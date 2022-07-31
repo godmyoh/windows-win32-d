@@ -1,0 +1,6 @@
+name "example"
+copyright "godmyoh"
+authors "godmyoh"
+targetType "executable"
+importPaths "..\\windows-win32\\source"
+libs "user32" "..\\windows-win32\\windows-win32"

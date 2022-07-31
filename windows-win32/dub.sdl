@@ -1,0 +1,6 @@
+name "windows-win32"
+description "win32metadata for D"
+copyright "godmyoh"
+authors "godmyoh"
+targetType "library"
+targetName "windows-win32"

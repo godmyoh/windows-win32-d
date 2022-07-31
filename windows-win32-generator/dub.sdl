@@ -1,0 +1,17 @@
+name "winmd-d"
+authors "godmyoh"
+copyright "godmyoh"
+license "proprietary"
+targetType "executable"
+targetName "winmd-d"
+mainSourceFile "source/app.d"
+
+configuration "default" {
+	targetType "executable"
+	targetPath "temp/Debug"
+}
+configuration "release" {
+	targetType "executable"
+	targetPath "temp/Release"
+	buildOptions "releaseMode" "inline" "optimize"
+}

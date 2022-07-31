@@ -1,0 +1,9 @@
+/.vs
+/windows-win32-generator/.dub
+/windows-win32-generator/temp
+/windows-win32-generator/x64
+/windows-win32/.dub
+/windows-win32/*.lib
+/example/.dub
+/example/*.exe
+/example/*.pdb
