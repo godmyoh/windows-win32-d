@@ -902,9 +902,9 @@ struct D3D11_BUFFER_DESC
 {
     uint ByteWidth;
     D3D11_USAGE Usage;
-    uint BindFlags;
-    uint CPUAccessFlags;
-    uint MiscFlags;
+    D3D11_BIND_FLAG BindFlags;
+    D3D11_CPU_ACCESS_FLAG CPUAccessFlags;
+    D3D11_RESOURCE_MISC_FLAG MiscFlags;
     uint StructureByteStride;
 }
 enum IID_ID3D11Buffer = GUID(0x48570b85, 0xd1ee, 0x4fcd, [0xa2, 0x50, 0xeb, 0x35, 0x7, 0x22, 0xb0, 0x37]);
@@ -919,9 +919,9 @@ struct D3D11_TEXTURE1D_DESC
     uint ArraySize;
     DXGI_FORMAT Format;
     D3D11_USAGE Usage;
-    uint BindFlags;
-    uint CPUAccessFlags;
-    uint MiscFlags;
+    D3D11_BIND_FLAG BindFlags;
+    D3D11_CPU_ACCESS_FLAG CPUAccessFlags;
+    D3D11_RESOURCE_MISC_FLAG MiscFlags;
 }
 enum IID_ID3D11Texture1D = GUID(0xf8fb5c27, 0xc6b3, 0x4f75, [0xa4, 0xc8, 0x43, 0x9a, 0xf2, 0xef, 0x56, 0x4c]);
 interface ID3D11Texture1D : ID3D11Resource
@@ -954,9 +954,9 @@ struct D3D11_TEXTURE3D_DESC
     uint MipLevels;
     DXGI_FORMAT Format;
     D3D11_USAGE Usage;
-    uint BindFlags;
-    uint CPUAccessFlags;
-    uint MiscFlags;
+    D3D11_BIND_FLAG BindFlags;
+    D3D11_CPU_ACCESS_FLAG CPUAccessFlags;
+    D3D11_RESOURCE_MISC_FLAG MiscFlags;
 }
 enum IID_ID3D11Texture3D = GUID(0x37e866e, 0xf56d, 0x4357, [0xa8, 0xaf, 0x9d, 0xab, 0xbe, 0x6e, 0x25, 0xe]);
 interface ID3D11Texture3D : ID3D11Resource
@@ -4584,9 +4584,9 @@ struct D3D11_TEXTURE2D_DESC1
     DXGI_FORMAT Format;
     DXGI_SAMPLE_DESC SampleDesc;
     D3D11_USAGE Usage;
-    uint BindFlags;
-    uint CPUAccessFlags;
-    uint MiscFlags;
+    D3D11_BIND_FLAG BindFlags;
+    D3D11_CPU_ACCESS_FLAG CPUAccessFlags;
+    D3D11_RESOURCE_MISC_FLAG MiscFlags;
     D3D11_TEXTURE_LAYOUT TextureLayout;
 }
 enum IID_ID3D11Texture2D1 = GUID(0x51218251, 0x1e33, 0x4617, [0x9c, 0xcb, 0x4d, 0x3a, 0x43, 0x67, 0xe7, 0xbb]);
@@ -4602,9 +4602,9 @@ struct D3D11_TEXTURE3D_DESC1
     uint MipLevels;
     DXGI_FORMAT Format;
     D3D11_USAGE Usage;
-    uint BindFlags;
-    uint CPUAccessFlags;
-    uint MiscFlags;
+    D3D11_BIND_FLAG BindFlags;
+    D3D11_CPU_ACCESS_FLAG CPUAccessFlags;
+    D3D11_RESOURCE_MISC_FLAG MiscFlags;
     D3D11_TEXTURE_LAYOUT TextureLayout;
 }
 enum IID_ID3D11Texture3D1 = GUID(0xc711683, 0x2853, 0x4846, [0x9b, 0xb0, 0xf3, 0xe6, 0x6, 0x39, 0xe4, 0x6a]);

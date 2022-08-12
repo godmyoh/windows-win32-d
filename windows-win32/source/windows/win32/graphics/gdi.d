@@ -98,7 +98,7 @@ BOOL BitBlt(HDC, int, int, int, int, HDC, int, int, ROP_CODE);
 BOOL CancelDC(HDC);
 BOOL Chord(HDC, int, int, int, int, int, int, int, int);
 HMETAFILE CloseMetaFile(HDC);
-int CombineRgn(HRGN, HRGN, HRGN, RGN_COMBINE_MODE);
+GDI_REGION_TYPE CombineRgn(HRGN, HRGN, HRGN, RGN_COMBINE_MODE);
 HMETAFILE CopyMetaFileA(HMETAFILE, const(char)*);
 HMETAFILE CopyMetaFileW(HMETAFILE, const(wchar)*);
 HBITMAP CreateBitmap(int, int, uint, uint, const(void)*);
@@ -147,7 +147,7 @@ int EnumFontsA(HDC, const(char)*, FONTENUMPROCA, LPARAM);
 int EnumFontsW(HDC, const(wchar)*, FONTENUMPROCW, LPARAM);
 int EnumObjects(HDC, OBJ_TYPE, GOBJENUMPROC, LPARAM);
 BOOL EqualRgn(HRGN, HRGN);
-int ExcludeClipRect(HDC, int, int, int, int);
+GDI_REGION_TYPE ExcludeClipRect(HDC, int, int, int, int);
 HRGN ExtCreateRegion(const(XFORM)*, uint, const(RGNDATA)*);
 BOOL ExtFloodFill(HDC, int, int, uint, EXT_FLOOD_FILL_TYPE);
 BOOL FillRgn(HDC, HRGN, HBRUSH);
@@ -173,7 +173,7 @@ BOOL GetCharABCWidthsA(HDC, uint, uint, ABC*);
 BOOL GetCharABCWidthsW(HDC, uint, uint, ABC*);
 BOOL GetCharABCWidthsFloatA(HDC, uint, uint, ABCFLOAT*);
 BOOL GetCharABCWidthsFloatW(HDC, uint, uint, ABCFLOAT*);
-int GetClipBox(HDC, RECT*);
+GDI_REGION_TYPE GetClipBox(HDC, RECT*);
 int GetClipRgn(HDC, HRGN);
 int GetMetaRgn(HDC, HRGN);
 HGDIOBJ GetCurrentObject(HDC, OBJ_TYPE);
@@ -199,7 +199,7 @@ int GetPolyFillMode(HDC);
 BOOL GetRasterizerCaps(RASTERIZER_STATUS*, uint);
 int GetRandomRgn(HDC, HRGN, int);
 uint GetRegionData(HRGN, uint, RGNDATA*);
-int GetRgnBox(HRGN, RECT*);
+GDI_REGION_TYPE GetRgnBox(HRGN, RECT*);
 HGDIOBJ GetStockObject(GET_STOCK_OBJECT_FLAGS);
 int GetStretchBltMode(HDC);
 uint GetSystemPaletteEntries(HDC, uint, uint, PALETTEENTRY*);
@@ -235,14 +235,14 @@ BOOL GetViewportExtEx(HDC, SIZE*);
 BOOL GetViewportOrgEx(HDC, POINT*);
 BOOL GetWindowExtEx(HDC, SIZE*);
 BOOL GetWindowOrgEx(HDC, POINT*);
-int IntersectClipRect(HDC, int, int, int, int);
+GDI_REGION_TYPE IntersectClipRect(HDC, int, int, int, int);
 BOOL InvertRgn(HDC, HRGN);
 BOOL LineDDA(int, int, int, int, LINEDDAPROC, LPARAM);
 BOOL LineTo(HDC, int, int);
 BOOL MaskBlt(HDC, int, int, int, int, HDC, int, int, HBITMAP, int, int, uint);
 BOOL PlgBlt(HDC, const(POINT)*, HDC, int, int, int, int, HBITMAP, int, int);
-int OffsetClipRgn(HDC, int, int);
-int OffsetRgn(HRGN, int, int);
+GDI_REGION_TYPE OffsetClipRgn(HDC, int, int);
+GDI_REGION_TYPE OffsetRgn(HRGN, int, int);
 BOOL PatBlt(HDC, int, int, int, int, ROP_CODE);
 BOOL Pie(HDC, int, int, int, int, int, int, int, int);
 BOOL PlayMetaFile(HDC, HMETAFILE);
@@ -262,9 +262,9 @@ BOOL RemoveFontResourceW(const(wchar)*);
 BOOL RoundRect(HDC, int, int, int, int, int, int);
 BOOL ResizePalette(HPALETTE, uint);
 int SaveDC(HDC);
-int SelectClipRgn(HDC, HRGN);
-int ExtSelectClipRgn(HDC, HRGN, RGN_COMBINE_MODE);
-int SetMetaRgn(HDC);
+GDI_REGION_TYPE SelectClipRgn(HDC, HRGN);
+GDI_REGION_TYPE ExtSelectClipRgn(HDC, HRGN, RGN_COMBINE_MODE);
+GDI_REGION_TYPE SetMetaRgn(HDC);
 HGDIOBJ SelectObject(HDC, HGDIOBJ);
 HPALETTE SelectPalette(HDC, HPALETTE, BOOL);
 uint SetBkColor(HDC, uint);
@@ -485,10 +485,6 @@ BOOL GetMonitorInfoW(HMONITOR, MONITORINFO*);
 BOOL EnumDisplayMonitors(HDC, RECT*, MONITORENUMPROC, LPARAM);
 enum GDI_ERROR = 0xffffffffffffffff;
 enum ERROR = 0x00000000;
-enum NULLREGION = 0x00000001;
-enum SIMPLEREGION = 0x00000002;
-enum COMPLEXREGION = 0x00000003;
-enum RGN_ERROR = 0x00000000;
 enum MAXSTRETCHBLTMODE = 0x00000004;
 enum POLYFILL_LAST = 0x00000002;
 enum LAYOUT_BTT = 0x00000002;
@@ -2295,6 +2291,15 @@ enum : uint
     MM_LOMETRIC    = 0x00000002,
     MM_TEXT        = 0x00000001,
     MM_TWIPS       = 0x00000006,
+}
+
+alias GDI_REGION_TYPE = int;
+enum : int
+{
+    RGN_ERROR     = 0x00000000,
+    NULLREGION    = 0x00000001,
+    SIMPLEREGION  = 0x00000002,
+    COMPLEXREGION = 0x00000003,
 }
 
 alias HDC = void*;

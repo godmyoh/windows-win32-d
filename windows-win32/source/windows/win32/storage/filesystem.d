@@ -95,7 +95,10 @@ enum : uint
     FILE_DELETE_CHILD         = 0x00000040,
     FILE_READ_ATTRIBUTES      = 0x00000080,
     FILE_WRITE_ATTRIBUTES     = 0x00000100,
+    DELETE                    = 0x00010000,
     READ_CONTROL              = 0x00020000,
+    WRITE_DAC                 = 0x00040000,
+    WRITE_OWNER               = 0x00080000,
     SYNCHRONIZE               = 0x00100000,
     STANDARD_RIGHTS_REQUIRED  = 0x000f0000,
     STANDARD_RIGHTS_READ      = 0x00020000,
@@ -132,7 +135,7 @@ FindFileHandle FindFirstFileExW(const(wchar)*, FINDEX_INFO_LEVELS, void*, FINDEX
 FindVolumeHandle FindFirstVolumeW(PWSTR, uint);
 BOOL FindNextChangeNotification(FindChangeNotificationHandle);
 BOOL FindNextFileA(FindFileHandle, WIN32_FIND_DATAA*);
-BOOL FindNextFileW(HANDLE, WIN32_FIND_DATAW*);
+BOOL FindNextFileW(FindFileHandle, WIN32_FIND_DATAW*);
 BOOL FindNextVolumeW(FindVolumeHandle, PWSTR, uint);
 BOOL FindVolumeClose(FindVolumeHandle);
 BOOL FlushFileBuffers(HANDLE);

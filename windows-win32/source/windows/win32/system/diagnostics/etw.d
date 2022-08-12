@@ -1,7 +1,7 @@
 module windows.win32.system.diagnostics.etw;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOLEAN, BSTR, FILETIME, HANDLE, HRESULT, LARGE_INTEGER, PSID, PSTR, PWSTR;
+import windows.win32.foundation : BOOLEAN, BSTR, FILETIME, HANDLE, HRESULT, LARGE_INTEGER, PSID, PSTR, PWSTR, WIN32_ERROR;
 import windows.win32.security_ : PSECURITY_DESCRIPTOR;
 import windows.win32.system.com_ : IUnknown;
 import windows.win32.system.time : TIME_ZONE_INFORMATION;
@@ -9,104 +9,45 @@ import windows.win32.system.time : TIME_ZONE_INFORMATION;
 version (Windows):
 extern (Windows):
 
-alias TRACE_MESSAGE_FLAGS = uint;
-enum : uint
-{
-    TRACE_MESSAGE_COMPONENTID = 0x00000004,
-    TRACE_MESSAGE_GUID        = 0x00000002,
-    TRACE_MESSAGE_SEQUENCE    = 0x00000001,
-    TRACE_MESSAGE_SYSTEMINFO  = 0x00000020,
-    TRACE_MESSAGE_TIMESTAMP   = 0x00000008,
-}
-
-alias ENABLECALLBACK_ENABLED_STATE = uint;
-enum : uint
-{
-    EVENT_CONTROL_CODE_DISABLE_PROVIDER = 0x00000000,
-    EVENT_CONTROL_CODE_ENABLE_PROVIDER  = 0x00000001,
-    EVENT_CONTROL_CODE_CAPTURE_STATE    = 0x00000002,
-}
-
-alias EVENT_TRACE_CONTROL = uint;
-enum : uint
-{
-    EVENT_TRACE_CONTROL_FLUSH  = 0x00000003,
-    EVENT_TRACE_CONTROL_QUERY  = 0x00000000,
-    EVENT_TRACE_CONTROL_STOP   = 0x00000001,
-    EVENT_TRACE_CONTROL_UPDATE = 0x00000002,
-}
-
-alias EVENT_TRACE_FLAG = uint;
-enum : uint
-{
-    EVENT_TRACE_FLAG_ALPC               = 0x00100000,
-    EVENT_TRACE_FLAG_CSWITCH            = 0x00000010,
-    EVENT_TRACE_FLAG_DBGPRINT           = 0x00040000,
-    EVENT_TRACE_FLAG_DISK_FILE_IO       = 0x00000200,
-    EVENT_TRACE_FLAG_DISK_IO            = 0x00000100,
-    EVENT_TRACE_FLAG_DISK_IO_INIT       = 0x00000400,
-    EVENT_TRACE_FLAG_DISPATCHER         = 0x00000800,
-    EVENT_TRACE_FLAG_DPC                = 0x00000020,
-    EVENT_TRACE_FLAG_DRIVER             = 0x00800000,
-    EVENT_TRACE_FLAG_FILE_IO            = 0x02000000,
-    EVENT_TRACE_FLAG_FILE_IO_INIT       = 0x04000000,
-    EVENT_TRACE_FLAG_IMAGE_LOAD         = 0x00000004,
-    EVENT_TRACE_FLAG_INTERRUPT          = 0x00000040,
-    EVENT_TRACE_FLAG_JOB                = 0x00080000,
-    EVENT_TRACE_FLAG_MEMORY_HARD_FAULTS = 0x00002000,
-    EVENT_TRACE_FLAG_MEMORY_PAGE_FAULTS = 0x00001000,
-    EVENT_TRACE_FLAG_NETWORK_TCPIP      = 0x00010000,
-    EVENT_TRACE_FLAG_NO_SYSCONFIG       = 0x10000000,
-    EVENT_TRACE_FLAG_PROCESS            = 0x00000001,
-    EVENT_TRACE_FLAG_PROCESS_COUNTERS   = 0x00000008,
-    EVENT_TRACE_FLAG_PROFILE            = 0x01000000,
-    EVENT_TRACE_FLAG_REGISTRY           = 0x00020000,
-    EVENT_TRACE_FLAG_SPLIT_IO           = 0x00200000,
-    EVENT_TRACE_FLAG_SYSTEMCALL         = 0x00000080,
-    EVENT_TRACE_FLAG_THREAD             = 0x00000002,
-    EVENT_TRACE_FLAG_VAMAP              = 0x00008000,
-    EVENT_TRACE_FLAG_VIRTUAL_ALLOC      = 0x00004000,
-}
-
-uint StartTraceW(ulong*, const(wchar)*, EVENT_TRACE_PROPERTIES*);
-uint StartTraceA(ulong*, const(char)*, EVENT_TRACE_PROPERTIES*);
-uint StopTraceW(ulong, const(wchar)*, EVENT_TRACE_PROPERTIES*);
-uint StopTraceA(ulong, const(char)*, EVENT_TRACE_PROPERTIES*);
-uint QueryTraceW(ulong, const(wchar)*, EVENT_TRACE_PROPERTIES*);
-uint QueryTraceA(ulong, const(char)*, EVENT_TRACE_PROPERTIES*);
-uint UpdateTraceW(ulong, const(wchar)*, EVENT_TRACE_PROPERTIES*);
-uint UpdateTraceA(ulong, const(char)*, EVENT_TRACE_PROPERTIES*);
-uint FlushTraceW(ulong, const(wchar)*, EVENT_TRACE_PROPERTIES*);
-uint FlushTraceA(ulong, const(char)*, EVENT_TRACE_PROPERTIES*);
-uint ControlTraceW(ulong, const(wchar)*, EVENT_TRACE_PROPERTIES*, EVENT_TRACE_CONTROL);
-uint ControlTraceA(ulong, const(char)*, EVENT_TRACE_PROPERTIES*, EVENT_TRACE_CONTROL);
-uint QueryAllTracesW(EVENT_TRACE_PROPERTIES**, uint, uint*);
-uint QueryAllTracesA(EVENT_TRACE_PROPERTIES**, uint, uint*);
-uint EnableTrace(uint, uint, uint, const(GUID)*, ulong);
-uint EnableTraceEx(const(GUID)*, const(GUID)*, ulong, uint, ubyte, ulong, ulong, uint, EVENT_FILTER_DESCRIPTOR*);
-uint EnableTraceEx2(ulong, const(GUID)*, uint, ubyte, ulong, ulong, uint, ENABLE_TRACE_PARAMETERS*);
-uint EnumerateTraceGuidsEx(TRACE_QUERY_INFO_CLASS, void*, uint, void*, uint, uint*);
-uint TraceSetInformation(ulong, TRACE_QUERY_INFO_CLASS, void*, uint);
-uint TraceQueryInformation(ulong, TRACE_QUERY_INFO_CLASS, void*, uint, uint*);
-uint CreateTraceInstanceId(HANDLE, EVENT_INSTANCE_INFO*);
-uint TraceEvent(ulong, EVENT_TRACE_HEADER*);
+WIN32_ERROR StartTraceW(CONTROLTRACE_HANDLE*, const(wchar)*, EVENT_TRACE_PROPERTIES*);
+WIN32_ERROR StartTraceA(CONTROLTRACE_HANDLE*, const(char)*, EVENT_TRACE_PROPERTIES*);
+WIN32_ERROR StopTraceW(CONTROLTRACE_HANDLE, const(wchar)*, EVENT_TRACE_PROPERTIES*);
+WIN32_ERROR StopTraceA(CONTROLTRACE_HANDLE, const(char)*, EVENT_TRACE_PROPERTIES*);
+WIN32_ERROR QueryTraceW(CONTROLTRACE_HANDLE, const(wchar)*, EVENT_TRACE_PROPERTIES*);
+WIN32_ERROR QueryTraceA(CONTROLTRACE_HANDLE, const(char)*, EVENT_TRACE_PROPERTIES*);
+WIN32_ERROR UpdateTraceW(CONTROLTRACE_HANDLE, const(wchar)*, EVENT_TRACE_PROPERTIES*);
+WIN32_ERROR UpdateTraceA(CONTROLTRACE_HANDLE, const(char)*, EVENT_TRACE_PROPERTIES*);
+WIN32_ERROR FlushTraceW(CONTROLTRACE_HANDLE, const(wchar)*, EVENT_TRACE_PROPERTIES*);
+WIN32_ERROR FlushTraceA(CONTROLTRACE_HANDLE, const(char)*, EVENT_TRACE_PROPERTIES*);
+WIN32_ERROR ControlTraceW(CONTROLTRACE_HANDLE, const(wchar)*, EVENT_TRACE_PROPERTIES*, EVENT_TRACE_CONTROL);
+WIN32_ERROR ControlTraceA(CONTROLTRACE_HANDLE, const(char)*, EVENT_TRACE_PROPERTIES*, EVENT_TRACE_CONTROL);
+WIN32_ERROR QueryAllTracesW(EVENT_TRACE_PROPERTIES**, uint, uint*);
+WIN32_ERROR QueryAllTracesA(EVENT_TRACE_PROPERTIES**, uint, uint*);
+WIN32_ERROR EnableTrace(uint, uint, uint, const(GUID)*, CONTROLTRACE_HANDLE);
+WIN32_ERROR EnableTraceEx(const(GUID)*, const(GUID)*, CONTROLTRACE_HANDLE, uint, ubyte, ulong, ulong, uint, EVENT_FILTER_DESCRIPTOR*);
+WIN32_ERROR EnableTraceEx2(CONTROLTRACE_HANDLE, const(GUID)*, uint, ubyte, ulong, ulong, uint, ENABLE_TRACE_PARAMETERS*);
+WIN32_ERROR EnumerateTraceGuidsEx(TRACE_QUERY_INFO_CLASS, void*, uint, void*, uint, uint*);
+WIN32_ERROR TraceSetInformation(CONTROLTRACE_HANDLE, TRACE_QUERY_INFO_CLASS, void*, uint);
+WIN32_ERROR TraceQueryInformation(CONTROLTRACE_HANDLE, TRACE_QUERY_INFO_CLASS, void*, uint, uint*);
+WIN32_ERROR CreateTraceInstanceId(HANDLE, EVENT_INSTANCE_INFO*);
+WIN32_ERROR TraceEvent(ulong, EVENT_TRACE_HEADER*);
 uint TraceEventInstance(ulong, EVENT_INSTANCE_HEADER*, EVENT_INSTANCE_INFO*, EVENT_INSTANCE_INFO*);
 uint RegisterTraceGuidsW(WMIDPREQUEST, void*, const(GUID)*, uint, TRACE_GUID_REGISTRATION*, const(wchar)*, const(wchar)*, ulong*);
 uint RegisterTraceGuidsA(WMIDPREQUEST, void*, const(GUID)*, uint, TRACE_GUID_REGISTRATION*, const(char)*, const(char)*, ulong*);
-uint EnumerateTraceGuids(TRACE_GUID_PROPERTIES**, uint, uint*);
+WIN32_ERROR EnumerateTraceGuids(TRACE_GUID_PROPERTIES**, uint, uint*);
 uint UnregisterTraceGuids(ulong);
 ulong GetTraceLoggerHandle(void*);
 ubyte GetTraceEnableLevel(ulong);
 uint GetTraceEnableFlags(ulong);
-ulong OpenTraceW(EVENT_TRACE_LOGFILEW*);
-uint ProcessTrace(ulong*, uint, FILETIME*, FILETIME*);
-uint CloseTrace(ulong);
-uint QueryTraceProcessingHandle(ulong, ETW_PROCESS_HANDLE_INFO_TYPE, void*, uint, void*, uint, uint*);
-ulong OpenTraceA(EVENT_TRACE_LOGFILEA*);
-uint SetTraceCallback(const(GUID)*, PEVENT_CALLBACK);
-uint RemoveTraceCallback(const(GUID)*);
-uint TraceMessage(ulong, TRACE_MESSAGE_FLAGS, const(GUID)*, ushort);
-uint TraceMessageVa(ulong, TRACE_MESSAGE_FLAGS, const(GUID)*, ushort, byte*);
+PROCESSTRACE_HANDLE OpenTraceW(EVENT_TRACE_LOGFILEW*);
+WIN32_ERROR ProcessTrace(PROCESSTRACE_HANDLE*, uint, FILETIME*, FILETIME*);
+WIN32_ERROR CloseTrace(PROCESSTRACE_HANDLE);
+WIN32_ERROR QueryTraceProcessingHandle(PROCESSTRACE_HANDLE, ETW_PROCESS_HANDLE_INFO_TYPE, void*, uint, void*, uint, uint*);
+PROCESSTRACE_HANDLE OpenTraceA(EVENT_TRACE_LOGFILEA*);
+WIN32_ERROR SetTraceCallback(const(GUID)*, PEVENT_CALLBACK);
+WIN32_ERROR RemoveTraceCallback(const(GUID)*);
+WIN32_ERROR TraceMessage(ulong, TRACE_MESSAGE_FLAGS, const(GUID)*, ushort);
+WIN32_ERROR TraceMessageVa(ulong, TRACE_MESSAGE_FLAGS, const(GUID)*, ushort, byte*);
 uint EventRegister(const(GUID)*, PENABLECALLBACK, void*, ulong*);
 uint EventUnregister(ulong);
 uint EventSetInformation(ulong, EVENT_INFO_CLASS, void*, uint);
@@ -148,6 +89,19 @@ uint TdhLoadManifestFromBinary(PWSTR);
 uint TdhEnumerateManifestProviderEvents(GUID*, PROVIDER_EVENT_INFO*, uint*);
 uint TdhGetManifestEventInformation(GUID*, EVENT_DESCRIPTOR*, TRACE_EVENT_INFO*, uint*);
 int CveEventWrite(const(wchar)*, const(wchar)*);
+enum ALPCGuid = GUID(0x45d8cccd, 0x539f, 0x4b72, [0xa8, 0xb7, 0x5c, 0x68, 0x31, 0x42, 0x60, 0x9a]);
+enum DiskIoGuid = GUID(0x3d6fa8d4, 0xfe05, 0x11d0, [0x9d, 0xda, 0x0, 0xc0, 0x4f, 0xd7, 0xba, 0x7c]);
+enum EventTraceConfigGuid = GUID(0x1853a65, 0x418f, 0x4f36, [0xae, 0xfc, 0xdc, 0xf, 0x1d, 0x2f, 0xd2, 0x35]);
+enum FileIoGuid = GUID(0x90cbdc39, 0x4a3e, 0x11d1, [0x84, 0xf4, 0x0, 0x0, 0xf8, 0x4, 0x64, 0xe3]);
+enum ImageLoadGuid = GUID(0x2cb15d1d, 0x5fc1, 0x11d2, [0xab, 0xe1, 0x0, 0xa0, 0xc9, 0x11, 0xf5, 0x18]);
+enum PageFaultGuid = GUID(0x3d6fa8d3, 0xfe05, 0x11d0, [0x9d, 0xda, 0x0, 0xc0, 0x4f, 0xd7, 0xba, 0x7c]);
+enum PerfInfoGuid = GUID(0xce1dbfb4, 0x137e, 0x4da6, [0x87, 0xb0, 0x3f, 0x59, 0xaa, 0x10, 0x2c, 0xbc]);
+enum ProcessGuid = GUID(0x3d6fa8d0, 0xfe05, 0x11d0, [0x9d, 0xda, 0x0, 0xc0, 0x4f, 0xd7, 0xba, 0x7c]);
+enum RegistryGuid = GUID(0xae53722e, 0xc863, 0x11d2, [0x86, 0x59, 0x0, 0xc0, 0x4f, 0xa3, 0x21, 0xa1]);
+enum SplitIoGuid = GUID(0xd837ca92, 0x12b9, 0x44a5, [0xad, 0x6a, 0x3a, 0x65, 0xb3, 0x57, 0x8a, 0xa8]);
+enum TcpIpGuid = GUID(0x9a280ac0, 0xc8e0, 0x11d1, [0x84, 0xe2, 0x0, 0xc0, 0x4f, 0xb9, 0x98, 0xa2]);
+enum ThreadGuid = GUID(0x3d6fa8d1, 0xfe05, 0x11d0, [0x9d, 0xda, 0x0, 0xc0, 0x4f, 0xd7, 0xba, 0x7c]);
+enum UdpIpGuid = GUID(0xbf3a50c5, 0xa9c9, 0x4988, [0xa0, 0x5, 0x2d, 0xf0, 0xb7, 0xc8, 0xf, 0x80]);
 enum WNODE_FLAG_ALL_DATA = 0x00000001;
 enum WNODE_FLAG_SINGLE_INSTANCE = 0x00000002;
 enum WNODE_FLAG_SINGLE_ITEM = 0x00000004;
@@ -203,7 +157,6 @@ enum WMI_GLOBAL_LOGGER_ID = 0x00000001;
 enum MAX_PAYLOAD_PREDICATES = 0x00000008;
 enum EventTraceGuid = GUID(0x68fdd900, 0x4a3e, 0x11d1, [0x84, 0xf4, 0x0, 0x0, 0xf8, 0x4, 0x64, 0xe3]);
 enum SystemTraceControlGuid = GUID(0x9e814aad, 0x3204, 0x11d2, [0x9a, 0x82, 0x0, 0x60, 0x8, 0xa8, 0x69, 0x39]);
-enum EventTraceConfigGuid = GUID(0x1853a65, 0x418f, 0x4f36, [0xae, 0xfc, 0xdc, 0xf, 0x1d, 0x2f, 0xd2, 0x35]);
 enum DefaultTraceSecurityGuid = GUID(0x811c1af, 0x7a07, 0x4a06, [0x82, 0xed, 0x86, 0x94, 0x55, 0xcd, 0xf7, 0x13]);
 enum PrivateLoggerNotificationGuid = GUID(0x3595ab5c, 0x42a, 0x4c8e, [0xb9, 0x42, 0x2d, 0x5, 0x9b, 0xfe, 0xb1, 0xb1]);
 enum SystemIoFilterProviderGuid = GUID(0xfbd09363, 0x9e22, 0x4661, [0xb8, 0xbf, 0xe7, 0xa3, 0x4b, 0x53, 0x5b, 0x8c]);
@@ -618,7 +571,69 @@ enum PROCESS_TRACE_MODE_REAL_TIME = 0x00000100;
 enum PROCESS_TRACE_MODE_RAW_TIMESTAMP = 0x00001000;
 enum PROCESS_TRACE_MODE_EVENT_RECORD = 0x10000000;
 enum CLSID_TraceRelogger = GUID(0x7b40792d, 0x5ff, 0x44c4, [0x90, 0x58, 0xf4, 0x40, 0xc7, 0x1f, 0x17, 0xd4]);
+alias TRACE_MESSAGE_FLAGS = uint;
+enum : uint
+{
+    TRACE_MESSAGE_COMPONENTID = 0x00000004,
+    TRACE_MESSAGE_GUID        = 0x00000002,
+    TRACE_MESSAGE_SEQUENCE    = 0x00000001,
+    TRACE_MESSAGE_SYSTEMINFO  = 0x00000020,
+    TRACE_MESSAGE_TIMESTAMP   = 0x00000008,
+}
+
+alias ENABLECALLBACK_ENABLED_STATE = uint;
+enum : uint
+{
+    EVENT_CONTROL_CODE_DISABLE_PROVIDER = 0x00000000,
+    EVENT_CONTROL_CODE_ENABLE_PROVIDER  = 0x00000001,
+    EVENT_CONTROL_CODE_CAPTURE_STATE    = 0x00000002,
+}
+
+alias EVENT_TRACE_CONTROL = uint;
+enum : uint
+{
+    EVENT_TRACE_CONTROL_FLUSH  = 0x00000003,
+    EVENT_TRACE_CONTROL_QUERY  = 0x00000000,
+    EVENT_TRACE_CONTROL_STOP   = 0x00000001,
+    EVENT_TRACE_CONTROL_UPDATE = 0x00000002,
+}
+
+alias EVENT_TRACE_FLAG = uint;
+enum : uint
+{
+    EVENT_TRACE_FLAG_ALPC               = 0x00100000,
+    EVENT_TRACE_FLAG_CSWITCH            = 0x00000010,
+    EVENT_TRACE_FLAG_DBGPRINT           = 0x00040000,
+    EVENT_TRACE_FLAG_DISK_FILE_IO       = 0x00000200,
+    EVENT_TRACE_FLAG_DISK_IO            = 0x00000100,
+    EVENT_TRACE_FLAG_DISK_IO_INIT       = 0x00000400,
+    EVENT_TRACE_FLAG_DISPATCHER         = 0x00000800,
+    EVENT_TRACE_FLAG_DPC                = 0x00000020,
+    EVENT_TRACE_FLAG_DRIVER             = 0x00800000,
+    EVENT_TRACE_FLAG_FILE_IO            = 0x02000000,
+    EVENT_TRACE_FLAG_FILE_IO_INIT       = 0x04000000,
+    EVENT_TRACE_FLAG_IMAGE_LOAD         = 0x00000004,
+    EVENT_TRACE_FLAG_INTERRUPT          = 0x00000040,
+    EVENT_TRACE_FLAG_JOB                = 0x00080000,
+    EVENT_TRACE_FLAG_MEMORY_HARD_FAULTS = 0x00002000,
+    EVENT_TRACE_FLAG_MEMORY_PAGE_FAULTS = 0x00001000,
+    EVENT_TRACE_FLAG_NETWORK_TCPIP      = 0x00010000,
+    EVENT_TRACE_FLAG_NO_SYSCONFIG       = 0x10000000,
+    EVENT_TRACE_FLAG_PROCESS            = 0x00000001,
+    EVENT_TRACE_FLAG_PROCESS_COUNTERS   = 0x00000008,
+    EVENT_TRACE_FLAG_PROFILE            = 0x01000000,
+    EVENT_TRACE_FLAG_REGISTRY           = 0x00020000,
+    EVENT_TRACE_FLAG_SPLIT_IO           = 0x00200000,
+    EVENT_TRACE_FLAG_SYSTEMCALL         = 0x00000080,
+    EVENT_TRACE_FLAG_THREAD             = 0x00000002,
+    EVENT_TRACE_FLAG_VAMAP              = 0x00008000,
+    EVENT_TRACE_FLAG_VIRTUAL_ALLOC      = 0x00004000,
+}
+
 alias TDH_HANDLE = long;
+alias PROCESSTRACE_HANDLE = ulong;
+alias CONTROLTRACE_HANDLE = ulong;
+alias RELOGSTREAM_HANDLE = ulong;
 struct WNODE_HEADER
 {
     uint BufferSize;
@@ -1850,11 +1865,11 @@ interface ITraceEventCallback : IUnknown
 enum IID_ITraceRelogger = GUID(0xf754ad43, 0x3bcc, 0x4286, [0x80, 0x9, 0x9c, 0x5d, 0xa2, 0x14, 0xe8, 0x4e]);
 interface ITraceRelogger : IUnknown
 {
-    HRESULT AddLogfileTraceStream(BSTR, void*, ulong*);
-    HRESULT AddRealtimeTraceStream(BSTR, void*, ulong*);
+    HRESULT AddLogfileTraceStream(BSTR, void*, RELOGSTREAM_HANDLE*);
+    HRESULT AddRealtimeTraceStream(BSTR, void*, RELOGSTREAM_HANDLE*);
     HRESULT RegisterCallback(ITraceEventCallback);
     HRESULT Inject(ITraceEvent);
-    HRESULT CreateEventInstance(ulong, uint, ITraceEvent*);
+    HRESULT CreateEventInstance(RELOGSTREAM_HANDLE, uint, ITraceEvent*);
     HRESULT ProcessTrace();
     HRESULT SetOutputFilename(BSTR);
     HRESULT SetCompressionMode(BOOLEAN);

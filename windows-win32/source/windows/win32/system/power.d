@@ -1,13 +1,37 @@
 module windows.win32.system.power;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, HANDLE, HRESULT, LPARAM, PWSTR;
+import windows.win32.foundation : BOOL, BOOLEAN, HANDLE, HRESULT, LPARAM, NTSTATUS, PWSTR;
 import windows.win32.system.registry : HKEY, REG_SAM_FLAGS;
 import windows.win32.system.threading : REASON_CONTEXT;
 
 version (Windows):
 extern (Windows):
 
+alias POWER_COOLING_MODE = ushort;
+enum : ushort
+{
+    PO_TZ_ACTIVE       = 0x0000,
+    PO_TZ_PASSIVE      = 0x0001,
+    PO_TZ_INVALID_MODE = 0x0002,
+}
+
+struct PROCESSOR_POWER_INFORMATION
+{
+    ulong Number;
+    ulong MaxMhz;
+    ulong CurrentMhz;
+    ulong MhzLimit;
+    ulong MaxIdleState;
+    ulong CurrentIdleState;
+}
+struct SYSTEM_POWER_INFORMATION
+{
+    ulong MaxIdlenessAllowed;
+    ulong Idleness;
+    ulong TimeRemaining;
+    POWER_COOLING_MODE CoolingMode;
+}
 alias POWER_PLATFORM_ROLE_VERSION = uint;
 enum : uint
 {
@@ -44,7 +68,7 @@ enum : uint
     POWER_USER_NOTIFY_SHUTDOWN    = 0x00000010,
 }
 
-int CallNtPowerInformation(POWER_INFORMATION_LEVEL, void*, uint, void*, uint);
+NTSTATUS CallNtPowerInformation(POWER_INFORMATION_LEVEL, void*, uint, void*, uint);
 BOOLEAN GetPwrCapabilities(SYSTEM_POWER_CAPABILITIES*);
 POWER_PLATFORM_ROLE PowerDeterminePlatformRoleEx(POWER_PLATFORM_ROLE_VERSION);
 uint PowerRegisterSuspendResumeNotification(uint, HANDLE, void**);

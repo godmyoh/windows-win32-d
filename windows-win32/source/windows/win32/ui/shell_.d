@@ -646,7 +646,7 @@ HRESULT QISearch(void*, QITAB*, const(GUID)*, void**);
 BOOL SHIsLowMemoryMachine(uint);
 int GetMenuPosFromID(HMENU, uint);
 HRESULT SHGetInverseCMAP(ubyte*, uint);
-HRESULT SHAutoComplete(HWND, uint);
+HRESULT SHAutoComplete(HWND, SHELL_AUTOCOMPLETE_FLAGS);
 HRESULT SHCreateThreadRef(int*, IUnknown*);
 HRESULT SHSetThreadRef(IUnknown);
 HRESULT SHGetThreadRef(IUnknown*);
@@ -700,15 +700,15 @@ HRESULT PathCchFindExtension(const(wchar)*, ulong, PWSTR*);
 HRESULT PathCchAddExtension(PWSTR, ulong, const(wchar)*);
 HRESULT PathCchRenameExtension(PWSTR, ulong, const(wchar)*);
 HRESULT PathCchRemoveExtension(PWSTR, ulong);
-HRESULT PathCchCanonicalizeEx(PWSTR, ulong, const(wchar)*, uint);
+HRESULT PathCchCanonicalizeEx(PWSTR, ulong, const(wchar)*, PATHCCH_OPTIONS);
 HRESULT PathCchCanonicalize(PWSTR, ulong, const(wchar)*);
-HRESULT PathCchCombineEx(PWSTR, ulong, const(wchar)*, const(wchar)*, uint);
+HRESULT PathCchCombineEx(PWSTR, ulong, const(wchar)*, const(wchar)*, PATHCCH_OPTIONS);
 HRESULT PathCchCombine(PWSTR, ulong, const(wchar)*, const(wchar)*);
-HRESULT PathCchAppendEx(PWSTR, ulong, const(wchar)*, uint);
+HRESULT PathCchAppendEx(PWSTR, ulong, const(wchar)*, PATHCCH_OPTIONS);
 HRESULT PathCchAppend(PWSTR, ulong, const(wchar)*);
 HRESULT PathCchStripPrefix(PWSTR, ulong);
-HRESULT PathAllocCombine(const(wchar)*, const(wchar)*, uint, PWSTR*);
-HRESULT PathAllocCanonicalize(const(wchar)*, uint, PWSTR*);
+HRESULT PathAllocCombine(const(wchar)*, const(wchar)*, PATHCCH_OPTIONS, PWSTR*);
+HRESULT PathAllocCanonicalize(const(wchar)*, PATHCCH_OPTIONS, PWSTR*);
 uint RegisterAppStateChangeNotification(PAPPSTATE_CHANGE_ROUTINE, void*, _APPSTATE_REGISTRATION**);
 void UnregisterAppStateChangeNotification(_APPSTATE_REGISTRATION*);
 uint RegisterAppConstrainedChangeNotification(PAPPCONSTRAIN_CHANGE_ROUTINE, void*, _APPCONSTRAIN_REGISTRATION**);
@@ -2071,18 +2071,6 @@ enum PLATFORM_IE3 = 0x00000001;
 enum PLATFORM_BROWSERONLY = 0x00000001;
 enum PLATFORM_INTEGRATED = 0x00000002;
 enum ILMM_IE4 = 0x00000000;
-enum SHACF_DEFAULT = 0x00000000;
-enum SHACF_FILESYSTEM = 0x00000001;
-enum SHACF_URLHISTORY = 0x00000002;
-enum SHACF_URLMRU = 0x00000004;
-enum SHACF_USETAB = 0x00000008;
-enum SHACF_FILESYS_ONLY = 0x00000010;
-enum SHACF_FILESYS_DIRS = 0x00000020;
-enum SHACF_VIRTUAL_NAMESPACE = 0x00000040;
-enum SHACF_AUTOSUGGEST_FORCE_ON = 0x10000000;
-enum SHACF_AUTOSUGGEST_FORCE_OFF = 0x20000000;
-enum SHACF_AUTOAPPEND_FORCE_ON = 0x40000000;
-enum SHACF_AUTOAPPEND_FORCE_OFF = 0x80000000;
 enum DLLVER_PLATFORM_WINDOWS = 0x00000001;
 enum DLLVER_PLATFORM_NT = 0x00000002;
 enum DLLVER_MAJOR_MASK = 0xffff000000000000;
@@ -2840,6 +2828,24 @@ enum : uint
     OS_SERVERADMINUI          = 0x00000022,
     OS_MEDIACENTER            = 0x00000023,
     OS_APPLIANCE              = 0x00000024,
+}
+
+alias SHELL_AUTOCOMPLETE_FLAGS = uint;
+enum : uint
+{
+    SHACF_DEFAULT               = 0x00000000,
+    SHACF_FILESYSTEM            = 0x00000001,
+    SHACF_URLALL                = 0x00000006,
+    SHACF_URLHISTORY            = 0x00000002,
+    SHACF_URLMRU                = 0x00000004,
+    SHACF_USETAB                = 0x00000008,
+    SHACF_FILESYS_ONLY          = 0x00000010,
+    SHACF_FILESYS_DIRS          = 0x00000020,
+    SHACF_VIRTUAL_NAMESPACE     = 0x00000040,
+    SHACF_AUTOSUGGEST_FORCE_ON  = 0x10000000,
+    SHACF_AUTOSUGGEST_FORCE_OFF = 0x20000000,
+    SHACF_AUTOAPPEND_FORCE_ON   = 0x40000000,
+    SHACF_AUTOAPPEND_FORCE_OFF  = 0x80000000,
 }
 
 struct _APPSTATE_REGISTRATION
@@ -10913,8 +10919,8 @@ interface ITranscodeImage : IUnknown
 {
     HRESULT TranscodeImage(IShellItem, uint, uint, uint, IStream, uint*, uint*);
 }
-alias PATHCCH_OPTIONS = int;
-enum : int
+alias PATHCCH_OPTIONS = uint;
+enum : uint
 {
     PATHCCH_NONE                            = 0x00000000,
     PATHCCH_ALLOW_LONG_PATHS                = 0x00000001,

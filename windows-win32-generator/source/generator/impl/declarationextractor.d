@@ -335,24 +335,31 @@ class DeclarationExtractor : IDeclarationExtractor
             if (n == "GuidAttribute")
             {
                 auto value = customAttribute.value;
-                assert(value.length == 20);
 
                 // parse Guid
                 auto ctor = customAttribute.getConstructor();
                 auto ctorSig = ctor.signatureAsMethodDef;
                 assert(ctorSig.paramSigs.length == 11);
 
-                // Prolog
-                assert(value[0..2] == [0x01, 0x0]);
-                value = value[2..$];
+                if (value.length == 20)
+                {
+                    // Prolog
+                    assert(value[0..2] == [0x01, 0x0]);
+                    value = value[2..$];
 
-                uint data1 = *(cast(uint*)(value.ptr));
-                ushort data2 = *(cast(ushort*)(value.ptr + GUID.Data2.offsetof));
-                ushort data3 = *(cast(ushort*)(value.ptr + GUID.Data3.offsetof));
-                ubyte[8] data4 = value[GUID.Data4.offsetof..GUID.sizeof].dup;
+                    uint data1 = *(cast(uint*)(value.ptr));
+                    ushort data2 = *(cast(ushort*)(value.ptr + GUID.Data2.offsetof));
+                    ushort data3 = *(cast(ushort*)(value.ptr + GUID.Data3.offsetof));
+                    ubyte[8] data4 = value[GUID.Data4.offsetof..GUID.sizeof].dup;
 
-                guid = GUID(data1, data2, data3, data4);
-                return guid;
+                    guid = GUID(data1, data2, data3, data4);
+                    return guid;
+                }
+                else
+                {
+                    // TODO: invalid data?
+                    assert(value.length == 16);
+                }
             }
         }
 
