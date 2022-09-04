@@ -3,7 +3,7 @@ module windows.win32.devices.imageacquisition;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, CHAR, FILETIME, HANDLE, HRESULT, HWND, PWSTR, RECT;
 import windows.win32.graphics.gdi : HBITMAP;
-import windows.win32.system.com_ : IStream, IUnknown, STGMEDIUM;
+import windows.win32.system.com_ : IStream, IUnknown, STGMEDIUM, VARENUM;
 import windows.win32.system.com.structuredstorage : IEnumSTATPROPSTG, PROPSPEC, PROPVARIANT, STATPROPSETSTG;
 import windows.win32.ui.windowsandmessaging : HICON;
 
@@ -1708,7 +1708,7 @@ interface IWiaDrvItem : IUnknown
 struct WIA_PROPERTY_INFO
 {
     uint lAccessFlags;
-    ushort vt;
+    VARENUM vt;
     union _ValidVal_e__Union
     {
         struct _Range_e__Struct

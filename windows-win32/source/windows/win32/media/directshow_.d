@@ -1,7 +1,7 @@
 module windows.win32.media.directshow_;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, HANDLE, HRESULT, HWND, LARGE_INTEGER, PAPCFUNC, POINT, PSID, PSTR, PWSTR, RECT, SIZE;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, COLORREF, HANDLE, HRESULT, HWND, LARGE_INTEGER, PAPCFUNC, POINT, PSID, PSTR, PWSTR, RECT, SIZE;
 import windows.win32.graphics.direct3d9 : D3DFORMAT, D3DPOOL, IDirect3DDevice9, IDirect3DSurface9;
 import windows.win32.graphics.directdraw : DDCAPS_DX7, DDCOLORCONTROL, DDCOLORKEY, DDPIXELFORMAT, DDSCAPS2, DDSURFACEDESC, DDVIDEOPORTCONNECT, IDirectDraw, IDirectDraw7, IDirectDrawPalette, IDirectDrawSurface, IDirectDrawSurface7;
 import windows.win32.graphics.gdi : BITMAPINFO, BITMAPINFOHEADER, HDC, HMONITOR, PALETTEENTRY, RGBQUAD, RGNDATA;
@@ -1565,8 +1565,8 @@ struct COLORKEY
 {
     uint KeyType;
     uint PaletteIndex;
-    uint LowColorValue;
-    uint HighColorValue;
+    COLORREF LowColorValue;
+    COLORREF HighColorValue;
 }
 alias ADVISE_TYPE = uint;
 enum : uint
@@ -2848,7 +2848,7 @@ interface IVMRSurfaceAllocatorNotify : IUnknown
     HRESULT ChangeDDrawDevice(IDirectDraw7, HMONITOR);
     HRESULT RestoreDDrawSurfaces();
     HRESULT NotifyEvent(int, long, long);
-    HRESULT SetBorderColor(uint);
+    HRESULT SetBorderColor(COLORREF);
 }
 alias VMR_ASPECT_RATIO_MODE = int;
 enum : int
@@ -2871,10 +2871,10 @@ interface IVMRWindowlessControl : IUnknown
     HRESULT RepaintVideo(HWND, HDC);
     HRESULT DisplayModeChanged();
     HRESULT GetCurrentImage(ubyte**);
-    HRESULT SetBorderColor(uint);
-    HRESULT GetBorderColor(uint*);
-    HRESULT SetColorKey(uint);
-    HRESULT GetColorKey(uint*);
+    HRESULT SetBorderColor(COLORREF);
+    HRESULT GetBorderColor(COLORREF*);
+    HRESULT SetColorKey(COLORREF);
+    HRESULT GetColorKey(COLORREF*);
 }
 alias VMRMixerPrefs = int;
 enum : int
@@ -2916,8 +2916,8 @@ interface IVMRMixerControl : IUnknown
     HRESULT GetZOrder(uint, uint*);
     HRESULT SetOutputRect(uint, const(NORMALIZEDRECT)*);
     HRESULT GetOutputRect(uint, NORMALIZEDRECT*);
-    HRESULT SetBackgroundClr(uint);
-    HRESULT GetBackgroundClr(uint*);
+    HRESULT SetBackgroundClr(COLORREF);
+    HRESULT GetBackgroundClr(COLORREF*);
     HRESULT SetMixingPrefs(uint);
     HRESULT GetMixingPrefs(uint*);
 }
@@ -3059,7 +3059,7 @@ struct VMRALPHABITMAP
     RECT rSrc;
     NORMALIZEDRECT rDest;
     float fAlpha;
-    uint clrSrcKey;
+    COLORREF clrSrcKey;
 }
 enum IID_IVMRMixerBitmap = GUID(0x1e673275, 0x257, 0x40aa, [0xaf, 0x20, 0x7c, 0x60, 0x8d, 0x4a, 0x4, 0x28]);
 interface IVMRMixerBitmap : IUnknown
@@ -6301,8 +6301,8 @@ interface IVMRWindowlessControl9 : IUnknown
     HRESULT RepaintVideo(HWND, HDC);
     HRESULT DisplayModeChanged();
     HRESULT GetCurrentImage(ubyte**);
-    HRESULT SetBorderColor(uint);
-    HRESULT GetBorderColor(uint*);
+    HRESULT SetBorderColor(COLORREF);
+    HRESULT GetBorderColor(COLORREF*);
 }
 alias VMR9MixerPrefs = int;
 enum : int
@@ -6373,8 +6373,8 @@ interface IVMRMixerControl9 : IUnknown
     HRESULT GetZOrder(uint, uint*);
     HRESULT SetOutputRect(uint, const(VMR9NormalizedRect)*);
     HRESULT GetOutputRect(uint, VMR9NormalizedRect*);
-    HRESULT SetBackgroundClr(uint);
-    HRESULT GetBackgroundClr(uint*);
+    HRESULT SetBackgroundClr(COLORREF);
+    HRESULT GetBackgroundClr(COLORREF*);
     HRESULT SetMixingPrefs(uint);
     HRESULT GetMixingPrefs(uint*);
     HRESULT SetProcAmpControl(uint, VMR9ProcAmpControl*);
@@ -6389,7 +6389,7 @@ struct VMR9AlphaBitmap
     RECT rSrc;
     VMR9NormalizedRect rDest;
     float fAlpha;
-    uint clrSrcKey;
+    COLORREF clrSrcKey;
     uint dwFilterMode;
 }
 alias VMR9AlphaBitmapFlags = int;

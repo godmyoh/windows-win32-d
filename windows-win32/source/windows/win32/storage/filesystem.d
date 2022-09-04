@@ -1226,6 +1226,10 @@ enum : uint
     SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE = 0x00000002,
 }
 
+struct FILE_DISPOSITION_INFO
+{
+    BOOLEAN DeleteFile;
+}
 alias FindFileHandle = long;
 alias FindFileNameHandle = long;
 alias FindStreamHandle = long;
@@ -3732,10 +3736,6 @@ struct FILE_ATTRIBUTE_TAG_INFO
 {
     uint FileAttributes;
     uint ReparseTag;
-}
-struct FILE_DISPOSITION_INFO
-{
-    BOOLEAN DeleteFileA;
 }
 struct FILE_ID_BOTH_DIR_INFO
 {

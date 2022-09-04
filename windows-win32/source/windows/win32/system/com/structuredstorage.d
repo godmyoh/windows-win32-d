@@ -3,7 +3,7 @@ module windows.win32.system.com.structuredstorage;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, DECIMAL, FILETIME, HRESULT, LARGE_INTEGER, PSTR, PWSTR, ULARGE_INTEGER;
 import windows.win32.security_ : PSECURITY_DESCRIPTOR;
-import windows.win32.system.com_ : BLOB, CLSCTX, COSERVERINFO, CY, DVTARGETDEVICE, IDispatch, IErrorLog, IPersist, IStream, IUnknown, MULTI_QI, SAFEARRAY, STATSTG, STGC, STGMEDIUM, StorageLayout, VARIANT;
+import windows.win32.system.com_ : BLOB, CLSCTX, COSERVERINFO, CY, DVTARGETDEVICE, IDispatch, IErrorLog, IPersist, IStream, IUnknown, MULTI_QI, SAFEARRAY, STATSTG, STGC, STGMEDIUM, StorageLayout, VARENUM, VARIANT;
 
 version (Windows):
 extern (Windows):
@@ -399,7 +399,7 @@ struct PROPVARIANT
     {
         struct
         {
-            ushort vt;
+            VARENUM vt;
             ushort wReserved1;
             ushort wReserved2;
             ushort wReserved3;
@@ -496,7 +496,7 @@ struct STATPROPSTG
 {
     PWSTR lpwstrName;
     uint propid;
-    ushort vt;
+    VARENUM vt;
 }
 struct STATPROPSETSTG
 {
@@ -596,7 +596,7 @@ struct OLESTREAM
 struct PROPBAG2
 {
     uint dwType;
-    ushort vt;
+    VARENUM vt;
     ushort cfType;
     uint dwHint;
     PWSTR pstrName;

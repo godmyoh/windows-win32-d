@@ -10,6 +10,11 @@ import windows.win32.system.windowsprogramming : ACTCTX_SECTION_KEYED_DATA_ASSEM
 version (Windows):
 extern (Windows):
 
+struct ACTIVATION_CONTEXT_COMPATIBILITY_INFORMATION
+{
+    uint ElementCount;
+    COMPATIBILITY_CONTEXT_ELEMENT* Elements;
+}
 uint MsiCloseHandle(MSIHANDLE);
 uint MsiCloseAllHandles();
 INSTALLUILEVEL MsiSetInternalUI(INSTALLUILEVEL, HWND*);
@@ -2843,11 +2848,6 @@ struct COMPATIBILITY_CONTEXT_ELEMENT
     GUID Id;
     ACTCTX_COMPATIBILITY_ELEMENT_TYPE Type;
     ulong MaxVersionTested;
-}
-struct ACTIVATION_CONTEXT_COMPATIBILITY_INFORMATION
-{
-    uint ElementCount;
-    COMPATIBILITY_CONTEXT_ELEMENT[1] Elements;
 }
 struct ACTIVATION_CONTEXT_DETAILED_INFORMATION
 {

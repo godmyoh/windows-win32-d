@@ -19,7 +19,7 @@ enum : int
     WSA_NOT_ENOUGH_MEMORY       = 0x00000008,
     WSA_OPERATION_ABORTED       = 0x000003e3,
     WSA_WAIT_EVENT_0            = 0x00000000,
-    WSA_WAIT_IO_COMPLETION      = 0x00000081,
+    WSA_WAIT_IO_COMPLETION      = 0x000000c0,
     WSABASEERR                  = 0x00002710,
     WSAEINTR                    = 0x00002714,
     WSAEBADF                    = 0x00002719,
@@ -329,17 +329,17 @@ int SetServiceW(uint, SET_SERVICE_OPERATION, uint, SERVICE_INFOW*, SERVICE_ASYNC
 int GetServiceA(uint, GUID*, PSTR, uint, void*, uint*, SERVICE_ASYNC_INFO*);
 int GetServiceW(uint, GUID*, PWSTR, uint, void*, uint*, SERVICE_ASYNC_INFO*);
 int getaddrinfo(const(char)*, const(char)*, const(ADDRINFOA)*, ADDRINFOA**);
-int GetAddrInfoW(const(wchar)*, const(wchar)*, const(addrinfoW)*, addrinfoW**);
-int GetAddrInfoExA(const(char)*, const(char)*, uint, GUID*, const(addrinfoexA)*, addrinfoexA**, timeval*, OVERLAPPED*, LPLOOKUPSERVICE_COMPLETION_ROUTINE, HANDLE*);
-int GetAddrInfoExW(const(wchar)*, const(wchar)*, uint, GUID*, const(addrinfoexW)*, addrinfoexW**, timeval*, OVERLAPPED*, LPLOOKUPSERVICE_COMPLETION_ROUTINE, HANDLE*);
+int GetAddrInfoW(const(wchar)*, const(wchar)*, const(ADDRINFOW)*, ADDRINFOW**);
+int GetAddrInfoExA(const(char)*, const(char)*, uint, GUID*, const(ADDRINFOEXA)*, ADDRINFOEXA**, timeval*, OVERLAPPED*, LPLOOKUPSERVICE_COMPLETION_ROUTINE, HANDLE*);
+int GetAddrInfoExW(const(wchar)*, const(wchar)*, uint, GUID*, const(ADDRINFOEXW)*, ADDRINFOEXW**, timeval*, OVERLAPPED*, LPLOOKUPSERVICE_COMPLETION_ROUTINE, HANDLE*);
 int GetAddrInfoExCancel(HANDLE*);
 int GetAddrInfoExOverlappedResult(OVERLAPPED*);
 int SetAddrInfoExA(const(char)*, const(char)*, SOCKET_ADDRESS*, uint, BLOB*, uint, uint, GUID*, timeval*, OVERLAPPED*, LPLOOKUPSERVICE_COMPLETION_ROUTINE, HANDLE*);
 int SetAddrInfoExW(const(wchar)*, const(wchar)*, SOCKET_ADDRESS*, uint, BLOB*, uint, uint, GUID*, timeval*, OVERLAPPED*, LPLOOKUPSERVICE_COMPLETION_ROUTINE, HANDLE*);
 void freeaddrinfo(ADDRINFOA*);
-void FreeAddrInfoW(addrinfoW*);
-void FreeAddrInfoEx(addrinfoexA*);
-void FreeAddrInfoExW(addrinfoexW*);
+void FreeAddrInfoW(ADDRINFOW*);
+void FreeAddrInfoEx(ADDRINFOEXA*);
+void FreeAddrInfoExW(ADDRINFOEXW*);
 int getnameinfo(const(SOCKADDR)*, int, PSTR, uint, PSTR, uint, int);
 int GetNameInfoW(const(SOCKADDR)*, int, PWSTR, uint, PWSTR, uint, int);
 int inet_pton(int, const(char)*, void*);
@@ -1675,7 +1675,7 @@ struct ADDRINFOA
     SOCKADDR* ai_addr;
     ADDRINFOA* ai_next;
 }
-struct addrinfoW
+struct ADDRINFOW
 {
     int ai_flags;
     int ai_family;
@@ -1684,9 +1684,9 @@ struct addrinfoW
     ulong ai_addrlen;
     PWSTR ai_canonname;
     SOCKADDR* ai_addr;
-    addrinfoW* ai_next;
+    ADDRINFOW* ai_next;
 }
-struct addrinfoexA
+struct ADDRINFOEXA
 {
     int ai_flags;
     int ai_family;
@@ -1698,9 +1698,9 @@ struct addrinfoexA
     void* ai_blob;
     ulong ai_bloblen;
     GUID* ai_provider;
-    addrinfoexA* ai_next;
+    ADDRINFOEXA* ai_next;
 }
-struct addrinfoexW
+struct ADDRINFOEXW
 {
     int ai_flags;
     int ai_family;
@@ -1712,9 +1712,9 @@ struct addrinfoexW
     void* ai_blob;
     ulong ai_bloblen;
     GUID* ai_provider;
-    addrinfoexW* ai_next;
+    ADDRINFOEXW* ai_next;
 }
-struct addrinfoex2A
+struct ADDRINFOEX2A
 {
     int ai_flags;
     int ai_family;
@@ -1726,11 +1726,11 @@ struct addrinfoex2A
     void* ai_blob;
     ulong ai_bloblen;
     GUID* ai_provider;
-    addrinfoex2A* ai_next;
+    ADDRINFOEX2A* ai_next;
     int ai_version;
     PSTR ai_fqdn;
 }
-struct addrinfoex2W
+struct ADDRINFOEX2W
 {
     int ai_flags;
     int ai_family;
@@ -1742,11 +1742,11 @@ struct addrinfoex2W
     void* ai_blob;
     ulong ai_bloblen;
     GUID* ai_provider;
-    addrinfoex2W* ai_next;
+    ADDRINFOEX2W* ai_next;
     int ai_version;
     PWSTR ai_fqdn;
 }
-struct addrinfoex3
+struct ADDRINFOEX3
 {
     int ai_flags;
     int ai_family;
@@ -1758,12 +1758,12 @@ struct addrinfoex3
     void* ai_blob;
     ulong ai_bloblen;
     GUID* ai_provider;
-    addrinfoex3* ai_next;
+    ADDRINFOEX3* ai_next;
     int ai_version;
     PWSTR ai_fqdn;
     int ai_interfaceindex;
 }
-struct addrinfoex4
+struct ADDRINFOEX4
 {
     int ai_flags;
     int ai_family;
@@ -1775,13 +1775,13 @@ struct addrinfoex4
     void* ai_blob;
     ulong ai_bloblen;
     GUID* ai_provider;
-    addrinfoex4* ai_next;
+    ADDRINFOEX4* ai_next;
     int ai_version;
     PWSTR ai_fqdn;
     int ai_interfaceindex;
     HANDLE ai_resolutionhandle;
 }
-struct addrinfoex5
+struct ADDRINFOEX5
 {
     int ai_flags;
     int ai_family;
@@ -1793,7 +1793,7 @@ struct addrinfoex5
     void* ai_blob;
     ulong ai_bloblen;
     GUID* ai_provider;
-    addrinfoex5* ai_next;
+    ADDRINFOEX5* ai_next;
     int ai_version;
     PWSTR ai_fqdn;
     int ai_interfaceindex;
@@ -1811,7 +1811,7 @@ struct addrinfo_dns_server
         PWSTR ai_template;
     }
 }
-struct addrinfoex6
+struct ADDRINFOEX6
 {
     int ai_flags;
     int ai_family;
@@ -1823,7 +1823,7 @@ struct addrinfoex6
     void* ai_blob;
     ulong ai_bloblen;
     GUID* ai_provider;
-    addrinfoex5* ai_next;
+    ADDRINFOEX5* ai_next;
     int ai_version;
     PWSTR ai_fqdn;
     int ai_interfaceindex;
@@ -2308,7 +2308,7 @@ struct IN_PKTINFO_EX
     IN_PKTINFO pkt_info;
     SCOPE_ID scope_id;
 }
-struct in6_pktinfo_ex
+struct IN6_PKTINFO_EX
 {
     IN6_PKTINFO pkt_info;
     SCOPE_ID scope_id;
@@ -4152,7 +4152,7 @@ struct nd_router_solicit
 {
     ICMP_MESSAGE nd_rs_hdr;
 }
-struct nd_router_advert
+struct ND_ROUTER_ADVERT_HEADER
 {
     ICMP_MESSAGE nd_ra_hdr;
     uint nd_ra_reachable;
@@ -4166,12 +4166,12 @@ union IPV6_ROUTER_ADVERTISEMENT_FLAGS
     }
     ubyte Value;
 }
-struct nd_neighbor_solicit
+struct ND_NEIGHBOR_SOLICIT_HEADER
 {
     ICMP_MESSAGE nd_ns_hdr;
     IN6_ADDR nd_ns_target;
 }
-struct nd_neighbor_advert
+struct ND_NEIGHBOR_ADVERT_HEADER
 {
     ICMP_MESSAGE nd_na_hdr;
     IN6_ADDR nd_na_target;
@@ -4185,13 +4185,13 @@ union IPV6_NEIGHBOR_ADVERTISEMENT_FLAGS
     }
     uint Value;
 }
-struct nd_redirect
+struct ND_REDIRECT_HEADER
 {
     ICMP_MESSAGE nd_rd_hdr;
     IN6_ADDR nd_rd_target;
     IN6_ADDR nd_rd_dst;
 }
-struct nd_opt_hdr
+struct ND_OPTION_HDR
 {
     ubyte nd_opt_type;
     ubyte nd_opt_len;
@@ -4214,7 +4214,7 @@ enum : int
     ND_OPT_DNSSL                  = 0x0000001f,
 }
 
-struct nd_opt_prefix_info
+struct ND_OPTION_PREFIX_INFO
 {
     ubyte nd_opt_pi_type;
     ubyte nd_opt_pi_len;
@@ -4240,21 +4240,21 @@ struct nd_opt_prefix_info
     }
     IN6_ADDR nd_opt_pi_prefix;
 }
-struct nd_opt_rd_hdr
+struct ND_OPTION_RD_HDR
 {
     ubyte nd_opt_rh_type;
     ubyte nd_opt_rh_len;
     ushort nd_opt_rh_reserved1;
     uint nd_opt_rh_reserved2;
 }
-struct nd_opt_mtu
+struct ND_OPTION_MTU
 {
     ubyte nd_opt_mtu_type;
     ubyte nd_opt_mtu_len;
     ushort nd_opt_mtu_reserved;
     uint nd_opt_mtu_mtu;
 }
-struct nd_opt_route_info
+struct ND_OPTION_ROUTE_INFO
 {
     ubyte nd_opt_ri_type;
     ubyte nd_opt_ri_len;
@@ -4270,14 +4270,14 @@ struct nd_opt_route_info
     uint nd_opt_ri_route_lifetime;
     IN6_ADDR nd_opt_ri_prefix;
 }
-struct nd_opt_rdnss
+struct ND_OPTION_RDNSS
 {
     ubyte nd_opt_rdnss_type;
     ubyte nd_opt_rdnss_len;
     ushort nd_opt_rdnss_reserved;
     uint nd_opt_rdnss_lifetime;
 }
-struct nd_opt_dnssl
+struct ND_OPTION_DNSSL
 {
     ubyte nd_opt_dnssl_type;
     ubyte nd_opt_dnssl_len;

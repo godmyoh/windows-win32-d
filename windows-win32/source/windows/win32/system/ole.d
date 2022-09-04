@@ -1,11 +1,12 @@
 module windows.win32.system.ole;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, CHAR, DECIMAL, FILETIME, HANDLE, HINSTANCE, HRESULT, HRSRC, HWND, LPARAM, LRESULT, POINT, POINTL, PSTR, PWSTR, RECT, RECTL, SIZE, SYSTEMTIME, WPARAM;
+import windows.win32.foundation : BOOL, BSTR, CHAR, COLORREF, DECIMAL, FILETIME, HANDLE, HINSTANCE, HRESULT, HRSRC, HWND, LPARAM, LRESULT, POINT, POINTL, PSTR, PWSTR, RECT, RECTL, SIZE, SYSTEMTIME, WPARAM;
 import windows.win32.graphics.gdi : HBITMAP, HDC, HENHMETAFILE, HFONT, HMETAFILE, HPALETTE, HRGN, LOGPALETTE, TEXTMETRICW;
 import windows.win32.media_ : HTASK;
-import windows.win32.system.com_ : BYTE_SIZEDARR, CALLCONV, CUSTDATA, CY, DISPPARAMS, DVASPECT, DVTARGETDEVICE, EXCEPINFO, FLAGGED_WORD_BLOB, FORMATETC, FUNCDESC, HYPER_SIZEDARR, IAdviseSink, IBindCtx, IBindHost, IClassFactory, IDLDESC, IDataObject, IDispatch, IEnumFORMATETC, IEnumSTATDATA, IEnumUnknown, IErrorLog, IMoniker, INVOKEKIND, IPersist, IPersistStream, IServiceProvider, IStream, ITypeInfo, ITypeLib, IUnknown, LONG_SIZEDARR, SAFEARRAY, SAFEARRAYBOUND, SHORT_SIZEDARR, STGMEDIUM, SYSKIND, TYPEDESC, TYPEKIND, VARDESC, VARIANT;
+import windows.win32.system.com_ : BYTE_SIZEDARR, CALLCONV, CUSTDATA, CY, DISPPARAMS, DVASPECT, DVTARGETDEVICE, EXCEPINFO, FLAGGED_WORD_BLOB, FORMATETC, FUNCDESC, HYPER_SIZEDARR, IAdviseSink, IBindCtx, IBindHost, IClassFactory, IDLDESC, IDataObject, IDispatch, IEnumFORMATETC, IEnumSTATDATA, IEnumUnknown, IErrorLog, IMoniker, INVOKEKIND, IPersist, IPersistStream, IServiceProvider, IStream, ITypeInfo, ITypeLib, IUnknown, LONG_SIZEDARR, SAFEARRAY, SAFEARRAYBOUND, SHORT_SIZEDARR, STGMEDIUM, SYSKIND, TYPEDESC, TYPEKIND, VARDESC, VARENUM, VARIANT;
 import windows.win32.system.com.structuredstorage : IPersistStorage, IPropertyBag, IPropertyBag2, IStorage;
+import windows.win32.system.systemservices : MODIFIERKEYS_FLAGS;
 import windows.win32.ui.controls_ : PROPSHEETHEADERA_V2, PROPSHEETHEADERW_V2;
 import windows.win32.ui.controls.dialogs : OPENFILENAMEA, OPENFILENAMEW;
 import windows.win32.ui.windowsandmessaging : HACCEL, HCURSOR, HICON, HMENU, MSG;
@@ -18,10 +19,10 @@ int VariantTimeToDosDateTime(double, ushort*, ushort*);
 int SystemTimeToVariantTime(SYSTEMTIME*, double*);
 int VariantTimeToSystemTime(double, SYSTEMTIME*);
 HRESULT SafeArrayAllocDescriptor(uint, SAFEARRAY**);
-HRESULT SafeArrayAllocDescriptorEx(ushort, uint, SAFEARRAY**);
+HRESULT SafeArrayAllocDescriptorEx(VARENUM, uint, SAFEARRAY**);
 HRESULT SafeArrayAllocData(SAFEARRAY*);
-SAFEARRAY* SafeArrayCreate(ushort, uint, SAFEARRAYBOUND*);
-SAFEARRAY* SafeArrayCreateEx(ushort, uint, SAFEARRAYBOUND*, void*);
+SAFEARRAY* SafeArrayCreate(VARENUM, uint, SAFEARRAYBOUND*);
+SAFEARRAY* SafeArrayCreateEx(VARENUM, uint, SAFEARRAYBOUND*, void*);
 HRESULT SafeArrayCopyData(SAFEARRAY*, SAFEARRAY*);
 void SafeArrayReleaseDescriptor(SAFEARRAY*);
 HRESULT SafeArrayDestroyDescriptor(SAFEARRAY*);
@@ -47,14 +48,14 @@ HRESULT SafeArrayGetRecordInfo(SAFEARRAY*, IRecordInfo*);
 HRESULT SafeArraySetIID(SAFEARRAY*, const(GUID)*);
 HRESULT SafeArrayGetIID(SAFEARRAY*, GUID*);
 HRESULT SafeArrayGetVartype(SAFEARRAY*, ushort*);
-SAFEARRAY* SafeArrayCreateVector(ushort, int, uint);
-SAFEARRAY* SafeArrayCreateVectorEx(ushort, int, uint, void*);
+SAFEARRAY* SafeArrayCreateVector(VARENUM, int, uint);
+SAFEARRAY* SafeArrayCreateVectorEx(VARENUM, int, uint, void*);
 void VariantInit(VARIANT*);
 HRESULT VariantClear(VARIANT*);
 HRESULT VariantCopy(VARIANT*, const(VARIANT)*);
 HRESULT VariantCopyInd(VARIANT*, const(VARIANT)*);
-HRESULT VariantChangeType(VARIANT*, const(VARIANT)*, ushort, ushort);
-HRESULT VariantChangeTypeEx(VARIANT*, const(VARIANT)*, uint, ushort, ushort);
+HRESULT VariantChangeType(VARIANT*, const(VARIANT)*, ushort, VARENUM);
+HRESULT VariantChangeTypeEx(VARIANT*, const(VARIANT)*, uint, ushort, VARENUM);
 HRESULT VectorFromBstr(BSTR, SAFEARRAY**);
 HRESULT BstrFromVector(SAFEARRAY*, BSTR*);
 HRESULT VarUI1FromI2(short, ubyte*);
@@ -355,12 +356,12 @@ HRESULT RegisterTypeLibForUser(ITypeLib, PWSTR, PWSTR);
 HRESULT UnRegisterTypeLibForUser(const(GUID)*, ushort, ushort, uint, SYSKIND);
 HRESULT CreateTypeLib(SYSKIND, const(wchar)*, ICreateTypeLib*);
 HRESULT CreateTypeLib2(SYSKIND, const(wchar)*, ICreateTypeLib2*);
-HRESULT DispGetParam(DISPPARAMS*, uint, ushort, VARIANT*, uint*);
+HRESULT DispGetParam(DISPPARAMS*, uint, VARENUM, VARIANT*, uint*);
 HRESULT DispGetIDsOfNames(ITypeInfo, PWSTR*, uint, int*);
 HRESULT DispInvoke(void*, ITypeInfo, int, ushort, DISPPARAMS*, VARIANT*, EXCEPINFO*, uint*);
 HRESULT CreateDispTypeInfo(INTERFACEDATA*, uint, ITypeInfo*);
 HRESULT CreateStdDispatch(IUnknown, void*, ITypeInfo, IUnknown*);
-HRESULT DispCallFunc(void*, ulong, CALLCONV, ushort, uint, ushort*, VARIANT**, VARIANT*);
+HRESULT DispCallFunc(void*, ulong, CALLCONV, VARENUM, uint, ushort*, VARIANT**, VARIANT*);
 HRESULT RegisterActiveObject(IUnknown, const(GUID)*, uint, uint*);
 HRESULT RevokeActiveObject(uint, void*);
 HRESULT GetActiveObject(const(GUID)*, void*, IUnknown*);
@@ -436,7 +437,7 @@ ubyte* HRGN_UserUnmarshal64(uint*, ubyte*, HRGN*);
 void HRGN_UserFree64(uint*, HRGN*);
 HRESULT OleCreatePropertyFrame(HWND, uint, uint, const(wchar)*, uint, IUnknown*, uint, GUID*, uint, uint, void*);
 HRESULT OleCreatePropertyFrameIndirect(OCPFIPARAMS*);
-HRESULT OleTranslateColor(uint, HPALETTE, uint*);
+HRESULT OleTranslateColor(uint, HPALETTE, COLORREF*);
 HRESULT OleCreateFontIndirect(FONTDESC*, const(GUID)*, void**);
 HRESULT OleCreatePictureIndirect(PICTDESC*, const(GUID)*, BOOL, void**);
 HRESULT OleLoadPicture(IStream, int, BOOL, const(GUID)*, void**);
@@ -1135,63 +1136,6 @@ enum : uint
     DROPEFFECT_SCROLL = 0x80000000,
 }
 
-alias VARENUM = int;
-enum : int
-{
-    VT_EMPTY            = 0x00000000,
-    VT_NULL             = 0x00000001,
-    VT_I2               = 0x00000002,
-    VT_I4               = 0x00000003,
-    VT_R4               = 0x00000004,
-    VT_R8               = 0x00000005,
-    VT_CY               = 0x00000006,
-    VT_DATE             = 0x00000007,
-    VT_BSTR             = 0x00000008,
-    VT_DISPATCH         = 0x00000009,
-    VT_ERROR            = 0x0000000a,
-    VT_BOOL             = 0x0000000b,
-    VT_VARIANT          = 0x0000000c,
-    VT_UNKNOWN          = 0x0000000d,
-    VT_DECIMAL          = 0x0000000e,
-    VT_I1               = 0x00000010,
-    VT_UI1              = 0x00000011,
-    VT_UI2              = 0x00000012,
-    VT_UI4              = 0x00000013,
-    VT_I8               = 0x00000014,
-    VT_UI8              = 0x00000015,
-    VT_INT              = 0x00000016,
-    VT_UINT             = 0x00000017,
-    VT_VOID             = 0x00000018,
-    VT_HRESULT          = 0x00000019,
-    VT_PTR              = 0x0000001a,
-    VT_SAFEARRAY        = 0x0000001b,
-    VT_CARRAY           = 0x0000001c,
-    VT_USERDEFINED      = 0x0000001d,
-    VT_LPSTR            = 0x0000001e,
-    VT_LPWSTR           = 0x0000001f,
-    VT_RECORD           = 0x00000024,
-    VT_INT_PTR          = 0x00000025,
-    VT_UINT_PTR         = 0x00000026,
-    VT_FILETIME         = 0x00000040,
-    VT_BLOB             = 0x00000041,
-    VT_STREAM           = 0x00000042,
-    VT_STORAGE          = 0x00000043,
-    VT_STREAMED_OBJECT  = 0x00000044,
-    VT_STORED_OBJECT    = 0x00000045,
-    VT_BLOB_OBJECT      = 0x00000046,
-    VT_CF               = 0x00000047,
-    VT_CLSID            = 0x00000048,
-    VT_VERSIONED_STREAM = 0x00000049,
-    VT_BSTR_BLOB        = 0x00000fff,
-    VT_VECTOR           = 0x00001000,
-    VT_ARRAY            = 0x00002000,
-    VT_BYREF            = 0x00004000,
-    VT_RESERVED         = 0x00008000,
-    VT_ILLEGAL          = 0x0000ffff,
-    VT_ILLEGALMASKED    = 0x00000fff,
-    VT_TYPEMASK         = 0x00000fff,
-}
-
 struct _wireSAFEARR_BSTR
 {
     uint Size;
@@ -1859,16 +1803,16 @@ interface IViewObject2 : IViewObject
 enum IID_IDropSource = GUID(0x121, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IDropSource : IUnknown
 {
-    HRESULT QueryContinueDrag(BOOL, uint);
+    HRESULT QueryContinueDrag(BOOL, MODIFIERKEYS_FLAGS);
     HRESULT GiveFeedback(uint);
 }
 enum IID_IDropTarget = GUID(0x122, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IDropTarget : IUnknown
 {
-    HRESULT DragEnter(IDataObject, uint, POINTL, uint*);
-    HRESULT DragOver(uint, POINTL, uint*);
+    HRESULT DragEnter(IDataObject, MODIFIERKEYS_FLAGS, POINTL, uint*);
+    HRESULT DragOver(MODIFIERKEYS_FLAGS, POINTL, uint*);
     HRESULT DragLeave();
-    HRESULT Drop(IDataObject, uint, POINTL, uint*);
+    HRESULT Drop(IDataObject, MODIFIERKEYS_FLAGS, POINTL, uint*);
 }
 enum IID_IDropSourceNotify = GUID(0x12b, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IDropSourceNotify : IUnknown
@@ -1929,7 +1873,7 @@ enum : int
 struct PARAMDATA
 {
     PWSTR szName;
-    ushort vt;
+    VARENUM vt;
 }
 struct METHODDATA
 {
@@ -1940,7 +1884,7 @@ struct METHODDATA
     CALLCONV cc;
     uint cArgs;
     ushort wFlags;
-    ushort vtReturn;
+    VARENUM vtReturn;
 }
 struct INTERFACEDATA
 {
@@ -3387,7 +3331,7 @@ interface IDispError : IUnknown
 enum IID_IVariantChangeType = GUID(0xa6ef9862, 0xc720, 0x11d0, [0x93, 0x37, 0x0, 0xa0, 0xc9, 0xd, 0xca, 0xa9]);
 interface IVariantChangeType : IUnknown
 {
-    HRESULT ChangeType(VARIANT*, VARIANT*, uint, ushort);
+    HRESULT ChangeType(VARIANT*, VARIANT*, uint, VARENUM);
 }
 enum IID_IObjectIdentity = GUID(0xca04b7e6, 0xd21, 0x11d1, [0x8c, 0xc5, 0x0, 0xc0, 0x4f, 0xc2, 0xb0, 0x85]);
 interface IObjectIdentity : IUnknown

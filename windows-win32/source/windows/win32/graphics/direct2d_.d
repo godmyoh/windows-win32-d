@@ -1855,15 +1855,15 @@ interface ID2D1Multithread : IUnknown
 }
 struct Matrix4x3F
 {
-    D2D_MATRIX_4X3_F __AnonymousBase_d2d1_1helper_L45_C31;
+    D2D_MATRIX_4X3_F Base;
 }
 struct Matrix4x4F
 {
-    D2D_MATRIX_4X4_F __AnonymousBase_d2d1_1helper_L97_C31;
+    D2D_MATRIX_4X4_F Base;
 }
 struct Matrix5x4F
 {
-    D2D_MATRIX_5X4_F __AnonymousBase_d2d1_1helper_L472_C31;
+    D2D_MATRIX_5X4_F Base;
 }
 alias PD2D1_PROPERTY_SET_FUNCTION = HRESULT function(IUnknown, const(ubyte)*, uint);
 alias PD2D1_PROPERTY_GET_FUNCTION = HRESULT function(const(IUnknown), ubyte*, uint, uint*);

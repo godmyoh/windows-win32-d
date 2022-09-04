@@ -11,7 +11,7 @@ enum : uint
     WAIT_OBJECT_0                                                                  = 0x00000000,
     WAIT_ABANDONED                                                                 = 0x00000080,
     WAIT_ABANDONED_0                                                               = 0x00000080,
-    WAIT_IO_COMPLETION                                                             = 0x00000081,
+    WAIT_IO_COMPLETION                                                             = 0x000000c0,
     WAIT_TIMEOUT                                                                   = 0x00000102,
     WAIT_FAILED                                                                    = 0xffffffff,
     ERROR_SUCCESS                                                                  = 0x00000000,
@@ -9842,6 +9842,7 @@ alias PSID = void*;
 alias PSTR = char*;
 alias PWSTR = wchar*;
 alias WPARAM = ulong;
+alias COLORREF = uint;
 alias HRSRC = void*;
 alias CHAR = ubyte;
 alias SHANDLE_PTR = long;

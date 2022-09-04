@@ -1,13 +1,14 @@
 module windows.win32.ui.controls.richedit;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, CHAR, HANDLE, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT, RECTL, SIZE, WPARAM;
+import windows.win32.foundation : BOOL, BSTR, CHAR, COLORREF, HANDLE, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT, RECTL, SIZE, WPARAM;
 import windows.win32.globalization : HIMC;
 import windows.win32.graphics.direct2d_ : ID2D1RenderTarget;
 import windows.win32.graphics.gdi : HBITMAP, HDC, HPALETTE, HRGN, TEXT_ALIGN_OPTIONS;
 import windows.win32.system.com_ : DVASPECT, DVTARGETDEVICE, IDataObject, IDispatch, IStream, IUnknown, VARIANT;
 import windows.win32.system.com.structuredstorage : IStorage;
 import windows.win32.system.ole : IDropTarget, IOleClientSite, IOleInPlaceFrame, IOleInPlaceUIWindow, IOleObject, OIFI;
+import windows.win32.system.systemservices : MODIFIERKEYS_FLAGS;
 import windows.win32.ui.controls_ : ENABLE_SCROLL_BAR_ARROWS, NMHDR;
 import windows.win32.ui.windowsandmessaging : HCURSOR, HMENU, SCROLLBAR_CONSTANTS, SHOW_WINDOW_CMD;
 
@@ -734,12 +735,12 @@ struct TABLECELLPARMS
     short dyBrdrTop;
     short dxBrdrRight;
     short dyBrdrBottom;
-    uint crBrdrLeft;
-    uint crBrdrTop;
-    uint crBrdrRight;
-    uint crBrdrBottom;
-    uint crBackPat;
-    uint crForePat;
+    COLORREF crBrdrLeft;
+    COLORREF crBrdrTop;
+    COLORREF crBrdrRight;
+    COLORREF crBrdrBottom;
+    COLORREF crBackPat;
+    COLORREF crForePat;
 }
 alias AutoCorrectProc = int function(ushort, const(wchar)*, PWSTR, int, int*);
 struct RICHEDIT_IMAGE_PARAMETERS
@@ -766,7 +767,7 @@ struct CHARFORMATA
     CFE_EFFECTS dwEffects;
     int yHeight;
     int yOffset;
-    uint crTextColor;
+    COLORREF crTextColor;
     ubyte bCharSet;
     ubyte bPitchAndFamily;
     CHAR[32] szFaceName;
@@ -778,17 +779,17 @@ struct CHARFORMATW
     CFE_EFFECTS dwEffects;
     int yHeight;
     int yOffset;
-    uint crTextColor;
+    COLORREF crTextColor;
     ubyte bCharSet;
     ubyte bPitchAndFamily;
     wchar[32] szFaceName;
 }
 struct CHARFORMAT2W
 {
-    CHARFORMATW __AnonymousBase_richedit_L711_C23;
+    CHARFORMATW Base;
     ushort wWeight;
     short sSpacing;
-    uint crBackColor;
+    COLORREF crBackColor;
     uint lcid;
     union
     {
@@ -804,10 +805,10 @@ struct CHARFORMAT2W
 }
 struct CHARFORMAT2A
 {
-    CHARFORMATA __AnonymousBase_richedit_L736_C23;
+    CHARFORMATA Base;
     ushort wWeight;
     short sSpacing;
-    uint crBackColor;
+    COLORREF crBackColor;
     uint lcid;
     union
     {
@@ -900,7 +901,7 @@ struct PARAFORMAT
 }
 struct PARAFORMAT2
 {
-    PARAFORMAT __AnonymousBase_richedit_L1149_C22;
+    PARAFORMAT Base;
     int dySpaceBefore;
     int dySpaceAfter;
     int dyLineSpacing;
@@ -1026,8 +1027,8 @@ struct PUNCTUATION
 }
 struct COMPCOLOR
 {
-    uint crText;
-    uint crBackground;
+    COLORREF crText;
+    COLORREF crBackground;
     uint dwEffects;
 }
 struct REPASTESPECIAL
@@ -1213,7 +1214,7 @@ interface ITextHost : IUnknown
     HRESULT TxGetViewInset(RECT*);
     HRESULT TxGetCharFormat(const(CHARFORMATW)**);
     HRESULT TxGetParaFormat(const(PARAFORMAT)**);
-    uint TxGetSysColor(int);
+    COLORREF TxGetSysColor(int);
     HRESULT TxGetBackStyle(TXTBACKSTYLE*);
     HRESULT TxGetMaxLength(uint*);
     HRESULT TxGetScrollBars(uint*);
@@ -1301,7 +1302,7 @@ interface IRichEditOleCallback : IUnknown
     HRESULT QueryAcceptData(IDataObject, ushort*, uint, BOOL, long);
     HRESULT ContextSensitiveHelp(BOOL);
     HRESULT GetClipboardData(CHARRANGE*, uint, IDataObject*);
-    HRESULT GetDragDropEffect(BOOL, uint, uint*);
+    HRESULT GetDragDropEffect(BOOL, MODIFIERKEYS_FLAGS, uint*);
     HRESULT GetContextMenu(RICH_EDIT_GET_CONTEXT_MENU_SEL_TYPE, IOleObject, CHARRANGE*, HMENU*);
 }
 alias tomConstants = int;
@@ -2426,8 +2427,8 @@ enum IID_ITextDocument2Old = GUID(0x1c25500, 0x4268, 0x11d1, [0x88, 0x3a, 0x3c, 
 interface ITextDocument2Old : ITextDocument
 {
     HRESULT AttachMsgFilter(IUnknown);
-    HRESULT SetEffectColor(int, uint);
-    HRESULT GetEffectColor(int, uint*);
+    HRESULT SetEffectColor(int, COLORREF);
+    HRESULT GetEffectColor(int, COLORREF*);
     HRESULT GetCaretType(int*);
     HRESULT SetCaretType(int);
     HRESULT GetImmContext(long*);

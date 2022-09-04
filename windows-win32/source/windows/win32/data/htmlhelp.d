@@ -1,7 +1,7 @@
 module windows.win32.data.htmlhelp;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, HINSTANCE, HRESULT, HWND, POINT, PSTR, PWSTR, RECT;
+import windows.win32.foundation : BOOL, COLORREF, HINSTANCE, HRESULT, HWND, POINT, PSTR, PWSTR, RECT;
 import windows.win32.system.com_ : IPersistStreamInit, IStream, IUnknown, VARIANT;
 import windows.win32.system.search_ : IStemmer;
 import windows.win32.ui.controls_ : NMHDR;
@@ -301,8 +301,8 @@ struct HH_POPUP
     uint idString;
     byte* pszText;
     POINT pt;
-    uint clrForeground;
-    uint clrBackground;
+    COLORREF clrForeground;
+    COLORREF clrBackground;
     RECT rcMargins;
     byte* pszFont;
 }

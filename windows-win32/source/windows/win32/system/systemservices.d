@@ -86,20 +86,6 @@ enum : uint
     ATF_ONOFFFEEDBACK = 0x00000002,
 }
 
-alias CHOOSECOLOR_FLAGS = uint;
-enum : uint
-{
-    CC_RGBINIT              = 0x00000001,
-    CC_FULLOPEN             = 0x00000002,
-    CC_PREVENTFULLOPEN      = 0x00000004,
-    CC_SHOWHELP             = 0x00000008,
-    CC_ENABLEHOOK           = 0x00000010,
-    CC_ENABLETEMPLATE       = 0x00000020,
-    CC_ENABLETEMPLATEHANDLE = 0x00000040,
-    CC_SOLIDCOLOR           = 0x00000080,
-    CC_ANYCOLOR             = 0x00000100,
-}
-
 alias CLIPBOARD_FORMATS = uint;
 enum : uint
 {
@@ -247,6 +233,55 @@ enum : ushort
 {
     DBTF_MEDIA = 0x0001,
     DBTF_NET   = 0x0002,
+}
+
+alias MODIFIERKEYS_FLAGS = uint;
+enum : uint
+{
+    MK_LBUTTON  = 0x00000001,
+    MK_RBUTTON  = 0x00000002,
+    MK_SHIFT    = 0x00000004,
+    MK_CONTROL  = 0x00000008,
+    MK_MBUTTON  = 0x00000010,
+    MK_XBUTTON1 = 0x00000020,
+    MK_XBUTTON2 = 0x00000040,
+}
+
+alias STATIC_STYLES = uint;
+enum : uint
+{
+    SS_LEFT            = 0x00000000,
+    SS_CENTER          = 0x00000001,
+    SS_RIGHT           = 0x00000002,
+    SS_ICON            = 0x00000003,
+    SS_BLACKRECT       = 0x00000004,
+    SS_GRAYRECT        = 0x00000005,
+    SS_WHITERECT       = 0x00000006,
+    SS_BLACKFRAME      = 0x00000007,
+    SS_GRAYFRAME       = 0x00000008,
+    SS_WHITEFRAME      = 0x00000009,
+    SS_USERITEM        = 0x0000000a,
+    SS_SIMPLE          = 0x0000000b,
+    SS_LEFTNOWORDWRAP  = 0x0000000c,
+    SS_OWNERDRAW       = 0x0000000d,
+    SS_BITMAP          = 0x0000000e,
+    SS_ENHMETAFILE     = 0x0000000f,
+    SS_ETCHEDHORZ      = 0x00000010,
+    SS_ETCHEDVERT      = 0x00000011,
+    SS_ETCHEDFRAME     = 0x00000012,
+    SS_TYPEMASK        = 0x0000001f,
+    SS_REALSIZECONTROL = 0x00000040,
+    SS_NOPREFIX        = 0x00000080,
+    SS_NOTIFY          = 0x00000100,
+    SS_CENTERIMAGE     = 0x00000200,
+    SS_RIGHTJUST       = 0x00000400,
+    SS_REALSIZEIMAGE   = 0x00000800,
+    SS_SUNKEN          = 0x00001000,
+    SS_EDITCONTROL     = 0x00002000,
+    SS_ENDELLIPSIS     = 0x00004000,
+    SS_PATHELLIPSIS    = 0x00008000,
+    SS_WORDELLIPSIS    = 0x0000c000,
+    SS_ELLIPSISMASK    = 0x0000c000,
 }
 
 alias PUMS_SCHEDULER_ENTRY_POINT = void function(RTL_UMS_SCHEDULER_REASON, ulong, void*);

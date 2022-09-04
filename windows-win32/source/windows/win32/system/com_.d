@@ -243,6 +243,63 @@ union CY
     }
     long int64;
 }
+alias VARENUM = ushort;
+enum : ushort
+{
+    VT_EMPTY            = 0x0000,
+    VT_NULL             = 0x0001,
+    VT_I2               = 0x0002,
+    VT_I4               = 0x0003,
+    VT_R4               = 0x0004,
+    VT_R8               = 0x0005,
+    VT_CY               = 0x0006,
+    VT_DATE             = 0x0007,
+    VT_BSTR             = 0x0008,
+    VT_DISPATCH         = 0x0009,
+    VT_ERROR            = 0x000a,
+    VT_BOOL             = 0x000b,
+    VT_VARIANT          = 0x000c,
+    VT_UNKNOWN          = 0x000d,
+    VT_DECIMAL          = 0x000e,
+    VT_I1               = 0x0010,
+    VT_UI1              = 0x0011,
+    VT_UI2              = 0x0012,
+    VT_UI4              = 0x0013,
+    VT_I8               = 0x0014,
+    VT_UI8              = 0x0015,
+    VT_INT              = 0x0016,
+    VT_UINT             = 0x0017,
+    VT_VOID             = 0x0018,
+    VT_HRESULT          = 0x0019,
+    VT_PTR              = 0x001a,
+    VT_SAFEARRAY        = 0x001b,
+    VT_CARRAY           = 0x001c,
+    VT_USERDEFINED      = 0x001d,
+    VT_LPSTR            = 0x001e,
+    VT_LPWSTR           = 0x001f,
+    VT_RECORD           = 0x0024,
+    VT_INT_PTR          = 0x0025,
+    VT_UINT_PTR         = 0x0026,
+    VT_FILETIME         = 0x0040,
+    VT_BLOB             = 0x0041,
+    VT_STREAM           = 0x0042,
+    VT_STORAGE          = 0x0043,
+    VT_STREAMED_OBJECT  = 0x0044,
+    VT_STORED_OBJECT    = 0x0045,
+    VT_BLOB_OBJECT      = 0x0046,
+    VT_CF               = 0x0047,
+    VT_CLSID            = 0x0048,
+    VT_VERSIONED_STREAM = 0x0049,
+    VT_BSTR_BLOB        = 0x0fff,
+    VT_VECTOR           = 0x1000,
+    VT_ARRAY            = 0x2000,
+    VT_BYREF            = 0x4000,
+    VT_RESERVED         = 0x8000,
+    VT_ILLEGAL          = 0xffff,
+    VT_ILLEGALMASKED    = 0x0fff,
+    VT_TYPEMASK         = 0x0fff,
+}
+
 struct CSPLATFORM
 {
     uint dwPlatformId;
@@ -1087,7 +1144,7 @@ struct BIND_OPTS
 }
 struct BIND_OPTS2
 {
-    BIND_OPTS __AnonymousBase_objidl_L9017_C36;
+    BIND_OPTS Base;
     uint dwTrackFlags;
     uint dwClassContext;
     uint locale;
@@ -1095,7 +1152,7 @@ struct BIND_OPTS2
 }
 struct BIND_OPTS3
 {
-    BIND_OPTS2 __AnonymousBase_objidl_L9041_C36;
+    BIND_OPTS2 Base;
     HWND hwnd;
 }
 alias BIND_FLAGS = int;
@@ -1789,7 +1846,7 @@ struct VARIANT
     {
         struct
         {
-            ushort vt;
+            VARENUM vt;
             ushort wReserved1;
             ushort wReserved2;
             ushort wReserved3;
@@ -1872,7 +1929,7 @@ struct TYPEDESC
         ARRAYDESC* lpadesc;
         uint hreftype;
     }
-    ushort vt;
+    VARENUM vt;
 }
 struct IDLDESC
 {

@@ -4,7 +4,7 @@ import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FARPROC, HANDLE, HANDLE_PTR, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, NTSTATUS, PSTR, PWSTR, SYSTEMTIME;
 import windows.win32.security.wintrust : WIN_CERTIFICATE;
 import windows.win32.storage.filesystem : VS_FIXEDFILEINFO;
-import windows.win32.system.com_ : DISPPARAMS, EXCEPINFO, IDispatch, IStream, ITypeInfo, IUnknown, TYPEDESC, VARIANT;
+import windows.win32.system.com_ : DISPPARAMS, EXCEPINFO, IDispatch, IStream, ITypeInfo, IUnknown, TYPEDESC, VARENUM, VARIANT;
 import windows.win32.system.com.structuredstorage : ILockBytes;
 import windows.win32.system.kernel : EXCEPTION_ROUTINE, FLOATING_SAVE_AREA, LIST_ENTRY, LIST_ENTRY32, LIST_ENTRY64;
 import windows.win32.system.memory_ : MEMORY_BASIC_INFORMATION64, VIRTUAL_ALLOCATION_TYPE;
@@ -6194,7 +6194,7 @@ interface IModelObject : IUnknown
     HRESULT GetContext(IDebugHostContext*);
     HRESULT GetKind(ModelObjectKind*);
     HRESULT GetIntrinsicValue(VARIANT*);
-    HRESULT GetIntrinsicValueAs(ushort, VARIANT*);
+    HRESULT GetIntrinsicValueAs(VARENUM, VARIANT*);
     HRESULT GetKeyValue(const(wchar)*, IModelObject*, IKeyStore*);
     HRESULT SetKeyValue(const(wchar)*, IModelObject);
     HRESULT EnumerateKeyValues(IKeyEnumerator*);
@@ -6697,7 +6697,7 @@ struct ScriptDebugEventInformation
     {
         struct _ExceptionInformation_e__Struct
         {
-            bool IsUncaught;
+            ubyte IsUncaught;
         }
         struct _BreakpointInformation_e__Struct
         {
@@ -10246,7 +10246,7 @@ interface IDebugFormatter : IUnknown
 {
     HRESULT GetStringForVariant(VARIANT*, uint, BSTR*);
     HRESULT GetVariantForString(const(wchar)*, VARIANT*);
-    HRESULT GetStringForVarType(ushort, TYPEDESC*, BSTR*);
+    HRESULT GetStringForVarType(VARENUM, TYPEDESC*, BSTR*);
 }
 enum IID_ISimpleConnectionPoint = GUID(0x51973c3e, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface ISimpleConnectionPoint : IUnknown

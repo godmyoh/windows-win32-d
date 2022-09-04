@@ -1,7 +1,7 @@
 module windows.win32.system.windowsprogramming;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, LPARAM, LRESULT, NTSTATUS, PSTR, PWSTR, RECT, UNICODE_STRING, WPARAM;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, LPARAM, LRESULT, NTSTATUS, PSTR, PWSTR, RECT, UNICODE_STRING, WIN32_ERROR, WPARAM;
 import windows.win32.graphics.gdi : HDC, RGNDATA;
 import windows.win32.security_ : SECURITY_ATTRIBUTES;
 import windows.win32.system.com_ : IUnknown, SAFEARRAY;
@@ -62,7 +62,7 @@ int _hread(int, void*, int);
 int _hwrite(int, const(char)*, int);
 int _lclose(int);
 int _llseek(int, int, int);
-uint SignalObjectAndWait(HANDLE, HANDLE, uint, BOOL);
+WIN32_ERROR SignalObjectAndWait(HANDLE, HANDLE, uint, BOOL);
 HANDLE OpenMutexA(uint, BOOL, const(char)*);
 HANDLE OpenSemaphoreA(uint, BOOL, const(char)*);
 HANDLE CreateWaitableTimerA(SECURITY_ATTRIBUTES*, BOOL, const(char)*);

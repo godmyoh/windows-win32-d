@@ -1,6 +1,6 @@
 module windows.win32.graphics.opengl;
 
-import windows.win32.foundation : BOOL, PROC, PSTR, PWSTR;
+import windows.win32.foundation : BOOL, COLORREF, PROC, PSTR, PWSTR;
 import windows.win32.graphics.gdi : EMR, HDC, HENHMETAFILE;
 
 version (Windows):
@@ -65,8 +65,8 @@ BOOL SwapBuffers(HDC);
 BOOL wglUseFontOutlinesA(HDC, uint, uint, uint, float, float, int, GLYPHMETRICSFLOAT*);
 BOOL wglUseFontOutlinesW(HDC, uint, uint, uint, float, float, int, GLYPHMETRICSFLOAT*);
 BOOL wglDescribeLayerPlane(HDC, int, int, uint, LAYERPLANEDESCRIPTOR*);
-int wglSetLayerPaletteEntries(HDC, int, int, int, const(uint)*);
-int wglGetLayerPaletteEntries(HDC, int, int, int, uint*);
+int wglSetLayerPaletteEntries(HDC, int, int, int, const(COLORREF)*);
+int wglGetLayerPaletteEntries(HDC, int, int, int, COLORREF*);
 BOOL wglRealizeLayerPalette(HDC, int, BOOL);
 BOOL wglSwapLayerBuffers(HDC, uint);
 void glAccum(uint, float);
@@ -1233,7 +1233,7 @@ struct LAYERPLANEDESCRIPTOR
     ubyte cAuxBuffers;
     ubyte iLayerPlane;
     ubyte bReserved;
-    uint crTransparent;
+    COLORREF crTransparent;
 }
 alias PFNGLARRAYELEMENTEXTPROC = void function(int);
 alias PFNGLDRAWARRAYSEXTPROC = void function(uint, int, int);

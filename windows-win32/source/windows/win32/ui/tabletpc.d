@@ -1,7 +1,7 @@
 module windows.win32.ui.tabletpc;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, HANDLE_PTR, HRESULT, HWND, POINT, PWSTR, RECT;
+import windows.win32.foundation : BOOL, BSTR, COLORREF, HANDLE_PTR, HRESULT, HWND, POINT, PWSTR, RECT;
 import windows.win32.graphics.gdi : XFORM;
 import windows.win32.system.com_ : IDataObject, IDispatch, IUnknown, SAFEARRAY, VARIANT;
 import windows.win32.system.ole : IFontDisp, IPictureDisp;
@@ -517,7 +517,7 @@ struct INKMETRIC
     int iFontAscent;
     int iFontDescent;
     uint dwFlags;
-    uint color;
+    COLORREF color;
 }
 alias InkSelectionConstants = int;
 enum : int

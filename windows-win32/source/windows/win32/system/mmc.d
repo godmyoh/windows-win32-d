@@ -1,7 +1,7 @@
 module windows.win32.system.mmc;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, HRESULT, HWND, LPARAM, LRESULT, PWSTR;
+import windows.win32.foundation : BOOL, BSTR, COLORREF, HRESULT, HWND, LPARAM, LRESULT, PWSTR;
 import windows.win32.graphics.gdi : HBITMAP, HPALETTE;
 import windows.win32.system.com_ : IDataObject, IDispatch, IEnumString, IUnknown, VARIANT;
 import windows.win32.ui.controls_ : HPROPSHEETPAGE;
@@ -788,7 +788,7 @@ enum IID_IImageList = GUID(0x43136eb8, 0xd36c, 0x11cf, [0xad, 0xbc, 0x0, 0xaa, 0
 interface IImageList : IUnknown
 {
     HRESULT ImageListSetIcon(long*, int);
-    HRESULT ImageListSetStrip(long*, long*, int, uint);
+    HRESULT ImageListSetStrip(long*, long*, int, COLORREF);
 }
 enum IID_IResultData = GUID(0x31da5fa0, 0xe0eb, 0x11cf, [0x9f, 0x21, 0x0, 0xaa, 0x0, 0x3c, 0xa9, 0xf6]);
 interface IResultData : IUnknown
@@ -863,7 +863,7 @@ interface IExtendControlbar : IUnknown
 enum IID_IToolbar = GUID(0x43136eb9, 0xd36c, 0x11cf, [0xad, 0xbc, 0x0, 0xaa, 0x0, 0xa8, 0x0, 0x33]);
 interface IToolbar : IUnknown
 {
-    HRESULT AddBitmap(int, HBITMAP, int, int, uint);
+    HRESULT AddBitmap(int, HBITMAP, int, int, COLORREF);
     HRESULT AddButtons(int, MMCBUTTON*);
     HRESULT InsertButton(int, MMCBUTTON*);
     HRESULT DeleteButton(int);
@@ -885,7 +885,7 @@ interface ISnapinAbout : IUnknown
     HRESULT GetProvider(PWSTR*);
     HRESULT GetSnapinVersion(PWSTR*);
     HRESULT GetSnapinImage(HICON*);
-    HRESULT GetStaticFolderImage(HBITMAP*, HBITMAP*, HBITMAP*, uint*);
+    HRESULT GetStaticFolderImage(HBITMAP*, HBITMAP*, HBITMAP*, COLORREF*);
 }
 enum IID_IMenuButton = GUID(0x951ed750, 0xd080, 0x11d0, [0xb1, 0x97, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
 interface IMenuButton : IUnknown

@@ -12,6 +12,46 @@ import windows.win32.ui.windowsandmessaging : HICON;
 version (Windows):
 extern (Windows):
 
+struct CLUSPROP_RESOURCE_CLASS_INFO
+{
+    CLUSPROP_VALUE Base;
+    CLUS_RESOURCE_CLASS_INFO Base2;
+}
+struct CLUSTER_SHARED_VOLUME_RENAME_INPUT
+{
+    CLUSTER_SHARED_VOLUME_RENAME_INPUT_VOLUME Base;
+    CLUSTER_SHARED_VOLUME_RENAME_INPUT_NAME Base2;
+}
+struct CLUSTER_SHARED_VOLUME_RENAME_GUID_INPUT
+{
+    CLUSTER_SHARED_VOLUME_RENAME_INPUT_VOLUME Base;
+    CLUSTER_SHARED_VOLUME_RENAME_INPUT_GUID_NAME Base2;
+}
+struct CLUSPROP_PARTITION_INFO
+{
+    CLUSPROP_VALUE Base;
+    CLUS_PARTITION_INFO Base2;
+}
+struct CLUSPROP_PARTITION_INFO_EX
+{
+    CLUSPROP_VALUE Base;
+    CLUS_PARTITION_INFO_EX Base2;
+}
+struct CLUSPROP_PARTITION_INFO_EX2
+{
+    CLUSPROP_PARTITION_INFO_EX Base;
+    CLUS_PARTITION_INFO_EX2 Base2;
+}
+struct CLUSPROP_FTSET_INFO
+{
+    CLUSPROP_VALUE Base;
+    CLUS_FTSET_INFO Base2;
+}
+struct CLUSPROP_SCSI_ADDRESS
+{
+    CLUSPROP_VALUE Base;
+    CLUS_SCSI_ADDRESS Base2;
+}
 uint GetNodeClusterState(const(wchar)*, uint*);
 _HCLUSTER* OpenCluster(const(wchar)*);
 _HCLUSTER* OpenClusterEx(const(wchar)*, uint, uint*);
@@ -2640,42 +2680,42 @@ struct CLUSPROP_VALUE
 }
 struct CLUSPROP_BINARY
 {
-    CLUSPROP_VALUE __AnonymousBase_clusapi_L5129_C41;
+    CLUSPROP_VALUE Base;
     ubyte[1] rgb;
 }
 struct CLUSPROP_WORD
 {
-    CLUSPROP_VALUE __AnonymousBase_clusapi_L5139_C39;
+    CLUSPROP_VALUE Base;
     ushort w;
 }
 struct CLUSPROP_DWORD
 {
-    CLUSPROP_VALUE __AnonymousBase_clusapi_L5149_C40;
+    CLUSPROP_VALUE Base;
     uint dw;
 }
 struct CLUSPROP_LONG
 {
-    CLUSPROP_VALUE __AnonymousBase_clusapi_L5159_C39;
+    CLUSPROP_VALUE Base;
     int l;
 }
 struct CLUSPROP_SZ
 {
-    CLUSPROP_VALUE __AnonymousBase_clusapi_L5169_C37;
+    CLUSPROP_VALUE Base;
     wchar[1] sz;
 }
 struct CLUSPROP_ULARGE_INTEGER
 {
-    CLUSPROP_VALUE __AnonymousBase_clusapi_L5186_C14;
+    CLUSPROP_VALUE Base;
     ULARGE_INTEGER li;
 }
 struct CLUSPROP_LARGE_INTEGER
 {
-    CLUSPROP_VALUE __AnonymousBase_clusapi_L5199_C14;
+    CLUSPROP_VALUE Base;
     LARGE_INTEGER li;
 }
 struct CLUSPROP_SECURITY_DESCRIPTOR
 {
-    CLUSPROP_VALUE __AnonymousBase_clusapi_L5211_C54;
+    CLUSPROP_VALUE Base;
     union
     {
         SECURITY_DESCRIPTOR_RELATIVE sd;
@@ -2684,7 +2724,7 @@ struct CLUSPROP_SECURITY_DESCRIPTOR
 }
 struct CLUSPROP_FILETIME
 {
-    CLUSPROP_VALUE __AnonymousBase_clusapi_L5225_C14;
+    CLUSPROP_VALUE Base;
     FILETIME ft;
 }
 struct CLUS_RESOURCE_CLASS_INFO
@@ -2705,13 +2745,8 @@ struct CLUS_RESOURCE_CLASS_INFO
 }
 struct CLUSPROP_RESOURCE_CLASS
 {
-    CLUSPROP_VALUE __AnonymousBase_clusapi_L5250_C14;
+    CLUSPROP_VALUE Base;
     CLUSTER_RESOURCE_CLASS rc;
-}
-struct CLUSPROP_RESOURCE_CLASS_INFO
-{
-    CLUSPROP_VALUE __AnonymousBase_clusapi_L5261_C14;
-    CLUS_RESOURCE_CLASS_INFO __AnonymousBase_clusapi_L5262_C14;
 }
 union CLUSPROP_REQUIRED_DEPENDENCY
 {
@@ -2857,16 +2892,6 @@ struct CLUSTER_SHARED_VOLUME_RENAME_INPUT_GUID_NAME
     wchar[260] NewVolumeName;
     wchar[50] NewVolumeGuid;
 }
-struct CLUSTER_SHARED_VOLUME_RENAME_INPUT
-{
-    CLUSTER_SHARED_VOLUME_RENAME_INPUT_VOLUME __AnonymousBase_clusapi_L5464_C14;
-    CLUSTER_SHARED_VOLUME_RENAME_INPUT_NAME __AnonymousBase_clusapi_L5465_C14;
-}
-struct CLUSTER_SHARED_VOLUME_RENAME_GUID_INPUT
-{
-    CLUSTER_SHARED_VOLUME_RENAME_INPUT_VOLUME __AnonymousBase_clusapi_L5475_C14;
-    CLUSTER_SHARED_VOLUME_RENAME_INPUT_GUID_NAME __AnonymousBase_clusapi_L5476_C14;
-}
 struct CLUS_CHKDSK_INFO
 {
     uint PartitionNumber;
@@ -2885,30 +2910,10 @@ struct CLUS_SHARED_VOLUME_BACKUP_MODE
     uint DelayTimerInSecs;
     wchar[260] VolumeName;
 }
-struct CLUSPROP_PARTITION_INFO
-{
-    CLUSPROP_VALUE __AnonymousBase_clusapi_L5507_C14;
-    CLUS_PARTITION_INFO __AnonymousBase_clusapi_L5508_C14;
-}
-struct CLUSPROP_PARTITION_INFO_EX
-{
-    CLUSPROP_VALUE __AnonymousBase_clusapi_L5519_C14;
-    CLUS_PARTITION_INFO_EX __AnonymousBase_clusapi_L5520_C14;
-}
-struct CLUSPROP_PARTITION_INFO_EX2
-{
-    CLUSPROP_PARTITION_INFO_EX __AnonymousBase_clusapi_L5533_C14;
-    CLUS_PARTITION_INFO_EX2 __AnonymousBase_clusapi_L5534_C14;
-}
 struct CLUS_FTSET_INFO
 {
     uint dwRootSignature;
     uint dwFtType;
-}
-struct CLUSPROP_FTSET_INFO
-{
-    CLUSPROP_VALUE __AnonymousBase_clusapi_L5555_C14;
-    CLUS_FTSET_INFO __AnonymousBase_clusapi_L5556_C14;
 }
 struct CLUS_SCSI_ADDRESS
 {
@@ -2923,11 +2928,6 @@ struct CLUS_SCSI_ADDRESS
         }
         uint dw;
     }
-}
-struct CLUSPROP_SCSI_ADDRESS
-{
-    CLUSPROP_VALUE __AnonymousBase_clusapi_L5583_C14;
-    CLUS_SCSI_ADDRESS __AnonymousBase_clusapi_L5584_C14;
 }
 struct CLUS_NETNAME_VS_TOKEN_INFO
 {

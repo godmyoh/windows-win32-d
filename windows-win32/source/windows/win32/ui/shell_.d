@@ -2,13 +2,13 @@ module windows.win32.ui.shell_;
 
 import windows.win32.guid : GUID;
 import windows.win32.data.xml.msxml : IXMLDOMDocument;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, LPARAM, LRESULT, NTSTATUS, POINT, POINTL, PSTR, PWSTR, RECT, RECTL, SHANDLE_PTR, SIZE, SYSTEMTIME, ULARGE_INTEGER, WIN32_ERROR, WPARAM;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, COLORREF, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, LPARAM, LRESULT, NTSTATUS, POINT, POINTL, PSTR, PWSTR, RECT, RECTL, SHANDLE_PTR, SIZE, SYSTEMTIME, ULARGE_INTEGER, WIN32_ERROR, WPARAM;
 import windows.win32.graphics.directcomposition : IDCompositionAnimation;
 import windows.win32.graphics.gdi : HBITMAP, HDC, HMONITOR, HPALETTE, LOGFONTW;
 import windows.win32.networkmanagement.wnet : NETRESOURCEA;
 import windows.win32.security_ : SECURITY_ATTRIBUTES;
 import windows.win32.storage.filesystem : FILE_FLAGS_AND_ATTRIBUTES, WIN32_FIND_DATAA, WIN32_FIND_DATAW;
-import windows.win32.system.com_ : BYTE_BLOB, DISPPARAMS, EXCEPINFO, FORMATETC, IBindCtx, IBindStatusCallback, IConnectionPoint, IDataObject, IDispatch, IEnumFORMATETC, IEnumGUID, IEnumString, IEnumUnknown, IMalloc, IMoniker, IPersist, IServiceProvider, IStream, IUnknown, VARIANT;
+import windows.win32.system.com_ : BYTE_BLOB, DISPPARAMS, EXCEPINFO, FORMATETC, IBindCtx, IBindStatusCallback, IConnectionPoint, IDataObject, IDispatch, IEnumFORMATETC, IEnumGUID, IEnumString, IEnumUnknown, IMalloc, IMoniker, IPersist, IServiceProvider, IStream, IUnknown, VARENUM, VARIANT;
 import windows.win32.system.com.structuredstorage : IPropertyBag, IPropertySetStorage, IStorage, PROPVARIANT;
 import windows.win32.system.com.urlmon : SOFTDISTINFO;
 import windows.win32.system.console : COORD;
@@ -655,9 +655,9 @@ BOOL SHCreateThread(LPTHREAD_START_ROUTINE, void*, uint, LPTHREAD_START_ROUTINE)
 BOOL SHCreateThreadWithHandle(LPTHREAD_START_ROUTINE, void*, uint, LPTHREAD_START_ROUTINE, HANDLE*);
 HRESULT SHReleaseThreadRef();
 HPALETTE SHCreateShellPalette(HDC);
-void ColorRGBToHLS(uint, ushort*, ushort*, ushort*);
-uint ColorHLSToRGB(ushort, ushort, ushort);
-uint ColorAdjustLuma(uint, int, BOOL);
+void ColorRGBToHLS(COLORREF, ushort*, ushort*, ushort*);
+COLORREF ColorHLSToRGB(ushort, ushort, ushort);
+COLORREF ColorAdjustLuma(COLORREF, int, BOOL);
 BOOL IsInternetESCEnabled();
 HRESULT HlinkCreateFromMoniker(IMoniker, const(wchar)*, const(wchar)*, IHlinkSite, uint, IUnknown, const(GUID)*, void**);
 HRESULT HlinkCreateFromString(const(wchar)*, const(wchar)*, const(wchar)*, IHlinkSite, uint, IUnknown, const(GUID)*, void**);
@@ -3677,9 +3677,9 @@ interface INetworkFolderInternal : IUnknown
 enum IID_IPreviewHandlerVisuals = GUID(0x196bf9a5, 0xb346, 0x4ef0, [0xaa, 0x1e, 0x5d, 0xcd, 0xb7, 0x67, 0x68, 0xb1]);
 interface IPreviewHandlerVisuals : IUnknown
 {
-    HRESULT SetBackgroundColor(uint);
+    HRESULT SetBackgroundColor(COLORREF);
     HRESULT SetFont(const(LOGFONTW)*);
-    HRESULT SetTextColor(uint);
+    HRESULT SetTextColor(COLORREF);
 }
 enum IID_ICommDlgBrowser = GUID(0x214f1, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ICommDlgBrowser : IUnknown
@@ -4106,7 +4106,7 @@ struct SHDRAGIMAGE
     SIZE sizeDragImage;
     POINT ptOffset;
     HBITMAP hbmpDragImage;
-    uint crColorKey;
+    COLORREF crColorKey;
 }
 enum IID_IDropTargetHelper = GUID(0x4657278b, 0x411b, 0x11d2, [0x83, 0x9a, 0x0, 0xc0, 0x4f, 0xd9, 0x18, 0xd0]);
 interface IDropTargetHelper : IUnknown
@@ -4371,7 +4371,7 @@ struct DESKBANDINFO
     POINTL ptActual;
     wchar[256] wszTitle;
     uint dwModeFlags;
-    uint crBkgnd;
+    COLORREF crBkgnd;
 }
 alias DESKBANDCID = int;
 enum : int
@@ -5698,8 +5698,8 @@ interface IDesktopWallpaper : IUnknown
     HRESULT GetMonitorDevicePathAt(uint, PWSTR*);
     HRESULT GetMonitorDevicePathCount(uint*);
     HRESULT GetMonitorRECT(const(wchar)*, RECT*);
-    HRESULT SetBackgroundColor(uint);
-    HRESULT GetBackgroundColor(uint*);
+    HRESULT SetBackgroundColor(COLORREF);
+    HRESULT GetBackgroundColor(COLORREF*);
     HRESULT SetPosition(DESKTOP_WALLPAPER_POSITION);
     HRESULT GetPosition(DESKTOP_WALLPAPER_POSITION*);
     HRESULT SetSlideshow(IShellItemArray);
@@ -6272,8 +6272,8 @@ enum IID_IVisualProperties = GUID(0xe693cf68, 0xd967, 0x4112, [0x87, 0x63, 0x99,
 interface IVisualProperties : IUnknown
 {
     HRESULT SetWatermark(HBITMAP, VPWATERMARKFLAGS);
-    HRESULT SetColor(VPCOLORFLAGS, uint);
-    HRESULT GetColor(VPCOLORFLAGS, uint*);
+    HRESULT SetColor(VPCOLORFLAGS, COLORREF);
+    HRESULT GetColor(VPCOLORFLAGS, COLORREF*);
     HRESULT SetItemHeight(int);
     HRESULT GetItemHeight(int*);
     HRESULT SetFont(const(LOGFONTW)*, BOOL);
@@ -6606,7 +6606,7 @@ interface INameSpaceTreeControlCustomDraw : IUnknown
 {
     HRESULT PrePaint(HDC, RECT*, LRESULT*);
     HRESULT PostPaint(HDC, RECT*);
-    HRESULT ItemPrePaint(HDC, RECT*, NSTCCUSTOMDRAW*, uint*, uint*, LRESULT*);
+    HRESULT ItemPrePaint(HDC, RECT*, NSTCCUSTOMDRAW*, COLORREF*, COLORREF*, LRESULT*);
     HRESULT ItemPostPaint(HDC, RECT*, NSTCCUSTOMDRAW*);
 }
 enum IID_ITrayDeskBand = GUID(0x6d67e846, 0x5b9c, 0x4db8, [0x9c, 0xbc, 0xdd, 0xe1, 0x2f, 0x42, 0x54, 0xf1]);
@@ -7588,7 +7588,7 @@ struct NT_CONSOLE_PROPS
     uint uHistoryBufferSize;
     uint uNumberOfHistoryBuffers;
     BOOL bHistoryNoDup;
-    uint[16] ColorTable;
+    COLORREF[16] ColorTable;
 }
 struct NT_FE_CONSOLE_PROPS
 {
@@ -8376,9 +8376,9 @@ struct BANDINFOSFB
     uint dwMask;
     uint dwStateMask;
     uint dwState;
-    uint crBkgnd;
-    uint crBtnLt;
-    uint crBtnDk;
+    COLORREF crBkgnd;
+    COLORREF crBtnLt;
+    COLORREF crBtnDk;
     ushort wViewMode;
     ushort wAlign;
     IShellFolder psf;
@@ -8403,7 +8403,7 @@ struct SHCOLUMNINFO
 {
     align (1):
     PROPERTYKEY scid;
-    ushort vt;
+    VARENUM vt;
     uint fmt;
     uint cChars;
     uint csFlags;

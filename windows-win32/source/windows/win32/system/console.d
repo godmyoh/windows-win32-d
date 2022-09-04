@@ -1,6 +1,6 @@
 module windows.win32.system.console;
 
-import windows.win32.foundation : BOOL, CHAR, HANDLE, HRESULT, HWND, PSTR, PWSTR;
+import windows.win32.foundation : BOOL, CHAR, COLORREF, HANDLE, HRESULT, HWND, PSTR, PWSTR;
 import windows.win32.security_ : SECURITY_ATTRIBUTES;
 
 version (Windows):
@@ -300,7 +300,7 @@ struct CONSOLE_SCREEN_BUFFER_INFOEX
     COORD dwMaximumWindowSize;
     ushort wPopupAttributes;
     BOOL bFullscreenSupported;
-    uint[16] ColorTable;
+    COLORREF[16] ColorTable;
 }
 struct CONSOLE_FONT_INFOEX
 {

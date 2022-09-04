@@ -1,7 +1,7 @@
 module windows.win32.ui.controls_;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, CHAR, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT, SIZE, SYSTEMTIME, WPARAM;
+import windows.win32.foundation : BOOL, CHAR, COLORREF, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT, SIZE, SYSTEMTIME, WPARAM;
 import windows.win32.graphics.gdi : BLENDFUNCTION, HBITMAP, HBRUSH, HDC, HFONT, HMONITOR, HPALETTE, HPEN, HRGN, LOGFONTW, RGBQUAD, TEXTMETRICW;
 import windows.win32.system.com_ : IStream, IUnknown;
 import windows.win32.system.registry : HKEY;
@@ -24,18 +24,18 @@ int ImageList_GetImageCount(HIMAGELIST);
 BOOL ImageList_SetImageCount(HIMAGELIST, uint);
 int ImageList_Add(HIMAGELIST, HBITMAP, HBITMAP);
 int ImageList_ReplaceIcon(HIMAGELIST, int, HICON);
-uint ImageList_SetBkColor(HIMAGELIST, uint);
-uint ImageList_GetBkColor(HIMAGELIST);
+COLORREF ImageList_SetBkColor(HIMAGELIST, COLORREF);
+COLORREF ImageList_GetBkColor(HIMAGELIST);
 BOOL ImageList_SetOverlayImage(HIMAGELIST, int, int);
 BOOL ImageList_Draw(HIMAGELIST, int, HDC, int, int, IMAGE_LIST_DRAW_STYLE);
 BOOL ImageList_Replace(HIMAGELIST, int, HBITMAP, HBITMAP);
-int ImageList_AddMasked(HIMAGELIST, HBITMAP, uint);
-BOOL ImageList_DrawEx(HIMAGELIST, int, HDC, int, int, int, int, uint, uint, IMAGE_LIST_DRAW_STYLE);
+int ImageList_AddMasked(HIMAGELIST, HBITMAP, COLORREF);
+BOOL ImageList_DrawEx(HIMAGELIST, int, HDC, int, int, int, int, COLORREF, COLORREF, IMAGE_LIST_DRAW_STYLE);
 BOOL ImageList_DrawIndirect(IMAGELISTDRAWPARAMS*);
 BOOL ImageList_Remove(HIMAGELIST, int);
 HICON ImageList_GetIcon(HIMAGELIST, int, uint);
-HIMAGELIST ImageList_LoadImageA(HINSTANCE, const(char)*, int, int, uint, uint, IMAGE_FLAGS);
-HIMAGELIST ImageList_LoadImageW(HINSTANCE, const(wchar)*, int, int, uint, uint, IMAGE_FLAGS);
+HIMAGELIST ImageList_LoadImageA(HINSTANCE, const(char)*, int, int, COLORREF, uint, IMAGE_FLAGS);
+HIMAGELIST ImageList_LoadImageW(HINSTANCE, const(wchar)*, int, int, COLORREF, uint, IMAGE_FLAGS);
 BOOL ImageList_Copy(HIMAGELIST, int, HIMAGELIST, int, IMAGE_LIST_COPY_FLAGS);
 BOOL ImageList_BeginDrag(HIMAGELIST, int, int, int);
 void ImageList_EndDrag();
@@ -119,7 +119,7 @@ BOOL InitializeFlatSB(HWND);
 HRESULT UninitializeFlatSB(HWND);
 HRESULT LoadIconMetric(HINSTANCE, const(wchar)*, _LI_METRIC, HICON*);
 HRESULT LoadIconWithScaleDown(HINSTANCE, const(wchar)*, int, int, HICON*);
-int DrawShadowText(HDC, const(wchar)*, uint, RECT*, uint, uint, uint, int, int);
+int DrawShadowText(HDC, const(wchar)*, uint, RECT*, uint, COLORREF, COLORREF, int, int);
 HRESULT ImageList_CoCreateInstance(const(GUID)*, const(IUnknown), const(GUID)*, void**);
 BOOL BeginPanningFeedback(HWND);
 BOOL UpdatePanningFeedback(HWND, int, int, BOOL);
@@ -144,34 +144,34 @@ HRESULT DrawThemeEdge(long, HDC, int, int, RECT*, uint, uint, RECT*);
 HRESULT DrawThemeIcon(long, HDC, int, int, RECT*, HIMAGELIST, int);
 BOOL IsThemePartDefined(long, int, int);
 BOOL IsThemeBackgroundPartiallyTransparent(long, int, int);
-HRESULT GetThemeColor(long, int, int, int, uint*);
+HRESULT GetThemeColor(long, int, int, THEME_PROPERTY_SYMBOL_ID, COLORREF*);
 HRESULT GetThemeMetric(long, HDC, int, int, THEME_PROPERTY_SYMBOL_ID, int*);
 HRESULT GetThemeString(long, int, int, int, PWSTR, int);
 HRESULT GetThemeBool(long, int, int, THEME_PROPERTY_SYMBOL_ID, BOOL*);
-HRESULT GetThemeInt(long, int, int, int, int*);
-HRESULT GetThemeEnumValue(long, int, int, int, int*);
-HRESULT GetThemePosition(long, int, int, int, POINT*);
+HRESULT GetThemeInt(long, int, int, THEME_PROPERTY_SYMBOL_ID, int*);
+HRESULT GetThemeEnumValue(long, int, int, THEME_PROPERTY_SYMBOL_ID, int*);
+HRESULT GetThemePosition(long, int, int, THEME_PROPERTY_SYMBOL_ID, POINT*);
 HRESULT GetThemeFont(long, HDC, int, int, int, LOGFONTW*);
 HRESULT GetThemeRect(long, int, int, int, RECT*);
-HRESULT GetThemeMargins(long, HDC, int, int, int, RECT*, MARGINS*);
-HRESULT GetThemeIntList(long, int, int, int, INTLIST*);
+HRESULT GetThemeMargins(long, HDC, int, int, THEME_PROPERTY_SYMBOL_ID, RECT*, MARGINS*);
+HRESULT GetThemeIntList(long, int, int, THEME_PROPERTY_SYMBOL_ID, INTLIST*);
 HRESULT GetThemePropertyOrigin(long, int, int, int, PROPERTYORIGIN*);
 HRESULT SetWindowTheme(HWND, const(wchar)*, const(wchar)*);
-HRESULT GetThemeFilename(long, int, int, int, PWSTR, int);
-uint GetThemeSysColor(long, int);
+HRESULT GetThemeFilename(long, int, int, THEME_PROPERTY_SYMBOL_ID, PWSTR, int);
+COLORREF GetThemeSysColor(long, int);
 HBRUSH GetThemeSysColorBrush(long, THEME_PROPERTY_SYMBOL_ID);
-BOOL GetThemeSysBool(long, int);
+BOOL GetThemeSysBool(long, THEME_PROPERTY_SYMBOL_ID);
 int GetThemeSysSize(long, int);
 HRESULT GetThemeSysFont(long, THEME_PROPERTY_SYMBOL_ID, LOGFONTW*);
 HRESULT GetThemeSysString(long, THEME_PROPERTY_SYMBOL_ID, PWSTR, int);
-HRESULT GetThemeSysInt(long, int, int*);
+HRESULT GetThemeSysInt(long, THEME_PROPERTY_SYMBOL_ID, int*);
 BOOL IsThemeActive();
 BOOL IsAppThemed();
 long GetWindowTheme(HWND);
 HRESULT EnableThemeDialogTexture(HWND, uint);
 BOOL IsThemeDialogTextureEnabled(HWND);
-uint GetThemeAppProperties();
-void SetThemeAppProperties(uint);
+SET_THEME_APP_PROPERTIES_FLAGS GetThemeAppProperties();
+void SetThemeAppProperties(SET_THEME_APP_PROPERTIES_FLAGS);
 HRESULT GetCurrentThemeName(PWSTR, int, PWSTR, int, PWSTR, int);
 HRESULT GetThemeDocumentationProperty(const(wchar)*, const(wchar)*, PWSTR, int);
 HRESULT DrawThemeParentBackground(HWND, HDC, const(RECT)*);
@@ -2526,6 +2526,15 @@ enum : uint
     TMT_ATLASRECT               = 0x00001f42,
 }
 
+alias SET_THEME_APP_PROPERTIES_FLAGS = uint;
+enum : uint
+{
+    ALLOW_NONCLIENT  = 0x00000001,
+    ALLOW_CONTROLS   = 0x00000002,
+    ALLOW_WEBCONTENT = 0x00000004,
+    VALIDBITS        = 0x00000007,
+}
+
 alias DRAGLISTINFO_NOTIFICATION_FLAGS = uint;
 enum : uint
 {
@@ -3093,6 +3102,26 @@ enum : uint
     ILC_HIGHQUALITYSCALE = 0x00020000,
 }
 
+alias DTTOPTS_FLAGS = uint;
+enum : uint
+{
+    DTT_TEXTCOLOR    = 0x00000001,
+    DTT_BORDERCOLOR  = 0x00000002,
+    DTT_SHADOWCOLOR  = 0x00000004,
+    DTT_SHADOWTYPE   = 0x00000008,
+    DTT_SHADOWOFFSET = 0x00000010,
+    DTT_BORDERSIZE   = 0x00000020,
+    DTT_FONTPROP     = 0x00000040,
+    DTT_COLORPROP    = 0x00000080,
+    DTT_STATEID      = 0x00000100,
+    DTT_CALCRECT     = 0x00000200,
+    DTT_APPLYOVERLAY = 0x00000400,
+    DTT_GLOWSIZE     = 0x00000800,
+    DTT_CALLBACK     = 0x00001000,
+    DTT_COMPOSITED   = 0x00002000,
+    DTT_VALIDBITS    = 0x00002fff,
+}
+
 alias HPROPSHEETPAGE = void*;
 alias HIMAGELIST = void*;
 alias HSYNTHETICPOINTERDEVICE = void*;
@@ -3433,8 +3462,8 @@ struct INITCOMMONCONTROLSEX
 struct COLORSCHEME
 {
     uint dwSize;
-    uint clrBtnHighlight;
-    uint clrBtnShadow;
+    COLORREF clrBtnHighlight;
+    COLORREF clrBtnShadow;
 }
 struct NMTOOLTIPSCREATED
 {
@@ -3515,13 +3544,13 @@ struct IMAGELISTDRAWPARAMS
     int cy;
     int xBitmap;
     int yBitmap;
-    uint rgbBk;
-    uint rgbFg;
+    COLORREF rgbBk;
+    COLORREF rgbFg;
     uint fStyle;
     uint dwRop;
     uint fState;
     uint Frame;
-    uint crEffect;
+    COLORREF crEffect;
 }
 struct IMAGEINFO
 {
@@ -3634,8 +3663,8 @@ struct TBBUTTON
 }
 struct COLORMAP
 {
-    uint from;
-    uint to;
+    COLORREF from;
+    COLORREF to;
 }
 struct NMTBCUSTOMDRAW
 {
@@ -3643,12 +3672,12 @@ struct NMTBCUSTOMDRAW
     HBRUSH hbrMonoDither;
     HBRUSH hbrLines;
     HPEN hpenLines;
-    uint clrText;
-    uint clrMark;
-    uint clrTextHighlight;
-    uint clrBtnFace;
-    uint clrBtnHighlight;
-    uint clrHighlightHotTrack;
+    COLORREF clrText;
+    COLORREF clrMark;
+    COLORREF clrTextHighlight;
+    COLORREF clrBtnFace;
+    COLORREF clrBtnHighlight;
+    COLORREF clrHighlightHotTrack;
     RECT rcText;
     int nStringBkMode;
     int nHLStringBkMode;
@@ -3814,8 +3843,8 @@ struct REBARBANDINFOA
     uint cbSize;
     uint fMask;
     uint fStyle;
-    uint clrFore;
-    uint clrBack;
+    COLORREF clrFore;
+    COLORREF clrBack;
     PSTR lpText;
     uint cch;
     int iImage;
@@ -3839,8 +3868,8 @@ struct REBARBANDINFOW
     uint cbSize;
     uint fMask;
     uint fStyle;
-    uint clrFore;
-    uint clrBack;
+    COLORREF clrFore;
+    COLORREF clrBack;
     PWSTR lpText;
     uint cch;
     int iImage;
@@ -4163,12 +4192,12 @@ struct LVGROUPMETRICS
     uint Top;
     uint Right;
     uint Bottom;
-    uint crLeft;
-    uint crTop;
-    uint crRight;
-    uint crBottom;
-    uint crHeader;
-    uint crFooter;
+    COLORREF crLeft;
+    COLORREF crTop;
+    COLORREF crRight;
+    COLORREF crBottom;
+    COLORREF crHeader;
+    COLORREF crFooter;
 }
 alias PFNLVGROUPCOMPARE = int function(int, int, void*);
 struct LVINSERTGROUPSORTED
@@ -4256,11 +4285,11 @@ struct NMITEMACTIVATE
 struct NMLVCUSTOMDRAW
 {
     NMCUSTOMDRAW nmcd;
-    uint clrText;
-    uint clrTextBk;
+    COLORREF clrText;
+    COLORREF clrTextBk;
     int iSubItem;
     NMLVCUSTOMDRAW_ITEM_TYPE dwItemType;
-    uint clrFace;
+    COLORREF clrFace;
     int iIconEffect;
     int iIconPhase;
     int iPartId;
@@ -4510,8 +4539,8 @@ struct NMTVKEYDOWN
 struct NMTVCUSTOMDRAW
 {
     NMCUSTOMDRAW nmcd;
-    uint clrText;
-    uint clrTextBk;
+    COLORREF clrText;
+    COLORREF clrTextBk;
     int iLevel;
 }
 struct NMTVGETINFOTIPA
@@ -5024,7 +5053,7 @@ interface IImageList : IUnknown
     HRESULT ReplaceIcon(int, HICON, int*);
     HRESULT SetOverlayImage(int, int);
     HRESULT Replace(int, HBITMAP, HBITMAP);
-    HRESULT AddMasked(HBITMAP, uint, int*);
+    HRESULT AddMasked(HBITMAP, COLORREF, int*);
     HRESULT Draw(IMAGELISTDRAWPARAMS*);
     HRESULT Remove(int);
     HRESULT GetIcon(int, uint, HICON*);
@@ -5037,8 +5066,8 @@ interface IImageList : IUnknown
     HRESULT SetIconSize(int, int);
     HRESULT GetImageCount(int*);
     HRESULT SetImageCount(uint);
-    HRESULT SetBkColor(uint, uint*);
-    HRESULT GetBkColor(uint*);
+    HRESULT SetBkColor(COLORREF, COLORREF*);
+    HRESULT GetBkColor(COLORREF*);
     HRESULT BeginDrag(int, int, int);
     HRESULT EndDrag();
     HRESULT DragEnter(HWND, int, int);
@@ -5219,10 +5248,10 @@ alias DTT_CALLBACK_PROC = int function(HDC, PWSTR, int, RECT*, uint, LPARAM);
 struct DTTOPTS
 {
     uint dwSize;
-    uint dwFlags;
-    uint crText;
-    uint crBorder;
-    uint crShadow;
+    DTTOPTS_FLAGS dwFlags;
+    COLORREF crText;
+    COLORREF crBorder;
+    COLORREF crShadow;
     int iTextShadowType;
     POINT ptShadowOffset;
     int iBorderSize;
@@ -7563,7 +7592,7 @@ struct NMHDR
 }
 struct MEASUREITEMSTRUCT
 {
-    uint CtlType;
+    DRAWITEMSTRUCT_CTL_TYPE CtlType;
     uint CtlID;
     uint itemID;
     uint itemWidth;
@@ -7592,7 +7621,7 @@ struct DELETEITEMSTRUCT
 }
 struct COMPAREITEMSTRUCT
 {
-    uint CtlType;
+    DRAWITEMSTRUCT_CTL_TYPE CtlType;
     uint CtlID;
     HWND hwndItem;
     uint itemID1;

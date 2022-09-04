@@ -1,7 +1,7 @@
 module windows.win32.ui.colorsystem;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, CHAR, HRESULT, HWND, LPARAM, LUID, PSTR, PWSTR;
+import windows.win32.foundation : BOOL, BSTR, CHAR, COLORREF, HRESULT, HWND, LPARAM, LUID, PSTR, PWSTR;
 import windows.win32.graphics.gdi : CIEXYZ, CIEXYZTRIPLE, EMR, HDC, HPALETTE, RGBTRIPLE;
 import windows.win32.system.com_ : IUnknown;
 import windows.win32.ui.windowsandmessaging : DLGPROC;
@@ -139,7 +139,7 @@ long CMCreateTransformW(LOGCOLORSPACEW*, void*, void*);
 long CMCreateTransformExt(LOGCOLORSPACEA*, void*, void*, uint);
 BOOL CMCheckColorsInGamut(long, RGBTRIPLE*, ubyte*, uint);
 BOOL CMCreateProfile(LOGCOLORSPACEA*, void**);
-BOOL CMTranslateRGB(long, uint, uint*, uint);
+BOOL CMTranslateRGB(long, COLORREF, uint*, uint);
 BOOL CMTranslateRGBs(long, void*, BMFORMAT, uint, uint, uint, void*, BMFORMAT, uint);
 long CMCreateTransformExtW(LOGCOLORSPACEW*, void*, void*, uint);
 BOOL CMDeleteTransform(long);

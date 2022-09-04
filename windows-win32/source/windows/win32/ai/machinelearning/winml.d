@@ -364,7 +364,7 @@ struct MLOperatorAttribute
 {
     const(char)* name;
     MLOperatorAttributeType type;
-    bool required;
+    ubyte required;
 }
 struct MLOperatorAttributeNameValue
 {

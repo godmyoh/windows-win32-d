@@ -1,7 +1,7 @@
 module windows.win32.ui.controls.dialogs;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, HINSTANCE, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT, WPARAM;
+import windows.win32.foundation : BOOL, COLORREF, HINSTANCE, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT, WPARAM;
 import windows.win32.graphics.gdi : DEVMODEA, HDC, LOGFONTA, LOGFONTW;
 import windows.win32.system.com_ : IUnknown;
 import windows.win32.ui.controls_ : HPROPSHEETPAGE, NMHDR;
@@ -49,6 +49,20 @@ enum : uint
     FRERR_FINDREPLACECODES = 0x00004000,
     FRERR_BUFFERLENGTHZERO = 0x00004001,
     CCERR_CHOOSECOLORCODES = 0x00005000,
+}
+
+alias CHOOSECOLOR_FLAGS = uint;
+enum : uint
+{
+    CC_RGBINIT              = 0x00000001,
+    CC_FULLOPEN             = 0x00000002,
+    CC_PREVENTFULLOPEN      = 0x00000004,
+    CC_SHOWHELP             = 0x00000008,
+    CC_ENABLEHOOK           = 0x00000010,
+    CC_ENABLETEMPLATE       = 0x00000020,
+    CC_ENABLETEMPLATEHANDLE = 0x00000040,
+    CC_SOLIDCOLOR           = 0x00000080,
+    CC_ANYCOLOR             = 0x00000100,
 }
 
 alias OPEN_FILENAME_FLAGS = uint;
@@ -461,9 +475,9 @@ struct CHOOSECOLORA
     uint lStructSize;
     HWND hwndOwner;
     HWND hInstance;
-    uint rgbResult;
-    uint* lpCustColors;
-    uint Flags;
+    COLORREF rgbResult;
+    COLORREF* lpCustColors;
+    CHOOSECOLOR_FLAGS Flags;
     LPARAM lCustData;
     LPCCHOOKPROC lpfnHook;
     const(char)* lpTemplateName;
@@ -473,9 +487,9 @@ struct CHOOSECOLORW
     uint lStructSize;
     HWND hwndOwner;
     HWND hInstance;
-    uint rgbResult;
-    uint* lpCustColors;
-    uint Flags;
+    COLORREF rgbResult;
+    COLORREF* lpCustColors;
+    CHOOSECOLOR_FLAGS Flags;
     LPARAM lCustData;
     LPCCHOOKPROC lpfnHook;
     const(wchar)* lpTemplateName;
@@ -518,7 +532,7 @@ struct CHOOSEFONTA
     LOGFONTA* lpLogFont;
     int iPointSize;
     CHOOSEFONT_FLAGS Flags;
-    uint rgbColors;
+    COLORREF rgbColors;
     LPARAM lCustData;
     LPCFHOOKPROC lpfnHook;
     const(char)* lpTemplateName;
@@ -537,7 +551,7 @@ struct CHOOSEFONTW
     LOGFONTW* lpLogFont;
     int iPointSize;
     CHOOSEFONT_FLAGS Flags;
-    uint rgbColors;
+    COLORREF rgbColors;
     LPARAM lCustData;
     LPCFHOOKPROC lpfnHook;
     const(wchar)* lpTemplateName;
@@ -850,9 +864,9 @@ struct PAGESETUPDLGW
     uint lStructSize;
     HWND hwndOwner;
     HWND hInstance;
-    uint rgbResult;
-    uint* lpCustColors;
-    uint Flags;
+    COLORREF rgbResult;
+    COLORREF* lpCustColors;
+    CHOOSECOLOR_FLAGS Flags;
     LPARAM lCustData;
     LPCCHOOKPROC lpfnHook;
     const(char)* lpTemplateName;
@@ -864,9 +878,9 @@ struct PAGESETUPDLGW
     uint lStructSize;
     HWND hwndOwner;
     HWND hInstance;
-    uint rgbResult;
-    uint* lpCustColors;
-    uint Flags;
+    COLORREF rgbResult;
+    COLORREF* lpCustColors;
+    CHOOSECOLOR_FLAGS Flags;
     LPARAM lCustData;
     LPCCHOOKPROC lpfnHook;
     const(wchar)* lpTemplateName;
@@ -913,7 +927,7 @@ struct PAGESETUPDLGW
     LOGFONTA* lpLogFont;
     int iPointSize;
     CHOOSEFONT_FLAGS Flags;
-    uint rgbColors;
+    COLORREF rgbColors;
     LPARAM lCustData;
     LPCFHOOKPROC lpfnHook;
     const(char)* lpTemplateName;
@@ -934,7 +948,7 @@ struct PAGESETUPDLGW
     LOGFONTW* lpLogFont;
     int iPointSize;
     CHOOSEFONT_FLAGS Flags;
-    uint rgbColors;
+    COLORREF rgbColors;
     LPARAM lCustData;
     LPCFHOOKPROC lpfnHook;
     const(wchar)* lpTemplateName;

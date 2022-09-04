@@ -1,7 +1,7 @@
 module windows.win32.ui.textservices;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, HANDLE, HRESULT, HWND, LPARAM, POINT, PWSTR, RECT, SIZE, WPARAM;
+import windows.win32.foundation : BOOL, BSTR, COLORREF, HANDLE, HRESULT, HWND, LPARAM, POINT, PWSTR, RECT, SIZE, WPARAM;
 import windows.win32.graphics.gdi : HBITMAP;
 import windows.win32.system.com_ : FORMATETC, IDataObject, IEnumGUID, IEnumString, IEnumUnknown, IStream, IUnknown, VARIANT;
 import windows.win32.ui.windowsandmessaging : HICON, MSG;
@@ -1538,7 +1538,7 @@ struct TF_DA_COLOR
     union
     {
         int nIndex;
-        uint cr;
+        COLORREF cr;
     }
 }
 alias TF_DA_ATTR_INFO = int;

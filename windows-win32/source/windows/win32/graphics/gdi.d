@@ -1,6 +1,6 @@
 module windows.win32.graphics.gdi;
 
-import windows.win32.foundation : BOOL, CHAR, HANDLE, HINSTANCE, HWND, LPARAM, POINT, POINTL, POINTS, PSTR, PWSTR, RECT, RECTL, SIZE, WPARAM;
+import windows.win32.foundation : BOOL, CHAR, COLORREF, HANDLE, HINSTANCE, HWND, LPARAM, POINT, POINTL, POINTS, PSTR, PWSTR, RECT, RECTL, SIZE, WPARAM;
 
 version (Windows):
 extern (Windows):
@@ -118,13 +118,13 @@ HFONT CreateFontIndirectA(const(LOGFONTA)*);
 HFONT CreateFontIndirectW(const(LOGFONTW)*);
 HFONT CreateFontA(int, int, int, int, int, uint, uint, uint, uint, FONT_OUTPUT_PRECISION, FONT_CLIP_PRECISION, FONT_QUALITY, FONT_PITCH_AND_FAMILY, const(char)*);
 HFONT CreateFontW(int, int, int, int, int, uint, uint, uint, uint, FONT_OUTPUT_PRECISION, FONT_CLIP_PRECISION, FONT_QUALITY, FONT_PITCH_AND_FAMILY, const(wchar)*);
-HBRUSH CreateHatchBrush(HATCH_BRUSH_STYLE, uint);
+HBRUSH CreateHatchBrush(HATCH_BRUSH_STYLE, COLORREF);
 CreatedHDC CreateICA(const(char)*, const(char)*, const(char)*, const(DEVMODEA)*);
 CreatedHDC CreateICW(const(wchar)*, const(wchar)*, const(wchar)*, const(DEVMODEW)*);
 HdcMetdataFileHandle CreateMetaFileA(const(char)*);
 HdcMetdataFileHandle CreateMetaFileW(const(wchar)*);
 HPALETTE CreatePalette(const(LOGPALETTE)*);
-HPEN CreatePen(PEN_STYLE, int, uint);
+HPEN CreatePen(PEN_STYLE, int, COLORREF);
 HPEN CreatePenIndirect(const(LOGPEN)*);
 HRGN CreatePolyPolygonRgn(const(POINT)*, const(int)*, int, CREATE_POLYGON_RGN_MODE);
 HBRUSH CreatePatternBrush(HBITMAP);
@@ -133,7 +133,7 @@ HRGN CreateRectRgnIndirect(const(RECT)*);
 HRGN CreateRoundRectRgn(int, int, int, int, int, int);
 BOOL CreateScalableFontResourceA(uint, const(char)*, const(char)*, const(char)*);
 BOOL CreateScalableFontResourceW(uint, const(wchar)*, const(wchar)*, const(wchar)*);
-HBRUSH CreateSolidBrush(uint);
+HBRUSH CreateSolidBrush(COLORREF);
 BOOL DeleteDC(CreatedHDC);
 BOOL DeleteMetaFile(HMETAFILE);
 BOOL DeleteObject(HGDIOBJ);
@@ -149,16 +149,16 @@ int EnumObjects(HDC, OBJ_TYPE, GOBJENUMPROC, LPARAM);
 BOOL EqualRgn(HRGN, HRGN);
 GDI_REGION_TYPE ExcludeClipRect(HDC, int, int, int, int);
 HRGN ExtCreateRegion(const(XFORM)*, uint, const(RGNDATA)*);
-BOOL ExtFloodFill(HDC, int, int, uint, EXT_FLOOD_FILL_TYPE);
+BOOL ExtFloodFill(HDC, int, int, COLORREF, EXT_FLOOD_FILL_TYPE);
 BOOL FillRgn(HDC, HRGN, HBRUSH);
-BOOL FloodFill(HDC, int, int, uint);
+BOOL FloodFill(HDC, int, int, COLORREF);
 BOOL FrameRgn(HDC, HRGN, HBRUSH, int, int);
-int GetROP2(HDC);
+R2_MODE GetROP2(HDC);
 BOOL GetAspectRatioFilterEx(HDC, SIZE*);
-uint GetBkColor(HDC);
-uint GetDCBrushColor(HDC);
-uint GetDCPenColor(HDC);
-int GetBkMode(HDC);
+COLORREF GetBkColor(HDC);
+COLORREF GetDCBrushColor(HDC);
+COLORREF GetDCPenColor(HDC);
+BACKGROUND_MODE GetBkMode(HDC);
 int GetBitmapBits(HBITMAP, int, void*);
 BOOL GetBitmapDimensionEx(HBITMAP, SIZE*);
 uint GetBoundsRect(HDC, RECT*, uint);
@@ -184,17 +184,17 @@ uint GetFontData(HDC, uint, uint, void*, uint);
 uint GetGlyphOutlineA(HDC, uint, GET_GLYPH_OUTLINE_FORMAT, GLYPHMETRICS*, uint, void*, const(MAT2)*);
 uint GetGlyphOutlineW(HDC, uint, GET_GLYPH_OUTLINE_FORMAT, GLYPHMETRICS*, uint, void*, const(MAT2)*);
 int GetGraphicsMode(HDC);
-int GetMapMode(HDC);
+HDC_MAP_MODE GetMapMode(HDC);
 uint GetMetaFileBitsEx(HMETAFILE, uint, void*);
 HMETAFILE GetMetaFileA(const(char)*);
 HMETAFILE GetMetaFileW(const(wchar)*);
-uint GetNearestColor(HDC, uint);
-uint GetNearestPaletteIndex(HPALETTE, uint);
+COLORREF GetNearestColor(HDC, COLORREF);
+uint GetNearestPaletteIndex(HPALETTE, COLORREF);
 uint GetObjectType(HGDIOBJ);
 uint GetOutlineTextMetricsA(HDC, uint, OUTLINETEXTMETRICA*);
 uint GetOutlineTextMetricsW(HDC, uint, OUTLINETEXTMETRICW*);
 uint GetPaletteEntries(HPALETTE, uint, uint, PALETTEENTRY*);
-uint GetPixel(HDC, int, int);
+COLORREF GetPixel(HDC, int, int);
 int GetPolyFillMode(HDC);
 BOOL GetRasterizerCaps(RASTERIZER_STATUS*, uint);
 int GetRandomRgn(HDC, HRGN, int);
@@ -205,8 +205,8 @@ int GetStretchBltMode(HDC);
 uint GetSystemPaletteEntries(HDC, uint, uint, PALETTEENTRY*);
 uint GetSystemPaletteUse(HDC);
 int GetTextCharacterExtra(HDC);
-uint GetTextAlign(HDC);
-uint GetTextColor(HDC);
+TEXT_ALIGN_OPTIONS GetTextAlign(HDC);
+COLORREF GetTextColor(HDC);
 BOOL GetTextExtentPointA(HDC, const(char)*, int, SIZE*);
 BOOL GetTextExtentPointW(HDC, const(wchar)*, int, SIZE*);
 BOOL GetTextExtentPoint32A(HDC, const(char)*, int, SIZE*);
@@ -267,9 +267,9 @@ GDI_REGION_TYPE ExtSelectClipRgn(HDC, HRGN, RGN_COMBINE_MODE);
 GDI_REGION_TYPE SetMetaRgn(HDC);
 HGDIOBJ SelectObject(HDC, HGDIOBJ);
 HPALETTE SelectPalette(HDC, HPALETTE, BOOL);
-uint SetBkColor(HDC, uint);
-uint SetDCBrushColor(HDC, uint);
-uint SetDCPenColor(HDC, uint);
+COLORREF SetBkColor(HDC, COLORREF);
+COLORREF SetDCBrushColor(HDC, COLORREF);
+COLORREF SetDCPenColor(HDC, COLORREF);
 int SetBkMode(HDC, BACKGROUND_MODE);
 int SetBitmapBits(HBITMAP, uint, const(void)*);
 uint SetBoundsRect(HDC, const(RECT)*, SET_BOUNDS_RECT_FLAGS);
@@ -282,8 +282,8 @@ uint SetLayout(HDC, DC_LAYOUT);
 uint GetLayout(HDC);
 HMETAFILE SetMetaFileBitsEx(uint, const(ubyte)*);
 uint SetPaletteEntries(HPALETTE, uint, uint, const(PALETTEENTRY)*);
-uint SetPixel(HDC, int, int, uint);
-BOOL SetPixelV(HDC, int, int, uint);
+COLORREF SetPixel(HDC, int, int, COLORREF);
+BOOL SetPixelV(HDC, int, int, COLORREF);
 int SetPolyFillMode(HDC, CREATE_POLYGON_RGN_MODE);
 BOOL StretchBlt(HDC, int, int, int, int, HDC, int, int, int, int, ROP_CODE);
 BOOL SetRectRgn(HRGN, int, int, int, int);
@@ -292,7 +292,7 @@ int SetROP2(HDC, R2_MODE);
 int SetStretchBltMode(HDC, STRETCH_BLT_MODE);
 uint SetSystemPaletteUse(HDC, SYSTEM_PALETTE_USE);
 int SetTextCharacterExtra(HDC, int);
-uint SetTextColor(HDC, uint);
+COLORREF SetTextColor(HDC, COLORREF);
 uint SetTextAlign(HDC, TEXT_ALIGN_OPTIONS);
 BOOL SetTextJustification(HDC, int, int);
 BOOL UpdateColors(HDC);
@@ -435,10 +435,10 @@ int ReleaseDC(HWND, HDC);
 HDC BeginPaint(HWND, PAINTSTRUCT*);
 BOOL EndPaint(HWND, const(PAINTSTRUCT)*);
 BOOL GetUpdateRect(HWND, RECT*, BOOL);
-int GetUpdateRgn(HWND, HRGN, BOOL);
+GDI_REGION_TYPE GetUpdateRgn(HWND, HRGN, BOOL);
 int SetWindowRgn(HWND, HRGN, BOOL);
-int GetWindowRgn(HWND, HRGN);
-int GetWindowRgnBox(HWND, RECT*);
+GDI_REGION_TYPE GetWindowRgn(HWND, HRGN);
+GDI_REGION_TYPE GetWindowRgnBox(HWND, RECT*);
 int ExcludeUpdateRgn(HDC, HWND);
 BOOL InvalidateRect(HWND, const(RECT)*, BOOL);
 BOOL ValidateRect(HWND, const(RECT)*);
@@ -680,16 +680,6 @@ enum LCS_GM_IMAGES = 0x00000004;
 enum LCS_GM_ABS_COLORIMETRIC = 0x00000008;
 enum CM_OUT_OF_GAMUT = 0x000000ff;
 enum CM_IN_GAMUT = 0x00000000;
-enum BI_RGB = 0x00000000;
-enum BI_RLE8 = 0x00000001;
-enum BI_RLE4 = 0x00000002;
-enum BI_BITFIELDS = 0x00000003;
-enum BI_JPEG = 0x00000004;
-enum BI_PNG = 0x00000005;
-enum TMPF_FIXED_PITCH = 0x00000001;
-enum TMPF_VECTOR = 0x00000002;
-enum TMPF_DEVICE = 0x00000008;
-enum TMPF_TRUETYPE = 0x00000004;
 enum NTM_REGULAR = 0x00000040;
 enum NTM_BOLD = 0x00000020;
 enum NTM_ITALIC = 0x00000001;
@@ -707,26 +697,6 @@ enum DEFAULT_PITCH = 0x00000000;
 enum FIXED_PITCH = 0x00000001;
 enum VARIABLE_PITCH = 0x00000002;
 enum MONO_FONT = 0x00000008;
-enum ANSI_CHARSET = 0x00000000;
-enum DEFAULT_CHARSET = 0x00000001;
-enum SYMBOL_CHARSET = 0x00000002;
-enum SHIFTJIS_CHARSET = 0x00000080;
-enum HANGEUL_CHARSET = 0x00000081;
-enum HANGUL_CHARSET = 0x00000081;
-enum GB2312_CHARSET = 0x00000086;
-enum CHINESEBIG5_CHARSET = 0x00000088;
-enum OEM_CHARSET = 0x000000ff;
-enum JOHAB_CHARSET = 0x00000082;
-enum HEBREW_CHARSET = 0x000000b1;
-enum ARABIC_CHARSET = 0x000000b2;
-enum GREEK_CHARSET = 0x000000a1;
-enum TURKISH_CHARSET = 0x000000a2;
-enum VIETNAMESE_CHARSET = 0x000000a3;
-enum THAI_CHARSET = 0x000000de;
-enum EASTEUROPE_CHARSET = 0x000000ee;
-enum RUSSIAN_CHARSET = 0x000000cc;
-enum MAC_CHARSET = 0x0000004d;
-enum BALTIC_CHARSET = 0x000000ba;
 enum FS_LATIN1 = 0x00000001;
 enum FS_LATIN2 = 0x00000002;
 enum FS_CYRILLIC = 0x00000004;
@@ -743,21 +713,6 @@ enum FS_WANSUNG = 0x00080000;
 enum FS_CHINESETRAD = 0x00100000;
 enum FS_JOHAB = 0x00200000;
 enum FS_SYMBOL = 0xffffffff80000000;
-enum FW_DONTCARE = 0x00000000;
-enum FW_THIN = 0x00000064;
-enum FW_EXTRALIGHT = 0x000000c8;
-enum FW_LIGHT = 0x0000012c;
-enum FW_NORMAL = 0x00000190;
-enum FW_MEDIUM = 0x000001f4;
-enum FW_SEMIBOLD = 0x00000258;
-enum FW_BOLD = 0x000002bc;
-enum FW_EXTRABOLD = 0x00000320;
-enum FW_HEAVY = 0x00000384;
-enum FW_ULTRALIGHT = 0x000000c8;
-enum FW_REGULAR = 0x00000190;
-enum FW_DEMIBOLD = 0x00000258;
-enum FW_ULTRABOLD = 0x00000320;
-enum FW_BLACK = 0x00000384;
 enum PANOSE_COUNT = 0x0000000a;
 enum PAN_FAMILYTYPE_INDEX = 0x00000000;
 enum PAN_SERIFSTYLE_INDEX = 0x00000001;
@@ -884,17 +839,6 @@ enum ABSOLUTE = 0x00000001;
 enum RELATIVE = 0x00000002;
 enum STOCK_LAST = 0x00000013;
 enum CLR_INVALID = 0xffffffff;
-enum BS_SOLID = 0x00000000;
-enum BS_NULL = 0x00000001;
-enum BS_HOLLOW = 0x00000001;
-enum BS_HATCHED = 0x00000002;
-enum BS_PATTERN = 0x00000003;
-enum BS_INDEXED = 0x00000004;
-enum BS_DIBPATTERN = 0x00000005;
-enum BS_DIBPATTERNPT = 0x00000006;
-enum BS_PATTERN8X8 = 0x00000007;
-enum BS_DIBPATTERN8X8 = 0x00000008;
-enum BS_MONOPATTERN = 0x00000009;
 enum HS_API_MAX = 0x0000000c;
 enum DT_PLOTTER = 0x00000000;
 enum DT_RASDISPLAY = 0x00000001;
@@ -1334,129 +1278,6 @@ enum DI_ROPS_READ_DESTINATION = 0x00000002;
 enum FONTMAPPER_MAX = 0x0000000a;
 enum ENHMETA_SIGNATURE = 0x464d4520;
 enum ENHMETA_STOCK_OBJECT = 0x80000000;
-enum EMR_HEADER = 0x00000001;
-enum EMR_POLYBEZIER = 0x00000002;
-enum EMR_POLYGON = 0x00000003;
-enum EMR_POLYLINE = 0x00000004;
-enum EMR_POLYBEZIERTO = 0x00000005;
-enum EMR_POLYLINETO = 0x00000006;
-enum EMR_POLYPOLYLINE = 0x00000007;
-enum EMR_POLYPOLYGON = 0x00000008;
-enum EMR_SETWINDOWEXTEX = 0x00000009;
-enum EMR_SETWINDOWORGEX = 0x0000000a;
-enum EMR_SETVIEWPORTEXTEX = 0x0000000b;
-enum EMR_SETVIEWPORTORGEX = 0x0000000c;
-enum EMR_SETBRUSHORGEX = 0x0000000d;
-enum EMR_EOF = 0x0000000e;
-enum EMR_SETPIXELV = 0x0000000f;
-enum EMR_SETMAPPERFLAGS = 0x00000010;
-enum EMR_SETMAPMODE = 0x00000011;
-enum EMR_SETBKMODE = 0x00000012;
-enum EMR_SETPOLYFILLMODE = 0x00000013;
-enum EMR_SETROP2 = 0x00000014;
-enum EMR_SETSTRETCHBLTMODE = 0x00000015;
-enum EMR_SETTEXTALIGN = 0x00000016;
-enum EMR_SETCOLORADJUSTMENT = 0x00000017;
-enum EMR_SETTEXTCOLOR = 0x00000018;
-enum EMR_SETBKCOLOR = 0x00000019;
-enum EMR_OFFSETCLIPRGN = 0x0000001a;
-enum EMR_MOVETOEX = 0x0000001b;
-enum EMR_SETMETARGN = 0x0000001c;
-enum EMR_EXCLUDECLIPRECT = 0x0000001d;
-enum EMR_INTERSECTCLIPRECT = 0x0000001e;
-enum EMR_SCALEVIEWPORTEXTEX = 0x0000001f;
-enum EMR_SCALEWINDOWEXTEX = 0x00000020;
-enum EMR_SAVEDC = 0x00000021;
-enum EMR_RESTOREDC = 0x00000022;
-enum EMR_SETWORLDTRANSFORM = 0x00000023;
-enum EMR_MODIFYWORLDTRANSFORM = 0x00000024;
-enum EMR_SELECTOBJECT = 0x00000025;
-enum EMR_CREATEPEN = 0x00000026;
-enum EMR_CREATEBRUSHINDIRECT = 0x00000027;
-enum EMR_DELETEOBJECT = 0x00000028;
-enum EMR_ANGLEARC = 0x00000029;
-enum EMR_ELLIPSE = 0x0000002a;
-enum EMR_RECTANGLE = 0x0000002b;
-enum EMR_ROUNDRECT = 0x0000002c;
-enum EMR_ARC = 0x0000002d;
-enum EMR_CHORD = 0x0000002e;
-enum EMR_PIE = 0x0000002f;
-enum EMR_SELECTPALETTE = 0x00000030;
-enum EMR_CREATEPALETTE = 0x00000031;
-enum EMR_SETPALETTEENTRIES = 0x00000032;
-enum EMR_RESIZEPALETTE = 0x00000033;
-enum EMR_REALIZEPALETTE = 0x00000034;
-enum EMR_EXTFLOODFILL = 0x00000035;
-enum EMR_LINETO = 0x00000036;
-enum EMR_ARCTO = 0x00000037;
-enum EMR_POLYDRAW = 0x00000038;
-enum EMR_SETARCDIRECTION = 0x00000039;
-enum EMR_SETMITERLIMIT = 0x0000003a;
-enum EMR_BEGINPATH = 0x0000003b;
-enum EMR_ENDPATH = 0x0000003c;
-enum EMR_CLOSEFIGURE = 0x0000003d;
-enum EMR_FILLPATH = 0x0000003e;
-enum EMR_STROKEANDFILLPATH = 0x0000003f;
-enum EMR_STROKEPATH = 0x00000040;
-enum EMR_FLATTENPATH = 0x00000041;
-enum EMR_WIDENPATH = 0x00000042;
-enum EMR_SELECTCLIPPATH = 0x00000043;
-enum EMR_ABORTPATH = 0x00000044;
-enum EMR_GDICOMMENT = 0x00000046;
-enum EMR_FILLRGN = 0x00000047;
-enum EMR_FRAMERGN = 0x00000048;
-enum EMR_INVERTRGN = 0x00000049;
-enum EMR_PAINTRGN = 0x0000004a;
-enum EMR_EXTSELECTCLIPRGN = 0x0000004b;
-enum EMR_BITBLT = 0x0000004c;
-enum EMR_STRETCHBLT = 0x0000004d;
-enum EMR_MASKBLT = 0x0000004e;
-enum EMR_PLGBLT = 0x0000004f;
-enum EMR_SETDIBITSTODEVICE = 0x00000050;
-enum EMR_STRETCHDIBITS = 0x00000051;
-enum EMR_EXTCREATEFONTINDIRECTW = 0x00000052;
-enum EMR_EXTTEXTOUTA = 0x00000053;
-enum EMR_EXTTEXTOUTW = 0x00000054;
-enum EMR_POLYBEZIER16 = 0x00000055;
-enum EMR_POLYGON16 = 0x00000056;
-enum EMR_POLYLINE16 = 0x00000057;
-enum EMR_POLYBEZIERTO16 = 0x00000058;
-enum EMR_POLYLINETO16 = 0x00000059;
-enum EMR_POLYPOLYLINE16 = 0x0000005a;
-enum EMR_POLYPOLYGON16 = 0x0000005b;
-enum EMR_POLYDRAW16 = 0x0000005c;
-enum EMR_CREATEMONOBRUSH = 0x0000005d;
-enum EMR_CREATEDIBPATTERNBRUSHPT = 0x0000005e;
-enum EMR_EXTCREATEPEN = 0x0000005f;
-enum EMR_POLYTEXTOUTA = 0x00000060;
-enum EMR_POLYTEXTOUTW = 0x00000061;
-enum EMR_SETICMMODE = 0x00000062;
-enum EMR_CREATECOLORSPACE = 0x00000063;
-enum EMR_SETCOLORSPACE = 0x00000064;
-enum EMR_DELETECOLORSPACE = 0x00000065;
-enum EMR_GLSRECORD = 0x00000066;
-enum EMR_GLSBOUNDEDRECORD = 0x00000067;
-enum EMR_PIXELFORMAT = 0x00000068;
-enum EMR_RESERVED_105 = 0x00000069;
-enum EMR_RESERVED_106 = 0x0000006a;
-enum EMR_RESERVED_107 = 0x0000006b;
-enum EMR_RESERVED_108 = 0x0000006c;
-enum EMR_RESERVED_109 = 0x0000006d;
-enum EMR_RESERVED_110 = 0x0000006e;
-enum EMR_COLORCORRECTPALETTE = 0x0000006f;
-enum EMR_SETICMPROFILEA = 0x00000070;
-enum EMR_SETICMPROFILEW = 0x00000071;
-enum EMR_ALPHABLEND = 0x00000072;
-enum EMR_SETLAYOUT = 0x00000073;
-enum EMR_TRANSPARENTBLT = 0x00000074;
-enum EMR_RESERVED_117 = 0x00000075;
-enum EMR_GRADIENTFILL = 0x00000076;
-enum EMR_RESERVED_119 = 0x00000077;
-enum EMR_RESERVED_120 = 0x00000078;
-enum EMR_COLORMATCHTOTARGETW = 0x00000079;
-enum EMR_CREATECOLORSPACEW = 0x0000007a;
-enum EMR_MIN = 0x00000001;
-enum EMR_MAX = 0x0000007a;
 enum SETICMPROFILE_EMBEDED = 0x00000001;
 enum CREATECOLORSPACE_EMBEDED = 0x00000001;
 enum COLORMATCHTOTARGET_EMBEDED = 0x00000001;
@@ -2080,6 +1901,51 @@ enum : uint
     OUT_TT_PRECIS        = 0x00000004,
 }
 
+alias FONT_WEIGHT = uint;
+enum : uint
+{
+    FW_DONTCARE   = 0x00000000,
+    FW_THIN       = 0x00000064,
+    FW_EXTRALIGHT = 0x000000c8,
+    FW_LIGHT      = 0x0000012c,
+    FW_NORMAL     = 0x00000190,
+    FW_MEDIUM     = 0x000001f4,
+    FW_SEMIBOLD   = 0x00000258,
+    FW_BOLD       = 0x000002bc,
+    FW_EXTRABOLD  = 0x00000320,
+    FW_HEAVY      = 0x00000384,
+    FW_ULTRALIGHT = 0x000000c8,
+    FW_REGULAR    = 0x00000190,
+    FW_DEMIBOLD   = 0x00000258,
+    FW_ULTRABOLD  = 0x00000320,
+    FW_BLACK      = 0x00000384,
+}
+
+alias FONT_CHARSET = uint;
+enum : uint
+{
+    ANSI_CHARSET        = 0x00000000,
+    DEFAULT_CHARSET     = 0x00000001,
+    SYMBOL_CHARSET      = 0x00000002,
+    SHIFTJIS_CHARSET    = 0x00000080,
+    HANGEUL_CHARSET     = 0x00000081,
+    HANGUL_CHARSET      = 0x00000081,
+    GB2312_CHARSET      = 0x00000086,
+    CHINESEBIG5_CHARSET = 0x00000088,
+    OEM_CHARSET         = 0x000000ff,
+    JOHAB_CHARSET       = 0x00000082,
+    HEBREW_CHARSET      = 0x000000b1,
+    ARABIC_CHARSET      = 0x000000b2,
+    GREEK_CHARSET       = 0x000000a1,
+    TURKISH_CHARSET     = 0x000000a2,
+    VIETNAMESE_CHARSET  = 0x000000a3,
+    THAI_CHARSET        = 0x000000de,
+    EASTEUROPE_CHARSET  = 0x000000ee,
+    RUSSIAN_CHARSET     = 0x000000cc,
+    MAC_CHARSET         = 0x0000004d,
+    BALTIC_CHARSET      = 0x000000ba,
+}
+
 alias ARC_DIRECTION = uint;
 enum : uint
 {
@@ -2302,6 +2168,170 @@ enum : int
     COMPLEXREGION = 0x00000003,
 }
 
+alias BRUSH_STYLE = uint;
+enum : uint
+{
+    BS_SOLID         = 0x00000000,
+    BS_NULL          = 0x00000001,
+    BS_HOLLOW        = 0x00000001,
+    BS_HATCHED       = 0x00000002,
+    BS_PATTERN       = 0x00000003,
+    BS_INDEXED       = 0x00000004,
+    BS_DIBPATTERN    = 0x00000005,
+    BS_DIBPATTERNPT  = 0x00000006,
+    BS_PATTERN8X8    = 0x00000007,
+    BS_DIBPATTERN8X8 = 0x00000008,
+    BS_MONOPATTERN   = 0x00000009,
+}
+
+alias TMPF_FLAGS = ubyte;
+enum : ubyte
+{
+    TMPF_FIXED_PITCH = 0x01,
+    TMPF_VECTOR      = 0x02,
+    TMPF_DEVICE      = 0x08,
+    TMPF_TRUETYPE    = 0x04,
+}
+
+alias BI_COMPRESSION = int;
+enum : int
+{
+    BI_RGB       = 0x00000000,
+    BI_RLE8      = 0x00000001,
+    BI_RLE4      = 0x00000002,
+    BI_BITFIELDS = 0x00000003,
+    BI_JPEG      = 0x00000004,
+    BI_PNG       = 0x00000005,
+}
+
+alias ENHANCED_METAFILE_RECORD_TYPE = uint;
+enum : uint
+{
+    EMR_HEADER                  = 0x00000001,
+    EMR_POLYBEZIER              = 0x00000002,
+    EMR_POLYGON                 = 0x00000003,
+    EMR_POLYLINE                = 0x00000004,
+    EMR_POLYBEZIERTO            = 0x00000005,
+    EMR_POLYLINETO              = 0x00000006,
+    EMR_POLYPOLYLINE            = 0x00000007,
+    EMR_POLYPOLYGON             = 0x00000008,
+    EMR_SETWINDOWEXTEX          = 0x00000009,
+    EMR_SETWINDOWORGEX          = 0x0000000a,
+    EMR_SETVIEWPORTEXTEX        = 0x0000000b,
+    EMR_SETVIEWPORTORGEX        = 0x0000000c,
+    EMR_SETBRUSHORGEX           = 0x0000000d,
+    EMR_EOF                     = 0x0000000e,
+    EMR_SETPIXELV               = 0x0000000f,
+    EMR_SETMAPPERFLAGS          = 0x00000010,
+    EMR_SETMAPMODE              = 0x00000011,
+    EMR_SETBKMODE               = 0x00000012,
+    EMR_SETPOLYFILLMODE         = 0x00000013,
+    EMR_SETROP2                 = 0x00000014,
+    EMR_SETSTRETCHBLTMODE       = 0x00000015,
+    EMR_SETTEXTALIGN            = 0x00000016,
+    EMR_SETCOLORADJUSTMENT      = 0x00000017,
+    EMR_SETTEXTCOLOR            = 0x00000018,
+    EMR_SETBKCOLOR              = 0x00000019,
+    EMR_OFFSETCLIPRGN           = 0x0000001a,
+    EMR_MOVETOEX                = 0x0000001b,
+    EMR_SETMETARGN              = 0x0000001c,
+    EMR_EXCLUDECLIPRECT         = 0x0000001d,
+    EMR_INTERSECTCLIPRECT       = 0x0000001e,
+    EMR_SCALEVIEWPORTEXTEX      = 0x0000001f,
+    EMR_SCALEWINDOWEXTEX        = 0x00000020,
+    EMR_SAVEDC                  = 0x00000021,
+    EMR_RESTOREDC               = 0x00000022,
+    EMR_SETWORLDTRANSFORM       = 0x00000023,
+    EMR_MODIFYWORLDTRANSFORM    = 0x00000024,
+    EMR_SELECTOBJECT            = 0x00000025,
+    EMR_CREATEPEN               = 0x00000026,
+    EMR_CREATEBRUSHINDIRECT     = 0x00000027,
+    EMR_DELETEOBJECT            = 0x00000028,
+    EMR_ANGLEARC                = 0x00000029,
+    EMR_ELLIPSE                 = 0x0000002a,
+    EMR_RECTANGLE               = 0x0000002b,
+    EMR_ROUNDRECT               = 0x0000002c,
+    EMR_ARC                     = 0x0000002d,
+    EMR_CHORD                   = 0x0000002e,
+    EMR_PIE                     = 0x0000002f,
+    EMR_SELECTPALETTE           = 0x00000030,
+    EMR_CREATEPALETTE           = 0x00000031,
+    EMR_SETPALETTEENTRIES       = 0x00000032,
+    EMR_RESIZEPALETTE           = 0x00000033,
+    EMR_REALIZEPALETTE          = 0x00000034,
+    EMR_EXTFLOODFILL            = 0x00000035,
+    EMR_LINETO                  = 0x00000036,
+    EMR_ARCTO                   = 0x00000037,
+    EMR_POLYDRAW                = 0x00000038,
+    EMR_SETARCDIRECTION         = 0x00000039,
+    EMR_SETMITERLIMIT           = 0x0000003a,
+    EMR_BEGINPATH               = 0x0000003b,
+    EMR_ENDPATH                 = 0x0000003c,
+    EMR_CLOSEFIGURE             = 0x0000003d,
+    EMR_FILLPATH                = 0x0000003e,
+    EMR_STROKEANDFILLPATH       = 0x0000003f,
+    EMR_STROKEPATH              = 0x00000040,
+    EMR_FLATTENPATH             = 0x00000041,
+    EMR_WIDENPATH               = 0x00000042,
+    EMR_SELECTCLIPPATH          = 0x00000043,
+    EMR_ABORTPATH               = 0x00000044,
+    EMR_GDICOMMENT              = 0x00000046,
+    EMR_FILLRGN                 = 0x00000047,
+    EMR_FRAMERGN                = 0x00000048,
+    EMR_INVERTRGN               = 0x00000049,
+    EMR_PAINTRGN                = 0x0000004a,
+    EMR_EXTSELECTCLIPRGN        = 0x0000004b,
+    EMR_BITBLT                  = 0x0000004c,
+    EMR_STRETCHBLT              = 0x0000004d,
+    EMR_MASKBLT                 = 0x0000004e,
+    EMR_PLGBLT                  = 0x0000004f,
+    EMR_SETDIBITSTODEVICE       = 0x00000050,
+    EMR_STRETCHDIBITS           = 0x00000051,
+    EMR_EXTCREATEFONTINDIRECTW  = 0x00000052,
+    EMR_EXTTEXTOUTA             = 0x00000053,
+    EMR_EXTTEXTOUTW             = 0x00000054,
+    EMR_POLYBEZIER16            = 0x00000055,
+    EMR_POLYGON16               = 0x00000056,
+    EMR_POLYLINE16              = 0x00000057,
+    EMR_POLYBEZIERTO16          = 0x00000058,
+    EMR_POLYLINETO16            = 0x00000059,
+    EMR_POLYPOLYLINE16          = 0x0000005a,
+    EMR_POLYPOLYGON16           = 0x0000005b,
+    EMR_POLYDRAW16              = 0x0000005c,
+    EMR_CREATEMONOBRUSH         = 0x0000005d,
+    EMR_CREATEDIBPATTERNBRUSHPT = 0x0000005e,
+    EMR_EXTCREATEPEN            = 0x0000005f,
+    EMR_POLYTEXTOUTA            = 0x00000060,
+    EMR_POLYTEXTOUTW            = 0x00000061,
+    EMR_SETICMMODE              = 0x00000062,
+    EMR_CREATECOLORSPACE        = 0x00000063,
+    EMR_SETCOLORSPACE           = 0x00000064,
+    EMR_DELETECOLORSPACE        = 0x00000065,
+    EMR_GLSRECORD               = 0x00000066,
+    EMR_GLSBOUNDEDRECORD        = 0x00000067,
+    EMR_PIXELFORMAT             = 0x00000068,
+    EMR_RESERVED_105            = 0x00000069,
+    EMR_RESERVED_106            = 0x0000006a,
+    EMR_RESERVED_107            = 0x0000006b,
+    EMR_RESERVED_108            = 0x0000006c,
+    EMR_RESERVED_109            = 0x0000006d,
+    EMR_RESERVED_110            = 0x0000006e,
+    EMR_COLORCORRECTPALETTE     = 0x0000006f,
+    EMR_SETICMPROFILEA          = 0x00000070,
+    EMR_SETICMPROFILEW          = 0x00000071,
+    EMR_ALPHABLEND              = 0x00000072,
+    EMR_SETLAYOUT               = 0x00000073,
+    EMR_TRANSPARENTBLT          = 0x00000074,
+    EMR_RESERVED_117            = 0x00000075,
+    EMR_GRADIENTFILL            = 0x00000076,
+    EMR_RESERVED_119            = 0x00000077,
+    EMR_RESERVED_120            = 0x00000078,
+    EMR_COLORMATCHTOTARGETW     = 0x00000079,
+    EMR_CREATECOLORSPACEW       = 0x0000007a,
+    EMR_MIN                     = 0x00000001,
+    EMR_MAX                     = 0x0000007a,
+}
+
 alias HDC = void*;
 alias CreatedHDC = void*;
 alias HBITMAP = void*;
@@ -2375,7 +2405,7 @@ struct BITMAPINFOHEADER
     int biHeight;
     ushort biPlanes;
     ushort biBitCount;
-    uint biCompression;
+    BI_COMPRESSION biCompression;
     uint biSizeImage;
     int biXPelsPerMeter;
     int biYPelsPerMeter;
@@ -2389,7 +2419,7 @@ struct BITMAPV4HEADER
     int bV4Height;
     ushort bV4Planes;
     ushort bV4BitCount;
-    uint bV4V4Compression;
+    BI_COMPRESSION bV4V4Compression;
     uint bV4SizeImage;
     int bV4XPelsPerMeter;
     int bV4YPelsPerMeter;
@@ -2412,7 +2442,7 @@ struct BITMAPV5HEADER
     int bV5Height;
     ushort bV5Planes;
     ushort bV5BitCount;
-    uint bV5Compression;
+    BI_COMPRESSION bV5Compression;
     uint bV5SizeImage;
     int bV5XPelsPerMeter;
     int bV5YPelsPerMeter;
@@ -2520,7 +2550,7 @@ struct TEXTMETRICA
     ubyte tmItalic;
     ubyte tmUnderlined;
     ubyte tmStruckOut;
-    ubyte tmPitchAndFamily;
+    TMPF_FLAGS tmPitchAndFamily;
     ubyte tmCharSet;
 }
 struct TEXTMETRICW
@@ -2543,7 +2573,7 @@ struct TEXTMETRICW
     ubyte tmItalic;
     ubyte tmUnderlined;
     ubyte tmStruckOut;
-    ubyte tmPitchAndFamily;
+    TMPF_FLAGS tmPitchAndFamily;
     ubyte tmCharSet;
 }
 struct NEWTEXTMETRICA
@@ -2566,7 +2596,7 @@ struct NEWTEXTMETRICA
     ubyte tmItalic;
     ubyte tmUnderlined;
     ubyte tmStruckOut;
-    ubyte tmPitchAndFamily;
+    TMPF_FLAGS tmPitchAndFamily;
     ubyte tmCharSet;
     uint ntmFlags;
     uint ntmSizeEM;
@@ -2593,7 +2623,7 @@ struct NEWTEXTMETRICW
     ubyte tmItalic;
     ubyte tmUnderlined;
     ubyte tmStruckOut;
-    ubyte tmPitchAndFamily;
+    TMPF_FLAGS tmPitchAndFamily;
     ubyte tmCharSet;
     uint ntmFlags;
     uint ntmSizeEM;
@@ -2610,38 +2640,38 @@ struct PELARRAY
 }
 struct LOGBRUSH
 {
-    uint lbStyle;
-    uint lbColor;
+    BRUSH_STYLE lbStyle;
+    COLORREF lbColor;
     ulong lbHatch;
 }
 struct LOGBRUSH32
 {
-    uint lbStyle;
-    uint lbColor;
+    BRUSH_STYLE lbStyle;
+    COLORREF lbColor;
     uint lbHatch;
 }
 struct LOGPEN
 {
-    uint lopnStyle;
+    PEN_STYLE lopnStyle;
     POINT lopnWidth;
-    uint lopnColor;
+    COLORREF lopnColor;
 }
 struct EXTLOGPEN
 {
-    uint elpPenStyle;
+    PEN_STYLE elpPenStyle;
     uint elpWidth;
     uint elpBrushStyle;
-    uint elpColor;
+    COLORREF elpColor;
     ulong elpHatch;
     uint elpNumEntries;
     uint[1] elpStyleEntry;
 }
 struct EXTLOGPEN32
 {
-    uint elpPenStyle;
+    PEN_STYLE elpPenStyle;
     uint elpWidth;
     uint elpBrushStyle;
-    uint elpColor;
+    COLORREF elpColor;
     uint elpHatch;
     uint elpNumEntries;
     uint[1] elpStyleEntry;
@@ -2665,15 +2695,15 @@ struct LOGFONTA
     int lfWidth;
     int lfEscapement;
     int lfOrientation;
-    int lfWeight;
+    FONT_WEIGHT lfWeight;
     ubyte lfItalic;
     ubyte lfUnderline;
     ubyte lfStrikeOut;
     ubyte lfCharSet;
-    ubyte lfOutPrecision;
-    ubyte lfClipPrecision;
-    ubyte lfQuality;
-    ubyte lfPitchAndFamily;
+    FONT_OUTPUT_PRECISION lfOutPrecision;
+    FONT_CLIP_PRECISION lfClipPrecision;
+    FONT_QUALITY lfQuality;
+    FONT_PITCH_AND_FAMILY lfPitchAndFamily;
     CHAR[32] lfFaceName;
 }
 struct LOGFONTW
@@ -2682,15 +2712,15 @@ struct LOGFONTW
     int lfWidth;
     int lfEscapement;
     int lfOrientation;
-    int lfWeight;
+    FONT_WEIGHT lfWeight;
     ubyte lfItalic;
     ubyte lfUnderline;
     ubyte lfStrikeOut;
-    ubyte lfCharSet;
-    ubyte lfOutPrecision;
-    ubyte lfClipPrecision;
-    ubyte lfQuality;
-    ubyte lfPitchAndFamily;
+    FONT_CHARSET lfCharSet;
+    FONT_OUTPUT_PRECISION lfOutPrecision;
+    FONT_CLIP_PRECISION lfClipPrecision;
+    FONT_QUALITY lfQuality;
+    FONT_PITCH_AND_FAMILY lfPitchAndFamily;
     wchar[32] lfFaceName;
 }
 struct ENUMLOGFONTA
@@ -3238,7 +3268,7 @@ struct EMRSETMAPPERFLAGS
 struct EMRSETTEXTCOLOR
 {
     EMR emr;
-    uint crColor;
+    COLORREF crColor;
 }
 struct EMRSELECTOBJECT
 {
@@ -3329,19 +3359,19 @@ struct EMRMODIFYWORLDTRANSFORM
 {
     EMR emr;
     XFORM xform;
-    uint iMode;
+    MODIFY_WORLD_TRANSFORM_MODE iMode;
 }
 struct EMRSETPIXELV
 {
     EMR emr;
     POINTL ptlPixel;
-    uint crColor;
+    COLORREF crColor;
 }
 struct EMREXTFLOODFILL
 {
     EMR emr;
     POINTL ptlStart;
-    uint crColor;
+    COLORREF crColor;
     uint iMode;
 }
 struct EMRELLIPSE
@@ -3446,7 +3476,7 @@ struct EMREXTSELECTCLIPRGN
 {
     EMR emr;
     uint cbRgnData;
-    uint iMode;
+    RGN_COMBINE_MODE iMode;
     ubyte[1] RgnData;
 }
 struct EMREXTTEXTOUTA
@@ -3480,7 +3510,7 @@ struct EMRBITBLT
     int xSrc;
     int ySrc;
     XFORM xformSrc;
-    uint crBkColorSrc;
+    COLORREF crBkColorSrc;
     uint iUsageSrc;
     uint offBmiSrc;
     uint cbBmiSrc;
@@ -3499,7 +3529,7 @@ struct EMRSTRETCHBLT
     int xSrc;
     int ySrc;
     XFORM xformSrc;
-    uint crBkColorSrc;
+    COLORREF crBkColorSrc;
     uint iUsageSrc;
     uint offBmiSrc;
     uint cbBmiSrc;
@@ -3520,7 +3550,7 @@ struct EMRMASKBLT
     int xSrc;
     int ySrc;
     XFORM xformSrc;
-    uint crBkColorSrc;
+    COLORREF crBkColorSrc;
     uint iUsageSrc;
     uint offBmiSrc;
     uint cbBmiSrc;
@@ -3544,7 +3574,7 @@ struct EMRPLGBLT
     int cxSrc;
     int cySrc;
     XFORM xformSrc;
-    uint crBkColorSrc;
+    COLORREF crBkColorSrc;
     uint iUsageSrc;
     uint offBmiSrc;
     uint cbBmiSrc;
@@ -3726,7 +3756,7 @@ struct EMRALPHABLEND
     int xSrc;
     int ySrc;
     XFORM xformSrc;
-    uint crBkColorSrc;
+    COLORREF crBkColorSrc;
     uint iUsageSrc;
     uint offBmiSrc;
     uint cbBmiSrc;
@@ -3756,7 +3786,7 @@ struct EMRTRANSPARENTBLT
     int xSrc;
     int ySrc;
     XFORM xformSrc;
-    uint crBkColorSrc;
+    COLORREF crBkColorSrc;
     uint iUsageSrc;
     uint offBmiSrc;
     uint cbBmiSrc;

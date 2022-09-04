@@ -831,7 +831,7 @@ struct HTTP_REQUEST_V1
 }
 struct HTTP_REQUEST_V2
 {
-    HTTP_REQUEST_V1 __AnonymousBase_http_L1861_C35;
+    HTTP_REQUEST_V1 Base;
     ushort RequestInfoCount;
     HTTP_REQUEST_INFO* pRequestInfo;
 }
@@ -870,7 +870,7 @@ struct HTTP_MULTIPLE_KNOWN_HEADERS
 }
 struct HTTP_RESPONSE_V2
 {
-    HTTP_RESPONSE_V1 __AnonymousBase_http_L2050_C36;
+    HTTP_RESPONSE_V1 Base;
     ushort ResponseInfoCount;
     HTTP_RESPONSE_INFO* pResponseInfo;
 }

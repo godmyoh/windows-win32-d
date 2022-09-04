@@ -4,7 +4,7 @@ import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, FILETIME, HANDLE, HRESULT, HWND, PSTR, PWSTR, SYSTEMTIME;
 import windows.win32.security.authorization_ : EXPLICIT_ACCESS_W, TRUSTEE_W;
 import windows.win32.storage.indexserver : DBID, FILTERREGION, FULLPROPSPEC, IFilter, IPhraseSink, WORDREP_BREAK_TYPE;
-import windows.win32.system.com_ : BLOB, COSERVERINFO, CY, DISPPARAMS, IAuthenticate, IDispatch, IEnumString, IEnumUnknown, IErrorInfo, IMoniker, IPersistStream, ISequentialStream, IStream, ITypeInfo, IUnknown, MULTI_QI, VARIANT;
+import windows.win32.system.com_ : BLOB, COSERVERINFO, CY, DISPPARAMS, IAuthenticate, IDispatch, IEnumString, IEnumUnknown, IErrorInfo, IMoniker, IPersistStream, ISequentialStream, IStream, ITypeInfo, IUnknown, MULTI_QI, VARENUM, VARIANT;
 import windows.win32.system.com.structuredstorage : IStorage, PROPSPEC, PROPVARIANT;
 import windows.win32.system.distributedtransactioncoordinator : ITransaction, ITransactionOptions;
 import windows.win32.system.search.common : CONDITION_OPERATION, CONDITION_TYPE;
@@ -4490,7 +4490,7 @@ struct DBPROPINFO
     PWSTR pwszDescription;
     uint dwPropertyID;
     uint dwFlags;
-    ushort vtType;
+    VARENUM vtType;
     VARIANT vValues;
 }
 struct DBPROPINFOSET
@@ -6648,7 +6648,7 @@ interface IRowsetChangeExtInfo : IUnknown
 struct KAGREQDIAG
 {
     uint ulDiagFlags;
-    ushort vt;
+    VARENUM vt;
     short sDiagField;
 }
 struct KAGGETDIAG
@@ -7406,7 +7406,7 @@ alias SQL_ASYNC_NOTIFICATION_CALLBACK = short function(void*, BOOL);
     PWSTR pwszDescription;
     uint dwPropertyID;
     uint dwFlags;
-    ushort vtType;
+    VARENUM vtType;
     VARIANT vValues;
 }
 +/

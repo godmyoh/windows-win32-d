@@ -64,7 +64,7 @@ enum : int
 
 struct FILE_UNPROTECT_OPTIONS
 {
-    bool audit;
+    ubyte audit;
 }
 HRESULT SrpCreateThreadNetworkContext(const(wchar)*, HTHREAD_NETWORK_CONTEXT*);
 HRESULT SrpCloseThreadNetworkContext(HTHREAD_NETWORK_CONTEXT*);

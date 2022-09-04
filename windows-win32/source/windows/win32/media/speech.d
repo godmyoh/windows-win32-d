@@ -751,7 +751,7 @@ struct SPPHRASE_50
 }
 struct SPPHRASE
 {
-    SPPHRASE_50 __AnonymousBase_sapi53_L5821_C34;
+    SPPHRASE_50 Base;
     PWSTR pSML;
     SPSEMANTICERRORINFO* pSemanticErrorInfo;
 }

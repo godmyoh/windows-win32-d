@@ -1,7 +1,7 @@
 module windows.win32.graphics.directwrite;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, FILETIME, HANDLE, HRESULT, POINT, PWSTR, RECT, SIZE;
+import windows.win32.foundation : BOOL, COLORREF, FILETIME, HANDLE, HRESULT, POINT, PWSTR, RECT, SIZE;
 import windows.win32.globalization : FONTSIGNATURE;
 import windows.win32.graphics.direct2d.common : D2D_POINT_2F, D2D_SIZE_U, ID2D1SimplifiedGeometrySink;
 import windows.win32.graphics.gdi : HDC, HMONITOR, LOGFONTA, LOGFONTW;
@@ -791,7 +791,7 @@ interface IDWriteTextLayout : IDWriteTextFormat
 enum IID_IDWriteBitmapRenderTarget = GUID(0x5e5a32a3, 0x8dff, 0x4773, [0x9f, 0xf6, 0x6, 0x96, 0xea, 0xb7, 0x72, 0x67]);
 interface IDWriteBitmapRenderTarget : IUnknown
 {
-    HRESULT DrawGlyphRun(float, float, DWRITE_MEASURING_MODE, const(DWRITE_GLYPH_RUN)*, IDWriteRenderingParams, uint, RECT*);
+    HRESULT DrawGlyphRun(float, float, DWRITE_MEASURING_MODE, const(DWRITE_GLYPH_RUN)*, IDWriteRenderingParams, COLORREF, RECT*);
     HDC GetMemoryDC();
     float GetPixelsPerDip();
     HRESULT SetPixelsPerDip(float);
@@ -1297,7 +1297,7 @@ enum : int
 
 struct DWRITE_FONT_METRICS1
 {
-    DWRITE_FONT_METRICS __AnonymousBase_DWrite_1_L627_C38;
+    DWRITE_FONT_METRICS Base;
     short glyphBoxLeft;
     short glyphBoxTop;
     short glyphBoxRight;
