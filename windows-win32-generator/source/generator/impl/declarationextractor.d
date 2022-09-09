@@ -357,8 +357,7 @@ class DeclarationExtractor : IDeclarationExtractor
                 }
                 else
                 {
-                    // TODO: invalid data?
-                    assert(value.length == 16);
+                    assert(0);
                 }
             }
         }
