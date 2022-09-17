@@ -519,7 +519,7 @@ class DeclarationExtractor : IDeclarationExtractor
         else
         {
             declString ~= " ";
-            declString ~= typeDef.typeName;
+            declString ~= dlangTypeResolver.toDlangType(cliTypeResolver.getType(typeDef));
         }
 
         declString ~= toRidCommentString(typeDef);

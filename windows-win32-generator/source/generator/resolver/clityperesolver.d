@@ -26,6 +26,11 @@ class CLITypeResolver
                          );
     }
 
+    CLIType getType(TypeDefRow typeDef)
+    {
+        return toTypeName(typeDef);
+    }
+
     CLIType getType(CodedIndex!TypeDefOrRef ci)
     {
         if (ci.type == TypeDefOrRef.TypeDef)
