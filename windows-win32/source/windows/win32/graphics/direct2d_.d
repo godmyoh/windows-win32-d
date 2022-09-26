@@ -460,9 +460,9 @@ interface ID2D1Image : ID2D1Resource
 enum IID_ID2D1Bitmap = GUID(0xa2296057, 0xea42, 0x4099, [0x98, 0x3b, 0x53, 0x9f, 0xb6, 0x50, 0x54, 0x26]);
 interface ID2D1Bitmap : ID2D1Image
 {
-    D2D_SIZE_F GetSize();
-    D2D_SIZE_U GetPixelSize();
-    D2D1_PIXEL_FORMAT GetPixelFormat();
+    void GetSize(D2D_SIZE_F*); // ABI bug workaround
+    void GetPixelSize(D2D_SIZE_U*); // ABI bug workaround
+    void GetPixelFormat(D2D1_PIXEL_FORMAT*); // ABI bug workaround
     void GetDpi(float*, float*);
     HRESULT CopyFromBitmap(const(D2D_POINT_2U)*, ID2D1Bitmap, const(D2D_RECT_U)*);
     HRESULT CopyFromRenderTarget(const(D2D_POINT_2U)*, ID2D1RenderTarget, const(D2D_RECT_U)*);
@@ -672,11 +672,11 @@ interface ID2D1RenderTarget : ID2D1Resource
     void Clear(const(D2D1_COLOR_F)*);
     void BeginDraw();
     HRESULT EndDraw(ulong*, ulong*);
-    D2D1_PIXEL_FORMAT GetPixelFormat();
+    void GetPixelFormat(D2D1_PIXEL_FORMAT*); // ABI bug workaround
     void SetDpi(float, float);
     void GetDpi(float*, float*);
-    D2D_SIZE_F GetSize();
-    D2D_SIZE_U GetPixelSize();
+    void GetSize(D2D_SIZE_F*); // ABI bug workaround
+    void GetPixelSize(D2D_SIZE_U*); // ABI bug workaround
     uint GetMaximumBitmapSize();
     BOOL IsSupported(const(D2D1_RENDER_TARGET_PROPERTIES)*);
 }

@@ -122,6 +122,18 @@ class ModuleWriterPatch : IModuleWriter
             P((d) => d.startsWith("alias KSCAMERA_EXTENDEDPROP_VALUE"), (d) => d = "// [UNSUPPORTED]\n//" ~ d ~ "\nalias KSCAMERA_EXTENDEDPROP_VALUE = ulong; // [DUMMY]"),
             ];
 
+        auto abiBugWorkaround = delegate constr(constr d)
+        {
+            return d.replace("D2D_SIZE_F GetSize();", "void GetSize(D2D_SIZE_F*); // ABI bug workaround")
+                .replace("D2D_SIZE_U GetPixelSize();", "void GetPixelSize(D2D_SIZE_U*); // ABI bug workaround")
+                .replace("D2D1_PIXEL_FORMAT GetPixelFormat();", "void GetPixelFormat(D2D1_PIXEL_FORMAT*); // ABI bug workaround");
+        };
+
+        patches[r"direct2d_.d"] = [
+            P((d) => d.startsWith("interface ID2D1Bitmap "), abiBugWorkaround),
+            P((d) => d.startsWith("interface ID2D1RenderTarget "), abiBugWorkaround),
+        ];
+
         return patches;
     }
 }
