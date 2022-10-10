@@ -3,7 +3,7 @@ module windows.win32.system.com.structuredstorage;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, DECIMAL, FILETIME, HRESULT, LARGE_INTEGER, PSTR, PWSTR, ULARGE_INTEGER;
 import windows.win32.security_ : PSECURITY_DESCRIPTOR;
-import windows.win32.system.com_ : BLOB, CLSCTX, COSERVERINFO, CY, DVTARGETDEVICE, IDispatch, IErrorLog, IPersist, IStream, IUnknown, MULTI_QI, SAFEARRAY, STATSTG, STGC, STGMEDIUM, StorageLayout, VARENUM, VARIANT;
+import windows.win32.system.com_ : BLOB, CLSCTX, COSERVERINFO, CY, DVTARGETDEVICE, IDispatch, IErrorLog, IPersist, IStream, IUnknown, LOCKTYPE, MULTI_QI, SAFEARRAY, STATFLAG, STATSTG, STGC, STGM, STGMEDIUM, StorageLayout, VARENUM, VARIANT;
 
 version (Windows):
 extern (Windows):
@@ -13,29 +13,6 @@ enum : uint
 {
     PRSPEC_LPWSTR = 0x00000000,
     PRSPEC_PROPID = 0x00000001,
-}
-
-alias STGM = uint;
-enum : uint
-{
-    STGM_DIRECT           = 0x00000000,
-    STGM_TRANSACTED       = 0x00010000,
-    STGM_SIMPLE           = 0x08000000,
-    STGM_READ             = 0x00000000,
-    STGM_WRITE            = 0x00000001,
-    STGM_READWRITE        = 0x00000002,
-    STGM_SHARE_DENY_NONE  = 0x00000040,
-    STGM_SHARE_DENY_READ  = 0x00000030,
-    STGM_SHARE_DENY_WRITE = 0x00000020,
-    STGM_SHARE_EXCLUSIVE  = 0x00000010,
-    STGM_PRIORITY         = 0x00040000,
-    STGM_DELETEONRELEASE  = 0x04000000,
-    STGM_NOSCRATCH        = 0x00100000,
-    STGM_CREATE           = 0x00001000,
-    STGM_CONVERT          = 0x00020000,
-    STGM_FAILIFTHERE      = 0x00000000,
-    STGM_NOSNAPSHOT       = 0x00200000,
-    STGM_DIRECT_SWMR      = 0x00400000,
 }
 
 alias STGFMT = uint;
@@ -64,7 +41,7 @@ HRESULT FreePropVariantArray(uint, PROPVARIANT*);
 HRESULT StgCreateDocfile(const(wchar)*, STGM, uint, IStorage*);
 HRESULT StgCreateDocfileOnILockBytes(ILockBytes, STGM, uint, IStorage*);
 HRESULT StgOpenStorage(const(wchar)*, IStorage, STGM, ushort**, uint, IStorage*);
-HRESULT StgOpenStorageOnILockBytes(ILockBytes, IStorage, uint, ushort**, uint, IStorage*);
+HRESULT StgOpenStorageOnILockBytes(ILockBytes, IStorage, STGM, ushort**, uint, IStorage*);
 HRESULT StgIsStorageFile(const(wchar)*);
 HRESULT StgIsStorageILockBytes(ILockBytes);
 HRESULT StgSetTimes(const(wchar)*, const(FILETIME)*, const(FILETIME)*, const(FILETIME)*);
@@ -168,14 +145,6 @@ enum : int
     STGMOVE_SHALLOWCOPY = 0x00000002,
 }
 
-alias STATFLAG = int;
-enum : int
-{
-    STATFLAG_DEFAULT = 0x00000000,
-    STATFLAG_NONAME  = 0x00000001,
-    STATFLAG_NOOPEN  = 0x00000002,
-}
-
 struct BSTRBLOB
 {
     uint cbSize;
@@ -187,14 +156,6 @@ struct CLIPDATA
     int ulClipFmt;
     ubyte* pClipData;
 }
-alias LOCKTYPE = int;
-enum : int
-{
-    LOCK_WRITE     = 0x00000001,
-    LOCK_EXCLUSIVE = 0x00000002,
-    LOCK_ONLYONCE  = 0x00000004,
-}
-
 enum IID_IEnumSTATSTG = GUID(0xd, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IEnumSTATSTG : IUnknown
 {
@@ -226,7 +187,7 @@ interface IStorage : IUnknown
     HRESULT SetElementTimes(const(wchar)*, const(FILETIME)*, const(FILETIME)*, const(FILETIME)*);
     HRESULT SetClass(const(GUID)*);
     HRESULT SetStateBits(uint, uint);
-    HRESULT Stat(STATSTG*, uint);
+    HRESULT Stat(STATSTG*, STATFLAG);
 }
 enum IID_IPersistStorage = GUID(0x10a, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IPersistStorage : IPersist
@@ -245,9 +206,9 @@ interface ILockBytes : IUnknown
     HRESULT WriteAt(ULARGE_INTEGER, const(void)*, uint, uint*);
     HRESULT Flush();
     HRESULT SetSize(ULARGE_INTEGER);
-    HRESULT LockRegion(ULARGE_INTEGER, ULARGE_INTEGER, uint);
+    HRESULT LockRegion(ULARGE_INTEGER, ULARGE_INTEGER, LOCKTYPE);
     HRESULT UnlockRegion(ULARGE_INTEGER, ULARGE_INTEGER, uint);
-    HRESULT Stat(STATSTG*, uint);
+    HRESULT Stat(STATSTG*, STATFLAG);
 }
 enum IID_IRootStorage = GUID(0x12, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IRootStorage : IUnknown

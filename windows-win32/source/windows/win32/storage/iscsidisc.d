@@ -270,38 +270,6 @@ enum ISCSI_TARGET_FLAG_MERGE_TARGET_INFORMATION = 0x00000004;
 struct _ADAPTER_OBJECT
 {
 }
-struct SCSI_PASS_THROUGH
-{
-    ushort Length;
-    ubyte ScsiStatus;
-    ubyte PathId;
-    ubyte TargetId;
-    ubyte Lun;
-    ubyte CdbLength;
-    ubyte SenseInfoLength;
-    ubyte DataIn;
-    uint DataTransferLength;
-    uint TimeOutValue;
-    ulong DataBufferOffset;
-    uint SenseInfoOffset;
-    ubyte[16] Cdb;
-}
-struct SCSI_PASS_THROUGH_DIRECT
-{
-    ushort Length;
-    ubyte ScsiStatus;
-    ubyte PathId;
-    ubyte TargetId;
-    ubyte Lun;
-    ubyte CdbLength;
-    ubyte SenseInfoLength;
-    ubyte DataIn;
-    uint DataTransferLength;
-    uint TimeOutValue;
-    void* DataBuffer;
-    uint SenseInfoOffset;
-    ubyte[16] Cdb;
-}
 struct SCSI_PASS_THROUGH32
 {
     ushort Length;
@@ -319,6 +287,142 @@ struct SCSI_PASS_THROUGH32
     ubyte[16] Cdb;
 }
 struct SCSI_PASS_THROUGH_DIRECT32
+{
+    ushort Length;
+    ubyte ScsiStatus;
+    ubyte PathId;
+    ubyte TargetId;
+    ubyte Lun;
+    ubyte CdbLength;
+    ubyte SenseInfoLength;
+    ubyte DataIn;
+    uint DataTransferLength;
+    uint TimeOutValue;
+    void* DataBuffer;
+    uint SenseInfoOffset;
+    ubyte[16] Cdb;
+}
+struct SCSI_PASS_THROUGH32_EX
+{
+    uint Version;
+    uint Length;
+    uint CdbLength;
+    uint StorAddressLength;
+    ubyte ScsiStatus;
+    ubyte SenseInfoLength;
+    ubyte DataDirection;
+    ubyte Reserved;
+    uint TimeOutValue;
+    uint StorAddressOffset;
+    uint SenseInfoOffset;
+    uint DataOutTransferLength;
+    uint DataInTransferLength;
+    uint DataOutBufferOffset;
+    uint DataInBufferOffset;
+    ubyte[1] Cdb;
+}
+struct SCSI_PASS_THROUGH_DIRECT32_EX
+{
+    uint Version;
+    uint Length;
+    uint CdbLength;
+    uint StorAddressLength;
+    ubyte ScsiStatus;
+    ubyte SenseInfoLength;
+    ubyte DataDirection;
+    ubyte Reserved;
+    uint TimeOutValue;
+    uint StorAddressOffset;
+    uint SenseInfoOffset;
+    uint DataOutTransferLength;
+    uint DataInTransferLength;
+    void* DataOutBuffer;
+    void* DataInBuffer;
+    ubyte[1] Cdb;
+}
+struct ATA_PASS_THROUGH_EX32
+{
+    ushort Length;
+    ushort AtaFlags;
+    ubyte PathId;
+    ubyte TargetId;
+    ubyte Lun;
+    ubyte ReservedAsUchar;
+    uint DataTransferLength;
+    uint TimeOutValue;
+    uint ReservedAsUlong;
+    uint DataBufferOffset;
+    ubyte[8] PreviousTaskFile;
+    ubyte[8] CurrentTaskFile;
+}
+struct ATA_PASS_THROUGH_DIRECT32
+{
+    ushort Length;
+    ushort AtaFlags;
+    ubyte PathId;
+    ubyte TargetId;
+    ubyte Lun;
+    ubyte ReservedAsUchar;
+    uint DataTransferLength;
+    uint TimeOutValue;
+    uint ReservedAsUlong;
+    void* DataBuffer;
+    ubyte[8] PreviousTaskFile;
+    ubyte[8] CurrentTaskFile;
+}
+struct MPIO_PASS_THROUGH_PATH32
+{
+    SCSI_PASS_THROUGH32 PassThrough;
+    uint Version;
+    ushort Length;
+    ubyte Flags;
+    ubyte PortNumber;
+    ulong MpioPathId;
+}
+struct MPIO_PASS_THROUGH_PATH_DIRECT32
+{
+    SCSI_PASS_THROUGH_DIRECT32 PassThrough;
+    uint Version;
+    ushort Length;
+    ubyte Flags;
+    ubyte PortNumber;
+    ulong MpioPathId;
+}
+struct MPIO_PASS_THROUGH_PATH32_EX
+{
+    uint PassThroughOffset;
+    uint Version;
+    ushort Length;
+    ubyte Flags;
+    ubyte PortNumber;
+    ulong MpioPathId;
+}
+struct MPIO_PASS_THROUGH_PATH_DIRECT32_EX
+{
+    uint PassThroughOffset;
+    uint Version;
+    ushort Length;
+    ubyte Flags;
+    ubyte PortNumber;
+    ulong MpioPathId;
+}
+struct SCSI_PASS_THROUGH
+{
+    ushort Length;
+    ubyte ScsiStatus;
+    ubyte PathId;
+    ubyte TargetId;
+    ubyte Lun;
+    ubyte CdbLength;
+    ubyte SenseInfoLength;
+    ubyte DataIn;
+    uint DataTransferLength;
+    uint TimeOutValue;
+    ulong DataBufferOffset;
+    uint SenseInfoOffset;
+    ubyte[16] Cdb;
+}
+struct SCSI_PASS_THROUGH_DIRECT
 {
     ushort Length;
     ubyte ScsiStatus;
@@ -372,44 +476,6 @@ struct SCSI_PASS_THROUGH_DIRECT_EX
     void* DataInBuffer;
     ubyte[1] Cdb;
 }
-struct SCSI_PASS_THROUGH32_EX
-{
-    uint Version;
-    uint Length;
-    uint CdbLength;
-    uint StorAddressLength;
-    ubyte ScsiStatus;
-    ubyte SenseInfoLength;
-    ubyte DataDirection;
-    ubyte Reserved;
-    uint TimeOutValue;
-    uint StorAddressOffset;
-    uint SenseInfoOffset;
-    uint DataOutTransferLength;
-    uint DataInTransferLength;
-    uint DataOutBufferOffset;
-    uint DataInBufferOffset;
-    ubyte[1] Cdb;
-}
-struct SCSI_PASS_THROUGH_DIRECT32_EX
-{
-    uint Version;
-    uint Length;
-    uint CdbLength;
-    uint StorAddressLength;
-    ubyte ScsiStatus;
-    ubyte SenseInfoLength;
-    ubyte DataDirection;
-    ubyte Reserved;
-    uint TimeOutValue;
-    uint StorAddressOffset;
-    uint SenseInfoOffset;
-    uint DataOutTransferLength;
-    uint DataInTransferLength;
-    void* DataOutBuffer;
-    void* DataInBuffer;
-    ubyte[1] Cdb;
-}
 struct ATA_PASS_THROUGH_EX
 {
     ushort Length;
@@ -426,36 +492,6 @@ struct ATA_PASS_THROUGH_EX
     ubyte[8] CurrentTaskFile;
 }
 struct ATA_PASS_THROUGH_DIRECT
-{
-    ushort Length;
-    ushort AtaFlags;
-    ubyte PathId;
-    ubyte TargetId;
-    ubyte Lun;
-    ubyte ReservedAsUchar;
-    uint DataTransferLength;
-    uint TimeOutValue;
-    uint ReservedAsUlong;
-    void* DataBuffer;
-    ubyte[8] PreviousTaskFile;
-    ubyte[8] CurrentTaskFile;
-}
-struct ATA_PASS_THROUGH_EX32
-{
-    ushort Length;
-    ushort AtaFlags;
-    ubyte PathId;
-    ubyte TargetId;
-    ubyte Lun;
-    ubyte ReservedAsUchar;
-    uint DataTransferLength;
-    uint TimeOutValue;
-    uint ReservedAsUlong;
-    uint DataBufferOffset;
-    ubyte[8] PreviousTaskFile;
-    ubyte[8] CurrentTaskFile;
-}
-struct ATA_PASS_THROUGH_DIRECT32
 {
     ushort Length;
     ushort AtaFlags;
@@ -507,42 +543,6 @@ struct MPIO_PASS_THROUGH_PATH_EX
     ulong MpioPathId;
 }
 struct MPIO_PASS_THROUGH_PATH_DIRECT_EX
-{
-    uint PassThroughOffset;
-    uint Version;
-    ushort Length;
-    ubyte Flags;
-    ubyte PortNumber;
-    ulong MpioPathId;
-}
-struct MPIO_PASS_THROUGH_PATH32
-{
-    SCSI_PASS_THROUGH32 PassThrough;
-    uint Version;
-    ushort Length;
-    ubyte Flags;
-    ubyte PortNumber;
-    ulong MpioPathId;
-}
-struct MPIO_PASS_THROUGH_PATH_DIRECT32
-{
-    SCSI_PASS_THROUGH_DIRECT32 PassThrough;
-    uint Version;
-    ushort Length;
-    ubyte Flags;
-    ubyte PortNumber;
-    ulong MpioPathId;
-}
-struct MPIO_PASS_THROUGH_PATH32_EX
-{
-    uint PassThroughOffset;
-    uint Version;
-    ushort Length;
-    ubyte Flags;
-    ubyte PortNumber;
-    ulong MpioPathId;
-}
-struct MPIO_PASS_THROUGH_PATH_DIRECT32_EX
 {
     uint PassThroughOffset;
     uint Version;

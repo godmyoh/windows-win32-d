@@ -1434,7 +1434,7 @@ struct DOT11_WME_AC_PARAMETERS
     ubyte ucECWmax;
     ushort usTXOPLimit;
 }
-struct _DOT11_WME_AC_PARAMTERS_LIST
+struct DOT11_WME_AC_PARAMETERS_LIST
 {
     uint uNumOfEntries;
     uint uTotalNumOfEntries;

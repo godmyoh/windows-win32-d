@@ -362,7 +362,7 @@ struct SLPSTRArray
     uint cValues;
     PSTR* lppszA;
 }
-union _PV
+union __UPV
 {
     short i;
     int l;
@@ -397,7 +397,7 @@ struct SPropValue
 {
     uint ulPropTag;
     uint dwAlignPad;
-    _PV Value;
+    __UPV Value;
 }
 struct SPropProblem
 {
@@ -712,7 +712,7 @@ interface IMAPIContainer : IMAPIProp
     HRESULT SetSearchCriteria(SRestriction*, SBinaryArray*, uint);
     HRESULT GetSearchCriteria(uint, SRestriction**, SBinaryArray**, uint*);
 }
-struct _flaglist
+struct FlagList
 {
     uint cFlags;
     uint[1] ulFlag;
@@ -723,7 +723,7 @@ interface IABContainer : IMAPIContainer
     HRESULT CreateEntry(uint, ENTRYID*, uint, IMAPIProp*);
     HRESULT CopyEntries(SBinaryArray*, ulong, IMAPIProgress, uint);
     HRESULT DeleteEntries(SBinaryArray*, uint);
-    HRESULT ResolveNames(SPropTagArray*, uint, ADRLIST*, _flaglist*);
+    HRESULT ResolveNames(SPropTagArray*, uint, ADRLIST*, FlagList*);
 }
 // [Not Found] IID_IMailUser
 interface IMailUser : IMAPIProp
@@ -735,7 +735,7 @@ interface IDistList : IMAPIContainer
     HRESULT CreateEntry(uint, ENTRYID*, uint, IMAPIProp*);
     HRESULT CopyEntries(SBinaryArray*, ulong, IMAPIProgress, uint);
     HRESULT DeleteEntries(SBinaryArray*, uint);
-    HRESULT ResolveNames(SPropTagArray*, uint, ADRLIST*, _flaglist*);
+    HRESULT ResolveNames(SPropTagArray*, uint, ADRLIST*, FlagList*);
 }
 // [Not Found] IID_IMAPIFolder
 interface IMAPIFolder : IMAPIContainer

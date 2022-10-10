@@ -766,47 +766,6 @@ enum : uint
     PM_QS_SENDMESSAGE = 0x00400000,
 }
 
-alias SYS_COLOR_INDEX = uint;
-enum : uint
-{
-    COLOR_3DDKSHADOW              = 0x00000015,
-    COLOR_3DFACE                  = 0x0000000f,
-    COLOR_3DHIGHLIGHT             = 0x00000014,
-    COLOR_3DHILIGHT               = 0x00000014,
-    COLOR_3DLIGHT                 = 0x00000016,
-    COLOR_3DSHADOW                = 0x00000010,
-    COLOR_ACTIVEBORDER            = 0x0000000a,
-    COLOR_ACTIVECAPTION           = 0x00000002,
-    COLOR_APPWORKSPACE            = 0x0000000c,
-    COLOR_BACKGROUND              = 0x00000001,
-    COLOR_BTNFACE                 = 0x0000000f,
-    COLOR_BTNHIGHLIGHT            = 0x00000014,
-    COLOR_BTNHILIGHT              = 0x00000014,
-    COLOR_BTNSHADOW               = 0x00000010,
-    COLOR_BTNTEXT                 = 0x00000012,
-    COLOR_CAPTIONTEXT             = 0x00000009,
-    COLOR_DESKTOP                 = 0x00000001,
-    COLOR_GRADIENTACTIVECAPTION   = 0x0000001b,
-    COLOR_GRADIENTINACTIVECAPTION = 0x0000001c,
-    COLOR_GRAYTEXT                = 0x00000011,
-    COLOR_HIGHLIGHT               = 0x0000000d,
-    COLOR_HIGHLIGHTTEXT           = 0x0000000e,
-    COLOR_HOTLIGHT                = 0x0000001a,
-    COLOR_INACTIVEBORDER          = 0x0000000b,
-    COLOR_INACTIVECAPTION         = 0x00000003,
-    COLOR_INACTIVECAPTIONTEXT     = 0x00000013,
-    COLOR_INFOBK                  = 0x00000018,
-    COLOR_INFOTEXT                = 0x00000017,
-    COLOR_MENU                    = 0x00000004,
-    COLOR_MENUHILIGHT             = 0x0000001d,
-    COLOR_MENUBAR                 = 0x0000001e,
-    COLOR_MENUTEXT                = 0x00000007,
-    COLOR_SCROLLBAR               = 0x00000000,
-    COLOR_WINDOW                  = 0x00000005,
-    COLOR_WINDOWFRAME             = 0x00000006,
-    COLOR_WINDOWTEXT              = 0x00000008,
-}
-
 alias GET_WINDOW_CMD = uint;
 enum : uint
 {
@@ -1096,8 +1055,46 @@ enum : uint
     LLKHF_LOWER_IL_INJECTED = 0x00000002,
 }
 
+alias ACCEL_VIRT_FLAGS = ubyte;
+enum : ubyte
+{
+    FVIRTKEY  = 0x01,
+    FNOINVERT = 0x02,
+    FSHIFT    = 0x04,
+    FCONTROL  = 0x08,
+    FALT      = 0x10,
+}
+
+alias SCROLLBAR_COMMAND = int;
+enum : int
+{
+    SB_LINEUP        = 0x00000000,
+    SB_LINELEFT      = 0x00000000,
+    SB_LINEDOWN      = 0x00000001,
+    SB_LINERIGHT     = 0x00000001,
+    SB_PAGEUP        = 0x00000002,
+    SB_PAGELEFT      = 0x00000002,
+    SB_PAGEDOWN      = 0x00000003,
+    SB_PAGERIGHT     = 0x00000003,
+    SB_THUMBPOSITION = 0x00000004,
+    SB_THUMBTRACK    = 0x00000005,
+    SB_TOP           = 0x00000006,
+    SB_LEFT          = 0x00000006,
+    SB_RIGHT         = 0x00000007,
+    SB_BOTTOM        = 0x00000007,
+    SB_ENDSCROLL     = 0x00000008,
+}
+
 int LoadStringA(HINSTANCE, uint, PSTR, int);
 int LoadStringW(HINSTANCE, uint, PWSTR, int);
+long GetWindowLongPtrA(HWND, WINDOW_LONG_PTR_INDEX);
+long GetWindowLongPtrW(HWND, WINDOW_LONG_PTR_INDEX);
+long SetWindowLongPtrA(HWND, WINDOW_LONG_PTR_INDEX, long);
+long SetWindowLongPtrW(HWND, WINDOW_LONG_PTR_INDEX, long);
+ulong GetClassLongPtrA(HWND, GET_CLASS_LONG_INDEX);
+ulong GetClassLongPtrW(HWND, GET_CLASS_LONG_INDEX);
+ulong SetClassLongPtrA(HWND, GET_CLASS_LONG_INDEX, long);
+ulong SetClassLongPtrW(HWND, GET_CLASS_LONG_INDEX, long);
 int wvsprintfA(PSTR, const(char)*, byte*);
 int wvsprintfW(PWSTR, const(wchar)*, byte*);
 int wsprintfA(PSTR, const(char)*);
@@ -1366,28 +1363,18 @@ HWND WindowFromPhysicalPoint(POINT);
 HWND ChildWindowFromPoint(HWND, POINT);
 BOOL ClipCursor(const(RECT)*);
 HWND ChildWindowFromPointEx(HWND, POINT, CWP_FLAGS);
-uint GetSysColor(SYS_COLOR_INDEX);
-BOOL SetSysColors(int, const(int)*, const(COLORREF)*);
 ushort GetWindowWord(HWND, int);
 ushort SetWindowWord(HWND, int, ushort);
 int GetWindowLongA(HWND, WINDOW_LONG_PTR_INDEX);
 int GetWindowLongW(HWND, WINDOW_LONG_PTR_INDEX);
 int SetWindowLongA(HWND, WINDOW_LONG_PTR_INDEX, int);
 int SetWindowLongW(HWND, WINDOW_LONG_PTR_INDEX, int);
-long GetWindowLongPtrA(HWND, WINDOW_LONG_PTR_INDEX);
-long GetWindowLongPtrW(HWND, WINDOW_LONG_PTR_INDEX);
-long SetWindowLongPtrA(HWND, WINDOW_LONG_PTR_INDEX, long);
-long SetWindowLongPtrW(HWND, WINDOW_LONG_PTR_INDEX, long);
 ushort GetClassWord(HWND, int);
 ushort SetClassWord(HWND, int, ushort);
 uint GetClassLongA(HWND, GET_CLASS_LONG_INDEX);
 uint GetClassLongW(HWND, GET_CLASS_LONG_INDEX);
 uint SetClassLongA(HWND, GET_CLASS_LONG_INDEX, int);
 uint SetClassLongW(HWND, GET_CLASS_LONG_INDEX, int);
-ulong GetClassLongPtrA(HWND, GET_CLASS_LONG_INDEX);
-ulong GetClassLongPtrW(HWND, GET_CLASS_LONG_INDEX);
-ulong SetClassLongPtrA(HWND, GET_CLASS_LONG_INDEX, long);
-ulong SetClassLongPtrW(HWND, GET_CLASS_LONG_INDEX, long);
 BOOL GetProcessDefaultLayout(uint*);
 BOOL SetProcessDefaultLayout(uint);
 HWND GetDesktopWindow();
@@ -1543,21 +1530,6 @@ enum ISOLATIONPOLICY_MANIFEST_RESOURCE_ID = 0x00000004;
 enum ISOLATIONPOLICY_BROWSER_MANIFEST_RESOURCE_ID = 0x00000005;
 enum MINIMUM_RESERVED_MANIFEST_RESOURCE_ID = 0x00000001;
 enum MAXIMUM_RESERVED_MANIFEST_RESOURCE_ID = 0x00000010;
-enum SB_LINEUP = 0x00000000;
-enum SB_LINELEFT = 0x00000000;
-enum SB_LINEDOWN = 0x00000001;
-enum SB_LINERIGHT = 0x00000001;
-enum SB_PAGEUP = 0x00000002;
-enum SB_PAGELEFT = 0x00000002;
-enum SB_PAGEDOWN = 0x00000003;
-enum SB_PAGERIGHT = 0x00000003;
-enum SB_THUMBPOSITION = 0x00000004;
-enum SB_THUMBTRACK = 0x00000005;
-enum SB_TOP = 0x00000006;
-enum SB_LEFT = 0x00000006;
-enum SB_BOTTOM = 0x00000007;
-enum SB_RIGHT = 0x00000007;
-enum SB_ENDSCROLL = 0x00000008;
 enum HIDE_WINDOW = 0x00000000;
 enum SHOW_OPENWINDOW = 0x00000001;
 enum SHOW_ICONWINDOW = 0x00000002;
@@ -1637,16 +1609,6 @@ enum INPUTLANGCHANGE_SYSCHARSET = 0x00000001;
 enum INPUTLANGCHANGE_FORWARD = 0x00000002;
 enum INPUTLANGCHANGE_BACKWARD = 0x00000004;
 enum KL_NAMELENGTH = 0x00000009;
-enum DESKTOP_READOBJECTS = 0x00000001;
-enum DESKTOP_CREATEWINDOW = 0x00000002;
-enum DESKTOP_CREATEMENU = 0x00000004;
-enum DESKTOP_HOOKCONTROL = 0x00000008;
-enum DESKTOP_JOURNALRECORD = 0x00000010;
-enum DESKTOP_JOURNALPLAYBACK = 0x00000020;
-enum DESKTOP_ENUMERATE = 0x00000040;
-enum DESKTOP_WRITEOBJECTS = 0x00000080;
-enum DESKTOP_SWITCHDESKTOP = 0x00000100;
-enum DF_ALLOWOTHERACCOUNTHOOK = 0x00000001;
 enum WINSTA_ENUMDESKTOPS = 0x00000001;
 enum WINSTA_READATTRIBUTES = 0x00000002;
 enum WINSTA_ACCESSCLIPBOARD = 0x00000004;
@@ -2014,25 +1976,6 @@ enum PRF_CHILDREN = 0x00000010;
 enum PRF_OWNED = 0x00000020;
 enum IDANI_OPEN = 0x00000001;
 enum IDANI_CAPTION = 0x00000003;
-enum FVIRTKEY = 0x00000001;
-enum FNOINVERT = 0x00000002;
-enum FSHIFT = 0x00000004;
-enum FCONTROL = 0x00000008;
-enum FALT = 0x00000010;
-enum ODA_DRAWENTIRE = 0x00000001;
-enum ODA_SELECT = 0x00000002;
-enum ODA_FOCUS = 0x00000004;
-enum ODS_SELECTED = 0x00000001;
-enum ODS_GRAYED = 0x00000002;
-enum ODS_DISABLED = 0x00000004;
-enum ODS_CHECKED = 0x00000008;
-enum ODS_FOCUS = 0x00000010;
-enum ODS_DEFAULT = 0x00000020;
-enum ODS_COMBOBOXEDIT = 0x00001000;
-enum ODS_HOTLIGHT = 0x00000040;
-enum ODS_INACTIVE = 0x00000080;
-enum ODS_NOACCEL = 0x00000100;
-enum ODS_NOFOCUSRECT = 0x00000200;
 enum IDHOT_SNAPWINDOW = 0xffffffffffffffff;
 enum IDHOT_SNAPDESKTOP = 0xfffffffffffffffe;
 enum ENDSESSION_CLOSEAPP = 0x00000001;
@@ -2134,8 +2077,6 @@ enum DO_DROPFILE = 0x454c4946;
 enum DO_PRINTFILE = 0x544e5250;
 enum ASFW_ANY = 0xffffffff;
 enum DCX_EXCLUDEUPDATE = 0x00000100;
-enum HELPINFO_WINDOW = 0x00000001;
-enum HELPINFO_MENUITEM = 0x00000002;
 enum CTLCOLOR_MSGBOX = 0x00000000;
 enum CTLCOLOR_EDIT = 0x00000001;
 enum CTLCOLOR_LISTBOX = 0x00000002;
@@ -3101,7 +3042,7 @@ struct NCCALCSIZE_PARAMS
 }
 struct ACCEL
 {
-    ubyte fVirt;
+    ACCEL_VIRT_FLAGS fVirt;
     ushort key;
     ushort cmd;
 }
@@ -3391,7 +3332,7 @@ struct CLIENTCREATESTRUCT
     HANDLE hWindowMenu;
     uint idFirstChild;
 }
-struct TouchPredictionParameters
+struct TOUCHPREDICTIONPARAMETERS
 {
     uint cbSize;
     uint dwLatency;

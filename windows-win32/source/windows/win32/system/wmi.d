@@ -72,6 +72,8 @@ enum WBEMS_DISPID_COMPLETED = 0x00000002;
 enum WBEMS_DISPID_PROGRESS = 0x00000003;
 enum WBEMS_DISPID_OBJECT_PUT = 0x00000004;
 enum WBEMS_DISPID_CONNECTION_READY = 0x00000005;
+enum WBEM_NO_WAIT = 0x00000000;
+enum WBEM_INFINITE = 0xffffffffffffffff;
 alias MI_Result = int;
 enum : int
 {
@@ -1673,7 +1675,7 @@ enum : int
     WMIQ_LF_LAST                         = 0x00000028,
 }
 
-alias WMIQ_RPNQ_FEATURE = int;
+alias WMIQ_RPNF_FEATURE = int;
 enum : int
 {
     WMIQ_RPNF_WHERE_CLAUSE_PRESENT = 0x00000001,
@@ -1801,8 +1803,8 @@ enum : int
     WBEM_FLAG_ADVISORY          = 0x00010000,
 }
 
-alias WBEM_GENERIC_FLAG_TYPE = int;
-enum : int
+alias WBEM_GENERIC_FLAG_TYPE = uint;
+enum : uint
 {
     WBEM_FLAG_RETURN_IMMEDIATELY     = 0x00000010,
     WBEM_FLAG_RETURN_WBEM_COMPLETE   = 0x00000000,
@@ -1833,13 +1835,6 @@ enum : int
     WBEM_STATUS_LOGGING_INFORMATION_HOST       = 0x00000400,
     WBEM_STATUS_LOGGING_INFORMATION_REPOSITORY = 0x00000800,
     WBEM_STATUS_LOGGING_INFORMATION_ESS        = 0x00001000,
-}
-
-alias WBEM_TIMEOUT_TYPE = int;
-enum : int
-{
-    WBEM_NO_WAIT  = 0x00000000,
-    WBEM_INFINITE = 0xffffffff,
 }
 
 alias WBEM_CONDITION_FLAG_TYPE = int;
@@ -1927,7 +1922,7 @@ enum : int
     WBEM_FLAG_IGNORE_FLAVOR         = 0x00000020,
 }
 
-alias WBEM_LOCKING = int;
+alias WBEM_LOCKING_FLAG_TYPE = int;
 enum : int
 {
     WBEM_FLAG_ALLOW_READ = 0x00000001,
@@ -2267,7 +2262,7 @@ interface IWbemServices : IUnknown
     HRESULT DeleteInstanceAsync(const(BSTR), int, IWbemContext, IWbemObjectSink);
     HRESULT CreateInstanceEnum(const(BSTR), int, IWbemContext, IEnumWbemClassObject*);
     HRESULT CreateInstanceEnumAsync(const(BSTR), int, IWbemContext, IWbemObjectSink);
-    HRESULT ExecQuery(const(BSTR), const(BSTR), int, IWbemContext, IEnumWbemClassObject*);
+    HRESULT ExecQuery(const(BSTR), const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IEnumWbemClassObject*);
     HRESULT ExecQueryAsync(const(BSTR), const(BSTR), int, IWbemContext, IWbemObjectSink);
     HRESULT ExecNotificationQuery(const(BSTR), const(BSTR), int, IWbemContext, IEnumWbemClassObject*);
     HRESULT ExecNotificationQueryAsync(const(BSTR), const(BSTR), int, IWbemContext, IWbemObjectSink);
@@ -3295,7 +3290,7 @@ enum CLSID_WbemDCOMTransport = GUID(0xf7ce2e13, 0x8c90, 0x11d1, [0x9e, 0x7b, 0x0
 struct WbemDCOMTransport
 {
 }
-alias tag_WBEM_LOGIN_TYPE = int;
+alias WBEM_LOGIN_TYPE = int;
 enum : int
 {
     WBEM_FLAG_INPROC_LOGIN            = 0x00000000,

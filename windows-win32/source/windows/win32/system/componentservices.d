@@ -1003,21 +1003,21 @@ enum : int
     APPTYPE_SWC     = 0x00000002,
 }
 
-struct CAppStatistics
+struct APPSTATISTICS
 {
     uint m_cTotalCalls;
     uint m_cTotalInstances;
     uint m_cTotalClasses;
     uint m_cCallsPerSecond;
 }
-struct CAppData
+struct APPDATA
 {
     uint m_idApp;
     wchar[40] m_szAppGuid;
     uint m_dwAppProcessId;
-    CAppStatistics m_AppStatistics;
+    APPSTATISTICS m_AppStatistics;
 }
-struct CCLSIDData
+struct CLSIDDATA
 {
     GUID m_clsid;
     uint m_cReferences;
@@ -1028,7 +1028,7 @@ struct CCLSIDData
     uint m_cCallsCompleted;
     uint m_cCallsFailed;
 }
-struct CCLSIDData2
+struct CLSIDDATA2
 {
     GUID m_clsid;
     GUID m_appid;

@@ -4756,7 +4756,7 @@ interface INetLanConnectionUiInfo : IUnknown
 {
     HRESULT GetDeviceGuid(GUID*);
 }
-alias tagRASCON_IPUI_FLAGS = int;
+alias RASCON_UIINFO_FLAGS = int;
 enum : int
 {
     RCUIF_VPN                       = 0x00000001,

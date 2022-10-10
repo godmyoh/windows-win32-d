@@ -647,7 +647,7 @@ struct VSC_LPWSTR
     ubyte vsc;
     PWSTR pwsz;
 }
-struct tagKbdLayer
+struct KBDTABLES
 {
     MODIFIERS* pCharModifiers;
     VK_TO_WCHAR_TABLE* pVkToWcharTable;
@@ -666,26 +666,26 @@ struct tagKbdLayer
     uint dwType;
     uint dwSubType;
 }
-struct _VK_FUNCTION_PARAM
+struct VK_FPARAM
 {
     ubyte NLSFEProcIndex;
     uint NLSFEProcParam;
 }
-struct _VK_TO_FUNCTION_TABLE
+struct VK_F_
 {
     ubyte Vk;
     ubyte NLSFEProcType;
     ubyte NLSFEProcCurrent;
     ubyte NLSFEProcSwitch;
-    _VK_FUNCTION_PARAM[8] NLSFEProc;
-    _VK_FUNCTION_PARAM[8] NLSFEProcAlt;
+    VK_FPARAM[8] NLSFEProc;
+    VK_FPARAM[8] NLSFEProcAlt;
 }
-struct tagKbdNlsLayer
+struct KBDNLSTABLES
 {
     ushort OEMIdentifier;
     ushort LayoutInformation;
     uint NumOfVkToF;
-    _VK_TO_FUNCTION_TABLE* pVkToF;
+    VK_F_* pVkToF;
     int NumOfMouseVKey;
     ushort* pusMouseVKey;
 }

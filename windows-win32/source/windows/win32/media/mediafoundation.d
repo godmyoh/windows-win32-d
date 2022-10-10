@@ -2443,12 +2443,6 @@ struct MPEG2VIDEOINFO
     MPEG2VIDEOINFO_FLAGS dwFlags;
     uint[1] dwSequenceHeader;
 }
-struct D3DOVERLAYCAPS
-{
-    uint Caps;
-    uint MaxOverlayDisplayWidth;
-    uint MaxOverlayDisplayHeight;
-}
 struct D3DCONTENTPROTECTIONCAPS
 {
     uint Caps;
@@ -2457,6 +2451,58 @@ struct D3DCONTENTPROTECTIONCAPS
     uint BlockAlignmentSize;
     ulong ProtectedMemorySize;
 }
+struct DXVA_VideoSample2
+{
+    uint Size;
+    uint Reserved;
+    long rtStart;
+    long rtEnd;
+    uint SampleFormat;
+    uint SampleFlags;
+    void* lpDDSSrcSurface;
+    RECT rcSrc;
+    RECT rcDst;
+    DXVA_AYUVsample2[16] Palette;
+}
+struct DXVA_VideoSample32
+{
+    long rtStart;
+    long rtEnd;
+    uint SampleFormat;
+    uint SampleFlags;
+    uint lpDDSSrcSurface;
+    RECT rcSrc;
+    RECT rcDst;
+    DXVA_AYUVsample2[16] Palette;
+}
+struct DXVA_DeinterlaceBltEx32
+{
+    uint Size;
+    DXVA_AYUVsample2 BackgroundColor;
+    RECT rcTarget;
+    long rtTarget;
+    uint NumSourceSurfaces;
+    float Alpha;
+    DXVA_VideoSample32[32] Source;
+    uint DestinationFormat;
+    uint DestinationFlags;
+}
+struct D3DOVERLAYCAPS
+{
+    uint Caps;
+    uint MaxOverlayDisplayWidth;
+    uint MaxOverlayDisplayHeight;
+}
+/+ [CONFLICTED] struct D3DCONTENTPROTECTIONCAPS
+{
+    align (4):
+    uint Caps;
+    GUID KeyExchangeType;
+    uint BufferAlignmentStart;
+    uint BlockAlignmentSize;
+    ulong ProtectedMemorySize;
+}
++/
 enum IID_IDirect3D9ExOverlayExtension = GUID(0x187aeb13, 0xaaf5, 0x4c59, [0x87, 0x6d, 0xe0, 0x59, 0x8, 0x8c, 0xd, 0xf8]);
 interface IDirect3D9ExOverlayExtension : IUnknown
 {
@@ -5352,10 +5398,8 @@ enum : int
     DXVA_DestinationFlag_Alpha_Changed      = 0x00000008,
 }
 
-struct DXVA_VideoSample2
+/+ [CONFLICTED] struct DXVA_VideoSample2
 {
-    uint Size;
-    uint Reserved;
     long rtStart;
     long rtEnd;
     uint SampleFormat;
@@ -5365,6 +5409,7 @@ struct DXVA_VideoSample2
     RECT rcDst;
     DXVA_AYUVsample2[16] Palette;
 }
++/
 struct DXVA_DeinterlaceCaps
 {
     uint Size;
@@ -5375,29 +5420,6 @@ struct DXVA_DeinterlaceCaps
     D3DFORMAT d3dOutputFormat;
     DXVA_VideoProcessCaps VideoProcessingCaps;
     DXVA_DeinterlaceTech DeinterlaceTechnology;
-}
-struct DXVA_VideoSample32
-{
-    long rtStart;
-    long rtEnd;
-    uint SampleFormat;
-    uint SampleFlags;
-    uint lpDDSSrcSurface;
-    RECT rcSrc;
-    RECT rcDst;
-    DXVA_AYUVsample2[16] Palette;
-}
-struct DXVA_DeinterlaceBltEx32
-{
-    uint Size;
-    DXVA_AYUVsample2 BackgroundColor;
-    RECT rcTarget;
-    long rtTarget;
-    uint NumSourceSurfaces;
-    float Alpha;
-    DXVA_VideoSample32[32] Source;
-    uint DestinationFormat;
-    uint DestinationFlags;
 }
 struct DXVA_DeinterlaceBlt
 {
@@ -13675,25 +13697,3 @@ enum : int
     OPM_HDCP_STATUS_OFF = 0x00000001,
 }
 
-/+ [CONFLICTED] struct D3DCONTENTPROTECTIONCAPS
-{
-    align (4):
-    uint Caps;
-    GUID KeyExchangeType;
-    uint BufferAlignmentStart;
-    uint BlockAlignmentSize;
-    ulong ProtectedMemorySize;
-}
-+/
-/+ [CONFLICTED] struct DXVA_VideoSample2
-{
-    long rtStart;
-    long rtEnd;
-    uint SampleFormat;
-    uint SampleFlags;
-    void* lpDDSSrcSurface;
-    RECT rcSrc;
-    RECT rcDst;
-    DXVA_AYUVsample2[16] Palette;
-}
-+/

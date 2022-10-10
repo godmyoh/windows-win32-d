@@ -2,7 +2,7 @@ module windows.win32.ui.controls_;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, CHAR, COLORREF, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT, SIZE, SYSTEMTIME, WPARAM;
-import windows.win32.graphics.gdi : BLENDFUNCTION, HBITMAP, HBRUSH, HDC, HFONT, HMONITOR, HPALETTE, HPEN, HRGN, LOGFONTW, RGBQUAD, TEXTMETRICW;
+import windows.win32.graphics.gdi : BLENDFUNCTION, DRAWEDGE_FLAGS, DRAW_EDGE_FLAGS, DRAW_TEXT_FORMAT, HBITMAP, HBRUSH, HDC, HFONT, HMONITOR, HPALETTE, HPEN, HRGN, LOGFONTW, RGBQUAD, TEXTMETRICW;
 import windows.win32.system.com_ : IStream, IUnknown;
 import windows.win32.system.registry : HKEY;
 import windows.win32.ui.input.pointer : POINTER_PEN_INFO, POINTER_TOUCH_INFO;
@@ -48,7 +48,7 @@ HIMAGELIST ImageList_GetDragImage(POINT*, POINT*);
 HIMAGELIST ImageList_Read(IStream);
 BOOL ImageList_Write(HIMAGELIST, IStream);
 HRESULT ImageList_ReadEx(uint, IStream, const(GUID)*, void**);
-HRESULT ImageList_WriteEx(HIMAGELIST, uint, IStream);
+HRESULT ImageList_WriteEx(HIMAGELIST, IMAGE_LIST_WRITE_STREAM_FLAGS, IStream);
 BOOL ImageList_GetIconSize(HIMAGELIST, int*, int*);
 BOOL ImageList_SetIconSize(HIMAGELIST, int, int);
 BOOL ImageList_GetImageInfo(HIMAGELIST, int, IMAGEINFO*);
@@ -132,15 +132,15 @@ long OpenThemeDataEx(HWND, const(wchar)*, OPEN_THEME_DATA_FLAGS);
 HRESULT CloseThemeData(long);
 HRESULT DrawThemeBackground(long, HDC, int, int, RECT*, RECT*);
 HRESULT DrawThemeBackgroundEx(long, HDC, int, int, RECT*, const(DTBGOPTS)*);
-HRESULT DrawThemeText(long, HDC, int, int, const(wchar)*, int, uint, uint, RECT*);
+HRESULT DrawThemeText(long, HDC, int, int, const(wchar)*, int, DRAW_TEXT_FORMAT, uint, RECT*);
 HRESULT GetThemeBackgroundContentRect(long, HDC, int, int, RECT*, RECT*);
 HRESULT GetThemeBackgroundExtent(long, HDC, int, int, RECT*, RECT*);
 HRESULT GetThemeBackgroundRegion(long, HDC, int, int, RECT*, HRGN*);
 HRESULT GetThemePartSize(long, HDC, int, int, RECT*, THEMESIZE, SIZE*);
-HRESULT GetThemeTextExtent(long, HDC, int, int, const(wchar)*, int, uint, RECT*, RECT*);
+HRESULT GetThemeTextExtent(long, HDC, int, int, const(wchar)*, int, DRAW_TEXT_FORMAT, RECT*, RECT*);
 HRESULT GetThemeTextMetrics(long, HDC, int, int, TEXTMETRICW*);
-HRESULT HitTestThemeBackground(long, HDC, int, int, uint, RECT*, HRGN, POINT, ushort*);
-HRESULT DrawThemeEdge(long, HDC, int, int, RECT*, uint, uint, RECT*);
+HRESULT HitTestThemeBackground(long, HDC, int, int, HIT_TEST_BACKGROUND_OPTIONS, RECT*, HRGN, POINT, ushort*);
+HRESULT DrawThemeEdge(long, HDC, int, int, RECT*, DRAWEDGE_FLAGS, DRAW_EDGE_FLAGS, RECT*);
 HRESULT DrawThemeIcon(long, HDC, int, int, RECT*, HIMAGELIST, int);
 BOOL IsThemePartDefined(long, int, int);
 BOOL IsThemeBackgroundPartiallyTransparent(long, int, int);
@@ -178,7 +178,7 @@ HRESULT DrawThemeParentBackground(HWND, HDC, const(RECT)*);
 HRESULT EnableTheming(BOOL);
 HRESULT DrawThemeParentBackgroundEx(HWND, HDC, DRAW_THEME_PARENT_BACKGROUND_FLAGS, const(RECT)*);
 HRESULT SetWindowThemeAttribute(HWND, WINDOWTHEMEATTRIBUTETYPE, void*, uint);
-HRESULT DrawThemeTextEx(long, HDC, int, int, const(wchar)*, int, uint, RECT*, const(DTTOPTS)*);
+HRESULT DrawThemeTextEx(long, HDC, int, int, const(wchar)*, int, DRAW_TEXT_FORMAT, RECT*, const(DTTOPTS)*);
 HRESULT GetThemeBitmap(long, int, int, THEME_PROPERTY_SYMBOL_ID, GET_THEME_BITMAP_FLAGS, HBITMAP*);
 HRESULT GetThemeStream(long, int, int, int, void**, uint*, HINSTANCE);
 HRESULT BufferedPaintInit();
@@ -275,19 +275,6 @@ enum CDRF_NOTIFYSUBITEMDRAW = 0x00000020;
 enum CDRF_NOTIFYPOSTERASE = 0x00000040;
 enum CDDS_POSTERASE = 0x00000004;
 enum CDDS_ITEM = 0x00010000;
-enum CDIS_SELECTED = 0x00000001;
-enum CDIS_GRAYED = 0x00000002;
-enum CDIS_DISABLED = 0x00000004;
-enum CDIS_CHECKED = 0x00000008;
-enum CDIS_FOCUS = 0x00000010;
-enum CDIS_DEFAULT = 0x00000020;
-enum CDIS_HOT = 0x00000040;
-enum CDIS_MARKED = 0x00000080;
-enum CDIS_INDETERMINATE = 0x00000100;
-enum CDIS_SHOWKEYBOARDCUES = 0x00000200;
-enum CDIS_NEARHOT = 0x00000400;
-enum CDIS_OTHERSIDEHOT = 0x00000800;
-enum CDIS_DROPHILITED = 0x00001000;
 enum NM_GETCUSTOMSPLITRECT = 0xfffffb21;
 enum CLR_NONE = 0xffffffffffffffff;
 enum CLR_DEFAULT = 0xffffffffff000000;
@@ -308,8 +295,6 @@ enum ILS_SATURATE = 0x00000004;
 enum ILS_ALPHA = 0x00000008;
 enum ILGT_NORMAL = 0x00000000;
 enum ILGT_ASYNC = 0x00000001;
-enum ILP_NORMAL = 0x00000000;
-enum ILP_DOWNLEVEL = 0x00000001;
 enum WC_HEADERA = "SysHeader32";
 enum WC_HEADERW = "SysHeader32";
 enum WC_HEADER = "SysHeader32";
@@ -324,27 +309,6 @@ enum HDS_FLAT = 0x00000200;
 enum HDS_CHECKBOXES = 0x00000400;
 enum HDS_NOSIZING = 0x00000800;
 enum HDS_OVERFLOW = 0x00001000;
-enum HDFT_ISSTRING = 0x00000000;
-enum HDFT_ISNUMBER = 0x00000001;
-enum HDFT_ISDATE = 0x00000002;
-enum HDFT_HASNOVALUE = 0x00008000;
-enum HDF_LEFT = 0x00000000;
-enum HDF_RIGHT = 0x00000001;
-enum HDF_CENTER = 0x00000002;
-enum HDF_JUSTIFYMASK = 0x00000003;
-enum HDF_RTLREADING = 0x00000004;
-enum HDF_BITMAP = 0x00002000;
-enum HDF_STRING = 0x00004000;
-enum HDF_OWNERDRAW = 0x00008000;
-enum HDF_IMAGE = 0x00000800;
-enum HDF_BITMAP_ON_RIGHT = 0x00001000;
-enum HDF_SORTUP = 0x00000400;
-enum HDF_SORTDOWN = 0x00000200;
-enum HDF_CHECKBOX = 0x00000040;
-enum HDF_CHECKED = 0x00000080;
-enum HDF_FIXEDWIDTH = 0x00000100;
-enum HDF_SPLITBUTTON = 0x01000000;
-enum HDIS_FOCUSED = 0x00000001;
 enum HDM_GETITEMCOUNT = 0x00001200;
 enum HDM_INSERTITEMA = 0x00001201;
 enum HDM_INSERTITEMW = 0x0000120a;
@@ -357,19 +321,6 @@ enum HDM_SETITEMA = 0x00001204;
 enum HDM_SETITEMW = 0x0000120c;
 enum HDM_SETITEM = 0x0000120c;
 enum HDM_LAYOUT = 0x00001205;
-enum HHT_NOWHERE = 0x00000001;
-enum HHT_ONHEADER = 0x00000002;
-enum HHT_ONDIVIDER = 0x00000004;
-enum HHT_ONDIVOPEN = 0x00000008;
-enum HHT_ONFILTER = 0x00000010;
-enum HHT_ONFILTERBUTTON = 0x00000020;
-enum HHT_ABOVE = 0x00000100;
-enum HHT_BELOW = 0x00000200;
-enum HHT_TORIGHT = 0x00000400;
-enum HHT_TOLEFT = 0x00000800;
-enum HHT_ONITEMSTATEICON = 0x00001000;
-enum HHT_ONDROPDOWN = 0x00002000;
-enum HHT_ONOVERFLOW = 0x00004000;
 enum HDSIL_NORMAL = 0x00000000;
 enum HDSIL_STATE = 0x00000001;
 enum HDM_HITTEST = 0x00001206;
@@ -710,7 +661,6 @@ enum TTS_NOFADE = 0x00000020;
 enum TTS_BALLOON = 0x00000040;
 enum TTS_CLOSE = 0x00000080;
 enum TTS_USEVISUALSTYLE = 0x00000100;
-enum TTF_DI_SETITEM = 0x00008000;
 enum TTDT_AUTOMATIC = 0x00000000;
 enum TTDT_RESHOW = 0x00000001;
 enum TTDT_AUTOPOP = 0x00000002;
@@ -974,15 +924,6 @@ enum LWS_NOPREFIX = 0x00000004;
 enum LWS_USEVISUALSTYLE = 0x00000008;
 enum LWS_USECUSTOMTEXT = 0x00000010;
 enum LWS_RIGHT = 0x00000020;
-enum LIF_ITEMINDEX = 0x00000001;
-enum LIF_STATE = 0x00000002;
-enum LIF_ITEMID = 0x00000004;
-enum LIF_URL = 0x00000008;
-enum LIS_FOCUSED = 0x00000001;
-enum LIS_ENABLED = 0x00000002;
-enum LIS_VISITED = 0x00000004;
-enum LIS_HOTTRACK = 0x00000008;
-enum LIS_DEFAULTCOLORS = 0x00000010;
 enum LM_HITTEST = 0x00000700;
 enum LM_GETIDEALHEIGHT = 0x00000701;
 enum LM_SETITEM = 0x00000702;
@@ -1024,23 +965,6 @@ enum LVSIL_STATE = 0x00000002;
 enum LVSIL_GROUPHEADER = 0x00000003;
 enum LVM_SETIMAGELIST = 0x00001003;
 enum LVM_GETITEMCOUNT = 0x00001004;
-enum LVIF_TEXT = 0x00000001;
-enum LVIF_IMAGE = 0x00000002;
-enum LVIF_PARAM = 0x00000004;
-enum LVIF_STATE = 0x00000008;
-enum LVIF_INDENT = 0x00000010;
-enum LVIF_NORECOMPUTE = 0x00000800;
-enum LVIF_GROUPID = 0x00000100;
-enum LVIF_COLUMNS = 0x00000200;
-enum LVIF_COLFMT = 0x00010000;
-enum LVIS_FOCUSED = 0x00000001;
-enum LVIS_SELECTED = 0x00000002;
-enum LVIS_CUT = 0x00000004;
-enum LVIS_DROPHILITED = 0x00000008;
-enum LVIS_GLOW = 0x00000010;
-enum LVIS_ACTIVATING = 0x00000020;
-enum LVIS_OVERLAYMASK = 0x00000f00;
-enum LVIS_STATEIMAGEMASK = 0x0000f000;
 enum I_INDENTCALLBACK = 0xffffffffffffffff;
 enum I_IMAGECALLBACK = 0xffffffffffffffff;
 enum I_IMAGENONE = 0xfffffffffffffffe;
@@ -1097,10 +1021,6 @@ enum LVM_EDITLABELA = 0x00001017;
 enum LVM_EDITLABELW = 0x00001076;
 enum LVM_EDITLABEL = 0x00001076;
 enum LVM_GETEDITCONTROL = 0x00001018;
-enum LVCFMT_LINE_BREAK = 0x00100000;
-enum LVCFMT_FILL = 0x00200000;
-enum LVCFMT_WRAP = 0x00400000;
-enum LVCFMT_NO_TITLE = 0x00800000;
 enum LVM_GETCOLUMNA = 0x00001019;
 enum LVM_GETCOLUMNW = 0x0000105f;
 enum LVM_GETCOLUMN = 0x0000105f;
@@ -1197,16 +1117,6 @@ enum LVM_GETHOVERTIME = 0x00001048;
 enum LVM_SETTOOLTIPS = 0x0000104a;
 enum LVM_GETTOOLTIPS = 0x0000104e;
 enum LVM_SORTITEMSEX = 0x00001051;
-enum LVBKIF_SOURCE_NONE = 0x00000000;
-enum LVBKIF_SOURCE_HBITMAP = 0x00000001;
-enum LVBKIF_SOURCE_URL = 0x00000002;
-enum LVBKIF_SOURCE_MASK = 0x00000003;
-enum LVBKIF_STYLE_NORMAL = 0x00000000;
-enum LVBKIF_STYLE_TILE = 0x00000010;
-enum LVBKIF_STYLE_MASK = 0x00000010;
-enum LVBKIF_FLAG_TILEOFFSET = 0x00000100;
-enum LVBKIF_TYPE_WATERMARK = 0x10000000;
-enum LVBKIF_FLAG_ALPHABLEND = 0x20000000;
 enum LVM_SETBKIMAGEA = 0x00001044;
 enum LVM_SETBKIMAGEW = 0x0000108a;
 enum LVM_GETBKIMAGEA = 0x00001045;
@@ -1231,18 +1141,6 @@ enum LVGF_EXTENDEDIMAGE = 0x00002000;
 enum LVGF_ITEMS = 0x00004000;
 enum LVGF_SUBSET = 0x00008000;
 enum LVGF_SUBSETITEMS = 0x00010000;
-enum LVGS_NORMAL = 0x00000000;
-enum LVGS_COLLAPSED = 0x00000001;
-enum LVGS_HIDDEN = 0x00000002;
-enum LVGS_NOHEADER = 0x00000004;
-enum LVGS_COLLAPSIBLE = 0x00000008;
-enum LVGS_FOCUSED = 0x00000010;
-enum LVGS_SELECTED = 0x00000020;
-enum LVGS_SUBSETED = 0x00000040;
-enum LVGS_SUBSETLINKFOCUSED = 0x00000080;
-enum LVGA_FOOTER_LEFT = 0x00000008;
-enum LVGA_FOOTER_CENTER = 0x00000010;
-enum LVGA_FOOTER_RIGHT = 0x00000020;
 enum LVM_INSERTGROUP = 0x00001091;
 enum LVM_SETGROUPINFO = 0x00001093;
 enum LVM_GETGROUPINFO = 0x00001095;
@@ -1269,18 +1167,11 @@ enum LVM_REMOVEALLGROUPS = 0x000010a0;
 enum LVM_HASGROUP = 0x000010a1;
 enum LVM_GETGROUPSTATE = 0x0000105c;
 enum LVM_GETFOCUSEDGROUP = 0x0000105d;
-enum LVTVIF_AUTOSIZE = 0x00000000;
-enum LVTVIF_FIXEDWIDTH = 0x00000001;
-enum LVTVIF_FIXEDHEIGHT = 0x00000002;
-enum LVTVIF_FIXEDSIZE = 0x00000003;
-enum LVTVIM_TILESIZE = 0x00000001;
-enum LVTVIM_COLUMNS = 0x00000002;
-enum LVTVIM_LABELMARGIN = 0x00000004;
+enum LVTVIF_EXTENDED = 0x00000004;
 enum LVM_SETTILEVIEWINFO = 0x000010a2;
 enum LVM_GETTILEVIEWINFO = 0x000010a3;
 enum LVM_SETTILEINFO = 0x000010a4;
 enum LVM_GETTILEINFO = 0x000010a5;
-enum LVIM_AFTER = 0x00000001;
 enum LVM_SETINSERTMARK = 0x000010a6;
 enum LVM_GETINSERTMARK = 0x000010a7;
 enum LVM_INSERTMARKHITTEST = 0x000010a8;
@@ -1313,8 +1204,6 @@ enum LVKF_CONTROL = 0x00000002;
 enum LVKF_SHIFT = 0x00000004;
 enum LVCDRF_NOSELECT = 0x00010000;
 enum LVCDRF_NOGROUPFRAME = 0x00020000;
-enum LVIF_DI_SETITEM = 0x00001000;
-enum LVGIT_UNFOLDED = 0x00000001;
 enum LVNSCH_DEFAULT = 0xffffffffffffffff;
 enum LVNSCH_ERROR = 0xfffffffffffffffe;
 enum LVNSCH_IGNORE = 0xfffffffffffffffd;
@@ -1348,29 +1237,11 @@ enum TVS_EX_PARTIALCHECKBOXES = 0x00000080;
 enum TVS_EX_EXCLUSIONCHECKBOXES = 0x00000100;
 enum TVS_EX_DIMMEDCHECKBOXES = 0x00000200;
 enum TVS_EX_DRAWIMAGEASYNC = 0x00000400;
-enum TVIS_SELECTED = 0x00000002;
-enum TVIS_CUT = 0x00000004;
-enum TVIS_DROPHILITED = 0x00000008;
-enum TVIS_BOLD = 0x00000010;
-enum TVIS_EXPANDED = 0x00000020;
-enum TVIS_EXPANDEDONCE = 0x00000040;
-enum TVIS_EXPANDPARTIAL = 0x00000080;
-enum TVIS_OVERLAYMASK = 0x00000f00;
-enum TVIS_STATEIMAGEMASK = 0x0000f000;
-enum TVIS_USERMASK = 0x0000f000;
-enum TVIS_EX_FLAT = 0x00000001;
-enum TVIS_EX_DISABLED = 0x00000002;
-enum TVIS_EX_ALL = 0x00000002;
 enum TVM_INSERTITEMA = 0x00001100;
 enum TVM_INSERTITEMW = 0x00001132;
 enum TVM_INSERTITEM = 0x00001132;
 enum TVM_DELETEITEM = 0x00001101;
 enum TVM_EXPAND = 0x00001102;
-enum TVE_COLLAPSE = 0x00000001;
-enum TVE_EXPAND = 0x00000002;
-enum TVE_TOGGLE = 0x00000003;
-enum TVE_EXPANDPARTIAL = 0x00004000;
-enum TVE_COLLAPSERESET = 0x00008000;
 enum TVM_GETITEMRECT = 0x00001104;
 enum TVM_GETCOUNT = 0x00001105;
 enum TVM_GETINDENT = 0x00001106;
@@ -1444,9 +1315,6 @@ enum TVM_SETHOT = 0x0000113a;
 enum TVM_GETSELECTEDCOUNT = 0x00001146;
 enum TVM_SHOWINFOTIP = 0x00001147;
 enum TVM_GETITEMPARTRECT = 0x00001148;
-enum TVC_UNKNOWN = 0x00000000;
-enum TVC_BYMOUSE = 0x00000001;
-enum TVC_BYKEYBOARD = 0x00000002;
 enum TVNRET_DEFAULT = 0x00000000;
 enum TVNRET_SKIPOLD = 0x00000001;
 enum TVNRET_SKIPNEW = 0x00000002;
@@ -1514,8 +1382,6 @@ enum TCS_EX_REGISTERDROP = 0x00000002;
 enum TCM_GETIMAGELIST = 0x00001302;
 enum TCM_SETIMAGELIST = 0x00001303;
 enum TCM_GETITEMCOUNT = 0x00001304;
-enum TCIS_BUTTONPRESSED = 0x00000001;
-enum TCIS_HIGHLIGHTED = 0x00000002;
 enum TCM_GETITEMA = 0x00001305;
 enum TCM_GETITEMW = 0x0000133c;
 enum TCM_GETITEM = 0x0000133c;
@@ -1587,15 +1453,6 @@ enum MCSC_TRAILINGTEXT = 0x00000005;
 enum MCM_SETTODAY = 0x0000100c;
 enum MCM_GETTODAY = 0x0000100d;
 enum MCM_HITTEST = 0x0000100e;
-enum MCHT_TITLE = 0x00010000;
-enum MCHT_CALENDAR = 0x00020000;
-enum MCHT_TODAYLINK = 0x00030000;
-enum MCHT_CALENDARCONTROL = 0x00100000;
-enum MCHT_NEXT = 0x01000000;
-enum MCHT_PREV = 0x02000000;
-enum MCHT_NOWHERE = 0x00000000;
-enum MCHT_TITLEBK = 0x00010000;
-enum MCHT_CALENDARBK = 0x00020000;
 enum MCM_SETFIRSTDAYOFWEEK = 0x0000100f;
 enum MCM_GETFIRSTDAYOFWEEK = 0x00001010;
 enum MCM_GETRANGE = 0x00001011;
@@ -1605,11 +1462,6 @@ enum MCM_SETMONTHDELTA = 0x00001014;
 enum MCM_GETMAXTODAYWIDTH = 0x00001015;
 enum MCM_SETUNICODEFORMAT = 0x00002005;
 enum MCM_GETUNICODEFORMAT = 0x00002006;
-enum MCMV_MONTH = 0x00000000;
-enum MCMV_YEAR = 0x00000001;
-enum MCMV_DECADE = 0x00000002;
-enum MCMV_CENTURY = 0x00000003;
-enum MCMV_MAX = 0x00000003;
 enum MCM_GETCURRENTVIEW = 0x00001016;
 enum MCM_GETCALENDARCOUNT = 0x00001017;
 enum MCM_GETCALENDARGRIDINFO = 0x00001018;
@@ -1661,8 +1513,6 @@ enum DTS_RIGHTALIGN = 0x00000020;
 enum GDTR_MIN = 0x00000001;
 enum GDTR_MAX = 0x00000002;
 enum GDT_ERROR = 0xffffffffffffffff;
-enum GDT_VALID = 0x00000000;
-enum GDT_NONE = 0x00000001;
 enum IPM_CLEARADDRESS = 0x00000464;
 enum IPM_SETADDRESS = 0x00000465;
 enum IPM_GETADDRESS = 0x00000466;
@@ -2138,15 +1988,6 @@ enum DTBG_MIRRORDC = 0x00000020;
 enum DTBG_NOMIRROR = 0x00000040;
 enum DTT_GRAYED = 0x00000001;
 enum DTT_FLAGS2VALIDBITS = 0x00000001;
-enum HTTB_BACKGROUNDSEG = 0x00000000;
-enum HTTB_FIXEDBORDER = 0x00000002;
-enum HTTB_CAPTION = 0x00000004;
-enum HTTB_RESIZINGBORDER_LEFT = 0x00000010;
-enum HTTB_RESIZINGBORDER_TOP = 0x00000020;
-enum HTTB_RESIZINGBORDER_RIGHT = 0x00000040;
-enum HTTB_RESIZINGBORDER_BOTTOM = 0x00000080;
-enum HTTB_SIZINGTEMPLATE = 0x00000100;
-enum HTTB_SYSTEMSIZINGMARGINS = 0x00000200;
 enum MAX_INTLIST_COUNT = 0x00000192;
 enum ETDT_DISABLE = 0x00000001;
 enum ETDT_ENABLE = 0x00000002;
@@ -2858,23 +2699,35 @@ enum : uint
     HICF_TOGGLEDROPDOWN = 0x00000100,
 }
 
-alias TTTOOLINFO_FLAGS = uint;
+alias TOOLTIP_FLAGS = uint;
 enum : uint
 {
-    TTF_ABSOLUTE    = 0x00000080,
-    TTF_CENTERTIP   = 0x00000002,
     TTF_IDISHWND    = 0x00000001,
-    TTF_PARSELINKS  = 0x00001000,
+    TTF_CENTERTIP   = 0x00000002,
     TTF_RTLREADING  = 0x00000004,
     TTF_SUBCLASS    = 0x00000010,
     TTF_TRACK       = 0x00000020,
+    TTF_ABSOLUTE    = 0x00000080,
     TTF_TRANSPARENT = 0x00000100,
+    TTF_PARSELINKS  = 0x00001000,
+    TTF_DI_SETITEM  = 0x00008000,
 }
 
 alias LVTILEVIEWINFO_FLAGS = uint;
 enum : uint
 {
-    LVTVIF_EXTENDED = 0x00000004,
+    LVTVIF_AUTOSIZE    = 0x00000000,
+    LVTVIF_FIXEDWIDTH  = 0x00000001,
+    LVTVIF_FIXEDHEIGHT = 0x00000002,
+    LVTVIF_FIXEDSIZE   = 0x00000003,
+}
+
+alias LVTILEVIEWINFO_MASK = uint;
+enum : uint
+{
+    LVTVIM_TILESIZE    = 0x00000001,
+    LVTVIM_COLUMNS     = 0x00000002,
+    LVTVIM_LABELMARGIN = 0x00000004,
 }
 
 alias NMPGSCROLL_DIR = uint;
@@ -2993,14 +2846,6 @@ enum : uint
 {
     PGF_CALCHEIGHT = 0x00000002,
     PGF_CALCWIDTH  = 0x00000001,
-}
-
-alias NMLVCUSTOMDRAW_ALIGN = uint;
-enum : uint
-{
-    LVGA_HEADER_CENTER = 0x00000002,
-    LVGA_HEADER_LEFT   = 0x00000001,
-    LVGA_HEADER_RIGHT  = 0x00000004,
 }
 
 alias MCGRIDINFO_FLAGS = uint;
@@ -3122,12 +2967,330 @@ enum : uint
     DTT_VALIDBITS    = 0x00002fff,
 }
 
+alias NMLVGETINFOTIP_FLAGS = uint;
+enum : uint
+{
+    LVGIT_UNFOLDED = 0x00000001,
+    LVGIT_ZERO     = 0x00000000,
+}
+
+alias LIST_VIEW_ITEM_STATE_FLAGS = uint;
+enum : uint
+{
+    LVIS_FOCUSED        = 0x00000001,
+    LVIS_SELECTED       = 0x00000002,
+    LVIS_CUT            = 0x00000004,
+    LVIS_DROPHILITED    = 0x00000008,
+    LVIS_GLOW           = 0x00000010,
+    LVIS_ACTIVATING     = 0x00000020,
+    LVIS_OVERLAYMASK    = 0x00000f00,
+    LVIS_STATEIMAGEMASK = 0x0000f000,
+}
+
+alias NM_TREEVIEW_ACTION = uint;
+enum : uint
+{
+    TVE_COLLAPSE      = 0x00000001,
+    TVE_EXPAND        = 0x00000002,
+    TVE_TOGGLE        = 0x00000003,
+    TVE_EXPANDPARTIAL = 0x00004000,
+    TVE_COLLAPSERESET = 0x00008000,
+    TVC_UNKNOWN       = 0x00000000,
+    TVC_BYMOUSE       = 0x00000001,
+    TVC_BYKEYBOARD    = 0x00000002,
+}
+
+alias MONTH_CALDENDAR_MESSAGES_VIEW = uint;
+enum : uint
+{
+    MCMV_MONTH   = 0x00000000,
+    MCMV_YEAR    = 0x00000001,
+    MCMV_DECADE  = 0x00000002,
+    MCMV_CENTURY = 0x00000003,
+    MCMV_MAX     = 0x00000003,
+}
+
+alias TAB_CONTROL_ITEM_STATE = uint;
+enum : uint
+{
+    TCIS_BUTTONPRESSED = 0x00000001,
+    TCIS_HIGHLIGHTED   = 0x00000002,
+}
+
+alias TREE_VIEW_ITEM_STATE_FLAGS = uint;
+enum : uint
+{
+    TVIS_SELECTED       = 0x00000002,
+    TVIS_CUT            = 0x00000004,
+    TVIS_DROPHILITED    = 0x00000008,
+    TVIS_BOLD           = 0x00000010,
+    TVIS_EXPANDED       = 0x00000020,
+    TVIS_EXPANDEDONCE   = 0x00000040,
+    TVIS_EXPANDPARTIAL  = 0x00000080,
+    TVIS_OVERLAYMASK    = 0x00000f00,
+    TVIS_STATEIMAGEMASK = 0x0000f000,
+    TVIS_USERMASK       = 0x0000f000,
+    TVIS_EX_FLAT        = 0x00000001,
+    TVIS_EX_DISABLED    = 0x00000002,
+    TVIS_EX_ALL         = 0x00000002,
+}
+
+alias HEADER_CONTROL_FORMAT_FLAGS = int;
+enum : int
+{
+    HDF_LEFT            = 0x00000000,
+    HDF_RIGHT           = 0x00000001,
+    HDF_CENTER          = 0x00000002,
+    HDF_JUSTIFYMASK     = 0x00000003,
+    HDF_RTLREADING      = 0x00000004,
+    HDF_BITMAP          = 0x00002000,
+    HDF_STRING          = 0x00004000,
+    HDF_OWNERDRAW       = 0x00008000,
+    HDF_IMAGE           = 0x00000800,
+    HDF_BITMAP_ON_RIGHT = 0x00001000,
+    HDF_SORTUP          = 0x00000400,
+    HDF_SORTDOWN        = 0x00000200,
+    HDF_CHECKBOX        = 0x00000040,
+    HDF_CHECKED         = 0x00000080,
+    HDF_FIXEDWIDTH      = 0x00000100,
+    HDF_SPLITBUTTON     = 0x01000000,
+}
+
+alias HEADER_CONTROL_FORMAT_TYPE = uint;
+enum : uint
+{
+    HDFT_ISSTRING   = 0x00000000,
+    HDFT_ISNUMBER   = 0x00000001,
+    HDFT_ISDATE     = 0x00000002,
+    HDFT_HASNOVALUE = 0x00008000,
+}
+
+alias HEADER_CONTROL_FORMAT_STATE = uint;
+enum : uint
+{
+    HDIS_FOCUSED = 0x00000001,
+}
+
+alias HEADER_HITTEST_INFO_FLAGS = uint;
+enum : uint
+{
+    HHT_NOWHERE         = 0x00000001,
+    HHT_ONHEADER        = 0x00000002,
+    HHT_ONDIVIDER       = 0x00000004,
+    HHT_ONDIVOPEN       = 0x00000008,
+    HHT_ONFILTER        = 0x00000010,
+    HHT_ONFILTERBUTTON  = 0x00000020,
+    HHT_ABOVE           = 0x00000100,
+    HHT_BELOW           = 0x00000200,
+    HHT_TORIGHT         = 0x00000400,
+    HHT_TOLEFT          = 0x00000800,
+    HHT_ONITEMSTATEICON = 0x00001000,
+    HHT_ONDROPDOWN      = 0x00002000,
+    HHT_ONOVERFLOW      = 0x00004000,
+}
+
+alias IMAGE_LIST_WRITE_STREAM_FLAGS = uint;
+enum : uint
+{
+    ILP_NORMAL    = 0x00000000,
+    ILP_DOWNLEVEL = 0x00000001,
+}
+
+alias LIST_ITEM_FLAGS = uint;
+enum : uint
+{
+    LIF_ITEMINDEX = 0x00000001,
+    LIF_STATE     = 0x00000002,
+    LIF_ITEMID    = 0x00000004,
+    LIF_URL       = 0x00000008,
+}
+
+alias LIST_ITEM_STATE_FLAGS = uint;
+enum : uint
+{
+    LIS_FOCUSED       = 0x00000001,
+    LIS_ENABLED       = 0x00000002,
+    LIS_VISITED       = 0x00000004,
+    LIS_HOTTRACK      = 0x00000008,
+    LIS_DEFAULTCOLORS = 0x00000010,
+}
+
+alias LIST_VIEW_BACKGROUND_IMAGE_FLAGS = uint;
+enum : uint
+{
+    LVBKIF_SOURCE_NONE     = 0x00000000,
+    LVBKIF_SOURCE_HBITMAP  = 0x00000001,
+    LVBKIF_SOURCE_URL      = 0x00000002,
+    LVBKIF_SOURCE_MASK     = 0x00000003,
+    LVBKIF_STYLE_NORMAL    = 0x00000000,
+    LVBKIF_STYLE_TILE      = 0x00000010,
+    LVBKIF_STYLE_MASK      = 0x00000010,
+    LVBKIF_FLAG_TILEOFFSET = 0x00000100,
+    LVBKIF_TYPE_WATERMARK  = 0x10000000,
+    LVBKIF_FLAG_ALPHABLEND = 0x20000000,
+}
+
+alias LIST_VIEW_GROUP_STATE_FLAGS = uint;
+enum : uint
+{
+    LVGS_NORMAL            = 0x00000000,
+    LVGS_COLLAPSED         = 0x00000001,
+    LVGS_HIDDEN            = 0x00000002,
+    LVGS_NOHEADER          = 0x00000004,
+    LVGS_COLLAPSIBLE       = 0x00000008,
+    LVGS_FOCUSED           = 0x00000010,
+    LVGS_SELECTED          = 0x00000020,
+    LVGS_SUBSETED          = 0x00000040,
+    LVGS_SUBSETLINKFOCUSED = 0x00000080,
+}
+
+alias LIST_VIEW_GROUP_ALIGN_FLAGS = uint;
+enum : uint
+{
+    LVGA_HEADER_LEFT   = 0x00000001,
+    LVGA_HEADER_CENTER = 0x00000002,
+    LVGA_HEADER_RIGHT  = 0x00000004,
+    LVGA_FOOTER_LEFT   = 0x00000008,
+    LVGA_FOOTER_CENTER = 0x00000010,
+    LVGA_FOOTER_RIGHT  = 0x00000020,
+}
+
+alias LIST_VIEW_INSERT_MARK_FLAGS = uint;
+enum : uint
+{
+    LVIM_AFTER = 0x00000001,
+}
+
+alias LIST_VIEW_ITEM_COLUMN_FORMAT_FLAGS = int;
+enum : int
+{
+    LVCFMT_LINE_BREAK         = 0x00100000,
+    LVCFMT_FILL               = 0x00200000,
+    LVCFMT_WRAP               = 0x00400000,
+    LVCFMT_NO_TITLE           = 0x00800000,
+    LVCFMT_TILE_PLACEMENTMASK = 0x00300000,
+}
+
+alias MCHITTESTINFO_HIT_FLAGS = uint;
+enum : uint
+{
+    MCHT_TITLE            = 0x00010000,
+    MCHT_CALENDAR         = 0x00020000,
+    MCHT_TODAYLINK        = 0x00030000,
+    MCHT_CALENDARCONTROL  = 0x00100000,
+    MCHT_NEXT             = 0x01000000,
+    MCHT_PREV             = 0x02000000,
+    MCHT_NOWHERE          = 0x00000000,
+    MCHT_TITLEBK          = 0x00010000,
+    MCHT_TITLEMONTH       = 0x00010001,
+    MCHT_TITLEYEAR        = 0x00010002,
+    MCHT_TITLEBTNNEXT     = 0x01010003,
+    MCHT_TITLEBTNPREV     = 0x02010003,
+    MCHT_CALENDARBK       = 0x00020000,
+    MCHT_CALENDARDATE     = 0x00020001,
+    MCHT_CALENDARDATENEXT = 0x01020001,
+    MCHT_CALENDARDATEPREV = 0x02020001,
+    MCHT_CALENDARDAY      = 0x00020002,
+    MCHT_CALENDARWEEKNUM  = 0x00020003,
+    MCHT_CALENDARDATEMIN  = 0x00020004,
+    MCHT_CALENDARDATEMAX  = 0x00020005,
+}
+
+alias NMCUSTOMDRAW_DRAW_STATE_FLAGS = uint;
+enum : uint
+{
+    CDIS_SELECTED         = 0x00000001,
+    CDIS_GRAYED           = 0x00000002,
+    CDIS_DISABLED         = 0x00000004,
+    CDIS_CHECKED          = 0x00000008,
+    CDIS_FOCUS            = 0x00000010,
+    CDIS_DEFAULT          = 0x00000020,
+    CDIS_HOT              = 0x00000040,
+    CDIS_MARKED           = 0x00000080,
+    CDIS_INDETERMINATE    = 0x00000100,
+    CDIS_SHOWKEYBOARDCUES = 0x00000200,
+    CDIS_NEARHOT          = 0x00000400,
+    CDIS_OTHERSIDEHOT     = 0x00000800,
+    CDIS_DROPHILITED      = 0x00001000,
+}
+
+alias NMDATETIMECHANGE_FLAGS = uint;
+enum : uint
+{
+    GDT_NONE  = 0x00000001,
+    GDT_VALID = 0x00000000,
+}
+
+alias LIST_VIEW_ITEM_FLAGS = uint;
+enum : uint
+{
+    LVIF_TEXT        = 0x00000001,
+    LVIF_IMAGE       = 0x00000002,
+    LVIF_PARAM       = 0x00000004,
+    LVIF_STATE       = 0x00000008,
+    LVIF_INDENT      = 0x00000010,
+    LVIF_NORECOMPUTE = 0x00000800,
+    LVIF_GROUPID     = 0x00000100,
+    LVIF_COLUMNS     = 0x00000200,
+    LVIF_COLFMT      = 0x00010000,
+    LVIF_DI_SETITEM  = 0x00001000,
+}
+
+alias ODA_FLAGS = uint;
+enum : uint
+{
+    ODA_DRAWENTIRE = 0x00000001,
+    ODA_SELECT     = 0x00000002,
+    ODA_FOCUS      = 0x00000004,
+}
+
+alias ODS_FLAGS = uint;
+enum : uint
+{
+    ODS_SELECTED     = 0x00000001,
+    ODS_GRAYED       = 0x00000002,
+    ODS_DISABLED     = 0x00000004,
+    ODS_CHECKED      = 0x00000008,
+    ODS_FOCUS        = 0x00000010,
+    ODS_DEFAULT      = 0x00000020,
+    ODS_COMBOBOXEDIT = 0x00001000,
+    ODS_HOTLIGHT     = 0x00000040,
+    ODS_INACTIVE     = 0x00000080,
+    ODS_NOACCEL      = 0x00000100,
+    ODS_NOFOCUSRECT  = 0x00000200,
+}
+
+alias HIT_TEST_BACKGROUND_OPTIONS = uint;
+enum : uint
+{
+    HTTB_BACKGROUNDSEG         = 0x00000000,
+    HTTB_FIXEDBORDER           = 0x00000002,
+    HTTB_CAPTION               = 0x00000004,
+    HTTB_RESIZINGBORDER_LEFT   = 0x00000010,
+    HTTB_RESIZINGBORDER_TOP    = 0x00000020,
+    HTTB_RESIZINGBORDER_RIGHT  = 0x00000040,
+    HTTB_RESIZINGBORDER_BOTTOM = 0x00000080,
+    HTTB_RESIZINGBORDER        = 0x000000f0,
+    HTTB_SIZINGTEMPLATE        = 0x00000100,
+    HTTB_SYSTEMSIZINGMARGINS   = 0x00000200,
+}
+
 alias HPROPSHEETPAGE = void*;
 alias HIMAGELIST = void*;
 alias HSYNTHETICPOINTERDEVICE = void*;
 alias HTREEITEM = void*;
 alias HDSA = void*;
 alias HDPA = void*;
+struct TBBUTTON
+{
+    int iBitmap;
+    int idCommand;
+    ubyte fsState;
+    ubyte fsStyle;
+    ubyte[6] bReserved;
+    ulong dwData;
+    long iString;
+}
 alias LPFNPSPCALLBACKA = uint function(HWND, PSPCB_MESSAGE, PROPSHEETPAGEA*);
 alias LPFNPSPCALLBACKW = uint function(HWND, PSPCB_MESSAGE, PROPSHEETPAGEW*);
 struct PROPSHEETPAGEA_V1
@@ -3517,7 +3680,7 @@ struct NMCUSTOMDRAW
     HDC hdc;
     RECT rc;
     ulong dwItemSpec;
-    uint uItemState;
+    NMCUSTOMDRAW_DRAW_STATE_FLAGS uItemState;
     LPARAM lItemlParam;
 }
 struct NMTTCUSTOMDRAW
@@ -3577,13 +3740,13 @@ struct HDITEMA
     PSTR pszText;
     HBITMAP hbm;
     int cchTextMax;
-    int fmt;
+    HEADER_CONTROL_FORMAT_FLAGS fmt;
     LPARAM lParam;
     int iImage;
     int iOrder;
-    uint type;
+    HEADER_CONTROL_FORMAT_TYPE type;
     void* pvFilter;
-    uint state;
+    HEADER_CONTROL_FORMAT_STATE state;
 }
 struct HDITEMW
 {
@@ -3592,13 +3755,13 @@ struct HDITEMW
     PWSTR pszText;
     HBITMAP hbm;
     int cchTextMax;
-    int fmt;
+    HEADER_CONTROL_FORMAT_FLAGS fmt;
     LPARAM lParam;
     int iImage;
     int iOrder;
-    uint type;
+    HEADER_CONTROL_FORMAT_TYPE type;
     void* pvFilter;
-    uint state;
+    HEADER_CONTROL_FORMAT_STATE state;
 }
 struct HDLAYOUT
 {
@@ -3608,7 +3771,7 @@ struct HDLAYOUT
 struct HDHITTESTINFO
 {
     POINT pt;
-    uint flags;
+    HEADER_HITTEST_INFO_FLAGS flags;
     int iItem;
 }
 struct NMHEADERA
@@ -3651,16 +3814,17 @@ struct NMHDFILTERBTNCLICK
     int iItem;
     RECT rc;
 }
-struct TBBUTTON
+/+ [CONFLICTED] struct TBBUTTON
 {
     int iBitmap;
     int idCommand;
     ubyte fsState;
     ubyte fsStyle;
-    ubyte[6] bReserved;
+    ubyte[2] bReserved;
     ulong dwData;
     long iString;
 }
++/
 struct COLORMAP
 {
     COLORREF from;
@@ -3945,7 +4109,7 @@ struct RBHITTESTINFO
 struct TTTOOLINFOA
 {
     uint cbSize;
-    TTTOOLINFO_FLAGS uFlags;
+    TOOLTIP_FLAGS uFlags;
     HWND hwnd;
     ulong uId;
     RECT rect;
@@ -3957,7 +4121,7 @@ struct TTTOOLINFOA
 struct TTTOOLINFOW
 {
     uint cbSize;
-    TTTOOLINFO_FLAGS uFlags;
+    TOOLTIP_FLAGS uFlags;
     HWND hwnd;
     ulong uId;
     RECT rect;
@@ -3991,7 +4155,7 @@ struct NMTTDISPINFOA
     PSTR lpszText;
     CHAR[80] szText;
     HINSTANCE hinst;
-    uint uFlags;
+    TOOLTIP_FLAGS uFlags;
     LPARAM lParam;
 }
 struct NMTTDISPINFOW
@@ -4000,7 +4164,7 @@ struct NMTTDISPINFOW
     PWSTR lpszText;
     wchar[80] szText;
     HINSTANCE hinst;
-    uint uFlags;
+    TOOLTIP_FLAGS uFlags;
     LPARAM lParam;
 }
 struct NMTRBTHUMBPOSCHANGING
@@ -4033,10 +4197,10 @@ struct PBRANGE
 }
 struct LITEM
 {
-    uint mask;
+    LIST_ITEM_FLAGS mask;
     int iLink;
-    uint state;
-    uint stateMask;
+    LIST_ITEM_STATE_FLAGS state;
+    LIST_ITEM_STATE_FLAGS stateMask;
     wchar[48] szID;
     wchar[2084] szUrl;
 }
@@ -4052,11 +4216,11 @@ struct NMLINK
 }
 struct LVITEMA
 {
-    uint mask;
+    LIST_VIEW_ITEM_FLAGS mask;
     int iItem;
     int iSubItem;
-    uint state;
-    uint stateMask;
+    LIST_VIEW_ITEM_STATE_FLAGS state;
+    LIST_VIEW_ITEM_STATE_FLAGS stateMask;
     PSTR pszText;
     int cchTextMax;
     int iImage;
@@ -4065,16 +4229,16 @@ struct LVITEMA
     LVITEMA_GROUP_ID iGroupId;
     uint cColumns;
     uint* puColumns;
-    int* piColFmt;
+    LIST_VIEW_ITEM_COLUMN_FORMAT_FLAGS* piColFmt;
     int iGroup;
 }
 struct LVITEMW
 {
-    uint mask;
+    LIST_VIEW_ITEM_FLAGS mask;
     int iItem;
     int iSubItem;
-    uint state;
-    uint stateMask;
+    LIST_VIEW_ITEM_STATE_FLAGS state;
+    LIST_VIEW_ITEM_STATE_FLAGS stateMask;
     PWSTR pszText;
     int cchTextMax;
     int iImage;
@@ -4083,7 +4247,7 @@ struct LVITEMW
     LVITEMA_GROUP_ID iGroupId;
     uint cColumns;
     uint* puColumns;
-    int* piColFmt;
+    LIST_VIEW_ITEM_COLUMN_FORMAT_FLAGS* piColFmt;
     int iGroup;
 }
 struct LVFINDINFOA
@@ -4141,7 +4305,7 @@ struct LVCOLUMNW
 alias PFNLVCOMPARE = int function(LPARAM, LPARAM, LPARAM);
 struct LVBKIMAGEA
 {
-    uint ulFlags;
+    LIST_VIEW_BACKGROUND_IMAGE_FLAGS ulFlags;
     HBITMAP hbm;
     PSTR pszImage;
     uint cchImageMax;
@@ -4150,7 +4314,7 @@ struct LVBKIMAGEA
 }
 struct LVBKIMAGEW
 {
-    uint ulFlags;
+    LIST_VIEW_BACKGROUND_IMAGE_FLAGS ulFlags;
     HBITMAP hbm;
     PWSTR pszImage;
     uint cchImageMax;
@@ -4166,9 +4330,9 @@ struct LVGROUP
     PWSTR pszFooter;
     int cchFooter;
     int iGroupId;
-    uint stateMask;
-    uint state;
-    uint uAlign;
+    LIST_VIEW_GROUP_STATE_FLAGS stateMask;
+    LIST_VIEW_GROUP_STATE_FLAGS state;
+    LIST_VIEW_GROUP_ALIGN_FLAGS uAlign;
     PWSTR pszSubtitle;
     uint cchSubtitle;
     PWSTR pszTask;
@@ -4209,7 +4373,7 @@ struct LVINSERTGROUPSORTED
 struct LVTILEVIEWINFO
 {
     uint cbSize;
-    uint dwMask;
+    LVTILEVIEWINFO_MASK dwMask;
     LVTILEVIEWINFO_FLAGS dwFlags;
     SIZE sizeTile;
     int cLines;
@@ -4226,7 +4390,7 @@ struct LVTILEINFO
 struct LVINSERTMARK
 {
     uint cbSize;
-    uint dwFlags;
+    LIST_VIEW_INSERT_MARK_FLAGS dwFlags;
     int iItem;
     uint dwReserved;
 }
@@ -4266,7 +4430,7 @@ struct NMLISTVIEW
     int iSubItem;
     uint uNewState;
     uint uOldState;
-    uint uChanged;
+    LIST_VIEW_ITEM_FLAGS uChanged;
     POINT ptAction;
     LPARAM lParam;
 }
@@ -4295,7 +4459,7 @@ struct NMLVCUSTOMDRAW
     int iPartId;
     int iStateId;
     RECT rcText;
-    NMLVCUSTOMDRAW_ALIGN uAlign;
+    LIST_VIEW_GROUP_ALIGN_FLAGS uAlign;
 }
 struct NMLVCACHEHINT
 {
@@ -4320,8 +4484,8 @@ struct NMLVODSTATECHANGE
     NMHDR hdr;
     int iFrom;
     int iTo;
-    uint uNewState;
-    uint uOldState;
+    LIST_VIEW_ITEM_STATE_FLAGS uNewState;
+    LIST_VIEW_ITEM_STATE_FLAGS uOldState;
 }
 struct NMLVDISPINFOA
 {
@@ -4350,7 +4514,7 @@ struct NMLVLINK
 struct NMLVGETINFOTIPA
 {
     NMHDR hdr;
-    uint dwFlags;
+    NMLVGETINFOTIP_FLAGS dwFlags;
     PSTR pszText;
     int cchTextMax;
     int iItem;
@@ -4360,7 +4524,7 @@ struct NMLVGETINFOTIPA
 struct NMLVGETINFOTIPW
 {
     NMHDR hdr;
-    uint dwFlags;
+    NMLVGETINFOTIP_FLAGS dwFlags;
     PWSTR pszText;
     int cchTextMax;
     int iItem;
@@ -4390,8 +4554,8 @@ struct TVITEMA
 {
     TVITEM_MASK mask;
     HTREEITEM hItem;
-    uint state;
-    uint stateMask;
+    TREE_VIEW_ITEM_STATE_FLAGS state;
+    TREE_VIEW_ITEM_STATE_FLAGS stateMask;
     PSTR pszText;
     int cchTextMax;
     int iImage;
@@ -4403,8 +4567,8 @@ struct TVITEMW
 {
     TVITEM_MASK mask;
     HTREEITEM hItem;
-    uint state;
-    uint stateMask;
+    TREE_VIEW_ITEM_STATE_FLAGS state;
+    TREE_VIEW_ITEM_STATE_FLAGS stateMask;
     PWSTR pszText;
     int cchTextMax;
     int iImage;
@@ -4496,7 +4660,7 @@ struct TVSORTCB
 struct NMTREEVIEWA
 {
     NMHDR hdr;
-    uint action;
+    NM_TREEVIEW_ACTION action;
     TVITEMA itemOld;
     TVITEMA itemNew;
     POINT ptDrag;
@@ -4504,7 +4668,7 @@ struct NMTREEVIEWA
 struct NMTREEVIEWW
 {
     NMHDR hdr;
-    uint action;
+    NM_TREEVIEW_ACTION action;
     TVITEMW itemOld;
     TVITEMW itemNew;
     POINT ptDrag;
@@ -4661,8 +4825,8 @@ struct TCITEMHEADERW
 struct TCITEMA
 {
     TCITEMHEADERA_MASK mask;
-    uint dwState;
-    uint dwStateMask;
+    TAB_CONTROL_ITEM_STATE dwState;
+    TAB_CONTROL_ITEM_STATE dwStateMask;
     PSTR pszText;
     int cchTextMax;
     int iImage;
@@ -4671,8 +4835,8 @@ struct TCITEMA
 struct TCITEMW
 {
     TCITEMHEADERA_MASK mask;
-    uint dwState;
-    uint dwStateMask;
+    TAB_CONTROL_ITEM_STATE dwState;
+    TAB_CONTROL_ITEM_STATE dwStateMask;
     PWSTR pszText;
     int cchTextMax;
     int iImage;
@@ -4694,7 +4858,7 @@ struct MCHITTESTINFO
 {
     uint cbSize;
     POINT pt;
-    uint uHit;
+    MCHITTESTINFO_HIT_FLAGS uHit;
     SYSTEMTIME st;
     RECT rc;
     int iOffset;
@@ -4732,8 +4896,8 @@ struct NMDAYSTATE
 struct NMVIEWCHANGE
 {
     NMHDR nmhdr;
-    uint dwOldView;
-    uint dwNewView;
+    MONTH_CALDENDAR_MESSAGES_VIEW dwOldView;
+    MONTH_CALDENDAR_MESSAGES_VIEW dwNewView;
 }
 struct DATETIMEPICKERINFO
 {
@@ -4749,7 +4913,7 @@ struct DATETIMEPICKERINFO
 struct NMDATETIMECHANGE
 {
     NMHDR nmhdr;
-    uint dwFlags;
+    NMDATETIMECHANGE_FLAGS dwFlags;
     SYSTEMTIME st;
 }
 struct NMDATETIMESTRINGA
@@ -7604,8 +7768,8 @@ struct DRAWITEMSTRUCT
     DRAWITEMSTRUCT_CTL_TYPE CtlType;
     uint CtlID;
     uint itemID;
-    uint itemAction;
-    uint itemState;
+    ODA_FLAGS itemAction;
+    ODS_FLAGS itemState;
     HWND hwndItem;
     HDC hDC;
     RECT rcItem;
@@ -7745,14 +7909,3 @@ struct POINTER_DEVICE_CURSOR_INFO
     uint cursorId;
     POINTER_DEVICE_CURSOR_TYPE cursor;
 }
-/+ [CONFLICTED] struct TBBUTTON
-{
-    int iBitmap;
-    int idCommand;
-    ubyte fsState;
-    ubyte fsStyle;
-    ubyte[2] bReserved;
-    ulong dwData;
-    long iString;
-}
-+/

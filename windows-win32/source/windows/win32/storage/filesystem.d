@@ -443,7 +443,7 @@ uint OpenEncryptedFileRawW(const(wchar)*, uint, void**);
 uint ReadEncryptedFileRaw(PFE_EXPORT_FUNC, void*, void*);
 uint WriteEncryptedFileRaw(PFE_IMPORT_FUNC, void*, void*);
 void CloseEncryptedFileRaw(void*);
-int OpenFile(const(char)*, OFSTRUCT*, LZOPENFILE_STYLE);
+int OpenFile(const(char)*, OFSTRUCT*, uint);
 BOOL BackupRead(HANDLE, ubyte*, uint, uint*, BOOL, BOOL, void**);
 BOOL BackupSeek(HANDLE, uint, uint, uint*, uint*, void**);
 BOOL BackupWrite(HANDLE, ubyte*, uint, uint*, BOOL, BOOL, void**);
@@ -989,25 +989,25 @@ enum : uint
     FILE_NAME_OPENED     = 0x00000008,
 }
 
-alias LZOPENFILE_STYLE = uint;
-enum : uint
+alias LZOPENFILE_STYLE = ushort;
+enum : ushort
 {
-    OF_CANCEL           = 0x00000800,
-    OF_CREATE           = 0x00001000,
-    OF_DELETE           = 0x00000200,
-    OF_EXIST            = 0x00004000,
-    OF_PARSE            = 0x00000100,
-    OF_PROMPT           = 0x00002000,
-    OF_READ             = 0x00000000,
-    OF_READWRITE        = 0x00000002,
-    OF_REOPEN           = 0x00008000,
-    OF_SHARE_DENY_NONE  = 0x00000040,
-    OF_SHARE_DENY_READ  = 0x00000030,
-    OF_SHARE_DENY_WRITE = 0x00000020,
-    OF_SHARE_EXCLUSIVE  = 0x00000010,
-    OF_WRITE            = 0x00000001,
-    OF_SHARE_COMPAT     = 0x00000000,
-    OF_VERIFY           = 0x00000400,
+    OF_CANCEL           = 0x0800,
+    OF_CREATE           = 0x1000,
+    OF_DELETE           = 0x0200,
+    OF_EXIST            = 0x4000,
+    OF_PARSE            = 0x0100,
+    OF_PROMPT           = 0x2000,
+    OF_READ             = 0x0000,
+    OF_READWRITE        = 0x0002,
+    OF_REOPEN           = 0x8000,
+    OF_SHARE_DENY_NONE  = 0x0040,
+    OF_SHARE_DENY_READ  = 0x0030,
+    OF_SHARE_DENY_WRITE = 0x0020,
+    OF_SHARE_EXCLUSIVE  = 0x0010,
+    OF_WRITE            = 0x0001,
+    OF_SHARE_COMPAT     = 0x0000,
+    OF_VERIFY           = 0x0400,
 }
 
 alias FILE_NOTIFY_CHANGE = uint;
@@ -2898,6 +2898,7 @@ struct WOF_FILE_COMPRESSION_INFO_V1
 }
 struct TXF_ID
 {
+    align (4):
     struct
     {
         align (4):
@@ -2907,6 +2908,7 @@ struct TXF_ID
 }
 struct TXF_LOG_RECORD_BASE
 {
+    align (4):
     ushort Version;
     TXF_LOG_RECORD_TYPE RecordType;
     uint RecordLength;
@@ -2941,6 +2943,7 @@ struct TXF_LOG_RECORD_TRUNCATE
 }
 struct TXF_LOG_RECORD_AFFECTED_FILE
 {
+    align (4):
     ushort Version;
     uint RecordLength;
     uint Flags;

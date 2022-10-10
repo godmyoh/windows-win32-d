@@ -665,6 +665,29 @@ struct IKsAllocator
 struct IKsAllocatorEx
 {
 }
+struct KSSTREAM_HEADER
+{
+    uint Size;
+    uint TypeSpecificFlags;
+    KSTIME PresentationTime;
+    long Duration;
+    uint FrameExtent;
+    uint DataUsed;
+    void* Data;
+    uint OptionsFlags;
+    uint Reserved;
+}
+struct KSNODEPROPERTY_AUDIO_3D_LISTENER
+{
+    KSNODEPROPERTY NodeProperty;
+    void* ListenerId;
+}
+struct KSNODEPROPERTY_AUDIO_PROPERTY
+{
+    KSNODEPROPERTY NodeProperty;
+    void* AppContext;
+    uint Length;
+}
 enum IID_IKsControl = GUID(0x28f54685, 0x6fd, 0x11d2, [0xb2, 0x7a, 0x0, 0xa0, 0xc9, 0x22, 0x31, 0x96]);
 interface IKsControl : IUnknown
 {
@@ -1480,7 +1503,7 @@ struct KSTIME
     uint Numerator;
     uint Denominator;
 }
-struct KSSTREAM_HEADER
+/+ [CONFLICTED] struct KSSTREAM_HEADER
 {
     uint Size;
     uint TypeSpecificFlags;
@@ -1490,8 +1513,8 @@ struct KSSTREAM_HEADER
     uint DataUsed;
     void* Data;
     uint OptionsFlags;
-    uint Reserved;
 }
++/
 struct KSSTREAM_METADATA_INFO
 {
     uint BufferSize;
@@ -2126,7 +2149,7 @@ enum : int
     CONSTRICTOR_OPTION_MUTE    = 0x00000001,
 }
 
-struct _KSAUDIO_PACKETSIZE_SIGNALPROCESSINGMODE_CONSTRAINT
+struct KSAUDIO_PACKETSIZE_PROCESSINGMODE_CONSTRAINT
 {
     GUID ProcessingMode;
     uint SamplesPerProcessingPacket;
@@ -2138,7 +2161,7 @@ struct KSAUDIO_PACKETSIZE_CONSTRAINTS
     uint PacketSizeFileAlignment;
     uint Reserved;
     uint NumProcessingModeConstraints;
-    _KSAUDIO_PACKETSIZE_SIGNALPROCESSINGMODE_CONSTRAINT[1] ProcessingModeConstraints;
+    KSAUDIO_PACKETSIZE_PROCESSINGMODE_CONSTRAINT[1] ProcessingModeConstraints;
 }
 struct KSAUDIO_PACKETSIZE_CONSTRAINTS2
 {
@@ -2146,7 +2169,7 @@ struct KSAUDIO_PACKETSIZE_CONSTRAINTS2
     uint PacketSizeFileAlignment;
     uint MaxPacketSizeInBytes;
     uint NumProcessingModeConstraints;
-    _KSAUDIO_PACKETSIZE_SIGNALPROCESSINGMODE_CONSTRAINT[1] ProcessingModeConstraints;
+    KSAUDIO_PACKETSIZE_PROCESSINGMODE_CONSTRAINT[1] ProcessingModeConstraints;
 }
 alias KSMICARRAY_MICTYPE = int;
 enum : int
@@ -3374,17 +3397,21 @@ struct KSNODEPROPERTY_AUDIO_DEV_SPECIFIC
     uint DeviceInfo;
     uint Length;
 }
-struct KSNODEPROPERTY_AUDIO_3D_LISTENER
+/+ [CONFLICTED] struct KSNODEPROPERTY_AUDIO_3D_LISTENER
 {
     KSNODEPROPERTY NodeProperty;
     void* ListenerId;
+    uint Reserved;
 }
-struct KSNODEPROPERTY_AUDIO_PROPERTY
++/
+/+ [CONFLICTED] struct KSNODEPROPERTY_AUDIO_PROPERTY
 {
     KSNODEPROPERTY NodeProperty;
     void* AppContext;
     uint Length;
+    uint Reserved;
 }
++/
 enum CLSID_KSDATAFORMAT_TYPE_MUSIC = GUID(0xe725d360, 0x62cc, 0x11cf, [0xa5, 0xd6, 0x28, 0xdb, 0x4, 0xc1, 0x0, 0x0]);
 struct KSDATAFORMAT_TYPE_MUSIC
 {
@@ -4029,7 +4056,7 @@ struct KS_VBIINFOHEADER
     uint StrideInBytes;
     uint BufferSize;
 }
-struct KS_AnalogVideoInfo
+struct KS_ANALOGVIDEOINFO
 {
     RECT rcSource;
     RECT rcTarget;
@@ -4140,7 +4167,7 @@ struct KS_H264VIDEOINFO
     ushort wMaxMBperSecThreeResolutionsFullScalability;
     ushort wMaxMBperSecFourResolutionsFullScalability;
 }
-struct KS_MPEAUDIOINFO
+struct KS_MPEGAUDIOINFO
 {
     uint dwFlags;
     uint dwReserved1;
@@ -4285,7 +4312,7 @@ struct KS_DATARANGE_VIDEO_VBI
 struct KS_DATARANGE_ANALOGVIDEO
 {
     KSDATAFORMAT DataRange;
-    KS_AnalogVideoInfo AnalogVideoInfo;
+    KS_ANALOGVIDEOINFO AnalogVideoInfo;
 }
 enum CLSID_KSPROPSETID_VBICAP_PROPERTIES = GUID(0xf162c607, 0x7b35, 0x496f, [0xad, 0x7f, 0x2d, 0xca, 0x3b, 0x46, 0xb7, 0x18]);
 struct KSPROPSETID_VBICAP_PROPERTIES
@@ -4889,7 +4916,7 @@ struct KSPROPERTY_TUNER_STATUS_S
     uint SignalStrength;
     uint Busy;
 }
-alias _TunerDecoderLockType = int;
+alias TunerLockType = int;
 enum : int
 {
     Tuner_LockType_None                      = 0x00000000,
@@ -4937,7 +4964,7 @@ struct KSPROPERTY_TUNER_NETWORKTYPE_SCAN_CAPS_S
 struct KSPROPERTY_TUNER_SCAN_STATUS_S
 {
     KSIDENTIFIER Property;
-    _TunerDecoderLockType LockStatus;
+    TunerLockType LockStatus;
     uint CurrentFrequency;
 }
 struct KSEVENT_TUNER_INITIATE_SCAN_S
@@ -7006,30 +7033,3 @@ interface IKsTopology : IUnknown
 {
     HRESULT CreateNodeInstance(uint, uint, uint, IUnknown, const(GUID)*, void**);
 }
-/+ [CONFLICTED] struct KSSTREAM_HEADER
-{
-    uint Size;
-    uint TypeSpecificFlags;
-    KSTIME PresentationTime;
-    long Duration;
-    uint FrameExtent;
-    uint DataUsed;
-    void* Data;
-    uint OptionsFlags;
-}
-+/
-/+ [CONFLICTED] struct KSNODEPROPERTY_AUDIO_3D_LISTENER
-{
-    KSNODEPROPERTY NodeProperty;
-    void* ListenerId;
-    uint Reserved;
-}
-+/
-/+ [CONFLICTED] struct KSNODEPROPERTY_AUDIO_PROPERTY
-{
-    KSNODEPROPERTY NodeProperty;
-    void* AppContext;
-    uint Length;
-    uint Reserved;
-}
-+/

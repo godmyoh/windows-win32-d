@@ -285,8 +285,8 @@ HRESULT ScriptStringOut(void*, int, int, ETO_OPTIONS, const(RECT)*, int, int, BO
 HRESULT ScriptIsComplex(const(wchar)*, int, SCRIPT_IS_COMPLEX_FLAGS);
 HRESULT ScriptRecordDigitSubstitution(uint, SCRIPT_DIGITSUBSTITUTE*);
 HRESULT ScriptApplyDigitSubstitution(const(SCRIPT_DIGITSUBSTITUTE)*, SCRIPT_CONTROL*, SCRIPT_STATE*);
-HRESULT ScriptShapeOpenType(HDC, void**, SCRIPT_ANALYSIS*, uint, uint, int*, textrange_properties**, int, const(wchar)*, int, int, ushort*, script_charprop*, ushort*, script_glyphprop*, int*);
-HRESULT ScriptPlaceOpenType(HDC, void**, SCRIPT_ANALYSIS*, uint, uint, int*, textrange_properties**, int, const(wchar)*, ushort*, script_charprop*, int, const(ushort)*, const(script_glyphprop)*, int, int*, GOFFSET*, ABC*);
+HRESULT ScriptShapeOpenType(HDC, void**, SCRIPT_ANALYSIS*, uint, uint, int*, TEXTRANGE_PROPERTIES**, int, const(wchar)*, int, int, ushort*, SCRIPT_CHARPROP*, ushort*, SCRIPT_GLYPHPROP*, int*);
+HRESULT ScriptPlaceOpenType(HDC, void**, SCRIPT_ANALYSIS*, uint, uint, int*, TEXTRANGE_PROPERTIES**, int, const(wchar)*, ushort*, SCRIPT_CHARPROP*, int, const(ushort)*, const(SCRIPT_GLYPHPROP)*, int, int*, GOFFSET*, ABC*);
 HRESULT ScriptItemizeOpenType(const(wchar)*, int, int, const(SCRIPT_CONTROL)*, const(SCRIPT_STATE)*, SCRIPT_ITEM*, uint*, int*);
 HRESULT ScriptGetFontScriptTags(HDC, void**, SCRIPT_ANALYSIS*, int, uint*, int*);
 HRESULT ScriptGetFontLanguageTags(HDC, void**, SCRIPT_ANALYSIS*, uint, int, uint*, int*);
@@ -2697,21 +2697,21 @@ struct SCRIPT_DIGITSUBSTITUTE
     uint _bitfield2;
     uint dwReserved;
 }
-struct opentype_feature_record
+struct OPENTYPE_FEATURE_RECORD
 {
     uint tagFeature;
     int lParameter;
 }
-struct textrange_properties
+struct TEXTRANGE_PROPERTIES
 {
-    opentype_feature_record* potfRecords;
+    OPENTYPE_FEATURE_RECORD* potfRecords;
     int cotfRecords;
 }
-struct script_charprop
+struct SCRIPT_CHARPROP
 {
     ushort _bitfield0;
 }
-struct script_glyphprop
+struct SCRIPT_GLYPHPROP
 {
     SCRIPT_VISATTR sva;
     ushort reserved;
@@ -5877,7 +5877,7 @@ interface IEnumScript : IUnknown
     HRESULT Reset();
     HRESULT Skip(uint);
 }
-alias tagMLCONVCHARF = int;
+alias MLCONVCHAR = int;
 enum : int
 {
     MLCONVCHARF_AUTODETECT     = 0x00000001,
@@ -5889,7 +5889,7 @@ enum : int
     MLCONVCHARF_DETECTJPN      = 0x00000020,
 }
 
-alias tagMLCPF = int;
+alias MLCP = int;
 enum : int
 {
     MLDETECTF_MAILNEWS           = 0x00000001,
@@ -5960,7 +5960,7 @@ enum : int
     SCRIPTCONTF_SCRIPT_SYSTEM     = 0x00040000,
 }
 
-struct tagSCRIPFONTINFO
+struct SCRIPTFONTINFO
 {
     long scripts;
     wchar[32] wszFont;
@@ -6025,7 +6025,7 @@ interface IMLangFontLink2 : IMLangCodePages
     HRESULT ResetFontMapping();
     HRESULT MapFont(HDC, uint, wchar, HFONT*);
     HRESULT GetFontUnicodeRanges(HDC, uint*, UNICODERANGE*);
-    HRESULT GetScriptFontInfo(ubyte, uint, uint*, tagSCRIPFONTINFO*);
+    HRESULT GetScriptFontInfo(ubyte, uint, uint*, SCRIPTFONTINFO*);
     HRESULT CodePageToScriptID(uint, ubyte*);
 }
 enum IID_IMultiLanguage3 = GUID(0x4e5868ab, 0xb157, 0x4623, [0x9a, 0xcc, 0x6a, 0x1d, 0x9c, 0xae, 0xbe, 0x4]);

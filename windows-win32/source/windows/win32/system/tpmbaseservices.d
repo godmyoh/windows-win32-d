@@ -81,7 +81,7 @@ struct TBS_CONTEXT_PARAMS2
         uint asUINT32;
     }
 }
-struct tdTPM_WNF_PROVISIONING
+struct TPM_WNF_PROVISIONING
 {
     uint status;
     ubyte[28] message;

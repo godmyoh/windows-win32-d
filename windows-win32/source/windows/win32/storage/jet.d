@@ -146,8 +146,8 @@ int JetPrereadKeys(JET_SESID, JET_TABLEID, const(void)**, const(uint)*, int, int
 int JetPrereadIndexRanges(JET_SESID, JET_TABLEID, const(JET_INDEX_RANGE)*, const(uint), uint*, const(uint)*, const(uint), uint);
 int JetGetBookmark(JET_SESID, JET_TABLEID, void*, uint, uint*);
 int JetGetSecondaryIndexBookmark(JET_SESID, JET_TABLEID, void*, uint, uint*, void*, uint, uint*, const(uint));
-int JetCompactA(JET_SESID, byte*, byte*, JET_PFNSTATUS, CONVERT_A*, uint);
-int JetCompactW(JET_SESID, ushort*, ushort*, JET_PFNSTATUS, CONVERT_W*, uint);
+int JetCompactA(JET_SESID, byte*, byte*, JET_PFNSTATUS, JET_CONVERT_A*, uint);
+int JetCompactW(JET_SESID, ushort*, ushort*, JET_PFNSTATUS, JET_CONVERT_W*, uint);
 int JetDefragmentA(JET_SESID, uint, byte*, uint*, uint*, uint);
 int JetDefragmentW(JET_SESID, uint, ushort*, uint*, uint*, uint);
 int JetDefragment2A(JET_SESID, uint, byte*, uint*, uint*, JET_CALLBACK, uint);
@@ -1191,6 +1191,86 @@ struct JET_INDEXID
     uint cbStruct;
     ubyte[16] rgbIndexId;
 }
+struct JET_OBJECTINFO
+{
+    uint cbStruct;
+    uint objtyp;
+    double dtCreate;
+    double dtUpdate;
+    uint grbit;
+    uint flags;
+    uint cRecord;
+    uint cPage;
+}
+struct JET_THREADSTATS2
+{
+    uint cbStruct;
+    uint cPageReferenced;
+    uint cPageRead;
+    uint cPagePreread;
+    uint cPageDirtied;
+    uint cPageRedirtied;
+    uint cLogRecord;
+    uint cbLogRecord;
+    ulong cusecPageCacheMiss;
+    uint cPageCacheMiss;
+}
+struct JET_COMMIT_ID
+{
+    JET_SIGNATURE signLog;
+    int reserved;
+    long commitId;
+}
+struct JET_RBSINFOMISC
+{
+    int lRBSGeneration;
+    JET_LOGTIME logtimeCreate;
+    JET_LOGTIME logtimeCreatePrevRBS;
+    uint ulMajor;
+    uint ulMinor;
+    ulong cbLogicalFileSize;
+}
+struct JET_RBSREVERTINFOMISC
+{
+    int lGenMinRevertStart;
+    int lGenMaxRevertStart;
+    int lGenMinRevertEnd;
+    int lGenMaxRevertEnd;
+    JET_LOGTIME logtimeRevertFrom;
+    ulong cSecRevert;
+    ulong cPagesReverted;
+}
+struct JET_RECSIZE
+{
+    ulong cbData;
+    ulong cbLongValueData;
+    ulong cbOverhead;
+    ulong cbLongValueOverhead;
+    ulong cNonTaggedColumns;
+    ulong cTaggedColumns;
+    ulong cLongValues;
+    ulong cMultiValues;
+}
+struct JET_RECSIZE2
+{
+    ulong cbData;
+    ulong cbLongValueData;
+    ulong cbOverhead;
+    ulong cbLongValueOverhead;
+    ulong cNonTaggedColumns;
+    ulong cTaggedColumns;
+    ulong cLongValues;
+    ulong cMultiValues;
+    ulong cCompressedColumns;
+    ulong cbDataCompressed;
+    ulong cbLongValueDataCompressed;
+}
+/+ [CONFLICTED] struct JET_INDEXID
+{
+    uint cbStruct;
+    ubyte[12] rgbIndexId;
+}
++/
 alias JET_PFNSTATUS = int function(JET_SESID, uint, uint, void*);
 struct JET_RSTMAP_A
 {
@@ -1202,7 +1282,7 @@ struct JET_RSTMAP_W
     PWSTR szDatabaseName;
     PWSTR szNewDatabaseName;
 }
-struct CONVERT_A
+struct JET_CONVERT_A
 {
     PSTR szOldDll;
     union
@@ -1214,7 +1294,7 @@ struct CONVERT_A
         }
     }
 }
-struct CONVERT_W
+struct JET_CONVERT_W
 {
     PWSTR szOldDll;
     union
@@ -1250,8 +1330,9 @@ struct JET_DBINFOUPGRADE
         }
     }
 }
-struct JET_OBJECTINFO
+/+ [CONFLICTED] struct JET_OBJECTINFO
 {
+    align (4):
     uint cbStruct;
     uint objtyp;
     double dtCreate;
@@ -1261,6 +1342,7 @@ struct JET_OBJECTINFO
     uint cRecord;
     uint cPage;
 }
++/
 struct JET_OBJECTLIST
 {
     uint cbStruct;
@@ -2035,8 +2117,9 @@ struct JET_THREADSTATS
     uint cLogRecord;
     uint cbLogRecord;
 }
-struct JET_THREADSTATS2
+/+ [CONFLICTED] struct JET_THREADSTATS2
 {
+    align (4):
     uint cbStruct;
     uint cPageReferenced;
     uint cPageRead;
@@ -2048,6 +2131,7 @@ struct JET_THREADSTATS2
     ulong cusecPageCacheMiss;
     uint cPageCacheMiss;
 }
++/
 struct JET_RSTINFO_A
 {
     uint cbStruct;
@@ -2098,15 +2182,18 @@ struct JET_ERRINFOBASIC_W
     uint lSourceLine;
     wchar[64] rgszSourceFile;
 }
-struct JET_COMMIT_ID
+/+ [CONFLICTED] struct JET_COMMIT_ID
 {
+    align (4):
     JET_SIGNATURE signLog;
     int reserved;
     long commitId;
 }
++/
 alias JET_PFNDURABLECOMMITCALLBACK = int function(JET_INSTANCE, JET_COMMIT_ID*, uint);
-struct JET_RBSINFOMISC
+/+ [CONFLICTED] struct JET_RBSINFOMISC
 {
+    align (4):
     int lRBSGeneration;
     JET_LOGTIME logtimeCreate;
     JET_LOGTIME logtimeCreatePrevRBS;
@@ -2114,8 +2201,10 @@ struct JET_RBSINFOMISC
     uint ulMinor;
     ulong cbLogicalFileSize;
 }
-struct JET_RBSREVERTINFOMISC
++/
+/+ [CONFLICTED] struct JET_RBSREVERTINFOMISC
 {
+    align (4):
     int lGenMinRevertStart;
     int lGenMaxRevertStart;
     int lGenMinRevertEnd;
@@ -2124,6 +2213,7 @@ struct JET_RBSREVERTINFOMISC
     ulong cSecRevert;
     ulong cPagesReverted;
 }
++/
 alias JET_INDEXCHECKING = int;
 enum : int
 {
@@ -2209,8 +2299,9 @@ struct JET_ENUMCOLUMN
     }
 }
 alias JET_PFNREALLOC = void* function(void*, void*, uint);
-struct JET_RECSIZE
+/+ [CONFLICTED] struct JET_RECSIZE
 {
+    align (4):
     ulong cbData;
     ulong cbLongValueData;
     ulong cbOverhead;
@@ -2220,8 +2311,10 @@ struct JET_RECSIZE
     ulong cLongValues;
     ulong cMultiValues;
 }
-struct JET_RECSIZE2
++/
+/+ [CONFLICTED] struct JET_RECSIZE2
 {
+    align (4):
     ulong cbData;
     ulong cbLongValueData;
     ulong cbOverhead;
@@ -2234,6 +2327,7 @@ struct JET_RECSIZE2
     ulong cbDataCompressed;
     ulong cbLongValueDataCompressed;
 }
++/
 struct JET_LOGINFO_A
 {
     uint cbSize;
@@ -2266,97 +2360,3 @@ struct JET_INSTANCE_INFO_W
     ushort** szDatabaseDisplayName;
     ushort** szDatabaseSLVFileName_Obsolete;
 }
-/+ [CONFLICTED] struct JET_INDEXID
-{
-    uint cbStruct;
-    ubyte[12] rgbIndexId;
-}
-+/
-/+ [CONFLICTED] struct JET_OBJECTINFO
-{
-    align (4):
-    uint cbStruct;
-    uint objtyp;
-    double dtCreate;
-    double dtUpdate;
-    uint grbit;
-    uint flags;
-    uint cRecord;
-    uint cPage;
-}
-+/
-/+ [CONFLICTED] struct JET_THREADSTATS2
-{
-    align (4):
-    uint cbStruct;
-    uint cPageReferenced;
-    uint cPageRead;
-    uint cPagePreread;
-    uint cPageDirtied;
-    uint cPageRedirtied;
-    uint cLogRecord;
-    uint cbLogRecord;
-    ulong cusecPageCacheMiss;
-    uint cPageCacheMiss;
-}
-+/
-/+ [CONFLICTED] struct JET_COMMIT_ID
-{
-    align (4):
-    JET_SIGNATURE signLog;
-    int reserved;
-    long commitId;
-}
-+/
-/+ [CONFLICTED] struct JET_RBSINFOMISC
-{
-    align (4):
-    int lRBSGeneration;
-    JET_LOGTIME logtimeCreate;
-    JET_LOGTIME logtimeCreatePrevRBS;
-    uint ulMajor;
-    uint ulMinor;
-    ulong cbLogicalFileSize;
-}
-+/
-/+ [CONFLICTED] struct JET_RBSREVERTINFOMISC
-{
-    align (4):
-    int lGenMinRevertStart;
-    int lGenMaxRevertStart;
-    int lGenMinRevertEnd;
-    int lGenMaxRevertEnd;
-    JET_LOGTIME logtimeRevertFrom;
-    ulong cSecRevert;
-    ulong cPagesReverted;
-}
-+/
-/+ [CONFLICTED] struct JET_RECSIZE
-{
-    align (4):
-    ulong cbData;
-    ulong cbLongValueData;
-    ulong cbOverhead;
-    ulong cbLongValueOverhead;
-    ulong cNonTaggedColumns;
-    ulong cTaggedColumns;
-    ulong cLongValues;
-    ulong cMultiValues;
-}
-+/
-/+ [CONFLICTED] struct JET_RECSIZE2
-{
-    align (4):
-    ulong cbData;
-    ulong cbLongValueData;
-    ulong cbOverhead;
-    ulong cbLongValueOverhead;
-    ulong cNonTaggedColumns;
-    ulong cTaggedColumns;
-    ulong cLongValues;
-    ulong cMultiValues;
-    ulong cCompressedColumns;
-    ulong cbDataCompressed;
-    ulong cbLongValueDataCompressed;
-}
-+/

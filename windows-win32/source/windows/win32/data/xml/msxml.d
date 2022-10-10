@@ -608,7 +608,7 @@ enum : int
     NODE_NOTATION               = 0x0000000c,
 }
 
-alias XMLEMEM_TYPE = int;
+alias XMLELEM_TYPE = int;
 enum : int
 {
     XMLELEMTYPE_ELEMENT  = 0x00000000,

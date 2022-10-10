@@ -4,8 +4,8 @@ import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, CHAR, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, LRESULT, PSTR, PWSTR, WPARAM;
 import windows.win32.media_ : HTASK, MMTIME;
 import windows.win32.media.multimedia : HDRVR;
-import windows.win32.system.com_ : CLSCTX, INTERFACEINFO, IUnknown;
-import windows.win32.system.com.structuredstorage : PROPVARIANT, STGM;
+import windows.win32.system.com_ : CLSCTX, INTERFACEINFO, IUnknown, STGM;
+import windows.win32.system.com.structuredstorage : PROPVARIANT;
 import windows.win32.ui.shell.propertiessystem : IPropertyStore, PROPERTYKEY;
 import windows.win32.ui.windowsandmessaging : HICON;
 
@@ -768,6 +768,22 @@ struct ECHOWAVEFILTER
     WAVEFILTER wfltr;
     uint dwVolume;
     uint dwDelay;
+}
+struct ACMSTREAMHEADER
+{
+    align (1):
+    uint cbStruct;
+    uint fdwStatus;
+    ulong dwUser;
+    ubyte* pbSrc;
+    uint cbSrcLength;
+    uint cbSrcLengthUsed;
+    ulong dwSrcUser;
+    ubyte* pbDst;
+    uint cbDstLength;
+    uint cbDstLengthUsed;
+    ulong dwDstUser;
+    uint[15] dwReservedDriver;
 }
 struct WAVEHDR
 {
@@ -2548,7 +2564,7 @@ struct ACMFILTERCHOOSEW
     LPARAM lCustData;
     ACMFILTERCHOOSEHOOKPROCW pfnHook;
 }
-struct ACMSTREAMHEADER
+/+ [CONFLICTED] struct ACMSTREAMHEADER
 {
     align (1):
     uint cbStruct;
@@ -2562,9 +2578,10 @@ struct ACMSTREAMHEADER
     uint cbDstLength;
     uint cbDstLengthUsed;
     ulong dwDstUser;
-    uint[15] dwReservedDriver;
+    uint[10] dwReservedDriver;
 }
-struct tACMDRVOPENDESCA
++/
+struct ACMDRVOPENDESCA
 {
     align (1):
     uint cbStruct;
@@ -2577,7 +2594,7 @@ struct tACMDRVOPENDESCA
     const(char)* pszAliasName;
     uint dnDevNode;
 }
-struct tACMDRVOPENDESCW
+struct ACMDRVOPENDESCW
 {
     align (1):
     uint cbStruct;
@@ -2647,20 +2664,3 @@ struct ACMDRVFORMATSUGGEST
     WAVEFORMATEX* pwfxDst;
     uint cbwfxDst;
 }
-/+ [CONFLICTED] struct ACMSTREAMHEADER
-{
-    align (1):
-    uint cbStruct;
-    uint fdwStatus;
-    ulong dwUser;
-    ubyte* pbSrc;
-    uint cbSrcLength;
-    uint cbSrcLengthUsed;
-    ulong dwSrcUser;
-    ubyte* pbDst;
-    uint cbDstLength;
-    uint cbDstLengthUsed;
-    ulong dwDstUser;
-    uint[10] dwReservedDriver;
-}
-+/

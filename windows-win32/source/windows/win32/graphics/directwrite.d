@@ -10,7 +10,7 @@ import windows.win32.system.com_ : IUnknown;
 version (Windows):
 extern (Windows):
 
-HRESULT DWriteCreateFactory(DWRITE_FACTORY_TYPE, const(GUID)*, IUnknown*);
+HRESULT DWriteCreateFactory(DWRITE_FACTORY_TYPE, const(GUID)*, void**);
 enum DWRITE_ALPHA_MAX = 0x000000ff;
 enum FACILITY_DWRITE = 0x00000898;
 enum DWRITE_ERR_BASE = 0x00005000;

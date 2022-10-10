@@ -4054,7 +4054,7 @@ struct CMS_KEY_INFO
     ubyte* pbOID;
     uint cbOID;
 }
-struct HMAC_Info
+struct HMAC_INFO
 {
     uint HashAlgid;
     ubyte* pbInnerString;
@@ -4629,7 +4629,7 @@ struct NCRYPT_PCP_TPM_FW_VERSION_INFO
     ushort minor1;
     ushort minor2;
 }
-struct NCRYPT_PCP_RAW_POLICYDIGEST
+struct NCRYPT_PCP_RAW_POLICYDIGEST_INFO
 {
     uint dwVersion;
     uint cbDigest;

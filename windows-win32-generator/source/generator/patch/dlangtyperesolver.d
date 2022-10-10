@@ -20,6 +20,10 @@ class DlangTypeResolverPatch : IDlangTypeResolver
         if (cliType == CLIType_Guid)
             return isConst ? "const(GUID)" : "GUID";
 
+        // Avoid conflict with enum VIRTUAL_KEY.VK_F
+        if (cliType.namespace == "Windows.Win32.UI.Input.KeyboardAndMouse" && cliType.typeName == "VK_F")
+            return "VK_F_";
+
         if (isConst)
         {
             auto dlangType = cliType.typeName;

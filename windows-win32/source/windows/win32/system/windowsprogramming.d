@@ -24,6 +24,14 @@ enum : uint
     IF_ENTITY      = 0x00000200,
 }
 
+int uaw_lstrcmpW(ushort*, ushort*);
+int uaw_lstrcmpiW(ushort*, ushort*);
+int uaw_lstrlenW(ushort*);
+ushort* uaw_wcschr(ushort*, wchar);
+ushort* uaw_wcscpy(ushort*, ushort*);
+int uaw_wcsicmp(ushort*, ushort*);
+ulong uaw_wcslen(ushort*);
+ushort* uaw_wcsrchr(ushort*, wchar);
 ulong RtlGetReturnAddressHijackTarget();
 uint RtlRaiseCustomSystemEventTrigger(CUSTOM_SYSTEM_EVENT_TRIGGER_CONFIG*);
 BOOL IsApiSetImplemented(const(char)*);
@@ -119,14 +127,6 @@ BOOL ReplacePartitionUnit(PWSTR, PWSTR, uint);
 ulong GetThreadEnabledXStateFeatures();
 BOOL EnableProcessOptionalXStateFeatures(ulong);
 uint RaiseCustomSystemEventTrigger(CUSTOM_SYSTEM_EVENT_TRIGGER_CONFIG*);
-int uaw_lstrcmpW(ushort*, ushort*);
-int uaw_lstrcmpiW(ushort*, ushort*);
-int uaw_lstrlenW(ushort*);
-ushort* uaw_wcschr(ushort*, wchar);
-ushort* uaw_wcscpy(ushort*, ushort*);
-int uaw_wcsicmp(ushort*, ushort*);
-ulong uaw_wcslen(ushort*);
-ushort* uaw_wcsrchr(ushort*, wchar);
 NTSTATUS NtClose(HANDLE);
 NTSTATUS NtOpenFile(HANDLE*, uint, OBJECT_ATTRIBUTES*, IO_STATUS_BLOCK*, uint, uint);
 NTSTATUS NtRenameKey(HANDLE, UNICODE_STRING*);
@@ -840,6 +840,22 @@ struct _D3DHAL_GLOBALDRIVERDATA
 alias HWINWATCH = void*;
 alias FEATURE_STATE_CHANGE_SUBSCRIPTION = long;
 alias FH_SERVICE_PIPE_HANDLE = long;
+struct TCP_REQUEST_QUERY_INFORMATION_EX32_XP
+{
+    TDIObjectID ID;
+    uint[4] Context;
+}
+struct DELAYLOAD_INFO
+{
+    uint Size;
+    IMAGE_DELAYLOAD_DESCRIPTOR* DelayloadDescriptor;
+    IMAGE_THUNK_DATA64* ThunkAddress;
+    const(char)* TargetDllName;
+    DELAYLOAD_PROC_DESCRIPTOR TargetApiDescriptor;
+    void* TargetModuleBase;
+    void* Unused;
+    uint LastError;
+}
 struct IMAGE_THUNK_DATA64
 {
     union _u1_e__Union
@@ -1504,22 +1520,17 @@ struct TDIObjectID
     uint toi_type;
     uint toi_id;
 }
-struct tcp_request_query_information_ex_xp
+struct TCP_REQUEST_QUERY_INFORMATION_EX_XP
 {
     TDIObjectID ID;
-    ulong[2] Context;
+    ulong[4] Context;
 }
-struct tcp_request_query_information_ex32_xp
-{
-    TDIObjectID ID;
-    uint[4] Context;
-}
-struct tcp_request_query_information_ex_w2k
+struct TCP_REQUEST_QUERY_INFORMATION_EX_W2K
 {
     TDIObjectID ID;
     ubyte[16] Context;
 }
-struct tcp_request_set_information_ex
+struct TCP_REQUEST_SET_INFORMATION_EX
 {
     TDIObjectID ID;
     uint BufferSize;
@@ -1671,23 +1682,6 @@ struct DELAYLOAD_PROC_DESCRIPTOR
         uint Ordinal;
     }
 }
-struct DELAYLOAD_INFO
-{
-    uint Size;
-    IMAGE_DELAYLOAD_DESCRIPTOR* DelayloadDescriptor;
-    IMAGE_THUNK_DATA64* ThunkAddress;
-    const(char)* TargetDllName;
-    DELAYLOAD_PROC_DESCRIPTOR TargetApiDescriptor;
-    void* TargetModuleBase;
-    void* Unused;
-    uint LastError;
-}
-alias PDELAYLOAD_FAILURE_DLL_CALLBACK = void* function(uint, DELAYLOAD_INFO*);
-enum IID_IDeleteBrowsingHistory = GUID(0xcf38ed4b, 0x2be7, 0x4461, [0x8b, 0x5e, 0x9a, 0x46, 0x6d, 0xc8, 0x2a, 0xe3]);
-interface IDeleteBrowsingHistory : IUnknown
-{
-    HRESULT DeleteBrowsingHistory(uint);
-}
 /+ [CONFLICTED] struct DELAYLOAD_INFO
 {
     uint Size;
@@ -1700,3 +1694,9 @@ interface IDeleteBrowsingHistory : IUnknown
     uint LastError;
 }
 +/
+alias PDELAYLOAD_FAILURE_DLL_CALLBACK = void* function(uint, DELAYLOAD_INFO*);
+enum IID_IDeleteBrowsingHistory = GUID(0xcf38ed4b, 0x2be7, 0x4461, [0x8b, 0x5e, 0x9a, 0x46, 0x6d, 0xc8, 0x2a, 0xe3]);
+interface IDeleteBrowsingHistory : IUnknown
+{
+    HRESULT DeleteBrowsingHistory(uint);
+}

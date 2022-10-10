@@ -344,7 +344,6 @@ enum COLOR_SOLID_LEFT = 0x000002da;
 enum COLOR_SOLID_RIGHT = 0x000002db;
 enum NUM_BASIC_COLORS = 0x00000030;
 enum NUM_CUSTOM_COLORS = 0x00000010;
-alias LPOFNHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
 struct OPENFILENAME_NT4A
 {
     uint lStructSize;
@@ -443,7 +442,6 @@ struct OPENFILENAMEW
     uint dwReserved;
     OPEN_FILENAME_FLAGS_EX FlagsEx;
 }
-alias LPCCHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
 struct OFNOTIFYA
 {
     NMHDR hdr;
@@ -494,7 +492,6 @@ struct CHOOSECOLORW
     LPCCHOOKPROC lpfnHook;
     const(wchar)* lpTemplateName;
 }
-alias LPFRHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
 struct FINDREPLACEA
 {
     uint lStructSize;
@@ -523,7 +520,6 @@ struct FINDREPLACEW
     LPFRHOOKPROC lpfnHook;
     const(wchar)* lpTemplateName;
 }
-alias LPCFHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
 struct CHOOSEFONTA
 {
     uint lStructSize;
@@ -562,8 +558,6 @@ struct CHOOSEFONTW
     int nSizeMin;
     int nSizeMax;
 }
-alias LPPRINTHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
-alias LPSETUPHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
 struct PRINTDLGA
 {
     uint lStructSize;
@@ -607,20 +601,6 @@ struct PRINTDLGW
     const(wchar)* lpSetupTemplateName;
     long hPrintTemplate;
     long hSetupTemplate;
-}
-enum IID_IPrintDialogCallback = GUID(0x5852a2c3, 0x6530, 0x11d1, [0xb6, 0xa3, 0x0, 0x0, 0xf8, 0x75, 0x7b, 0xf9]);
-interface IPrintDialogCallback : IUnknown
-{
-    HRESULT InitDone();
-    HRESULT SelectionChange();
-    HRESULT HandleMessage(HWND, uint, WPARAM, LPARAM, LRESULT*);
-}
-enum IID_IPrintDialogServices = GUID(0x509aaeda, 0x5639, 0x11d1, [0xb6, 0xa1, 0x0, 0x0, 0xf8, 0x75, 0x7b, 0xf9]);
-interface IPrintDialogServices : IUnknown
-{
-    HRESULT GetCurrentDevMode(DEVMODEA*, uint*);
-    HRESULT GetCurrentPrinterName(PWSTR, uint*);
-    HRESULT GetCurrentPortName(PWSTR, uint*);
 }
 struct PRINTPAGERANGE
 {
@@ -682,8 +662,6 @@ struct DEVNAMES
     ushort wOutputOffset;
     ushort wDefault;
 }
-alias LPPAGEPAINTHOOK = ulong function(HWND, uint, WPARAM, LPARAM);
-alias LPPAGESETUPHOOK = ulong function(HWND, uint, WPARAM, LPARAM);
 struct PAGESETUPDLGA
 {
     uint lStructSize;
@@ -718,6 +696,7 @@ struct PAGESETUPDLGW
     const(wchar)* lpPageSetupTemplateName;
     long hPageSetupTemplate;
 }
+alias LPOFNHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
 /+ [CONFLICTED] struct OPENFILENAME_NT4A
 {
     align (1):
@@ -824,6 +803,7 @@ struct PAGESETUPDLGW
     OPEN_FILENAME_FLAGS_EX FlagsEx;
 }
 +/
+alias LPCCHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
 /+ [CONFLICTED] struct OFNOTIFYA
 {
     align (1):
@@ -886,6 +866,7 @@ struct PAGESETUPDLGW
     const(wchar)* lpTemplateName;
 }
 +/
+alias LPFRHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
 /+ [CONFLICTED] struct FINDREPLACEA
 {
     align (1):
@@ -918,6 +899,7 @@ struct PAGESETUPDLGW
     const(wchar)* lpTemplateName;
 }
 +/
+alias LPCFHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
 /+ [CONFLICTED] struct CHOOSEFONTA
 {
     align (1):
@@ -960,6 +942,8 @@ struct PAGESETUPDLGW
     int nSizeMax;
 }
 +/
+alias LPPRINTHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
+alias LPSETUPHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
 /+ [CONFLICTED] struct PRINTDLGA
 {
     align (1):
@@ -1008,6 +992,20 @@ struct PAGESETUPDLGW
     long hSetupTemplate;
 }
 +/
+enum IID_IPrintDialogCallback = GUID(0x5852a2c3, 0x6530, 0x11d1, [0xb6, 0xa3, 0x0, 0x0, 0xf8, 0x75, 0x7b, 0xf9]);
+interface IPrintDialogCallback : IUnknown
+{
+    HRESULT InitDone();
+    HRESULT SelectionChange();
+    HRESULT HandleMessage(HWND, uint, WPARAM, LPARAM, LRESULT*);
+}
+enum IID_IPrintDialogServices = GUID(0x509aaeda, 0x5639, 0x11d1, [0xb6, 0xa1, 0x0, 0x0, 0xf8, 0x75, 0x7b, 0xf9]);
+interface IPrintDialogServices : IUnknown
+{
+    HRESULT GetCurrentDevMode(DEVMODEA*, uint*);
+    HRESULT GetCurrentPrinterName(PWSTR, uint*);
+    HRESULT GetCurrentPortName(PWSTR, uint*);
+}
 /+ [CONFLICTED] struct PRINTPAGERANGE
 {
     align (1):
@@ -1076,6 +1074,8 @@ struct PAGESETUPDLGW
     ushort wDefault;
 }
 +/
+alias LPPAGEPAINTHOOK = ulong function(HWND, uint, WPARAM, LPARAM);
+alias LPPAGESETUPHOOK = ulong function(HWND, uint, WPARAM, LPARAM);
 /+ [CONFLICTED] struct PAGESETUPDLGA
 {
     align (1):

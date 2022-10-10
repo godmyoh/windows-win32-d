@@ -22,6 +22,7 @@ struct SHITEMID
 }
 struct ITEMIDLIST
 {
+    align (1):
     SHITEMID mkid;
 }
 alias STRRET_TYPE = int;

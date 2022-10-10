@@ -358,6 +358,7 @@ enum : int
 alias PFN_WdsCliCallback = void function(PFN_WDS_CLI_CALLBACK_MESSAGE_ID, WPARAM, LPARAM, void*);
 struct PXE_DHCP_OPTION
 {
+    align (1):
     ubyte OptionType;
     ubyte OptionLength;
     ubyte[1] OptionValue;
@@ -396,11 +397,13 @@ struct PXE_DHCPV6_OPTION
 }
 struct PXE_DHCPV6_MESSAGE_HEADER
 {
+    align (1):
     ubyte MessageType;
     ubyte[1] Message;
 }
 struct PXE_DHCPV6_MESSAGE
 {
+    align (1):
     ubyte MessageType;
     ubyte TransactionIDByte1;
     ubyte TransactionIDByte2;
@@ -409,6 +412,7 @@ struct PXE_DHCPV6_MESSAGE
 }
 struct PXE_DHCPV6_RELAY_MESSAGE
 {
+    align (1):
     ubyte MessageType;
     ubyte HopCount;
     ubyte[16] LinkAddress;

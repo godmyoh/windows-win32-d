@@ -34,7 +34,7 @@ enum CLSID_CQueryOEMWinSATCustomization = GUID(0xc47a41b7, 0xb729, 0x424f, [0x9a
 struct CQueryOEMWinSATCustomization
 {
 }
-alias WINSAT_OEM_DATA_TYPE = int;
+alias WINSAT_OEM_CUSTOMIZATION_STATE = int;
 enum : int
 {
     WINSAT_OEM_DATA_VALID                = 0x00000000,
@@ -125,5 +125,5 @@ interface IAccessibleWinSAT : IAccessible
 enum IID_IQueryOEMWinSATCustomization = GUID(0xbc9a6a9f, 0xad4e, 0x420e, [0x99, 0x53, 0xb3, 0x46, 0x71, 0xe9, 0xdf, 0x22]);
 interface IQueryOEMWinSATCustomization : IUnknown
 {
-    HRESULT GetOEMPrePopulationInfo(WINSAT_OEM_DATA_TYPE*);
+    HRESULT GetOEMPrePopulationInfo(WINSAT_OEM_CUSTOMIZATION_STATE*);
 }

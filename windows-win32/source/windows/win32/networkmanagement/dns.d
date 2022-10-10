@@ -391,11 +391,6 @@ enum DNS_CONNECTION_PROXY_INFO_FLAG_DISABLED = 0x00000001;
 enum DNS_CONNECTION_PROXY_INFO_FLAG_BYPASSLOCAL = 0x00000002;
 enum DNS_CONNECTION_POLICY_ENTRY_ONDEMAND = 0x00000001;
 alias DnsContextHandle = long;
-struct IP4_ARRAY
-{
-    uint AddrCount;
-    uint[1] AddrArray;
-}
 union IP6_ADDRESS
 {
     ulong[2] IP6Qword;
@@ -403,6 +398,18 @@ union IP6_ADDRESS
     ushort[8] IP6Word;
     ubyte[16] IP6Byte;
 }
+struct IP4_ARRAY
+{
+    uint AddrCount;
+    uint[1] AddrArray;
+}
+/+ [CONFLICTED] union IP6_ADDRESS
+{
+    uint[4] IP6Dword;
+    ushort[8] IP6Word;
+    ubyte[16] IP6Byte;
+}
++/
 struct DNS_ADDR
 {
     CHAR[32] MaxSa;
@@ -920,7 +927,7 @@ struct DNS_RECORDW
         ubyte* pDataPtr;
     }
 }
-struct _DnsRecordOptW
+struct DNS_RECORD_OPTW
 {
     DNS_RECORDW* pNext;
     PWSTR pName;
@@ -1349,10 +1356,3 @@ struct MDNS_QUERY_REQUEST
     BOOL fAnswerReceived;
     uint ulResendCount;
 }
-/+ [CONFLICTED] union IP6_ADDRESS
-{
-    uint[4] IP6Dword;
-    ushort[8] IP6Word;
-    ubyte[16] IP6Byte;
-}
-+/

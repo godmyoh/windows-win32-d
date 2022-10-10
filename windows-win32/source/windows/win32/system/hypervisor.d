@@ -539,7 +539,6 @@ enum : int
     WHvCacheTypeUncached       = 0x00000000,
     WHvCacheTypeWriteCombining = 0x00000001,
     WHvCacheTypeWriteThrough   = 0x00000004,
-    WHvCacheTypeWriteProtected = 0x00000005,
     WHvCacheTypeWriteBack      = 0x00000006,
 }
 

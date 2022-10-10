@@ -55,6 +55,11 @@ enum tcompQUANTUM_MEM_HI = 0x00001500;
 enum tcompSHIFT_QUANTUM_MEM = 0x00000008;
 enum tcompMASK_RESERVED = 0x0000e000;
 enum INCLUDED_FDI = 0x00000001;
+struct FDISPILLFILE
+{
+    CHAR[2] ach;
+    int cbFile;
+}
 struct ERF
 {
     int erfOper;
@@ -207,11 +212,6 @@ enum : int
 }
 
 alias PFNFDINOTIFY = long function(FDINOTIFICATIONTYPE, FDINOTIFICATION*);
-struct FDISPILLFILE
-{
-    CHAR[2] ach;
-    int cbFile;
-}
 /+ [CONFLICTED] struct FDISPILLFILE
 {
     align (1):

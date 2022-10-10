@@ -1,167 +1,167 @@
 module windows.win32.networking.ldap;
 
-import windows.win32.foundation : BOOLEAN, CHAR, HANDLE, PSTR, PWSTR;
+import windows.win32.foundation : BOOLEAN, CHAR, HANDLE, PSTR, PWSTR, WIN32_ERROR;
 import windows.win32.security.authentication.identity_ : SecPkgContext_IssuerListInfoEx;
 import windows.win32.security.cryptography_ : CERT_CONTEXT;
 
 version (Windows):
 extern (Windows):
 
-ldap* ldap_openW(const(wchar)*, uint);
-ldap* ldap_openA(const(char)*, uint);
-ldap* ldap_initW(const(wchar)*, uint);
-ldap* ldap_initA(const(char)*, uint);
-ldap* ldap_sslinitW(PWSTR, uint, int);
-ldap* ldap_sslinitA(PSTR, uint, int);
-uint ldap_connect(ldap*, LDAP_TIMEVAL*);
-ldap* ldap_open(PSTR, uint);
-ldap* ldap_init(PSTR, uint);
-ldap* ldap_sslinit(PSTR, uint, int);
-ldap* cldap_openW(PWSTR, uint);
-ldap* cldap_openA(PSTR, uint);
-ldap* cldap_open(PSTR, uint);
-uint ldap_unbind(ldap*);
-uint ldap_unbind_s(ldap*);
-uint ldap_get_option(ldap*, int, void*);
-uint ldap_get_optionW(ldap*, int, void*);
-uint ldap_set_option(ldap*, int, const(void)*);
-uint ldap_set_optionW(ldap*, int, const(void)*);
-uint ldap_simple_bindW(ldap*, PWSTR, PWSTR);
-uint ldap_simple_bindA(ldap*, PSTR, PSTR);
-uint ldap_simple_bind_sW(ldap*, PWSTR, PWSTR);
-uint ldap_simple_bind_sA(ldap*, PSTR, PSTR);
-uint ldap_bindW(ldap*, PWSTR, PWSTR, uint);
-uint ldap_bindA(ldap*, PSTR, PSTR, uint);
-uint ldap_bind_sW(ldap*, PWSTR, PWSTR, uint);
-uint ldap_bind_sA(ldap*, PSTR, PSTR, uint);
-int ldap_sasl_bindA(ldap*, const(char)*, const(char)*, const(LDAP_BERVAL)*, ldapcontrolA**, ldapcontrolA**, int*);
-int ldap_sasl_bindW(ldap*, const(wchar)*, const(wchar)*, const(LDAP_BERVAL)*, ldapcontrolW**, ldapcontrolW**, int*);
-int ldap_sasl_bind_sA(ldap*, const(char)*, const(char)*, const(LDAP_BERVAL)*, ldapcontrolA**, ldapcontrolA**, LDAP_BERVAL**);
-int ldap_sasl_bind_sW(ldap*, const(wchar)*, const(wchar)*, const(LDAP_BERVAL)*, ldapcontrolW**, ldapcontrolW**, LDAP_BERVAL**);
-uint ldap_simple_bind(ldap*, const(char)*, const(char)*);
-uint ldap_simple_bind_s(ldap*, const(char)*, const(char)*);
-uint ldap_bind(ldap*, const(char)*, const(char)*, uint);
-uint ldap_bind_s(ldap*, const(char)*, const(char)*, uint);
-uint ldap_searchW(ldap*, const(wchar)*, uint, const(wchar)*, ushort**, uint);
-uint ldap_searchA(ldap*, const(char)*, uint, const(char)*, byte**, uint);
-uint ldap_search_sW(ldap*, const(wchar)*, uint, const(wchar)*, ushort**, uint, LDAPMessage**);
-uint ldap_search_sA(ldap*, const(char)*, uint, const(char)*, byte**, uint, LDAPMessage**);
-uint ldap_search_stW(ldap*, const(wchar)*, uint, const(wchar)*, ushort**, uint, LDAP_TIMEVAL*, LDAPMessage**);
-uint ldap_search_stA(ldap*, const(char)*, uint, const(char)*, byte**, uint, LDAP_TIMEVAL*, LDAPMessage**);
-uint ldap_search_extW(ldap*, const(wchar)*, uint, const(wchar)*, ushort**, uint, ldapcontrolW**, ldapcontrolW**, uint, uint, uint*);
-uint ldap_search_extA(ldap*, const(char)*, uint, const(char)*, byte**, uint, ldapcontrolA**, ldapcontrolA**, uint, uint, uint*);
-uint ldap_search_ext_sW(ldap*, const(wchar)*, uint, const(wchar)*, ushort**, uint, ldapcontrolW**, ldapcontrolW**, LDAP_TIMEVAL*, uint, LDAPMessage**);
-uint ldap_search_ext_sA(ldap*, const(char)*, uint, const(char)*, byte**, uint, ldapcontrolA**, ldapcontrolA**, LDAP_TIMEVAL*, uint, LDAPMessage**);
-uint ldap_search(ldap*, PSTR, uint, PSTR, byte**, uint);
-uint ldap_search_s(ldap*, PSTR, uint, PSTR, byte**, uint, LDAPMessage**);
-uint ldap_search_st(ldap*, PSTR, uint, PSTR, byte**, uint, LDAP_TIMEVAL*, LDAPMessage**);
-uint ldap_search_ext(ldap*, PSTR, uint, PSTR, byte**, uint, ldapcontrolA**, ldapcontrolA**, uint, uint, uint*);
-uint ldap_search_ext_s(ldap*, PSTR, uint, PSTR, byte**, uint, ldapcontrolA**, ldapcontrolA**, LDAP_TIMEVAL*, uint, LDAPMessage**);
-uint ldap_check_filterW(ldap*, PWSTR);
-uint ldap_check_filterA(ldap*, PSTR);
-uint ldap_modifyW(ldap*, PWSTR, ldapmodW**);
-uint ldap_modifyA(ldap*, PSTR, ldapmodA**);
-uint ldap_modify_sW(ldap*, PWSTR, ldapmodW**);
-uint ldap_modify_sA(ldap*, PSTR, ldapmodA**);
-uint ldap_modify_extW(ldap*, const(wchar)*, ldapmodW**, ldapcontrolW**, ldapcontrolW**, uint*);
-uint ldap_modify_extA(ldap*, const(char)*, ldapmodA**, ldapcontrolA**, ldapcontrolA**, uint*);
-uint ldap_modify_ext_sW(ldap*, const(wchar)*, ldapmodW**, ldapcontrolW**, ldapcontrolW**);
-uint ldap_modify_ext_sA(ldap*, const(char)*, ldapmodA**, ldapcontrolA**, ldapcontrolA**);
-uint ldap_modify(ldap*, PSTR, ldapmodA**);
-uint ldap_modify_s(ldap*, PSTR, ldapmodA**);
-uint ldap_modify_ext(ldap*, const(char)*, ldapmodA**, ldapcontrolA**, ldapcontrolA**, uint*);
-uint ldap_modify_ext_s(ldap*, const(char)*, ldapmodA**, ldapcontrolA**, ldapcontrolA**);
-uint ldap_modrdn2W(ldap*, const(wchar)*, const(wchar)*, int);
-uint ldap_modrdn2A(ldap*, const(char)*, const(char)*, int);
-uint ldap_modrdnW(ldap*, const(wchar)*, const(wchar)*);
-uint ldap_modrdnA(ldap*, const(char)*, const(char)*);
-uint ldap_modrdn2_sW(ldap*, const(wchar)*, const(wchar)*, int);
-uint ldap_modrdn2_sA(ldap*, const(char)*, const(char)*, int);
-uint ldap_modrdn_sW(ldap*, const(wchar)*, const(wchar)*);
-uint ldap_modrdn_sA(ldap*, const(char)*, const(char)*);
-uint ldap_modrdn2(ldap*, const(char)*, const(char)*, int);
-uint ldap_modrdn(ldap*, const(char)*, const(char)*);
-uint ldap_modrdn2_s(ldap*, const(char)*, const(char)*, int);
-uint ldap_modrdn_s(ldap*, const(char)*, const(char)*);
-uint ldap_rename_extW(ldap*, const(wchar)*, const(wchar)*, const(wchar)*, int, ldapcontrolW**, ldapcontrolW**, uint*);
-uint ldap_rename_extA(ldap*, const(char)*, const(char)*, const(char)*, int, ldapcontrolA**, ldapcontrolA**, uint*);
-uint ldap_rename_ext_sW(ldap*, const(wchar)*, const(wchar)*, const(wchar)*, int, ldapcontrolW**, ldapcontrolW**);
-uint ldap_rename_ext_sA(ldap*, const(char)*, const(char)*, const(char)*, int, ldapcontrolA**, ldapcontrolA**);
-uint ldap_rename_ext(ldap*, const(char)*, const(char)*, const(char)*, int, ldapcontrolA**, ldapcontrolA**, uint*);
-uint ldap_rename_ext_s(ldap*, const(char)*, const(char)*, const(char)*, int, ldapcontrolA**, ldapcontrolA**);
-uint ldap_addW(ldap*, PWSTR, ldapmodW**);
-uint ldap_addA(ldap*, PSTR, ldapmodA**);
-uint ldap_add_sW(ldap*, PWSTR, ldapmodW**);
-uint ldap_add_sA(ldap*, PSTR, ldapmodA**);
-uint ldap_add_extW(ldap*, const(wchar)*, ldapmodW**, ldapcontrolW**, ldapcontrolW**, uint*);
-uint ldap_add_extA(ldap*, const(char)*, ldapmodA**, ldapcontrolA**, ldapcontrolA**, uint*);
-uint ldap_add_ext_sW(ldap*, const(wchar)*, ldapmodW**, ldapcontrolW**, ldapcontrolW**);
-uint ldap_add_ext_sA(ldap*, const(char)*, ldapmodA**, ldapcontrolA**, ldapcontrolA**);
-uint ldap_add(ldap*, PSTR, ldapmodA**);
-uint ldap_add_s(ldap*, PSTR, ldapmodA**);
-uint ldap_add_ext(ldap*, const(char)*, ldapmodA**, ldapcontrolA**, ldapcontrolA**, uint*);
-uint ldap_add_ext_s(ldap*, const(char)*, ldapmodA**, ldapcontrolA**, ldapcontrolA**);
-uint ldap_compareW(ldap*, const(wchar)*, const(wchar)*, PWSTR);
-uint ldap_compareA(ldap*, const(char)*, const(char)*, PSTR);
-uint ldap_compare_sW(ldap*, const(wchar)*, const(wchar)*, PWSTR);
-uint ldap_compare_sA(ldap*, const(char)*, const(char)*, PSTR);
-uint ldap_compare(ldap*, const(char)*, const(char)*, PSTR);
-uint ldap_compare_s(ldap*, const(char)*, const(char)*, PSTR);
-uint ldap_compare_extW(ldap*, const(wchar)*, const(wchar)*, const(wchar)*, LDAP_BERVAL*, ldapcontrolW**, ldapcontrolW**, uint*);
-uint ldap_compare_extA(ldap*, const(char)*, const(char)*, const(char)*, LDAP_BERVAL*, ldapcontrolA**, ldapcontrolA**, uint*);
-uint ldap_compare_ext_sW(ldap*, const(wchar)*, const(wchar)*, const(wchar)*, LDAP_BERVAL*, ldapcontrolW**, ldapcontrolW**);
-uint ldap_compare_ext_sA(ldap*, const(char)*, const(char)*, const(char)*, LDAP_BERVAL*, ldapcontrolA**, ldapcontrolA**);
-uint ldap_compare_ext(ldap*, const(char)*, const(char)*, const(char)*, LDAP_BERVAL*, ldapcontrolA**, ldapcontrolA**, uint*);
-uint ldap_compare_ext_s(ldap*, const(char)*, const(char)*, const(char)*, LDAP_BERVAL*, ldapcontrolA**, ldapcontrolA**);
-uint ldap_deleteW(ldap*, const(wchar)*);
-uint ldap_deleteA(ldap*, const(char)*);
-uint ldap_delete_sW(ldap*, const(wchar)*);
-uint ldap_delete_sA(ldap*, const(char)*);
-uint ldap_delete_extW(ldap*, const(wchar)*, ldapcontrolW**, ldapcontrolW**, uint*);
-uint ldap_delete_extA(ldap*, const(char)*, ldapcontrolA**, ldapcontrolA**, uint*);
-uint ldap_delete_ext_sW(ldap*, const(wchar)*, ldapcontrolW**, ldapcontrolW**);
-uint ldap_delete_ext_sA(ldap*, const(char)*, ldapcontrolA**, ldapcontrolA**);
-uint ldap_delete(ldap*, PSTR);
-uint ldap_delete_s(ldap*, PSTR);
-uint ldap_delete_ext(ldap*, const(char)*, ldapcontrolA**, ldapcontrolA**, uint*);
-uint ldap_delete_ext_s(ldap*, const(char)*, ldapcontrolA**, ldapcontrolA**);
-uint ldap_abandon(ldap*, uint);
-uint ldap_result(ldap*, uint, uint, LDAP_TIMEVAL*, LDAPMessage**);
+LDAP* ldap_openW(const(wchar)*, uint);
+LDAP* ldap_openA(const(char)*, uint);
+LDAP* ldap_initW(const(wchar)*, uint);
+LDAP* ldap_initA(const(char)*, uint);
+LDAP* ldap_sslinitW(PWSTR, uint, int);
+LDAP* ldap_sslinitA(PSTR, uint, int);
+uint ldap_connect(LDAP*, LDAP_TIMEVAL*);
+LDAP* ldap_open(PSTR, uint);
+LDAP* ldap_init(PSTR, uint);
+LDAP* ldap_sslinit(PSTR, uint, int);
+LDAP* cldap_openW(PWSTR, uint);
+LDAP* cldap_openA(PSTR, uint);
+LDAP* cldap_open(PSTR, uint);
+uint ldap_unbind(LDAP*);
+uint ldap_unbind_s(LDAP*);
+uint ldap_get_option(LDAP*, int, void*);
+uint ldap_get_optionW(LDAP*, int, void*);
+uint ldap_set_option(LDAP*, int, const(void)*);
+uint ldap_set_optionW(LDAP*, int, const(void)*);
+uint ldap_simple_bindW(LDAP*, PWSTR, PWSTR);
+uint ldap_simple_bindA(LDAP*, PSTR, PSTR);
+uint ldap_simple_bind_sW(LDAP*, PWSTR, PWSTR);
+uint ldap_simple_bind_sA(LDAP*, PSTR, PSTR);
+uint ldap_bindW(LDAP*, PWSTR, PWSTR, uint);
+uint ldap_bindA(LDAP*, PSTR, PSTR, uint);
+uint ldap_bind_sW(LDAP*, PWSTR, PWSTR, uint);
+uint ldap_bind_sA(LDAP*, PSTR, PSTR, uint);
+int ldap_sasl_bindA(LDAP*, const(char)*, const(char)*, const(LDAP_BERVAL)*, LDAPControlA**, LDAPControlA**, int*);
+int ldap_sasl_bindW(LDAP*, const(wchar)*, const(wchar)*, const(LDAP_BERVAL)*, LDAPControlW**, LDAPControlW**, int*);
+int ldap_sasl_bind_sA(LDAP*, const(char)*, const(char)*, const(LDAP_BERVAL)*, LDAPControlA**, LDAPControlA**, LDAP_BERVAL**);
+int ldap_sasl_bind_sW(LDAP*, const(wchar)*, const(wchar)*, const(LDAP_BERVAL)*, LDAPControlW**, LDAPControlW**, LDAP_BERVAL**);
+uint ldap_simple_bind(LDAP*, const(char)*, const(char)*);
+uint ldap_simple_bind_s(LDAP*, const(char)*, const(char)*);
+uint ldap_bind(LDAP*, const(char)*, const(char)*, uint);
+uint ldap_bind_s(LDAP*, const(char)*, const(char)*, uint);
+uint ldap_searchW(LDAP*, const(wchar)*, uint, const(wchar)*, ushort**, uint);
+uint ldap_searchA(LDAP*, const(char)*, uint, const(char)*, byte**, uint);
+uint ldap_search_sW(LDAP*, const(wchar)*, uint, const(wchar)*, ushort**, uint, LDAPMessage**);
+uint ldap_search_sA(LDAP*, const(char)*, uint, const(char)*, byte**, uint, LDAPMessage**);
+uint ldap_search_stW(LDAP*, const(wchar)*, uint, const(wchar)*, ushort**, uint, LDAP_TIMEVAL*, LDAPMessage**);
+uint ldap_search_stA(LDAP*, const(char)*, uint, const(char)*, byte**, uint, LDAP_TIMEVAL*, LDAPMessage**);
+uint ldap_search_extW(LDAP*, const(wchar)*, uint, const(wchar)*, ushort**, uint, LDAPControlW**, LDAPControlW**, uint, uint, uint*);
+uint ldap_search_extA(LDAP*, const(char)*, uint, const(char)*, byte**, uint, LDAPControlA**, LDAPControlA**, uint, uint, uint*);
+uint ldap_search_ext_sW(LDAP*, const(wchar)*, uint, const(wchar)*, ushort**, uint, LDAPControlW**, LDAPControlW**, LDAP_TIMEVAL*, uint, LDAPMessage**);
+uint ldap_search_ext_sA(LDAP*, const(char)*, uint, const(char)*, byte**, uint, LDAPControlA**, LDAPControlA**, LDAP_TIMEVAL*, uint, LDAPMessage**);
+uint ldap_search(LDAP*, PSTR, uint, PSTR, byte**, uint);
+uint ldap_search_s(LDAP*, PSTR, uint, PSTR, byte**, uint, LDAPMessage**);
+uint ldap_search_st(LDAP*, PSTR, uint, PSTR, byte**, uint, LDAP_TIMEVAL*, LDAPMessage**);
+uint ldap_search_ext(LDAP*, PSTR, uint, PSTR, byte**, uint, LDAPControlA**, LDAPControlA**, uint, uint, uint*);
+uint ldap_search_ext_s(LDAP*, PSTR, uint, PSTR, byte**, uint, LDAPControlA**, LDAPControlA**, LDAP_TIMEVAL*, uint, LDAPMessage**);
+uint ldap_check_filterW(LDAP*, PWSTR);
+uint ldap_check_filterA(LDAP*, PSTR);
+uint ldap_modifyW(LDAP*, PWSTR, LDAPModW**);
+uint ldap_modifyA(LDAP*, PSTR, LDAPModA**);
+uint ldap_modify_sW(LDAP*, PWSTR, LDAPModW**);
+uint ldap_modify_sA(LDAP*, PSTR, LDAPModA**);
+uint ldap_modify_extW(LDAP*, const(wchar)*, LDAPModW**, LDAPControlW**, LDAPControlW**, uint*);
+uint ldap_modify_extA(LDAP*, const(char)*, LDAPModA**, LDAPControlA**, LDAPControlA**, uint*);
+uint ldap_modify_ext_sW(LDAP*, const(wchar)*, LDAPModW**, LDAPControlW**, LDAPControlW**);
+uint ldap_modify_ext_sA(LDAP*, const(char)*, LDAPModA**, LDAPControlA**, LDAPControlA**);
+uint ldap_modify(LDAP*, PSTR, LDAPModA**);
+uint ldap_modify_s(LDAP*, PSTR, LDAPModA**);
+uint ldap_modify_ext(LDAP*, const(char)*, LDAPModA**, LDAPControlA**, LDAPControlA**, uint*);
+uint ldap_modify_ext_s(LDAP*, const(char)*, LDAPModA**, LDAPControlA**, LDAPControlA**);
+uint ldap_modrdn2W(LDAP*, const(wchar)*, const(wchar)*, int);
+uint ldap_modrdn2A(LDAP*, const(char)*, const(char)*, int);
+uint ldap_modrdnW(LDAP*, const(wchar)*, const(wchar)*);
+uint ldap_modrdnA(LDAP*, const(char)*, const(char)*);
+uint ldap_modrdn2_sW(LDAP*, const(wchar)*, const(wchar)*, int);
+uint ldap_modrdn2_sA(LDAP*, const(char)*, const(char)*, int);
+uint ldap_modrdn_sW(LDAP*, const(wchar)*, const(wchar)*);
+uint ldap_modrdn_sA(LDAP*, const(char)*, const(char)*);
+uint ldap_modrdn2(LDAP*, const(char)*, const(char)*, int);
+uint ldap_modrdn(LDAP*, const(char)*, const(char)*);
+uint ldap_modrdn2_s(LDAP*, const(char)*, const(char)*, int);
+uint ldap_modrdn_s(LDAP*, const(char)*, const(char)*);
+uint ldap_rename_extW(LDAP*, const(wchar)*, const(wchar)*, const(wchar)*, int, LDAPControlW**, LDAPControlW**, uint*);
+uint ldap_rename_extA(LDAP*, const(char)*, const(char)*, const(char)*, int, LDAPControlA**, LDAPControlA**, uint*);
+uint ldap_rename_ext_sW(LDAP*, const(wchar)*, const(wchar)*, const(wchar)*, int, LDAPControlW**, LDAPControlW**);
+uint ldap_rename_ext_sA(LDAP*, const(char)*, const(char)*, const(char)*, int, LDAPControlA**, LDAPControlA**);
+uint ldap_rename_ext(LDAP*, const(char)*, const(char)*, const(char)*, int, LDAPControlA**, LDAPControlA**, uint*);
+uint ldap_rename_ext_s(LDAP*, const(char)*, const(char)*, const(char)*, int, LDAPControlA**, LDAPControlA**);
+uint ldap_addW(LDAP*, PWSTR, LDAPModW**);
+uint ldap_addA(LDAP*, PSTR, LDAPModA**);
+uint ldap_add_sW(LDAP*, PWSTR, LDAPModW**);
+uint ldap_add_sA(LDAP*, PSTR, LDAPModA**);
+uint ldap_add_extW(LDAP*, const(wchar)*, LDAPModW**, LDAPControlW**, LDAPControlW**, uint*);
+uint ldap_add_extA(LDAP*, const(char)*, LDAPModA**, LDAPControlA**, LDAPControlA**, uint*);
+uint ldap_add_ext_sW(LDAP*, const(wchar)*, LDAPModW**, LDAPControlW**, LDAPControlW**);
+uint ldap_add_ext_sA(LDAP*, const(char)*, LDAPModA**, LDAPControlA**, LDAPControlA**);
+uint ldap_add(LDAP*, PSTR, LDAPModA**);
+uint ldap_add_s(LDAP*, PSTR, LDAPModA**);
+uint ldap_add_ext(LDAP*, const(char)*, LDAPModA**, LDAPControlA**, LDAPControlA**, uint*);
+uint ldap_add_ext_s(LDAP*, const(char)*, LDAPModA**, LDAPControlA**, LDAPControlA**);
+uint ldap_compareW(LDAP*, const(wchar)*, const(wchar)*, PWSTR);
+uint ldap_compareA(LDAP*, const(char)*, const(char)*, PSTR);
+uint ldap_compare_sW(LDAP*, const(wchar)*, const(wchar)*, PWSTR);
+uint ldap_compare_sA(LDAP*, const(char)*, const(char)*, PSTR);
+uint ldap_compare(LDAP*, const(char)*, const(char)*, PSTR);
+uint ldap_compare_s(LDAP*, const(char)*, const(char)*, PSTR);
+uint ldap_compare_extW(LDAP*, const(wchar)*, const(wchar)*, const(wchar)*, LDAP_BERVAL*, LDAPControlW**, LDAPControlW**, uint*);
+uint ldap_compare_extA(LDAP*, const(char)*, const(char)*, const(char)*, LDAP_BERVAL*, LDAPControlA**, LDAPControlA**, uint*);
+uint ldap_compare_ext_sW(LDAP*, const(wchar)*, const(wchar)*, const(wchar)*, LDAP_BERVAL*, LDAPControlW**, LDAPControlW**);
+uint ldap_compare_ext_sA(LDAP*, const(char)*, const(char)*, const(char)*, LDAP_BERVAL*, LDAPControlA**, LDAPControlA**);
+uint ldap_compare_ext(LDAP*, const(char)*, const(char)*, const(char)*, LDAP_BERVAL*, LDAPControlA**, LDAPControlA**, uint*);
+uint ldap_compare_ext_s(LDAP*, const(char)*, const(char)*, const(char)*, LDAP_BERVAL*, LDAPControlA**, LDAPControlA**);
+uint ldap_deleteW(LDAP*, const(wchar)*);
+uint ldap_deleteA(LDAP*, const(char)*);
+uint ldap_delete_sW(LDAP*, const(wchar)*);
+uint ldap_delete_sA(LDAP*, const(char)*);
+uint ldap_delete_extW(LDAP*, const(wchar)*, LDAPControlW**, LDAPControlW**, uint*);
+uint ldap_delete_extA(LDAP*, const(char)*, LDAPControlA**, LDAPControlA**, uint*);
+uint ldap_delete_ext_sW(LDAP*, const(wchar)*, LDAPControlW**, LDAPControlW**);
+uint ldap_delete_ext_sA(LDAP*, const(char)*, LDAPControlA**, LDAPControlA**);
+uint ldap_delete(LDAP*, PSTR);
+uint ldap_delete_s(LDAP*, PSTR);
+uint ldap_delete_ext(LDAP*, const(char)*, LDAPControlA**, LDAPControlA**, uint*);
+uint ldap_delete_ext_s(LDAP*, const(char)*, LDAPControlA**, LDAPControlA**);
+uint ldap_abandon(LDAP*, uint);
+uint ldap_result(LDAP*, uint, uint, LDAP_TIMEVAL*, LDAPMessage**);
 uint ldap_msgfree(LDAPMessage*);
-uint ldap_result2error(ldap*, LDAPMessage*, uint);
-uint ldap_parse_resultW(ldap*, LDAPMessage*, uint*, PWSTR*, PWSTR*, ushort***, ldapcontrolW***, BOOLEAN);
-uint ldap_parse_resultA(ldap*, LDAPMessage*, uint*, PSTR*, PSTR*, byte***, ldapcontrolA***, BOOLEAN);
-uint ldap_parse_extended_resultA(ldap*, LDAPMessage*, PSTR*, LDAP_BERVAL**, BOOLEAN);
-uint ldap_parse_extended_resultW(ldap*, LDAPMessage*, PWSTR*, LDAP_BERVAL**, BOOLEAN);
-uint ldap_controls_freeA(ldapcontrolA**);
-uint ldap_control_freeA(ldapcontrolA*);
-uint ldap_controls_freeW(ldapcontrolW**);
-uint ldap_control_freeW(ldapcontrolW*);
-uint ldap_free_controlsW(ldapcontrolW**);
-uint ldap_free_controlsA(ldapcontrolA**);
-uint ldap_parse_result(ldap*, LDAPMessage*, uint*, PSTR*, PSTR*, PSTR**, ldapcontrolA***, BOOLEAN);
-uint ldap_controls_free(ldapcontrolA**);
-uint ldap_control_free(ldapcontrolA*);
-uint ldap_free_controls(ldapcontrolA**);
+uint ldap_result2error(LDAP*, LDAPMessage*, uint);
+uint ldap_parse_resultW(LDAP*, LDAPMessage*, uint*, PWSTR*, PWSTR*, ushort***, LDAPControlW***, BOOLEAN);
+uint ldap_parse_resultA(LDAP*, LDAPMessage*, uint*, PSTR*, PSTR*, byte***, LDAPControlA***, BOOLEAN);
+uint ldap_parse_extended_resultA(LDAP*, LDAPMessage*, PSTR*, LDAP_BERVAL**, BOOLEAN);
+uint ldap_parse_extended_resultW(LDAP*, LDAPMessage*, PWSTR*, LDAP_BERVAL**, BOOLEAN);
+uint ldap_controls_freeA(LDAPControlA**);
+uint ldap_control_freeA(LDAPControlA*);
+uint ldap_controls_freeW(LDAPControlW**);
+uint ldap_control_freeW(LDAPControlW*);
+uint ldap_free_controlsW(LDAPControlW**);
+uint ldap_free_controlsA(LDAPControlA**);
+uint ldap_parse_result(LDAP*, LDAPMessage*, uint*, PSTR*, PSTR*, PSTR**, LDAPControlA***, BOOLEAN);
+uint ldap_controls_free(LDAPControlA**);
+uint ldap_control_free(LDAPControlA*);
+uint ldap_free_controls(LDAPControlA**);
 PWSTR ldap_err2stringW(uint);
 PSTR ldap_err2stringA(uint);
 PSTR ldap_err2string(uint);
-void ldap_perror(ldap*, const(char)*);
-LDAPMessage* ldap_first_entry(ldap*, LDAPMessage*);
-LDAPMessage* ldap_next_entry(ldap*, LDAPMessage*);
-uint ldap_count_entries(ldap*, LDAPMessage*);
-PWSTR ldap_first_attributeW(ldap*, LDAPMessage*, berelement**);
-PSTR ldap_first_attributeA(ldap*, LDAPMessage*, berelement**);
-PSTR ldap_first_attribute(ldap*, LDAPMessage*, berelement**);
-PWSTR ldap_next_attributeW(ldap*, LDAPMessage*, berelement*);
-PSTR ldap_next_attributeA(ldap*, LDAPMessage*, berelement*);
-PSTR ldap_next_attribute(ldap*, LDAPMessage*, berelement*);
-PWSTR* ldap_get_valuesW(ldap*, LDAPMessage*, const(wchar)*);
-PSTR* ldap_get_valuesA(ldap*, LDAPMessage*, const(char)*);
-PSTR* ldap_get_values(ldap*, LDAPMessage*, const(char)*);
-LDAP_BERVAL** ldap_get_values_lenW(ldap*, LDAPMessage*, const(wchar)*);
-LDAP_BERVAL** ldap_get_values_lenA(ldap*, LDAPMessage*, const(char)*);
-LDAP_BERVAL** ldap_get_values_len(ldap*, LDAPMessage*, const(char)*);
+void ldap_perror(LDAP*, const(char)*);
+LDAPMessage* ldap_first_entry(LDAP*, LDAPMessage*);
+LDAPMessage* ldap_next_entry(LDAP*, LDAPMessage*);
+uint ldap_count_entries(LDAP*, LDAPMessage*);
+PWSTR ldap_first_attributeW(LDAP*, LDAPMessage*, BerElement**);
+PSTR ldap_first_attributeA(LDAP*, LDAPMessage*, BerElement**);
+PSTR ldap_first_attribute(LDAP*, LDAPMessage*, BerElement**);
+PWSTR ldap_next_attributeW(LDAP*, LDAPMessage*, BerElement*);
+PSTR ldap_next_attributeA(LDAP*, LDAPMessage*, BerElement*);
+PSTR ldap_next_attribute(LDAP*, LDAPMessage*, BerElement*);
+PWSTR* ldap_get_valuesW(LDAP*, LDAPMessage*, const(wchar)*);
+PSTR* ldap_get_valuesA(LDAP*, LDAPMessage*, const(char)*);
+PSTR* ldap_get_values(LDAP*, LDAPMessage*, const(char)*);
+LDAP_BERVAL** ldap_get_values_lenW(LDAP*, LDAPMessage*, const(wchar)*);
+LDAP_BERVAL** ldap_get_values_lenA(LDAP*, LDAPMessage*, const(char)*);
+LDAP_BERVAL** ldap_get_values_len(LDAP*, LDAPMessage*, const(char)*);
 uint ldap_count_valuesW(PWSTR*);
 uint ldap_count_valuesA(PSTR*);
 uint ldap_count_values(PSTR*);
@@ -170,9 +170,9 @@ uint ldap_value_freeW(PWSTR*);
 uint ldap_value_freeA(PSTR*);
 uint ldap_value_free(PSTR*);
 uint ldap_value_free_len(LDAP_BERVAL**);
-PWSTR ldap_get_dnW(ldap*, LDAPMessage*);
-PSTR ldap_get_dnA(ldap*, LDAPMessage*);
-PSTR ldap_get_dn(ldap*, LDAPMessage*);
+PWSTR ldap_get_dnW(LDAP*, LDAPMessage*);
+PSTR ldap_get_dnA(LDAP*, LDAPMessage*);
+PSTR ldap_get_dn(LDAP*, LDAPMessage*);
 PWSTR* ldap_explode_dnW(const(wchar)*, uint);
 PSTR* ldap_explode_dnA(const(char)*, uint);
 PSTR* ldap_explode_dn(const(char)*, uint);
@@ -186,7 +186,7 @@ void ldap_memfree(PSTR);
 uint ldap_ufn2dnW(const(wchar)*, PWSTR*);
 uint ldap_ufn2dnA(const(char)*, PSTR*);
 uint ldap_ufn2dn(const(char)*, PSTR*);
-uint ldap_startup(ldap_version_info*, HANDLE*);
+uint ldap_startup(LDAP_VERSION_INFO*, HANDLE*);
 uint ldap_cleanup(HANDLE);
 uint ldap_escape_filter_elementW(PSTR, uint, PWSTR, uint);
 uint ldap_escape_filter_elementA(PSTR, uint, PSTR, uint);
@@ -195,61 +195,61 @@ uint ldap_set_dbg_flags(uint);
 void ldap_set_dbg_routine(DBGPRINT);
 int LdapUTF8ToUnicode(const(char)*, int, PWSTR, int);
 int LdapUnicodeToUTF8(const(wchar)*, int, PSTR, int);
-uint ldap_create_sort_controlA(ldap*, ldapsortkeyA**, ubyte, ldapcontrolA**);
-uint ldap_create_sort_controlW(ldap*, ldapsortkeyW**, ubyte, ldapcontrolW**);
-uint ldap_parse_sort_controlA(ldap*, ldapcontrolA**, uint*, PSTR*);
-uint ldap_parse_sort_controlW(ldap*, ldapcontrolW**, uint*, PWSTR*);
-uint ldap_create_sort_control(ldap*, ldapsortkeyA**, ubyte, ldapcontrolA**);
-uint ldap_parse_sort_control(ldap*, ldapcontrolA**, uint*, PSTR*);
-uint ldap_encode_sort_controlW(ldap*, ldapsortkeyW**, ldapcontrolW*, BOOLEAN);
-uint ldap_encode_sort_controlA(ldap*, ldapsortkeyA**, ldapcontrolA*, BOOLEAN);
-uint ldap_create_page_controlW(ldap*, uint, LDAP_BERVAL*, ubyte, ldapcontrolW**);
-uint ldap_create_page_controlA(ldap*, uint, LDAP_BERVAL*, ubyte, ldapcontrolA**);
-uint ldap_parse_page_controlW(ldap*, ldapcontrolW**, uint*, LDAP_BERVAL**);
-uint ldap_parse_page_controlA(ldap*, ldapcontrolA**, uint*, LDAP_BERVAL**);
-uint ldap_create_page_control(ldap*, uint, LDAP_BERVAL*, ubyte, ldapcontrolA**);
-uint ldap_parse_page_control(ldap*, ldapcontrolA**, uint*, LDAP_BERVAL**);
-ldapsearch* ldap_search_init_pageW(ldap*, const(wchar)*, uint, const(wchar)*, ushort**, uint, ldapcontrolW**, ldapcontrolW**, uint, uint, ldapsortkeyW**);
-ldapsearch* ldap_search_init_pageA(ldap*, const(char)*, uint, const(char)*, byte**, uint, ldapcontrolA**, ldapcontrolA**, uint, uint, ldapsortkeyA**);
-ldapsearch* ldap_search_init_page(ldap*, const(char)*, uint, const(char)*, byte**, uint, ldapcontrolA**, ldapcontrolA**, uint, uint, ldapsortkeyA**);
-uint ldap_get_next_page(ldap*, ldapsearch*, uint, uint*);
-uint ldap_get_next_page_s(ldap*, ldapsearch*, LDAP_TIMEVAL*, uint, uint*, LDAPMessage**);
-uint ldap_get_paged_count(ldap*, ldapsearch*, uint*, LDAPMessage*);
-uint ldap_search_abandon_page(ldap*, ldapsearch*);
-int ldap_create_vlv_controlW(ldap*, ldapvlvinfo*, ubyte, ldapcontrolW**);
-int ldap_create_vlv_controlA(ldap*, ldapvlvinfo*, ubyte, ldapcontrolA**);
-int ldap_parse_vlv_controlW(ldap*, ldapcontrolW**, uint*, uint*, LDAP_BERVAL**, int*);
-int ldap_parse_vlv_controlA(ldap*, ldapcontrolA**, uint*, uint*, LDAP_BERVAL**, int*);
-uint ldap_start_tls_sW(ldap*, uint*, LDAPMessage**, ldapcontrolW**, ldapcontrolW**);
-uint ldap_start_tls_sA(ldap*, uint*, LDAPMessage**, ldapcontrolA**, ldapcontrolA**);
-BOOLEAN ldap_stop_tls_s(ldap*);
-LDAPMessage* ldap_first_reference(ldap*, LDAPMessage*);
-LDAPMessage* ldap_next_reference(ldap*, LDAPMessage*);
-uint ldap_count_references(ldap*, LDAPMessage*);
-uint ldap_parse_referenceW(ldap*, LDAPMessage*, PWSTR**);
-uint ldap_parse_referenceA(ldap*, LDAPMessage*, PSTR**);
-uint ldap_parse_reference(ldap*, LDAPMessage*, PSTR**);
-uint ldap_extended_operationW(ldap*, const(wchar)*, LDAP_BERVAL*, ldapcontrolW**, ldapcontrolW**, uint*);
-uint ldap_extended_operationA(ldap*, const(char)*, LDAP_BERVAL*, ldapcontrolA**, ldapcontrolA**, uint*);
-uint ldap_extended_operation_sA(ldap*, PSTR, LDAP_BERVAL*, ldapcontrolA**, ldapcontrolA**, PSTR*, LDAP_BERVAL**);
-uint ldap_extended_operation_sW(ldap*, PWSTR, LDAP_BERVAL*, ldapcontrolW**, ldapcontrolW**, PWSTR*, LDAP_BERVAL**);
-uint ldap_extended_operation(ldap*, const(char)*, LDAP_BERVAL*, ldapcontrolA**, ldapcontrolA**, uint*);
-uint ldap_close_extended_op(ldap*, uint);
+uint ldap_create_sort_controlA(LDAP*, LDAPSortKeyA**, ubyte, LDAPControlA**);
+uint ldap_create_sort_controlW(LDAP*, LDAPSortKeyW**, ubyte, LDAPControlW**);
+uint ldap_parse_sort_controlA(LDAP*, LDAPControlA**, uint*, PSTR*);
+uint ldap_parse_sort_controlW(LDAP*, LDAPControlW**, uint*, PWSTR*);
+uint ldap_create_sort_control(LDAP*, LDAPSortKeyA**, ubyte, LDAPControlA**);
+uint ldap_parse_sort_control(LDAP*, LDAPControlA**, uint*, PSTR*);
+uint ldap_encode_sort_controlW(LDAP*, LDAPSortKeyW**, LDAPControlW*, BOOLEAN);
+uint ldap_encode_sort_controlA(LDAP*, LDAPSortKeyA**, LDAPControlA*, BOOLEAN);
+uint ldap_create_page_controlW(LDAP*, uint, LDAP_BERVAL*, ubyte, LDAPControlW**);
+uint ldap_create_page_controlA(LDAP*, uint, LDAP_BERVAL*, ubyte, LDAPControlA**);
+uint ldap_parse_page_controlW(LDAP*, LDAPControlW**, uint*, LDAP_BERVAL**);
+uint ldap_parse_page_controlA(LDAP*, LDAPControlA**, uint*, LDAP_BERVAL**);
+uint ldap_create_page_control(LDAP*, uint, LDAP_BERVAL*, ubyte, LDAPControlA**);
+uint ldap_parse_page_control(LDAP*, LDAPControlA**, uint*, LDAP_BERVAL**);
+LDAPSearch* ldap_search_init_pageW(LDAP*, const(wchar)*, uint, const(wchar)*, ushort**, uint, LDAPControlW**, LDAPControlW**, uint, uint, LDAPSortKeyW**);
+LDAPSearch* ldap_search_init_pageA(LDAP*, const(char)*, uint, const(char)*, byte**, uint, LDAPControlA**, LDAPControlA**, uint, uint, LDAPSortKeyA**);
+LDAPSearch* ldap_search_init_page(LDAP*, const(char)*, uint, const(char)*, byte**, uint, LDAPControlA**, LDAPControlA**, uint, uint, LDAPSortKeyA**);
+uint ldap_get_next_page(LDAP*, LDAPSearch*, uint, uint*);
+uint ldap_get_next_page_s(LDAP*, LDAPSearch*, LDAP_TIMEVAL*, uint, uint*, LDAPMessage**);
+uint ldap_get_paged_count(LDAP*, LDAPSearch*, uint*, LDAPMessage*);
+uint ldap_search_abandon_page(LDAP*, LDAPSearch*);
+int ldap_create_vlv_controlW(LDAP*, LDAPVLVInfo*, ubyte, LDAPControlW**);
+int ldap_create_vlv_controlA(LDAP*, LDAPVLVInfo*, ubyte, LDAPControlA**);
+int ldap_parse_vlv_controlW(LDAP*, LDAPControlW**, uint*, uint*, LDAP_BERVAL**, int*);
+int ldap_parse_vlv_controlA(LDAP*, LDAPControlA**, uint*, uint*, LDAP_BERVAL**, int*);
+uint ldap_start_tls_sW(LDAP*, uint*, LDAPMessage**, LDAPControlW**, LDAPControlW**);
+uint ldap_start_tls_sA(LDAP*, uint*, LDAPMessage**, LDAPControlA**, LDAPControlA**);
+BOOLEAN ldap_stop_tls_s(LDAP*);
+LDAPMessage* ldap_first_reference(LDAP*, LDAPMessage*);
+LDAPMessage* ldap_next_reference(LDAP*, LDAPMessage*);
+uint ldap_count_references(LDAP*, LDAPMessage*);
+uint ldap_parse_referenceW(LDAP*, LDAPMessage*, PWSTR**);
+uint ldap_parse_referenceA(LDAP*, LDAPMessage*, PSTR**);
+uint ldap_parse_reference(LDAP*, LDAPMessage*, PSTR**);
+uint ldap_extended_operationW(LDAP*, const(wchar)*, LDAP_BERVAL*, LDAPControlW**, LDAPControlW**, uint*);
+uint ldap_extended_operationA(LDAP*, const(char)*, LDAP_BERVAL*, LDAPControlA**, LDAPControlA**, uint*);
+uint ldap_extended_operation_sA(LDAP*, PSTR, LDAP_BERVAL*, LDAPControlA**, LDAPControlA**, PSTR*, LDAP_BERVAL**);
+uint ldap_extended_operation_sW(LDAP*, PWSTR, LDAP_BERVAL*, LDAPControlW**, LDAPControlW**, PWSTR*, LDAP_BERVAL**);
+uint ldap_extended_operation(LDAP*, const(char)*, LDAP_BERVAL*, LDAPControlA**, LDAPControlA**, uint*);
+uint ldap_close_extended_op(LDAP*, uint);
 uint LdapGetLastError();
-uint LdapMapErrorToWin32(uint);
-ldap* ldap_conn_from_msg(ldap*, LDAPMessage*);
-berelement* ber_init(LDAP_BERVAL*);
-void ber_free(berelement*, int);
+WIN32_ERROR LdapMapErrorToWin32(LDAP_RETCODE);
+LDAP* ldap_conn_from_msg(LDAP*, LDAPMessage*);
+BerElement* ber_init(LDAP_BERVAL*);
+void ber_free(BerElement*, int);
 void ber_bvecfree(LDAP_BERVAL**);
 LDAP_BERVAL* ber_bvdup(LDAP_BERVAL*);
-berelement* ber_alloc_t(int);
-uint ber_skip_tag(berelement*, uint*);
-uint ber_peek_tag(berelement*, uint*);
-uint ber_first_element(berelement*, uint*, CHAR**);
-uint ber_next_element(berelement*, uint*, PSTR);
-int ber_flatten(berelement*, LDAP_BERVAL**);
-int ber_printf(berelement*, PSTR);
-uint ber_scanf(berelement*, PSTR);
+BerElement* ber_alloc_t(int);
+uint ber_skip_tag(BerElement*, uint*);
+uint ber_peek_tag(BerElement*, uint*);
+uint ber_first_element(BerElement*, uint*, CHAR**);
+uint ber_next_element(BerElement*, uint*, PSTR);
+int ber_flatten(BerElement*, LDAP_BERVAL**);
+int ber_printf(BerElement*, PSTR);
+uint ber_scanf(BerElement*, PSTR);
 enum LBER_ERROR = 0xffffffffffffffff;
 enum LBER_DEFAULT = 0xffffffffffffffff;
 enum LDAP_UNICODE = 0x00000001;
@@ -640,7 +640,7 @@ enum : int
     LDAP_REFERRAL_LIMIT_EXCEEDED    = 0x00000061,
 }
 
-struct ldap
+struct LDAP
 {
     struct _ld_sb_e__Struct
     {
@@ -683,7 +683,7 @@ struct LDAPMessage
     LDAPMessage* lm_chain;
     LDAPMessage* lm_next;
     uint lm_time;
-    ldap* Connection;
+    LDAP* Connection;
     void* Request;
     uint lm_returncode;
     ushort lm_referral;
@@ -691,19 +691,19 @@ struct LDAPMessage
     BOOLEAN lm_eom;
     BOOLEAN ConnectionReferenced;
 }
-struct ldapcontrolA
+struct LDAPControlA
 {
     PSTR ldctl_oid;
     LDAP_BERVAL ldctl_value;
     BOOLEAN ldctl_iscritical;
 }
-struct ldapcontrolW
+struct LDAPControlW
 {
     PWSTR ldctl_oid;
     LDAP_BERVAL ldctl_value;
     BOOLEAN ldctl_iscritical;
 }
-struct ldapmodW
+struct LDAPModW
 {
     uint mod_op;
     PWSTR mod_type;
@@ -713,7 +713,7 @@ struct ldapmodW
         LDAP_BERVAL** modv_bvals;
     }
 }
-struct ldapmodA
+struct LDAPModA
 {
     uint mod_op;
     PSTR mod_type;
@@ -723,17 +723,17 @@ struct ldapmodA
         LDAP_BERVAL** modv_bvals;
     }
 }
-struct berelement
+struct BerElement
 {
     PSTR opaque;
 }
-struct ldap_version_info
+struct LDAP_VERSION_INFO
 {
     uint lv_size;
     uint lv_major;
     uint lv_minor;
 }
-struct ldapapiinfoA
+struct LDAPAPIInfoA
 {
     int ldapai_info_version;
     int ldapai_api_version;
@@ -742,7 +742,7 @@ struct ldapapiinfoA
     PSTR ldapai_vendor_name;
     int ldapai_vendor_version;
 }
-struct ldapapiinfoW
+struct LDAPAPIInfoW
 {
     int ldapai_info_version;
     int ldapai_api_version;
@@ -764,22 +764,22 @@ struct LDAPAPIFeatureInfoW
     int ldapaif_version;
 }
 alias DBGPRINT = uint function(const(char)*);
-struct ldapsearch
+struct LDAPSearch
 {
 }
-struct ldapsortkeyW
+struct LDAPSortKeyW
 {
     PWSTR sk_attrtype;
     PWSTR sk_matchruleoid;
     BOOLEAN sk_reverseorder;
 }
-struct ldapsortkeyA
+struct LDAPSortKeyA
 {
     PSTR sk_attrtype;
     PSTR sk_matchruleoid;
     BOOLEAN sk_reverseorder;
 }
-struct ldapvlvinfo
+struct LDAPVLVInfo
 {
     int ldvlv_version;
     uint ldvlv_before_count;
@@ -790,9 +790,9 @@ struct ldapvlvinfo
     LDAP_BERVAL* ldvlv_context;
     void* ldvlv_extradata;
 }
-alias QUERYFORCONNECTION = uint function(ldap*, ldap*, PWSTR, PSTR, uint, void*, void*, ldap**);
-alias NOTIFYOFNEWCONNECTION = BOOLEAN function(ldap*, ldap*, PWSTR, PSTR, ldap*, uint, void*, void*, uint);
-alias DEREFERENCECONNECTION = uint function(ldap*, ldap*);
+alias QUERYFORCONNECTION = uint function(LDAP*, LDAP*, PWSTR, PSTR, uint, void*, void*, LDAP**);
+alias NOTIFYOFNEWCONNECTION = BOOLEAN function(LDAP*, LDAP*, PWSTR, PSTR, LDAP*, uint, void*, void*, uint);
+alias DEREFERENCECONNECTION = uint function(LDAP*, LDAP*);
 struct LDAP_REFERRAL_CALLBACK
 {
     uint SizeOfCallbacks;
@@ -800,5 +800,5 @@ struct LDAP_REFERRAL_CALLBACK
     NOTIFYOFNEWCONNECTION NotifyRoutine;
     DEREFERENCECONNECTION DereferenceRoutine;
 }
-alias QUERYCLIENTCERT = BOOLEAN function(ldap*, SecPkgContext_IssuerListInfoEx*, CERT_CONTEXT**);
-alias VERIFYSERVERCERT = BOOLEAN function(ldap*, CERT_CONTEXT**);
+alias QUERYCLIENTCERT = BOOLEAN function(LDAP*, SecPkgContext_IssuerListInfoEx*, CERT_CONTEXT**);
+alias VERIFYSERVERCERT = BOOLEAN function(LDAP*, CERT_CONTEXT**);

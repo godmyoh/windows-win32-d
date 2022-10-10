@@ -2,8 +2,8 @@ module windows.win32.devices.functiondiscovery;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HRESULT, PWSTR;
-import windows.win32.system.com_ : IServiceProvider, IUnknown;
-import windows.win32.system.com.structuredstorage : PROPVARIANT, STGM;
+import windows.win32.system.com_ : IServiceProvider, IUnknown, STGM;
+import windows.win32.system.com.structuredstorage : PROPVARIANT;
 import windows.win32.ui.shell.propertiessystem : IPropertyStore, PROPERTYKEY;
 
 version (Windows):

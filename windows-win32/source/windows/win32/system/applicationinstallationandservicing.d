@@ -21,8 +21,8 @@ INSTALLUILEVEL MsiSetInternalUI(INSTALLUILEVEL, HWND*);
 INSTALLUI_HANDLERA MsiSetExternalUIA(INSTALLUI_HANDLERA, uint, void*);
 INSTALLUI_HANDLERW MsiSetExternalUIW(INSTALLUI_HANDLERW, uint, void*);
 uint MsiSetExternalUIRecord(PINSTALLUI_HANDLER_RECORD, uint, void*, PINSTALLUI_HANDLER_RECORD);
-uint MsiEnableLogA(INSTALLOGMODE, const(char)*, uint);
-uint MsiEnableLogW(INSTALLOGMODE, const(wchar)*, uint);
+uint MsiEnableLogA(INSTALLLOGMODE, const(char)*, uint);
+uint MsiEnableLogW(INSTALLLOGMODE, const(wchar)*, uint);
 INSTALLSTATE MsiQueryProductStateA(const(char)*);
 INSTALLSTATE MsiQueryProductStateW(const(wchar)*);
 uint MsiGetProductInfoA(const(char)*, const(char)*, PSTR, uint*);
@@ -1213,7 +1213,7 @@ enum : int
     REINSTALLMODE_PACKAGE          = 0x00000400,
 }
 
-alias INSTALLOGMODE = int;
+alias INSTALLLOGMODE = int;
 enum : int
 {
     INSTALLLOGMODE_FATALEXIT      = 0x00000001,
@@ -2206,7 +2206,7 @@ enum : int
     PM_ENUM_BW_FILTER_MAX            = 0x00000021,
 }
 
-struct _tagAPPTASKTYPE
+struct PM_APPTASKTYPE
 {
     GUID ProductID;
     PM_TASK_TYPE TaskType;
@@ -2238,7 +2238,7 @@ struct PM_ENUM_FILTER
         PM_TASK_TYPE Tasktype;
         GUID TaskProductID;
         GUID TileProductID;
-        _tagAPPTASKTYPE AppTaskType;
+        PM_APPTASKTYPE AppTaskType;
         PM_EXTENSIONCONSUMER Consumer;
         PM_BSATASKID BSATask;
         GUID BSAProductID;

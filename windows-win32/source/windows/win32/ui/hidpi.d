@@ -2,7 +2,7 @@ module windows.win32.ui.hidpi;
 
 import windows.win32.foundation : BOOL, HANDLE, HRESULT, HWND, POINT, PWSTR, RECT;
 import windows.win32.graphics.gdi : HMONITOR;
-import windows.win32.ui.windowsandmessaging : WINDOW_EX_STYLE, WINDOW_STYLE;
+import windows.win32.ui.windowsandmessaging : SYSTEM_METRICS_INDEX, WINDOW_EX_STYLE, WINDOW_STYLE;
 
 version (Windows):
 extern (Windows):
@@ -12,7 +12,7 @@ BOOL SetDialogControlDpiChangeBehavior(HWND, DIALOG_CONTROL_DPI_CHANGE_BEHAVIORS
 DIALOG_CONTROL_DPI_CHANGE_BEHAVIORS GetDialogControlDpiChangeBehavior(HWND);
 BOOL SetDialogDpiChangeBehavior(HWND, DIALOG_DPI_CHANGE_BEHAVIORS, DIALOG_DPI_CHANGE_BEHAVIORS);
 DIALOG_DPI_CHANGE_BEHAVIORS GetDialogDpiChangeBehavior(HWND);
-int GetSystemMetricsForDpi(int, uint);
+int GetSystemMetricsForDpi(SYSTEM_METRICS_INDEX, uint);
 BOOL AdjustWindowRectExForDpi(RECT*, WINDOW_STYLE, BOOL, WINDOW_EX_STYLE, uint);
 BOOL LogicalToPhysicalPointForPerMonitorDPI(HWND, POINT*);
 BOOL PhysicalToLogicalPointForPerMonitorDPI(HWND, POINT*);

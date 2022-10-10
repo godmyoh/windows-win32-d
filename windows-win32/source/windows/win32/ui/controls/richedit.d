@@ -4,11 +4,11 @@ import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, CHAR, COLORREF, HANDLE, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT, RECTL, SIZE, WPARAM;
 import windows.win32.globalization : HIMC;
 import windows.win32.graphics.direct2d_ : ID2D1RenderTarget;
-import windows.win32.graphics.gdi : HBITMAP, HDC, HPALETTE, HRGN, TEXT_ALIGN_OPTIONS;
+import windows.win32.graphics.gdi : EMBED_FONT_CHARSET, HBITMAP, HDC, HPALETTE, HRGN, SYS_COLOR_INDEX, TEXT_ALIGN_OPTIONS;
 import windows.win32.system.com_ : DVASPECT, DVTARGETDEVICE, IDataObject, IDispatch, IStream, IUnknown, VARIANT;
 import windows.win32.system.com.structuredstorage : IStorage;
-import windows.win32.system.ole : IDropTarget, IOleClientSite, IOleInPlaceFrame, IOleInPlaceUIWindow, IOleObject, OIFI;
-import windows.win32.system.systemservices : MODIFIERKEYS_FLAGS;
+import windows.win32.system.ole : DROPEFFECT, IDropTarget, IOleClientSite, IOleInPlaceFrame, IOleInPlaceUIWindow, IOleObject, OLEINPLACEFRAMEINFO;
+import windows.win32.system.systemservices : MODIFIERKEYS_FLAGS, RECO_FLAGS;
 import windows.win32.ui.controls_ : ENABLE_SCROLL_BAR_ARROWS, NMHDR;
 import windows.win32.ui.windowsandmessaging : HCURSOR, HMENU, SCROLLBAR_CONSTANTS, SHOW_WINDOW_CMD;
 
@@ -232,6 +232,17 @@ enum : ushort
     PFA_CENTER = 0x0003,
     PFA_LEFT   = 0x0001,
     PFA_RIGHT  = 0x0002,
+}
+
+alias PARAFORMAT_NUMBERING = ushort;
+enum : ushort
+{
+    PFN_BULLET   = 0x0001,
+    PFN_ARABIC   = 0x0002,
+    PFN_LCLETTER = 0x0003,
+    PFN_UCLETTER = 0x0004,
+    PFN_LCROMAN  = 0x0005,
+    PFN_UCROMAN  = 0x0006,
 }
 
 enum cchTextLimitDefault = 0x00007fff;
@@ -610,12 +621,6 @@ enum PFM_RESERVED2 = 0x08000000;
 enum PFM_TABLEROWDELIMITER = 0x10000000;
 enum PFM_TEXTWRAPPINGBREAK = 0x20000000;
 enum PFM_TABLE = 0x40000000;
-enum PFN_BULLET = 0x00000001;
-enum PFN_ARABIC = 0x00000002;
-enum PFN_LCLETTER = 0x00000003;
-enum PFN_UCLETTER = 0x00000004;
-enum PFN_LCROMAN = 0x00000005;
-enum PFN_UCROMAN = 0x00000006;
 enum PFA_JUSTIFY = 0x00000004;
 enum PFA_FULL_INTERWORD = 0x00000004;
 enum GCMF_GRIPPER = 0x00000001;
@@ -691,11 +696,6 @@ enum TXTBIT_ADVANCEDINPUT = 0x20000000;
 enum TXES_ISDIALOG = 0x00000001;
 enum REO_NULL = 0x00000000;
 enum REO_READWRITEMASK = 0x000007ff;
-enum RECO_PASTE = 0x00000000;
-enum RECO_DROP = 0x00000001;
-enum RECO_COPY = 0x00000002;
-enum RECO_CUT = 0x00000003;
-enum RECO_DRAG = 0x00000004;
 alias TEXTMODE = int;
 enum : int
 {
@@ -768,7 +768,7 @@ struct CHARFORMATA
     int yHeight;
     int yOffset;
     COLORREF crTextColor;
-    ubyte bCharSet;
+    EMBED_FONT_CHARSET bCharSet;
     ubyte bPitchAndFamily;
     CHAR[32] szFaceName;
 }
@@ -780,7 +780,7 @@ struct CHARFORMATW
     int yHeight;
     int yOffset;
     COLORREF crTextColor;
-    ubyte bCharSet;
+    EMBED_FONT_CHARSET bCharSet;
     ubyte bPitchAndFamily;
     wchar[32] szFaceName;
 }
@@ -886,7 +886,7 @@ struct PARAFORMAT
 {
     uint cbSize;
     PARAFORMAT_MASK dwMask;
-    ushort wNumbering;
+    PARAFORMAT_NUMBERING wNumbering;
     union
     {
         ushort wReserved;
@@ -938,7 +938,7 @@ struct SELCHANGE
     CHARRANGE chrg;
     RICH_EDIT_GET_CONTEXT_MENU_SEL_TYPE seltyp;
 }
-struct _grouptypingchange
+struct GROUPTYPINGCHANGE
 {
     align (4):
     NMHDR nmhdr;
@@ -1086,7 +1086,7 @@ enum : int
     khyphDelAndChange = 0x00000006,
 }
 
-struct hyphresult
+struct HYPHRESULT
 {
     KHYPH khyph;
     int ichHyph;
@@ -1214,7 +1214,7 @@ interface ITextHost : IUnknown
     HRESULT TxGetViewInset(RECT*);
     HRESULT TxGetCharFormat(const(CHARFORMATW)**);
     HRESULT TxGetParaFormat(const(PARAFORMAT)**);
-    COLORREF TxGetSysColor(int);
+    COLORREF TxGetSysColor(SYS_COLOR_INDEX);
     HRESULT TxGetBackStyle(TXTBACKSTYLE*);
     HRESULT TxGetMaxLength(uint*);
     HRESULT TxGetScrollBars(uint*);
@@ -1295,14 +1295,14 @@ enum IID_IRichEditOleCallback = GUID(0x20d03, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x
 interface IRichEditOleCallback : IUnknown
 {
     HRESULT GetNewStorage(IStorage*);
-    HRESULT GetInPlaceContext(IOleInPlaceFrame*, IOleInPlaceUIWindow*, OIFI*);
+    HRESULT GetInPlaceContext(IOleInPlaceFrame*, IOleInPlaceUIWindow*, OLEINPLACEFRAMEINFO*);
     HRESULT ShowContainerUI(BOOL);
     HRESULT QueryInsertObject(GUID*, IStorage, int);
     HRESULT DeleteObject(IOleObject);
-    HRESULT QueryAcceptData(IDataObject, ushort*, uint, BOOL, long);
+    HRESULT QueryAcceptData(IDataObject, ushort*, RECO_FLAGS, BOOL, long);
     HRESULT ContextSensitiveHelp(BOOL);
     HRESULT GetClipboardData(CHARRANGE*, uint, IDataObject*);
-    HRESULT GetDragDropEffect(BOOL, MODIFIERKEYS_FLAGS, uint*);
+    HRESULT GetDragDropEffect(BOOL, MODIFIERKEYS_FLAGS, DROPEFFECT*);
     HRESULT GetContextMenu(RICH_EDIT_GET_CONTEXT_MENU_SEL_TYPE, IOleObject, CHARRANGE*, HMENU*);
 }
 alias tomConstants = int;
@@ -1963,8 +1963,8 @@ interface ITextDocument : IDispatch
     HRESULT GetDefaultTabStop(float*);
     HRESULT SetDefaultTabStop(float);
     HRESULT New();
-    HRESULT Open(VARIANT*, int, int);
-    HRESULT Save(VARIANT*, int, int);
+    HRESULT Open(VARIANT*, tomConstants, int);
+    HRESULT Save(VARIANT*, tomConstants, int);
     HRESULT Freeze(int*);
     HRESULT Unfreeze(int*);
     HRESULT BeginEditCollection();
@@ -2014,18 +2014,18 @@ interface ITextRange : IDispatch
     HRESULT MoveUntil(VARIANT*, int, int*);
     HRESULT MoveStartUntil(VARIANT*, int, int*);
     HRESULT MoveEndUntil(VARIANT*, int, int*);
-    HRESULT FindText(BSTR, int, int, int*);
-    HRESULT FindTextStart(BSTR, int, int, int*);
-    HRESULT FindTextEnd(BSTR, int, int, int*);
+    HRESULT FindText(BSTR, int, tomConstants, int*);
+    HRESULT FindTextStart(BSTR, int, tomConstants, int*);
+    HRESULT FindTextEnd(BSTR, int, tomConstants, int*);
     HRESULT Delete(int, int, int*);
     HRESULT Cut(VARIANT*);
     HRESULT Copy(VARIANT*);
     HRESULT Paste(VARIANT*, int);
     HRESULT CanPaste(VARIANT*, int, int*);
     HRESULT CanEdit(int*);
-    HRESULT ChangeCase(int);
-    HRESULT GetPoint(int, int*, int*);
-    HRESULT SetPoint(int, int, int, int);
+    HRESULT ChangeCase(tomConstants);
+    HRESULT GetPoint(tomConstants, int*, int*);
+    HRESULT SetPoint(int, int, tomConstants, int);
     HRESULT ScrollIntoView(int);
     HRESULT GetEmbeddedObject(IUnknown*);
 }

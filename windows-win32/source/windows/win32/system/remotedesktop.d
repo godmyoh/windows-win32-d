@@ -825,19 +825,19 @@ struct WTSCLIENTA
     ushort OutBufLength;
     CHAR[261] DeviceId;
 }
-struct _WTS_PRODUCT_INFOA
+struct PRODUCT_INFOA
 {
     CHAR[256] CompanyName;
     CHAR[4] ProductID;
 }
-struct _WTS_PRODUCT_INFOW
+struct PRODUCT_INFOW
 {
     wchar[256] CompanyName;
     wchar[4] ProductID;
 }
 struct WTS_VALIDATION_INFORMATIONA
 {
-    _WTS_PRODUCT_INFOA ProductInfo;
+    PRODUCT_INFOA ProductInfo;
     ubyte[16384] License;
     uint LicenseLength;
     ubyte[20] HardwareID;
@@ -845,7 +845,7 @@ struct WTS_VALIDATION_INFORMATIONA
 }
 struct WTS_VALIDATION_INFORMATIONW
 {
-    _WTS_PRODUCT_INFOW ProductInfo;
+    PRODUCT_INFOW ProductInfo;
     ubyte[16384] License;
     uint LicenseLength;
     ubyte[20] HardwareID;

@@ -335,6 +335,46 @@ enum D3DPRESENT_UPDATEOVERLAYONLY = 0x00000020;
 enum D3DPRESENT_HIDEOVERLAY = 0x00000040;
 enum D3DPRESENT_UPDATECOLORKEY = 0x00000080;
 enum D3DPRESENT_FORCEIMMEDIATE = 0x00000100;
+struct D3DADAPTER_IDENTIFIER9
+{
+    CHAR[512] Driver;
+    CHAR[512] Description;
+    CHAR[32] DeviceName;
+    LARGE_INTEGER DriverVersion;
+    uint VendorId;
+    uint DeviceId;
+    uint SubSysId;
+    uint Revision;
+    GUID DeviceIdentifier;
+    uint WHQLLevel;
+}
+struct D3DMEMORYPRESSURE
+{
+    ulong BytesEvictedFromProcess;
+    ulong SizeOfInefficientAllocation;
+    uint LevelOfEfficiency;
+}
+struct D3DPRESENTSTATS
+{
+    uint PresentCount;
+    uint PresentRefreshCount;
+    uint SyncRefreshCount;
+    LARGE_INTEGER SyncQPCTime;
+    LARGE_INTEGER SyncGPUTime;
+}
+struct D3DAUTHENTICATEDCHANNEL_QUERYOUTPUTID_OUTPUT
+{
+    D3DAUTHENTICATEDCHANNEL_QUERY_OUTPUT Output;
+    HANDLE DeviceHandle;
+    HANDLE CryptoSessionHandle;
+    uint OutputIDIndex;
+    ulong OutputID;
+}
+struct D3DAES_CTR_IV
+{
+    ulong IV;
+    ulong Count;
+}
 struct D3DCOLORVALUE
 {
     float r;
@@ -1354,8 +1394,9 @@ struct D3DTRIPATCH_INFO
     D3DBASISTYPE Basis;
     D3DDEGREETYPE Degree;
 }
-struct D3DADAPTER_IDENTIFIER9
+/+ [CONFLICTED] struct D3DADAPTER_IDENTIFIER9
 {
+    align (4):
     CHAR[512] Driver;
     CHAR[512] Description;
     CHAR[32] DeviceName;
@@ -1367,6 +1408,7 @@ struct D3DADAPTER_IDENTIFIER9
     GUID DeviceIdentifier;
     uint WHQLLevel;
 }
++/
 struct D3DRASTER_STATUS
 {
     BOOL InVBlank;
@@ -1463,12 +1505,14 @@ struct D3DDEVINFO_D3D9CACHEUTILIZATION
     float TextureCacheHitRate;
     float PostTransformVertexCacheHitRate;
 }
-struct D3DMEMORYPRESSURE
+/+ [CONFLICTED] struct D3DMEMORYPRESSURE
 {
+    align (4):
     ulong BytesEvictedFromProcess;
     ulong SizeOfInefficientAllocation;
     uint LevelOfEfficiency;
 }
++/
 alias D3DCOMPOSERECTSOP = int;
 enum : int
 {
@@ -1493,14 +1537,16 @@ struct D3DCOMPOSERECTDESTINATION
     short X;
     short Y;
 }
-struct D3DPRESENTSTATS
+/+ [CONFLICTED] struct D3DPRESENTSTATS
 {
+    align (4):
     uint PresentCount;
     uint PresentRefreshCount;
     uint SyncRefreshCount;
     LARGE_INTEGER SyncQPCTime;
     LARGE_INTEGER SyncGPUTime;
 }
++/
 alias D3DSCANLINEORDERING = int;
 enum : int
 {
@@ -1647,14 +1693,16 @@ struct D3DAUTHENTICATEDCHANNEL_QUERYOUTPUTID_INPUT
     HANDLE CryptoSessionHandle;
     uint OutputIDIndex;
 }
-struct D3DAUTHENTICATEDCHANNEL_QUERYOUTPUTID_OUTPUT
+/+ [CONFLICTED] struct D3DAUTHENTICATEDCHANNEL_QUERYOUTPUTID_OUTPUT
 {
+    align (4):
     D3DAUTHENTICATEDCHANNEL_QUERY_OUTPUT Output;
     HANDLE DeviceHandle;
     HANDLE CryptoSessionHandle;
     uint OutputIDIndex;
     ulong OutputID;
 }
++/
 alias D3DBUSTYPE = int;
 enum : int
 {
@@ -1750,11 +1798,13 @@ struct D3DENCRYPTED_BLOCK_INFO
     uint NumBytesInSkipPattern;
     uint NumBytesInEncryptPattern;
 }
-struct D3DAES_CTR_IV
+/+ [CONFLICTED] struct D3DAES_CTR_IV
 {
+    align (4):
     ulong IV;
     ulong Count;
 }
++/
 struct D3DVSHADERCAPS2_0
 {
     uint Caps;
@@ -2145,53 +2195,3 @@ interface IDirect3DSwapChain9Ex : IDirect3DSwapChain9
     HRESULT GetPresentStats(D3DPRESENTSTATS*);
     HRESULT GetDisplayModeEx(D3DDISPLAYMODEEX*, D3DDISPLAYROTATION*);
 }
-/+ [CONFLICTED] struct D3DADAPTER_IDENTIFIER9
-{
-    align (4):
-    CHAR[512] Driver;
-    CHAR[512] Description;
-    CHAR[32] DeviceName;
-    LARGE_INTEGER DriverVersion;
-    uint VendorId;
-    uint DeviceId;
-    uint SubSysId;
-    uint Revision;
-    GUID DeviceIdentifier;
-    uint WHQLLevel;
-}
-+/
-/+ [CONFLICTED] struct D3DMEMORYPRESSURE
-{
-    align (4):
-    ulong BytesEvictedFromProcess;
-    ulong SizeOfInefficientAllocation;
-    uint LevelOfEfficiency;
-}
-+/
-/+ [CONFLICTED] struct D3DPRESENTSTATS
-{
-    align (4):
-    uint PresentCount;
-    uint PresentRefreshCount;
-    uint SyncRefreshCount;
-    LARGE_INTEGER SyncQPCTime;
-    LARGE_INTEGER SyncGPUTime;
-}
-+/
-/+ [CONFLICTED] struct D3DAUTHENTICATEDCHANNEL_QUERYOUTPUTID_OUTPUT
-{
-    align (4):
-    D3DAUTHENTICATEDCHANNEL_QUERY_OUTPUT Output;
-    HANDLE DeviceHandle;
-    HANDLE CryptoSessionHandle;
-    uint OutputIDIndex;
-    ulong OutputID;
-}
-+/
-/+ [CONFLICTED] struct D3DAES_CTR_IV
-{
-    align (4):
-    ulong IV;
-    ulong Count;
-}
-+/

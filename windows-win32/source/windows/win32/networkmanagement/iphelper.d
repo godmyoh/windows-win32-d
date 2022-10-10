@@ -114,10 +114,10 @@ NTSTATUS NotifyNetworkConnectivityHintChange(PNETWORK_CONNECTIVITY_HINT_CHANGE_C
 IcmpHandle IcmpCreateFile();
 IcmpHandle Icmp6CreateFile();
 BOOL IcmpCloseHandle(IcmpHandle);
-uint IcmpSendEcho(IcmpHandle, uint, void*, ushort, ip_option_information*, void*, uint, uint);
-uint IcmpSendEcho2(IcmpHandle, HANDLE, PIO_APC_ROUTINE, void*, uint, void*, ushort, ip_option_information*, void*, uint, uint);
-uint IcmpSendEcho2Ex(IcmpHandle, HANDLE, PIO_APC_ROUTINE, void*, uint, uint, void*, ushort, ip_option_information*, void*, uint, uint);
-uint Icmp6SendEcho2(IcmpHandle, HANDLE, PIO_APC_ROUTINE, void*, SOCKADDR_IN6*, SOCKADDR_IN6*, void*, ushort, ip_option_information*, void*, uint, uint);
+uint IcmpSendEcho(IcmpHandle, uint, void*, ushort, IP_OPTION_INFORMATION*, void*, uint, uint);
+uint IcmpSendEcho2(IcmpHandle, HANDLE, PIO_APC_ROUTINE, void*, uint, void*, ushort, IP_OPTION_INFORMATION*, void*, uint, uint);
+uint IcmpSendEcho2Ex(IcmpHandle, HANDLE, PIO_APC_ROUTINE, void*, uint, uint, void*, ushort, IP_OPTION_INFORMATION*, void*, uint, uint);
+uint Icmp6SendEcho2(IcmpHandle, HANDLE, PIO_APC_ROUTINE, void*, SOCKADDR_IN6*, SOCKADDR_IN6*, void*, ushort, IP_OPTION_INFORMATION*, void*, uint, uint);
 uint IcmpParseReplies(void*, uint);
 uint Icmp6ParseReplies(void*, uint);
 uint GetNumberOfInterfaces(uint*);
@@ -169,7 +169,7 @@ uint DeleteProxyArpEntry(uint, uint, uint);
 uint SetTcpEntry(MIB_TCPROW_LH*);
 uint GetInterfaceInfo(IP_INTERFACE_INFO*, uint*);
 uint GetUniDirectionalAdapterInfo(IP_UNIDIRECTIONAL_ADAPTER_ADDRESS*, uint*);
-uint NhpAllocateAndGetInterfaceInfoFromStack(ip_interface_name_info_w2ksp1**, uint*, BOOL, HANDLE, uint);
+uint NhpAllocateAndGetInterfaceInfoFromStack(IP_INTERFACE_NAME_INFO_W2KSP1**, uint*, BOOL, HANDLE, uint);
 uint GetBestInterface(uint, uint*);
 uint GetBestInterfaceEx(SOCKADDR*, uint*);
 uint GetBestRoute(uint, uint, MIB_IPFORWARDROW*);
@@ -669,7 +669,7 @@ enum IP_FILTER_ENABLE_INFO_V6 = 0xffff0016;
 enum IP_PROT_PRIORITY_INFO_EX = 0xffff0017;
 alias IcmpHandle = long;
 alias HIFTIMESTAMPCHANGE = void*;
-struct ip_option_information
+struct IP_OPTION_INFORMATION32
 {
     ubyte Ttl;
     ubyte Tos;
@@ -677,7 +677,17 @@ struct ip_option_information
     ubyte OptionsSize;
     ubyte* OptionsData;
 }
-struct ip_option_information32
+struct ICMP_ECHO_REPLY32
+{
+    uint Address;
+    uint Status;
+    uint RoundTripTime;
+    ushort DataSize;
+    ushort Reserved;
+    void* Data;
+    IP_OPTION_INFORMATION32 Options;
+}
+struct IP_OPTION_INFORMATION
 {
     ubyte Ttl;
     ubyte Tos;
@@ -685,7 +695,7 @@ struct ip_option_information32
     ubyte OptionsSize;
     ubyte* OptionsData;
 }
-struct icmp_echo_reply
+struct ICMP_ECHO_REPLY
 {
     uint Address;
     uint Status;
@@ -693,17 +703,7 @@ struct icmp_echo_reply
     ushort DataSize;
     ushort Reserved;
     void* Data;
-    ip_option_information Options;
-}
-struct icmp_echo_reply32
-{
-    uint Address;
-    uint Status;
-    uint RoundTripTime;
-    ushort DataSize;
-    ushort Reserved;
-    void* Data;
-    ip_option_information32 Options;
+    IP_OPTION_INFORMATION Options;
 }
 struct IPV6_ADDRESS_EX
 {
@@ -713,18 +713,18 @@ struct IPV6_ADDRESS_EX
     ushort[8] sin6_addr;
     uint sin6_scope_id;
 }
-struct icmpv6_echo_reply_lh
+struct ICMPV6_ECHO_REPLY_LH
 {
     IPV6_ADDRESS_EX Address;
     uint Status;
     uint RoundTripTime;
 }
-struct arp_send_reply
+struct ARP_SEND_REPLY
 {
     uint DestAddress;
     uint SrcAddress;
 }
-struct tcp_reserve_port_range
+struct TCP_RESERVE_PORT_RANGE
 {
     ushort UpperRange;
     ushort LowerRange;
@@ -2297,7 +2297,7 @@ struct FIXED_INFO_W2KSP1
     uint EnableProxy;
     uint EnableDns;
 }
-struct ip_interface_name_info_w2ksp1
+struct IP_INTERFACE_NAME_INFO_W2KSP1
 {
     uint Index;
     uint MediaType;

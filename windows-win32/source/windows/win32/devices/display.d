@@ -1376,6 +1376,117 @@ union FLOAT_LONG
     float e;
     int l;
 }
+struct FD_XFORM
+{
+    float eXX;
+    float eXY;
+    float eYX;
+    float eYY;
+}
+struct IFIMETRICS
+{
+    uint cjThis;
+    uint cjIfiExtra;
+    int dpwszFamilyName;
+    int dpwszStyleName;
+    int dpwszFaceName;
+    int dpwszUniqueName;
+    int dpFontSim;
+    int lEmbedId;
+    int lItalicAngle;
+    int lCharBias;
+    int dpCharSets;
+    ubyte jWinCharSet;
+    ubyte jWinPitchAndFamily;
+    ushort usWinWeight;
+    uint flInfo;
+    ushort fsSelection;
+    ushort fsType;
+    short fwdUnitsPerEm;
+    short fwdLowestPPEm;
+    short fwdWinAscender;
+    short fwdWinDescender;
+    short fwdMacAscender;
+    short fwdMacDescender;
+    short fwdMacLineGap;
+    short fwdTypoAscender;
+    short fwdTypoDescender;
+    short fwdTypoLineGap;
+    short fwdAveCharWidth;
+    short fwdMaxCharInc;
+    short fwdCapHeight;
+    short fwdXHeight;
+    short fwdSubscriptXSize;
+    short fwdSubscriptYSize;
+    short fwdSubscriptXOffset;
+    short fwdSubscriptYOffset;
+    short fwdSuperscriptXSize;
+    short fwdSuperscriptYSize;
+    short fwdSuperscriptXOffset;
+    short fwdSuperscriptYOffset;
+    short fwdUnderscoreSize;
+    short fwdUnderscorePosition;
+    short fwdStrikeoutSize;
+    short fwdStrikeoutPosition;
+    ubyte chFirstChar;
+    ubyte chLastChar;
+    ubyte chDefaultChar;
+    ubyte chBreakChar;
+    wchar wcFirstChar;
+    wchar wcLastChar;
+    wchar wcDefaultChar;
+    wchar wcBreakChar;
+    POINTL ptlBaseline;
+    POINTL ptlAspect;
+    POINTL ptlCaret;
+    RECTL rclFontBox;
+    ubyte[4] achVendId;
+    uint cKerningPairs;
+    uint ulPanoseCulture;
+    PANOSE panose;
+    void* Align;
+}
+struct LINEATTRS
+{
+    uint fl;
+    uint iJoin;
+    uint iEndCap;
+    FLOAT_LONG elWidth;
+    float eMiterLimit;
+    uint cstyle;
+    FLOAT_LONG* pstyle;
+    FLOAT_LONG elStyleState;
+}
+struct XFORML
+{
+    float eM11;
+    float eM12;
+    float eM21;
+    float eM22;
+    float eDx;
+    float eDy;
+}
+struct FLOATOBJ_XFORM
+{
+    float eM11;
+    float eM12;
+    float eM21;
+    float eM22;
+    float eDx;
+    float eDy;
+}
+/+ [CONFLICTED] struct POINTE
+{
+    uint x;
+    uint y;
+}
++/
+/+ [CONFLICTED] union FLOAT_LONG
+{
+    uint e;
+    int l;
+}
++/
 struct POINTFIX
 {
     int x;
@@ -1388,13 +1499,14 @@ struct RECTFX
     int xRight;
     int yBottom;
 }
-struct FD_XFORM
+/+ [CONFLICTED] struct FD_XFORM
 {
-    float eXX;
-    float eXY;
-    float eYX;
-    float eYY;
+    uint eXX;
+    uint eXY;
+    uint eYX;
+    uint eYY;
 }
++/
 struct FD_DEVICEMETRICS
 {
     uint flRealizedType;
@@ -1484,7 +1596,7 @@ struct FONTSIM
     int dpItalic;
     int dpBoldItalic;
 }
-struct IFIMETRICS
+/+ [CONFLICTED] struct IFIMETRICS
 {
     uint cjThis;
     uint cjIfiExtra;
@@ -1545,8 +1657,8 @@ struct IFIMETRICS
     uint cKerningPairs;
     uint ulPanoseCulture;
     PANOSE panose;
-    void* Align;
 }
++/
 struct IFIEXTRA
 {
     uint ulIdentifier;
@@ -1581,26 +1693,28 @@ struct DEVINFO
     HPALETTE hpalDefault;
     uint flGraphicsCaps2;
 }
-struct LINEATTRS
+/+ [CONFLICTED] struct LINEATTRS
 {
     uint fl;
     uint iJoin;
     uint iEndCap;
     FLOAT_LONG elWidth;
-    float eMiterLimit;
+    uint eMiterLimit;
     uint cstyle;
     FLOAT_LONG* pstyle;
     FLOAT_LONG elStyleState;
 }
-struct XFORML
++/
+/+ [CONFLICTED] struct XFORML
 {
-    float eM11;
-    float eM12;
-    float eM21;
-    float eM22;
-    float eDx;
-    float eDy;
+    uint eM11;
+    uint eM12;
+    uint eM21;
+    uint eM22;
+    uint eDx;
+    uint eDy;
 }
++/
 struct CIECHROMA
 {
     int x;
@@ -1879,15 +1993,21 @@ struct ENGSAFESEMAPHORE
     HSEMAPHORE hsem;
     int lCount;
 }
-struct FLOATOBJ_XFORM
+struct FLOATOBJ
 {
-    float eM11;
-    float eM12;
-    float eM21;
-    float eM22;
-    float eDx;
-    float eDy;
+    uint ul1;
+    uint ul2;
 }
+/+ [CONFLICTED] struct FLOATOBJ_XFORM
+{
+    FLOATOBJ eM11;
+    FLOATOBJ eM12;
+    FLOATOBJ eM21;
+    FLOATOBJ eM22;
+    FLOATOBJ eDx;
+    FLOATOBJ eDy;
+}
++/
 alias SORTCOMP = int function(const(void)*, const(void)*);
 struct ENG_TIME_FIELDS
 {
@@ -2841,123 +2961,3 @@ enum : int
     ORIENTATION_PREFERENCE_PORTRAIT_FLIPPED  = 0x00000008,
 }
 
-/+ [CONFLICTED] struct POINTE
-{
-    uint x;
-    uint y;
-}
-+/
-/+ [CONFLICTED] union FLOAT_LONG
-{
-    uint e;
-    int l;
-}
-+/
-/+ [CONFLICTED] struct FD_XFORM
-{
-    uint eXX;
-    uint eXY;
-    uint eYX;
-    uint eYY;
-}
-+/
-/+ [CONFLICTED] struct IFIMETRICS
-{
-    uint cjThis;
-    uint cjIfiExtra;
-    int dpwszFamilyName;
-    int dpwszStyleName;
-    int dpwszFaceName;
-    int dpwszUniqueName;
-    int dpFontSim;
-    int lEmbedId;
-    int lItalicAngle;
-    int lCharBias;
-    int dpCharSets;
-    ubyte jWinCharSet;
-    ubyte jWinPitchAndFamily;
-    ushort usWinWeight;
-    uint flInfo;
-    ushort fsSelection;
-    ushort fsType;
-    short fwdUnitsPerEm;
-    short fwdLowestPPEm;
-    short fwdWinAscender;
-    short fwdWinDescender;
-    short fwdMacAscender;
-    short fwdMacDescender;
-    short fwdMacLineGap;
-    short fwdTypoAscender;
-    short fwdTypoDescender;
-    short fwdTypoLineGap;
-    short fwdAveCharWidth;
-    short fwdMaxCharInc;
-    short fwdCapHeight;
-    short fwdXHeight;
-    short fwdSubscriptXSize;
-    short fwdSubscriptYSize;
-    short fwdSubscriptXOffset;
-    short fwdSubscriptYOffset;
-    short fwdSuperscriptXSize;
-    short fwdSuperscriptYSize;
-    short fwdSuperscriptXOffset;
-    short fwdSuperscriptYOffset;
-    short fwdUnderscoreSize;
-    short fwdUnderscorePosition;
-    short fwdStrikeoutSize;
-    short fwdStrikeoutPosition;
-    ubyte chFirstChar;
-    ubyte chLastChar;
-    ubyte chDefaultChar;
-    ubyte chBreakChar;
-    wchar wcFirstChar;
-    wchar wcLastChar;
-    wchar wcDefaultChar;
-    wchar wcBreakChar;
-    POINTL ptlBaseline;
-    POINTL ptlAspect;
-    POINTL ptlCaret;
-    RECTL rclFontBox;
-    ubyte[4] achVendId;
-    uint cKerningPairs;
-    uint ulPanoseCulture;
-    PANOSE panose;
-}
-+/
-/+ [CONFLICTED] struct LINEATTRS
-{
-    uint fl;
-    uint iJoin;
-    uint iEndCap;
-    FLOAT_LONG elWidth;
-    uint eMiterLimit;
-    uint cstyle;
-    FLOAT_LONG* pstyle;
-    FLOAT_LONG elStyleState;
-}
-+/
-/+ [CONFLICTED] struct XFORML
-{
-    uint eM11;
-    uint eM12;
-    uint eM21;
-    uint eM22;
-    uint eDx;
-    uint eDy;
-}
-+/
-struct FLOATOBJ
-{
-    uint ul1;
-    uint ul2;
-}
-/+ [CONFLICTED] struct FLOATOBJ_XFORM
-{
-    FLOATOBJ eM11;
-    FLOATOBJ eM12;
-    FLOATOBJ eM21;
-    FLOATOBJ eM22;
-    FLOATOBJ eDx;
-    FLOATOBJ eDy;
-}
-+/

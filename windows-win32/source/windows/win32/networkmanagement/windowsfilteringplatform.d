@@ -159,22 +159,22 @@ uint FwpmProviderSubscriptionsGet0(HANDLE, FWPM_PROVIDER_SUBSCRIPTION0***, uint*
 uint FwpmProviderContextAdd0(HANDLE, const(FWPM_PROVIDER_CONTEXT0)*, PSECURITY_DESCRIPTOR, ulong*);
 uint FwpmProviderContextAdd1(HANDLE, const(FWPM_PROVIDER_CONTEXT1)*, PSECURITY_DESCRIPTOR, ulong*);
 uint FwpmProviderContextAdd2(HANDLE, const(FWPM_PROVIDER_CONTEXT2)*, PSECURITY_DESCRIPTOR, ulong*);
-uint FwpmProviderContextAdd3(HANDLE, const(FWPM_PROVIDER_CONTEXT3_)*, PSECURITY_DESCRIPTOR, ulong*);
+uint FwpmProviderContextAdd3(HANDLE, const(FWPM_PROVIDER_CONTEXT3)*, PSECURITY_DESCRIPTOR, ulong*);
 uint FwpmProviderContextDeleteById0(HANDLE, ulong);
 uint FwpmProviderContextDeleteByKey0(HANDLE, const(GUID)*);
 uint FwpmProviderContextGetById0(HANDLE, ulong, FWPM_PROVIDER_CONTEXT0**);
 uint FwpmProviderContextGetById1(HANDLE, ulong, FWPM_PROVIDER_CONTEXT1**);
 uint FwpmProviderContextGetById2(HANDLE, ulong, FWPM_PROVIDER_CONTEXT2**);
-uint FwpmProviderContextGetById3(HANDLE, ulong, FWPM_PROVIDER_CONTEXT3_**);
+uint FwpmProviderContextGetById3(HANDLE, ulong, FWPM_PROVIDER_CONTEXT3**);
 uint FwpmProviderContextGetByKey0(HANDLE, const(GUID)*, FWPM_PROVIDER_CONTEXT0**);
 uint FwpmProviderContextGetByKey1(HANDLE, const(GUID)*, FWPM_PROVIDER_CONTEXT1**);
 uint FwpmProviderContextGetByKey2(HANDLE, const(GUID)*, FWPM_PROVIDER_CONTEXT2**);
-uint FwpmProviderContextGetByKey3(HANDLE, const(GUID)*, FWPM_PROVIDER_CONTEXT3_**);
+uint FwpmProviderContextGetByKey3(HANDLE, const(GUID)*, FWPM_PROVIDER_CONTEXT3**);
 uint FwpmProviderContextCreateEnumHandle0(HANDLE, const(FWPM_PROVIDER_CONTEXT_ENUM_TEMPLATE0)*, HANDLE*);
 uint FwpmProviderContextEnum0(HANDLE, HANDLE, uint, FWPM_PROVIDER_CONTEXT0***, uint*);
 uint FwpmProviderContextEnum1(HANDLE, HANDLE, uint, FWPM_PROVIDER_CONTEXT1***, uint*);
 uint FwpmProviderContextEnum2(HANDLE, HANDLE, uint, FWPM_PROVIDER_CONTEXT2***, uint*);
-uint FwpmProviderContextEnum3(HANDLE, HANDLE, uint, FWPM_PROVIDER_CONTEXT3_***, uint*);
+uint FwpmProviderContextEnum3(HANDLE, HANDLE, uint, FWPM_PROVIDER_CONTEXT3***, uint*);
 uint FwpmProviderContextDestroyEnumHandle0(HANDLE, HANDLE);
 uint FwpmProviderContextGetSecurityInfoByKey0(HANDLE, const(GUID)*, uint, PSID*, PSID*, ACL**, ACL**, PSECURITY_DESCRIPTOR*);
 uint FwpmProviderContextSetSecurityInfoByKey0(HANDLE, const(GUID)*, uint, const(SID)*, const(SID)*, const(ACL)*, const(ACL)*);
@@ -229,7 +229,7 @@ uint FwpmGetAppIdFromFileName0(const(wchar)*, FWP_BYTE_BLOB**);
 uint FwpmIPsecTunnelAdd0(HANDLE, uint, const(FWPM_PROVIDER_CONTEXT0)*, const(FWPM_PROVIDER_CONTEXT0)*, uint, const(FWPM_FILTER_CONDITION0)*, PSECURITY_DESCRIPTOR);
 uint FwpmIPsecTunnelAdd1(HANDLE, uint, const(FWPM_PROVIDER_CONTEXT1)*, const(FWPM_PROVIDER_CONTEXT1)*, uint, const(FWPM_FILTER_CONDITION0)*, const(GUID)*, PSECURITY_DESCRIPTOR);
 uint FwpmIPsecTunnelAdd2(HANDLE, uint, const(FWPM_PROVIDER_CONTEXT2)*, const(FWPM_PROVIDER_CONTEXT2)*, uint, const(FWPM_FILTER_CONDITION0)*, const(GUID)*, PSECURITY_DESCRIPTOR);
-uint FwpmIPsecTunnelAdd3(HANDLE, uint, const(FWPM_PROVIDER_CONTEXT3_)*, const(FWPM_PROVIDER_CONTEXT3_)*, uint, const(FWPM_FILTER_CONDITION0)*, const(GUID)*, PSECURITY_DESCRIPTOR);
+uint FwpmIPsecTunnelAdd3(HANDLE, uint, const(FWPM_PROVIDER_CONTEXT3)*, const(FWPM_PROVIDER_CONTEXT3)*, uint, const(FWPM_FILTER_CONDITION0)*, const(GUID)*, PSECURITY_DESCRIPTOR);
 uint FwpmIPsecTunnelDeleteByKey0(HANDLE, const(GUID)*);
 uint IPsecGetStatistics0(HANDLE, IPSEC_STATISTICS0*);
 uint IPsecGetStatistics1(HANDLE, IPSEC_STATISTICS1*);
@@ -289,8 +289,8 @@ uint FwpmNetEventEnum0(HANDLE, HANDLE, uint, FWPM_NET_EVENT0***, uint*);
 uint FwpmNetEventEnum1(HANDLE, HANDLE, uint, FWPM_NET_EVENT1***, uint*);
 uint FwpmNetEventEnum2(HANDLE, HANDLE, uint, FWPM_NET_EVENT2***, uint*);
 uint FwpmNetEventEnum3(HANDLE, HANDLE, uint, FWPM_NET_EVENT3***, uint*);
-uint FwpmNetEventEnum4(HANDLE, HANDLE, uint, FWPM_NET_EVENT4_***, uint*);
-uint FwpmNetEventEnum5(HANDLE, HANDLE, uint, FWPM_NET_EVENT5_***, uint*);
+uint FwpmNetEventEnum4(HANDLE, HANDLE, uint, FWPM_NET_EVENT4***, uint*);
+uint FwpmNetEventEnum5(HANDLE, HANDLE, uint, FWPM_NET_EVENT5***, uint*);
 uint FwpmNetEventDestroyEnumHandle0(HANDLE, HANDLE);
 uint FwpmNetEventsGetSecurityInfo0(HANDLE, uint, PSID*, PSID*, ACL**, ACL**, PSECURITY_DESCRIPTOR*);
 uint FwpmNetEventsSetSecurityInfo0(HANDLE, uint, const(SID)*, const(SID)*, const(ACL)*, const(ACL)*);
@@ -1866,7 +1866,7 @@ struct IPSEC_SA_IDLE_TIMEOUT0
     uint idleTimeoutSeconds;
     uint idleTimeoutSecondsFailOver;
 }
-struct IPSEC_TRAFFIC_SELECTOR0_
+struct IPSEC_TRAFFIC_SELECTOR0
 {
     ubyte protocolId;
     ushort portStart;
@@ -1883,13 +1883,13 @@ struct IPSEC_TRAFFIC_SELECTOR0_
         ubyte[16] endV6Address;
     }
 }
-struct IPSEC_TRAFFIC_SELECTOR_POLICY0_
+struct IPSEC_TRAFFIC_SELECTOR_POLICY0
 {
     uint flags;
     uint numLocalTrafficSelectors;
-    IPSEC_TRAFFIC_SELECTOR0_* localTrafficSelectors;
+    IPSEC_TRAFFIC_SELECTOR0* localTrafficSelectors;
     uint numRemoteTrafficSelectors;
-    IPSEC_TRAFFIC_SELECTOR0_* remoteTrafficSelectors;
+    IPSEC_TRAFFIC_SELECTOR0* remoteTrafficSelectors;
 }
 struct IPSEC_TRANSPORT_POLICY0
 {
@@ -2002,7 +2002,7 @@ struct IPSEC_TUNNEL_POLICY2
     IKEEXT_EM_POLICY2* emPolicy;
     uint fwdPathSaLifetime;
 }
-struct IPSEC_TUNNEL_POLICY3_
+struct IPSEC_TUNNEL_POLICY3
 {
     uint flags;
     uint numIpsecProposals;
@@ -2013,7 +2013,7 @@ struct IPSEC_TUNNEL_POLICY3_
     uint fwdPathSaLifetime;
     uint compartmentId;
     uint numTrafficSelectorPolicy;
-    IPSEC_TRAFFIC_SELECTOR_POLICY0_* trafficSelectorPolicies;
+    IPSEC_TRAFFIC_SELECTOR_POLICY0* trafficSelectorPolicies;
 }
 struct IPSEC_KEYING_POLICY0
 {
@@ -2632,7 +2632,7 @@ struct FWPM_PROVIDER_CONTEXT2
     }
     ulong providerContextId;
 }
-struct FWPM_PROVIDER_CONTEXT3_
+struct FWPM_PROVIDER_CONTEXT3
 {
     GUID providerContextKey;
     FWPM_DISPLAY_DATA0 displayData;
@@ -2644,14 +2644,14 @@ struct FWPM_PROVIDER_CONTEXT3_
     {
         IPSEC_KEYING_POLICY1* keyingPolicy;
         IPSEC_TRANSPORT_POLICY2* ikeQmTransportPolicy;
-        IPSEC_TUNNEL_POLICY3_* ikeQmTunnelPolicy;
+        IPSEC_TUNNEL_POLICY3* ikeQmTunnelPolicy;
         IPSEC_TRANSPORT_POLICY2* authipQmTransportPolicy;
-        IPSEC_TUNNEL_POLICY3_* authipQmTunnelPolicy;
+        IPSEC_TUNNEL_POLICY3* authipQmTunnelPolicy;
         IKEEXT_POLICY2* ikeMmPolicy;
         IKEEXT_POLICY2* authIpMmPolicy;
         FWP_BYTE_BLOB* dataBuffer;
         FWPM_CLASSIFY_OPTIONS0* classifyOptions;
-        IPSEC_TUNNEL_POLICY3_* ikeV2QmTunnelPolicy;
+        IPSEC_TUNNEL_POLICY3* ikeV2QmTunnelPolicy;
         IPSEC_TRANSPORT_POLICY2* ikeV2QmTransportPolicy;
         IKEEXT_POLICY2* ikeV2MmPolicy;
         IPSEC_DOSP_OPTIONS0* idpOptions;
@@ -3029,7 +3029,7 @@ struct FWPM_NET_EVENT_IKEEXT_MM_FAILURE1
     uint numRemotePrincipalGroupSids;
     PWSTR* remotePrincipalGroupSids;
 }
-struct FWPM_NET_EVENT_IKEEXT_MM_FAILURE2_
+struct FWPM_NET_EVENT_IKEEXT_MM_FAILURE2
 {
     uint failureErrorCode;
     IPSEC_FAILURE_POINT failurePoint;
@@ -3067,7 +3067,7 @@ struct FWPM_NET_EVENT_IKEEXT_QM_FAILURE0
     }
     ulong qmFilterId;
 }
-struct FWPM_NET_EVENT_IKEEXT_QM_FAILURE1_
+struct FWPM_NET_EVENT_IKEEXT_QM_FAILURE1
 {
     uint failureErrorCode;
     IPSEC_FAILURE_POINT failurePoint;
@@ -3222,7 +3222,7 @@ struct FWPM_NET_EVENT_CAPABILITY_ALLOW0
     ulong filterId;
     BOOL isLoopback;
 }
-struct FWPM_NET_EVENT_LPM_PACKET_ARRIVAL0_
+struct FWPM_NET_EVENT_LPM_PACKET_ARRIVAL0
 {
     uint spi;
 }
@@ -3290,14 +3290,14 @@ struct FWPM_NET_EVENT3
         FWPM_NET_EVENT_CLASSIFY_DROP_MAC0* classifyDropMac;
     }
 }
-struct FWPM_NET_EVENT4_
+struct FWPM_NET_EVENT4
 {
     FWPM_NET_EVENT_HEADER3 header;
     FWPM_NET_EVENT_TYPE type;
     union
     {
-        FWPM_NET_EVENT_IKEEXT_MM_FAILURE2_* ikeMmFailure;
-        FWPM_NET_EVENT_IKEEXT_QM_FAILURE1_* ikeQmFailure;
+        FWPM_NET_EVENT_IKEEXT_MM_FAILURE2* ikeMmFailure;
+        FWPM_NET_EVENT_IKEEXT_QM_FAILURE1* ikeQmFailure;
         FWPM_NET_EVENT_IKEEXT_EM_FAILURE1* ikeEmFailure;
         FWPM_NET_EVENT_CLASSIFY_DROP2* classifyDrop;
         FWPM_NET_EVENT_IPSEC_KERNEL_DROP0* ipsecDrop;
@@ -3308,14 +3308,14 @@ struct FWPM_NET_EVENT4_
         FWPM_NET_EVENT_CLASSIFY_DROP_MAC0* classifyDropMac;
     }
 }
-struct FWPM_NET_EVENT5_
+struct FWPM_NET_EVENT5
 {
     FWPM_NET_EVENT_HEADER3 header;
     FWPM_NET_EVENT_TYPE type;
     union
     {
-        FWPM_NET_EVENT_IKEEXT_MM_FAILURE2_* ikeMmFailure;
-        FWPM_NET_EVENT_IKEEXT_QM_FAILURE1_* ikeQmFailure;
+        FWPM_NET_EVENT_IKEEXT_MM_FAILURE2* ikeMmFailure;
+        FWPM_NET_EVENT_IKEEXT_QM_FAILURE1* ikeQmFailure;
         FWPM_NET_EVENT_IKEEXT_EM_FAILURE1* ikeEmFailure;
         FWPM_NET_EVENT_CLASSIFY_DROP2* classifyDrop;
         FWPM_NET_EVENT_IPSEC_KERNEL_DROP0* ipsecDrop;
@@ -3324,7 +3324,7 @@ struct FWPM_NET_EVENT5_
         FWPM_NET_EVENT_CAPABILITY_DROP0* capabilityDrop;
         FWPM_NET_EVENT_CAPABILITY_ALLOW0* capabilityAllow;
         FWPM_NET_EVENT_CLASSIFY_DROP_MAC0* classifyDropMac;
-        FWPM_NET_EVENT_LPM_PACKET_ARRIVAL0_* lpmPacketArrival;
+        FWPM_NET_EVENT_LPM_PACKET_ARRIVAL0* lpmPacketArrival;
     }
 }
 struct FWPM_NET_EVENT_ENUM_TEMPLATE0
@@ -3460,8 +3460,8 @@ struct IPSEC_KEY_MANAGER_CALLBACKS0
 alias FWPM_NET_EVENT_CALLBACK0 = void function(void*, const(FWPM_NET_EVENT1)*);
 alias FWPM_NET_EVENT_CALLBACK1 = void function(void*, const(FWPM_NET_EVENT2)*);
 alias FWPM_NET_EVENT_CALLBACK2 = void function(void*, const(FWPM_NET_EVENT3)*);
-alias FWPM_NET_EVENT_CALLBACK3 = void function(void*, const(FWPM_NET_EVENT4_)*);
-alias FWPM_NET_EVENT_CALLBACK4 = void function(void*, const(FWPM_NET_EVENT5_)*);
+alias FWPM_NET_EVENT_CALLBACK3 = void function(void*, const(FWPM_NET_EVENT4)*);
+alias FWPM_NET_EVENT_CALLBACK4 = void function(void*, const(FWPM_NET_EVENT5)*);
 alias FWPM_DYNAMIC_KEYWORD_CALLBACK0 = void function(void*, void*);
 alias FWPM_SYSTEM_PORTS_CALLBACK0 = void function(void*, const(FWPM_SYSTEM_PORTS0)*);
 alias FWPM_CONNECTION_CALLBACK0 = void function(void*, FWPM_CONNECTION_EVENT_TYPE, const(FWPM_CONNECTION0)*);

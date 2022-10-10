@@ -2541,7 +2541,7 @@ enum : int
     MPR_VPN_TS_IPv6_ADDR_RANGE = 0x00000008,
 }
 
-struct _MPR_VPN_SELECTOR
+struct MPR_VPN_TRAFFIC_SELECTOR
 {
     MPR_VPN_TS_TYPE type;
     ubyte protocolId;
@@ -2555,8 +2555,8 @@ struct MPR_VPN_TRAFFIC_SELECTORS
 {
     uint numTsi;
     uint numTsr;
-    _MPR_VPN_SELECTOR* tsI;
-    _MPR_VPN_SELECTOR* tsR;
+    MPR_VPN_TRAFFIC_SELECTOR* tsI;
+    MPR_VPN_TRAFFIC_SELECTOR* tsR;
 }
 struct ROUTER_IKEv2_IF_CUSTOM_CONFIG2
 {

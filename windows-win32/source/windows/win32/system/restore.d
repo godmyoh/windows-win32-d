@@ -63,7 +63,7 @@ struct RESTOREPOINTINFOW
     long llSequenceNumber;
     wchar[256] szDescription;
 }
-struct _RESTOREPTINFOEX
+struct RESTOREPOINTINFOEX
 {
     align (1):
     FILETIME ftCreation;

@@ -1362,12 +1362,12 @@ struct IMEITEMCANDIDATE
     uint uCount;
     IMEITEM[1] imeItem;
 }
-struct tabIMESTRINGINFO
+struct IMESTRINGINFO
 {
     uint dwFarEastId;
     PWSTR lpwstr;
 }
-struct tabIMEFAREASTINFO
+struct IMEFAREASTINFO
 {
     uint dwSize;
     uint dwType;
@@ -1376,7 +1376,7 @@ struct tabIMEFAREASTINFO
 struct IMESTRINGCANDIDATEINFO
 {
     uint dwFarEastId;
-    tabIMEFAREASTINFO* lpFarEastInfo;
+    IMEFAREASTINFO* lpFarEastInfo;
     uint fInfoMask;
     int iSelIndex;
     uint uCount;

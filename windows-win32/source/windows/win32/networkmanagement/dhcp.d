@@ -1892,32 +1892,3 @@ struct DHCP_FAILOVER_STATISTICS
     uint PartnerAddrInUse;
     uint ThisAddrInUse;
 }
-/+ [CONFLICTED] struct DHCP_SERVER_OPTIONS
-{
-    ubyte* MessageType;
-    uint* SubnetMask;
-    uint* RequestedAddress;
-    uint* RequestLeaseTime;
-    ubyte* OverlayFields;
-    uint* RouterAddress;
-    uint* Server;
-    ubyte* ParameterRequestList;
-    uint ParameterRequestListLength;
-    PSTR MachineName;
-    uint MachineNameLength;
-    ubyte ClientHardwareAddressType;
-    ubyte ClientHardwareAddressLength;
-    ubyte* ClientHardwareAddress;
-    PSTR ClassIdentifier;
-    uint ClassIdentifierLength;
-    ubyte* VendorClass;
-    uint VendorClassLength;
-    uint DNSFlags;
-    uint DNSNameLength;
-    ubyte* DNSName;
-    BOOLEAN DSDomainNameRequested;
-    PSTR DSDomainName;
-    uint DSDomainNameLen;
-    uint* ScopeId;
-}
-+/

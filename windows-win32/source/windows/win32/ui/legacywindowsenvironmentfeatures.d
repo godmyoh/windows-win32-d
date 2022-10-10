@@ -10,15 +10,20 @@ import windows.win32.system.registry : HKEY;
 version (Windows):
 extern (Windows):
 
-enum EVCF_HASSETTINGS = 0x00000001;
-enum EVCF_ENABLEBYDEFAULT = 0x00000002;
-enum EVCF_REMOVEFROMLIST = 0x00000004;
-enum EVCF_ENABLEBYDEFAULT_AUTO = 0x00000008;
-enum EVCF_DONTSHOWIFZERO = 0x00000010;
-enum EVCF_SETTINGSMODE = 0x00000020;
-enum EVCF_OUTOFDISKSPACE = 0x00000040;
-enum EVCF_USERCONSENTOBTAINED = 0x00000080;
-enum EVCF_SYSTEMAUTORUN = 0x00000100;
+alias EMPTY_VOLUME_CACHE_FLAGS = uint;
+enum : uint
+{
+    EVCF_HASSETTINGS          = 0x00000001,
+    EVCF_ENABLEBYDEFAULT      = 0x00000002,
+    EVCF_REMOVEFROMLIST       = 0x00000004,
+    EVCF_ENABLEBYDEFAULT_AUTO = 0x00000008,
+    EVCF_DONTSHOWIFZERO       = 0x00000010,
+    EVCF_SETTINGSMODE         = 0x00000020,
+    EVCF_OUTOFDISKSPACE       = 0x00000040,
+    EVCF_USERCONSENTOBTAINED  = 0x00000080,
+    EVCF_SYSTEMAUTORUN        = 0x00000100,
+}
+
 enum EVCCBF_LASTNOTIFICATION = 0x00000001;
 enum STATEBITS_FLAT = 0x00000001;
 enum REC_S_IDIDTHEUPDATES = 0x00041000;
@@ -38,16 +43,16 @@ interface IEmptyVolumeCacheCallBack : IUnknown
 enum IID_IEmptyVolumeCache = GUID(0x8fce5227, 0x4da, 0x11d1, [0xa0, 0x4, 0x0, 0x80, 0x5f, 0x8a, 0xbe, 0x6]);
 interface IEmptyVolumeCache : IUnknown
 {
-    HRESULT Initialize(HKEY, const(wchar)*, PWSTR*, PWSTR*, uint*);
+    HRESULT Initialize(HKEY, const(wchar)*, PWSTR*, PWSTR*, EMPTY_VOLUME_CACHE_FLAGS*);
     HRESULT GetSpaceUsed(ulong*, IEmptyVolumeCacheCallBack);
     HRESULT Purge(ulong, IEmptyVolumeCacheCallBack);
     HRESULT ShowProperties(HWND);
-    HRESULT Deactivate(uint*);
+    HRESULT Deactivate(EMPTY_VOLUME_CACHE_FLAGS*);
 }
 enum IID_IEmptyVolumeCache2 = GUID(0x2b7e3ba, 0x4db3, 0x11d2, [0xb2, 0xd9, 0x0, 0xc0, 0x4f, 0x8e, 0xec, 0x8c]);
 interface IEmptyVolumeCache2 : IEmptyVolumeCache
 {
-    HRESULT InitializeEx(HKEY, const(wchar)*, const(wchar)*, PWSTR*, PWSTR*, PWSTR*, uint*);
+    HRESULT InitializeEx(HKEY, const(wchar)*, const(wchar)*, PWSTR*, PWSTR*, PWSTR*, EMPTY_VOLUME_CACHE_FLAGS*);
 }
 enum IID_IReconcileInitiator = GUID(0x99180161, 0xda16, 0x101a, [0x93, 0x5c, 0x44, 0x45, 0x53, 0x54, 0x0, 0x0]);
 interface IReconcileInitiator : IUnknown
@@ -55,7 +60,7 @@ interface IReconcileInitiator : IUnknown
     HRESULT SetAbortCallback(IUnknown);
     HRESULT SetProgressFeedback(uint, uint);
 }
-alias _reconcilef = int;
+alias RECONCILEF = int;
 enum : int
 {
     RECONCILEF_MAYBOTHERUSER        = 0x00000001,

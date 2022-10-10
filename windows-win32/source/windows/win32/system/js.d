@@ -15,6 +15,8 @@ enum : int
     JsRuntimeVersionEdge = 0xffffffff,
 }
 
+JsErrorCode JsCreateContext(void*, IDebugApplication64, void**);
+JsErrorCode JsStartDebugging(IDebugApplication64);
 JsErrorCode JsCreateRuntime(JsRuntimeAttributes, JsRuntimeVersion, JsThreadServiceCallback, void**);
 JsErrorCode JsCollectGarbage(void*);
 JsErrorCode JsDisposeRuntime(void*);
@@ -25,11 +27,13 @@ JsErrorCode JsSetRuntimeMemoryAllocationCallback(void*, void*, JsMemoryAllocatio
 JsErrorCode JsSetRuntimeBeforeCollectCallback(void*, void*, JsBeforeCollectCallback);
 JsErrorCode JsAddRef(void*, uint*);
 JsErrorCode JsRelease(void*, uint*);
-JsErrorCode JsCreateContext(void*, IDebugApplication64, void**);
+/+ [CONFLICTED] JsErrorCode JsCreateContext(void*, IDebugApplication32, void**);
++/
 JsErrorCode JsGetCurrentContext(void**);
 JsErrorCode JsSetCurrentContext(void*);
 JsErrorCode JsGetRuntime(void*, void**);
-JsErrorCode JsStartDebugging(IDebugApplication64);
+/+ [CONFLICTED] JsErrorCode JsStartDebugging(IDebugApplication32);
++/
 JsErrorCode JsIdle(uint*);
 JsErrorCode JsParseScript(const(wchar)*, ulong, const(wchar)*, void**);
 JsErrorCode JsRunScript(const(wchar)*, ulong, const(wchar)*, void**);
@@ -100,10 +104,6 @@ JsErrorCode JsStartProfiling(IActiveScriptProfilerCallback, PROFILER_EVENT_MASK,
 JsErrorCode JsStopProfiling(HRESULT);
 JsErrorCode JsEnumerateHeap(IActiveScriptProfilerHeapEnum*);
 JsErrorCode JsIsEnumeratingHeap(bool*);
-/+ [CONFLICTED] JsErrorCode JsCreateContext(void*, IDebugApplication32, void**);
-+/
-/+ [CONFLICTED] JsErrorCode JsStartDebugging(IDebugApplication32);
-+/
 enum JS_SOURCE_CONTEXT_NONE = 0xffffffffffffffff;
 alias JsErrorCode = uint;
 enum : uint

@@ -580,6 +580,38 @@ enum WINHTTP_RESET_OUT_OF_PROC = 0x00020000;
 enum WINHTTP_RESET_DISCARD_RESOLVERS = 0x00040000;
 enum WINHTTP_WEB_SOCKET_MAX_CLOSE_REASON_LENGTH = 0x0000007b;
 enum WINHTTP_WEB_SOCKET_MIN_KEEPALIVE_VALUE = 0x00003a98;
+struct WINHTTP_CONNECTION_INFO
+{
+    uint cbSize;
+    SOCKADDR_STORAGE LocalAddress;
+    SOCKADDR_STORAGE RemoteAddress;
+}
+struct WINHTTP_REQUEST_TIMES
+{
+    uint cTimes;
+    ulong[64] rgullTimes;
+}
+struct WINHTTP_REQUEST_STATS
+{
+    ulong ullFlags;
+    uint ulIndex;
+    uint cStats;
+    ulong[32] rgullStats;
+}
+struct WINHTTP_MATCH_CONNECTION_GUID
+{
+    GUID ConnectionGuid;
+    ulong ullFlags;
+}
+struct WINHTTP_RESOLVER_CACHE_CONFIG
+{
+    uint ulMaxResolverCacheEntries;
+    uint ulMaxCacheEntryAge;
+    uint ulMinCacheEntryTtl;
+    WINHTTP_SECURE_DNS_SETTING SecureDnsSetting;
+    ulong ullConnResolutionWaitTime;
+    ulong ullFlags;
+}
 struct WINHTTP_ASYNC_RESULT
 {
     ulong dwResult;
@@ -643,7 +675,7 @@ struct WINHTTP_PROXY_RESULT_EX
     HANDLE hProxyDetectionHandle;
     uint dwProxyInterfaceAffinity;
 }
-struct _WinHttpProxyNetworkKey
+struct WINHTTP_PROXY_NETWORKING_KEY
 {
     ubyte[128] pbBuffer;
 }
@@ -664,7 +696,7 @@ struct WINHTTP_PROXY_SETTINGS
     uint dwDetectedInterfaceIpCount;
     uint* pdwDetectedInterfaceIp;
     uint cNetworkKeys;
-    _WinHttpProxyNetworkKey* pNetworkKeys;
+    WINHTTP_PROXY_NETWORKING_KEY* pNetworkKeys;
 }
 struct WINHTTP_CERTIFICATE_INFO
 {
@@ -677,12 +709,14 @@ struct WINHTTP_CERTIFICATE_INFO
     PWSTR lpszEncryptionAlgName;
     uint dwKeySize;
 }
-struct WINHTTP_CONNECTION_INFO
+/+ [CONFLICTED] struct WINHTTP_CONNECTION_INFO
 {
+    align (4):
     uint cbSize;
     SOCKADDR_STORAGE LocalAddress;
     SOCKADDR_STORAGE RemoteAddress;
 }
++/
 alias WINHTTP_REQUEST_TIME_ENTRY = int;
 enum : int
 {
@@ -726,11 +760,13 @@ enum : int
     WinHttpRequestTimeMax                           = 0x00000040,
 }
 
-struct WINHTTP_REQUEST_TIMES
+/+ [CONFLICTED] struct WINHTTP_REQUEST_TIMES
 {
+    align (4):
     uint cTimes;
     ulong[64] rgullTimes;
 }
++/
 alias WINHTTP_REQUEST_STAT_ENTRY = int;
 enum : int
 {
@@ -754,18 +790,22 @@ enum : int
     WinHttpRequestStatMax                  = 0x00000020,
 }
 
-struct WINHTTP_REQUEST_STATS
+/+ [CONFLICTED] struct WINHTTP_REQUEST_STATS
 {
+    align (4):
     ulong ullFlags;
     uint ulIndex;
     uint cStats;
     ulong[32] rgullStats;
 }
-struct WINHTTP_MATCH_CONNECTION_GUID
++/
+/+ [CONFLICTED] struct WINHTTP_MATCH_CONNECTION_GUID
 {
+    align (4):
     GUID ConnectionGuid;
     ulong ullFlags;
 }
++/
 struct WINHTTP_EXTENDED_HEADER
 {
     union
@@ -794,8 +834,9 @@ enum : int
     WinHttpSecureDnsSettingMax                       = 0x00000004,
 }
 
-struct WINHTTP_RESOLVER_CACHE_CONFIG
+/+ [CONFLICTED] struct WINHTTP_RESOLVER_CACHE_CONFIG
 {
+    align (4):
     uint ulMaxResolverCacheEntries;
     uint ulMaxCacheEntryAge;
     uint ulMinCacheEntryTtl;
@@ -803,6 +844,7 @@ struct WINHTTP_RESOLVER_CACHE_CONFIG
     ulong ullConnResolutionWaitTime;
     ulong ullFlags;
 }
++/
 struct WINHTTP_CONNECTION_GROUP
 {
     uint cConnections;
@@ -902,45 +944,3 @@ struct WINHTTP_WEB_SOCKET_STATUS
     uint dwBytesTransferred;
     WINHTTP_WEB_SOCKET_BUFFER_TYPE eBufferType;
 }
-/+ [CONFLICTED] struct WINHTTP_CONNECTION_INFO
-{
-    align (4):
-    uint cbSize;
-    SOCKADDR_STORAGE LocalAddress;
-    SOCKADDR_STORAGE RemoteAddress;
-}
-+/
-/+ [CONFLICTED] struct WINHTTP_REQUEST_TIMES
-{
-    align (4):
-    uint cTimes;
-    ulong[64] rgullTimes;
-}
-+/
-/+ [CONFLICTED] struct WINHTTP_REQUEST_STATS
-{
-    align (4):
-    ulong ullFlags;
-    uint ulIndex;
-    uint cStats;
-    ulong[32] rgullStats;
-}
-+/
-/+ [CONFLICTED] struct WINHTTP_MATCH_CONNECTION_GUID
-{
-    align (4):
-    GUID ConnectionGuid;
-    ulong ullFlags;
-}
-+/
-/+ [CONFLICTED] struct WINHTTP_RESOLVER_CACHE_CONFIG
-{
-    align (4):
-    uint ulMaxResolverCacheEntries;
-    uint ulMaxCacheEntryAge;
-    uint ulMinCacheEntryTtl;
-    WINHTTP_SECURE_DNS_SETTING SecureDnsSetting;
-    ulong ullConnResolutionWaitTime;
-    ulong ullFlags;
-}
-+/

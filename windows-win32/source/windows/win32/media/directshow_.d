@@ -1369,7 +1369,7 @@ interface IAMovieSetup : IUnknown
     HRESULT Register();
     HRESULT Unregister();
 }
-alias AM_SEEKING_SeekingFlags = int;
+alias AM_SEEKING_SEEKING_FLAGS = int;
 enum : int
 {
     AM_SEEKING_NoPositioning          = 0x00000000,
@@ -6765,7 +6765,7 @@ struct AVITIMEDINDEX_ENTRY
     uint dwSize;
     uint dwDuration;
 }
-struct _avitimedindex
+struct AVITIMEDINDEX
 {
     align (2):
     uint fcc;
@@ -6802,7 +6802,7 @@ struct AVITCDLINDEX_ENTRY
     uint dwUser;
     byte[12] szReelId;
 }
-struct _avitcdlindex
+struct AVITCDLINDEX
 {
     align (2):
     uint fcc;
@@ -10527,6 +10527,7 @@ struct TID_EXTENSION
 }
 struct SECTION
 {
+    align (1):
     ubyte TableId;
     union _Header_e__Union
     {
@@ -10688,6 +10689,7 @@ struct MPEG_STREAM_BUFFER
 }
 struct MPEG_TIME
 {
+    align (1):
     ubyte Hours;
     ubyte Minutes;
     ubyte Seconds;
@@ -10701,6 +10703,7 @@ struct MPEG_DATE
 }
 struct MPEG_DATE_AND_TIME
 {
+    align (1):
     MPEG_DATE D;
     MPEG_TIME T;
 }

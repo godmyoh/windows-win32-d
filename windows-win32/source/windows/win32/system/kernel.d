@@ -219,32 +219,6 @@ enum : int
     MaxSuiteType            = 0x00000012,
 }
 
-alias COMPARTMENT_ID = int;
-enum : int
-{
-    UNSPECIFIED_COMPARTMENT_ID = 0x00000000,
-    DEFAULT_COMPARTMENT_ID     = 0x00000001,
-}
-
-struct EXCEPTION_REGISTRATION_RECORD
-{
-    EXCEPTION_REGISTRATION_RECORD* Next;
-    EXCEPTION_ROUTINE Handler;
-}
-struct NT_TIB
-{
-    EXCEPTION_REGISTRATION_RECORD* ExceptionList;
-    void* StackBase;
-    void* StackLimit;
-    void* SubSystemTib;
-    union
-    {
-        void* FiberData;
-        uint Version;
-    }
-    void* ArbitraryUserPointer;
-    NT_TIB* Self;
-}
 /+ [CONFLICTED] union SLIST_HEADER
 {
     struct
@@ -271,6 +245,13 @@ struct FLOATING_SAVE_AREA
     ubyte[80] RegisterArea;
     uint Cr0NpxState;
 }
+alias COMPARTMENT_ID = int;
+enum : int
+{
+    UNSPECIFIED_COMPARTMENT_ID = 0x00000000,
+    DEFAULT_COMPARTMENT_ID     = 0x00000001,
+}
+
 /+ [CONFLICTED] struct FLOATING_SAVE_AREA
 {
     uint ControlWord;
@@ -284,6 +265,25 @@ struct FLOATING_SAVE_AREA
     uint Spare0;
 }
 +/
+struct EXCEPTION_REGISTRATION_RECORD
+{
+    EXCEPTION_REGISTRATION_RECORD* Next;
+    EXCEPTION_ROUTINE Handler;
+}
+struct NT_TIB
+{
+    EXCEPTION_REGISTRATION_RECORD* ExceptionList;
+    void* StackBase;
+    void* StackLimit;
+    void* SubSystemTib;
+    union
+    {
+        void* FiberData;
+        uint Version;
+    }
+    void* ArbitraryUserPointer;
+    NT_TIB* Self;
+}
 /+ [CONFLICTED] union SLIST_HEADER
 {
     ulong Alignment;

@@ -14,29 +14,64 @@ import windows.win32.ui.shell.propertiessystem : PROPERTYKEY;
 version (Windows):
 extern (Windows):
 
+short SQLBindCol(void*, ushort, short, void*, long, long*);
+short SQLBindParam(void*, ushort, short, short, ulong, short, void*, long*);
+short SQLColAttribute(void*, ushort, ushort, void*, short, short*, long*);
+short SQLDescribeCol(void*, ushort, ubyte*, short, short*, short*, ulong*, short*, short*);
+short SQLFetchScroll(void*, short, long);
+short SQLGetData(void*, ushort, short, void*, long, long*);
+short SQLGetDescRec(void*, short, ubyte*, short, short*, short*, short*, long*, short*, short*, short*);
+short SQLPutData(void*, void*, long);
+short SQLRowCount(void*, long*);
+short SQLSetConnectOption(void*, ushort, ulong);
+short SQLSetDescRec(void*, short, short, short, long, short, short, void*, long*, long*);
+short SQLSetParam(void*, ushort, short, short, ulong, short, void*, long*);
+short SQLSetStmtOption(void*, ushort, ulong);
+short SQLColAttributes(void*, ushort, ushort, void*, short, short*, long*);
+short SQLDescribeParam(void*, ushort, short*, ulong*, short*, short*);
+short SQLExtendedFetch(void*, ushort, long, ulong*, ushort*);
+short SQLParamOptions(void*, ulong, ulong*);
+short SQLSetPos(void*, ulong, ushort, ushort);
+short SQLBindParameter(void*, ushort, short, short, short, ulong, short, void*, long, long*);
+short SQLSetScrollOptions(void*, ushort, long, ushort);
+short SQLColAttributeW(void*, ushort, ushort, void*, short, short*, long*);
+short SQLColAttributesW(void*, ushort, ushort, void*, short, short*, long*);
+short SQLDescribeColW(void*, ushort, ushort*, short, short*, short*, ulong*, short*, short*);
+short SQLGetDescRecW(void*, short, ushort*, short, short*, short*, short*, long*, short*, short*, short*);
+short SQLSetConnectOptionW(void*, ushort, ulong);
+short SQLColAttributeA(void*, short, short, void*, short, short*, long*);
+short SQLColAttributesA(void*, ushort, ushort, void*, short, short*, long*);
+short SQLDescribeColA(void*, ushort, ubyte*, short, short*, short*, ulong*, short*, short*);
+short SQLGetDescRecA(void*, short, ubyte*, short, short*, short*, short*, long*, short*, short*, short*);
+short SQLSetConnectOptionA(void*, ushort, ulong);
 short SQLAllocConnect(void*, void**);
 short SQLAllocEnv(void**);
 short SQLAllocHandle(short, void*, void**);
 short SQLAllocStmt(void*, void**);
-short SQLBindCol(void*, ushort, short, void*, long, long*);
-short SQLBindParam(void*, ushort, short, short, ulong, short, void*, long*);
+/+ [CONFLICTED] short SQLBindCol(void*, ushort, short, void*, int, int*);
++/
+/+ [CONFLICTED] short SQLBindParam(void*, ushort, short, short, uint, short, void*, int*);
++/
 short SQLCancel(void*);
 short SQLCancelHandle(short, void*);
 short SQLCloseCursor(void*);
-short SQLColAttribute(void*, ushort, ushort, void*, short, short*, long*);
+/+ [CONFLICTED] short SQLColAttribute(void*, ushort, ushort, void*, short, short*, void*);
++/
 short SQLColumns(void*, ubyte*, short, ubyte*, short, ubyte*, short, ubyte*, short);
 short SQLCompleteAsync(short, void*, short*);
 short SQLConnect(void*, ubyte*, short, ubyte*, short, ubyte*, short);
 short SQLCopyDesc(void*, void*);
 short SQLDataSources(void*, ushort, ubyte*, short, short*, ubyte*, short, short*);
-short SQLDescribeCol(void*, ushort, ubyte*, short, short*, short*, ulong*, short*, short*);
+/+ [CONFLICTED] short SQLDescribeCol(void*, ushort, ubyte*, short, short*, short*, uint*, short*, short*);
++/
 short SQLDisconnect(void*);
 short SQLEndTran(short, void*, short);
 short SQLError(void*, void*, void*, ubyte*, int*, ubyte*, short, short*);
 short SQLExecDirect(void*, ubyte*, int);
 short SQLExecute(void*);
 short SQLFetch(void*);
-short SQLFetchScroll(void*, short, long);
+/+ [CONFLICTED] short SQLFetchScroll(void*, short, int);
++/
 short SQLFreeConnect(void*);
 short SQLFreeEnv(void*);
 short SQLFreeHandle(short, void*);
@@ -44,9 +79,11 @@ short SQLFreeStmt(void*, ushort);
 short SQLGetConnectAttr(void*, int, void*, int, int*);
 short SQLGetConnectOption(void*, ushort, void*);
 short SQLGetCursorName(void*, ubyte*, short, short*);
-short SQLGetData(void*, ushort, short, void*, long, long*);
+/+ [CONFLICTED] short SQLGetData(void*, ushort, short, void*, int, int*);
++/
 short SQLGetDescField(void*, short, short, void*, int, int*);
-short SQLGetDescRec(void*, short, ubyte*, short, short*, short*, short*, long*, short*, short*, short*);
+/+ [CONFLICTED] short SQLGetDescRec(void*, short, ubyte*, short, short*, short*, short*, int*, short*, short*, short*);
++/
 short SQLGetDiagField(short, void*, short, short, void*, short, short*);
 short SQLGetDiagRec(short, void*, short, ubyte*, int*, ubyte*, short, short*);
 short SQLGetEnvAttr(void*, int, void*, int, int*);
@@ -58,17 +95,23 @@ short SQLGetTypeInfo(void*, short);
 short SQLNumResultCols(void*, short*);
 short SQLParamData(void*, void**);
 short SQLPrepare(void*, ubyte*, int);
-short SQLPutData(void*, void*, long);
-short SQLRowCount(void*, long*);
+/+ [CONFLICTED] short SQLPutData(void*, void*, int);
++/
+/+ [CONFLICTED] short SQLRowCount(void*, int*);
++/
 short SQLSetConnectAttr(void*, int, void*, int);
-short SQLSetConnectOption(void*, ushort, ulong);
+/+ [CONFLICTED] short SQLSetConnectOption(void*, ushort, uint);
++/
 short SQLSetCursorName(void*, ubyte*, short);
 short SQLSetDescField(void*, short, short, void*, int);
-short SQLSetDescRec(void*, short, short, short, long, short, short, void*, long*, long*);
+/+ [CONFLICTED] short SQLSetDescRec(void*, short, short, short, int, short, short, void*, int*, int*);
++/
 short SQLSetEnvAttr(void*, int, void*, int);
-short SQLSetParam(void*, ushort, short, short, ulong, short, void*, long*);
+/+ [CONFLICTED] short SQLSetParam(void*, ushort, short, short, uint, short, void*, int*);
++/
 short SQLSetStmtAttr(void*, int, void*, int);
-short SQLSetStmtOption(void*, ushort, ulong);
+/+ [CONFLICTED] short SQLSetStmtOption(void*, ushort, uint);
++/
 short SQLSpecialColumns(void*, ushort, ubyte*, short, ubyte*, short, ubyte*, short, ushort, ushort);
 short SQLStatistics(void*, ubyte*, short, ubyte*, short, ubyte*, short, ushort, ushort);
 short SQLTables(void*, ubyte*, short, ubyte*, short, ubyte*, short, ubyte*, short);
@@ -103,37 +146,48 @@ short SQLCloseEnumServers(HANDLE);
 short SQLDriverConnect(void*, long, ubyte*, short, ubyte*, short, short*, ushort);
 short SQLBrowseConnect(void*, ubyte*, short, ubyte*, short, short*);
 short SQLBulkOperations(void*, short);
-short SQLColAttributes(void*, ushort, ushort, void*, short, short*, long*);
+/+ [CONFLICTED] short SQLColAttributes(void*, ushort, ushort, void*, short, short*, int*);
++/
 short SQLColumnPrivileges(void*, ubyte*, short, ubyte*, short, ubyte*, short, ubyte*, short);
-short SQLDescribeParam(void*, ushort, short*, ulong*, short*, short*);
-short SQLExtendedFetch(void*, ushort, long, ulong*, ushort*);
+/+ [CONFLICTED] short SQLDescribeParam(void*, ushort, short*, uint*, short*, short*);
++/
+/+ [CONFLICTED] short SQLExtendedFetch(void*, ushort, int, uint*, ushort*);
++/
 short SQLForeignKeys(void*, ubyte*, short, ubyte*, short, ubyte*, short, ubyte*, short, ubyte*, short, ubyte*, short);
 short SQLMoreResults(void*);
 short SQLNativeSql(void*, ubyte*, int, ubyte*, int, int*);
 short SQLNumParams(void*, short*);
-short SQLParamOptions(void*, ulong, ulong*);
+/+ [CONFLICTED] short SQLParamOptions(void*, uint, uint*);
++/
 short SQLPrimaryKeys(void*, ubyte*, short, ubyte*, short, ubyte*, short);
 short SQLProcedureColumns(void*, ubyte*, short, ubyte*, short, ubyte*, short, ubyte*, short);
 short SQLProcedures(void*, ubyte*, short, ubyte*, short, ubyte*, short);
-short SQLSetPos(void*, ulong, ushort, ushort);
+/+ [CONFLICTED] short SQLSetPos(void*, ushort, ushort, ushort);
++/
 short SQLTablePrivileges(void*, ubyte*, short, ubyte*, short, ubyte*, short);
 short SQLDrivers(void*, ushort, ubyte*, short, short*, ubyte*, short, short*);
-short SQLBindParameter(void*, ushort, short, short, short, ulong, short, void*, long, long*);
+/+ [CONFLICTED] short SQLBindParameter(void*, ushort, short, short, short, uint, short, void*, int, int*);
++/
 short SQLAllocHandleStd(short, void*, void**);
-short SQLSetScrollOptions(void*, ushort, long, ushort);
+/+ [CONFLICTED] short SQLSetScrollOptions(void*, ushort, int, ushort);
++/
 BOOL ODBCSetTryWaitValue(uint);
 uint ODBCGetTryWaitValue();
-short SQLColAttributeW(void*, ushort, ushort, void*, short, short*, long*);
-short SQLColAttributesW(void*, ushort, ushort, void*, short, short*, long*);
+/+ [CONFLICTED] short SQLColAttributeW(void*, ushort, ushort, void*, short, short*, void*);
++/
+/+ [CONFLICTED] short SQLColAttributesW(void*, ushort, ushort, void*, short, short*, int*);
++/
 short SQLConnectW(void*, ushort*, short, ushort*, short, ushort*, short);
-short SQLDescribeColW(void*, ushort, ushort*, short, short*, short*, ulong*, short*, short*);
+/+ [CONFLICTED] short SQLDescribeColW(void*, ushort, ushort*, short, short*, short*, uint*, short*, short*);
++/
 short SQLErrorW(void*, void*, void*, ushort*, int*, ushort*, short, short*);
 short SQLExecDirectW(void*, ushort*, int);
 short SQLGetConnectAttrW(void*, int, void*, int, int*);
 short SQLGetCursorNameW(void*, ushort*, short, short*);
 short SQLSetDescFieldW(void*, short, short, void*, int);
 short SQLGetDescFieldW(void*, short, short, void*, int, int*);
-short SQLGetDescRecW(void*, short, ushort*, short, short*, short*, short*, long*, short*, short*, short*);
+/+ [CONFLICTED] short SQLGetDescRecW(void*, short, ushort*, short, short*, short*, short*, int*, short*, short*, short*);
++/
 short SQLGetDiagFieldW(short, void*, short, short, void*, short, short*);
 short SQLGetDiagRecW(short, void*, short, ushort*, int*, ushort*, short, short*);
 short SQLPrepareW(void*, ushort*, int);
@@ -143,7 +197,8 @@ short SQLColumnsW(void*, ushort*, short, ushort*, short, ushort*, short, ushort*
 short SQLGetConnectOptionW(void*, ushort, void*);
 short SQLGetInfoW(void*, ushort, void*, short, short*);
 short SQLGetTypeInfoW(void*, short);
-short SQLSetConnectOptionW(void*, ushort, ulong);
+/+ [CONFLICTED] short SQLSetConnectOptionW(void*, ushort, uint);
++/
 short SQLSpecialColumnsW(void*, ushort, ushort*, short, ushort*, short, ushort*, short, ushort, ushort);
 short SQLStatisticsW(void*, ushort*, short, ushort*, short, ushort*, short, ushort, ushort);
 short SQLTablesW(void*, ushort*, short, ushort*, short, ushort*, short, ushort*, short);
@@ -160,16 +215,20 @@ short SQLProcedureColumnsW(void*, ushort*, short, ushort*, short, ushort*, short
 short SQLProceduresW(void*, ushort*, short, ushort*, short, ushort*, short);
 short SQLTablePrivilegesW(void*, ushort*, short, ushort*, short, ushort*, short);
 short SQLDriversW(void*, ushort, ushort*, short, short*, ushort*, short, short*);
-short SQLColAttributeA(void*, short, short, void*, short, short*, long*);
-short SQLColAttributesA(void*, ushort, ushort, void*, short, short*, long*);
+/+ [CONFLICTED] short SQLColAttributeA(void*, short, short, void*, short, short*, void*);
++/
+/+ [CONFLICTED] short SQLColAttributesA(void*, ushort, ushort, void*, short, short*, int*);
++/
 short SQLConnectA(void*, ubyte*, short, ubyte*, short, ubyte*, short);
-short SQLDescribeColA(void*, ushort, ubyte*, short, short*, short*, ulong*, short*, short*);
+/+ [CONFLICTED] short SQLDescribeColA(void*, ushort, ubyte*, short, short*, short*, uint*, short*, short*);
++/
 short SQLErrorA(void*, void*, void*, ubyte*, int*, ubyte*, short, short*);
 short SQLExecDirectA(void*, ubyte*, int);
 short SQLGetConnectAttrA(void*, int, void*, int, int*);
 short SQLGetCursorNameA(void*, ubyte*, short, short*);
 short SQLGetDescFieldA(void*, short, short, void*, int, int*);
-short SQLGetDescRecA(void*, short, ubyte*, short, short*, short*, short*, long*, short*, short*, short*);
+/+ [CONFLICTED] short SQLGetDescRecA(void*, short, ubyte*, short, short*, short*, short*, int*, short*, short*, short*);
++/
 short SQLGetDiagFieldA(short, void*, short, short, void*, short, short*);
 short SQLGetDiagRecA(short, void*, short, ubyte*, int*, ubyte*, short, short*);
 short SQLGetStmtAttrA(void*, int, void*, int, int*);
@@ -180,7 +239,8 @@ short SQLSetCursorNameA(void*, ubyte*, short);
 short SQLColumnsA(void*, ubyte*, short, ubyte*, short, ubyte*, short, ubyte*, short);
 short SQLGetConnectOptionA(void*, ushort, void*);
 short SQLGetInfoA(void*, ushort, void*, short, short*);
-short SQLSetConnectOptionA(void*, ushort, ulong);
+/+ [CONFLICTED] short SQLSetConnectOptionA(void*, ushort, uint);
++/
 short SQLSpecialColumnsA(void*, ushort, ubyte*, short, ubyte*, short, ubyte*, short, ushort, ushort);
 short SQLStatisticsA(void*, ubyte*, short, ubyte*, short, ubyte*, short, ushort, ushort);
 short SQLTablesA(void*, ubyte*, short, ubyte*, short, ubyte*, short, ubyte*, short);
@@ -195,66 +255,6 @@ short SQLProcedureColumnsA(void*, ubyte*, short, ubyte*, short, ubyte*, short, u
 short SQLProceduresA(void*, ubyte*, short, ubyte*, short, ubyte*, short);
 short SQLTablePrivilegesA(void*, ubyte*, short, ubyte*, short, ubyte*, short);
 short SQLDriversA(void*, ushort, ubyte*, short, short*, ubyte*, short, short*);
-/+ [CONFLICTED] short SQLBindCol(void*, ushort, short, void*, int, int*);
-+/
-/+ [CONFLICTED] short SQLBindParam(void*, ushort, short, short, uint, short, void*, int*);
-+/
-/+ [CONFLICTED] short SQLColAttribute(void*, ushort, ushort, void*, short, short*, void*);
-+/
-/+ [CONFLICTED] short SQLDescribeCol(void*, ushort, ubyte*, short, short*, short*, uint*, short*, short*);
-+/
-/+ [CONFLICTED] short SQLFetchScroll(void*, short, int);
-+/
-/+ [CONFLICTED] short SQLGetData(void*, ushort, short, void*, int, int*);
-+/
-/+ [CONFLICTED] short SQLGetDescRec(void*, short, ubyte*, short, short*, short*, short*, int*, short*, short*, short*);
-+/
-/+ [CONFLICTED] short SQLPutData(void*, void*, int);
-+/
-/+ [CONFLICTED] short SQLRowCount(void*, int*);
-+/
-/+ [CONFLICTED] short SQLSetConnectOption(void*, ushort, uint);
-+/
-/+ [CONFLICTED] short SQLSetDescRec(void*, short, short, short, int, short, short, void*, int*, int*);
-+/
-/+ [CONFLICTED] short SQLSetParam(void*, ushort, short, short, uint, short, void*, int*);
-+/
-/+ [CONFLICTED] short SQLSetStmtOption(void*, ushort, uint);
-+/
-/+ [CONFLICTED] short SQLColAttributes(void*, ushort, ushort, void*, short, short*, int*);
-+/
-/+ [CONFLICTED] short SQLDescribeParam(void*, ushort, short*, uint*, short*, short*);
-+/
-/+ [CONFLICTED] short SQLExtendedFetch(void*, ushort, int, uint*, ushort*);
-+/
-/+ [CONFLICTED] short SQLParamOptions(void*, uint, uint*);
-+/
-/+ [CONFLICTED] short SQLSetPos(void*, ushort, ushort, ushort);
-+/
-/+ [CONFLICTED] short SQLBindParameter(void*, ushort, short, short, short, uint, short, void*, int, int*);
-+/
-/+ [CONFLICTED] short SQLSetScrollOptions(void*, ushort, int, ushort);
-+/
-/+ [CONFLICTED] short SQLColAttributeW(void*, ushort, ushort, void*, short, short*, void*);
-+/
-/+ [CONFLICTED] short SQLColAttributesW(void*, ushort, ushort, void*, short, short*, int*);
-+/
-/+ [CONFLICTED] short SQLDescribeColW(void*, ushort, ushort*, short, short*, short*, uint*, short*, short*);
-+/
-/+ [CONFLICTED] short SQLGetDescRecW(void*, short, ushort*, short, short*, short*, short*, int*, short*, short*, short*);
-+/
-/+ [CONFLICTED] short SQLSetConnectOptionW(void*, ushort, uint);
-+/
-/+ [CONFLICTED] short SQLColAttributeA(void*, short, short, void*, short, short*, void*);
-+/
-/+ [CONFLICTED] short SQLColAttributesA(void*, ushort, ushort, void*, short, short*, int*);
-+/
-/+ [CONFLICTED] short SQLDescribeColA(void*, ushort, ubyte*, short, short*, short*, uint*, short*, short*);
-+/
-/+ [CONFLICTED] short SQLGetDescRecA(void*, short, ubyte*, short, short*, short*, short*, int*, short*, short*, short*);
-+/
-/+ [CONFLICTED] short SQLSetConnectOptionA(void*, ushort, uint);
-+/
 enum SI_TEMPORARY = 0x80000000;
 enum SUBSINFO_ALLFLAGS = 0x0000ef7f;
 enum RS_READY = 0x00000001;
@@ -3651,6 +3651,247 @@ enum DBPROPSET_SQLSERVERSTREAM = GUID(0x9f79c073, 0x8a6d, 0x4bca, [0xa8, 0xa8, 0
 struct IRowsetExactScroll
 {
 }
+alias HACCESSOR = void*;
+struct DBVECTOR
+{
+    ulong size;
+    void* ptr;
+}
+struct DBTIMESTAMP
+{
+    short year;
+    ushort month;
+    ushort day;
+    ushort hour;
+    ushort minute;
+    ushort second;
+    uint fraction;
+}
+struct SEC_OBJECT_ELEMENT
+{
+    GUID guidObjectType;
+    DBID ObjectID;
+}
+struct SEC_OBJECT
+{
+    uint cObjects;
+    SEC_OBJECT_ELEMENT* prgObjects;
+}
+struct DBIMPLICITSESSION
+{
+    IUnknown pUnkOuter;
+    GUID* piid;
+    IUnknown pSession;
+}
+struct DBOBJECT
+{
+    uint dwFlags;
+    GUID iid;
+}
+struct DBBINDEXT
+{
+    ubyte* pExtension;
+    ulong ulExtension;
+}
+struct DBBINDING
+{
+    ulong iOrdinal;
+    ulong obValue;
+    ulong obLength;
+    ulong obStatus;
+    ITypeInfo pTypeInfo;
+    DBOBJECT* pObject;
+    DBBINDEXT* pBindExt;
+    uint dwPart;
+    uint dwMemOwner;
+    uint eParamIO;
+    ulong cbMaxLen;
+    uint dwFlags;
+    ushort wType;
+    ubyte bPrecision;
+    ubyte bScale;
+}
+struct DBFAILUREINFO
+{
+    ulong hRow;
+    ulong iColumn;
+    HRESULT failure;
+}
+struct DBCOLUMNINFO
+{
+    PWSTR pwszName;
+    ITypeInfo pTypeInfo;
+    ulong iOrdinal;
+    uint dwFlags;
+    ulong ulColumnSize;
+    ushort wType;
+    ubyte bPrecision;
+    ubyte bScale;
+    DBID columnid;
+}
+struct DBPARAMS
+{
+    void* pData;
+    ulong cParamSets;
+    HACCESSOR hAccessor;
+}
+struct DBPARAMINFO
+{
+    uint dwFlags;
+    ulong iOrdinal;
+    PWSTR pwszName;
+    ITypeInfo pTypeInfo;
+    ulong ulParamSize;
+    ushort wType;
+    ubyte bPrecision;
+    ubyte bScale;
+}
+struct DBPROPIDSET
+{
+    uint* rgPropertyIDs;
+    uint cPropertyIDs;
+    GUID guidPropertySet;
+}
+struct DBPROPINFO
+{
+    PWSTR pwszDescription;
+    uint dwPropertyID;
+    uint dwFlags;
+    VARENUM vtType;
+    VARIANT vValues;
+}
+struct DBPROPINFOSET
+{
+    DBPROPINFO* rgPropertyInfos;
+    uint cPropertyInfos;
+    GUID guidPropertySet;
+}
+struct DBPROP
+{
+    uint dwPropertyID;
+    uint dwOptions;
+    uint dwStatus;
+    DBID colid;
+    VARIANT vValue;
+}
+struct DBPROPSET
+{
+    DBPROP* rgProperties;
+    uint cProperties;
+    GUID guidPropertySet;
+}
+struct DBINDEXCOLUMNDESC
+{
+    DBID* pColumnID;
+    uint eIndexColOrder;
+}
+struct DBCOLUMNDESC
+{
+    PWSTR pwszTypeName;
+    ITypeInfo pTypeInfo;
+    DBPROPSET* rgPropertySets;
+    GUID* pclsid;
+    uint cPropertySets;
+    ulong ulColumnSize;
+    DBID dbcid;
+    ushort wType;
+    ubyte bPrecision;
+    ubyte bScale;
+}
+struct DBCOLUMNACCESS
+{
+    void* pData;
+    DBID columnid;
+    ulong cbDataLen;
+    uint dwStatus;
+    ulong cbMaxLen;
+    ulong dwReserved;
+    ushort wType;
+    ubyte bPrecision;
+    ubyte bScale;
+}
+struct DBCONSTRAINTDESC
+{
+    DBID* pConstraintID;
+    uint ConstraintType;
+    ulong cColumns;
+    DBID* rgColumnList;
+    DBID* pReferencedTableID;
+    ulong cForeignKeyColumns;
+    DBID* rgForeignKeyColumnList;
+    PWSTR pwszConstraintText;
+    uint UpdateRule;
+    uint DeleteRule;
+    uint MatchType;
+    uint Deferrability;
+    ulong cReserved;
+    DBPROPSET* rgReserved;
+}
+struct MDAXISINFO
+{
+    ulong cbSize;
+    ulong iAxis;
+    ulong cDimensions;
+    ulong cCoordinates;
+    ulong* rgcColumns;
+    PWSTR* rgpwszDimensionNames;
+}
+struct RMTPACK
+{
+    ISequentialStream pISeqStream;
+    uint cbData;
+    uint cBSTR;
+    BSTR* rgBSTR;
+    uint cVARIANT;
+    VARIANT* rgVARIANT;
+    uint cIDISPATCH;
+    IDispatch* rgIDISPATCH;
+    uint cIUNKNOWN;
+    IUnknown* rgIUNKNOWN;
+    uint cPROPVARIANT;
+    PROPVARIANT* rgPROPVARIANT;
+    uint cArray;
+    VARIANT* rgArray;
+}
+struct DBPARAMBINDINFO
+{
+    PWSTR pwszDataSourceType;
+    PWSTR pwszName;
+    ulong ulParamSize;
+    uint dwFlags;
+    ubyte bPrecision;
+    ubyte bScale;
+}
+struct DBLITERALINFO
+{
+    PWSTR pwszLiteralValue;
+    PWSTR pwszInvalidChars;
+    PWSTR pwszInvalidStartingChars;
+    uint lt;
+    BOOL fSupported;
+    uint cchMaxLen;
+}
+struct ERRORINFO
+{
+    HRESULT hrError;
+    uint dwMinor;
+    GUID clsid;
+    GUID iid;
+    int dispid;
+}
+struct DBROWWATCHCHANGE
+{
+    ulong hRegion;
+    uint eChangeKind;
+    ulong hRow;
+    ulong iRow;
+}
+struct DBCOST
+{
+    uint eKind;
+    uint dwUnits;
+    int lValue;
+}
 enum IID_IWordSink = GUID(0xcc907054, 0xc058, 0x101a, [0xb5, 0x54, 0x8, 0x0, 0x2b, 0x33, 0xb0, 0xe6]);
 interface IWordSink : IUnknown
 {
@@ -3773,11 +4014,13 @@ struct DB_NUMERIC
     ubyte sign;
     ubyte[16] val;
 }
-struct DBVECTOR
+/+ [CONFLICTED] struct DBVECTOR
 {
+    align (2):
     ulong size;
     void* ptr;
 }
++/
 struct DBDATE
 {
     short year;
@@ -3790,8 +4033,9 @@ struct DBTIME
     ushort minute;
     ushort second;
 }
-struct DBTIMESTAMP
+/+ [CONFLICTED] struct DBTIMESTAMP
 {
+    align (2):
     short year;
     ushort month;
     ushort day;
@@ -3800,6 +4044,7 @@ struct DBTIMESTAMP
     ushort second;
     uint fraction;
 }
++/
 struct DB_VARNUMERIC
 {
     ubyte precision;
@@ -3807,22 +4052,28 @@ struct DB_VARNUMERIC
     ubyte sign;
     ubyte[1] val;
 }
-struct SEC_OBJECT_ELEMENT
+/+ [CONFLICTED] struct SEC_OBJECT_ELEMENT
 {
+    align (2):
     GUID guidObjectType;
     DBID ObjectID;
 }
-struct SEC_OBJECT
++/
+/+ [CONFLICTED] struct SEC_OBJECT
 {
+    align (2):
     uint cObjects;
     SEC_OBJECT_ELEMENT* prgObjects;
 }
-struct DBIMPLICITSESSION
++/
+/+ [CONFLICTED] struct DBIMPLICITSESSION
 {
+    align (2):
     IUnknown pUnkOuter;
     GUID* piid;
     IUnknown pSession;
 }
++/
 alias DBTYPEENUM = int;
 enum : int
 {
@@ -3906,11 +4157,13 @@ enum : int
     DBMEMOWNER_PROVIDEROWNED = 0x00000001,
 }
 
-struct DBOBJECT
+/+ [CONFLICTED] struct DBOBJECT
 {
+    align (2):
     uint dwFlags;
     GUID iid;
 }
++/
 alias DBSTATUSENUM = int;
 enum : int
 {
@@ -3991,13 +4244,16 @@ enum : int
     DBSTATUS_E_NOTCOLLECTION = 0x0000001c,
 }
 
-struct DBBINDEXT
+/+ [CONFLICTED] struct DBBINDEXT
 {
+    align (2):
     ubyte* pExtension;
     ulong ulExtension;
 }
-struct DBBINDING
++/
+/+ [CONFLICTED] struct DBBINDING
 {
+    align (2):
     ulong iOrdinal;
     ulong obValue;
     ulong obLength;
@@ -4014,6 +4270,7 @@ struct DBBINDING
     ubyte bPrecision;
     ubyte bScale;
 }
++/
 alias DBROWSTATUSENUM = int;
 enum : int
 {
@@ -4049,12 +4306,14 @@ enum : int
     DBSTATUS_S_ROWSETCOLUMN = 0x0000001d,
 }
 
-struct DBFAILUREINFO
+/+ [CONFLICTED] struct DBFAILUREINFO
 {
+    align (2):
     ulong hRow;
     ulong iColumn;
     HRESULT failure;
 }
++/
 alias DBCOLUMNFLAGSENUM = int;
 enum : int
 {
@@ -4109,8 +4368,9 @@ enum : int
     DBSTAT_TUPLE_CARDINALITY  = 0x00000004,
 }
 
-struct DBCOLUMNINFO
+/+ [CONFLICTED] struct DBCOLUMNINFO
 {
+    align (2):
     PWSTR pwszName;
     ITypeInfo pTypeInfo;
     ulong iOrdinal;
@@ -4121,6 +4381,7 @@ struct DBCOLUMNINFO
     ubyte bScale;
     DBID columnid;
 }
++/
 alias DBBOOKMARK = int;
 enum : int
 {
@@ -4409,12 +4670,14 @@ enum : int
     MDPROP_VISUALMODE          = 0x00000125,
 }
 
-struct DBPARAMS
+/+ [CONFLICTED] struct DBPARAMS
 {
+    align (2):
     void* pData;
     ulong cParamSets;
-    ulong hAccessor;
+    HACCESSOR hAccessor;
 }
++/
 alias DBPARAMFLAGSENUM = int;
 enum : int
 {
@@ -4431,8 +4694,9 @@ enum : int
     DBPARAMFLAGS_SCALEISNEGATIVE = 0x00000100,
 }
 
-struct DBPARAMINFO
+/+ [CONFLICTED] struct DBPARAMINFO
 {
+    align (2):
     uint dwFlags;
     ulong iOrdinal;
     PWSTR pwszName;
@@ -4442,12 +4706,15 @@ struct DBPARAMINFO
     ubyte bPrecision;
     ubyte bScale;
 }
-struct DBPROPIDSET
++/
+/+ [CONFLICTED] struct DBPROPIDSET
 {
+    align (2):
     uint* rgPropertyIDs;
     uint cPropertyIDs;
     GUID guidPropertySet;
 }
++/
 alias DBPROPFLAGSENUM = int;
 enum : int
 {
@@ -4485,20 +4752,24 @@ enum : int
     DBPROPFLAGS_STREAM = 0x00008000,
 }
 
-struct DBPROPINFO
+/+ [CONFLICTED] struct DBPROPINFO
 {
+    align (2):
     PWSTR pwszDescription;
     uint dwPropertyID;
     uint dwFlags;
     VARENUM vtType;
     VARIANT vValues;
 }
-struct DBPROPINFOSET
++/
+/+ [CONFLICTED] struct DBPROPINFOSET
 {
+    align (2):
     DBPROPINFO* rgPropertyInfos;
     uint cPropertyInfos;
     GUID guidPropertySet;
 }
++/
 alias DBPROPOPTIONSENUM = int;
 enum : int
 {
@@ -4527,20 +4798,24 @@ enum : int
     DBPROPSTATUS_NOTAVAILABLE = 0x00000009,
 }
 
-struct DBPROP
+/+ [CONFLICTED] struct DBPROP
 {
+    align (2):
     uint dwPropertyID;
     uint dwOptions;
     uint dwStatus;
     DBID colid;
     VARIANT vValue;
 }
-struct DBPROPSET
++/
+/+ [CONFLICTED] struct DBPROPSET
 {
+    align (2):
     DBPROP* rgProperties;
     uint cProperties;
     GUID guidPropertySet;
 }
++/
 alias DBINDEX_COL_ORDERENUM = int;
 enum : int
 {
@@ -4548,13 +4823,16 @@ enum : int
     DBINDEX_COL_ORDER_DESC = 0x00000001,
 }
 
-struct DBINDEXCOLUMNDESC
+/+ [CONFLICTED] struct DBINDEXCOLUMNDESC
 {
+    align (2):
     DBID* pColumnID;
     uint eIndexColOrder;
 }
-struct DBCOLUMNDESC
++/
+/+ [CONFLICTED] struct DBCOLUMNDESC
 {
+    align (2):
     PWSTR pwszTypeName;
     ITypeInfo pTypeInfo;
     DBPROPSET* rgPropertySets;
@@ -4566,8 +4844,10 @@ struct DBCOLUMNDESC
     ubyte bPrecision;
     ubyte bScale;
 }
-struct DBCOLUMNACCESS
++/
+/+ [CONFLICTED] struct DBCOLUMNACCESS
 {
+    align (2):
     void* pData;
     DBID columnid;
     ulong cbDataLen;
@@ -4578,6 +4858,7 @@ struct DBCOLUMNACCESS
     ubyte bPrecision;
     ubyte bScale;
 }
++/
 alias DBCOLUMNDESCFLAGSENUM = int;
 enum : int
 {
@@ -4723,8 +5004,9 @@ enum : int
     DBDEFERRABILITY_DEFERRABLE = 0x00000002,
 }
 
-struct DBCONSTRAINTDESC
+/+ [CONFLICTED] struct DBCONSTRAINTDESC
 {
+    align (2):
     DBID* pConstraintID;
     uint ConstraintType;
     ulong cColumns;
@@ -4740,8 +5022,10 @@ struct DBCONSTRAINTDESC
     ulong cReserved;
     DBPROPSET* rgReserved;
 }
-struct MDAXISINFO
++/
+/+ [CONFLICTED] struct MDAXISINFO
 {
+    align (2):
     ulong cbSize;
     ulong iAxis;
     ulong cDimensions;
@@ -4749,8 +5033,10 @@ struct MDAXISINFO
     ulong* rgcColumns;
     PWSTR* rgpwszDimensionNames;
 }
-struct RMTPACK
++/
+/+ [CONFLICTED] struct RMTPACK
 {
+    align (2):
     ISequentialStream pISeqStream;
     uint cbData;
     uint cBSTR;
@@ -4766,6 +5052,7 @@ struct RMTPACK
     uint cArray;
     VARIANT* rgArray;
 }
++/
 alias DBACCESSORFLAGSENUM = int;
 enum : int
 {
@@ -4792,16 +5079,16 @@ enum : int
 enum IID_IAccessor = GUID(0xc733a8c, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IAccessor : IUnknown
 {
-    HRESULT AddRefAccessor(ulong, uint*);
-    HRESULT CreateAccessor(uint, ulong, const(DBBINDING)*, ulong, ulong*, uint*);
-    HRESULT GetBindings(ulong, uint*, ulong*, DBBINDING**);
-    HRESULT ReleaseAccessor(ulong, uint*);
+    HRESULT AddRefAccessor(HACCESSOR, uint*);
+    HRESULT CreateAccessor(uint, ulong, const(DBBINDING)*, ulong, HACCESSOR*, uint*);
+    HRESULT GetBindings(HACCESSOR, uint*, ulong*, DBBINDING**);
+    HRESULT ReleaseAccessor(HACCESSOR, uint*);
 }
 enum IID_IRowset = GUID(0xc733a7c, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowset : IUnknown
 {
     HRESULT AddRefRows(ulong, const(ulong)*, uint*, uint*);
-    HRESULT GetData(ulong, ulong, void*);
+    HRESULT GetData(ulong, HACCESSOR, void*);
     HRESULT GetNextRows(ulong, long, long, ulong*, ulong**);
     HRESULT ReleaseRows(ulong, const(ulong)*, uint*, uint*, uint*);
     HRESULT RestartPosition(ulong);
@@ -4834,7 +5121,7 @@ interface IRowsetLocate : IRowset
 enum IID_IRowsetResynch = GUID(0xc733a84, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetResynch : IUnknown
 {
-    HRESULT GetVisibleData(ulong, ulong, void*);
+    HRESULT GetVisibleData(ulong, HACCESSOR, void*);
     HRESULT ResynchRows(ulong, const(ulong)*, ulong*, ulong**, uint**);
 }
 enum IID_IRowsetScroll = GUID(0xc733a7e, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
@@ -4852,7 +5139,7 @@ interface IChapteredRowset : IUnknown
 enum IID_IRowsetFind = GUID(0xc733a9d, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetFind : IUnknown
 {
-    HRESULT FindNextRow(ulong, ulong, void*, uint, ulong, const(ubyte)*, long, long, ulong*, ulong**);
+    HRESULT FindNextRow(ulong, HACCESSOR, void*, uint, ulong, const(ubyte)*, long, long, ulong*, ulong**);
 }
 alias DBPOSITIONFLAGSENUM = int;
 enum : int
@@ -4898,9 +5185,9 @@ interface IViewSort : IUnknown
 enum IID_IViewFilter = GUID(0xc733a9b, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IViewFilter : IUnknown
 {
-    HRESULT GetFilter(ulong, ulong*, uint**, void*);
+    HRESULT GetFilter(HACCESSOR, ulong*, uint**, void*);
     HRESULT GetFilterBindings(ulong*, DBBINDING**);
-    HRESULT SetFilter(ulong, ulong, uint*, void*);
+    HRESULT SetFilter(HACCESSOR, ulong, uint*, void*);
 }
 enum IID_IRowsetView = GUID(0xc733a99, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetView : IUnknown
@@ -4912,8 +5199,8 @@ enum IID_IRowsetChange = GUID(0xc733a05, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa,
 interface IRowsetChange : IUnknown
 {
     HRESULT DeleteRows(ulong, ulong, const(ulong)*, uint*);
-    HRESULT SetData(ulong, ulong, void*);
-    HRESULT InsertRow(ulong, ulong, void*, ulong*);
+    HRESULT SetData(ulong, HACCESSOR, void*);
+    HRESULT InsertRow(ulong, HACCESSOR, void*, ulong*);
 }
 alias DBPENDINGSTATUSENUM = int;
 enum : int
@@ -4928,7 +5215,7 @@ enum : int
 enum IID_IRowsetUpdate = GUID(0xc733a6d, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetUpdate : IRowsetChange
 {
-    HRESULT GetOriginalData(ulong, ulong, void*);
+    HRESULT GetOriginalData(ulong, HACCESSOR, void*);
     HRESULT GetPendingRows(ulong, uint, ulong*, ulong**, uint**);
     HRESULT GetRowStatus(ulong, ulong, const(ulong)*, uint*);
     HRESULT Undo(ulong, ulong, const(ulong)*, ulong*, ulong**, uint**);
@@ -4981,8 +5268,8 @@ enum IID_IRowsetIndex = GUID(0xc733a82, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 
 interface IRowsetIndex : IUnknown
 {
     HRESULT GetIndexInfo(ulong*, DBINDEXCOLUMNDESC**, uint*, DBPROPSET**);
-    HRESULT Seek(ulong, ulong, void*, uint);
-    HRESULT SetRange(ulong, ulong, void*, ulong, void*, uint);
+    HRESULT Seek(HACCESSOR, ulong, void*, uint);
+    HRESULT SetRange(HACCESSOR, ulong, void*, ulong, void*, uint);
 }
 enum IID_ICommand = GUID(0xc733a63, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ICommand : IUnknown
@@ -5042,8 +5329,9 @@ interface ICommandText : ICommand
     HRESULT GetCommandText(GUID*, PWSTR*);
     HRESULT SetCommandText(const(GUID)*, const(wchar)*);
 }
-struct DBPARAMBINDINFO
+/+ [CONFLICTED] struct DBPARAMBINDINFO
 {
+    align (2):
     PWSTR pwszDataSourceType;
     PWSTR pwszName;
     ulong ulParamSize;
@@ -5051,6 +5339,7 @@ struct DBPARAMBINDINFO
     ubyte bPrecision;
     ubyte bScale;
 }
++/
 enum IID_ICommandWithParameters = GUID(0xc733a64, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ICommandWithParameters : IUnknown
 {
@@ -5164,8 +5453,9 @@ enum : int
     DBLITERAL_ESCAPE_UNDERSCORE_SUFFIX = 0x0000001e,
 }
 
-struct DBLITERALINFO
+/+ [CONFLICTED] struct DBLITERALINFO
 {
+    align (2):
     PWSTR pwszLiteralValue;
     PWSTR pwszInvalidChars;
     PWSTR pwszInvalidStartingChars;
@@ -5173,6 +5463,7 @@ struct DBLITERALINFO
     BOOL fSupported;
     uint cchMaxLen;
 }
++/
 enum IID_IDBInfo = GUID(0xc733a89, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IDBInfo : IUnknown
 {
@@ -5237,7 +5528,7 @@ interface IMDDataset : IUnknown
     HRESULT FreeAxisInfo(ulong, MDAXISINFO*);
     HRESULT GetAxisInfo(ulong*, MDAXISINFO**);
     HRESULT GetAxisRowset(IUnknown, ulong, const(GUID)*, uint, DBPROPSET*, IUnknown*);
-    HRESULT GetCellData(ulong, ulong, ulong, void*);
+    HRESULT GetCellData(HACCESSOR, ulong, ulong, void*);
     HRESULT GetSpecification(const(GUID)*, IUnknown*);
 }
 enum IID_IMDFind = GUID(0xa07cccd2, 0x8148, 0x11d0, [0x87, 0xbb, 0x0, 0xc0, 0x4f, 0xc3, 0x39, 0x42]);
@@ -5279,21 +5570,23 @@ enum IID_IRowsetRefresh = GUID(0xc733aa9, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa
 interface IRowsetRefresh : IUnknown
 {
     HRESULT RefreshVisibleData(ulong, ulong, const(ulong)*, BOOL, ulong*, ulong**, uint**);
-    HRESULT GetLastVisibleData(ulong, ulong, void*);
+    HRESULT GetLastVisibleData(ulong, HACCESSOR, void*);
 }
 enum IID_IParentRowset = GUID(0xc733aaa, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IParentRowset : IUnknown
 {
     HRESULT GetChildRowset(IUnknown, ulong, const(GUID)*, IUnknown*);
 }
-struct ERRORINFO
+/+ [CONFLICTED] struct ERRORINFO
 {
+    align (2):
     HRESULT hrError;
     uint dwMinor;
     GUID clsid;
     GUID iid;
     int dispid;
 }
++/
 enum IID_IErrorRecords = GUID(0xc733a67, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IErrorRecords : IUnknown
 {
@@ -6627,8 +6920,8 @@ interface IDataInitialize : IUnknown
 enum IID_IDataSourceLocator = GUID(0x2206ccb2, 0x19c1, 0x11d1, [0x89, 0xe0, 0x0, 0xc0, 0x4f, 0xd7, 0xa8, 0x29]);
 interface IDataSourceLocator : IDispatch
 {
-    HRESULT get_hWnd(long*);
-    HRESULT put_hWnd(long);
+    HRESULT get_hWnd(HWND*);
+    HRESULT put_hWnd(HWND);
     HRESULT PromptNew(IDispatch*);
     HRESULT PromptEdit(IDispatch*, short*);
 }
@@ -6719,12 +7012,12 @@ enum : int
     SQL_IS_MINUTE_TO_SECOND = 0x0000000d,
 }
 
-struct tagSQL_YEAR_MONTH
+struct SQL_YEAR_MONTH_STRUCT
 {
     uint year;
     uint month;
 }
-struct tagSQL_DAY_SECOND
+struct SQL_DAY_SECOND_STRUCT
 {
     uint day;
     uint hour;
@@ -6738,8 +7031,8 @@ struct SQL_INTERVAL_STRUCT
     short interval_sign;
     union _intval_e__Union
     {
-        tagSQL_YEAR_MONTH year_month;
-        tagSQL_DAY_SECOND day_second;
+        SQL_YEAR_MONTH_STRUCT year_month;
+        SQL_DAY_SECOND_STRUCT day_second;
     }
 }
 struct SQL_NUMERIC_STRUCT
@@ -6749,32 +7042,32 @@ struct SQL_NUMERIC_STRUCT
     ubyte sign;
     ubyte[16] val;
 }
-struct dbvarychar
+struct DBVARYCHAR
 {
     short len;
     byte[8001] str;
 }
-struct dbvarybin
+struct DBVARYBIN
 {
     short len;
     ubyte[8001] array;
 }
-struct dbmoney
+struct DBMONEY
 {
     int mnyhigh;
     uint mnylow;
 }
-struct dbdatetime
+struct DBDATETIME
 {
     int dtdays;
     uint dttime;
 }
-struct dbdatetime4
+struct DBDATETIM4
 {
     ushort numdays;
     ushort nummins;
 }
-struct sqlperf
+struct SQLPERF
 {
     uint TimerResolution;
     uint SQLidu;
@@ -6847,7 +7140,7 @@ interface IRowsetNextRowset : IUnknown
 enum IID_IRowsetNewRowAfter = GUID(0xc733a71, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetNewRowAfter : IUnknown
 {
-    HRESULT SetNewDataAfter(ulong, uint, const(ubyte)*, ulong, ubyte*, ulong*);
+    HRESULT SetNewDataAfter(ulong, uint, const(ubyte)*, HACCESSOR, ubyte*, ulong*);
 }
 enum IID_IRowsetWithParameters = GUID(0xc733a6e, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetWithParameters : IUnknown
@@ -6904,13 +7197,15 @@ enum : int
     DBROWCHANGEKIND_COUNT  = 0x00000003,
 }
 
-struct tagDBROWWATCHRANGE
+/+ [CONFLICTED] struct DBROWWATCHCHANGE
 {
+    align (2):
     ulong hRegion;
     uint eChangeKind;
     ulong hRow;
     ulong iRow;
 }
++/
 enum IID_IRowsetWatchRegion = GUID(0xc733a45, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetWatchRegion : IRowsetWatchAll
 {
@@ -6918,7 +7213,7 @@ interface IRowsetWatchRegion : IRowsetWatchAll
     HRESULT ChangeWatchMode(ulong, uint);
     HRESULT DeleteWatchRegion(ulong);
     HRESULT GetWatchRegionInfo(ulong, uint*, ulong*, ulong*, ubyte**, long*);
-    HRESULT Refresh(ulong*, tagDBROWWATCHRANGE**);
+    HRESULT Refresh(ulong*, DBROWWATCHCHANGE**);
     HRESULT ShrinkWatchRegion(ulong, ulong, ulong, ubyte*, long);
 }
 enum IID_IRowsetCopyRows = GUID(0xc733a6b, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
@@ -6932,7 +7227,7 @@ interface IRowsetCopyRows : IUnknown
 enum IID_IReadData = GUID(0xc733a6a, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IReadData : IUnknown
 {
-    HRESULT ReadData(ulong, ulong, const(ubyte)*, long, ulong, long, ulong*, ubyte**, ulong*, ubyte**);
+    HRESULT ReadData(ulong, ulong, const(ubyte)*, long, HACCESSOR, long, ulong*, ubyte**, ulong*, ubyte**);
     HRESULT ReleaseChapter(ulong);
 }
 alias DBRESOURCEKINDENUM = int;
@@ -6972,12 +7267,14 @@ enum : int
     DBUNIT_OTHER        = 0x00010000,
 }
 
-struct DBCOST
+/+ [CONFLICTED] struct DBCOST
 {
+    align (2):
     uint eKind;
     uint dwUnits;
     int lValue;
 }
++/
 alias DBEXECLIMITSENUM = int;
 enum : int
 {
@@ -7238,7 +7535,7 @@ interface IUMS
     void SqlUmsSwitchNonPremptive();
     BOOL SqlUmsFIsPremptive();
 }
-struct tagSSErrorInfo
+struct SSERRORINFO
 {
     PWSTR pwszMessage;
     PWSTR pwszServer;
@@ -7251,12 +7548,12 @@ struct tagSSErrorInfo
 enum IID_ISQLServerErrorInfo = GUID(0x5cf4ca12, 0xef21, 0x11d0, [0x97, 0xe7, 0x0, 0xc0, 0x4f, 0xc2, 0xad, 0x98]);
 interface ISQLServerErrorInfo : IUnknown
 {
-    HRESULT GetErrorInfo(tagSSErrorInfo**, ushort**);
+    HRESULT GetErrorInfo(SSERRORINFO**, ushort**);
 }
 enum IID_IRowsetFastLoad = GUID(0x5cf4ca13, 0xef21, 0x11d0, [0x97, 0xe7, 0x0, 0xc0, 0x4f, 0xc2, 0xad, 0x98]);
 interface IRowsetFastLoad : IUnknown
 {
-    HRESULT InsertRow(ulong, void*);
+    HRESULT InsertRow(HACCESSOR, void*);
     HRESULT Commit(BOOL);
 }
 alias LOCKMODEENUM = int;
@@ -7274,299 +7571,3 @@ interface ISchemaLock : IUnknown
     HRESULT ReleaseSchemaLock(HANDLE);
 }
 alias SQL_ASYNC_NOTIFICATION_CALLBACK = short function(void*, BOOL);
-/+ [CONFLICTED] struct DBVECTOR
-{
-    align (2):
-    ulong size;
-    void* ptr;
-}
-+/
-/+ [CONFLICTED] struct DBTIMESTAMP
-{
-    align (2):
-    short year;
-    ushort month;
-    ushort day;
-    ushort hour;
-    ushort minute;
-    ushort second;
-    uint fraction;
-}
-+/
-/+ [CONFLICTED] struct SEC_OBJECT_ELEMENT
-{
-    align (2):
-    GUID guidObjectType;
-    DBID ObjectID;
-}
-+/
-/+ [CONFLICTED] struct SEC_OBJECT
-{
-    align (2):
-    uint cObjects;
-    SEC_OBJECT_ELEMENT* prgObjects;
-}
-+/
-/+ [CONFLICTED] struct DBIMPLICITSESSION
-{
-    align (2):
-    IUnknown pUnkOuter;
-    GUID* piid;
-    IUnknown pSession;
-}
-+/
-/+ [CONFLICTED] struct DBOBJECT
-{
-    align (2):
-    uint dwFlags;
-    GUID iid;
-}
-+/
-/+ [CONFLICTED] struct DBBINDEXT
-{
-    align (2):
-    ubyte* pExtension;
-    ulong ulExtension;
-}
-+/
-/+ [CONFLICTED] struct DBBINDING
-{
-    align (2):
-    ulong iOrdinal;
-    ulong obValue;
-    ulong obLength;
-    ulong obStatus;
-    ITypeInfo pTypeInfo;
-    DBOBJECT* pObject;
-    DBBINDEXT* pBindExt;
-    uint dwPart;
-    uint dwMemOwner;
-    uint eParamIO;
-    ulong cbMaxLen;
-    uint dwFlags;
-    ushort wType;
-    ubyte bPrecision;
-    ubyte bScale;
-}
-+/
-/+ [CONFLICTED] struct DBFAILUREINFO
-{
-    align (2):
-    ulong hRow;
-    ulong iColumn;
-    HRESULT failure;
-}
-+/
-/+ [CONFLICTED] struct DBCOLUMNINFO
-{
-    align (2):
-    PWSTR pwszName;
-    ITypeInfo pTypeInfo;
-    ulong iOrdinal;
-    uint dwFlags;
-    ulong ulColumnSize;
-    ushort wType;
-    ubyte bPrecision;
-    ubyte bScale;
-    DBID columnid;
-}
-+/
-/+ [CONFLICTED] struct DBPARAMS
-{
-    align (2):
-    void* pData;
-    ulong cParamSets;
-    ulong hAccessor;
-}
-+/
-/+ [CONFLICTED] struct DBPARAMINFO
-{
-    align (2):
-    uint dwFlags;
-    ulong iOrdinal;
-    PWSTR pwszName;
-    ITypeInfo pTypeInfo;
-    ulong ulParamSize;
-    ushort wType;
-    ubyte bPrecision;
-    ubyte bScale;
-}
-+/
-/+ [CONFLICTED] struct DBPROPIDSET
-{
-    align (2):
-    uint* rgPropertyIDs;
-    uint cPropertyIDs;
-    GUID guidPropertySet;
-}
-+/
-/+ [CONFLICTED] struct DBPROPINFO
-{
-    align (2):
-    PWSTR pwszDescription;
-    uint dwPropertyID;
-    uint dwFlags;
-    VARENUM vtType;
-    VARIANT vValues;
-}
-+/
-/+ [CONFLICTED] struct DBPROPINFOSET
-{
-    align (2):
-    DBPROPINFO* rgPropertyInfos;
-    uint cPropertyInfos;
-    GUID guidPropertySet;
-}
-+/
-/+ [CONFLICTED] struct DBPROP
-{
-    align (2):
-    uint dwPropertyID;
-    uint dwOptions;
-    uint dwStatus;
-    DBID colid;
-    VARIANT vValue;
-}
-+/
-/+ [CONFLICTED] struct DBPROPSET
-{
-    align (2):
-    DBPROP* rgProperties;
-    uint cProperties;
-    GUID guidPropertySet;
-}
-+/
-/+ [CONFLICTED] struct DBINDEXCOLUMNDESC
-{
-    align (2):
-    DBID* pColumnID;
-    uint eIndexColOrder;
-}
-+/
-/+ [CONFLICTED] struct DBCOLUMNDESC
-{
-    align (2):
-    PWSTR pwszTypeName;
-    ITypeInfo pTypeInfo;
-    DBPROPSET* rgPropertySets;
-    GUID* pclsid;
-    uint cPropertySets;
-    ulong ulColumnSize;
-    DBID dbcid;
-    ushort wType;
-    ubyte bPrecision;
-    ubyte bScale;
-}
-+/
-/+ [CONFLICTED] struct DBCOLUMNACCESS
-{
-    align (2):
-    void* pData;
-    DBID columnid;
-    ulong cbDataLen;
-    uint dwStatus;
-    ulong cbMaxLen;
-    ulong dwReserved;
-    ushort wType;
-    ubyte bPrecision;
-    ubyte bScale;
-}
-+/
-/+ [CONFLICTED] struct DBCONSTRAINTDESC
-{
-    align (2):
-    DBID* pConstraintID;
-    uint ConstraintType;
-    ulong cColumns;
-    DBID* rgColumnList;
-    DBID* pReferencedTableID;
-    ulong cForeignKeyColumns;
-    DBID* rgForeignKeyColumnList;
-    PWSTR pwszConstraintText;
-    uint UpdateRule;
-    uint DeleteRule;
-    uint MatchType;
-    uint Deferrability;
-    ulong cReserved;
-    DBPROPSET* rgReserved;
-}
-+/
-/+ [CONFLICTED] struct MDAXISINFO
-{
-    align (2):
-    ulong cbSize;
-    ulong iAxis;
-    ulong cDimensions;
-    ulong cCoordinates;
-    ulong* rgcColumns;
-    PWSTR* rgpwszDimensionNames;
-}
-+/
-/+ [CONFLICTED] struct RMTPACK
-{
-    align (2):
-    ISequentialStream pISeqStream;
-    uint cbData;
-    uint cBSTR;
-    BSTR* rgBSTR;
-    uint cVARIANT;
-    VARIANT* rgVARIANT;
-    uint cIDISPATCH;
-    IDispatch* rgIDISPATCH;
-    uint cIUNKNOWN;
-    IUnknown* rgIUNKNOWN;
-    uint cPROPVARIANT;
-    PROPVARIANT* rgPROPVARIANT;
-    uint cArray;
-    VARIANT* rgArray;
-}
-+/
-/+ [CONFLICTED] struct DBPARAMBINDINFO
-{
-    align (2):
-    PWSTR pwszDataSourceType;
-    PWSTR pwszName;
-    ulong ulParamSize;
-    uint dwFlags;
-    ubyte bPrecision;
-    ubyte bScale;
-}
-+/
-/+ [CONFLICTED] struct DBLITERALINFO
-{
-    align (2):
-    PWSTR pwszLiteralValue;
-    PWSTR pwszInvalidChars;
-    PWSTR pwszInvalidStartingChars;
-    uint lt;
-    BOOL fSupported;
-    uint cchMaxLen;
-}
-+/
-/+ [CONFLICTED] struct ERRORINFO
-{
-    align (2):
-    HRESULT hrError;
-    uint dwMinor;
-    GUID clsid;
-    GUID iid;
-    int dispid;
-}
-+/
-/+ [CONFLICTED] struct tagDBROWWATCHRANGE
-{
-    align (2):
-    ulong hRegion;
-    uint eChangeKind;
-    ulong hRow;
-    ulong iRow;
-}
-+/
-/+ [CONFLICTED] struct DBCOST
-{
-    align (2):
-    uint eKind;
-    uint dwUnits;
-    int lValue;
-}
-+/

@@ -13,14 +13,15 @@ import windows.win32.system.com.structuredstorage : IPropertyBag, IPropertySetSt
 import windows.win32.system.com.urlmon : SOFTDISTINFO;
 import windows.win32.system.console : COORD;
 import windows.win32.system.io : OVERLAPPED;
-import windows.win32.system.ole : DROPEFFECT, IDropSource, IDropTarget, IOleCommandTarget, IOleInPlaceSite, IOleObject, IOleWindow, OLECMDEXECOPT, OLECMDF, OLECMDID, OleMenuGroupWidths, READYSTATE;
+import windows.win32.system.ole : DROPEFFECT, IDropSource, IDropTarget, IOleCommandTarget, IOleInPlaceSite, IOleObject, IOleWindow, OLECMDEXECOPT, OLECMDF, OLECMDID, OLEMENUGROUPWIDTHS, READYSTATE;
 import windows.win32.system.registry : HKEY;
 import windows.win32.system.search_ : ICondition;
+import windows.win32.system.systemservices : SFGAO_FLAGS;
 import windows.win32.system.threading : LPTHREAD_START_ROUTINE, PROCESS_INFORMATION, STARTUPINFOW;
 import windows.win32.ui.controls_ : HIMAGELIST, HPROPSHEETPAGE, LPFNSVADDPROPSHEETPAGE, NMHDR, TBBUTTON;
 import windows.win32.ui.shell.common : COMDLG_FILTERSPEC, DEVICE_SCALE_FACTOR, IObjectArray, ITEMIDLIST, PERCEIVED, SHELLDETAILS, SHITEMID, STRRET;
 import windows.win32.ui.shell.propertiessystem : GETPROPERTYSTOREFLAGS, IPropertyChangeArray, IPropertyDescriptionList, IPropertyStore, PDOPSTATUS, PROPERTYKEY;
-import windows.win32.ui.windowsandmessaging : CREATESTRUCTW, HACCEL, HICON, HMENU, MSG;
+import windows.win32.ui.windowsandmessaging : CREATESTRUCTW, HACCEL, HICON, HMENU, MSG, SHOW_WINDOW_CMD;
 
 version (Windows):
 extern (Windows):
@@ -106,7 +107,7 @@ ITEMIDLIST* ILCreateFromPathA(const(char)*);
 ITEMIDLIST* ILCreateFromPathW(const(wchar)*);
 HRESULT SHILCreateFromPath(const(wchar)*, ITEMIDLIST**, uint*);
 ITEMIDLIST* ILAppendID(ITEMIDLIST*, SHITEMID*, BOOL);
-BOOL SHGetPathFromIDListEx(ITEMIDLIST*, PWSTR, uint, int);
+BOOL SHGetPathFromIDListEx(ITEMIDLIST*, PWSTR, uint, GPFIDL_FLAGS);
 BOOL SHGetPathFromIDListA(ITEMIDLIST*, PSTR);
 BOOL SHGetPathFromIDListW(ITEMIDLIST*, PWSTR);
 int SHCreateDirectory(HWND, const(wchar)*);
@@ -128,7 +129,7 @@ HRESULT SHGetFolderPathAndSubDirA(HWND, int, HANDLE, uint, const(char)*, PSTR);
 HRESULT SHGetFolderPathAndSubDirW(HWND, int, HANDLE, uint, const(wchar)*, PWSTR);
 HRESULT SHGetKnownFolderIDList(const(GUID)*, uint, HANDLE, ITEMIDLIST**);
 HRESULT SHSetKnownFolderPath(const(GUID)*, uint, HANDLE, const(wchar)*);
-HRESULT SHGetKnownFolderPath(const(GUID)*, uint, HANDLE, PWSTR*);
+HRESULT SHGetKnownFolderPath(const(GUID)*, KNOWN_FOLDER_FLAG, HANDLE, PWSTR*);
 HRESULT SHGetKnownFolderItem(const(GUID)*, KNOWN_FOLDER_FLAG, HANDLE, const(GUID)*, void**);
 HRESULT SHGetSetFolderCustomSettings(SHFOLDERCUSTOMSETTINGS*, const(wchar)*, uint);
 ITEMIDLIST* SHBrowseForFolderA(BROWSEINFOA*);
@@ -242,8 +243,8 @@ uint DragQueryFileW(HDROP, uint, PWSTR, uint);
 BOOL DragQueryPoint(HDROP, POINT*);
 void DragFinish(HDROP);
 void DragAcceptFiles(HWND, BOOL);
-HINSTANCE ShellExecuteA(HWND, const(char)*, const(char)*, const(char)*, const(char)*, int);
-HINSTANCE ShellExecuteW(HWND, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, int);
+HINSTANCE ShellExecuteA(HWND, const(char)*, const(char)*, const(char)*, const(char)*, SHOW_WINDOW_CMD);
+HINSTANCE ShellExecuteW(HWND, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, SHOW_WINDOW_CMD);
 HINSTANCE FindExecutableA(const(char)*, const(char)*, PSTR);
 HINSTANCE FindExecutableW(const(wchar)*, const(wchar)*, PWSTR);
 int ShellAboutA(HWND, const(char)*, const(char)*, HICON);
@@ -1548,39 +1549,6 @@ enum SHCIDS_ALLFIELDS = 0xffffffff80000000;
 enum SHCIDS_CANONICALONLY = 0x10000000;
 enum SHCIDS_BITMASK = 0xffffffffffff0000;
 enum SHCIDS_COLUMNMASK = 0x0000ffff;
-enum SFGAO_STORAGE = 0x00000008;
-enum SFGAO_CANRENAME = 0x00000010;
-enum SFGAO_CANDELETE = 0x00000020;
-enum SFGAO_HASPROPSHEET = 0x00000040;
-enum SFGAO_DROPTARGET = 0x00000100;
-enum SFGAO_CAPABILITYMASK = 0x00000177;
-enum SFGAO_PLACEHOLDER = 0x00000800;
-enum SFGAO_SYSTEM = 0x00001000;
-enum SFGAO_ENCRYPTED = 0x00002000;
-enum SFGAO_ISSLOW = 0x00004000;
-enum SFGAO_GHOSTED = 0x00008000;
-enum SFGAO_LINK = 0x00010000;
-enum SFGAO_SHARE = 0x00020000;
-enum SFGAO_READONLY = 0x00040000;
-enum SFGAO_HIDDEN = 0x00080000;
-enum SFGAO_DISPLAYATTRMASK = 0x000fc000;
-enum SFGAO_FILESYSANCESTOR = 0x10000000;
-enum SFGAO_FOLDER = 0x20000000;
-enum SFGAO_FILESYSTEM = 0x40000000;
-enum SFGAO_HASSUBFOLDER = 0xffffffff80000000;
-enum SFGAO_CONTENTSMASK = 0xffffffff80000000;
-enum SFGAO_VALIDATE = 0x01000000;
-enum SFGAO_REMOVABLE = 0x02000000;
-enum SFGAO_COMPRESSED = 0x04000000;
-enum SFGAO_BROWSABLE = 0x08000000;
-enum SFGAO_NONENUMERATED = 0x00100000;
-enum SFGAO_NEWCONTENT = 0x00200000;
-enum SFGAO_CANMONIKER = 0x00400000;
-enum SFGAO_HASSTORAGE = 0x00400000;
-enum SFGAO_STREAM = 0x00400000;
-enum SFGAO_STORAGEANCESTOR = 0x00800000;
-enum SFGAO_STORAGECAPMASK = 0x70c50008;
-enum SFGAO_PKEYSFGAOMASK = 0xffffffff81044000;
 enum CONFLICT_RESOLUTION_CLSID_KEY = "ConflictResolutionCLSID";
 enum STR_BIND_FORCE_FOLDER_SHORTCUT_RESOLVE = "Force Folder Shortcut Resolve";
 enum STR_AVOID_DRIVE_RESTRICTION_POLICY = "Avoid Drive Restriction Policy";
@@ -1927,17 +1895,6 @@ enum NIN_POPUPOPEN = 0x00000406;
 enum NIN_POPUPCLOSE = 0x00000407;
 enum NOTIFYICON_VERSION = 0x00000003;
 enum NOTIFYICON_VERSION_4 = 0x00000004;
-enum NIS_HIDDEN = 0x00000001;
-enum NIS_SHAREDICON = 0x00000002;
-enum NIIF_NONE = 0x00000000;
-enum NIIF_INFO = 0x00000001;
-enum NIIF_WARNING = 0x00000002;
-enum NIIF_ERROR = 0x00000003;
-enum NIIF_USER = 0x00000004;
-enum NIIF_ICON_MASK = 0x0000000f;
-enum NIIF_NOSOUND = 0x00000010;
-enum NIIF_LARGE_ICON = 0x00000020;
-enum NIIF_RESPECT_QUIET_TIME = 0x00000080;
 enum SHGSI_ICONLOCATION = 0x00000000;
 enum SHGNLI_PIDL = 0x0000000000000001;
 enum SHGNLI_PREFIXNAME = 0x0000000000000002;
@@ -2340,9 +2297,6 @@ enum SHC_E_SHELL_COMPONENT_STARTUP_FAILURE = 0xffffffff80270234;
 enum E_TILE_NOTIFICATIONS_PLATFORM_FAILURE = 0xffffffff80270249;
 enum E_SHELL_EXTENSION_BLOCKED = 0xffffffff80270301;
 enum E_IMAGEFEED_CHANGEDISABLED = 0xffffffff80270310;
-enum GPFIDL_DEFAULT = 0x00000000;
-enum GPFIDL_ALTNAME = 0x00000001;
-enum GPFIDL_UNCPRINTER = 0x00000002;
 enum ISHCUTCMDID_DOWNLOADICON = 0x00000000;
 enum ISHCUTCMDID_INTSHORTCUTCREATE = 0x00000001;
 enum ISHCUTCMDID_COMMITHISTORY = 0x00000002;
@@ -2848,6 +2802,42 @@ enum : uint
     SHACF_AUTOAPPEND_FORCE_OFF  = 0x80000000,
 }
 
+alias HELP_INFO_TYPE = int;
+enum : int
+{
+    HELPINFO_WINDOW   = 0x00000001,
+    HELPINFO_MENUITEM = 0x00000002,
+}
+
+alias NOTIFY_ICON_INFOTIP_FLAGS = uint;
+enum : uint
+{
+    NIIF_NONE               = 0x00000000,
+    NIIF_INFO               = 0x00000001,
+    NIIF_WARNING            = 0x00000002,
+    NIIF_ERROR              = 0x00000003,
+    NIIF_USER               = 0x00000004,
+    NIIF_ICON_MASK          = 0x0000000f,
+    NIIF_NOSOUND            = 0x00000010,
+    NIIF_LARGE_ICON         = 0x00000020,
+    NIIF_RESPECT_QUIET_TIME = 0x00000080,
+}
+
+alias NOTIFY_ICON_STATE = uint;
+enum : uint
+{
+    NIS_HIDDEN     = 0x00000001,
+    NIS_SHAREDICON = 0x00000002,
+}
+
+alias GPFIDL_FLAGS = uint;
+enum : uint
+{
+    GPFIDL_DEFAULT    = 0x00000000,
+    GPFIDL_ALTNAME    = 0x00000001,
+    GPFIDL_UNCPRINTER = 0x00000002,
+}
+
 struct _APPSTATE_REGISTRATION
 {
 }
@@ -2873,11 +2863,235 @@ struct APPCATEGORYINFOLIST
     uint cCategory;
     APPCATEGORYINFO* pCategoryInfo;
 }
+struct DRAGINFOA
+{
+    uint uSize;
+    POINT pt;
+    BOOL fNC;
+    PSTR lpFileList;
+    uint grfKeyState;
+}
+struct DRAGINFOW
+{
+    uint uSize;
+    POINT pt;
+    BOOL fNC;
+    PWSTR lpFileList;
+    uint grfKeyState;
+}
+struct APPBARDATA
+{
+    uint cbSize;
+    HWND hWnd;
+    uint uCallbackMessage;
+    uint uEdge;
+    RECT rc;
+    LPARAM lParam;
+}
+struct SHFILEOPSTRUCTA
+{
+    HWND hwnd;
+    uint wFunc;
+    byte* pFrom;
+    byte* pTo;
+    ushort fFlags;
+    BOOL fAnyOperationsAborted;
+    void* hNameMappings;
+    const(char)* lpszProgressTitle;
+}
+struct SHFILEOPSTRUCTW
+{
+    HWND hwnd;
+    uint wFunc;
+    const(wchar)* pFrom;
+    const(wchar)* pTo;
+    ushort fFlags;
+    BOOL fAnyOperationsAborted;
+    void* hNameMappings;
+    const(wchar)* lpszProgressTitle;
+}
+struct SHNAMEMAPPINGA
+{
+    PSTR pszOldPath;
+    PSTR pszNewPath;
+    int cchOldPath;
+    int cchNewPath;
+}
+struct SHNAMEMAPPINGW
+{
+    PWSTR pszOldPath;
+    PWSTR pszNewPath;
+    int cchOldPath;
+    int cchNewPath;
+}
+struct SHELLEXECUTEINFOA
+{
+    uint cbSize;
+    uint fMask;
+    HWND hwnd;
+    const(char)* lpVerb;
+    const(char)* lpFile;
+    const(char)* lpParameters;
+    const(char)* lpDirectory;
+    int nShow;
+    HINSTANCE hInstApp;
+    void* lpIDList;
+    const(char)* lpClass;
+    HKEY hkeyClass;
+    uint dwHotKey;
+    union
+    {
+        HANDLE hIcon;
+        HANDLE hMonitor;
+    }
+    HANDLE hProcess;
+}
+struct SHELLEXECUTEINFOW
+{
+    uint cbSize;
+    uint fMask;
+    HWND hwnd;
+    const(wchar)* lpVerb;
+    const(wchar)* lpFile;
+    const(wchar)* lpParameters;
+    const(wchar)* lpDirectory;
+    int nShow;
+    HINSTANCE hInstApp;
+    void* lpIDList;
+    const(wchar)* lpClass;
+    HKEY hkeyClass;
+    uint dwHotKey;
+    union
+    {
+        HANDLE hIcon;
+        HANDLE hMonitor;
+    }
+    HANDLE hProcess;
+}
+struct SHCREATEPROCESSINFOW
+{
+    uint cbSize;
+    uint fMask;
+    HWND hwnd;
+    const(wchar)* pszFile;
+    const(wchar)* pszParameters;
+    const(wchar)* pszCurrentDirectory;
+    HANDLE hUserToken;
+    SECURITY_ATTRIBUTES* lpProcessAttributes;
+    SECURITY_ATTRIBUTES* lpThreadAttributes;
+    BOOL bInheritHandles;
+    uint dwCreationFlags;
+    STARTUPINFOW* lpStartupInfo;
+    PROCESS_INFORMATION* lpProcessInformation;
+}
+struct ASSOCIATIONELEMENT
+{
+    ASSOCCLASS ac;
+    HKEY hkClass;
+    const(wchar)* pszClass;
+}
+struct SHQUERYRBINFO
+{
+    uint cbSize;
+    long i64Size;
+    long i64NumItems;
+}
+struct NOTIFYICONDATAA
+{
+    uint cbSize;
+    HWND hWnd;
+    uint uID;
+    NOTIFY_ICON_DATA_FLAGS uFlags;
+    uint uCallbackMessage;
+    HICON hIcon;
+    CHAR[128] szTip;
+    NOTIFY_ICON_STATE dwState;
+    uint dwStateMask;
+    CHAR[256] szInfo;
+    union
+    {
+        uint uTimeout;
+        uint uVersion;
+    }
+    CHAR[64] szInfoTitle;
+    NOTIFY_ICON_INFOTIP_FLAGS dwInfoFlags;
+    GUID guidItem;
+    HICON hBalloonIcon;
+}
+struct NOTIFYICONDATAW
+{
+    uint cbSize;
+    HWND hWnd;
+    uint uID;
+    NOTIFY_ICON_DATA_FLAGS uFlags;
+    uint uCallbackMessage;
+    HICON hIcon;
+    wchar[128] szTip;
+    NOTIFY_ICON_STATE dwState;
+    uint dwStateMask;
+    wchar[256] szInfo;
+    union
+    {
+        uint uTimeout;
+        uint uVersion;
+    }
+    wchar[64] szInfoTitle;
+    NOTIFY_ICON_INFOTIP_FLAGS dwInfoFlags;
+    GUID guidItem;
+    HICON hBalloonIcon;
+}
+struct NOTIFYICONIDENTIFIER
+{
+    uint cbSize;
+    HWND hWnd;
+    uint uID;
+    GUID guidItem;
+}
+struct SHFILEINFOA
+{
+    HICON hIcon;
+    int iIcon;
+    uint dwAttributes;
+    CHAR[260] szDisplayName;
+    CHAR[80] szTypeName;
+}
+struct SHFILEINFOW
+{
+    HICON hIcon;
+    int iIcon;
+    uint dwAttributes;
+    wchar[260] szDisplayName;
+    wchar[80] szTypeName;
+}
+struct SHSTOCKICONINFO
+{
+    uint cbSize;
+    HICON hIcon;
+    int iSysImageIndex;
+    int iIcon;
+    wchar[260] szPath;
+}
+struct OPEN_PRINTER_PROPS_INFOA
+{
+    uint dwSize;
+    PSTR pszSheetName;
+    uint uSheetIndex;
+    uint dwFlags;
+    BOOL bModal;
+}
+struct OPEN_PRINTER_PROPS_INFOW
+{
+    uint dwSize;
+    PWSTR pszSheetName;
+    uint uSheetIndex;
+    uint dwFlags;
+    BOOL bModal;
+}
 alias SUBCLASSPROC = LRESULT function(HWND, uint, WPARAM, LPARAM, ulong, ulong);
 struct HELPINFO
 {
     uint cbSize;
-    int iContextType;
+    HELP_INFO_TYPE iContextType;
     int iCtrlId;
     HANDLE hItemHandle;
     ulong dwContextId;
@@ -3784,7 +3998,7 @@ interface IShellIcon : IUnknown
 enum IID_IShellBrowser = GUID(0x214e2, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IShellBrowser : IOleWindow
 {
-    HRESULT InsertMenusSB(HMENU, OleMenuGroupWidths*);
+    HRESULT InsertMenusSB(HMENU, OLEMENUGROUPWIDTHS*);
     HRESULT SetMenuSB(HMENU, long, HWND);
     HRESULT RemoveMenusSB(HMENU);
     HRESULT SetStatusTextSB(const(wchar)*);
@@ -3839,7 +4053,7 @@ interface IShellItem : IUnknown
     HRESULT BindToHandler(IBindCtx, const(GUID)*, const(GUID)*, void**);
     HRESULT GetParent(IShellItem*);
     HRESULT GetDisplayName(SIGDN, PWSTR*);
-    HRESULT GetAttributes(uint, uint*);
+    HRESULT GetAttributes(SFGAO_FLAGS, SFGAO_FLAGS*);
     HRESULT Compare(IShellItem, uint, int*);
 }
 alias DATAOBJ_GET_ITEM_FLAGS = int;
@@ -4035,7 +4249,7 @@ interface IShellItemArray : IUnknown
     HRESULT BindToHandler(IBindCtx, const(GUID)*, const(GUID)*, void**);
     HRESULT GetPropertyStore(GETPROPERTYSTOREFLAGS, const(GUID)*, void**);
     HRESULT GetPropertyDescriptionList(const(PROPERTYKEY)*, const(GUID)*, void**);
-    HRESULT GetAttributes(SIATTRIBFLAGS, uint, uint*);
+    HRESULT GetAttributes(SIATTRIBFLAGS, SFGAO_FLAGS, SFGAO_FLAGS*);
     HRESULT GetCount(uint*);
     HRESULT GetItemAt(uint, IShellItem*);
     HRESULT EnumItems(IEnumShellItems*);
@@ -4111,10 +4325,10 @@ struct SHDRAGIMAGE
 enum IID_IDropTargetHelper = GUID(0x4657278b, 0x411b, 0x11d2, [0x83, 0x9a, 0x0, 0xc0, 0x4f, 0xd9, 0x18, 0xd0]);
 interface IDropTargetHelper : IUnknown
 {
-    HRESULT DragEnter(HWND, IDataObject, POINT*, uint);
+    HRESULT DragEnter(HWND, IDataObject, POINT*, DROPEFFECT);
     HRESULT DragLeave();
-    HRESULT DragOver(POINT*, uint);
-    HRESULT Drop(IDataObject, POINT*, uint);
+    HRESULT DragOver(POINT*, DROPEFFECT);
+    HRESULT Drop(IDataObject, POINT*, DROPEFFECT);
     HRESULT Show(BOOL);
 }
 enum IID_IDragSourceHelper = GUID(0xde5bf786, 0x477a, 0x11d2, [0x83, 0x9d, 0x0, 0xc0, 0x4f, 0xd9, 0x18, 0xd0]);
@@ -8503,24 +8717,29 @@ enum : int
     SHELL_UI_COMPONENT_DESKBAND         = 0x00000002,
 }
 
-struct DRAGINFOA
+/+ [CONFLICTED] struct DRAGINFOA
 {
+    align (1):
     uint uSize;
     POINT pt;
     BOOL fNC;
     PSTR lpFileList;
     uint grfKeyState;
 }
-struct DRAGINFOW
++/
+/+ [CONFLICTED] struct DRAGINFOW
 {
+    align (1):
     uint uSize;
     POINT pt;
     BOOL fNC;
     PWSTR lpFileList;
     uint grfKeyState;
 }
-struct APPBARDATA
++/
+/+ [CONFLICTED] struct APPBARDATA
 {
+    align (1):
     uint cbSize;
     HWND hWnd;
     uint uCallbackMessage;
@@ -8528,8 +8747,10 @@ struct APPBARDATA
     RECT rc;
     LPARAM lParam;
 }
-struct SHFILEOPSTRUCTA
++/
+/+ [CONFLICTED] struct SHFILEOPSTRUCTA
 {
+    align (1):
     HWND hwnd;
     uint wFunc;
     byte* pFrom;
@@ -8539,8 +8760,10 @@ struct SHFILEOPSTRUCTA
     void* hNameMappings;
     const(char)* lpszProgressTitle;
 }
-struct SHFILEOPSTRUCTW
++/
+/+ [CONFLICTED] struct SHFILEOPSTRUCTW
 {
+    align (1):
     HWND hwnd;
     uint wFunc;
     const(wchar)* pFrom;
@@ -8550,22 +8773,28 @@ struct SHFILEOPSTRUCTW
     void* hNameMappings;
     const(wchar)* lpszProgressTitle;
 }
-struct SHNAMEMAPPINGA
++/
+/+ [CONFLICTED] struct SHNAMEMAPPINGA
 {
+    align (1):
     PSTR pszOldPath;
     PSTR pszNewPath;
     int cchOldPath;
     int cchNewPath;
 }
-struct SHNAMEMAPPINGW
++/
+/+ [CONFLICTED] struct SHNAMEMAPPINGW
 {
+    align (1):
     PWSTR pszOldPath;
     PWSTR pszNewPath;
     int cchOldPath;
     int cchNewPath;
 }
-struct SHELLEXECUTEINFOA
++/
+/+ [CONFLICTED] struct SHELLEXECUTEINFOA
 {
+    align (1):
     uint cbSize;
     uint fMask;
     HWND hwnd;
@@ -8581,13 +8810,16 @@ struct SHELLEXECUTEINFOA
     uint dwHotKey;
     union
     {
+        align (1):
         HANDLE hIcon;
         HANDLE hMonitor;
     }
     HANDLE hProcess;
 }
-struct SHELLEXECUTEINFOW
++/
+/+ [CONFLICTED] struct SHELLEXECUTEINFOW
 {
+    align (1):
     uint cbSize;
     uint fMask;
     HWND hwnd;
@@ -8603,13 +8835,16 @@ struct SHELLEXECUTEINFOW
     uint dwHotKey;
     union
     {
+        align (1):
         HANDLE hIcon;
         HANDLE hMonitor;
     }
     HANDLE hProcess;
 }
-struct SHCREATEPROCESSINFOW
++/
+/+ [CONFLICTED] struct SHCREATEPROCESSINFOW
 {
+    align (1):
     uint cbSize;
     uint fMask;
     HWND hwnd;
@@ -8624,6 +8859,7 @@ struct SHCREATEPROCESSINFOW
     STARTUPINFOW* lpStartupInfo;
     PROCESS_INFORMATION* lpProcessInformation;
 }
++/
 alias ASSOCCLASS = int;
 enum : int
 {
@@ -8641,18 +8877,22 @@ enum : int
     ASSOCCLASS_PROTOCOL_STR     = 0x0000000b,
 }
 
-struct ASSOCIATIONELEMENT
+/+ [CONFLICTED] struct ASSOCIATIONELEMENT
 {
+    align (1):
     ASSOCCLASS ac;
     HKEY hkClass;
     const(wchar)* pszClass;
 }
-struct SHQUERYRBINFO
++/
+/+ [CONFLICTED] struct SHQUERYRBINFO
 {
+    align (1):
     uint cbSize;
     long i64Size;
     long i64NumItems;
 }
++/
 alias QUERY_USER_NOTIFICATION_STATE = int;
 enum : int
 {
@@ -8665,8 +8905,9 @@ enum : int
     QUNS_APP                     = 0x00000007,
 }
 
-struct NOTIFYICONDATAA
+/+ [CONFLICTED] struct NOTIFYICONDATAA
 {
+    align (1):
     uint cbSize;
     HWND hWnd;
     uint uID;
@@ -8674,21 +8915,24 @@ struct NOTIFYICONDATAA
     uint uCallbackMessage;
     HICON hIcon;
     CHAR[128] szTip;
-    uint dwState;
+    NOTIFY_ICON_STATE dwState;
     uint dwStateMask;
     CHAR[256] szInfo;
     union
     {
+        align (1):
         uint uTimeout;
         uint uVersion;
     }
     CHAR[64] szInfoTitle;
-    uint dwInfoFlags;
+    NOTIFY_ICON_INFOTIP_FLAGS dwInfoFlags;
     GUID guidItem;
     HICON hBalloonIcon;
 }
-struct NOTIFYICONDATAW
++/
+/+ [CONFLICTED] struct NOTIFYICONDATAW
 {
+    align (1):
     uint cbSize;
     HWND hWnd;
     uint uID;
@@ -8696,50 +8940,60 @@ struct NOTIFYICONDATAW
     uint uCallbackMessage;
     HICON hIcon;
     wchar[128] szTip;
-    uint dwState;
+    NOTIFY_ICON_STATE dwState;
     uint dwStateMask;
     wchar[256] szInfo;
     union
     {
+        align (1):
         uint uTimeout;
         uint uVersion;
     }
     wchar[64] szInfoTitle;
-    uint dwInfoFlags;
+    NOTIFY_ICON_INFOTIP_FLAGS dwInfoFlags;
     GUID guidItem;
     HICON hBalloonIcon;
 }
-struct NOTIFYICONIDENTIFIER
++/
+/+ [CONFLICTED] struct NOTIFYICONIDENTIFIER
 {
+    align (1):
     uint cbSize;
     HWND hWnd;
     uint uID;
     GUID guidItem;
 }
-struct SHFILEINFOA
++/
+/+ [CONFLICTED] struct SHFILEINFOA
 {
+    align (1):
     HICON hIcon;
     int iIcon;
     uint dwAttributes;
     CHAR[260] szDisplayName;
     CHAR[80] szTypeName;
 }
-struct SHFILEINFOW
++/
+/+ [CONFLICTED] struct SHFILEINFOW
 {
+    align (1):
     HICON hIcon;
     int iIcon;
     uint dwAttributes;
     wchar[260] szDisplayName;
     wchar[80] szTypeName;
 }
-struct SHSTOCKICONINFO
++/
+/+ [CONFLICTED] struct SHSTOCKICONINFO
 {
+    align (1):
     uint cbSize;
     HICON hIcon;
     int iSysImageIndex;
     int iIcon;
     wchar[260] szPath;
 }
++/
 alias SHSTOCKICONID = int;
 enum : int
 {
@@ -8839,22 +9093,26 @@ enum : int
     SIID_MAX_ICONS         = 0x000000b5,
 }
 
-struct OPEN_PRINTER_PROPS_INFOA
+/+ [CONFLICTED] struct OPEN_PRINTER_PROPS_INFOA
 {
+    align (1):
     uint dwSize;
     PSTR pszSheetName;
     uint uSheetIndex;
     uint dwFlags;
     BOOL bModal;
 }
-struct OPEN_PRINTER_PROPS_INFOW
++/
+/+ [CONFLICTED] struct OPEN_PRINTER_PROPS_INFOW
 {
+    align (1):
     uint dwSize;
     PWSTR pszSheetName;
     uint uSheetIndex;
     uint dwFlags;
     BOOL bModal;
 }
++/
 alias PFNCANSHAREFOLDERW = HRESULT function(const(wchar)*);
 alias PFNSHOWSHAREFOLDERUIW = HRESULT function(HWND, const(wchar)*);
 struct NC_ADDRESS
@@ -10413,7 +10671,7 @@ interface ITravelLogStg : IUnknown
     HRESULT RemoveEntry(ITravelLogEntry);
     HRESULT GetRelativeEntry(int, ITravelLogEntry*);
 }
-alias _HLSR_NOREDEF10 = int;
+alias HLSR = int;
 enum : int
 {
     HLSR_HOME          = 0x00000000,
@@ -10421,7 +10679,7 @@ enum : int
     HLSR_HISTORYFOLDER = 0x00000002,
 }
 
-alias _HLSHORTCUTF__NOREDEF10 = int;
+alias HLSHORTCUTF = int;
 enum : int
 {
     HLSHORTCUTF_DEFAULT                     = 0x00000000,
@@ -10431,7 +10689,7 @@ enum : int
     HLSHORTCUTF_MAYUSEEXISTINGSHORTCUT      = 0x00000008,
 }
 
-alias _HLTRANSLATEF_NOREDEF10 = int;
+alias HLTRANSLATEF = int;
 enum : int
 {
     HLTRANSLATEF_DEFAULT                = 0x00000000,
@@ -10987,14 +11245,14 @@ struct PROFILEINFOW
     PWSTR lpPolicyPath;
     HANDLE hProfile;
 }
-alias iurl_seturl_flags = int;
+alias IURL_SETURL_FLAGS = int;
 enum : int
 {
     IURL_SETURL_FL_GUESS_PROTOCOL       = 0x00000001,
     IURL_SETURL_FL_USE_DEFAULT_PROTOCOL = 0x00000002,
 }
 
-alias iurl_invokecommand_flags = int;
+alias IURL_INVOKECOMMAND_FLAGS = int;
 enum : int
 {
     IURL_INVOKECOMMAND_FL_ALLOW_UI         = 0x00000001,
@@ -11004,14 +11262,14 @@ enum : int
     IURL_INVOKECOMMAND_FL_LOG_USAGE        = 0x00000010,
 }
 
-struct urlinvokecommandinfoA
+struct URLINVOKECOMMANDINFOA
 {
     uint dwcbSize;
     uint dwFlags;
     HWND hwndParent;
     const(char)* pcszVerb;
 }
-struct urlinvokecommandinfoW
+struct URLINVOKECOMMANDINFOW
 {
     uint dwcbSize;
     uint dwFlags;
@@ -11023,30 +11281,30 @@ interface IUniformResourceLocatorA : IUnknown
 {
     HRESULT SetURL(const(char)*, uint);
     HRESULT GetURL(PSTR*);
-    HRESULT InvokeCommand(urlinvokecommandinfoA*);
+    HRESULT InvokeCommand(URLINVOKECOMMANDINFOA*);
 }
 enum IID_IUniformResourceLocatorW = GUID(0xcabb0da0, 0xda57, 0x11cf, [0x99, 0x74, 0x0, 0x20, 0xaf, 0xd7, 0x97, 0x62]);
 interface IUniformResourceLocatorW : IUnknown
 {
     HRESULT SetURL(const(wchar)*, uint);
     HRESULT GetURL(PWSTR*);
-    HRESULT InvokeCommand(urlinvokecommandinfoW*);
+    HRESULT InvokeCommand(URLINVOKECOMMANDINFOW*);
 }
-alias translateurl_in_flags = int;
+alias TRANSLATEURL_IN_FLAGS = int;
 enum : int
 {
     TRANSLATEURL_FL_GUESS_PROTOCOL       = 0x00000001,
     TRANSLATEURL_FL_USE_DEFAULT_PROTOCOL = 0x00000002,
 }
 
-alias urlassociationdialog_in_flags = int;
+alias URLASSOCIATIONDIALOG_IN_FLAGS = int;
 enum : int
 {
     URLASSOCDLG_FL_USE_DEFAULT_NAME = 0x00000001,
     URLASSOCDLG_FL_REGISTER_ASSOC   = 0x00000002,
 }
 
-alias mimeassociationdialog_in_flags = int;
+alias MIMEASSOCIATIONDIALOG_IN_FLAGS = int;
 enum : int
 {
     MIMEASSOCDLG_FL_REGISTER_ASSOC = 0x00000001,
@@ -11067,271 +11325,3 @@ interface IInputPaneAnimationCoordinator : IUnknown
 {
     HRESULT AddAnimation(IUnknown, IDCompositionAnimation);
 }
-/+ [CONFLICTED] struct DRAGINFOA
-{
-    align (1):
-    uint uSize;
-    POINT pt;
-    BOOL fNC;
-    PSTR lpFileList;
-    uint grfKeyState;
-}
-+/
-/+ [CONFLICTED] struct DRAGINFOW
-{
-    align (1):
-    uint uSize;
-    POINT pt;
-    BOOL fNC;
-    PWSTR lpFileList;
-    uint grfKeyState;
-}
-+/
-/+ [CONFLICTED] struct APPBARDATA
-{
-    align (1):
-    uint cbSize;
-    HWND hWnd;
-    uint uCallbackMessage;
-    uint uEdge;
-    RECT rc;
-    LPARAM lParam;
-}
-+/
-/+ [CONFLICTED] struct SHFILEOPSTRUCTA
-{
-    align (1):
-    HWND hwnd;
-    uint wFunc;
-    byte* pFrom;
-    byte* pTo;
-    ushort fFlags;
-    BOOL fAnyOperationsAborted;
-    void* hNameMappings;
-    const(char)* lpszProgressTitle;
-}
-+/
-/+ [CONFLICTED] struct SHFILEOPSTRUCTW
-{
-    align (1):
-    HWND hwnd;
-    uint wFunc;
-    const(wchar)* pFrom;
-    const(wchar)* pTo;
-    ushort fFlags;
-    BOOL fAnyOperationsAborted;
-    void* hNameMappings;
-    const(wchar)* lpszProgressTitle;
-}
-+/
-/+ [CONFLICTED] struct SHNAMEMAPPINGA
-{
-    align (1):
-    PSTR pszOldPath;
-    PSTR pszNewPath;
-    int cchOldPath;
-    int cchNewPath;
-}
-+/
-/+ [CONFLICTED] struct SHNAMEMAPPINGW
-{
-    align (1):
-    PWSTR pszOldPath;
-    PWSTR pszNewPath;
-    int cchOldPath;
-    int cchNewPath;
-}
-+/
-/+ [CONFLICTED] struct SHELLEXECUTEINFOA
-{
-    align (1):
-    uint cbSize;
-    uint fMask;
-    HWND hwnd;
-    const(char)* lpVerb;
-    const(char)* lpFile;
-    const(char)* lpParameters;
-    const(char)* lpDirectory;
-    int nShow;
-    HINSTANCE hInstApp;
-    void* lpIDList;
-    const(char)* lpClass;
-    HKEY hkeyClass;
-    uint dwHotKey;
-    union
-    {
-        align (1):
-        HANDLE hIcon;
-        HANDLE hMonitor;
-    }
-    HANDLE hProcess;
-}
-+/
-/+ [CONFLICTED] struct SHELLEXECUTEINFOW
-{
-    align (1):
-    uint cbSize;
-    uint fMask;
-    HWND hwnd;
-    const(wchar)* lpVerb;
-    const(wchar)* lpFile;
-    const(wchar)* lpParameters;
-    const(wchar)* lpDirectory;
-    int nShow;
-    HINSTANCE hInstApp;
-    void* lpIDList;
-    const(wchar)* lpClass;
-    HKEY hkeyClass;
-    uint dwHotKey;
-    union
-    {
-        align (1):
-        HANDLE hIcon;
-        HANDLE hMonitor;
-    }
-    HANDLE hProcess;
-}
-+/
-/+ [CONFLICTED] struct SHCREATEPROCESSINFOW
-{
-    align (1):
-    uint cbSize;
-    uint fMask;
-    HWND hwnd;
-    const(wchar)* pszFile;
-    const(wchar)* pszParameters;
-    const(wchar)* pszCurrentDirectory;
-    HANDLE hUserToken;
-    SECURITY_ATTRIBUTES* lpProcessAttributes;
-    SECURITY_ATTRIBUTES* lpThreadAttributes;
-    BOOL bInheritHandles;
-    uint dwCreationFlags;
-    STARTUPINFOW* lpStartupInfo;
-    PROCESS_INFORMATION* lpProcessInformation;
-}
-+/
-/+ [CONFLICTED] struct ASSOCIATIONELEMENT
-{
-    align (1):
-    ASSOCCLASS ac;
-    HKEY hkClass;
-    const(wchar)* pszClass;
-}
-+/
-/+ [CONFLICTED] struct SHQUERYRBINFO
-{
-    align (1):
-    uint cbSize;
-    long i64Size;
-    long i64NumItems;
-}
-+/
-/+ [CONFLICTED] struct NOTIFYICONDATAA
-{
-    align (1):
-    uint cbSize;
-    HWND hWnd;
-    uint uID;
-    NOTIFY_ICON_DATA_FLAGS uFlags;
-    uint uCallbackMessage;
-    HICON hIcon;
-    CHAR[128] szTip;
-    uint dwState;
-    uint dwStateMask;
-    CHAR[256] szInfo;
-    union
-    {
-        align (1):
-        uint uTimeout;
-        uint uVersion;
-    }
-    CHAR[64] szInfoTitle;
-    uint dwInfoFlags;
-    GUID guidItem;
-    HICON hBalloonIcon;
-}
-+/
-/+ [CONFLICTED] struct NOTIFYICONDATAW
-{
-    align (1):
-    uint cbSize;
-    HWND hWnd;
-    uint uID;
-    NOTIFY_ICON_DATA_FLAGS uFlags;
-    uint uCallbackMessage;
-    HICON hIcon;
-    wchar[128] szTip;
-    uint dwState;
-    uint dwStateMask;
-    wchar[256] szInfo;
-    union
-    {
-        align (1):
-        uint uTimeout;
-        uint uVersion;
-    }
-    wchar[64] szInfoTitle;
-    uint dwInfoFlags;
-    GUID guidItem;
-    HICON hBalloonIcon;
-}
-+/
-/+ [CONFLICTED] struct NOTIFYICONIDENTIFIER
-{
-    align (1):
-    uint cbSize;
-    HWND hWnd;
-    uint uID;
-    GUID guidItem;
-}
-+/
-/+ [CONFLICTED] struct SHFILEINFOA
-{
-    align (1):
-    HICON hIcon;
-    int iIcon;
-    uint dwAttributes;
-    CHAR[260] szDisplayName;
-    CHAR[80] szTypeName;
-}
-+/
-/+ [CONFLICTED] struct SHFILEINFOW
-{
-    align (1):
-    HICON hIcon;
-    int iIcon;
-    uint dwAttributes;
-    wchar[260] szDisplayName;
-    wchar[80] szTypeName;
-}
-+/
-/+ [CONFLICTED] struct SHSTOCKICONINFO
-{
-    align (1):
-    uint cbSize;
-    HICON hIcon;
-    int iSysImageIndex;
-    int iIcon;
-    wchar[260] szPath;
-}
-+/
-/+ [CONFLICTED] struct OPEN_PRINTER_PROPS_INFOA
-{
-    align (1):
-    uint dwSize;
-    PSTR pszSheetName;
-    uint uSheetIndex;
-    uint dwFlags;
-    BOOL bModal;
-}
-+/
-/+ [CONFLICTED] struct OPEN_PRINTER_PROPS_INFOW
-{
-    align (1):
-    uint dwSize;
-    PWSTR pszSheetName;
-    uint uSheetIndex;
-    uint dwFlags;
-    BOOL bModal;
-}
-+/

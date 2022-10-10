@@ -43,6 +43,12 @@ enum : uint
     UOI_USER_SID = 0x00000004,
 }
 
+alias DESKTOP_CONTROL_FLAGS = uint;
+enum : uint
+{
+    DF_ALLOWOTHERACCOUNTHOOK = 0x00000001,
+}
+
 alias WINSTAENUMPROCA = BOOL function(PSTR, LPARAM);
 alias WINSTAENUMPROCW = BOOL function(PWSTR, LPARAM);
 alias DESKTOPENUMPROCA = BOOL function(PSTR, LPARAM);
@@ -62,13 +68,13 @@ struct BSMINFO
     HWND hwnd;
     LUID luid;
 }
-HDESK CreateDesktopA(const(char)*, const(char)*, DEVMODEA*, uint, uint, SECURITY_ATTRIBUTES*);
-HDESK CreateDesktopW(const(wchar)*, const(wchar)*, DEVMODEW*, uint, uint, SECURITY_ATTRIBUTES*);
-HDESK CreateDesktopExA(const(char)*, const(char)*, DEVMODEA*, uint, uint, SECURITY_ATTRIBUTES*, uint, void*);
-HDESK CreateDesktopExW(const(wchar)*, const(wchar)*, DEVMODEW*, uint, uint, SECURITY_ATTRIBUTES*, uint, void*);
-HDESK OpenDesktopA(const(char)*, uint, BOOL, uint);
-HDESK OpenDesktopW(const(wchar)*, uint, BOOL, uint);
-HDESK OpenInputDesktop(uint, BOOL, uint);
+HDESK CreateDesktopA(const(char)*, const(char)*, DEVMODEA*, DESKTOP_CONTROL_FLAGS, uint, SECURITY_ATTRIBUTES*);
+HDESK CreateDesktopW(const(wchar)*, const(wchar)*, DEVMODEW*, DESKTOP_CONTROL_FLAGS, uint, SECURITY_ATTRIBUTES*);
+HDESK CreateDesktopExA(const(char)*, const(char)*, DEVMODEA*, DESKTOP_CONTROL_FLAGS, uint, SECURITY_ATTRIBUTES*, uint, void*);
+HDESK CreateDesktopExW(const(wchar)*, const(wchar)*, DEVMODEW*, DESKTOP_CONTROL_FLAGS, uint, SECURITY_ATTRIBUTES*, uint, void*);
+HDESK OpenDesktopA(const(char)*, DESKTOP_CONTROL_FLAGS, BOOL, uint);
+HDESK OpenDesktopW(const(wchar)*, DESKTOP_CONTROL_FLAGS, BOOL, uint);
+HDESK OpenInputDesktop(DESKTOP_CONTROL_FLAGS, BOOL, uint);
 BOOL EnumDesktopsA(HWINSTA, DESKTOPENUMPROCA, LPARAM);
 BOOL EnumDesktopsW(HWINSTA, DESKTOPENUMPROCW, LPARAM);
 BOOL EnumDesktopWindows(HDESK, WNDENUMPROC, LPARAM);

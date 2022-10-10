@@ -288,7 +288,7 @@ enum EVENT_WMDM_CONTENT_TRANSFER = GUID(0x339c9bf4, 0xbcfe, 0x4ed8, [0x94, 0xdf,
 enum MTP_COMMAND_MAX_PARAMS = 0x00000005;
 enum MTP_RESPONSE_MAX_PARAMS = 0x00000005;
 enum MTP_RESPONSE_OK = 0x2001;
-struct __MACINFO
+struct MACINFO
 {
     BOOL fUsed;
     ubyte[36] abMacState;

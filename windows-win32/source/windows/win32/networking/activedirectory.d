@@ -1035,7 +1035,7 @@ enum CLSID_ADsSecurityUtility = GUID(0xf270c64a, 0xffb8, 0x4ae4, [0x85, 0xfe, 0x
 struct ADsSecurityUtility
 {
 }
-alias ADSTYPEENUM = int;
+alias ADSTYPE = int;
 enum : int
 {
     ADSTYPE_INVALID                = 0x00000000,
@@ -1164,7 +1164,7 @@ struct ADS_DN_WITH_STRING
 }
 struct ADSVALUE
 {
-    ADSTYPEENUM dwType;
+    ADSTYPE dwType;
     union
     {
         ushort* DNString;
@@ -1200,7 +1200,7 @@ struct ADS_ATTR_INFO
 {
     PWSTR pszAttrName;
     uint dwControlCode;
-    ADSTYPEENUM dwADsType;
+    ADSTYPE dwADsType;
     ADSVALUE* pADsValues;
     uint dwNumValues;
 }
@@ -1320,16 +1320,16 @@ enum : int
     ADS_PASSWORD_ENCODE_CLEAR       = 0x00000001,
 }
 
-struct ads_searchpref_info
+struct ADS_SEARCHPREF_INFO
 {
     ADS_SEARCHPREF_ENUM dwSearchPref;
     ADSVALUE vValue;
     ADS_STATUSENUM dwStatus;
 }
-struct ads_search_column
+struct ADS_SEARCH_COLUMN
 {
     PWSTR pszAttrName;
-    ADSTYPEENUM dwADsType;
+    ADSTYPE dwADsType;
     ADSVALUE* pADsValues;
     uint dwNumValues;
     HANDLE hReserved;
@@ -1337,7 +1337,7 @@ struct ads_search_column
 struct ADS_ATTR_DEF
 {
     PWSTR pszAttrName;
-    ADSTYPEENUM dwADsType;
+    ADSTYPE dwADsType;
     uint dwMinRange;
     uint dwMaxRange;
     BOOL fMultiValued;
@@ -2207,15 +2207,15 @@ interface IDirectoryObject : IUnknown
 enum IID_IDirectorySearch = GUID(0x109ba8ec, 0x92f0, 0x11d0, [0xa7, 0x90, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0xa8]);
 interface IDirectorySearch : IUnknown
 {
-    HRESULT SetSearchPreference(ads_searchpref_info*, uint);
+    HRESULT SetSearchPreference(ADS_SEARCHPREF_INFO*, uint);
     HRESULT ExecuteSearch(PWSTR, PWSTR*, uint, ADS_SEARCH_HANDLE*);
     HRESULT AbandonSearch(ADS_SEARCH_HANDLE);
     HRESULT GetFirstRow(ADS_SEARCH_HANDLE);
     HRESULT GetNextRow(ADS_SEARCH_HANDLE);
     HRESULT GetPreviousRow(ADS_SEARCH_HANDLE);
     HRESULT GetNextColumnName(ADS_SEARCH_HANDLE, PWSTR*);
-    HRESULT GetColumn(ADS_SEARCH_HANDLE, PWSTR, ads_search_column*);
-    HRESULT FreeColumn(ads_search_column*);
+    HRESULT GetColumn(ADS_SEARCH_HANDLE, PWSTR, ADS_SEARCH_COLUMN*);
+    HRESULT FreeColumn(ADS_SEARCH_COLUMN*);
     HRESULT CloseSearchHandle(ADS_SEARCH_HANDLE);
 }
 enum IID_IDirectorySchemaMgmt = GUID(0x75db3b9c, 0xa4d8, 0x11d0, [0xa7, 0x9c, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0xa8]);
@@ -2576,7 +2576,7 @@ interface IDsDisplaySpecifier : IUnknown
     BOOL IsClassContainer(const(wchar)*, const(wchar)*, uint);
     HRESULT GetClassCreationInfo(const(wchar)*, DSCLASSCREATIONINFO**);
     HRESULT EnumClassAttributes(const(wchar)*, LPDSENUMATTRIBUTES, LPARAM);
-    ADSTYPEENUM GetAttributeADsType(const(wchar)*);
+    ADSTYPE GetAttributeADsType(const(wchar)*);
 }
 struct DSBROWSEINFOW
 {

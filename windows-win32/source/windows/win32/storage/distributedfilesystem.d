@@ -62,6 +62,41 @@ enum DFS_SITE_PRIMARY = 0x00000001;
 enum DFS_MOVE_FLAG_REPLACE_IF_EXISTS = 0x00000001;
 enum DFS_FORCE_REMOVE = 0x80000000;
 enum FSCTL_DFS_GET_PKT_ENTRY_STATE = 0x00061fbc;
+struct DFS_INFO_1_32
+{
+    uint EntryPath;
+}
+struct DFS_INFO_2_32
+{
+    uint EntryPath;
+    uint Comment;
+    uint State;
+    uint NumberOfStorages;
+}
+struct DFS_STORAGE_INFO_0_32
+{
+    uint State;
+    uint ServerName;
+    uint ShareName;
+}
+struct DFS_INFO_3_32
+{
+    uint EntryPath;
+    uint Comment;
+    uint State;
+    uint NumberOfStorages;
+    uint Storage;
+}
+struct DFS_INFO_4_32
+{
+    uint EntryPath;
+    uint Comment;
+    uint State;
+    uint Timeout;
+    GUID Guid;
+    uint NumberOfStorages;
+    uint Storage;
+}
 alias DFS_TARGET_PRIORITY_CLASS = int;
 enum : int
 {
@@ -83,21 +118,10 @@ struct DFS_INFO_1
 {
     PWSTR EntryPath;
 }
-struct DFS_INFO_1_32
-{
-    uint EntryPath;
-}
 struct DFS_INFO_2
 {
     PWSTR EntryPath;
     PWSTR Comment;
-    uint State;
-    uint NumberOfStorages;
-}
-struct DFS_INFO_2_32
-{
-    uint EntryPath;
-    uint Comment;
     uint State;
     uint NumberOfStorages;
 }
@@ -106,12 +130,6 @@ struct DFS_STORAGE_INFO
     uint State;
     PWSTR ServerName;
     PWSTR ShareName;
-}
-struct DFS_STORAGE_INFO_0_32
-{
-    uint State;
-    uint ServerName;
-    uint ShareName;
 }
 struct DFS_STORAGE_INFO_1
 {
@@ -128,14 +146,6 @@ struct DFS_INFO_3
     uint NumberOfStorages;
     DFS_STORAGE_INFO* Storage;
 }
-struct DFS_INFO_3_32
-{
-    uint EntryPath;
-    uint Comment;
-    uint State;
-    uint NumberOfStorages;
-    uint Storage;
-}
 struct DFS_INFO_4
 {
     PWSTR EntryPath;
@@ -145,16 +155,6 @@ struct DFS_INFO_4
     GUID Guid;
     uint NumberOfStorages;
     DFS_STORAGE_INFO* Storage;
-}
-struct DFS_INFO_4_32
-{
-    uint EntryPath;
-    uint Comment;
-    uint State;
-    uint Timeout;
-    GUID Guid;
-    uint NumberOfStorages;
-    uint Storage;
 }
 struct DFS_INFO_5
 {

@@ -7,14 +7,21 @@ import windows.win32.graphics.gdi : HRGN;
 version (Windows):
 extern (Windows):
 
+alias MW_FILTERMODE = uint;
+enum : uint
+{
+    MW_FILTERMODE_EXCLUDE = 0x00000000,
+    MW_FILTERMODE_INCLUDE = 0x00000001,
+}
+
 BOOL MagInitialize();
 BOOL MagUninitialize();
 BOOL MagSetWindowSource(HWND, RECT);
 BOOL MagGetWindowSource(HWND, RECT*);
 BOOL MagSetWindowTransform(HWND, MAGTRANSFORM*);
 BOOL MagGetWindowTransform(HWND, MAGTRANSFORM*);
-BOOL MagSetWindowFilterList(HWND, uint, int, HWND*);
-int MagGetWindowFilterList(HWND, uint*, int, HWND*);
+BOOL MagSetWindowFilterList(HWND, MW_FILTERMODE, int, HWND*);
+int MagGetWindowFilterList(HWND, MW_FILTERMODE*, int, HWND*);
 BOOL MagSetImageScalingCallback(HWND, MagImageScalingCallback);
 MagImageScalingCallback MagGetImageScalingCallback(HWND);
 BOOL MagSetColorEffect(HWND, MAGCOLOREFFECT*);
@@ -32,8 +39,6 @@ enum WC_MAGNIFIER = "Magnifier";
 enum MS_SHOWMAGNIFIEDCURSOR = 0x00000001;
 enum MS_CLIPAROUNDCURSOR = 0x00000002;
 enum MS_INVERTCOLORS = 0x00000004;
-enum MW_FILTERMODE_EXCLUDE = 0x00000000;
-enum MW_FILTERMODE_INCLUDE = 0x00000001;
 struct MAGTRANSFORM
 {
     float[9] v;

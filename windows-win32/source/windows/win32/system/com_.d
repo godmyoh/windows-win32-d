@@ -64,6 +64,85 @@ enum : uint
     ROTFLAGS_ALLOWANYCLIENT         = 0x00000002,
 }
 
+alias ADVANCED_FEATURE_FLAGS = ushort;
+enum : ushort
+{
+    FADF_AUTO        = 0x0001,
+    FADF_STATIC      = 0x0002,
+    FADF_EMBEDDED    = 0x0004,
+    FADF_FIXEDSIZE   = 0x0010,
+    FADF_RECORD      = 0x0020,
+    FADF_HAVEIID     = 0x0040,
+    FADF_HAVEVARTYPE = 0x0080,
+    FADF_BSTR        = 0x0100,
+    FADF_UNKNOWN     = 0x0200,
+    FADF_DISPATCH    = 0x0400,
+    FADF_VARIANT     = 0x0800,
+    FADF_RESERVED    = 0xf008,
+}
+
+alias IMPLTYPEFLAGS = int;
+enum : int
+{
+    IMPLTYPEFLAG_FDEFAULT       = 0x00000001,
+    IMPLTYPEFLAG_FSOURCE        = 0x00000002,
+    IMPLTYPEFLAG_FRESTRICTED    = 0x00000004,
+    IMPLTYPEFLAG_FDEFAULTVTABLE = 0x00000008,
+}
+
+alias IDLFLAGS = ushort;
+enum : ushort
+{
+    IDLFLAG_NONE    = 0x0000,
+    IDLFLAG_FIN     = 0x0001,
+    IDLFLAG_FOUT    = 0x0002,
+    IDLFLAG_FLCID   = 0x0004,
+    IDLFLAG_FRETVAL = 0x0008,
+}
+
+alias DISPATCH_FLAGS = ushort;
+enum : ushort
+{
+    DISPATCH_METHOD         = 0x0001,
+    DISPATCH_PROPERTYGET    = 0x0002,
+    DISPATCH_PROPERTYPUT    = 0x0004,
+    DISPATCH_PROPERTYPUTREF = 0x0008,
+}
+
+alias STGM = uint;
+enum : uint
+{
+    STGM_DIRECT           = 0x00000000,
+    STGM_TRANSACTED       = 0x00010000,
+    STGM_SIMPLE           = 0x08000000,
+    STGM_READ             = 0x00000000,
+    STGM_WRITE            = 0x00000001,
+    STGM_READWRITE        = 0x00000002,
+    STGM_SHARE_DENY_NONE  = 0x00000040,
+    STGM_SHARE_DENY_READ  = 0x00000030,
+    STGM_SHARE_DENY_WRITE = 0x00000020,
+    STGM_SHARE_EXCLUSIVE  = 0x00000010,
+    STGM_PRIORITY         = 0x00040000,
+    STGM_DELETEONRELEASE  = 0x04000000,
+    STGM_NOSCRATCH        = 0x00100000,
+    STGM_CREATE           = 0x00001000,
+    STGM_CONVERT          = 0x00020000,
+    STGM_FAILIFTHERE      = 0x00000000,
+    STGM_NOSNAPSHOT       = 0x00200000,
+    STGM_DIRECT_SWMR      = 0x00400000,
+}
+
+alias DVASPECT = uint;
+enum : uint
+{
+    DVASPECT_CONTENT     = 0x00000001,
+    DVASPECT_THUMBNAIL   = 0x00000002,
+    DVASPECT_ICON        = 0x00000004,
+    DVASPECT_DOCPRINT    = 0x00000008,
+    DVASPECT_OPAQUE      = 0x00000010,
+    DVASPECT_TRANSPARENT = 0x00000020,
+}
+
 uint CoBuildVersion();
 HRESULT CoInitialize(void*);
 HRESULT CoRegisterMallocSpy(IMallocSpy);
@@ -215,15 +294,6 @@ enum MAXLSN = 0x7fffffffffffffff;
 enum DMUS_ERRBASE = 0x00001000;
 alias CO_MTA_USAGE_COOKIE = long;
 alias CO_DEVICE_CATALOG_COOKIE = long;
-alias DVASPECT = int;
-enum : int
-{
-    DVASPECT_CONTENT   = 0x00000001,
-    DVASPECT_THUMBNAIL = 0x00000002,
-    DVASPECT_ICON      = 0x00000004,
-    DVASPECT_DOCPRINT  = 0x00000008,
-}
-
 alias STGC = uint;
 enum : uint
 {
@@ -232,6 +302,14 @@ enum : uint
     STGC_ONLYIFCURRENT                      = 0x00000002,
     STGC_DANGEROUSLYCOMMITMERELYTODISKCACHE = 0x00000004,
     STGC_CONSOLIDATE                        = 0x00000008,
+}
+
+alias STATFLAG = int;
+enum : int
+{
+    STATFLAG_DEFAULT = 0x00000000,
+    STATFLAG_NONAME  = 0x00000001,
+    STATFLAG_NOOPEN  = 0x00000002,
 }
 
 union CY
@@ -486,12 +564,12 @@ struct BYTE_SIZEDARR
     uint clSize;
     ubyte* pData;
 }
-struct SHORT_SIZEDARR
+struct WORD_SIZEDARR
 {
     uint clSize;
     ushort* pData;
 }
-struct LONG_SIZEDARR
+struct DWORD_SIZEDARR
 {
     uint clSize;
     uint* pData;
@@ -636,8 +714,8 @@ struct STATSTG
     FILETIME mtime;
     FILETIME ctime;
     FILETIME atime;
-    uint grfMode;
-    uint grfLocksSupported;
+    STGM grfMode;
+    LOCKTYPE grfLocksSupported;
     GUID clsid;
     uint grfStateBits;
     uint reserved;
@@ -659,6 +737,14 @@ enum : uint
     STREAM_SEEK_END = 0x00000002,
 }
 
+alias LOCKTYPE = int;
+enum : int
+{
+    LOCK_WRITE     = 0x00000001,
+    LOCK_EXCLUSIVE = 0x00000002,
+    LOCK_ONLYONCE  = 0x00000004,
+}
+
 enum IID_IStream = GUID(0xc, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IStream : ISequentialStream
 {
@@ -667,9 +753,9 @@ interface IStream : ISequentialStream
     HRESULT CopyTo(IStream, ULARGE_INTEGER, ULARGE_INTEGER*, ULARGE_INTEGER*);
     HRESULT Commit(STGC);
     HRESULT Revert();
-    HRESULT LockRegion(ULARGE_INTEGER, ULARGE_INTEGER, uint);
+    HRESULT LockRegion(ULARGE_INTEGER, ULARGE_INTEGER, LOCKTYPE);
     HRESULT UnlockRegion(ULARGE_INTEGER, ULARGE_INTEGER, uint);
-    HRESULT Stat(STATSTG*, uint);
+    HRESULT Stat(STATSTG*, STATFLAG);
     HRESULT Clone(IStream*);
 }
 struct RPCOLEMESSAGE
@@ -1232,7 +1318,7 @@ enum : int
     MKSYS_LUAMONIKER       = 0x0000000a,
 }
 
-alias MKREDUCE = int;
+alias MKRREDUCE = int;
 enum : int
 {
     MKRREDUCE_ONE         = 0x00030000,
@@ -1341,7 +1427,7 @@ enum : int
 
 struct RemSTGMEDIUM
 {
-    uint tymed;
+    TYMED tymed;
     uint dwHandleType;
     uint pData;
     uint pUnkForRelease;
@@ -1350,7 +1436,7 @@ struct RemSTGMEDIUM
 }
 struct STGMEDIUM
 {
-    uint tymed;
+    TYMED tymed;
     union
     {
         HBITMAP hBitmap;
@@ -1834,7 +1920,7 @@ struct SAFEARRAYBOUND
 struct SAFEARRAY
 {
     ushort cDims;
-    ushort fFeatures;
+    ADVANCED_FEATURE_FLAGS fFeatures;
     uint cbElements;
     uint cLocks;
     void* pvData;
@@ -1934,7 +2020,7 @@ struct TYPEDESC
 struct IDLDESC
 {
     ulong dwReserved;
-    ushort wIDLFlags;
+    IDLFLAGS wIDLFlags;
 }
 struct ELEMDESC
 {
@@ -2033,7 +2119,7 @@ struct FUNCDESC
     short oVft;
     short cScodes;
     ELEMDESC elemdescFunc;
-    ushort wFuncFlags;
+    FUNCFLAGS wFuncFlags;
 }
 alias VARKIND = int;
 enum : int
@@ -2054,9 +2140,45 @@ struct VARDESC
         VARIANT* lpvarValue;
     }
     ELEMDESC elemdescVar;
-    ushort wVarFlags;
+    VARFLAGS wVarFlags;
     VARKIND varkind;
 }
+alias FUNCFLAGS = ushort;
+enum : ushort
+{
+    FUNCFLAG_FRESTRICTED       = 0x0001,
+    FUNCFLAG_FSOURCE           = 0x0002,
+    FUNCFLAG_FBINDABLE         = 0x0004,
+    FUNCFLAG_FREQUESTEDIT      = 0x0008,
+    FUNCFLAG_FDISPLAYBIND      = 0x0010,
+    FUNCFLAG_FDEFAULTBIND      = 0x0020,
+    FUNCFLAG_FHIDDEN           = 0x0040,
+    FUNCFLAG_FUSESGETLASTERROR = 0x0080,
+    FUNCFLAG_FDEFAULTCOLLELEM  = 0x0100,
+    FUNCFLAG_FUIDEFAULT        = 0x0200,
+    FUNCFLAG_FNONBROWSABLE     = 0x0400,
+    FUNCFLAG_FREPLACEABLE      = 0x0800,
+    FUNCFLAG_FIMMEDIATEBIND    = 0x1000,
+}
+
+alias VARFLAGS = ushort;
+enum : ushort
+{
+    VARFLAG_FREADONLY        = 0x0001,
+    VARFLAG_FSOURCE          = 0x0002,
+    VARFLAG_FBINDABLE        = 0x0004,
+    VARFLAG_FREQUESTEDIT     = 0x0008,
+    VARFLAG_FDISPLAYBIND     = 0x0010,
+    VARFLAG_FDEFAULTBIND     = 0x0020,
+    VARFLAG_FHIDDEN          = 0x0040,
+    VARFLAG_FRESTRICTED      = 0x0080,
+    VARFLAG_FDEFAULTCOLLELEM = 0x0100,
+    VARFLAG_FUIDEFAULT       = 0x0200,
+    VARFLAG_FNONBROWSABLE    = 0x0400,
+    VARFLAG_FREPLACEABLE     = 0x0800,
+    VARFLAG_FIMMEDIATEBIND   = 0x1000,
+}
+
 struct CUSTDATAITEM
 {
     GUID guid;
@@ -2073,7 +2195,7 @@ interface IDispatch : IUnknown
     HRESULT GetTypeInfoCount(uint*);
     HRESULT GetTypeInfo(uint, uint, ITypeInfo*);
     HRESULT GetIDsOfNames(const(GUID)*, PWSTR*, uint, uint, int*);
-    HRESULT Invoke(int, const(GUID)*, uint, ushort, DISPPARAMS*, VARIANT*, EXCEPINFO*, uint*);
+    HRESULT Invoke(int, const(GUID)*, uint, DISPATCH_FLAGS, DISPPARAMS*, VARIANT*, EXCEPINFO*, uint*);
 }
 alias DESCKIND = int;
 enum : int
@@ -2109,7 +2231,7 @@ interface ITypeInfo : IUnknown
     HRESULT GetRefTypeOfImplType(uint, uint*);
     HRESULT GetImplTypeFlags(uint, int*);
     HRESULT GetIDsOfNames(PWSTR*, uint, int*);
-    HRESULT Invoke(void*, int, ushort, DISPPARAMS*, VARIANT*, EXCEPINFO*, uint*);
+    HRESULT Invoke(void*, int, DISPATCH_FLAGS, DISPPARAMS*, VARIANT*, EXCEPINFO*, uint*);
     HRESULT GetDocumentation(int, BSTR*, BSTR*, uint*, BSTR*);
     HRESULT GetDllEntry(int, INVOKEKIND, BSTR*, BSTR*, ushort*);
     HRESULT GetRefTypeInfo(uint, ITypeInfo*);

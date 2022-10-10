@@ -312,6 +312,7 @@ struct AsnObjectIdentifier
 }
 struct AsnAny
 {
+    align (4):
     ubyte asnType;
     union _asnValue_e__Union
     {
@@ -332,6 +333,7 @@ struct AsnAny
 }
 struct SnmpVarBind
 {
+    align (4):
     AsnObjectIdentifier name;
     AsnAny value;
 }

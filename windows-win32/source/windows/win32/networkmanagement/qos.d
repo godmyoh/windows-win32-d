@@ -785,7 +785,7 @@ struct IS_FLOWSPEC
     RsvpObjHdr flow_header;
     IntServFlowSpec flow_body;
 }
-struct flow_desc
+struct FLOW_DESC
 {
     union _u1_e__Union
     {
@@ -850,7 +850,7 @@ struct RSVP_MSG_OBJS
     RESV_STYLE* pResvStyle;
     RSVP_SCOPE* pRsvpScope;
     int FlowDescCount;
-    flow_desc* pFlowDescs;
+    FLOW_DESC* pFlowDescs;
     int PdObjectCount;
     POLICY_DATA** ppPdObjects;
     ERROR_SPEC* pErrorSpec;
@@ -858,13 +858,13 @@ struct RSVP_MSG_OBJS
 }
 alias PALLOCMEM = void* function(uint);
 alias PFREEMEM = void function(void*);
-struct policy_decision
+struct POLICY_DECISION
 {
     uint lpvResult;
     ushort wPolicyErrCode;
     ushort wPolicyErrValue;
 }
-alias CBADMITRESULT = uint* function(LPM_HANDLE, RHANDLE, uint, int, int, policy_decision*);
+alias CBADMITRESULT = uint* function(LPM_HANDLE, RHANDLE, uint, int, int, POLICY_DECISION*);
 alias CBGETRSVPOBJECTS = uint* function(LPM_HANDLE, RHANDLE, int, int, RsvpObjHdr**);
 struct LPM_INIT_INFO
 {
@@ -876,7 +876,7 @@ struct LPM_INIT_INFO
     CBADMITRESULT PcmAdmitResultCallback;
     CBGETRSVPOBJECTS GetRsvpObjectsCallback;
 }
-struct lpmiptable
+struct LPMIPTABLE
 {
     uint ulIfIndex;
     uint MediaType;
@@ -1274,7 +1274,7 @@ struct WBCL_LogHdr
     uint entries;
     uint length;
 }
-struct tag_SIPAEVENT_VSM_IDK_RSA_INFO
+struct SIPAEVENT_VSM_IDK_RSA_INFO
 {
     align (1):
     uint KeyBitLength;
@@ -1282,16 +1282,16 @@ struct tag_SIPAEVENT_VSM_IDK_RSA_INFO
     uint ModulusSizeBytes;
     ubyte[1] PublicKeyData;
 }
-struct tag_SIPAEVENT_VSM_IDK_INFO_PAYLOAD
+struct SIPAEVENT_VSM_IDK_INFO_PAYLOAD
 {
     align (1):
     uint KeyAlgID;
     union
     {
-        tag_SIPAEVENT_VSM_IDK_RSA_INFO RsaKeyInfo;
+        SIPAEVENT_VSM_IDK_RSA_INFO RsaKeyInfo;
     }
 }
-struct tag_SIPAEVENT_SI_POLICY_PAYLOAD
+struct SIPAEVENT_SI_POLICY_PAYLOAD
 {
     align (1):
     ulong PolicyVersion;
@@ -1300,7 +1300,7 @@ struct tag_SIPAEVENT_SI_POLICY_PAYLOAD
     uint DigestLength;
     ubyte[1] VarLengthData;
 }
-struct tag_SIPAEVENT_REVOCATION_LIST_PAYLOAD
+struct SIPAEVENT_REVOCATION_LIST_PAYLOAD
 {
     align (1):
     long CreationTime;
@@ -1308,14 +1308,14 @@ struct tag_SIPAEVENT_REVOCATION_LIST_PAYLOAD
     ushort HashAlgID;
     ubyte[1] Digest;
 }
-struct tag_SIPAEVENT_KSR_SIGNATURE_PAYLOAD
+struct SIPAEVENT_KSR_SIGNATURE_PAYLOAD
 {
     align (1):
     uint SignAlgID;
     uint SignatureLength;
     ubyte[1] Signature;
 }
-struct tag_SIPAEVENT_SBCP_INFO_PAYLOAD_V1
+struct SIPAEVENT_SBCP_INFO_PAYLOAD_V1
 {
     align (1):
     uint PayloadVersion;

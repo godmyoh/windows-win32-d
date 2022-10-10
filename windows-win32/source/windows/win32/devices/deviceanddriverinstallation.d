@@ -570,8 +570,8 @@ CONFIGRET CM_Get_Global_State(uint*, uint);
 CONFIGRET CM_Get_Global_State_Ex(uint*, uint, long);
 CONFIGRET CM_Get_Hardware_Profile_InfoA(uint, HWProfileInfo_sA*, uint);
 CONFIGRET CM_Get_Hardware_Profile_Info_ExA(uint, HWProfileInfo_sA*, uint, long);
-CONFIGRET CM_Get_Hardware_Profile_InfoW(uint, HWProfileInfo_sW*, uint);
-CONFIGRET CM_Get_Hardware_Profile_Info_ExW(uint, HWProfileInfo_sW*, uint, long);
+CONFIGRET CM_Get_Hardware_Profile_InfoW(uint, HWPROFILEINFO_W*, uint);
+CONFIGRET CM_Get_Hardware_Profile_Info_ExW(uint, HWPROFILEINFO_W*, uint, long);
 CONFIGRET CM_Get_HW_Prof_FlagsA(PSTR, uint, uint*, uint);
 CONFIGRET CM_Get_HW_Prof_FlagsW(PWSTR, uint, uint*, uint);
 CONFIGRET CM_Get_HW_Prof_Flags_ExA(PSTR, uint, uint*, uint, long);
@@ -2299,8 +2299,6 @@ struct SP_ORIGINAL_FILE_INFO_W
     wchar[260] OriginalInfName;
     wchar[260] OriginalCatalogName;
 }
-alias PSP_FILE_CALLBACK_A = uint function(void*, uint, ulong, ulong);
-alias PSP_FILE_CALLBACK_W = uint function(void*, uint, ulong, ulong);
 struct FILEPATHS_A
 {
     const(char)* Target;
@@ -2527,15 +2525,6 @@ struct SP_UNREMOVEDEVICE_PARAMS
     uint Scope;
     uint HwProfile;
 }
-struct SP_SELECTDEVICE_PARAMS_A
-{
-    SP_CLASSINSTALL_HEADER ClassInstallHeader;
-    CHAR[60] Title;
-    CHAR[256] Instructions;
-    CHAR[30] ListLabel;
-    CHAR[256] SubTitle;
-    ubyte[2] Reserved;
-}
 struct SP_SELECTDEVICE_PARAMS_W
 {
     SP_CLASSINSTALL_HEADER ClassInstallHeader;
@@ -2544,7 +2533,6 @@ struct SP_SELECTDEVICE_PARAMS_W
     wchar[30] ListLabel;
     wchar[256] SubTitle;
 }
-alias PDETECT_PROGRESS_NOTIFY = BOOL function(void*, uint);
 struct SP_DETECTDEVICE_PARAMS
 {
     SP_CLASSINSTALL_HEADER ClassInstallHeader;
@@ -2570,22 +2558,11 @@ struct SP_NEWDEVICEWIZARD_DATA
     uint NumDynamicPages;
     HWND hwndWizardDlg;
 }
-struct SP_TROUBLESHOOTER_PARAMS_A
-{
-    SP_CLASSINSTALL_HEADER ClassInstallHeader;
-    CHAR[260] ChmFile;
-    CHAR[260] HtmlTroubleShooter;
-}
 struct SP_TROUBLESHOOTER_PARAMS_W
 {
     SP_CLASSINSTALL_HEADER ClassInstallHeader;
     wchar[260] ChmFile;
     wchar[260] HtmlTroubleShooter;
-}
-struct SP_POWERMESSAGEWAKE_PARAMS_A
-{
-    SP_CLASSINSTALL_HEADER ClassInstallHeader;
-    CHAR[512] PowerMessageWake;
 }
 struct SP_POWERMESSAGEWAKE_PARAMS_W
 {
@@ -2664,7 +2641,6 @@ struct SP_DRVINSTALL_PARAMS
     ulong PrivateData;
     uint Reserved;
 }
-alias PSP_DETSIG_CMPPROC = uint function(HDEVINFO, SP_DEVINFO_DATA*, SP_DEVINFO_DATA*, void*);
 struct COINSTALLER_CONTEXT_DATA
 {
     BOOL PostProcessing;
@@ -2710,17 +2686,6 @@ struct SP_BACKUP_QUEUE_PARAMS_V1_W
     wchar[260] FullInfPath;
     int FilenameOffset;
 }
-alias SetupFileLogInfo = int;
-enum : int
-{
-    SetupFileLogSourceFilename  = 0x00000000,
-    SetupFileLogChecksum        = 0x00000001,
-    SetupFileLogDiskTagfile     = 0x00000002,
-    SetupFileLogDiskDescription = 0x00000003,
-    SetupFileLogOtherInfo       = 0x00000004,
-    SetupFileLogMax             = 0x00000005,
-}
-
 struct SP_INF_SIGNER_INFO_V1_A
 {
     uint cbSize;
@@ -2751,364 +2716,6 @@ struct SP_INF_SIGNER_INFO_V2_W
     wchar[260] DigitalSignerVersion;
     uint SignerScore;
 }
-alias PNP_VETO_TYPE = int;
-enum : int
-{
-    PNP_VetoTypeUnknown          = 0x00000000,
-    PNP_VetoLegacyDevice         = 0x00000001,
-    PNP_VetoPendingClose         = 0x00000002,
-    PNP_VetoWindowsApp           = 0x00000003,
-    PNP_VetoWindowsService       = 0x00000004,
-    PNP_VetoOutstandingOpen      = 0x00000005,
-    PNP_VetoDevice               = 0x00000006,
-    PNP_VetoDriver               = 0x00000007,
-    PNP_VetoIllegalDeviceRequest = 0x00000008,
-    PNP_VetoInsufficientPower    = 0x00000009,
-    PNP_VetoNonDisableable       = 0x0000000a,
-    PNP_VetoLegacyDriver         = 0x0000000b,
-    PNP_VetoInsufficientRights   = 0x0000000c,
-    PNP_VetoAlreadyRemoved       = 0x0000000d,
-}
-
-struct CONFLICT_DETAILS_A
-{
-    uint CD_ulSize;
-    uint CD_ulMask;
-    uint CD_dnDevInst;
-    ulong CD_rdResDes;
-    uint CD_ulFlags;
-    CHAR[260] CD_szDescription;
-}
-struct CONFLICT_DETAILS_W
-{
-    uint CD_ulSize;
-    uint CD_ulMask;
-    uint CD_dnDevInst;
-    ulong CD_rdResDes;
-    uint CD_ulFlags;
-    wchar[260] CD_szDescription;
-}
-struct MEM_RANGE
-{
-    align (1):
-    ulong MR_Align;
-    uint MR_nBytes;
-    ulong MR_Min;
-    ulong MR_Max;
-    uint MR_Flags;
-    uint MR_Reserved;
-}
-struct MEM_DES
-{
-    align (1):
-    uint MD_Count;
-    uint MD_Type;
-    ulong MD_Alloc_Base;
-    ulong MD_Alloc_End;
-    uint MD_Flags;
-    uint MD_Reserved;
-}
-struct MEM_RESOURCE
-{
-    MEM_DES MEM_Header;
-    MEM_RANGE[1] MEM_Data;
-}
-struct Mem_Large_Range_s
-{
-    align (1):
-    ulong MLR_Align;
-    ulong MLR_nBytes;
-    ulong MLR_Min;
-    ulong MLR_Max;
-    uint MLR_Flags;
-    uint MLR_Reserved;
-}
-struct Mem_Large_Des_s
-{
-    align (1):
-    uint MLD_Count;
-    uint MLD_Type;
-    ulong MLD_Alloc_Base;
-    ulong MLD_Alloc_End;
-    uint MLD_Flags;
-    uint MLD_Reserved;
-}
-struct Mem_Large_Resource_s
-{
-    Mem_Large_Des_s MEM_LARGE_Header;
-    Mem_Large_Range_s[1] MEM_LARGE_Data;
-}
-struct IO_RANGE
-{
-    align (1):
-    ulong IOR_Align;
-    uint IOR_nPorts;
-    ulong IOR_Min;
-    ulong IOR_Max;
-    uint IOR_RangeFlags;
-    ulong IOR_Alias;
-}
-struct IO_DES
-{
-    align (1):
-    uint IOD_Count;
-    uint IOD_Type;
-    ulong IOD_Alloc_Base;
-    ulong IOD_Alloc_End;
-    uint IOD_DesFlags;
-}
-struct IO_RESOURCE
-{
-    IO_DES IO_Header;
-    IO_RANGE[1] IO_Data;
-}
-struct DMA_RANGE
-{
-    align (1):
-    uint DR_Min;
-    uint DR_Max;
-    uint DR_Flags;
-}
-struct DMA_DES
-{
-    align (1):
-    uint DD_Count;
-    uint DD_Type;
-    uint DD_Flags;
-    uint DD_Alloc_Chan;
-}
-struct DMA_RESOURCE
-{
-    DMA_DES DMA_Header;
-    DMA_RANGE[1] DMA_Data;
-}
-struct IRQ_RANGE
-{
-    align (1):
-    uint IRQR_Min;
-    uint IRQR_Max;
-    uint IRQR_Flags;
-}
-struct IRQ_DES_32
-{
-    align (1):
-    uint IRQD_Count;
-    uint IRQD_Type;
-    uint IRQD_Flags;
-    uint IRQD_Alloc_Num;
-    uint IRQD_Affinity;
-}
-struct IRQ_DES_64
-{
-    align (1):
-    uint IRQD_Count;
-    uint IRQD_Type;
-    uint IRQD_Flags;
-    uint IRQD_Alloc_Num;
-    ulong IRQD_Affinity;
-}
-struct IRQ_RESOURCE_32
-{
-    IRQ_DES_32 IRQ_Header;
-    IRQ_RANGE[1] IRQ_Data;
-}
-struct IRQ_RESOURCE_64
-{
-    IRQ_DES_64 IRQ_Header;
-    IRQ_RANGE[1] IRQ_Data;
-}
-struct DevPrivate_Range_s
-{
-    align (1):
-    uint PR_Data1;
-    uint PR_Data2;
-    uint PR_Data3;
-}
-struct DevPrivate_Des_s
-{
-    align (1):
-    uint PD_Count;
-    uint PD_Type;
-    uint PD_Data1;
-    uint PD_Data2;
-    uint PD_Data3;
-    uint PD_Flags;
-}
-struct DevPrivate_Resource_s
-{
-    DevPrivate_Des_s PRV_Header;
-    DevPrivate_Range_s[1] PRV_Data;
-}
-struct CS_DES
-{
-    align (1):
-    uint CSD_SignatureLength;
-    uint CSD_LegacyDataOffset;
-    uint CSD_LegacyDataSize;
-    uint CSD_Flags;
-    GUID CSD_ClassGuid;
-    ubyte[1] CSD_Signature;
-}
-struct CS_RESOURCE
-{
-    CS_DES CS_Header;
-}
-struct PCCARD_DES
-{
-    align (1):
-    uint PCD_Count;
-    uint PCD_Type;
-    uint PCD_Flags;
-    ubyte PCD_ConfigIndex;
-    ubyte[3] PCD_Reserved;
-    uint PCD_MemoryCardBase1;
-    uint PCD_MemoryCardBase2;
-    uint[2] PCD_MemoryCardBase;
-    ushort[2] PCD_MemoryFlags;
-    ubyte[2] PCD_IoFlags;
-}
-struct PCCARD_RESOURCE
-{
-    PCCARD_DES PcCard_Header;
-}
-struct MFCARD_DES
-{
-    align (1):
-    uint PMF_Count;
-    uint PMF_Type;
-    uint PMF_Flags;
-    ubyte PMF_ConfigOptions;
-    ubyte PMF_IoResourceIndex;
-    ubyte[2] PMF_Reserved;
-    uint PMF_ConfigRegisterBase;
-}
-struct MFCARD_RESOURCE
-{
-    MFCARD_DES MfCard_Header;
-}
-struct BUSNUMBER_RANGE
-{
-    align (1):
-    uint BUSR_Min;
-    uint BUSR_Max;
-    uint BUSR_nBusNumbers;
-    uint BUSR_Flags;
-}
-struct BUSNUMBER_DES
-{
-    align (1):
-    uint BUSD_Count;
-    uint BUSD_Type;
-    uint BUSD_Flags;
-    uint BUSD_Alloc_Base;
-    uint BUSD_Alloc_End;
-}
-struct BUSNUMBER_RESOURCE
-{
-    BUSNUMBER_DES BusNumber_Header;
-    BUSNUMBER_RANGE[1] BusNumber_Data;
-}
-struct Connection_Des_s
-{
-    align (1):
-    uint COND_Type;
-    uint COND_Flags;
-    ubyte COND_Class;
-    ubyte COND_ClassType;
-    ubyte COND_Reserved1;
-    ubyte COND_Reserved2;
-    LARGE_INTEGER COND_Id;
-}
-struct Connection_Resource_s
-{
-    Connection_Des_s Connection_Header;
-}
-struct HWProfileInfo_sA
-{
-    align (1):
-    uint HWPI_ulHWProfile;
-    CHAR[80] HWPI_szFriendlyName;
-    uint HWPI_dwFlags;
-}
-struct HWProfileInfo_sW
-{
-    align (1):
-    uint HWPI_ulHWProfile;
-    wchar[80] HWPI_szFriendlyName;
-    uint HWPI_dwFlags;
-}
-alias CM_NOTIFY_FILTER_TYPE = int;
-enum : int
-{
-    CM_NOTIFY_FILTER_TYPE_DEVICEINTERFACE = 0x00000000,
-    CM_NOTIFY_FILTER_TYPE_DEVICEHANDLE    = 0x00000001,
-    CM_NOTIFY_FILTER_TYPE_DEVICEINSTANCE  = 0x00000002,
-    CM_NOTIFY_FILTER_TYPE_MAX             = 0x00000003,
-}
-
-struct CM_NOTIFY_FILTER
-{
-    uint cbSize;
-    uint Flags;
-    CM_NOTIFY_FILTER_TYPE FilterType;
-    uint Reserved;
-    union _u_e__Union
-    {
-        struct _DeviceInterface_e__Struct
-        {
-            GUID ClassGuid;
-        }
-        struct _DeviceHandle_e__Struct
-        {
-            HANDLE hTarget;
-        }
-        struct _DeviceInstance_e__Struct
-        {
-            wchar[200] InstanceId;
-        }
-    }
-}
-alias CM_NOTIFY_ACTION = int;
-enum : int
-{
-    CM_NOTIFY_ACTION_DEVICEINTERFACEARRIVAL   = 0x00000000,
-    CM_NOTIFY_ACTION_DEVICEINTERFACEREMOVAL   = 0x00000001,
-    CM_NOTIFY_ACTION_DEVICEQUERYREMOVE        = 0x00000002,
-    CM_NOTIFY_ACTION_DEVICEQUERYREMOVEFAILED  = 0x00000003,
-    CM_NOTIFY_ACTION_DEVICEREMOVEPENDING      = 0x00000004,
-    CM_NOTIFY_ACTION_DEVICEREMOVECOMPLETE     = 0x00000005,
-    CM_NOTIFY_ACTION_DEVICECUSTOMEVENT        = 0x00000006,
-    CM_NOTIFY_ACTION_DEVICEINSTANCEENUMERATED = 0x00000007,
-    CM_NOTIFY_ACTION_DEVICEINSTANCESTARTED    = 0x00000008,
-    CM_NOTIFY_ACTION_DEVICEINSTANCEREMOVED    = 0x00000009,
-    CM_NOTIFY_ACTION_MAX                      = 0x0000000a,
-}
-
-struct CM_NOTIFY_EVENT_DATA
-{
-    CM_NOTIFY_FILTER_TYPE FilterType;
-    uint Reserved;
-    union _u_e__Union
-    {
-        struct _DeviceInterface_e__Struct
-        {
-            GUID ClassGuid;
-            wchar[1] SymbolicLink;
-        }
-        struct _DeviceHandle_e__Struct
-        {
-            GUID EventGuid;
-            int NameOffset;
-            uint DataSize;
-            ubyte[1] Data;
-        }
-        struct _DeviceInstance_e__Struct
-        {
-            wchar[1] InstanceId;
-        }
-    }
-}
-alias PCM_NOTIFY_CALLBACK = uint function(HCMNOTIFICATION, void*, CM_NOTIFY_ACTION, CM_NOTIFY_EVENT_DATA*, uint);
 /+ [CONFLICTED] struct INFCONTEXT
 {
     align (1):
@@ -3192,6 +2799,8 @@ alias PCM_NOTIFY_CALLBACK = uint function(HCMNOTIFICATION, void*, CM_NOTIFY_ACTI
     wchar[260] OriginalCatalogName;
 }
 +/
+alias PSP_FILE_CALLBACK_A = uint function(void*, uint, ulong, ulong);
+alias PSP_FILE_CALLBACK_W = uint function(void*, uint, ulong, ulong);
 /+ [CONFLICTED] struct FILEPATHS_A
 {
     align (1):
@@ -3472,6 +3081,15 @@ alias PCM_NOTIFY_CALLBACK = uint function(HCMNOTIFICATION, void*, CM_NOTIFY_ACTI
     uint HwProfile;
 }
 +/
+struct SP_SELECTDEVICE_PARAMS_A
+{
+    SP_CLASSINSTALL_HEADER ClassInstallHeader;
+    CHAR[60] Title;
+    CHAR[256] Instructions;
+    CHAR[30] ListLabel;
+    CHAR[256] SubTitle;
+    ubyte[2] Reserved;
+}
 /+ [CONFLICTED] struct SP_SELECTDEVICE_PARAMS_W
 {
     align (1):
@@ -3482,6 +3100,7 @@ alias PCM_NOTIFY_CALLBACK = uint function(HCMNOTIFICATION, void*, CM_NOTIFY_ACTI
     wchar[256] SubTitle;
 }
 +/
+alias PDETECT_PROGRESS_NOTIFY = BOOL function(void*, uint);
 /+ [CONFLICTED] struct SP_DETECTDEVICE_PARAMS
 {
     align (1):
@@ -3513,6 +3132,12 @@ alias PCM_NOTIFY_CALLBACK = uint function(HCMNOTIFICATION, void*, CM_NOTIFY_ACTI
     HWND hwndWizardDlg;
 }
 +/
+struct SP_TROUBLESHOOTER_PARAMS_A
+{
+    SP_CLASSINSTALL_HEADER ClassInstallHeader;
+    CHAR[260] ChmFile;
+    CHAR[260] HtmlTroubleShooter;
+}
 /+ [CONFLICTED] struct SP_TROUBLESHOOTER_PARAMS_W
 {
     align (1):
@@ -3521,6 +3146,11 @@ alias PCM_NOTIFY_CALLBACK = uint function(HCMNOTIFICATION, void*, CM_NOTIFY_ACTI
     wchar[260] HtmlTroubleShooter;
 }
 +/
+struct SP_POWERMESSAGEWAKE_PARAMS_A
+{
+    SP_CLASSINSTALL_HEADER ClassInstallHeader;
+    CHAR[512] PowerMessageWake;
+}
 /+ [CONFLICTED] struct SP_POWERMESSAGEWAKE_PARAMS_W
 {
     align (1):
@@ -3614,6 +3244,7 @@ alias PCM_NOTIFY_CALLBACK = uint function(HCMNOTIFICATION, void*, CM_NOTIFY_ACTI
     uint Reserved;
 }
 +/
+alias PSP_DETSIG_CMPPROC = uint function(HDEVINFO, SP_DEVINFO_DATA*, SP_DEVINFO_DATA*, void*);
 /+ [CONFLICTED] struct COINSTALLER_CONTEXT_DATA
 {
     align (1):
@@ -3673,6 +3304,17 @@ alias PCM_NOTIFY_CALLBACK = uint function(HCMNOTIFICATION, void*, CM_NOTIFY_ACTI
     int FilenameOffset;
 }
 +/
+alias SetupFileLogInfo = int;
+enum : int
+{
+    SetupFileLogSourceFilename  = 0x00000000,
+    SetupFileLogChecksum        = 0x00000001,
+    SetupFileLogDiskTagfile     = 0x00000002,
+    SetupFileLogDiskDescription = 0x00000003,
+    SetupFileLogOtherInfo       = 0x00000004,
+    SetupFileLogMax             = 0x00000005,
+}
+
 /+ [CONFLICTED] struct SP_INF_SIGNER_INFO_V1_A
 {
     align (1):
@@ -3711,3 +3353,372 @@ alias PCM_NOTIFY_CALLBACK = uint function(HCMNOTIFICATION, void*, CM_NOTIFY_ACTI
     uint SignerScore;
 }
 +/
+alias PNP_VETO_TYPE = int;
+enum : int
+{
+    PNP_VetoTypeUnknown          = 0x00000000,
+    PNP_VetoLegacyDevice         = 0x00000001,
+    PNP_VetoPendingClose         = 0x00000002,
+    PNP_VetoWindowsApp           = 0x00000003,
+    PNP_VetoWindowsService       = 0x00000004,
+    PNP_VetoOutstandingOpen      = 0x00000005,
+    PNP_VetoDevice               = 0x00000006,
+    PNP_VetoDriver               = 0x00000007,
+    PNP_VetoIllegalDeviceRequest = 0x00000008,
+    PNP_VetoInsufficientPower    = 0x00000009,
+    PNP_VetoNonDisableable       = 0x0000000a,
+    PNP_VetoLegacyDriver         = 0x0000000b,
+    PNP_VetoInsufficientRights   = 0x0000000c,
+    PNP_VetoAlreadyRemoved       = 0x0000000d,
+}
+
+struct CONFLICT_DETAILS_A
+{
+    uint CD_ulSize;
+    uint CD_ulMask;
+    uint CD_dnDevInst;
+    ulong CD_rdResDes;
+    uint CD_ulFlags;
+    CHAR[260] CD_szDescription;
+}
+struct CONFLICT_DETAILS_W
+{
+    uint CD_ulSize;
+    uint CD_ulMask;
+    uint CD_dnDevInst;
+    ulong CD_rdResDes;
+    uint CD_ulFlags;
+    wchar[260] CD_szDescription;
+}
+struct MEM_RANGE
+{
+    align (1):
+    ulong MR_Align;
+    uint MR_nBytes;
+    ulong MR_Min;
+    ulong MR_Max;
+    uint MR_Flags;
+    uint MR_Reserved;
+}
+struct MEM_DES
+{
+    align (1):
+    uint MD_Count;
+    uint MD_Type;
+    ulong MD_Alloc_Base;
+    ulong MD_Alloc_End;
+    uint MD_Flags;
+    uint MD_Reserved;
+}
+struct MEM_RESOURCE
+{
+    align (1):
+    MEM_DES MEM_Header;
+    MEM_RANGE[1] MEM_Data;
+}
+struct MEM_LARGE_RANGE
+{
+    align (1):
+    ulong MLR_Align;
+    ulong MLR_nBytes;
+    ulong MLR_Min;
+    ulong MLR_Max;
+    uint MLR_Flags;
+    uint MLR_Reserved;
+}
+struct MEM_LARGE_DES
+{
+    align (1):
+    uint MLD_Count;
+    uint MLD_Type;
+    ulong MLD_Alloc_Base;
+    ulong MLD_Alloc_End;
+    uint MLD_Flags;
+    uint MLD_Reserved;
+}
+struct MEM_LARGE_RESOURCE
+{
+    align (1):
+    MEM_LARGE_DES MEM_LARGE_Header;
+    MEM_LARGE_RANGE[1] MEM_LARGE_Data;
+}
+struct IO_RANGE
+{
+    align (1):
+    ulong IOR_Align;
+    uint IOR_nPorts;
+    ulong IOR_Min;
+    ulong IOR_Max;
+    uint IOR_RangeFlags;
+    ulong IOR_Alias;
+}
+struct IO_DES
+{
+    align (1):
+    uint IOD_Count;
+    uint IOD_Type;
+    ulong IOD_Alloc_Base;
+    ulong IOD_Alloc_End;
+    uint IOD_DesFlags;
+}
+struct IO_RESOURCE
+{
+    IO_DES IO_Header;
+    IO_RANGE[1] IO_Data;
+}
+struct DMA_RANGE
+{
+    align (1):
+    uint DR_Min;
+    uint DR_Max;
+    uint DR_Flags;
+}
+struct DMA_DES
+{
+    align (1):
+    uint DD_Count;
+    uint DD_Type;
+    uint DD_Flags;
+    uint DD_Alloc_Chan;
+}
+struct DMA_RESOURCE
+{
+    align (1):
+    DMA_DES DMA_Header;
+    DMA_RANGE[1] DMA_Data;
+}
+struct IRQ_RANGE
+{
+    align (1):
+    uint IRQR_Min;
+    uint IRQR_Max;
+    uint IRQR_Flags;
+}
+struct IRQ_DES_32
+{
+    align (1):
+    uint IRQD_Count;
+    uint IRQD_Type;
+    uint IRQD_Flags;
+    uint IRQD_Alloc_Num;
+    uint IRQD_Affinity;
+}
+struct IRQ_DES_64
+{
+    align (1):
+    uint IRQD_Count;
+    uint IRQD_Type;
+    uint IRQD_Flags;
+    uint IRQD_Alloc_Num;
+    ulong IRQD_Affinity;
+}
+struct IRQ_RESOURCE_32
+{
+    align (1):
+    IRQ_DES_32 IRQ_Header;
+    IRQ_RANGE[1] IRQ_Data;
+}
+struct IRQ_RESOURCE_64
+{
+    align (1):
+    IRQ_DES_64 IRQ_Header;
+    IRQ_RANGE[1] IRQ_Data;
+}
+struct DEVPRIVATE_RANGE
+{
+    align (1):
+    uint PR_Data1;
+    uint PR_Data2;
+    uint PR_Data3;
+}
+struct DEVPRIVATE_DES
+{
+    align (1):
+    uint PD_Count;
+    uint PD_Type;
+    uint PD_Data1;
+    uint PD_Data2;
+    uint PD_Data3;
+    uint PD_Flags;
+}
+struct DEVPRIVATE_RESOURCE
+{
+    align (1):
+    DEVPRIVATE_DES PRV_Header;
+    DEVPRIVATE_RANGE[1] PRV_Data;
+}
+struct CS_DES
+{
+    align (1):
+    uint CSD_SignatureLength;
+    uint CSD_LegacyDataOffset;
+    uint CSD_LegacyDataSize;
+    uint CSD_Flags;
+    GUID CSD_ClassGuid;
+    ubyte[1] CSD_Signature;
+}
+struct CS_RESOURCE
+{
+    align (1):
+    CS_DES CS_Header;
+}
+struct PCCARD_DES
+{
+    align (1):
+    uint PCD_Count;
+    uint PCD_Type;
+    uint PCD_Flags;
+    ubyte PCD_ConfigIndex;
+    ubyte[3] PCD_Reserved;
+    uint PCD_MemoryCardBase1;
+    uint PCD_MemoryCardBase2;
+    uint[2] PCD_MemoryCardBase;
+    ushort[2] PCD_MemoryFlags;
+    ubyte[2] PCD_IoFlags;
+}
+struct PCCARD_RESOURCE
+{
+    align (1):
+    PCCARD_DES PcCard_Header;
+}
+struct MFCARD_DES
+{
+    align (1):
+    uint PMF_Count;
+    uint PMF_Type;
+    uint PMF_Flags;
+    ubyte PMF_ConfigOptions;
+    ubyte PMF_IoResourceIndex;
+    ubyte[2] PMF_Reserved;
+    uint PMF_ConfigRegisterBase;
+}
+struct MFCARD_RESOURCE
+{
+    align (1):
+    MFCARD_DES MfCard_Header;
+}
+struct BUSNUMBER_RANGE
+{
+    align (1):
+    uint BUSR_Min;
+    uint BUSR_Max;
+    uint BUSR_nBusNumbers;
+    uint BUSR_Flags;
+}
+struct BUSNUMBER_DES
+{
+    align (1):
+    uint BUSD_Count;
+    uint BUSD_Type;
+    uint BUSD_Flags;
+    uint BUSD_Alloc_Base;
+    uint BUSD_Alloc_End;
+}
+struct BUSNUMBER_RESOURCE
+{
+    align (1):
+    BUSNUMBER_DES BusNumber_Header;
+    BUSNUMBER_RANGE[1] BusNumber_Data;
+}
+struct CONNECTION_DES
+{
+    align (1):
+    uint COND_Type;
+    uint COND_Flags;
+    ubyte COND_Class;
+    ubyte COND_ClassType;
+    ubyte COND_Reserved1;
+    ubyte COND_Reserved2;
+    LARGE_INTEGER COND_Id;
+}
+struct CONNECTION_RESOURCE
+{
+    align (1):
+    CONNECTION_DES Connection_Header;
+}
+struct HWProfileInfo_sA
+{
+    align (1):
+    uint HWPI_ulHWProfile;
+    CHAR[80] HWPI_szFriendlyName;
+    uint HWPI_dwFlags;
+}
+struct HWPROFILEINFO_W
+{
+    align (1):
+    uint HWPI_ulHWProfile;
+    wchar[80] HWPI_szFriendlyName;
+    uint HWPI_dwFlags;
+}
+alias CM_NOTIFY_FILTER_TYPE = int;
+enum : int
+{
+    CM_NOTIFY_FILTER_TYPE_DEVICEINTERFACE = 0x00000000,
+    CM_NOTIFY_FILTER_TYPE_DEVICEHANDLE    = 0x00000001,
+    CM_NOTIFY_FILTER_TYPE_DEVICEINSTANCE  = 0x00000002,
+    CM_NOTIFY_FILTER_TYPE_MAX             = 0x00000003,
+}
+
+struct CM_NOTIFY_FILTER
+{
+    uint cbSize;
+    uint Flags;
+    CM_NOTIFY_FILTER_TYPE FilterType;
+    uint Reserved;
+    union _u_e__Union
+    {
+        struct _DeviceInterface_e__Struct
+        {
+            GUID ClassGuid;
+        }
+        struct _DeviceHandle_e__Struct
+        {
+            HANDLE hTarget;
+        }
+        struct _DeviceInstance_e__Struct
+        {
+            wchar[200] InstanceId;
+        }
+    }
+}
+alias CM_NOTIFY_ACTION = int;
+enum : int
+{
+    CM_NOTIFY_ACTION_DEVICEINTERFACEARRIVAL   = 0x00000000,
+    CM_NOTIFY_ACTION_DEVICEINTERFACEREMOVAL   = 0x00000001,
+    CM_NOTIFY_ACTION_DEVICEQUERYREMOVE        = 0x00000002,
+    CM_NOTIFY_ACTION_DEVICEQUERYREMOVEFAILED  = 0x00000003,
+    CM_NOTIFY_ACTION_DEVICEREMOVEPENDING      = 0x00000004,
+    CM_NOTIFY_ACTION_DEVICEREMOVECOMPLETE     = 0x00000005,
+    CM_NOTIFY_ACTION_DEVICECUSTOMEVENT        = 0x00000006,
+    CM_NOTIFY_ACTION_DEVICEINSTANCEENUMERATED = 0x00000007,
+    CM_NOTIFY_ACTION_DEVICEINSTANCESTARTED    = 0x00000008,
+    CM_NOTIFY_ACTION_DEVICEINSTANCEREMOVED    = 0x00000009,
+    CM_NOTIFY_ACTION_MAX                      = 0x0000000a,
+}
+
+struct CM_NOTIFY_EVENT_DATA
+{
+    CM_NOTIFY_FILTER_TYPE FilterType;
+    uint Reserved;
+    union _u_e__Union
+    {
+        struct _DeviceInterface_e__Struct
+        {
+            GUID ClassGuid;
+            wchar[1] SymbolicLink;
+        }
+        struct _DeviceHandle_e__Struct
+        {
+            GUID EventGuid;
+            int NameOffset;
+            uint DataSize;
+            ubyte[1] Data;
+        }
+        struct _DeviceInstance_e__Struct
+        {
+            wchar[1] InstanceId;
+        }
+    }
+}
+alias PCM_NOTIFY_CALLBACK = uint function(HCMNOTIFICATION, void*, CM_NOTIFY_ACTION, CM_NOTIFY_EVENT_DATA*, uint);

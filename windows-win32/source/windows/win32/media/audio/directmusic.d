@@ -316,7 +316,7 @@ struct POOLTABLE
     uint cbSize;
     uint cCues;
 }
-struct _rwsmp
+struct WSMPL
 {
     uint cbSize;
     ushort usUnityNote;
@@ -325,7 +325,7 @@ struct _rwsmp
     uint fulOptions;
     uint cSampleLoops;
 }
-struct _rloop
+struct WLOOP
 {
     uint cbSize;
     uint ulType;
@@ -362,8 +362,8 @@ struct DMUS_REGION
     uint ulNextRegionIdx;
     uint ulFirstExtCkIdx;
     WAVELINK WaveLink;
-    _rwsmp WSMP;
-    _rloop[1] WLOOP;
+    WSMPL WSMP;
+    WLOOP[1] WLOOP_;
 }
 struct DMUS_LFOPARAMS
 {
@@ -485,7 +485,7 @@ struct DMUS_PORTCAPS
     uint dwEffectFlags;
     wchar[128] wszDescription;
 }
-struct _DMUS_PORTPARAMS
+struct DMUS_PORTPARAMS7
 {
     uint dwSize;
     uint dwValidParams;
@@ -789,7 +789,7 @@ struct DSPROPERTY_DIRECTSOUNDDEVICE_ENUMERATE_W_DATA
     LPFNDIRECTSOUNDDEVICEENUMERATECALLBACKW Callback;
     void* Context;
 }
-struct Tag_DVAudInfo
+struct DVAudInfo
 {
     ubyte[2] bAudStyle;
     ubyte[2] bAudQu;

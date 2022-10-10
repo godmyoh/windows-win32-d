@@ -1405,7 +1405,7 @@ alias I_RpcPerformCalloutFn = RPC_STATUS function(void*, RDR_CALLOUT_STATE*, RPC
 alias I_RpcFreeCalloutStateFn = void function(RDR_CALLOUT_STATE*);
 alias I_RpcProxyGetClientSessionAndResourceUUID = RPC_STATUS function(void*, int*, GUID*, int*, GUID*);
 alias I_RpcProxyFilterIfFn = RPC_STATUS function(void*, GUID*, ushort, int*);
-alias RpcProxyPerfCounters = int;
+alias RpcPerfCounters = int;
 enum : int
 {
     RpcCurrentUniqueUser         = 0x00000001,
@@ -1422,7 +1422,7 @@ enum : int
     RpcLastCounter               = 0x0000000c,
 }
 
-alias I_RpcProxyUpdatePerfCounterFn = void function(RpcProxyPerfCounters, int, uint);
+alias I_RpcProxyUpdatePerfCounterFn = void function(RpcPerfCounters, int, uint);
 alias I_RpcProxyUpdatePerfCounterBackendServerFn = void function(ushort*, int);
 struct I_RpcProxyCallbackInterface
 {

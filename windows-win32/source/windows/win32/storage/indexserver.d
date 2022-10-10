@@ -242,6 +242,20 @@ interface IFilter : IUnknown
     int GetValue(PROPVARIANT**);
     int BindRegion(FILTERREGION, const(GUID)*, void**);
 }
+struct DBID
+{
+    union _uGuid_e__Union
+    {
+        GUID guid;
+        GUID* pguid;
+    }
+    uint eKind;
+    union _uName_e__Union
+    {
+        PWSTR pwszName;
+        uint ulPropid;
+    }
+}
 enum IID_IPhraseSink = GUID(0xcc906ff0, 0xc058, 0x101a, [0xb5, 0x54, 0x8, 0x0, 0x2b, 0x33, 0xb0, 0xe6]);
 interface IPhraseSink : IUnknown
 {
@@ -269,20 +283,6 @@ enum : int
     DBKIND_GUID         = 0x00000006,
 }
 
-struct DBID
-{
-    union _uGuid_e__Union
-    {
-        GUID guid;
-        GUID* pguid;
-    }
-    uint eKind;
-    union _uName_e__Union
-    {
-        PWSTR pwszName;
-        uint ulPropid;
-    }
-}
 /+ [CONFLICTED] struct DBID
 {
     align (2):

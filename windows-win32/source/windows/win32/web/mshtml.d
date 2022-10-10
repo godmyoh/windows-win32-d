@@ -20863,7 +20863,7 @@ enum : int
     NAVIGATEFRAME_FL_REALLY_SENDING_FROM_FORM = 0x00000040,
 }
 
-struct tagNavigateData
+struct NAVIGATEDATA
 {
     uint ulTarget;
     uint ulURL;
@@ -20977,7 +20977,7 @@ interface ITridentTouchInputSite : IUnknown
     HRESULT SetManipulationMode(styleMsTouchAction);
     HRESULT ZoomToPoint(int, int);
 }
-alias MediaActivityNotifyType = int;
+alias MEDIA_ACTIVITY_NOTIFY_TYPE = int;
 enum : int
 {
     MediaPlayback  = 0x00000000,
@@ -20988,8 +20988,8 @@ enum : int
 enum IID_IMediaActivityNotifySite = GUID(0x8165cfef, 0x179d, 0x46c2, [0xbc, 0x71, 0x3f, 0xa7, 0x26, 0xdc, 0x1f, 0x8d]);
 interface IMediaActivityNotifySite : IUnknown
 {
-    HRESULT OnMediaActivityStarted(MediaActivityNotifyType);
-    HRESULT OnMediaActivityStopped(MediaActivityNotifyType);
+    HRESULT OnMediaActivityStarted(MEDIA_ACTIVITY_NOTIFY_TYPE);
+    HRESULT OnMediaActivityStopped(MEDIA_ACTIVITY_NOTIFY_TYPE);
 }
 enum IID_IAudioSessionSite = GUID(0xd7d8b684, 0xd02d, 0x4517, [0xb6, 0xb7, 0x19, 0xe3, 0xdf, 0xe2, 0x9c, 0x45]);
 interface IAudioSessionSite : IUnknown
@@ -21343,8 +21343,8 @@ enum : int
 struct DOCHOSTUIINFO
 {
     uint cbSize;
-    uint dwFlags;
-    uint dwDoubleClick;
+    DOCHOSTUIFLAG dwFlags;
+    DOCHOSTUIDBLCLK dwDoubleClick;
     PWSTR pchHostCss;
     PWSTR pchHostNS;
 }

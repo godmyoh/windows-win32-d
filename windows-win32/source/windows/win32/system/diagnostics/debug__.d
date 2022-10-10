@@ -12,6 +12,7 @@ import windows.win32.system.ole : CADWORD, CALPOLESTR;
 import windows.win32.system.systeminformation : IMAGE_FILE_MACHINE;
 import windows.win32.system.threading : LPTHREAD_START_ROUTINE;
 import windows.win32.system.time : TIME_ZONE_INFORMATION;
+import windows.win32.ui.windowsandmessaging : MESSAGEBOX_STYLE;
 
 version (Windows):
 extern (Windows):
@@ -1040,6 +1041,7 @@ enum : uint
 
 BOOLEAN RtlAddFunctionTable(IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY*, uint, ulong);
 BOOLEAN RtlDeleteFunctionTable(IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY*);
+BOOLEAN RtlInstallFunctionTableCallback(ulong, ulong, uint, PGET_RUNTIME_FUNCTION_CALLBACK, void*, const(wchar)*);
 uint RtlAddGrowableFunctionTable(void**, IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY*, uint, uint, ulong, ulong);
 IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY* RtlLookupFunctionEntry(ulong, ulong*, UNWIND_HISTORY_TABLE*);
 EXCEPTION_ROUTINE RtlVirtualUnwind(RTL_VIRTUAL_UNWIND_HANDLER_TYPE, ulong, ulong, IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY*, CONTEXT*, void**, ulong*, KNONVOLATILE_CONTEXT_POINTERS_ARM64*);
@@ -1055,25 +1057,32 @@ BOOL SetThreadContext(HANDLE, const(CONTEXT)*);
 BOOL FlushInstructionCache(HANDLE, const(void)*, ulong);
 BOOL Wow64GetThreadContext(HANDLE, WOW64_CONTEXT*);
 BOOL Wow64SetThreadContext(HANDLE, const(WOW64_CONTEXT)*);
-ushort RtlCaptureStackBackTrace(uint, uint, void**, uint*);
-void RtlCaptureContext(CONTEXT*);
 void RtlCaptureContext2(CONTEXT*);
-void RtlUnwind(void*, void*, EXCEPTION_RECORD*, void*);
 /+ [CONFLICTED] BOOLEAN RtlAddFunctionTable(IMAGE_RUNTIME_FUNCTION_ENTRY*, uint, ulong);
 +/
 /+ [CONFLICTED] BOOLEAN RtlDeleteFunctionTable(IMAGE_RUNTIME_FUNCTION_ENTRY*);
 +/
-BOOLEAN RtlInstallFunctionTableCallback(ulong, ulong, uint, PGET_RUNTIME_FUNCTION_CALLBACK, void*, const(wchar)*);
+/+ [CONFLICTED] BOOLEAN RtlInstallFunctionTableCallback(ulong, ulong, uint, PGET_RUNTIME_FUNCTION_CALLBACK, void*, const(wchar)*);
++/
 /+ [CONFLICTED] uint RtlAddGrowableFunctionTable(void**, IMAGE_RUNTIME_FUNCTION_ENTRY*, uint, uint, ulong, ulong);
 +/
 void RtlGrowFunctionTable(void*, uint);
 void RtlDeleteGrowableFunctionTable(void*);
 /+ [CONFLICTED] IMAGE_RUNTIME_FUNCTION_ENTRY* RtlLookupFunctionEntry(ulong, ulong*, UNWIND_HISTORY_TABLE*);
 +/
-void RtlRestoreContext(CONTEXT*, EXCEPTION_RECORD*);
 void RtlUnwindEx(void*, void*, EXCEPTION_RECORD*, void*, CONTEXT*, UNWIND_HISTORY_TABLE*);
 /+ [CONFLICTED] EXCEPTION_ROUTINE RtlVirtualUnwind(RTL_VIRTUAL_UNWIND_HANDLER_TYPE, ulong, ulong, IMAGE_RUNTIME_FUNCTION_ENTRY*, CONTEXT*, void**, ulong*, KNONVOLATILE_CONTEXT_POINTERS*);
 +/
+IMAGE_NT_HEADERS64* CheckSumMappedFile(void*, uint, uint*, uint*);
+BOOL GetImageConfigInformation(LOADED_IMAGE*, IMAGE_LOAD_CONFIG_DIRECTORY64*);
+BOOL SetImageConfigInformation(LOADED_IMAGE*, IMAGE_LOAD_CONFIG_DIRECTORY64*);
+IMAGE_NT_HEADERS64* ImageNtHeader(void*);
+IMAGE_SECTION_HEADER* ImageRvaToSection(IMAGE_NT_HEADERS64*, void*, uint);
+void* ImageRvaToVa(IMAGE_NT_HEADERS64*, void*, uint, IMAGE_SECTION_HEADER**);
+ushort RtlCaptureStackBackTrace(uint, uint, void**, uint*);
+void RtlCaptureContext(CONTEXT*);
+void RtlUnwind(void*, void*, EXCEPTION_RECORD*, void*);
+void RtlRestoreContext(CONTEXT*, EXCEPTION_RECORD*);
 void RtlRaiseException(EXCEPTION_RECORD*);
 void* RtlPcToFileHeader(void*, void**);
 BOOL IsDebuggerPresent();
@@ -1118,12 +1127,15 @@ BOOL BindImage(const(char)*, const(char)*, const(char)*);
 BOOL BindImageEx(uint, const(char)*, const(char)*, const(char)*, PIMAGEHLP_STATUS_ROUTINE);
 BOOL ReBaseImage(const(char)*, const(char)*, BOOL, BOOL, BOOL, uint, uint*, ulong*, uint*, ulong*, uint);
 BOOL ReBaseImage64(const(char)*, const(char)*, BOOL, BOOL, BOOL, uint, uint*, ulong*, uint*, ulong*, uint);
-IMAGE_NT_HEADERS64* CheckSumMappedFile(void*, uint, uint*, uint*);
+/+ [CONFLICTED] IMAGE_NT_HEADERS32* CheckSumMappedFile(void*, uint, uint*, uint*);
++/
 uint MapFileAndCheckSumA(const(char)*, uint*, uint*);
 uint MapFileAndCheckSumW(const(wchar)*, uint*, uint*);
-BOOL GetImageConfigInformation(LOADED_IMAGE*, IMAGE_LOAD_CONFIG_DIRECTORY64*);
+/+ [CONFLICTED] BOOL GetImageConfigInformation(LOADED_IMAGE*, IMAGE_LOAD_CONFIG_DIRECTORY32*);
++/
 uint GetImageUnusedHeaderBytes(LOADED_IMAGE*, uint*);
-BOOL SetImageConfigInformation(LOADED_IMAGE*, IMAGE_LOAD_CONFIG_DIRECTORY64*);
+/+ [CONFLICTED] BOOL SetImageConfigInformation(LOADED_IMAGE*, IMAGE_LOAD_CONFIG_DIRECTORY32*);
++/
 BOOL ImageGetDigestStream(HANDLE, uint, DIGEST_FUNCTION, void*);
 BOOL ImageAddCertificate(HANDLE, WIN_CERTIFICATE*, uint*);
 BOOL ImageRemoveCertificate(HANDLE, uint);
@@ -1149,11 +1161,14 @@ HANDLE SymFindExecutableImageW(HANDLE, const(wchar)*, PWSTR, PFIND_EXE_FILE_CALL
 HANDLE FindExecutableImage(const(char)*, const(char)*, PSTR);
 HANDLE FindExecutableImageEx(const(char)*, const(char)*, PSTR, PFIND_EXE_FILE_CALLBACK, void*);
 HANDLE FindExecutableImageExW(const(wchar)*, const(wchar)*, PWSTR, PFIND_EXE_FILE_CALLBACKW, void*);
-IMAGE_NT_HEADERS64* ImageNtHeader(void*);
+/+ [CONFLICTED] IMAGE_NT_HEADERS32* ImageNtHeader(void*);
++/
 void* ImageDirectoryEntryToDataEx(void*, BOOLEAN, IMAGE_DIRECTORY_ENTRY, uint*, IMAGE_SECTION_HEADER**);
 void* ImageDirectoryEntryToData(void*, BOOLEAN, IMAGE_DIRECTORY_ENTRY, uint*);
-IMAGE_SECTION_HEADER* ImageRvaToSection(IMAGE_NT_HEADERS64*, void*, uint);
-void* ImageRvaToVa(IMAGE_NT_HEADERS64*, void*, uint, IMAGE_SECTION_HEADER**);
+/+ [CONFLICTED] IMAGE_SECTION_HEADER* ImageRvaToSection(IMAGE_NT_HEADERS32*, void*, uint);
++/
+/+ [CONFLICTED] void* ImageRvaToVa(IMAGE_NT_HEADERS32*, void*, uint, IMAGE_SECTION_HEADER**);
++/
 BOOL SearchTreeForFile(const(char)*, const(char)*, PSTR);
 BOOL SearchTreeForFileW(const(wchar)*, const(wchar)*, PWSTR);
 BOOL EnumDirTree(HANDLE, const(char)*, const(char)*, PSTR, PENUMDIRTREE_CALLBACK, void*);
@@ -1163,6 +1178,7 @@ uint UnDecorateSymbolName(const(char)*, PSTR, uint, uint);
 uint UnDecorateSymbolNameW(const(wchar)*, PWSTR, uint, uint);
 BOOL StackWalk64(uint, HANDLE, HANDLE, STACKFRAME64*, void*, PREAD_PROCESS_MEMORY_ROUTINE64, PFUNCTION_TABLE_ACCESS_ROUTINE64, PGET_MODULE_BASE_ROUTINE64, PTRANSLATE_ADDRESS_ROUTINE64);
 BOOL StackWalkEx(uint, HANDLE, HANDLE, STACKFRAME_EX*, void*, PREAD_PROCESS_MEMORY_ROUTINE64, PFUNCTION_TABLE_ACCESS_ROUTINE64, PGET_MODULE_BASE_ROUTINE64, PTRANSLATE_ADDRESS_ROUTINE64, uint);
+BOOL StackWalk(uint, HANDLE, HANDLE, STACKFRAME*, void*, PREAD_PROCESS_MEMORY_ROUTINE, PFUNCTION_TABLE_ACCESS_ROUTINE, PGET_MODULE_BASE_ROUTINE, PTRANSLATE_ADDRESS_ROUTINE);
 API_VERSION* ImagehlpApiVersion();
 API_VERSION* ImagehlpApiVersionEx(API_VERSION*);
 uint GetTimestampForLoadedLibrary(HINSTANCE);
@@ -1184,16 +1200,22 @@ BOOL SymEnumSourceFiles(HANDLE, ulong, const(char)*, PSYM_ENUMSOURCEFILES_CALLBA
 BOOL SymEnumSourceFilesW(HANDLE, ulong, const(wchar)*, PSYM_ENUMSOURCEFILES_CALLBACKW, void*);
 BOOL SymEnumerateModules64(HANDLE, PSYM_ENUMMODULES_CALLBACK64, void*);
 BOOL SymEnumerateModulesW64(HANDLE, PSYM_ENUMMODULES_CALLBACKW64, void*);
+BOOL SymEnumerateModules(HANDLE, PSYM_ENUMMODULES_CALLBACK, void*);
 BOOL EnumerateLoadedModulesEx(HANDLE, PENUMLOADED_MODULES_CALLBACK64, void*);
 BOOL EnumerateLoadedModulesExW(HANDLE, PENUMLOADED_MODULES_CALLBACKW64, void*);
 BOOL EnumerateLoadedModules64(HANDLE, PENUMLOADED_MODULES_CALLBACK64, void*);
 BOOL EnumerateLoadedModulesW64(HANDLE, PENUMLOADED_MODULES_CALLBACKW64, void*);
+BOOL EnumerateLoadedModules(HANDLE, PENUMLOADED_MODULES_CALLBACK, void*);
 void* SymFunctionTableAccess64(HANDLE, ulong);
 void* SymFunctionTableAccess64AccessRoutines(HANDLE, ulong, PREAD_PROCESS_MEMORY_ROUTINE64, PGET_MODULE_BASE_ROUTINE64);
+void* SymFunctionTableAccess(HANDLE, uint);
 BOOL SymGetUnwindInfo(HANDLE, ulong, void*, uint*);
 BOOL SymGetModuleInfo64(HANDLE, ulong, IMAGEHLP_MODULE64*);
 BOOL SymGetModuleInfoW64(HANDLE, ulong, IMAGEHLP_MODULEW64*);
+BOOL SymGetModuleInfo(HANDLE, uint, IMAGEHLP_MODULE*);
+BOOL SymGetModuleInfoW(HANDLE, uint, IMAGEHLP_MODULEW*);
 ulong SymGetModuleBase64(HANDLE, ulong);
+uint SymGetModuleBase(HANDLE, uint);
 BOOL SymEnumLines(HANDLE, ulong, const(char)*, const(char)*, PSYM_ENUMLINES_CALLBACK, void*);
 BOOL SymEnumLinesW(HANDLE, ulong, const(wchar)*, const(wchar)*, PSYM_ENUMLINES_CALLBACKW, void*);
 BOOL SymGetLineFromAddr64(HANDLE, ulong, uint*, IMAGEHLP_LINE64*);
@@ -1205,12 +1227,16 @@ BOOL SymEnumSourceLinesW(HANDLE, ulong, const(wchar)*, const(wchar)*, uint, uint
 uint SymAddrIncludeInlineTrace(HANDLE, ulong);
 uint SymCompareInlineTrace(HANDLE, ulong, uint, ulong, ulong, ulong);
 BOOL SymQueryInlineTrace(HANDLE, ulong, uint, ulong, ulong, uint*, uint*);
+BOOL SymGetLineFromAddr(HANDLE, uint, uint*, IMAGEHLP_LINE*);
 BOOL SymGetLineFromName64(HANDLE, const(char)*, const(char)*, uint, int*, IMAGEHLP_LINE64*);
 BOOL SymGetLineFromNameW64(HANDLE, const(wchar)*, const(wchar)*, uint, int*, IMAGEHLP_LINEW64*);
+BOOL SymGetLineFromName(HANDLE, const(char)*, const(char)*, uint, int*, IMAGEHLP_LINE*);
 BOOL SymGetLineNext64(HANDLE, IMAGEHLP_LINE64*);
 BOOL SymGetLineNextW64(HANDLE, IMAGEHLP_LINEW64*);
+BOOL SymGetLineNext(HANDLE, IMAGEHLP_LINE*);
 BOOL SymGetLinePrev64(HANDLE, IMAGEHLP_LINE64*);
 BOOL SymGetLinePrevW64(HANDLE, IMAGEHLP_LINEW64*);
+BOOL SymGetLinePrev(HANDLE, IMAGEHLP_LINE*);
 uint SymGetFileLineOffsets64(HANDLE, const(char)*, const(char)*, ulong*, uint);
 BOOL SymMatchFileName(const(char)*, const(char)*, PSTR*, PSTR*);
 BOOL SymMatchFileNameW(const(wchar)*, const(wchar)*, PWSTR*, PWSTR*);
@@ -1238,10 +1264,14 @@ BOOL SymSetSearchPathW(HANDLE, const(wchar)*);
 ulong SymLoadModuleEx(HANDLE, HANDLE, const(char)*, const(char)*, ulong, uint, MODLOAD_DATA*, SYM_LOAD_FLAGS);
 ulong SymLoadModuleExW(HANDLE, HANDLE, const(wchar)*, const(wchar)*, ulong, uint, MODLOAD_DATA*, SYM_LOAD_FLAGS);
 BOOL SymUnloadModule64(HANDLE, ulong);
+BOOL SymUnloadModule(HANDLE, uint);
 BOOL SymUnDName64(IMAGEHLP_SYMBOL64*, PSTR, uint);
+BOOL SymUnDName(IMAGEHLP_SYMBOL*, PSTR, uint);
 BOOL SymRegisterCallback64(HANDLE, PSYMBOL_REGISTERED_CALLBACK64, ulong);
 BOOL SymRegisterCallbackW64(HANDLE, PSYMBOL_REGISTERED_CALLBACK64, ulong);
 BOOL SymRegisterFunctionEntryCallback64(HANDLE, PSYMBOL_FUNCENTRY_CALLBACK64, ulong);
+BOOL SymRegisterCallback(HANDLE, PSYMBOL_REGISTERED_CALLBACK, void*);
+BOOL SymRegisterFunctionEntryCallback(HANDLE, PSYMBOL_FUNCENTRY_CALLBACK, void*);
 BOOL SymSetContext(HANDLE, IMAGEHLP_STACK_FRAME*, void*);
 BOOL SymSetScopeFromAddr(HANDLE, ulong);
 BOOL SymSetScopeFromInlineContext(HANDLE, ulong, uint);
@@ -1308,15 +1338,22 @@ BOOL SymGetSymbolFileW(HANDLE, const(wchar)*, const(wchar)*, IMAGEHLP_SF_TYPE, P
 BOOL DbgHelpCreateUserDump(const(char)*, PDBGHELP_CREATE_USER_DUMP_CALLBACK, void*);
 BOOL DbgHelpCreateUserDumpW(const(wchar)*, PDBGHELP_CREATE_USER_DUMP_CALLBACK, void*);
 BOOL SymGetSymFromAddr64(HANDLE, ulong, ulong*, IMAGEHLP_SYMBOL64*);
+BOOL SymGetSymFromAddr(HANDLE, uint, uint*, IMAGEHLP_SYMBOL*);
 BOOL SymGetSymFromName64(HANDLE, const(char)*, IMAGEHLP_SYMBOL64*);
+BOOL SymGetSymFromName(HANDLE, const(char)*, IMAGEHLP_SYMBOL*);
 BOOL FindFileInPath(HANDLE, const(char)*, const(char)*, void*, uint, uint, uint, PSTR);
 BOOL FindFileInSearchPath(HANDLE, const(char)*, const(char)*, uint, uint, uint, PSTR);
 BOOL SymEnumSym(HANDLE, ulong, PSYM_ENUMERATESYMBOLS_CALLBACK, void*);
 BOOL SymEnumerateSymbols64(HANDLE, ulong, PSYM_ENUMSYMBOLS_CALLBACK64, void*);
 BOOL SymEnumerateSymbolsW64(HANDLE, ulong, PSYM_ENUMSYMBOLS_CALLBACK64W, void*);
+BOOL SymEnumerateSymbols(HANDLE, uint, PSYM_ENUMSYMBOLS_CALLBACK, void*);
+BOOL SymEnumerateSymbolsW(HANDLE, uint, PSYM_ENUMSYMBOLS_CALLBACKW, void*);
 ulong SymLoadModule64(HANDLE, HANDLE, const(char)*, const(char)*, ulong, uint);
+uint SymLoadModule(HANDLE, HANDLE, const(char)*, const(char)*, uint, uint);
 BOOL SymGetSymNext64(HANDLE, IMAGEHLP_SYMBOL64*);
+BOOL SymGetSymNext(HANDLE, IMAGEHLP_SYMBOL*);
 BOOL SymGetSymPrev64(HANDLE, IMAGEHLP_SYMBOL64*);
+BOOL SymGetSymPrev(HANDLE, IMAGEHLP_SYMBOL*);
 void SetCheckUserInterruptShared(LPCALL_BACK_USER_INTERRUPT_ROUTINE);
 uint GetSymLoadError();
 void SetSymLoadError(uint);
@@ -1328,7 +1365,7 @@ BOOL RangeMapAddPeImageSections(void*, const(wchar)*, void*, uint, ulong, ulong,
 BOOL RangeMapRemove(void*, ulong);
 BOOL RangeMapRead(void*, ulong, void*, uint, uint, uint*);
 BOOL RangeMapWrite(void*, ulong, void*, uint, uint, uint*);
-BOOL MessageBeep(uint);
+BOOL MessageBeep(MESSAGEBOX_STYLE);
 void FatalExit(int);
 BOOL GetThreadSelectorEntry(HANDLE, uint, LDT_ENTRY*);
 BOOL Wow64GetThreadSelectorEntry(HANDLE, uint, WOW64_LDT_ENTRY*);
@@ -1343,40 +1380,6 @@ ulong GetEnabledXStateFeatures();
 BOOL GetXStateFeaturesMask(CONTEXT*, ulong*);
 void* LocateXStateFeature(CONTEXT*, uint, uint*);
 BOOL SetXStateFeaturesMask(CONTEXT*, ulong);
-/+ [CONFLICTED] IMAGE_NT_HEADERS32* CheckSumMappedFile(void*, uint, uint*, uint*);
-+/
-/+ [CONFLICTED] BOOL GetImageConfigInformation(LOADED_IMAGE*, IMAGE_LOAD_CONFIG_DIRECTORY32*);
-+/
-/+ [CONFLICTED] BOOL SetImageConfigInformation(LOADED_IMAGE*, IMAGE_LOAD_CONFIG_DIRECTORY32*);
-+/
-/+ [CONFLICTED] IMAGE_NT_HEADERS32* ImageNtHeader(void*);
-+/
-/+ [CONFLICTED] IMAGE_SECTION_HEADER* ImageRvaToSection(IMAGE_NT_HEADERS32*, void*, uint);
-+/
-/+ [CONFLICTED] void* ImageRvaToVa(IMAGE_NT_HEADERS32*, void*, uint, IMAGE_SECTION_HEADER**);
-+/
-BOOL StackWalk(uint, HANDLE, HANDLE, STACKFRAME*, void*, PREAD_PROCESS_MEMORY_ROUTINE, PFUNCTION_TABLE_ACCESS_ROUTINE, PGET_MODULE_BASE_ROUTINE, PTRANSLATE_ADDRESS_ROUTINE);
-BOOL SymEnumerateModules(HANDLE, PSYM_ENUMMODULES_CALLBACK, void*);
-BOOL EnumerateLoadedModules(HANDLE, PENUMLOADED_MODULES_CALLBACK, void*);
-void* SymFunctionTableAccess(HANDLE, uint);
-BOOL SymGetModuleInfo(HANDLE, uint, IMAGEHLP_MODULE*);
-BOOL SymGetModuleInfoW(HANDLE, uint, IMAGEHLP_MODULEW*);
-uint SymGetModuleBase(HANDLE, uint);
-BOOL SymGetLineFromAddr(HANDLE, uint, uint*, IMAGEHLP_LINE*);
-BOOL SymGetLineFromName(HANDLE, const(char)*, const(char)*, uint, int*, IMAGEHLP_LINE*);
-BOOL SymGetLineNext(HANDLE, IMAGEHLP_LINE*);
-BOOL SymGetLinePrev(HANDLE, IMAGEHLP_LINE*);
-BOOL SymUnloadModule(HANDLE, uint);
-BOOL SymUnDName(IMAGEHLP_SYMBOL*, PSTR, uint);
-BOOL SymRegisterCallback(HANDLE, PSYMBOL_REGISTERED_CALLBACK, void*);
-BOOL SymRegisterFunctionEntryCallback(HANDLE, PSYMBOL_FUNCENTRY_CALLBACK, void*);
-BOOL SymGetSymFromAddr(HANDLE, uint, uint*, IMAGEHLP_SYMBOL*);
-BOOL SymGetSymFromName(HANDLE, const(char)*, IMAGEHLP_SYMBOL*);
-BOOL SymEnumerateSymbols(HANDLE, uint, PSYM_ENUMSYMBOLS_CALLBACK, void*);
-BOOL SymEnumerateSymbolsW(HANDLE, uint, PSYM_ENUMSYMBOLS_CALLBACKW, void*);
-uint SymLoadModule(HANDLE, HANDLE, const(char)*, const(char)*, uint, uint);
-BOOL SymGetSymNext(HANDLE, IMAGEHLP_SYMBOL*);
-BOOL SymGetSymPrev(HANDLE, IMAGEHLP_SYMBOL*);
 enum WOW64_CONTEXT_i386 = 0x00010000;
 enum WOW64_CONTEXT_i486 = 0x00010000;
 enum WOW64_CONTEXT_EXCEPTION_ACTIVE = 0x08000000;
@@ -2792,6 +2795,7 @@ struct UNWIND_HISTORY_TABLE_ENTRY
 }
 struct MINIDUMP_THREAD_CALLBACK
 {
+    align (4):
     uint ThreadId;
     HANDLE ThreadHandle;
     uint Pad;
@@ -2802,6 +2806,7 @@ struct MINIDUMP_THREAD_CALLBACK
 }
 struct MINIDUMP_THREAD_EX_CALLBACK
 {
+    align (4):
     uint ThreadId;
     HANDLE ThreadHandle;
     uint Pad;
@@ -6984,7 +6989,7 @@ struct IOSPACE_EX64
     uint BusNumber;
     uint AddressSpace;
 }
-struct _GETSETBUSDATA
+struct BUSDATA
 {
     uint BusDataType;
     uint BusNumber;
@@ -7553,11 +7558,6 @@ struct SYM_DUMP_PARAM
     uint BufferSize;
     uint _bitfield0;
 }
-struct M128A
-{
-    ulong Low;
-    long High;
-}
 struct XSAVE_FORMAT
 {
     ushort ControlWord;
@@ -7576,17 +7576,6 @@ struct XSAVE_FORMAT
     M128A[8] FloatRegisters;
     M128A[16] XmmRegisters;
     ubyte[96] Reserved4;
-}
-struct XSAVE_AREA_HEADER
-{
-    ulong Mask;
-    ulong CompactionMask;
-    ulong[6] Reserved2;
-}
-struct XSAVE_AREA
-{
-    XSAVE_FORMAT LegacyState;
-    XSAVE_AREA_HEADER Header;
 }
 struct XSTATE_CONTEXT
 {
@@ -7736,6 +7725,87 @@ struct KNONVOLATILE_CONTEXT_POINTERS
         }
     }
 }
+/+ [CONFLICTED] struct UNWIND_HISTORY_TABLE_ENTRY
+{
+    ulong ImageBase;
+    IMAGE_RUNTIME_FUNCTION_ENTRY* FunctionEntry;
+}
++/
+struct UNWIND_HISTORY_TABLE
+{
+    uint Count;
+    ubyte LocalHint;
+    ubyte GlobalHint;
+    ubyte Search;
+    ubyte Once;
+    ulong LowAddress;
+    ulong HighAddress;
+    UNWIND_HISTORY_TABLE_ENTRY[12] Entry;
+}
+struct LOADED_IMAGE
+{
+    PSTR ModuleName;
+    HANDLE hFile;
+    ubyte* MappedAddress;
+    IMAGE_NT_HEADERS64* FileHeader;
+    IMAGE_SECTION_HEADER* LastRvaSection;
+    uint NumberOfSections;
+    IMAGE_SECTION_HEADER* Sections;
+    IMAGE_FILE_CHARACTERISTICS2 Characteristics;
+    BOOLEAN fSystemImage;
+    BOOLEAN fDOSImage;
+    BOOLEAN fReadOnly;
+    ubyte Version;
+    LIST_ENTRY Links;
+    uint SizeOfImage;
+}
+struct M128A
+{
+    ulong Low;
+    long High;
+}
+/+ [CONFLICTED] struct XSAVE_FORMAT
+{
+    ushort ControlWord;
+    ushort StatusWord;
+    ubyte TagWord;
+    ubyte Reserved1;
+    ushort ErrorOpcode;
+    uint ErrorOffset;
+    ushort ErrorSelector;
+    ushort Reserved2;
+    uint DataOffset;
+    ushort DataSelector;
+    ushort Reserved3;
+    uint MxCsr;
+    uint MxCsr_Mask;
+    M128A[8] FloatRegisters;
+    M128A[8] XmmRegisters;
+    ubyte[224] Reserved4;
+}
++/
+struct XSAVE_AREA_HEADER
+{
+    ulong Mask;
+    ulong CompactionMask;
+    ulong[6] Reserved2;
+}
+struct XSAVE_AREA
+{
+    XSAVE_FORMAT LegacyState;
+    XSAVE_AREA_HEADER Header;
+}
+/+ [CONFLICTED] struct XSTATE_CONTEXT
+{
+    ulong Mask;
+    uint Length;
+    uint Reserved1;
+    XSAVE_AREA* Area;
+    uint Reserved2;
+    void* Buffer;
+    uint Reserved3;
+}
++/
 union ARM64_NT_NEON128
 {
     struct
@@ -7800,6 +7870,35 @@ struct ARM64_NT_CONTEXT
     uint[2] Wcr;
     ulong[2] Wvr;
 }
+/+ [CONFLICTED] struct CONTEXT
+{
+    uint ContextFlags;
+    uint Dr0;
+    uint Dr1;
+    uint Dr2;
+    uint Dr3;
+    uint Dr6;
+    uint Dr7;
+    FLOATING_SAVE_AREA FloatSave;
+    uint SegGs;
+    uint SegFs;
+    uint SegEs;
+    uint SegDs;
+    uint Edi;
+    uint Esi;
+    uint Ebx;
+    uint Edx;
+    uint Ecx;
+    uint Eax;
+    uint Ebp;
+    uint Eip;
+    uint SegCs;
+    uint EFlags;
+    uint Esp;
+    uint SegSs;
+    ubyte[512] ExtendedRegisters;
+}
++/
 struct LDT_ENTRY
 {
     ushort LimitLow;
@@ -7819,6 +7918,11 @@ struct LDT_ENTRY
         }
     }
 }
+/+ [CONFLICTED] struct KNONVOLATILE_CONTEXT_POINTERS
+{
+    uint Dummy;
+}
++/
 struct WOW64_FLOATING_SAVE_AREA
 {
     uint ControlWord;
@@ -8276,23 +8380,6 @@ struct IMAGE_COR20_HEADER
     IMAGE_DATA_DIRECTORY ExportAddressTableJumps;
     IMAGE_DATA_DIRECTORY ManagedNativeHeader;
 }
-/+ [CONFLICTED] struct UNWIND_HISTORY_TABLE_ENTRY
-{
-    ulong ImageBase;
-    IMAGE_RUNTIME_FUNCTION_ENTRY* FunctionEntry;
-}
-+/
-struct UNWIND_HISTORY_TABLE
-{
-    uint Count;
-    ubyte LocalHint;
-    ubyte GlobalHint;
-    ubyte Search;
-    ubyte Once;
-    ulong LowAddress;
-    ulong HighAddress;
-    UNWIND_HISTORY_TABLE_ENTRY[12] Entry;
-}
 alias PVECTORED_EXCEPTION_HANDLER = int function(EXCEPTION_POINTERS*);
 alias LPTOP_LEVEL_EXCEPTION_FILTER = int function(EXCEPTION_POINTERS*);
 alias WCT_OBJECT_TYPE = int;
@@ -8355,6 +8442,7 @@ alias PCOGETCALLSTATE = HRESULT function(int, uint*);
 alias PCOGETACTIVATIONSTATE = HRESULT function(GUID, uint, uint*);
 struct MINIDUMP_LOCATION_DESCRIPTOR
 {
+    align (4):
     uint DataSize;
     uint Rva;
 }
@@ -8393,11 +8481,13 @@ struct MINIDUMP_HEADER
 }
 struct MINIDUMP_DIRECTORY
 {
+    align (4):
     uint StreamType;
     MINIDUMP_LOCATION_DESCRIPTOR Location;
 }
 struct MINIDUMP_STRING
 {
+    align (4):
     uint Length;
     wchar[1] Buffer;
 }
@@ -8462,6 +8552,7 @@ union CPU_INFORMATION
 }
 struct MINIDUMP_SYSTEM_INFO
 {
+    align (4):
     PROCESSOR_ARCHITECTURE ProcessorArchitecture;
     ushort ProcessorLevel;
     ushort ProcessorRevision;
@@ -8503,6 +8594,7 @@ struct MINIDUMP_THREAD
 }
 struct MINIDUMP_THREAD_LIST
 {
+    align (4):
     uint NumberOfThreads;
     MINIDUMP_THREAD[1] Threads;
 }
@@ -8520,6 +8612,7 @@ struct MINIDUMP_THREAD_EX
 }
 struct MINIDUMP_THREAD_EX_LIST
 {
+    align (4):
     uint NumberOfThreads;
     MINIDUMP_THREAD_EX[1] Threads;
 }
@@ -8536,6 +8629,7 @@ struct MINIDUMP_EXCEPTION
 }
 struct MINIDUMP_EXCEPTION_STREAM
 {
+    align (4):
     uint ThreadId;
     uint __alignment;
     MINIDUMP_EXCEPTION ExceptionRecord;
@@ -8557,11 +8651,13 @@ struct MINIDUMP_MODULE
 }
 struct MINIDUMP_MODULE_LIST
 {
+    align (4):
     uint NumberOfModules;
     MINIDUMP_MODULE[1] Modules;
 }
 struct MINIDUMP_MEMORY_LIST
 {
+    align (4):
     uint NumberOfMemoryRanges;
     MINIDUMP_MEMORY_DESCRIPTOR[1] MemoryRanges;
 }
@@ -8604,6 +8700,7 @@ enum : int
 
 struct MINIDUMP_HANDLE_OBJECT_INFORMATION
 {
+    align (4):
     uint NextInfoRva;
     uint InfoType;
     uint SizeOfInfo;
@@ -8634,6 +8731,7 @@ struct MINIDUMP_HANDLE_DESCRIPTOR_2
 }
 struct MINIDUMP_HANDLE_DATA_STREAM
 {
+    align (4):
     uint SizeOfHeader;
     uint SizeOfDescriptor;
     uint NumberOfDescriptors;
@@ -8641,6 +8739,7 @@ struct MINIDUMP_HANDLE_DATA_STREAM
 }
 struct MINIDUMP_HANDLE_OPERATION_LIST
 {
+    align (4):
     uint SizeOfHeader;
     uint SizeOfEntry;
     uint NumberOfEntries;
@@ -8657,6 +8756,7 @@ struct MINIDUMP_FUNCTION_TABLE_DESCRIPTOR
 }
 struct MINIDUMP_FUNCTION_TABLE_STREAM
 {
+    align (4):
     uint SizeOfHeader;
     uint SizeOfDescriptor;
     uint SizeOfNativeDescriptor;
@@ -8675,6 +8775,7 @@ struct MINIDUMP_UNLOADED_MODULE
 }
 struct MINIDUMP_UNLOADED_MODULE_LIST
 {
+    align (4):
     uint SizeOfHeader;
     uint SizeOfEntry;
     uint NumberOfEntries;
@@ -8689,6 +8790,7 @@ struct XSTATE_CONFIG_FEATURE_MSC_INFO
 }
 struct MINIDUMP_MISC_INFO
 {
+    align (4):
     uint SizeOfInfo;
     MINIDUMP_MISC_INFO_FLAGS Flags1;
     uint ProcessId;
@@ -8698,6 +8800,7 @@ struct MINIDUMP_MISC_INFO
 }
 struct MINIDUMP_MISC_INFO_2
 {
+    align (4):
     uint SizeOfInfo;
     uint Flags1;
     uint ProcessId;
@@ -8712,6 +8815,7 @@ struct MINIDUMP_MISC_INFO_2
 }
 struct MINIDUMP_MISC_INFO_3
 {
+    align (4):
     uint SizeOfInfo;
     uint Flags1;
     uint ProcessId;
@@ -8731,6 +8835,7 @@ struct MINIDUMP_MISC_INFO_3
 }
 struct MINIDUMP_MISC_INFO_4
 {
+    align (4):
     uint SizeOfInfo;
     uint Flags1;
     uint ProcessId;
@@ -8752,6 +8857,7 @@ struct MINIDUMP_MISC_INFO_4
 }
 struct MINIDUMP_MISC_INFO_5
 {
+    align (4):
     uint SizeOfInfo;
     uint Flags1;
     uint ProcessId;
@@ -8801,6 +8907,7 @@ struct MINIDUMP_THREAD_NAME
 }
 struct MINIDUMP_THREAD_NAME_LIST
 {
+    align (4):
     uint NumberOfThreadNames;
     MINIDUMP_THREAD_NAME[1] ThreadNames;
 }
@@ -8820,6 +8927,7 @@ struct MINIDUMP_THREAD_INFO
 }
 struct MINIDUMP_THREAD_INFO_LIST
 {
+    align (4):
     uint SizeOfHeader;
     uint SizeOfEntry;
     uint NumberOfEntries;
@@ -8833,6 +8941,7 @@ struct MINIDUMP_TOKEN_INFO_HEADER
 }
 struct MINIDUMP_TOKEN_INFO_LIST
 {
+    align (4):
     uint TokenListSize;
     uint TokenListEntries;
     uint ListHeaderSize;
@@ -8957,6 +9066,7 @@ struct MINIDUMP_SYSTEM_PERFORMANCE_INFORMATION
 }
 struct MINIDUMP_SYSTEM_MEMORY_INFO_1
 {
+    align (4):
     ushort Revision;
     ushort Flags;
     MINIDUMP_SYSTEM_BASIC_INFORMATION BasicInfo;
@@ -9006,6 +9116,7 @@ struct MINIDUMP_PROCESS_VM_COUNTERS_2
 }
 struct MINIDUMP_USER_RECORD
 {
+    align (4):
     uint Type;
     MINIDUMP_LOCATION_DESCRIPTOR Memory;
 }
@@ -9050,6 +9161,7 @@ enum : int
 
 /+ [CONFLICTED] struct MINIDUMP_THREAD_CALLBACK
 {
+    align (4):
     uint ThreadId;
     HANDLE ThreadHandle;
     CONTEXT Context;
@@ -9060,6 +9172,7 @@ enum : int
 +/
 /+ [CONFLICTED] struct MINIDUMP_THREAD_EX_CALLBACK
 {
+    align (4):
     uint ThreadId;
     HANDLE ThreadHandle;
     CONTEXT Context;
@@ -9072,6 +9185,7 @@ enum : int
 +/
 struct MINIDUMP_INCLUDE_THREAD_CALLBACK
 {
+    align (4):
     uint ThreadId;
 }
 alias THREAD_WRITE_FLAGS = int;
@@ -9155,6 +9269,7 @@ struct MINIDUMP_VM_POST_READ_CALLBACK
 }
 struct MINIDUMP_CALLBACK_INPUT
 {
+    align (4):
     uint ProcessId;
     HANDLE ProcessHandle;
     uint CallbackType;
@@ -9176,9 +9291,9 @@ struct MINIDUMP_CALLBACK_INPUT
 }
 struct MINIDUMP_CALLBACK_OUTPUT
 {
+    align (4):
     union
     {
-        align (4):
         uint ModuleWriteFlags;
         uint ThreadWriteFlags;
         uint SecondaryFlags;
@@ -9548,8 +9663,8 @@ enum : uint
     DBGPROP_INFO_AUTOEXPAND   = 0x08000000,
 }
 
-alias OBJECT_ATTRIB_FLAG = uint;
-enum : uint
+alias OBJECT_ATTRIB_FLAGS = int;
+enum : int
 {
     OBJECT_ATTRIB_NO_ATTRIB            = 0x00000000,
     OBJECT_ATTRIB_NO_NAME              = 0x00000001,
@@ -9719,7 +9834,7 @@ enum : int
     BREAKREASON_MUTATION_BREAKPOINT = 0x00000008,
 }
 
-alias BREAKRESUME_ACTION = int;
+alias BREAKRESUMEACTION = int;
 enum : int
 {
     BREAKRESUMEACTION_ABORT         = 0x00000000,
@@ -10071,7 +10186,7 @@ interface IProcessDebugManager64 : IUnknown
 enum IID_IRemoteDebugApplication = GUID(0x51973c30, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IRemoteDebugApplication : IUnknown
 {
-    HRESULT ResumeFromBreakPoint(IRemoteDebugApplicationThread, BREAKRESUME_ACTION, ERRORRESUMEACTION);
+    HRESULT ResumeFromBreakPoint(IRemoteDebugApplicationThread, BREAKRESUMEACTION, ERRORRESUMEACTION);
     HRESULT CauseBreak();
     HRESULT ConnectDebugger(IApplicationDebugger);
     HRESULT DisconnectDebugger();
@@ -10090,7 +10205,7 @@ interface IDebugApplication32 : IRemoteDebugApplication
     HRESULT StepOutComplete();
     HRESULT DebugOutput(const(wchar)*);
     HRESULT StartDebugSession();
-    HRESULT HandleBreakPoint(BREAKREASON, BREAKRESUME_ACTION*);
+    HRESULT HandleBreakPoint(BREAKREASON, BREAKRESUMEACTION*);
     HRESULT Close();
     HRESULT GetBreakFlags(uint*, IRemoteDebugApplicationThread*);
     HRESULT GetCurrentThread(IDebugApplicationThread*);
@@ -10101,7 +10216,7 @@ interface IDebugApplication32 : IRemoteDebugApplication
     HRESULT SynchronousCallInDebuggerThread(IDebugThreadCall32, uint, uint, uint);
     HRESULT CreateApplicationNode(IDebugApplicationNode*);
     HRESULT FireDebuggerEvent(const(GUID)*, IUnknown);
-    HRESULT HandleRuntimeError(IActiveScriptErrorDebug, IActiveScriptSite, BREAKRESUME_ACTION*, ERRORRESUMEACTION*, BOOL*);
+    HRESULT HandleRuntimeError(IActiveScriptErrorDebug, IActiveScriptSite, BREAKRESUMEACTION*, ERRORRESUMEACTION*, BOOL*);
     BOOL FCanJitDebug();
     BOOL FIsAutoJitDebugEnabled();
     HRESULT AddGlobalExpressionContextProvider(IProvideExpressionContexts, uint*);
@@ -10114,7 +10229,7 @@ interface IDebugApplication64 : IRemoteDebugApplication
     HRESULT StepOutComplete();
     HRESULT DebugOutput(const(wchar)*);
     HRESULT StartDebugSession();
-    HRESULT HandleBreakPoint(BREAKREASON, BREAKRESUME_ACTION*);
+    HRESULT HandleBreakPoint(BREAKREASON, BREAKRESUMEACTION*);
     HRESULT Close();
     HRESULT GetBreakFlags(uint*, IRemoteDebugApplicationThread*);
     HRESULT GetCurrentThread(IDebugApplicationThread*);
@@ -10125,7 +10240,7 @@ interface IDebugApplication64 : IRemoteDebugApplication
     HRESULT SynchronousCallInDebuggerThread(IDebugThreadCall64, ulong, ulong, ulong);
     HRESULT CreateApplicationNode(IDebugApplicationNode*);
     HRESULT FireDebuggerEvent(const(GUID)*, IUnknown);
-    HRESULT HandleRuntimeError(IActiveScriptErrorDebug, IActiveScriptSite, BREAKRESUME_ACTION*, ERRORRESUMEACTION*, BOOL*);
+    HRESULT HandleRuntimeError(IActiveScriptErrorDebug, IActiveScriptSite, BREAKRESUMEACTION*, ERRORRESUMEACTION*, BOOL*);
     BOOL FCanJitDebug();
     BOOL FIsAutoJitDebugEnabled();
     HRESULT AddGlobalExpressionContextProvider(IProvideExpressionContexts, ulong*);
@@ -10492,12 +10607,12 @@ interface IActiveScriptProfilerCallback3 : IActiveScriptProfilerCallback2
 {
     HRESULT SetWebWorkerId(uint);
 }
-struct LOADED_IMAGE
+/+ [CONFLICTED] struct LOADED_IMAGE
 {
     PSTR ModuleName;
     HANDLE hFile;
     ubyte* MappedAddress;
-    IMAGE_NT_HEADERS64* FileHeader;
+    IMAGE_NT_HEADERS32* FileHeader;
     IMAGE_SECTION_HEADER* LastRvaSection;
     uint NumberOfSections;
     IMAGE_SECTION_HEADER* Sections;
@@ -10509,6 +10624,7 @@ struct LOADED_IMAGE
     LIST_ENTRY Links;
     uint SizeOfImage;
 }
++/
 alias IMAGEHLP_STATUS_REASON = int;
 enum : int
 {
@@ -10544,6 +10660,40 @@ alias PFINDFILEINPATHCALLBACK = BOOL function(const(char)*, void*);
 alias PFINDFILEINPATHCALLBACKW = BOOL function(const(wchar)*, void*);
 alias PFIND_EXE_FILE_CALLBACK = BOOL function(HANDLE, const(char)*, void*);
 alias PFIND_EXE_FILE_CALLBACKW = BOOL function(HANDLE, const(wchar)*, void*);
+struct IMAGE_DEBUG_INFORMATION
+{
+    LIST_ENTRY List;
+    uint ReservedSize;
+    void* ReservedMappedBase;
+    ushort ReservedMachine;
+    ushort ReservedCharacteristics;
+    uint ReservedCheckSum;
+    uint ImageBase;
+    uint SizeOfImage;
+    uint ReservedNumberOfSections;
+    IMAGE_SECTION_HEADER* ReservedSections;
+    uint ReservedExportedNamesSize;
+    PSTR ReservedExportedNames;
+    uint ReservedNumberOfFunctionTableEntries;
+    IMAGE_FUNCTION_ENTRY* ReservedFunctionTableEntries;
+    uint ReservedLowestFunctionStartingAddress;
+    uint ReservedHighestFunctionEndingAddress;
+    uint ReservedNumberOfFpoTableEntries;
+    FPO_DATA* ReservedFpoTableEntries;
+    uint SizeOfCoffSymbols;
+    IMAGE_COFF_SYMBOLS_HEADER* CoffSymbols;
+    uint ReservedSizeOfCodeViewSymbols;
+    void* ReservedCodeViewSymbols;
+    PSTR ImageFilePath;
+    PSTR ImageFileName;
+    PSTR ReservedDebugFilePath;
+    uint ReservedTimeDateStamp;
+    BOOL ReservedRomImage;
+    IMAGE_DEBUG_DIRECTORY* ReservedDebugDirectory;
+    uint ReservedNumberOfDebugDirectories;
+    uint ReservedOriginalFunctionTableBaseAddress;
+    uint[2] Reserved;
+}
 alias PENUMDIRTREE_CALLBACK = BOOL function(const(char)*, void*);
 alias PENUMDIRTREE_CALLBACKW = BOOL function(const(wchar)*, void*);
 struct MODLOAD_DATA
@@ -10583,6 +10733,12 @@ struct ADDRESS64
     ushort Segment;
     ADDRESS_MODE Mode;
 }
+struct ADDRESS
+{
+    uint Offset;
+    ushort Segment;
+    ADDRESS_MODE Mode;
+}
 struct KDHELP64
 {
     ulong Thread;
@@ -10602,6 +10758,21 @@ struct KDHELP64
     uint RetpolineStubOffset;
     uint RetpolineStubSize;
     ulong[2] Reserved0;
+}
+struct KDHELP
+{
+    uint Thread;
+    uint ThCallbackStack;
+    uint NextCallback;
+    uint FramePointer;
+    uint KiCallUserMode;
+    uint KeUserCallbackDispatcher;
+    uint SystemRangeStart;
+    uint ThCallbackBStore;
+    uint KiUserExceptionDispatcher;
+    uint StackBase;
+    uint StackLimit;
+    uint[5] Reserved;
 }
 struct STACKFRAME64
 {
@@ -10633,10 +10804,28 @@ struct STACKFRAME_EX
     uint StackFrameSize;
     uint InlineFrameContext;
 }
+struct STACKFRAME
+{
+    ADDRESS AddrPC;
+    ADDRESS AddrReturn;
+    ADDRESS AddrFrame;
+    ADDRESS AddrStack;
+    void* FuncTableEntry;
+    uint[4] Params;
+    BOOL Far;
+    BOOL Virtual;
+    uint[3] Reserved;
+    KDHELP KdHelp;
+    ADDRESS AddrBStore;
+}
 alias PREAD_PROCESS_MEMORY_ROUTINE64 = BOOL function(HANDLE, ulong, void*, uint, uint*);
 alias PFUNCTION_TABLE_ACCESS_ROUTINE64 = void* function(HANDLE, ulong);
 alias PGET_MODULE_BASE_ROUTINE64 = ulong function(HANDLE, ulong);
 alias PTRANSLATE_ADDRESS_ROUTINE64 = ulong function(HANDLE, HANDLE, ADDRESS64*);
+alias PREAD_PROCESS_MEMORY_ROUTINE = BOOL function(HANDLE, uint, void*, uint, uint*);
+alias PFUNCTION_TABLE_ACCESS_ROUTINE = void* function(HANDLE, uint);
+alias PGET_MODULE_BASE_ROUTINE = uint function(HANDLE, uint);
+alias PTRANSLATE_ADDRESS_ROUTINE = uint function(HANDLE, HANDLE, ADDRESS*);
 struct API_VERSION
 {
     ushort MajorVersion;
@@ -10653,6 +10842,11 @@ alias PSYM_ENUMSYMBOLS_CALLBACK64W = BOOL function(const(wchar)*, ulong, uint, v
 alias PSYMBOL_REGISTERED_CALLBACK64 = BOOL function(HANDLE, uint, ulong, ulong);
 alias PSYMBOL_FUNCENTRY_CALLBACK = void* function(HANDLE, uint, void*);
 alias PSYMBOL_FUNCENTRY_CALLBACK64 = void* function(HANDLE, ulong, ulong);
+alias PSYM_ENUMMODULES_CALLBACK = BOOL function(const(char)*, uint, void*);
+alias PSYM_ENUMSYMBOLS_CALLBACK = BOOL function(const(char)*, uint, uint, void*);
+alias PSYM_ENUMSYMBOLS_CALLBACKW = BOOL function(const(wchar)*, uint, uint, void*);
+alias PENUMLOADED_MODULES_CALLBACK = BOOL function(const(char)*, uint, uint, void*);
+alias PSYMBOL_REGISTERED_CALLBACK = BOOL function(HANDLE, uint, void*, void*);
 alias SYM_TYPE = int;
 enum : int
 {
@@ -10694,6 +10888,34 @@ struct IMAGEHLP_SYMBOLW64
 struct IMAGEHLP_SYMBOLW64_PACKAGE
 {
     IMAGEHLP_SYMBOLW64 sym;
+    wchar[2001] name;
+}
+struct IMAGEHLP_SYMBOL
+{
+    uint SizeOfStruct;
+    uint Address;
+    uint Size;
+    uint Flags;
+    uint MaxNameLength;
+    CHAR[1] Name;
+}
+struct IMAGEHLP_SYMBOL_PACKAGE
+{
+    IMAGEHLP_SYMBOL sym;
+    CHAR[2001] name;
+}
+struct IMAGEHLP_SYMBOLW
+{
+    uint SizeOfStruct;
+    uint Address;
+    uint Size;
+    uint Flags;
+    uint MaxNameLength;
+    wchar[1] Name;
+}
+struct IMAGEHLP_SYMBOLW_PACKAGE
+{
+    IMAGEHLP_SYMBOLW sym;
     wchar[2001] name;
 }
 struct IMAGEHLP_MODULE64
@@ -10762,6 +10984,32 @@ struct IMAGEHLP_MODULEW64_EX
     IMAGEHLP_MODULEW64 Module;
     uint RegionFlags;
 }
+struct IMAGEHLP_MODULE
+{
+    uint SizeOfStruct;
+    uint BaseOfImage;
+    uint ImageSize;
+    uint TimeDateStamp;
+    uint CheckSum;
+    uint NumSyms;
+    SYM_TYPE SymType;
+    CHAR[32] ModuleName;
+    CHAR[256] ImageName;
+    CHAR[256] LoadedImageName;
+}
+struct IMAGEHLP_MODULEW
+{
+    uint SizeOfStruct;
+    uint BaseOfImage;
+    uint ImageSize;
+    uint TimeDateStamp;
+    uint CheckSum;
+    uint NumSyms;
+    SYM_TYPE SymType;
+    wchar[32] ModuleName;
+    wchar[256] ImageName;
+    wchar[256] LoadedImageName;
+}
 struct IMAGEHLP_LINE64
 {
     uint SizeOfStruct;
@@ -10776,6 +11024,22 @@ struct IMAGEHLP_LINEW64
     void* Key;
     uint LineNumber;
     PWSTR FileName;
+    ulong Address;
+}
+struct IMAGEHLP_LINE
+{
+    uint SizeOfStruct;
+    void* Key;
+    uint LineNumber;
+    PSTR FileName;
+    uint Address;
+}
+struct IMAGEHLP_LINEW
+{
+    uint SizeOfStruct;
+    void* Key;
+    uint LineNumber;
+    PSTR FileName;
     ulong Address;
 }
 struct SOURCEFILE
@@ -10831,6 +11095,16 @@ struct IMAGEHLP_DEFERRED_SYMBOL_LOADW64
     HANDLE hFile;
     uint Flags;
 }
+struct IMAGEHLP_DEFERRED_SYMBOL_LOAD
+{
+    uint SizeOfStruct;
+    uint BaseOfImage;
+    uint CheckSum;
+    uint TimeDateStamp;
+    CHAR[260] FileName;
+    BOOLEAN Reparse;
+    HANDLE hFile;
+}
 struct IMAGEHLP_DUPLICATE_SYMBOL64
 {
     uint SizeOfStruct;
@@ -10838,7 +11112,14 @@ struct IMAGEHLP_DUPLICATE_SYMBOL64
     IMAGEHLP_SYMBOL64* Symbol;
     uint SelectedSymbol;
 }
-struct _IMAGEHLP_JIT_SYMBOL_MAP
+struct IMAGEHLP_DUPLICATE_SYMBOL
+{
+    uint SizeOfStruct;
+    uint NumberOfDups;
+    IMAGEHLP_SYMBOL* Symbol;
+    uint SelectedSymbol;
+}
+struct IMAGEHLP_JIT_SYMBOLMAP
 {
     uint SizeOfStruct;
     ulong Address;
@@ -11454,7 +11735,7 @@ interface IJsDebugDataTarget : IUnknown
     HRESULT CreateStackFrameEnumerator(uint, IEnumJsStackFrames*);
     HRESULT GetThreadContext(uint, uint, uint, void*);
 }
-alias _DUMP_TYPES = int;
+alias DUMP_TYPE = int;
 enum : int
 {
     DUMP_TYPE_INVALID       = 0xffffffff,
@@ -12044,276 +12325,4 @@ struct IPMI_OS_SEL_RECORD
     IPMI_OS_SEL_RECORD_TYPE RecordType;
     uint DataLength;
     ubyte[1] Data;
-}
-/+ [CONFLICTED] struct XSAVE_FORMAT
-{
-    ushort ControlWord;
-    ushort StatusWord;
-    ubyte TagWord;
-    ubyte Reserved1;
-    ushort ErrorOpcode;
-    uint ErrorOffset;
-    ushort ErrorSelector;
-    ushort Reserved2;
-    uint DataOffset;
-    ushort DataSelector;
-    ushort Reserved3;
-    uint MxCsr;
-    uint MxCsr_Mask;
-    M128A[8] FloatRegisters;
-    M128A[8] XmmRegisters;
-    ubyte[224] Reserved4;
-}
-+/
-/+ [CONFLICTED] struct XSTATE_CONTEXT
-{
-    ulong Mask;
-    uint Length;
-    uint Reserved1;
-    XSAVE_AREA* Area;
-    uint Reserved2;
-    void* Buffer;
-    uint Reserved3;
-}
-+/
-/+ [CONFLICTED] struct CONTEXT
-{
-    uint ContextFlags;
-    uint Dr0;
-    uint Dr1;
-    uint Dr2;
-    uint Dr3;
-    uint Dr6;
-    uint Dr7;
-    FLOATING_SAVE_AREA FloatSave;
-    uint SegGs;
-    uint SegFs;
-    uint SegEs;
-    uint SegDs;
-    uint Edi;
-    uint Esi;
-    uint Ebx;
-    uint Edx;
-    uint Ecx;
-    uint Eax;
-    uint Ebp;
-    uint Eip;
-    uint SegCs;
-    uint EFlags;
-    uint Esp;
-    uint SegSs;
-    ubyte[512] ExtendedRegisters;
-}
-+/
-/+ [CONFLICTED] struct KNONVOLATILE_CONTEXT_POINTERS
-{
-    uint Dummy;
-}
-+/
-/+ [CONFLICTED] struct MINIDUMP_THREAD_CALLBACK
-{
-    align (4):
-    uint ThreadId;
-    HANDLE ThreadHandle;
-    CONTEXT Context;
-    uint SizeOfContext;
-    ulong StackBase;
-    ulong StackEnd;
-}
-+/
-/+ [CONFLICTED] struct MINIDUMP_THREAD_EX_CALLBACK
-{
-    align (4):
-    uint ThreadId;
-    HANDLE ThreadHandle;
-    CONTEXT Context;
-    uint SizeOfContext;
-    ulong StackBase;
-    ulong StackEnd;
-    ulong BackingStoreBase;
-    ulong BackingStoreEnd;
-}
-+/
-/+ [CONFLICTED] struct LOADED_IMAGE
-{
-    PSTR ModuleName;
-    HANDLE hFile;
-    ubyte* MappedAddress;
-    IMAGE_NT_HEADERS32* FileHeader;
-    IMAGE_SECTION_HEADER* LastRvaSection;
-    uint NumberOfSections;
-    IMAGE_SECTION_HEADER* Sections;
-    IMAGE_FILE_CHARACTERISTICS2 Characteristics;
-    BOOLEAN fSystemImage;
-    BOOLEAN fDOSImage;
-    BOOLEAN fReadOnly;
-    ubyte Version;
-    LIST_ENTRY Links;
-    uint SizeOfImage;
-}
-+/
-struct IMAGE_DEBUG_INFORMATION
-{
-    LIST_ENTRY List;
-    uint ReservedSize;
-    void* ReservedMappedBase;
-    ushort ReservedMachine;
-    ushort ReservedCharacteristics;
-    uint ReservedCheckSum;
-    uint ImageBase;
-    uint SizeOfImage;
-    uint ReservedNumberOfSections;
-    IMAGE_SECTION_HEADER* ReservedSections;
-    uint ReservedExportedNamesSize;
-    PSTR ReservedExportedNames;
-    uint ReservedNumberOfFunctionTableEntries;
-    IMAGE_FUNCTION_ENTRY* ReservedFunctionTableEntries;
-    uint ReservedLowestFunctionStartingAddress;
-    uint ReservedHighestFunctionEndingAddress;
-    uint ReservedNumberOfFpoTableEntries;
-    FPO_DATA* ReservedFpoTableEntries;
-    uint SizeOfCoffSymbols;
-    IMAGE_COFF_SYMBOLS_HEADER* CoffSymbols;
-    uint ReservedSizeOfCodeViewSymbols;
-    void* ReservedCodeViewSymbols;
-    PSTR ImageFilePath;
-    PSTR ImageFileName;
-    PSTR ReservedDebugFilePath;
-    uint ReservedTimeDateStamp;
-    BOOL ReservedRomImage;
-    IMAGE_DEBUG_DIRECTORY* ReservedDebugDirectory;
-    uint ReservedNumberOfDebugDirectories;
-    uint ReservedOriginalFunctionTableBaseAddress;
-    uint[2] Reserved;
-}
-struct ADDRESS
-{
-    uint Offset;
-    ushort Segment;
-    ADDRESS_MODE Mode;
-}
-struct KDHELP
-{
-    uint Thread;
-    uint ThCallbackStack;
-    uint NextCallback;
-    uint FramePointer;
-    uint KiCallUserMode;
-    uint KeUserCallbackDispatcher;
-    uint SystemRangeStart;
-    uint ThCallbackBStore;
-    uint KiUserExceptionDispatcher;
-    uint StackBase;
-    uint StackLimit;
-    uint[5] Reserved;
-}
-struct STACKFRAME
-{
-    ADDRESS AddrPC;
-    ADDRESS AddrReturn;
-    ADDRESS AddrFrame;
-    ADDRESS AddrStack;
-    void* FuncTableEntry;
-    uint[4] Params;
-    BOOL Far;
-    BOOL Virtual;
-    uint[3] Reserved;
-    KDHELP KdHelp;
-    ADDRESS AddrBStore;
-}
-alias PREAD_PROCESS_MEMORY_ROUTINE = BOOL function(HANDLE, uint, void*, uint, uint*);
-alias PFUNCTION_TABLE_ACCESS_ROUTINE = void* function(HANDLE, uint);
-alias PGET_MODULE_BASE_ROUTINE = uint function(HANDLE, uint);
-alias PTRANSLATE_ADDRESS_ROUTINE = uint function(HANDLE, HANDLE, ADDRESS*);
-alias PSYM_ENUMMODULES_CALLBACK = BOOL function(const(char)*, uint, void*);
-alias PSYM_ENUMSYMBOLS_CALLBACK = BOOL function(const(char)*, uint, uint, void*);
-alias PSYM_ENUMSYMBOLS_CALLBACKW = BOOL function(const(wchar)*, uint, uint, void*);
-alias PENUMLOADED_MODULES_CALLBACK = BOOL function(const(char)*, uint, uint, void*);
-alias PSYMBOL_REGISTERED_CALLBACK = BOOL function(HANDLE, uint, void*, void*);
-struct IMAGEHLP_SYMBOL
-{
-    uint SizeOfStruct;
-    uint Address;
-    uint Size;
-    uint Flags;
-    uint MaxNameLength;
-    CHAR[1] Name;
-}
-struct IMAGEHLP_SYMBOL_PACKAGE
-{
-    IMAGEHLP_SYMBOL sym;
-    CHAR[2001] name;
-}
-struct IMAGEHLP_SYMBOLW
-{
-    uint SizeOfStruct;
-    uint Address;
-    uint Size;
-    uint Flags;
-    uint MaxNameLength;
-    wchar[1] Name;
-}
-struct IMAGEHLP_SYMBOLW_PACKAGE
-{
-    IMAGEHLP_SYMBOLW sym;
-    wchar[2001] name;
-}
-struct IMAGEHLP_MODULE
-{
-    uint SizeOfStruct;
-    uint BaseOfImage;
-    uint ImageSize;
-    uint TimeDateStamp;
-    uint CheckSum;
-    uint NumSyms;
-    SYM_TYPE SymType;
-    CHAR[32] ModuleName;
-    CHAR[256] ImageName;
-    CHAR[256] LoadedImageName;
-}
-struct IMAGEHLP_MODULEW
-{
-    uint SizeOfStruct;
-    uint BaseOfImage;
-    uint ImageSize;
-    uint TimeDateStamp;
-    uint CheckSum;
-    uint NumSyms;
-    SYM_TYPE SymType;
-    wchar[32] ModuleName;
-    wchar[256] ImageName;
-    wchar[256] LoadedImageName;
-}
-struct IMAGEHLP_LINE
-{
-    uint SizeOfStruct;
-    void* Key;
-    uint LineNumber;
-    PSTR FileName;
-    uint Address;
-}
-struct IMAGEHLP_LINEW
-{
-    uint SizeOfStruct;
-    void* Key;
-    uint LineNumber;
-    PSTR FileName;
-    ulong Address;
-}
-struct IMAGEHLP_DEFERRED_SYMBOL_LOAD
-{
-    uint SizeOfStruct;
-    uint BaseOfImage;
-    uint CheckSum;
-    uint TimeDateStamp;
-    CHAR[260] FileName;
-    BOOLEAN Reparse;
-    HANDLE hFile;
-}
-struct IMAGEHLP_DUPLICATE_SYMBOL
-{
-    uint SizeOfStruct;
-    uint NumberOfDups;
-    IMAGEHLP_SYMBOL* Symbol;
-    uint SelectedSymbol;
 }

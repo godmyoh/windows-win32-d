@@ -1652,6 +1652,10 @@ enum PRINT_PORT_MONITOR_NOTIFY_CHANNEL = GUID(0x25df3b0e, 0x74a9, 0x47f5, [0x80,
 enum GUID_DEVINTERFACE_USBPRINT = GUID(0x28d78fad, 0x5a12, 0x11d1, [0xae, 0x5b, 0x0, 0x0, 0xf8, 0x3, 0xa8, 0xc2]);
 enum GUID_DEVINTERFACE_IPPUSB_PRINT = GUID(0xf2f40381, 0xf46d, 0x4e51, [0xbc, 0xe7, 0x62, 0xde, 0x6c, 0xf2, 0xd0, 0x98]);
 enum CLSID_XPSRASTERIZER_FACTORY = GUID(0x503e79bf, 0x1d09, 0x4764, [0x9d, 0x72, 0x1e, 0xb0, 0xc6, 0x59, 0x67, 0xc6]);
+struct SPLCLIENT_INFO_2_WINXP
+{
+    ulong hSplPrinter;
+}
 enum CLSID_BidiRequest = GUID(0xb9162a23, 0x45f9, 0x47cc, [0x80, 0xf5, 0xfe, 0xf, 0xe9, 0xb9, 0xe1, 0xa2]);
 struct BidiRequest
 {
@@ -3045,7 +3049,7 @@ struct PRINT_EXECUTION_DATA
     PRINT_EXECUTION_CONTEXT context;
     uint clientAppPID;
 }
-alias MxdcLandscapeRotationEnums = int;
+alias MXDC_LANDSCAPE_ROTATION_ENUMS = int;
 enum : int
 {
     MXDC_LANDSCAPE_ROTATE_COUNTERCLOCKWISE_90_DEGREES  = 0x0000005a,
@@ -3053,7 +3057,7 @@ enum : int
     MXDC_LANDSCAPE_ROTATE_COUNTERCLOCKWISE_270_DEGREES = 0xffffffa6,
 }
 
-alias MxdcImageTypeEnums = int;
+alias MXDC_IMAGE_TYPE_ENUMS = int;
 enum : int
 {
     MXDC_IMAGETYPE_JPEGHIGH_COMPRESSION   = 0x00000001,
@@ -3062,26 +3066,26 @@ enum : int
     MXDC_IMAGETYPE_PNG                    = 0x00000004,
 }
 
-struct MxdcEscapeHeader
+struct MXDC_ESCAPE_HEADER_T
 {
     align (1):
     uint cbInput;
     uint cbOutput;
     uint opCode;
 }
-struct MxdcGetFileNameData
+struct MXDC_GET_FILENAME_DATA_T
 {
     align (1):
     uint cbOutput;
     wchar[1] wszData;
 }
-struct MxdcS0PageData
+struct MXDC_S0PAGE_DATA_T
 {
     align (1):
     uint dwSize;
     ubyte[1] bData;
 }
-alias MxdcS0PageEnums = int;
+alias MXDC_S0_PAGE_ENUMS = int;
 enum : int
 {
     MXDC_RESOURCE_TTF            = 0x00000000,
@@ -3096,7 +3100,7 @@ enum : int
     MXDC_RESOURCE_MAX            = 0x00000009,
 }
 
-struct MxdcXpsS0PageResource
+struct MXDC_XPS_S0PAGE_RESOURCE_T
 {
     align (1):
     uint dwSize;
@@ -3105,26 +3109,29 @@ struct MxdcXpsS0PageResource
     uint dwDataSize;
     ubyte[1] bData;
 }
-struct MxdcPrintTicketPassthrough
+struct MXDC_PRINTTICKET_DATA_T
 {
     align (1):
     uint dwDataSize;
     ubyte[1] bData;
 }
-struct MxdcPrintTicketEscape
+struct MXDC_PRINTTICKET_ESCAPE_T
 {
-    MxdcEscapeHeader mxdcEscape;
-    MxdcPrintTicketPassthrough printTicketData;
+    align (1):
+    MXDC_ESCAPE_HEADER_T mxdcEscape;
+    MXDC_PRINTTICKET_DATA_T printTicketData;
 }
-struct MxdcS0PagePassthroughEscape
+struct MXDC_S0PAGE_PASSTHROUGH_ESCAPE_T
 {
-    MxdcEscapeHeader mxdcEscape;
-    MxdcS0PageData xpsS0PageData;
+    align (1):
+    MXDC_ESCAPE_HEADER_T mxdcEscape;
+    MXDC_S0PAGE_DATA_T xpsS0PageData;
 }
-struct MxdcS0PageResourceEscape
+struct MXDC_S0PAGE_RESOURCE_ESCAPE_T
 {
-    MxdcEscapeHeader mxdcEscape;
-    MxdcXpsS0PageResource xpsS0PageResourcePassthrough;
+    align (1):
+    MXDC_ESCAPE_HEADER_T mxdcEscape;
+    MXDC_XPS_S0PAGE_RESOURCE_T xpsS0PageResourcePassthrough;
 }
 struct DEVICEPROPERTYHEADER
 {
@@ -4310,14 +4317,15 @@ struct SPLCLIENT_INFO_1
     uint dwMinorVersion;
     ushort wProcessorArchitecture;
 }
-struct _SPLCLIENT_INFO_2_V1
+struct SPLCLIENT_INFO_2_W2K
 {
     ulong hSplPrinter;
 }
-struct _SPLCLIENT_INFO_2_V2
+/+ [CONFLICTED] struct SPLCLIENT_INFO_2_WINXP
 {
-    ulong hSplPrinter;
+    uint hSplPrinter;
 }
++/
 struct _SPLCLIENT_INFO_2_V3
 {
     ulong hSplPrinter;
@@ -4642,8 +4650,3 @@ interface IPrintPreviewDxgiPackageTarget : IUnknown
     HRESULT DrawPage(uint, IDXGISurface, float, float);
     HRESULT InvalidatePreview();
 }
-/+ [CONFLICTED] struct _SPLCLIENT_INFO_2_V2
-{
-    uint hSplPrinter;
-}
-+/

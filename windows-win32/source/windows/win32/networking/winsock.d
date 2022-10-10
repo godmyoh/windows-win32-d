@@ -154,7 +154,23 @@ enum : uint
     RESOURCEDISPLAYTYPE_TREE    = 0x0000000a,
 }
 
-int __WSAFDIsSet(SOCKET, fd_set*);
+int WSCEnumProtocols32(int*, WSAPROTOCOL_INFOW*, uint*, int*);
+int WSCDeinstallProvider32(GUID*, int*);
+int WSCInstallProvider64_32(GUID*, const(wchar)*, const(WSAPROTOCOL_INFOW)*, uint, int*);
+int WSCGetProviderPath32(GUID*, PWSTR, int*, int*);
+int WSCUpdateProvider32(GUID*, const(wchar)*, const(WSAPROTOCOL_INFOW)*, uint, int*);
+int WSCSetProviderInfo32(GUID*, WSC_PROVIDER_INFO_TYPE, ubyte*, ulong, uint, int*);
+int WSCGetProviderInfo32(GUID*, WSC_PROVIDER_INFO_TYPE, ubyte*, ulong*, uint, int*);
+int WSCEnumNameSpaceProviders32(uint*, WSANAMESPACE_INFOW*);
+int WSCEnumNameSpaceProvidersEx32(uint*, WSANAMESPACE_INFOEXW*);
+int WSCInstallNameSpace32(PWSTR, PWSTR, uint, uint, GUID*);
+int WSCInstallNameSpaceEx32(PWSTR, PWSTR, uint, uint, GUID*, BLOB*);
+int WSCUnInstallNameSpace32(GUID*);
+int WSCEnableNSProvider32(GUID*, BOOL);
+int WSCInstallProviderAndChains64_32(GUID*, const(wchar)*, const(wchar)*, const(wchar)*, uint, WSAPROTOCOL_INFOW*, uint, uint*, int*);
+int WSCWriteProviderOrder32(uint*, uint);
+int WSCWriteNameSpaceOrder32(GUID*, uint);
+int __WSAFDIsSet(SOCKET, FD_SET*);
 SOCKET accept(SOCKET, SOCKADDR*, int*);
 int bind(SOCKET, const(SOCKADDR)*, int);
 int closesocket(SOCKET);
@@ -172,21 +188,21 @@ uint ntohl(uint);
 ushort ntohs(ushort);
 int recv(SOCKET, PSTR, int, SEND_RECV_FLAGS);
 int recvfrom(SOCKET, PSTR, int, int, SOCKADDR*, int*);
-int select(int, fd_set*, fd_set*, fd_set*, const(timeval)*);
+int select(int, FD_SET*, FD_SET*, FD_SET*, const(TIMEVAL)*);
 int send(SOCKET, const(char)*, int, SEND_RECV_FLAGS);
 int sendto(SOCKET, const(char)*, int, int, const(SOCKADDR)*, int);
 int setsockopt(SOCKET, int, int, const(char)*, int);
 int shutdown(SOCKET, int);
 SOCKET socket(int, int, int);
-hostent* gethostbyaddr(const(char)*, int, int);
-hostent* gethostbyname(const(char)*);
+HOSTENT* gethostbyaddr(const(char)*, int, int);
+HOSTENT* gethostbyname(const(char)*);
 int gethostname(PSTR, int);
 int GetHostNameW(PWSTR, int);
-servent* getservbyport(int, const(char)*);
-servent* getservbyname(const(char)*, const(char)*);
-protoent* getprotobynumber(int);
-protoent* getprotobyname(const(char)*);
-int WSAStartup(ushort, WSAData*);
+SERVENT* getservbyport(int, const(char)*);
+SERVENT* getservbyname(const(char)*, const(char)*);
+PROTOENT* getprotobynumber(int);
+PROTOENT* getprotobyname(const(char)*);
+int WSAStartup(ushort, WSADATA*);
 int WSACleanup();
 void WSASetLastError(int);
 WSA_ERROR WSAGetLastError();
@@ -205,9 +221,9 @@ int WSAAsyncSelect(SOCKET, HWND, uint, int);
 SOCKET WSAAccept(SOCKET, SOCKADDR*, int*, LPCONDITIONPROC, ulong);
 BOOL WSACloseEvent(HANDLE);
 int WSAConnect(SOCKET, const(SOCKADDR)*, int, WSABUF*, WSABUF*, QOS*, QOS*);
-BOOL WSAConnectByNameW(SOCKET, PWSTR, PWSTR, uint*, SOCKADDR*, uint*, SOCKADDR*, const(timeval)*, OVERLAPPED*);
-BOOL WSAConnectByNameA(SOCKET, const(char)*, const(char)*, uint*, SOCKADDR*, uint*, SOCKADDR*, const(timeval)*, OVERLAPPED*);
-BOOL WSAConnectByList(SOCKET, SOCKET_ADDRESS_LIST*, uint*, SOCKADDR*, uint*, SOCKADDR*, const(timeval)*, OVERLAPPED*);
+BOOL WSAConnectByNameW(SOCKET, PWSTR, PWSTR, uint*, SOCKADDR*, uint*, SOCKADDR*, const(TIMEVAL)*, OVERLAPPED*);
+BOOL WSAConnectByNameA(SOCKET, const(char)*, const(char)*, uint*, SOCKADDR*, uint*, SOCKADDR*, const(TIMEVAL)*, OVERLAPPED*);
+BOOL WSAConnectByList(SOCKET, SOCKET_ADDRESS_LIST*, uint*, SOCKADDR*, uint*, SOCKADDR*, const(TIMEVAL)*, OVERLAPPED*);
 HANDLE WSACreateEvent();
 int WSADuplicateSocketA(SOCKET, uint, WSAPROTOCOL_INFOA*);
 int WSADuplicateSocketW(SOCKET, uint, WSAPROTOCOL_INFOW*);
@@ -286,33 +302,19 @@ BOOL TransmitFile(SOCKET, HANDLE, uint, uint, OVERLAPPED*, TRANSMIT_FILE_BUFFERS
 BOOL AcceptEx(SOCKET, SOCKET, void*, uint, uint, uint, uint*, OVERLAPPED*);
 void GetAcceptExSockaddrs(void*, uint, uint, uint, SOCKADDR**, int*, SOCKADDR**, int*);
 int WSCEnumProtocols(int*, WSAPROTOCOL_INFOW*, uint*, int*);
-int WSCEnumProtocols32(int*, WSAPROTOCOL_INFOW*, uint*, int*);
 int WSCDeinstallProvider(GUID*, int*);
-int WSCDeinstallProvider32(GUID*, int*);
 int WSCInstallProvider(GUID*, const(wchar)*, const(WSAPROTOCOL_INFOW)*, uint, int*);
-int WSCInstallProvider64_32(GUID*, const(wchar)*, const(WSAPROTOCOL_INFOW)*, uint, int*);
 int WSCGetProviderPath(GUID*, PWSTR, int*, int*);
-int WSCGetProviderPath32(GUID*, PWSTR, int*, int*);
 int WSCUpdateProvider(GUID*, const(wchar)*, const(WSAPROTOCOL_INFOW)*, uint, int*);
-int WSCUpdateProvider32(GUID*, const(wchar)*, const(WSAPROTOCOL_INFOW)*, uint, int*);
 int WSCSetProviderInfo(GUID*, WSC_PROVIDER_INFO_TYPE, ubyte*, ulong, uint, int*);
 int WSCGetProviderInfo(GUID*, WSC_PROVIDER_INFO_TYPE, ubyte*, ulong*, uint, int*);
-int WSCSetProviderInfo32(GUID*, WSC_PROVIDER_INFO_TYPE, ubyte*, ulong, uint, int*);
-int WSCGetProviderInfo32(GUID*, WSC_PROVIDER_INFO_TYPE, ubyte*, ulong*, uint, int*);
 int WSCSetApplicationCategory(const(wchar)*, uint, const(wchar)*, uint, uint, uint*, int*);
 int WSCGetApplicationCategory(const(wchar)*, uint, const(wchar)*, uint, uint*, int*);
 int WPUCompleteOverlappedRequest(SOCKET, OVERLAPPED*, uint, uint, int*);
-int WSCEnumNameSpaceProviders32(uint*, WSANAMESPACE_INFOW*);
-int WSCEnumNameSpaceProvidersEx32(uint*, WSANAMESPACE_INFOEXW*);
 int WSCInstallNameSpace(PWSTR, PWSTR, uint, uint, GUID*);
-int WSCInstallNameSpace32(PWSTR, PWSTR, uint, uint, GUID*);
 int WSCUnInstallNameSpace(GUID*);
 int WSCInstallNameSpaceEx(PWSTR, PWSTR, uint, uint, GUID*, BLOB*);
-int WSCInstallNameSpaceEx32(PWSTR, PWSTR, uint, uint, GUID*, BLOB*);
-int WSCUnInstallNameSpace32(GUID*);
 int WSCEnableNSProvider(GUID*, BOOL);
-int WSCEnableNSProvider32(GUID*, BOOL);
-int WSCInstallProviderAndChains64_32(GUID*, const(wchar)*, const(wchar)*, const(wchar)*, uint, WSAPROTOCOL_INFOW*, uint, uint*, int*);
 int WSAAdvertiseProvider(const(GUID)*, const(NSPV2_ROUTINE)*);
 int WSAUnadvertiseProvider(const(GUID)*);
 int WSAProviderCompleteAsyncCall(HANDLE, int);
@@ -330,12 +332,12 @@ int GetServiceA(uint, GUID*, PSTR, uint, void*, uint*, SERVICE_ASYNC_INFO*);
 int GetServiceW(uint, GUID*, PWSTR, uint, void*, uint*, SERVICE_ASYNC_INFO*);
 int getaddrinfo(const(char)*, const(char)*, const(ADDRINFOA)*, ADDRINFOA**);
 int GetAddrInfoW(const(wchar)*, const(wchar)*, const(ADDRINFOW)*, ADDRINFOW**);
-int GetAddrInfoExA(const(char)*, const(char)*, uint, GUID*, const(ADDRINFOEXA)*, ADDRINFOEXA**, timeval*, OVERLAPPED*, LPLOOKUPSERVICE_COMPLETION_ROUTINE, HANDLE*);
-int GetAddrInfoExW(const(wchar)*, const(wchar)*, uint, GUID*, const(ADDRINFOEXW)*, ADDRINFOEXW**, timeval*, OVERLAPPED*, LPLOOKUPSERVICE_COMPLETION_ROUTINE, HANDLE*);
+int GetAddrInfoExA(const(char)*, const(char)*, uint, GUID*, const(ADDRINFOEXA)*, ADDRINFOEXA**, TIMEVAL*, OVERLAPPED*, LPLOOKUPSERVICE_COMPLETION_ROUTINE, HANDLE*);
+int GetAddrInfoExW(const(wchar)*, const(wchar)*, uint, GUID*, const(ADDRINFOEXW)*, ADDRINFOEXW**, TIMEVAL*, OVERLAPPED*, LPLOOKUPSERVICE_COMPLETION_ROUTINE, HANDLE*);
 int GetAddrInfoExCancel(HANDLE*);
 int GetAddrInfoExOverlappedResult(OVERLAPPED*);
-int SetAddrInfoExA(const(char)*, const(char)*, SOCKET_ADDRESS*, uint, BLOB*, uint, uint, GUID*, timeval*, OVERLAPPED*, LPLOOKUPSERVICE_COMPLETION_ROUTINE, HANDLE*);
-int SetAddrInfoExW(const(wchar)*, const(wchar)*, SOCKET_ADDRESS*, uint, BLOB*, uint, uint, GUID*, timeval*, OVERLAPPED*, LPLOOKUPSERVICE_COMPLETION_ROUTINE, HANDLE*);
+int SetAddrInfoExA(const(char)*, const(char)*, SOCKET_ADDRESS*, uint, BLOB*, uint, uint, GUID*, TIMEVAL*, OVERLAPPED*, LPLOOKUPSERVICE_COMPLETION_ROUTINE, HANDLE*);
+int SetAddrInfoExW(const(wchar)*, const(wchar)*, SOCKET_ADDRESS*, uint, BLOB*, uint, uint, GUID*, TIMEVAL*, OVERLAPPED*, LPLOOKUPSERVICE_COMPLETION_ROUTINE, HANDLE*);
 void freeaddrinfo(ADDRINFOA*);
 void FreeAddrInfoW(ADDRINFOW*);
 void FreeAddrInfoEx(ADDRINFOEXA*);
@@ -354,9 +356,7 @@ int WSAImpersonateSocketPeer(SOCKET, const(SOCKADDR)*, uint);
 int WSARevertImpersonation();
 HRESULT SetSocketMediaStreamingMode(BOOL);
 int WSCWriteProviderOrder(uint*, uint);
-int WSCWriteProviderOrder32(uint*, uint);
 int WSCWriteNameSpaceOrder(GUID*, uint);
-int WSCWriteNameSpaceOrder32(GUID*, uint);
 enum SOCKET_DEFAULT2_QM_POLICY = GUID(0xaec2ef9c, 0x3a4d, 0x4d3e, [0x88, 0x42, 0x23, 0x99, 0x42, 0xe3, 0x9a, 0x47]);
 enum REAL_TIME_NOTIFICATION_CAPABILITY = GUID(0x6b59819a, 0x5cae, 0x492d, [0xa9, 0x1, 0x2a, 0x3c, 0x2c, 0x50, 0x16, 0x4f]);
 enum REAL_TIME_NOTIFICATION_CAPABILITY_EX = GUID(0x6843da03, 0x154a, 0x4616, [0xa5, 0x8, 0x44, 0x37, 0x12, 0x95, 0xf9, 0x6b]);
@@ -1506,6 +1506,23 @@ struct FLOWSPEC
     uint MaxSduSize;
     uint MinimumPolicedSize;
 }
+struct SERVENT
+{
+    PSTR s_name;
+    byte** s_aliases;
+    PSTR s_proto;
+    short s_port;
+}
+struct WSADATA
+{
+    ushort wVersion;
+    ushort wHighVersion;
+    ushort iMaxSockets;
+    ushort iMaxUdpDg;
+    PSTR lpVendorInfo;
+    CHAR[257] szDescription;
+    CHAR[129] szSystemStatus;
+}
 struct IN_ADDR
 {
     union _S_un_e__Union
@@ -1658,7 +1675,7 @@ struct WSAMSG
     WSABUF Control;
     uint dwFlags;
 }
-struct cmsghdr
+struct CMSGHDR
 {
     ulong cmsg_len;
     int cmsg_level;
@@ -1800,7 +1817,7 @@ struct ADDRINFOEX5
     HANDLE ai_resolutionhandle;
     uint ai_ttl;
 }
-struct addrinfo_dns_server
+struct ADDRINFO_DNS_SERVER
 {
     uint ai_servertype;
     ulong ai_flags;
@@ -1830,20 +1847,20 @@ struct ADDRINFOEX6
     HANDLE ai_resolutionhandle;
     uint ai_ttl;
     uint ai_numservers;
-    addrinfo_dns_server* ai_servers;
+    ADDRINFO_DNS_SERVER* ai_servers;
     ulong ai_responseflags;
 }
-struct fd_set
+struct FD_SET
 {
     uint fd_count;
     SOCKET[64] fd_array;
 }
-struct timeval
+struct TIMEVAL
 {
     int tv_sec;
     int tv_usec;
 }
-struct hostent
+struct HOSTENT
 {
     PSTR h_name;
     byte** h_aliases;
@@ -1858,35 +1875,37 @@ struct netent
     short n_addrtype;
     uint n_net;
 }
-struct servent
+/+ [CONFLICTED] struct SERVENT
 {
     PSTR s_name;
     byte** s_aliases;
-    PSTR s_proto;
     short s_port;
+    PSTR s_proto;
 }
-struct protoent
++/
+struct PROTOENT
 {
     PSTR p_name;
     byte** p_aliases;
     short p_proto;
 }
-struct WSAData
+/+ [CONFLICTED] struct WSADATA
 {
     ushort wVersion;
     ushort wHighVersion;
+    CHAR[257] szDescription;
+    CHAR[129] szSystemStatus;
     ushort iMaxSockets;
     ushort iMaxUdpDg;
     PSTR lpVendorInfo;
-    CHAR[257] szDescription;
-    CHAR[129] szSystemStatus;
 }
++/
 struct sockproto
 {
     ushort sp_family;
     ushort sp_protocol;
 }
-struct linger
+struct LINGER
 {
     ushort l_onoff;
     ushort l_linger;
@@ -3059,7 +3078,7 @@ struct ATM_BHLI
     uint HighLayerInfoLength;
     ubyte[8] HighLayerInfo;
 }
-struct sockaddr_atm
+struct SOCKADDR_ATM
 {
     ushort satm_family;
     ATM_ADDRESS satm_number;
@@ -3387,7 +3406,7 @@ struct RIO_EXTENSION_FUNCTION_TABLE
     LPFN_RIORESIZECOMPLETIONQUEUE RIOResizeCompletionQueue;
     LPFN_RIORESIZEREQUESTQUEUE RIOResizeRequestQueue;
 }
-struct WSPData
+struct WSPDATA
 {
     ushort wVersion;
     ushort wHighVersion;
@@ -3422,7 +3441,7 @@ alias LPWSPLISTEN = int function(SOCKET, int, int*);
 alias LPWSPRECV = int function(SOCKET, WSABUF*, uint, uint*, uint*, OVERLAPPED*, LPWSAOVERLAPPED_COMPLETION_ROUTINE, WSATHREADID*, int*);
 alias LPWSPRECVDISCONNECT = int function(SOCKET, WSABUF*, int*);
 alias LPWSPRECVFROM = int function(SOCKET, WSABUF*, uint, uint*, uint*, SOCKADDR*, int*, OVERLAPPED*, LPWSAOVERLAPPED_COMPLETION_ROUTINE, WSATHREADID*, int*);
-alias LPWSPSELECT = int function(int, fd_set*, fd_set*, fd_set*, const(timeval)*, int*);
+alias LPWSPSELECT = int function(int, FD_SET*, FD_SET*, FD_SET*, const(TIMEVAL)*, int*);
 alias LPWSPSEND = int function(SOCKET, WSABUF*, uint, uint*, uint, OVERLAPPED*, LPWSAOVERLAPPED_COMPLETION_ROUTINE, WSATHREADID*, int*);
 alias LPWSPSENDDISCONNECT = int function(SOCKET, WSABUF*, int*);
 alias LPWSPSENDTO = int function(SOCKET, WSABUF*, uint, uint*, uint, const(SOCKADDR)*, int, OVERLAPPED*, LPWSAOVERLAPPED_COMPLETION_ROUTINE, WSATHREADID*, int*);
@@ -3467,7 +3486,7 @@ alias LPWPUCLOSEEVENT = BOOL function(HANDLE, int*);
 alias LPWPUCLOSESOCKETHANDLE = int function(SOCKET, int*);
 alias LPWPUCREATEEVENT = HANDLE function(int*);
 alias LPWPUCREATESOCKETHANDLE = SOCKET function(uint, ulong, int*);
-alias LPWPUFDISSET = int function(SOCKET, fd_set*);
+alias LPWPUFDISSET = int function(SOCKET, FD_SET*);
 alias LPWPUGETPROVIDERPATH = int function(GUID*, PWSTR, int*, int*);
 alias LPWPUMODIFYIFSHANDLE = SOCKET function(uint, SOCKET, int*);
 alias LPWPUPOSTMESSAGE = BOOL function(HWND, uint, WPARAM, LPARAM);
@@ -3497,7 +3516,7 @@ struct WSPUPCALLTABLE
     LPWPUOPENCURRENTTHREAD lpWPUOpenCurrentThread;
     LPWPUCLOSETHREAD lpWPUCloseThread;
 }
-alias LPWSPSTARTUP = int function(ushort, WSPData*, WSAPROTOCOL_INFOW*, WSPUPCALLTABLE, WSPPROC_TABLE*);
+alias LPWSPSTARTUP = int function(ushort, WSPDATA*, WSAPROTOCOL_INFOW*, WSPUPCALLTABLE, WSPPROC_TABLE*);
 alias LPWSCENUMPROTOCOLS = int function(int*, WSAPROTOCOL_INFOW*, uint*, int*);
 alias LPWSCDEINSTALLPROVIDER = int function(GUID*, int*);
 alias LPWSCINSTALLPROVIDER = int function(GUID*, const(wchar)*, const(WSAPROTOCOL_INFOW)*, uint, int*);
@@ -3728,19 +3747,19 @@ struct SERVICE_ASYNC_INFO
 alias LPLOOKUPSERVICE_COMPLETION_ROUTINE = void function(uint, uint, OVERLAPPED*);
 alias LPWSCWRITEPROVIDERORDER = int function(uint*, uint);
 alias LPWSCWRITENAMESPACEORDER = int function(GUID*, uint);
-struct sockaddr_un
+struct SOCKADDR_UN
 {
     ushort sun_family;
     CHAR[108] sun_path;
 }
-struct sockaddr_ipx
+struct SOCKADDR_IPX
 {
     short sa_family;
     CHAR[4] sa_netnum;
     CHAR[6] sa_nodenum;
     ushort sa_socket;
 }
-struct sockaddr_tp
+struct SOCKADDR_TP
 {
     ushort tp_family;
     ushort tp_addr_type;
@@ -3748,13 +3767,13 @@ struct sockaddr_tp
     ushort tp_tsel_len;
     ubyte[64] tp_addr;
 }
-struct sockaddr_nb
+struct SOCKADDR_NB
 {
     short snb_family;
     ushort snb_type;
     CHAR[16] snb_name;
 }
-struct sockaddr_vns
+struct SOCKADDR_VNS
 {
     ushort sin_family;
     ubyte[4] net_address;
@@ -4148,7 +4167,7 @@ struct IPV6_ROUTING_HEADER
     ubyte SegmentsLeft;
     ubyte[4] Reserved;
 }
-struct nd_router_solicit
+struct ND_ROUTER_SOLICIT_HEADER
 {
     ICMP_MESSAGE nd_rs_hdr;
 }
@@ -4335,7 +4354,7 @@ struct MLDV2_REPORT_HEADER
     ushort Reserved;
     ushort RecordCount;
 }
-struct tcp_hdr
+struct TCP_HDR
 {
     align (1):
     ushort th_sport;
@@ -4348,26 +4367,29 @@ struct tcp_hdr
     ushort th_sum;
     ushort th_urp;
 }
-struct tcp_opt_mss
+struct TCP_OPT_MSS
 {
     align (1):
     ubyte Kind;
     ubyte Length;
     ushort Mss;
 }
-struct tcp_opt_ws
+struct TCP_OPT_WS
 {
+    align (1):
     ubyte Kind;
     ubyte Length;
     ubyte ShiftCnt;
 }
-struct tcp_opt_sack_permitted
+struct TCP_OPT_SACK_PERMITTED
 {
+    align (1):
     ubyte Kind;
     ubyte Length;
 }
-struct tcp_opt_sack
+struct TCP_OPT_SACK
 {
+    align (1):
     ubyte Kind;
     ubyte Length;
     struct tcp_opt_sack_block
@@ -4377,7 +4399,7 @@ struct tcp_opt_sack
         uint Right;
     }
 }
-struct tcp_opt_ts
+struct TCP_OPT_TS
 {
     align (1):
     ubyte Kind;
@@ -4385,13 +4407,15 @@ struct tcp_opt_ts
     uint Val;
     uint EcR;
 }
-struct tcp_opt_unknown
+struct TCP_OPT_UNKNOWN
 {
+    align (1):
     ubyte Kind;
     ubyte Length;
 }
-struct tcp_opt_fastopen
+struct TCP_OPT_FASTOPEN
 {
+    align (1):
     ubyte Kind;
     ubyte Length;
     ubyte[1] Cookie;
@@ -4413,6 +4437,7 @@ enum : int
 
 struct DL_TEREDO_ADDRESS
 {
+    align (1):
     ubyte[6] Reserved;
     union
     {
@@ -4429,6 +4454,7 @@ struct DL_TEREDO_ADDRESS
 }
 struct DL_TEREDO_ADDRESS_PRV
 {
+    align (1):
     ubyte[6] Reserved;
     union
     {
@@ -4476,22 +4502,3 @@ enum : int
     FallbackIndexMax         = 0x00000001,
 }
 
-/+ [CONFLICTED] struct servent
-{
-    PSTR s_name;
-    byte** s_aliases;
-    short s_port;
-    PSTR s_proto;
-}
-+/
-/+ [CONFLICTED] struct WSAData
-{
-    ushort wVersion;
-    ushort wHighVersion;
-    CHAR[257] szDescription;
-    CHAR[129] szSystemStatus;
-    ushort iMaxSockets;
-    ushort iMaxUdpDg;
-    PSTR lpVendorInfo;
-}
-+/

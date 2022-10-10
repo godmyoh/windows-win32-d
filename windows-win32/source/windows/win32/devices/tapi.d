@@ -2264,7 +2264,7 @@ struct LINEREQMAKECALL
     CHAR[40] szCalledParty;
     CHAR[80] szComment;
 }
-struct linereqmakecallW_tag
+struct LINEREQMAKECALLW
 {
     align (1):
     wchar[80] szDestAddress;
@@ -2286,7 +2286,7 @@ struct LINEREQMEDIACALL
     CHAR[40] szCalledParty;
     CHAR[80] szComment;
 }
-struct linereqmediacallW_tag
+struct LINEREQMEDIACALLW
 {
     align (1):
     HWND hWnd;
@@ -4506,7 +4506,7 @@ interface ITnef : IUnknown
 alias LPOPENTNEFSTREAM = HRESULT function(void*, IStream, byte*, uint, IMessage, ushort, ITnef*);
 alias LPOPENTNEFSTREAMEX = HRESULT function(void*, IStream, byte*, uint, IMessage, ushort, IAddrBook, ITnef*);
 alias LPGETTNEFSTREAMCODEPAGE = HRESULT function(IStream, uint*, uint*);
-struct _renddata
+struct RENDDATA
 {
     align (1):
     ushort atyp;
@@ -4515,7 +4515,7 @@ struct _renddata
     ushort dyHeight;
     uint dwFlags;
 }
-struct _dtr
+struct DTR
 {
     align (1):
     ushort wYear;
@@ -4526,14 +4526,14 @@ struct _dtr
     ushort wSecond;
     ushort wDayOfWeek;
 }
-struct _trp
+struct TRP
 {
     ushort trpid;
     ushort cbgrtrp;
     ushort cch;
     ushort cbRgb;
 }
-struct _ADDR_ALIAS
+struct ADDRALIAS
 {
     CHAR[41] rgchName;
     CHAR[11] rgchEName;
@@ -4549,7 +4549,7 @@ struct NSID
     int lTime;
     union _address_e__Union
     {
-        _ADDR_ALIAS alias_;
+        ADDRALIAS alias_;
         CHAR[1] rgchInterNet;
     }
 }

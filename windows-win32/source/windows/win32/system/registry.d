@@ -1105,14 +1105,14 @@ struct val_context
     void* value_context;
     void* val_buff_ptr;
 }
-struct pvalueA
+struct PVALUEA
 {
     PSTR pv_valuename;
     int pv_valuelen;
     void* pv_value_context;
     uint pv_type;
 }
-struct pvalueW
+struct PVALUEW
 {
     PWSTR pv_valuename;
     int pv_valuelen;
@@ -1120,7 +1120,7 @@ struct pvalueW
     uint pv_type;
 }
 alias PQUERYHANDLER = uint function(void*, val_context*, uint, void*, uint*, uint);
-struct provider_info
+struct REG_PROVIDER
 {
     PQUERYHANDLER pi_R0_1val;
     PQUERYHANDLER pi_R0_allvals;

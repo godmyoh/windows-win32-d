@@ -496,7 +496,7 @@ struct PACKET_DESCRIPTION
     uint cButtons;
     GUID* pguidButtons;
 }
-alias enumINKMETRIC_FLAGS = int;
+alias INK_METRIC_FLAGS = int;
 enum : int
 {
     IMF_FONT_SELECTED_IN_HDC = 0x00000001,
@@ -504,7 +504,7 @@ enum : int
     IMF_BOLD                 = 0x00000004,
 }
 
-alias enumGetCandidateFlags = int;
+alias GET_DANDIDATE_FLAGS = int;
 enum : int
 {
     TCF_ALLOW_RECOGNITION = 0x00000001,
@@ -2954,7 +2954,7 @@ enum : int
     ALT_BREAKS_FULL   = 0x00000002,
 }
 
-alias enumRECO_TYPE = int;
+alias RECO_TYPE = int;
 enum : int
 {
     RECO_TYPE_WSTRING = 0x00000000,

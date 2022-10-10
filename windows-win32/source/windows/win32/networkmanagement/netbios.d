@@ -108,6 +108,25 @@ struct NCB
     ubyte[18] ncb_reserve;
     HANDLE ncb_event;
 }
+/+ [CONFLICTED] struct NCB
+{
+    ubyte ncb_command;
+    ubyte ncb_retcode;
+    ubyte ncb_lsn;
+    ubyte ncb_num;
+    ubyte* ncb_buffer;
+    ushort ncb_length;
+    ubyte[16] ncb_callname;
+    ubyte[16] ncb_name;
+    ubyte ncb_rto;
+    ubyte ncb_sto;
+    long ncb_post;
+    ubyte ncb_lana_num;
+    ubyte ncb_cmd_cplt;
+    ubyte[10] ncb_reserve;
+    HANDLE ncb_event;
+}
++/
 struct ADAPTER_STATUS
 {
     ubyte[6] adapter_address;
@@ -186,22 +205,3 @@ struct ACTION_HEADER
     ushort action_code;
     ushort reserved;
 }
-/+ [CONFLICTED] struct NCB
-{
-    ubyte ncb_command;
-    ubyte ncb_retcode;
-    ubyte ncb_lsn;
-    ubyte ncb_num;
-    ubyte* ncb_buffer;
-    ushort ncb_length;
-    ubyte[16] ncb_callname;
-    ubyte[16] ncb_name;
-    ubyte ncb_rto;
-    ubyte ncb_sto;
-    long ncb_post;
-    ubyte ncb_lana_num;
-    ubyte ncb_cmd_cplt;
-    ubyte[10] ncb_reserve;
-    HANDLE ncb_event;
-}
-+/

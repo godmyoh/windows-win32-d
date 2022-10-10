@@ -4,12 +4,12 @@ import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, CHAR, COLORREF, DECIMAL, FILETIME, HANDLE, HINSTANCE, HRESULT, HRSRC, HWND, LPARAM, LRESULT, POINT, POINTL, PSTR, PWSTR, RECT, RECTL, SIZE, SYSTEMTIME, WPARAM;
 import windows.win32.graphics.gdi : HBITMAP, HDC, HENHMETAFILE, HFONT, HMETAFILE, HPALETTE, HRGN, LOGPALETTE, TEXTMETRICW;
 import windows.win32.media_ : HTASK;
-import windows.win32.system.com_ : BYTE_SIZEDARR, CALLCONV, CUSTDATA, CY, DISPPARAMS, DVASPECT, DVTARGETDEVICE, EXCEPINFO, FLAGGED_WORD_BLOB, FORMATETC, FUNCDESC, HYPER_SIZEDARR, IAdviseSink, IBindCtx, IBindHost, IClassFactory, IDLDESC, IDataObject, IDispatch, IEnumFORMATETC, IEnumSTATDATA, IEnumUnknown, IErrorLog, IMoniker, INVOKEKIND, IPersist, IPersistStream, IServiceProvider, IStream, ITypeInfo, ITypeLib, IUnknown, LONG_SIZEDARR, SAFEARRAY, SAFEARRAYBOUND, SHORT_SIZEDARR, STGMEDIUM, SYSKIND, TYPEDESC, TYPEKIND, VARDESC, VARENUM, VARIANT;
+import windows.win32.system.com_ : ADVF, BYTE_SIZEDARR, CALLCONV, CUSTDATA, CY, DISPPARAMS, DVASPECT, DVTARGETDEVICE, DWORD_SIZEDARR, EXCEPINFO, FLAGGED_WORD_BLOB, FORMATETC, FUNCDESC, HYPER_SIZEDARR, IAdviseSink, IBindCtx, IBindHost, IClassFactory, IDLDESC, IDataObject, IDispatch, IEnumFORMATETC, IEnumSTATDATA, IEnumUnknown, IErrorLog, IMoniker, INVOKEKIND, IPersist, IPersistStream, IServiceProvider, IStream, ITypeInfo, ITypeLib, IUnknown, SAFEARRAY, SAFEARRAYBOUND, STGMEDIUM, SYSKIND, TYPEDESC, TYPEKIND, VARDESC, VARENUM, VARIANT, WORD_SIZEDARR;
 import windows.win32.system.com.structuredstorage : IPersistStorage, IPropertyBag, IPropertyBag2, IStorage;
 import windows.win32.system.systemservices : MODIFIERKEYS_FLAGS;
 import windows.win32.ui.controls_ : PROPSHEETHEADERA_V2, PROPSHEETHEADERW_V2;
 import windows.win32.ui.controls.dialogs : OPENFILENAMEA, OPENFILENAMEW;
-import windows.win32.ui.windowsandmessaging : HACCEL, HCURSOR, HICON, HMENU, MSG;
+import windows.win32.ui.windowsandmessaging : HACCEL, HCURSOR, HICON, HMENU, MENU_ITEM_FLAGS, MSG;
 
 version (Windows):
 extern (Windows):
@@ -47,7 +47,7 @@ HRESULT SafeArraySetRecordInfo(SAFEARRAY*, IRecordInfo);
 HRESULT SafeArrayGetRecordInfo(SAFEARRAY*, IRecordInfo*);
 HRESULT SafeArraySetIID(SAFEARRAY*, const(GUID)*);
 HRESULT SafeArrayGetIID(SAFEARRAY*, GUID*);
-HRESULT SafeArrayGetVartype(SAFEARRAY*, ushort*);
+HRESULT SafeArrayGetVartype(SAFEARRAY*, VARENUM*);
 SAFEARRAY* SafeArrayCreateVector(VARENUM, int, uint);
 SAFEARRAY* SafeArrayCreateVectorEx(VARENUM, int, uint, void*);
 void VariantInit(VARIANT*);
@@ -302,7 +302,7 @@ HRESULT VarInt(VARIANT*, VARIANT*);
 HRESULT VarNeg(VARIANT*, VARIANT*);
 HRESULT VarNot(VARIANT*, VARIANT*);
 HRESULT VarRound(VARIANT*, int, VARIANT*);
-HRESULT VarCmp(VARIANT*, VARIANT*, uint, uint);
+VARCMP VarCmp(VARIANT*, VARIANT*, uint, uint);
 HRESULT VarDecAdd(DECIMAL*, DECIMAL*, DECIMAL*);
 HRESULT VarDecDiv(DECIMAL*, DECIMAL*, DECIMAL*);
 HRESULT VarDecMul(DECIMAL*, DECIMAL*, DECIMAL*);
@@ -312,8 +312,8 @@ HRESULT VarDecFix(DECIMAL*, DECIMAL*);
 HRESULT VarDecInt(DECIMAL*, DECIMAL*);
 HRESULT VarDecNeg(DECIMAL*, DECIMAL*);
 HRESULT VarDecRound(DECIMAL*, int, DECIMAL*);
-HRESULT VarDecCmp(DECIMAL*, DECIMAL*);
-HRESULT VarDecCmpR8(DECIMAL*, double);
+VARCMP VarDecCmp(DECIMAL*, DECIMAL*);
+VARCMP VarDecCmpR8(DECIMAL*, double);
 HRESULT VarCyAdd(CY, CY, CY*);
 HRESULT VarCyMul(CY, CY, CY*);
 HRESULT VarCyMulI4(CY, int, CY*);
@@ -324,26 +324,26 @@ HRESULT VarCyFix(CY, CY*);
 HRESULT VarCyInt(CY, CY*);
 HRESULT VarCyNeg(CY, CY*);
 HRESULT VarCyRound(CY, int, CY*);
-HRESULT VarCyCmp(CY, CY);
-HRESULT VarCyCmpR8(CY, double);
+VARCMP VarCyCmp(CY, CY);
+VARCMP VarCyCmpR8(CY, double);
 HRESULT VarBstrCat(BSTR, BSTR, ushort**);
 HRESULT VarBstrCmp(BSTR, BSTR, uint, uint);
 HRESULT VarR8Pow(double, double, double*);
-HRESULT VarR4CmpR8(float, double);
+VARCMP VarR4CmpR8(float, double);
 HRESULT VarR8Round(double, int, double*);
 HRESULT VarDateFromUdate(UDATE*, uint, double*);
 HRESULT VarDateFromUdateEx(UDATE*, uint, uint, double*);
 HRESULT VarUdateFromDate(double, uint, UDATE*);
 HRESULT GetAltMonthNames(uint, PWSTR**);
-HRESULT VarFormat(VARIANT*, PWSTR, int, int, uint, BSTR*);
-HRESULT VarFormatDateTime(VARIANT*, int, uint, BSTR*);
-HRESULT VarFormatNumber(VARIANT*, int, int, int, int, uint, BSTR*);
-HRESULT VarFormatPercent(VARIANT*, int, int, int, int, uint, BSTR*);
+HRESULT VarFormat(VARIANT*, PWSTR, VARFORMAT_FIRST_DAY, VARFORMAT_FIRST_WEEK, uint, BSTR*);
+HRESULT VarFormatDateTime(VARIANT*, VARFORMAT_NAMED_FORMAT, uint, BSTR*);
+HRESULT VarFormatNumber(VARIANT*, int, VARFORMAT_LEADING_DIGIT, VARFORMAT_PARENTHESES, VARFORMAT_GROUP, uint, BSTR*);
+HRESULT VarFormatPercent(VARIANT*, int, VARFORMAT_LEADING_DIGIT, VARFORMAT_PARENTHESES, VARFORMAT_GROUP, uint, BSTR*);
 HRESULT VarFormatCurrency(VARIANT*, int, int, int, int, uint, BSTR*);
 HRESULT VarWeekdayName(int, int, int, uint, BSTR*);
 HRESULT VarMonthName(int, int, uint, BSTR*);
 HRESULT VarFormatFromTokens(VARIANT*, PWSTR, ubyte*, uint, BSTR*, uint);
-HRESULT VarTokenizeFormatString(PWSTR, ubyte*, int, int, int, uint, int*);
+HRESULT VarTokenizeFormatString(PWSTR, ubyte*, int, VARFORMAT_FIRST_DAY, VARFORMAT_FIRST_WEEK, uint, int*);
 uint LHashValOfNameSysA(SYSKIND, uint, const(char)*);
 uint LHashValOfNameSys(SYSKIND, uint, const(wchar)*);
 HRESULT LoadTypeLib(const(wchar)*, ITypeLib*);
@@ -362,7 +362,7 @@ HRESULT DispInvoke(void*, ITypeInfo, int, ushort, DISPPARAMS*, VARIANT*, EXCEPIN
 HRESULT CreateDispTypeInfo(INTERFACEDATA*, uint, ITypeInfo*);
 HRESULT CreateStdDispatch(IUnknown, void*, ITypeInfo, IUnknown*);
 HRESULT DispCallFunc(void*, ulong, CALLCONV, VARENUM, uint, ushort*, VARIANT**, VARIANT*);
-HRESULT RegisterActiveObject(IUnknown, const(GUID)*, uint, uint*);
+HRESULT RegisterActiveObject(IUnknown, const(GUID)*, ACTIVEOBJECT_FLAGS, uint*);
 HRESULT RevokeActiveObject(uint, void*);
 HRESULT GetActiveObject(const(GUID)*, void*, IUnknown*);
 HRESULT CreateErrorInfo(ICreateErrorInfo*);
@@ -376,19 +376,19 @@ HRESULT OleInitialize(void*);
 void OleUninitialize();
 HRESULT OleQueryLinkFromData(IDataObject);
 HRESULT OleQueryCreateFromData(IDataObject);
-HRESULT OleCreate(const(GUID)*, const(GUID)*, uint, FORMATETC*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateEx(const(GUID)*, const(GUID)*, uint, uint, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateFromData(IDataObject, const(GUID)*, uint, FORMATETC*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateFromDataEx(IDataObject, const(GUID)*, uint, uint, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateLinkFromData(IDataObject, const(GUID)*, uint, FORMATETC*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateLinkFromDataEx(IDataObject, const(GUID)*, uint, uint, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateStaticFromData(IDataObject, const(GUID)*, uint, FORMATETC*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateLink(IMoniker, const(GUID)*, uint, FORMATETC*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateLinkEx(IMoniker, const(GUID)*, uint, uint, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateLinkToFile(const(wchar)*, const(GUID)*, uint, FORMATETC*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateLinkToFileEx(const(wchar)*, const(GUID)*, uint, uint, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateFromFile(const(GUID)*, const(wchar)*, const(GUID)*, uint, FORMATETC*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateFromFileEx(const(GUID)*, const(wchar)*, const(GUID)*, uint, uint, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
+HRESULT OleCreate(const(GUID)*, const(GUID)*, OLERENDER, FORMATETC*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateEx(const(GUID)*, const(GUID)*, OLECREATE, OLERENDER, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateFromData(IDataObject, const(GUID)*, OLERENDER, FORMATETC*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateFromDataEx(IDataObject, const(GUID)*, OLECREATE, OLERENDER, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateLinkFromData(IDataObject, const(GUID)*, OLERENDER, FORMATETC*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateLinkFromDataEx(IDataObject, const(GUID)*, OLECREATE, OLERENDER, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateStaticFromData(IDataObject, const(GUID)*, OLERENDER, FORMATETC*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateLink(IMoniker, const(GUID)*, OLERENDER, FORMATETC*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateLinkEx(IMoniker, const(GUID)*, OLECREATE, OLERENDER, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateLinkToFile(const(wchar)*, const(GUID)*, OLERENDER, FORMATETC*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateLinkToFileEx(const(wchar)*, const(GUID)*, OLECREATE, OLERENDER, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateFromFile(const(GUID)*, const(wchar)*, const(GUID)*, OLERENDER, FORMATETC*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateFromFileEx(const(GUID)*, const(wchar)*, const(GUID)*, OLECREATE, OLERENDER, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
 HRESULT OleLoad(IStorage, const(GUID)*, IOleClientSite, void**);
 HRESULT OleSave(IPersistStorage, IStorage, BOOL);
 HRESULT OleLoadFromStream(IStream, const(GUID)*, void**);
@@ -403,10 +403,10 @@ HRESULT OleGetClipboard(IDataObject*);
 HRESULT OleGetClipboardWithEnterpriseInfo(IDataObject*, PWSTR*, PWSTR*, PWSTR*, PWSTR*);
 HRESULT OleFlushClipboard();
 HRESULT OleIsCurrentClipboard(IDataObject);
-long OleCreateMenuDescriptor(HMENU, OleMenuGroupWidths*);
+long OleCreateMenuDescriptor(HMENU, OLEMENUGROUPWIDTHS*);
 HRESULT OleSetMenuDescriptor(long, HWND, HWND, IOleInPlaceFrame, IOleInPlaceActiveObject);
 HRESULT OleDestroyMenuDescriptor(long);
-HRESULT OleTranslateAccelerator(IOleInPlaceFrame, OIFI*, MSG*);
+HRESULT OleTranslateAccelerator(IOleInPlaceFrame, OLEINPLACEFRAMEINFO*, MSG*);
 HANDLE OleDuplicateData(HANDLE, ushort, uint);
 HRESULT OleDraw(IUnknown, uint, HDC, RECT*);
 HRESULT OleRun(IUnknown);
@@ -415,12 +415,12 @@ HRESULT OleLockRunning(IUnknown, BOOL, BOOL);
 void ReleaseStgMedium(STGMEDIUM*);
 HRESULT CreateOleAdviseHolder(IOleAdviseHolder*);
 HRESULT OleCreateDefaultHandler(const(GUID)*, IUnknown, const(GUID)*, void**);
-HRESULT OleCreateEmbeddingHelper(const(GUID)*, IUnknown, uint, IClassFactory, const(GUID)*, void**);
+HRESULT OleCreateEmbeddingHelper(const(GUID)*, IUnknown, EMBDHLP_FLAGS, IClassFactory, const(GUID)*, void**);
 BOOL IsAccelerator(HACCEL, int, MSG*, ushort*);
 long OleGetIconOfFile(PWSTR, BOOL);
 long OleGetIconOfClass(const(GUID)*, PWSTR, BOOL);
 long OleMetafilePictFromIconAndLabel(HICON, PWSTR, PWSTR, uint);
-HRESULT OleRegGetUserType(const(GUID)*, uint, PWSTR*);
+HRESULT OleRegGetUserType(const(GUID)*, USERCLASSTYPE, PWSTR*);
 HRESULT OleRegGetMiscStatus(const(GUID)*, uint, uint*);
 HRESULT OleRegEnumFormatEtc(const(GUID)*, uint, IEnumFORMATETC*);
 HRESULT OleRegEnumVerbs(const(GUID)*, IEnumOLEVERB*);
@@ -441,10 +441,10 @@ HRESULT OleTranslateColor(uint, HPALETTE, COLORREF*);
 HRESULT OleCreateFontIndirect(FONTDESC*, const(GUID)*, void**);
 HRESULT OleCreatePictureIndirect(PICTDESC*, const(GUID)*, BOOL, void**);
 HRESULT OleLoadPicture(IStream, int, BOOL, const(GUID)*, void**);
-HRESULT OleLoadPictureEx(IStream, int, BOOL, const(GUID)*, uint, uint, uint, void**);
+HRESULT OleLoadPictureEx(IStream, int, BOOL, const(GUID)*, uint, uint, LOAD_PICTURE_FLAGS, void**);
 HRESULT OleLoadPicturePath(PWSTR, IUnknown, uint, uint, const(GUID)*, void**);
 HRESULT OleLoadPictureFile(VARIANT, IDispatch*);
-HRESULT OleLoadPictureFileEx(VARIANT, uint, uint, uint, IDispatch*);
+HRESULT OleLoadPictureFileEx(VARIANT, uint, uint, LOAD_PICTURE_FLAGS, IDispatch*);
 HRESULT OleSavePictureFile(IDispatch, BSTR);
 HCURSOR OleIconToCursor(HINSTANCE, HICON);
 BOOL OleUIAddVerbMenuW(IOleObject, const(wchar)*, HMENU, uint, uint, uint, BOOL, uint, HMENU*);
@@ -513,12 +513,6 @@ enum GUID_FONTITALIC = GUID(0x66504310, 0xbe0f, 0x101a, [0x8b, 0xbb, 0x0, 0xaa, 
 enum GUID_FONTUNDERSCORE = GUID(0x66504311, 0xbe0f, 0x101a, [0x8b, 0xbb, 0x0, 0xaa, 0x0, 0x30, 0xc, 0xab]);
 enum GUID_FONTSTRIKETHROUGH = GUID(0x66504312, 0xbe0f, 0x101a, [0x8b, 0xbb, 0x0, 0xaa, 0x0, 0x30, 0xc, 0xab]);
 enum GUID_HANDLE = GUID(0x66504313, 0xbe0f, 0x101a, [0x8b, 0xbb, 0x0, 0xaa, 0x0, 0x30, 0xc, 0xab]);
-enum PICTYPE_UNINITIALIZED = 0xffffffffffffffff;
-enum PICTYPE_NONE = 0x00000000;
-enum PICTYPE_BITMAP = 0x00000001;
-enum PICTYPE_METAFILE = 0x00000002;
-enum PICTYPE_ICON = 0x00000003;
-enum PICTYPE_ENHMETAFILE = 0x00000004;
 enum CONNECT_E_LAST = 0xffffffff8004020f;
 enum CONNECT_S_FIRST = 0x00040200;
 enum CONNECT_S_LAST = 0x0004020f;
@@ -534,10 +528,6 @@ enum VT_STORED_PROPSET = 0x0000004a;
 enum VT_BLOB_PROPSET = 0x0000004b;
 enum VT_VERBOSE_ENUM = 0x0000004c;
 enum OCM__BASE = 0x00002000;
-enum LP_DEFAULT = 0x00000000;
-enum LP_MONOCHROME = 0x00000001;
-enum LP_VGACOLOR = 0x00000002;
-enum LP_COLOR = 0x00000004;
 enum DISPID_AUTOSIZE = 0xfffffffffffffe0c;
 enum DISPID_BACKCOLOR = 0xfffffffffffffe0b;
 enum DISPID_BACKSTYLE = 0xfffffffffffffe0a;
@@ -690,11 +680,6 @@ enum OLEIVERB_HIDE = 0xfffffffffffffffd;
 enum OLEIVERB_UIACTIVATE = 0xfffffffffffffffc;
 enum OLEIVERB_INPLACEACTIVATE = 0xfffffffffffffffb;
 enum OLEIVERB_DISCARDUNDOSTATE = 0xfffffffffffffffa;
-enum EMBDHLP_INPROC_HANDLER = 0x00000000;
-enum EMBDHLP_INPROC_SERVER = 0x00000001;
-enum EMBDHLP_CREATENOW = 0x00000000;
-enum EMBDHLP_DELAYCREATE = 0x00010000;
-enum OLECREATE_LEAVERUNNING = 0x00000001;
 enum IDC_OLEUIHELP = 0x00000063;
 enum IDC_IO_CREATENEW = 0x00000834;
 enum IDC_IO_CREATEFROMFILE = 0x00000835;
@@ -860,20 +845,6 @@ enum OLEUI_ERR_LOCALMEMALLOC = 0x00000071;
 enum OLEUI_ERR_GLOBALMEMALLOC = 0x00000072;
 enum OLEUI_ERR_LOADSTRING = 0x00000073;
 enum OLEUI_ERR_STANDARDMAX = 0x00000074;
-enum IOF_SHOWHELP = 0x00000001;
-enum IOF_SELECTCREATENEW = 0x00000002;
-enum IOF_SELECTCREATEFROMFILE = 0x00000004;
-enum IOF_CHECKLINK = 0x00000008;
-enum IOF_CHECKDISPLAYASICON = 0x00000010;
-enum IOF_CREATENEWOBJECT = 0x00000020;
-enum IOF_CREATEFILEOBJECT = 0x00000040;
-enum IOF_CREATELINKOBJECT = 0x00000080;
-enum IOF_DISABLELINK = 0x00000100;
-enum IOF_VERIFYSERVERSEXIST = 0x00000200;
-enum IOF_DISABLEDISPLAYASICON = 0x00000400;
-enum IOF_HIDECHANGEICON = 0x00000800;
-enum IOF_SHOWINSERTCONTROL = 0x00001000;
-enum IOF_SELECTCREATECONTROL = 0x00002000;
 enum OLEUI_IOERR_LPSZFILEINVALID = 0x00000074;
 enum OLEUI_IOERR_LPSZLABELINVALID = 0x00000075;
 enum OLEUI_IOERR_HICONINVALID = 0x00000076;
@@ -885,14 +856,6 @@ enum OLEUI_IOERR_SCODEHASERROR = 0x0000007b;
 enum OLEUI_IOERR_LPCLSIDEXCLUDEINVALID = 0x0000007c;
 enum OLEUI_IOERR_CCHFILEINVALID = 0x0000007d;
 enum PS_MAXLINKTYPES = 0x00000008;
-enum PSF_SHOWHELP = 0x00000001;
-enum PSF_SELECTPASTE = 0x00000002;
-enum PSF_SELECTPASTELINK = 0x00000004;
-enum PSF_CHECKDISPLAYASICON = 0x00000008;
-enum PSF_DISABLEDISPLAYASICON = 0x00000010;
-enum PSF_HIDECHANGEICON = 0x00000020;
-enum PSF_STAYONCLIPBOARDCHANGE = 0x00000040;
-enum PSF_NOREFRESHDATAOBJECT = 0x00000080;
 enum OLEUI_IOERR_SRCDATAOBJECTINVALID = 0x00000074;
 enum OLEUI_IOERR_ARRPASTEENTRIESINVALID = 0x00000075;
 enum OLEUI_IOERR_ARRLINKTYPESINVALID = 0x00000076;
@@ -900,46 +863,19 @@ enum OLEUI_PSERR_CLIPBOARDCHANGED = 0x00000077;
 enum OLEUI_PSERR_GETCLIPBOARDFAILED = 0x00000078;
 enum OLEUI_ELERR_LINKCNTRNULL = 0x00000074;
 enum OLEUI_ELERR_LINKCNTRINVALID = 0x00000075;
-enum ELF_SHOWHELP = 0x00000001;
-enum ELF_DISABLEUPDATENOW = 0x00000002;
-enum ELF_DISABLEOPENSOURCE = 0x00000004;
-enum ELF_DISABLECHANGESOURCE = 0x00000008;
-enum ELF_DISABLECANCELLINK = 0x00000010;
-enum CIF_SHOWHELP = 0x00000001;
-enum CIF_SELECTCURRENT = 0x00000002;
-enum CIF_SELECTDEFAULT = 0x00000004;
-enum CIF_SELECTFROMFILE = 0x00000008;
-enum CIF_USEICONEXE = 0x00000010;
 enum OLEUI_CIERR_MUSTHAVECLSID = 0x00000074;
 enum OLEUI_CIERR_MUSTHAVECURRENTMETAFILE = 0x00000075;
 enum OLEUI_CIERR_SZICONEXEINVALID = 0x00000076;
 enum PROP_HWND_CHGICONDLG = "HWND_CIDLG";
-enum CF_SHOWHELPBUTTON = 0x00000001;
-enum CF_SETCONVERTDEFAULT = 0x00000002;
-enum CF_SETACTIVATEDEFAULT = 0x00000004;
-enum CF_SELECTCONVERTTO = 0x00000008;
-enum CF_SELECTACTIVATEAS = 0x00000010;
-enum CF_DISABLEDISPLAYASICON = 0x00000020;
-enum CF_DISABLEACTIVATEAS = 0x00000040;
-enum CF_HIDECHANGEICON = 0x00000080;
-enum CF_CONVERTONLY = 0x00000100;
 enum OLEUI_CTERR_CLASSIDINVALID = 0x00000075;
 enum OLEUI_CTERR_DVASPECTINVALID = 0x00000076;
 enum OLEUI_CTERR_CBFORMATINVALID = 0x00000077;
 enum OLEUI_CTERR_HMETAPICTINVALID = 0x00000078;
 enum OLEUI_CTERR_STRINGINVALID = 0x00000079;
-enum BZ_DISABLECANCELBUTTON = 0x00000001;
-enum BZ_DISABLESWITCHTOBUTTON = 0x00000002;
-enum BZ_DISABLERETRYBUTTON = 0x00000004;
-enum BZ_NOTRESPONDINGDIALOG = 0x00000008;
 enum OLEUI_BZERR_HTASKINVALID = 0x00000074;
 enum OLEUI_BZ_SWITCHTOSELECTED = 0x00000075;
 enum OLEUI_BZ_RETRYSELECTED = 0x00000076;
 enum OLEUI_BZ_CALLUNBLOCKED = 0x00000077;
-enum CSF_SHOWHELP = 0x00000001;
-enum CSF_VALIDSOURCE = 0x00000002;
-enum CSF_ONLYGETSOURCE = 0x00000004;
-enum CSF_EXPLORER = 0x00000008;
 enum OLEUI_CSERR_LINKCNTRNULL = 0x00000074;
 enum OLEUI_CSERR_LINKCNTRINVALID = 0x00000075;
 enum OLEUI_CSERR_FROMNOTNULL = 0x00000076;
@@ -948,13 +884,6 @@ enum OLEUI_CSERR_SOURCENULL = 0x00000078;
 enum OLEUI_CSERR_SOURCEINVALID = 0x00000079;
 enum OLEUI_CSERR_SOURCEPARSERROR = 0x0000007a;
 enum OLEUI_CSERR_SOURCEPARSEERROR = 0x0000007a;
-enum VPF_SELECTRELATIVE = 0x00000001;
-enum VPF_DISABLERELATIVE = 0x00000002;
-enum VPF_DISABLESCALE = 0x00000004;
-enum OPF_OBJECTISLINK = 0x00000001;
-enum OPF_NOFILLDEFAULT = 0x00000002;
-enum OPF_SHOWHELP = 0x00000004;
-enum OPF_DISABLECONVERT = 0x00000008;
 enum OLEUI_OPERR_SUBPROPNULL = 0x00000074;
 enum OLEUI_OPERR_SUBPROPINVALID = 0x00000075;
 enum OLEUI_OPERR_PROPSHEETNULL = 0x00000076;
@@ -979,35 +908,6 @@ enum OLEUI_OPERR_OBJINFOINVALID = 0x00000088;
 enum OLEUI_OPERR_LINKINFOINVALID = 0x00000089;
 enum OLEUI_QUERY_GETCLASSID = 0x0000ff00;
 enum OLEUI_QUERY_LINKBROKEN = 0x0000ff01;
-enum FADF_AUTO = 0x00000001;
-enum FADF_STATIC = 0x00000002;
-enum FADF_EMBEDDED = 0x00000004;
-enum FADF_FIXEDSIZE = 0x00000010;
-enum FADF_RECORD = 0x00000020;
-enum FADF_HAVEIID = 0x00000040;
-enum FADF_HAVEVARTYPE = 0x00000080;
-enum FADF_BSTR = 0x00000100;
-enum FADF_UNKNOWN = 0x00000200;
-enum FADF_DISPATCH = 0x00000400;
-enum FADF_VARIANT = 0x00000800;
-enum FADF_RESERVED = 0x0000f008;
-enum PARAMFLAG_NONE = 0x00000000;
-enum PARAMFLAG_FIN = 0x00000001;
-enum PARAMFLAG_FOUT = 0x00000002;
-enum PARAMFLAG_FLCID = 0x00000004;
-enum PARAMFLAG_FRETVAL = 0x00000008;
-enum PARAMFLAG_FOPT = 0x00000010;
-enum PARAMFLAG_FHASDEFAULT = 0x00000020;
-enum PARAMFLAG_FHASCUSTDATA = 0x00000040;
-enum IDLFLAG_NONE = 0x00000000;
-enum IDLFLAG_FIN = 0x00000001;
-enum IDLFLAG_FOUT = 0x00000002;
-enum IDLFLAG_FLCID = 0x00000004;
-enum IDLFLAG_FRETVAL = 0x00000008;
-enum IMPLTYPEFLAG_FDEFAULT = 0x00000001;
-enum IMPLTYPEFLAG_FSOURCE = 0x00000002;
-enum IMPLTYPEFLAG_FRESTRICTED = 0x00000004;
-enum IMPLTYPEFLAG_FDEFAULTVTABLE = 0x00000008;
 enum DISPID_UNKNOWN = 0xffffffffffffffff;
 enum DISPID_VALUE = 0x00000000;
 enum DISPID_PROPERTYPUT = 0xfffffffffffffffd;
@@ -1033,56 +933,16 @@ enum VARIANT_USE_NLS = 0x00000080;
 enum LOCALE_USE_NLS = 0x10000000;
 enum VTDATEGRE_MAX = 0x002d2481;
 enum VTDATEGRE_MIN = 0xfffffffffff5f7e6;
-enum NUMPRS_LEADING_WHITE = 0x00000001;
-enum NUMPRS_TRAILING_WHITE = 0x00000002;
-enum NUMPRS_LEADING_PLUS = 0x00000004;
-enum NUMPRS_TRAILING_PLUS = 0x00000008;
-enum NUMPRS_LEADING_MINUS = 0x00000010;
-enum NUMPRS_TRAILING_MINUS = 0x00000020;
-enum NUMPRS_HEX_OCT = 0x00000040;
-enum NUMPRS_PARENS = 0x00000080;
-enum NUMPRS_DECIMAL = 0x00000100;
-enum NUMPRS_THOUSANDS = 0x00000200;
-enum NUMPRS_CURRENCY = 0x00000400;
-enum NUMPRS_EXPONENT = 0x00000800;
-enum NUMPRS_USE_ALL = 0x00001000;
-enum NUMPRS_STD = 0x00001fff;
-enum NUMPRS_NEG = 0x00010000;
-enum NUMPRS_INEXACT = 0x00020000;
-enum VARCMP_LT = 0x00000000;
-enum VARCMP_EQ = 0x00000001;
-enum VARCMP_GT = 0x00000002;
-enum VARCMP_NULL = 0x00000003;
 enum MEMBERID_NIL = 0xffffffffffffffff;
 enum ID_DEFAULTINST = 0xfffffffffffffffe;
-enum DISPATCH_METHOD = 0x00000001;
-enum DISPATCH_PROPERTYGET = 0x00000002;
-enum DISPATCH_PROPERTYPUT = 0x00000004;
-enum DISPATCH_PROPERTYPUTREF = 0x00000008;
 enum LOAD_TLB_AS_32BIT = 0x00000020;
 enum LOAD_TLB_AS_64BIT = 0x00000040;
-enum ACTIVEOBJECT_STRONG = 0x00000000;
-enum ACTIVEOBJECT_WEAK = 0x00000001;
 enum fdexNameCaseSensitive = 0x00000001;
 enum fdexNameEnsure = 0x00000002;
 enum fdexNameImplicit = 0x00000004;
 enum fdexNameCaseInsensitive = 0x00000008;
 enum fdexNameInternal = 0x00000010;
 enum fdexNameNoDynamicProperties = 0x00000020;
-enum fdexPropCanGet = 0x00000001;
-enum fdexPropCannotGet = 0x00000002;
-enum fdexPropCanPut = 0x00000004;
-enum fdexPropCannotPut = 0x00000008;
-enum fdexPropCanPutRef = 0x00000010;
-enum fdexPropCannotPutRef = 0x00000020;
-enum fdexPropNoSideEffects = 0x00000040;
-enum fdexPropDynamicType = 0x00000080;
-enum fdexPropCanCall = 0x00000100;
-enum fdexPropCannotCall = 0x00000200;
-enum fdexPropCanConstruct = 0x00000400;
-enum fdexPropCannotConstruct = 0x00000800;
-enum fdexPropCanSourceEvents = 0x00001000;
-enum fdexPropCannotSourceEvents = 0x00002000;
 enum fdexEnumDefault = 0x00000001;
 enum fdexEnumAll = 0x00000002;
 enum DISPATCH_CONSTRUCT = 0x00004000;
@@ -1136,32 +996,302 @@ enum : uint
     DROPEFFECT_SCROLL = 0x80000000,
 }
 
-struct _wireSAFEARR_BSTR
+alias KEYMODIFIERS = uint;
+enum : uint
+{
+    KEYMOD_SHIFT   = 0x00000001,
+    KEYMOD_CONTROL = 0x00000002,
+    KEYMOD_ALT     = 0x00000004,
+}
+
+alias ACTIVEOBJECT_FLAGS = uint;
+enum : uint
+{
+    ACTIVEOBJECT_STRONG = 0x00000000,
+    ACTIVEOBJECT_WEAK   = 0x00000001,
+}
+
+alias BUSY_DIALOG_FLAGS = uint;
+enum : uint
+{
+    BZ_DISABLECANCELBUTTON   = 0x00000001,
+    BZ_DISABLESWITCHTOBUTTON = 0x00000002,
+    BZ_DISABLERETRYBUTTON    = 0x00000004,
+    BZ_NOTRESPONDINGDIALOG   = 0x00000008,
+}
+
+alias UI_CONVERT_FLAGS = uint;
+enum : uint
+{
+    CF_SHOWHELPBUTTON       = 0x00000001,
+    CF_SETCONVERTDEFAULT    = 0x00000002,
+    CF_SETACTIVATEDEFAULT   = 0x00000004,
+    CF_SELECTCONVERTTO      = 0x00000008,
+    CF_SELECTACTIVATEAS     = 0x00000010,
+    CF_DISABLEDISPLAYASICON = 0x00000020,
+    CF_DISABLEACTIVATEAS    = 0x00000040,
+    CF_HIDECHANGEICON       = 0x00000080,
+    CF_CONVERTONLY          = 0x00000100,
+}
+
+alias CHANGE_ICON_FLAGS = int;
+enum : int
+{
+    CIF_SHOWHELP       = 0x00000001,
+    CIF_SELECTCURRENT  = 0x00000002,
+    CIF_SELECTDEFAULT  = 0x00000004,
+    CIF_SELECTFROMFILE = 0x00000008,
+    CIF_USEICONEXE     = 0x00000010,
+}
+
+alias CHANGE_SOURCE_FLAGS = uint;
+enum : uint
+{
+    CSF_SHOWHELP      = 0x00000001,
+    CSF_VALIDSOURCE   = 0x00000002,
+    CSF_ONLYGETSOURCE = 0x00000004,
+    CSF_EXPLORER      = 0x00000008,
+}
+
+alias EDIT_LINKS_FLAGS = uint;
+enum : uint
+{
+    ELF_SHOWHELP            = 0x00000001,
+    ELF_DISABLEUPDATENOW    = 0x00000002,
+    ELF_DISABLEOPENSOURCE   = 0x00000004,
+    ELF_DISABLECHANGESOURCE = 0x00000008,
+    ELF_DISABLECANCELLINK   = 0x00000010,
+}
+
+alias INSERT_OBJECT_FLAGS = uint;
+enum : uint
+{
+    IOF_SHOWHELP             = 0x00000001,
+    IOF_SELECTCREATENEW      = 0x00000002,
+    IOF_SELECTCREATEFROMFILE = 0x00000004,
+    IOF_CHECKLINK            = 0x00000008,
+    IOF_CHECKDISPLAYASICON   = 0x00000010,
+    IOF_CREATENEWOBJECT      = 0x00000020,
+    IOF_CREATEFILEOBJECT     = 0x00000040,
+    IOF_CREATELINKOBJECT     = 0x00000080,
+    IOF_DISABLELINK          = 0x00000100,
+    IOF_VERIFYSERVERSEXIST   = 0x00000200,
+    IOF_DISABLEDISPLAYASICON = 0x00000400,
+    IOF_HIDECHANGEICON       = 0x00000800,
+    IOF_SHOWINSERTCONTROL    = 0x00001000,
+    IOF_SELECTCREATECONTROL  = 0x00002000,
+}
+
+alias OBJECT_PROPERTIES_FLAGS = uint;
+enum : uint
+{
+    OPF_OBJECTISLINK   = 0x00000001,
+    OPF_NOFILLDEFAULT  = 0x00000002,
+    OPF_SHOWHELP       = 0x00000004,
+    OPF_DISABLECONVERT = 0x00000008,
+}
+
+alias VIEW_OBJECT_PROPERTIES_FLAGS = uint;
+enum : uint
+{
+    VPF_SELECTRELATIVE  = 0x00000001,
+    VPF_DISABLERELATIVE = 0x00000002,
+    VPF_DISABLESCALE    = 0x00000004,
+}
+
+alias PARAMFLAGS = ushort;
+enum : ushort
+{
+    PARAMFLAG_NONE         = 0x0000,
+    PARAMFLAG_FIN          = 0x0001,
+    PARAMFLAG_FOUT         = 0x0002,
+    PARAMFLAG_FLCID        = 0x0004,
+    PARAMFLAG_FRETVAL      = 0x0008,
+    PARAMFLAG_FOPT         = 0x0010,
+    PARAMFLAG_FHASDEFAULT  = 0x0020,
+    PARAMFLAG_FHASCUSTDATA = 0x0040,
+}
+
+alias NUMPARSE_FLAGS = uint;
+enum : uint
+{
+    NUMPRS_LEADING_WHITE  = 0x00000001,
+    NUMPRS_TRAILING_WHITE = 0x00000002,
+    NUMPRS_LEADING_PLUS   = 0x00000004,
+    NUMPRS_TRAILING_PLUS  = 0x00000008,
+    NUMPRS_LEADING_MINUS  = 0x00000010,
+    NUMPRS_TRAILING_MINUS = 0x00000020,
+    NUMPRS_HEX_OCT        = 0x00000040,
+    NUMPRS_PARENS         = 0x00000080,
+    NUMPRS_DECIMAL        = 0x00000100,
+    NUMPRS_THOUSANDS      = 0x00000200,
+    NUMPRS_CURRENCY       = 0x00000400,
+    NUMPRS_EXPONENT       = 0x00000800,
+    NUMPRS_USE_ALL        = 0x00001000,
+    NUMPRS_STD            = 0x00001fff,
+    NUMPRS_NEG            = 0x00010000,
+    NUMPRS_INEXACT        = 0x00020000,
+}
+
+alias PICTYPE = int;
+enum : int
+{
+    PICTYPE_UNINITIALIZED = 0xffffffff,
+    PICTYPE_NONE          = 0x00000000,
+    PICTYPE_BITMAP        = 0x00000001,
+    PICTYPE_METAFILE      = 0x00000002,
+    PICTYPE_ICON          = 0x00000003,
+    PICTYPE_ENHMETAFILE   = 0x00000004,
+}
+
+alias VARCMP = uint;
+enum : uint
+{
+    VARCMP_LT   = 0x00000000,
+    VARCMP_EQ   = 0x00000001,
+    VARCMP_GT   = 0x00000002,
+    VARCMP_NULL = 0x00000003,
+}
+
+alias PASTE_SPECIAL_FLAGS = uint;
+enum : uint
+{
+    PSF_SHOWHELP              = 0x00000001,
+    PSF_SELECTPASTE           = 0x00000002,
+    PSF_SELECTPASTELINK       = 0x00000004,
+    PSF_CHECKDISPLAYASICON    = 0x00000008,
+    PSF_DISABLEDISPLAYASICON  = 0x00000010,
+    PSF_HIDECHANGEICON        = 0x00000020,
+    PSF_STAYONCLIPBOARDCHANGE = 0x00000040,
+    PSF_NOREFRESHDATAOBJECT   = 0x00000080,
+}
+
+alias EMBDHLP_FLAGS = uint;
+enum : uint
+{
+    EMBDHLP_INPROC_HANDLER = 0x00000000,
+    EMBDHLP_INPROC_SERVER  = 0x00000001,
+    EMBDHLP_CREATENOW      = 0x00000000,
+    EMBDHLP_DELAYCREATE    = 0x00010000,
+}
+
+alias FDEX_PROP_FLAGS = uint;
+enum : uint
+{
+    fdexPropCanGet             = 0x00000001,
+    fdexPropCannotGet          = 0x00000002,
+    fdexPropCanPut             = 0x00000004,
+    fdexPropCannotPut          = 0x00000008,
+    fdexPropCanPutRef          = 0x00000010,
+    fdexPropCannotPutRef       = 0x00000020,
+    fdexPropNoSideEffects      = 0x00000040,
+    fdexPropDynamicType        = 0x00000080,
+    fdexPropCanCall            = 0x00000100,
+    fdexPropCannotCall         = 0x00000200,
+    fdexPropCanConstruct       = 0x00000400,
+    fdexPropCannotConstruct    = 0x00000800,
+    fdexPropCanSourceEvents    = 0x00001000,
+    fdexPropCannotSourceEvents = 0x00002000,
+}
+
+alias LOAD_PICTURE_FLAGS = uint;
+enum : uint
+{
+    LP_DEFAULT    = 0x00000000,
+    LP_MONOCHROME = 0x00000001,
+    LP_VGACOLOR   = 0x00000002,
+    LP_COLOR      = 0x00000004,
+}
+
+alias OLECREATE = uint;
+enum : uint
+{
+    OLECREATE_ZERO         = 0x00000000,
+    OLECREATE_LEAVERUNNING = 0x00000001,
+}
+
+alias VARFORMAT_FIRST_DAY = int;
+enum : int
+{
+    VARFORMAT_FIRST_DAY_SYSTEMDEFAULT = 0x00000000,
+    VARFORMAT_FIRST_DAY_MONDAY        = 0x00000001,
+    VARFORMAT_FIRST_DAY_TUESDAY       = 0x00000002,
+    VARFORMAT_FIRST_DAY_WEDNESDAY     = 0x00000003,
+    VARFORMAT_FIRST_DAY_THURSDAY      = 0x00000004,
+    VARFORMAT_FIRST_DAY_FRIDAY        = 0x00000005,
+    VARFORMAT_FIRST_DAY_SATURDAY      = 0x00000006,
+    VARFORMAT_FIRST_DAY_SUNDAY        = 0x00000007,
+}
+
+alias VARFORMAT_FIRST_WEEK = int;
+enum : int
+{
+    VARFORMAT_FIRST_WEEK_SYSTEMDEFAULT               = 0x00000000,
+    VARFORMAT_FIRST_WEEK_CONTAINS_JANUARY_FIRST      = 0x00000001,
+    VARFORMAT_FIRST_WEEK_LARGER_HALF_IN_CURRENT_YEAR = 0x00000002,
+    VARFORMAT_FIRST_WEEK_HAS_SEVEN_DAYS              = 0x00000003,
+}
+
+alias VARFORMAT_NAMED_FORMAT = int;
+enum : int
+{
+    VARFORMAT_NAMED_FORMAT_GENERALDATE = 0x00000000,
+    VARFORMAT_NAMED_FORMAT_LONGDATE    = 0x00000001,
+    VARFORMAT_NAMED_FORMAT_SHORTDATE   = 0x00000002,
+    VARFORMAT_NAMED_FORMAT_LONGTIME    = 0x00000003,
+    VARFORMAT_NAMED_FORMAT_SHORTTIME   = 0x00000004,
+}
+
+alias VARFORMAT_LEADING_DIGIT = int;
+enum : int
+{
+    VARFORMAT_LEADING_DIGIT_SYSTEMDEFAULT = 0xfffffffe,
+    VARFORMAT_LEADING_DIGIT_INCLUDED      = 0xffffffff,
+    VARFORMAT_LEADING_DIGIT_NOTINCLUDED   = 0x00000000,
+}
+
+alias VARFORMAT_PARENTHESES = int;
+enum : int
+{
+    VARFORMAT_PARENTHESES_SYSTEMDEFAULT = 0xfffffffe,
+    VARFORMAT_PARENTHESES_USED          = 0xffffffff,
+    VARFORMAT_PARENTHESES_NOTUSED       = 0x00000000,
+}
+
+alias VARFORMAT_GROUP = int;
+enum : int
+{
+    VARFORMAT_GROUP_SYSTEMDEFAULT = 0xfffffffe,
+    VARFORMAT_GROUP_THOUSANDS     = 0xffffffff,
+    VARFORMAT_GROUP_NOTTHOUSANDS  = 0x00000000,
+}
+
+struct SAFEARR_BSTR
 {
     uint Size;
     FLAGGED_WORD_BLOB** aBstr;
 }
-struct _wireSAFEARR_UNKNOWN
+struct SAFEARR_UNKNOWN
 {
     uint Size;
     IUnknown* apUnknown;
 }
-struct _wireSAFEARR_DISPATCH
+struct SAFEARR_DISPATCH
 {
     uint Size;
     IDispatch* apDispatch;
 }
-struct _wireSAFEARR_VARIANT
+struct SAFEARR_VARIANT
 {
     uint Size;
     _wireVARIANT** aVariant;
 }
-struct _wireSAFEARR_BRECORD
+struct SAFEARR_BRECORD
 {
     uint Size;
     _wireBRECORD** aRecord;
 }
-struct _wireSAFEARR_HAVEIID
+struct SAFEARR_HAVEIID
 {
     uint Size;
     IUnknown* apUnknown;
@@ -1183,20 +1313,20 @@ enum : int
     SF_HAVEIID  = 0x0000800d,
 }
 
-struct _wireSAFEARRAY_UNION
+struct SAFEARRAYUNION
 {
     uint sfType;
     union _u_e__Struct
     {
-        _wireSAFEARR_BSTR BstrStr;
-        _wireSAFEARR_UNKNOWN UnknownStr;
-        _wireSAFEARR_DISPATCH DispatchStr;
-        _wireSAFEARR_VARIANT VariantStr;
-        _wireSAFEARR_BRECORD RecordStr;
-        _wireSAFEARR_HAVEIID HaveIidStr;
+        SAFEARR_BSTR BstrStr;
+        SAFEARR_UNKNOWN UnknownStr;
+        SAFEARR_DISPATCH DispatchStr;
+        SAFEARR_VARIANT VariantStr;
+        SAFEARR_BRECORD RecordStr;
+        SAFEARR_HAVEIID HaveIidStr;
         BYTE_SIZEDARR ByteStr;
-        SHORT_SIZEDARR WordStr;
-        LONG_SIZEDARR LongStr;
+        WORD_SIZEDARR WordStr;
+        DWORD_SIZEDARR LongStr;
         HYPER_SIZEDARR HyperStr;
     }
 }
@@ -1206,7 +1336,7 @@ struct _wireSAFEARRAY
     ushort fFeatures;
     uint cbElements;
     uint cLocks;
-    _wireSAFEARRAY_UNION uArrayStructs;
+    SAFEARRAYUNION uArrayStructs;
     SAFEARRAYBOUND[1] rgsabound;
 }
 struct _wireBRECORD
@@ -1286,7 +1416,7 @@ struct PARAMDESCEX
 struct PARAMDESC
 {
     PARAMDESCEX* pparamdescex;
-    ushort wParamFlags;
+    PARAMFLAGS wParamFlags;
 }
 alias TYPEFLAGS = int;
 enum : int
@@ -1306,42 +1436,6 @@ enum : int
     TYPEFLAG_FDISPATCHABLE  = 0x00001000,
     TYPEFLAG_FREVERSEBIND   = 0x00002000,
     TYPEFLAG_FPROXY         = 0x00004000,
-}
-
-alias FUNCFLAGS = int;
-enum : int
-{
-    FUNCFLAG_FRESTRICTED       = 0x00000001,
-    FUNCFLAG_FSOURCE           = 0x00000002,
-    FUNCFLAG_FBINDABLE         = 0x00000004,
-    FUNCFLAG_FREQUESTEDIT      = 0x00000008,
-    FUNCFLAG_FDISPLAYBIND      = 0x00000010,
-    FUNCFLAG_FDEFAULTBIND      = 0x00000020,
-    FUNCFLAG_FHIDDEN           = 0x00000040,
-    FUNCFLAG_FUSESGETLASTERROR = 0x00000080,
-    FUNCFLAG_FDEFAULTCOLLELEM  = 0x00000100,
-    FUNCFLAG_FUIDEFAULT        = 0x00000200,
-    FUNCFLAG_FNONBROWSABLE     = 0x00000400,
-    FUNCFLAG_FREPLACEABLE      = 0x00000800,
-    FUNCFLAG_FIMMEDIATEBIND    = 0x00001000,
-}
-
-alias VARFLAGS = int;
-enum : int
-{
-    VARFLAG_FREADONLY        = 0x00000001,
-    VARFLAG_FSOURCE          = 0x00000002,
-    VARFLAG_FBINDABLE        = 0x00000004,
-    VARFLAG_FREQUESTEDIT     = 0x00000008,
-    VARFLAG_FDISPLAYBIND     = 0x00000010,
-    VARFLAG_FDEFAULTBIND     = 0x00000020,
-    VARFLAG_FHIDDEN          = 0x00000040,
-    VARFLAG_FRESTRICTED      = 0x00000080,
-    VARFLAG_FDEFAULTCOLLELEM = 0x00000100,
-    VARFLAG_FUIDEFAULT       = 0x00000200,
-    VARFLAG_FNONBROWSABLE    = 0x00000400,
-    VARFLAG_FREPLACEABLE     = 0x00000800,
-    VARFLAG_FIMMEDIATEBIND   = 0x00001000,
 }
 
 struct CLEANLOCALSTORAGE
@@ -1488,8 +1582,8 @@ interface IRecordInfo : IUnknown
     HRESULT GetTypeInfo(ITypeInfo*);
     HRESULT GetField(void*, const(wchar)*, VARIANT*);
     HRESULT GetFieldNoCopy(void*, const(wchar)*, VARIANT*, void**);
-    HRESULT PutField(uint, void*, const(wchar)*, VARIANT*);
-    HRESULT PutFieldNoCopy(uint, void*, const(wchar)*, VARIANT*);
+    HRESULT PutField(INVOKEKIND, void*, const(wchar)*, VARIANT*);
+    HRESULT PutFieldNoCopy(INVOKEKIND, void*, const(wchar)*, VARIANT*);
     HRESULT GetFieldNames(uint*, BSTR*);
     BOOL IsMatchingType(IRecordInfo);
     void* RecordCreate();
@@ -1542,14 +1636,14 @@ interface IParseDisplayName : IUnknown
 enum IID_IOleContainer = GUID(0x11b, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IOleContainer : IParseDisplayName
 {
-    HRESULT EnumObjects(uint, IEnumUnknown*);
+    HRESULT EnumObjects(OLECONTF, IEnumUnknown*);
     HRESULT LockContainer(BOOL);
 }
 enum IID_IOleClientSite = GUID(0x118, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IOleClientSite : IUnknown
 {
     HRESULT SaveObject();
-    HRESULT GetMoniker(uint, uint, IMoniker*);
+    HRESULT GetMoniker(OLEGETMONIKER, OLEWHICHMK, IMoniker*);
     HRESULT GetContainer(IOleContainer*);
     HRESULT ShowObject();
     HRESULT OnShowWindow(BOOL);
@@ -1621,9 +1715,9 @@ interface IOleObject : IUnknown
     HRESULT SetClientSite(IOleClientSite);
     HRESULT GetClientSite(IOleClientSite*);
     HRESULT SetHostNames(const(wchar)*, const(wchar)*);
-    HRESULT Close(uint);
-    HRESULT SetMoniker(uint, IMoniker);
-    HRESULT GetMoniker(uint, uint, IMoniker*);
+    HRESULT Close(OLECLOSE);
+    HRESULT SetMoniker(OLEWHICHMK, IMoniker);
+    HRESULT GetMoniker(OLEGETMONIKER, OLEWHICHMK, IMoniker*);
     HRESULT InitFromData(IDataObject, BOOL, uint);
     HRESULT GetClipboardData(uint, IDataObject*);
     HRESULT DoVerb(int, MSG*, IOleClientSite, int, HWND, RECT*);
@@ -1631,13 +1725,13 @@ interface IOleObject : IUnknown
     HRESULT Update();
     HRESULT IsUpToDate();
     HRESULT GetUserClassID(GUID*);
-    HRESULT GetUserType(uint, PWSTR*);
-    HRESULT SetExtent(uint, SIZE*);
-    HRESULT GetExtent(uint, SIZE*);
+    HRESULT GetUserType(USERCLASSTYPE, PWSTR*);
+    HRESULT SetExtent(DVASPECT, SIZE*);
+    HRESULT GetExtent(DVASPECT, SIZE*);
     HRESULT Advise(IAdviseSink, uint*);
     HRESULT Unadvise(uint);
     HRESULT EnumAdvise(IEnumSTATDATA*);
-    HRESULT GetMiscStatus(uint, uint*);
+    HRESULT GetMiscStatus(DVASPECT, OLEMISC*);
     HRESULT SetColorScheme(LOGPALETTE*);
 }
 alias OLERENDER = int;
@@ -1736,7 +1830,7 @@ interface IOleInPlaceActiveObject : IOleWindow
     HRESULT ResizeBorder(RECT*, IOleInPlaceUIWindow, BOOL);
     HRESULT EnableModeless(BOOL);
 }
-struct OIFI
+struct OLEINPLACEFRAMEINFO
 {
     uint cb;
     BOOL fMDIApp;
@@ -1744,14 +1838,14 @@ struct OIFI
     HACCEL haccel;
     uint cAccelEntries;
 }
-struct OleMenuGroupWidths
+struct OLEMENUGROUPWIDTHS
 {
     int[6] width;
 }
 enum IID_IOleInPlaceFrame = GUID(0x116, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IOleInPlaceFrame : IOleInPlaceUIWindow
 {
-    HRESULT InsertMenus(HMENU, OleMenuGroupWidths*);
+    HRESULT InsertMenus(HMENU, OLEMENUGROUPWIDTHS*);
     HRESULT SetMenu(HMENU, long, HWND);
     HRESULT RemoveMenus(HMENU);
     HRESULT SetStatusText(const(wchar)*);
@@ -1772,7 +1866,7 @@ interface IOleInPlaceSite : IOleWindow
     HRESULT CanInPlaceActivate();
     HRESULT OnInPlaceActivate();
     HRESULT OnUIActivate();
-    HRESULT GetWindowContext(IOleInPlaceFrame*, IOleInPlaceUIWindow*, RECT*, RECT*, OIFI*);
+    HRESULT GetWindowContext(IOleInPlaceFrame*, IOleInPlaceUIWindow*, RECT*, RECT*, OLEINPLACEFRAMEINFO*);
     HRESULT Scroll(SIZE);
     HRESULT OnUIDeactivate(BOOL);
     HRESULT OnInPlaceDeactivate();
@@ -1788,31 +1882,31 @@ interface IContinue : IUnknown
 enum IID_IViewObject = GUID(0x10d, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IViewObject : IUnknown
 {
-    HRESULT Draw(uint, int, void*, DVTARGETDEVICE*, HDC, HDC, RECTL*, RECTL*, long, ulong);
-    HRESULT GetColorSet(uint, int, void*, DVTARGETDEVICE*, HDC, LOGPALETTE**);
-    HRESULT Freeze(uint, int, void*, uint*);
+    HRESULT Draw(DVASPECT, int, void*, DVTARGETDEVICE*, HDC, HDC, RECTL*, RECTL*, long, ulong);
+    HRESULT GetColorSet(DVASPECT, int, void*, DVTARGETDEVICE*, HDC, LOGPALETTE**);
+    HRESULT Freeze(DVASPECT, int, void*, uint*);
     HRESULT Unfreeze(uint);
-    HRESULT SetAdvise(uint, uint, IAdviseSink);
+    HRESULT SetAdvise(DVASPECT, ADVF, IAdviseSink);
     HRESULT GetAdvise(uint*, uint*, IAdviseSink*);
 }
 enum IID_IViewObject2 = GUID(0x127, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IViewObject2 : IViewObject
 {
-    HRESULT GetExtent(uint, int, DVTARGETDEVICE*, SIZE*);
+    HRESULT GetExtent(DVASPECT, int, DVTARGETDEVICE*, SIZE*);
 }
 enum IID_IDropSource = GUID(0x121, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IDropSource : IUnknown
 {
     HRESULT QueryContinueDrag(BOOL, MODIFIERKEYS_FLAGS);
-    HRESULT GiveFeedback(uint);
+    HRESULT GiveFeedback(DROPEFFECT);
 }
 enum IID_IDropTarget = GUID(0x122, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IDropTarget : IUnknown
 {
-    HRESULT DragEnter(IDataObject, MODIFIERKEYS_FLAGS, POINTL, uint*);
-    HRESULT DragOver(MODIFIERKEYS_FLAGS, POINTL, uint*);
+    HRESULT DragEnter(IDataObject, MODIFIERKEYS_FLAGS, POINTL, DROPEFFECT*);
+    HRESULT DragOver(MODIFIERKEYS_FLAGS, POINTL, DROPEFFECT*);
     HRESULT DragLeave();
-    HRESULT Drop(IDataObject, MODIFIERKEYS_FLAGS, POINTL, uint*);
+    HRESULT Drop(IDataObject, MODIFIERKEYS_FLAGS, POINTL, DROPEFFECT*);
 }
 enum IID_IDropSourceNotify = GUID(0x12b, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IDropSourceNotify : IUnknown
@@ -1830,8 +1924,8 @@ struct OLEVERB
 {
     int lVerb;
     PWSTR lpszVerbName;
-    uint fuFlags;
-    uint grfAttribs;
+    MENU_ITEM_FLAGS fuFlags;
+    OLEVERBATTRIB grfAttribs;
 }
 alias OLEVERBATTRIB = int;
 enum : int
@@ -1851,8 +1945,8 @@ interface IEnumOLEVERB : IUnknown
 struct NUMPARSE
 {
     int cDig;
-    uint dwInFlags;
-    uint dwOutFlags;
+    NUMPARSE_FLAGS dwInFlags;
+    NUMPARSE_FLAGS dwOutFlags;
     int cchUsed;
     int nBaseShift;
     int nPwr10;
@@ -1950,7 +2044,7 @@ struct CONTROLINFO
     uint cb;
     HACCEL hAccel;
     ushort cAccel;
-    uint dwFlags;
+    CTRLINFO dwFlags;
 }
 alias CTRLINFO = int;
 enum : int
@@ -1989,7 +2083,7 @@ interface IOleControlSite : IUnknown
     HRESULT LockInPlaceActive(BOOL);
     HRESULT GetExtendedControl(IDispatch*);
     HRESULT TransformCoords(POINTL*, POINTF*, XFORMCOORDS);
-    HRESULT TranslateAccelerator(MSG*, uint);
+    HRESULT TranslateAccelerator(MSG*, KEYMODIFIERS);
     HRESULT OnFocus(BOOL);
     HRESULT ShowPropertyFrame();
 }
@@ -2095,7 +2189,7 @@ interface IFont : IUnknown
     HRESULT ReleaseHfont(HFONT);
     HRESULT SetHdc(HDC);
 }
-alias PictureAttributes = int;
+alias PICTUREATTRIBUTES = int;
 enum : int
 {
     PICTURE_SCALABLE    = 0x00000001,
@@ -2213,33 +2307,26 @@ enum : int
     HITRESULT_HIT         = 0x00000003,
 }
 
-alias DVASPECT2 = int;
-enum : int
-{
-    DVASPECT_OPAQUE      = 0x00000010,
-    DVASPECT_TRANSPARENT = 0x00000020,
-}
-
-struct ExtentInfo
+struct DVEXTENTINFO
 {
     uint cb;
     uint dwExtentMode;
     SIZE sizelProposed;
 }
-alias ExtentMode = int;
+alias DVEXTENTMODE = int;
 enum : int
 {
     DVEXTENT_CONTENT  = 0x00000000,
     DVEXTENT_INTEGRAL = 0x00000001,
 }
 
-alias AspectInfoFlag = int;
+alias DVASPECTINFOFLAG = int;
 enum : int
 {
     DVASPECTINFOFLAG_CANOPTIMIZE = 0x00000001,
 }
 
-struct AspectInfo
+struct DVASPECTINFO
 {
     uint cb;
     uint dwFlags;
@@ -2251,7 +2338,7 @@ interface IViewObjectEx : IViewObject2
     HRESULT GetViewStatus(uint*);
     HRESULT QueryHitPoint(uint, RECT*, POINT, int, uint*);
     HRESULT QueryHitRect(uint, RECT*, RECT*, int, uint*);
-    HRESULT GetNaturalExtent(DVASPECT, int, DVTARGETDEVICE*, HDC, ExtentInfo*, SIZE*);
+    HRESULT GetNaturalExtent(DVASPECT, int, DVTARGETDEVICE*, HDC, DVEXTENTINFO*, SIZE*);
 }
 enum IID_IOleUndoUnit = GUID(0x894ad3b0, 0xef97, 0x11ce, [0x9b, 0xc9, 0x0, 0xaa, 0x0, 0x60, 0x8e, 0x1]);
 interface IOleUndoUnit : IUnknown
@@ -2305,7 +2392,7 @@ enum : int
 enum IID_IPointerInactive = GUID(0x55980ba0, 0x35aa, 0x11cf, [0xb6, 0x71, 0x0, 0xaa, 0x0, 0x4c, 0xd6, 0xd8]);
 interface IPointerInactive : IUnknown
 {
-    HRESULT GetActivationPolicy(uint*);
+    HRESULT GetActivationPolicy(POINTERINACTIVE*);
     HRESULT OnInactiveMouseMove(RECT*, int, int, uint);
     HRESULT OnInactiveSetCursor(RECT*, int, int, uint, BOOL);
 }
@@ -2378,7 +2465,7 @@ struct QACONTAINER
     IAdviseSinkEx pAdviseSink;
     IPropertyNotifySink pPropertyNotifySink;
     IUnknown pUnkEventSink;
-    uint dwAmbientFlags;
+    QACONTAINERFLAGS dwAmbientFlags;
     uint colorFore;
     uint colorBack;
     IFont pFont;
@@ -2393,11 +2480,11 @@ struct QACONTAINER
 struct QACONTROL
 {
     uint cbSize;
-    uint dwMiscStatus;
-    uint dwViewStatus;
+    OLEMISC dwMiscStatus;
+    VIEWSTATUS dwViewStatus;
     uint dwEventCookie;
     uint dwPropNotifyCookie;
-    uint dwPointerActivationPolicy;
+    POINTERINACTIVE dwPointerActivationPolicy;
 }
 enum IID_IQuickActivate = GUID(0xcf51ed10, 0x62fe, 0x11cf, [0xbf, 0x86, 0x0, 0xa0, 0xc9, 0x3, 0x48, 0x36]);
 interface IQuickActivate : IUnknown
@@ -2434,7 +2521,7 @@ struct FONTDESC
 struct PICTDESC
 {
     uint cbSizeofstruct;
-    uint picType;
+    PICTYPE picType;
     union
     {
         struct _bmp_e__Struct
@@ -2583,8 +2670,8 @@ enum : int
 
 struct OLECMD
 {
-    uint cmdID;
-    uint cmdf;
+    OLECMDID cmdID;
+    OLECMDF cmdf;
 }
 struct OLECMDTEXT
 {
@@ -2862,7 +2949,7 @@ alias LPFNOLEUIHOOK = uint function(HWND, uint, WPARAM, LPARAM);
 struct OLEUIINSERTOBJECTW
 {
     uint cbStruct;
-    uint dwFlags;
+    INSERT_OBJECT_FLAGS dwFlags;
     HWND hWndOwner;
     const(wchar)* lpszCaption;
     LPFNOLEUIHOOK lpfnHook;
@@ -2887,7 +2974,7 @@ struct OLEUIINSERTOBJECTW
 struct OLEUIINSERTOBJECTA
 {
     uint cbStruct;
-    uint dwFlags;
+    INSERT_OBJECT_FLAGS dwFlags;
     HWND hWndOwner;
     const(char)* lpszCaption;
     LPFNOLEUIHOOK lpfnHook;
@@ -2945,7 +3032,7 @@ struct OLEUIPASTEENTRYA
 struct OLEUIPASTESPECIALW
 {
     uint cbStruct;
-    uint dwFlags;
+    PASTE_SPECIAL_FLAGS dwFlags;
     HWND hWndOwner;
     const(wchar)* lpszCaption;
     LPFNOLEUIHOOK lpfnHook;
@@ -2968,7 +3055,7 @@ struct OLEUIPASTESPECIALW
 struct OLEUIPASTESPECIALA
 {
     uint cbStruct;
-    uint dwFlags;
+    PASTE_SPECIAL_FLAGS dwFlags;
     HWND hWndOwner;
     const(char)* lpszCaption;
     LPFNOLEUIHOOK lpfnHook;
@@ -3015,7 +3102,7 @@ interface IOleUILinkContainerA : IUnknown
 struct OLEUIEDITLINKSW
 {
     uint cbStruct;
-    uint dwFlags;
+    EDIT_LINKS_FLAGS dwFlags;
     HWND hWndOwner;
     const(wchar)* lpszCaption;
     LPFNOLEUIHOOK lpfnHook;
@@ -3028,7 +3115,7 @@ struct OLEUIEDITLINKSW
 struct OLEUIEDITLINKSA
 {
     uint cbStruct;
-    uint dwFlags;
+    EDIT_LINKS_FLAGS dwFlags;
     HWND hWndOwner;
     const(char)* lpszCaption;
     LPFNOLEUIHOOK lpfnHook;
@@ -3041,7 +3128,7 @@ struct OLEUIEDITLINKSA
 struct OLEUICHANGEICONW
 {
     uint cbStruct;
-    uint dwFlags;
+    CHANGE_ICON_FLAGS dwFlags;
     HWND hWndOwner;
     const(wchar)* lpszCaption;
     LPFNOLEUIHOOK lpfnHook;
@@ -3057,7 +3144,7 @@ struct OLEUICHANGEICONW
 struct OLEUICHANGEICONA
 {
     uint cbStruct;
-    uint dwFlags;
+    CHANGE_ICON_FLAGS dwFlags;
     HWND hWndOwner;
     const(char)* lpszCaption;
     LPFNOLEUIHOOK lpfnHook;
@@ -3073,7 +3160,7 @@ struct OLEUICHANGEICONA
 struct OLEUICONVERTW
 {
     uint cbStruct;
-    uint dwFlags;
+    UI_CONVERT_FLAGS dwFlags;
     HWND hWndOwner;
     const(wchar)* lpszCaption;
     LPFNOLEUIHOOK lpfnHook;
@@ -3098,7 +3185,7 @@ struct OLEUICONVERTW
 struct OLEUICONVERTA
 {
     uint cbStruct;
-    uint dwFlags;
+    UI_CONVERT_FLAGS dwFlags;
     HWND hWndOwner;
     const(char)* lpszCaption;
     LPFNOLEUIHOOK lpfnHook;
@@ -3151,7 +3238,7 @@ struct OLEUIBUSYA
 struct OLEUICHANGESOURCEW
 {
     uint cbStruct;
-    uint dwFlags;
+    CHANGE_SOURCE_FLAGS dwFlags;
     HWND hWndOwner;
     const(wchar)* lpszCaption;
     LPFNOLEUIHOOK lpfnHook;
@@ -3171,7 +3258,7 @@ struct OLEUICHANGESOURCEW
 struct OLEUICHANGESOURCEA
 {
     uint cbStruct;
-    uint dwFlags;
+    CHANGE_SOURCE_FLAGS dwFlags;
     HWND hWndOwner;
     const(char)* lpszCaption;
     LPFNOLEUIHOOK lpfnHook;
@@ -3239,7 +3326,7 @@ struct OLEUIGNRLPROPSA
 struct OLEUIVIEWPROPSW
 {
     uint cbStruct;
-    uint dwFlags;
+    VIEW_OBJECT_PROPERTIES_FLAGS dwFlags;
     uint[2] dwReserved1;
     LPFNOLEUIHOOK lpfnHook;
     LPARAM lCustData;
@@ -3251,7 +3338,7 @@ struct OLEUIVIEWPROPSW
 struct OLEUIVIEWPROPSA
 {
     uint cbStruct;
-    uint dwFlags;
+    VIEW_OBJECT_PROPERTIES_FLAGS dwFlags;
     uint[2] dwReserved1;
     LPFNOLEUIHOOK lpfnHook;
     LPARAM lCustData;
@@ -3283,7 +3370,7 @@ struct OLEUILINKPROPSA
 struct OLEUIOBJECTPROPSW
 {
     uint cbStruct;
-    uint dwFlags;
+    OBJECT_PROPERTIES_FLAGS dwFlags;
     PROPSHEETHEADERW_V2* lpPS;
     uint dwObject;
     IOleUIObjInfoW lpObjInfo;
@@ -3296,7 +3383,7 @@ struct OLEUIOBJECTPROPSW
 struct OLEUIOBJECTPROPSA
 {
     uint cbStruct;
-    uint dwFlags;
+    OBJECT_PROPERTIES_FLAGS dwFlags;
     PROPSHEETHEADERA_V2* lpPS;
     uint dwObject;
     IOleUIObjInfoA lpObjInfo;
@@ -3313,7 +3400,7 @@ interface IDispatchEx : IDispatch
     HRESULT InvokeEx(int, uint, ushort, DISPPARAMS*, VARIANT*, EXCEPINFO*, IServiceProvider);
     HRESULT DeleteMemberByName(BSTR, uint);
     HRESULT DeleteMemberByDispID(int);
-    HRESULT GetMemberProperties(int, uint, uint*);
+    HRESULT GetMemberProperties(int, uint, FDEX_PROP_FLAGS*);
     HRESULT GetMemberName(int, BSTR*);
     HRESULT GetNextDispID(uint, int, int*);
     HRESULT GetNameSpaceParent(IUnknown*);

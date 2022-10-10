@@ -336,18 +336,18 @@ struct CERT_VIEWPROPERTIES_STRUCT_W
     uint cArrayPropSheetPages;
     PROPSHEETPAGEA* arrayPropSheetPages;
 }
-struct CMOID
+struct CERT_FILTER_EXTENSION_MATCH
 {
     const(char)* szExtensionOID;
     uint dwTestOperation;
     ubyte* pbTestData;
     uint cbTestData;
 }
-struct CMFLTR
+struct CERT_FILTER_DATA
 {
     uint dwSize;
     uint cExtensionChecks;
-    CMOID* arrayExtensionChecks;
+    CERT_FILTER_EXTENSION_MATCH* arrayExtensionChecks;
     uint dwCheckingFlags;
 }
 alias PFNTRUSTHELPER = HRESULT function(const(CERT_CONTEXT)*, LPARAM, BOOL, ubyte*);

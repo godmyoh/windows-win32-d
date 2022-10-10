@@ -8,6 +8,190 @@ import windows.win32.ui.windowsandmessaging : HMENU, POINTER_INPUT_TYPE;
 version (Windows):
 extern (Windows):
 
+alias UIA_TEXTATTRIBUTE_ID = uint;
+enum : uint
+{
+    UIA_AnimationStyleAttributeId          = 0x00009c40,
+    UIA_BackgroundColorAttributeId         = 0x00009c41,
+    UIA_BulletStyleAttributeId             = 0x00009c42,
+    UIA_CapStyleAttributeId                = 0x00009c43,
+    UIA_CultureAttributeId                 = 0x00009c44,
+    UIA_FontNameAttributeId                = 0x00009c45,
+    UIA_FontSizeAttributeId                = 0x00009c46,
+    UIA_FontWeightAttributeId              = 0x00009c47,
+    UIA_ForegroundColorAttributeId         = 0x00009c48,
+    UIA_HorizontalTextAlignmentAttributeId = 0x00009c49,
+    UIA_IndentationFirstLineAttributeId    = 0x00009c4a,
+    UIA_IndentationLeadingAttributeId      = 0x00009c4b,
+    UIA_IndentationTrailingAttributeId     = 0x00009c4c,
+    UIA_IsHiddenAttributeId                = 0x00009c4d,
+    UIA_IsItalicAttributeId                = 0x00009c4e,
+    UIA_IsReadOnlyAttributeId              = 0x00009c4f,
+    UIA_IsSubscriptAttributeId             = 0x00009c50,
+    UIA_IsSuperscriptAttributeId           = 0x00009c51,
+    UIA_MarginBottomAttributeId            = 0x00009c52,
+    UIA_MarginLeadingAttributeId           = 0x00009c53,
+    UIA_MarginTopAttributeId               = 0x00009c54,
+    UIA_MarginTrailingAttributeId          = 0x00009c55,
+    UIA_OutlineStylesAttributeId           = 0x00009c56,
+    UIA_OverlineColorAttributeId           = 0x00009c57,
+    UIA_OverlineStyleAttributeId           = 0x00009c58,
+    UIA_StrikethroughColorAttributeId      = 0x00009c59,
+    UIA_StrikethroughStyleAttributeId      = 0x00009c5a,
+    UIA_TabsAttributeId                    = 0x00009c5b,
+    UIA_TextFlowDirectionsAttributeId      = 0x00009c5c,
+    UIA_UnderlineColorAttributeId          = 0x00009c5d,
+    UIA_UnderlineStyleAttributeId          = 0x00009c5e,
+    UIA_AnnotationTypesAttributeId         = 0x00009c5f,
+    UIA_AnnotationObjectsAttributeId       = 0x00009c60,
+    UIA_StyleNameAttributeId               = 0x00009c61,
+    UIA_StyleIdAttributeId                 = 0x00009c62,
+    UIA_LinkAttributeId                    = 0x00009c63,
+    UIA_IsActiveAttributeId                = 0x00009c64,
+    UIA_SelectionActiveEndAttributeId      = 0x00009c65,
+    UIA_CaretPositionAttributeId           = 0x00009c66,
+    UIA_CaretBidiModeAttributeId           = 0x00009c67,
+    UIA_LineSpacingAttributeId             = 0x00009c68,
+    UIA_BeforeParagraphSpacingAttributeId  = 0x00009c69,
+    UIA_AfterParagraphSpacingAttributeId   = 0x00009c6a,
+    UIA_SayAsInterpretAsAttributeId        = 0x00009c6b,
+}
+
+alias UIA_CONTROLTYPE_ID = uint;
+enum : uint
+{
+    UIA_ButtonControlTypeId       = 0x0000c350,
+    UIA_CalendarControlTypeId     = 0x0000c351,
+    UIA_CheckBoxControlTypeId     = 0x0000c352,
+    UIA_ComboBoxControlTypeId     = 0x0000c353,
+    UIA_EditControlTypeId         = 0x0000c354,
+    UIA_HyperlinkControlTypeId    = 0x0000c355,
+    UIA_ImageControlTypeId        = 0x0000c356,
+    UIA_ListItemControlTypeId     = 0x0000c357,
+    UIA_ListControlTypeId         = 0x0000c358,
+    UIA_MenuControlTypeId         = 0x0000c359,
+    UIA_MenuBarControlTypeId      = 0x0000c35a,
+    UIA_MenuItemControlTypeId     = 0x0000c35b,
+    UIA_ProgressBarControlTypeId  = 0x0000c35c,
+    UIA_RadioButtonControlTypeId  = 0x0000c35d,
+    UIA_ScrollBarControlTypeId    = 0x0000c35e,
+    UIA_SliderControlTypeId       = 0x0000c35f,
+    UIA_SpinnerControlTypeId      = 0x0000c360,
+    UIA_StatusBarControlTypeId    = 0x0000c361,
+    UIA_TabControlTypeId          = 0x0000c362,
+    UIA_TabItemControlTypeId      = 0x0000c363,
+    UIA_TextControlTypeId         = 0x0000c364,
+    UIA_ToolBarControlTypeId      = 0x0000c365,
+    UIA_ToolTipControlTypeId      = 0x0000c366,
+    UIA_TreeControlTypeId         = 0x0000c367,
+    UIA_TreeItemControlTypeId     = 0x0000c368,
+    UIA_CustomControlTypeId       = 0x0000c369,
+    UIA_GroupControlTypeId        = 0x0000c36a,
+    UIA_ThumbControlTypeId        = 0x0000c36b,
+    UIA_DataGridControlTypeId     = 0x0000c36c,
+    UIA_DataItemControlTypeId     = 0x0000c36d,
+    UIA_DocumentControlTypeId     = 0x0000c36e,
+    UIA_SplitButtonControlTypeId  = 0x0000c36f,
+    UIA_WindowControlTypeId       = 0x0000c370,
+    UIA_PaneControlTypeId         = 0x0000c371,
+    UIA_HeaderControlTypeId       = 0x0000c372,
+    UIA_HeaderItemControlTypeId   = 0x0000c373,
+    UIA_TableControlTypeId        = 0x0000c374,
+    UIA_TitleBarControlTypeId     = 0x0000c375,
+    UIA_SeparatorControlTypeId    = 0x0000c376,
+    UIA_SemanticZoomControlTypeId = 0x0000c377,
+    UIA_AppBarControlTypeId       = 0x0000c378,
+}
+
+alias UIA_ANNOTATIONTYPE = uint;
+enum : uint
+{
+    AnnotationType_Unknown                = 0x0000ea60,
+    AnnotationType_SpellingError          = 0x0000ea61,
+    AnnotationType_GrammarError           = 0x0000ea62,
+    AnnotationType_Comment                = 0x0000ea63,
+    AnnotationType_FormulaError           = 0x0000ea64,
+    AnnotationType_TrackChanges           = 0x0000ea65,
+    AnnotationType_Header                 = 0x0000ea66,
+    AnnotationType_Footer                 = 0x0000ea67,
+    AnnotationType_Highlighted            = 0x0000ea68,
+    AnnotationType_Endnote                = 0x0000ea69,
+    AnnotationType_Footnote               = 0x0000ea6a,
+    AnnotationType_InsertionChange        = 0x0000ea6b,
+    AnnotationType_DeletionChange         = 0x0000ea6c,
+    AnnotationType_MoveChange             = 0x0000ea6d,
+    AnnotationType_FormatChange           = 0x0000ea6e,
+    AnnotationType_UnsyncedChange         = 0x0000ea6f,
+    AnnotationType_EditingLockedChange    = 0x0000ea70,
+    AnnotationType_ExternalChange         = 0x0000ea71,
+    AnnotationType_ConflictingChange      = 0x0000ea72,
+    AnnotationType_Author                 = 0x0000ea73,
+    AnnotationType_AdvancedProofingIssue  = 0x0000ea74,
+    AnnotationType_DataValidationError    = 0x0000ea75,
+    AnnotationType_CircularReferenceError = 0x0000ea76,
+    AnnotationType_Mathematics            = 0x0000ea77,
+    AnnotationType_Sensitive              = 0x0000ea78,
+}
+
+alias UIA_STYLE_ID = uint;
+enum : uint
+{
+    StyleId_Custom       = 0x00011170,
+    StyleId_Heading1     = 0x00011171,
+    StyleId_Heading2     = 0x00011172,
+    StyleId_Heading3     = 0x00011173,
+    StyleId_Heading4     = 0x00011174,
+    StyleId_Heading5     = 0x00011175,
+    StyleId_Heading6     = 0x00011176,
+    StyleId_Heading7     = 0x00011177,
+    StyleId_Heading8     = 0x00011178,
+    StyleId_Heading9     = 0x00011179,
+    StyleId_Title        = 0x0001117a,
+    StyleId_Subtitle     = 0x0001117b,
+    StyleId_Normal       = 0x0001117c,
+    StyleId_Emphasis     = 0x0001117d,
+    StyleId_Quote        = 0x0001117e,
+    StyleId_BulletedList = 0x0001117f,
+    StyleId_NumberedList = 0x00011180,
+}
+
+alias UIA_LANDMARKTYPE_ID = uint;
+enum : uint
+{
+    UIA_CustomLandmarkTypeId     = 0x00013880,
+    UIA_FormLandmarkTypeId       = 0x00013881,
+    UIA_MainLandmarkTypeId       = 0x00013882,
+    UIA_NavigationLandmarkTypeId = 0x00013883,
+    UIA_SearchLandmarkTypeId     = 0x00013884,
+}
+
+alias UIA_HEADINGLEVEL_ID = uint;
+enum : uint
+{
+    HeadingLevel_None = 0x000138b2,
+    HeadingLevel1     = 0x000138b3,
+    HeadingLevel2     = 0x000138b4,
+    HeadingLevel3     = 0x000138b5,
+    HeadingLevel4     = 0x000138b6,
+    HeadingLevel5     = 0x000138b7,
+    HeadingLevel6     = 0x000138b8,
+    HeadingLevel7     = 0x000138b9,
+    HeadingLevel8     = 0x000138ba,
+    HeadingLevel9     = 0x000138bb,
+}
+
+alias UIA_CHANGE_ID = uint;
+enum : uint
+{
+    UIA_SummaryChangeId = 0x00015f90,
+}
+
+alias UIA_METADATA_ID = uint;
+enum : uint
+{
+    UIA_SayAsInterpretAsMetadataId = 0x000186a0,
+}
+
 alias STICKYKEYS_FLAGS = uint;
 enum : uint
 {
@@ -102,6 +286,268 @@ enum : uint
     SSWF_WINDOW  = 0x00000002,
 }
 
+alias UIA_PATTERN_ID = uint;
+enum : uint
+{
+    UIA_InvokePatternId            = 0x00002710,
+    UIA_SelectionPatternId         = 0x00002711,
+    UIA_ValuePatternId             = 0x00002712,
+    UIA_RangeValuePatternId        = 0x00002713,
+    UIA_ScrollPatternId            = 0x00002714,
+    UIA_ExpandCollapsePatternId    = 0x00002715,
+    UIA_GridPatternId              = 0x00002716,
+    UIA_GridItemPatternId          = 0x00002717,
+    UIA_MultipleViewPatternId      = 0x00002718,
+    UIA_WindowPatternId            = 0x00002719,
+    UIA_SelectionItemPatternId     = 0x0000271a,
+    UIA_DockPatternId              = 0x0000271b,
+    UIA_TablePatternId             = 0x0000271c,
+    UIA_TableItemPatternId         = 0x0000271d,
+    UIA_TextPatternId              = 0x0000271e,
+    UIA_TogglePatternId            = 0x0000271f,
+    UIA_TransformPatternId         = 0x00002720,
+    UIA_ScrollItemPatternId        = 0x00002721,
+    UIA_LegacyIAccessiblePatternId = 0x00002722,
+    UIA_ItemContainerPatternId     = 0x00002723,
+    UIA_VirtualizedItemPatternId   = 0x00002724,
+    UIA_SynchronizedInputPatternId = 0x00002725,
+    UIA_ObjectModelPatternId       = 0x00002726,
+    UIA_AnnotationPatternId        = 0x00002727,
+    UIA_TextPattern2Id             = 0x00002728,
+    UIA_StylesPatternId            = 0x00002729,
+    UIA_SpreadsheetPatternId       = 0x0000272a,
+    UIA_SpreadsheetItemPatternId   = 0x0000272b,
+    UIA_TransformPattern2Id        = 0x0000272c,
+    UIA_TextChildPatternId         = 0x0000272d,
+    UIA_DragPatternId              = 0x0000272e,
+    UIA_DropTargetPatternId        = 0x0000272f,
+    UIA_TextEditPatternId          = 0x00002730,
+    UIA_CustomNavigationPatternId  = 0x00002731,
+    UIA_SelectionPattern2Id        = 0x00002732,
+}
+
+alias UIA_EVENT_ID = uint;
+enum : uint
+{
+    UIA_ToolTipOpenedEventId                             = 0x00004e20,
+    UIA_ToolTipClosedEventId                             = 0x00004e21,
+    UIA_StructureChangedEventId                          = 0x00004e22,
+    UIA_MenuOpenedEventId                                = 0x00004e23,
+    UIA_AutomationPropertyChangedEventId                 = 0x00004e24,
+    UIA_AutomationFocusChangedEventId                    = 0x00004e25,
+    UIA_AsyncContentLoadedEventId                        = 0x00004e26,
+    UIA_MenuClosedEventId                                = 0x00004e27,
+    UIA_LayoutInvalidatedEventId                         = 0x00004e28,
+    UIA_Invoke_InvokedEventId                            = 0x00004e29,
+    UIA_SelectionItem_ElementAddedToSelectionEventId     = 0x00004e2a,
+    UIA_SelectionItem_ElementRemovedFromSelectionEventId = 0x00004e2b,
+    UIA_SelectionItem_ElementSelectedEventId             = 0x00004e2c,
+    UIA_Selection_InvalidatedEventId                     = 0x00004e2d,
+    UIA_Text_TextSelectionChangedEventId                 = 0x00004e2e,
+    UIA_Text_TextChangedEventId                          = 0x00004e2f,
+    UIA_Window_WindowOpenedEventId                       = 0x00004e30,
+    UIA_Window_WindowClosedEventId                       = 0x00004e31,
+    UIA_MenuModeStartEventId                             = 0x00004e32,
+    UIA_MenuModeEndEventId                               = 0x00004e33,
+    UIA_InputReachedTargetEventId                        = 0x00004e34,
+    UIA_InputReachedOtherElementEventId                  = 0x00004e35,
+    UIA_InputDiscardedEventId                            = 0x00004e36,
+    UIA_SystemAlertEventId                               = 0x00004e37,
+    UIA_LiveRegionChangedEventId                         = 0x00004e38,
+    UIA_HostedFragmentRootsInvalidatedEventId            = 0x00004e39,
+    UIA_Drag_DragStartEventId                            = 0x00004e3a,
+    UIA_Drag_DragCancelEventId                           = 0x00004e3b,
+    UIA_Drag_DragCompleteEventId                         = 0x00004e3c,
+    UIA_DropTarget_DragEnterEventId                      = 0x00004e3d,
+    UIA_DropTarget_DragLeaveEventId                      = 0x00004e3e,
+    UIA_DropTarget_DroppedEventId                        = 0x00004e3f,
+    UIA_TextEdit_TextChangedEventId                      = 0x00004e40,
+    UIA_TextEdit_ConversionTargetChangedEventId          = 0x00004e41,
+    UIA_ChangesEventId                                   = 0x00004e42,
+    UIA_NotificationEventId                              = 0x00004e43,
+    UIA_ActiveTextPositionChangedEventId                 = 0x00004e44,
+}
+
+alias UIA_PROPERTY_ID = uint;
+enum : uint
+{
+    UIA_RuntimeIdPropertyId                           = 0x00007530,
+    UIA_BoundingRectanglePropertyId                   = 0x00007531,
+    UIA_ProcessIdPropertyId                           = 0x00007532,
+    UIA_ControlTypePropertyId                         = 0x00007533,
+    UIA_LocalizedControlTypePropertyId                = 0x00007534,
+    UIA_NamePropertyId                                = 0x00007535,
+    UIA_AcceleratorKeyPropertyId                      = 0x00007536,
+    UIA_AccessKeyPropertyId                           = 0x00007537,
+    UIA_HasKeyboardFocusPropertyId                    = 0x00007538,
+    UIA_IsKeyboardFocusablePropertyId                 = 0x00007539,
+    UIA_IsEnabledPropertyId                           = 0x0000753a,
+    UIA_AutomationIdPropertyId                        = 0x0000753b,
+    UIA_ClassNamePropertyId                           = 0x0000753c,
+    UIA_HelpTextPropertyId                            = 0x0000753d,
+    UIA_ClickablePointPropertyId                      = 0x0000753e,
+    UIA_CulturePropertyId                             = 0x0000753f,
+    UIA_IsControlElementPropertyId                    = 0x00007540,
+    UIA_IsContentElementPropertyId                    = 0x00007541,
+    UIA_LabeledByPropertyId                           = 0x00007542,
+    UIA_IsPasswordPropertyId                          = 0x00007543,
+    UIA_NativeWindowHandlePropertyId                  = 0x00007544,
+    UIA_ItemTypePropertyId                            = 0x00007545,
+    UIA_IsOffscreenPropertyId                         = 0x00007546,
+    UIA_OrientationPropertyId                         = 0x00007547,
+    UIA_FrameworkIdPropertyId                         = 0x00007548,
+    UIA_IsRequiredForFormPropertyId                   = 0x00007549,
+    UIA_ItemStatusPropertyId                          = 0x0000754a,
+    UIA_IsDockPatternAvailablePropertyId              = 0x0000754b,
+    UIA_IsExpandCollapsePatternAvailablePropertyId    = 0x0000754c,
+    UIA_IsGridItemPatternAvailablePropertyId          = 0x0000754d,
+    UIA_IsGridPatternAvailablePropertyId              = 0x0000754e,
+    UIA_IsInvokePatternAvailablePropertyId            = 0x0000754f,
+    UIA_IsMultipleViewPatternAvailablePropertyId      = 0x00007550,
+    UIA_IsRangeValuePatternAvailablePropertyId        = 0x00007551,
+    UIA_IsScrollPatternAvailablePropertyId            = 0x00007552,
+    UIA_IsScrollItemPatternAvailablePropertyId        = 0x00007553,
+    UIA_IsSelectionItemPatternAvailablePropertyId     = 0x00007554,
+    UIA_IsSelectionPatternAvailablePropertyId         = 0x00007555,
+    UIA_IsTablePatternAvailablePropertyId             = 0x00007556,
+    UIA_IsTableItemPatternAvailablePropertyId         = 0x00007557,
+    UIA_IsTextPatternAvailablePropertyId              = 0x00007558,
+    UIA_IsTogglePatternAvailablePropertyId            = 0x00007559,
+    UIA_IsTransformPatternAvailablePropertyId         = 0x0000755a,
+    UIA_IsValuePatternAvailablePropertyId             = 0x0000755b,
+    UIA_IsWindowPatternAvailablePropertyId            = 0x0000755c,
+    UIA_ValueValuePropertyId                          = 0x0000755d,
+    UIA_ValueIsReadOnlyPropertyId                     = 0x0000755e,
+    UIA_RangeValueValuePropertyId                     = 0x0000755f,
+    UIA_RangeValueIsReadOnlyPropertyId                = 0x00007560,
+    UIA_RangeValueMinimumPropertyId                   = 0x00007561,
+    UIA_RangeValueMaximumPropertyId                   = 0x00007562,
+    UIA_RangeValueLargeChangePropertyId               = 0x00007563,
+    UIA_RangeValueSmallChangePropertyId               = 0x00007564,
+    UIA_ScrollHorizontalScrollPercentPropertyId       = 0x00007565,
+    UIA_ScrollHorizontalViewSizePropertyId            = 0x00007566,
+    UIA_ScrollVerticalScrollPercentPropertyId         = 0x00007567,
+    UIA_ScrollVerticalViewSizePropertyId              = 0x00007568,
+    UIA_ScrollHorizontallyScrollablePropertyId        = 0x00007569,
+    UIA_ScrollVerticallyScrollablePropertyId          = 0x0000756a,
+    UIA_SelectionSelectionPropertyId                  = 0x0000756b,
+    UIA_SelectionCanSelectMultiplePropertyId          = 0x0000756c,
+    UIA_SelectionIsSelectionRequiredPropertyId        = 0x0000756d,
+    UIA_GridRowCountPropertyId                        = 0x0000756e,
+    UIA_GridColumnCountPropertyId                     = 0x0000756f,
+    UIA_GridItemRowPropertyId                         = 0x00007570,
+    UIA_GridItemColumnPropertyId                      = 0x00007571,
+    UIA_GridItemRowSpanPropertyId                     = 0x00007572,
+    UIA_GridItemColumnSpanPropertyId                  = 0x00007573,
+    UIA_GridItemContainingGridPropertyId              = 0x00007574,
+    UIA_DockDockPositionPropertyId                    = 0x00007575,
+    UIA_ExpandCollapseExpandCollapseStatePropertyId   = 0x00007576,
+    UIA_MultipleViewCurrentViewPropertyId             = 0x00007577,
+    UIA_MultipleViewSupportedViewsPropertyId          = 0x00007578,
+    UIA_WindowCanMaximizePropertyId                   = 0x00007579,
+    UIA_WindowCanMinimizePropertyId                   = 0x0000757a,
+    UIA_WindowWindowVisualStatePropertyId             = 0x0000757b,
+    UIA_WindowWindowInteractionStatePropertyId        = 0x0000757c,
+    UIA_WindowIsModalPropertyId                       = 0x0000757d,
+    UIA_WindowIsTopmostPropertyId                     = 0x0000757e,
+    UIA_SelectionItemIsSelectedPropertyId             = 0x0000757f,
+    UIA_SelectionItemSelectionContainerPropertyId     = 0x00007580,
+    UIA_TableRowHeadersPropertyId                     = 0x00007581,
+    UIA_TableColumnHeadersPropertyId                  = 0x00007582,
+    UIA_TableRowOrColumnMajorPropertyId               = 0x00007583,
+    UIA_TableItemRowHeaderItemsPropertyId             = 0x00007584,
+    UIA_TableItemColumnHeaderItemsPropertyId          = 0x00007585,
+    UIA_ToggleToggleStatePropertyId                   = 0x00007586,
+    UIA_TransformCanMovePropertyId                    = 0x00007587,
+    UIA_TransformCanResizePropertyId                  = 0x00007588,
+    UIA_TransformCanRotatePropertyId                  = 0x00007589,
+    UIA_IsLegacyIAccessiblePatternAvailablePropertyId = 0x0000758a,
+    UIA_LegacyIAccessibleChildIdPropertyId            = 0x0000758b,
+    UIA_LegacyIAccessibleNamePropertyId               = 0x0000758c,
+    UIA_LegacyIAccessibleValuePropertyId              = 0x0000758d,
+    UIA_LegacyIAccessibleDescriptionPropertyId        = 0x0000758e,
+    UIA_LegacyIAccessibleRolePropertyId               = 0x0000758f,
+    UIA_LegacyIAccessibleStatePropertyId              = 0x00007590,
+    UIA_LegacyIAccessibleHelpPropertyId               = 0x00007591,
+    UIA_LegacyIAccessibleKeyboardShortcutPropertyId   = 0x00007592,
+    UIA_LegacyIAccessibleSelectionPropertyId          = 0x00007593,
+    UIA_LegacyIAccessibleDefaultActionPropertyId      = 0x00007594,
+    UIA_AriaRolePropertyId                            = 0x00007595,
+    UIA_AriaPropertiesPropertyId                      = 0x00007596,
+    UIA_IsDataValidForFormPropertyId                  = 0x00007597,
+    UIA_ControllerForPropertyId                       = 0x00007598,
+    UIA_DescribedByPropertyId                         = 0x00007599,
+    UIA_FlowsToPropertyId                             = 0x0000759a,
+    UIA_ProviderDescriptionPropertyId                 = 0x0000759b,
+    UIA_IsItemContainerPatternAvailablePropertyId     = 0x0000759c,
+    UIA_IsVirtualizedItemPatternAvailablePropertyId   = 0x0000759d,
+    UIA_IsSynchronizedInputPatternAvailablePropertyId = 0x0000759e,
+    UIA_OptimizeForVisualContentPropertyId            = 0x0000759f,
+    UIA_IsObjectModelPatternAvailablePropertyId       = 0x000075a0,
+    UIA_AnnotationAnnotationTypeIdPropertyId          = 0x000075a1,
+    UIA_AnnotationAnnotationTypeNamePropertyId        = 0x000075a2,
+    UIA_AnnotationAuthorPropertyId                    = 0x000075a3,
+    UIA_AnnotationDateTimePropertyId                  = 0x000075a4,
+    UIA_AnnotationTargetPropertyId                    = 0x000075a5,
+    UIA_IsAnnotationPatternAvailablePropertyId        = 0x000075a6,
+    UIA_IsTextPattern2AvailablePropertyId             = 0x000075a7,
+    UIA_StylesStyleIdPropertyId                       = 0x000075a8,
+    UIA_StylesStyleNamePropertyId                     = 0x000075a9,
+    UIA_StylesFillColorPropertyId                     = 0x000075aa,
+    UIA_StylesFillPatternStylePropertyId              = 0x000075ab,
+    UIA_StylesShapePropertyId                         = 0x000075ac,
+    UIA_StylesFillPatternColorPropertyId              = 0x000075ad,
+    UIA_StylesExtendedPropertiesPropertyId            = 0x000075ae,
+    UIA_IsStylesPatternAvailablePropertyId            = 0x000075af,
+    UIA_IsSpreadsheetPatternAvailablePropertyId       = 0x000075b0,
+    UIA_SpreadsheetItemFormulaPropertyId              = 0x000075b1,
+    UIA_SpreadsheetItemAnnotationObjectsPropertyId    = 0x000075b2,
+    UIA_SpreadsheetItemAnnotationTypesPropertyId      = 0x000075b3,
+    UIA_IsSpreadsheetItemPatternAvailablePropertyId   = 0x000075b4,
+    UIA_Transform2CanZoomPropertyId                   = 0x000075b5,
+    UIA_IsTransformPattern2AvailablePropertyId        = 0x000075b6,
+    UIA_LiveSettingPropertyId                         = 0x000075b7,
+    UIA_IsTextChildPatternAvailablePropertyId         = 0x000075b8,
+    UIA_IsDragPatternAvailablePropertyId              = 0x000075b9,
+    UIA_DragIsGrabbedPropertyId                       = 0x000075ba,
+    UIA_DragDropEffectPropertyId                      = 0x000075bb,
+    UIA_DragDropEffectsPropertyId                     = 0x000075bc,
+    UIA_IsDropTargetPatternAvailablePropertyId        = 0x000075bd,
+    UIA_DropTargetDropTargetEffectPropertyId          = 0x000075be,
+    UIA_DropTargetDropTargetEffectsPropertyId         = 0x000075bf,
+    UIA_DragGrabbedItemsPropertyId                    = 0x000075c0,
+    UIA_Transform2ZoomLevelPropertyId                 = 0x000075c1,
+    UIA_Transform2ZoomMinimumPropertyId               = 0x000075c2,
+    UIA_Transform2ZoomMaximumPropertyId               = 0x000075c3,
+    UIA_FlowsFromPropertyId                           = 0x000075c4,
+    UIA_IsTextEditPatternAvailablePropertyId          = 0x000075c5,
+    UIA_IsPeripheralPropertyId                        = 0x000075c6,
+    UIA_IsCustomNavigationPatternAvailablePropertyId  = 0x000075c7,
+    UIA_PositionInSetPropertyId                       = 0x000075c8,
+    UIA_SizeOfSetPropertyId                           = 0x000075c9,
+    UIA_LevelPropertyId                               = 0x000075ca,
+    UIA_AnnotationTypesPropertyId                     = 0x000075cb,
+    UIA_AnnotationObjectsPropertyId                   = 0x000075cc,
+    UIA_LandmarkTypePropertyId                        = 0x000075cd,
+    UIA_LocalizedLandmarkTypePropertyId               = 0x000075ce,
+    UIA_FullDescriptionPropertyId                     = 0x000075cf,
+    UIA_FillColorPropertyId                           = 0x000075d0,
+    UIA_OutlineColorPropertyId                        = 0x000075d1,
+    UIA_FillTypePropertyId                            = 0x000075d2,
+    UIA_VisualEffectsPropertyId                       = 0x000075d3,
+    UIA_OutlineThicknessPropertyId                    = 0x000075d4,
+    UIA_CenterPointPropertyId                         = 0x000075d5,
+    UIA_RotationPropertyId                            = 0x000075d6,
+    UIA_SizePropertyId                                = 0x000075d7,
+    UIA_IsSelectionPattern2AvailablePropertyId        = 0x000075d8,
+    UIA_Selection2FirstSelectedItemPropertyId         = 0x000075d9,
+    UIA_Selection2LastSelectedItemPropertyId          = 0x000075da,
+    UIA_Selection2CurrentSelectedItemPropertyId       = 0x000075db,
+    UIA_Selection2ItemCountPropertyId                 = 0x000075dc,
+    UIA_HeadingLevelPropertyId                        = 0x000075dd,
+    UIA_IsDialogPropertyId                            = 0x000075de,
+}
+
 LRESULT LresultFromObject(const(GUID)*, WPARAM, IUnknown);
 HRESULT ObjectFromLresult(LRESULT, const(GUID)*, WPARAM, void**);
 HRESULT WindowFromAccessibleObject(IAccessible, HWND*);
@@ -141,8 +587,8 @@ int UiaLookupId(AutomationIdentifierType, const(GUID)*);
 HRESULT UiaGetReservedNotSupportedValue(IUnknown*);
 HRESULT UiaGetReservedMixedAttributeValue(IUnknown*);
 BOOL UiaClientsAreListening();
-HRESULT UiaRaiseAutomationPropertyChangedEvent(IRawElementProviderSimple, int, VARIANT, VARIANT);
-HRESULT UiaRaiseAutomationEvent(IRawElementProviderSimple, int);
+HRESULT UiaRaiseAutomationPropertyChangedEvent(IRawElementProviderSimple, UIA_PROPERTY_ID, VARIANT, VARIANT);
+HRESULT UiaRaiseAutomationEvent(IRawElementProviderSimple, UIA_EVENT_ID);
 HRESULT UiaRaiseStructureChangedEvent(IRawElementProviderSimple, StructureChangeType, int*, int);
 HRESULT UiaRaiseAsyncContentLoadedEvent(IRawElementProviderSimple, AsyncContentLoadedState, double);
 HRESULT UiaRaiseTextEditTextChangedEvent(IRawElementProviderSimple, TextEditChangeType, SAFEARRAY*);
@@ -756,413 +1202,11 @@ enum UIA_IAFP_UNWRAP_BRIDGE = 0x00000001;
 enum UIA_PFIA_DEFAULT = 0x00000000;
 enum UIA_PFIA_UNWRAP_BRIDGE = 0x00000001;
 enum UIA_ScrollPatternNoScroll = -1.000000;
-enum UIA_InvokePatternId = 0x00002710;
-enum UIA_SelectionPatternId = 0x00002711;
-enum UIA_ValuePatternId = 0x00002712;
-enum UIA_RangeValuePatternId = 0x00002713;
-enum UIA_ScrollPatternId = 0x00002714;
-enum UIA_ExpandCollapsePatternId = 0x00002715;
-enum UIA_GridPatternId = 0x00002716;
-enum UIA_GridItemPatternId = 0x00002717;
-enum UIA_MultipleViewPatternId = 0x00002718;
-enum UIA_WindowPatternId = 0x00002719;
-enum UIA_SelectionItemPatternId = 0x0000271a;
-enum UIA_DockPatternId = 0x0000271b;
-enum UIA_TablePatternId = 0x0000271c;
-enum UIA_TableItemPatternId = 0x0000271d;
-enum UIA_TextPatternId = 0x0000271e;
-enum UIA_TogglePatternId = 0x0000271f;
-enum UIA_TransformPatternId = 0x00002720;
-enum UIA_ScrollItemPatternId = 0x00002721;
-enum UIA_LegacyIAccessiblePatternId = 0x00002722;
-enum UIA_ItemContainerPatternId = 0x00002723;
-enum UIA_VirtualizedItemPatternId = 0x00002724;
-enum UIA_SynchronizedInputPatternId = 0x00002725;
-enum UIA_ObjectModelPatternId = 0x00002726;
-enum UIA_AnnotationPatternId = 0x00002727;
-enum UIA_TextPattern2Id = 0x00002728;
-enum UIA_StylesPatternId = 0x00002729;
-enum UIA_SpreadsheetPatternId = 0x0000272a;
-enum UIA_SpreadsheetItemPatternId = 0x0000272b;
-enum UIA_TransformPattern2Id = 0x0000272c;
-enum UIA_TextChildPatternId = 0x0000272d;
-enum UIA_DragPatternId = 0x0000272e;
-enum UIA_DropTargetPatternId = 0x0000272f;
-enum UIA_TextEditPatternId = 0x00002730;
-enum UIA_CustomNavigationPatternId = 0x00002731;
-enum UIA_SelectionPattern2Id = 0x00002732;
-enum UIA_ToolTipOpenedEventId = 0x00004e20;
-enum UIA_ToolTipClosedEventId = 0x00004e21;
-enum UIA_StructureChangedEventId = 0x00004e22;
-enum UIA_MenuOpenedEventId = 0x00004e23;
-enum UIA_AutomationPropertyChangedEventId = 0x00004e24;
-enum UIA_AutomationFocusChangedEventId = 0x00004e25;
-enum UIA_AsyncContentLoadedEventId = 0x00004e26;
-enum UIA_MenuClosedEventId = 0x00004e27;
-enum UIA_LayoutInvalidatedEventId = 0x00004e28;
-enum UIA_Invoke_InvokedEventId = 0x00004e29;
-enum UIA_SelectionItem_ElementAddedToSelectionEventId = 0x00004e2a;
-enum UIA_SelectionItem_ElementRemovedFromSelectionEventId = 0x00004e2b;
-enum UIA_SelectionItem_ElementSelectedEventId = 0x00004e2c;
-enum UIA_Selection_InvalidatedEventId = 0x00004e2d;
-enum UIA_Text_TextSelectionChangedEventId = 0x00004e2e;
-enum UIA_Text_TextChangedEventId = 0x00004e2f;
-enum UIA_Window_WindowOpenedEventId = 0x00004e30;
-enum UIA_Window_WindowClosedEventId = 0x00004e31;
-enum UIA_MenuModeStartEventId = 0x00004e32;
-enum UIA_MenuModeEndEventId = 0x00004e33;
-enum UIA_InputReachedTargetEventId = 0x00004e34;
-enum UIA_InputReachedOtherElementEventId = 0x00004e35;
-enum UIA_InputDiscardedEventId = 0x00004e36;
-enum UIA_SystemAlertEventId = 0x00004e37;
-enum UIA_LiveRegionChangedEventId = 0x00004e38;
-enum UIA_HostedFragmentRootsInvalidatedEventId = 0x00004e39;
-enum UIA_Drag_DragStartEventId = 0x00004e3a;
-enum UIA_Drag_DragCancelEventId = 0x00004e3b;
-enum UIA_Drag_DragCompleteEventId = 0x00004e3c;
-enum UIA_DropTarget_DragEnterEventId = 0x00004e3d;
-enum UIA_DropTarget_DragLeaveEventId = 0x00004e3e;
-enum UIA_DropTarget_DroppedEventId = 0x00004e3f;
-enum UIA_TextEdit_TextChangedEventId = 0x00004e40;
-enum UIA_TextEdit_ConversionTargetChangedEventId = 0x00004e41;
-enum UIA_ChangesEventId = 0x00004e42;
-enum UIA_NotificationEventId = 0x00004e43;
-enum UIA_ActiveTextPositionChangedEventId = 0x00004e44;
-enum UIA_RuntimeIdPropertyId = 0x00007530;
-enum UIA_BoundingRectanglePropertyId = 0x00007531;
-enum UIA_ProcessIdPropertyId = 0x00007532;
-enum UIA_ControlTypePropertyId = 0x00007533;
-enum UIA_LocalizedControlTypePropertyId = 0x00007534;
-enum UIA_NamePropertyId = 0x00007535;
-enum UIA_AcceleratorKeyPropertyId = 0x00007536;
-enum UIA_AccessKeyPropertyId = 0x00007537;
-enum UIA_HasKeyboardFocusPropertyId = 0x00007538;
-enum UIA_IsKeyboardFocusablePropertyId = 0x00007539;
-enum UIA_IsEnabledPropertyId = 0x0000753a;
-enum UIA_AutomationIdPropertyId = 0x0000753b;
-enum UIA_ClassNamePropertyId = 0x0000753c;
-enum UIA_HelpTextPropertyId = 0x0000753d;
-enum UIA_ClickablePointPropertyId = 0x0000753e;
-enum UIA_CulturePropertyId = 0x0000753f;
-enum UIA_IsControlElementPropertyId = 0x00007540;
-enum UIA_IsContentElementPropertyId = 0x00007541;
-enum UIA_LabeledByPropertyId = 0x00007542;
-enum UIA_IsPasswordPropertyId = 0x00007543;
-enum UIA_NativeWindowHandlePropertyId = 0x00007544;
-enum UIA_ItemTypePropertyId = 0x00007545;
-enum UIA_IsOffscreenPropertyId = 0x00007546;
-enum UIA_OrientationPropertyId = 0x00007547;
-enum UIA_FrameworkIdPropertyId = 0x00007548;
-enum UIA_IsRequiredForFormPropertyId = 0x00007549;
-enum UIA_ItemStatusPropertyId = 0x0000754a;
-enum UIA_IsDockPatternAvailablePropertyId = 0x0000754b;
-enum UIA_IsExpandCollapsePatternAvailablePropertyId = 0x0000754c;
-enum UIA_IsGridItemPatternAvailablePropertyId = 0x0000754d;
-enum UIA_IsGridPatternAvailablePropertyId = 0x0000754e;
-enum UIA_IsInvokePatternAvailablePropertyId = 0x0000754f;
-enum UIA_IsMultipleViewPatternAvailablePropertyId = 0x00007550;
-enum UIA_IsRangeValuePatternAvailablePropertyId = 0x00007551;
-enum UIA_IsScrollPatternAvailablePropertyId = 0x00007552;
-enum UIA_IsScrollItemPatternAvailablePropertyId = 0x00007553;
-enum UIA_IsSelectionItemPatternAvailablePropertyId = 0x00007554;
-enum UIA_IsSelectionPatternAvailablePropertyId = 0x00007555;
-enum UIA_IsTablePatternAvailablePropertyId = 0x00007556;
-enum UIA_IsTableItemPatternAvailablePropertyId = 0x00007557;
-enum UIA_IsTextPatternAvailablePropertyId = 0x00007558;
-enum UIA_IsTogglePatternAvailablePropertyId = 0x00007559;
-enum UIA_IsTransformPatternAvailablePropertyId = 0x0000755a;
-enum UIA_IsValuePatternAvailablePropertyId = 0x0000755b;
-enum UIA_IsWindowPatternAvailablePropertyId = 0x0000755c;
-enum UIA_ValueValuePropertyId = 0x0000755d;
-enum UIA_ValueIsReadOnlyPropertyId = 0x0000755e;
-enum UIA_RangeValueValuePropertyId = 0x0000755f;
-enum UIA_RangeValueIsReadOnlyPropertyId = 0x00007560;
-enum UIA_RangeValueMinimumPropertyId = 0x00007561;
-enum UIA_RangeValueMaximumPropertyId = 0x00007562;
-enum UIA_RangeValueLargeChangePropertyId = 0x00007563;
-enum UIA_RangeValueSmallChangePropertyId = 0x00007564;
-enum UIA_ScrollHorizontalScrollPercentPropertyId = 0x00007565;
-enum UIA_ScrollHorizontalViewSizePropertyId = 0x00007566;
-enum UIA_ScrollVerticalScrollPercentPropertyId = 0x00007567;
-enum UIA_ScrollVerticalViewSizePropertyId = 0x00007568;
-enum UIA_ScrollHorizontallyScrollablePropertyId = 0x00007569;
-enum UIA_ScrollVerticallyScrollablePropertyId = 0x0000756a;
-enum UIA_SelectionSelectionPropertyId = 0x0000756b;
-enum UIA_SelectionCanSelectMultiplePropertyId = 0x0000756c;
-enum UIA_SelectionIsSelectionRequiredPropertyId = 0x0000756d;
-enum UIA_GridRowCountPropertyId = 0x0000756e;
-enum UIA_GridColumnCountPropertyId = 0x0000756f;
-enum UIA_GridItemRowPropertyId = 0x00007570;
-enum UIA_GridItemColumnPropertyId = 0x00007571;
-enum UIA_GridItemRowSpanPropertyId = 0x00007572;
-enum UIA_GridItemColumnSpanPropertyId = 0x00007573;
-enum UIA_GridItemContainingGridPropertyId = 0x00007574;
-enum UIA_DockDockPositionPropertyId = 0x00007575;
-enum UIA_ExpandCollapseExpandCollapseStatePropertyId = 0x00007576;
-enum UIA_MultipleViewCurrentViewPropertyId = 0x00007577;
-enum UIA_MultipleViewSupportedViewsPropertyId = 0x00007578;
-enum UIA_WindowCanMaximizePropertyId = 0x00007579;
-enum UIA_WindowCanMinimizePropertyId = 0x0000757a;
-enum UIA_WindowWindowVisualStatePropertyId = 0x0000757b;
-enum UIA_WindowWindowInteractionStatePropertyId = 0x0000757c;
-enum UIA_WindowIsModalPropertyId = 0x0000757d;
-enum UIA_WindowIsTopmostPropertyId = 0x0000757e;
-enum UIA_SelectionItemIsSelectedPropertyId = 0x0000757f;
-enum UIA_SelectionItemSelectionContainerPropertyId = 0x00007580;
-enum UIA_TableRowHeadersPropertyId = 0x00007581;
-enum UIA_TableColumnHeadersPropertyId = 0x00007582;
-enum UIA_TableRowOrColumnMajorPropertyId = 0x00007583;
-enum UIA_TableItemRowHeaderItemsPropertyId = 0x00007584;
-enum UIA_TableItemColumnHeaderItemsPropertyId = 0x00007585;
-enum UIA_ToggleToggleStatePropertyId = 0x00007586;
-enum UIA_TransformCanMovePropertyId = 0x00007587;
-enum UIA_TransformCanResizePropertyId = 0x00007588;
-enum UIA_TransformCanRotatePropertyId = 0x00007589;
-enum UIA_IsLegacyIAccessiblePatternAvailablePropertyId = 0x0000758a;
-enum UIA_LegacyIAccessibleChildIdPropertyId = 0x0000758b;
-enum UIA_LegacyIAccessibleNamePropertyId = 0x0000758c;
-enum UIA_LegacyIAccessibleValuePropertyId = 0x0000758d;
-enum UIA_LegacyIAccessibleDescriptionPropertyId = 0x0000758e;
-enum UIA_LegacyIAccessibleRolePropertyId = 0x0000758f;
-enum UIA_LegacyIAccessibleStatePropertyId = 0x00007590;
-enum UIA_LegacyIAccessibleHelpPropertyId = 0x00007591;
-enum UIA_LegacyIAccessibleKeyboardShortcutPropertyId = 0x00007592;
-enum UIA_LegacyIAccessibleSelectionPropertyId = 0x00007593;
-enum UIA_LegacyIAccessibleDefaultActionPropertyId = 0x00007594;
-enum UIA_AriaRolePropertyId = 0x00007595;
-enum UIA_AriaPropertiesPropertyId = 0x00007596;
-enum UIA_IsDataValidForFormPropertyId = 0x00007597;
-enum UIA_ControllerForPropertyId = 0x00007598;
-enum UIA_DescribedByPropertyId = 0x00007599;
-enum UIA_FlowsToPropertyId = 0x0000759a;
-enum UIA_ProviderDescriptionPropertyId = 0x0000759b;
-enum UIA_IsItemContainerPatternAvailablePropertyId = 0x0000759c;
-enum UIA_IsVirtualizedItemPatternAvailablePropertyId = 0x0000759d;
-enum UIA_IsSynchronizedInputPatternAvailablePropertyId = 0x0000759e;
-enum UIA_OptimizeForVisualContentPropertyId = 0x0000759f;
-enum UIA_IsObjectModelPatternAvailablePropertyId = 0x000075a0;
-enum UIA_AnnotationAnnotationTypeIdPropertyId = 0x000075a1;
-enum UIA_AnnotationAnnotationTypeNamePropertyId = 0x000075a2;
-enum UIA_AnnotationAuthorPropertyId = 0x000075a3;
-enum UIA_AnnotationDateTimePropertyId = 0x000075a4;
-enum UIA_AnnotationTargetPropertyId = 0x000075a5;
-enum UIA_IsAnnotationPatternAvailablePropertyId = 0x000075a6;
-enum UIA_IsTextPattern2AvailablePropertyId = 0x000075a7;
-enum UIA_StylesStyleIdPropertyId = 0x000075a8;
-enum UIA_StylesStyleNamePropertyId = 0x000075a9;
-enum UIA_StylesFillColorPropertyId = 0x000075aa;
-enum UIA_StylesFillPatternStylePropertyId = 0x000075ab;
-enum UIA_StylesShapePropertyId = 0x000075ac;
-enum UIA_StylesFillPatternColorPropertyId = 0x000075ad;
-enum UIA_StylesExtendedPropertiesPropertyId = 0x000075ae;
-enum UIA_IsStylesPatternAvailablePropertyId = 0x000075af;
-enum UIA_IsSpreadsheetPatternAvailablePropertyId = 0x000075b0;
-enum UIA_SpreadsheetItemFormulaPropertyId = 0x000075b1;
-enum UIA_SpreadsheetItemAnnotationObjectsPropertyId = 0x000075b2;
-enum UIA_SpreadsheetItemAnnotationTypesPropertyId = 0x000075b3;
-enum UIA_IsSpreadsheetItemPatternAvailablePropertyId = 0x000075b4;
-enum UIA_Transform2CanZoomPropertyId = 0x000075b5;
-enum UIA_IsTransformPattern2AvailablePropertyId = 0x000075b6;
-enum UIA_LiveSettingPropertyId = 0x000075b7;
-enum UIA_IsTextChildPatternAvailablePropertyId = 0x000075b8;
-enum UIA_IsDragPatternAvailablePropertyId = 0x000075b9;
-enum UIA_DragIsGrabbedPropertyId = 0x000075ba;
-enum UIA_DragDropEffectPropertyId = 0x000075bb;
-enum UIA_DragDropEffectsPropertyId = 0x000075bc;
-enum UIA_IsDropTargetPatternAvailablePropertyId = 0x000075bd;
-enum UIA_DropTargetDropTargetEffectPropertyId = 0x000075be;
-enum UIA_DropTargetDropTargetEffectsPropertyId = 0x000075bf;
-enum UIA_DragGrabbedItemsPropertyId = 0x000075c0;
-enum UIA_Transform2ZoomLevelPropertyId = 0x000075c1;
-enum UIA_Transform2ZoomMinimumPropertyId = 0x000075c2;
-enum UIA_Transform2ZoomMaximumPropertyId = 0x000075c3;
-enum UIA_FlowsFromPropertyId = 0x000075c4;
-enum UIA_IsTextEditPatternAvailablePropertyId = 0x000075c5;
-enum UIA_IsPeripheralPropertyId = 0x000075c6;
-enum UIA_IsCustomNavigationPatternAvailablePropertyId = 0x000075c7;
-enum UIA_PositionInSetPropertyId = 0x000075c8;
-enum UIA_SizeOfSetPropertyId = 0x000075c9;
-enum UIA_LevelPropertyId = 0x000075ca;
-enum UIA_AnnotationTypesPropertyId = 0x000075cb;
-enum UIA_AnnotationObjectsPropertyId = 0x000075cc;
-enum UIA_LandmarkTypePropertyId = 0x000075cd;
-enum UIA_LocalizedLandmarkTypePropertyId = 0x000075ce;
-enum UIA_FullDescriptionPropertyId = 0x000075cf;
-enum UIA_FillColorPropertyId = 0x000075d0;
-enum UIA_OutlineColorPropertyId = 0x000075d1;
-enum UIA_FillTypePropertyId = 0x000075d2;
-enum UIA_VisualEffectsPropertyId = 0x000075d3;
-enum UIA_OutlineThicknessPropertyId = 0x000075d4;
-enum UIA_CenterPointPropertyId = 0x000075d5;
-enum UIA_RotationPropertyId = 0x000075d6;
-enum UIA_SizePropertyId = 0x000075d7;
-enum UIA_IsSelectionPattern2AvailablePropertyId = 0x000075d8;
-enum UIA_Selection2FirstSelectedItemPropertyId = 0x000075d9;
-enum UIA_Selection2LastSelectedItemPropertyId = 0x000075da;
-enum UIA_Selection2CurrentSelectedItemPropertyId = 0x000075db;
-enum UIA_Selection2ItemCountPropertyId = 0x000075dc;
-enum UIA_HeadingLevelPropertyId = 0x000075dd;
-enum UIA_IsDialogPropertyId = 0x000075de;
-enum UIA_AnimationStyleAttributeId = 0x00009c40;
-enum UIA_BackgroundColorAttributeId = 0x00009c41;
-enum UIA_BulletStyleAttributeId = 0x00009c42;
-enum UIA_CapStyleAttributeId = 0x00009c43;
-enum UIA_CultureAttributeId = 0x00009c44;
-enum UIA_FontNameAttributeId = 0x00009c45;
-enum UIA_FontSizeAttributeId = 0x00009c46;
-enum UIA_FontWeightAttributeId = 0x00009c47;
-enum UIA_ForegroundColorAttributeId = 0x00009c48;
-enum UIA_HorizontalTextAlignmentAttributeId = 0x00009c49;
-enum UIA_IndentationFirstLineAttributeId = 0x00009c4a;
-enum UIA_IndentationLeadingAttributeId = 0x00009c4b;
-enum UIA_IndentationTrailingAttributeId = 0x00009c4c;
-enum UIA_IsHiddenAttributeId = 0x00009c4d;
-enum UIA_IsItalicAttributeId = 0x00009c4e;
-enum UIA_IsReadOnlyAttributeId = 0x00009c4f;
-enum UIA_IsSubscriptAttributeId = 0x00009c50;
-enum UIA_IsSuperscriptAttributeId = 0x00009c51;
-enum UIA_MarginBottomAttributeId = 0x00009c52;
-enum UIA_MarginLeadingAttributeId = 0x00009c53;
-enum UIA_MarginTopAttributeId = 0x00009c54;
-enum UIA_MarginTrailingAttributeId = 0x00009c55;
-enum UIA_OutlineStylesAttributeId = 0x00009c56;
-enum UIA_OverlineColorAttributeId = 0x00009c57;
-enum UIA_OverlineStyleAttributeId = 0x00009c58;
-enum UIA_StrikethroughColorAttributeId = 0x00009c59;
-enum UIA_StrikethroughStyleAttributeId = 0x00009c5a;
-enum UIA_TabsAttributeId = 0x00009c5b;
-enum UIA_TextFlowDirectionsAttributeId = 0x00009c5c;
-enum UIA_UnderlineColorAttributeId = 0x00009c5d;
-enum UIA_UnderlineStyleAttributeId = 0x00009c5e;
-enum UIA_AnnotationTypesAttributeId = 0x00009c5f;
-enum UIA_AnnotationObjectsAttributeId = 0x00009c60;
-enum UIA_StyleNameAttributeId = 0x00009c61;
-enum UIA_StyleIdAttributeId = 0x00009c62;
-enum UIA_LinkAttributeId = 0x00009c63;
-enum UIA_IsActiveAttributeId = 0x00009c64;
-enum UIA_SelectionActiveEndAttributeId = 0x00009c65;
-enum UIA_CaretPositionAttributeId = 0x00009c66;
-enum UIA_CaretBidiModeAttributeId = 0x00009c67;
-enum UIA_LineSpacingAttributeId = 0x00009c68;
-enum UIA_BeforeParagraphSpacingAttributeId = 0x00009c69;
-enum UIA_AfterParagraphSpacingAttributeId = 0x00009c6a;
-enum UIA_SayAsInterpretAsAttributeId = 0x00009c6b;
-enum UIA_ButtonControlTypeId = 0x0000c350;
-enum UIA_CalendarControlTypeId = 0x0000c351;
-enum UIA_CheckBoxControlTypeId = 0x0000c352;
-enum UIA_ComboBoxControlTypeId = 0x0000c353;
-enum UIA_EditControlTypeId = 0x0000c354;
-enum UIA_HyperlinkControlTypeId = 0x0000c355;
-enum UIA_ImageControlTypeId = 0x0000c356;
-enum UIA_ListItemControlTypeId = 0x0000c357;
-enum UIA_ListControlTypeId = 0x0000c358;
-enum UIA_MenuControlTypeId = 0x0000c359;
-enum UIA_MenuBarControlTypeId = 0x0000c35a;
-enum UIA_MenuItemControlTypeId = 0x0000c35b;
-enum UIA_ProgressBarControlTypeId = 0x0000c35c;
-enum UIA_RadioButtonControlTypeId = 0x0000c35d;
-enum UIA_ScrollBarControlTypeId = 0x0000c35e;
-enum UIA_SliderControlTypeId = 0x0000c35f;
-enum UIA_SpinnerControlTypeId = 0x0000c360;
-enum UIA_StatusBarControlTypeId = 0x0000c361;
-enum UIA_TabControlTypeId = 0x0000c362;
-enum UIA_TabItemControlTypeId = 0x0000c363;
-enum UIA_TextControlTypeId = 0x0000c364;
-enum UIA_ToolBarControlTypeId = 0x0000c365;
-enum UIA_ToolTipControlTypeId = 0x0000c366;
-enum UIA_TreeControlTypeId = 0x0000c367;
-enum UIA_TreeItemControlTypeId = 0x0000c368;
-enum UIA_CustomControlTypeId = 0x0000c369;
-enum UIA_GroupControlTypeId = 0x0000c36a;
-enum UIA_ThumbControlTypeId = 0x0000c36b;
-enum UIA_DataGridControlTypeId = 0x0000c36c;
-enum UIA_DataItemControlTypeId = 0x0000c36d;
-enum UIA_DocumentControlTypeId = 0x0000c36e;
-enum UIA_SplitButtonControlTypeId = 0x0000c36f;
-enum UIA_WindowControlTypeId = 0x0000c370;
-enum UIA_PaneControlTypeId = 0x0000c371;
-enum UIA_HeaderControlTypeId = 0x0000c372;
-enum UIA_HeaderItemControlTypeId = 0x0000c373;
-enum UIA_TableControlTypeId = 0x0000c374;
-enum UIA_TitleBarControlTypeId = 0x0000c375;
-enum UIA_SeparatorControlTypeId = 0x0000c376;
-enum UIA_SemanticZoomControlTypeId = 0x0000c377;
-enum UIA_AppBarControlTypeId = 0x0000c378;
-enum AnnotationType_Unknown = 0x0000ea60;
-enum AnnotationType_SpellingError = 0x0000ea61;
-enum AnnotationType_GrammarError = 0x0000ea62;
-enum AnnotationType_Comment = 0x0000ea63;
-enum AnnotationType_FormulaError = 0x0000ea64;
-enum AnnotationType_TrackChanges = 0x0000ea65;
-enum AnnotationType_Header = 0x0000ea66;
-enum AnnotationType_Footer = 0x0000ea67;
-enum AnnotationType_Highlighted = 0x0000ea68;
-enum AnnotationType_Endnote = 0x0000ea69;
-enum AnnotationType_Footnote = 0x0000ea6a;
-enum AnnotationType_InsertionChange = 0x0000ea6b;
-enum AnnotationType_DeletionChange = 0x0000ea6c;
-enum AnnotationType_MoveChange = 0x0000ea6d;
-enum AnnotationType_FormatChange = 0x0000ea6e;
-enum AnnotationType_UnsyncedChange = 0x0000ea6f;
-enum AnnotationType_EditingLockedChange = 0x0000ea70;
-enum AnnotationType_ExternalChange = 0x0000ea71;
-enum AnnotationType_ConflictingChange = 0x0000ea72;
-enum AnnotationType_Author = 0x0000ea73;
-enum AnnotationType_AdvancedProofingIssue = 0x0000ea74;
-enum AnnotationType_DataValidationError = 0x0000ea75;
-enum AnnotationType_CircularReferenceError = 0x0000ea76;
-enum AnnotationType_Mathematics = 0x0000ea77;
-enum AnnotationType_Sensitive = 0x0000ea78;
-enum StyleId_Custom = 0x00011170;
-enum StyleId_Heading1 = 0x00011171;
-enum StyleId_Heading2 = 0x00011172;
-enum StyleId_Heading3 = 0x00011173;
-enum StyleId_Heading4 = 0x00011174;
-enum StyleId_Heading5 = 0x00011175;
-enum StyleId_Heading6 = 0x00011176;
-enum StyleId_Heading7 = 0x00011177;
-enum StyleId_Heading8 = 0x00011178;
-enum StyleId_Heading9 = 0x00011179;
-enum StyleId_Title = 0x0001117a;
-enum StyleId_Subtitle = 0x0001117b;
-enum StyleId_Normal = 0x0001117c;
-enum StyleId_Emphasis = 0x0001117d;
-enum StyleId_Quote = 0x0001117e;
-enum StyleId_BulletedList = 0x0001117f;
-enum StyleId_NumberedList = 0x00011180;
-enum UIA_CustomLandmarkTypeId = 0x00013880;
-enum UIA_FormLandmarkTypeId = 0x00013881;
-enum UIA_MainLandmarkTypeId = 0x00013882;
-enum UIA_NavigationLandmarkTypeId = 0x00013883;
-enum UIA_SearchLandmarkTypeId = 0x00013884;
-enum HeadingLevel_None = 0x000138b2;
-enum HeadingLevel1 = 0x000138b3;
-enum HeadingLevel2 = 0x000138b4;
-enum HeadingLevel3 = 0x000138b5;
-enum HeadingLevel4 = 0x000138b6;
-enum HeadingLevel5 = 0x000138b7;
-enum HeadingLevel6 = 0x000138b8;
-enum HeadingLevel7 = 0x000138b9;
-enum HeadingLevel8 = 0x000138ba;
-enum HeadingLevel9 = 0x000138bb;
-enum UIA_SummaryChangeId = 0x00015f90;
-enum UIA_SayAsInterpretAsMetadataId = 0x000186a0;
 alias HWINEVENTHOOK = void*;
 alias HUIANODE = void*;
 alias HUIAPATTERNOBJECT = void*;
 alias HUIATEXTRANGE = void*;
 alias HUIAEVENT = void*;
-// [Not Found] IID_IRicheditWindowlessAccessibility
-interface IRicheditWindowlessAccessibility : IUnknown
-{
-    HRESULT CreateProvider(IRawElementProviderWindowlessSite, IRawElementProviderSimple*);
-}
-// [Not Found] IID_IRichEditUiaInformation
-interface IRichEditUiaInformation : IUnknown
-{
-    HRESULT GetBoundaryRectangle(UiaRect*);
-    HRESULT IsVisible();
-}
 enum CLSID_CAccPropServices = GUID(0xb5f8350b, 0x548, 0x48b1, [0xa6, 0xee, 0x88, 0xbd, 0x0, 0xb4, 0xa5, 0xe7]);
 struct CAccPropServices
 {
@@ -1720,8 +1764,8 @@ enum IID_IRawElementProviderSimple = GUID(0xd6dd68d1, 0x86fd, 0x4332, [0x86, 0x6
 interface IRawElementProviderSimple : IUnknown
 {
     HRESULT get_ProviderOptions(ProviderOptions*);
-    HRESULT GetPatternProvider(int, IUnknown*);
-    HRESULT GetPropertyValue(int, VARIANT*);
+    HRESULT GetPatternProvider(UIA_PATTERN_ID, IUnknown*);
+    HRESULT GetPropertyValue(UIA_PROPERTY_ID, VARIANT*);
     HRESULT get_HostRawElementProvider(IRawElementProviderSimple*);
 }
 enum IID_IAccessibleEx = GUID(0xf8b80ada, 0x2c44, 0x48d0, [0x89, 0xbe, 0x5f, 0xf2, 0x3c, 0x9c, 0xd8, 0x75]);
@@ -2994,7 +3038,7 @@ struct UiaCondition
 struct UiaPropertyCondition
 {
     ConditionType ConditionType_;
-    int PropertyId;
+    UIA_PROPERTY_ID PropertyId;
     VARIANT Value;
     PropertyConditionFlags Flags;
 }
@@ -3088,7 +3132,7 @@ struct UiaEventArgs
 struct UiaPropertyChangedEventArgs
 {
     EventArgsType Type;
-    int EventId;
+    UIA_EVENT_ID EventId;
     int PropertyId;
     VARIANT OldValue;
     VARIANT NewValue;
@@ -3130,6 +3174,17 @@ struct UiaWindowClosedEventArgs
     int cRuntimeIdLen;
 }
 alias UiaEventCallback = void function(UiaEventArgs*, SAFEARRAY*, BSTR);
+// [Not Found] IID_IRicheditWindowlessAccessibility
+interface IRicheditWindowlessAccessibility : IUnknown
+{
+    HRESULT CreateProvider(IRawElementProviderWindowlessSite, IRawElementProviderSimple*);
+}
+// [Not Found] IID_IRichEditUiaInformation
+interface IRichEditUiaInformation : IUnknown
+{
+    HRESULT GetBoundaryRectangle(UiaRect*);
+    HRESULT IsVisible();
+}
 struct SERIALKEYSA
 {
     uint cbSize;

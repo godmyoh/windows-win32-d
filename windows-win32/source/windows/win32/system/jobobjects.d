@@ -317,16 +317,6 @@ enum : int
     JOB_OBJECT_IO_RATE_CONTROL_VALID_FLAGS                   = 0x0000000f,
 }
 
-struct JOBOBJECT_IO_RATE_CONTROL_INFORMATION_NATIVE
-{
-    long MaxIops;
-    long MaxBandwidth;
-    long ReservationIops;
-    PWSTR VolumeName;
-    uint BaseIoSize;
-    JOB_OBJECT_IO_RATE_CONTROL_FLAGS ControlFlags;
-    ushort VolumeNameLength;
-}
 struct JOBOBJECT_IO_RATE_CONTROL_INFORMATION_NATIVE_V2
 {
     long MaxIops;

@@ -2494,6 +2494,9 @@ enum BUTTON_BIT_OEMCUSTOM3 = 0x00008000;
 enum BUTTON_BIT_ALLBUTTONSMASK = 0x00003fff;
 enum IOCTL_BUTTON_SET_ENABLED_ON_IDLE = 0x000b02a8;
 enum IOCTL_BUTTON_GET_ENABLED_ON_IDLE = 0x000b02ac;
+struct _HIDP_PREPARSED_DATA
+{
+}
 struct DICONSTANTFORCE
 {
     int lMagnitude;
@@ -3668,9 +3671,6 @@ struct HIDP_LINK_COLLECTION_NODE
     ushort FirstChild;
     uint _bitfield0;
     void* UserContext;
-}
-struct _HIDP_PREPARSED_DATA
-{
 }
 struct HIDP_CAPS
 {

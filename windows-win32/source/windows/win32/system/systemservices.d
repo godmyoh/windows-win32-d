@@ -6,6 +6,7 @@ import windows.win32.graphics.gdi : LOGPALETTE;
 import windows.win32.security_ : SID, SID_AND_ATTRIBUTES, TOKEN_USER;
 import windows.win32.system.com_ : BYTE_BLOB, DWORD_BLOB, FLAGGED_BYTE_BLOB;
 import windows.win32.system.diagnostics.debug__ : EXCEPTION_POINTERS, IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY, IMAGE_RUNTIME_FUNCTION_ENTRY;
+import windows.win32.system.jobobjects : JOB_OBJECT_IO_RATE_CONTROL_FLAGS;
 
 version (Windows):
 extern (Windows):
@@ -282,6 +283,71 @@ enum : uint
     SS_PATHELLIPSIS    = 0x00008000,
     SS_WORDELLIPSIS    = 0x0000c000,
     SS_ELLIPSISMASK    = 0x0000c000,
+}
+
+alias RECO_FLAGS = uint;
+enum : uint
+{
+    RECO_PASTE = 0x00000000,
+    RECO_DROP  = 0x00000001,
+    RECO_COPY  = 0x00000002,
+    RECO_CUT   = 0x00000003,
+    RECO_DRAG  = 0x00000004,
+}
+
+alias SFGAO_FLAGS = ulong;
+enum : ulong
+{
+    SFGAO_CANCOPY         = 0x00000001,
+    SFGAO_CANMOVE         = 0x00000002,
+    SFGAO_CANLINK         = 0x00000004,
+    SFGAO_STORAGE         = 0x00000008,
+    SFGAO_CANRENAME       = 0x00000010,
+    SFGAO_CANDELETE       = 0x00000020,
+    SFGAO_HASPROPSHEET    = 0x00000040,
+    SFGAO_DROPTARGET      = 0x00000100,
+    SFGAO_CAPABILITYMASK  = 0x00000177,
+    SFGAO_PLACEHOLDER     = 0x00000800,
+    SFGAO_SYSTEM          = 0x00001000,
+    SFGAO_ENCRYPTED       = 0x00002000,
+    SFGAO_ISSLOW          = 0x00004000,
+    SFGAO_GHOSTED         = 0x00008000,
+    SFGAO_LINK            = 0x00010000,
+    SFGAO_SHARE           = 0x00020000,
+    SFGAO_READONLY        = 0x00040000,
+    SFGAO_HIDDEN          = 0x00080000,
+    SFGAO_DISPLAYATTRMASK = 0x000fc000,
+    SFGAO_FILESYSANCESTOR = 0x10000000,
+    SFGAO_FOLDER          = 0x20000000,
+    SFGAO_FILESYSTEM      = 0x40000000,
+    SFGAO_HASSUBFOLDER    = 0x80000000,
+    SFGAO_CONTENTSMASK    = 0x80000000,
+    SFGAO_VALIDATE        = 0x01000000,
+    SFGAO_REMOVABLE       = 0x02000000,
+    SFGAO_COMPRESSED      = 0x04000000,
+    SFGAO_BROWSABLE       = 0x08000000,
+    SFGAO_NONENUMERATED   = 0x00100000,
+    SFGAO_NEWCONTENT      = 0x00200000,
+    SFGAO_CANMONIKER      = 0x00400000,
+    SFGAO_HASSTORAGE      = 0x00400000,
+    SFGAO_STREAM          = 0x00400000,
+    SFGAO_STORAGEANCESTOR = 0x00800000,
+    SFGAO_STORAGECAPMASK  = 0x70c50008,
+    SFGAO_PKEYSFGAOMASK   = 0x81044000,
+}
+
+alias DESKTOP_ACCESS_FLAGS = uint;
+enum : uint
+{
+    DESKTOP_READOBJECTS     = 0x00000001,
+    DESKTOP_CREATEWINDOW    = 0x00000002,
+    DESKTOP_CREATEMENU      = 0x00000004,
+    DESKTOP_HOOKCONTROL     = 0x00000008,
+    DESKTOP_JOURNALRECORD   = 0x00000010,
+    DESKTOP_JOURNALPLAYBACK = 0x00000020,
+    DESKTOP_ENUMERATE       = 0x00000040,
+    DESKTOP_WRITEOBJECTS    = 0x00000080,
+    DESKTOP_SWITCHDESKTOP   = 0x00000100,
 }
 
 alias PUMS_SCHEDULER_ENTRY_POINT = void function(RTL_UMS_SCHEDULER_REASON, ulong, void*);
@@ -3482,7 +3548,7 @@ struct RemHPALETTE
     uint cbData;
     ubyte[1] data;
 }
-struct RemBRUSH
+struct RemHBRUSH
 {
     uint cbData;
     ubyte[1] data;
@@ -3764,6 +3830,19 @@ struct _DEV_BROADCAST_USERDEFINED
 struct AtlThunkData_t
 {
 }
+/+ [CONFLICTED] alias POUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK = uint function(HANDLE, void*, uint*, IMAGE_RUNTIME_FUNCTION_ENTRY**);
++/
+alias PEXCEPTION_FILTER = int function(EXCEPTION_POINTERS*, void*);
+/+ [CONFLICTED] alias PTERMINATION_HANDLER = void function(BOOLEAN, void*);
++/
+struct REARRANGE_FILE_DATA32
+{
+    ulong SourceStartingOffset;
+    ulong TargetOffset;
+    uint SourceFileHandle;
+    uint Length;
+    uint Flags;
+}
 struct XSAVE_CET_U_FORMAT
 {
     ulong Ia32CetUMsr;
@@ -3795,11 +3874,6 @@ struct SCOPE_TABLE_AMD64
         uint JumpTarget;
     }
 }
-/+ [CONFLICTED] alias POUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK = uint function(HANDLE, void*, uint*, IMAGE_RUNTIME_FUNCTION_ENTRY**);
-+/
-alias PEXCEPTION_FILTER = int function(EXCEPTION_POINTERS*, void*);
-/+ [CONFLICTED] alias PTERMINATION_HANDLER = void function(BOOLEAN, void*);
-+/
 struct SCOPE_TABLE_ARM
 {
     uint Count;
@@ -4150,6 +4224,16 @@ struct PROCESS_MITIGATION_REDIRECTION_TRUST_POLICY
         }
     }
 }
+struct JOBOBJECT_IO_RATE_CONTROL_INFORMATION_NATIVE_V1
+{
+    long MaxIops;
+    long MaxBandwidth;
+    long ReservationIops;
+    PWSTR VolumeName;
+    uint BaseIoSize;
+    JOB_OBJECT_IO_RATE_CONTROL_FLAGS ControlFlags;
+    ushort VolumeNameLength;
+}
 struct SILOOBJECT_BASIC_INFORMATION
 {
     uint SiloId;
@@ -4289,14 +4373,6 @@ struct REARRANGE_FILE_DATA
     ulong SourceStartingOffset;
     ulong TargetOffset;
     HANDLE SourceFileHandle;
-    uint Length;
-    uint Flags;
-}
-struct REARRANGE_FILE_DATA32
-{
-    ulong SourceStartingOffset;
-    ulong TargetOffset;
-    uint SourceFileHandle;
     uint Length;
     uint Flags;
 }
@@ -5543,7 +5619,7 @@ struct PACKEDEVENTINFO
     uint ulNumEventsForLogFile;
     uint[1] ulOffsets;
 }
-alias CM_SERVICE_NODE_TYPE = int;
+alias SERVICE_NODE_TYPE = int;
 enum : int
 {
     DriverType               = 0x00000001,
@@ -5554,7 +5630,7 @@ enum : int
     RecognizerType           = 0x00000008,
 }
 
-alias CM_SERVICE_LOAD_TYPE = int;
+alias SERVICE_LOAD_TYPE = int;
 enum : int
 {
     BootLoad    = 0x00000000,
@@ -5564,7 +5640,7 @@ enum : int
     DisableLoad = 0x00000004,
 }
 
-alias CM_ERROR_CONTROL_TYPE = int;
+alias SERVICE_ERROR_TYPE = int;
 enum : int
 {
     IgnoreError   = 0x00000000,

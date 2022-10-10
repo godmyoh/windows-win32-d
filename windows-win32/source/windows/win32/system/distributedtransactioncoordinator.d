@@ -390,7 +390,7 @@ interface IDtcNetworkAccessConfig3 : IDtcNetworkAccessConfig2
     HRESULT GetLUAccess(BOOL*);
     HRESULT SetLUAccess(BOOL);
 }
-struct xid_t
+struct XID
 {
     int formatID;
     int gtrid_length;
@@ -415,19 +415,19 @@ struct xa_switch_t
 }
 alias XA_OPEN_EPT = int function(PSTR, int, int);
 alias XA_CLOSE_EPT = int function(PSTR, int, int);
-alias XA_START_EPT = int function(xid_t*, int, int);
-alias XA_END_EPT = int function(xid_t*, int, int);
-alias XA_ROLLBACK_EPT = int function(xid_t*, int, int);
-alias XA_PREPARE_EPT = int function(xid_t*, int, int);
-alias XA_COMMIT_EPT = int function(xid_t*, int, int);
-alias XA_RECOVER_EPT = int function(xid_t*, int, int, int);
-alias XA_FORGET_EPT = int function(xid_t*, int, int);
+alias XA_START_EPT = int function(XID*, int, int);
+alias XA_END_EPT = int function(XID*, int, int);
+alias XA_ROLLBACK_EPT = int function(XID*, int, int);
+alias XA_PREPARE_EPT = int function(XID*, int, int);
+alias XA_COMMIT_EPT = int function(XID*, int, int);
+alias XA_RECOVER_EPT = int function(XID*, int, int, int);
+alias XA_FORGET_EPT = int function(XID*, int, int);
 alias XA_COMPLETE_EPT = int function(int*, int*, int, int);
 enum IID_IDtcToXaMapper = GUID(0x64ffabe0, 0x7ce9, 0x11d0, [0x8c, 0xe6, 0x0, 0xc0, 0x4f, 0xdc, 0x87, 0x7e]);
 interface IDtcToXaMapper : IUnknown
 {
     HRESULT RequestNewResourceManager(PSTR, PSTR, uint*);
-    HRESULT TranslateTridToXid(uint*, uint, xid_t*);
+    HRESULT TranslateTridToXid(uint*, uint, XID*);
     HRESULT EnlistResourceManager(uint, uint*);
     HRESULT ReleaseResourceManager(uint);
 }
@@ -440,13 +440,13 @@ enum IID_IDtcToXaHelper = GUID(0xa9861611, 0x304a, 0x11d1, [0x98, 0x13, 0x0, 0xa
 interface IDtcToXaHelper : IUnknown
 {
     HRESULT Close(BOOL);
-    HRESULT TranslateTridToXid(ITransaction, GUID*, xid_t*);
+    HRESULT TranslateTridToXid(ITransaction, GUID*, XID*);
 }
 enum IID_IDtcToXaHelperSinglePipe = GUID(0x47ed4971, 0x53b3, 0x11d1, [0xbb, 0xb9, 0x0, 0xc0, 0x4f, 0xd6, 0x58, 0xf6]);
 interface IDtcToXaHelperSinglePipe : IUnknown
 {
     HRESULT XARMCreate(PSTR, PSTR, uint*);
-    HRESULT ConvertTridToXID(uint*, uint, xid_t*);
+    HRESULT ConvertTridToXID(uint*, uint, XID*);
     HRESULT EnlistWithRM(uint, ITransaction, ITransactionResourceAsync, ITransactionEnlistmentAsync*);
     void ReleaseRMCookie(uint, BOOL);
 }
@@ -505,7 +505,7 @@ interface IXATransLookup : IUnknown
 enum IID_IXATransLookup2 = GUID(0xbf193c85, 0xd1a, 0x4290, [0xb8, 0x8f, 0xd2, 0xcb, 0x88, 0x73, 0xd1, 0xe7]);
 interface IXATransLookup2 : IUnknown
 {
-    HRESULT Lookup(xid_t*, ITransaction*);
+    HRESULT Lookup(XID*, ITransaction*);
 }
 enum IID_IResourceManagerSink = GUID(0xd563181, 0xdefb, 0x11ce, [0xae, 0xd1, 0x0, 0xaa, 0x0, 0x51, 0xe2, 0xc4]);
 interface IResourceManagerSink : IUnknown
@@ -529,8 +529,8 @@ interface ILastResourceManager : IUnknown
 enum IID_IResourceManager2 = GUID(0xd136c69a, 0xf749, 0x11d1, [0x8f, 0x47, 0x0, 0xc0, 0x4f, 0x8e, 0xe5, 0x7d]);
 interface IResourceManager2 : IResourceManager
 {
-    HRESULT Enlist2(ITransaction, ITransactionResourceAsync, BOID*, int*, xid_t*, ITransactionEnlistmentAsync*);
-    HRESULT Reenlist2(xid_t*, uint, XACTSTAT*);
+    HRESULT Enlist2(ITransaction, ITransactionResourceAsync, BOID*, int*, XID*, ITransactionEnlistmentAsync*);
+    HRESULT Reenlist2(XID*, uint, XACTSTAT*);
 }
 enum IID_IResourceManagerRejoinable = GUID(0x6f6de620, 0xb5df, 0x4f3e, [0x9c, 0xfa, 0xc8, 0xae, 0xbd, 0x5, 0x17, 0x2b]);
 interface IResourceManagerRejoinable : IResourceManager2
@@ -643,7 +643,7 @@ interface ITransactionReceiverFactory : IUnknown
 {
     HRESULT Create(ITransactionReceiver*);
 }
-struct _ProxyConfigParams
+struct PROXY_CONFIG_PARAMS
 {
     ushort wcThreadsMax;
 }
@@ -662,7 +662,7 @@ interface IDtcLuRecoveryFactory : IUnknown
 {
     HRESULT Create(ubyte*, uint, IDtcLuRecovery*);
 }
-alias _DtcLu_LocalRecovery_Work = int;
+alias DTCINITIATEDRECOVERYWORK = int;
 enum : int
 {
     DTCINITIATEDRECOVERYWORK_CHECKLUSTATUS = 0x00000001,
@@ -670,14 +670,14 @@ enum : int
     DTCINITIATEDRECOVERYWORK_TMDOWN        = 0x00000003,
 }
 
-alias _DtcLu_Xln = int;
+alias DTCLUXLN = int;
 enum : int
 {
     DTCLUXLN_COLD = 0x00000001,
     DTCLUXLN_WARM = 0x00000002,
 }
 
-alias _DtcLu_Xln_Confirmation = int;
+alias DTCLUXLNCONFIRMATION = int;
 enum : int
 {
     DTCLUXLNCONFIRMATION_CONFIRM          = 0x00000001,
@@ -686,7 +686,7 @@ enum : int
     DTCLUXLNCONFIRMATION_OBSOLETE         = 0x00000004,
 }
 
-alias _DtcLu_Xln_Response = int;
+alias DTCLUXLNRESPONSE = int;
 enum : int
 {
     DTCLUXLNRESPONSE_OK_SENDOURXLNBACK   = 0x00000001,
@@ -695,7 +695,7 @@ enum : int
     DTCLUXLNRESPONSE_COLDWARMMISMATCH    = 0x00000004,
 }
 
-alias _DtcLu_Xln_Error = int;
+alias DTCLUXLNERROR = int;
 enum : int
 {
     DTCLUXLNERROR_PROTOCOL         = 0x00000001,
@@ -703,7 +703,7 @@ enum : int
     DTCLUXLNERROR_COLDWARMMISMATCH = 0x00000003,
 }
 
-alias _DtcLu_CompareState = int;
+alias DTCLUCOMPARESTATE = int;
 enum : int
 {
     DTCLUCOMPARESTATE_COMMITTED          = 0x00000001,
@@ -714,20 +714,20 @@ enum : int
     DTCLUCOMPARESTATE_RESET              = 0x00000006,
 }
 
-alias _DtcLu_CompareStates_Confirmation = int;
+alias DTCLUCOMPARESTATESCONFIRMATION = int;
 enum : int
 {
     DTCLUCOMPARESTATESCONFIRMATION_CONFIRM  = 0x00000001,
     DTCLUCOMPARESTATESCONFIRMATION_PROTOCOL = 0x00000002,
 }
 
-alias _DtcLu_CompareStates_Error = int;
+alias DTCLUCOMPARESTATESERROR = int;
 enum : int
 {
     DTCLUCOMPARESTATESERROR_PROTOCOL = 0x00000001,
 }
 
-alias _DtcLu_CompareStates_Response = int;
+alias DTCLUCOMPARESTATESRESPONSE = int;
 enum : int
 {
     DTCLUCOMPARESTATESRESPONSE_OK       = 0x00000001,
@@ -738,15 +738,15 @@ enum IID_IDtcLuRecoveryInitiatedByDtcTransWork = GUID(0x4131e765, 0x1aea, 0x11d0
 interface IDtcLuRecoveryInitiatedByDtcTransWork : IUnknown
 {
     HRESULT GetLogNameSizes(uint*, uint*);
-    HRESULT GetOurXln(_DtcLu_Xln*, ubyte*, ubyte*, uint*);
-    HRESULT HandleConfirmationFromOurXln(_DtcLu_Xln_Confirmation);
-    HRESULT HandleTheirXlnResponse(_DtcLu_Xln, ubyte*, uint, uint, _DtcLu_Xln_Confirmation*);
-    HRESULT HandleErrorFromOurXln(_DtcLu_Xln_Error);
+    HRESULT GetOurXln(DTCLUXLN*, ubyte*, ubyte*, uint*);
+    HRESULT HandleConfirmationFromOurXln(DTCLUXLNCONFIRMATION);
+    HRESULT HandleTheirXlnResponse(DTCLUXLN, ubyte*, uint, uint, DTCLUXLNCONFIRMATION*);
+    HRESULT HandleErrorFromOurXln(DTCLUXLNERROR);
     HRESULT CheckForCompareStates(BOOL*);
     HRESULT GetOurTransIdSize(uint*);
-    HRESULT GetOurCompareStates(ubyte*, _DtcLu_CompareState*);
-    HRESULT HandleTheirCompareStatesResponse(_DtcLu_CompareState, _DtcLu_CompareStates_Confirmation*);
-    HRESULT HandleErrorFromOurCompareStates(_DtcLu_CompareStates_Error);
+    HRESULT GetOurCompareStates(ubyte*, DTCLUCOMPARESTATE*);
+    HRESULT HandleTheirCompareStatesResponse(DTCLUCOMPARESTATE, DTCLUCOMPARESTATESCONFIRMATION*);
+    HRESULT HandleErrorFromOurCompareStates(DTCLUCOMPARESTATESERROR);
     HRESULT ConversationLost();
     HRESULT GetRecoverySeqNum(int*);
     HRESULT ObsoleteRecoverySeqNum(int);
@@ -759,18 +759,18 @@ interface IDtcLuRecoveryInitiatedByDtcStatusWork : IUnknown
 enum IID_IDtcLuRecoveryInitiatedByDtc = GUID(0x4131e764, 0x1aea, 0x11d0, [0x94, 0x4b, 0x0, 0xa0, 0xc9, 0x5, 0x41, 0x6e]);
 interface IDtcLuRecoveryInitiatedByDtc : IUnknown
 {
-    HRESULT GetWork(_DtcLu_LocalRecovery_Work*, void**);
+    HRESULT GetWork(DTCINITIATEDRECOVERYWORK*, void**);
 }
 enum IID_IDtcLuRecoveryInitiatedByLuWork = GUID(0xac2b8ad1, 0xd6f0, 0x11d0, [0xb3, 0x86, 0x0, 0xa0, 0xc9, 0x8, 0x33, 0x65]);
 interface IDtcLuRecoveryInitiatedByLuWork : IUnknown
 {
-    HRESULT HandleTheirXln(int, _DtcLu_Xln, ubyte*, uint, ubyte*, uint, uint, _DtcLu_Xln_Response*);
+    HRESULT HandleTheirXln(int, DTCLUXLN, ubyte*, uint, ubyte*, uint, uint, DTCLUXLNRESPONSE*);
     HRESULT GetOurLogNameSize(uint*);
-    HRESULT GetOurXln(_DtcLu_Xln*, ubyte*, uint*);
-    HRESULT HandleConfirmationOfOurXln(_DtcLu_Xln_Confirmation);
-    HRESULT HandleTheirCompareStates(ubyte*, uint, _DtcLu_CompareState, _DtcLu_CompareStates_Response*, _DtcLu_CompareState*);
-    HRESULT HandleConfirmationOfOurCompareStates(_DtcLu_CompareStates_Confirmation);
-    HRESULT HandleErrorFromOurCompareStates(_DtcLu_CompareStates_Error);
+    HRESULT GetOurXln(DTCLUXLN*, ubyte*, uint*);
+    HRESULT HandleConfirmationOfOurXln(DTCLUXLNCONFIRMATION);
+    HRESULT HandleTheirCompareStates(ubyte*, uint, DTCLUCOMPARESTATE, DTCLUCOMPARESTATESRESPONSE*, DTCLUCOMPARESTATE*);
+    HRESULT HandleConfirmationOfOurCompareStates(DTCLUCOMPARESTATESCONFIRMATION);
+    HRESULT HandleErrorFromOurCompareStates(DTCLUCOMPARESTATESERROR);
     HRESULT ConversationLost();
 }
 enum IID_IDtcLuRecoveryInitiatedByLu = GUID(0x4131e768, 0x1aea, 0x11d0, [0x94, 0x4b, 0x0, 0xa0, 0xc9, 0x5, 0x41, 0x6e]);

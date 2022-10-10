@@ -1153,6 +1153,39 @@ enum : uint
     CHANGER_TRUE_EXCHANGE_CAPABLE      = 0x80000008,
 }
 
+struct MOVE_FILE_DATA32
+{
+    uint FileHandle;
+    LARGE_INTEGER StartingVcn;
+    LARGE_INTEGER StartingLcn;
+    uint ClusterCount;
+}
+struct MARK_HANDLE_INFO32
+{
+    union
+    {
+        uint UsnSourceInfo;
+        uint CopyNumber;
+    }
+    uint VolumeHandle;
+    uint HandleInfo;
+}
+struct DUPLICATE_EXTENTS_DATA32
+{
+    uint FileHandle;
+    LARGE_INTEGER SourceFileOffset;
+    LARGE_INTEGER TargetFileOffset;
+    LARGE_INTEGER ByteCount;
+}
+struct DUPLICATE_EXTENTS_DATA_EX32
+{
+    uint Size;
+    uint FileHandle;
+    LARGE_INTEGER SourceFileOffset;
+    LARGE_INTEGER TargetFileOffset;
+    LARGE_INTEGER ByteCount;
+    uint Flags;
+}
 struct STORAGE_HOTPLUG_INFO
 {
     uint Size;
@@ -2694,7 +2727,7 @@ struct PERSISTENT_RESERVE_COMMAND
         }
     }
 }
-alias _DEVICEDUMP_COLLECTION_TYPE = int;
+alias DEVICEDUMP_COLLECTION_TYPEIDE_NOTIFICATION_TYPE = int;
 enum : int
 {
     TCCollectionBugCheck             = 0x00000001,
@@ -4177,13 +4210,6 @@ struct MOVE_FILE_RECORD_DATA
     LARGE_INTEGER SourceFileRecord;
     LARGE_INTEGER TargetFileRecord;
 }
-struct MOVE_FILE_DATA32
-{
-    uint FileHandle;
-    LARGE_INTEGER StartingVcn;
-    LARGE_INTEGER StartingLcn;
-    uint ClusterCount;
-}
 struct FIND_BY_SID_DATA
 {
     uint Restart;
@@ -4366,16 +4392,6 @@ struct MARK_HANDLE_INFO
         uint CopyNumber;
     }
     HANDLE VolumeHandle;
-    uint HandleInfo;
-}
-struct MARK_HANDLE_INFO32
-{
-    union
-    {
-        uint UsnSourceInfo;
-        uint CopyNumber;
-    }
-    uint VolumeHandle;
     uint HandleInfo;
 }
 struct BULK_SECURITY_TEST_DATA
@@ -5448,7 +5464,7 @@ struct FILE_STORAGE_TIER
     GUID Id;
     wchar[256] Name;
     wchar[256] Description;
-    FILE_STORAGE_TIER_FLAGS Flags;
+    ulong Flags;
     ulong ProvisionedCapacity;
     FILE_STORAGE_TIER_MEDIA_TYPE MediaType;
     FILE_STORAGE_TIER_CLASS Class;
@@ -5533,26 +5549,10 @@ struct DUPLICATE_EXTENTS_DATA
     LARGE_INTEGER TargetFileOffset;
     LARGE_INTEGER ByteCount;
 }
-struct DUPLICATE_EXTENTS_DATA32
-{
-    uint FileHandle;
-    LARGE_INTEGER SourceFileOffset;
-    LARGE_INTEGER TargetFileOffset;
-    LARGE_INTEGER ByteCount;
-}
 struct DUPLICATE_EXTENTS_DATA_EX
 {
     ulong Size;
     HANDLE FileHandle;
-    LARGE_INTEGER SourceFileOffset;
-    LARGE_INTEGER TargetFileOffset;
-    LARGE_INTEGER ByteCount;
-    uint Flags;
-}
-struct DUPLICATE_EXTENTS_DATA_EX32
-{
-    uint Size;
-    uint FileHandle;
     LARGE_INTEGER SourceFileOffset;
     LARGE_INTEGER TargetFileOffset;
     LARGE_INTEGER ByteCount;

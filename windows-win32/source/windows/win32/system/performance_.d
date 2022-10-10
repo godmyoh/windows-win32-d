@@ -974,6 +974,36 @@ interface IValueMap : IDispatch
     HRESULT AddRange(IValueMap);
     HRESULT CreateValueMapItem(IValueMapItem*);
 }
+struct PERF_OBJECT_TYPE
+{
+    uint TotalByteLength;
+    uint DefinitionLength;
+    uint HeaderLength;
+    uint ObjectNameTitleIndex;
+    uint ObjectNameTitle;
+    uint ObjectHelpTitleIndex;
+    uint ObjectHelpTitle;
+    uint DetailLevel;
+    uint NumCounters;
+    int DefaultCounter;
+    int NumInstances;
+    uint CodePage;
+    LARGE_INTEGER PerfTime;
+    LARGE_INTEGER PerfFreq;
+}
+struct PERF_COUNTER_DEFINITION
+{
+    uint ByteLength;
+    uint CounterNameTitleIndex;
+    uint CounterNameTitle;
+    uint CounterHelpTitleIndex;
+    uint CounterHelpTitle;
+    int DefaultScale;
+    uint DetailLevel;
+    uint CounterType;
+    uint CounterSize;
+    uint CounterOffset;
+}
 struct PERF_COUNTERSET_INFO
 {
     GUID CounterSetGuid;
@@ -1141,15 +1171,15 @@ struct PERF_DATA_BLOCK
     uint SystemNameLength;
     uint SystemNameOffset;
 }
-struct PERF_OBJECT_TYPE
+/+ [CONFLICTED] struct PERF_OBJECT_TYPE
 {
     uint TotalByteLength;
     uint DefinitionLength;
     uint HeaderLength;
     uint ObjectNameTitleIndex;
-    uint ObjectNameTitle;
+    PWSTR ObjectNameTitle;
     uint ObjectHelpTitleIndex;
-    uint ObjectHelpTitle;
+    PWSTR ObjectHelpTitle;
     uint DetailLevel;
     uint NumCounters;
     int DefaultCounter;
@@ -1158,19 +1188,21 @@ struct PERF_OBJECT_TYPE
     LARGE_INTEGER PerfTime;
     LARGE_INTEGER PerfFreq;
 }
-struct PERF_COUNTER_DEFINITION
++/
+/+ [CONFLICTED] struct PERF_COUNTER_DEFINITION
 {
     uint ByteLength;
     uint CounterNameTitleIndex;
-    uint CounterNameTitle;
+    PWSTR CounterNameTitle;
     uint CounterHelpTitleIndex;
-    uint CounterHelpTitle;
+    PWSTR CounterHelpTitle;
     int DefaultScale;
     uint DetailLevel;
     uint CounterType;
     uint CounterSize;
     uint CounterOffset;
 }
++/
 struct PERF_INSTANCE_DEFINITION
 {
     uint ByteLength;
@@ -1875,35 +1907,3 @@ enum IID_DISystemMonitorEvents = GUID(0x84979930, 0x4ab3, 0x11cf, [0x94, 0x3a, 0
 interface DISystemMonitorEvents : IDispatch
 {
 }
-/+ [CONFLICTED] struct PERF_OBJECT_TYPE
-{
-    uint TotalByteLength;
-    uint DefinitionLength;
-    uint HeaderLength;
-    uint ObjectNameTitleIndex;
-    PWSTR ObjectNameTitle;
-    uint ObjectHelpTitleIndex;
-    PWSTR ObjectHelpTitle;
-    uint DetailLevel;
-    uint NumCounters;
-    int DefaultCounter;
-    int NumInstances;
-    uint CodePage;
-    LARGE_INTEGER PerfTime;
-    LARGE_INTEGER PerfFreq;
-}
-+/
-/+ [CONFLICTED] struct PERF_COUNTER_DEFINITION
-{
-    uint ByteLength;
-    uint CounterNameTitleIndex;
-    PWSTR CounterNameTitle;
-    uint CounterHelpTitleIndex;
-    PWSTR CounterHelpTitle;
-    int DefaultScale;
-    uint DetailLevel;
-    uint CounterType;
-    uint CounterSize;
-    uint CounterOffset;
-}
-+/

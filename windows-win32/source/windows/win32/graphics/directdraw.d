@@ -1892,15 +1892,6 @@ struct DDCOLORCONTROL
     int lColorEnable;
     uint dwReserved1;
 }
-struct IDDVideoPortContainerVtbl
-{
-}
-struct IDirectDrawVideoPortVtbl
-{
-}
-struct IDirectDrawVideoPortNotifyVtbl
-{
-}
 alias LPDDENUMVIDEOCALLBACK = HRESULT function(DDVIDEOPORTCAPS*, void*);
 enum IID_IDDVideoPortContainer = GUID(0x6c142760, 0xa733, 0x11ce, [0xa5, 0x21, 0x0, 0x20, 0xaf, 0xb, 0xe5, 0x60]);
 interface IDDVideoPortContainer : IUnknown
@@ -2149,51 +2140,6 @@ struct DDMONITORINFO
     int ModeReserved1;
     int ModeReserved2;
     int ModeReserved3;
-}
-struct IDirectDrawClipperVtbl
-{
-}
-struct IDirectDrawPaletteVtbl
-{
-}
-struct IDirectDrawSurfaceVtbl
-{
-}
-struct IDirectDrawSurface2Vtbl
-{
-}
-struct IDirectDrawSurface3Vtbl
-{
-}
-struct IDirectDrawSurface4Vtbl
-{
-}
-struct IDirectDrawSurface7Vtbl
-{
-}
-struct IDirectDrawColorControlVtbl
-{
-}
-struct IDirectDrawVtbl
-{
-}
-struct IDirectDraw2Vtbl
-{
-}
-struct IDirectDraw4Vtbl
-{
-}
-struct IDirectDraw7Vtbl
-{
-}
-struct IDirectDrawKernelVtbl
-{
-}
-struct IDirectDrawSurfaceKernelVtbl
-{
-}
-struct IDirectDrawGammaControlVtbl
-{
 }
 struct DD32BITDRIVERDATA
 {

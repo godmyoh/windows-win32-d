@@ -636,7 +636,7 @@ interface ISpTranscript : IUnknown
     HRESULT GetTranscript(PWSTR*);
     HRESULT AppendTranscript(const(wchar)*);
 }
-alias SPDISPLYATTRIBUTES = int;
+alias SPDISPLAYATTRIBUTES = int;
 enum : int
 {
     SPAF_ONE_TRAILING_SPACE     = 0x00000002,
@@ -1434,7 +1434,7 @@ struct SPRECOGNIZERSTATUS
     ushort[20] aLangID;
     ulong ullRecognitionStreamTime;
 }
-alias SPWAVEFORMATTYPE = int;
+alias SPSTREAMFORMATTYPE = int;
 enum : int
 {
     SPWF_INPUT    = 0x00000000,
@@ -1466,7 +1466,7 @@ interface ISpRecognizer : ISpProperties
     HRESULT GetRecoState(SPRECOSTATE*);
     HRESULT SetRecoState(SPRECOSTATE);
     HRESULT GetStatus(SPRECOGNIZERSTATUS*);
-    HRESULT GetFormat(SPWAVEFORMATTYPE, GUID*, WAVEFORMATEX**);
+    HRESULT GetFormat(SPSTREAMFORMATTYPE, GUID*, WAVEFORMATEX**);
     HRESULT IsUISupported(const(wchar)*, void*, uint, BOOL*);
     HRESULT DisplayUI(HWND, const(wchar)*, const(wchar)*, void*, uint);
     HRESULT EmulateRecognition(ISpPhrase);

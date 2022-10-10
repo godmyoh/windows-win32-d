@@ -367,6 +367,17 @@ struct MEMORY_BASIC_INFORMATION
     PAGE_PROTECTION_FLAGS Protect;
     PAGE_TYPE Type;
 }
+/+ [CONFLICTED] struct MEMORY_BASIC_INFORMATION
+{
+    void* BaseAddress;
+    void* AllocationBase;
+    PAGE_PROTECTION_FLAGS AllocationProtect;
+    ulong RegionSize;
+    VIRTUAL_ALLOCATION_TYPE State;
+    PAGE_PROTECTION_FLAGS Protect;
+    PAGE_TYPE Type;
+}
++/
 struct MEMORY_BASIC_INFORMATION32
 {
     uint BaseAddress;
@@ -438,14 +449,3 @@ enum : int
 }
 
 alias PSECURE_MEMORY_CACHE_CALLBACK = BOOLEAN function(void*, ulong);
-/+ [CONFLICTED] struct MEMORY_BASIC_INFORMATION
-{
-    void* BaseAddress;
-    void* AllocationBase;
-    PAGE_PROTECTION_FLAGS AllocationProtect;
-    ulong RegionSize;
-    VIRTUAL_ALLOCATION_TYPE State;
-    PAGE_PROTECTION_FLAGS Protect;
-    PAGE_TYPE Type;
-}
-+/
