@@ -11,7 +11,7 @@ Clone this repository and build `windows-win32.lib` from `windows-win32-d\window
 ```
 git clone https://github.com/godmyoh/windows-win32-d.git
 cd windows-win32-d\windows-win32
-dub build --build=release
+dub build --build=release --config=release
 ```
 
 You can import `windows-win32-d\windows-win32\source` and link `windows-win32-d\windows-win32\windows-win32.lib` instead of using `core.sys.windows`.
@@ -27,6 +27,13 @@ If you want to generate files under `windows-win32-d\windows-win32\source`, `dub
 ```
 cd ..\windows-win32-generator
 dub run
+```
+
+## Debug build
+
+`debug` configuration generates `windows-win32-debug.lib`.
+```
+dub build --build=debug --config=debug
 ```
 
 ## Naming rules for packages and modules

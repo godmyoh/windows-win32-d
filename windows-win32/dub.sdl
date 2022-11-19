@@ -4,3 +4,11 @@ copyright "godmyoh"
 authors "godmyoh"
 targetType "library"
 targetName "windows-win32"
+
+configuration "release" {
+    targetName "windows-win32"
+}
+
+configuration "debug" {
+    targetName "windows-win32-debug"
+}
