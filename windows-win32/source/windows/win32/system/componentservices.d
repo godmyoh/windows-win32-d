@@ -1,7 +1,7 @@
 module windows.win32.system.componentservices;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, FILETIME, HRESULT, PSID, PWSTR;
+import windows.win32.foundation : BOOL, BSTR, FILETIME, HRESULT, PSID, PWSTR, VARIANT_BOOL;
 import windows.win32.system.com_ : APTTYPE, BLOB, IClassFactory, IDispatch, IUnknown, SAFEARRAY, VARIANT;
 import windows.win32.system.distributedtransactioncoordinator : ITransaction, ITransactionVoterBallotAsync2, ITransactionVoterNotifyAsync2;
 
@@ -179,7 +179,7 @@ interface ICOMAdminCatalog : IDispatch
     HRESULT RefreshComponents();
     HRESULT BackupREGDB(BSTR);
     HRESULT RestoreREGDB(BSTR);
-    HRESULT QueryApplicationFile(BSTR, BSTR*, BSTR*, short*, short*, SAFEARRAY**);
+    HRESULT QueryApplicationFile(BSTR, BSTR*, BSTR*, VARIANT_BOOL*, VARIANT_BOOL*, SAFEARRAY**);
     HRESULT StartApplication(BSTR);
     HRESULT ServiceCheck(int, int*);
     HRESULT InstallMultipleEventClasses(BSTR, SAFEARRAY**, SAFEARRAY**);
@@ -206,10 +206,10 @@ interface ICOMAdminCatalog2 : ICOMAdminCatalog
     HRESULT PauseApplicationInstances(VARIANT*);
     HRESULT ResumeApplicationInstances(VARIANT*);
     HRESULT RecycleApplicationInstances(VARIANT*, int);
-    HRESULT AreApplicationInstancesPaused(VARIANT*, short*);
+    HRESULT AreApplicationInstancesPaused(VARIANT*, VARIANT_BOOL*);
     HRESULT DumpApplicationInstance(BSTR, BSTR, int, BSTR*);
-    HRESULT get_IsApplicationInstanceDumpSupported(short*);
-    HRESULT CreateServiceForApplication(BSTR, BSTR, BSTR, BSTR, BSTR, BSTR, BSTR, short);
+    HRESULT get_IsApplicationInstanceDumpSupported(VARIANT_BOOL*);
+    HRESULT CreateServiceForApplication(BSTR, BSTR, BSTR, BSTR, BSTR, BSTR, BSTR, VARIANT_BOOL);
     HRESULT DeleteServiceForApplication(BSTR);
     HRESULT GetPartitionID(BSTR, BSTR*);
     HRESULT GetPartitionName(BSTR, BSTR*);
@@ -226,7 +226,7 @@ interface ICOMAdminCatalog2 : ICOMAdminCatalog
     HRESULT ImportUnconfiguredComponents(BSTR, VARIANT*, VARIANT*);
     HRESULT PromoteUnconfiguredComponents(BSTR, VARIANT*, VARIANT*);
     HRESULT ImportComponents(BSTR, VARIANT*, VARIANT*);
-    HRESULT get_Is64BitCatalogServer(short*);
+    HRESULT get_Is64BitCatalogServer(VARIANT_BOOL*);
     HRESULT ExportPartition(BSTR, BSTR, COMAdminApplicationExportOptions);
     HRESULT InstallPartition(BSTR, BSTR, COMAdminApplicationInstallOptions, BSTR, BSTR, BSTR);
     HRESULT QueryApplicationFile2(BSTR, IDispatch*);
@@ -239,9 +239,9 @@ interface ICatalogObject : IDispatch
     HRESULT put_Value(BSTR, VARIANT);
     HRESULT get_Key(VARIANT*);
     HRESULT get_Name(VARIANT*);
-    HRESULT IsPropertyReadOnly(BSTR, short*);
-    HRESULT get_Valid(short*);
-    HRESULT IsPropertyWriteOnly(BSTR, short*);
+    HRESULT IsPropertyReadOnly(BSTR, VARIANT_BOOL*);
+    HRESULT get_Valid(VARIANT_BOOL*);
+    HRESULT IsPropertyWriteOnly(BSTR, VARIANT_BOOL*);
 }
 enum IID_ICatalogCollection = GUID(0x6eb22872, 0x8a19, 0x11d0, [0x81, 0xb6, 0x0, 0xa0, 0xc9, 0x23, 0x1c, 0x29]);
 interface ICatalogCollection : IDispatch
@@ -255,8 +255,8 @@ interface ICatalogCollection : IDispatch
     HRESULT SaveChanges(int*);
     HRESULT GetCollection(BSTR, VARIANT, IDispatch*);
     HRESULT get_Name(VARIANT*);
-    HRESULT get_AddEnabled(short*);
-    HRESULT get_RemoveEnabled(short*);
+    HRESULT get_AddEnabled(VARIANT_BOOL*);
+    HRESULT get_RemoveEnabled(VARIANT_BOOL*);
     HRESULT GetUtilInterface(IDispatch*);
     HRESULT get_DataStoreMajorVersion(int*);
     HRESULT get_DataStoreMinorVersion(int*);
@@ -590,9 +590,9 @@ interface ISecurityCallContext : IDispatch
     HRESULT get_Count(int*);
     HRESULT get_Item(BSTR, VARIANT*);
     HRESULT get__NewEnum(IUnknown*);
-    HRESULT IsCallerInRole(BSTR, short*);
-    HRESULT IsSecurityEnabled(short*);
-    HRESULT IsUserInRole(VARIANT*, BSTR, short*);
+    HRESULT IsCallerInRole(BSTR, VARIANT_BOOL*);
+    HRESULT IsSecurityEnabled(VARIANT_BOOL*);
+    HRESULT IsUserInRole(VARIANT*, BSTR, VARIANT_BOOL*);
 }
 enum IID_IGetSecurityCallContext = GUID(0xcafc823f, 0xb441, 0x11d1, [0xb8, 0x2b, 0x0, 0x0, 0xf8, 0x75, 0x7e, 0x2a]);
 interface IGetSecurityCallContext : IDispatch
@@ -610,7 +610,7 @@ interface SecurityProperty : IDispatch
 enum IID_ContextInfo = GUID(0x19a5a02c, 0xac8, 0x11d2, [0xb2, 0x86, 0x0, 0xc0, 0x4f, 0x8e, 0xf9, 0x34]);
 interface ContextInfo : IDispatch
 {
-    HRESULT IsInTransaction(short*);
+    HRESULT IsInTransaction(VARIANT_BOOL*);
     HRESULT GetTransaction(IUnknown*);
     HRESULT GetTransactionId(BSTR*);
     HRESULT GetActivityId(BSTR*);
@@ -631,9 +631,9 @@ interface ObjectContext : IDispatch
     HRESULT SetAbort();
     HRESULT EnableCommit();
     HRESULT DisableCommit();
-    HRESULT IsInTransaction(short*);
-    HRESULT IsSecurityEnabled(short*);
-    HRESULT IsCallerInRole(BSTR, short*);
+    HRESULT IsInTransaction(VARIANT_BOOL*);
+    HRESULT IsSecurityEnabled(VARIANT_BOOL*);
+    HRESULT IsCallerInRole(BSTR, VARIANT_BOOL*);
     HRESULT get_Count(int*);
     HRESULT get_Item(BSTR, VARIANT*);
     HRESULT get__NewEnum(IUnknown*);
@@ -927,7 +927,7 @@ interface IMtsEvents : IDispatch
     HRESULT get_PackageName(BSTR*);
     HRESULT get_PackageGuid(BSTR*);
     HRESULT PostEvent(VARIANT*);
-    HRESULT get_FireEvents(short*);
+    HRESULT get_FireEvents(VARIANT_BOOL*);
     HRESULT GetProcessID(int*);
 }
 enum IID_IMtsEventInfo = GUID(0xd56c3dc1, 0x8482, 0x11d0, [0xb1, 0x70, 0x0, 0xaa, 0x0, 0xba, 0x32, 0x58]);
@@ -1237,7 +1237,7 @@ interface ObjectControl : IUnknown
 {
     HRESULT Activate();
     HRESULT Deactivate();
-    HRESULT CanBePooled(short*);
+    HRESULT CanBePooled(VARIANT_BOOL*);
 }
 enum IID_ISharedProperty = GUID(0x2a005c01, 0xa5de, 0x11cf, [0x9e, 0x66, 0x0, 0xaa, 0x0, 0xa3, 0xf4, 0x64]);
 interface ISharedProperty : IDispatch
@@ -1248,15 +1248,15 @@ interface ISharedProperty : IDispatch
 enum IID_ISharedPropertyGroup = GUID(0x2a005c07, 0xa5de, 0x11cf, [0x9e, 0x66, 0x0, 0xaa, 0x0, 0xa3, 0xf4, 0x64]);
 interface ISharedPropertyGroup : IDispatch
 {
-    HRESULT CreatePropertyByPosition(int, short*, ISharedProperty*);
+    HRESULT CreatePropertyByPosition(int, VARIANT_BOOL*, ISharedProperty*);
     HRESULT get_PropertyByPosition(int, ISharedProperty*);
-    HRESULT CreateProperty(BSTR, short*, ISharedProperty*);
+    HRESULT CreateProperty(BSTR, VARIANT_BOOL*, ISharedProperty*);
     HRESULT get_Property(BSTR, ISharedProperty*);
 }
 enum IID_ISharedPropertyGroupManager = GUID(0x2a005c0d, 0xa5de, 0x11cf, [0x9e, 0x66, 0x0, 0xaa, 0x0, 0xa3, 0xf4, 0x64]);
 interface ISharedPropertyGroupManager : IDispatch
 {
-    HRESULT CreatePropertyGroup(BSTR, int*, int*, short*, ISharedPropertyGroup*);
+    HRESULT CreatePropertyGroup(BSTR, int*, int*, VARIANT_BOOL*, ISharedPropertyGroup*);
     HRESULT get_Group(BSTR, ISharedPropertyGroup*);
     HRESULT get__NewEnum(IUnknown*);
 }
@@ -1325,8 +1325,8 @@ enum : int
 enum IID_IContextState = GUID(0x3c05e54b, 0xa42a, 0x11d2, [0xaf, 0xc4, 0x0, 0xc0, 0x4f, 0x8e, 0xe1, 0xc4]);
 interface IContextState : IUnknown
 {
-    HRESULT SetDeactivateOnReturn(short);
-    HRESULT GetDeactivateOnReturn(short*);
+    HRESULT SetDeactivateOnReturn(VARIANT_BOOL);
+    HRESULT GetDeactivateOnReturn(VARIANT_BOOL*);
     HRESULT SetMyTransactionVote(TransactionVote);
     HRESULT GetMyTransactionVote(TransactionVote*);
 }
@@ -1365,13 +1365,13 @@ interface ICrmCompensatorVariants : IUnknown
 {
     HRESULT SetLogControlVariants(ICrmLogControl);
     HRESULT BeginPrepareVariants();
-    HRESULT PrepareRecordVariants(VARIANT*, short*);
-    HRESULT EndPrepareVariants(short*);
-    HRESULT BeginCommitVariants(short);
-    HRESULT CommitRecordVariants(VARIANT*, short*);
+    HRESULT PrepareRecordVariants(VARIANT*, VARIANT_BOOL*);
+    HRESULT EndPrepareVariants(VARIANT_BOOL*);
+    HRESULT BeginCommitVariants(VARIANT_BOOL);
+    HRESULT CommitRecordVariants(VARIANT*, VARIANT_BOOL*);
     HRESULT EndCommitVariants();
-    HRESULT BeginAbortVariants(short);
-    HRESULT AbortRecordVariants(VARIANT*, short*);
+    HRESULT BeginAbortVariants(VARIANT_BOOL);
+    HRESULT AbortRecordVariants(VARIANT*, VARIANT_BOOL*);
     HRESULT EndAbortVariants();
 }
 struct CrmLogRecordRead
@@ -1408,7 +1408,7 @@ interface ICrmMonitorLogRecords : IUnknown
 {
     HRESULT get_Count(int*);
     HRESULT get_TransactionState(CrmTransactionState*);
-    HRESULT get_StructuredRecords(short*);
+    HRESULT get_StructuredRecords(VARIANT_BOOL*);
     HRESULT GetLogRecord(uint, CrmLogRecordRead*);
     HRESULT GetLogRecordVariants(VARIANT, VARIANT*);
 }

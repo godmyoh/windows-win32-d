@@ -13,10 +13,10 @@ enum : byte
     PFD_TYPE_COLORINDEX = 0x01,
 }
 
-alias PFD_LAYER_TYPE = ubyte;
-enum : ubyte
+alias PFD_LAYER_TYPE = byte;
+enum : byte
 {
-    PFD_UNDERLAY_PLANE = 0xff,
+    PFD_UNDERLAY_PLANE = cast(byte)0xff,
     PFD_MAIN_PLANE     = 0x00,
     PFD_OVERLAY_PLANE  = 0x01,
 }

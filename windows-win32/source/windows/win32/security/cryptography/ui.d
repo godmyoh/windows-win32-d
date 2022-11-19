@@ -2,7 +2,7 @@ module windows.win32.security.cryptography.ui;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, PSTR, PWSTR, WPARAM;
-import windows.win32.security.cryptography_ : CERT_CHAIN_CONTEXT, CERT_CONTEXT, CRL_CONTEXT, CRYPTOAPI_BLOB, CRYPT_ATTRIBUTES, CRYPT_KEY_FLAGS, CRYPT_KEY_PROV_INFO, CTL_CONTEXT, HCERTSTORE;
+import windows.win32.security.cryptography_ : CERT_CHAIN_CONTEXT, CERT_CONTEXT, CRL_CONTEXT, CRYPT_ATTRIBUTES, CRYPT_INTEGER_BLOB, CRYPT_KEY_FLAGS, CRYPT_KEY_PROV_INFO, CTL_CONTEXT, HCERTSTORE;
 import windows.win32.security.wintrust : CRYPT_PROVIDER_DATA;
 import windows.win32.ui.controls_ : PROPSHEETPAGEA, PROPSHEETPAGEW;
 
@@ -371,7 +371,7 @@ struct CERT_VERIFY_CERTIFICATE_TRUST
     uint* pcChain;
     CERT_CONTEXT*** prgChain;
     uint** prgdwErrors;
-    CRYPTOAPI_BLOB** prgpbTrustInfo;
+    CRYPT_INTEGER_BLOB** prgpbTrustInfo;
 }
 struct CTL_MODIFY_REQUEST
 {

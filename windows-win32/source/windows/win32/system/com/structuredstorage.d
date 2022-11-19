@@ -1,7 +1,7 @@
 module windows.win32.system.com.structuredstorage;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, DECIMAL, FILETIME, HRESULT, LARGE_INTEGER, PSTR, PWSTR, ULARGE_INTEGER;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, DECIMAL, FILETIME, HRESULT, LARGE_INTEGER, PSTR, PWSTR, ULARGE_INTEGER, VARIANT_BOOL;
 import windows.win32.security_ : PSECURITY_DESCRIPTOR;
 import windows.win32.system.com_ : BLOB, CLSCTX, COSERVERINFO, CY, DVTARGETDEVICE, IDispatch, IErrorLog, IPersist, IStream, IUnknown, LOCKTYPE, MULTI_QI, SAFEARRAY, STATFLAG, STATSTG, STGC, STGM, STGMEDIUM, StorageLayout, VARENUM, VARIANT;
 
@@ -307,7 +307,7 @@ struct CABSTRBLOB
 struct CABOOL
 {
     uint cElems;
-    short* pElems;
+    VARIANT_BOOL* pElems;
 }
 struct CASCODE
 {
@@ -378,8 +378,8 @@ struct PROPVARIANT
                 ULARGE_INTEGER uhVal;
                 float fltVal;
                 double dblVal;
-                short boolVal;
-                short __OBSOLETE__VARIANT_BOOL;
+                VARIANT_BOOL boolVal;
+                VARIANT_BOOL __OBSOLETE__VARIANT_BOOL;
                 int scode;
                 CY cyVal;
                 double date;
@@ -429,7 +429,7 @@ struct PROPVARIANT
                 uint* puintVal;
                 float* pfltVal;
                 double* pdblVal;
-                short* pboolVal;
+                VARIANT_BOOL* pboolVal;
                 DECIMAL* pdecVal;
                 int* pscode;
                 CY* pcyVal;

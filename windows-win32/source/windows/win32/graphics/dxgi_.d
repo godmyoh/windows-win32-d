@@ -27,18 +27,23 @@ enum : uint
     DXGI_RESOURCE_PRIORITY_MAXIMUM = 0xc8000000,
 }
 
+alias DXGI_USAGE = uint;
+enum : uint
+{
+    DXGI_USAGE_SHADER_INPUT         = 0x00000010,
+    DXGI_USAGE_RENDER_TARGET_OUTPUT = 0x00000020,
+    DXGI_USAGE_BACK_BUFFER          = 0x00000040,
+    DXGI_USAGE_SHARED               = 0x00000080,
+    DXGI_USAGE_READ_ONLY            = 0x00000100,
+    DXGI_USAGE_DISCARD_ON_PRESENT   = 0x00000200,
+    DXGI_USAGE_UNORDERED_ACCESS     = 0x00000400,
+}
+
 HRESULT CreateDXGIFactory(const(GUID)*, void**);
 HRESULT CreateDXGIFactory1(const(GUID)*, void**);
 HRESULT CreateDXGIFactory2(uint, const(GUID)*, void**);
 HRESULT DXGIGetDebugInterface1(uint, const(GUID)*, void**);
 HRESULT DXGIDeclareAdapterRemovalSupport();
-enum DXGI_USAGE_SHADER_INPUT = 0x00000010;
-enum DXGI_USAGE_RENDER_TARGET_OUTPUT = 0x00000020;
-enum DXGI_USAGE_BACK_BUFFER = 0x00000040;
-enum DXGI_USAGE_SHARED = 0x00000080;
-enum DXGI_USAGE_READ_ONLY = 0x00000100;
-enum DXGI_USAGE_DISCARD_ON_PRESENT = 0x00000200;
-enum DXGI_USAGE_UNORDERED_ACCESS = 0x00000400;
 enum DXGI_MAP_READ = 0x00000001;
 enum DXGI_MAP_WRITE = 0x00000002;
 enum DXGI_MAP_DISCARD = 0x00000004;
@@ -185,7 +190,7 @@ struct DXGI_SWAP_CHAIN_DESC
 {
     DXGI_MODE_DESC BufferDesc;
     DXGI_SAMPLE_DESC SampleDesc;
-    uint BufferUsage;
+    DXGI_USAGE BufferUsage;
     uint BufferCount;
     HWND OutputWindow;
     BOOL Windowed;
@@ -209,7 +214,7 @@ enum IID_IDXGIResource = GUID(0x35f3ab4, 0x482e, 0x4e50, [0xb4, 0x1f, 0x8a, 0x7f
 interface IDXGIResource : IDXGIDeviceSubObject
 {
     HRESULT GetSharedHandle(HANDLE*);
-    HRESULT GetUsage(uint*);
+    HRESULT GetUsage(DXGI_USAGE*);
     HRESULT SetEvictionPriority(DXGI_RESOURCE_PRIORITY);
     HRESULT GetEvictionPriority(uint*);
 }
@@ -282,7 +287,7 @@ enum IID_IDXGIDevice = GUID(0x54ec77fa, 0x1377, 0x44e6, [0x8c, 0x32, 0x88, 0xfd,
 interface IDXGIDevice : IDXGIObject
 {
     HRESULT GetAdapter(IDXGIAdapter*);
-    HRESULT CreateSurface(const(DXGI_SURFACE_DESC)*, uint, uint, const(DXGI_SHARED_RESOURCE)*, IDXGISurface*);
+    HRESULT CreateSurface(const(DXGI_SURFACE_DESC)*, uint, DXGI_USAGE, const(DXGI_SHARED_RESOURCE)*, IDXGISurface*);
     HRESULT QueryResourceResidency(IUnknown*, DXGI_RESIDENCY*, uint);
     HRESULT SetGPUThreadPriority(int);
     HRESULT GetGPUThreadPriority(int*);
@@ -442,7 +447,7 @@ struct DXGI_SWAP_CHAIN_DESC1
     DXGI_FORMAT Format;
     BOOL Stereo;
     DXGI_SAMPLE_DESC SampleDesc;
-    uint BufferUsage;
+    DXGI_USAGE BufferUsage;
     uint BufferCount;
     DXGI_SCALING Scaling;
     DXGI_SWAP_EFFECT SwapEffect;

@@ -378,6 +378,8 @@ class DeclarationExtractor : IDeclarationExtractor
 
         int fieldBytes;
         string enumWriteFormat;
+        constr fieldTypeName;
+        bool signed;
 
         foreach (iFieldDef, fieldDef; fieldList)
         {
@@ -388,7 +390,7 @@ class DeclarationExtractor : IDeclarationExtractor
                 assert(fieldName == "value__");
 
                 auto sig = fieldDef.signature;
-                auto fieldTypeName = dlangTypeResolver.toDlangType(cliTypeResolver.getType(sig.typeSig.valueType));
+                fieldTypeName = dlangTypeResolver.toDlangType(cliTypeResolver.getType(sig.typeSig.valueType));
 
                 switch (fieldTypeName)
                 {
@@ -399,22 +401,27 @@ class DeclarationExtractor : IDeclarationExtractor
                     default: assert(0);
                 }
 
+                signed = fieldTypeName[0] != 'u';
+
                 aliasDeclString = format("alias %s = %s;", typeDef.typeName, fieldTypeName) ~ toRidCommentString(typeDef);
                 enumDeclString ~= format("enum : %s\n", fieldTypeName);
                 enumDeclString ~= "{\n";
 
-                enumWriteFormat = "    %-" ~ maxFieldNameLength.to!string ~ "s = 0x%0" ~ (fieldBytes * 2).to!string ~ "x,";
+                enumWriteFormat = "    %-" ~ maxFieldNameLength.to!string ~ "s = %s0x%0" ~ (fieldBytes * 2).to!string ~ "x,";
             }
             else
             {
                 auto constantValue = constantFieldResolver.getConstantValue(fieldDef.rid).get;
+                auto integerValue = constantValue.integerValue;
+                auto castString = (signed && fieldBytes <= 2 && integerValue >= 2 ^^ (fieldBytes * 8 - 1)) ? format("cast(%s)", fieldTypeName) : "";
+
                 string decl;
                 switch (fieldBytes)
                 {
-                    case 1: decl = format(enumWriteFormat, fieldName, cast(ubyte)constantValue.integerValue); break;
-                    case 2: decl = format(enumWriteFormat, fieldName, cast(ushort)constantValue.integerValue); break;
-                    case 4: decl = format(enumWriteFormat, fieldName, cast(uint)constantValue.integerValue); break;
-                    case 8: decl = format(enumWriteFormat, fieldName, cast(ulong)constantValue.integerValue); break;
+                    case 1: decl = format(enumWriteFormat, fieldName, castString, cast(ubyte)integerValue); break;
+                    case 2: decl = format(enumWriteFormat, fieldName, castString, cast(ushort)integerValue); break;
+                    case 4: decl = format(enumWriteFormat, fieldName, castString, cast(uint)integerValue); break;
+                    case 8: decl = format(enumWriteFormat, fieldName, castString, cast(ulong)integerValue); break;
                     default: assert(0);
                 }
                 enumDeclString ~= decl ~ toRidCommentString(fieldDef) ~ "\n";

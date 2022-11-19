@@ -3283,6 +3283,13 @@ enum : uint
     HANDLE_FLAG_PROTECT_FROM_CLOSE = 0x00000002,
 }
 
+alias VARIANT_BOOL = short;
+enum : short
+{
+    VARIANT_TRUE  = cast(short)0xffff,
+    VARIANT_FALSE = 0x0000,
+}
+
 BSTR SysAllocString(const(wchar)*);
 int SysReAllocString(BSTR*, const(wchar)*);
 BSTR SysAllocStringLen(const(wchar)*, uint);

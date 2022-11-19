@@ -1,7 +1,7 @@
 module windows.win32.data.xml.msxml;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, FILETIME, HRESULT, PWSTR;
+import windows.win32.foundation : BOOL, BSTR, FILETIME, HRESULT, PWSTR, VARIANT_BOOL;
 import windows.win32.system.com_ : IDispatch, ISequentialStream, IUnknown, VARIANT;
 
 version (Windows):
@@ -623,7 +623,7 @@ enum : int
 enum IID_IXMLDOMImplementation = GUID(0x2933bf8f, 0x7b36, 0x11d2, [0xb2, 0xe, 0x0, 0xc0, 0x4f, 0x98, 0x3e, 0x60]);
 interface IXMLDOMImplementation : IDispatch
 {
-    HRESULT hasFeature(BSTR, BSTR, short*);
+    HRESULT hasFeature(BSTR, BSTR, VARIANT_BOOL*);
 }
 enum IID_IXMLDOMNode = GUID(0x2933bf80, 0x7b36, 0x11d2, [0xb2, 0xe, 0x0, 0xc0, 0x4f, 0x98, 0x3e, 0x60]);
 interface IXMLDOMNode : IDispatch
@@ -643,13 +643,13 @@ interface IXMLDOMNode : IDispatch
     HRESULT replaceChild(IXMLDOMNode, IXMLDOMNode, IXMLDOMNode*);
     HRESULT removeChild(IXMLDOMNode, IXMLDOMNode*);
     HRESULT appendChild(IXMLDOMNode, IXMLDOMNode*);
-    HRESULT hasChildNodes(short*);
+    HRESULT hasChildNodes(VARIANT_BOOL*);
     HRESULT get_ownerDocument(IXMLDOMDocument*);
-    HRESULT cloneNode(short, IXMLDOMNode*);
+    HRESULT cloneNode(VARIANT_BOOL, IXMLDOMNode*);
     HRESULT get_nodeTypeString(BSTR*);
     HRESULT get_text(BSTR*);
     HRESULT put_text(BSTR);
-    HRESULT get_specified(short*);
+    HRESULT get_specified(VARIANT_BOOL*);
     HRESULT get_definition(IXMLDOMNode*);
     HRESULT get_nodeTypedValue(VARIANT*);
     HRESULT put_nodeTypedValue(VARIANT);
@@ -659,7 +659,7 @@ interface IXMLDOMNode : IDispatch
     HRESULT transformNode(IXMLDOMNode, BSTR*);
     HRESULT selectNodes(BSTR, IXMLDOMNodeList*);
     HRESULT selectSingleNode(BSTR, IXMLDOMNode*);
-    HRESULT get_parsed(short*);
+    HRESULT get_parsed(VARIANT_BOOL*);
     HRESULT get_namespaceURI(BSTR*);
     HRESULT get_prefix(BSTR*);
     HRESULT get_baseName(BSTR*);
@@ -687,21 +687,21 @@ interface IXMLDOMDocument : IXMLDOMNode
     HRESULT getElementsByTagName(BSTR, IXMLDOMNodeList*);
     HRESULT createNode(VARIANT, BSTR, BSTR, IXMLDOMNode*);
     HRESULT nodeFromID(BSTR, IXMLDOMNode*);
-    HRESULT load(VARIANT, short*);
+    HRESULT load(VARIANT, VARIANT_BOOL*);
     HRESULT get_readyState(int*);
     HRESULT get_parseError(IXMLDOMParseError*);
     HRESULT get_url(BSTR*);
-    HRESULT get_async(short*);
-    HRESULT put_async(short);
+    HRESULT get_async(VARIANT_BOOL*);
+    HRESULT put_async(VARIANT_BOOL);
     HRESULT abort();
-    HRESULT loadXML(BSTR, short*);
+    HRESULT loadXML(BSTR, VARIANT_BOOL*);
     HRESULT save(VARIANT);
-    HRESULT get_validateOnParse(short*);
-    HRESULT put_validateOnParse(short);
-    HRESULT get_resolveExternals(short*);
-    HRESULT put_resolveExternals(short);
-    HRESULT get_preserveWhiteSpace(short*);
-    HRESULT put_preserveWhiteSpace(short);
+    HRESULT get_validateOnParse(VARIANT_BOOL*);
+    HRESULT put_validateOnParse(VARIANT_BOOL);
+    HRESULT get_resolveExternals(VARIANT_BOOL*);
+    HRESULT put_resolveExternals(VARIANT_BOOL);
+    HRESULT get_preserveWhiteSpace(VARIANT_BOOL*);
+    HRESULT put_preserveWhiteSpace(VARIANT_BOOL);
     HRESULT put_onreadystatechange(VARIANT);
     HRESULT put_ondataavailable(VARIANT);
     HRESULT put_ontransformnode(VARIANT);
@@ -903,8 +903,8 @@ interface IXMLDocument2 : IDispatch
     HRESULT get_doctype(BSTR*);
     HRESULT get_dtdURL(BSTR*);
     HRESULT createElement(VARIANT, VARIANT, IXMLElement2*);
-    HRESULT get_async(short*);
-    HRESULT put_async(short);
+    HRESULT get_async(VARIANT_BOOL*);
+    HRESULT put_async(VARIANT_BOOL);
 }
 enum IID_IXMLElement = GUID(0x3f7f31ac, 0xe15f, 0x11d0, [0x9c, 0x25, 0x0, 0xc0, 0x4f, 0xc9, 0x9c, 0x8e]);
 interface IXMLElement : IDispatch
@@ -1012,7 +1012,7 @@ enum IID_IXMLDOMDocument3 = GUID(0x2933bf96, 0x7b36, 0x11d2, [0xb2, 0xe, 0x0, 0x
 interface IXMLDOMDocument3 : IXMLDOMDocument2
 {
     HRESULT validateNode(IXMLDOMNode, IXMLDOMParseError*);
-    HRESULT importNode(IXMLDOMNode, short, IXMLDOMNode*);
+    HRESULT importNode(IXMLDOMNode, VARIANT_BOOL, IXMLDOMNode*);
 }
 enum IID_IXMLDOMSchemaCollection = GUID(0x373984c8, 0xb845, 0x449b, [0x91, 0xe7, 0x45, 0xac, 0x83, 0x3, 0x6a, 0xde]);
 interface IXMLDOMSchemaCollection : IDispatch
@@ -1068,7 +1068,7 @@ interface IXSLProcessor : IDispatch
     HRESULT get_startModeURI(BSTR*);
     HRESULT put_output(VARIANT);
     HRESULT get_output(VARIANT*);
-    HRESULT transform(short*);
+    HRESULT transform(VARIANT_BOOL*);
     HRESULT reset();
     HRESULT get_readyState(int*);
     HRESULT addParameter(BSTR, VARIANT, BSTR);
@@ -1133,7 +1133,7 @@ enum IID_IServerXMLHTTPRequest = GUID(0x2e9196bf, 0x13ba, 0x4dd4, [0x91, 0xca, 0
 interface IServerXMLHTTPRequest : IXMLHTTPRequest
 {
     HRESULT setTimeouts(int, int, int, int);
-    HRESULT waitForResponse(VARIANT, short*);
+    HRESULT waitForResponse(VARIANT, VARIANT_BOOL*);
     HRESULT getOption(SERVERXMLHTTP_OPTION, VARIANT*);
     HRESULT setOption(SERVERXMLHTTP_OPTION, VARIANT);
 }
@@ -1146,8 +1146,8 @@ interface IServerXMLHTTPRequest2 : IServerXMLHTTPRequest
 enum IID_ISAXXMLReader = GUID(0xa4f96ed0, 0xf829, 0x476e, [0x81, 0xc0, 0xcd, 0xc7, 0xbd, 0x2a, 0x8, 0x2]);
 interface ISAXXMLReader : IUnknown
 {
-    HRESULT getFeature(const(wchar)*, short*);
-    HRESULT putFeature(const(wchar)*, short);
+    HRESULT getFeature(const(wchar)*, VARIANT_BOOL*);
+    HRESULT putFeature(const(wchar)*, VARIANT_BOOL);
     HRESULT getProperty(const(wchar)*, VARIANT*);
     HRESULT putProperty(const(wchar)*, VARIANT);
     HRESULT getEntityResolver(ISAXEntityResolver*);
@@ -1251,8 +1251,8 @@ interface ISAXAttributes : IUnknown
 enum IID_IVBSAXXMLReader = GUID(0x8c033caa, 0x6cd6, 0x4f73, [0xb7, 0x28, 0x45, 0x31, 0xaf, 0x74, 0x94, 0x5f]);
 interface IVBSAXXMLReader : IDispatch
 {
-    HRESULT getFeature(BSTR, short*);
-    HRESULT putFeature(BSTR, short);
+    HRESULT getFeature(BSTR, VARIANT_BOOL*);
+    HRESULT putFeature(BSTR, VARIANT_BOOL);
     HRESULT getProperty(BSTR, VARIANT*);
     HRESULT putProperty(BSTR, VARIANT);
     HRESULT get_entityResolver(IVBSAXEntityResolver*);
@@ -1359,18 +1359,18 @@ interface IMXWriter : IDispatch
     HRESULT get_output(VARIANT*);
     HRESULT put_encoding(BSTR);
     HRESULT get_encoding(BSTR*);
-    HRESULT put_byteOrderMark(short);
-    HRESULT get_byteOrderMark(short*);
-    HRESULT put_indent(short);
-    HRESULT get_indent(short*);
-    HRESULT put_standalone(short);
-    HRESULT get_standalone(short*);
-    HRESULT put_omitXMLDeclaration(short);
-    HRESULT get_omitXMLDeclaration(short*);
+    HRESULT put_byteOrderMark(VARIANT_BOOL);
+    HRESULT get_byteOrderMark(VARIANT_BOOL*);
+    HRESULT put_indent(VARIANT_BOOL);
+    HRESULT get_indent(VARIANT_BOOL*);
+    HRESULT put_standalone(VARIANT_BOOL);
+    HRESULT get_standalone(VARIANT_BOOL*);
+    HRESULT put_omitXMLDeclaration(VARIANT_BOOL);
+    HRESULT get_omitXMLDeclaration(VARIANT_BOOL*);
     HRESULT put_version(BSTR);
     HRESULT get_version(BSTR*);
-    HRESULT put_disableOutputEscaping(short);
-    HRESULT get_disableOutputEscaping(short*);
+    HRESULT put_disableOutputEscaping(VARIANT_BOOL);
+    HRESULT get_disableOutputEscaping(VARIANT_BOOL*);
     HRESULT flush();
 }
 enum IID_IMXAttributes = GUID(0xf10d27cc, 0x3ec0, 0x415c, [0x8e, 0xd8, 0x77, 0xab, 0x1c, 0x5e, 0x72, 0x62]);
@@ -1410,11 +1410,11 @@ interface IMXNamespacePrefixes : IDispatch
 enum IID_IVBMXNamespaceManager = GUID(0xc90352f5, 0x643c, 0x4fbc, [0xbb, 0x23, 0xe9, 0x96, 0xeb, 0x2d, 0x51, 0xfd]);
 interface IVBMXNamespaceManager : IDispatch
 {
-    HRESULT put_allowOverride(short);
-    HRESULT get_allowOverride(short*);
+    HRESULT put_allowOverride(VARIANT_BOOL);
+    HRESULT get_allowOverride(VARIANT_BOOL*);
     HRESULT reset();
     HRESULT pushContext();
-    HRESULT pushNodeContext(IXMLDOMNode, short);
+    HRESULT pushNodeContext(IXMLDOMNode, VARIANT_BOOL);
     HRESULT popContext();
     HRESULT declarePrefix(BSTR, BSTR);
     HRESULT getDeclaredPrefixes(IMXNamespacePrefixes*);
@@ -1425,11 +1425,11 @@ interface IVBMXNamespaceManager : IDispatch
 enum IID_IMXNamespaceManager = GUID(0xc90352f6, 0x643c, 0x4fbc, [0xbb, 0x23, 0xe9, 0x96, 0xeb, 0x2d, 0x51, 0xfd]);
 interface IMXNamespaceManager : IUnknown
 {
-    HRESULT putAllowOverride(short);
-    HRESULT getAllowOverride(short*);
+    HRESULT putAllowOverride(VARIANT_BOOL);
+    HRESULT getAllowOverride(VARIANT_BOOL*);
     HRESULT reset();
     HRESULT pushContext();
-    HRESULT pushNodeContext(IXMLDOMNode, short);
+    HRESULT pushNodeContext(IXMLDOMNode, VARIANT_BOOL);
     HRESULT popContext();
     HRESULT declarePrefix(const(wchar)*, const(wchar)*);
     HRESULT getDeclaredPrefix(int, PWSTR, int*);
@@ -1439,8 +1439,8 @@ interface IMXNamespaceManager : IUnknown
 enum IID_IMXXMLFilter = GUID(0xc90352f7, 0x643c, 0x4fbc, [0xbb, 0x23, 0xe9, 0x96, 0xeb, 0x2d, 0x51, 0xfd]);
 interface IMXXMLFilter : IDispatch
 {
-    HRESULT getFeature(BSTR, short*);
-    HRESULT putFeature(BSTR, short);
+    HRESULT getFeature(BSTR, VARIANT_BOOL*);
+    HRESULT putFeature(BSTR, VARIANT_BOOL);
     HRESULT getProperty(BSTR, VARIANT*);
     HRESULT putProperty(BSTR, VARIANT);
     HRESULT get_entityResolver(IUnknown*);
@@ -1591,8 +1591,8 @@ enum IID_IXMLDOMSchemaCollection2 = GUID(0x50ea08b0, 0xdd1b, 0x4664, [0x9a, 0x50
 interface IXMLDOMSchemaCollection2 : IXMLDOMSchemaCollection
 {
     HRESULT validate();
-    HRESULT put_validateOnLoad(short);
-    HRESULT get_validateOnLoad(short*);
+    HRESULT put_validateOnLoad(VARIANT_BOOL);
+    HRESULT get_validateOnLoad(VARIANT_BOOL*);
     HRESULT getSchema(BSTR, ISchema*);
     HRESULT getDeclaration(IXMLDOMNode, ISchemaItem*);
 }
@@ -1621,7 +1621,7 @@ interface ISchemaItem : IDispatch
     HRESULT get_id(BSTR*);
     HRESULT get_itemType(SOMITEMTYPE*);
     HRESULT get_unhandledAttributes(IVBSAXAttributes*);
-    HRESULT writeAnnotation(IUnknown, short*);
+    HRESULT writeAnnotation(IUnknown, VARIANT_BOOL*);
 }
 enum IID_ISchema = GUID(0x50ea08b4, 0xdd1b, 0x4664, [0x9a, 0x50, 0xc2, 0xf4, 0xf, 0x4b, 0xd7, 0x9a]);
 interface ISchema : ISchemaItem
@@ -1650,7 +1650,7 @@ interface ISchemaAttribute : ISchemaItem
     HRESULT get_defaultValue(BSTR*);
     HRESULT get_fixedValue(BSTR*);
     HRESULT get_use(SCHEMAUSE*);
-    HRESULT get_isReference(short*);
+    HRESULT get_isReference(VARIANT_BOOL*);
 }
 enum IID_ISchemaElement = GUID(0x50ea08b7, 0xdd1b, 0x4664, [0x9a, 0x50, 0xc2, 0xf4, 0xf, 0x4b, 0xd7, 0x9a]);
 interface ISchemaElement : ISchemaParticle
@@ -1659,13 +1659,13 @@ interface ISchemaElement : ISchemaParticle
     HRESULT get_scope(ISchemaComplexType*);
     HRESULT get_defaultValue(BSTR*);
     HRESULT get_fixedValue(BSTR*);
-    HRESULT get_isNillable(short*);
+    HRESULT get_isNillable(VARIANT_BOOL*);
     HRESULT get_identityConstraints(ISchemaItemCollection*);
     HRESULT get_substitutionGroup(ISchemaElement*);
     HRESULT get_substitutionGroupExclusions(SCHEMADERIVATIONMETHOD*);
     HRESULT get_disallowedSubstitutions(SCHEMADERIVATIONMETHOD*);
-    HRESULT get_isAbstract(short*);
-    HRESULT get_isReference(short*);
+    HRESULT get_isAbstract(VARIANT_BOOL*);
+    HRESULT get_isReference(VARIANT_BOOL*);
 }
 enum IID_ISchemaType = GUID(0x50ea08b8, 0xdd1b, 0x4664, [0x9a, 0x50, 0xc2, 0xf4, 0xf, 0x4b, 0xd7, 0x9a]);
 interface ISchemaType : ISchemaItem
@@ -1674,7 +1674,7 @@ interface ISchemaType : ISchemaItem
     HRESULT get_final(SCHEMADERIVATIONMETHOD*);
     HRESULT get_variety(SCHEMATYPEVARIETY*);
     HRESULT get_derivedBy(SCHEMADERIVATIONMETHOD*);
-    HRESULT isValid(BSTR, short*);
+    HRESULT isValid(BSTR, VARIANT_BOOL*);
     HRESULT get_minExclusive(BSTR*);
     HRESULT get_minInclusive(BSTR*);
     HRESULT get_maxExclusive(BSTR*);
@@ -1691,7 +1691,7 @@ interface ISchemaType : ISchemaItem
 enum IID_ISchemaComplexType = GUID(0x50ea08b9, 0xdd1b, 0x4664, [0x9a, 0x50, 0xc2, 0xf4, 0xf, 0x4b, 0xd7, 0x9a]);
 interface ISchemaComplexType : ISchemaType
 {
-    HRESULT get_isAbstract(short*);
+    HRESULT get_isAbstract(VARIANT_BOOL*);
     HRESULT get_anyAttribute(ISchemaAny*);
     HRESULT get_attributes(ISchemaItemCollection*);
     HRESULT get_contentType(SCHEMACONTENTTYPE*);

@@ -2,7 +2,7 @@ module windows.win32.media.mediafoundation;
 
 import windows.win32.guid : GUID;
 import windows.win32.devices.properties : DEVPROPKEY;
-import windows.win32.foundation : BOOL, BSTR, COLORREF, FILETIME, HANDLE, HRESULT, HWND, LUID, POINT, PSTR, PWSTR, RECT, SIZE;
+import windows.win32.foundation : BOOL, BSTR, COLORREF, FILETIME, HANDLE, HRESULT, HWND, LUID, POINT, PSTR, PWSTR, RECT, SIZE, VARIANT_BOOL;
 import windows.win32.graphics.direct3d12 : D3D12_COMMAND_LIST_SUPPORT_FLAGS, D3D12_DISCARD_REGION, D3D12_PREDICATION_OP, D3D12_QUERY_TYPE, D3D12_RESOURCE_BARRIER, D3D12_WRITEBUFFERIMMEDIATE_MODE, D3D12_WRITEBUFFERIMMEDIATE_PARAMETER, ID3D12CommandAllocator, ID3D12CommandList, ID3D12CommandQueue, ID3D12Device, ID3D12Pageable, ID3D12ProtectedResourceSession, ID3D12QueryHeap, ID3D12Resource;
 import windows.win32.graphics.direct3d9 : D3DAUTHENTICATEDCHANNELTYPE, D3DAUTHENTICATEDCHANNEL_CONFIGURE_OUTPUT, D3DDEVTYPE, D3DDISPLAYMODEEX, D3DDISPLAYROTATION, D3DENCRYPTED_BLOCK_INFO, D3DFORMAT, D3DPOOL, IDirect3DDevice9, IDirect3DDevice9Ex, IDirect3DSurface9;
 import windows.win32.graphics.dxgi.common : DXGI_COLOR_SPACE_TYPE, DXGI_FORMAT, DXGI_RATIONAL;
@@ -10539,7 +10539,7 @@ interface IMFSSLCertificateManager : IUnknown
 enum IID_IMFNetResourceFilter = GUID(0x91878a3, 0xbf11, 0x4a5c, [0xbc, 0x9f, 0x33, 0x99, 0x5b, 0x6, 0xef, 0x2d]);
 interface IMFNetResourceFilter : IUnknown
 {
-    HRESULT OnRedirect(const(wchar)*, short*);
+    HRESULT OnRedirect(const(wchar)*, VARIANT_BOOL*);
     HRESULT OnSendingRequest(const(wchar)*);
 }
 enum IID_IMFSourceOpenMonitor = GUID(0x59054b3, 0x27c, 0x494c, [0xa2, 0x7d, 0x91, 0x13, 0x29, 0x1c, 0xf8, 0x7f]);

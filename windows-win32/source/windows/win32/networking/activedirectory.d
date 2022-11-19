@@ -1,7 +1,7 @@
 module windows.win32.networking.activedirectory;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, LPARAM, PSID, PSTR, PWSTR, SYSTEMTIME, WPARAM;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, LPARAM, PSID, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL, WPARAM;
 import windows.win32.networking.winsock : SOCKET_ADDRESS;
 import windows.win32.security_ : PSECURITY_DESCRIPTOR;
 import windows.win32.security.authentication.identity_ : LSA_FOREST_TRUST_INFORMATION;
@@ -1774,10 +1774,10 @@ interface IADsClass : IADs
     HRESULT put_CLSID(BSTR);
     HRESULT get_OID(BSTR*);
     HRESULT put_OID(BSTR);
-    HRESULT get_Abstract(short*);
-    HRESULT put_Abstract(short);
-    HRESULT get_Auxiliary(short*);
-    HRESULT put_Auxiliary(short);
+    HRESULT get_Abstract(VARIANT_BOOL*);
+    HRESULT put_Abstract(VARIANT_BOOL);
+    HRESULT get_Auxiliary(VARIANT_BOOL*);
+    HRESULT put_Auxiliary(VARIANT_BOOL);
     HRESULT get_MandatoryProperties(VARIANT*);
     HRESULT put_MandatoryProperties(VARIANT);
     HRESULT get_OptionalProperties(VARIANT*);
@@ -1792,8 +1792,8 @@ interface IADsClass : IADs
     HRESULT put_PossibleSuperiors(VARIANT);
     HRESULT get_Containment(VARIANT*);
     HRESULT put_Containment(VARIANT);
-    HRESULT get_Container(short*);
-    HRESULT put_Container(short);
+    HRESULT get_Container(VARIANT_BOOL*);
+    HRESULT put_Container(VARIANT_BOOL);
     HRESULT get_HelpFileName(BSTR*);
     HRESULT put_HelpFileName(BSTR);
     HRESULT get_HelpFileContext(int*);
@@ -1811,8 +1811,8 @@ interface IADsProperty : IADs
     HRESULT put_MaxRange(int);
     HRESULT get_MinRange(int*);
     HRESULT put_MinRange(int);
-    HRESULT get_MultiValued(short*);
-    HRESULT put_MultiValued(short);
+    HRESULT get_MultiValued(VARIANT_BOOL*);
+    HRESULT put_MultiValued(VARIANT_BOOL);
     HRESULT Qualifiers(IADsCollection*);
 }
 enum IID_IADsSyntax = GUID(0xc8f93dd2, 0x4ae0, 0x11cf, [0x9e, 0x73, 0x0, 0xaa, 0x0, 0x4a, 0x56, 0x91]);
@@ -1870,7 +1870,7 @@ interface IADsOU : IADs
 enum IID_IADsDomain = GUID(0xe4c220, 0xfd16, 0x11ce, [0xab, 0xc4, 0x2, 0x60, 0x8c, 0x9e, 0x75, 0x53]);
 interface IADsDomain : IADs
 {
-    HRESULT get_IsWorkgroup(short*);
+    HRESULT get_IsWorkgroup(VARIANT_BOOL*);
     HRESULT get_MinPasswordLength(int*);
     HRESULT put_MinPasswordLength(int);
     HRESULT get_MinPasswordAge(int*);
@@ -1928,7 +1928,7 @@ enum IID_IADsComputerOperations = GUID(0xef497680, 0x1d9f, 0x11cf, [0xb1, 0xf3, 
 interface IADsComputerOperations : IADs
 {
     HRESULT Status(IDispatch*);
-    HRESULT Shutdown(short);
+    HRESULT Shutdown(VARIANT_BOOL);
 }
 enum IID_IADsGroup = GUID(0x27636b00, 0x410f, 0x11cf, [0xb1, 0xff, 0x2, 0x60, 0x8c, 0x9e, 0x75, 0x53]);
 interface IADsGroup : IADs
@@ -1936,7 +1936,7 @@ interface IADsGroup : IADs
     HRESULT get_Description(BSTR*);
     HRESULT put_Description(BSTR);
     HRESULT Members(IADsMembers*);
-    HRESULT IsMember(BSTR, short*);
+    HRESULT IsMember(BSTR, VARIANT_BOOL*);
     HRESULT Add(BSTR);
     HRESULT Remove(BSTR);
 }
@@ -1991,16 +1991,16 @@ interface IADsUser : IADs
     HRESULT put_PostalCodes(VARIANT);
     HRESULT get_SeeAlso(VARIANT*);
     HRESULT put_SeeAlso(VARIANT);
-    HRESULT get_AccountDisabled(short*);
-    HRESULT put_AccountDisabled(short);
+    HRESULT get_AccountDisabled(VARIANT_BOOL*);
+    HRESULT put_AccountDisabled(VARIANT_BOOL);
     HRESULT get_AccountExpirationDate(double*);
     HRESULT put_AccountExpirationDate(double);
     HRESULT get_GraceLoginsAllowed(int*);
     HRESULT put_GraceLoginsAllowed(int);
     HRESULT get_GraceLoginsRemaining(int*);
     HRESULT put_GraceLoginsRemaining(int);
-    HRESULT get_IsAccountLocked(short*);
-    HRESULT put_IsAccountLocked(short);
+    HRESULT get_IsAccountLocked(VARIANT_BOOL*);
+    HRESULT put_IsAccountLocked(VARIANT_BOOL);
     HRESULT get_LoginHours(VARIANT*);
     HRESULT put_LoginHours(VARIANT);
     HRESULT get_LoginWorkstations(VARIANT*);
@@ -2013,10 +2013,10 @@ interface IADsUser : IADs
     HRESULT put_PasswordExpirationDate(double);
     HRESULT get_PasswordMinimumLength(int*);
     HRESULT put_PasswordMinimumLength(int);
-    HRESULT get_PasswordRequired(short*);
-    HRESULT put_PasswordRequired(short);
-    HRESULT get_RequireUniquePassword(short*);
-    HRESULT put_RequireUniquePassword(short);
+    HRESULT get_PasswordRequired(VARIANT_BOOL*);
+    HRESULT put_PasswordRequired(VARIANT_BOOL);
+    HRESULT get_RequireUniquePassword(VARIANT_BOOL*);
+    HRESULT put_RequireUniquePassword(VARIANT_BOOL);
     HRESULT get_EmailAddress(BSTR*);
     HRESULT put_EmailAddress(BSTR);
     HRESULT get_HomeDirectory(BSTR*);
@@ -2283,20 +2283,20 @@ interface IADsSecurityDescriptor : IDispatch
     HRESULT put_Control(int);
     HRESULT get_Owner(BSTR*);
     HRESULT put_Owner(BSTR);
-    HRESULT get_OwnerDefaulted(short*);
-    HRESULT put_OwnerDefaulted(short);
+    HRESULT get_OwnerDefaulted(VARIANT_BOOL*);
+    HRESULT put_OwnerDefaulted(VARIANT_BOOL);
     HRESULT get_Group(BSTR*);
     HRESULT put_Group(BSTR);
-    HRESULT get_GroupDefaulted(short*);
-    HRESULT put_GroupDefaulted(short);
+    HRESULT get_GroupDefaulted(VARIANT_BOOL*);
+    HRESULT put_GroupDefaulted(VARIANT_BOOL);
     HRESULT get_DiscretionaryAcl(IDispatch*);
     HRESULT put_DiscretionaryAcl(IDispatch);
-    HRESULT get_DaclDefaulted(short*);
-    HRESULT put_DaclDefaulted(short);
+    HRESULT get_DaclDefaulted(VARIANT_BOOL*);
+    HRESULT put_DaclDefaulted(VARIANT_BOOL);
     HRESULT get_SystemAcl(IDispatch*);
     HRESULT put_SystemAcl(IDispatch);
-    HRESULT get_SaclDefaulted(short*);
-    HRESULT put_SaclDefaulted(short);
+    HRESULT get_SaclDefaulted(VARIANT_BOOL*);
+    HRESULT put_SaclDefaulted(VARIANT_BOOL);
     HRESULT CopySecurityDescriptor(IDispatch*);
 }
 enum IID_IADsLargeInteger = GUID(0x9068270b, 0x939, 0x11d1, [0x8b, 0xe1, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
@@ -2461,7 +2461,7 @@ interface IADsADSystemInfo : IDispatch
     HRESULT get_ForestDNSName(BSTR*);
     HRESULT get_PDCRoleOwner(BSTR*);
     HRESULT get_SchemaRoleOwner(BSTR*);
-    HRESULT get_IsNativeMode(short*);
+    HRESULT get_IsNativeMode(VARIANT_BOOL*);
     HRESULT GetAnyDCName(BSTR*);
     HRESULT GetDCSiteName(BSTR, BSTR*);
     HRESULT RefreshSchemaCache();

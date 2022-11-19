@@ -717,8 +717,8 @@ enum : int
     D3D11_RAISE_FLAG_DRIVER_INTERNAL_ERROR = 0x00000001,
 }
 
-alias D3D11_CLEAR_FLAG = int;
-enum : int
+alias D3D11_CLEAR_FLAG = uint;
+enum : uint
 {
     D3D11_CLEAR_DEPTH   = 0x00000001,
     D3D11_CLEAR_STENCIL = 0x00000002,

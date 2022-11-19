@@ -4,7 +4,7 @@ import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, CHAR, FILETIME, HANDLE, HINSTANCE, HWND, LUID, PSTR, PWSTR;
 import windows.win32.networkmanagement.iphelper : MIB_IPMCAST_MFE;
 import windows.win32.networking.winsock : IN6_ADDR, IN_ADDR;
-import windows.win32.security.cryptography_ : CRYPTOAPI_BLOB;
+import windows.win32.security.cryptography_ : CRYPT_INTEGER_BLOB;
 
 version (Windows):
 extern (Windows):
@@ -2510,7 +2510,7 @@ struct ROUTER_IKEv2_IF_CUSTOM_CONFIG0
 {
     uint dwSaLifeTime;
     uint dwSaDataSize;
-    CRYPTOAPI_BLOB certificateName;
+    CRYPT_INTEGER_BLOB certificateName;
     ROUTER_CUSTOM_IKEv2_POLICY0* customPolicy;
 }
 struct MPR_IF_CUSTOMINFOEX0
@@ -2562,9 +2562,9 @@ struct ROUTER_IKEv2_IF_CUSTOM_CONFIG2
 {
     uint dwSaLifeTime;
     uint dwSaDataSize;
-    CRYPTOAPI_BLOB certificateName;
+    CRYPT_INTEGER_BLOB certificateName;
     ROUTER_CUSTOM_IKEv2_POLICY0* customPolicy;
-    CRYPTOAPI_BLOB certificateHash;
+    CRYPT_INTEGER_BLOB certificateHash;
     uint dwMmSaLifeTime;
     MPR_VPN_TRAFFIC_SELECTORS vpnTrafficSelectors;
 }
@@ -2582,22 +2582,22 @@ struct IKEV2_TUNNEL_CONFIG_PARAMS4
     uint dwSaDataSizeForRenegotiation;
     uint dwConfigOptions;
     uint dwTotalCertificates;
-    CRYPTOAPI_BLOB* certificateNames;
-    CRYPTOAPI_BLOB machineCertificateName;
+    CRYPT_INTEGER_BLOB* certificateNames;
+    CRYPT_INTEGER_BLOB machineCertificateName;
     uint dwEncryptionType;
     ROUTER_CUSTOM_IKEv2_POLICY0* customPolicy;
     uint dwTotalEkus;
     MPR_CERT_EKU* certificateEKUs;
-    CRYPTOAPI_BLOB machineCertificateHash;
+    CRYPT_INTEGER_BLOB machineCertificateHash;
     uint dwMmSaLifeTime;
 }
 struct ROUTER_IKEv2_IF_CUSTOM_CONFIG1
 {
     uint dwSaLifeTime;
     uint dwSaDataSize;
-    CRYPTOAPI_BLOB certificateName;
+    CRYPT_INTEGER_BLOB certificateName;
     ROUTER_CUSTOM_IKEv2_POLICY0* customPolicy;
-    CRYPTOAPI_BLOB certificateHash;
+    CRYPT_INTEGER_BLOB certificateHash;
 }
 struct MPR_IF_CUSTOMINFOEX1
 {
@@ -2613,13 +2613,13 @@ struct IKEV2_TUNNEL_CONFIG_PARAMS3
     uint dwSaDataSizeForRenegotiation;
     uint dwConfigOptions;
     uint dwTotalCertificates;
-    CRYPTOAPI_BLOB* certificateNames;
-    CRYPTOAPI_BLOB machineCertificateName;
+    CRYPT_INTEGER_BLOB* certificateNames;
+    CRYPT_INTEGER_BLOB machineCertificateName;
     uint dwEncryptionType;
     ROUTER_CUSTOM_IKEv2_POLICY0* customPolicy;
     uint dwTotalEkus;
     MPR_CERT_EKU* certificateEKUs;
-    CRYPTOAPI_BLOB machineCertificateHash;
+    CRYPT_INTEGER_BLOB machineCertificateHash;
 }
 struct IKEV2_TUNNEL_CONFIG_PARAMS2
 {
@@ -2629,8 +2629,8 @@ struct IKEV2_TUNNEL_CONFIG_PARAMS2
     uint dwSaDataSizeForRenegotiation;
     uint dwConfigOptions;
     uint dwTotalCertificates;
-    CRYPTOAPI_BLOB* certificateNames;
-    CRYPTOAPI_BLOB machineCertificateName;
+    CRYPT_INTEGER_BLOB* certificateNames;
+    CRYPT_INTEGER_BLOB machineCertificateName;
     uint dwEncryptionType;
     ROUTER_CUSTOM_IKEv2_POLICY0* customPolicy;
 }
@@ -2683,7 +2683,7 @@ struct L2TP_CONFIG_PARAMS0
 struct SSTP_CERT_INFO
 {
     BOOL isDefault;
-    CRYPTOAPI_BLOB certBlob;
+    CRYPT_INTEGER_BLOB certBlob;
 }
 struct SSTP_CONFIG_PARAMS
 {

@@ -2,7 +2,7 @@ module windows.win32.ui.shell_;
 
 import windows.win32.guid : GUID;
 import windows.win32.data.xml.msxml : IXMLDOMDocument;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, COLORREF, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, LPARAM, LRESULT, NTSTATUS, POINT, POINTL, PSTR, PWSTR, RECT, RECTL, SHANDLE_PTR, SIZE, SYSTEMTIME, ULARGE_INTEGER, WIN32_ERROR, WPARAM;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, COLORREF, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, LPARAM, LRESULT, NTSTATUS, POINT, POINTL, PSTR, PWSTR, RECT, RECTL, SHANDLE_PTR, SIZE, SYSTEMTIME, ULARGE_INTEGER, VARIANT_BOOL, WIN32_ERROR, WPARAM;
 import windows.win32.graphics.directcomposition : IDCompositionAnimation;
 import windows.win32.graphics.gdi : HBITMAP, HDC, HMONITOR, HPALETTE, LOGFONTW;
 import windows.win32.networkmanagement.wnet : NETRESOURCEA;
@@ -21,7 +21,7 @@ import windows.win32.system.threading : LPTHREAD_START_ROUTINE, PROCESS_INFORMAT
 import windows.win32.ui.controls_ : HIMAGELIST, HPROPSHEETPAGE, LPFNSVADDPROPSHEETPAGE, NMHDR, TBBUTTON;
 import windows.win32.ui.shell.common : COMDLG_FILTERSPEC, DEVICE_SCALE_FACTOR, IObjectArray, ITEMIDLIST, PERCEIVED, SHELLDETAILS, SHITEMID, STRRET;
 import windows.win32.ui.shell.propertiessystem : GETPROPERTYSTOREFLAGS, IPropertyChangeArray, IPropertyDescriptionList, IPropertyStore, PDOPSTATUS, PROPERTYKEY;
-import windows.win32.ui.windowsandmessaging : CREATESTRUCTW, HACCEL, HICON, HMENU, MSG, SHOW_WINDOW_CMD;
+import windows.win32.ui.windowsandmessaging : CREATESTRUCTW, HACCEL, HDWP, HICON, HMENU, MESSAGEBOX_STYLE, MSG, SHOW_WINDOW_CMD;
 
 version (Windows):
 extern (Windows):
@@ -279,7 +279,7 @@ BOOL Shell_NotifyIconW(NOTIFY_ICON_MESSAGE, NOTIFYICONDATAW*);
 HRESULT Shell_NotifyIconGetRect(const(NOTIFYICONIDENTIFIER)*, RECT*);
 ulong SHGetFileInfoA(const(char)*, FILE_FLAGS_AND_ATTRIBUTES, SHFILEINFOA*, uint, SHGFI_FLAGS);
 ulong SHGetFileInfoW(const(wchar)*, FILE_FLAGS_AND_ATTRIBUTES, SHFILEINFOW*, uint, SHGFI_FLAGS);
-HRESULT SHGetStockIconInfo(SHSTOCKICONID, uint, SHSTOCKICONINFO*);
+HRESULT SHGetStockIconInfo(SHSTOCKICONID, SHGSI_FLAGS, SHSTOCKICONINFO*);
 BOOL SHGetDiskFreeSpaceExA(const(char)*, ULARGE_INTEGER*, ULARGE_INTEGER*, ULARGE_INTEGER*);
 BOOL SHGetDiskFreeSpaceExW(const(wchar)*, ULARGE_INTEGER*, ULARGE_INTEGER*, ULARGE_INTEGER*);
 BOOL SHGetNewLinkInfoA(const(char)*, const(char)*, PSTR, BOOL*, uint);
@@ -291,8 +291,8 @@ HRESULT SHIsFileAvailableOffline(const(wchar)*, uint*);
 HRESULT SHSetLocalizedName(const(wchar)*, const(wchar)*, int);
 HRESULT SHRemoveLocalizedName(const(wchar)*);
 HRESULT SHGetLocalizedName(const(wchar)*, PWSTR, uint, int*);
-int ShellMessageBoxA(HINSTANCE, HWND, const(char)*, const(char)*, uint);
-int ShellMessageBoxW(HINSTANCE, HWND, const(wchar)*, const(wchar)*, uint);
+int ShellMessageBoxA(HINSTANCE, HWND, const(char)*, const(char)*, MESSAGEBOX_STYLE);
+int ShellMessageBoxW(HINSTANCE, HWND, const(wchar)*, const(wchar)*, MESSAGEBOX_STYLE);
 BOOL IsLFNDriveA(const(char)*);
 BOOL IsLFNDriveW(const(wchar)*);
 HRESULT SHEnumerateUnreadMailAccountsW(HKEY, uint, PWSTR, int);
@@ -587,12 +587,12 @@ WIN32_ERROR SHRegGetIntW(HKEY, const(wchar)*, int);
 BOOL SHRegGetBoolUSValueA(const(char)*, const(char)*, BOOL, BOOL);
 BOOL SHRegGetBoolUSValueW(const(wchar)*, const(wchar)*, BOOL, BOOL);
 HRESULT AssocCreate(GUID, const(GUID)*, void**);
-HRESULT AssocQueryStringA(uint, ASSOCSTR, const(char)*, const(char)*, PSTR, uint*);
-HRESULT AssocQueryStringW(uint, ASSOCSTR, const(wchar)*, const(wchar)*, PWSTR, uint*);
-HRESULT AssocQueryStringByKeyA(uint, ASSOCSTR, HKEY, const(char)*, PSTR, uint*);
-HRESULT AssocQueryStringByKeyW(uint, ASSOCSTR, HKEY, const(wchar)*, PWSTR, uint*);
-HRESULT AssocQueryKeyA(uint, ASSOCKEY, const(char)*, const(char)*, HKEY*);
-HRESULT AssocQueryKeyW(uint, ASSOCKEY, const(wchar)*, const(wchar)*, HKEY*);
+HRESULT AssocQueryStringA(ASSOCF, ASSOCSTR, const(char)*, const(char)*, PSTR, uint*);
+HRESULT AssocQueryStringW(ASSOCF, ASSOCSTR, const(wchar)*, const(wchar)*, PWSTR, uint*);
+HRESULT AssocQueryStringByKeyA(ASSOCF, ASSOCSTR, HKEY, const(char)*, PSTR, uint*);
+HRESULT AssocQueryStringByKeyW(ASSOCF, ASSOCSTR, HKEY, const(wchar)*, PWSTR, uint*);
+HRESULT AssocQueryKeyA(ASSOCF, ASSOCKEY, const(char)*, const(char)*, HKEY*);
+HRESULT AssocQueryKeyW(ASSOCF, ASSOCKEY, const(wchar)*, const(wchar)*, HKEY*);
 BOOL AssocIsDangerous(const(wchar)*);
 HRESULT AssocGetPerceivedType(const(wchar)*, PERCEIVED*, uint*, PWSTR*);
 IStream SHOpenRegStreamA(HKEY, const(char)*, const(char)*, uint);
@@ -1895,7 +1895,6 @@ enum NIN_POPUPOPEN = 0x00000406;
 enum NIN_POPUPCLOSE = 0x00000407;
 enum NOTIFYICON_VERSION = 0x00000003;
 enum NOTIFYICON_VERSION_4 = 0x00000004;
-enum SHGSI_ICONLOCATION = 0x00000000;
 enum SHGNLI_PIDL = 0x0000000000000001;
 enum SHGNLI_PREFIXNAME = 0x0000000000000002;
 enum SHGNLI_NOUNIQUE = 0x0000000000000004;
@@ -2310,25 +2309,6 @@ enum DBCID_GETBAR = 0x00000004;
 enum DBCID_UPDATESIZE = 0x00000005;
 enum BMICON_LARGE = 0x00000000;
 enum BMICON_SMALL = 0x00000001;
-enum ASSOCF_NONE = 0x00000000;
-enum ASSOCF_INIT_NOREMAPCLSID = 0x00000001;
-enum ASSOCF_INIT_BYEXENAME = 0x00000002;
-enum ASSOCF_OPEN_BYEXENAME = 0x00000002;
-enum ASSOCF_INIT_DEFAULTTOSTAR = 0x00000004;
-enum ASSOCF_INIT_DEFAULTTOFOLDER = 0x00000008;
-enum ASSOCF_NOUSERSETTINGS = 0x00000010;
-enum ASSOCF_NOTRUNCATE = 0x00000020;
-enum ASSOCF_VERIFY = 0x00000040;
-enum ASSOCF_REMAPRUNDLL = 0x00000080;
-enum ASSOCF_NOFIXUPS = 0x00000100;
-enum ASSOCF_IGNOREBASECLASS = 0x00000200;
-enum ASSOCF_INIT_IGNOREUNKNOWN = 0x00000400;
-enum ASSOCF_INIT_FIXED_PROGID = 0x00000800;
-enum ASSOCF_IS_PROTOCOL = 0x00001000;
-enum ASSOCF_INIT_FOR_FILE = 0x00002000;
-enum ASSOCF_IS_FULL_URI = 0x00004000;
-enum ASSOCF_PER_MACHINE_ONLY = 0x00008000;
-enum ASSOCF_APP_TO_APP = 0x00010000;
 enum CTF_INSIST = 0x00000001;
 enum CTF_THREAD_REF = 0x00000002;
 enum CTF_PROCESS_REF = 0x00000004;
@@ -2720,6 +2700,30 @@ enum : uint
     SSF_SHOWSTATUSBAR        = 0x04000000,
 }
 
+alias ASSOCF = uint;
+enum : uint
+{
+    ASSOCF_NONE                 = 0x00000000,
+    ASSOCF_INIT_NOREMAPCLSID    = 0x00000001,
+    ASSOCF_INIT_BYEXENAME       = 0x00000002,
+    ASSOCF_OPEN_BYEXENAME       = 0x00000002,
+    ASSOCF_INIT_DEFAULTTOSTAR   = 0x00000004,
+    ASSOCF_INIT_DEFAULTTOFOLDER = 0x00000008,
+    ASSOCF_NOUSERSETTINGS       = 0x00000010,
+    ASSOCF_NOTRUNCATE           = 0x00000020,
+    ASSOCF_VERIFY               = 0x00000040,
+    ASSOCF_REMAPRUNDLL          = 0x00000080,
+    ASSOCF_NOFIXUPS             = 0x00000100,
+    ASSOCF_IGNOREBASECLASS      = 0x00000200,
+    ASSOCF_INIT_IGNOREUNKNOWN   = 0x00000400,
+    ASSOCF_INIT_FIXED_PROGID    = 0x00000800,
+    ASSOCF_IS_PROTOCOL          = 0x00001000,
+    ASSOCF_INIT_FOR_FILE        = 0x00002000,
+    ASSOCF_IS_FULL_URI          = 0x00004000,
+    ASSOCF_PER_MACHINE_ONLY     = 0x00008000,
+    ASSOCF_APP_TO_APP           = 0x00010000,
+}
+
 alias NOTIFY_ICON_MESSAGE = uint;
 enum : uint
 {
@@ -2836,6 +2840,19 @@ enum : uint
     GPFIDL_DEFAULT    = 0x00000000,
     GPFIDL_ALTNAME    = 0x00000001,
     GPFIDL_UNCPRINTER = 0x00000002,
+}
+
+alias SHGSI_FLAGS = uint;
+enum : uint
+{
+    SHGSI_ICONLOCATION  = 0x00000000,
+    SHGSI_ICON          = 0x00000100,
+    SHGSI_SYSICONINDEX  = 0x00004000,
+    SHGSI_LINKOVERLAY   = 0x00008000,
+    SHGSI_SELECTED      = 0x00010000,
+    SHGSI_LARGEICON     = 0x00000000,
+    SHGSI_SMALLICON     = 0x00000001,
+    SHGSI_SHELLICONSIZE = 0x00000004,
 }
 
 struct _APPSTATE_REGISTRATION
@@ -4729,7 +4746,7 @@ interface IExplorerBrowser : IUnknown
 {
     HRESULT Initialize(HWND, const(RECT)*, const(FOLDERSETTINGS)*);
     HRESULT Destroy();
-    HRESULT SetRect(long*, RECT);
+    HRESULT SetRect(HDWP*, RECT);
     HRESULT SetPropertyBag(const(wchar)*);
     HRESULT SetEmptyText(const(wchar)*);
     HRESULT SetFolderSettings(const(FOLDERSETTINGS)*);
@@ -7020,7 +7037,7 @@ interface IWebBrowser : IDispatch
     HRESULT get_Parent(IDispatch*);
     HRESULT get_Container(IDispatch*);
     HRESULT get_Document(IDispatch*);
-    HRESULT get_TopLevelContainer(short*);
+    HRESULT get_TopLevelContainer(VARIANT_BOOL*);
     HRESULT get_Type(BSTR*);
     HRESULT get_Left(int*);
     HRESULT put_Left(int);
@@ -7032,7 +7049,7 @@ interface IWebBrowser : IDispatch
     HRESULT put_Height(int);
     HRESULT get_LocationName(BSTR*);
     HRESULT get_LocationURL(BSTR*);
-    HRESULT get_Busy(short*);
+    HRESULT get_Busy(VARIANT_BOOL*);
 }
 enum IID_DWebBrowserEvents = GUID(0xeab22ac2, 0x30c1, 0x11cf, [0xa7, 0xeb, 0x0, 0x0, 0xc0, 0x5b, 0xae, 0xb]);
 interface DWebBrowserEvents : IDispatch
@@ -7049,18 +7066,18 @@ interface IWebBrowserApp : IWebBrowser
     HRESULT get_HWND(SHANDLE_PTR*);
     HRESULT get_FullName(BSTR*);
     HRESULT get_Path(BSTR*);
-    HRESULT get_Visible(short*);
-    HRESULT put_Visible(short);
-    HRESULT get_StatusBar(short*);
-    HRESULT put_StatusBar(short);
+    HRESULT get_Visible(VARIANT_BOOL*);
+    HRESULT put_Visible(VARIANT_BOOL);
+    HRESULT get_StatusBar(VARIANT_BOOL*);
+    HRESULT put_StatusBar(VARIANT_BOOL);
     HRESULT get_StatusText(BSTR*);
     HRESULT put_StatusText(BSTR);
     HRESULT get_ToolBar(int*);
     HRESULT put_ToolBar(int);
-    HRESULT get_MenuBar(short*);
-    HRESULT put_MenuBar(short);
-    HRESULT get_FullScreen(short*);
-    HRESULT put_FullScreen(short);
+    HRESULT get_MenuBar(VARIANT_BOOL*);
+    HRESULT put_MenuBar(VARIANT_BOOL);
+    HRESULT get_FullScreen(VARIANT_BOOL*);
+    HRESULT put_FullScreen(VARIANT_BOOL);
 }
 enum IID_IWebBrowser2 = GUID(0xd30c1661, 0xcdaf, 0x11d0, [0x8a, 0x3e, 0x0, 0xc0, 0x4f, 0xc9, 0xe2, 0x6e]);
 interface IWebBrowser2 : IWebBrowserApp
@@ -7070,20 +7087,20 @@ interface IWebBrowser2 : IWebBrowserApp
     HRESULT ExecWB(OLECMDID, OLECMDEXECOPT, VARIANT*, VARIANT*);
     HRESULT ShowBrowserBar(VARIANT*, VARIANT*, VARIANT*);
     HRESULT get_ReadyState(READYSTATE*);
-    HRESULT get_Offline(short*);
-    HRESULT put_Offline(short);
-    HRESULT get_Silent(short*);
-    HRESULT put_Silent(short);
-    HRESULT get_RegisterAsBrowser(short*);
-    HRESULT put_RegisterAsBrowser(short);
-    HRESULT get_RegisterAsDropTarget(short*);
-    HRESULT put_RegisterAsDropTarget(short);
-    HRESULT get_TheaterMode(short*);
-    HRESULT put_TheaterMode(short);
-    HRESULT get_AddressBar(short*);
-    HRESULT put_AddressBar(short);
-    HRESULT get_Resizable(short*);
-    HRESULT put_Resizable(short);
+    HRESULT get_Offline(VARIANT_BOOL*);
+    HRESULT put_Offline(VARIANT_BOOL);
+    HRESULT get_Silent(VARIANT_BOOL*);
+    HRESULT put_Silent(VARIANT_BOOL);
+    HRESULT get_RegisterAsBrowser(VARIANT_BOOL*);
+    HRESULT put_RegisterAsBrowser(VARIANT_BOOL);
+    HRESULT get_RegisterAsDropTarget(VARIANT_BOOL*);
+    HRESULT put_RegisterAsDropTarget(VARIANT_BOOL);
+    HRESULT get_TheaterMode(VARIANT_BOOL*);
+    HRESULT put_TheaterMode(VARIANT_BOOL);
+    HRESULT get_AddressBar(VARIANT_BOOL*);
+    HRESULT put_AddressBar(VARIANT_BOOL);
+    HRESULT get_Resizable(VARIANT_BOOL*);
+    HRESULT put_Resizable(VARIANT_BOOL);
 }
 enum IID_DWebBrowserEvents2 = GUID(0x34a715a0, 0x6587, 0x11d0, [0x92, 0x4a, 0x0, 0x20, 0xaf, 0xc7, 0xac, 0x4d]);
 interface DWebBrowserEvents2 : IDispatch
@@ -7103,10 +7120,10 @@ interface IShellWindows : IDispatch
     HRESULT RegisterPending(int, VARIANT*, VARIANT*, int, int*);
     HRESULT Revoke(int);
     HRESULT OnNavigate(int, VARIANT*);
-    HRESULT OnActivated(int, short);
+    HRESULT OnActivated(int, VARIANT_BOOL);
     HRESULT FindWindowSW(VARIANT*, VARIANT*, int, int*, int, IDispatch*);
     HRESULT OnCreated(int, IUnknown);
-    HRESULT ProcessAttachDetach(short);
+    HRESULT ProcessAttachDetach(VARIANT_BOOL);
 }
 enum IID_IShellUIHelper = GUID(0x729fe2f8, 0x1ea8, 0x11d1, [0x8f, 0x85, 0x0, 0xc0, 0x4f, 0xc2, 0xfb, 0xe1]);
 interface IShellUIHelper : IDispatch
@@ -7117,9 +7134,9 @@ interface IShellUIHelper : IDispatch
     HRESULT AddFavorite(BSTR, VARIANT*);
     HRESULT AddChannel(BSTR);
     HRESULT AddDesktopComponent(BSTR, BSTR, VARIANT*, VARIANT*, VARIANT*, VARIANT*);
-    HRESULT IsSubscribed(BSTR, short*);
+    HRESULT IsSubscribed(BSTR, VARIANT_BOOL*);
     HRESULT NavigateAndFind(BSTR, BSTR, VARIANT*);
-    HRESULT ImportExportFavorites(short, BSTR);
+    HRESULT ImportExportFavorites(VARIANT_BOOL, BSTR);
     HRESULT AutoCompleteSaveForm(VARIANT*);
     HRESULT AutoScan(BSTR, BSTR, VARIANT*);
     HRESULT AutoCompleteAttach(VARIANT*);
@@ -7131,18 +7148,18 @@ interface IShellUIHelper2 : IShellUIHelper
     HRESULT AddSearchProvider(BSTR);
     HRESULT RunOnceShown();
     HRESULT SkipRunOnce();
-    HRESULT CustomizeSettings(short, short, BSTR);
-    HRESULT SqmEnabled(short*);
-    HRESULT PhishingEnabled(short*);
+    HRESULT CustomizeSettings(VARIANT_BOOL, VARIANT_BOOL, BSTR);
+    HRESULT SqmEnabled(VARIANT_BOOL*);
+    HRESULT PhishingEnabled(VARIANT_BOOL*);
     HRESULT BrandImageUri(BSTR*);
     HRESULT SkipTabsWelcome();
     HRESULT DiagnoseConnection();
-    HRESULT CustomizeClearType(short);
+    HRESULT CustomizeClearType(VARIANT_BOOL);
     HRESULT IsSearchProviderInstalled(BSTR, uint*);
-    HRESULT IsSearchMigrated(short*);
+    HRESULT IsSearchMigrated(VARIANT_BOOL*);
     HRESULT DefaultSearchProvider(BSTR*);
-    HRESULT RunOnceRequiredSettingsComplete(short);
-    HRESULT RunOnceHasShown(short*);
+    HRESULT RunOnceRequiredSettingsComplete(VARIANT_BOOL);
+    HRESULT RunOnceHasShown(VARIANT_BOOL*);
     HRESULT SearchGuideUrl(BSTR*);
 }
 enum IID_IShellUIHelper3 = GUID(0x528df2ec, 0xd419, 0x40bc, [0x9b, 0x6d, 0xdc, 0xdb, 0xf9, 0xc1, 0xb2, 0x5d]);
@@ -7150,14 +7167,14 @@ interface IShellUIHelper3 : IShellUIHelper2
 {
     HRESULT AddService(BSTR);
     HRESULT IsServiceInstalled(BSTR, BSTR, uint*);
-    HRESULT InPrivateFilteringEnabled(short*);
+    HRESULT InPrivateFilteringEnabled(VARIANT_BOOL*);
     HRESULT AddToFavoritesBar(BSTR, BSTR, VARIANT*);
     HRESULT BuildNewTabPage();
-    HRESULT SetRecentlyClosedVisible(short);
-    HRESULT SetActivitiesVisible(short);
+    HRESULT SetRecentlyClosedVisible(VARIANT_BOOL);
+    HRESULT SetActivitiesVisible(VARIANT_BOOL);
     HRESULT ContentDiscoveryReset();
-    HRESULT IsSuggestedSitesEnabled(short*);
-    HRESULT EnableSuggestedSites(short);
+    HRESULT IsSuggestedSitesEnabled(VARIANT_BOOL*);
+    HRESULT EnableSuggestedSites(VARIANT_BOOL);
     HRESULT NavigateToSuggestedSites(BSTR);
     HRESULT ShowTabsHelp();
     HRESULT ShowInPrivateHelp();
@@ -7165,10 +7182,10 @@ interface IShellUIHelper3 : IShellUIHelper2
 enum IID_IShellUIHelper4 = GUID(0xb36e6a53, 0x8073, 0x499e, [0x82, 0x4c, 0xd7, 0x76, 0x33, 0xa, 0x33, 0x3e]);
 interface IShellUIHelper4 : IShellUIHelper3
 {
-    HRESULT msIsSiteMode(short*);
+    HRESULT msIsSiteMode(VARIANT_BOOL*);
     HRESULT msSiteModeShowThumbBar();
     HRESULT msSiteModeAddThumbBarButton(BSTR, BSTR, VARIANT*);
-    HRESULT msSiteModeUpdateThumbBarButton(VARIANT, short, short);
+    HRESULT msSiteModeUpdateThumbBarButton(VARIANT, VARIANT_BOOL, VARIANT_BOOL);
     HRESULT msSiteModeSetIconOverlay(BSTR, VARIANT*);
     HRESULT msSiteModeClearIconOverlay();
     HRESULT msAddSiteMode();
@@ -7179,10 +7196,10 @@ interface IShellUIHelper4 : IShellUIHelper3
     HRESULT msSiteModeAddButtonStyle(VARIANT, BSTR, BSTR, VARIANT*);
     HRESULT msSiteModeShowButtonStyle(VARIANT, VARIANT);
     HRESULT msSiteModeActivate();
-    HRESULT msIsSiteModeFirstRun(short, VARIANT*);
+    HRESULT msIsSiteModeFirstRun(VARIANT_BOOL, VARIANT*);
     HRESULT msAddTrackingProtectionList(BSTR, BSTR);
-    HRESULT msTrackingProtectionEnabled(short*);
-    HRESULT msActiveXFilteringEnabled(short*);
+    HRESULT msTrackingProtectionEnabled(VARIANT_BOOL*);
+    HRESULT msActiveXFilteringEnabled(VARIANT_BOOL*);
 }
 enum IID_IShellUIHelper5 = GUID(0xa2a08b09, 0x103d, 0x4d3f, [0xb9, 0x1c, 0xea, 0x45, 0x5c, 0xa8, 0x2e, 0xfa]);
 interface IShellUIHelper5 : IShellUIHelper4
@@ -7193,7 +7210,7 @@ interface IShellUIHelper5 : IShellUIHelper4
     HRESULT msSiteModeClearBadge();
     HRESULT msDiagnoseConnectionUILess();
     HRESULT msLaunchNetworkClientHelp();
-    HRESULT msChangeDefaultBrowser(short);
+    HRESULT msChangeDefaultBrowser(VARIANT_BOOL);
 }
 enum IID_IShellUIHelper6 = GUID(0x987a573e, 0x46ee, 0x4e89, [0x96, 0xab, 0xdd, 0xf7, 0xf8, 0xfd, 0xc9, 0x8c]);
 interface IShellUIHelper6 : IShellUIHelper5
@@ -7202,11 +7219,11 @@ interface IShellUIHelper6 : IShellUIHelper5
     HRESULT msStartPeriodicTileUpdate(VARIANT, VARIANT, VARIANT);
     HRESULT msStartPeriodicTileUpdateBatch(VARIANT, VARIANT, VARIANT);
     HRESULT msClearTile();
-    HRESULT msEnableTileNotificationQueue(short);
+    HRESULT msEnableTileNotificationQueue(VARIANT_BOOL);
     HRESULT msPinnedSiteState(VARIANT*);
-    HRESULT msEnableTileNotificationQueueForSquare150x150(short);
-    HRESULT msEnableTileNotificationQueueForWide310x150(short);
-    HRESULT msEnableTileNotificationQueueForSquare310x310(short);
+    HRESULT msEnableTileNotificationQueueForSquare150x150(VARIANT_BOOL);
+    HRESULT msEnableTileNotificationQueueForWide310x150(VARIANT_BOOL);
+    HRESULT msEnableTileNotificationQueueForSquare310x310(VARIANT_BOOL);
     HRESULT msScheduledTileNotification(BSTR, BSTR, BSTR, VARIANT, VARIANT);
     HRESULT msRemoveScheduledTileNotification(BSTR);
     HRESULT msStartPeriodicBadgeUpdate(BSTR, VARIANT, VARIANT);
@@ -7216,15 +7233,15 @@ interface IShellUIHelper6 : IShellUIHelper5
 enum IID_IShellUIHelper7 = GUID(0x60e567c8, 0x9573, 0x4ab2, [0xa2, 0x64, 0x63, 0x7c, 0x6c, 0x16, 0x1c, 0xb1]);
 interface IShellUIHelper7 : IShellUIHelper6
 {
-    HRESULT SetExperimentalFlag(BSTR, short);
-    HRESULT GetExperimentalFlag(BSTR, short*);
+    HRESULT SetExperimentalFlag(BSTR, VARIANT_BOOL);
+    HRESULT GetExperimentalFlag(BSTR, VARIANT_BOOL*);
     HRESULT SetExperimentalValue(BSTR, uint);
     HRESULT GetExperimentalValue(BSTR, uint*);
     HRESULT ResetAllExperimentalFlagsAndValues();
-    HRESULT GetNeedIEAutoLaunchFlag(BSTR, short*);
-    HRESULT SetNeedIEAutoLaunchFlag(BSTR, short);
-    HRESULT HasNeedIEAutoLaunchFlag(BSTR, short*);
-    HRESULT LaunchIE(BSTR, short);
+    HRESULT GetNeedIEAutoLaunchFlag(BSTR, VARIANT_BOOL*);
+    HRESULT SetNeedIEAutoLaunchFlag(BSTR, VARIANT_BOOL);
+    HRESULT HasNeedIEAutoLaunchFlag(BSTR, VARIANT_BOOL*);
+    HRESULT LaunchIE(BSTR, VARIANT_BOOL);
 }
 enum IID_IShellUIHelper8 = GUID(0x66debcf2, 0x5b0, 0x4f07, [0xb4, 0x9b, 0xb9, 0x62, 0x41, 0xa6, 0x5d, 0xb2]);
 interface IShellUIHelper8 : IShellUIHelper7
@@ -7258,9 +7275,9 @@ interface IShellFavoritesNameSpace : IDispatch
     HRESULT Export();
     HRESULT InvokeContextMenuCommand(BSTR);
     HRESULT MoveSelectionTo();
-    HRESULT get_SubscriptionsEnabled(short*);
-    HRESULT CreateSubscriptionForSelection(short*);
-    HRESULT DeleteSubscriptionForSelection(short*);
+    HRESULT get_SubscriptionsEnabled(VARIANT_BOOL*);
+    HRESULT CreateSubscriptionForSelection(VARIANT_BOOL*);
+    HRESULT DeleteSubscriptionForSelection(VARIANT_BOOL*);
     HRESULT SetRoot(BSTR);
 }
 enum IID_IShellNameSpace = GUID(0xe572d3c9, 0x37be, 0x4ae2, [0x82, 0x5d, 0xd5, 0x21, 0x76, 0x3e, 0x31, 0x8]);
@@ -7424,10 +7441,10 @@ interface FolderItem : IDispatch
     HRESULT get_Path(BSTR*);
     HRESULT get_GetLink(IDispatch*);
     HRESULT get_GetFolder(IDispatch*);
-    HRESULT get_IsLink(short*);
-    HRESULT get_IsFolder(short*);
-    HRESULT get_IsFileSystem(short*);
-    HRESULT get_IsBrowsable(short*);
+    HRESULT get_IsLink(VARIANT_BOOL*);
+    HRESULT get_IsFolder(VARIANT_BOOL*);
+    HRESULT get_IsFileSystem(VARIANT_BOOL*);
+    HRESULT get_IsBrowsable(VARIANT_BOOL*);
     HRESULT get_ModifyDate(double*);
     HRESULT put_ModifyDate(double);
     HRESULT get_Size(int*);
@@ -7481,14 +7498,14 @@ interface Folder2 : Folder
     HRESULT get_Self(FolderItem*);
     HRESULT get_OfflineStatus(int*);
     HRESULT Synchronize();
-    HRESULT get_HaveToShowWebViewBarricade(short*);
+    HRESULT get_HaveToShowWebViewBarricade(VARIANT_BOOL*);
     HRESULT DismissedWebViewBarricade();
 }
 enum IID_Folder3 = GUID(0xa7ae5f64, 0xc4d7, 0x4d7f, [0x93, 0x7, 0x4d, 0x24, 0xee, 0x54, 0xb8, 0x41]);
 interface Folder3 : Folder2
 {
-    HRESULT get_ShowWebViewBarricade(short*);
-    HRESULT put_ShowWebViewBarricade(short);
+    HRESULT get_ShowWebViewBarricade(VARIANT_BOOL*);
+    HRESULT put_ShowWebViewBarricade(VARIANT_BOOL);
 }
 enum IID_FolderItem2 = GUID(0xedc817aa, 0x92b8, 0x11d1, [0xb0, 0x75, 0x0, 0xc0, 0x4f, 0xc3, 0x3a, 0xa5]);
 interface FolderItem2 : FolderItem
@@ -7616,7 +7633,7 @@ interface IShellDispatch4 : IShellDispatch3
     HRESULT WindowsSecurity();
     HRESULT ToggleDesktop();
     HRESULT ExplorerPolicy(BSTR, VARIANT*);
-    HRESULT GetSetting(int, short*);
+    HRESULT GetSetting(int, VARIANT_BOOL*);
 }
 enum IID_IShellDispatch5 = GUID(0x866738b9, 0x6cf2, 0x4de8, [0x87, 0x67, 0xf7, 0x94, 0xeb, 0xe7, 0x4f, 0x4e]);
 interface IShellDispatch5 : IShellDispatch4
@@ -7632,7 +7649,7 @@ enum IID_IFileSearchBand = GUID(0x2d91eea1, 0x9932, 0x11d2, [0xbe, 0x86, 0x0, 0x
 interface IFileSearchBand : IDispatch
 {
     HRESULT SetFocus();
-    HRESULT SetSearchParameters(BSTR*, short, VARIANT*, VARIANT*);
+    HRESULT SetSearchParameters(BSTR*, VARIANT_BOOL, VARIANT*, VARIANT*);
     HRESULT get_SearchID(BSTR*);
     HRESULT get_Scope(VARIANT*);
     HRESULT get_QueryFile(VARIANT*);
@@ -7647,7 +7664,7 @@ interface IWebWizardHost : IDispatch
     HRESULT get_Caption(BSTR*);
     HRESULT put_Property(BSTR, VARIANT*);
     HRESULT get_Property(BSTR, VARIANT*);
-    HRESULT SetWizardButtons(short, short, short);
+    HRESULT SetWizardButtons(VARIANT_BOOL, VARIANT_BOOL, VARIANT_BOOL);
     HRESULT SetHeaderText(BSTR, BSTR);
 }
 enum IID_IWebWizardHost2 = GUID(0xf9c013dc, 0x3c23, 0x4041, [0x8e, 0x39, 0xcf, 0xb4, 0x2, 0xf7, 0xea, 0x59]);
@@ -7658,7 +7675,7 @@ interface IWebWizardHost2 : IWebWizardHost
 enum IID_INewWDEvents = GUID(0x751c551, 0x7568, 0x41c9, [0x8e, 0x5b, 0xe2, 0x2e, 0x38, 0x91, 0x92, 0x36]);
 interface INewWDEvents : IWebWizardHost
 {
-    HRESULT PassportAuthenticate(BSTR, short*);
+    HRESULT PassportAuthenticate(BSTR, VARIANT_BOOL*);
 }
 enum IID_IAutoComplete = GUID(0xbb2762, 0x6a77, 0x11d0, [0xa5, 0x35, 0x0, 0xc0, 0x4f, 0xd7, 0xd0, 0x62]);
 interface IAutoComplete : IUnknown
@@ -9310,11 +9327,11 @@ enum : int
 enum IID_IQueryAssociations = GUID(0xc46ca590, 0x3c3f, 0x11d2, [0xbe, 0xe6, 0x0, 0x0, 0xf8, 0x5, 0xca, 0x57]);
 interface IQueryAssociations : IUnknown
 {
-    HRESULT Init(uint, const(wchar)*, HKEY, HWND);
-    HRESULT GetString(uint, ASSOCSTR, const(wchar)*, PWSTR, uint*);
-    HRESULT GetKey(uint, ASSOCKEY, const(wchar)*, HKEY*);
-    HRESULT GetData(uint, ASSOCDATA, const(wchar)*, void*, uint*);
-    HRESULT GetEnum(uint, ASSOCENUM, const(wchar)*, const(GUID)*, void**);
+    HRESULT Init(ASSOCF, const(wchar)*, HKEY, HWND);
+    HRESULT GetString(ASSOCF, ASSOCSTR, const(wchar)*, PWSTR, uint*);
+    HRESULT GetKey(ASSOCF, ASSOCKEY, const(wchar)*, HKEY*);
+    HRESULT GetData(ASSOCF, ASSOCDATA, const(wchar)*, void*, uint*);
+    HRESULT GetEnum(ASSOCF, ASSOCENUM, const(wchar)*, const(GUID)*, void**);
 }
 alias SHGLOBALCOUNTER = int;
 enum : int

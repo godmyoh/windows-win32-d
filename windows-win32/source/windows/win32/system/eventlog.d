@@ -24,41 +24,41 @@ enum : uint
     EVENTLOG_SEQUENTIAL_READ = 0x00000001,
 }
 
-long EvtOpenSession(EVT_LOGIN_CLASS, void*, uint, uint);
-BOOL EvtClose(long);
-BOOL EvtCancel(long);
+EVT_HANDLE EvtOpenSession(EVT_LOGIN_CLASS, void*, uint, uint);
+BOOL EvtClose(EVT_HANDLE);
+BOOL EvtCancel(EVT_HANDLE);
 uint EvtGetExtendedStatus(uint, PWSTR, uint*);
-long EvtQuery(long, const(wchar)*, const(wchar)*, uint);
-BOOL EvtNext(long, uint, long*, uint, uint, uint*);
-BOOL EvtSeek(long, long, long, uint, uint);
-long EvtSubscribe(long, HANDLE, const(wchar)*, const(wchar)*, long, void*, EVT_SUBSCRIBE_CALLBACK, uint);
-long EvtCreateRenderContext(uint, PWSTR*, uint);
-BOOL EvtRender(long, long, uint, uint, void*, uint*, uint*);
-BOOL EvtFormatMessage(long, long, uint, uint, EVT_VARIANT*, uint, uint, PWSTR, uint*);
-long EvtOpenLog(long, const(wchar)*, uint);
-BOOL EvtGetLogInfo(long, EVT_LOG_PROPERTY_ID, uint, EVT_VARIANT*, uint*);
-BOOL EvtClearLog(long, const(wchar)*, const(wchar)*, uint);
-BOOL EvtExportLog(long, const(wchar)*, const(wchar)*, const(wchar)*, uint);
-BOOL EvtArchiveExportedLog(long, const(wchar)*, uint, uint);
-long EvtOpenChannelEnum(long, uint);
-BOOL EvtNextChannelPath(long, uint, PWSTR, uint*);
-long EvtOpenChannelConfig(long, const(wchar)*, uint);
-BOOL EvtSaveChannelConfig(long, uint);
-BOOL EvtSetChannelConfigProperty(long, EVT_CHANNEL_CONFIG_PROPERTY_ID, uint, EVT_VARIANT*);
-BOOL EvtGetChannelConfigProperty(long, EVT_CHANNEL_CONFIG_PROPERTY_ID, uint, uint, EVT_VARIANT*, uint*);
-long EvtOpenPublisherEnum(long, uint);
-BOOL EvtNextPublisherId(long, uint, PWSTR, uint*);
-long EvtOpenPublisherMetadata(long, const(wchar)*, const(wchar)*, uint, uint);
-BOOL EvtGetPublisherMetadataProperty(long, EVT_PUBLISHER_METADATA_PROPERTY_ID, uint, uint, EVT_VARIANT*, uint*);
-long EvtOpenEventMetadataEnum(long, uint);
-long EvtNextEventMetadata(long, uint);
-BOOL EvtGetEventMetadataProperty(long, EVT_EVENT_METADATA_PROPERTY_ID, uint, uint, EVT_VARIANT*, uint*);
+EVT_HANDLE EvtQuery(EVT_HANDLE, const(wchar)*, const(wchar)*, uint);
+BOOL EvtNext(EVT_HANDLE, uint, long*, uint, uint, uint*);
+BOOL EvtSeek(EVT_HANDLE, long, EVT_HANDLE, uint, uint);
+EVT_HANDLE EvtSubscribe(EVT_HANDLE, HANDLE, const(wchar)*, const(wchar)*, EVT_HANDLE, void*, EVT_SUBSCRIBE_CALLBACK, uint);
+EVT_HANDLE EvtCreateRenderContext(uint, PWSTR*, uint);
+BOOL EvtRender(EVT_HANDLE, EVT_HANDLE, uint, uint, void*, uint*, uint*);
+BOOL EvtFormatMessage(EVT_HANDLE, EVT_HANDLE, uint, uint, EVT_VARIANT*, uint, uint, PWSTR, uint*);
+EVT_HANDLE EvtOpenLog(EVT_HANDLE, const(wchar)*, uint);
+BOOL EvtGetLogInfo(EVT_HANDLE, EVT_LOG_PROPERTY_ID, uint, EVT_VARIANT*, uint*);
+BOOL EvtClearLog(EVT_HANDLE, const(wchar)*, const(wchar)*, uint);
+BOOL EvtExportLog(EVT_HANDLE, const(wchar)*, const(wchar)*, const(wchar)*, uint);
+BOOL EvtArchiveExportedLog(EVT_HANDLE, const(wchar)*, uint, uint);
+EVT_HANDLE EvtOpenChannelEnum(EVT_HANDLE, uint);
+BOOL EvtNextChannelPath(EVT_HANDLE, uint, PWSTR, uint*);
+EVT_HANDLE EvtOpenChannelConfig(EVT_HANDLE, const(wchar)*, uint);
+BOOL EvtSaveChannelConfig(EVT_HANDLE, uint);
+BOOL EvtSetChannelConfigProperty(EVT_HANDLE, EVT_CHANNEL_CONFIG_PROPERTY_ID, uint, EVT_VARIANT*);
+BOOL EvtGetChannelConfigProperty(EVT_HANDLE, EVT_CHANNEL_CONFIG_PROPERTY_ID, uint, uint, EVT_VARIANT*, uint*);
+EVT_HANDLE EvtOpenPublisherEnum(EVT_HANDLE, uint);
+BOOL EvtNextPublisherId(EVT_HANDLE, uint, PWSTR, uint*);
+EVT_HANDLE EvtOpenPublisherMetadata(EVT_HANDLE, const(wchar)*, const(wchar)*, uint, uint);
+BOOL EvtGetPublisherMetadataProperty(EVT_HANDLE, EVT_PUBLISHER_METADATA_PROPERTY_ID, uint, uint, EVT_VARIANT*, uint*);
+EVT_HANDLE EvtOpenEventMetadataEnum(EVT_HANDLE, uint);
+EVT_HANDLE EvtNextEventMetadata(EVT_HANDLE, uint);
+BOOL EvtGetEventMetadataProperty(EVT_HANDLE, EVT_EVENT_METADATA_PROPERTY_ID, uint, uint, EVT_VARIANT*, uint*);
 BOOL EvtGetObjectArraySize(long, uint*);
 BOOL EvtGetObjectArrayProperty(long, uint, uint, uint, uint, EVT_VARIANT*, uint*);
-BOOL EvtGetQueryInfo(long, EVT_QUERY_PROPERTY_ID, uint, EVT_VARIANT*, uint*);
-long EvtCreateBookmark(const(wchar)*);
-BOOL EvtUpdateBookmark(long, long);
-BOOL EvtGetEventInfo(long, EVT_EVENT_PROPERTY_ID, uint, EVT_VARIANT*, uint*);
+BOOL EvtGetQueryInfo(EVT_HANDLE, EVT_QUERY_PROPERTY_ID, uint, EVT_VARIANT*, uint*);
+EVT_HANDLE EvtCreateBookmark(const(wchar)*);
+BOOL EvtUpdateBookmark(EVT_HANDLE, EVT_HANDLE);
+BOOL EvtGetEventInfo(EVT_HANDLE, EVT_EVENT_PROPERTY_ID, uint, EVT_VARIANT*, uint*);
 BOOL ClearEventLogA(EventLogHandle, const(char)*);
 BOOL ClearEventLogW(EventLogHandle, const(wchar)*);
 BOOL BackupEventLogA(EventLogHandle, const(char)*);
@@ -87,6 +87,7 @@ enum EVT_CLEAR_ACCESS = 0x00000004;
 enum EVT_ALL_ACCESS = 0x00000007;
 alias EventLogHandle = long;
 alias EventSourceHandle = long;
+alias EVT_HANDLE = long;
 alias EVT_VARIANT_TYPE = int;
 enum : int
 {
@@ -157,7 +158,7 @@ struct EVT_VARIANT
         PSTR* AnsiStringArr;
         PSID* SidArr;
         ulong* SizeTArr;
-        long EvtHandleVal;
+        EVT_HANDLE EvtHandleVal;
         const(wchar)* XmlVal;
         PWSTR* XmlValArr;
     }
@@ -170,8 +171,8 @@ enum : int
     EvtRpcLogin = 0x00000001,
 }
 
-alias EVT_RPC_LOGIN_FLAGS = int;
-enum : int
+alias EVT_RPC_LOGIN_FLAGS = uint;
+enum : uint
 {
     EvtRpcLoginAuthDefault   = 0x00000000,
     EvtRpcLoginAuthNegotiate = 0x00000001,
@@ -187,8 +188,8 @@ struct EVT_RPC_LOGIN
     PWSTR Password;
     uint Flags;
 }
-alias EVT_QUERY_FLAGS = int;
-enum : int
+alias EVT_QUERY_FLAGS = uint;
+enum : uint
 {
     EvtQueryChannelPath         = 0x00000001,
     EvtQueryFilePath            = 0x00000002,
@@ -197,8 +198,8 @@ enum : int
     EvtQueryTolerateQueryErrors = 0x00001000,
 }
 
-alias EVT_SEEK_FLAGS = int;
-enum : int
+alias EVT_SEEK_FLAGS = uint;
+enum : uint
 {
     EvtSeekRelativeToFirst    = 0x00000001,
     EvtSeekRelativeToLast     = 0x00000002,
@@ -208,8 +209,8 @@ enum : int
     EvtSeekStrict             = 0x00010000,
 }
 
-alias EVT_SUBSCRIBE_FLAGS = int;
-enum : int
+alias EVT_SUBSCRIBE_FLAGS = uint;
+enum : uint
 {
     EvtSubscribeToFutureEvents      = 0x00000001,
     EvtSubscribeStartAtOldestRecord = 0x00000002,
@@ -226,7 +227,7 @@ enum : int
     EvtSubscribeActionDeliver = 0x00000001,
 }
 
-alias EVT_SUBSCRIBE_CALLBACK = uint function(EVT_SUBSCRIBE_NOTIFY_ACTION, void*, long);
+alias EVT_SUBSCRIBE_CALLBACK = uint function(EVT_SUBSCRIBE_NOTIFY_ACTION, void*, EVT_HANDLE);
 alias EVT_SYSTEM_PROPERTY_ID = int;
 enum : int
 {
@@ -251,24 +252,24 @@ enum : int
     EvtSystemPropertyIdEND     = 0x00000012,
 }
 
-alias EVT_RENDER_CONTEXT_FLAGS = int;
-enum : int
+alias EVT_RENDER_CONTEXT_FLAGS = uint;
+enum : uint
 {
     EvtRenderContextValues = 0x00000000,
     EvtRenderContextSystem = 0x00000001,
     EvtRenderContextUser   = 0x00000002,
 }
 
-alias EVT_RENDER_FLAGS = int;
-enum : int
+alias EVT_RENDER_FLAGS = uint;
+enum : uint
 {
     EvtRenderEventValues = 0x00000000,
     EvtRenderEventXml    = 0x00000001,
     EvtRenderBookmark    = 0x00000002,
 }
 
-alias EVT_FORMAT_MESSAGE_FLAGS = int;
-enum : int
+alias EVT_FORMAT_MESSAGE_FLAGS = uint;
+enum : uint
 {
     EvtFormatMessageEvent    = 0x00000001,
     EvtFormatMessageLevel    = 0x00000002,
@@ -281,8 +282,8 @@ enum : int
     EvtFormatMessageXml      = 0x00000009,
 }
 
-alias EVT_OPEN_LOG_FLAGS = int;
-enum : int
+alias EVT_OPEN_LOG_FLAGS = uint;
+enum : uint
 {
     EvtOpenChannelPath = 0x00000001,
     EvtOpenFilePath    = 0x00000002,
@@ -301,8 +302,8 @@ enum : int
     EvtLogFull               = 0x00000007,
 }
 
-alias EVT_EXPORTLOG_FLAGS = int;
-enum : int
+alias EVT_EXPORTLOG_FLAGS = uint;
+enum : uint
 {
     EvtExportLogChannelPath         = 0x00000001,
     EvtExportLogFilePath            = 0x00000002,
@@ -368,8 +369,8 @@ enum : int
     EvtChannelSidTypePublishing = 0x00000001,
 }
 
-alias EVT_CHANNEL_REFERENCE_FLAGS = int;
-enum : int
+alias EVT_CHANNEL_REFERENCE_FLAGS = uint;
+enum : uint
 {
     EvtChannelReferenceImported = 0x00000001,
 }

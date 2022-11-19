@@ -1,7 +1,7 @@
 module windows.win32.system.deploymentservices;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, HANDLE, HRESULT, LPARAM, PWSTR, SYSTEMTIME, ULARGE_INTEGER, WPARAM;
+import windows.win32.foundation : BOOL, BSTR, HANDLE, HRESULT, LPARAM, PWSTR, SYSTEMTIME, ULARGE_INTEGER, VARIANT_BOOL, WPARAM;
 import windows.win32.system.com_ : IDispatch, IUnknown;
 import windows.win32.system.registry : HKEY;
 
@@ -705,7 +705,7 @@ enum : int
 enum IID_IWdsTransportCacheable = GUID(0x46ad894b, 0xbab, 0x47dc, [0x84, 0xb2, 0x7b, 0x55, 0x3f, 0x1d, 0x8f, 0x80]);
 interface IWdsTransportCacheable : IDispatch
 {
-    HRESULT get_Dirty(short*);
+    HRESULT get_Dirty(VARIANT_BOOL*);
     HRESULT Discard();
     HRESULT Refresh();
     HRESULT Commit();
@@ -756,7 +756,7 @@ interface IWdsTransportConfigurationManager : IDispatch
 {
     HRESULT get_ServicePolicy(IWdsTransportServicePolicy*);
     HRESULT get_DiagnosticsPolicy(IWdsTransportDiagnosticsPolicy*);
-    HRESULT get_WdsTransportServicesRunning(short, short*);
+    HRESULT get_WdsTransportServicesRunning(VARIANT_BOOL, VARIANT_BOOL*);
     HRESULT EnableWdsTransportServices();
     HRESULT DisableWdsTransportServices();
     HRESULT StartWdsTransportServices();
@@ -774,7 +774,7 @@ interface IWdsTransportNamespaceManager : IDispatch
 {
     HRESULT CreateNamespace(WDSTRANSPORT_NAMESPACE_TYPE, BSTR, BSTR, BSTR, IWdsTransportNamespace*);
     HRESULT RetrieveNamespace(BSTR, IWdsTransportNamespace*);
-    HRESULT RetrieveNamespaces(BSTR, BSTR, short, IWdsTransportCollection*);
+    HRESULT RetrieveNamespaces(BSTR, BSTR, VARIANT_BOOL, IWdsTransportCollection*);
 }
 enum IID_IWdsTransportTftpManager = GUID(0x1327a7c8, 0xae8a, 0x4fb3, [0x81, 0x50, 0x13, 0x62, 0x27, 0xc3, 0x7e, 0x9a]);
 interface IWdsTransportTftpManager : IDispatch
@@ -804,14 +804,14 @@ interface IWdsTransportServicePolicy2 : IWdsTransportServicePolicy
     HRESULT put_UdpPortPolicy(WDSTRANSPORT_UDP_PORT_POLICY);
     HRESULT get_TftpMaximumBlockSize(uint*);
     HRESULT put_TftpMaximumBlockSize(uint);
-    HRESULT get_EnableTftpVariableWindowExtension(short*);
-    HRESULT put_EnableTftpVariableWindowExtension(short);
+    HRESULT get_EnableTftpVariableWindowExtension(VARIANT_BOOL*);
+    HRESULT put_EnableTftpVariableWindowExtension(VARIANT_BOOL);
 }
 enum IID_IWdsTransportDiagnosticsPolicy = GUID(0x13b33efc, 0x7856, 0x4f61, [0x9a, 0x59, 0x8d, 0xe6, 0x7b, 0x6b, 0x87, 0xb6]);
 interface IWdsTransportDiagnosticsPolicy : IWdsTransportCacheable
 {
-    HRESULT get_Enabled(short*);
-    HRESULT put_Enabled(short);
+    HRESULT get_Enabled(VARIANT_BOOL*);
+    HRESULT put_Enabled(VARIANT_BOOL);
     HRESULT get_Components(uint*);
     HRESULT put_Components(uint);
 }
@@ -824,8 +824,8 @@ interface IWdsTransportMulticastSessionPolicy : IWdsTransportCacheable
     HRESULT put_AutoDisconnectThreshold(uint);
     HRESULT get_MultistreamStreamCount(uint*);
     HRESULT put_MultistreamStreamCount(uint);
-    HRESULT get_SlowClientFallback(short*);
-    HRESULT put_SlowClientFallback(short);
+    HRESULT get_SlowClientFallback(VARIANT_BOOL*);
+    HRESULT put_SlowClientFallback(VARIANT_BOOL);
 }
 enum IID_IWdsTransportNamespace = GUID(0xfa561f57, 0xfbef, 0x4ed3, [0xb0, 0x56, 0x12, 0x7c, 0xb1, 0xb3, 0x3b, 0x84]);
 interface IWdsTransportNamespace : IDispatch
@@ -842,12 +842,12 @@ interface IWdsTransportNamespace : IDispatch
     HRESULT put_ContentProvider(BSTR);
     HRESULT get_Configuration(BSTR*);
     HRESULT put_Configuration(BSTR);
-    HRESULT get_Registered(short*);
-    HRESULT get_Tombstoned(short*);
+    HRESULT get_Registered(VARIANT_BOOL*);
+    HRESULT get_Tombstoned(VARIANT_BOOL*);
     HRESULT get_TombstoneTime(double*);
-    HRESULT get_TransmissionStarted(short*);
+    HRESULT get_TransmissionStarted(VARIANT_BOOL*);
     HRESULT Register();
-    HRESULT Deregister(short);
+    HRESULT Deregister(VARIANT_BOOL);
     HRESULT Clone(IWdsTransportNamespace*);
     HRESULT Refresh();
     HRESULT RetrieveContents(IWdsTransportCollection*);

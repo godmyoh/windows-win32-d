@@ -1,7 +1,7 @@
 module windows.win32.system.taskscheduler;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, HRESULT, HWND, PWSTR, SYSTEMTIME;
+import windows.win32.foundation : BOOL, BSTR, HRESULT, HWND, PWSTR, SYSTEMTIME, VARIANT_BOOL;
 import windows.win32.system.com_ : IDispatch, IUnknown, SAFEARRAY, VARIANT;
 import windows.win32.ui.controls_ : HPROPSHEETPAGE;
 
@@ -349,7 +349,7 @@ interface ITaskService : IDispatch
     HRESULT GetRunningTasks(int, IRunningTaskCollection*);
     HRESULT NewTask(uint, ITaskDefinition*);
     HRESULT Connect(VARIANT, VARIANT, VARIANT, VARIANT);
-    HRESULT get_Connected(short*);
+    HRESULT get_Connected(VARIANT_BOOL*);
     HRESULT get_TargetServer(BSTR*);
     HRESULT get_ConnectedUser(BSTR*);
     HRESULT get_ConnectedDomain(BSTR*);
@@ -419,8 +419,8 @@ interface IRegisteredTask : IDispatch
     HRESULT get_Name(BSTR*);
     HRESULT get_Path(BSTR*);
     HRESULT get_State(TASK_STATE*);
-    HRESULT get_Enabled(short*);
-    HRESULT put_Enabled(short);
+    HRESULT get_Enabled(VARIANT_BOOL*);
+    HRESULT put_Enabled(VARIANT_BOOL);
     HRESULT Run(VARIANT, IRunningTask*);
     HRESULT RunEx(VARIANT, int, int, BSTR, IRunningTask*);
     HRESULT GetInstances(int, IRunningTaskCollection*);
@@ -449,8 +449,8 @@ interface ITrigger : IDispatch
     HRESULT put_StartBoundary(BSTR);
     HRESULT get_EndBoundary(BSTR*);
     HRESULT put_EndBoundary(BSTR);
-    HRESULT get_Enabled(short*);
-    HRESULT put_Enabled(short);
+    HRESULT get_Enabled(VARIANT_BOOL*);
+    HRESULT put_Enabled(VARIANT_BOOL);
 }
 enum IID_IIdleTrigger = GUID(0xd537d2b0, 0x9fb3, 0x4d34, [0x97, 0x39, 0x1f, 0xf5, 0xce, 0x7b, 0x1e, 0xf3]);
 interface IIdleTrigger : ITrigger
@@ -515,8 +515,8 @@ interface IMonthlyTrigger : ITrigger
     HRESULT put_DaysOfMonth(int);
     HRESULT get_MonthsOfYear(short*);
     HRESULT put_MonthsOfYear(short);
-    HRESULT get_RunOnLastDayOfMonth(short*);
-    HRESULT put_RunOnLastDayOfMonth(short);
+    HRESULT get_RunOnLastDayOfMonth(VARIANT_BOOL*);
+    HRESULT put_RunOnLastDayOfMonth(VARIANT_BOOL);
     HRESULT get_RandomDelay(BSTR*);
     HRESULT put_RandomDelay(BSTR);
 }
@@ -529,8 +529,8 @@ interface IMonthlyDOWTrigger : ITrigger
     HRESULT put_WeeksOfMonth(short);
     HRESULT get_MonthsOfYear(short*);
     HRESULT put_MonthsOfYear(short);
-    HRESULT get_RunOnLastWeekOfMonth(short*);
-    HRESULT put_RunOnLastWeekOfMonth(short);
+    HRESULT get_RunOnLastWeekOfMonth(VARIANT_BOOL*);
+    HRESULT put_RunOnLastWeekOfMonth(VARIANT_BOOL);
     HRESULT get_RandomDelay(BSTR*);
     HRESULT put_RandomDelay(BSTR);
 }
@@ -566,8 +566,8 @@ interface IExecAction : IAction
 enum IID_IExecAction2 = GUID(0xf2a82542, 0xbda5, 0x4e6b, [0x91, 0x43, 0xe2, 0xbf, 0x4f, 0x89, 0x87, 0xb6]);
 interface IExecAction2 : IExecAction
 {
-    HRESULT get_HideAppWindow(short*);
-    HRESULT put_HideAppWindow(short);
+    HRESULT get_HideAppWindow(VARIANT_BOOL*);
+    HRESULT put_HideAppWindow(VARIANT_BOOL);
 }
 enum IID_IShowMessageAction = GUID(0x505e9e68, 0xaf89, 0x46b8, [0xa3, 0xf, 0x56, 0x16, 0x2a, 0x83, 0xd5, 0x37]);
 interface IShowMessageAction : IAction
@@ -701,67 +701,67 @@ interface ITaskDefinition : IDispatch
 enum IID_ITaskSettings = GUID(0x8fd4711d, 0x2d02, 0x4c8c, [0x87, 0xe3, 0xef, 0xf6, 0x99, 0xde, 0x12, 0x7e]);
 interface ITaskSettings : IDispatch
 {
-    HRESULT get_AllowDemandStart(short*);
-    HRESULT put_AllowDemandStart(short);
+    HRESULT get_AllowDemandStart(VARIANT_BOOL*);
+    HRESULT put_AllowDemandStart(VARIANT_BOOL);
     HRESULT get_RestartInterval(BSTR*);
     HRESULT put_RestartInterval(BSTR);
     HRESULT get_RestartCount(int*);
     HRESULT put_RestartCount(int);
     HRESULT get_MultipleInstances(TASK_INSTANCES_POLICY*);
     HRESULT put_MultipleInstances(TASK_INSTANCES_POLICY);
-    HRESULT get_StopIfGoingOnBatteries(short*);
-    HRESULT put_StopIfGoingOnBatteries(short);
-    HRESULT get_DisallowStartIfOnBatteries(short*);
-    HRESULT put_DisallowStartIfOnBatteries(short);
-    HRESULT get_AllowHardTerminate(short*);
-    HRESULT put_AllowHardTerminate(short);
-    HRESULT get_StartWhenAvailable(short*);
-    HRESULT put_StartWhenAvailable(short);
+    HRESULT get_StopIfGoingOnBatteries(VARIANT_BOOL*);
+    HRESULT put_StopIfGoingOnBatteries(VARIANT_BOOL);
+    HRESULT get_DisallowStartIfOnBatteries(VARIANT_BOOL*);
+    HRESULT put_DisallowStartIfOnBatteries(VARIANT_BOOL);
+    HRESULT get_AllowHardTerminate(VARIANT_BOOL*);
+    HRESULT put_AllowHardTerminate(VARIANT_BOOL);
+    HRESULT get_StartWhenAvailable(VARIANT_BOOL*);
+    HRESULT put_StartWhenAvailable(VARIANT_BOOL);
     HRESULT get_XmlText(BSTR*);
     HRESULT put_XmlText(BSTR);
-    HRESULT get_RunOnlyIfNetworkAvailable(short*);
-    HRESULT put_RunOnlyIfNetworkAvailable(short);
+    HRESULT get_RunOnlyIfNetworkAvailable(VARIANT_BOOL*);
+    HRESULT put_RunOnlyIfNetworkAvailable(VARIANT_BOOL);
     HRESULT get_ExecutionTimeLimit(BSTR*);
     HRESULT put_ExecutionTimeLimit(BSTR);
-    HRESULT get_Enabled(short*);
-    HRESULT put_Enabled(short);
+    HRESULT get_Enabled(VARIANT_BOOL*);
+    HRESULT put_Enabled(VARIANT_BOOL);
     HRESULT get_DeleteExpiredTaskAfter(BSTR*);
     HRESULT put_DeleteExpiredTaskAfter(BSTR);
     HRESULT get_Priority(int*);
     HRESULT put_Priority(int);
     HRESULT get_Compatibility(TASK_COMPATIBILITY*);
     HRESULT put_Compatibility(TASK_COMPATIBILITY);
-    HRESULT get_Hidden(short*);
-    HRESULT put_Hidden(short);
+    HRESULT get_Hidden(VARIANT_BOOL*);
+    HRESULT put_Hidden(VARIANT_BOOL);
     HRESULT get_IdleSettings(IIdleSettings*);
     HRESULT put_IdleSettings(IIdleSettings);
-    HRESULT get_RunOnlyIfIdle(short*);
-    HRESULT put_RunOnlyIfIdle(short);
-    HRESULT get_WakeToRun(short*);
-    HRESULT put_WakeToRun(short);
+    HRESULT get_RunOnlyIfIdle(VARIANT_BOOL*);
+    HRESULT put_RunOnlyIfIdle(VARIANT_BOOL);
+    HRESULT get_WakeToRun(VARIANT_BOOL*);
+    HRESULT put_WakeToRun(VARIANT_BOOL);
     HRESULT get_NetworkSettings(INetworkSettings*);
     HRESULT put_NetworkSettings(INetworkSettings);
 }
 enum IID_ITaskSettings2 = GUID(0x2c05c3f0, 0x6eed, 0x4c05, [0xa1, 0x5f, 0xed, 0x7d, 0x7a, 0x98, 0xa3, 0x69]);
 interface ITaskSettings2 : IDispatch
 {
-    HRESULT get_DisallowStartOnRemoteAppSession(short*);
-    HRESULT put_DisallowStartOnRemoteAppSession(short);
-    HRESULT get_UseUnifiedSchedulingEngine(short*);
-    HRESULT put_UseUnifiedSchedulingEngine(short);
+    HRESULT get_DisallowStartOnRemoteAppSession(VARIANT_BOOL*);
+    HRESULT put_DisallowStartOnRemoteAppSession(VARIANT_BOOL);
+    HRESULT get_UseUnifiedSchedulingEngine(VARIANT_BOOL*);
+    HRESULT put_UseUnifiedSchedulingEngine(VARIANT_BOOL);
 }
 enum IID_ITaskSettings3 = GUID(0xad9d0d7, 0xc7f, 0x4ebb, [0x9a, 0x5f, 0xd1, 0xc6, 0x48, 0xdc, 0xa5, 0x28]);
 interface ITaskSettings3 : ITaskSettings
 {
-    HRESULT get_DisallowStartOnRemoteAppSession(short*);
-    HRESULT put_DisallowStartOnRemoteAppSession(short);
-    HRESULT get_UseUnifiedSchedulingEngine(short*);
-    HRESULT put_UseUnifiedSchedulingEngine(short);
+    HRESULT get_DisallowStartOnRemoteAppSession(VARIANT_BOOL*);
+    HRESULT put_DisallowStartOnRemoteAppSession(VARIANT_BOOL);
+    HRESULT get_UseUnifiedSchedulingEngine(VARIANT_BOOL*);
+    HRESULT put_UseUnifiedSchedulingEngine(VARIANT_BOOL);
     HRESULT get_MaintenanceSettings(IMaintenanceSettings*);
     HRESULT put_MaintenanceSettings(IMaintenanceSettings);
     HRESULT CreateMaintenanceSettings(IMaintenanceSettings*);
-    HRESULT get_Volatile(short*);
-    HRESULT put_Volatile(short);
+    HRESULT get_Volatile(VARIANT_BOOL*);
+    HRESULT put_Volatile(VARIANT_BOOL);
 }
 enum IID_IMaintenanceSettings = GUID(0xa6024fa8, 0x9652, 0x4adb, [0xa6, 0xbf, 0x5c, 0xfc, 0xd8, 0x77, 0xa7, 0xba]);
 interface IMaintenanceSettings : IDispatch
@@ -770,8 +770,8 @@ interface IMaintenanceSettings : IDispatch
     HRESULT get_Period(BSTR*);
     HRESULT put_Deadline(BSTR);
     HRESULT get_Deadline(BSTR*);
-    HRESULT put_Exclusive(short);
-    HRESULT get_Exclusive(short*);
+    HRESULT put_Exclusive(VARIANT_BOOL);
+    HRESULT get_Exclusive(VARIANT_BOOL*);
 }
 enum IID_IRegisteredTaskCollection = GUID(0x86627eb4, 0x42a7, 0x41e4, [0xa4, 0xd9, 0xac, 0x33, 0xa7, 0x2f, 0x2d, 0x52]);
 interface IRegisteredTaskCollection : IDispatch
@@ -804,10 +804,10 @@ interface IIdleSettings : IDispatch
     HRESULT put_IdleDuration(BSTR);
     HRESULT get_WaitTimeout(BSTR*);
     HRESULT put_WaitTimeout(BSTR);
-    HRESULT get_StopOnIdleEnd(short*);
-    HRESULT put_StopOnIdleEnd(short);
-    HRESULT get_RestartOnIdle(short*);
-    HRESULT put_RestartOnIdle(short);
+    HRESULT get_StopOnIdleEnd(VARIANT_BOOL*);
+    HRESULT put_StopOnIdleEnd(VARIANT_BOOL);
+    HRESULT get_RestartOnIdle(VARIANT_BOOL*);
+    HRESULT put_RestartOnIdle(VARIANT_BOOL);
 }
 enum IID_INetworkSettings = GUID(0x9f7dea84, 0xc30b, 0x4245, [0x80, 0xb6, 0x0, 0xe9, 0xf6, 0x46, 0xf1, 0xb4]);
 interface INetworkSettings : IDispatch
@@ -824,6 +824,6 @@ interface IRepetitionPattern : IDispatch
     HRESULT put_Interval(BSTR);
     HRESULT get_Duration(BSTR*);
     HRESULT put_Duration(BSTR);
-    HRESULT get_StopAtDurationEnd(short*);
-    HRESULT put_StopAtDurationEnd(short);
+    HRESULT get_StopAtDurationEnd(VARIANT_BOOL*);
+    HRESULT put_StopAtDurationEnd(VARIANT_BOOL);
 }

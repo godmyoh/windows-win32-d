@@ -13,12 +13,12 @@ import windows.win32.ui.colorsystem : LOGCOLORSPACEW;
 version (Windows):
 extern (Windows):
 
-int GetNumberOfPhysicalMonitorsFromHMONITOR(HMONITOR, uint*);
+BOOL GetNumberOfPhysicalMonitorsFromHMONITOR(HMONITOR, uint*);
 HRESULT GetNumberOfPhysicalMonitorsFromIDirect3DDevice9(IDirect3DDevice9, uint*);
-int GetPhysicalMonitorsFromHMONITOR(HMONITOR, uint, PHYSICAL_MONITOR*);
+BOOL GetPhysicalMonitorsFromHMONITOR(HMONITOR, uint, PHYSICAL_MONITOR*);
 HRESULT GetPhysicalMonitorsFromIDirect3DDevice9(IDirect3DDevice9, uint, PHYSICAL_MONITOR*);
-int DestroyPhysicalMonitor(HANDLE);
-int DestroyPhysicalMonitors(uint, PHYSICAL_MONITOR*);
+BOOL DestroyPhysicalMonitor(HANDLE);
+BOOL DestroyPhysicalMonitors(uint, PHYSICAL_MONITOR*);
 int GetVCPFeatureAndVCPFeatureReply(HANDLE, ubyte, MC_VCP_CODE_TYPE*, uint*, uint*);
 int SetVCPFeature(HANDLE, ubyte, uint);
 int SaveCurrentSettings(HANDLE);

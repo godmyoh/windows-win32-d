@@ -1,7 +1,7 @@
 module windows.win32.system.remotedesktop;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HANDLE_PTR, HRESULT, HWND, LARGE_INTEGER, PSID, PSTR, PWSTR, RECT;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HANDLE_PTR, HRESULT, HWND, LARGE_INTEGER, PSID, PSTR, PWSTR, RECT, VARIANT_BOOL;
 import windows.win32.media.audio_ : WAVEFORMATEX;
 import windows.win32.media.audio.apo : APO_CONNECTION_PROPERTY;
 import windows.win32.security_ : PSECURITY_DESCRIPTOR;
@@ -1197,7 +1197,7 @@ interface IWorkspace : IUnknown
 enum IID_IWorkspace2 = GUID(0x96d8d7cf, 0x783e, 0x4286, [0x83, 0x4c, 0xeb, 0xc0, 0xe9, 0x5f, 0x78, 0x3c]);
 interface IWorkspace2 : IWorkspace
 {
-    HRESULT StartRemoteApplicationEx(BSTR, BSTR, BSTR, short, BSTR, SAFEARRAY*);
+    HRESULT StartRemoteApplicationEx(BSTR, BSTR, BSTR, VARIANT_BOOL, BSTR, SAFEARRAY*);
 }
 enum IID_IWorkspace3 = GUID(0x1becbe4a, 0xd654, 0x423b, [0xaf, 0xeb, 0xbe, 0x8d, 0x53, 0x2c, 0x13, 0xc6]);
 interface IWorkspace3 : IWorkspace2
@@ -1222,8 +1222,8 @@ interface IWorkspaceScriptable : IDispatch
 {
     HRESULT DisconnectWorkspace(BSTR);
     HRESULT StartWorkspace(BSTR, BSTR, BSTR, BSTR, int, int);
-    HRESULT IsWorkspaceCredentialSpecified(BSTR, short, short*);
-    HRESULT IsWorkspaceSSOEnabled(short*);
+    HRESULT IsWorkspaceCredentialSpecified(BSTR, VARIANT_BOOL, VARIANT_BOOL*);
+    HRESULT IsWorkspaceSSOEnabled(VARIANT_BOOL*);
     HRESULT ClearWorkspaceCredential(BSTR);
     HRESULT OnAuthenticated(BSTR, BSTR);
     HRESULT DisconnectWorkspaceByFriendlyName(BSTR);
@@ -1243,7 +1243,7 @@ enum IID_IWorkspaceReportMessage = GUID(0xa7c06739, 0x500f, 0x4e8c, [0x99, 0xa8,
 interface IWorkspaceReportMessage : IUnknown
 {
     HRESULT RegisterErrorLogMessage(BSTR);
-    HRESULT IsErrorMessageRegistered(BSTR, uint, BSTR, uint, short*);
+    HRESULT IsErrorMessageRegistered(BSTR, uint, BSTR, uint, VARIANT_BOOL*);
     HRESULT RegisterErrorEvent(BSTR, uint, BSTR, uint);
 }
 enum IID__ITSWkspEvents = GUID(0xb922bbb8, 0x4c55, 0x4fea, [0x84, 0x96, 0xbe, 0xb0, 0xb4, 0x42, 0x85, 0xe9]);
@@ -1808,11 +1808,11 @@ interface ItsPubPlugin2 : ItsPubPlugin
 enum IID_IWorkspaceResTypeRegistry = GUID(0x1d428c79, 0x6e2e, 0x4351, [0xa3, 0x61, 0xc0, 0x40, 0x1a, 0x3, 0xa0, 0xba]);
 interface IWorkspaceResTypeRegistry : IDispatch
 {
-    HRESULT AddResourceType(short, BSTR, BSTR);
-    HRESULT DeleteResourceType(short, BSTR);
-    HRESULT GetRegisteredFileExtensions(short, SAFEARRAY**);
-    HRESULT GetResourceTypeInfo(short, BSTR, BSTR*);
-    HRESULT ModifyResourceType(short, BSTR, BSTR);
+    HRESULT AddResourceType(VARIANT_BOOL, BSTR, BSTR);
+    HRESULT DeleteResourceType(VARIANT_BOOL, BSTR);
+    HRESULT GetRegisteredFileExtensions(VARIANT_BOOL, SAFEARRAY**);
+    HRESULT GetResourceTypeInfo(VARIANT_BOOL, BSTR, BSTR*);
+    HRESULT ModifyResourceType(VARIANT_BOOL, BSTR, BSTR);
 }
 enum IID_IWTSPlugin = GUID(0xa1230201, 0x1439, 0x4e62, [0xa4, 0x14, 0x19, 0xd, 0xa, 0xc3, 0xd4, 0xe]);
 interface IWTSPlugin : IUnknown
@@ -1841,7 +1841,7 @@ interface IWTSVirtualChannelCallback : IUnknown
 enum IID_IWTSVirtualChannelManager = GUID(0xa1230205, 0xd6a7, 0x11d8, [0xb9, 0xfd, 0x0, 0xb, 0xdb, 0xd1, 0xf1, 0x98]);
 interface IWTSVirtualChannelManager : IUnknown
 {
-    HRESULT CreateListener(const(ubyte)*, uint, IWTSListenerCallback, IWTSListener*);
+    HRESULT CreateListener(const(char)*, uint, IWTSListenerCallback, IWTSListener*);
 }
 enum IID_IWTSVirtualChannel = GUID(0xa1230207, 0xd6a7, 0x11d8, [0xb9, 0xfd, 0x0, 0xb, 0xdb, 0xd1, 0xf1, 0x98]);
 interface IWTSVirtualChannel : IUnknown
@@ -2673,10 +2673,10 @@ interface IRemoteDesktopClientActions : IDispatch
 enum IID_IRemoteDesktopClientTouchPointer = GUID(0x260ec22d, 0x8cbc, 0x44b5, [0x9e, 0x88, 0x2a, 0x37, 0xf6, 0xc9, 0x3a, 0xe9]);
 interface IRemoteDesktopClientTouchPointer : IDispatch
 {
-    HRESULT put_Enabled(short);
-    HRESULT get_Enabled(short*);
-    HRESULT put_EventsEnabled(short);
-    HRESULT get_EventsEnabled(short*);
+    HRESULT put_Enabled(VARIANT_BOOL);
+    HRESULT get_Enabled(VARIANT_BOOL*);
+    HRESULT put_EventsEnabled(VARIANT_BOOL);
+    HRESULT get_EventsEnabled(VARIANT_BOOL*);
     HRESULT put_PointerSpeed(uint);
     HRESULT get_PointerSpeed(uint*);
 }

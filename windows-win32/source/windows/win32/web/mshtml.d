@@ -1,7 +1,7 @@
 module windows.win32.web.mshtml;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, LRESULT, LUID, POINT, PSTR, PWSTR, RECT, SIZE, WPARAM;
+import windows.win32.foundation : BOOL, BSTR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, LRESULT, LUID, POINT, PSTR, PWSTR, RECT, SIZE, VARIANT_BOOL, WPARAM;
 import windows.win32.graphics.directdraw : IDirectDrawSurface;
 import windows.win32.graphics.dxgi.common : DXGI_FORMAT, DXGI_MODE_ROTATION;
 import windows.win32.graphics.gdi : HBITMAP, HDC, HRGN, LOGFONTW, RGBQUAD;
@@ -11262,13 +11262,13 @@ enum IID_IHTMLEventObj = GUID(0x3050f32d, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa
 interface IHTMLEventObj : IDispatch
 {
     HRESULT get_srcElement(IHTMLElement*);
-    HRESULT get_altKey(short*);
-    HRESULT get_ctrlKey(short*);
-    HRESULT get_shiftKey(short*);
+    HRESULT get_altKey(VARIANT_BOOL*);
+    HRESULT get_ctrlKey(VARIANT_BOOL*);
+    HRESULT get_shiftKey(VARIANT_BOOL*);
     HRESULT put_returnValue(VARIANT);
     HRESULT get_returnValue(VARIANT*);
-    HRESULT put_cancelBubble(short);
-    HRESULT get_cancelBubble(short*);
+    HRESULT put_cancelBubble(VARIANT_BOOL);
+    HRESULT get_cancelBubble(VARIANT_BOOL*);
     HRESULT get_fromElement(IHTMLElement*);
     HRESULT get_toElement(IHTMLElement*);
     HRESULT put_keyCode(int);
@@ -11332,21 +11332,21 @@ interface IElementBehaviorSiteRender : IUnknown
 enum IID_IDOMEvent = GUID(0x305104ba, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IDOMEvent : IDispatch
 {
-    HRESULT get_bubbles(short*);
-    HRESULT get_cancelable(short*);
+    HRESULT get_bubbles(VARIANT_BOOL*);
+    HRESULT get_cancelable(VARIANT_BOOL*);
     HRESULT get_currentTarget(IEventTarget*);
-    HRESULT get_defaultPrevented(short*);
+    HRESULT get_defaultPrevented(VARIANT_BOOL*);
     HRESULT get_eventPhase(ushort*);
     HRESULT get_target(IEventTarget*);
     HRESULT get_timeStamp(ulong*);
     HRESULT get_type(BSTR*);
-    HRESULT initEvent(BSTR, short, short);
+    HRESULT initEvent(BSTR, VARIANT_BOOL, VARIANT_BOOL);
     HRESULT preventDefault();
     HRESULT stopPropagation();
     HRESULT stopImmediatePropagation();
-    HRESULT get_isTrusted(short*);
-    HRESULT put_cancelBubble(short);
-    HRESULT get_cancelBubble(short*);
+    HRESULT get_isTrusted(VARIANT_BOOL*);
+    HRESULT put_cancelBubble(VARIANT_BOOL);
+    HRESULT get_cancelBubble(VARIANT_BOOL*);
     HRESULT get_srcElement(IHTMLElement*);
 }
 enum IID_IHTMLDOMConstructor = GUID(0x3051049b, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
@@ -11364,7 +11364,7 @@ interface IHTMLStyleSheetRule : IDispatch
     HRESULT put_selectorText(BSTR);
     HRESULT get_selectorText(BSTR*);
     HRESULT get_style(IHTMLRuleStyle*);
-    HRESULT get_readOnly(short*);
+    HRESULT get_readOnly(VARIANT_BOOL*);
 }
 enum IID_IHTMLCSSStyleDeclaration = GUID(0x30510740, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLCSSStyleDeclaration : IDispatch
@@ -12117,8 +12117,8 @@ interface IHTMLCSSStyleDeclaration4 : IDispatch
 enum IID_IHTMLStyleEnabled = GUID(0x305104c2, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLStyleEnabled : IDispatch
 {
-    HRESULT msGetPropertyEnabled(BSTR, short*);
-    HRESULT msPutPropertyEnabled(BSTR, short);
+    HRESULT msGetPropertyEnabled(BSTR, VARIANT_BOOL*);
+    HRESULT msPutPropertyEnabled(BSTR, VARIANT_BOOL);
 }
 enum IID_DispHTMLCSSStyleDeclaration = GUID(0x3059009a, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispHTMLCSSStyleDeclaration : IDispatch
@@ -12163,16 +12163,16 @@ interface IHTMLStyle : IDispatch
     HRESULT get_letterSpacing(VARIANT*);
     HRESULT put_textDecoration(BSTR);
     HRESULT get_textDecoration(BSTR*);
-    HRESULT put_textDecorationNone(short);
-    HRESULT get_textDecorationNone(short*);
-    HRESULT put_textDecorationUnderline(short);
-    HRESULT get_textDecorationUnderline(short*);
-    HRESULT put_textDecorationOverline(short);
-    HRESULT get_textDecorationOverline(short*);
-    HRESULT put_textDecorationLineThrough(short);
-    HRESULT get_textDecorationLineThrough(short*);
-    HRESULT put_textDecorationBlink(short);
-    HRESULT get_textDecorationBlink(short*);
+    HRESULT put_textDecorationNone(VARIANT_BOOL);
+    HRESULT get_textDecorationNone(VARIANT_BOOL*);
+    HRESULT put_textDecorationUnderline(VARIANT_BOOL);
+    HRESULT get_textDecorationUnderline(VARIANT_BOOL*);
+    HRESULT put_textDecorationOverline(VARIANT_BOOL);
+    HRESULT get_textDecorationOverline(VARIANT_BOOL*);
+    HRESULT put_textDecorationLineThrough(VARIANT_BOOL);
+    HRESULT get_textDecorationLineThrough(VARIANT_BOOL*);
+    HRESULT put_textDecorationBlink(VARIANT_BOOL);
+    HRESULT get_textDecorationBlink(VARIANT_BOOL*);
     HRESULT put_verticalAlign(VARIANT);
     HRESULT get_verticalAlign(VARIANT*);
     HRESULT put_textTransform(BSTR);
@@ -12304,7 +12304,7 @@ interface IHTMLStyle : IDispatch
     HRESULT get_filter(BSTR*);
     HRESULT setAttribute(BSTR, VARIANT, int);
     HRESULT getAttribute(BSTR, int, VARIANT*);
-    HRESULT removeAttribute(BSTR, int, short*);
+    HRESULT removeAttribute(BSTR, int, VARIANT_BOOL*);
     HRESULT toString(BSTR*);
 }
 enum IID_IHTMLStyle2 = GUID(0x3050f4a2, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
@@ -12320,7 +12320,7 @@ interface IHTMLStyle2 : IDispatch
     HRESULT get_behavior(BSTR*);
     HRESULT setExpression(BSTR, BSTR, BSTR);
     HRESULT getExpression(BSTR, VARIANT*);
-    HRESULT removeExpression(BSTR, short*);
+    HRESULT removeExpression(BSTR, VARIANT_BOOL*);
     HRESULT put_position(BSTR);
     HRESULT get_position(BSTR*);
     HRESULT put_unicodeBidi(BSTR);
@@ -12503,16 +12503,16 @@ interface IHTMLRuleStyle : IDispatch
     HRESULT get_letterSpacing(VARIANT*);
     HRESULT put_textDecoration(BSTR);
     HRESULT get_textDecoration(BSTR*);
-    HRESULT put_textDecorationNone(short);
-    HRESULT get_textDecorationNone(short*);
-    HRESULT put_textDecorationUnderline(short);
-    HRESULT get_textDecorationUnderline(short*);
-    HRESULT put_textDecorationOverline(short);
-    HRESULT get_textDecorationOverline(short*);
-    HRESULT put_textDecorationLineThrough(short);
-    HRESULT get_textDecorationLineThrough(short*);
-    HRESULT put_textDecorationBlink(short);
-    HRESULT get_textDecorationBlink(short*);
+    HRESULT put_textDecorationNone(VARIANT_BOOL);
+    HRESULT get_textDecorationNone(VARIANT_BOOL*);
+    HRESULT put_textDecorationUnderline(VARIANT_BOOL);
+    HRESULT get_textDecorationUnderline(VARIANT_BOOL*);
+    HRESULT put_textDecorationOverline(VARIANT_BOOL);
+    HRESULT get_textDecorationOverline(VARIANT_BOOL*);
+    HRESULT put_textDecorationLineThrough(VARIANT_BOOL);
+    HRESULT get_textDecorationLineThrough(VARIANT_BOOL*);
+    HRESULT put_textDecorationBlink(VARIANT_BOOL);
+    HRESULT get_textDecorationBlink(VARIANT_BOOL*);
     HRESULT put_verticalAlign(VARIANT);
     HRESULT get_verticalAlign(VARIANT*);
     HRESULT put_textTransform(BSTR);
@@ -12628,7 +12628,7 @@ interface IHTMLRuleStyle : IDispatch
     HRESULT get_filter(BSTR*);
     HRESULT setAttribute(BSTR, VARIANT, int);
     HRESULT getAttribute(BSTR, int, VARIANT*);
-    HRESULT removeAttribute(BSTR, int, short*);
+    HRESULT removeAttribute(BSTR, int, VARIANT_BOOL*);
 }
 enum IID_IHTMLRuleStyle2 = GUID(0x3050f4ac, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLRuleStyle2 : IDispatch
@@ -12805,9 +12805,9 @@ interface IHTMLStyleSheet : IDispatch
     HRESULT get_title(BSTR*);
     HRESULT get_parentStyleSheet(IHTMLStyleSheet*);
     HRESULT get_owningElement(IHTMLElement*);
-    HRESULT put_disabled(short);
-    HRESULT get_disabled(short*);
-    HRESULT get_readOnly(short*);
+    HRESULT put_disabled(VARIANT_BOOL);
+    HRESULT get_disabled(VARIANT_BOOL*);
+    HRESULT get_readOnly(VARIANT_BOOL*);
     HRESULT get_imports(IHTMLStyleSheetsCollection*);
     HRESULT put_href(BSTR);
     HRESULT get_href(BSTR*);
@@ -13037,7 +13037,7 @@ interface IHTMLCurrentStyle2 : IDispatch
     HRESULT get_layoutFlow(BSTR*);
     HRESULT get_wordWrap(BSTR*);
     HRESULT get_textUnderlinePosition(BSTR*);
-    HRESULT get_hasLayout(short*);
+    HRESULT get_hasLayout(VARIANT_BOOL*);
     HRESULT get_scrollbarBaseColor(VARIANT*);
     HRESULT get_scrollbarFaceColor(VARIANT*);
     HRESULT get_scrollbar3dLightColor(VARIANT*);
@@ -13051,7 +13051,7 @@ interface IHTMLCurrentStyle2 : IDispatch
     HRESULT get_filter(BSTR*);
     HRESULT get_textAlignLast(BSTR*);
     HRESULT get_textKashidaSpace(VARIANT*);
-    HRESULT get_isBlock(short*);
+    HRESULT get_isBlock(VARIANT_BOOL*);
 }
 enum IID_IHTMLCurrentStyle3 = GUID(0x3050f818, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLCurrentStyle3 : IDispatch
@@ -13095,7 +13095,7 @@ interface IHTMLElement : IDispatch
 {
     HRESULT setAttribute(BSTR, VARIANT, int);
     HRESULT getAttribute(BSTR, int, VARIANT*);
-    HRESULT removeAttribute(BSTR, int, short*);
+    HRESULT removeAttribute(BSTR, int, VARIANT_BOOL*);
     HRESULT put_className(BSTR);
     HRESULT get_className(BSTR*);
     HRESULT put_id(BSTR);
@@ -13133,7 +13133,7 @@ interface IHTMLElement : IDispatch
     HRESULT put_onselectstart(VARIANT);
     HRESULT get_onselectstart(VARIANT*);
     HRESULT scrollIntoView(VARIANT);
-    HRESULT contains(IHTMLElement, short*);
+    HRESULT contains(IHTMLElement, VARIANT_BOOL*);
     HRESULT get_sourceIndex(int*);
     HRESULT get_recordNumber(VARIANT*);
     HRESULT put_lang(BSTR);
@@ -13154,7 +13154,7 @@ interface IHTMLElement : IDispatch
     HRESULT insertAdjacentHTML(BSTR, BSTR);
     HRESULT insertAdjacentText(BSTR, BSTR);
     HRESULT get_parentTextEdit(IHTMLElement*);
-    HRESULT get_isTextEdit(short*);
+    HRESULT get_isTextEdit(VARIANT_BOOL*);
     HRESULT click();
     HRESULT get_filters(IHTMLFiltersCollection*);
     HRESULT put_ondragstart(VARIANT);
@@ -13220,7 +13220,7 @@ enum IID_IHTMLElement2 = GUID(0x3050f434, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa
 interface IHTMLElement2 : IDispatch
 {
     HRESULT get_scopeName(BSTR*);
-    HRESULT setCapture(short);
+    HRESULT setCapture(VARIANT_BOOL);
     HRESULT releaseCapture();
     HRESULT put_onlosecapture(VARIANT);
     HRESULT get_onlosecapture(VARIANT*);
@@ -13259,7 +13259,7 @@ interface IHTMLElement2 : IDispatch
     HRESULT getBoundingClientRect(IHTMLRect*);
     HRESULT setExpression(BSTR, BSTR, BSTR);
     HRESULT getExpression(BSTR, VARIANT*);
-    HRESULT removeExpression(BSTR, short*);
+    HRESULT removeExpression(BSTR, VARIANT_BOOL*);
     HRESULT put_tabIndex(short);
     HRESULT get_tabIndex(short*);
     HRESULT focus();
@@ -13278,7 +13278,7 @@ interface IHTMLElement2 : IDispatch
     HRESULT get_clientWidth(int*);
     HRESULT get_clientTop(int*);
     HRESULT get_clientLeft(int*);
-    HRESULT attachEvent(BSTR, IDispatch, short*);
+    HRESULT attachEvent(BSTR, IDispatch, VARIANT_BOOL*);
     HRESULT detachEvent(BSTR, IDispatch);
     HRESULT get_readyState(VARIANT*);
     HRESULT put_onreadystatechange(VARIANT);
@@ -13306,9 +13306,9 @@ interface IHTMLElement2 : IDispatch
     HRESULT applyElement(IHTMLElement, BSTR, IHTMLElement*);
     HRESULT getAdjacentText(BSTR, BSTR*);
     HRESULT replaceAdjacentText(BSTR, BSTR, BSTR*);
-    HRESULT get_canHaveChildren(short*);
+    HRESULT get_canHaveChildren(VARIANT_BOOL*);
     HRESULT addBehavior(BSTR, VARIANT*, int*);
-    HRESULT removeBehavior(int, short*);
+    HRESULT removeBehavior(int, VARIANT_BOOL*);
     HRESULT get_runtimeStyle(IHTMLStyle*);
     HRESULT get_behaviorUrns(IDispatch*);
     HRESULT put_tagUrn(BSTR);
@@ -13359,11 +13359,11 @@ interface IHTMLDocument7 : IDispatch
     HRESULT get_all(IHTMLElementCollection*);
     HRESULT get_inputEncoding(BSTR*);
     HRESULT get_xmlEncoding(BSTR*);
-    HRESULT put_xmlStandalone(short);
-    HRESULT get_xmlStandalone(short*);
+    HRESULT put_xmlStandalone(VARIANT_BOOL);
+    HRESULT get_xmlStandalone(VARIANT_BOOL*);
     HRESULT put_xmlVersion(BSTR);
     HRESULT get_xmlVersion(BSTR*);
-    HRESULT hasAttributes(short*);
+    HRESULT hasAttributes(VARIANT_BOOL*);
     HRESULT put_onabort(VARIANT);
     HRESULT get_onabort(VARIANT*);
     HRESULT put_onblur(VARIANT);
@@ -13439,7 +13439,7 @@ interface IHTMLDocument7 : IDispatch
     HRESULT put_onwaiting(VARIANT);
     HRESULT get_onwaiting(VARIANT*);
     HRESULT normalize();
-    HRESULT importNode(IHTMLDOMNode, short, IHTMLDOMNode3*);
+    HRESULT importNode(IHTMLDOMNode, VARIANT_BOOL, IHTMLDOMNode3*);
     HRESULT get_parentWindow(IHTMLWindow2*);
     HRESULT putref_body(IHTMLElement);
     HRESULT get_body(IHTMLElement*);
@@ -13450,14 +13450,14 @@ interface IHTMLDOMNode : IDispatch
 {
     HRESULT get_nodeType(int*);
     HRESULT get_parentNode(IHTMLDOMNode*);
-    HRESULT hasChildNodes(short*);
+    HRESULT hasChildNodes(VARIANT_BOOL*);
     HRESULT get_childNodes(IDispatch*);
     HRESULT get_attributes(IDispatch*);
     HRESULT insertBefore(IHTMLDOMNode, VARIANT, IHTMLDOMNode*);
     HRESULT removeChild(IHTMLDOMNode, IHTMLDOMNode*);
     HRESULT replaceChild(IHTMLDOMNode, IHTMLDOMNode, IHTMLDOMNode*);
-    HRESULT cloneNode(short, IHTMLDOMNode*);
-    HRESULT removeNode(short, IHTMLDOMNode*);
+    HRESULT cloneNode(VARIANT_BOOL, IHTMLDOMNode*);
+    HRESULT removeNode(VARIANT_BOOL, IHTMLDOMNode*);
     HRESULT swapNode(IHTMLDOMNode, IHTMLDOMNode*);
     HRESULT replaceNode(IHTMLDOMNode, IHTMLDOMNode*);
     HRESULT appendChild(IHTMLDOMNode, IHTMLDOMNode*);
@@ -13483,17 +13483,17 @@ interface IHTMLDOMNode3 : IDispatch
     HRESULT get_namespaceURI(VARIANT*);
     HRESULT put_textContent(VARIANT);
     HRESULT get_textContent(VARIANT*);
-    HRESULT isEqualNode(IHTMLDOMNode3, short*);
+    HRESULT isEqualNode(IHTMLDOMNode3, VARIANT_BOOL*);
     HRESULT lookupNamespaceURI(VARIANT*, VARIANT*);
     HRESULT lookupPrefix(VARIANT*, VARIANT*);
-    HRESULT isDefaultNamespace(VARIANT*, short*);
+    HRESULT isDefaultNamespace(VARIANT*, VARIANT_BOOL*);
     HRESULT appendChild(IHTMLDOMNode, IHTMLDOMNode*);
     HRESULT insertBefore(IHTMLDOMNode, VARIANT, IHTMLDOMNode*);
     HRESULT removeChild(IHTMLDOMNode, IHTMLDOMNode*);
     HRESULT replaceChild(IHTMLDOMNode, IHTMLDOMNode, IHTMLDOMNode*);
-    HRESULT isSameNode(IHTMLDOMNode3, short*);
+    HRESULT isSameNode(IHTMLDOMNode3, VARIANT_BOOL*);
     HRESULT compareDocumentPosition(IHTMLDOMNode, ushort*);
-    HRESULT isSupported(BSTR, VARIANT, short*);
+    HRESULT isSupported(BSTR, VARIANT, VARIANT_BOOL*);
 }
 enum IID_IHTMLDOMAttribute = GUID(0x3050f4b0, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLDOMAttribute : IDispatch
@@ -13501,7 +13501,7 @@ interface IHTMLDOMAttribute : IDispatch
     HRESULT get_nodeName(BSTR*);
     HRESULT put_nodeValue(VARIANT);
     HRESULT get_nodeValue(VARIANT*);
-    HRESULT get_specified(short*);
+    HRESULT get_specified(VARIANT_BOOL*);
 }
 enum IID_IHTMLDOMAttribute2 = GUID(0x3050f810, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLDOMAttribute2 : IDispatch
@@ -13509,7 +13509,7 @@ interface IHTMLDOMAttribute2 : IDispatch
     HRESULT get_name(BSTR*);
     HRESULT put_value(BSTR);
     HRESULT get_value(BSTR*);
-    HRESULT get_expando(short*);
+    HRESULT get_expando(VARIANT_BOOL*);
     HRESULT get_nodeType(int*);
     HRESULT get_parentNode(IHTMLDOMNode*);
     HRESULT get_childNodes(IDispatch*);
@@ -13523,8 +13523,8 @@ interface IHTMLDOMAttribute2 : IDispatch
     HRESULT replaceChild(IHTMLDOMNode, IHTMLDOMNode, IHTMLDOMNode*);
     HRESULT removeChild(IHTMLDOMNode, IHTMLDOMNode*);
     HRESULT appendChild(IHTMLDOMNode, IHTMLDOMNode*);
-    HRESULT hasChildNodes(short*);
-    HRESULT cloneNode(short, IHTMLDOMAttribute*);
+    HRESULT hasChildNodes(VARIANT_BOOL*);
+    HRESULT cloneNode(VARIANT_BOOL, IHTMLDOMAttribute*);
 }
 enum IID_IHTMLDOMAttribute3 = GUID(0x30510468, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLDOMAttribute3 : IDispatch
@@ -13533,7 +13533,7 @@ interface IHTMLDOMAttribute3 : IDispatch
     HRESULT get_nodeValue(VARIANT*);
     HRESULT put_value(BSTR);
     HRESULT get_value(BSTR*);
-    HRESULT get_specified(short*);
+    HRESULT get_specified(VARIANT_BOOL*);
     HRESULT get_ownerElement(IHTMLElement2*);
 }
 enum IID_IHTMLDOMAttribute4 = GUID(0x305106f9, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
@@ -13548,10 +13548,10 @@ interface IHTMLDOMAttribute4 : IDispatch
     HRESULT get_firstChild(IHTMLDOMNode*);
     HRESULT get_lastChild(IHTMLDOMNode*);
     HRESULT get_childNodes(IDispatch*);
-    HRESULT hasAttributes(short*);
-    HRESULT hasChildNodes(short*);
+    HRESULT hasAttributes(VARIANT_BOOL*);
+    HRESULT hasChildNodes(VARIANT_BOOL*);
     HRESULT normalize();
-    HRESULT get_specified(short*);
+    HRESULT get_specified(VARIANT_BOOL*);
 }
 enum IID_IHTMLDOMTextNode = GUID(0x3050f4b1, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLDOMTextNode : IDispatch
@@ -13581,13 +13581,13 @@ interface IHTMLDOMTextNode3 : IDispatch
     HRESULT splitText(int, IHTMLDOMNode*);
     HRESULT get_wholeText(BSTR*);
     HRESULT replaceWholeText(BSTR, IHTMLDOMNode*);
-    HRESULT hasAttributes(short*);
+    HRESULT hasAttributes(VARIANT_BOOL*);
     HRESULT normalize();
 }
 enum IID_IHTMLDOMImplementation = GUID(0x3050f80d, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLDOMImplementation : IDispatch
 {
-    HRESULT hasFeature(BSTR, VARIANT, short*);
+    HRESULT hasFeature(BSTR, VARIANT, VARIANT_BOOL*);
 }
 enum IID_IHTMLDOMImplementation2 = GUID(0x3051073c, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLDOMImplementation2 : IDispatch
@@ -13595,7 +13595,7 @@ interface IHTMLDOMImplementation2 : IDispatch
     HRESULT createDocumentType(BSTR, VARIANT*, VARIANT*, IDOMDocumentType*);
     HRESULT createDocument(VARIANT*, VARIANT*, IDOMDocumentType, IHTMLDocument7*);
     HRESULT createHTMLDocument(BSTR, IHTMLDocument7*);
-    HRESULT hasFeature(BSTR, VARIANT, short*);
+    HRESULT hasFeature(BSTR, VARIANT, VARIANT_BOOL*);
 }
 enum IID_DispHTMLDOMAttribute = GUID(0x3050f564, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispHTMLDOMAttribute : IDispatch
@@ -13691,30 +13691,30 @@ enum IID_IHTMLElement3 = GUID(0x3050f673, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa
 interface IHTMLElement3 : IDispatch
 {
     HRESULT mergeAttributes(IHTMLElement, VARIANT*);
-    HRESULT get_isMultiLine(short*);
-    HRESULT get_canHaveHTML(short*);
+    HRESULT get_isMultiLine(VARIANT_BOOL*);
+    HRESULT get_canHaveHTML(VARIANT_BOOL*);
     HRESULT put_onlayoutcomplete(VARIANT);
     HRESULT get_onlayoutcomplete(VARIANT*);
     HRESULT put_onpage(VARIANT);
     HRESULT get_onpage(VARIANT*);
-    HRESULT put_inflateBlock(short);
-    HRESULT get_inflateBlock(short*);
+    HRESULT put_inflateBlock(VARIANT_BOOL);
+    HRESULT get_inflateBlock(VARIANT_BOOL*);
     HRESULT put_onbeforedeactivate(VARIANT);
     HRESULT get_onbeforedeactivate(VARIANT*);
     HRESULT setActive();
     HRESULT put_contentEditable(BSTR);
     HRESULT get_contentEditable(BSTR*);
-    HRESULT get_isContentEditable(short*);
-    HRESULT put_hideFocus(short);
-    HRESULT get_hideFocus(short*);
-    HRESULT put_disabled(short);
-    HRESULT get_disabled(short*);
-    HRESULT get_isDisabled(short*);
+    HRESULT get_isContentEditable(VARIANT_BOOL*);
+    HRESULT put_hideFocus(VARIANT_BOOL);
+    HRESULT get_hideFocus(VARIANT_BOOL*);
+    HRESULT put_disabled(VARIANT_BOOL);
+    HRESULT get_disabled(VARIANT_BOOL*);
+    HRESULT get_isDisabled(VARIANT_BOOL*);
     HRESULT put_onmove(VARIANT);
     HRESULT get_onmove(VARIANT*);
     HRESULT put_oncontrolselect(VARIANT);
     HRESULT get_oncontrolselect(VARIANT*);
-    HRESULT fireEvent(BSTR, VARIANT*, short*);
+    HRESULT fireEvent(BSTR, VARIANT*, VARIANT_BOOL*);
     HRESULT put_onresizestart(VARIANT);
     HRESULT get_onresizestart(VARIANT*);
     HRESULT put_onresizeend(VARIANT);
@@ -13731,7 +13731,7 @@ interface IHTMLElement3 : IDispatch
     HRESULT get_onactivate(VARIANT*);
     HRESULT put_ondeactivate(VARIANT);
     HRESULT get_ondeactivate(VARIANT*);
-    HRESULT dragDrop(short*);
+    HRESULT dragDrop(VARIANT_BOOL*);
     HRESULT get_glyphMode(int*);
 }
 enum IID_IHTMLElement4 = GUID(0x3050f80f, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
@@ -13774,7 +13774,7 @@ interface IHTMLElement5 : IDispatch
     HRESULT getAttributeNode(BSTR, IHTMLDOMAttribute2*);
     HRESULT setAttributeNode(IHTMLDOMAttribute2, IHTMLDOMAttribute2*);
     HRESULT removeAttributeNode(IHTMLDOMAttribute2, IHTMLDOMAttribute2*);
-    HRESULT hasAttribute(BSTR, short*);
+    HRESULT hasAttribute(BSTR, VARIANT_BOOL*);
     HRESULT put_role(BSTR);
     HRESULT get_role(BSTR*);
     HRESULT put_ariaBusy(BSTR);
@@ -13805,7 +13805,7 @@ interface IHTMLElement5 : IDispatch
     HRESULT get_ariaSelected(BSTR*);
     HRESULT getAttribute(BSTR, VARIANT*);
     HRESULT setAttribute(BSTR, VARIANT);
-    HRESULT removeAttribute(BSTR, short*);
+    HRESULT removeAttribute(BSTR, VARIANT_BOOL*);
     HRESULT get_attributes(IHTMLAttributeCollection3*);
     HRESULT put_ariaValuenow(BSTR);
     HRESULT get_ariaValuenow(BSTR*);
@@ -13831,7 +13831,7 @@ interface IHTMLElement5 : IDispatch
     HRESULT get_ariaActivedescendant(BSTR*);
     HRESULT put_ariaOwns(BSTR);
     HRESULT get_ariaOwns(BSTR*);
-    HRESULT hasAttributes(short*);
+    HRESULT hasAttributes(VARIANT_BOOL*);
     HRESULT put_ariaLive(BSTR);
     HRESULT get_ariaLive(BSTR*);
     HRESULT put_ariaRelevant(BSTR);
@@ -13845,19 +13845,19 @@ interface IHTMLElement6 : IDispatch
     HRESULT removeAttributeNS(VARIANT*, BSTR);
     HRESULT getAttributeNodeNS(VARIANT*, BSTR, IHTMLDOMAttribute2*);
     HRESULT setAttributeNodeNS(IHTMLDOMAttribute2, IHTMLDOMAttribute2*);
-    HRESULT hasAttributeNS(VARIANT*, BSTR, short*);
+    HRESULT hasAttributeNS(VARIANT*, BSTR, VARIANT_BOOL*);
     HRESULT getAttribute(BSTR, VARIANT*);
     HRESULT setAttribute(BSTR, VARIANT*);
     HRESULT removeAttribute(BSTR);
     HRESULT getAttributeNode(BSTR, IHTMLDOMAttribute2*);
     HRESULT setAttributeNode(IHTMLDOMAttribute2, IHTMLDOMAttribute2*);
     HRESULT removeAttributeNode(IHTMLDOMAttribute2, IHTMLDOMAttribute2*);
-    HRESULT hasAttribute(BSTR, short*);
+    HRESULT hasAttribute(BSTR, VARIANT_BOOL*);
     HRESULT getElementsByTagNameNS(VARIANT*, BSTR, IHTMLElementCollection*);
     HRESULT get_tagName(BSTR*);
     HRESULT get_nodeName(BSTR*);
     HRESULT getElementsByClassName(BSTR, IHTMLElementCollection*);
-    HRESULT msMatchesSelector(BSTR, short*);
+    HRESULT msMatchesSelector(BSTR, VARIANT_BOOL*);
     HRESULT put_onabort(VARIANT);
     HRESULT get_onabort(VARIANT*);
     HRESULT put_oncanplay(VARIANT);
@@ -13914,7 +13914,7 @@ interface IHTMLElement6 : IDispatch
     HRESULT get_onvolumechange(VARIANT*);
     HRESULT put_onwaiting(VARIANT);
     HRESULT get_onwaiting(VARIANT*);
-    HRESULT hasAttributes(short*);
+    HRESULT hasAttributes(VARIANT_BOOL*);
 }
 enum IID_IHTMLElement7 = GUID(0x305107aa, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLElement7 : IDispatch
@@ -14008,26 +14008,26 @@ enum IID_IHTMLElementDefaults = GUID(0x3050f6c9, 0x98b5, 0x11cf, [0xbb, 0x82, 0x
 interface IHTMLElementDefaults : IDispatch
 {
     HRESULT get_style(IHTMLStyle*);
-    HRESULT put_tabStop(short);
-    HRESULT get_tabStop(short*);
-    HRESULT put_viewInheritStyle(short);
-    HRESULT get_viewInheritStyle(short*);
-    HRESULT put_viewMasterTab(short);
-    HRESULT get_viewMasterTab(short*);
+    HRESULT put_tabStop(VARIANT_BOOL);
+    HRESULT get_tabStop(VARIANT_BOOL*);
+    HRESULT put_viewInheritStyle(VARIANT_BOOL);
+    HRESULT get_viewInheritStyle(VARIANT_BOOL*);
+    HRESULT put_viewMasterTab(VARIANT_BOOL);
+    HRESULT get_viewMasterTab(VARIANT_BOOL*);
     HRESULT put_scrollSegmentX(int);
     HRESULT get_scrollSegmentX(int*);
     HRESULT put_scrollSegmentY(int);
     HRESULT get_scrollSegmentY(int*);
-    HRESULT put_isMultiLine(short);
-    HRESULT get_isMultiLine(short*);
+    HRESULT put_isMultiLine(VARIANT_BOOL);
+    HRESULT get_isMultiLine(VARIANT_BOOL*);
     HRESULT put_contentEditable(BSTR);
     HRESULT get_contentEditable(BSTR*);
-    HRESULT put_canHaveHTML(short);
-    HRESULT get_canHaveHTML(short*);
+    HRESULT put_canHaveHTML(VARIANT_BOOL);
+    HRESULT get_canHaveHTML(VARIANT_BOOL*);
     HRESULT putref_viewLink(IHTMLDocument);
     HRESULT get_viewLink(IHTMLDocument*);
-    HRESULT put_frozen(short);
-    HRESULT get_frozen(short*);
+    HRESULT put_frozen(VARIANT_BOOL);
+    HRESULT get_frozen(VARIANT_BOOL*);
 }
 enum IID_DispHTMLDefaults = GUID(0x3050f58c, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispHTMLDefaults : IDispatch
@@ -14189,8 +14189,8 @@ interface IHTMLStyleSheet3 : IDispatch
 {
     HRESULT put_href(BSTR);
     HRESULT get_href(BSTR*);
-    HRESULT get_isAlternate(short*);
-    HRESULT get_isPrefAlternate(short*);
+    HRESULT get_isAlternate(VARIANT_BOOL*);
+    HRESULT get_isPrefAlternate(VARIANT_BOOL*);
 }
 enum IID_IHTMLStyleSheet4 = GUID(0x305106f4, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLStyleSheet4 : IDispatch
@@ -14245,8 +14245,8 @@ interface IHTMLLinkElement : IDispatch
     HRESULT put_onerror(VARIANT);
     HRESULT get_onerror(VARIANT*);
     HRESULT get_styleSheet(IHTMLStyleSheet*);
-    HRESULT put_disabled(short);
-    HRESULT get_disabled(short*);
+    HRESULT put_disabled(VARIANT_BOOL);
+    HRESULT get_disabled(VARIANT_BOOL*);
     HRESULT put_media(BSTR);
     HRESULT get_media(BSTR*);
 }
@@ -14287,11 +14287,11 @@ interface IHTMLTxtRange : IDispatch
     HRESULT get_text(BSTR*);
     HRESULT parentElement(IHTMLElement*);
     HRESULT duplicate(IHTMLTxtRange*);
-    HRESULT inRange(IHTMLTxtRange, short*);
-    HRESULT isEqual(IHTMLTxtRange, short*);
-    HRESULT scrollIntoView(short);
-    HRESULT collapse(short);
-    HRESULT expand(BSTR, short*);
+    HRESULT inRange(IHTMLTxtRange, VARIANT_BOOL*);
+    HRESULT isEqual(IHTMLTxtRange, VARIANT_BOOL*);
+    HRESULT scrollIntoView(VARIANT_BOOL);
+    HRESULT collapse(VARIANT_BOOL);
+    HRESULT expand(BSTR, VARIANT_BOOL*);
     HRESULT move(BSTR, int, int*);
     HRESULT moveStart(BSTR, int, int*);
     HRESULT moveEnd(BSTR, int, int*);
@@ -14300,18 +14300,18 @@ interface IHTMLTxtRange : IDispatch
     HRESULT moveToElementText(IHTMLElement);
     HRESULT setEndPoint(BSTR, IHTMLTxtRange);
     HRESULT compareEndPoints(BSTR, IHTMLTxtRange, int*);
-    HRESULT findText(BSTR, int, int, short*);
+    HRESULT findText(BSTR, int, int, VARIANT_BOOL*);
     HRESULT moveToPoint(int, int);
     HRESULT getBookmark(BSTR*);
-    HRESULT moveToBookmark(BSTR, short*);
-    HRESULT queryCommandSupported(BSTR, short*);
-    HRESULT queryCommandEnabled(BSTR, short*);
-    HRESULT queryCommandState(BSTR, short*);
-    HRESULT queryCommandIndeterm(BSTR, short*);
+    HRESULT moveToBookmark(BSTR, VARIANT_BOOL*);
+    HRESULT queryCommandSupported(BSTR, VARIANT_BOOL*);
+    HRESULT queryCommandEnabled(BSTR, VARIANT_BOOL*);
+    HRESULT queryCommandState(BSTR, VARIANT_BOOL*);
+    HRESULT queryCommandIndeterm(BSTR, VARIANT_BOOL*);
     HRESULT queryCommandText(BSTR, BSTR*);
     HRESULT queryCommandValue(BSTR, VARIANT*);
-    HRESULT execCommand(BSTR, short, VARIANT, short*);
-    HRESULT execCommandShowHelp(BSTR, short*);
+    HRESULT execCommand(BSTR, VARIANT_BOOL, VARIANT, VARIANT_BOOL*);
+    HRESULT execCommandShowHelp(BSTR, VARIANT_BOOL*);
 }
 enum IID_IHTMLTextRangeMetrics = GUID(0x3050f40b, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLTextRangeMetrics : IDispatch
@@ -14343,7 +14343,7 @@ interface IHTMLDOMRange : IDispatch
     HRESULT get_startOffset(int*);
     HRESULT get_endContainer(IHTMLDOMNode*);
     HRESULT get_endOffset(int*);
-    HRESULT get_collapsed(short*);
+    HRESULT get_collapsed(VARIANT_BOOL*);
     HRESULT get_commonAncestorContainer(IHTMLDOMNode*);
     HRESULT setStart(IDispatch, int);
     HRESULT setEnd(IDispatch, int);
@@ -14351,7 +14351,7 @@ interface IHTMLDOMRange : IDispatch
     HRESULT setStartAfter(IDispatch);
     HRESULT setEndBefore(IDispatch);
     HRESULT setEndAfter(IDispatch);
-    HRESULT collapse(short);
+    HRESULT collapse(VARIANT_BOOL);
     HRESULT selectNode(IDispatch);
     HRESULT selectNodeContents(IDispatch);
     HRESULT compareBoundaryPoints(short, IDispatch, int*);
@@ -14502,14 +14502,14 @@ interface IHTMLControlRange : IDispatch
     HRESULT remove(int);
     HRESULT item(int, IHTMLElement*);
     HRESULT scrollIntoView(VARIANT);
-    HRESULT queryCommandSupported(BSTR, short*);
-    HRESULT queryCommandEnabled(BSTR, short*);
-    HRESULT queryCommandState(BSTR, short*);
-    HRESULT queryCommandIndeterm(BSTR, short*);
+    HRESULT queryCommandSupported(BSTR, VARIANT_BOOL*);
+    HRESULT queryCommandEnabled(BSTR, VARIANT_BOOL*);
+    HRESULT queryCommandState(BSTR, VARIANT_BOOL*);
+    HRESULT queryCommandIndeterm(BSTR, VARIANT_BOOL*);
     HRESULT queryCommandText(BSTR, BSTR*);
     HRESULT queryCommandValue(BSTR, VARIANT*);
-    HRESULT execCommand(BSTR, short, VARIANT, short*);
-    HRESULT execCommandShowHelp(BSTR, short*);
+    HRESULT execCommand(BSTR, VARIANT_BOOL, VARIANT, VARIANT_BOOL*);
+    HRESULT execCommandShowHelp(BSTR, VARIANT_BOOL*);
     HRESULT commonParentElement(IHTMLElement*);
     HRESULT get_length(int*);
 }
@@ -14529,8 +14529,8 @@ interface HTMLImgEvents : IDispatch
 enum IID_IHTMLImgElement = GUID(0x3050f240, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLImgElement : IDispatch
 {
-    HRESULT put_isMap(short);
-    HRESULT get_isMap(short*);
+    HRESULT put_isMap(VARIANT_BOOL);
+    HRESULT get_isMap(VARIANT_BOOL*);
     HRESULT put_useMap(BSTR);
     HRESULT get_useMap(BSTR*);
     HRESULT get_mimeType(BSTR*);
@@ -14558,7 +14558,7 @@ interface IHTMLImgElement : IDispatch
     HRESULT put_dynsrc(BSTR);
     HRESULT get_dynsrc(BSTR*);
     HRESULT get_readyState(BSTR*);
-    HRESULT get_complete(short*);
+    HRESULT get_complete(VARIANT_BOOL*);
     HRESULT put_loop(VARIANT);
     HRESULT get_loop(VARIANT*);
     HRESULT put_align(BSTR);
@@ -14605,10 +14605,10 @@ interface IHTMLImgElement4 : IDispatch
 enum IID_IHTMLMSImgElement = GUID(0x30510793, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLMSImgElement : IDispatch
 {
-    HRESULT put_msPlayToDisabled(short);
-    HRESULT get_msPlayToDisabled(short*);
-    HRESULT put_msPlayToPrimary(short);
-    HRESULT get_msPlayToPrimary(short*);
+    HRESULT put_msPlayToDisabled(VARIANT_BOOL);
+    HRESULT get_msPlayToDisabled(VARIANT_BOOL*);
+    HRESULT put_msPlayToPrimary(VARIANT_BOOL);
+    HRESULT get_msPlayToPrimary(VARIANT_BOOL*);
 }
 enum IID_IHTMLImageElementFactory = GUID(0x3050f38e, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLImageElementFactory : IDispatch
@@ -14634,8 +14634,8 @@ interface IHTMLBodyElement : IDispatch
     HRESULT get_rightMargin(VARIANT*);
     HRESULT put_bottomMargin(VARIANT);
     HRESULT get_bottomMargin(VARIANT*);
-    HRESULT put_noWrap(short);
-    HRESULT get_noWrap(short*);
+    HRESULT put_noWrap(VARIANT_BOOL);
+    HRESULT get_noWrap(VARIANT_BOOL*);
     HRESULT put_bgColor(VARIANT);
     HRESULT get_bgColor(VARIANT*);
     HRESULT put_text(VARIANT);
@@ -14823,8 +14823,8 @@ interface IHTMLListElement : IDispatch
 enum IID_IHTMLListElement2 = GUID(0x3050f822, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLListElement2 : IDispatch
 {
-    HRESULT put_compact(short);
-    HRESULT get_compact(short*);
+    HRESULT put_compact(VARIANT_BOOL);
+    HRESULT get_compact(VARIANT_BOOL*);
 }
 enum IID_DispHTMLListElement = GUID(0x3050f525, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispHTMLListElement : IDispatch
@@ -14833,8 +14833,8 @@ interface DispHTMLListElement : IDispatch
 enum IID_IHTMLUListElement = GUID(0x3050f1dd, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLUListElement : IDispatch
 {
-    HRESULT put_compact(short);
-    HRESULT get_compact(short*);
+    HRESULT put_compact(VARIANT_BOOL);
+    HRESULT get_compact(VARIANT_BOOL*);
     HRESULT put_type(BSTR);
     HRESULT get_type(BSTR*);
 }
@@ -14845,8 +14845,8 @@ interface DispHTMLUListElement : IDispatch
 enum IID_IHTMLOListElement = GUID(0x3050f1de, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLOListElement : IDispatch
 {
-    HRESULT put_compact(short);
-    HRESULT get_compact(short*);
+    HRESULT put_compact(VARIANT_BOOL);
+    HRESULT get_compact(VARIANT_BOOL*);
     HRESULT put_start(int);
     HRESULT get_start(int*);
     HRESULT put_type(BSTR);
@@ -14897,8 +14897,8 @@ interface IHTMLDivElement : IDispatch
 {
     HRESULT put_align(BSTR);
     HRESULT get_align(BSTR*);
-    HRESULT put_noWrap(short);
-    HRESULT get_noWrap(short*);
+    HRESULT put_noWrap(VARIANT_BOOL);
+    HRESULT get_noWrap(VARIANT_BOOL*);
 }
 enum IID_DispHTMLDivElement = GUID(0x3050f50c, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispHTMLDivElement : IDispatch
@@ -14907,8 +14907,8 @@ interface DispHTMLDivElement : IDispatch
 enum IID_IHTMLDDElement = GUID(0x3050f1f2, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLDDElement : IDispatch
 {
-    HRESULT put_noWrap(short);
-    HRESULT get_noWrap(short*);
+    HRESULT put_noWrap(VARIANT_BOOL);
+    HRESULT get_noWrap(VARIANT_BOOL*);
 }
 enum IID_DispHTMLDDElement = GUID(0x3050f50b, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispHTMLDDElement : IDispatch
@@ -14917,8 +14917,8 @@ interface DispHTMLDDElement : IDispatch
 enum IID_IHTMLDTElement = GUID(0x3050f1f3, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLDTElement : IDispatch
 {
-    HRESULT put_noWrap(short);
-    HRESULT get_noWrap(short*);
+    HRESULT put_noWrap(VARIANT_BOOL);
+    HRESULT get_noWrap(VARIANT_BOOL*);
 }
 enum IID_DispHTMLDTElement = GUID(0x3050f50d, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispHTMLDTElement : IDispatch
@@ -14937,8 +14937,8 @@ interface DispHTMLBRElement : IDispatch
 enum IID_IHTMLDListElement = GUID(0x3050f1f1, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLDListElement : IDispatch
 {
-    HRESULT put_compact(short);
-    HRESULT get_compact(short*);
+    HRESULT put_compact(VARIANT_BOOL);
+    HRESULT get_compact(VARIANT_BOOL*);
 }
 enum IID_DispHTMLDListElement = GUID(0x3050f53b, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispHTMLDListElement : IDispatch
@@ -14951,8 +14951,8 @@ interface IHTMLHRElement : IDispatch
     HRESULT get_align(BSTR*);
     HRESULT put_color(VARIANT);
     HRESULT get_color(VARIANT*);
-    HRESULT put_noShade(short);
-    HRESULT get_noShade(short*);
+    HRESULT put_noShade(VARIANT_BOOL);
+    HRESULT get_noShade(VARIANT_BOOL*);
     HRESULT put_width(VARIANT);
     HRESULT get_width(VARIANT*);
     HRESULT put_size(VARIANT);
@@ -15014,12 +15014,12 @@ interface HTMLSelectElementEvents : IDispatch
 enum IID_IHTMLOptionElement = GUID(0x3050f211, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLOptionElement : IDispatch
 {
-    HRESULT put_selected(short);
-    HRESULT get_selected(short*);
+    HRESULT put_selected(VARIANT_BOOL);
+    HRESULT get_selected(VARIANT_BOOL*);
     HRESULT put_value(BSTR);
     HRESULT get_value(BSTR*);
-    HRESULT put_defaultSelected(short);
-    HRESULT get_defaultSelected(short*);
+    HRESULT put_defaultSelected(VARIANT_BOOL);
+    HRESULT get_defaultSelected(VARIANT_BOOL*);
     HRESULT put_index(int);
     HRESULT get_index(int*);
     HRESULT put_text(BSTR);
@@ -15039,8 +15039,8 @@ interface IHTMLSelectElement : IDispatch
 {
     HRESULT put_size(int);
     HRESULT get_size(int*);
-    HRESULT put_multiple(short);
-    HRESULT get_multiple(short*);
+    HRESULT put_multiple(VARIANT_BOOL);
+    HRESULT get_multiple(VARIANT_BOOL*);
     HRESULT put_name(BSTR);
     HRESULT get_name(BSTR*);
     HRESULT get_options(IDispatch*);
@@ -15051,8 +15051,8 @@ interface IHTMLSelectElement : IDispatch
     HRESULT get_type(BSTR*);
     HRESULT put_value(BSTR);
     HRESULT get_value(BSTR*);
-    HRESULT put_disabled(short);
-    HRESULT get_disabled(short*);
+    HRESULT put_disabled(VARIANT_BOOL);
+    HRESULT get_disabled(VARIANT_BOOL*);
     HRESULT get_form(IHTMLFormElement*);
     HRESULT add(IHTMLElement, VARIANT);
     HRESULT remove(int);
@@ -15113,7 +15113,7 @@ interface IHTMLSelection : IDispatch
     HRESULT get_anchorOffset(int*);
     HRESULT get_focusNode(IHTMLDOMNode*);
     HRESULT get_focusOffset(int*);
-    HRESULT get_isCollapsed(short*);
+    HRESULT get_isCollapsed(VARIANT_BOOL*);
     HRESULT collapse(IDispatch, int);
     HRESULT collapseToStart();
     HRESULT collapseToEnd();
@@ -15200,10 +15200,10 @@ interface IHTMLInputElement : IDispatch
     HRESULT get_value(BSTR*);
     HRESULT put_name(BSTR);
     HRESULT get_name(BSTR*);
-    HRESULT put_status(short);
-    HRESULT get_status(short*);
-    HRESULT put_disabled(short);
-    HRESULT get_disabled(short*);
+    HRESULT put_status(VARIANT_BOOL);
+    HRESULT get_status(VARIANT_BOOL*);
+    HRESULT put_disabled(VARIANT_BOOL);
+    HRESULT get_disabled(VARIANT_BOOL*);
     HRESULT get_form(IHTMLFormElement*);
     HRESULT put_size(int);
     HRESULT get_size(int*);
@@ -15216,15 +15216,15 @@ interface IHTMLInputElement : IDispatch
     HRESULT get_onselect(VARIANT*);
     HRESULT put_defaultValue(BSTR);
     HRESULT get_defaultValue(BSTR*);
-    HRESULT put_readOnly(short);
-    HRESULT get_readOnly(short*);
+    HRESULT put_readOnly(VARIANT_BOOL);
+    HRESULT get_readOnly(VARIANT_BOOL*);
     HRESULT createTextRange(IHTMLTxtRange*);
-    HRESULT put_indeterminate(short);
-    HRESULT get_indeterminate(short*);
-    HRESULT put_defaultChecked(short);
-    HRESULT get_defaultChecked(short*);
-    HRESULT put_checked(short);
-    HRESULT get_checked(short*);
+    HRESULT put_indeterminate(VARIANT_BOOL);
+    HRESULT get_indeterminate(VARIANT_BOOL*);
+    HRESULT put_defaultChecked(VARIANT_BOOL);
+    HRESULT get_defaultChecked(VARIANT_BOOL*);
+    HRESULT put_checked(VARIANT_BOOL);
+    HRESULT get_checked(VARIANT_BOOL*);
     HRESULT put_border(VARIANT);
     HRESULT get_border(VARIANT*);
     HRESULT put_vspace(int);
@@ -15242,7 +15242,7 @@ interface IHTMLInputElement : IDispatch
     HRESULT put_dynsrc(BSTR);
     HRESULT get_dynsrc(BSTR*);
     HRESULT get_readyState(BSTR*);
-    HRESULT get_complete(short*);
+    HRESULT get_complete(VARIANT_BOOL*);
     HRESULT put_loop(VARIANT);
     HRESULT get_loop(VARIANT*);
     HRESULT put_align(BSTR);
@@ -15290,8 +15290,8 @@ interface IHTMLInputButtonElement : IDispatch
     HRESULT get_name(BSTR*);
     HRESULT put_status(VARIANT);
     HRESULT get_status(VARIANT*);
-    HRESULT put_disabled(short);
-    HRESULT get_disabled(short*);
+    HRESULT put_disabled(VARIANT_BOOL);
+    HRESULT get_disabled(VARIANT_BOOL*);
     HRESULT get_form(IHTMLFormElement*);
     HRESULT createTextRange(IHTMLTxtRange*);
 }
@@ -15305,8 +15305,8 @@ interface IHTMLInputHiddenElement : IDispatch
     HRESULT get_name(BSTR*);
     HRESULT put_status(VARIANT);
     HRESULT get_status(VARIANT*);
-    HRESULT put_disabled(short);
-    HRESULT get_disabled(short*);
+    HRESULT put_disabled(VARIANT_BOOL);
+    HRESULT get_disabled(VARIANT_BOOL*);
     HRESULT get_form(IHTMLFormElement*);
     HRESULT createTextRange(IHTMLTxtRange*);
 }
@@ -15320,8 +15320,8 @@ interface IHTMLInputTextElement : IDispatch
     HRESULT get_name(BSTR*);
     HRESULT put_status(VARIANT);
     HRESULT get_status(VARIANT*);
-    HRESULT put_disabled(short);
-    HRESULT get_disabled(short*);
+    HRESULT put_disabled(VARIANT_BOOL);
+    HRESULT get_disabled(VARIANT_BOOL*);
     HRESULT get_form(IHTMLFormElement*);
     HRESULT put_defaultValue(BSTR);
     HRESULT get_defaultValue(BSTR*);
@@ -15334,8 +15334,8 @@ interface IHTMLInputTextElement : IDispatch
     HRESULT get_onchange(VARIANT*);
     HRESULT put_onselect(VARIANT);
     HRESULT get_onselect(VARIANT*);
-    HRESULT put_readOnly(short);
-    HRESULT get_readOnly(short*);
+    HRESULT put_readOnly(VARIANT_BOOL);
+    HRESULT get_readOnly(VARIANT_BOOL*);
     HRESULT createTextRange(IHTMLTxtRange*);
 }
 enum IID_IHTMLInputTextElement2 = GUID(0x3050f2d2, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
@@ -15355,8 +15355,8 @@ interface IHTMLInputFileElement : IDispatch
     HRESULT get_name(BSTR*);
     HRESULT put_status(VARIANT);
     HRESULT get_status(VARIANT*);
-    HRESULT put_disabled(short);
-    HRESULT get_disabled(short*);
+    HRESULT put_disabled(VARIANT_BOOL);
+    HRESULT get_disabled(VARIANT_BOOL*);
     HRESULT get_form(IHTMLFormElement*);
     HRESULT put_size(int);
     HRESULT get_size(int*);
@@ -15378,26 +15378,26 @@ interface IHTMLOptionButtonElement : IDispatch
     HRESULT get_type(BSTR*);
     HRESULT put_name(BSTR);
     HRESULT get_name(BSTR*);
-    HRESULT put_checked(short);
-    HRESULT get_checked(short*);
-    HRESULT put_defaultChecked(short);
-    HRESULT get_defaultChecked(short*);
+    HRESULT put_checked(VARIANT_BOOL);
+    HRESULT get_checked(VARIANT_BOOL*);
+    HRESULT put_defaultChecked(VARIANT_BOOL);
+    HRESULT get_defaultChecked(VARIANT_BOOL*);
     HRESULT put_onchange(VARIANT);
     HRESULT get_onchange(VARIANT*);
-    HRESULT put_disabled(short);
-    HRESULT get_disabled(short*);
-    HRESULT put_status(short);
-    HRESULT get_status(short*);
-    HRESULT put_indeterminate(short);
-    HRESULT get_indeterminate(short*);
+    HRESULT put_disabled(VARIANT_BOOL);
+    HRESULT get_disabled(VARIANT_BOOL*);
+    HRESULT put_status(VARIANT_BOOL);
+    HRESULT get_status(VARIANT_BOOL*);
+    HRESULT put_indeterminate(VARIANT_BOOL);
+    HRESULT get_indeterminate(VARIANT_BOOL*);
     HRESULT get_form(IHTMLFormElement*);
 }
 enum IID_IHTMLInputImage = GUID(0x3050f2c2, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLInputImage : IDispatch
 {
     HRESULT get_type(BSTR*);
-    HRESULT put_disabled(short);
-    HRESULT get_disabled(short*);
+    HRESULT put_disabled(VARIANT_BOOL);
+    HRESULT get_disabled(VARIANT_BOOL*);
     HRESULT put_border(VARIANT);
     HRESULT get_border(VARIANT*);
     HRESULT put_vspace(int);
@@ -15415,7 +15415,7 @@ interface IHTMLInputImage : IDispatch
     HRESULT put_dynsrc(BSTR);
     HRESULT get_dynsrc(BSTR*);
     HRESULT get_readyState(BSTR*);
-    HRESULT get_complete(short*);
+    HRESULT get_complete(VARIANT_BOOL*);
     HRESULT put_loop(VARIANT);
     HRESULT get_loop(VARIANT*);
     HRESULT put_align(BSTR);
@@ -15438,8 +15438,8 @@ interface IHTMLInputImage : IDispatch
 enum IID_IHTMLInputRangeElement = GUID(0x3050f2d4, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLInputRangeElement : IDispatch
 {
-    HRESULT put_disabled(short);
-    HRESULT get_disabled(short*);
+    HRESULT put_disabled(VARIANT_BOOL);
+    HRESULT get_disabled(VARIANT_BOOL*);
     HRESULT get_type(BSTR*);
     HRESULT put_alt(BSTR);
     HRESULT get_alt(BSTR*);
@@ -15472,8 +15472,8 @@ interface IHTMLTextAreaElement : IDispatch
     HRESULT get_name(BSTR*);
     HRESULT put_status(VARIANT);
     HRESULT get_status(VARIANT*);
-    HRESULT put_disabled(short);
-    HRESULT get_disabled(short*);
+    HRESULT put_disabled(VARIANT_BOOL);
+    HRESULT get_disabled(VARIANT_BOOL*);
     HRESULT get_form(IHTMLFormElement*);
     HRESULT put_defaultValue(BSTR);
     HRESULT get_defaultValue(BSTR*);
@@ -15482,8 +15482,8 @@ interface IHTMLTextAreaElement : IDispatch
     HRESULT get_onchange(VARIANT*);
     HRESULT put_onselect(VARIANT);
     HRESULT get_onselect(VARIANT*);
-    HRESULT put_readOnly(short);
-    HRESULT get_readOnly(short*);
+    HRESULT put_readOnly(VARIANT_BOOL);
+    HRESULT get_readOnly(VARIANT_BOOL*);
     HRESULT put_rows(int);
     HRESULT get_rows(int*);
     HRESULT put_cols(int);
@@ -15519,8 +15519,8 @@ interface IHTMLButtonElement : IDispatch
     HRESULT get_name(BSTR*);
     HRESULT put_status(VARIANT);
     HRESULT get_status(VARIANT*);
-    HRESULT put_disabled(short);
-    HRESULT get_disabled(short*);
+    HRESULT put_disabled(VARIANT_BOOL);
+    HRESULT get_disabled(VARIANT_BOOL*);
     HRESULT get_form(IHTMLFormElement*);
     HRESULT createTextRange(IHTMLTxtRange*);
 }
@@ -15571,8 +15571,8 @@ interface IHTMLMarqueeElement : IDispatch
     HRESULT get_width(VARIANT*);
     HRESULT put_height(VARIANT);
     HRESULT get_height(VARIANT*);
-    HRESULT put_trueSpeed(short);
-    HRESULT get_trueSpeed(short*);
+    HRESULT put_trueSpeed(VARIANT_BOOL);
+    HRESULT get_trueSpeed(VARIANT_BOOL*);
     HRESULT start();
     HRESULT stop();
 }
@@ -15729,7 +15729,7 @@ enum IID_IHTMLPluginsCollection = GUID(0x3050f3fd, 0x98b5, 0x11cf, [0xbb, 0x82, 
 interface IHTMLPluginsCollection : IDispatch
 {
     HRESULT get_length(int*);
-    HRESULT refresh(short);
+    HRESULT refresh(VARIANT_BOOL);
 }
 enum IID_IOmHistory = GUID(0xfeceaaa2, 0x8405, 0x11cf, [0x8b, 0xa1, 0x0, 0xaa, 0x0, 0x47, 0x6d, 0xa6]);
 interface IOmHistory : IDispatch
@@ -15742,15 +15742,15 @@ interface IOmHistory : IDispatch
 enum IID_IHTMLOpsProfile = GUID(0x3050f401, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLOpsProfile : IDispatch
 {
-    HRESULT addRequest(BSTR, VARIANT, short*);
+    HRESULT addRequest(BSTR, VARIANT, VARIANT_BOOL*);
     HRESULT clearRequest();
     HRESULT doRequest(VARIANT, VARIANT, VARIANT, VARIANT, VARIANT, VARIANT);
     HRESULT getAttribute(BSTR, BSTR*);
-    HRESULT setAttribute(BSTR, BSTR, VARIANT, short*);
-    HRESULT commitChanges(short*);
-    HRESULT addReadRequest(BSTR, VARIANT, short*);
+    HRESULT setAttribute(BSTR, BSTR, VARIANT, VARIANT_BOOL*);
+    HRESULT commitChanges(VARIANT_BOOL*);
+    HRESULT addReadRequest(BSTR, VARIANT, VARIANT_BOOL*);
     HRESULT doReadRequest(VARIANT, VARIANT, VARIANT, VARIANT, VARIANT, VARIANT);
-    HRESULT doWriteRequest(short*);
+    HRESULT doWriteRequest(VARIANT_BOOL*);
 }
 enum IID_IOmNavigator = GUID(0xfeceaaa5, 0x8405, 0x11cf, [0x8b, 0xa1, 0x0, 0xaa, 0x0, 0x47, 0x6d, 0xa6]);
 interface IOmNavigator : IDispatch
@@ -15759,11 +15759,11 @@ interface IOmNavigator : IDispatch
     HRESULT get_appName(BSTR*);
     HRESULT get_appVersion(BSTR*);
     HRESULT get_userAgent(BSTR*);
-    HRESULT javaEnabled(short*);
-    HRESULT taintEnabled(short*);
+    HRESULT javaEnabled(VARIANT_BOOL*);
+    HRESULT taintEnabled(VARIANT_BOOL*);
     HRESULT get_mimeTypes(IHTMLMimeTypesCollection*);
     HRESULT get_plugins(IHTMLPluginsCollection*);
-    HRESULT get_cookieEnabled(short*);
+    HRESULT get_cookieEnabled(VARIANT_BOOL*);
     HRESULT get_opsProfile(IHTMLOpsProfile*);
     HRESULT toString(BSTR*);
     HRESULT get_cpuClass(BSTR*);
@@ -15773,7 +15773,7 @@ interface IOmNavigator : IDispatch
     HRESULT get_platform(BSTR*);
     HRESULT get_appMinorVersion(BSTR*);
     HRESULT get_connectionSpeed(int*);
-    HRESULT get_onLine(short*);
+    HRESULT get_onLine(VARIANT_BOOL*);
     HRESULT get_userProfile(IHTMLOpsProfile*);
 }
 enum IID_INavigatorGeolocation = GUID(0x305107cf, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
@@ -15805,7 +15805,7 @@ interface IHTMLLocation : IDispatch
     HRESULT get_search(BSTR*);
     HRESULT put_hash(BSTR);
     HRESULT get_hash(BSTR*);
-    HRESULT reload(short);
+    HRESULT reload(VARIANT_BOOL);
     HRESULT replace(BSTR);
     HRESULT assign(BSTR);
     HRESULT toString(BSTR*);
@@ -15836,9 +15836,9 @@ interface IHTMLBookmarkCollection : IDispatch
 enum IID_IHTMLDataTransfer = GUID(0x3050f4b3, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLDataTransfer : IDispatch
 {
-    HRESULT setData(BSTR, VARIANT*, short*);
+    HRESULT setData(BSTR, VARIANT*, VARIANT_BOOL*);
     HRESULT getData(BSTR, VARIANT*);
-    HRESULT clearData(BSTR, short*);
+    HRESULT clearData(BSTR, VARIANT_BOOL*);
     HRESULT put_dropEffect(BSTR);
     HRESULT get_dropEffect(BSTR*);
     HRESULT put_effectAllowed(BSTR);
@@ -15849,7 +15849,7 @@ interface IHTMLEventObj2 : IDispatch
 {
     HRESULT setAttribute(BSTR, VARIANT, int);
     HRESULT getAttribute(BSTR, int, VARIANT*);
-    HRESULT removeAttribute(BSTR, int, short*);
+    HRESULT removeAttribute(BSTR, int, VARIANT_BOOL*);
     HRESULT put_propertyName(BSTR);
     HRESULT get_propertyName(BSTR*);
     HRESULT putref_bookmarks(IHTMLBookmarkCollection);
@@ -15860,18 +15860,18 @@ interface IHTMLEventObj2 : IDispatch
     HRESULT get_dataFld(BSTR*);
     HRESULT putref_boundElements(IHTMLElementCollection);
     HRESULT get_boundElements(IHTMLElementCollection*);
-    HRESULT put_repeat(short);
-    HRESULT get_repeat(short*);
+    HRESULT put_repeat(VARIANT_BOOL);
+    HRESULT get_repeat(VARIANT_BOOL*);
     HRESULT put_srcUrn(BSTR);
     HRESULT get_srcUrn(BSTR*);
     HRESULT putref_srcElement(IHTMLElement);
     HRESULT get_srcElement(IHTMLElement*);
-    HRESULT put_altKey(short);
-    HRESULT get_altKey(short*);
-    HRESULT put_ctrlKey(short);
-    HRESULT get_ctrlKey(short*);
-    HRESULT put_shiftKey(short);
-    HRESULT get_shiftKey(short*);
+    HRESULT put_altKey(VARIANT_BOOL);
+    HRESULT get_altKey(VARIANT_BOOL*);
+    HRESULT put_ctrlKey(VARIANT_BOOL);
+    HRESULT get_ctrlKey(VARIANT_BOOL*);
+    HRESULT put_shiftKey(VARIANT_BOOL);
+    HRESULT get_shiftKey(VARIANT_BOOL*);
     HRESULT putref_fromElement(IHTMLElement);
     HRESULT get_fromElement(IHTMLElement*);
     HRESULT putref_toElement(IHTMLElement);
@@ -15907,13 +15907,13 @@ interface IHTMLEventObj2 : IDispatch
 enum IID_IHTMLEventObj3 = GUID(0x3050f680, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLEventObj3 : IDispatch
 {
-    HRESULT get_contentOverflow(short*);
-    HRESULT put_shiftLeft(short);
-    HRESULT get_shiftLeft(short*);
-    HRESULT put_altLeft(short);
-    HRESULT get_altLeft(short*);
-    HRESULT put_ctrlLeft(short);
-    HRESULT get_ctrlLeft(short*);
+    HRESULT get_contentOverflow(VARIANT_BOOL*);
+    HRESULT put_shiftLeft(VARIANT_BOOL);
+    HRESULT get_shiftLeft(VARIANT_BOOL*);
+    HRESULT put_altLeft(VARIANT_BOOL);
+    HRESULT get_altLeft(VARIANT_BOOL*);
+    HRESULT put_ctrlLeft(VARIANT_BOOL);
+    HRESULT get_ctrlLeft(VARIANT_BOOL*);
     HRESULT get_imeCompositionChange(long*);
     HRESULT get_imeNotifyCommand(long*);
     HRESULT get_imeNotifyData(long*);
@@ -15939,8 +15939,8 @@ interface IHTMLEventObj5 : IDispatch
     HRESULT get_source(IDispatch*);
     HRESULT put_origin(BSTR);
     HRESULT get_origin(BSTR*);
-    HRESULT put_issession(short);
-    HRESULT get_issession(short*);
+    HRESULT put_issession(VARIANT_BOOL);
+    HRESULT get_issession(VARIANT_BOOL*);
 }
 enum IID_IHTMLEventObj6 = GUID(0x30510734, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLEventObj6 : IDispatch
@@ -15956,7 +15956,7 @@ enum IID_IHTMLStyleMedia = GUID(0x3051074b, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0x
 interface IHTMLStyleMedia : IDispatch
 {
     HRESULT get_type(BSTR*);
-    HRESULT matchMedium(BSTR, short*);
+    HRESULT matchMedium(BSTR, VARIANT_BOOL*);
 }
 enum IID_DispHTMLStyleMedia = GUID(0x3059009e, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispHTMLStyleMedia : IDispatch
@@ -16020,8 +16020,8 @@ interface IHTMLDocument2 : IHTMLDocument
     HRESULT get_domain(BSTR*);
     HRESULT put_cookie(BSTR);
     HRESULT get_cookie(BSTR*);
-    HRESULT put_expando(short);
-    HRESULT get_expando(short*);
+    HRESULT put_expando(VARIANT_BOOL);
+    HRESULT get_expando(VARIANT_BOOL*);
     HRESULT put_charset(BSTR);
     HRESULT get_charset(BSTR*);
     HRESULT put_defaultCharset(BSTR);
@@ -16039,14 +16039,14 @@ interface IHTMLDocument2 : IHTMLDocument
     HRESULT open(BSTR, VARIANT, VARIANT, VARIANT, IDispatch*);
     HRESULT close();
     HRESULT clear();
-    HRESULT queryCommandSupported(BSTR, short*);
-    HRESULT queryCommandEnabled(BSTR, short*);
-    HRESULT queryCommandState(BSTR, short*);
-    HRESULT queryCommandIndeterm(BSTR, short*);
+    HRESULT queryCommandSupported(BSTR, VARIANT_BOOL*);
+    HRESULT queryCommandEnabled(BSTR, VARIANT_BOOL*);
+    HRESULT queryCommandState(BSTR, VARIANT_BOOL*);
+    HRESULT queryCommandIndeterm(BSTR, VARIANT_BOOL*);
     HRESULT queryCommandText(BSTR, BSTR*);
     HRESULT queryCommandValue(BSTR, VARIANT*);
-    HRESULT execCommand(BSTR, short, VARIANT, short*);
-    HRESULT execCommandShowHelp(BSTR, short*);
+    HRESULT execCommand(BSTR, VARIANT_BOOL, VARIANT, VARIANT_BOOL*);
+    HRESULT execCommandShowHelp(BSTR, VARIANT_BOOL*);
     HRESULT createElement(BSTR, IHTMLElement*);
     HRESULT put_onhelp(VARIANT);
     HRESULT get_onhelp(VARIANT*);
@@ -16103,7 +16103,7 @@ interface IHTMLWindow2 : IHTMLFramesCollection2
     HRESULT setTimeout(BSTR, int, VARIANT*, int*);
     HRESULT clearTimeout(int);
     HRESULT alert(BSTR);
-    HRESULT confirm(BSTR, short*);
+    HRESULT confirm(BSTR, VARIANT_BOOL*);
     HRESULT prompt(BSTR, BSTR, VARIANT*);
     HRESULT get_Image(IHTMLImageElementFactory*);
     HRESULT get_location(IHTMLLocation*);
@@ -16115,7 +16115,7 @@ interface IHTMLWindow2 : IHTMLFramesCollection2
     HRESULT put_name(BSTR);
     HRESULT get_name(BSTR*);
     HRESULT get_parent(IHTMLWindow2*);
-    HRESULT open(BSTR, BSTR, BSTR, short, IHTMLWindow2*);
+    HRESULT open(BSTR, BSTR, BSTR, VARIANT_BOOL, IHTMLWindow2*);
     HRESULT get_self(IHTMLWindow2*);
     HRESULT get_top(IHTMLWindow2*);
     HRESULT get_window(IHTMLWindow2*);
@@ -16146,7 +16146,7 @@ interface IHTMLWindow2 : IHTMLFramesCollection2
     HRESULT get_screen(IHTMLScreen*);
     HRESULT get_Option(IHTMLOptionElementFactory*);
     HRESULT focus();
-    HRESULT get_closed(short*);
+    HRESULT get_closed(VARIANT_BOOL*);
     HRESULT blur();
     HRESULT scroll(int, int);
     HRESULT get_clientInformation(IOmNavigator*);
@@ -16169,7 +16169,7 @@ interface IHTMLWindow3 : IDispatch
 {
     HRESULT get_screenLeft(int*);
     HRESULT get_screenTop(int*);
-    HRESULT attachEvent(BSTR, IDispatch, short*);
+    HRESULT attachEvent(BSTR, IDispatch, VARIANT_BOOL*);
     HRESULT detachEvent(BSTR, IDispatch);
     HRESULT setTimeout(VARIANT*, int, VARIANT*, int*);
     HRESULT setInterval(VARIANT*, int, VARIANT*, int*);
@@ -16198,8 +16198,8 @@ interface IHTMLFrameBase : IDispatch
     HRESULT get_marginWidth(VARIANT*);
     HRESULT put_marginHeight(VARIANT);
     HRESULT get_marginHeight(VARIANT*);
-    HRESULT put_noResize(short);
-    HRESULT get_noResize(short*);
+    HRESULT put_noResize(VARIANT_BOOL);
+    HRESULT get_noResize(VARIANT_BOOL*);
     HRESULT put_scrolling(BSTR);
     HRESULT get_scrolling(BSTR*);
 }
@@ -16258,7 +16258,7 @@ interface IHTMLScreen : IDispatch
     HRESULT get_updateInterval(int*);
     HRESULT get_availHeight(int*);
     HRESULT get_availWidth(int*);
-    HRESULT get_fontSmoothingEnabled(short*);
+    HRESULT get_fontSmoothingEnabled(VARIANT_BOOL*);
 }
 enum IID_IHTMLScreen2 = GUID(0x3050f84a, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLScreen2 : IDispatch
@@ -16538,8 +16538,8 @@ interface ISVGSVGElement : IDispatch
     HRESULT get_screenPixelToMillimeterX(float*);
     HRESULT put_screenPixelToMillimeterY(float);
     HRESULT get_screenPixelToMillimeterY(float*);
-    HRESULT put_useCurrentView(short);
-    HRESULT get_useCurrentView(short*);
+    HRESULT put_useCurrentView(VARIANT_BOOL);
+    HRESULT get_useCurrentView(VARIANT_BOOL*);
     HRESULT putref_currentView(ISVGViewSpec);
     HRESULT get_currentView(ISVGViewSpec*);
     HRESULT put_currentScale(float);
@@ -16552,13 +16552,13 @@ interface ISVGSVGElement : IDispatch
     HRESULT forceRedraw();
     HRESULT pauseAnimations();
     HRESULT unpauseAnimations();
-    HRESULT animationsPaused(short*);
+    HRESULT animationsPaused(VARIANT_BOOL*);
     HRESULT getCurrentTime(float*);
     HRESULT setCurrentTime(float);
     HRESULT getIntersectionList(ISVGRect, ISVGElement, VARIANT*);
     HRESULT getEnclosureList(ISVGRect, ISVGElement, VARIANT*);
-    HRESULT checkIntersection(ISVGElement, ISVGRect, short*);
-    HRESULT checkEnclosure(ISVGElement, ISVGRect, short*);
+    HRESULT checkIntersection(ISVGElement, ISVGRect, VARIANT_BOOL*);
+    HRESULT checkEnclosure(ISVGElement, ISVGRect, VARIANT_BOOL*);
     HRESULT deselectAll();
     HRESULT createSVGNumber(ISVGNumber*);
     HRESULT createSVGLength(ISVGLength*);
@@ -16576,7 +16576,7 @@ interface IDOMNodeIterator : IDispatch
     HRESULT get_root(IDispatch*);
     HRESULT get_whatToShow(uint*);
     HRESULT get_filter(IDispatch*);
-    HRESULT get_expandEntityReferences(short*);
+    HRESULT get_expandEntityReferences(VARIANT_BOOL*);
     HRESULT nextNode(IDispatch*);
     HRESULT previousNode(IDispatch*);
     HRESULT detach();
@@ -16587,7 +16587,7 @@ interface IDOMTreeWalker : IDispatch
     HRESULT get_root(IDispatch*);
     HRESULT get_whatToShow(uint*);
     HRESULT get_filter(IDispatch*);
-    HRESULT get_expandEntityReferences(short*);
+    HRESULT get_expandEntityReferences(VARIANT_BOOL*);
     HRESULT putref_currentNode(IDispatch);
     HRESULT get_currentNode(IDispatch*);
     HRESULT parentNode(IDispatch*);
@@ -16609,11 +16609,11 @@ enum IID_IHTMLDocument3 = GUID(0x3050f485, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xa
 interface IHTMLDocument3 : IDispatch
 {
     HRESULT releaseCapture();
-    HRESULT recalc(short);
+    HRESULT recalc(VARIANT_BOOL);
     HRESULT createTextNode(BSTR, IHTMLDOMNode*);
     HRESULT get_documentElement(IHTMLElement*);
     HRESULT get_uniqueID(BSTR*);
-    HRESULT attachEvent(BSTR, IDispatch, short*);
+    HRESULT attachEvent(BSTR, IDispatch, VARIANT_BOOL*);
     HRESULT detachEvent(BSTR, IDispatch);
     HRESULT put_onrowsdelete(VARIANT);
     HRESULT get_onrowsdelete(VARIANT*);
@@ -16637,13 +16637,13 @@ interface IHTMLDocument3 : IDispatch
     HRESULT get_onstop(VARIANT*);
     HRESULT createDocumentFragment(IHTMLDocument2*);
     HRESULT get_parentDocument(IHTMLDocument2*);
-    HRESULT put_enableDownload(short);
-    HRESULT get_enableDownload(short*);
+    HRESULT put_enableDownload(VARIANT_BOOL);
+    HRESULT get_enableDownload(VARIANT_BOOL*);
     HRESULT put_baseUrl(BSTR);
     HRESULT get_baseUrl(BSTR*);
     HRESULT get_childNodes(IDispatch*);
-    HRESULT put_inheritStyleSheets(short);
-    HRESULT get_inheritStyleSheets(short*);
+    HRESULT put_inheritStyleSheets(VARIANT_BOOL);
+    HRESULT get_inheritStyleSheets(VARIANT_BOOL*);
     HRESULT put_onbeforeeditfocus(VARIANT);
     HRESULT get_onbeforeeditfocus(VARIANT*);
     HRESULT getElementsByName(BSTR, IHTMLElementCollection*);
@@ -16654,7 +16654,7 @@ enum IID_IHTMLDocument4 = GUID(0x3050f69a, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xa
 interface IHTMLDocument4 : IDispatch
 {
     HRESULT focus();
-    HRESULT hasFocus(short*);
+    HRESULT hasFocus(VARIANT_BOOL*);
     HRESULT put_onselectionchange(VARIANT);
     HRESULT get_onselectionchange(VARIANT*);
     HRESULT get_namespaces(IDispatch*);
@@ -16662,7 +16662,7 @@ interface IHTMLDocument4 : IDispatch
     HRESULT put_media(BSTR);
     HRESULT get_media(BSTR*);
     HRESULT createEventObject(VARIANT*, IHTMLEventObj*);
-    HRESULT fireEvent(BSTR, VARIANT*, short*);
+    HRESULT fireEvent(BSTR, VARIANT*, VARIANT_BOOL*);
     HRESULT createRenderStyle(BSTR, IHTMLRenderStyle*);
     HRESULT put_oncontrolselect(VARIANT);
     HRESULT get_oncontrolselect(VARIANT*);
@@ -16740,8 +16740,8 @@ interface IHTMLDocument8 : IDispatch
     HRESULT elementsFromRect(float, float, float, float, IHTMLDOMChildrenCollection*);
     HRESULT put_onmsmanipulationstatechanged(VARIANT);
     HRESULT get_onmsmanipulationstatechanged(VARIANT*);
-    HRESULT put_msCapsLockWarningOff(short);
-    HRESULT get_msCapsLockWarningOff(short*);
+    HRESULT put_msCapsLockWarningOff(VARIANT_BOOL);
+    HRESULT get_msCapsLockWarningOff(VARIANT_BOOL*);
 }
 enum IID_IDocumentEvent = GUID(0x305104bc, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IDocumentEvent : IDispatch
@@ -16762,8 +16762,8 @@ interface IDocumentSelector : IDispatch
 enum IID_IDocumentTraversal = GUID(0x30510744, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IDocumentTraversal : IDispatch
 {
-    HRESULT createNodeIterator(IDispatch, int, VARIANT*, short, IDOMNodeIterator*);
-    HRESULT createTreeWalker(IDispatch, int, VARIANT*, short, IDOMTreeWalker*);
+    HRESULT createNodeIterator(IDispatch, int, VARIANT*, VARIANT_BOOL, IDOMNodeIterator*);
+    HRESULT createTreeWalker(IDispatch, int, VARIANT*, VARIANT_BOOL, IDOMTreeWalker*);
 }
 enum IID_DispHTMLDocument = GUID(0x3050f55f, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispHTMLDocument : IDispatch
@@ -16778,10 +16778,10 @@ interface IWebBridge : IDispatch
 {
     HRESULT put_URL(BSTR);
     HRESULT get_URL(BSTR*);
-    HRESULT put_Scrollbar(short);
-    HRESULT get_Scrollbar(short*);
-    HRESULT put_embed(short);
-    HRESULT get_embed(short*);
+    HRESULT put_Scrollbar(VARIANT_BOOL);
+    HRESULT get_Scrollbar(VARIANT_BOOL*);
+    HRESULT put_embed(VARIANT_BOOL);
+    HRESULT get_embed(VARIANT_BOOL*);
     HRESULT get_event(IDispatch*);
     HRESULT get_readyState(int*);
     HRESULT AboutBox();
@@ -16792,13 +16792,13 @@ interface IWBScriptControl : IDispatch
     HRESULT raiseEvent(BSTR, VARIANT);
     HRESULT bubbleEvent();
     HRESULT setContextMenu(VARIANT);
-    HRESULT put_selectableContent(short);
-    HRESULT get_selectableContent(short*);
-    HRESULT get_frozen(short*);
-    HRESULT put_scrollbar(short);
-    HRESULT get_scrollbar(short*);
+    HRESULT put_selectableContent(VARIANT_BOOL);
+    HRESULT get_selectableContent(VARIANT_BOOL*);
+    HRESULT get_frozen(VARIANT_BOOL*);
+    HRESULT put_scrollbar(VARIANT_BOOL);
+    HRESULT get_scrollbar(VARIANT_BOOL*);
     HRESULT get_version(BSTR*);
-    HRESULT get_visibility(short*);
+    HRESULT get_visibility(VARIANT_BOOL*);
     HRESULT put_onvisibilitychange(VARIANT);
     HRESULT get_onvisibilitychange(VARIANT*);
 }
@@ -16903,8 +16903,8 @@ interface IHTMLAreaElement : IDispatch
     HRESULT get_target(BSTR*);
     HRESULT put_alt(BSTR);
     HRESULT get_alt(BSTR*);
-    HRESULT put_noHref(short);
-    HRESULT get_noHref(short*);
+    HRESULT put_noHref(VARIANT_BOOL);
+    HRESULT get_noHref(VARIANT_BOOL*);
     HRESULT put_host(BSTR);
     HRESULT get_host(BSTR*);
     HRESULT put_hostname(BSTR);
@@ -17234,8 +17234,8 @@ interface IHTMLTableCell : IDispatch
     HRESULT get_vAlign(BSTR*);
     HRESULT put_bgColor(VARIANT);
     HRESULT get_bgColor(VARIANT*);
-    HRESULT put_noWrap(short);
-    HRESULT get_noWrap(short*);
+    HRESULT put_noWrap(VARIANT_BOOL);
+    HRESULT get_noWrap(VARIANT_BOOL*);
     HRESULT put_background(BSTR);
     HRESULT get_background(BSTR*);
     HRESULT put_borderColor(VARIANT);
@@ -17313,8 +17313,8 @@ interface IHTMLScriptElement : IDispatch
     HRESULT get_event(BSTR*);
     HRESULT put_text(BSTR);
     HRESULT get_text(BSTR*);
-    HRESULT put_defer(short);
-    HRESULT get_defer(short*);
+    HRESULT put_defer(VARIANT_BOOL);
+    HRESULT get_defer(VARIANT_BOOL*);
     HRESULT get_readyState(BSTR*);
     HRESULT put_onerror(VARIANT);
     HRESULT get_onerror(VARIANT*);
@@ -17412,8 +17412,8 @@ interface IHTMLObjectElement3 : IDispatch
     HRESULT get_archive(BSTR*);
     HRESULT put_alt(BSTR);
     HRESULT get_alt(BSTR*);
-    HRESULT put_declare(short);
-    HRESULT get_declare(short*);
+    HRESULT put_declare(VARIANT_BOOL);
+    HRESULT get_declare(VARIANT_BOOL*);
     HRESULT put_standby(BSTR);
     HRESULT get_standby(BSTR*);
     HRESULT put_border(VARIANT);
@@ -17485,8 +17485,8 @@ interface IHTMLFrameBase2 : IDispatch
     HRESULT put_onreadystatechange(VARIANT);
     HRESULT get_onreadystatechange(VARIANT*);
     HRESULT get_readyState(BSTR*);
-    HRESULT put_allowTransparency(short);
-    HRESULT get_allowTransparency(short*);
+    HRESULT put_allowTransparency(VARIANT_BOOL);
+    HRESULT get_allowTransparency(VARIANT_BOOL*);
 }
 enum IID_IHTMLFrameBase3 = GUID(0x3050f82e, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLFrameBase3 : IDispatch
@@ -17706,19 +17706,19 @@ interface IHTMLOptionsHolder : IDispatch
     HRESULT get_errorCode(int*);
     HRESULT put_errorMessage(BSTR);
     HRESULT get_errorMessage(BSTR*);
-    HRESULT put_errorDebug(short);
-    HRESULT get_errorDebug(short*);
+    HRESULT put_errorDebug(VARIANT_BOOL);
+    HRESULT get_errorDebug(VARIANT_BOOL*);
     HRESULT get_unsecuredWindowOfDocument(IHTMLWindow2*);
     HRESULT put_findText(BSTR);
     HRESULT get_findText(BSTR*);
-    HRESULT put_anythingAfterFrameset(short);
-    HRESULT get_anythingAfterFrameset(short*);
+    HRESULT put_anythingAfterFrameset(VARIANT_BOOL);
+    HRESULT get_anythingAfterFrameset(VARIANT_BOOL*);
     HRESULT sizes(BSTR, IHTMLFontSizesCollection*);
     HRESULT openfiledlg(VARIANT, VARIANT, VARIANT, VARIANT, BSTR*);
     HRESULT savefiledlg(VARIANT, VARIANT, VARIANT, VARIANT, BSTR*);
     HRESULT choosecolordlg(VARIANT, int*);
     HRESULT showSecurityInfo();
-    HRESULT isApartmentModel(IHTMLObjectElement, short*);
+    HRESULT isApartmentModel(IHTMLObjectElement, VARIANT_BOOL*);
     HRESULT getCharset(BSTR, int*);
     HRESULT get_secureConnectionInfo(BSTR*);
 }
@@ -17743,8 +17743,8 @@ interface IHTMLStyleElement : IDispatch
     HRESULT put_onerror(VARIANT);
     HRESULT get_onerror(VARIANT*);
     HRESULT get_styleSheet(IHTMLStyleSheet*);
-    HRESULT put_disabled(short);
-    HRESULT get_disabled(short*);
+    HRESULT put_disabled(VARIANT_BOOL);
+    HRESULT get_disabled(VARIANT_BOOL*);
     HRESULT put_media(BSTR);
     HRESULT get_media(BSTR*);
 }
@@ -17812,9 +17812,9 @@ interface DispHTMLStorage : IDispatch
 enum IID_IEventTarget = GUID(0x305104b9, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IEventTarget : IDispatch
 {
-    HRESULT addEventListener(BSTR, IDispatch, short);
-    HRESULT removeEventListener(BSTR, IDispatch, short);
-    HRESULT dispatchEvent(IDOMEvent, short*);
+    HRESULT addEventListener(BSTR, IDispatch, VARIANT_BOOL);
+    HRESULT removeEventListener(BSTR, IDispatch, VARIANT_BOOL);
+    HRESULT dispatchEvent(IDOMEvent, VARIANT_BOOL*);
 }
 enum IID_DispDOMEvent = GUID(0x3050f5a2, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispDOMEvent : IDispatch
@@ -17825,7 +17825,7 @@ interface IDOMUIEvent : IDispatch
 {
     HRESULT get_view(IHTMLWindow2*);
     HRESULT get_detail(int*);
-    HRESULT initUIEvent(BSTR, short, short, IHTMLWindow2, int);
+    HRESULT initUIEvent(BSTR, VARIANT_BOOL, VARIANT_BOOL, IHTMLWindow2, int);
 }
 enum IID_DispDOMUIEvent = GUID(0x30590072, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispDOMUIEvent : IDispatch
@@ -17838,14 +17838,14 @@ interface IDOMMouseEvent : IDispatch
     HRESULT get_screenY(int*);
     HRESULT get_clientX(int*);
     HRESULT get_clientY(int*);
-    HRESULT get_ctrlKey(short*);
-    HRESULT get_shiftKey(short*);
-    HRESULT get_altKey(short*);
-    HRESULT get_metaKey(short*);
+    HRESULT get_ctrlKey(VARIANT_BOOL*);
+    HRESULT get_shiftKey(VARIANT_BOOL*);
+    HRESULT get_altKey(VARIANT_BOOL*);
+    HRESULT get_metaKey(VARIANT_BOOL*);
     HRESULT get_button(ushort*);
     HRESULT get_relatedTarget(IEventTarget*);
-    HRESULT initMouseEvent(BSTR, short, short, IHTMLWindow2, int, int, int, int, int, short, short, short, short, ushort, IEventTarget);
-    HRESULT getModifierState(BSTR, short*);
+    HRESULT initMouseEvent(BSTR, VARIANT_BOOL, VARIANT_BOOL, IHTMLWindow2, int, int, int, int, int, VARIANT_BOOL, VARIANT_BOOL, VARIANT_BOOL, VARIANT_BOOL, ushort, IEventTarget);
+    HRESULT getModifierState(BSTR, VARIANT_BOOL*);
     HRESULT get_buttons(ushort*);
     HRESULT get_fromElement(IHTMLElement*);
     HRESULT get_toElement(IHTMLElement*);
@@ -17867,7 +17867,7 @@ enum IID_IDOMDragEvent = GUID(0x30510761, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa
 interface IDOMDragEvent : IDispatch
 {
     HRESULT get_dataTransfer(IHTMLDataTransfer*);
-    HRESULT initDragEvent(BSTR, short, short, IHTMLWindow2, int, int, int, int, int, short, short, short, short, ushort, IEventTarget, IHTMLDataTransfer);
+    HRESULT initDragEvent(BSTR, VARIANT_BOOL, VARIANT_BOOL, IHTMLWindow2, int, int, int, int, int, VARIANT_BOOL, VARIANT_BOOL, VARIANT_BOOL, VARIANT_BOOL, ushort, IEventTarget, IHTMLDataTransfer);
 }
 enum IID_DispDOMDragEvent = GUID(0x305900a7, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispDOMDragEvent : IDispatch
@@ -17877,7 +17877,7 @@ enum IID_IDOMMouseWheelEvent = GUID(0x305106d0, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0
 interface IDOMMouseWheelEvent : IDispatch
 {
     HRESULT get_wheelDelta(int*);
-    HRESULT initMouseWheelEvent(BSTR, short, short, IHTMLWindow2, int, int, int, int, int, ushort, IEventTarget, BSTR, int);
+    HRESULT initMouseWheelEvent(BSTR, VARIANT_BOOL, VARIANT_BOOL, IHTMLWindow2, int, int, int, int, int, ushort, IEventTarget, BSTR, int);
 }
 enum IID_DispDOMMouseWheelEvent = GUID(0x30590074, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispDOMMouseWheelEvent : IDispatch
@@ -17890,7 +17890,7 @@ interface IDOMWheelEvent : IDispatch
     HRESULT get_deltaY(int*);
     HRESULT get_deltaZ(int*);
     HRESULT get_deltaMode(uint*);
-    HRESULT initWheelEvent(BSTR, short, short, IHTMLWindow2, int, int, int, int, int, ushort, IEventTarget, BSTR, int, int, int, uint);
+    HRESULT initWheelEvent(BSTR, VARIANT_BOOL, VARIANT_BOOL, IHTMLWindow2, int, int, int, int, int, ushort, IEventTarget, BSTR, int, int, int, uint);
 }
 enum IID_DispDOMWheelEvent = GUID(0x30590075, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispDOMWheelEvent : IDispatch
@@ -17901,7 +17901,7 @@ interface IDOMTextEvent : IDispatch
 {
     HRESULT get_data(BSTR*);
     HRESULT get_inputMethod(uint*);
-    HRESULT initTextEvent(BSTR, short, short, IHTMLWindow2, BSTR, uint, BSTR);
+    HRESULT initTextEvent(BSTR, VARIANT_BOOL, VARIANT_BOOL, IHTMLWindow2, BSTR, uint, BSTR);
     HRESULT get_locale(BSTR*);
 }
 enum IID_DispDOMTextEvent = GUID(0x30590076, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
@@ -17913,13 +17913,13 @@ interface IDOMKeyboardEvent : IDispatch
 {
     HRESULT get_key(BSTR*);
     HRESULT get_location(uint*);
-    HRESULT get_ctrlKey(short*);
-    HRESULT get_shiftKey(short*);
-    HRESULT get_altKey(short*);
-    HRESULT get_metaKey(short*);
-    HRESULT get_repeat(short*);
-    HRESULT getModifierState(BSTR, short*);
-    HRESULT initKeyboardEvent(BSTR, short, short, IHTMLWindow2, BSTR, uint, BSTR, short, BSTR);
+    HRESULT get_ctrlKey(VARIANT_BOOL*);
+    HRESULT get_shiftKey(VARIANT_BOOL*);
+    HRESULT get_altKey(VARIANT_BOOL*);
+    HRESULT get_metaKey(VARIANT_BOOL*);
+    HRESULT get_repeat(VARIANT_BOOL*);
+    HRESULT getModifierState(BSTR, VARIANT_BOOL*);
+    HRESULT initKeyboardEvent(BSTR, VARIANT_BOOL, VARIANT_BOOL, IHTMLWindow2, BSTR, uint, BSTR, VARIANT_BOOL, BSTR);
     HRESULT get_keyCode(int*);
     HRESULT get_charCode(int*);
     HRESULT get_which(int*);
@@ -17934,7 +17934,7 @@ enum IID_IDOMCompositionEvent = GUID(0x305106d8, 0x98b5, 0x11cf, [0xbb, 0x82, 0x
 interface IDOMCompositionEvent : IDispatch
 {
     HRESULT get_data(BSTR*);
-    HRESULT initCompositionEvent(BSTR, short, short, IHTMLWindow2, BSTR, BSTR);
+    HRESULT initCompositionEvent(BSTR, VARIANT_BOOL, VARIANT_BOOL, IHTMLWindow2, BSTR, BSTR);
     HRESULT get_locale(BSTR*);
 }
 enum IID_DispDOMCompositionEvent = GUID(0x30590078, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
@@ -17949,7 +17949,7 @@ interface IDOMMutationEvent : IDispatch
     HRESULT get_newValue(BSTR*);
     HRESULT get_attrName(BSTR*);
     HRESULT get_attrChange(ushort*);
-    HRESULT initMutationEvent(BSTR, short, short, IDispatch, BSTR, BSTR, BSTR, ushort);
+    HRESULT initMutationEvent(BSTR, VARIANT_BOOL, VARIANT_BOOL, IDispatch, BSTR, BSTR, BSTR, ushort);
 }
 enum IID_DispDOMMutationEvent = GUID(0x30590079, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispDOMMutationEvent : IDispatch
@@ -17969,7 +17969,7 @@ enum IID_IDOMFocusEvent = GUID(0x305106cc, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xa
 interface IDOMFocusEvent : IDispatch
 {
     HRESULT get_relatedTarget(IEventTarget*);
-    HRESULT initFocusEvent(BSTR, short, short, IHTMLWindow2, int, IEventTarget);
+    HRESULT initFocusEvent(BSTR, VARIANT_BOOL, VARIANT_BOOL, IHTMLWindow2, int, IEventTarget);
 }
 enum IID_DispDOMFocusEvent = GUID(0x30590071, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispDOMFocusEvent : IDispatch
@@ -17979,7 +17979,7 @@ enum IID_IDOMCustomEvent = GUID(0x305106de, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0x
 interface IDOMCustomEvent : IDispatch
 {
     HRESULT get_detail(VARIANT*);
-    HRESULT initCustomEvent(BSTR, short, short, VARIANT*);
+    HRESULT initCustomEvent(BSTR, VARIANT_BOOL, VARIANT_BOOL, VARIANT*);
 }
 enum IID_DispDOMCustomEvent = GUID(0x3059007c, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispDOMCustomEvent : IDispatch
@@ -18074,7 +18074,7 @@ interface ICanvasRenderingContext2D : IDispatch
     HRESULT quadraticCurveTo(float, float, float, float);
     HRESULT rect(float, float, float, float);
     HRESULT stroke();
-    HRESULT isPointInPath(float, float, short*);
+    HRESULT isPointInPath(float, float, VARIANT_BOOL*);
     HRESULT put_font(BSTR);
     HRESULT get_font(BSTR*);
     HRESULT put_textAlign(BSTR);
@@ -18116,10 +18116,10 @@ interface DispHTMLCanvasElement : IDispatch
 enum IID_IDOMProgressEvent = GUID(0x3051071e, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IDOMProgressEvent : IDispatch
 {
-    HRESULT get_lengthComputable(short*);
+    HRESULT get_lengthComputable(VARIANT_BOOL*);
     HRESULT get_loaded(ulong*);
     HRESULT get_total(ulong*);
-    HRESULT initProgressEvent(BSTR, short, short, short, ulong, ulong);
+    HRESULT initProgressEvent(BSTR, VARIANT_BOOL, VARIANT_BOOL, VARIANT_BOOL, ulong, ulong);
 }
 enum IID_DispDOMProgressEvent = GUID(0x30590091, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispDOMProgressEvent : IDispatch
@@ -18131,7 +18131,7 @@ interface IDOMMessageEvent : IDispatch
     HRESULT get_data(BSTR*);
     HRESULT get_origin(BSTR*);
     HRESULT get_source(IHTMLWindow2*);
-    HRESULT initMessageEvent(BSTR, short, short, BSTR, BSTR, BSTR, IHTMLWindow2);
+    HRESULT initMessageEvent(BSTR, VARIANT_BOOL, VARIANT_BOOL, BSTR, BSTR, BSTR, IHTMLWindow2);
 }
 enum IID_DispDOMMessageEvent = GUID(0x30590092, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispDOMMessageEvent : IDispatch
@@ -18155,7 +18155,7 @@ interface IDOMStorageEvent : IDispatch
     HRESULT get_newValue(BSTR*);
     HRESULT get_url(BSTR*);
     HRESULT get_storageArea(IHTMLStorage*);
-    HRESULT initStorageEvent(BSTR, short, short, BSTR, BSTR, BSTR, BSTR, IHTMLStorage);
+    HRESULT initStorageEvent(BSTR, VARIANT_BOOL, VARIANT_BOOL, BSTR, BSTR, BSTR, BSTR, IHTMLStorage);
 }
 enum IID_DispDOMStorageEvent = GUID(0x30590093, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispDOMStorageEvent : IDispatch
@@ -18304,10 +18304,10 @@ interface ISVGAnimatedString : IDispatch
 enum IID_ISVGAnimatedBoolean = GUID(0x305104c6, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface ISVGAnimatedBoolean : IDispatch
 {
-    HRESULT put_baseVal(short);
-    HRESULT get_baseVal(short*);
-    HRESULT put_animVal(short);
-    HRESULT get_animVal(short*);
+    HRESULT put_baseVal(VARIANT_BOOL);
+    HRESULT get_baseVal(VARIANT_BOOL*);
+    HRESULT put_animVal(VARIANT_BOOL);
+    HRESULT get_animVal(VARIANT_BOOL*);
 }
 enum IID_ISVGAnimatedTransformList = GUID(0x305104f9, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface ISVGAnimatedTransformList : IDispatch
@@ -18351,7 +18351,7 @@ interface ISVGTests : IDispatch
     HRESULT get_requiredFeatures(ISVGStringList*);
     HRESULT get_requiredExtensions(ISVGStringList*);
     HRESULT get_systemLanguage(ISVGStringList*);
-    HRESULT hasExtension(BSTR, short*);
+    HRESULT hasExtension(BSTR, VARIANT_BOOL*);
 }
 enum IID_ISVGLangSpace = GUID(0x305104de, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface ISVGLangSpace : IDispatch
@@ -18574,10 +18574,10 @@ interface ISVGPathSegArcAbs : IDispatch
     HRESULT get_r2(float*);
     HRESULT put_angle(float);
     HRESULT get_angle(float*);
-    HRESULT put_largeArcFlag(short);
-    HRESULT get_largeArcFlag(short*);
-    HRESULT put_sweepFlag(short);
-    HRESULT get_sweepFlag(short*);
+    HRESULT put_largeArcFlag(VARIANT_BOOL);
+    HRESULT get_largeArcFlag(VARIANT_BOOL*);
+    HRESULT put_sweepFlag(VARIANT_BOOL);
+    HRESULT get_sweepFlag(VARIANT_BOOL*);
 }
 enum IID_ISVGPathSegArcRel = GUID(0x30510507, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface ISVGPathSegArcRel : IDispatch
@@ -18592,10 +18592,10 @@ interface ISVGPathSegArcRel : IDispatch
     HRESULT get_r2(float*);
     HRESULT put_angle(float);
     HRESULT get_angle(float*);
-    HRESULT put_largeArcFlag(short);
-    HRESULT get_largeArcFlag(short*);
-    HRESULT put_sweepFlag(short);
-    HRESULT get_sweepFlag(short*);
+    HRESULT put_largeArcFlag(VARIANT_BOOL);
+    HRESULT get_largeArcFlag(VARIANT_BOOL*);
+    HRESULT put_sweepFlag(VARIANT_BOOL);
+    HRESULT get_sweepFlag(VARIANT_BOOL*);
 }
 enum IID_ISVGPathSegClosePath = GUID(0x305104fd, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface ISVGPathSegClosePath : IDispatch
@@ -18935,9 +18935,9 @@ interface IRulesApplied : IDispatch
     HRESULT get_element(IHTMLElement*);
     HRESULT get_inlineStyles(IHTMLStyle*);
     HRESULT get_appliedRules(IHTMLStyleSheetRulesAppliedCollection*);
-    HRESULT propertyIsInline(BSTR, short*);
-    HRESULT propertyIsInheritable(BSTR, short*);
-    HRESULT hasInheritableProperty(short*);
+    HRESULT propertyIsInline(BSTR, VARIANT_BOOL*);
+    HRESULT propertyIsInheritable(BSTR, VARIANT_BOOL*);
+    HRESULT hasInheritableProperty(VARIANT_BOOL*);
 }
 enum IID_DispHTMLStyleSheetRulesAppliedCollection = GUID(0x3050f5a6, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispHTMLStyleSheetRulesAppliedCollection : IDispatch
@@ -19098,8 +19098,8 @@ interface ISVGPathElement : IDispatch
     HRESULT createSVGPathSegCurvetoCubicRel(float, float, float, float, float, float, ISVGPathSegCurvetoCubicRel*);
     HRESULT createSVGPathSegCurvetoQuadraticAbs(float, float, float, float, ISVGPathSegCurvetoQuadraticAbs*);
     HRESULT createSVGPathSegCurvetoQuadraticRel(float, float, float, float, ISVGPathSegCurvetoQuadraticRel*);
-    HRESULT createSVGPathSegArcAbs(float, float, float, float, float, short, short, ISVGPathSegArcAbs*);
-    HRESULT createSVGPathSegArcRel(float, float, float, float, float, short, short, ISVGPathSegArcRel*);
+    HRESULT createSVGPathSegArcAbs(float, float, float, float, float, VARIANT_BOOL, VARIANT_BOOL, ISVGPathSegArcAbs*);
+    HRESULT createSVGPathSegArcRel(float, float, float, float, float, VARIANT_BOOL, VARIANT_BOOL, ISVGPathSegArcRel*);
     HRESULT createSVGPathSegLinetoHorizontalAbs(float, ISVGPathSegLinetoHorizontalAbs*);
     HRESULT createSVGPathSegLinetoHorizontalRel(float, ISVGPathSegLinetoHorizontalRel*);
     HRESULT createSVGPathSegLinetoVerticalAbs(float, ISVGPathSegLinetoVerticalAbs*);
@@ -19311,33 +19311,33 @@ interface IHTMLMediaElement : IDispatch
     HRESULT get_buffered(IHTMLTimeRanges*);
     HRESULT load();
     HRESULT canPlayType(BSTR, BSTR*);
-    HRESULT get_seeking(short*);
+    HRESULT get_seeking(VARIANT_BOOL*);
     HRESULT put_currentTime(float);
     HRESULT get_currentTime(float*);
     HRESULT get_initialTime(float*);
     HRESULT get_duration(float*);
-    HRESULT get_paused(short*);
+    HRESULT get_paused(VARIANT_BOOL*);
     HRESULT put_defaultPlaybackRate(float);
     HRESULT get_defaultPlaybackRate(float*);
     HRESULT put_playbackRate(float);
     HRESULT get_playbackRate(float*);
     HRESULT get_played(IHTMLTimeRanges*);
     HRESULT get_seekable(IHTMLTimeRanges*);
-    HRESULT get_ended(short*);
-    HRESULT put_autoplay(short);
-    HRESULT get_autoplay(short*);
-    HRESULT put_loop(short);
-    HRESULT get_loop(short*);
+    HRESULT get_ended(VARIANT_BOOL*);
+    HRESULT put_autoplay(VARIANT_BOOL);
+    HRESULT get_autoplay(VARIANT_BOOL*);
+    HRESULT put_loop(VARIANT_BOOL);
+    HRESULT get_loop(VARIANT_BOOL*);
     HRESULT play();
     HRESULT pause();
-    HRESULT put_controls(short);
-    HRESULT get_controls(short*);
+    HRESULT put_controls(VARIANT_BOOL);
+    HRESULT get_controls(VARIANT_BOOL*);
     HRESULT put_volume(float);
     HRESULT get_volume(float*);
-    HRESULT put_muted(short);
-    HRESULT get_muted(short*);
-    HRESULT put_autobuffer(short);
-    HRESULT get_autobuffer(short*);
+    HRESULT put_muted(VARIANT_BOOL);
+    HRESULT get_muted(VARIANT_BOOL*);
+    HRESULT put_autobuffer(VARIANT_BOOL);
+    HRESULT get_autobuffer(VARIANT_BOOL*);
 }
 enum IID_IHTMLMediaElement2 = GUID(0x30510809, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLMediaElement2 : IDispatch
@@ -19356,10 +19356,10 @@ interface IHTMLMediaElement2 : IDispatch
 enum IID_IHTMLMSMediaElement = GUID(0x30510792, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLMSMediaElement : IDispatch
 {
-    HRESULT put_msPlayToDisabled(short);
-    HRESULT get_msPlayToDisabled(short*);
-    HRESULT put_msPlayToPrimary(short);
-    HRESULT get_msPlayToPrimary(short*);
+    HRESULT put_msPlayToDisabled(VARIANT_BOOL);
+    HRESULT get_msPlayToDisabled(VARIANT_BOOL*);
+    HRESULT put_msPlayToPrimary(VARIANT_BOOL);
+    HRESULT get_msPlayToPrimary(VARIANT_BOOL*);
 }
 enum IID_IHTMLSourceElement = GUID(0x30510707, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLSourceElement : IDispatch
@@ -19641,42 +19641,42 @@ interface DispSVGTSpanElement : IDispatch
 enum IID_ITemplatePrinter = GUID(0x3050f6b4, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface ITemplatePrinter : IDispatch
 {
-    HRESULT startDoc(BSTR, short*);
+    HRESULT startDoc(BSTR, VARIANT_BOOL*);
     HRESULT stopDoc();
     HRESULT printBlankPage();
     HRESULT printPage(IDispatch);
-    HRESULT ensurePrintDialogDefaults(short*);
-    HRESULT showPrintDialog(short*);
-    HRESULT showPageSetupDialog(short*);
-    HRESULT printNonNative(IUnknown, short*);
-    HRESULT printNonNativeFrames(IUnknown, short);
-    HRESULT put_framesetDocument(short);
-    HRESULT get_framesetDocument(short*);
-    HRESULT put_frameActive(short);
-    HRESULT get_frameActive(short*);
-    HRESULT put_frameAsShown(short);
-    HRESULT get_frameAsShown(short*);
-    HRESULT put_selection(short);
-    HRESULT get_selection(short*);
-    HRESULT put_selectedPages(short);
-    HRESULT get_selectedPages(short*);
-    HRESULT put_currentPage(short);
-    HRESULT get_currentPage(short*);
-    HRESULT put_currentPageAvail(short);
-    HRESULT get_currentPageAvail(short*);
-    HRESULT put_collate(short);
-    HRESULT get_collate(short*);
-    HRESULT get_duplex(short*);
+    HRESULT ensurePrintDialogDefaults(VARIANT_BOOL*);
+    HRESULT showPrintDialog(VARIANT_BOOL*);
+    HRESULT showPageSetupDialog(VARIANT_BOOL*);
+    HRESULT printNonNative(IUnknown, VARIANT_BOOL*);
+    HRESULT printNonNativeFrames(IUnknown, VARIANT_BOOL);
+    HRESULT put_framesetDocument(VARIANT_BOOL);
+    HRESULT get_framesetDocument(VARIANT_BOOL*);
+    HRESULT put_frameActive(VARIANT_BOOL);
+    HRESULT get_frameActive(VARIANT_BOOL*);
+    HRESULT put_frameAsShown(VARIANT_BOOL);
+    HRESULT get_frameAsShown(VARIANT_BOOL*);
+    HRESULT put_selection(VARIANT_BOOL);
+    HRESULT get_selection(VARIANT_BOOL*);
+    HRESULT put_selectedPages(VARIANT_BOOL);
+    HRESULT get_selectedPages(VARIANT_BOOL*);
+    HRESULT put_currentPage(VARIANT_BOOL);
+    HRESULT get_currentPage(VARIANT_BOOL*);
+    HRESULT put_currentPageAvail(VARIANT_BOOL);
+    HRESULT get_currentPageAvail(VARIANT_BOOL*);
+    HRESULT put_collate(VARIANT_BOOL);
+    HRESULT get_collate(VARIANT_BOOL*);
+    HRESULT get_duplex(VARIANT_BOOL*);
     HRESULT put_copies(ushort);
     HRESULT get_copies(ushort*);
     HRESULT put_pageFrom(ushort);
     HRESULT get_pageFrom(ushort*);
     HRESULT put_pageTo(ushort);
     HRESULT get_pageTo(ushort*);
-    HRESULT put_tableOfLinks(short);
-    HRESULT get_tableOfLinks(short*);
-    HRESULT put_allLinkedDocuments(short);
-    HRESULT get_allLinkedDocuments(short*);
+    HRESULT put_tableOfLinks(VARIANT_BOOL);
+    HRESULT get_tableOfLinks(VARIANT_BOOL*);
+    HRESULT put_allLinkedDocuments(VARIANT_BOOL);
+    HRESULT get_allLinkedDocuments(VARIANT_BOOL*);
     HRESULT put_header(BSTR);
     HRESULT get_header(BSTR*);
     HRESULT put_footer(BSTR);
@@ -19700,14 +19700,14 @@ interface ITemplatePrinter : IDispatch
 enum IID_ITemplatePrinter2 = GUID(0x3050f83f, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface ITemplatePrinter2 : ITemplatePrinter
 {
-    HRESULT put_selectionEnabled(short);
-    HRESULT get_selectionEnabled(short*);
-    HRESULT put_frameActiveEnabled(short);
-    HRESULT get_frameActiveEnabled(short*);
+    HRESULT put_selectionEnabled(VARIANT_BOOL);
+    HRESULT get_selectionEnabled(VARIANT_BOOL*);
+    HRESULT put_frameActiveEnabled(VARIANT_BOOL);
+    HRESULT get_frameActiveEnabled(VARIANT_BOOL*);
     HRESULT put_orientation(BSTR);
     HRESULT get_orientation(BSTR*);
-    HRESULT put_usePrinterCopyCollate(short);
-    HRESULT get_usePrinterCopyCollate(short*);
+    HRESULT put_usePrinterCopyCollate(VARIANT_BOOL);
+    HRESULT get_usePrinterCopyCollate(VARIANT_BOOL*);
     HRESULT deviceSupports(BSTR, VARIANT*);
 }
 enum IID_ITemplatePrinter3 = GUID(0x305104a3, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
@@ -19719,10 +19719,10 @@ interface ITemplatePrinter3 : ITemplatePrinter2
     HRESULT getPageMarginRight(IDispatch, int, int, VARIANT*);
     HRESULT getPageMarginBottom(IDispatch, int, int, VARIANT*);
     HRESULT getPageMarginLeft(IDispatch, int, int, VARIANT*);
-    HRESULT getPageMarginTopImportant(IDispatch, short*);
-    HRESULT getPageMarginRightImportant(IDispatch, short*);
-    HRESULT getPageMarginBottomImportant(IDispatch, short*);
-    HRESULT getPageMarginLeftImportant(IDispatch, short*);
+    HRESULT getPageMarginTopImportant(IDispatch, VARIANT_BOOL*);
+    HRESULT getPageMarginRightImportant(IDispatch, VARIANT_BOOL*);
+    HRESULT getPageMarginBottomImportant(IDispatch, VARIANT_BOOL*);
+    HRESULT getPageMarginLeftImportant(IDispatch, VARIANT_BOOL*);
 }
 enum IID_IPrintManagerTemplatePrinter = GUID(0xf633be14, 0x9eff, 0x4c4d, [0x92, 0x9e, 0x5, 0x71, 0x7b, 0x21, 0xb3, 0xe6]);
 interface IPrintManagerTemplatePrinter : IDispatch
@@ -19737,8 +19737,8 @@ interface IPrintManagerTemplatePrinter : IDispatch
 enum IID_IPrintManagerTemplatePrinter2 = GUID(0xc6403497, 0x7493, 0x4f09, [0x80, 0x16, 0x54, 0xb0, 0x3e, 0x9b, 0xda, 0x69]);
 interface IPrintManagerTemplatePrinter2 : IPrintManagerTemplatePrinter
 {
-    HRESULT get_showHeaderFooter(short*);
-    HRESULT get_shrinkToFit(short*);
+    HRESULT get_showHeaderFooter(VARIANT_BOOL*);
+    HRESULT get_shrinkToFit(VARIANT_BOOL*);
     HRESULT get_percentScale(float*);
 }
 enum IID_DispCPrintManagerTemplatePrinter = GUID(0x305900e9, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
@@ -19810,7 +19810,7 @@ interface IDOMMSTransitionEvent : IDispatch
 {
     HRESULT get_propertyName(BSTR*);
     HRESULT get_elapsedTime(float*);
-    HRESULT initMSTransitionEvent(BSTR, short, short, BSTR, float);
+    HRESULT initMSTransitionEvent(BSTR, VARIANT_BOOL, VARIANT_BOOL, BSTR, float);
 }
 enum IID_DispDOMMSTransitionEvent = GUID(0x305900bb, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispDOMMSTransitionEvent : IDispatch
@@ -19821,7 +19821,7 @@ interface IDOMMSAnimationEvent : IDispatch
 {
     HRESULT get_animationName(BSTR*);
     HRESULT get_elapsedTime(float*);
-    HRESULT initMSAnimationEvent(BSTR, short, short, BSTR, float);
+    HRESULT initMSAnimationEvent(BSTR, VARIANT_BOOL, VARIANT_BOOL, BSTR, float);
 }
 enum IID_DispDOMMSAnimationEvent = GUID(0x305900bc, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispDOMMSAnimationEvent : IDispatch
@@ -19869,14 +19869,14 @@ interface DispWebGeoposition : IDispatch
 enum IID_IClientCaps = GUID(0x7e8bc44d, 0xaeff, 0x11d1, [0x89, 0xc2, 0x0, 0xc0, 0x4f, 0xb6, 0xbf, 0xc4]);
 interface IClientCaps : IDispatch
 {
-    HRESULT get_javaEnabled(short*);
-    HRESULT get_cookieEnabled(short*);
+    HRESULT get_javaEnabled(VARIANT_BOOL*);
+    HRESULT get_cookieEnabled(VARIANT_BOOL*);
     HRESULT get_cpuClass(BSTR*);
     HRESULT get_systemLanguage(BSTR*);
     HRESULT get_userLanguage(BSTR*);
     HRESULT get_platform(BSTR*);
     HRESULT get_connectionSpeed(int*);
-    HRESULT get_onLine(short*);
+    HRESULT get_onLine(VARIANT_BOOL*);
     HRESULT get_colorDepth(int*);
     HRESULT get_bufferDepth(int*);
     HRESULT get_width(int*);
@@ -19884,11 +19884,11 @@ interface IClientCaps : IDispatch
     HRESULT get_availHeight(int*);
     HRESULT get_availWidth(int*);
     HRESULT get_connectionType(BSTR*);
-    HRESULT isComponentInstalled(BSTR, BSTR, BSTR, short*);
+    HRESULT isComponentInstalled(BSTR, BSTR, BSTR, VARIANT_BOOL*);
     HRESULT getComponentVersion(BSTR, BSTR, BSTR*);
     HRESULT compareVersions(BSTR, BSTR, int*);
     HRESULT addComponentRequest(BSTR, BSTR, BSTR);
-    HRESULT doComponentRequest(short*);
+    HRESULT doComponentRequest(VARIANT_BOOL*);
     HRESULT clearComponentRequest();
 }
 enum IID_IDOMMSManipulationEvent = GUID(0x30510816, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
@@ -19896,7 +19896,7 @@ interface IDOMMSManipulationEvent : IDispatch
 {
     HRESULT get_lastState(int*);
     HRESULT get_currentState(int*);
-    HRESULT initMSManipulationEvent(BSTR, short, short, IHTMLWindow2, int, int, int);
+    HRESULT initMSManipulationEvent(BSTR, VARIANT_BOOL, VARIANT_BOOL, IHTMLWindow2, int, int, int);
 }
 enum IID_DispDOMMSManipulationEvent = GUID(0x305900e1, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispDOMMSManipulationEvent : IDispatch
@@ -19905,8 +19905,8 @@ interface DispDOMMSManipulationEvent : IDispatch
 enum IID_IDOMCloseEvent = GUID(0x305107ff, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IDOMCloseEvent : IDispatch
 {
-    HRESULT get_wasClean(short*);
-    HRESULT initCloseEvent(BSTR, short, short, short, int, BSTR);
+    HRESULT get_wasClean(VARIANT_BOOL*);
+    HRESULT initCloseEvent(BSTR, VARIANT_BOOL, VARIANT_BOOL, VARIANT_BOOL, int, BSTR);
 }
 enum IID_DispDOMCloseEvent = GUID(0x305900dc, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispDOMCloseEvent : IDispatch
@@ -20160,7 +20160,7 @@ interface IMarkupTextFrags : IUnknown
 enum IID_IXMLGenericParse = GUID(0xe4e23071, 0x4d07, 0x11d2, [0xae, 0x76, 0x0, 0x80, 0xc7, 0x3b, 0xc1, 0x99]);
 interface IXMLGenericParse : IUnknown
 {
-    HRESULT SetGenericParse(short);
+    HRESULT SetGenericParse(VARIANT_BOOL);
 }
 enum IID_IHTMLEditHost = GUID(0x3050f6a0, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLEditHost : IUnknown
@@ -20230,25 +20230,25 @@ interface IHTMLEditServices2 : IHTMLEditServices
 enum IID_IHTMLComputedStyle = GUID(0x3050f6c3, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLComputedStyle : IUnknown
 {
-    HRESULT get_bold(short*);
-    HRESULT get_italic(short*);
-    HRESULT get_underline(short*);
-    HRESULT get_overline(short*);
-    HRESULT get_strikeOut(short*);
-    HRESULT get_subScript(short*);
-    HRESULT get_superScript(short*);
-    HRESULT get_explicitFace(short*);
+    HRESULT get_bold(VARIANT_BOOL*);
+    HRESULT get_italic(VARIANT_BOOL*);
+    HRESULT get_underline(VARIANT_BOOL*);
+    HRESULT get_overline(VARIANT_BOOL*);
+    HRESULT get_strikeOut(VARIANT_BOOL*);
+    HRESULT get_subScript(VARIANT_BOOL*);
+    HRESULT get_superScript(VARIANT_BOOL*);
+    HRESULT get_explicitFace(VARIANT_BOOL*);
     HRESULT get_fontWeight(int*);
     HRESULT get_fontSize(int*);
     HRESULT get_fontName(byte*);
-    HRESULT get_hasBgColor(short*);
+    HRESULT get_hasBgColor(VARIANT_BOOL*);
     HRESULT get_textColor(uint*);
     HRESULT get_backgroundColor(uint*);
-    HRESULT get_preFormatted(short*);
-    HRESULT get_direction(short*);
-    HRESULT get_blockDirection(short*);
-    HRESULT get_OL(short*);
-    HRESULT IsEqual(IHTMLComputedStyle, short*);
+    HRESULT get_preFormatted(VARIANT_BOOL*);
+    HRESULT get_direction(VARIANT_BOOL*);
+    HRESULT get_blockDirection(VARIANT_BOOL*);
+    HRESULT get_OL(VARIANT_BOOL*);
+    HRESULT IsEqual(IHTMLComputedStyle, VARIANT_BOOL*);
 }
 enum IID_IDeveloperConsoleMessageReceiver = GUID(0x30510808, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IDeveloperConsoleMessageReceiver : IUnknown
@@ -20311,7 +20311,7 @@ interface IHTMLNamespace : IDispatch
     HRESULT put_onreadystatechange(VARIANT);
     HRESULT get_onreadystatechange(VARIANT*);
     HRESULT doImport(BSTR);
-    HRESULT attachEvent(BSTR, IDispatch, short*);
+    HRESULT attachEvent(BSTR, IDispatch, VARIANT_BOOL*);
     HRESULT detachEvent(BSTR, IDispatch);
 }
 enum IID_IHTMLNamespaceCollection = GUID(0x3050f6b8, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
@@ -20540,7 +20540,7 @@ interface IHTMLPopup : IDispatch
     HRESULT show(int, int, int, int, VARIANT*);
     HRESULT hide();
     HRESULT get_document(IHTMLDocument*);
-    HRESULT get_isOpen(short*);
+    HRESULT get_isOpen(VARIANT_BOOL*);
 }
 enum IID_DispHTMLPopup = GUID(0x3050f589, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface DispHTMLPopup : IDispatch
@@ -21174,13 +21174,13 @@ interface IHomePage : IDispatch
 {
     HRESULT navigateHomePage();
     HRESULT setHomePage(BSTR);
-    HRESULT isHomePage(BSTR, short*);
+    HRESULT isHomePage(BSTR, VARIANT_BOOL*);
 }
 enum IID_IIntelliForms = GUID(0x9b9f68e6, 0x1aaa, 0x11d2, [0xbc, 0xa5, 0x0, 0xc0, 0x4f, 0xd9, 0x29, 0xdb]);
 interface IIntelliForms : IDispatch
 {
-    HRESULT get_enabled(short*);
-    HRESULT put_enabled(short);
+    HRESULT get_enabled(VARIANT_BOOL*);
+    HRESULT put_enabled(VARIANT_BOOL);
 }
 enum IID_Iwfolders = GUID(0xbae31f98, 0x1b81, 0x11d2, [0xa9, 0x7a, 0x0, 0xc0, 0x4f, 0x8e, 0xcb, 0x2]);
 interface Iwfolders : IDispatch
@@ -21217,9 +21217,9 @@ interface IHTMLPersistDataOM : IDispatch
 enum IID_IHTMLPersistData = GUID(0x3050f4c5, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLPersistData : IUnknown
 {
-    HRESULT save(IUnknown, int, short*);
-    HRESULT load(IUnknown, int, short*);
-    HRESULT queryType(int, short*);
+    HRESULT save(IUnknown, int, VARIANT_BOOL*);
+    HRESULT load(IUnknown, int, VARIANT_BOOL*);
+    HRESULT queryType(int, VARIANT_BOOL*);
 }
 enum IID_IDownloadBehavior = GUID(0x3050f5bd, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IDownloadBehavior : IDispatch
@@ -21233,10 +21233,10 @@ interface ILayoutRect : IDispatch
     HRESULT get_nextRect(BSTR*);
     HRESULT put_contentSrc(VARIANT);
     HRESULT get_contentSrc(VARIANT*);
-    HRESULT put_honorPageBreaks(short);
-    HRESULT get_honorPageBreaks(short*);
-    HRESULT put_honorPageRules(short);
-    HRESULT get_honorPageRules(short*);
+    HRESULT put_honorPageBreaks(VARIANT_BOOL);
+    HRESULT get_honorPageBreaks(VARIANT_BOOL*);
+    HRESULT put_honorPageRules(VARIANT_BOOL);
+    HRESULT get_honorPageRules(VARIANT_BOOL*);
     HRESULT put_nextRectElement(IDispatch);
     HRESULT get_nextRectElement(IDispatch*);
     HRESULT get_contentDocument(IDispatch*);
@@ -21581,7 +21581,7 @@ interface IUrlHistoryNotify : IOleCommandTarget
 enum IID_IWebBrowserEventsService = GUID(0x54a8f188, 0x9ebd, 0x4795, [0xad, 0x16, 0x9b, 0x49, 0x45, 0x11, 0x96, 0x36]);
 interface IWebBrowserEventsService : IUnknown
 {
-    HRESULT FireBeforeNavigate2Event(short*);
+    HRESULT FireBeforeNavigate2Event(VARIANT_BOOL*);
     HRESULT FireNavigateComplete2Event();
     HRESULT FireDownloadBeginEvent();
     HRESULT FireDownloadCompleteEvent();

@@ -1,7 +1,7 @@
 module windows.win32.media.speech;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, PWSTR, WPARAM;
+import windows.win32.foundation : BOOL, BSTR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, PWSTR, VARIANT_BOOL, WPARAM;
 import windows.win32.media.audio_ : WAVEFORMATEX;
 import windows.win32.system.com_ : IDispatch, IServiceProvider, IStream, IUnknown, VARIANT;
 import windows.win32.system.com.urlmon : IInternetSecurityManager;
@@ -1321,7 +1321,7 @@ interface ISpRecoGrammar2 : IUnknown
 enum IID_ISpeechResourceLoader = GUID(0xb9ac5783, 0xfcd0, 0x4b21, [0xb1, 0x19, 0xb4, 0xf8, 0xda, 0x8f, 0xd2, 0xc3]);
 interface ISpeechResourceLoader : IDispatch
 {
-    HRESULT LoadResource(BSTR, short, IUnknown*, BSTR*, short*, BSTR*);
+    HRESULT LoadResource(BSTR, VARIANT_BOOL, IUnknown*, BSTR*, VARIANT_BOOL*, BSTR*);
     HRESULT GetLocalCopy(BSTR, BSTR*, BSTR*, BSTR*);
     HRESULT ReleaseLocalCopy(BSTR);
 }
@@ -2569,15 +2569,15 @@ interface ISpeechObjectToken : IDispatch
     HRESULT get_DataKey(ISpeechDataKey*);
     HRESULT get_Category(ISpeechObjectTokenCategory*);
     HRESULT GetDescription(int, BSTR*);
-    HRESULT SetId(BSTR, BSTR, short);
+    HRESULT SetId(BSTR, BSTR, VARIANT_BOOL);
     HRESULT GetAttribute(BSTR, BSTR*);
     HRESULT CreateInstance(IUnknown, SpeechTokenContext, IUnknown*);
     HRESULT Remove(BSTR);
     HRESULT GetStorageFileName(BSTR, BSTR, BSTR, SpeechTokenShellFolder, BSTR*);
-    HRESULT RemoveStorageFileName(BSTR, BSTR, short);
-    HRESULT IsUISupported(const(BSTR), const(VARIANT)*, IUnknown, short*);
+    HRESULT RemoveStorageFileName(BSTR, BSTR, VARIANT_BOOL);
+    HRESULT IsUISupported(const(BSTR), const(VARIANT)*, IUnknown, VARIANT_BOOL*);
     HRESULT DisplayUI(int, BSTR, const(BSTR), const(VARIANT)*, IUnknown);
-    HRESULT MatchesAttributes(BSTR, short*);
+    HRESULT MatchesAttributes(BSTR, VARIANT_BOOL*);
 }
 enum IID_ISpeechObjectTokens = GUID(0x9285b776, 0x2e7b, 0x4bc0, [0xb5, 0x3e, 0x58, 0xe, 0xb6, 0xfa, 0x96, 0x7f]);
 interface ISpeechObjectTokens : IDispatch
@@ -2592,7 +2592,7 @@ interface ISpeechObjectTokenCategory : IDispatch
     HRESULT get_Id(BSTR*);
     HRESULT put_Default(const(BSTR));
     HRESULT get_Default(BSTR*);
-    HRESULT SetId(const(BSTR), short);
+    HRESULT SetId(const(BSTR), VARIANT_BOOL);
     HRESULT GetDataKey(SpeechDataKeyLocation, ISpeechDataKey*);
     HRESULT EnumerateTokens(BSTR, BSTR, ISpeechObjectTokens*);
 }
@@ -2655,7 +2655,7 @@ interface ISpeechBaseStream : IDispatch
 enum IID_ISpeechFileStream = GUID(0xaf67f125, 0xab39, 0x4e93, [0xb4, 0xa2, 0xcc, 0x2e, 0x66, 0xe1, 0x82, 0xa7]);
 interface ISpeechFileStream : ISpeechBaseStream
 {
-    HRESULT Open(BSTR, SpeechStreamFileMode, short);
+    HRESULT Open(BSTR, SpeechStreamFileMode, VARIANT_BOOL);
     HRESULT Close();
 }
 enum IID_ISpeechMemoryStream = GUID(0xeeb14b68, 0x808b, 0x4abe, [0xa5, 0xea, 0xb5, 0x1d, 0xa7, 0x58, 0x80, 0x8]);
@@ -2706,8 +2706,8 @@ interface ISpeechVoice : IDispatch
     HRESULT put_Rate(int);
     HRESULT get_Volume(int*);
     HRESULT put_Volume(int);
-    HRESULT put_AllowAudioOutputFormatChangesOnNextSet(short);
-    HRESULT get_AllowAudioOutputFormatChangesOnNextSet(short*);
+    HRESULT put_AllowAudioOutputFormatChangesOnNextSet(VARIANT_BOOL);
+    HRESULT get_AllowAudioOutputFormatChangesOnNextSet(VARIANT_BOOL*);
     HRESULT get_EventInterests(SpeechVoiceEvents*);
     HRESULT put_EventInterests(SpeechVoiceEvents);
     HRESULT put_Priority(SpeechVoicePriority);
@@ -2723,9 +2723,9 @@ interface ISpeechVoice : IDispatch
     HRESULT Skip(const(BSTR), int, int*);
     HRESULT GetVoices(BSTR, BSTR, ISpeechObjectTokens*);
     HRESULT GetAudioOutputs(BSTR, BSTR, ISpeechObjectTokens*);
-    HRESULT WaitUntilDone(int, short*);
+    HRESULT WaitUntilDone(int, VARIANT_BOOL*);
     HRESULT SpeakCompleteEvent(int*);
-    HRESULT IsUISupported(const(BSTR), const(VARIANT)*, short*);
+    HRESULT IsUISupported(const(BSTR), const(VARIANT)*, VARIANT_BOOL*);
     HRESULT DisplayUI(int, BSTR, const(BSTR), const(VARIANT)*);
 }
 enum IID_ISpeechVoiceStatus = GUID(0x8be47b07, 0x57f6, 0x11d2, [0x9e, 0xee, 0x0, 0xc0, 0x4f, 0x79, 0x73, 0x96]);
@@ -2753,13 +2753,13 @@ interface ISpeechRecognizer : IDispatch
 {
     HRESULT putref_Recognizer(ISpeechObjectToken);
     HRESULT get_Recognizer(ISpeechObjectToken*);
-    HRESULT put_AllowAudioInputFormatChangesOnNextSet(short);
-    HRESULT get_AllowAudioInputFormatChangesOnNextSet(short*);
+    HRESULT put_AllowAudioInputFormatChangesOnNextSet(VARIANT_BOOL);
+    HRESULT get_AllowAudioInputFormatChangesOnNextSet(VARIANT_BOOL*);
     HRESULT putref_AudioInput(ISpeechObjectToken);
     HRESULT get_AudioInput(ISpeechObjectToken*);
     HRESULT putref_AudioInputStream(ISpeechBaseStream);
     HRESULT get_AudioInputStream(ISpeechBaseStream*);
-    HRESULT get_IsShared(short*);
+    HRESULT get_IsShared(VARIANT_BOOL*);
     HRESULT put_State(SpeechRecognizerState);
     HRESULT get_State(SpeechRecognizerState*);
     HRESULT get_Status(ISpeechRecognizerStatus*);
@@ -2768,11 +2768,11 @@ interface ISpeechRecognizer : IDispatch
     HRESULT EmulateRecognition(VARIANT, VARIANT*, int);
     HRESULT CreateRecoContext(ISpeechRecoContext*);
     HRESULT GetFormat(SpeechFormatType, ISpeechAudioFormat*);
-    HRESULT SetPropertyNumber(const(BSTR), int, short*);
-    HRESULT GetPropertyNumber(const(BSTR), int*, short*);
-    HRESULT SetPropertyString(const(BSTR), const(BSTR), short*);
-    HRESULT GetPropertyString(const(BSTR), BSTR*, short*);
-    HRESULT IsUISupported(const(BSTR), const(VARIANT)*, short*);
+    HRESULT SetPropertyNumber(const(BSTR), int, VARIANT_BOOL*);
+    HRESULT GetPropertyNumber(const(BSTR), int*, VARIANT_BOOL*);
+    HRESULT SetPropertyString(const(BSTR), const(BSTR), VARIANT_BOOL*);
+    HRESULT GetPropertyString(const(BSTR), BSTR*, VARIANT_BOOL*);
+    HRESULT IsUISupported(const(BSTR), const(VARIANT)*, VARIANT_BOOL*);
     HRESULT DisplayUI(int, BSTR, const(BSTR), const(VARIANT)*);
     HRESULT GetRecognizers(BSTR, BSTR, ISpeechObjectTokens*);
     HRESULT GetAudioInputs(BSTR, BSTR, ISpeechObjectTokens*);
@@ -2796,8 +2796,8 @@ interface ISpeechRecoContext : IDispatch
     HRESULT get_RequestedUIType(BSTR*);
     HRESULT putref_Voice(ISpeechVoice);
     HRESULT get_Voice(ISpeechVoice*);
-    HRESULT put_AllowVoiceFormatMatchingOnNextSet(short);
-    HRESULT get_AllowVoiceFormatMatchingOnNextSet(short*);
+    HRESULT put_AllowVoiceFormatMatchingOnNextSet(VARIANT_BOOL);
+    HRESULT get_AllowVoiceFormatMatchingOnNextSet(VARIANT_BOOL*);
     HRESULT put_VoicePurgeEvent(SpeechRecoEvents);
     HRESULT get_VoicePurgeEvent(SpeechRecoEvents*);
     HRESULT put_EventInterests(SpeechRecoEvents);
@@ -2862,7 +2862,7 @@ interface ISpeechGrammarRules : IDispatch
     HRESULT FindRule(VARIANT, ISpeechGrammarRule*);
     HRESULT Item(int, ISpeechGrammarRule*);
     HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Dynamic(short*);
+    HRESULT get_Dynamic(VARIANT_BOOL*);
     HRESULT Add(BSTR, SpeechRuleAttributes, int, ISpeechGrammarRule*);
     HRESULT Commit();
     HRESULT CommitAndSave(BSTR*, VARIANT*);
@@ -2924,7 +2924,7 @@ interface ISpeechRecoResult : IDispatch
 enum IID_ISpeechRecoResult2 = GUID(0x8e0a246d, 0xd3c8, 0x45de, [0x86, 0x57, 0x4, 0x29, 0xc, 0x45, 0x8c, 0x3c]);
 interface ISpeechRecoResult2 : ISpeechRecoResult
 {
-    HRESULT SetTextFeedback(BSTR, short);
+    HRESULT SetTextFeedback(BSTR, VARIANT_BOOL);
 }
 enum IID_ISpeechRecoResultTimes = GUID(0x62b3b8fb, 0xf6e7, 0x41be, [0xbd, 0xcb, 0x5, 0x6b, 0x1c, 0x29, 0xef, 0xc0]);
 interface ISpeechRecoResultTimes : IDispatch
@@ -2967,8 +2967,8 @@ interface ISpeechPhraseInfo : IDispatch
     HRESULT get_EngineId(BSTR*);
     HRESULT get_EnginePrivateData(VARIANT*);
     HRESULT SaveToMemory(VARIANT*);
-    HRESULT GetText(int, int, short, BSTR*);
-    HRESULT GetDisplayAttributes(int, int, short, SpeechDisplayAttributes*);
+    HRESULT GetText(int, int, VARIANT_BOOL, BSTR*);
+    HRESULT GetDisplayAttributes(int, int, VARIANT_BOOL, SpeechDisplayAttributes*);
 }
 enum IID_ISpeechPhraseElement = GUID(0xe6176f96, 0xe373, 0x4801, [0xb2, 0x23, 0x3b, 0x62, 0xc0, 0x68, 0xc0, 0xb4]);
 interface ISpeechPhraseElement : IDispatch
@@ -3095,7 +3095,7 @@ enum IID_ISpeechXMLRecoResult = GUID(0xaaec54af, 0x8f85, 0x4924, [0x94, 0x4d, 0x
 interface ISpeechXMLRecoResult : ISpeechRecoResult
 {
     HRESULT GetXMLResult(SPXMLRESULTOPTIONS, BSTR*);
-    HRESULT GetXMLErrorInfo(int*, BSTR*, BSTR*, BSTR*, int*, short*);
+    HRESULT GetXMLErrorInfo(int*, BSTR*, BSTR*, BSTR*, int*, VARIANT_BOOL*);
 }
 enum IID_ISpeechRecoResultDispatch = GUID(0x6d60eb64, 0xaced, 0x40a6, [0xbb, 0xf3, 0x4e, 0x55, 0x7f, 0x71, 0xde, 0xe2]);
 interface ISpeechRecoResultDispatch : IDispatch
@@ -3111,8 +3111,8 @@ interface ISpeechRecoResultDispatch : IDispatch
     HRESULT SaveToMemory(VARIANT*);
     HRESULT DiscardResultInfo(SpeechDiscardType);
     HRESULT GetXMLResult(SPXMLRESULTOPTIONS, BSTR*);
-    HRESULT GetXMLErrorInfo(int*, BSTR*, BSTR*, BSTR*, HRESULT*, short*);
-    HRESULT SetTextFeedback(BSTR, short);
+    HRESULT GetXMLErrorInfo(int*, BSTR*, BSTR*, BSTR*, HRESULT*, VARIANT_BOOL*);
+    HRESULT SetTextFeedback(BSTR, VARIANT_BOOL);
 }
 enum IID_ISpeechPhraseInfoBuilder = GUID(0x3b151836, 0xdf3a, 0x4e0a, [0x84, 0x6c, 0xd2, 0xad, 0xc9, 0x33, 0x43, 0x33]);
 interface ISpeechPhraseInfoBuilder : IDispatch

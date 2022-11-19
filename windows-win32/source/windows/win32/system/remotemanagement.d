@@ -1,7 +1,7 @@
 module windows.win32.system.remotemanagement;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, HANDLE, HRESULT, PWSTR;
+import windows.win32.foundation : BOOL, BSTR, HANDLE, HRESULT, PWSTR, VARIANT_BOOL;
 import windows.win32.system.com_ : IDispatch, IUnknown, VARIANT;
 
 version (Windows):
@@ -1054,7 +1054,7 @@ enum IID_IWSManEnumerator = GUID(0xf3457ca9, 0xabb9, 0x4fa5, [0xb8, 0x50, 0x90, 
 interface IWSManEnumerator : IDispatch
 {
     HRESULT ReadItem(BSTR*);
-    HRESULT get_AtEndOfStream(short*);
+    HRESULT get_AtEndOfStream(VARIANT_BOOL*);
     HRESULT get_Error(BSTR*);
 }
 enum IID_IWSManResourceLocator = GUID(0xa7a1ba28, 0xde41, 0x466a, [0xad, 0xa, 0xc4, 0x5, 0x9e, 0xad, 0x74, 0x28]);

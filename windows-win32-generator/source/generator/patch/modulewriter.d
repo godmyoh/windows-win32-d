@@ -110,9 +110,6 @@ class ModuleWriterPatch : IModuleWriter
         patches[r"qos.d"] = [
             P((d) => d.startsWith("struct IPX_PATTERN"), (d) => commentOutUnsupportedDecl(d)),
             ];
-        patches[r"opengl.d"] = [
-            P((d) => d.startsWith("alias PFD_LAYER_TYPE = byte;"), (d) => d.replace("byte", "ubyte")),
-            ];
         patches[r"winml.d"] = [
             P((d) => d.startsWith("alias MLOperatorAttributeType"), (d) => removeFirstLine(d).replace("enum", "enum MLOperatorAttributeType")),
             P((d) => d.startsWith("alias MLOperatorTensorDataType"), (d) => removeFirstLine(d).replace("enum", "enum MLOperatorTensorDataType")),

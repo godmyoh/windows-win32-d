@@ -124,50 +124,50 @@ HRESULT ImageList_CoCreateInstance(const(GUID)*, const(IUnknown), const(GUID)*, 
 BOOL BeginPanningFeedback(HWND);
 BOOL UpdatePanningFeedback(HWND, int, int, BOOL);
 BOOL EndPanningFeedback(HWND, BOOL);
-HRESULT GetThemeAnimationProperty(long, int, int, TA_PROPERTY, void*, uint, uint*);
-HRESULT GetThemeAnimationTransform(long, int, int, uint, TA_TRANSFORM*, uint, uint*);
-HRESULT GetThemeTimingFunction(long, int, TA_TIMINGFUNCTION*, uint, uint*);
-long OpenThemeData(HWND, const(wchar)*);
-long OpenThemeDataEx(HWND, const(wchar)*, OPEN_THEME_DATA_FLAGS);
-HRESULT CloseThemeData(long);
-HRESULT DrawThemeBackground(long, HDC, int, int, RECT*, RECT*);
-HRESULT DrawThemeBackgroundEx(long, HDC, int, int, RECT*, const(DTBGOPTS)*);
-HRESULT DrawThemeText(long, HDC, int, int, const(wchar)*, int, DRAW_TEXT_FORMAT, uint, RECT*);
-HRESULT GetThemeBackgroundContentRect(long, HDC, int, int, RECT*, RECT*);
-HRESULT GetThemeBackgroundExtent(long, HDC, int, int, RECT*, RECT*);
-HRESULT GetThemeBackgroundRegion(long, HDC, int, int, RECT*, HRGN*);
-HRESULT GetThemePartSize(long, HDC, int, int, RECT*, THEMESIZE, SIZE*);
-HRESULT GetThemeTextExtent(long, HDC, int, int, const(wchar)*, int, DRAW_TEXT_FORMAT, RECT*, RECT*);
-HRESULT GetThemeTextMetrics(long, HDC, int, int, TEXTMETRICW*);
-HRESULT HitTestThemeBackground(long, HDC, int, int, HIT_TEST_BACKGROUND_OPTIONS, RECT*, HRGN, POINT, ushort*);
-HRESULT DrawThemeEdge(long, HDC, int, int, RECT*, DRAWEDGE_FLAGS, DRAW_EDGE_FLAGS, RECT*);
-HRESULT DrawThemeIcon(long, HDC, int, int, RECT*, HIMAGELIST, int);
-BOOL IsThemePartDefined(long, int, int);
-BOOL IsThemeBackgroundPartiallyTransparent(long, int, int);
-HRESULT GetThemeColor(long, int, int, THEME_PROPERTY_SYMBOL_ID, COLORREF*);
-HRESULT GetThemeMetric(long, HDC, int, int, THEME_PROPERTY_SYMBOL_ID, int*);
-HRESULT GetThemeString(long, int, int, int, PWSTR, int);
-HRESULT GetThemeBool(long, int, int, THEME_PROPERTY_SYMBOL_ID, BOOL*);
-HRESULT GetThemeInt(long, int, int, THEME_PROPERTY_SYMBOL_ID, int*);
-HRESULT GetThemeEnumValue(long, int, int, THEME_PROPERTY_SYMBOL_ID, int*);
-HRESULT GetThemePosition(long, int, int, THEME_PROPERTY_SYMBOL_ID, POINT*);
-HRESULT GetThemeFont(long, HDC, int, int, int, LOGFONTW*);
-HRESULT GetThemeRect(long, int, int, int, RECT*);
-HRESULT GetThemeMargins(long, HDC, int, int, THEME_PROPERTY_SYMBOL_ID, RECT*, MARGINS*);
-HRESULT GetThemeIntList(long, int, int, THEME_PROPERTY_SYMBOL_ID, INTLIST*);
-HRESULT GetThemePropertyOrigin(long, int, int, int, PROPERTYORIGIN*);
+HRESULT GetThemeAnimationProperty(HTHEME, int, int, TA_PROPERTY, void*, uint, uint*);
+HRESULT GetThemeAnimationTransform(HTHEME, int, int, uint, TA_TRANSFORM*, uint, uint*);
+HRESULT GetThemeTimingFunction(HTHEME, int, TA_TIMINGFUNCTION*, uint, uint*);
+HTHEME OpenThemeData(HWND, const(wchar)*);
+HTHEME OpenThemeDataEx(HWND, const(wchar)*, OPEN_THEME_DATA_FLAGS);
+HRESULT CloseThemeData(HTHEME);
+HRESULT DrawThemeBackground(HTHEME, HDC, int, int, RECT*, RECT*);
+HRESULT DrawThemeBackgroundEx(HTHEME, HDC, int, int, RECT*, const(DTBGOPTS)*);
+HRESULT DrawThemeText(HTHEME, HDC, int, int, const(wchar)*, int, DRAW_TEXT_FORMAT, uint, RECT*);
+HRESULT GetThemeBackgroundContentRect(HTHEME, HDC, int, int, RECT*, RECT*);
+HRESULT GetThemeBackgroundExtent(HTHEME, HDC, int, int, RECT*, RECT*);
+HRESULT GetThemeBackgroundRegion(HTHEME, HDC, int, int, RECT*, HRGN*);
+HRESULT GetThemePartSize(HTHEME, HDC, int, int, RECT*, THEMESIZE, SIZE*);
+HRESULT GetThemeTextExtent(HTHEME, HDC, int, int, const(wchar)*, int, DRAW_TEXT_FORMAT, RECT*, RECT*);
+HRESULT GetThemeTextMetrics(HTHEME, HDC, int, int, TEXTMETRICW*);
+HRESULT HitTestThemeBackground(HTHEME, HDC, int, int, HIT_TEST_BACKGROUND_OPTIONS, RECT*, HRGN, POINT, ushort*);
+HRESULT DrawThemeEdge(HTHEME, HDC, int, int, RECT*, DRAWEDGE_FLAGS, DRAW_EDGE_FLAGS, RECT*);
+HRESULT DrawThemeIcon(HTHEME, HDC, int, int, RECT*, HIMAGELIST, int);
+BOOL IsThemePartDefined(HTHEME, int, int);
+BOOL IsThemeBackgroundPartiallyTransparent(HTHEME, int, int);
+HRESULT GetThemeColor(HTHEME, int, int, THEME_PROPERTY_SYMBOL_ID, COLORREF*);
+HRESULT GetThemeMetric(HTHEME, HDC, int, int, THEME_PROPERTY_SYMBOL_ID, int*);
+HRESULT GetThemeString(HTHEME, int, int, int, PWSTR, int);
+HRESULT GetThemeBool(HTHEME, int, int, THEME_PROPERTY_SYMBOL_ID, BOOL*);
+HRESULT GetThemeInt(HTHEME, int, int, THEME_PROPERTY_SYMBOL_ID, int*);
+HRESULT GetThemeEnumValue(HTHEME, int, int, THEME_PROPERTY_SYMBOL_ID, int*);
+HRESULT GetThemePosition(HTHEME, int, int, THEME_PROPERTY_SYMBOL_ID, POINT*);
+HRESULT GetThemeFont(HTHEME, HDC, int, int, int, LOGFONTW*);
+HRESULT GetThemeRect(HTHEME, int, int, int, RECT*);
+HRESULT GetThemeMargins(HTHEME, HDC, int, int, THEME_PROPERTY_SYMBOL_ID, RECT*, MARGINS*);
+HRESULT GetThemeIntList(HTHEME, int, int, THEME_PROPERTY_SYMBOL_ID, INTLIST*);
+HRESULT GetThemePropertyOrigin(HTHEME, int, int, int, PROPERTYORIGIN*);
 HRESULT SetWindowTheme(HWND, const(wchar)*, const(wchar)*);
-HRESULT GetThemeFilename(long, int, int, THEME_PROPERTY_SYMBOL_ID, PWSTR, int);
-COLORREF GetThemeSysColor(long, int);
-HBRUSH GetThemeSysColorBrush(long, THEME_PROPERTY_SYMBOL_ID);
-BOOL GetThemeSysBool(long, THEME_PROPERTY_SYMBOL_ID);
-int GetThemeSysSize(long, int);
-HRESULT GetThemeSysFont(long, THEME_PROPERTY_SYMBOL_ID, LOGFONTW*);
-HRESULT GetThemeSysString(long, THEME_PROPERTY_SYMBOL_ID, PWSTR, int);
-HRESULT GetThemeSysInt(long, THEME_PROPERTY_SYMBOL_ID, int*);
+HRESULT GetThemeFilename(HTHEME, int, int, THEME_PROPERTY_SYMBOL_ID, PWSTR, int);
+COLORREF GetThemeSysColor(HTHEME, int);
+HBRUSH GetThemeSysColorBrush(HTHEME, THEME_PROPERTY_SYMBOL_ID);
+BOOL GetThemeSysBool(HTHEME, THEME_PROPERTY_SYMBOL_ID);
+int GetThemeSysSize(HTHEME, int);
+HRESULT GetThemeSysFont(HTHEME, THEME_PROPERTY_SYMBOL_ID, LOGFONTW*);
+HRESULT GetThemeSysString(HTHEME, THEME_PROPERTY_SYMBOL_ID, PWSTR, int);
+HRESULT GetThemeSysInt(HTHEME, THEME_PROPERTY_SYMBOL_ID, int*);
 BOOL IsThemeActive();
 BOOL IsAppThemed();
-long GetWindowTheme(HWND);
+HTHEME GetWindowTheme(HWND);
 HRESULT EnableThemeDialogTexture(HWND, uint);
 BOOL IsThemeDialogTextureEnabled(HWND);
 SET_THEME_APP_PROPERTIES_FLAGS GetThemeAppProperties();
@@ -178,9 +178,9 @@ HRESULT DrawThemeParentBackground(HWND, HDC, const(RECT)*);
 HRESULT EnableTheming(BOOL);
 HRESULT DrawThemeParentBackgroundEx(HWND, HDC, DRAW_THEME_PARENT_BACKGROUND_FLAGS, const(RECT)*);
 HRESULT SetWindowThemeAttribute(HWND, WINDOWTHEMEATTRIBUTETYPE, void*, uint);
-HRESULT DrawThemeTextEx(long, HDC, int, int, const(wchar)*, int, DRAW_TEXT_FORMAT, RECT*, const(DTTOPTS)*);
-HRESULT GetThemeBitmap(long, int, int, THEME_PROPERTY_SYMBOL_ID, GET_THEME_BITMAP_FLAGS, HBITMAP*);
-HRESULT GetThemeStream(long, int, int, int, void**, uint*, HINSTANCE);
+HRESULT DrawThemeTextEx(HTHEME, HDC, int, int, const(wchar)*, int, DRAW_TEXT_FORMAT, RECT*, const(DTTOPTS)*);
+HRESULT GetThemeBitmap(HTHEME, int, int, THEME_PROPERTY_SYMBOL_ID, GET_THEME_BITMAP_FLAGS, HBITMAP*);
+HRESULT GetThemeStream(HTHEME, int, int, int, void**, uint*, HINSTANCE);
 HRESULT BufferedPaintInit();
 HRESULT BufferedPaintUnInit();
 long BeginBufferedPaint(HDC, const(RECT)*, BP_BUFFERFORMAT, BP_PAINTPARAMS*, HDC*);
@@ -196,7 +196,7 @@ long BeginBufferedAnimation(HWND, HDC, const(RECT)*, BP_BUFFERFORMAT, BP_PAINTPA
 HRESULT EndBufferedAnimation(long, BOOL);
 BOOL BufferedPaintRenderAnimation(HWND, HDC);
 BOOL IsCompositionActive();
-HRESULT GetThemeTransitionDuration(long, int, int, int, int, uint*);
+HRESULT GetThemeTransitionDuration(HTHEME, int, int, int, int, uint*);
 BOOL CheckDlgButton(HWND, int, DLG_BUTTON_CHECK_STATE);
 BOOL CheckRadioButton(HWND, int, int, int);
 uint IsDlgButtonChecked(HWND, int);
@@ -278,15 +278,6 @@ enum CDDS_ITEM = 0x00010000;
 enum NM_GETCUSTOMSPLITRECT = 0xfffffb21;
 enum CLR_NONE = 0xffffffffffffffff;
 enum CLR_DEFAULT = 0xffffffffff000000;
-enum ILD_TRANSPARENT = 0x00000001;
-enum ILD_IMAGE = 0x00000020;
-enum ILD_ROP = 0x00000040;
-enum ILD_BLEND25 = 0x00000002;
-enum ILD_OVERLAYMASK = 0x00000f00;
-enum ILD_PRESERVEALPHA = 0x00001000;
-enum ILD_SCALE = 0x00002000;
-enum ILD_DPISCALE = 0x00004000;
-enum ILD_ASYNC = 0x00008000;
 enum CLR_HILIGHT = 0xffffffffff000000;
 enum ILS_NORMAL = 0x00000000;
 enum ILS_GLOW = 0x00000001;
@@ -2451,12 +2442,21 @@ enum : uint
 alias IMAGE_LIST_DRAW_STYLE = uint;
 enum : uint
 {
-    ILD_BLEND    = 0x00000004,
-    ILD_BLEND50  = 0x00000004,
-    ILD_FOCUS    = 0x00000002,
-    ILD_MASK     = 0x00000010,
-    ILD_NORMAL   = 0x00000000,
-    ILD_SELECTED = 0x00000004,
+    ILD_NORMAL        = 0x00000000,
+    ILD_TRANSPARENT   = 0x00000001,
+    ILD_BLEND25       = 0x00000002,
+    ILD_FOCUS         = 0x00000002,
+    ILD_BLEND50       = 0x00000004,
+    ILD_SELECTED      = 0x00000004,
+    ILD_BLEND         = 0x00000004,
+    ILD_MASK          = 0x00000010,
+    ILD_IMAGE         = 0x00000020,
+    ILD_ROP           = 0x00000040,
+    ILD_OVERLAYMASK   = 0x00000f00,
+    ILD_PRESERVEALPHA = 0x00001000,
+    ILD_SCALE         = 0x00002000,
+    ILD_DPISCALE      = 0x00004000,
+    ILD_ASYNC         = 0x00008000,
 }
 
 alias WSB_PROP = int;
@@ -3281,6 +3281,7 @@ alias HSYNTHETICPOINTERDEVICE = void*;
 alias HTREEITEM = void*;
 alias HDSA = void*;
 alias HDPA = void*;
+alias HTHEME = void*;
 struct TBBUTTON
 {
     int iBitmap;

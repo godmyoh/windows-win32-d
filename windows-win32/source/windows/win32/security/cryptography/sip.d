@@ -2,7 +2,7 @@ module windows.win32.security.cryptography.sip;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HANDLE, PWSTR;
-import windows.win32.security.cryptography_ : CERT_QUERY_ENCODING_TYPE, CRYPTOAPI_BLOB, CRYPT_ALGORITHM_IDENTIFIER, CRYPT_ATTRIBUTE_TYPE_VALUE;
+import windows.win32.security.cryptography_ : CERT_QUERY_ENCODING_TYPE, CRYPT_ALGORITHM_IDENTIFIER, CRYPT_ATTRIBUTE_TYPE_VALUE, CRYPT_INTEGER_BLOB;
 import windows.win32.security.cryptography.catalog : MS_ADDINFO_CATALOGMEMBER;
 
 version (Windows):
@@ -105,7 +105,7 @@ struct SIP_INDIRECT_DATA
 {
     CRYPT_ATTRIBUTE_TYPE_VALUE Data;
     CRYPT_ALGORITHM_IDENTIFIER DigestAlgorithm;
-    CRYPTOAPI_BLOB Digest;
+    CRYPT_INTEGER_BLOB Digest;
 }
 alias pCryptSIPGetSignedDataMsg = BOOL function(SIP_SUBJECTINFO*, uint*, uint, uint*, ubyte*);
 alias pCryptSIPPutSignedDataMsg = BOOL function(SIP_SUBJECTINFO*, uint, uint*, uint, ubyte*);

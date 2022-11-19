@@ -10,35 +10,35 @@ long BluetoothFindFirstRadio(const(BLUETOOTH_FIND_RADIO_PARAMS)*, HANDLE*);
 BOOL BluetoothFindNextRadio(long, HANDLE*);
 BOOL BluetoothFindRadioClose(long);
 uint BluetoothGetRadioInfo(HANDLE, BLUETOOTH_RADIO_INFO*);
-long BluetoothFindFirstDevice(const(BLUETOOTH_DEVICE_SEARCH_PARAMS)*, BLUETOOTH_DEVICE_INFO_STRUCT*);
-BOOL BluetoothFindNextDevice(long, BLUETOOTH_DEVICE_INFO_STRUCT*);
+long BluetoothFindFirstDevice(const(BLUETOOTH_DEVICE_SEARCH_PARAMS)*, BLUETOOTH_DEVICE_INFO*);
+BOOL BluetoothFindNextDevice(long, BLUETOOTH_DEVICE_INFO*);
 BOOL BluetoothFindDeviceClose(long);
-uint BluetoothGetDeviceInfo(HANDLE, BLUETOOTH_DEVICE_INFO_STRUCT*);
-uint BluetoothUpdateDeviceRecord(const(BLUETOOTH_DEVICE_INFO_STRUCT)*);
-uint BluetoothRemoveDevice(const(BLUETOOTH_ADDRESS_STRUCT)*);
+uint BluetoothGetDeviceInfo(HANDLE, BLUETOOTH_DEVICE_INFO*);
+uint BluetoothUpdateDeviceRecord(const(BLUETOOTH_DEVICE_INFO)*);
+uint BluetoothRemoveDevice(const(BLUETOOTH_ADDRESS)*);
 BOOL BluetoothSelectDevices(BLUETOOTH_SELECT_DEVICE_PARAMS*);
 BOOL BluetoothSelectDevicesFree(BLUETOOTH_SELECT_DEVICE_PARAMS*);
-BOOL BluetoothDisplayDeviceProperties(HWND, BLUETOOTH_DEVICE_INFO_STRUCT*);
-uint BluetoothAuthenticateDevice(HWND, HANDLE, BLUETOOTH_DEVICE_INFO_STRUCT*, PWSTR, uint);
-uint BluetoothAuthenticateDeviceEx(HWND, HANDLE, BLUETOOTH_DEVICE_INFO_STRUCT*, BLUETOOTH_OOB_DATA_INFO*, AUTHENTICATION_REQUIREMENTS);
-uint BluetoothAuthenticateMultipleDevices(HWND, HANDLE, uint, BLUETOOTH_DEVICE_INFO_STRUCT*);
-uint BluetoothSetServiceState(HANDLE, const(BLUETOOTH_DEVICE_INFO_STRUCT)*, const(GUID)*, uint);
-uint BluetoothEnumerateInstalledServices(HANDLE, const(BLUETOOTH_DEVICE_INFO_STRUCT)*, uint*, GUID*);
+BOOL BluetoothDisplayDeviceProperties(HWND, BLUETOOTH_DEVICE_INFO*);
+uint BluetoothAuthenticateDevice(HWND, HANDLE, BLUETOOTH_DEVICE_INFO*, PWSTR, uint);
+uint BluetoothAuthenticateDeviceEx(HWND, HANDLE, BLUETOOTH_DEVICE_INFO*, BLUETOOTH_OOB_DATA_INFO*, AUTHENTICATION_REQUIREMENTS);
+uint BluetoothAuthenticateMultipleDevices(HWND, HANDLE, uint, BLUETOOTH_DEVICE_INFO*);
+uint BluetoothSetServiceState(HANDLE, const(BLUETOOTH_DEVICE_INFO)*, const(GUID)*, uint);
+uint BluetoothEnumerateInstalledServices(HANDLE, const(BLUETOOTH_DEVICE_INFO)*, uint*, GUID*);
 BOOL BluetoothEnableDiscovery(HANDLE, BOOL);
 BOOL BluetoothIsDiscoverable(HANDLE);
 BOOL BluetoothEnableIncomingConnections(HANDLE, BOOL);
 BOOL BluetoothIsConnectable(HANDLE);
-uint BluetoothRegisterForAuthentication(const(BLUETOOTH_DEVICE_INFO_STRUCT)*, long*, PFN_AUTHENTICATION_CALLBACK, void*);
-uint BluetoothRegisterForAuthenticationEx(const(BLUETOOTH_DEVICE_INFO_STRUCT)*, long*, PFN_AUTHENTICATION_CALLBACK_EX, void*);
+uint BluetoothRegisterForAuthentication(const(BLUETOOTH_DEVICE_INFO)*, long*, PFN_AUTHENTICATION_CALLBACK, void*);
+uint BluetoothRegisterForAuthenticationEx(const(BLUETOOTH_DEVICE_INFO)*, long*, PFN_AUTHENTICATION_CALLBACK_EX, void*);
 BOOL BluetoothUnregisterAuthentication(long);
-uint BluetoothSendAuthenticationResponse(HANDLE, const(BLUETOOTH_DEVICE_INFO_STRUCT)*, const(wchar)*);
+uint BluetoothSendAuthenticationResponse(HANDLE, const(BLUETOOTH_DEVICE_INFO)*, const(wchar)*);
 uint BluetoothSendAuthenticationResponseEx(HANDLE, BLUETOOTH_AUTHENTICATE_RESPONSE*);
 uint BluetoothSdpGetElementData(ubyte*, uint, SDP_ELEMENT_DATA*);
 uint BluetoothSdpGetContainerElementData(ubyte*, uint, long*, SDP_ELEMENT_DATA*);
 uint BluetoothSdpGetAttributeValue(ubyte*, uint, ushort, SDP_ELEMENT_DATA*);
 uint BluetoothSdpGetString(ubyte*, uint, const(SDP_STRING_TYPE_DATA)*, ushort, PWSTR, uint*);
 BOOL BluetoothSdpEnumAttributes(ubyte*, uint, PFN_BLUETOOTH_ENUM_ATTRIBUTES_CALLBACK, void*);
-uint BluetoothSetLocalServiceInfo(HANDLE, const(GUID)*, uint, const(BLUETOOTH_LOCAL_SERVICE_INFO_STRUCT)*);
+uint BluetoothSetLocalServiceInfo(HANDLE, const(GUID)*, uint, const(BLUETOOTH_LOCAL_SERVICE_INFO)*);
 BOOL BluetoothIsVersionAvailable(ubyte, ubyte);
 HRESULT BluetoothGATTGetServices(HANDLE, ushort, BTH_LE_GATT_SERVICE*, ushort*, uint);
 HRESULT BluetoothGATTGetIncludedServices(HANDLE, BTH_LE_GATT_SERVICE*, ushort, BTH_LE_GATT_SERVICE*, ushort*, uint);
@@ -947,7 +947,7 @@ enum : int
     MITMProtectionNotDefined                = 0x000000ff,
 }
 
-struct BLUETOOTH_ADDRESS_STRUCT
+struct BLUETOOTH_ADDRESS
 {
     union
     {
@@ -955,10 +955,10 @@ struct BLUETOOTH_ADDRESS_STRUCT
         ubyte[6] rgBytes;
     }
 }
-struct BLUETOOTH_LOCAL_SERVICE_INFO_STRUCT
+struct BLUETOOTH_LOCAL_SERVICE_INFO
 {
     BOOL Enabled;
-    BLUETOOTH_ADDRESS_STRUCT btAddr;
+    BLUETOOTH_ADDRESS btAddr;
     wchar[256] szName;
     wchar[256] szDeviceString;
 }
@@ -969,16 +969,16 @@ struct BLUETOOTH_FIND_RADIO_PARAMS
 struct BLUETOOTH_RADIO_INFO
 {
     uint dwSize;
-    BLUETOOTH_ADDRESS_STRUCT address;
+    BLUETOOTH_ADDRESS address;
     wchar[248] szName;
     uint ulClassofDevice;
     ushort lmpSubversion;
     ushort manufacturer;
 }
-struct BLUETOOTH_DEVICE_INFO_STRUCT
+struct BLUETOOTH_DEVICE_INFO
 {
     uint dwSize;
-    BLUETOOTH_ADDRESS_STRUCT Address;
+    BLUETOOTH_ADDRESS Address;
     uint ulClassofDevice;
     BOOL fConnected;
     BOOL fRemembered;
@@ -1021,7 +1021,7 @@ enum : int
 
 struct BLUETOOTH_AUTHENTICATION_CALLBACK_PARAMS
 {
-    BLUETOOTH_DEVICE_INFO_STRUCT deviceInfo;
+    BLUETOOTH_DEVICE_INFO deviceInfo;
     BLUETOOTH_AUTHENTICATION_METHOD authenticationMethod;
     BLUETOOTH_IO_CAPABILITY ioCapability;
     BLUETOOTH_AUTHENTICATION_REQUIREMENTS authenticationRequirements;
@@ -1047,7 +1047,7 @@ struct BLUETOOTH_COD_PAIRS
     uint ulCODMask;
     const(wchar)* pcszDescription;
 }
-alias PFN_DEVICE_CALLBACK = BOOL function(void*, const(BLUETOOTH_DEVICE_INFO_STRUCT)*);
+alias PFN_DEVICE_CALLBACK = BOOL function(void*, const(BLUETOOTH_DEVICE_INFO)*);
 struct BLUETOOTH_SELECT_DEVICE_PARAMS
 {
     uint dwSize;
@@ -1064,7 +1064,7 @@ struct BLUETOOTH_SELECT_DEVICE_PARAMS
     PFN_DEVICE_CALLBACK pfnDeviceCallback;
     void* pvParam;
     uint cNumDevices;
-    BLUETOOTH_DEVICE_INFO_STRUCT* pDevices;
+    BLUETOOTH_DEVICE_INFO* pDevices;
 }
 struct BLUETOOTH_PIN_INFO
 {
@@ -1084,11 +1084,11 @@ struct BLUETOOTH_PASSKEY_INFO
 {
     uint passkey;
 }
-alias PFN_AUTHENTICATION_CALLBACK = BOOL function(void*, BLUETOOTH_DEVICE_INFO_STRUCT*);
+alias PFN_AUTHENTICATION_CALLBACK = BOOL function(void*, BLUETOOTH_DEVICE_INFO*);
 alias PFN_AUTHENTICATION_CALLBACK_EX = BOOL function(void*, BLUETOOTH_AUTHENTICATION_CALLBACK_PARAMS*);
 struct BLUETOOTH_AUTHENTICATE_RESPONSE
 {
-    BLUETOOTH_ADDRESS_STRUCT bthAddressRemote;
+    BLUETOOTH_ADDRESS bthAddressRemote;
     BLUETOOTH_AUTHENTICATION_METHOD authMethod;
     union
     {

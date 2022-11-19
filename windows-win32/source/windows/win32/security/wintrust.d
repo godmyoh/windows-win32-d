@@ -2,7 +2,7 @@ module windows.win32.security.wintrust;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BOOLEAN, FILETIME, HANDLE, HRESULT, HWND, PSTR, PWSTR;
-import windows.win32.security.cryptography_ : CERT_CHAIN_CONTEXT, CERT_CHAIN_ELEMENT, CERT_CHAIN_PARA, CERT_CONTEXT, CERT_INFO, CERT_STRONG_SIGN_PARA, CERT_USAGE_MATCH, CMSG_SIGNER_INFO, CRYPTOAPI_BLOB, CRYPT_ALGORITHM_IDENTIFIER, CRYPT_ATTRIBUTE_TYPE_VALUE, CRYPT_BIT_BLOB, CTL_CONTEXT, HCERTCHAINENGINE, HCERTSTORE;
+import windows.win32.security.cryptography_ : CERT_CHAIN_CONTEXT, CERT_CHAIN_ELEMENT, CERT_CHAIN_PARA, CERT_CONTEXT, CERT_INFO, CERT_STRONG_SIGN_PARA, CERT_USAGE_MATCH, CMSG_SIGNER_INFO, CRYPT_ALGORITHM_IDENTIFIER, CRYPT_ATTRIBUTE_TYPE_VALUE, CRYPT_BIT_BLOB, CRYPT_INTEGER_BLOB, CTL_CONTEXT, HCERTCHAINENGINE, HCERTSTORE;
 import windows.win32.security.cryptography.sip : SIP_DISPATCH_INFO, SIP_INDIRECT_DATA, SIP_SUBJECTINFO;
 
 version (Windows):
@@ -552,7 +552,7 @@ struct CRYPT_PROVIDER_DEFUSAGE
 struct SPC_SERIALIZED_OBJECT
 {
     ubyte[16] ClassId;
-    CRYPTOAPI_BLOB SerializedData;
+    CRYPT_INTEGER_BLOB SerializedData;
 }
 struct SPC_SIGINFO
 {
@@ -583,7 +583,7 @@ struct SPC_INDIRECT_DATA_CONTENT
 {
     CRYPT_ATTRIBUTE_TYPE_VALUE Data;
     CRYPT_ALGORITHM_IDENTIFIER DigestAlgorithm;
-    CRYPTOAPI_BLOB Digest;
+    CRYPT_INTEGER_BLOB Digest;
 }
 struct SPC_FINANCIAL_CRITERIA
 {
@@ -593,10 +593,10 @@ struct SPC_FINANCIAL_CRITERIA
 struct SPC_IMAGE
 {
     SPC_LINK* pImageLink;
-    CRYPTOAPI_BLOB Bitmap;
-    CRYPTOAPI_BLOB Metafile;
-    CRYPTOAPI_BLOB EnhancedMetafile;
-    CRYPTOAPI_BLOB GifFile;
+    CRYPT_INTEGER_BLOB Bitmap;
+    CRYPT_INTEGER_BLOB Metafile;
+    CRYPT_INTEGER_BLOB EnhancedMetafile;
+    CRYPT_INTEGER_BLOB GifFile;
 }
 struct SPC_SP_AGENCY_INFO
 {
@@ -620,7 +620,7 @@ struct CAT_NAMEVALUE
 {
     PWSTR pwszTag;
     uint fdwFlags;
-    CRYPTOAPI_BLOB Value;
+    CRYPT_INTEGER_BLOB Value;
 }
 struct CAT_MEMBERINFO
 {
@@ -642,13 +642,13 @@ struct SEALING_SIGNATURE_ATTRIBUTE
     uint version_;
     uint signerIndex;
     CRYPT_ALGORITHM_IDENTIFIER signatureAlgorithm;
-    CRYPTOAPI_BLOB encryptedDigest;
+    CRYPT_INTEGER_BLOB encryptedDigest;
 }
 struct SEALING_TIMESTAMP_ATTRIBUTE
 {
     uint version_;
     uint signerIndex;
-    CRYPTOAPI_BLOB sealTimeStampToken;
+    CRYPT_INTEGER_BLOB sealTimeStampToken;
 }
 struct WIN_CERTIFICATE
 {
@@ -754,7 +754,7 @@ struct CONFIG_CI_PROV_INFO
 {
     uint cbSize;
     uint dwPolicies;
-    CRYPTOAPI_BLOB* pPolicies;
+    CRYPT_INTEGER_BLOB* pPolicies;
     CONFIG_CI_PROV_INFO_RESULT result;
     uint dwScenario;
 }

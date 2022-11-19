@@ -1,7 +1,7 @@
 module windows.win32.ui.wpf;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BSTR, HRESULT;
+import windows.win32.foundation : BSTR, HRESULT, VARIANT_BOOL;
 import windows.win32.graphics.dwm : MilMatrix3x2D;
 import windows.win32.graphics.imaging_ : IWICBitmapSource;
 import windows.win32.system.com_ : IUnknown;
@@ -79,12 +79,12 @@ interface IMILBitmapEffect : IUnknown
 enum IID_IMILBitmapEffectImpl = GUID(0xcc2468f2, 0x9936, 0x47be, [0xb4, 0xaf, 0x6, 0xb5, 0xdf, 0x5d, 0xbc, 0xbb]);
 interface IMILBitmapEffectImpl : IUnknown
 {
-    HRESULT IsInPlaceModificationAllowed(IMILBitmapEffectOutputConnector, short*);
+    HRESULT IsInPlaceModificationAllowed(IMILBitmapEffectOutputConnector, VARIANT_BOOL*);
     HRESULT SetParentEffect(IMILBitmapEffectGroup);
     HRESULT GetInputSource(uint, IWICBitmapSource*);
     HRESULT GetInputSourceBounds(uint, MilRectD*);
-    HRESULT GetInputBitmapSource(uint, IMILBitmapEffectRenderContext, short*, IWICBitmapSource*);
-    HRESULT GetOutputBitmapSource(uint, IMILBitmapEffectRenderContext, short*, IWICBitmapSource*);
+    HRESULT GetInputBitmapSource(uint, IMILBitmapEffectRenderContext, VARIANT_BOOL*, IWICBitmapSource*);
+    HRESULT GetOutputBitmapSource(uint, IMILBitmapEffectRenderContext, VARIANT_BOOL*, IWICBitmapSource*);
     HRESULT Initialize(IUnknown);
 }
 enum IID_IMILBitmapEffectGroup = GUID(0x2f952360, 0x698a, 0x4ac6, [0x81, 0xa1, 0xbc, 0xfd, 0xf0, 0x8e, 0xb8, 0xe8]);
@@ -106,7 +106,7 @@ interface IMILBitmapEffectRenderContext : IUnknown
 {
     HRESULT SetOutputPixelFormat(GUID*);
     HRESULT GetOutputPixelFormat(GUID*);
-    HRESULT SetUseSoftwareRenderer(short);
+    HRESULT SetUseSoftwareRenderer(VARIANT_BOOL);
     HRESULT SetInitialTransform(MILMatrixF*);
     HRESULT GetFinalTransform(MILMatrixF*);
     HRESULT SetOutputDPI(double, double);
@@ -116,7 +116,7 @@ interface IMILBitmapEffectRenderContext : IUnknown
 enum IID_IMILBitmapEffectRenderContextImpl = GUID(0x4d25accb, 0x797d, 0x4fd2, [0xb1, 0x28, 0xdf, 0xfe, 0xff, 0x84, 0xfc, 0xc3]);
 interface IMILBitmapEffectRenderContextImpl : IUnknown
 {
-    HRESULT GetUseSoftwareRenderer(short*);
+    HRESULT GetUseSoftwareRenderer(VARIANT_BOOL*);
     HRESULT GetTransform(MILMatrixF*);
     HRESULT UpdateTransform(MILMatrixF*);
     HRESULT GetOutputBounds(MilRectD*);
@@ -132,18 +132,18 @@ interface IMILBitmapEffectFactory : IUnknown
 enum IID_IMILBitmapEffectPrimitive = GUID(0x67e31025, 0x3091, 0x4dfc, [0x98, 0xd6, 0xdd, 0x49, 0x45, 0x51, 0x46, 0x1d]);
 interface IMILBitmapEffectPrimitive : IUnknown
 {
-    HRESULT GetOutput(uint, IMILBitmapEffectRenderContext, short*, IWICBitmapSource*);
-    HRESULT TransformPoint(uint, MilPoint2D*, short, IMILBitmapEffectRenderContext, short*);
-    HRESULT TransformRect(uint, MilRectD*, short, IMILBitmapEffectRenderContext);
-    HRESULT HasAffineTransform(uint, short*);
-    HRESULT HasInverseTransform(uint, short*);
+    HRESULT GetOutput(uint, IMILBitmapEffectRenderContext, VARIANT_BOOL*, IWICBitmapSource*);
+    HRESULT TransformPoint(uint, MilPoint2D*, VARIANT_BOOL, IMILBitmapEffectRenderContext, VARIANT_BOOL*);
+    HRESULT TransformRect(uint, MilRectD*, VARIANT_BOOL, IMILBitmapEffectRenderContext);
+    HRESULT HasAffineTransform(uint, VARIANT_BOOL*);
+    HRESULT HasInverseTransform(uint, VARIANT_BOOL*);
     HRESULT GetAffineMatrix(uint, MilMatrix3x2D*);
 }
 enum IID_IMILBitmapEffectPrimitiveImpl = GUID(0xce41e00b, 0xefa6, 0x44e7, [0xb0, 0x7, 0xdd, 0x4, 0x2e, 0x3a, 0xe1, 0x26]);
 interface IMILBitmapEffectPrimitiveImpl : IUnknown
 {
-    HRESULT IsDirty(uint, short*);
-    HRESULT IsVolatile(uint, short*);
+    HRESULT IsDirty(uint, VARIANT_BOOL*);
+    HRESULT IsVolatile(uint, VARIANT_BOOL*);
 }
 enum IID_IMILBitmapEffects = GUID(0x51ac3dce, 0x67c5, 0x448b, [0x91, 0x80, 0xad, 0x3e, 0xab, 0xdd, 0xd5, 0xdd]);
 interface IMILBitmapEffects : IUnknown
@@ -156,7 +156,7 @@ interface IMILBitmapEffects : IUnknown
 enum IID_IMILBitmapEffectConnector = GUID(0xf59567b3, 0x76c1, 0x4d47, [0xba, 0x1e, 0x79, 0xf9, 0x55, 0xe3, 0x50, 0xef]);
 interface IMILBitmapEffectConnector : IMILBitmapEffectConnectorInfo
 {
-    HRESULT IsConnected(short*);
+    HRESULT IsConnected(VARIANT_BOOL*);
     HRESULT GetBitmapEffect(IMILBitmapEffect*);
 }
 enum IID_IMILBitmapEffectInputConnector = GUID(0xa9b4ecaa, 0x7a3c, 0x45e7, [0x85, 0x73, 0xf4, 0xb8, 0x1b, 0x60, 0xdd, 0x6c]);

@@ -969,13 +969,6 @@ enum DMRES_DRAFT = 0xffffffffffffffff;
 enum DMRES_LOW = 0xfffffffffffffffe;
 enum DMRES_MEDIUM = 0xfffffffffffffffd;
 enum DMRES_HIGH = 0xfffffffffffffffc;
-enum DMDO_DEFAULT = 0x00000000;
-enum DMDO_90 = 0x00000001;
-enum DMDO_180 = 0x00000002;
-enum DMDO_270 = 0x00000003;
-enum DMDFO_DEFAULT = 0x00000000;
-enum DMDFO_STRETCH = 0x00000001;
-enum DMDFO_CENTER = 0x00000002;
 enum DMDISPLAYFLAGS_TEXTMODE = 0x00000004;
 enum DMNUP_SYSTEM = 0x00000001;
 enum DMNUP_ONEUP = 0x00000002;
@@ -2286,35 +2279,52 @@ enum : uint
     DM_OUT_DEFAULT        = 0x00000001,
 }
 
-alias DEVMODE_COLOR = uint;
-enum : uint
+alias DEVMODE_COLOR = ushort;
+enum : ushort
 {
-    DMCOLOR_MONOCHROME = 0x00000001,
-    DMCOLOR_COLOR      = 0x00000002,
+    DMCOLOR_MONOCHROME = 0x0001,
+    DMCOLOR_COLOR      = 0x0002,
 }
 
-alias DEVMODE_DUPLEX = uint;
-enum : uint
+alias DEVMODE_DUPLEX = ushort;
+enum : ushort
 {
-    DMDUP_SIMPLEX    = 0x00000001,
-    DMDUP_VERTICAL   = 0x00000002,
-    DMDUP_HORIZONTAL = 0x00000003,
+    DMDUP_SIMPLEX    = 0x0001,
+    DMDUP_VERTICAL   = 0x0002,
+    DMDUP_HORIZONTAL = 0x0003,
 }
 
-alias DEVMODE_COLLATE = uint;
-enum : uint
+alias DEVMODE_COLLATE = ushort;
+enum : ushort
 {
-    DMCOLLATE_FALSE = 0x00000000,
-    DMCOLLATE_TRUE  = 0x00000001,
+    DMCOLLATE_FALSE = 0x0000,
+    DMCOLLATE_TRUE  = 0x0001,
 }
 
-alias DEVMODE_TRUETYPE_OPTION = uint;
+alias DEVMODE_DISPLAY_ORIENTATION = uint;
 enum : uint
 {
-    DMTT_BITMAP           = 0x00000001,
-    DMTT_DOWNLOAD         = 0x00000002,
-    DMTT_SUBDEV           = 0x00000003,
-    DMTT_DOWNLOAD_OUTLINE = 0x00000004,
+    DMDO_DEFAULT = 0x00000000,
+    DMDO_90      = 0x00000001,
+    DMDO_180     = 0x00000002,
+    DMDO_270     = 0x00000003,
+}
+
+alias DEVMODE_DISPLAY_FIXED_OUTPUT = uint;
+enum : uint
+{
+    DMDFO_DEFAULT = 0x00000000,
+    DMDFO_STRETCH = 0x00000001,
+    DMDFO_CENTER  = 0x00000002,
+}
+
+alias DEVMODE_TRUETYPE_OPTION = ushort;
+enum : ushort
+{
+    DMTT_BITMAP           = 0x0001,
+    DMTT_DOWNLOAD         = 0x0002,
+    DMTT_SUBDEV           = 0x0003,
+    DMTT_DOWNLOAD_OUTLINE = 0x0004,
 }
 
 alias PAN_FAMILY_TYPE = uint;
@@ -2964,12 +2974,12 @@ struct DEVMODEA
         struct
         {
             POINTL dmPosition;
-            uint dmDisplayOrientation;
-            uint dmDisplayFixedOutput;
+            DEVMODE_DISPLAY_ORIENTATION dmDisplayOrientation;
+            DEVMODE_DISPLAY_FIXED_OUTPUT dmDisplayFixedOutput;
         }
     }
     DEVMODE_COLOR dmColor;
-    short dmDuplex;
+    DEVMODE_DUPLEX dmDuplex;
     short dmYResolution;
     DEVMODE_TRUETYPE_OPTION dmTTOption;
     DEVMODE_COLLATE dmCollate;
@@ -3017,12 +3027,12 @@ struct DEVMODEW
         struct
         {
             POINTL dmPosition;
-            uint dmDisplayOrientation;
-            uint dmDisplayFixedOutput;
+            DEVMODE_DISPLAY_ORIENTATION dmDisplayOrientation;
+            DEVMODE_DISPLAY_FIXED_OUTPUT dmDisplayFixedOutput;
         }
     }
     DEVMODE_COLOR dmColor;
-    short dmDuplex;
+    DEVMODE_DUPLEX dmDuplex;
     short dmYResolution;
     DEVMODE_TRUETYPE_OPTION dmTTOption;
     DEVMODE_COLLATE dmCollate;

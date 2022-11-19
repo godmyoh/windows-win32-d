@@ -1,7 +1,7 @@
 module windows.win32.media.mediaplayer;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, HRESULT, HWND, LPARAM, LRESULT, PWSTR, RECT, SIZE, SYSTEMTIME, WPARAM;
+import windows.win32.foundation : BOOL, BSTR, HRESULT, HWND, LPARAM, LRESULT, PWSTR, RECT, SIZE, SYSTEMTIME, VARIANT_BOOL, WPARAM;
 import windows.win32.graphics.gdi : HDC;
 import windows.win32.media.mediafoundation : IMFActivate;
 import windows.win32.system.com_ : BLOB, IDispatch, IStream, IUnknown, VARIANT;
@@ -795,7 +795,7 @@ interface IWMPError : IDispatch
 enum IID_IWMPMedia = GUID(0x94d55e95, 0x3fac, 0x11d3, [0xb1, 0x55, 0x0, 0xc0, 0x4f, 0x79, 0xfa, 0xa6]);
 interface IWMPMedia : IDispatch
 {
-    HRESULT get_isIdentical(IWMPMedia, short*);
+    HRESULT get_isIdentical(IWMPMedia, VARIANT_BOOL*);
     HRESULT get_sourceURL(BSTR*);
     HRESULT get_name(BSTR*);
     HRESULT put_name(BSTR);
@@ -811,13 +811,13 @@ interface IWMPMedia : IDispatch
     HRESULT getItemInfo(BSTR, BSTR*);
     HRESULT setItemInfo(BSTR, BSTR);
     HRESULT getItemInfoByAtom(int, BSTR*);
-    HRESULT isMemberOf(IWMPPlaylist, short*);
-    HRESULT isReadOnlyItem(BSTR, short*);
+    HRESULT isMemberOf(IWMPPlaylist, VARIANT_BOOL*);
+    HRESULT isReadOnlyItem(BSTR, VARIANT_BOOL*);
 }
 enum IID_IWMPControls = GUID(0x74c09e02, 0xf828, 0x11d2, [0xa7, 0x4b, 0x0, 0xa0, 0xc9, 0x5, 0xf3, 0x6e]);
 interface IWMPControls : IDispatch
 {
-    HRESULT get_isAvailable(BSTR, short*);
+    HRESULT get_isAvailable(BSTR, VARIANT_BOOL*);
     HRESULT play();
     HRESULT stop();
     HRESULT pause();
@@ -837,17 +837,17 @@ interface IWMPControls : IDispatch
 enum IID_IWMPSettings = GUID(0x9104d1ab, 0x80c9, 0x4fed, [0xab, 0xf0, 0x2e, 0x64, 0x17, 0xa6, 0xdf, 0x14]);
 interface IWMPSettings : IDispatch
 {
-    HRESULT get_isAvailable(BSTR, short*);
-    HRESULT get_autoStart(short*);
-    HRESULT put_autoStart(short);
+    HRESULT get_isAvailable(BSTR, VARIANT_BOOL*);
+    HRESULT get_autoStart(VARIANT_BOOL*);
+    HRESULT put_autoStart(VARIANT_BOOL);
     HRESULT get_baseURL(BSTR*);
     HRESULT put_baseURL(BSTR);
     HRESULT get_defaultFrame(BSTR*);
     HRESULT put_defaultFrame(BSTR);
-    HRESULT get_invokeURLs(short*);
-    HRESULT put_invokeURLs(short);
-    HRESULT get_mute(short*);
-    HRESULT put_mute(short);
+    HRESULT get_invokeURLs(VARIANT_BOOL*);
+    HRESULT put_invokeURLs(VARIANT_BOOL);
+    HRESULT get_mute(VARIANT_BOOL*);
+    HRESULT put_mute(VARIANT_BOOL);
     HRESULT get_playCount(int*);
     HRESULT put_playCount(int);
     HRESULT get_rate(double*);
@@ -856,10 +856,10 @@ interface IWMPSettings : IDispatch
     HRESULT put_balance(int);
     HRESULT get_volume(int*);
     HRESULT put_volume(int);
-    HRESULT getMode(BSTR, short*);
-    HRESULT setMode(BSTR, short);
-    HRESULT get_enableErrorDialogs(short*);
-    HRESULT put_enableErrorDialogs(short);
+    HRESULT getMode(BSTR, VARIANT_BOOL*);
+    HRESULT setMode(BSTR, VARIANT_BOOL);
+    HRESULT get_enableErrorDialogs(VARIANT_BOOL*);
+    HRESULT put_enableErrorDialogs(VARIANT_BOOL);
 }
 enum IID_IWMPClosedCaption = GUID(0x4f2df574, 0xc588, 0x11d3, [0x9e, 0xd0, 0x0, 0xc0, 0x4f, 0xb6, 0xe9, 0x37]);
 interface IWMPClosedCaption : IDispatch
@@ -884,7 +884,7 @@ interface IWMPPlaylist : IDispatch
     HRESULT get_item(int, IWMPMedia*);
     HRESULT getItemInfo(BSTR, BSTR*);
     HRESULT setItemInfo(BSTR, BSTR);
-    HRESULT get_isIdentical(IWMPPlaylist, short*);
+    HRESULT get_isIdentical(IWMPPlaylist, VARIANT_BOOL*);
     HRESULT clear();
     HRESULT insertItem(int, IWMPMedia);
     HRESULT appendItem(IWMPMedia);
@@ -921,11 +921,11 @@ interface IWMPMediaCollection : IDispatch
     HRESULT getByAuthor(BSTR, IWMPPlaylist*);
     HRESULT getByAlbum(BSTR, IWMPPlaylist*);
     HRESULT getByAttribute(BSTR, BSTR, IWMPPlaylist*);
-    HRESULT remove(IWMPMedia, short);
+    HRESULT remove(IWMPMedia, VARIANT_BOOL);
     HRESULT getAttributeStringCollection(BSTR, BSTR, IWMPStringCollection*);
     HRESULT getMediaAtom(BSTR, int*);
-    HRESULT setDeleted(IWMPMedia, short);
-    HRESULT isDeleted(IWMPMedia, short*);
+    HRESULT setDeleted(IWMPMedia, VARIANT_BOOL);
+    HRESULT isDeleted(IWMPMedia, VARIANT_BOOL*);
 }
 enum IID_IWMPPlaylistArray = GUID(0x679409c0, 0x99f7, 0x11d3, [0x9f, 0xb7, 0x0, 0x10, 0x5a, 0xa6, 0x20, 0xbb]);
 interface IWMPPlaylistArray : IDispatch
@@ -940,8 +940,8 @@ interface IWMPPlaylistCollection : IDispatch
     HRESULT getAll(IWMPPlaylistArray*);
     HRESULT getByName(BSTR, IWMPPlaylistArray*);
     HRESULT remove(IWMPPlaylist);
-    HRESULT setDeleted(IWMPPlaylist, short);
-    HRESULT isDeleted(IWMPPlaylist, short*);
+    HRESULT setDeleted(IWMPPlaylist, VARIANT_BOOL);
+    HRESULT isDeleted(IWMPPlaylist, VARIANT_BOOL*);
     HRESULT importPlaylist(IWMPPlaylist, IWMPPlaylist*);
 }
 enum IID_IWMPNetwork = GUID(0xec21b779, 0xedef, 0x462d, [0xbb, 0xa4, 0xad, 0x9d, 0xde, 0x2b, 0x29, 0xa7]);
@@ -968,8 +968,8 @@ interface IWMPNetwork : IDispatch
     HRESULT setProxyPort(BSTR, int);
     HRESULT getProxyExceptionList(BSTR, BSTR*);
     HRESULT setProxyExceptionList(BSTR, BSTR);
-    HRESULT getProxyBypassForLocal(BSTR, short*);
-    HRESULT setProxyBypassForLocal(BSTR, short);
+    HRESULT getProxyBypassForLocal(BSTR, VARIANT_BOOL*);
+    HRESULT setProxyBypassForLocal(BSTR, VARIANT_BOOL);
     HRESULT get_maxBandwidth(int*);
     HRESULT put_maxBandwidth(int);
     HRESULT get_downloadProgress(int*);
@@ -997,37 +997,37 @@ interface IWMPCore : IDispatch
     HRESULT put_currentPlaylist(IWMPPlaylist);
     HRESULT get_cdromCollection(IWMPCdromCollection*);
     HRESULT get_closedCaption(IWMPClosedCaption*);
-    HRESULT get_isOnline(short*);
+    HRESULT get_isOnline(VARIANT_BOOL*);
     HRESULT get_error(IWMPError*);
     HRESULT get_status(BSTR*);
 }
 enum IID_IWMPPlayer = GUID(0x6bf52a4f, 0x394a, 0x11d3, [0xb1, 0x53, 0x0, 0xc0, 0x4f, 0x79, 0xfa, 0xa6]);
 interface IWMPPlayer : IWMPCore
 {
-    HRESULT get_enabled(short*);
-    HRESULT put_enabled(short);
-    HRESULT get_fullScreen(short*);
-    HRESULT put_fullScreen(short);
-    HRESULT get_enableContextMenu(short*);
-    HRESULT put_enableContextMenu(short);
+    HRESULT get_enabled(VARIANT_BOOL*);
+    HRESULT put_enabled(VARIANT_BOOL);
+    HRESULT get_fullScreen(VARIANT_BOOL*);
+    HRESULT put_fullScreen(VARIANT_BOOL);
+    HRESULT get_enableContextMenu(VARIANT_BOOL*);
+    HRESULT put_enableContextMenu(VARIANT_BOOL);
     HRESULT put_uiMode(BSTR);
     HRESULT get_uiMode(BSTR*);
 }
 enum IID_IWMPPlayer2 = GUID(0xe6b01d1, 0xd407, 0x4c85, [0xbf, 0x5f, 0x1c, 0x1, 0xf6, 0x15, 0x2, 0x80]);
 interface IWMPPlayer2 : IWMPCore
 {
-    HRESULT get_enabled(short*);
-    HRESULT put_enabled(short);
-    HRESULT get_fullScreen(short*);
-    HRESULT put_fullScreen(short);
-    HRESULT get_enableContextMenu(short*);
-    HRESULT put_enableContextMenu(short);
+    HRESULT get_enabled(VARIANT_BOOL*);
+    HRESULT put_enabled(VARIANT_BOOL);
+    HRESULT get_fullScreen(VARIANT_BOOL*);
+    HRESULT put_fullScreen(VARIANT_BOOL);
+    HRESULT get_enableContextMenu(VARIANT_BOOL*);
+    HRESULT put_enableContextMenu(VARIANT_BOOL);
     HRESULT put_uiMode(BSTR);
     HRESULT get_uiMode(BSTR*);
-    HRESULT get_stretchToFit(short*);
-    HRESULT put_stretchToFit(short);
-    HRESULT get_windowlessVideo(short*);
-    HRESULT put_windowlessVideo(short);
+    HRESULT get_stretchToFit(VARIANT_BOOL*);
+    HRESULT put_stretchToFit(VARIANT_BOOL);
+    HRESULT get_windowlessVideo(VARIANT_BOOL*);
+    HRESULT put_windowlessVideo(VARIANT_BOOL);
 }
 enum IID_IWMPMedia2 = GUID(0xab7c88bb, 0x143e, 0x4ea4, [0xac, 0xc3, 0xe4, 0x35, 0xb, 0x21, 0x6, 0xc3]);
 interface IWMPMedia2 : IWMPMedia
@@ -1042,7 +1042,7 @@ interface IWMPControls2 : IWMPControls
 enum IID_IWMPDVD = GUID(0x8da61686, 0x4668, 0x4a5c, [0xae, 0x5d, 0x80, 0x31, 0x93, 0x29, 0x3d, 0xbe]);
 interface IWMPDVD : IDispatch
 {
-    HRESULT get_isAvailable(BSTR, short*);
+    HRESULT get_isAvailable(BSTR, VARIANT_BOOL*);
     HRESULT get_domain(BSTR*);
     HRESULT topMenu();
     HRESULT titleMenu();
@@ -1057,18 +1057,18 @@ interface IWMPCore2 : IWMPCore
 enum IID_IWMPPlayer3 = GUID(0x54062b68, 0x52a, 0x4c25, [0xa3, 0x9f, 0x8b, 0x63, 0x34, 0x65, 0x11, 0xd4]);
 interface IWMPPlayer3 : IWMPCore2
 {
-    HRESULT get_enabled(short*);
-    HRESULT put_enabled(short);
-    HRESULT get_fullScreen(short*);
-    HRESULT put_fullScreen(short);
-    HRESULT get_enableContextMenu(short*);
-    HRESULT put_enableContextMenu(short);
+    HRESULT get_enabled(VARIANT_BOOL*);
+    HRESULT put_enabled(VARIANT_BOOL);
+    HRESULT get_fullScreen(VARIANT_BOOL*);
+    HRESULT put_fullScreen(VARIANT_BOOL);
+    HRESULT get_enableContextMenu(VARIANT_BOOL*);
+    HRESULT put_enableContextMenu(VARIANT_BOOL);
     HRESULT put_uiMode(BSTR);
     HRESULT get_uiMode(BSTR*);
-    HRESULT get_stretchToFit(short*);
-    HRESULT put_stretchToFit(short);
-    HRESULT get_windowlessVideo(short*);
-    HRESULT put_windowlessVideo(short);
+    HRESULT get_stretchToFit(VARIANT_BOOL*);
+    HRESULT put_stretchToFit(VARIANT_BOOL);
+    HRESULT get_windowlessVideo(VARIANT_BOOL*);
+    HRESULT put_windowlessVideo(VARIANT_BOOL);
 }
 enum IID_IWMPErrorItem2 = GUID(0xf75ccec0, 0xc67c, 0x475c, [0x93, 0x1e, 0x87, 0x19, 0x87, 0xb, 0xee, 0x7d]);
 interface IWMPErrorItem2 : IWMPErrorItem
@@ -1113,7 +1113,7 @@ interface IWMPSettings2 : IWMPSettings
 {
     HRESULT get_defaultAudioLanguage(int*);
     HRESULT get_mediaAccessRights(BSTR*);
-    HRESULT requestMediaAccessRights(BSTR, short*);
+    HRESULT requestMediaAccessRights(BSTR, VARIANT_BOOL*);
 }
 enum IID_IWMPControls3 = GUID(0xa1d1110e, 0xd545, 0x476a, [0x9a, 0x78, 0xac, 0x3e, 0x4c, 0xb1, 0xe6, 0xbd]);
 interface IWMPControls3 : IWMPControls2
@@ -1143,8 +1143,8 @@ interface IWMPPlayerApplication : IDispatch
 {
     HRESULT switchToPlayerApplication();
     HRESULT switchToControl();
-    HRESULT get_playerDocked(short*);
-    HRESULT get_hasDisplay(short*);
+    HRESULT get_playerDocked(VARIANT_BOOL*);
+    HRESULT get_hasDisplay(VARIANT_BOOL*);
 }
 enum IID_IWMPCore3 = GUID(0x7587c667, 0x628f, 0x499f, [0x88, 0xe7, 0x6a, 0x6f, 0x4e, 0x88, 0x84, 0x64]);
 interface IWMPCore3 : IWMPCore2
@@ -1155,19 +1155,19 @@ interface IWMPCore3 : IWMPCore2
 enum IID_IWMPPlayer4 = GUID(0x6c497d62, 0x8919, 0x413c, [0x82, 0xdb, 0xe9, 0x35, 0xfb, 0x3e, 0xc5, 0x84]);
 interface IWMPPlayer4 : IWMPCore3
 {
-    HRESULT get_enabled(short*);
-    HRESULT put_enabled(short);
-    HRESULT get_fullScreen(short*);
-    HRESULT put_fullScreen(short);
-    HRESULT get_enableContextMenu(short*);
-    HRESULT put_enableContextMenu(short);
+    HRESULT get_enabled(VARIANT_BOOL*);
+    HRESULT put_enabled(VARIANT_BOOL);
+    HRESULT get_fullScreen(VARIANT_BOOL*);
+    HRESULT put_fullScreen(VARIANT_BOOL);
+    HRESULT get_enableContextMenu(VARIANT_BOOL*);
+    HRESULT put_enableContextMenu(VARIANT_BOOL);
     HRESULT put_uiMode(BSTR);
     HRESULT get_uiMode(BSTR*);
-    HRESULT get_stretchToFit(short*);
-    HRESULT put_stretchToFit(short);
-    HRESULT get_windowlessVideo(short*);
-    HRESULT put_windowlessVideo(short);
-    HRESULT get_isRemote(short*);
+    HRESULT get_stretchToFit(VARIANT_BOOL*);
+    HRESULT put_stretchToFit(VARIANT_BOOL);
+    HRESULT get_windowlessVideo(VARIANT_BOOL*);
+    HRESULT put_windowlessVideo(VARIANT_BOOL);
+    HRESULT get_isRemote(VARIANT_BOOL*);
     HRESULT get_playerApplication(IWMPPlayerApplication*);
     HRESULT openPlayer(BSTR);
 }
@@ -1208,17 +1208,17 @@ interface IWMPSyncDevice : IUnknown
     HRESULT get_deviceName(BSTR*);
     HRESULT get_deviceId(BSTR*);
     HRESULT get_partnershipIndex(int*);
-    HRESULT get_connected(short*);
+    HRESULT get_connected(VARIANT_BOOL*);
     HRESULT get_status(WMPDeviceStatus*);
     HRESULT get_syncState(WMPSyncState*);
     HRESULT get_progress(int*);
     HRESULT getItemInfo(BSTR, BSTR*);
-    HRESULT createPartnership(short);
+    HRESULT createPartnership(VARIANT_BOOL);
     HRESULT deletePartnership();
     HRESULT start();
     HRESULT stop();
     HRESULT showSettings();
-    HRESULT isIdentical(IWMPSyncDevice, short*);
+    HRESULT isIdentical(IWMPSyncDevice, VARIANT_BOOL*);
 }
 enum IID_IWMPSyncServices = GUID(0x8b5050ff, 0xe0a4, 0x4808, [0xb3, 0xa8, 0x89, 0x3a, 0x9e, 0x1e, 0xd8, 0x94]);
 interface IWMPSyncServices : IUnknown
@@ -1284,7 +1284,7 @@ interface IWMPCdromRip : IUnknown
 enum IID_IWMPCdromBurn = GUID(0xbd94dbeb, 0x417f, 0x4928, [0xaa, 0x6, 0x8, 0x7d, 0x56, 0xed, 0x9b, 0x59]);
 interface IWMPCdromBurn : IUnknown
 {
-    HRESULT isAvailable(BSTR, short*);
+    HRESULT isAvailable(BSTR, VARIANT_BOOL*);
     HRESULT getItemInfo(BSTR, BSTR*);
     HRESULT get_label(BSTR*);
     HRESULT put_label(BSTR);
@@ -1309,14 +1309,14 @@ enum IID_IWMPMediaCollection2 = GUID(0x8ba957f5, 0xfd8c, 0x4791, [0xb8, 0x2d, 0x
 interface IWMPMediaCollection2 : IWMPMediaCollection
 {
     HRESULT createQuery(IWMPQuery*);
-    HRESULT getPlaylistByQuery(IWMPQuery, BSTR, BSTR, short, IWMPPlaylist*);
-    HRESULT getStringCollectionByQuery(BSTR, IWMPQuery, BSTR, BSTR, short, IWMPStringCollection*);
+    HRESULT getPlaylistByQuery(IWMPQuery, BSTR, BSTR, VARIANT_BOOL, IWMPPlaylist*);
+    HRESULT getStringCollectionByQuery(BSTR, IWMPQuery, BSTR, BSTR, VARIANT_BOOL, IWMPStringCollection*);
     HRESULT getByAttributeAndMediaType(BSTR, BSTR, BSTR, IWMPPlaylist*);
 }
 enum IID_IWMPStringCollection2 = GUID(0x46ad648d, 0x53f1, 0x4a74, [0x92, 0xe2, 0x2a, 0x1b, 0x68, 0xd6, 0x3f, 0xd4]);
 interface IWMPStringCollection2 : IWMPStringCollection
 {
-    HRESULT isIdentical(IWMPStringCollection2, short*);
+    HRESULT isIdentical(IWMPStringCollection2, VARIANT_BOOL*);
     HRESULT getItemInfo(int, BSTR, BSTR*);
     HRESULT getAttributeCountByType(int, BSTR, BSTR, int*);
     HRESULT getItemInfoByType(int, BSTR, BSTR, int, VARIANT*);
@@ -1338,7 +1338,7 @@ interface IWMPLibrary : IUnknown
     HRESULT get_name(BSTR*);
     HRESULT get_type(WMPLibraryType*);
     HRESULT get_mediaCollection(IWMPMediaCollection*);
-    HRESULT isIdentical(IWMPLibrary, short*);
+    HRESULT isIdentical(IWMPLibrary, VARIANT_BOOL*);
 }
 enum IID_IWMPLibraryServices = GUID(0x39c2f8d5, 0x1cf2, 0x4d5e, [0xae, 0x9, 0xd7, 0x34, 0x92, 0xcf, 0x9e, 0xaa]);
 interface IWMPLibraryServices : IUnknown
@@ -1349,8 +1349,8 @@ interface IWMPLibraryServices : IUnknown
 enum IID_IWMPLibrarySharingServices = GUID(0x82cba86b, 0x9f04, 0x474b, [0xa3, 0x65, 0xd6, 0xdd, 0x14, 0x66, 0xe5, 0x41]);
 interface IWMPLibrarySharingServices : IUnknown
 {
-    HRESULT isLibraryShared(short*);
-    HRESULT isLibrarySharingEnabled(short*);
+    HRESULT isLibraryShared(VARIANT_BOOL*);
+    HRESULT isLibrarySharingEnabled(VARIANT_BOOL*);
     HRESULT showLibrarySharing();
 }
 alias WMPFolderScanState = int;
@@ -1411,7 +1411,7 @@ interface IWMPEvents : IUnknown
     void ScriptCommand(BSTR, BSTR);
     void NewStream();
     void Disconnect(int);
-    void Buffering(short);
+    void Buffering(VARIANT_BOOL);
     void Error();
     void Warning(int, int, BSTR);
     void EndOfStream(int);
@@ -1432,8 +1432,8 @@ interface IWMPEvents : IUnknown
     void PlaylistCollectionChange();
     void PlaylistCollectionPlaylistAdded(BSTR);
     void PlaylistCollectionPlaylistRemoved(BSTR);
-    void PlaylistCollectionPlaylistSetAsDeleted(BSTR, short);
-    void ModeChange(BSTR, short);
+    void PlaylistCollectionPlaylistSetAsDeleted(BSTR, VARIANT_BOOL);
+    void ModeChange(BSTR, VARIANT_BOOL);
     void MediaError(IDispatch);
     void OpenPlaylistSwitch(IDispatch);
     void DomainChange(BSTR);
@@ -1602,7 +1602,7 @@ interface IWMPConvert : IUnknown
 enum IID_IWMPTranscodePolicy = GUID(0xb64cbac3, 0x401c, 0x4327, [0xa3, 0xe8, 0xb9, 0xfe, 0xb3, 0xa8, 0xc2, 0x5c]);
 interface IWMPTranscodePolicy : IUnknown
 {
-    HRESULT allowTranscode(short*);
+    HRESULT allowTranscode(VARIANT_BOOL*);
 }
 enum IID_IWMPUserEventSink = GUID(0xcfccfa72, 0xc343, 0x48c3, [0xa2, 0xde, 0xb7, 0xa4, 0x40, 0x2e, 0x39, 0xf2]);
 interface IWMPUserEventSink : IUnknown
@@ -1922,11 +1922,11 @@ enum IID_IFeedsManager = GUID(0xa74029cc, 0x1f1a, 0x4906, [0x88, 0xf0, 0x81, 0x6
 interface IFeedsManager : IDispatch
 {
     HRESULT get_RootFolder(IDispatch*);
-    HRESULT IsSubscribed(BSTR, short*);
-    HRESULT ExistsFeed(BSTR, short*);
+    HRESULT IsSubscribed(BSTR, VARIANT_BOOL*);
+    HRESULT ExistsFeed(BSTR, VARIANT_BOOL*);
     HRESULT GetFeed(BSTR, IDispatch*);
     HRESULT GetFeedByUrl(BSTR, IDispatch*);
-    HRESULT ExistsFolder(BSTR, short*);
+    HRESULT ExistsFolder(BSTR, VARIANT_BOOL*);
     HRESULT GetFolder(BSTR, IDispatch*);
     HRESULT DeleteFeed(BSTR);
     HRESULT DeleteFolder(BSTR);
@@ -1952,9 +1952,9 @@ interface IFeedFolder : IDispatch
     HRESULT get_Subfolders(IDispatch*);
     HRESULT CreateFeed(BSTR, BSTR, IDispatch*);
     HRESULT CreateSubfolder(BSTR, IDispatch*);
-    HRESULT ExistsFeed(BSTR, short*);
+    HRESULT ExistsFeed(BSTR, VARIANT_BOOL*);
     HRESULT GetFeed(BSTR, IDispatch*);
-    HRESULT ExistsSubfolder(BSTR, short*);
+    HRESULT ExistsSubfolder(BSTR, VARIANT_BOOL*);
     HRESULT GetSubfolder(BSTR, IDispatch*);
     HRESULT Delete();
     HRESULT get_Name(BSTR*);
@@ -1962,7 +1962,7 @@ interface IFeedFolder : IDispatch
     HRESULT get_Path(BSTR*);
     HRESULT Move(BSTR);
     HRESULT get_Parent(IDispatch*);
-    HRESULT get_IsRoot(short*);
+    HRESULT get_IsRoot(VARIANT_BOOL*);
     HRESULT get_TotalUnreadItemCount(int*);
     HRESULT get_TotalItemCount(int*);
     HRESULT GetWatcher(FEEDS_EVENTS_SCOPE, FEEDS_EVENTS_MASK, IDispatch*);
@@ -2023,13 +2023,13 @@ interface IFeed : IDispatch
     HRESULT get_Copyright(BSTR*);
     HRESULT get_MaxItemCount(int*);
     HRESULT put_MaxItemCount(int);
-    HRESULT get_DownloadEnclosuresAutomatically(short*);
-    HRESULT put_DownloadEnclosuresAutomatically(short);
+    HRESULT get_DownloadEnclosuresAutomatically(VARIANT_BOOL*);
+    HRESULT put_DownloadEnclosuresAutomatically(VARIANT_BOOL);
     HRESULT get_DownloadStatus(FEEDS_DOWNLOAD_STATUS*);
     HRESULT get_LastDownloadError(FEEDS_DOWNLOAD_ERROR*);
     HRESULT Merge(BSTR, BSTR);
     HRESULT get_DownloadUrl(BSTR*);
-    HRESULT get_IsList(short*);
+    HRESULT get_IsList(VARIANT_BOOL*);
     HRESULT MarkAllItemsRead();
     HRESULT GetWatcher(FEEDS_EVENTS_SCOPE, FEEDS_EVENTS_MASK, IDispatch*);
     HRESULT get_UnreadItemCount(int*);
@@ -2069,8 +2069,8 @@ interface IFeedItem : IDispatch
     HRESULT get_Comments(BSTR*);
     HRESULT get_Author(BSTR*);
     HRESULT get_Enclosure(IDispatch*);
-    HRESULT get_IsRead(short*);
-    HRESULT put_IsRead(short);
+    HRESULT get_IsRead(VARIANT_BOOL*);
+    HRESULT put_IsRead(VARIANT_BOOL);
     HRESULT get_LocalId(int*);
     HRESULT get_Parent(IDispatch*);
     HRESULT Delete();
@@ -2262,17 +2262,17 @@ interface IWMPContentPartner : IUnknown
     HRESULT GetContentPartnerInfo(BSTR, VARIANT*);
     HRESULT GetCommands(BSTR, VARIANT*, BSTR, uint, uint*, uint*, WMPContextMenuInfo**);
     HRESULT InvokeCommand(uint, BSTR, VARIANT*, BSTR, uint, uint*);
-    HRESULT CanBuySilent(IWMPContentContainerList, BSTR*, short*);
+    HRESULT CanBuySilent(IWMPContentContainerList, BSTR*, VARIANT_BOOL*);
     HRESULT Buy(IWMPContentContainerList, uint);
     HRESULT GetStreamingURL(WMPStreamingType, VARIANT*, BSTR*);
     HRESULT Download(IWMPContentContainerList, uint);
     HRESULT DownloadTrackComplete(HRESULT, uint, BSTR);
-    HRESULT RefreshLicense(uint, short, BSTR, WMPStreamingType, uint, BSTR, VARIANT*);
+    HRESULT RefreshLicense(uint, VARIANT_BOOL, BSTR, WMPStreamingType, uint, BSTR, VARIANT*);
     HRESULT GetCatalogURL(uint, uint, uint, uint*, BSTR*, VARIANT*);
     HRESULT GetTemplate(WMPTaskType, BSTR, VARIANT*, BSTR, VARIANT*, BSTR, BSTR, BSTR*, WMPTemplateSize*);
     HRESULT UpdateDevice(BSTR);
     HRESULT GetListContents(BSTR, VARIANT*, BSTR, BSTR, uint);
-    HRESULT Login(BLOB, BLOB, short, short);
+    HRESULT Login(BLOB, BLOB, VARIANT_BOOL, VARIANT_BOOL);
     HRESULT Authenticate(BLOB, BLOB);
     HRESULT Logout();
     HRESULT SendMessage(BSTR, BSTR);

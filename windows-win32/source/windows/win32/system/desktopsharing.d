@@ -1,7 +1,7 @@
 module windows.win32.system.desktopsharing;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BSTR, HRESULT;
+import windows.win32.foundation : BSTR, HRESULT, VARIANT_BOOL;
 import windows.win32.system.com_ : IDispatch, IUnknown, SAFEARRAY, VARIANT;
 
 version (Windows):
@@ -318,15 +318,15 @@ interface IRDPSRAPIAudioStream : IUnknown
 enum IID_IRDPSRAPIClipboardUseEvents = GUID(0xd559f59a, 0x7a27, 0x4138, [0x87, 0x63, 0x24, 0x7c, 0xe5, 0xf6, 0x59, 0xa8]);
 interface IRDPSRAPIClipboardUseEvents : IUnknown
 {
-    HRESULT OnPasteFromClipboard(uint, IDispatch, short*);
+    HRESULT OnPasteFromClipboard(uint, IDispatch, VARIANT_BOOL*);
 }
 enum IID_IRDPSRAPIWindow = GUID(0xbeafe0f9, 0xc77b, 0x4933, [0xba, 0x9f, 0xa2, 0x4c, 0xdd, 0xcc, 0x27, 0xcf]);
 interface IRDPSRAPIWindow : IDispatch
 {
     HRESULT get_Id(int*);
     HRESULT get_Application(IRDPSRAPIApplication*);
-    HRESULT get_Shared(short*);
-    HRESULT put_Shared(short);
+    HRESULT get_Shared(VARIANT_BOOL*);
+    HRESULT put_Shared(VARIANT_BOOL);
     HRESULT get_Name(BSTR*);
     HRESULT Show();
     HRESULT get_Flags(uint*);
@@ -342,8 +342,8 @@ interface IRDPSRAPIApplication : IDispatch
 {
     HRESULT get_Windows(IRDPSRAPIWindowList*);
     HRESULT get_Id(int*);
-    HRESULT get_Shared(short*);
-    HRESULT put_Shared(short);
+    HRESULT get_Shared(VARIANT_BOOL*);
+    HRESULT put_Shared(VARIANT_BOOL);
     HRESULT get_Name(BSTR*);
     HRESULT get_Flags(uint*);
 }
@@ -358,8 +358,8 @@ interface IRDPSRAPIApplicationFilter : IDispatch
 {
     HRESULT get_Applications(IRDPSRAPIApplicationList*);
     HRESULT get_Windows(IRDPSRAPIWindowList*);
-    HRESULT get_Enabled(short*);
-    HRESULT put_Enabled(short);
+    HRESULT get_Enabled(VARIANT_BOOL*);
+    HRESULT put_Enabled(VARIANT_BOOL);
 }
 enum IID_IRDPSRAPISessionProperties = GUID(0x339b24f2, 0x9bc0, 0x4f16, [0x9a, 0xac, 0xf1, 0x65, 0x43, 0x3d, 0x13, 0xd4]);
 interface IRDPSRAPISessionProperties : IDispatch
@@ -375,8 +375,8 @@ interface IRDPSRAPIInvitation : IDispatch
     HRESULT get_Password(BSTR*);
     HRESULT get_AttendeeLimit(int*);
     HRESULT put_AttendeeLimit(int);
-    HRESULT get_Revoked(short*);
-    HRESULT put_Revoked(short);
+    HRESULT get_Revoked(VARIANT_BOOL*);
+    HRESULT put_Revoked(VARIANT_BOOL);
 }
 enum IID_IRDPSRAPIInvitationManager = GUID(0x4722b049, 0x92c3, 0x4c2d, [0x8a, 0x65, 0xf7, 0x34, 0x8f, 0x64, 0x4d, 0xcf]);
 interface IRDPSRAPIInvitationManager : IDispatch
@@ -445,8 +445,8 @@ interface IRDPSRAPIViewer : IDispatch
     HRESULT get_Invitations(IRDPSRAPIInvitationManager*);
     HRESULT get_ApplicationFilter(IRDPSRAPIApplicationFilter*);
     HRESULT get_VirtualChannelManager(IRDPSRAPIVirtualChannelManager*);
-    HRESULT put_SmartSizing(short);
-    HRESULT get_SmartSizing(short*);
+    HRESULT put_SmartSizing(VARIANT_BOOL);
+    HRESULT get_SmartSizing(VARIANT_BOOL*);
     HRESULT RequestControl(CTRL_LEVEL);
     HRESULT put_DisconnectedText(BSTR);
     HRESULT get_DisconnectedText(BSTR*);
@@ -457,10 +457,10 @@ interface IRDPSRAPIViewer : IDispatch
 enum IID_IRDPViewerInputSink = GUID(0xbb590853, 0xa6c5, 0x4a7b, [0x8d, 0xd4, 0x76, 0xb6, 0x9e, 0xea, 0x12, 0xd5]);
 interface IRDPViewerInputSink : IUnknown
 {
-    HRESULT SendMouseButtonEvent(RDPSRAPI_MOUSE_BUTTON_TYPE, short, uint, uint);
+    HRESULT SendMouseButtonEvent(RDPSRAPI_MOUSE_BUTTON_TYPE, VARIANT_BOOL, uint, uint);
     HRESULT SendMouseMoveEvent(uint, uint);
     HRESULT SendMouseWheelEvent(ushort);
-    HRESULT SendKeyboardEvent(RDPSRAPI_KBD_CODE_TYPE, ushort, short, short, short);
+    HRESULT SendKeyboardEvent(RDPSRAPI_KBD_CODE_TYPE, ushort, VARIANT_BOOL, VARIANT_BOOL, VARIANT_BOOL);
     HRESULT SendSyncEvent(uint);
     HRESULT BeginTouchFrame();
     HRESULT AddTouchInput(uint, uint, int, int);

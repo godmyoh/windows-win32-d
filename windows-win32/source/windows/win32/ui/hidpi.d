@@ -2,12 +2,13 @@ module windows.win32.ui.hidpi;
 
 import windows.win32.foundation : BOOL, HANDLE, HRESULT, HWND, POINT, PWSTR, RECT;
 import windows.win32.graphics.gdi : HMONITOR;
+import windows.win32.ui.controls_ : HTHEME;
 import windows.win32.ui.windowsandmessaging : SYSTEM_METRICS_INDEX, WINDOW_EX_STYLE, WINDOW_STYLE;
 
 version (Windows):
 extern (Windows):
 
-long OpenThemeDataForDpi(HWND, const(wchar)*, uint);
+HTHEME OpenThemeDataForDpi(HWND, const(wchar)*, uint);
 BOOL SetDialogControlDpiChangeBehavior(HWND, DIALOG_CONTROL_DPI_CHANGE_BEHAVIORS, DIALOG_CONTROL_DPI_CHANGE_BEHAVIORS);
 DIALOG_CONTROL_DPI_CHANGE_BEHAVIORS GetDialogControlDpiChangeBehavior(HWND);
 BOOL SetDialogDpiChangeBehavior(HWND, DIALOG_DPI_CHANGE_BEHAVIORS, DIALOG_DPI_CHANGE_BEHAVIORS);

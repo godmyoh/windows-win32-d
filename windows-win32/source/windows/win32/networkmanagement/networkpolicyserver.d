@@ -1,7 +1,7 @@
 module windows.win32.networkmanagement.networkpolicyserver;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BSTR, HRESULT;
+import windows.win32.foundation : BSTR, HRESULT, VARIANT_BOOL;
 import windows.win32.system.com_ : IDispatch, IUnknown, VARIANT;
 
 version (Windows):
@@ -698,7 +698,7 @@ interface ISdoMachine : IDispatch
     HRESULT GetUserSDO(IASDATASTORE, BSTR, IUnknown*);
     HRESULT GetOSType(IASOSTYPE*);
     HRESULT GetDomainType(IASDOMAINTYPE*);
-    HRESULT IsDirectoryAvailable(short*);
+    HRESULT IsDirectoryAvailable(VARIANT_BOOL*);
     HRESULT GetAttachedComputer(BSTR*);
     HRESULT GetSDOSchema(IUnknown*);
 }
@@ -707,7 +707,7 @@ interface ISdoMachine2 : ISdoMachine
 {
     HRESULT GetTemplatesSDO(BSTR, IUnknown*);
     HRESULT EnableTemplates();
-    HRESULT SyncConfigAgainstTemplates(BSTR, IUnknown*, IUnknown*, short);
+    HRESULT SyncConfigAgainstTemplates(BSTR, IUnknown*, IUnknown*, VARIANT_BOOL);
     HRESULT ImportRemoteTemplates(IUnknown, BSTR);
     HRESULT Reload();
 }
@@ -738,7 +738,7 @@ interface ISdoCollection : IDispatch
     HRESULT Remove(IDispatch);
     HRESULT RemoveAll();
     HRESULT Reload();
-    HRESULT IsNameUnique(BSTR, short*);
+    HRESULT IsNameUnique(BSTR, VARIANT_BOOL*);
     HRESULT Item(VARIANT*, IDispatch*);
     HRESULT get__NewEnum(IUnknown*);
 }

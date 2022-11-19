@@ -2,7 +2,7 @@ module windows.win32.graphics.direct2d_;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HRESULT, HWND, POINT, PSTR, PWSTR, RECT;
-import windows.win32.graphics.direct2d.common : D2D1_ALPHA_MODE, D2D1_BEZIER_SEGMENT, D2D1_BLEND_MODE, D2D1_COLOR_F, D2D1_COMPOSITE_MODE, D2D1_FILL_MODE, D2D1_PIXEL_FORMAT, D2D_MATRIX_3X2_F, D2D_MATRIX_4X3_F, D2D_MATRIX_4X4_F, D2D_MATRIX_5X4_F, D2D_POINT_2F, D2D_POINT_2U, D2D_RECT_F, D2D_RECT_U, D2D_SIZE_F, D2D_SIZE_U, ID2D1SimplifiedGeometrySink;
+import windows.win32.graphics.direct2d.common : D2D1_ALPHA_MODE, D2D1_BEZIER_SEGMENT, D2D1_BLEND_MODE, D2D1_COLOR_F, D2D1_COMPOSITE_MODE, D2D1_FILL_MODE, D2D1_PIXEL_FORMAT, D2D_MATRIX_3X2_F, D2D_MATRIX_4X4_F, D2D_POINT_2F, D2D_POINT_2U, D2D_RECT_F, D2D_RECT_U, D2D_SIZE_F, D2D_SIZE_U, ID2D1SimplifiedGeometrySink;
 import windows.win32.graphics.direct3d_ : D3D_FEATURE_LEVEL;
 import windows.win32.graphics.directwrite : DWRITE_GLYPH_IMAGE_FORMATS, DWRITE_GLYPH_RUN, DWRITE_GLYPH_RUN_DESCRIPTION, DWRITE_MEASURING_MODE, IDWriteFontFace, IDWriteRenderingParams, IDWriteTextFormat, IDWriteTextLayout;
 import windows.win32.graphics.dxgi_ : IDXGIDevice, IDXGISurface;
@@ -1852,18 +1852,6 @@ interface ID2D1Multithread : IUnknown
     BOOL GetMultithreadProtected();
     void Enter();
     void Leave();
-}
-struct Matrix4x3F
-{
-    D2D_MATRIX_4X3_F Base;
-}
-struct Matrix4x4F
-{
-    D2D_MATRIX_4X4_F Base;
-}
-struct Matrix5x4F
-{
-    D2D_MATRIX_5X4_F Base;
 }
 alias PD2D1_PROPERTY_SET_FUNCTION = HRESULT function(IUnknown, const(ubyte)*, uint);
 alias PD2D1_PROPERTY_GET_FUNCTION = HRESULT function(const(IUnknown), ubyte*, uint, uint*);

@@ -1,7 +1,7 @@
 module windows.win32.security.cryptography_;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, NTSTATUS, PSID, PSTR, PWSTR, SYSTEMTIME;
+import windows.win32.foundation : BOOL, BSTR, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, NTSTATUS, PSID, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL;
 import windows.win32.security_ : NCRYPT_DESCRIPTOR_HANDLE, NCRYPT_STREAM_HANDLE, OBJECT_SECURITY_INFORMATION;
 import windows.win32.system.com_ : IDispatch, IUnknown, VARIANT;
 import windows.win32.system.registry : HKEY, REG_VALUE_TYPE;
@@ -906,11 +906,11 @@ HRESULT NCryptDeriveKey(NCRYPT_SECRET_HANDLE, const(wchar)*, BCryptBufferDesc*, 
 HRESULT NCryptKeyDerivation(NCRYPT_KEY_HANDLE, BCryptBufferDesc*, ubyte*, uint, uint*, uint);
 HRESULT NCryptCreateClaim(NCRYPT_KEY_HANDLE, NCRYPT_KEY_HANDLE, uint, BCryptBufferDesc*, ubyte*, uint, uint*, uint);
 HRESULT NCryptVerifyClaim(NCRYPT_KEY_HANDLE, NCRYPT_KEY_HANDLE, uint, BCryptBufferDesc*, ubyte*, uint, BCryptBufferDesc*, uint);
-BOOL CryptFormatObject(uint, uint, uint, void*, const(char)*, const(ubyte)*, uint, void*, uint*);
+BOOL CryptFormatObject(CERT_QUERY_ENCODING_TYPE, uint, uint, void*, const(char)*, const(ubyte)*, uint, void*, uint*);
 BOOL CryptEncodeObjectEx(CERT_QUERY_ENCODING_TYPE, const(char)*, const(void)*, CRYPT_ENCODE_OBJECT_FLAGS, CRYPT_ENCODE_PARA*, void*, uint*);
-BOOL CryptEncodeObject(uint, const(char)*, const(void)*, ubyte*, uint*);
-BOOL CryptDecodeObjectEx(uint, const(char)*, const(ubyte)*, uint, uint, CRYPT_DECODE_PARA*, void*, uint*);
-BOOL CryptDecodeObject(uint, const(char)*, const(ubyte)*, uint, uint, void*, uint*);
+BOOL CryptEncodeObject(CERT_QUERY_ENCODING_TYPE, const(char)*, const(void)*, ubyte*, uint*);
+BOOL CryptDecodeObjectEx(CERT_QUERY_ENCODING_TYPE, const(char)*, const(ubyte)*, uint, uint, CRYPT_DECODE_PARA*, void*, uint*);
+BOOL CryptDecodeObject(CERT_QUERY_ENCODING_TYPE, const(char)*, const(ubyte)*, uint, uint, void*, uint*);
 BOOL CryptInstallOIDFunctionAddress(HINSTANCE, uint, const(char)*, uint, const(CRYPT_OID_FUNC_ENTRY)*, uint);
 void* CryptInitOIDFunctionSet(const(char)*, uint);
 BOOL CryptGetOIDFunctionAddress(void*, uint, const(char)*, uint, void**, void**);
@@ -945,13 +945,13 @@ HCERTSTORE CertOpenStore(const(char)*, CERT_QUERY_ENCODING_TYPE, HCRYPTPROV_LEGA
 HCERTSTORE CertDuplicateStore(HCERTSTORE);
 BOOL CertSaveStore(HCERTSTORE, CERT_QUERY_ENCODING_TYPE, CERT_STORE_SAVE_AS, CERT_STORE_SAVE_TO, void*, uint);
 BOOL CertCloseStore(HCERTSTORE, uint);
-CERT_CONTEXT* CertGetSubjectCertificateFromStore(HCERTSTORE, uint, CERT_INFO*);
+CERT_CONTEXT* CertGetSubjectCertificateFromStore(HCERTSTORE, CERT_QUERY_ENCODING_TYPE, CERT_INFO*);
 CERT_CONTEXT* CertEnumCertificatesInStore(HCERTSTORE, const(CERT_CONTEXT)*);
-CERT_CONTEXT* CertFindCertificateInStore(HCERTSTORE, uint, uint, CERT_FIND_FLAGS, const(void)*, const(CERT_CONTEXT)*);
+CERT_CONTEXT* CertFindCertificateInStore(HCERTSTORE, CERT_QUERY_ENCODING_TYPE, uint, CERT_FIND_FLAGS, const(void)*, const(CERT_CONTEXT)*);
 CERT_CONTEXT* CertGetIssuerCertificateFromStore(HCERTSTORE, const(CERT_CONTEXT)*, const(CERT_CONTEXT)*, uint*);
 BOOL CertVerifySubjectCertificateContext(const(CERT_CONTEXT)*, const(CERT_CONTEXT)*, uint*);
 CERT_CONTEXT* CertDuplicateCertificateContext(const(CERT_CONTEXT)*);
-CERT_CONTEXT* CertCreateCertificateContext(uint, const(ubyte)*, uint);
+CERT_CONTEXT* CertCreateCertificateContext(CERT_QUERY_ENCODING_TYPE, const(ubyte)*, uint);
 BOOL CertFreeCertificateContext(const(CERT_CONTEXT)*);
 BOOL CertSetCertificateContextProperty(const(CERT_CONTEXT)*, uint, uint, const(void)*);
 BOOL CertGetCertificateContextProperty(const(CERT_CONTEXT)*, uint, void*, uint*);
@@ -960,20 +960,20 @@ BOOL CertCreateCTLEntryFromCertificateContextProperties(const(CERT_CONTEXT)*, ui
 BOOL CertSetCertificateContextPropertiesFromCTLEntry(const(CERT_CONTEXT)*, CTL_ENTRY*, uint);
 CRL_CONTEXT* CertGetCRLFromStore(HCERTSTORE, const(CERT_CONTEXT)*, CRL_CONTEXT*, uint*);
 CRL_CONTEXT* CertEnumCRLsInStore(HCERTSTORE, CRL_CONTEXT*);
-CRL_CONTEXT* CertFindCRLInStore(HCERTSTORE, uint, uint, uint, const(void)*, CRL_CONTEXT*);
+CRL_CONTEXT* CertFindCRLInStore(HCERTSTORE, CERT_QUERY_ENCODING_TYPE, uint, uint, const(void)*, CRL_CONTEXT*);
 CRL_CONTEXT* CertDuplicateCRLContext(CRL_CONTEXT*);
-CRL_CONTEXT* CertCreateCRLContext(uint, const(ubyte)*, uint);
+CRL_CONTEXT* CertCreateCRLContext(CERT_QUERY_ENCODING_TYPE, const(ubyte)*, uint);
 BOOL CertFreeCRLContext(CRL_CONTEXT*);
 BOOL CertSetCRLContextProperty(CRL_CONTEXT*, uint, uint, const(void)*);
 BOOL CertGetCRLContextProperty(CRL_CONTEXT*, uint, void*, uint*);
 uint CertEnumCRLContextProperties(CRL_CONTEXT*, uint);
 BOOL CertFindCertificateInCRL(const(CERT_CONTEXT)*, CRL_CONTEXT*, uint, void*, CRL_ENTRY**);
 BOOL CertIsValidCRLForCertificate(const(CERT_CONTEXT)*, CRL_CONTEXT*, uint, void*);
-BOOL CertAddEncodedCertificateToStore(HCERTSTORE, uint, const(ubyte)*, uint, uint, CERT_CONTEXT**);
+BOOL CertAddEncodedCertificateToStore(HCERTSTORE, CERT_QUERY_ENCODING_TYPE, const(ubyte)*, uint, uint, CERT_CONTEXT**);
 BOOL CertAddCertificateContextToStore(HCERTSTORE, const(CERT_CONTEXT)*, uint, CERT_CONTEXT**);
 BOOL CertAddSerializedElementToStore(HCERTSTORE, const(ubyte)*, uint, uint, uint, uint, uint*, const(void)**);
 BOOL CertDeleteCertificateFromStore(const(CERT_CONTEXT)*);
-BOOL CertAddEncodedCRLToStore(HCERTSTORE, uint, const(ubyte)*, uint, uint, CRL_CONTEXT**);
+BOOL CertAddEncodedCRLToStore(HCERTSTORE, CERT_QUERY_ENCODING_TYPE, const(ubyte)*, uint, uint, CRL_CONTEXT**);
 BOOL CertAddCRLContextToStore(HCERTSTORE, CRL_CONTEXT*, uint, CRL_CONTEXT**);
 BOOL CertDeleteCRLFromStore(CRL_CONTEXT*);
 BOOL CertSerializeCertificateStoreElement(const(CERT_CONTEXT)*, uint, ubyte*, uint*);
@@ -987,7 +987,7 @@ uint CertEnumCTLContextProperties(CTL_CONTEXT*, uint);
 CTL_CONTEXT* CertEnumCTLsInStore(HCERTSTORE, CTL_CONTEXT*);
 CTL_ENTRY* CertFindSubjectInCTL(uint, uint, void*, CTL_CONTEXT*, uint);
 CTL_CONTEXT* CertFindCTLInStore(HCERTSTORE, uint, uint, CERT_FIND_TYPE, const(void)*, CTL_CONTEXT*);
-BOOL CertAddEncodedCTLToStore(HCERTSTORE, uint, const(ubyte)*, uint, uint, CTL_CONTEXT**);
+BOOL CertAddEncodedCTLToStore(HCERTSTORE, CERT_QUERY_ENCODING_TYPE, const(ubyte)*, uint, uint, CTL_CONTEXT**);
 BOOL CertAddCTLContextToStore(HCERTSTORE, CTL_CONTEXT*, uint, CTL_CONTEXT**);
 BOOL CertSerializeCTLStoreElement(CTL_CONTEXT*, uint, ubyte*, uint*);
 BOOL CertDeleteCTLFromStore(CTL_CONTEXT*);
@@ -1015,53 +1015,53 @@ BOOL CertGetValidUsages(uint, CERT_CONTEXT**, int*, PSTR*, uint*);
 BOOL CryptMsgGetAndVerifySigner(void*, uint, HCERTSTORE*, uint, CERT_CONTEXT**, uint*);
 BOOL CryptMsgSignCTL(uint, ubyte*, uint, CMSG_SIGNED_ENCODE_INFO*, uint, ubyte*, uint*);
 BOOL CryptMsgEncodeAndSignCTL(uint, CTL_INFO*, CMSG_SIGNED_ENCODE_INFO*, uint, ubyte*, uint*);
-BOOL CertFindSubjectInSortedCTL(CRYPTOAPI_BLOB*, CTL_CONTEXT*, uint, void*, CRYPTOAPI_BLOB*);
-BOOL CertEnumSubjectInSortedCTL(CTL_CONTEXT*, void**, CRYPTOAPI_BLOB*, CRYPTOAPI_BLOB*);
+BOOL CertFindSubjectInSortedCTL(CRYPT_INTEGER_BLOB*, CTL_CONTEXT*, uint, void*, CRYPT_INTEGER_BLOB*);
+BOOL CertEnumSubjectInSortedCTL(CTL_CONTEXT*, void**, CRYPT_INTEGER_BLOB*, CRYPT_INTEGER_BLOB*);
 BOOL CertVerifyCTLUsage(uint, uint, void*, CTL_USAGE*, uint, CTL_VERIFY_USAGE_PARA*, CTL_VERIFY_USAGE_STATUS*);
 BOOL CertVerifyRevocation(uint, uint, uint, void**, uint, CERT_REVOCATION_PARA*, CERT_REVOCATION_STATUS*);
-BOOL CertCompareIntegerBlob(CRYPTOAPI_BLOB*, CRYPTOAPI_BLOB*);
-BOOL CertCompareCertificate(uint, CERT_INFO*, CERT_INFO*);
-BOOL CertCompareCertificateName(uint, CRYPTOAPI_BLOB*, CRYPTOAPI_BLOB*);
-BOOL CertIsRDNAttrsInCertificateName(uint, uint, CRYPTOAPI_BLOB*, CERT_RDN*);
-BOOL CertComparePublicKeyInfo(uint, CERT_PUBLIC_KEY_INFO*, CERT_PUBLIC_KEY_INFO*);
-uint CertGetPublicKeyLength(uint, CERT_PUBLIC_KEY_INFO*);
-BOOL CryptVerifyCertificateSignature(HCRYPTPROV_LEGACY, uint, const(ubyte)*, uint, CERT_PUBLIC_KEY_INFO*);
-BOOL CryptVerifyCertificateSignatureEx(HCRYPTPROV_LEGACY, uint, uint, void*, uint, void*, CRYPT_VERIFY_CERT_FLAGS, void*);
+BOOL CertCompareIntegerBlob(CRYPT_INTEGER_BLOB*, CRYPT_INTEGER_BLOB*);
+BOOL CertCompareCertificate(CERT_QUERY_ENCODING_TYPE, CERT_INFO*, CERT_INFO*);
+BOOL CertCompareCertificateName(CERT_QUERY_ENCODING_TYPE, CRYPT_INTEGER_BLOB*, CRYPT_INTEGER_BLOB*);
+BOOL CertIsRDNAttrsInCertificateName(CERT_QUERY_ENCODING_TYPE, uint, CRYPT_INTEGER_BLOB*, CERT_RDN*);
+BOOL CertComparePublicKeyInfo(CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*, CERT_PUBLIC_KEY_INFO*);
+uint CertGetPublicKeyLength(CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*);
+BOOL CryptVerifyCertificateSignature(HCRYPTPROV_LEGACY, CERT_QUERY_ENCODING_TYPE, const(ubyte)*, uint, CERT_PUBLIC_KEY_INFO*);
+BOOL CryptVerifyCertificateSignatureEx(HCRYPTPROV_LEGACY, CERT_QUERY_ENCODING_TYPE, uint, void*, uint, void*, CRYPT_VERIFY_CERT_FLAGS, void*);
 BOOL CertIsStrongHashToSign(CERT_STRONG_SIGN_PARA*, const(wchar)*, const(CERT_CONTEXT)*);
-BOOL CryptHashToBeSigned(HCRYPTPROV_LEGACY, uint, const(ubyte)*, uint, ubyte*, uint*);
+BOOL CryptHashToBeSigned(HCRYPTPROV_LEGACY, CERT_QUERY_ENCODING_TYPE, const(ubyte)*, uint, ubyte*, uint*);
 BOOL CryptHashCertificate(HCRYPTPROV_LEGACY, uint, uint, const(ubyte)*, uint, ubyte*, uint*);
 BOOL CryptHashCertificate2(const(wchar)*, uint, void*, const(ubyte)*, uint, ubyte*, uint*);
-BOOL CryptSignCertificate(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE, uint, uint, const(ubyte)*, uint, CRYPT_ALGORITHM_IDENTIFIER*, const(void)*, ubyte*, uint*);
-BOOL CryptSignAndEncodeCertificate(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE, CERT_KEY_SPEC, uint, const(char)*, const(void)*, CRYPT_ALGORITHM_IDENTIFIER*, const(void)*, ubyte*, uint*);
+BOOL CryptSignCertificate(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE, uint, CERT_QUERY_ENCODING_TYPE, const(ubyte)*, uint, CRYPT_ALGORITHM_IDENTIFIER*, const(void)*, ubyte*, uint*);
+BOOL CryptSignAndEncodeCertificate(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE, CERT_KEY_SPEC, CERT_QUERY_ENCODING_TYPE, const(char)*, const(void)*, CRYPT_ALGORITHM_IDENTIFIER*, const(void)*, ubyte*, uint*);
 int CertVerifyTimeValidity(FILETIME*, CERT_INFO*);
 int CertVerifyCRLTimeValidity(FILETIME*, CRL_INFO*);
 BOOL CertVerifyValidityNesting(CERT_INFO*, CERT_INFO*);
-BOOL CertVerifyCRLRevocation(uint, CERT_INFO*, uint, CRL_INFO**);
+BOOL CertVerifyCRLRevocation(CERT_QUERY_ENCODING_TYPE, CERT_INFO*, uint, CRL_INFO**);
 PSTR CertAlgIdToOID(uint);
 uint CertOIDToAlgId(const(char)*);
 CERT_EXTENSION* CertFindExtension(const(char)*, uint, CERT_EXTENSION*);
 CRYPT_ATTRIBUTE* CertFindAttribute(const(char)*, uint, CRYPT_ATTRIBUTE*);
 CERT_RDN_ATTR* CertFindRDNAttr(const(char)*, CERT_NAME_INFO*);
-BOOL CertGetIntendedKeyUsage(uint, CERT_INFO*, ubyte*, uint);
+BOOL CertGetIntendedKeyUsage(CERT_QUERY_ENCODING_TYPE, CERT_INFO*, ubyte*, uint);
 BOOL CryptInstallDefaultContext(ulong, CRYPT_DEFAULT_CONTEXT_TYPE, const(void)*, CRYPT_DEFAULT_CONTEXT_FLAGS, void*, void**);
 BOOL CryptUninstallDefaultContext(void*, uint, void*);
-BOOL CryptExportPublicKeyInfo(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE, uint, uint, CERT_PUBLIC_KEY_INFO*, uint*);
-BOOL CryptExportPublicKeyInfoEx(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE, uint, uint, PSTR, uint, void*, CERT_PUBLIC_KEY_INFO*, uint*);
-BOOL CryptExportPublicKeyInfoFromBCryptKeyHandle(BCRYPT_KEY_HANDLE, uint, PSTR, uint, void*, CERT_PUBLIC_KEY_INFO*, uint*);
-BOOL CryptImportPublicKeyInfo(ulong, uint, CERT_PUBLIC_KEY_INFO*, ulong*);
-BOOL CryptImportPublicKeyInfoEx(ulong, uint, CERT_PUBLIC_KEY_INFO*, uint, uint, void*, ulong*);
-BOOL CryptImportPublicKeyInfoEx2(uint, CERT_PUBLIC_KEY_INFO*, CRYPT_IMPORT_PUBLIC_KEY_FLAGS, void*, BCRYPT_KEY_HANDLE*);
+BOOL CryptExportPublicKeyInfo(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE, uint, CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*, uint*);
+BOOL CryptExportPublicKeyInfoEx(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE, uint, CERT_QUERY_ENCODING_TYPE, PSTR, uint, void*, CERT_PUBLIC_KEY_INFO*, uint*);
+BOOL CryptExportPublicKeyInfoFromBCryptKeyHandle(BCRYPT_KEY_HANDLE, CERT_QUERY_ENCODING_TYPE, PSTR, uint, void*, CERT_PUBLIC_KEY_INFO*, uint*);
+BOOL CryptImportPublicKeyInfo(ulong, CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*, ulong*);
+BOOL CryptImportPublicKeyInfoEx(ulong, CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*, uint, uint, void*, ulong*);
+BOOL CryptImportPublicKeyInfoEx2(CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*, CRYPT_IMPORT_PUBLIC_KEY_FLAGS, void*, BCRYPT_KEY_HANDLE*);
 BOOL CryptAcquireCertificatePrivateKey(const(CERT_CONTEXT)*, CRYPT_ACQUIRE_FLAGS, void*, HCRYPTPROV_OR_NCRYPT_KEY_HANDLE*, CERT_KEY_SPEC*, BOOL*);
 BOOL CryptFindCertificateKeyProvInfo(const(CERT_CONTEXT)*, CRYPT_FIND_FLAGS, void*);
 BOOL CryptImportPKCS8(CRYPT_PKCS8_IMPORT_PARAMS, CRYPT_KEY_FLAGS, ulong*, void*);
 BOOL CryptExportPKCS8(ulong, uint, PSTR, uint, void*, ubyte*, uint*);
-BOOL CryptHashPublicKeyInfo(HCRYPTPROV_LEGACY, uint, uint, uint, CERT_PUBLIC_KEY_INFO*, ubyte*, uint*);
-uint CertRDNValueToStrA(uint, CRYPTOAPI_BLOB*, PSTR, uint);
-uint CertRDNValueToStrW(uint, CRYPTOAPI_BLOB*, PWSTR, uint);
-uint CertNameToStrA(uint, CRYPTOAPI_BLOB*, CERT_STRING_TYPE, PSTR, uint);
-uint CertNameToStrW(uint, CRYPTOAPI_BLOB*, CERT_STRING_TYPE, PWSTR, uint);
-BOOL CertStrToNameA(uint, const(char)*, CERT_STRING_TYPE, void*, ubyte*, uint*, PSTR*);
-BOOL CertStrToNameW(uint, const(wchar)*, CERT_STRING_TYPE, void*, ubyte*, uint*, PWSTR*);
+BOOL CryptHashPublicKeyInfo(HCRYPTPROV_LEGACY, uint, uint, CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*, ubyte*, uint*);
+uint CertRDNValueToStrA(uint, CRYPT_INTEGER_BLOB*, PSTR, uint);
+uint CertRDNValueToStrW(uint, CRYPT_INTEGER_BLOB*, PWSTR, uint);
+uint CertNameToStrA(CERT_QUERY_ENCODING_TYPE, CRYPT_INTEGER_BLOB*, CERT_STRING_TYPE, PSTR, uint);
+uint CertNameToStrW(CERT_QUERY_ENCODING_TYPE, CRYPT_INTEGER_BLOB*, CERT_STRING_TYPE, PWSTR, uint);
+BOOL CertStrToNameA(CERT_QUERY_ENCODING_TYPE, const(char)*, CERT_STRING_TYPE, void*, ubyte*, uint*, PSTR*);
+BOOL CertStrToNameW(CERT_QUERY_ENCODING_TYPE, const(wchar)*, CERT_STRING_TYPE, void*, ubyte*, uint*, PWSTR*);
 uint CertGetNameStringA(const(CERT_CONTEXT)*, uint, uint, void*, PSTR, uint);
 uint CertGetNameStringW(const(CERT_CONTEXT)*, uint, uint, void*, PWSTR, uint);
 BOOL CryptSignMessage(CRYPT_SIGN_MESSAGE_PARA*, BOOL, uint, const(ubyte)**, uint*, ubyte*, uint*);
@@ -1097,28 +1097,28 @@ BOOL CryptRetrieveObjectByUrlW(const(wchar)*, const(char)*, uint, uint, void**, 
 BOOL CryptInstallCancelRetrieval(PFN_CRYPT_CANCEL_RETRIEVAL, const(void)*, uint, void*);
 BOOL CryptUninstallCancelRetrieval(uint, void*);
 BOOL CryptGetObjectUrl(const(char)*, void*, CRYPT_GET_URL_FLAGS, CRYPT_URL_ARRAY*, uint*, CRYPT_URL_INFO*, uint*, void*);
-CERT_CONTEXT* CertCreateSelfSignCertificate(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE, CRYPTOAPI_BLOB*, CERT_CREATE_SELFSIGN_FLAGS, CRYPT_KEY_PROV_INFO*, CRYPT_ALGORITHM_IDENTIFIER*, SYSTEMTIME*, SYSTEMTIME*, CERT_EXTENSIONS*);
-BOOL CryptGetKeyIdentifierProperty(const(CRYPTOAPI_BLOB)*, uint, uint, const(wchar)*, void*, void*, uint*);
-BOOL CryptSetKeyIdentifierProperty(const(CRYPTOAPI_BLOB)*, uint, uint, const(wchar)*, void*, const(void)*);
-BOOL CryptEnumKeyIdentifierProperties(const(CRYPTOAPI_BLOB)*, uint, uint, const(wchar)*, void*, void*, PFN_CRYPT_ENUM_KEYID_PROP);
-BOOL CryptCreateKeyIdentifierFromCSP(uint, const(char)*, const(PUBLICKEYSTRUC)*, uint, uint, void*, ubyte*, uint*);
+CERT_CONTEXT* CertCreateSelfSignCertificate(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE, CRYPT_INTEGER_BLOB*, CERT_CREATE_SELFSIGN_FLAGS, CRYPT_KEY_PROV_INFO*, CRYPT_ALGORITHM_IDENTIFIER*, SYSTEMTIME*, SYSTEMTIME*, CERT_EXTENSIONS*);
+BOOL CryptGetKeyIdentifierProperty(const(CRYPT_INTEGER_BLOB)*, uint, uint, const(wchar)*, void*, void*, uint*);
+BOOL CryptSetKeyIdentifierProperty(const(CRYPT_INTEGER_BLOB)*, uint, uint, const(wchar)*, void*, const(void)*);
+BOOL CryptEnumKeyIdentifierProperties(const(CRYPT_INTEGER_BLOB)*, uint, uint, const(wchar)*, void*, void*, PFN_CRYPT_ENUM_KEYID_PROP);
+BOOL CryptCreateKeyIdentifierFromCSP(CERT_QUERY_ENCODING_TYPE, const(char)*, const(PUBLICKEYSTRUC)*, uint, uint, void*, ubyte*, uint*);
 BOOL CertCreateCertificateChainEngine(CERT_CHAIN_ENGINE_CONFIG*, HCERTCHAINENGINE*);
 void CertFreeCertificateChainEngine(HCERTCHAINENGINE);
 BOOL CertResyncCertificateChainEngine(HCERTCHAINENGINE);
 BOOL CertGetCertificateChain(HCERTCHAINENGINE, const(CERT_CONTEXT)*, FILETIME*, HCERTSTORE, CERT_CHAIN_PARA*, uint, void*, CERT_CHAIN_CONTEXT**);
 void CertFreeCertificateChain(CERT_CHAIN_CONTEXT*);
 CERT_CHAIN_CONTEXT* CertDuplicateCertificateChain(CERT_CHAIN_CONTEXT*);
-CERT_CHAIN_CONTEXT* CertFindChainInStore(HCERTSTORE, uint, CERT_FIND_CHAIN_IN_STORE_FLAGS, uint, const(void)*, CERT_CHAIN_CONTEXT*);
+CERT_CHAIN_CONTEXT* CertFindChainInStore(HCERTSTORE, CERT_QUERY_ENCODING_TYPE, CERT_FIND_CHAIN_IN_STORE_FLAGS, uint, const(void)*, CERT_CHAIN_CONTEXT*);
 BOOL CertVerifyCertificateChainPolicy(const(char)*, CERT_CHAIN_CONTEXT*, CERT_CHAIN_POLICY_PARA*, CERT_CHAIN_POLICY_STATUS*);
 BOOL CryptStringToBinaryA(const(char)*, uint, CRYPT_STRING, ubyte*, uint*, uint*, uint*);
 BOOL CryptStringToBinaryW(const(wchar)*, uint, CRYPT_STRING, ubyte*, uint*, uint*, uint*);
 BOOL CryptBinaryToStringA(const(ubyte)*, uint, CRYPT_STRING, PSTR, uint*);
 BOOL CryptBinaryToStringW(const(ubyte)*, uint, CRYPT_STRING, PWSTR, uint*);
-HCERTSTORE PFXImportCertStore(CRYPTOAPI_BLOB*, const(wchar)*, CRYPT_KEY_FLAGS);
-BOOL PFXIsPFXBlob(CRYPTOAPI_BLOB*);
-BOOL PFXVerifyPassword(CRYPTOAPI_BLOB*, const(wchar)*, uint);
-BOOL PFXExportCertStoreEx(HCERTSTORE, CRYPTOAPI_BLOB*, const(wchar)*, void*, uint);
-BOOL PFXExportCertStore(HCERTSTORE, CRYPTOAPI_BLOB*, const(wchar)*, uint);
+HCERTSTORE PFXImportCertStore(CRYPT_INTEGER_BLOB*, const(wchar)*, CRYPT_KEY_FLAGS);
+BOOL PFXIsPFXBlob(CRYPT_INTEGER_BLOB*);
+BOOL PFXVerifyPassword(CRYPT_INTEGER_BLOB*, const(wchar)*, uint);
+BOOL PFXExportCertStoreEx(HCERTSTORE, CRYPT_INTEGER_BLOB*, const(wchar)*, void*, uint);
+BOOL PFXExportCertStore(HCERTSTORE, CRYPT_INTEGER_BLOB*, const(wchar)*, uint);
 void* CertOpenServerOcspResponse(CERT_CHAIN_CONTEXT*, uint, CERT_SERVER_OCSP_RESPONSE_OPEN_PARA*);
 void CertAddRefServerOcspResponse(void*);
 void CertCloseServerOcspResponse(void*, uint);
@@ -1131,8 +1131,8 @@ void CertFreeCertificateChainList(CERT_CHAIN_CONTEXT**);
 BOOL CryptRetrieveTimeStamp(const(wchar)*, uint, uint, const(char)*, const(CRYPT_TIMESTAMP_PARA)*, const(ubyte)*, uint, CRYPT_TIMESTAMP_CONTEXT**, CERT_CONTEXT**, HCERTSTORE*);
 BOOL CryptVerifyTimeStampSignature(const(ubyte)*, uint, const(ubyte)*, uint, HCERTSTORE, CRYPT_TIMESTAMP_CONTEXT**, CERT_CONTEXT**, HCERTSTORE*);
 BOOL CertIsWeakHash(uint, const(wchar)*, uint, CERT_CHAIN_CONTEXT*, FILETIME*, const(wchar)*);
-BOOL CryptProtectData(CRYPTOAPI_BLOB*, const(wchar)*, CRYPTOAPI_BLOB*, void*, CRYPTPROTECT_PROMPTSTRUCT*, uint, CRYPTOAPI_BLOB*);
-BOOL CryptUnprotectData(CRYPTOAPI_BLOB*, PWSTR*, CRYPTOAPI_BLOB*, void*, CRYPTPROTECT_PROMPTSTRUCT*, uint, CRYPTOAPI_BLOB*);
+BOOL CryptProtectData(CRYPT_INTEGER_BLOB*, const(wchar)*, CRYPT_INTEGER_BLOB*, void*, CRYPTPROTECT_PROMPTSTRUCT*, uint, CRYPT_INTEGER_BLOB*);
+BOOL CryptUnprotectData(CRYPT_INTEGER_BLOB*, PWSTR*, CRYPT_INTEGER_BLOB*, void*, CRYPTPROTECT_PROMPTSTRUCT*, uint, CRYPT_INTEGER_BLOB*);
 BOOL CryptUpdateProtectedState(PSID, const(wchar)*, uint, uint*, uint*);
 BOOL CryptProtectMemory(void*, uint, uint);
 BOOL CryptUnprotectMemory(void*, uint, uint);
@@ -4176,7 +4176,7 @@ struct CRYPT_AES_256_KEY_STATE
     ubyte[240] DecryptionState;
     ubyte[16] Feedback;
 }
-struct CRYPTOAPI_BLOB
+struct CRYPT_INTEGER_BLOB
 {
     uint cbData;
     ubyte* pbData;
@@ -4186,7 +4186,7 @@ struct CMS_DH_KEY_INFO
     uint dwVersion;
     uint Algid;
     PSTR pszContentEncObjId;
-    CRYPTOAPI_BLOB PubInfo;
+    CRYPT_INTEGER_BLOB PubInfo;
     void* pReserved;
 }
 struct BCRYPT_KEY_LENGTHS_STRUCT
@@ -4658,7 +4658,7 @@ struct CRYPT_BIT_BLOB
 struct CRYPT_ALGORITHM_IDENTIFIER
 {
     PSTR pszObjId;
-    CRYPTOAPI_BLOB Parameters;
+    CRYPT_INTEGER_BLOB Parameters;
 }
 struct CRYPT_OBJID_TABLE
 {
@@ -4668,24 +4668,24 @@ struct CRYPT_OBJID_TABLE
 struct CRYPT_HASH_INFO
 {
     CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm;
-    CRYPTOAPI_BLOB Hash;
+    CRYPT_INTEGER_BLOB Hash;
 }
 struct CERT_EXTENSION
 {
     PSTR pszObjId;
     BOOL fCritical;
-    CRYPTOAPI_BLOB Value;
+    CRYPT_INTEGER_BLOB Value;
 }
 struct CRYPT_ATTRIBUTE_TYPE_VALUE
 {
     PSTR pszObjId;
-    CRYPTOAPI_BLOB Value;
+    CRYPT_INTEGER_BLOB Value;
 }
 struct CRYPT_ATTRIBUTE
 {
     PSTR pszObjId;
     uint cValue;
-    CRYPTOAPI_BLOB* rgValue;
+    CRYPT_INTEGER_BLOB* rgValue;
 }
 struct CRYPT_ATTRIBUTES
 {
@@ -4696,7 +4696,7 @@ struct CERT_RDN_ATTR
 {
     PSTR pszObjId;
     CERT_RDN_ATTR_VALUE_TYPE dwValueType;
-    CRYPTOAPI_BLOB Value;
+    CRYPT_INTEGER_BLOB Value;
 }
 struct CERT_RDN
 {
@@ -4711,7 +4711,7 @@ struct CERT_NAME_INFO
 struct CERT_NAME_VALUE
 {
     uint dwValueType;
-    CRYPTOAPI_BLOB Value;
+    CRYPT_INTEGER_BLOB Value;
 }
 struct CERT_PUBLIC_KEY_INFO
 {
@@ -4721,7 +4721,7 @@ struct CERT_PUBLIC_KEY_INFO
 struct CRYPT_ECC_PRIVATE_KEY_INFO
 {
     uint dwVersion;
-    CRYPTOAPI_BLOB PrivateKey;
+    CRYPT_INTEGER_BLOB PrivateKey;
     PSTR szCurveOid;
     CRYPT_BIT_BLOB PublicKey;
 }
@@ -4729,20 +4729,20 @@ struct CRYPT_PRIVATE_KEY_INFO
 {
     uint Version;
     CRYPT_ALGORITHM_IDENTIFIER Algorithm;
-    CRYPTOAPI_BLOB PrivateKey;
+    CRYPT_INTEGER_BLOB PrivateKey;
     CRYPT_ATTRIBUTES* pAttributes;
 }
 struct CRYPT_ENCRYPTED_PRIVATE_KEY_INFO
 {
     CRYPT_ALGORITHM_IDENTIFIER EncryptionAlgorithm;
-    CRYPTOAPI_BLOB EncryptedPrivateKey;
+    CRYPT_INTEGER_BLOB EncryptedPrivateKey;
 }
-alias PCRYPT_DECRYPT_PRIVATE_KEY_FUNC = BOOL function(CRYPT_ALGORITHM_IDENTIFIER, CRYPTOAPI_BLOB, ubyte*, uint*, void*);
-alias PCRYPT_ENCRYPT_PRIVATE_KEY_FUNC = BOOL function(CRYPT_ALGORITHM_IDENTIFIER*, CRYPTOAPI_BLOB*, ubyte*, uint*, void*);
+alias PCRYPT_DECRYPT_PRIVATE_KEY_FUNC = BOOL function(CRYPT_ALGORITHM_IDENTIFIER, CRYPT_INTEGER_BLOB, ubyte*, uint*, void*);
+alias PCRYPT_ENCRYPT_PRIVATE_KEY_FUNC = BOOL function(CRYPT_ALGORITHM_IDENTIFIER*, CRYPT_INTEGER_BLOB*, ubyte*, uint*, void*);
 alias PCRYPT_RESOLVE_HCRYPTPROV_FUNC = BOOL function(CRYPT_PRIVATE_KEY_INFO*, ulong*, void*);
 struct CRYPT_PKCS8_IMPORT_PARAMS
 {
-    CRYPTOAPI_BLOB PrivateKey;
+    CRYPT_INTEGER_BLOB PrivateKey;
     PCRYPT_RESOLVE_HCRYPTPROV_FUNC pResolvehCryptProvFunc;
     void* pVoidResolveFunc;
     PCRYPT_DECRYPT_PRIVATE_KEY_FUNC pDecryptPrivateKeyFunc;
@@ -4759,12 +4759,12 @@ struct CRYPT_PKCS8_EXPORT_PARAMS
 struct CERT_INFO
 {
     uint dwVersion;
-    CRYPTOAPI_BLOB SerialNumber;
+    CRYPT_INTEGER_BLOB SerialNumber;
     CRYPT_ALGORITHM_IDENTIFIER SignatureAlgorithm;
-    CRYPTOAPI_BLOB Issuer;
+    CRYPT_INTEGER_BLOB Issuer;
     FILETIME NotBefore;
     FILETIME NotAfter;
-    CRYPTOAPI_BLOB Subject;
+    CRYPT_INTEGER_BLOB Subject;
     CERT_PUBLIC_KEY_INFO SubjectPublicKeyInfo;
     CRYPT_BIT_BLOB IssuerUniqueId;
     CRYPT_BIT_BLOB SubjectUniqueId;
@@ -4773,7 +4773,7 @@ struct CERT_INFO
 }
 struct CRL_ENTRY
 {
-    CRYPTOAPI_BLOB SerialNumber;
+    CRYPT_INTEGER_BLOB SerialNumber;
     FILETIME RevocationDate;
     uint cExtension;
     CERT_EXTENSION* rgExtension;
@@ -4782,7 +4782,7 @@ struct CRL_INFO
 {
     uint dwVersion;
     CRYPT_ALGORITHM_IDENTIFIER SignatureAlgorithm;
-    CRYPTOAPI_BLOB Issuer;
+    CRYPT_INTEGER_BLOB Issuer;
     FILETIME ThisUpdate;
     FILETIME NextUpdate;
     uint cCRLEntry;
@@ -4804,7 +4804,7 @@ struct CERT_OR_CRL_BUNDLE
 struct CERT_REQUEST_INFO
 {
     uint dwVersion;
-    CRYPTOAPI_BLOB Subject;
+    CRYPT_INTEGER_BLOB Subject;
     CERT_PUBLIC_KEY_INFO SubjectPublicKeyInfo;
     uint cAttribute;
     CRYPT_ATTRIBUTE* rgAttribute;
@@ -4817,7 +4817,7 @@ struct CERT_KEYGEN_REQUEST_INFO
 }
 struct CERT_SIGNED_CONTENT_INFO
 {
-    CRYPTOAPI_BLOB ToBeSigned;
+    CRYPT_INTEGER_BLOB ToBeSigned;
     CRYPT_ALGORITHM_IDENTIFIER SignatureAlgorithm;
     CRYPT_BIT_BLOB Signature;
 }
@@ -4828,7 +4828,7 @@ struct CTL_USAGE
 }
 struct CTL_ENTRY
 {
-    CRYPTOAPI_BLOB SubjectIdentifier;
+    CRYPT_INTEGER_BLOB SubjectIdentifier;
     uint cAttribute;
     CRYPT_ATTRIBUTE* rgAttribute;
 }
@@ -4836,8 +4836,8 @@ struct CTL_INFO
 {
     uint dwVersion;
     CTL_USAGE SubjectUsage;
-    CRYPTOAPI_BLOB ListIdentifier;
-    CRYPTOAPI_BLOB SequenceNumber;
+    CRYPT_INTEGER_BLOB ListIdentifier;
+    CRYPT_INTEGER_BLOB SequenceNumber;
     FILETIME ThisUpdate;
     FILETIME NextUpdate;
     CRYPT_ALGORITHM_IDENTIFIER SubjectAlgorithm;
@@ -4850,7 +4850,7 @@ struct CRYPT_TIME_STAMP_REQUEST_INFO
 {
     PSTR pszTimeStampAlgorithm;
     PSTR pszContentType;
-    CRYPTOAPI_BLOB Content;
+    CRYPT_INTEGER_BLOB Content;
     uint cAttribute;
     CRYPT_ATTRIBUTE* rgAttribute;
 }
@@ -4886,9 +4886,9 @@ struct CERT_EXTENSIONS
 }
 struct CERT_AUTHORITY_KEY_ID_INFO
 {
-    CRYPTOAPI_BLOB KeyId;
-    CRYPTOAPI_BLOB CertIssuer;
-    CRYPTOAPI_BLOB CertSerialNumber;
+    CRYPT_INTEGER_BLOB KeyId;
+    CRYPT_INTEGER_BLOB CertIssuer;
+    CRYPT_INTEGER_BLOB CertSerialNumber;
 }
 struct CERT_PRIVATE_KEY_VALIDITY
 {
@@ -4897,7 +4897,7 @@ struct CERT_PRIVATE_KEY_VALIDITY
 }
 struct CERT_KEY_ATTRIBUTES_INFO
 {
-    CRYPTOAPI_BLOB KeyId;
+    CRYPT_INTEGER_BLOB KeyId;
     CRYPT_BIT_BLOB IntendedKeyUsage;
     CERT_PRIVATE_KEY_VALIDITY* pPrivateKeyUsagePeriod;
 }
@@ -4915,7 +4915,7 @@ struct CERT_KEY_USAGE_RESTRICTION_INFO
 struct CERT_OTHER_NAME
 {
     PSTR pszObjId;
-    CRYPTOAPI_BLOB Value;
+    CRYPT_INTEGER_BLOB Value;
 }
 struct CERT_ALT_NAME_ENTRY
 {
@@ -4925,9 +4925,9 @@ struct CERT_ALT_NAME_ENTRY
         CERT_OTHER_NAME* pOtherName;
         PWSTR pwszRfc822Name;
         PWSTR pwszDNSName;
-        CRYPTOAPI_BLOB DirectoryName;
+        CRYPT_INTEGER_BLOB DirectoryName;
         PWSTR pwszURL;
-        CRYPTOAPI_BLOB IPAddress;
+        CRYPT_INTEGER_BLOB IPAddress;
         PSTR pszRegisteredID;
     }
 }
@@ -4942,7 +4942,7 @@ struct CERT_BASIC_CONSTRAINTS_INFO
     BOOL fPathLenConstraint;
     uint dwPathLenConstraint;
     uint cSubtreesConstraint;
-    CRYPTOAPI_BLOB* rgSubtreesConstraint;
+    CRYPT_INTEGER_BLOB* rgSubtreesConstraint;
 }
 struct CERT_BASIC_CONSTRAINTS2_INFO
 {
@@ -4953,7 +4953,7 @@ struct CERT_BASIC_CONSTRAINTS2_INFO
 struct CERT_POLICY_QUALIFIER_INFO
 {
     PSTR pszPolicyQualifierId;
-    CRYPTOAPI_BLOB Qualifier;
+    CRYPT_INTEGER_BLOB Qualifier;
 }
 struct CERT_POLICY_INFO
 {
@@ -4981,7 +4981,7 @@ struct CPS_URLS
 {
     PWSTR pszURL;
     CRYPT_ALGORITHM_IDENTIFIER* pAlgorithm;
-    CRYPTOAPI_BLOB* pDigest;
+    CRYPT_INTEGER_BLOB* pDigest;
 }
 struct CERT_POLICY95_QUALIFIER1
 {
@@ -5012,23 +5012,23 @@ struct CRYPT_CONTENT_INFO_SEQUENCE_OF_ANY
 {
     PSTR pszObjId;
     uint cValue;
-    CRYPTOAPI_BLOB* rgValue;
+    CRYPT_INTEGER_BLOB* rgValue;
 }
 struct CRYPT_CONTENT_INFO
 {
     PSTR pszObjId;
-    CRYPTOAPI_BLOB Content;
+    CRYPT_INTEGER_BLOB Content;
 }
 struct CRYPT_SEQUENCE_OF_ANY
 {
     uint cValue;
-    CRYPTOAPI_BLOB* rgValue;
+    CRYPT_INTEGER_BLOB* rgValue;
 }
 struct CERT_AUTHORITY_KEY_ID2_INFO
 {
-    CRYPTOAPI_BLOB KeyId;
+    CRYPT_INTEGER_BLOB KeyId;
     CERT_ALT_NAME_INFO AuthorityCertIssuer;
-    CRYPTOAPI_BLOB AuthorityCertSerialNumber;
+    CRYPT_INTEGER_BLOB AuthorityCertSerialNumber;
 }
 struct CERT_ACCESS_DESCRIPTION
 {
@@ -5067,8 +5067,8 @@ struct CROSS_CERT_DIST_POINTS_INFO
 }
 struct CERT_PAIR
 {
-    CRYPTOAPI_BLOB Forward;
-    CRYPTOAPI_BLOB Reverse;
+    CRYPT_INTEGER_BLOB Forward;
+    CRYPT_INTEGER_BLOB Reverse;
 }
 struct CRL_ISSUING_DIST_POINT
 {
@@ -5094,19 +5094,19 @@ struct CERT_NAME_CONSTRAINTS_INFO
 }
 struct CERT_DSS_PARAMETERS
 {
-    CRYPTOAPI_BLOB p;
-    CRYPTOAPI_BLOB q;
-    CRYPTOAPI_BLOB g;
+    CRYPT_INTEGER_BLOB p;
+    CRYPT_INTEGER_BLOB q;
+    CRYPT_INTEGER_BLOB g;
 }
 struct CERT_DH_PARAMETERS
 {
-    CRYPTOAPI_BLOB p;
-    CRYPTOAPI_BLOB g;
+    CRYPT_INTEGER_BLOB p;
+    CRYPT_INTEGER_BLOB g;
 }
 struct CERT_ECC_SIGNATURE
 {
-    CRYPTOAPI_BLOB r;
-    CRYPTOAPI_BLOB s;
+    CRYPT_INTEGER_BLOB r;
+    CRYPT_INTEGER_BLOB s;
 }
 struct CERT_X942_DH_VALIDATION_PARAMS
 {
@@ -5115,10 +5115,10 @@ struct CERT_X942_DH_VALIDATION_PARAMS
 }
 struct CERT_X942_DH_PARAMETERS
 {
-    CRYPTOAPI_BLOB p;
-    CRYPTOAPI_BLOB g;
-    CRYPTOAPI_BLOB q;
-    CRYPTOAPI_BLOB j;
+    CRYPT_INTEGER_BLOB p;
+    CRYPT_INTEGER_BLOB g;
+    CRYPT_INTEGER_BLOB q;
+    CRYPT_INTEGER_BLOB j;
     CERT_X942_DH_VALIDATION_PARAMS* pValidationParams;
 }
 struct CRYPT_X942_OTHER_INFO
@@ -5126,12 +5126,12 @@ struct CRYPT_X942_OTHER_INFO
     PSTR pszContentEncryptionObjId;
     ubyte[4] rgbCounter;
     ubyte[4] rgbKeyLength;
-    CRYPTOAPI_BLOB PubInfo;
+    CRYPT_INTEGER_BLOB PubInfo;
 }
 struct CRYPT_ECC_CMS_SHARED_INFO
 {
     CRYPT_ALGORITHM_IDENTIFIER Algorithm;
-    CRYPTOAPI_BLOB EntityUInfo;
+    CRYPT_INTEGER_BLOB EntityUInfo;
     ubyte[4] rgbSuppPubInfo;
 }
 struct CRYPT_RC2_CBC_PARAMETERS
@@ -5143,7 +5143,7 @@ struct CRYPT_RC2_CBC_PARAMETERS
 struct CRYPT_SMIME_CAPABILITY
 {
     PSTR pszObjId;
-    CRYPTOAPI_BLOB Parameters;
+    CRYPT_INTEGER_BLOB Parameters;
 }
 struct CRYPT_SMIME_CAPABILITIES
 {
@@ -5153,7 +5153,7 @@ struct CRYPT_SMIME_CAPABILITIES
 struct CERT_QC_STATEMENT
 {
     PSTR pszStatementId;
-    CRYPTOAPI_BLOB StatementInfo;
+    CRYPT_INTEGER_BLOB StatementInfo;
 }
 struct CERT_QC_STATEMENTS_EXT_INFO
 {
@@ -5175,7 +5175,7 @@ struct CRYPT_RSA_SSA_PSS_PARAMETERS
 struct CRYPT_PSOURCE_ALGORITHM
 {
     PSTR pszObjId;
-    CRYPTOAPI_BLOB EncodingParameters;
+    CRYPT_INTEGER_BLOB EncodingParameters;
 }
 struct CRYPT_RSAES_OAEP_PARAMETERS
 {
@@ -5191,7 +5191,7 @@ struct CMC_TAGGED_ATTRIBUTE
 struct CMC_TAGGED_CERT_REQUEST
 {
     uint dwBodyPartID;
-    CRYPTOAPI_BLOB SignedCertRequest;
+    CRYPT_INTEGER_BLOB SignedCertRequest;
 }
 struct CMC_TAGGED_REQUEST
 {
@@ -5204,13 +5204,13 @@ struct CMC_TAGGED_REQUEST
 struct CMC_TAGGED_CONTENT_INFO
 {
     uint dwBodyPartID;
-    CRYPTOAPI_BLOB EncodedContentInfo;
+    CRYPT_INTEGER_BLOB EncodedContentInfo;
 }
 struct CMC_TAGGED_OTHER_MSG
 {
     uint dwBodyPartID;
     PSTR pszObjId;
-    CRYPTOAPI_BLOB Value;
+    CRYPT_INTEGER_BLOB Value;
 }
 struct CMC_DATA_INFO
 {
@@ -5234,7 +5234,7 @@ struct CMC_RESPONSE_INFO
 }
 struct CMC_PEND_INFO
 {
-    CRYPTOAPI_BLOB PendToken;
+    CRYPT_INTEGER_BLOB PendToken;
     FILETIME PendTime;
 }
 struct CMC_STATUS_INFO
@@ -5276,7 +5276,7 @@ struct CERT_TEMPLATE_EXT
 struct CERT_HASHED_URL
 {
     CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm;
-    CRYPTOAPI_BLOB Hash;
+    CRYPT_INTEGER_BLOB Hash;
     PWSTR pwszUrl;
 }
 struct CERT_LOGOTYPE_DETAILS
@@ -5372,19 +5372,19 @@ struct OCSP_SIGNATURE_INFO
     CRYPT_ALGORITHM_IDENTIFIER SignatureAlgorithm;
     CRYPT_BIT_BLOB Signature;
     uint cCertEncoded;
-    CRYPTOAPI_BLOB* rgCertEncoded;
+    CRYPT_INTEGER_BLOB* rgCertEncoded;
 }
 struct OCSP_SIGNED_REQUEST_INFO
 {
-    CRYPTOAPI_BLOB ToBeSigned;
+    CRYPT_INTEGER_BLOB ToBeSigned;
     OCSP_SIGNATURE_INFO* pOptionalSignatureInfo;
 }
 struct OCSP_CERT_ID
 {
     CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm;
-    CRYPTOAPI_BLOB IssuerNameHash;
-    CRYPTOAPI_BLOB IssuerKeyHash;
-    CRYPTOAPI_BLOB SerialNumber;
+    CRYPT_INTEGER_BLOB IssuerNameHash;
+    CRYPT_INTEGER_BLOB IssuerKeyHash;
+    CRYPT_INTEGER_BLOB SerialNumber;
 }
 struct OCSP_REQUEST_ENTRY
 {
@@ -5405,11 +5405,11 @@ struct OCSP_RESPONSE_INFO
 {
     uint dwStatus;
     PSTR pszObjId;
-    CRYPTOAPI_BLOB Value;
+    CRYPT_INTEGER_BLOB Value;
 }
 struct OCSP_BASIC_SIGNED_RESPONSE_INFO
 {
-    CRYPTOAPI_BLOB ToBeSigned;
+    CRYPT_INTEGER_BLOB ToBeSigned;
     OCSP_SIGNATURE_INFO SignatureInfo;
 }
 struct OCSP_BASIC_REVOKED_INFO
@@ -5436,8 +5436,8 @@ struct OCSP_BASIC_RESPONSE_INFO
     uint dwResponderIdChoice;
     union
     {
-        CRYPTOAPI_BLOB ByNameResponderId;
-        CRYPTOAPI_BLOB ByKeyResponderId;
+        CRYPT_INTEGER_BLOB ByNameResponderId;
+        CRYPT_INTEGER_BLOB ByKeyResponderId;
     }
     FILETIME ProducedAt;
     uint cResponseEntry;
@@ -5475,7 +5475,7 @@ struct CRYPT_OID_INFO
         uint Algid;
         uint dwLength;
     }
-    CRYPTOAPI_BLOB ExtraInfo;
+    CRYPT_INTEGER_BLOB ExtraInfo;
 }
 alias PFN_CRYPT_ENUM_OID_INFO = BOOL function(CRYPT_OID_INFO*, void*);
 struct CERT_STRONG_SIGN_SERIALIZED_INFO
@@ -5497,8 +5497,8 @@ struct CERT_STRONG_SIGN_PARA
 }
 struct CERT_ISSUER_SERIAL_NUMBER
 {
-    CRYPTOAPI_BLOB Issuer;
-    CRYPTOAPI_BLOB SerialNumber;
+    CRYPT_INTEGER_BLOB Issuer;
+    CRYPT_INTEGER_BLOB SerialNumber;
 }
 struct CERT_ID
 {
@@ -5506,8 +5506,8 @@ struct CERT_ID
     union
     {
         CERT_ISSUER_SERIAL_NUMBER IssuerSerialNumber;
-        CRYPTOAPI_BLOB KeyId;
-        CRYPTOAPI_BLOB HashId;
+        CRYPT_INTEGER_BLOB KeyId;
+        CRYPT_INTEGER_BLOB HashId;
     }
 }
 struct CMSG_SIGNER_ENCODE_INFO
@@ -5533,9 +5533,9 @@ struct CMSG_SIGNED_ENCODE_INFO
     uint cSigners;
     CMSG_SIGNER_ENCODE_INFO* rgSigners;
     uint cCertEncoded;
-    CRYPTOAPI_BLOB* rgCertEncoded;
+    CRYPT_INTEGER_BLOB* rgCertEncoded;
     uint cCrlEncoded;
-    CRYPTOAPI_BLOB* rgCrlEncoded;
+    CRYPT_INTEGER_BLOB* rgCrlEncoded;
 }
 struct CMSG_ENVELOPED_ENCODE_INFO
 {
@@ -5578,7 +5578,7 @@ struct CMSG_KEY_AGREE_RECIPIENT_ENCODE_INFO
         CRYPT_ALGORITHM_IDENTIFIER* pEphemeralAlgorithm;
         CERT_ID* pSenderId;
     }
-    CRYPTOAPI_BLOB UserKeyingMaterial;
+    CRYPT_INTEGER_BLOB UserKeyingMaterial;
     uint cRecipientEncryptedKeys;
     CMSG_RECIPIENT_ENCRYPTED_KEY_ENCODE_INFO** rgpRecipientEncryptedKeys;
 }
@@ -5594,7 +5594,7 @@ struct CMSG_MAIL_LIST_RECIPIENT_ENCODE_INFO
         ulong hKeyEncryptionKey;
         void* pvKeyEncryptionKey;
     }
-    CRYPTOAPI_BLOB KeyId;
+    CRYPT_INTEGER_BLOB KeyId;
     FILETIME Date;
     CRYPT_ATTRIBUTE_TYPE_VALUE* pOtherAttr;
 }
@@ -5652,11 +5652,11 @@ struct CMSG_STREAM_INFO
 struct CMSG_SIGNER_INFO
 {
     uint dwVersion;
-    CRYPTOAPI_BLOB Issuer;
-    CRYPTOAPI_BLOB SerialNumber;
+    CRYPT_INTEGER_BLOB Issuer;
+    CRYPT_INTEGER_BLOB SerialNumber;
     CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm;
     CRYPT_ALGORITHM_IDENTIFIER HashEncryptionAlgorithm;
-    CRYPTOAPI_BLOB EncryptedHash;
+    CRYPT_INTEGER_BLOB EncryptedHash;
     CRYPT_ATTRIBUTES AuthAttrs;
     CRYPT_ATTRIBUTES UnauthAttrs;
 }
@@ -5666,7 +5666,7 @@ struct CMSG_CMS_SIGNER_INFO
     CERT_ID SignerId;
     CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm;
     CRYPT_ALGORITHM_IDENTIFIER HashEncryptionAlgorithm;
-    CRYPTOAPI_BLOB EncryptedHash;
+    CRYPT_INTEGER_BLOB EncryptedHash;
     CRYPT_ATTRIBUTES AuthAttrs;
     CRYPT_ATTRIBUTES UnauthAttrs;
 }
@@ -5675,12 +5675,12 @@ struct CMSG_KEY_TRANS_RECIPIENT_INFO
     uint dwVersion;
     CERT_ID RecipientId;
     CRYPT_ALGORITHM_IDENTIFIER KeyEncryptionAlgorithm;
-    CRYPTOAPI_BLOB EncryptedKey;
+    CRYPT_INTEGER_BLOB EncryptedKey;
 }
 struct CMSG_RECIPIENT_ENCRYPTED_KEY_INFO
 {
     CERT_ID RecipientId;
-    CRYPTOAPI_BLOB EncryptedKey;
+    CRYPT_INTEGER_BLOB EncryptedKey;
     FILETIME Date;
     CRYPT_ATTRIBUTE_TYPE_VALUE* pOtherAttr;
 }
@@ -5693,7 +5693,7 @@ struct CMSG_KEY_AGREE_RECIPIENT_INFO
         CERT_ID OriginatorCertId;
         CERT_PUBLIC_KEY_INFO OriginatorPublicKeyInfo;
     }
-    CRYPTOAPI_BLOB UserKeyingMaterial;
+    CRYPT_INTEGER_BLOB UserKeyingMaterial;
     CRYPT_ALGORITHM_IDENTIFIER KeyEncryptionAlgorithm;
     uint cRecipientEncryptedKeys;
     CMSG_RECIPIENT_ENCRYPTED_KEY_INFO** rgpRecipientEncryptedKeys;
@@ -5701,9 +5701,9 @@ struct CMSG_KEY_AGREE_RECIPIENT_INFO
 struct CMSG_MAIL_LIST_RECIPIENT_INFO
 {
     uint dwVersion;
-    CRYPTOAPI_BLOB KeyId;
+    CRYPT_INTEGER_BLOB KeyId;
     CRYPT_ALGORITHM_IDENTIFIER KeyEncryptionAlgorithm;
-    CRYPTOAPI_BLOB EncryptedKey;
+    CRYPT_INTEGER_BLOB EncryptedKey;
     FILETIME Date;
     CRYPT_ATTRIBUTE_TYPE_VALUE* pOtherAttr;
 }
@@ -5779,7 +5779,7 @@ struct CMSG_CTRL_ADD_SIGNER_UNAUTH_ATTR_PARA
 {
     uint cbSize;
     uint dwSignerIndex;
-    CRYPTOAPI_BLOB blob;
+    CRYPT_INTEGER_BLOB blob;
 }
 struct CMSG_CTRL_DEL_SIGNER_UNAUTH_ATTR_PARA
 {
@@ -5820,21 +5820,21 @@ struct CMSG_KEY_TRANS_ENCRYPT_INFO
     uint cbSize;
     uint dwRecipientIndex;
     CRYPT_ALGORITHM_IDENTIFIER KeyEncryptionAlgorithm;
-    CRYPTOAPI_BLOB EncryptedKey;
+    CRYPT_INTEGER_BLOB EncryptedKey;
     uint dwFlags;
 }
 alias PFN_CMSG_EXPORT_KEY_TRANS = BOOL function(CMSG_CONTENT_ENCRYPT_INFO*, CMSG_KEY_TRANS_RECIPIENT_ENCODE_INFO*, CMSG_KEY_TRANS_ENCRYPT_INFO*, uint, void*);
 struct CMSG_KEY_AGREE_KEY_ENCRYPT_INFO
 {
     uint cbSize;
-    CRYPTOAPI_BLOB EncryptedKey;
+    CRYPT_INTEGER_BLOB EncryptedKey;
 }
 struct CMSG_KEY_AGREE_ENCRYPT_INFO
 {
     uint cbSize;
     uint dwRecipientIndex;
     CRYPT_ALGORITHM_IDENTIFIER KeyEncryptionAlgorithm;
-    CRYPTOAPI_BLOB UserKeyingMaterial;
+    CRYPT_INTEGER_BLOB UserKeyingMaterial;
     CMSG_KEY_AGREE_ORIGINATOR dwOriginatorChoice;
     union
     {
@@ -5851,7 +5851,7 @@ struct CMSG_MAIL_LIST_ENCRYPT_INFO
     uint cbSize;
     uint dwRecipientIndex;
     CRYPT_ALGORITHM_IDENTIFIER KeyEncryptionAlgorithm;
-    CRYPTOAPI_BLOB EncryptedKey;
+    CRYPT_INTEGER_BLOB EncryptedKey;
     uint dwFlags;
 }
 alias PFN_CMSG_EXPORT_MAIL_LIST = BOOL function(CMSG_CONTENT_ENCRYPT_INFO*, CMSG_MAIL_LIST_RECIPIENT_ENCODE_INFO*, CMSG_MAIL_LIST_ENCRYPT_INFO*, uint, void*);
@@ -5875,7 +5875,7 @@ alias PFN_CMSG_CNG_IMPORT_KEY_AGREE = BOOL function(CMSG_CNG_CONTENT_DECRYPT_INF
 alias PFN_CMSG_CNG_IMPORT_CONTENT_ENCRYPT_KEY = BOOL function(CMSG_CNG_CONTENT_DECRYPT_INFO*, uint, void*);
 struct CERT_CONTEXT
 {
-    uint dwCertEncodingType;
+    CERT_QUERY_ENCODING_TYPE dwCertEncodingType;
     ubyte* pbCertEncoded;
     uint cbCertEncoded;
     CERT_INFO* pCertInfo;
@@ -5883,7 +5883,7 @@ struct CERT_CONTEXT
 }
 struct CRL_CONTEXT
 {
-    uint dwCertEncodingType;
+    CERT_QUERY_ENCODING_TYPE dwCertEncodingType;
     ubyte* pbCrlEncoded;
     uint cbCrlEncoded;
     CRL_INFO* pCrlInfo;
@@ -6029,13 +6029,13 @@ struct CRL_FIND_ISSUED_FOR_PARA
 struct CTL_ANY_SUBJECT_INFO
 {
     CRYPT_ALGORITHM_IDENTIFIER SubjectAlgorithm;
-    CRYPTOAPI_BLOB SubjectIdentifier;
+    CRYPT_INTEGER_BLOB SubjectIdentifier;
 }
 struct CTL_FIND_USAGE_PARA
 {
     uint cbSize;
     CTL_USAGE SubjectUsage;
-    CRYPTOAPI_BLOB ListIdentifier;
+    CRYPT_INTEGER_BLOB ListIdentifier;
     CERT_INFO* pSigner;
 }
 struct CTL_FIND_SUBJECT_PARA
@@ -6064,7 +6064,7 @@ struct CERT_PHYSICAL_STORE_INFO
     PSTR pszOpenStoreProvider;
     uint dwOpenEncodingType;
     uint dwOpenFlags;
-    CRYPTOAPI_BLOB OpenParameters;
+    CRYPT_INTEGER_BLOB OpenParameters;
     uint dwFlags;
     uint dwPriority;
 }
@@ -6074,7 +6074,7 @@ alias PFN_CERT_ENUM_PHYSICAL_STORE = BOOL function(const(void)*, uint, const(wch
 struct CTL_VERIFY_USAGE_PARA
 {
     uint cbSize;
-    CRYPTOAPI_BLOB ListIdentifier;
+    CRYPT_INTEGER_BLOB ListIdentifier;
     uint cCtlStore;
     HCERTSTORE* rghCtlStore;
     uint cSignerStore;
@@ -6118,8 +6118,8 @@ struct CERT_REVOCATION_STATUS
 }
 struct CRYPT_VERIFY_CERT_SIGN_STRONG_PROPERTIES_INFO
 {
-    CRYPTOAPI_BLOB CertSignHashCNGAlgPropData;
-    CRYPTOAPI_BLOB CertIssuerPubKeyBitLengthPropData;
+    CRYPT_INTEGER_BLOB CertSignHashCNGAlgPropData;
+    CRYPT_INTEGER_BLOB CertIssuerPubKeyBitLengthPropData;
 }
 struct CRYPT_VERIFY_CERT_SIGN_WEAK_HASH_INFO
 {
@@ -6127,20 +6127,20 @@ struct CRYPT_VERIFY_CERT_SIGN_WEAK_HASH_INFO
     PWSTR* rgpwszCNGHashAlgid;
     uint dwWeakIndex;
 }
-alias PFN_CRYPT_EXTRACT_ENCODED_SIGNATURE_PARAMETERS_FUNC = BOOL function(uint, CRYPT_ALGORITHM_IDENTIFIER*, void**, PWSTR*);
-alias PFN_CRYPT_SIGN_AND_ENCODE_HASH_FUNC = BOOL function(NCRYPT_KEY_HANDLE, uint, CRYPT_ALGORITHM_IDENTIFIER*, void*, const(wchar)*, const(wchar)*, ubyte*, uint, ubyte*, uint*);
-alias PFN_CRYPT_VERIFY_ENCODED_SIGNATURE_FUNC = BOOL function(uint, CERT_PUBLIC_KEY_INFO*, CRYPT_ALGORITHM_IDENTIFIER*, void*, const(wchar)*, const(wchar)*, ubyte*, uint, ubyte*, uint);
+alias PFN_CRYPT_EXTRACT_ENCODED_SIGNATURE_PARAMETERS_FUNC = BOOL function(CERT_QUERY_ENCODING_TYPE, CRYPT_ALGORITHM_IDENTIFIER*, void**, PWSTR*);
+alias PFN_CRYPT_SIGN_AND_ENCODE_HASH_FUNC = BOOL function(NCRYPT_KEY_HANDLE, CERT_QUERY_ENCODING_TYPE, CRYPT_ALGORITHM_IDENTIFIER*, void*, const(wchar)*, const(wchar)*, ubyte*, uint, ubyte*, uint*);
+alias PFN_CRYPT_VERIFY_ENCODED_SIGNATURE_FUNC = BOOL function(CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*, CRYPT_ALGORITHM_IDENTIFIER*, void*, const(wchar)*, const(wchar)*, ubyte*, uint, ubyte*, uint);
 struct CRYPT_DEFAULT_CONTEXT_MULTI_OID_PARA
 {
     uint cOID;
     PSTR* rgpszOID;
 }
-alias PFN_CRYPT_EXPORT_PUBLIC_KEY_INFO_EX2_FUNC = BOOL function(NCRYPT_KEY_HANDLE, uint, PSTR, uint, void*, CERT_PUBLIC_KEY_INFO*, uint*);
-alias PFN_CRYPT_EXPORT_PUBLIC_KEY_INFO_FROM_BCRYPT_HANDLE_FUNC = BOOL function(BCRYPT_KEY_HANDLE, uint, PSTR, uint, void*, CERT_PUBLIC_KEY_INFO*, uint*);
-alias PFN_IMPORT_PUBLIC_KEY_INFO_EX2_FUNC = BOOL function(uint, CERT_PUBLIC_KEY_INFO*, uint, void*, BCRYPT_KEY_HANDLE*);
+alias PFN_CRYPT_EXPORT_PUBLIC_KEY_INFO_EX2_FUNC = BOOL function(NCRYPT_KEY_HANDLE, CERT_QUERY_ENCODING_TYPE, PSTR, uint, void*, CERT_PUBLIC_KEY_INFO*, uint*);
+alias PFN_CRYPT_EXPORT_PUBLIC_KEY_INFO_FROM_BCRYPT_HANDLE_FUNC = BOOL function(BCRYPT_KEY_HANDLE, CERT_QUERY_ENCODING_TYPE, PSTR, uint, void*, CERT_PUBLIC_KEY_INFO*, uint*);
+alias PFN_IMPORT_PUBLIC_KEY_INFO_EX2_FUNC = BOOL function(CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*, uint, void*, BCRYPT_KEY_HANDLE*);
 alias PFN_IMPORT_PRIV_KEY_FUNC = BOOL function(ulong, CRYPT_PRIVATE_KEY_INFO*, uint, void*);
 alias PFN_EXPORT_PRIV_KEY_FUNC = BOOL function(ulong, uint, PSTR, uint, void*, CRYPT_PRIVATE_KEY_INFO*, uint*);
-alias PFN_CRYPT_GET_SIGNER_CERTIFICATE = CERT_CONTEXT* function(void*, uint, CERT_INFO*, HCERTSTORE);
+alias PFN_CRYPT_GET_SIGNER_CERTIFICATE = CERT_CONTEXT* function(void*, CERT_QUERY_ENCODING_TYPE, CERT_INFO*, HCERTSTORE);
 struct CRYPT_SIGN_MESSAGE_PARA
 {
     uint cbSize;
@@ -6215,14 +6215,14 @@ struct CRYPT_KEY_VERIFY_MESSAGE_PARA
 struct CERT_CHAIN
 {
     uint cCerts;
-    CRYPTOAPI_BLOB* certs;
+    CRYPT_INTEGER_BLOB* certs;
     CRYPT_KEY_PROV_INFO keyLocatorInfo;
 }
 alias PFN_CRYPT_ASYNC_PARAM_FREE_FUNC = void function(PSTR, void*);
 struct CRYPT_BLOB_ARRAY
 {
     uint cBlob;
-    CRYPTOAPI_BLOB* rgBlob;
+    CRYPT_INTEGER_BLOB* rgBlob;
 }
 struct CRYPT_CREDENTIALS
 {
@@ -6282,7 +6282,7 @@ struct CRYPT_RETRIEVE_AUX_INFO
     BOOL fProxyCacheRetrieval;
     uint dwHttpStatusCode;
     PWSTR* ppwszErrorResponseHeaders;
-    CRYPTOAPI_BLOB** ppErrorContentBlob;
+    CRYPT_INTEGER_BLOB** ppErrorContentBlob;
 }
 alias PFN_CRYPT_CANCEL_RETRIEVAL = BOOL function(uint, void*);
 alias PFN_CRYPT_ASYNC_RETRIEVAL_COMPLETION_FUNC = void function(void*, uint, const(char)*, PSTR, void*);
@@ -6317,9 +6317,9 @@ struct CRYPT_GET_TIME_VALID_OBJECT_EXTRA_INFO
     FILETIME* pLastSyncTime;
     FILETIME* pMaxAgeTime;
     CERT_REVOCATION_CHAIN_PARA* pChainPara;
-    CRYPTOAPI_BLOB* pDeltaCrlIndicator;
+    CRYPT_INTEGER_BLOB* pDeltaCrlIndicator;
 }
-alias PFN_CRYPT_ENUM_KEYID_PROP = BOOL function(const(CRYPTOAPI_BLOB)*, uint, void*, void*, uint, uint*, void**, uint*);
+alias PFN_CRYPT_ENUM_KEYID_PROP = BOOL function(const(CRYPT_INTEGER_BLOB)*, uint, void*, void*, uint, uint*, void**, uint*);
 struct CERT_CHAIN_ENGINE_CONFIG
 {
     uint cbSize;
@@ -6430,7 +6430,7 @@ struct CERT_CHAIN_FIND_BY_ISSUER_PARA
     uint dwKeySpec;
     uint dwAcquirePrivateKeyFlags;
     uint cIssuer;
-    CRYPTOAPI_BLOB* rgIssuer;
+    CRYPT_INTEGER_BLOB* rgIssuer;
     PFN_CERT_CHAIN_FIND_BY_ISSUER_CALLBACK pfnFindCallback;
     void* pvFindArg;
 }
@@ -6559,9 +6559,9 @@ struct CRYPT_TIMESTAMP_REQUEST
 {
     CRYPT_TIMESTAMP_VERSION dwVersion;
     CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm;
-    CRYPTOAPI_BLOB HashedMessage;
+    CRYPT_INTEGER_BLOB HashedMessage;
     PSTR pszTSAPolicyId;
-    CRYPTOAPI_BLOB Nonce;
+    CRYPT_INTEGER_BLOB Nonce;
     BOOL fCertReq;
     uint cExtension;
     CERT_EXTENSION* rgExtension;
@@ -6572,7 +6572,7 @@ struct CRYPT_TIMESTAMP_RESPONSE
     uint cFreeText;
     PWSTR* rgFreeText;
     CRYPT_BIT_BLOB FailureInfo;
-    CRYPTOAPI_BLOB ContentInfo;
+    CRYPT_INTEGER_BLOB ContentInfo;
 }
 struct CRYPT_TIMESTAMP_ACCURACY
 {
@@ -6585,13 +6585,13 @@ struct CRYPT_TIMESTAMP_INFO
     uint dwVersion;
     PSTR pszTSAPolicyId;
     CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm;
-    CRYPTOAPI_BLOB HashedMessage;
-    CRYPTOAPI_BLOB SerialNumber;
+    CRYPT_INTEGER_BLOB HashedMessage;
+    CRYPT_INTEGER_BLOB SerialNumber;
     FILETIME ftTime;
     CRYPT_TIMESTAMP_ACCURACY* pvAccuracy;
     BOOL fOrdering;
-    CRYPTOAPI_BLOB Nonce;
-    CRYPTOAPI_BLOB Tsa;
+    CRYPT_INTEGER_BLOB Nonce;
+    CRYPT_INTEGER_BLOB Tsa;
     uint cExtension;
     CERT_EXTENSION* rgExtension;
 }
@@ -6605,16 +6605,16 @@ struct CRYPT_TIMESTAMP_PARA
 {
     const(char)* pszTSAPolicyId;
     BOOL fRequestCerts;
-    CRYPTOAPI_BLOB Nonce;
+    CRYPT_INTEGER_BLOB Nonce;
     uint cExtension;
     CERT_EXTENSION* rgExtension;
 }
-alias PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_FLUSH = BOOL function(void*, CRYPTOAPI_BLOB**, uint);
-alias PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_GET = BOOL function(void*, CRYPTOAPI_BLOB*, uint, CRYPTOAPI_BLOB*, ubyte**, uint*, PWSTR*, CRYPTOAPI_BLOB**);
+alias PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_FLUSH = BOOL function(void*, CRYPT_INTEGER_BLOB**, uint);
+alias PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_GET = BOOL function(void*, CRYPT_INTEGER_BLOB*, uint, CRYPT_INTEGER_BLOB*, ubyte**, uint*, PWSTR*, CRYPT_INTEGER_BLOB**);
 alias PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_RELEASE = void function(CRYPT_OBJECT_LOCATOR_RELEASE_REASON, void*);
 alias PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_FREE_PASSWORD = void function(void*, const(wchar)*);
 alias PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_FREE = void function(void*, ubyte*);
-alias PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_FREE_IDENTIFIER = void function(void*, CRYPTOAPI_BLOB*);
+alias PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_FREE_IDENTIFIER = void function(void*, CRYPT_INTEGER_BLOB*);
 struct CRYPT_OBJECT_LOCATOR_PROVIDER_TABLE
 {
     uint cbSize;
@@ -6802,7 +6802,7 @@ struct CRYPT_XML_REFERENCE
     const(wchar)* wszUri;
     const(wchar)* wszType;
     CRYPT_XML_ALGORITHM DigestMethod;
-    CRYPTOAPI_BLOB DigestValue;
+    CRYPT_INTEGER_BLOB DigestValue;
     uint cTransform;
     CRYPT_XML_ALGORITHM* rgTransform;
 }
@@ -6837,7 +6837,7 @@ struct CRYPT_XML_SIGNATURE
     void* hSignature;
     const(wchar)* wszId;
     CRYPT_XML_SIGNED_INFO SignedInfo;
-    CRYPTOAPI_BLOB SignatureValue;
+    CRYPT_INTEGER_BLOB SignatureValue;
     CRYPT_XML_KEY_INFO* pKeyInfo;
     uint cObject;
     CRYPT_XML_OBJECT** rgpObject;
@@ -6854,12 +6854,12 @@ struct CRYPT_XML_KEYINFO_PARAM
 {
     const(wchar)* wszId;
     const(wchar)* wszKeyName;
-    CRYPTOAPI_BLOB SKI;
+    CRYPT_INTEGER_BLOB SKI;
     const(wchar)* wszSubjectName;
     uint cCertificate;
-    CRYPTOAPI_BLOB* rgCertificate;
+    CRYPT_INTEGER_BLOB* rgCertificate;
     uint cCRL;
-    CRYPTOAPI_BLOB* rgCRL;
+    CRYPT_INTEGER_BLOB* rgCRL;
 }
 alias CRYPT_XML_KEYINFO_SPEC = int;
 enum : int
@@ -6984,7 +6984,7 @@ struct ENDPOINTADDRESS
 {
     const(wchar)* serviceUrl;
     const(wchar)* policyUrl;
-    CRYPTOAPI_BLOB rawCertificate;
+    CRYPT_INTEGER_BLOB rawCertificate;
 }
 struct ENDPOINTADDRESS2
 {
@@ -6996,7 +6996,7 @@ struct ENDPOINTADDRESS2
 struct CERTIFICATE_CHAIN_BLOB
 {
     uint certCount;
-    CRYPTOAPI_BLOB* rawCertificates;
+    CRYPT_INTEGER_BLOB* rawCertificates;
 }
 struct CLAIMLIST
 {
@@ -7050,8 +7050,8 @@ interface ICertSrvSetupKeyInformation : IDispatch
     HRESULT put_ProviderName(const(BSTR));
     HRESULT get_Length(int*);
     HRESULT put_Length(int);
-    HRESULT get_Existing(short*);
-    HRESULT put_Existing(short);
+    HRESULT get_Existing(VARIANT_BOOL*);
+    HRESULT put_Existing(VARIANT_BOOL);
     HRESULT get_ContainerName(BSTR*);
     HRESULT put_ContainerName(const(BSTR));
     HRESULT get_HashAlgorithm(BSTR*);
@@ -7095,23 +7095,23 @@ interface ICertSrvSetup : IDispatch
 {
     HRESULT get_CAErrorId(int*);
     HRESULT get_CAErrorString(BSTR*);
-    HRESULT InitializeDefaults(short, short);
+    HRESULT InitializeDefaults(VARIANT_BOOL, VARIANT_BOOL);
     HRESULT GetCASetupProperty(CASetupProperty, VARIANT*);
     HRESULT SetCASetupProperty(CASetupProperty, VARIANT*);
-    HRESULT IsPropertyEditable(CASetupProperty, short*);
+    HRESULT IsPropertyEditable(CASetupProperty, VARIANT_BOOL*);
     HRESULT GetSupportedCATypes(VARIANT*);
     HRESULT GetProviderNameList(VARIANT*);
     HRESULT GetKeyLengthList(const(BSTR), VARIANT*);
     HRESULT GetHashAlgorithmList(const(BSTR), VARIANT*);
     HRESULT GetPrivateKeyContainerList(const(BSTR), VARIANT*);
     HRESULT GetExistingCACertificates(ICertSrvSetupKeyInformationCollection*);
-    HRESULT CAImportPFX(const(BSTR), const(BSTR), short, ICertSrvSetupKeyInformation*);
-    HRESULT SetCADistinguishedName(const(BSTR), short, short, short);
-    HRESULT SetDatabaseInformation(const(BSTR), const(BSTR), const(BSTR), short);
+    HRESULT CAImportPFX(const(BSTR), const(BSTR), VARIANT_BOOL, ICertSrvSetupKeyInformation*);
+    HRESULT SetCADistinguishedName(const(BSTR), VARIANT_BOOL, VARIANT_BOOL, VARIANT_BOOL);
+    HRESULT SetDatabaseInformation(const(BSTR), const(BSTR), const(BSTR), VARIANT_BOOL);
     HRESULT SetParentCAInformation(const(BSTR));
     HRESULT SetWebCAInformation(const(BSTR));
     HRESULT Install();
-    HRESULT PreUnInstall(short);
+    HRESULT PreUnInstall(VARIANT_BOOL);
     HRESULT PostUnInstall();
 }
 alias MSCEPSetupProperty = int;
@@ -7142,9 +7142,9 @@ interface IMSCEPSetup : IDispatch
     HRESULT GetMSCEPSetupProperty(MSCEPSetupProperty, VARIANT*);
     HRESULT SetMSCEPSetupProperty(MSCEPSetupProperty, VARIANT*);
     HRESULT SetAccountInformation(const(BSTR), const(BSTR));
-    HRESULT IsMSCEPStoreEmpty(short*);
-    HRESULT GetProviderNameList(short, VARIANT*);
-    HRESULT GetKeyLengthList(short, const(BSTR), VARIANT*);
+    HRESULT IsMSCEPStoreEmpty(VARIANT_BOOL*);
+    HRESULT GetProviderNameList(VARIANT_BOOL, VARIANT*);
+    HRESULT GetKeyLengthList(VARIANT_BOOL, const(BSTR), VARIANT*);
     HRESULT Install();
     HRESULT PreUnInstall();
     HRESULT PostUnInstall();

@@ -1,7 +1,7 @@
 module windows.win32.system.wmi;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, HRESULT, PWSTR;
+import windows.win32.foundation : BOOL, BSTR, HRESULT, PWSTR, VARIANT_BOOL;
 import windows.win32.system.com_ : IDispatch, IUnknown, SAFEARRAY, VARIANT;
 
 version (Windows):
@@ -2973,10 +2973,10 @@ interface ISWbemServices : IDispatch
     HRESULT SubclassesOfAsync(IDispatch, BSTR, int, IDispatch, IDispatch);
     HRESULT ExecQuery(BSTR, BSTR, int, IDispatch, ISWbemObjectSet*);
     HRESULT ExecQueryAsync(IDispatch, BSTR, BSTR, int, IDispatch, IDispatch);
-    HRESULT AssociatorsOf(BSTR, BSTR, BSTR, BSTR, BSTR, short, short, BSTR, BSTR, int, IDispatch, ISWbemObjectSet*);
-    HRESULT AssociatorsOfAsync(IDispatch, BSTR, BSTR, BSTR, BSTR, BSTR, short, short, BSTR, BSTR, int, IDispatch, IDispatch);
-    HRESULT ReferencesTo(BSTR, BSTR, BSTR, short, short, BSTR, int, IDispatch, ISWbemObjectSet*);
-    HRESULT ReferencesToAsync(IDispatch, BSTR, BSTR, BSTR, short, short, BSTR, int, IDispatch, IDispatch);
+    HRESULT AssociatorsOf(BSTR, BSTR, BSTR, BSTR, BSTR, VARIANT_BOOL, VARIANT_BOOL, BSTR, BSTR, int, IDispatch, ISWbemObjectSet*);
+    HRESULT AssociatorsOfAsync(IDispatch, BSTR, BSTR, BSTR, BSTR, BSTR, VARIANT_BOOL, VARIANT_BOOL, BSTR, BSTR, int, IDispatch, IDispatch);
+    HRESULT ReferencesTo(BSTR, BSTR, BSTR, VARIANT_BOOL, VARIANT_BOOL, BSTR, int, IDispatch, ISWbemObjectSet*);
+    HRESULT ReferencesToAsync(IDispatch, BSTR, BSTR, BSTR, VARIANT_BOOL, VARIANT_BOOL, BSTR, int, IDispatch, IDispatch);
     HRESULT ExecNotificationQuery(BSTR, BSTR, int, IDispatch, ISWbemEventSource*);
     HRESULT ExecNotificationQueryAsync(IDispatch, BSTR, BSTR, int, IDispatch, IDispatch);
     HRESULT ExecMethod(BSTR, BSTR, IDispatch, int, IDispatch, ISWbemObject*);
@@ -3000,17 +3000,17 @@ interface ISWbemObject : IDispatch
     HRESULT InstancesAsync_(IDispatch, int, IDispatch, IDispatch);
     HRESULT Subclasses_(int, IDispatch, ISWbemObjectSet*);
     HRESULT SubclassesAsync_(IDispatch, int, IDispatch, IDispatch);
-    HRESULT Associators_(BSTR, BSTR, BSTR, BSTR, short, short, BSTR, BSTR, int, IDispatch, ISWbemObjectSet*);
-    HRESULT AssociatorsAsync_(IDispatch, BSTR, BSTR, BSTR, BSTR, short, short, BSTR, BSTR, int, IDispatch, IDispatch);
-    HRESULT References_(BSTR, BSTR, short, short, BSTR, int, IDispatch, ISWbemObjectSet*);
-    HRESULT ReferencesAsync_(IDispatch, BSTR, BSTR, short, short, BSTR, int, IDispatch, IDispatch);
+    HRESULT Associators_(BSTR, BSTR, BSTR, BSTR, VARIANT_BOOL, VARIANT_BOOL, BSTR, BSTR, int, IDispatch, ISWbemObjectSet*);
+    HRESULT AssociatorsAsync_(IDispatch, BSTR, BSTR, BSTR, BSTR, VARIANT_BOOL, VARIANT_BOOL, BSTR, BSTR, int, IDispatch, IDispatch);
+    HRESULT References_(BSTR, BSTR, VARIANT_BOOL, VARIANT_BOOL, BSTR, int, IDispatch, ISWbemObjectSet*);
+    HRESULT ReferencesAsync_(IDispatch, BSTR, BSTR, VARIANT_BOOL, VARIANT_BOOL, BSTR, int, IDispatch, IDispatch);
     HRESULT ExecMethod_(BSTR, IDispatch, int, IDispatch, ISWbemObject*);
     HRESULT ExecMethodAsync_(IDispatch, BSTR, IDispatch, int, IDispatch, IDispatch);
     HRESULT Clone_(ISWbemObject*);
     HRESULT GetObjectText_(int, BSTR*);
     HRESULT SpawnDerivedClass_(int, ISWbemObject*);
     HRESULT SpawnInstance_(int, ISWbemObject*);
-    HRESULT CompareTo_(IDispatch, int, short*);
+    HRESULT CompareTo_(IDispatch, int, VARIANT_BOOL*);
     HRESULT get_Qualifiers_(ISWbemQualifierSet*);
     HRESULT get_Properties_(ISWbemPropertySet*);
     HRESULT get_Methods_(ISWbemMethodSet*);
@@ -3051,14 +3051,14 @@ interface ISWbemQualifier : IDispatch
     HRESULT get_Value(VARIANT*);
     HRESULT put_Value(VARIANT*);
     HRESULT get_Name(BSTR*);
-    HRESULT get_IsLocal(short*);
-    HRESULT get_PropagatesToSubclass(short*);
-    HRESULT put_PropagatesToSubclass(short);
-    HRESULT get_PropagatesToInstance(short*);
-    HRESULT put_PropagatesToInstance(short);
-    HRESULT get_IsOverridable(short*);
-    HRESULT put_IsOverridable(short);
-    HRESULT get_IsAmended(short*);
+    HRESULT get_IsLocal(VARIANT_BOOL*);
+    HRESULT get_PropagatesToSubclass(VARIANT_BOOL*);
+    HRESULT put_PropagatesToSubclass(VARIANT_BOOL);
+    HRESULT get_PropagatesToInstance(VARIANT_BOOL*);
+    HRESULT put_PropagatesToInstance(VARIANT_BOOL);
+    HRESULT get_IsOverridable(VARIANT_BOOL*);
+    HRESULT put_IsOverridable(VARIANT_BOOL);
+    HRESULT get_IsAmended(VARIANT_BOOL*);
 }
 enum IID_ISWbemQualifierSet = GUID(0x9b16ed16, 0xd3df, 0x11d1, [0x8b, 0x8, 0x0, 0x60, 0x8, 0x6, 0xd9, 0xb6]);
 interface ISWbemQualifierSet : IDispatch
@@ -3066,7 +3066,7 @@ interface ISWbemQualifierSet : IDispatch
     HRESULT get__NewEnum(IUnknown*);
     HRESULT Item(BSTR, int, ISWbemQualifier*);
     HRESULT get_Count(int*);
-    HRESULT Add(BSTR, VARIANT*, short, short, short, int, ISWbemQualifier*);
+    HRESULT Add(BSTR, VARIANT*, VARIANT_BOOL, VARIANT_BOOL, VARIANT_BOOL, int, ISWbemQualifier*);
     HRESULT Remove(BSTR, int);
 }
 enum IID_ISWbemProperty = GUID(0x1a388f98, 0xd4ba, 0x11d1, [0x8b, 0x9, 0x0, 0x60, 0x8, 0x6, 0xd9, 0xb6]);
@@ -3075,11 +3075,11 @@ interface ISWbemProperty : IDispatch
     HRESULT get_Value(VARIANT*);
     HRESULT put_Value(VARIANT*);
     HRESULT get_Name(BSTR*);
-    HRESULT get_IsLocal(short*);
+    HRESULT get_IsLocal(VARIANT_BOOL*);
     HRESULT get_Origin(BSTR*);
     HRESULT get_CIMType(WbemCimtypeEnum*);
     HRESULT get_Qualifiers_(ISWbemQualifierSet*);
-    HRESULT get_IsArray(short*);
+    HRESULT get_IsArray(VARIANT_BOOL*);
 }
 enum IID_ISWbemPropertySet = GUID(0xdea0a7b2, 0xd4ba, 0x11d1, [0x8b, 0x9, 0x0, 0x60, 0x8, 0x6, 0xd9, 0xb6]);
 interface ISWbemPropertySet : IDispatch
@@ -3087,7 +3087,7 @@ interface ISWbemPropertySet : IDispatch
     HRESULT get__NewEnum(IUnknown*);
     HRESULT Item(BSTR, int, ISWbemProperty*);
     HRESULT get_Count(int*);
-    HRESULT Add(BSTR, WbemCimtypeEnum, short, int, ISWbemProperty*);
+    HRESULT Add(BSTR, WbemCimtypeEnum, VARIANT_BOOL, int, ISWbemProperty*);
     HRESULT Remove(BSTR, int);
 }
 enum IID_ISWbemMethod = GUID(0x422e8e90, 0xd955, 0x11d1, [0x8b, 0x9, 0x0, 0x60, 0x8, 0x6, 0xd9, 0xb6]);
@@ -3128,9 +3128,9 @@ interface ISWbemObjectPath : IDispatch
     HRESULT put_DisplayName(BSTR);
     HRESULT get_Class(BSTR*);
     HRESULT put_Class(BSTR);
-    HRESULT get_IsClass(short*);
+    HRESULT get_IsClass(VARIANT_BOOL*);
     HRESULT SetAsClass();
-    HRESULT get_IsSingleton(short*);
+    HRESULT get_IsSingleton(VARIANT_BOOL*);
     HRESULT SetAsSingleton();
     HRESULT get_Keys(ISWbemNamedValueSet*);
     HRESULT get_Security_(ISWbemSecurity*);
@@ -3164,8 +3164,8 @@ interface ISWbemSecurity : IDispatch
 enum IID_ISWbemPrivilege = GUID(0x26ee67bd, 0x5804, 0x11d2, [0x8b, 0x4a, 0x0, 0x60, 0x8, 0x6, 0xd9, 0xb6]);
 interface ISWbemPrivilege : IDispatch
 {
-    HRESULT get_IsEnabled(short*);
-    HRESULT put_IsEnabled(short);
+    HRESULT get_IsEnabled(VARIANT_BOOL*);
+    HRESULT put_IsEnabled(VARIANT_BOOL);
     HRESULT get_Name(BSTR*);
     HRESULT get_DisplayName(BSTR*);
     HRESULT get_Identifier(WbemPrivilegeEnum*);
@@ -3176,10 +3176,10 @@ interface ISWbemPrivilegeSet : IDispatch
     HRESULT get__NewEnum(IUnknown*);
     HRESULT Item(WbemPrivilegeEnum, ISWbemPrivilege*);
     HRESULT get_Count(int*);
-    HRESULT Add(WbemPrivilegeEnum, short, ISWbemPrivilege*);
+    HRESULT Add(WbemPrivilegeEnum, VARIANT_BOOL, ISWbemPrivilege*);
     HRESULT Remove(WbemPrivilegeEnum);
     HRESULT DeleteAll();
-    HRESULT AddAsString(BSTR, short, ISWbemPrivilege*);
+    HRESULT AddAsString(BSTR, VARIANT_BOOL, ISWbemPrivilege*);
 }
 enum IID_ISWbemServicesEx = GUID(0xd2f68443, 0x85dc, 0x427e, [0x91, 0xd8, 0x36, 0x65, 0x54, 0xcc, 0x75, 0x4c]);
 interface ISWbemServicesEx : ISWbemServices
@@ -3202,42 +3202,42 @@ interface ISWbemDateTime : IDispatch
     HRESULT put_Value(BSTR);
     HRESULT get_Year(int*);
     HRESULT put_Year(int);
-    HRESULT get_YearSpecified(short*);
-    HRESULT put_YearSpecified(short);
+    HRESULT get_YearSpecified(VARIANT_BOOL*);
+    HRESULT put_YearSpecified(VARIANT_BOOL);
     HRESULT get_Month(int*);
     HRESULT put_Month(int);
-    HRESULT get_MonthSpecified(short*);
-    HRESULT put_MonthSpecified(short);
+    HRESULT get_MonthSpecified(VARIANT_BOOL*);
+    HRESULT put_MonthSpecified(VARIANT_BOOL);
     HRESULT get_Day(int*);
     HRESULT put_Day(int);
-    HRESULT get_DaySpecified(short*);
-    HRESULT put_DaySpecified(short);
+    HRESULT get_DaySpecified(VARIANT_BOOL*);
+    HRESULT put_DaySpecified(VARIANT_BOOL);
     HRESULT get_Hours(int*);
     HRESULT put_Hours(int);
-    HRESULT get_HoursSpecified(short*);
-    HRESULT put_HoursSpecified(short);
+    HRESULT get_HoursSpecified(VARIANT_BOOL*);
+    HRESULT put_HoursSpecified(VARIANT_BOOL);
     HRESULT get_Minutes(int*);
     HRESULT put_Minutes(int);
-    HRESULT get_MinutesSpecified(short*);
-    HRESULT put_MinutesSpecified(short);
+    HRESULT get_MinutesSpecified(VARIANT_BOOL*);
+    HRESULT put_MinutesSpecified(VARIANT_BOOL);
     HRESULT get_Seconds(int*);
     HRESULT put_Seconds(int);
-    HRESULT get_SecondsSpecified(short*);
-    HRESULT put_SecondsSpecified(short);
+    HRESULT get_SecondsSpecified(VARIANT_BOOL*);
+    HRESULT put_SecondsSpecified(VARIANT_BOOL);
     HRESULT get_Microseconds(int*);
     HRESULT put_Microseconds(int);
-    HRESULT get_MicrosecondsSpecified(short*);
-    HRESULT put_MicrosecondsSpecified(short);
+    HRESULT get_MicrosecondsSpecified(VARIANT_BOOL*);
+    HRESULT put_MicrosecondsSpecified(VARIANT_BOOL);
     HRESULT get_UTC(int*);
     HRESULT put_UTC(int);
-    HRESULT get_UTCSpecified(short*);
-    HRESULT put_UTCSpecified(short);
-    HRESULT get_IsInterval(short*);
-    HRESULT put_IsInterval(short);
-    HRESULT GetVarDate(short, double*);
-    HRESULT SetVarDate(double, short);
-    HRESULT GetFileTime(short, BSTR*);
-    HRESULT SetFileTime(BSTR, short);
+    HRESULT get_UTCSpecified(VARIANT_BOOL*);
+    HRESULT put_UTCSpecified(VARIANT_BOOL);
+    HRESULT get_IsInterval(VARIANT_BOOL*);
+    HRESULT put_IsInterval(VARIANT_BOOL);
+    HRESULT GetVarDate(VARIANT_BOOL, double*);
+    HRESULT SetVarDate(double, VARIANT_BOOL);
+    HRESULT GetFileTime(VARIANT_BOOL, BSTR*);
+    HRESULT SetFileTime(BSTR, VARIANT_BOOL);
 }
 enum IID_ISWbemRefresher = GUID(0x14d8250e, 0xd9c2, 0x11d3, [0xb3, 0x8f, 0x0, 0x10, 0x5a, 0x1f, 0x47, 0x3a]);
 interface ISWbemRefresher : IDispatch
@@ -3249,8 +3249,8 @@ interface ISWbemRefresher : IDispatch
     HRESULT AddEnum(ISWbemServicesEx, BSTR, int, IDispatch, ISWbemRefreshableItem*);
     HRESULT Remove(int, int);
     HRESULT Refresh(int);
-    HRESULT get_AutoReconnect(short*);
-    HRESULT put_AutoReconnect(short);
+    HRESULT get_AutoReconnect(VARIANT_BOOL*);
+    HRESULT put_AutoReconnect(VARIANT_BOOL);
     HRESULT DeleteAll();
 }
 enum IID_ISWbemRefreshableItem = GUID(0x5ad4bf92, 0xdaab, 0x11d3, [0xb3, 0x8f, 0x0, 0x10, 0x5a, 0x1f, 0x47, 0x3a]);
@@ -3258,7 +3258,7 @@ interface ISWbemRefreshableItem : IDispatch
 {
     HRESULT get_Index(int*);
     HRESULT get_Refresher(ISWbemRefresher*);
-    HRESULT get_IsSet(short*);
+    HRESULT get_IsSet(VARIANT_BOOL*);
     HRESULT get_Object(ISWbemObjectEx*);
     HRESULT get_ObjectSet(ISWbemObjectSet*);
     HRESULT Remove(int);

@@ -1,7 +1,7 @@
 module windows.win32.system.mmc;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, COLORREF, HRESULT, HWND, LPARAM, LRESULT, PWSTR;
+import windows.win32.foundation : BOOL, BSTR, COLORREF, HRESULT, HWND, LPARAM, LRESULT, PWSTR, VARIANT_BOOL;
 import windows.win32.graphics.gdi : HBITMAP, HPALETTE;
 import windows.win32.system.com_ : IDataObject, IDispatch, IEnumString, IUnknown, VARIANT;
 import windows.win32.ui.controls_ : HPROPSHEETPAGE;
@@ -347,7 +347,7 @@ interface View : IDispatch
     HRESULT get_ListItems(Nodes*);
     HRESULT SnapinScopeObject(VARIANT, IDispatch*);
     HRESULT SnapinSelectionObject(IDispatch*);
-    HRESULT Is(View, short*);
+    HRESULT Is(View, VARIANT_BOOL*);
     HRESULT get_Document(Document*);
     HRESULT SelectAll();
     HRESULT Select(Node);

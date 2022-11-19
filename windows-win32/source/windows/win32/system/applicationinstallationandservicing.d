@@ -1,7 +1,7 @@
 module windows.win32.system.applicationinstallationandservicing;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, PSTR, PWSTR, ULARGE_INTEGER;
+import windows.win32.foundation : BOOL, BSTR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, PSTR, PWSTR, ULARGE_INTEGER, VARIANT_BOOL;
 import windows.win32.security.cryptography_ : CERT_CONTEXT;
 import windows.win32.system.com_ : IDispatch, IStream, IUnknown, SAFEARRAY;
 import windows.win32.system.registry : HKEY;
@@ -1096,7 +1096,7 @@ interface IMsmMerge : IDispatch
 {
     HRESULT OpenDatabase(const(BSTR));
     HRESULT OpenModule(const(BSTR), const(short));
-    HRESULT CloseDatabase(const(short));
+    HRESULT CloseDatabase(const(VARIANT_BOOL));
     HRESULT CloseModule();
     HRESULT OpenLog(const(BSTR));
     HRESULT CloseLog();

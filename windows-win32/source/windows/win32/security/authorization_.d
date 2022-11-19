@@ -1,7 +1,7 @@
 module windows.win32.security.authorization_;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, HANDLE, HRESULT, HWND, LARGE_INTEGER, LUID, PSID, PSTR, PWSTR, WIN32_ERROR;
+import windows.win32.foundation : BOOL, BSTR, HANDLE, HRESULT, HWND, LARGE_INTEGER, LUID, PSID, PSTR, PWSTR, VARIANT_BOOL, WIN32_ERROR;
 import windows.win32.security_ : ACE_FLAGS, ACE_HEADER, ACL, GENERIC_MAPPING, OBJECT_SECURITY_INFORMATION, OBJECT_TYPE_LIST, PSECURITY_DESCRIPTOR, SID, SID_AND_ATTRIBUTES, SYSTEM_AUDIT_OBJECT_ACE_FLAGS, TOKEN_GROUPS;
 import windows.win32.system.com_ : IDispatch, IUnknown, VARIANT;
 import windows.win32.system.threading : LPTHREAD_START_ROUTINE;
@@ -95,31 +95,31 @@ BOOL AuthzReportSecurityEventFromParams(uint, AUTHZ_SECURITY_EVENT_PROVIDER_HAND
 BOOL AuthzRegisterCapChangeNotification(AUTHZ_CAP_CHANGE_SUBSCRIPTION_HANDLE__**, LPTHREAD_START_ROUTINE, void*);
 BOOL AuthzUnregisterCapChangeNotification(AUTHZ_CAP_CHANGE_SUBSCRIPTION_HANDLE__*);
 BOOL AuthzFreeCentralAccessPolicyCache();
-uint SetEntriesInAclA(uint, EXPLICIT_ACCESS_A*, ACL*, ACL**);
-uint SetEntriesInAclW(uint, EXPLICIT_ACCESS_W*, ACL*, ACL**);
-uint GetExplicitEntriesFromAclA(ACL*, uint*, EXPLICIT_ACCESS_A**);
-uint GetExplicitEntriesFromAclW(ACL*, uint*, EXPLICIT_ACCESS_W**);
-uint GetEffectiveRightsFromAclA(ACL*, TRUSTEE_A*, uint*);
-uint GetEffectiveRightsFromAclW(ACL*, TRUSTEE_W*, uint*);
-uint GetAuditedPermissionsFromAclA(ACL*, TRUSTEE_A*, uint*, uint*);
-uint GetAuditedPermissionsFromAclW(ACL*, TRUSTEE_W*, uint*, uint*);
+WIN32_ERROR SetEntriesInAclA(uint, EXPLICIT_ACCESS_A*, ACL*, ACL**);
+WIN32_ERROR SetEntriesInAclW(uint, EXPLICIT_ACCESS_W*, ACL*, ACL**);
+WIN32_ERROR GetExplicitEntriesFromAclA(ACL*, uint*, EXPLICIT_ACCESS_A**);
+WIN32_ERROR GetExplicitEntriesFromAclW(ACL*, uint*, EXPLICIT_ACCESS_W**);
+WIN32_ERROR GetEffectiveRightsFromAclA(ACL*, TRUSTEE_A*, uint*);
+WIN32_ERROR GetEffectiveRightsFromAclW(ACL*, TRUSTEE_W*, uint*);
+WIN32_ERROR GetAuditedPermissionsFromAclA(ACL*, TRUSTEE_A*, uint*, uint*);
+WIN32_ERROR GetAuditedPermissionsFromAclW(ACL*, TRUSTEE_W*, uint*, uint*);
 WIN32_ERROR GetNamedSecurityInfoA(const(char)*, SE_OBJECT_TYPE, OBJECT_SECURITY_INFORMATION, PSID*, PSID*, ACL**, ACL**, PSECURITY_DESCRIPTOR*);
 WIN32_ERROR GetNamedSecurityInfoW(const(wchar)*, SE_OBJECT_TYPE, OBJECT_SECURITY_INFORMATION, PSID*, PSID*, ACL**, ACL**, PSECURITY_DESCRIPTOR*);
 WIN32_ERROR GetSecurityInfo(HANDLE, SE_OBJECT_TYPE, uint, PSID*, PSID*, ACL**, ACL**, PSECURITY_DESCRIPTOR*);
-uint SetNamedSecurityInfoA(PSTR, SE_OBJECT_TYPE, OBJECT_SECURITY_INFORMATION, PSID, PSID, ACL*, ACL*);
-uint SetNamedSecurityInfoW(PWSTR, SE_OBJECT_TYPE, OBJECT_SECURITY_INFORMATION, PSID, PSID, ACL*, ACL*);
-uint SetSecurityInfo(HANDLE, SE_OBJECT_TYPE, uint, PSID, PSID, ACL*, ACL*);
-uint GetInheritanceSourceA(PSTR, SE_OBJECT_TYPE, uint, BOOL, GUID**, uint, ACL*, FN_OBJECT_MGR_FUNCTS*, GENERIC_MAPPING*, INHERITED_FROMA*);
-uint GetInheritanceSourceW(PWSTR, SE_OBJECT_TYPE, uint, BOOL, GUID**, uint, ACL*, FN_OBJECT_MGR_FUNCTS*, GENERIC_MAPPING*, INHERITED_FROMW*);
-uint FreeInheritedFromArray(INHERITED_FROMW*, ushort, FN_OBJECT_MGR_FUNCTS*);
-uint TreeResetNamedSecurityInfoA(PSTR, SE_OBJECT_TYPE, uint, PSID, PSID, ACL*, ACL*, BOOL, FN_PROGRESS, PROG_INVOKE_SETTING, void*);
-uint TreeResetNamedSecurityInfoW(PWSTR, SE_OBJECT_TYPE, uint, PSID, PSID, ACL*, ACL*, BOOL, FN_PROGRESS, PROG_INVOKE_SETTING, void*);
-uint TreeSetNamedSecurityInfoA(PSTR, SE_OBJECT_TYPE, uint, PSID, PSID, ACL*, ACL*, TREE_SEC_INFO, FN_PROGRESS, PROG_INVOKE_SETTING, void*);
-uint TreeSetNamedSecurityInfoW(PWSTR, SE_OBJECT_TYPE, uint, PSID, PSID, ACL*, ACL*, TREE_SEC_INFO, FN_PROGRESS, PROG_INVOKE_SETTING, void*);
-uint BuildSecurityDescriptorA(TRUSTEE_A*, TRUSTEE_A*, uint, EXPLICIT_ACCESS_A*, uint, EXPLICIT_ACCESS_A*, PSECURITY_DESCRIPTOR, uint*, PSECURITY_DESCRIPTOR*);
-uint BuildSecurityDescriptorW(TRUSTEE_W*, TRUSTEE_W*, uint, EXPLICIT_ACCESS_W*, uint, EXPLICIT_ACCESS_W*, PSECURITY_DESCRIPTOR, uint*, PSECURITY_DESCRIPTOR*);
-uint LookupSecurityDescriptorPartsA(TRUSTEE_A**, TRUSTEE_A**, uint*, EXPLICIT_ACCESS_A**, uint*, EXPLICIT_ACCESS_A**, PSECURITY_DESCRIPTOR);
-uint LookupSecurityDescriptorPartsW(TRUSTEE_W**, TRUSTEE_W**, uint*, EXPLICIT_ACCESS_W**, uint*, EXPLICIT_ACCESS_W**, PSECURITY_DESCRIPTOR);
+WIN32_ERROR SetNamedSecurityInfoA(PSTR, SE_OBJECT_TYPE, OBJECT_SECURITY_INFORMATION, PSID, PSID, ACL*, ACL*);
+WIN32_ERROR SetNamedSecurityInfoW(PWSTR, SE_OBJECT_TYPE, OBJECT_SECURITY_INFORMATION, PSID, PSID, ACL*, ACL*);
+WIN32_ERROR SetSecurityInfo(HANDLE, SE_OBJECT_TYPE, uint, PSID, PSID, ACL*, ACL*);
+WIN32_ERROR GetInheritanceSourceA(PSTR, SE_OBJECT_TYPE, uint, BOOL, GUID**, uint, ACL*, FN_OBJECT_MGR_FUNCTS*, GENERIC_MAPPING*, INHERITED_FROMA*);
+WIN32_ERROR GetInheritanceSourceW(PWSTR, SE_OBJECT_TYPE, uint, BOOL, GUID**, uint, ACL*, FN_OBJECT_MGR_FUNCTS*, GENERIC_MAPPING*, INHERITED_FROMW*);
+WIN32_ERROR FreeInheritedFromArray(INHERITED_FROMW*, ushort, FN_OBJECT_MGR_FUNCTS*);
+WIN32_ERROR TreeResetNamedSecurityInfoA(PSTR, SE_OBJECT_TYPE, uint, PSID, PSID, ACL*, ACL*, BOOL, FN_PROGRESS, PROG_INVOKE_SETTING, void*);
+WIN32_ERROR TreeResetNamedSecurityInfoW(PWSTR, SE_OBJECT_TYPE, uint, PSID, PSID, ACL*, ACL*, BOOL, FN_PROGRESS, PROG_INVOKE_SETTING, void*);
+WIN32_ERROR TreeSetNamedSecurityInfoA(PSTR, SE_OBJECT_TYPE, uint, PSID, PSID, ACL*, ACL*, TREE_SEC_INFO, FN_PROGRESS, PROG_INVOKE_SETTING, void*);
+WIN32_ERROR TreeSetNamedSecurityInfoW(PWSTR, SE_OBJECT_TYPE, uint, PSID, PSID, ACL*, ACL*, TREE_SEC_INFO, FN_PROGRESS, PROG_INVOKE_SETTING, void*);
+WIN32_ERROR BuildSecurityDescriptorA(TRUSTEE_A*, TRUSTEE_A*, uint, EXPLICIT_ACCESS_A*, uint, EXPLICIT_ACCESS_A*, PSECURITY_DESCRIPTOR, uint*, PSECURITY_DESCRIPTOR*);
+WIN32_ERROR BuildSecurityDescriptorW(TRUSTEE_W*, TRUSTEE_W*, uint, EXPLICIT_ACCESS_W*, uint, EXPLICIT_ACCESS_W*, PSECURITY_DESCRIPTOR, uint*, PSECURITY_DESCRIPTOR*);
+WIN32_ERROR LookupSecurityDescriptorPartsA(TRUSTEE_A**, TRUSTEE_A**, uint*, EXPLICIT_ACCESS_A**, uint*, EXPLICIT_ACCESS_A**, PSECURITY_DESCRIPTOR);
+WIN32_ERROR LookupSecurityDescriptorPartsW(TRUSTEE_W**, TRUSTEE_W**, uint*, EXPLICIT_ACCESS_W**, uint*, EXPLICIT_ACCESS_W**, PSECURITY_DESCRIPTOR);
 void BuildExplicitAccessWithNameA(EXPLICIT_ACCESS_A*, PSTR, uint, ACCESS_MODE, ACE_FLAGS);
 void BuildExplicitAccessWithNameW(EXPLICIT_ACCESS_W*, PWSTR, uint, ACCESS_MODE, ACE_FLAGS);
 void BuildImpersonateExplicitAccessWithNameA(EXPLICIT_ACCESS_A*, PSTR, TRUSTEE_A*, uint, ACCESS_MODE, uint);
@@ -979,10 +979,10 @@ interface IAzAuthorizationStore2 : IAzAuthorizationStore
 enum IID_IAzAuthorizationStore3 = GUID(0xabc08425, 0xc86, 0x4fa0, [0x9b, 0xe3, 0x71, 0x89, 0x95, 0x6c, 0x92, 0x6e]);
 interface IAzAuthorizationStore3 : IAzAuthorizationStore2
 {
-    HRESULT IsUpdateNeeded(short*);
-    HRESULT BizruleGroupSupported(short*);
+    HRESULT IsUpdateNeeded(VARIANT_BOOL*);
+    HRESULT BizruleGroupSupported(VARIANT_BOOL*);
     HRESULT UpgradeStoresFunctionalLevel(int);
-    HRESULT IsFunctionalLevelUpgradeSupported(int, short*);
+    HRESULT IsFunctionalLevelUpgradeSupported(int, VARIANT_BOOL*);
     HRESULT GetSchemaVersion(int*, int*);
 }
 enum IID_IAzApplication = GUID(0x987bc7c7, 0xb813, 0x4d27, [0xbe, 0xde, 0x6b, 0xa5, 0xae, 0x86, 0x7e, 0x95]);
@@ -1312,7 +1312,7 @@ enum IID_IAzClientContext3 = GUID(0x11894fde, 0x1deb, 0x4b4b, [0x89, 0x7, 0x6d, 
 interface IAzClientContext3 : IAzClientContext2
 {
     HRESULT AccessCheck2(BSTR, BSTR, int, uint*);
-    HRESULT IsInRoleAssignment(BSTR, BSTR, short*);
+    HRESULT IsInRoleAssignment(BSTR, BSTR, VARIANT_BOOL*);
     HRESULT GetOperations(BSTR, IAzOperations*);
     HRESULT GetTasks(BSTR, IAzTasks*);
     HRESULT get_BizRuleParameters(IAzBizRuleParameters*);
@@ -1335,7 +1335,7 @@ interface IAzScope2 : IAzScope
 enum IID_IAzApplication3 = GUID(0x181c845e, 0x7196, 0x4a7d, [0xac, 0x2e, 0x2, 0xc, 0xb, 0xb7, 0xa3, 0x3]);
 interface IAzApplication3 : IAzApplication2
 {
-    HRESULT ScopeExists(BSTR, short*);
+    HRESULT ScopeExists(BSTR, VARIANT_BOOL*);
     HRESULT OpenScope2(BSTR, IAzScope2*);
     HRESULT CreateScope2(BSTR, IAzScope2*);
     HRESULT DeleteScope2(BSTR);
@@ -1347,13 +1347,13 @@ interface IAzApplication3 : IAzApplication2
     HRESULT CreateRoleAssignment(BSTR, IAzRoleAssignment*);
     HRESULT OpenRoleAssignment(BSTR, IAzRoleAssignment*);
     HRESULT DeleteRoleAssignment(BSTR);
-    HRESULT get_BizRulesEnabled(short*);
-    HRESULT put_BizRulesEnabled(short);
+    HRESULT get_BizRulesEnabled(VARIANT_BOOL*);
+    HRESULT put_BizRulesEnabled(VARIANT_BOOL);
 }
 enum IID_IAzOperation2 = GUID(0x1f5ea01f, 0x44a2, 0x4184, [0x9c, 0x48, 0xa7, 0x5b, 0x4d, 0xcc, 0x8c, 0xcc]);
 interface IAzOperation2 : IAzOperation
 {
-    HRESULT RoleAssignments(BSTR, short, IAzRoleAssignments*);
+    HRESULT RoleAssignments(BSTR, VARIANT_BOOL, IAzRoleAssignments*);
 }
 enum IID_IAzRoleDefinitions = GUID(0x881f25a5, 0xd755, 0x4550, [0x95, 0x7a, 0xd5, 0x3, 0xa3, 0xb3, 0x40, 0x1]);
 interface IAzRoleDefinitions : IDispatch
@@ -1365,7 +1365,7 @@ interface IAzRoleDefinitions : IDispatch
 enum IID_IAzRoleDefinition = GUID(0xd97fcea1, 0x2599, 0x44f1, [0x9f, 0xc3, 0x58, 0xe9, 0xfb, 0xe0, 0x94, 0x66]);
 interface IAzRoleDefinition : IAzTask
 {
-    HRESULT RoleAssignments(BSTR, short, IAzRoleAssignments*);
+    HRESULT RoleAssignments(BSTR, VARIANT_BOOL, IAzRoleAssignments*);
     HRESULT AddRoleDefinition(BSTR);
     HRESULT DeleteRoleDefinition(BSTR);
     HRESULT get_RoleDefinitions(IAzRoleDefinitions*);
@@ -1412,12 +1412,12 @@ interface IAzApplicationGroup2 : IAzApplicationGroup
     HRESULT put_BizRuleLanguage(BSTR);
     HRESULT get_BizRuleImportedPath(BSTR*);
     HRESULT put_BizRuleImportedPath(BSTR);
-    HRESULT RoleAssignments(BSTR, short, IAzRoleAssignments*);
+    HRESULT RoleAssignments(BSTR, VARIANT_BOOL, IAzRoleAssignments*);
 }
 enum IID_IAzTask2 = GUID(0x3a9a5ee, 0x48c8, 0x4832, [0x90, 0x25, 0xaa, 0xd5, 0x3, 0xc4, 0x65, 0x26]);
 interface IAzTask2 : IAzTask
 {
-    HRESULT RoleAssignments(BSTR, short, IAzRoleAssignments*);
+    HRESULT RoleAssignments(BSTR, VARIANT_BOOL, IAzRoleAssignments*);
 }
 alias AZ_PROP_CONSTANTS = int;
 enum : int

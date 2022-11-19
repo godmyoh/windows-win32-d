@@ -1,7 +1,7 @@
 module windows.win32.storage.fileserverresourcemanager;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BSTR, HRESULT;
+import windows.win32.foundation : BSTR, HRESULT, VARIANT_BOOL;
 import windows.win32.system.com_ : IDispatch, IUnknown, SAFEARRAY, VARIANT;
 
 version (Windows):
@@ -589,7 +589,7 @@ interface IFsrmCollection : IDispatch
     HRESULT get_Count(int*);
     HRESULT get_State(FsrmCollectionState*);
     HRESULT Cancel();
-    HRESULT WaitForCompletion(int, short*);
+    HRESULT WaitForCompletion(int, VARIANT_BOOL*);
     HRESULT GetById(GUID, VARIANT*);
 }
 enum IID_IFsrmMutableCollection = GUID(0x1bb617b8, 0x3886, 0x49dc, [0xaf, 0x82, 0xa6, 0xc9, 0xf, 0xa3, 0x5d, 0xda]);
@@ -665,12 +665,12 @@ interface IFsrmActionCommand : IFsrmAction
     HRESULT put_Account(FsrmAccountType);
     HRESULT get_WorkingDirectory(BSTR*);
     HRESULT put_WorkingDirectory(BSTR);
-    HRESULT get_MonitorCommand(short*);
-    HRESULT put_MonitorCommand(short);
+    HRESULT get_MonitorCommand(VARIANT_BOOL*);
+    HRESULT put_MonitorCommand(VARIANT_BOOL);
     HRESULT get_KillTimeOut(int*);
     HRESULT put_KillTimeOut(int);
-    HRESULT get_LogResult(short*);
-    HRESULT put_LogResult(short);
+    HRESULT get_LogResult(VARIANT_BOOL*);
+    HRESULT put_LogResult(VARIANT_BOOL);
 }
 enum IID_IFsrmSetting = GUID(0xf411d4fd, 0x14be, 0x4260, [0x8c, 0x40, 0x3, 0xb7, 0xc9, 0x5e, 0x60, 0x8a]);
 interface IFsrmSetting : IDispatch
@@ -681,10 +681,10 @@ interface IFsrmSetting : IDispatch
     HRESULT put_MailFrom(BSTR);
     HRESULT get_AdminEmail(BSTR*);
     HRESULT put_AdminEmail(BSTR);
-    HRESULT get_DisableCommandLine(short*);
-    HRESULT put_DisableCommandLine(short);
-    HRESULT get_EnableScreeningAudit(short*);
-    HRESULT put_EnableScreeningAudit(short);
+    HRESULT get_DisableCommandLine(VARIANT_BOOL*);
+    HRESULT put_DisableCommandLine(VARIANT_BOOL);
+    HRESULT get_EnableScreeningAudit(VARIANT_BOOL*);
+    HRESULT put_EnableScreeningAudit(VARIANT_BOOL);
     HRESULT EmailTest(BSTR);
     HRESULT SetActionRunLimitInterval(FsrmActionType, int);
     HRESULT GetActionRunLimitInterval(FsrmActionType, int*);
@@ -796,7 +796,7 @@ interface IFsrmQuotaObject : IFsrmQuotaBase
     HRESULT get_UserSid(BSTR*);
     HRESULT get_UserAccount(BSTR*);
     HRESULT get_SourceTemplateName(BSTR*);
-    HRESULT get_MatchesSourceTemplate(short*);
+    HRESULT get_MatchesSourceTemplate(VARIANT_BOOL*);
     HRESULT ApplyTemplate(BSTR);
 }
 enum IID_IFsrmQuota = GUID(0x377f739d, 0x9647, 0x4b8e, [0x97, 0xd2, 0x5f, 0xfc, 0xe6, 0xd7, 0x59, 0xcd]);
@@ -834,7 +834,7 @@ interface IFsrmQuotaManager : IDispatch
 enum IID_IFsrmQuotaManagerEx = GUID(0x4846cb01, 0xd430, 0x494f, [0xab, 0xb4, 0xb1, 0x5, 0x49, 0x99, 0xfb, 0x9]);
 interface IFsrmQuotaManagerEx : IFsrmQuotaManager
 {
-    HRESULT IsAffectedByQuota(BSTR, FsrmEnumOptions, short*);
+    HRESULT IsAffectedByQuota(BSTR, FsrmEnumOptions, VARIANT_BOOL*);
 }
 enum IID_IFsrmQuotaTemplate = GUID(0xa2efab31, 0x295e, 0x46bb, [0xb9, 0x76, 0xe8, 0x6d, 0x58, 0xb5, 0x2e, 0x8b]);
 interface IFsrmQuotaTemplate : IFsrmQuotaBase
@@ -847,8 +847,8 @@ interface IFsrmQuotaTemplate : IFsrmQuotaBase
 enum IID_IFsrmQuotaTemplateImported = GUID(0x9a2bf113, 0xa329, 0x44cc, [0x80, 0x9a, 0x5c, 0x0, 0xfc, 0xe8, 0xda, 0x40]);
 interface IFsrmQuotaTemplateImported : IFsrmQuotaTemplate
 {
-    HRESULT get_OverwriteOnCommit(short*);
-    HRESULT put_OverwriteOnCommit(short);
+    HRESULT get_OverwriteOnCommit(VARIANT_BOOL*);
+    HRESULT put_OverwriteOnCommit(VARIANT_BOOL);
 }
 enum IID_IFsrmQuotaTemplateManager = GUID(0x4173ac41, 0x172d, 0x4d52, [0x96, 0x3c, 0xfd, 0xc7, 0xe4, 0x15, 0xf7, 0x17]);
 interface IFsrmQuotaTemplateManager : IDispatch
@@ -872,8 +872,8 @@ interface IFsrmFileGroup : IFsrmObject
 enum IID_IFsrmFileGroupImported = GUID(0xad55f10b, 0x5f11, 0x4be7, [0x94, 0xef, 0xd9, 0xee, 0x2e, 0x47, 0xd, 0xed]);
 interface IFsrmFileGroupImported : IFsrmFileGroup
 {
-    HRESULT get_OverwriteOnCommit(short*);
-    HRESULT put_OverwriteOnCommit(short);
+    HRESULT get_OverwriteOnCommit(VARIANT_BOOL*);
+    HRESULT put_OverwriteOnCommit(VARIANT_BOOL);
 }
 enum IID_IFsrmFileGroupManager = GUID(0x426677d5, 0x18c, 0x485c, [0x8a, 0x51, 0x20, 0xb8, 0x6d, 0x0, 0xbd, 0xc4]);
 interface IFsrmFileGroupManager : IDispatch
@@ -899,7 +899,7 @@ interface IFsrmFileScreen : IFsrmFileScreenBase
 {
     HRESULT get_Path(BSTR*);
     HRESULT get_SourceTemplateName(BSTR*);
-    HRESULT get_MatchesSourceTemplate(short*);
+    HRESULT get_MatchesSourceTemplate(VARIANT_BOOL*);
     HRESULT get_UserSid(BSTR*);
     HRESULT get_UserAccount(BSTR*);
     HRESULT ApplyTemplate(BSTR);
@@ -935,8 +935,8 @@ interface IFsrmFileScreenTemplate : IFsrmFileScreenBase
 enum IID_IFsrmFileScreenTemplateImported = GUID(0xe1010359, 0x3e5d, 0x4ecd, [0x9f, 0xe4, 0xef, 0x48, 0x62, 0x2f, 0xdf, 0x30]);
 interface IFsrmFileScreenTemplateImported : IFsrmFileScreenTemplate
 {
-    HRESULT get_OverwriteOnCommit(short*);
-    HRESULT put_OverwriteOnCommit(short);
+    HRESULT get_OverwriteOnCommit(VARIANT_BOOL*);
+    HRESULT put_OverwriteOnCommit(VARIANT_BOOL);
 }
 enum IID_IFsrmFileScreenTemplateManager = GUID(0xcfe36cba, 0x1949, 0x4e74, [0xa1, 0x4f, 0xf1, 0xd5, 0x80, 0xce, 0xaf, 0x13]);
 interface IFsrmFileScreenTemplateManager : IDispatch
@@ -955,7 +955,7 @@ interface IFsrmReportManager : IDispatch
     HRESULT GetReportJob(BSTR, IFsrmReportJob*);
     HRESULT GetOutputDirectory(FsrmReportGenerationContext, BSTR*);
     HRESULT SetOutputDirectory(FsrmReportGenerationContext, BSTR);
-    HRESULT IsFilterValidForReportType(FsrmReportType, FsrmReportFilter, short*);
+    HRESULT IsFilterValidForReportType(FsrmReportType, FsrmReportFilter, VARIANT_BOOL*);
     HRESULT GetDefaultFilter(FsrmReportType, FsrmReportFilter, VARIANT*);
     HRESULT SetDefaultFilter(FsrmReportType, FsrmReportFilter, VARIANT);
     HRESULT GetReportSizeLimit(FsrmReportLimit, VARIANT*);
@@ -979,7 +979,7 @@ interface IFsrmReportJob : IFsrmObject
     HRESULT EnumReports(IFsrmCollection*);
     HRESULT CreateReport(FsrmReportType, IFsrmReport*);
     HRESULT Run(FsrmReportGenerationContext);
-    HRESULT WaitForCompletion(int, short*);
+    HRESULT WaitForCompletion(int, VARIANT_BOOL*);
     HRESULT Cancel();
 }
 enum IID_IFsrmReport = GUID(0xd8cc81d9, 0x46b8, 0x4fa4, [0xbf, 0xa5, 0x4a, 0xa9, 0xde, 0xc9, 0xb6, 0x38]);
@@ -1019,8 +1019,8 @@ interface IFsrmFileManagementJob : IFsrmObject
     HRESULT put_Name(BSTR);
     HRESULT get_NamespaceRoots(SAFEARRAY**);
     HRESULT put_NamespaceRoots(SAFEARRAY*);
-    HRESULT get_Enabled(short*);
-    HRESULT put_Enabled(short);
+    HRESULT get_Enabled(VARIANT_BOOL*);
+    HRESULT put_Enabled(VARIANT_BOOL);
     HRESULT get_OperationType(FsrmFileManagementType*);
     HRESULT put_OperationType(FsrmFileManagementType);
     HRESULT get_ExpirationDirectory(BSTR*);
@@ -1029,8 +1029,8 @@ interface IFsrmFileManagementJob : IFsrmObject
     HRESULT get_Notifications(SAFEARRAY**);
     HRESULT get_Logging(int*);
     HRESULT put_Logging(int);
-    HRESULT get_ReportEnabled(short*);
-    HRESULT put_ReportEnabled(short);
+    HRESULT get_ReportEnabled(VARIANT_BOOL*);
+    HRESULT put_ReportEnabled(VARIANT_BOOL);
     HRESULT get_Formats(SAFEARRAY**);
     HRESULT put_Formats(SAFEARRAY*);
     HRESULT get_MailTo(BSTR*);
@@ -1055,7 +1055,7 @@ interface IFsrmFileManagementJob : IFsrmObject
     HRESULT get_FileNamePattern(BSTR*);
     HRESULT put_FileNamePattern(BSTR);
     HRESULT Run(FsrmReportGenerationContext);
-    HRESULT WaitForCompletion(int, short*);
+    HRESULT WaitForCompletion(int, VARIANT_BOOL*);
     HRESULT Cancel();
     HRESULT AddNotification(int);
     HRESULT DeleteNotification(int);
@@ -1173,10 +1173,10 @@ interface IFsrmPipelineModuleDefinition : IFsrmObject
     HRESULT get_Version(BSTR*);
     HRESULT put_Version(BSTR);
     HRESULT get_ModuleType(FsrmPipelineModuleType*);
-    HRESULT get_Enabled(short*);
-    HRESULT put_Enabled(short);
-    HRESULT get_NeedsFileContent(short*);
-    HRESULT put_NeedsFileContent(short);
+    HRESULT get_Enabled(VARIANT_BOOL*);
+    HRESULT put_Enabled(VARIANT_BOOL);
+    HRESULT get_NeedsFileContent(VARIANT_BOOL*);
+    HRESULT put_NeedsFileContent(VARIANT_BOOL);
     HRESULT get_Account(FsrmAccountType*);
     HRESULT put_Account(FsrmAccountType);
     HRESULT get_SupportedExtensions(SAFEARRAY**);
@@ -1191,8 +1191,8 @@ interface IFsrmClassifierModuleDefinition : IFsrmPipelineModuleDefinition
     HRESULT put_PropertiesAffected(SAFEARRAY*);
     HRESULT get_PropertiesUsed(SAFEARRAY**);
     HRESULT put_PropertiesUsed(SAFEARRAY*);
-    HRESULT get_NeedsExplicitValue(short*);
-    HRESULT put_NeedsExplicitValue(short);
+    HRESULT get_NeedsExplicitValue(VARIANT_BOOL*);
+    HRESULT put_NeedsExplicitValue(VARIANT_BOOL);
 }
 enum IID_IFsrmStorageModuleDefinition = GUID(0x15a81350, 0x497d, 0x4aba, [0x80, 0xe9, 0xd4, 0xdb, 0xcc, 0x55, 0x21, 0xfe]);
 interface IFsrmStorageModuleDefinition : IFsrmPipelineModuleDefinition
@@ -1201,8 +1201,8 @@ interface IFsrmStorageModuleDefinition : IFsrmPipelineModuleDefinition
     HRESULT put_Capabilities(FsrmStorageModuleCaps);
     HRESULT get_StorageType(FsrmStorageModuleType*);
     HRESULT put_StorageType(FsrmStorageModuleType);
-    HRESULT get_UpdatesFileContent(short*);
-    HRESULT put_UpdatesFileContent(short);
+    HRESULT get_UpdatesFileContent(VARIANT_BOOL*);
+    HRESULT put_UpdatesFileContent(VARIANT_BOOL);
 }
 enum IID_IFsrmClassificationManager = GUID(0xd2dc89da, 0xee91, 0x48a0, [0x85, 0xd8, 0xcc, 0x72, 0xa5, 0x6f, 0x7d, 0x4]);
 interface IFsrmClassificationManager : IDispatch
@@ -1213,8 +1213,8 @@ interface IFsrmClassificationManager : IDispatch
     HRESULT put_Logging(int);
     HRESULT get_ClassificationReportMailTo(BSTR*);
     HRESULT put_ClassificationReportMailTo(BSTR);
-    HRESULT get_ClassificationReportEnabled(short*);
-    HRESULT put_ClassificationReportEnabled(short);
+    HRESULT get_ClassificationReportEnabled(VARIANT_BOOL*);
+    HRESULT put_ClassificationReportEnabled(VARIANT_BOOL);
     HRESULT get_ClassificationLastReportPathWithoutExtension(BSTR*);
     HRESULT get_ClassificationLastError(BSTR*);
     HRESULT get_ClassificationRunningStatus(FsrmReportRunningStatus*);
@@ -1228,7 +1228,7 @@ interface IFsrmClassificationManager : IDispatch
     HRESULT CreateModuleDefinition(FsrmPipelineModuleType, IFsrmPipelineModuleDefinition*);
     HRESULT GetModuleDefinition(BSTR, FsrmPipelineModuleType, IFsrmPipelineModuleDefinition*);
     HRESULT RunClassification(FsrmReportGenerationContext, BSTR);
-    HRESULT WaitForClassificationCompletion(int, short*);
+    HRESULT WaitForClassificationCompletion(int, VARIANT_BOOL*);
     HRESULT CancelClassification();
     HRESULT EnumFileProperties(BSTR, FsrmGetFilePropertyOptions, IFsrmCollection*);
     HRESULT GetFileProperty(BSTR, BSTR, FsrmGetFilePropertyOptions, IFsrmProperty*);
@@ -1283,7 +1283,7 @@ interface IFsrmClassifierModuleImplementation : IFsrmPipelineModuleImplementatio
     HRESULT get_LastModified(VARIANT*);
     HRESULT UseRulesAndDefinitions(IFsrmCollection, IFsrmCollection);
     HRESULT OnBeginFile(IFsrmPropertyBag, SAFEARRAY*);
-    HRESULT DoesPropertyValueApply(BSTR, BSTR, short*, GUID, GUID);
+    HRESULT DoesPropertyValueApply(BSTR, BSTR, VARIANT_BOOL*, GUID, GUID);
     HRESULT GetPropertyValueToApply(BSTR, BSTR*, GUID, GUID);
     HRESULT OnEndFile();
 }

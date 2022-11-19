@@ -1,7 +1,7 @@
 module windows.win32.networkmanagement.mobilebroadband;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, HRESULT, PWSTR;
+import windows.win32.foundation : BOOL, BSTR, HRESULT, PWSTR, VARIANT_BOOL;
 import windows.win32.system.com_ : IDispatch, IUnknown, SAFEARRAY;
 
 version (Windows):
@@ -445,8 +445,8 @@ enum : int
 struct MBN_DEVICE_SERVICE
 {
     BSTR deviceServiceID;
-    short dataWriteSupported;
-    short dataReadSupported;
+    VARIANT_BOOL dataWriteSupported;
+    VARIANT_BOOL dataReadSupported;
 }
 alias MBN_DEVICE_SERVICES_INTERFACE_STATE = int;
 enum : int
@@ -481,7 +481,7 @@ interface IMbnInterface : IUnknown
     HRESULT GetInterfaceCapability(MBN_INTERFACE_CAPS*);
     HRESULT GetSubscriberInformation(IMbnSubscriberInformation*);
     HRESULT GetReadyState(MBN_READY_STATE*);
-    HRESULT InEmergencyMode(short*);
+    HRESULT InEmergencyMode(VARIANT_BOOL*);
     HRESULT GetHomeProvider(MBN_PROVIDER*);
     HRESULT GetPreferredProviders(SAFEARRAY**);
     HRESULT SetPreferredProviders(SAFEARRAY*, uint*);
@@ -666,7 +666,7 @@ interface IMbnSmsEvents : IUnknown
     HRESULT OnSmsConfigurationChange(IMbnSms);
     HRESULT OnSetSmsConfigurationComplete(IMbnSms, uint, HRESULT);
     HRESULT OnSmsSendComplete(IMbnSms, uint, HRESULT);
-    HRESULT OnSmsReadComplete(IMbnSms, MBN_SMS_FORMAT, SAFEARRAY*, short, uint, HRESULT);
+    HRESULT OnSmsReadComplete(IMbnSms, MBN_SMS_FORMAT, SAFEARRAY*, VARIANT_BOOL, uint, HRESULT);
     HRESULT OnSmsNewClass0Message(IMbnSms, MBN_SMS_FORMAT, SAFEARRAY*);
     HRESULT OnSmsDeleteComplete(IMbnSms, uint, HRESULT);
     HRESULT OnSmsStatusChange(IMbnSms);

@@ -1,7 +1,7 @@
 module windows.win32.media.librarysharingservices;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BSTR, HRESULT;
+import windows.win32.foundation : BSTR, HRESULT, VARIANT_BOOL;
 import windows.win32.system.com_ : IDispatch, VARIANT;
 
 version (Windows):
@@ -51,22 +51,22 @@ enum IID_IWindowsMediaLibrarySharingServices = GUID(0x1f5f85e, 0xa81, 0x40da, [0
 interface IWindowsMediaLibrarySharingServices : IDispatch
 {
     HRESULT showShareMediaCPL(BSTR);
-    HRESULT get_userHomeMediaSharingState(short*);
-    HRESULT put_userHomeMediaSharingState(short);
+    HRESULT get_userHomeMediaSharingState(VARIANT_BOOL*);
+    HRESULT put_userHomeMediaSharingState(VARIANT_BOOL);
     HRESULT get_userHomeMediaSharingLibraryName(BSTR*);
     HRESULT put_userHomeMediaSharingLibraryName(BSTR);
-    HRESULT get_computerHomeMediaSharingAllowedState(short*);
-    HRESULT put_computerHomeMediaSharingAllowedState(short);
-    HRESULT get_userInternetMediaSharingState(short*);
-    HRESULT put_userInternetMediaSharingState(short);
-    HRESULT get_computerInternetMediaSharingAllowedState(short*);
-    HRESULT put_computerInternetMediaSharingAllowedState(short);
+    HRESULT get_computerHomeMediaSharingAllowedState(VARIANT_BOOL*);
+    HRESULT put_computerHomeMediaSharingAllowedState(VARIANT_BOOL);
+    HRESULT get_userInternetMediaSharingState(VARIANT_BOOL*);
+    HRESULT put_userInternetMediaSharingState(VARIANT_BOOL);
+    HRESULT get_computerInternetMediaSharingAllowedState(VARIANT_BOOL*);
+    HRESULT put_computerInternetMediaSharingAllowedState(VARIANT_BOOL);
     HRESULT get_internetMediaSharingSecurityGroup(BSTR*);
     HRESULT put_internetMediaSharingSecurityGroup(BSTR);
-    HRESULT get_allowSharingToAllDevices(short*);
-    HRESULT put_allowSharingToAllDevices(short);
-    HRESULT setDefaultAuthorization(BSTR, BSTR, short);
-    HRESULT setAuthorizationState(BSTR, short);
+    HRESULT get_allowSharingToAllDevices(VARIANT_BOOL*);
+    HRESULT put_allowSharingToAllDevices(VARIANT_BOOL);
+    HRESULT setDefaultAuthorization(BSTR, BSTR, VARIANT_BOOL);
+    HRESULT setAuthorizationState(BSTR, VARIANT_BOOL);
     HRESULT getAllDevices(IWindowsMediaLibrarySharingDevices*);
-    HRESULT get_customSettingsApplied(short*);
+    HRESULT get_customSettingsApplied(VARIANT_BOOL*);
 }

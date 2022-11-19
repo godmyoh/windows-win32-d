@@ -1,7 +1,7 @@
 module windows.win32.devices.tapi;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, CHAR, HANDLE, HINSTANCE, HRESULT, HWND, PSTR, PWSTR, SYSTEMTIME, WPARAM;
+import windows.win32.foundation : BOOL, BSTR, CHAR, HANDLE, HINSTANCE, HRESULT, HWND, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL, WPARAM;
 import windows.win32.media.directshow_ : ALLOCATOR_PROPERTIES;
 import windows.win32.media.mediafoundation : AM_MEDIA_TYPE;
 import windows.win32.system.addressbook : IAddrBook, IMAPITable, IMessage, SPropTagArray, SPropValue;
@@ -3141,16 +3141,16 @@ interface ITTAPI : IDispatch
     HRESULT Shutdown();
     HRESULT get_Addresses(VARIANT*);
     HRESULT EnumerateAddresses(IEnumAddress*);
-    HRESULT RegisterCallNotifications(ITAddress, short, short, int, int, int*);
+    HRESULT RegisterCallNotifications(ITAddress, VARIANT_BOOL, VARIANT_BOOL, int, int, int*);
     HRESULT UnregisterNotifications(int);
     HRESULT get_CallHubs(VARIANT*);
     HRESULT EnumerateCallHubs(IEnumCallHub*);
-    HRESULT SetCallHubTracking(VARIANT, short);
+    HRESULT SetCallHubTracking(VARIANT, VARIANT_BOOL);
     HRESULT EnumeratePrivateTAPIObjects(IEnumUnknown*);
     HRESULT get_PrivateTAPIObjects(VARIANT*);
-    HRESULT RegisterRequestRecipient(int, int, short);
-    HRESULT SetAssistedTelephonyPriority(BSTR, short);
-    HRESULT SetApplicationPriority(BSTR, int, short);
+    HRESULT RegisterRequestRecipient(int, int, VARIANT_BOOL);
+    HRESULT SetAssistedTelephonyPriority(BSTR, VARIANT_BOOL);
+    HRESULT SetApplicationPriority(BSTR, int, VARIANT_BOOL);
     HRESULT put_EventFilter(int);
     HRESULT get_EventFilter(int*);
 }
@@ -3165,7 +3165,7 @@ enum IID_ITMediaSupport = GUID(0xb1efc384, 0x9355, 0x11d0, [0x83, 0x5c, 0x0, 0xa
 interface ITMediaSupport : IDispatch
 {
     HRESULT get_MediaTypes(int*);
-    HRESULT QueryMediaType(int, short*);
+    HRESULT QueryMediaType(int, VARIANT_BOOL*);
 }
 enum IID_ITPluggableTerminalClassInfo = GUID(0x41757f4a, 0xcf09, 0x4b34, [0xbc, 0x96, 0xa, 0x79, 0xd2, 0x39, 0x0, 0x76]);
 interface ITPluggableTerminalClassInfo : IDispatch
@@ -3216,10 +3216,10 @@ interface ITAddress : IDispatch
     HRESULT CreateForwardInfoObject(ITForwardInformation*);
     HRESULT Forward(ITForwardInformation, ITBasicCallControl);
     HRESULT get_CurrentForwardInfo(ITForwardInformation*);
-    HRESULT put_MessageWaiting(short);
-    HRESULT get_MessageWaiting(short*);
-    HRESULT put_DoNotDisturb(short);
-    HRESULT get_DoNotDisturb(short*);
+    HRESULT put_MessageWaiting(VARIANT_BOOL);
+    HRESULT get_MessageWaiting(VARIANT_BOOL*);
+    HRESULT put_DoNotDisturb(VARIANT_BOOL);
+    HRESULT get_DoNotDisturb(VARIANT_BOOL*);
 }
 enum IID_ITAddress2 = GUID(0xb0ae5d9b, 0xbe51, 0x46c9, [0xb0, 0xf7, 0xdf, 0xa8, 0xa2, 0x2a, 0x8b, 0xc4]);
 interface ITAddress2 : ITAddress
@@ -3229,8 +3229,8 @@ interface ITAddress2 : ITAddress
     HRESULT GetPhoneFromTerminal(ITTerminal, ITPhone*);
     HRESULT get_PreferredPhones(VARIANT*);
     HRESULT EnumeratePreferredPhones(IEnumPhone*);
-    HRESULT get_EventFilter(TAPI_EVENT, int, short*);
-    HRESULT put_EventFilter(TAPI_EVENT, int, short);
+    HRESULT get_EventFilter(TAPI_EVENT, int, VARIANT_BOOL*);
+    HRESULT put_EventFilter(TAPI_EVENT, int, VARIANT_BOOL);
     HRESULT DeviceSpecific(ITCallInfo, ubyte*, uint);
     HRESULT DeviceSpecificVariant(ITCallInfo, VARIANT);
     HRESULT NegotiateExtVersion(int, int, int*);
@@ -3292,30 +3292,30 @@ interface ITAutomatedPhoneControl : IDispatch
     HRESULT get_Tone(PHONE_TONE*);
     HRESULT StartRinger(int, int);
     HRESULT StopRinger();
-    HRESULT get_Ringer(short*);
-    HRESULT put_PhoneHandlingEnabled(short);
-    HRESULT get_PhoneHandlingEnabled(short*);
+    HRESULT get_Ringer(VARIANT_BOOL*);
+    HRESULT put_PhoneHandlingEnabled(VARIANT_BOOL);
+    HRESULT get_PhoneHandlingEnabled(VARIANT_BOOL*);
     HRESULT put_AutoEndOfNumberTimeout(int);
     HRESULT get_AutoEndOfNumberTimeout(int*);
-    HRESULT put_AutoDialtone(short);
-    HRESULT get_AutoDialtone(short*);
-    HRESULT put_AutoStopTonesOnOnHook(short);
-    HRESULT get_AutoStopTonesOnOnHook(short*);
-    HRESULT put_AutoStopRingOnOffHook(short);
-    HRESULT get_AutoStopRingOnOffHook(short*);
-    HRESULT put_AutoKeypadTones(short);
-    HRESULT get_AutoKeypadTones(short*);
+    HRESULT put_AutoDialtone(VARIANT_BOOL);
+    HRESULT get_AutoDialtone(VARIANT_BOOL*);
+    HRESULT put_AutoStopTonesOnOnHook(VARIANT_BOOL);
+    HRESULT get_AutoStopTonesOnOnHook(VARIANT_BOOL*);
+    HRESULT put_AutoStopRingOnOffHook(VARIANT_BOOL);
+    HRESULT get_AutoStopRingOnOffHook(VARIANT_BOOL*);
+    HRESULT put_AutoKeypadTones(VARIANT_BOOL);
+    HRESULT get_AutoKeypadTones(VARIANT_BOOL*);
     HRESULT put_AutoKeypadTonesMinimumDuration(int);
     HRESULT get_AutoKeypadTonesMinimumDuration(int*);
-    HRESULT put_AutoVolumeControl(short);
-    HRESULT get_AutoVolumeControl(short*);
+    HRESULT put_AutoVolumeControl(VARIANT_BOOL);
+    HRESULT get_AutoVolumeControl(VARIANT_BOOL*);
     HRESULT put_AutoVolumeControlStep(int);
     HRESULT get_AutoVolumeControlStep(int*);
     HRESULT put_AutoVolumeControlRepeatDelay(int);
     HRESULT get_AutoVolumeControlRepeatDelay(int*);
     HRESULT put_AutoVolumeControlRepeatPeriod(int);
     HRESULT get_AutoVolumeControlRepeatPeriod(int*);
-    HRESULT SelectCall(ITCallInfo, short);
+    HRESULT SelectCall(ITCallInfo, VARIANT_BOOL);
     HRESULT UnselectCall(ITCallInfo);
     HRESULT EnumerateSelectedCalls(IEnumCall*);
     HRESULT get_SelectedCalls(VARIANT*);
@@ -3323,14 +3323,14 @@ interface ITAutomatedPhoneControl : IDispatch
 enum IID_ITBasicCallControl = GUID(0xb1efc389, 0x9355, 0x11d0, [0x83, 0x5c, 0x0, 0xaa, 0x0, 0x3c, 0xca, 0xbd]);
 interface ITBasicCallControl : IDispatch
 {
-    HRESULT Connect(short);
+    HRESULT Connect(VARIANT_BOOL);
     HRESULT Answer();
     HRESULT Disconnect(DISCONNECT_CODE);
-    HRESULT Hold(short);
+    HRESULT Hold(VARIANT_BOOL);
     HRESULT HandoffDirect(BSTR);
     HRESULT HandoffIndirect(int);
-    HRESULT Conference(ITBasicCallControl, short);
-    HRESULT Transfer(ITBasicCallControl, short);
+    HRESULT Conference(ITBasicCallControl, VARIANT_BOOL);
+    HRESULT Transfer(ITBasicCallControl, VARIANT_BOOL);
     HRESULT BlindTransfer(BSTR);
     HRESULT SwapHold(ITBasicCallControl);
     HRESULT ParkDirect(BSTR);
@@ -3362,8 +3362,8 @@ interface ITCallInfo : IDispatch
 enum IID_ITCallInfo2 = GUID(0x94d70ca6, 0x7ab0, 0x4daa, [0x81, 0xca, 0xb8, 0xf8, 0x64, 0x3f, 0xae, 0xc1]);
 interface ITCallInfo2 : ITCallInfo
 {
-    HRESULT get_EventFilter(TAPI_EVENT, int, short*);
-    HRESULT put_EventFilter(TAPI_EVENT, int, short);
+    HRESULT get_EventFilter(TAPI_EVENT, int, VARIANT_BOOL*);
+    HRESULT put_EventFilter(TAPI_EVENT, int, VARIANT_BOOL);
 }
 enum IID_ITTerminal = GUID(0xb1efc38a, 0x9355, 0x11d0, [0x83, 0x5c, 0x0, 0xaa, 0x0, 0x3c, 0xca, 0xbd]);
 interface ITTerminal : IDispatch
@@ -4354,8 +4354,8 @@ interface ITDirectoryObjectConference : IDispatch
     HRESULT put_Url(BSTR);
     HRESULT get_Description(BSTR*);
     HRESULT put_Description(BSTR);
-    HRESULT get_IsEncrypted(short*);
-    HRESULT put_IsEncrypted(short);
+    HRESULT get_IsEncrypted(VARIANT_BOOL*);
+    HRESULT put_IsEncrypted(VARIANT_BOOL);
     HRESULT get_StartTime(double*);
     HRESULT put_StartTime(double);
     HRESULT get_StopTime(double*);
@@ -4405,11 +4405,11 @@ interface ITDirectory : IDispatch
 {
     HRESULT get_DirectoryType(DIRECTORY_TYPE*);
     HRESULT get_DisplayName(BSTR*);
-    HRESULT get_IsDynamic(short*);
+    HRESULT get_IsDynamic(VARIANT_BOOL*);
     HRESULT get_DefaultObjectTTL(int*);
     HRESULT put_DefaultObjectTTL(int);
-    HRESULT EnableAutoRefresh(short);
-    HRESULT Connect(short);
+    HRESULT EnableAutoRefresh(VARIANT_BOOL);
+    HRESULT Connect(VARIANT_BOOL);
     HRESULT Bind(BSTR, BSTR, BSTR, int);
     HRESULT AddDirectoryObject(ITDirectoryObject);
     HRESULT ModifyDirectoryObject(ITDirectoryObject);

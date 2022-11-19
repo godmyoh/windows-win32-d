@@ -1173,9 +1173,9 @@ BOOL GetWindowPlacement(HWND, WINDOWPLACEMENT*);
 BOOL SetWindowPlacement(HWND, const(WINDOWPLACEMENT)*);
 BOOL GetWindowDisplayAffinity(HWND, uint*);
 BOOL SetWindowDisplayAffinity(HWND, WINDOW_DISPLAY_AFFINITY);
-long BeginDeferWindowPos(int);
-long DeferWindowPos(long, HWND, HWND, int, int, int, int, SET_WINDOW_POS_FLAGS);
-BOOL EndDeferWindowPos(long);
+HDWP BeginDeferWindowPos(int);
+HDWP DeferWindowPos(HDWP, HWND, HWND, int, int, int, int, SET_WINDOW_POS_FLAGS);
+BOOL EndDeferWindowPos(HDWP);
 BOOL IsWindowVisible(HWND);
 BOOL IsIconic(HWND);
 BOOL AnyPopup();
@@ -2831,6 +2831,7 @@ alias HICON = void*;
 alias HMENU = void*;
 alias HCURSOR = void*;
 alias HACCEL = void*;
+alias HDWP = void*;
 struct MESSAGE_RESOURCE_ENTRY
 {
     ushort Length;

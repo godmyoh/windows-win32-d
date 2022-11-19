@@ -79,8 +79,8 @@ WIN32_ERROR RegSetKeyValueW(HKEY, const(wchar)*, const(wchar)*, uint, const(void
 WIN32_ERROR RegDeleteTreeA(HKEY, const(char)*);
 WIN32_ERROR RegDeleteTreeW(HKEY, const(wchar)*);
 WIN32_ERROR RegCopyTreeA(HKEY, const(char)*, HKEY);
-WIN32_ERROR RegGetValueA(HKEY, const(char)*, const(char)*, RRF_RT, uint*, void*, uint*);
-WIN32_ERROR RegGetValueW(HKEY, const(wchar)*, const(wchar)*, RRF_RT, uint*, void*, uint*);
+WIN32_ERROR RegGetValueA(HKEY, const(char)*, const(char)*, REG_ROUTINE_FLAGS, REG_VALUE_TYPE*, void*, uint*);
+WIN32_ERROR RegGetValueW(HKEY, const(wchar)*, const(wchar)*, REG_ROUTINE_FLAGS, REG_VALUE_TYPE*, void*, uint*);
 WIN32_ERROR RegCopyTreeW(HKEY, const(wchar)*, HKEY);
 WIN32_ERROR RegLoadMUIStringA(HKEY, const(char)*, PSTR, uint, uint*, uint, const(char)*);
 WIN32_ERROR RegLoadMUIStringW(HKEY, const(wchar)*, PWSTR, uint, uint*, uint, const(wchar)*);
@@ -99,11 +99,6 @@ enum HKEY_PERFORMANCE_NLSTEXT = 0xffffffff80000060;
 enum HKEY_CURRENT_CONFIG = 0xffffffff80000005;
 enum HKEY_DYN_DATA = 0xffffffff80000006;
 enum HKEY_CURRENT_USER_LOCAL_SETTINGS = 0xffffffff80000007;
-enum RRF_SUBKEY_WOW6464KEY = 0x00010000;
-enum RRF_SUBKEY_WOW6432KEY = 0x00020000;
-enum RRF_WOW64_MASK = 0x00030000;
-enum RRF_NOEXPAND = 0x10000000;
-enum RRF_ZEROONFAILURE = 0x20000000;
 enum REG_PROCESS_APPKEY = 0x00000001;
 enum REG_USE_CURRENT_SECURITY_CONTEXT = 0x00000002;
 enum PROVIDER_KEEPS_VALUE_LENGTH = 0x00000001;
@@ -1083,19 +1078,24 @@ enum : uint
     REG_NOTIFY_THREAD_AGNOSTIC   = 0x10000000,
 }
 
-alias RRF_RT = uint;
+alias REG_ROUTINE_FLAGS = uint;
 enum : uint
 {
-    RRF_RT_ANY           = 0x0000ffff,
-    RRF_RT_DWORD         = 0x00000018,
-    RRF_RT_QWORD         = 0x00000048,
-    RRF_RT_REG_BINARY    = 0x00000008,
-    RRF_RT_REG_DWORD     = 0x00000010,
-    RRF_RT_REG_EXPAND_SZ = 0x00000004,
-    RRF_RT_REG_MULTI_SZ  = 0x00000020,
-    RRF_RT_REG_NONE      = 0x00000001,
-    RRF_RT_REG_QWORD     = 0x00000040,
-    RRF_RT_REG_SZ        = 0x00000002,
+    RRF_RT_DWORD          = 0x00000018,
+    RRF_RT_QWORD          = 0x00000048,
+    RRF_RT_REG_NONE       = 0x00000001,
+    RRF_RT_REG_SZ         = 0x00000002,
+    RRF_RT_REG_EXPAND_SZ  = 0x00000004,
+    RRF_RT_REG_BINARY     = 0x00000008,
+    RRF_RT_REG_DWORD      = 0x00000010,
+    RRF_RT_REG_MULTI_SZ   = 0x00000020,
+    RRF_RT_REG_QWORD      = 0x00000040,
+    RRF_RT_ANY            = 0x0000ffff,
+    RRF_SUBKEY_WOW6464KEY = 0x00010000,
+    RRF_SUBKEY_WOW6432KEY = 0x00020000,
+    RRF_WOW64_MASK        = 0x00030000,
+    RRF_NOEXPAND          = 0x10000000,
+    RRF_ZEROONFAILURE     = 0x20000000,
 }
 
 alias HKEY = void*;

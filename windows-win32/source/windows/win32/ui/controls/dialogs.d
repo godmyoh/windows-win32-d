@@ -227,6 +227,21 @@ enum : ushort
     SIMULATED_FONTTYPE = 0x8000,
 }
 
+alias COMMON_DIALOG_NOTIFICATION = int;
+enum : int
+{
+    CDN_FIRST          = 0xfffffda7,
+    CDN_LAST           = 0xfffffd45,
+    CDN_INITDONE       = 0xfffffda7,
+    CDN_SELCHANGE      = 0xfffffda6,
+    CDN_FOLDERCHANGE   = 0xfffffda5,
+    CDN_SHAREVIOLATION = 0xfffffda4,
+    CDN_HELP           = 0xfffffda3,
+    CDN_FILEOK         = 0xfffffda2,
+    CDN_TYPECHANGE     = 0xfffffda1,
+    CDN_INCLUDEITEM    = 0xfffffda0,
+}
+
 BOOL GetOpenFileNameA(OPENFILENAMEA*);
 BOOL GetOpenFileNameW(OPENFILENAMEW*);
 BOOL GetSaveFileNameA(OPENFILENAMEA*);

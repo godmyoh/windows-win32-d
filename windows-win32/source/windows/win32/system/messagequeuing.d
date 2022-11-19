@@ -1,7 +1,7 @@
 module windows.win32.system.messagequeuing;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BSTR, HRESULT;
+import windows.win32.foundation : BSTR, HRESULT, VARIANT_BOOL;
 import windows.win32.system.com_ : IDispatch, IUnknown, VARIANT;
 
 version (Windows):
@@ -837,8 +837,8 @@ interface IMSMQQueueInfo3 : IDispatch
     HRESULT get_Properties(IDispatch*);
     HRESULT get_Security(VARIANT*);
     HRESULT put_Security(VARIANT);
-    HRESULT get_IsTransactional2(short*);
-    HRESULT get_IsWorldReadable2(short*);
+    HRESULT get_IsTransactional2(VARIANT_BOOL*);
+    HRESULT get_IsWorldReadable2(VARIANT_BOOL*);
     HRESULT get_MulticastAddress(BSTR*);
     HRESULT put_MulticastAddress(BSTR);
     HRESULT get_ADsPath(BSTR*);
@@ -880,8 +880,8 @@ interface IMSMQQueueInfo4 : IDispatch
     HRESULT get_Properties(IDispatch*);
     HRESULT get_Security(VARIANT*);
     HRESULT put_Security(VARIANT);
-    HRESULT get_IsTransactional2(short*);
-    HRESULT get_IsWorldReadable2(short*);
+    HRESULT get_IsTransactional2(VARIANT_BOOL*);
+    HRESULT get_IsWorldReadable2(VARIANT_BOOL*);
     HRESULT get_MulticastAddress(BSTR*);
     HRESULT put_MulticastAddress(BSTR);
     HRESULT get_ADsPath(BSTR*);
@@ -960,7 +960,7 @@ interface IMSMQQueue3 : IDispatch
     HRESULT PeekFirstByLookupId(VARIANT*, VARIANT*, VARIANT*, IMSMQMessage3*);
     HRESULT PeekLastByLookupId(VARIANT*, VARIANT*, VARIANT*, IMSMQMessage3*);
     HRESULT Purge();
-    HRESULT get_IsOpen2(short*);
+    HRESULT get_IsOpen2(VARIANT_BOOL*);
 }
 enum IID_IMSMQQueue4 = GUID(0xeba96b20, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQQueue4 : IDispatch
@@ -996,7 +996,7 @@ interface IMSMQQueue4 : IDispatch
     HRESULT PeekFirstByLookupId(VARIANT*, VARIANT*, VARIANT*, IMSMQMessage4*);
     HRESULT PeekLastByLookupId(VARIANT*, VARIANT*, VARIANT*, IMSMQMessage4*);
     HRESULT Purge();
-    HRESULT get_IsOpen2(short*);
+    HRESULT get_IsOpen2(VARIANT_BOOL*);
     HRESULT ReceiveByLookupIdAllowPeek(VARIANT, VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage4*);
 }
 enum IID_IMSMQMessage = GUID(0xd7d6e074, 0xdccd, 0x11d0, [0xaa, 0x4b, 0x0, 0x60, 0x97, 0xd, 0xeb, 0xae]);
@@ -1294,9 +1294,9 @@ interface IMSMQMessage3 : IDispatch
     HRESULT putref_ResponseDestination(IDispatch);
     HRESULT get_Destination(IDispatch*);
     HRESULT get_LookupId(VARIANT*);
-    HRESULT get_IsAuthenticated2(short*);
-    HRESULT get_IsFirstInTransaction2(short*);
-    HRESULT get_IsLastInTransaction2(short*);
+    HRESULT get_IsAuthenticated2(VARIANT_BOOL*);
+    HRESULT get_IsFirstInTransaction2(VARIANT_BOOL*);
+    HRESULT get_IsLastInTransaction2(VARIANT_BOOL*);
     HRESULT AttachCurrentSecurityContext2();
     HRESULT get_SoapEnvelope(BSTR*);
     HRESULT get_CompoundMessage(VARIANT*);
@@ -1389,9 +1389,9 @@ interface IMSMQMessage4 : IDispatch
     HRESULT putref_ResponseDestination(IDispatch);
     HRESULT get_Destination(IDispatch*);
     HRESULT get_LookupId(VARIANT*);
-    HRESULT get_IsAuthenticated2(short*);
-    HRESULT get_IsFirstInTransaction2(short*);
-    HRESULT get_IsLastInTransaction2(short*);
+    HRESULT get_IsAuthenticated2(VARIANT_BOOL*);
+    HRESULT get_IsFirstInTransaction2(VARIANT_BOOL*);
+    HRESULT get_IsLastInTransaction2(VARIANT_BOOL*);
     HRESULT AttachCurrentSecurityContext2();
     HRESULT get_SoapEnvelope(BSTR*);
     HRESULT get_CompoundMessage(VARIANT*);
@@ -1457,7 +1457,7 @@ interface IMSMQApplication2 : IMSMQApplication
     HRESULT get_MSMQVersionMajor(short*);
     HRESULT get_MSMQVersionMinor(short*);
     HRESULT get_MSMQVersionBuild(short*);
-    HRESULT get_IsDsEnabled(short*);
+    HRESULT get_IsDsEnabled(VARIANT_BOOL*);
     HRESULT get_Properties(IDispatch*);
 }
 enum IID_IMSMQApplication3 = GUID(0xeba96b1f, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
@@ -1466,7 +1466,7 @@ interface IMSMQApplication3 : IMSMQApplication2
     HRESULT get_ActiveQueues(VARIANT*);
     HRESULT get_PrivateQueues(VARIANT*);
     HRESULT get_DirectoryServiceServer(BSTR*);
-    HRESULT get_IsConnected(short*);
+    HRESULT get_IsConnected(VARIANT_BOOL*);
     HRESULT get_BytesInAllQueues(VARIANT*);
     HRESULT put_Machine(BSTR);
     HRESULT get_Machine(BSTR*);
@@ -1479,7 +1479,7 @@ interface IMSMQDestination : IDispatch
 {
     HRESULT Open();
     HRESULT Close();
-    HRESULT get_IsOpen(short*);
+    HRESULT get_IsOpen(VARIANT_BOOL*);
     HRESULT get_IADs(IDispatch*);
     HRESULT putref_IADs(IDispatch);
     HRESULT get_ADsPath(BSTR*);
@@ -1514,7 +1514,7 @@ interface IMSMQManagement : IDispatch
     HRESULT get_MessageCount(int*);
     HRESULT get_ForeignStatus(int*);
     HRESULT get_QueueType(int*);
-    HRESULT get_IsLocal(short*);
+    HRESULT get_IsLocal(VARIANT_BOOL*);
     HRESULT get_TransactionalStatus(int*);
     HRESULT get_BytesInQueue(VARIANT*);
 }

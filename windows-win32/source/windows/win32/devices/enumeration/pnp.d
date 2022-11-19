@@ -2,7 +2,7 @@ module windows.win32.devices.enumeration.pnp;
 
 import windows.win32.guid : GUID;
 import windows.win32.devices.properties : DEVPROPERTY;
-import windows.win32.foundation : BOOL, BSTR, HRESULT, PWSTR;
+import windows.win32.foundation : BOOL, BSTR, HRESULT, PWSTR, VARIANT_BOOL;
 import windows.win32.security_ : SECURITY_DESCRIPTOR;
 import windows.win32.system.com_ : IDispatch, IUnknown, VARIANT;
 
@@ -218,10 +218,10 @@ interface IUPnPDevices : IDispatch
 enum IID_IUPnPDevice = GUID(0x3d44d0d1, 0x98c9, 0x4889, [0xac, 0xd1, 0xf9, 0xd6, 0x74, 0xbf, 0x22, 0x21]);
 interface IUPnPDevice : IDispatch
 {
-    HRESULT get_IsRootDevice(short*);
+    HRESULT get_IsRootDevice(VARIANT_BOOL*);
     HRESULT get_RootDevice(IUPnPDevice*);
     HRESULT get_ParentDevice(IUPnPDevice*);
-    HRESULT get_HasChildren(short*);
+    HRESULT get_HasChildren(VARIANT_BOOL*);
     HRESULT get_Children(IUPnPDevices*);
     HRESULT get_UniqueDeviceName(BSTR*);
     HRESULT get_FriendlyName(BSTR*);

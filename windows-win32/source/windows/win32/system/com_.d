@@ -1,7 +1,7 @@
 module windows.win32.system.com_;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, CHAR, DECIMAL, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, PSTR, PWSTR, ULARGE_INTEGER;
+import windows.win32.foundation : BOOL, BSTR, CHAR, DECIMAL, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, PSTR, PWSTR, ULARGE_INTEGER, VARIANT_BOOL;
 import windows.win32.graphics.gdi : HBITMAP, HENHMETAFILE;
 import windows.win32.security_ : PSECURITY_DESCRIPTOR, SECURITY_ATTRIBUTES;
 import windows.win32.system.com.structuredstorage : IStorage;
@@ -1355,7 +1355,7 @@ enum IID_IPersistFile = GUID(0x10b, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x
 interface IPersistFile : IPersist
 {
     HRESULT IsDirty();
-    HRESULT Load(const(wchar)*, uint);
+    HRESULT Load(const(wchar)*, STGM);
     HRESULT Save(const(wchar)*, BOOL);
     HRESULT SaveCompleted(const(wchar)*);
     HRESULT GetCurFile(PWSTR*);
@@ -1944,8 +1944,8 @@ struct VARIANT
                 short iVal;
                 float fltVal;
                 double dblVal;
-                short boolVal;
-                short __OBSOLETE__VARIANT_BOOL;
+                VARIANT_BOOL boolVal;
+                VARIANT_BOOL __OBSOLETE__VARIANT_BOOL;
                 int scode;
                 CY cyVal;
                 double date;
@@ -1959,8 +1959,8 @@ struct VARIANT
                 long* pllVal;
                 float* pfltVal;
                 double* pdblVal;
-                short* pboolVal;
-                short* __OBSOLETE__VARIANT_PBOOL;
+                VARIANT_BOOL* pboolVal;
+                VARIANT_BOOL* __OBSOLETE__VARIANT_PBOOL;
                 int* pscode;
                 CY* pcyVal;
                 double* pdate;

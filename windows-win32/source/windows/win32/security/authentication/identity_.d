@@ -4,7 +4,7 @@ import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BOOLEAN, CHAR, FILETIME, HANDLE, HRESULT, HWND, LARGE_INTEGER, LUID, NTSTATUS, PSID, PSTR, PWSTR, UNICODE_STRING;
 import windows.win32.security_ : ACL, PSECURITY_DESCRIPTOR, QUOTA_LIMITS, SECURITY_ATTRIBUTES, SECURITY_IMPERSONATION_LEVEL, SID_NAME_USE, TOKEN_DEFAULT_DACL, TOKEN_DEVICE_CLAIMS, TOKEN_GROUPS, TOKEN_OWNER, TOKEN_PRIMARY_GROUP, TOKEN_PRIVILEGES, TOKEN_SOURCE, TOKEN_USER, TOKEN_USER_CLAIMS;
 import windows.win32.security.credentials : CREDENTIALW, CREDENTIAL_TARGET_INFORMATIONW, SecHandle;
-import windows.win32.security.cryptography_ : CERT_CONTEXT, CRYPTOAPI_BLOB, HCERTSTORE;
+import windows.win32.security.cryptography_ : CERT_CONTEXT, CRYPT_INTEGER_BLOB, HCERTSTORE;
 import windows.win32.system.com_ : IUnknown;
 import windows.win32.system.kernel : LIST_ENTRY, STRING;
 import windows.win32.system.passwordmanagement : CYPHER_BLOCK, LM_OWF_PASSWORD;
@@ -342,48 +342,48 @@ enum : uint
     ASC_REQ_ALLOW_MISSING_BINDINGS = 0x10000000,
 }
 
-NTSTATUS LsaRegisterLogonProcess(STRING*, LsaHandle*, uint*);
+NTSTATUS LsaRegisterLogonProcess(STRING*, HANDLE*, uint*);
 NTSTATUS LsaLogonUser(HANDLE, STRING*, SECURITY_LOGON_TYPE, uint, void*, uint, TOKEN_GROUPS*, TOKEN_SOURCE*, void**, uint*, LUID*, HANDLE*, QUOTA_LIMITS*, int*);
 NTSTATUS LsaLookupAuthenticationPackage(HANDLE, STRING*, uint*);
 NTSTATUS LsaFreeReturnBuffer(void*);
 NTSTATUS LsaCallAuthenticationPackage(HANDLE, uint, void*, uint, void**, uint*, int*);
-NTSTATUS LsaDeregisterLogonProcess(LsaHandle);
+NTSTATUS LsaDeregisterLogonProcess(HANDLE);
 NTSTATUS LsaConnectUntrusted(HANDLE*);
 NTSTATUS LsaFreeMemory(void*);
-NTSTATUS LsaClose(void*);
+NTSTATUS LsaClose(LSA_HANDLE);
 NTSTATUS LsaEnumerateLogonSessions(uint*, LUID**);
 NTSTATUS LsaGetLogonSessionData(LUID*, SECURITY_LOGON_SESSION_DATA**);
-NTSTATUS LsaOpenPolicy(UNICODE_STRING*, OBJECT_ATTRIBUTES*, uint, void**);
+NTSTATUS LsaOpenPolicy(UNICODE_STRING*, OBJECT_ATTRIBUTES*, uint, LSA_HANDLE*);
 NTSTATUS LsaSetCAPs(UNICODE_STRING*, uint, uint);
 NTSTATUS LsaGetAppliedCAPIDs(UNICODE_STRING*, PSID**, uint*);
 NTSTATUS LsaQueryCAPs(PSID*, uint, CENTRAL_ACCESS_POLICY**, uint*);
-NTSTATUS LsaQueryInformationPolicy(void*, POLICY_INFORMATION_CLASS, void**);
-NTSTATUS LsaSetInformationPolicy(void*, POLICY_INFORMATION_CLASS, void*);
-NTSTATUS LsaQueryDomainInformationPolicy(void*, POLICY_DOMAIN_INFORMATION_CLASS, void**);
-NTSTATUS LsaSetDomainInformationPolicy(void*, POLICY_DOMAIN_INFORMATION_CLASS, void*);
+NTSTATUS LsaQueryInformationPolicy(LSA_HANDLE, POLICY_INFORMATION_CLASS, void**);
+NTSTATUS LsaSetInformationPolicy(LSA_HANDLE, POLICY_INFORMATION_CLASS, void*);
+NTSTATUS LsaQueryDomainInformationPolicy(LSA_HANDLE, POLICY_DOMAIN_INFORMATION_CLASS, void**);
+NTSTATUS LsaSetDomainInformationPolicy(LSA_HANDLE, POLICY_DOMAIN_INFORMATION_CLASS, void*);
 NTSTATUS LsaRegisterPolicyChangeNotification(POLICY_NOTIFICATION_INFORMATION_CLASS, HANDLE);
 NTSTATUS LsaUnregisterPolicyChangeNotification(POLICY_NOTIFICATION_INFORMATION_CLASS, HANDLE);
-NTSTATUS LsaEnumerateTrustedDomains(void*, uint*, void**, uint, uint*);
-NTSTATUS LsaLookupNames(void*, uint, UNICODE_STRING*, LSA_REFERENCED_DOMAIN_LIST**, LSA_TRANSLATED_SID**);
-NTSTATUS LsaLookupNames2(void*, uint, uint, UNICODE_STRING*, LSA_REFERENCED_DOMAIN_LIST**, LSA_TRANSLATED_SID2**);
-NTSTATUS LsaLookupSids(void*, uint, PSID*, LSA_REFERENCED_DOMAIN_LIST**, LSA_TRANSLATED_NAME**);
-NTSTATUS LsaLookupSids2(void*, uint, uint, PSID*, LSA_REFERENCED_DOMAIN_LIST**, LSA_TRANSLATED_NAME**);
-NTSTATUS LsaEnumerateAccountsWithUserRight(void*, UNICODE_STRING*, void**, uint*);
-NTSTATUS LsaEnumerateAccountRights(void*, PSID, UNICODE_STRING**, uint*);
-NTSTATUS LsaAddAccountRights(void*, PSID, UNICODE_STRING*, uint);
-NTSTATUS LsaRemoveAccountRights(void*, PSID, BOOLEAN, UNICODE_STRING*, uint);
-NTSTATUS LsaOpenTrustedDomainByName(void*, UNICODE_STRING*, uint, void**);
-NTSTATUS LsaQueryTrustedDomainInfo(void*, PSID, TRUSTED_INFORMATION_CLASS, void**);
-NTSTATUS LsaSetTrustedDomainInformation(void*, PSID, TRUSTED_INFORMATION_CLASS, void*);
-NTSTATUS LsaDeleteTrustedDomain(void*, PSID);
-NTSTATUS LsaQueryTrustedDomainInfoByName(void*, UNICODE_STRING*, TRUSTED_INFORMATION_CLASS, void**);
-NTSTATUS LsaSetTrustedDomainInfoByName(void*, UNICODE_STRING*, TRUSTED_INFORMATION_CLASS, void*);
-NTSTATUS LsaEnumerateTrustedDomainsEx(void*, uint*, void**, uint, uint*);
-NTSTATUS LsaCreateTrustedDomainEx(void*, TRUSTED_DOMAIN_INFORMATION_EX*, TRUSTED_DOMAIN_AUTH_INFORMATION*, uint, void**);
-NTSTATUS LsaQueryForestTrustInformation(void*, UNICODE_STRING*, LSA_FOREST_TRUST_INFORMATION**);
-NTSTATUS LsaSetForestTrustInformation(void*, UNICODE_STRING*, LSA_FOREST_TRUST_INFORMATION*, BOOLEAN, LSA_FOREST_TRUST_COLLISION_INFORMATION**);
-NTSTATUS LsaStorePrivateData(void*, UNICODE_STRING*, UNICODE_STRING*);
-NTSTATUS LsaRetrievePrivateData(void*, UNICODE_STRING*, UNICODE_STRING**);
+NTSTATUS LsaEnumerateTrustedDomains(LSA_HANDLE, uint*, void**, uint, uint*);
+NTSTATUS LsaLookupNames(LSA_HANDLE, uint, UNICODE_STRING*, LSA_REFERENCED_DOMAIN_LIST**, LSA_TRANSLATED_SID**);
+NTSTATUS LsaLookupNames2(LSA_HANDLE, uint, uint, UNICODE_STRING*, LSA_REFERENCED_DOMAIN_LIST**, LSA_TRANSLATED_SID2**);
+NTSTATUS LsaLookupSids(LSA_HANDLE, uint, PSID*, LSA_REFERENCED_DOMAIN_LIST**, LSA_TRANSLATED_NAME**);
+NTSTATUS LsaLookupSids2(LSA_HANDLE, uint, uint, PSID*, LSA_REFERENCED_DOMAIN_LIST**, LSA_TRANSLATED_NAME**);
+NTSTATUS LsaEnumerateAccountsWithUserRight(LSA_HANDLE, UNICODE_STRING*, void**, uint*);
+NTSTATUS LsaEnumerateAccountRights(LSA_HANDLE, PSID, UNICODE_STRING**, uint*);
+NTSTATUS LsaAddAccountRights(LSA_HANDLE, PSID, UNICODE_STRING*, uint);
+NTSTATUS LsaRemoveAccountRights(LSA_HANDLE, PSID, BOOLEAN, UNICODE_STRING*, uint);
+NTSTATUS LsaOpenTrustedDomainByName(LSA_HANDLE, UNICODE_STRING*, uint, LSA_HANDLE*);
+NTSTATUS LsaQueryTrustedDomainInfo(LSA_HANDLE, PSID, TRUSTED_INFORMATION_CLASS, void**);
+NTSTATUS LsaSetTrustedDomainInformation(LSA_HANDLE, PSID, TRUSTED_INFORMATION_CLASS, void*);
+NTSTATUS LsaDeleteTrustedDomain(LSA_HANDLE, PSID);
+NTSTATUS LsaQueryTrustedDomainInfoByName(LSA_HANDLE, UNICODE_STRING*, TRUSTED_INFORMATION_CLASS, void**);
+NTSTATUS LsaSetTrustedDomainInfoByName(LSA_HANDLE, UNICODE_STRING*, TRUSTED_INFORMATION_CLASS, void*);
+NTSTATUS LsaEnumerateTrustedDomainsEx(LSA_HANDLE, uint*, void**, uint, uint*);
+NTSTATUS LsaCreateTrustedDomainEx(LSA_HANDLE, TRUSTED_DOMAIN_INFORMATION_EX*, TRUSTED_DOMAIN_AUTH_INFORMATION*, uint, LSA_HANDLE*);
+NTSTATUS LsaQueryForestTrustInformation(LSA_HANDLE, UNICODE_STRING*, LSA_FOREST_TRUST_INFORMATION**);
+NTSTATUS LsaSetForestTrustInformation(LSA_HANDLE, UNICODE_STRING*, LSA_FOREST_TRUST_INFORMATION*, BOOLEAN, LSA_FOREST_TRUST_COLLISION_INFORMATION**);
+NTSTATUS LsaStorePrivateData(LSA_HANDLE, UNICODE_STRING*, UNICODE_STRING*);
+NTSTATUS LsaRetrievePrivateData(LSA_HANDLE, UNICODE_STRING*, UNICODE_STRING**);
 uint LsaNtStatusToWinError(NTSTATUS);
 BOOLEAN SystemFunction036(void*, uint);
 NTSTATUS SystemFunction040(void*, uint, uint);
@@ -1941,7 +1941,7 @@ enum WINDOWS_SLID = GUID(0x55c92734, 0xd682, 0x4d71, [0x98, 0x3e, 0xd6, 0xec, 0x
 enum WDIGEST_SP_NAME_A = "WDigest";
 enum WDIGEST_SP_NAME_W = "WDigest";
 enum WDIGEST_SP_NAME = "WDigest";
-alias LsaHandle = long;
+alias LSA_HANDLE = long;
 struct LSA_TRUST_INFORMATION
 {
     UNICODE_STRING Name;
@@ -4752,7 +4752,7 @@ struct SecPkgContext_ClientCertPolicyResult
 }
 struct SecPkgContext_IssuerListInfoEx
 {
-    CRYPTOAPI_BLOB* aIssuers;
+    CRYPT_INTEGER_BLOB* aIssuers;
     uint cIssuers;
 }
 struct SecPkgContext_ConnectionInfo

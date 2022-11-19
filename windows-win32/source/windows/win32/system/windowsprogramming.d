@@ -1,11 +1,12 @@
 module windows.win32.system.windowsprogramming;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, LPARAM, LRESULT, NTSTATUS, PSTR, PWSTR, RECT, UNICODE_STRING, WIN32_ERROR, WPARAM;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, LPARAM, LRESULT, NTSTATUS, PSTR, PWSTR, RECT, UNICODE_STRING, VARIANT_BOOL, WIN32_ERROR, WPARAM;
 import windows.win32.graphics.gdi : HDC, RGNDATA;
 import windows.win32.security_ : SECURITY_ATTRIBUTES;
 import windows.win32.system.com_ : IUnknown, SAFEARRAY;
 import windows.win32.system.kernel : LIST_ENTRY, STRING;
+import windows.win32.system.ole : OLE_HANDLE;
 import windows.win32.system.registry : HKEY;
 
 version (Windows):
@@ -1259,7 +1260,7 @@ interface IWindowsLockModeHelper : IUnknown
 enum IID_IEditionUpgradeBroker = GUID(0xff19cbcf, 0x9455, 0x4937, [0xb8, 0x72, 0x6b, 0x79, 0x29, 0xa4, 0x60, 0xaf]);
 interface IEditionUpgradeBroker : IUnknown
 {
-    HRESULT InitializeParentWindow(uint);
+    HRESULT InitializeParentWindow(OLE_HANDLE);
     HRESULT UpdateOperatingSystem(BSTR);
     HRESULT ShowProductKeyUI();
     HRESULT CanUpgrade();
@@ -1267,7 +1268,7 @@ interface IEditionUpgradeBroker : IUnknown
 enum IID_IContainerActivationHelper = GUID(0xb524f93f, 0x80d5, 0x4ec7, [0xae, 0x9e, 0xd6, 0x6e, 0x93, 0xad, 0xe1, 0xfa]);
 interface IContainerActivationHelper : IUnknown
 {
-    HRESULT CanActivateClientVM(short*);
+    HRESULT CanActivateClientVM(VARIANT_BOOL*);
 }
 enum IID_IClipServiceNotificationHelper = GUID(0xc39948f0, 0x6142, 0x44fd, [0x98, 0xca, 0xe1, 0x68, 0x1a, 0x8d, 0x68, 0xb5]);
 interface IClipServiceNotificationHelper : IUnknown

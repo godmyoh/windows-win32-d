@@ -1,7 +1,7 @@
 module windows.win32.networking.networklistmanager;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BSTR, FILETIME, HRESULT;
+import windows.win32.foundation : BSTR, FILETIME, HRESULT, VARIANT_BOOL;
 import windows.win32.system.com_ : IDispatch, IUnknown;
 import windows.win32.system.ole : IEnumVARIANT;
 
@@ -120,8 +120,8 @@ interface INetworkListManager : IDispatch
     HRESULT GetNetwork(GUID, INetwork*);
     HRESULT GetNetworkConnections(IEnumNetworkConnections*);
     HRESULT GetNetworkConnection(GUID, INetworkConnection*);
-    HRESULT get_IsConnectedToInternet(short*);
-    HRESULT get_IsConnected(short*);
+    HRESULT get_IsConnectedToInternet(VARIANT_BOOL*);
+    HRESULT get_IsConnected(VARIANT_BOOL*);
     HRESULT GetConnectivity(NLM_CONNECTIVITY*);
     HRESULT SetSimulatedProfileInfo(NLM_SIMULATED_PROFILE_INFO*);
     HRESULT ClearSimulatedProfileInfo();
@@ -150,8 +150,8 @@ interface INetwork : IDispatch
     HRESULT GetDomainType(NLM_DOMAIN_TYPE*);
     HRESULT GetNetworkConnections(IEnumNetworkConnections*);
     HRESULT GetTimeCreatedAndConnected(uint*, uint*, uint*, uint*);
-    HRESULT get_IsConnectedToInternet(short*);
-    HRESULT get_IsConnected(short*);
+    HRESULT get_IsConnectedToInternet(VARIANT_BOOL*);
+    HRESULT get_IsConnected(VARIANT_BOOL*);
     HRESULT GetConnectivity(NLM_CONNECTIVITY*);
     HRESULT GetCategory(NLM_NETWORK_CATEGORY*);
     HRESULT SetCategory(NLM_NETWORK_CATEGORY);
@@ -187,8 +187,8 @@ enum IID_INetworkConnection = GUID(0xdcb00005, 0x570f, 0x4a9b, [0x8d, 0x69, 0x19
 interface INetworkConnection : IDispatch
 {
     HRESULT GetNetwork(INetwork*);
-    HRESULT get_IsConnectedToInternet(short*);
-    HRESULT get_IsConnected(short*);
+    HRESULT get_IsConnectedToInternet(VARIANT_BOOL*);
+    HRESULT get_IsConnected(VARIANT_BOOL*);
     HRESULT GetConnectivity(NLM_CONNECTIVITY*);
     HRESULT GetConnectionId(GUID*);
     HRESULT GetAdapterId(GUID*);
@@ -220,7 +220,7 @@ interface INetworkCostManager : IUnknown
 {
     HRESULT GetCost(uint*, NLM_SOCKADDR*);
     HRESULT GetDataPlanStatus(NLM_DATAPLAN_STATUS*, NLM_SOCKADDR*);
-    HRESULT SetDestinationAddresses(uint, NLM_SOCKADDR*, short);
+    HRESULT SetDestinationAddresses(uint, NLM_SOCKADDR*, VARIANT_BOOL);
 }
 enum IID_INetworkCostManagerEvents = GUID(0xdcb00009, 0x570f, 0x4a9b, [0x8d, 0x69, 0x19, 0x9f, 0xdb, 0xa5, 0x72, 0x3b]);
 interface INetworkCostManagerEvents : IUnknown

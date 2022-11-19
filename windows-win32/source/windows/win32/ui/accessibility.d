@@ -8,188 +8,10 @@ import windows.win32.ui.windowsandmessaging : HMENU, POINTER_INPUT_TYPE;
 version (Windows):
 extern (Windows):
 
-alias UIA_TEXTATTRIBUTE_ID = uint;
-enum : uint
-{
-    UIA_AnimationStyleAttributeId          = 0x00009c40,
-    UIA_BackgroundColorAttributeId         = 0x00009c41,
-    UIA_BulletStyleAttributeId             = 0x00009c42,
-    UIA_CapStyleAttributeId                = 0x00009c43,
-    UIA_CultureAttributeId                 = 0x00009c44,
-    UIA_FontNameAttributeId                = 0x00009c45,
-    UIA_FontSizeAttributeId                = 0x00009c46,
-    UIA_FontWeightAttributeId              = 0x00009c47,
-    UIA_ForegroundColorAttributeId         = 0x00009c48,
-    UIA_HorizontalTextAlignmentAttributeId = 0x00009c49,
-    UIA_IndentationFirstLineAttributeId    = 0x00009c4a,
-    UIA_IndentationLeadingAttributeId      = 0x00009c4b,
-    UIA_IndentationTrailingAttributeId     = 0x00009c4c,
-    UIA_IsHiddenAttributeId                = 0x00009c4d,
-    UIA_IsItalicAttributeId                = 0x00009c4e,
-    UIA_IsReadOnlyAttributeId              = 0x00009c4f,
-    UIA_IsSubscriptAttributeId             = 0x00009c50,
-    UIA_IsSuperscriptAttributeId           = 0x00009c51,
-    UIA_MarginBottomAttributeId            = 0x00009c52,
-    UIA_MarginLeadingAttributeId           = 0x00009c53,
-    UIA_MarginTopAttributeId               = 0x00009c54,
-    UIA_MarginTrailingAttributeId          = 0x00009c55,
-    UIA_OutlineStylesAttributeId           = 0x00009c56,
-    UIA_OverlineColorAttributeId           = 0x00009c57,
-    UIA_OverlineStyleAttributeId           = 0x00009c58,
-    UIA_StrikethroughColorAttributeId      = 0x00009c59,
-    UIA_StrikethroughStyleAttributeId      = 0x00009c5a,
-    UIA_TabsAttributeId                    = 0x00009c5b,
-    UIA_TextFlowDirectionsAttributeId      = 0x00009c5c,
-    UIA_UnderlineColorAttributeId          = 0x00009c5d,
-    UIA_UnderlineStyleAttributeId          = 0x00009c5e,
-    UIA_AnnotationTypesAttributeId         = 0x00009c5f,
-    UIA_AnnotationObjectsAttributeId       = 0x00009c60,
-    UIA_StyleNameAttributeId               = 0x00009c61,
-    UIA_StyleIdAttributeId                 = 0x00009c62,
-    UIA_LinkAttributeId                    = 0x00009c63,
-    UIA_IsActiveAttributeId                = 0x00009c64,
-    UIA_SelectionActiveEndAttributeId      = 0x00009c65,
-    UIA_CaretPositionAttributeId           = 0x00009c66,
-    UIA_CaretBidiModeAttributeId           = 0x00009c67,
-    UIA_LineSpacingAttributeId             = 0x00009c68,
-    UIA_BeforeParagraphSpacingAttributeId  = 0x00009c69,
-    UIA_AfterParagraphSpacingAttributeId   = 0x00009c6a,
-    UIA_SayAsInterpretAsAttributeId        = 0x00009c6b,
-}
-
-alias UIA_CONTROLTYPE_ID = uint;
-enum : uint
-{
-    UIA_ButtonControlTypeId       = 0x0000c350,
-    UIA_CalendarControlTypeId     = 0x0000c351,
-    UIA_CheckBoxControlTypeId     = 0x0000c352,
-    UIA_ComboBoxControlTypeId     = 0x0000c353,
-    UIA_EditControlTypeId         = 0x0000c354,
-    UIA_HyperlinkControlTypeId    = 0x0000c355,
-    UIA_ImageControlTypeId        = 0x0000c356,
-    UIA_ListItemControlTypeId     = 0x0000c357,
-    UIA_ListControlTypeId         = 0x0000c358,
-    UIA_MenuControlTypeId         = 0x0000c359,
-    UIA_MenuBarControlTypeId      = 0x0000c35a,
-    UIA_MenuItemControlTypeId     = 0x0000c35b,
-    UIA_ProgressBarControlTypeId  = 0x0000c35c,
-    UIA_RadioButtonControlTypeId  = 0x0000c35d,
-    UIA_ScrollBarControlTypeId    = 0x0000c35e,
-    UIA_SliderControlTypeId       = 0x0000c35f,
-    UIA_SpinnerControlTypeId      = 0x0000c360,
-    UIA_StatusBarControlTypeId    = 0x0000c361,
-    UIA_TabControlTypeId          = 0x0000c362,
-    UIA_TabItemControlTypeId      = 0x0000c363,
-    UIA_TextControlTypeId         = 0x0000c364,
-    UIA_ToolBarControlTypeId      = 0x0000c365,
-    UIA_ToolTipControlTypeId      = 0x0000c366,
-    UIA_TreeControlTypeId         = 0x0000c367,
-    UIA_TreeItemControlTypeId     = 0x0000c368,
-    UIA_CustomControlTypeId       = 0x0000c369,
-    UIA_GroupControlTypeId        = 0x0000c36a,
-    UIA_ThumbControlTypeId        = 0x0000c36b,
-    UIA_DataGridControlTypeId     = 0x0000c36c,
-    UIA_DataItemControlTypeId     = 0x0000c36d,
-    UIA_DocumentControlTypeId     = 0x0000c36e,
-    UIA_SplitButtonControlTypeId  = 0x0000c36f,
-    UIA_WindowControlTypeId       = 0x0000c370,
-    UIA_PaneControlTypeId         = 0x0000c371,
-    UIA_HeaderControlTypeId       = 0x0000c372,
-    UIA_HeaderItemControlTypeId   = 0x0000c373,
-    UIA_TableControlTypeId        = 0x0000c374,
-    UIA_TitleBarControlTypeId     = 0x0000c375,
-    UIA_SeparatorControlTypeId    = 0x0000c376,
-    UIA_SemanticZoomControlTypeId = 0x0000c377,
-    UIA_AppBarControlTypeId       = 0x0000c378,
-}
-
-alias UIA_ANNOTATIONTYPE = uint;
-enum : uint
-{
-    AnnotationType_Unknown                = 0x0000ea60,
-    AnnotationType_SpellingError          = 0x0000ea61,
-    AnnotationType_GrammarError           = 0x0000ea62,
-    AnnotationType_Comment                = 0x0000ea63,
-    AnnotationType_FormulaError           = 0x0000ea64,
-    AnnotationType_TrackChanges           = 0x0000ea65,
-    AnnotationType_Header                 = 0x0000ea66,
-    AnnotationType_Footer                 = 0x0000ea67,
-    AnnotationType_Highlighted            = 0x0000ea68,
-    AnnotationType_Endnote                = 0x0000ea69,
-    AnnotationType_Footnote               = 0x0000ea6a,
-    AnnotationType_InsertionChange        = 0x0000ea6b,
-    AnnotationType_DeletionChange         = 0x0000ea6c,
-    AnnotationType_MoveChange             = 0x0000ea6d,
-    AnnotationType_FormatChange           = 0x0000ea6e,
-    AnnotationType_UnsyncedChange         = 0x0000ea6f,
-    AnnotationType_EditingLockedChange    = 0x0000ea70,
-    AnnotationType_ExternalChange         = 0x0000ea71,
-    AnnotationType_ConflictingChange      = 0x0000ea72,
-    AnnotationType_Author                 = 0x0000ea73,
-    AnnotationType_AdvancedProofingIssue  = 0x0000ea74,
-    AnnotationType_DataValidationError    = 0x0000ea75,
-    AnnotationType_CircularReferenceError = 0x0000ea76,
-    AnnotationType_Mathematics            = 0x0000ea77,
-    AnnotationType_Sensitive              = 0x0000ea78,
-}
-
-alias UIA_STYLE_ID = uint;
-enum : uint
-{
-    StyleId_Custom       = 0x00011170,
-    StyleId_Heading1     = 0x00011171,
-    StyleId_Heading2     = 0x00011172,
-    StyleId_Heading3     = 0x00011173,
-    StyleId_Heading4     = 0x00011174,
-    StyleId_Heading5     = 0x00011175,
-    StyleId_Heading6     = 0x00011176,
-    StyleId_Heading7     = 0x00011177,
-    StyleId_Heading8     = 0x00011178,
-    StyleId_Heading9     = 0x00011179,
-    StyleId_Title        = 0x0001117a,
-    StyleId_Subtitle     = 0x0001117b,
-    StyleId_Normal       = 0x0001117c,
-    StyleId_Emphasis     = 0x0001117d,
-    StyleId_Quote        = 0x0001117e,
-    StyleId_BulletedList = 0x0001117f,
-    StyleId_NumberedList = 0x00011180,
-}
-
-alias UIA_LANDMARKTYPE_ID = uint;
-enum : uint
-{
-    UIA_CustomLandmarkTypeId     = 0x00013880,
-    UIA_FormLandmarkTypeId       = 0x00013881,
-    UIA_MainLandmarkTypeId       = 0x00013882,
-    UIA_NavigationLandmarkTypeId = 0x00013883,
-    UIA_SearchLandmarkTypeId     = 0x00013884,
-}
-
-alias UIA_HEADINGLEVEL_ID = uint;
-enum : uint
-{
-    HeadingLevel_None = 0x000138b2,
-    HeadingLevel1     = 0x000138b3,
-    HeadingLevel2     = 0x000138b4,
-    HeadingLevel3     = 0x000138b5,
-    HeadingLevel4     = 0x000138b6,
-    HeadingLevel5     = 0x000138b7,
-    HeadingLevel6     = 0x000138b8,
-    HeadingLevel7     = 0x000138b9,
-    HeadingLevel8     = 0x000138ba,
-    HeadingLevel9     = 0x000138bb,
-}
-
 alias UIA_CHANGE_ID = uint;
 enum : uint
 {
     UIA_SummaryChangeId = 0x00015f90,
-}
-
-alias UIA_METADATA_ID = uint;
-enum : uint
-{
-    UIA_SayAsInterpretAsMetadataId = 0x000186a0,
 }
 
 alias STICKYKEYS_FLAGS = uint;
@@ -546,6 +368,184 @@ enum : uint
     UIA_Selection2ItemCountPropertyId                 = 0x000075dc,
     UIA_HeadingLevelPropertyId                        = 0x000075dd,
     UIA_IsDialogPropertyId                            = 0x000075de,
+}
+
+alias UIA_TEXTATTRIBUTE_ID = uint;
+enum : uint
+{
+    UIA_AnimationStyleAttributeId          = 0x00009c40,
+    UIA_BackgroundColorAttributeId         = 0x00009c41,
+    UIA_BulletStyleAttributeId             = 0x00009c42,
+    UIA_CapStyleAttributeId                = 0x00009c43,
+    UIA_CultureAttributeId                 = 0x00009c44,
+    UIA_FontNameAttributeId                = 0x00009c45,
+    UIA_FontSizeAttributeId                = 0x00009c46,
+    UIA_FontWeightAttributeId              = 0x00009c47,
+    UIA_ForegroundColorAttributeId         = 0x00009c48,
+    UIA_HorizontalTextAlignmentAttributeId = 0x00009c49,
+    UIA_IndentationFirstLineAttributeId    = 0x00009c4a,
+    UIA_IndentationLeadingAttributeId      = 0x00009c4b,
+    UIA_IndentationTrailingAttributeId     = 0x00009c4c,
+    UIA_IsHiddenAttributeId                = 0x00009c4d,
+    UIA_IsItalicAttributeId                = 0x00009c4e,
+    UIA_IsReadOnlyAttributeId              = 0x00009c4f,
+    UIA_IsSubscriptAttributeId             = 0x00009c50,
+    UIA_IsSuperscriptAttributeId           = 0x00009c51,
+    UIA_MarginBottomAttributeId            = 0x00009c52,
+    UIA_MarginLeadingAttributeId           = 0x00009c53,
+    UIA_MarginTopAttributeId               = 0x00009c54,
+    UIA_MarginTrailingAttributeId          = 0x00009c55,
+    UIA_OutlineStylesAttributeId           = 0x00009c56,
+    UIA_OverlineColorAttributeId           = 0x00009c57,
+    UIA_OverlineStyleAttributeId           = 0x00009c58,
+    UIA_StrikethroughColorAttributeId      = 0x00009c59,
+    UIA_StrikethroughStyleAttributeId      = 0x00009c5a,
+    UIA_TabsAttributeId                    = 0x00009c5b,
+    UIA_TextFlowDirectionsAttributeId      = 0x00009c5c,
+    UIA_UnderlineColorAttributeId          = 0x00009c5d,
+    UIA_UnderlineStyleAttributeId          = 0x00009c5e,
+    UIA_AnnotationTypesAttributeId         = 0x00009c5f,
+    UIA_AnnotationObjectsAttributeId       = 0x00009c60,
+    UIA_StyleNameAttributeId               = 0x00009c61,
+    UIA_StyleIdAttributeId                 = 0x00009c62,
+    UIA_LinkAttributeId                    = 0x00009c63,
+    UIA_IsActiveAttributeId                = 0x00009c64,
+    UIA_SelectionActiveEndAttributeId      = 0x00009c65,
+    UIA_CaretPositionAttributeId           = 0x00009c66,
+    UIA_CaretBidiModeAttributeId           = 0x00009c67,
+    UIA_LineSpacingAttributeId             = 0x00009c68,
+    UIA_BeforeParagraphSpacingAttributeId  = 0x00009c69,
+    UIA_AfterParagraphSpacingAttributeId   = 0x00009c6a,
+    UIA_SayAsInterpretAsAttributeId        = 0x00009c6b,
+}
+
+alias UIA_CONTROLTYPE_ID = uint;
+enum : uint
+{
+    UIA_ButtonControlTypeId       = 0x0000c350,
+    UIA_CalendarControlTypeId     = 0x0000c351,
+    UIA_CheckBoxControlTypeId     = 0x0000c352,
+    UIA_ComboBoxControlTypeId     = 0x0000c353,
+    UIA_EditControlTypeId         = 0x0000c354,
+    UIA_HyperlinkControlTypeId    = 0x0000c355,
+    UIA_ImageControlTypeId        = 0x0000c356,
+    UIA_ListItemControlTypeId     = 0x0000c357,
+    UIA_ListControlTypeId         = 0x0000c358,
+    UIA_MenuControlTypeId         = 0x0000c359,
+    UIA_MenuBarControlTypeId      = 0x0000c35a,
+    UIA_MenuItemControlTypeId     = 0x0000c35b,
+    UIA_ProgressBarControlTypeId  = 0x0000c35c,
+    UIA_RadioButtonControlTypeId  = 0x0000c35d,
+    UIA_ScrollBarControlTypeId    = 0x0000c35e,
+    UIA_SliderControlTypeId       = 0x0000c35f,
+    UIA_SpinnerControlTypeId      = 0x0000c360,
+    UIA_StatusBarControlTypeId    = 0x0000c361,
+    UIA_TabControlTypeId          = 0x0000c362,
+    UIA_TabItemControlTypeId      = 0x0000c363,
+    UIA_TextControlTypeId         = 0x0000c364,
+    UIA_ToolBarControlTypeId      = 0x0000c365,
+    UIA_ToolTipControlTypeId      = 0x0000c366,
+    UIA_TreeControlTypeId         = 0x0000c367,
+    UIA_TreeItemControlTypeId     = 0x0000c368,
+    UIA_CustomControlTypeId       = 0x0000c369,
+    UIA_GroupControlTypeId        = 0x0000c36a,
+    UIA_ThumbControlTypeId        = 0x0000c36b,
+    UIA_DataGridControlTypeId     = 0x0000c36c,
+    UIA_DataItemControlTypeId     = 0x0000c36d,
+    UIA_DocumentControlTypeId     = 0x0000c36e,
+    UIA_SplitButtonControlTypeId  = 0x0000c36f,
+    UIA_WindowControlTypeId       = 0x0000c370,
+    UIA_PaneControlTypeId         = 0x0000c371,
+    UIA_HeaderControlTypeId       = 0x0000c372,
+    UIA_HeaderItemControlTypeId   = 0x0000c373,
+    UIA_TableControlTypeId        = 0x0000c374,
+    UIA_TitleBarControlTypeId     = 0x0000c375,
+    UIA_SeparatorControlTypeId    = 0x0000c376,
+    UIA_SemanticZoomControlTypeId = 0x0000c377,
+    UIA_AppBarControlTypeId       = 0x0000c378,
+}
+
+alias UIA_ANNOTATIONTYPE = uint;
+enum : uint
+{
+    AnnotationType_Unknown                = 0x0000ea60,
+    AnnotationType_SpellingError          = 0x0000ea61,
+    AnnotationType_GrammarError           = 0x0000ea62,
+    AnnotationType_Comment                = 0x0000ea63,
+    AnnotationType_FormulaError           = 0x0000ea64,
+    AnnotationType_TrackChanges           = 0x0000ea65,
+    AnnotationType_Header                 = 0x0000ea66,
+    AnnotationType_Footer                 = 0x0000ea67,
+    AnnotationType_Highlighted            = 0x0000ea68,
+    AnnotationType_Endnote                = 0x0000ea69,
+    AnnotationType_Footnote               = 0x0000ea6a,
+    AnnotationType_InsertionChange        = 0x0000ea6b,
+    AnnotationType_DeletionChange         = 0x0000ea6c,
+    AnnotationType_MoveChange             = 0x0000ea6d,
+    AnnotationType_FormatChange           = 0x0000ea6e,
+    AnnotationType_UnsyncedChange         = 0x0000ea6f,
+    AnnotationType_EditingLockedChange    = 0x0000ea70,
+    AnnotationType_ExternalChange         = 0x0000ea71,
+    AnnotationType_ConflictingChange      = 0x0000ea72,
+    AnnotationType_Author                 = 0x0000ea73,
+    AnnotationType_AdvancedProofingIssue  = 0x0000ea74,
+    AnnotationType_DataValidationError    = 0x0000ea75,
+    AnnotationType_CircularReferenceError = 0x0000ea76,
+    AnnotationType_Mathematics            = 0x0000ea77,
+    AnnotationType_Sensitive              = 0x0000ea78,
+}
+
+alias UIA_STYLE_ID = uint;
+enum : uint
+{
+    StyleId_Custom       = 0x00011170,
+    StyleId_Heading1     = 0x00011171,
+    StyleId_Heading2     = 0x00011172,
+    StyleId_Heading3     = 0x00011173,
+    StyleId_Heading4     = 0x00011174,
+    StyleId_Heading5     = 0x00011175,
+    StyleId_Heading6     = 0x00011176,
+    StyleId_Heading7     = 0x00011177,
+    StyleId_Heading8     = 0x00011178,
+    StyleId_Heading9     = 0x00011179,
+    StyleId_Title        = 0x0001117a,
+    StyleId_Subtitle     = 0x0001117b,
+    StyleId_Normal       = 0x0001117c,
+    StyleId_Emphasis     = 0x0001117d,
+    StyleId_Quote        = 0x0001117e,
+    StyleId_BulletedList = 0x0001117f,
+    StyleId_NumberedList = 0x00011180,
+}
+
+alias UIA_LANDMARKTYPE_ID = uint;
+enum : uint
+{
+    UIA_CustomLandmarkTypeId     = 0x00013880,
+    UIA_FormLandmarkTypeId       = 0x00013881,
+    UIA_MainLandmarkTypeId       = 0x00013882,
+    UIA_NavigationLandmarkTypeId = 0x00013883,
+    UIA_SearchLandmarkTypeId     = 0x00013884,
+}
+
+alias UIA_HEADINGLEVEL_ID = uint;
+enum : uint
+{
+    HeadingLevel_None = 0x000138b2,
+    HeadingLevel1     = 0x000138b3,
+    HeadingLevel2     = 0x000138b4,
+    HeadingLevel3     = 0x000138b5,
+    HeadingLevel4     = 0x000138b6,
+    HeadingLevel5     = 0x000138b7,
+    HeadingLevel6     = 0x000138b8,
+    HeadingLevel7     = 0x000138b9,
+    HeadingLevel8     = 0x000138ba,
+    HeadingLevel9     = 0x000138bb,
+}
+
+alias UIA_METADATA_ID = uint;
+enum : uint
+{
+    UIA_SayAsInterpretAsMetadataId = 0x000186a0,
 }
 
 LRESULT LresultFromObject(const(GUID)*, WPARAM, IUnknown);
@@ -1784,7 +1784,7 @@ interface IRawElementProviderSimple2 : IRawElementProviderSimple
 enum IID_IRawElementProviderSimple3 = GUID(0xfcf5d820, 0xd7ec, 0x4613, [0xbd, 0xf6, 0x42, 0xa8, 0x4c, 0xe7, 0xda, 0xaf]);
 interface IRawElementProviderSimple3 : IRawElementProviderSimple2
 {
-    HRESULT GetMetadataValue(int, int, VARIANT*);
+    HRESULT GetMetadataValue(int, UIA_METADATA_ID, VARIANT*);
 }
 enum IID_IRawElementProviderFragmentRoot = GUID(0x620ce2a5, 0xab8f, 0x40a9, [0x86, 0xcb, 0xde, 0x3c, 0x75, 0x59, 0x9b, 0x58]);
 interface IRawElementProviderFragmentRoot : IUnknown
@@ -1805,8 +1805,8 @@ interface IRawElementProviderFragment : IUnknown
 enum IID_IRawElementProviderAdviseEvents = GUID(0xa407b27b, 0xf6d, 0x4427, [0x92, 0x92, 0x47, 0x3c, 0x7b, 0xf9, 0x32, 0x58]);
 interface IRawElementProviderAdviseEvents : IUnknown
 {
-    HRESULT AdviseEventAdded(int, SAFEARRAY*);
-    HRESULT AdviseEventRemoved(int, SAFEARRAY*);
+    HRESULT AdviseEventAdded(UIA_EVENT_ID, SAFEARRAY*);
+    HRESULT AdviseEventRemoved(UIA_EVENT_ID, SAFEARRAY*);
 }
 enum IID_IRawElementProviderHwndOverride = GUID(0x1d5df27c, 0x8947, 0x4425, [0xb8, 0xd9, 0x79, 0x78, 0x7b, 0xb4, 0x60, 0xb8]);
 interface IRawElementProviderHwndOverride : IUnknown
@@ -1816,8 +1816,8 @@ interface IRawElementProviderHwndOverride : IUnknown
 enum IID_IProxyProviderWinEventSink = GUID(0x4fd82b78, 0xa43e, 0x46ac, [0x98, 0x3, 0xa, 0x69, 0x69, 0xc7, 0xc1, 0x83]);
 interface IProxyProviderWinEventSink : IUnknown
 {
-    HRESULT AddAutomationPropertyChangedEvent(IRawElementProviderSimple, int, VARIANT);
-    HRESULT AddAutomationEvent(IRawElementProviderSimple, int);
+    HRESULT AddAutomationPropertyChangedEvent(IRawElementProviderSimple, UIA_PROPERTY_ID, VARIANT);
+    HRESULT AddAutomationEvent(IRawElementProviderSimple, UIA_EVENT_ID);
     HRESULT AddStructureChangedEvent(IRawElementProviderSimple, StructureChangeType, SAFEARRAY*);
 }
 enum IID_IProxyProviderWinEventHandler = GUID(0x89592ad4, 0xf4e0, 0x43d5, [0xa3, 0xb6, 0xba, 0xd7, 0xe1, 0x11, 0xb4, 0x35]);
@@ -2012,7 +2012,7 @@ interface ILegacyIAccessibleProvider : IUnknown
 enum IID_IItemContainerProvider = GUID(0xe747770b, 0x39ce, 0x4382, [0xab, 0x30, 0xd8, 0xfb, 0x3f, 0x33, 0x6f, 0x24]);
 interface IItemContainerProvider : IUnknown
 {
-    HRESULT FindItemByProperty(IRawElementProviderSimple, int, VARIANT, IRawElementProviderSimple*);
+    HRESULT FindItemByProperty(IRawElementProviderSimple, UIA_PROPERTY_ID, VARIANT, IRawElementProviderSimple*);
 }
 enum IID_IVirtualizedItemProvider = GUID(0xcb98b665, 0x2d35, 0x4fac, [0xad, 0x35, 0xf3, 0xc6, 0xd, 0xc, 0xb, 0x8b]);
 interface IVirtualizedItemProvider : IUnknown
@@ -2027,7 +2027,7 @@ interface IObjectModelProvider : IUnknown
 enum IID_IAnnotationProvider = GUID(0xf95c7e80, 0xbd63, 0x4601, [0x97, 0x82, 0x44, 0x5e, 0xbf, 0xf0, 0x11, 0xfc]);
 interface IAnnotationProvider : IUnknown
 {
-    HRESULT get_AnnotationTypeId(int*);
+    HRESULT get_AnnotationTypeId(UIA_ANNOTATIONTYPE*);
     HRESULT get_AnnotationTypeName(BSTR*);
     HRESULT get_Author(BSTR*);
     HRESULT get_DateTime(BSTR*);
@@ -2036,7 +2036,7 @@ interface IAnnotationProvider : IUnknown
 enum IID_IStylesProvider = GUID(0x19b6b649, 0xf5d7, 0x4a6d, [0xbd, 0xcb, 0x12, 0x92, 0x52, 0xbe, 0x58, 0x8a]);
 interface IStylesProvider : IUnknown
 {
-    HRESULT get_StyleId(int*);
+    HRESULT get_StyleId(UIA_STYLE_ID*);
     HRESULT get_StyleName(BSTR*);
     HRESULT get_FillColor(int*);
     HRESULT get_FillPatternStyle(BSTR*);
@@ -2087,9 +2087,9 @@ interface ITextRangeProvider : IUnknown
     HRESULT Compare(ITextRangeProvider, BOOL*);
     HRESULT CompareEndpoints(TextPatternRangeEndpoint, ITextRangeProvider, TextPatternRangeEndpoint, int*);
     HRESULT ExpandToEnclosingUnit(TextUnit);
-    HRESULT FindAttribute(int, VARIANT, BOOL, ITextRangeProvider*);
+    HRESULT FindAttribute(UIA_TEXTATTRIBUTE_ID, VARIANT, BOOL, ITextRangeProvider*);
     HRESULT FindText(BSTR, BOOL, BOOL, ITextRangeProvider*);
-    HRESULT GetAttributeValue(int, VARIANT*);
+    HRESULT GetAttributeValue(UIA_TEXTATTRIBUTE_ID, VARIANT*);
     HRESULT GetBoundingRectangles(SAFEARRAY**);
     HRESULT GetEnclosingElement(IRawElementProviderSimple*);
     HRESULT GetText(int, BSTR*);
@@ -2223,18 +2223,18 @@ interface IUIAutomationElement : IUnknown
     HRESULT FindFirstBuildCache(TreeScope, IUIAutomationCondition, IUIAutomationCacheRequest, IUIAutomationElement*);
     HRESULT FindAllBuildCache(TreeScope, IUIAutomationCondition, IUIAutomationCacheRequest, IUIAutomationElementArray*);
     HRESULT BuildUpdatedCache(IUIAutomationCacheRequest, IUIAutomationElement*);
-    HRESULT GetCurrentPropertyValue(int, VARIANT*);
-    HRESULT GetCurrentPropertyValueEx(int, BOOL, VARIANT*);
-    HRESULT GetCachedPropertyValue(int, VARIANT*);
-    HRESULT GetCachedPropertyValueEx(int, BOOL, VARIANT*);
-    HRESULT GetCurrentPatternAs(int, const(GUID)*, void**);
-    HRESULT GetCachedPatternAs(int, const(GUID)*, void**);
-    HRESULT GetCurrentPattern(int, IUnknown*);
-    HRESULT GetCachedPattern(int, IUnknown*);
+    HRESULT GetCurrentPropertyValue(UIA_PROPERTY_ID, VARIANT*);
+    HRESULT GetCurrentPropertyValueEx(UIA_PROPERTY_ID, BOOL, VARIANT*);
+    HRESULT GetCachedPropertyValue(UIA_PROPERTY_ID, VARIANT*);
+    HRESULT GetCachedPropertyValueEx(UIA_PROPERTY_ID, BOOL, VARIANT*);
+    HRESULT GetCurrentPatternAs(UIA_PATTERN_ID, const(GUID)*, void**);
+    HRESULT GetCachedPatternAs(UIA_PATTERN_ID, const(GUID)*, void**);
+    HRESULT GetCurrentPattern(UIA_PATTERN_ID, IUnknown*);
+    HRESULT GetCachedPattern(UIA_PATTERN_ID, IUnknown*);
     HRESULT GetCachedParent(IUIAutomationElement*);
     HRESULT GetCachedChildren(IUIAutomationElementArray*);
     HRESULT get_CurrentProcessId(int*);
-    HRESULT get_CurrentControlType(int*);
+    HRESULT get_CurrentControlType(UIA_CONTROLTYPE_ID*);
     HRESULT get_CurrentLocalizedControlType(BSTR*);
     HRESULT get_CurrentName(BSTR*);
     HRESULT get_CurrentAcceleratorKey(BSTR*);
@@ -2266,7 +2266,7 @@ interface IUIAutomationElement : IUnknown
     HRESULT get_CurrentFlowsTo(IUIAutomationElementArray*);
     HRESULT get_CurrentProviderDescription(BSTR*);
     HRESULT get_CachedProcessId(int*);
-    HRESULT get_CachedControlType(int*);
+    HRESULT get_CachedControlType(UIA_CONTROLTYPE_ID*);
     HRESULT get_CachedLocalizedControlType(BSTR*);
     HRESULT get_CachedName(BSTR*);
     HRESULT get_CachedAcceleratorKey(BSTR*);
@@ -2317,7 +2317,7 @@ interface IUIAutomationBoolCondition : IUIAutomationCondition
 enum IID_IUIAutomationPropertyCondition = GUID(0x99ebf2cb, 0x5578, 0x4267, [0x9a, 0xd4, 0xaf, 0xd6, 0xea, 0x77, 0xe9, 0x4b]);
 interface IUIAutomationPropertyCondition : IUIAutomationCondition
 {
-    HRESULT get_PropertyId(int*);
+    HRESULT get_PropertyId(UIA_PROPERTY_ID*);
     HRESULT get_PropertyValue(VARIANT*);
     HRESULT get_PropertyConditionFlags(PropertyConditionFlags*);
 }
@@ -2343,8 +2343,8 @@ interface IUIAutomationNotCondition : IUIAutomationCondition
 enum IID_IUIAutomationCacheRequest = GUID(0xb32a92b5, 0xbc25, 0x4078, [0x9c, 0x8, 0xd7, 0xee, 0x95, 0xc4, 0x8e, 0x3]);
 interface IUIAutomationCacheRequest : IUnknown
 {
-    HRESULT AddProperty(int);
-    HRESULT AddPattern(int);
+    HRESULT AddProperty(UIA_PROPERTY_ID);
+    HRESULT AddPattern(UIA_PATTERN_ID);
     HRESULT Clone(IUIAutomationCacheRequest*);
     HRESULT get_TreeScope(TreeScope*);
     HRESULT put_TreeScope(TreeScope);
@@ -2373,12 +2373,12 @@ interface IUIAutomationTreeWalker : IUnknown
 enum IID_IUIAutomationEventHandler = GUID(0x146c3c17, 0xf12e, 0x4e22, [0x8c, 0x27, 0xf8, 0x94, 0xb9, 0xb7, 0x9c, 0x69]);
 interface IUIAutomationEventHandler : IUnknown
 {
-    HRESULT HandleAutomationEvent(IUIAutomationElement, int);
+    HRESULT HandleAutomationEvent(IUIAutomationElement, UIA_EVENT_ID);
 }
 enum IID_IUIAutomationPropertyChangedEventHandler = GUID(0x40cd37d4, 0xc756, 0x4b0c, [0x8c, 0x6f, 0xbd, 0xdf, 0xee, 0xb1, 0x3b, 0x50]);
 interface IUIAutomationPropertyChangedEventHandler : IUnknown
 {
-    HRESULT HandlePropertyChangedEvent(IUIAutomationElement, int, VARIANT);
+    HRESULT HandlePropertyChangedEvent(IUIAutomationElement, UIA_PROPERTY_ID, VARIANT);
 }
 enum IID_IUIAutomationStructureChangedEventHandler = GUID(0xe81d1b4e, 0x11c5, 0x42f8, [0x97, 0x54, 0xe7, 0x3, 0x6c, 0x79, 0xf0, 0x54]);
 interface IUIAutomationStructureChangedEventHandler : IUnknown
@@ -2615,9 +2615,9 @@ interface IUIAutomationTextRange : IUnknown
     HRESULT Compare(IUIAutomationTextRange, BOOL*);
     HRESULT CompareEndpoints(TextPatternRangeEndpoint, IUIAutomationTextRange, TextPatternRangeEndpoint, int*);
     HRESULT ExpandToEnclosingUnit(TextUnit);
-    HRESULT FindAttribute(int, VARIANT, BOOL, IUIAutomationTextRange*);
+    HRESULT FindAttribute(UIA_TEXTATTRIBUTE_ID, VARIANT, BOOL, IUIAutomationTextRange*);
     HRESULT FindText(BSTR, BOOL, BOOL, IUIAutomationTextRange*);
-    HRESULT GetAttributeValue(int, VARIANT*);
+    HRESULT GetAttributeValue(UIA_TEXTATTRIBUTE_ID, VARIANT*);
     HRESULT GetBoundingRectangles(SAFEARRAY**);
     HRESULT GetEnclosingElement(IUIAutomationElement*);
     HRESULT GetText(int, BSTR*);
@@ -2640,7 +2640,7 @@ interface IUIAutomationTextRange3 : IUIAutomationTextRange2
 {
     HRESULT GetEnclosingElementBuildCache(IUIAutomationCacheRequest, IUIAutomationElement*);
     HRESULT GetChildrenBuildCache(IUIAutomationCacheRequest, IUIAutomationElementArray*);
-    HRESULT GetAttributeValues(const(int)*, int, SAFEARRAY**);
+    HRESULT GetAttributeValues(const(UIA_TEXTATTRIBUTE_ID)*, int, SAFEARRAY**);
 }
 enum IID_IUIAutomationTextRangeArray = GUID(0xce4ae76a, 0xe717, 0x4c98, [0x81, 0xea, 0x47, 0x37, 0x1d, 0x2, 0x8e, 0xb6]);
 interface IUIAutomationTextRangeArray : IUnknown
@@ -2711,7 +2711,7 @@ interface IUIAutomationLegacyIAccessiblePattern : IUnknown
 enum IID_IUIAutomationItemContainerPattern = GUID(0xc690fdb2, 0x27a8, 0x423c, [0x81, 0x2d, 0x42, 0x97, 0x73, 0xc9, 0x8, 0x4e]);
 interface IUIAutomationItemContainerPattern : IUnknown
 {
-    HRESULT FindItemByProperty(IUIAutomationElement, int, VARIANT, IUIAutomationElement*);
+    HRESULT FindItemByProperty(IUIAutomationElement, UIA_PROPERTY_ID, VARIANT, IUIAutomationElement*);
 }
 enum IID_IUIAutomationVirtualizedItemPattern = GUID(0x6ba3d7a6, 0x4cf, 0x4f11, [0x87, 0x93, 0xa8, 0xd1, 0xcd, 0xe9, 0x96, 0x9f]);
 interface IUIAutomationVirtualizedItemPattern : IUnknown
@@ -2721,12 +2721,12 @@ interface IUIAutomationVirtualizedItemPattern : IUnknown
 enum IID_IUIAutomationAnnotationPattern = GUID(0x9a175b21, 0x339e, 0x41b1, [0x8e, 0x8b, 0x62, 0x3f, 0x6b, 0x68, 0x10, 0x98]);
 interface IUIAutomationAnnotationPattern : IUnknown
 {
-    HRESULT get_CurrentAnnotationTypeId(int*);
+    HRESULT get_CurrentAnnotationTypeId(UIA_ANNOTATIONTYPE*);
     HRESULT get_CurrentAnnotationTypeName(BSTR*);
     HRESULT get_CurrentAuthor(BSTR*);
     HRESULT get_CurrentDateTime(BSTR*);
     HRESULT get_CurrentTarget(IUIAutomationElement*);
-    HRESULT get_CachedAnnotationTypeId(int*);
+    HRESULT get_CachedAnnotationTypeId(UIA_ANNOTATIONTYPE*);
     HRESULT get_CachedAnnotationTypeName(BSTR*);
     HRESULT get_CachedAuthor(BSTR*);
     HRESULT get_CachedDateTime(BSTR*);
@@ -2735,7 +2735,7 @@ interface IUIAutomationAnnotationPattern : IUnknown
 enum IID_IUIAutomationStylesPattern = GUID(0x85b5f0a2, 0xbd79, 0x484a, [0xad, 0x2b, 0x38, 0x8c, 0x98, 0x38, 0xd5, 0xfb]);
 interface IUIAutomationStylesPattern : IUnknown
 {
-    HRESULT get_CurrentStyleId(int*);
+    HRESULT get_CurrentStyleId(UIA_STYLE_ID*);
     HRESULT get_CurrentStyleName(BSTR*);
     HRESULT get_CurrentFillColor(int*);
     HRESULT get_CurrentFillPatternStyle(BSTR*);
@@ -2743,7 +2743,7 @@ interface IUIAutomationStylesPattern : IUnknown
     HRESULT get_CurrentFillPatternColor(int*);
     HRESULT get_CurrentExtendedProperties(BSTR*);
     HRESULT GetCurrentExtendedPropertiesAsArray(ExtendedProperty**, int*);
-    HRESULT get_CachedStyleId(int*);
+    HRESULT get_CachedStyleId(UIA_STYLE_ID*);
     HRESULT get_CachedStyleName(BSTR*);
     HRESULT get_CachedFillColor(int*);
     HRESULT get_CachedFillPatternStyle(BSTR*);
@@ -2841,9 +2841,9 @@ interface IUIAutomationElement4 : IUIAutomationElement3
 enum IID_IUIAutomationElement5 = GUID(0x98141c1d, 0xd0e, 0x4175, [0xbb, 0xe2, 0x6b, 0xff, 0x45, 0x58, 0x42, 0xa7]);
 interface IUIAutomationElement5 : IUIAutomationElement4
 {
-    HRESULT get_CurrentLandmarkType(int*);
+    HRESULT get_CurrentLandmarkType(UIA_LANDMARKTYPE_ID*);
     HRESULT get_CurrentLocalizedLandmarkType(BSTR*);
-    HRESULT get_CachedLandmarkType(int*);
+    HRESULT get_CachedLandmarkType(UIA_LANDMARKTYPE_ID*);
     HRESULT get_CachedLocalizedLandmarkType(BSTR*);
 }
 enum IID_IUIAutomationElement6 = GUID(0x4780d450, 0x8bca, 0x4977, [0xaf, 0xa5, 0xa4, 0xa5, 0x17, 0xf5, 0x55, 0xe3]);
@@ -2859,13 +2859,13 @@ interface IUIAutomationElement7 : IUIAutomationElement6
     HRESULT FindAllWithOptions(TreeScope, IUIAutomationCondition, TreeTraversalOptions, IUIAutomationElement, IUIAutomationElementArray*);
     HRESULT FindFirstWithOptionsBuildCache(TreeScope, IUIAutomationCondition, IUIAutomationCacheRequest, TreeTraversalOptions, IUIAutomationElement, IUIAutomationElement*);
     HRESULT FindAllWithOptionsBuildCache(TreeScope, IUIAutomationCondition, IUIAutomationCacheRequest, TreeTraversalOptions, IUIAutomationElement, IUIAutomationElementArray*);
-    HRESULT GetCurrentMetadataValue(int, int, VARIANT*);
+    HRESULT GetCurrentMetadataValue(int, UIA_METADATA_ID, VARIANT*);
 }
 enum IID_IUIAutomationElement8 = GUID(0x8c60217d, 0x5411, 0x4cde, [0xbc, 0xc0, 0x1c, 0xed, 0xa2, 0x23, 0x83, 0xc]);
 interface IUIAutomationElement8 : IUIAutomationElement7
 {
-    HRESULT get_CurrentHeadingLevel(int*);
-    HRESULT get_CachedHeadingLevel(int*);
+    HRESULT get_CurrentHeadingLevel(UIA_HEADINGLEVEL_ID*);
+    HRESULT get_CachedHeadingLevel(UIA_HEADINGLEVEL_ID*);
 }
 enum IID_IUIAutomationElement9 = GUID(0x39325fac, 0x39d, 0x440e, [0xa3, 0xa3, 0x5e, 0xb8, 0x1a, 0x5c, 0xec, 0xc3]);
 interface IUIAutomationElement9 : IUIAutomationElement8
@@ -2893,8 +2893,8 @@ interface IUIAutomationProxyFactoryEntry : IUnknown
     HRESULT put_AllowSubstringMatch(BOOL);
     HRESULT put_CanCheckBaseClass(BOOL);
     HRESULT put_NeedsAdviseEvents(BOOL);
-    HRESULT SetWinEventsForAutomationEvent(int, int, SAFEARRAY*);
-    HRESULT GetWinEventsForAutomationEvent(int, int, SAFEARRAY**);
+    HRESULT SetWinEventsForAutomationEvent(UIA_EVENT_ID, UIA_PROPERTY_ID, SAFEARRAY*);
+    HRESULT GetWinEventsForAutomationEvent(UIA_EVENT_ID, UIA_PROPERTY_ID, SAFEARRAY**);
 }
 enum IID_IUIAutomationProxyFactoryMapping = GUID(0x9e31e18, 0x872d, 0x4873, [0x93, 0xd1, 0x1e, 0x54, 0x1e, 0xc1, 0x33, 0xfd]);
 interface IUIAutomationProxyFactoryMapping : IUnknown
@@ -2913,10 +2913,10 @@ enum IID_IUIAutomationEventHandlerGroup = GUID(0xc9ee12f2, 0xc13b, 0x4408, [0x99
 interface IUIAutomationEventHandlerGroup : IUnknown
 {
     HRESULT AddActiveTextPositionChangedEventHandler(TreeScope, IUIAutomationCacheRequest, IUIAutomationActiveTextPositionChangedEventHandler);
-    HRESULT AddAutomationEventHandler(int, TreeScope, IUIAutomationCacheRequest, IUIAutomationEventHandler);
+    HRESULT AddAutomationEventHandler(UIA_EVENT_ID, TreeScope, IUIAutomationCacheRequest, IUIAutomationEventHandler);
     HRESULT AddChangesEventHandler(TreeScope, int*, int, IUIAutomationCacheRequest, IUIAutomationChangesEventHandler);
     HRESULT AddNotificationEventHandler(TreeScope, IUIAutomationCacheRequest, IUIAutomationNotificationEventHandler);
-    HRESULT AddPropertyChangedEventHandler(TreeScope, IUIAutomationCacheRequest, IUIAutomationPropertyChangedEventHandler, int*, int);
+    HRESULT AddPropertyChangedEventHandler(TreeScope, IUIAutomationCacheRequest, IUIAutomationPropertyChangedEventHandler, UIA_PROPERTY_ID*, int);
     HRESULT AddStructureChangedEventHandler(TreeScope, IUIAutomationCacheRequest, IUIAutomationStructureChangedEventHandler);
     HRESULT AddTextEditTextChangedEventHandler(TreeScope, TextEditChangeType, IUIAutomationCacheRequest, IUIAutomationTextEditTextChangedEventHandler);
 }
@@ -2943,8 +2943,8 @@ interface IUIAutomation : IUnknown
     HRESULT CreateCacheRequest(IUIAutomationCacheRequest*);
     HRESULT CreateTrueCondition(IUIAutomationCondition*);
     HRESULT CreateFalseCondition(IUIAutomationCondition*);
-    HRESULT CreatePropertyCondition(int, VARIANT, IUIAutomationCondition*);
-    HRESULT CreatePropertyConditionEx(int, VARIANT, PropertyConditionFlags, IUIAutomationCondition*);
+    HRESULT CreatePropertyCondition(UIA_PROPERTY_ID, VARIANT, IUIAutomationCondition*);
+    HRESULT CreatePropertyConditionEx(UIA_PROPERTY_ID, VARIANT, PropertyConditionFlags, IUIAutomationCondition*);
     HRESULT CreateAndCondition(IUIAutomationCondition, IUIAutomationCondition, IUIAutomationCondition*);
     HRESULT CreateAndConditionFromArray(SAFEARRAY*, IUIAutomationCondition*);
     HRESULT CreateAndConditionFromNativeArray(IUIAutomationCondition*, int, IUIAutomationCondition*);
@@ -2952,9 +2952,9 @@ interface IUIAutomation : IUnknown
     HRESULT CreateOrConditionFromArray(SAFEARRAY*, IUIAutomationCondition*);
     HRESULT CreateOrConditionFromNativeArray(IUIAutomationCondition*, int, IUIAutomationCondition*);
     HRESULT CreateNotCondition(IUIAutomationCondition, IUIAutomationCondition*);
-    HRESULT AddAutomationEventHandler(int, IUIAutomationElement, TreeScope, IUIAutomationCacheRequest, IUIAutomationEventHandler);
-    HRESULT RemoveAutomationEventHandler(int, IUIAutomationElement, IUIAutomationEventHandler);
-    HRESULT AddPropertyChangedEventHandlerNativeArray(IUIAutomationElement, TreeScope, IUIAutomationCacheRequest, IUIAutomationPropertyChangedEventHandler, int*, int);
+    HRESULT AddAutomationEventHandler(UIA_EVENT_ID, IUIAutomationElement, TreeScope, IUIAutomationCacheRequest, IUIAutomationEventHandler);
+    HRESULT RemoveAutomationEventHandler(UIA_EVENT_ID, IUIAutomationElement, IUIAutomationEventHandler);
+    HRESULT AddPropertyChangedEventHandlerNativeArray(IUIAutomationElement, TreeScope, IUIAutomationCacheRequest, IUIAutomationPropertyChangedEventHandler, UIA_PROPERTY_ID*, int);
     HRESULT AddPropertyChangedEventHandler(IUIAutomationElement, TreeScope, IUIAutomationCacheRequest, IUIAutomationPropertyChangedEventHandler, SAFEARRAY*);
     HRESULT RemovePropertyChangedEventHandler(IUIAutomationElement, IUIAutomationPropertyChangedEventHandler);
     HRESULT AddStructureChangedEventHandler(IUIAutomationElement, TreeScope, IUIAutomationCacheRequest, IUIAutomationStructureChangedEventHandler);
@@ -2969,8 +2969,8 @@ interface IUIAutomation : IUnknown
     HRESULT SafeArrayToRectNativeArray(SAFEARRAY*, RECT**, int*);
     HRESULT CreateProxyFactoryEntry(IUIAutomationProxyFactory, IUIAutomationProxyFactoryEntry*);
     HRESULT get_ProxyFactoryMapping(IUIAutomationProxyFactoryMapping*);
-    HRESULT GetPropertyProgrammaticName(int, BSTR*);
-    HRESULT GetPatternProgrammaticName(int, BSTR*);
+    HRESULT GetPropertyProgrammaticName(UIA_PROPERTY_ID, BSTR*);
+    HRESULT GetPatternProgrammaticName(UIA_PATTERN_ID, BSTR*);
     HRESULT PollForPotentialSupportedPatterns(IUIAutomationElement, SAFEARRAY**, SAFEARRAY**);
     HRESULT PollForPotentialSupportedProperties(IUIAutomationElement, SAFEARRAY**, SAFEARRAY**);
     HRESULT CheckNotSupported(VARIANT, BOOL*);

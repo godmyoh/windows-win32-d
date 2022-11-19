@@ -1,7 +1,7 @@
 module windows.win32.system.realtimecommunications;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BSTR, HRESULT;
+import windows.win32.foundation : BSTR, HRESULT, VARIANT_BOOL;
 import windows.win32.media.directshow_ : IVideoWindow;
 import windows.win32.networking.winsock : TRANSPORT_SETTING_ID;
 import windows.win32.system.com_ : IDispatch, IUnknown, VARIANT;
@@ -673,24 +673,24 @@ interface IRTCClient : IUnknown
     HRESULT PrepareForShutdown();
     HRESULT put_EventFilter(int);
     HRESULT get_EventFilter(int*);
-    HRESULT SetPreferredMediaTypes(int, short);
+    HRESULT SetPreferredMediaTypes(int, VARIANT_BOOL);
     HRESULT get_PreferredMediaTypes(int*);
     HRESULT get_MediaCapabilities(int*);
     HRESULT CreateSession(RTC_SESSION_TYPE, BSTR, IRTCProfile, int, IRTCSession*);
     HRESULT put_ListenForIncomingSessions(RTC_LISTEN_MODE);
     HRESULT get_ListenForIncomingSessions(RTC_LISTEN_MODE*);
-    HRESULT get_NetworkAddresses(short, short, VARIANT*);
+    HRESULT get_NetworkAddresses(VARIANT_BOOL, VARIANT_BOOL, VARIANT*);
     HRESULT put_Volume(RTC_AUDIO_DEVICE, int);
     HRESULT get_Volume(RTC_AUDIO_DEVICE, int*);
-    HRESULT put_AudioMuted(RTC_AUDIO_DEVICE, short);
-    HRESULT get_AudioMuted(RTC_AUDIO_DEVICE, short*);
+    HRESULT put_AudioMuted(RTC_AUDIO_DEVICE, VARIANT_BOOL);
+    HRESULT get_AudioMuted(RTC_AUDIO_DEVICE, VARIANT_BOOL*);
     HRESULT get_IVideoWindow(RTC_VIDEO_DEVICE, IVideoWindow*);
     HRESULT put_PreferredAudioDevice(RTC_AUDIO_DEVICE, BSTR);
     HRESULT get_PreferredAudioDevice(RTC_AUDIO_DEVICE, BSTR*);
     HRESULT put_PreferredVolume(RTC_AUDIO_DEVICE, int);
     HRESULT get_PreferredVolume(RTC_AUDIO_DEVICE, int*);
-    HRESULT put_PreferredAEC(short);
-    HRESULT get_PreferredAEC(short*);
+    HRESULT put_PreferredAEC(VARIANT_BOOL);
+    HRESULT get_PreferredAEC(VARIANT_BOOL*);
     HRESULT put_PreferredVideoDevice(BSTR);
     HRESULT get_PreferredVideoDevice(BSTR*);
     HRESULT get_ActiveMedia(int*);
@@ -701,22 +701,22 @@ interface IRTCClient : IUnknown
     HRESULT get_NetworkQuality(int*);
     HRESULT StartT120Applet(RTC_T120_APPLET);
     HRESULT StopT120Applets();
-    HRESULT get_IsT120AppletRunning(RTC_T120_APPLET, short*);
+    HRESULT get_IsT120AppletRunning(RTC_T120_APPLET, VARIANT_BOOL*);
     HRESULT get_LocalUserURI(BSTR*);
     HRESULT put_LocalUserURI(BSTR);
     HRESULT get_LocalUserName(BSTR*);
     HRESULT put_LocalUserName(BSTR);
-    HRESULT PlayRing(RTC_RING_TYPE, short);
+    HRESULT PlayRing(RTC_RING_TYPE, VARIANT_BOOL);
     HRESULT SendDTMF(RTC_DTMF);
     HRESULT InvokeTuningWizard(long);
-    HRESULT get_IsTuned(short*);
+    HRESULT get_IsTuned(VARIANT_BOOL*);
 }
 enum IID_IRTCClient2 = GUID(0xc91d71d, 0x1064, 0x42da, [0xbf, 0xa5, 0x57, 0x2b, 0xeb, 0x8e, 0xea, 0x84]);
 interface IRTCClient2 : IRTCClient
 {
     HRESULT put_AnswerMode(RTC_SESSION_TYPE, RTC_ANSWER_MODE);
     HRESULT get_AnswerMode(RTC_SESSION_TYPE, RTC_ANSWER_MODE*);
-    HRESULT InvokeTuningWizardEx(long, short, short);
+    HRESULT InvokeTuningWizardEx(long, VARIANT_BOOL, VARIANT_BOOL);
     HRESULT get_Version(int*);
     HRESULT put_ClientName(BSTR);
     HRESULT put_ClientCurVer(BSTR);
@@ -731,18 +731,18 @@ interface IRTCClient2 : IRTCClient
 enum IID_IRTCClientPresence = GUID(0x11c3cbcc, 0x744, 0x42d1, [0x96, 0x8a, 0x51, 0xaa, 0x1b, 0xb2, 0x74, 0xc6]);
 interface IRTCClientPresence : IUnknown
 {
-    HRESULT EnablePresence(short, VARIANT);
+    HRESULT EnablePresence(VARIANT_BOOL, VARIANT);
     HRESULT Export(VARIANT);
-    HRESULT Import(VARIANT, short);
+    HRESULT Import(VARIANT, VARIANT_BOOL);
     HRESULT EnumerateBuddies(IRTCEnumBuddies*);
     HRESULT get_Buddies(IRTCCollection*);
     HRESULT get_Buddy(BSTR, IRTCBuddy*);
-    HRESULT AddBuddy(BSTR, BSTR, BSTR, short, IRTCProfile, int, IRTCBuddy*);
+    HRESULT AddBuddy(BSTR, BSTR, BSTR, VARIANT_BOOL, IRTCProfile, int, IRTCBuddy*);
     HRESULT RemoveBuddy(IRTCBuddy);
     HRESULT EnumerateWatchers(IRTCEnumWatchers*);
     HRESULT get_Watchers(IRTCCollection*);
     HRESULT get_Watcher(BSTR, IRTCWatcher*);
-    HRESULT AddWatcher(BSTR, BSTR, BSTR, short, short, IRTCWatcher*);
+    HRESULT AddWatcher(BSTR, BSTR, BSTR, VARIANT_BOOL, VARIANT_BOOL, IRTCWatcher*);
     HRESULT RemoveWatcher(IRTCWatcher);
     HRESULT SetLocalPresenceInfo(RTC_PRESENCE_STATUS, BSTR);
     HRESULT get_OfferWatcherMode(RTC_OFFER_WATCHER_MODE*);
@@ -760,14 +760,14 @@ interface IRTCClientPresence2 : IRTCClientPresence
     HRESULT EnumerateGroups(IRTCEnumGroups*);
     HRESULT get_Groups(IRTCCollection*);
     HRESULT get_Group(BSTR, IRTCBuddyGroup*);
-    HRESULT AddWatcherEx(BSTR, BSTR, BSTR, RTC_WATCHER_STATE, short, RTC_ACE_SCOPE, IRTCProfile, int, IRTCWatcher2*);
+    HRESULT AddWatcherEx(BSTR, BSTR, BSTR, RTC_WATCHER_STATE, VARIANT_BOOL, RTC_ACE_SCOPE, IRTCProfile, int, IRTCWatcher2*);
     HRESULT get_WatcherEx(RTC_WATCHER_MATCH_MODE, BSTR, IRTCWatcher2*);
     HRESULT put_PresenceProperty(RTC_PRESENCE_PROPERTY, BSTR);
     HRESULT get_PresenceProperty(RTC_PRESENCE_PROPERTY, BSTR*);
     HRESULT SetPresenceData(BSTR, BSTR);
     HRESULT GetPresenceData(BSTR*, BSTR*);
     HRESULT GetLocalPresenceInfo(RTC_PRESENCE_STATUS*, BSTR*);
-    HRESULT AddBuddyEx(BSTR, BSTR, BSTR, short, RTC_BUDDY_SUBSCRIPTION_TYPE, IRTCProfile, int, IRTCBuddy2*);
+    HRESULT AddBuddyEx(BSTR, BSTR, BSTR, VARIANT_BOOL, RTC_BUDDY_SUBSCRIPTION_TYPE, IRTCProfile, int, IRTCBuddy2*);
 }
 enum IID_IRTCClientProvisioning = GUID(0xb9f5cf06, 0x65b9, 0x4a80, [0xa0, 0xe6, 0x73, 0xca, 0xe3, 0xef, 0x38, 0x22]);
 interface IRTCClientProvisioning : IUnknown
@@ -795,7 +795,7 @@ interface IRTCProfile : IUnknown
     HRESULT get_ProviderURI(RTC_PROVIDER_URI, BSTR*);
     HRESULT get_ProviderData(BSTR*);
     HRESULT get_ClientName(BSTR*);
-    HRESULT get_ClientBanner(short*);
+    HRESULT get_ClientBanner(VARIANT_BOOL*);
     HRESULT get_ClientMinVer(BSTR*);
     HRESULT get_ClientCurVer(BSTR*);
     HRESULT get_ClientUpdateURI(BSTR*);
@@ -829,7 +829,7 @@ interface IRTCSession : IUnknown
     HRESULT AddParticipant(BSTR, BSTR, IRTCParticipant*);
     HRESULT RemoveParticipant(IRTCParticipant);
     HRESULT EnumerateParticipants(IRTCEnumParticipants*);
-    HRESULT get_CanAddParticipants(short*);
+    HRESULT get_CanAddParticipants(VARIANT_BOOL*);
     HRESULT get_RedirectedUserURI(BSTR*);
     HRESULT get_RedirectedUserName(BSTR*);
     HRESULT NextRedirectedUser();
@@ -845,7 +845,7 @@ interface IRTCSession2 : IRTCSession
     HRESULT SendInfo(BSTR, BSTR, long);
     HRESULT put_PreferredSecurityLevel(RTC_SECURITY_TYPE, RTC_SECURITY_LEVEL);
     HRESULT get_PreferredSecurityLevel(RTC_SECURITY_TYPE, RTC_SECURITY_LEVEL*);
-    HRESULT IsSecurityEnabled(RTC_SECURITY_TYPE, short*);
+    HRESULT IsSecurityEnabled(RTC_SECURITY_TYPE, VARIANT_BOOL*);
     HRESULT AnswerWithSessionDescription(BSTR, BSTR);
     HRESULT ReInviteWithSessionDescription(BSTR, BSTR, long);
 }
@@ -860,14 +860,14 @@ interface IRTCSessionCallControl : IUnknown
     HRESULT get_ReferredByURI(BSTR*);
     HRESULT put_ReferCookie(BSTR);
     HRESULT get_ReferCookie(BSTR*);
-    HRESULT get_IsReferred(short*);
+    HRESULT get_IsReferred(VARIANT_BOOL*);
 }
 enum IID_IRTCParticipant = GUID(0xae86add5, 0x26b1, 0x4414, [0xaf, 0x1d, 0xb9, 0x4c, 0xd9, 0x38, 0xd7, 0x39]);
 interface IRTCParticipant : IUnknown
 {
     HRESULT get_UserURI(BSTR*);
     HRESULT get_Name(BSTR*);
-    HRESULT get_Removable(short*);
+    HRESULT get_Removable(VARIANT_BOOL*);
     HRESULT get_State(RTC_PARTICIPANT_STATE*);
     HRESULT get_Session(IRTCSession*);
 }
@@ -918,7 +918,7 @@ interface IRTCSessionStateChangeEvent2 : IRTCSessionStateChangeEvent
 {
     HRESULT get_MediaTypes(int*);
     HRESULT get_RemotePreferredSecurityLevel(RTC_SECURITY_TYPE, RTC_SECURITY_LEVEL*);
-    HRESULT get_IsForked(short*);
+    HRESULT get_IsForked(VARIANT_BOOL*);
     HRESULT GetRemoteSessionDescription(BSTR*, BSTR*);
 }
 enum IID_IRTCSessionOperationCompleteEvent = GUID(0xa6bff4c0, 0xf7c8, 0x4d3c, [0x9a, 0x41, 0x35, 0x50, 0xf7, 0x8a, 0x95, 0xb0]);
@@ -1104,8 +1104,8 @@ interface IRTCPresenceContact : IUnknown
     HRESULT put_Name(BSTR);
     HRESULT get_Data(BSTR*);
     HRESULT put_Data(BSTR);
-    HRESULT get_Persistent(short*);
-    HRESULT put_Persistent(short);
+    HRESULT get_Persistent(VARIANT_BOOL*);
+    HRESULT put_Persistent(VARIANT_BOOL);
 }
 enum IID_IRTCBuddy = GUID(0xfcb136c8, 0x7b90, 0x4e0c, [0xbe, 0xfe, 0x56, 0xed, 0xf0, 0xba, 0x6f, 0x1c]);
 interface IRTCBuddy : IRTCPresenceContact
@@ -1213,7 +1213,7 @@ interface IRTCUserSearchResultsEvent : IDispatch
     HRESULT get_Query(IRTCUserSearchQuery*);
     HRESULT get_Cookie(long*);
     HRESULT get_StatusCode(int*);
-    HRESULT get_MoreAvailable(short*);
+    HRESULT get_MoreAvailable(VARIANT_BOOL*);
 }
 enum IID_IRTCSessionReferStatusEvent = GUID(0x3d8fc2cd, 0x5d76, 0x44ab, [0xbb, 0x68, 0x2a, 0x80, 0x35, 0x3b, 0x34, 0xa2]);
 interface IRTCSessionReferStatusEvent : IDispatch
@@ -1237,7 +1237,7 @@ interface IRTCSessionReferredEvent : IDispatch
 enum IID_IRTCSessionDescriptionManager = GUID(0xba7f518e, 0xd336, 0x4070, [0x93, 0xa6, 0x86, 0x53, 0x95, 0xc8, 0x43, 0xf9]);
 interface IRTCSessionDescriptionManager : IUnknown
 {
-    HRESULT EvaluateSessionDescription(BSTR, BSTR, short*);
+    HRESULT EvaluateSessionDescription(BSTR, BSTR, VARIANT_BOOL*);
 }
 enum IID_IRTCEnumPresenceDevices = GUID(0x708c2ab7, 0x8bf8, 0x42f8, [0x8c, 0x7d, 0x63, 0x51, 0x97, 0xad, 0x55, 0x39]);
 interface IRTCEnumPresenceDevices : IUnknown

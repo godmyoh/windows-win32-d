@@ -1,7 +1,7 @@
 module windows.win32.system.diagnostics.debug__;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FARPROC, HANDLE, HANDLE_PTR, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, NTSTATUS, PSTR, PWSTR, SYSTEMTIME;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FARPROC, HANDLE, HANDLE_PTR, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, NTSTATUS, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL;
 import windows.win32.security.wintrust : WIN_CERTIFICATE;
 import windows.win32.storage.filesystem : VS_FIXEDFILEINFO;
 import windows.win32.system.com_ : DISPPARAMS, EXCEPINFO, IDispatch, IStream, ITypeInfo, IUnknown, TYPEDESC, VARENUM, VARIANT;
@@ -11486,7 +11486,7 @@ interface IDebugApplicationNode100 : IUnknown
 enum IID_IWebAppDiagnosticsSetup = GUID(0x379bfbe1, 0xc6c9, 0x432a, [0x93, 0xe1, 0x6d, 0x17, 0x65, 0x6c, 0x53, 0x8c]);
 interface IWebAppDiagnosticsSetup : IUnknown
 {
-    HRESULT DiagnosticsSupported(short*);
+    HRESULT DiagnosticsSupported(VARIANT_BOOL*);
     HRESULT CreateObjectWithSiteAtWebApp(const(GUID)*, uint, const(GUID)*, ulong);
 }
 alias SCRIPT_DEBUGGER_OPTIONS = int;

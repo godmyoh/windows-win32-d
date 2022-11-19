@@ -1,7 +1,7 @@
 module windows.win32.devices.fax;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, PSTR, PWSTR, SYSTEMTIME;
+import windows.win32.foundation : BOOL, BSTR, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL;
 import windows.win32.graphics.gdi : HDC;
 import windows.win32.system.com_ : IDispatch, IUnknown, VARIANT;
 import windows.win32.system.io : OVERLAPPED;
@@ -1175,7 +1175,7 @@ interface IFaxServer : IDispatch
     HRESULT get_MinorVersion(int*);
     HRESULT get_MajorBuild(int*);
     HRESULT get_MinorBuild(int*);
-    HRESULT get_Debug(short*);
+    HRESULT get_Debug(VARIANT_BOOL*);
     HRESULT get_Activity(IFaxActivity*);
     HRESULT get_OutboundRouting(IFaxOutboundRouting*);
     HRESULT get_ReceiptOptions(IFaxReceiptOptions*);
@@ -1276,8 +1276,8 @@ interface IFaxReceiptOptions : IDispatch
     HRESULT put_SMTPPassword(BSTR);
     HRESULT Refresh();
     HRESULT Save();
-    HRESULT get_UseForInboundRouting(short*);
-    HRESULT put_UseForInboundRouting(short);
+    HRESULT get_UseForInboundRouting(VARIANT_BOOL*);
+    HRESULT put_UseForInboundRouting(VARIANT_BOOL);
 }
 alias FAX_ACCESS_RIGHTS_ENUM = int;
 enum : int
@@ -1357,16 +1357,16 @@ interface IFaxDocument : IDispatch
     HRESULT put_ScheduleType(FAX_SCHEDULE_TYPE_ENUM);
     HRESULT get_ReceiptType(FAX_RECEIPT_TYPE_ENUM*);
     HRESULT put_ReceiptType(FAX_RECEIPT_TYPE_ENUM);
-    HRESULT get_GroupBroadcastReceipts(short*);
-    HRESULT put_GroupBroadcastReceipts(short);
+    HRESULT get_GroupBroadcastReceipts(VARIANT_BOOL*);
+    HRESULT put_GroupBroadcastReceipts(VARIANT_BOOL);
     HRESULT get_Priority(FAX_PRIORITY_TYPE_ENUM*);
     HRESULT put_Priority(FAX_PRIORITY_TYPE_ENUM);
     HRESULT get_TapiConnection(IDispatch*);
     HRESULT putref_TapiConnection(IDispatch);
     HRESULT Submit(BSTR, VARIANT*);
     HRESULT ConnectedSubmit(IFaxServer, VARIANT*);
-    HRESULT get_AttachFaxToReceipt(short*);
-    HRESULT put_AttachFaxToReceipt(short);
+    HRESULT get_AttachFaxToReceipt(VARIANT_BOOL*);
+    HRESULT put_AttachFaxToReceipt(VARIANT_BOOL);
 }
 enum IID_IFaxSender = GUID(0xd879d7d, 0xf57a, 0x4cc6, [0xa6, 0xf9, 0x3e, 0xe5, 0xd5, 0x27, 0xb4, 0x6a]);
 interface IFaxSender : IDispatch
@@ -1426,12 +1426,12 @@ interface IFaxRecipients : IDispatch
 enum IID_IFaxIncomingArchive = GUID(0x76062cc7, 0xf714, 0x4fbd, [0xaa, 0x6, 0xed, 0x6e, 0x4a, 0x4b, 0x70, 0xf3]);
 interface IFaxIncomingArchive : IDispatch
 {
-    HRESULT get_UseArchive(short*);
-    HRESULT put_UseArchive(short);
+    HRESULT get_UseArchive(VARIANT_BOOL*);
+    HRESULT put_UseArchive(VARIANT_BOOL);
     HRESULT get_ArchiveFolder(BSTR*);
     HRESULT put_ArchiveFolder(BSTR);
-    HRESULT get_SizeQuotaWarning(short*);
-    HRESULT put_SizeQuotaWarning(short);
+    HRESULT get_SizeQuotaWarning(VARIANT_BOOL*);
+    HRESULT put_SizeQuotaWarning(VARIANT_BOOL);
     HRESULT get_HighQuotaWaterMark(int*);
     HRESULT put_HighQuotaWaterMark(int);
     HRESULT get_LowQuotaWaterMark(int*);
@@ -1448,8 +1448,8 @@ interface IFaxIncomingArchive : IDispatch
 enum IID_IFaxIncomingQueue = GUID(0x902e64ef, 0x8fd8, 0x4b75, [0x97, 0x25, 0x60, 0x14, 0xdf, 0x16, 0x15, 0x45]);
 interface IFaxIncomingQueue : IDispatch
 {
-    HRESULT get_Blocked(short*);
-    HRESULT put_Blocked(short);
+    HRESULT get_Blocked(VARIANT_BOOL*);
+    HRESULT put_Blocked(VARIANT_BOOL);
     HRESULT Refresh();
     HRESULT Save();
     HRESULT GetJobs(IFaxIncomingJobs*);
@@ -1458,12 +1458,12 @@ interface IFaxIncomingQueue : IDispatch
 enum IID_IFaxOutgoingArchive = GUID(0xc9c28f40, 0x8d80, 0x4e53, [0x81, 0xf, 0x9a, 0x79, 0x91, 0x9b, 0x49, 0xfd]);
 interface IFaxOutgoingArchive : IDispatch
 {
-    HRESULT get_UseArchive(short*);
-    HRESULT put_UseArchive(short);
+    HRESULT get_UseArchive(VARIANT_BOOL*);
+    HRESULT put_UseArchive(VARIANT_BOOL);
     HRESULT get_ArchiveFolder(BSTR*);
     HRESULT put_ArchiveFolder(BSTR);
-    HRESULT get_SizeQuotaWarning(short*);
-    HRESULT put_SizeQuotaWarning(short);
+    HRESULT get_SizeQuotaWarning(VARIANT_BOOL*);
+    HRESULT put_SizeQuotaWarning(VARIANT_BOOL);
     HRESULT get_HighQuotaWaterMark(int*);
     HRESULT put_HighQuotaWaterMark(int);
     HRESULT get_LowQuotaWaterMark(int*);
@@ -1480,14 +1480,14 @@ interface IFaxOutgoingArchive : IDispatch
 enum IID_IFaxOutgoingQueue = GUID(0x80b1df24, 0xd9ac, 0x4333, [0xb3, 0x73, 0x48, 0x7c, 0xed, 0xc8, 0xc, 0xe5]);
 interface IFaxOutgoingQueue : IDispatch
 {
-    HRESULT get_Blocked(short*);
-    HRESULT put_Blocked(short);
-    HRESULT get_Paused(short*);
-    HRESULT put_Paused(short);
-    HRESULT get_AllowPersonalCoverPages(short*);
-    HRESULT put_AllowPersonalCoverPages(short);
-    HRESULT get_UseDeviceTSID(short*);
-    HRESULT put_UseDeviceTSID(short);
+    HRESULT get_Blocked(VARIANT_BOOL*);
+    HRESULT put_Blocked(VARIANT_BOOL);
+    HRESULT get_Paused(VARIANT_BOOL*);
+    HRESULT put_Paused(VARIANT_BOOL);
+    HRESULT get_AllowPersonalCoverPages(VARIANT_BOOL*);
+    HRESULT put_AllowPersonalCoverPages(VARIANT_BOOL);
+    HRESULT get_UseDeviceTSID(VARIANT_BOOL*);
+    HRESULT put_UseDeviceTSID(VARIANT_BOOL);
     HRESULT get_Retries(int*);
     HRESULT put_Retries(int);
     HRESULT get_RetryDelay(int*);
@@ -1498,8 +1498,8 @@ interface IFaxOutgoingQueue : IDispatch
     HRESULT put_DiscountRateEnd(double);
     HRESULT get_AgeLimit(int*);
     HRESULT put_AgeLimit(int);
-    HRESULT get_Branding(short*);
-    HRESULT put_Branding(short);
+    HRESULT get_Branding(VARIANT_BOOL*);
+    HRESULT put_Branding(VARIANT_BOOL);
     HRESULT Refresh();
     HRESULT Save();
     HRESULT GetJobs(IFaxOutgoingJobs*);
@@ -1511,7 +1511,7 @@ interface IFaxIncomingMessageIterator : IDispatch
     HRESULT get_Message(IFaxIncomingMessage*);
     HRESULT get_PrefetchSize(int*);
     HRESULT put_PrefetchSize(int);
-    HRESULT get_AtEOF(short*);
+    HRESULT get_AtEOF(VARIANT_BOOL*);
     HRESULT MoveFirst();
     HRESULT MoveNext();
 }
@@ -1566,7 +1566,7 @@ interface IFaxOutgoingJob : IDispatch
     HRESULT get_TransmissionEnd(double*);
     HRESULT get_CSID(BSTR*);
     HRESULT get_TSID(BSTR*);
-    HRESULT get_GroupBroadcastReceipts(short*);
+    HRESULT get_GroupBroadcastReceipts(VARIANT_BOOL*);
     HRESULT Pause();
     HRESULT Resume();
     HRESULT Restart();
@@ -1578,7 +1578,7 @@ enum IID_IFaxOutgoingMessageIterator = GUID(0xf5ec5d4f, 0xb840, 0x432f, [0x99, 0
 interface IFaxOutgoingMessageIterator : IDispatch
 {
     HRESULT get_Message(IFaxOutgoingMessage*);
-    HRESULT get_AtEOF(short*);
+    HRESULT get_AtEOF(VARIANT_BOOL*);
     HRESULT get_PrefetchSize(int*);
     HRESULT put_PrefetchSize(int);
     HRESULT MoveFirst();
@@ -1660,7 +1660,7 @@ interface IFaxDeviceProvider : IDispatch
     HRESULT get_MinorVersion(int*);
     HRESULT get_MajorBuild(int*);
     HRESULT get_MinorBuild(int*);
-    HRESULT get_Debug(short*);
+    HRESULT get_Debug(VARIANT_BOOL*);
     HRESULT get_Status(FAX_PROVIDER_STATUS_ENUM*);
     HRESULT get_InitErrorCode(int*);
     HRESULT get_DeviceIds(VARIANT*);
@@ -1679,14 +1679,14 @@ interface IFaxDevice : IDispatch
     HRESULT get_Id(int*);
     HRESULT get_DeviceName(BSTR*);
     HRESULT get_ProviderUniqueName(BSTR*);
-    HRESULT get_PoweredOff(short*);
-    HRESULT get_ReceivingNow(short*);
-    HRESULT get_SendingNow(short*);
+    HRESULT get_PoweredOff(VARIANT_BOOL*);
+    HRESULT get_ReceivingNow(VARIANT_BOOL*);
+    HRESULT get_SendingNow(VARIANT_BOOL*);
     HRESULT get_UsedRoutingMethods(VARIANT*);
     HRESULT get_Description(BSTR*);
     HRESULT put_Description(BSTR);
-    HRESULT get_SendEnabled(short*);
-    HRESULT put_SendEnabled(short);
+    HRESULT get_SendEnabled(VARIANT_BOOL*);
+    HRESULT put_SendEnabled(VARIANT_BOOL);
     HRESULT get_ReceiveMode(FAX_DEVICE_RECEIVE_MODE_ENUM*);
     HRESULT put_ReceiveMode(FAX_DEVICE_RECEIVE_MODE_ENUM);
     HRESULT get_RingsBeforeAnswer(int*);
@@ -1699,17 +1699,17 @@ interface IFaxDevice : IDispatch
     HRESULT Save();
     HRESULT GetExtensionProperty(BSTR, VARIANT*);
     HRESULT SetExtensionProperty(BSTR, VARIANT);
-    HRESULT UseRoutingMethod(BSTR, short);
-    HRESULT get_RingingNow(short*);
+    HRESULT UseRoutingMethod(BSTR, VARIANT_BOOL);
+    HRESULT get_RingingNow(VARIANT_BOOL*);
     HRESULT AnswerCall();
 }
 enum IID_IFaxActivityLogging = GUID(0x1e29078b, 0x5a69, 0x497b, [0x95, 0x92, 0x49, 0xb7, 0xe7, 0xfa, 0xdd, 0xb5]);
 interface IFaxActivityLogging : IDispatch
 {
-    HRESULT get_LogIncoming(short*);
-    HRESULT put_LogIncoming(short);
-    HRESULT get_LogOutgoing(short*);
-    HRESULT put_LogOutgoing(short);
+    HRESULT get_LogIncoming(VARIANT_BOOL*);
+    HRESULT put_LogIncoming(VARIANT_BOOL);
+    HRESULT get_LogOutgoing(VARIANT_BOOL*);
+    HRESULT put_LogOutgoing(VARIANT_BOOL);
     HRESULT get_DatabasePath(BSTR*);
     HRESULT put_DatabasePath(BSTR);
     HRESULT Refresh();
@@ -1782,7 +1782,7 @@ interface IFaxOutboundRoutingRules : IDispatch
     HRESULT ItemByCountryAndArea(int, int, IFaxOutboundRoutingRule*);
     HRESULT RemoveByCountryAndArea(int, int);
     HRESULT Remove(int);
-    HRESULT Add(int, int, short, BSTR, int, IFaxOutboundRoutingRule*);
+    HRESULT Add(int, int, VARIANT_BOOL, BSTR, int, IFaxOutboundRoutingRule*);
 }
 alias FAX_RULE_STATUS_ENUM = int;
 enum : int
@@ -1800,8 +1800,8 @@ interface IFaxOutboundRoutingRule : IDispatch
     HRESULT get_CountryCode(int*);
     HRESULT get_AreaCode(int*);
     HRESULT get_Status(FAX_RULE_STATUS_ENUM*);
-    HRESULT get_UseDevice(short*);
-    HRESULT put_UseDevice(short);
+    HRESULT get_UseDevice(VARIANT_BOOL*);
+    HRESULT put_UseDevice(VARIANT_BOOL);
     HRESULT get_DeviceId(int*);
     HRESULT put_DeviceId(int);
     HRESULT get_GroupName(BSTR*);
@@ -1826,7 +1826,7 @@ interface IFaxInboundRoutingExtension : IDispatch
     HRESULT get_MinorVersion(int*);
     HRESULT get_MajorBuild(int*);
     HRESULT get_MinorBuild(int*);
-    HRESULT get_Debug(short*);
+    HRESULT get_Debug(VARIANT_BOOL*);
     HRESULT get_Status(FAX_PROVIDER_STATUS_ENUM*);
     HRESULT get_InitErrorCode(int*);
     HRESULT get_Methods(VARIANT*);
@@ -1863,12 +1863,12 @@ interface IFaxDocument2 : IFaxDocument
 enum IID_IFaxConfiguration = GUID(0x10f4d0f7, 0x994, 0x4543, [0xab, 0x6e, 0x50, 0x69, 0x49, 0x12, 0x8c, 0x40]);
 interface IFaxConfiguration : IDispatch
 {
-    HRESULT get_UseArchive(short*);
-    HRESULT put_UseArchive(short);
+    HRESULT get_UseArchive(VARIANT_BOOL*);
+    HRESULT put_UseArchive(VARIANT_BOOL);
     HRESULT get_ArchiveLocation(BSTR*);
     HRESULT put_ArchiveLocation(BSTR);
-    HRESULT get_SizeQuotaWarning(short*);
-    HRESULT put_SizeQuotaWarning(short);
+    HRESULT get_SizeQuotaWarning(VARIANT_BOOL*);
+    HRESULT put_SizeQuotaWarning(VARIANT_BOOL);
     HRESULT get_HighQuotaWaterMark(int*);
     HRESULT put_HighQuotaWaterMark(int);
     HRESULT get_LowQuotaWaterMark(int*);
@@ -1877,14 +1877,14 @@ interface IFaxConfiguration : IDispatch
     HRESULT put_ArchiveAgeLimit(int);
     HRESULT get_ArchiveSizeLow(int*);
     HRESULT get_ArchiveSizeHigh(int*);
-    HRESULT get_OutgoingQueueBlocked(short*);
-    HRESULT put_OutgoingQueueBlocked(short);
-    HRESULT get_OutgoingQueuePaused(short*);
-    HRESULT put_OutgoingQueuePaused(short);
-    HRESULT get_AllowPersonalCoverPages(short*);
-    HRESULT put_AllowPersonalCoverPages(short);
-    HRESULT get_UseDeviceTSID(short*);
-    HRESULT put_UseDeviceTSID(short);
+    HRESULT get_OutgoingQueueBlocked(VARIANT_BOOL*);
+    HRESULT put_OutgoingQueueBlocked(VARIANT_BOOL);
+    HRESULT get_OutgoingQueuePaused(VARIANT_BOOL*);
+    HRESULT put_OutgoingQueuePaused(VARIANT_BOOL);
+    HRESULT get_AllowPersonalCoverPages(VARIANT_BOOL*);
+    HRESULT put_AllowPersonalCoverPages(VARIANT_BOOL);
+    HRESULT get_UseDeviceTSID(VARIANT_BOOL*);
+    HRESULT put_UseDeviceTSID(VARIANT_BOOL);
     HRESULT get_Retries(int*);
     HRESULT put_Retries(int);
     HRESULT get_RetryDelay(int*);
@@ -1895,14 +1895,14 @@ interface IFaxConfiguration : IDispatch
     HRESULT put_DiscountRateEnd(double);
     HRESULT get_OutgoingQueueAgeLimit(int*);
     HRESULT put_OutgoingQueueAgeLimit(int);
-    HRESULT get_Branding(short*);
-    HRESULT put_Branding(short);
-    HRESULT get_IncomingQueueBlocked(short*);
-    HRESULT put_IncomingQueueBlocked(short);
-    HRESULT get_AutoCreateAccountOnConnect(short*);
-    HRESULT put_AutoCreateAccountOnConnect(short);
-    HRESULT get_IncomingFaxesArePublic(short*);
-    HRESULT put_IncomingFaxesArePublic(short);
+    HRESULT get_Branding(VARIANT_BOOL*);
+    HRESULT put_Branding(VARIANT_BOOL);
+    HRESULT get_IncomingQueueBlocked(VARIANT_BOOL*);
+    HRESULT put_IncomingQueueBlocked(VARIANT_BOOL);
+    HRESULT get_AutoCreateAccountOnConnect(VARIANT_BOOL*);
+    HRESULT put_AutoCreateAccountOnConnect(VARIANT_BOOL);
+    HRESULT get_IncomingFaxesArePublic(VARIANT_BOOL*);
+    HRESULT put_IncomingFaxesArePublic(VARIANT_BOOL);
     HRESULT Refresh();
     HRESULT Save();
 }
@@ -1951,7 +1951,7 @@ interface IFaxAccount : IDispatch
 enum IID_IFaxOutgoingJob2 = GUID(0x418a8d96, 0x59a0, 0x4789, [0xb1, 0x76, 0xed, 0xf3, 0xdc, 0x8f, 0xa8, 0xf7]);
 interface IFaxOutgoingJob2 : IFaxOutgoingJob
 {
-    HRESULT get_HasCoverPage(short*);
+    HRESULT get_HasCoverPage(VARIANT_BOOL*);
     HRESULT get_ReceiptAddress(BSTR*);
     HRESULT get_ScheduleType(FAX_SCHEDULE_TYPE_ENUM*);
 }
@@ -1978,11 +1978,11 @@ interface IFaxAccountOutgoingQueue : IDispatch
 enum IID_IFaxOutgoingMessage2 = GUID(0xb37df687, 0xbc88, 0x4b46, [0xb3, 0xbe, 0xb4, 0x58, 0xb3, 0xea, 0x9e, 0x7f]);
 interface IFaxOutgoingMessage2 : IFaxOutgoingMessage
 {
-    HRESULT get_HasCoverPage(short*);
+    HRESULT get_HasCoverPage(VARIANT_BOOL*);
     HRESULT get_ReceiptType(FAX_RECEIPT_TYPE_ENUM*);
     HRESULT get_ReceiptAddress(BSTR*);
-    HRESULT get_Read(short*);
-    HRESULT put_Read(short);
+    HRESULT get_Read(VARIANT_BOOL*);
+    HRESULT put_Read(VARIANT_BOOL);
     HRESULT Save();
     HRESULT Refresh();
 }
@@ -2039,13 +2039,13 @@ interface IFaxIncomingMessage2 : IFaxIncomingMessage
     HRESULT put_SenderName(BSTR);
     HRESULT get_SenderFaxNumber(BSTR*);
     HRESULT put_SenderFaxNumber(BSTR);
-    HRESULT get_HasCoverPage(short*);
-    HRESULT put_HasCoverPage(short);
+    HRESULT get_HasCoverPage(VARIANT_BOOL*);
+    HRESULT put_HasCoverPage(VARIANT_BOOL);
     HRESULT get_Recipients(BSTR*);
     HRESULT put_Recipients(BSTR);
-    HRESULT get_WasReAssigned(short*);
-    HRESULT get_Read(short*);
-    HRESULT put_Read(short);
+    HRESULT get_WasReAssigned(VARIANT_BOOL*);
+    HRESULT get_Read(VARIANT_BOOL*);
+    HRESULT put_Read(VARIANT_BOOL);
     HRESULT ReAssign();
     HRESULT Save();
     HRESULT Refresh();
@@ -2060,8 +2060,8 @@ enum IID_IFaxServerNotify = GUID(0x2e037b27, 0xcf8a, 0x4abd, [0xb1, 0xe0, 0x57, 
 interface IFaxServerNotify : IDispatch
 {
 }
-enum IID__IFaxServerNotify2 = GUID(0xec9c69b9, 0x5fe7, 0x4805, [0x94, 0x67, 0x82, 0xfc, 0xd9, 0x6a, 0xf9, 0x3]);
-interface _IFaxServerNotify2 : IDispatch
+enum IID_IFaxServerNotify2 = GUID(0xec9c69b9, 0x5fe7, 0x4805, [0x94, 0x67, 0x82, 0xfc, 0xd9, 0x6a, 0xf9, 0x3]);
+interface IFaxServerNotify2 : IDispatch
 {
     HRESULT OnIncomingJobAdded(IFaxServer2, BSTR);
     HRESULT OnIncomingJobRemoved(IFaxServer2, BSTR);
@@ -2084,18 +2084,14 @@ interface _IFaxServerNotify2 : IDispatch
     HRESULT OnOutboundRoutingGroupsConfigChange(IFaxServer2);
     HRESULT OnOutboundRoutingRulesConfigChange(IFaxServer2);
     HRESULT OnServerActivityChange(IFaxServer2, int, int, int, int);
-    HRESULT OnQueuesStatusChange(IFaxServer2, short, short, short);
+    HRESULT OnQueuesStatusChange(IFaxServer2, VARIANT_BOOL, VARIANT_BOOL, VARIANT_BOOL);
     HRESULT OnNewCall(IFaxServer2, int, int, BSTR);
     HRESULT OnServerShutDown(IFaxServer2);
-    HRESULT OnDeviceStatusChange(IFaxServer2, int, short, short, short, short);
+    HRESULT OnDeviceStatusChange(IFaxServer2, int, VARIANT_BOOL, VARIANT_BOOL, VARIANT_BOOL, VARIANT_BOOL);
     HRESULT OnGeneralServerConfigChanged(IFaxServer2);
 }
-enum IID_IFaxServerNotify2 = GUID(0x616ca8d6, 0xa77a, 0x4062, [0xab, 0xfd, 0xe, 0x47, 0x12, 0x41, 0xc7, 0xaa]);
-interface IFaxServerNotify2 : IDispatch
-{
-}
-enum IID__IFaxAccountNotify = GUID(0xb9b3bc81, 0xac1b, 0x46f3, [0xb3, 0x9d, 0xa, 0xdc, 0x30, 0xe1, 0xb7, 0x88]);
-interface _IFaxAccountNotify : IDispatch
+enum IID_IFaxAccountNotify = GUID(0xb9b3bc81, 0xac1b, 0x46f3, [0xb3, 0x9d, 0xa, 0xdc, 0x30, 0xe1, 0xb7, 0x88]);
+interface IFaxAccountNotify : IDispatch
 {
     HRESULT OnIncomingJobAdded(IFaxAccount, BSTR);
     HRESULT OnIncomingJobRemoved(IFaxAccount, BSTR);
@@ -2103,15 +2099,11 @@ interface _IFaxAccountNotify : IDispatch
     HRESULT OnOutgoingJobAdded(IFaxAccount, BSTR);
     HRESULT OnOutgoingJobRemoved(IFaxAccount, BSTR);
     HRESULT OnOutgoingJobChanged(IFaxAccount, BSTR, IFaxJobStatus);
-    HRESULT OnIncomingMessageAdded(IFaxAccount, BSTR, short);
-    HRESULT OnIncomingMessageRemoved(IFaxAccount, BSTR, short);
+    HRESULT OnIncomingMessageAdded(IFaxAccount, BSTR, VARIANT_BOOL);
+    HRESULT OnIncomingMessageRemoved(IFaxAccount, BSTR, VARIANT_BOOL);
     HRESULT OnOutgoingMessageAdded(IFaxAccount, BSTR);
     HRESULT OnOutgoingMessageRemoved(IFaxAccount, BSTR);
     HRESULT OnServerShutDown(IFaxServer2);
-}
-enum IID_IFaxAccountNotify = GUID(0xb5e5bd1, 0xb8a9, 0x47a0, [0xa3, 0x23, 0xef, 0x4a, 0x29, 0x3b, 0xa0, 0x6a]);
-interface IFaxAccountNotify : IDispatch
-{
 }
 alias PFAXROUTEADDFILE = int function(uint, const(wchar)*, GUID*);
 alias PFAXROUTEDELETEFILE = int function(uint, const(wchar)*);

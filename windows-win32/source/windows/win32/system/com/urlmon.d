@@ -2,7 +2,7 @@ module windows.win32.system.com.urlmon;
 
 import windows.win32.guid : GUID;
 import windows.win32.data.xml.msxml : IXMLElement;
-import windows.win32.foundation : BOOL, HANDLE, HANDLE_PTR, HRESULT, HWND, LARGE_INTEGER, PSTR, PWSTR, SYSTEMTIME, ULARGE_INTEGER;
+import windows.win32.foundation : BOOL, HANDLE, HANDLE_PTR, HRESULT, HWND, LARGE_INTEGER, PSTR, PWSTR, SYSTEMTIME, ULARGE_INTEGER, VARIANT_BOOL;
 import windows.win32.system.com_ : BINDINFO, CLSCTX, FORMATETC, IBindCtx, IBindStatusCallback, IBinding, IClassFactory, IEnumFORMATETC, IEnumString, IMoniker, IServiceProvider, IStream, IUnknown, IUri, IUriBuilder, QUERYCONTEXT, STGMEDIUM, uCLSSPEC;
 
 version (Windows):
@@ -1311,7 +1311,7 @@ struct PROTOCOL_ARGUMENT
 enum IID_IBindCallbackRedirect = GUID(0x11c81bc2, 0x121e, 0x4ed5, [0xb9, 0xc4, 0xb4, 0x30, 0xbd, 0x54, 0xf2, 0xc0]);
 interface IBindCallbackRedirect : IUnknown
 {
-    HRESULT Redirect(const(wchar)*, short*);
+    HRESULT Redirect(const(wchar)*, VARIANT_BOOL*);
 }
 enum IID_IBindHttpSecurity = GUID(0xa9eda967, 0xf50e, 0x4a33, [0xb3, 0x58, 0x20, 0x6f, 0x6e, 0xf3, 0x8, 0x6d]);
 interface IBindHttpSecurity : IUnknown

@@ -1,7 +1,7 @@
 module windows.win32.media.directshow_;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, COLORREF, HANDLE, HRESULT, HWND, LARGE_INTEGER, PAPCFUNC, POINT, PSID, PSTR, PWSTR, RECT, SIZE;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, COLORREF, HANDLE, HRESULT, HWND, LARGE_INTEGER, PAPCFUNC, POINT, PSID, PSTR, PWSTR, RECT, SIZE, VARIANT_BOOL;
 import windows.win32.graphics.direct3d9 : D3DFORMAT, D3DPOOL, IDirect3DDevice9, IDirect3DSurface9;
 import windows.win32.graphics.directdraw : DDCAPS_DX7, DDCOLORCONTROL, DDCOLORKEY, DDPIXELFORMAT, DDSCAPS2, DDSURFACEDESC, DDVIDEOPORTCONNECT, IDirectDraw, IDirectDraw7, IDirectDrawPalette, IDirectDrawSurface, IDirectDrawSurface7;
 import windows.win32.graphics.gdi : BITMAPINFO, BITMAPINFOHEADER, HDC, HMONITOR, PALETTEENTRY, RGBQUAD, RGNDATA;
@@ -4911,8 +4911,8 @@ interface IBDA_TransportStreamInfo : IUnknown
 enum IID_IBDA_ConditionalAccess = GUID(0xcd51f1e0, 0x7be9, 0x4123, [0x84, 0x82, 0xa2, 0xa7, 0x96, 0xc0, 0xa6, 0xb0]);
 interface IBDA_ConditionalAccess : IUnknown
 {
-    HRESULT get_SmartCardStatus(SmartCardStatusType*, SmartCardAssociationType*, BSTR*, short*);
-    HRESULT get_SmartCardInfo(BSTR*, BSTR*, short*, ubyte*, int*, BSTR*, EALocationCodeType*);
+    HRESULT get_SmartCardStatus(SmartCardStatusType*, SmartCardAssociationType*, BSTR*, VARIANT_BOOL*);
+    HRESULT get_SmartCardInfo(BSTR*, BSTR*, VARIANT_BOOL*, ubyte*, int*, BSTR*, EALocationCodeType*);
     HRESULT get_SmartCardApplications(uint*, uint, SmartCardApplication*);
     HRESULT get_Entitlement(ushort, EntitlementType*);
     HRESULT TuneByChannel(ushort);
@@ -5088,26 +5088,26 @@ interface IAMNetShowConfig : IDispatch
 {
     HRESULT get_BufferingTime(double*);
     HRESULT put_BufferingTime(double);
-    HRESULT get_UseFixedUDPPort(short*);
-    HRESULT put_UseFixedUDPPort(short);
+    HRESULT get_UseFixedUDPPort(VARIANT_BOOL*);
+    HRESULT put_UseFixedUDPPort(VARIANT_BOOL);
     HRESULT get_FixedUDPPort(int*);
     HRESULT put_FixedUDPPort(int);
-    HRESULT get_UseHTTPProxy(short*);
-    HRESULT put_UseHTTPProxy(short);
-    HRESULT get_EnableAutoProxy(short*);
-    HRESULT put_EnableAutoProxy(short);
+    HRESULT get_UseHTTPProxy(VARIANT_BOOL*);
+    HRESULT put_UseHTTPProxy(VARIANT_BOOL);
+    HRESULT get_EnableAutoProxy(VARIANT_BOOL*);
+    HRESULT put_EnableAutoProxy(VARIANT_BOOL);
     HRESULT get_HTTPProxyHost(BSTR*);
     HRESULT put_HTTPProxyHost(BSTR);
     HRESULT get_HTTPProxyPort(int*);
     HRESULT put_HTTPProxyPort(int);
-    HRESULT get_EnableMulticast(short*);
-    HRESULT put_EnableMulticast(short);
-    HRESULT get_EnableUDP(short*);
-    HRESULT put_EnableUDP(short);
-    HRESULT get_EnableTCP(short*);
-    HRESULT put_EnableTCP(short);
-    HRESULT get_EnableHTTP(short*);
-    HRESULT put_EnableHTTP(short);
+    HRESULT get_EnableMulticast(VARIANT_BOOL*);
+    HRESULT put_EnableMulticast(VARIANT_BOOL);
+    HRESULT get_EnableUDP(VARIANT_BOOL*);
+    HRESULT put_EnableUDP(VARIANT_BOOL);
+    HRESULT get_EnableTCP(VARIANT_BOOL*);
+    HRESULT put_EnableTCP(VARIANT_BOOL);
+    HRESULT get_EnableHTTP(VARIANT_BOOL*);
+    HRESULT put_EnableHTTP(VARIANT_BOOL);
 }
 enum IID_IAMChannelInfo = GUID(0xfa2aa8f2, 0x8b62, 0x11d0, [0xa5, 0x20, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
 interface IAMChannelInfo : IDispatch
@@ -5127,7 +5127,7 @@ interface IAMNetworkStatus : IDispatch
     HRESULT get_LostPackets(int*);
     HRESULT get_ReceptionQuality(int*);
     HRESULT get_BufferingCount(int*);
-    HRESULT get_IsBroadcast(short*);
+    HRESULT get_IsBroadcast(VARIANT_BOOL*);
     HRESULT get_BufferingProgress(int*);
 }
 alias AMExtendedSeekingCapabilities = int;
@@ -5160,7 +5160,7 @@ interface IAMNetShowExProps : IDispatch
     HRESULT get_Bandwidth(int*);
     HRESULT get_ErrorCorrection(BSTR*);
     HRESULT get_CodecCount(int*);
-    HRESULT GetCodecInstalled(int, short*);
+    HRESULT GetCodecInstalled(int, VARIANT_BOOL*);
     HRESULT GetCodecDescription(int, BSTR*);
     HRESULT GetCodecURL(int, BSTR*);
     HRESULT get_CreationDate(double*);
@@ -5169,7 +5169,7 @@ interface IAMNetShowExProps : IDispatch
 enum IID_IAMExtendedErrorInfo = GUID(0xfa2aa8f6, 0x8b62, 0x11d0, [0xa5, 0x20, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
 interface IAMExtendedErrorInfo : IDispatch
 {
-    HRESULT get_HasError(short*);
+    HRESULT get_HasError(VARIANT_BOOL*);
     HRESULT get_ErrorDescription(BSTR*);
     HRESULT get_ErrorCode(int*);
 }
@@ -5200,8 +5200,8 @@ interface IAMMediaContent2 : IDispatch
 enum IID_IAMNetShowPreroll = GUID(0xaae7e4e2, 0x6388, 0x11d1, [0x8d, 0x93, 0x0, 0x60, 0x97, 0xc9, 0xa2, 0xb2]);
 interface IAMNetShowPreroll : IDispatch
 {
-    HRESULT put_Preroll(short);
-    HRESULT get_Preroll(short*);
+    HRESULT put_Preroll(VARIANT_BOOL);
+    HRESULT get_Preroll(VARIANT_BOOL*);
 }
 enum IID_IDShowPlugin = GUID(0x4746b7c8, 0x700e, 0x11d1, [0xbe, 0xcc, 0x0, 0xc0, 0x4f, 0xb6, 0xe9, 0x37]);
 interface IDShowPlugin : IUnknown
@@ -7971,7 +7971,7 @@ interface ITunerCap : IUnknown
 enum IID_ITunerCapEx = GUID(0xed3e0c66, 0x18c8, 0x4ea6, [0x93, 0x0, 0xf6, 0x84, 0x1f, 0xdd, 0x35, 0xdc]);
 interface ITunerCapEx : IUnknown
 {
-    HRESULT get_Has608_708Caption(short*);
+    HRESULT get_Has608_708Caption(VARIANT_BOOL*);
 }
 enum IID_ITuner = GUID(0x28c52640, 0x18a, 0x11d3, [0x9d, 0x8e, 0x0, 0xc0, 0x4f, 0x72, 0xd9, 0x80]);
 interface ITuner : IUnknown
@@ -8000,7 +8000,7 @@ enum IID_IScanningTunerEx = GUID(0x4bbd195, 0xe2d, 0x4593, [0x9b, 0xd5, 0x4f, 0x
 interface IScanningTunerEx : IScanningTuner
 {
     HRESULT GetCurrentLocator(ILocator*);
-    HRESULT PerformExhaustiveScan(int, int, short, ulong);
+    HRESULT PerformExhaustiveScan(int, int, VARIANT_BOOL, ulong);
     HRESULT TerminateCurrentScan(int*);
     HRESULT ResumeCurrentScan(ulong);
     HRESULT GetTunerScanningCapability(int*, int*, GUID*);
@@ -8189,8 +8189,8 @@ interface IDVBTLocator : IDigitalLocator
     HRESULT put_Guard(GuardInterval);
     HRESULT get_Mode(TransmissionMode*);
     HRESULT put_Mode(TransmissionMode);
-    HRESULT get_OtherFrequencyInUse(short*);
-    HRESULT put_OtherFrequencyInUse(short);
+    HRESULT get_OtherFrequencyInUse(VARIANT_BOOL*);
+    HRESULT put_OtherFrequencyInUse(VARIANT_BOOL);
 }
 enum IID_IDVBTLocator2 = GUID(0x448a2edf, 0xae95, 0x4b43, [0xa3, 0xcc, 0x74, 0x78, 0x43, 0xc4, 0x53, 0xd4]);
 interface IDVBTLocator2 : IDVBTLocator
@@ -8203,8 +8203,8 @@ interface IDVBSLocator : IDigitalLocator
 {
     HRESULT get_SignalPolarisation(Polarisation*);
     HRESULT put_SignalPolarisation(Polarisation);
-    HRESULT get_WestPosition(short*);
-    HRESULT put_WestPosition(short);
+    HRESULT get_WestPosition(VARIANT_BOOL*);
+    HRESULT put_WestPosition(VARIANT_BOOL);
     HRESULT get_OrbitalPosition(int*);
     HRESULT put_OrbitalPosition(int);
     HRESULT get_Azimuth(int*);
@@ -9196,10 +9196,10 @@ interface IMSVidVRGraphSegment : IMSVidGraphSegment
     HRESULT put__VMRendererMode(int);
     HRESULT put_Owner(HWND);
     HRESULT get_Owner(HWND*);
-    HRESULT get_UseOverlay(short*);
-    HRESULT put_UseOverlay(short);
-    HRESULT get_Visible(short*);
-    HRESULT put_Visible(short);
+    HRESULT get_UseOverlay(VARIANT_BOOL*);
+    HRESULT put_UseOverlay(VARIANT_BOOL);
+    HRESULT get_Visible(VARIANT_BOOL*);
+    HRESULT put_Visible(VARIANT_BOOL);
     HRESULT get_ColorKey(uint*);
     HRESULT put_ColorKey(uint);
     HRESULT get_Source(RECT*);
@@ -9209,8 +9209,8 @@ interface IMSVidVRGraphSegment : IMSVidGraphSegment
     HRESULT get_NativeSize(SIZE*, SIZE*);
     HRESULT get_BorderColor(uint*);
     HRESULT put_BorderColor(uint);
-    HRESULT get_MaintainAspectRatio(short*);
-    HRESULT put_MaintainAspectRatio(short);
+    HRESULT get_MaintainAspectRatio(VARIANT_BOOL*);
+    HRESULT put_MaintainAspectRatio(VARIANT_BOOL);
     HRESULT Refresh();
     HRESULT DisplayChange();
     HRESULT RePaint(HDC);
@@ -9220,13 +9220,13 @@ interface IMSVidDevice : IDispatch
 {
     HRESULT get_Name(BSTR*);
     HRESULT get_Status(int*);
-    HRESULT put_Power(short);
-    HRESULT get_Power(short*);
+    HRESULT put_Power(VARIANT_BOOL);
+    HRESULT get_Power(VARIANT_BOOL*);
     HRESULT get_Category(BSTR*);
     HRESULT get_ClassID(BSTR*);
     HRESULT get__Category(GUID*);
     HRESULT get__ClassID(GUID*);
-    HRESULT IsEqualDevice(IMSVidDevice, short*);
+    HRESULT IsEqualDevice(IMSVidDevice, VARIANT_BOOL*);
 }
 enum IID_IMSVidDevice2 = GUID(0x87bd2783, 0xebc0, 0x478c, [0xb4, 0xa0, 0xe8, 0xe7, 0xf4, 0x3a, 0xb7, 0x8e]);
 interface IMSVidDevice2 : IUnknown
@@ -9236,7 +9236,7 @@ interface IMSVidDevice2 : IUnknown
 enum IID_IMSVidInputDevice = GUID(0x37b0353d, 0xa4c8, 0x11d2, [0xb6, 0x34, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidInputDevice : IMSVidDevice
 {
-    HRESULT IsViewable(VARIANT*, short*);
+    HRESULT IsViewable(VARIANT*, VARIANT_BOOL*);
     HRESULT View(VARIANT*);
 }
 enum IID_IMSVidDeviceEvent = GUID(0x1c15d480, 0x911d, 0x11d2, [0xb6, 0x32, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
@@ -9255,12 +9255,12 @@ interface IMSVidVideoInputDevice : IMSVidInputDevice
 enum IID_IMSVidPlayback = GUID(0x37b03538, 0xa4c8, 0x11d2, [0xb6, 0x34, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidPlayback : IMSVidInputDevice
 {
-    HRESULT get_EnableResetOnStop(short*);
-    HRESULT put_EnableResetOnStop(short);
+    HRESULT get_EnableResetOnStop(VARIANT_BOOL*);
+    HRESULT put_EnableResetOnStop(VARIANT_BOOL);
     HRESULT Run();
     HRESULT Pause();
     HRESULT Stop();
-    HRESULT get_CanStep(short, short*);
+    HRESULT get_CanStep(VARIANT_BOOL, VARIANT_BOOL*);
     HRESULT Step(int);
     HRESULT put_Rate(double);
     HRESULT get_Rate(double*);
@@ -9297,9 +9297,9 @@ interface IMSVidAnalogTuner : IMSVidTuner
     HRESULT get_AudioFrequency(int*);
     HRESULT get_CountryCode(int*);
     HRESULT put_CountryCode(int);
-    HRESULT get_SAP(short*);
-    HRESULT put_SAP(short);
-    HRESULT ChannelAvailable(int, int*, short*);
+    HRESULT get_SAP(VARIANT_BOOL*);
+    HRESULT put_SAP(VARIANT_BOOL);
+    HRESULT ChannelAvailable(int, int*, VARIANT_BOOL*);
 }
 enum IID_IMSVidAnalogTuner2 = GUID(0x37647bf7, 0x3dde, 0x4cc8, [0xa4, 0xdc, 0xd, 0x53, 0x4d, 0x3d, 0x0, 0x37]);
 interface IMSVidAnalogTuner2 : IMSVidAnalogTuner
@@ -9417,7 +9417,7 @@ interface IMSVidWebDVD : IMSVidPlayback
     HRESULT PlayPrevChapter();
     HRESULT PlayNextChapter();
     HRESULT StillOff();
-    HRESULT get_AudioLanguage(int, short, BSTR*);
+    HRESULT get_AudioLanguage(int, VARIANT_BOOL, BSTR*);
     HRESULT ShowMenu(DVDMenuIDConstants);
     HRESULT Resume();
     HRESULT ReturnFromSubmenu();
@@ -9445,8 +9445,8 @@ interface IMSVidWebDVD : IMSVidPlayback
     HRESULT DVDTimeCode2bstr(int, BSTR*);
     HRESULT get_DVDDirectory(BSTR*);
     HRESULT put_DVDDirectory(BSTR);
-    HRESULT IsSubpictureStreamEnabled(int, short*);
-    HRESULT IsAudioStreamEnabled(int, short*);
+    HRESULT IsSubpictureStreamEnabled(int, VARIANT_BOOL*);
+    HRESULT IsAudioStreamEnabled(int, VARIANT_BOOL*);
     HRESULT get_CurrentSubpictureStream(int*);
     HRESULT put_CurrentSubpictureStream(int);
     HRESULT get_SubpictureLanguage(int, BSTR*);
@@ -9457,18 +9457,18 @@ interface IMSVidWebDVD : IMSVidPlayback
     HRESULT get_CurrentAngle(int*);
     HRESULT put_CurrentAngle(int);
     HRESULT get_SubpictureStreamsAvailable(int*);
-    HRESULT get_SubpictureOn(short*);
-    HRESULT put_SubpictureOn(short);
+    HRESULT get_SubpictureOn(VARIANT_BOOL*);
+    HRESULT put_SubpictureOn(VARIANT_BOOL);
     HRESULT get_DVDUniqueID(BSTR*);
-    HRESULT AcceptParentalLevelChange(short, BSTR, BSTR);
-    HRESULT NotifyParentalLevelChange(short);
+    HRESULT AcceptParentalLevelChange(VARIANT_BOOL, BSTR, BSTR);
+    HRESULT NotifyParentalLevelChange(VARIANT_BOOL);
     HRESULT SelectParentalCountry(int, BSTR, BSTR);
     HRESULT SelectParentalLevel(int, BSTR, BSTR);
     HRESULT get_TitleParentalLevels(int, int*);
     HRESULT get_PlayerParentalCountry(int*);
     HRESULT get_PlayerParentalLevel(int*);
     HRESULT Eject();
-    HRESULT UOPValid(int, short*);
+    HRESULT UOPValid(int, VARIANT_BOOL*);
     HRESULT get_SPRM(int, short*);
     HRESULT get_GPRM(int, short*);
     HRESULT put_GPRM(int, short);
@@ -9511,28 +9511,28 @@ enum IID_IMSVidWebDVDEvent = GUID(0xb4f7a674, 0x9b83, 0x49cb, [0xa3, 0x57, 0xc6,
 interface IMSVidWebDVDEvent : IMSVidPlaybackEvent
 {
     HRESULT DVDNotify(int, VARIANT, VARIANT);
-    HRESULT PlayForwards(short);
-    HRESULT PlayBackwards(short);
-    HRESULT ShowMenu(DVDMenuIDConstants, short);
-    HRESULT Resume(short);
-    HRESULT SelectOrActivateButton(short);
-    HRESULT StillOff(short);
-    HRESULT PauseOn(short);
-    HRESULT ChangeCurrentAudioStream(short);
-    HRESULT ChangeCurrentSubpictureStream(short);
-    HRESULT ChangeCurrentAngle(short);
-    HRESULT PlayAtTimeInTitle(short);
-    HRESULT PlayAtTime(short);
-    HRESULT PlayChapterInTitle(short);
-    HRESULT PlayChapter(short);
-    HRESULT ReplayChapter(short);
-    HRESULT PlayNextChapter(short);
-    HRESULT Stop(short);
-    HRESULT ReturnFromSubmenu(short);
-    HRESULT PlayTitle(short);
-    HRESULT PlayPrevChapter(short);
-    HRESULT ChangeKaraokePresMode(short);
-    HRESULT ChangeVideoPresMode(short);
+    HRESULT PlayForwards(VARIANT_BOOL);
+    HRESULT PlayBackwards(VARIANT_BOOL);
+    HRESULT ShowMenu(DVDMenuIDConstants, VARIANT_BOOL);
+    HRESULT Resume(VARIANT_BOOL);
+    HRESULT SelectOrActivateButton(VARIANT_BOOL);
+    HRESULT StillOff(VARIANT_BOOL);
+    HRESULT PauseOn(VARIANT_BOOL);
+    HRESULT ChangeCurrentAudioStream(VARIANT_BOOL);
+    HRESULT ChangeCurrentSubpictureStream(VARIANT_BOOL);
+    HRESULT ChangeCurrentAngle(VARIANT_BOOL);
+    HRESULT PlayAtTimeInTitle(VARIANT_BOOL);
+    HRESULT PlayAtTime(VARIANT_BOOL);
+    HRESULT PlayChapterInTitle(VARIANT_BOOL);
+    HRESULT PlayChapter(VARIANT_BOOL);
+    HRESULT ReplayChapter(VARIANT_BOOL);
+    HRESULT PlayNextChapter(VARIANT_BOOL);
+    HRESULT Stop(VARIANT_BOOL);
+    HRESULT ReturnFromSubmenu(VARIANT_BOOL);
+    HRESULT PlayTitle(VARIANT_BOOL);
+    HRESULT PlayPrevChapter(VARIANT_BOOL);
+    HRESULT ChangeKaraokePresMode(VARIANT_BOOL);
+    HRESULT ChangeVideoPresMode(VARIANT_BOOL);
 }
 enum IID_IMSVidWebDVDAdm = GUID(0xb8be681a, 0xeb2c, 0x47f0, [0xb4, 0x15, 0x94, 0xd5, 0x45, 0x2f, 0xe, 0x5]);
 interface IMSVidWebDVDAdm : IDispatch
@@ -9540,7 +9540,7 @@ interface IMSVidWebDVDAdm : IDispatch
     HRESULT ChangePassword(BSTR, BSTR, BSTR);
     HRESULT SaveParentalLevel(int, BSTR, BSTR);
     HRESULT SaveParentalCountry(int, BSTR, BSTR);
-    HRESULT ConfirmPassword(BSTR, BSTR, short*);
+    HRESULT ConfirmPassword(BSTR, BSTR, VARIANT_BOOL*);
     HRESULT GetParentalLevel(int*);
     HRESULT GetParentalCountry(int*);
     HRESULT get_DefaultAudioLCID(int*);
@@ -9549,8 +9549,8 @@ interface IMSVidWebDVDAdm : IDispatch
     HRESULT put_DefaultSubpictureLCID(int);
     HRESULT get_DefaultMenuLCID(int*);
     HRESULT put_DefaultMenuLCID(int);
-    HRESULT get_BookmarkOnStop(short*);
-    HRESULT put_BookmarkOnStop(short);
+    HRESULT get_BookmarkOnStop(VARIANT_BOOL*);
+    HRESULT put_BookmarkOnStop(VARIANT_BOOL);
 }
 enum IID_IMSVidOutputDevice = GUID(0x37b03546, 0xa4c8, 0x11d2, [0xb6, 0x34, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidOutputDevice : IMSVidDevice
@@ -9577,8 +9577,8 @@ interface IMSVidEncoder : IMSVidFeature
 enum IID_IMSVidClosedCaptioning = GUID(0x99652ea1, 0xc1f7, 0x414f, [0xbb, 0x7b, 0x1c, 0x96, 0x7d, 0xe7, 0x59, 0x83]);
 interface IMSVidClosedCaptioning : IMSVidFeature
 {
-    HRESULT get_Enable(short*);
-    HRESULT put_Enable(short);
+    HRESULT get_Enable(VARIANT_BOOL*);
+    HRESULT put_Enable(VARIANT_BOOL);
 }
 enum IID_IMSVidClosedCaptioning2 = GUID(0xe00cb864, 0xa029, 0x4310, [0x99, 0x87, 0xa8, 0x73, 0xf5, 0x88, 0x7d, 0x97]);
 interface IMSVidClosedCaptioning2 : IMSVidClosedCaptioning
@@ -9644,12 +9644,12 @@ interface IMSVidVideoRenderer : IMSVidOutputDevice
     HRESULT get_MinVidRect(IMSVidRect*);
     HRESULT get_ClippedSourceRect(IMSVidRect*);
     HRESULT put_ClippedSourceRect(IMSVidRect);
-    HRESULT get_UsingOverlay(short*);
-    HRESULT put_UsingOverlay(short);
+    HRESULT get_UsingOverlay(VARIANT_BOOL*);
+    HRESULT put_UsingOverlay(VARIANT_BOOL);
     HRESULT Capture(IPictureDisp*);
     HRESULT get_FramesPerSecond(int*);
-    HRESULT get_DecimateInput(short*);
-    HRESULT put_DecimateInput(short);
+    HRESULT get_DecimateInput(VARIANT_BOOL*);
+    HRESULT put_DecimateInput(VARIANT_BOOL);
 }
 enum IID_IMSVidVideoRendererEvent = GUID(0x37b03545, 0xa4c8, 0x11d2, [0xb6, 0x34, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidVideoRendererEvent : IMSVidOutputDeviceEvent
@@ -9676,8 +9676,8 @@ interface IMSVidStreamBufferRecordingControl : IDispatch
     HRESULT put_StartTime(int);
     HRESULT get_StopTime(int*);
     HRESULT put_StopTime(int);
-    HRESULT get_RecordingStopped(short*);
-    HRESULT get_RecordingStarted(short*);
+    HRESULT get_RecordingStopped(VARIANT_BOOL*);
+    HRESULT get_RecordingStarted(VARIANT_BOOL*);
     HRESULT get_RecordingType(RecordingType*);
     HRESULT get_RecordingAttribute(IUnknown*);
 }
@@ -9748,7 +9748,7 @@ interface IMSVidStreamBufferSource : IMSVidFilePlayback
     HRESULT get_RecordingAttribute(IUnknown*);
     HRESULT CurrentRatings(EnTvRat_System*, EnTvRat_GenericLevel*, int*);
     HRESULT MaxRatingsLevel(EnTvRat_System, EnTvRat_GenericLevel, int);
-    HRESULT put_BlockUnrated(short);
+    HRESULT put_BlockUnrated(VARIANT_BOOL);
     HRESULT put_UnratedDelay(int);
     HRESULT get_SBESource(IUnknown*);
 }
@@ -9809,8 +9809,8 @@ interface IMSVidVideoRenderer2 : IMSVidVideoRenderer
     HRESULT get_Allocator_ID(int*);
     HRESULT SetAllocator(IUnknown, int);
     HRESULT _SetAllocator2(IVMRSurfaceAllocator, int);
-    HRESULT put_SuppressEffects(short);
-    HRESULT get_SuppressEffects(short*);
+    HRESULT put_SuppressEffects(VARIANT_BOOL);
+    HRESULT get_SuppressEffects(VARIANT_BOOL*);
 }
 enum IID_IMSVidVideoRendererEvent2 = GUID(0x7145ed66, 0x4730, 0x4fdb, [0x8a, 0x53, 0xfd, 0xe7, 0x50, 0x8d, 0x3e, 0x5e]);
 interface IMSVidVideoRendererEvent2 : IMSVidOutputDeviceEvent
@@ -9822,8 +9822,8 @@ interface IMSVidVMR9 : IMSVidVideoRenderer
 {
     HRESULT get_Allocator_ID(int*);
     HRESULT SetAllocator(IUnknown, int);
-    HRESULT put_SuppressEffects(short);
-    HRESULT get_SuppressEffects(short*);
+    HRESULT put_SuppressEffects(VARIANT_BOOL);
+    HRESULT get_SuppressEffects(VARIANT_BOOL*);
     HRESULT get_Allocator(IUnknown*);
 }
 enum IID_IMSVidEVR = GUID(0x15e496ae, 0x82a8, 0x4cf9, [0xa6, 0xb6, 0xc5, 0x61, 0xdc, 0x60, 0x39, 0x8f]);
@@ -9831,8 +9831,8 @@ interface IMSVidEVR : IMSVidVideoRenderer
 {
     HRESULT get_Presenter(IMFVideoPresenter*);
     HRESULT put_Presenter(IMFVideoPresenter);
-    HRESULT put_SuppressEffects(short);
-    HRESULT get_SuppressEffects(short*);
+    HRESULT put_SuppressEffects(VARIANT_BOOL);
+    HRESULT get_SuppressEffects(VARIANT_BOOL*);
 }
 enum IID_IMSVidEVREvent = GUID(0x349abb10, 0x883c, 0x4f22, [0x87, 0x14, 0xce, 0xca, 0xee, 0xe4, 0x5d, 0x62]);
 interface IMSVidEVREvent : IMSVidOutputDeviceEvent
@@ -10219,20 +10219,20 @@ enum : int
 enum IID_IMSVidCtl = GUID(0xb0edf162, 0x910a, 0x11d2, [0xb6, 0x32, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidCtl : IDispatch
 {
-    HRESULT get_AutoSize(short*);
-    HRESULT put_AutoSize(short);
+    HRESULT get_AutoSize(VARIANT_BOOL*);
+    HRESULT put_AutoSize(VARIANT_BOOL);
     HRESULT get_BackColor(uint*);
     HRESULT put_BackColor(uint);
-    HRESULT get_Enabled(short*);
-    HRESULT put_Enabled(short);
-    HRESULT get_TabStop(short*);
-    HRESULT put_TabStop(short);
+    HRESULT get_Enabled(VARIANT_BOOL*);
+    HRESULT put_Enabled(VARIANT_BOOL);
+    HRESULT get_TabStop(VARIANT_BOOL*);
+    HRESULT put_TabStop(VARIANT_BOOL);
     HRESULT get_Window(HWND*);
     HRESULT Refresh();
     HRESULT get_DisplaySize(DisplaySizeList*);
     HRESULT put_DisplaySize(DisplaySizeList);
-    HRESULT get_MaintainAspectRatio(short*);
-    HRESULT put_MaintainAspectRatio(short);
+    HRESULT get_MaintainAspectRatio(VARIANT_BOOL*);
+    HRESULT put_MaintainAspectRatio(VARIANT_BOOL);
     HRESULT get_ColorKey(uint*);
     HRESULT put_ColorKey(uint);
     HRESULT get_InputsAvailable(BSTR, IMSVidInputDevices*);

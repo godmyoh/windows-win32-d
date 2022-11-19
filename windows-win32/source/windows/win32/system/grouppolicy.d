@@ -1,7 +1,7 @@
 module windows.win32.system.grouppolicy;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, CHAR, HANDLE, HRESULT, HWND, LPARAM, PSID, PSTR, PWSTR, SYSTEMTIME;
+import windows.win32.foundation : BOOL, BSTR, CHAR, HANDLE, HRESULT, HWND, LPARAM, PSID, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL;
 import windows.win32.security_ : GENERIC_MAPPING, OBJECT_TYPE_LIST, PRIVILEGE_SET, PSECURITY_DESCRIPTOR;
 import windows.win32.system.com_ : IDispatch, IUnknown, SAFEARRAY, VARIANT;
 import windows.win32.system.ole : IEnumVARIANT;
@@ -392,7 +392,7 @@ interface IGPM : IDispatch
     HRESULT GetBackupDir(BSTR, IGPMBackupDir*);
     HRESULT GetSitesContainer(BSTR, BSTR, BSTR, int, IGPMSitesContainer*);
     HRESULT GetRSOP(GPMRSOPMode, BSTR, int, IGPMRSOP*);
-    HRESULT CreatePermission(BSTR, GPMPermissionType, short, IGPMPermission*);
+    HRESULT CreatePermission(BSTR, GPMPermissionType, VARIANT_BOOL, IGPMPermission*);
     HRESULT CreateSearchCriteria(IGPMSearchCriteria*);
     HRESULT CreateTrustee(BSTR, IGPMTrustee*);
     HRESULT GetClientSideExtensions(IGPMCSECollection*);
@@ -448,9 +448,9 @@ interface IGPMTrustee : IDispatch
 enum IID_IGPMPermission = GUID(0x35ebca40, 0xe1a1, 0x4a02, [0x89, 0x5, 0xd7, 0x94, 0x16, 0xfb, 0x46, 0x4a]);
 interface IGPMPermission : IDispatch
 {
-    HRESULT get_Inherited(short*);
-    HRESULT get_Inheritable(short*);
-    HRESULT get_Denied(short*);
+    HRESULT get_Inherited(VARIANT_BOOL*);
+    HRESULT get_Inheritable(VARIANT_BOOL*);
+    HRESULT get_Denied(VARIANT_BOOL*);
     HRESULT get_Permission(GPMPermissionType*);
     HRESULT get_Trustee(IGPMTrustee*);
 }
@@ -496,8 +496,8 @@ enum : int
 enum IID_IGPMSOM = GUID(0xc0a7f09e, 0x5a1, 0x4f0c, [0x81, 0x58, 0x9e, 0x5c, 0x33, 0x68, 0x4f, 0x6b]);
 interface IGPMSOM : IDispatch
 {
-    HRESULT get_GPOInheritanceBlocked(short*);
-    HRESULT put_GPOInheritanceBlocked(short);
+    HRESULT get_GPOInheritanceBlocked(VARIANT_BOOL*);
+    HRESULT put_GPOInheritanceBlocked(VARIANT_BOOL);
     HRESULT get_Name(BSTR*);
     HRESULT get_Path(BSTR*);
     HRESULT CreateGPOLink(int, IGPMGPO, IGPMGPOLink*);
@@ -588,10 +588,10 @@ interface IGPMGPO : IDispatch
     HRESULT get_ComputerSysvolVersionNumber(int*);
     HRESULT GetWMIFilter(IGPMWMIFilter*);
     HRESULT SetWMIFilter(IGPMWMIFilter);
-    HRESULT SetUserEnabled(short);
-    HRESULT SetComputerEnabled(short);
-    HRESULT IsUserEnabled(short*);
-    HRESULT IsComputerEnabled(short*);
+    HRESULT SetUserEnabled(VARIANT_BOOL);
+    HRESULT SetComputerEnabled(VARIANT_BOOL);
+    HRESULT IsUserEnabled(VARIANT_BOOL*);
+    HRESULT IsComputerEnabled(VARIANT_BOOL*);
     HRESULT GetSecurityInfo(IGPMSecurityInfo*);
     HRESULT SetSecurityInfo(IGPMSecurityInfo);
     HRESULT Delete();
@@ -602,7 +602,7 @@ interface IGPMGPO : IDispatch
     HRESULT CopyTo(int, IGPMDomain, VARIANT*, VARIANT*, VARIANT*, VARIANT*, IGPMResult*);
     HRESULT SetSecurityDescriptor(int, IDispatch);
     HRESULT GetSecurityDescriptor(int, IDispatch*);
-    HRESULT IsACLConsistent(short*);
+    HRESULT IsACLConsistent(VARIANT_BOOL*);
     HRESULT MakeACLConsistent();
 }
 enum IID_IGPMGPOCollection = GUID(0xf0f0d5cf, 0x70ca, 0x4c39, [0x9e, 0x29, 0xb6, 0x42, 0xf8, 0x72, 0x6c, 0x1]);
@@ -617,10 +617,10 @@ interface IGPMGPOLink : IDispatch
 {
     HRESULT get_GPOID(BSTR*);
     HRESULT get_GPODomain(BSTR*);
-    HRESULT get_Enabled(short*);
-    HRESULT put_Enabled(short);
-    HRESULT get_Enforced(short*);
-    HRESULT put_Enforced(short);
+    HRESULT get_Enabled(VARIANT_BOOL*);
+    HRESULT put_Enabled(VARIANT_BOOL);
+    HRESULT get_Enforced(VARIANT_BOOL*);
+    HRESULT put_Enforced(VARIANT_BOOL);
     HRESULT get_SOMLinkOrder(int*);
     HRESULT get_SOM(IGPMSOM*);
     HRESULT Delete();
@@ -644,8 +644,8 @@ interface IGPMClientSideExtension : IDispatch
 {
     HRESULT get_ID(BSTR*);
     HRESULT get_DisplayName(BSTR*);
-    HRESULT IsUserEnabled(short*);
-    HRESULT IsComputerEnabled(short*);
+    HRESULT IsUserEnabled(VARIANT_BOOL*);
+    HRESULT IsComputerEnabled(VARIANT_BOOL*);
 }
 enum IID_IGPMAsyncCancel = GUID(0xddc67754, 0xbe67, 0x4541, [0x81, 0x66, 0xf4, 0x81, 0x66, 0x86, 0x8c, 0x9c]);
 interface IGPMAsyncCancel : IDispatch
@@ -711,7 +711,7 @@ interface IGPMConstants : IDispatch
     HRESULT get_SOMSite(GPMSOMType*);
     HRESULT get_SOMDomain(GPMSOMType*);
     HRESULT get_SOMOU(GPMSOMType*);
-    HRESULT get_SecurityFlags(short, short, short, short, int*);
+    HRESULT get_SecurityFlags(VARIANT_BOOL, VARIANT_BOOL, VARIANT_BOOL, VARIANT_BOOL, int*);
     HRESULT get_DoNotValidateDC(int*);
     HRESULT get_ReportHTML(GPMReportType*);
     HRESULT get_ReportXML(GPMReportType*);
@@ -734,7 +734,7 @@ interface IGPMConstants : IDispatch
     HRESULT get_RsopLoggingNoComputer(int*);
     HRESULT get_RsopLoggingNoUser(int*);
     HRESULT get_RsopPlanningAssumeSlowLink(int*);
-    HRESULT get_RsopPlanningLoopbackOption(short, int*);
+    HRESULT get_RsopPlanningLoopbackOption(VARIANT_BOOL, int*);
     HRESULT get_RsopPlanningAssumeUserWQLFilterTrue(int*);
     HRESULT get_RsopPlanningAssumeCompWQLFilterTrue(int*);
 }
@@ -839,7 +839,7 @@ interface IGPMStarterGPO : IDispatch
     HRESULT get_UserVersion(ushort*);
     HRESULT get_StarterGPOVersion(BSTR*);
     HRESULT Delete();
-    HRESULT Save(BSTR, short, short, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, IGPMResult*);
+    HRESULT Save(BSTR, VARIANT_BOOL, VARIANT_BOOL, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, IGPMResult*);
     HRESULT Backup(BSTR, BSTR, VARIANT*, VARIANT*, IGPMResult*);
     HRESULT CopyTo(VARIANT*, VARIANT*, VARIANT*, IGPMResult*);
     HRESULT GenerateReport(GPMReportType, VARIANT*, VARIANT*, IGPMResult*);
@@ -861,7 +861,7 @@ interface IGPMDomain2 : IGPMDomain
     HRESULT CreateGPOFromStarterGPO(IGPMStarterGPO, IGPMGPO*);
     HRESULT GetStarterGPO(BSTR, IGPMStarterGPO*);
     HRESULT SearchStarterGPOs(IGPMSearchCriteria, IGPMStarterGPOCollection*);
-    HRESULT LoadStarterGPO(BSTR, short, VARIANT*, VARIANT*, IGPMResult*);
+    HRESULT LoadStarterGPO(BSTR, VARIANT_BOOL, VARIANT*, VARIANT*, IGPMResult*);
     HRESULT RestoreStarterGPO(IGPMStarterGPOBackup, VARIANT*, VARIANT*, IGPMResult*);
 }
 enum IID_IGPMConstants2 = GUID(0x5ae21b0, 0xac09, 0x4032, [0xa2, 0x6f, 0x9e, 0x7d, 0xa7, 0x86, 0xdc, 0x19]);

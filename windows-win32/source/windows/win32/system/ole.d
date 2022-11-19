@@ -1,11 +1,12 @@
 module windows.win32.system.ole;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, CHAR, COLORREF, DECIMAL, FILETIME, HANDLE, HINSTANCE, HRESULT, HRSRC, HWND, LPARAM, LRESULT, POINT, POINTL, PSTR, PWSTR, RECT, RECTL, SIZE, SYSTEMTIME, WPARAM;
+import windows.win32.foundation : BOOL, BSTR, CHAR, COLORREF, DECIMAL, FILETIME, HANDLE, HINSTANCE, HRESULT, HRSRC, HWND, LPARAM, LRESULT, POINT, POINTL, PSTR, PWSTR, RECT, RECTL, SIZE, SYSTEMTIME, VARIANT_BOOL, WPARAM;
 import windows.win32.graphics.gdi : HBITMAP, HDC, HENHMETAFILE, HFONT, HMETAFILE, HPALETTE, HRGN, LOGPALETTE, TEXTMETRICW;
 import windows.win32.media_ : HTASK;
 import windows.win32.system.com_ : ADVF, BYTE_SIZEDARR, CALLCONV, CUSTDATA, CY, DISPPARAMS, DVASPECT, DVTARGETDEVICE, DWORD_SIZEDARR, EXCEPINFO, FLAGGED_WORD_BLOB, FORMATETC, FUNCDESC, HYPER_SIZEDARR, IAdviseSink, IBindCtx, IBindHost, IClassFactory, IDLDESC, IDataObject, IDispatch, IEnumFORMATETC, IEnumSTATDATA, IEnumUnknown, IErrorLog, IMoniker, INVOKEKIND, IPersist, IPersistStream, IServiceProvider, IStream, ITypeInfo, ITypeLib, IUnknown, SAFEARRAY, SAFEARRAYBOUND, STGMEDIUM, SYSKIND, TYPEDESC, TYPEKIND, VARDESC, VARENUM, VARIANT, WORD_SIZEDARR;
 import windows.win32.system.com.structuredstorage : IPersistStorage, IPropertyBag, IPropertyBag2, IStorage;
+import windows.win32.system.memory_ : GLOBAL_ALLOC_FLAGS;
 import windows.win32.system.systemservices : MODIFIERKEYS_FLAGS;
 import windows.win32.ui.controls_ : PROPSHEETHEADERA_V2, PROPSHEETHEADERW_V2;
 import windows.win32.ui.controls.dialogs : OPENFILENAMEA, OPENFILENAMEW;
@@ -67,7 +68,7 @@ HRESULT VarUI1FromCy(CY, ubyte*);
 HRESULT VarUI1FromDate(double, ubyte*);
 HRESULT VarUI1FromStr(const(wchar)*, uint, uint, ubyte*);
 HRESULT VarUI1FromDisp(IDispatch, uint, ubyte*);
-HRESULT VarUI1FromBool(short, ubyte*);
+HRESULT VarUI1FromBool(VARIANT_BOOL, ubyte*);
 HRESULT VarUI1FromI1(CHAR, ubyte*);
 HRESULT VarUI1FromUI2(ushort, ubyte*);
 HRESULT VarUI1FromUI4(uint, ubyte*);
@@ -82,7 +83,7 @@ HRESULT VarI2FromCy(CY, short*);
 HRESULT VarI2FromDate(double, short*);
 HRESULT VarI2FromStr(const(wchar)*, uint, uint, short*);
 HRESULT VarI2FromDisp(IDispatch, uint, short*);
-HRESULT VarI2FromBool(short, short*);
+HRESULT VarI2FromBool(VARIANT_BOOL, short*);
 HRESULT VarI2FromI1(CHAR, short*);
 HRESULT VarI2FromUI2(ushort, short*);
 HRESULT VarI2FromUI4(uint, short*);
@@ -97,7 +98,7 @@ HRESULT VarI4FromCy(CY, int*);
 HRESULT VarI4FromDate(double, int*);
 HRESULT VarI4FromStr(const(wchar)*, uint, uint, int*);
 HRESULT VarI4FromDisp(IDispatch, uint, int*);
-HRESULT VarI4FromBool(short, int*);
+HRESULT VarI4FromBool(VARIANT_BOOL, int*);
 HRESULT VarI4FromI1(CHAR, int*);
 HRESULT VarI4FromUI2(ushort, int*);
 HRESULT VarI4FromUI4(uint, int*);
@@ -111,7 +112,7 @@ HRESULT VarI8FromCy(CY, long*);
 HRESULT VarI8FromDate(double, long*);
 HRESULT VarI8FromStr(const(wchar)*, uint, uint, long*);
 HRESULT VarI8FromDisp(IDispatch, uint, long*);
-HRESULT VarI8FromBool(short, long*);
+HRESULT VarI8FromBool(VARIANT_BOOL, long*);
 HRESULT VarI8FromI1(CHAR, long*);
 HRESULT VarI8FromUI2(ushort, long*);
 HRESULT VarI8FromUI4(uint, long*);
@@ -126,7 +127,7 @@ HRESULT VarR4FromCy(CY, float*);
 HRESULT VarR4FromDate(double, float*);
 HRESULT VarR4FromStr(const(wchar)*, uint, uint, float*);
 HRESULT VarR4FromDisp(IDispatch, uint, float*);
-HRESULT VarR4FromBool(short, float*);
+HRESULT VarR4FromBool(VARIANT_BOOL, float*);
 HRESULT VarR4FromI1(CHAR, float*);
 HRESULT VarR4FromUI2(ushort, float*);
 HRESULT VarR4FromUI4(uint, float*);
@@ -141,7 +142,7 @@ HRESULT VarR8FromCy(CY, double*);
 HRESULT VarR8FromDate(double, double*);
 HRESULT VarR8FromStr(const(wchar)*, uint, uint, double*);
 HRESULT VarR8FromDisp(IDispatch, uint, double*);
-HRESULT VarR8FromBool(short, double*);
+HRESULT VarR8FromBool(VARIANT_BOOL, double*);
 HRESULT VarR8FromI1(CHAR, double*);
 HRESULT VarR8FromUI2(ushort, double*);
 HRESULT VarR8FromUI4(uint, double*);
@@ -156,7 +157,7 @@ HRESULT VarDateFromR8(double, double*);
 HRESULT VarDateFromCy(CY, double*);
 HRESULT VarDateFromStr(const(wchar)*, uint, uint, double*);
 HRESULT VarDateFromDisp(IDispatch, uint, double*);
-HRESULT VarDateFromBool(short, double*);
+HRESULT VarDateFromBool(VARIANT_BOOL, double*);
 HRESULT VarDateFromI1(CHAR, double*);
 HRESULT VarDateFromUI2(ushort, double*);
 HRESULT VarDateFromUI4(uint, double*);
@@ -171,7 +172,7 @@ HRESULT VarCyFromR8(double, CY*);
 HRESULT VarCyFromDate(double, CY*);
 HRESULT VarCyFromStr(const(wchar)*, uint, uint, CY*);
 HRESULT VarCyFromDisp(IDispatch, uint, CY*);
-HRESULT VarCyFromBool(short, CY*);
+HRESULT VarCyFromBool(VARIANT_BOOL, CY*);
 HRESULT VarCyFromI1(CHAR, CY*);
 HRESULT VarCyFromUI2(ushort, CY*);
 HRESULT VarCyFromUI4(uint, CY*);
@@ -186,27 +187,27 @@ HRESULT VarBstrFromR8(double, uint, uint, BSTR*);
 HRESULT VarBstrFromCy(CY, uint, uint, BSTR*);
 HRESULT VarBstrFromDate(double, uint, uint, BSTR*);
 HRESULT VarBstrFromDisp(IDispatch, uint, uint, BSTR*);
-HRESULT VarBstrFromBool(short, uint, uint, BSTR*);
+HRESULT VarBstrFromBool(VARIANT_BOOL, uint, uint, BSTR*);
 HRESULT VarBstrFromI1(CHAR, uint, uint, BSTR*);
 HRESULT VarBstrFromUI2(ushort, uint, uint, BSTR*);
 HRESULT VarBstrFromUI4(uint, uint, uint, BSTR*);
 HRESULT VarBstrFromUI8(ulong, uint, uint, BSTR*);
 HRESULT VarBstrFromDec(const(DECIMAL)*, uint, uint, BSTR*);
-HRESULT VarBoolFromUI1(ubyte, short*);
-HRESULT VarBoolFromI2(short, short*);
-HRESULT VarBoolFromI4(int, short*);
-HRESULT VarBoolFromI8(long, short*);
-HRESULT VarBoolFromR4(float, short*);
-HRESULT VarBoolFromR8(double, short*);
-HRESULT VarBoolFromDate(double, short*);
-HRESULT VarBoolFromCy(CY, short*);
-HRESULT VarBoolFromStr(const(wchar)*, uint, uint, short*);
-HRESULT VarBoolFromDisp(IDispatch, uint, short*);
-HRESULT VarBoolFromI1(CHAR, short*);
-HRESULT VarBoolFromUI2(ushort, short*);
-HRESULT VarBoolFromUI4(uint, short*);
-HRESULT VarBoolFromUI8(ulong, short*);
-HRESULT VarBoolFromDec(const(DECIMAL)*, short*);
+HRESULT VarBoolFromUI1(ubyte, VARIANT_BOOL*);
+HRESULT VarBoolFromI2(short, VARIANT_BOOL*);
+HRESULT VarBoolFromI4(int, VARIANT_BOOL*);
+HRESULT VarBoolFromI8(long, VARIANT_BOOL*);
+HRESULT VarBoolFromR4(float, VARIANT_BOOL*);
+HRESULT VarBoolFromR8(double, VARIANT_BOOL*);
+HRESULT VarBoolFromDate(double, VARIANT_BOOL*);
+HRESULT VarBoolFromCy(CY, VARIANT_BOOL*);
+HRESULT VarBoolFromStr(const(wchar)*, uint, uint, VARIANT_BOOL*);
+HRESULT VarBoolFromDisp(IDispatch, uint, VARIANT_BOOL*);
+HRESULT VarBoolFromI1(CHAR, VARIANT_BOOL*);
+HRESULT VarBoolFromUI2(ushort, VARIANT_BOOL*);
+HRESULT VarBoolFromUI4(uint, VARIANT_BOOL*);
+HRESULT VarBoolFromUI8(ulong, VARIANT_BOOL*);
+HRESULT VarBoolFromDec(const(DECIMAL)*, VARIANT_BOOL*);
 HRESULT VarI1FromUI1(ubyte, PSTR);
 HRESULT VarI1FromI2(short, PSTR);
 HRESULT VarI1FromI4(int, PSTR);
@@ -217,7 +218,7 @@ HRESULT VarI1FromDate(double, PSTR);
 HRESULT VarI1FromCy(CY, PSTR);
 HRESULT VarI1FromStr(const(wchar)*, uint, uint, PSTR);
 HRESULT VarI1FromDisp(IDispatch, uint, PSTR);
-HRESULT VarI1FromBool(short, PSTR);
+HRESULT VarI1FromBool(VARIANT_BOOL, PSTR);
 HRESULT VarI1FromUI2(ushort, PSTR);
 HRESULT VarI1FromUI4(uint, PSTR);
 HRESULT VarI1FromUI8(ulong, PSTR);
@@ -232,7 +233,7 @@ HRESULT VarUI2FromDate(double, ushort*);
 HRESULT VarUI2FromCy(CY, ushort*);
 HRESULT VarUI2FromStr(const(wchar)*, uint, uint, ushort*);
 HRESULT VarUI2FromDisp(IDispatch, uint, ushort*);
-HRESULT VarUI2FromBool(short, ushort*);
+HRESULT VarUI2FromBool(VARIANT_BOOL, ushort*);
 HRESULT VarUI2FromI1(CHAR, ushort*);
 HRESULT VarUI2FromUI4(uint, ushort*);
 HRESULT VarUI2FromUI8(ulong, ushort*);
@@ -247,7 +248,7 @@ HRESULT VarUI4FromDate(double, uint*);
 HRESULT VarUI4FromCy(CY, uint*);
 HRESULT VarUI4FromStr(const(wchar)*, uint, uint, uint*);
 HRESULT VarUI4FromDisp(IDispatch, uint, uint*);
-HRESULT VarUI4FromBool(short, uint*);
+HRESULT VarUI4FromBool(VARIANT_BOOL, uint*);
 HRESULT VarUI4FromI1(CHAR, uint*);
 HRESULT VarUI4FromUI2(ushort, uint*);
 HRESULT VarUI4FromUI8(ulong, uint*);
@@ -261,7 +262,7 @@ HRESULT VarUI8FromCy(CY, ulong*);
 HRESULT VarUI8FromDate(double, ulong*);
 HRESULT VarUI8FromStr(const(wchar)*, uint, uint, ulong*);
 HRESULT VarUI8FromDisp(IDispatch, uint, ulong*);
-HRESULT VarUI8FromBool(short, ulong*);
+HRESULT VarUI8FromBool(VARIANT_BOOL, ulong*);
 HRESULT VarUI8FromI1(CHAR, ulong*);
 HRESULT VarUI8FromUI2(ushort, ulong*);
 HRESULT VarUI8FromUI4(uint, ulong*);
@@ -276,7 +277,7 @@ HRESULT VarDecFromDate(double, DECIMAL*);
 HRESULT VarDecFromCy(CY, DECIMAL*);
 HRESULT VarDecFromStr(const(wchar)*, uint, uint, DECIMAL*);
 HRESULT VarDecFromDisp(IDispatch, uint, DECIMAL*);
-HRESULT VarDecFromBool(short, DECIMAL*);
+HRESULT VarDecFromBool(VARIANT_BOOL, DECIMAL*);
 HRESULT VarDecFromI1(CHAR, DECIMAL*);
 HRESULT VarDecFromUI2(ushort, DECIMAL*);
 HRESULT VarDecFromUI4(uint, DECIMAL*);
@@ -407,7 +408,7 @@ long OleCreateMenuDescriptor(HMENU, OLEMENUGROUPWIDTHS*);
 HRESULT OleSetMenuDescriptor(long, HWND, HWND, IOleInPlaceFrame, IOleInPlaceActiveObject);
 HRESULT OleDestroyMenuDescriptor(long);
 HRESULT OleTranslateAccelerator(IOleInPlaceFrame, OLEINPLACEFRAMEINFO*, MSG*);
-HANDLE OleDuplicateData(HANDLE, ushort, uint);
+HANDLE OleDuplicateData(HANDLE, CLIPBOARD_FORMAT, GLOBAL_ALLOC_FLAGS);
 HRESULT OleDraw(IUnknown, uint, HDC, RECT*);
 HRESULT OleRun(IUnknown);
 BOOL OleIsRunning(IOleObject);
@@ -673,13 +674,6 @@ enum OF_SET = 0x00000001;
 enum OF_GET = 0x00000002;
 enum OF_HANDLER = 0x00000004;
 enum WIN32 = 0x00000064;
-enum OLEIVERB_PRIMARY = 0x00000000;
-enum OLEIVERB_SHOW = 0xffffffffffffffff;
-enum OLEIVERB_OPEN = 0xfffffffffffffffe;
-enum OLEIVERB_HIDE = 0xfffffffffffffffd;
-enum OLEIVERB_UIACTIVATE = 0xfffffffffffffffc;
-enum OLEIVERB_INPLACEACTIVATE = 0xfffffffffffffffb;
-enum OLEIVERB_DISCARDUNDOSTATE = 0xfffffffffffffffa;
 enum IDC_OLEUIHELP = 0x00000063;
 enum IDC_IO_CREATENEW = 0x00000834;
 enum IDC_IO_CREATEFROMFILE = 0x00000835;
@@ -950,6 +944,50 @@ enum DISPID_STARTENUM = 0xffffffffffffffff;
 enum SID_VariantConversion = GUID(0x1f101481, 0xbccd, 0x11d0, [0x93, 0x36, 0x0, 0xa0, 0xc9, 0xd, 0xca, 0xa9]);
 enum SID_GetCaller = GUID(0x4717cc40, 0xbcb9, 0x11d0, [0x93, 0x36, 0x0, 0xa0, 0xc9, 0xd, 0xca, 0xa9]);
 enum SID_ProvideRuntimeContext = GUID(0x74a5040c, 0xdd0c, 0x48f0, [0xac, 0x85, 0x19, 0x4c, 0x32, 0x59, 0x18, 0xa]);
+alias CLIPBOARD_FORMAT = ushort;
+enum : ushort
+{
+    CF_TEXT            = 0x0001,
+    CF_BITMAP          = 0x0002,
+    CF_METAFILEPICT    = 0x0003,
+    CF_SYLK            = 0x0004,
+    CF_DIF             = 0x0005,
+    CF_TIFF            = 0x0006,
+    CF_OEMTEXT         = 0x0007,
+    CF_DIB             = 0x0008,
+    CF_PALETTE         = 0x0009,
+    CF_PENDATA         = 0x000a,
+    CF_RIFF            = 0x000b,
+    CF_WAVE            = 0x000c,
+    CF_UNICODETEXT     = 0x000d,
+    CF_ENHMETAFILE     = 0x000e,
+    CF_HDROP           = 0x000f,
+    CF_LOCALE          = 0x0010,
+    CF_DIBV5           = 0x0011,
+    CF_MAX             = 0x0012,
+    CF_OWNERDISPLAY    = 0x0080,
+    CF_DSPTEXT         = 0x0081,
+    CF_DSPBITMAP       = 0x0082,
+    CF_DSPMETAFILEPICT = 0x0083,
+    CF_DSPENHMETAFILE  = 0x008e,
+    CF_PRIVATEFIRST    = 0x0200,
+    CF_PRIVATELAST     = 0x02ff,
+    CF_GDIOBJFIRST     = 0x0300,
+    CF_GDIOBJLAST      = 0x03ff,
+}
+
+alias OLEIVERB = int;
+enum : int
+{
+    OLEIVERB_PRIMARY          = 0x00000000,
+    OLEIVERB_SHOW             = 0xffffffff,
+    OLEIVERB_OPEN             = 0xfffffffe,
+    OLEIVERB_HIDE             = 0xfffffffd,
+    OLEIVERB_UIACTIVATE       = 0xfffffffc,
+    OLEIVERB_INPLACEACTIVATE  = 0xfffffffb,
+    OLEIVERB_DISCARDUNDOSTATE = 0xfffffffa,
+}
+
 alias UPDFCACHE_FLAGS = uint;
 enum : uint
 {
@@ -1266,6 +1304,7 @@ enum : int
     VARFORMAT_GROUP_NOTTHOUSANDS  = 0x00000000,
 }
 
+alias OLE_HANDLE = uint;
 struct SAFEARR_BSTR
 {
     uint Size;
@@ -1362,7 +1401,7 @@ struct _wireVARIANT
         short iVal;
         float fltVal;
         double dblVal;
-        short boolVal;
+        VARIANT_BOOL boolVal;
         int scode;
         CY cyVal;
         double date;
@@ -1377,7 +1416,7 @@ struct _wireVARIANT
         long* pllVal;
         float* pfltVal;
         double* pdblVal;
-        short* pboolVal;
+        VARIANT_BOOL* pboolVal;
         int* pscode;
         CY* pcyVal;
         double* pdate;
@@ -1922,7 +1961,7 @@ interface IEnterpriseDropTarget : IUnknown
 }
 struct OLEVERB
 {
-    int lVerb;
+    OLEIVERB lVerb;
     PWSTR lpszVerbName;
     MENU_ITEM_FLAGS fuFlags;
     OLEVERBATTRIB grfAttribs;
@@ -2199,15 +2238,15 @@ enum : int
 enum IID_IPicture = GUID(0x7bf80980, 0xbf32, 0x101a, [0x8b, 0xbb, 0x0, 0xaa, 0x0, 0x30, 0xc, 0xab]);
 interface IPicture : IUnknown
 {
-    HRESULT get_Handle(uint*);
-    HRESULT get_hPal(uint*);
+    HRESULT get_Handle(OLE_HANDLE*);
+    HRESULT get_hPal(OLE_HANDLE*);
     HRESULT get_Type(short*);
     HRESULT get_Width(int*);
     HRESULT get_Height(int*);
     HRESULT Render(HDC, int, int, int, int, int, int, int, int, RECT*);
-    HRESULT set_hPal(uint);
+    HRESULT set_hPal(OLE_HANDLE);
     HRESULT get_CurDC(HDC*);
-    HRESULT SelectPicture(HDC, HDC*, uint*);
+    HRESULT SelectPicture(HDC, HDC*, OLE_HANDLE*);
     HRESULT get_KeepOriginalFormat(BOOL*);
     HRESULT put_KeepOriginalFormat(BOOL);
     HRESULT PictureChanged();
@@ -3433,5 +3472,5 @@ interface ICanHandleException : IUnknown
 enum IID_IProvideRuntimeContext = GUID(0x10e2414a, 0xec59, 0x49d2, [0xbc, 0x51, 0x5a, 0xdd, 0x2c, 0x36, 0xfe, 0xbc]);
 interface IProvideRuntimeContext : IUnknown
 {
-    HRESULT GetCurrentSourceContext(ulong*, short*);
+    HRESULT GetCurrentSourceContext(ulong*, VARIANT_BOOL*);
 }

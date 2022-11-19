@@ -1,7 +1,7 @@
 module windows.win32.system.search_;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, FILETIME, HANDLE, HRESULT, HWND, PSTR, PWSTR, SYSTEMTIME;
+import windows.win32.foundation : BOOL, BSTR, FILETIME, HANDLE, HRESULT, HWND, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL;
 import windows.win32.security.authorization_ : EXPLICIT_ACCESS_W, TRUSTEE_W;
 import windows.win32.storage.indexserver : DBID, FILTERREGION, FULLPROPSPEC, IFilter, IPhraseSink, WORDREP_BREAK_TYPE;
 import windows.win32.system.com_ : BLOB, COSERVERINFO, CY, DISPPARAMS, IAuthenticate, IDispatch, IEnumString, IEnumUnknown, IErrorInfo, IMoniker, IPersistStream, ISequentialStream, IStream, ITypeInfo, IUnknown, MULTI_QI, VARENUM, VARIANT;
@@ -6923,7 +6923,7 @@ interface IDataSourceLocator : IDispatch
     HRESULT get_hWnd(HWND*);
     HRESULT put_hWnd(HWND);
     HRESULT PromptNew(IDispatch*);
-    HRESULT PromptEdit(IDispatch*, short*);
+    HRESULT PromptEdit(IDispatch*, VARIANT_BOOL*);
 }
 alias KAGREQDIAGFLAGSENUM = int;
 enum : int
@@ -7497,7 +7497,7 @@ struct SSVARIANT
             uint dwReserved;
             PWSTR pwchReserved;
         }
-        short fBitVal;
+        VARIANT_BOOL fBitVal;
         ubyte[16] rgbGuidVal;
         DB_NUMERIC numNumericVal;
         struct _BinaryVal

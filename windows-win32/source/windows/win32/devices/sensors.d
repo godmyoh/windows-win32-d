@@ -2,7 +2,7 @@ module windows.win32.devices.sensors;
 
 import windows.win32.guid : GUID;
 import windows.win32.devices.portabledevices : IPortableDeviceKeyCollection, IPortableDeviceValues;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, FILETIME, HRESULT, HWND, NTSTATUS, SYSTEMTIME;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, FILETIME, HRESULT, HWND, NTSTATUS, SYSTEMTIME, VARIANT_BOOL;
 import windows.win32.system.com_ : IUnknown;
 import windows.win32.system.com.structuredstorage : PROPVARIANT;
 import windows.win32.ui.shell.propertiessystem : PROPERTYKEY;
@@ -438,10 +438,10 @@ interface ISensor : IUnknown
     HRESULT GetProperties(IPortableDeviceKeyCollection, IPortableDeviceValues*);
     HRESULT GetSupportedDataFields(IPortableDeviceKeyCollection*);
     HRESULT SetProperties(IPortableDeviceValues, IPortableDeviceValues*);
-    HRESULT SupportsDataField(const(PROPERTYKEY)*, short*);
+    HRESULT SupportsDataField(const(PROPERTYKEY)*, VARIANT_BOOL*);
     HRESULT GetState(SensorState*);
     HRESULT GetData(ISensorDataReport*);
-    HRESULT SupportsEvent(const(GUID)*, short*);
+    HRESULT SupportsEvent(const(GUID)*, VARIANT_BOOL*);
     HRESULT GetEventInterest(GUID**, uint*);
     HRESULT SetEventInterest(GUID*, uint);
     HRESULT SetEventSink(ISensorEvents);
