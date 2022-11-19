@@ -395,7 +395,7 @@ class DeclarationExtractor : IDeclarationExtractor
                     case "byte": case "ubyte": fieldBytes = 1; break;
                     case "short": case "ushort": fieldBytes = 2; break;
                     case "int": case "uint": fieldBytes = 4; break;
-                    case "long": case "ulong": fieldBytes = 4; break;
+                    case "long": case "ulong": fieldBytes = 8; break;
                     default: assert(0);
                 }
 

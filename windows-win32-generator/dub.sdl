@@ -1,9 +1,9 @@
-name "winmd-d"
+name "windows-win32-generator"
 authors "godmyoh"
 copyright "godmyoh"
-license "proprietary"
+license "MIT"
 targetType "executable"
-targetName "winmd-d"
+targetName "windows-win32-generator"
 mainSourceFile "source/app.d"
 
 configuration "default" {

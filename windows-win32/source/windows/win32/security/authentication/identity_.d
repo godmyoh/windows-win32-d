@@ -270,8 +270,8 @@ enum : uint
 alias ISC_REQ_HIGH_FLAGS = ulong;
 enum : ulong
 {
-    ISC_REQ_MESSAGES                 = 0x00000000,
-    ISC_REQ_DEFERRED_CRED_VALIDATION = 0x00000000,
+    ISC_REQ_MESSAGES                 = 0x0000000100000000,
+    ISC_REQ_DEFERRED_CRED_VALIDATION = 0x0000000200000000,
 }
 
 alias ISC_REQ_FLAGS = uint;
@@ -309,7 +309,7 @@ enum : uint
 alias ASC_REQ_HIGH_FLAGS = ulong;
 enum : ulong
 {
-    ASC_REQ_MESSAGES = 0x00000000,
+    ASC_REQ_MESSAGES = 0x0000000100000000,
 }
 
 alias ASC_REQ_FLAGS = uint;
