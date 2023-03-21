@@ -1,7 +1,7 @@
 module windows.win32.networking.activedirectory;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, LPARAM, PSID, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL, WPARAM;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, PSID, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL, WPARAM;
 import windows.win32.networking.winsock : SOCKET_ADDRESS;
 import windows.win32.security_ : PSECURITY_DESCRIPTOR;
 import windows.win32.security.authentication.identity_ : LSA_FOREST_TRUST_INFORMATION;
@@ -90,12 +90,12 @@ uint DsCrackNamesW(HANDLE, DS_NAME_FLAGS, DS_NAME_FORMAT, DS_NAME_FORMAT, uint, 
 uint DsCrackNamesA(HANDLE, DS_NAME_FLAGS, DS_NAME_FORMAT, DS_NAME_FORMAT, uint, const(char)**, DS_NAME_RESULTA**);
 void DsFreeNameResultW(DS_NAME_RESULTW*);
 void DsFreeNameResultA(DS_NAME_RESULTA*);
-uint DsGetSpnA(DS_SPN_NAME_TYPE, const(char)*, const(char)*, ushort, ushort, PSTR*, const(ushort)*, uint*, PSTR**);
-uint DsGetSpnW(DS_SPN_NAME_TYPE, const(wchar)*, const(wchar)*, ushort, ushort, PWSTR*, const(ushort)*, uint*, PWSTR**);
+uint DsGetSpnA(DS_SPN_NAME_TYPE, const(char)*, const(char)*, ushort, ushort, const(char)**, const(ushort)*, uint*, PSTR**);
+uint DsGetSpnW(DS_SPN_NAME_TYPE, const(wchar)*, const(wchar)*, ushort, ushort, const(wchar)**, const(ushort)*, uint*, PWSTR**);
 void DsFreeSpnArrayA(uint, PSTR*);
 void DsFreeSpnArrayW(uint, PWSTR*);
-uint DsWriteAccountSpnA(HANDLE, DS_SPN_WRITE_OP, const(char)*, uint, PSTR*);
-uint DsWriteAccountSpnW(HANDLE, DS_SPN_WRITE_OP, const(wchar)*, uint, PWSTR*);
+uint DsWriteAccountSpnA(HANDLE, DS_SPN_WRITE_OP, const(char)*, uint, const(char)**);
+uint DsWriteAccountSpnW(HANDLE, DS_SPN_WRITE_OP, const(wchar)*, uint, const(wchar)**);
 uint DsClientMakeSpnForTargetServerW(const(wchar)*, const(wchar)*, uint*, PWSTR);
 uint DsClientMakeSpnForTargetServerA(const(char)*, const(char)*, uint*, PSTR);
 uint DsServerRegisterSpnA(DS_SPN_WRITE_OP, const(char)*, const(char)*);
@@ -685,10 +685,6 @@ enum SCHEDULE_PRIORITY = 0x00000002;
 enum FACILITY_NTDSB = 0x00000800;
 enum FACILITY_BACKUP = 0x000007ff;
 enum FACILITY_SYSTEM = 0x00000000;
-enum STATUS_SEVERITY_SUCCESS = 0x00000000;
-enum STATUS_SEVERITY_INFORMATIONAL = 0x00000001;
-enum STATUS_SEVERITY_WARNING = 0x00000002;
-enum STATUS_SEVERITY_ERROR = 0x00000003;
 enum hrNone = 0x00000000;
 enum hrNyi = 0xffffffffc0000001;
 enum hrInvalidParam = 0xffffffffc7ff0001;
@@ -1176,7 +1172,7 @@ struct ADSVALUE
         uint Integer;
         ADS_OCTET_STRING OctetString;
         SYSTEMTIME UTCTime;
-        LARGE_INTEGER LargeInteger;
+        long LargeInteger;
         ushort* ClassName;
         ADS_PROV_SPECIFIC ProviderSpecific;
         ADS_CASEIGNORE_LIST* pCaseIgnoreList;
@@ -2667,7 +2663,7 @@ struct DSOP_INIT_INFO
     DSOP_SCOPE_INIT_INFO* aDsScopeInfos;
     uint flOptions;
     uint cAttributesToFetch;
-    PWSTR* apwzAttributeNames;
+    const(wchar)** apwzAttributeNames;
 }
 struct DS_SELECTION
 {

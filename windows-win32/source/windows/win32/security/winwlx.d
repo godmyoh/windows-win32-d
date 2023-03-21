@@ -1,6 +1,6 @@
 module windows.win32.security.winwlx;
 
-import windows.win32.foundation : BOOL, HANDLE, HWND, LARGE_INTEGER, LPARAM, LUID, PWSTR;
+import windows.win32.foundation : BOOL, HANDLE, HWND, LPARAM, LUID, PWSTR;
 import windows.win32.security_ : QUOTA_LIMITS;
 import windows.win32.system.stationsanddesktops : HDESK;
 import windows.win32.ui.windowsandmessaging : DLGPROC, DLGTEMPLATE;
@@ -134,18 +134,18 @@ struct WLX_CONSOLESWITCH_CREDENTIALS_INFO_V1_0
     QUOTA_LIMITS Quotas;
     PWSTR UserName;
     PWSTR Domain;
-    LARGE_INTEGER LogonTime;
+    long LogonTime;
     BOOL SmartCardLogon;
     uint ProfileLength;
     uint MessageType;
     ushort LogonCount;
     ushort BadPasswordCount;
-    LARGE_INTEGER ProfileLogonTime;
-    LARGE_INTEGER LogoffTime;
-    LARGE_INTEGER KickOffTime;
-    LARGE_INTEGER PasswordLastSet;
-    LARGE_INTEGER PasswordCanChange;
-    LARGE_INTEGER PasswordMustChange;
+    long ProfileLogonTime;
+    long LogoffTime;
+    long KickOffTime;
+    long PasswordLastSet;
+    long PasswordCanChange;
+    long PasswordMustChange;
     PWSTR LogonScript;
     PWSTR HomeDirectory;
     PWSTR FullName;

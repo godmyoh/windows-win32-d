@@ -478,7 +478,7 @@ struct CRYPTUI_VIEWCERTIFICATE_STRUCTW
     CRYPTUI_VIEWCERTIFICATE_FLAGS dwFlags;
     const(wchar)* szTitle;
     const(CERT_CONTEXT)* pCertContext;
-    PSTR* rgszPurposes;
+    const(char)** rgszPurposes;
     uint cPurposes;
     union
     {
@@ -503,7 +503,7 @@ struct CRYPTUI_VIEWCERTIFICATE_STRUCTA
     CRYPTUI_VIEWCERTIFICATE_FLAGS dwFlags;
     const(char)* szTitle;
     const(CERT_CONTEXT)* pCertContext;
-    PSTR* rgszPurposes;
+    const(char)** rgszPurposes;
     uint cPurposes;
     union
     {

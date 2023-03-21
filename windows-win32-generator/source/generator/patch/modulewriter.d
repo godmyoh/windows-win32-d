@@ -1,6 +1,7 @@
 module generator.patch.modulewriter;
 
 public import generator.interfaces;
+public import generator.patch.patchstatus;
 import generator.commentout;
 
 import std.algorithm, std.array, std.string, std.path;
@@ -10,21 +11,41 @@ class ModuleWriterPatch : IModuleWriter
 {
     private
     {
+        PatchStatus patchStatus;
         IModuleWriter wrappee;
 
         struct Patch
         {
+            string patchName;
             bool delegate(constr decl) condition;
             constr delegate(constr decl) operation;
         }
 
         Patch[][string] patches;
+
+        enum PatchNames
+        {
+            PSTR = "PSTR: ubyte* -> char*",
+            IPX_PATTERN = "IPX_PATTERN",
+            MLOperatorAttributeType = "MLOperatorAttributeType",
+            MLOperatorTensorDataType = "MLOperatorTensorDataType",
+            MLOperatorEdgeType = "MLOperatorEdgeType",
+            KSCAMERA_EXTENDEDPROP_VALUE = "KSCAMERA_EXTENDEDPROP_VALUE",
+            ID2D1Bitmap = "ID2D1Bitmap",
+            ID2D1RenderTarget = "ID2D1RenderTarget",
+            MENU_POPUPSUBMENU_HCHOT = "MENU_POPUPSUBMENU_HCHOT",
+        }
     }
 
-    this(IModuleWriter wrappee)
+    this(PatchStatus patchStatus, IModuleWriter wrappee)
     {
+        this.patchStatus = patchStatus;
         this.wrappee = wrappee;
         this.patches = buildPatchesForDecls();
+
+        import std.traits;
+        foreach (patchName; EnumMembers!PatchNames)
+            patchStatus.addPatchName(patchName);
     }
 
     override void writeModule(File f, constr fqmn)
@@ -77,7 +98,10 @@ class ModuleWriterPatch : IModuleWriter
                 foreach (ref decl; declStrings)
                 {
                     if (patch.condition(decl))
+                    {
                         decl = patch.operation(decl);
+                        patchStatus.logExecuted(patch.patchName);
+                    }
                 }
             }
         }
@@ -105,18 +129,18 @@ class ModuleWriterPatch : IModuleWriter
 
         alias P = Patch;
         patches[r"foundation.d"] = [
-            P((d) => d == "alias PSTR = ubyte*;", (d) => "alias PSTR = char*;"),
+            P(PatchNames.PSTR, (d) => d == "alias PSTR = ubyte*;", (d) => "alias PSTR = char*;"),
             ];
         patches[r"qos.d"] = [
-            P((d) => d.startsWith("struct IPX_PATTERN"), (d) => commentOutUnsupportedDecl(d)),
+            P(PatchNames.IPX_PATTERN, (d) => d.startsWith("struct IPX_PATTERN"), (d) => commentOutUnsupportedDecl(d)),
             ];
         patches[r"winml.d"] = [
-            P((d) => d.startsWith("alias MLOperatorAttributeType"), (d) => removeFirstLine(d).replace("enum", "enum MLOperatorAttributeType")),
-            P((d) => d.startsWith("alias MLOperatorTensorDataType"), (d) => removeFirstLine(d).replace("enum", "enum MLOperatorTensorDataType")),
-            P((d) => d.startsWith("alias MLOperatorEdgeType"), (d) => removeFirstLine(d).replace("enum", "enum MLOperatorEdgeType")),
+            P(PatchNames.MLOperatorAttributeType, (d) => d.startsWith("alias MLOperatorAttributeType"), (d) => removeFirstLine(d).replace("enum", "enum MLOperatorAttributeType")),
+            P(PatchNames.MLOperatorTensorDataType, (d) => d.startsWith("alias MLOperatorTensorDataType"), (d) => removeFirstLine(d).replace("enum", "enum MLOperatorTensorDataType")),
+            P(PatchNames.MLOperatorEdgeType, (d) => d.startsWith("alias MLOperatorEdgeType"), (d) => removeFirstLine(d).replace("enum", "enum MLOperatorEdgeType")),
         ];
         patches[r"kernelstreaming.d"] = [
-            P((d) => d.startsWith("alias KSCAMERA_EXTENDEDPROP_VALUE"), (d) => d = "// [UNSUPPORTED]\n//" ~ d ~ "\nalias KSCAMERA_EXTENDEDPROP_VALUE = ulong; // [DUMMY]"),
+            P(PatchNames.KSCAMERA_EXTENDEDPROP_VALUE, (d) => d.startsWith("alias KSCAMERA_EXTENDEDPROP_VALUE"), (d) => d = "// [UNSUPPORTED]\n//" ~ d ~ "\nalias KSCAMERA_EXTENDEDPROP_VALUE = ulong; // [DUMMY]"),
             ];
 
         auto abiBugWorkaround = delegate constr(constr d)
@@ -127,8 +151,12 @@ class ModuleWriterPatch : IModuleWriter
         };
 
         patches[r"direct2d_.d"] = [
-            P((d) => d.startsWith("interface ID2D1Bitmap "), abiBugWorkaround),
-            P((d) => d.startsWith("interface ID2D1RenderTarget "), abiBugWorkaround),
+            P(PatchNames.ID2D1Bitmap, (d) => d.startsWith("interface ID2D1Bitmap "), abiBugWorkaround),
+            P(PatchNames.ID2D1RenderTarget, (d) => d.startsWith("interface ID2D1RenderTarget "), abiBugWorkaround),
+        ];
+
+        patches[r"controls_.d"] = [
+            P(PatchNames.MENU_POPUPSUBMENU_HCHOT, (d) => d.startsWith("alias MENU_POPUPSUBMENU_HCHOT ="), (d) => commentOutUnsupportedDecl(d)),
         ];
 
         return patches;

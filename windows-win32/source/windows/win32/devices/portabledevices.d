@@ -1,8 +1,8 @@
 module windows.win32.devices.portabledevices;
 
 import windows.win32.guid : GUID;
-import windows.win32.devices.properties : DEVPROPKEY;
-import windows.win32.foundation : BOOL, BSTR, HRESULT, LARGE_INTEGER, PWSTR, ULARGE_INTEGER;
+import windows.win32.devices.properties : DEVPROPKEY, DEVPROPTYPE;
+import windows.win32.foundation : BOOL, BSTR, HRESULT, PWSTR;
 import windows.win32.system.com_ : IDispatch, IStream, IUnknown;
 import windows.win32.system.com.structuredstorage : PROPVARIANT;
 import windows.win32.ui.shell.propertiessystem : IPropertyStore, PROPERTYKEY;
@@ -10,7 +10,7 @@ import windows.win32.ui.shell.propertiessystem : IPropertyStore, PROPERTYKEY;
 version (Windows):
 extern (Windows):
 
-HRESULT DMProcessConfigXMLFiltered(const(wchar)*, PWSTR*, uint, BSTR*);
+HRESULT DMProcessConfigXMLFiltered(const(wchar)*, const(wchar)**, uint, BSTR*);
 //enum DEVPKEY_MTPBTH_IsConnected = [MISSING];
 enum GUID_DEVINTERFACE_WPD = GUID(0x6ac27878, 0xa6fa, 0x4155, [0xba, 0x85, 0xf9, 0x8f, 0x49, 0x1d, 0x4f, 0x33]);
 enum GUID_DEVINTERFACE_WPD_PRIVATE = GUID(0xba0c718f, 0x4ded, 0x49b7, [0xbd, 0xd3, 0xfa, 0xbe, 0x28, 0x66, 0x12, 0x11]);
@@ -1756,7 +1756,7 @@ interface IPortableDeviceDataStream : IStream
 enum IID_IPortableDeviceUnitsStream = GUID(0x5e98025f, 0xbfc4, 0x47a2, [0x9a, 0x5f, 0xbc, 0x90, 0xa, 0x50, 0x7c, 0x67]);
 interface IPortableDeviceUnitsStream : IUnknown
 {
-    HRESULT SeekInUnits(LARGE_INTEGER, WPD_STREAM_UNITS, uint, ULARGE_INTEGER*);
+    HRESULT SeekInUnits(long, WPD_STREAM_UNITS, uint, ulong*);
     HRESULT Cancel();
 }
 enum IID_IPortableDevicePropertiesBulk = GUID(0x482b05c0, 0x4056, 0x44ed, [0x9e, 0xf, 0x5e, 0x23, 0xb0, 0x9, 0xda, 0x93]);
@@ -1868,8 +1868,8 @@ interface IPortableDeviceConnector : IUnknown
     HRESULT Connect(IConnectionRequestCallback);
     HRESULT Disconnect(IConnectionRequestCallback);
     HRESULT Cancel(IConnectionRequestCallback);
-    HRESULT GetProperty(const(DEVPROPKEY)*, uint*, ubyte**, uint*);
-    HRESULT SetProperty(const(DEVPROPKEY)*, uint, const(ubyte)*, uint);
+    HRESULT GetProperty(const(DEVPROPKEY)*, DEVPROPTYPE*, ubyte**, uint*);
+    HRESULT SetProperty(const(DEVPROPKEY)*, DEVPROPTYPE, const(ubyte)*, uint);
     HRESULT GetPnPID(PWSTR*);
 }
 enum IID_IConnectionRequestCallback = GUID(0x272c9ae0, 0x7161, 0x4ae0, [0x91, 0xbd, 0x9f, 0x44, 0x8e, 0xe9, 0xc4, 0x27]);

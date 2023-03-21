@@ -87,8 +87,8 @@ struct OPEN_VIRTUAL_DISK_PARAMETERS
         }
     }
 }
-alias VIRTUAL_DISK_ACCESS_MASK = uint;
-enum : uint
+alias VIRTUAL_DISK_ACCESS_MASK = int;
+enum : int
 {
     VIRTUAL_DISK_ACCESS_NONE      = 0x00000000,
     VIRTUAL_DISK_ACCESS_ATTACH_RO = 0x00010000,
@@ -102,8 +102,8 @@ enum : uint
     VIRTUAL_DISK_ACCESS_WRITABLE  = 0x00320000,
 }
 
-alias OPEN_VIRTUAL_DISK_FLAG = uint;
-enum : uint
+alias OPEN_VIRTUAL_DISK_FLAG = int;
+enum : int
 {
     OPEN_VIRTUAL_DISK_FLAG_NONE                           = 0x00000000,
     OPEN_VIRTUAL_DISK_FLAG_NO_PARENTS                     = 0x00000001,
@@ -194,8 +194,8 @@ struct CREATE_VIRTUAL_DISK_PARAMETERS
         }
     }
 }
-alias CREATE_VIRTUAL_DISK_FLAG = uint;
-enum : uint
+alias CREATE_VIRTUAL_DISK_FLAG = int;
+enum : int
 {
     CREATE_VIRTUAL_DISK_FLAG_NONE                                  = 0x00000000,
     CREATE_VIRTUAL_DISK_FLAG_FULL_PHYSICAL_ALLOCATION              = 0x00000001,
@@ -235,8 +235,8 @@ struct ATTACH_VIRTUAL_DISK_PARAMETERS
         }
     }
 }
-alias ATTACH_VIRTUAL_DISK_FLAG = uint;
-enum : uint
+alias ATTACH_VIRTUAL_DISK_FLAG = int;
+enum : int
 {
     ATTACH_VIRTUAL_DISK_FLAG_NONE                             = 0x00000000,
     ATTACH_VIRTUAL_DISK_FLAG_READ_ONLY                        = 0x00000001,
@@ -251,14 +251,14 @@ enum : uint
     ATTACH_VIRTUAL_DISK_FLAG_REGISTER_VOLUME                  = 0x00000200,
 }
 
-alias DETACH_VIRTUAL_DISK_FLAG = uint;
-enum : uint
+alias DETACH_VIRTUAL_DISK_FLAG = int;
+enum : int
 {
     DETACH_VIRTUAL_DISK_FLAG_NONE = 0x00000000,
 }
 
-alias DEPENDENT_DISK_FLAG = uint;
-enum : uint
+alias DEPENDENT_DISK_FLAG = int;
+enum : int
 {
     DEPENDENT_DISK_FLAG_NONE                       = 0x00000000,
     DEPENDENT_DISK_FLAG_MULT_BACKING_FILES         = 0x00000001,
@@ -312,8 +312,8 @@ struct STORAGE_DEPENDENCY_INFO
         STORAGE_DEPENDENCY_INFO_TYPE_2[1] Version2Entries;
     }
 }
-alias GET_STORAGE_DEPENDENCY_FLAG = uint;
-enum : uint
+alias GET_STORAGE_DEPENDENCY_FLAG = int;
+enum : int
 {
     GET_STORAGE_DEPENDENCY_FLAG_NONE         = 0x00000000,
     GET_STORAGE_DEPENDENCY_FLAG_HOST_VOLUMES = 0x00000001,
@@ -442,8 +442,8 @@ struct COMPACT_VIRTUAL_DISK_PARAMETERS
         }
     }
 }
-alias COMPACT_VIRTUAL_DISK_FLAG = uint;
-enum : uint
+alias COMPACT_VIRTUAL_DISK_FLAG = int;
+enum : int
 {
     COMPACT_VIRTUAL_DISK_FLAG_NONE           = 0x00000000,
     COMPACT_VIRTUAL_DISK_FLAG_NO_ZERO_SCAN   = 0x00000001,
@@ -474,8 +474,8 @@ struct MERGE_VIRTUAL_DISK_PARAMETERS
         }
     }
 }
-alias MERGE_VIRTUAL_DISK_FLAG = uint;
-enum : uint
+alias MERGE_VIRTUAL_DISK_FLAG = int;
+enum : int
 {
     MERGE_VIRTUAL_DISK_FLAG_NONE = 0x00000000,
 }
@@ -498,8 +498,8 @@ struct EXPAND_VIRTUAL_DISK_PARAMETERS
         }
     }
 }
-alias EXPAND_VIRTUAL_DISK_FLAG = uint;
-enum : uint
+alias EXPAND_VIRTUAL_DISK_FLAG = int;
+enum : int
 {
     EXPAND_VIRTUAL_DISK_FLAG_NONE          = 0x00000000,
     EXPAND_VIRTUAL_DISK_FLAG_NOTIFY_CHANGE = 0x00000001,
@@ -523,8 +523,8 @@ struct RESIZE_VIRTUAL_DISK_PARAMETERS
         }
     }
 }
-alias RESIZE_VIRTUAL_DISK_FLAG = uint;
-enum : uint
+alias RESIZE_VIRTUAL_DISK_FLAG = int;
+enum : int
 {
     RESIZE_VIRTUAL_DISK_FLAG_NONE                                 = 0x00000000,
     RESIZE_VIRTUAL_DISK_FLAG_ALLOW_UNSAFE_VIRTUAL_SIZE            = 0x00000001,
@@ -549,8 +549,8 @@ struct MIRROR_VIRTUAL_DISK_PARAMETERS
         }
     }
 }
-alias MIRROR_VIRTUAL_DISK_FLAG = uint;
-enum : uint
+alias MIRROR_VIRTUAL_DISK_FLAG = int;
+enum : int
 {
     MIRROR_VIRTUAL_DISK_FLAG_NONE                   = 0x00000000,
     MIRROR_VIRTUAL_DISK_FLAG_EXISTING_FILE          = 0x00000001,
@@ -565,14 +565,14 @@ struct QUERY_CHANGES_VIRTUAL_DISK_RANGE
     ulong ByteLength;
     ulong Reserved;
 }
-alias QUERY_CHANGES_VIRTUAL_DISK_FLAG = uint;
-enum : uint
+alias QUERY_CHANGES_VIRTUAL_DISK_FLAG = int;
+enum : int
 {
     QUERY_CHANGES_VIRTUAL_DISK_FLAG_NONE = 0x00000000,
 }
 
-alias TAKE_SNAPSHOT_VHDSET_FLAG = uint;
-enum : uint
+alias TAKE_SNAPSHOT_VHDSET_FLAG = int;
+enum : int
 {
     TAKE_SNAPSHOT_VHDSET_FLAG_NONE      = 0x00000000,
     TAKE_SNAPSHOT_VHDSET_FLAG_WRITEABLE = 0x00000001,
@@ -596,8 +596,8 @@ struct TAKE_SNAPSHOT_VHDSET_PARAMETERS
         }
     }
 }
-alias DELETE_SNAPSHOT_VHDSET_FLAG = uint;
-enum : uint
+alias DELETE_SNAPSHOT_VHDSET_FLAG = int;
+enum : int
 {
     DELETE_SNAPSHOT_VHDSET_FLAG_NONE        = 0x00000000,
     DELETE_SNAPSHOT_VHDSET_FLAG_PERSIST_RCT = 0x00000001,
@@ -630,8 +630,8 @@ enum : int
     MODIFY_VHDSET_DEFAULT_SNAPSHOT_PATH = 0x00000003,
 }
 
-alias MODIFY_VHDSET_FLAG = uint;
-enum : uint
+alias MODIFY_VHDSET_FLAG = int;
+enum : int
 {
     MODIFY_VHDSET_FLAG_NONE               = 0x00000000,
     MODIFY_VHDSET_FLAG_WRITEABLE_SNAPSHOT = 0x00000001,
@@ -651,8 +651,8 @@ struct MODIFY_VHDSET_PARAMETERS
         const(wchar)* DefaultFilePath;
     }
 }
-alias APPLY_SNAPSHOT_VHDSET_FLAG = uint;
-enum : uint
+alias APPLY_SNAPSHOT_VHDSET_FLAG = int;
+enum : int
 {
     APPLY_SNAPSHOT_VHDSET_FLAG_NONE      = 0x00000000,
     APPLY_SNAPSHOT_VHDSET_FLAG_WRITEABLE = 0x00000001,
@@ -677,8 +677,8 @@ struct APPLY_SNAPSHOT_VHDSET_PARAMETERS
         }
     }
 }
-alias RAW_SCSI_VIRTUAL_DISK_FLAG = uint;
-enum : uint
+alias RAW_SCSI_VIRTUAL_DISK_FLAG = int;
+enum : int
 {
     RAW_SCSI_VIRTUAL_DISK_FLAG_NONE = 0x00000000,
 }
@@ -740,8 +740,8 @@ struct FORK_VIRTUAL_DISK_PARAMETERS
         }
     }
 }
-alias FORK_VIRTUAL_DISK_FLAG = uint;
-enum : uint
+alias FORK_VIRTUAL_DISK_FLAG = int;
+enum : int
 {
     FORK_VIRTUAL_DISK_FLAG_NONE          = 0x00000000,
     FORK_VIRTUAL_DISK_FLAG_EXISTING_FILE = 0x00000001,

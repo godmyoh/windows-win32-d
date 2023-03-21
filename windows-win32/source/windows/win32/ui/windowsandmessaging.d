@@ -1,8 +1,8 @@
 module windows.win32.ui.windowsandmessaging;
 
+import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BOOLEAN, CHAR, COLORREF, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT, SIZE, WPARAM;
 import windows.win32.graphics.gdi : BLENDFUNCTION, HBITMAP, HBRUSH, HDC, HRGN, LOGFONTA, LOGFONTW;
-import windows.win32.system.power : POWER_SETTING_REGISTER_NOTIFICATION_FLAGS;
 import windows.win32.ui.shell_ : HELPINFO;
 
 version (Windows):
@@ -113,29 +113,39 @@ enum : uint
 alias SHOW_WINDOW_CMD = uint;
 enum : uint
 {
-    SW_FORCEMINIMIZE   = 0x0000000b,
     SW_HIDE            = 0x00000000,
-    SW_MAXIMIZE        = 0x00000003,
-    SW_MINIMIZE        = 0x00000006,
-    SW_RESTORE         = 0x00000009,
-    SW_SHOW            = 0x00000005,
-    SW_SHOWDEFAULT     = 0x0000000a,
-    SW_SHOWMAXIMIZED   = 0x00000003,
-    SW_SHOWMINIMIZED   = 0x00000002,
-    SW_SHOWMINNOACTIVE = 0x00000007,
-    SW_SHOWNA          = 0x00000008,
-    SW_SHOWNOACTIVATE  = 0x00000004,
     SW_SHOWNORMAL      = 0x00000001,
     SW_NORMAL          = 0x00000001,
+    SW_SHOWMINIMIZED   = 0x00000002,
+    SW_SHOWMAXIMIZED   = 0x00000003,
+    SW_MAXIMIZE        = 0x00000003,
+    SW_SHOWNOACTIVATE  = 0x00000004,
+    SW_SHOW            = 0x00000005,
+    SW_MINIMIZE        = 0x00000006,
+    SW_SHOWMINNOACTIVE = 0x00000007,
+    SW_SHOWNA          = 0x00000008,
+    SW_RESTORE         = 0x00000009,
+    SW_SHOWDEFAULT     = 0x0000000a,
+    SW_FORCEMINIMIZE   = 0x0000000b,
     SW_MAX             = 0x0000000b,
-    SW_PARENTCLOSING   = 0x00000001,
-    SW_OTHERZOOM       = 0x00000002,
-    SW_PARENTOPENING   = 0x00000003,
-    SW_OTHERUNZOOM     = 0x00000004,
-    SW_SCROLLCHILDREN  = 0x00000001,
-    SW_INVALIDATE      = 0x00000002,
-    SW_ERASE           = 0x00000004,
-    SW_SMOOTHSCROLL    = 0x00000010,
+}
+
+alias SHOW_WINDOW_STATUS = uint;
+enum : uint
+{
+    SW_PARENTCLOSING = 0x00000001,
+    SW_OTHERZOOM     = 0x00000002,
+    SW_PARENTOPENING = 0x00000003,
+    SW_OTHERUNZOOM   = 0x00000004,
+}
+
+alias SCROLL_WINDOW_FLAGS = uint;
+enum : uint
+{
+    SW_SCROLLCHILDREN = 0x00000001,
+    SW_INVALIDATE     = 0x00000002,
+    SW_ERASE          = 0x00000004,
+    SW_SMOOTHSCROLL   = 0x00000010,
 }
 
 alias SYSTEM_PARAMETERS_INFO_ACTION = uint;
@@ -718,6 +728,15 @@ enum : uint
     QS_TIMER          = 0x00000010,
 }
 
+alias REGISTER_NOTIFICATION_FLAGS = uint;
+enum : uint
+{
+    DEVICE_NOTIFY_SERVICE_HANDLE        = 0x00000001,
+    DEVICE_NOTIFY_CALLBACK              = 0x00000002,
+    DEVICE_NOTIFY_WINDOW_HANDLE         = 0x00000000,
+    DEVICE_NOTIFY_ALL_INTERFACE_CLASSES = 0x00000004,
+}
+
 alias SYSTEM_CURSOR_ID = uint;
 enum : uint
 {
@@ -939,13 +958,6 @@ enum : uint
     MSGFLTINFO_ALREADYDISALLOWED_FORWND = 0x00000002,
 }
 
-alias MOUSEHOOKSTRUCTEX_MOUSE_DATA = uint;
-enum : uint
-{
-    XBUTTON1 = 0x00000001,
-    XBUTTON2 = 0x00000002,
-}
-
 alias MENU_ITEM_MASK = uint;
 enum : uint
 {
@@ -1008,6 +1020,16 @@ enum : uint
     MIM_STYLE           = 0x00000010,
 }
 
+alias DEV_BROADCAST_HDR_DEVICE_TYPE = uint;
+enum : uint
+{
+    DBT_DEVTYP_DEVICEINTERFACE = 0x00000005,
+    DBT_DEVTYP_HANDLE          = 0x00000006,
+    DBT_DEVTYP_OEM             = 0x00000000,
+    DBT_DEVTYP_PORT            = 0x00000003,
+    DBT_DEVTYP_VOLUME          = 0x00000002,
+}
+
 alias MINIMIZEDMETRICS_ARRANGE = int;
 enum : int
 {
@@ -1015,6 +1037,13 @@ enum : int
     ARW_BOTTOMRIGHT = 0x00000001,
     ARW_TOPLEFT     = 0x00000002,
     ARW_TOPRIGHT    = 0x00000003,
+}
+
+alias DEV_BROADCAST_VOLUME_FLAGS = ushort;
+enum : ushort
+{
+    DBTF_MEDIA = 0x0001,
+    DBTF_NET   = 0x0002,
 }
 
 alias SCROLLINFO_MASK = uint;
@@ -1124,8 +1153,9 @@ BOOL SendNotifyMessageA(HWND, uint, WPARAM, LPARAM);
 BOOL SendNotifyMessageW(HWND, uint, WPARAM, LPARAM);
 BOOL SendMessageCallbackA(HWND, uint, WPARAM, LPARAM, SENDASYNCPROC, ulong);
 BOOL SendMessageCallbackW(HWND, uint, WPARAM, LPARAM, SENDASYNCPROC, ulong);
-void* RegisterDeviceNotificationA(HANDLE, void*, POWER_SETTING_REGISTER_NOTIFICATION_FLAGS);
-void* RegisterDeviceNotificationW(HANDLE, void*, POWER_SETTING_REGISTER_NOTIFICATION_FLAGS);
+void* RegisterDeviceNotificationA(HANDLE, void*, REGISTER_NOTIFICATION_FLAGS);
+void* RegisterDeviceNotificationW(HANDLE, void*, REGISTER_NOTIFICATION_FLAGS);
+BOOL UnregisterDeviceNotification(void*);
 BOOL PostMessageA(HWND, uint, WPARAM, LPARAM);
 BOOL PostMessageW(HWND, uint, WPARAM, LPARAM);
 BOOL PostThreadMessageA(uint, uint, WPARAM, LPARAM);
@@ -1311,7 +1341,7 @@ BOOL AllowSetForegroundWindow(uint);
 BOOL LockSetForegroundWindow(FOREGROUND_WINDOW_LOCK_CODE);
 BOOL ScrollWindow(HWND, int, int, const(RECT)*, const(RECT)*);
 BOOL ScrollDC(HDC, int, int, const(RECT)*, const(RECT)*, HRGN, RECT*);
-int ScrollWindowEx(HWND, int, int, const(RECT)*, const(RECT)*, HRGN, RECT*, SHOW_WINDOW_CMD);
+int ScrollWindowEx(HWND, int, int, const(RECT)*, const(RECT)*, HRGN, RECT*, SCROLL_WINDOW_FLAGS);
 int GetScrollPos(HWND, SCROLLBAR_CONSTANTS);
 BOOL GetScrollRange(HWND, SCROLLBAR_CONSTANTS, int*, int*);
 BOOL SetPropA(HWND, const(char)*, HANDLE);
@@ -1422,8 +1452,8 @@ int LookupIconIdFromDirectory(ubyte*, BOOL);
 int LookupIconIdFromDirectoryEx(ubyte*, BOOL, int, int, IMAGE_FLAGS);
 HICON CreateIconFromResource(ubyte*, uint, BOOL, uint);
 HICON CreateIconFromResourceEx(ubyte*, uint, BOOL, uint, int, int, IMAGE_FLAGS);
-HANDLE LoadImageA(HINSTANCE, const(char)*, GDI_IMAGE_TYPE, int, int, IMAGE_FLAGS);
-HANDLE LoadImageW(HINSTANCE, const(wchar)*, GDI_IMAGE_TYPE, int, int, IMAGE_FLAGS);
+LOADIMAGE_HANDLE LoadImageA(HINSTANCE, const(char)*, GDI_IMAGE_TYPE, int, int, IMAGE_FLAGS);
+LOADIMAGE_HANDLE LoadImageW(HINSTANCE, const(wchar)*, GDI_IMAGE_TYPE, int, int, IMAGE_FLAGS);
 HANDLE CopyImage(HANDLE, GDI_IMAGE_TYPE, int, int, IMAGE_FLAGS);
 BOOL DrawIconEx(HDC, int, int, HICON, int, int, uint, HBRUSH, DI_FLAGS);
 HICON CreateIconIndirect(ICONINFO*);
@@ -1497,14 +1527,117 @@ HRESULT MrmDumpPriDataInMemory(ubyte*, uint, ubyte*, uint, MrmDumpType, ubyte**,
 HRESULT MrmCreateConfig(MrmPlatformVersion, const(wchar)*, const(wchar)*);
 HRESULT MrmCreateConfigInMemory(MrmPlatformVersion, const(wchar)*, ubyte**, uint*);
 HRESULT MrmGetPriFileContentChecksum(const(wchar)*, uint*);
-enum WM_DEVICECHANGE = 0x00000219;
-enum BSM_VXDS = 0x00000001;
-enum BSM_NETDRIVER = 0x00000002;
-enum BSM_INSTALLABLEDRIVERS = 0x00000004;
 enum WM_CONTEXTMENU = 0x0000007b;
 enum WM_UNICHAR = 0x00000109;
 enum WM_PRINTCLIENT = 0x00000318;
 enum WM_NOTIFY = 0x0000004e;
+enum GUID_IO_VOLUME_CHANGE = GUID(0x7373654a, 0x812a, 0x11d0, [0xbe, 0xc7, 0x8, 0x0, 0x2b, 0xe2, 0x9, 0x2f]);
+enum GUID_IO_VOLUME_DISMOUNT = GUID(0xd16a55e8, 0x1059, 0x11d2, [0x8f, 0xfd, 0x0, 0xa0, 0xc9, 0xa0, 0x6d, 0x32]);
+enum GUID_IO_VOLUME_DISMOUNT_FAILED = GUID(0xe3c5b178, 0x105d, 0x11d2, [0x8f, 0xfd, 0x0, 0xa0, 0xc9, 0xa0, 0x6d, 0x32]);
+enum GUID_IO_VOLUME_MOUNT = GUID(0xb5804878, 0x1a96, 0x11d2, [0x8f, 0xfd, 0x0, 0xa0, 0xc9, 0xa0, 0x6d, 0x32]);
+enum GUID_IO_VOLUME_LOCK = GUID(0x50708874, 0xc9af, 0x11d1, [0x8f, 0xef, 0x0, 0xa0, 0xc9, 0xa0, 0x6d, 0x32]);
+enum GUID_IO_VOLUME_LOCK_FAILED = GUID(0xae2eed10, 0xba8, 0x11d2, [0x8f, 0xfb, 0x0, 0xa0, 0xc9, 0xa0, 0x6d, 0x32]);
+enum GUID_IO_VOLUME_UNLOCK = GUID(0x9a8c3d68, 0xd0cb, 0x11d1, [0x8f, 0xef, 0x0, 0xa0, 0xc9, 0xa0, 0x6d, 0x32]);
+enum GUID_IO_VOLUME_NAME_CHANGE = GUID(0x2de97f83, 0x4c06, 0x11d2, [0xa5, 0x32, 0x0, 0x60, 0x97, 0x13, 0x5, 0x5a]);
+enum GUID_IO_VOLUME_NEED_CHKDSK = GUID(0x799a0960, 0xa0b, 0x4e03, [0xad, 0x88, 0x2f, 0xa7, 0xc6, 0xce, 0x74, 0x8a]);
+enum GUID_IO_VOLUME_WORM_NEAR_FULL = GUID(0xf3bfff82, 0xf3de, 0x48d2, [0xaf, 0x95, 0x45, 0x7f, 0x80, 0xb7, 0x63, 0xf2]);
+enum GUID_IO_VOLUME_WEARING_OUT = GUID(0x873113ca, 0x1486, 0x4508, [0x82, 0xac, 0xc3, 0xb2, 0xe5, 0x29, 0x7a, 0xaa]);
+enum GUID_IO_VOLUME_FORCE_CLOSED = GUID(0x411ad84f, 0x433e, 0x4dc2, [0xa5, 0xae, 0x4a, 0x2d, 0x1a, 0x2d, 0xe6, 0x54]);
+enum GUID_IO_VOLUME_INFO_MAKE_COMPAT = GUID(0x3ab9a0d2, 0xef80, 0x45cf, [0x8c, 0xdc, 0xcb, 0xe0, 0x2a, 0x21, 0x29, 0x6]);
+enum GUID_IO_VOLUME_PREPARING_EJECT = GUID(0xc79eb16e, 0xdac, 0x4e7a, [0xa8, 0x6c, 0xb2, 0x5c, 0xee, 0xaa, 0x88, 0xf6]);
+enum GUID_IO_VOLUME_BACKGROUND_FORMAT = GUID(0xa2e5fc86, 0xd5cd, 0x4038, [0xb2, 0xe3, 0x44, 0x45, 0x6, 0x5c, 0x23, 0x77]);
+enum GUID_IO_VOLUME_PHYSICAL_CONFIGURATION_CHANGE = GUID(0x2de97f84, 0x4c06, 0x11d2, [0xa5, 0x32, 0x0, 0x60, 0x97, 0x13, 0x5, 0x5a]);
+enum GUID_IO_VOLUME_UNIQUE_ID_CHANGE = GUID(0xaf39da42, 0x6622, 0x41f5, [0x97, 0xb, 0x13, 0x9d, 0x9, 0x2f, 0xa3, 0xd9]);
+enum GUID_IO_VOLUME_FVE_STATUS_CHANGE = GUID(0x62998b2, 0xee1f, 0x4b6a, [0xb8, 0x57, 0xe7, 0x6c, 0xbb, 0xe9, 0xa6, 0xda]);
+enum GUID_IO_VOLUME_DEVICE_INTERFACE = GUID(0x53f5630d, 0xb6bf, 0x11d0, [0x94, 0xf2, 0x0, 0xa0, 0xc9, 0x1e, 0xfb, 0x8b]);
+enum GUID_IO_VOLUME_CHANGE_SIZE = GUID(0x3a1625be, 0xad03, 0x49f1, [0x8e, 0xf8, 0x6b, 0xba, 0xc1, 0x82, 0xd1, 0xfd]);
+enum GUID_IO_MEDIA_ARRIVAL = GUID(0xd07433c0, 0xa98e, 0x11d2, [0x91, 0x7a, 0x0, 0xa0, 0xc9, 0x6, 0x8f, 0xf3]);
+enum GUID_IO_MEDIA_REMOVAL = GUID(0xd07433c1, 0xa98e, 0x11d2, [0x91, 0x7a, 0x0, 0xa0, 0xc9, 0x6, 0x8f, 0xf3]);
+enum GUID_IO_CDROM_EXCLUSIVE_LOCK = GUID(0xbc56c139, 0x7a10, 0x47ee, [0xa2, 0x94, 0x4c, 0x6a, 0x38, 0xf0, 0x14, 0x9a]);
+enum GUID_IO_CDROM_EXCLUSIVE_UNLOCK = GUID(0xa3b6d27d, 0x5e35, 0x4885, [0x81, 0xe5, 0xee, 0x18, 0xc0, 0xe, 0xd7, 0x79]);
+enum GUID_IO_DEVICE_BECOMING_READY = GUID(0xd07433f0, 0xa98e, 0x11d2, [0x91, 0x7a, 0x0, 0xa0, 0xc9, 0x6, 0x8f, 0xf3]);
+enum GUID_IO_DEVICE_EXTERNAL_REQUEST = GUID(0xd07433d0, 0xa98e, 0x11d2, [0x91, 0x7a, 0x0, 0xa0, 0xc9, 0x6, 0x8f, 0xf3]);
+enum GUID_IO_MEDIA_EJECT_REQUEST = GUID(0xd07433d1, 0xa98e, 0x11d2, [0x91, 0x7a, 0x0, 0xa0, 0xc9, 0x6, 0x8f, 0xf3]);
+enum GUID_IO_DRIVE_REQUIRES_CLEANING = GUID(0x7207877c, 0x90ed, 0x44e5, [0xa0, 0x0, 0x81, 0x42, 0x8d, 0x4c, 0x79, 0xbb]);
+enum GUID_IO_TAPE_ERASE = GUID(0x852d11eb, 0x4bb8, 0x4507, [0x9d, 0x9b, 0x41, 0x7c, 0xc2, 0xb1, 0xb4, 0x38]);
+enum GUID_DEVICE_EVENT_RBC = GUID(0xd0744792, 0xa98e, 0x11d2, [0x91, 0x7a, 0x0, 0xa0, 0xc9, 0x6, 0x8f, 0xf3]);
+enum GUID_IO_DISK_CLONE_ARRIVAL = GUID(0x6a61885b, 0x7c39, 0x43dd, [0x9b, 0x56, 0xb8, 0xac, 0x22, 0xa5, 0x49, 0xaa]);
+enum GUID_IO_DISK_LAYOUT_CHANGE = GUID(0x11dff54c, 0x8469, 0x41f9, [0xb3, 0xde, 0xef, 0x83, 0x64, 0x87, 0xc5, 0x4a]);
+enum GUID_IO_DISK_HEALTH_NOTIFICATION = GUID(0xf1bd644, 0x3916, 0x49c5, [0xb0, 0x63, 0x99, 0x19, 0x40, 0x11, 0x8f, 0xb2]);
+enum STRSAFE_USE_SECURE_CRT = 0x00000000;
+enum STRSAFE_MAX_CCH = 0x7fffffff;
+enum STRSAFE_IGNORE_NULLS = 0x00000100;
+enum STRSAFE_FILL_BEHIND_NULL = 0x00000200;
+enum STRSAFE_FILL_ON_FAILURE = 0x00000400;
+enum STRSAFE_NULL_ON_FAILURE = 0x00000800;
+enum STRSAFE_NO_TRUNCATION = 0x00001000;
+enum STRSAFE_E_INSUFFICIENT_BUFFER = 0xffffffff8007007a;
+enum STRSAFE_E_INVALID_PARAMETER = 0xffffffff80070057;
+enum STRSAFE_E_END_OF_FILE = 0xffffffff80070026;
+enum __WARNING_CYCLOMATIC_COMPLEXITY = 0x0000703e;
+enum __WARNING_USING_UNINIT_VAR = 0x00001771;
+enum __WARNING_RETURN_UNINIT_VAR = 0x000017d5;
+enum __WARNING_DEREF_NULL_PTR = 0x0000177b;
+enum __WARNING_MISSING_ZERO_TERMINATION2 = 0x000017a6;
+enum __WARNING_INVALID_PARAM_VALUE_1 = 0x000018f3;
+enum __WARNING_INCORRECT_ANNOTATION = 0x00006597;
+enum __WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY = 0x0000659f;
+enum __WARNING_PRECONDITION_NULLTERMINATION_VIOLATION = 0x000065b3;
+enum __WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION = 0x000065b4;
+enum __WARNING_HIGH_PRIORITY_OVERFLOW_POSTCONDITION = 0x000065bd;
+enum __WARNING_RANGE_POSTCONDITION_VIOLATION = 0x000065cd;
+enum __WARNING_POTENTIAL_RANGE_POSTCONDITION_VIOLATION = 0x000065d7;
+enum __WARNING_INVALID_PARAM_VALUE_3 = 0x00006e17;
+enum __WARNING_RETURNING_BAD_RESULT = 0x00006e24;
+enum __WARNING_BANNED_API_USAGE = 0x0000702f;
+enum __WARNING_POST_EXPECTED = 0x00006e32;
+enum WM_DEVICECHANGE = 0x00000219;
+enum BSF_MSGSRV32ISOK = 0x80000000;
+enum BSF_MSGSRV32ISOK_BIT = 0x0000001f;
+enum BSM_VXDS = 0x00000001;
+enum BSM_NETDRIVER = 0x00000002;
+enum BSM_INSTALLABLEDRIVERS = 0x00000004;
+enum DBT_APPYBEGIN = 0x00000000;
+enum DBT_APPYEND = 0x00000001;
+enum DBT_DEVNODES_CHANGED = 0x00000007;
+enum DBT_QUERYCHANGECONFIG = 0x00000017;
+enum DBT_CONFIGCHANGED = 0x00000018;
+enum DBT_CONFIGCHANGECANCELED = 0x00000019;
+enum DBT_MONITORCHANGE = 0x0000001b;
+enum DBT_SHELLLOGGEDON = 0x00000020;
+enum DBT_CONFIGMGAPI32 = 0x00000022;
+enum DBT_VXDINITCOMPLETE = 0x00000023;
+enum DBT_VOLLOCKQUERYLOCK = 0x00008041;
+enum DBT_VOLLOCKLOCKTAKEN = 0x00008042;
+enum DBT_VOLLOCKLOCKFAILED = 0x00008043;
+enum DBT_VOLLOCKQUERYUNLOCK = 0x00008044;
+enum DBT_VOLLOCKLOCKRELEASED = 0x00008045;
+enum DBT_VOLLOCKUNLOCKFAILED = 0x00008046;
+enum LOCKP_ALLOW_WRITES = 0x00000001;
+enum LOCKP_FAIL_WRITES = 0x00000000;
+enum LOCKP_FAIL_MEM_MAPPING = 0x00000002;
+enum LOCKP_ALLOW_MEM_MAPPING = 0x00000000;
+enum LOCKP_USER_MASK = 0x00000003;
+enum LOCKP_LOCK_FOR_FORMAT = 0x00000004;
+enum LOCKF_LOGICAL_LOCK = 0x00000000;
+enum LOCKF_PHYSICAL_LOCK = 0x00000001;
+enum DBT_NO_DISK_SPACE = 0x00000047;
+enum DBT_LOW_DISK_SPACE = 0x00000048;
+enum DBT_CONFIGMGPRIVATE = 0x00007fff;
+enum DBT_DEVICEARRIVAL = 0x00008000;
+enum DBT_DEVICEQUERYREMOVE = 0x00008001;
+enum DBT_DEVICEQUERYREMOVEFAILED = 0x00008002;
+enum DBT_DEVICEREMOVEPENDING = 0x00008003;
+enum DBT_DEVICEREMOVECOMPLETE = 0x00008004;
+enum DBT_DEVICETYPESPECIFIC = 0x00008005;
+enum DBT_CUSTOMEVENT = 0x00008006;
+enum DBT_DEVTYP_DEVNODE = 0x00000001;
+enum DBT_DEVTYP_NET = 0x00000004;
+enum DBTF_RESOURCE = 0x00000001;
+enum DBTF_XPORT = 0x00000002;
+enum DBTF_SLOWNET = 0x00000004;
+enum DBT_VPOWERDAPI = 0x00008100;
+enum DBT_USERDEFINED = 0x0000ffff;
 enum RT_CURSOR = 0x00000001;
 enum RT_BITMAP = 0x00000002;
 enum RT_ICON = 0x00000003;
@@ -1792,6 +1925,8 @@ enum WM_XBUTTONDBLCLK = 0x0000020d;
 enum WM_MOUSEHWHEEL = 0x0000020e;
 enum WM_MOUSELAST = 0x0000020e;
 enum WHEEL_DELTA = 0x00000078;
+enum XBUTTON1 = 0x0001;
+enum XBUTTON2 = 0x0002;
 enum WM_PARENTNOTIFY = 0x00000210;
 enum WM_ENTERMENULOOP = 0x00000211;
 enum WM_EXITMENULOOP = 0x00000212;
@@ -1989,7 +2124,6 @@ enum EWX_ARSO = 0x04000000;
 enum EWX_CHECK_SAFE_FOR_SERVER = 0x08000000;
 enum EWX_SYSTEM_INITIATED = 0x10000000;
 enum BROADCAST_QUERY_DENY = 0x424d5144;
-enum DEVICE_NOTIFY_ALL_INTERFACE_CLASSES = 0x00000004;
 enum HWND_MESSAGE = 0xfffffffffffffffd;
 enum ISMEX_NOSEND = 0x00000000;
 enum ISMEX_SEND = 0x00000001;
@@ -2039,11 +2173,6 @@ enum TOUCH_HIT_TESTING_NONE = 0x00000002;
 enum TOUCH_HIT_TESTING_PROXIMITY_CLOSEST = 0x00000000;
 enum TOUCH_HIT_TESTING_PROXIMITY_FARTHEST = 0x00000fff;
 enum GWFS_INCLUDE_ANCESTORS = 0x00000001;
-enum MAPVK_VK_TO_VSC = 0x00000000;
-enum MAPVK_VSC_TO_VK = 0x00000001;
-enum MAPVK_VK_TO_CHAR = 0x00000002;
-enum MAPVK_VSC_TO_VK_EX = 0x00000003;
-enum MAPVK_VK_TO_VSC_EX = 0x00000004;
 enum QS_TOUCH = 0x00000800;
 enum QS_POINTER = 0x00001000;
 enum USER_TIMER_MAXIMUM = 0x7fffffff;
@@ -2545,8 +2674,6 @@ enum ARW_DOWN = 0x00000004;
 enum ARW_HIDE = 0x00000008;
 enum HCF_LOGONDESKTOP = 0x00000100;
 enum HCF_DEFAULTDESKTOP = 0x00000200;
-enum EDS_RAWMODE = 0x00000002;
-enum EDS_ROTATEDMODE = 0x00000004;
 enum EDD_GET_DEVICE_INTERFACE_NAME = 0x00000001;
 enum FKF_FILTERKEYSON = 0x00000001;
 enum FKF_AVAILABLE = 0x00000002;
@@ -2775,33 +2902,7 @@ enum NID_EXTERNAL_PEN = 0x00000008;
 enum NID_MULTI_INPUT = 0x00000040;
 enum NID_READY = 0x00000080;
 enum MAX_STR_BLOCKREASON = 0x00000100;
-enum STRSAFE_USE_SECURE_CRT = 0x00000000;
-enum STRSAFE_MAX_CCH = 0x7fffffff;
-enum STRSAFE_IGNORE_NULLS = 0x00000100;
-enum STRSAFE_FILL_BEHIND_NULL = 0x00000200;
-enum STRSAFE_FILL_ON_FAILURE = 0x00000400;
-enum STRSAFE_NULL_ON_FAILURE = 0x00000800;
-enum STRSAFE_NO_TRUNCATION = 0x00001000;
-enum STRSAFE_E_INSUFFICIENT_BUFFER = 0xffffffff8007007a;
-enum STRSAFE_E_INVALID_PARAMETER = 0xffffffff80070057;
-enum STRSAFE_E_END_OF_FILE = 0xffffffff80070026;
-enum __WARNING_CYCLOMATIC_COMPLEXITY = 0x0000703e;
-enum __WARNING_USING_UNINIT_VAR = 0x00001771;
-enum __WARNING_RETURN_UNINIT_VAR = 0x000017d5;
-enum __WARNING_DEREF_NULL_PTR = 0x0000177b;
-enum __WARNING_MISSING_ZERO_TERMINATION2 = 0x000017a6;
-enum __WARNING_INVALID_PARAM_VALUE_1 = 0x000018f3;
-enum __WARNING_INCORRECT_ANNOTATION = 0x00006597;
-enum __WARNING_POTENTIAL_BUFFER_OVERFLOW_HIGH_PRIORITY = 0x0000659f;
-enum __WARNING_PRECONDITION_NULLTERMINATION_VIOLATION = 0x000065b3;
-enum __WARNING_POSTCONDITION_NULLTERMINATION_VIOLATION = 0x000065b4;
-enum __WARNING_HIGH_PRIORITY_OVERFLOW_POSTCONDITION = 0x000065bd;
-enum __WARNING_RANGE_POSTCONDITION_VIOLATION = 0x000065cd;
-enum __WARNING_POTENTIAL_RANGE_POSTCONDITION_VIOLATION = 0x000065d7;
-enum __WARNING_INVALID_PARAM_VALUE_3 = 0x00006e17;
-enum __WARNING_RETURNING_BAD_RESULT = 0x00006e24;
-enum __WARNING_BANNED_API_USAGE = 0x0000702f;
-enum __WARNING_POST_EXPECTED = 0x00006e32;
+enum WM_TOOLTIPDISMISS = 0x00000345;
 enum HBMMENU_CALLBACK = 0xffffffffffffffff;
 enum HBMMENU_SYSTEM = 0x00000001;
 enum HBMMENU_MBAR_RESTORE = 0x00000002;
@@ -2832,6 +2933,7 @@ alias HMENU = void*;
 alias HCURSOR = void*;
 alias HACCEL = void*;
 alias HDWP = void*;
+alias LOADIMAGE_HANDLE = long;
 struct MESSAGE_RESOURCE_ENTRY
 {
     ushort Length;
@@ -2915,7 +3017,7 @@ struct KBDLLHOOKSTRUCT
 struct MSLLHOOKSTRUCT
 {
     POINT pt;
-    MOUSEHOOKSTRUCTEX_MOUSE_DATA mouseData;
+    uint mouseData;
     uint flags;
     uint time;
     ulong dwExtraInfo;
@@ -2938,7 +3040,7 @@ struct MOUSEHOOKSTRUCT
 struct MOUSEHOOKSTRUCTEX
 {
     MOUSEHOOKSTRUCT Base;
-    MOUSEHOOKSTRUCTEX_MOUSE_DATA mouseData;
+    uint mouseData;
 }
 struct HARDWAREHOOKSTRUCT
 {
@@ -3134,6 +3236,12 @@ struct DLGITEMTEMPLATE
     short cx;
     short cy;
     ushort id;
+}
+struct GETCLIPBMETADATA
+{
+    uint Version;
+    BOOL IsDelayRendered;
+    BOOL IsSynthetic;
 }
 alias POINTER_INPUT_TYPE = int;
 enum : int
@@ -3444,8 +3552,8 @@ struct WINDOWINFO
     uint cbSize;
     RECT rcWindow;
     RECT rcClient;
-    uint dwStyle;
-    uint dwExStyle;
+    WINDOW_STYLE dwStyle;
+    WINDOW_EX_STYLE dwExStyle;
     uint dwWindowStatus;
     uint cxWindowBorders;
     uint cyWindowBorders;
@@ -3500,6 +3608,13 @@ struct CHANGEFILTERSTRUCT
     uint cbSize;
     MSGFLTINFO_STATUS ExtStatus;
 }
+alias TOOLTIP_DISMISS_FLAGS = int;
+enum : int
+{
+    TDF_REGISTER   = 0x00000001,
+    TDF_UNREGISTER = 0x00000002,
+}
+
 struct IndexedResourceQualifier
 {
     PWSTR name;
@@ -3563,4 +3678,166 @@ struct MrmResourceIndexerMessage
     MrmResourceIndexerMessageSeverity severity;
     uint id;
     const(wchar)* text;
+}
+struct DEV_BROADCAST_HDR
+{
+    uint dbch_size;
+    DEV_BROADCAST_HDR_DEVICE_TYPE dbch_devicetype;
+    uint dbch_reserved;
+}
+struct VolLockBroadcast
+{
+    DEV_BROADCAST_HDR vlb_dbh;
+    uint vlb_owner;
+    ubyte vlb_perms;
+    ubyte vlb_lockType;
+    ubyte vlb_drive;
+    ubyte vlb_flags;
+}
+struct _DEV_BROADCAST_HEADER
+{
+    uint dbcd_size;
+    uint dbcd_devicetype;
+    uint dbcd_reserved;
+}
+struct DEV_BROADCAST_OEM
+{
+    uint dbco_size;
+    uint dbco_devicetype;
+    uint dbco_reserved;
+    uint dbco_identifier;
+    uint dbco_suppfunc;
+}
+struct DEV_BROADCAST_DEVNODE
+{
+    uint dbcd_size;
+    uint dbcd_devicetype;
+    uint dbcd_reserved;
+    uint dbcd_devnode;
+}
+struct DEV_BROADCAST_VOLUME
+{
+    uint dbcv_size;
+    uint dbcv_devicetype;
+    uint dbcv_reserved;
+    uint dbcv_unitmask;
+    DEV_BROADCAST_VOLUME_FLAGS dbcv_flags;
+}
+struct DEV_BROADCAST_PORT_A
+{
+    uint dbcp_size;
+    uint dbcp_devicetype;
+    uint dbcp_reserved;
+    CHAR[1] dbcp_name;
+}
+struct DEV_BROADCAST_PORT_W
+{
+    uint dbcp_size;
+    uint dbcp_devicetype;
+    uint dbcp_reserved;
+    wchar[1] dbcp_name;
+}
+struct DEV_BROADCAST_NET
+{
+    uint dbcn_size;
+    uint dbcn_devicetype;
+    uint dbcn_reserved;
+    uint dbcn_resource;
+    uint dbcn_flags;
+}
+struct DEV_BROADCAST_DEVICEINTERFACE_A
+{
+    uint dbcc_size;
+    uint dbcc_devicetype;
+    uint dbcc_reserved;
+    GUID dbcc_classguid;
+    CHAR[1] dbcc_name;
+}
+struct DEV_BROADCAST_DEVICEINTERFACE_W
+{
+    uint dbcc_size;
+    uint dbcc_devicetype;
+    uint dbcc_reserved;
+    GUID dbcc_classguid;
+    wchar[1] dbcc_name;
+}
+struct DEV_BROADCAST_HANDLE
+{
+    uint dbch_size;
+    uint dbch_devicetype;
+    uint dbch_reserved;
+    HANDLE dbch_handle;
+    void* dbch_hdevnotify;
+    GUID dbch_eventguid;
+    int dbch_nameoffset;
+    ubyte[1] dbch_data;
+}
+struct DEV_BROADCAST_HANDLE32
+{
+    uint dbch_size;
+    uint dbch_devicetype;
+    uint dbch_reserved;
+    uint dbch_handle;
+    uint dbch_hdevnotify;
+    GUID dbch_eventguid;
+    int dbch_nameoffset;
+    ubyte[1] dbch_data;
+}
+struct DEV_BROADCAST_HANDLE64
+{
+    uint dbch_size;
+    uint dbch_devicetype;
+    uint dbch_reserved;
+    ulong dbch_handle;
+    ulong dbch_hdevnotify;
+    GUID dbch_eventguid;
+    int dbch_nameoffset;
+    ubyte[1] dbch_data;
+}
+struct _DEV_BROADCAST_USERDEFINED
+{
+    DEV_BROADCAST_HDR dbud_dbh;
+    CHAR[1] dbud_szName;
+}
+struct DEVICE_EVENT_MOUNT
+{
+    uint Version;
+    uint Flags;
+    uint FileSystemNameLength;
+    uint FileSystemNameOffset;
+}
+struct DEVICE_EVENT_BECOMING_READY
+{
+    uint Version;
+    uint Reason;
+    uint Estimated100msToReady;
+}
+struct DEVICE_EVENT_EXTERNAL_REQUEST
+{
+    uint Version;
+    uint DeviceClass;
+    ushort ButtonStatus;
+    ushort Request;
+    long SystemTime;
+}
+struct DEVICE_EVENT_GENERIC_DATA
+{
+    uint EventNumber;
+}
+struct DEVICE_EVENT_RBC_DATA
+{
+    uint EventNumber;
+    ubyte SenseQualifier;
+    ubyte SenseCode;
+    ubyte SenseKey;
+    ubyte Reserved;
+    uint Information;
+}
+struct GUID_IO_DISK_CLONE_ARRIVAL_INFORMATION
+{
+    uint DiskNumber;
+}
+struct DISK_HEALTH_NOTIFICATION_DATA
+{
+    GUID DeviceGuid;
 }

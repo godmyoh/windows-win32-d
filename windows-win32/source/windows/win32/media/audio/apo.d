@@ -48,6 +48,19 @@ enum AUDIO_MAX_CHANNELS = 0x00001000;
 //enum PKEY_CompositeFX_KeywordDetector_EndpointEffectClsid = [MISSING];
 //enum PKEY_CompositeFX_Offload_StreamEffectClsid = [MISSING];
 //enum PKEY_CompositeFX_Offload_ModeEffectClsid = [MISSING];
+//enum PKEY_FX_SupportAppLauncher = [MISSING];
+//enum PKEY_FX_SupportedFormats = [MISSING];
+//enum PKEY_FX_Enumerator = [MISSING];
+//enum PKEY_FX_VersionMajor = [MISSING];
+//enum PKEY_FX_VersionMinor = [MISSING];
+//enum PKEY_FX_Author = [MISSING];
+//enum PKEY_FX_ObjectId = [MISSING];
+//enum PKEY_FX_State = [MISSING];
+//enum PKEY_FX_EffectPackSchema_Version = [MISSING];
+//enum PKEY_FX_ApplyToBluetooth = [MISSING];
+//enum PKEY_FX_ApplyToUsb = [MISSING];
+//enum PKEY_FX_ApplyToRender = [MISSING];
+//enum PKEY_FX_ApplyToCapture = [MISSING];
 //enum PKEY_SFX_ProcessingModes_Supported_For_Streaming = [MISSING];
 //enum PKEY_MFX_ProcessingModes_Supported_For_Streaming = [MISSING];
 //enum PKEY_EFX_ProcessingModes_Supported_For_Streaming = [MISSING];
@@ -57,6 +70,7 @@ enum AUDIO_MAX_CHANNELS = 0x00001000;
 //enum PKEY_SFX_Offload_ProcessingModes_Supported_For_Streaming = [MISSING];
 //enum PKEY_MFX_Offload_ProcessingModes_Supported_For_Streaming = [MISSING];
 //enum PKEY_APO_SWFallback_ProcessingModes = [MISSING];
+enum PKEY_FX_EffectPack_Schema_V1 = GUID(0x7abf23d9, 0x727e, 0x4d0b, [0x86, 0xa3, 0xdd, 0x50, 0x1d, 0x26, 0x0, 0x1]);
 enum SID_AudioProcessingObjectRTQueue = GUID(0x458c1a1f, 0x6899, 0x4c12, [0x99, 0xac, 0xe2, 0xe6, 0xac, 0x25, 0x31, 0x4]);
 enum SID_AudioProcessingObjectLoggingService = GUID(0x8b8008af, 0x9f9, 0x456e, [0xa1, 0x73, 0xbd, 0xb5, 0x84, 0x99, 0xbc, 0xe7]);
 enum AUDIOMEDIATYPE_EQUAL_FORMAT_TYPES = 0x00000002;
@@ -317,6 +331,9 @@ enum : int
     APO_NOTIFICATION_TYPE_ENDPOINT_VOLUME                = 0x00000001,
     APO_NOTIFICATION_TYPE_ENDPOINT_PROPERTY_CHANGE       = 0x00000002,
     APO_NOTIFICATION_TYPE_SYSTEM_EFFECTS_PROPERTY_CHANGE = 0x00000003,
+    APO_NOTIFICATION_TYPE_ENDPOINT_VOLUME2               = 0x00000004,
+    APO_NOTIFICATION_TYPE_DEVICE_ORIENTATION             = 0x00000005,
+    APO_NOTIFICATION_TYPE_MICROPHONE_BOOST               = 0x00000006,
 }
 
 struct AUDIO_ENDPOINT_VOLUME_CHANGE_NOTIFICATION
@@ -338,6 +355,43 @@ struct AUDIO_SYSTEMEFFECTS_PROPERTY_CHANGE_NOTIFICATION
     IPropertyStore propertyStore;
     PROPERTYKEY propertyKey;
 }
+struct AUDIO_VOLUME_NOTIFICATION_DATA2
+{
+    AUDIO_VOLUME_NOTIFICATION_DATA* notificationData;
+    float masterVolumeInDb;
+    float volumeMinInDb;
+    float volumeMaxInDb;
+    float volumeIncrementInDb;
+    uint step;
+    uint stepCount;
+    float[1] channelVolumesInDb;
+}
+struct AUDIO_ENDPOINT_VOLUME_CHANGE_NOTIFICATION2
+{
+    IMMDevice endpoint;
+    AUDIO_VOLUME_NOTIFICATION_DATA2* volume;
+}
+alias DEVICE_ORIENTATION_TYPE = int;
+enum : int
+{
+    DEVICE_NOT_ROTATED                   = 0x00000000,
+    DEVICE_ROTATED_90_DEGREES_CLOCKWISE  = 0x00000001,
+    DEVICE_ROTATED_180_DEGREES_CLOCKWISE = 0x00000002,
+    DEVICE_ROTATED_270_DEGREES_CLOCKWISE = 0x00000003,
+}
+
+struct AUDIO_MICROPHONE_BOOST_NOTIFICATION
+{
+    IMMDevice endpoint;
+    GUID eventContext;
+    BOOL microphoneBoostEnabled;
+    float levelInDb;
+    float levelMinInDb;
+    float levelMaxInDb;
+    float levelStepInDb;
+    BOOL muteSupported;
+    BOOL mute;
+}
 struct APO_NOTIFICATION
 {
     APO_NOTIFICATION_TYPE type;
@@ -346,6 +400,9 @@ struct APO_NOTIFICATION
         AUDIO_ENDPOINT_VOLUME_CHANGE_NOTIFICATION audioEndpointVolumeChange;
         AUDIO_ENDPOINT_PROPERTY_CHANGE_NOTIFICATION audioEndpointPropertyChange;
         AUDIO_SYSTEMEFFECTS_PROPERTY_CHANGE_NOTIFICATION audioSystemEffectsPropertyChange;
+        AUDIO_ENDPOINT_VOLUME_CHANGE_NOTIFICATION2 audioEndpointVolumeChange2;
+        DEVICE_ORIENTATION_TYPE deviceOrientation;
+        AUDIO_MICROPHONE_BOOST_NOTIFICATION audioMicrophoneBoostChange;
     }
 }
 struct AUDIO_ENDPOINT_VOLUME_APO_NOTIFICATION_DESCRIPTOR
@@ -361,6 +418,10 @@ struct AUDIO_SYSTEMEFFECTS_PROPERTY_CHANGE_APO_NOTIFICATION_DESCRIPTOR
     IMMDevice device;
     GUID propertyStoreContext;
 }
+struct AUDIO_MICROPHONE_BOOST_APO_NOTIFICATION_DESCRIPTOR
+{
+    IMMDevice device;
+}
 struct APO_NOTIFICATION_DESCRIPTOR
 {
     APO_NOTIFICATION_TYPE type;
@@ -369,6 +430,7 @@ struct APO_NOTIFICATION_DESCRIPTOR
         AUDIO_ENDPOINT_VOLUME_APO_NOTIFICATION_DESCRIPTOR audioEndpointVolume;
         AUDIO_ENDPOINT_PROPERTY_CHANGE_APO_NOTIFICATION_DESCRIPTOR audioEndpointPropertyChange;
         AUDIO_SYSTEMEFFECTS_PROPERTY_CHANGE_APO_NOTIFICATION_DESCRIPTOR audioSystemEffectsPropertyChange;
+        AUDIO_MICROPHONE_BOOST_APO_NOTIFICATION_DESCRIPTOR audioMicrophoneBoost;
     }
 }
 enum IID_IAudioProcessingObjectNotifications = GUID(0x56b0c76f, 0x2fd, 0x4b21, [0xa5, 0x2e, 0x9f, 0x82, 0x19, 0xfc, 0x86, 0xe4]);
@@ -376,4 +438,9 @@ interface IAudioProcessingObjectNotifications : IUnknown
 {
     HRESULT GetApoNotificationRegistrationInfo(APO_NOTIFICATION_DESCRIPTOR**, uint*);
     void HandleNotification(APO_NOTIFICATION*);
+}
+enum IID_IAudioProcessingObjectNotifications2 = GUID(0xca2cfbde, 0xa9d6, 0x4eb0, [0xbc, 0x95, 0xc4, 0xd0, 0x26, 0xb3, 0x80, 0xf0]);
+interface IAudioProcessingObjectNotifications2 : IAudioProcessingObjectNotifications
+{
+    HRESULT GetApoNotificationRegistrationInfo2(APO_NOTIFICATION_TYPE, APO_NOTIFICATION_DESCRIPTOR**, uint*);
 }

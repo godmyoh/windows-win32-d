@@ -1,7 +1,7 @@
 module windows.win32.graphics.directcomposition;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, HANDLE, HRESULT, HWND, LARGE_INTEGER, LUID, POINT, RECT;
+import windows.win32.foundation : BOOL, HANDLE, HRESULT, HWND, LUID, POINT, RECT;
 import windows.win32.graphics.direct2d.common : D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE, D2D1_BLEND_MODE, D2D1_BORDER_MODE, D2D1_COLORMATRIX_ALPHA_MODE, D2D1_COLOR_F, D2D1_COMPOSITE_MODE, D2D1_TURBULENCE_NOISE, D2D_MATRIX_3X2_F, D2D_MATRIX_4X4_F, D2D_MATRIX_5X4_F, D2D_RECT_F, D2D_VECTOR_2F, D2D_VECTOR_4F;
 import windows.win32.graphics.direct3d_ : D3DMATRIX;
 import windows.win32.graphics.dxgi_ : IDXGIDevice;
@@ -79,11 +79,11 @@ enum : int
 
 struct DCOMPOSITION_FRAME_STATISTICS
 {
-    LARGE_INTEGER lastFrameTime;
+    long lastFrameTime;
     DXGI_RATIONAL currentCompositionRate;
-    LARGE_INTEGER currentTime;
-    LARGE_INTEGER timeFrequency;
-    LARGE_INTEGER nextEstimatedFrameTime;
+    long currentTime;
+    long timeFrequency;
+    long nextEstimatedFrameTime;
 }
 alias COMPOSITION_FRAME_ID_TYPE = int;
 enum : int
@@ -126,7 +126,7 @@ enum IID_IDCompositionAnimation = GUID(0xcbfd91d9, 0x51b2, 0x45e4, [0xb3, 0xde, 
 interface IDCompositionAnimation : IUnknown
 {
     HRESULT Reset();
-    HRESULT SetAbsoluteBeginTime(LARGE_INTEGER);
+    HRESULT SetAbsoluteBeginTime(long);
     HRESULT AddCubic(double, float, float, float, float);
     HRESULT AddSinusoidal(double, float, float, float, float);
     HRESULT AddRepeat(double, double);

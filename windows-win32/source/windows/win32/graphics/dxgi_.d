@@ -1,7 +1,7 @@
 module windows.win32.graphics.dxgi_;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, HANDLE, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, LUID, POINT, PSTR, PWSTR, RECT;
+import windows.win32.foundation : BOOL, HANDLE, HINSTANCE, HRESULT, HWND, LUID, POINT, PSTR, PWSTR, RECT;
 import windows.win32.graphics.dxgi.common : DXGI_ALPHA_MODE, DXGI_COLOR_SPACE_TYPE, DXGI_FORMAT, DXGI_GAMMA_CONTROL, DXGI_GAMMA_CONTROL_CAPABILITIES, DXGI_MODE_DESC, DXGI_MODE_ROTATION, DXGI_MODE_SCALING, DXGI_MODE_SCANLINE_ORDER, DXGI_RATIONAL, DXGI_SAMPLE_DESC;
 import windows.win32.graphics.gdi : HDC, HMONITOR;
 import windows.win32.security_ : SECURITY_ATTRIBUTES;
@@ -107,13 +107,14 @@ enum DXGI_ERROR_CACHE_CORRUPT = 0xffffffff887a0033;
 enum DXGI_ERROR_CACHE_FULL = 0xffffffff887a0034;
 enum DXGI_ERROR_CACHE_HASH_COLLISION = 0xffffffff887a0035;
 enum DXGI_ERROR_ALREADY_EXISTS = 0xffffffff887a0036;
+enum DXGI_ERROR_MPO_UNPINNED = 0xffffffff887a0064;
 struct DXGI_FRAME_STATISTICS
 {
     uint PresentCount;
     uint PresentRefreshCount;
     uint SyncRefreshCount;
-    LARGE_INTEGER SyncQPCTime;
-    LARGE_INTEGER SyncGPUTime;
+    long SyncQPCTime;
+    long SyncGPUTime;
 }
 struct DXGI_MAPPED_RECT
 {
@@ -242,7 +243,7 @@ interface IDXGIAdapter : IDXGIObject
 {
     HRESULT EnumOutputs(uint, IDXGIOutput*);
     HRESULT GetDesc(DXGI_ADAPTER_DESC*);
-    HRESULT CheckInterfaceSupport(const(GUID)*, LARGE_INTEGER*);
+    HRESULT CheckInterfaceSupport(const(GUID)*, long*);
 }
 enum IID_IDXGIOutput = GUID(0xae02eedb, 0xc735, 0x4690, [0x8d, 0x52, 0x5a, 0x8d, 0xc2, 0x2, 0x13, 0xaa]);
 interface IDXGIOutput : IDXGIObject
@@ -375,8 +376,8 @@ struct DXGI_OUTDUPL_POINTER_SHAPE_INFO
 }
 struct DXGI_OUTDUPL_FRAME_INFO
 {
-    LARGE_INTEGER LastPresentTime;
-    LARGE_INTEGER LastMouseUpdateTime;
+    long LastPresentTime;
+    long LastMouseUpdateTime;
     uint AccumulatedFrames;
     BOOL RectsCoalesced;
     BOOL ProtectedContentMaskedOut;
@@ -626,8 +627,8 @@ struct DXGI_FRAME_STATISTICS_MEDIA
     uint PresentCount;
     uint PresentRefreshCount;
     uint SyncRefreshCount;
-    LARGE_INTEGER SyncQPCTime;
-    LARGE_INTEGER SyncGPUTime;
+    long SyncQPCTime;
+    long SyncGPUTime;
     DXGI_FRAME_PRESENTATION_MODE CompositionMode;
     uint ApprovedPresentDuration;
 }
@@ -826,8 +827,8 @@ struct DXGI_OUTPUT_DESC1
     float MaxLuminance;
     float MaxFullFrameLuminance;
 }
-alias DXGI_HARDWARE_COMPOSITION_SUPPORT_FLAGS = uint;
-enum : uint
+alias DXGI_HARDWARE_COMPOSITION_SUPPORT_FLAGS = int;
+enum : int
 {
     DXGI_HARDWARE_COMPOSITION_SUPPORT_FLAG_FULLSCREEN       = 0x00000001,
     DXGI_HARDWARE_COMPOSITION_SUPPORT_FLAG_WINDOWED         = 0x00000002,
@@ -859,8 +860,8 @@ interface IDXGIFactory7 : IDXGIFactory6
     HRESULT RegisterAdaptersChangedEvent(HANDLE, uint*);
     HRESULT UnregisterAdaptersChangedEvent(uint);
 }
-alias DXGI_DEBUG_RLO_FLAGS = uint;
-enum : uint
+alias DXGI_DEBUG_RLO_FLAGS = int;
+enum : int
 {
     DXGI_DEBUG_RLO_SUMMARY         = 0x00000001,
     DXGI_DEBUG_RLO_DETAIL          = 0x00000002,

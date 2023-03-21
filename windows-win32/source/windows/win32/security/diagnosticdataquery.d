@@ -34,7 +34,7 @@ struct DIAGNOSTIC_DATA_RECORD
 }
 struct DIAGNOSTIC_DATA_SEARCH_CRITERIA
 {
-    PWSTR* producerNames;
+    const(wchar)** producerNames;
     uint producerNameCount;
     const(wchar)* textToMatch;
     const(int)* categoryIds;
@@ -119,7 +119,7 @@ HRESULT DdqCloseSession(HDIAGNOSTIC_DATA_QUERY_SESSION);
 HRESULT DdqGetSessionAccessLevel(HDIAGNOSTIC_DATA_QUERY_SESSION, DdqAccessLevel*);
 HRESULT DdqGetDiagnosticDataAccessLevelAllowed(DdqAccessLevel*);
 HRESULT DdqGetDiagnosticRecordStats(HDIAGNOSTIC_DATA_QUERY_SESSION, const(DIAGNOSTIC_DATA_SEARCH_CRITERIA)*, uint*, long*, long*);
-HRESULT DdqGetDiagnosticRecordPayload(HDIAGNOSTIC_DATA_QUERY_SESSION, long, PWSTR*);
+HRESULT DdqGetDiagnosticRecordPayload(HDIAGNOSTIC_DATA_QUERY_SESSION, long, const(wchar)**);
 HRESULT DdqGetDiagnosticRecordLocaleTags(HDIAGNOSTIC_DATA_QUERY_SESSION, const(wchar)*, HDIAGNOSTIC_EVENT_TAG_DESCRIPTION*);
 HRESULT DdqFreeDiagnosticRecordLocaleTags(HDIAGNOSTIC_EVENT_TAG_DESCRIPTION);
 HRESULT DdqGetDiagnosticRecordLocaleTagAtIndex(HDIAGNOSTIC_EVENT_TAG_DESCRIPTION, uint, DIAGNOSTIC_DATA_EVENT_TAG_DESCRIPTION*);
@@ -144,8 +144,8 @@ HRESULT DdqFreeDiagnosticReport(HDIAGNOSTIC_REPORT);
 HRESULT DdqGetDiagnosticReportAtIndex(HDIAGNOSTIC_REPORT, uint, DIAGNOSTIC_REPORT_DATA*);
 HRESULT DdqGetDiagnosticReportCount(HDIAGNOSTIC_REPORT, uint*);
 HRESULT DdqExtractDiagnosticReport(HDIAGNOSTIC_DATA_QUERY_SESSION, uint, const(wchar)*, const(wchar)*);
-HRESULT DdqGetDiagnosticRecordTagDistribution(HDIAGNOSTIC_DATA_QUERY_SESSION, PWSTR*, uint, DIAGNOSTIC_DATA_EVENT_TAG_STATS**, uint*);
-HRESULT DdqGetDiagnosticRecordBinaryDistribution(HDIAGNOSTIC_DATA_QUERY_SESSION, PWSTR*, uint, uint, DIAGNOSTIC_DATA_EVENT_BINARY_STATS**, uint*);
+HRESULT DdqGetDiagnosticRecordTagDistribution(HDIAGNOSTIC_DATA_QUERY_SESSION, const(wchar)**, uint, DIAGNOSTIC_DATA_EVENT_TAG_STATS**, uint*);
+HRESULT DdqGetDiagnosticRecordBinaryDistribution(HDIAGNOSTIC_DATA_QUERY_SESSION, const(wchar)**, uint, uint, DIAGNOSTIC_DATA_EVENT_BINARY_STATS**, uint*);
 HRESULT DdqGetDiagnosticRecordSummary(HDIAGNOSTIC_DATA_QUERY_SESSION, const(wchar)**, uint, DIAGNOSTIC_DATA_GENERAL_STATS*);
 HRESULT DdqSetTranscriptConfiguration(HDIAGNOSTIC_DATA_QUERY_SESSION, const(DIAGNOSTIC_DATA_EVENT_TRANSCRIPT_CONFIGURATION)*);
 HRESULT DdqGetTranscriptConfiguration(HDIAGNOSTIC_DATA_QUERY_SESSION, DIAGNOSTIC_DATA_EVENT_TRANSCRIPT_CONFIGURATION*);

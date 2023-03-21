@@ -9,6 +9,17 @@ import windows.win32.system.registry : HKEY;
 version (Windows):
 extern (Windows):
 
+BOOL GetAppContainerNamedObjectPath(HANDLE, PSID, uint, PWSTR, uint*);
+HRESULT IsProcessInWDAGContainer(void*, BOOL*);
+HRESULT IsProcessInIsolatedContainer(BOOL*);
+HRESULT IsProcessInIsolatedWindowsEnvironment(BOOL*);
+HRESULT CreateAppContainerProfile(const(wchar)*, const(wchar)*, const(wchar)*, SID_AND_ATTRIBUTES*, uint, PSID*);
+HRESULT DeleteAppContainerProfile(const(wchar)*);
+HRESULT GetAppContainerRegistryLocation(uint, HKEY*);
+HRESULT GetAppContainerFolderPath(const(wchar)*, PWSTR*);
+HRESULT DeriveRestrictedAppContainerSidFromAppContainerSidAndRestrictedName(PSID, const(wchar)*, PSID*);
+HRESULT DeriveAppContainerSidFromAppContainerName(const(wchar)*, PSID*);
+enum WDAG_CLIPBOARD_TAG = "CrossIsolatedEnvironmentContent";
 enum CLSID_IsolatedAppLauncher = GUID(0xbc812430, 0xe75e, 0x4fd1, [0x96, 0x41, 0x1f, 0x9f, 0x1e, 0x2d, 0x9a, 0x1f]);
 struct IsolatedAppLauncher
 {
@@ -23,13 +34,3 @@ interface IIsolatedAppLauncher : IUnknown
 {
     HRESULT Launch(const(wchar)*, const(wchar)*, const(IsolatedAppLauncherTelemetryParameters)*);
 }
-BOOL GetAppContainerNamedObjectPath(HANDLE, PSID, uint, PWSTR, uint*);
-HRESULT IsProcessInWDAGContainer(void*, BOOL*);
-HRESULT IsProcessInIsolatedContainer(BOOL*);
-HRESULT IsProcessInIsolatedWindowsEnvironment(BOOL*);
-HRESULT CreateAppContainerProfile(const(wchar)*, const(wchar)*, const(wchar)*, SID_AND_ATTRIBUTES*, uint, PSID*);
-HRESULT DeleteAppContainerProfile(const(wchar)*);
-HRESULT GetAppContainerRegistryLocation(uint, HKEY*);
-HRESULT GetAppContainerFolderPath(const(wchar)*, PWSTR*);
-HRESULT DeriveRestrictedAppContainerSidFromAppContainerSidAndRestrictedName(PSID, const(wchar)*, PSID*);
-HRESULT DeriveAppContainerSidFromAppContainerName(const(wchar)*, PSID*);

@@ -100,6 +100,7 @@ alias PNS_DLL_STOP_FN = uint function(uint);
 alias PNS_HELPER_START_FN = uint function(const(GUID)*, uint);
 alias PNS_HELPER_STOP_FN = uint function(uint);
 alias PFN_HANDLE_CMD = uint function(const(wchar)*, PWSTR*, uint, uint, uint, const(void)*, BOOL*);
+alias PFN_CUSTOM_HELP = void function(HANDLE, const(wchar)*);
 alias PNS_OSVERSIONCHECK = BOOL function(uint, uint, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, uint, uint);
 struct NS_HELPER_ATTRIBUTES
 {
@@ -124,6 +125,7 @@ struct CMD_ENTRY
     uint dwCmdHlpToken;
     uint dwFlags;
     PNS_OSVERSIONCHECK pOsVersionCheck;
+    PFN_CUSTOM_HELP pfnCustomHelpFn;
 }
 struct CMD_GROUP_ENTRY
 {

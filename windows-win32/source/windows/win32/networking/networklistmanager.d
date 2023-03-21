@@ -1,7 +1,7 @@
 module windows.win32.networking.networklistmanager;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BSTR, FILETIME, HRESULT, VARIANT_BOOL;
+import windows.win32.foundation : BOOL, BSTR, FILETIME, HRESULT, VARIANT_BOOL;
 import windows.win32.system.com_ : IDispatch, IUnknown;
 import windows.win32.system.ole : IEnumVARIANT;
 
@@ -105,6 +105,14 @@ enum : int
     NLM_DOMAIN_TYPE_DOMAIN_AUTHENTICATED = 0x00000002,
 }
 
+alias NLM_DOMAIN_AUTHENTICATION_KIND = int;
+enum : int
+{
+    NLM_DOMAIN_AUTHENTICATION_KIND_NONE = 0x00000000,
+    NLM_DOMAIN_AUTHENTICATION_KIND_LDAP = 0x00000001,
+    NLM_DOMAIN_AUTHENTICATION_KIND_TLS  = 0x00000002,
+}
+
 alias NLM_ENUM_NETWORK = int;
 enum : int
 {
@@ -156,6 +164,11 @@ interface INetwork : IDispatch
     HRESULT GetCategory(NLM_NETWORK_CATEGORY*);
     HRESULT SetCategory(NLM_NETWORK_CATEGORY);
 }
+enum IID_INetwork2 = GUID(0xb5550abb, 0x3391, 0x4310, [0x80, 0x4f, 0x25, 0xdc, 0xc3, 0x25, 0xed, 0x81]);
+interface INetwork2 : INetwork
+{
+    HRESULT IsDomainAuthenticatedBy(NLM_DOMAIN_AUTHENTICATION_KIND, BOOL*);
+}
 enum IID_IEnumNetworks = GUID(0xdcb00003, 0x570f, 0x4a9b, [0x8d, 0x69, 0x19, 0x9f, 0xdb, 0xa5, 0x72, 0x3b]);
 interface IEnumNetworks : IDispatch
 {
@@ -193,6 +206,11 @@ interface INetworkConnection : IDispatch
     HRESULT GetConnectionId(GUID*);
     HRESULT GetAdapterId(GUID*);
     HRESULT GetDomainType(NLM_DOMAIN_TYPE*);
+}
+enum IID_INetworkConnection2 = GUID(0xe676ed, 0x5a35, 0x4738, [0x92, 0xeb, 0x85, 0x81, 0x73, 0x8d, 0xf, 0xa]);
+interface INetworkConnection2 : INetworkConnection
+{
+    HRESULT IsDomainAuthenticatedBy(NLM_DOMAIN_AUTHENTICATION_KIND, BOOL*);
 }
 enum IID_IEnumNetworkConnections = GUID(0xdcb00006, 0x570f, 0x4a9b, [0x8d, 0x69, 0x19, 0x9f, 0xdb, 0xa5, 0x72, 0x3b]);
 interface IEnumNetworkConnections : IDispatch

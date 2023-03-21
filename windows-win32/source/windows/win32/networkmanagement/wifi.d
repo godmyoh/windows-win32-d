@@ -1,7 +1,7 @@
 module windows.win32.networkmanagement.wifi;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, HANDLE, HRESULT, HWND, LARGE_INTEGER, PWSTR;
+import windows.win32.foundation : BOOL, BOOLEAN, HANDLE, HRESULT, HWND, PWSTR;
 import windows.win32.networkmanagement.ndis : NDIS_OBJECT_HEADER;
 import windows.win32.security.extensibleauthenticationprotocol : EAP_ATTRIBUTES, EAP_METHOD_TYPE;
 import windows.win32.system.com_ : IUnknown;
@@ -34,7 +34,7 @@ uint WlanSetProfile(HANDLE, const(GUID)*, uint, const(wchar)*, const(wchar)*, BO
 uint WlanDeleteProfile(HANDLE, const(GUID)*, const(wchar)*, void*);
 uint WlanRenameProfile(HANDLE, const(GUID)*, const(wchar)*, const(wchar)*, void*);
 uint WlanGetProfileList(HANDLE, const(GUID)*, void*, WLAN_PROFILE_INFO_LIST**);
-uint WlanSetProfileList(HANDLE, const(GUID)*, uint, PWSTR*, void*);
+uint WlanSetProfileList(HANDLE, const(GUID)*, uint, const(wchar)**, void*);
 uint WlanSetProfilePosition(HANDLE, const(GUID)*, const(wchar)*, uint, void*);
 uint WlanSetProfileCustomUserData(HANDLE, const(GUID)*, const(wchar)*, uint, const(ubyte)*, void*);
 uint WlanGetProfileCustomUserData(HANDLE, const(GUID)*, const(wchar)*, void*, uint*, ubyte**);
@@ -987,6 +987,7 @@ enum : int
     dot11_phy_type_vht        = 0x00000008,
     dot11_phy_type_dmg        = 0x00000009,
     dot11_phy_type_he         = 0x0000000a,
+    dot11_phy_type_eht        = 0x0000000b,
     dot11_phy_type_IHV_start  = 0x80000000,
     dot11_phy_type_IHV_end    = 0xffffffff,
 }
@@ -1708,7 +1709,7 @@ struct DOT11_ASSOCIATION_INFO_EX
     ushort usAssociationID;
     DOT11_ASSOCIATION_STATE dot11AssociationState;
     DOT11_POWER_MODE dot11PowerMode;
-    LARGE_INTEGER liAssociationUpTime;
+    long liAssociationUpTime;
     ulong ullNumOfTxPacketSuccesses;
     ulong ullNumOfTxPacketFailures;
     ulong ullNumOfRxPacketSuccesses;
@@ -2216,7 +2217,7 @@ struct DOT11_PEER_INFO
     ushort usAssociationID;
     DOT11_ASSOCIATION_STATE AssociationState;
     DOT11_POWER_MODE PowerMode;
-    LARGE_INTEGER liAssociationUpTime;
+    long liAssociationUpTime;
     DOT11_PEER_STATISTICS Statistics;
 }
 struct DOT11_PEER_INFO_LIST

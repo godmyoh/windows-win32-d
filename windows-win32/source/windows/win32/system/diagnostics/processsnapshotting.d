@@ -1,6 +1,6 @@
 module windows.win32.system.diagnostics.processsnapshotting;
 
-import windows.win32.foundation : BOOL, FILETIME, HANDLE, LARGE_INTEGER, PWSTR;
+import windows.win32.foundation : BOOL, FILETIME, HANDLE, PWSTR;
 import windows.win32.system.diagnostics.debug__ : CONTEXT;
 import windows.win32.system.memory_ : MEMORY_BASIC_INFORMATION;
 
@@ -20,8 +20,8 @@ uint PssWalkMarkerSeekToBeginning(HPSSWALK);
 enum PSS_PERF_RESOLUTION = 0x000f4240;
 alias HPSS = void*;
 alias HPSSWALK = void*;
-alias PSS_HANDLE_FLAGS = uint;
-enum : uint
+alias PSS_HANDLE_FLAGS = int;
+enum : int
 {
     PSS_HANDLE_NONE                           = 0x00000000,
     PSS_HANDLE_HAVE_TYPE                      = 0x00000001,
@@ -91,15 +91,15 @@ enum : int
     PSS_WALK_THREADS         = 0x00000003,
 }
 
-alias PSS_DUPLICATE_FLAGS = uint;
-enum : uint
+alias PSS_DUPLICATE_FLAGS = int;
+enum : int
 {
     PSS_DUPLICATE_NONE         = 0x00000000,
     PSS_DUPLICATE_CLOSE_SOURCE = 0x00000001,
 }
 
-alias PSS_PROCESS_FLAGS = uint;
-enum : uint
+alias PSS_PROCESS_FLAGS = int;
+enum : int
 {
     PSS_PROCESS_FLAGS_NONE        = 0x00000000,
     PSS_PROCESS_FLAGS_PROTECTED   = 0x00000001,
@@ -259,7 +259,7 @@ struct PSS_HANDLE_ENTRY
         {
             void* BaseAddress;
             uint AllocationAttributes;
-            LARGE_INTEGER MaximumSize;
+            long MaximumSize;
         }
         struct _Semaphore_e__Struct
         {
@@ -268,8 +268,8 @@ struct PSS_HANDLE_ENTRY
         }
     }
 }
-alias PSS_THREAD_FLAGS = uint;
-enum : uint
+alias PSS_THREAD_FLAGS = int;
+enum : int
 {
     PSS_THREAD_FLAGS_NONE       = 0x00000000,
     PSS_THREAD_FLAGS_TERMINATED = 0x00000001,

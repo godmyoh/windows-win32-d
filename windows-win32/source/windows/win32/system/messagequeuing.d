@@ -1,12 +1,71 @@
 module windows.win32.system.messagequeuing;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BSTR, HRESULT, VARIANT_BOOL;
+import windows.win32.foundation : BSTR, HANDLE, HRESULT, PWSTR, VARIANT_BOOL;
+import windows.win32.security_ : PSECURITY_DESCRIPTOR;
 import windows.win32.system.com_ : IDispatch, IUnknown, VARIANT;
+import windows.win32.system.com.structuredstorage : PROPVARIANT;
+import windows.win32.system.distributedtransactioncoordinator : ITransaction;
+import windows.win32.system.io : OVERLAPPED;
 
 version (Windows):
 extern (Windows):
 
+alias MQQUEUEACCESSMASK = uint;
+enum : uint
+{
+    MQSEC_DELETE_QUEUE             = 0x00010000,
+    MQSEC_GET_QUEUE_PERMISSIONS    = 0x00020000,
+    MQSEC_CHANGE_QUEUE_PERMISSIONS = 0x00040000,
+    MQSEC_TAKE_QUEUE_OWNERSHIP     = 0x00080000,
+    MQSEC_RECEIVE_MESSAGE          = 0x00000003,
+    MQSEC_RECEIVE_JOURNAL_MESSAGE  = 0x0000000a,
+    MQSEC_QUEUE_GENERIC_READ       = 0x0002002b,
+    MQSEC_QUEUE_GENERIC_WRITE      = 0x00020024,
+    MQSEC_QUEUE_GENERIC_ALL        = 0x000f003f,
+    MQSEC_DELETE_MESSAGE           = 0x00000001,
+    MQSEC_PEEK_MESSAGE             = 0x00000002,
+    MQSEC_WRITE_MESSAGE            = 0x00000004,
+    MQSEC_DELETE_JOURNAL_MESSAGE   = 0x00000008,
+    MQSEC_SET_QUEUE_PROPERTIES     = 0x00000010,
+    MQSEC_GET_QUEUE_PROPERTIES     = 0x00000020,
+    MQSEC_QUEUE_GENERIC_EXECUTE    = 0x00000000,
+}
+
+HRESULT MQCreateQueue(PSECURITY_DESCRIPTOR, MQQUEUEPROPS*, PWSTR, uint*);
+HRESULT MQDeleteQueue(const(wchar)*);
+HRESULT MQLocateBegin(const(wchar)*, MQRESTRICTION*, MQCOLUMNSET*, MQSORTSET*, HANDLE*);
+HRESULT MQLocateNext(HANDLE, uint*, PROPVARIANT*);
+HRESULT MQLocateEnd(HANDLE);
+HRESULT MQOpenQueue(const(wchar)*, uint, uint, long*);
+HRESULT MQSendMessage(long, MQMSGPROPS*, ITransaction);
+HRESULT MQReceiveMessage(long, uint, uint, MQMSGPROPS*, OVERLAPPED*, PMQRECEIVECALLBACK, HANDLE, ITransaction);
+HRESULT MQReceiveMessageByLookupId(long, ulong, uint, MQMSGPROPS*, OVERLAPPED*, PMQRECEIVECALLBACK, ITransaction);
+HRESULT MQCreateCursor(long, HANDLE*);
+HRESULT MQCloseCursor(HANDLE);
+HRESULT MQCloseQueue(long);
+HRESULT MQSetQueueProperties(const(wchar)*, MQQUEUEPROPS*);
+HRESULT MQGetQueueProperties(const(wchar)*, MQQUEUEPROPS*);
+HRESULT MQGetQueueSecurity(const(wchar)*, uint, PSECURITY_DESCRIPTOR, uint, uint*);
+HRESULT MQSetQueueSecurity(const(wchar)*, uint, PSECURITY_DESCRIPTOR);
+HRESULT MQPathNameToFormatName(const(wchar)*, PWSTR, uint*);
+HRESULT MQHandleToFormatName(long, PWSTR, uint*);
+HRESULT MQInstanceToFormatName(GUID*, PWSTR, uint*);
+HRESULT MQADsPathToFormatName(const(wchar)*, PWSTR, uint*);
+void MQFreeMemory(void*);
+HRESULT MQGetMachineProperties(const(wchar)*, const(GUID)*, MQQMPROPS*);
+HRESULT MQGetSecurityContext(void*, uint, HANDLE*);
+HRESULT MQGetSecurityContextEx(void*, uint, HANDLE*);
+void MQFreeSecurityContext(HANDLE);
+HRESULT MQRegisterCertificate(uint, void*, uint);
+HRESULT MQBeginTransaction(ITransaction*);
+HRESULT MQGetOverlappedResult(OVERLAPPED*);
+HRESULT MQGetPrivateComputerInformation(const(wchar)*, MQPRIVATEPROPS*);
+HRESULT MQPurgeQueue(long);
+HRESULT MQMgmtGetInfo(const(wchar)*, const(wchar)*, MQMGMTPROPS*);
+HRESULT MQMgmtAction(const(wchar)*, const(wchar)*, const(wchar)*);
+HRESULT MQMarkMessageRejected(HANDLE, ulong);
+HRESULT MQMoveMessage(long, long, ulong, ITransaction);
 enum PRLT = 0x00000000;
 enum PRLE = 0x00000001;
 enum PRGT = 0x00000002;
@@ -126,6 +185,8 @@ enum PROPID_Q_TRANSACTION = 0x00000071;
 enum PROPID_Q_PATHNAME_DNS = 0x0000007c;
 enum PROPID_Q_MULTICAST_ADDRESS = 0x0000007d;
 enum PROPID_Q_ADS_PATH = 0x0000007e;
+enum MQ_QTYPE_REPORT = GUID(0x55ee8f32, 0xcce9, 0x11cf, [0xb1, 0x8, 0x0, 0x20, 0xaf, 0xd6, 0x1c, 0xe9]);
+enum MQ_QTYPE_TEST = GUID(0x55ee8f33, 0xcce9, 0x11cf, [0xb1, 0x8, 0x0, 0x20, 0xaf, 0xd6, 0x1c, 0xe9]);
 enum PROPID_QM_BASE = 0x000000c8;
 enum PROPID_QM_SITE_ID = 0x000000c9;
 enum PROPID_QM_MACHINE_ID = 0x000000ca;
@@ -210,13 +271,6 @@ enum QUEUE_ACTION_PAUSE = "PAUSE";
 enum QUEUE_ACTION_RESUME = "RESUME";
 enum QUEUE_ACTION_EOD_RESEND = "EOD_RESEND";
 enum LONG_LIVED = 0xfffffffe;
-enum MQSEC_DELETE_MESSAGE = 0x00000001;
-enum MQSEC_PEEK_MESSAGE = 0x00000002;
-enum MQSEC_WRITE_MESSAGE = 0x00000004;
-enum MQSEC_DELETE_JOURNAL_MESSAGE = 0x00000008;
-enum MQSEC_SET_QUEUE_PROPERTIES = 0x00000010;
-enum MQSEC_GET_QUEUE_PROPERTIES = 0x00000020;
-enum MQSEC_QUEUE_GENERIC_EXECUTE = 0x00000000;
 enum MQ_OK = 0x00000000;
 enum MQ_ERROR_RESOLVE_ADDRESS = 0xffffffffc00e0099;
 enum MQ_ERROR_TOO_MANY_PROPERTIES = 0xffffffffc00e009a;
@@ -1535,3 +1589,93 @@ interface IMSMQQueueManagement : IMSMQManagement
     HRESULT get_BytesInJournal(VARIANT*);
     HRESULT EodGetReceiveInfo(VARIANT*);
 }
+struct MQPROPERTYRESTRICTION
+{
+    uint rel;
+    uint prop;
+    PROPVARIANT prval;
+}
+struct MQRESTRICTION
+{
+    uint cRes;
+    MQPROPERTYRESTRICTION* paPropRes;
+}
+struct MQCOLUMNSET
+{
+    uint cCol;
+    uint* aCol;
+}
+struct MQSORTKEY
+{
+    uint propColumn;
+    uint dwOrder;
+}
+struct MQSORTSET
+{
+    uint cCol;
+    MQSORTKEY* aCol;
+}
+struct MQMSGPROPS
+{
+    uint cProp;
+    uint* aPropID;
+    PROPVARIANT* aPropVar;
+    HRESULT* aStatus;
+}
+struct MQQUEUEPROPS
+{
+    uint cProp;
+    uint* aPropID;
+    PROPVARIANT* aPropVar;
+    HRESULT* aStatus;
+}
+struct MQQMPROPS
+{
+    uint cProp;
+    uint* aPropID;
+    PROPVARIANT* aPropVar;
+    HRESULT* aStatus;
+}
+struct MQPRIVATEPROPS
+{
+    uint cProp;
+    uint* aPropID;
+    PROPVARIANT* aPropVar;
+    HRESULT* aStatus;
+}
+struct MQMGMTPROPS
+{
+    uint cProp;
+    uint* aPropID;
+    PROPVARIANT* aPropVar;
+    HRESULT* aStatus;
+}
+struct SEQUENCE_INFO
+{
+    long SeqID;
+    uint SeqNo;
+    uint PrevNo;
+}
+alias MQConnectionState = int;
+enum : int
+{
+    MQCONN_NOFAILURE                 = 0x00000000,
+    MQCONN_ESTABLISH_PACKET_RECEIVED = 0x00000001,
+    MQCONN_READY                     = 0x00000002,
+    MQCONN_UNKNOWN_FAILURE           = 0x80000000,
+    MQCONN_PING_FAILURE              = 0x80000001,
+    MQCONN_CREATE_SOCKET_FAILURE     = 0x80000002,
+    MQCONN_BIND_SOCKET_FAILURE       = 0x80000003,
+    MQCONN_CONNECT_SOCKET_FAILURE    = 0x80000004,
+    MQCONN_TCP_NOT_ENABLED           = 0x80000005,
+    MQCONN_SEND_FAILURE              = 0x80000006,
+    MQCONN_NOT_READY                 = 0x80000007,
+    MQCONN_NAME_RESOLUTION_FAILURE   = 0x80000008,
+    MQCONN_INVALID_SERVER_CERT       = 0x80000009,
+    MQCONN_LIMIT_REACHED             = 0x8000000a,
+    MQCONN_REFUSED_BY_OTHER_SIDE     = 0x8000000b,
+    MQCONN_ROUTING_FAILURE           = 0x8000000c,
+    MQCONN_OUT_OF_MEMORY             = 0x8000000d,
+}
+
+alias PMQRECEIVECALLBACK = void function(HRESULT, long, uint, uint, MQMSGPROPS*, OVERLAPPED*, HANDLE);

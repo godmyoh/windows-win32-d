@@ -1,7 +1,7 @@
 module windows.win32.storage.iscsidisc;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOLEAN, CHAR, LARGE_INTEGER, PSTR, PWSTR;
+import windows.win32.foundation : BOOLEAN, CHAR, PSTR, PWSTR;
 import windows.win32.system.ioctl : STORAGE_DEVICE_NUMBER;
 
 version (Windows):
@@ -206,6 +206,7 @@ enum FIRMWARE_REQUEST_BLOCK_STRUCTURE_VERSION = 0x00000001;
 enum FIRMWARE_REQUEST_FLAG_CONTROLLER = 0x00000001;
 enum FIRMWARE_REQUEST_FLAG_LAST_SEGMENT = 0x00000002;
 enum FIRMWARE_REQUEST_FLAG_FIRST_SEGMENT = 0x00000004;
+enum FIRMWARE_REQUEST_FLAG_REPLACE_EXISTING_IMAGE = 0x40000000;
 enum FIRMWARE_REQUEST_FLAG_SWITCH_TO_EXISTING_FIRMWARE = 0x80000000;
 enum STORAGE_FIRMWARE_INFO_STRUCTURE_VERSION = 0x00000001;
 enum STORAGE_FIRMWARE_INFO_STRUCTURE_VERSION_V2 = 0x00000002;
@@ -884,7 +885,7 @@ struct DUMP_POINTERS
     void* MappedRegisterBase;
     void* DumpData;
     void* CommonBufferVa;
-    LARGE_INTEGER CommonBufferPa;
+    long CommonBufferPa;
     uint CommonBufferSize;
     BOOLEAN AllocateCommonBuffers;
     BOOLEAN UseDiskDump;

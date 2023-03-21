@@ -33,7 +33,7 @@ void WSDFreeLinkedMemory(void*);
 void WSDAttachLinkedMemory(void*, void*);
 void WSDDetachLinkedMemory(void*);
 HRESULT WSDXMLBuildAnyForSingleElement(WSDXML_NAME*, const(wchar)*, WSDXML_ELEMENT**);
-HRESULT WSDXMLGetValueFromAny(const(wchar)*, const(wchar)*, WSDXML_ELEMENT*, PWSTR*);
+HRESULT WSDXMLGetValueFromAny(const(wchar)*, const(wchar)*, WSDXML_ELEMENT*, const(wchar)**);
 HRESULT WSDXMLAddSibling(WSDXML_ELEMENT*, WSDXML_ELEMENT*);
 HRESULT WSDXMLAddChild(WSDXML_ELEMENT*, WSDXML_ELEMENT*);
 HRESULT WSDXMLCleanupElement(WSDXML_ELEMENT*);
@@ -124,8 +124,8 @@ interface IWSDTransportAddress : IWSDAddress
 {
     HRESULT GetPort(ushort*);
     HRESULT SetPort(ushort);
-    HRESULT GetTransportAddress(PWSTR*);
-    HRESULT GetTransportAddressEx(BOOL, PWSTR*);
+    HRESULT GetTransportAddress(const(wchar)**);
+    HRESULT GetTransportAddressEx(BOOL, const(wchar)**);
     HRESULT SetTransportAddress(const(wchar)*);
 }
 enum IID_IWSDMessageParameters = GUID(0x1fafe8a2, 0xe6fc, 0x4b80, [0xb6, 0xcf, 0xb7, 0xd4, 0x5c, 0x41, 0x6d, 0x7c]);
@@ -176,11 +176,11 @@ enum IID_IWSDHttpMessageParameters = GUID(0x540bd122, 0x5c83, 0x4dec, [0xb3, 0x9
 interface IWSDHttpMessageParameters : IWSDMessageParameters
 {
     HRESULT SetInboundHttpHeaders(const(wchar)*);
-    HRESULT GetInboundHttpHeaders(PWSTR*);
+    HRESULT GetInboundHttpHeaders(const(wchar)**);
     HRESULT SetOutboundHttpHeaders(const(wchar)*);
-    HRESULT GetOutboundHttpHeaders(PWSTR*);
+    HRESULT GetOutboundHttpHeaders(const(wchar)**);
     HRESULT SetID(const(wchar)*);
-    HRESULT GetID(PWSTR*);
+    HRESULT GetID(const(wchar)**);
     HRESULT SetContext(IUnknown);
     HRESULT GetContext(IUnknown*);
     HRESULT Clear();
@@ -190,7 +190,7 @@ interface IWSDHttpAddress : IWSDTransportAddress
 {
     HRESULT GetSecure();
     HRESULT SetSecure(BOOL);
-    HRESULT GetPath(PWSTR*);
+    HRESULT GetPath(const(wchar)**);
     HRESULT SetPath(const(wchar)*);
 }
 enum IID_IWSDSSLClientCertificate = GUID(0xde105e87, 0xa0da, 0x418e, [0x98, 0xad, 0x27, 0xb9, 0xee, 0xd8, 0x7b, 0xdc]);
@@ -756,9 +756,9 @@ interface IWSDiscoveredService : IUnknown
     HRESULT GetXAddrs(WSD_URI_LIST**);
     HRESULT GetMetadataVersion(ulong*);
     HRESULT GetExtendedDiscoXML(WSDXML_ELEMENT**, WSDXML_ELEMENT**);
-    HRESULT GetProbeResolveTag(PWSTR*);
-    HRESULT GetRemoteTransportAddress(PWSTR*);
-    HRESULT GetLocalTransportAddress(PWSTR*);
+    HRESULT GetProbeResolveTag(const(wchar)**);
+    HRESULT GetRemoteTransportAddress(const(wchar)**);
+    HRESULT GetLocalTransportAddress(const(wchar)**);
     HRESULT GetLocalInterfaceGUID(GUID*);
     HRESULT GetInstanceId(ulong*);
 }
@@ -788,7 +788,7 @@ interface IWSDiscoveryPublisherNotify : IUnknown
 enum IID_IWSDScopeMatchingRule = GUID(0xfcafe424, 0xfef5, 0x481a, [0xbd, 0x9f, 0x33, 0xce, 0x5, 0x74, 0x25, 0x6f]);
 interface IWSDScopeMatchingRule : IUnknown
 {
-    HRESULT GetScopeRule(PWSTR*);
+    HRESULT GetScopeRule(const(wchar)**);
     HRESULT MatchScopes(const(wchar)*, const(wchar)*, BOOL*);
 }
 enum IID_IWSDEndpointProxy = GUID(0x1860d430, 0xb24c, 0x4975, [0x9f, 0x90, 0xdb, 0xb3, 0x9b, 0xaa, 0x24, 0xec]);
@@ -799,7 +799,7 @@ interface IWSDEndpointProxy : IUnknown
     HRESULT SendTwoWayRequestAsync(const(void)*, const(WSD_OPERATION)*, IUnknown, IWSDAsyncCallback, IWSDAsyncResult*);
     HRESULT AbortAsyncOperation(IWSDAsyncResult);
     HRESULT ProcessFault(const(WSD_SOAP_FAULT)*);
-    HRESULT GetErrorInfo(PWSTR*);
+    HRESULT GetErrorInfo(const(wchar)**);
     HRESULT GetFaultInfo(WSD_SOAP_FAULT**);
 }
 enum IID_IWSDMetadataExchange = GUID(0x6996d57, 0x1d67, 0x4928, [0x93, 0x7, 0x3d, 0x78, 0x33, 0xfd, 0xb8, 0x46]);

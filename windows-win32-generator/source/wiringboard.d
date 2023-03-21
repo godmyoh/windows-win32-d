@@ -16,14 +16,14 @@ import generator.patch.modulewriter;
 import std.file;
 
 
-auto buildGenerator(string outDir)
+auto buildGenerator(string outDir, PatchStatus patchStatus)
 {
     auto winmdFile = `.\meta\Windows.Win32.winmd`;
     auto db = new Database(read(winmdFile));
 
-    auto patchedDeclarationAggrigator = new DeclarationAggregatorPatch(new DeclarationAggregator());
-    auto patchedModuleWriter = new ModuleWriterPatch(new ModuleWriter());
-    auto patchedDlangTypeResolver = new DlangTypeResolverPatch(new DlangTypeResolver());
+    auto patchedDeclarationAggrigator = new DeclarationAggregatorPatch(patchStatus, new DeclarationAggregator());
+    auto patchedModuleWriter = new ModuleWriterPatch(patchStatus, new ModuleWriter());
+    auto patchedDlangTypeResolver = new DlangTypeResolverPatch(patchStatus, new DlangTypeResolver());
 
     return new Win32ModuleGenerator(outDir,
                                     new NamespaceExtractor(db),

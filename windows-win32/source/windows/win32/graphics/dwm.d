@@ -93,7 +93,8 @@ enum : int
     DWMWA_CAPTION_COLOR                  = 0x00000023,
     DWMWA_TEXT_COLOR                     = 0x00000024,
     DWMWA_VISIBLE_FRAME_BORDER_THICKNESS = 0x00000025,
-    DWMWA_LAST                           = 0x00000026,
+    DWMWA_SYSTEMBACKDROP_TYPE            = 0x00000026,
+    DWMWA_LAST                           = 0x00000027,
 }
 
 alias DWM_WINDOW_CORNER_PREFERENCE = int;
@@ -103,6 +104,16 @@ enum : int
     DWMWCP_DONOTROUND = 0x00000001,
     DWMWCP_ROUND      = 0x00000002,
     DWMWCP_ROUNDSMALL = 0x00000003,
+}
+
+alias DWM_SYSTEMBACKDROP_TYPE = int;
+enum : int
+{
+    DWMSBT_AUTO            = 0x00000000,
+    DWMSBT_NONE            = 0x00000001,
+    DWMSBT_MAINWINDOW      = 0x00000002,
+    DWMSBT_TRANSIENTWINDOW = 0x00000003,
+    DWMSBT_TABBEDWINDOW    = 0x00000004,
 }
 
 alias DWMNCRENDERINGPOLICY = int;
@@ -248,8 +259,8 @@ enum : uint
     DWMSC_ALL       = 0xffffffff,
 }
 
-alias DWM_TAB_WINDOW_REQUIREMENTS = uint;
-enum : uint
+alias DWM_TAB_WINDOW_REQUIREMENTS = int;
+enum : int
 {
     DWMTWR_NONE                  = 0x00000000,
     DWMTWR_IMPLEMENTED_BY_SYSTEM = 0x00000001,

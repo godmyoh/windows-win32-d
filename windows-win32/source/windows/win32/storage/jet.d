@@ -438,12 +438,13 @@ enum JET_paramConfigStoreSpec = 0x000000bd;
 enum JET_paramUseFlushForWriteDurability = 0x000000d6;
 enum JET_paramEnableRBS = 0x000000d7;
 enum JET_paramRBSFilePath = 0x000000d8;
-enum JET_paramMaxValueInvalid = 0x000000d9;
+enum JET_paramPerfmonRefreshInterval = 0x000000d9;
+enum JET_paramMaxValueInvalid = 0x000000da;
 enum JET_sesparamCommitDefault = 0x00001001;
 enum JET_sesparamTransactionLevel = 0x00001003;
 enum JET_sesparamOperationContext = 0x00001004;
 enum JET_sesparamCorrelationID = 0x00001005;
-enum JET_sesparamMaxValueInvalid = 0x0000100e;
+enum JET_sesparamMaxValueInvalid = 0x0000100f;
 enum JET_bitESE98FileNames = 0x00000001;
 enum JET_bitEightDotThreeSoftCompat = 0x00000002;
 enum JET_bitHungIOEvent = 0x00000001;
@@ -694,11 +695,6 @@ enum JET_filetypeLog = 0x00000003;
 enum JET_filetypeCheckpoint = 0x00000004;
 enum JET_filetypeTempDatabase = 0x00000005;
 enum JET_filetypeFlushMap = 0x00000007;
-enum JET_revertstateNone = 0x00000000;
-enum JET_revertstateInProgress = 0x00000001;
-enum JET_revertstateCopingLogs = 0x00000002;
-enum JET_revertstateCompleted = 0x00000003;
-enum JET_bitDeleteAllExistingLogs = 0x00000001;
 enum JET_coltypNil = 0x00000000;
 enum JET_coltypBit = 0x00000001;
 enum JET_coltypUnsignedByte = 0x00000002;
@@ -892,6 +888,7 @@ enum JET_errEngineFormatVersionNotYetImplementedTooHigh = 0xfffffffffffffd94;
 enum JET_errEngineFormatVersionParamTooLowForRequestedFeature = 0xfffffffffffffd93;
 enum JET_errEngineFormatVersionSpecifiedTooLowForLogVersion = 0xfffffffffffffd92;
 enum JET_errEngineFormatVersionSpecifiedTooLowForDatabaseVersion = 0xfffffffffffffd91;
+enum JET_errDbTimeBeyondMaxRequired = 0xfffffffffffffd8f;
 enum JET_errBackupAbortByServer = 0xfffffffffffffcdf;
 enum JET_errInvalidGrbit = 0xfffffffffffffc7c;
 enum JET_errTermInProgress = 0xfffffffffffffc18;
@@ -1202,6 +1199,15 @@ struct JET_OBJECTINFO
     uint cRecord;
     uint cPage;
 }
+struct JET_RECPOS2
+{
+    uint cbStruct;
+    uint centriesLTDeprecated;
+    uint centriesInRangeDeprecated;
+    uint centriesTotalDeprecated;
+    ulong centriesLT;
+    ulong centriesTotal;
+}
 struct JET_THREADSTATS2
 {
     uint cbStruct;
@@ -1220,25 +1226,6 @@ struct JET_COMMIT_ID
     JET_SIGNATURE signLog;
     int reserved;
     long commitId;
-}
-struct JET_RBSINFOMISC
-{
-    int lRBSGeneration;
-    JET_LOGTIME logtimeCreate;
-    JET_LOGTIME logtimeCreatePrevRBS;
-    uint ulMajor;
-    uint ulMinor;
-    ulong cbLogicalFileSize;
-}
-struct JET_RBSREVERTINFOMISC
-{
-    int lGenMinRevertStart;
-    int lGenMaxRevertStart;
-    int lGenMinRevertEnd;
-    int lGenMaxRevertEnd;
-    JET_LOGTIME logtimeRevertFrom;
-    ulong cSecRevert;
-    ulong cPagesReverted;
 }
 struct JET_RECSIZE
 {
@@ -1843,6 +1830,17 @@ struct JET_RECPOS
     uint centriesInRange;
     uint centriesTotal;
 }
+/+ [CONFLICTED] struct JET_RECPOS2
+{
+    align (4):
+    uint cbStruct;
+    uint centriesLTDeprecated;
+    uint centriesInRangeDeprecated;
+    uint centriesTotalDeprecated;
+    ulong centriesLT;
+    ulong centriesTotal;
+}
++/
 struct JET_RECORDLIST
 {
     uint cbStruct;
@@ -2191,29 +2189,6 @@ struct JET_ERRINFOBASIC_W
 }
 +/
 alias JET_PFNDURABLECOMMITCALLBACK = int function(JET_INSTANCE, JET_COMMIT_ID*, uint);
-/+ [CONFLICTED] struct JET_RBSINFOMISC
-{
-    align (4):
-    int lRBSGeneration;
-    JET_LOGTIME logtimeCreate;
-    JET_LOGTIME logtimeCreatePrevRBS;
-    uint ulMajor;
-    uint ulMinor;
-    ulong cbLogicalFileSize;
-}
-+/
-/+ [CONFLICTED] struct JET_RBSREVERTINFOMISC
-{
-    align (4):
-    int lGenMinRevertStart;
-    int lGenMaxRevertStart;
-    int lGenMinRevertEnd;
-    int lGenMaxRevertEnd;
-    JET_LOGTIME logtimeRevertFrom;
-    ulong cSecRevert;
-    ulong cPagesReverted;
-}
-+/
 alias JET_INDEXCHECKING = int;
 enum : int
 {

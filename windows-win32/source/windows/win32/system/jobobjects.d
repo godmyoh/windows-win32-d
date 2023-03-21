@@ -1,6 +1,6 @@
 module windows.win32.system.jobobjects;
 
-import windows.win32.foundation : BOOL, HANDLE, LARGE_INTEGER, PSTR, PWSTR;
+import windows.win32.foundation : BOOL, HANDLE, PSTR, PWSTR;
 import windows.win32.security_ : SECURITY_ATTRIBUTES, TOKEN_GROUPS, TOKEN_PRIVILEGES;
 import windows.win32.system.threading : IO_COUNTERS;
 
@@ -112,10 +112,10 @@ struct JOB_SET_ARRAY
 }
 struct JOBOBJECT_BASIC_ACCOUNTING_INFORMATION
 {
-    LARGE_INTEGER TotalUserTime;
-    LARGE_INTEGER TotalKernelTime;
-    LARGE_INTEGER ThisPeriodTotalUserTime;
-    LARGE_INTEGER ThisPeriodTotalKernelTime;
+    long TotalUserTime;
+    long TotalKernelTime;
+    long ThisPeriodTotalUserTime;
+    long ThisPeriodTotalKernelTime;
     uint TotalPageFaultCount;
     uint TotalProcesses;
     uint ActiveProcesses;
@@ -123,8 +123,8 @@ struct JOBOBJECT_BASIC_ACCOUNTING_INFORMATION
 }
 struct JOBOBJECT_BASIC_LIMIT_INFORMATION
 {
-    LARGE_INTEGER PerProcessUserTimeLimit;
-    LARGE_INTEGER PerJobUserTimeLimit;
+    long PerProcessUserTimeLimit;
+    long PerJobUserTimeLimit;
     JOB_OBJECT_LIMIT LimitFlags;
     ulong MinimumWorkingSetSize;
     ulong MaximumWorkingSetSize;
@@ -198,7 +198,7 @@ struct JOBOBJECT_NOTIFICATION_LIMIT_INFORMATION
 {
     ulong IoReadBytesLimit;
     ulong IoWriteBytesLimit;
-    LARGE_INTEGER PerJobUserTimeLimit;
+    long PerJobUserTimeLimit;
     ulong JobMemoryLimit;
     JOBOBJECT_RATE_CONTROL_TOLERANCE RateControlTolerance;
     JOBOBJECT_RATE_CONTROL_TOLERANCE_INTERVAL RateControlToleranceInterval;
@@ -208,7 +208,7 @@ struct JOBOBJECT_NOTIFICATION_LIMIT_INFORMATION_2
 {
     ulong IoReadBytesLimit;
     ulong IoWriteBytesLimit;
-    LARGE_INTEGER PerJobUserTimeLimit;
+    long PerJobUserTimeLimit;
     union
     {
         ulong JobHighMemoryLimit;
@@ -239,8 +239,8 @@ struct JOBOBJECT_LIMIT_VIOLATION_INFORMATION
     ulong IoReadBytesLimit;
     ulong IoWriteBytes;
     ulong IoWriteBytesLimit;
-    LARGE_INTEGER PerJobUserTime;
-    LARGE_INTEGER PerJobUserTimeLimit;
+    long PerJobUserTime;
+    long PerJobUserTimeLimit;
     ulong JobMemory;
     ulong JobMemoryLimit;
     JOBOBJECT_RATE_CONTROL_TOLERANCE RateControlTolerance;
@@ -254,8 +254,8 @@ struct JOBOBJECT_LIMIT_VIOLATION_INFORMATION_2
     ulong IoReadBytesLimit;
     ulong IoWriteBytes;
     ulong IoWriteBytesLimit;
-    LARGE_INTEGER PerJobUserTime;
-    LARGE_INTEGER PerJobUserTimeLimit;
+    long PerJobUserTime;
+    long PerJobUserTimeLimit;
     ulong JobMemory;
     union
     {
@@ -292,8 +292,8 @@ struct JOBOBJECT_CPU_RATE_CONTROL_INFORMATION
         }
     }
 }
-alias JOB_OBJECT_NET_RATE_CONTROL_FLAGS = uint;
-enum : uint
+alias JOB_OBJECT_NET_RATE_CONTROL_FLAGS = int;
+enum : int
 {
     JOB_OBJECT_NET_RATE_CONTROL_ENABLE        = 0x00000001,
     JOB_OBJECT_NET_RATE_CONTROL_MAX_BANDWIDTH = 0x00000002,
@@ -317,6 +317,16 @@ enum : int
     JOB_OBJECT_IO_RATE_CONTROL_VALID_FLAGS                   = 0x0000000f,
 }
 
+struct JOBOBJECT_IO_RATE_CONTROL_INFORMATION_NATIVE_V1
+{
+    long MaxIops;
+    long MaxBandwidth;
+    long ReservationIops;
+    PWSTR VolumeName;
+    uint BaseIoSize;
+    JOB_OBJECT_IO_RATE_CONTROL_FLAGS ControlFlags;
+    ushort VolumeNameLength;
+}
 struct JOBOBJECT_IO_RATE_CONTROL_INFORMATION_NATIVE_V2
 {
     long MaxIops;
@@ -426,6 +436,8 @@ enum : int
     JobObjectReserved23Information              = 0x0000002d,
     JobObjectReserved24Information              = 0x0000002e,
     JobObjectReserved25Information              = 0x0000002f,
-    MaxJobObjectInfoClass                       = 0x00000030,
+    JobObjectReserved26Information              = 0x00000030,
+    JobObjectReserved27Information              = 0x00000031,
+    MaxJobObjectInfoClass                       = 0x00000032,
 }
 

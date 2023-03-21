@@ -32,7 +32,7 @@ EVT_HANDLE EvtQuery(EVT_HANDLE, const(wchar)*, const(wchar)*, uint);
 BOOL EvtNext(EVT_HANDLE, uint, long*, uint, uint, uint*);
 BOOL EvtSeek(EVT_HANDLE, long, EVT_HANDLE, uint, uint);
 EVT_HANDLE EvtSubscribe(EVT_HANDLE, HANDLE, const(wchar)*, const(wchar)*, EVT_HANDLE, void*, EVT_SUBSCRIBE_CALLBACK, uint);
-EVT_HANDLE EvtCreateRenderContext(uint, PWSTR*, uint);
+EVT_HANDLE EvtCreateRenderContext(uint, const(wchar)**, uint);
 BOOL EvtRender(EVT_HANDLE, EVT_HANDLE, uint, uint, void*, uint*, uint*);
 BOOL EvtFormatMessage(EVT_HANDLE, EVT_HANDLE, uint, uint, EVT_VARIANT*, uint, uint, PWSTR, uint*);
 EVT_HANDLE EvtOpenLog(EVT_HANDLE, const(wchar)*, uint);
@@ -76,8 +76,8 @@ EventLogHandle OpenBackupEventLogA(const(char)*, const(char)*);
 EventLogHandle OpenBackupEventLogW(const(wchar)*, const(wchar)*);
 BOOL ReadEventLogA(EventLogHandle, READ_EVENT_LOG_READ_FLAGS, uint, void*, uint, uint*, uint*);
 BOOL ReadEventLogW(EventLogHandle, READ_EVENT_LOG_READ_FLAGS, uint, void*, uint, uint*, uint*);
-BOOL ReportEventA(EventSourceHandle, REPORT_EVENT_TYPE, ushort, uint, PSID, ushort, uint, PSTR*, void*);
-BOOL ReportEventW(EventSourceHandle, REPORT_EVENT_TYPE, ushort, uint, PSID, ushort, uint, PWSTR*, void*);
+BOOL ReportEventA(EventSourceHandle, REPORT_EVENT_TYPE, ushort, uint, PSID, ushort, uint, const(char)**, void*);
+BOOL ReportEventW(EventSourceHandle, REPORT_EVENT_TYPE, ushort, uint, PSID, ushort, uint, const(wchar)**, void*);
 BOOL GetEventLogInformation(EventLogHandle, uint, void*, uint, uint*);
 enum EVT_VARIANT_TYPE_MASK = 0x0000007f;
 enum EVT_VARIANT_TYPE_ARRAY = 0x00000080;
@@ -160,7 +160,7 @@ struct EVT_VARIANT
         ulong* SizeTArr;
         EVT_HANDLE EvtHandleVal;
         const(wchar)* XmlVal;
-        PWSTR* XmlValArr;
+        const(wchar)** XmlValArr;
     }
     uint Count;
     uint Type;

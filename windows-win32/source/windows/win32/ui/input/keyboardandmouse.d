@@ -121,6 +121,23 @@ enum : ushort
     VK_X                               = 0x0058,
     VK_Y                               = 0x0059,
     VK_Z                               = 0x005a,
+    VK_ABNT_C1                         = 0x00c1,
+    VK_ABNT_C2                         = 0x00c2,
+    VK_DBE_ALPHANUMERIC                = 0x00f0,
+    VK_DBE_CODEINPUT                   = 0x00fa,
+    VK_DBE_DBCSCHAR                    = 0x00f4,
+    VK_DBE_DETERMINESTRING             = 0x00fc,
+    VK_DBE_ENTERDLGCONVERSIONMODE      = 0x00fd,
+    VK_DBE_ENTERIMECONFIGMODE          = 0x00f8,
+    VK_DBE_ENTERWORDREGISTERMODE       = 0x00f7,
+    VK_DBE_FLUSHSTRING                 = 0x00f9,
+    VK_DBE_HIRAGANA                    = 0x00f2,
+    VK_DBE_KATAKANA                    = 0x00f1,
+    VK_DBE_NOCODEINPUT                 = 0x00fb,
+    VK_DBE_NOROMAN                     = 0x00f6,
+    VK_DBE_ROMAN                       = 0x00f5,
+    VK_DBE_SBCSCHAR                    = 0x00f3,
+    VK__none_                          = 0x00ff,
     VK_LBUTTON                         = 0x0001,
     VK_RBUTTON                         = 0x0002,
     VK_CANCEL                          = 0x0003,
@@ -317,6 +334,16 @@ enum : ushort
     VK_OEM_CLEAR                       = 0x00fe,
 }
 
+alias MAP_VIRTUAL_KEY_TYPE = uint;
+enum : uint
+{
+    MAPVK_VK_TO_VSC    = 0x00000000,
+    MAPVK_VSC_TO_VK    = 0x00000001,
+    MAPVK_VK_TO_CHAR   = 0x00000002,
+    MAPVK_VSC_TO_VK_EX = 0x00000003,
+    MAPVK_VK_TO_VSC_EX = 0x00000004,
+}
+
 BOOL _TrackMouseEvent(TRACKMOUSEEVENT*);
 HKL LoadKeyboardLayoutA(const(char)*, ACTIVATE_KEYBOARD_LAYOUT_FLAGS);
 HKL LoadKeyboardLayoutW(const(wchar)*, ACTIVATE_KEYBOARD_LAYOUT_FLAGS);
@@ -354,13 +381,13 @@ short VkKeyScanW(wchar);
 short VkKeyScanExA(CHAR, HKL);
 short VkKeyScanExW(wchar, HKL);
 void keybd_event(ubyte, ubyte, KEYBD_EVENT_FLAGS, ulong);
-void mouse_event(MOUSE_EVENT_FLAGS, int, int, uint, ulong);
+void mouse_event(MOUSE_EVENT_FLAGS, int, int, int, ulong);
 uint SendInput(uint, INPUT*, int);
 BOOL GetLastInputInfo(LASTINPUTINFO*);
-uint MapVirtualKeyA(uint, uint);
-uint MapVirtualKeyW(uint, uint);
-uint MapVirtualKeyExA(uint, uint, HKL);
-uint MapVirtualKeyExW(uint, uint, HKL);
+uint MapVirtualKeyA(uint, MAP_VIRTUAL_KEY_TYPE);
+uint MapVirtualKeyW(uint, MAP_VIRTUAL_KEY_TYPE);
+uint MapVirtualKeyExA(uint, MAP_VIRTUAL_KEY_TYPE, HKL);
+uint MapVirtualKeyExW(uint, MAP_VIRTUAL_KEY_TYPE, HKL);
 HWND GetCapture();
 HWND SetCapture(HWND);
 BOOL ReleaseCapture();
@@ -493,9 +520,6 @@ enum KBDNLS_NUMPAD = 0x0000000d;
 enum KBDNLS_KANAEVENT = 0x0000000e;
 enum KBDNLS_CONV_OR_NONCONV = 0x0000000f;
 enum KBD_TYPE = 0x00000004;
-enum VK__none_ = 0x000000ff;
-enum VK_ABNT_C1 = 0x000000c1;
-enum VK_ABNT_C2 = 0x000000c2;
 enum SCANCODE_LSHIFT = 0x0000002a;
 enum SCANCODE_RSHIFT = 0x00000036;
 enum SCANCODE_CTRL = 0x0000001d;
@@ -505,20 +529,6 @@ enum SCANCODE_NUMPAD_LAST = 0x00000052;
 enum SCANCODE_LWIN = 0x0000005b;
 enum SCANCODE_RWIN = 0x0000005c;
 enum SCANCODE_THAI_LAYOUT_TOGGLE = 0x00000029;
-enum VK_DBE_ALPHANUMERIC = 0x000000f0;
-enum VK_DBE_KATAKANA = 0x000000f1;
-enum VK_DBE_HIRAGANA = 0x000000f2;
-enum VK_DBE_SBCSCHAR = 0x000000f3;
-enum VK_DBE_DBCSCHAR = 0x000000f4;
-enum VK_DBE_ROMAN = 0x000000f5;
-enum VK_DBE_NOROMAN = 0x000000f6;
-enum VK_DBE_ENTERWORDREGISTERMODE = 0x000000f7;
-enum VK_DBE_ENTERIMECONFIGMODE = 0x000000f8;
-enum VK_DBE_FLUSHSTRING = 0x000000f9;
-enum VK_DBE_CODEINPUT = 0x000000fa;
-enum VK_DBE_NOCODEINPUT = 0x000000fb;
-enum VK_DBE_DETERMINESTRING = 0x000000fc;
-enum VK_DBE_ENTERDLGCONVERSIONMODE = 0x000000fd;
 struct VK_TO_BIT
 {
     ubyte Vk;

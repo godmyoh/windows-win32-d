@@ -1,7 +1,7 @@
 module windows.win32.system.remotedesktop;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HANDLE_PTR, HRESULT, HWND, LARGE_INTEGER, PSID, PSTR, PWSTR, RECT, VARIANT_BOOL;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HANDLE_PTR, HRESULT, HWND, PSID, PSTR, PWSTR, RECT, VARIANT_BOOL;
 import windows.win32.media.audio_ : WAVEFORMATEX;
 import windows.win32.media.audio.apo : APO_CONNECTION_PROPERTY;
 import windows.win32.security_ : PSECURITY_DESCRIPTOR;
@@ -78,6 +78,9 @@ BOOL WTSGetChildSessionId(uint*);
 HRESULT WTSSetRenderHint(ulong*, HWND, uint, uint, ubyte*);
 BOOL ProcessIdToSessionId(uint, uint*);
 uint WTSGetActiveConsoleSessionId();
+enum WTS_CURRENT_SERVER = 0x00000000;
+enum WTS_CURRENT_SERVER_HANDLE = 0x00000000;
+enum WTS_CURRENT_SERVER_NAME = "";
 enum WTS_DOMAIN_LENGTH = 0x000000ff;
 enum WTS_USERNAME_LENGTH = 0x000000ff;
 enum WTS_PASSWORD_LENGTH = 0x000000ff;
@@ -221,17 +224,6 @@ enum WTS_LISTENER_NAME_LENGTH = 0x00000020;
 enum WTS_COMMENT_LENGTH = 0x0000003c;
 enum WTS_LISTENER_CREATE = 0x00000001;
 enum WTS_LISTENER_UPDATE = 0x00000010;
-enum WTS_SECURITY_QUERY_INFORMATION = 0x00000001;
-enum WTS_SECURITY_SET_INFORMATION = 0x00000002;
-enum WTS_SECURITY_RESET = 0x00000004;
-enum WTS_SECURITY_VIRTUAL_CHANNELS = 0x00000008;
-enum WTS_SECURITY_REMOTE_CONTROL = 0x00000010;
-enum WTS_SECURITY_LOGON = 0x00000020;
-enum WTS_SECURITY_LOGOFF = 0x00000040;
-enum WTS_SECURITY_MESSAGE = 0x00000080;
-enum WTS_SECURITY_CONNECT = 0x00000100;
-enum WTS_SECURITY_DISCONNECT = 0x00000200;
-enum WTS_SECURITY_GUEST_ACCESS = 0x00000020;
 enum WTS_PROTOCOL_TYPE_CONSOLE = 0x00000000;
 enum WTS_PROTOCOL_TYPE_ICA = 0x00000001;
 enum WTS_PROTOCOL_TYPE_RDP = 0x00000002;
@@ -338,6 +330,26 @@ enum PROPERTY_TYPE_GET_FAST_RECONNECT_USER_SID = GUID(0x197c427a, 0x135, 0x4b6d,
 enum PROPERTY_TYPE_ENABLE_UNIVERSAL_APPS_FOR_CUSTOM_SHELL = GUID(0xed2c3fda, 0x338d, 0x4d3f, [0x81, 0xa3, 0xe7, 0x67, 0x31, 0xd, 0x90, 0x8e]);
 enum CONNECTION_PROPERTY_IDLE_TIME_WARNING = GUID(0x693f7ff5, 0xc4e, 0x4d17, [0xb8, 0xe0, 0x1f, 0x70, 0x32, 0x5e, 0x5d, 0x58]);
 enum CONNECTION_PROPERTY_CURSOR_BLINK_DISABLED = GUID(0x4b150580, 0xfea4, 0x4d3c, [0x9d, 0xe4, 0x74, 0x33, 0xa6, 0x66, 0x18, 0xf7]);
+alias WTS_SECURITY_FLAGS = uint;
+enum : uint
+{
+    WTS_SECURITY_CURRENT_GUEST_ACCESS = 0x00000048,
+    WTS_SECURITY_USER_ACCESS          = 0x00000149,
+    WTS_SECURITY_CURRENT_USER_ACCESS  = 0x0000024e,
+    WTS_SECURITY_ALL_ACCESS           = 0x000f03bf,
+    WTS_SECURITY_QUERY_INFORMATION    = 0x00000001,
+    WTS_SECURITY_SET_INFORMATION      = 0x00000002,
+    WTS_SECURITY_RESET                = 0x00000004,
+    WTS_SECURITY_VIRTUAL_CHANNELS     = 0x00000008,
+    WTS_SECURITY_REMOTE_CONTROL       = 0x00000010,
+    WTS_SECURITY_LOGON                = 0x00000020,
+    WTS_SECURITY_LOGOFF               = 0x00000040,
+    WTS_SECURITY_MESSAGE              = 0x00000080,
+    WTS_SECURITY_CONNECT              = 0x00000100,
+    WTS_SECURITY_DISCONNECT           = 0x00000200,
+    WTS_SECURITY_GUEST_ACCESS         = 0x00000020,
+}
+
 alias AE_POSITION_FLAGS = int;
 enum : int
 {
@@ -698,11 +710,11 @@ struct WTSINFOW
     wchar[32] WinStationName;
     wchar[17] Domain;
     wchar[21] UserName;
-    LARGE_INTEGER ConnectTime;
-    LARGE_INTEGER DisconnectTime;
-    LARGE_INTEGER LastInputTime;
-    LARGE_INTEGER LogonTime;
-    LARGE_INTEGER CurrentTime;
+    long ConnectTime;
+    long DisconnectTime;
+    long LastInputTime;
+    long LogonTime;
+    long CurrentTime;
 }
 struct WTSINFOA
 {
@@ -717,11 +729,11 @@ struct WTSINFOA
     CHAR[32] WinStationName;
     CHAR[17] Domain;
     CHAR[21] UserName;
-    LARGE_INTEGER ConnectTime;
-    LARGE_INTEGER DisconnectTime;
-    LARGE_INTEGER LastInputTime;
-    LARGE_INTEGER LogonTime;
-    LARGE_INTEGER CurrentTime;
+    long ConnectTime;
+    long DisconnectTime;
+    long LastInputTime;
+    long LogonTime;
+    long CurrentTime;
 }
 struct WTSINFOEX_LEVEL1_W
 {
@@ -731,11 +743,11 @@ struct WTSINFOEX_LEVEL1_W
     wchar[33] WinStationName;
     wchar[21] UserName;
     wchar[18] DomainName;
-    LARGE_INTEGER LogonTime;
-    LARGE_INTEGER ConnectTime;
-    LARGE_INTEGER DisconnectTime;
-    LARGE_INTEGER LastInputTime;
-    LARGE_INTEGER CurrentTime;
+    long LogonTime;
+    long ConnectTime;
+    long DisconnectTime;
+    long LastInputTime;
+    long CurrentTime;
     uint IncomingBytes;
     uint OutgoingBytes;
     uint IncomingFrames;
@@ -751,11 +763,11 @@ struct WTSINFOEX_LEVEL1_A
     CHAR[33] WinStationName;
     CHAR[21] UserName;
     CHAR[18] DomainName;
-    LARGE_INTEGER LogonTime;
-    LARGE_INTEGER ConnectTime;
-    LARGE_INTEGER DisconnectTime;
-    LARGE_INTEGER LastInputTime;
-    LARGE_INTEGER CurrentTime;
+    long LogonTime;
+    long ConnectTime;
+    long DisconnectTime;
+    long LastInputTime;
+    long CurrentTime;
     uint IncomingBytes;
     uint OutgoingBytes;
     uint IncomingFrames;
@@ -959,8 +971,8 @@ struct WTS_PROCESS_INFO_EXW
     uint PeakPagefileUsage;
     uint WorkingSetSize;
     uint PeakWorkingSetSize;
-    LARGE_INTEGER UserTime;
-    LARGE_INTEGER KernelTime;
+    long UserTime;
+    long KernelTime;
 }
 struct WTS_PROCESS_INFO_EXA
 {
@@ -974,8 +986,8 @@ struct WTS_PROCESS_INFO_EXA
     uint PeakPagefileUsage;
     uint WorkingSetSize;
     uint PeakWorkingSetSize;
-    LARGE_INTEGER UserTime;
-    LARGE_INTEGER KernelTime;
+    long UserTime;
+    long KernelTime;
 }
 alias WTS_TYPE_CLASS = int;
 enum : int
@@ -2194,7 +2206,7 @@ struct WTS_PROTOCOL_STATUS
     WTS_CACHE_STATS Cache;
     uint AsyncSignal;
     uint AsyncSignalMask;
-    LARGE_INTEGER[100] Counters;
+    long[100] Counters;
 }
 struct WTS_DISPLAY_IOCTL
 {

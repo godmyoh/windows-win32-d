@@ -1,6 +1,6 @@
 module windows.win32.system.libraryloader;
 
-import windows.win32.foundation : BOOL, FARPROC, HANDLE, HINSTANCE, HRSRC, PSTR, PWSTR;
+import windows.win32.foundation : BOOL, FARPROC, HANDLE, HGLOBAL, HINSTANCE, HRSRC, PSTR, PWSTR;
 
 version (Windows):
 extern (Windows):
@@ -28,7 +28,7 @@ BOOL DisableThreadLibraryCalls(HINSTANCE);
 HRSRC FindResourceExW(HINSTANCE, const(wchar)*, const(wchar)*, ushort);
 BOOL FreeLibrary(HINSTANCE);
 void FreeLibraryAndExitThread(HINSTANCE, uint);
-BOOL FreeResource(long);
+BOOL FreeResource(HGLOBAL);
 uint GetModuleFileNameA(HINSTANCE, PSTR, uint);
 uint GetModuleFileNameW(HINSTANCE, PWSTR, uint);
 HINSTANCE GetModuleHandleA(const(char)*);
@@ -38,8 +38,8 @@ BOOL GetModuleHandleExW(uint, const(wchar)*, HINSTANCE*);
 FARPROC GetProcAddress(HINSTANCE, const(char)*);
 HINSTANCE LoadLibraryExA(const(char)*, HANDLE, LOAD_LIBRARY_FLAGS);
 HINSTANCE LoadLibraryExW(const(wchar)*, HANDLE, LOAD_LIBRARY_FLAGS);
-long LoadResource(HINSTANCE, HRSRC);
-void* LockResource(long);
+HGLOBAL LoadResource(HINSTANCE, HRSRC);
+void* LockResource(HGLOBAL);
 uint SizeofResource(HINSTANCE, HRSRC);
 void* AddDllDirectory(const(wchar)*);
 BOOL RemoveDllDirectory(void*);
@@ -63,12 +63,12 @@ BOOL EnumResourceTypesA(HINSTANCE, ENUMRESTYPEPROCA, long);
 BOOL EnumResourceTypesW(HINSTANCE, ENUMRESTYPEPROCW, long);
 BOOL EnumResourceLanguagesA(HINSTANCE, const(char)*, const(char)*, ENUMRESLANGPROCA, long);
 BOOL EnumResourceLanguagesW(HINSTANCE, const(wchar)*, const(wchar)*, ENUMRESLANGPROCW, long);
-HANDLE BeginUpdateResourceA(const(char)*, BOOL);
-HANDLE BeginUpdateResourceW(const(wchar)*, BOOL);
-BOOL UpdateResourceA(HANDLE, const(char)*, const(char)*, ushort, void*, uint);
-BOOL UpdateResourceW(HANDLE, const(wchar)*, const(wchar)*, ushort, void*, uint);
-BOOL EndUpdateResourceA(HANDLE, BOOL);
-BOOL EndUpdateResourceW(HANDLE, BOOL);
+UPDATERESOURCE_HANDLE BeginUpdateResourceA(const(char)*, BOOL);
+UPDATERESOURCE_HANDLE BeginUpdateResourceW(const(wchar)*, BOOL);
+BOOL UpdateResourceA(UPDATERESOURCE_HANDLE, const(char)*, const(char)*, ushort, void*, uint);
+BOOL UpdateResourceW(UPDATERESOURCE_HANDLE, const(wchar)*, const(wchar)*, ushort, void*, uint);
+BOOL EndUpdateResourceA(UPDATERESOURCE_HANDLE, BOOL);
+BOOL EndUpdateResourceW(UPDATERESOURCE_HANDLE, BOOL);
 BOOL SetDllDirectoryA(const(char)*);
 BOOL SetDllDirectoryW(const(wchar)*);
 uint GetDllDirectoryA(uint, PSTR);
@@ -87,6 +87,7 @@ enum GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT = 0x00000002;
 enum GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS = 0x00000004;
 enum CURRENT_IMPORT_REDIRECTION_VERSION = 0x00000001;
 enum LOAD_LIBRARY_OS_INTEGRITY_CONTINUITY = 0x00008000;
+alias UPDATERESOURCE_HANDLE = long;
 struct ENUMUILANG
 {
     uint NumOfEnumUILang;

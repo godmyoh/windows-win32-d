@@ -36,8 +36,8 @@ enum : uint
     HO_WRITE_THROUGH         = 0x80000000,
 }
 
-alias HANDLE_ACCESS_OPTIONS = uint;
-enum : uint
+alias HANDLE_ACCESS_OPTIONS = int;
+enum : int
 {
     HAO_NONE            = 0x00000000,
     HAO_READ_ATTRIBUTES = 0x00000080,
@@ -46,8 +46,8 @@ enum : uint
     HAO_DELETE          = 0x00010000,
 }
 
-alias HANDLE_SHARING_OPTIONS = uint;
-enum : uint
+alias HANDLE_SHARING_OPTIONS = int;
+enum : int
 {
     HSO_SHARE_NONE   = 0x00000000,
     HSO_SHARE_READ   = 0x00000001,

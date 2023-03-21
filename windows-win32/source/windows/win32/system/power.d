@@ -4,6 +4,7 @@ import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BOOLEAN, HANDLE, HRESULT, LPARAM, NTSTATUS, PWSTR, WIN32_ERROR;
 import windows.win32.system.registry : HKEY, REG_SAM_FLAGS;
 import windows.win32.system.threading : REASON_CONTEXT;
+import windows.win32.ui.windowsandmessaging : REGISTER_NOTIFICATION_FLAGS;
 
 version (Windows):
 extern (Windows):
@@ -18,18 +19,18 @@ enum : ushort
 
 struct PROCESSOR_POWER_INFORMATION
 {
-    ulong Number;
-    ulong MaxMhz;
-    ulong CurrentMhz;
-    ulong MhzLimit;
-    ulong MaxIdleState;
-    ulong CurrentIdleState;
+    uint Number;
+    uint MaxMhz;
+    uint CurrentMhz;
+    uint MhzLimit;
+    uint MaxIdleState;
+    uint CurrentIdleState;
 }
 struct SYSTEM_POWER_INFORMATION
 {
-    ulong MaxIdlenessAllowed;
-    ulong Idleness;
-    ulong TimeRemaining;
+    uint MaxIdlenessAllowed;
+    uint Idleness;
+    uint TimeRemaining;
     POWER_COOLING_MODE CoolingMode;
 }
 alias POWER_PLATFORM_ROLE_VERSION = uint;
@@ -37,14 +38,6 @@ enum : uint
 {
     POWER_PLATFORM_ROLE_V1 = 0x00000001,
     POWER_PLATFORM_ROLE_V2 = 0x00000002,
-}
-
-alias POWER_SETTING_REGISTER_NOTIFICATION_FLAGS = uint;
-enum : uint
-{
-    DEVICE_NOTIFY_SERVICE_HANDLE = 0x00000001,
-    DEVICE_NOTIFY_CALLBACK       = 0x00000002,
-    DEVICE_NOTIFY_WINDOW_HANDLE  = 0x00000000,
 }
 
 alias EXECUTION_STATE = uint;
@@ -71,7 +64,7 @@ enum : uint
 NTSTATUS CallNtPowerInformation(POWER_INFORMATION_LEVEL, void*, uint, void*, uint);
 BOOLEAN GetPwrCapabilities(SYSTEM_POWER_CAPABILITIES*);
 POWER_PLATFORM_ROLE PowerDeterminePlatformRoleEx(POWER_PLATFORM_ROLE_VERSION);
-WIN32_ERROR PowerRegisterSuspendResumeNotification(uint, HANDLE, void**);
+WIN32_ERROR PowerRegisterSuspendResumeNotification(REGISTER_NOTIFICATION_FLAGS, HANDLE, void**);
 WIN32_ERROR PowerUnregisterSuspendResumeNotification(HPOWERNOTIFY);
 WIN32_ERROR PowerReadACValue(HKEY, const(GUID)*, const(GUID)*, const(GUID)*, uint*, ubyte*, uint*);
 WIN32_ERROR PowerReadDCValue(HKEY, const(GUID)*, const(GUID)*, const(GUID)*, uint*, ubyte*, uint*);
@@ -79,7 +72,7 @@ uint PowerWriteACValueIndex(HKEY, const(GUID)*, const(GUID)*, const(GUID)*, uint
 uint PowerWriteDCValueIndex(HKEY, const(GUID)*, const(GUID)*, const(GUID)*, uint);
 WIN32_ERROR PowerGetActiveScheme(HKEY, GUID**);
 WIN32_ERROR PowerSetActiveScheme(HKEY, const(GUID)*);
-WIN32_ERROR PowerSettingRegisterNotification(const(GUID)*, POWER_SETTING_REGISTER_NOTIFICATION_FLAGS, HANDLE, void**);
+WIN32_ERROR PowerSettingRegisterNotification(const(GUID)*, REGISTER_NOTIFICATION_FLAGS, HANDLE, void**);
 WIN32_ERROR PowerSettingUnregisterNotification(HPOWERNOTIFY);
 HRESULT PowerRegisterForEffectivePowerModeNotifications(uint, EFFECTIVE_POWER_MODE_CALLBACK, void*, void**);
 HRESULT PowerUnregisterFromEffectivePowerModeNotifications(void*);
@@ -154,7 +147,7 @@ BOOLEAN DevicePowerClose();
 WIN32_ERROR PowerReportThermalEvent(THERMAL_EVENT*);
 HPOWERNOTIFY RegisterPowerSettingNotification(HANDLE, const(GUID)*, uint);
 BOOL UnregisterPowerSettingNotification(HPOWERNOTIFY);
-HPOWERNOTIFY RegisterSuspendResumeNotification(HANDLE, uint);
+HPOWERNOTIFY RegisterSuspendResumeNotification(HANDLE, REGISTER_NOTIFICATION_FLAGS);
 BOOL UnregisterSuspendResumeNotification(HPOWERNOTIFY);
 BOOL RequestWakeupLatency(LATENCY_TIME);
 BOOL IsSystemResumeAutomatic();
@@ -165,6 +158,46 @@ BOOL PowerClearRequest(HANDLE, POWER_REQUEST_TYPE);
 BOOL GetDevicePowerState(HANDLE, BOOL*);
 BOOL SetSystemPowerState(BOOL, BOOL);
 BOOL GetSystemPowerStatus(SYSTEM_POWER_STATUS*);
+enum PPM_FIRMWARE_ACPI1C2 = 0x00000001;
+enum PPM_FIRMWARE_ACPI1C3 = 0x00000002;
+enum PPM_FIRMWARE_ACPI1TSTATES = 0x00000004;
+enum PPM_FIRMWARE_CST = 0x00000008;
+enum PPM_FIRMWARE_CSD = 0x00000010;
+enum PPM_FIRMWARE_PCT = 0x00000020;
+enum PPM_FIRMWARE_PSS = 0x00000040;
+enum PPM_FIRMWARE_XPSS = 0x00000080;
+enum PPM_FIRMWARE_PPC = 0x00000100;
+enum PPM_FIRMWARE_PSD = 0x00000200;
+enum PPM_FIRMWARE_PTC = 0x00000400;
+enum PPM_FIRMWARE_TSS = 0x00000800;
+enum PPM_FIRMWARE_TPC = 0x00001000;
+enum PPM_FIRMWARE_TSD = 0x00002000;
+enum PPM_FIRMWARE_PCCH = 0x00004000;
+enum PPM_FIRMWARE_PCCP = 0x00008000;
+enum PPM_FIRMWARE_OSC = 0x00010000;
+enum PPM_FIRMWARE_PDC = 0x00020000;
+enum PPM_FIRMWARE_CPC = 0x00040000;
+enum PPM_FIRMWARE_LPI = 0x00080000;
+enum PPM_PERFORMANCE_IMPLEMENTATION_NONE = 0x00000000;
+enum PPM_PERFORMANCE_IMPLEMENTATION_PSTATES = 0x00000001;
+enum PPM_PERFORMANCE_IMPLEMENTATION_PCCV1 = 0x00000002;
+enum PPM_PERFORMANCE_IMPLEMENTATION_CPPC = 0x00000003;
+enum PPM_PERFORMANCE_IMPLEMENTATION_PEP = 0x00000004;
+enum PPM_IDLE_IMPLEMENTATION_NONE = 0x00000000;
+enum PPM_IDLE_IMPLEMENTATION_CSTATES = 0x00000001;
+enum PPM_IDLE_IMPLEMENTATION_PEP = 0x00000002;
+enum PPM_IDLE_IMPLEMENTATION_MICROPEP = 0x00000003;
+enum PPM_IDLE_IMPLEMENTATION_LPISTATES = 0x00000004;
+enum PPM_PERFSTATE_CHANGE_GUID = GUID(0xa5b32ddd, 0x7f39, 0x4abc, [0xb8, 0x92, 0x90, 0xe, 0x43, 0xb5, 0x9e, 0xbb]);
+enum PPM_PERFSTATE_DOMAIN_CHANGE_GUID = GUID(0x995e6b7f, 0xd653, 0x497a, [0xb9, 0x78, 0x36, 0xa3, 0xc, 0x29, 0xbf, 0x1]);
+enum PPM_IDLESTATE_CHANGE_GUID = GUID(0x4838fe4f, 0xf71c, 0x4e51, [0x9e, 0xcc, 0x84, 0x30, 0xa7, 0xac, 0x4c, 0x6c]);
+enum PPM_PERFSTATES_DATA_GUID = GUID(0x5708cc20, 0x7d40, 0x4bf4, [0xb4, 0xaa, 0x2b, 0x1, 0x33, 0x8d, 0x1, 0x26]);
+enum PPM_IDLESTATES_DATA_GUID = GUID(0xba138e10, 0xe250, 0x4ad7, [0x86, 0x16, 0xcf, 0x1a, 0x7a, 0xd4, 0x10, 0xe7]);
+enum PPM_IDLE_ACCOUNTING_GUID = GUID(0xe2a26f78, 0xae07, 0x4ee0, [0xa3, 0xf, 0xce, 0x54, 0xf5, 0x5a, 0x94, 0xcd]);
+enum PPM_IDLE_ACCOUNTING_EX_GUID = GUID(0xd67abd39, 0x81f8, 0x4a5e, [0x81, 0x52, 0x72, 0xe3, 0x1e, 0xc9, 0x12, 0xee]);
+enum PPM_THERMALCONSTRAINT_GUID = GUID(0xa852c2c8, 0x1a4c, 0x423b, [0x8c, 0x2c, 0xf3, 0xd, 0x82, 0x93, 0x1a, 0x88]);
+enum PPM_PERFMON_PERFSTATE_GUID = GUID(0x7fd18652, 0xcfe, 0x40d2, [0xb0, 0xa1, 0xb, 0x6, 0x6a, 0x87, 0x75, 0x9e]);
+enum PPM_THERMAL_POLICY_CHANGE_GUID = GUID(0x48f377b8, 0x6880, 0x4c7b, [0x8b, 0xdc, 0x38, 0x1, 0x76, 0xc6, 0x65, 0x4d]);
 //enum PROCESSOR_NUMBER_PKEY = [MISSING];
 enum GUID_DEVICE_BATTERY = GUID(0x72631e54, 0x78a4, 0x11d0, [0xbc, 0xf7, 0x0, 0xaa, 0x0, 0xb7, 0xb3, 0x2a]);
 enum GUID_DEVICE_APPLICATIONLAUNCH_BUTTON = GUID(0x629758ee, 0x986e, 0x4d9e, [0x8e, 0x47, 0xde, 0x27, 0xf8, 0xab, 0x5, 0x4d]);
@@ -249,6 +282,7 @@ enum ACPI_TIME_ZONE_UNKNOWN = 0x000007ff;
 enum IOCTL_ACPI_GET_REAL_TIME = 0x00294210;
 enum IOCTL_ACPI_SET_REAL_TIME = 0x00298214;
 enum IOCTL_GET_WAKE_ALARM_SYSTEM_POWERSTATE = 0x00294218;
+enum IOCTL_GET_ACPI_TIME_AND_ALARM_CAPABILITIES = 0x0029421c;
 enum BATTERY_STATUS_WMI_GUID = GUID(0xfc4670d1, 0xebbf, 0x416e, [0x87, 0xce, 0x37, 0x4a, 0x4e, 0xbc, 0x11, 0x1a]);
 enum BATTERY_RUNTIME_WMI_GUID = GUID(0x535a3767, 0x1ac2, 0x49bc, [0xa0, 0x77, 0x3f, 0x7a, 0x2, 0xe4, 0xa, 0xec]);
 enum BATTERY_TEMPERATURE_WMI_GUID = GUID(0x1a52a14d, 0xadce, 0x4a44, [0x9a, 0x3e, 0xc8, 0xd8, 0xf1, 0x5f, 0xf2, 0xc2]);
@@ -618,6 +652,27 @@ struct ACPI_REAL_TIME
     ubyte DayLight;
     ubyte[3] Reserved1;
 }
+alias ACPI_TIME_RESOLUTION = int;
+enum : int
+{
+    AcpiTimeResolutionMilliseconds = 0x00000000,
+    AcpiTimeResolutionSeconds      = 0x00000001,
+    AcpiTimeResolutionMax          = 0x00000002,
+}
+
+struct ACPI_TIME_AND_ALARM_CAPABILITIES
+{
+    BOOLEAN AcWakeSupported;
+    BOOLEAN DcWakeSupported;
+    BOOLEAN S4AcWakeSupported;
+    BOOLEAN S4DcWakeSupported;
+    BOOLEAN S5AcWakeSupported;
+    BOOLEAN S5DcWakeSupported;
+    BOOLEAN S4S5WakeStatusSupported;
+    uint DeepestWakeSystemState;
+    BOOLEAN RealTimeFeaturesSupported;
+    ACPI_TIME_RESOLUTION RealTimeResolution;
+}
 alias EMI_MEASUREMENT_UNIT = int;
 enum : int
 {
@@ -700,6 +755,16 @@ enum : int
     PowerDeviceD2          = 0x00000003,
     PowerDeviceD3          = 0x00000004,
     PowerDeviceMaximum     = 0x00000005,
+}
+
+alias USER_ACTIVITY_PRESENCE = int;
+enum : int
+{
+    PowerUserPresent    = 0x00000000,
+    PowerUserNotPresent = 0x00000001,
+    PowerUserInactive   = 0x00000002,
+    PowerUserMaximum    = 0x00000003,
+    PowerUserInvalid    = 0x00000003,
 }
 
 alias LATENCY_TIME = int;
@@ -829,9 +894,132 @@ enum : int
     UpdateBlackBoxRecorder             = 0x0000005e,
     SessionAllowExternalDmaDevices     = 0x0000005f,
     SendSuspendResumeNotification      = 0x00000060,
-    PowerInformationLevelMaximum       = 0x00000061,
+    BlackBoxRecorderDirectAccessBuffer = 0x00000061,
+    PowerInformationLevelMaximum       = 0x00000062,
 }
 
+alias POWER_USER_PRESENCE_TYPE = int;
+enum : int
+{
+    UserNotPresent = 0x00000000,
+    UserPresent    = 0x00000001,
+    UserUnknown    = 0x000000ff,
+}
+
+struct POWER_USER_PRESENCE
+{
+    POWER_USER_PRESENCE_TYPE UserPresence;
+}
+struct POWER_SESSION_CONNECT
+{
+    BOOLEAN Connected;
+    BOOLEAN Console;
+}
+struct POWER_SESSION_TIMEOUTS
+{
+    uint InputTimeout;
+    uint DisplayTimeout;
+}
+struct POWER_SESSION_RIT_STATE
+{
+    BOOLEAN Active;
+    ulong LastInputTime;
+}
+struct POWER_SESSION_WINLOGON
+{
+    uint SessionId;
+    BOOLEAN Console;
+    BOOLEAN Locked;
+}
+struct POWER_SESSION_ALLOW_EXTERNAL_DMA_DEVICES
+{
+    BOOLEAN IsAllowed;
+}
+struct POWER_IDLE_RESILIENCY
+{
+    uint CoalescingTimeout;
+    uint IdleResiliencyPeriod;
+}
+alias POWER_MONITOR_REQUEST_REASON = int;
+enum : int
+{
+    MonitorRequestReasonUnknown                        = 0x00000000,
+    MonitorRequestReasonPowerButton                    = 0x00000001,
+    MonitorRequestReasonRemoteConnection               = 0x00000002,
+    MonitorRequestReasonScMonitorpower                 = 0x00000003,
+    MonitorRequestReasonUserInput                      = 0x00000004,
+    MonitorRequestReasonAcDcDisplayBurst               = 0x00000005,
+    MonitorRequestReasonUserDisplayBurst               = 0x00000006,
+    MonitorRequestReasonPoSetSystemState               = 0x00000007,
+    MonitorRequestReasonSetThreadExecutionState        = 0x00000008,
+    MonitorRequestReasonFullWake                       = 0x00000009,
+    MonitorRequestReasonSessionUnlock                  = 0x0000000a,
+    MonitorRequestReasonScreenOffRequest               = 0x0000000b,
+    MonitorRequestReasonIdleTimeout                    = 0x0000000c,
+    MonitorRequestReasonPolicyChange                   = 0x0000000d,
+    MonitorRequestReasonSleepButton                    = 0x0000000e,
+    MonitorRequestReasonLid                            = 0x0000000f,
+    MonitorRequestReasonBatteryCountChange             = 0x00000010,
+    MonitorRequestReasonGracePeriod                    = 0x00000011,
+    MonitorRequestReasonPnP                            = 0x00000012,
+    MonitorRequestReasonDP                             = 0x00000013,
+    MonitorRequestReasonSxTransition                   = 0x00000014,
+    MonitorRequestReasonSystemIdle                     = 0x00000015,
+    MonitorRequestReasonNearProximity                  = 0x00000016,
+    MonitorRequestReasonThermalStandby                 = 0x00000017,
+    MonitorRequestReasonResumePdc                      = 0x00000018,
+    MonitorRequestReasonResumeS4                       = 0x00000019,
+    MonitorRequestReasonTerminal                       = 0x0000001a,
+    MonitorRequestReasonPdcSignal                      = 0x0000001b,
+    MonitorRequestReasonAcDcDisplayBurstSuppressed     = 0x0000001c,
+    MonitorRequestReasonSystemStateEntered             = 0x0000001d,
+    MonitorRequestReasonWinrt                          = 0x0000001e,
+    MonitorRequestReasonUserInputKeyboard              = 0x0000001f,
+    MonitorRequestReasonUserInputMouse                 = 0x00000020,
+    MonitorRequestReasonUserInputTouchpad              = 0x00000021,
+    MonitorRequestReasonUserInputPen                   = 0x00000022,
+    MonitorRequestReasonUserInputAccelerometer         = 0x00000023,
+    MonitorRequestReasonUserInputHid                   = 0x00000024,
+    MonitorRequestReasonUserInputPoUserPresent         = 0x00000025,
+    MonitorRequestReasonUserInputSessionSwitch         = 0x00000026,
+    MonitorRequestReasonUserInputInitialization        = 0x00000027,
+    MonitorRequestReasonPdcSignalWindowsMobilePwrNotif = 0x00000028,
+    MonitorRequestReasonPdcSignalWindowsMobileShell    = 0x00000029,
+    MonitorRequestReasonPdcSignalHeyCortana            = 0x0000002a,
+    MonitorRequestReasonPdcSignalHolographicShell      = 0x0000002b,
+    MonitorRequestReasonPdcSignalFingerprint           = 0x0000002c,
+    MonitorRequestReasonDirectedDrips                  = 0x0000002d,
+    MonitorRequestReasonDim                            = 0x0000002e,
+    MonitorRequestReasonBuiltinPanel                   = 0x0000002f,
+    MonitorRequestReasonDisplayRequiredUnDim           = 0x00000030,
+    MonitorRequestReasonBatteryCountChangeSuppressed   = 0x00000031,
+    MonitorRequestReasonResumeModernStandby            = 0x00000032,
+    MonitorRequestReasonTerminalInit                   = 0x00000033,
+    MonitorRequestReasonPdcSignalSensorsHumanPresence  = 0x00000034,
+    MonitorRequestReasonBatteryPreCritical             = 0x00000035,
+    MonitorRequestReasonUserInputTouch                 = 0x00000036,
+    MonitorRequestReasonMax                            = 0x00000037,
+}
+
+alias POWER_MONITOR_REQUEST_TYPE = int;
+enum : int
+{
+    MonitorRequestTypeOff          = 0x00000000,
+    MonitorRequestTypeOnAndPresent = 0x00000001,
+    MonitorRequestTypeToggleOn     = 0x00000002,
+}
+
+struct POWER_MONITOR_INVOCATION
+{
+    BOOLEAN Console;
+    POWER_MONITOR_REQUEST_REASON RequestReason;
+}
+struct RESUME_PERFORMANCE
+{
+    uint PostTimeMs;
+    ulong TotalResumeTimeMs;
+    ulong ResumeCompleteTimestamp;
+}
 alias SYSTEM_POWER_CONDITION = int;
 enum : int
 {
@@ -864,10 +1052,203 @@ enum : int
     PlatformRoleMaximum           = 0x00000009,
 }
 
+struct POWER_PLATFORM_INFORMATION
+{
+    BOOLEAN AoAc;
+}
+alias POWER_SETTING_ALTITUDE = int;
+enum : int
+{
+    ALTITUDE_GROUP_POLICY      = 0x00000000,
+    ALTITUDE_USER              = 0x00000001,
+    ALTITUDE_RUNTIME_OVERRIDE  = 0x00000002,
+    ALTITUDE_PROVISIONING      = 0x00000003,
+    ALTITUDE_OEM_CUSTOMIZATION = 0x00000004,
+    ALTITUDE_INTERNAL_OVERRIDE = 0x00000005,
+    ALTITUDE_OS_DEFAULT        = 0x00000006,
+}
+
 struct BATTERY_REPORTING_SCALE
 {
     uint Granularity;
     uint Capacity;
+}
+struct PPM_WMI_LEGACY_PERFSTATE
+{
+    uint Frequency;
+    uint Flags;
+    uint PercentFrequency;
+}
+struct PPM_WMI_IDLE_STATE
+{
+    uint Latency;
+    uint Power;
+    uint TimeCheck;
+    ubyte PromotePercent;
+    ubyte DemotePercent;
+    ubyte StateType;
+    ubyte Reserved;
+    uint StateFlags;
+    uint Context;
+    uint IdleHandler;
+    uint Reserved1;
+}
+struct PPM_WMI_IDLE_STATES
+{
+    uint Type;
+    uint Count;
+    uint TargetState;
+    uint OldState;
+    ulong TargetProcessors;
+    PPM_WMI_IDLE_STATE[1] State;
+}
+struct PPM_WMI_IDLE_STATES_EX
+{
+    uint Type;
+    uint Count;
+    uint TargetState;
+    uint OldState;
+    void* TargetProcessors;
+    PPM_WMI_IDLE_STATE[1] State;
+}
+struct PPM_WMI_PERF_STATE
+{
+    uint Frequency;
+    uint Power;
+    ubyte PercentFrequency;
+    ubyte IncreaseLevel;
+    ubyte DecreaseLevel;
+    ubyte Type;
+    uint IncreaseTime;
+    uint DecreaseTime;
+    ulong Control;
+    ulong Status;
+    uint HitCount;
+    uint Reserved1;
+    ulong Reserved2;
+    ulong Reserved3;
+}
+struct PPM_WMI_PERF_STATES
+{
+    uint Count;
+    uint MaxFrequency;
+    uint CurrentState;
+    uint MaxPerfState;
+    uint MinPerfState;
+    uint LowestPerfState;
+    uint ThermalConstraint;
+    ubyte BusyAdjThreshold;
+    ubyte PolicyType;
+    ubyte Type;
+    ubyte Reserved;
+    uint TimerInterval;
+    ulong TargetProcessors;
+    uint PStateHandler;
+    uint PStateContext;
+    uint TStateHandler;
+    uint TStateContext;
+    uint FeedbackHandler;
+    uint Reserved1;
+    ulong Reserved2;
+    PPM_WMI_PERF_STATE[1] State;
+}
+struct PPM_WMI_PERF_STATES_EX
+{
+    uint Count;
+    uint MaxFrequency;
+    uint CurrentState;
+    uint MaxPerfState;
+    uint MinPerfState;
+    uint LowestPerfState;
+    uint ThermalConstraint;
+    ubyte BusyAdjThreshold;
+    ubyte PolicyType;
+    ubyte Type;
+    ubyte Reserved;
+    uint TimerInterval;
+    void* TargetProcessors;
+    uint PStateHandler;
+    uint PStateContext;
+    uint TStateHandler;
+    uint TStateContext;
+    uint FeedbackHandler;
+    uint Reserved1;
+    ulong Reserved2;
+    PPM_WMI_PERF_STATE[1] State;
+}
+struct PPM_IDLE_STATE_ACCOUNTING
+{
+    uint IdleTransitions;
+    uint FailedTransitions;
+    uint InvalidBucketIndex;
+    ulong TotalTime;
+    uint[6] IdleTimeBuckets;
+}
+struct PPM_IDLE_ACCOUNTING
+{
+    uint StateCount;
+    uint TotalTransitions;
+    uint ResetCount;
+    ulong StartTime;
+    PPM_IDLE_STATE_ACCOUNTING[1] State;
+}
+struct PPM_IDLE_STATE_BUCKET_EX
+{
+    ulong TotalTimeUs;
+    uint MinTimeUs;
+    uint MaxTimeUs;
+    uint Count;
+}
+struct PPM_IDLE_STATE_ACCOUNTING_EX
+{
+    ulong TotalTime;
+    uint IdleTransitions;
+    uint FailedTransitions;
+    uint InvalidBucketIndex;
+    uint MinTimeUs;
+    uint MaxTimeUs;
+    uint CancelledTransitions;
+    PPM_IDLE_STATE_BUCKET_EX[16] IdleTimeBuckets;
+}
+struct PPM_IDLE_ACCOUNTING_EX
+{
+    uint StateCount;
+    uint TotalTransitions;
+    uint ResetCount;
+    uint AbortCount;
+    ulong StartTime;
+    PPM_IDLE_STATE_ACCOUNTING_EX[1] State;
+}
+struct PPM_PERFSTATE_EVENT
+{
+    uint State;
+    uint Status;
+    uint Latency;
+    uint Speed;
+    uint Processor;
+}
+struct PPM_PERFSTATE_DOMAIN_EVENT
+{
+    uint State;
+    uint Latency;
+    uint Speed;
+    ulong Processors;
+}
+struct PPM_IDLESTATE_EVENT
+{
+    uint NewState;
+    uint OldState;
+    ulong Processors;
+}
+struct PPM_THERMALCHANGE_EVENT
+{
+    uint ThermalConstraint;
+    ulong Processors;
+}
+struct PPM_THERMAL_POLICY_EVENT
+{
+    ubyte Mode;
+    ulong Processors;
 }
 struct POWER_ACTION_POLICY
 {

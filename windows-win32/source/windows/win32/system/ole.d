@@ -1,16 +1,16 @@
 module windows.win32.system.ole;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, CHAR, COLORREF, DECIMAL, FILETIME, HANDLE, HINSTANCE, HRESULT, HRSRC, HWND, LPARAM, LRESULT, POINT, POINTL, PSTR, PWSTR, RECT, RECTL, SIZE, SYSTEMTIME, VARIANT_BOOL, WPARAM;
+import windows.win32.foundation : BOOL, BSTR, CHAR, COLORREF, DECIMAL, FILETIME, HANDLE, HGLOBAL, HINSTANCE, HRESULT, HRSRC, HWND, LPARAM, LRESULT, POINT, POINTL, PSTR, PWSTR, RECT, RECTL, SIZE, SYSTEMTIME, VARIANT_BOOL, WPARAM;
 import windows.win32.graphics.gdi : HBITMAP, HDC, HENHMETAFILE, HFONT, HMETAFILE, HPALETTE, HRGN, LOGPALETTE, TEXTMETRICW;
 import windows.win32.media_ : HTASK;
-import windows.win32.system.com_ : ADVF, BYTE_SIZEDARR, CALLCONV, CUSTDATA, CY, DISPPARAMS, DVASPECT, DVTARGETDEVICE, DWORD_SIZEDARR, EXCEPINFO, FLAGGED_WORD_BLOB, FORMATETC, FUNCDESC, HYPER_SIZEDARR, IAdviseSink, IBindCtx, IBindHost, IClassFactory, IDLDESC, IDataObject, IDispatch, IEnumFORMATETC, IEnumSTATDATA, IEnumUnknown, IErrorLog, IMoniker, INVOKEKIND, IPersist, IPersistStream, IServiceProvider, IStream, ITypeInfo, ITypeLib, IUnknown, SAFEARRAY, SAFEARRAYBOUND, STGMEDIUM, SYSKIND, TYPEDESC, TYPEKIND, VARDESC, VARENUM, VARIANT, WORD_SIZEDARR;
+import windows.win32.system.com_ : ADVF, BYTE_SIZEDARR, CALLCONV, CUSTDATA, CY, DISPPARAMS, DVASPECT, DVTARGETDEVICE, DWORD_SIZEDARR, EXCEPINFO, FLAGGED_WORD_BLOB, FORMATETC, FUNCDESC, HYPER_SIZEDARR, IAdviseSink, IBindCtx, IBindHost, IClassFactory, IDLDESC, IDataObject, IDispatch, IEnumFORMATETC, IEnumSTATDATA, IEnumUnknown, IErrorLog, IMPLTYPEFLAGS, IMoniker, INVOKEKIND, IPersist, IPersistStream, IServiceProvider, IStream, ITypeInfo, ITypeLib, IUnknown, SAFEARRAY, SAFEARRAYBOUND, STGMEDIUM, SYSKIND, TYPEDESC, TYPEKIND, VARDESC, VARENUM, VARIANT, WORD_SIZEDARR;
 import windows.win32.system.com.structuredstorage : IPersistStorage, IPropertyBag, IPropertyBag2, IStorage;
 import windows.win32.system.memory_ : GLOBAL_ALLOC_FLAGS;
 import windows.win32.system.systemservices : MODIFIERKEYS_FLAGS;
 import windows.win32.ui.controls_ : PROPSHEETHEADERA_V2, PROPSHEETHEADERW_V2;
 import windows.win32.ui.controls.dialogs : OPENFILENAMEA, OPENFILENAMEW;
-import windows.win32.ui.windowsandmessaging : HACCEL, HCURSOR, HICON, HMENU, MENU_ITEM_FLAGS, MSG;
+import windows.win32.ui.windowsandmessaging : HACCEL, HCURSOR, HICON, HMENU, MENU_ITEM_FLAGS, MSG, SHOW_WINDOW_CMD;
 
 version (Windows):
 extern (Windows):
@@ -327,7 +327,7 @@ HRESULT VarCyNeg(CY, CY*);
 HRESULT VarCyRound(CY, int, CY*);
 VARCMP VarCyCmp(CY, CY);
 VARCMP VarCyCmpR8(CY, double);
-HRESULT VarBstrCat(BSTR, BSTR, ushort**);
+HRESULT VarBstrCat(BSTR, BSTR, BSTR*);
 HRESULT VarBstrCmp(BSTR, BSTR, uint, uint);
 HRESULT VarR8Pow(double, double, double*);
 VARCMP VarR4CmpR8(float, double);
@@ -350,7 +350,7 @@ uint LHashValOfNameSys(SYSKIND, uint, const(wchar)*);
 HRESULT LoadTypeLib(const(wchar)*, ITypeLib*);
 HRESULT LoadTypeLibEx(const(wchar)*, REGKIND, ITypeLib*);
 HRESULT LoadRegTypeLib(const(GUID)*, ushort, ushort, uint, ITypeLib*);
-HRESULT QueryPathOfRegTypeLib(const(GUID)*, ushort, ushort, uint, ushort**);
+HRESULT QueryPathOfRegTypeLib(const(GUID)*, ushort, ushort, uint, BSTR*);
 HRESULT RegisterTypeLib(ITypeLib, const(wchar)*, const(wchar)*);
 HRESULT UnRegisterTypeLib(const(GUID)*, ushort, ushort, uint, SYSKIND);
 HRESULT RegisterTypeLibForUser(ITypeLib, PWSTR, PWSTR);
@@ -418,9 +418,9 @@ HRESULT CreateOleAdviseHolder(IOleAdviseHolder*);
 HRESULT OleCreateDefaultHandler(const(GUID)*, IUnknown, const(GUID)*, void**);
 HRESULT OleCreateEmbeddingHelper(const(GUID)*, IUnknown, EMBDHLP_FLAGS, IClassFactory, const(GUID)*, void**);
 BOOL IsAccelerator(HACCEL, int, MSG*, ushort*);
-long OleGetIconOfFile(PWSTR, BOOL);
-long OleGetIconOfClass(const(GUID)*, PWSTR, BOOL);
-long OleMetafilePictFromIconAndLabel(HICON, PWSTR, PWSTR, uint);
+HGLOBAL OleGetIconOfFile(PWSTR, BOOL);
+HGLOBAL OleGetIconOfClass(const(GUID)*, PWSTR, BOOL);
+HGLOBAL OleMetafilePictFromIconAndLabel(HICON, PWSTR, PWSTR, uint);
 HRESULT OleRegGetUserType(const(GUID)*, USERCLASSTYPE, PWSTR*);
 HRESULT OleRegGetMiscStatus(const(GUID)*, uint, uint*);
 HRESULT OleRegEnumFormatEtc(const(GUID)*, uint, IEnumFORMATETC*);
@@ -924,7 +924,16 @@ enum VARIANT_LOCALBOOL = 0x00000010;
 enum VARIANT_CALENDAR_THAI = 0x00000020;
 enum VARIANT_CALENDAR_GREGORIAN = 0x00000040;
 enum VARIANT_USE_NLS = 0x00000080;
+enum VAR_TIMEVALUEONLY = 0x00000001;
+enum VAR_DATEVALUEONLY = 0x00000002;
+enum VAR_VALIDDATE = 0x00000004;
+enum VAR_CALENDAR_HIJRI = 0x00000008;
+enum VAR_LOCALBOOL = 0x00000010;
+enum VAR_FORMAT_NOSUBSTITUTE = 0x00000020;
+enum VAR_FOURDIGITYEARS = 0x00000040;
 enum LOCALE_USE_NLS = 0x10000000;
+enum VAR_CALENDAR_THAI = 0x00000080;
+enum VAR_CALENDAR_GREGORIAN = 0x00000100;
 enum VTDATEGRE_MAX = 0x002d2481;
 enum VTDATEGRE_MIN = 0xfffffffffff5f7e6;
 enum MEMBERID_NIL = 0xffffffffffffffff;
@@ -1494,7 +1503,7 @@ interface ICreateTypeInfo : IUnknown
     HRESULT AddRefTypeInfo(ITypeInfo, uint*);
     HRESULT AddFuncDesc(uint, FUNCDESC*);
     HRESULT AddImplType(uint, uint);
-    HRESULT SetImplTypeFlags(uint, int);
+    HRESULT SetImplTypeFlags(uint, IMPLTYPEFLAGS);
     HRESULT SetAlignment(ushort);
     HRESULT SetSchema(PWSTR);
     HRESULT AddVarDesc(uint, VARDESC*);
@@ -2143,7 +2152,7 @@ interface IPropertyPage : IUnknown
     HRESULT Deactivate();
     HRESULT GetPageInfo(PROPPAGEINFO*);
     HRESULT SetObjects(uint, IUnknown*);
-    HRESULT Show(uint);
+    HRESULT Show(SHOW_WINDOW_CMD);
     HRESULT Move(RECT*);
     HRESULT IsPageDirty();
     HRESULT Apply();
@@ -2664,8 +2673,8 @@ interface IContinueCallback : IUnknown
     HRESULT FContinue();
     HRESULT FContinuePrinting(int, int, PWSTR);
 }
-alias PRINTFLAG = uint;
-enum : uint
+alias PRINTFLAG = int;
+enum : int
 {
     PRINTFLAG_MAYBOTHERUSER        = 0x00000001,
     PRINTFLAG_PROMPTUSER           = 0x00000002,
@@ -3008,7 +3017,7 @@ struct OLEUIINSERTOBJECTW
     IStorage lpIStorage;
     void** ppvObj;
     int sc;
-    long hMetaPict;
+    HGLOBAL hMetaPict;
 }
 struct OLEUIINSERTOBJECTA
 {
@@ -3033,7 +3042,7 @@ struct OLEUIINSERTOBJECTA
     IStorage lpIStorage;
     void** ppvObj;
     int sc;
-    long hMetaPict;
+    HGLOBAL hMetaPict;
 }
 alias OLEUIPASTEFLAG = int;
 enum : int
@@ -3088,7 +3097,7 @@ struct OLEUIPASTESPECIALW
     GUID* lpClsidExclude;
     int nSelectedIndex;
     BOOL fLink;
-    long hMetaPict;
+    HGLOBAL hMetaPict;
     SIZE sizel;
 }
 struct OLEUIPASTESPECIALA
@@ -3111,7 +3120,7 @@ struct OLEUIPASTESPECIALA
     GUID* lpClsidExclude;
     int nSelectedIndex;
     BOOL fLink;
-    long hMetaPict;
+    HGLOBAL hMetaPict;
     SIZE sizel;
 }
 // [Not Found] IID_IOleUILinkContainerW
@@ -3175,7 +3184,7 @@ struct OLEUICHANGEICONW
     HINSTANCE hInstance;
     const(wchar)* lpszTemplate;
     HRSRC hResource;
-    long hMetaPict;
+    HGLOBAL hMetaPict;
     GUID clsid;
     wchar[260] szIconExe;
     int cchIconExe;
@@ -3191,7 +3200,7 @@ struct OLEUICHANGEICONA
     HINSTANCE hInstance;
     const(char)* lpszTemplate;
     HRSRC hResource;
-    long hMetaPict;
+    HGLOBAL hMetaPict;
     GUID clsid;
     CHAR[260] szIconExe;
     int cchIconExe;
@@ -3214,7 +3223,7 @@ struct OLEUICONVERTW
     uint dvAspect;
     ushort wFormat;
     BOOL fIsLinkedObject;
-    long hMetaPict;
+    HGLOBAL hMetaPict;
     PWSTR lpszUserType;
     BOOL fObjectsIconChanged;
     PWSTR lpszDefLabel;
@@ -3239,7 +3248,7 @@ struct OLEUICONVERTA
     uint dvAspect;
     ushort wFormat;
     BOOL fIsLinkedObject;
-    long hMetaPict;
+    HGLOBAL hMetaPict;
     PSTR lpszUserType;
     BOOL fObjectsIconChanged;
     PSTR lpszDefLabel;
@@ -3249,7 +3258,7 @@ struct OLEUICONVERTA
 struct OLEUIBUSYW
 {
     uint cbStruct;
-    uint dwFlags;
+    BUSY_DIALOG_FLAGS dwFlags;
     HWND hWndOwner;
     const(wchar)* lpszCaption;
     LPFNOLEUIHOOK lpfnHook;
@@ -3263,7 +3272,7 @@ struct OLEUIBUSYW
 struct OLEUIBUSYA
 {
     uint cbStruct;
-    uint dwFlags;
+    BUSY_DIALOG_FLAGS dwFlags;
     HWND hWndOwner;
     const(char)* lpszCaption;
     LPFNOLEUIHOOK lpfnHook;
@@ -3320,8 +3329,8 @@ interface IOleUIObjInfoW : IUnknown
     HRESULT GetObjectInfo(uint, uint*, PWSTR*, PWSTR*, PWSTR*, PWSTR*);
     HRESULT GetConvertInfo(uint, GUID*, ushort*, GUID*, GUID**, uint*);
     HRESULT ConvertObject(uint, const(GUID)*);
-    HRESULT GetViewInfo(uint, long*, uint*, int*);
-    HRESULT SetViewInfo(uint, long, uint, int, BOOL);
+    HRESULT GetViewInfo(uint, HGLOBAL*, uint*, int*);
+    HRESULT SetViewInfo(uint, HGLOBAL, uint, int, BOOL);
 }
 // [Not Found] IID_IOleUIObjInfoA
 interface IOleUIObjInfoA : IUnknown
@@ -3329,8 +3338,8 @@ interface IOleUIObjInfoA : IUnknown
     HRESULT GetObjectInfo(uint, uint*, PSTR*, PSTR*, PSTR*, PSTR*);
     HRESULT GetConvertInfo(uint, GUID*, ushort*, GUID*, GUID**, uint*);
     HRESULT ConvertObject(uint, const(GUID)*);
-    HRESULT GetViewInfo(uint, long*, uint*, int*);
-    HRESULT SetViewInfo(uint, long, uint, int, BOOL);
+    HRESULT GetViewInfo(uint, HGLOBAL*, uint*, int*);
+    HRESULT SetViewInfo(uint, HGLOBAL, uint, int, BOOL);
 }
 // [Not Found] IID_IOleUILinkInfoW
 interface IOleUILinkInfoW : IOleUILinkContainerW

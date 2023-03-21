@@ -589,7 +589,7 @@ interface IVssWriterImpl : IUnknown
     void Uninitialize();
     PWSTR* GetCurrentVolumeArray();
     uint GetCurrentVolumeCount();
-    HRESULT GetSnapshotDeviceName(const(wchar)*, PWSTR*);
+    HRESULT GetSnapshotDeviceName(const(wchar)*, const(wchar)**);
     GUID GetCurrentSnapshotSetId();
     int GetContext();
     VSS_APPLICATION_LEVEL GetCurrentLevel();

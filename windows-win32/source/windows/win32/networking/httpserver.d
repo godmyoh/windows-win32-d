@@ -1,7 +1,7 @@
 module windows.win32.networking.httpserver;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, HANDLE, HRESULT, PSTR, PWSTR, ULARGE_INTEGER;
+import windows.win32.foundation : BOOL, BOOLEAN, HANDLE, HRESULT, PSTR, PWSTR;
 import windows.win32.networking.winsock : SOCKADDR, SOCKADDR_STORAGE;
 import windows.win32.security_ : PSECURITY_DESCRIPTOR, SECURITY_ATTRIBUTES;
 import windows.win32.system.io : OVERLAPPED;
@@ -113,6 +113,7 @@ enum HTTP_LOG_FIELD_SITE_ID = 0x01000000;
 enum HTTP_LOG_FIELD_REASON = 0x02000000;
 enum HTTP_LOG_FIELD_QUEUE_NAME = 0x04000000;
 enum HTTP_LOG_FIELD_CORRELATION_ID = 0x40000000;
+enum HTTP_LOG_FIELD_FAULT_CODE = 0x80000000;
 enum HTTP_LOGGING_FLAG_LOCAL_TIME_ROLLOVER = 0x00000001;
 enum HTTP_LOGGING_FLAG_USE_UTF8_CONVERSION = 0x00000002;
 enum HTTP_LOGGING_FLAG_LOG_ERRORS_ONLY = 0x00000004;
@@ -158,6 +159,7 @@ enum HTTP_SERVICE_CONFIG_SSL_FLAG_DISABLE_LEGACY_TLS = 0x00000400;
 enum HTTP_SERVICE_CONFIG_SSL_FLAG_ENABLE_SESSION_TICKET = 0x00000800;
 enum HTTP_SERVICE_CONFIG_SSL_FLAG_DISABLE_TLS12 = 0x00001000;
 enum HTTP_SERVICE_CONFIG_SSL_FLAG_ENABLE_CLIENT_CORRELATION = 0x00002000;
+enum HTTP_SERVICE_CONFIG_SSL_FLAG_DISABLE_SESSION_ID = 0x00004000;
 enum HTTP_REQUEST_PROPERTY_SNI_HOST_MAX_LENGTH = 0x000000ff;
 enum HTTP_REQUEST_PROPERTY_SNI_FLAG_SNI_USED = 0x00000001;
 enum HTTP_REQUEST_PROPERTY_SNI_FLAG_NO_SNI = 0x00000002;
@@ -407,8 +409,8 @@ struct HTTP_PROTECTION_LEVEL_INFO
 }
 struct HTTP_BYTE_RANGE
 {
-    ULARGE_INTEGER StartingOffset;
-    ULARGE_INTEGER Length;
+    ulong StartingOffset;
+    ulong Length;
 }
 struct HTTP_VERSION
 {
@@ -1216,6 +1218,17 @@ struct HTTP_QUIC_API_TIMINGS
     HTTP_QUIC_CONNECTION_API_TIMINGS ConnectionTimings;
     HTTP_QUIC_STREAM_API_TIMINGS StreamTimings;
 }
+struct HTTP_QUIC_STREAM_REQUEST_STATS
+{
+    ulong StreamWaitStart;
+    ulong StreamWaitEnd;
+    ulong RequestHeadersCompressionStart;
+    ulong RequestHeadersCompressionEnd;
+    ulong ResponseHeadersDecompressionStart;
+    ulong ResponseHeadersDecompressionEnd;
+    ulong RequestHeadersCompressedSize;
+    ulong ResponseHeadersCompressedSize;
+}
 alias HTTP_FEATURE_ID = int;
 enum : int
 {
@@ -1224,6 +1237,7 @@ enum : int
     HttpFeatureApiTimings       = 0x00000002,
     HttpFeatureDelegateEx       = 0x00000003,
     HttpFeatureHttp3            = 0x00000004,
+    HttpFeatureLast             = 0x00000005,
     HttpFeaturemax              = 0xffffffff,
 }
 

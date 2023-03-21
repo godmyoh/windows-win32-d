@@ -166,7 +166,7 @@ enum IID_IWinMLModel = GUID(0xe2eeb6a9, 0xf31f, 0x4055, [0xa5, 0x21, 0xe3, 0xb, 
 interface IWinMLModel : IUnknown
 {
     HRESULT GetDescription(WINML_MODEL_DESC**);
-    HRESULT EnumerateMetadata(uint, PWSTR*, PWSTR*);
+    HRESULT EnumerateMetadata(uint, const(wchar)**, const(wchar)**);
     HRESULT EnumerateModelInputs(uint, WINML_VARIABLE_DESC**);
     HRESULT EnumerateModelOutputs(uint, WINML_VARIABLE_DESC**);
 }

@@ -1,16 +1,16 @@
 module windows.win32.ui.controls.richedit;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, CHAR, COLORREF, HANDLE, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT, RECTL, SIZE, WPARAM;
+import windows.win32.foundation : BOOL, BSTR, CHAR, COLORREF, HANDLE, HGLOBAL, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT, RECTL, SIZE, WPARAM;
 import windows.win32.globalization : HIMC;
 import windows.win32.graphics.direct2d_ : ID2D1RenderTarget;
-import windows.win32.graphics.gdi : EMBED_FONT_CHARSET, HBITMAP, HDC, HPALETTE, HRGN, SYS_COLOR_INDEX, TEXT_ALIGN_OPTIONS;
+import windows.win32.graphics.gdi : FONT_CHARSET, HBITMAP, HDC, HPALETTE, HRGN, SYS_COLOR_INDEX, TEXT_ALIGN_OPTIONS;
 import windows.win32.system.com_ : DVASPECT, DVTARGETDEVICE, IDataObject, IDispatch, IStream, IUnknown, VARIANT;
 import windows.win32.system.com.structuredstorage : IStorage;
 import windows.win32.system.ole : DROPEFFECT, IDropTarget, IOleClientSite, IOleInPlaceFrame, IOleInPlaceUIWindow, IOleObject, OLEINPLACEFRAMEINFO;
 import windows.win32.system.systemservices : MODIFIERKEYS_FLAGS, RECO_FLAGS;
 import windows.win32.ui.controls_ : ENABLE_SCROLL_BAR_ARROWS, NMHDR;
-import windows.win32.ui.windowsandmessaging : HCURSOR, HMENU, SCROLLBAR_CONSTANTS, SHOW_WINDOW_CMD;
+import windows.win32.ui.windowsandmessaging : HCURSOR, HMENU, SCROLLBAR_CONSTANTS, SCROLL_WINDOW_FLAGS;
 
 version (Windows):
 extern (Windows):
@@ -696,6 +696,13 @@ enum TXTBIT_ADVANCEDINPUT = 0x20000000;
 enum TXES_ISDIALOG = 0x00000001;
 enum REO_NULL = 0x00000000;
 enum REO_READWRITEMASK = 0x000007ff;
+struct HYPHENATEINFO
+{
+    align (4):
+    short cbSize;
+    short dxHyphenateZone;
+    long pfnHyphenate;
+}
 alias TEXTMODE = int;
 enum : int
 {
@@ -768,7 +775,7 @@ struct CHARFORMATA
     int yHeight;
     int yOffset;
     COLORREF crTextColor;
-    EMBED_FONT_CHARSET bCharSet;
+    FONT_CHARSET bCharSet;
     ubyte bPitchAndFamily;
     CHAR[32] szFaceName;
 }
@@ -780,7 +787,7 @@ struct CHARFORMATW
     int yHeight;
     int yOffset;
     COLORREF crTextColor;
-    EMBED_FONT_CHARSET bCharSet;
+    FONT_CHARSET bCharSet;
     ubyte bPitchAndFamily;
     wchar[32] szFaceName;
 }
@@ -1092,13 +1099,13 @@ struct HYPHRESULT
     int ichHyph;
     wchar chHyph;
 }
-struct HYPHENATEINFO
+/+ [CONFLICTED] struct HYPHENATEINFO
 {
-    align (4):
     short cbSize;
     short dxHyphenateZone;
     long pfnHyphenate;
 }
++/
 alias TXTBACKSTYLE = int;
 enum : int
 {
@@ -1202,7 +1209,7 @@ interface ITextHost : IUnknown
     BOOL TxSetCaretPos(int, int);
     BOOL TxSetTimer(uint, uint);
     void TxKillTimer(uint);
-    void TxScrollWindowEx(int, int, RECT*, RECT*, HRGN, RECT*, SHOW_WINDOW_CMD);
+    void TxScrollWindowEx(int, int, RECT*, RECT*, HRGN, RECT*, SCROLL_WINDOW_FLAGS);
     void TxSetCapture(BOOL);
     void TxSetFocus();
     void TxSetCursor(HCURSOR, BOOL);
@@ -1289,7 +1296,7 @@ interface IRichEditOle : IUnknown
     HRESULT InPlaceDeactivate();
     HRESULT ContextSensitiveHelp(BOOL);
     HRESULT GetClipboardData(CHARRANGE*, uint, IDataObject*);
-    HRESULT ImportDataObject(IDataObject, ushort, long);
+    HRESULT ImportDataObject(IDataObject, ushort, HGLOBAL);
 }
 enum IID_IRichEditOleCallback = GUID(0x20d03, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IRichEditOleCallback : IUnknown
@@ -1299,7 +1306,7 @@ interface IRichEditOleCallback : IUnknown
     HRESULT ShowContainerUI(BOOL);
     HRESULT QueryInsertObject(GUID*, IStorage, int);
     HRESULT DeleteObject(IOleObject);
-    HRESULT QueryAcceptData(IDataObject, ushort*, RECO_FLAGS, BOOL, long);
+    HRESULT QueryAcceptData(IDataObject, ushort*, RECO_FLAGS, BOOL, HGLOBAL);
     HRESULT ContextSensitiveHelp(BOOL);
     HRESULT GetClipboardData(CHARRANGE*, uint, IDataObject*);
     HRESULT GetDragDropEffect(BOOL, MODIFIERKEYS_FLAGS, DROPEFFECT*);

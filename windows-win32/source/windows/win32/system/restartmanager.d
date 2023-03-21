@@ -8,7 +8,7 @@ extern (Windows):
 uint RmStartSession(uint*, uint, PWSTR);
 uint RmJoinSession(uint*, const(wchar)*);
 uint RmEndSession(uint);
-uint RmRegisterResources(uint, uint, PWSTR*, uint, RM_UNIQUE_PROCESS*, uint, PWSTR*);
+uint RmRegisterResources(uint, uint, const(wchar)**, uint, RM_UNIQUE_PROCESS*, uint, const(wchar)**);
 uint RmGetList(uint, uint*, uint*, RM_PROCESS_INFO*, uint*);
 uint RmShutdown(uint, uint, RM_WRITE_STATUS_CALLBACK);
 uint RmRestart(uint, uint, RM_WRITE_STATUS_CALLBACK);

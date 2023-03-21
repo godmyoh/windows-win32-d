@@ -177,7 +177,7 @@ enum IID_IWPCWebSettings = GUID(0xffccbdb8, 0x992, 0x4c30, [0xb0, 0xf1, 0x1c, 0x
 interface IWPCWebSettings : IWPCSettings
 {
     HRESULT GetSettings(WPCFLAG_WEB_SETTING*);
-    HRESULT RequestURLOverride(HWND, const(wchar)*, uint, PWSTR*, BOOL*);
+    HRESULT RequestURLOverride(HWND, const(wchar)*, uint, const(wchar)**, BOOL*);
 }
 alias WPCFLAG_VISIBILITY = int;
 enum : int

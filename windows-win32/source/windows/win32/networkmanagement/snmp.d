@@ -1,6 +1,6 @@
 module windows.win32.networkmanagement.snmp;
 
-import windows.win32.foundation : BOOL, CHAR, HANDLE, HWND, LPARAM, PSTR, ULARGE_INTEGER, WPARAM;
+import windows.win32.foundation : BOOL, CHAR, HANDLE, HWND, LPARAM, PSTR, WPARAM;
 
 version (Windows):
 extern (Windows):
@@ -319,7 +319,7 @@ struct AsnAny
         align (4):
         int number;
         uint unsigned32;
-        ULARGE_INTEGER counter64;
+        ulong counter64;
         AsnOctetString string;
         AsnOctetString bits;
         AsnObjectIdentifier object;

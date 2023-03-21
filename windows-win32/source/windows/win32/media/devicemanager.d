@@ -624,7 +624,7 @@ interface IWMDMStorage4 : IWMDMStorage3
     HRESULT SetReferences(uint, IWMDMStorage*);
     HRESULT GetReferences(uint*, IWMDMStorage**);
     HRESULT GetRightsWithProgress(IWMDMProgress3, WMDMRIGHTS**, uint*);
-    HRESULT GetSpecifiedMetadata(uint, PWSTR*, IWMDMMetaData*);
+    HRESULT GetSpecifiedMetadata(uint, const(wchar)**, IWMDMMetaData*);
     HRESULT FindStorage(WMDM_FIND_SCOPE, const(wchar)*, IWMDMStorage*);
     HRESULT GetParent(IWMDMStorage*);
 }
@@ -973,7 +973,7 @@ interface IMDSPStorage4 : IMDSPStorage3
     HRESULT SetReferences(uint, IMDSPStorage*);
     HRESULT GetReferences(uint*, IMDSPStorage**);
     HRESULT CreateStorageWithMetadata(uint, const(wchar)*, IWMDMMetaData, ulong, IMDSPStorage*);
-    HRESULT GetSpecifiedMetadata(uint, PWSTR*, IWMDMMetaData);
+    HRESULT GetSpecifiedMetadata(uint, const(wchar)**, IWMDMMetaData);
     HRESULT FindStorage(WMDM_FIND_SCOPE, const(wchar)*, IMDSPStorage*);
     HRESULT GetParent(IMDSPStorage*);
 }

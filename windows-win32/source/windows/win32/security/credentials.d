@@ -416,8 +416,8 @@ enum SECPKG_ALT_ATTR = 0x80000000;
 enum SECPKG_ATTR_C_FULL_IDENT_TOKEN = 0x80000085;
 enum CREDSSP_CRED_EX_VERSION = 0x00000000;
 enum CREDSSP_FLAG_REDIRECT = 0x00000001;
-alias KeyCredentialManagerOperationErrorStates = uint;
-enum : uint
+alias KeyCredentialManagerOperationErrorStates = int;
+enum : int
 {
     KeyCredentialManagerOperationErrorStateNone                 = 0x00000000,
     KeyCredentialManagerOperationErrorStateDeviceJoinFailure    = 0x00000001,

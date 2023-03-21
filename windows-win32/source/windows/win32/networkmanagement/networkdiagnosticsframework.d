@@ -24,7 +24,7 @@ HRESULT NdfCloseIncident(void*);
 HRESULT NdfDiagnoseIncident(void*, uint*, RootCauseInfo**, uint, uint);
 HRESULT NdfRepairIncident(void*, RepairInfoEx*, uint);
 HRESULT NdfCancelIncident(void*);
-HRESULT NdfGetTraceFile(void*, PWSTR*);
+HRESULT NdfGetTraceFile(void*, const(wchar)**);
 enum NDF_ERROR_START = 0x0000f900;
 enum NDF_E_LENGTH_EXCEEDED = 0xffffffff8008f900;
 enum NDF_E_NOHELPERCLASS = 0xffffffff8008f901;

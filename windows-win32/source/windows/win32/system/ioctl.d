@@ -1,7 +1,7 @@
 module windows.win32.system.ioctl;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOLEAN, CHAR, HANDLE, LARGE_INTEGER;
+import windows.win32.foundation : BOOLEAN, CHAR, HANDLE;
 import windows.win32.security_ : SID;
 import windows.win32.storage.filesystem : FILE_ID_128, STORAGE_BUS_TYPE;
 import windows.win32.storage.vhd : VIRTUAL_STORAGE_TYPE;
@@ -207,6 +207,7 @@ enum READ_COPY_NUMBER_BYPASS_CACHE_FLAG = 0x00000100;
 enum STORAGE_HW_FIRMWARE_REQUEST_FLAG_CONTROLLER = 0x00000001;
 enum STORAGE_HW_FIRMWARE_REQUEST_FLAG_LAST_SEGMENT = 0x00000002;
 enum STORAGE_HW_FIRMWARE_REQUEST_FLAG_FIRST_SEGMENT = 0x00000004;
+enum STORAGE_HW_FIRMWARE_REQUEST_FLAG_REPLACE_EXISTING_IMAGE = 0x40000000;
 enum STORAGE_HW_FIRMWARE_REQUEST_FLAG_SWITCH_TO_EXISTING_FIRMWARE = 0x80000000;
 enum STORAGE_HW_FIRMWARE_INVALID_SLOT = 0x000000ff;
 enum STORAGE_HW_FIRMWARE_REVISION_LENGTH = 0x00000010;
@@ -336,6 +337,7 @@ enum IOCTL_SCM_BUS_GET_REGIONS = 0x00590008;
 enum IOCTL_SCM_BUS_QUERY_PROPERTY = 0x0059000c;
 enum IOCTL_SCM_BUS_SET_PROPERTY = 0x00598014;
 enum IOCTL_SCM_BUS_RUNTIME_FW_ACTIVATE = 0x00598010;
+enum IOCTL_SCM_BUS_REFRESH_NAMESPACE = 0x00590018;
 enum IOCTL_SCM_LD_GET_INTERLEAVE_SET = 0x00590c00;
 enum IOCTL_SCM_PD_QUERY_PROPERTY = 0x00591800;
 enum IOCTL_SCM_PD_FIRMWARE_DOWNLOAD = 0x00599804;
@@ -430,6 +432,7 @@ enum PARTITION_GPT = 0x000000ee;
 enum PARTITION_SYSTEM = 0x000000ef;
 enum VALID_NTFT = 0x000000c0;
 enum PARTITION_NTFT = 0x00000080;
+enum WMI_DISK_GEOMETRY_GUID = GUID(0x25007f51, 0x57c2, 0x11d1, [0xa5, 0x28, 0x0, 0xa0, 0xc9, 0x6, 0x29, 0x10]);
 enum GPT_ATTRIBUTE_NO_BLOCK_IO_PROTOCOL = 0x0000000000000002;
 enum GPT_ATTRIBUTE_LEGACY_BIOS_BOOTABLE = 0x0000000000000004;
 enum GPT_BASIC_DATA_ATTRIBUTE_OFFLINE = 0x0800000000000000;
@@ -539,6 +542,19 @@ enum IOCTL_SERENUM_EXPOSE_HARDWARE = 0x00370200;
 enum IOCTL_SERENUM_REMOVE_HARDWARE = 0x00370204;
 enum IOCTL_SERENUM_PORT_DESC = 0x00370208;
 enum IOCTL_SERENUM_GET_PORT_NAME = 0x0037020c;
+enum SERIAL_IOC_FCR_FIFO_ENABLE = 0x00000001;
+enum SERIAL_IOC_FCR_RCVR_RESET = 0x00000002;
+enum SERIAL_IOC_FCR_XMIT_RESET = 0x00000004;
+enum SERIAL_IOC_FCR_DMA_MODE = 0x00000008;
+enum SERIAL_IOC_FCR_RES1 = 0x00000010;
+enum SERIAL_IOC_FCR_RES2 = 0x00000020;
+enum SERIAL_IOC_FCR_RCVR_TRIGGER_LSB = 0x00000040;
+enum SERIAL_IOC_FCR_RCVR_TRIGGER_MSB = 0x00000080;
+enum SERIAL_IOC_MCR_DTR = 0x00000001;
+enum SERIAL_IOC_MCR_RTS = 0x00000002;
+enum SERIAL_IOC_MCR_OUT1 = 0x00000004;
+enum SERIAL_IOC_MCR_OUT2 = 0x00000008;
+enum SERIAL_IOC_MCR_LOOP = 0x00000010;
 enum FSCTL_REQUEST_OPLOCK_LEVEL_1 = 0x00090000;
 enum FSCTL_REQUEST_OPLOCK_LEVEL_2 = 0x00090004;
 enum FSCTL_REQUEST_BATCH_OPLOCK = 0x00090008;
@@ -745,6 +761,18 @@ enum FSCTL_QUERY_ASYNC_DUPLICATE_EXTENTS_STATUS = 0x00090430;
 enum FSCTL_SMB_SHARE_FLUSH_AND_PURGE = 0x0009043c;
 enum FSCTL_REFS_STREAM_SNAPSHOT_MANAGEMENT = 0x00090440;
 enum FSCTL_MANAGE_BYPASS_IO = 0x00090448;
+enum FSCTL_REFS_DEALLOCATE_RANGES_EX = 0x0009044c;
+enum FSCTL_SET_CACHED_RUNS_STATE = 0x00090450;
+enum FSCTL_REFS_SET_VOLUME_COMPRESSION_INFO = 0x00090454;
+enum FSCTL_REFS_QUERY_VOLUME_COMPRESSION_INFO = 0x00090458;
+enum FSCTL_DUPLICATE_CLUSTER = 0x0009045c;
+enum FSCTL_CREATE_LCN_WEAK_REFERENCE = 0x00090460;
+enum FSCTL_DELETE_LCN_WEAK_REFERENCE = 0x00090464;
+enum FSCTL_QUERY_LCN_WEAK_REFERENCE = 0x00090468;
+enum FSCTL_DELETE_LCN_WEAK_REFERENCES = 0x0009046c;
+enum FSCTL_REFS_SET_VOLUME_DEDUP_INFO = 0x00090470;
+enum FSCTL_REFS_QUERY_VOLUME_DEDUP_INFO = 0x00090474;
+enum FSCTL_LMR_QUERY_INFO = 0x00090478;
 enum GET_VOLUME_BITMAP_FLAG_MASK_METADATA = 0x00000001;
 enum FLAG_USN_TRACK_MODIFIED_RANGES_ENABLE = 0x00000001;
 enum USN_PAGE_SIZE = 0x00001000;
@@ -1156,8 +1184,8 @@ enum : uint
 struct MOVE_FILE_DATA32
 {
     uint FileHandle;
-    LARGE_INTEGER StartingVcn;
-    LARGE_INTEGER StartingLcn;
+    long StartingVcn;
+    long StartingLcn;
     uint ClusterCount;
 }
 struct MARK_HANDLE_INFO32
@@ -1173,17 +1201,17 @@ struct MARK_HANDLE_INFO32
 struct DUPLICATE_EXTENTS_DATA32
 {
     uint FileHandle;
-    LARGE_INTEGER SourceFileOffset;
-    LARGE_INTEGER TargetFileOffset;
-    LARGE_INTEGER ByteCount;
+    long SourceFileOffset;
+    long TargetFileOffset;
+    long ByteCount;
 }
 struct DUPLICATE_EXTENTS_DATA_EX32
 {
     uint Size;
     uint FileHandle;
-    LARGE_INTEGER SourceFileOffset;
-    LARGE_INTEGER TargetFileOffset;
-    LARGE_INTEGER ByteCount;
+    long SourceFileOffset;
+    long TargetFileOffset;
+    long ByteCount;
     uint Flags;
 }
 struct STORAGE_HOTPLUG_INFO
@@ -1242,10 +1270,10 @@ struct TAPE_STATISTICS
 {
     uint Version;
     uint Flags;
-    LARGE_INTEGER RecoveredWrites;
-    LARGE_INTEGER UnrecoveredWrites;
-    LARGE_INTEGER RecoveredReads;
-    LARGE_INTEGER UnrecoveredReads;
+    long RecoveredWrites;
+    long UnrecoveredWrites;
+    long RecoveredReads;
+    long UnrecoveredReads;
     ubyte CompressionRatioReads;
     ubyte CompressionRatioWrites;
 }
@@ -1327,7 +1355,7 @@ struct DEVICE_MEDIA_INFO
     {
         struct _DiskInfo_e__Struct
         {
-            LARGE_INTEGER Cylinders;
+            long Cylinders;
             STORAGE_MEDIA_TYPE MediaType;
             uint TracksPerCylinder;
             uint SectorsPerTrack;
@@ -1337,7 +1365,7 @@ struct DEVICE_MEDIA_INFO
         }
         struct _RemovableDiskInfo_e__Struct
         {
-            LARGE_INTEGER Cylinders;
+            long Cylinders;
             STORAGE_MEDIA_TYPE MediaType;
             uint TracksPerCylinder;
             uint SectorsPerTrack;
@@ -2204,6 +2232,21 @@ struct STORAGE_DEVICE_SELF_ENCRYPTION_PROPERTY
     uint Size;
     BOOLEAN SupportsSelfEncryption;
 }
+alias STORAGE_ENCRYPTION_TYPE = int;
+enum : int
+{
+    StorageEncryptionTypeUnknown = 0x00000000,
+    StorageEncryptionTypeEDrive  = 0x00000001,
+    StorageEncryptionTypeTcgOpal = 0x00000002,
+}
+
+struct STORAGE_DEVICE_SELF_ENCRYPTION_PROPERTY_V2
+{
+    uint Version;
+    uint Size;
+    BOOLEAN SupportsSelfEncryption;
+    STORAGE_ENCRYPTION_TYPE EncryptionType;
+}
 struct STORAGE_FRU_ID_DESCRIPTOR
 {
     uint Version;
@@ -2660,8 +2703,8 @@ struct STORAGE_READ_CAPACITY
     uint Version;
     uint Size;
     uint BlockLength;
-    LARGE_INTEGER NumberOfBlocks;
-    LARGE_INTEGER DiskLength;
+    long NumberOfBlocks;
+    long DiskLength;
 }
 alias WRITE_CACHE_TYPE = int;
 enum : int
@@ -3549,7 +3592,7 @@ struct FORMAT_EX_PARAMETERS
 }
 struct DISK_GEOMETRY
 {
-    LARGE_INTEGER Cylinders;
+    long Cylinders;
     MEDIA_TYPE MediaType;
     uint TracksPerCylinder;
     uint SectorsPerTrack;
@@ -3557,8 +3600,8 @@ struct DISK_GEOMETRY
 }
 struct PARTITION_INFORMATION
 {
-    LARGE_INTEGER StartingOffset;
-    LARGE_INTEGER PartitionLength;
+    long StartingOffset;
+    long PartitionLength;
     uint HiddenSectors;
     uint PartitionNumber;
     ubyte PartitionType;
@@ -3578,7 +3621,7 @@ struct DRIVE_LAYOUT_INFORMATION
 }
 struct VERIFY_INFORMATION
 {
-    LARGE_INTEGER StartingOffset;
+    long StartingOffset;
     uint Length;
 }
 struct REASSIGN_BLOCKS
@@ -3592,7 +3635,7 @@ struct REASSIGN_BLOCKS_EX
     align (1):
     ushort Reserved;
     ushort Count;
-    LARGE_INTEGER[1] BlockNumber;
+    long[1] BlockNumber;
 }
 alias PARTITION_STYLE = int;
 enum : int
@@ -3646,13 +3689,13 @@ struct CREATE_DISK
 }
 struct GET_LENGTH_INFORMATION
 {
-    LARGE_INTEGER Length;
+    long Length;
 }
 struct PARTITION_INFORMATION_EX
 {
     PARTITION_STYLE PartitionStyle;
-    LARGE_INTEGER StartingOffset;
-    LARGE_INTEGER PartitionLength;
+    long StartingOffset;
+    long PartitionLength;
     uint PartitionNumber;
     BOOLEAN RewritePartition;
     BOOLEAN IsServicePartition;
@@ -3665,8 +3708,8 @@ struct PARTITION_INFORMATION_EX
 struct DRIVE_LAYOUT_INFORMATION_GPT
 {
     GUID DiskId;
-    LARGE_INTEGER StartingUsableOffset;
-    LARGE_INTEGER UsableLength;
+    long StartingUsableOffset;
+    long UsableLength;
     uint MaxPartitionCount;
 }
 struct DRIVE_LAYOUT_INFORMATION_MBR
@@ -3745,7 +3788,7 @@ struct DISK_PARTITION_INFO
 struct DISK_GEOMETRY_EX
 {
     DISK_GEOMETRY Geometry;
-    LARGE_INTEGER DiskSize;
+    long DiskSize;
     ubyte[1] Data;
 }
 struct DISK_CONTROLLER_NUMBER
@@ -3788,7 +3831,7 @@ struct DISK_CACHE_INFORMATION
 struct DISK_GROW_PARTITION
 {
     uint PartitionNumber;
-    LARGE_INTEGER BytesToGrow;
+    long BytesToGrow;
 }
 struct HISTOGRAM_BUCKET
 {
@@ -3797,12 +3840,12 @@ struct HISTOGRAM_BUCKET
 }
 struct DISK_HISTOGRAM
 {
-    LARGE_INTEGER DiskSize;
-    LARGE_INTEGER Start;
-    LARGE_INTEGER End;
-    LARGE_INTEGER Average;
-    LARGE_INTEGER AverageRead;
-    LARGE_INTEGER AverageWrite;
+    long DiskSize;
+    long Start;
+    long End;
+    long Average;
+    long AverageRead;
+    long AverageWrite;
     uint Granularity;
     uint Size;
     uint ReadCount;
@@ -3811,24 +3854,24 @@ struct DISK_HISTOGRAM
 }
 struct DISK_PERFORMANCE
 {
-    LARGE_INTEGER BytesRead;
-    LARGE_INTEGER BytesWritten;
-    LARGE_INTEGER ReadTime;
-    LARGE_INTEGER WriteTime;
-    LARGE_INTEGER IdleTime;
+    long BytesRead;
+    long BytesWritten;
+    long ReadTime;
+    long WriteTime;
+    long IdleTime;
     uint ReadCount;
     uint WriteCount;
     uint QueueDepth;
     uint SplitCount;
-    LARGE_INTEGER QueryTime;
+    long QueryTime;
     uint StorageDeviceNumber;
     wchar[8] StorageManagerName;
 }
 struct DISK_RECORD
 {
-    LARGE_INTEGER ByteOffset;
-    LARGE_INTEGER StartTime;
-    LARGE_INTEGER EndTime;
+    long ByteOffset;
+    long StartTime;
+    long EndTime;
     void* VirtualAddress;
     uint NumberOfBytes;
     ubyte DeviceNumber;
@@ -3849,8 +3892,8 @@ enum : int
 
 struct BIN_RANGE
 {
-    LARGE_INTEGER StartValue;
-    LARGE_INTEGER Length;
+    long StartValue;
+    long Length;
 }
 struct PERF_BIN
 {
@@ -4096,20 +4139,20 @@ struct FSCTL_QUERY_FAT_BPB_BUFFER
 }
 struct NTFS_VOLUME_DATA_BUFFER
 {
-    LARGE_INTEGER VolumeSerialNumber;
-    LARGE_INTEGER NumberSectors;
-    LARGE_INTEGER TotalClusters;
-    LARGE_INTEGER FreeClusters;
-    LARGE_INTEGER TotalReserved;
+    long VolumeSerialNumber;
+    long NumberSectors;
+    long TotalClusters;
+    long FreeClusters;
+    long TotalReserved;
     uint BytesPerSector;
     uint BytesPerCluster;
     uint BytesPerFileRecordSegment;
     uint ClustersPerFileRecordSegment;
-    LARGE_INTEGER MftValidDataLength;
-    LARGE_INTEGER MftStartLcn;
-    LARGE_INTEGER Mft2StartLcn;
-    LARGE_INTEGER MftZoneStart;
-    LARGE_INTEGER MftZoneEnd;
+    long MftValidDataLength;
+    long MftStartLcn;
+    long Mft2StartLcn;
+    long MftZoneStart;
+    long MftZoneEnd;
 }
 struct NTFS_EXTENDED_VOLUME_DATA
 {
@@ -4130,56 +4173,56 @@ struct REFS_VOLUME_DATA_BUFFER
     uint MajorVersion;
     uint MinorVersion;
     uint BytesPerPhysicalSector;
-    LARGE_INTEGER VolumeSerialNumber;
-    LARGE_INTEGER NumberSectors;
-    LARGE_INTEGER TotalClusters;
-    LARGE_INTEGER FreeClusters;
-    LARGE_INTEGER TotalReserved;
+    long VolumeSerialNumber;
+    long NumberSectors;
+    long TotalClusters;
+    long FreeClusters;
+    long TotalReserved;
     uint BytesPerSector;
     uint BytesPerCluster;
-    LARGE_INTEGER MaximumSizeOfResidentFile;
+    long MaximumSizeOfResidentFile;
     ushort FastTierDataFillRatio;
     ushort SlowTierDataFillRatio;
     uint DestagesFastTierToSlowTierRate;
-    LARGE_INTEGER[9] Reserved;
+    long[9] Reserved;
 }
 struct STARTING_LCN_INPUT_BUFFER
 {
-    LARGE_INTEGER StartingLcn;
+    long StartingLcn;
 }
 struct STARTING_LCN_INPUT_BUFFER_EX
 {
-    LARGE_INTEGER StartingLcn;
+    long StartingLcn;
     uint Flags;
 }
 struct VOLUME_BITMAP_BUFFER
 {
-    LARGE_INTEGER StartingLcn;
-    LARGE_INTEGER BitmapSize;
+    long StartingLcn;
+    long BitmapSize;
     ubyte[1] Buffer;
 }
 struct STARTING_VCN_INPUT_BUFFER
 {
-    LARGE_INTEGER StartingVcn;
+    long StartingVcn;
 }
 struct RETRIEVAL_POINTERS_BUFFER
 {
     uint ExtentCount;
-    LARGE_INTEGER StartingVcn;
+    long StartingVcn;
     struct
     {
-        LARGE_INTEGER NextVcn;
-        LARGE_INTEGER Lcn;
+        long NextVcn;
+        long Lcn;
     }
 }
 struct RETRIEVAL_POINTERS_AND_REFCOUNT_BUFFER
 {
     uint ExtentCount;
-    LARGE_INTEGER StartingVcn;
+    long StartingVcn;
     struct
     {
-        LARGE_INTEGER NextVcn;
-        LARGE_INTEGER Lcn;
+        long NextVcn;
+        long Lcn;
         uint ReferenceCount;
     }
 }
@@ -4189,26 +4232,26 @@ struct RETRIEVAL_POINTER_COUNT
 }
 struct NTFS_FILE_RECORD_INPUT_BUFFER
 {
-    LARGE_INTEGER FileReferenceNumber;
+    long FileReferenceNumber;
 }
 struct NTFS_FILE_RECORD_OUTPUT_BUFFER
 {
-    LARGE_INTEGER FileReferenceNumber;
+    long FileReferenceNumber;
     uint FileRecordLength;
     ubyte[1] FileRecordBuffer;
 }
 struct MOVE_FILE_DATA
 {
     HANDLE FileHandle;
-    LARGE_INTEGER StartingVcn;
-    LARGE_INTEGER StartingLcn;
+    long StartingVcn;
+    long StartingLcn;
     uint ClusterCount;
 }
 struct MOVE_FILE_RECORD_DATA
 {
     HANDLE FileHandle;
-    LARGE_INTEGER SourceFileRecord;
-    LARGE_INTEGER TargetFileRecord;
+    long SourceFileRecord;
+    long TargetFileRecord;
 }
 struct FIND_BY_SID_DATA
 {
@@ -4285,7 +4328,7 @@ struct USN_RECORD_V2
     ulong FileReferenceNumber;
     ulong ParentFileReferenceNumber;
     long Usn;
-    LARGE_INTEGER TimeStamp;
+    long TimeStamp;
     uint Reason;
     uint SourceInfo;
     uint SecurityId;
@@ -4302,7 +4345,7 @@ struct USN_RECORD_V3
     FILE_ID_128 FileReferenceNumber;
     FILE_ID_128 ParentFileReferenceNumber;
     long Usn;
-    LARGE_INTEGER TimeStamp;
+    long TimeStamp;
     uint Reason;
     uint SourceInfo;
     uint SecurityId;
@@ -4672,19 +4715,19 @@ struct FILE_SET_SPARSE_BUFFER
 }
 struct FILE_ZERO_DATA_INFORMATION
 {
-    LARGE_INTEGER FileOffset;
-    LARGE_INTEGER BeyondFinalZero;
+    long FileOffset;
+    long BeyondFinalZero;
 }
 struct FILE_ZERO_DATA_INFORMATION_EX
 {
-    LARGE_INTEGER FileOffset;
-    LARGE_INTEGER BeyondFinalZero;
+    long FileOffset;
+    long BeyondFinalZero;
     uint Flags;
 }
 struct FILE_ALLOCATED_RANGE_BUFFER
 {
-    LARGE_INTEGER FileOffset;
-    LARGE_INTEGER Length;
+    long FileOffset;
+    long Length;
 }
 struct ENCRYPTION_BUFFER
 {
@@ -4723,7 +4766,7 @@ struct EXTENDED_ENCRYPTED_DATA_INFO
 }
 struct PLEX_READ_DATA_REQUEST
 {
-    LARGE_INTEGER ByteOffset;
+    long ByteOffset;
     uint ByteLength;
     uint PlexNumber;
 }
@@ -4751,13 +4794,13 @@ struct FILE_QUERY_SPARING_BUFFER
 }
 struct FILE_QUERY_ON_DISK_VOL_INFO_BUFFER
 {
-    LARGE_INTEGER DirectoryCount;
-    LARGE_INTEGER FileCount;
+    long DirectoryCount;
+    long FileCount;
     ushort FsFormatMajVersion;
     ushort FsFormatMinVersion;
     wchar[12] FsFormatName;
-    LARGE_INTEGER FormatTime;
-    LARGE_INTEGER LastUpdateTime;
+    long FormatTime;
+    long LastUpdateTime;
     wchar[34] CopyrightInfo;
     wchar[34] AbstractInfo;
     wchar[34] FormattingImplementationInfo;
@@ -4802,7 +4845,7 @@ struct TXFS_QUERY_RM_INFORMATION
     ulong CurrentLsn;
     ulong ArchiveTailLsn;
     ulong LogContainerSize;
-    LARGE_INTEGER HighestVirtualClock;
+    long HighestVirtualClock;
     uint LogContainerCount;
     uint LogContainerCountMax;
     uint LogContainerCountMin;
@@ -4826,7 +4869,7 @@ struct TXFS_QUERY_RM_INFORMATION
 }
 struct TXFS_ROLLFORWARD_REDO_INFORMATION
 {
-    LARGE_INTEGER LastVirtualClock;
+    long LastVirtualClock;
     ulong LastRedoLsn;
     ulong HighestRecoveryLsn;
     uint Flags;
@@ -4929,12 +4972,12 @@ struct BOOT_AREA_INFO
     uint BootSectorCount;
     struct
     {
-        LARGE_INTEGER Offset;
+        long Offset;
     }
 }
 struct RETRIEVAL_POINTER_BASE
 {
-    LARGE_INTEGER FileAreaOffset;
+    long FileAreaOffset;
 }
 struct FILE_FS_PERSISTENT_VOLUME_INFORMATION
 {
@@ -5080,7 +5123,7 @@ struct LOOKUP_STREAM_FROM_CLUSTER_INPUT
 {
     uint Flags;
     uint NumberOfClusters;
-    LARGE_INTEGER[1] Cluster;
+    long[1] Cluster;
 }
 struct LOOKUP_STREAM_FROM_CLUSTER_OUTPUT
 {
@@ -5092,8 +5135,8 @@ struct LOOKUP_STREAM_FROM_CLUSTER_ENTRY
 {
     uint OffsetToNext;
     uint Flags;
-    LARGE_INTEGER Reserved;
-    LARGE_INTEGER Cluster;
+    long Reserved;
+    long Cluster;
     wchar[1] FileName;
 }
 struct FILE_TYPE_NOTIFICATION_INPUT
@@ -5110,7 +5153,7 @@ struct CSV_NAMESPACE_INFO
 {
     uint Version;
     uint DeviceNumber;
-    LARGE_INTEGER StartingOffset;
+    long StartingOffset;
     uint SectorSize;
 }
 alias CSV_CONTROL_OP = int;
@@ -5203,6 +5246,20 @@ struct CSV_QUERY_VOLUME_ID
 {
     GUID VolumeId;
 }
+alias LMR_QUERY_INFO_CLASS = int;
+enum : int
+{
+    LMRQuerySessionInfo = 0x00000001,
+}
+
+struct LMR_QUERY_INFO_PARAM
+{
+    LMR_QUERY_INFO_CLASS Operation;
+}
+struct LMR_QUERY_SESSION_INFO
+{
+    ulong SessionId;
+}
 struct CSV_QUERY_VETO_FILE_DIRECT_IO_OUTPUT
 {
     ulong VetoedFromAltitudeIntegral;
@@ -5250,8 +5307,8 @@ enum : int
 
 struct CLUSTER_RANGE
 {
-    LARGE_INTEGER StartingCluster;
-    LARGE_INTEGER ClusterCount;
+    long StartingCluster;
+    long ClusterCount;
 }
 struct FILE_REFERENCE_RANGE
 {
@@ -5307,10 +5364,10 @@ struct FILE_LAYOUT_INFO_ENTRY
 {
     struct _BasicInformation_e__Struct
     {
-        LARGE_INTEGER CreationTime;
-        LARGE_INTEGER LastAccessTime;
-        LARGE_INTEGER LastWriteTime;
-        LARGE_INTEGER ChangeTime;
+        long CreationTime;
+        long LastAccessTime;
+        long LastWriteTime;
+        long ChangeTime;
         uint FileAttributes;
     }
     uint OwnerId;
@@ -5324,8 +5381,8 @@ struct STREAM_LAYOUT_ENTRY
     uint NextStreamOffset;
     uint Flags;
     uint ExtentInformationOffset;
-    LARGE_INTEGER AllocationSize;
-    LARGE_INTEGER EndOfFile;
+    long AllocationSize;
+    long EndOfFile;
     uint StreamInformationOffset;
     uint AttributeTypeCode;
     uint AttributeFlags;
@@ -5402,7 +5459,7 @@ struct REPAIR_COPIES_INPUT
 {
     uint Size;
     uint Flags;
-    LARGE_INTEGER FileOffset;
+    long FileOffset;
     uint Length;
     uint SourceCopy;
     uint NumberOfRepairCopies;
@@ -5412,7 +5469,7 @@ struct REPAIR_COPIES_OUTPUT
 {
     uint Size;
     uint Status;
-    LARGE_INTEGER ResumeFileOffset;
+    long ResumeFileOffset;
 }
 struct FILE_REGION_INFO
 {
@@ -5545,17 +5602,17 @@ struct FILE_DESIRED_STORAGE_CLASS_INFORMATION
 struct DUPLICATE_EXTENTS_DATA
 {
     HANDLE FileHandle;
-    LARGE_INTEGER SourceFileOffset;
-    LARGE_INTEGER TargetFileOffset;
-    LARGE_INTEGER ByteCount;
+    long SourceFileOffset;
+    long TargetFileOffset;
+    long ByteCount;
 }
 struct DUPLICATE_EXTENTS_DATA_EX
 {
     ulong Size;
     HANDLE FileHandle;
-    LARGE_INTEGER SourceFileOffset;
-    LARGE_INTEGER TargetFileOffset;
-    LARGE_INTEGER ByteCount;
+    long SourceFileOffset;
+    long TargetFileOffset;
+    long ByteCount;
     uint Flags;
 }
 alias DUPLICATE_EXTENTS_STATE = int;
@@ -5588,11 +5645,11 @@ struct REFS_SMR_VOLUME_INFO_OUTPUT
 {
     uint Version;
     uint Flags;
-    LARGE_INTEGER SizeOfRandomlyWritableTier;
-    LARGE_INTEGER FreeSpaceInRandomlyWritableTier;
-    LARGE_INTEGER SizeofSMRTier;
-    LARGE_INTEGER FreeSpaceInSMRTier;
-    LARGE_INTEGER UsableFreeSpaceInSMRTier;
+    long SizeOfRandomlyWritableTier;
+    long FreeSpaceInRandomlyWritableTier;
+    long SizeofSMRTier;
+    long FreeSpaceInSMRTier;
+    long UsableFreeSpaceInSMRTier;
     REFS_SMR_VOLUME_GC_STATE VolumeGcState;
     uint VolumeGcLastStatus;
     uint CurrentGcBandFillPercentage;
@@ -5715,7 +5772,7 @@ struct WIM_PROVIDER_EXTERNAL_INFO
 {
     uint Version;
     uint Flags;
-    LARGE_INTEGER DataSourceId;
+    long DataSourceId;
     ubyte[20] ResourceHash;
 }
 struct WIM_PROVIDER_ADD_OVERLAY_INPUT
@@ -5727,22 +5784,22 @@ struct WIM_PROVIDER_ADD_OVERLAY_INPUT
 }
 struct WIM_PROVIDER_UPDATE_OVERLAY_INPUT
 {
-    LARGE_INTEGER DataSourceId;
+    long DataSourceId;
     uint WimFileNameOffset;
     uint WimFileNameLength;
 }
 struct WIM_PROVIDER_REMOVE_OVERLAY_INPUT
 {
-    LARGE_INTEGER DataSourceId;
+    long DataSourceId;
 }
 struct WIM_PROVIDER_SUSPEND_OVERLAY_INPUT
 {
-    LARGE_INTEGER DataSourceId;
+    long DataSourceId;
 }
 struct WIM_PROVIDER_OVERLAY_ENTRY
 {
     uint NextEntryOffset;
-    LARGE_INTEGER DataSourceId;
+    long DataSourceId;
     GUID WimGuid;
     uint WimFileNameOffset;
     uint WimType;
@@ -5878,8 +5935,8 @@ struct SMB_SHARE_FLUSH_AND_PURGE_OUTPUT
 struct DISK_EXTENT
 {
     uint DiskNumber;
-    LARGE_INTEGER StartingOffset;
-    LARGE_INTEGER ExtentLength;
+    long StartingOffset;
+    long ExtentLength;
 }
 struct VOLUME_DISK_EXTENTS
 {

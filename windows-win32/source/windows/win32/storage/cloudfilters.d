@@ -1,7 +1,7 @@
 module windows.win32.storage.cloudfilters;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOLEAN, HANDLE, HRESULT, LARGE_INTEGER, NTSTATUS, PWSTR;
+import windows.win32.foundation : BOOLEAN, HANDLE, HRESULT, NTSTATUS, PWSTR;
 import windows.win32.storage.filesystem : FILE_BASIC_INFO, FILE_INFO_BY_HANDLE_CLASS, WIN32_FIND_DATAA;
 import windows.win32.system.correlationvector : CORRELATION_VECTOR;
 import windows.win32.system.io : OVERLAPPED;
@@ -14,8 +14,8 @@ HRESULT CfRegisterSyncRoot(const(wchar)*, const(CF_SYNC_REGISTRATION)*, const(CF
 HRESULT CfUnregisterSyncRoot(const(wchar)*);
 HRESULT CfConnectSyncRoot(const(wchar)*, const(CF_CALLBACK_REGISTRATION)*, const(void)*, CF_CONNECT_FLAGS, CF_CONNECTION_KEY*);
 HRESULT CfDisconnectSyncRoot(CF_CONNECTION_KEY);
-HRESULT CfGetTransferKey(HANDLE, LARGE_INTEGER*);
-void CfReleaseTransferKey(HANDLE, LARGE_INTEGER*);
+HRESULT CfGetTransferKey(HANDLE, long*);
+void CfReleaseTransferKey(HANDLE, long*);
 HRESULT CfExecute(const(CF_OPERATION_INFO)*, CF_OPERATION_PARAMETERS*);
 HRESULT CfUpdateSyncProviderStatus(CF_CONNECTION_KEY, CF_SYNC_PROVIDER_STATUS);
 HRESULT CfQuerySyncProviderStatus(CF_CONNECTION_KEY, CF_SYNC_PROVIDER_STATUS*);
@@ -29,8 +29,8 @@ void CfCloseHandle(HANDLE);
 HRESULT CfConvertToPlaceholder(HANDLE, const(void)*, uint, CF_CONVERT_FLAGS, long*, OVERLAPPED*);
 HRESULT CfUpdatePlaceholder(HANDLE, const(CF_FS_METADATA)*, const(void)*, uint, const(CF_FILE_RANGE)*, uint, CF_UPDATE_FLAGS, long*, OVERLAPPED*);
 HRESULT CfRevertPlaceholder(HANDLE, CF_REVERT_FLAGS, OVERLAPPED*);
-HRESULT CfHydratePlaceholder(HANDLE, LARGE_INTEGER, LARGE_INTEGER, CF_HYDRATE_FLAGS, OVERLAPPED*);
-HRESULT CfDehydratePlaceholder(HANDLE, LARGE_INTEGER, LARGE_INTEGER, CF_DEHYDRATE_FLAGS, OVERLAPPED*);
+HRESULT CfHydratePlaceholder(HANDLE, long, long, CF_HYDRATE_FLAGS, OVERLAPPED*);
+HRESULT CfDehydratePlaceholder(HANDLE, long, long, CF_DEHYDRATE_FLAGS, OVERLAPPED*);
 HRESULT CfSetPinState(HANDLE, CF_PIN_STATE, CF_SET_PIN_FLAGS, OVERLAPPED*);
 HRESULT CfSetInSyncState(HANDLE, CF_IN_SYNC_STATE, CF_SET_IN_SYNC_FLAGS, long*);
 HRESULT CfSetCorrelationVector(HANDLE, const(CORRELATION_VECTOR)*);
@@ -41,9 +41,9 @@ CF_PLACEHOLDER_STATE CfGetPlaceholderStateFromFindData(const(WIN32_FIND_DATAA)*)
 HRESULT CfGetPlaceholderInfo(HANDLE, CF_PLACEHOLDER_INFO_CLASS, void*, uint, uint*);
 HRESULT CfGetSyncRootInfoByPath(const(wchar)*, CF_SYNC_ROOT_INFO_CLASS, void*, uint, uint*);
 HRESULT CfGetSyncRootInfoByHandle(HANDLE, CF_SYNC_ROOT_INFO_CLASS, void*, uint, uint*);
-HRESULT CfGetPlaceholderRangeInfo(HANDLE, CF_PLACEHOLDER_RANGE_INFO_CLASS, LARGE_INTEGER, LARGE_INTEGER, void*, uint, uint*);
-HRESULT CfReportProviderProgress(CF_CONNECTION_KEY, LARGE_INTEGER, LARGE_INTEGER, LARGE_INTEGER);
-HRESULT CfReportProviderProgress2(CF_CONNECTION_KEY, LARGE_INTEGER, LARGE_INTEGER, LARGE_INTEGER, LARGE_INTEGER, uint);
+HRESULT CfGetPlaceholderRangeInfo(HANDLE, CF_PLACEHOLDER_RANGE_INFO_CLASS, long, long, void*, uint, uint*);
+HRESULT CfReportProviderProgress(CF_CONNECTION_KEY, long, long, long);
+HRESULT CfReportProviderProgress2(CF_CONNECTION_KEY, long, long, long, long, uint);
 enum CF_REQUEST_KEY_DEFAULT = 0x00000000;
 enum CF_PLACEHOLDER_MAX_FILE_IDENTITY_LENGTH = 0x00001000;
 enum CF_MAX_PRIORITY_HINT = 0x0000000f;
@@ -53,10 +53,10 @@ alias CF_CONNECTION_KEY = long;
 struct CF_FS_METADATA
 {
     FILE_BASIC_INFO BasicInfo;
-    LARGE_INTEGER FileSize;
+    long FileSize;
 }
-alias CF_PLACEHOLDER_CREATE_FLAGS = uint;
-enum : uint
+alias CF_PLACEHOLDER_CREATE_FLAGS = int;
+enum : int
 {
     CF_PLACEHOLDER_CREATE_FLAG_NONE                         = 0x00000000,
     CF_PLACEHOLDER_CREATE_FLAG_DISABLE_ON_DEMAND_POPULATION = 0x00000001,
@@ -107,8 +107,8 @@ struct CF_PLATFORM_INFO
     uint RevisionNumber;
     uint IntegrationNumber;
 }
-alias CF_REGISTER_FLAGS = uint;
-enum : uint
+alias CF_REGISTER_FLAGS = int;
+enum : int
 {
     CF_REGISTER_FLAG_NONE                                 = 0x00000000,
     CF_REGISTER_FLAG_UPDATE                               = 0x00000001,
@@ -125,10 +125,6 @@ enum : ushort
     CF_HYDRATION_POLICY_ALWAYS_FULL = 0x0003,
 }
 
-struct CF_HYDRATION_POLICY_PRIMARY_USHORT
-{
-    ushort us;
-}
 alias CF_HYDRATION_POLICY_MODIFIER = ushort;
 enum : ushort
 {
@@ -139,14 +135,10 @@ enum : ushort
     CF_HYDRATION_POLICY_MODIFIER_ALLOW_FULL_RESTART_HYDRATION = 0x0008,
 }
 
-struct CF_HYDRATION_POLICY_MODIFIER_USHORT
-{
-    ushort us;
-}
 struct CF_HYDRATION_POLICY
 {
-    CF_HYDRATION_POLICY_PRIMARY_USHORT Primary;
-    CF_HYDRATION_POLICY_MODIFIER_USHORT Modifier;
+    CF_HYDRATION_POLICY_PRIMARY Primary;
+    CF_HYDRATION_POLICY_MODIFIER Modifier;
 }
 alias CF_POPULATION_POLICY_PRIMARY = ushort;
 enum : ushort
@@ -156,24 +148,16 @@ enum : ushort
     CF_POPULATION_POLICY_ALWAYS_FULL = 0x0003,
 }
 
-struct CF_POPULATION_POLICY_PRIMARY_USHORT
-{
-    ushort us;
-}
 alias CF_POPULATION_POLICY_MODIFIER = ushort;
 enum : ushort
 {
     CF_POPULATION_POLICY_MODIFIER_NONE = 0x0000,
 }
 
-struct CF_POPULATION_POLICY_MODIFIER_USHORT
-{
-    ushort us;
-}
 struct CF_POPULATION_POLICY
 {
-    CF_POPULATION_POLICY_PRIMARY_USHORT Primary;
-    CF_POPULATION_POLICY_MODIFIER_USHORT Modifier;
+    CF_POPULATION_POLICY_PRIMARY Primary;
+    CF_POPULATION_POLICY_MODIFIER Modifier;
 }
 alias CF_PLACEHOLDER_MANAGEMENT_POLICY = int;
 enum : int
@@ -204,8 +188,8 @@ enum : uint
     CF_INSYNC_POLICY_PRESERVE_INSYNC_FOR_SYNC_ENGINE    = 0x80000000,
 }
 
-alias CF_HARDLINK_POLICY = uint;
-enum : uint
+alias CF_HARDLINK_POLICY = int;
+enum : int
 {
     CF_HARDLINK_POLICY_NONE    = 0x00000000,
     CF_HARDLINK_POLICY_ALLOWED = 0x00000001,
@@ -239,95 +223,95 @@ struct CF_CALLBACK_INFO
     const(wchar)* VolumeGuidName;
     const(wchar)* VolumeDosName;
     uint VolumeSerialNumber;
-    LARGE_INTEGER SyncRootFileId;
+    long SyncRootFileId;
     const(void)* SyncRootIdentity;
     uint SyncRootIdentityLength;
-    LARGE_INTEGER FileId;
-    LARGE_INTEGER FileSize;
+    long FileId;
+    long FileSize;
     const(void)* FileIdentity;
     uint FileIdentityLength;
     const(wchar)* NormalizedPath;
-    LARGE_INTEGER TransferKey;
+    long TransferKey;
     ubyte PriorityHint;
     CORRELATION_VECTOR* CorrelationVector;
     CF_PROCESS_INFO* ProcessInfo;
-    LARGE_INTEGER RequestKey;
+    long RequestKey;
 }
-alias CF_CALLBACK_CANCEL_FLAGS = uint;
-enum : uint
+alias CF_CALLBACK_CANCEL_FLAGS = int;
+enum : int
 {
     CF_CALLBACK_CANCEL_FLAG_NONE       = 0x00000000,
     CF_CALLBACK_CANCEL_FLAG_IO_TIMEOUT = 0x00000001,
     CF_CALLBACK_CANCEL_FLAG_IO_ABORTED = 0x00000002,
 }
 
-alias CF_CALLBACK_FETCH_DATA_FLAGS = uint;
-enum : uint
+alias CF_CALLBACK_FETCH_DATA_FLAGS = int;
+enum : int
 {
     CF_CALLBACK_FETCH_DATA_FLAG_NONE               = 0x00000000,
     CF_CALLBACK_FETCH_DATA_FLAG_RECOVERY           = 0x00000001,
     CF_CALLBACK_FETCH_DATA_FLAG_EXPLICIT_HYDRATION = 0x00000002,
 }
 
-alias CF_CALLBACK_VALIDATE_DATA_FLAGS = uint;
-enum : uint
+alias CF_CALLBACK_VALIDATE_DATA_FLAGS = int;
+enum : int
 {
     CF_CALLBACK_VALIDATE_DATA_FLAG_NONE               = 0x00000000,
     CF_CALLBACK_VALIDATE_DATA_FLAG_EXPLICIT_HYDRATION = 0x00000002,
 }
 
-alias CF_CALLBACK_FETCH_PLACEHOLDERS_FLAGS = uint;
-enum : uint
+alias CF_CALLBACK_FETCH_PLACEHOLDERS_FLAGS = int;
+enum : int
 {
     CF_CALLBACK_FETCH_PLACEHOLDERS_FLAG_NONE = 0x00000000,
 }
 
-alias CF_CALLBACK_OPEN_COMPLETION_FLAGS = uint;
-enum : uint
+alias CF_CALLBACK_OPEN_COMPLETION_FLAGS = int;
+enum : int
 {
     CF_CALLBACK_OPEN_COMPLETION_FLAG_NONE                    = 0x00000000,
     CF_CALLBACK_OPEN_COMPLETION_FLAG_PLACEHOLDER_UNKNOWN     = 0x00000001,
     CF_CALLBACK_OPEN_COMPLETION_FLAG_PLACEHOLDER_UNSUPPORTED = 0x00000002,
 }
 
-alias CF_CALLBACK_CLOSE_COMPLETION_FLAGS = uint;
-enum : uint
+alias CF_CALLBACK_CLOSE_COMPLETION_FLAGS = int;
+enum : int
 {
     CF_CALLBACK_CLOSE_COMPLETION_FLAG_NONE    = 0x00000000,
     CF_CALLBACK_CLOSE_COMPLETION_FLAG_DELETED = 0x00000001,
 }
 
-alias CF_CALLBACK_DEHYDRATE_FLAGS = uint;
-enum : uint
+alias CF_CALLBACK_DEHYDRATE_FLAGS = int;
+enum : int
 {
     CF_CALLBACK_DEHYDRATE_FLAG_NONE       = 0x00000000,
     CF_CALLBACK_DEHYDRATE_FLAG_BACKGROUND = 0x00000001,
 }
 
-alias CF_CALLBACK_DEHYDRATE_COMPLETION_FLAGS = uint;
-enum : uint
+alias CF_CALLBACK_DEHYDRATE_COMPLETION_FLAGS = int;
+enum : int
 {
     CF_CALLBACK_DEHYDRATE_COMPLETION_FLAG_NONE       = 0x00000000,
     CF_CALLBACK_DEHYDRATE_COMPLETION_FLAG_BACKGROUND = 0x00000001,
     CF_CALLBACK_DEHYDRATE_COMPLETION_FLAG_DEHYDRATED = 0x00000002,
 }
 
-alias CF_CALLBACK_DELETE_FLAGS = uint;
-enum : uint
+alias CF_CALLBACK_DELETE_FLAGS = int;
+enum : int
 {
     CF_CALLBACK_DELETE_FLAG_NONE         = 0x00000000,
     CF_CALLBACK_DELETE_FLAG_IS_DIRECTORY = 0x00000001,
     CF_CALLBACK_DELETE_FLAG_IS_UNDELETE  = 0x00000002,
 }
 
-alias CF_CALLBACK_DELETE_COMPLETION_FLAGS = uint;
-enum : uint
+alias CF_CALLBACK_DELETE_COMPLETION_FLAGS = int;
+enum : int
 {
     CF_CALLBACK_DELETE_COMPLETION_FLAG_NONE = 0x00000000,
 }
 
-alias CF_CALLBACK_RENAME_FLAGS = uint;
-enum : uint
+alias CF_CALLBACK_RENAME_FLAGS = int;
+enum : int
 {
     CF_CALLBACK_RENAME_FLAG_NONE            = 0x00000000,
     CF_CALLBACK_RENAME_FLAG_IS_DIRECTORY    = 0x00000001,
@@ -335,8 +319,8 @@ enum : uint
     CF_CALLBACK_RENAME_FLAG_TARGET_IN_SCOPE = 0x00000004,
 }
 
-alias CF_CALLBACK_RENAME_COMPLETION_FLAGS = uint;
-enum : uint
+alias CF_CALLBACK_RENAME_COMPLETION_FLAGS = int;
+enum : int
 {
     CF_CALLBACK_RENAME_COMPLETION_FLAG_NONE = 0x00000000,
 }
@@ -363,26 +347,26 @@ struct CF_CALLBACK_PARAMETERS
             {
                 struct _FetchData_e__Struct
                 {
-                    LARGE_INTEGER FileOffset;
-                    LARGE_INTEGER Length;
+                    long FileOffset;
+                    long Length;
                 }
             }
         }
         struct _FetchData_e__Struct
         {
             CF_CALLBACK_FETCH_DATA_FLAGS Flags;
-            LARGE_INTEGER RequiredFileOffset;
-            LARGE_INTEGER RequiredLength;
-            LARGE_INTEGER OptionalFileOffset;
-            LARGE_INTEGER OptionalLength;
-            LARGE_INTEGER LastDehydrationTime;
+            long RequiredFileOffset;
+            long RequiredLength;
+            long OptionalFileOffset;
+            long OptionalLength;
+            long LastDehydrationTime;
             CF_CALLBACK_DEHYDRATION_REASON LastDehydrationReason;
         }
         struct _ValidateData_e__Struct
         {
             CF_CALLBACK_VALIDATE_DATA_FLAGS Flags;
-            LARGE_INTEGER RequiredFileOffset;
-            LARGE_INTEGER RequiredLength;
+            long RequiredFileOffset;
+            long RequiredLength;
         }
         struct _FetchPlaceholders_e__Struct
         {
@@ -452,8 +436,8 @@ struct CF_CALLBACK_REGISTRATION
     CF_CALLBACK_TYPE Type;
     CF_CALLBACK Callback;
 }
-alias CF_CONNECT_FLAGS = uint;
-enum : uint
+alias CF_CONNECT_FLAGS = int;
+enum : int
 {
     CF_CONNECT_FLAG_NONE                          = 0x00000000,
     CF_CONNECT_FLAG_REQUIRE_PROCESS_INFO          = 0x00000002,
@@ -488,58 +472,58 @@ struct CF_OPERATION_INFO
     uint StructSize;
     CF_OPERATION_TYPE Type;
     CF_CONNECTION_KEY ConnectionKey;
-    LARGE_INTEGER TransferKey;
+    long TransferKey;
     const(CORRELATION_VECTOR)* CorrelationVector;
     const(CF_SYNC_STATUS)* SyncStatus;
-    LARGE_INTEGER RequestKey;
+    long RequestKey;
 }
-alias CF_OPERATION_TRANSFER_DATA_FLAGS = uint;
-enum : uint
+alias CF_OPERATION_TRANSFER_DATA_FLAGS = int;
+enum : int
 {
     CF_OPERATION_TRANSFER_DATA_FLAG_NONE = 0x00000000,
 }
 
-alias CF_OPERATION_RETRIEVE_DATA_FLAGS = uint;
-enum : uint
+alias CF_OPERATION_RETRIEVE_DATA_FLAGS = int;
+enum : int
 {
     CF_OPERATION_RETRIEVE_DATA_FLAG_NONE = 0x00000000,
 }
 
-alias CF_OPERATION_ACK_DATA_FLAGS = uint;
-enum : uint
+alias CF_OPERATION_ACK_DATA_FLAGS = int;
+enum : int
 {
     CF_OPERATION_ACK_DATA_FLAG_NONE = 0x00000000,
 }
 
-alias CF_OPERATION_RESTART_HYDRATION_FLAGS = uint;
-enum : uint
+alias CF_OPERATION_RESTART_HYDRATION_FLAGS = int;
+enum : int
 {
     CF_OPERATION_RESTART_HYDRATION_FLAG_NONE         = 0x00000000,
     CF_OPERATION_RESTART_HYDRATION_FLAG_MARK_IN_SYNC = 0x00000001,
 }
 
-alias CF_OPERATION_TRANSFER_PLACEHOLDERS_FLAGS = uint;
-enum : uint
+alias CF_OPERATION_TRANSFER_PLACEHOLDERS_FLAGS = int;
+enum : int
 {
     CF_OPERATION_TRANSFER_PLACEHOLDERS_FLAG_NONE                         = 0x00000000,
     CF_OPERATION_TRANSFER_PLACEHOLDERS_FLAG_STOP_ON_ERROR                = 0x00000001,
     CF_OPERATION_TRANSFER_PLACEHOLDERS_FLAG_DISABLE_ON_DEMAND_POPULATION = 0x00000002,
 }
 
-alias CF_OPERATION_ACK_DEHYDRATE_FLAGS = uint;
-enum : uint
+alias CF_OPERATION_ACK_DEHYDRATE_FLAGS = int;
+enum : int
 {
     CF_OPERATION_ACK_DEHYDRATE_FLAG_NONE = 0x00000000,
 }
 
-alias CF_OPERATION_ACK_RENAME_FLAGS = uint;
-enum : uint
+alias CF_OPERATION_ACK_RENAME_FLAGS = int;
+enum : int
 {
     CF_OPERATION_ACK_RENAME_FLAG_NONE = 0x00000000,
 }
 
-alias CF_OPERATION_ACK_DELETE_FLAGS = uint;
-enum : uint
+alias CF_OPERATION_ACK_DELETE_FLAGS = int;
+enum : int
 {
     CF_OPERATION_ACK_DELETE_FLAG_NONE = 0x00000000,
 }
@@ -554,23 +538,23 @@ struct CF_OPERATION_PARAMETERS
             CF_OPERATION_TRANSFER_DATA_FLAGS Flags;
             NTSTATUS CompletionStatus;
             const(void)* Buffer;
-            LARGE_INTEGER Offset;
-            LARGE_INTEGER Length;
+            long Offset;
+            long Length;
         }
         struct _RetrieveData_e__Struct
         {
             CF_OPERATION_RETRIEVE_DATA_FLAGS Flags;
             void* Buffer;
-            LARGE_INTEGER Offset;
-            LARGE_INTEGER Length;
-            LARGE_INTEGER ReturnedLength;
+            long Offset;
+            long Length;
+            long ReturnedLength;
         }
         struct _AckData_e__Struct
         {
             CF_OPERATION_ACK_DATA_FLAGS Flags;
             NTSTATUS CompletionStatus;
-            LARGE_INTEGER Offset;
-            LARGE_INTEGER Length;
+            long Offset;
+            long Length;
         }
         struct _RestartHydration_e__Struct
         {
@@ -583,7 +567,7 @@ struct CF_OPERATION_PARAMETERS
         {
             CF_OPERATION_TRANSFER_PLACEHOLDERS_FLAGS Flags;
             NTSTATUS CompletionStatus;
-            LARGE_INTEGER PlaceholderTotalCount;
+            long PlaceholderTotalCount;
             CF_PLACEHOLDER_CREATE_INFO* PlaceholderArray;
             uint PlaceholderCount;
             uint EntriesProcessed;
@@ -607,15 +591,15 @@ struct CF_OPERATION_PARAMETERS
         }
     }
 }
-alias CF_CREATE_FLAGS = uint;
-enum : uint
+alias CF_CREATE_FLAGS = int;
+enum : int
 {
     CF_CREATE_FLAG_NONE          = 0x00000000,
     CF_CREATE_FLAG_STOP_ON_ERROR = 0x00000001,
 }
 
-alias CF_OPEN_FILE_FLAGS = uint;
-enum : uint
+alias CF_OPEN_FILE_FLAGS = int;
+enum : int
 {
     CF_OPEN_FILE_FLAG_NONE          = 0x00000000,
     CF_OPEN_FILE_FLAG_EXCLUSIVE     = 0x00000001,
@@ -626,11 +610,11 @@ enum : uint
 
 struct CF_FILE_RANGE
 {
-    LARGE_INTEGER StartingOffset;
-    LARGE_INTEGER Length;
+    long StartingOffset;
+    long Length;
 }
-alias CF_CONVERT_FLAGS = uint;
-enum : uint
+alias CF_CONVERT_FLAGS = int;
+enum : int
 {
     CF_CONVERT_FLAG_NONE                        = 0x00000000,
     CF_CONVERT_FLAG_MARK_IN_SYNC                = 0x00000001,
@@ -640,8 +624,8 @@ enum : uint
     CF_CONVERT_FLAG_FORCE_CONVERT_TO_CLOUD_FILE = 0x00000010,
 }
 
-alias CF_UPDATE_FLAGS = uint;
-enum : uint
+alias CF_UPDATE_FLAGS = int;
+enum : int
 {
     CF_UPDATE_FLAG_NONE                         = 0x00000000,
     CF_UPDATE_FLAG_VERIFY_IN_SYNC               = 0x00000001,
@@ -657,20 +641,20 @@ enum : uint
     CF_UPDATE_FLAG_ALLOW_PARTIAL                = 0x00000400,
 }
 
-alias CF_REVERT_FLAGS = uint;
-enum : uint
+alias CF_REVERT_FLAGS = int;
+enum : int
 {
     CF_REVERT_FLAG_NONE = 0x00000000,
 }
 
-alias CF_HYDRATE_FLAGS = uint;
-enum : uint
+alias CF_HYDRATE_FLAGS = int;
+enum : int
 {
     CF_HYDRATE_FLAG_NONE = 0x00000000,
 }
 
-alias CF_DEHYDRATE_FLAGS = uint;
-enum : uint
+alias CF_DEHYDRATE_FLAGS = int;
+enum : int
 {
     CF_DEHYDRATE_FLAG_NONE       = 0x00000000,
     CF_DEHYDRATE_FLAG_BACKGROUND = 0x00000001,
@@ -686,8 +670,8 @@ enum : int
     CF_PIN_STATE_INHERIT     = 0x00000004,
 }
 
-alias CF_SET_PIN_FLAGS = uint;
-enum : uint
+alias CF_SET_PIN_FLAGS = int;
+enum : int
 {
     CF_SET_PIN_FLAG_NONE                  = 0x00000000,
     CF_SET_PIN_FLAG_RECURSE               = 0x00000001,
@@ -702,8 +686,8 @@ enum : int
     CF_IN_SYNC_STATE_IN_SYNC     = 0x00000001,
 }
 
-alias CF_SET_IN_SYNC_FLAGS = uint;
-enum : uint
+alias CF_SET_IN_SYNC_FLAGS = int;
+enum : int
 {
     CF_SET_IN_SYNC_FLAG_NONE = 0x00000000,
 }
@@ -732,21 +716,21 @@ struct CF_PLACEHOLDER_BASIC_INFO
 {
     CF_PIN_STATE PinState;
     CF_IN_SYNC_STATE InSyncState;
-    LARGE_INTEGER FileId;
-    LARGE_INTEGER SyncRootFileId;
+    long FileId;
+    long SyncRootFileId;
     uint FileIdentityLength;
     ubyte[1] FileIdentity;
 }
 struct CF_PLACEHOLDER_STANDARD_INFO
 {
-    LARGE_INTEGER OnDiskDataSize;
-    LARGE_INTEGER ValidatedDataSize;
-    LARGE_INTEGER ModifiedDataSize;
-    LARGE_INTEGER PropertiesSize;
+    long OnDiskDataSize;
+    long ValidatedDataSize;
+    long ModifiedDataSize;
+    long PropertiesSize;
     CF_PIN_STATE PinState;
     CF_IN_SYNC_STATE InSyncState;
-    LARGE_INTEGER FileId;
-    LARGE_INTEGER SyncRootFileId;
+    long FileId;
+    long SyncRootFileId;
     uint FileIdentityLength;
     ubyte[1] FileIdentity;
 }
@@ -760,7 +744,7 @@ enum : int
 
 struct CF_SYNC_ROOT_BASIC_INFO
 {
-    LARGE_INTEGER SyncRootFileId;
+    long SyncRootFileId;
 }
 struct CF_SYNC_ROOT_PROVIDER_INFO
 {
@@ -770,7 +754,7 @@ struct CF_SYNC_ROOT_PROVIDER_INFO
 }
 struct CF_SYNC_ROOT_STANDARD_INFO
 {
-    LARGE_INTEGER SyncRootFileId;
+    long SyncRootFileId;
     CF_HYDRATION_POLICY HydrationPolicy;
     CF_POPULATION_POLICY PopulationPolicy;
     CF_INSYNC_POLICY InSyncPolicy;

@@ -1,7 +1,7 @@
 module windows.win32.security.authentication.identity_;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, CHAR, FILETIME, HANDLE, HRESULT, HWND, LARGE_INTEGER, LUID, NTSTATUS, PSID, PSTR, PWSTR, UNICODE_STRING;
+import windows.win32.foundation : BOOL, BOOLEAN, CHAR, FILETIME, HANDLE, HRESULT, HWND, LUID, NTSTATUS, PSID, PSTR, PWSTR, UNICODE_STRING;
 import windows.win32.security_ : ACL, PSECURITY_DESCRIPTOR, QUOTA_LIMITS, SECURITY_ATTRIBUTES, SECURITY_IMPERSONATION_LEVEL, SID_NAME_USE, TOKEN_DEFAULT_DACL, TOKEN_DEVICE_CLAIMS, TOKEN_GROUPS, TOKEN_OWNER, TOKEN_PRIMARY_GROUP, TOKEN_PRIVILEGES, TOKEN_SOURCE, TOKEN_USER, TOKEN_USER_CLAIMS;
 import windows.win32.security.credentials : CREDENTIALW, CREDENTIAL_TARGET_INFORMATIONW, SecHandle;
 import windows.win32.security.cryptography_ : CERT_CONTEXT, CRYPT_INTEGER_BLOB, HCERTSTORE;
@@ -272,6 +272,7 @@ enum : ulong
 {
     ISC_REQ_MESSAGES                 = 0x0000000100000000,
     ISC_REQ_DEFERRED_CRED_VALIDATION = 0x0000000200000000,
+    ISC_REQ_NO_POST_HANDSHAKE_AUTH   = 0x0000000400000000,
 }
 
 alias ISC_REQ_FLAGS = uint;
@@ -410,16 +411,16 @@ BOOLEAN AuditSetGlobalSaclA(const(char)*, ACL*);
 BOOLEAN AuditQueryGlobalSaclW(const(wchar)*, ACL**);
 BOOLEAN AuditQueryGlobalSaclA(const(char)*, ACL**);
 void AuditFree(void*);
-HRESULT AcquireCredentialsHandleW(PWSTR, PWSTR, SECPKG_CRED, void*, void*, SEC_GET_KEY_FN, void*, SecHandle*, LARGE_INTEGER*);
-HRESULT AcquireCredentialsHandleA(PSTR, PSTR, SECPKG_CRED, void*, void*, SEC_GET_KEY_FN, void*, SecHandle*, LARGE_INTEGER*);
+HRESULT AcquireCredentialsHandleW(PWSTR, PWSTR, SECPKG_CRED, void*, void*, SEC_GET_KEY_FN, void*, SecHandle*, long*);
+HRESULT AcquireCredentialsHandleA(PSTR, PSTR, SECPKG_CRED, void*, void*, SEC_GET_KEY_FN, void*, SecHandle*, long*);
 HRESULT FreeCredentialsHandle(SecHandle*);
-HRESULT AddCredentialsW(SecHandle*, PWSTR, PWSTR, uint, void*, SEC_GET_KEY_FN, void*, LARGE_INTEGER*);
-HRESULT AddCredentialsA(SecHandle*, PSTR, PSTR, uint, void*, SEC_GET_KEY_FN, void*, LARGE_INTEGER*);
+HRESULT AddCredentialsW(SecHandle*, PWSTR, PWSTR, uint, void*, SEC_GET_KEY_FN, void*, long*);
+HRESULT AddCredentialsA(SecHandle*, PSTR, PSTR, uint, void*, SEC_GET_KEY_FN, void*, long*);
 HRESULT ChangeAccountPasswordW(ushort*, ushort*, ushort*, ushort*, ushort*, BOOLEAN, uint, SecBufferDesc*);
 HRESULT ChangeAccountPasswordA(byte*, byte*, byte*, byte*, byte*, BOOLEAN, uint, SecBufferDesc*);
-HRESULT InitializeSecurityContextW(SecHandle*, SecHandle*, ushort*, ISC_REQ_FLAGS, uint, uint, SecBufferDesc*, uint, SecHandle*, SecBufferDesc*, uint*, LARGE_INTEGER*);
-HRESULT InitializeSecurityContextA(SecHandle*, SecHandle*, byte*, ISC_REQ_FLAGS, uint, uint, SecBufferDesc*, uint, SecHandle*, SecBufferDesc*, uint*, LARGE_INTEGER*);
-HRESULT AcceptSecurityContext(SecHandle*, SecHandle*, SecBufferDesc*, ASC_REQ_FLAGS, uint, SecHandle*, SecBufferDesc*, uint*, LARGE_INTEGER*);
+HRESULT InitializeSecurityContextW(SecHandle*, SecHandle*, ushort*, ISC_REQ_FLAGS, uint, uint, SecBufferDesc*, uint, SecHandle*, SecBufferDesc*, uint*, long*);
+HRESULT InitializeSecurityContextA(SecHandle*, SecHandle*, byte*, ISC_REQ_FLAGS, uint, uint, SecBufferDesc*, uint, SecHandle*, SecBufferDesc*, uint*, long*);
+HRESULT AcceptSecurityContext(SecHandle*, SecHandle*, SecBufferDesc*, ASC_REQ_FLAGS, uint, SecHandle*, SecBufferDesc*, uint*, long*);
 HRESULT CompleteAuthToken(SecHandle*, SecBufferDesc*);
 HRESULT ImpersonateSecurityContext(SecHandle*);
 HRESULT RevertSecurityContext(SecHandle*);
@@ -458,21 +459,21 @@ HRESULT SaslGetProfilePackageA(PSTR, SecPkgInfoA**);
 HRESULT SaslGetProfilePackageW(PWSTR, SecPkgInfoW**);
 HRESULT SaslIdentifyPackageA(SecBufferDesc*, SecPkgInfoA**);
 HRESULT SaslIdentifyPackageW(SecBufferDesc*, SecPkgInfoW**);
-HRESULT SaslInitializeSecurityContextW(SecHandle*, SecHandle*, PWSTR, ISC_REQ_FLAGS, uint, uint, SecBufferDesc*, uint, SecHandle*, SecBufferDesc*, uint*, LARGE_INTEGER*);
-HRESULT SaslInitializeSecurityContextA(SecHandle*, SecHandle*, PSTR, ISC_REQ_FLAGS, uint, uint, SecBufferDesc*, uint, SecHandle*, SecBufferDesc*, uint*, LARGE_INTEGER*);
-HRESULT SaslAcceptSecurityContext(SecHandle*, SecHandle*, SecBufferDesc*, ASC_REQ_FLAGS, uint, SecHandle*, SecBufferDesc*, uint*, LARGE_INTEGER*);
+HRESULT SaslInitializeSecurityContextW(SecHandle*, SecHandle*, PWSTR, ISC_REQ_FLAGS, uint, uint, SecBufferDesc*, uint, SecHandle*, SecBufferDesc*, uint*, long*);
+HRESULT SaslInitializeSecurityContextA(SecHandle*, SecHandle*, PSTR, ISC_REQ_FLAGS, uint, uint, SecBufferDesc*, uint, SecHandle*, SecBufferDesc*, uint*, long*);
+HRESULT SaslAcceptSecurityContext(SecHandle*, SecHandle*, SecBufferDesc*, ASC_REQ_FLAGS, uint, SecHandle*, SecBufferDesc*, uint*, long*);
 HRESULT SaslSetContextOption(SecHandle*, uint, void*, uint);
 HRESULT SaslGetContextOption(SecHandle*, uint, void*, uint, uint*);
 uint SspiPromptForCredentialsW(const(wchar)*, void*, uint, const(wchar)*, void*, void**, int*, uint);
 uint SspiPromptForCredentialsA(const(char)*, void*, uint, const(char)*, void*, void**, int*, uint);
-HRESULT SspiPrepareForCredRead(void*, const(wchar)*, uint*, PWSTR*);
-HRESULT SspiPrepareForCredWrite(void*, const(wchar)*, uint*, PWSTR*, PWSTR*, ubyte**, uint*);
+HRESULT SspiPrepareForCredRead(void*, const(wchar)*, uint*, const(wchar)**);
+HRESULT SspiPrepareForCredWrite(void*, const(wchar)*, uint*, const(wchar)**, const(wchar)**, ubyte**, uint*);
 HRESULT SspiEncryptAuthIdentity(void*);
 HRESULT SspiEncryptAuthIdentityEx(uint, void*);
 HRESULT SspiDecryptAuthIdentity(void*);
 HRESULT SspiDecryptAuthIdentityEx(uint, void*);
 BOOLEAN SspiIsAuthIdentityEncrypted(void*);
-HRESULT SspiEncodeAuthIdentityAsStrings(void*, PWSTR*, PWSTR*, PWSTR*);
+HRESULT SspiEncodeAuthIdentityAsStrings(void*, const(wchar)**, const(wchar)**, const(wchar)**);
 HRESULT SspiValidateAuthIdentity(void*);
 HRESULT SspiCopyAuthIdentity(void*, void**);
 void SspiFreeAuthIdentity(void*);
@@ -553,6 +554,7 @@ HRESULT SLSetGenuineInformation(const(GUID)*, const(wchar)*, SLDATATYPE, uint, c
 HRESULT SLGetReferralInformation(void*, SLREFERRALTYPE, const(GUID)*, const(wchar)*, PWSTR*);
 HRESULT SLGetGenuineInformation(const(GUID)*, const(wchar)*, SLDATATYPE*, uint*, ubyte**);
 HRESULT SLQueryLicenseValueFromApp(const(wchar)*, uint*, void*, uint, uint*);
+void SendSAS(BOOL);
 enum NTLMSP_NAME_A = "NTLM";
 enum NTLMSP_NAME = "NTLM";
 enum MICROSOFT_KERBEROS_NAME_A = "Kerberos";
@@ -627,6 +629,7 @@ enum SECBUFFER_SEND_GENERIC_TLS_EXTENSION = 0x00000019;
 enum SECBUFFER_SUBSCRIBE_GENERIC_TLS_EXTENSION = 0x0000001a;
 enum SECBUFFER_FLAGS = 0x0000001b;
 enum SECBUFFER_TRAFFIC_SECRETS = 0x0000001c;
+enum SECBUFFER_CERTIFICATE_REQUEST_CONTEXT = 0x0000001d;
 enum SECBUFFER_ATTRMASK = 0xf0000000;
 enum SECBUFFER_READONLY = 0x80000000;
 enum SECBUFFER_READONLY_WITH_CHECKSUM = 0x10000000;
@@ -668,6 +671,7 @@ enum ISC_RET_REAUTHENTICATION = 0x08000000;
 enum ISC_RET_CONFIDENTIALITY_ONLY = 0x40000000;
 enum ISC_RET_MESSAGES = 0x0000000100000000;
 enum ISC_RET_DEFERRED_CRED_VALIDATION = 0x0000000200000000;
+enum ISC_RET_NO_POST_HANDSHAKE_AUTH = 0x0000000400000000;
 enum ASC_RET_DELEGATE = 0x00000001;
 enum ASC_RET_MUTUAL_AUTH = 0x00000002;
 enum ASC_RET_REPLAY_DETECT = 0x00000004;
@@ -795,6 +799,8 @@ enum SECPKG_ATTR_KEYING_MATERIAL_INPROC = 0x00000070;
 enum SECPKG_ATTR_CERT_CHECK_RESULT = 0x00000071;
 enum SECPKG_ATTR_CERT_CHECK_RESULT_INPROC = 0x00000072;
 enum SECPKG_ATTR_SESSION_TICKET_KEYS = 0x00000073;
+enum SECPKG_ATTR_SERIALIZED_REMOTE_CERT_CONTEXT_INPROC = 0x00000074;
+enum SECPKG_ATTR_SERIALIZED_REMOTE_CERT_CONTEXT = 0x00000075;
 enum SESSION_TICKET_INFO_V0 = 0x00000000;
 enum SESSION_TICKET_INFO_VERSION = 0x00000000;
 enum LSA_MODE_PASSWORD_PROTECTED = 0x00000001;
@@ -868,6 +874,10 @@ enum TRUSTED_QUERY_POSIX = 0x00000008;
 enum TRUSTED_SET_POSIX = 0x00000010;
 enum TRUSTED_SET_AUTH = 0x00000020;
 enum TRUSTED_QUERY_AUTH = 0x00000040;
+enum LSAD_AES_CRYPT_SHA512_HASH_SIZE = 0x00000040;
+enum LSAD_AES_KEY_SIZE = 0x00000010;
+enum LSAD_AES_SALT_SIZE = 0x00000010;
+enum LSAD_AES_BLOCK_SIZE = 0x00000010;
 enum TRUST_ATTRIBUTE_TREE_PARENT = 0x00400000;
 enum TRUST_ATTRIBUTE_TREE_ROOT = 0x00800000;
 enum TRUST_ATTRIBUTES_VALID = 0xff02ffff;
@@ -877,6 +887,7 @@ enum TRUST_ATTRIBUTE_TRUST_USES_AES_KEYS = 0x00000100;
 enum TRUST_ATTRIBUTE_CROSS_ORGANIZATION_NO_TGT_DELEGATION = 0x00000200;
 enum TRUST_ATTRIBUTE_PIM_TRUST = 0x00000400;
 enum TRUST_ATTRIBUTE_CROSS_ORGANIZATION_ENABLE_TGT_DELEGATION = 0x00000800;
+enum TRUST_ATTRIBUTE_DISABLE_AUTH_TARGET_VALIDATION = 0x00001000;
 enum TRUST_ATTRIBUTES_USER = 0xff000000;
 enum LSA_FOREST_TRUST_RECORD_TYPE_UNRECOGNIZED = 0x80000000;
 enum LSA_FTRECORD_DISABLED_REASONS = 0x0000ffff;
@@ -887,6 +898,8 @@ enum LSA_SID_DISABLED_ADMIN = 0x00000001;
 enum LSA_SID_DISABLED_CONFLICT = 0x00000002;
 enum LSA_NB_DISABLED_ADMIN = 0x00000004;
 enum LSA_NB_DISABLED_CONFLICT = 0x00000008;
+enum LSA_SCANNER_INFO_DISABLE_AUTH_TARGET_VALIDATION = 0x00000001;
+enum LSA_SCANNER_INFO_ADMIN_ALL_FLAGS = 0x00000001;
 enum MAX_RECORDS_IN_FOREST_TRUST_INFO = 0x00000fa0;
 enum SECRET_SET_VALUE = 0x00000001;
 enum SECRET_QUERY_VALUE = 0x00000002;
@@ -1101,6 +1114,9 @@ enum KERB_CHECKSUM_MD25 = 0xffffffffffffff79;
 enum KERB_CHECKSUM_RC4_MD5 = 0xffffffffffffff78;
 enum KERB_CHECKSUM_MD5_HMAC = 0xffffffffffffff77;
 enum KERB_CHECKSUM_HMAC_MD5 = 0xffffffffffffff76;
+enum KERB_CHECKSUM_SHA256 = 0xffffffffffffff75;
+enum KERB_CHECKSUM_SHA384 = 0xffffffffffffff74;
+enum KERB_CHECKSUM_SHA512 = 0xffffffffffffff73;
 enum KERB_CHECKSUM_HMAC_SHA1_96_AES128_Ki = 0xffffffffffffff6a;
 enum KERB_CHECKSUM_HMAC_SHA1_96_AES256_Ki = 0xffffffffffffff69;
 enum AUTH_REQ_ALLOW_FORWARDABLE = 0x00000001;
@@ -1161,7 +1177,7 @@ enum KERB_S4U2PROXY_CACHE_ENTRY_INFO_FLAG_NEGATIVE = 0x00000001;
 enum KERB_S4U2PROXY_CRED_FLAG_NEGATIVE = 0x00000001;
 enum KERB_REFRESH_POLICY_KERBEROS = 0x00000001;
 enum KERB_REFRESH_POLICY_KDC = 0x00000002;
-enum KERB_CLOUD_KERBEROS_DEBUG_DATA_VERSION = 0x00000000;
+enum KERB_CLOUD_KERBEROS_DEBUG_DATA_VERSION = 0x00000001;
 enum DS_UNKNOWN_ADDRESS_TYPE = 0x00000000;
 enum KERB_SETPASS_USE_LOGONID = 0x00000001;
 enum KERB_SETPASS_USE_CREDHANDLE = 0x00000002;
@@ -1249,6 +1265,8 @@ enum SECPKG_STATE_STANDALONE = 0x00000010;
 enum SECPKG_STATE_CRED_ISOLATION_ENABLED = 0x00000020;
 enum SECPKG_STATE_RESERVED_1 = 0x80000000;
 enum SECPKG_MAX_OID_LENGTH = 0x00000020;
+enum SECPKG_MSVAV_FLAGS_VALID = 0x00000001;
+enum SECPKG_MSVAV_TIMESTAMP_VALID = 0x00000002;
 enum SECPKG_ATTR_SASL_CONTEXT = 0x00010000;
 enum SECPKG_ATTR_THUNK_ALL = 0x00010000;
 enum UNDERSTANDS_LONG_NAMES = 0x00000001;
@@ -1256,6 +1274,7 @@ enum NO_LONG_NAMES = 0x00000002;
 enum SECPKG_CALL_PACKAGE_TRANSFER_CRED_REQUEST_FLAG_OPTIMISTIC_LOGON = 0x00000001;
 enum SECPKG_CALL_PACKAGE_TRANSFER_CRED_REQUEST_FLAG_CLEANUP_CREDENTIALS = 0x00000002;
 enum SECPKG_CALL_PACKAGE_TRANSFER_CRED_REQUEST_FLAG_TO_SSO_SESSION = 0x00000004;
+enum SECPKG_REDIRECTED_LOGON_GUID_INITIALIZER = GUID(0xc2be5457, 0x82eb, 0x483e, [0xae, 0x4e, 0x74, 0x68, 0xef, 0x14, 0xd5, 0x9]);
 enum NOTIFIER_FLAG_NEW_THREAD = 0x00000001;
 enum NOTIFIER_FLAG_ONE_SHOT = 0x00000002;
 enum NOTIFIER_FLAG_SECONDS = 0x80000000;
@@ -1294,6 +1313,7 @@ enum SECPKG_INTERFACE_VERSION_7 = 0x00400000;
 enum SECPKG_INTERFACE_VERSION_8 = 0x00800000;
 enum SECPKG_INTERFACE_VERSION_9 = 0x01000000;
 enum SECPKG_INTERFACE_VERSION_10 = 0x02000000;
+enum SECPKG_INTERFACE_VERSION_11 = 0x04000000;
 enum UNISP_NAME_A = "Microsoft Unified Security Protocol Provider";
 enum UNISP_NAME_W = "Microsoft Unified Security Protocol Provider";
 enum SSL2SP_NAME_A = "Microsoft SSL 2.0";
@@ -2146,9 +2166,9 @@ struct POLICY_AUDIT_LOG_INFO
 {
     uint AuditLogPercentFull;
     uint MaximumLogSize;
-    LARGE_INTEGER AuditRetentionPeriod;
+    long AuditRetentionPeriod;
     BOOLEAN AuditLogFullShutdownInProgress;
-    LARGE_INTEGER TimeToShutdown;
+    long TimeToShutdown;
     uint NextAuditRecordId;
 }
 struct POLICY_AUDIT_EVENTS_INFO
@@ -2191,8 +2211,8 @@ struct POLICY_DEFAULT_QUOTA_INFO
 }
 struct POLICY_MODIFICATION_INFO
 {
-    LARGE_INTEGER ModifiedId;
-    LARGE_INTEGER DatabaseCreationTime;
+    long ModifiedId;
+    long DatabaseCreationTime;
 }
 struct POLICY_AUDIT_FULL_SET_INFO
 {
@@ -2218,11 +2238,11 @@ struct POLICY_DOMAIN_EFS_INFO
 struct POLICY_DOMAIN_KERBEROS_TICKET_INFO
 {
     uint AuthenticationOptions;
-    LARGE_INTEGER MaxServiceTicketAge;
-    LARGE_INTEGER MaxTicketAge;
-    LARGE_INTEGER MaxRenewAge;
-    LARGE_INTEGER MaxClockSkew;
-    LARGE_INTEGER Reserved;
+    long MaxServiceTicketAge;
+    long MaxTicketAge;
+    long MaxRenewAge;
+    long MaxClockSkew;
+    long Reserved;
 }
 struct POLICY_MACHINE_ACCT_INFO
 {
@@ -2246,19 +2266,21 @@ enum : int
 alias TRUSTED_INFORMATION_CLASS = int;
 enum : int
 {
-    TrustedDomainNameInformation          = 0x00000001,
-    TrustedControllersInformation         = 0x00000002,
-    TrustedPosixOffsetInformation         = 0x00000003,
-    TrustedPasswordInformation            = 0x00000004,
-    TrustedDomainInformationBasic         = 0x00000005,
-    TrustedDomainInformationEx            = 0x00000006,
-    TrustedDomainAuthInformation          = 0x00000007,
-    TrustedDomainFullInformation          = 0x00000008,
-    TrustedDomainAuthInformationInternal  = 0x00000009,
-    TrustedDomainFullInformationInternal  = 0x0000000a,
-    TrustedDomainInformationEx2Internal   = 0x0000000b,
-    TrustedDomainFullInformation2Internal = 0x0000000c,
-    TrustedDomainSupportedEncryptionTypes = 0x0000000d,
+    TrustedDomainNameInformation            = 0x00000001,
+    TrustedControllersInformation           = 0x00000002,
+    TrustedPosixOffsetInformation           = 0x00000003,
+    TrustedPasswordInformation              = 0x00000004,
+    TrustedDomainInformationBasic           = 0x00000005,
+    TrustedDomainInformationEx              = 0x00000006,
+    TrustedDomainAuthInformation            = 0x00000007,
+    TrustedDomainFullInformation            = 0x00000008,
+    TrustedDomainAuthInformationInternal    = 0x00000009,
+    TrustedDomainFullInformationInternal    = 0x0000000a,
+    TrustedDomainInformationEx2Internal     = 0x0000000b,
+    TrustedDomainFullInformation2Internal   = 0x0000000c,
+    TrustedDomainSupportedEncryptionTypes   = 0x0000000d,
+    TrustedDomainAuthInformationInternalAes = 0x0000000e,
+    TrustedDomainFullInformationInternalAes = 0x0000000f,
 }
 
 struct TRUSTED_DOMAIN_NAME_INFO
@@ -2301,7 +2323,7 @@ struct TRUSTED_DOMAIN_INFORMATION_EX2
 }
 struct LSA_AUTH_INFORMATION
 {
-    LARGE_INTEGER LastUpdateTime;
+    long LastUpdateTime;
     LSA_AUTH_INFORMATION_AUTH_TYPE AuthType;
     uint AuthInfoLength;
     ubyte* AuthInfo;
@@ -2337,12 +2359,20 @@ enum : int
     ForestTrustTopLevelName   = 0x00000000,
     ForestTrustTopLevelNameEx = 0x00000001,
     ForestTrustDomainInfo     = 0x00000002,
-    ForestTrustRecordTypeLast = 0x00000002,
+    ForestTrustBinaryInfo     = 0x00000003,
+    ForestTrustScannerInfo    = 0x00000004,
+    ForestTrustRecordTypeLast = 0x00000004,
 }
 
 struct LSA_FOREST_TRUST_DOMAIN_INFO
 {
     PSID Sid;
+    UNICODE_STRING DnsName;
+    UNICODE_STRING NetbiosName;
+}
+struct LSA_FOREST_TRUST_SCANNER_INFO
+{
+    PSID DomainSid;
     UNICODE_STRING DnsName;
     UNICODE_STRING NetbiosName;
 }
@@ -2355,7 +2385,7 @@ struct LSA_FOREST_TRUST_RECORD
 {
     uint Flags;
     LSA_FOREST_TRUST_RECORD_TYPE ForestTrustType;
-    LARGE_INTEGER Time;
+    long Time;
     union _ForestTrustData_e__Union
     {
         UNICODE_STRING TopLevelName;
@@ -2363,10 +2393,28 @@ struct LSA_FOREST_TRUST_RECORD
         LSA_FOREST_TRUST_BINARY_DATA Data;
     }
 }
+struct LSA_FOREST_TRUST_RECORD2
+{
+    uint Flags;
+    LSA_FOREST_TRUST_RECORD_TYPE ForestTrustType;
+    long Time;
+    union _ForestTrustData_e__Union
+    {
+        UNICODE_STRING TopLevelName;
+        LSA_FOREST_TRUST_DOMAIN_INFO DomainInfo;
+        LSA_FOREST_TRUST_BINARY_DATA BinaryData;
+        LSA_FOREST_TRUST_SCANNER_INFO ScannerInfo;
+    }
+}
 struct LSA_FOREST_TRUST_INFORMATION
 {
     uint RecordCount;
     LSA_FOREST_TRUST_RECORD** Entries;
+}
+struct LSA_FOREST_TRUST_INFORMATION2
+{
+    uint RecordCount;
+    LSA_FOREST_TRUST_RECORD2** Entries;
 }
 alias LSA_FOREST_TRUST_COLLISION_RECORD_TYPE = int;
 enum : int
@@ -2394,8 +2442,8 @@ struct LSA_ENUMERATION_INFORMATION
 }
 struct LSA_LAST_INTER_LOGON_INFO
 {
-    LARGE_INTEGER LastSuccessfulLogon;
-    LARGE_INTEGER LastFailedLogon;
+    long LastSuccessfulLogon;
+    long LastFailedLogon;
     uint FailedAttemptCountSinceLastSuccessfulLogon;
 }
 struct SECURITY_LOGON_SESSION_DATA
@@ -2408,7 +2456,7 @@ struct SECURITY_LOGON_SESSION_DATA
     uint LogonType;
     uint Session;
     PSID Sid;
-    LARGE_INTEGER LogonTime;
+    long LogonTime;
     UNICODE_STRING LogonServer;
     UNICODE_STRING DnsDomainName;
     UNICODE_STRING Upn;
@@ -2418,11 +2466,11 @@ struct SECURITY_LOGON_SESSION_DATA
     UNICODE_STRING ProfilePath;
     UNICODE_STRING HomeDirectory;
     UNICODE_STRING HomeDirectoryDrive;
-    LARGE_INTEGER LogoffTime;
-    LARGE_INTEGER KickOffTime;
-    LARGE_INTEGER PasswordLastSet;
-    LARGE_INTEGER PasswordCanChange;
-    LARGE_INTEGER PasswordMustChange;
+    long LogoffTime;
+    long KickOffTime;
+    long PasswordLastSet;
+    long PasswordCanChange;
+    long PasswordMustChange;
 }
 struct CENTRAL_ACCESS_POLICY_ENTRY
 {
@@ -2487,8 +2535,8 @@ struct DOMAIN_PASSWORD_INFORMATION
     ushort MinPasswordLength;
     ushort PasswordHistoryLength;
     DOMAIN_PASSWORD_PROPERTIES PasswordProperties;
-    LARGE_INTEGER MaxPasswordAge;
-    LARGE_INTEGER MinPasswordAge;
+    long MaxPasswordAge;
+    long MinPasswordAge;
 }
 alias PSAM_PASSWORD_NOTIFICATION_ROUTINE = NTSTATUS function(UNICODE_STRING*, uint, UNICODE_STRING*);
 alias PSAM_INIT_NOTIFICATION_ROUTINE = BOOLEAN function();
@@ -2527,12 +2575,12 @@ struct MSV1_0_INTERACTIVE_PROFILE
     MSV1_0_PROFILE_BUFFER_TYPE MessageType;
     ushort LogonCount;
     ushort BadPasswordCount;
-    LARGE_INTEGER LogonTime;
-    LARGE_INTEGER LogoffTime;
-    LARGE_INTEGER KickOffTime;
-    LARGE_INTEGER PasswordLastSet;
-    LARGE_INTEGER PasswordCanChange;
-    LARGE_INTEGER PasswordMustChange;
+    long LogonTime;
+    long LogoffTime;
+    long KickOffTime;
+    long PasswordLastSet;
+    long PasswordCanChange;
+    long PasswordMustChange;
     UNICODE_STRING LogonScript;
     UNICODE_STRING HomeDirectory;
     UNICODE_STRING FullName;
@@ -2574,8 +2622,8 @@ struct MSV1_0_S4U_LOGON
 struct MSV1_0_LM20_LOGON_PROFILE
 {
     MSV1_0_PROFILE_BUFFER_TYPE MessageType;
-    LARGE_INTEGER KickOffTime;
-    LARGE_INTEGER LogoffTime;
+    long KickOffTime;
+    long LogoffTime;
     MSV_SUB_AUTHENTICATION_FILTER UserFlags;
     ubyte[16] UserSessionKey;
     UNICODE_STRING LogonDomainName;
@@ -2843,12 +2891,12 @@ struct KERB_INTERACTIVE_PROFILE
     KERB_PROFILE_BUFFER_TYPE MessageType;
     ushort LogonCount;
     ushort BadPasswordCount;
-    LARGE_INTEGER LogonTime;
-    LARGE_INTEGER LogoffTime;
-    LARGE_INTEGER KickOffTime;
-    LARGE_INTEGER PasswordLastSet;
-    LARGE_INTEGER PasswordCanChange;
-    LARGE_INTEGER PasswordMustChange;
+    long LogonTime;
+    long LogoffTime;
+    long KickOffTime;
+    long PasswordLastSet;
+    long PasswordCanChange;
+    long PasswordMustChange;
     UNICODE_STRING LogonScript;
     UNICODE_STRING HomeDirectory;
     UNICODE_STRING FullName;
@@ -2931,9 +2979,9 @@ struct KERB_TICKET_CACHE_INFO
 {
     UNICODE_STRING ServerName;
     UNICODE_STRING RealmName;
-    LARGE_INTEGER StartTime;
-    LARGE_INTEGER EndTime;
-    LARGE_INTEGER RenewTime;
+    long StartTime;
+    long EndTime;
+    long RenewTime;
     int EncryptionType;
     KERB_TICKET_FLAGS TicketFlags;
 }
@@ -2943,9 +2991,9 @@ struct KERB_TICKET_CACHE_INFO_EX
     UNICODE_STRING ClientRealm;
     UNICODE_STRING ServerName;
     UNICODE_STRING ServerRealm;
-    LARGE_INTEGER StartTime;
-    LARGE_INTEGER EndTime;
-    LARGE_INTEGER RenewTime;
+    long StartTime;
+    long EndTime;
+    long RenewTime;
     int EncryptionType;
     uint TicketFlags;
 }
@@ -2955,9 +3003,9 @@ struct KERB_TICKET_CACHE_INFO_EX2
     UNICODE_STRING ClientRealm;
     UNICODE_STRING ServerName;
     UNICODE_STRING ServerRealm;
-    LARGE_INTEGER StartTime;
-    LARGE_INTEGER EndTime;
-    LARGE_INTEGER RenewTime;
+    long StartTime;
+    long EndTime;
+    long RenewTime;
     int EncryptionType;
     uint TicketFlags;
     uint SessionKeyType;
@@ -2969,9 +3017,9 @@ struct KERB_TICKET_CACHE_INFO_EX3
     UNICODE_STRING ClientRealm;
     UNICODE_STRING ServerName;
     UNICODE_STRING ServerRealm;
-    LARGE_INTEGER StartTime;
-    LARGE_INTEGER EndTime;
-    LARGE_INTEGER RenewTime;
+    long StartTime;
+    long EndTime;
+    long RenewTime;
     int EncryptionType;
     uint TicketFlags;
     uint SessionKeyType;
@@ -3037,11 +3085,11 @@ struct KERB_EXTERNAL_TICKET
     KERB_CRYPTO_KEY SessionKey;
     KERB_TICKET_FLAGS TicketFlags;
     uint Flags;
-    LARGE_INTEGER KeyExpirationTime;
-    LARGE_INTEGER StartTime;
-    LARGE_INTEGER EndTime;
-    LARGE_INTEGER RenewUntil;
-    LARGE_INTEGER TimeSkew;
+    long KeyExpirationTime;
+    long StartTime;
+    long EndTime;
+    long RenewUntil;
+    long TimeSkew;
     uint EncodedTicketSize;
     ubyte* EncodedTicket;
 }
@@ -3122,7 +3170,7 @@ struct KERB_S4U2PROXY_CACHE_ENTRY_INFO
     UNICODE_STRING ServerName;
     uint Flags;
     NTSTATUS LastStatus;
-    LARGE_INTEGER Expiry;
+    long Expiry;
 }
 struct KERB_S4U2PROXY_CRED
 {
@@ -3130,7 +3178,7 @@ struct KERB_S4U2PROXY_CRED
     UNICODE_STRING DomainName;
     uint Flags;
     NTSTATUS LastStatus;
-    LARGE_INTEGER Expiry;
+    long Expiry;
     uint CountOfEntries;
     KERB_S4U2PROXY_CACHE_ENTRY_INFO* Entries;
 }
@@ -3184,7 +3232,11 @@ struct KERB_CLOUD_KERBEROS_DEBUG_RESPONSE
 }
 struct KERB_CLOUD_KERBEROS_DEBUG_DATA_V0
 {
-    int _bitfield0;
+    uint _bitfield0;
+}
+struct KERB_CLOUD_KERBEROS_DEBUG_DATA
+{
+    uint _bitfield0;
 }
 struct KERB_CHANGEPASSWORD_REQUEST
 {
@@ -3481,6 +3533,11 @@ struct SEC_FLAGS
 {
     ulong Flags;
 }
+struct SEC_CERTIFICATE_REQUEST_CONTEXT
+{
+    ubyte cbCertificateRequestContext;
+    ubyte[1] rgCertificateRequestContext;
+}
 alias SEC_TRAFFIC_SECRET_TYPE = int;
 enum : int
 {
@@ -3600,8 +3657,8 @@ struct SecPkgContext_NamesA
 }
 struct SecPkgContext_Lifespan
 {
-    LARGE_INTEGER tsStart;
-    LARGE_INTEGER tsExpiry;
+    long tsStart;
+    long tsExpiry;
 }
 struct SecPkgContext_DceInfo
 {
@@ -3646,11 +3703,11 @@ struct SecPkgContext_ProtoInfoW
 }
 struct SecPkgContext_PasswordExpiry
 {
-    LARGE_INTEGER tsPasswordExpires;
+    long tsPasswordExpires;
 }
 struct SecPkgContext_LogoffTime
 {
-    LARGE_INTEGER tsLogoffTime;
+    long tsLogoffTime;
 }
 struct SecPkgContext_SessionKey
 {
@@ -3769,16 +3826,16 @@ struct SECPKG_APP_MODE_INFO
     BOOLEAN ReturnToLsa;
 }
 alias SEC_GET_KEY_FN = void function(void*, void*, uint, void**, HRESULT*);
-alias ACQUIRE_CREDENTIALS_HANDLE_FN_W = HRESULT function(ushort*, ushort*, uint, void*, void*, SEC_GET_KEY_FN, void*, SecHandle*, LARGE_INTEGER*);
-alias ACQUIRE_CREDENTIALS_HANDLE_FN_A = HRESULT function(byte*, byte*, uint, void*, void*, SEC_GET_KEY_FN, void*, SecHandle*, LARGE_INTEGER*);
+alias ACQUIRE_CREDENTIALS_HANDLE_FN_W = HRESULT function(ushort*, ushort*, uint, void*, void*, SEC_GET_KEY_FN, void*, SecHandle*, long*);
+alias ACQUIRE_CREDENTIALS_HANDLE_FN_A = HRESULT function(byte*, byte*, uint, void*, void*, SEC_GET_KEY_FN, void*, SecHandle*, long*);
 alias FREE_CREDENTIALS_HANDLE_FN = HRESULT function(SecHandle*);
-alias ADD_CREDENTIALS_FN_W = HRESULT function(SecHandle*, ushort*, ushort*, uint, void*, SEC_GET_KEY_FN, void*, LARGE_INTEGER*);
-alias ADD_CREDENTIALS_FN_A = HRESULT function(SecHandle*, byte*, byte*, uint, void*, SEC_GET_KEY_FN, void*, LARGE_INTEGER*);
+alias ADD_CREDENTIALS_FN_W = HRESULT function(SecHandle*, ushort*, ushort*, uint, void*, SEC_GET_KEY_FN, void*, long*);
+alias ADD_CREDENTIALS_FN_A = HRESULT function(SecHandle*, byte*, byte*, uint, void*, SEC_GET_KEY_FN, void*, long*);
 alias CHANGE_PASSWORD_FN_W = HRESULT function(ushort*, ushort*, ushort*, ushort*, ushort*, BOOLEAN, uint, SecBufferDesc*);
 alias CHANGE_PASSWORD_FN_A = HRESULT function(byte*, byte*, byte*, byte*, byte*, BOOLEAN, uint, SecBufferDesc*);
-alias INITIALIZE_SECURITY_CONTEXT_FN_W = HRESULT function(SecHandle*, SecHandle*, ushort*, uint, uint, uint, SecBufferDesc*, uint, SecHandle*, SecBufferDesc*, uint*, LARGE_INTEGER*);
-alias INITIALIZE_SECURITY_CONTEXT_FN_A = HRESULT function(SecHandle*, SecHandle*, byte*, uint, uint, uint, SecBufferDesc*, uint, SecHandle*, SecBufferDesc*, uint*, LARGE_INTEGER*);
-alias ACCEPT_SECURITY_CONTEXT_FN = HRESULT function(SecHandle*, SecHandle*, SecBufferDesc*, uint, uint, SecHandle*, SecBufferDesc*, uint*, LARGE_INTEGER*);
+alias INITIALIZE_SECURITY_CONTEXT_FN_W = HRESULT function(SecHandle*, SecHandle*, ushort*, uint, uint, uint, SecBufferDesc*, uint, SecHandle*, SecBufferDesc*, uint*, long*);
+alias INITIALIZE_SECURITY_CONTEXT_FN_A = HRESULT function(SecHandle*, SecHandle*, byte*, uint, uint, uint, SecBufferDesc*, uint, SecHandle*, SecBufferDesc*, uint*, long*);
+alias ACCEPT_SECURITY_CONTEXT_FN = HRESULT function(SecHandle*, SecHandle*, SecBufferDesc*, uint, uint, SecHandle*, SecBufferDesc*, uint*, long*);
 alias COMPLETE_AUTH_TOKEN_FN = HRESULT function(SecHandle*, SecBufferDesc*);
 alias IMPERSONATE_SECURITY_CONTEXT_FN = HRESULT function(SecHandle*);
 alias REVERT_SECURITY_CONTEXT_FN = HRESULT function(SecHandle*);
@@ -3968,12 +4025,12 @@ enum : int
 
 struct LSA_TOKEN_INFORMATION_NULL
 {
-    LARGE_INTEGER ExpirationTime;
+    long ExpirationTime;
     TOKEN_GROUPS* Groups;
 }
 struct LSA_TOKEN_INFORMATION_V1
 {
-    LARGE_INTEGER ExpirationTime;
+    long ExpirationTime;
     TOKEN_USER User;
     TOKEN_GROUPS* Groups;
     TOKEN_PRIMARY_GROUP PrimaryGroup;
@@ -3983,7 +4040,7 @@ struct LSA_TOKEN_INFORMATION_V1
 }
 struct LSA_TOKEN_INFORMATION_V3
 {
-    LARGE_INTEGER ExpirationTime;
+    long ExpirationTime;
     TOKEN_USER User;
     TOKEN_GROUPS* Groups;
     TOKEN_PRIMARY_GROUP PrimaryGroup;
@@ -4058,6 +4115,20 @@ struct SECPKG_CLIENT_INFO
     ubyte ClientFlags;
     SECURITY_IMPERSONATION_LEVEL ImpersonationLevel;
     HANDLE ClientToken;
+}
+struct SECPKG_CLIENT_INFO_EX
+{
+    LUID LogonId;
+    uint ProcessID;
+    uint ThreadID;
+    BOOLEAN HasTcbPrivilege;
+    BOOLEAN Impersonating;
+    BOOLEAN Restricted;
+    ubyte ClientFlags;
+    SECURITY_IMPERSONATION_LEVEL ImpersonationLevel;
+    HANDLE ClientToken;
+    LUID IdentificationLogonId;
+    HANDLE IdentificationToken;
 }
 struct SECPKG_CALL_INFO
 {
@@ -4238,6 +4309,18 @@ struct SECPKG_TARGETINFO
     PSID DomainSid;
     const(wchar)* ComputerName;
 }
+struct SECPKG_NTLM_TARGETINFO
+{
+    uint Flags;
+    PWSTR MsvAvNbComputerName;
+    PWSTR MsvAvNbDomainName;
+    PWSTR MsvAvDnsComputerName;
+    PWSTR MsvAvDnsDomainName;
+    PWSTR MsvAvDnsTreeName;
+    uint MsvAvFlags;
+    FILETIME MsvAvTimestamp;
+    PWSTR MsvAvTargetName;
+}
 struct SecPkgContext_SaslContext
 {
     void* SaslContext;
@@ -4284,6 +4367,7 @@ alias PLSA_REDIRECTED_LOGON_CALLBACK = NTSTATUS function(HANDLE, void*, uint, vo
 alias PLSA_REDIRECTED_LOGON_CLEANUP_CALLBACK = void function(HANDLE);
 alias PLSA_REDIRECTED_LOGON_GET_LOGON_CREDS = NTSTATUS function(HANDLE, ubyte**, uint*);
 alias PLSA_REDIRECTED_LOGON_GET_SUPP_CREDS = NTSTATUS function(HANDLE, SECPKG_SUPPLEMENTAL_CRED_ARRAY**);
+alias PLSA_REDIRECTED_LOGON_GET_SID = NTSTATUS function(HANDLE, PSID*);
 struct SECPKG_REDIRECTED_LOGON_BUFFER
 {
     GUID RedirectedLogonGuid;
@@ -4293,6 +4377,7 @@ struct SECPKG_REDIRECTED_LOGON_BUFFER
     PLSA_REDIRECTED_LOGON_CLEANUP_CALLBACK CleanupCallback;
     PLSA_REDIRECTED_LOGON_GET_LOGON_CREDS GetLogonCreds;
     PLSA_REDIRECTED_LOGON_GET_SUPP_CREDS GetSupplementalCreds;
+    PLSA_REDIRECTED_LOGON_GET_SID GetRedirectedLogonSid;
 }
 struct SECPKG_POST_LOGON_USER_INFO
 {
@@ -4306,6 +4391,7 @@ alias PLSA_DUPLICATE_HANDLE = NTSTATUS function(HANDLE, HANDLE*);
 alias PLSA_SAVE_SUPPLEMENTAL_CREDENTIALS = NTSTATUS function(LUID*, uint, void*, BOOLEAN);
 alias PLSA_CREATE_THREAD = HANDLE function(SECURITY_ATTRIBUTES*, uint, LPTHREAD_START_ROUTINE, void*, uint, uint*);
 alias PLSA_GET_CLIENT_INFO = NTSTATUS function(SECPKG_CLIENT_INFO*);
+alias PLSA_GET_CLIENT_INFO_EX = NTSTATUS function(SECPKG_CLIENT_INFO_EX*, uint);
 alias PLSA_REGISTER_NOTIFICATION = HANDLE function(LPTHREAD_START_ROUTINE, void*, uint, uint, uint, uint, HANDLE);
 alias PLSA_CANCEL_NOTIFICATION = NTSTATUS function(HANDLE);
 alias PLSA_MAP_BUFFER = NTSTATUS function(SecBuffer*, SecBuffer*);
@@ -4483,6 +4569,7 @@ struct LSA_SECPKG_FUNCTION_TABLE
     PLSA_QUERY_CLIENT_REQUEST QueryClientRequest;
     PLSA_GET_APP_MODE_INFO GetAppModeInfo;
     PLSA_SET_APP_MODE_INFO SetAppModeInfo;
+    PLSA_GET_CLIENT_INFO_EX GetClientInfoEx;
 }
 alias PLSA_LOCATE_PKG_BY_ID = void* function(uint);
 struct SECPKG_DLL_FUNCTIONS
@@ -4502,18 +4589,18 @@ alias PLSA_AP_LOGON_USER_EX3 = NTSTATUS function(void**, SECURITY_LOGON_TYPE, vo
 alias PLSA_AP_PRE_LOGON_USER_SURROGATE = NTSTATUS function(void**, SECURITY_LOGON_TYPE, void*, void*, uint, SECPKG_SURROGATE_LOGON*, int*);
 alias PLSA_AP_POST_LOGON_USER_SURROGATE = NTSTATUS function(void**, SECURITY_LOGON_TYPE, void*, void*, uint, SECPKG_SURROGATE_LOGON*, void*, uint, LUID*, NTSTATUS, NTSTATUS, LSA_TOKEN_INFORMATION_TYPE, void*, UNICODE_STRING*, UNICODE_STRING*, UNICODE_STRING*, SECPKG_PRIMARY_CRED*, SECPKG_SUPPLEMENTAL_CRED_ARRAY*);
 alias SpAcceptCredentialsFn = NTSTATUS function(SECURITY_LOGON_TYPE, UNICODE_STRING*, SECPKG_PRIMARY_CRED*, SECPKG_SUPPLEMENTAL_CRED*);
-alias SpAcquireCredentialsHandleFn = NTSTATUS function(UNICODE_STRING*, uint, LUID*, void*, void*, void*, ulong*, LARGE_INTEGER*);
+alias SpAcquireCredentialsHandleFn = NTSTATUS function(UNICODE_STRING*, uint, LUID*, void*, void*, void*, ulong*, long*);
 alias SpFreeCredentialsHandleFn = NTSTATUS function(ulong);
 alias SpQueryCredentialsAttributesFn = NTSTATUS function(ulong, uint, void*);
 alias SpSetCredentialsAttributesFn = NTSTATUS function(ulong, uint, void*, uint);
-alias SpAddCredentialsFn = NTSTATUS function(ulong, UNICODE_STRING*, UNICODE_STRING*, uint, void*, void*, void*, LARGE_INTEGER*);
+alias SpAddCredentialsFn = NTSTATUS function(ulong, UNICODE_STRING*, UNICODE_STRING*, uint, void*, void*, void*, long*);
 alias SpSaveCredentialsFn = NTSTATUS function(ulong, SecBuffer*);
 alias SpGetCredentialsFn = NTSTATUS function(ulong, SecBuffer*);
 alias SpDeleteCredentialsFn = NTSTATUS function(ulong, SecBuffer*);
-alias SpInitLsaModeContextFn = NTSTATUS function(ulong, ulong, UNICODE_STRING*, uint, uint, SecBufferDesc*, ulong*, SecBufferDesc*, uint*, LARGE_INTEGER*, BOOLEAN*, SecBuffer*);
+alias SpInitLsaModeContextFn = NTSTATUS function(ulong, ulong, UNICODE_STRING*, uint, uint, SecBufferDesc*, ulong*, SecBufferDesc*, uint*, long*, BOOLEAN*, SecBuffer*);
 alias SpDeleteContextFn = NTSTATUS function(ulong);
 alias SpApplyControlTokenFn = NTSTATUS function(ulong, SecBufferDesc*);
-alias SpAcceptLsaModeContextFn = NTSTATUS function(ulong, ulong, SecBufferDesc*, uint, uint, ulong*, SecBufferDesc*, uint*, LARGE_INTEGER*, BOOLEAN*, SecBuffer*);
+alias SpAcceptLsaModeContextFn = NTSTATUS function(ulong, ulong, SecBufferDesc*, uint, uint, ulong*, SecBufferDesc*, uint*, long*, BOOLEAN*, SecBuffer*);
 alias SpGetUserInfoFn = NTSTATUS function(LUID*, uint, SECURITY_USER_DATA**);
 alias SpQueryContextAttributesFn = NTSTATUS function(ulong, uint, void*);
 alias SpSetContextAttributesFn = NTSTATUS function(ulong, uint, void*, uint);
@@ -4523,6 +4610,7 @@ alias SpExchangeMetaDataFn = NTSTATUS function(ulong, UNICODE_STRING*, uint, uin
 alias SpGetCredUIContextFn = NTSTATUS function(ulong, GUID*, uint*, ubyte**);
 alias SpUpdateCredentialsFn = NTSTATUS function(ulong, GUID*, uint, ubyte*);
 alias SpValidateTargetInfoFn = NTSTATUS function(void**, void*, void*, uint, SECPKG_TARGETINFO*);
+alias SpExtractTargetInfoFn = NTSTATUS function(void**, void*, void*, uint, void**, uint*);
 alias LSA_AP_POST_LOGON_USER = NTSTATUS function(SECPKG_POST_LOGON_USER_INFO*);
 alias SpGetRemoteCredGuardLogonBufferFn = NTSTATUS function(ulong, ulong, const(UNICODE_STRING)*, HANDLE*, PLSA_REDIRECTED_LOGON_CALLBACK*, PLSA_REDIRECTED_LOGON_CLEANUP_CALLBACK*, uint*, void**);
 alias SpGetRemoteCredGuardSupplementalCredsFn = NTSTATUS function(ulong, const(UNICODE_STRING)*, HANDLE*, PLSA_REDIRECTED_LOGON_CALLBACK*, PLSA_REDIRECTED_LOGON_CLEANUP_CALLBACK*, uint*, void**);
@@ -4571,6 +4659,7 @@ struct SECPKG_FUNCTION_TABLE
     PLSA_AP_LOGON_USER_EX3 LogonUserEx3;
     PLSA_AP_PRE_LOGON_USER_SURROGATE PreLogonUserSurrogate;
     PLSA_AP_POST_LOGON_USER_SURROGATE PostLogonUserSurrogate;
+    SpExtractTargetInfoFn ExtractTargetInfo;
 }
 alias SpInstanceInitFn = NTSTATUS function(uint, SECPKG_DLL_FUNCTIONS*, void**);
 alias SpInitUserModeContextFn = NTSTATUS function(ulong, SecBuffer*);
@@ -5026,14 +5115,15 @@ struct SCH_EXTENSION_DATA
     const(ubyte)* pExtData;
     uint cbExtData;
 }
-alias SchGetExtensionsOptions = uint;
-enum : uint
+alias SchGetExtensionsOptions = int;
+enum : int
 {
     SCH_EXTENSIONS_OPTIONS_NONE = 0x00000000,
     SCH_NO_RECORD_HEADER        = 0x00000001,
 }
 
 alias SslGetExtensionsFn = HRESULT function(const(ubyte)*, uint, SCH_EXTENSION_DATA*, ubyte, uint*, SchGetExtensionsOptions);
+alias SslDeserializeCertificateStoreFn = HRESULT function(CRYPT_INTEGER_BLOB, CERT_CONTEXT**);
 struct LOGON_HOURS
 {
     ushort UnitsPerWeek;
@@ -5047,12 +5137,12 @@ struct SR_SECURITY_DESCRIPTOR
 struct USER_ALL_INFORMATION
 {
     align (4):
-    LARGE_INTEGER LastLogon;
-    LARGE_INTEGER LastLogoff;
-    LARGE_INTEGER PasswordLastSet;
-    LARGE_INTEGER AccountExpires;
-    LARGE_INTEGER PasswordCanChange;
-    LARGE_INTEGER PasswordMustChange;
+    long LastLogon;
+    long LastLogoff;
+    long PasswordLastSet;
+    long AccountExpires;
+    long PasswordCanChange;
+    long PasswordMustChange;
     UNICODE_STRING UserName;
     UNICODE_STRING FullName;
     UNICODE_STRING HomeDirectory;
@@ -5105,7 +5195,7 @@ struct NETLOGON_LOGON_IDENTITY_INFO
 {
     UNICODE_STRING LogonDomainName;
     uint ParameterControl;
-    LARGE_INTEGER LogonId;
+    long LogonId;
     UNICODE_STRING UserName;
     UNICODE_STRING Workstation;
 }
@@ -5137,8 +5227,8 @@ struct NETLOGON_GENERIC_INFO
 }
 struct MSV1_0_VALIDATION_INFO
 {
-    LARGE_INTEGER LogoffTime;
-    LARGE_INTEGER KickoffTime;
+    long LogoffTime;
+    long KickoffTime;
     UNICODE_STRING LogonServer;
     UNICODE_STRING LogonDomainName;
     USER_SESSION_KEY SessionKey;

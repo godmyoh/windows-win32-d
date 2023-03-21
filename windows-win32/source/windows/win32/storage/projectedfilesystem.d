@@ -1,7 +1,7 @@
 module windows.win32.storage.projectedfilesystem;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOLEAN, HRESULT, LARGE_INTEGER, PWSTR;
+import windows.win32.foundation : BOOLEAN, HRESULT, PWSTR;
 
 version (Windows):
 extern (Windows):
@@ -68,8 +68,8 @@ struct PRJ_NOTIFICATION_MAPPING
     PRJ_NOTIFY_TYPES NotificationBitMask;
     const(wchar)* NotificationRoot;
 }
-alias PRJ_STARTVIRTUALIZING_FLAGS = uint;
-enum : uint
+alias PRJ_STARTVIRTUALIZING_FLAGS = int;
+enum : int
 {
     PRJ_FLAG_NONE                    = 0x00000000,
     PRJ_FLAG_USE_NEGATIVE_PATH_CACHE = 0x00000001,
@@ -103,10 +103,10 @@ struct PRJ_FILE_BASIC_INFO
 {
     BOOLEAN IsDirectory;
     long FileSize;
-    LARGE_INTEGER CreationTime;
-    LARGE_INTEGER LastAccessTime;
-    LARGE_INTEGER LastWriteTime;
-    LARGE_INTEGER ChangeTime;
+    long CreationTime;
+    long LastAccessTime;
+    long LastWriteTime;
+    long ChangeTime;
     uint FileAttributes;
 }
 struct PRJ_PLACEHOLDER_INFO
@@ -130,8 +130,8 @@ struct PRJ_PLACEHOLDER_INFO
     PRJ_PLACEHOLDER_VERSION_INFO VersionInfo;
     ubyte[1] VariableData;
 }
-alias PRJ_UPDATE_TYPES = uint;
-enum : uint
+alias PRJ_UPDATE_TYPES = int;
+enum : int
 {
     PRJ_UPDATE_NONE                 = 0x00000000,
     PRJ_UPDATE_ALLOW_DIRTY_METADATA = 0x00000001,
@@ -143,8 +143,8 @@ enum : uint
     PRJ_UPDATE_MAX_VAL              = 0x00000040,
 }
 
-alias PRJ_UPDATE_FAILURE_CAUSES = uint;
-enum : uint
+alias PRJ_UPDATE_FAILURE_CAUSES = int;
+enum : int
 {
     PRJ_UPDATE_FAILURE_CAUSE_NONE           = 0x00000000,
     PRJ_UPDATE_FAILURE_CAUSE_DIRTY_METADATA = 0x00000001,
@@ -153,8 +153,8 @@ enum : uint
     PRJ_UPDATE_FAILURE_CAUSE_READ_ONLY      = 0x00000008,
 }
 
-alias PRJ_FILE_STATE = uint;
-enum : uint
+alias PRJ_FILE_STATE = int;
+enum : int
 {
     PRJ_FILE_STATE_PLACEHOLDER          = 0x00000001,
     PRJ_FILE_STATE_HYDRATED_PLACEHOLDER = 0x00000002,

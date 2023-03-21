@@ -30,6 +30,7 @@ enum TSF_Hardware = 0x00000001;
 enum TSF_Authenticated = 0x00000002;
 enum TSF_IPv6 = 0x00000004;
 enum TSF_SignatureAuthenticated = 0x00000008;
+enum TIME_ZONE_ID_INVALID = 0xffffffff;
 struct TIME_ZONE_INFORMATION
 {
     int Bias;

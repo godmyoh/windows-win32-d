@@ -228,8 +228,8 @@ interface IUIAnimationTransitionLibrary : IUnknown
     HRESULT CreateSmoothStopTransition(double, double, IUIAnimationTransition*);
     HRESULT CreateParabolicTransitionFromAcceleration(double, double, double, IUIAnimationTransition*);
 }
-alias UI_ANIMATION_DEPENDENCIES = uint;
-enum : uint
+alias UI_ANIMATION_DEPENDENCIES = int;
+enum : int
 {
     UI_ANIMATION_DEPENDENCY_NONE                = 0x00000000,
     UI_ANIMATION_DEPENDENCY_INTERMEDIATE_VALUES = 0x00000001,

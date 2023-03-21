@@ -1593,7 +1593,7 @@ struct SWbemQueryQualifiedName
     uint m_uVersion;
     uint m_uTokenType;
     uint m_uNameListSize;
-    PWSTR* m_ppszNameList;
+    const(wchar)** m_ppszNameList;
     BOOL m_bArraysUsed;
     BOOL* m_pbArrayElUsed;
     uint* m_puArrayIndex;
@@ -1706,13 +1706,13 @@ struct SWbemRpnEncodedQuery
     uint m_uFromTargetType;
     const(wchar)* m_pszOptionalFromPath;
     uint m_uFromListSize;
-    PWSTR* m_ppszFromList;
+    const(wchar)** m_ppszFromList;
     uint m_uWhereClauseSize;
     SWbemRpnQueryToken** m_ppRpnWhereClause;
     double m_dblWithinPolling;
     double m_dblWithinWindow;
     uint m_uOrderByListSize;
-    PWSTR* m_ppszOrderByList;
+    const(wchar)** m_ppszOrderByList;
     uint* m_uOrderDirectionEl;
 }
 struct SWbemAnalysisMatrix
@@ -1803,8 +1803,8 @@ enum : int
     WBEM_FLAG_ADVISORY          = 0x00010000,
 }
 
-alias WBEM_GENERIC_FLAG_TYPE = uint;
-enum : uint
+alias WBEM_GENERIC_FLAG_TYPE = int;
+enum : int
 {
     WBEM_FLAG_RETURN_IMMEDIATELY     = 0x00000010,
     WBEM_FLAG_RETURN_WBEM_COMPLETE   = 0x00000000,

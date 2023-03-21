@@ -1,7 +1,7 @@
 module windows.win32.ui.controls.dialogs;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, COLORREF, HINSTANCE, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT, WPARAM;
+import windows.win32.foundation : BOOL, COLORREF, HGLOBAL, HINSTANCE, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT, WPARAM;
 import windows.win32.graphics.gdi : DEVMODEA, HDC, LOGFONTA, LOGFONTW;
 import windows.win32.system.com_ : IUnknown;
 import windows.win32.ui.controls_ : HPROPSHEETPAGE, NMHDR;
@@ -577,8 +577,8 @@ struct PRINTDLGA
 {
     uint lStructSize;
     HWND hwndOwner;
-    long hDevMode;
-    long hDevNames;
+    HGLOBAL hDevMode;
+    HGLOBAL hDevNames;
     HDC hDC;
     PRINTDLGEX_FLAGS Flags;
     ushort nFromPage;
@@ -592,15 +592,15 @@ struct PRINTDLGA
     LPSETUPHOOKPROC lpfnSetupHook;
     const(char)* lpPrintTemplateName;
     const(char)* lpSetupTemplateName;
-    long hPrintTemplate;
-    long hSetupTemplate;
+    HGLOBAL hPrintTemplate;
+    HGLOBAL hSetupTemplate;
 }
 struct PRINTDLGW
 {
     uint lStructSize;
     HWND hwndOwner;
-    long hDevMode;
-    long hDevNames;
+    HGLOBAL hDevMode;
+    HGLOBAL hDevNames;
     HDC hDC;
     PRINTDLGEX_FLAGS Flags;
     ushort nFromPage;
@@ -614,8 +614,8 @@ struct PRINTDLGW
     LPSETUPHOOKPROC lpfnSetupHook;
     const(wchar)* lpPrintTemplateName;
     const(wchar)* lpSetupTemplateName;
-    long hPrintTemplate;
-    long hSetupTemplate;
+    HGLOBAL hPrintTemplate;
+    HGLOBAL hSetupTemplate;
 }
 struct PRINTPAGERANGE
 {
@@ -626,8 +626,8 @@ struct PRINTDLGEXA
 {
     uint lStructSize;
     HWND hwndOwner;
-    long hDevMode;
-    long hDevNames;
+    HGLOBAL hDevMode;
+    HGLOBAL hDevNames;
     HDC hDC;
     PRINTDLGEX_FLAGS Flags;
     uint Flags2;
@@ -650,8 +650,8 @@ struct PRINTDLGEXW
 {
     uint lStructSize;
     HWND hwndOwner;
-    long hDevMode;
-    long hDevNames;
+    HGLOBAL hDevMode;
+    HGLOBAL hDevNames;
     HDC hDC;
     PRINTDLGEX_FLAGS Flags;
     uint Flags2;
@@ -681,8 +681,8 @@ struct PAGESETUPDLGA
 {
     uint lStructSize;
     HWND hwndOwner;
-    long hDevMode;
-    long hDevNames;
+    HGLOBAL hDevMode;
+    HGLOBAL hDevNames;
     PAGESETUPDLG_FLAGS Flags;
     POINT ptPaperSize;
     RECT rtMinMargin;
@@ -692,14 +692,14 @@ struct PAGESETUPDLGA
     LPPAGESETUPHOOK lpfnPageSetupHook;
     LPPAGEPAINTHOOK lpfnPagePaintHook;
     const(char)* lpPageSetupTemplateName;
-    long hPageSetupTemplate;
+    HGLOBAL hPageSetupTemplate;
 }
 struct PAGESETUPDLGW
 {
     uint lStructSize;
     HWND hwndOwner;
-    long hDevMode;
-    long hDevNames;
+    HGLOBAL hDevMode;
+    HGLOBAL hDevNames;
     PAGESETUPDLG_FLAGS Flags;
     POINT ptPaperSize;
     RECT rtMinMargin;
@@ -709,7 +709,7 @@ struct PAGESETUPDLGW
     LPPAGESETUPHOOK lpfnPageSetupHook;
     LPPAGEPAINTHOOK lpfnPagePaintHook;
     const(wchar)* lpPageSetupTemplateName;
-    long hPageSetupTemplate;
+    HGLOBAL hPageSetupTemplate;
 }
 alias LPOFNHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
 /+ [CONFLICTED] struct OPENFILENAME_NT4A
@@ -964,8 +964,8 @@ alias LPSETUPHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
     align (1):
     uint lStructSize;
     HWND hwndOwner;
-    long hDevMode;
-    long hDevNames;
+    HGLOBAL hDevMode;
+    HGLOBAL hDevNames;
     HDC hDC;
     PRINTDLGEX_FLAGS Flags;
     ushort nFromPage;
@@ -979,8 +979,8 @@ alias LPSETUPHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
     LPSETUPHOOKPROC lpfnSetupHook;
     const(char)* lpPrintTemplateName;
     const(char)* lpSetupTemplateName;
-    long hPrintTemplate;
-    long hSetupTemplate;
+    HGLOBAL hPrintTemplate;
+    HGLOBAL hSetupTemplate;
 }
 +/
 /+ [CONFLICTED] struct PRINTDLGW
@@ -988,8 +988,8 @@ alias LPSETUPHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
     align (1):
     uint lStructSize;
     HWND hwndOwner;
-    long hDevMode;
-    long hDevNames;
+    HGLOBAL hDevMode;
+    HGLOBAL hDevNames;
     HDC hDC;
     PRINTDLGEX_FLAGS Flags;
     ushort nFromPage;
@@ -1003,8 +1003,8 @@ alias LPSETUPHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
     LPSETUPHOOKPROC lpfnSetupHook;
     const(wchar)* lpPrintTemplateName;
     const(wchar)* lpSetupTemplateName;
-    long hPrintTemplate;
-    long hSetupTemplate;
+    HGLOBAL hPrintTemplate;
+    HGLOBAL hSetupTemplate;
 }
 +/
 enum IID_IPrintDialogCallback = GUID(0x5852a2c3, 0x6530, 0x11d1, [0xb6, 0xa3, 0x0, 0x0, 0xf8, 0x75, 0x7b, 0xf9]);
@@ -1033,8 +1033,8 @@ interface IPrintDialogServices : IUnknown
     align (1):
     uint lStructSize;
     HWND hwndOwner;
-    long hDevMode;
-    long hDevNames;
+    HGLOBAL hDevMode;
+    HGLOBAL hDevNames;
     HDC hDC;
     PRINTDLGEX_FLAGS Flags;
     uint Flags2;
@@ -1059,8 +1059,8 @@ interface IPrintDialogServices : IUnknown
     align (1):
     uint lStructSize;
     HWND hwndOwner;
-    long hDevMode;
-    long hDevNames;
+    HGLOBAL hDevMode;
+    HGLOBAL hDevNames;
     HDC hDC;
     PRINTDLGEX_FLAGS Flags;
     uint Flags2;
@@ -1096,8 +1096,8 @@ alias LPPAGESETUPHOOK = ulong function(HWND, uint, WPARAM, LPARAM);
     align (1):
     uint lStructSize;
     HWND hwndOwner;
-    long hDevMode;
-    long hDevNames;
+    HGLOBAL hDevMode;
+    HGLOBAL hDevNames;
     PAGESETUPDLG_FLAGS Flags;
     POINT ptPaperSize;
     RECT rtMinMargin;
@@ -1107,7 +1107,7 @@ alias LPPAGESETUPHOOK = ulong function(HWND, uint, WPARAM, LPARAM);
     LPPAGESETUPHOOK lpfnPageSetupHook;
     LPPAGEPAINTHOOK lpfnPagePaintHook;
     const(char)* lpPageSetupTemplateName;
-    long hPageSetupTemplate;
+    HGLOBAL hPageSetupTemplate;
 }
 +/
 /+ [CONFLICTED] struct PAGESETUPDLGW
@@ -1115,8 +1115,8 @@ alias LPPAGESETUPHOOK = ulong function(HWND, uint, WPARAM, LPARAM);
     align (1):
     uint lStructSize;
     HWND hwndOwner;
-    long hDevMode;
-    long hDevNames;
+    HGLOBAL hDevMode;
+    HGLOBAL hDevNames;
     PAGESETUPDLG_FLAGS Flags;
     POINT ptPaperSize;
     RECT rtMinMargin;
@@ -1126,6 +1126,6 @@ alias LPPAGESETUPHOOK = ulong function(HWND, uint, WPARAM, LPARAM);
     LPPAGESETUPHOOK lpfnPageSetupHook;
     LPPAGEPAINTHOOK lpfnPagePaintHook;
     const(wchar)* lpPageSetupTemplateName;
-    long hPageSetupTemplate;
+    HGLOBAL hPageSetupTemplate;
 }
 +/

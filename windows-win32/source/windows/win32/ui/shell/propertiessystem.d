@@ -94,7 +94,7 @@ HRESULT InitPropVariantFromInt64Vector(const(long)*, uint, PROPVARIANT*);
 HRESULT InitPropVariantFromUInt64Vector(const(ulong)*, uint, PROPVARIANT*);
 HRESULT InitPropVariantFromDoubleVector(const(double)*, uint, PROPVARIANT*);
 HRESULT InitPropVariantFromFileTimeVector(const(FILETIME)*, uint, PROPVARIANT*);
-HRESULT InitPropVariantFromStringVector(PWSTR*, uint, PROPVARIANT*);
+HRESULT InitPropVariantFromStringVector(const(wchar)**, uint, PROPVARIANT*);
 HRESULT InitPropVariantFromStringAsVector(const(wchar)*, PROPVARIANT*);
 BOOL PropVariantToBooleanWithDefault(const(PROPVARIANT)*, BOOL);
 short PropVariantToInt16WithDefault(const(PROPVARIANT)*, short);
@@ -171,7 +171,7 @@ HRESULT InitVariantFromUInt32Array(const(uint)*, uint, VARIANT*);
 HRESULT InitVariantFromInt64Array(const(long)*, uint, VARIANT*);
 HRESULT InitVariantFromUInt64Array(const(ulong)*, uint, VARIANT*);
 HRESULT InitVariantFromDoubleArray(const(double)*, uint, VARIANT*);
-HRESULT InitVariantFromStringArray(PWSTR*, uint, VARIANT*);
+HRESULT InitVariantFromStringArray(const(wchar)**, uint, VARIANT*);
 BOOL VariantToBooleanWithDefault(const(VARIANT)*, BOOL);
 short VariantToInt16WithDefault(const(VARIANT)*, short);
 ushort VariantToUInt16WithDefault(const(VARIANT)*, ushort);
@@ -282,8 +282,8 @@ interface INamedPropertyStore : IUnknown
     HRESULT GetNameCount(uint*);
     HRESULT GetNameAt(uint, BSTR*);
 }
-alias GETPROPERTYSTOREFLAGS = uint;
-enum : uint
+alias GETPROPERTYSTOREFLAGS = int;
+enum : int
 {
     GPS_DEFAULT                 = 0x00000000,
     GPS_HANDLERPROPERTIESONLY   = 0x00000001,
@@ -308,8 +308,8 @@ interface IObjectWithPropertyKey : IUnknown
     HRESULT SetPropertyKey(const(PROPERTYKEY)*);
     HRESULT GetPropertyKey(PROPERTYKEY*);
 }
-alias PKA_FLAGS = uint;
-enum : uint
+alias PKA_FLAGS = int;
+enum : int
 {
     PKA_SET    = 0x00000000,
     PKA_APPEND = 0x00000001,
@@ -406,8 +406,8 @@ enum : uint
     PDTF_MASK_ALL                  = 0x80001fff,
 }
 
-alias PROPDESC_VIEW_FLAGS = uint;
-enum : uint
+alias PROPDESC_VIEW_FLAGS = int;
+enum : int
 {
     PDVF_DEFAULT             = 0x00000000,
     PDVF_CENTERALIGN         = 0x00000001,
@@ -447,8 +447,8 @@ enum : int
     PDGR_ENUMERATED   = 0x00000006,
 }
 
-alias PROPDESC_FORMAT_FLAGS = uint;
-enum : uint
+alias PROPDESC_FORMAT_FLAGS = int;
+enum : int
 {
     PDFF_DEFAULT              = 0x00000000,
     PDFF_PREFIXNAME           = 0x00000001,
@@ -553,8 +553,8 @@ interface IPropertyDescriptionAliasInfo : IPropertyDescription
     HRESULT GetSortByAlias(const(GUID)*, void**);
     HRESULT GetAdditionalSortByAliases(const(GUID)*, void**);
 }
-alias PROPDESC_SEARCHINFO_FLAGS = uint;
-enum : uint
+alias PROPDESC_SEARCHINFO_FLAGS = int;
+enum : int
 {
     PDSIF_DEFAULT         = 0x00000000,
     PDSIF_ININVERTEDINDEX = 0x00000001,
@@ -664,8 +664,8 @@ interface ICreateObject : IUnknown
 {
     HRESULT CreateObject(const(GUID)*, IUnknown, const(GUID)*, void**);
 }
-alias PSTIME_FLAGS = uint;
-enum : uint
+alias PSTIME_FLAGS = int;
+enum : int
 {
     PSTF_UTC   = 0x00000000,
     PSTF_LOCAL = 0x00000001,
@@ -683,8 +683,8 @@ enum : int
     PVCU_YEAR    = 0x00000006,
 }
 
-alias PROPVAR_COMPARE_FLAGS = uint;
-enum : uint
+alias PROPVAR_COMPARE_FLAGS = int;
+enum : int
 {
     PVCF_DEFAULT                       = 0x00000000,
     PVCF_TREATEMPTYASGREATERTHAN       = 0x00000001,
@@ -695,8 +695,8 @@ enum : uint
     PVCF_DIGITSASNUMBERS_CASESENSITIVE = 0x00000020,
 }
 
-alias PROPVAR_CHANGE_FLAGS = uint;
-enum : uint
+alias PROPVAR_CHANGE_FLAGS = int;
+enum : int
 {
     PVCHF_DEFAULT        = 0x00000000,
     PVCHF_NOVALUEPROP    = 0x00000001,
@@ -706,8 +706,8 @@ enum : uint
     PVCHF_NOHEXSTRING    = 0x00000010,
 }
 
-alias DRAWPROGRESSFLAGS = uint;
-enum : uint
+alias DRAWPROGRESSFLAGS = int;
+enum : int
 {
     DPF_NONE             = 0x00000000,
     DPF_MARQUEE          = 0x00000001,
@@ -717,8 +717,8 @@ enum : uint
     DPF_STOPPED          = 0x00000010,
 }
 
-alias SYNC_TRANSFER_STATUS = uint;
-enum : uint
+alias SYNC_TRANSFER_STATUS = int;
+enum : int
 {
     STS_NONE                   = 0x00000000,
     STS_NEEDSUPLOAD            = 0x00000001,
@@ -734,8 +734,8 @@ enum : uint
     STS_PLACEHOLDER_IFEMPTY    = 0x00000400,
 }
 
-alias PLACEHOLDER_STATES = uint;
-enum : uint
+alias PLACEHOLDER_STATES = int;
+enum : int
 {
     PS_NONE                            = 0x00000000,
     PS_MARKED_FOR_OFFLINE_AVAILABILITY = 0x00000001,
@@ -746,23 +746,23 @@ enum : uint
     PS_ALL                             = 0x0000000f,
 }
 
-alias PROPERTYUI_NAME_FLAGS = uint;
-enum : uint
+alias PROPERTYUI_NAME_FLAGS = int;
+enum : int
 {
     PUIFNF_DEFAULT  = 0x00000000,
     PUIFNF_MNEMONIC = 0x00000001,
 }
 
-alias PROPERTYUI_FLAGS = uint;
-enum : uint
+alias PROPERTYUI_FLAGS = int;
+enum : int
 {
     PUIF_DEFAULT          = 0x00000000,
     PUIF_RIGHTALIGN       = 0x00000001,
     PUIF_NOLABELININFOTIP = 0x00000002,
 }
 
-alias PROPERTYUI_FORMAT_FLAGS = uint;
-enum : uint
+alias PROPERTYUI_FORMAT_FLAGS = int;
+enum : int
 {
     PUIFFDF_DEFAULT      = 0x00000000,
     PUIFFDF_RIGHTTOLEFT  = 0x00000001,
@@ -793,8 +793,8 @@ enum : int
     PDOPS_ERRORS    = 0x00000005,
 }
 
-alias SYNC_ENGINE_STATE_FLAGS = uint;
-enum : uint
+alias SYNC_ENGINE_STATE_FLAGS = int;
+enum : int
 {
     SESF_NONE                          = 0x00000000,
     SESF_SERVICE_QUOTA_NEARING_LIMIT   = 0x00000001,

@@ -1,7 +1,7 @@
 module windows.win32.system.com.structuredstorage;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, DECIMAL, FILETIME, HRESULT, LARGE_INTEGER, PSTR, PWSTR, ULARGE_INTEGER, VARIANT_BOOL;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, DECIMAL, FILETIME, HGLOBAL, HRESULT, PSTR, PWSTR, VARIANT_BOOL;
 import windows.win32.security_ : PSECURITY_DESCRIPTOR;
 import windows.win32.system.com_ : BLOB, CLSCTX, COSERVERINFO, CY, DVTARGETDEVICE, IDispatch, IErrorLog, IPersist, IStream, IUnknown, LOCKTYPE, MULTI_QI, SAFEARRAY, STATFLAG, STATSTG, STGC, STGM, STGMEDIUM, StorageLayout, VARENUM, VARIANT;
 
@@ -32,8 +32,8 @@ HRESULT StgOpenAsyncDocfileOnIFillLockBytes(IFillLockBytes, uint, uint, IStorage
 HRESULT StgGetIFillLockBytesOnILockBytes(ILockBytes, IFillLockBytes*);
 HRESULT StgGetIFillLockBytesOnFile(const(wchar)*, IFillLockBytes*);
 HRESULT StgOpenLayoutDocfile(const(wchar)*, uint, uint, IStorage*);
-HRESULT CreateStreamOnHGlobal(long, BOOL, IStream*);
-HRESULT GetHGlobalFromStream(IStream, long*);
+HRESULT CreateStreamOnHGlobal(HGLOBAL, BOOL, IStream*);
+HRESULT GetHGlobalFromStream(IStream, HGLOBAL*);
 HRESULT CoGetInterfaceAndReleaseStream(IStream, const(GUID)*, void**);
 HRESULT PropVariantCopy(PROPVARIANT*, const(PROPVARIANT)*);
 HRESULT PropVariantClear(PROPVARIANT*);
@@ -56,8 +56,8 @@ HRESULT ReadClassStg(IStorage, GUID*);
 HRESULT WriteClassStg(IStorage, const(GUID)*);
 HRESULT ReadClassStm(IStream, GUID*);
 HRESULT WriteClassStm(IStream, const(GUID)*);
-HRESULT GetHGlobalFromILockBytes(ILockBytes, long*);
-HRESULT CreateILockBytesOnHGlobal(long, BOOL, ILockBytes*);
+HRESULT GetHGlobalFromILockBytes(ILockBytes, HGLOBAL*);
+HRESULT CreateILockBytesOnHGlobal(HGLOBAL, BOOL, ILockBytes*);
 HRESULT GetConvertStg(IStorage);
 SERIALIZEDPROPERTYVALUE* StgConvertVariantToProperty(const(PROPVARIANT)*, ushort, SERIALIZEDPROPERTYVALUE*, uint*, uint, BOOLEAN, uint*);
 BOOLEAN StgConvertPropertyToVariant(const(SERIALIZEDPROPERTYVALUE)*, ushort, PROPVARIANT*, PMemoryAllocator*);
@@ -202,12 +202,12 @@ interface IPersistStorage : IPersist
 enum IID_ILockBytes = GUID(0xa, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ILockBytes : IUnknown
 {
-    HRESULT ReadAt(ULARGE_INTEGER, void*, uint, uint*);
-    HRESULT WriteAt(ULARGE_INTEGER, const(void)*, uint, uint*);
+    HRESULT ReadAt(ulong, void*, uint, uint*);
+    HRESULT WriteAt(ulong, const(void)*, uint, uint*);
     HRESULT Flush();
-    HRESULT SetSize(ULARGE_INTEGER);
-    HRESULT LockRegion(ULARGE_INTEGER, ULARGE_INTEGER, LOCKTYPE);
-    HRESULT UnlockRegion(ULARGE_INTEGER, ULARGE_INTEGER, uint);
+    HRESULT SetSize(ulong);
+    HRESULT LockRegion(ulong, ulong, LOCKTYPE);
+    HRESULT UnlockRegion(ulong, ulong, uint);
     HRESULT Stat(STATSTG*, STATFLAG);
 }
 enum IID_IRootStorage = GUID(0x12, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
@@ -219,8 +219,8 @@ enum IID_IFillLockBytes = GUID(0x99caf010, 0x415e, 0x11cf, [0x88, 0x14, 0x0, 0xa
 interface IFillLockBytes : IUnknown
 {
     HRESULT FillAppend(const(void)*, uint, uint*);
-    HRESULT FillAt(ULARGE_INTEGER, const(void)*, uint, uint*);
-    HRESULT SetFillSize(ULARGE_INTEGER);
+    HRESULT FillAt(ulong, const(void)*, uint, uint*);
+    HRESULT SetFillSize(ulong);
     HRESULT Terminate(BOOL);
 }
 enum IID_ILayoutStorage = GUID(0xe6d4d90, 0x6738, 0x11cf, [0x96, 0x8, 0x0, 0xaa, 0x0, 0x68, 0xd, 0xb4]);
@@ -322,12 +322,12 @@ struct CAPROPVARIANT
 struct CAH
 {
     uint cElems;
-    LARGE_INTEGER* pElems;
+    long* pElems;
 }
 struct CAUH
 {
     uint cElems;
-    ULARGE_INTEGER* pElems;
+    ulong* pElems;
 }
 struct CALPSTR
 {
@@ -374,8 +374,8 @@ struct PROPVARIANT
                 uint ulVal;
                 int intVal;
                 uint uintVal;
-                LARGE_INTEGER hVal;
-                ULARGE_INTEGER uhVal;
+                long hVal;
+                ulong uhVal;
                 float fltVal;
                 double dblVal;
                 VARIANT_BOOL boolVal;

@@ -28,8 +28,8 @@ enum : int
     IDENTITIES_ME_ONLY = 0x00000001,
 }
 
-alias IdentityUpdateEvent = uint;
-enum : uint
+alias IdentityUpdateEvent = int;
+enum : int
 {
     IDENTITY_ASSOCIATED    = 0x00000001,
     IDENTITY_DISASSOCIATED = 0x00000002,

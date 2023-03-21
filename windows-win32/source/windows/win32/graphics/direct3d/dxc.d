@@ -109,8 +109,8 @@ interface IDxcCompilerArgs : IUnknown
 {
     PWSTR* GetArguments();
     uint GetCount();
-    HRESULT AddArguments(PWSTR*, uint);
-    HRESULT AddArgumentsUTF8(PSTR*, uint);
+    HRESULT AddArguments(const(wchar)**, uint);
+    HRESULT AddArgumentsUTF8(const(char)**, uint);
     HRESULT AddDefines(const(DxcDefine)*, uint);
 }
 enum IID_IDxcLibrary = GUID(0xe5204dc7, 0xd18c, 0x4c3c, [0xbd, 0xfb, 0x85, 0x16, 0x73, 0x98, 0xf, 0xe7]);
@@ -137,14 +137,14 @@ interface IDxcOperationResult : IUnknown
 enum IID_IDxcCompiler = GUID(0x8c210bf3, 0x11f, 0x4422, [0x8d, 0x70, 0x6f, 0x9a, 0xcb, 0x8d, 0xb6, 0x17]);
 interface IDxcCompiler : IUnknown
 {
-    HRESULT Compile(IDxcBlob, const(wchar)*, const(wchar)*, const(wchar)*, PWSTR*, uint, const(DxcDefine)*, uint, IDxcIncludeHandler, IDxcOperationResult*);
-    HRESULT Preprocess(IDxcBlob, const(wchar)*, PWSTR*, uint, const(DxcDefine)*, uint, IDxcIncludeHandler, IDxcOperationResult*);
+    HRESULT Compile(IDxcBlob, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)**, uint, const(DxcDefine)*, uint, IDxcIncludeHandler, IDxcOperationResult*);
+    HRESULT Preprocess(IDxcBlob, const(wchar)*, const(wchar)**, uint, const(DxcDefine)*, uint, IDxcIncludeHandler, IDxcOperationResult*);
     HRESULT Disassemble(IDxcBlob, IDxcBlobEncoding*);
 }
 enum IID_IDxcCompiler2 = GUID(0xa005a9d9, 0xb8bb, 0x4594, [0xb5, 0xc9, 0xe, 0x63, 0x3b, 0xec, 0x4d, 0x37]);
 interface IDxcCompiler2 : IDxcCompiler
 {
-    HRESULT CompileWithDebug(IDxcBlob, const(wchar)*, const(wchar)*, const(wchar)*, PWSTR*, uint, const(DxcDefine)*, uint, IDxcIncludeHandler, IDxcOperationResult*, PWSTR*, IDxcBlob*);
+    HRESULT CompileWithDebug(IDxcBlob, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)**, uint, const(DxcDefine)*, uint, IDxcIncludeHandler, IDxcOperationResult*, PWSTR*, IDxcBlob*);
 }
 enum IID_IDxcLinker = GUID(0xf1b5be2a, 0x62dd, 0x4327, [0xa1, 0xc2, 0x42, 0xac, 0x1e, 0x1e, 0x78, 0xe6]);
 interface IDxcLinker : IUnknown
@@ -166,7 +166,7 @@ interface IDxcUtils : IUnknown
     HRESULT GetBlobAsUtf16(IDxcBlob, IDxcBlobUtf16*);
     HRESULT GetDxilContainerPart(const(DxcBuffer)*, uint, void**, uint*);
     HRESULT CreateReflection(const(DxcBuffer)*, const(GUID)*, void**);
-    HRESULT BuildArguments(const(wchar)*, const(wchar)*, const(wchar)*, PWSTR*, uint, const(DxcDefine)*, uint, IDxcCompilerArgs*);
+    HRESULT BuildArguments(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)**, uint, const(DxcDefine)*, uint, IDxcCompilerArgs*);
     HRESULT GetPDBContents(IDxcBlob, IDxcBlob*, IDxcBlob*);
 }
 alias DXC_OUT_KIND = int;
@@ -204,7 +204,7 @@ interface IDxcExtraOutputs : IUnknown
 enum IID_IDxcCompiler3 = GUID(0x228b4687, 0x5a6a, 0x4730, [0x90, 0xc, 0x97, 0x2, 0xb2, 0x20, 0x3f, 0x54]);
 interface IDxcCompiler3 : IUnknown
 {
-    HRESULT Compile(const(DxcBuffer)*, PWSTR*, uint, IDxcIncludeHandler, const(GUID)*, void**);
+    HRESULT Compile(const(DxcBuffer)*, const(wchar)**, uint, IDxcIncludeHandler, const(GUID)*, void**);
     HRESULT Disassemble(const(DxcBuffer)*, const(GUID)*, void**);
 }
 enum IID_IDxcValidator = GUID(0xa6e82bd2, 0x1fd7, 0x4826, [0x98, 0x11, 0x28, 0x57, 0xe7, 0x97, 0xf4, 0x9a]);
@@ -254,7 +254,7 @@ interface IDxcOptimizer : IUnknown
 {
     HRESULT GetAvailablePassCount(uint*);
     HRESULT GetAvailablePass(uint, IDxcOptimizerPass*);
-    HRESULT RunOptimizer(IDxcBlob, PWSTR*, uint, IDxcBlob*, IDxcBlobEncoding*);
+    HRESULT RunOptimizer(IDxcBlob, const(wchar)**, uint, IDxcBlob*, IDxcBlobEncoding*);
 }
 enum IID_IDxcVersionInfo = GUID(0xb04f5b50, 0x2059, 0x4f12, [0xa8, 0xff, 0xa1, 0xe0, 0xcd, 0xe1, 0xcc, 0x7e]);
 interface IDxcVersionInfo : IUnknown

@@ -1,7 +1,7 @@
 module windows.win32.system.winrt_;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, HRESULT, HWND, PSTR, PWSTR;
+import windows.win32.foundation : BOOL, BSTR, HRESULT, HWND, PWSTR;
 import windows.win32.system.com_ : IStream, IUnknown;
 import windows.win32.system.com.marshal : IMarshal;
 import windows.win32.ui.shell.propertiessystem : INamedPropertyStore;
@@ -44,7 +44,7 @@ HRESULT WindowsInspectString2(ulong, ushort, PINSPECT_HSTRING_CALLBACK2, void*, 
 HRESULT RoInitialize(RO_INIT_TYPE);
 void RoUninitialize();
 HRESULT RoActivateInstance(HSTRING, IInspectable*);
-HRESULT RoRegisterActivationFactories(HSTRING*, long*, uint, long*);
+HRESULT RoRegisterActivationFactories(HSTRING*, PFNGETACTIVATIONFACTORY*, uint, long*);
 void RoRevokeActivationFactories(long);
 HRESULT RoGetActivationFactory(HSTRING, const(GUID)*, void**);
 HRESULT RoRegisterForApartmentShutdown(IApartmentShutdown, ulong*, APARTMENT_SHUTDOWN_REGISTRATION_COOKIE*);
@@ -70,10 +70,6 @@ HRESULT RoInspectCapturedStackBackTrace(ulong, ushort, PINSPECT_MEMORY_CALLBACK,
 HRESULT RoGetMatchingRestrictedErrorInfo(HRESULT, IRestrictedErrorInfo*);
 HRESULT RoReportFailedDelegate(IUnknown, IRestrictedErrorInfo);
 BOOL IsErrorPropagationEnabled();
-HRESULT MetaDataGetDispenser(const(GUID)*, const(GUID)*, void**);
-HRESULT RoGetParameterizedTypeInstanceIID(uint, PWSTR*, const(IRoMetaDataLocator), GUID*, ROPARAMIIDHANDLE*);
-void RoFreeParameterizedTypeExtra(ROPARAMIIDHANDLE);
-PSTR RoParameterizedTypeExtraGetTypeSignature(ROPARAMIIDHANDLE);
 HRESULT RoGetServerActivatableClasses(HSTRING, HSTRING**, uint*);
 HRESULT CreateRandomAccessStreamOnFile(const(wchar)*, uint, const(GUID)*, void**);
 HRESULT CreateRandomAccessStreamOverStream(IStream, BSOS_OPTIONS, const(GUID)*, void**);
@@ -339,13 +335,14 @@ enum : int
 struct _RO_REGISTRATION_COOKIE
 {
 }
+alias PFNGETACTIVATIONFACTORY = HRESULT function(HSTRING, IActivationFactory*);
 enum IID_IBufferByteAccess = GUID(0x905a0fef, 0xbc53, 0x11df, [0x8c, 0x49, 0x0, 0x1e, 0x4f, 0xc6, 0x86, 0xda]);
 interface IBufferByteAccess : IUnknown
 {
     HRESULT Buffer(ubyte**);
 }
-alias RO_ERROR_REPORTING_FLAGS = uint;
-enum : uint
+alias RO_ERROR_REPORTING_FLAGS = int;
+enum : int
 {
     RO_ERROR_REPORTING_NONE                 = 0x00000000,
     RO_ERROR_REPORTING_SUPPRESSEXCEPTIONS   = 0x00000001,
@@ -355,25 +352,6 @@ enum : uint
 }
 
 alias PINSPECT_MEMORY_CALLBACK = HRESULT function(void*, ulong, uint, ubyte*);
-// [Not Found] IID_IRoSimpleMetaDataBuilder
-interface IRoSimpleMetaDataBuilder
-{
-    HRESULT SetWinRtInterface(GUID);
-    HRESULT SetDelegate(GUID);
-    HRESULT SetInterfaceGroupSimpleDefault(const(wchar)*, const(wchar)*, const(GUID)*);
-    HRESULT SetInterfaceGroupParameterizedDefault(const(wchar)*, uint, PWSTR*);
-    HRESULT SetRuntimeClassSimpleDefault(const(wchar)*, const(wchar)*, const(GUID)*);
-    HRESULT SetRuntimeClassParameterizedDefault(const(wchar)*, uint, const(wchar)**);
-    HRESULT SetStruct(const(wchar)*, uint, const(wchar)**);
-    HRESULT SetEnum(const(wchar)*, const(wchar)*);
-    HRESULT SetParameterizedInterface(GUID, uint);
-    HRESULT SetParameterizedDelegate(GUID, uint);
-}
-// [Not Found] IID_IRoMetaDataLocator
-interface IRoMetaDataLocator
-{
-    HRESULT Locate(const(wchar)*, IRoSimpleMetaDataBuilder);
-}
 alias BSOS_OPTIONS = int;
 enum : int
 {

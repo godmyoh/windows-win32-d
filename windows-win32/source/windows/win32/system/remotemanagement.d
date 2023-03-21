@@ -586,6 +586,7 @@ enum ERROR_WSMAN_VIRTUALACCOUNT_NOTSUPPORTED = 0x803381fb;
 enum ERROR_WSMAN_VIRTUALACCOUNT_NOTSUPPORTED_DOWNLEVEL = 0x803381fc;
 enum ERROR_WSMAN_RUNASUSER_MANAGEDACCOUNT_LOGON_FAILED = 0x803381fd;
 enum ERROR_WSMAN_CERTMAPPING_CREDENTIAL_MANAGEMENT_FAILIED = 0x803381fe;
+enum ERROR_WSMAN_EVENTING_PUSH_SUBSCRIPTION_NOACTIVATE_EVENTSOURCE = 0x803381ff;
 struct WSMAN_DATA_TEXT
 {
     uint bufferLength;
@@ -667,7 +668,7 @@ struct WSMAN_OPTION_SETEX
     uint optionsCount;
     WSMAN_OPTION* options;
     BOOL optionsMustUnderstand;
-    PWSTR* optionTypes;
+    const(wchar)** optionTypes;
 }
 struct WSMAN_KEY
 {
@@ -783,7 +784,7 @@ struct WSMAN_COMMAND
 struct WSMAN_STREAM_ID_SET
 {
     uint streamIDsCount;
-    PWSTR* streamIDs;
+    const(wchar)** streamIDs;
 }
 struct WSMAN_ENVIRONMENT_VARIABLE
 {
@@ -852,7 +853,7 @@ struct WSMAN_SHELL_ASYNC
 struct WSMAN_COMMAND_ARG_SET
 {
     uint argsCount;
-    PWSTR* args;
+    const(wchar)** args;
 }
 struct WSMAN_CERTIFICATE_DETAILS
 {

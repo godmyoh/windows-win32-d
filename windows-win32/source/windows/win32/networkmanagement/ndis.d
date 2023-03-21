@@ -1,7 +1,7 @@
 module windows.win32.networkmanagement.ndis;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOLEAN, CHAR, HANDLE, LARGE_INTEGER;
+import windows.win32.foundation : BOOLEAN, CHAR, HANDLE;
 
 version (Windows):
 extern (Windows):
@@ -233,6 +233,7 @@ enum OID_WWAN_UICC_APP_LIST = 0x0e01014a;
 enum OID_WWAN_MODEM_LOGGING_CONFIG = 0x0e01014b;
 enum OID_WWAN_REGISTER_PARAMS = 0x0e01014c;
 enum OID_WWAN_NETWORK_PARAMS = 0x0e01014d;
+enum OID_WWAN_UE_POLICY = 0x0e01014e;
 enum OID_GEN_XMIT_OK = 0x00020101;
 enum OID_GEN_RCV_OK = 0x00020102;
 enum OID_GEN_XMIT_ERROR = 0x00020103;
@@ -1629,6 +1630,7 @@ enum NDIS_ENCAPSULATION_IEEE_802_3_P_AND_Q = 0x00000004;
 enum NDIS_ENCAPSULATION_IEEE_802_3_P_AND_Q_IN_OOB = 0x00000008;
 enum NDIS_ENCAPSULATION_IEEE_LLC_SNAP_ROUTED = 0x00000010;
 enum NDIS_OBJECT_TYPE_OID_REQUEST = 0x00000096;
+enum NDIS_SUPPORT_NDIS687 = 0x00000001;
 enum NDIS_SUPPORT_NDIS686 = 0x00000001;
 enum NDIS_SUPPORT_NDIS685 = 0x00000001;
 enum NDIS_SUPPORT_NDIS684 = 0x00000001;
@@ -2214,30 +2216,30 @@ struct NDIS_802_11_CONFIGURATION
 struct NDIS_802_11_STATISTICS
 {
     uint Length;
-    LARGE_INTEGER TransmittedFragmentCount;
-    LARGE_INTEGER MulticastTransmittedFrameCount;
-    LARGE_INTEGER FailedCount;
-    LARGE_INTEGER RetryCount;
-    LARGE_INTEGER MultipleRetryCount;
-    LARGE_INTEGER RTSSuccessCount;
-    LARGE_INTEGER RTSFailureCount;
-    LARGE_INTEGER ACKFailureCount;
-    LARGE_INTEGER FrameDuplicateCount;
-    LARGE_INTEGER ReceivedFragmentCount;
-    LARGE_INTEGER MulticastReceivedFrameCount;
-    LARGE_INTEGER FCSErrorCount;
-    LARGE_INTEGER TKIPLocalMICFailures;
-    LARGE_INTEGER TKIPICVErrorCount;
-    LARGE_INTEGER TKIPCounterMeasuresInvoked;
-    LARGE_INTEGER TKIPReplays;
-    LARGE_INTEGER CCMPFormatErrors;
-    LARGE_INTEGER CCMPReplays;
-    LARGE_INTEGER CCMPDecryptErrors;
-    LARGE_INTEGER FourWayHandshakeFailures;
-    LARGE_INTEGER WEPUndecryptableCount;
-    LARGE_INTEGER WEPICVErrorCount;
-    LARGE_INTEGER DecryptSuccessCount;
-    LARGE_INTEGER DecryptFailureCount;
+    long TransmittedFragmentCount;
+    long MulticastTransmittedFrameCount;
+    long FailedCount;
+    long RetryCount;
+    long MultipleRetryCount;
+    long RTSSuccessCount;
+    long RTSFailureCount;
+    long ACKFailureCount;
+    long FrameDuplicateCount;
+    long ReceivedFragmentCount;
+    long MulticastReceivedFrameCount;
+    long FCSErrorCount;
+    long TKIPLocalMICFailures;
+    long TKIPICVErrorCount;
+    long TKIPCounterMeasuresInvoked;
+    long TKIPReplays;
+    long CCMPFormatErrors;
+    long CCMPReplays;
+    long CCMPDecryptErrors;
+    long FourWayHandshakeFailures;
+    long WEPUndecryptableCount;
+    long WEPICVErrorCount;
+    long DecryptSuccessCount;
+    long DecryptFailureCount;
 }
 struct NDIS_802_11_KEY
 {

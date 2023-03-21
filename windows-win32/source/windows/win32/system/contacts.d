@@ -147,12 +147,12 @@ interface IContactProperties : IUnknown
     HRESULT SetString(const(wchar)*, uint, const(wchar)*);
     HRESULT SetDate(const(wchar)*, uint, FILETIME);
     HRESULT SetBinary(const(wchar)*, uint, const(wchar)*, IStream);
-    HRESULT SetLabels(const(wchar)*, uint, uint, PWSTR*);
+    HRESULT SetLabels(const(wchar)*, uint, uint, const(wchar)**);
     HRESULT CreateArrayNode(const(wchar)*, uint, BOOL, PWSTR, uint, uint*);
     HRESULT DeleteProperty(const(wchar)*, uint);
     HRESULT DeleteArrayNode(const(wchar)*, uint);
     HRESULT DeleteLabels(const(wchar)*, uint);
-    HRESULT GetPropertyCollection(IContactPropertyCollection*, uint, const(wchar)*, uint, PWSTR*, BOOL);
+    HRESULT GetPropertyCollection(IContactPropertyCollection*, uint, const(wchar)*, uint, const(wchar)**, BOOL);
 }
 enum IID_IContact = GUID(0xf941b671, 0xbda7, 0x4f77, [0x88, 0x4a, 0xf4, 0x64, 0x62, 0xf2, 0x26, 0xa7]);
 interface IContact : IUnknown

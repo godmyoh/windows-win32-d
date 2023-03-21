@@ -1,7 +1,7 @@
 module windows.win32.graphics.direct3d9;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, CHAR, HANDLE, HRESULT, HWND, LARGE_INTEGER, LUID, POINT, PWSTR, RECT;
+import windows.win32.foundation : BOOL, CHAR, HANDLE, HRESULT, HWND, LUID, POINT, PWSTR, RECT;
 import windows.win32.graphics.direct3d_ : D3DMATRIX, D3DVECTOR;
 import windows.win32.graphics.gdi : HDC, HMONITOR, PALETTEENTRY, RGNDATA;
 import windows.win32.system.com_ : IUnknown;
@@ -340,7 +340,7 @@ struct D3DADAPTER_IDENTIFIER9
     CHAR[512] Driver;
     CHAR[512] Description;
     CHAR[32] DeviceName;
-    LARGE_INTEGER DriverVersion;
+    long DriverVersion;
     uint VendorId;
     uint DeviceId;
     uint SubSysId;
@@ -359,8 +359,8 @@ struct D3DPRESENTSTATS
     uint PresentCount;
     uint PresentRefreshCount;
     uint SyncRefreshCount;
-    LARGE_INTEGER SyncQPCTime;
-    LARGE_INTEGER SyncGPUTime;
+    long SyncQPCTime;
+    long SyncGPUTime;
 }
 struct D3DAUTHENTICATEDCHANNEL_QUERYOUTPUTID_OUTPUT
 {
@@ -1400,7 +1400,7 @@ struct D3DTRIPATCH_INFO
     CHAR[512] Driver;
     CHAR[512] Description;
     CHAR[32] DeviceName;
-    LARGE_INTEGER DriverVersion;
+    long DriverVersion;
     uint VendorId;
     uint DeviceId;
     uint SubSysId;
@@ -1543,8 +1543,8 @@ struct D3DCOMPOSERECTDESTINATION
     uint PresentCount;
     uint PresentRefreshCount;
     uint SyncRefreshCount;
-    LARGE_INTEGER SyncQPCTime;
-    LARGE_INTEGER SyncGPUTime;
+    long SyncQPCTime;
+    long SyncGPUTime;
 }
 +/
 alias D3DSCANLINEORDERING = int;

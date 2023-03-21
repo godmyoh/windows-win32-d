@@ -45,6 +45,8 @@ enum : int
     HcsEventProcessExited                     = 0x00010000,
     HcsEventOperationCallback                 = 0x01000000,
     HcsEventServiceDisconnect                 = 0x02000000,
+    HcsEventGroupVmLifecycle                  = 0x80000002,
+    HcsEventGroupOperationInfo                = 0xc0000001,
 }
 
 struct HCS_EVENT
@@ -53,14 +55,30 @@ struct HCS_EVENT
     const(wchar)* EventData;
     HCS_OPERATION Operation;
 }
-alias HCS_EVENT_OPTIONS = uint;
-enum : uint
+alias HCS_EVENT_OPTIONS = int;
+enum : int
 {
     HcsEventOptionNone                     = 0x00000000,
     HcsEventOptionEnableOperationCallbacks = 0x00000001,
+    HcsEventOptionEnableVmLifecycle        = 0x00000002,
+}
+
+alias HCS_OPERATION_OPTIONS = int;
+enum : int
+{
+    HcsOperationOptionNone           = 0x00000000,
+    HcsOperationOptionProgressUpdate = 0x00000001,
 }
 
 alias HCS_EVENT_CALLBACK = void function(HCS_EVENT*, void*);
+alias HCS_RESOURCE_TYPE = int;
+enum : int
+{
+    HcsResourceTypeNone = 0x00000000,
+    HcsResourceTypeFile = 0x00000001,
+    HcsResourceTypeJob  = 0x00000002,
+}
+
 alias HCS_NOTIFICATION_FLAGS = int;
 enum : int
 {
@@ -89,6 +107,7 @@ enum : int
     HcsNotificationSystemGuestConnectionClosed       = 0x0000000e,
     HcsNotificationSystemOperationCompletion         = 0x0000000f,
     HcsNotificationSystemPassThru                    = 0x00000010,
+    HcsNotificationOperationProgressUpdate           = 0x00000100,
     HcsNotificationProcessExited                     = 0x00010000,
     HcsNotificationServiceDisconnect                 = 0x01000000,
     HcsNotificationFlagsReserved                     = 0xf0000000,
@@ -130,7 +149,7 @@ HCS_OPERATION_TYPE HcsGetOperationType(HCS_OPERATION);
 ulong HcsGetOperationId(HCS_OPERATION);
 HRESULT HcsGetOperationResult(HCS_OPERATION, PWSTR*);
 HRESULT HcsGetOperationResultAndProcessInfo(HCS_OPERATION, HCS_PROCESS_INFORMATION*, PWSTR*);
-HRESULT HcsGetProcessorCompatibilityFromSavedState(const(wchar)*, PWSTR*);
+HRESULT HcsGetProcessorCompatibilityFromSavedState(const(wchar)*, const(wchar)**);
 HRESULT HcsWaitForOperationResult(HCS_OPERATION, uint, PWSTR*);
 HRESULT HcsWaitForOperationResultAndProcessInfo(HCS_OPERATION, uint, HCS_PROCESS_INFORMATION*, PWSTR*);
 HRESULT HcsSetOperationCallback(HCS_OPERATION, const(void)*, HCS_OPERATION_COMPLETION);

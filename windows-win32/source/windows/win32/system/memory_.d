@@ -1,10 +1,22 @@
 module windows.win32.system.memory_;
 
-import windows.win32.foundation : BOOL, BOOLEAN, FARPROC, HANDLE, PSTR, PWSTR;
+import windows.win32.foundation : BOOL, BOOLEAN, FARPROC, HANDLE, HGLOBAL, HLOCAL, PSTR, PWSTR;
 import windows.win32.security_ : SECURITY_ATTRIBUTES;
 
 version (Windows):
 extern (Windows):
+
+alias SECTION_FLAGS = uint;
+enum : uint
+{
+    SECTION_ALL_ACCESS           = 0x000f001f,
+    SECTION_QUERY                = 0x00000001,
+    SECTION_MAP_WRITE            = 0x00000002,
+    SECTION_MAP_READ             = 0x00000004,
+    SECTION_MAP_EXECUTE          = 0x00000008,
+    SECTION_EXTEND_SIZE          = 0x00000010,
+    SECTION_MAP_EXECUTE_EXPLICIT = 0x00000020,
+}
 
 alias FILE_MAP = uint;
 enum : uint
@@ -168,11 +180,11 @@ BOOL VirtualProtectEx(HANDLE, void*, ulong, PAGE_PROTECTION_FLAGS, PAGE_PROTECTI
 ulong VirtualQueryEx(HANDLE, const(void)*, MEMORY_BASIC_INFORMATION*, ulong);
 HANDLE CreateFileMappingW(HANDLE, SECURITY_ATTRIBUTES*, PAGE_PROTECTION_FLAGS, uint, uint, const(wchar)*);
 HANDLE OpenFileMappingW(uint, BOOL, const(wchar)*);
-void* MapViewOfFile(HANDLE, FILE_MAP, uint, uint, ulong);
-void* MapViewOfFileEx(HANDLE, FILE_MAP, uint, uint, ulong, void*);
+MEMORYMAPPEDVIEW_HANDLE MapViewOfFile(HANDLE, FILE_MAP, uint, uint, ulong);
+MEMORYMAPPEDVIEW_HANDLE MapViewOfFileEx(HANDLE, FILE_MAP, uint, uint, ulong, void*);
 BOOL VirtualFreeEx(HANDLE, void*, ulong, VIRTUAL_FREE_TYPE);
 BOOL FlushViewOfFile(const(void)*, ulong);
-BOOL UnmapViewOfFile(const(void)*);
+BOOL UnmapViewOfFile(const(MEMORYMAPPEDVIEW_HANDLE));
 ulong GetLargePageMinimum();
 BOOL GetProcessWorkingSetSizeEx(HANDLE, ulong*, ulong*, uint*);
 BOOL SetProcessWorkingSetSizeEx(HANDLE, ulong, ulong, uint);
@@ -187,8 +199,8 @@ BOOL SetSystemFileCacheSize(ulong, ulong, uint);
 HANDLE CreateFileMappingNumaW(HANDLE, SECURITY_ATTRIBUTES*, PAGE_PROTECTION_FLAGS, uint, uint, const(wchar)*, uint);
 BOOL PrefetchVirtualMemory(HANDLE, ulong, WIN32_MEMORY_RANGE_ENTRY*, uint);
 HANDLE CreateFileMappingFromApp(HANDLE, SECURITY_ATTRIBUTES*, PAGE_PROTECTION_FLAGS, ulong, const(wchar)*);
-void* MapViewOfFileFromApp(HANDLE, FILE_MAP, ulong, ulong);
-BOOL UnmapViewOfFileEx(void*, UNMAP_VIEW_OF_FILE_FLAGS);
+MEMORYMAPPEDVIEW_HANDLE MapViewOfFileFromApp(HANDLE, FILE_MAP, ulong, ulong);
+BOOL UnmapViewOfFileEx(MEMORYMAPPEDVIEW_HANDLE, UNMAP_VIEW_OF_FILE_FLAGS);
 BOOL AllocateUserPhysicalPages(HANDLE, ulong*, ulong*);
 BOOL FreeUserPhysicalPages(HANDLE, ulong*, ulong*);
 BOOL MapUserPhysicalPages(void*, ulong, ulong*);
@@ -206,13 +218,13 @@ void* VirtualAllocFromApp(void*, ulong, VIRTUAL_ALLOCATION_TYPE, uint);
 BOOL VirtualProtectFromApp(void*, ulong, uint, uint*);
 HANDLE OpenFileMappingFromApp(uint, BOOL, const(wchar)*);
 BOOL QueryVirtualMemoryInformation(HANDLE, const(void)*, WIN32_MEMORY_INFORMATION_CLASS, void*, ulong, ulong*);
-void* MapViewOfFileNuma2(HANDLE, HANDLE, ulong, void*, ulong, uint, uint, uint);
-BOOL UnmapViewOfFile2(HANDLE, void*, UNMAP_VIEW_OF_FILE_FLAGS);
+MEMORYMAPPEDVIEW_HANDLE MapViewOfFileNuma2(HANDLE, HANDLE, ulong, void*, ulong, uint, uint, uint);
+BOOL UnmapViewOfFile2(HANDLE, MEMORYMAPPEDVIEW_HANDLE, UNMAP_VIEW_OF_FILE_FLAGS);
 BOOL VirtualUnlockEx(HANDLE, void*, ulong);
 void* VirtualAlloc2(HANDLE, void*, ulong, VIRTUAL_ALLOCATION_TYPE, uint, MEM_EXTENDED_PARAMETER*, uint);
-void* MapViewOfFile3(HANDLE, HANDLE, void*, ulong, ulong, VIRTUAL_ALLOCATION_TYPE, uint, MEM_EXTENDED_PARAMETER*, uint);
+MEMORYMAPPEDVIEW_HANDLE MapViewOfFile3(HANDLE, HANDLE, void*, ulong, ulong, VIRTUAL_ALLOCATION_TYPE, uint, MEM_EXTENDED_PARAMETER*, uint);
 void* VirtualAlloc2FromApp(HANDLE, void*, ulong, VIRTUAL_ALLOCATION_TYPE, uint, MEM_EXTENDED_PARAMETER*, uint);
-void* MapViewOfFile3FromApp(HANDLE, HANDLE, void*, ulong, ulong, VIRTUAL_ALLOCATION_TYPE, uint, MEM_EXTENDED_PARAMETER*, uint);
+MEMORYMAPPEDVIEW_HANDLE MapViewOfFile3FromApp(HANDLE, HANDLE, void*, ulong, ulong, VIRTUAL_ALLOCATION_TYPE, uint, MEM_EXTENDED_PARAMETER*, uint);
 HANDLE CreateFileMapping2(HANDLE, SECURITY_ATTRIBUTES*, uint, PAGE_PROTECTION_FLAGS, uint, ulong, const(wchar)*, MEM_EXTENDED_PARAMETER*, uint);
 BOOL AllocateUserPhysicalPages2(HANDLE, ulong*, ulong*, MEM_EXTENDED_PARAMETER*, uint);
 HANDLE OpenDedicatedMemoryPartition(HANDLE, ulong, uint, BOOL);
@@ -221,26 +233,26 @@ ulong RtlCompareMemory(const(void)*, const(void)*, ulong);
 uint RtlCrc32(const(void)*, ulong, uint);
 ulong RtlCrc64(const(void)*, ulong, ulong);
 BOOLEAN RtlIsZeroMemory(void*, ulong);
-long GlobalAlloc(GLOBAL_ALLOC_FLAGS, ulong);
-long GlobalReAlloc(long, ulong, uint);
-ulong GlobalSize(long);
-BOOL GlobalUnlock(long);
-void* GlobalLock(long);
-uint GlobalFlags(long);
-long GlobalHandle(const(void)*);
-long GlobalFree(long);
-long LocalAlloc(LOCAL_ALLOC_FLAGS, ulong);
-long LocalReAlloc(long, ulong, uint);
-void* LocalLock(long);
-long LocalHandle(const(void)*);
-BOOL LocalUnlock(long);
-ulong LocalSize(long);
-uint LocalFlags(long);
-long LocalFree(long);
+HGLOBAL GlobalAlloc(GLOBAL_ALLOC_FLAGS, ulong);
+HGLOBAL GlobalReAlloc(HGLOBAL, ulong, uint);
+ulong GlobalSize(HGLOBAL);
+BOOL GlobalUnlock(HGLOBAL);
+void* GlobalLock(HGLOBAL);
+uint GlobalFlags(HGLOBAL);
+HGLOBAL GlobalHandle(const(void)*);
+HGLOBAL GlobalFree(HGLOBAL);
+HLOCAL LocalAlloc(LOCAL_ALLOC_FLAGS, ulong);
+HLOCAL LocalReAlloc(HLOCAL, ulong, uint);
+void* LocalLock(HLOCAL);
+HLOCAL LocalHandle(const(void)*);
+BOOL LocalUnlock(HLOCAL);
+ulong LocalSize(HLOCAL);
+uint LocalFlags(HLOCAL);
+HLOCAL LocalFree(HLOCAL);
 HANDLE CreateFileMappingA(HANDLE, SECURITY_ATTRIBUTES*, PAGE_PROTECTION_FLAGS, uint, uint, const(char)*);
 HANDLE CreateFileMappingNumaA(HANDLE, SECURITY_ATTRIBUTES*, PAGE_PROTECTION_FLAGS, uint, uint, const(char)*, uint);
 HANDLE OpenFileMappingA(uint, BOOL, const(char)*);
-void* MapViewOfFileExNuma(HANDLE, FILE_MAP, uint, uint, ulong, void*, uint);
+MEMORYMAPPEDVIEW_HANDLE MapViewOfFileExNuma(HANDLE, FILE_MAP, uint, uint, ulong, void*, uint);
 BOOL IsBadReadPtr(const(void)*, ulong);
 BOOL IsBadWritePtr(void*, ulong);
 BOOL IsBadCodePtr(FARPROC);
@@ -255,6 +267,7 @@ enum FILE_CACHE_MIN_HARD_ENABLE = 0x00000004;
 enum FILE_CACHE_MIN_HARD_DISABLE = 0x00000008;
 enum MEHC_PATROL_SCRUBBER_PRESENT = 0x00000001;
 alias HeapHandle = void*;
+alias MEMORYMAPPEDVIEW_HANDLE = long;
 struct PROCESS_HEAP_ENTRY
 {
     void* lpData;
@@ -438,6 +451,42 @@ struct MEM_EXTENDED_PARAMETER
         HANDLE Handle;
         uint ULong;
     }
+}
+alias MEM_DEDICATED_ATTRIBUTE_TYPE = int;
+enum : int
+{
+    MemDedicatedAttributeReadBandwidth  = 0x00000000,
+    MemDedicatedAttributeReadLatency    = 0x00000001,
+    MemDedicatedAttributeWriteBandwidth = 0x00000002,
+    MemDedicatedAttributeWriteLatency   = 0x00000003,
+    MemDedicatedAttributeMax            = 0x00000004,
+}
+
+alias MEM_SECTION_EXTENDED_PARAMETER_TYPE = int;
+enum : int
+{
+    MemSectionExtendedParameterInvalidType       = 0x00000000,
+    MemSectionExtendedParameterUserPhysicalFlags = 0x00000001,
+    MemSectionExtendedParameterNumaNode          = 0x00000002,
+    MemSectionExtendedParameterSigningLevel      = 0x00000003,
+    MemSectionExtendedParameterMax               = 0x00000004,
+}
+
+struct MEMORY_PARTITION_DEDICATED_MEMORY_ATTRIBUTE
+{
+    MEM_DEDICATED_ATTRIBUTE_TYPE Type;
+    uint Reserved;
+    ulong Value;
+}
+struct MEMORY_PARTITION_DEDICATED_MEMORY_INFORMATION
+{
+    uint NextEntryOffset;
+    uint SizeOfInformation;
+    uint Flags;
+    uint AttributesOffset;
+    uint AttributeCount;
+    uint Reserved;
+    ulong TypeId;
 }
 alias HEAP_INFORMATION_CLASS = int;
 enum : int

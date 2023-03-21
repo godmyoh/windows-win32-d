@@ -1,6 +1,6 @@
 module windows.win32.devices.devicequery;
 
-import windows.win32.devices.properties : DEVPROPCOMPKEY, DEVPROPERTY, DEVPROPKEY, DEVPROPSTORE;
+import windows.win32.devices.properties : DEVPROPCOMPKEY, DEVPROPERTY, DEVPROPKEY, DEVPROPSTORE, DEVPROPTYPE;
 import windows.win32.foundation : HRESULT, PWSTR;
 
 version (Windows):
@@ -122,7 +122,7 @@ struct DEV_QUERY_RESULT_ACTION_DATA
 struct DEV_QUERY_PARAMETER
 {
     DEVPROPKEY Key;
-    uint Type;
+    DEVPROPTYPE Type;
     uint BufferSize;
     void* Buffer;
 }

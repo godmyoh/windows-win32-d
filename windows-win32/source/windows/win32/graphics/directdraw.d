@@ -1,7 +1,7 @@
 module windows.win32.graphics.directdraw;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, CHAR, HANDLE, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, PSTR, PWSTR, RECT, RECTL, SIZE;
+import windows.win32.foundation : BOOL, CHAR, HANDLE, HINSTANCE, HRESULT, HWND, PSTR, PWSTR, RECT, RECTL, SIZE;
 import windows.win32.graphics.gdi : HDC, HMONITOR, HPALETTE, PALETTEENTRY, RGNDATA;
 import windows.win32.system.com_ : IUnknown;
 
@@ -1428,7 +1428,7 @@ struct DDDEVICEIDENTIFIER
 {
     CHAR[512] szDriver;
     CHAR[512] szDescription;
-    LARGE_INTEGER liDriverVersion;
+    long liDriverVersion;
     uint dwVendorId;
     uint dwDeviceId;
     uint dwSubSysId;
@@ -1439,7 +1439,7 @@ struct DDDEVICEIDENTIFIER2
 {
     CHAR[512] szDriver;
     CHAR[512] szDescription;
-    LARGE_INTEGER liDriverVersion;
+    long liDriverVersion;
     uint dwVendorId;
     uint dwDeviceId;
     uint dwSubSysId;
@@ -2008,7 +2008,7 @@ struct DDVIDEOPORTSTATUS
 }
 struct DDVIDEOPORTNOTIFY
 {
-    LARGE_INTEGER ApproximateTimeStamp;
+    long ApproximateTimeStamp;
     int lField;
     uint dwSurfaceIndex;
     int lDone;
@@ -2112,7 +2112,7 @@ struct VMEMHEAP
     HEAPALIGNMENT Alignment;
     DDSCAPSEX ddsCapsEx;
     DDSCAPSEX ddsCapsExAlt;
-    LARGE_INTEGER liPhysAGPBase;
+    long liPhysAGPBase;
     HANDLE hdevAGP;
     void* pvPhysRsrv;
     ubyte* pAgpCommitMask;

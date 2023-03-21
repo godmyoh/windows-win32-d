@@ -262,6 +262,7 @@ enum : uint
     IAS_ATTRIBUTE_SERVER_IPv6_ADDRESS                    = 0x00001fea,
     IAS_ATTRIBUTE_RADIUS_USERNAME_ENCODING_ASCII         = 0x00001feb,
     MS_ATTRIBUTE_RAS_ROUTING_DOMAIN_ID                   = 0x00001fec,
+    MS_ATTRIBUTE_AZURE_POLICY_ID                         = 0x00001fed,
     IAS_ATTRIBUTE_CERTIFICATE_THUMBPRINT                 = 0x0000203a,
     RAS_ATTRIBUTE_ENCRYPTION_TYPE                        = 0xffffffa6,
     RAS_ATTRIBUTE_ENCRYPTION_POLICY                      = 0xffffffa7,

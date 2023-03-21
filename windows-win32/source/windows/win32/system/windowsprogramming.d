@@ -1,10 +1,10 @@
 module windows.win32.system.windowsprogramming;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, LPARAM, LRESULT, NTSTATUS, PSTR, PWSTR, RECT, UNICODE_STRING, VARIANT_BOOL, WIN32_ERROR, WPARAM;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HGLOBAL, HINSTANCE, HLOCAL, HRESULT, HWND, LPARAM, LRESULT, NTSTATUS, PSTR, PWSTR, RECT, UNICODE_STRING, VARIANT_BOOL, WIN32_ERROR, WPARAM;
 import windows.win32.graphics.gdi : HDC, RGNDATA;
 import windows.win32.security_ : SECURITY_ATTRIBUTES;
-import windows.win32.system.com_ : IUnknown, SAFEARRAY;
+import windows.win32.system.com_ : IStream, IUnknown, SAFEARRAY;
 import windows.win32.system.kernel : LIST_ENTRY, STRING;
 import windows.win32.system.ole : OLE_HANDLE;
 import windows.win32.system.registry : HKEY;
@@ -48,11 +48,11 @@ HRESULT QueryAuxiliaryCounterFrequency(ulong*);
 HRESULT ConvertAuxiliaryCounterToPerformanceCounter(ulong, ulong*, ulong*);
 HRESULT ConvertPerformanceCounterToAuxiliaryCounter(ulong, ulong*, ulong*);
 ulong GlobalCompact(uint);
-void GlobalFix(long);
-void GlobalUnfix(long);
-void* GlobalWire(long);
-BOOL GlobalUnWire(long);
-ulong LocalShrink(long, uint);
+void GlobalFix(HGLOBAL);
+void GlobalUnfix(HGLOBAL);
+void* GlobalWire(HGLOBAL);
+BOOL GlobalUnWire(HGLOBAL);
+ulong LocalShrink(HLOCAL, uint);
 ulong LocalCompact(uint);
 BOOL SetEnvironmentStringsA(PSTR);
 uint SetHandleCount(uint);
@@ -97,7 +97,7 @@ uint GetProfileSectionW(const(wchar)*, PWSTR, uint);
 BOOL WriteProfileSectionA(const(char)*, const(char)*);
 BOOL WriteProfileSectionW(const(wchar)*, const(wchar)*);
 uint GetPrivateProfileIntA(const(char)*, const(char)*, int, const(char)*);
-uint GetPrivateProfileIntW(const(wchar)*, const(wchar)*, int, const(wchar)*);
+int GetPrivateProfileIntW(const(wchar)*, const(wchar)*, int, const(wchar)*);
 uint GetPrivateProfileStringA(const(char)*, const(char)*, const(char)*, PSTR, uint, const(char)*);
 uint GetPrivateProfileStringW(const(wchar)*, const(wchar)*, const(wchar)*, PWSTR, uint, const(wchar)*);
 BOOL WritePrivateProfileStringA(const(char)*, const(char)*, const(char)*, const(char)*);
@@ -135,14 +135,14 @@ NTSTATUS NtNotifyChangeMultipleKeys(HANDLE, uint, OBJECT_ATTRIBUTES*, HANDLE, PI
 NTSTATUS NtQueryMultipleValueKey(HANDLE, KEY_VALUE_ENTRY*, uint, void*, uint*, uint*);
 NTSTATUS NtSetInformationKey(HANDLE, KEY_SET_INFORMATION_CLASS, void*, uint);
 NTSTATUS NtDeviceIoControlFile(HANDLE, HANDLE, PIO_APC_ROUTINE, void*, IO_STATUS_BLOCK*, uint, void*, uint, void*, uint);
-NTSTATUS NtWaitForSingleObject(HANDLE, BOOLEAN, LARGE_INTEGER*);
+NTSTATUS NtWaitForSingleObject(HANDLE, BOOLEAN, long*);
 BOOLEAN RtlIsNameLegalDOS8Dot3(UNICODE_STRING*, STRING*, BOOLEAN*);
 NTSTATUS NtQueryObject(HANDLE, OBJECT_INFORMATION_CLASS, void*, uint, uint*);
 NTSTATUS NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS, void*, uint, uint*);
-NTSTATUS NtQuerySystemTime(LARGE_INTEGER*);
+NTSTATUS NtQuerySystemTime(long*);
 NTSTATUS NtQueryTimerResolution(uint*, uint*, uint*);
-NTSTATUS RtlLocalTimeToSystemTime(LARGE_INTEGER*, LARGE_INTEGER*);
-BOOLEAN RtlTimeToSecondsSince1970(LARGE_INTEGER*, uint*);
+NTSTATUS RtlLocalTimeToSystemTime(long*, long*);
+BOOLEAN RtlTimeToSecondsSince1970(long*, uint*);
 void RtlFreeAnsiString(STRING*);
 void RtlFreeUnicodeString(UNICODE_STRING*);
 void RtlFreeOemString(STRING*);
@@ -270,6 +270,8 @@ enum WLDP_ISWCOSPRODUCTIONCONFIGURATION_FN = "WldpIsWcosProductionConfiguration"
 enum WLDP_RESETWCOSPRODUCTIONCONFIGURATION_FN = "WldpResetWcosProductionConfiguration";
 enum WLDP_ISPRODUCTIONCONFIGURATION_FN = "WldpIsProductionConfiguration";
 enum WLDP_RESETPRODUCTIONCONFIGURATION_FN = "WldpResetProductionConfiguration";
+enum WLDP_CANEXECUTEBUFFER_FN = "WldpCanExecuteBuffer";
+enum WLDP_CANEXECUTEFILE_FN = "WldpCanExecuteFile";
 enum WLDP_LOCKDOWN_UNDEFINED = 0x00000000;
 enum WLDP_LOCKDOWN_DEFINED_FLAG = 0x80000000;
 enum WLDP_LOCKDOWN_CONFIG_CI_FLAG = 0x00000001;
@@ -378,8 +380,61 @@ enum COPY_FILE_DIRECTORY = 0x00000080;
 enum COPY_FILE_SKIP_ALTERNATE_STREAMS = 0x00008000;
 enum COPY_FILE_DISABLE_PRE_ALLOCATION = 0x04000000;
 enum COPY_FILE_ENABLE_LOW_FREE_SPACE_MODE = 0x08000000;
+enum COPY_FILE_ENABLE_SPARSE_COPY = 0x20000000;
 enum FAIL_FAST_GENERATE_EXCEPTION_ADDRESS = 0x00000001;
 enum FAIL_FAST_NO_HARD_ERROR_DLG = 0x00000002;
+enum SP_SERIALCOMM = 0x00000001;
+enum PST_UNSPECIFIED = 0x00000000;
+enum PST_RS232 = 0x00000001;
+enum PST_PARALLELPORT = 0x00000002;
+enum PST_RS422 = 0x00000003;
+enum PST_RS423 = 0x00000004;
+enum PST_RS449 = 0x00000005;
+enum PST_MODEM = 0x00000006;
+enum PST_FAX = 0x00000021;
+enum PST_SCANNER = 0x00000022;
+enum PST_NETWORK_BRIDGE = 0x00000100;
+enum PST_LAT = 0x00000101;
+enum PST_TCPIP_TELNET = 0x00000102;
+enum PST_X25 = 0x00000103;
+enum PCF_DTRDSR = 0x00000001;
+enum PCF_RTSCTS = 0x00000002;
+enum PCF_RLSD = 0x00000004;
+enum PCF_PARITY_CHECK = 0x00000008;
+enum PCF_XONXOFF = 0x00000010;
+enum PCF_SETXCHAR = 0x00000020;
+enum PCF_TOTALTIMEOUTS = 0x00000040;
+enum PCF_INTTIMEOUTS = 0x00000080;
+enum PCF_SPECIALCHARS = 0x00000100;
+enum PCF_16BITMODE = 0x00000200;
+enum SP_PARITY = 0x00000001;
+enum SP_BAUD = 0x00000002;
+enum SP_DATABITS = 0x00000004;
+enum SP_STOPBITS = 0x00000008;
+enum SP_HANDSHAKING = 0x00000010;
+enum SP_PARITY_CHECK = 0x00000020;
+enum SP_RLSD = 0x00000040;
+enum BAUD_075 = 0x00000001;
+enum BAUD_110 = 0x00000002;
+enum BAUD_134_5 = 0x00000004;
+enum BAUD_150 = 0x00000008;
+enum BAUD_300 = 0x00000010;
+enum BAUD_600 = 0x00000020;
+enum BAUD_1200 = 0x00000040;
+enum BAUD_1800 = 0x00000080;
+enum BAUD_2400 = 0x00000100;
+enum BAUD_4800 = 0x00000200;
+enum BAUD_7200 = 0x00000400;
+enum BAUD_9600 = 0x00000800;
+enum BAUD_14400 = 0x00001000;
+enum BAUD_19200 = 0x00002000;
+enum BAUD_38400 = 0x00004000;
+enum BAUD_56K = 0x00008000;
+enum BAUD_128K = 0x00010000;
+enum BAUD_115200 = 0x00020000;
+enum BAUD_57600 = 0x00040000;
+enum BAUD_USER = 0x10000000;
+enum COMMPROP_INITIALIZED = 0xe73cf52e;
 enum DTR_CONTROL_DISABLE = 0x00000000;
 enum DTR_CONTROL_ENABLE = 0x00000001;
 enum DTR_CONTROL_HANDSHAKE = 0x00000002;
@@ -412,11 +467,6 @@ enum DRIVE_FIXED = 0x00000003;
 enum DRIVE_REMOTE = 0x00000004;
 enum DRIVE_CDROM = 0x00000005;
 enum DRIVE_RAMDISK = 0x00000006;
-enum FILE_TYPE_UNKNOWN = 0x00000000;
-enum FILE_TYPE_DISK = 0x00000001;
-enum FILE_TYPE_CHAR = 0x00000002;
-enum FILE_TYPE_PIPE = 0x00000003;
-enum FILE_TYPE_REMOTE = 0x00008000;
 enum IGNORE = 0x00000000;
 enum INFINITE = 0xffffffff;
 enum CBR_110 = 0x0000006e;
@@ -562,6 +612,8 @@ enum COPYFILE2_MESSAGE_COPY_OFFLOAD = 0x00000001;
 enum COPYFILE2_IO_CYCLE_SIZE_MIN = 0x00001000;
 enum COPYFILE2_IO_CYCLE_SIZE_MAX = 0x40000000;
 enum COPYFILE2_IO_RATE_MIN = 0x00000200;
+enum COPY_FILE2_V2_DONT_COPY_JUNCTIONS = 0x00000001;
+enum COPY_FILE2_V2_VALID_FLAGS = 0x00000001;
 enum EVENTLOG_FULL_INFO = 0x00000000;
 enum OPERATION_API_VERSION = 0x00000001;
 enum MAX_COMPUTERNAME_LENGTH = 0x0000000f;
@@ -628,6 +680,8 @@ enum RPI_FLAG_SMB2_SHARECAP_DFS = 0x00000008;
 enum RPI_FLAG_SMB2_SHARECAP_CONTINUOUS_AVAILABILITY = 0x00000010;
 enum RPI_FLAG_SMB2_SHARECAP_SCALEOUT = 0x00000020;
 enum RPI_FLAG_SMB2_SHARECAP_CLUSTER = 0x00000040;
+enum RPI_SMB2_SHAREFLAG_ENCRYPT_DATA = 0x00000001;
+enum RPI_SMB2_SHAREFLAG_COMPRESS_DATA = 0x00000002;
 enum RPI_SMB2_FLAG_SERVERCAP_DFS = 0x00000001;
 enum RPI_SMB2_FLAG_SERVERCAP_LEASING = 0x00000002;
 enum RPI_SMB2_FLAG_SERVERCAP_LARGEMTU = 0x00000004;
@@ -832,6 +886,15 @@ enum DELETE_BROWSING_HISTORY_FORMDATA = 0x00000008;
 enum DELETE_BROWSING_HISTORY_PASSWORDS = 0x00000010;
 enum DELETE_BROWSING_HISTORY_PRESERVEFAVORITES = 0x00000020;
 enum DELETE_BROWSING_HISTORY_DOWNLOADHISTORY = 0x00000040;
+enum WLDP_HOST_CMD = GUID(0x5baea1d6, 0x6f1c, 0x488e, [0x84, 0x90, 0x34, 0x7f, 0xa5, 0xc5, 0x6, 0x7f]);
+enum WLDP_HOST_POWERSHELL = GUID(0x8e9aaa7c, 0x198b, 0x4879, [0xae, 0x41, 0xa5, 0xd, 0x47, 0xad, 0x64, 0x58]);
+enum WLDP_HOST_PYTHON = GUID(0xbfd557ef, 0x2448, 0x42ec, [0x81, 0xb, 0xd, 0x9f, 0x9, 0x35, 0x2d, 0x4a]);
+enum WLDP_HOST_WINDOWS_SCRIPT_HOST = GUID(0xd30b84c5, 0x29ce, 0x4ff3, [0x86, 0xec, 0xa3, 0x0, 0x7, 0xa8, 0x2e, 0x49]);
+enum WLDP_HOST_JAVASCRIPT = GUID(0x5629f0d5, 0x1cca, 0x4fed, [0xa1, 0xa3, 0x36, 0xa8, 0xc1, 0x8d, 0x74, 0xc0]);
+enum WLDP_HOST_HTML = GUID(0xb35a71b6, 0xfe56, 0x48d6, [0x95, 0x43, 0x2d, 0xff, 0xe, 0xcd, 0xed, 0x66]);
+enum WLDP_HOST_XML = GUID(0x5594be58, 0xc6bf, 0x4295, [0x82, 0xf4, 0xd4, 0x94, 0xd2, 0xe, 0x3a, 0x36]);
+enum WLDP_HOST_MSI = GUID(0x624eb611, 0x6e7e, 0x4eec, [0x9b, 0xfe, 0xf0, 0xec, 0xdb, 0xfc, 0xf3, 0x90]);
+enum WLDP_HOST_OTHER = GUID(0x626cbec3, 0xe1fa, 0x4227, [0x98, 0x0, 0xed, 0x21, 0x2, 0x74, 0xcf, 0x7c]);
 struct _D3DHAL_CALLBACKS
 {
 }
@@ -900,6 +963,22 @@ struct CUSTOM_SYSTEM_EVENT_TRIGGER_CONFIG
     uint Size;
     const(wchar)* TriggerId;
 }
+alias FILE_WRITE_FLAGS = int;
+enum : int
+{
+    FILE_WRITE_FLAGS_NONE          = 0x00000000,
+    FILE_WRITE_FLAGS_WRITE_THROUGH = 0x00000001,
+}
+
+alias FILE_FLUSH_MODE = int;
+enum : int
+{
+    FILE_FLUSH_DEFAULT      = 0x00000000,
+    FILE_FLUSH_DATA         = 0x00000001,
+    FILE_FLUSH_MIN_METADATA = 0x00000002,
+    FILE_FLUSH_NO_SYNC      = 0x00000003,
+}
+
 alias PFIBER_CALLOUT_ROUTINE = void* function(void*);
 struct JIT_DEBUG_INFO
 {
@@ -1002,10 +1081,10 @@ struct IO_STATUS_BLOCK
 alias PIO_APC_ROUTINE = void function(void*, IO_STATUS_BLOCK*, uint);
 struct SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION
 {
-    LARGE_INTEGER IdleTime;
-    LARGE_INTEGER KernelTime;
-    LARGE_INTEGER UserTime;
-    LARGE_INTEGER[2] Reserved1;
+    long IdleTime;
+    long KernelTime;
+    long UserTime;
+    long[2] Reserved1;
     uint Reserved2;
 }
 struct SYSTEM_PROCESS_INFORMATION
@@ -1032,11 +1111,11 @@ struct SYSTEM_PROCESS_INFORMATION
     ulong PagefileUsage;
     ulong PeakPagefileUsage;
     ulong PrivatePageCount;
-    LARGE_INTEGER[6] Reserved7;
+    long[6] Reserved7;
 }
 struct SYSTEM_THREAD_INFORMATION
 {
-    LARGE_INTEGER[3] Reserved1;
+    long[3] Reserved1;
     uint Reserved2;
     void* StartAddress;
     CLIENT_ID ClientId;
@@ -1275,6 +1354,11 @@ interface IClipServiceNotificationHelper : IUnknown
 {
     HRESULT ShowToast(BSTR, BSTR, BSTR, BSTR, BSTR);
 }
+enum IID_IFClipNotificationHelper = GUID(0x3d5e3d21, 0xbd41, 0x4c2a, [0xa6, 0x69, 0xb1, 0x7c, 0xe8, 0x7f, 0xb5, 0xb]);
+interface IFClipNotificationHelper : IUnknown
+{
+    HRESULT ShowSystemDialog(BSTR, BSTR);
+}
 alias FEATURE_CHANGE_TIME = int;
 enum : int
 {
@@ -1392,7 +1476,7 @@ struct STRTABLEW
     uint cEntries;
     STRENTRYW* pse;
 }
-alias REGINSTALLA = HRESULT function(HINSTANCE, const(char)*, STRTABLEA*);
+alias REGINSTALLA = HRESULT function(HINSTANCE, const(char)*, const(STRTABLEA)*);
 struct CABINFOA
 {
     PSTR pszCab;
@@ -1651,6 +1735,21 @@ struct WLDP_DEVICE_SECURITY_INFORMATION
     uint ManufacturerIDLength;
     PWSTR ManufacturerID;
 }
+alias WLDP_EXECUTION_POLICY = int;
+enum : int
+{
+    WLDP_EXECUTION_POLICY_BLOCKED         = 0x00000000,
+    WLDP_EXECUTION_POLICY_ALLOWED         = 0x00000001,
+    WLDP_EXECUTION_POLICY_REQUIRE_SANDBOX = 0x00000002,
+}
+
+alias WLDP_EXECUTION_EVALUATION_OPTIONS = int;
+enum : int
+{
+    WLDP_EXECUTION_EVALUATION_OPTION_NONE                           = 0x00000000,
+    WLDP_EXECUTION_EVALUATION_OPTION_EXECUTE_IN_INTERACTIVE_SESSION = 0x00000001,
+}
+
 alias PWLDP_SETDYNAMICCODETRUST_API = HRESULT function(HANDLE);
 alias PWLDP_ISDYNAMICCODEPOLICYENABLED_API = HRESULT function(BOOL*);
 alias PWLDP_QUERYDYNAMICODETRUST_API = HRESULT function(HANDLE, void*, uint);
@@ -1665,6 +1764,9 @@ alias PWLDP_ISWCOSPRODUCTIONCONFIGURATION_API = HRESULT function(BOOL*);
 alias PWLDP_RESETWCOSPRODUCTIONCONFIGURATION_API = HRESULT function();
 alias PWLDP_ISPRODUCTIONCONFIGURATION_API = HRESULT function(BOOL*);
 alias PWLDP_RESETPRODUCTIONCONFIGURATION_API = HRESULT function();
+alias PWLDP_CANEXECUTEFILE_API = HRESULT function(const(GUID)*, WLDP_EXECUTION_EVALUATION_OPTIONS, HANDLE, const(wchar)*, WLDP_EXECUTION_POLICY*);
+alias PWLDP_CANEXECUTEBUFFER_API = HRESULT function(const(GUID)*, WLDP_EXECUTION_EVALUATION_OPTIONS, const(ubyte)*, uint, const(wchar)*, WLDP_EXECUTION_POLICY*);
+alias PWLDP_CANEXECUTESTREAM_API = HRESULT function(const(GUID)*, WLDP_EXECUTION_EVALUATION_OPTIONS, IStream, const(wchar)*, WLDP_EXECUTION_POLICY*);
 enum CLSID_DefaultBrowserSyncSettings = GUID(0x3ac83423, 0x3112, 0x4aa6, [0x9b, 0x5b, 0x1f, 0xeb, 0x23, 0xd0, 0xc5, 0xf9]);
 struct DefaultBrowserSyncSettings
 {

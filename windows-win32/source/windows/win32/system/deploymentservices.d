@@ -1,7 +1,7 @@
 module windows.win32.system.deploymentservices;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, HANDLE, HRESULT, LPARAM, PWSTR, SYSTEMTIME, ULARGE_INTEGER, VARIANT_BOOL, WPARAM;
+import windows.win32.foundation : BOOL, BSTR, HANDLE, HRESULT, LPARAM, PWSTR, SYSTEMTIME, VARIANT_BOOL, WPARAM;
 import windows.win32.system.com_ : IDispatch, IUnknown;
 import windows.win32.system.registry : HKEY;
 
@@ -110,7 +110,7 @@ uint WdsTransportClientInitialize();
 uint WdsTransportClientInitializeSession(WDS_TRANSPORTCLIENT_REQUEST*, void*, HANDLE*);
 uint WdsTransportClientRegisterCallback(HANDLE, TRANSPORTCLIENT_CALLBACK_ID, void*);
 uint WdsTransportClientStartSession(HANDLE);
-uint WdsTransportClientCompleteReceive(HANDLE, uint, ULARGE_INTEGER*);
+uint WdsTransportClientCompleteReceive(HANDLE, uint, ulong*);
 uint WdsTransportClientCancelSession(HANDLE);
 uint WdsTransportClientCancelSessionEx(HANDLE, uint);
 uint WdsTransportClientWaitForCompletion(HANDLE, uint);
@@ -490,13 +490,13 @@ enum : int
 struct TRANSPORTCLIENT_SESSION_INFO
 {
     uint ulStructureLength;
-    ULARGE_INTEGER ullFileSize;
+    ulong ullFileSize;
     uint ulBlockSize;
 }
-alias PFN_WdsTransportClientSessionStart = void function(HANDLE, void*, ULARGE_INTEGER*);
+alias PFN_WdsTransportClientSessionStart = void function(HANDLE, void*, ulong*);
 alias PFN_WdsTransportClientSessionStartEx = void function(HANDLE, void*, TRANSPORTCLIENT_SESSION_INFO*);
 alias PFN_WdsTransportClientReceiveMetadata = void function(HANDLE, void*, void*, uint);
-alias PFN_WdsTransportClientReceiveContents = void function(HANDLE, void*, void*, uint, ULARGE_INTEGER*);
+alias PFN_WdsTransportClientReceiveContents = void function(HANDLE, void*, void*, uint, ulong*);
 alias PFN_WdsTransportClientSessionComplete = void function(HANDLE, void*, uint);
 alias PFN_WdsTransportClientSessionNegotiate = void function(HANDLE, void*, TRANSPORTCLIENT_SESSION_INFO*, HANDLE);
 struct WDS_TRANSPORTCLIENT_REQUEST

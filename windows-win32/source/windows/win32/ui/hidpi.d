@@ -60,16 +60,16 @@ enum : int
     DPI_HOSTING_BEHAVIOR_MIXED   = 0x00000001,
 }
 
-alias DIALOG_CONTROL_DPI_CHANGE_BEHAVIORS = uint;
-enum : uint
+alias DIALOG_CONTROL_DPI_CHANGE_BEHAVIORS = int;
+enum : int
 {
     DCDC_DEFAULT             = 0x00000000,
     DCDC_DISABLE_FONT_UPDATE = 0x00000001,
     DCDC_DISABLE_RELAYOUT    = 0x00000002,
 }
 
-alias DIALOG_DPI_CHANGE_BEHAVIORS = uint;
-enum : uint
+alias DIALOG_DPI_CHANGE_BEHAVIORS = int;
+enum : int
 {
     DDC_DEFAULT                  = 0x00000000,
     DDC_DISABLE_ALL              = 0x00000001,

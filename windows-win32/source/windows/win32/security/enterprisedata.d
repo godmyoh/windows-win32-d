@@ -39,8 +39,8 @@ struct HTHREAD_NETWORK_CONTEXT
     uint ThreadId;
     HANDLE ThreadContext;
 }
-alias ENTERPRISE_DATA_POLICIES = uint;
-enum : uint
+alias ENTERPRISE_DATA_POLICIES = int;
+enum : int
 {
     ENTERPRISE_POLICY_NONE        = 0x00000000,
     ENTERPRISE_POLICY_ALLOWED     = 0x00000001,
@@ -69,7 +69,7 @@ struct FILE_UNPROTECT_OPTIONS
 HRESULT SrpCreateThreadNetworkContext(const(wchar)*, HTHREAD_NETWORK_CONTEXT*);
 HRESULT SrpCloseThreadNetworkContext(HTHREAD_NETWORK_CONTEXT*);
 HRESULT SrpSetTokenEnterpriseId(HANDLE, const(wchar)*);
-HRESULT SrpGetEnterpriseIds(HANDLE, uint*, PWSTR*, uint*);
+HRESULT SrpGetEnterpriseIds(HANDLE, uint*, const(wchar)**, uint*);
 HRESULT SrpEnablePermissiveModeFileEncryption(const(wchar)*);
 HRESULT SrpDisablePermissiveModeFileEncryption();
 HRESULT SrpGetEnterprisePolicy(HANDLE, ENTERPRISE_DATA_POLICIES*);

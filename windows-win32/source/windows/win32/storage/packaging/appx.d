@@ -1,6 +1,7 @@
 module windows.win32.storage.packaging.appx;
 
 import windows.win32.guid : GUID;
+import windows.win32.data.xml.msxml : IXMLDOMDocument;
 import windows.win32.foundation : BOOL, HANDLE, HRESULT, PSID, PSTR, PWSTR, WIN32_ERROR;
 import windows.win32.system.com_ : IStream, IUnknown, IUri;
 
@@ -154,8 +155,8 @@ enum : int
     APPX_BUNDLE_FOOTPRINT_FILE_TYPE_LAST      = 0x00000002,
 }
 
-alias APPX_CAPABILITIES = uint;
-enum : uint
+alias APPX_CAPABILITIES = int;
+enum : int
 {
     APPX_CAPABILITY_INTERNET_CLIENT               = 0x00000001,
     APPX_CAPABILITY_INTERNET_CLIENT_SERVER        = 0x00000002,
@@ -244,6 +245,13 @@ interface IAppxFactory2 : IUnknown
     HRESULT CreateContentGroupMapReader(IStream, IAppxContentGroupMapReader*);
     HRESULT CreateSourceContentGroupMapReader(IStream, IAppxSourceContentGroupMapReader*);
     HRESULT CreateContentGroupMapWriter(IStream, IAppxContentGroupMapWriter*);
+}
+enum IID_IAppxFactory3 = GUID(0x776b2c05, 0xe21d, 0x4e24, [0xba, 0x1a, 0xcd, 0x52, 0x9a, 0x8b, 0xfd, 0xbb]);
+interface IAppxFactory3 : IUnknown
+{
+    HRESULT CreatePackageReader2(IStream, const(wchar)*, IAppxPackageReader*);
+    HRESULT CreateManifestReader2(IStream, const(wchar)*, IAppxManifestReader*);
+    HRESULT CreateAppInstallerReader(IStream, const(wchar)*, IAppxAppInstallerReader*);
 }
 enum IID_IAppxPackageReader = GUID(0xb5c49650, 0x99bc, 0x481c, [0x9a, 0x34, 0x3d, 0x53, 0xa4, 0x10, 0x67, 0x8]);
 interface IAppxPackageReader : IUnknown
@@ -563,6 +571,11 @@ interface IAppxBundleFactory : IUnknown
     HRESULT CreateBundleReader(IStream, IAppxBundleReader*);
     HRESULT CreateBundleManifestReader(IStream, IAppxBundleManifestReader*);
 }
+enum IID_IAppxBundleFactory2 = GUID(0x7325b83d, 0x185, 0x42c4, [0x82, 0xac, 0xbe, 0x34, 0xab, 0x1a, 0x2a, 0x8a]);
+interface IAppxBundleFactory2 : IUnknown
+{
+    HRESULT CreateBundleReader2(IStream, const(wchar)*, IAppxBundleReader*);
+}
 enum IID_IAppxBundleWriter = GUID(0xec446fe8, 0xbfec, 0x4c64, [0xab, 0x4f, 0x49, 0xf0, 0x38, 0xf0, 0xc6, 0xd2]);
 interface IAppxBundleWriter : IUnknown
 {
@@ -706,6 +719,16 @@ interface IAppxPackagingDiagnosticEventSinkManager : IUnknown
 {
     HRESULT SetSinkForProcess(IAppxPackagingDiagnosticEventSink);
 }
+enum IID_IAppxAppInstallerReader = GUID(0xf35bc38c, 0x1d2f, 0x43db, [0xa1, 0xf4, 0x58, 0x64, 0x30, 0xd1, 0xfe, 0xd2]);
+interface IAppxAppInstallerReader : IUnknown
+{
+    HRESULT GetXmlDom(IXMLDOMDocument*);
+}
+enum IID_IAppxDigestProvider = GUID(0x9fe2702b, 0x7640, 0x4659, [0x8e, 0x6c, 0x34, 0x9e, 0x43, 0xc4, 0xcd, 0xbd]);
+interface IAppxDigestProvider : IUnknown
+{
+    HRESULT GetDigest(PWSTR*);
+}
 struct APPX_ENCRYPTED_PACKAGE_SETTINGS
 {
     uint keyLength;
@@ -713,8 +736,8 @@ struct APPX_ENCRYPTED_PACKAGE_SETTINGS
     BOOL useDiffusion;
     IUri blockMapHashAlgorithm;
 }
-alias APPX_ENCRYPTED_PACKAGE_OPTIONS = uint;
-enum : uint
+alias APPX_ENCRYPTED_PACKAGE_OPTIONS = int;
+enum : int
 {
     APPX_ENCRYPTED_PACKAGE_OPTION_NONE         = 0x00000000,
     APPX_ENCRYPTED_PACKAGE_OPTION_DIFFUSION    = 0x00000001,
@@ -738,7 +761,7 @@ struct APPX_KEY_INFO
 struct APPX_ENCRYPTED_EXEMPTIONS
 {
     uint count;
-    PWSTR* plainTextFiles;
+    const(wchar)** plainTextFiles;
 }
 enum IID_IAppxEncryptionFactory = GUID(0x80e8e04d, 0x8c88, 0x44ae, [0xa0, 0x11, 0x7c, 0xad, 0xf6, 0xfb, 0x2e, 0x72]);
 interface IAppxEncryptionFactory : IUnknown
@@ -770,6 +793,12 @@ interface IAppxEncryptionFactory4 : IUnknown
 {
     HRESULT EncryptPackage(IStream, IStream, const(APPX_ENCRYPTED_PACKAGE_SETTINGS2)*, const(APPX_KEY_INFO)*, const(APPX_ENCRYPTED_EXEMPTIONS)*, ulong);
 }
+enum IID_IAppxEncryptionFactory5 = GUID(0x68d6e77a, 0xf446, 0x480f, [0xb0, 0xf0, 0xd9, 0x1a, 0x24, 0xc6, 0x7, 0x46]);
+interface IAppxEncryptionFactory5 : IUnknown
+{
+    HRESULT CreateEncryptedPackageReader2(IStream, const(APPX_KEY_INFO)*, const(wchar)*, IAppxPackageReader*);
+    HRESULT CreateEncryptedBundleReader2(IStream, const(APPX_KEY_INFO)*, const(wchar)*, IAppxBundleReader*);
+}
 enum IID_IAppxEncryptedPackageWriter = GUID(0xf43d0b0b, 0x1379, 0x40e2, [0x9b, 0x29, 0x68, 0x2e, 0xa2, 0xbf, 0x42, 0xaf]);
 interface IAppxEncryptedPackageWriter : IUnknown
 {
@@ -798,8 +827,8 @@ enum : int
     APPX_PACKAGE_EDITOR_UPDATE_PACKAGE_OPTION_APPEND_DELTA = 0x00000000,
 }
 
-alias APPX_PACKAGE_EDITOR_UPDATE_PACKAGE_MANIFEST_OPTIONS = uint;
-enum : uint
+alias APPX_PACKAGE_EDITOR_UPDATE_PACKAGE_MANIFEST_OPTIONS = int;
+enum : int
 {
     APPX_PACKAGE_EDITOR_UPDATE_PACKAGE_MANIFEST_OPTION_NONE            = 0x00000000,
     APPX_PACKAGE_EDITOR_UPDATE_PACKAGE_MANIFEST_OPTION_SKIP_VALIDATION = 0x00000001,

@@ -117,11 +117,14 @@ enum : int
 alias GAMING_DEVICE_DEVICE_ID = int;
 enum : int
 {
-    GAMING_DEVICE_DEVICE_ID_NONE              = 0x00000000,
-    GAMING_DEVICE_DEVICE_ID_XBOX_ONE          = 0x768bae26,
-    GAMING_DEVICE_DEVICE_ID_XBOX_ONE_S        = 0x2a7361d9,
-    GAMING_DEVICE_DEVICE_ID_XBOX_ONE_X        = 0x5ad617c7,
-    GAMING_DEVICE_DEVICE_ID_XBOX_ONE_X_DEVKIT = 0x10f7cde3,
+    GAMING_DEVICE_DEVICE_ID_NONE                 = 0x00000000,
+    GAMING_DEVICE_DEVICE_ID_XBOX_ONE             = 0x768bae26,
+    GAMING_DEVICE_DEVICE_ID_XBOX_ONE_S           = 0x2a7361d9,
+    GAMING_DEVICE_DEVICE_ID_XBOX_ONE_X           = 0x5ad617c7,
+    GAMING_DEVICE_DEVICE_ID_XBOX_ONE_X_DEVKIT    = 0x10f7cde3,
+    GAMING_DEVICE_DEVICE_ID_XBOX_SERIES_S        = 0x1d27fabb,
+    GAMING_DEVICE_DEVICE_ID_XBOX_SERIES_X        = 0x2f7a3dff,
+    GAMING_DEVICE_DEVICE_ID_XBOX_SERIES_X_DEVKIT = 0xde8a5661,
 }
 
 struct GAMING_DEVICE_MODEL_INFORMATION
@@ -189,6 +192,11 @@ interface IXblIdpAuthManager : IUnknown
     HRESULT GetEnvironment(PWSTR*);
     HRESULT GetSandbox(PWSTR*);
     HRESULT GetTokenAndSignatureWithTokenResult(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, ubyte*, uint, BOOL, IXblIdpAuthTokenResult*);
+}
+enum IID_IXblIdpAuthManager2 = GUID(0xbf8c0950, 0x8389, 0x43dd, [0x9a, 0x76, 0xa1, 0x97, 0x28, 0xec, 0x5d, 0xc5]);
+interface IXblIdpAuthManager2 : IUnknown
+{
+    HRESULT GetUserlessTokenAndSignatureWithTokenResult(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, ubyte*, uint, BOOL, IXblIdpAuthTokenResult*);
 }
 enum IID_IXblIdpAuthTokenResult = GUID(0x46ce0225, 0xf267, 0x4d68, [0xb2, 0x99, 0xb2, 0x76, 0x25, 0x52, 0xde, 0xc1]);
 interface IXblIdpAuthTokenResult : IUnknown

@@ -14,33 +14,33 @@ enum : uint
     LIST_MODULES_64BIT   = 0x00000002,
 }
 
-BOOL K32EnumProcesses(uint*, uint, uint*);
-BOOL K32EnumProcessModules(HANDLE, HINSTANCE*, uint, uint*);
-BOOL K32EnumProcessModulesEx(HANDLE, HINSTANCE*, uint, uint*, ENUM_PROCESS_MODULES_EX_FLAGS);
-uint K32GetModuleBaseNameA(HANDLE, HINSTANCE, PSTR, uint);
-uint K32GetModuleBaseNameW(HANDLE, HINSTANCE, PWSTR, uint);
-uint K32GetModuleFileNameExA(HANDLE, HINSTANCE, PSTR, uint);
-uint K32GetModuleFileNameExW(HANDLE, HINSTANCE, PWSTR, uint);
-BOOL K32GetModuleInformation(HANDLE, HINSTANCE, MODULEINFO*, uint);
-BOOL K32EmptyWorkingSet(HANDLE);
-BOOL K32InitializeProcessForWsWatch(HANDLE);
-BOOL K32GetWsChanges(HANDLE, PSAPI_WS_WATCH_INFORMATION*, uint);
-BOOL K32GetWsChangesEx(HANDLE, PSAPI_WS_WATCH_INFORMATION_EX*, uint*);
-uint K32GetMappedFileNameW(HANDLE, void*, PWSTR, uint);
-uint K32GetMappedFileNameA(HANDLE, void*, PSTR, uint);
-BOOL K32EnumDeviceDrivers(void**, uint, uint*);
-uint K32GetDeviceDriverBaseNameA(void*, PSTR, uint);
-uint K32GetDeviceDriverBaseNameW(void*, PWSTR, uint);
-uint K32GetDeviceDriverFileNameA(void*, PSTR, uint);
-uint K32GetDeviceDriverFileNameW(void*, PWSTR, uint);
-BOOL K32QueryWorkingSet(HANDLE, void*, uint);
-BOOL K32QueryWorkingSetEx(HANDLE, void*, uint);
-BOOL K32GetProcessMemoryInfo(HANDLE, PROCESS_MEMORY_COUNTERS*, uint);
-BOOL K32GetPerformanceInfo(PERFORMANCE_INFORMATION*, uint);
-BOOL K32EnumPageFilesW(PENUM_PAGE_FILE_CALLBACKW, void*);
-BOOL K32EnumPageFilesA(PENUM_PAGE_FILE_CALLBACKA, void*);
-uint K32GetProcessImageFileNameA(HANDLE, PSTR, uint);
-uint K32GetProcessImageFileNameW(HANDLE, PWSTR, uint);
+BOOL EnumProcesses(uint*, uint, uint*);
+BOOL EnumProcessModules(HANDLE, HINSTANCE*, uint, uint*);
+BOOL EnumProcessModulesEx(HANDLE, HINSTANCE*, uint, uint*, ENUM_PROCESS_MODULES_EX_FLAGS);
+uint GetModuleBaseNameA(HANDLE, HINSTANCE, PSTR, uint);
+uint GetModuleBaseNameW(HANDLE, HINSTANCE, PWSTR, uint);
+uint GetModuleFileNameExA(HANDLE, HINSTANCE, PSTR, uint);
+uint GetModuleFileNameExW(HANDLE, HINSTANCE, PWSTR, uint);
+BOOL GetModuleInformation(HANDLE, HINSTANCE, MODULEINFO*, uint);
+BOOL EmptyWorkingSet(HANDLE);
+BOOL InitializeProcessForWsWatch(HANDLE);
+BOOL GetWsChanges(HANDLE, PSAPI_WS_WATCH_INFORMATION*, uint);
+BOOL GetWsChangesEx(HANDLE, PSAPI_WS_WATCH_INFORMATION_EX*, uint*);
+uint GetMappedFileNameW(HANDLE, void*, PWSTR, uint);
+uint GetMappedFileNameA(HANDLE, void*, PSTR, uint);
+BOOL EnumDeviceDrivers(void**, uint, uint*);
+uint GetDeviceDriverBaseNameA(void*, PSTR, uint);
+uint GetDeviceDriverBaseNameW(void*, PWSTR, uint);
+uint GetDeviceDriverFileNameA(void*, PSTR, uint);
+uint GetDeviceDriverFileNameW(void*, PWSTR, uint);
+BOOL QueryWorkingSet(HANDLE, void*, uint);
+BOOL QueryWorkingSetEx(HANDLE, void*, uint);
+BOOL GetProcessMemoryInfo(HANDLE, PROCESS_MEMORY_COUNTERS*, uint);
+BOOL GetPerformanceInfo(PERFORMANCE_INFORMATION*, uint);
+BOOL EnumPageFilesW(PENUM_PAGE_FILE_CALLBACKW, void*);
+BOOL EnumPageFilesA(PENUM_PAGE_FILE_CALLBACKA, void*);
+uint GetProcessImageFileNameA(HANDLE, PSTR, uint);
+uint GetProcessImageFileNameW(HANDLE, PWSTR, uint);
 enum PSAPI_VERSION = 0x00000002;
 struct MODULEINFO
 {

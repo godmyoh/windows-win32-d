@@ -2,6 +2,7 @@ module windows.win32.devices.sensors;
 
 import windows.win32.guid : GUID;
 import windows.win32.devices.portabledevices : IPortableDeviceKeyCollection, IPortableDeviceValues;
+import windows.win32.devices.properties : DEVPROPTYPE;
 import windows.win32.foundation : BOOL, BOOLEAN, BSTR, FILETIME, HRESULT, HWND, NTSTATUS, SYSTEMTIME, VARIANT_BOOL;
 import windows.win32.system.com_ : IUnknown;
 import windows.win32.system.com.structuredstorage : PROPVARIANT;
@@ -29,7 +30,7 @@ NTSTATUS PropKeyFindKeyGetNthInt64(const(SENSOR_COLLECTION_LIST)*, const(PROPERT
 BOOLEAN IsKeyPresentInPropertyList(SENSOR_PROPERTY_LIST*, const(PROPERTYKEY)*);
 BOOLEAN IsKeyPresentInCollectionList(SENSOR_COLLECTION_LIST*, const(PROPERTYKEY)*);
 BOOLEAN IsCollectionListSame(const(SENSOR_COLLECTION_LIST)*, const(SENSOR_COLLECTION_LIST)*);
-NTSTATUS PropVariantGetInformation(const(PROPVARIANT)*, uint*, uint*, void**, uint*);
+NTSTATUS PropVariantGetInformation(const(PROPVARIANT)*, uint*, uint*, void**, DEVPROPTYPE*);
 NTSTATUS PropertiesListCopy(SENSOR_PROPERTY_LIST*, const(SENSOR_PROPERTY_LIST)*);
 uint PropertiesListGetFillableCount(uint);
 uint CollectionsListGetMarshalledSize(const(SENSOR_COLLECTION_LIST)*);
@@ -544,6 +545,14 @@ enum : int
     HumanPresenceDetectionType_FacialBiometric           = 0x00000004,
     HumanPresenceDetectionType_AudioBiometric            = 0x00000008,
     HumanPresenceDetectionType_Force_Dword               = 0xffffffff,
+}
+
+alias PROXIMITY_SENSOR_CAPABILITIES = int;
+enum : int
+{
+    Proximity_Sensor_Human_Presence_Capable   = 0x00000001,
+    Proximity_Sensor_Human_Engagement_Capable = 0x00000002,
+    Proximity_Sensor_Supported_Capabilities   = 0x00000003,
 }
 
 alias SIMPLE_DEVICE_ORIENTATION = int;

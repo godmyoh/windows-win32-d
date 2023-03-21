@@ -1,7 +1,7 @@
 module windows.win32.storage.filesystem;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, CHAR, FILETIME, HANDLE, HRESULT, LARGE_INTEGER, NTSTATUS, PSID, PSTR, PWSTR, SYSTEMTIME, ULARGE_INTEGER;
+import windows.win32.foundation : BOOL, BOOLEAN, CHAR, FILETIME, HANDLE, HRESULT, NTSTATUS, PSID, PSTR, PWSTR, SYSTEMTIME;
 import windows.win32.security_ : GENERIC_MAPPING, PRIVILEGE_SET, PSECURITY_DESCRIPTOR, SECURITY_ATTRIBUTES, SID;
 import windows.win32.system.com_ : IConnectionPointContainer, IUnknown;
 import windows.win32.system.io : LPOVERLAPPED_COMPLETION_ROUTINE, OVERLAPPED;
@@ -78,7 +78,7 @@ enum : uint
     SECURITY_VALID_SQOS_FLAGS            = 0x001f0000,
 }
 
-alias FILE_ACCESS_FLAGS = uint;
+alias FILE_ACCESS_RIGHTS = uint;
 enum : uint
 {
     FILE_READ_DATA            = 0x00000001,
@@ -117,8 +117,8 @@ uint SearchPathA(const(char)*, const(char)*, const(char)*, uint, PSTR, PSTR*);
 int CompareFileTime(const(FILETIME)*, const(FILETIME)*);
 BOOL CreateDirectoryA(const(char)*, SECURITY_ATTRIBUTES*);
 BOOL CreateDirectoryW(const(wchar)*, SECURITY_ATTRIBUTES*);
-HANDLE CreateFileA(const(char)*, FILE_ACCESS_FLAGS, FILE_SHARE_MODE, SECURITY_ATTRIBUTES*, FILE_CREATION_DISPOSITION, FILE_FLAGS_AND_ATTRIBUTES, HANDLE);
-HANDLE CreateFileW(const(wchar)*, FILE_ACCESS_FLAGS, FILE_SHARE_MODE, SECURITY_ATTRIBUTES*, FILE_CREATION_DISPOSITION, FILE_FLAGS_AND_ATTRIBUTES, HANDLE);
+HANDLE CreateFileA(const(char)*, uint, FILE_SHARE_MODE, SECURITY_ATTRIBUTES*, FILE_CREATION_DISPOSITION, FILE_FLAGS_AND_ATTRIBUTES, HANDLE);
+HANDLE CreateFileW(const(wchar)*, uint, FILE_SHARE_MODE, SECURITY_ATTRIBUTES*, FILE_CREATION_DISPOSITION, FILE_FLAGS_AND_ATTRIBUTES, HANDLE);
 BOOL DefineDosDeviceW(DEFINE_DOS_DEVICE_FLAGS, const(wchar)*, const(wchar)*);
 BOOL DeleteFileA(const(char)*);
 BOOL DeleteFileW(const(wchar)*);
@@ -141,8 +141,8 @@ BOOL FindVolumeClose(FindVolumeHandle);
 BOOL FlushFileBuffers(HANDLE);
 BOOL GetDiskFreeSpaceA(const(char)*, uint*, uint*, uint*, uint*);
 BOOL GetDiskFreeSpaceW(const(wchar)*, uint*, uint*, uint*, uint*);
-BOOL GetDiskFreeSpaceExA(const(char)*, ULARGE_INTEGER*, ULARGE_INTEGER*, ULARGE_INTEGER*);
-BOOL GetDiskFreeSpaceExW(const(wchar)*, ULARGE_INTEGER*, ULARGE_INTEGER*, ULARGE_INTEGER*);
+BOOL GetDiskFreeSpaceExA(const(char)*, ulong*, ulong*, ulong*);
+BOOL GetDiskFreeSpaceExW(const(wchar)*, ulong*, ulong*, ulong*);
 HRESULT GetDiskSpaceInformationA(const(char)*, DISK_SPACE_INFORMATION*);
 HRESULT GetDiskSpaceInformationW(const(wchar)*, DISK_SPACE_INFORMATION*);
 uint GetDriveTypeA(const(char)*);
@@ -153,8 +153,8 @@ BOOL GetFileAttributesExA(const(char)*, GET_FILEEX_INFO_LEVELS, void*);
 BOOL GetFileAttributesExW(const(wchar)*, GET_FILEEX_INFO_LEVELS, void*);
 BOOL GetFileInformationByHandle(HANDLE, BY_HANDLE_FILE_INFORMATION*);
 uint GetFileSize(HANDLE, uint*);
-BOOL GetFileSizeEx(HANDLE, LARGE_INTEGER*);
-uint GetFileType(HANDLE);
+BOOL GetFileSizeEx(HANDLE, long*);
+FILE_TYPE GetFileType(HANDLE);
 uint GetFinalPathNameByHandleA(HANDLE, PSTR, uint, FILE_NAME);
 uint GetFinalPathNameByHandleW(HANDLE, PWSTR, uint, FILE_NAME);
 BOOL GetFileTime(HANDLE, FILETIME*, FILETIME*, FILETIME*);
@@ -184,18 +184,18 @@ BOOL SetFileAttributesA(const(char)*, FILE_FLAGS_AND_ATTRIBUTES);
 BOOL SetFileAttributesW(const(wchar)*, FILE_FLAGS_AND_ATTRIBUTES);
 BOOL SetFileInformationByHandle(HANDLE, FILE_INFO_BY_HANDLE_CLASS, void*, uint);
 uint SetFilePointer(HANDLE, int, int*, SET_FILE_POINTER_MOVE_METHOD);
-BOOL SetFilePointerEx(HANDLE, LARGE_INTEGER, LARGE_INTEGER*, SET_FILE_POINTER_MOVE_METHOD);
+BOOL SetFilePointerEx(HANDLE, long, long*, SET_FILE_POINTER_MOVE_METHOD);
 BOOL SetFileTime(HANDLE, const(FILETIME)*, const(FILETIME)*, const(FILETIME)*);
 BOOL SetFileValidData(HANDLE, long);
 BOOL UnlockFile(HANDLE, uint, uint, uint, uint);
 BOOL UnlockFileEx(HANDLE, uint, uint, uint, OVERLAPPED*);
-BOOL WriteFile(HANDLE, const(void)*, uint, uint*, OVERLAPPED*);
-BOOL WriteFileEx(HANDLE, const(void)*, uint, OVERLAPPED*, LPOVERLAPPED_COMPLETION_ROUTINE);
+BOOL WriteFile(HANDLE, const(ubyte)*, uint, uint*, OVERLAPPED*);
+BOOL WriteFileEx(HANDLE, const(ubyte)*, uint, OVERLAPPED*, LPOVERLAPPED_COMPLETION_ROUTINE);
 BOOL WriteFileGather(HANDLE, FILE_SEGMENT_ELEMENT*, uint, uint*, OVERLAPPED*);
 uint GetTempPathW(uint, PWSTR);
 BOOL GetVolumeNameForVolumeMountPointW(const(wchar)*, PWSTR, uint);
 BOOL GetVolumePathNamesForVolumeNameW(const(wchar)*, PWSTR, uint, uint*);
-HANDLE CreateFile2(const(wchar)*, FILE_ACCESS_FLAGS, FILE_SHARE_MODE, FILE_CREATION_DISPOSITION, CREATEFILE2_EXTENDED_PARAMETERS*);
+HANDLE CreateFile2(const(wchar)*, uint, FILE_SHARE_MODE, FILE_CREATION_DISPOSITION, CREATEFILE2_EXTENDED_PARAMETERS*);
 BOOL SetFileIoOverlappedRange(HANDLE, ubyte*, uint);
 uint GetCompressedFileSizeA(const(char)*, uint*);
 uint GetCompressedFileSizeW(const(wchar)*, uint*);
@@ -248,7 +248,7 @@ uint LsnBlockOffset(const(CLS_LSN)*);
 uint LsnRecordSequence(const(CLS_LSN)*);
 BOOLEAN LsnInvalid(const(CLS_LSN)*);
 CLS_LSN LsnIncrement(CLS_LSN*);
-HANDLE CreateLogFile(const(wchar)*, FILE_ACCESS_FLAGS, FILE_SHARE_MODE, SECURITY_ATTRIBUTES*, FILE_CREATION_DISPOSITION, FILE_FLAGS_AND_ATTRIBUTES);
+HANDLE CreateLogFile(const(wchar)*, uint, FILE_SHARE_MODE, SECURITY_ATTRIBUTES*, FILE_CREATION_DISPOSITION, FILE_FLAGS_AND_ATTRIBUTES);
 BOOL DeleteLogByHandle(HANDLE);
 BOOL DeleteLogFile(const(wchar)*, void*);
 BOOL AddLogContainer(HANDLE, ulong*, PWSTR, void*);
@@ -326,19 +326,19 @@ HRESULT WofGetDriverVersion(HANDLE, uint, uint*);
 HRESULT WofSetFileDataLocation(HANDLE, uint, void*, uint);
 HRESULT WofIsExternalFile(const(wchar)*, BOOL*, uint*, void*, uint*);
 HRESULT WofEnumEntries(const(wchar)*, uint, WofEnumEntryProc, void*);
-HRESULT WofWimAddEntry(const(wchar)*, const(wchar)*, uint, uint, LARGE_INTEGER*);
-HRESULT WofWimEnumFiles(const(wchar)*, LARGE_INTEGER, WofEnumFilesProc, void*);
-HRESULT WofWimSuspendEntry(const(wchar)*, LARGE_INTEGER);
-HRESULT WofWimRemoveEntry(const(wchar)*, LARGE_INTEGER);
-HRESULT WofWimUpdateEntry(const(wchar)*, LARGE_INTEGER, const(wchar)*);
+HRESULT WofWimAddEntry(const(wchar)*, const(wchar)*, uint, uint, long*);
+HRESULT WofWimEnumFiles(const(wchar)*, long, WofEnumFilesProc, void*);
+HRESULT WofWimSuspendEntry(const(wchar)*, long);
+HRESULT WofWimRemoveEntry(const(wchar)*, long);
+HRESULT WofWimUpdateEntry(const(wchar)*, long, const(wchar)*);
 HRESULT WofFileEnumFiles(const(wchar)*, uint, WofEnumFilesProc, void*);
 BOOL TxfLogCreateFileReadContext(const(wchar)*, CLS_LSN, CLS_LSN, TXF_ID*, void**);
-BOOL TxfLogCreateRangeReadContext(const(wchar)*, CLS_LSN, CLS_LSN, LARGE_INTEGER*, LARGE_INTEGER*, uint, void**);
+BOOL TxfLogCreateRangeReadContext(const(wchar)*, CLS_LSN, CLS_LSN, long*, long*, uint, void**);
 BOOL TxfLogDestroyReadContext(void*);
 BOOL TxfLogReadRecords(void*, uint, void*, uint*, uint*);
 BOOL TxfReadMetadataInfo(HANDLE, TXF_ID*, CLS_LSN*, uint*, GUID*);
 BOOL TxfLogRecordGetFileName(void*, uint, PWSTR, uint*, TXF_ID*);
-BOOL TxfLogRecordGetGenericType(void*, uint, uint*, LARGE_INTEGER*);
+BOOL TxfLogRecordGetGenericType(void*, uint, uint*, long*);
 void TxfSetThreadMiniVersionForCreate(ushort);
 void TxfGetThreadMiniVersionForCreate(ushort*);
 HANDLE CreateTransaction(SECURITY_ATTRIBUTES*, GUID*, uint, uint, uint, uint, PWSTR);
@@ -354,9 +354,9 @@ HANDLE CreateTransactionManager(SECURITY_ATTRIBUTES*, PWSTR, uint, uint);
 HANDLE OpenTransactionManager(PWSTR, uint, uint);
 HANDLE OpenTransactionManagerById(GUID*, uint, uint);
 BOOL RenameTransactionManager(PWSTR, GUID*);
-BOOL RollforwardTransactionManager(HANDLE, LARGE_INTEGER*);
+BOOL RollforwardTransactionManager(HANDLE, long*);
 BOOL RecoverTransactionManager(HANDLE);
-BOOL GetCurrentClockTransactionManager(HANDLE, LARGE_INTEGER*);
+BOOL GetCurrentClockTransactionManager(HANDLE, long*);
 BOOL GetTransactionManagerId(HANDLE, GUID*);
 HANDLE CreateResourceManager(SECURITY_ATTRIBUTES*, GUID*, uint, HANDLE, PWSTR);
 HANDLE OpenResourceManager(uint, HANDLE, GUID*);
@@ -370,16 +370,16 @@ BOOL RecoverEnlistment(HANDLE, void*);
 BOOL GetEnlistmentRecoveryInformation(HANDLE, uint, void*, uint*);
 BOOL GetEnlistmentId(HANDLE, GUID*);
 BOOL SetEnlistmentRecoveryInformation(HANDLE, uint, void*);
-BOOL PrepareEnlistment(HANDLE, LARGE_INTEGER*);
-BOOL PrePrepareEnlistment(HANDLE, LARGE_INTEGER*);
-BOOL CommitEnlistment(HANDLE, LARGE_INTEGER*);
-BOOL RollbackEnlistment(HANDLE, LARGE_INTEGER*);
-BOOL PrePrepareComplete(HANDLE, LARGE_INTEGER*);
-BOOL PrepareComplete(HANDLE, LARGE_INTEGER*);
-BOOL ReadOnlyEnlistment(HANDLE, LARGE_INTEGER*);
-BOOL CommitComplete(HANDLE, LARGE_INTEGER*);
-BOOL RollbackComplete(HANDLE, LARGE_INTEGER*);
-BOOL SinglePhaseReject(HANDLE, LARGE_INTEGER*);
+BOOL PrepareEnlistment(HANDLE, long*);
+BOOL PrePrepareEnlistment(HANDLE, long*);
+BOOL CommitEnlistment(HANDLE, long*);
+BOOL RollbackEnlistment(HANDLE, long*);
+BOOL PrePrepareComplete(HANDLE, long*);
+BOOL PrepareComplete(HANDLE, long*);
+BOOL ReadOnlyEnlistment(HANDLE, long*);
+BOOL CommitComplete(HANDLE, long*);
+BOOL RollbackComplete(HANDLE, long*);
+BOOL SinglePhaseReject(HANDLE, long*);
 uint NetShareAdd(PWSTR, uint, ubyte*, uint*);
 uint NetShareEnum(PWSTR, uint, ubyte**, uint, uint*, uint*, uint*);
 uint NetShareEnumSticky(PWSTR, uint, ubyte**, uint, uint*, uint*, uint*);
@@ -461,7 +461,7 @@ BOOL DefineDosDeviceA(DEFINE_DOS_DEVICE_FLAGS, const(char)*, const(char)*);
 uint QueryDosDeviceA(const(char)*, PSTR, uint);
 HANDLE CreateFileTransactedA(const(char)*, uint, FILE_SHARE_MODE, SECURITY_ATTRIBUTES*, FILE_CREATION_DISPOSITION, FILE_FLAGS_AND_ATTRIBUTES, HANDLE, HANDLE, TXFS_MINIVERSION*, void*);
 HANDLE CreateFileTransactedW(const(wchar)*, uint, FILE_SHARE_MODE, SECURITY_ATTRIBUTES*, FILE_CREATION_DISPOSITION, FILE_FLAGS_AND_ATTRIBUTES, HANDLE, HANDLE, TXFS_MINIVERSION*, void*);
-HANDLE ReOpenFile(HANDLE, FILE_ACCESS_FLAGS, FILE_SHARE_MODE, FILE_FLAGS_AND_ATTRIBUTES);
+HANDLE ReOpenFile(HANDLE, uint, FILE_SHARE_MODE, FILE_FLAGS_AND_ATTRIBUTES);
 BOOL SetFileAttributesTransactedA(const(char)*, uint, HANDLE);
 BOOL SetFileAttributesTransactedW(const(wchar)*, uint, HANDLE);
 BOOL GetFileAttributesTransactedA(const(char)*, GET_FILEEX_INFO_LEVELS, void*, HANDLE);
@@ -505,11 +505,11 @@ BOOL ReadDirectoryChangesW(HANDLE, void*, uint, BOOL, FILE_NOTIFY_CHANGE, uint*,
 BOOL ReadDirectoryChangesExW(HANDLE, void*, uint, BOOL, FILE_NOTIFY_CHANGE, uint*, OVERLAPPED*, LPOVERLAPPED_COMPLETION_ROUTINE, READ_DIRECTORY_NOTIFY_INFORMATION_CLASS);
 FindVolumeHandle FindFirstVolumeA(PSTR, uint);
 BOOL FindNextVolumeA(FindVolumeHandle, PSTR, uint);
-FindVolumeMointPointHandle FindFirstVolumeMountPointA(const(char)*, PSTR, uint);
-FindVolumeMointPointHandle FindFirstVolumeMountPointW(const(wchar)*, PWSTR, uint);
-BOOL FindNextVolumeMountPointA(FindVolumeMointPointHandle, PSTR, uint);
-BOOL FindNextVolumeMountPointW(FindVolumeMointPointHandle, PWSTR, uint);
-BOOL FindVolumeMountPointClose(FindVolumeMointPointHandle);
+FindVolumeMountPointHandle FindFirstVolumeMountPointA(const(char)*, PSTR, uint);
+FindVolumeMountPointHandle FindFirstVolumeMountPointW(const(wchar)*, PWSTR, uint);
+BOOL FindNextVolumeMountPointA(FindVolumeMountPointHandle, PSTR, uint);
+BOOL FindNextVolumeMountPointW(FindVolumeMountPointHandle, PWSTR, uint);
+BOOL FindVolumeMountPointClose(FindVolumeMountPointHandle);
 BOOL SetVolumeMountPointA(const(char)*, const(char)*);
 BOOL SetVolumeMountPointW(const(wchar)*, const(wchar)*);
 BOOL DeleteVolumeMountPointA(const(char)*);
@@ -517,12 +517,12 @@ BOOL GetVolumeNameForVolumeMountPointA(const(char)*, PSTR, uint);
 BOOL GetVolumePathNameA(const(char)*, PSTR, uint);
 BOOL GetVolumePathNamesForVolumeNameA(const(char)*, PSTR, uint, uint*);
 BOOL GetFileInformationByHandleEx(HANDLE, FILE_INFO_BY_HANDLE_CLASS, void*, uint);
-HANDLE OpenFileById(HANDLE, FILE_ID_DESCRIPTOR*, FILE_ACCESS_FLAGS, FILE_SHARE_MODE, SECURITY_ATTRIBUTES*, FILE_FLAGS_AND_ATTRIBUTES);
+HANDLE OpenFileById(HANDLE, FILE_ID_DESCRIPTOR*, uint, FILE_SHARE_MODE, SECURITY_ATTRIBUTES*, FILE_FLAGS_AND_ATTRIBUTES);
 BOOLEAN CreateSymbolicLinkA(const(char)*, const(char)*, SYMBOLIC_LINK_FLAGS);
 BOOLEAN CreateSymbolicLinkW(const(wchar)*, const(wchar)*, SYMBOLIC_LINK_FLAGS);
 BOOLEAN CreateSymbolicLinkTransactedA(const(char)*, const(char)*, SYMBOLIC_LINK_FLAGS, HANDLE);
 BOOLEAN CreateSymbolicLinkTransactedW(const(wchar)*, const(wchar)*, SYMBOLIC_LINK_FLAGS, HANDLE);
-NTSTATUS NtCreateFile(HANDLE*, uint, OBJECT_ATTRIBUTES*, IO_STATUS_BLOCK*, LARGE_INTEGER*, uint, FILE_SHARE_MODE, NT_CREATE_FILE_DISPOSITION, uint, void*, uint);
+NTSTATUS NtCreateFile(HANDLE*, uint, OBJECT_ATTRIBUTES*, IO_STATUS_BLOCK*, long*, uint, FILE_SHARE_MODE, NT_CREATE_FILE_DISPOSITION, uint, void*, uint);
 enum MAXIMUM_REPARSE_DATA_BUFFER_SIZE = 0x00004000;
 enum EA_CONTAINER_NAME = "ContainerName";
 enum EA_CONTAINER_SIZE = "ContainerSize";
@@ -641,6 +641,9 @@ enum PARTITION_MSFT_SNAPSHOT_GUID = GUID(0xcaddebf1, 0x4400, 0x4de8, [0xb1, 0x3,
 enum PARTITION_OS_DATA_GUID = GUID(0x57434f53, 0x23f2, 0x44d5, [0xa8, 0x30, 0x67, 0xbb, 0xda, 0xa6, 0x9, 0xf9]);
 enum PARTITION_PATCH_GUID = GUID(0x8967a686, 0x96aa, 0x6aa8, [0x95, 0x89, 0xa8, 0x42, 0x56, 0x54, 0x10, 0x90]);
 enum PARTITION_PRE_INSTALLED_GUID = GUID(0x57434f53, 0x7fe0, 0x4196, [0x9b, 0x42, 0x42, 0x7b, 0x51, 0x64, 0x34, 0x84]);
+enum PARTITION_SBL_CACHE_SSD_GUID = GUID(0xeeff8352, 0xdd2a, 0x44db, [0xae, 0x83, 0xbe, 0xe1, 0xcf, 0x74, 0x81, 0xdc]);
+enum PARTITION_SBL_CACHE_SSD_RESERVED_GUID = GUID(0xdcc0c7c1, 0x55ad, 0x4f17, [0x9d, 0x43, 0x4b, 0xc7, 0x76, 0xe0, 0x11, 0x7e]);
+enum PARTITION_SBL_CACHE_HDD_GUID = GUID(0x3aaa829, 0xebfc, 0x4e7e, [0xaa, 0xc9, 0xc4, 0xd7, 0x6c, 0x63, 0xb2, 0x4b]);
 enum PARTITION_SERVICING_FILES_GUID = GUID(0x57434f53, 0x432e, 0x4014, [0xae, 0x4c, 0x8d, 0xea, 0xa9, 0xc0, 0x0, 0x6a]);
 enum PARTITION_SERVICING_METADATA_GUID = GUID(0x57434f53, 0xc691, 0x4a05, [0xbb, 0x4e, 0x70, 0x3d, 0xaf, 0xd2, 0x29, 0xce]);
 enum PARTITION_SERVICING_RESERVE_GUID = GUID(0x57434f53, 0x4b81, 0x460b, [0xa3, 0x19, 0xff, 0xb6, 0xfe, 0x13, 0x6d, 0x14]);
@@ -670,6 +673,7 @@ enum DISKQUOTA_USER_ACCOUNT_DELETED = 0x00000002;
 enum DISKQUOTA_USER_ACCOUNT_INVALID = 0x00000003;
 enum DISKQUOTA_USER_ACCOUNT_UNKNOWN = 0x00000004;
 enum DISKQUOTA_USER_ACCOUNT_UNRESOLVED = 0x00000005;
+enum INVALID_FILE_SIZE = 0xffffffff;
 enum INVALID_SET_FILE_POINTER = 0xffffffff;
 enum INVALID_FILE_ATTRIBUTES = 0xffffffff;
 enum SHARE_NETNAME_PARMNUM = 0x00000001;
@@ -682,6 +686,7 @@ enum SHARE_PATH_PARMNUM = 0x00000008;
 enum SHARE_PASSWD_PARMNUM = 0x00000009;
 enum SHARE_FILE_SD_PARMNUM = 0x000001f5;
 enum SHARE_SERVER_PARMNUM = 0x000001f7;
+enum SHARE_QOS_POLICY_PARMNUM = 0x000001f8;
 enum SHI1_NUM_ELEMENTS = 0x00000004;
 enum SHI2_NUM_ELEMENTS = 0x0000000a;
 enum STYPE_RESERVED1 = 0x01000000;
@@ -712,6 +717,8 @@ enum SHI1005_FLAGS_DISABLE_CLIENT_BUFFERING = 0x00020000;
 enum SHI1005_FLAGS_IDENTITY_REMOTING = 0x00040000;
 enum SHI1005_FLAGS_CLUSTER_MANAGED = 0x00080000;
 enum SHI1005_FLAGS_COMPRESS_DATA = 0x00100000;
+enum SHI1005_FLAGS_ISOLATED_TRANSPORT = 0x00200000;
+enum SHI1005_FLAGS_DISABLE_DIRECTORY_HANDLE_LEASING = 0x00400000;
 enum SESI1_NUM_ELEMENTS = 0x00000008;
 enum SESI2_NUM_ELEMENTS = 0x00000009;
 enum STATSOPT_CLR = 0x00000001;
@@ -1226,6 +1233,27 @@ enum : uint
     SYMBOLIC_LINK_FLAG_ALLOW_UNPRIVILEGED_CREATE = 0x00000002,
 }
 
+alias COMPRESSION_FORMAT = ushort;
+enum : ushort
+{
+    COMPRESSION_FORMAT_NONE        = 0x0000,
+    COMPRESSION_FORMAT_DEFAULT     = 0x0001,
+    COMPRESSION_FORMAT_LZNT1       = 0x0002,
+    COMPRESSION_FORMAT_XPRESS      = 0x0003,
+    COMPRESSION_FORMAT_XPRESS_HUFF = 0x0004,
+    COMPRESSION_FORMAT_XP10        = 0x0005,
+}
+
+alias FILE_TYPE = uint;
+enum : uint
+{
+    FILE_TYPE_UNKNOWN = 0x00000000,
+    FILE_TYPE_DISK    = 0x00000001,
+    FILE_TYPE_CHAR    = 0x00000002,
+    FILE_TYPE_PIPE    = 0x00000003,
+    FILE_TYPE_REMOTE  = 0x00008000,
+}
+
 struct FILE_DISPOSITION_INFO
 {
     BOOLEAN DeleteFile;
@@ -1235,7 +1263,7 @@ alias FindFileNameHandle = long;
 alias FindStreamHandle = long;
 alias FindChangeNotificationHandle = long;
 alias FindVolumeHandle = long;
-alias FindVolumeMointPointHandle = long;
+alias FindVolumeMountPointHandle = long;
 struct WIN32_FIND_DATAA
 {
     uint dwFileAttributes;
@@ -1284,6 +1312,8 @@ enum : int
 {
     ReadDirectoryNotifyInformation         = 0x00000001,
     ReadDirectoryNotifyExtendedInformation = 0x00000002,
+    ReadDirectoryNotifyFullInformation     = 0x00000003,
+    ReadDirectoryNotifyMaximumInformation  = 0x00000004,
 }
 
 alias GET_FILEEX_INFO_LEVELS = int;
@@ -1328,7 +1358,7 @@ struct TRANSACTION_NOTIFICATION
 {
     void* TransactionKey;
     uint TransactionNotification;
-    LARGE_INTEGER TmVirtualClock;
+    long TmVirtualClock;
     uint ArgumentLength;
 }
 struct TRANSACTION_NOTIFICATION_RECOVERY_ARGUMENT
@@ -1437,7 +1467,7 @@ enum : int
 
 struct WIN32_FIND_STREAM_DATA
 {
-    LARGE_INTEGER StreamSize;
+    long StreamSize;
     wchar[296] cStreamName;
 }
 struct VS_FIXEDFILEINFO
@@ -1843,7 +1873,7 @@ struct NTMS_PARTITIONINFORMATIONA
     CHAR[256] szOmidLabelInfo;
     uint dwMountCount;
     uint dwAllocateCount;
-    LARGE_INTEGER Capacity;
+    long Capacity;
 }
 struct NTMS_PARTITIONINFORMATIONW
 {
@@ -1857,7 +1887,7 @@ struct NTMS_PARTITIONINFORMATIONW
     wchar[256] szOmidLabelInfo;
     uint dwMountCount;
     uint dwAllocateCount;
-    LARGE_INTEGER Capacity;
+    long Capacity;
 }
 alias NtmsPoolType = int;
 enum : int
@@ -2875,7 +2905,7 @@ struct WIM_ENTRY_INFO
 {
     uint WimEntryInfoSize;
     uint WimType;
-    LARGE_INTEGER DataSourceId;
+    long DataSourceId;
     GUID WimGuid;
     const(wchar)* WimPath;
     uint WimIndex;
@@ -2883,7 +2913,7 @@ struct WIM_ENTRY_INFO
 }
 struct WIM_EXTERNAL_FILE_INFO
 {
-    LARGE_INTEGER DataSourceId;
+    long DataSourceId;
     ubyte[20] ResourceHash;
     uint Flags;
 }
@@ -2978,7 +3008,7 @@ struct VOLUME_PHYSICAL_OFFSETS
 }
 struct VOLUME_READ_PLEX_INPUT
 {
-    LARGE_INTEGER ByteOffset;
+    long ByteOffset;
     uint Length;
     uint PlexNumber;
 }
@@ -3221,22 +3251,23 @@ struct SERVER_CERTIFICATE_INFO_0
     PWSTR srvci0_renewalchain;
     uint srvci0_type;
     uint srvci0_flags;
+    uint srvci0_mapping_status;
 }
 struct STAT_WORKSTATION_0
 {
-    LARGE_INTEGER StatisticsStartTime;
-    LARGE_INTEGER BytesReceived;
-    LARGE_INTEGER SmbsReceived;
-    LARGE_INTEGER PagingReadBytesRequested;
-    LARGE_INTEGER NonPagingReadBytesRequested;
-    LARGE_INTEGER CacheReadBytesRequested;
-    LARGE_INTEGER NetworkReadBytesRequested;
-    LARGE_INTEGER BytesTransmitted;
-    LARGE_INTEGER SmbsTransmitted;
-    LARGE_INTEGER PagingWriteBytesRequested;
-    LARGE_INTEGER NonPagingWriteBytesRequested;
-    LARGE_INTEGER CacheWriteBytesRequested;
-    LARGE_INTEGER NetworkWriteBytesRequested;
+    long StatisticsStartTime;
+    long BytesReceived;
+    long SmbsReceived;
+    long PagingReadBytesRequested;
+    long NonPagingReadBytesRequested;
+    long CacheReadBytesRequested;
+    long NetworkReadBytesRequested;
+    long BytesTransmitted;
+    long SmbsTransmitted;
+    long PagingWriteBytesRequested;
+    long NonPagingWriteBytesRequested;
+    long CacheWriteBytesRequested;
+    long NetworkWriteBytesRequested;
     uint InitiallyFailedOperations;
     uint FailedCompletionOperations;
     uint ReadOperations;
@@ -3323,6 +3354,8 @@ enum : int
 {
     IORING_VERSION_INVALID = 0x00000000,
     IORING_VERSION_1       = 0x00000001,
+    IORING_VERSION_2       = 0x00000002,
+    IORING_VERSION_3       = 0x0000012c,
 }
 
 alias IORING_FEATURE_FLAGS = int;
@@ -3341,6 +3374,8 @@ enum : int
     IORING_OP_REGISTER_FILES   = 0x00000002,
     IORING_OP_REGISTER_BUFFERS = 0x00000003,
     IORING_OP_CANCEL           = 0x00000004,
+    IORING_OP_WRITE            = 0x00000005,
+    IORING_OP_FLUSH            = 0x00000006,
 }
 
 struct IORING_BUFFER_INFO
@@ -3360,7 +3395,8 @@ struct HIORING__
 alias IORING_SQE_FLAGS = int;
 enum : int
 {
-    IOSQE_FLAGS_NONE = 0x00000000,
+    IOSQE_FLAGS_NONE                = 0x00000000,
+    IOSQE_FLAGS_DRAIN_PRECEDING_OPS = 0x00000001,
 }
 
 alias IORING_CREATE_REQUIRED_FLAGS = int;
@@ -3440,16 +3476,20 @@ struct FILE_NOTIFY_EXTENDED_INFORMATION
 {
     uint NextEntryOffset;
     FILE_ACTION Action;
-    LARGE_INTEGER CreationTime;
-    LARGE_INTEGER LastModificationTime;
-    LARGE_INTEGER LastChangeTime;
-    LARGE_INTEGER LastAccessTime;
-    LARGE_INTEGER AllocatedLength;
-    LARGE_INTEGER FileSize;
+    long CreationTime;
+    long LastModificationTime;
+    long LastChangeTime;
+    long LastAccessTime;
+    long AllocatedLength;
+    long FileSize;
     uint FileAttributes;
-    uint ReparsePointTag;
-    LARGE_INTEGER FileId;
-    LARGE_INTEGER ParentFileId;
+    union
+    {
+        uint ReparsePointTag;
+        uint EaSize;
+    }
+    long FileId;
+    long ParentFileId;
     uint FileNameLength;
     wchar[1] FileName;
 }
@@ -3489,13 +3529,13 @@ struct TAPE_GET_POSITION
 {
     TAPE_POSITION_TYPE Type;
     uint Partition;
-    LARGE_INTEGER Offset;
+    long Offset;
 }
 struct TAPE_SET_POSITION
 {
     TAPE_POSITION_METHOD Method;
     uint Partition;
-    LARGE_INTEGER Offset;
+    long Offset;
     BOOLEAN Immediate;
 }
 alias TRANSACTION_OUTCOME = int;
@@ -3548,11 +3588,11 @@ struct WIN32_STREAM_ID
 {
     WIN_STREAM_ID dwStreamId;
     uint dwStreamAttributes;
-    LARGE_INTEGER Size;
+    long Size;
     uint dwStreamNameSize;
     wchar[1] cStreamName;
 }
-alias LPPROGRESS_ROUTINE = uint function(LARGE_INTEGER, LARGE_INTEGER, LARGE_INTEGER, LARGE_INTEGER, uint, LPPROGRESS_ROUTINE_CALLBACK_REASON, HANDLE, HANDLE, void*);
+alias LPPROGRESS_ROUTINE = uint function(long, long, long, long, uint, LPPROGRESS_ROUTINE_CALLBACK_REASON, HANDLE, HANDLE, void*);
 alias COPYFILE2_MESSAGE_TYPE = int;
 enum : int
 {
@@ -3601,10 +3641,10 @@ struct COPYFILE2_MESSAGE
             uint dwReserved;
             HANDLE hSourceFile;
             HANDLE hDestinationFile;
-            ULARGE_INTEGER uliChunkNumber;
-            ULARGE_INTEGER uliChunkSize;
-            ULARGE_INTEGER uliStreamSize;
-            ULARGE_INTEGER uliTotalFileSize;
+            ulong uliChunkNumber;
+            ulong uliChunkSize;
+            ulong uliStreamSize;
+            ulong uliTotalFileSize;
         }
         struct _ChunkFinished_e__Struct
         {
@@ -3612,12 +3652,12 @@ struct COPYFILE2_MESSAGE
             uint dwFlags;
             HANDLE hSourceFile;
             HANDLE hDestinationFile;
-            ULARGE_INTEGER uliChunkNumber;
-            ULARGE_INTEGER uliChunkSize;
-            ULARGE_INTEGER uliStreamSize;
-            ULARGE_INTEGER uliStreamBytesTransferred;
-            ULARGE_INTEGER uliTotalFileSize;
-            ULARGE_INTEGER uliTotalBytesTransferred;
+            ulong uliChunkNumber;
+            ulong uliChunkSize;
+            ulong uliStreamSize;
+            ulong uliStreamBytesTransferred;
+            ulong uliTotalFileSize;
+            ulong uliTotalBytesTransferred;
         }
         struct _StreamStarted_e__Struct
         {
@@ -3625,8 +3665,8 @@ struct COPYFILE2_MESSAGE
             uint dwReserved;
             HANDLE hSourceFile;
             HANDLE hDestinationFile;
-            ULARGE_INTEGER uliStreamSize;
-            ULARGE_INTEGER uliTotalFileSize;
+            ulong uliStreamSize;
+            ulong uliTotalFileSize;
         }
         struct _StreamFinished_e__Struct
         {
@@ -3634,10 +3674,10 @@ struct COPYFILE2_MESSAGE
             uint dwReserved;
             HANDLE hSourceFile;
             HANDLE hDestinationFile;
-            ULARGE_INTEGER uliStreamSize;
-            ULARGE_INTEGER uliStreamBytesTransferred;
-            ULARGE_INTEGER uliTotalFileSize;
-            ULARGE_INTEGER uliTotalBytesTransferred;
+            ulong uliStreamSize;
+            ulong uliStreamBytesTransferred;
+            ulong uliTotalFileSize;
+            ulong uliTotalBytesTransferred;
         }
         struct _PollContinue_e__Struct
         {
@@ -3649,11 +3689,11 @@ struct COPYFILE2_MESSAGE
             uint dwStreamNumber;
             HRESULT hrFailure;
             uint dwReserved;
-            ULARGE_INTEGER uliChunkNumber;
-            ULARGE_INTEGER uliStreamSize;
-            ULARGE_INTEGER uliStreamBytesTransferred;
-            ULARGE_INTEGER uliTotalFileSize;
-            ULARGE_INTEGER uliTotalBytesTransferred;
+            ulong uliChunkNumber;
+            ulong uliStreamSize;
+            ulong uliStreamBytesTransferred;
+            ulong uliTotalFileSize;
+            ulong uliTotalBytesTransferred;
         }
     }
 }
@@ -3680,16 +3720,16 @@ struct COPYFILE2_EXTENDED_PARAMETERS_V2
 }
 struct FILE_BASIC_INFO
 {
-    LARGE_INTEGER CreationTime;
-    LARGE_INTEGER LastAccessTime;
-    LARGE_INTEGER LastWriteTime;
-    LARGE_INTEGER ChangeTime;
+    long CreationTime;
+    long LastAccessTime;
+    long LastWriteTime;
+    long ChangeTime;
     uint FileAttributes;
 }
 struct FILE_STANDARD_INFO
 {
-    LARGE_INTEGER AllocationSize;
-    LARGE_INTEGER EndOfFile;
+    long AllocationSize;
+    long EndOfFile;
     uint NumberOfLinks;
     BOOLEAN DeletePending;
     BOOLEAN Directory;
@@ -3712,24 +3752,24 @@ struct FILE_RENAME_INFO
 }
 struct FILE_ALLOCATION_INFO
 {
-    LARGE_INTEGER AllocationSize;
+    long AllocationSize;
 }
 struct FILE_END_OF_FILE_INFO
 {
-    LARGE_INTEGER EndOfFile;
+    long EndOfFile;
 }
 struct FILE_STREAM_INFO
 {
     uint NextEntryOffset;
     uint StreamNameLength;
-    LARGE_INTEGER StreamSize;
-    LARGE_INTEGER StreamAllocationSize;
+    long StreamSize;
+    long StreamAllocationSize;
     wchar[1] StreamName;
 }
 struct FILE_COMPRESSION_INFO
 {
-    LARGE_INTEGER CompressedFileSize;
-    ushort CompressionFormat;
+    long CompressedFileSize;
+    COMPRESSION_FORMAT CompressionFormat;
     ubyte CompressionUnitShift;
     ubyte ChunkShift;
     ubyte ClusterShift;
@@ -3744,30 +3784,30 @@ struct FILE_ID_BOTH_DIR_INFO
 {
     uint NextEntryOffset;
     uint FileIndex;
-    LARGE_INTEGER CreationTime;
-    LARGE_INTEGER LastAccessTime;
-    LARGE_INTEGER LastWriteTime;
-    LARGE_INTEGER ChangeTime;
-    LARGE_INTEGER EndOfFile;
-    LARGE_INTEGER AllocationSize;
+    long CreationTime;
+    long LastAccessTime;
+    long LastWriteTime;
+    long ChangeTime;
+    long EndOfFile;
+    long AllocationSize;
     uint FileAttributes;
     uint FileNameLength;
     uint EaSize;
     byte ShortNameLength;
     wchar[12] ShortName;
-    LARGE_INTEGER FileId;
+    long FileId;
     wchar[1] FileName;
 }
 struct FILE_FULL_DIR_INFO
 {
     uint NextEntryOffset;
     uint FileIndex;
-    LARGE_INTEGER CreationTime;
-    LARGE_INTEGER LastAccessTime;
-    LARGE_INTEGER LastWriteTime;
-    LARGE_INTEGER ChangeTime;
-    LARGE_INTEGER EndOfFile;
-    LARGE_INTEGER AllocationSize;
+    long CreationTime;
+    long LastAccessTime;
+    long LastWriteTime;
+    long ChangeTime;
+    long EndOfFile;
+    long AllocationSize;
     uint FileAttributes;
     uint FileNameLength;
     uint EaSize;
@@ -3809,12 +3849,12 @@ struct FILE_ID_EXTD_DIR_INFO
 {
     uint NextEntryOffset;
     uint FileIndex;
-    LARGE_INTEGER CreationTime;
-    LARGE_INTEGER LastAccessTime;
-    LARGE_INTEGER LastWriteTime;
-    LARGE_INTEGER ChangeTime;
-    LARGE_INTEGER EndOfFile;
-    LARGE_INTEGER AllocationSize;
+    long CreationTime;
+    long LastAccessTime;
+    long LastWriteTime;
+    long ChangeTime;
+    long EndOfFile;
+    long AllocationSize;
     uint FileAttributes;
     uint FileNameLength;
     uint EaSize;
@@ -3847,7 +3887,7 @@ struct FILE_REMOTE_PROTOCOL_INFO
             struct _Share_e__Struct
             {
                 uint Capabilities;
-                uint CachingFlags;
+                uint ShareFlags;
             }
         }
         uint[16] Reserved;
@@ -3868,7 +3908,7 @@ struct FILE_ID_DESCRIPTOR
     FILE_ID_TYPE Type;
     union
     {
-        LARGE_INTEGER FileId;
+        long FileId;
         GUID ObjectId;
         FILE_ID_128 ExtendedFileId;
     }

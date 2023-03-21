@@ -8,7 +8,7 @@ import windows.win32.system.com_ : IDispatch, IUnknown, VARIANT;
 version (Windows):
 extern (Windows):
 
-HRESULT NetworkIsolationSetupAppContainerBinaries(PSID, const(wchar)*, const(wchar)*, const(wchar)*, BOOL, PWSTR*, uint);
+HRESULT NetworkIsolationSetupAppContainerBinaries(PSID, const(wchar)*, const(wchar)*, const(wchar)*, BOOL, const(wchar)**, uint);
 uint NetworkIsolationRegisterForAppContainerChanges(uint, PAC_CHANGES_CALLBACK_FN, void*, HANDLE*);
 uint NetworkIsolationUnregisterForAppContainerChanges(HANDLE);
 uint NetworkIsolationFreeAppContainers(INET_FIREWALL_APP_CONTAINER*);
@@ -602,14 +602,14 @@ struct FW_DYNAMIC_KEYWORD_ADDRESS_DATA0
     ushort schemaVersion;
     FW_DYNAMIC_KEYWORD_ORIGIN_TYPE originType;
 }
-alias FW_DYNAMIC_KEYWORD_ADDRESS_FLAGS = uint;
-enum : uint
+alias FW_DYNAMIC_KEYWORD_ADDRESS_FLAGS = int;
+enum : int
 {
     FW_DYNAMIC_KEYWORD_ADDRESS_FLAGS_AUTO_RESOLVE = 0x00000001,
 }
 
-alias FW_DYNAMIC_KEYWORD_ADDRESS_ENUM_FLAGS = uint;
-enum : uint
+alias FW_DYNAMIC_KEYWORD_ADDRESS_ENUM_FLAGS = int;
+enum : int
 {
     FW_DYNAMIC_KEYWORD_ADDRESS_ENUM_FLAGS_AUTO_RESOLVE     = 0x00000001,
     FW_DYNAMIC_KEYWORD_ADDRESS_ENUM_FLAGS_NON_AUTO_RESOLVE = 0x00000002,

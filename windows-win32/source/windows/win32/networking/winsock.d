@@ -1,7 +1,7 @@
 module windows.win32.networking.winsock;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, CHAR, FARPROC, HANDLE, HRESULT, HWND, LARGE_INTEGER, LPARAM, LUID, PSTR, PWSTR, WPARAM;
+import windows.win32.foundation : BOOL, BOOLEAN, CHAR, FARPROC, HANDLE, HRESULT, HWND, LPARAM, LUID, PSTR, PWSTR, WPARAM;
 import windows.win32.system.com_ : BLOB;
 import windows.win32.system.io : OVERLAPPED, OVERLAPPED_ENTRY;
 import windows.win32.system.kernel : COMPARTMENT_ID, PROCESSOR_NUMBER;
@@ -114,12 +114,12 @@ enum : int
     WSA_IPSEC_NAME_POLICY_ERROR = 0x00002b19,
 }
 
-alias ADDRESS_FAMILY = uint;
-enum : uint
+alias ADDRESS_FAMILY = ushort;
+enum : ushort
 {
-    AF_INET   = 0x00000002,
-    AF_INET6  = 0x00000017,
-    AF_UNSPEC = 0x00000000,
+    AF_INET   = 0x0002,
+    AF_INET6  = 0x0017,
+    AF_UNSPEC = 0x0000,
 }
 
 alias SET_SERVICE_OPERATION = uint;
@@ -152,6 +152,39 @@ enum : uint
     RESOURCEDISPLAYTYPE_SERVER  = 0x00000002,
     RESOURCEDISPLAYTYPE_SHARE   = 0x00000003,
     RESOURCEDISPLAYTYPE_TREE    = 0x0000000a,
+}
+
+alias WSAPOLL_EVENT_FLAGS = short;
+enum : short
+{
+    POLLRDNORM = 0x0100,
+    POLLRDBAND = 0x0200,
+    POLLIN     = 0x0300,
+    POLLPRI    = 0x0400,
+    POLLWRNORM = 0x0010,
+    POLLOUT    = 0x0010,
+    POLLWRBAND = 0x0020,
+    POLLERR    = 0x0001,
+    POLLHUP    = 0x0002,
+    POLLNVAL   = 0x0004,
+}
+
+alias WINSOCK_SHUTDOWN_HOW = int;
+enum : int
+{
+    SD_RECEIVE = 0x00000000,
+    SD_SEND    = 0x00000001,
+    SD_BOTH    = 0x00000002,
+}
+
+alias WINSOCK_SOCKET_TYPE = int;
+enum : int
+{
+    SOCK_STREAM    = 0x00000001,
+    SOCK_DGRAM     = 0x00000002,
+    SOCK_RAW       = 0x00000003,
+    SOCK_RDM       = 0x00000004,
+    SOCK_SEQPACKET = 0x00000005,
 }
 
 int WSCEnumProtocols32(int*, WSAPROTOCOL_INFOW*, uint*, int*);
@@ -192,8 +225,8 @@ int select(int, FD_SET*, FD_SET*, FD_SET*, const(TIMEVAL)*);
 int send(SOCKET, const(char)*, int, SEND_RECV_FLAGS);
 int sendto(SOCKET, const(char)*, int, int, const(SOCKADDR)*, int);
 int setsockopt(SOCKET, int, int, const(char)*, int);
-int shutdown(SOCKET, int);
-SOCKET socket(int, int, int);
+int shutdown(SOCKET, WINSOCK_SHUTDOWN_HOW);
+SOCKET socket(int, WINSOCK_SOCKET_TYPE, int);
 HOSTENT* gethostbyaddr(const(char)*, int, int);
 HOSTENT* gethostbyname(const(char)*);
 int gethostname(PSTR, int);
@@ -281,22 +314,22 @@ PSTR RtlIpv4AddressToStringA(const(IN_ADDR)*, PSTR);
 int RtlIpv4AddressToStringExA(const(IN_ADDR)*, ushort, PSTR, uint*);
 PWSTR RtlIpv4AddressToStringW(const(IN_ADDR)*, PWSTR);
 int RtlIpv4AddressToStringExW(const(IN_ADDR)*, ushort, PWSTR, uint*);
-int RtlIpv4StringToAddressA(const(char)*, BOOLEAN, PSTR*, IN_ADDR*);
+int RtlIpv4StringToAddressA(const(char)*, BOOLEAN, const(char)**, IN_ADDR*);
 int RtlIpv4StringToAddressExA(const(char)*, BOOLEAN, IN_ADDR*, ushort*);
-int RtlIpv4StringToAddressW(const(wchar)*, BOOLEAN, PWSTR*, IN_ADDR*);
+int RtlIpv4StringToAddressW(const(wchar)*, BOOLEAN, const(wchar)**, IN_ADDR*);
 int RtlIpv4StringToAddressExW(const(wchar)*, BOOLEAN, IN_ADDR*, ushort*);
 PSTR RtlIpv6AddressToStringA(const(IN6_ADDR)*, PSTR);
 int RtlIpv6AddressToStringExA(const(IN6_ADDR)*, uint, ushort, PSTR, uint*);
 PWSTR RtlIpv6AddressToStringW(const(IN6_ADDR)*, PWSTR);
 int RtlIpv6AddressToStringExW(const(IN6_ADDR)*, uint, ushort, PWSTR, uint*);
-int RtlIpv6StringToAddressA(const(char)*, PSTR*, IN6_ADDR*);
+int RtlIpv6StringToAddressA(const(char)*, const(char)**, IN6_ADDR*);
 int RtlIpv6StringToAddressExA(const(char)*, IN6_ADDR*, uint*, ushort*);
-int RtlIpv6StringToAddressW(const(wchar)*, PWSTR*, IN6_ADDR*);
+int RtlIpv6StringToAddressW(const(wchar)*, const(wchar)**, IN6_ADDR*);
 int RtlIpv6StringToAddressExW(const(wchar)*, IN6_ADDR*, uint*, ushort*);
 PSTR RtlEthernetAddressToStringA(const(DL_EUI48)*, PSTR);
 PWSTR RtlEthernetAddressToStringW(const(DL_EUI48)*, PWSTR);
-int RtlEthernetStringToAddressA(const(char)*, PSTR*, DL_EUI48*);
-int RtlEthernetStringToAddressW(const(wchar)*, PWSTR*, DL_EUI48*);
+int RtlEthernetStringToAddressA(const(char)*, const(char)**, DL_EUI48*);
+int RtlEthernetStringToAddressW(const(wchar)*, const(wchar)**, DL_EUI48*);
 int WSARecvEx(SOCKET, PSTR, int, int*);
 BOOL TransmitFile(SOCKET, HANDLE, uint, uint, OVERLAPPED*, TRANSMIT_FILE_BUFFERS*, uint);
 BOOL AcceptEx(SOCKET, SOCKET, void*, uint, uint, uint, uint*, OVERLAPPED*);
@@ -342,8 +375,8 @@ void freeaddrinfo(ADDRINFOA*);
 void FreeAddrInfoW(ADDRINFOW*);
 void FreeAddrInfoEx(ADDRINFOEXA*);
 void FreeAddrInfoExW(ADDRINFOEXW*);
-int getnameinfo(const(SOCKADDR)*, int, PSTR, uint, PSTR, uint, int);
-int GetNameInfoW(const(SOCKADDR)*, int, PWSTR, uint, PWSTR, uint, int);
+int getnameinfo(const(SOCKADDR)*, socklen_t, PSTR, uint, PSTR, uint, int);
+int GetNameInfoW(const(SOCKADDR)*, socklen_t, PWSTR, uint, PWSTR, uint, int);
 int inet_pton(int, const(char)*, void*);
 int InetPtonW(int, const(wchar)*, void*);
 PSTR inet_ntop(int, const(void)*, PSTR, ulong);
@@ -461,11 +494,6 @@ enum AF_TCNMESSAGE = 0x001e;
 enum AF_ICLFXBM = 0x001f;
 enum AF_LINK = 0x0021;
 enum AF_HYPERV = 0x0022;
-enum SOCK_STREAM = 0x0001;
-enum SOCK_DGRAM = 0x0002;
-enum SOCK_RAW = 0x0003;
-enum SOCK_RDM = 0x0004;
-enum SOCK_SEQPACKET = 0x0005;
 enum SOL_SOCKET = 0x0000ffff;
 enum SO_DEBUG = 0x00000001;
 enum SO_ACCEPTCONN = 0x00000002;
@@ -527,7 +555,6 @@ enum SIO_ADDRESS_LIST_SORT = 0xc8000019;
 enum SIO_RESERVED_1 = 0x8800001a;
 enum SIO_RESERVED_2 = 0x88000021;
 enum SIO_GET_MULTIPLE_EXTENSION_FUNCTION_POINTER = 0xc8000024;
-enum IPPROTO_IP = 0x00000000;
 enum IPPORT_TCPMUX = 0x00000001;
 enum IPPORT_ECHO = 0x00000007;
 enum IPPORT_DISCARD = 0x00000009;
@@ -867,6 +894,9 @@ enum TF_WRITE_BEHIND = 0x00000004;
 enum TF_USE_DEFAULT_WORKER = 0x00000000;
 enum TF_USE_SYSTEM_THREAD = 0x00000010;
 enum TF_USE_KERNEL_APC = 0x00000020;
+enum WSAID_TRANSMITFILE = GUID(0xb5367df0, 0xcbac, 0x11cf, [0x95, 0xca, 0x0, 0x80, 0x5f, 0x48, 0xa1, 0x92]);
+enum WSAID_ACCEPTEX = GUID(0xb5367df1, 0xcbac, 0x11cf, [0x95, 0xca, 0x0, 0x80, 0x5f, 0x48, 0xa1, 0x92]);
+enum WSAID_GETACCEPTEXSOCKADDRS = GUID(0xb5367df2, 0xcbac, 0x11cf, [0x95, 0xca, 0x0, 0x80, 0x5f, 0x48, 0xa1, 0x92]);
 enum TP_ELEMENT_MEMORY = 0x00000001;
 enum TP_ELEMENT_FILE = 0x00000002;
 enum TP_ELEMENT_EOP = 0x00000004;
@@ -875,9 +905,15 @@ enum TP_REUSE_SOCKET = 0x00000002;
 enum TP_USE_DEFAULT_WORKER = 0x00000000;
 enum TP_USE_SYSTEM_THREAD = 0x00000010;
 enum TP_USE_KERNEL_APC = 0x00000020;
+enum WSAID_TRANSMITPACKETS = GUID(0xd9689da0, 0x1f90, 0x11d3, [0x99, 0x71, 0x0, 0xc0, 0x4f, 0x68, 0xc8, 0x76]);
+enum WSAID_CONNECTEX = GUID(0x25a207b9, 0xddf3, 0x4660, [0x8e, 0xe9, 0x76, 0xe5, 0x8c, 0x74, 0x6, 0x3e]);
+enum WSAID_DISCONNECTEX = GUID(0x7fda2e11, 0x8630, 0x436f, [0xa0, 0x31, 0xf5, 0x36, 0xa6, 0xee, 0xc1, 0x57]);
 enum DE_REUSE_SOCKET = 0x00000002;
+enum NLA_NAMESPACE_GUID = GUID(0x6642243a, 0x3ba8, 0x4aa6, [0xba, 0xa5, 0x2e, 0xb, 0xd7, 0x1f, 0xdd, 0x83]);
+enum NLA_SERVICE_CLASS_GUID = GUID(0x37e515, 0xb5c9, 0x4a43, [0xba, 0xda, 0x8b, 0x48, 0xa8, 0x7a, 0xd2, 0x39]);
 enum NLA_ALLUSERS_NETWORK = 0x00000001;
 enum NLA_FRIENDLY_NAME = 0x00000002;
+enum WSAID_WSARECVMSG = GUID(0xf689d7c8, 0x6f1f, 0x436b, [0x8a, 0x53, 0xe5, 0x4f, 0xe3, 0x51, 0xc3, 0x22]);
 enum SIO_BSP_HANDLE = 0x4800001b;
 enum SIO_BSP_HANDLE_SELECT = 0x4800001c;
 enum SIO_BSP_HANDLE_POLL = 0x4800001d;
@@ -885,6 +921,7 @@ enum SIO_BASE_HANDLE = 0x48000022;
 enum SIO_EXT_SELECT = 0xc800001e;
 enum SIO_EXT_POLL = 0xc800001f;
 enum SIO_EXT_SENDMSG = 0xc8000020;
+enum WSAID_WSAPOLL = GUID(0x18c76f85, 0xdc66, 0x4964, [0x97, 0x2e, 0x23, 0xc2, 0x72, 0x38, 0x31, 0x2b]);
 enum SERVICE_RESOURCE = 0x00000001;
 enum SERVICE_SERVICE = 0x00000002;
 enum SERVICE_LOCAL = 0x00000004;
@@ -1002,12 +1039,10 @@ enum FD_ADDRESS_LIST_CHANGE_BIT = 0x00000009;
 enum FD_MAX_EVENTS = 0x0000000a;
 enum WSA_MAXIMUM_WAIT_EVENTS = 0x00000040;
 enum WSA_WAIT_FAILED = 0xffffffff;
+enum WSA_WAIT_TIMEOUT = 0x00000102;
 enum CF_ACCEPT = 0x00000000;
 enum CF_REJECT = 0x00000001;
 enum CF_DEFER = 0x00000002;
-enum SD_RECEIVE = 0x00000000;
-enum SD_SEND = 0x00000001;
-enum SD_BOTH = 0x00000002;
 enum SG_UNCONSTRAINED_GROUP = 0x00000001;
 enum SG_CONSTRAINED_GROUP = 0x00000002;
 enum MAX_PROTOCOL_CHAIN = 0x00000007;
@@ -1102,15 +1137,6 @@ enum RESULT_IS_ALIAS = 0x00000001;
 enum RESULT_IS_ADDED = 0x00000010;
 enum RESULT_IS_CHANGED = 0x00000020;
 enum RESULT_IS_DELETED = 0x00000040;
-enum POLLRDNORM = 0x0100;
-enum POLLRDBAND = 0x0200;
-enum POLLPRI = 0x0400;
-enum POLLWRNORM = 0x0010;
-enum POLLOUT = 0x0010;
-enum POLLWRBAND = 0x0020;
-enum POLLERR = 0x0001;
-enum POLLHUP = 0x0002;
-enum POLLNVAL = 0x0004;
 enum SOCK_NOTIFY_REGISTER_EVENT_NONE = 0x00000000;
 enum SOCK_NOTIFY_REGISTER_EVENT_IN = 0x00000001;
 enum SOCK_NOTIFY_REGISTER_EVENT_OUT = 0x00000002;
@@ -1307,7 +1333,6 @@ enum IPX_MAX_ADAPTER_NUM = 0x0000400d;
 enum IPX_RERIPNETNUMBER = 0x0000400e;
 enum IPX_RECEIVE_BROADCAST = 0x0000400f;
 enum IPX_IMMEDIATESPXACK = 0x00004010;
-enum IPPROTO_RM = 0x00000071;
 enum MAX_MCAST_TTL = 0x000000ff;
 enum RM_OPTIONSBASE = 0x000003e8;
 enum RM_RATE_WINDOW_SIZE = 0x000003e9;
@@ -1428,6 +1453,7 @@ enum ICMP6_TIME_EXCEED_REASSEMBLY = 0x00000001;
 enum ICMP6_PARAMPROB_HEADER = 0x00000000;
 enum ICMP6_PARAMPROB_NEXTHEADER = 0x00000001;
 enum ICMP6_PARAMPROB_OPTION = 0x00000002;
+enum ICMP6_PARAMPROB_FIRSTFRAGMENT = 0x00000003;
 enum ICMPV6_ECHO_REQUEST_FLAG_REVERSE = 0x00000001;
 enum ND_RA_FLAG_MANAGED = 0x00000080;
 enum ND_RA_FLAG_OTHER = 0x00000040;
@@ -1473,7 +1499,6 @@ enum SIOCGHIWAT = 0x40047301;
 enum SIOCSLOWAT = 0xffffffff80047302;
 enum SIOCGLOWAT = 0x40047303;
 enum SIOCATMARK = 0x40047307;
-enum POLLIN = 0x0300;
 enum LM_HB_Extension = 0x00000080;
 enum LM_HB1_PnP = 0x00000001;
 enum LM_HB1_PDA_Palmtop = 0x00000002;
@@ -1495,6 +1520,8 @@ struct RIO_RQ_t
 }
 alias HWSAEVENT = void*;
 alias SOCKET = ulong;
+alias socklen_t = int;
+alias sa_family_t = ushort;
 struct FLOWSPEC
 {
     uint TokenRate;
@@ -1544,7 +1571,7 @@ struct IN_ADDR
 }
 struct SOCKADDR
 {
-    ushort sa_family;
+    ADDRESS_FAMILY sa_family;
     CHAR[14] sa_data;
 }
 struct SOCKET_ADDRESS
@@ -1566,7 +1593,7 @@ struct CSADDR_INFO
 }
 struct SOCKADDR_STORAGE
 {
-    ushort ss_family;
+    ADDRESS_FAMILY ss_family;
     CHAR[6] __ss_pad1;
     long __ss_align;
     CHAR[112] __ss_pad2;
@@ -1622,6 +1649,8 @@ enum : int
     IPPROTO_RESERVED_IPSECOFFLOAD = 0x00000103,
     IPPROTO_RESERVED_WNV          = 0x00000104,
     IPPROTO_RESERVED_MAX          = 0x00000105,
+    IPPROTO_IP                    = 0x00000000,
+    IPPROTO_RM                    = 0x00000071,
 }
 
 alias SCOPE_LEVEL = int;
@@ -1650,14 +1679,14 @@ struct SCOPE_ID
 }
 struct SOCKADDR_IN
 {
-    ushort sin_family;
+    ADDRESS_FAMILY sin_family;
     ushort sin_port;
     IN_ADDR sin_addr;
     CHAR[8] sin_zero;
 }
 struct SOCKADDR_DL
 {
-    ushort sdl_family;
+    ADDRESS_FAMILY sdl_family;
     ubyte[8] sdl_data;
     ubyte[4] sdl_zero;
 }
@@ -2174,8 +2203,8 @@ struct WSANAMESPACE_INFOEXW
 struct WSAPOLLFD
 {
     SOCKET fd;
-    short events;
-    short revents;
+    WSAPOLL_EVENT_FLAGS events;
+    WSAPOLL_EVENT_FLAGS revents;
 }
 struct SOCK_NOTIFY_REGISTRATION
 {
@@ -2233,7 +2262,7 @@ enum : int
 
 struct SOCKADDR_IN6
 {
-    ushort sin6_family;
+    ADDRESS_FAMILY sin6_family;
     ushort sin6_port;
     uint sin6_flowinfo;
     IN6_ADDR sin6_addr;
@@ -2255,7 +2284,7 @@ union SOCKADDR_INET
 {
     SOCKADDR_IN Ipv4;
     SOCKADDR_IN6 Ipv6;
-    ushort si_family;
+    ADDRESS_FAMILY si_family;
 }
 struct SOCKADDR_IN6_PAIR
 {
@@ -3258,7 +3287,7 @@ struct TRANSMIT_PACKETS_ELEMENT
     {
         struct
         {
-            LARGE_INTEGER nFileOffset;
+            long nFileOffset;
             HANDLE hFile;
         }
         void* pBuffer;
@@ -3749,7 +3778,7 @@ alias LPWSCWRITEPROVIDERORDER = int function(uint*, uint);
 alias LPWSCWRITENAMESPACEORDER = int function(GUID*, uint);
 struct SOCKADDR_UN
 {
-    ushort sun_family;
+    ADDRESS_FAMILY sun_family;
     CHAR[108] sun_path;
 }
 struct SOCKADDR_IPX

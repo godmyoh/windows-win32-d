@@ -1,7 +1,7 @@
 module windows.win32.devices.biometricframework;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, HANDLE, HRESULT, HWND, LARGE_INTEGER, POINT, PWSTR, RECT;
+import windows.win32.foundation : BOOL, BOOLEAN, HANDLE, HRESULT, HWND, POINT, PWSTR, RECT;
 import windows.win32.system.io : OVERLAPPED;
 
 version (Windows):
@@ -252,11 +252,11 @@ struct WINBIO_BIR_HEADER
     ubyte Subtype;
     ubyte Purpose;
     byte DataQuality;
-    LARGE_INTEGER CreationDate;
+    long CreationDate;
     struct _ValidityPeriod_e__Struct
     {
-        LARGE_INTEGER BeginDate;
-        LARGE_INTEGER EndDate;
+        long BeginDate;
+        long EndDate;
     }
     WINBIO_REGISTERED_FORMAT BiometricDataFormat;
     WINBIO_REGISTERED_FORMAT ProductId;

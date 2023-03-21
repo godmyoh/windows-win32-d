@@ -3,6 +3,7 @@ module windows.win32.media.audio_;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, CHAR, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, LRESULT, PSTR, PWSTR, WPARAM;
 import windows.win32.media_ : HTASK, MMTIME;
+import windows.win32.media.kernelstreaming : KSJACK_DESCRIPTION3;
 import windows.win32.media.multimedia : HDRVR;
 import windows.win32.system.com_ : CLSCTX, INTERFACEINFO, IUnknown, STGM;
 import windows.win32.system.com.structuredstorage : PROPVARIANT;
@@ -1401,8 +1402,8 @@ enum : int
     AUDCLNT_BUFFERFLAGS_TIMESTAMP_ERROR    = 0x00000004,
 }
 
-alias AUDCLNT_STREAMOPTIONS = uint;
-enum : uint
+alias AUDCLNT_STREAMOPTIONS = int;
+enum : int
 {
     AUDCLNT_STREAMOPTIONS_NONE         = 0x00000000,
     AUDCLNT_STREAMOPTIONS_RAW          = 0x00000001,
@@ -1489,8 +1490,8 @@ interface ISimpleAudioVolume : IUnknown
     HRESULT SetMute(const(BOOL), const(GUID)*);
     HRESULT GetMute(BOOL*);
 }
-alias AUDIO_DUCKING_OPTIONS = uint;
-enum : uint
+alias AUDIO_DUCKING_OPTIONS = int;
+enum : int
 {
     AUDIO_DUCKING_OPTIONS_DEFAULT                   = 0x00000000,
     AUDIO_DUCKING_OPTIONS_DO_NOT_DUCK_OTHER_STREAMS = 0x00000001,
@@ -1500,6 +1501,11 @@ enum IID_IAudioClientDuckingControl = GUID(0xc789d381, 0xa28c, 0x4168, [0xb2, 0x
 interface IAudioClientDuckingControl : IUnknown
 {
     HRESULT SetDuckingOptionsForCurrentStream(AUDIO_DUCKING_OPTIONS);
+}
+enum IID_IAudioViewManagerService = GUID(0xa7a7ef10, 0x1f49, 0x45e0, [0xad, 0x35, 0x61, 0x20, 0x57, 0xcc, 0x8f, 0x74]);
+interface IAudioViewManagerService : IUnknown
+{
+    HRESULT SetAudioStreamWindow(HWND);
 }
 alias AUDIO_EFFECT_STATE = int;
 enum : int
@@ -1583,8 +1589,13 @@ interface IChannelAudioVolume : IUnknown
     HRESULT SetAllVolumes(uint, const(float)*, const(GUID)*);
     HRESULT GetAllVolumes(uint, float*);
 }
-alias AudioObjectType = uint;
-enum : uint
+enum IID_IAcousticEchoCancellationControl = GUID(0xf4ae25b5, 0xaaa3, 0x437d, [0xb6, 0xb3, 0xdb, 0xbe, 0x2d, 0xe, 0x95, 0x49]);
+interface IAcousticEchoCancellationControl : IUnknown
+{
+    HRESULT SetEchoCancellationRenderEndpoint(const(wchar)*);
+}
+alias AudioObjectType = int;
+enum : int
 {
     AudioObjectType_None             = 0x00000000,
     AudioObjectType_Dynamic          = 0x00000001,
@@ -1607,8 +1618,8 @@ enum : uint
     AudioObjectType_BackCenter       = 0x00020000,
 }
 
-alias SPATIAL_AUDIO_STREAM_OPTIONS = uint;
-enum : uint
+alias SPATIAL_AUDIO_STREAM_OPTIONS = int;
+enum : int
 {
     SPATIAL_AUDIO_STREAM_OPTIONS_NONE    = 0x00000000,
     SPATIAL_AUDIO_STREAM_OPTIONS_OFFLOAD = 0x00000001,
@@ -2043,6 +2054,12 @@ interface IDeviceSpecificProperty : IUnknown
     HRESULT GetValue(void*, uint*);
     HRESULT SetValue(void*, uint, const(GUID)*);
     HRESULT Get4BRange(int*, int*, int*);
+}
+enum IID_IKsJackDescription3 = GUID(0xe3f6778b, 0x6660, 0x4cc8, [0xa2, 0x91, 0xec, 0xc4, 0x19, 0x2d, 0x99, 0x67]);
+interface IKsJackDescription3 : IUnknown
+{
+    HRESULT GetJackCount(uint*);
+    HRESULT GetJackDescription3(uint, KSJACK_DESCRIPTION3*);
 }
 enum IID_IPartsList = GUID(0x6daa848c, 0x5eb0, 0x45cc, [0xae, 0xa5, 0x99, 0x8a, 0x2c, 0xda, 0x1f, 0xfb]);
 interface IPartsList : IUnknown

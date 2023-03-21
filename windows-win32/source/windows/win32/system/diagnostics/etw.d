@@ -1,7 +1,7 @@
 module windows.win32.system.diagnostics.etw;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOLEAN, BSTR, FILETIME, HANDLE, HRESULT, LARGE_INTEGER, PSID, PSTR, PWSTR, WIN32_ERROR;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, FILETIME, HANDLE, HRESULT, PSID, PSTR, PWSTR, WIN32_ERROR;
 import windows.win32.security_ : PSECURITY_DESCRIPTOR;
 import windows.win32.system.com_ : IUnknown;
 import windows.win32.system.time : TIME_ZONE_INFORMATION;
@@ -277,6 +277,7 @@ enum EVENT_TRACE_TYPE_CONFIG_SERVICES = 0x0000000f;
 enum EVENT_TRACE_TYPE_CONFIG_POWER = 0x00000010;
 enum EVENT_TRACE_TYPE_CONFIG_NETINFO = 0x00000011;
 enum EVENT_TRACE_TYPE_CONFIG_OPTICALMEDIA = 0x00000012;
+enum EVENT_TRACE_TYPE_CONFIG_PHYSICALDISK_EX = 0x00000013;
 enum EVENT_TRACE_TYPE_CONFIG_IRQ = 0x00000015;
 enum EVENT_TRACE_TYPE_CONFIG_PNP = 0x00000016;
 enum EVENT_TRACE_TYPE_CONFIG_IDECHANNEL = 0x00000017;
@@ -651,7 +652,7 @@ struct WNODE_HEADER
     {
         uint CountLost;
         HANDLE KernelHandle;
-        LARGE_INTEGER TimeStamp;
+        long TimeStamp;
     }
     GUID Guid;
     uint ClientContext;
@@ -793,7 +794,7 @@ struct EVENT_TRACE_HEADER
     }
     uint ThreadId;
     uint ProcessId;
-    LARGE_INTEGER TimeStamp;
+    long TimeStamp;
     union
     {
         GUID Guid;
@@ -838,7 +839,7 @@ struct EVENT_INSTANCE_HEADER
     }
     uint ThreadId;
     uint ProcessId;
-    LARGE_INTEGER TimeStamp;
+    long TimeStamp;
     ulong RegHandle;
     uint InstanceId;
     uint ParentInstanceId;
@@ -880,7 +881,7 @@ struct TRACE_LOGFILE_HEADER
     }
     uint ProviderVersion;
     uint NumberOfProcessors;
-    LARGE_INTEGER EndTime;
+    long EndTime;
     uint TimerResolution;
     uint MaximumFileSize;
     uint LogFileMode;
@@ -899,9 +900,9 @@ struct TRACE_LOGFILE_HEADER
     PWSTR LoggerName;
     PWSTR LogFileName;
     TIME_ZONE_INFORMATION TimeZone;
-    LARGE_INTEGER BootTime;
-    LARGE_INTEGER PerfFreq;
-    LARGE_INTEGER StartTime;
+    long BootTime;
+    long PerfFreq;
+    long StartTime;
     uint ReservedFlags;
     uint BuffersLost;
 }
@@ -921,7 +922,7 @@ struct TRACE_LOGFILE_HEADER32
     }
     uint ProviderVersion;
     uint NumberOfProcessors;
-    LARGE_INTEGER EndTime;
+    long EndTime;
     uint TimerResolution;
     uint MaximumFileSize;
     uint LogFileMode;
@@ -940,9 +941,9 @@ struct TRACE_LOGFILE_HEADER32
     uint LoggerName;
     uint LogFileName;
     TIME_ZONE_INFORMATION TimeZone;
-    LARGE_INTEGER BootTime;
-    LARGE_INTEGER PerfFreq;
-    LARGE_INTEGER StartTime;
+    long BootTime;
+    long PerfFreq;
+    long StartTime;
     uint ReservedFlags;
     uint BuffersLost;
 }
@@ -962,7 +963,7 @@ struct TRACE_LOGFILE_HEADER64
     }
     uint ProviderVersion;
     uint NumberOfProcessors;
-    LARGE_INTEGER EndTime;
+    long EndTime;
     uint TimerResolution;
     uint MaximumFileSize;
     uint LogFileMode;
@@ -981,9 +982,9 @@ struct TRACE_LOGFILE_HEADER64
     ulong LoggerName;
     ulong LogFileName;
     TIME_ZONE_INFORMATION TimeZone;
-    LARGE_INTEGER BootTime;
-    LARGE_INTEGER PerfFreq;
-    LARGE_INTEGER StartTime;
+    long BootTime;
+    long PerfFreq;
+    long StartTime;
     uint ReservedFlags;
     uint BuffersLost;
 }
@@ -1140,6 +1141,14 @@ struct ETW_PMC_COUNTER_OWNERSHIP_STATUS
     uint NumberOfCounters;
     ETW_PMC_COUNTER_OWNER[1] CounterOwners;
 }
+struct ETW_PMC_SESSION_INFO
+{
+    uint NextEntryOffset;
+    ushort LoggerId;
+    ushort Reserved;
+    uint ProfileSourceCount;
+    uint HookIdCount;
+}
 struct EVENT_TRACE
 {
     EVENT_TRACE_HEADER Header;
@@ -1158,6 +1167,39 @@ alias PEVENT_TRACE_BUFFER_CALLBACKW = uint function(EVENT_TRACE_LOGFILEW*);
 alias PEVENT_TRACE_BUFFER_CALLBACKA = uint function(EVENT_TRACE_LOGFILEA*);
 alias PEVENT_CALLBACK = void function(EVENT_TRACE*);
 alias PEVENT_RECORD_CALLBACK = void function(EVENT_RECORD*);
+struct ETW_BUFFER_HEADER
+{
+    uint[4] Reserved1;
+    long TimeStamp;
+    uint[4] Reserved2;
+    ETW_BUFFER_CONTEXT ClientContext;
+    uint Reserved3;
+    uint FilledBytes;
+    uint[5] Reserved4;
+}
+struct ETW_BUFFER_CALLBACK_INFORMATION
+{
+    ulong TraceHandle;
+    const(TRACE_LOGFILE_HEADER)* LogfileHeader;
+    uint BuffersRead;
+}
+alias PETW_BUFFER_CALLBACK = BOOL function(const(ETW_BUFFER_HEADER)*, uint, const(ETW_BUFFER_CALLBACK_INFORMATION)*, void*);
+alias ETW_PROCESS_TRACE_MODES = int;
+enum : int
+{
+    ETW_PROCESS_TRACE_MODE_NONE          = 0x00000000,
+    ETW_PROCESS_TRACE_MODE_RAW_TIMESTAMP = 0x00000001,
+}
+
+struct ETW_OPEN_TRACE_OPTIONS
+{
+    ETW_PROCESS_TRACE_MODES ProcessTraceModes;
+    PEVENT_RECORD_CALLBACK EventCallback;
+    void* EventCallbackContext;
+    PETW_BUFFER_CALLBACK BufferCallback;
+    void* BufferCallbackContext;
+}
+alias PETW_BUFFER_COMPLETION_CALLBACK = void function(const(ETW_BUFFER_HEADER)*, void*);
 alias WMIDPREQUEST = uint function(WMIDPREQUESTCODE, void*, uint*, void*);
 struct EVENT_TRACE_LOGFILEW
 {
@@ -1256,7 +1298,8 @@ enum : int
     TraceStackCachingInfo             = 0x00000018,
     TracePmcCounterOwners             = 0x00000019,
     TraceUnifiedStackCachingInfo      = 0x0000001a,
-    MaxTraceSetInfoClass              = 0x0000001b,
+    TracePmcSessionInformation        = 0x0000001b,
+    MaxTraceSetInfoClass              = 0x0000001c,
 }
 
 struct CLASSIC_EVENT_ID
@@ -1293,7 +1336,8 @@ enum : int
     EtwQueryPartitionInformation   = 0x00000001,
     EtwQueryPartitionInformationV2 = 0x00000002,
     EtwQueryLastDroppedTimes       = 0x00000003,
-    EtwQueryProcessHandleInfoMax   = 0x00000004,
+    EtwQueryLogFileHeader          = 0x00000004,
+    EtwQueryProcessHandleInfoMax   = 0x00000005,
 }
 
 struct ETW_TRACE_PARTITION_INFORMATION
@@ -1454,7 +1498,7 @@ struct EVENT_HEADER
     ushort EventProperty;
     uint ThreadId;
     uint ProcessId;
-    LARGE_INTEGER TimeStamp;
+    long TimeStamp;
     GUID ProviderId;
     EVENT_DESCRIPTOR EventDescriptor;
     union
@@ -1852,7 +1896,7 @@ interface ITraceEvent : IUnknown
     HRESULT SetThreadId(uint);
     HRESULT SetThreadTimes(uint, uint);
     HRESULT SetActivityId(const(GUID)*);
-    HRESULT SetTimeStamp(LARGE_INTEGER*);
+    HRESULT SetTimeStamp(long*);
     HRESULT SetProviderId(const(GUID)*);
 }
 enum IID_ITraceEventCallback = GUID(0x3ed25501, 0x593f, 0x43e9, [0x8f, 0x38, 0x3a, 0xb4, 0x6f, 0x5a, 0x4a, 0x52]);

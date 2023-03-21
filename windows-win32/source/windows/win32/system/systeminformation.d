@@ -237,7 +237,7 @@ enum : uint
     DEVICEFAMILYDEVICEFORM_XBOX_ONE_X_DEVKIT     = 0x00000021,
     DEVICEFAMILYDEVICEFORM_XBOX_SERIES_X         = 0x00000022,
     DEVICEFAMILYDEVICEFORM_XBOX_SERIES_X_DEVKIT  = 0x00000023,
-    DEVICEFAMILYDEVICEFORM_XBOX_RESERVED_00      = 0x00000024,
+    DEVICEFAMILYDEVICEFORM_XBOX_SERIES_S         = 0x00000024,
     DEVICEFAMILYDEVICEFORM_XBOX_RESERVED_01      = 0x00000025,
     DEVICEFAMILYDEVICEFORM_XBOX_RESERVED_02      = 0x00000026,
     DEVICEFAMILYDEVICEFORM_XBOX_RESERVED_03      = 0x00000027,
@@ -419,11 +419,12 @@ enum NTDDI_WIN10_VB = 0x0a000008;
 enum NTDDI_WIN10_MN = 0x0a000009;
 enum NTDDI_WIN10_FE = 0x0a00000a;
 enum NTDDI_WIN10_CO = 0x0a00000b;
-enum WDK_NTDDI_VERSION = 0x0a00000b;
+enum NTDDI_WIN10_NI = 0x0a00000c;
+enum WDK_NTDDI_VERSION = 0x0a00000c;
 enum OSVERSION_MASK = 0xffff0000;
 enum SPVERSION_MASK = 0x0000ff00;
 enum SUBVERSION_MASK = 0x000000ff;
-enum NTDDI_VERSION = 0x0a00000b;
+enum NTDDI_VERSION = 0x0a00000c;
 enum SCEX2_ALT_NETBIOS_NAME = 0x00000001;
 alias FIRMWARE_TABLE_ID = uint;
 struct GROUP_AFFINITY
@@ -717,6 +718,12 @@ enum : int
     GlobalDataIdCyclesPerYield              = 0x0000000b,
     GlobalDataIdSafeBootMode                = 0x0000000c,
     GlobalDataIdLastSystemRITEventTickCount = 0x0000000d,
+    GlobalDataIdConsoleSharedDataFlags      = 0x0000000e,
+    GlobalDataIdNtSystemRootDrive           = 0x0000000f,
+    GlobalDataIdQpcShift                    = 0x00000010,
+    GlobalDataIdQpcBypassEnabled            = 0x00000011,
+    GlobalDataIdQpcData                     = 0x00000012,
+    GlobalDataIdQpcBias                     = 0x00000013,
 }
 
 struct MEMORYSTATUS

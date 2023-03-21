@@ -2,7 +2,7 @@ module windows.win32.system.com.urlmon;
 
 import windows.win32.guid : GUID;
 import windows.win32.data.xml.msxml : IXMLElement;
-import windows.win32.foundation : BOOL, HANDLE, HANDLE_PTR, HRESULT, HWND, LARGE_INTEGER, PSTR, PWSTR, SYSTEMTIME, ULARGE_INTEGER, VARIANT_BOOL;
+import windows.win32.foundation : BOOL, HANDLE, HANDLE_PTR, HRESULT, HWND, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL;
 import windows.win32.system.com_ : BINDINFO, CLSCTX, FORMATETC, IBindCtx, IBindStatusCallback, IBinding, IClassFactory, IEnumFORMATETC, IEnumString, IMoniker, IServiceProvider, IStream, IUnknown, IUri, IUriBuilder, QUERYCONTEXT, STGMEDIUM, uCLSSPEC;
 
 version (Windows):
@@ -860,7 +860,7 @@ enum IID_IInternetProtocol = GUID(0x79eac9e4, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 
 interface IInternetProtocol : IInternetProtocolRoot
 {
     HRESULT Read(void*, uint, uint*);
-    HRESULT Seek(LARGE_INTEGER, uint, ULARGE_INTEGER*);
+    HRESULT Seek(long, uint, ulong*);
     HRESULT LockRequest(uint);
     HRESULT UnlockRequest();
 }

@@ -1,7 +1,7 @@
 module windows.win32.security_;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, CHAR, FILETIME, HANDLE, LARGE_INTEGER, LUID, NTSTATUS, PSID, PSTR, PWSTR, UNICODE_STRING;
+import windows.win32.foundation : BOOL, BOOLEAN, CHAR, FILETIME, HANDLE, LUID, NTSTATUS, PSID, PSTR, PWSTR, UNICODE_STRING;
 
 version (Windows):
 extern (Windows):
@@ -141,32 +141,23 @@ enum : ushort
     CLAIM_SECURITY_ATTRIBUTE_TYPE_BOOLEAN      = 0x0006,
 }
 
-alias PLSA_AP_CALL_PACKAGE_UNTRUSTED = NTSTATUS function(void**, void*, void*, uint, void**, uint*, int*);
-alias SEC_THREAD_START = uint function(void*);
-alias TOKEN_ACCESS_MASK = uint;
-enum : uint
+alias SECURITY_DESCRIPTOR_CONTROL = ushort;
+enum : ushort
 {
-    TOKEN_DELETE                    = 0x00010000,
-    TOKEN_READ_CONTROL              = 0x00020000,
-    TOKEN_WRITE_DAC                 = 0x00040000,
-    TOKEN_WRITE_OWNER               = 0x00080000,
-    TOKEN_ACCESS_SYSTEM_SECURITY    = 0x01000000,
-    TOKEN_ASSIGN_PRIMARY            = 0x00000001,
-    TOKEN_DUPLICATE                 = 0x00000002,
-    TOKEN_IMPERSONATE               = 0x00000004,
-    TOKEN_QUERY                     = 0x00000008,
-    TOKEN_QUERY_SOURCE              = 0x00000010,
-    TOKEN_ADJUST_PRIVILEGES         = 0x00000020,
-    TOKEN_ADJUST_GROUPS             = 0x00000040,
-    TOKEN_ADJUST_DEFAULT            = 0x00000080,
-    TOKEN_ADJUST_SESSIONID          = 0x00000100,
-    TOKEN_READ                      = 0x00020008,
-    TOKEN_WRITE                     = 0x000200e0,
-    TOKEN_EXECUTE                   = 0x00020000,
-    TOKEN_TRUST_CONSTRAINT_MASK     = 0x00020018,
-    TOKEN_ACCESS_PSEUDO_HANDLE_WIN8 = 0x00000018,
-    TOKEN_ACCESS_PSEUDO_HANDLE      = 0x00000018,
-    TOKEN_ALL_ACCESS                = 0x000f00ff,
+    SE_OWNER_DEFAULTED       = 0x0001,
+    SE_GROUP_DEFAULTED       = 0x0002,
+    SE_DACL_PRESENT          = 0x0004,
+    SE_DACL_DEFAULTED        = 0x0008,
+    SE_SACL_PRESENT          = 0x0010,
+    SE_SACL_DEFAULTED        = 0x0020,
+    SE_DACL_AUTO_INHERIT_REQ = 0x0100,
+    SE_SACL_AUTO_INHERIT_REQ = 0x0200,
+    SE_DACL_AUTO_INHERITED   = 0x0400,
+    SE_SACL_AUTO_INHERITED   = 0x0800,
+    SE_DACL_PROTECTED        = 0x1000,
+    SE_SACL_PROTECTED        = 0x2000,
+    SE_RM_CONTROL_VALID      = 0x4000,
+    SE_SELF_RELATIVE         = 0x8000,
 }
 
 BOOL AccessCheck(PSECURITY_DESCRIPTOR, HANDLE, uint, GENERIC_MAPPING*, PRIVILEGE_SET*, uint*, uint*, int*);
@@ -262,7 +253,7 @@ BOOL SetKernelObjectSecurity(HANDLE, uint, PSECURITY_DESCRIPTOR);
 BOOL SetPrivateObjectSecurity(uint, PSECURITY_DESCRIPTOR, PSECURITY_DESCRIPTOR*, GENERIC_MAPPING*, HANDLE);
 BOOL SetPrivateObjectSecurityEx(uint, PSECURITY_DESCRIPTOR, PSECURITY_DESCRIPTOR*, SECURITY_AUTO_INHERIT_FLAGS, GENERIC_MAPPING*, HANDLE);
 void SetSecurityAccessMask(uint, uint*);
-BOOL SetSecurityDescriptorControl(PSECURITY_DESCRIPTOR, ushort, ushort);
+BOOL SetSecurityDescriptorControl(PSECURITY_DESCRIPTOR, SECURITY_DESCRIPTOR_CONTROL, SECURITY_DESCRIPTOR_CONTROL);
 BOOL SetSecurityDescriptorDacl(PSECURITY_DESCRIPTOR, BOOL, ACL*, BOOL);
 BOOL SetSecurityDescriptorGroup(PSECURITY_DESCRIPTOR, PSID, BOOL);
 BOOL SetSecurityDescriptorOwner(PSECURITY_DESCRIPTOR, PSID, BOOL);
@@ -291,10 +282,6 @@ BOOL LookupAccountSidA(const(char)*, PSID, PSTR, uint*, PSTR, uint*, SID_NAME_US
 BOOL LookupAccountSidW(const(wchar)*, PSID, PWSTR, uint*, PWSTR, uint*, SID_NAME_USE*);
 BOOL LookupAccountNameA(const(char)*, const(char)*, PSID, uint*, PSTR, uint*, SID_NAME_USE*);
 BOOL LookupAccountNameW(const(wchar)*, const(wchar)*, PSID, uint*, PWSTR, uint*, SID_NAME_USE*);
-BOOL LookupAccountNameLocalA(const(char)*, PSID, uint*, PSTR, uint*, SID_NAME_USE*);
-BOOL LookupAccountNameLocalW(const(wchar)*, PSID, uint*, PWSTR, uint*, SID_NAME_USE*);
-BOOL LookupAccountSidLocalA(PSID, PSTR, uint*, PSTR, uint*, SID_NAME_USE*);
-BOOL LookupAccountSidLocalW(PSID, PWSTR, uint*, PWSTR, uint*, SID_NAME_USE*);
 BOOL LookupPrivilegeValueA(const(char)*, const(char)*, LUID*);
 BOOL LookupPrivilegeValueW(const(wchar)*, const(wchar)*, LUID*);
 BOOL LookupPrivilegeNameA(const(char)*, LUID*, PSTR, uint*);
@@ -306,6 +293,56 @@ BOOL LogonUserW(const(wchar)*, const(wchar)*, const(wchar)*, LOGON32_LOGON, LOGO
 BOOL LogonUserExA(const(char)*, const(char)*, const(char)*, LOGON32_LOGON, LOGON32_PROVIDER, HANDLE*, PSID*, void**, uint*, QUOTA_LIMITS*);
 BOOL LogonUserExW(const(wchar)*, const(wchar)*, const(wchar)*, LOGON32_LOGON, LOGON32_PROVIDER, HANDLE*, PSID*, void**, uint*, QUOTA_LIMITS*);
 NTSTATUS RtlConvertSidToUnicodeString(UNICODE_STRING*, PSID, BOOLEAN);
+enum SECURITY_DYNAMIC_TRACKING = 0x01;
+enum SECURITY_STATIC_TRACKING = 0x00;
+//enum SECURITY_NULL_SID_AUTHORITY = [MISSING];
+//enum SECURITY_WORLD_SID_AUTHORITY = [MISSING];
+//enum SECURITY_LOCAL_SID_AUTHORITY = [MISSING];
+//enum SECURITY_CREATOR_SID_AUTHORITY = [MISSING];
+//enum SECURITY_NON_UNIQUE_AUTHORITY = [MISSING];
+//enum SECURITY_NT_AUTHORITY = [MISSING];
+//enum SECURITY_RESOURCE_MANAGER_AUTHORITY = [MISSING];
+//enum SECURITY_APP_PACKAGE_AUTHORITY = [MISSING];
+//enum SECURITY_MANDATORY_LABEL_AUTHORITY = [MISSING];
+//enum SECURITY_SCOPED_POLICY_ID_AUTHORITY = [MISSING];
+//enum SECURITY_AUTHENTICATION_AUTHORITY = [MISSING];
+//enum SECURITY_PROCESS_TRUST_AUTHORITY = [MISSING];
+enum SE_CREATE_TOKEN_NAME = "SeCreateTokenPrivilege";
+enum SE_ASSIGNPRIMARYTOKEN_NAME = "SeAssignPrimaryTokenPrivilege";
+enum SE_LOCK_MEMORY_NAME = "SeLockMemoryPrivilege";
+enum SE_INCREASE_QUOTA_NAME = "SeIncreaseQuotaPrivilege";
+enum SE_UNSOLICITED_INPUT_NAME = "SeUnsolicitedInputPrivilege";
+enum SE_MACHINE_ACCOUNT_NAME = "SeMachineAccountPrivilege";
+enum SE_TCB_NAME = "SeTcbPrivilege";
+enum SE_SECURITY_NAME = "SeSecurityPrivilege";
+enum SE_TAKE_OWNERSHIP_NAME = "SeTakeOwnershipPrivilege";
+enum SE_LOAD_DRIVER_NAME = "SeLoadDriverPrivilege";
+enum SE_SYSTEM_PROFILE_NAME = "SeSystemProfilePrivilege";
+enum SE_SYSTEMTIME_NAME = "SeSystemtimePrivilege";
+enum SE_PROF_SINGLE_PROCESS_NAME = "SeProfileSingleProcessPrivilege";
+enum SE_INC_BASE_PRIORITY_NAME = "SeIncreaseBasePriorityPrivilege";
+enum SE_CREATE_PAGEFILE_NAME = "SeCreatePagefilePrivilege";
+enum SE_CREATE_PERMANENT_NAME = "SeCreatePermanentPrivilege";
+enum SE_BACKUP_NAME = "SeBackupPrivilege";
+enum SE_RESTORE_NAME = "SeRestorePrivilege";
+enum SE_SHUTDOWN_NAME = "SeShutdownPrivilege";
+enum SE_DEBUG_NAME = "SeDebugPrivilege";
+enum SE_AUDIT_NAME = "SeAuditPrivilege";
+enum SE_SYSTEM_ENVIRONMENT_NAME = "SeSystemEnvironmentPrivilege";
+enum SE_CHANGE_NOTIFY_NAME = "SeChangeNotifyPrivilege";
+enum SE_REMOTE_SHUTDOWN_NAME = "SeRemoteShutdownPrivilege";
+enum SE_UNDOCK_NAME = "SeUndockPrivilege";
+enum SE_SYNC_AGENT_NAME = "SeSyncAgentPrivilege";
+enum SE_ENABLE_DELEGATION_NAME = "SeEnableDelegationPrivilege";
+enum SE_MANAGE_VOLUME_NAME = "SeManageVolumePrivilege";
+enum SE_IMPERSONATE_NAME = "SeImpersonatePrivilege";
+enum SE_CREATE_GLOBAL_NAME = "SeCreateGlobalPrivilege";
+enum SE_TRUSTED_CREDMAN_ACCESS_NAME = "SeTrustedCredManAccessPrivilege";
+enum SE_RELABEL_NAME = "SeRelabelPrivilege";
+enum SE_INC_WORKING_SET_NAME = "SeIncreaseWorkingSetPrivilege";
+enum SE_TIME_ZONE_NAME = "SeTimeZonePrivilege";
+enum SE_CREATE_SYMBOLIC_LINK_NAME = "SeCreateSymbolicLinkPrivilege";
+enum SE_DELEGATE_SESSION_USER_IMPERSONATE_NAME = "SeDelegateSessionUserImpersonatePrivilege";
 enum wszCERTENROLLSHAREPATH = "CertSrv\\CertEnroll";
 enum cwcHRESULTSTRING = 0x00000028;
 enum szLBRACE = "{";
@@ -332,6 +369,34 @@ enum wszFCSAPARM_DSCACERTATTRIBUTE = "%11";
 enum wszFCSAPARM_DSUSERCERTATTRIBUTE = "%12";
 enum wszFCSAPARM_DSKRACERTATTRIBUTE = "%13";
 enum wszFCSAPARM_DSCROSSCERTPAIRATTRIBUTE = "%14";
+alias PLSA_AP_CALL_PACKAGE_UNTRUSTED = NTSTATUS function(void**, void*, void*, uint, void**, uint*, int*);
+alias SEC_THREAD_START = uint function(void*);
+alias TOKEN_ACCESS_MASK = uint;
+enum : uint
+{
+    TOKEN_DELETE                    = 0x00010000,
+    TOKEN_READ_CONTROL              = 0x00020000,
+    TOKEN_WRITE_DAC                 = 0x00040000,
+    TOKEN_WRITE_OWNER               = 0x00080000,
+    TOKEN_ACCESS_SYSTEM_SECURITY    = 0x01000000,
+    TOKEN_ASSIGN_PRIMARY            = 0x00000001,
+    TOKEN_DUPLICATE                 = 0x00000002,
+    TOKEN_IMPERSONATE               = 0x00000004,
+    TOKEN_QUERY                     = 0x00000008,
+    TOKEN_QUERY_SOURCE              = 0x00000010,
+    TOKEN_ADJUST_PRIVILEGES         = 0x00000020,
+    TOKEN_ADJUST_GROUPS             = 0x00000040,
+    TOKEN_ADJUST_DEFAULT            = 0x00000080,
+    TOKEN_ADJUST_SESSIONID          = 0x00000100,
+    TOKEN_READ                      = 0x00020008,
+    TOKEN_WRITE                     = 0x000200e0,
+    TOKEN_EXECUTE                   = 0x00020000,
+    TOKEN_TRUST_CONSTRAINT_MASK     = 0x00020018,
+    TOKEN_ACCESS_PSEUDO_HANDLE_WIN8 = 0x00000018,
+    TOKEN_ACCESS_PSEUDO_HANDLE      = 0x00000018,
+    TOKEN_ALL_ACCESS                = 0x000f01ff,
+}
+
 alias HDIAGNOSTIC_DATA_QUERY_SESSION = void*;
 alias HDIAGNOSTIC_REPORT = void*;
 alias HDIAGNOSTIC_EVENT_TAG_DESCRIPTION = void*;
@@ -728,11 +793,21 @@ struct ACL_SIZE_INFORMATION
     uint AclBytesInUse;
     uint AclBytesFree;
 }
+struct SECURITY_DESCRIPTOR_RELATIVE
+{
+    ubyte Revision;
+    ubyte Sbz1;
+    SECURITY_DESCRIPTOR_CONTROL Control;
+    uint Owner;
+    uint Group;
+    uint Sacl;
+    uint Dacl;
+}
 struct SECURITY_DESCRIPTOR
 {
     ubyte Revision;
     ubyte Sbz1;
-    ushort Control;
+    SECURITY_DESCRIPTOR_CONTROL Control;
     PSID Owner;
     PSID Group;
     ACL* Sacl;
@@ -861,7 +936,8 @@ enum : int
     TokenChildProcessFlags               = 0x0000002d,
     TokenIsLessPrivilegedAppContainer    = 0x0000002e,
     TokenIsSandboxed                     = 0x0000002f,
-    MaxTokenInfoClass                    = 0x00000030,
+    TokenIsAppSilo                       = 0x00000030,
+    MaxTokenInfoClass                    = 0x00000031,
 }
 
 struct TOKEN_USER
@@ -956,7 +1032,7 @@ struct TOKEN_STATISTICS
 {
     LUID TokenId;
     LUID AuthenticationId;
-    LARGE_INTEGER ExpirationTime;
+    long ExpirationTime;
     TOKEN_TYPE TokenType;
     SECURITY_IMPERSONATION_LEVEL ImpersonationLevel;
     uint DynamicCharged;
@@ -1072,5 +1148,5 @@ struct QUOTA_LIMITS
     ulong MinimumWorkingSetSize;
     ulong MaximumWorkingSetSize;
     ulong PagefileLimit;
-    LARGE_INTEGER TimeLimit;
+    long TimeLimit;
 }

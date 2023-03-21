@@ -2200,8 +2200,8 @@ interface ID3D10EffectMatrixVariable : ID3D10EffectVariable
 enum IID_ID3D10EffectStringVariable = GUID(0x71417501, 0x8df9, 0x4e0a, [0xa7, 0x8a, 0x25, 0x5f, 0x97, 0x56, 0xba, 0xff]);
 interface ID3D10EffectStringVariable : ID3D10EffectVariable
 {
-    HRESULT GetString(PSTR*);
-    HRESULT GetStringArray(PSTR*, uint, uint);
+    HRESULT GetString(const(char)**);
+    HRESULT GetStringArray(const(char)**, uint, uint);
 }
 enum IID_ID3D10EffectShaderResourceVariable = GUID(0xc0a7157b, 0xd872, 0x4b1d, [0x80, 0x73, 0xef, 0xc2, 0xac, 0xd4, 0xb1, 0xfc]);
 interface ID3D10EffectShaderResourceVariable : ID3D10EffectVariable

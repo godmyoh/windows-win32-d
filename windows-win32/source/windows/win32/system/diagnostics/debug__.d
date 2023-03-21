@@ -1,7 +1,8 @@
 module windows.win32.system.diagnostics.debug__;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FARPROC, HANDLE, HANDLE_PTR, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, NTSTATUS, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL;
+import windows.win32.data.xml.msxml : IXMLDOMElement;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FARPROC, HANDLE, HANDLE_PTR, HINSTANCE, HRESULT, HWND, NTSTATUS, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL;
 import windows.win32.security.wintrust : WIN_CERTIFICATE;
 import windows.win32.storage.filesystem : VS_FIXEDFILEINFO;
 import windows.win32.system.com_ : DISPPARAMS, EXCEPINFO, IDispatch, IStream, ITypeInfo, IUnknown, TYPEDESC, VARENUM, VARIANT;
@@ -626,6 +627,16 @@ enum : uint
     ILLEGAL_ATS_INITIALIZATION                               = 0x000001e9,
     SECURE_PCI_CONFIG_SPACE_ACCESS_VIOLATION                 = 0x000001ea,
     DAM_WATCHDOG_TIMEOUT                                     = 0x000001eb,
+    HANDLE_LIVE_DUMP                                         = 0x000001ec,
+    HANDLE_ERROR_ON_CRITICAL_THREAD                          = 0x000001ed,
+    MPSDRV_QUERY_USER                                        = 0x400001ee,
+    VMBUS_LIVEDUMP                                           = 0x400001ef,
+    USB4_HARDWARE_VIOLATION                                  = 0x000001f0,
+    KASAN_ENLIGHTENMENT_VIOLATION                            = 0x000001f1,
+    KASAN_ILLEGAL_ACCESS                                     = 0x000001f2,
+    IORING                                                   = 0x000001f3,
+    MDL_CACHE                                                = 0x000001f4,
+    MISALIGNED_POINTER_PARAMETER                             = 0x000001f6,
     XBOX_VMCTRL_CS_TIMEOUT                                   = 0x00000356,
     XBOX_CORRUPTED_IMAGE                                     = 0x00000357,
     XBOX_INVERTED_FUNCTION_TABLE_OVERFLOW                    = 0x00000358,
@@ -638,6 +649,8 @@ enum : uint
     KERNEL_CFG_INIT_FAILURE                                  = 0x00000422,
     MANUALLY_INITIATED_POWER_BUTTON_HOLD_LIVE_DUMP           = 0x000011c8,
     HYPERVISOR_ERROR                                         = 0x00020001,
+    XBOX_MANUALLY_INITIATED_CRASH                            = 0x00030006,
+    MANUALLY_INITIATED_BLACKSCREEN_HOTKEY_LIVE_DUMP          = 0x000021c8,
     WINLOGON_FATAL_ERROR                                     = 0xc000021a,
     MANUALLY_INITIATED_CRASH1                                = 0xdeaddead,
     BUGCHECK_CONTEXT_MODIFIER                                = 0x80000000,
@@ -857,24 +870,24 @@ enum : ushort
     PROCESSOR_ARCHITECTURE_UNKNOWN = 0xffff,
 }
 
-alias IMAGE_DIRECTORY_ENTRY = uint;
-enum : uint
+alias IMAGE_DIRECTORY_ENTRY = ushort;
+enum : ushort
 {
-    IMAGE_DIRECTORY_ENTRY_ARCHITECTURE   = 0x00000007,
-    IMAGE_DIRECTORY_ENTRY_BASERELOC      = 0x00000005,
-    IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT   = 0x0000000b,
-    IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR = 0x0000000e,
-    IMAGE_DIRECTORY_ENTRY_DEBUG          = 0x00000006,
-    IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT   = 0x0000000d,
-    IMAGE_DIRECTORY_ENTRY_EXCEPTION      = 0x00000003,
-    IMAGE_DIRECTORY_ENTRY_EXPORT         = 0x00000000,
-    IMAGE_DIRECTORY_ENTRY_GLOBALPTR      = 0x00000008,
-    IMAGE_DIRECTORY_ENTRY_IAT            = 0x0000000c,
-    IMAGE_DIRECTORY_ENTRY_IMPORT         = 0x00000001,
-    IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG    = 0x0000000a,
-    IMAGE_DIRECTORY_ENTRY_RESOURCE       = 0x00000002,
-    IMAGE_DIRECTORY_ENTRY_SECURITY       = 0x00000004,
-    IMAGE_DIRECTORY_ENTRY_TLS            = 0x00000009,
+    IMAGE_DIRECTORY_ENTRY_ARCHITECTURE   = 0x0007,
+    IMAGE_DIRECTORY_ENTRY_BASERELOC      = 0x0005,
+    IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT   = 0x000b,
+    IMAGE_DIRECTORY_ENTRY_COM_DESCRIPTOR = 0x000e,
+    IMAGE_DIRECTORY_ENTRY_DEBUG          = 0x0006,
+    IMAGE_DIRECTORY_ENTRY_DELAY_IMPORT   = 0x000d,
+    IMAGE_DIRECTORY_ENTRY_EXCEPTION      = 0x0003,
+    IMAGE_DIRECTORY_ENTRY_EXPORT         = 0x0000,
+    IMAGE_DIRECTORY_ENTRY_GLOBALPTR      = 0x0008,
+    IMAGE_DIRECTORY_ENTRY_IAT            = 0x000c,
+    IMAGE_DIRECTORY_ENTRY_IMPORT         = 0x0001,
+    IMAGE_DIRECTORY_ENTRY_LOAD_CONFIG    = 0x000a,
+    IMAGE_DIRECTORY_ENTRY_RESOURCE       = 0x0002,
+    IMAGE_DIRECTORY_ENTRY_SECURITY       = 0x0004,
+    IMAGE_DIRECTORY_ENTRY_TLS            = 0x0009,
 }
 
 alias WAIT_CHAIN_THREAD_OPTIONS = uint;
@@ -1089,7 +1102,7 @@ BOOL IsDebuggerPresent();
 void DebugBreak();
 void OutputDebugStringA(const(char)*);
 void OutputDebugStringW(const(wchar)*);
-BOOL ContinueDebugEvent(uint, uint, uint);
+BOOL ContinueDebugEvent(uint, uint, NTSTATUS);
 BOOL WaitForDebugEvent(DEBUG_EVENT*, uint);
 BOOL DebugActiveProcess(uint);
 BOOL DebugActiveProcessStop(uint);
@@ -1435,6 +1448,7 @@ enum DEBUG_REQUEST_INLINE_QUERY = 0x00000023;
 enum DEBUG_REQUEST_TL_INSTRUMENTATION_AWARE = 0x00000024;
 enum DEBUG_REQUEST_GET_INSTRUMENTATION_VERSION = 0x00000025;
 enum DEBUG_REQUEST_GET_MODULE_ARCHITECTURE = 0x00000026;
+enum DEBUG_REQUEST_GET_IMAGE_ARCHITECTURE = 0x00000027;
 enum DEBUG_SRCFILE_SYMBOL_TOKEN = 0x00000000;
 enum DEBUG_SRCFILE_SYMBOL_TOKEN_SOURCE_COMMAND_WIDE = 0x00000001;
 enum DEBUG_SRCFILE_SYMBOL_CHECKSUMINFO = 0x00000002;
@@ -1481,6 +1495,7 @@ enum DEBUG_PROC_DESC_NO_COMMAND_LINE = 0x00000008;
 enum DEBUG_PROC_DESC_NO_SESSION_ID = 0x00000010;
 enum DEBUG_PROC_DESC_NO_USER_NAME = 0x00000020;
 enum DEBUG_PROC_DESC_WITH_PACKAGEFAMILY = 0x00000040;
+enum DEBUG_PROC_DESC_WITH_ARCHITECTURE = 0x00000080;
 enum DEBUG_ATTACH_DEFAULT = 0x00000000;
 enum DEBUG_ATTACH_NONINVASIVE = 0x00000001;
 enum DEBUG_ATTACH_EXISTING = 0x00000002;
@@ -1631,7 +1646,8 @@ enum DEBUG_ENGOPT_DISABLESQM = 0x00080000;
 enum DEBUG_ENGOPT_DISABLE_STEPLINES_OPTIONS = 0x00200000;
 enum DEBUG_ENGOPT_DEBUGGING_SENSITIVE_DATA = 0x00400000;
 enum DEBUG_ENGOPT_PREFER_TRACE_FILES = 0x00800000;
-enum DEBUG_ENGOPT_ALL = 0x00efffff;
+enum DEBUG_ENGOPT_RESOLVE_SHADOWED_VARIABLES = 0x01000000;
+enum DEBUG_ENGOPT_ALL = 0x01efffff;
 enum DEBUG_ANY_ID = 0xffffffff;
 enum DBG_FRAME_DEFAULT = 0x00000000;
 enum DBG_FRAME_IGNORE_INLINE = 0xffffffff;
@@ -1879,6 +1895,7 @@ enum DEBUG_DATA_DumpWriterVersion = 0x000186d0;
 enum DEBUG_DATA_DumpPowerState = 0x000186d8;
 enum DEBUG_DATA_DumpMmStorage = 0x000186e0;
 enum DEBUG_DATA_DumpAttributes = 0x000186e8;
+enum DEBUG_DATA_PagingLevels = 0x000186f0;
 enum DEBUG_DATA_KPCR_OFFSET = 0x00000000;
 enum DEBUG_DATA_KPRCB_OFFSET = 0x00000001;
 enum DEBUG_DATA_KTHREAD_OFFSET = 0x00000002;
@@ -2112,7 +2129,63 @@ enum DEBUG_EXT_QVALUE_DEFAULT = 0x00000000;
 enum DEBUG_EXT_PVALUE_DEFAULT = 0x00000000;
 enum DEBUG_EXT_PVTYPE_IS_VALUE = 0x00000000;
 enum DEBUG_EXT_PVTYPE_IS_POINTER = 0x00000001;
+enum _EXTSAPI_VER_ = 0x0000000a;
+enum DUMP_HANDLE_FLAG_PRINT_OBJECT = 0x00000002;
+enum DUMP_HANDLE_FLAG_PRINT_FREE_ENTRY = 0x00000004;
+enum DUMP_HANDLE_FLAG_KERNEL_TABLE = 0x00000010;
+enum DUMP_HANDLE_FLAG_CID_TABLE = 0x00000020;
+enum KDEXTS_LOCK_CALLBACKROUTINE_DEFINED = 0x00000002;
+enum FAILURE_ANALYSIS_NO_DB_LOOKUP = 0x00000001;
+enum FAILURE_ANALYSIS_VERBOSE = 0x00000002;
+enum FAILURE_ANALYSIS_ASSUME_HANG = 0x00000004;
+enum FAILURE_ANALYSIS_IGNORE_BREAKIN = 0x00000008;
+enum FAILURE_ANALYSIS_SET_FAILURE_CONTEXT = 0x00000010;
+enum FAILURE_ANALYSIS_EXCEPTION_AS_HANG = 0x00000020;
+enum FAILURE_ANALYSIS_AUTOBUG_PROCESSING = 0x00000040;
+enum FAILURE_ANALYSIS_XML_OUTPUT = 0x00000080;
+enum FAILURE_ANALYSIS_CALLSTACK_XML = 0x00000100;
+enum FAILURE_ANALYSIS_REGISTRY_DATA = 0x00000200;
+enum FAILURE_ANALYSIS_WMI_QUERY_DATA = 0x00000400;
+enum FAILURE_ANALYSIS_USER_ATTRIBUTES = 0x00000800;
+enum FAILURE_ANALYSIS_MODULE_INFO_XML = 0x00001000;
+enum FAILURE_ANALYSIS_NO_IMAGE_CORRUPTION = 0x00002000;
+enum FAILURE_ANALYSIS_AUTOSET_SYMPATH = 0x00004000;
+enum FAILURE_ANALYSIS_USER_ATTRIBUTES_ALL = 0x00008000;
+enum FAILURE_ANALYSIS_USER_ATTRIBUTES_FRAMES = 0x00010000;
+enum FAILURE_ANALYSIS_MULTI_TARGET = 0x00020000;
+enum FAILURE_ANALYSIS_SHOW_SOURCE = 0x00040000;
+enum FAILURE_ANALYSIS_SHOW_WCT_STACKS = 0x00080000;
+enum FAILURE_ANALYSIS_CREATE_INSTANCE = 0x00100000;
+enum FAILURE_ANALYSIS_LIVE_DEBUG_HOLD_CHECK = 0x00200000;
+enum FAILURE_ANALYSIS_XML_FILE_OUTPUT = 0x00400000;
+enum FAILURE_ANALYSIS_XSD_VERIFY = 0x00800000;
+enum FAILURE_ANALYSIS_CALLSTACK_XML_FULL_SOURCE_INFO = 0x01000000;
+enum FAILURE_ANALYSIS_HEAP_CORRUPTION_BLAME_FUNCTION = 0x02000000;
+enum FAILURE_ANALYSIS_PERMIT_HEAP_ACCESS_VIOLATIONS = 0x04000000;
+enum FAILURE_ANALYSIS_XSLT_FILE_INPUT = 0x10000000;
+enum FAILURE_ANALYSIS_XSLT_FILE_OUTPUT = 0x20000000;
+enum CLSID_DebugFailureAnalysisBasic = GUID(0xb74eed7f, 0x1c7d, 0x4c1b, [0x95, 0x9f, 0xb9, 0x6d, 0xd9, 0x17, 0x5a, 0xa4]);
+enum CLSID_DebugFailureAnalysisTarget = GUID(0xba9bfb05, 0xef75, 0x4bbd, [0xa7, 0x45, 0xa6, 0xb5, 0x52, 0x94, 0x58, 0xb8]);
+enum CLSID_DebugFailureAnalysisUser = GUID(0xe60b0c93, 0xcf49, 0x4a32, [0x81, 0x47, 0x3, 0x62, 0x20, 0x2d, 0xc5, 0x6b]);
+enum CLSID_DebugFailureAnalysisKernel = GUID(0xee433078, 0x64af, 0x4c33, [0xab, 0x2f, 0xec, 0xad, 0x7f, 0x2a, 0x0, 0x2d]);
+enum CLSID_DebugFailureAnalysisWinCE = GUID(0x67d5e86f, 0xf5e2, 0x462a, [0x92, 0x33, 0x1b, 0xd6, 0x16, 0xfc, 0xc7, 0xe8]);
+enum CLSID_DebugFailureAnalysisXBox360 = GUID(0x901625bb, 0x95f1, 0x4318, [0xac, 0x80, 0x9d, 0x73, 0x3c, 0xee, 0x8c, 0x8b]);
 enum CROSS_PLATFORM_MAXIMUM_PROCESSORS = 0x00000800;
+enum MAX_STACK_IN_BYTES = 0x00001000;
+enum TRIAGE_FOLLOWUP_FAIL = 0x00000000;
+enum TRIAGE_FOLLOWUP_IGNORE = 0x00000001;
+enum TRIAGE_FOLLOWUP_DEFAULT = 0x00000002;
+enum TRIAGE_FOLLOWUP_SUCCESS = 0x00000003;
+enum EXT_ANALYZER_FLAG_MOD = 0x00000001;
+enum EXT_ANALYZER_FLAG_ID = 0x00000002;
+enum EXTDLL_DATA_QUERY_BUILD_BINDIR = 0x00000001;
+enum EXTDLL_DATA_QUERY_BUILD_SYMDIR = 0x00000002;
+enum EXTDLL_DATA_QUERY_BUILD_WOW64SYMDIR = 0x00000003;
+enum EXTDLL_DATA_QUERY_BUILD_WOW64BINDIR = 0x00000004;
+enum EXTDLL_DATA_QUERY_BUILD_BINDIR_SYMSRV = 0x0000000b;
+enum EXTDLL_DATA_QUERY_BUILD_SYMDIR_SYMSRV = 0x0000000c;
+enum EXTDLL_DATA_QUERY_BUILD_WOW64SYMDIR_SYMSRV = 0x0000000d;
+enum EXTDLL_DATA_QUERY_BUILD_WOW64BINDIR_SYMSRV = 0x0000000e;
 enum EXT_API_VERSION_NUMBER = 0x00000005;
 enum EXT_API_VERSION_NUMBER32 = 0x00000005;
 enum EXT_API_VERSION_NUMBER64 = 0x00000006;
@@ -2366,6 +2439,7 @@ enum UNDNAME_NO_SPECIAL_SYMS = 0x00004000;
 enum DBHHEADER_PDBGUID = 0x00000003;
 enum INLINE_FRAME_CONTEXT_INIT = 0x00000000;
 enum INLINE_FRAME_CONTEXT_IGNORE = 0xffffffff;
+enum TARGET_ATTRIBUTE_PACMASK = 0x00000001;
 enum SYM_STKWALK_DEFAULT = 0x00000000;
 enum SYM_STKWALK_FORCE_FRAMEPTR = 0x00000001;
 enum SYM_STKWALK_ZEROEXTEND_PTRS = 0x00000002;
@@ -2665,6 +2739,9 @@ enum WHEA_PENDING_PAGE_LIST_SZ = 0x0000000d;
 enum WHEA_BAD_PAGE_LIST_MAX_SIZE = 0x0000000e;
 enum WHEA_BAD_PAGE_LIST_LOCATION = 0x0000000f;
 enum WHEA_NOTIFY_ALL_OFFLINES = 0x00000010;
+enum WHEA_ROW_FAIL_CHECK_EXTENT = 0x00000011;
+enum WHEA_ROW_FAIL_CHECK_ENABLE = 0x00000012;
+enum WHEA_ROW_FAIL_CHECK_THRESHOLD = 0x00000013;
 enum IPMI_OS_SEL_RECORD_VERSION_1 = 0x00000001;
 enum IPMI_OS_SEL_RECORD_VERSION = 0x00000001;
 enum IPMI_IOCTL_INDEX = 0x00000400;
@@ -7513,6 +7590,11 @@ struct KDDEBUGGER_DATA64
     uint RetpolineStubOffset;
     uint RetpolineStubSize;
     ushort OffsetEProcessMmHotPatchContext;
+    uint OffsetKThreadShadowStackLimit;
+    uint OffsetKThreadShadowStackBase;
+    ulong ShadowStackEnabled;
+    ulong PointerAuthMask;
+    ushort OffsetPrcbExceptionStack;
 }
 alias PSYM_DUMP_FIELD_CALLBACK = uint function(FIELD_INFO*, void*);
 struct FIELD_INFO
@@ -7557,6 +7639,1429 @@ struct SYM_DUMP_PARAM
     uint TypeSize;
     uint BufferSize;
     uint _bitfield0;
+}
+struct DEBUG_DEVICE_OBJECT_INFO
+{
+    uint SizeOfStruct;
+    ulong DevObjAddress;
+    uint ReferenceCount;
+    BOOL QBusy;
+    ulong DriverObject;
+    ulong CurrentIrp;
+    ulong DevExtension;
+    ulong DevObjExtension;
+}
+alias PGET_DEVICE_OBJECT_INFO = HRESULT function(IDebugClient, ulong, DEBUG_DEVICE_OBJECT_INFO*);
+struct DEBUG_DRIVER_OBJECT_INFO
+{
+    uint SizeOfStruct;
+    uint DriverSize;
+    ulong DriverObjAddress;
+    ulong DriverStart;
+    ulong DriverExtension;
+    ulong DeviceObject;
+    struct _DriverName_e__Struct
+    {
+        ushort Length;
+        ushort MaximumLength;
+        ulong Buffer;
+    }
+}
+alias PGET_DRIVER_OBJECT_INFO = HRESULT function(IDebugClient, ulong, DEBUG_DRIVER_OBJECT_INFO*);
+struct PROCESS_COMMIT_USAGE
+{
+    ubyte[16] ImageFileName;
+    ulong ClientId;
+    ulong ProcessAddress;
+    ulong CommitCharge;
+    ulong SharedCommitCharge;
+    ulong ReleasedCommitDebt;
+    ulong Reserved;
+}
+alias PGET_PROCESS_COMMIT = HRESULT function(IDebugClient, ulong*, uint*, PROCESS_COMMIT_USAGE**);
+alias PGET_FULL_IMAGE_NAME = HRESULT function(IDebugClient, ulong, PSTR*);
+struct DEBUG_CPU_SPEED_INFO
+{
+    uint SizeOfStruct;
+    uint CurrentSpeed;
+    uint RatedSpeed;
+    wchar[256] NameString;
+}
+alias PGET_CPU_PSPEED_INFO = HRESULT function(IDebugClient, DEBUG_CPU_SPEED_INFO*);
+struct DEBUG_CPU_MICROCODE_VERSION
+{
+    uint SizeOfStruct;
+    long CachedSignature;
+    long InitialSignature;
+    uint ProcessorModel;
+    uint ProcessorFamily;
+    uint ProcessorStepping;
+    uint ProcessorArchRev;
+}
+alias PGET_CPU_MICROCODE_VERSION = HRESULT function(IDebugClient, DEBUG_CPU_MICROCODE_VERSION*);
+struct DEBUG_SMBIOS_INFO
+{
+    uint SizeOfStruct;
+    ubyte SmbiosMajorVersion;
+    ubyte SmbiosMinorVersion;
+    ubyte DMIVersion;
+    uint TableSize;
+    ubyte BiosMajorRelease;
+    ubyte BiosMinorRelease;
+    ubyte FirmwareMajorRelease;
+    ubyte FirmwareMinorRelease;
+    CHAR[64] BaseBoardManufacturer;
+    CHAR[64] BaseBoardProduct;
+    CHAR[64] BaseBoardVersion;
+    CHAR[64] BiosReleaseDate;
+    CHAR[64] BiosVendor;
+    CHAR[64] BiosVersion;
+    CHAR[64] SystemFamily;
+    CHAR[64] SystemManufacturer;
+    CHAR[64] SystemProductName;
+    CHAR[64] SystemSKU;
+    CHAR[64] SystemVersion;
+}
+alias PGET_SMBIOS_INFO = HRESULT function(IDebugClient, DEBUG_SMBIOS_INFO*);
+struct DEBUG_IRP_STACK_INFO
+{
+    ubyte Major;
+    ubyte Minor;
+    ulong DeviceObject;
+    ulong FileObject;
+    ulong CompletionRoutine;
+    ulong StackAddress;
+}
+struct DEBUG_IRP_INFO
+{
+    uint SizeOfStruct;
+    ulong IrpAddress;
+    uint IoStatus;
+    uint StackCount;
+    uint CurrentLocation;
+    ulong MdlAddress;
+    ulong Thread;
+    ulong CancelRoutine;
+    DEBUG_IRP_STACK_INFO CurrentStack;
+    DEBUG_IRP_STACK_INFO[10] Stack;
+}
+alias PGET_IRP_INFO = HRESULT function(IDebugClient, ulong, DEBUG_IRP_INFO*);
+struct DEBUG_PNP_TRIAGE_INFO
+{
+    uint SizeOfStruct;
+    ulong Lock_Address;
+    int Lock_ActiveCount;
+    uint Lock_ContentionCount;
+    uint Lock_NumberOfExclusiveWaiters;
+    uint Lock_NumberOfSharedWaiters;
+    ushort Lock_Flag;
+    ulong TriagedThread;
+    int ThreadCount;
+    ulong TriagedThread_WaitTime;
+}
+alias PGET_PNP_TRIAGE_INFO = HRESULT function(IDebugClient, DEBUG_PNP_TRIAGE_INFO*);
+struct DEBUG_POOL_DATA
+{
+    uint SizeofStruct;
+    ulong PoolBlock;
+    ulong Pool;
+    uint PreviousSize;
+    uint Size;
+    uint PoolTag;
+    ulong ProcessBilled;
+    union
+    {
+        struct
+        {
+            uint _bitfield0;
+        }
+        uint AsUlong;
+    }
+    ulong[4] Reserved2;
+    CHAR[64] PoolTagDescription;
+}
+alias PGET_POOL_DATA = HRESULT function(IDebugClient, ulong, DEBUG_POOL_DATA*);
+alias DEBUG_POOL_REGION = int;
+enum : int
+{
+    DbgPoolRegionUnknown           = 0x00000000,
+    DbgPoolRegionSpecial           = 0x00000001,
+    DbgPoolRegionPaged             = 0x00000002,
+    DbgPoolRegionNonPaged          = 0x00000003,
+    DbgPoolRegionNonPagedExpansion = 0x00000004,
+    DbgPoolRegionSessionPaged      = 0x00000005,
+    DbgPoolRegionMax               = 0x00000006,
+}
+
+alias PGET_POOL_REGION = HRESULT function(IDebugClient, ulong, DEBUG_POOL_REGION*);
+struct KDEXT_THREAD_FIND_PARAMS
+{
+    uint SizeofStruct;
+    ulong StackPointer;
+    uint Cid;
+    ulong Thread;
+}
+alias PFIND_MATCHING_THREAD = HRESULT function(IDebugClient, KDEXT_THREAD_FIND_PARAMS*);
+struct KDEXT_PROCESS_FIND_PARAMS
+{
+    uint SizeofStruct;
+    uint Pid;
+    uint Session;
+    PSTR ImageName;
+}
+alias PFIND_MATCHING_PROCESS = HRESULT function(IDebugClient, KDEXT_PROCESS_FIND_PARAMS*, ulong*);
+alias EXTS_JOB_PROCESS_CALLBACK = BOOLEAN function(ulong, ulong, void*);
+alias PENUMERATE_JOB_PROCESSES = HRESULT function(IDebugClient, ulong, EXTS_JOB_PROCESS_CALLBACK, void*);
+alias EXTS_TABLE_ENTRY_CALLBACK = BOOLEAN function(ulong, void*);
+alias PENUMERATE_HASH_TABLE = HRESULT function(IDebugClient, ulong, EXTS_TABLE_ENTRY_CALLBACK, void*);
+struct KDEXT_HANDLE_INFORMATION
+{
+    ulong HandleTableEntry;
+    ulong Handle;
+    ulong Object;
+    ulong ObjectBody;
+    ulong GrantedAccess;
+    uint HandleAttributes;
+    BOOLEAN PagedOut;
+}
+alias KDEXT_DUMP_HANDLE_CALLBACK = BOOLEAN function(KDEXT_HANDLE_INFORMATION*, uint, void*);
+alias PENUMERATE_HANDLES = HRESULT function(IDebugClient, ulong, ulong, uint, KDEXT_DUMP_HANDLE_CALLBACK, void*);
+struct KDEXT_FILELOCK_OWNER
+{
+    uint Sizeofstruct;
+    ulong FileObject;
+    ulong OwnerThread;
+    ulong WaitIrp;
+    ulong DeviceObject;
+    CHAR[32] BlockingDirver;
+}
+alias PFIND_FILELOCK_OWNERINFO = HRESULT function(IDebugClient, KDEXT_FILELOCK_OWNER*);
+struct KDEXTS_LOCK_INFO
+{
+    uint SizeOfStruct;
+    ulong Address;
+    ulong OwningThread;
+    BOOL ExclusiveOwned;
+    uint NumOwners;
+    uint ContentionCount;
+    uint NumExclusiveWaiters;
+    uint NumSharedWaiters;
+    ulong* pOwnerThreads;
+    ulong* pWaiterThreads;
+}
+alias KDEXTS_LOCK_CALLBACKROUTINE = HRESULT function(KDEXTS_LOCK_INFO*, void*);
+alias PENUMERATE_SYSTEM_LOCKS = HRESULT function(IDebugClient, uint, KDEXTS_LOCK_CALLBACKROUTINE, void*);
+struct KDEXTS_PTE_INFO
+{
+    uint SizeOfStruct;
+    ulong VirtualAddress;
+    ulong PpeAddress;
+    ulong PdeAddress;
+    ulong PteAddress;
+    ulong Pfn;
+    ulong Levels;
+    uint _bitfield1;
+    uint _bitfield2;
+}
+alias PKDEXTS_GET_PTE_INFO = HRESULT function(IDebugClient, ulong, KDEXTS_PTE_INFO*);
+struct DEBUG_POOLTAG_DESCRIPTION
+{
+    uint SizeOfStruct;
+    uint PoolTag;
+    CHAR[260] Description;
+    CHAR[32] Binary;
+    CHAR[32] Owner;
+}
+alias PGET_POOL_TAG_DESCRIPTION = HRESULT function(uint, DEBUG_POOLTAG_DESCRIPTION*);
+alias DEBUG_FAILURE_TYPE = int;
+enum : int
+{
+    DEBUG_FLR_UNKNOWN = 0x00000000,
+    DEBUG_FLR_KERNEL  = 0x00000001,
+    DEBUG_FLR_USER    = 0x00000002,
+}
+
+alias DEBUG_FLR_PARAM_TYPE = int;
+enum : int
+{
+    DEBUG_FLR_INVALID                                       = 0x00000000,
+    DEBUG_FLR_RESERVED                                      = 0x00000001,
+    DEBUG_FLR_DRIVER_OBJECT                                 = 0x00000002,
+    DEBUG_FLR_DEVICE_OBJECT                                 = 0x00000003,
+    DEBUG_FLR_INVALID_PFN                                   = 0x00000004,
+    DEBUG_FLR_WORKER_ROUTINE                                = 0x00000005,
+    DEBUG_FLR_WORK_ITEM                                     = 0x00000006,
+    DEBUG_FLR_INVALID_DPC_FOUND                             = 0x00000007,
+    DEBUG_FLR_PROCESS_OBJECT                                = 0x00000008,
+    DEBUG_FLR_FAILED_INSTRUCTION_ADDRESS                    = 0x00000009,
+    DEBUG_FLR_LAST_CONTROL_TRANSFER                         = 0x0000000a,
+    DEBUG_FLR_ACPI_EXTENSION                                = 0x0000000b,
+    DEBUG_FLR_ACPI_RESCONFLICT                              = 0x0000000c,
+    DEBUG_FLR_ACPI_OBJECT                                   = 0x0000000d,
+    DEBUG_FLR_READ_ADDRESS                                  = 0x0000000e,
+    DEBUG_FLR_WRITE_ADDRESS                                 = 0x0000000f,
+    DEBUG_FLR_CRITICAL_SECTION                              = 0x00000010,
+    DEBUG_FLR_BAD_HANDLE                                    = 0x00000011,
+    DEBUG_FLR_INVALID_HEAP_ADDRESS                          = 0x00000012,
+    DEBUG_FLR_CHKIMG_EXTENSION                              = 0x00000013,
+    DEBUG_FLR_USBPORT_OCADATA                               = 0x00000014,
+    DEBUG_FLR_WORK_QUEUE_ITEM                               = 0x00000015,
+    DEBUG_FLR_ERESOURCE_ADDRESS                             = 0x00000016,
+    DEBUG_FLR_PNP_TRIAGE_DATA_DEPRECATED                    = 0x00000017,
+    DEBUG_FLR_HANDLE_VALUE                                  = 0x00000018,
+    DEBUG_FLR_WHEA_ERROR_RECORD                             = 0x00000019,
+    DEBUG_FLR_VERIFIER_FOUND_DEADLOCK                       = 0x0000001a,
+    DEBUG_FLR_PG_MISMATCH                                   = 0x0000001b,
+    DEBUG_FLR_DEVICE_NODE                                   = 0x0000001c,
+    DEBUG_FLR_POWERREQUEST_ADDRESS                          = 0x0000001d,
+    DEBUG_FLR_EXECUTE_ADDRESS                               = 0x0000001e,
+    DEBUG_FLR_IRP_ADDRESS                                   = 0x00000100,
+    DEBUG_FLR_IRP_MAJOR_FN                                  = 0x00000101,
+    DEBUG_FLR_IRP_MINOR_FN                                  = 0x00000102,
+    DEBUG_FLR_IRP_CANCEL_ROUTINE                            = 0x00000103,
+    DEBUG_FLR_IOSB_ADDRESS                                  = 0x00000104,
+    DEBUG_FLR_INVALID_USEREVENT                             = 0x00000105,
+    DEBUG_FLR_VIDEO_TDR_CONTEXT                             = 0x00000106,
+    DEBUG_FLR_VERIFIER_DRIVER_ENTRY                         = 0x00000107,
+    DEBUG_FLR_PNP_IRP_ADDRESS_DEPRECATED                    = 0x00000108,
+    DEBUG_FLR_PREVIOUS_MODE                                 = 0x00000109,
+    DEBUG_FLR_CURRENT_IRQL                                  = 0x00000200,
+    DEBUG_FLR_PREVIOUS_IRQL                                 = 0x00000201,
+    DEBUG_FLR_REQUESTED_IRQL                                = 0x00000202,
+    DEBUG_FLR_ASSERT_DATA                                   = 0x00000300,
+    DEBUG_FLR_ASSERT_FILE                                   = 0x00000301,
+    DEBUG_FLR_EXCEPTION_PARAMETER1                          = 0x00000302,
+    DEBUG_FLR_EXCEPTION_PARAMETER2                          = 0x00000303,
+    DEBUG_FLR_EXCEPTION_PARAMETER3                          = 0x00000304,
+    DEBUG_FLR_EXCEPTION_PARAMETER4                          = 0x00000305,
+    DEBUG_FLR_EXCEPTION_RECORD                              = 0x00000306,
+    DEBUG_FLR_IO_ERROR_CODE                                 = 0x00000307,
+    DEBUG_FLR_EXCEPTION_STR                                 = 0x00000308,
+    DEBUG_FLR_EXCEPTION_DOESNOT_MATCH_CODE                  = 0x00000309,
+    DEBUG_FLR_ASSERT_INSTRUCTION                            = 0x0000030a,
+    DEBUG_FLR_POOL_ADDRESS                                  = 0x00000400,
+    DEBUG_FLR_SPECIAL_POOL_CORRUPTION_TYPE                  = 0x00000401,
+    DEBUG_FLR_CORRUPTING_POOL_ADDRESS                       = 0x00000402,
+    DEBUG_FLR_CORRUPTING_POOL_TAG                           = 0x00000403,
+    DEBUG_FLR_FREED_POOL_TAG                                = 0x00000404,
+    DEBUG_FLR_LEAKED_SESSION_POOL_TAG                       = 0x00000405,
+    DEBUG_FLR_INSTR_SESSION_POOL_TAG                        = 0x00000406,
+    DEBUG_FLR_CLIENT_DRIVER                                 = 0x00000407,
+    DEBUG_FLR_FILE_ID                                       = 0x00000500,
+    DEBUG_FLR_FILE_LINE                                     = 0x00000501,
+    DEBUG_FLR_BUGCHECK_STR                                  = 0x00000600,
+    DEBUG_FLR_BUGCHECK_SPECIFIER                            = 0x00000601,
+    DEBUG_FLR_BUGCHECK_DESC                                 = 0x00000602,
+    DEBUG_FLR_MANAGED_CODE                                  = 0x00000700,
+    DEBUG_FLR_MANAGED_OBJECT                                = 0x00000701,
+    DEBUG_FLR_MANAGED_EXCEPTION_OBJECT                      = 0x00000702,
+    DEBUG_FLR_MANAGED_EXCEPTION_MESSAGE_deprecated          = 0x00000703,
+    DEBUG_FLR_MANAGED_STACK_STRING                          = 0x00000704,
+    DEBUG_FLR_MANAGED_BITNESS_MISMATCH                      = 0x00000705,
+    DEBUG_FLR_MANAGED_OBJECT_NAME                           = 0x00000706,
+    DEBUG_FLR_MANAGED_EXCEPTION_CONTEXT_MESSAGE             = 0x00000707,
+    DEBUG_FLR_MANAGED_STACK_COMMAND                         = 0x00000708,
+    DEBUG_FLR_MANAGED_KERNEL_DEBUGGER                       = 0x00000709,
+    DEBUG_FLR_MANAGED_HRESULT_STRING                        = 0x0000070a,
+    DEBUG_FLR_MANAGED_ENGINE_MODULE                         = 0x0000070b,
+    DEBUG_FLR_MANAGED_ANALYSIS_PROVIDER                     = 0x0000070c,
+    DEBUG_FLR_MANAGED_EXCEPTION_ADDRESS                     = 0x00000800,
+    DEBUG_FLR_MANAGED_EXCEPTION_HRESULT                     = 0x00000801,
+    DEBUG_FLR_MANAGED_EXCEPTION_TYPE                        = 0x00000802,
+    DEBUG_FLR_MANAGED_EXCEPTION_MESSAGE                     = 0x00000803,
+    DEBUG_FLR_MANAGED_EXCEPTION_CALLSTACK                   = 0x00000804,
+    DEBUG_FLR_MANAGED_EXCEPTION_INNER_ADDRESS               = 0x00000810,
+    DEBUG_FLR_MANAGED_EXCEPTION_INNER_HRESULT               = 0x00000811,
+    DEBUG_FLR_MANAGED_EXCEPTION_INNER_TYPE                  = 0x00000812,
+    DEBUG_FLR_MANAGED_EXCEPTION_INNER_MESSAGE               = 0x00000813,
+    DEBUG_FLR_MANAGED_EXCEPTION_INNER_CALLSTACK             = 0x00000814,
+    DEBUG_FLR_MANAGED_EXCEPTION_NESTED_ADDRESS              = 0x00000820,
+    DEBUG_FLR_MANAGED_EXCEPTION_NESTED_HRESULT              = 0x00000821,
+    DEBUG_FLR_MANAGED_EXCEPTION_NESTED_TYPE                 = 0x00000822,
+    DEBUG_FLR_MANAGED_EXCEPTION_NESTED_MESSAGE              = 0x00000823,
+    DEBUG_FLR_MANAGED_EXCEPTION_NESTED_CALLSTACK            = 0x00000824,
+    DEBUG_FLR_MANAGED_EXCEPTION_CMD                         = 0x000008f0,
+    DEBUG_FLR_MANAGED_THREAD_ID                             = 0x00000900,
+    DEBUG_FLR_MANAGED_THREAD_CMD_CALLSTACK                  = 0x000009f0,
+    DEBUG_FLR_MANAGED_THREAD_CMD_STACKOBJECTS               = 0x000009f1,
+    DEBUG_FLR_DRIVER_VERIFIER_IO_VIOLATION_TYPE             = 0x00001000,
+    DEBUG_FLR_EXCEPTION_CODE                                = 0x00001001,
+    DEBUG_FLR_EXCEPTION_CODE_STR                            = 0x00001002,
+    DEBUG_FLR_IOCONTROL_CODE                                = 0x00001003,
+    DEBUG_FLR_MM_INTERNAL_CODE                              = 0x00001004,
+    DEBUG_FLR_DRVPOWERSTATE_SUBCODE                         = 0x00001005,
+    DEBUG_FLR_STATUS_CODE                                   = 0x00001006,
+    DEBUG_FLR_SYMBOL_STACK_INDEX                            = 0x00001007,
+    DEBUG_FLR_SYMBOL_ON_RAW_STACK                           = 0x00001008,
+    DEBUG_FLR_SECURITY_COOKIES                              = 0x00001009,
+    DEBUG_FLR_THREADPOOL_WAITER                             = 0x0000100a,
+    DEBUG_FLR_TARGET_MODE                                   = 0x0000100b,
+    DEBUG_FLR_BUGCHECK_CODE                                 = 0x0000100c,
+    DEBUG_FLR_BADPAGES_DETECTED                             = 0x0000100d,
+    DEBUG_FLR_DPC_TIMEOUT_TYPE                              = 0x0000100e,
+    DEBUG_FLR_DPC_RUNTIME                                   = 0x0000100f,
+    DEBUG_FLR_DPC_TIMELIMIT                                 = 0x00001010,
+    DEBUG_FLR_DUMP_FILE_ATTRIBUTES                          = 0x00001011,
+    DEBUG_FLR_PAGE_HASH_ERRORS                              = 0x00001012,
+    DEBUG_FLR_BUGCHECK_P1                                   = 0x00001013,
+    DEBUG_FLR_BUGCHECK_P2                                   = 0x00001014,
+    DEBUG_FLR_BUGCHECK_P3                                   = 0x00001015,
+    DEBUG_FLR_BUGCHECK_P4                                   = 0x00001016,
+    DEBUG_FLR_CRITICAL_PROCESS                              = 0x00001017,
+    DEBUG_FLR_RESOURCE_CALL_TYPE                            = 0x00001100,
+    DEBUG_FLR_RESOURCE_CALL_TYPE_STR                        = 0x00001101,
+    DEBUG_FLR_CORRUPT_MODULE_LIST                           = 0x00002000,
+    DEBUG_FLR_BAD_STACK                                     = 0x00002001,
+    DEBUG_FLR_ZEROED_STACK                                  = 0x00002002,
+    DEBUG_FLR_WRONG_SYMBOLS                                 = 0x00002003,
+    DEBUG_FLR_FOLLOWUP_DRIVER_ONLY                          = 0x00002004,
+    DEBUG_FLR_UNUSED001                                     = 0x00002005,
+    DEBUG_FLR_CPU_OVERCLOCKED                               = 0x00002006,
+    DEBUG_FLR_POSSIBLE_INVALID_CONTROL_TRANSFER             = 0x00002007,
+    DEBUG_FLR_POISONED_TB                                   = 0x00002008,
+    DEBUG_FLR_UNKNOWN_MODULE                                = 0x00002009,
+    DEBUG_FLR_ANALYZABLE_POOL_CORRUPTION                    = 0x0000200a,
+    DEBUG_FLR_SINGLE_BIT_ERROR                              = 0x0000200b,
+    DEBUG_FLR_TWO_BIT_ERROR                                 = 0x0000200c,
+    DEBUG_FLR_INVALID_KERNEL_CONTEXT                        = 0x0000200d,
+    DEBUG_FLR_DISK_HARDWARE_ERROR                           = 0x0000200e,
+    DEBUG_FLR_SHOW_ERRORLOG                                 = 0x0000200f,
+    DEBUG_FLR_MANUAL_BREAKIN                                = 0x00002010,
+    DEBUG_FLR_HANG                                          = 0x00002011,
+    DEBUG_FLR_BAD_MEMORY_REFERENCE                          = 0x00002012,
+    DEBUG_FLR_BAD_OBJECT_REFERENCE                          = 0x00002013,
+    DEBUG_FLR_APPKILL                                       = 0x00002014,
+    DEBUG_FLR_SINGLE_BIT_PFN_PAGE_ERROR                     = 0x00002015,
+    DEBUG_FLR_HARDWARE_ERROR                                = 0x00002016,
+    DEBUG_FLR_NO_IMAGE_IN_BUCKET                            = 0x00002017,
+    DEBUG_FLR_NO_BUGCHECK_IN_BUCKET                         = 0x00002018,
+    DEBUG_FLR_SKIP_STACK_ANALYSIS                           = 0x00002019,
+    DEBUG_FLR_INVALID_OPCODE                                = 0x0000201a,
+    DEBUG_FLR_ADD_PROCESS_IN_BUCKET                         = 0x0000201b,
+    DEBUG_FLR_RAISED_IRQL_USER_FAULT                        = 0x0000201c,
+    DEBUG_FLR_USE_DEFAULT_CONTEXT                           = 0x0000201d,
+    DEBUG_FLR_BOOST_FOLLOWUP_TO_SPECIFIC                    = 0x0000201e,
+    DEBUG_FLR_SWITCH_PROCESS_CONTEXT                        = 0x0000201f,
+    DEBUG_FLR_VERIFIER_STOP                                 = 0x00002020,
+    DEBUG_FLR_USERBREAK_PEB_PAGEDOUT                        = 0x00002021,
+    DEBUG_FLR_MOD_SPECIFIC_DATA_ONLY                        = 0x00002022,
+    DEBUG_FLR_OVERLAPPED_MODULE                             = 0x00002023,
+    DEBUG_FLR_CPU_MICROCODE_ZERO_INTEL                      = 0x00002024,
+    DEBUG_FLR_INTEL_CPU_BIOS_UPGRADE_NEEDED                 = 0x00002025,
+    DEBUG_FLR_OVERLAPPED_UNLOADED_MODULE                    = 0x00002026,
+    DEBUG_FLR_INVALID_USER_CONTEXT                          = 0x00002027,
+    DEBUG_FLR_MILCORE_BREAK                                 = 0x00002028,
+    DEBUG_FLR_NO_IMAGE_TIMESTAMP_IN_BUCKET                  = 0x00002029,
+    DEBUG_FLR_KERNEL_VERIFIER_ENABLED                       = 0x0000202a,
+    DEBUG_FLR_SKIP_CORRUPT_MODULE_DETECTION                 = 0x0000202b,
+    DEBUG_FLR_GSFAILURE_FALSE_POSITIVE                      = 0x0000202c,
+    DEBUG_FLR_IGNORE_LARGE_MODULE_CORRUPTION                = 0x0000202d,
+    DEBUG_FLR_IGNORE_BUCKET_ID_OFFSET                       = 0x0000202e,
+    DEBUG_FLR_NO_ARCH_IN_BUCKET                             = 0x0000202f,
+    DEBUG_FLR_IGNORE_MODULE_HARDWARE_ID                     = 0x00002030,
+    DEBUG_FLR_ARM_WRITE_AV_CAVEAT                           = 0x00002031,
+    DEBUG_FLR_ON_DPC_STACK                                  = 0x00002032,
+    DEBUG_FLR_LIVE_KERNEL_DUMP                              = 0x00002033,
+    DEBUG_FLR_COVERAGE_BUILD                                = 0x00002034,
+    DEBUG_FLR_POSSIBLE_STACK_OVERFLOW                       = 0x00002035,
+    DEBUG_FLR_WRONG_SYMBOLS_TIMESTAMP                       = 0x00002036,
+    DEBUG_FLR_WRONG_SYMBOLS_SIZE                            = 0x00002037,
+    DEBUG_FLR_MISSING_IMPORTANT_SYMBOL                      = 0x00002038,
+    DEBUG_FLR_MISSING_CLR_SYMBOL                            = 0x00002039,
+    DEBUG_FLR_TARGET_TIME                                   = 0x0000203a,
+    DEBUG_FLR_LOW_SYSTEM_COMMIT                             = 0x0000203b,
+    DEBUG_FLR_LEGACY_PAGE_TABLE_ACCESS                      = 0x0000203c,
+    DEBUG_FLR_HIGH_PROCESS_COMMIT                           = 0x0000203d,
+    DEBUG_FLR_HIGH_SERVICE_COMMIT                           = 0x0000203e,
+    DEBUG_FLR_HIGH_NONPAGED_POOL_USAGE                      = 0x0000203f,
+    DEBUG_FLR_HIGH_PAGED_POOL_USAGE                         = 0x00002040,
+    DEBUG_FLR_HIGH_SHARED_COMMIT_USAGE                      = 0x00002041,
+    DEBUG_FLR_APPS_NOT_TERMINATED                           = 0x00002042,
+    DEBUG_FLR_POOL_CORRUPTOR                                = 0x00003000,
+    DEBUG_FLR_MEMORY_CORRUPTOR                              = 0x00003001,
+    DEBUG_FLR_UNALIGNED_STACK_POINTER                       = 0x00003002,
+    DEBUG_FLR_OS_VERSION_deprecated                         = 0x00003003,
+    DEBUG_FLR_BUGCHECKING_DRIVER                            = 0x00003004,
+    DEBUG_FLR_SOLUTION_ID                                   = 0x00003005,
+    DEBUG_FLR_DEFAULT_SOLUTION_ID                           = 0x00003006,
+    DEBUG_FLR_SOLUTION_TYPE                                 = 0x00003007,
+    DEBUG_FLR_RECURRING_STACK                               = 0x00003008,
+    DEBUG_FLR_FAULTING_INSTR_CODE                           = 0x00003009,
+    DEBUG_FLR_SYSTEM_LOCALE_deprecated                      = 0x0000300a,
+    DEBUG_FLR_CUSTOMER_CRASH_COUNT                          = 0x0000300b,
+    DEBUG_FLR_TRAP_FRAME_RECURSION                          = 0x0000300c,
+    DEBUG_FLR_STACK_OVERFLOW                                = 0x0000300d,
+    DEBUG_FLR_STACK_POINTER_ERROR                           = 0x0000300e,
+    DEBUG_FLR_STACK_POINTER_ONEBIT_ERROR                    = 0x0000300f,
+    DEBUG_FLR_STACK_POINTER_MISALIGNED                      = 0x00003010,
+    DEBUG_FLR_INSTR_POINTER_MISALIGNED                      = 0x00003011,
+    DEBUG_FLR_INSTR_POINTER_CLIFAULT                        = 0x00003012,
+    DEBUG_FLR_REGISTRYTXT_STRESS_ID                         = 0x00003013,
+    DEBUG_FLR_CORRUPT_SERVICE_TABLE                         = 0x00003014,
+    DEBUG_FLR_LOP_STACKHASH                                 = 0x00003015,
+    DEBUG_FLR_GSFAILURE_FUNCTION                            = 0x00003016,
+    DEBUG_FLR_GSFAILURE_MODULE_COOKIE                       = 0x00003017,
+    DEBUG_FLR_GSFAILURE_FRAME_COOKIE                        = 0x00003018,
+    DEBUG_FLR_GSFAILURE_FRAME_COOKIE_COMPLEMENT             = 0x00003019,
+    DEBUG_FLR_GSFAILURE_CORRUPTED_COOKIE                    = 0x0000301a,
+    DEBUG_FLR_GSFAILURE_CORRUPTED_EBP                       = 0x0000301b,
+    DEBUG_FLR_GSFAILURE_OVERRUN_LOCAL                       = 0x0000301c,
+    DEBUG_FLR_GSFAILURE_OVERRUN_LOCAL_NAME                  = 0x0000301d,
+    DEBUG_FLR_GSFAILURE_CORRUPTED_EBPESP                    = 0x0000301e,
+    DEBUG_FLR_GSFAILURE_POSITIVELY_CORRUPTED_EBPESP         = 0x0000301f,
+    DEBUG_FLR_GSFAILURE_MEMORY_READ_ERROR                   = 0x00003020,
+    DEBUG_FLR_GSFAILURE_PROBABLY_NOT_USING_GS               = 0x00003021,
+    DEBUG_FLR_GSFAILURE_POSITIVE_BUFFER_OVERFLOW            = 0x00003022,
+    DEBUG_FLR_GSFAILURE_ANALYSIS_TEXT                       = 0x00003023,
+    DEBUG_FLR_GSFAILURE_OFF_BY_ONE_OVERRUN                  = 0x00003024,
+    DEBUG_FLR_GSFAILURE_RA_SMASHED                          = 0x00003025,
+    DEBUG_FLR_GSFAILURE_NOT_UP2DATE                         = 0x00003026,
+    DEBUG_FLR_GSFAILURE_UP2DATE_UNKNOWN                     = 0x00003027,
+    DEBUG_FLR_TRIAGER_OS_BUILD_NAME                         = 0x00003028,
+    DEBUG_FLR_CPU_MICROCODE_VERSION                         = 0x00003029,
+    DEBUG_FLR_CPU_COUNT                                     = 0x0000302a,
+    DEBUG_FLR_CPU_SPEED                                     = 0x0000302b,
+    DEBUG_FLR_CPU_VENDOR                                    = 0x0000302c,
+    DEBUG_FLR_CPU_FAMILY                                    = 0x0000302d,
+    DEBUG_FLR_CPU_MODEL                                     = 0x0000302e,
+    DEBUG_FLR_CPU_STEPPING                                  = 0x0000302f,
+    DEBUG_FLR_INSTR_POINTER_ON_STACK                        = 0x00003030,
+    DEBUG_FLR_INSTR_POINTER_ON_HEAP                         = 0x00003031,
+    DEBUG_FLR_EVENT_CODE_DATA_MISMATCH                      = 0x00003032,
+    DEBUG_FLR_PROCESSOR_INFO                                = 0x00003033,
+    DEBUG_FLR_INSTR_POINTER_IN_UNLOADED_MODULE              = 0x00003034,
+    DEBUG_FLR_MEMDIAG_LASTRUN_STATUS                        = 0x00003035,
+    DEBUG_FLR_MEMDIAG_LASTRUN_TIME                          = 0x00003036,
+    DEBUG_FLR_INSTR_POINTER_IN_FREE_BLOCK                   = 0x00003037,
+    DEBUG_FLR_INSTR_POINTER_IN_RESERVED_BLOCK               = 0x00003038,
+    DEBUG_FLR_INSTR_POINTER_IN_VM_MAPPED_MODULE             = 0x00003039,
+    DEBUG_FLR_INSTR_POINTER_IN_MODULE_NOT_IN_LIST           = 0x0000303a,
+    DEBUG_FLR_INSTR_POINTER_NOT_IN_STREAM                   = 0x0000303b,
+    DEBUG_FLR_MEMORY_CORRUPTION_SIGNATURE                   = 0x0000303c,
+    DEBUG_FLR_BUILDNAME_IN_BUCKET                           = 0x0000303d,
+    DEBUG_FLR_CANCELLATION_NOT_SUPPORTED                    = 0x0000303e,
+    DEBUG_FLR_DETOURED_IMAGE                                = 0x0000303f,
+    DEBUG_FLR_EXCEPTION_CONTEXT_RECURSION                   = 0x00003040,
+    DEBUG_FLR_DISKIO_READ_FAILURE                           = 0x00003041,
+    DEBUG_FLR_DISKIO_WRITE_FAILURE                          = 0x00003042,
+    DEBUG_FLR_GSFAILURE_MISSING_ESTABLISHER_FRAME           = 0x00003043,
+    DEBUG_FLR_GSFAILURE_COOKIES_MATCH_EXH                   = 0x00003044,
+    DEBUG_FLR_GSFAILURE_MANAGED                             = 0x00003045,
+    DEBUG_FLR_MANAGED_FRAME_CHAIN_CORRUPTION                = 0x00003046,
+    DEBUG_FLR_GSFAILURE_MANAGED_THREADID                    = 0x00003047,
+    DEBUG_FLR_GSFAILURE_MANAGED_FRAMEID                     = 0x00003048,
+    DEBUG_FLR_STACKUSAGE_IMAGE                              = 0x00003049,
+    DEBUG_FLR_STACKUSAGE_IMAGE_SIZE                         = 0x0000304a,
+    DEBUG_FLR_STACKUSAGE_FUNCTION                           = 0x0000304b,
+    DEBUG_FLR_STACKUSAGE_FUNCTION_SIZE                      = 0x0000304c,
+    DEBUG_FLR_STACKUSAGE_RECURSION_COUNT                    = 0x0000304d,
+    DEBUG_FLR_XBOX_SYSTEM_UPTIME                            = 0x0000304e,
+    DEBUG_FLR_XBOX_SYSTEM_CRASHTIME                         = 0x0000304f,
+    DEBUG_FLR_XBOX_LIVE_ENVIRONMENT                         = 0x00003050,
+    DEBUG_FLR_LARGE_TICK_INCREMENT                          = 0x00003051,
+    DEBUG_FLR_INSTR_POINTER_IN_PAGED_CODE                   = 0x00003052,
+    DEBUG_FLR_SERVICETABLE_MODIFIED                         = 0x00003053,
+    DEBUG_FLR_ALUREON                                       = 0x00003054,
+    DEBUG_FLR_INTERNAL_RAID_BUG                             = 0x00004000,
+    DEBUG_FLR_INTERNAL_BUCKET_URL                           = 0x00004001,
+    DEBUG_FLR_INTERNAL_SOLUTION_TEXT                        = 0x00004002,
+    DEBUG_FLR_INTERNAL_BUCKET_HITCOUNT                      = 0x00004003,
+    DEBUG_FLR_INTERNAL_RAID_BUG_DATABASE_STRING             = 0x00004004,
+    DEBUG_FLR_INTERNAL_BUCKET_CONTINUABLE                   = 0x00004005,
+    DEBUG_FLR_INTERNAL_BUCKET_STATUS_TEXT                   = 0x00004006,
+    DEBUG_FLR_WATSON_MODULE                                 = 0x00004100,
+    DEBUG_FLR_WATSON_MODULE_VERSION                         = 0x00004101,
+    DEBUG_FLR_WATSON_MODULE_OFFSET                          = 0x00004102,
+    DEBUG_FLR_WATSON_PROCESS_VERSION                        = 0x00004103,
+    DEBUG_FLR_WATSON_IBUCKET                                = 0x00004104,
+    DEBUG_FLR_WATSON_MODULE_TIMESTAMP                       = 0x00004105,
+    DEBUG_FLR_WATSON_PROCESS_TIMESTAMP                      = 0x00004106,
+    DEBUG_FLR_WATSON_GENERIC_EVENT_NAME                     = 0x00004107,
+    DEBUG_FLR_WATSON_GENERIC_BUCKETING_00                   = 0x00004108,
+    DEBUG_FLR_WATSON_GENERIC_BUCKETING_01                   = 0x00004109,
+    DEBUG_FLR_WATSON_GENERIC_BUCKETING_02                   = 0x0000410a,
+    DEBUG_FLR_WATSON_GENERIC_BUCKETING_03                   = 0x0000410b,
+    DEBUG_FLR_WATSON_GENERIC_BUCKETING_04                   = 0x0000410c,
+    DEBUG_FLR_WATSON_GENERIC_BUCKETING_05                   = 0x0000410d,
+    DEBUG_FLR_WATSON_GENERIC_BUCKETING_06                   = 0x0000410e,
+    DEBUG_FLR_WATSON_GENERIC_BUCKETING_07                   = 0x0000410f,
+    DEBUG_FLR_WATSON_GENERIC_BUCKETING_08                   = 0x00004110,
+    DEBUG_FLR_WATSON_GENERIC_BUCKETING_09                   = 0x00004111,
+    DEBUG_FLR_SYSXML_LOCALEID                               = 0x00004200,
+    DEBUG_FLR_SYSXML_CHECKSUM                               = 0x00004201,
+    DEBUG_FLR_WQL_EVENT_COUNT                               = 0x00004202,
+    DEBUG_FLR_WQL_EVENTLOG_INFO                             = 0x00004203,
+    DEBUG_FLR_SYSINFO_SYSTEM_MANUFACTURER                   = 0x00004300,
+    DEBUG_FLR_SYSINFO_SYSTEM_PRODUCT                        = 0x00004301,
+    DEBUG_FLR_SYSINFO_SYSTEM_SKU                            = 0x00004302,
+    DEBUG_FLR_SYSINFO_SYSTEM_VERSION                        = 0x00004303,
+    DEBUG_FLR_SYSINFO_BASEBOARD_MANUFACTURER                = 0x00004304,
+    DEBUG_FLR_SYSINFO_BASEBOARD_PRODUCT                     = 0x00004305,
+    DEBUG_FLR_SYSINFO_BASEBOARD_VERSION                     = 0x00004306,
+    DEBUG_FLR_SYSINFO_BIOS_VENDOR                           = 0x00004307,
+    DEBUG_FLR_SYSINFO_BIOS_VERSION                          = 0x00004308,
+    DEBUG_FLR_SYSINFO_BIOS_DATE                             = 0x00004309,
+    DEBUG_FLR_VIRTUAL_MACHINE                               = 0x0000430a,
+    DEBUG_FLR_SERVICE                                       = 0x00005000,
+    DEBUG_FLR_SERVICE_NAME                                  = 0x00005001,
+    DEBUG_FLR_SERVICE_GROUP                                 = 0x00005002,
+    DEBUG_FLR_SERVICE_DISPLAYNAME                           = 0x00005003,
+    DEBUG_FLR_SERVICE_DESCRIPTION                           = 0x00005004,
+    DEBUG_FLR_SERVICE_DEPENDONSERVICE                       = 0x00005005,
+    DEBUG_FLR_SERVICE_DEPENDONGROUP                         = 0x00005006,
+    DEBUG_FLR_SVCHOST                                       = 0x00005100,
+    DEBUG_FLR_SVCHOST_GROUP                                 = 0x00005101,
+    DEBUG_FLR_SVCHOST_IMAGEPATH                             = 0x00005102,
+    DEBUG_FLR_SVCHOST_SERVICEDLL                            = 0x00005103,
+    DEBUG_FLR_SCM                                           = 0x00005200,
+    DEBUG_FLR_SCM_BLACKBOX                                  = 0x000052f0,
+    DEBUG_FLR_SCM_BLACKBOX_ENTRY                            = 0x000052f1,
+    DEBUG_FLR_SCM_BLACKBOX_ENTRY_CONTROLCODE                = 0x000052f2,
+    DEBUG_FLR_SCM_BLACKBOX_ENTRY_STARTTIME                  = 0x000052f3,
+    DEBUG_FLR_SCM_BLACKBOX_ENTRY_SERVICENAME                = 0x000052f4,
+    DEBUG_FLR_ACPI                                          = 0x00006000,
+    DEBUG_FLR_ACPI_BLACKBOX                                 = 0x00006100,
+    DEBUG_FLR_PO_BLACKBOX                                   = 0x00006101,
+    DEBUG_FLR_BOOTSTAT                                      = 0x00007000,
+    DEBUG_FLR_BOOTSTAT_BLACKBOX                             = 0x00007100,
+    DEBUG_FLR_STORAGE                                       = 0x00007400,
+    DEBUG_FLR_STORAGE_ORGID                                 = 0x00007401,
+    DEBUG_FLR_STORAGE_MODEL                                 = 0x00007402,
+    DEBUG_FLR_STORAGE_MFGID                                 = 0x00007403,
+    DEBUG_FLR_STORAGE_ISSUEDESCSTRING                       = 0x00007404,
+    DEBUG_FLR_STORAGE_PUBLIC_TOTSIZE                        = 0x00007405,
+    DEBUG_FLR_STORAGE_PUBLIC_OFFSET                         = 0x00007406,
+    DEBUG_FLR_STORAGE_PUBLIC_DATASIZE                       = 0x00007407,
+    DEBUG_FLR_STORAGE_PRIVATE_TOTSIZE                       = 0x00007408,
+    DEBUG_FLR_STORAGE_PRIVATE_OFFSET                        = 0x00007409,
+    DEBUG_FLR_STORAGE_PRIVATE_DATASIZE                      = 0x0000740a,
+    DEBUG_FLR_STORAGE_TOTALSIZE                             = 0x0000740b,
+    DEBUG_FLR_STORAGE_REASON                                = 0x0000740c,
+    DEBUG_FLR_STORAGE_BLACKBOX                              = 0x000074f0,
+    DEBUG_FLR_FILESYSTEMS_NTFS                              = 0x00007600,
+    DEBUG_FLR_FILESYSTEMS_NTFS_BLACKBOX                     = 0x000076f0,
+    DEBUG_FLR_FILESYSTEMS_REFS                              = 0x00007800,
+    DEBUG_FLR_FILESYSTEMS_REFS_BLACKBOX                     = 0x000078f0,
+    DEBUG_FLR_PNP                                           = 0x00008000,
+    DEBUG_FLR_PNP_TRIAGE_DATA                               = 0x00008001,
+    DEBUG_FLR_PNP_IRP_ADDRESS                               = 0x00008002,
+    DEBUG_FLR_PNP_BLACKBOX                                  = 0x00008100,
+    DEBUG_FLR_BUCKET_ID                                     = 0x00010000,
+    DEBUG_FLR_IMAGE_NAME                                    = 0x00010001,
+    DEBUG_FLR_SYMBOL_NAME                                   = 0x00010002,
+    DEBUG_FLR_FOLLOWUP_NAME                                 = 0x00010003,
+    DEBUG_FLR_STACK_COMMAND                                 = 0x00010004,
+    DEBUG_FLR_STACK_TEXT                                    = 0x00010005,
+    DEBUG_FLR_MODULE_NAME                                   = 0x00010006,
+    DEBUG_FLR_FIXED_IN_OSVERSION                            = 0x00010007,
+    DEBUG_FLR_DEFAULT_BUCKET_ID                             = 0x00010008,
+    DEBUG_FLR_MODULE_BUCKET_ID                              = 0x00010009,
+    DEBUG_FLR_ADDITIONAL_DEBUGTEXT                          = 0x0001000a,
+    DEBUG_FLR_PROCESS_NAME                                  = 0x0001000b,
+    DEBUG_FLR_USER_NAME                                     = 0x0001000c,
+    DEBUG_FLR_MARKER_FILE                                   = 0x0001000d,
+    DEBUG_FLR_INTERNAL_RESPONSE                             = 0x0001000e,
+    DEBUG_FLR_CONTEXT_RESTORE_COMMAND                       = 0x0001000f,
+    DEBUG_FLR_DRIVER_HARDWAREID                             = 0x00010010,
+    DEBUG_FLR_DRIVER_HARDWARE_VENDOR_ID                     = 0x00010011,
+    DEBUG_FLR_DRIVER_HARDWARE_DEVICE_ID                     = 0x00010012,
+    DEBUG_FLR_DRIVER_HARDWARE_SUBSYS_ID                     = 0x00010013,
+    DEBUG_FLR_DRIVER_HARDWARE_REV_ID                        = 0x00010014,
+    DEBUG_FLR_DRIVER_HARDWARE_ID_BUS_TYPE                   = 0x00010015,
+    DEBUG_FLR_MARKER_MODULE_FILE                            = 0x00010016,
+    DEBUG_FLR_BUGCHECKING_DRIVER_IDTAG                      = 0x00010017,
+    DEBUG_FLR_MARKER_BUCKET                                 = 0x00010018,
+    DEBUG_FLR_FAILURE_BUCKET_ID                             = 0x00010019,
+    DEBUG_FLR_DRIVER_XML_DESCRIPTION                        = 0x0001001a,
+    DEBUG_FLR_DRIVER_XML_PRODUCTNAME                        = 0x0001001b,
+    DEBUG_FLR_DRIVER_XML_MANUFACTURER                       = 0x0001001c,
+    DEBUG_FLR_DRIVER_XML_VERSION                            = 0x0001001d,
+    DEBUG_FLR_BUILD_VERSION_STRING                          = 0x0001001e,
+    DEBUG_FLR_BUILD_OS_FULL_VERSION_STRING                  = 0x0001001f,
+    DEBUG_FLR_ORIGINAL_CAB_NAME                             = 0x00010020,
+    DEBUG_FLR_FAULTING_SOURCE_CODE                          = 0x00010021,
+    DEBUG_FLR_FAULTING_SERVICE_NAME                         = 0x00010022,
+    DEBUG_FLR_FILE_IN_CAB                                   = 0x00010023,
+    DEBUG_FLR_UNRESPONSIVE_UI_SYMBOL_NAME                   = 0x00010024,
+    DEBUG_FLR_UNRESPONSIVE_UI_FOLLOWUP_NAME                 = 0x00010025,
+    DEBUG_FLR_UNRESPONSIVE_UI_STACK                         = 0x00010026,
+    DEBUG_FLR_PROCESS_PRODUCTNAME                           = 0x00010027,
+    DEBUG_FLR_MODULE_PRODUCTNAME                            = 0x00010028,
+    DEBUG_FLR_COLLECT_DATA_FOR_BUCKET                       = 0x00010029,
+    DEBUG_FLR_COMPUTER_NAME                                 = 0x0001002a,
+    DEBUG_FLR_IMAGE_CLASS                                   = 0x0001002b,
+    DEBUG_FLR_SYMBOL_ROUTINE_NAME                           = 0x0001002c,
+    DEBUG_FLR_HARDWARE_BUCKET_TAG                           = 0x0001002d,
+    DEBUG_FLR_KERNEL_LOG_PROCESS_NAME                       = 0x0001002e,
+    DEBUG_FLR_KERNEL_LOG_STATUS                             = 0x0001002f,
+    DEBUG_FLR_REGISTRYTXT_SOURCE                            = 0x00010030,
+    DEBUG_FLR_FAULTING_SOURCE_LINE                          = 0x00010031,
+    DEBUG_FLR_FAULTING_SOURCE_FILE                          = 0x00010032,
+    DEBUG_FLR_FAULTING_SOURCE_LINE_NUMBER                   = 0x00010033,
+    DEBUG_FLR_SKIP_MODULE_SPECIFIC_BUCKET_INFO              = 0x00010034,
+    DEBUG_FLR_BUCKET_ID_FUNC_OFFSET                         = 0x00010035,
+    DEBUG_FLR_XHCI_FIRMWARE_VERSION                         = 0x00010036,
+    DEBUG_FLR_FAILURE_ANALYSIS_SOURCE                       = 0x00010037,
+    DEBUG_FLR_FAILURE_ID_HASH                               = 0x00010038,
+    DEBUG_FLR_FAILURE_ID_HASH_STRING                        = 0x00010039,
+    DEBUG_FLR_FAILURE_ID_REPORT_LINK                        = 0x0001003a,
+    DEBUG_FLR_HOLDINFO                                      = 0x0001003b,
+    DEBUG_FLR_HOLDINFO_ACTIVE_HOLD_COUNT                    = 0x0001003c,
+    DEBUG_FLR_HOLDINFO_TENET_SOCRE                          = 0x0001003d,
+    DEBUG_FLR_HOLDINFO_HISTORIC_HOLD_COUNT                  = 0x0001003e,
+    DEBUG_FLR_HOLDINFO_ALWAYS_IGNORE                        = 0x0001003f,
+    DEBUG_FLR_HOLDINFO_ALWAYS_HOLD                          = 0x00010040,
+    DEBUG_FLR_HOLDINFO_MAX_HOLD_LIMIT                       = 0x00010041,
+    DEBUG_FLR_HOLDINFO_MANUAL_HOLD                          = 0x00010042,
+    DEBUG_FLR_HOLDINFO_NOTIFICATION_ALIASES                 = 0x00010043,
+    DEBUG_FLR_HOLDINFO_LAST_SEEN_HOLD_DATE                  = 0x00010044,
+    DEBUG_FLR_HOLDINFO_RECOMMEND_HOLD                       = 0x00010045,
+    DEBUG_FLR_FAILURE_PROBLEM_CLASS                         = 0x00010046,
+    DEBUG_FLR_FAILURE_EXCEPTION_CODE                        = 0x00010047,
+    DEBUG_FLR_FAILURE_IMAGE_NAME                            = 0x00010048,
+    DEBUG_FLR_FAILURE_FUNCTION_NAME                         = 0x00010049,
+    DEBUG_FLR_FAILURE_SYMBOL_NAME                           = 0x0001004a,
+    DEBUG_FLR_FOLLOWUP_BEFORE_RETRACER                      = 0x0001004b,
+    DEBUG_FLR_END_MESSAGE                                   = 0x0001004c,
+    DEBUG_FLR_FEATURE_PATH                                  = 0x0001004d,
+    DEBUG_FLR_USER_MODE_BUCKET                              = 0x0001004e,
+    DEBUG_FLR_USER_MODE_BUCKET_INDEX                        = 0x0001004f,
+    DEBUG_FLR_USER_MODE_BUCKET_EVENTTYPE                    = 0x00010050,
+    DEBUG_FLR_USER_MODE_BUCKET_REPORTGUID                   = 0x00010051,
+    DEBUG_FLR_USER_MODE_BUCKET_REPORTCREATIONTIME           = 0x00010052,
+    DEBUG_FLR_USER_MODE_BUCKET_P0                           = 0x00010053,
+    DEBUG_FLR_USER_MODE_BUCKET_P1                           = 0x00010054,
+    DEBUG_FLR_USER_MODE_BUCKET_P2                           = 0x00010055,
+    DEBUG_FLR_USER_MODE_BUCKET_P3                           = 0x00010056,
+    DEBUG_FLR_USER_MODE_BUCKET_P4                           = 0x00010057,
+    DEBUG_FLR_USER_MODE_BUCKET_P5                           = 0x00010058,
+    DEBUG_FLR_USER_MODE_BUCKET_P6                           = 0x00010059,
+    DEBUG_FLR_USER_MODE_BUCKET_P7                           = 0x0001005a,
+    DEBUG_FLR_USER_MODE_BUCKET_STRING                       = 0x0001005b,
+    DEBUG_FLR_CRITICAL_PROCESS_REPORTGUID                   = 0x0001005c,
+    DEBUG_FLR_FAILURE_MODULE_NAME                           = 0x0001005d,
+    DEBUG_FLR_PLATFORM_BUCKET_STRING                        = 0x0001005e,
+    DEBUG_FLR_DRIVER_HARDWARE_VENDOR_NAME                   = 0x0001005f,
+    DEBUG_FLR_DRIVER_HARDWARE_SUBVENDOR_NAME                = 0x00010060,
+    DEBUG_FLR_DRIVER_HARDWARE_DEVICE_NAME                   = 0x00010061,
+    DEBUG_FLR_FAULTING_SOURCE_COMMIT_ID                     = 0x00010062,
+    DEBUG_FLR_FAULTING_SOURCE_CONTROL_TYPE                  = 0x00010063,
+    DEBUG_FLR_FAULTING_SOURCE_PROJECT                       = 0x00010064,
+    DEBUG_FLR_FAULTING_SOURCE_REPO_ID                       = 0x00010065,
+    DEBUG_FLR_FAULTING_SOURCE_REPO_URL                      = 0x00010066,
+    DEBUG_FLR_FAULTING_SOURCE_SRV_COMMAND                   = 0x00010067,
+    DEBUG_FLR_USERMODE_DATA                                 = 0x00100000,
+    DEBUG_FLR_THREAD_ATTRIBUTES                             = 0x00100001,
+    DEBUG_FLR_PROBLEM_CLASSES                               = 0x00100002,
+    DEBUG_FLR_PRIMARY_PROBLEM_CLASS                         = 0x00100003,
+    DEBUG_FLR_PRIMARY_PROBLEM_CLASS_DATA                    = 0x00100004,
+    DEBUG_FLR_UNRESPONSIVE_UI_PROBLEM_CLASS                 = 0x00100005,
+    DEBUG_FLR_UNRESPONSIVE_UI_PROBLEM_CLASS_DATA            = 0x00100006,
+    DEBUG_FLR_DERIVED_WAIT_CHAIN                            = 0x00100007,
+    DEBUG_FLR_HANG_DATA_NEEDED                              = 0x00100008,
+    DEBUG_FLR_PROBLEM_CODE_PATH_HASH                        = 0x00100009,
+    DEBUG_FLR_SUSPECT_CODE_PATH_HASH                        = 0x0010000a,
+    DEBUG_FLR_LOADERLOCK_IN_WAIT_CHAIN                      = 0x0010000b,
+    DEBUG_FLR_XPROC_HANG                                    = 0x0010000c,
+    DEBUG_FLR_DEADLOCK_INPROC                               = 0x0010000d,
+    DEBUG_FLR_DEADLOCK_XPROC                                = 0x0010000e,
+    DEBUG_FLR_WCT_XML_AVAILABLE                             = 0x0010000f,
+    DEBUG_FLR_XPROC_DUMP_AVAILABLE                          = 0x00100010,
+    DEBUG_FLR_DESKTOP_HEAP_MISSING                          = 0x00100011,
+    DEBUG_FLR_HANG_REPORT_THREAD_IS_IDLE                    = 0x00100012,
+    DEBUG_FLR_FAULT_THREAD_SHA1_HASH_MF                     = 0x00100013,
+    DEBUG_FLR_FAULT_THREAD_SHA1_HASH_MFO                    = 0x00100014,
+    DEBUG_FLR_FAULT_THREAD_SHA1_HASH_M                      = 0x00100015,
+    DEBUG_FLR_WAIT_CHAIN_COMMAND                            = 0x00100016,
+    DEBUG_FLR_NTGLOBALFLAG                                  = 0x00100017,
+    DEBUG_FLR_APPVERIFERFLAGS                               = 0x00100018,
+    DEBUG_FLR_MODLIST_SHA1_HASH                             = 0x00100019,
+    DEBUG_FLR_DUMP_TYPE                                     = 0x0010001a,
+    DEBUG_FLR_XCS_PATH                                      = 0x0010001b,
+    DEBUG_FLR_LOADERLOCK_OWNER_API                          = 0x0010001c,
+    DEBUG_FLR_LOADERLOCK_BLOCKED_API                        = 0x0010001d,
+    DEBUG_FLR_MODLIST_TSCHKSUM_SHA1_HASH                    = 0x0010001e,
+    DEBUG_FLR_MODLIST_UNLOADED_SHA1_HASH                    = 0x0010001f,
+    DEBUG_FLR_MACHINE_INFO_SHA1_HASH                        = 0x00100020,
+    DEBUG_FLR_URLS_DISCOVERED                               = 0x00100021,
+    DEBUG_FLR_URLS                                          = 0x00100022,
+    DEBUG_FLR_URL_ENTRY                                     = 0x00100023,
+    DEBUG_FLR_WATSON_IBUCKET_S1_RESP                        = 0x00100024,
+    DEBUG_FLR_WATSON_IBUCKETTABLE_S1_RESP                   = 0x00100025,
+    DEBUG_FLR_SEARCH_HANG                                   = 0x00100026,
+    DEBUG_FLR_WER_DATA_COLLECTION_INFO                      = 0x00100027,
+    DEBUG_FLR_WER_MACHINE_ID                                = 0x00100028,
+    DEBUG_FLR_ULS_SCRIPT_EXCEPTION                          = 0x00100029,
+    DEBUG_FLR_LCIE_ISO_AVAILABLE                            = 0x0010002a,
+    DEBUG_FLR_SHOW_LCIE_ISO_DATA                            = 0x0010002b,
+    DEBUG_FLR_URL_LCIE_ENTRY                                = 0x0010002c,
+    DEBUG_FLR_URL_URLMON_ENTRY                              = 0x0010002d,
+    DEBUG_FLR_URL_XMLHTTPREQ_SYNC_ENTRY                     = 0x0010002e,
+    DEBUG_FLR_FAULTING_LOCAL_VARIABLE_NAME                  = 0x0010002f,
+    DEBUG_FLR_MODULE_LIST                                   = 0x00100030,
+    DEBUG_FLR_DUMP_FLAGS                                    = 0x00100031,
+    DEBUG_FLR_APPLICATION_VERIFIER_LOADED                   = 0x00100032,
+    DEBUG_FLR_DUMP_CLASS                                    = 0x00100033,
+    DEBUG_FLR_DUMP_QUALIFIER                                = 0x00100034,
+    DEBUG_FLR_KM_MODULE_LIST                                = 0x00100035,
+    DEBUG_FLR_EXCEPTION_CODE_STR_deprecated                 = 0x00101000,
+    DEBUG_FLR_BUCKET_ID_PREFIX_STR                          = 0x00101001,
+    DEBUG_FLR_BUCKET_ID_MODULE_STR                          = 0x00101002,
+    DEBUG_FLR_BUCKET_ID_MODVER_STR                          = 0x00101003,
+    DEBUG_FLR_BUCKET_ID_FUNCTION_STR                        = 0x00101004,
+    DEBUG_FLR_BUCKET_ID_OFFSET                              = 0x00101005,
+    DEBUG_FLR_OS_BUILD                                      = 0x00101006,
+    DEBUG_FLR_OS_SERVICEPACK                                = 0x00101007,
+    DEBUG_FLR_OS_BRANCH                                     = 0x00101008,
+    DEBUG_FLR_OS_BUILD_TIMESTAMP_LAB                        = 0x00101009,
+    DEBUG_FLR_OS_VERSION                                    = 0x0010100a,
+    DEBUG_FLR_BUCKET_ID_TIMEDATESTAMP                       = 0x0010100b,
+    DEBUG_FLR_BUCKET_ID_CHECKSUM                            = 0x0010100c,
+    DEBUG_FLR_OS_FLAVOR                                     = 0x0010100d,
+    DEBUG_FLR_BUCKET_ID_FLAVOR_STR                          = 0x0010100e,
+    DEBUG_FLR_OS_SKU                                        = 0x0010100f,
+    DEBUG_FLR_OS_PRODUCT_TYPE                               = 0x00101010,
+    DEBUG_FLR_OS_SUITE_MASK                                 = 0x00101011,
+    DEBUG_FLR_USER_LCID                                     = 0x00101012,
+    DEBUG_FLR_OS_REVISION                                   = 0x00101013,
+    DEBUG_FLR_OS_NAME                                       = 0x00101014,
+    DEBUG_FLR_OS_NAME_EDITION                               = 0x00101015,
+    DEBUG_FLR_OS_PLATFORM_ARCH                              = 0x00101016,
+    DEBUG_FLR_OS_SERVICEPACK_deprecated                     = 0x00101017,
+    DEBUG_FLR_OS_LOCALE                                     = 0x00101018,
+    DEBUG_FLR_OS_BUILD_TIMESTAMP_ISO                        = 0x00101019,
+    DEBUG_FLR_USER_LCID_STR                                 = 0x0010101a,
+    DEBUG_FLR_ANALYSIS_SESSION_TIME                         = 0x0010101b,
+    DEBUG_FLR_ANALYSIS_SESSION_HOST                         = 0x0010101c,
+    DEBUG_FLR_ANALYSIS_SESSION_ELAPSED_TIME                 = 0x0010101d,
+    DEBUG_FLR_ANALYSIS_VERSION                              = 0x0010101e,
+    DEBUG_FLR_BUCKET_ID_IMAGE_STR                           = 0x0010101f,
+    DEBUG_FLR_BUCKET_ID_PRIVATE                             = 0x00101020,
+    DEBUG_FLR_ANALYSIS_REPROCESS                            = 0x00101021,
+    DEBUG_FLR_OS_MAJOR                                      = 0x00101022,
+    DEBUG_FLR_OS_MINOR                                      = 0x00101023,
+    DEBUG_FLR_OS_BUILD_STRING                               = 0x00101024,
+    DEBUG_FLR_OS_LOCALE_LCID                                = 0x00101025,
+    DEBUG_FLR_OS_PLATFORM_ID                                = 0x00101026,
+    DEBUG_FLR_OS_BUILD_LAYERS_XML                           = 0x00101027,
+    DEBUG_FLR_OSBUILD_deprecated                            = 0x00101100,
+    DEBUG_FLR_BUILDOSVER_STR_deprecated                     = 0x00101101,
+    DEBUG_FLR_DEBUG_ANALYSIS                                = 0x00111000,
+    DEBUG_FLR_KEYVALUE_ANALYSIS                             = 0x00112000,
+    DEBUG_FLR_KEY_VALUES_STRING                             = 0x00112100,
+    DEBUG_FLR_KEY_VALUES_VARIANT                            = 0x00112200,
+    DEBUG_FLR_TIMELINE_ANALYSIS                             = 0x00113000,
+    DEBUG_FLR_TIMELINE_TIMES                                = 0x00113001,
+    DEBUG_FLR_STREAM_ANALYSIS                               = 0x00114000,
+    DEBUG_FLR_MEMORY_ANALYSIS                               = 0x00115000,
+    DEBUG_FLR_STACKHASH_ANALYSIS                            = 0x00116000,
+    DEBUG_FLR_PROCESSES_ANALYSIS                            = 0x00117000,
+    DEBUG_FLR_SERVICE_ANALYSIS                              = 0x00118000,
+    DEBUG_FLR_ADDITIONAL_XML                                = 0x00119000,
+    DEBUG_FLR_STACK                                         = 0x00200000,
+    DEBUG_FLR_FOLLOWUP_CONTEXT                              = 0x00200001,
+    DEBUG_FLR_XML_MODULE_LIST                               = 0x00200002,
+    DEBUG_FLR_STACK_FRAME                                   = 0x00200003,
+    DEBUG_FLR_STACK_FRAME_NUMBER                            = 0x00200004,
+    DEBUG_FLR_STACK_FRAME_INSTRUCTION                       = 0x00200005,
+    DEBUG_FLR_STACK_FRAME_SYMBOL                            = 0x00200006,
+    DEBUG_FLR_STACK_FRAME_SYMBOL_OFFSET                     = 0x00200007,
+    DEBUG_FLR_STACK_FRAME_MODULE                            = 0x00200008,
+    DEBUG_FLR_STACK_FRAME_IMAGE                             = 0x00200009,
+    DEBUG_FLR_STACK_FRAME_FUNCTION                          = 0x0020000a,
+    DEBUG_FLR_STACK_FRAME_FLAGS                             = 0x0020000b,
+    DEBUG_FLR_CONTEXT_COMMAND                               = 0x0020000c,
+    DEBUG_FLR_CONTEXT_FLAGS                                 = 0x0020000d,
+    DEBUG_FLR_CONTEXT_ORDER                                 = 0x0020000e,
+    DEBUG_FLR_CONTEXT_SYSTEM                                = 0x0020000f,
+    DEBUG_FLR_CONTEXT_ID                                    = 0x00200010,
+    DEBUG_FLR_XML_MODULE_INFO                               = 0x00200011,
+    DEBUG_FLR_XML_MODULE_INFO_INDEX                         = 0x00200012,
+    DEBUG_FLR_XML_MODULE_INFO_NAME                          = 0x00200013,
+    DEBUG_FLR_XML_MODULE_INFO_IMAGE_NAME                    = 0x00200014,
+    DEBUG_FLR_XML_MODULE_INFO_IMAGE_PATH                    = 0x00200015,
+    DEBUG_FLR_XML_MODULE_INFO_CHECKSUM                      = 0x00200016,
+    DEBUG_FLR_XML_MODULE_INFO_TIMESTAMP                     = 0x00200017,
+    DEBUG_FLR_XML_MODULE_INFO_UNLOADED                      = 0x00200018,
+    DEBUG_FLR_XML_MODULE_INFO_ON_STACK                      = 0x00200019,
+    DEBUG_FLR_XML_MODULE_INFO_FIXED_FILE_VER                = 0x0020001a,
+    DEBUG_FLR_XML_MODULE_INFO_FIXED_PROD_VER                = 0x0020001b,
+    DEBUG_FLR_XML_MODULE_INFO_STRING_FILE_VER               = 0x0020001c,
+    DEBUG_FLR_XML_MODULE_INFO_STRING_PROD_VER               = 0x0020001d,
+    DEBUG_FLR_XML_MODULE_INFO_COMPANY_NAME                  = 0x0020001e,
+    DEBUG_FLR_XML_MODULE_INFO_FILE_DESCRIPTION              = 0x0020001f,
+    DEBUG_FLR_XML_MODULE_INFO_INTERNAL_NAME                 = 0x00200020,
+    DEBUG_FLR_XML_MODULE_INFO_ORIG_FILE_NAME                = 0x00200021,
+    DEBUG_FLR_XML_MODULE_INFO_BASE                          = 0x00200022,
+    DEBUG_FLR_XML_MODULE_INFO_SIZE                          = 0x00200023,
+    DEBUG_FLR_XML_MODULE_INFO_PRODUCT_NAME                  = 0x00200024,
+    DEBUG_FLR_PROCESS_INFO                                  = 0x00200025,
+    DEBUG_FLR_EXCEPTION_MODULE_INFO                         = 0x00200026,
+    DEBUG_FLR_CONTEXT_FOLLOWUP_INDEX                        = 0x00200027,
+    DEBUG_FLR_XML_GLOBALATTRIBUTE_LIST                      = 0x00200028,
+    DEBUG_FLR_XML_ATTRIBUTE_LIST                            = 0x00200029,
+    DEBUG_FLR_XML_ATTRIBUTE                                 = 0x0020002a,
+    DEBUG_FLR_XML_ATTRIBUTE_NAME                            = 0x0020002b,
+    DEBUG_FLR_XML_ATTRIBUTE_VALUE                           = 0x0020002c,
+    DEBUG_FLR_XML_ATTRIBUTE_D1VALUE                         = 0x0020002d,
+    DEBUG_FLR_XML_ATTRIBUTE_D2VALUE                         = 0x0020002e,
+    DEBUG_FLR_XML_ATTRIBUTE_DOVALUE                         = 0x0020002f,
+    DEBUG_FLR_XML_ATTRIBUTE_VALUE_TYPE                      = 0x00200030,
+    DEBUG_FLR_XML_ATTRIBUTE_FRAME_NUMBER                    = 0x00200031,
+    DEBUG_FLR_XML_ATTRIBUTE_THREAD_INDEX                    = 0x00200032,
+    DEBUG_FLR_XML_PROBLEMCLASS_LIST                         = 0x00200033,
+    DEBUG_FLR_XML_PROBLEMCLASS                              = 0x00200034,
+    DEBUG_FLR_XML_PROBLEMCLASS_NAME                         = 0x00200035,
+    DEBUG_FLR_XML_PROBLEMCLASS_VALUE                        = 0x00200036,
+    DEBUG_FLR_XML_PROBLEMCLASS_VALUE_TYPE                   = 0x00200037,
+    DEBUG_FLR_XML_PROBLEMCLASS_FRAME_NUMBER                 = 0x00200038,
+    DEBUG_FLR_XML_PROBLEMCLASS_THREAD_INDEX                 = 0x00200039,
+    DEBUG_FLR_XML_STACK_FRAME_TRIAGE_STATUS                 = 0x0020003a,
+    DEBUG_FLR_CONTEXT_METADATA                              = 0x0020003b,
+    DEBUG_FLR_STACK_FRAMES                                  = 0x0020003c,
+    DEBUG_FLR_XML_ENCODED_OFFSETS                           = 0x0020003d,
+    DEBUG_FLR_FA_PERF_DATA                                  = 0x0020003e,
+    DEBUG_FLR_FA_PERF_ITEM                                  = 0x0020003f,
+    DEBUG_FLR_FA_PERF_ITEM_NAME                             = 0x00200040,
+    DEBUG_FLR_FA_PERF_ITERATIONS                            = 0x00200041,
+    DEBUG_FLR_FA_PERF_ELAPSED_MS                            = 0x00200042,
+    DEBUG_FLR_STACK_SHA1_HASH_MF                            = 0x00200043,
+    DEBUG_FLR_STACK_SHA1_HASH_MFO                           = 0x00200044,
+    DEBUG_FLR_STACK_SHA1_HASH_M                             = 0x00200045,
+    DEBUG_FLR_XML_MODULE_INFO_SYMBOL_TYPE                   = 0x00200046,
+    DEBUG_FLR_XML_MODULE_INFO_FILE_FLAGS                    = 0x00200047,
+    DEBUG_FLR_STACK_FRAME_MODULE_BASE                       = 0x00200048,
+    DEBUG_FLR_STACK_FRAME_SRC                               = 0x00200049,
+    DEBUG_FLR_XML_SYSTEMINFO                                = 0x0020004a,
+    DEBUG_FLR_XML_SYSTEMINFO_SYSTEMMANUFACTURER             = 0x0020004b,
+    DEBUG_FLR_XML_SYSTEMINFO_SYSTEMMODEL                    = 0x0020004c,
+    DEBUG_FLR_XML_SYSTEMINFO_SYSTEMMARKER                   = 0x0020004d,
+    DEBUG_FLR_FA_ADHOC_ANALYSIS_ITEMS                       = 0x0020004e,
+    DEBUG_FLR_XML_APPLICATION_NAME                          = 0x0020004f,
+    DEBUG_FLR_XML_PACKAGE_MONIKER                           = 0x00200050,
+    DEBUG_FLR_XML_PACKAGE_RELATIVE_APPLICATION_ID           = 0x00200051,
+    DEBUG_FLR_XML_MODERN_ASYNC_REQUEST_OUTSTANDING          = 0x00200052,
+    DEBUG_FLR_XML_EVENTTYPE                                 = 0x00200053,
+    DEBUG_FLR_XML_PACKAGE_NAME                              = 0x00200054,
+    DEBUG_FLR_XML_PACKAGE_VERSION                           = 0x00200055,
+    DEBUG_FLR_FAILURE_LIST                                  = 0x00200056,
+    DEBUG_FLR_FAILURE_DISPLAY_NAME                          = 0x00200057,
+    DEBUG_FLR_FRAME_SOURCE_FILE_NAME                        = 0x00200058,
+    DEBUG_FLR_FRAME_SOURCE_FILE_PATH                        = 0x00200059,
+    DEBUG_FLR_FRAME_SOURCE_LINE_NUMBER                      = 0x0020005a,
+    DEBUG_FLR_XML_MODULE_INFO_SYMSRV_IMAGE_STATUS           = 0x0020005b,
+    DEBUG_FLR_XML_MODULE_INFO_SYMSRV_IMAGE_ERROR            = 0x0020005c,
+    DEBUG_FLR_XML_MODULE_INFO_SYMSRV_IMAGE_DETAIL           = 0x0020005d,
+    DEBUG_FLR_XML_MODULE_INFO_SYMSRV_IMAGE_SEC              = 0x0020005e,
+    DEBUG_FLR_XML_MODULE_INFO_SYMSRV_PDB_STATUS             = 0x0020005f,
+    DEBUG_FLR_XML_MODULE_INFO_SYMSRV_PDB_ERROR              = 0x00200060,
+    DEBUG_FLR_XML_MODULE_INFO_SYMSRV_PDB_DETAIL             = 0x00200061,
+    DEBUG_FLR_XML_MODULE_INFO_SYMSRV_PDB_SEC                = 0x00200062,
+    DEBUG_FLR_XML_MODULE_INFO_DRIVER_GROUP                  = 0x00200063,
+    DEBUG_FLR_REGISTRY_DATA                                 = 0x00300000,
+    DEBUG_FLR_WMI_QUERY_DATA                                = 0x00301000,
+    DEBUG_FLR_USER_GLOBAL_ATTRIBUTES                        = 0x00302000,
+    DEBUG_FLR_USER_THREAD_ATTRIBUTES                        = 0x00303000,
+    DEBUG_FLR_USER_PROBLEM_CLASSES                          = 0x00304000,
+    DEBUG_FLR_SM_COMPRESSION_FORMAT                         = 0x50000000,
+    DEBUG_FLR_SM_SOURCE_PFN1                                = 0x50000001,
+    DEBUG_FLR_SM_SOURCE_PFN2                                = 0x50000002,
+    DEBUG_FLR_SM_SOURCE_OFFSET                              = 0x50000003,
+    DEBUG_FLR_SM_SOURCE_SIZE                                = 0x50000004,
+    DEBUG_FLR_SM_TARGET_PFN                                 = 0x50000005,
+    DEBUG_FLR_SM_BUFFER_HASH                                = 0x50000006,
+    DEBUG_FLR_SM_ONEBIT_SOLUTION_COUNT                      = 0x50000007,
+    DEBUG_FLR_STORE_PRODUCT_ID                              = 0x60000000,
+    DEBUG_FLR_STORE_PRODUCT_DISPLAY_NAME                    = 0x60000001,
+    DEBUG_FLR_STORE_PRODUCT_DESCRIPTION                     = 0x60000002,
+    DEBUG_FLR_STORE_PRODUCT_EXTENDED_NAME                   = 0x60000003,
+    DEBUG_FLR_STORE_PUBLISHER_ID                            = 0x60000004,
+    DEBUG_FLR_STORE_PUBLISHER_NAME                          = 0x60000005,
+    DEBUG_FLR_STORE_PUBLISHER_CERTIFICATE_NAME              = 0x60000006,
+    DEBUG_FLR_STORE_DEVELOPER_NAME                          = 0x60000007,
+    DEBUG_FLR_STORE_PACKAGE_FAMILY_NAME                     = 0x60000008,
+    DEBUG_FLR_STORE_PACKAGE_IDENTITY_NAME                   = 0x60000009,
+    DEBUG_FLR_STORE_PRIMARY_PARENT_PRODUCT_ID               = 0x6000000a,
+    DEBUG_FLR_STORE_LEGACY_PARENT_PRODUCT_ID                = 0x6000000b,
+    DEBUG_FLR_STORE_LEGACY_WINDOWS_STORE_PRODUCT_ID         = 0x6000000c,
+    DEBUG_FLR_STORE_LEGACY_WINDOWS_PHONE_PRODUCT_ID         = 0x6000000d,
+    DEBUG_FLR_STORE_LEGACY_XBOX_ONE_PRODUCT_ID              = 0x6000000e,
+    DEBUG_FLR_STORE_LEGACY_XBOX_360_PRODUCT_ID              = 0x6000000f,
+    DEBUG_FLR_STORE_XBOX_TITLE_ID                           = 0x60000010,
+    DEBUG_FLR_STORE_PREFERRED_SKU_ID                        = 0x60000011,
+    DEBUG_FLR_STORE_IS_MICROSOFT_PRODUCT                    = 0x60000012,
+    DEBUG_FLR_STORE_URL_APP                                 = 0x60000013,
+    DEBUG_FLR_STORE_URL_APPHEALTH                           = 0x60000014,
+    DEBUG_FLR_PHONE_VERSIONMAJOR                            = 0x70000000,
+    DEBUG_FLR_PHONE_VERSIONMINOR                            = 0x70000001,
+    DEBUG_FLR_PHONE_BUILDNUMBER                             = 0x70000002,
+    DEBUG_FLR_PHONE_BUILDTIMESTAMP                          = 0x70000003,
+    DEBUG_FLR_PHONE_BUILDBRANCH                             = 0x70000004,
+    DEBUG_FLR_PHONE_BUILDER                                 = 0x70000005,
+    DEBUG_FLR_PHONE_LCID                                    = 0x70000006,
+    DEBUG_FLR_PHONE_QFE                                     = 0x70000007,
+    DEBUG_FLR_PHONE_OPERATOR                                = 0x70000008,
+    DEBUG_FLR_PHONE_MCCMNC                                  = 0x70000009,
+    DEBUG_FLR_PHONE_FIRMWAREREVISION                        = 0x7000000a,
+    DEBUG_FLR_PHONE_RAM                                     = 0x7000000b,
+    DEBUG_FLR_PHONE_ROMVERSION                              = 0x7000000c,
+    DEBUG_FLR_PHONE_SOCVERSION                              = 0x7000000d,
+    DEBUG_FLR_PHONE_HARDWAREREVISION                        = 0x7000000e,
+    DEBUG_FLR_PHONE_RADIOHARDWAREREVISION                   = 0x7000000f,
+    DEBUG_FLR_PHONE_RADIOSOFTWAREREVISION                   = 0x70000010,
+    DEBUG_FLR_PHONE_BOOTLOADERVERSION                       = 0x70000011,
+    DEBUG_FLR_PHONE_REPORTGUID                              = 0x70000012,
+    DEBUG_FLR_PHONE_SOURCE                                  = 0x70000013,
+    DEBUG_FLR_PHONE_SOURCEEXTERNAL                          = 0x70000014,
+    DEBUG_FLR_PHONE_USERALIAS                               = 0x70000015,
+    DEBUG_FLR_PHONE_REPORTTIMESTAMP                         = 0x70000016,
+    DEBUG_FLR_PHONE_APPID                                   = 0x70000017,
+    DEBUG_FLR_PHONE_SKUID                                   = 0x70000018,
+    DEBUG_FLR_PHONE_APPVERSION                              = 0x70000019,
+    DEBUG_FLR_PHONE_UIF_COMMENT                             = 0x7000001a,
+    DEBUG_FLR_PHONE_UIF_APPNAME                             = 0x7000001b,
+    DEBUG_FLR_PHONE_UIF_APPID                               = 0x7000001c,
+    DEBUG_FLR_PHONE_UIF_CATEGORY                            = 0x7000001d,
+    DEBUG_FLR_PHONE_UIF_ORIGIN                              = 0x7000001e,
+    DEBUG_FLR_SIMULTANEOUS_TELSVC_INSTANCES                 = 0x7000001f,
+    DEBUG_FLR_SIMULTANEOUS_TELWP_INSTANCES                  = 0x70000020,
+    DEBUG_FLR_MINUTES_SINCE_LAST_EVENT                      = 0x70000021,
+    DEBUG_FLR_MINUTES_SINCE_LAST_EVENT_OF_THIS_TYPE         = 0x70000022,
+    DEBUG_FLR_REPORT_INFO_GUID                              = 0x70000023,
+    DEBUG_FLR_REPORT_INFO_SOURCE                            = 0x70000024,
+    DEBUG_FLR_REPORT_INFO_CREATION_TIME                     = 0x70000025,
+    DEBUG_FLR_FAULTING_IP                                   = 0x80000000,
+    DEBUG_FLR_FAULTING_MODULE                               = 0x80000001,
+    DEBUG_FLR_IMAGE_TIMESTAMP                               = 0x80000002,
+    DEBUG_FLR_FOLLOWUP_IP                                   = 0x80000003,
+    DEBUG_FLR_FRAME_ONE_INVALID                             = 0x80000004,
+    DEBUG_FLR_SYMBOL_FROM_RAW_STACK_ADDRESS                 = 0x80000005,
+    DEBUG_FLR_IMAGE_VERSION                                 = 0x80000006,
+    DEBUG_FLR_FOLLOWUP_BUCKET_ID                            = 0x80000007,
+    DEBUG_FLR_CUSTOM_ANALYSIS_TAG_MIN                       = 0xa0000000,
+    DEBUG_FLR_CUSTOM_ANALYSIS_TAG_MAX                       = 0xb0000000,
+    DEBUG_FLR_FAULTING_THREAD                               = 0xc0000000,
+    DEBUG_FLR_CONTEXT                                       = 0xc0000001,
+    DEBUG_FLR_TRAP_FRAME                                    = 0xc0000002,
+    DEBUG_FLR_TSS                                           = 0xc0000003,
+    DEBUG_FLR_BLOCKING_THREAD                               = 0xc0000004,
+    DEBUG_FLR_UNRESPONSIVE_UI_THREAD                        = 0xc0000005,
+    DEBUG_FLR_BLOCKED_THREAD0                               = 0xc0000006,
+    DEBUG_FLR_BLOCKED_THREAD1                               = 0xc0000007,
+    DEBUG_FLR_BLOCKED_THREAD2                               = 0xc0000008,
+    DEBUG_FLR_BLOCKING_PROCESSID                            = 0xc0000009,
+    DEBUG_FLR_PROCESSOR_ID                                  = 0xc000000a,
+    DEBUG_FLR_XDV_VIOLATED_CONDITION                        = 0xc000000b,
+    DEBUG_FLR_XDV_STATE_VARIABLE                            = 0xc000000c,
+    DEBUG_FLR_XDV_HELP_LINK                                 = 0xc000000d,
+    DEBUG_FLR_XDV_RULE_INFO                                 = 0xc000000e,
+    DEBUG_FLR_DPC_STACK_BASE                                = 0xc000000f,
+    DEBUG_FLR_TESTRESULTSERVER                              = 0xf0000000,
+    DEBUG_FLR_TESTRESULTGUID                                = 0xf0000001,
+    DEBUG_FLR_CUSTOMREPORTTAG                               = 0xf0000002,
+    DEBUG_FLR_DISKSEC_ORGID_DEPRECATED                      = 0xf0000003,
+    DEBUG_FLR_DISKSEC_MODEL_DEPRECATED                      = 0xf0000004,
+    DEBUG_FLR_DISKSEC_MFGID_DEPRECATED                      = 0xf0000005,
+    DEBUG_FLR_DISKSEC_ISSUEDESCSTRING_DEPRECATED            = 0xf0000006,
+    DEBUG_FLR_DISKSEC_PUBLIC_TOTSIZE_DEPRECATED             = 0xf0000007,
+    DEBUG_FLR_DISKSEC_PUBLIC_OFFSET_DEPRECATED              = 0xf0000008,
+    DEBUG_FLR_DISKSEC_PUBLIC_DATASIZE_DEPRECATED            = 0xf0000009,
+    DEBUG_FLR_DISKSEC_PRIVATE_TOTSIZE_DEPRECATED            = 0xf000000a,
+    DEBUG_FLR_DISKSEC_PRIVATE_OFFSET_DEPRECATED             = 0xf000000b,
+    DEBUG_FLR_DISKSEC_PRIVATE_DATASIZE_DEPRECATED           = 0xf000000c,
+    DEBUG_FLR_DISKSEC_TOTALSIZE_DEPRECATED                  = 0xf000000d,
+    DEBUG_FLR_DISKSEC_REASON_DEPRECATED                     = 0xf000000e,
+    DEBUG_FLR_WERCOLLECTION_PROCESSTERMINATED               = 0xf000000f,
+    DEBUG_FLR_WERCOLLECTION_PROCESSHEAPDUMP_REQUEST_FAILURE = 0xf0000010,
+    DEBUG_FLR_WERCOLLECTION_MINIDUMP_WRITE_FAILURE          = 0xf0000011,
+    DEBUG_FLR_WERCOLLECTION_DEFAULTCOLLECTION_FAILURE       = 0xf0000012,
+    DEBUG_FLR_PROCESS_BAM_CURRENT_THROTTLED                 = 0xf0000013,
+    DEBUG_FLR_PROCESS_BAM_PREVIOUS_THROTTLED                = 0xf0000014,
+    DEBUG_FLR_DUMPSTREAM_COMMENTA                           = 0xf0000015,
+    DEBUG_FLR_DUMPSTREAM_COMMENTW                           = 0xf0000016,
+    DEBUG_FLR_CHPE_PROCESS                                  = 0xf0000017,
+    DEBUG_FLR_WINLOGON_BLACKBOX                             = 0xf0000018,
+    DEBUG_FLR_CUSTOM_COMMAND                                = 0xf0000019,
+    DEBUG_FLR_CUSTOM_COMMAND_OUTPUT                         = 0xf000001a,
+    DEBUG_FLR_MASK_ALL                                      = 0xffffffff,
+}
+
+struct DBG_THREAD_ATTRIBUTES
+{
+    uint ThreadIndex;
+    ulong ProcessID;
+    ulong ThreadID;
+    ulong AttributeBits;
+    uint BoolBits;
+    ulong BlockedOnPID;
+    ulong BlockedOnTID;
+    ulong CritSecAddress;
+    uint Timeout_msec;
+    CHAR[100] StringData;
+    CHAR[100] SymName;
+}
+alias FA_ENTRY_TYPE = int;
+enum : int
+{
+    DEBUG_FA_ENTRY_NO_TYPE            = 0x00000000,
+    DEBUG_FA_ENTRY_ULONG              = 0x00000001,
+    DEBUG_FA_ENTRY_ULONG64            = 0x00000002,
+    DEBUG_FA_ENTRY_INSTRUCTION_OFFSET = 0x00000003,
+    DEBUG_FA_ENTRY_POINTER            = 0x00000004,
+    DEBUG_FA_ENTRY_ANSI_STRING        = 0x00000005,
+    DEBUG_FA_ENTRY_ANSI_STRINGs       = 0x00000006,
+    DEBUG_FA_ENTRY_EXTENSION_CMD      = 0x00000007,
+    DEBUG_FA_ENTRY_STRUCTURED_DATA    = 0x00000008,
+    DEBUG_FA_ENTRY_UNICODE_STRING     = 0x00000009,
+    DEBUG_FA_ENTRY_ARRAY              = 0x00008000,
+}
+
+// [Not Found] IID_IDebugFAEntryTags
+interface IDebugFAEntryTags
+{
+    FA_ENTRY_TYPE GetType(DEBUG_FLR_PARAM_TYPE);
+    HRESULT SetType(DEBUG_FLR_PARAM_TYPE, FA_ENTRY_TYPE);
+    HRESULT GetProperties(DEBUG_FLR_PARAM_TYPE, PSTR, uint*, PSTR, uint*, uint*);
+    HRESULT SetProperties(DEBUG_FLR_PARAM_TYPE, const(char)*, const(char)*, uint);
+    HRESULT GetTagByName(const(char)*, const(char)*, DEBUG_FLR_PARAM_TYPE*);
+    BOOL IsValidTagToSet(DEBUG_FLR_PARAM_TYPE);
+}
+struct FA_ENTRY
+{
+    DEBUG_FLR_PARAM_TYPE Tag;
+    ushort FullSize;
+    ushort DataSize;
+}
+enum IID_IDebugFailureAnalysis = GUID(0xed0de363, 0x451f, 0x4943, [0x82, 0xc, 0x62, 0xdc, 0xcd, 0xfa, 0x7e, 0x6d]);
+interface IDebugFailureAnalysis : IUnknown
+{
+    uint GetFailureClass();
+    DEBUG_FAILURE_TYPE GetFailureType();
+    uint GetFailureCode();
+    FA_ENTRY* Get(DEBUG_FLR_PARAM_TYPE);
+    FA_ENTRY* GetNext(FA_ENTRY*, DEBUG_FLR_PARAM_TYPE, DEBUG_FLR_PARAM_TYPE);
+    FA_ENTRY* GetString(DEBUG_FLR_PARAM_TYPE, PSTR, uint);
+    FA_ENTRY* GetBuffer(DEBUG_FLR_PARAM_TYPE, void*, uint);
+    FA_ENTRY* GetUlong(DEBUG_FLR_PARAM_TYPE, uint*);
+    FA_ENTRY* GetUlong64(DEBUG_FLR_PARAM_TYPE, ulong*);
+    FA_ENTRY* NextEntry(FA_ENTRY*);
+}
+enum IID_IDebugFailureAnalysis2 = GUID(0xea15c288, 0x8226, 0x4b70, [0xac, 0xf6, 0xb, 0xe6, 0xb1, 0x89, 0xe3, 0xad]);
+interface IDebugFailureAnalysis2 : IUnknown
+{
+    uint GetFailureClass();
+    DEBUG_FAILURE_TYPE GetFailureType();
+    uint GetFailureCode();
+    FA_ENTRY* Get(DEBUG_FLR_PARAM_TYPE);
+    FA_ENTRY* GetNext(FA_ENTRY*, DEBUG_FLR_PARAM_TYPE, DEBUG_FLR_PARAM_TYPE);
+    FA_ENTRY* GetString(DEBUG_FLR_PARAM_TYPE, PSTR, uint);
+    FA_ENTRY* GetBuffer(DEBUG_FLR_PARAM_TYPE, void*, uint);
+    FA_ENTRY* GetUlong(DEBUG_FLR_PARAM_TYPE, uint*);
+    FA_ENTRY* GetUlong64(DEBUG_FLR_PARAM_TYPE, ulong*);
+    FA_ENTRY* NextEntry(FA_ENTRY*);
+    FA_ENTRY* SetString(DEBUG_FLR_PARAM_TYPE, const(char)*);
+    FA_ENTRY* SetExtensionCommand(DEBUG_FLR_PARAM_TYPE, const(char)*);
+    FA_ENTRY* SetUlong(DEBUG_FLR_PARAM_TYPE, uint);
+    FA_ENTRY* SetUlong64(DEBUG_FLR_PARAM_TYPE, ulong);
+    FA_ENTRY* SetBuffer(DEBUG_FLR_PARAM_TYPE, FA_ENTRY_TYPE, void*, uint);
+    FA_ENTRY* AddString(DEBUG_FLR_PARAM_TYPE, const(char)*);
+    FA_ENTRY* AddExtensionCommand(DEBUG_FLR_PARAM_TYPE, const(char)*);
+    FA_ENTRY* AddUlong(DEBUG_FLR_PARAM_TYPE, uint);
+    FA_ENTRY* AddUlong64(DEBUG_FLR_PARAM_TYPE, ulong);
+    FA_ENTRY* AddBuffer(DEBUG_FLR_PARAM_TYPE, FA_ENTRY_TYPE, const(void)*, uint);
+    HRESULT GetDebugFATagControl(IDebugFAEntryTags*);
+    HRESULT GetAnalysisXml(IXMLDOMElement*);
+    HRESULT AddStructuredAnalysisData(DEBUG_FLR_PARAM_TYPE, IDebugFailureAnalysis2);
+}
+enum IID_IDebugFailureAnalysis3 = GUID(0x3627dc67, 0xfd45, 0x42ff, [0x9b, 0xa4, 0x4a, 0x67, 0xee, 0x64, 0x61, 0x9f]);
+interface IDebugFailureAnalysis3 : IUnknown
+{
+    uint GetFailureClass();
+    DEBUG_FAILURE_TYPE GetFailureType();
+    uint GetFailureCode();
+    FA_ENTRY* Get(DEBUG_FLR_PARAM_TYPE);
+    FA_ENTRY* GetNext(FA_ENTRY*, DEBUG_FLR_PARAM_TYPE, DEBUG_FLR_PARAM_TYPE);
+    FA_ENTRY* GetString(DEBUG_FLR_PARAM_TYPE, PSTR, uint);
+    FA_ENTRY* GetBuffer(DEBUG_FLR_PARAM_TYPE, void*, uint);
+    FA_ENTRY* GetUlong(DEBUG_FLR_PARAM_TYPE, uint*);
+    FA_ENTRY* GetUlong64(DEBUG_FLR_PARAM_TYPE, ulong*);
+    FA_ENTRY* NextEntry(FA_ENTRY*);
+    FA_ENTRY* SetString(DEBUG_FLR_PARAM_TYPE, const(char)*);
+    FA_ENTRY* SetExtensionCommand(DEBUG_FLR_PARAM_TYPE, const(char)*);
+    FA_ENTRY* SetUlong(DEBUG_FLR_PARAM_TYPE, uint);
+    FA_ENTRY* SetUlong64(DEBUG_FLR_PARAM_TYPE, ulong);
+    FA_ENTRY* SetBuffer(DEBUG_FLR_PARAM_TYPE, FA_ENTRY_TYPE, void*, uint);
+    FA_ENTRY* AddString(DEBUG_FLR_PARAM_TYPE, const(char)*);
+    FA_ENTRY* AddExtensionCommand(DEBUG_FLR_PARAM_TYPE, const(char)*);
+    FA_ENTRY* AddUlong(DEBUG_FLR_PARAM_TYPE, uint);
+    FA_ENTRY* AddUlong64(DEBUG_FLR_PARAM_TYPE, ulong);
+    FA_ENTRY* AddBuffer(DEBUG_FLR_PARAM_TYPE, FA_ENTRY_TYPE, const(void)*, uint);
+    HRESULT GetDebugFATagControl(IDebugFAEntryTags*);
+    HRESULT GetAnalysisXml(IXMLDOMElement*);
+    HRESULT AddStructuredAnalysisData(DEBUG_FLR_PARAM_TYPE, IDebugFailureAnalysis2);
+    HRESULT AddThreads(IUnknown);
+    HRESULT AttributeGet(uint, VARIANT*);
+    HRESULT AttributeGetName(uint, BSTR*);
+    HRESULT AttributeSet(uint, VARIANT);
+    HRESULT BlameApplication(BSTR);
+    HRESULT BlameProcess(BSTR);
+    HRESULT BlameThread(IUnknown);
+    HRESULT BlameStitch(IUnknown, BSTR);
+    HRESULT BlameTEB(ulong);
+    HRESULT BlameETHREAD(ulong);
+    HRESULT ProblemClassIsSet(uint, VARIANT_BOOL*);
+    HRESULT ProblemClassDelete(uint);
+    HRESULT ProblemClassSet(uint);
+    HRESULT ProblemClassSetBSTR(uint, BSTR);
+    HRESULT SetAdditionalXML(BSTR, IUnknown);
+    HRESULT GetAdditionalXML(BSTR, IUnknown*);
+    HRESULT DeleteAdditionalXML(BSTR);
+}
+alias EXT_GET_FAILURE_ANALYSIS = HRESULT function(IDebugClient4, uint, IDebugFailureAnalysis*);
+alias EXT_GET_DEBUG_FAILURE_ANALYSIS = HRESULT function(IDebugClient4, uint, GUID, IDebugFailureAnalysis2*);
+alias fnDebugFailureAnalysisCreateInstance = HRESULT function(IDebugClient, const(wchar)*, uint, const(GUID)*, const(GUID)*, void**);
+alias FA_EXTENSION_PLUGIN_PHASE = int;
+enum : int
+{
+    FA_PLUGIN_INITIALIZATION = 0x00000001,
+    FA_PLUGIN_STACK_ANALYSIS = 0x00000002,
+    FA_PLUGIN_PRE_BUCKETING  = 0x00000004,
+    FA_PLUGIN_POST_BUCKETING = 0x00000008,
+}
+
+alias EXT_ANALYSIS_PLUGIN = HRESULT function(IDebugClient4, FA_EXTENSION_PLUGIN_PHASE, IDebugFailureAnalysis2);
+alias EXT_GET_FA_ENTRIES_DATA = HRESULT function(IDebugClient4, uint*, FA_ENTRY**);
+alias OS_TYPE = int;
+enum : int
+{
+    WIN_95        = 0x00000000,
+    WIN_98        = 0x00000001,
+    WIN_ME        = 0x00000002,
+    WIN_NT4       = 0x00000003,
+    WIN_NT5       = 0x00000004,
+    WIN_NT5_1     = 0x00000005,
+    WIN_NT5_2     = 0x00000006,
+    WIN_NT6_0     = 0x00000007,
+    WIN_NT6_1     = 0x00000008,
+    WIN_UNDEFINED = 0x000000ff,
+}
+
+struct OS_INFO
+{
+    uint MajorVer;
+    uint MinorVer;
+    uint Build;
+    uint BuildQfe;
+    uint ProductType;
+    uint Suite;
+    uint Revision;
+    struct _s_e__Struct
+    {
+        uint _bitfield0;
+    }
+    uint SrvPackNumber;
+    uint ServicePackBuild;
+    uint Architecture;
+    uint Lcid;
+    CHAR[64] Name;
+    CHAR[256] FullName;
+    CHAR[30] Language;
+    CHAR[64] BuildVersion;
+    CHAR[64] ServicePackString;
+}
+struct CPU_INFO
+{
+    uint Type;
+    uint NumCPUs;
+    uint CurrentProc;
+    DEBUG_PROCESSOR_IDENTIFICATION_ALL[2048] ProcInfo;
+    uint Mhz;
+}
+struct TARGET_DEBUG_INFO
+{
+    uint SizeOfStruct;
+    ulong EntryDate;
+    uint DebugeeClass;
+    ulong SysUpTime;
+    ulong AppUpTime;
+    ulong CrashTime;
+    OS_INFO OsInfo;
+    CPU_INFO Cpu;
+    CHAR[260] DumpFile;
+}
+struct CPU_INFO_v2
+{
+    uint Type;
+    uint NumCPUs;
+    uint CurrentProc;
+    DEBUG_PROCESSOR_IDENTIFICATION_ALL[1280] ProcInfo;
+    uint Mhz;
+}
+struct TARGET_DEBUG_INFO_v2
+{
+    uint SizeOfStruct;
+    ulong EntryDate;
+    uint DebugeeClass;
+    ulong SysUpTime;
+    ulong AppUpTime;
+    ulong CrashTime;
+    OS_INFO OsInfo;
+    CPU_INFO_v2 Cpu;
+    CHAR[260] DumpFile;
+}
+struct OS_INFO_v1
+{
+    OS_TYPE Type;
+    union
+    {
+        struct _Version_e__Struct
+        {
+            uint Major;
+            uint Minor;
+        }
+        ulong Ver64;
+    }
+    uint ProductType;
+    uint Suite;
+    struct _s_e__Struct
+    {
+        uint _bitfield0;
+    }
+    uint SrvPackNumber;
+    CHAR[30] Language;
+    CHAR[64] OsString;
+    CHAR[64] ServicePackString;
+}
+struct CPU_INFO_v1
+{
+    uint Type;
+    uint NumCPUs;
+    uint CurrentProc;
+    DEBUG_PROCESSOR_IDENTIFICATION_ALL[32] ProcInfo;
+    uint Mhz;
+}
+struct TARGET_DEBUG_INFO_v1
+{
+    uint SizeOfStruct;
+    ulong Id;
+    ulong Source;
+    ulong EntryDate;
+    ulong SysUpTime;
+    ulong AppUpTime;
+    ulong CrashTime;
+    ulong Mode;
+    OS_INFO_v1 OsInfo;
+    CPU_INFO_v1 Cpu;
+    CHAR[260] DumpFile;
+    void* FailureData;
+    CHAR[4096] StackTr;
+}
+alias EXT_TARGET_INFO = HRESULT function(IDebugClient4, TARGET_DEBUG_INFO*);
+struct DEBUG_DECODE_ERROR
+{
+    uint SizeOfStruct;
+    uint Code;
+    BOOL TreatAsStatus;
+    CHAR[64] Source;
+    CHAR[260] Message;
+}
+alias EXT_DECODE_ERROR = void function(DEBUG_DECODE_ERROR*);
+struct DEBUG_TRIAGE_FOLLOWUP_INFO
+{
+    uint SizeOfStruct;
+    uint OwnerNameSize;
+    PSTR OwnerName;
+}
+struct DEBUG_TRIAGE_FOLLOWUP_INFO_2
+{
+    uint SizeOfStruct;
+    uint OwnerNameSize;
+    PSTR OwnerName;
+    uint FeaturePathSize;
+    PSTR FeaturePath;
+}
+alias EXT_TRIAGE_FOLLOWUP = uint function(IDebugClient4, const(char)*, DEBUG_TRIAGE_FOLLOWUP_INFO*);
+alias EXT_RELOAD_TRIAGER = HRESULT function(IDebugClient4);
+struct EXT_CAB_XML_DATA
+{
+    uint SizeOfStruct;
+    const(wchar)* XmlObjectTag;
+    uint NumSubTags;
+    struct _SUBTAGS
+    {
+        const(wchar)* SubTag;
+        const(wchar)* MatchPattern;
+        PWSTR ReturnText;
+        uint ReturnTextSize;
+        uint _bitfield0;
+        uint Reserved2;
+    }
+}
+alias EXT_XML_DATA = HRESULT function(IDebugClient4, EXT_CAB_XML_DATA*);
+struct XML_DRIVER_NODE_INFO
+{
+    CHAR[64] FileName;
+    ulong FileSize;
+    ulong CreationDate;
+    CHAR[64] Version;
+    CHAR[260] Manufacturer;
+    CHAR[260] ProductName;
+    CHAR[260] Group;
+    CHAR[260] Altitude;
+}
+alias EXT_ANALYZER = HRESULT function(IDebugClient, PSTR, uint, PSTR, uint, uint*, IDebugFailureAnalysis);
+struct DEBUG_ANALYSIS_PROCESSOR_INFO
+{
+    uint SizeOfStruct;
+    uint Model;
+    uint Family;
+    uint Stepping;
+    uint Architecture;
+    uint Revision;
+    uint CurrentClockSpeed;
+    uint CurrentVoltage;
+    uint MaxClockSpeed;
+    uint ProcessorType;
+    CHAR[32] DeviceID;
+    CHAR[64] Manufacturer;
+    CHAR[64] Name;
+    CHAR[64] Version;
+    CHAR[64] Description;
+}
+alias EXTDLL_QUERYDATABYTAG = HRESULT function(IDebugClient4, uint, void*, ubyte*, uint);
+alias EXTDLL_QUERYDATABYTAGEX = HRESULT function(IDebugClient4, uint, void*, ubyte*, uint, ubyte*, uint);
+alias ENTRY_CALLBACK = HRESULT function(ulong, void*);
+alias EXTDLL_ITERATERTLBALANCEDNODES = void function(ulong, uint, ENTRY_CALLBACK, void*);
+alias EXT_GET_HANDLE_TRACE = HRESULT function(IDebugClient, uint, uint, ulong*, ulong*, uint);
+alias EXT_GET_ENVIRONMENT_VARIABLE = HRESULT function(ulong, PSTR, PSTR, uint);
+alias TANALYZE_RETURN = int;
+enum : int
+{
+    NO_TYPE           = 0x00000000,
+    PROCESS_END       = 0x00000001,
+    EXIT_STATUS       = 0x00000002,
+    DISK_READ_0_BYTES = 0x00000003,
+    DISK_WRITE        = 0x00000004,
+    NT_STATUS_CODE    = 0x00000005,
+}
+
+struct CKCL_DATA
+{
+    void* NextLogEvent;
+    PSTR TAnalyzeString;
+    TANALYZE_RETURN TAnalyzeReturnType;
+}
+struct CKCL_LISTHEAD
+{
+    CKCL_DATA* LogEventListHead;
+    HANDLE Heap;
+}
+struct APC_CALLBACK_DATA
+{
+    ulong Parameter;
+    CONTEXT* ContextRecord;
+    ulong Reserved0;
+    ulong Reserved1;
 }
 struct XSAVE_FORMAT
 {
@@ -8238,6 +9743,7 @@ struct IMAGE_LOAD_CONFIG_DIRECTORY32
     uint GuardXFGDispatchFunctionPointer;
     uint GuardXFGTableDispatchFunctionPointer;
     uint CastGuardOsDeterminedFailureMode;
+    uint GuardMemcpyFunctionPointer;
 }
 struct IMAGE_LOAD_CONFIG_DIRECTORY64
 {
@@ -8290,6 +9796,7 @@ struct IMAGE_LOAD_CONFIG_DIRECTORY64
     ulong GuardXFGDispatchFunctionPointer;
     ulong GuardXFGTableDispatchFunctionPointer;
     ulong CastGuardOsDeterminedFailureMode;
+    ulong GuardMemcpyFunctionPointer;
 }
 struct IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY
 {
@@ -8425,7 +9932,7 @@ struct WAITCHAIN_NODE_INFO
         struct _LockObject_e__Struct
         {
             wchar[128] ObjectName;
-            LARGE_INTEGER Timeout;
+            long Timeout;
             BOOL Alertable;
         }
         struct _ThreadObject_e__Struct
@@ -9327,8 +10834,8 @@ struct MINIDUMP_CALLBACK_OUTPUT
         HRESULT Status;
     }
 }
-alias MINIDUMP_TYPE = uint;
-enum : uint
+alias MINIDUMP_TYPE = int;
+enum : int
 {
     MiniDumpNormal                         = 0x00000000,
     MiniDumpWithDataSegs                   = 0x00000001,
@@ -9619,8 +11126,8 @@ interface IActiveScriptStringCompare : IUnknown
 {
     HRESULT StrComp(BSTR, BSTR, int*);
 }
-alias DBGPROP_ATTRIB_FLAGS = uint;
-enum : uint
+alias DBGPROP_ATTRIB_FLAGS = int;
+enum : int
 {
     DBGPROP_ATTRIB_NO_ATTRIB              = 0x00000000,
     DBGPROP_ATTRIB_VALUE_IS_INVALID       = 0x00000008,
@@ -9649,8 +11156,8 @@ enum : uint
     DBGPROP_ATTRIB_VALUE_PENDING_MUTATION = 0x10000000,
 }
 
-alias DBGPROP_INFO = uint;
-enum : uint
+alias DBGPROP_INFO = int;
+enum : int
 {
     DBGPROP_INFO_NAME         = 0x00000001,
     DBGPROP_INFO_TYPE         = 0x00000002,
@@ -10400,8 +11907,8 @@ enum : int
     PROFILER_SCRIPT_TYPE_DOM     = 0x00000003,
 }
 
-alias PROFILER_EVENT_MASK = uint;
-enum : uint
+alias PROFILER_EVENT_MASK = int;
+enum : int
 {
     PROFILER_EVENT_MASK_TRACE_SCRIPT_FUNCTION_CALL = 0x00000001,
     PROFILER_EVENT_MASK_TRACE_NATIVE_FUNCTION_CALL = 0x00000002,
@@ -10423,8 +11930,8 @@ interface IActiveScriptProfilerControl2 : IActiveScriptProfilerControl
     HRESULT CompleteProfilerStart();
     HRESULT PrepareProfilerStop();
 }
-alias PROFILER_HEAP_OBJECT_FLAGS = uint;
-enum : uint
+alias PROFILER_HEAP_OBJECT_FLAGS = int;
+enum : int
 {
     PROFILER_HEAP_OBJECT_FLAGS_NEW_OBJECT            = 0x00000001,
     PROFILER_HEAP_OBJECT_FLAGS_IS_ROOT               = 0x00000002,
@@ -10460,8 +11967,8 @@ enum : int
     PROFILER_HEAP_OBJECT_OPTIONAL_INFO_MAX_VALUE                  = 0x0000000d,
 }
 
-alias PROFILER_HEAP_OBJECT_RELATIONSHIP_FLAGS = uint;
-enum : uint
+alias PROFILER_HEAP_OBJECT_RELATIONSHIP_FLAGS = int;
+enum : int
 {
     PROFILER_HEAP_OBJECT_RELATIONSHIP_FLAGS_NONE            = 0x00000000,
     PROFILER_HEAP_OBJECT_RELATIONSHIP_FLAGS_IS_GET_ACCESSOR = 0x00010000,
@@ -10470,8 +11977,8 @@ enum : uint
     PROFILER_HEAP_OBJECT_RELATIONSHIP_FLAGS_CONST_VARIABLE  = 0x00080000,
 }
 
-alias PROFILER_HEAP_ENUM_FLAGS = uint;
-enum : uint
+alias PROFILER_HEAP_ENUM_FLAGS = int;
+enum : int
 {
     PROFILER_HEAP_ENUM_FLAGS_NONE                     = 0x00000000,
     PROFILER_HEAP_ENUM_FLAGS_STORE_RELATIONSHIP_FLAGS = 0x00000001,
@@ -10558,7 +12065,7 @@ interface IActiveScriptProfilerHeapEnum : IUnknown
     HRESULT Next(uint, PROFILER_HEAP_OBJECT**, uint*);
     HRESULT GetOptionalInfo(PROFILER_HEAP_OBJECT*, uint, PROFILER_HEAP_OBJECT_OPTIONAL_INFO*);
     HRESULT FreeObjectAndOptionalInfo(uint, PROFILER_HEAP_OBJECT**);
-    HRESULT GetNameIdMap(PWSTR***, uint*);
+    HRESULT GetNameIdMap(const(wchar)****, uint*);
 }
 enum IID_IActiveScriptProfilerControl3 = GUID(0xb403015, 0xf381, 0x4023, [0xa5, 0xd0, 0x6f, 0xed, 0x7, 0x6d, 0xe7, 0x16]);
 interface IActiveScriptProfilerControl3 : IActiveScriptProfilerControl2
@@ -10822,6 +12329,7 @@ alias PREAD_PROCESS_MEMORY_ROUTINE64 = BOOL function(HANDLE, ulong, void*, uint,
 alias PFUNCTION_TABLE_ACCESS_ROUTINE64 = void* function(HANDLE, ulong);
 alias PGET_MODULE_BASE_ROUTINE64 = ulong function(HANDLE, ulong);
 alias PTRANSLATE_ADDRESS_ROUTINE64 = ulong function(HANDLE, HANDLE, ADDRESS64*);
+alias PGET_TARGET_ATTRIBUTE_VALUE64 = BOOL function(HANDLE, uint, ulong, ulong*);
 alias PREAD_PROCESS_MEMORY_ROUTINE = BOOL function(HANDLE, uint, void*, uint, uint*);
 alias PFUNCTION_TABLE_ACCESS_ROUTINE = void* function(HANDLE, uint);
 alias PGET_MODULE_BASE_ROUTINE = uint function(HANDLE, uint);
@@ -11818,10 +13326,10 @@ struct DUMP_HEADER32
     uint ProductType;
     uint SuiteMask;
     uint WriterStatus;
-    LARGE_INTEGER RequiredDumpSpace;
+    long RequiredDumpSpace;
     ubyte[16] _reserved2;
-    LARGE_INTEGER SystemUpTime;
-    LARGE_INTEGER SystemTime;
+    long SystemUpTime;
+    long SystemTime;
     ubyte[56] _reserved3;
 }
 struct DUMP_HEADER64
@@ -11851,10 +13359,10 @@ struct DUMP_HEADER64
     ubyte[3000] ContextRecord;
     EXCEPTION_RECORD64 Exception;
     uint DumpType;
-    LARGE_INTEGER RequiredDumpSpace;
-    LARGE_INTEGER SystemTime;
+    long RequiredDumpSpace;
+    long SystemTime;
     CHAR[128] Comment;
-    LARGE_INTEGER SystemUpTime;
+    long SystemUpTime;
     uint MiniDumpFields;
     uint SecondaryDataState;
     uint ProductType;
@@ -11893,7 +13401,9 @@ enum : int
     WheaErrSrcTypeBMC          = 0x0000000e,
     WheaErrSrcTypePMEM         = 0x0000000f,
     WheaErrSrcTypeDeviceDriver = 0x00000010,
-    WheaErrSrcTypeMax          = 0x00000011,
+    WheaErrSrcTypeSea          = 0x00000011,
+    WheaErrSrcTypeSei          = 0x00000012,
+    WheaErrSrcTypeMax          = 0x00000013,
 }
 
 alias WHEA_ERROR_SOURCE_STATE = int;
@@ -12205,7 +13715,7 @@ struct WHEA_GENERIC_ERROR_DESCRIPTOR
     ubyte ErrStatusAddressBitWidth;
     ubyte ErrStatusAddressBitOffset;
     ubyte ErrStatusAddressAccessSize;
-    LARGE_INTEGER ErrStatusAddress;
+    long ErrStatusAddress;
     WHEA_NOTIFICATION_DESCRIPTOR Notify;
 }
 struct WHEA_GENERIC_ERROR_DESCRIPTOR_V2
@@ -12220,13 +13730,13 @@ struct WHEA_GENERIC_ERROR_DESCRIPTOR_V2
     ubyte ErrStatusAddressBitWidth;
     ubyte ErrStatusAddressBitOffset;
     ubyte ErrStatusAddressAccessSize;
-    LARGE_INTEGER ErrStatusAddress;
+    long ErrStatusAddress;
     WHEA_NOTIFICATION_DESCRIPTOR Notify;
     ubyte ReadAckAddressSpaceID;
     ubyte ReadAckAddressBitWidth;
     ubyte ReadAckAddressBitOffset;
     ubyte ReadAckAddressAccessSize;
-    LARGE_INTEGER ReadAckAddress;
+    long ReadAckAddress;
     ulong ReadAckPreserveMask;
     ulong ReadAckWriteMask;
 }

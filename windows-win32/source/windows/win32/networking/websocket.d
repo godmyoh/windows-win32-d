@@ -6,10 +6,10 @@ version (Windows):
 extern (Windows):
 
 HRESULT WebSocketCreateClientHandle(const(WEB_SOCKET_PROPERTY)*, uint, WEB_SOCKET_HANDLE*);
-HRESULT WebSocketBeginClientHandshake(WEB_SOCKET_HANDLE, PSTR*, uint, PSTR*, uint, const(WEB_SOCKET_HTTP_HEADER)*, uint, WEB_SOCKET_HTTP_HEADER**, uint*);
+HRESULT WebSocketBeginClientHandshake(WEB_SOCKET_HANDLE, const(char)**, uint, const(char)**, uint, const(WEB_SOCKET_HTTP_HEADER)*, uint, WEB_SOCKET_HTTP_HEADER**, uint*);
 HRESULT WebSocketEndClientHandshake(WEB_SOCKET_HANDLE, const(WEB_SOCKET_HTTP_HEADER)*, uint, uint*, uint*, uint*);
 HRESULT WebSocketCreateServerHandle(const(WEB_SOCKET_PROPERTY)*, uint, WEB_SOCKET_HANDLE*);
-HRESULT WebSocketBeginServerHandshake(WEB_SOCKET_HANDLE, const(char)*, PSTR*, uint, const(WEB_SOCKET_HTTP_HEADER)*, uint, WEB_SOCKET_HTTP_HEADER**, uint*);
+HRESULT WebSocketBeginServerHandshake(WEB_SOCKET_HANDLE, const(char)*, const(char)**, uint, const(WEB_SOCKET_HTTP_HEADER)*, uint, WEB_SOCKET_HTTP_HEADER**, uint*);
 HRESULT WebSocketEndServerHandshake(WEB_SOCKET_HANDLE);
 HRESULT WebSocketSend(WEB_SOCKET_HANDLE, WEB_SOCKET_BUFFER_TYPE, WEB_SOCKET_BUFFER*, void*);
 HRESULT WebSocketReceive(WEB_SOCKET_HANDLE, WEB_SOCKET_BUFFER*, void*);

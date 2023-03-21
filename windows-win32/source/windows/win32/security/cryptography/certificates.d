@@ -1,7 +1,7 @@
 module windows.win32.security.cryptography.certificates;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, HRESULT, HWND, LARGE_INTEGER, NTSTATUS, PWSTR, UNICODE_STRING, VARIANT_BOOL;
+import windows.win32.foundation : BOOL, BSTR, HRESULT, HWND, NTSTATUS, PWSTR, UNICODE_STRING, VARIANT_BOOL;
 import windows.win32.security.authentication.identity_ : LSA_TOKEN_INFORMATION_TYPE, SecPkgContext_IssuerListInfoEx;
 import windows.win32.security.cryptography_ : CERT_CHAIN_CONTEXT, CERT_CONTEXT, CERT_EXTENSIONS, CERT_RDN_ATTR_VALUE_TYPE, CERT_SELECT_CRITERIA, CERT_USAGE_MATCH, CRYPT_ATTRIBUTES, CRYPT_INTEGER_BLOB, HCERTSTORE;
 import windows.win32.system.com_ : IDispatch, IUnknown, VARIANT;
@@ -13,7 +13,7 @@ HRESULT CertSrvIsServerOnlineW(const(wchar)*, BOOL*);
 HRESULT CertSrvBackupGetDynamicFileListW(void*, PWSTR*, uint*);
 HRESULT CertSrvBackupPrepareW(const(wchar)*, uint, CSBACKUP_TYPE, void**);
 HRESULT CertSrvBackupGetDatabaseNamesW(void*, PWSTR*, uint*);
-HRESULT CertSrvBackupOpenFileW(void*, const(wchar)*, uint, LARGE_INTEGER*);
+HRESULT CertSrvBackupOpenFileW(void*, const(wchar)*, uint, long*);
 HRESULT CertSrvBackupRead(void*, void*, uint, uint*);
 HRESULT CertSrvBackupClose(void*);
 HRESULT CertSrvBackupGetBackupLogsW(void*, PWSTR*, uint*);
@@ -505,6 +505,7 @@ enum wszREGFILEISSUERCERTURL_OLD = "FileIssuerCertURL";
 enum wszREGENABLEREQUESTEXTENSIONLIST = "EnableRequestExtensionList";
 enum wszREGENABLEENROLLEEREQUESTEXTENSIONLIST = "EnableEnrolleeRequestExtensionList";
 enum wszREGDISABLEEXTENSIONLIST = "DisableExtensionList";
+enum wszREGDISABLESECEXTENSION = "DisableSecExtension";
 enum wszREGEKUOIDSFORVOLATILEREQUESTS = "EKUOIDsforVolatileRequests";
 enum wszREGLDAPSESSIONOPTIONS = "LDAPSessionOptions";
 enum wszLDAPSESSIONOPTIONVALUE = "LDAPSessionOptionValue";
@@ -1438,7 +1439,7 @@ alias FNCERTSRVISSERVERONLINEW = HRESULT function(const(wchar)*, BOOL*);
 alias FNCERTSRVBACKUPGETDYNAMICFILELISTW = HRESULT function(void*, ushort**, uint*);
 alias FNCERTSRVBACKUPPREPAREW = HRESULT function(const(wchar)*, uint, uint, void**);
 alias FNCERTSRVBACKUPGETDATABASENAMESW = HRESULT function(void*, ushort**, uint*);
-alias FNCERTSRVBACKUPOPENFILEW = HRESULT function(void*, const(wchar)*, uint, LARGE_INTEGER*);
+alias FNCERTSRVBACKUPOPENFILEW = HRESULT function(void*, const(wchar)*, uint, long*);
 alias FNCERTSRVBACKUPREAD = HRESULT function(void*, void*, uint, uint*);
 alias FNCERTSRVBACKUPCLOSE = HRESULT function(void*);
 alias FNCERTSRVBACKUPGETBACKUPLOGSW = HRESULT function(void*, ushort**, uint*);
@@ -3366,7 +3367,7 @@ enum : int
     XCN_CERT_CLR_DELETE_KEY_PROP_ID                          = 0x0000007d,
     XCN_CERT_NOT_BEFORE_FILETIME_PROP_ID                     = 0x0000007e,
     XCN_CERT_CERT_NOT_BEFORE_ENHKEY_USAGE_PROP_ID            = 0x0000007f,
-    XCN_CERT_FIRST_RESERVED_PROP_ID                          = 0x00000080,
+    XCN_CERT_FIRST_RESERVED_PROP_ID                          = 0x00000081,
     XCN_CERT_LAST_RESERVED_PROP_ID                           = 0x00007fff,
     XCN_CERT_FIRST_USER_PROP_ID                              = 0x00008000,
     XCN_CERT_LAST_USER_PROP_ID                               = 0x0000ffff,

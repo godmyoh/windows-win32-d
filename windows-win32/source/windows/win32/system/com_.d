@@ -1,7 +1,7 @@
 module windows.win32.system.com_;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, CHAR, DECIMAL, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, PSTR, PWSTR, ULARGE_INTEGER, VARIANT_BOOL;
+import windows.win32.foundation : BOOL, BSTR, CHAR, DECIMAL, FILETIME, HANDLE, HGLOBAL, HINSTANCE, HRESULT, HWND, PSTR, PWSTR, VARIANT_BOOL;
 import windows.win32.graphics.gdi : HBITMAP, HENHMETAFILE;
 import windows.win32.security_ : PSECURITY_DESCRIPTOR, SECURITY_ATTRIBUTES;
 import windows.win32.system.com.structuredstorage : IStorage;
@@ -11,6 +11,157 @@ import windows.win32.system.systemservices : userHBITMAP, userHGLOBAL, userHPALE
 version (Windows):
 extern (Windows):
 
+uint CoBuildVersion();
+HRESULT CoInitialize(void*);
+HRESULT CoRegisterMallocSpy(IMallocSpy);
+HRESULT CoRevokeMallocSpy();
+HRESULT CoRegisterInitializeSpy(IInitializeSpy, ulong*);
+HRESULT CoRevokeInitializeSpy(ulong);
+HRESULT CoGetSystemSecurityPermissions(COMSD, PSECURITY_DESCRIPTOR*);
+HINSTANCE CoLoadLibrary(PWSTR, BOOL);
+void CoFreeLibrary(HINSTANCE);
+void CoFreeAllLibraries();
+HRESULT CoAllowSetForegroundWindow(IUnknown, void*);
+HRESULT DcomChannelSetHResult(void*, uint*, HRESULT);
+BOOL CoIsOle1Class(const(GUID)*);
+HRESULT CLSIDFromProgIDEx(const(wchar)*, GUID*);
+BOOL CoFileTimeToDosDateTime(FILETIME*, ushort*, ushort*);
+BOOL CoDosDateTimeToFileTime(ushort, ushort, FILETIME*);
+HRESULT CoFileTimeNow(FILETIME*);
+HRESULT CoRegisterChannelHook(const(GUID)*, IChannelHook);
+HRESULT CoTreatAsClass(const(GUID)*, const(GUID)*);
+HRESULT CreateDataAdviseHolder(IDataAdviseHolder*);
+HRESULT CreateDataCache(IUnknown, const(GUID)*, const(GUID)*, void**);
+HRESULT CoInstall(IBindCtx, uint, uCLSSPEC*, QUERYCONTEXT*, PWSTR);
+HRESULT BindMoniker(IMoniker, uint, const(GUID)*, void**);
+HRESULT CoGetObject(const(wchar)*, BIND_OPTS*, const(GUID)*, void**);
+HRESULT MkParseDisplayName(IBindCtx, const(wchar)*, uint*, IMoniker*);
+HRESULT MonikerRelativePathTo(IMoniker, IMoniker, IMoniker*, BOOL);
+HRESULT MonikerCommonPrefixWith(IMoniker, IMoniker, IMoniker*);
+HRESULT CreateBindCtx(uint, IBindCtx*);
+HRESULT CreateGenericComposite(IMoniker, IMoniker, IMoniker*);
+HRESULT GetClassFile(const(wchar)*, GUID*);
+HRESULT CreateClassMoniker(const(GUID)*, IMoniker*);
+HRESULT CreateFileMoniker(const(wchar)*, IMoniker*);
+HRESULT CreateItemMoniker(const(wchar)*, const(wchar)*, IMoniker*);
+HRESULT CreateAntiMoniker(IMoniker*);
+HRESULT CreatePointerMoniker(IUnknown, IMoniker*);
+HRESULT CreateObjrefMoniker(IUnknown, IMoniker*);
+HRESULT GetRunningObjectTable(uint, IRunningObjectTable*);
+HRESULT CreateStdProgressIndicator(HWND, const(wchar)*, IBindStatusCallback, IBindStatusCallback*);
+HRESULT CoGetMalloc(uint, IMalloc*);
+void CoUninitialize();
+uint CoGetCurrentProcess();
+HRESULT CoInitializeEx(void*, COINIT);
+HRESULT CoGetCallerTID(uint*);
+HRESULT CoGetCurrentLogicalThreadId(GUID*);
+HRESULT CoGetContextToken(ulong*);
+HRESULT CoGetApartmentType(APTTYPE*, APTTYPEQUALIFIER*);
+HRESULT CoIncrementMTAUsage(CO_MTA_USAGE_COOKIE*);
+HRESULT CoDecrementMTAUsage(CO_MTA_USAGE_COOKIE);
+HRESULT CoAllowUnmarshalerCLSID(const(GUID)*);
+HRESULT CoGetObjectContext(const(GUID)*, void**);
+HRESULT CoGetClassObject(const(GUID)*, CLSCTX, void*, const(GUID)*, void**);
+HRESULT CoRegisterClassObject(const(GUID)*, IUnknown, CLSCTX, REGCLS, uint*);
+HRESULT CoRevokeClassObject(uint);
+HRESULT CoResumeClassObjects();
+HRESULT CoSuspendClassObjects();
+uint CoAddRefServerProcess();
+uint CoReleaseServerProcess();
+HRESULT CoGetPSClsid(const(GUID)*, GUID*);
+HRESULT CoRegisterPSClsid(const(GUID)*, const(GUID)*);
+HRESULT CoRegisterSurrogate(ISurrogate);
+HRESULT CoDisconnectObject(IUnknown, uint);
+HRESULT CoLockObjectExternal(IUnknown, BOOL, BOOL);
+BOOL CoIsHandlerConnected(IUnknown);
+HRESULT CoCreateFreeThreadedMarshaler(IUnknown, IUnknown*);
+void CoFreeUnusedLibraries();
+void CoFreeUnusedLibrariesEx(uint, uint);
+HRESULT CoDisconnectContext(uint);
+HRESULT CoInitializeSecurity(PSECURITY_DESCRIPTOR, int, SOLE_AUTHENTICATION_SERVICE*, void*, RPC_C_AUTHN_LEVEL, RPC_C_IMP_LEVEL, void*, EOLE_AUTHENTICATION_CAPABILITIES, void*);
+HRESULT CoGetCallContext(const(GUID)*, void**);
+HRESULT CoQueryProxyBlanket(IUnknown, uint*, uint*, PWSTR*, uint*, uint*, void**, uint*);
+HRESULT CoSetProxyBlanket(IUnknown, uint, uint, PWSTR, RPC_C_AUTHN_LEVEL, RPC_C_IMP_LEVEL, void*, EOLE_AUTHENTICATION_CAPABILITIES);
+HRESULT CoCopyProxy(IUnknown, IUnknown*);
+HRESULT CoQueryClientBlanket(uint*, uint*, PWSTR*, uint*, uint*, void**, uint*);
+HRESULT CoImpersonateClient();
+HRESULT CoRevertToSelf();
+HRESULT CoQueryAuthenticationServices(uint*, SOLE_AUTHENTICATION_SERVICE**);
+HRESULT CoSwitchCallContext(IUnknown, IUnknown*);
+HRESULT CoCreateInstance(const(GUID)*, IUnknown, CLSCTX, const(GUID)*, void**);
+HRESULT CoCreateInstanceEx(const(GUID)*, IUnknown, CLSCTX, COSERVERINFO*, uint, MULTI_QI*);
+HRESULT CoCreateInstanceFromApp(const(GUID)*, IUnknown, CLSCTX, void*, uint, MULTI_QI*);
+HRESULT CoRegisterActivationFilter(IActivationFilter);
+HRESULT CoGetCancelObject(uint, const(GUID)*, void**);
+HRESULT CoSetCancelObject(IUnknown);
+HRESULT CoCancelCall(uint, uint);
+HRESULT CoTestCancel();
+HRESULT CoEnableCallCancellation(void*);
+HRESULT CoDisableCallCancellation(void*);
+HRESULT StringFromCLSID(const(GUID)*, PWSTR*);
+HRESULT CLSIDFromString(const(wchar)*, GUID*);
+HRESULT StringFromIID(const(GUID)*, PWSTR*);
+HRESULT IIDFromString(const(wchar)*, GUID*);
+HRESULT ProgIDFromCLSID(const(GUID)*, PWSTR*);
+HRESULT CLSIDFromProgID(const(wchar)*, GUID*);
+int StringFromGUID2(const(GUID)*, PWSTR, int);
+HRESULT CoCreateGuid(GUID*);
+HRESULT CoWaitForMultipleHandles(uint, uint, uint, HANDLE*, uint*);
+HRESULT CoWaitForMultipleObjects(uint, uint, uint, const(HANDLE)*, uint*);
+HRESULT CoGetTreatAsClass(const(GUID)*, GUID*);
+HRESULT CoInvalidateRemoteMachineBindings(PWSTR);
+void* CoTaskMemAlloc(ulong);
+void* CoTaskMemRealloc(void*, ulong);
+void CoTaskMemFree(void*);
+HRESULT CoRegisterDeviceCatalog(const(wchar)*, CO_DEVICE_CATALOG_COOKIE*);
+HRESULT CoRevokeDeviceCatalog(CO_DEVICE_CATALOG_COOKIE);
+HRESULT CreateUri(const(wchar)*, URI_CREATE_FLAGS, ulong, IUri*);
+HRESULT CreateUriWithFragment(const(wchar)*, const(wchar)*, uint, ulong, IUri*);
+HRESULT CreateUriFromMultiByteString(const(char)*, uint, uint, uint, ulong, IUri*);
+HRESULT CreateIUriBuilder(IUri, uint, ulong, IUriBuilder*);
+HRESULT SetErrorInfo(uint, IErrorInfo);
+HRESULT GetErrorInfo(uint, IErrorInfo*);
+enum COLE_DEFAULT_PRINCIPAL = 0xffffffffffffffff;
+enum COLE_DEFAULT_AUTHINFO = 0xffffffffffffffff;
+enum MARSHALINTERFACE_MIN = 0x000001f4;
+enum ASYNC_MODE_COMPATIBILITY = 0x00000001;
+enum ASYNC_MODE_DEFAULT = 0x00000000;
+enum STGTY_REPEAT = 0x00000100;
+enum STG_TOEND = 0xffffffffffffffff;
+enum STG_LAYOUT_SEQUENTIAL = 0x00000000;
+enum STG_LAYOUT_INTERLEAVED = 0x00000001;
+enum COM_RIGHTS_EXECUTE = 0x00000001;
+enum COM_RIGHTS_EXECUTE_LOCAL = 0x00000002;
+enum COM_RIGHTS_EXECUTE_REMOTE = 0x00000004;
+enum COM_RIGHTS_ACTIVATE_LOCAL = 0x00000008;
+enum COM_RIGHTS_ACTIVATE_REMOTE = 0x00000010;
+enum COM_RIGHTS_RESERVED1 = 0x00000020;
+enum COM_RIGHTS_RESERVED2 = 0x00000040;
+enum CWMO_MAX_HANDLES = 0x00000038;
+enum ROTREGFLAGS_ALLOWANYCLIENT = 0x00000001;
+enum APPIDREGFLAGS_ACTIVATE_IUSERVER_INDESKTOP = 0x00000001;
+enum APPIDREGFLAGS_SECURE_SERVER_PROCESS_SD_AND_BIND = 0x00000002;
+enum APPIDREGFLAGS_ISSUE_ACTIVATION_RPC_AT_IDENTIFY = 0x00000004;
+enum APPIDREGFLAGS_IUSERVER_UNMODIFIED_LOGON_TOKEN = 0x00000008;
+enum APPIDREGFLAGS_IUSERVER_SELF_SID_IN_LAUNCH_PERMISSION = 0x00000010;
+enum APPIDREGFLAGS_IUSERVER_ACTIVATE_IN_CLIENT_SESSION_ONLY = 0x00000020;
+enum APPIDREGFLAGS_RESERVED1 = 0x00000040;
+enum APPIDREGFLAGS_RESERVED2 = 0x00000080;
+enum APPIDREGFLAGS_RESERVED3 = 0x00000100;
+enum APPIDREGFLAGS_RESERVED4 = 0x00000200;
+enum APPIDREGFLAGS_RESERVED5 = 0x00000400;
+enum APPIDREGFLAGS_AAA_NO_IMPLICIT_ACTIVATE_AS_IU = 0x00000800;
+enum APPIDREGFLAGS_RESERVED7 = 0x00001000;
+enum APPIDREGFLAGS_RESERVED8 = 0x00002000;
+enum APPIDREGFLAGS_RESERVED9 = 0x00004000;
+enum DCOMSCM_ACTIVATION_USE_ALL_AUTHNSERVICES = 0x00000001;
+enum DCOMSCM_ACTIVATION_DISALLOW_UNSECURE_CALL = 0x00000002;
+enum DCOMSCM_RESOLVE_USE_ALL_AUTHNSERVICES = 0x00000004;
+enum DCOMSCM_RESOLVE_DISALLOW_UNSECURE_CALL = 0x00000008;
+enum DCOMSCM_PING_USE_MID_AUTHNSERVICE = 0x00000010;
+enum DCOMSCM_PING_DISALLOW_UNSECURE_CALL = 0x00000020;
+enum MAXLSN = 0x7fffffffffffffff;
+enum DMUS_ERRBASE = 0x00001000;
 alias LPEXCEPFINO_DEFERRED_FILLIN = HRESULT function(EXCEPINFO*);
 alias URI_CREATE_FLAGS = uint;
 enum : uint
@@ -143,159 +294,10 @@ enum : uint
     DVASPECT_TRANSPARENT = 0x00000020,
 }
 
-uint CoBuildVersion();
-HRESULT CoInitialize(void*);
-HRESULT CoRegisterMallocSpy(IMallocSpy);
-HRESULT CoRevokeMallocSpy();
-HRESULT CoRegisterInitializeSpy(IInitializeSpy, ULARGE_INTEGER*);
-HRESULT CoRevokeInitializeSpy(ULARGE_INTEGER);
-HRESULT CoGetSystemSecurityPermissions(COMSD, PSECURITY_DESCRIPTOR*);
-HINSTANCE CoLoadLibrary(PWSTR, BOOL);
-void CoFreeLibrary(HINSTANCE);
-void CoFreeAllLibraries();
-HRESULT CoAllowSetForegroundWindow(IUnknown, void*);
-HRESULT DcomChannelSetHResult(void*, uint*, HRESULT);
-BOOL CoIsOle1Class(const(GUID)*);
-HRESULT CLSIDFromProgIDEx(const(wchar)*, GUID*);
-BOOL CoFileTimeToDosDateTime(FILETIME*, ushort*, ushort*);
-BOOL CoDosDateTimeToFileTime(ushort, ushort, FILETIME*);
-HRESULT CoFileTimeNow(FILETIME*);
-HRESULT CoRegisterChannelHook(const(GUID)*, IChannelHook);
-HRESULT CoTreatAsClass(const(GUID)*, const(GUID)*);
-HRESULT CreateDataAdviseHolder(IDataAdviseHolder*);
-HRESULT CreateDataCache(IUnknown, const(GUID)*, const(GUID)*, void**);
-HRESULT CoInstall(IBindCtx, uint, uCLSSPEC*, QUERYCONTEXT*, PWSTR);
-HRESULT BindMoniker(IMoniker, uint, const(GUID)*, void**);
-HRESULT CoGetObject(const(wchar)*, BIND_OPTS*, const(GUID)*, void**);
-HRESULT MkParseDisplayName(IBindCtx, const(wchar)*, uint*, IMoniker*);
-HRESULT MonikerRelativePathTo(IMoniker, IMoniker, IMoniker*, BOOL);
-HRESULT MonikerCommonPrefixWith(IMoniker, IMoniker, IMoniker*);
-HRESULT CreateBindCtx(uint, IBindCtx*);
-HRESULT CreateGenericComposite(IMoniker, IMoniker, IMoniker*);
-HRESULT GetClassFile(const(wchar)*, GUID*);
-HRESULT CreateClassMoniker(const(GUID)*, IMoniker*);
-HRESULT CreateFileMoniker(const(wchar)*, IMoniker*);
-HRESULT CreateItemMoniker(const(wchar)*, const(wchar)*, IMoniker*);
-HRESULT CreateAntiMoniker(IMoniker*);
-HRESULT CreatePointerMoniker(IUnknown, IMoniker*);
-HRESULT CreateObjrefMoniker(IUnknown, IMoniker*);
-HRESULT GetRunningObjectTable(uint, IRunningObjectTable*);
-HRESULT CreateStdProgressIndicator(HWND, const(wchar)*, IBindStatusCallback, IBindStatusCallback*);
-HRESULT CoGetMalloc(uint, IMalloc*);
-void CoUninitialize();
-uint CoGetCurrentProcess();
-HRESULT CoInitializeEx(void*, COINIT);
-HRESULT CoGetCallerTID(uint*);
-HRESULT CoGetCurrentLogicalThreadId(GUID*);
-HRESULT CoGetContextToken(ulong*);
-HRESULT CoGetApartmentType(APTTYPE*, APTTYPEQUALIFIER*);
-HRESULT CoIncrementMTAUsage(CO_MTA_USAGE_COOKIE*);
-HRESULT CoDecrementMTAUsage(CO_MTA_USAGE_COOKIE);
-HRESULT CoAllowUnmarshalerCLSID(const(GUID)*);
-HRESULT CoGetObjectContext(const(GUID)*, void**);
-HRESULT CoGetClassObject(const(GUID)*, CLSCTX, void*, const(GUID)*, void**);
-HRESULT CoRegisterClassObject(const(GUID)*, IUnknown, CLSCTX, REGCLS, uint*);
-HRESULT CoRevokeClassObject(uint);
-HRESULT CoResumeClassObjects();
-HRESULT CoSuspendClassObjects();
-uint CoAddRefServerProcess();
-uint CoReleaseServerProcess();
-HRESULT CoGetPSClsid(const(GUID)*, GUID*);
-HRESULT CoRegisterPSClsid(const(GUID)*, const(GUID)*);
-HRESULT CoRegisterSurrogate(ISurrogate);
-HRESULT CoDisconnectObject(IUnknown, uint);
-HRESULT CoLockObjectExternal(IUnknown, BOOL, BOOL);
-BOOL CoIsHandlerConnected(IUnknown);
-HRESULT CoCreateFreeThreadedMarshaler(IUnknown, IUnknown*);
-void CoFreeUnusedLibraries();
-void CoFreeUnusedLibrariesEx(uint, uint);
-HRESULT CoDisconnectContext(uint);
-HRESULT CoInitializeSecurity(PSECURITY_DESCRIPTOR, int, SOLE_AUTHENTICATION_SERVICE*, void*, RPC_C_AUTHN_LEVEL, RPC_C_IMP_LEVEL, void*, EOLE_AUTHENTICATION_CAPABILITIES, void*);
-HRESULT CoGetCallContext(const(GUID)*, void**);
-HRESULT CoQueryProxyBlanket(IUnknown, uint*, uint*, PWSTR*, uint*, uint*, void**, uint*);
-HRESULT CoSetProxyBlanket(IUnknown, uint, uint, PWSTR, RPC_C_AUTHN_LEVEL, RPC_C_IMP_LEVEL, void*, EOLE_AUTHENTICATION_CAPABILITIES);
-HRESULT CoCopyProxy(IUnknown, IUnknown*);
-HRESULT CoQueryClientBlanket(uint*, uint*, PWSTR*, uint*, uint*, void**, uint*);
-HRESULT CoImpersonateClient();
-HRESULT CoRevertToSelf();
-HRESULT CoQueryAuthenticationServices(uint*, SOLE_AUTHENTICATION_SERVICE**);
-HRESULT CoSwitchCallContext(IUnknown, IUnknown*);
-HRESULT CoCreateInstance(const(GUID)*, IUnknown, CLSCTX, const(GUID)*, void**);
-HRESULT CoCreateInstanceEx(const(GUID)*, IUnknown, CLSCTX, COSERVERINFO*, uint, MULTI_QI*);
-HRESULT CoCreateInstanceFromApp(const(GUID)*, IUnknown, CLSCTX, void*, uint, MULTI_QI*);
-HRESULT CoRegisterActivationFilter(IActivationFilter);
-HRESULT CoGetCancelObject(uint, const(GUID)*, void**);
-HRESULT CoSetCancelObject(IUnknown);
-HRESULT CoCancelCall(uint, uint);
-HRESULT CoTestCancel();
-HRESULT CoEnableCallCancellation(void*);
-HRESULT CoDisableCallCancellation(void*);
-HRESULT StringFromCLSID(const(GUID)*, PWSTR*);
-HRESULT CLSIDFromString(const(wchar)*, GUID*);
-HRESULT StringFromIID(const(GUID)*, PWSTR*);
-HRESULT IIDFromString(const(wchar)*, GUID*);
-HRESULT ProgIDFromCLSID(const(GUID)*, PWSTR*);
-HRESULT CLSIDFromProgID(const(wchar)*, GUID*);
-int StringFromGUID2(const(GUID)*, PWSTR, int);
-HRESULT CoCreateGuid(GUID*);
-HRESULT CoWaitForMultipleHandles(uint, uint, uint, HANDLE*, uint*);
-HRESULT CoWaitForMultipleObjects(uint, uint, uint, const(HANDLE)*, uint*);
-HRESULT CoGetTreatAsClass(const(GUID)*, GUID*);
-HRESULT CoInvalidateRemoteMachineBindings(PWSTR);
-void* CoTaskMemAlloc(ulong);
-void* CoTaskMemRealloc(void*, ulong);
-void CoTaskMemFree(void*);
-HRESULT CoRegisterDeviceCatalog(const(wchar)*, CO_DEVICE_CATALOG_COOKIE*);
-HRESULT CoRevokeDeviceCatalog(CO_DEVICE_CATALOG_COOKIE);
-HRESULT CreateUri(const(wchar)*, URI_CREATE_FLAGS, ulong, IUri*);
-HRESULT CreateUriWithFragment(const(wchar)*, const(wchar)*, uint, ulong, IUri*);
-HRESULT CreateUriFromMultiByteString(const(char)*, uint, uint, uint, ulong, IUri*);
-HRESULT CreateIUriBuilder(IUri, uint, ulong, IUriBuilder*);
-HRESULT SetErrorInfo(uint, IErrorInfo);
-HRESULT GetErrorInfo(uint, IErrorInfo*);
-enum MARSHALINTERFACE_MIN = 0x000001f4;
-enum ASYNC_MODE_COMPATIBILITY = 0x00000001;
-enum ASYNC_MODE_DEFAULT = 0x00000000;
-enum STGTY_REPEAT = 0x00000100;
-enum STG_TOEND = 0xffffffffffffffff;
-enum STG_LAYOUT_SEQUENTIAL = 0x00000000;
-enum STG_LAYOUT_INTERLEAVED = 0x00000001;
-enum COM_RIGHTS_EXECUTE = 0x00000001;
-enum COM_RIGHTS_EXECUTE_LOCAL = 0x00000002;
-enum COM_RIGHTS_EXECUTE_REMOTE = 0x00000004;
-enum COM_RIGHTS_ACTIVATE_LOCAL = 0x00000008;
-enum COM_RIGHTS_ACTIVATE_REMOTE = 0x00000010;
-enum COM_RIGHTS_RESERVED1 = 0x00000020;
-enum COM_RIGHTS_RESERVED2 = 0x00000040;
-enum CWMO_MAX_HANDLES = 0x00000038;
-enum ROTREGFLAGS_ALLOWANYCLIENT = 0x00000001;
-enum APPIDREGFLAGS_ACTIVATE_IUSERVER_INDESKTOP = 0x00000001;
-enum APPIDREGFLAGS_SECURE_SERVER_PROCESS_SD_AND_BIND = 0x00000002;
-enum APPIDREGFLAGS_ISSUE_ACTIVATION_RPC_AT_IDENTIFY = 0x00000004;
-enum APPIDREGFLAGS_IUSERVER_UNMODIFIED_LOGON_TOKEN = 0x00000008;
-enum APPIDREGFLAGS_IUSERVER_SELF_SID_IN_LAUNCH_PERMISSION = 0x00000010;
-enum APPIDREGFLAGS_IUSERVER_ACTIVATE_IN_CLIENT_SESSION_ONLY = 0x00000020;
-enum APPIDREGFLAGS_RESERVED1 = 0x00000040;
-enum APPIDREGFLAGS_RESERVED2 = 0x00000080;
-enum APPIDREGFLAGS_RESERVED3 = 0x00000100;
-enum APPIDREGFLAGS_RESERVED4 = 0x00000200;
-enum APPIDREGFLAGS_RESERVED5 = 0x00000400;
-enum APPIDREGFLAGS_AAA_NO_IMPLICIT_ACTIVATE_AS_IU = 0x00000800;
-enum APPIDREGFLAGS_RESERVED7 = 0x00001000;
-enum APPIDREGFLAGS_RESERVED8 = 0x00002000;
-enum APPIDREGFLAGS_RESERVED9 = 0x00004000;
-enum DCOMSCM_ACTIVATION_USE_ALL_AUTHNSERVICES = 0x00000001;
-enum DCOMSCM_ACTIVATION_DISALLOW_UNSECURE_CALL = 0x00000002;
-enum DCOMSCM_RESOLVE_USE_ALL_AUTHNSERVICES = 0x00000004;
-enum DCOMSCM_RESOLVE_DISALLOW_UNSECURE_CALL = 0x00000008;
-enum DCOMSCM_PING_USE_MID_AUTHNSERVICE = 0x00000010;
-enum DCOMSCM_PING_DISALLOW_UNSECURE_CALL = 0x00000020;
-enum MAXLSN = 0x7fffffffffffffff;
-enum DMUS_ERRBASE = 0x00001000;
 alias CO_MTA_USAGE_COOKIE = long;
 alias CO_DEVICE_CATALOG_COOKIE = long;
-alias STGC = uint;
-enum : uint
+alias STGC = int;
+enum : int
 {
     STGC_DEFAULT                            = 0x00000000,
     STGC_OVERWRITE                          = 0x00000001,
@@ -477,35 +479,36 @@ enum : int
 alias CLSCTX = uint;
 enum : uint
 {
-    CLSCTX_INPROC_SERVER          = 0x00000001,
-    CLSCTX_INPROC_HANDLER         = 0x00000002,
-    CLSCTX_LOCAL_SERVER           = 0x00000004,
-    CLSCTX_INPROC_SERVER16        = 0x00000008,
-    CLSCTX_REMOTE_SERVER          = 0x00000010,
-    CLSCTX_INPROC_HANDLER16       = 0x00000020,
-    CLSCTX_RESERVED1              = 0x00000040,
-    CLSCTX_RESERVED2              = 0x00000080,
-    CLSCTX_RESERVED3              = 0x00000100,
-    CLSCTX_RESERVED4              = 0x00000200,
-    CLSCTX_NO_CODE_DOWNLOAD       = 0x00000400,
-    CLSCTX_RESERVED5              = 0x00000800,
-    CLSCTX_NO_CUSTOM_MARSHAL      = 0x00001000,
-    CLSCTX_ENABLE_CODE_DOWNLOAD   = 0x00002000,
-    CLSCTX_NO_FAILURE_LOG         = 0x00004000,
-    CLSCTX_DISABLE_AAA            = 0x00008000,
-    CLSCTX_ENABLE_AAA             = 0x00010000,
-    CLSCTX_FROM_DEFAULT_CONTEXT   = 0x00020000,
-    CLSCTX_ACTIVATE_X86_SERVER    = 0x00040000,
-    CLSCTX_ACTIVATE_32_BIT_SERVER = 0x00040000,
-    CLSCTX_ACTIVATE_64_BIT_SERVER = 0x00080000,
-    CLSCTX_ENABLE_CLOAKING        = 0x00100000,
-    CLSCTX_APPCONTAINER           = 0x00400000,
-    CLSCTX_ACTIVATE_AAA_AS_IU     = 0x00800000,
-    CLSCTX_RESERVED6              = 0x01000000,
-    CLSCTX_ACTIVATE_ARM32_SERVER  = 0x02000000,
-    CLSCTX_PS_DLL                 = 0x80000000,
-    CLSCTX_ALL                    = 0x00000017,
-    CLSCTX_SERVER                 = 0x00000015,
+    CLSCTX_INPROC_SERVER                  = 0x00000001,
+    CLSCTX_INPROC_HANDLER                 = 0x00000002,
+    CLSCTX_LOCAL_SERVER                   = 0x00000004,
+    CLSCTX_INPROC_SERVER16                = 0x00000008,
+    CLSCTX_REMOTE_SERVER                  = 0x00000010,
+    CLSCTX_INPROC_HANDLER16               = 0x00000020,
+    CLSCTX_RESERVED1                      = 0x00000040,
+    CLSCTX_RESERVED2                      = 0x00000080,
+    CLSCTX_RESERVED3                      = 0x00000100,
+    CLSCTX_RESERVED4                      = 0x00000200,
+    CLSCTX_NO_CODE_DOWNLOAD               = 0x00000400,
+    CLSCTX_RESERVED5                      = 0x00000800,
+    CLSCTX_NO_CUSTOM_MARSHAL              = 0x00001000,
+    CLSCTX_ENABLE_CODE_DOWNLOAD           = 0x00002000,
+    CLSCTX_NO_FAILURE_LOG                 = 0x00004000,
+    CLSCTX_DISABLE_AAA                    = 0x00008000,
+    CLSCTX_ENABLE_AAA                     = 0x00010000,
+    CLSCTX_FROM_DEFAULT_CONTEXT           = 0x00020000,
+    CLSCTX_ACTIVATE_X86_SERVER            = 0x00040000,
+    CLSCTX_ACTIVATE_32_BIT_SERVER         = 0x00040000,
+    CLSCTX_ACTIVATE_64_BIT_SERVER         = 0x00080000,
+    CLSCTX_ENABLE_CLOAKING                = 0x00100000,
+    CLSCTX_APPCONTAINER                   = 0x00400000,
+    CLSCTX_ACTIVATE_AAA_AS_IU             = 0x00800000,
+    CLSCTX_RESERVED6                      = 0x01000000,
+    CLSCTX_ACTIVATE_ARM32_SERVER          = 0x02000000,
+    CLSCTX_ALLOW_LOWER_TRUST_REGISTRATION = 0x04000000,
+    CLSCTX_PS_DLL                         = 0x80000000,
+    CLSCTX_ALL                            = 0x00000017,
+    CLSCTX_SERVER                         = 0x00000015,
 }
 
 alias MSHLFLAGS = int;
@@ -710,7 +713,7 @@ struct STATSTG
 {
     PWSTR pwcsName;
     uint type;
-    ULARGE_INTEGER cbSize;
+    ulong cbSize;
     FILETIME mtime;
     FILETIME ctime;
     FILETIME atime;
@@ -748,13 +751,13 @@ enum : int
 enum IID_IStream = GUID(0xc, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IStream : ISequentialStream
 {
-    HRESULT Seek(LARGE_INTEGER, STREAM_SEEK, ULARGE_INTEGER*);
-    HRESULT SetSize(ULARGE_INTEGER);
-    HRESULT CopyTo(IStream, ULARGE_INTEGER, ULARGE_INTEGER*, ULARGE_INTEGER*);
+    HRESULT Seek(long, STREAM_SEEK, ulong*);
+    HRESULT SetSize(ulong);
+    HRESULT CopyTo(IStream, ulong, ulong*, ulong*);
     HRESULT Commit(STGC);
     HRESULT Revert();
-    HRESULT LockRegion(ULARGE_INTEGER, ULARGE_INTEGER, LOCKTYPE);
-    HRESULT UnlockRegion(ULARGE_INTEGER, ULARGE_INTEGER, uint);
+    HRESULT LockRegion(ulong, ulong, LOCKTYPE);
+    HRESULT UnlockRegion(ulong, ulong, uint);
     HRESULT Stat(STATSTG*, STATFLAG);
     HRESULT Clone(IStream*);
 }
@@ -1205,6 +1208,10 @@ interface IMachineGlobalObjectTable : IUnknown
     HRESULT GetObject(const(GUID)*, const(wchar)*, const(GUID)*, void**);
     HRESULT RevokeObject(MachineGlobalObjectTableRegistrationToken__*);
 }
+enum IID_ISupportAllowLowerTrustActivation = GUID(0xe9956ef2, 0x3828, 0x4b4b, [0x8f, 0xa9, 0x7d, 0xb6, 0x1d, 0xee, 0x49, 0x54]);
+interface ISupportAllowLowerTrustActivation : IUnknown
+{
+}
 enum IID_IMallocSpy = GUID(0x1d, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IMallocSpy : IUnknown
 {
@@ -1301,7 +1308,7 @@ interface IPersistStream : IPersist
     HRESULT IsDirty();
     HRESULT Load(IStream);
     HRESULT Save(IStream, BOOL);
-    HRESULT GetSizeMax(ULARGE_INTEGER*);
+    HRESULT GetSizeMax(ulong*);
 }
 alias MKSYS = int;
 enum : int
@@ -1442,7 +1449,7 @@ struct STGMEDIUM
         HBITMAP hBitmap;
         void* hMetaFilePict;
         HENHMETAFILE hEnhMetaFile;
-        long hGlobal;
+        HGLOBAL hGlobal;
         PWSTR lpszFileName;
         IStream pstm;
         IStorage pstg;
@@ -1590,8 +1597,8 @@ struct StorageLayout
 {
     uint LayoutType;
     PWSTR pwcsElementName;
-    LARGE_INTEGER cOffset;
-    LARGE_INTEGER cBytes;
+    long cOffset;
+    long cBytes;
 }
 enum IID_IBlockingLock = GUID(0x30f3d47a, 0x6447, 0x11d1, [0x8e, 0x3c, 0x0, 0xc0, 0x4f, 0xb9, 0x38, 0x6d]);
 interface IBlockingLock : IUnknown
@@ -1657,8 +1664,8 @@ interface IInitializeSpy : IUnknown
     HRESULT PreUninitialize(uint);
     HRESULT PostUninitialize(uint);
 }
-alias COINIT = uint;
-enum : uint
+alias COINIT = int;
+enum : int
 {
     COINIT_APARTMENTTHREADED = 0x00000002,
     COINIT_MULTITHREADED     = 0x00000000,
@@ -1886,14 +1893,14 @@ interface IUriBuilder : IUnknown
     HRESULT CreateUriWithFlags(uint, uint, uint, ulong, IUri*);
     HRESULT GetIUri(IUri*);
     HRESULT SetIUri(IUri);
-    HRESULT GetFragment(uint*, PWSTR*);
-    HRESULT GetHost(uint*, PWSTR*);
-    HRESULT GetPassword(uint*, PWSTR*);
-    HRESULT GetPath(uint*, PWSTR*);
+    HRESULT GetFragment(uint*, const(wchar)**);
+    HRESULT GetHost(uint*, const(wchar)**);
+    HRESULT GetPassword(uint*, const(wchar)**);
+    HRESULT GetPath(uint*, const(wchar)**);
     HRESULT GetPort(BOOL*, uint*);
-    HRESULT GetQuery(uint*, PWSTR*);
-    HRESULT GetSchemeName(uint*, PWSTR*);
-    HRESULT GetUserName(uint*, PWSTR*);
+    HRESULT GetQuery(uint*, const(wchar)**);
+    HRESULT GetSchemeName(uint*, const(wchar)**);
+    HRESULT GetUserName(uint*, const(wchar)**);
     HRESULT SetFragment(const(wchar)*);
     HRESULT SetHost(const(wchar)*);
     HRESULT SetPassword(const(wchar)*);
@@ -2229,7 +2236,7 @@ interface ITypeInfo : IUnknown
     HRESULT GetVarDesc(uint, VARDESC**);
     HRESULT GetNames(int, BSTR*, uint, uint*);
     HRESULT GetRefTypeOfImplType(uint, uint*);
-    HRESULT GetImplTypeFlags(uint, int*);
+    HRESULT GetImplTypeFlags(uint, IMPLTYPEFLAGS*);
     HRESULT GetIDsOfNames(PWSTR*, uint, int*);
     HRESULT Invoke(void*, int, DISPATCH_FLAGS, DISPPARAMS*, VARIANT*, EXCEPINFO*, uint*);
     HRESULT GetDocumentation(int, BSTR*, BSTR*, uint*, BSTR*);
@@ -2389,6 +2396,6 @@ interface IPersistStreamInit : IPersist
     HRESULT IsDirty();
     HRESULT Load(IStream);
     HRESULT Save(IStream, BOOL);
-    HRESULT GetSizeMax(ULARGE_INTEGER*);
+    HRESULT GetSizeMax(ulong*);
     HRESULT InitNew();
 }

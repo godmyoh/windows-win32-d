@@ -1744,7 +1744,7 @@ struct UIAutomationMethodInfo
     uint cInParameters;
     uint cOutParameters;
     UIAutomationType* pParameterTypes;
-    PWSTR* pParameterNames;
+    const(wchar)** pParameterNames;
 }
 struct UIAutomationPatternInfo
 {

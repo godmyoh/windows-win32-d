@@ -153,16 +153,16 @@ enum : int
     OPC_STREAM_IO_WRITE = 0x00000002,
 }
 
-alias OPC_READ_FLAGS = uint;
-enum : uint
+alias OPC_READ_FLAGS = int;
+enum : int
 {
     OPC_READ_DEFAULT     = 0x00000000,
     OPC_VALIDATE_ON_LOAD = 0x00000001,
     OPC_CACHE_ON_ACCESS  = 0x00000002,
 }
 
-alias OPC_WRITE_FLAGS = uint;
-enum : uint
+alias OPC_WRITE_FLAGS = int;
+enum : int
 {
     OPC_WRITE_DEFAULT     = 0x00000000,
     OPC_WRITE_FORCE_ZIP32 = 0x00000001,

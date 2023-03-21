@@ -1,7 +1,7 @@
 module windows.win32.media.directshow_;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, COLORREF, HANDLE, HRESULT, HWND, LARGE_INTEGER, PAPCFUNC, POINT, PSID, PSTR, PWSTR, RECT, SIZE, VARIANT_BOOL;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, COLORREF, HANDLE, HRESULT, HWND, PAPCFUNC, POINT, PSID, PSTR, PWSTR, RECT, SIZE, VARIANT_BOOL;
 import windows.win32.graphics.direct3d9 : D3DFORMAT, D3DPOOL, IDirect3DDevice9, IDirect3DSurface9;
 import windows.win32.graphics.directdraw : DDCAPS_DX7, DDCOLORCONTROL, DDCOLORKEY, DDPIXELFORMAT, DDSCAPS2, DDSURFACEDESC, DDVIDEOPORTCONNECT, IDirectDraw, IDirectDraw7, IDirectDrawPalette, IDirectDrawSurface, IDirectDrawSurface7;
 import windows.win32.graphics.gdi : BITMAPINFO, BITMAPINFOHEADER, HDC, HMONITOR, PALETTEENTRY, RGBQUAD, RGNDATA;
@@ -16,7 +16,7 @@ import windows.win32.system.com.structuredstorage : IPropertyBag;
 import windows.win32.system.diagnostics.etw : EVENT_TRACE_HEADER;
 import windows.win32.system.ole : CAUUID, IEnumVARIANT, IPictureDisp;
 import windows.win32.system.registry : HKEY;
-import windows.win32.ui.windowsandmessaging : HACCEL;
+import windows.win32.ui.windowsandmessaging : HACCEL, SHOW_WINDOW_CMD;
 
 version (Windows):
 extern (Windows):
@@ -310,7 +310,6 @@ enum MEDIASUBTYPE_MPEG2DATA = GUID(0xc892e55b, 0x252d, 0x42b5, [0xa3, 0x16, 0xd9
 enum MEDIASUBTYPE_MPEG2_WMDRM_TRANSPORT = GUID(0x18bec4ea, 0x4676, 0x450e, [0xb4, 0x78, 0xc, 0xd8, 0x4c, 0x54, 0xb3, 0x27]);
 enum MEDIASUBTYPE_MPEG2_VIDEO = GUID(0xe06d8026, 0xdb46, 0x11cf, [0xb4, 0xd1, 0x0, 0x80, 0x5f, 0x6c, 0xbb, 0xea]);
 enum FORMAT_MPEG2_VIDEO = GUID(0xe06d80e3, 0xdb46, 0x11cf, [0xb4, 0xd1, 0x0, 0x80, 0x5f, 0x6c, 0xbb, 0xea]);
-enum FORMAT_VIDEOINFO2 = GUID(0xf72a76a0, 0xeb0a, 0x11d0, [0xac, 0xe4, 0x0, 0x0, 0xc0, 0xcc, 0x16, 0xba]);
 enum MEDIASUBTYPE_MPEG2_PROGRAM = GUID(0xe06d8022, 0xdb46, 0x11cf, [0xb4, 0xd1, 0x0, 0x80, 0x5f, 0x6c, 0xbb, 0xea]);
 enum MEDIASUBTYPE_MPEG2_TRANSPORT = GUID(0xe06d8023, 0xdb46, 0x11cf, [0xb4, 0xd1, 0x0, 0x80, 0x5f, 0x6c, 0xbb, 0xea]);
 enum MEDIASUBTYPE_MPEG2_TRANSPORT_STRIDE = GUID(0x138aa9a4, 0x1ee2, 0x4c5b, [0x98, 0x8e, 0x19, 0xab, 0xfd, 0xbc, 0x8a, 0x11]);
@@ -1483,8 +1482,8 @@ struct REGPINMEDIUM
     uint dw1;
     uint dw2;
 }
-alias REG_PINFLAG = uint;
-enum : uint
+alias REG_PINFLAG = int;
+enum : int
 {
     REG_PINFLAG_B_ZERO     = 0x00000001,
     REG_PINFLAG_B_RENDERER = 0x00000002,
@@ -1568,8 +1567,8 @@ struct COLORKEY
     COLORREF LowColorValue;
     COLORREF HighColorValue;
 }
-alias ADVISE_TYPE = uint;
-enum : uint
+alias ADVISE_TYPE = int;
+enum : int
 {
     ADVISE_NONE           = 0x00000000,
     ADVISE_CLIPPING       = 0x00000001,
@@ -2934,7 +2933,7 @@ struct VMRMONITORINFO
     uint dwFlags;
     wchar[32] szDevice;
     wchar[256] szDescription;
-    LARGE_INTEGER liDriverVersion;
+    long liDriverVersion;
     uint dwVendorId;
     uint dwDeviceId;
     uint dwSubSysId;
@@ -4846,8 +4845,8 @@ interface IBDA_DigitalDemodulator3 : IBDA_DigitalDemodulator2
     HRESULT put_PLPNumber(uint*);
     HRESULT get_PLPNumber(uint*);
 }
-alias KSPROPERTY_IPSINK = uint;
-enum : uint
+alias KSPROPERTY_IPSINK = int;
+enum : int
 {
     KSPROPERTY_IPSINK_MULTICASTLIST       = 0x00000000,
     KSPROPERTY_IPSINK_ADAPTER_DESCRIPTION = 0x00000001,
@@ -5363,7 +5362,7 @@ interface IVideoWindow : IDispatch
     HRESULT put_AutoShow(int);
     HRESULT get_AutoShow(int*);
     HRESULT put_WindowState(int);
-    HRESULT get_WindowState(int*);
+    HRESULT get_WindowState(SHOW_WINDOW_CMD*);
     HRESULT put_BackgroundPalette(int);
     HRESULT get_BackgroundPalette(int*);
     HRESULT put_Visible(int);
@@ -5808,8 +5807,8 @@ enum : int
     COMPSTAT_ABORT      = 0x00000004,
 }
 
-alias MMSSF_GET_INFORMATION_FLAGS = uint;
-enum : uint
+alias MMSSF_GET_INFORMATION_FLAGS = int;
+enum : int
 {
     MMSSF_HASCLOCK     = 0x00000001,
     MMSSF_SUPPORTSEEK  = 0x00000002,
@@ -5855,8 +5854,8 @@ interface IStreamSample : IUnknown
     HRESULT Update(uint, HANDLE, PAPCFUNC, ulong);
     HRESULT CompletionStatus(uint, uint);
 }
-alias DDSFF_FLAGS = uint;
-enum : uint
+alias DDSFF_FLAGS = int;
+enum : int
 {
     DDSFF_PROGRESSIVERENDER = 0x00000001,
 }
@@ -5902,14 +5901,14 @@ interface IAudioData : IMemoryData
     HRESULT GetFormat(WAVEFORMATEX*);
     HRESULT SetFormat(const(WAVEFORMATEX)*);
 }
-alias AMMSF_MMS_INIT_FLAGS = uint;
-enum : uint
+alias AMMSF_MMS_INIT_FLAGS = int;
+enum : int
 {
     AMMSF_NOGRAPHTHREAD = 0x00000001,
 }
 
-alias AMMSF_MS_FLAGS = uint;
-enum : uint
+alias AMMSF_MS_FLAGS = int;
+enum : int
 {
     AMMSF_ADDDEFAULTRENDERER = 0x00000001,
     AMMSF_CREATEPEER         = 0x00000002,
@@ -5917,8 +5916,8 @@ enum : uint
     AMMSF_NOSTALL            = 0x00000008,
 }
 
-alias AMMSF_RENDER_FLAGS = uint;
-enum : uint
+alias AMMSF_RENDER_FLAGS = int;
+enum : int
 {
     AMMSF_RENDERTYPEMASK   = 0x00000003,
     AMMSF_RENDERTOEXISTING = 0x00000000,
@@ -5928,8 +5927,8 @@ enum : uint
     AMMSF_RUN              = 0x00000008,
 }
 
-alias OUTPUT_STATE = uint;
-enum : uint
+alias OUTPUT_STATE = int;
+enum : int
 {
     Disabled   = 0x00000000,
     ReadData   = 0x00000001,
@@ -6471,7 +6470,7 @@ struct VMR9MonitorInfo
     uint dwFlags;
     wchar[32] szDevice;
     wchar[512] szDescription;
-    LARGE_INTEGER liDriverVersion;
+    long liDriverVersion;
     uint dwVendorId;
     uint dwDeviceId;
     uint dwSubSysId;

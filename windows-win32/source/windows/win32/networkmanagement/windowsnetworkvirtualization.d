@@ -1,7 +1,7 @@
 module windows.win32.networkmanagement.windowsnetworkvirtualization;
 
 import windows.win32.foundation : HANDLE;
-import windows.win32.networking.winsock : DL_EUI48, IN6_ADDR, IN_ADDR, NL_DAD_STATE;
+import windows.win32.networking.winsock : ADDRESS_FAMILY, DL_EUI48, IN6_ADDR, IN_ADDR, NL_DAD_STATE;
 import windows.win32.system.io : OVERLAPPED;
 
 version (Windows):
@@ -61,25 +61,25 @@ struct WNV_IP_ADDRESS
 }
 struct WNV_POLICY_MISMATCH_PARAM
 {
-    ushort CAFamily;
-    ushort PAFamily;
+    ADDRESS_FAMILY CAFamily;
+    ADDRESS_FAMILY PAFamily;
     uint VirtualSubnetId;
     WNV_IP_ADDRESS CA;
     WNV_IP_ADDRESS PA;
 }
 struct WNV_PROVIDER_ADDRESS_CHANGE_PARAM
 {
-    ushort PAFamily;
+    ADDRESS_FAMILY PAFamily;
     WNV_IP_ADDRESS PA;
     NL_DAD_STATE AddressState;
 }
 struct WNV_CUSTOMER_ADDRESS_CHANGE_PARAM
 {
     DL_EUI48 MACAddress;
-    ushort CAFamily;
+    ADDRESS_FAMILY CAFamily;
     WNV_IP_ADDRESS CA;
     uint VirtualSubnetId;
-    ushort PAFamily;
+    ADDRESS_FAMILY PAFamily;
     WNV_IP_ADDRESS PA;
     WNV_CA_NOTIFICATION_TYPE NotificationReason;
 }
@@ -94,9 +94,9 @@ struct WNV_OBJECT_CHANGE_PARAM
 }
 struct WNV_REDIRECT_PARAM
 {
-    ushort CAFamily;
-    ushort PAFamily;
-    ushort NewPAFamily;
+    ADDRESS_FAMILY CAFamily;
+    ADDRESS_FAMILY PAFamily;
+    ADDRESS_FAMILY NewPAFamily;
     uint VirtualSubnetId;
     WNV_IP_ADDRESS CA;
     WNV_IP_ADDRESS PA;

@@ -2,8 +2,11 @@ module app;
 
 import wiringboard;
 
+import generator.patch.patchstatus;
+
 import std.file;
 import std.process;
+import std.stdio;
 
 
 int main()
@@ -13,10 +16,17 @@ int main()
     if (outDir.exists)
         rmdirRecurse(outDir);
 
-    auto g = buildGenerator(outDir);
+    PatchStatus patchStatus = new PatchStatus();
+
+    auto g = buildGenerator(outDir, patchStatus);
     g.execute();
 
     execute(["xcopy", ".\\handmade", outDir, "/S", "/Y"]);
+
+    if (patchStatus.hasDanglingPatch)
+    {
+        writefln("%s", patchStatus.report());
+    }
 
     return 0;
 }

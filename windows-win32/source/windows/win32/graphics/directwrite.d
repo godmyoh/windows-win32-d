@@ -18,6 +18,7 @@ enum DWRITE_E_REMOTEFONT = 0xffffffff8898500d;
 enum DWRITE_E_DOWNLOADCANCELLED = 0xffffffff8898500e;
 enum DWRITE_E_DOWNLOADFAILED = 0xffffffff8898500f;
 enum DWRITE_E_TOOMANYDOWNLOADS = 0xffffffff88985010;
+enum DWRITE_STANDARD_FONT_AXIS_COUNT = 0x00000005;
 alias DWRITE_FONT_AXIS_TAG = uint;
 enum : uint
 {
@@ -43,8 +44,8 @@ enum : int
     DWRITE_MEASURING_MODE_GDI_NATURAL = 0x00000002,
 }
 
-alias DWRITE_GLYPH_IMAGE_FORMATS = uint;
-enum : uint
+alias DWRITE_GLYPH_IMAGE_FORMATS = int;
+enum : int
 {
     DWRITE_GLYPH_IMAGE_FORMATS_NONE                   = 0x00000000,
     DWRITE_GLYPH_IMAGE_FORMATS_TRUETYPE               = 0x00000001,
@@ -85,8 +86,8 @@ enum : int
     DWRITE_FONT_FACE_TYPE_TRUETYPE_COLLECTION = 0x00000002,
 }
 
-alias DWRITE_FONT_SIMULATIONS = uint;
-enum : uint
+alias DWRITE_FONT_SIMULATIONS = int;
+enum : int
 {
     DWRITE_FONT_SIMULATIONS_NONE    = 0x00000000,
     DWRITE_FONT_SIMULATIONS_BOLD    = 0x00000001,
@@ -554,8 +555,8 @@ interface IDWriteTypography : IUnknown
     uint GetFontFeatureCount();
     HRESULT GetFontFeature(uint, DWRITE_FONT_FEATURE*);
 }
-alias DWRITE_SCRIPT_SHAPES = uint;
-enum : uint
+alias DWRITE_SCRIPT_SHAPES = int;
+enum : int
 {
     DWRITE_SCRIPT_SHAPES_DEFAULT   = 0x00000000,
     DWRITE_SCRIPT_SHAPES_NO_VISUAL = 0x00000001,
@@ -1923,15 +1924,15 @@ enum : int
     DWRITE_FONT_FAMILY_MODEL_WEIGHT_STRETCH_STYLE = 0x00000001,
 }
 
-alias DWRITE_AUTOMATIC_FONT_AXES = uint;
-enum : uint
+alias DWRITE_AUTOMATIC_FONT_AXES = int;
+enum : int
 {
     DWRITE_AUTOMATIC_FONT_AXES_NONE         = 0x00000000,
     DWRITE_AUTOMATIC_FONT_AXES_OPTICAL_SIZE = 0x00000001,
 }
 
-alias DWRITE_FONT_AXIS_ATTRIBUTES = uint;
-enum : uint
+alias DWRITE_FONT_AXIS_ATTRIBUTES = int;
+enum : int
 {
     DWRITE_FONT_AXIS_ATTRIBUTES_NONE     = 0x00000000,
     DWRITE_FONT_AXIS_ATTRIBUTES_VARIABLE = 0x00000001,
@@ -2084,4 +2085,10 @@ interface IDWriteFontFace6 : IDWriteFontFace5
 {
     HRESULT GetFamilyNames(DWRITE_FONT_FAMILY_MODEL, IDWriteLocalizedStrings*);
     HRESULT GetFaceNames(DWRITE_FONT_FAMILY_MODEL, IDWriteLocalizedStrings*);
+}
+enum IID_IDWriteFontSet4 = GUID(0xeec175fc, 0xbea9, 0x4c86, [0x8b, 0x53, 0xcc, 0xbd, 0xd7, 0xdf, 0xc, 0x82]);
+interface IDWriteFontSet4 : IDWriteFontSet3
+{
+    uint ConvertWeightStretchStyleToFontAxisValues(const(DWRITE_FONT_AXIS_VALUE)*, uint, DWRITE_FONT_WEIGHT, DWRITE_FONT_STRETCH, DWRITE_FONT_STYLE, float, DWRITE_FONT_AXIS_VALUE*);
+    HRESULT GetMatchingFonts(const(wchar)*, const(DWRITE_FONT_AXIS_VALUE)*, uint, DWRITE_FONT_SIMULATIONS, IDWriteFontSet4*);
 }

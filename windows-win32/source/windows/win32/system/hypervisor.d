@@ -2,6 +2,7 @@ module windows.win32.system.hypervisor;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HANDLE, HRESULT, LUID, PSTR, PWSTR;
+import windows.win32.networking.winsock : ADDRESS_FAMILY;
 import windows.win32.system.hostcomputesystem : HCS_SYSTEM;
 import windows.win32.system.power : DEVICE_POWER_STATE;
 
@@ -135,8 +136,8 @@ HRESULT ScanMemoryForDosImages(void*, uint, ulong, ulong, void*, FOUND_IMAGE_CAL
 HRESULT CallStackUnwind(void*, uint, MODULE_INFO*, uint, uint, PWSTR*);
 enum HVSOCKET_CONNECT_TIMEOUT = 0x00000001;
 enum HVSOCKET_CONNECT_TIMEOUT_MAX = 0x000493e0;
-enum HVSOCKET_CONTAINER_PASSTHRU = 0x00000002;
 enum HVSOCKET_CONNECTED_SUSPEND = 0x00000004;
+enum HVSOCKET_HIGH_VTL = 0x00000008;
 enum HV_PROTOCOL_RAW = 0x00000001;
 enum HVSOCKET_ADDRESS_FLAG_PASSTHRU = 0x00000001;
 enum WHV_PROCESSOR_FEATURES_BANKS_COUNT = 0x00000002;
@@ -386,8 +387,8 @@ struct WHV_X64_CPUID_RESULT
     uint Ecx;
     uint Edx;
 }
-alias WHV_X64_CPUID_RESULT2_FLAGS = uint;
-enum : uint
+alias WHV_X64_CPUID_RESULT2_FLAGS = int;
+enum : int
 {
     WHvX64CpuidResult2FlagSubleafSpecific = 0x00000001,
     WHvX64CpuidResult2FlagVpSpecific      = 0x00000002,
@@ -487,8 +488,8 @@ union WHV_PARTITION_PROPERTY
     WHV_PROCESSOR_PERFMON_FEATURES ProcessorPerfmonFeatures;
     BOOL DisableSmt;
 }
-alias WHV_MAP_GPA_RANGE_FLAGS = uint;
-enum : uint
+alias WHV_MAP_GPA_RANGE_FLAGS = int;
+enum : int
 {
     WHvMapGpaRangeFlagNone            = 0x00000000,
     WHvMapGpaRangeFlagRead            = 0x00000001,
@@ -497,8 +498,8 @@ enum : uint
     WHvMapGpaRangeFlagTrackDirtyPages = 0x00000008,
 }
 
-alias WHV_TRANSLATE_GVA_FLAGS = uint;
-enum : uint
+alias WHV_TRANSLATE_GVA_FLAGS = int;
+enum : int
 {
     WHvTranslateGvaFlagNone             = 0x00000000,
     WHvTranslateGvaFlagValidateRead     = 0x00000001,
@@ -1332,8 +1333,8 @@ struct WHV_SYNIC_EVENT_PARAMETERS
     ubyte Reserved;
     ushort FlagNumber;
 }
-alias WHV_ALLOCATE_VPCI_RESOURCE_FLAGS = uint;
-enum : uint
+alias WHV_ALLOCATE_VPCI_RESOURCE_FLAGS = int;
+enum : int
 {
     WHvAllocateVpciResourceFlagNone           = 0x00000000,
     WHvAllocateVpciResourceFlagAllowDirectP2P = 0x00000001,
@@ -1363,8 +1364,8 @@ struct WHV_VPCI_DEVICE_NOTIFICATION
         ulong Reserved2;
     }
 }
-alias WHV_CREATE_VPCI_DEVICE_FLAGS = uint;
-enum : uint
+alias WHV_CREATE_VPCI_DEVICE_FLAGS = int;
+enum : int
 {
     WHvCreateVpciDeviceFlagNone                 = 0x00000000,
     WHvCreateVpciDeviceFlagPhysicallyBacked     = 0x00000001,
@@ -1391,8 +1392,8 @@ struct WHV_VPCI_HARDWARE_IDS
     ushort SubSystemID;
 }
 alias WHV_VPCI_PROBED_BARS = uint;
-alias WHV_VPCI_MMIO_RANGE_FLAGS = uint;
-enum : uint
+alias WHV_VPCI_MMIO_RANGE_FLAGS = int;
+enum : int
 {
     WHvVpciMmioRangeFlagReadAccess  = 0x00000001,
     WHvVpciMmioRangeFlagWriteAccess = 0x00000002,
@@ -1424,8 +1425,8 @@ struct WHV_VPCI_DEVICE_REGISTER
     uint SizeInBytes;
     ulong OffsetInBytes;
 }
-alias WHV_VPCI_INTERRUPT_TARGET_FLAGS = uint;
-enum : uint
+alias WHV_VPCI_INTERRUPT_TARGET_FLAGS = int;
+enum : int
 {
     WHvVpciInterruptTargetFlagNone      = 0x00000000,
     WHvVpciInterruptTargetFlagMulticast = 0x00000001,
@@ -1545,7 +1546,7 @@ struct WHV_EMULATOR_CALLBACKS
 }
 struct SOCKADDR_HV
 {
-    ushort Family;
+    ADDRESS_FAMILY Family;
     ushort Reserved;
     GUID VmId;
     GUID ServiceId;
@@ -1567,6 +1568,13 @@ enum : int
 {
     HdvDeviceTypeUndefined = 0x00000000,
     HdvDeviceTypePCI       = 0x00000001,
+}
+
+alias HDV_DEVICE_HOST_FLAGS = int;
+enum : int
+{
+    HdvDeviceHostFlagNone                  = 0x00000000,
+    HdvDeviceHostFlagInitializeComSecurity = 0x00000001,
 }
 
 struct HDV_PCI_PNP_ID
@@ -1602,8 +1610,8 @@ enum : int
     HDV_DOORBELL_FLAG_TRIGGER_ANY_VALUE  = 0x80000000,
 }
 
-alias HDV_MMIO_MAPPING_FLAGS = uint;
-enum : uint
+alias HDV_MMIO_MAPPING_FLAGS = int;
+enum : int
 {
     HdvMmioMappingFlagNone       = 0x00000000,
     HdvMmioMappingFlagWriteable  = 0x00000001,

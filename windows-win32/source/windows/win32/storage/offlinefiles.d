@@ -1,7 +1,7 @@
 module windows.win32.storage.offlinefiles;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, FILETIME, HRESULT, HWND, LARGE_INTEGER, PWSTR;
+import windows.win32.foundation : BOOL, FILETIME, HRESULT, HWND, PWSTR;
 import windows.win32.system.com_ : BYTE_BLOB, IUnknown, VARIANT;
 
 version (Windows):
@@ -418,7 +418,7 @@ interface IOfflineFilesSyncErrorItemInfo : IUnknown
 {
     HRESULT GetFileAttributes(uint*);
     HRESULT GetFileTimes(FILETIME*, FILETIME*);
-    HRESULT GetFileSize(LARGE_INTEGER*);
+    HRESULT GetFileSize(long*);
 }
 enum IID_IOfflineFilesSyncErrorInfo = GUID(0x59f95e46, 0xeb54, 0x49d1, [0xbe, 0x76, 0xde, 0x95, 0x45, 0x8d, 0x1, 0xb0]);
 interface IOfflineFilesSyncErrorInfo : IOfflineFilesErrorInfo
@@ -516,15 +516,15 @@ interface IOfflineFilesChangeInfo : IUnknown
 enum IID_IOfflineFilesDirtyInfo = GUID(0xf50ce33, 0xbac9, 0x4eaa, [0xa1, 0x1d, 0xda, 0xe, 0x52, 0x7d, 0x4, 0x7d]);
 interface IOfflineFilesDirtyInfo : IUnknown
 {
-    HRESULT LocalDirtyByteCount(LARGE_INTEGER*);
-    HRESULT RemoteDirtyByteCount(LARGE_INTEGER*);
+    HRESULT LocalDirtyByteCount(long*);
+    HRESULT RemoteDirtyByteCount(long*);
 }
 enum IID_IOfflineFilesFileSysInfo = GUID(0xbc1a163f, 0x7bfd, 0x4d88, [0x9c, 0x66, 0x96, 0xea, 0x9a, 0x6a, 0x3d, 0x6b]);
 interface IOfflineFilesFileSysInfo : IUnknown
 {
     HRESULT GetAttributes(OFFLINEFILES_ITEM_COPY, uint*);
     HRESULT GetTimes(OFFLINEFILES_ITEM_COPY, FILETIME*, FILETIME*, FILETIME*, FILETIME*);
-    HRESULT GetFileSize(OFFLINEFILES_ITEM_COPY, LARGE_INTEGER*);
+    HRESULT GetFileSize(OFFLINEFILES_ITEM_COPY, long*);
 }
 enum IID_IOfflineFilesPinInfo = GUID(0x5b2b0655, 0xb3fd, 0x497d, [0xad, 0xeb, 0xbd, 0x15, 0x6b, 0xc8, 0x35, 0x5b]);
 interface IOfflineFilesPinInfo : IUnknown
@@ -599,11 +599,11 @@ interface IEnumOfflineFilesSettings : IUnknown
 enum IID_IOfflineFilesCache = GUID(0x855d6203, 0x7914, 0x48b9, [0x8d, 0x40, 0x4c, 0x56, 0xf5, 0xac, 0xff, 0xc5]);
 interface IOfflineFilesCache : IUnknown
 {
-    HRESULT Synchronize(HWND, PWSTR*, uint, BOOL, uint, IOfflineFilesSyncConflictHandler, IOfflineFilesSyncProgress, GUID*);
-    HRESULT DeleteItems(PWSTR*, uint, uint, BOOL, IOfflineFilesSimpleProgress);
-    HRESULT DeleteItemsForUser(const(wchar)*, PWSTR*, uint, uint, BOOL, IOfflineFilesSimpleProgress);
-    HRESULT Pin(HWND, PWSTR*, uint, BOOL, BOOL, uint, IOfflineFilesSyncProgress);
-    HRESULT Unpin(HWND, PWSTR*, uint, BOOL, BOOL, uint, IOfflineFilesSyncProgress);
+    HRESULT Synchronize(HWND, const(wchar)**, uint, BOOL, uint, IOfflineFilesSyncConflictHandler, IOfflineFilesSyncProgress, GUID*);
+    HRESULT DeleteItems(const(wchar)**, uint, uint, BOOL, IOfflineFilesSimpleProgress);
+    HRESULT DeleteItemsForUser(const(wchar)*, const(wchar)**, uint, uint, BOOL, IOfflineFilesSimpleProgress);
+    HRESULT Pin(HWND, const(wchar)**, uint, BOOL, BOOL, uint, IOfflineFilesSyncProgress);
+    HRESULT Unpin(HWND, const(wchar)**, uint, BOOL, BOOL, uint, IOfflineFilesSyncProgress);
     HRESULT GetEncryptionStatus(BOOL*, BOOL*);
     HRESULT Encrypt(HWND, BOOL, uint, BOOL, IOfflineFilesSyncProgress);
     HRESULT FindItem(const(wchar)*, uint, IOfflineFilesItem*);

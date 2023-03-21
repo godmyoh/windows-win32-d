@@ -97,6 +97,7 @@ enum : int
     D3D_PRIMITIVE_TOPOLOGY_LINESTRIP                    = 0x00000003,
     D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST                 = 0x00000004,
     D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP                = 0x00000005,
+    D3D_PRIMITIVE_TOPOLOGY_TRIANGLEFAN                  = 0x00000006,
     D3D_PRIMITIVE_TOPOLOGY_LINELIST_ADJ                 = 0x0000000a,
     D3D_PRIMITIVE_TOPOLOGY_LINESTRIP_ADJ                = 0x0000000b,
     D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST_ADJ             = 0x0000000c,
@@ -761,6 +762,46 @@ enum : int
     D3D_PF_IN          = 0x00000001,
     D3D_PF_OUT         = 0x00000002,
     D3D_PF_FORCE_DWORD = 0x7fffffff,
+}
+
+alias D3D_FORMAT_LAYOUT = int;
+enum : int
+{
+    D3DFL_STANDARD = 0x00000000,
+    D3DFL_CUSTOM   = 0xffffffff,
+}
+
+alias D3D_FORMAT_TYPE_LEVEL = int;
+enum : int
+{
+    D3DFTL_NO_TYPE      = 0x00000000,
+    D3DFTL_PARTIAL_TYPE = 0xfffffffe,
+    D3DFTL_FULL_TYPE    = 0xffffffff,
+}
+
+alias D3D_FORMAT_COMPONENT_NAME = int;
+enum : int
+{
+    D3DFCN_R = 0xfffffffc,
+    D3DFCN_G = 0xfffffffd,
+    D3DFCN_B = 0xfffffffe,
+    D3DFCN_A = 0xffffffff,
+    D3DFCN_D = 0x00000000,
+    D3DFCN_S = 0x00000001,
+    D3DFCN_X = 0x00000002,
+}
+
+alias D3D_FORMAT_COMPONENT_INTERPRETATION = int;
+enum : int
+{
+    D3DFCI_TYPELESS         = 0x00000000,
+    D3DFCI_FLOAT            = 0xfffffffc,
+    D3DFCI_SNORM            = 0xfffffffd,
+    D3DFCI_UNORM            = 0xfffffffe,
+    D3DFCI_SINT             = 0xffffffff,
+    D3DFCI_UINT             = 0x00000001,
+    D3DFCI_UNORM_SRGB       = 0x00000002,
+    D3DFCI_BIASED_FIXED_2_8 = 0x00000003,
 }
 
 struct D3DVECTOR

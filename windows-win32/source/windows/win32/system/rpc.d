@@ -1,7 +1,7 @@
 module windows.win32.system.rpc;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, FILETIME, HANDLE, HRESULT, HWND, LARGE_INTEGER, LUID, PSTR, PWSTR, SYSTEMTIME;
+import windows.win32.foundation : BOOL, FILETIME, HANDLE, HRESULT, HWND, LUID, PSTR, PWSTR, SYSTEMTIME;
 import windows.win32.security.cryptography_ : CERT_CONTEXT;
 import windows.win32.system.com_ : IRpcChannelBuffer, IRpcStubBuffer, IUnknown, RPC_C_IMP_LEVEL;
 import windows.win32.system.io : OVERLAPPED;
@@ -9,11 +9,6 @@ import windows.win32.system.io : OVERLAPPED;
 version (Windows):
 extern (Windows):
 
-struct NDR_SCONTEXT_1
-{
-    void*[2] pad;
-    void* userContext;
-}
 alias RPC_C_QOS_CAPABILITIES = uint;
 enum : uint
 {
@@ -459,7 +454,7 @@ RPC_STATUS RpcErrorSaveErrorInfo(RPC_ERROR_ENUM_HANDLE*, void**, ulong*);
 RPC_STATUS RpcErrorLoadErrorInfo(void*, ulong, RPC_ERROR_ENUM_HANDLE*);
 RPC_STATUS RpcErrorAddRecord(RPC_EXTENDED_ERROR_INFO*);
 void RpcErrorClearInformation();
-RPC_STATUS RpcGetAuthorizationContextForClient(void*, BOOL, void*, LARGE_INTEGER*, LUID, uint, void*, void**);
+RPC_STATUS RpcGetAuthorizationContextForClient(void*, BOOL, void*, long*, LUID, uint, void*, void**);
 RPC_STATUS RpcFreeAuthorizationContext(void**);
 RPC_STATUS RpcSsContextLockExclusive(void*, void*);
 RPC_STATUS RpcSsContextLockShared(void*, void*);
@@ -480,12 +475,12 @@ RPC_STATUS I_RpcReBindBuffer(RPC_MESSAGE*);
 void* NDRCContextBinding(long);
 void NDRCContextMarshall(long, void*);
 void NDRCContextUnmarshall(long*, void*, void*, uint);
-void NDRSContextMarshall(NDR_SCONTEXT_1*, void*, NDR_RUNDOWN);
-NDR_SCONTEXT_1* NDRSContextUnmarshall(void*, uint);
-void NDRSContextMarshallEx(void*, NDR_SCONTEXT_1*, void*, NDR_RUNDOWN);
-void NDRSContextMarshall2(void*, NDR_SCONTEXT_1*, void*, NDR_RUNDOWN, void*, uint);
-NDR_SCONTEXT_1* NDRSContextUnmarshallEx(void*, void*, uint);
-NDR_SCONTEXT_1* NDRSContextUnmarshall2(void*, void*, uint, void*, uint);
+void NDRSContextMarshall(NDR_SCONTEXT*, void*, NDR_RUNDOWN);
+NDR_SCONTEXT* NDRSContextUnmarshall(void*, uint);
+void NDRSContextMarshallEx(void*, NDR_SCONTEXT*, void*, NDR_RUNDOWN);
+void NDRSContextMarshall2(void*, NDR_SCONTEXT*, void*, NDR_RUNDOWN, void*, uint);
+NDR_SCONTEXT* NDRSContextUnmarshallEx(void*, void*, uint);
+NDR_SCONTEXT* NDRSContextUnmarshall2(void*, void*, uint, void*, uint);
 void RpcSsDestroyClientContext(void**);
 void NdrSimpleTypeMarshall(MIDL_STUB_MESSAGE*, ubyte*, ubyte);
 ubyte* NdrPointerMarshall(MIDL_STUB_MESSAGE*, ubyte*, ubyte*);
@@ -507,8 +502,8 @@ ubyte* NdrXmitOrRepAsMarshall(MIDL_STUB_MESSAGE*, ubyte*, ubyte*);
 ubyte* NdrUserMarshalMarshall(MIDL_STUB_MESSAGE*, ubyte*, ubyte*);
 ubyte* NdrInterfacePointerMarshall(MIDL_STUB_MESSAGE*, ubyte*, ubyte*);
 void NdrClientContextMarshall(MIDL_STUB_MESSAGE*, long, int);
-void NdrServerContextMarshall(MIDL_STUB_MESSAGE*, NDR_SCONTEXT_1*, NDR_RUNDOWN);
-void NdrServerContextNewMarshall(MIDL_STUB_MESSAGE*, NDR_SCONTEXT_1*, NDR_RUNDOWN, ubyte*);
+void NdrServerContextMarshall(MIDL_STUB_MESSAGE*, NDR_SCONTEXT*, NDR_RUNDOWN);
+void NdrServerContextNewMarshall(MIDL_STUB_MESSAGE*, NDR_SCONTEXT*, NDR_RUNDOWN, ubyte*);
 void NdrSimpleTypeUnmarshall(MIDL_STUB_MESSAGE*, ubyte*, ubyte);
 ubyte* NdrRangeUnmarshall(MIDL_STUB_MESSAGE*, ubyte**, ubyte*, ubyte);
 void NdrCorrelationInitialize(MIDL_STUB_MESSAGE*, void*, uint, uint);
@@ -533,9 +528,9 @@ ubyte* NdrXmitOrRepAsUnmarshall(MIDL_STUB_MESSAGE*, ubyte**, ubyte*, ubyte);
 ubyte* NdrUserMarshalUnmarshall(MIDL_STUB_MESSAGE*, ubyte**, ubyte*, ubyte);
 ubyte* NdrInterfacePointerUnmarshall(MIDL_STUB_MESSAGE*, ubyte**, ubyte*, ubyte);
 void NdrClientContextUnmarshall(MIDL_STUB_MESSAGE*, long*, void*);
-NDR_SCONTEXT_1* NdrServerContextUnmarshall(MIDL_STUB_MESSAGE*);
-NDR_SCONTEXT_1* NdrContextHandleInitialize(MIDL_STUB_MESSAGE*, ubyte*);
-NDR_SCONTEXT_1* NdrServerContextNewUnmarshall(MIDL_STUB_MESSAGE*, ubyte*);
+NDR_SCONTEXT* NdrServerContextUnmarshall(MIDL_STUB_MESSAGE*);
+NDR_SCONTEXT* NdrContextHandleInitialize(MIDL_STUB_MESSAGE*, ubyte*);
+NDR_SCONTEXT* NdrServerContextNewUnmarshall(MIDL_STUB_MESSAGE*, ubyte*);
 void NdrPointerBufferSize(MIDL_STUB_MESSAGE*, ubyte*, ubyte*);
 void NdrSimpleStructBufferSize(MIDL_STUB_MESSAGE*, ubyte*, ubyte*);
 void NdrConformantStructBufferSize(MIDL_STUB_MESSAGE*, ubyte*, ubyte*);
@@ -885,6 +880,8 @@ enum RPC_C_PROFILE_MATCH_BY_IF = 0x00000002;
 enum RPC_C_PROFILE_MATCH_BY_MBR = 0x00000003;
 enum RPC_C_PROFILE_MATCH_BY_BOTH = 0x00000004;
 enum RPC_C_NS_DEFAULT_EXP_AGE = 0xffffffffffffffff;
+enum TARGET_IS_NT1012_OR_LATER = 0x00000001;
+enum TARGET_IS_NT102_OR_LATER = 0x00000001;
 enum TARGET_IS_NT100_OR_LATER = 0x00000001;
 enum TARGET_IS_NT63_OR_LATER = 0x00000001;
 enum TARGET_IS_NT62_OR_LATER = 0x00000001;
@@ -917,7 +914,7 @@ enum NDR64_FC_BIND_PRIMITIVE = 0x00000002;
 enum NDR64_FC_AUTO_HANDLE = 0x00000003;
 enum NDR64_FC_CALLBACK_HANDLE = 0x00000004;
 enum NDR64_FC_NO_HANDLE = 0x00000005;
-enum __RPCPROXY_H_VERSION__ = 0x000001db;
+enum __RPCPROXY_H_VERSION__ = 0x000001dd;
 enum MidlInterceptionInfoVersionOne = 0x00000001;
 enum MidlWinrtTypeSerializationInfoVersionOne = 0x00000001;
 struct RPC_BINDING_VECTOR
@@ -1706,7 +1703,7 @@ struct RPC_IMPORT_CONTEXT_P
     void* ProposedHandle;
     RPC_BINDING_VECTOR* Bindings;
 }
-struct _NDR_SCONTEXT
+struct NDR_SCONTEXT
 {
     void*[2] pad;
     void* userContext;
@@ -1717,7 +1714,7 @@ alias NDR_NOTIFY2_ROUTINE = void function(ubyte);
 struct SCONTEXT_QUEUE
 {
     uint NumberOfObjects;
-    NDR_SCONTEXT_1** ArrayOfObjects;
+    NDR_SCONTEXT** ArrayOfObjects;
 }
 alias EXPR_EVAL = void function(MIDL_STUB_MESSAGE*);
 struct ARRAY_INFO
@@ -1781,7 +1778,7 @@ struct MIDL_STUB_MESSAGE
     int _bitfield0;
     uint dwDestContext;
     void* pvDestContext;
-    NDR_SCONTEXT_1** SavedContextHandles;
+    NDR_SCONTEXT** SavedContextHandles;
     int ParamNumber;
     IRpcChannelBuffer pRpcChannelBuffer;
     ARRAY_INFO* pArrayInfo;

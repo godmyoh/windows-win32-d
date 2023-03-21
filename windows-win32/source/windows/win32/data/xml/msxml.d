@@ -833,24 +833,6 @@ enum IID_XMLDOMDocumentEvents = GUID(0x3efaa427, 0x272f, 0x11d2, [0x83, 0x6f, 0x
 interface XMLDOMDocumentEvents : IDispatch
 {
 }
-enum IID_IXMLHttpRequest = GUID(0xed8c108d, 0x4349, 0x11d2, [0x91, 0xa4, 0x0, 0xc0, 0x4f, 0x79, 0x69, 0xe8]);
-interface IXMLHttpRequest : IDispatch
-{
-    HRESULT open(BSTR, BSTR, VARIANT, VARIANT, VARIANT);
-    HRESULT setRequestHeader(BSTR, BSTR);
-    HRESULT getResponseHeader(BSTR, BSTR*);
-    HRESULT getAllResponseHeaders(BSTR*);
-    HRESULT send(VARIANT);
-    HRESULT abort();
-    HRESULT get_status(int*);
-    HRESULT get_statusText(BSTR*);
-    HRESULT get_responseXML(IDispatch*);
-    HRESULT get_responseText(BSTR*);
-    HRESULT get_responseBody(VARIANT*);
-    HRESULT get_responseStream(VARIANT*);
-    HRESULT get_readyState(int*);
-    HRESULT put_onreadystatechange(IDispatch);
-}
 enum IID_IXMLDSOControl = GUID(0x310afa62, 0x575, 0x11d2, [0x9c, 0xa9, 0x0, 0x60, 0xb0, 0xec, 0x3d, 0x39]);
 interface IXMLDSOControl : IDispatch
 {

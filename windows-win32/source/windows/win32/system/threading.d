@@ -1,7 +1,7 @@
 module windows.win32.system.threading;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, FILETIME, HANDLE, HINSTANCE, HRESULT, LARGE_INTEGER, NTSTATUS, PAPCFUNC, PSID, PSTR, PWSTR, UNICODE_STRING, WIN32_ERROR;
+import windows.win32.foundation : BOOL, BOOLEAN, FILETIME, HANDLE, HINSTANCE, HRESULT, NTSTATUS, PAPCFUNC, PSID, PSTR, PWSTR, UNICODE_STRING, WIN32_ERROR;
 import windows.win32.security_ : SECURITY_ATTRIBUTES, TOKEN_ACCESS_MASK;
 import windows.win32.system.kernel : LIST_ENTRY, PROCESSOR_NUMBER, SLIST_ENTRY, SLIST_HEADER;
 import windows.win32.system.systeminformation : GROUP_AFFINITY, IMAGE_FILE_MACHINE;
@@ -266,8 +266,8 @@ HANDLE OpenEventA(SYNCHRONIZATION_ACCESS_RIGHTS, BOOL, const(char)*);
 HANDLE OpenEventW(SYNCHRONIZATION_ACCESS_RIGHTS, BOOL, const(wchar)*);
 HANDLE OpenSemaphoreW(SYNCHRONIZATION_ACCESS_RIGHTS, BOOL, const(wchar)*);
 HANDLE OpenWaitableTimerW(SYNCHRONIZATION_ACCESS_RIGHTS, BOOL, const(wchar)*);
-BOOL SetWaitableTimerEx(HANDLE, const(LARGE_INTEGER)*, int, PTIMERAPCROUTINE, void*, REASON_CONTEXT*, uint);
-BOOL SetWaitableTimer(HANDLE, const(LARGE_INTEGER)*, int, PTIMERAPCROUTINE, void*, BOOL);
+BOOL SetWaitableTimerEx(HANDLE, const(long)*, int, PTIMERAPCROUTINE, void*, REASON_CONTEXT*, uint);
+BOOL SetWaitableTimer(HANDLE, const(long)*, int, PTIMERAPCROUTINE, void*, BOOL);
 BOOL CancelWaitableTimer(HANDLE);
 HANDLE CreateMutexExA(SECURITY_ATTRIBUTES*, const(char)*, uint, uint);
 HANDLE CreateMutexExW(SECURITY_ATTRIBUTES*, const(wchar)*, uint, uint);
@@ -323,7 +323,7 @@ BOOL CreateProcessW(const(wchar)*, PWSTR, SECURITY_ATTRIBUTES*, SECURITY_ATTRIBU
 BOOL SetProcessShutdownParameters(uint, uint);
 uint GetProcessVersion(uint);
 void GetStartupInfoW(STARTUPINFOW*);
-BOOL CreateProcessAsUserW(HANDLE, const(wchar)*, PWSTR, SECURITY_ATTRIBUTES*, SECURITY_ATTRIBUTES*, BOOL, uint, void*, const(wchar)*, STARTUPINFOW*, PROCESS_INFORMATION*);
+BOOL CreateProcessAsUserW(HANDLE, const(wchar)*, PWSTR, SECURITY_ATTRIBUTES*, SECURITY_ATTRIBUTES*, BOOL, PROCESS_CREATION_FLAGS, void*, const(wchar)*, STARTUPINFOW*, PROCESS_INFORMATION*);
 BOOL SetThreadToken(HANDLE*, HANDLE);
 BOOL OpenProcessToken(HANDLE, TOKEN_ACCESS_MASK, HANDLE*);
 BOOL OpenThreadToken(HANDLE, TOKEN_ACCESS_MASK, BOOL, HANDLE*);
@@ -369,7 +369,7 @@ BOOL GetProcessDefaultCpuSets(HANDLE, uint*, uint, uint*);
 BOOL SetProcessDefaultCpuSets(HANDLE, const(uint)*, uint);
 BOOL GetThreadSelectedCpuSets(HANDLE, uint*, uint, uint*);
 BOOL SetThreadSelectedCpuSets(HANDLE, const(uint)*, uint);
-BOOL CreateProcessAsUserA(HANDLE, const(char)*, PSTR, SECURITY_ATTRIBUTES*, SECURITY_ATTRIBUTES*, BOOL, uint, void*, const(char)*, STARTUPINFOA*, PROCESS_INFORMATION*);
+BOOL CreateProcessAsUserA(HANDLE, const(char)*, PSTR, SECURITY_ATTRIBUTES*, SECURITY_ATTRIBUTES*, BOOL, PROCESS_CREATION_FLAGS, void*, const(char)*, STARTUPINFOA*, PROCESS_INFORMATION*);
 BOOL GetProcessShutdownParameters(uint*, uint*);
 BOOL GetProcessDefaultCpuSetMasks(HANDLE, GROUP_AFFINITY*, ushort, ushort*);
 BOOL SetProcessDefaultCpuSetMasks(HANDLE, GROUP_AFFINITY*, ushort);
@@ -395,34 +395,34 @@ void CloseThreadpool(PTP_POOL);
 long CreateThreadpoolCleanupGroup();
 void CloseThreadpoolCleanupGroupMembers(long, BOOL, void*);
 void CloseThreadpoolCleanupGroup(long);
-void SetEventWhenCallbackReturns(TP_CALLBACK_INSTANCE*, HANDLE);
-void ReleaseSemaphoreWhenCallbackReturns(TP_CALLBACK_INSTANCE*, HANDLE, uint);
-void ReleaseMutexWhenCallbackReturns(TP_CALLBACK_INSTANCE*, HANDLE);
-void LeaveCriticalSectionWhenCallbackReturns(TP_CALLBACK_INSTANCE*, RTL_CRITICAL_SECTION*);
-void FreeLibraryWhenCallbackReturns(TP_CALLBACK_INSTANCE*, HINSTANCE);
-BOOL CallbackMayRunLong(TP_CALLBACK_INSTANCE*);
-void DisassociateCurrentThreadFromCallback(TP_CALLBACK_INSTANCE*);
+void SetEventWhenCallbackReturns(PTP_CALLBACK_INSTANCE, HANDLE);
+void ReleaseSemaphoreWhenCallbackReturns(PTP_CALLBACK_INSTANCE, HANDLE, uint);
+void ReleaseMutexWhenCallbackReturns(PTP_CALLBACK_INSTANCE, HANDLE);
+void LeaveCriticalSectionWhenCallbackReturns(PTP_CALLBACK_INSTANCE, RTL_CRITICAL_SECTION*);
+void FreeLibraryWhenCallbackReturns(PTP_CALLBACK_INSTANCE, HINSTANCE);
+BOOL CallbackMayRunLong(PTP_CALLBACK_INSTANCE);
+void DisassociateCurrentThreadFromCallback(PTP_CALLBACK_INSTANCE);
 BOOL TrySubmitThreadpoolCallback(PTP_SIMPLE_CALLBACK, void*, TP_CALLBACK_ENVIRON_V3*);
-TP_WORK* CreateThreadpoolWork(PTP_WORK_CALLBACK, void*, TP_CALLBACK_ENVIRON_V3*);
-void SubmitThreadpoolWork(TP_WORK*);
-void WaitForThreadpoolWorkCallbacks(TP_WORK*, BOOL);
-void CloseThreadpoolWork(TP_WORK*);
-TP_TIMER* CreateThreadpoolTimer(PTP_TIMER_CALLBACK, void*, TP_CALLBACK_ENVIRON_V3*);
-void SetThreadpoolTimer(TP_TIMER*, FILETIME*, uint, uint);
-BOOL IsThreadpoolTimerSet(TP_TIMER*);
-void WaitForThreadpoolTimerCallbacks(TP_TIMER*, BOOL);
-void CloseThreadpoolTimer(TP_TIMER*);
-TP_WAIT* CreateThreadpoolWait(PTP_WAIT_CALLBACK, void*, TP_CALLBACK_ENVIRON_V3*);
-void SetThreadpoolWait(TP_WAIT*, HANDLE, FILETIME*);
-void WaitForThreadpoolWaitCallbacks(TP_WAIT*, BOOL);
-void CloseThreadpoolWait(TP_WAIT*);
-TP_IO* CreateThreadpoolIo(HANDLE, PTP_WIN32_IO_CALLBACK, void*, TP_CALLBACK_ENVIRON_V3*);
-void StartThreadpoolIo(TP_IO*);
-void CancelThreadpoolIo(TP_IO*);
-void WaitForThreadpoolIoCallbacks(TP_IO*, BOOL);
-void CloseThreadpoolIo(TP_IO*);
-BOOL SetThreadpoolTimerEx(TP_TIMER*, FILETIME*, uint, uint);
-BOOL SetThreadpoolWaitEx(TP_WAIT*, HANDLE, FILETIME*, void*);
+PTP_WORK CreateThreadpoolWork(PTP_WORK_CALLBACK, void*, TP_CALLBACK_ENVIRON_V3*);
+void SubmitThreadpoolWork(PTP_WORK);
+void WaitForThreadpoolWorkCallbacks(PTP_WORK, BOOL);
+void CloseThreadpoolWork(PTP_WORK);
+PTP_TIMER CreateThreadpoolTimer(PTP_TIMER_CALLBACK, void*, TP_CALLBACK_ENVIRON_V3*);
+void SetThreadpoolTimer(PTP_TIMER, FILETIME*, uint, uint);
+BOOL IsThreadpoolTimerSet(PTP_TIMER);
+void WaitForThreadpoolTimerCallbacks(PTP_TIMER, BOOL);
+void CloseThreadpoolTimer(PTP_TIMER);
+PTP_WAIT CreateThreadpoolWait(PTP_WAIT_CALLBACK, void*, TP_CALLBACK_ENVIRON_V3*);
+void SetThreadpoolWait(PTP_WAIT, HANDLE, FILETIME*);
+void WaitForThreadpoolWaitCallbacks(PTP_WAIT, BOOL);
+void CloseThreadpoolWait(PTP_WAIT);
+PTP_IO CreateThreadpoolIo(HANDLE, PTP_WIN32_IO_CALLBACK, void*, TP_CALLBACK_ENVIRON_V3*);
+void StartThreadpoolIo(PTP_IO);
+void CancelThreadpoolIo(PTP_IO);
+void WaitForThreadpoolIoCallbacks(PTP_IO, BOOL);
+void CloseThreadpoolIo(PTP_IO);
+BOOL SetThreadpoolTimerEx(PTP_TIMER, FILETIME*, uint, uint);
+BOOL SetThreadpoolWaitEx(PTP_WAIT, HANDLE, FILETIME*, void*);
 BOOL IsWow64Process(HANDLE, BOOL*);
 ushort Wow64SetThreadDefaultGuestMachine(ushort);
 BOOL IsWow64Process2(HANDLE, IMAGE_FILE_MACHINE*, IMAGE_FILE_MACHINE*);
@@ -446,9 +446,9 @@ HANDLE AvSetMmMaxThreadCharacteristicsA(const(char)*, const(char)*, uint*);
 HANDLE AvSetMmMaxThreadCharacteristicsW(const(wchar)*, const(wchar)*, uint*);
 BOOL AvRevertMmThreadCharacteristics(HANDLE);
 BOOL AvSetMmThreadPriority(HANDLE, AVRT_PRIORITY);
-BOOL AvRtCreateThreadOrderingGroup(HANDLE*, LARGE_INTEGER*, GUID*, LARGE_INTEGER*);
-BOOL AvRtCreateThreadOrderingGroupExA(HANDLE*, LARGE_INTEGER*, GUID*, LARGE_INTEGER*, const(char)*);
-BOOL AvRtCreateThreadOrderingGroupExW(HANDLE*, LARGE_INTEGER*, GUID*, LARGE_INTEGER*, const(wchar)*);
+BOOL AvRtCreateThreadOrderingGroup(HANDLE*, long*, GUID*, long*);
+BOOL AvRtCreateThreadOrderingGroupExA(HANDLE*, long*, GUID*, long*, const(char)*);
+BOOL AvRtCreateThreadOrderingGroupExW(HANDLE*, long*, GUID*, long*, const(wchar)*);
 BOOL AvRtJoinThreadOrderingGroup(HANDLE*, GUID*, BOOL);
 BOOL AvRtWaitOnThreadOrderingGroup(HANDLE);
 BOOL AvRtLeaveThreadOrderingGroup(HANDLE);
@@ -493,8 +493,8 @@ HANDLE CreateSemaphoreExA(SECURITY_ATTRIBUTES*, int, int, const(char)*, uint, ui
 BOOL QueryFullProcessImageNameA(HANDLE, PROCESS_NAME_FORMAT, PSTR, uint*);
 BOOL QueryFullProcessImageNameW(HANDLE, PROCESS_NAME_FORMAT, PWSTR, uint*);
 void GetStartupInfoA(STARTUPINFOA*);
-BOOL CreateProcessWithLogonW(const(wchar)*, const(wchar)*, const(wchar)*, CREATE_PROCESS_LOGON_FLAGS, const(wchar)*, PWSTR, uint, void*, const(wchar)*, STARTUPINFOW*, PROCESS_INFORMATION*);
-BOOL CreateProcessWithTokenW(HANDLE, CREATE_PROCESS_LOGON_FLAGS, const(wchar)*, PWSTR, uint, void*, const(wchar)*, STARTUPINFOW*, PROCESS_INFORMATION*);
+BOOL CreateProcessWithLogonW(const(wchar)*, const(wchar)*, const(wchar)*, CREATE_PROCESS_LOGON_FLAGS, const(wchar)*, PWSTR, PROCESS_CREATION_FLAGS, void*, const(wchar)*, STARTUPINFOW*, PROCESS_INFORMATION*);
+BOOL CreateProcessWithTokenW(HANDLE, CREATE_PROCESS_LOGON_FLAGS, const(wchar)*, PWSTR, PROCESS_CREATION_FLAGS, void*, const(wchar)*, STARTUPINFOW*, PROCESS_INFORMATION*);
 BOOL RegisterWaitForSingleObject(HANDLE*, HANDLE, WAITORTIMERCALLBACK, void*, uint, WORKER_THREAD_FLAGS);
 BOOL UnregisterWait(HANDLE);
 HANDLE SetTimerQueueTimer(HANDLE, WAITORTIMERCALLBACK, void*, uint, uint, BOOL);
@@ -516,7 +516,9 @@ BOOL GetNumaProximityNode(uint, ubyte*);
 NTSTATUS NtQueryInformationProcess(HANDLE, PROCESSINFOCLASS, void*, uint, uint*);
 NTSTATUS NtQueryInformationThread(HANDLE, THREADINFOCLASS, void*, uint, uint*);
 NTSTATUS NtSetInformationThread(HANDLE, THREADINFOCLASS, void*, uint);
+enum FLS_OUT_OF_INDEXES = 0xffffffff;
 enum PRIVATE_NAMESPACE_FLAG_DESTROY = 0x00000001;
+enum TLS_OUT_OF_INDEXES = 0xffffffff;
 enum PROC_THREAD_ATTRIBUTE_REPLACE_VALUE = 0x00000001;
 enum THREAD_POWER_THROTTLING_CURRENT_VERSION = 0x00000001;
 enum THREAD_POWER_THROTTLING_EXECUTION_SPEED = 0x00000001;
@@ -559,6 +561,15 @@ enum PROC_THREAD_ATTRIBUTE_ALL_APPLICATION_PACKAGES_POLICY = 0x0002000f;
 enum PROC_THREAD_ATTRIBUTE_DESKTOP_APP_POLICY = 0x00020012;
 enum PROC_THREAD_ATTRIBUTE_MITIGATION_AUDIT_POLICY = 0x00020018;
 enum PROC_THREAD_ATTRIBUTE_COMPONENT_FILTER = 0x0002001a;
+struct PROCESS_BASIC_INFORMATION
+{
+    NTSTATUS ExitStatus;
+    PEB* PebBaseAddress;
+    ulong AffinityMask;
+    int BasePriority;
+    ulong UniqueProcessId;
+    ulong InheritedFromUniqueProcessId;
+}
 alias PROCESS_CREATION_FLAGS = uint;
 enum : uint
 {
@@ -621,25 +632,140 @@ enum : uint
     PROCESS_STANDARD_RIGHTS_REQUIRED  = 0x000f0000,
 }
 
-struct TP_CALLBACK_INSTANCE
+alias PROCESSINFOCLASS = int;
+enum : int
 {
+    ProcessBasicInformation                     = 0x00000000,
+    ProcessQuotaLimits                          = 0x00000001,
+    ProcessIoCounters                           = 0x00000002,
+    ProcessVmCounters                           = 0x00000003,
+    ProcessTimes                                = 0x00000004,
+    ProcessBasePriority                         = 0x00000005,
+    ProcessRaisePriority                        = 0x00000006,
+    ProcessDebugPort                            = 0x00000007,
+    ProcessExceptionPort                        = 0x00000008,
+    ProcessAccessToken                          = 0x00000009,
+    ProcessLdtInformation                       = 0x0000000a,
+    ProcessLdtSize                              = 0x0000000b,
+    ProcessDefaultHardErrorMode                 = 0x0000000c,
+    ProcessIoPortHandlers                       = 0x0000000d,
+    ProcessPooledUsageAndLimits                 = 0x0000000e,
+    ProcessWorkingSetWatch                      = 0x0000000f,
+    ProcessUserModeIOPL                         = 0x00000010,
+    ProcessEnableAlignmentFaultFixup            = 0x00000011,
+    ProcessPriorityClass                        = 0x00000012,
+    ProcessWx86Information                      = 0x00000013,
+    ProcessHandleCount                          = 0x00000014,
+    ProcessAffinityMask                         = 0x00000015,
+    ProcessPriorityBoost                        = 0x00000016,
+    ProcessDeviceMap                            = 0x00000017,
+    ProcessSessionInformation                   = 0x00000018,
+    ProcessForegroundInformation                = 0x00000019,
+    ProcessWow64Information                     = 0x0000001a,
+    ProcessImageFileName                        = 0x0000001b,
+    ProcessLUIDDeviceMapsEnabled                = 0x0000001c,
+    ProcessBreakOnTermination                   = 0x0000001d,
+    ProcessDebugObjectHandle                    = 0x0000001e,
+    ProcessDebugFlags                           = 0x0000001f,
+    ProcessHandleTracing                        = 0x00000020,
+    ProcessIoPriority                           = 0x00000021,
+    ProcessExecuteFlags                         = 0x00000022,
+    ProcessTlsInformation                       = 0x00000023,
+    ProcessCookie                               = 0x00000024,
+    ProcessImageInformation                     = 0x00000025,
+    ProcessCycleTime                            = 0x00000026,
+    ProcessPagePriority                         = 0x00000027,
+    ProcessInstrumentationCallback              = 0x00000028,
+    ProcessThreadStackAllocation                = 0x00000029,
+    ProcessWorkingSetWatchEx                    = 0x0000002a,
+    ProcessImageFileNameWin32                   = 0x0000002b,
+    ProcessImageFileMapping                     = 0x0000002c,
+    ProcessAffinityUpdateMode                   = 0x0000002d,
+    ProcessMemoryAllocationMode                 = 0x0000002e,
+    ProcessGroupInformation                     = 0x0000002f,
+    ProcessTokenVirtualizationEnabled           = 0x00000030,
+    ProcessOwnerInformation                     = 0x00000031,
+    ProcessWindowInformation                    = 0x00000032,
+    ProcessHandleInformation                    = 0x00000033,
+    ProcessMitigationPolicy                     = 0x00000034,
+    ProcessDynamicFunctionTableInformation      = 0x00000035,
+    ProcessHandleCheckingMode                   = 0x00000036,
+    ProcessKeepAliveCount                       = 0x00000037,
+    ProcessRevokeFileHandles                    = 0x00000038,
+    ProcessWorkingSetControl                    = 0x00000039,
+    ProcessHandleTable                          = 0x0000003a,
+    ProcessCheckStackExtentsMode                = 0x0000003b,
+    ProcessCommandLineInformation               = 0x0000003c,
+    ProcessProtectionInformation                = 0x0000003d,
+    ProcessMemoryExhaustion                     = 0x0000003e,
+    ProcessFaultInformation                     = 0x0000003f,
+    ProcessTelemetryIdInformation               = 0x00000040,
+    ProcessCommitReleaseInformation             = 0x00000041,
+    ProcessReserved1Information                 = 0x00000042,
+    ProcessReserved2Information                 = 0x00000043,
+    ProcessSubsystemProcess                     = 0x00000044,
+    ProcessInPrivate                            = 0x00000046,
+    ProcessRaiseUMExceptionOnInvalidHandleClose = 0x00000047,
+    ProcessSubsystemInformation                 = 0x0000004b,
+    ProcessWin32kSyscallFilterInformation       = 0x0000004f,
+    ProcessEnergyTrackingState                  = 0x00000052,
+    MaxProcessInfoClass                         = 0x00000053,
 }
-struct TP_WORK
+
+alias THREADINFOCLASS = int;
+enum : int
 {
+    ThreadBasicInformation          = 0x00000000,
+    ThreadTimes                     = 0x00000001,
+    ThreadPriority                  = 0x00000002,
+    ThreadBasePriority              = 0x00000003,
+    ThreadAffinityMask              = 0x00000004,
+    ThreadImpersonationToken        = 0x00000005,
+    ThreadDescriptorTableEntry      = 0x00000006,
+    ThreadEnableAlignmentFaultFixup = 0x00000007,
+    ThreadEventPair_Reusable        = 0x00000008,
+    ThreadQuerySetWin32StartAddress = 0x00000009,
+    ThreadZeroTlsCell               = 0x0000000a,
+    ThreadPerformanceCount          = 0x0000000b,
+    ThreadAmILastThread             = 0x0000000c,
+    ThreadIdealProcessor            = 0x0000000d,
+    ThreadPriorityBoost             = 0x0000000e,
+    ThreadSetTlsArrayAddress        = 0x0000000f,
+    ThreadIsIoPending               = 0x00000010,
+    ThreadHideFromDebugger          = 0x00000011,
+    ThreadBreakOnTermination        = 0x00000012,
+    ThreadSwitchLegacyState         = 0x00000013,
+    ThreadIsTerminated              = 0x00000014,
+    ThreadLastSystemCall            = 0x00000015,
+    ThreadIoPriority                = 0x00000016,
+    ThreadCycleTime                 = 0x00000017,
+    ThreadPagePriority              = 0x00000018,
+    ThreadActualBasePriority        = 0x00000019,
+    ThreadTebInformation            = 0x0000001a,
+    ThreadCSwitchMon                = 0x0000001b,
+    ThreadCSwitchPmu                = 0x0000001c,
+    ThreadWow64Context              = 0x0000001d,
+    ThreadGroupInformation          = 0x0000001e,
+    ThreadUmsInformation            = 0x0000001f,
+    ThreadCounterProfiling          = 0x00000020,
+    ThreadIdealProcessorEx          = 0x00000021,
+    ThreadCpuAccountingInformation  = 0x00000022,
+    ThreadSuspendCount              = 0x00000023,
+    ThreadActualGroupAffinity       = 0x00000029,
+    ThreadDynamicCodePolicyInfo     = 0x0000002a,
+    ThreadSubsystemInformation      = 0x0000002d,
+    MaxThreadInfoClass              = 0x00000035,
 }
-struct TP_TIMER
-{
-}
-struct TP_WAIT
-{
-}
-struct TP_IO
-{
-}
+
 alias TimerQueueHandle = long;
 alias PTP_POOL = long;
 alias NamespaceHandle = long;
 alias BoundaryDescriptorHandle = long;
+alias PTP_IO = long;
+alias PTP_TIMER = long;
+alias PTP_WAIT = long;
+alias PTP_WORK = long;
+alias PTP_CALLBACK_INSTANCE = long;
 alias LPPROC_THREAD_ATTRIBUTE_LIST = void*;
 struct REASON_CONTEXT
 {
@@ -714,6 +840,7 @@ enum : int
 {
     QUEUE_USER_APC_FLAGS_NONE             = 0x00000000,
     QUEUE_USER_APC_FLAGS_SPECIAL_USER_APC = 0x00000001,
+    QUEUE_USER_APC_CALLBACK_DATA_CONTEXT  = 0x00010000,
 }
 
 alias THREAD_INFORMATION_CLASS = int;
@@ -759,8 +886,8 @@ struct APP_MEMORY_INFORMATION
     ulong PeakPrivateCommitUsage;
     ulong TotalCommitUsage;
 }
-alias MACHINE_ATTRIBUTES = uint;
-enum : uint
+alias MACHINE_ATTRIBUTES = int;
+enum : int
 {
     UserEnabled    = 0x00000001,
     KernelEnabled  = 0x00000002,
@@ -802,7 +929,7 @@ struct PROCESS_LEAP_SECOND_INFO
     uint Flags;
     uint Reserved;
 }
-alias PTP_WIN32_IO_CALLBACK = void function(TP_CALLBACK_INSTANCE*, void*, void*, uint, ulong, TP_IO*);
+alias PTP_WIN32_IO_CALLBACK = void function(PTP_CALLBACK_INSTANCE, void*, void*, uint, ulong, PTP_IO);
 alias AVRT_PRIORITY = int;
 enum : int
 {
@@ -867,7 +994,9 @@ enum : int
     ProcessSideChannelIsolationPolicy  = 0x0000000e,
     ProcessUserShadowStackPolicy       = 0x0000000f,
     ProcessRedirectionTrustPolicy      = 0x00000010,
-    MaxProcessMitigationPolicy         = 0x00000011,
+    ProcessUserPointerAuthPolicy       = 0x00000011,
+    ProcessSEHOPPolicy                 = 0x00000012,
+    MaxProcessMitigationPolicy         = 0x00000013,
 }
 
 union RTL_RUN_ONCE
@@ -906,7 +1035,7 @@ struct RTL_CRITICAL_SECTION_DEBUG
     uint ContentionCount;
     uint Flags;
     ushort CreatorBackTraceIndexHigh;
-    ushort SpareWORD;
+    ushort Identifier;
 }
 struct RTL_CRITICAL_SECTION
 {
@@ -926,8 +1055,10 @@ struct RTL_CONDITION_VARIABLE
     void* Ptr;
 }
 alias WAITORTIMERCALLBACK = void function(void*, BOOLEAN);
+alias WORKERCALLBACKFUNC = void function(void*);
+alias APC_CALLBACK_FUNCTION = void function(uint, void*, void*);
 alias PFLS_CALLBACK_FUNCTION = void function(void*);
-alias PTP_SIMPLE_CALLBACK = void function(TP_CALLBACK_INSTANCE*, void*);
+alias PTP_SIMPLE_CALLBACK = void function(PTP_CALLBACK_INSTANCE, void*);
 alias TP_CALLBACK_PRIORITY = int;
 enum : int
 {
@@ -964,9 +1095,9 @@ struct TP_CALLBACK_ENVIRON_V3
     TP_CALLBACK_PRIORITY CallbackPriority;
     uint Size;
 }
-alias PTP_WORK_CALLBACK = void function(TP_CALLBACK_INSTANCE*, void*, TP_WORK*);
-alias PTP_TIMER_CALLBACK = void function(TP_CALLBACK_INSTANCE*, void*, TP_TIMER*);
-alias PTP_WAIT_CALLBACK = void function(TP_CALLBACK_INSTANCE*, void*, TP_WAIT*, uint);
+alias PTP_WORK_CALLBACK = void function(PTP_CALLBACK_INSTANCE, void*, PTP_WORK);
+alias PTP_TIMER_CALLBACK = void function(PTP_CALLBACK_INSTANCE, void*, PTP_TIMER);
+alias PTP_WAIT_CALLBACK = void function(PTP_CALLBACK_INSTANCE, void*, PTP_WAIT, uint);
 alias LPFIBER_START_ROUTINE = void function(void*);
 struct UMS_SCHEDULER_STARTUP_INFO
 {
@@ -1020,6 +1151,7 @@ enum : uint
     ProcThreadAttributeMachineType                  = 0x00000019,
     ProcThreadAttributeComponentFilter              = 0x0000001a,
     ProcThreadAttributeEnableOptionalXStateFeatures = 0x0000001b,
+    ProcThreadAttributeTrustedApp                   = 0x0000001d,
 }
 
 struct PEB_LDR_DATA
@@ -1058,28 +1190,3 @@ struct PEB
     void*[1] Reserved12;
     uint SessionId;
 }
-struct PROCESS_BASIC_INFORMATION
-{
-    void* Reserved1;
-    PEB* PebBaseAddress;
-    void*[2] Reserved2;
-    ulong UniqueProcessId;
-    void* Reserved3;
-}
-alias PROCESSINFOCLASS = int;
-enum : int
-{
-    ProcessBasicInformation   = 0x00000000,
-    ProcessDebugPort          = 0x00000007,
-    ProcessWow64Information   = 0x0000001a,
-    ProcessImageFileName      = 0x0000001b,
-    ProcessBreakOnTermination = 0x0000001d,
-}
-
-alias THREADINFOCLASS = int;
-enum : int
-{
-    ThreadIsIoPending     = 0x00000010,
-    ThreadNameInformation = 0x00000026,
-}
-

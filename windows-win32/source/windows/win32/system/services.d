@@ -1,7 +1,7 @@
 module windows.win32.system.services;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, HANDLE, LARGE_INTEGER, PSTR, PWSTR;
+import windows.win32.foundation : BOOL, BOOLEAN, HANDLE, PSTR, PWSTR;
 import windows.win32.security_ : OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR, SC_HANDLE;
 import windows.win32.system.registry : HKEY;
 
@@ -51,8 +51,8 @@ BOOL SetServiceObjectSecurity(SC_HANDLE, OBJECT_SECURITY_INFORMATION, PSECURITY_
 BOOL SetServiceStatus(SERVICE_STATUS_HANDLE, SERVICE_STATUS*);
 BOOL StartServiceCtrlDispatcherA(const(SERVICE_TABLE_ENTRYA)*);
 BOOL StartServiceCtrlDispatcherW(const(SERVICE_TABLE_ENTRYW)*);
-BOOL StartServiceA(SC_HANDLE, uint, PSTR*);
-BOOL StartServiceW(SC_HANDLE, uint, PWSTR*);
+BOOL StartServiceA(SC_HANDLE, uint, const(char)**);
+BOOL StartServiceW(SC_HANDLE, uint, const(wchar)**);
 BOOL UnlockServiceDatabase(void*);
 uint NotifyServiceStatusChangeA(SC_HANDLE, SERVICE_NOTIFY, SERVICE_NOTIFY_2A*);
 uint NotifyServiceStatusChangeW(SC_HANDLE, SERVICE_NOTIFY, SERVICE_NOTIFY_2W*);
@@ -422,8 +422,8 @@ struct SERVICE_PREFERRED_NODE_INFO
 }
 struct SERVICE_TIMECHANGE_INFO
 {
-    LARGE_INTEGER liNewTime;
-    LARGE_INTEGER liOldTime;
+    long liNewTime;
+    long liOldTime;
 }
 struct SERVICE_LAUNCH_PROTECTED_INFO
 {

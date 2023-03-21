@@ -2,7 +2,7 @@ module windows.win32.ui.shell_;
 
 import windows.win32.guid : GUID;
 import windows.win32.data.xml.msxml : IXMLDOMDocument;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, COLORREF, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, LPARAM, LRESULT, NTSTATUS, POINT, POINTL, PSTR, PWSTR, RECT, RECTL, SHANDLE_PTR, SIZE, SYSTEMTIME, ULARGE_INTEGER, VARIANT_BOOL, WIN32_ERROR, WPARAM;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, COLORREF, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, LRESULT, NTSTATUS, POINT, POINTL, PSTR, PWSTR, RECT, RECTL, SHANDLE_PTR, SIZE, SYSTEMTIME, VARIANT_BOOL, WIN32_ERROR, WPARAM;
 import windows.win32.graphics.directcomposition : IDCompositionAnimation;
 import windows.win32.graphics.gdi : HBITMAP, HDC, HMONITOR, HPALETTE, LOGFONTW;
 import windows.win32.networkmanagement.wnet : NETRESOURCEA;
@@ -26,6 +26,7 @@ import windows.win32.ui.windowsandmessaging : CREATESTRUCTW, HACCEL, HDWP, HICON
 version (Windows):
 extern (Windows):
 
+BOOL FileIconInit(BOOL);
 BOOL LoadUserProfileA(HANDLE, PROFILEINFOA*);
 BOOL LoadUserProfileW(HANDLE, PROFILEINFOW*);
 BOOL UnloadUserProfile(HANDLE, HANDLE);
@@ -280,8 +281,8 @@ HRESULT Shell_NotifyIconGetRect(const(NOTIFYICONIDENTIFIER)*, RECT*);
 ulong SHGetFileInfoA(const(char)*, FILE_FLAGS_AND_ATTRIBUTES, SHFILEINFOA*, uint, SHGFI_FLAGS);
 ulong SHGetFileInfoW(const(wchar)*, FILE_FLAGS_AND_ATTRIBUTES, SHFILEINFOW*, uint, SHGFI_FLAGS);
 HRESULT SHGetStockIconInfo(SHSTOCKICONID, SHGSI_FLAGS, SHSTOCKICONINFO*);
-BOOL SHGetDiskFreeSpaceExA(const(char)*, ULARGE_INTEGER*, ULARGE_INTEGER*, ULARGE_INTEGER*);
-BOOL SHGetDiskFreeSpaceExW(const(wchar)*, ULARGE_INTEGER*, ULARGE_INTEGER*, ULARGE_INTEGER*);
+BOOL SHGetDiskFreeSpaceExA(const(char)*, ulong*, ulong*, ulong*);
+BOOL SHGetDiskFreeSpaceExW(const(wchar)*, ulong*, ulong*, ulong*);
 BOOL SHGetNewLinkInfoA(const(char)*, const(char)*, PSTR, BOOL*, uint);
 BOOL SHGetNewLinkInfoW(const(wchar)*, const(wchar)*, PWSTR, BOOL*, uint);
 BOOL SHInvokePrinterCommandA(HWND, uint, const(char)*, const(char)*, BOOL);
@@ -614,7 +615,7 @@ HRESULT IUnknown_QueryService(IUnknown, const(GUID)*, const(GUID)*, void**);
 HRESULT IStream_Read(IStream, void*, uint);
 HRESULT IStream_Write(IStream, const(void)*, uint);
 HRESULT IStream_Reset(IStream);
-HRESULT IStream_Size(IStream, ULARGE_INTEGER*);
+HRESULT IStream_Size(IStream, ulong*);
 HRESULT ConnectToConnectionPoint(IUnknown, const(GUID)*, BOOL, IUnknown, uint*, IConnectionPoint*);
 HRESULT IStream_ReadPidl(IStream, ITEMIDLIST**);
 HRESULT IStream_WritePidl(IStream, ITEMIDLIST*);
@@ -688,16 +689,16 @@ HRESULT HlinkResolveShortcutToString(const(wchar)*, PWSTR*, PWSTR*);
 HRESULT HlinkIsShortcut(const(wchar)*);
 HRESULT HlinkGetValueFromParams(const(wchar)*, const(wchar)*, PWSTR*);
 HRESULT HlinkTranslateURL(const(wchar)*, uint, PWSTR*);
-BOOL PathIsUNCEx(const(wchar)*, PWSTR*);
+BOOL PathIsUNCEx(const(wchar)*, const(wchar)**);
 BOOL PathCchIsRoot(const(wchar)*);
 HRESULT PathCchAddBackslashEx(PWSTR, ulong, PWSTR*, ulong*);
 HRESULT PathCchAddBackslash(PWSTR, ulong);
 HRESULT PathCchRemoveBackslashEx(PWSTR, ulong, PWSTR*, ulong*);
 HRESULT PathCchRemoveBackslash(PWSTR, ulong);
-HRESULT PathCchSkipRoot(const(wchar)*, PWSTR*);
+HRESULT PathCchSkipRoot(const(wchar)*, const(wchar)**);
 HRESULT PathCchStripToRoot(PWSTR, ulong);
 HRESULT PathCchRemoveFileSpec(PWSTR, ulong);
-HRESULT PathCchFindExtension(const(wchar)*, ulong, PWSTR*);
+HRESULT PathCchFindExtension(const(wchar)*, ulong, const(wchar)**);
 HRESULT PathCchAddExtension(PWSTR, ulong, const(wchar)*);
 HRESULT PathCchRenameExtension(PWSTR, ulong, const(wchar)*);
 HRESULT PathCchRemoveExtension(PWSTR, ulong);
@@ -3797,7 +3798,7 @@ interface IShellView : IOleWindow
     HRESULT AddPropertySheetPages(uint, LPFNSVADDPROPSHEETPAGE, LPARAM);
     HRESULT SaveViewState();
     HRESULT SelectItem(ITEMIDLIST*, uint);
-    HRESULT GetItemObject(uint, const(GUID)*, void**);
+    HRESULT GetItemObject(_SVGIO, const(GUID)*, void**);
 }
 struct SV2CVW2_PARAMS
 {
@@ -3824,8 +3825,8 @@ interface IFolderView : IUnknown
     HRESULT SetCurrentViewMode(uint);
     HRESULT GetFolder(const(GUID)*, void**);
     HRESULT Item(int, ITEMIDLIST**);
-    HRESULT ItemCount(uint, int*);
-    HRESULT Items(uint, const(GUID)*, void**);
+    HRESULT ItemCount(_SVGIO, int*);
+    HRESULT Items(_SVGIO, const(GUID)*, void**);
     HRESULT GetSelectionMarkedItem(int*);
     HRESULT GetFocusedItem(int*);
     HRESULT GetItemPosition(ITEMIDLIST*, POINT*);
@@ -4397,8 +4398,8 @@ interface IShellLinkA : IUnknown
     HRESULT SetArguments(const(char)*);
     HRESULT GetHotkey(ushort*);
     HRESULT SetHotkey(ushort);
-    HRESULT GetShowCmd(int*);
-    HRESULT SetShowCmd(int);
+    HRESULT GetShowCmd(SHOW_WINDOW_CMD*);
+    HRESULT SetShowCmd(SHOW_WINDOW_CMD);
     HRESULT GetIconLocation(PSTR, int, int*);
     HRESULT SetIconLocation(const(char)*, int);
     HRESULT SetRelativePath(const(char)*, uint);
@@ -4419,8 +4420,8 @@ interface IShellLinkW : IUnknown
     HRESULT SetArguments(const(wchar)*);
     HRESULT GetHotkey(ushort*);
     HRESULT SetHotkey(ushort);
-    HRESULT GetShowCmd(int*);
-    HRESULT SetShowCmd(int);
+    HRESULT GetShowCmd(SHOW_WINDOW_CMD*);
+    HRESULT SetShowCmd(SHOW_WINDOW_CMD);
     HRESULT GetIconLocation(PWSTR, int, int*);
     HRESULT SetIconLocation(const(wchar)*, int);
     HRESULT SetRelativePath(const(wchar)*, uint);
@@ -5827,8 +5828,8 @@ interface IFileSystemBindData : IUnknown
 enum IID_IFileSystemBindData2 = GUID(0x3acf075f, 0x71db, 0x4afa, [0x81, 0xf0, 0x3f, 0xc4, 0xfd, 0xf2, 0xa5, 0xb8]);
 interface IFileSystemBindData2 : IFileSystemBindData
 {
-    HRESULT SetFileID(LARGE_INTEGER);
-    HRESULT GetFileID(LARGE_INTEGER*);
+    HRESULT SetFileID(long);
+    HRESULT GetFileID(long*);
     HRESULT SetJunctionCLSID(const(GUID)*);
     HRESULT GetJunctionCLSID(GUID*);
 }
@@ -6190,7 +6191,7 @@ interface IPackageDebugSettings : IUnknown
     HRESULT Resume(const(wchar)*);
     HRESULT TerminateAllProcesses(const(wchar)*);
     HRESULT SetTargetSessionId(uint);
-    HRESULT EnumerateBackgroundTasks(const(wchar)*, uint*, GUID**, PWSTR**);
+    HRESULT EnumerateBackgroundTasks(const(wchar)*, uint*, GUID**, const(wchar)***);
     HRESULT ActivateBackgroundTask(const(GUID)*);
     HRESULT StartServicing(const(wchar)*);
     HRESULT StopServicing(const(wchar)*);
@@ -7116,12 +7117,12 @@ interface IShellWindows : IDispatch
     HRESULT get_Count(int*);
     HRESULT Item(VARIANT, IDispatch*);
     HRESULT _NewEnum(IUnknown*);
-    HRESULT Register(IDispatch, int, int, int*);
-    HRESULT RegisterPending(int, VARIANT*, VARIANT*, int, int*);
+    HRESULT Register(IDispatch, int, ShellWindowTypeConstants, int*);
+    HRESULT RegisterPending(int, VARIANT*, VARIANT*, ShellWindowTypeConstants, int*);
     HRESULT Revoke(int);
     HRESULT OnNavigate(int, VARIANT*);
     HRESULT OnActivated(int, VARIANT_BOOL);
-    HRESULT FindWindowSW(VARIANT*, VARIANT*, int, int*, int, IDispatch*);
+    HRESULT FindWindowSW(VARIANT*, VARIANT*, ShellWindowTypeConstants, int*, ShellWindowFindWindowOptions, IDispatch*);
     HRESULT OnCreated(int, IUnknown);
     HRESULT ProcessAttachDetach(VARIANT_BOOL);
 }
@@ -8369,8 +8370,8 @@ enum : int
     REST_ALLOWCOMMENTTOGGLE         = 0x41000004,
 }
 
-alias OPEN_AS_INFO_FLAGS = uint;
-enum : uint
+alias OPEN_AS_INFO_FLAGS = int;
+enum : int
 {
     OAIF_ALLOW_REGISTRATION = 0x00000001,
     OAIF_REGISTER_EXT       = 0x00000002,
@@ -8718,8 +8719,8 @@ enum : int
     DEVICE_IMMERSIVE = 0x00000001,
 }
 
-alias SCALE_CHANGE_FLAGS = uint;
-enum : uint
+alias SCALE_CHANGE_FLAGS = int;
+enum : int
 {
     SCF_VALUE_NONE = 0x00000000,
     SCF_SCALE      = 0x00000001,
@@ -9892,7 +9893,7 @@ interface ISyncMgrHandler : IUnknown
     HRESULT GetPolicies(SYNCMGR_HANDLER_POLICIES*);
     HRESULT Activate(BOOL);
     HRESULT Enable(BOOL);
-    HRESULT Synchronize(PWSTR*, uint, HWND, ISyncMgrSessionCreator, IUnknown);
+    HRESULT Synchronize(const(wchar)**, uint, HWND, ISyncMgrSessionCreator, IUnknown);
 }
 alias SYNCMGR_HANDLER_TYPE = int;
 enum : int
@@ -10027,7 +10028,7 @@ enum : int
 enum IID_ISyncMgrSessionCreator = GUID(0x17f48517, 0xf305, 0x4321, [0xa0, 0x8d, 0xb2, 0x5a, 0x83, 0x49, 0x18, 0xfd]);
 interface ISyncMgrSessionCreator : IUnknown
 {
-    HRESULT CreateSession(const(wchar)*, PWSTR*, uint, ISyncMgrSyncCallback*);
+    HRESULT CreateSession(const(wchar)*, const(wchar)**, uint, ISyncMgrSyncCallback*);
 }
 enum IID_ISyncMgrSyncCallback = GUID(0x884ccd87, 0xb139, 0x4937, [0xa4, 0xba, 0x4f, 0x8e, 0x19, 0x51, 0x3f, 0xbe]);
 interface ISyncMgrSyncCallback : IUnknown
@@ -10094,10 +10095,10 @@ enum IID_ISyncMgrControl = GUID(0x9b63616c, 0x36b2, 0x46bc, [0x95, 0x9f, 0xc1, 0
 interface ISyncMgrControl : IUnknown
 {
     HRESULT StartHandlerSync(const(wchar)*, HWND, IUnknown, SYNCMGR_SYNC_CONTROL_FLAGS, ISyncMgrSyncResult);
-    HRESULT StartItemSync(const(wchar)*, PWSTR*, uint, HWND, IUnknown, SYNCMGR_SYNC_CONTROL_FLAGS, ISyncMgrSyncResult);
+    HRESULT StartItemSync(const(wchar)*, const(wchar)**, uint, HWND, IUnknown, SYNCMGR_SYNC_CONTROL_FLAGS, ISyncMgrSyncResult);
     HRESULT StartSyncAll(HWND);
     HRESULT StopHandlerSync(const(wchar)*);
-    HRESULT StopItemSync(const(wchar)*, PWSTR*, uint);
+    HRESULT StopItemSync(const(wchar)*, const(wchar)**, uint);
     HRESULT StopSyncAll();
     HRESULT UpdateHandlerCollection(const(GUID)*, SYNCMGR_CONTROL_FLAGS);
     HRESULT UpdateHandler(const(wchar)*, SYNCMGR_CONTROL_FLAGS);
@@ -10732,8 +10733,8 @@ enum : int
     HLINKGETREF_RELATIVE = 0x00000002,
 }
 
-alias HLFNAMEF = uint;
-enum : uint
+alias HLFNAMEF = int;
+enum : int
 {
     HLFNAMEF_DEFAULT          = 0x00000000,
     HLFNAMEF_TRYCACHE         = 0x00000001,
@@ -10834,8 +10835,8 @@ struct HLTBINFO
     uint uDockType;
     RECT rcTbPos;
 }
-alias HLBWIF_FLAGS = uint;
-enum : uint
+alias HLBWIF_FLAGS = int;
+enum : int
 {
     HLBWIF_HASFRAMEWNDINFO   = 0x00000001,
     HLBWIF_HASDOCWNDINFO     = 0x00000002,
@@ -10986,7 +10987,7 @@ interface IBrowserService : IUnknown
     HRESULT GetSetCodePage(VARIANT*, VARIANT*);
     HRESULT OnHttpEquiv(IShellView, BOOL, VARIANT*, VARIANT*);
     HRESULT GetPalette(HPALETTE*);
-    HRESULT RegisterWindow(BOOL, int);
+    HRESULT RegisterWindow(BOOL, ShellWindowTypeConstants);
 }
 enum IID_IShellService = GUID(0x5836fb00, 0x8187, 0x11cf, [0xa1, 0x2b, 0x0, 0xaa, 0x0, 0x4a, 0xe8, 0x37]);
 interface IShellService : IUnknown

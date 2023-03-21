@@ -5278,8 +5278,8 @@ enum : int
     TAP_ZORDER             = 0x00000005,
 }
 
-alias TA_PROPERTY_FLAG = uint;
-enum : uint
+alias TA_PROPERTY_FLAG = int;
+enum : int
 {
     TAPF_NONE            = 0x00000000,
     TAPF_HASSTAGGER      = 0x00000001,
@@ -6281,6 +6281,13 @@ enum : int
     MENU_SYSTEMMAXIMIZE           = 0x00000012,
     MENU_SYSTEMMINIMIZE           = 0x00000013,
     MENU_SYSTEMRESTORE            = 0x00000014,
+    MENU_POPUPSUBMENU_HCHOT       = 0x00000015,
+    MENU_SYSTEMCLOSE_HCHOT        = 0x00000016,
+    MENU_SYSTEMMAXIMIZE_HCHOT     = 0x00000017,
+    MENU_SYSTEMMINIMIZE_HCHOT     = 0x00000018,
+    MENU_SYSTEMRESTORE_HCHOT      = 0x00000019,
+    MENU_POPUPITEMKBFOCUS         = 0x0000001a,
+    MENU_POPUPITEM_FOCUSABLE      = 0x0000001b,
 }
 
 alias BARBACKGROUNDSTATES = int;
@@ -6360,6 +6367,52 @@ enum : int
 {
     MSYSR_NORMAL   = 0x00000001,
     MSYSR_DISABLED = 0x00000002,
+}
+
+/+ [UNSUPPORTED] alias MENU_POPUPSUBMENU_HCHOT = int;
+enum : int
+{
+    MSMHC_HOT = 0x00000001,
+}
+
++/
+alias SYSTEMCLOSEHCHOTSTATES = int;
+enum : int
+{
+    MSYSCHC_HOT = 0x00000001,
+}
+
+alias SYSTEMMAXIMIZEHCHOTSTATES = int;
+enum : int
+{
+    MSYSMXHC_HOT = 0x00000001,
+}
+
+alias SYSTEMMINIMIZEHCHOTSTATES = int;
+enum : int
+{
+    MSYSMNHC_HOT = 0x00000001,
+}
+
+alias SYSTEMRESTOREHCHOTSTATES = int;
+enum : int
+{
+    MSYSRHC_HOT = 0x00000001,
+}
+
+alias POPUPITEMKBFOCUSSTATES = int;
+enum : int
+{
+    MPIKBFOCUS_NORMAL = 0x00000001,
+}
+
+alias POPUPITEMFOCUSABLESTATES = int;
+enum : int
+{
+    MPIF_NORMAL      = 0x00000001,
+    MPIF_HOT         = 0x00000002,
+    MPIF_DISABLED    = 0x00000003,
+    MPIF_DISABLEDHOT = 0x00000004,
 }
 
 alias NAVIGATIONPARTS = int;

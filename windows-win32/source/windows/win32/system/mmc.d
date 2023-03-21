@@ -230,11 +230,11 @@ interface Frame : IDispatch
 enum IID_Node = GUID(0xf81ed800, 0x7839, 0x4447, [0x94, 0x5d, 0x8e, 0x15, 0xda, 0x59, 0xca, 0x55]);
 interface Node : IDispatch
 {
-    HRESULT get_Name(ushort**);
-    HRESULT get_Property(BSTR, ushort**);
-    HRESULT get_Bookmark(ushort**);
+    HRESULT get_Name(BSTR*);
+    HRESULT get_Property(BSTR, BSTR*);
+    HRESULT get_Bookmark(BSTR*);
     HRESULT IsScopeNode(BOOL*);
-    HRESULT get_Nodetype(ushort**);
+    HRESULT get_Nodetype(BSTR*);
 }
 enum IID_ScopeNamespace = GUID(0xebbb48dc, 0x1a3b, 0x4d86, [0xb7, 0x86, 0xc2, 0x1b, 0x28, 0x38, 0x90, 0x12]);
 interface ScopeNamespace : IDispatch
@@ -254,9 +254,9 @@ interface Document : IDispatch
     HRESULT get_Views(Views*);
     HRESULT get_SnapIns(SnapIns*);
     HRESULT get_ActiveView(View*);
-    HRESULT get_Name(ushort**);
+    HRESULT get_Name(BSTR*);
     HRESULT put_Name(BSTR);
-    HRESULT get_Location(ushort**);
+    HRESULT get_Location(BSTR*);
     HRESULT get_IsSaved(BOOL*);
     HRESULT get_Mode(_DocumentMode*);
     HRESULT put_Mode(_DocumentMode);
@@ -268,11 +268,11 @@ interface Document : IDispatch
 enum IID_SnapIn = GUID(0x3be910f6, 0x3459, 0x49c6, [0xa1, 0xbb, 0x41, 0xe6, 0xbe, 0x9d, 0xf3, 0xea]);
 interface SnapIn : IDispatch
 {
-    HRESULT get_Name(ushort**);
-    HRESULT get_Vendor(ushort**);
-    HRESULT get_Version(ushort**);
+    HRESULT get_Name(BSTR*);
+    HRESULT get_Vendor(BSTR*);
+    HRESULT get_Version(BSTR*);
     HRESULT get_Extensions(Extensions*);
-    HRESULT get_SnapinCLSID(ushort**);
+    HRESULT get_SnapinCLSID(BSTR*);
     HRESULT get_Properties(Properties*);
     HRESULT EnableAllExtensions(BOOL);
 }
@@ -288,11 +288,11 @@ interface SnapIns : IDispatch
 enum IID_Extension = GUID(0xad4d6ca6, 0x912f, 0x409b, [0xa2, 0x6e, 0x7f, 0xd2, 0x34, 0xae, 0xf5, 0x42]);
 interface Extension : IDispatch
 {
-    HRESULT get_Name(ushort**);
-    HRESULT get_Vendor(ushort**);
-    HRESULT get_Version(ushort**);
+    HRESULT get_Name(BSTR*);
+    HRESULT get_Vendor(BSTR*);
+    HRESULT get_Version(BSTR*);
     HRESULT get_Extensions(Extensions*);
-    HRESULT get_SnapinCLSID(ushort**);
+    HRESULT get_SnapinCLSID(BSTR*);
     HRESULT EnableAllExtensions(BOOL);
     HRESULT Enable(BOOL);
 }
@@ -375,10 +375,10 @@ interface View : IDispatch
     HRESULT Back();
     HRESULT Forward();
     HRESULT put_StatusBarText(BSTR);
-    HRESULT get_Memento(ushort**);
+    HRESULT get_Memento(BSTR*);
     HRESULT ViewMemento(BSTR);
     HRESULT get_Columns(Columns*);
-    HRESULT get_CellContents(Node, int, ushort**);
+    HRESULT get_CellContents(Node, int, BSTR*);
     HRESULT ExportList(BSTR, _ExportListOptions);
     HRESULT get_ListViewMode(_ListViewMode*);
     HRESULT put_ListViewMode(_ListViewMode);
@@ -401,10 +401,10 @@ interface ContextMenu : IDispatch
 enum IID_MenuItem = GUID(0x178fad1, 0xb361, 0x4b27, [0x96, 0xad, 0x67, 0xc5, 0x7e, 0xbf, 0x2e, 0x1d]);
 interface MenuItem : IDispatch
 {
-    HRESULT get_DisplayName(ushort**);
-    HRESULT get_LanguageIndependentName(ushort**);
-    HRESULT get_Path(ushort**);
-    HRESULT get_LanguageIndependentPath(ushort**);
+    HRESULT get_DisplayName(BSTR*);
+    HRESULT get_LanguageIndependentName(BSTR*);
+    HRESULT get_Path(BSTR*);
+    HRESULT get_LanguageIndependentPath(BSTR*);
     HRESULT Execute();
     HRESULT get_Enabled(BOOL*);
 }
@@ -421,7 +421,7 @@ interface Property : IDispatch
 {
     HRESULT get_Value(VARIANT*);
     HRESULT put_Value(VARIANT);
-    HRESULT get_Name(ushort**);
+    HRESULT get_Name(BSTR*);
 }
 enum CLSID_MMCVersionInfo = GUID(0xd6fedb1d, 0xcf21, 0x4bd9, [0xaf, 0x3b, 0xc5, 0x46, 0x8e, 0x9c, 0x66, 0x84]);
 struct MMCVersionInfo
@@ -1187,7 +1187,7 @@ interface IConsolePowerSink : IUnknown
 enum IID_INodeProperties = GUID(0x15bc4d24, 0xa522, 0x4406, [0xaa, 0x55, 0x7, 0x49, 0x53, 0x7a, 0x68, 0x65]);
 interface INodeProperties : IUnknown
 {
-    HRESULT GetProperty(IDataObject, BSTR, ushort**);
+    HRESULT GetProperty(IDataObject, BSTR, BSTR*);
 }
 enum IID_IConsole3 = GUID(0x4f85efdb, 0xd0e1, 0x498c, [0x8d, 0x4a, 0xd0, 0x10, 0xdf, 0xdd, 0x40, 0x4f]);
 interface IConsole3 : IConsole2

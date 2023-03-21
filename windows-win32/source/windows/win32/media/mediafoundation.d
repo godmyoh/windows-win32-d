@@ -1,9 +1,9 @@
 module windows.win32.media.mediafoundation;
 
 import windows.win32.guid : GUID;
-import windows.win32.devices.properties : DEVPROPKEY;
+import windows.win32.devices.properties : DEVPROPKEY, DEVPROPTYPE;
 import windows.win32.foundation : BOOL, BSTR, COLORREF, FILETIME, HANDLE, HRESULT, HWND, LUID, POINT, PSTR, PWSTR, RECT, SIZE, VARIANT_BOOL;
-import windows.win32.graphics.direct3d12 : D3D12_COMMAND_LIST_SUPPORT_FLAGS, D3D12_DISCARD_REGION, D3D12_PREDICATION_OP, D3D12_QUERY_TYPE, D3D12_RESOURCE_BARRIER, D3D12_WRITEBUFFERIMMEDIATE_MODE, D3D12_WRITEBUFFERIMMEDIATE_PARAMETER, ID3D12CommandAllocator, ID3D12CommandList, ID3D12CommandQueue, ID3D12Device, ID3D12Pageable, ID3D12ProtectedResourceSession, ID3D12QueryHeap, ID3D12Resource;
+import windows.win32.graphics.direct3d12 : D3D12_BARRIER_GROUP, D3D12_COMMAND_LIST_SUPPORT_FLAGS, D3D12_DISCARD_REGION, D3D12_PREDICATION_OP, D3D12_QUERY_TYPE, D3D12_RESOURCE_BARRIER, D3D12_WRITEBUFFERIMMEDIATE_MODE, D3D12_WRITEBUFFERIMMEDIATE_PARAMETER, ID3D12CommandAllocator, ID3D12CommandList, ID3D12CommandQueue, ID3D12Device, ID3D12Pageable, ID3D12ProtectedResourceSession, ID3D12QueryHeap, ID3D12Resource;
 import windows.win32.graphics.direct3d9 : D3DAUTHENTICATEDCHANNELTYPE, D3DAUTHENTICATEDCHANNEL_CONFIGURE_OUTPUT, D3DDEVTYPE, D3DDISPLAYMODEEX, D3DDISPLAYROTATION, D3DENCRYPTED_BLOCK_INFO, D3DFORMAT, D3DPOOL, IDirect3DDevice9, IDirect3DDevice9Ex, IDirect3DSurface9;
 import windows.win32.graphics.dxgi.common : DXGI_COLOR_SPACE_TYPE, DXGI_FORMAT, DXGI_RATIONAL;
 import windows.win32.graphics.gdi : BITMAPINFOHEADER, HDC, HMONITOR;
@@ -37,15 +37,6 @@ enum : uint
     AMMPEG2_DVB_UserData        = 0x00000080,
     AMMPEG2_27MhzTimebase       = 0x00000100,
     AMMPEG2_WidescreenAnalogOut = 0x00000200,
-}
-
-alias MF_Plugin_Type = int;
-enum : int
-{
-    MF_Plugin_Type_MFT                 = 0x00000000,
-    MF_Plugin_Type_MediaSource         = 0x00000001,
-    MF_Plugin_Type_MFT_MatchOutputType = 0x00000002,
-    MF_Plugin_Type_Other               = 0xffffffff,
 }
 
 HRESULT DXVAHD_CreateDevice(IDirect3DDevice9Ex, const(DXVAHD_CONTENT_DESC)*, DXVAHD_DEVICE_USAGE, PDXVAHDSW_Plugin, IDXVAHD_Device*);
@@ -290,6 +281,7 @@ HRESULT MFIsVirtualCameraTypeSupported(MFVirtualCameraType, BOOL*);
 HRESULT OPMXboxEnableHDCP(OPM_HDCP_TYPE);
 HRESULT OPMXboxGetHDCPStatus(OPM_HDCP_STATUS*);
 HRESULT OPMXboxGetHDCPStatusAndType(OPM_HDCP_STATUS*, OPM_HDCP_TYPE*);
+enum MF_VERSION = 0x00020070;
 enum MEDIASUBTYPE_None = GUID(0xe436eb8e, 0x524f, 0x11ce, [0x9f, 0x53, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 enum MEDIATYPE_Video = GUID(0x73646976, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIATYPE_Audio = GUID(0x73647561, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
@@ -399,7 +391,6 @@ enum MEDIASUBTYPE_PCM = GUID(0x1, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0
 enum MEDIASUBTYPE_WAVE = GUID(0xe436eb8b, 0x524f, 0x11ce, [0x9f, 0x53, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 enum MEDIASUBTYPE_AU = GUID(0xe436eb8c, 0x524f, 0x11ce, [0x9f, 0x53, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 enum MEDIASUBTYPE_AIFF = GUID(0xe436eb8d, 0x524f, 0x11ce, [0x9f, 0x53, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
-enum MEDIASUBTYPE_dvsd = GUID(0x64737664, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIASUBTYPE_dvhd = GUID(0x64687664, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIASUBTYPE_dvsl = GUID(0x6c737664, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIASUBTYPE_dv25 = GUID(0x35327664, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
@@ -1322,33 +1313,19 @@ enum MEDIASUBTYPE_V410 = GUID(0x30313456, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0,
 enum MEDIASUBTYPE_v210 = GUID(0x30313276, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIASUBTYPE_I420 = GUID(0x30323449, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIASUBTYPE_WVC1 = GUID(0x31435657, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
-enum MEDIASUBTYPE_wvc1 = GUID(0x31637677, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIASUBTYPE_WMVA = GUID(0x41564d57, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
-enum MEDIASUBTYPE_wmva = GUID(0x61766d77, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIASUBTYPE_WMVB = GUID(0x42564d57, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
-enum MEDIASUBTYPE_wmvb = GUID(0x62766d77, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIASUBTYPE_WMVR = GUID(0x52564d57, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
-enum MEDIASUBTYPE_wmvr = GUID(0x72766d77, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIASUBTYPE_WMVP = GUID(0x50564d57, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
-enum MEDIASUBTYPE_wmvp = GUID(0x70766d77, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIASUBTYPE_WVP2 = GUID(0x32505657, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
-enum MEDIASUBTYPE_wvp2 = GUID(0x32707677, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIASUBTYPE_WMV3 = GUID(0x33564d57, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
-enum MEDIASUBTYPE_wmv3 = GUID(0x33766d77, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIASUBTYPE_WMV2 = GUID(0x32564d57, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
-enum MEDIASUBTYPE_wmv2 = GUID(0x32766d77, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIASUBTYPE_WMV1 = GUID(0x31564d57, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
-enum MEDIASUBTYPE_wmv1 = GUID(0x31766d77, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIASUBTYPE_MPG4 = GUID(0x3447504d, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
-enum MEDIASUBTYPE_mpg4 = GUID(0x3467706d, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIASUBTYPE_MP42 = GUID(0x3234504d, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
-enum MEDIASUBTYPE_mp42 = GUID(0x3234706d, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIASUBTYPE_MP43 = GUID(0x3334504d, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
-enum MEDIASUBTYPE_mp43 = GUID(0x3334706d, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIASUBTYPE_MP4S = GUID(0x5334504d, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
-enum MEDIASUBTYPE_mp4s = GUID(0x7334706d, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIASUBTYPE_M4S2 = GUID(0x3253344d, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
-enum MEDIASUBTYPE_m4s2 = GUID(0x3273346d, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIASUBTYPE_MSS1 = GUID(0x3153534d, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIASUBTYPE_MSS2 = GUID(0x3253534d, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIASUBTYPE_MSAUDIO1 = GUID(0x160, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
@@ -1372,10 +1349,8 @@ enum MEDIASUBTYPE_DOLBY_DDPLUS = GUID(0xa7fb87af, 0x2d02, 0x42fb, [0xa4, 0xd4, 0
 enum MEDIASUBTYPE_DOLBY_TRUEHD = GUID(0xeb27cec4, 0x163e, 0x4ca3, [0x8b, 0x74, 0x8e, 0x25, 0xf9, 0x1b, 0x51, 0x7e]);
 enum MEDIASUBTYPE_DTS_HD = GUID(0xa2e58eb7, 0xfa9, 0x48bb, [0xa4, 0xc, 0xfa, 0xe, 0x15, 0x6d, 0x6, 0x45]);
 enum MEDIASUBTYPE_DTS_HD_HRA = GUID(0xa61ac364, 0xad0e, 0x4744, [0x89, 0xff, 0x21, 0x3c, 0xe0, 0xdf, 0x88, 0x4]);
-enum MEDIASUBTYPE_h264 = GUID(0x34363268, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIASUBTYPE_AVC1 = GUID(0x31435641, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MEDIASUBTYPE_X264 = GUID(0x34363258, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
-enum MEDIASUBTYPE_x264 = GUID(0x34363278, 0x0, 0x10, [0x80, 0x0, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum MF_VIDEODSP_MODE = GUID(0x16d720f0, 0x768c, 0x11de, [0x8a, 0x39, 0x8, 0x0, 0x20, 0xc, 0x9a, 0x66]);
 enum MFSampleExtension_VideoDSPMode = GUID(0xc12d55cb, 0xd7d9, 0x476d, [0x81, 0xf3, 0x69, 0x11, 0x7f, 0x16, 0x3e, 0xa0]);
 enum CLSID_CTocEntry = GUID(0xf22f5e05, 0x585c, 0x4def, [0x85, 0x23, 0x65, 0x55, 0xcf, 0xbc, 0xc, 0xb3]);
@@ -1761,6 +1736,8 @@ enum MF_QUOTA_EXCEEDED_ERR = 0x80700016;
 enum MF_PARSE_ERR = 0x80700051;
 enum MF_TYPE_ERR = 0x80704005;
 //enum DEVPKEY_DeviceInterface_IsVirtualCamera = [MISSING];
+//enum DEVPKEY_DeviceInterface_IsWindowsCameraEffectAvailable = [MISSING];
+//enum DEVPKEY_DeviceInterface_VirtualCameraAssociatedCameras = [MISSING];
 enum g_wszSpeechFormatCaps = "SpeechFormatCap";
 enum g_wszWMCPCodecName = "_CODECNAME";
 enum g_wszWMCPSupportedVBRModes = "_SUPPORTEDVBRMODES";
@@ -2170,6 +2147,8 @@ enum MF_DEVICESTREAM_REQUIRED_CAPABILITIES = GUID(0x6d8b957e, 0x7cf6, 0x43f4, [0
 enum MF_DEVICESTREAM_REQUIRED_SDDL = GUID(0x331ae85d, 0xc0d3, 0x49ba, [0x83, 0xba, 0x82, 0xa1, 0x2d, 0x63, 0xcd, 0xd6]);
 enum MF_DEVICEMFT_SENSORPROFILE_COLLECTION = GUID(0x36ebdc44, 0xb12c, 0x441b, [0x89, 0xf4, 0x8, 0xb2, 0xf4, 0x1a, 0x9c, 0xfc]);
 enum MF_DEVICESTREAM_SENSORSTREAM_ID = GUID(0xe35b9fe4, 0x659, 0x4cad, [0xbb, 0x51, 0x33, 0x16, 0xb, 0xe7, 0xe4, 0x13]);
+enum KSPROPERTYSETID_ANYCAMERACONTROL = GUID(0x94dd0c30, 0x28c7, 0x4efb, [0x9d, 0x6b, 0x81, 0x23, 0x0, 0xfb, 0xc, 0x7f]);
+enum CLSID_CameraConfigurationManager = GUID(0x6c92b540, 0x5854, 0x4a17, [0x92, 0xb6, 0xac, 0x89, 0xc9, 0x6e, 0x96, 0x83]);
 enum MF_PD_ASF_FILEPROPERTIES_FILE_ID = GUID(0x3de649b4, 0xd76d, 0x4e66, [0x9e, 0xc9, 0x78, 0x12, 0xf, 0xb4, 0xc7, 0xe3]);
 enum MF_PD_ASF_FILEPROPERTIES_CREATION_TIME = GUID(0x3de649b6, 0xd76d, 0x4e66, [0x9e, 0xc9, 0x78, 0x12, 0xf, 0xb4, 0xc7, 0xe3]);
 enum MF_PD_ASF_FILEPROPERTIES_PACKETS = GUID(0x3de649b7, 0xd76d, 0x4e66, [0x9e, 0xc9, 0x78, 0x12, 0xf, 0xb4, 0xc7, 0xe3]);
@@ -2354,6 +2333,9 @@ enum CLSID_PlayToSourceClassFactory = GUID(0xda17539a, 0x3dc3, 0x42c1, [0xa7, 0x
 enum GUID_PlayToService = GUID(0xf6a8ff9d, 0x9e14, 0x41c9, [0xbf, 0xf, 0x12, 0xa, 0x2b, 0x3c, 0xe1, 0x20]);
 enum GUID_NativeDeviceService = GUID(0xef71e53c, 0x52f4, 0x43c5, [0xb8, 0x6a, 0xad, 0x6c, 0xb2, 0x16, 0xa6, 0x1e]);
 enum MF_CONTENTDECRYPTIONMODULE_SERVICE = GUID(0x15320c45, 0xff80, 0x484a, [0x9d, 0xcb, 0xd, 0xf8, 0x94, 0xe6, 0x9a, 0x1]);
+enum MF_DEVSOURCE_ATTRIBUTE_ENABLE_MS_CAMERA_EFFECTS = GUID(0x28a5531a, 0x57dd, 0x4fd5, [0xaa, 0xa7, 0x38, 0x5a, 0xbf, 0x57, 0xd7, 0x85]);
+enum MF_VIRTUALCAMERA_ASSOCIATED_CAMERA_SOURCES = GUID(0x1bb79e7c, 0x5d83, 0x438c, [0x94, 0xd8, 0xe5, 0xf0, 0xdf, 0x6d, 0x32, 0x79]);
+enum MF_VIRTUALCAMERA_PROVIDE_ASSOCIATED_CAMERA_SOURCES = GUID(0xf0273718, 0x4a4d, 0x4ac5, [0xa1, 0x5d, 0x30, 0x5e, 0xb5, 0xe9, 0x6, 0x67]);
 enum MF_VIRTUALCAMERA_CONFIGURATION_APP_PACKAGE_FAMILY_NAME = GUID(0x658abe51, 0x8044, 0x462e, [0x97, 0xea, 0xe6, 0x76, 0xfd, 0x72, 0x5, 0x5f]);
 enum MF_FRAMESERVER_VCAMEVENT_EXTENDED_SOURCE_INITIALIZE = GUID(0xe52c4dff, 0xe46d, 0x4d0b, [0xbc, 0x75, 0xdd, 0xd4, 0xc8, 0x72, 0x3f, 0x96]);
 enum MF_FRAMESERVER_VCAMEVENT_EXTENDED_SOURCE_START = GUID(0xb1eeb989, 0xb456, 0x4f4a, [0xae, 0x40, 0x7, 0x9c, 0x28, 0xe2, 0x4a, 0xf8]);
@@ -2361,6 +2343,15 @@ enum MF_FRAMESERVER_VCAMEVENT_EXTENDED_SOURCE_STOP = GUID(0xb7fe7a61, 0xfe91, 0x
 enum MF_FRAMESERVER_VCAMEVENT_EXTENDED_SOURCE_UNINITIALIZE = GUID(0xa0ebaba7, 0xa422, 0x4e33, [0x84, 0x1, 0xb3, 0x7d, 0x28, 0x0, 0xaa, 0x67]);
 enum MF_FRAMESERVER_VCAMEVENT_EXTENDED_PIPELINE_SHUTDOWN = GUID(0x45a81b31, 0x43f8, 0x4e5d, [0x8c, 0xe2, 0x22, 0xdc, 0xe0, 0x26, 0x99, 0x6d]);
 enum MF_FRAMESERVER_VCAMEVENT_EXTENDED_CUSTOM_EVENT = GUID(0x6e59489c, 0x47d3, 0x4467, [0x83, 0xef, 0x12, 0xd3, 0x4e, 0x87, 0x16, 0x65]);
+alias MF_Plugin_Type = int;
+enum : int
+{
+    MF_Plugin_Type_MFT                 = 0x00000000,
+    MF_Plugin_Type_MediaSource         = 0x00000001,
+    MF_Plugin_Type_MFT_MatchOutputType = 0x00000002,
+    MF_Plugin_Type_Other               = 0xffffffff,
+}
+
 struct AM_MEDIA_TYPE
 {
     GUID majortype;
@@ -2576,33 +2567,46 @@ enum : int
 alias D3D12_FEATURE_VIDEO = int;
 enum : int
 {
-    D3D12_FEATURE_VIDEO_DECODE_SUPPORT                       = 0x00000000,
-    D3D12_FEATURE_VIDEO_DECODE_PROFILES                      = 0x00000001,
-    D3D12_FEATURE_VIDEO_DECODE_FORMATS                       = 0x00000002,
-    D3D12_FEATURE_VIDEO_DECODE_CONVERSION_SUPPORT            = 0x00000003,
-    D3D12_FEATURE_VIDEO_PROCESS_SUPPORT                      = 0x00000005,
-    D3D12_FEATURE_VIDEO_PROCESS_MAX_INPUT_STREAMS            = 0x00000006,
-    D3D12_FEATURE_VIDEO_PROCESS_REFERENCE_INFO               = 0x00000007,
-    D3D12_FEATURE_VIDEO_DECODER_HEAP_SIZE                    = 0x00000008,
-    D3D12_FEATURE_VIDEO_PROCESSOR_SIZE                       = 0x00000009,
-    D3D12_FEATURE_VIDEO_DECODE_PROFILE_COUNT                 = 0x0000000a,
-    D3D12_FEATURE_VIDEO_DECODE_FORMAT_COUNT                  = 0x0000000b,
-    D3D12_FEATURE_VIDEO_ARCHITECTURE                         = 0x00000011,
-    D3D12_FEATURE_VIDEO_DECODE_HISTOGRAM                     = 0x00000012,
-    D3D12_FEATURE_VIDEO_FEATURE_AREA_SUPPORT                 = 0x00000013,
-    D3D12_FEATURE_VIDEO_MOTION_ESTIMATOR                     = 0x00000014,
-    D3D12_FEATURE_VIDEO_MOTION_ESTIMATOR_SIZE                = 0x00000015,
-    D3D12_FEATURE_VIDEO_EXTENSION_COMMAND_COUNT              = 0x00000016,
-    D3D12_FEATURE_VIDEO_EXTENSION_COMMANDS                   = 0x00000017,
-    D3D12_FEATURE_VIDEO_EXTENSION_COMMAND_PARAMETER_COUNT    = 0x00000018,
-    D3D12_FEATURE_VIDEO_EXTENSION_COMMAND_PARAMETERS         = 0x00000019,
-    D3D12_FEATURE_VIDEO_EXTENSION_COMMAND_SUPPORT            = 0x0000001a,
-    D3D12_FEATURE_VIDEO_EXTENSION_COMMAND_SIZE               = 0x0000001b,
-    D3D12_FEATURE_VIDEO_DECODE_PROTECTED_RESOURCES           = 0x0000001c,
-    D3D12_FEATURE_VIDEO_PROCESS_PROTECTED_RESOURCES          = 0x0000001d,
-    D3D12_FEATURE_VIDEO_MOTION_ESTIMATOR_PROTECTED_RESOURCES = 0x0000001e,
-    D3D12_FEATURE_VIDEO_DECODER_HEAP_SIZE1                   = 0x0000001f,
-    D3D12_FEATURE_VIDEO_PROCESSOR_SIZE1                      = 0x00000020,
+    D3D12_FEATURE_VIDEO_DECODE_SUPPORT                         = 0x00000000,
+    D3D12_FEATURE_VIDEO_DECODE_PROFILES                        = 0x00000001,
+    D3D12_FEATURE_VIDEO_DECODE_FORMATS                         = 0x00000002,
+    D3D12_FEATURE_VIDEO_DECODE_CONVERSION_SUPPORT              = 0x00000003,
+    D3D12_FEATURE_VIDEO_PROCESS_SUPPORT                        = 0x00000005,
+    D3D12_FEATURE_VIDEO_PROCESS_MAX_INPUT_STREAMS              = 0x00000006,
+    D3D12_FEATURE_VIDEO_PROCESS_REFERENCE_INFO                 = 0x00000007,
+    D3D12_FEATURE_VIDEO_DECODER_HEAP_SIZE                      = 0x00000008,
+    D3D12_FEATURE_VIDEO_PROCESSOR_SIZE                         = 0x00000009,
+    D3D12_FEATURE_VIDEO_DECODE_PROFILE_COUNT                   = 0x0000000a,
+    D3D12_FEATURE_VIDEO_DECODE_FORMAT_COUNT                    = 0x0000000b,
+    D3D12_FEATURE_VIDEO_ARCHITECTURE                           = 0x00000011,
+    D3D12_FEATURE_VIDEO_DECODE_HISTOGRAM                       = 0x00000012,
+    D3D12_FEATURE_VIDEO_FEATURE_AREA_SUPPORT                   = 0x00000013,
+    D3D12_FEATURE_VIDEO_MOTION_ESTIMATOR                       = 0x00000014,
+    D3D12_FEATURE_VIDEO_MOTION_ESTIMATOR_SIZE                  = 0x00000015,
+    D3D12_FEATURE_VIDEO_EXTENSION_COMMAND_COUNT                = 0x00000016,
+    D3D12_FEATURE_VIDEO_EXTENSION_COMMANDS                     = 0x00000017,
+    D3D12_FEATURE_VIDEO_EXTENSION_COMMAND_PARAMETER_COUNT      = 0x00000018,
+    D3D12_FEATURE_VIDEO_EXTENSION_COMMAND_PARAMETERS           = 0x00000019,
+    D3D12_FEATURE_VIDEO_EXTENSION_COMMAND_SUPPORT              = 0x0000001a,
+    D3D12_FEATURE_VIDEO_EXTENSION_COMMAND_SIZE                 = 0x0000001b,
+    D3D12_FEATURE_VIDEO_DECODE_PROTECTED_RESOURCES             = 0x0000001c,
+    D3D12_FEATURE_VIDEO_PROCESS_PROTECTED_RESOURCES            = 0x0000001d,
+    D3D12_FEATURE_VIDEO_MOTION_ESTIMATOR_PROTECTED_RESOURCES   = 0x0000001e,
+    D3D12_FEATURE_VIDEO_DECODER_HEAP_SIZE1                     = 0x0000001f,
+    D3D12_FEATURE_VIDEO_PROCESSOR_SIZE1                        = 0x00000020,
+    D3D12_FEATURE_VIDEO_ENCODER_CODEC                          = 0x00000021,
+    D3D12_FEATURE_VIDEO_ENCODER_PROFILE_LEVEL                  = 0x00000022,
+    D3D12_FEATURE_VIDEO_ENCODER_OUTPUT_RESOLUTION_RATIOS_COUNT = 0x00000023,
+    D3D12_FEATURE_VIDEO_ENCODER_OUTPUT_RESOLUTION              = 0x00000024,
+    D3D12_FEATURE_VIDEO_ENCODER_INPUT_FORMAT                   = 0x00000025,
+    D3D12_FEATURE_VIDEO_ENCODER_RATE_CONTROL_MODE              = 0x00000026,
+    D3D12_FEATURE_VIDEO_ENCODER_INTRA_REFRESH_MODE             = 0x00000027,
+    D3D12_FEATURE_VIDEO_ENCODER_FRAME_SUBREGION_LAYOUT_MODE    = 0x00000028,
+    D3D12_FEATURE_VIDEO_ENCODER_HEAP_SIZE                      = 0x00000029,
+    D3D12_FEATURE_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT    = 0x0000002a,
+    D3D12_FEATURE_VIDEO_ENCODER_SUPPORT                        = 0x0000002b,
+    D3D12_FEATURE_VIDEO_ENCODER_CODEC_PICTURE_CONTROL_SUPPORT  = 0x0000002c,
+    D3D12_FEATURE_VIDEO_ENCODER_RESOURCE_REQUIREMENTS          = 0x0000002d,
 }
 
 alias D3D12_BITSTREAM_ENCRYPTION_TYPE = int;
@@ -2653,8 +2657,8 @@ enum : int
     D3D12_VIDEO_PROCESS_FILTER_STEREO_ADJUSTMENT  = 0x00000007,
 }
 
-alias D3D12_VIDEO_PROCESS_FILTER_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_PROCESS_FILTER_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_PROCESS_FILTER_FLAG_NONE               = 0x00000000,
     D3D12_VIDEO_PROCESS_FILTER_FLAG_BRIGHTNESS         = 0x00000001,
@@ -2752,15 +2756,15 @@ enum : int
     D3D12_VIDEO_DECODE_TIER_3             = 0x00000003,
 }
 
-alias D3D12_VIDEO_DECODE_SUPPORT_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_DECODE_SUPPORT_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_DECODE_SUPPORT_FLAG_NONE      = 0x00000000,
     D3D12_VIDEO_DECODE_SUPPORT_FLAG_SUPPORTED = 0x00000001,
 }
 
-alias D3D12_VIDEO_DECODE_CONFIGURATION_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_DECODE_CONFIGURATION_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_DECODE_CONFIGURATION_FLAG_NONE                                     = 0x00000000,
     D3D12_VIDEO_DECODE_CONFIGURATION_FLAG_HEIGHT_ALIGNMENT_MULTIPLE_32_REQUIRED    = 0x00000001,
@@ -2841,8 +2845,8 @@ enum : int
     D3D12_VIDEO_DECODE_HISTOGRAM_COMPONENT_A = 0x00000003,
 }
 
-alias D3D12_VIDEO_DECODE_HISTOGRAM_COMPONENT_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_DECODE_HISTOGRAM_COMPONENT_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_DECODE_HISTOGRAM_COMPONENT_FLAG_NONE = 0x00000000,
     D3D12_VIDEO_DECODE_HISTOGRAM_COMPONENT_FLAG_Y    = 0x00000001,
@@ -2865,15 +2869,15 @@ struct D3D12_FEATURE_DATA_VIDEO_DECODE_HISTOGRAM
     uint BinCount;
     uint CounterBitDepth;
 }
-alias D3D12_VIDEO_DECODE_CONVERSION_SUPPORT_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_DECODE_CONVERSION_SUPPORT_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_DECODE_CONVERSION_SUPPORT_FLAG_NONE      = 0x00000000,
     D3D12_VIDEO_DECODE_CONVERSION_SUPPORT_FLAG_SUPPORTED = 0x00000001,
 }
 
-alias D3D12_VIDEO_SCALE_SUPPORT_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_SCALE_SUPPORT_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_SCALE_SUPPORT_FLAG_NONE                 = 0x00000000,
     D3D12_VIDEO_SCALE_SUPPORT_FLAG_POW2_ONLY            = 0x00000001,
@@ -2967,8 +2971,8 @@ interface ID3D12VideoProcessor : ID3D12Pageable
     HRESULT GetInputStreamDescs(uint, D3D12_VIDEO_PROCESS_INPUT_STREAM_DESC*);
     D3D12_VIDEO_PROCESS_OUTPUT_STREAM_DESC GetOutputStreamDesc();
 }
-alias D3D12_VIDEO_PROCESS_FEATURE_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_PROCESS_FEATURE_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_PROCESS_FEATURE_FLAG_NONE               = 0x00000000,
     D3D12_VIDEO_PROCESS_FEATURE_FLAG_ALPHA_FILL         = 0x00000001,
@@ -3008,8 +3012,8 @@ enum : int
     D3D12_VIDEO_PROCESS_ORIENTATION_CLOCKWISE_270_FLIP_HORIZONTAL = 0x00000007,
 }
 
-alias D3D12_VIDEO_PROCESS_INPUT_STREAM_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_PROCESS_INPUT_STREAM_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_PROCESS_INPUT_STREAM_FLAG_NONE                = 0x00000000,
     D3D12_VIDEO_PROCESS_INPUT_STREAM_FLAG_FRAME_DISCONTINUITY = 0x00000001,
@@ -3023,8 +3027,8 @@ struct D3D12_VIDEO_PROCESS_FILTER_RANGE
     int Default;
     float Multiplier;
 }
-alias D3D12_VIDEO_PROCESS_SUPPORT_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_PROCESS_SUPPORT_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_PROCESS_SUPPORT_FLAG_NONE      = 0x00000000,
     D3D12_VIDEO_PROCESS_SUPPORT_FLAG_SUPPORTED = 0x00000001,
@@ -3195,8 +3199,8 @@ enum : int
     D3D12_VIDEO_MOTION_ESTIMATOR_SEARCH_BLOCK_SIZE_16X16 = 0x00000001,
 }
 
-alias D3D12_VIDEO_MOTION_ESTIMATOR_SEARCH_BLOCK_SIZE_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_MOTION_ESTIMATOR_SEARCH_BLOCK_SIZE_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_MOTION_ESTIMATOR_SEARCH_BLOCK_SIZE_FLAG_NONE  = 0x00000000,
     D3D12_VIDEO_MOTION_ESTIMATOR_SEARCH_BLOCK_SIZE_FLAG_8X8   = 0x00000001,
@@ -3209,8 +3213,8 @@ enum : int
     D3D12_VIDEO_MOTION_ESTIMATOR_VECTOR_PRECISION_QUARTER_PEL = 0x00000000,
 }
 
-alias D3D12_VIDEO_MOTION_ESTIMATOR_VECTOR_PRECISION_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_MOTION_ESTIMATOR_VECTOR_PRECISION_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_MOTION_ESTIMATOR_VECTOR_PRECISION_FLAG_NONE        = 0x00000000,
     D3D12_VIDEO_MOTION_ESTIMATOR_VECTOR_PRECISION_FLAG_QUARTER_PEL = 0x00000001,
@@ -3328,8 +3332,8 @@ interface ID3D12VideoEncodeCommandList : ID3D12CommandList
     void WriteBufferImmediate(uint, const(D3D12_WRITEBUFFERIMMEDIATE_PARAMETER)*, const(D3D12_WRITEBUFFERIMMEDIATE_MODE)*);
     void SetProtectedResourceSession(ID3D12ProtectedResourceSession);
 }
-alias D3D12_VIDEO_PROTECTED_RESOURCE_SUPPORT_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_PROTECTED_RESOURCE_SUPPORT_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_PROTECTED_RESOURCE_SUPPORT_FLAG_NONE      = 0x00000000,
     D3D12_VIDEO_PROTECTED_RESOURCE_SUPPORT_FLAG_SUPPORTED = 0x00000001,
@@ -3396,8 +3400,8 @@ enum : int
     D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_TYPE_RESOURCE = 0x0000000a,
 }
 
-alias D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_FLAG_NONE  = 0x00000000,
     D3D12_VIDEO_EXTENSION_COMMAND_PARAMETER_FLAG_READ  = 0x00000001,
@@ -3501,12 +3505,22 @@ interface ID3D12VideoDecodeCommandList2 : ID3D12VideoDecodeCommandList1
     void InitializeExtensionCommand(ID3D12VideoExtensionCommand, const(void)*, ulong);
     void ExecuteExtensionCommand(ID3D12VideoExtensionCommand, const(void)*, ulong);
 }
+enum IID_ID3D12VideoDecodeCommandList3 = GUID(0x2aee8c37, 0x9562, 0x42da, [0x8a, 0xbf, 0x61, 0xef, 0xeb, 0x2e, 0x45, 0x13]);
+interface ID3D12VideoDecodeCommandList3 : ID3D12VideoDecodeCommandList2
+{
+    void Barrier(uint, const(D3D12_BARRIER_GROUP)*);
+}
 enum IID_ID3D12VideoProcessCommandList2 = GUID(0xdb525ae4, 0x6ad6, 0x473c, [0xba, 0xa7, 0x59, 0xb2, 0xe3, 0x70, 0x82, 0xe4]);
 interface ID3D12VideoProcessCommandList2 : ID3D12VideoProcessCommandList1
 {
     void SetProtectedResourceSession(ID3D12ProtectedResourceSession);
     void InitializeExtensionCommand(ID3D12VideoExtensionCommand, const(void)*, ulong);
     void ExecuteExtensionCommand(ID3D12VideoExtensionCommand, const(void)*, ulong);
+}
+enum IID_ID3D12VideoProcessCommandList3 = GUID(0x1a0a4ca4, 0x9f08, 0x40ce, [0x95, 0x58, 0xb4, 0x11, 0xfd, 0x26, 0x66, 0xff]);
+interface ID3D12VideoProcessCommandList3 : ID3D12VideoProcessCommandList2
+{
+    void Barrier(uint, const(D3D12_BARRIER_GROUP)*);
 }
 enum IID_ID3D12VideoEncodeCommandList1 = GUID(0x94971eca, 0x2bdb, 0x4769, [0x88, 0xcf, 0x36, 0x75, 0xea, 0x75, 0x7e, 0xbc]);
 interface ID3D12VideoEncodeCommandList1 : ID3D12VideoEncodeCommandList
@@ -3524,8 +3538,8 @@ enum : int
     D3D12_VIDEO_ENCODER_RATE_CONTROL_MODE_QVBR            = 0x00000004,
 }
 
-alias D3D12_VIDEO_ENCODER_RATE_CONTROL_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_ENCODER_RATE_CONTROL_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_ENCODER_RATE_CONTROL_FLAG_NONE                  = 0x00000000,
     D3D12_VIDEO_ENCODER_RATE_CONTROL_FLAG_ENABLE_DELTA_QP       = 0x00000001,
@@ -3779,8 +3793,8 @@ struct D3D12_FEATURE_DATA_VIDEO_ENCODER_FRAME_SUBREGION_LAYOUT_MODE
     D3D12_VIDEO_ENCODER_FRAME_SUBREGION_LAYOUT_MODE SubregionMode;
     BOOL IsSupported;
 }
-alias D3D12_VIDEO_ENCODER_HEAP_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_ENCODER_HEAP_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_ENCODER_HEAP_FLAG_NONE = 0x00000000,
 }
@@ -3802,8 +3816,8 @@ struct D3D12_FEATURE_DATA_VIDEO_ENCODER_HEAP_SIZE
     ulong MemoryPoolL0Size;
     ulong MemoryPoolL1Size;
 }
-alias D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_H264_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_H264_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_H264_FLAG_NONE                                     = 0x00000000,
     D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_H264_FLAG_CABAC_ENCODING_SUPPORT                   = 0x00000001,
@@ -3827,8 +3841,8 @@ enum : int
     D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODE_6_DISABLE_CHROMA_BLOCK_EDGES_AND_USE_LUMA_TWO_STAGE_DEBLOCKING = 0x00000006,
 }
 
-alias D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODE_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODE_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODE_FLAG_NONE                                                           = 0x00000000,
     D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODE_FLAG_0_ALL_LUMA_CHROMA_SLICE_BLOCK_EDGES_ALWAYS_FILTERED            = 0x00000001,
@@ -3845,8 +3859,8 @@ struct D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_H264
     D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_H264_FLAGS SupportFlags;
     D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODE_FLAGS DisableDeblockingFilterSupportedModes;
 }
-alias D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_NONE                                        = 0x00000000,
     D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_SUPPORT_HEVC_FLAG_BFRAME_LTR_COMBINED_SUPPORT                 = 0x00000001,
@@ -3938,8 +3952,8 @@ struct D3D12_FEATURE_DATA_VIDEO_ENCODER_CODEC_PICTURE_CONTROL_SUPPORT
     BOOL IsSupported;
     D3D12_VIDEO_ENCODER_CODEC_PICTURE_CONTROL_SUPPORT PictureSupport;
 }
-alias D3D12_VIDEO_ENCODER_SUPPORT_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_ENCODER_SUPPORT_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_ENCODER_SUPPORT_FLAG_NONE                                             = 0x00000000,
     D3D12_VIDEO_ENCODER_SUPPORT_FLAG_GENERAL_SUPPORT_OK                               = 0x00000001,
@@ -3957,8 +3971,8 @@ enum : uint
     D3D12_VIDEO_ENCODER_SUPPORT_FLAG_MOTION_ESTIMATION_PRECISION_MODE_LIMIT_AVAILABLE = 0x00001000,
 }
 
-alias D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_FLAG_NONE                                   = 0x00000000,
     D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_FLAG_USE_CONSTRAINED_INTRAPREDICTION        = 0x00000001,
@@ -3981,8 +3995,8 @@ struct D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264
     D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_DIRECT_MODES DirectModeConfig;
     D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_H264_SLICES_DEBLOCKING_MODES DisableDeblockingFilterConfig;
 }
-alias D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_FLAG_NONE                                   = 0x00000000,
     D3D12_VIDEO_ENCODER_CODEC_CONFIGURATION_HEVC_FLAG_DISABLE_LOOP_FILTER_ACROSS_SLICES      = 0x00000001,
@@ -4034,8 +4048,8 @@ struct D3D12_FEATURE_DATA_VIDEO_ENCODER_RESOLUTION_SUPPORT_LIMITS
     uint SubregionBlockPixelsSize;
     uint QPMapRegionPixelsSize;
 }
-alias D3D12_VIDEO_ENCODER_VALIDATION_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_ENCODER_VALIDATION_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_ENCODER_VALIDATION_FLAG_NONE                                     = 0x00000000,
     D3D12_VIDEO_ENCODER_VALIDATION_FLAG_CODEC_NOT_SUPPORTED                      = 0x00000001,
@@ -4103,8 +4117,8 @@ struct D3D12_FEATURE_DATA_VIDEO_ENCODER_RESOURCE_REQUIREMENTS
     uint EncoderMetadataBufferAccessAlignment;
     uint MaxEncoderOutputMetadataBufferSize;
 }
-alias D3D12_VIDEO_ENCODER_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_ENCODER_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_ENCODER_FLAG_NONE = 0x00000000,
 }
@@ -4165,8 +4179,8 @@ struct D3D12_VIDEO_ENCODER_REFERENCE_PICTURE_DESCRIPTOR_H264
     uint FrameDecodingOrderNumber;
     uint TemporalLayerIndex;
 }
-alias D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_H264_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_H264_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_H264_FLAG_NONE                             = 0x00000000,
     D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_H264_FLAG_REQUEST_INTRA_CONSTRAINED_SLICES = 0x00000001,
@@ -4228,8 +4242,8 @@ struct D3D12_VIDEO_ENCODER_REFERENCE_PICTURE_DESCRIPTOR_HEVC
     uint PictureOrderCountNumber;
     uint TemporalLayerIndex;
 }
-alias D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_HEVC_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_HEVC_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_HEVC_FLAG_NONE                             = 0x00000000,
     D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA_HEVC_FLAG_REQUEST_INTRA_CONSTRAINED_SLICES = 0x00000001,
@@ -4270,8 +4284,8 @@ struct D3D12_VIDEO_ENCODE_REFERENCE_FRAMES
     ID3D12Resource* ppTexture2Ds;
     uint* pSubresources;
 }
-alias D3D12_VIDEO_ENCODER_PICTURE_CONTROL_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_ENCODER_PICTURE_CONTROL_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_ENCODER_PICTURE_CONTROL_FLAG_NONE                      = 0x00000000,
     D3D12_VIDEO_ENCODER_PICTURE_CONTROL_FLAG_USED_AS_REFERENCE_PICTURE = 0x00000001,
@@ -4284,8 +4298,8 @@ struct D3D12_VIDEO_ENCODER_PICTURE_CONTROL_DESC
     D3D12_VIDEO_ENCODER_PICTURE_CONTROL_CODEC_DATA PictureControlCodecData;
     D3D12_VIDEO_ENCODE_REFERENCE_FRAMES ReferenceFrames;
 }
-alias D3D12_VIDEO_ENCODER_SEQUENCE_CONTROL_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_ENCODER_SEQUENCE_CONTROL_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_ENCODER_SEQUENCE_CONTROL_FLAG_NONE                    = 0x00000000,
     D3D12_VIDEO_ENCODER_SEQUENCE_CONTROL_FLAG_RESOLUTION_CHANGE       = 0x00000001,
@@ -4348,8 +4362,8 @@ struct D3D12_VIDEO_ENCODER_FRAME_SUBREGION_METADATA
     ulong bStartOffset;
     ulong bHeaderSize;
 }
-alias D3D12_VIDEO_ENCODER_ENCODE_ERROR_FLAGS = uint;
-enum : uint
+alias D3D12_VIDEO_ENCODER_ENCODE_ERROR_FLAGS = int;
+enum : int
 {
     D3D12_VIDEO_ENCODER_ENCODE_ERROR_FLAG_NO_ERROR                                     = 0x00000000,
     D3D12_VIDEO_ENCODER_ENCODE_ERROR_FLAG_CODEC_PICTURE_CONTROL_NOT_SUPPORTED          = 0x00000001,
@@ -4403,6 +4417,11 @@ interface ID3D12VideoEncodeCommandList2 : ID3D12VideoEncodeCommandList1
 {
     void EncodeFrame(ID3D12VideoEncoder, ID3D12VideoEncoderHeap, const(D3D12_VIDEO_ENCODER_ENCODEFRAME_INPUT_ARGUMENTS)*, const(D3D12_VIDEO_ENCODER_ENCODEFRAME_OUTPUT_ARGUMENTS)*);
     void ResolveEncoderOutputMetadata(const(D3D12_VIDEO_ENCODER_RESOLVE_METADATA_INPUT_ARGUMENTS)*, const(D3D12_VIDEO_ENCODER_RESOLVE_METADATA_OUTPUT_ARGUMENTS)*);
+}
+enum IID_ID3D12VideoEncodeCommandList3 = GUID(0x7f027b22, 0x1515, 0x4e85, [0xaa, 0xd, 0x2, 0x64, 0x86, 0x58, 0x5, 0x76]);
+interface ID3D12VideoEncodeCommandList3 : ID3D12VideoEncodeCommandList2
+{
+    void Barrier(uint, const(D3D12_BARRIER_GROUP)*);
 }
 enum CLSID_CMpeg4DecMediaObject = GUID(0xf371728a, 0x6052, 0x4d47, [0x82, 0x7c, 0xd0, 0x39, 0x33, 0x5d, 0xfe, 0xa]);
 struct CMpeg4DecMediaObject
@@ -6627,6 +6646,24 @@ enum : int
     eAVEncVP9VProfile_420_12  = 0x00000003,
 }
 
+alias eAVEncAV1VProfile = int;
+enum : int
+{
+    eAVEncAV1VProfile_unknown             = 0x00000000,
+    eAVEncAV1VProfile_Main_420_8          = 0x00000001,
+    eAVEncAV1VProfile_Main_420_10         = 0x00000002,
+    eAVEncAV1VProfile_Main_400_8          = 0x00000003,
+    eAVEncAV1VProfile_Main_400_10         = 0x00000004,
+    eAVEncAV1VProfile_High_444_8          = 0x00000005,
+    eAVEncAV1VProfile_High_444_10         = 0x00000006,
+    eAVEncAV1VProfile_Professional_420_12 = 0x00000007,
+    eAVEncAV1VProfile_Professional_400_12 = 0x00000008,
+    eAVEncAV1VProfile_Professional_444_12 = 0x00000009,
+    eAVEncAV1VProfile_Professional_422_8  = 0x0000000a,
+    eAVEncAV1VProfile_Professional_422_10 = 0x0000000b,
+    eAVEncAV1VProfile_Professional_422_12 = 0x0000000c,
+}
+
 alias eAVEncH263PictureType = int;
 enum : int
 {
@@ -6641,6 +6678,15 @@ enum : int
     eAVEncH264PictureType_IDR = 0x00000000,
     eAVEncH264PictureType_P   = 0x00000001,
     eAVEncH264PictureType_B   = 0x00000002,
+}
+
+alias eAVEncAV1PictureType = int;
+enum : int
+{
+    eAVEncAV1PictureType_Key        = 0x00000000,
+    eAVEncAV1PictureType_Intra_Only = 0x00000001,
+    eAVEncAV1PictureType_Inter      = 0x00000002,
+    eAVEncAV1PictureType_Switch     = 0x00000003,
 }
 
 alias eAVEncH263VLevel = int;
@@ -6694,6 +6740,25 @@ enum : int
     eAVEncH265VLevel6   = 0x000000b4,
     eAVEncH265VLevel6_1 = 0x000000b7,
     eAVEncH265VLevel6_2 = 0x000000ba,
+}
+
+alias eAVEncAV1VLevel = int;
+enum : int
+{
+    eAVEncAV1VLevel2   = 0x00000000,
+    eAVEncAV1VLevel2_1 = 0x00000001,
+    eAVEncAV1VLevel3   = 0x00000004,
+    eAVEncAV1VLevel3_1 = 0x00000005,
+    eAVEncAV1VLevel4   = 0x00000008,
+    eAVEncAV1VLevel4_1 = 0x00000009,
+    eAVEncAV1VLevel5   = 0x0000000c,
+    eAVEncAV1VLevel5_1 = 0x0000000d,
+    eAVEncAV1VLevel5_2 = 0x0000000e,
+    eAVEncAV1VLevel5_3 = 0x0000000f,
+    eAVEncAV1VLevel6   = 0x00000010,
+    eAVEncAV1VLevel6_1 = 0x00000011,
+    eAVEncAV1VLevel6_2 = 0x00000012,
+    eAVEncAV1VLevel6_3 = 0x00000013,
 }
 
 enum CLSID_CODECAPI_AVEncMPVFrameFieldMode = GUID(0xacb5de96, 0x7b93, 0x4c2f, [0x88, 0x25, 0xb0, 0x29, 0x5f, 0xa9, 0x3b, 0xf4]);
@@ -7451,6 +7516,26 @@ struct CODECAPI_AVEncProgressiveUpdateTime
 }
 enum CLSID_CODECAPI_AVEncChromaUpdateTime = GUID(0x4b4fd998, 0x4274, 0x40bb, [0x8e, 0xe4, 0x7, 0x55, 0x3e, 0x7e, 0x2d, 0x3a]);
 struct CODECAPI_AVEncChromaUpdateTime
+{
+}
+enum CLSID_CODECAPI_AVEncAACEnableVBR = GUID(0xe836bb98, 0xfca3, 0x44b6, [0x9a, 0x39, 0x24, 0x78, 0x6b, 0xe4, 0x1b, 0xe1]);
+struct CODECAPI_AVEncAACEnableVBR
+{
+}
+enum CLSID_CODECAPI_AVEncVideoConsecutiveFramesForLayer = GUID(0xaf35522, 0xd984, 0x45ae, [0xbb, 0xb8, 0x53, 0x93, 0x3e, 0xa, 0xb1, 0xb5]);
+struct CODECAPI_AVEncVideoConsecutiveFramesForLayer
+{
+}
+enum CLSID_CODECAPI_AVEncVideoMaxNumRefFrameForLayer = GUID(0x3141c639, 0x6329, 0x40d1, [0xb7, 0xe7, 0x2f, 0xe, 0x3a, 0xc1, 0x8e, 0x2]);
+struct CODECAPI_AVEncVideoMaxNumRefFrameForLayer
+{
+}
+enum CLSID_CODECAPI_AVEncTileRows = GUID(0xfbc650fc, 0x41ab, 0x4f9b, [0x84, 0xb5, 0x6, 0x5b, 0xe9, 0xcd, 0x99, 0xee]);
+struct CODECAPI_AVEncTileRows
+{
+}
+enum CLSID_CODECAPI_AVEncTileColumns = GUID(0xb4b31205, 0x1e8, 0x452c, [0xb8, 0x76, 0x8c, 0x65, 0x6, 0x54, 0x59, 0x25]);
+struct CODECAPI_AVEncTileColumns
 {
 }
 alias DXVAHD_FRAME_FORMAT = int;
@@ -8407,8 +8492,8 @@ enum : int
     OPM_VOS_OPM_INDIRECT_DISPLAY = 0x00000002,
 }
 
-alias OPM_HDCP_FLAGS = uint;
-enum : uint
+alias OPM_HDCP_FLAGS = int;
+enum : int
 {
     OPM_HDCP_FLAG_NONE     = 0x00000000,
     OPM_HDCP_FLAG_REPEATER = 0x00000001,
@@ -9714,8 +9799,8 @@ enum : int
     MF_OBJECT_INVALID     = 0x00000002,
 }
 
-alias MF_RESOLUTION_FLAGS = uint;
-enum : uint
+alias MF_RESOLUTION_FLAGS = int;
+enum : int
 {
     MF_RESOLUTION_MEDIASOURCE                                           = 0x00000001,
     MF_RESOLUTION_BYTESTREAM                                            = 0x00000002,
@@ -11318,6 +11403,25 @@ interface IMFRelativePanelWatcher : IMFShutdown
     HRESULT EndGetReport(IMFAsyncResult, IMFRelativePanelReport*);
     HRESULT GetReport(IMFRelativePanelReport*);
 }
+enum IID_IMFVideoCaptureSampleAllocator = GUID(0x725b77c7, 0xca9f, 0x4fe5, [0x9d, 0x72, 0x99, 0x46, 0xbf, 0x9b, 0x3c, 0x70]);
+interface IMFVideoCaptureSampleAllocator : IMFVideoSampleAllocator
+{
+    HRESULT InitializeCaptureSampleAllocator(uint, uint, uint, uint, IMFAttributes, IMFMediaType);
+}
+alias MFSampleAllocatorUsage = int;
+enum : int
+{
+    MFSampleAllocatorUsage_UsesProvidedAllocator = 0x00000000,
+    MFSampleAllocatorUsage_UsesCustomAllocator   = 0x00000001,
+    MFSampleAllocatorUsage_DoesNotAllocate       = 0x00000002,
+}
+
+enum IID_IMFSampleAllocatorControl = GUID(0xda62b958, 0x3a38, 0x4a97, [0xbd, 0x27, 0x14, 0x9c, 0x64, 0xc, 0x7, 0x71]);
+interface IMFSampleAllocatorControl : IUnknown
+{
+    HRESULT SetDefaultAllocator(uint, IUnknown);
+    HRESULT GetAllocatorUsage(uint, uint*, MFSampleAllocatorUsage*);
+}
 alias MFCameraOcclusionState = int;
 enum : int
 {
@@ -11343,24 +11447,59 @@ interface IMFCameraOcclusionStateMonitor : IUnknown
     HRESULT Stop();
     uint GetSupportedStates();
 }
-enum IID_IMFVideoCaptureSampleAllocator = GUID(0x725b77c7, 0xca9f, 0x4fe5, [0x9d, 0x72, 0x99, 0x46, 0xbf, 0x9b, 0x3c, 0x70]);
-interface IMFVideoCaptureSampleAllocator : IMFVideoSampleAllocator
+enum IID_IMFCameraControlNotify = GUID(0xe8f2540d, 0x558a, 0x4449, [0x8b, 0x64, 0x48, 0x63, 0x46, 0x7a, 0x9f, 0xe8]);
+interface IMFCameraControlNotify : IUnknown
 {
-    HRESULT InitializeCaptureSampleAllocator(uint, uint, uint, uint, IMFAttributes, IMFMediaType);
+    void OnChange(const(GUID)*, uint);
+    void OnError(HRESULT);
 }
-alias MFSampleAllocatorUsage = int;
+enum IID_IMFCameraControlMonitor = GUID(0x4d46f2c9, 0x28ba, 0x4970, [0x8c, 0x7b, 0x1f, 0xc, 0x9d, 0x80, 0xaf, 0x69]);
+interface IMFCameraControlMonitor : IUnknown
+{
+    HRESULT Start();
+    HRESULT Stop();
+    HRESULT AddControlSubscription(GUID, uint);
+    HRESULT RemoveControlSubscription(GUID, uint);
+    void Shutdown();
+}
+alias MF_CAMERA_CONTROL_CONFIGURATION_TYPE = int;
 enum : int
 {
-    MFSampleAllocatorUsage_UsesProvidedAllocator = 0x00000000,
-    MFSampleAllocatorUsage_UsesCustomAllocator   = 0x00000001,
-    MFSampleAllocatorUsage_DoesNotAllocate       = 0x00000002,
+    MF_CAMERA_CONTROL_CONFIGURATION_TYPE_PRESTART  = 0x00000000,
+    MF_CAMERA_CONTROL_CONFIGURATION_TYPE_POSTSTART = 0x00000001,
 }
 
-enum IID_IMFSampleAllocatorControl = GUID(0xda62b958, 0x3a38, 0x4a97, [0xbd, 0x27, 0x14, 0x9c, 0x64, 0xc, 0x7, 0x71]);
-interface IMFSampleAllocatorControl : IUnknown
+struct MF_CAMERA_CONTROL_RANGE_INFO
 {
-    HRESULT SetDefaultAllocator(uint, IUnknown);
-    HRESULT GetAllocatorUsage(uint, uint*, MFSampleAllocatorUsage*);
+    int minValue;
+    int maxValue;
+    int stepValue;
+    int defaultValue;
+}
+enum IID_IMFCameraControlDefaults = GUID(0x75510662, 0xb034, 0x48f4, [0x88, 0xa7, 0x8d, 0xe6, 0x1d, 0xaa, 0x4a, 0xf9]);
+interface IMFCameraControlDefaults : IUnknown
+{
+    MF_CAMERA_CONTROL_CONFIGURATION_TYPE GetType();
+    HRESULT GetRangeInfo(MF_CAMERA_CONTROL_RANGE_INFO*);
+    HRESULT LockControlData(void**, uint*, void**, uint*);
+    HRESULT UnlockControlData();
+}
+enum IID_IMFCameraControlDefaultsCollection = GUID(0x92d43d0f, 0x54a8, 0x4bae, [0x96, 0xda, 0x35, 0x6d, 0x25, 0x9a, 0x5c, 0x26]);
+interface IMFCameraControlDefaultsCollection : IMFAttributes
+{
+    uint GetControlCount();
+    HRESULT GetControl(uint, IMFCameraControlDefaults*);
+    HRESULT GetOrAddExtendedControl(MF_CAMERA_CONTROL_CONFIGURATION_TYPE, uint, uint, uint, IMFCameraControlDefaults*);
+    HRESULT GetOrAddControl(MF_CAMERA_CONTROL_CONFIGURATION_TYPE, const(GUID)*, uint, uint, uint, IMFCameraControlDefaults*);
+    HRESULT RemoveControl(const(GUID)*, uint);
+    HRESULT RemoveAllControls();
+}
+enum IID_IMFCameraConfigurationManager = GUID(0xa624f617, 0x4704, 0x4206, [0x8a, 0x6d, 0xeb, 0xda, 0x4a, 0x9, 0x39, 0x85]);
+interface IMFCameraConfigurationManager : IUnknown
+{
+    HRESULT LoadDefaults(IMFAttributes, IMFCameraControlDefaultsCollection*);
+    HRESULT SaveDefaults(IMFCameraControlDefaultsCollection);
+    void Shutdown();
 }
 enum IID_IMFASFContentInfo = GUID(0xb1dca5cd, 0xd5da, 0x4451, [0x8e, 0x9e, 0xdb, 0x5c, 0x59, 0x91, 0x4e, 0xad]);
 interface IMFASFContentInfo : IUnknown
@@ -11813,8 +11952,8 @@ struct DigitalWindowSetting
     double OriginY;
     double WindowSize;
 }
-alias MFT_ENUM_FLAG = uint;
-enum : uint
+alias MFT_ENUM_FLAG = int;
+enum : int
 {
     MFT_ENUM_FLAG_SYNCMFT                         = 0x00000001,
     MFT_ENUM_FLAG_ASYNCMFT                        = 0x00000002,
@@ -13672,7 +13811,7 @@ enum IID_IMFVirtualCamera = GUID(0x1c08a864, 0xef6c, 0x4c75, [0xaf, 0x59, 0x5f, 
 interface IMFVirtualCamera : IMFAttributes
 {
     HRESULT AddDeviceSourceInfo(const(wchar)*);
-    HRESULT AddProperty(const(DEVPROPKEY)*, uint, const(ubyte)*, uint);
+    HRESULT AddProperty(const(DEVPROPKEY)*, DEVPROPTYPE, const(ubyte)*, uint);
     HRESULT AddRegistryEntry(const(wchar)*, const(wchar)*, uint, const(ubyte)*, uint);
     HRESULT Start(IMFAsyncCallback);
     HRESULT Stop();

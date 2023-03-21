@@ -1,7 +1,7 @@
 module windows.win32.system.addressbook;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, FILETIME, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, PSTR, PWSTR;
+import windows.win32.foundation : BOOL, FILETIME, HINSTANCE, HRESULT, HWND, PSTR, PWSTR;
 import windows.win32.system.com_ : CY, IMalloc, IStream, IUnknown;
 import windows.win32.system.com.structuredstorage : IStorage;
 
@@ -325,7 +325,7 @@ struct SLongArray
 struct SLargeIntegerArray
 {
     uint cValues;
-    LARGE_INTEGER* lpli;
+    long* lpli;
 }
 struct SDateTimeArray
 {
@@ -377,7 +377,7 @@ union __UPV
     SBinary bin;
     PWSTR lpszW;
     GUID* lpguid;
-    LARGE_INTEGER li;
+    long li;
     SShortArray MVi;
     SLongArray MVl;
     SRealArray MVflt;
@@ -998,42 +998,6 @@ struct _WABACTIONITEM
 // [Not Found] IID_IWABObject
 interface IWABObject : IUnknown
 {
-    HRESULT GetLastError(HRESULT, uint, MAPIERROR**);
-    HRESULT AllocateBuffer(uint, void**);
-    HRESULT AllocateMore(uint, void*, void**);
-    HRESULT FreeBuffer(void*);
-    HRESULT Backup(PSTR);
-    HRESULT Import(PSTR);
-    HRESULT Find(IAddrBook, HWND);
-    HRESULT VCardDisplay(IAddrBook, HWND, PSTR);
-    HRESULT LDAPUrl(IAddrBook, HWND, uint, PSTR, IMailUser*);
-    HRESULT VCardCreate(IAddrBook, uint, PSTR, IMailUser);
-    HRESULT VCardRetrieve(IAddrBook, uint, PSTR, IMailUser*);
-    HRESULT GetMe(IAddrBook, uint, uint*, SBinary*, HWND);
-    HRESULT SetMe(IAddrBook, uint, SBinary, HWND);
-}
-alias IWABOBJECT_QueryInterface_METHOD = HRESULT function(const(GUID)*, void**);
-alias IWABOBJECT_AddRef_METHOD = uint function();
-alias IWABOBJECT_Release_METHOD = uint function();
-alias IWABOBJECT_GetLastError_METHOD = HRESULT function(HRESULT, uint, MAPIERROR**);
-alias IWABOBJECT_AllocateBuffer_METHOD = HRESULT function(uint, void**);
-alias IWABOBJECT_AllocateMore_METHOD = HRESULT function(uint, void*, void**);
-alias IWABOBJECT_FreeBuffer_METHOD = HRESULT function(void*);
-alias IWABOBJECT_Backup_METHOD = HRESULT function(PSTR);
-alias IWABOBJECT_Import_METHOD = HRESULT function(PSTR);
-alias IWABOBJECT_Find_METHOD = HRESULT function(IAddrBook, HWND);
-alias IWABOBJECT_VCardDisplay_METHOD = HRESULT function(IAddrBook, HWND, PSTR);
-alias IWABOBJECT_LDAPUrl_METHOD = HRESULT function(IAddrBook, HWND, uint, PSTR, IMailUser*);
-alias IWABOBJECT_VCardCreate_METHOD = HRESULT function(IAddrBook, uint, PSTR, IMailUser);
-alias IWABOBJECT_VCardRetrieve_METHOD = HRESULT function(IAddrBook, uint, PSTR, IMailUser*);
-alias IWABOBJECT_GetMe_METHOD = HRESULT function(IAddrBook, uint, uint*, SBinary*, HWND);
-alias IWABOBJECT_SetMe_METHOD = HRESULT function(IAddrBook, uint, SBinary, HWND);
-// [Not Found] IID_IWABOBJECT_
-interface IWABOBJECT_
-{
-    HRESULT QueryInterface(const(GUID)*, void**);
-    uint AddRef();
-    uint Release();
     HRESULT GetLastError(HRESULT, uint, MAPIERROR**);
     HRESULT AllocateBuffer(uint, void**);
     HRESULT AllocateMore(uint, void*, void**);

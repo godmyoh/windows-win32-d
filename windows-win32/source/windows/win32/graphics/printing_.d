@@ -1119,6 +1119,7 @@ enum PRINTER_NOTIFY_STATUS_INFO = 0x00000004;
 enum ROUTER_UNKNOWN = 0x00000000;
 enum ROUTER_SUCCESS = 0x00000001;
 enum ROUTER_STOP_ROUTING = 0x00000002;
+enum DOC_INFO_INTERNAL_LEVEL = 0x00000064;
 enum FILL_WITH_DEFAULTS = 0x00000001;
 enum PRINTER_NOTIFY_INFO_DATA_COMPACT = 0x00000001;
 enum COPYFILE_EVENT_SET_PRINTER_DATAEX = 0x00000001;
@@ -1200,6 +1201,7 @@ enum JOB_CONTROL_SENT_TO_PRINTER = 0x00000006;
 enum JOB_CONTROL_LAST_PAGE_EJECTED = 0x00000007;
 enum JOB_CONTROL_RETAIN = 0x00000008;
 enum JOB_CONTROL_RELEASE = 0x00000009;
+enum JOB_CONTROL_SEND_TOAST = 0x0000000a;
 enum JOB_STATUS_PAUSED = 0x00000001;
 enum JOB_STATUS_ERROR = 0x00000002;
 enum JOB_STATUS_DELETING = 0x00000004;
@@ -3386,13 +3388,13 @@ struct PRINT_FEATURE_OPTION
 enum IID_IPrintCoreHelper = GUID(0xa89ec53e, 0x3905, 0x49c6, [0x9c, 0x1a, 0xc0, 0xa8, 0x81, 0x17, 0xfd, 0xb6]);
 interface IPrintCoreHelper : IUnknown
 {
-    HRESULT GetOption(const(DEVMODEA)*, uint, const(char)*, PSTR*);
+    HRESULT GetOption(const(DEVMODEA)*, uint, const(char)*, const(char)**);
     HRESULT SetOptions(DEVMODEA*, uint, BOOL, const(PRINT_FEATURE_OPTION)*, uint, uint*, uint*);
-    HRESULT EnumConstrainedOptions(const(DEVMODEA)*, uint, const(char)*, PSTR***, uint*);
+    HRESULT EnumConstrainedOptions(const(DEVMODEA)*, uint, const(char)*, const(char)****, uint*);
     HRESULT WhyConstrained(const(DEVMODEA)*, uint, const(char)*, const(char)*, const(PRINT_FEATURE_OPTION)**, uint*);
-    HRESULT EnumFeatures(PSTR***, uint*);
-    HRESULT EnumOptions(const(char)*, PSTR***, uint*);
-    HRESULT GetFontSubstitution(const(wchar)*, PWSTR*);
+    HRESULT EnumFeatures(const(char)****, uint*);
+    HRESULT EnumOptions(const(char)*, const(char)****, uint*);
+    HRESULT GetFontSubstitution(const(wchar)*, const(wchar)**);
     HRESULT SetFontSubstitution(const(wchar)*, const(wchar)*);
     HRESULT CreateInstanceOfMSXMLObject(const(GUID)*, IUnknown, uint, const(GUID)*, void**);
 }
@@ -4330,6 +4332,14 @@ struct _SPLCLIENT_INFO_2_V3
 {
     ulong hSplPrinter;
 }
+struct DOC_INFO_INTERNAL
+{
+    byte* pDocName;
+    byte* pOutputFile;
+    byte* pDatatype;
+    BOOL bLowILJob;
+    HANDLE hTokenLowIL;
+}
 struct SPLCLIENT_INFO_3_VISTA
 {
     uint cbSize;
@@ -4436,6 +4446,7 @@ struct PRINTPROVIDOR
     long fpEnumAndLogProvidorObjects;
     long fpInternalGetPrinterDriver;
     long fpFindCompatibleDriver;
+    long fpInstallPrinterDriverPackageFromConnection;
     long fpGetJobNamedPropertyValue;
     long fpSetJobNamedProperty;
     long fpDeleteJobNamedProperty;
@@ -4451,6 +4462,7 @@ struct PRINTPROVIDOR
     long fpIppSetJobAttributes;
     long fpIppGetPrinterAttributes;
     long fpIppSetPrinterAttributes;
+    long fpIppCreateJobOnPrinterWithAttributes;
 }
 struct PRINTPROCESSOROPENDATA
 {

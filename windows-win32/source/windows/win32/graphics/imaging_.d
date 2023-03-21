@@ -1,7 +1,7 @@
 module windows.win32.graphics.imaging_;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, HANDLE, HRESULT, PWSTR, ULARGE_INTEGER;
+import windows.win32.foundation : BOOL, HANDLE, HRESULT, PWSTR;
 import windows.win32.graphics.direct2d.common : D2D1_PIXEL_FORMAT;
 import windows.win32.graphics.dxgi.common : DXGI_FORMAT, DXGI_JPEG_AC_HUFFMAN_TABLE, DXGI_JPEG_DC_HUFFMAN_TABLE, DXGI_JPEG_QUANTIZATION_TABLE;
 import windows.win32.graphics.gdi : HBITMAP, HPALETTE;
@@ -20,7 +20,7 @@ HRESULT WICMapShortNameToGuid(const(wchar)*, GUID*);
 HRESULT WICMapSchemaToName(const(GUID)*, PWSTR, uint, PWSTR, uint*);
 HRESULT WICMatchMetadataContent(const(GUID)*, const(GUID)*, IStream, GUID*);
 HRESULT WICSerializeMetadataContent(const(GUID)*, IWICMetadataWriter, uint, IStream);
-HRESULT WICGetMetadataContentSize(const(GUID)*, IWICMetadataWriter, ULARGE_INTEGER*);
+HRESULT WICGetMetadataContentSize(const(GUID)*, IWICMetadataWriter, ulong*);
 enum WINCODEC_SDK_VERSION1 = 0x00000236;
 enum WINCODEC_SDK_VERSION2 = 0x00000237;
 enum CLSID_WICImagingFactory = GUID(0xcacaf262, 0x9370, 0x4615, [0xa1, 0x3b, 0x9f, 0x55, 0x39, 0xda, 0x4c, 0xa]);
@@ -389,7 +389,7 @@ enum : int
 
 struct WICBitmapPattern
 {
-    ULARGE_INTEGER Position;
+    ulong Position;
     uint Length;
     ubyte* Pattern;
     ubyte* Mask;
@@ -911,7 +911,7 @@ interface IWICStream : IStream
     HRESULT InitializeFromIStream(IStream);
     HRESULT InitializeFromFilename(const(wchar)*, uint);
     HRESULT InitializeFromMemory(ubyte*, uint);
-    HRESULT InitializeFromIStreamRegion(IStream, ULARGE_INTEGER, ULARGE_INTEGER);
+    HRESULT InitializeFromIStreamRegion(IStream, ulong, ulong);
 }
 enum IID_IWICEnumMetadataItem = GUID(0xdc2bb46d, 0x3f07, 0x481e, [0x86, 0x25, 0x22, 0xc, 0x4a, 0xed, 0xbb, 0x33]);
 interface IWICEnumMetadataItem : IUnknown
@@ -1442,11 +1442,11 @@ interface IWICMetadataHandlerInfo : IWICComponentInfo
 }
 struct WICMetadataPattern
 {
-    ULARGE_INTEGER Position;
+    ulong Position;
     uint Length;
     ubyte* Pattern;
     ubyte* Mask;
-    ULARGE_INTEGER DataOffset;
+    ulong DataOffset;
 }
 enum IID_IWICMetadataReaderInfo = GUID(0xeebf1f5b, 0x7c1, 0x4447, [0xa3, 0xab, 0x22, 0xac, 0xaf, 0x78, 0xa8, 0x4]);
 interface IWICMetadataReaderInfo : IWICMetadataHandlerInfo
@@ -1457,10 +1457,10 @@ interface IWICMetadataReaderInfo : IWICMetadataHandlerInfo
 }
 struct WICMetadataHeader
 {
-    ULARGE_INTEGER Position;
+    ulong Position;
     uint Length;
     ubyte* Header;
-    ULARGE_INTEGER DataOffset;
+    ulong DataOffset;
 }
 enum IID_IWICMetadataWriterInfo = GUID(0xb22e3fba, 0x3925, 0x4323, [0xb5, 0xc1, 0x9e, 0xbf, 0xc4, 0x30, 0xf2, 0x36]);
 interface IWICMetadataWriterInfo : IWICMetadataHandlerInfo

@@ -38,11 +38,6 @@ enum IID_ICompositorInterop = GUID(0x25297d5c, 0x3ad4, 0x4c9c, [0xb5, 0xcf, 0xe3
     HRESULT CreateGraphicsDevice(IUnknown, CompositionGraphicsDevice*);
 }
 +/
-enum IID_ISwapChainInterop = GUID(0x26f496a0, 0x7f38, 0x45fb, [0x88, 0xf7, 0xfa, 0xaa, 0xbe, 0x67, 0xdd, 0x59]);
-interface ISwapChainInterop : IUnknown
-{
-    HRESULT SetSwapChain(IUnknown);
-}
 enum IID_IVisualInteractionSourceInterop = GUID(0x11f62cd1, 0x2f9d, 0x42d3, [0xb0, 0x5f, 0xd6, 0x79, 0xd, 0x9e, 0x9f, 0x8e]);
 interface IVisualInteractionSourceInterop : IUnknown
 {

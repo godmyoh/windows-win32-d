@@ -1,7 +1,7 @@
 module windows.win32.devices.imageacquisition;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, CHAR, FILETIME, HANDLE, HRESULT, HWND, PWSTR, RECT;
+import windows.win32.foundation : BOOL, BSTR, CHAR, FILETIME, HANDLE, HGLOBAL, HRESULT, HWND, PWSTR, RECT;
 import windows.win32.graphics.gdi : HBITMAP;
 import windows.win32.system.com_ : IStream, IUnknown, STGMEDIUM, VARENUM;
 import windows.win32.system.com.structuredstorage : IEnumSTATPROPSTG, PROPSPEC, PROPVARIANT, STATPROPSETSTG;
@@ -1937,7 +1937,7 @@ struct VAL
     double dblVal;
     GUID* pGuid;
     SCANINFO* pScanInfo;
-    long handle;
+    HGLOBAL handle;
     ushort** ppButtonNames;
     HANDLE* pHandle;
     int lReserved;

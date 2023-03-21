@@ -1,7 +1,7 @@
 module windows.win32.system.applicationinstallationandservicing;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LARGE_INTEGER, PSTR, PWSTR, ULARGE_INTEGER, VARIANT_BOOL;
+import windows.win32.foundation : BOOL, BSTR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, PSTR, PWSTR, VARIANT_BOOL;
 import windows.win32.security.cryptography_ : CERT_CONTEXT;
 import windows.win32.system.com_ : IDispatch, IStream, IUnknown, SAFEARRAY;
 import windows.win32.system.registry : HKEY;
@@ -1546,7 +1546,7 @@ struct ASSEMBLY_INFO
 {
     uint cbAssemblyInfo;
     uint dwAssemblyFlags;
-    ULARGE_INTEGER uliAssemblySizeInKB;
+    ulong uliAssemblySizeInKB;
     PWSTR pszCurrentAssemblyPathBuf;
     uint cchBuf;
 }
@@ -1584,8 +1584,8 @@ enum : int
     ASM_NAME_MAX_PARAMS            = 0x00000014,
 }
 
-alias ASM_BIND_FLAGS = uint;
-enum : uint
+alias ASM_BIND_FLAGS = int;
+enum : int
 {
     ASM_BINDF_FORCE_CACHE_INSTALL = 0x00000001,
     ASM_BINDF_RFS_INTEGRITY_CHECK = 0x00000002,
@@ -1638,7 +1638,7 @@ interface IAssemblyName : IUnknown
 enum IID_IAssemblyCacheItem = GUID(0x9e3aaeb4, 0xd1cd, 0x11d2, [0xba, 0xb9, 0x0, 0xc0, 0x4f, 0x8e, 0xce, 0xae]);
 interface IAssemblyCacheItem : IUnknown
 {
-    HRESULT CreateStream(uint, const(wchar)*, uint, uint, IStream*, ULARGE_INTEGER*);
+    HRESULT CreateStream(uint, const(wchar)*, uint, uint, IStream*, ulong*);
     HRESULT Commit(uint, uint*);
     HRESULT AbortItem();
 }
@@ -2746,7 +2746,7 @@ struct PATCH_OPTION_DATA
     uint SizeOfThisStruct;
     uint SymbolOptionFlags;
     const(char)* NewFileSymbolPath;
-    PSTR* OldFileSymbolPathArray;
+    const(char)** OldFileSymbolPathArray;
     uint ExtendedOptionFlags;
     PPATCH_SYMLOAD_CALLBACK SymLoadCallback;
     void* SymLoadContext;
@@ -2802,10 +2802,10 @@ struct ACTIVATION_CONTEXT_ASSEMBLY_DETAILED_INFORMATION
     uint ulEncodedAssemblyIdentityLength;
     uint ulManifestPathType;
     uint ulManifestPathLength;
-    LARGE_INTEGER liManifestLastWriteTime;
+    long liManifestLastWriteTime;
     uint ulPolicyPathType;
     uint ulPolicyPathLength;
-    LARGE_INTEGER liPolicyLastWriteTime;
+    long liPolicyLastWriteTime;
     uint ulMetadataSatelliteRosterIndex;
     uint ulManifestVersionMajor;
     uint ulManifestVersionMinor;

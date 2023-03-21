@@ -6,6 +6,39 @@ import windows.win32.foundation : PWSTR;
 version (Windows):
 extern (Windows):
 
+alias DEVPROPTYPE = uint;
+enum : uint
+{
+    DEVPROP_TYPE_EMPTY                      = 0x00000000,
+    DEVPROP_TYPE_NULL                       = 0x00000001,
+    DEVPROP_TYPE_SBYTE                      = 0x00000002,
+    DEVPROP_TYPE_BYTE                       = 0x00000003,
+    DEVPROP_TYPE_INT16                      = 0x00000004,
+    DEVPROP_TYPE_UINT16                     = 0x00000005,
+    DEVPROP_TYPE_INT32                      = 0x00000006,
+    DEVPROP_TYPE_UINT32                     = 0x00000007,
+    DEVPROP_TYPE_INT64                      = 0x00000008,
+    DEVPROP_TYPE_UINT64                     = 0x00000009,
+    DEVPROP_TYPE_FLOAT                      = 0x0000000a,
+    DEVPROP_TYPE_DOUBLE                     = 0x0000000b,
+    DEVPROP_TYPE_DECIMAL                    = 0x0000000c,
+    DEVPROP_TYPE_GUID                       = 0x0000000d,
+    DEVPROP_TYPE_CURRENCY                   = 0x0000000e,
+    DEVPROP_TYPE_DATE                       = 0x0000000f,
+    DEVPROP_TYPE_FILETIME                   = 0x00000010,
+    DEVPROP_TYPE_BOOLEAN                    = 0x00000011,
+    DEVPROP_TYPE_STRING                     = 0x00000012,
+    DEVPROP_TYPE_STRING_LIST                = 0x00002012,
+    DEVPROP_TYPE_SECURITY_DESCRIPTOR        = 0x00000013,
+    DEVPROP_TYPE_SECURITY_DESCRIPTOR_STRING = 0x00000014,
+    DEVPROP_TYPE_DEVPROPKEY                 = 0x00000015,
+    DEVPROP_TYPE_DEVPROPTYPE                = 0x00000016,
+    DEVPROP_TYPE_BINARY                     = 0x00001003,
+    DEVPROP_TYPE_ERROR                      = 0x00000017,
+    DEVPROP_TYPE_NTSTATUS                   = 0x00000018,
+    DEVPROP_TYPE_STRING_INDIRECT            = 0x00000019,
+}
+
 //enum DEVPKEY_DeviceInterface_Autoplay_Silent = [MISSING];
 //enum DEVPKEY_NAME = [MISSING];
 //enum DEVPKEY_Device_DeviceDesc = [MISSING];
@@ -91,6 +124,7 @@ extern (Windows):
 //enum DEVPKEY_Device_ExtendedAddress = [MISSING];
 //enum DEVPKEY_Device_AssignedToGuest = [MISSING];
 //enum DEVPKEY_Device_CreatorProcessId = [MISSING];
+//enum DEVPKEY_Device_FirmwareVendor = [MISSING];
 //enum DEVPKEY_Device_SessionId = [MISSING];
 //enum DEVPKEY_Device_InstallDate = [MISSING];
 //enum DEVPKEY_Device_FirstInstallDate = [MISSING];
@@ -203,32 +237,6 @@ extern (Windows):
 //enum DEVPKEY_DevQuery_ObjectType = [MISSING];
 enum DEVPROP_TYPEMOD_ARRAY = 0x00001000;
 enum DEVPROP_TYPEMOD_LIST = 0x00002000;
-enum DEVPROP_TYPE_EMPTY = 0x00000000;
-enum DEVPROP_TYPE_NULL = 0x00000001;
-enum DEVPROP_TYPE_SBYTE = 0x00000002;
-enum DEVPROP_TYPE_BYTE = 0x00000003;
-enum DEVPROP_TYPE_INT16 = 0x00000004;
-enum DEVPROP_TYPE_UINT16 = 0x00000005;
-enum DEVPROP_TYPE_INT32 = 0x00000006;
-enum DEVPROP_TYPE_UINT32 = 0x00000007;
-enum DEVPROP_TYPE_INT64 = 0x00000008;
-enum DEVPROP_TYPE_UINT64 = 0x00000009;
-enum DEVPROP_TYPE_FLOAT = 0x0000000a;
-enum DEVPROP_TYPE_DOUBLE = 0x0000000b;
-enum DEVPROP_TYPE_DECIMAL = 0x0000000c;
-enum DEVPROP_TYPE_GUID = 0x0000000d;
-enum DEVPROP_TYPE_CURRENCY = 0x0000000e;
-enum DEVPROP_TYPE_DATE = 0x0000000f;
-enum DEVPROP_TYPE_FILETIME = 0x00000010;
-enum DEVPROP_TYPE_BOOLEAN = 0x00000011;
-enum DEVPROP_TYPE_STRING = 0x00000012;
-enum DEVPROP_TYPE_SECURITY_DESCRIPTOR = 0x00000013;
-enum DEVPROP_TYPE_SECURITY_DESCRIPTOR_STRING = 0x00000014;
-enum DEVPROP_TYPE_DEVPROPKEY = 0x00000015;
-enum DEVPROP_TYPE_DEVPROPTYPE = 0x00000016;
-enum DEVPROP_TYPE_ERROR = 0x00000017;
-enum DEVPROP_TYPE_NTSTATUS = 0x00000018;
-enum DEVPROP_TYPE_STRING_INDIRECT = 0x00000019;
 enum MAX_DEVPROP_TYPE = 0x00000019;
 enum MAX_DEVPROP_TYPEMOD = 0x00002000;
 enum DEVPROP_MASK_TYPE = 0x00000fff;
@@ -255,7 +263,7 @@ struct DEVPROPCOMPKEY
 struct DEVPROPERTY
 {
     DEVPROPCOMPKEY CompKey;
-    uint Type;
+    DEVPROPTYPE Type;
     uint BufferSize;
     void* Buffer;
 }

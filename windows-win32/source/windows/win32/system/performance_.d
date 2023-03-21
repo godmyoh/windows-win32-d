@@ -1,7 +1,7 @@
 module windows.win32.system.performance_;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, FILETIME, HANDLE, HRESULT, HWND, LARGE_INTEGER, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, FILETIME, HANDLE, HRESULT, HWND, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL;
 import windows.win32.system.com_ : IDispatch, IUnknown, SAFEARRAY, VARIANT;
 import windows.win32.system.ole : IFontDisp;
 
@@ -82,8 +82,8 @@ enum : uint
     PERF_AGGREGATE_MIN       = 0x00000003,
 }
 
-BOOL QueryPerformanceCounter(LARGE_INTEGER*);
-BOOL QueryPerformanceFrequency(LARGE_INTEGER*);
+BOOL QueryPerformanceCounter(long*);
+BOOL QueryPerformanceFrequency(long*);
 uint InstallPerfDllW(const(wchar)*, const(wchar)*, ulong);
 uint InstallPerfDllA(const(char)*, const(char)*, ulong);
 uint LoadPerfCounterTextStringsA(PSTR, BOOL);
@@ -401,6 +401,14 @@ enum PLA_CAPABILITY_V1_SYSTEM = 0x00000004;
 enum PLA_CAPABILITY_LEGACY_SESSION = 0x00000008;
 enum PLA_CAPABILITY_LEGACY_SVC = 0x00000010;
 enum PLA_CAPABILITY_AUTOLOGGER = 0x00000020;
+enum PLAL_ALERT_CMD_LINE_SINGLE = 0x00000100;
+enum PLAL_ALERT_CMD_LINE_A_NAME = 0x00000200;
+enum PLAL_ALERT_CMD_LINE_C_NAME = 0x00000400;
+enum PLAL_ALERT_CMD_LINE_D_TIME = 0x00000800;
+enum PLAL_ALERT_CMD_LINE_L_VAL = 0x00001000;
+enum PLAL_ALERT_CMD_LINE_M_VAL = 0x00002000;
+enum PLAL_ALERT_CMD_LINE_U_TEXT = 0x00004000;
+enum PLAL_ALERT_CMD_LINE_MASK = 0x00007f00;
 enum S_PDH = GUID(0x4d66358, 0xc4a1, 0x419b, [0x80, 0x23, 0x23, 0xb7, 0x39, 0x2, 0xde, 0x2c]);
 alias PerfProviderHandle = long;
 alias PerfQueryHandle = long;
@@ -988,8 +996,8 @@ struct PERF_OBJECT_TYPE
     int DefaultCounter;
     int NumInstances;
     uint CodePage;
-    LARGE_INTEGER PerfTime;
-    LARGE_INTEGER PerfFreq;
+    long PerfTime;
+    long PerfFreq;
 }
 struct PERF_COUNTER_DEFINITION
 {
@@ -1165,9 +1173,9 @@ struct PERF_DATA_BLOCK
     uint NumObjectTypes;
     int DefaultObject;
     SYSTEMTIME SystemTime;
-    LARGE_INTEGER PerfTime;
-    LARGE_INTEGER PerfFreq;
-    LARGE_INTEGER PerfTime100nSec;
+    long PerfTime;
+    long PerfFreq;
+    long PerfTime100nSec;
     uint SystemNameLength;
     uint SystemNameOffset;
 }
@@ -1185,8 +1193,8 @@ struct PERF_DATA_BLOCK
     int DefaultCounter;
     int NumInstances;
     uint CodePage;
-    LARGE_INTEGER PerfTime;
-    LARGE_INTEGER PerfFreq;
+    long PerfTime;
+    long PerfFreq;
 }
 +/
 /+ [CONFLICTED] struct PERF_COUNTER_DEFINITION

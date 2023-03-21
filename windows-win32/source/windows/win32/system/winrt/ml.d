@@ -35,3 +35,8 @@ interface ILearningModelSessionOptionsNative : IUnknown
 {
     HRESULT SetIntraOpNumThreadsOverride(uint);
 }
+enum IID_ILearningModelSessionOptionsNative1 = GUID(0x5da37a26, 0x526, 0x414b, [0x91, 0xe4, 0x2a, 0xf, 0xa3, 0xdd, 0xba, 0x40]);
+interface ILearningModelSessionOptionsNative1 : IUnknown
+{
+    HRESULT SetIntraOpThreadSpinning(ubyte);
+}

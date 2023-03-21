@@ -1,7 +1,7 @@
 module windows.win32.storage.xps.printing;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : HANDLE, HRESULT, PWSTR;
+import windows.win32.foundation : BOOL, HANDLE, HRESULT, PWSTR;
 import windows.win32.storage.xps_ : IXpsOMPackageTarget;
 import windows.win32.system.com_ : IDispatch, ISequentialStream, IStream, IUnknown;
 
@@ -56,6 +56,12 @@ interface IPrintDocumentPackageTarget : IUnknown
     HRESULT GetPackageTargetTypes(uint*, GUID**);
     HRESULT GetPackageTarget(const(GUID)*, const(GUID)*, void**);
     HRESULT Cancel();
+}
+enum IID_IPrintDocumentPackageTarget2 = GUID(0xc560298a, 0x535c, 0x48f9, [0x86, 0x6a, 0x63, 0x25, 0x40, 0x66, 0xc, 0xb4]);
+interface IPrintDocumentPackageTarget2 : IUnknown
+{
+    HRESULT GetIsTargetIppPrinter(BOOL*);
+    HRESULT GetTargetIppPrintDevice(const(GUID)*, void**);
 }
 alias PrintDocumentPackageCompletion = int;
 enum : int

@@ -272,6 +272,7 @@
      <File path="source\generator\patch\declarationaggregator.d" />
      <File path="source\generator\patch\dlangtyperesolver.d" />
      <File path="source\generator\patch\modulewriter.d" />
+     <File path="source\generator\patch\patchstatus.d" />
     </Folder>
     <Folder name="resolver">
      <File path="source\generator\resolver\classlayoutresolver.d" />

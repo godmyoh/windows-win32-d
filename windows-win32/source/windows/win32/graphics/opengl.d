@@ -46,7 +46,7 @@ enum : uint
 }
 
 int ChoosePixelFormat(HDC, const(PIXELFORMATDESCRIPTOR)*);
-int DescribePixelFormat(HDC, PFD_PIXEL_TYPE, uint, PIXELFORMATDESCRIPTOR*);
+int DescribePixelFormat(HDC, int, uint, PIXELFORMATDESCRIPTOR*);
 int GetPixelFormat(HDC);
 BOOL SetPixelFormat(HDC, int, const(PIXELFORMATDESCRIPTOR)*);
 uint GetEnhMetaFilePixelFormat(HENHMETAFILE, uint, PIXELFORMATDESCRIPTOR*);

@@ -58,6 +58,8 @@ enum : ushort
     DNS_TYPE_NSEC3      = 0x0032,
     DNS_TYPE_NSEC3PARAM = 0x0033,
     DNS_TYPE_TLSA       = 0x0034,
+    DNS_TYPE_SVCB       = 0x0040,
+    DNS_TYPE_HTTPS      = 0x0041,
     DNS_TYPE_UINFO      = 0x0064,
     DNS_TYPE_UID        = 0x0065,
     DNS_TYPE_GID        = 0x0066,
@@ -156,7 +158,7 @@ void DnsConnectionFreeNameList(DNS_CONNECTION_NAME_LIST*);
 uint DnsConnectionUpdateIfIndexTable(DNS_CONNECTION_IFINDEX_LIST*);
 uint DnsConnectionSetPolicyEntries(DNS_CONNECTION_POLICY_TAG, DNS_CONNECTION_POLICY_ENTRY_LIST*);
 uint DnsConnectionDeletePolicyEntries(DNS_CONNECTION_POLICY_TAG);
-DNS_SERVICE_INSTANCE* DnsServiceConstructInstance(const(wchar)*, const(wchar)*, uint*, IP6_ADDRESS*, ushort, ushort, ushort, uint, PWSTR*, PWSTR*);
+DNS_SERVICE_INSTANCE* DnsServiceConstructInstance(const(wchar)*, const(wchar)*, uint*, IP6_ADDRESS*, ushort, ushort, ushort, uint, const(wchar)**, const(wchar)**);
 DNS_SERVICE_INSTANCE* DnsServiceCopyInstance(DNS_SERVICE_INSTANCE*);
 void DnsServiceFreeInstance(DNS_SERVICE_INSTANCE*);
 int DnsServiceBrowse(DNS_SERVICE_BROWSE_REQUEST*, DNS_SERVICE_CANCEL*);
@@ -233,6 +235,7 @@ enum DNS_RCLASS_NONE = 0x0000fe00;
 enum DNS_RCLASS_ALL = 0x0000ff00;
 enum DNS_RCLASS_ANY = 0x0000ff00;
 enum DNS_RCLASS_UNICAST_RESPONSE = 0x00000080;
+enum DNS_RCLASS_MDNS_CACHE_FLUSH = 0x00000080;
 enum DNS_RTYPE_A = 0x00000100;
 enum DNS_RTYPE_NS = 0x00000200;
 enum DNS_RTYPE_MD = 0x00000300;
@@ -355,6 +358,7 @@ enum DNS_TKEY_MODE_RESOLVER_ASSIGN = 0x00000004;
 enum DNS_WINS_FLAG_SCOPE = 0x80000000;
 enum DNS_WINS_FLAG_LOCAL = 0x00010000;
 enum DNS_CONFIG_FLAG_ALLOC = 0x00000001;
+enum DDR_MAX_IP_HINTS = 0x00000004;
 enum DNSREC_SECTION = 0x00000003;
 enum DNSREC_QUESTION = 0x00000000;
 enum DNSREC_ANSWER = 0x00000001;
@@ -823,6 +827,73 @@ struct DNS_WINSR_DATAA
     uint dwCacheTimeout;
     PSTR pNameResultDomain;
 }
+alias DNS_SVCB_PARAM_TYPE = int;
+enum : int
+{
+    DnsSvcbParamMandatory      = 0x00000000,
+    DnsSvcbParamAlpn           = 0x00000001,
+    DnsSvcbParamNoDefaultAlpn  = 0x00000002,
+    DnsSvcbParamPort           = 0x00000003,
+    DnsSvcbParamIpv4Hint       = 0x00000004,
+    DnsSvcbParamEch            = 0x00000005,
+    DnsSvcbParamIpv6Hint       = 0x00000006,
+    DnsSvcbParamDohPath        = 0x00000007,
+    DnsSvcbParamDohPathQuad9   = 0x0000ff64,
+    DnsSvcbParamDohPathOpenDns = 0x0000ff98,
+}
+
+struct DNS_SVCB_PARAM_MANDATORY
+{
+    ushort cMandatoryKeys;
+    ushort[1] rgwMandatoryKeys;
+}
+struct DNS_SVCB_PARAM_ALPN_ID
+{
+    ubyte cBytes;
+    ubyte* pbId;
+}
+struct DNS_SVCB_PARAM_ALPN
+{
+    ushort cIds;
+    DNS_SVCB_PARAM_ALPN_ID[1] rgIds;
+}
+struct DNS_SVCB_PARAM_IPV4
+{
+    ushort cIps;
+    uint[1] rgIps;
+}
+struct DNS_SVCB_PARAM_IPV6
+{
+    ushort cIps;
+    IP6_ADDRESS[1] rgIps;
+}
+struct DNS_SVCB_PARAM_UNKNOWN
+{
+    ushort cBytes;
+    ubyte[1] pbSvcParamValue;
+}
+struct DNS_SVCB_PARAM
+{
+    ushort wSvcParamKey;
+    union
+    {
+        DNS_SVCB_PARAM_IPV4* pIpv4Hints;
+        DNS_SVCB_PARAM_IPV6* pIpv6Hints;
+        DNS_SVCB_PARAM_MANDATORY* pMandatory;
+        DNS_SVCB_PARAM_ALPN* pAlpn;
+        ushort wPort;
+        DNS_SVCB_PARAM_UNKNOWN* pUnknown;
+        PSTR pszDohPath;
+        void* pReserved;
+    }
+}
+struct DNS_SVCB_DATA
+{
+    ushort wSvcPriority;
+    PSTR pszTargetName;
+    ushort cSvcParams;
+    DNS_SVCB_PARAM* pSvcParams;
+}
 struct DNS_RECORD_FLAGS
 {
     uint _bitfield0;
@@ -932,6 +1003,8 @@ struct DNS_RECORDW
         DNS_NSEC3PARAM_DATA Nsec3Param;
         DNS_TLSA_DATA TLSA;
         DNS_TLSA_DATA Tlsa;
+        DNS_SVCB_DATA SVCB;
+        DNS_SVCB_DATA Svcb;
         DNS_UNKNOWN_DATA UNKNOWN;
         DNS_UNKNOWN_DATA Unknown;
         ubyte* pDataPtr;
@@ -1053,6 +1126,8 @@ struct DNS_RECORDA
         DNS_NSEC3PARAM_DATA Nsec3Param;
         DNS_TLSA_DATA TLSA;
         DNS_TLSA_DATA Tlsa;
+        DNS_SVCB_DATA SVCB;
+        DNS_SVCB_DATA Svcb;
         DNS_UNKNOWN_DATA UNKNOWN;
         DNS_UNKNOWN_DATA Unknown;
         ubyte* pDataPtr;
@@ -1277,7 +1352,7 @@ struct DNS_CONNECTION_POLICY_ENTRY
     uint cbAppSid;
     ubyte* pbAppSid;
     uint nConnections;
-    PWSTR* ppwszConnections;
+    const(wchar)** ppwszConnections;
     uint dwPolicyEntryFlags;
 }
 struct DNS_CONNECTION_POLICY_ENTRY_LIST
