@@ -2,7 +2,7 @@ module windows.win32.security.applocker;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BOOLEAN, FILETIME, HANDLE, HWND, PWSTR;
-import windows.win32.security_ : SAFER_LEVEL_HANDLE;
+import windows.win32.security : SAFER_LEVEL_HANDLE;
 
 version (Windows):
 extern (Windows):

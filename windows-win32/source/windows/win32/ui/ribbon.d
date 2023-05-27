@@ -3,7 +3,7 @@ module windows.win32.ui.ribbon;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : HINSTANCE, HRESULT, HWND, PWSTR;
 import windows.win32.graphics.gdi : HBITMAP;
-import windows.win32.system.com_ : IStream, IUnknown;
+import windows.win32.system.com : IStream, IUnknown;
 import windows.win32.system.com.structuredstorage : PROPVARIANT;
 import windows.win32.ui.shell.propertiessystem : PROPERTYKEY;
 
@@ -13,14 +13,6 @@ extern (Windows):
 enum UI_ALL_COMMANDS = 0x00000000;
 enum UI_COLLECTION_INVALIDINDEX = 0xffffffff;
 enum LIBID_UIRibbon = GUID(0x942f35c2, 0xe83b, 0x45ef, [0xb0, 0x85, 0xac, 0x29, 0x5d, 0xd6, 0x3d, 0x5b]);
-enum CLSID_UIRibbonFramework = GUID(0x926749fa, 0x2615, 0x4987, [0x88, 0x45, 0xc3, 0x3e, 0x65, 0xf2, 0xb9, 0x57]);
-struct UIRibbonFramework
-{
-}
-enum CLSID_UIRibbonImageFromBitmapFactory = GUID(0xf7434b6, 0x59b6, 0x4250, [0x99, 0x9e, 0xd1, 0x68, 0xd6, 0xae, 0x42, 0x93]);
-struct UIRibbonImageFromBitmapFactory
-{
-}
 alias UI_CONTEXTAVAILABILITY = int;
 enum : int
 {
@@ -267,4 +259,12 @@ enum IID_IUIImageFromBitmap = GUID(0x18aba7f3, 0x4c1c, 0x4ba2, [0xbf, 0x6c, 0xf5
 interface IUIImageFromBitmap : IUnknown
 {
     HRESULT CreateImage(HBITMAP, UI_OWNERSHIP, IUIImage*);
+}
+enum CLSID_UIRibbonFramework = GUID(0x926749fa, 0x2615, 0x4987, [0x88, 0x45, 0xc3, 0x3e, 0x65, 0xf2, 0xb9, 0x57]);
+struct UIRibbonFramework
+{
+}
+enum CLSID_UIRibbonImageFromBitmapFactory = GUID(0xf7434b6, 0x59b6, 0x4250, [0x99, 0x9e, 0xd1, 0x68, 0xd6, 0xae, 0x42, 0x93]);
+struct UIRibbonImageFromBitmapFactory
+{
 }

@@ -267,11 +267,13 @@
      <File path="source\generator\impl\modulewriter.d" />
      <File path="source\generator\impl\namespaceextractor.d" />
      <File path="source\generator\impl\namespacetomodulemapper.d" />
+     <File path="source\generator\impl\namespacetomoduleorpackagemodulemapper.d" />
     </Folder>
     <Folder name="patch">
      <File path="source\generator\patch\declarationaggregator.d" />
      <File path="source\generator\patch\dlangtyperesolver.d" />
      <File path="source\generator\patch\modulewriter.d" />
+     <File path="source\generator\patch\namespaceextractor.d" />
      <File path="source\generator\patch\patchstatus.d" />
     </Folder>
     <Folder name="resolver">

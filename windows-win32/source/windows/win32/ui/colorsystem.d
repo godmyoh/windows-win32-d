@@ -3,7 +3,7 @@ module windows.win32.ui.colorsystem;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, CHAR, COLORREF, HRESULT, HWND, LPARAM, LUID, PSTR, PWSTR;
 import windows.win32.graphics.gdi : CIEXYZ, CIEXYZTRIPLE, EMR, HDC, HPALETTE, RGBTRIPLE;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 import windows.win32.ui.windowsandmessaging : DLGPROC;
 
 version (Windows):
@@ -30,8 +30,8 @@ enum : int
     ICM_DONE_OUTSIDEDC = 0x00000004,
 }
 
-alias COLOR_MATCH_TO_TARGET_ACTION = int;
-enum : int
+alias COLOR_MATCH_TO_TARGET_ACTION = uint;
+enum : uint
 {
     CS_ENABLE           = 0x00000001,
     CS_DISABLE          = 0x00000002,

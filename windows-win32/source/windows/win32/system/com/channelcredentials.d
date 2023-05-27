@@ -2,7 +2,8 @@ module windows.win32.system.com.channelcredentials;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, HRESULT;
-import windows.win32.system.com_ : IDispatch, VARIANT;
+import windows.win32.system.com : IDispatch;
+import windows.win32.system.variant : VARIANT;
 
 version (Windows):
 extern (Windows):

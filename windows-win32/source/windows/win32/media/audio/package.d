@@ -1,11 +1,10 @@
-module windows.win32.media.audio_;
+module windows.win32.media.audio;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, CHAR, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, LRESULT, PSTR, PWSTR, WPARAM;
-import windows.win32.media_ : HTASK, MMTIME;
-import windows.win32.media.kernelstreaming : KSJACK_DESCRIPTION3;
+import windows.win32.foundation : BOOL, CHAR, HANDLE, HINSTANCE, HMODULE, HRESULT, HWND, LPARAM, LRESULT, PSTR, PWSTR, WPARAM;
+import windows.win32.media : HTASK, MMTIME;
 import windows.win32.media.multimedia : HDRVR;
-import windows.win32.system.com_ : CLSCTX, INTERFACEINFO, IUnknown, STGM;
+import windows.win32.system.com : CLSCTX, INTERFACEINFO, IUnknown, STGM;
 import windows.win32.system.com.structuredstorage : PROPVARIANT;
 import windows.win32.ui.shell.propertiessystem : IPropertyStore, PROPERTYKEY;
 import windows.win32.ui.windowsandmessaging : HICON;
@@ -18,8 +17,8 @@ alias LPMIDICALLBACK = void function(HDRVR, uint, ulong, ulong, ulong);
 HRESULT CoRegisterMessageFilter(IMessageFilter, IMessageFilter*);
 BOOL sndPlaySoundA(const(char)*, uint);
 BOOL sndPlaySoundW(const(wchar)*, uint);
-BOOL PlaySoundA(const(char)*, HINSTANCE, SND_FLAGS);
-BOOL PlaySoundW(const(wchar)*, HINSTANCE, SND_FLAGS);
+BOOL PlaySoundA(const(char)*, HMODULE, SND_FLAGS);
+BOOL PlaySoundW(const(wchar)*, HMODULE, SND_FLAGS);
 uint waveOutGetNumDevs();
 uint waveOutGetDevCapsA(ulong, WAVEOUTCAPSA*, uint);
 uint waveOutGetDevCapsW(ulong, WAVEOUTCAPSW*, uint);
@@ -111,7 +110,7 @@ uint auxOutMessage(uint, uint, ulong, ulong);
 uint mixerGetNumDevs();
 uint mixerGetDevCapsA(ulong, MIXERCAPSA*, uint);
 uint mixerGetDevCapsW(ulong, MIXERCAPSW*, uint);
-uint mixerOpen(long*, uint, ulong, ulong, uint);
+uint mixerOpen(HMIXER*, uint, ulong, ulong, uint);
 uint mixerClose(HMIXER);
 uint mixerMessage(HMIXER, uint, ulong, ulong);
 uint mixerGetLineInfoA(HMIXEROBJ, MIXERLINEA*, uint);
@@ -134,11 +133,11 @@ HRESULT CreateCaptureAudioStateMonitorForCategoryAndDeviceId(AUDIO_STREAM_CATEGO
 uint acmGetVersion();
 uint acmMetrics(HACMOBJ, uint, void*);
 uint acmDriverEnum(ACMDRIVERENUMCB, ulong, uint);
-uint acmDriverID(HACMOBJ, long*, uint);
-uint acmDriverAddA(long*, HINSTANCE, LPARAM, uint, uint);
-uint acmDriverAddW(long*, HINSTANCE, LPARAM, uint, uint);
+uint acmDriverID(HACMOBJ, HACMDRIVERID*, uint);
+uint acmDriverAddA(HACMDRIVERID*, HINSTANCE, LPARAM, uint, uint);
+uint acmDriverAddW(HACMDRIVERID*, HINSTANCE, LPARAM, uint, uint);
 uint acmDriverRemove(HACMDRIVERID, uint);
-uint acmDriverOpen(long*, HACMDRIVERID, uint);
+uint acmDriverOpen(HACMDRIVER*, HACMDRIVERID, uint);
 uint acmDriverClose(HACMDRIVER, uint);
 LRESULT acmDriverMessage(HACMDRIVER, uint, LPARAM, LPARAM);
 uint acmDriverPriority(HACMDRIVERID, uint, uint);
@@ -165,7 +164,7 @@ uint acmFilterEnumA(HACMDRIVER, ACMFILTERDETAILSA*, ACMFILTERENUMCBA, ulong, uin
 uint acmFilterEnumW(HACMDRIVER, ACMFILTERDETAILSW*, ACMFILTERENUMCBW, ulong, uint);
 uint acmFilterChooseA(ACMFILTERCHOOSEA*);
 uint acmFilterChooseW(ACMFILTERCHOOSEW*);
-uint acmStreamOpen(long*, HACMDRIVER, WAVEFORMATEX*, WAVEFORMATEX*, WAVEFILTER*, ulong, ulong, uint);
+uint acmStreamOpen(HACMSTREAM*, HACMDRIVER, WAVEFORMATEX*, WAVEFORMATEX*, WAVEFILTER*, ulong, ulong, uint);
 uint acmStreamClose(HACMSTREAM, uint);
 uint acmStreamSize(HACMSTREAM, uint, uint*, uint);
 uint acmStreamReset(HACMSTREAM, uint);
@@ -1821,10 +1820,6 @@ interface ISpatialAudioObjectRenderStreamForHrtf : ISpatialAudioObjectRenderStre
 {
     HRESULT ActivateSpatialAudioObjectForHrtf(AudioObjectType, ISpatialAudioObjectForHrtf*);
 }
-enum CLSID_MMDeviceEnumerator = GUID(0xbcde0395, 0xe52f, 0x467c, [0x8e, 0x3d, 0xc4, 0x57, 0x92, 0x91, 0x69, 0x2e]);
-struct MMDeviceEnumerator
-{
-}
 struct DIRECTX_AUDIO_ACTIVATION_PARAMS
 {
     uint cbDirectXAudioActivationParams;
@@ -1950,8 +1945,8 @@ interface IAudioSystemEffectsPropertyStore : IUnknown
     HRESULT RegisterPropertyChangeNotification(IAudioSystemEffectsPropertyChangeNotificationClient);
     HRESULT UnregisterPropertyChangeNotification(IAudioSystemEffectsPropertyChangeNotificationClient);
 }
-enum CLSID_DeviceTopology = GUID(0x1df639d0, 0x5ec1, 0x47aa, [0x93, 0x79, 0x82, 0x8d, 0xc1, 0xaa, 0x8c, 0x59]);
-struct DeviceTopology
+enum CLSID_MMDeviceEnumerator = GUID(0xbcde0395, 0xe52f, 0x467c, [0x8e, 0x3d, 0xc4, 0x57, 0x92, 0x91, 0x69, 0x2e]);
+struct MMDeviceEnumerator
 {
 }
 alias DataFlow = int;
@@ -2055,12 +2050,6 @@ interface IDeviceSpecificProperty : IUnknown
     HRESULT SetValue(void*, uint, const(GUID)*);
     HRESULT Get4BRange(int*, int*, int*);
 }
-enum IID_IKsJackDescription3 = GUID(0xe3f6778b, 0x6660, 0x4cc8, [0xa2, 0x91, 0xec, 0xc4, 0x19, 0x2d, 0x99, 0x67]);
-interface IKsJackDescription3 : IUnknown
-{
-    HRESULT GetJackCount(uint*);
-    HRESULT GetJackDescription3(uint, KSJACK_DESCRIPTION3*);
-}
 enum IID_IPartsList = GUID(0x6daa848c, 0x5eb0, 0x45cc, [0xae, 0xa5, 0x99, 0x8a, 0x2c, 0xda, 0x1f, 0xfb]);
 interface IPartsList : IUnknown
 {
@@ -2121,6 +2110,10 @@ interface IDeviceTopology : IUnknown
     HRESULT GetPartById(uint, IPart*);
     HRESULT GetDeviceId(PWSTR*);
     HRESULT GetSignalPath(IPart, IPart, BOOL, IPartsList*);
+}
+enum CLSID_DeviceTopology = GUID(0x1df639d0, 0x5ec1, 0x47aa, [0x93, 0x79, 0x82, 0x8d, 0xc1, 0xaa, 0x8c, 0x59]);
+struct DeviceTopology
+{
 }
 alias AudioSessionDisconnectReason = int;
 enum : int

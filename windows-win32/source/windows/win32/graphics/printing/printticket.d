@@ -2,8 +2,8 @@ module windows.win32.graphics.printing.printticket;
 
 import windows.win32.foundation : BSTR, HRESULT, PWSTR;
 import windows.win32.graphics.gdi : DEVMODEA;
-import windows.win32.storage.xps_ : HPTPROVIDER;
-import windows.win32.system.com_ : IStream;
+import windows.win32.storage.xps : HPTPROVIDER;
+import windows.win32.system.com : IStream;
 
 version (Windows):
 extern (Windows):

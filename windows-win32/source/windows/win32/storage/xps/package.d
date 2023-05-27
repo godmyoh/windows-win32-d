@@ -1,12 +1,12 @@
-module windows.win32.storage.xps_;
+module windows.win32.storage.xps;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HRESULT, HWND, POINT, PSTR, PWSTR, SYSTEMTIME;
 import windows.win32.graphics.gdi : DEVMODEA, DEVMODEW, HDC;
-import windows.win32.security_ : SECURITY_ATTRIBUTES;
-import windows.win32.security.cryptography_ : CERT_CONTEXT;
+import windows.win32.security : SECURITY_ATTRIBUTES;
+import windows.win32.security.cryptography : CERT_CONTEXT;
 import windows.win32.storage.packaging.opc : IOpcCertificateEnumerator, IOpcCertificateSet, IOpcPartUri, IOpcSignatureCustomObjectEnumerator, IOpcSignatureCustomObjectSet, IOpcSignatureReferenceEnumerator, IOpcSignatureReferenceSet, OPC_SIGNATURE_TIME_FORMAT;
-import windows.win32.system.com_ : ISequentialStream, IStream, IUnknown, IUri;
+import windows.win32.system.com : ISequentialStream, IStream, IUnknown, IUri;
 
 version (Windows):
 extern (Windows):
@@ -17,7 +17,7 @@ enum : uint
     PW_CLIENTONLY = 0x00000001,
 }
 
-alias DEVICE_CAPABILITIES = ushort;
+alias PRINTER_DEVICE_CAPABILITIES = ushort;
 enum : ushort
 {
     DC_BINNAMES         = 0x000c,
@@ -52,8 +52,8 @@ enum : ushort
     DC_VERSION          = 0x000a,
 }
 
-int DeviceCapabilitiesA(const(char)*, const(char)*, DEVICE_CAPABILITIES, PSTR, const(DEVMODEA)*);
-int DeviceCapabilitiesW(const(wchar)*, const(wchar)*, DEVICE_CAPABILITIES, PWSTR, const(DEVMODEW)*);
+int DeviceCapabilitiesA(const(char)*, const(char)*, PRINTER_DEVICE_CAPABILITIES, PSTR, const(DEVMODEA)*);
+int DeviceCapabilitiesW(const(wchar)*, const(wchar)*, PRINTER_DEVICE_CAPABILITIES, PWSTR, const(DEVMODEW)*);
 int Escape(HDC, int, int, const(char)*, void*);
 int ExtEscape(HDC, int, int, const(char)*, int, PSTR);
 int StartDocA(HDC, const(DOCINFOA)*);
@@ -228,14 +228,6 @@ struct DOCINFOW
     const(wchar)* lpszOutput;
     const(wchar)* lpszDatatype;
     uint fwType;
-}
-enum CLSID_XpsOMObjectFactory = GUID(0xe974d26d, 0x3d9b, 0x4d47, [0x88, 0xcc, 0x38, 0x72, 0xf2, 0xdc, 0x35, 0x85]);
-struct XpsOMObjectFactory
-{
-}
-enum CLSID_XpsOMThumbnailGenerator = GUID(0x7e4a23e2, 0xb969, 0x4761, [0xbe, 0x35, 0x1a, 0x8c, 0xed, 0x58, 0xe3, 0x23]);
-struct XpsOMThumbnailGenerator
-{
 }
 alias XPS_TILE_MODE = int;
 enum : int
@@ -1124,6 +1116,14 @@ interface IXpsOMThumbnailGenerator : IUnknown
 {
     HRESULT GenerateThumbnail(IXpsOMPage, XPS_IMAGE_TYPE, XPS_THUMBNAIL_SIZE, IOpcPartUri, IXpsOMImageResource*);
 }
+enum CLSID_XpsOMObjectFactory = GUID(0xe974d26d, 0x3d9b, 0x4d47, [0x88, 0xcc, 0x38, 0x72, 0xf2, 0xdc, 0x35, 0x85]);
+struct XpsOMObjectFactory
+{
+}
+enum CLSID_XpsOMThumbnailGenerator = GUID(0x7e4a23e2, 0xb969, 0x4761, [0xbe, 0x35, 0x1a, 0x8c, 0xed, 0x58, 0xe3, 0x23]);
+struct XpsOMThumbnailGenerator
+{
+}
 alias XPS_DOCUMENT_TYPE = int;
 enum : int
 {
@@ -1185,10 +1185,6 @@ interface IXpsDocumentPackageTarget3D : IUnknown
 {
     HRESULT GetXpsOMPackageWriter3D(IOpcPartUri, IOpcPartUri, IOpcPartUri, IStream, IXpsOMPackageWriter3D*);
     HRESULT GetXpsOMFactory(IXpsOMObjectFactory*);
-}
-enum CLSID_XpsSignatureManager = GUID(0xb0c43320, 0x2315, 0x44a2, [0xb7, 0xa, 0x9, 0x43, 0xa1, 0x40, 0xa8, 0xee]);
-struct XpsSignatureManager
-{
 }
 alias XPS_SIGNATURE_STATUS = int;
 enum : int
@@ -1315,4 +1311,8 @@ interface IXpsSignatureManager : IUnknown
     HRESULT CreateSigningOptions(IXpsSigningOptions*);
     HRESULT SavePackageToFile(const(wchar)*, SECURITY_ATTRIBUTES*, uint);
     HRESULT SavePackageToStream(IStream);
+}
+enum CLSID_XpsSignatureManager = GUID(0xb0c43320, 0x2315, 0x44a2, [0xb7, 0xa, 0x9, 0x43, 0xa1, 0x40, 0xa8, 0xee]);
+struct XpsSignatureManager
+{
 }

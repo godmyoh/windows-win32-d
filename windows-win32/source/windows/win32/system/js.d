@@ -1,8 +1,8 @@
 module windows.win32.system.js;
 
 import windows.win32.foundation : HRESULT, PWSTR;
-import windows.win32.system.com_ : VARIANT;
-import windows.win32.system.diagnostics.debug__ : IActiveScriptProfilerCallback, IActiveScriptProfilerHeapEnum, IDebugApplication32, IDebugApplication64, PROFILER_EVENT_MASK;
+import windows.win32.system.diagnostics.debug_.activescript : IActiveScriptProfilerCallback, IActiveScriptProfilerHeapEnum, IDebugApplication32, IDebugApplication64, PROFILER_EVENT_MASK;
+import windows.win32.system.variant : VARIANT;
 
 version (Windows):
 extern (Windows):

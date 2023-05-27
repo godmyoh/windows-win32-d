@@ -3,14 +3,15 @@ module windows.win32.networking.activedirectory;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, PSID, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL, WPARAM;
 import windows.win32.networking.winsock : SOCKET_ADDRESS;
-import windows.win32.security_ : PSECURITY_DESCRIPTOR;
-import windows.win32.security.authentication.identity_ : LSA_FOREST_TRUST_INFORMATION;
-import windows.win32.system.com_ : DISPPARAMS, EXCEPINFO, IDataObject, IDispatch, IPersist, ITypeInfo, IUnknown, VARIANT;
+import windows.win32.security : PSECURITY_DESCRIPTOR;
+import windows.win32.security.authentication.identity : LSA_FOREST_TRUST_INFORMATION;
+import windows.win32.system.com : DISPPARAMS, EXCEPINFO, IDataObject, IDispatch, IPersist, ITypeInfo, IUnknown;
 import windows.win32.system.com.structuredstorage : IPropertyBag;
 import windows.win32.system.ole : IEnumVARIANT;
 import windows.win32.system.registry : HKEY;
-import windows.win32.ui.controls_ : LPFNSVADDPROPSHEETPAGE;
-import windows.win32.ui.shell_ : BFFCALLBACK;
+import windows.win32.system.variant : VARIANT;
+import windows.win32.ui.controls : LPFNSVADDPROPSHEETPAGE;
+import windows.win32.ui.shell : BFFCALLBACK;
 import windows.win32.ui.windowsandmessaging : DLGPROC, HICON;
 
 version (Windows):
@@ -169,11 +170,11 @@ uint DsGetDcSiteCoverageW(const(wchar)*, uint*, PWSTR**);
 uint DsGetDcSiteCoverageA(const(char)*, uint*, PSTR**);
 uint DsDeregisterDnsHostRecordsW(PWSTR, PWSTR, GUID*, GUID*, PWSTR);
 uint DsDeregisterDnsHostRecordsA(PSTR, PSTR, GUID*, GUID*, PSTR);
-uint DsGetDcOpenW(const(wchar)*, uint, const(wchar)*, GUID*, const(wchar)*, uint, GetDcContextHandle*);
-uint DsGetDcOpenA(const(char)*, uint, const(char)*, GUID*, const(char)*, uint, GetDcContextHandle*);
+uint DsGetDcOpenW(const(wchar)*, uint, const(wchar)*, GUID*, const(wchar)*, uint, HANDLE*);
+uint DsGetDcOpenA(const(char)*, uint, const(char)*, GUID*, const(char)*, uint, HANDLE*);
 uint DsGetDcNextW(HANDLE, uint*, SOCKET_ADDRESS**, PWSTR*);
 uint DsGetDcNextA(HANDLE, uint*, SOCKET_ADDRESS**, PSTR*);
-void DsGetDcCloseW(GetDcContextHandle);
+void DsGetDcCloseW(HANDLE);
 enum WM_ADSPROP_NOTIFY_PAGEINIT = 0x0000084d;
 enum WM_ADSPROP_NOTIFY_PAGEHWND = 0x0000084e;
 enum WM_ADSPROP_NOTIFY_CHANGE = 0x0000084f;
@@ -931,106 +932,6 @@ interface ICommonQuery : IUnknown
 {
     HRESULT OpenQueryWindow(HWND, OPENQUERYWINDOW*, IDataObject*);
 }
-enum CLSID_PropertyEntry = GUID(0x72d3edc2, 0xa4c4, 0x11d0, [0x85, 0x33, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
-struct PropertyEntry
-{
-}
-enum CLSID_PropertyValue = GUID(0x7b9e38b0, 0xa97c, 0x11d0, [0x85, 0x34, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
-struct PropertyValue
-{
-}
-enum CLSID_AccessControlEntry = GUID(0xb75ac000, 0x9bdd, 0x11d0, [0x85, 0x2c, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
-struct AccessControlEntry
-{
-}
-enum CLSID_AccessControlList = GUID(0xb85ea052, 0x9bdd, 0x11d0, [0x85, 0x2c, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
-struct AccessControlList
-{
-}
-enum CLSID_SecurityDescriptor = GUID(0xb958f73c, 0x9bdd, 0x11d0, [0x85, 0x2c, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
-struct SecurityDescriptor
-{
-}
-enum CLSID_LargeInteger = GUID(0x927971f5, 0x939, 0x11d1, [0x8b, 0xe1, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
-struct LargeInteger
-{
-}
-enum CLSID_NameTranslate = GUID(0x274fae1f, 0x3626, 0x11d1, [0xa3, 0xa4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
-struct NameTranslate
-{
-}
-enum CLSID_CaseIgnoreList = GUID(0x15f88a55, 0x4680, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
-struct CaseIgnoreList
-{
-}
-enum CLSID_FaxNumber = GUID(0xa5062215, 0x4681, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
-struct FaxNumber
-{
-}
-enum CLSID_NetAddress = GUID(0xb0b71247, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
-struct NetAddress
-{
-}
-enum CLSID_OctetList = GUID(0x1241400f, 0x4680, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
-struct OctetList
-{
-}
-enum CLSID_Email = GUID(0x8f92a857, 0x478e, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
-struct Email
-{
-}
-enum CLSID_Path = GUID(0xb2538919, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
-struct Path
-{
-}
-enum CLSID_ReplicaPointer = GUID(0xf5d1badf, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
-struct ReplicaPointer
-{
-}
-enum CLSID_Timestamp = GUID(0xb2bed2eb, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
-struct Timestamp
-{
-}
-enum CLSID_PostalAddress = GUID(0xa75afcd, 0x4680, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
-struct PostalAddress
-{
-}
-enum CLSID_BackLink = GUID(0xfcbf906f, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
-struct BackLink
-{
-}
-enum CLSID_TypedName = GUID(0xb33143cb, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
-struct TypedName
-{
-}
-enum CLSID_Hold = GUID(0xb3ad3e13, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
-struct Hold
-{
-}
-enum CLSID_Pathname = GUID(0x80d0d78, 0xf421, 0x11d0, [0xa3, 0x6e, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
-struct Pathname
-{
-}
-enum CLSID_ADSystemInfo = GUID(0x50b6327f, 0xafd1, 0x11d2, [0x9c, 0xb9, 0x0, 0x0, 0xf8, 0x7a, 0x36, 0x9e]);
-struct ADSystemInfo
-{
-}
-enum CLSID_WinNTSystemInfo = GUID(0x66182ec4, 0xafd1, 0x11d2, [0x9c, 0xb9, 0x0, 0x0, 0xf8, 0x7a, 0x36, 0x9e]);
-struct WinNTSystemInfo
-{
-}
-enum CLSID_DNWithBinary = GUID(0x7e99c0a3, 0xf935, 0x11d2, [0xba, 0x96, 0x0, 0xc0, 0x4f, 0xb6, 0xd0, 0xd1]);
-struct DNWithBinary
-{
-}
-enum CLSID_DNWithString = GUID(0x334857cc, 0xf934, 0x11d2, [0xba, 0x96, 0x0, 0xc0, 0x4f, 0xb6, 0xd0, 0xd1]);
-struct DNWithString
-{
-}
-enum CLSID_ADsSecurityUtility = GUID(0xf270c64a, 0xffb8, 0x4ae4, [0x85, 0xfe, 0x3a, 0x75, 0xe5, 0x34, 0x79, 0x66]);
-struct ADsSecurityUtility
-{
-}
 alias ADSTYPE = int;
 enum : int
 {
@@ -1694,6 +1595,10 @@ interface IADsPropertyEntry : IDispatch
     HRESULT get_Values(VARIANT*);
     HRESULT put_Values(VARIANT);
 }
+enum CLSID_PropertyEntry = GUID(0x72d3edc2, 0xa4c4, 0x11d0, [0x85, 0x33, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
+struct PropertyEntry
+{
+}
 enum IID_IADsPropertyValue = GUID(0x79fa9ad0, 0xa97c, 0x11d0, [0x85, 0x34, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 interface IADsPropertyValue : IDispatch
 {
@@ -1728,6 +1633,10 @@ interface IADsPropertyValue2 : IDispatch
 {
     HRESULT GetObjectProperty(int*, VARIANT*);
     HRESULT PutObjectProperty(int, VARIANT);
+}
+enum CLSID_PropertyValue = GUID(0x7b9e38b0, 0xa97c, 0x11d0, [0x85, 0x34, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
+struct PropertyValue
+{
 }
 enum IID_IPrivateDispatch = GUID(0x86ab4bbe, 0x65f6, 0x11d1, [0x8c, 0x13, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 interface IPrivateDispatch : IUnknown
@@ -2258,6 +2167,10 @@ interface IADsAccessControlEntry : IDispatch
     HRESULT get_Trustee(BSTR*);
     HRESULT put_Trustee(BSTR);
 }
+enum CLSID_AccessControlEntry = GUID(0xb75ac000, 0x9bdd, 0x11d0, [0x85, 0x2c, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
+struct AccessControlEntry
+{
+}
 enum IID_IADsAccessControlList = GUID(0xb7ee91cc, 0x9bdd, 0x11d0, [0x85, 0x2c, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 interface IADsAccessControlList : IDispatch
 {
@@ -2269,6 +2182,10 @@ interface IADsAccessControlList : IDispatch
     HRESULT RemoveAce(IDispatch);
     HRESULT CopyAccessList(IDispatch*);
     HRESULT get__NewEnum(IUnknown*);
+}
+enum CLSID_AccessControlList = GUID(0xb85ea052, 0x9bdd, 0x11d0, [0x85, 0x2c, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
+struct AccessControlList
+{
 }
 enum IID_IADsSecurityDescriptor = GUID(0xb8c787ca, 0x9bdd, 0x11d0, [0x85, 0x2c, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 interface IADsSecurityDescriptor : IDispatch
@@ -2295,6 +2212,10 @@ interface IADsSecurityDescriptor : IDispatch
     HRESULT put_SaclDefaulted(VARIANT_BOOL);
     HRESULT CopySecurityDescriptor(IDispatch*);
 }
+enum CLSID_SecurityDescriptor = GUID(0xb958f73c, 0x9bdd, 0x11d0, [0x85, 0x2c, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
+struct SecurityDescriptor
+{
+}
 enum IID_IADsLargeInteger = GUID(0x9068270b, 0x939, 0x11d1, [0x8b, 0xe1, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 interface IADsLargeInteger : IDispatch
 {
@@ -2302,6 +2223,10 @@ interface IADsLargeInteger : IDispatch
     HRESULT put_HighPart(int);
     HRESULT get_LowPart(int*);
     HRESULT put_LowPart(int);
+}
+enum CLSID_LargeInteger = GUID(0x927971f5, 0x939, 0x11d1, [0x8b, 0xe1, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
+struct LargeInteger
+{
 }
 enum IID_IADsNameTranslate = GUID(0xb1b272a3, 0x3625, 0x11d1, [0xa3, 0xa4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsNameTranslate : IDispatch
@@ -2314,11 +2239,19 @@ interface IADsNameTranslate : IDispatch
     HRESULT SetEx(int, VARIANT);
     HRESULT GetEx(int, VARIANT*);
 }
+enum CLSID_NameTranslate = GUID(0x274fae1f, 0x3626, 0x11d1, [0xa3, 0xa4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
+struct NameTranslate
+{
+}
 enum IID_IADsCaseIgnoreList = GUID(0x7b66b533, 0x4680, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsCaseIgnoreList : IDispatch
 {
     HRESULT get_CaseIgnoreList(VARIANT*);
     HRESULT put_CaseIgnoreList(VARIANT);
+}
+enum CLSID_CaseIgnoreList = GUID(0x15f88a55, 0x4680, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
+struct CaseIgnoreList
+{
 }
 enum IID_IADsFaxNumber = GUID(0xa910dea9, 0x4680, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsFaxNumber : IDispatch
@@ -2328,6 +2261,10 @@ interface IADsFaxNumber : IDispatch
     HRESULT get_Parameters(VARIANT*);
     HRESULT put_Parameters(VARIANT);
 }
+enum CLSID_FaxNumber = GUID(0xa5062215, 0x4681, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
+struct FaxNumber
+{
+}
 enum IID_IADsNetAddress = GUID(0xb21a50a9, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsNetAddress : IDispatch
 {
@@ -2336,11 +2273,19 @@ interface IADsNetAddress : IDispatch
     HRESULT get_Address(VARIANT*);
     HRESULT put_Address(VARIANT);
 }
+enum CLSID_NetAddress = GUID(0xb0b71247, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
+struct NetAddress
+{
+}
 enum IID_IADsOctetList = GUID(0x7b28b80f, 0x4680, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsOctetList : IDispatch
 {
     HRESULT get_OctetList(VARIANT*);
     HRESULT put_OctetList(VARIANT);
+}
+enum CLSID_OctetList = GUID(0x1241400f, 0x4680, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
+struct OctetList
+{
 }
 enum IID_IADsEmail = GUID(0x97af011a, 0x478e, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsEmail : IDispatch
@@ -2349,6 +2294,10 @@ interface IADsEmail : IDispatch
     HRESULT put_Type(int);
     HRESULT get_Address(BSTR*);
     HRESULT put_Address(BSTR);
+}
+enum CLSID_Email = GUID(0x8f92a857, 0x478e, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
+struct Email
+{
 }
 enum IID_IADsPath = GUID(0xb287fcd5, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsPath : IDispatch
@@ -2359,6 +2308,10 @@ interface IADsPath : IDispatch
     HRESULT put_VolumeName(BSTR);
     HRESULT get_Path(BSTR*);
     HRESULT put_Path(BSTR);
+}
+enum CLSID_Path = GUID(0xb2538919, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
+struct Path
+{
 }
 enum IID_IADsReplicaPointer = GUID(0xf60fb803, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsReplicaPointer : IDispatch
@@ -2373,6 +2326,10 @@ interface IADsReplicaPointer : IDispatch
     HRESULT put_Count(int);
     HRESULT get_ReplicaAddressHints(VARIANT*);
     HRESULT put_ReplicaAddressHints(VARIANT);
+}
+enum CLSID_ReplicaPointer = GUID(0xf5d1badf, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
+struct ReplicaPointer
+{
 }
 enum IID_IADsAcl = GUID(0x8452d3ab, 0x869, 0x11d1, [0xa3, 0x77, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsAcl : IDispatch
@@ -2393,11 +2350,19 @@ interface IADsTimestamp : IDispatch
     HRESULT get_EventID(int*);
     HRESULT put_EventID(int);
 }
+enum CLSID_Timestamp = GUID(0xb2bed2eb, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
+struct Timestamp
+{
+}
 enum IID_IADsPostalAddress = GUID(0x7adecf29, 0x4680, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsPostalAddress : IDispatch
 {
     HRESULT get_PostalAddress(VARIANT*);
     HRESULT put_PostalAddress(VARIANT);
+}
+enum CLSID_PostalAddress = GUID(0xa75afcd, 0x4680, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
+struct PostalAddress
+{
 }
 enum IID_IADsBackLink = GUID(0xfd1302bd, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsBackLink : IDispatch
@@ -2406,6 +2371,10 @@ interface IADsBackLink : IDispatch
     HRESULT put_RemoteID(int);
     HRESULT get_ObjectName(BSTR*);
     HRESULT put_ObjectName(BSTR);
+}
+enum CLSID_BackLink = GUID(0xfcbf906f, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
+struct BackLink
+{
 }
 enum IID_IADsTypedName = GUID(0xb371a349, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsTypedName : IDispatch
@@ -2417,6 +2386,10 @@ interface IADsTypedName : IDispatch
     HRESULT get_Interval(int*);
     HRESULT put_Interval(int);
 }
+enum CLSID_TypedName = GUID(0xb33143cb, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
+struct TypedName
+{
+}
 enum IID_IADsHold = GUID(0xb3eb3b37, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsHold : IDispatch
 {
@@ -2424,6 +2397,10 @@ interface IADsHold : IDispatch
     HRESULT put_ObjectName(BSTR);
     HRESULT get_Amount(int*);
     HRESULT put_Amount(int);
+}
+enum CLSID_Hold = GUID(0xb3ad3e13, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
+struct Hold
+{
 }
 enum IID_IADsObjectOptions = GUID(0x46f14fda, 0x232b, 0x11d1, [0xa8, 0x8, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0xa8]);
 interface IADsObjectOptions : IDispatch
@@ -2446,6 +2423,10 @@ interface IADsPathname : IDispatch
     HRESULT get_EscapedMode(int*);
     HRESULT put_EscapedMode(int);
 }
+enum CLSID_Pathname = GUID(0x80d0d78, 0xf421, 0x11d0, [0xa3, 0x6e, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
+struct Pathname
+{
+}
 enum IID_IADsADSystemInfo = GUID(0x5bb11929, 0xafd1, 0x11d2, [0x9c, 0xb9, 0x0, 0x0, 0xf8, 0x7a, 0x36, 0x9e]);
 interface IADsADSystemInfo : IDispatch
 {
@@ -2463,6 +2444,10 @@ interface IADsADSystemInfo : IDispatch
     HRESULT RefreshSchemaCache();
     HRESULT GetTrees(VARIANT*);
 }
+enum CLSID_ADSystemInfo = GUID(0x50b6327f, 0xafd1, 0x11d2, [0x9c, 0xb9, 0x0, 0x0, 0xf8, 0x7a, 0x36, 0x9e]);
+struct ADSystemInfo
+{
+}
 enum IID_IADsWinNTSystemInfo = GUID(0x6c6d65dc, 0xafd1, 0x11d2, [0x9c, 0xb9, 0x0, 0x0, 0xf8, 0x7a, 0x36, 0x9e]);
 interface IADsWinNTSystemInfo : IDispatch
 {
@@ -2470,6 +2455,10 @@ interface IADsWinNTSystemInfo : IDispatch
     HRESULT get_ComputerName(BSTR*);
     HRESULT get_DomainName(BSTR*);
     HRESULT get_PDC(BSTR*);
+}
+enum CLSID_WinNTSystemInfo = GUID(0x66182ec4, 0xafd1, 0x11d2, [0x9c, 0xb9, 0x0, 0x0, 0xf8, 0x7a, 0x36, 0x9e]);
+struct WinNTSystemInfo
+{
 }
 enum IID_IADsDNWithBinary = GUID(0x7e99c0a2, 0xf935, 0x11d2, [0xba, 0x96, 0x0, 0xc0, 0x4f, 0xb6, 0xd0, 0xd1]);
 interface IADsDNWithBinary : IDispatch
@@ -2479,6 +2468,10 @@ interface IADsDNWithBinary : IDispatch
     HRESULT get_DNString(BSTR*);
     HRESULT put_DNString(BSTR);
 }
+enum CLSID_DNWithBinary = GUID(0x7e99c0a3, 0xf935, 0x11d2, [0xba, 0x96, 0x0, 0xc0, 0x4f, 0xb6, 0xd0, 0xd1]);
+struct DNWithBinary
+{
+}
 enum IID_IADsDNWithString = GUID(0x370df02e, 0xf934, 0x11d2, [0xba, 0x96, 0x0, 0xc0, 0x4f, 0xb6, 0xd0, 0xd1]);
 interface IADsDNWithString : IDispatch
 {
@@ -2486,6 +2479,10 @@ interface IADsDNWithString : IDispatch
     HRESULT put_StringValue(BSTR);
     HRESULT get_DNString(BSTR*);
     HRESULT put_DNString(BSTR);
+}
+enum CLSID_DNWithString = GUID(0x334857cc, 0xf934, 0x11d2, [0xba, 0x96, 0x0, 0xc0, 0x4f, 0xb6, 0xd0, 0xd1]);
+struct DNWithString
+{
 }
 enum IID_IADsSecurityUtility = GUID(0xa63251b2, 0x5f21, 0x474b, [0xab, 0x52, 0x4a, 0x8e, 0xfa, 0xd1, 0x8, 0x95]);
 interface IADsSecurityUtility : IDispatch
@@ -2495,6 +2492,10 @@ interface IADsSecurityUtility : IDispatch
     HRESULT ConvertSecurityDescriptor(VARIANT, int, int, VARIANT*);
     HRESULT get_SecurityMask(int*);
     HRESULT put_SecurityMask(int);
+}
+enum CLSID_ADsSecurityUtility = GUID(0xf270c64a, 0xffb8, 0x4ae4, [0x85, 0xfe, 0x3a, 0x75, 0xe5, 0x34, 0x79, 0x66]);
+struct ADsSecurityUtility
+{
 }
 struct DSOBJECT
 {
@@ -3476,5 +3477,4 @@ struct DS_DOMAIN_TRUSTSA
     PSID DomainSid;
     GUID DomainGuid;
 }
-alias GetDcContextHandle = long;
 alias ADS_SEARCH_HANDLE = long;

@@ -3,11 +3,11 @@ module windows.win32.graphics.directcomposition;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HANDLE, HRESULT, HWND, LUID, POINT, RECT;
 import windows.win32.graphics.direct2d.common : D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE, D2D1_BLEND_MODE, D2D1_BORDER_MODE, D2D1_COLORMATRIX_ALPHA_MODE, D2D1_COLOR_F, D2D1_COMPOSITE_MODE, D2D1_TURBULENCE_NOISE, D2D_MATRIX_3X2_F, D2D_MATRIX_4X4_F, D2D_MATRIX_5X4_F, D2D_RECT_F, D2D_VECTOR_2F, D2D_VECTOR_4F;
-import windows.win32.graphics.direct3d_ : D3DMATRIX;
-import windows.win32.graphics.dxgi_ : IDXGIDevice;
+import windows.win32.graphics.direct3d : D3DMATRIX;
+import windows.win32.graphics.dxgi : IDXGIDevice;
 import windows.win32.graphics.dxgi.common : DXGI_ALPHA_MODE, DXGI_FORMAT, DXGI_RATIONAL;
-import windows.win32.security_ : SECURITY_ATTRIBUTES;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.security : SECURITY_ATTRIBUTES;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):

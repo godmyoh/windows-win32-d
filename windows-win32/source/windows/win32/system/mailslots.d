@@ -1,7 +1,7 @@
 module windows.win32.system.mailslots;
 
 import windows.win32.foundation : BOOL, HANDLE, PSTR, PWSTR;
-import windows.win32.security_ : SECURITY_ATTRIBUTES;
+import windows.win32.security : SECURITY_ATTRIBUTES;
 
 version (Windows):
 extern (Windows):

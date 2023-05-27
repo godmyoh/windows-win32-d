@@ -2,9 +2,9 @@ module windows.win32.storage.packaging.opc;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HRESULT, PWSTR;
-import windows.win32.security_ : SECURITY_ATTRIBUTES;
-import windows.win32.security.cryptography_ : CERT_CONTEXT;
-import windows.win32.system.com_ : IStream, IUnknown, IUri;
+import windows.win32.security : SECURITY_ATTRIBUTES;
+import windows.win32.security.cryptography : CERT_CONTEXT;
+import windows.win32.system.com : IStream, IUnknown, IUri;
 
 version (Windows):
 extern (Windows):
@@ -111,10 +111,6 @@ enum OPC_E_ZIP_EXTRA_FIELDS_TOO_LARGE = 0xffffffff8051100d;
 enum OPC_E_ZIP_FILE_HEADER_TOO_LARGE = 0xffffffff8051100e;
 enum OPC_E_ZIP_MISSING_END_OF_CENTRAL_DIRECTORY = 0xffffffff8051100f;
 enum OPC_E_ZIP_REQUIRES_64_BIT = 0xffffffff80511010;
-enum CLSID_OpcFactory = GUID(0x6b2d6ba0, 0x9f3e, 0x4f27, [0x92, 0xb, 0x31, 0x3c, 0xc4, 0x26, 0xa3, 0x9e]);
-struct OpcFactory
-{
-}
 enum IID_IOpcUri = GUID(0xbc9c1b9b, 0xd62c, 0x49eb, [0xae, 0xf0, 0x3b, 0x4e, 0xb, 0x28, 0xeb, 0xed]);
 interface IOpcUri : IUri
 {
@@ -477,4 +473,8 @@ interface IOpcFactory : IUnknown
     HRESULT ReadPackageFromStream(IStream, OPC_READ_FLAGS, IOpcPackage*);
     HRESULT WritePackageToStream(IOpcPackage, OPC_WRITE_FLAGS, IStream);
     HRESULT CreateDigitalSignatureManager(IOpcPackage, IOpcDigitalSignatureManager*);
+}
+enum CLSID_OpcFactory = GUID(0x6b2d6ba0, 0x9f3e, 0x4f27, [0x92, 0xb, 0x31, 0x3c, 0xc4, 0x26, 0xa3, 0x9e]);
+struct OpcFactory
+{
 }

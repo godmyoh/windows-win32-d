@@ -1,7 +1,7 @@
 module windows.win32.system.hostcomputesystem;
 
 import windows.win32.foundation : HANDLE, HRESULT, PWSTR;
-import windows.win32.security_ : SECURITY_DESCRIPTOR;
+import windows.win32.security : SECURITY_DESCRIPTOR;
 
 version (Windows):
 extern (Windows):
@@ -140,6 +140,7 @@ struct HCS_CREATE_OPTIONS_1
 HRESULT HcsEnumerateComputeSystems(const(wchar)*, HCS_OPERATION);
 HRESULT HcsEnumerateComputeSystemsInNamespace(const(wchar)*, const(wchar)*, HCS_OPERATION);
 HCS_OPERATION HcsCreateOperation(const(void)*, HCS_OPERATION_COMPLETION);
+HCS_OPERATION HcsCreateOperationWithNotifications(HCS_OPERATION_OPTIONS, const(void)*, HCS_EVENT_CALLBACK);
 void HcsCloseOperation(HCS_OPERATION);
 void* HcsGetOperationContext(HCS_OPERATION);
 HRESULT HcsSetOperationContext(HCS_OPERATION, const(void)*);
@@ -149,6 +150,7 @@ HCS_OPERATION_TYPE HcsGetOperationType(HCS_OPERATION);
 ulong HcsGetOperationId(HCS_OPERATION);
 HRESULT HcsGetOperationResult(HCS_OPERATION, PWSTR*);
 HRESULT HcsGetOperationResultAndProcessInfo(HCS_OPERATION, HCS_PROCESS_INFORMATION*, PWSTR*);
+HRESULT HcsAddResourceToOperation(HCS_OPERATION, HCS_RESOURCE_TYPE, const(wchar)*, HANDLE);
 HRESULT HcsGetProcessorCompatibilityFromSavedState(const(wchar)*, const(wchar)**);
 HRESULT HcsWaitForOperationResult(HCS_OPERATION, uint, PWSTR*);
 HRESULT HcsWaitForOperationResultAndProcessInfo(HCS_OPERATION, uint, HCS_PROCESS_INFORMATION*, PWSTR*);

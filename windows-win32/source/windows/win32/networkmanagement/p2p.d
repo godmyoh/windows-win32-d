@@ -3,8 +3,8 @@ module windows.win32.networkmanagement.p2p;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, FILETIME, HANDLE, HRESULT, HWND, PWSTR;
 import windows.win32.networking.winsock : SOCKADDR, SOCKADDR_IN6, SOCKADDR_STORAGE, SOCKET_ADDRESS, SOCKET_ADDRESS_LIST;
-import windows.win32.security.cryptography_ : CERT_CONTEXT, CERT_PUBLIC_KEY_INFO;
-import windows.win32.system.com_ : BLOB;
+import windows.win32.security.cryptography : CERT_CONTEXT, CERT_PUBLIC_KEY_INFO;
+import windows.win32.system.com : BLOB;
 import windows.win32.system.io : OVERLAPPED;
 
 version (Windows):

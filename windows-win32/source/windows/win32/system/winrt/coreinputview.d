@@ -2,7 +2,7 @@ module windows.win32.system.winrt.coreinputview;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : HRESULT, HWND;
-import windows.win32.system.winrt_ : IInspectable;
+import windows.win32.system.winrt : IInspectable;
 
 version (Windows):
 extern (Windows):

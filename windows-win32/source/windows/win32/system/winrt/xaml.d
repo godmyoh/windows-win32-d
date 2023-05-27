@@ -2,14 +2,15 @@ module windows.win32.system.winrt.xaml;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HANDLE, HRESULT, HWND, POINT, RECT;
-import windows.win32.graphics.dxgi_ : IDXGIDevice, IDXGISurface, IDXGISwapChain;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.graphics.dxgi : IDXGIDevice, IDXGISurface, IDXGISwapChain;
+import windows.win32.system.com : IUnknown;
 import windows.win32.ui.windowsandmessaging : MSG;
 
 version (Windows):
 extern (Windows):
 
 enum E_SURFACE_CONTENTS_LOST = 0x802b0020;
+alias TrackerHandle = long;
 enum IID_ISurfaceImageSourceNative = GUID(0xf2e9edc1, 0xd307, 0x4525, [0x98, 0x86, 0xf, 0xaf, 0xaa, 0x44, 0x16, 0x3c]);
 interface ISurfaceImageSourceNative : IUnknown
 {
@@ -125,15 +126,11 @@ enum IID_IReferenceTrackerExtension = GUID(0x4e897caa, 0x59d5, 0x4613, [0x8f, 0x
 interface IReferenceTrackerExtension : IUnknown
 {
 }
-struct TrackerHandle__
-{
-    int unused;
-}
 enum IID_ITrackerOwner = GUID(0xeb24c20b, 0x9816, 0x4ac7, [0x8c, 0xff, 0x36, 0xf6, 0x7a, 0x11, 0x8f, 0x4e]);
 interface ITrackerOwner : IUnknown
 {
-    HRESULT CreateTrackerHandle(TrackerHandle__**);
-    HRESULT DeleteTrackerHandle(TrackerHandle__*);
-    HRESULT SetTrackerValue(TrackerHandle__*, IUnknown);
-    ubyte TryGetSafeTrackerValue(TrackerHandle__*, IUnknown*);
+    HRESULT CreateTrackerHandle(TrackerHandle*);
+    HRESULT DeleteTrackerHandle(TrackerHandle);
+    HRESULT SetTrackerValue(TrackerHandle, IUnknown);
+    ubyte TryGetSafeTrackerValue(TrackerHandle, IUnknown*);
 }

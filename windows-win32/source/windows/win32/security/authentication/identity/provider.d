@@ -2,8 +2,9 @@ module windows.win32.security.authentication.identity.provider;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HRESULT, HWND, PWSTR;
-import windows.win32.system.com_ : IBindCtx, IEnumUnknown, IUnknown, VARIANT;
+import windows.win32.system.com : IBindCtx, IEnumUnknown, IUnknown;
 import windows.win32.system.com.structuredstorage : PROPVARIANT;
+import windows.win32.system.variant : VARIANT;
 import windows.win32.ui.shell.propertiessystem : IPropertyStore, PROPERTYKEY;
 
 version (Windows):
@@ -44,7 +45,7 @@ enum : int
 enum IID_IIdentityAdvise = GUID(0x4e982fed, 0xd14b, 0x440c, [0xb8, 0xd6, 0xbb, 0x38, 0x64, 0x53, 0xd3, 0x86]);
 interface IIdentityAdvise : IUnknown
 {
-    HRESULT IdentityUpdated(IdentityUpdateEvent, const(wchar)*);
+    HRESULT IdentityUpdated(uint, const(wchar)*);
 }
 enum IID_AsyncIIdentityAdvise = GUID(0x3ab4c8da, 0xd038, 0x4830, [0x8d, 0xd9, 0x32, 0x53, 0xc5, 0x5a, 0x12, 0x7f]);
 interface AsyncIIdentityAdvise : IUnknown
@@ -61,7 +62,7 @@ interface IIdentityProvider : IUnknown
     HRESULT Delete(const(wchar)*, const(PROPVARIANT)*);
     HRESULT FindByUniqueID(const(wchar)*, IPropertyStore*);
     HRESULT GetProviderPropertyStore(IPropertyStore*);
-    HRESULT Advise(IIdentityAdvise, IdentityUpdateEvent, uint*);
+    HRESULT Advise(IIdentityAdvise, uint, uint*);
     HRESULT UnAdvise(const(uint));
 }
 enum IID_AsyncIIdentityProvider = GUID(0xc6fc9901, 0xc433, 0x4646, [0x8f, 0x48, 0x4e, 0x46, 0x87, 0xaa, 0xe2, 0xa0]);
@@ -158,14 +159,6 @@ interface AsyncIIdentityAuthentication : IUnknown
     HRESULT Begin_ValidateIdentityCredential(ubyte*, uint, IPropertyStore*);
     HRESULT Finish_ValidateIdentityCredential(IPropertyStore*);
 }
-enum CLSID_CoClassIdentityStore = GUID(0x30d49246, 0xd217, 0x465f, [0xb0, 0xb, 0xac, 0x9d, 0xdd, 0x65, 0x2e, 0xb7]);
-struct CoClassIdentityStore
-{
-}
-enum CLSID_CIdentityProfileHandler = GUID(0xecf5bf46, 0xe3b6, 0x449a, [0xb5, 0x6b, 0x43, 0xf5, 0x8f, 0x86, 0x78, 0x14]);
-struct CIdentityProfileHandler
-{
-}
 enum IID_IIdentityStore = GUID(0xdf586fa5, 0x6f35, 0x44f1, [0xb2, 0x9, 0xb3, 0x8e, 0x16, 0x97, 0x72, 0xeb]);
 interface IIdentityStore : IUnknown
 {
@@ -205,4 +198,12 @@ interface AsyncIIdentityStoreEx : IUnknown
     HRESULT Finish_CreateConnectedIdentity();
     HRESULT Begin_DeleteConnectedIdentity(const(wchar)*, const(GUID)*);
     HRESULT Finish_DeleteConnectedIdentity();
+}
+enum CLSID_CoClassIdentityStore = GUID(0x30d49246, 0xd217, 0x465f, [0xb0, 0xb, 0xac, 0x9d, 0xdd, 0x65, 0x2e, 0xb7]);
+struct CoClassIdentityStore
+{
+}
+enum CLSID_CIdentityProfileHandler = GUID(0xecf5bf46, 0xe3b6, 0x449a, [0xb5, 0x6b, 0x43, 0xf5, 0x8f, 0x86, 0x78, 0x14]);
+struct CIdentityProfileHandler
+{
 }

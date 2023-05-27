@@ -179,7 +179,7 @@ enum : uint
     DXGI_FORMAT_V408                                    = 0x00000084,
     DXGI_FORMAT_SAMPLER_FEEDBACK_MIN_MIP_OPAQUE         = 0x000000bd,
     DXGI_FORMAT_SAMPLER_FEEDBACK_MIP_REGION_USED_OPAQUE = 0x000000be,
-    DXGI_FORMAT_FORCE_UINT                              = 0xffffffff,
+    DXGI_FORMAT_A4B4G4R4_UNORM                          = 0x000000bf,
 }
 
 struct DXGI_RGB
@@ -259,6 +259,5 @@ enum : uint
     DXGI_ALPHA_MODE_PREMULTIPLIED = 0x00000001,
     DXGI_ALPHA_MODE_STRAIGHT      = 0x00000002,
     DXGI_ALPHA_MODE_IGNORE        = 0x00000003,
-    DXGI_ALPHA_MODE_FORCE_DWORD   = 0xffffffff,
 }
 

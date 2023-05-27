@@ -1,6 +1,6 @@
 module windows.win32.system.diagnostics.toolhelp;
 
-import windows.win32.foundation : BOOL, CHAR, HANDLE, HINSTANCE;
+import windows.win32.foundation : BOOL, CHAR, HANDLE, HMODULE;
 
 version (Windows):
 extern (Windows):
@@ -108,7 +108,7 @@ struct MODULEENTRY32W
     uint ProccntUsage;
     ubyte* modBaseAddr;
     uint modBaseSize;
-    HINSTANCE hModule;
+    HMODULE hModule;
     wchar[256] szModule;
     wchar[260] szExePath;
 }
@@ -121,7 +121,7 @@ struct MODULEENTRY32
     uint ProccntUsage;
     ubyte* modBaseAddr;
     uint modBaseSize;
-    HINSTANCE hModule;
+    HMODULE hModule;
     CHAR[256] szModule;
     CHAR[260] szExePath;
 }

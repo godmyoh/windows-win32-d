@@ -3,8 +3,8 @@ module windows.win32.networkmanagement.networkdiagnosticsframework;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, CHAR, FILETIME, HRESULT, HWND, PWSTR;
 import windows.win32.networking.winsock : SOCKET, SOCKET_ADDRESS_LIST;
-import windows.win32.security_ : SID;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.security : SID;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):

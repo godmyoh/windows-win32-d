@@ -8,12 +8,6 @@ alias WIN32_ERROR = uint;
 enum : uint
 {
     NO_ERROR                                                                       = 0x00000000,
-    WAIT_OBJECT_0                                                                  = 0x00000000,
-    WAIT_ABANDONED                                                                 = 0x00000080,
-    WAIT_ABANDONED_0                                                               = 0x00000080,
-    WAIT_IO_COMPLETION                                                             = 0x000000c0,
-    WAIT_TIMEOUT                                                                   = 0x00000102,
-    WAIT_FAILED                                                                    = 0xffffffff,
     ERROR_SUCCESS                                                                  = 0x00000000,
     ERROR_INVALID_FUNCTION                                                         = 0x00000001,
     ERROR_FILE_NOT_FOUND                                                           = 0x00000002,
@@ -3245,6 +3239,17 @@ enum : uint
     ERROR_QUERY_STORAGE_ERROR                                                      = 0x803a0001,
 }
 
+alias WAIT_EVENT = uint;
+enum : uint
+{
+    WAIT_OBJECT_0      = 0x00000000,
+    WAIT_ABANDONED     = 0x00000080,
+    WAIT_ABANDONED_0   = 0x00000080,
+    WAIT_IO_COMPLETION = 0x000000c0,
+    WAIT_TIMEOUT       = 0x00000102,
+    WAIT_FAILED        = 0xffffffff,
+}
+
 alias NTSTATUS_FACILITY_CODE = uint;
 enum : uint
 {
@@ -3353,9 +3358,12 @@ BOOL DuplicateHandle(HANDLE, HANDLE, HANDLE, HANDLE*, uint, BOOL, DUPLICATE_HAND
 BOOL CompareObjectHandles(HANDLE, HANDLE);
 BOOL GetHandleInformation(HANDLE, uint*);
 BOOL SetHandleInformation(HANDLE, uint, HANDLE_FLAGS);
+BOOL FreeLibrary(HMODULE);
 WIN32_ERROR GetLastError();
 void SetLastError(WIN32_ERROR);
 void SetLastErrorEx(WIN32_ERROR, uint);
+HGLOBAL GlobalFree(HGLOBAL);
+HLOCAL LocalFree(HLOCAL);
 uint RtlNtStatusToDosError(NTSTATUS);
 enum TRUE = 0x00000001;
 enum FALSE = 0x00000000;
@@ -10075,11 +10083,12 @@ enum NTDDI_MAXVER = 0x00000a00;
 enum _WIN32_IE_MAXVER = 0x00000a00;
 enum _WIN32_WINNT_MAXVER = 0x00000a00;
 enum WINVER_MAXVER = 0x00000a00;
+alias BSTR = wchar*;
+alias HANDLE = void*;
 alias BOOL = int;
 alias BOOLEAN = ubyte;
 alias VARIANT_BOOL = short;
-alias BSTR = wchar*;
-alias HANDLE = void*;
+alias HMODULE = void*;
 alias HINSTANCE = void*;
 alias HRESULT = int;
 alias HWND = void*;
@@ -10097,6 +10106,10 @@ alias HGLOBAL = void*;
 alias CHAR = ubyte;
 alias SHANDLE_PTR = long;
 alias HANDLE_PTR = void*;
+alias HSPRITE = void*;
+alias HSTR = void*;
+alias HUMPD = void*;
+alias HLSURF = void*;
 struct SYSTEMTIME
 {
     ushort wYear;
@@ -10134,26 +10147,10 @@ struct DECIMAL
 alias FARPROC = long function();
 alias NEARPROC = long function();
 alias PROC = long function();
-struct HSPRITE__
-{
-    int unused;
-}
-struct HLSURF__
-{
-    int unused;
-}
-struct HSTR__
-{
-    int unused;
-}
 struct FILETIME
 {
     uint dwLowDateTime;
     uint dwHighDateTime;
-}
-struct HUMPD__
-{
-    int unused;
 }
 struct RECT
 {

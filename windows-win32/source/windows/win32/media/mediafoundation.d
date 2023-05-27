@@ -7,11 +7,12 @@ import windows.win32.graphics.direct3d12 : D3D12_BARRIER_GROUP, D3D12_COMMAND_LI
 import windows.win32.graphics.direct3d9 : D3DAUTHENTICATEDCHANNELTYPE, D3DAUTHENTICATEDCHANNEL_CONFIGURE_OUTPUT, D3DDEVTYPE, D3DDISPLAYMODEEX, D3DDISPLAYROTATION, D3DENCRYPTED_BLOCK_INFO, D3DFORMAT, D3DPOOL, IDirect3DDevice9, IDirect3DDevice9Ex, IDirect3DSurface9;
 import windows.win32.graphics.dxgi.common : DXGI_COLOR_SPACE_TYPE, DXGI_FORMAT, DXGI_RATIONAL;
 import windows.win32.graphics.gdi : BITMAPINFOHEADER, HDC, HMONITOR;
-import windows.win32.media.audio_ : AudioObjectType, ISpatialAudioMetadataItems, WAVEFORMATEX;
+import windows.win32.media.audio : AudioObjectType, ISpatialAudioMetadataItems, WAVEFORMATEX;
 import windows.win32.media.dxmediaobjects : DMO_MEDIA_TYPE, IMediaBuffer;
-import windows.win32.system.com_ : IClassFactory, IStream, IUnknown, VARIANT;
+import windows.win32.system.com : IClassFactory, IStream, IUnknown;
 import windows.win32.system.com.structuredstorage : PROPVARIANT;
-import windows.win32.system.winrt_ : IInspectable;
+import windows.win32.system.variant : VARIANT;
+import windows.win32.system.winrt : IInspectable;
 import windows.win32.ui.shell.propertiessystem : INamedPropertyStore, IPropertyStore;
 
 version (Windows):
@@ -124,6 +125,7 @@ HRESULT MFCreateExtendedCameraIntrinsics(IMFExtendedCameraIntrinsics*);
 HRESULT MFCreateExtendedCameraIntrinsicModel(const(MFCameraIntrinsic_DistortionModelType), IMFExtendedCameraIntrinsicModel*);
 HRESULT MFCreateRelativePanelWatcher(const(wchar)*, const(wchar)*, IMFRelativePanelWatcher*);
 HRESULT MFCreateCameraOcclusionStateMonitor(const(wchar)*, IMFCameraOcclusionStateReportCallback, IMFCameraOcclusionStateMonitor*);
+HRESULT MFCreateCameraControlMonitor(const(wchar)*, IMFCameraControlNotify, IMFCameraControlMonitor*);
 HRESULT MFCreateASFContentInfo(IMFASFContentInfo*);
 HRESULT MFCreateASFIndexer(IMFASFIndexer*);
 HRESULT MFCreateASFIndexerByteStream(IMFByteStream, ulong, IMFByteStream*);
@@ -205,8 +207,8 @@ HRESULT MFTUnregisterLocal(IClassFactory);
 HRESULT MFTRegisterLocalByCLSID(const(GUID)*, const(GUID)*, const(wchar)*, uint, uint, const(MFT_REGISTER_TYPE_INFO)*, uint, const(MFT_REGISTER_TYPE_INFO)*);
 HRESULT MFTUnregisterLocalByCLSID(GUID);
 HRESULT MFTEnum(GUID, uint, MFT_REGISTER_TYPE_INFO*, MFT_REGISTER_TYPE_INFO*, IMFAttributes, GUID**, uint*);
-HRESULT MFTEnumEx(GUID, MFT_ENUM_FLAG, const(MFT_REGISTER_TYPE_INFO)*, const(MFT_REGISTER_TYPE_INFO)*, IMFActivate**, uint*);
-HRESULT MFTEnum2(GUID, MFT_ENUM_FLAG, const(MFT_REGISTER_TYPE_INFO)*, const(MFT_REGISTER_TYPE_INFO)*, IMFAttributes, IMFActivate**, uint*);
+HRESULT MFTEnumEx(GUID, uint, const(MFT_REGISTER_TYPE_INFO)*, const(MFT_REGISTER_TYPE_INFO)*, IMFActivate**, uint*);
+HRESULT MFTEnum2(GUID, uint, const(MFT_REGISTER_TYPE_INFO)*, const(MFT_REGISTER_TYPE_INFO)*, IMFAttributes, IMFActivate**, uint*);
 HRESULT MFTGetInfo(GUID, PWSTR*, MFT_REGISTER_TYPE_INFO**, uint*, MFT_REGISTER_TYPE_INFO**, uint*, IMFAttributes*);
 HRESULT MFGetPluginControl(IMFPluginControl*);
 HRESULT MFGetMFTMerit(IUnknown, uint, const(ubyte)*, uint*);
@@ -4423,6 +4425,339 @@ interface ID3D12VideoEncodeCommandList3 : ID3D12VideoEncodeCommandList2
 {
     void Barrier(uint, const(D3D12_BARRIER_GROUP)*);
 }
+alias WMT_PROP_DATATYPE = int;
+enum : int
+{
+    WMT_PROP_TYPE_DWORD  = 0x00000000,
+    WMT_PROP_TYPE_STRING = 0x00000001,
+    WMT_PROP_TYPE_BINARY = 0x00000002,
+    WMT_PROP_TYPE_BOOL   = 0x00000003,
+    WMT_PROP_TYPE_QWORD  = 0x00000004,
+    WMT_PROP_TYPE_WORD   = 0x00000005,
+    WMT_PROP_TYPE_GUID   = 0x00000006,
+}
+
+enum IID_IWMValidate = GUID(0xcee3def2, 0x3808, 0x414d, [0xbe, 0x66, 0xfa, 0xfd, 0x47, 0x22, 0x10, 0xbc]);
+interface IWMValidate : IUnknown
+{
+    HRESULT SetIdentifier(GUID);
+}
+enum IID_IValidateBinding = GUID(0x4a578b2, 0xe778, 0x422a, [0xa8, 0x5, 0xb3, 0xee, 0x54, 0xd9, 0xb, 0xd9]);
+interface IValidateBinding : IUnknown
+{
+    HRESULT GetIdentifier(GUID, ubyte*, uint, ubyte**, uint*);
+}
+enum IID_IWMVideoDecoderHurryup = GUID(0x352bb3bd, 0x2d4d, 0x4323, [0x9e, 0x71, 0xdc, 0xdc, 0xfb, 0xd5, 0x3c, 0xa6]);
+interface IWMVideoDecoderHurryup : IUnknown
+{
+    HRESULT SetHurryup(int);
+    HRESULT GetHurryup(int*);
+}
+enum IID_IWMVideoForceKeyFrame = GUID(0x9f8496be, 0x5b9a, 0x41b9, [0xa9, 0xe8, 0xf2, 0x1c, 0xd8, 0x5, 0x96, 0xc2]);
+interface IWMVideoForceKeyFrame : IUnknown
+{
+    HRESULT SetKeyFrame();
+}
+enum IID_IWMCodecStrings = GUID(0xa7b2504b, 0xe58a, 0x47fb, [0x95, 0x8b, 0xca, 0xc7, 0x16, 0x5a, 0x5, 0x7d]);
+interface IWMCodecStrings : IUnknown
+{
+    HRESULT GetName(DMO_MEDIA_TYPE*, uint, PWSTR, uint*);
+    HRESULT GetDescription(DMO_MEDIA_TYPE*, uint, PWSTR, uint*);
+}
+enum IID_IWMCodecProps = GUID(0x2573e11a, 0xf01a, 0x4fdd, [0xa9, 0x8d, 0x63, 0xb8, 0xe0, 0xba, 0x95, 0x89]);
+interface IWMCodecProps : IUnknown
+{
+    HRESULT GetFormatProp(DMO_MEDIA_TYPE*, const(wchar)*, WMT_PROP_DATATYPE*, ubyte*, uint*);
+    HRESULT GetCodecProp(uint, const(wchar)*, WMT_PROP_DATATYPE*, ubyte*, uint*);
+}
+enum IID_IWMCodecLeakyBucket = GUID(0xa81ba647, 0x6227, 0x43b7, [0xb2, 0x31, 0xc7, 0xb1, 0x51, 0x35, 0xdd, 0x7d]);
+interface IWMCodecLeakyBucket : IUnknown
+{
+    HRESULT SetBufferSizeBits(uint);
+    HRESULT GetBufferSizeBits(uint*);
+    HRESULT SetBufferFullnessBits(uint);
+    HRESULT GetBufferFullnessBits(uint*);
+}
+enum IID_IWMCodecOutputTimestamp = GUID(0xb72adf95, 0x7adc, 0x4a72, [0xbc, 0x5, 0x57, 0x7d, 0x8e, 0xa6, 0xbf, 0x68]);
+interface IWMCodecOutputTimestamp : IUnknown
+{
+    HRESULT GetNextOutputTime(long*);
+}
+enum IID_IWMVideoDecoderReconBuffer = GUID(0x45bda2ac, 0x88e2, 0x4923, [0x98, 0xba, 0x39, 0x49, 0x8, 0x7, 0x11, 0xa3]);
+interface IWMVideoDecoderReconBuffer : IUnknown
+{
+    HRESULT GetReconstructedVideoFrameSize(uint*);
+    HRESULT GetReconstructedVideoFrame(IMediaBuffer);
+    HRESULT SetReconstructedVideoFrame(IMediaBuffer);
+}
+enum IID_IWMCodecPrivateData = GUID(0x73f0be8e, 0x57f7, 0x4f01, [0xaa, 0x66, 0x9f, 0x57, 0x34, 0xc, 0xfe, 0xe]);
+interface IWMCodecPrivateData : IUnknown
+{
+    HRESULT SetPartialOutputType(DMO_MEDIA_TYPE*);
+    HRESULT GetPrivateData(ubyte*, uint*);
+}
+enum IID_IWMSampleExtensionSupport = GUID(0x9bca9884, 0x604, 0x4c2a, [0x87, 0xda, 0x79, 0x3f, 0xf4, 0xd5, 0x86, 0xc3]);
+interface IWMSampleExtensionSupport : IUnknown
+{
+    HRESULT SetUseSampleExtensions(BOOL);
+}
+enum IID_IWMResamplerProps = GUID(0xe7e9984f, 0xf09f, 0x4da4, [0x90, 0x3f, 0x6e, 0x2e, 0xe, 0xfe, 0x56, 0xb5]);
+interface IWMResamplerProps : IUnknown
+{
+    HRESULT SetHalfFilterLength(int);
+    HRESULT SetUserChannelMtx(float*);
+}
+enum IID_IWMResizerProps = GUID(0x57665d4c, 0x414, 0x4faa, [0x90, 0x5b, 0x10, 0xe5, 0x46, 0xf8, 0x1c, 0x33]);
+interface IWMResizerProps : IUnknown
+{
+    HRESULT SetResizerQuality(int);
+    HRESULT SetInterlaceMode(int);
+    HRESULT SetClipRegion(int, int, int, int);
+    HRESULT SetFullCropRegion(int, int, int, int, int, int, int, int);
+    HRESULT GetFullCropRegion(int*, int*, int*, int*, int*, int*, int*, int*);
+}
+enum IID_IWMColorLegalizerProps = GUID(0x776c93b3, 0xb72d, 0x4508, [0xb6, 0xd0, 0x20, 0x87, 0x85, 0xf5, 0x53, 0xe7]);
+interface IWMColorLegalizerProps : IUnknown
+{
+    HRESULT SetColorLegalizerQuality(int);
+}
+enum IID_IWMInterlaceProps = GUID(0x7b12e5d1, 0xbd22, 0x48ea, [0xbc, 0x6, 0x98, 0xe8, 0x93, 0x22, 0x1c, 0x89]);
+interface IWMInterlaceProps : IUnknown
+{
+    HRESULT SetProcessType(int);
+    HRESULT SetInitInverseTeleCinePattern(int);
+    HRESULT SetLastFrame();
+}
+enum IID_IWMFrameInterpProps = GUID(0x4c06bb9b, 0x626c, 0x4614, [0x83, 0x29, 0xcc, 0x6a, 0x21, 0xb9, 0x3f, 0xa0]);
+interface IWMFrameInterpProps : IUnknown
+{
+    HRESULT SetFrameRateIn(int, int);
+    HRESULT SetFrameRateOut(int, int);
+    HRESULT SetFrameInterpEnabled(BOOL);
+    HRESULT SetComplexityLevel(int);
+}
+enum IID_IWMColorConvProps = GUID(0xe6a49e22, 0xc099, 0x421d, [0xaa, 0xd3, 0xc0, 0x61, 0xfb, 0x4a, 0xe8, 0x5b]);
+interface IWMColorConvProps : IUnknown
+{
+    HRESULT SetMode(int);
+    HRESULT SetFullCroppingParam(int, int, int, int, int, int);
+}
+alias WMV_DYNAMIC_FLAGS = int;
+enum : int
+{
+    WMV_DYNAMIC_BITRATE    = 0x00000001,
+    WMV_DYNAMIC_RESOLUTION = 0x00000002,
+    WMV_DYNAMIC_COMPLEXITY = 0x00000004,
+}
+
+alias MF_AUVRHP_ROOMMODEL = int;
+enum : int
+{
+    VRHP_SMALLROOM      = 0x00000000,
+    VRHP_MEDIUMROOM     = 0x00000001,
+    VRHP_BIGROOM        = 0x00000002,
+    VRHP_CUSTUMIZEDROOM = 0x00000003,
+}
+
+alias AEC_SYSTEM_MODE = int;
+enum : int
+{
+    SINGLE_CHANNEL_AEC     = 0x00000000,
+    ADAPTIVE_ARRAY_ONLY    = 0x00000001,
+    OPTIBEAM_ARRAY_ONLY    = 0x00000002,
+    ADAPTIVE_ARRAY_AND_AEC = 0x00000003,
+    OPTIBEAM_ARRAY_AND_AEC = 0x00000004,
+    SINGLE_CHANNEL_NSAGC   = 0x00000005,
+    MODE_NOT_SET           = 0x00000006,
+}
+
+struct AecQualityMetrics_Struct
+{
+    long i64Timestamp;
+    ubyte ConvergenceFlag;
+    ubyte MicClippedFlag;
+    ubyte MicSilenceFlag;
+    ubyte PstvFeadbackFlag;
+    ubyte SpkClippedFlag;
+    ubyte SpkMuteFlag;
+    ubyte GlitchFlag;
+    ubyte DoubleTalkFlag;
+    uint uGlitchCount;
+    uint uMicClipCount;
+    float fDuration;
+    float fTSVariance;
+    float fTSDriftRate;
+    float fVoiceLevel;
+    float fNoiseLevel;
+    float fERLE;
+    float fAvgERLE;
+    uint dwReserved;
+}
+alias AEC_VAD_MODE = int;
+enum : int
+{
+    AEC_VAD_DISABLED                = 0x00000000,
+    AEC_VAD_NORMAL                  = 0x00000001,
+    AEC_VAD_FOR_AGC                 = 0x00000002,
+    AEC_VAD_FOR_SILENCE_SUPPRESSION = 0x00000003,
+}
+
+alias AEC_INPUT_STREAM = int;
+enum : int
+{
+    AEC_CAPTURE_STREAM   = 0x00000000,
+    AEC_REFERENCE_STREAM = 0x00000001,
+}
+
+alias MIC_ARRAY_MODE = int;
+enum : int
+{
+    MICARRAY_SINGLE_CHAN = 0x00000000,
+    MICARRAY_SIMPLE_SUM  = 0x00000100,
+    MICARRAY_SINGLE_BEAM = 0x00000200,
+    MICARRAY_FIXED_BEAM  = 0x00000400,
+    MICARRAY_EXTERN_BEAM = 0x00000800,
+}
+
+alias MFVideoDSPMode = int;
+enum : int
+{
+    MFVideoDSPMode_Passthrough   = 0x00000001,
+    MFVideoDSPMode_Stabilization = 0x00000004,
+}
+
+struct TOC_DESCRIPTOR
+{
+    GUID guidID;
+    ushort wStreamNumber;
+    GUID guidType;
+    ushort wLanguageIndex;
+}
+struct TOC_ENTRY_DESCRIPTOR
+{
+    ulong qwStartTime;
+    ulong qwEndTime;
+    ulong qwStartPacketOffset;
+    ulong qwEndPacketOffset;
+    ulong qwRepresentativeFrameTime;
+}
+alias TOC_POS_TYPE = int;
+enum : int
+{
+    TOC_POS_INHEADER       = 0x00000000,
+    TOC_POS_TOPLEVELOBJECT = 0x00000001,
+}
+
+enum IID_ITocEntry = GUID(0xf22f5e06, 0x585c, 0x4def, [0x85, 0x23, 0x65, 0x55, 0xcf, 0xbc, 0xc, 0xb3]);
+interface ITocEntry : IUnknown
+{
+    HRESULT SetTitle(const(wchar)*);
+    HRESULT GetTitle(ushort*, PWSTR);
+    HRESULT SetDescriptor(TOC_ENTRY_DESCRIPTOR*);
+    HRESULT GetDescriptor(TOC_ENTRY_DESCRIPTOR*);
+    HRESULT SetSubEntries(uint, ushort*);
+    HRESULT GetSubEntries(uint*, ushort*);
+    HRESULT SetDescriptionData(uint, ubyte*, GUID*);
+    HRESULT GetDescriptionData(uint*, ubyte*, GUID*);
+}
+enum IID_ITocEntryList = GUID(0x3a8cccbd, 0xefd, 0x43a3, [0xb8, 0x38, 0xf3, 0x8a, 0x55, 0x2b, 0xa2, 0x37]);
+interface ITocEntryList : IUnknown
+{
+    HRESULT GetEntryCount(uint*);
+    HRESULT GetEntryByIndex(uint, ITocEntry*);
+    HRESULT AddEntry(ITocEntry, uint*);
+    HRESULT AddEntryByIndex(uint, ITocEntry);
+    HRESULT RemoveEntryByIndex(uint);
+}
+enum IID_IToc = GUID(0xd6f05441, 0xa919, 0x423b, [0x91, 0xa0, 0x89, 0xd5, 0xb4, 0xa8, 0xab, 0x77]);
+interface IToc : IUnknown
+{
+    HRESULT SetDescriptor(TOC_DESCRIPTOR*);
+    HRESULT GetDescriptor(TOC_DESCRIPTOR*);
+    HRESULT SetDescription(const(wchar)*);
+    HRESULT GetDescription(ushort*, PWSTR);
+    HRESULT SetContext(uint, ubyte*);
+    HRESULT GetContext(uint*, ubyte*);
+    HRESULT GetEntryListCount(ushort*);
+    HRESULT GetEntryListByIndex(ushort, ITocEntryList*);
+    HRESULT AddEntryList(ITocEntryList, ushort*);
+    HRESULT AddEntryListByIndex(ushort, ITocEntryList);
+    HRESULT RemoveEntryListByIndex(ushort);
+}
+enum IID_ITocCollection = GUID(0x23fee831, 0xae96, 0x42df, [0xb1, 0x70, 0x25, 0xa0, 0x48, 0x47, 0xa3, 0xca]);
+interface ITocCollection : IUnknown
+{
+    HRESULT GetEntryCount(uint*);
+    HRESULT GetEntryByIndex(uint, IToc*);
+    HRESULT AddEntry(IToc, uint*);
+    HRESULT AddEntryByIndex(uint, IToc);
+    HRESULT RemoveEntryByIndex(uint);
+}
+enum IID_ITocParser = GUID(0xecfb9a55, 0x9298, 0x4f49, [0x88, 0x7f, 0xb, 0x36, 0x20, 0x65, 0x99, 0xd2]);
+interface ITocParser : IUnknown
+{
+    HRESULT Init(const(wchar)*);
+    HRESULT GetTocCount(TOC_POS_TYPE, uint*);
+    HRESULT GetTocByIndex(TOC_POS_TYPE, uint, IToc*);
+    HRESULT GetTocByType(TOC_POS_TYPE, GUID, ITocCollection*);
+    HRESULT AddToc(TOC_POS_TYPE, IToc, uint*);
+    HRESULT RemoveTocByIndex(TOC_POS_TYPE, uint);
+    HRESULT RemoveTocByType(TOC_POS_TYPE, GUID);
+    HRESULT Commit();
+}
+alias FILE_OPENMODE = int;
+enum : int
+{
+    OPENMODE_FAIL_IF_NOT_EXIST = 0x00000000,
+    OPENMODE_FAIL_IF_EXIST     = 0x00000001,
+    OPENMODE_RESET_IF_EXIST    = 0x00000002,
+    OPENMODE_APPEND_IF_EXIST   = 0x00000003,
+    OPENMODE_DELETE_IF_EXIST   = 0x00000004,
+}
+
+alias SEEK_ORIGIN = int;
+enum : int
+{
+    _msoBegin   = 0x00000000,
+    _msoCurrent = 0x00000001,
+}
+
+alias FILE_ACCESSMODE = int;
+enum : int
+{
+    ACCESSMODE_READ            = 0x00000001,
+    ACCESSMODE_WRITE           = 0x00000002,
+    ACCESSMODE_READWRITE       = 0x00000003,
+    ACCESSMODE_WRITE_EXCLUSIVE = 0x00000004,
+}
+
+enum IID_IFileIo = GUID(0x11993196, 0x1244, 0x4840, [0xab, 0x44, 0x48, 0x9, 0x75, 0xc4, 0xff, 0xe4]);
+interface IFileIo : IUnknown
+{
+    HRESULT Initialize(FILE_ACCESSMODE, FILE_OPENMODE, const(wchar)*);
+    HRESULT GetLength(ulong*);
+    HRESULT SetLength(ulong);
+    HRESULT GetCurrentPosition(ulong*);
+    HRESULT SetCurrentPosition(ulong);
+    HRESULT IsEndOfStream(BOOL*);
+    HRESULT Read(ubyte*, uint, uint*);
+    HRESULT Write(ubyte*, uint, uint*);
+    HRESULT Seek(SEEK_ORIGIN, ulong, uint, ulong*);
+    HRESULT Close();
+}
+enum IID_IFileClient = GUID(0xbfccd196, 0x1244, 0x4840, [0xab, 0x44, 0x48, 0x9, 0x75, 0xc4, 0xff, 0xe4]);
+interface IFileClient : IUnknown
+{
+    HRESULT GetObjectDiskSize(ulong*);
+    HRESULT Write(IFileIo);
+    HRESULT Read(IFileIo);
+}
+enum IID_IClusterDetector = GUID(0x3f07f7b7, 0xc680, 0x41d9, [0x94, 0x23, 0x91, 0x51, 0x7, 0xec, 0x9f, 0xf9]);
+interface IClusterDetector : IUnknown
+{
+    HRESULT Initialize(ushort, ushort);
+    HRESULT Detect(uint, float, float, IToc, IToc*);
+}
 enum CLSID_CMpeg4DecMediaObject = GUID(0xf371728a, 0x6052, 0x4d47, [0x82, 0x7c, 0xd0, 0x39, 0x33, 0x5d, 0xfe, 0xa]);
 struct CMpeg4DecMediaObject
 {
@@ -4806,339 +5141,6 @@ struct MFAMRNBByteStreamHandler
 enum CLSID_MFAMRNBSinkClassFactory = GUID(0xb0271158, 0x70d2, 0x4c5b, [0x9f, 0x94, 0x76, 0xf5, 0x49, 0xd9, 0xf, 0xdf]);
 struct MFAMRNBSinkClassFactory
 {
-}
-alias WMT_PROP_DATATYPE = int;
-enum : int
-{
-    WMT_PROP_TYPE_DWORD  = 0x00000000,
-    WMT_PROP_TYPE_STRING = 0x00000001,
-    WMT_PROP_TYPE_BINARY = 0x00000002,
-    WMT_PROP_TYPE_BOOL   = 0x00000003,
-    WMT_PROP_TYPE_QWORD  = 0x00000004,
-    WMT_PROP_TYPE_WORD   = 0x00000005,
-    WMT_PROP_TYPE_GUID   = 0x00000006,
-}
-
-enum IID_IWMValidate = GUID(0xcee3def2, 0x3808, 0x414d, [0xbe, 0x66, 0xfa, 0xfd, 0x47, 0x22, 0x10, 0xbc]);
-interface IWMValidate : IUnknown
-{
-    HRESULT SetIdentifier(GUID);
-}
-enum IID_IValidateBinding = GUID(0x4a578b2, 0xe778, 0x422a, [0xa8, 0x5, 0xb3, 0xee, 0x54, 0xd9, 0xb, 0xd9]);
-interface IValidateBinding : IUnknown
-{
-    HRESULT GetIdentifier(GUID, ubyte*, uint, ubyte**, uint*);
-}
-enum IID_IWMVideoDecoderHurryup = GUID(0x352bb3bd, 0x2d4d, 0x4323, [0x9e, 0x71, 0xdc, 0xdc, 0xfb, 0xd5, 0x3c, 0xa6]);
-interface IWMVideoDecoderHurryup : IUnknown
-{
-    HRESULT SetHurryup(int);
-    HRESULT GetHurryup(int*);
-}
-enum IID_IWMVideoForceKeyFrame = GUID(0x9f8496be, 0x5b9a, 0x41b9, [0xa9, 0xe8, 0xf2, 0x1c, 0xd8, 0x5, 0x96, 0xc2]);
-interface IWMVideoForceKeyFrame : IUnknown
-{
-    HRESULT SetKeyFrame();
-}
-enum IID_IWMCodecStrings = GUID(0xa7b2504b, 0xe58a, 0x47fb, [0x95, 0x8b, 0xca, 0xc7, 0x16, 0x5a, 0x5, 0x7d]);
-interface IWMCodecStrings : IUnknown
-{
-    HRESULT GetName(DMO_MEDIA_TYPE*, uint, PWSTR, uint*);
-    HRESULT GetDescription(DMO_MEDIA_TYPE*, uint, PWSTR, uint*);
-}
-enum IID_IWMCodecProps = GUID(0x2573e11a, 0xf01a, 0x4fdd, [0xa9, 0x8d, 0x63, 0xb8, 0xe0, 0xba, 0x95, 0x89]);
-interface IWMCodecProps : IUnknown
-{
-    HRESULT GetFormatProp(DMO_MEDIA_TYPE*, const(wchar)*, WMT_PROP_DATATYPE*, ubyte*, uint*);
-    HRESULT GetCodecProp(uint, const(wchar)*, WMT_PROP_DATATYPE*, ubyte*, uint*);
-}
-enum IID_IWMCodecLeakyBucket = GUID(0xa81ba647, 0x6227, 0x43b7, [0xb2, 0x31, 0xc7, 0xb1, 0x51, 0x35, 0xdd, 0x7d]);
-interface IWMCodecLeakyBucket : IUnknown
-{
-    HRESULT SetBufferSizeBits(uint);
-    HRESULT GetBufferSizeBits(uint*);
-    HRESULT SetBufferFullnessBits(uint);
-    HRESULT GetBufferFullnessBits(uint*);
-}
-enum IID_IWMCodecOutputTimestamp = GUID(0xb72adf95, 0x7adc, 0x4a72, [0xbc, 0x5, 0x57, 0x7d, 0x8e, 0xa6, 0xbf, 0x68]);
-interface IWMCodecOutputTimestamp : IUnknown
-{
-    HRESULT GetNextOutputTime(long*);
-}
-enum IID_IWMVideoDecoderReconBuffer = GUID(0x45bda2ac, 0x88e2, 0x4923, [0x98, 0xba, 0x39, 0x49, 0x8, 0x7, 0x11, 0xa3]);
-interface IWMVideoDecoderReconBuffer : IUnknown
-{
-    HRESULT GetReconstructedVideoFrameSize(uint*);
-    HRESULT GetReconstructedVideoFrame(IMediaBuffer);
-    HRESULT SetReconstructedVideoFrame(IMediaBuffer);
-}
-enum IID_IWMCodecPrivateData = GUID(0x73f0be8e, 0x57f7, 0x4f01, [0xaa, 0x66, 0x9f, 0x57, 0x34, 0xc, 0xfe, 0xe]);
-interface IWMCodecPrivateData : IUnknown
-{
-    HRESULT SetPartialOutputType(DMO_MEDIA_TYPE*);
-    HRESULT GetPrivateData(ubyte*, uint*);
-}
-enum IID_IWMSampleExtensionSupport = GUID(0x9bca9884, 0x604, 0x4c2a, [0x87, 0xda, 0x79, 0x3f, 0xf4, 0xd5, 0x86, 0xc3]);
-interface IWMSampleExtensionSupport : IUnknown
-{
-    HRESULT SetUseSampleExtensions(BOOL);
-}
-enum IID_IWMResamplerProps = GUID(0xe7e9984f, 0xf09f, 0x4da4, [0x90, 0x3f, 0x6e, 0x2e, 0xe, 0xfe, 0x56, 0xb5]);
-interface IWMResamplerProps : IUnknown
-{
-    HRESULT SetHalfFilterLength(int);
-    HRESULT SetUserChannelMtx(float*);
-}
-enum IID_IWMResizerProps = GUID(0x57665d4c, 0x414, 0x4faa, [0x90, 0x5b, 0x10, 0xe5, 0x46, 0xf8, 0x1c, 0x33]);
-interface IWMResizerProps : IUnknown
-{
-    HRESULT SetResizerQuality(int);
-    HRESULT SetInterlaceMode(int);
-    HRESULT SetClipRegion(int, int, int, int);
-    HRESULT SetFullCropRegion(int, int, int, int, int, int, int, int);
-    HRESULT GetFullCropRegion(int*, int*, int*, int*, int*, int*, int*, int*);
-}
-enum IID_IWMColorLegalizerProps = GUID(0x776c93b3, 0xb72d, 0x4508, [0xb6, 0xd0, 0x20, 0x87, 0x85, 0xf5, 0x53, 0xe7]);
-interface IWMColorLegalizerProps : IUnknown
-{
-    HRESULT SetColorLegalizerQuality(int);
-}
-enum IID_IWMInterlaceProps = GUID(0x7b12e5d1, 0xbd22, 0x48ea, [0xbc, 0x6, 0x98, 0xe8, 0x93, 0x22, 0x1c, 0x89]);
-interface IWMInterlaceProps : IUnknown
-{
-    HRESULT SetProcessType(int);
-    HRESULT SetInitInverseTeleCinePattern(int);
-    HRESULT SetLastFrame();
-}
-enum IID_IWMFrameInterpProps = GUID(0x4c06bb9b, 0x626c, 0x4614, [0x83, 0x29, 0xcc, 0x6a, 0x21, 0xb9, 0x3f, 0xa0]);
-interface IWMFrameInterpProps : IUnknown
-{
-    HRESULT SetFrameRateIn(int, int);
-    HRESULT SetFrameRateOut(int, int);
-    HRESULT SetFrameInterpEnabled(BOOL);
-    HRESULT SetComplexityLevel(int);
-}
-enum IID_IWMColorConvProps = GUID(0xe6a49e22, 0xc099, 0x421d, [0xaa, 0xd3, 0xc0, 0x61, 0xfb, 0x4a, 0xe8, 0x5b]);
-interface IWMColorConvProps : IUnknown
-{
-    HRESULT SetMode(int);
-    HRESULT SetFullCroppingParam(int, int, int, int, int, int);
-}
-alias WMV_DYNAMIC_FLAGS = int;
-enum : int
-{
-    WMV_DYNAMIC_BITRATE    = 0x00000001,
-    WMV_DYNAMIC_RESOLUTION = 0x00000002,
-    WMV_DYNAMIC_COMPLEXITY = 0x00000004,
-}
-
-alias MF_AUVRHP_ROOMMODEL = int;
-enum : int
-{
-    VRHP_SMALLROOM      = 0x00000000,
-    VRHP_MEDIUMROOM     = 0x00000001,
-    VRHP_BIGROOM        = 0x00000002,
-    VRHP_CUSTUMIZEDROOM = 0x00000003,
-}
-
-alias AEC_SYSTEM_MODE = int;
-enum : int
-{
-    SINGLE_CHANNEL_AEC     = 0x00000000,
-    ADAPTIVE_ARRAY_ONLY    = 0x00000001,
-    OPTIBEAM_ARRAY_ONLY    = 0x00000002,
-    ADAPTIVE_ARRAY_AND_AEC = 0x00000003,
-    OPTIBEAM_ARRAY_AND_AEC = 0x00000004,
-    SINGLE_CHANNEL_NSAGC   = 0x00000005,
-    MODE_NOT_SET           = 0x00000006,
-}
-
-struct AecQualityMetrics_Struct
-{
-    long i64Timestamp;
-    ubyte ConvergenceFlag;
-    ubyte MicClippedFlag;
-    ubyte MicSilenceFlag;
-    ubyte PstvFeadbackFlag;
-    ubyte SpkClippedFlag;
-    ubyte SpkMuteFlag;
-    ubyte GlitchFlag;
-    ubyte DoubleTalkFlag;
-    uint uGlitchCount;
-    uint uMicClipCount;
-    float fDuration;
-    float fTSVariance;
-    float fTSDriftRate;
-    float fVoiceLevel;
-    float fNoiseLevel;
-    float fERLE;
-    float fAvgERLE;
-    uint dwReserved;
-}
-alias AEC_VAD_MODE = int;
-enum : int
-{
-    AEC_VAD_DISABLED                = 0x00000000,
-    AEC_VAD_NORMAL                  = 0x00000001,
-    AEC_VAD_FOR_AGC                 = 0x00000002,
-    AEC_VAD_FOR_SILENCE_SUPPRESSION = 0x00000003,
-}
-
-alias AEC_INPUT_STREAM = int;
-enum : int
-{
-    AEC_CAPTURE_STREAM   = 0x00000000,
-    AEC_REFERENCE_STREAM = 0x00000001,
-}
-
-alias MIC_ARRAY_MODE = int;
-enum : int
-{
-    MICARRAY_SINGLE_CHAN = 0x00000000,
-    MICARRAY_SIMPLE_SUM  = 0x00000100,
-    MICARRAY_SINGLE_BEAM = 0x00000200,
-    MICARRAY_FIXED_BEAM  = 0x00000400,
-    MICARRAY_EXTERN_BEAM = 0x00000800,
-}
-
-alias MFVideoDSPMode = int;
-enum : int
-{
-    MFVideoDSPMode_Passthrough   = 0x00000001,
-    MFVideoDSPMode_Stabilization = 0x00000004,
-}
-
-struct TOC_DESCRIPTOR
-{
-    GUID guidID;
-    ushort wStreamNumber;
-    GUID guidType;
-    ushort wLanguageIndex;
-}
-struct TOC_ENTRY_DESCRIPTOR
-{
-    ulong qwStartTime;
-    ulong qwEndTime;
-    ulong qwStartPacketOffset;
-    ulong qwEndPacketOffset;
-    ulong qwRepresentativeFrameTime;
-}
-alias TOC_POS_TYPE = int;
-enum : int
-{
-    TOC_POS_INHEADER       = 0x00000000,
-    TOC_POS_TOPLEVELOBJECT = 0x00000001,
-}
-
-enum IID_ITocEntry = GUID(0xf22f5e06, 0x585c, 0x4def, [0x85, 0x23, 0x65, 0x55, 0xcf, 0xbc, 0xc, 0xb3]);
-interface ITocEntry : IUnknown
-{
-    HRESULT SetTitle(const(wchar)*);
-    HRESULT GetTitle(ushort*, PWSTR);
-    HRESULT SetDescriptor(TOC_ENTRY_DESCRIPTOR*);
-    HRESULT GetDescriptor(TOC_ENTRY_DESCRIPTOR*);
-    HRESULT SetSubEntries(uint, ushort*);
-    HRESULT GetSubEntries(uint*, ushort*);
-    HRESULT SetDescriptionData(uint, ubyte*, GUID*);
-    HRESULT GetDescriptionData(uint*, ubyte*, GUID*);
-}
-enum IID_ITocEntryList = GUID(0x3a8cccbd, 0xefd, 0x43a3, [0xb8, 0x38, 0xf3, 0x8a, 0x55, 0x2b, 0xa2, 0x37]);
-interface ITocEntryList : IUnknown
-{
-    HRESULT GetEntryCount(uint*);
-    HRESULT GetEntryByIndex(uint, ITocEntry*);
-    HRESULT AddEntry(ITocEntry, uint*);
-    HRESULT AddEntryByIndex(uint, ITocEntry);
-    HRESULT RemoveEntryByIndex(uint);
-}
-enum IID_IToc = GUID(0xd6f05441, 0xa919, 0x423b, [0x91, 0xa0, 0x89, 0xd5, 0xb4, 0xa8, 0xab, 0x77]);
-interface IToc : IUnknown
-{
-    HRESULT SetDescriptor(TOC_DESCRIPTOR*);
-    HRESULT GetDescriptor(TOC_DESCRIPTOR*);
-    HRESULT SetDescription(const(wchar)*);
-    HRESULT GetDescription(ushort*, PWSTR);
-    HRESULT SetContext(uint, ubyte*);
-    HRESULT GetContext(uint*, ubyte*);
-    HRESULT GetEntryListCount(ushort*);
-    HRESULT GetEntryListByIndex(ushort, ITocEntryList*);
-    HRESULT AddEntryList(ITocEntryList, ushort*);
-    HRESULT AddEntryListByIndex(ushort, ITocEntryList);
-    HRESULT RemoveEntryListByIndex(ushort);
-}
-enum IID_ITocCollection = GUID(0x23fee831, 0xae96, 0x42df, [0xb1, 0x70, 0x25, 0xa0, 0x48, 0x47, 0xa3, 0xca]);
-interface ITocCollection : IUnknown
-{
-    HRESULT GetEntryCount(uint*);
-    HRESULT GetEntryByIndex(uint, IToc*);
-    HRESULT AddEntry(IToc, uint*);
-    HRESULT AddEntryByIndex(uint, IToc);
-    HRESULT RemoveEntryByIndex(uint);
-}
-enum IID_ITocParser = GUID(0xecfb9a55, 0x9298, 0x4f49, [0x88, 0x7f, 0xb, 0x36, 0x20, 0x65, 0x99, 0xd2]);
-interface ITocParser : IUnknown
-{
-    HRESULT Init(const(wchar)*);
-    HRESULT GetTocCount(TOC_POS_TYPE, uint*);
-    HRESULT GetTocByIndex(TOC_POS_TYPE, uint, IToc*);
-    HRESULT GetTocByType(TOC_POS_TYPE, GUID, ITocCollection*);
-    HRESULT AddToc(TOC_POS_TYPE, IToc, uint*);
-    HRESULT RemoveTocByIndex(TOC_POS_TYPE, uint);
-    HRESULT RemoveTocByType(TOC_POS_TYPE, GUID);
-    HRESULT Commit();
-}
-alias FILE_OPENMODE = int;
-enum : int
-{
-    OPENMODE_FAIL_IF_NOT_EXIST = 0x00000000,
-    OPENMODE_FAIL_IF_EXIST     = 0x00000001,
-    OPENMODE_RESET_IF_EXIST    = 0x00000002,
-    OPENMODE_APPEND_IF_EXIST   = 0x00000003,
-    OPENMODE_DELETE_IF_EXIST   = 0x00000004,
-}
-
-alias SEEK_ORIGIN = int;
-enum : int
-{
-    _msoBegin   = 0x00000000,
-    _msoCurrent = 0x00000001,
-}
-
-alias FILE_ACCESSMODE = int;
-enum : int
-{
-    ACCESSMODE_READ            = 0x00000001,
-    ACCESSMODE_WRITE           = 0x00000002,
-    ACCESSMODE_READWRITE       = 0x00000003,
-    ACCESSMODE_WRITE_EXCLUSIVE = 0x00000004,
-}
-
-enum IID_IFileIo = GUID(0x11993196, 0x1244, 0x4840, [0xab, 0x44, 0x48, 0x9, 0x75, 0xc4, 0xff, 0xe4]);
-interface IFileIo : IUnknown
-{
-    HRESULT Initialize(FILE_ACCESSMODE, FILE_OPENMODE, const(wchar)*);
-    HRESULT GetLength(ulong*);
-    HRESULT SetLength(ulong);
-    HRESULT GetCurrentPosition(ulong*);
-    HRESULT SetCurrentPosition(ulong);
-    HRESULT IsEndOfStream(BOOL*);
-    HRESULT Read(ubyte*, uint, uint*);
-    HRESULT Write(ubyte*, uint, uint*);
-    HRESULT Seek(SEEK_ORIGIN, ulong, uint, ulong*);
-    HRESULT Close();
-}
-enum IID_IFileClient = GUID(0xbfccd196, 0x1244, 0x4840, [0xab, 0x44, 0x48, 0x9, 0x75, 0xc4, 0xff, 0xe4]);
-interface IFileClient : IUnknown
-{
-    HRESULT GetObjectDiskSize(ulong*);
-    HRESULT Write(IFileIo);
-    HRESULT Read(IFileIo);
-}
-enum IID_IClusterDetector = GUID(0x3f07f7b7, 0xc680, 0x41d9, [0x94, 0x23, 0x91, 0x51, 0x7, 0xec, 0x9f, 0xf9]);
-interface IClusterDetector : IUnknown
-{
-    HRESULT Initialize(ushort, ushort);
-    HRESULT Detect(uint, float, float, IToc, IToc*);
 }
 struct DXVA_AYUVsample2
 {
@@ -8367,7 +8369,7 @@ struct DXVA2_ConfigPictureDecode
 }
 struct DXVA2_DecodeBufferDesc
 {
-    DXVA2_BufferfType CompressedBufferType;
+    uint CompressedBufferType;
     uint BufferIndex;
     uint DataOffset;
     uint DataSize;
@@ -8412,7 +8414,7 @@ interface IDirect3DDeviceManager9 : IUnknown
 enum IID_IDirectXVideoAccelerationService = GUID(0xfc51a550, 0xd5e7, 0x11d9, [0xaf, 0x55, 0x0, 0x5, 0x4e, 0x43, 0xff, 0x2]);
 interface IDirectXVideoAccelerationService : IUnknown
 {
-    HRESULT CreateSurface(uint, uint, uint, D3DFORMAT, D3DPOOL, uint, DXVA2_VideoRenderTargetType, IDirect3DSurface9*, HANDLE*);
+    HRESULT CreateSurface(uint, uint, uint, D3DFORMAT, D3DPOOL, uint, uint, IDirect3DSurface9*, HANDLE*);
 }
 enum IID_IDirectXVideoDecoderService = GUID(0xfc51a551, 0xd5e7, 0x11d9, [0xaf, 0x55, 0x0, 0x5, 0x4e, 0x43, 0xff, 0x2]);
 interface IDirectXVideoDecoderService : IDirectXVideoAccelerationService
@@ -8439,7 +8441,7 @@ interface IDirectXVideoDecoder : IUnknown
 {
     HRESULT GetVideoDecoderService(IDirectXVideoDecoderService*);
     HRESULT GetCreationParameters(GUID*, DXVA2_VideoDesc*, DXVA2_ConfigPictureDecode*, IDirect3DSurface9**, uint*);
-    HRESULT GetBuffer(DXVA2_BufferfType, void**, uint*);
+    HRESULT GetBuffer(uint, void**, uint*);
     HRESULT ReleaseBuffer(uint);
     HRESULT BeginFrame(IDirect3DSurface9, void*);
     HRESULT EndFrame(HANDLE*);
@@ -8567,17 +8569,15 @@ enum : int
 alias OPM_DPCP_PROTECTION_LEVEL = int;
 enum : int
 {
-    OPM_DPCP_OFF         = 0x00000000,
-    OPM_DPCP_ON          = 0x00000001,
-    OPM_DPCP_FORCE_ULONG = 0x7fffffff,
+    OPM_DPCP_OFF = 0x00000000,
+    OPM_DPCP_ON  = 0x00000001,
 }
 
 alias OPM_HDCP_PROTECTION_LEVEL = int;
 enum : int
 {
-    OPM_HDCP_OFF         = 0x00000000,
-    OPM_HDCP_ON          = 0x00000001,
-    OPM_HDCP_FORCE_ULONG = 0x7fffffff,
+    OPM_HDCP_OFF = 0x00000000,
+    OPM_HDCP_ON  = 0x00000001,
 }
 
 alias OPM_TYPE_ENFORCEMENT_HDCP_PROTECTION_LEVEL = int;
@@ -8586,7 +8586,6 @@ enum : int
     OPM_TYPE_ENFORCEMENT_HDCP_OFF                         = 0x00000000,
     OPM_TYPE_ENFORCEMENT_HDCP_ON_WITH_NO_TYPE_RESTRICTION = 0x00000001,
     OPM_TYPE_ENFORCEMENT_HDCP_ON_WITH_TYPE1_RESTRICTION   = 0x00000002,
-    OPM_TYPE_ENFORCEMENT_HDCP_FORCE_ULONG                 = 0x7fffffff,
 }
 
 alias OPM_CGMSA = int;
@@ -8607,7 +8606,6 @@ enum : int
     OPM_ACP_LEVEL_ONE   = 0x00000001,
     OPM_ACP_LEVEL_TWO   = 0x00000002,
     OPM_ACP_LEVEL_THREE = 0x00000003,
-    OPM_ACP_FORCE_ULONG = 0x7fffffff,
 }
 
 alias OPM_PROTECTION_TYPE = int;
@@ -8656,7 +8654,6 @@ enum : int
     OPM_ASPECT_RATIO_EN300294_BOX_GT_16_BY_9_CENTER               = 0x00000005,
     OPM_ASPECT_RATIO_EN300294_FULL_FORMAT_4_BY_3_PROTECTED_CENTER = 0x00000006,
     OPM_ASPECT_RATIO_EN300294_FULL_FORMAT_16_BY_9_ANAMORPHIC      = 0x00000007,
-    OPM_ASPECT_RATIO_FORCE_ULONG                                  = 0x7fffffff,
 }
 
 struct OPM_RANDOM_NUMBER
@@ -10836,7 +10833,6 @@ enum : int
     MF_OPM_ACP_LEVEL_ONE   = 0x00000001,
     MF_OPM_ACP_LEVEL_TWO   = 0x00000002,
     MF_OPM_ACP_LEVEL_THREE = 0x00000003,
-    MF_OPM_ACP_FORCE_ULONG = 0x7fffffff,
 }
 
 alias MFAudioConstriction = int;

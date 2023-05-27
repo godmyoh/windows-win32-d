@@ -2,7 +2,8 @@ module windows.win32.storage.offlinefiles;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, FILETIME, HRESULT, HWND, PWSTR;
-import windows.win32.system.com_ : BYTE_BLOB, IUnknown, VARIANT;
+import windows.win32.system.com : BYTE_BLOB, IUnknown;
+import windows.win32.system.variant : VARIANT;
 
 version (Windows):
 extern (Windows):
@@ -109,14 +110,6 @@ enum OFFLINEFILES_SYNC_ITEM_CHANGE_CHANGETIME = 0x00000001;
 enum OFFLINEFILES_SYNC_ITEM_CHANGE_WRITETIME = 0x00000002;
 enum OFFLINEFILES_SYNC_ITEM_CHANGE_FILESIZE = 0x00000004;
 enum OFFLINEFILES_SYNC_ITEM_CHANGE_ATTRIBUTES = 0x00000008;
-enum CLSID_OfflineFilesSetting = GUID(0xfd3659e9, 0xa920, 0x4123, [0xad, 0x64, 0x7f, 0xc7, 0x6c, 0x7a, 0xac, 0xdf]);
-struct OfflineFilesSetting
-{
-}
-enum CLSID_OfflineFilesCache = GUID(0x48c6be7c, 0x3871, 0x43cc, [0xb4, 0x6f, 0x14, 0x49, 0xa1, 0xbb, 0x2f, 0xf3]);
-struct OfflineFilesCache
-{
-}
 alias OFFLINEFILES_ITEM_TYPE = int;
 enum : int
 {
@@ -621,4 +614,12 @@ enum IID_IOfflineFilesCache2 = GUID(0x8c075039, 0x1551, 0x4ed9, [0x87, 0x81, 0x5
 interface IOfflineFilesCache2 : IOfflineFilesCache
 {
     HRESULT RenameItemEx(const(wchar)*, const(wchar)*, BOOL);
+}
+enum CLSID_OfflineFilesSetting = GUID(0xfd3659e9, 0xa920, 0x4123, [0xad, 0x64, 0x7f, 0xc7, 0x6c, 0x7a, 0xac, 0xdf]);
+struct OfflineFilesSetting
+{
+}
+enum CLSID_OfflineFilesCache = GUID(0x48c6be7c, 0x3871, 0x43cc, [0xb4, 0x6f, 0x14, 0x49, 0xa1, 0xbb, 0x2f, 0xf3]);
+struct OfflineFilesCache
+{
 }

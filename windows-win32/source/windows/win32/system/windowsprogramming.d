@@ -1,10 +1,10 @@
 module windows.win32.system.windowsprogramming;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HGLOBAL, HINSTANCE, HLOCAL, HRESULT, HWND, LPARAM, LRESULT, NTSTATUS, PSTR, PWSTR, RECT, UNICODE_STRING, VARIANT_BOOL, WIN32_ERROR, WPARAM;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HGLOBAL, HINSTANCE, HLOCAL, HMODULE, HRESULT, HWND, LPARAM, LRESULT, NTSTATUS, PSTR, PWSTR, RECT, UNICODE_STRING, VARIANT_BOOL, WPARAM;
 import windows.win32.graphics.gdi : HDC, RGNDATA;
-import windows.win32.security_ : SECURITY_ATTRIBUTES;
-import windows.win32.system.com_ : IStream, IUnknown, SAFEARRAY;
+import windows.win32.security : SECURITY_ATTRIBUTES;
+import windows.win32.system.com : IStream, IUnknown, SAFEARRAY;
 import windows.win32.system.kernel : LIST_ENTRY, STRING;
 import windows.win32.system.ole : OLE_HANDLE;
 import windows.win32.system.registry : HKEY;
@@ -71,7 +71,6 @@ int _hread(int, void*, int);
 int _hwrite(int, const(char)*, int);
 int _lclose(int);
 int _llseek(int, int, int);
-WIN32_ERROR SignalObjectAndWait(HANDLE, HANDLE, uint, BOOL);
 HANDLE OpenMutexA(uint, BOOL, const(char)*);
 HANDLE OpenSemaphoreA(uint, BOOL, const(char)*);
 HANDLE CreateWaitableTimerA(SECURITY_ATTRIBUTES*, BOOL, const(char)*);
@@ -128,19 +127,7 @@ BOOL ReplacePartitionUnit(PWSTR, PWSTR, uint);
 ulong GetThreadEnabledXStateFeatures();
 BOOL EnableProcessOptionalXStateFeatures(ulong);
 uint RaiseCustomSystemEventTrigger(CUSTOM_SYSTEM_EVENT_TRIGGER_CONFIG*);
-NTSTATUS NtClose(HANDLE);
-NTSTATUS NtOpenFile(HANDLE*, uint, OBJECT_ATTRIBUTES*, IO_STATUS_BLOCK*, uint, uint);
-NTSTATUS NtRenameKey(HANDLE, UNICODE_STRING*);
-NTSTATUS NtNotifyChangeMultipleKeys(HANDLE, uint, OBJECT_ATTRIBUTES*, HANDLE, PIO_APC_ROUTINE, void*, IO_STATUS_BLOCK*, uint, BOOLEAN, void*, uint, BOOLEAN);
-NTSTATUS NtQueryMultipleValueKey(HANDLE, KEY_VALUE_ENTRY*, uint, void*, uint*, uint*);
-NTSTATUS NtSetInformationKey(HANDLE, KEY_SET_INFORMATION_CLASS, void*, uint);
-NTSTATUS NtDeviceIoControlFile(HANDLE, HANDLE, PIO_APC_ROUTINE, void*, IO_STATUS_BLOCK*, uint, void*, uint, void*, uint);
-NTSTATUS NtWaitForSingleObject(HANDLE, BOOLEAN, long*);
 BOOLEAN RtlIsNameLegalDOS8Dot3(UNICODE_STRING*, STRING*, BOOLEAN*);
-NTSTATUS NtQueryObject(HANDLE, OBJECT_INFORMATION_CLASS, void*, uint, uint*);
-NTSTATUS NtQuerySystemInformation(SYSTEM_INFORMATION_CLASS, void*, uint, uint*);
-NTSTATUS NtQuerySystemTime(long*);
-NTSTATUS NtQueryTimerResolution(uint*, uint*, uint*);
 NTSTATUS RtlLocalTimeToSystemTime(long*, long*);
 BOOLEAN RtlTimeToSecondsSince1970(long*, uint*);
 void RtlFreeAnsiString(STRING*);
@@ -192,8 +179,8 @@ HRESULT RebootCheckOnInstallA(HWND, const(char)*, const(char)*, uint);
 HRESULT RebootCheckOnInstallW(HWND, const(wchar)*, const(wchar)*, uint);
 HRESULT TranslateInfStringA(const(char)*, const(char)*, const(char)*, const(char)*, PSTR, uint, uint*, void*);
 HRESULT TranslateInfStringW(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, PWSTR, uint, uint*, void*);
-HRESULT RegInstallA(HINSTANCE, const(char)*, const(STRTABLEA)*);
-HRESULT RegInstallW(HINSTANCE, const(wchar)*, const(STRTABLEW)*);
+HRESULT RegInstallA(HMODULE, const(char)*, const(STRTABLEA)*);
+HRESULT RegInstallW(HMODULE, const(wchar)*, const(STRTABLEW)*);
 HRESULT LaunchINFSectionExW(HWND, HINSTANCE, PWSTR, int);
 HRESULT ExecuteCabA(HWND, CABINFOA*, void*);
 HRESULT ExecuteCabW(HWND, CABINFOW*, void*);
@@ -252,6 +239,9 @@ HRESULT WldpSetDynamicCodeTrust(HANDLE);
 HRESULT WldpIsDynamicCodePolicyEnabled(BOOL*);
 HRESULT WldpQueryDynamicCodeTrust(HANDLE, void*, uint);
 HRESULT WldpQueryDeviceSecurityInformation(WLDP_DEVICE_SECURITY_INFORMATION*, uint, uint*);
+HRESULT WldpCanExecuteFile(const(GUID)*, WLDP_EXECUTION_EVALUATION_OPTIONS, HANDLE, const(wchar)*, WLDP_EXECUTION_POLICY*);
+HRESULT WldpCanExecuteBuffer(const(GUID)*, WLDP_EXECUTION_EVALUATION_OPTIONS, const(ubyte)*, uint, const(wchar)*, WLDP_EXECUTION_POLICY*);
+HRESULT WldpCanExecuteStream(const(GUID)*, WLDP_EXECUTION_EVALUATION_OPTIONS, IStream, const(wchar)*, WLDP_EXECUTION_POLICY*);
 enum WLDP_DLL = "WLDP.DLL";
 enum WLDP_GETLOCKDOWNPOLICY_FN = "WldpGetLockdownPolicy";
 enum WLDP_ISCLASSINAPPROVEDLIST_FN = "WldpIsClassInApprovedList";
@@ -456,10 +446,6 @@ enum GMEM_INVALID_HANDLE = 0x00008000;
 enum GMEM_DISCARDED = 0x00004000;
 enum GMEM_LOCKCOUNT = 0x000000ff;
 enum THREAD_PRIORITY_ERROR_RETURN = 0x7fffffff;
-enum VOLUME_NAME_DOS = 0x00000000;
-enum VOLUME_NAME_GUID = 0x00000001;
-enum VOLUME_NAME_NT = 0x00000002;
-enum VOLUME_NAME_NONE = 0x00000004;
 enum DRIVE_UNKNOWN = 0x00000000;
 enum DRIVE_NO_ROOT_DIR = 0x00000001;
 enum DRIVE_REMOVABLE = 0x00000002;
@@ -468,7 +454,6 @@ enum DRIVE_REMOTE = 0x00000004;
 enum DRIVE_CDROM = 0x00000005;
 enum DRIVE_RAMDISK = 0x00000006;
 enum IGNORE = 0x00000000;
-enum INFINITE = 0xffffffff;
 enum CBR_110 = 0x0000006e;
 enum CBR_300 = 0x0000012c;
 enum CBR_600 = 0x00000258;
@@ -663,12 +648,6 @@ enum RECOVERY_DEFAULT_PING_INTERVAL = 0x00001388;
 enum FILE_RENAME_FLAG_REPLACE_IF_EXISTS = 0x00000001;
 enum FILE_RENAME_FLAG_POSIX_SEMANTICS = 0x00000002;
 enum FILE_RENAME_FLAG_SUPPRESS_PIN_STATE_INHERITANCE = 0x00000004;
-enum FILE_DISPOSITION_FLAG_DO_NOT_DELETE = 0x00000000;
-enum FILE_DISPOSITION_FLAG_DELETE = 0x00000001;
-enum FILE_DISPOSITION_FLAG_POSIX_SEMANTICS = 0x00000002;
-enum FILE_DISPOSITION_FLAG_FORCE_IMAGE_SECTION_CHECK = 0x00000004;
-enum FILE_DISPOSITION_FLAG_ON_CLOSE = 0x00000008;
-enum FILE_DISPOSITION_FLAG_IGNORE_READONLY_ATTRIBUTE = 0x00000010;
 enum STORAGE_INFO_FLAGS_ALIGNED_DEVICE = 0x00000001;
 enum STORAGE_INFO_FLAGS_PARTITION_ALIGNED_ON_DEVICE = 0x00000002;
 enum STORAGE_INFO_OFFSET_UNKNOWN = 0xffffffff;
@@ -705,27 +684,9 @@ enum CODEINTEGRITY_OPTION_HVCI_KMCI_AUDITMODE_ENABLED = 0x00000800;
 enum CODEINTEGRITY_OPTION_HVCI_KMCI_STRICTMODE_ENABLED = 0x00001000;
 enum CODEINTEGRITY_OPTION_HVCI_IUM_ENABLED = 0x00002000;
 enum FILE_MAXIMUM_DISPOSITION = 0x00000005;
-enum FILE_DIRECTORY_FILE = 0x00000001;
-enum FILE_WRITE_THROUGH = 0x00000002;
-enum FILE_SEQUENTIAL_ONLY = 0x00000004;
-enum FILE_NO_INTERMEDIATE_BUFFERING = 0x00000008;
-enum FILE_SYNCHRONOUS_IO_ALERT = 0x00000010;
-enum FILE_SYNCHRONOUS_IO_NONALERT = 0x00000020;
-enum FILE_NON_DIRECTORY_FILE = 0x00000040;
-enum FILE_CREATE_TREE_CONNECTION = 0x00000080;
-enum FILE_COMPLETE_IF_OPLOCKED = 0x00000100;
-enum FILE_NO_EA_KNOWLEDGE = 0x00000200;
 enum FILE_OPEN_REMOTE_INSTANCE = 0x00000400;
-enum FILE_RANDOM_ACCESS = 0x00000800;
-enum FILE_DELETE_ON_CLOSE = 0x00001000;
-enum FILE_OPEN_BY_FILE_ID = 0x00002000;
-enum FILE_OPEN_FOR_BACKUP_INTENT = 0x00004000;
 enum FILE_NO_COMPRESSION = 0x00008000;
-enum FILE_OPEN_REQUIRING_OPLOCK = 0x00010000;
-enum FILE_RESERVE_OPFILTER = 0x00100000;
-enum FILE_OPEN_REPARSE_POINT = 0x00200000;
 enum FILE_OPEN_NO_RECALL = 0x00400000;
-enum FILE_OPEN_FOR_FREE_SPACE_QUERY = 0x00800000;
 enum FILE_VALID_OPTION_FLAGS = 0x00ffffff;
 enum FILE_VALID_PIPE_OPTION_FLAGS = 0x00000032;
 enum FILE_VALID_MAILSLOT_OPTION_FLAGS = 0x00000032;
@@ -895,12 +856,6 @@ enum WLDP_HOST_HTML = GUID(0xb35a71b6, 0xfe56, 0x48d6, [0x95, 0x43, 0x2d, 0xff, 
 enum WLDP_HOST_XML = GUID(0x5594be58, 0xc6bf, 0x4295, [0x82, 0xf4, 0xd4, 0x94, 0xd2, 0xe, 0x3a, 0x36]);
 enum WLDP_HOST_MSI = GUID(0x624eb611, 0x6e7e, 0x4eec, [0x9b, 0xfe, 0xf0, 0xec, 0xdb, 0xfc, 0xf3, 0x90]);
 enum WLDP_HOST_OTHER = GUID(0x626cbec3, 0xe1fa, 0x4227, [0x98, 0x0, 0xed, 0x21, 0x2, 0x74, 0xcf, 0x7c]);
-struct _D3DHAL_CALLBACKS
-{
-}
-struct _D3DHAL_GLOBALDRIVERDATA
-{
-}
 alias HWINWATCH = void*;
 alias FEATURE_STATE_CHANGE_SUBSCRIPTION = long;
 alias FH_SERVICE_PIPE_HANDLE = long;
@@ -963,22 +918,6 @@ struct CUSTOM_SYSTEM_EVENT_TRIGGER_CONFIG
     uint Size;
     const(wchar)* TriggerId;
 }
-alias FILE_WRITE_FLAGS = int;
-enum : int
-{
-    FILE_WRITE_FLAGS_NONE          = 0x00000000,
-    FILE_WRITE_FLAGS_WRITE_THROUGH = 0x00000001,
-}
-
-alias FILE_FLUSH_MODE = int;
-enum : int
-{
-    FILE_FLUSH_DEFAULT      = 0x00000000,
-    FILE_FLUSH_DATA         = 0x00000001,
-    FILE_FLUSH_MIN_METADATA = 0x00000002,
-    FILE_FLUSH_NO_SYNC      = 0x00000003,
-}
-
 alias PFIBER_CALLOUT_ROUTINE = void* function(void*);
 struct JIT_DEBUG_INFO
 {
@@ -1034,10 +973,6 @@ struct FILE_CASE_SENSITIVE_INFO
 {
     uint Flags;
 }
-struct FILE_DISPOSITION_INFO_EX
-{
-    uint Flags;
-}
 struct CLIENT_ID
 {
     HANDLE UniqueProcess;
@@ -1060,25 +995,6 @@ struct LDR_DATA_TABLE_ENTRY
     }
     uint TimeDateStamp;
 }
-struct OBJECT_ATTRIBUTES
-{
-    uint Length;
-    HANDLE RootDirectory;
-    UNICODE_STRING* ObjectName;
-    uint Attributes;
-    void* SecurityDescriptor;
-    void* SecurityQualityOfService;
-}
-struct IO_STATUS_BLOCK
-{
-    union
-    {
-        NTSTATUS Status;
-        void* Pointer;
-    }
-    ulong Information;
-}
-alias PIO_APC_ROUTINE = void function(void*, IO_STATUS_BLOCK*, uint);
 struct SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION
 {
     long IdleTime;
@@ -1177,29 +1093,6 @@ struct SYSTEM_CODEINTEGRITY_INFORMATION
     uint Length;
     uint CodeIntegrityOptions;
 }
-alias SYSTEM_INFORMATION_CLASS = int;
-enum : int
-{
-    SystemBasicInformation                = 0x00000000,
-    SystemPerformanceInformation          = 0x00000002,
-    SystemTimeOfDayInformation            = 0x00000003,
-    SystemProcessInformation              = 0x00000005,
-    SystemProcessorPerformanceInformation = 0x00000008,
-    SystemInterruptInformation            = 0x00000017,
-    SystemExceptionInformation            = 0x00000021,
-    SystemRegistryQuotaInformation        = 0x00000025,
-    SystemLookasideInformation            = 0x0000002d,
-    SystemCodeIntegrityInformation        = 0x00000067,
-    SystemPolicyInformation               = 0x00000086,
-}
-
-alias OBJECT_INFORMATION_CLASS = int;
-enum : int
-{
-    ObjectBasicInformation = 0x00000000,
-    ObjectTypeInformation  = 0x00000002,
-}
-
 struct PUBLIC_OBJECT_BASIC_INFORMATION
 {
     uint Attributes;
@@ -1213,25 +1106,6 @@ struct PUBLIC_OBJECT_TYPE_INFORMATION
     UNICODE_STRING TypeName;
     uint[22] Reserved;
 }
-struct KEY_VALUE_ENTRY
-{
-    UNICODE_STRING* ValueName;
-    uint DataLength;
-    uint DataOffset;
-    uint Type;
-}
-alias KEY_SET_INFORMATION_CLASS = int;
-enum : int
-{
-    KeyWriteTimeInformation         = 0x00000000,
-    KeyWow64FlagsInformation        = 0x00000001,
-    KeyControlFlagsInformation      = 0x00000002,
-    KeySetVirtualizationInformation = 0x00000003,
-    KeySetDebugInformation          = 0x00000004,
-    KeySetHandleTagsInformation     = 0x00000005,
-    MaxKeySetInfoClass              = 0x00000006,
-}
-
 alias WINSTATIONINFOCLASS = int;
 enum : int
 {
@@ -1245,10 +1119,6 @@ struct WINSTATIONINFORMATIONW
     ubyte[1140] Reserved3;
 }
 alias PWINSTATIONQUERYINFORMATIONW = BOOLEAN function(HANDLE, uint, WINSTATIONINFOCLASS, void*, uint, uint*);
-enum CLSID_CameraUIControl = GUID(0x16d5a2be, 0xb1c5, 0x47b3, [0x8e, 0xae, 0xcc, 0xbc, 0xf4, 0x52, 0xc7, 0xe8]);
-struct CameraUIControl
-{
-}
 alias CameraUIControlMode = int;
 enum : int
 {
@@ -1314,12 +1184,8 @@ interface ICameraUIControl : IUnknown
     HRESULT GetSelectedItems(SAFEARRAY**);
     HRESULT RemoveCapturedItem(const(wchar)*);
 }
-enum CLSID_EditionUpgradeHelper = GUID(0x1776df3, 0xb9af, 0x4e50, [0x9b, 0x1c, 0x56, 0xe9, 0x31, 0x16, 0xd7, 0x4]);
-struct EditionUpgradeHelper
-{
-}
-enum CLSID_EditionUpgradeBroker = GUID(0xc4270827, 0x4f39, 0x45df, [0x92, 0x88, 0x12, 0xff, 0x6b, 0x85, 0xa9, 0x21]);
-struct EditionUpgradeBroker
+enum CLSID_CameraUIControl = GUID(0x16d5a2be, 0xb1c5, 0x47b3, [0x8e, 0xae, 0xcc, 0xbc, 0xf4, 0x52, 0xc7, 0xe8]);
+struct CameraUIControl
 {
 }
 enum IID_IEditionUpgradeHelper = GUID(0xd3e9e342, 0x5deb, 0x43b6, [0x84, 0x9e, 0x69, 0x13, 0xb8, 0x5d, 0x50, 0x3a]);
@@ -1358,6 +1224,14 @@ enum IID_IFClipNotificationHelper = GUID(0x3d5e3d21, 0xbd41, 0x4c2a, [0xa6, 0x69
 interface IFClipNotificationHelper : IUnknown
 {
     HRESULT ShowSystemDialog(BSTR, BSTR);
+}
+enum CLSID_EditionUpgradeHelper = GUID(0x1776df3, 0xb9af, 0x4e50, [0x9b, 0x1c, 0x56, 0xe9, 0x31, 0x16, 0xd7, 0x4]);
+struct EditionUpgradeHelper
+{
+}
+enum CLSID_EditionUpgradeBroker = GUID(0xc4270827, 0x4f39, 0x45df, [0x92, 0x88, 0x12, 0xff, 0x6b, 0x85, 0xa9, 0x21]);
+struct EditionUpgradeBroker
+{
 }
 alias FEATURE_CHANGE_TIME = int;
 enum : int
@@ -1476,7 +1350,7 @@ struct STRTABLEW
     uint cEntries;
     STRENTRYW* pse;
 }
-alias REGINSTALLA = HRESULT function(HINSTANCE, const(char)*, const(STRTABLEA)*);
+alias REGINSTALLA = HRESULT function(HMODULE, const(char)*, const(STRTABLEA)*);
 struct CABINFOA
 {
     PSTR pszCab;
@@ -1767,14 +1641,14 @@ alias PWLDP_RESETPRODUCTIONCONFIGURATION_API = HRESULT function();
 alias PWLDP_CANEXECUTEFILE_API = HRESULT function(const(GUID)*, WLDP_EXECUTION_EVALUATION_OPTIONS, HANDLE, const(wchar)*, WLDP_EXECUTION_POLICY*);
 alias PWLDP_CANEXECUTEBUFFER_API = HRESULT function(const(GUID)*, WLDP_EXECUTION_EVALUATION_OPTIONS, const(ubyte)*, uint, const(wchar)*, WLDP_EXECUTION_POLICY*);
 alias PWLDP_CANEXECUTESTREAM_API = HRESULT function(const(GUID)*, WLDP_EXECUTION_EVALUATION_OPTIONS, IStream, const(wchar)*, WLDP_EXECUTION_POLICY*);
-enum CLSID_DefaultBrowserSyncSettings = GUID(0x3ac83423, 0x3112, 0x4aa6, [0x9b, 0x5b, 0x1f, 0xeb, 0x23, 0xd0, 0xc5, 0xf9]);
-struct DefaultBrowserSyncSettings
-{
-}
 enum IID_IDefaultBrowserSyncSettings = GUID(0x7a27faad, 0x5ae6, 0x4255, [0x90, 0x30, 0xc5, 0x30, 0x93, 0x62, 0x92, 0xe3]);
 interface IDefaultBrowserSyncSettings : IUnknown
 {
     BOOL IsEnabled();
+}
+enum CLSID_DefaultBrowserSyncSettings = GUID(0x3ac83423, 0x3112, 0x4aa6, [0x9b, 0x5b, 0x1f, 0xeb, 0x23, 0xd0, 0xc5, 0xf9]);
+struct DefaultBrowserSyncSettings
+{
 }
 struct DELAYLOAD_PROC_DESCRIPTOR
 {

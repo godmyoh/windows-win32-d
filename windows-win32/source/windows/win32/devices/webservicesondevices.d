@@ -3,8 +3,8 @@ module windows.win32.devices.webservicesondevices;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HANDLE, HRESULT, PWSTR;
 import windows.win32.networking.winsock : SOCKADDR_STORAGE;
-import windows.win32.security.cryptography_ : CERT_CONTEXT, HCERTSTORE;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.security.cryptography : CERT_CONTEXT, HCERTSTORE;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):

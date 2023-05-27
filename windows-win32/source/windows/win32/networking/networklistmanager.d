@@ -2,7 +2,7 @@ module windows.win32.networking.networklistmanager;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, FILETIME, HRESULT, VARIANT_BOOL;
-import windows.win32.system.com_ : IDispatch, IUnknown;
+import windows.win32.system.com : IDispatch, IUnknown;
 import windows.win32.system.ole : IEnumVARIANT;
 
 version (Windows):
@@ -23,10 +23,6 @@ enum NA_InternetConnectivityV4 = "NA_InternetConnectivityV4";
 enum NA_InternetConnectivityV6 = "NA_InternetConnectivityV6";
 enum NLM_MAX_ADDRESS_LIST_SIZE = 0x0000000a;
 enum NLM_UNKNOWN_DATAPLAN_STATUS = 0xffffffff;
-enum CLSID_NetworkListManager = GUID(0xdcb00c01, 0x570f, 0x4a9b, [0x8d, 0x69, 0x19, 0x9f, 0xdb, 0xa5, 0x72, 0x3b]);
-struct NetworkListManager
-{
-}
 alias NLM_CONNECTION_COST = int;
 enum : int
 {
@@ -257,4 +253,8 @@ interface INetworkConnectionCostEvents : IUnknown
 {
     HRESULT ConnectionCostChanged(GUID, uint);
     HRESULT ConnectionDataPlanStatusChanged(GUID);
+}
+enum CLSID_NetworkListManager = GUID(0xdcb00c01, 0x570f, 0x4a9b, [0x8d, 0x69, 0x19, 0x9f, 0xdb, 0xa5, 0x72, 0x3b]);
+struct NetworkListManager
+{
 }

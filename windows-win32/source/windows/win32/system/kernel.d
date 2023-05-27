@@ -2,7 +2,7 @@ module windows.win32.system.kernel;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : PSTR;
-import windows.win32.system.diagnostics.debug__ : CONTEXT, EXCEPTION_RECORD;
+import windows.win32.system.diagnostics.debug_ : CONTEXT, EXCEPTION_RECORD;
 
 version (Windows):
 extern (Windows):
@@ -162,24 +162,6 @@ struct STRING64
     ushort Length;
     ushort MaximumLength;
     ulong Buffer;
-}
-struct OBJECT_ATTRIBUTES64
-{
-    uint Length;
-    ulong RootDirectory;
-    ulong ObjectName;
-    uint Attributes;
-    ulong SecurityDescriptor;
-    ulong SecurityQualityOfService;
-}
-struct OBJECT_ATTRIBUTES32
-{
-    uint Length;
-    uint RootDirectory;
-    uint ObjectName;
-    uint Attributes;
-    uint SecurityDescriptor;
-    uint SecurityQualityOfService;
 }
 struct OBJECTID
 {

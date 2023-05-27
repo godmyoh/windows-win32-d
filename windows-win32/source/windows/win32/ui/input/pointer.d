@@ -1,7 +1,7 @@
 module windows.win32.ui.input.pointer;
 
 import windows.win32.foundation : BOOL, HANDLE, HWND, POINT, RECT;
-import windows.win32.ui.controls_ : HSYNTHETICPOINTERDEVICE, POINTER_DEVICE_CURSOR_INFO, POINTER_DEVICE_INFO, POINTER_DEVICE_PROPERTY, POINTER_TYPE_INFO;
+import windows.win32.ui.controls : HSYNTHETICPOINTERDEVICE, POINTER_DEVICE_CURSOR_INFO, POINTER_DEVICE_INFO, POINTER_DEVICE_PROPERTY, POINTER_TYPE_INFO;
 import windows.win32.ui.windowsandmessaging : POINTER_INPUT_TYPE;
 
 version (Windows):

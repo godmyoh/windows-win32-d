@@ -2,7 +2,7 @@ module windows.win32.devices.functiondiscovery;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HRESULT, PWSTR;
-import windows.win32.system.com_ : IServiceProvider, IUnknown, STGM;
+import windows.win32.system.com : IServiceProvider, IUnknown, STGM;
 import windows.win32.system.com.structuredstorage : PROPVARIANT;
 import windows.win32.ui.shell.propertiessystem : IPropertyStore, PROPERTYKEY;
 
@@ -555,14 +555,6 @@ interface IFunctionDiscoveryServiceProvider : IUnknown
 {
     HRESULT Initialize(IFunctionInstance, const(GUID)*, void**);
 }
-enum CLSID_PNPXAssociation = GUID(0xcee8ccc9, 0x4f6b, 0x4469, [0xa2, 0x35, 0x5a, 0x22, 0x86, 0x9e, 0xef, 0x3]);
-struct PNPXAssociation
-{
-}
-enum CLSID_PNPXPairingHandler = GUID(0xb8a27942, 0xade7, 0x4085, [0xaa, 0x6e, 0x4f, 0xad, 0xc7, 0xad, 0xa1, 0xef]);
-struct PNPXPairingHandler
-{
-}
 enum IID_IPNPXAssociation = GUID(0xbd7e521, 0x4da6, 0x42d5, [0x81, 0xba, 0x19, 0x81, 0xb6, 0xb9, 0x40, 0x75]);
 interface IPNPXAssociation : IUnknown
 {
@@ -576,6 +568,14 @@ interface IPNPXDeviceAssociation : IUnknown
     HRESULT Associate(const(wchar)*, IFunctionDiscoveryNotification);
     HRESULT Unassociate(const(wchar)*, IFunctionDiscoveryNotification);
     HRESULT Delete(const(wchar)*, IFunctionDiscoveryNotification);
+}
+enum CLSID_PNPXAssociation = GUID(0xcee8ccc9, 0x4f6b, 0x4469, [0xa2, 0x35, 0x5a, 0x22, 0x86, 0x9e, 0xef, 0x3]);
+struct PNPXAssociation
+{
+}
+enum CLSID_PNPXPairingHandler = GUID(0xb8a27942, 0xade7, 0x4085, [0xaa, 0x6e, 0x4f, 0xad, 0xc7, 0xad, 0xa1, 0xef]);
+struct PNPXPairingHandler
+{
 }
 enum CLSID_FunctionDiscovery = GUID(0xc72be2ec, 0x8e90, 0x452c, [0xb2, 0x9a, 0xab, 0x8f, 0xf1, 0xc0, 0x71, 0xfc]);
 struct FunctionDiscovery

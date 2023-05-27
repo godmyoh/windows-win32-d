@@ -1,11 +1,11 @@
-module windows.win32.graphics.imaging_;
+module windows.win32.graphics.imaging;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, HANDLE, HRESULT, PWSTR;
+import windows.win32.foundation : BOOL, GENERIC_ACCESS_RIGHTS, HANDLE, HRESULT, PWSTR;
 import windows.win32.graphics.direct2d.common : D2D1_PIXEL_FORMAT;
 import windows.win32.graphics.dxgi.common : DXGI_FORMAT, DXGI_JPEG_AC_HUFFMAN_TABLE, DXGI_JPEG_DC_HUFFMAN_TABLE, DXGI_JPEG_QUANTIZATION_TABLE;
 import windows.win32.graphics.gdi : HBITMAP, HPALETTE;
-import windows.win32.system.com_ : IEnumString, IEnumUnknown, IPersistStream, IStream, IUnknown;
+import windows.win32.system.com : IEnumString, IEnumUnknown, IPersistStream, IStream, IUnknown;
 import windows.win32.system.com.structuredstorage : IPropertyBag2, PROPBAG2, PROPVARIANT;
 import windows.win32.ui.windowsandmessaging : HICON;
 
@@ -340,51 +340,46 @@ enum : int
 alias WICBitmapCreateCacheOption = int;
 enum : int
 {
-    WICBitmapNoCache                       = 0x00000000,
-    WICBitmapCacheOnDemand                 = 0x00000001,
-    WICBitmapCacheOnLoad                   = 0x00000002,
-    WICBITMAPCREATECACHEOPTION_FORCE_DWORD = 0x7fffffff,
+    WICBitmapNoCache       = 0x00000000,
+    WICBitmapCacheOnDemand = 0x00000001,
+    WICBitmapCacheOnLoad   = 0x00000002,
 }
 
 alias WICDecodeOptions = int;
 enum : int
 {
-    WICDecodeMetadataCacheOnDemand     = 0x00000000,
-    WICDecodeMetadataCacheOnLoad       = 0x00000001,
-    WICMETADATACACHEOPTION_FORCE_DWORD = 0x7fffffff,
+    WICDecodeMetadataCacheOnDemand = 0x00000000,
+    WICDecodeMetadataCacheOnLoad   = 0x00000001,
 }
 
 alias WICBitmapEncoderCacheOption = int;
 enum : int
 {
-    WICBitmapEncoderCacheInMemory           = 0x00000000,
-    WICBitmapEncoderCacheTempFile           = 0x00000001,
-    WICBitmapEncoderNoCache                 = 0x00000002,
-    WICBITMAPENCODERCACHEOPTION_FORCE_DWORD = 0x7fffffff,
+    WICBitmapEncoderCacheInMemory = 0x00000000,
+    WICBitmapEncoderCacheTempFile = 0x00000001,
+    WICBitmapEncoderNoCache       = 0x00000002,
 }
 
 alias WICComponentType = int;
 enum : int
 {
-    WICDecoder                   = 0x00000001,
-    WICEncoder                   = 0x00000002,
-    WICPixelFormatConverter      = 0x00000004,
-    WICMetadataReader            = 0x00000008,
-    WICMetadataWriter            = 0x00000010,
-    WICPixelFormat               = 0x00000020,
-    WICAllComponents             = 0x0000003f,
-    WICCOMPONENTTYPE_FORCE_DWORD = 0x7fffffff,
+    WICDecoder              = 0x00000001,
+    WICEncoder              = 0x00000002,
+    WICPixelFormatConverter = 0x00000004,
+    WICMetadataReader       = 0x00000008,
+    WICMetadataWriter       = 0x00000010,
+    WICPixelFormat          = 0x00000020,
+    WICAllComponents        = 0x0000003f,
 }
 
 alias WICComponentEnumerateOptions = int;
 enum : int
 {
-    WICComponentEnumerateDefault             = 0x00000000,
-    WICComponentEnumerateRefresh             = 0x00000001,
-    WICComponentEnumerateDisabled            = 0x80000000,
-    WICComponentEnumerateUnsigned            = 0x40000000,
-    WICComponentEnumerateBuiltInOnly         = 0x20000000,
-    WICCOMPONENTENUMERATEOPTIONS_FORCE_DWORD = 0x7fffffff,
+    WICComponentEnumerateDefault     = 0x00000000,
+    WICComponentEnumerateRefresh     = 0x00000001,
+    WICComponentEnumerateDisabled    = 0x80000000,
+    WICComponentEnumerateUnsigned    = 0x40000000,
+    WICComponentEnumerateBuiltInOnly = 0x20000000,
 }
 
 struct WICBitmapPattern
@@ -403,7 +398,6 @@ enum : int
     WICBitmapInterpolationModeCubic            = 0x00000002,
     WICBitmapInterpolationModeFant             = 0x00000003,
     WICBitmapInterpolationModeHighQualityCubic = 0x00000004,
-    WICBITMAPINTERPOLATIONMODE_FORCE_DWORD     = 0x7fffffff,
 }
 
 alias WICBitmapPaletteType = int;
@@ -423,7 +417,6 @@ enum : int
     WICBitmapPaletteTypeFixedGray4       = 0x0000000a,
     WICBitmapPaletteTypeFixedGray16      = 0x0000000b,
     WICBitmapPaletteTypeFixedGray256     = 0x0000000c,
-    WICBITMAPPALETTETYPE_FORCE_DWORD     = 0x7fffffff,
 }
 
 alias WICBitmapDitherType = int;
@@ -439,36 +432,32 @@ enum : int
     WICBitmapDitherTypeDualSpiral4x4  = 0x00000006,
     WICBitmapDitherTypeDualSpiral8x8  = 0x00000007,
     WICBitmapDitherTypeErrorDiffusion = 0x00000008,
-    WICBITMAPDITHERTYPE_FORCE_DWORD   = 0x7fffffff,
 }
 
 alias WICBitmapAlphaChannelOption = int;
 enum : int
 {
-    WICBitmapUseAlpha                        = 0x00000000,
-    WICBitmapUsePremultipliedAlpha           = 0x00000001,
-    WICBitmapIgnoreAlpha                     = 0x00000002,
-    WICBITMAPALPHACHANNELOPTIONS_FORCE_DWORD = 0x7fffffff,
+    WICBitmapUseAlpha              = 0x00000000,
+    WICBitmapUsePremultipliedAlpha = 0x00000001,
+    WICBitmapIgnoreAlpha           = 0x00000002,
 }
 
 alias WICBitmapTransformOptions = int;
 enum : int
 {
-    WICBitmapTransformRotate0             = 0x00000000,
-    WICBitmapTransformRotate90            = 0x00000001,
-    WICBitmapTransformRotate180           = 0x00000002,
-    WICBitmapTransformRotate270           = 0x00000003,
-    WICBitmapTransformFlipHorizontal      = 0x00000008,
-    WICBitmapTransformFlipVertical        = 0x00000010,
-    WICBITMAPTRANSFORMOPTIONS_FORCE_DWORD = 0x7fffffff,
+    WICBitmapTransformRotate0        = 0x00000000,
+    WICBitmapTransformRotate90       = 0x00000001,
+    WICBitmapTransformRotate180      = 0x00000002,
+    WICBitmapTransformRotate270      = 0x00000003,
+    WICBitmapTransformFlipHorizontal = 0x00000008,
+    WICBitmapTransformFlipVertical   = 0x00000010,
 }
 
 alias WICBitmapLockFlags = int;
 enum : int
 {
-    WICBitmapLockRead              = 0x00000001,
-    WICBitmapLockWrite             = 0x00000002,
-    WICBITMAPLOCKFLAGS_FORCE_DWORD = 0x7fffffff,
+    WICBitmapLockRead  = 0x00000001,
+    WICBitmapLockWrite = 0x00000002,
 }
 
 alias WICBitmapDecoderCapabilities = int;
@@ -479,221 +468,197 @@ enum : int
     WICBitmapDecoderCapabilityCanDecodeSomeImages  = 0x00000004,
     WICBitmapDecoderCapabilityCanEnumerateMetadata = 0x00000008,
     WICBitmapDecoderCapabilityCanDecodeThumbnail   = 0x00000010,
-    WICBITMAPDECODERCAPABILITIES_FORCE_DWORD       = 0x7fffffff,
 }
 
 alias WICProgressOperation = int;
 enum : int
 {
-    WICProgressOperationCopyPixels   = 0x00000001,
-    WICProgressOperationWritePixels  = 0x00000002,
-    WICProgressOperationAll          = 0x0000ffff,
-    WICPROGRESSOPERATION_FORCE_DWORD = 0x7fffffff,
+    WICProgressOperationCopyPixels  = 0x00000001,
+    WICProgressOperationWritePixels = 0x00000002,
+    WICProgressOperationAll         = 0x0000ffff,
 }
 
 alias WICProgressNotification = int;
 enum : int
 {
-    WICProgressNotificationBegin        = 0x00010000,
-    WICProgressNotificationEnd          = 0x00020000,
-    WICProgressNotificationFrequent     = 0x00040000,
-    WICProgressNotificationAll          = 0xffff0000,
-    WICPROGRESSNOTIFICATION_FORCE_DWORD = 0x7fffffff,
+    WICProgressNotificationBegin    = 0x00010000,
+    WICProgressNotificationEnd      = 0x00020000,
+    WICProgressNotificationFrequent = 0x00040000,
+    WICProgressNotificationAll      = 0xffff0000,
 }
 
 alias WICComponentSigning = int;
 enum : int
 {
-    WICComponentSigned              = 0x00000001,
-    WICComponentUnsigned            = 0x00000002,
-    WICComponentSafe                = 0x00000004,
-    WICComponentDisabled            = 0x80000000,
-    WICCOMPONENTSIGNING_FORCE_DWORD = 0x7fffffff,
+    WICComponentSigned   = 0x00000001,
+    WICComponentUnsigned = 0x00000002,
+    WICComponentSafe     = 0x00000004,
+    WICComponentDisabled = 0x80000000,
 }
 
 alias WICGifLogicalScreenDescriptorProperties = uint;
 enum : uint
 {
-    WICGifLogicalScreenSignature                        = 0x00000001,
-    WICGifLogicalScreenDescriptorWidth                  = 0x00000002,
-    WICGifLogicalScreenDescriptorHeight                 = 0x00000003,
-    WICGifLogicalScreenDescriptorGlobalColorTableFlag   = 0x00000004,
-    WICGifLogicalScreenDescriptorColorResolution        = 0x00000005,
-    WICGifLogicalScreenDescriptorSortFlag               = 0x00000006,
-    WICGifLogicalScreenDescriptorGlobalColorTableSize   = 0x00000007,
-    WICGifLogicalScreenDescriptorBackgroundColorIndex   = 0x00000008,
-    WICGifLogicalScreenDescriptorPixelAspectRatio       = 0x00000009,
-    WICGifLogicalScreenDescriptorProperties_FORCE_DWORD = 0x7fffffff,
+    WICGifLogicalScreenSignature                      = 0x00000001,
+    WICGifLogicalScreenDescriptorWidth                = 0x00000002,
+    WICGifLogicalScreenDescriptorHeight               = 0x00000003,
+    WICGifLogicalScreenDescriptorGlobalColorTableFlag = 0x00000004,
+    WICGifLogicalScreenDescriptorColorResolution      = 0x00000005,
+    WICGifLogicalScreenDescriptorSortFlag             = 0x00000006,
+    WICGifLogicalScreenDescriptorGlobalColorTableSize = 0x00000007,
+    WICGifLogicalScreenDescriptorBackgroundColorIndex = 0x00000008,
+    WICGifLogicalScreenDescriptorPixelAspectRatio     = 0x00000009,
 }
 
 alias WICGifImageDescriptorProperties = uint;
 enum : uint
 {
-    WICGifImageDescriptorLeft                   = 0x00000001,
-    WICGifImageDescriptorTop                    = 0x00000002,
-    WICGifImageDescriptorWidth                  = 0x00000003,
-    WICGifImageDescriptorHeight                 = 0x00000004,
-    WICGifImageDescriptorLocalColorTableFlag    = 0x00000005,
-    WICGifImageDescriptorInterlaceFlag          = 0x00000006,
-    WICGifImageDescriptorSortFlag               = 0x00000007,
-    WICGifImageDescriptorLocalColorTableSize    = 0x00000008,
-    WICGifImageDescriptorProperties_FORCE_DWORD = 0x7fffffff,
+    WICGifImageDescriptorLeft                = 0x00000001,
+    WICGifImageDescriptorTop                 = 0x00000002,
+    WICGifImageDescriptorWidth               = 0x00000003,
+    WICGifImageDescriptorHeight              = 0x00000004,
+    WICGifImageDescriptorLocalColorTableFlag = 0x00000005,
+    WICGifImageDescriptorInterlaceFlag       = 0x00000006,
+    WICGifImageDescriptorSortFlag            = 0x00000007,
+    WICGifImageDescriptorLocalColorTableSize = 0x00000008,
 }
 
 alias WICGifGraphicControlExtensionProperties = uint;
 enum : uint
 {
-    WICGifGraphicControlExtensionDisposal               = 0x00000001,
-    WICGifGraphicControlExtensionUserInputFlag          = 0x00000002,
-    WICGifGraphicControlExtensionTransparencyFlag       = 0x00000003,
-    WICGifGraphicControlExtensionDelay                  = 0x00000004,
-    WICGifGraphicControlExtensionTransparentColorIndex  = 0x00000005,
-    WICGifGraphicControlExtensionProperties_FORCE_DWORD = 0x7fffffff,
+    WICGifGraphicControlExtensionDisposal              = 0x00000001,
+    WICGifGraphicControlExtensionUserInputFlag         = 0x00000002,
+    WICGifGraphicControlExtensionTransparencyFlag      = 0x00000003,
+    WICGifGraphicControlExtensionDelay                 = 0x00000004,
+    WICGifGraphicControlExtensionTransparentColorIndex = 0x00000005,
 }
 
 alias WICGifApplicationExtensionProperties = uint;
 enum : uint
 {
-    WICGifApplicationExtensionApplication            = 0x00000001,
-    WICGifApplicationExtensionData                   = 0x00000002,
-    WICGifApplicationExtensionProperties_FORCE_DWORD = 0x7fffffff,
+    WICGifApplicationExtensionApplication = 0x00000001,
+    WICGifApplicationExtensionData        = 0x00000002,
 }
 
 alias WICGifCommentExtensionProperties = uint;
 enum : uint
 {
-    WICGifCommentExtensionText                   = 0x00000001,
-    WICGifCommentExtensionProperties_FORCE_DWORD = 0x7fffffff,
+    WICGifCommentExtensionText = 0x00000001,
 }
 
 alias WICJpegCommentProperties = uint;
 enum : uint
 {
-    WICJpegCommentText                   = 0x00000001,
-    WICJpegCommentProperties_FORCE_DWORD = 0x7fffffff,
+    WICJpegCommentText = 0x00000001,
 }
 
 alias WICJpegLuminanceProperties = uint;
 enum : uint
 {
-    WICJpegLuminanceTable                  = 0x00000001,
-    WICJpegLuminanceProperties_FORCE_DWORD = 0x7fffffff,
+    WICJpegLuminanceTable = 0x00000001,
 }
 
 alias WICJpegChrominanceProperties = uint;
 enum : uint
 {
-    WICJpegChrominanceTable                  = 0x00000001,
-    WICJpegChrominanceProperties_FORCE_DWORD = 0x7fffffff,
+    WICJpegChrominanceTable = 0x00000001,
 }
 
 alias WIC8BIMIptcProperties = uint;
 enum : uint
 {
-    WIC8BIMIptcPString                = 0x00000000,
-    WIC8BIMIptcEmbeddedIPTC           = 0x00000001,
-    WIC8BIMIptcProperties_FORCE_DWORD = 0x7fffffff,
+    WIC8BIMIptcPString      = 0x00000000,
+    WIC8BIMIptcEmbeddedIPTC = 0x00000001,
 }
 
 alias WIC8BIMResolutionInfoProperties = uint;
 enum : uint
 {
-    WIC8BIMResolutionInfoPString                = 0x00000001,
-    WIC8BIMResolutionInfoHResolution            = 0x00000002,
-    WIC8BIMResolutionInfoHResolutionUnit        = 0x00000003,
-    WIC8BIMResolutionInfoWidthUnit              = 0x00000004,
-    WIC8BIMResolutionInfoVResolution            = 0x00000005,
-    WIC8BIMResolutionInfoVResolutionUnit        = 0x00000006,
-    WIC8BIMResolutionInfoHeightUnit             = 0x00000007,
-    WIC8BIMResolutionInfoProperties_FORCE_DWORD = 0x7fffffff,
+    WIC8BIMResolutionInfoPString         = 0x00000001,
+    WIC8BIMResolutionInfoHResolution     = 0x00000002,
+    WIC8BIMResolutionInfoHResolutionUnit = 0x00000003,
+    WIC8BIMResolutionInfoWidthUnit       = 0x00000004,
+    WIC8BIMResolutionInfoVResolution     = 0x00000005,
+    WIC8BIMResolutionInfoVResolutionUnit = 0x00000006,
+    WIC8BIMResolutionInfoHeightUnit      = 0x00000007,
 }
 
 alias WIC8BIMIptcDigestProperties = uint;
 enum : uint
 {
-    WIC8BIMIptcDigestPString                = 0x00000001,
-    WIC8BIMIptcDigestIptcDigest             = 0x00000002,
-    WIC8BIMIptcDigestProperties_FORCE_DWORD = 0x7fffffff,
+    WIC8BIMIptcDigestPString    = 0x00000001,
+    WIC8BIMIptcDigestIptcDigest = 0x00000002,
 }
 
 alias WICPngGamaProperties = uint;
 enum : uint
 {
-    WICPngGamaGamma                  = 0x00000001,
-    WICPngGamaProperties_FORCE_DWORD = 0x7fffffff,
+    WICPngGamaGamma = 0x00000001,
 }
 
 alias WICPngBkgdProperties = uint;
 enum : uint
 {
-    WICPngBkgdBackgroundColor        = 0x00000001,
-    WICPngBkgdProperties_FORCE_DWORD = 0x7fffffff,
+    WICPngBkgdBackgroundColor = 0x00000001,
 }
 
 alias WICPngItxtProperties = uint;
 enum : uint
 {
-    WICPngItxtKeyword                = 0x00000001,
-    WICPngItxtCompressionFlag        = 0x00000002,
-    WICPngItxtLanguageTag            = 0x00000003,
-    WICPngItxtTranslatedKeyword      = 0x00000004,
-    WICPngItxtText                   = 0x00000005,
-    WICPngItxtProperties_FORCE_DWORD = 0x7fffffff,
+    WICPngItxtKeyword           = 0x00000001,
+    WICPngItxtCompressionFlag   = 0x00000002,
+    WICPngItxtLanguageTag       = 0x00000003,
+    WICPngItxtTranslatedKeyword = 0x00000004,
+    WICPngItxtText              = 0x00000005,
 }
 
 alias WICPngChrmProperties = uint;
 enum : uint
 {
-    WICPngChrmWhitePointX            = 0x00000001,
-    WICPngChrmWhitePointY            = 0x00000002,
-    WICPngChrmRedX                   = 0x00000003,
-    WICPngChrmRedY                   = 0x00000004,
-    WICPngChrmGreenX                 = 0x00000005,
-    WICPngChrmGreenY                 = 0x00000006,
-    WICPngChrmBlueX                  = 0x00000007,
-    WICPngChrmBlueY                  = 0x00000008,
-    WICPngChrmProperties_FORCE_DWORD = 0x7fffffff,
+    WICPngChrmWhitePointX = 0x00000001,
+    WICPngChrmWhitePointY = 0x00000002,
+    WICPngChrmRedX        = 0x00000003,
+    WICPngChrmRedY        = 0x00000004,
+    WICPngChrmGreenX      = 0x00000005,
+    WICPngChrmGreenY      = 0x00000006,
+    WICPngChrmBlueX       = 0x00000007,
+    WICPngChrmBlueY       = 0x00000008,
 }
 
 alias WICPngHistProperties = uint;
 enum : uint
 {
-    WICPngHistFrequencies            = 0x00000001,
-    WICPngHistProperties_FORCE_DWORD = 0x7fffffff,
+    WICPngHistFrequencies = 0x00000001,
 }
 
 alias WICPngIccpProperties = uint;
 enum : uint
 {
-    WICPngIccpProfileName            = 0x00000001,
-    WICPngIccpProfileData            = 0x00000002,
-    WICPngIccpProperties_FORCE_DWORD = 0x7fffffff,
+    WICPngIccpProfileName = 0x00000001,
+    WICPngIccpProfileData = 0x00000002,
 }
 
 alias WICPngSrgbProperties = uint;
 enum : uint
 {
-    WICPngSrgbRenderingIntent        = 0x00000001,
-    WICPngSrgbProperties_FORCE_DWORD = 0x7fffffff,
+    WICPngSrgbRenderingIntent = 0x00000001,
 }
 
 alias WICPngTimeProperties = uint;
 enum : uint
 {
-    WICPngTimeYear                   = 0x00000001,
-    WICPngTimeMonth                  = 0x00000002,
-    WICPngTimeDay                    = 0x00000003,
-    WICPngTimeHour                   = 0x00000004,
-    WICPngTimeMinute                 = 0x00000005,
-    WICPngTimeSecond                 = 0x00000006,
-    WICPngTimeProperties_FORCE_DWORD = 0x7fffffff,
+    WICPngTimeYear   = 0x00000001,
+    WICPngTimeMonth  = 0x00000002,
+    WICPngTimeDay    = 0x00000003,
+    WICPngTimeHour   = 0x00000004,
+    WICPngTimeMinute = 0x00000005,
+    WICPngTimeSecond = 0x00000006,
 }
 
 alias WICHeifProperties = uint;
 enum : uint
 {
-    WICHeifOrientation            = 0x00000001,
-    WICHeifProperties_FORCE_DWORD = 0x7fffffff,
+    WICHeifOrientation = 0x00000001,
 }
 
 alias WICHeifHdrProperties = uint;
@@ -704,29 +669,25 @@ enum : uint
     WICHeifHdrMinimumMasteringDisplayLuminanceLevel = 0x00000003,
     WICHeifHdrMaximumMasteringDisplayLuminanceLevel = 0x00000004,
     WICHeifHdrCustomVideoPrimaries                  = 0x00000005,
-    WICHeifHdrProperties_FORCE_DWORD                = 0x7fffffff,
 }
 
 alias WICWebpAnimProperties = uint;
 enum : uint
 {
-    WICWebpAnimLoopCount              = 0x00000001,
-    WICWebpAnimProperties_FORCE_DWORD = 0x7fffffff,
+    WICWebpAnimLoopCount = 0x00000001,
 }
 
 alias WICWebpAnmfProperties = uint;
 enum : uint
 {
-    WICWebpAnmfFrameDuration          = 0x00000001,
-    WICWebpAnmfProperties_FORCE_DWORD = 0x7fffffff,
+    WICWebpAnmfFrameDuration = 0x00000001,
 }
 
 alias WICSectionAccessLevel = uint;
 enum : uint
 {
-    WICSectionAccessLevelRead         = 0x00000001,
-    WICSectionAccessLevelReadWrite    = 0x00000003,
-    WICSectionAccessLevel_FORCE_DWORD = 0x7fffffff,
+    WICSectionAccessLevelRead      = 0x00000001,
+    WICSectionAccessLevelReadWrite = 0x00000003,
 }
 
 alias WICPixelFormatNumericRepresentation = uint;
@@ -738,7 +699,6 @@ enum : uint
     WICPixelFormatNumericRepresentationSignedInteger   = 0x00000003,
     WICPixelFormatNumericRepresentationFixed           = 0x00000004,
     WICPixelFormatNumericRepresentationFloat           = 0x00000005,
-    WICPixelFormatNumericRepresentation_FORCE_DWORD    = 0x7fffffff,
 }
 
 alias WICPlanarOptions = int;
@@ -746,7 +706,6 @@ enum : int
 {
     WICPlanarOptionsDefault             = 0x00000000,
     WICPlanarOptionsPreserveSubsampling = 0x00000001,
-    WICPLANAROPTIONS_FORCE_DWORD        = 0x7fffffff,
 }
 
 alias WICJpegIndexingOptions = uint;
@@ -754,15 +713,13 @@ enum : uint
 {
     WICJpegIndexingOptionsGenerateOnDemand = 0x00000000,
     WICJpegIndexingOptionsGenerateOnLoad   = 0x00000001,
-    WICJpegIndexingOptions_FORCE_DWORD     = 0x7fffffff,
 }
 
 alias WICJpegTransferMatrix = uint;
 enum : uint
 {
-    WICJpegTransferMatrixIdentity     = 0x00000000,
-    WICJpegTransferMatrixBT601        = 0x00000001,
-    WICJpegTransferMatrix_FORCE_DWORD = 0x7fffffff,
+    WICJpegTransferMatrixIdentity = 0x00000000,
+    WICJpegTransferMatrixBT601    = 0x00000001,
 }
 
 alias WICJpegScanType = uint;
@@ -771,7 +728,6 @@ enum : uint
     WICJpegScanTypeInterleaved      = 0x00000000,
     WICJpegScanTypePlanarComponents = 0x00000001,
     WICJpegScanTypeProgressive      = 0x00000002,
-    WICJpegScanType_FORCE_DWORD     = 0x7fffffff,
 }
 
 struct WICImageParameters
@@ -1088,7 +1044,7 @@ interface IWICPixelFormatInfo2 : IWICPixelFormatInfo
 enum IID_IWICImagingFactory = GUID(0xec5ec8a9, 0xc395, 0x4314, [0x9c, 0x77, 0x54, 0xd7, 0xa9, 0x35, 0xff, 0x70]);
 interface IWICImagingFactory : IUnknown
 {
-    HRESULT CreateDecoderFromFilename(const(wchar)*, const(GUID)*, uint, WICDecodeOptions, IWICBitmapDecoder*);
+    HRESULT CreateDecoderFromFilename(const(wchar)*, const(GUID)*, GENERIC_ACCESS_RIGHTS, WICDecodeOptions, IWICBitmapDecoder*);
     HRESULT CreateDecoderFromStream(IStream, const(GUID)*, WICDecodeOptions, IWICBitmapDecoder*);
     HRESULT CreateDecoderFromFileHandle(ulong, const(GUID)*, WICDecodeOptions, IWICBitmapDecoder*);
     HRESULT CreateComponentInfo(const(GUID)*, IWICComponentInfo*);
@@ -1117,56 +1073,52 @@ interface IWICImagingFactory : IUnknown
 alias WICTiffCompressionOption = int;
 enum : int
 {
-    WICTiffCompressionDontCare           = 0x00000000,
-    WICTiffCompressionNone               = 0x00000001,
-    WICTiffCompressionCCITT3             = 0x00000002,
-    WICTiffCompressionCCITT4             = 0x00000003,
-    WICTiffCompressionLZW                = 0x00000004,
-    WICTiffCompressionRLE                = 0x00000005,
-    WICTiffCompressionZIP                = 0x00000006,
-    WICTiffCompressionLZWHDifferencing   = 0x00000007,
-    WICTIFFCOMPRESSIONOPTION_FORCE_DWORD = 0x7fffffff,
+    WICTiffCompressionDontCare         = 0x00000000,
+    WICTiffCompressionNone             = 0x00000001,
+    WICTiffCompressionCCITT3           = 0x00000002,
+    WICTiffCompressionCCITT4           = 0x00000003,
+    WICTiffCompressionLZW              = 0x00000004,
+    WICTiffCompressionRLE              = 0x00000005,
+    WICTiffCompressionZIP              = 0x00000006,
+    WICTiffCompressionLZWHDifferencing = 0x00000007,
 }
 
 alias WICJpegYCrCbSubsamplingOption = int;
 enum : int
 {
-    WICJpegYCrCbSubsamplingDefault      = 0x00000000,
-    WICJpegYCrCbSubsampling420          = 0x00000001,
-    WICJpegYCrCbSubsampling422          = 0x00000002,
-    WICJpegYCrCbSubsampling444          = 0x00000003,
-    WICJpegYCrCbSubsampling440          = 0x00000004,
-    WICJPEGYCRCBSUBSAMPLING_FORCE_DWORD = 0x7fffffff,
+    WICJpegYCrCbSubsamplingDefault = 0x00000000,
+    WICJpegYCrCbSubsampling420     = 0x00000001,
+    WICJpegYCrCbSubsampling422     = 0x00000002,
+    WICJpegYCrCbSubsampling444     = 0x00000003,
+    WICJpegYCrCbSubsampling440     = 0x00000004,
 }
 
 alias WICPngFilterOption = int;
 enum : int
 {
-    WICPngFilterUnspecified        = 0x00000000,
-    WICPngFilterNone               = 0x00000001,
-    WICPngFilterSub                = 0x00000002,
-    WICPngFilterUp                 = 0x00000003,
-    WICPngFilterAverage            = 0x00000004,
-    WICPngFilterPaeth              = 0x00000005,
-    WICPngFilterAdaptive           = 0x00000006,
-    WICPNGFILTEROPTION_FORCE_DWORD = 0x7fffffff,
+    WICPngFilterUnspecified = 0x00000000,
+    WICPngFilterNone        = 0x00000001,
+    WICPngFilterSub         = 0x00000002,
+    WICPngFilterUp          = 0x00000003,
+    WICPngFilterAverage     = 0x00000004,
+    WICPngFilterPaeth       = 0x00000005,
+    WICPngFilterAdaptive    = 0x00000006,
 }
 
 alias WICNamedWhitePoint = int;
 enum : int
 {
-    WICWhitePointDefault           = 0x00000001,
-    WICWhitePointDaylight          = 0x00000002,
-    WICWhitePointCloudy            = 0x00000004,
-    WICWhitePointShade             = 0x00000008,
-    WICWhitePointTungsten          = 0x00000010,
-    WICWhitePointFluorescent       = 0x00000020,
-    WICWhitePointFlash             = 0x00000040,
-    WICWhitePointUnderwater        = 0x00000080,
-    WICWhitePointCustom            = 0x00000100,
-    WICWhitePointAutoWhiteBalance  = 0x00000200,
-    WICWhitePointAsShot            = 0x00000001,
-    WICNAMEDWHITEPOINT_FORCE_DWORD = 0x7fffffff,
+    WICWhitePointDefault          = 0x00000001,
+    WICWhitePointDaylight         = 0x00000002,
+    WICWhitePointCloudy           = 0x00000004,
+    WICWhitePointShade            = 0x00000008,
+    WICWhitePointTungsten         = 0x00000010,
+    WICWhitePointFluorescent      = 0x00000020,
+    WICWhitePointFlash            = 0x00000040,
+    WICWhitePointUnderwater       = 0x00000080,
+    WICWhitePointCustom           = 0x00000100,
+    WICWhitePointAutoWhiteBalance = 0x00000200,
+    WICWhitePointAsShot           = 0x00000001,
 }
 
 alias WICRawCapabilities = int;
@@ -1175,7 +1127,6 @@ enum : int
     WICRawCapabilityNotSupported   = 0x00000000,
     WICRawCapabilityGetSupported   = 0x00000001,
     WICRawCapabilityFullySupported = 0x00000002,
-    WICRAWCAPABILITIES_FORCE_DWORD = 0x7fffffff,
 }
 
 alias WICRawRotationCapabilities = int;
@@ -1185,7 +1136,6 @@ enum : int
     WICRawRotationCapabilityGetSupported           = 0x00000001,
     WICRawRotationCapabilityNinetyDegreesSupported = 0x00000002,
     WICRawRotationCapabilityFullySupported         = 0x00000003,
-    WICRAWROTATIONCAPABILITIES_FORCE_DWORD         = 0x7fffffff,
 }
 
 struct WICRawCapabilitiesInfo
@@ -1212,19 +1162,17 @@ struct WICRawCapabilitiesInfo
 alias WICRawParameterSet = int;
 enum : int
 {
-    WICAsShotParameterSet          = 0x00000001,
-    WICUserAdjustedParameterSet    = 0x00000002,
-    WICAutoAdjustedParameterSet    = 0x00000003,
-    WICRAWPARAMETERSET_FORCE_DWORD = 0x7fffffff,
+    WICAsShotParameterSet       = 0x00000001,
+    WICUserAdjustedParameterSet = 0x00000002,
+    WICAutoAdjustedParameterSet = 0x00000003,
 }
 
 alias WICRawRenderMode = int;
 enum : int
 {
-    WICRawRenderModeDraft        = 0x00000001,
-    WICRawRenderModeNormal       = 0x00000002,
-    WICRawRenderModeBestQuality  = 0x00000003,
-    WICRAWRENDERMODE_FORCE_DWORD = 0x7fffffff,
+    WICRawRenderModeDraft       = 0x00000001,
+    WICRawRenderModeNormal      = 0x00000002,
+    WICRawRenderModeBestQuality = 0x00000003,
 }
 
 struct WICRawToneCurvePoint
@@ -1281,11 +1229,10 @@ interface IWICDevelopRaw : IWICBitmapFrameDecode
 alias WICDdsDimension = int;
 enum : int
 {
-    WICDdsTexture1D           = 0x00000000,
-    WICDdsTexture2D           = 0x00000001,
-    WICDdsTexture3D           = 0x00000002,
-    WICDdsTextureCube         = 0x00000003,
-    WICDDSTEXTURE_FORCE_DWORD = 0x7fffffff,
+    WICDdsTexture1D   = 0x00000000,
+    WICDdsTexture2D   = 0x00000001,
+    WICDdsTexture3D   = 0x00000002,
+    WICDdsTextureCube = 0x00000003,
 }
 
 alias WICDdsAlphaMode = int;
@@ -1296,7 +1243,6 @@ enum : int
     WICDdsAlphaModePremultiplied = 0x00000002,
     WICDdsAlphaModeOpaque        = 0x00000003,
     WICDdsAlphaModeCustom        = 0x00000004,
-    WICDDSALPHAMODE_FORCE_DWORD  = 0x7fffffff,
 }
 
 struct WICDdsParameters

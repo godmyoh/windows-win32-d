@@ -1,7 +1,7 @@
 module windows.win32.system.virtualdosmachines;
 
 import windows.win32.foundation : BOOL, CHAR, HANDLE, LPARAM, PSTR;
-import windows.win32.system.diagnostics.debug__ : CONTEXT, DEBUG_EVENT, LDT_ENTRY;
+import windows.win32.system.diagnostics.debug_ : CONTEXT, DEBUG_EVENT, LDT_ENTRY;
 import windows.win32.system.kernel : FLOATING_SAVE_AREA;
 
 version (Windows):

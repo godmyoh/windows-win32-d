@@ -2,12 +2,13 @@ module windows.win32.system.remotedesktop;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HANDLE_PTR, HRESULT, HWND, PSID, PSTR, PWSTR, RECT, VARIANT_BOOL;
-import windows.win32.media.audio_ : WAVEFORMATEX;
+import windows.win32.media.audio : WAVEFORMATEX;
 import windows.win32.media.audio.apo : APO_CONNECTION_PROPERTY;
-import windows.win32.security_ : PSECURITY_DESCRIPTOR;
-import windows.win32.system.com_ : IDispatch, IUnknown, SAFEARRAY, VARIANT;
+import windows.win32.security : PSECURITY_DESCRIPTOR;
+import windows.win32.system.com : IDispatch, IUnknown, SAFEARRAY;
 import windows.win32.system.com.structuredstorage : IPropertyBag;
-import windows.win32.system.winrt_ : HSTRING;
+import windows.win32.system.variant : VARIANT;
+import windows.win32.system.winrt : HSTRING;
 import windows.win32.ui.windowsandmessaging : MESSAGEBOX_RESULT, MESSAGEBOX_STYLE;
 
 version (Windows):
@@ -44,8 +45,8 @@ BOOL WTSDisconnectSession(HANDLE, uint, BOOL);
 BOOL WTSLogoffSession(HANDLE, uint, BOOL);
 BOOL WTSShutdownSystem(HANDLE, uint);
 BOOL WTSWaitSystemEvent(HANDLE, uint, uint*);
-HwtsVirtualChannelHandle WTSVirtualChannelOpen(HANDLE, uint, PSTR);
-HwtsVirtualChannelHandle WTSVirtualChannelOpenEx(uint, PSTR, uint);
+HANDLE WTSVirtualChannelOpen(HANDLE, uint, PSTR);
+HANDLE WTSVirtualChannelOpenEx(uint, PSTR, uint);
 BOOL WTSVirtualChannelClose(HANDLE);
 BOOL WTSVirtualChannelRead(HANDLE, uint, PSTR, uint, uint*);
 BOOL WTSVirtualChannelWrite(HANDLE, PSTR, uint, uint*);
@@ -414,13 +415,8 @@ interface IAudioEndpointControl : IUnknown
     HRESULT Reset();
     HRESULT Stop();
 }
-alias HwtsVirtualChannelHandle = void*;
 enum CLSID_TSUserExInterfaces = GUID(0x910dd01, 0xdf8c, 0x11d1, [0xae, 0x27, 0x0, 0xc0, 0x4f, 0xa3, 0x58, 0x13]);
 struct TSUserExInterfaces
-{
-}
-enum CLSID_ADsTSUserEx = GUID(0xe2e9cae6, 0x1e7b, 0x4b8e, [0xba, 0xbd, 0xe9, 0xbf, 0x62, 0x92, 0xac, 0x29]);
-struct ADsTSUserEx
 {
 }
 enum IID_IADsTSUserEx = GUID(0xc4930e79, 0x2989, 0x4462, [0x8a, 0x60, 0x2f, 0xcf, 0x2f, 0x29, 0x55, 0xef]);
@@ -456,6 +452,10 @@ interface IADsTSUserEx : IDispatch
     HRESULT put_TerminalServicesWorkDirectory(BSTR);
     HRESULT get_TerminalServicesInitialProgram(BSTR*);
     HRESULT put_TerminalServicesInitialProgram(BSTR);
+}
+enum CLSID_ADsTSUserEx = GUID(0xe2e9cae6, 0x1e7b, 0x4b8e, [0xba, 0xbd, 0xe9, 0xbf, 0x62, 0x92, 0xac, 0x29]);
+struct ADsTSUserEx
+{
 }
 alias AAAuthSchemes = int;
 enum : int
@@ -1188,10 +1188,6 @@ struct CHANNEL_ENTRY_POINTS
     PVIRTUALCHANNELWRITE pVirtualChannelWrite;
 }
 alias PVIRTUALCHANNELENTRY = BOOL function(CHANNEL_ENTRY_POINTS*);
-enum CLSID_Workspace = GUID(0x4f1dfca6, 0x3aad, 0x48e1, [0x84, 0x6, 0x4b, 0xc2, 0x1a, 0x50, 0x1d, 0x7c]);
-struct Workspace
-{
-}
 enum IID_IWorkspaceClientExt = GUID(0x12b952f4, 0x41ca, 0x4f21, [0xa8, 0x29, 0xa6, 0xd0, 0x7d, 0x9a, 0x16, 0xe5]);
 interface IWorkspaceClientExt : IUnknown
 {
@@ -1260,6 +1256,10 @@ interface IWorkspaceReportMessage : IUnknown
 }
 enum IID__ITSWkspEvents = GUID(0xb922bbb8, 0x4c55, 0x4fea, [0x84, 0x96, 0xbe, 0xb0, 0xb4, 0x42, 0x85, 0xe9]);
 interface _ITSWkspEvents : IDispatch
+{
+}
+enum CLSID_Workspace = GUID(0x4f1dfca6, 0x3aad, 0x48e1, [0x84, 0x6, 0x4b, 0xc2, 0x1a, 0x50, 0x1d, 0x7c]);
+struct Workspace
 {
 }
 alias TSSD_AddrV46Type = int;

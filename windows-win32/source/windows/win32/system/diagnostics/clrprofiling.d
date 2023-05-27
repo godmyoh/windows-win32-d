@@ -2,7 +2,7 @@ module windows.win32.system.diagnostics.clrprofiling;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HANDLE, HRESULT, PWSTR;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 import windows.win32.system.winrt.metadata : ASSEMBLYMETADATA, COR_FIELD_OFFSET, CorElementType;
 
 version (Windows):

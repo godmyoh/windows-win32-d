@@ -2,7 +2,7 @@ module windows.win32.system.contacts;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, FILETIME, HRESULT, PWSTR;
-import windows.win32.system.com_ : IStream, IUnknown;
+import windows.win32.system.com : IStream, IUnknown;
 
 version (Windows):
 extern (Windows):
@@ -112,14 +112,6 @@ enum CONTACTLABEL_WAB_ANNIVERSARY = "wab:Anniversary";
 enum CONTACTLABEL_WAB_SOCIALNETWORK = "wab:SocialNetwork";
 enum CONTACTLABEL_WAB_SCHOOL = "wab:School";
 enum CONTACTLABEL_WAB_WISHLIST = "wab:WishList";
-enum CLSID_Contact = GUID(0x61b68808, 0x8eee, 0x4fd1, [0xac, 0xb8, 0x3d, 0x80, 0x4c, 0x8d, 0xb0, 0x56]);
-struct Contact
-{
-}
-enum CLSID_ContactManager = GUID(0x7165c8ab, 0xaf88, 0x42bd, [0x86, 0xfd, 0x53, 0x10, 0xb4, 0x28, 0x5a, 0x2]);
-struct ContactManager
-{
-}
 enum IID_IContactManager = GUID(0xad553d98, 0xdeb1, 0x474a, [0x8e, 0x17, 0xfc, 0xc, 0x20, 0x75, 0xb7, 0x38]);
 interface IContactManager : IUnknown
 {
@@ -171,6 +163,14 @@ interface IContactPropertyCollection : IUnknown
     HRESULT GetPropertyVersion(uint*);
     HRESULT GetPropertyModificationDate(FILETIME*);
     HRESULT GetPropertyArrayElementID(PWSTR, uint, uint*);
+}
+enum CLSID_Contact = GUID(0x61b68808, 0x8eee, 0x4fd1, [0xac, 0xb8, 0x3d, 0x80, 0x4c, 0x8d, 0xb0, 0x56]);
+struct Contact
+{
+}
+enum CLSID_ContactManager = GUID(0x7165c8ab, 0xaf88, 0x42bd, [0x86, 0xfd, 0x53, 0x10, 0xb4, 0x28, 0x5a, 0x2]);
+struct ContactManager
+{
 }
 alias CONTACT_AGGREGATION_CREATE_OR_OPEN_OPTIONS = int;
 enum : int

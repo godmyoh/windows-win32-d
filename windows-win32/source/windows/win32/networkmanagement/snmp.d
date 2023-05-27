@@ -86,8 +86,8 @@ enum : uint
     SNMP_OUTPUT_TO_DEBUGGER = 0x00000008,
 }
 
-alias SNMP_LOG = uint;
-enum : uint
+alias SNMP_LOG = int;
+enum : int
 {
     SNMP_LOG_SILENT  = 0x00000000,
     SNMP_LOG_FATAL   = 0x00000001,
@@ -145,7 +145,7 @@ void SnmpUtilPrintOid(AsnObjectIdentifier*);
 void SnmpUtilPrintAsnAny(AsnAny*);
 uint SnmpSvcGetUptime();
 void SnmpSvcSetLogLevel(SNMP_LOG);
-void SnmpSvcSetLogType(SNMP_OUTPUT_LOG_TYPE);
+void SnmpSvcSetLogType(int);
 void SnmpUtilDbgPrint(SNMP_LOG, PSTR);
 void* SnmpMgrOpen(PSTR, PSTR, int, int);
 BOOL SnmpMgrCtl(void*, uint, void*, uint, void*, uint, uint*);
@@ -310,6 +310,25 @@ struct AsnObjectIdentifier
     uint idLength;
     uint* ids;
 }
+struct SnmpVarBindList
+{
+    align (4):
+    SnmpVarBind* list;
+    uint len;
+}
+/+ [CONFLICTED] struct AsnOctetString
+{
+    ubyte* stream;
+    uint length;
+    BOOL dynamic;
+}
++/
+/+ [CONFLICTED] struct AsnObjectIdentifier
+{
+    uint idLength;
+    uint* ids;
+}
++/
 struct AsnAny
 {
     align (4):
@@ -337,12 +356,12 @@ struct SnmpVarBind
     AsnObjectIdentifier name;
     AsnAny value;
 }
-struct SnmpVarBindList
+/+ [CONFLICTED] struct SnmpVarBindList
 {
-    align (4):
     SnmpVarBind* list;
     uint len;
 }
++/
 alias PFNSNMPEXTENSIONINIT = BOOL function(uint, HANDLE*, AsnObjectIdentifier*);
 alias PFNSNMPEXTENSIONINITEX = BOOL function(AsnObjectIdentifier*);
 alias PFNSNMPEXTENSIONMONITOR = BOOL function(void*);

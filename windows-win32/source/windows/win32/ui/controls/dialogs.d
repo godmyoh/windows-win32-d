@@ -3,8 +3,8 @@ module windows.win32.ui.controls.dialogs;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, COLORREF, HGLOBAL, HINSTANCE, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT, WPARAM;
 import windows.win32.graphics.gdi : DEVMODEA, HDC, LOGFONTA, LOGFONTW;
-import windows.win32.system.com_ : IUnknown;
-import windows.win32.ui.controls_ : HPROPSHEETPAGE, NMHDR;
+import windows.win32.system.com : IUnknown;
+import windows.win32.ui.controls : HPROPSHEETPAGE, NMHDR;
 
 version (Windows):
 extern (Windows):
@@ -227,21 +227,6 @@ enum : ushort
     SIMULATED_FONTTYPE = 0x8000,
 }
 
-alias COMMON_DIALOG_NOTIFICATION = int;
-enum : int
-{
-    CDN_FIRST          = 0xfffffda7,
-    CDN_LAST           = 0xfffffd45,
-    CDN_INITDONE       = 0xfffffda7,
-    CDN_SELCHANGE      = 0xfffffda6,
-    CDN_FOLDERCHANGE   = 0xfffffda5,
-    CDN_SHAREVIOLATION = 0xfffffda4,
-    CDN_HELP           = 0xfffffda3,
-    CDN_FILEOK         = 0xfffffda2,
-    CDN_TYPECHANGE     = 0xfffffda1,
-    CDN_INCLUDEITEM    = 0xfffffda0,
-}
-
 BOOL GetOpenFileNameA(OPENFILENAMEA*);
 BOOL GetOpenFileNameW(OPENFILENAMEW*);
 BOOL GetSaveFileNameA(OPENFILENAMEA*);
@@ -266,6 +251,14 @@ BOOL PageSetupDlgW(PAGESETUPDLGW*);
 enum OFN_SHAREFALLTHROUGH = 0x00000002;
 enum OFN_SHARENOWARN = 0x00000001;
 enum OFN_SHAREWARN = 0x00000000;
+enum CDN_INITDONE = 0xfffffda7;
+enum CDN_SELCHANGE = 0xfffffda6;
+enum CDN_FOLDERCHANGE = 0xfffffda5;
+enum CDN_SHAREVIOLATION = 0xfffffda4;
+enum CDN_HELP = 0xfffffda3;
+enum CDN_FILEOK = 0xfffffda2;
+enum CDN_TYPECHANGE = 0xfffffda1;
+enum CDN_INCLUDEITEM = 0xfffffda0;
 enum CDM_FIRST = 0x00000464;
 enum CDM_LAST = 0x000004c8;
 enum CDM_GETSPEC = 0x00000464;

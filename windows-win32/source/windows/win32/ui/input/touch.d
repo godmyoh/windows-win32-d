@@ -2,7 +2,7 @@ module windows.win32.ui.input.touch;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HANDLE, HRESULT, HWND, POINTS;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):
@@ -50,14 +50,6 @@ enum : uint
 
 alias HGESTUREINFO = void*;
 alias HTOUCHINPUT = void*;
-enum CLSID_InertiaProcessor = GUID(0xabb27087, 0x4ce0, 0x4e58, [0xa0, 0xcb, 0xe2, 0x4d, 0xf9, 0x68, 0x14, 0xbe]);
-struct InertiaProcessor
-{
-}
-enum CLSID_ManipulationProcessor = GUID(0x597d4fb0, 0x47fd, 0x4aff, [0x89, 0xb9, 0xc6, 0xcf, 0xae, 0x8c, 0xf0, 0x8e]);
-struct ManipulationProcessor
-{
-}
 alias MANIPULATION_PROCESSOR_MANIPULATIONS = int;
 enum : int
 {
@@ -153,6 +145,14 @@ interface IManipulationProcessor : IUnknown
     HRESULT GetAngularVelocity(float*);
     HRESULT get_MinimumScaleRotateRadius(float*);
     HRESULT put_MinimumScaleRotateRadius(float);
+}
+enum CLSID_InertiaProcessor = GUID(0xabb27087, 0x4ce0, 0x4e58, [0xa0, 0xcb, 0xe2, 0x4d, 0xf9, 0x68, 0x14, 0xbe]);
+struct InertiaProcessor
+{
+}
+enum CLSID_ManipulationProcessor = GUID(0x597d4fb0, 0x47fd, 0x4aff, [0x89, 0xb9, 0xc6, 0xcf, 0xae, 0x8c, 0xf0, 0x8e]);
+struct ManipulationProcessor
+{
 }
 BOOL GetTouchInputInfo(HTOUCHINPUT, uint, TOUCHINPUT*, int);
 BOOL CloseTouchInputHandle(HTOUCHINPUT);

@@ -1,12 +1,13 @@
-module windows.win32.system.com_;
+module windows.win32.system.com;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, CHAR, DECIMAL, FILETIME, HANDLE, HGLOBAL, HINSTANCE, HRESULT, HWND, PSTR, PWSTR, VARIANT_BOOL;
+import windows.win32.foundation : BOOL, BSTR, FILETIME, HANDLE, HGLOBAL, HINSTANCE, HRESULT, HWND, PSTR, PWSTR;
 import windows.win32.graphics.gdi : HBITMAP, HENHMETAFILE;
-import windows.win32.security_ : PSECURITY_DESCRIPTOR, SECURITY_ATTRIBUTES;
+import windows.win32.security : PSECURITY_DESCRIPTOR, SECURITY_ATTRIBUTES;
 import windows.win32.system.com.structuredstorage : IStorage;
-import windows.win32.system.ole : ARRAYDESC, IRecordInfo, PARAMDESC;
-import windows.win32.system.systemservices : userHBITMAP, userHGLOBAL, userHPALETTE;
+import windows.win32.system.ole : ARRAYDESC, PARAMDESC;
+import windows.win32.system.systemservices : userHBITMAP, userHENHMETAFILE, userHGLOBAL, userHMETAFILEPICT, userHPALETTE;
+import windows.win32.system.variant : VARENUM, VARIANT;
 
 version (Windows):
 extern (Windows):
@@ -52,7 +53,7 @@ HRESULT CreateStdProgressIndicator(HWND, const(wchar)*, IBindStatusCallback, IBi
 HRESULT CoGetMalloc(uint, IMalloc*);
 void CoUninitialize();
 uint CoGetCurrentProcess();
-HRESULT CoInitializeEx(void*, COINIT);
+HRESULT CoInitializeEx(void*, uint);
 HRESULT CoGetCallerTID(uint*);
 HRESULT CoGetCurrentLogicalThreadId(GUID*);
 HRESULT CoGetContextToken(ulong*);
@@ -61,8 +62,8 @@ HRESULT CoIncrementMTAUsage(CO_MTA_USAGE_COOKIE*);
 HRESULT CoDecrementMTAUsage(CO_MTA_USAGE_COOKIE);
 HRESULT CoAllowUnmarshalerCLSID(const(GUID)*);
 HRESULT CoGetObjectContext(const(GUID)*, void**);
-HRESULT CoGetClassObject(const(GUID)*, CLSCTX, void*, const(GUID)*, void**);
-HRESULT CoRegisterClassObject(const(GUID)*, IUnknown, CLSCTX, REGCLS, uint*);
+HRESULT CoGetClassObject(const(GUID)*, uint, void*, const(GUID)*, void**);
+HRESULT CoRegisterClassObject(const(GUID)*, IUnknown, CLSCTX, uint, uint*);
 HRESULT CoRevokeClassObject(uint);
 HRESULT CoResumeClassObjects();
 HRESULT CoSuspendClassObjects();
@@ -78,10 +79,10 @@ HRESULT CoCreateFreeThreadedMarshaler(IUnknown, IUnknown*);
 void CoFreeUnusedLibraries();
 void CoFreeUnusedLibrariesEx(uint, uint);
 HRESULT CoDisconnectContext(uint);
-HRESULT CoInitializeSecurity(PSECURITY_DESCRIPTOR, int, SOLE_AUTHENTICATION_SERVICE*, void*, RPC_C_AUTHN_LEVEL, RPC_C_IMP_LEVEL, void*, EOLE_AUTHENTICATION_CAPABILITIES, void*);
+HRESULT CoInitializeSecurity(PSECURITY_DESCRIPTOR, int, SOLE_AUTHENTICATION_SERVICE*, void*, RPC_C_AUTHN_LEVEL, RPC_C_IMP_LEVEL, void*, uint, void*);
 HRESULT CoGetCallContext(const(GUID)*, void**);
 HRESULT CoQueryProxyBlanket(IUnknown, uint*, uint*, PWSTR*, uint*, uint*, void**, uint*);
-HRESULT CoSetProxyBlanket(IUnknown, uint, uint, PWSTR, RPC_C_AUTHN_LEVEL, RPC_C_IMP_LEVEL, void*, EOLE_AUTHENTICATION_CAPABILITIES);
+HRESULT CoSetProxyBlanket(IUnknown, uint, uint, PWSTR, RPC_C_AUTHN_LEVEL, RPC_C_IMP_LEVEL, void*, uint);
 HRESULT CoCopyProxy(IUnknown, IUnknown*);
 HRESULT CoQueryClientBlanket(uint*, uint*, PWSTR*, uint*, uint*, void**, uint*);
 HRESULT CoImpersonateClient();
@@ -296,6 +297,7 @@ enum : uint
 
 alias CO_MTA_USAGE_COOKIE = long;
 alias CO_DEVICE_CATALOG_COOKIE = long;
+alias MachineGlobalObjectTableRegistrationToken = long;
 alias STGC = int;
 enum : int
 {
@@ -323,63 +325,6 @@ union CY
     }
     long int64;
 }
-alias VARENUM = ushort;
-enum : ushort
-{
-    VT_EMPTY            = 0x0000,
-    VT_NULL             = 0x0001,
-    VT_I2               = 0x0002,
-    VT_I4               = 0x0003,
-    VT_R4               = 0x0004,
-    VT_R8               = 0x0005,
-    VT_CY               = 0x0006,
-    VT_DATE             = 0x0007,
-    VT_BSTR             = 0x0008,
-    VT_DISPATCH         = 0x0009,
-    VT_ERROR            = 0x000a,
-    VT_BOOL             = 0x000b,
-    VT_VARIANT          = 0x000c,
-    VT_UNKNOWN          = 0x000d,
-    VT_DECIMAL          = 0x000e,
-    VT_I1               = 0x0010,
-    VT_UI1              = 0x0011,
-    VT_UI2              = 0x0012,
-    VT_UI4              = 0x0013,
-    VT_I8               = 0x0014,
-    VT_UI8              = 0x0015,
-    VT_INT              = 0x0016,
-    VT_UINT             = 0x0017,
-    VT_VOID             = 0x0018,
-    VT_HRESULT          = 0x0019,
-    VT_PTR              = 0x001a,
-    VT_SAFEARRAY        = 0x001b,
-    VT_CARRAY           = 0x001c,
-    VT_USERDEFINED      = 0x001d,
-    VT_LPSTR            = 0x001e,
-    VT_LPWSTR           = 0x001f,
-    VT_RECORD           = 0x0024,
-    VT_INT_PTR          = 0x0025,
-    VT_UINT_PTR         = 0x0026,
-    VT_FILETIME         = 0x0040,
-    VT_BLOB             = 0x0041,
-    VT_STREAM           = 0x0042,
-    VT_STORAGE          = 0x0043,
-    VT_STREAMED_OBJECT  = 0x0044,
-    VT_STORED_OBJECT    = 0x0045,
-    VT_BLOB_OBJECT      = 0x0046,
-    VT_CF               = 0x0047,
-    VT_CLSID            = 0x0048,
-    VT_VERSIONED_STREAM = 0x0049,
-    VT_BSTR_BLOB        = 0x0fff,
-    VT_VECTOR           = 0x1000,
-    VT_ARRAY            = 0x2000,
-    VT_BYREF            = 0x4000,
-    VT_RESERVED         = 0x8000,
-    VT_ILLEGAL          = 0xffff,
-    VT_ILLEGALMASKED    = 0x0fff,
-    VT_TYPEMASK         = 0x0fff,
-}
-
 struct CSPLATFORM
 {
     uint dwPlatformId;
@@ -587,12 +532,6 @@ struct BLOB
     uint cbSize;
     ubyte* pBlobData;
 }
-struct IEnumContextProps
-{
-}
-struct IContext
-{
-}
 enum IID_IUnknown = GUID(0x0, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IUnknown
 {
@@ -718,7 +657,7 @@ struct STATSTG
     FILETIME ctime;
     FILETIME atime;
     STGM grfMode;
-    LOCKTYPE grfLocksSupported;
+    uint grfLocksSupported;
     GUID clsid;
     uint grfStateBits;
     uint reserved;
@@ -754,11 +693,11 @@ interface IStream : ISequentialStream
     HRESULT Seek(long, STREAM_SEEK, ulong*);
     HRESULT SetSize(ulong);
     HRESULT CopyTo(IStream, ulong, ulong*, ulong*);
-    HRESULT Commit(STGC);
+    HRESULT Commit(uint);
     HRESULT Revert();
-    HRESULT LockRegion(ulong, ulong, LOCKTYPE);
+    HRESULT LockRegion(ulong, ulong, uint);
     HRESULT UnlockRegion(ulong, ulong, uint);
-    HRESULT Stat(STATSTG*, STATFLAG);
+    HRESULT Stat(STATSTG*, uint);
     HRESULT Clone(IStream*);
 }
 struct RPCOLEMESSAGE
@@ -892,8 +831,8 @@ struct SOLE_AUTHENTICATION_LIST
 enum IID_IClientSecurity = GUID(0x13d, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IClientSecurity : IUnknown
 {
-    HRESULT QueryBlanket(IUnknown, uint*, uint*, ushort**, RPC_C_AUTHN_LEVEL*, RPC_C_IMP_LEVEL*, void**, EOLE_AUTHENTICATION_CAPABILITIES*);
-    HRESULT SetBlanket(IUnknown, uint, uint, PWSTR, RPC_C_AUTHN_LEVEL, RPC_C_IMP_LEVEL, void*, EOLE_AUTHENTICATION_CAPABILITIES);
+    HRESULT QueryBlanket(IUnknown, uint*, uint*, ushort**, RPC_C_AUTHN_LEVEL*, RPC_C_IMP_LEVEL*, void**, uint*);
+    HRESULT SetBlanket(IUnknown, uint, uint, PWSTR, RPC_C_AUTHN_LEVEL, RPC_C_IMP_LEVEL, void*, uint);
     HRESULT CopyProxy(IUnknown, IUnknown*);
 }
 enum IID_IServerSecurity = GUID(0x13e, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
@@ -1126,6 +1065,29 @@ interface AsyncIPipeDouble : IUnknown
     HRESULT Begin_Push(double*, uint);
     HRESULT Finish_Push();
 }
+struct ContextProperty
+{
+    GUID policyId;
+    uint flags;
+    IUnknown pUnk;
+}
+enum IID_IEnumContextProps = GUID(0x1c1, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
+interface IEnumContextProps : IUnknown
+{
+    HRESULT Next(uint, ContextProperty*, uint*);
+    HRESULT Skip(uint);
+    HRESULT Reset();
+    HRESULT Clone(IEnumContextProps*);
+    HRESULT Count(uint*);
+}
+enum IID_IContext = GUID(0x1c0, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
+interface IContext : IUnknown
+{
+    HRESULT SetProperty(const(GUID)*, uint, IUnknown);
+    HRESULT RemoveProperty(const(GUID)*);
+    HRESULT GetProperty(const(GUID)*, uint*, IUnknown*);
+    HRESULT EnumContextProps(IEnumContextProps*);
+}
 alias APTTYPEQUALIFIER = int;
 enum : int
 {
@@ -1197,16 +1159,12 @@ enum : int
     CO_MARSHALING_CONTEXT_ATTRIBUTE_RESERVED_18 = 0x80000011,
 }
 
-struct MachineGlobalObjectTableRegistrationToken__
-{
-    int unused;
-}
 enum IID_IMachineGlobalObjectTable = GUID(0x26d709ac, 0xf70b, 0x4421, [0xa9, 0x6f, 0xd2, 0x87, 0x8f, 0xaf, 0xb0, 0xd]);
 interface IMachineGlobalObjectTable : IUnknown
 {
-    HRESULT RegisterObject(const(GUID)*, const(wchar)*, IUnknown, MachineGlobalObjectTableRegistrationToken__**);
+    HRESULT RegisterObject(const(GUID)*, const(wchar)*, IUnknown, MachineGlobalObjectTableRegistrationToken*);
     HRESULT GetObject(const(GUID)*, const(wchar)*, const(GUID)*, void**);
-    HRESULT RevokeObject(MachineGlobalObjectTableRegistrationToken__*);
+    HRESULT RevokeObject(MachineGlobalObjectTableRegistrationToken);
 }
 enum IID_ISupportAllowLowerTrustActivation = GUID(0xe9956ef2, 0x3828, 0x4b4b, [0x8f, 0xa9, 0x7d, 0xb6, 0x1d, 0xee, 0x49, 0x54]);
 interface ISupportAllowLowerTrustActivation : IUnknown
@@ -1434,7 +1392,7 @@ enum : int
 
 struct RemSTGMEDIUM
 {
-    TYMED tymed;
+    uint tymed;
     uint dwHandleType;
     uint pData;
     uint pUnkForRelease;
@@ -1443,8 +1401,8 @@ struct RemSTGMEDIUM
 }
 struct STGMEDIUM
 {
-    TYMED tymed;
-    union
+    uint tymed;
+    union _u_e__Union
     {
         HBITMAP hBitmap;
         void* hMetaFilePict;
@@ -1468,6 +1426,20 @@ struct GDI_OBJECT
 }
 struct userSTGMEDIUM
 {
+    struct _STGMEDIUM_UNION
+    {
+        uint tymed;
+        union _u_e__Struct
+        {
+            userHMETAFILEPICT* hMetaFilePict;
+            userHENHMETAFILE* hHEnhMetaFile;
+            GDI_OBJECT* hGdiHandle;
+            userHGLOBAL* hGlobal;
+            PWSTR lpszFileName;
+            BYTE_BLOB* pstm;
+            BYTE_BLOB* pstg;
+        }
+    }
     IUnknown pUnkForRelease;
 }
 struct userFLAG_STGMEDIUM
@@ -1932,73 +1904,6 @@ struct SAFEARRAY
     uint cLocks;
     void* pvData;
     SAFEARRAYBOUND[1] rgsabound;
-}
-struct VARIANT
-{
-    union
-    {
-        struct
-        {
-            VARENUM vt;
-            ushort wReserved1;
-            ushort wReserved2;
-            ushort wReserved3;
-            union
-            {
-                long llVal;
-                int lVal;
-                ubyte bVal;
-                short iVal;
-                float fltVal;
-                double dblVal;
-                VARIANT_BOOL boolVal;
-                VARIANT_BOOL __OBSOLETE__VARIANT_BOOL;
-                int scode;
-                CY cyVal;
-                double date;
-                BSTR bstrVal;
-                IUnknown punkVal;
-                IDispatch pdispVal;
-                SAFEARRAY* parray;
-                ubyte* pbVal;
-                short* piVal;
-                int* plVal;
-                long* pllVal;
-                float* pfltVal;
-                double* pdblVal;
-                VARIANT_BOOL* pboolVal;
-                VARIANT_BOOL* __OBSOLETE__VARIANT_PBOOL;
-                int* pscode;
-                CY* pcyVal;
-                double* pdate;
-                BSTR* pbstrVal;
-                IUnknown* ppunkVal;
-                IDispatch* ppdispVal;
-                SAFEARRAY** pparray;
-                VARIANT* pvarVal;
-                void* byref;
-                CHAR cVal;
-                ushort uiVal;
-                uint ulVal;
-                ulong ullVal;
-                int intVal;
-                uint uintVal;
-                DECIMAL* pdecVal;
-                PSTR pcVal;
-                ushort* puiVal;
-                uint* pulVal;
-                ulong* pullVal;
-                int* pintVal;
-                uint* puintVal;
-                struct
-                {
-                    void* pvRecord;
-                    IRecordInfo pRecInfo;
-                }
-            }
-        }
-        DECIMAL decVal;
-    }
 }
 alias TYPEKIND = int;
 enum : int

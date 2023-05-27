@@ -1,8 +1,8 @@
 module windows.win32.networking.ldap;
 
 import windows.win32.foundation : BOOLEAN, CHAR, HANDLE, PSTR, PWSTR, WIN32_ERROR;
-import windows.win32.security.authentication.identity_ : SecPkgContext_IssuerListInfoEx;
-import windows.win32.security.cryptography_ : CERT_CONTEXT;
+import windows.win32.security.authentication.identity : SecPkgContext_IssuerListInfoEx;
+import windows.win32.security.cryptography : CERT_CONTEXT;
 
 version (Windows):
 extern (Windows):
@@ -209,13 +209,13 @@ uint ldap_parse_page_controlW(LDAP*, LDAPControlW**, uint*, LDAP_BERVAL**);
 uint ldap_parse_page_controlA(LDAP*, LDAPControlA**, uint*, LDAP_BERVAL**);
 uint ldap_create_page_control(LDAP*, uint, LDAP_BERVAL*, ubyte, LDAPControlA**);
 uint ldap_parse_page_control(LDAP*, LDAPControlA**, uint*, LDAP_BERVAL**);
-LDAPSearch* ldap_search_init_pageW(LDAP*, const(wchar)*, uint, const(wchar)*, ushort**, uint, LDAPControlW**, LDAPControlW**, uint, uint, LDAPSortKeyW**);
-LDAPSearch* ldap_search_init_pageA(LDAP*, const(char)*, uint, const(char)*, byte**, uint, LDAPControlA**, LDAPControlA**, uint, uint, LDAPSortKeyA**);
-LDAPSearch* ldap_search_init_page(LDAP*, const(char)*, uint, const(char)*, byte**, uint, LDAPControlA**, LDAPControlA**, uint, uint, LDAPSortKeyA**);
-uint ldap_get_next_page(LDAP*, LDAPSearch*, uint, uint*);
-uint ldap_get_next_page_s(LDAP*, LDAPSearch*, LDAP_TIMEVAL*, uint, uint*, LDAPMessage**);
-uint ldap_get_paged_count(LDAP*, LDAPSearch*, uint*, LDAPMessage*);
-uint ldap_search_abandon_page(LDAP*, LDAPSearch*);
+PLDAPSearch ldap_search_init_pageW(LDAP*, const(wchar)*, uint, const(wchar)*, ushort**, uint, LDAPControlW**, LDAPControlW**, uint, uint, LDAPSortKeyW**);
+PLDAPSearch ldap_search_init_pageA(LDAP*, const(char)*, uint, const(char)*, byte**, uint, LDAPControlA**, LDAPControlA**, uint, uint, LDAPSortKeyA**);
+PLDAPSearch ldap_search_init_page(LDAP*, const(char)*, uint, const(char)*, byte**, uint, LDAPControlA**, LDAPControlA**, uint, uint, LDAPSortKeyA**);
+uint ldap_get_next_page(LDAP*, PLDAPSearch, uint, uint*);
+uint ldap_get_next_page_s(LDAP*, PLDAPSearch, LDAP_TIMEVAL*, uint, uint*, LDAPMessage**);
+uint ldap_get_paged_count(LDAP*, PLDAPSearch, uint*, LDAPMessage*);
+uint ldap_search_abandon_page(LDAP*, PLDAPSearch);
 int ldap_create_vlv_controlW(LDAP*, LDAPVLVInfo*, ubyte, LDAPControlW**);
 int ldap_create_vlv_controlA(LDAP*, LDAPVLVInfo*, ubyte, LDAPControlA**);
 int ldap_parse_vlv_controlW(LDAP*, LDAPControlW**, uint*, uint*, LDAP_BERVAL**, int*);
@@ -236,7 +236,7 @@ uint ldap_extended_operation_sW(LDAP*, PWSTR, LDAP_BERVAL*, LDAPControlW**, LDAP
 uint ldap_extended_operation(LDAP*, const(char)*, LDAP_BERVAL*, LDAPControlA**, LDAPControlA**, uint*);
 uint ldap_close_extended_op(LDAP*, uint);
 uint LdapGetLastError();
-WIN32_ERROR LdapMapErrorToWin32(LDAP_RETCODE);
+WIN32_ERROR LdapMapErrorToWin32(uint);
 LDAP* ldap_conn_from_msg(LDAP*, LDAPMessage*);
 BerElement* ber_init(LDAP_BERVAL*);
 void ber_free(BerElement*, int);
@@ -572,6 +572,7 @@ enum LDAP_DIRSYNC_PUBLIC_DATA_ONLY = 0x00002000;
 enum LDAP_DIRSYNC_INCREMENTAL_VALUES = 0x80000000;
 enum LDAP_DIRSYNC_ROPAS_DATA_ONLY = 0x40000000;
 enum LDAP_POLICYHINT_APPLY_FULLPWDPOLICY = 0x00000001;
+alias PLDAPSearch = long;
 alias LDAP_RETCODE = int;
 enum : int
 {
@@ -764,9 +765,6 @@ struct LDAPAPIFeatureInfoW
     int ldapaif_version;
 }
 alias DBGPRINT = uint function(const(char)*);
-struct LDAPSearch
-{
-}
 struct LDAPSortKeyW
 {
     PWSTR sk_attrtype;

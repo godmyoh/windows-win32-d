@@ -4,7 +4,8 @@ import windows.win32.guid : GUID;
 import windows.win32.data.xml.msxml : IXMLDOMDocument;
 import windows.win32.foundation : BOOL, BSTR, FILETIME, HRESULT, PWSTR;
 import windows.win32.storage.virtualdiskservice : VDS_LUN_INFORMATION;
-import windows.win32.system.com_ : IUnknown, VARIANT;
+import windows.win32.system.com : IUnknown;
+import windows.win32.system.variant : VARIANT;
 
 version (Windows):
 extern (Windows):
@@ -479,9 +480,6 @@ enum : int
     VSS_CF_NOT_SYSTEM_STATE      = 0x00000004,
 }
 
-struct IVssExamineWriterMetadata
-{
-}
 // [Not Found] IID_IVssWMFiledesc
 interface IVssWMFiledesc : IUnknown
 {
@@ -580,32 +578,6 @@ interface IVssCreateWriterMetadata
     HRESULT GetDocument(IXMLDOMDocument*);
     HRESULT SaveAsXML(BSTR*);
 }
-// [Not Found] IID_IVssWriterImpl
-interface IVssWriterImpl : IUnknown
-{
-    HRESULT Initialize(GUID, const(wchar)*, const(wchar)*, uint, uint, VSS_USAGE_TYPE, VSS_SOURCE_TYPE, VSS_APPLICATION_LEVEL, uint, VSS_ALTERNATE_WRITER_STATE, ubyte);
-    HRESULT Subscribe(uint, uint);
-    HRESULT Unsubscribe();
-    void Uninitialize();
-    PWSTR* GetCurrentVolumeArray();
-    uint GetCurrentVolumeCount();
-    HRESULT GetSnapshotDeviceName(const(wchar)*, const(wchar)**);
-    GUID GetCurrentSnapshotSetId();
-    int GetContext();
-    VSS_APPLICATION_LEVEL GetCurrentLevel();
-    bool IsPathAffected(const(wchar)*);
-    bool IsBootableSystemStateBackedUp();
-    bool AreComponentsSelected();
-    VSS_BACKUP_TYPE GetBackupType();
-    VSS_RESTORE_TYPE GetRestoreType();
-    HRESULT SetWriterFailure(HRESULT);
-    bool IsPartialFileSupportEnabled();
-    HRESULT InstallAlternateWriter(GUID, GUID);
-    IVssExamineWriterMetadata* GetIdentityInformation();
-    HRESULT SetWriterFailureEx(HRESULT, HRESULT, const(wchar)*);
-    HRESULT GetSessionId(GUID*);
-    bool IsWriterShuttingDown();
-}
 enum IID_IVssCreateExpressWriterMetadata = GUID(0x9c772e77, 0xb26e, 0x427f, [0x92, 0xdd, 0xc9, 0x96, 0xf4, 0x1e, 0xa5, 0xe3]);
 interface IVssCreateExpressWriterMetadata : IUnknown
 {
@@ -624,10 +596,6 @@ interface IVssExpressWriter : IUnknown
     HRESULT LoadMetadata(const(wchar)*, uint);
     HRESULT Register();
     HRESULT Unregister(GUID);
-}
-enum CLSID_VssSnapshotMgmt = GUID(0xb5a2c52, 0x3eb9, 0x470a, [0x96, 0xe2, 0x6c, 0x6d, 0x45, 0x70, 0xe4, 0xf]);
-struct VssSnapshotMgmt
-{
 }
 alias VSS_MGMT_OBJECT_TYPE = int;
 enum : int
@@ -754,8 +722,8 @@ interface IVssEnumMgmtObject : IUnknown
     HRESULT Reset();
     HRESULT Clone(IVssEnumMgmtObject*);
 }
-enum CLSID_VSSCoordinator = GUID(0xe579ab5f, 0x1cc4, 0x44b4, [0xbe, 0xd9, 0xde, 0x9, 0x91, 0xff, 0x6, 0x23]);
-struct VSSCoordinator
+enum CLSID_VssSnapshotMgmt = GUID(0xb5a2c52, 0x3eb9, 0x470a, [0x96, 0xe2, 0x6c, 0x6d, 0x45, 0x70, 0xe4, 0xf]);
+struct VssSnapshotMgmt
 {
 }
 enum IID_IVssAdmin = GUID(0x77ed5996, 0x2f63, 0x11d3, [0x8a, 0x39, 0x0, 0xc0, 0x4f, 0x72, 0xd8, 0xe3]);
@@ -772,6 +740,10 @@ interface IVssAdminEx : IVssAdmin
     HRESULT GetProviderCapability(GUID, ulong*);
     HRESULT GetProviderContext(GUID, int*);
     HRESULT SetProviderContext(GUID, int);
+}
+enum CLSID_VSSCoordinator = GUID(0xe579ab5f, 0x1cc4, 0x44b4, [0xbe, 0xd9, 0xde, 0x9, 0x91, 0xff, 0x6, 0x23]);
+struct VSSCoordinator
+{
 }
 enum IID_IVssSoftwareSnapshotProvider = GUID(0x609e123e, 0x2c5a, 0x44d3, [0x8f, 0x1, 0xb, 0x1d, 0x9a, 0x47, 0xd1, 0xff]);
 interface IVssSoftwareSnapshotProvider : IUnknown

@@ -3,7 +3,7 @@ module windows.win32.storage.enhancedstorage;
 import windows.win32.guid : GUID;
 import windows.win32.devices.portabledevices : IPortableDevice;
 import windows.win32.foundation : BOOL, HRESULT, PWSTR;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):
@@ -1421,22 +1421,6 @@ struct ENHANCED_STORAGE_PASSWORD_SILO_INFORMATION
     ubyte MaxSiloNameSize;
     ushort MaxChallengeSize;
 }
-enum CLSID_EnumEnhancedStorageACT = GUID(0xfe841493, 0x835c, 0x4fa3, [0xb6, 0xcc, 0xb4, 0xb2, 0xd4, 0x71, 0x98, 0x48]);
-struct EnumEnhancedStorageACT
-{
-}
-enum CLSID_EnhancedStorageACT = GUID(0xaf076a15, 0x2ece, 0x4ad4, [0xbb, 0x21, 0x29, 0xf0, 0x40, 0xe1, 0x76, 0xd8]);
-struct EnhancedStorageACT
-{
-}
-enum CLSID_EnhancedStorageSilo = GUID(0xcb25220c, 0x76c7, 0x4fee, [0x84, 0x2b, 0xf3, 0x38, 0x3c, 0xd0, 0x22, 0xbc]);
-struct EnhancedStorageSilo
-{
-}
-enum CLSID_EnhancedStorageSiloAction = GUID(0x886d29dd, 0xb506, 0x466b, [0x9f, 0xbf, 0xb4, 0x4f, 0xf3, 0x83, 0xfb, 0x3f]);
-struct EnhancedStorageSiloAction
-{
-}
 struct ACT_AUTHORIZATION_STATE
 {
     uint ulState;
@@ -1502,4 +1486,20 @@ interface IEnhancedStorageSiloAction : IUnknown
     HRESULT GetName(PWSTR*);
     HRESULT GetDescription(PWSTR*);
     HRESULT Invoke();
+}
+enum CLSID_EnumEnhancedStorageACT = GUID(0xfe841493, 0x835c, 0x4fa3, [0xb6, 0xcc, 0xb4, 0xb2, 0xd4, 0x71, 0x98, 0x48]);
+struct EnumEnhancedStorageACT
+{
+}
+enum CLSID_EnhancedStorageACT = GUID(0xaf076a15, 0x2ece, 0x4ad4, [0xbb, 0x21, 0x29, 0xf0, 0x40, 0xe1, 0x76, 0xd8]);
+struct EnhancedStorageACT
+{
+}
+enum CLSID_EnhancedStorageSilo = GUID(0xcb25220c, 0x76c7, 0x4fee, [0x84, 0x2b, 0xf3, 0x38, 0x3c, 0xd0, 0x22, 0xbc]);
+struct EnhancedStorageSilo
+{
+}
+enum CLSID_EnhancedStorageSiloAction = GUID(0x886d29dd, 0xb506, 0x466b, [0x9f, 0xbf, 0xb4, 0x4f, 0xf3, 0x83, 0xfb, 0x3f]);
+struct EnhancedStorageSiloAction
+{
 }

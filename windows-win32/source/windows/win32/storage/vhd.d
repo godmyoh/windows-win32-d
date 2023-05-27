@@ -2,7 +2,7 @@ module windows.win32.storage.vhd;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HANDLE, PWSTR, WIN32_ERROR;
-import windows.win32.security_ : PSECURITY_DESCRIPTOR;
+import windows.win32.security : PSECURITY_DESCRIPTOR;
 import windows.win32.system.io : OVERLAPPED;
 
 version (Windows):

@@ -1,9 +1,9 @@
-module windows.win32.ui.controls_;
+module windows.win32.ui.controls;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, CHAR, COLORREF, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT, SIZE, SYSTEMTIME, WPARAM;
 import windows.win32.graphics.gdi : BLENDFUNCTION, DRAWEDGE_FLAGS, DRAW_EDGE_FLAGS, DRAW_TEXT_FORMAT, HBITMAP, HBRUSH, HDC, HFONT, HMONITOR, HPALETTE, HPEN, HRGN, LOGFONTW, RGBQUAD, TEXTMETRICW;
-import windows.win32.system.com_ : IStream, IUnknown;
+import windows.win32.system.com : IStream, IUnknown;
 import windows.win32.system.registry : HKEY;
 import windows.win32.ui.input.pointer : POINTER_PEN_INFO, POINTER_TOUCH_INFO;
 import windows.win32.ui.windowsandmessaging : DLGPROC, DLGTEMPLATE, HICON, HMENU, IMAGE_FLAGS, POINTER_INPUT_TYPE, SCROLLBAR_CONSTANTS, SCROLLINFO, WINDOWPOS;
@@ -114,7 +114,7 @@ BOOL FlatSB_GetScrollProp(HWND, WSB_PROP, int*);
 int FlatSB_SetScrollPos(HWND, SCROLLBAR_CONSTANTS, int, BOOL);
 int FlatSB_SetScrollInfo(HWND, SCROLLBAR_CONSTANTS, SCROLLINFO*, BOOL);
 int FlatSB_SetScrollRange(HWND, SCROLLBAR_CONSTANTS, int, int, BOOL);
-BOOL FlatSB_SetScrollProp(HWND, WSB_PROP, long, BOOL);
+BOOL FlatSB_SetScrollProp(HWND, uint, long, BOOL);
 BOOL InitializeFlatSB(HWND);
 HRESULT UninitializeFlatSB(HWND);
 HRESULT LoadIconMetric(HINSTANCE, const(wchar)*, _LI_METRIC, HICON*);
@@ -144,27 +144,27 @@ HRESULT DrawThemeEdge(HTHEME, HDC, int, int, RECT*, DRAWEDGE_FLAGS, DRAW_EDGE_FL
 HRESULT DrawThemeIcon(HTHEME, HDC, int, int, RECT*, HIMAGELIST, int);
 BOOL IsThemePartDefined(HTHEME, int, int);
 BOOL IsThemeBackgroundPartiallyTransparent(HTHEME, int, int);
-HRESULT GetThemeColor(HTHEME, int, int, THEME_PROPERTY_SYMBOL_ID, COLORREF*);
-HRESULT GetThemeMetric(HTHEME, HDC, int, int, THEME_PROPERTY_SYMBOL_ID, int*);
+HRESULT GetThemeColor(HTHEME, int, int, int, COLORREF*);
+HRESULT GetThemeMetric(HTHEME, HDC, int, int, int, int*);
 HRESULT GetThemeString(HTHEME, int, int, int, PWSTR, int);
-HRESULT GetThemeBool(HTHEME, int, int, THEME_PROPERTY_SYMBOL_ID, BOOL*);
-HRESULT GetThemeInt(HTHEME, int, int, THEME_PROPERTY_SYMBOL_ID, int*);
-HRESULT GetThemeEnumValue(HTHEME, int, int, THEME_PROPERTY_SYMBOL_ID, int*);
-HRESULT GetThemePosition(HTHEME, int, int, THEME_PROPERTY_SYMBOL_ID, POINT*);
+HRESULT GetThemeBool(HTHEME, int, int, int, BOOL*);
+HRESULT GetThemeInt(HTHEME, int, int, int, int*);
+HRESULT GetThemeEnumValue(HTHEME, int, int, int, int*);
+HRESULT GetThemePosition(HTHEME, int, int, int, POINT*);
 HRESULT GetThemeFont(HTHEME, HDC, int, int, int, LOGFONTW*);
 HRESULT GetThemeRect(HTHEME, int, int, int, RECT*);
-HRESULT GetThemeMargins(HTHEME, HDC, int, int, THEME_PROPERTY_SYMBOL_ID, RECT*, MARGINS*);
-HRESULT GetThemeIntList(HTHEME, int, int, THEME_PROPERTY_SYMBOL_ID, INTLIST*);
+HRESULT GetThemeMargins(HTHEME, HDC, int, int, int, RECT*, MARGINS*);
+HRESULT GetThemeIntList(HTHEME, int, int, int, INTLIST*);
 HRESULT GetThemePropertyOrigin(HTHEME, int, int, int, PROPERTYORIGIN*);
 HRESULT SetWindowTheme(HWND, const(wchar)*, const(wchar)*);
-HRESULT GetThemeFilename(HTHEME, int, int, THEME_PROPERTY_SYMBOL_ID, PWSTR, int);
+HRESULT GetThemeFilename(HTHEME, int, int, int, PWSTR, int);
 COLORREF GetThemeSysColor(HTHEME, int);
-HBRUSH GetThemeSysColorBrush(HTHEME, THEME_PROPERTY_SYMBOL_ID);
-BOOL GetThemeSysBool(HTHEME, THEME_PROPERTY_SYMBOL_ID);
+HBRUSH GetThemeSysColorBrush(HTHEME, int);
+BOOL GetThemeSysBool(HTHEME, int);
 int GetThemeSysSize(HTHEME, int);
-HRESULT GetThemeSysFont(HTHEME, THEME_PROPERTY_SYMBOL_ID, LOGFONTW*);
-HRESULT GetThemeSysString(HTHEME, THEME_PROPERTY_SYMBOL_ID, PWSTR, int);
-HRESULT GetThemeSysInt(HTHEME, THEME_PROPERTY_SYMBOL_ID, int*);
+HRESULT GetThemeSysFont(HTHEME, int, LOGFONTW*);
+HRESULT GetThemeSysString(HTHEME, int, PWSTR, int);
+HRESULT GetThemeSysInt(HTHEME, int, int*);
 BOOL IsThemeActive();
 BOOL IsAppThemed();
 HTHEME GetWindowTheme(HWND);
@@ -179,7 +179,7 @@ HRESULT EnableTheming(BOOL);
 HRESULT DrawThemeParentBackgroundEx(HWND, HDC, DRAW_THEME_PARENT_BACKGROUND_FLAGS, const(RECT)*);
 HRESULT SetWindowThemeAttribute(HWND, WINDOWTHEMEATTRIBUTETYPE, void*, uint);
 HRESULT DrawThemeTextEx(HTHEME, HDC, int, int, const(wchar)*, int, DRAW_TEXT_FORMAT, RECT*, const(DTTOPTS)*);
-HRESULT GetThemeBitmap(HTHEME, int, int, THEME_PROPERTY_SYMBOL_ID, GET_THEME_BITMAP_FLAGS, HBITMAP*);
+HRESULT GetThemeBitmap(HTHEME, int, int, int, GET_THEME_BITMAP_FLAGS, HBITMAP*);
 HRESULT GetThemeStream(HTHEME, int, int, int, void**, uint*, HINSTANCE);
 HRESULT BufferedPaintInit();
 HRESULT BufferedPaintUnInit();
@@ -212,7 +212,7 @@ BOOL SetWindowFeedbackSetting(HWND, FEEDBACK_TYPE, uint, uint, const(void)*);
 int SetScrollPos(HWND, SCROLLBAR_CONSTANTS, int, BOOL);
 BOOL SetScrollRange(HWND, SCROLLBAR_CONSTANTS, int, int, BOOL);
 BOOL ShowScrollBar(HWND, SCROLLBAR_CONSTANTS, BOOL);
-BOOL EnableScrollBar(HWND, SCROLLBAR_CONSTANTS, ENABLE_SCROLL_BAR_ARROWS);
+BOOL EnableScrollBar(HWND, uint, ENABLE_SCROLL_BAR_ARROWS);
 int DlgDirListA(HWND, PSTR, int, int, DLG_DIR_LIST_FILE_TYPE);
 int DlgDirListW(HWND, PWSTR, int, int, DLG_DIR_LIST_FILE_TYPE);
 BOOL DlgDirSelectExA(HWND, PSTR, int, int);
@@ -229,7 +229,29 @@ enum TVI_ROOT = 0xffffffffffff0000;
 enum TVI_FIRST = 0xffffffffffff0001;
 enum TVI_LAST = 0xffffffffffff0002;
 enum TVI_SORT = 0xffffffffffff0003;
-enum BCN_FIRST = 0xfffffb1e;
+enum NM_FIRST = 0x00000000;
+enum NM_OUTOFMEMORY = 0xffffffff;
+enum NM_CLICK = 0xfffffffe;
+enum NM_DBLCLK = 0xfffffffd;
+enum NM_RETURN = 0xfffffffc;
+enum NM_RCLICK = 0xfffffffb;
+enum NM_RDBLCLK = 0xfffffffa;
+enum NM_SETFOCUS = 0xfffffff9;
+enum NM_KILLFOCUS = 0xfffffff8;
+enum NM_CUSTOMDRAW = 0xfffffff4;
+enum NM_HOVER = 0xfffffff3;
+enum NM_NCHITTEST = 0xfffffff2;
+enum NM_KEYDOWN = 0xfffffff1;
+enum NM_RELEASEDCAPTURE = 0xfffffff0;
+enum NM_SETCURSOR = 0xffffffef;
+enum NM_CHAR = 0xffffffee;
+enum NM_TOOLTIPSCREATED = 0xffffffed;
+enum NM_LDOWN = 0xffffffec;
+enum NM_RDOWN = 0xffffffeb;
+enum NM_THEMECHANGED = 0xffffffea;
+enum NM_FONTCHANGED = 0xffffffe9;
+enum NM_CUSTOMTEXT = 0xffffffe8;
+enum NM_TVSTATEIMAGECHANGING = 0xffffffe8;
 enum EM_SCROLLCARET = 0x000000b7;
 enum EM_SETLIMITTEXT = 0x000000c5;
 enum EM_GETLIMITTEXT = 0x000000d5;
@@ -260,6 +282,47 @@ enum CCM_SETNOTIFYWINDOW = 0x00002009;
 enum CCM_SETWINDOWTHEME = 0x0000200b;
 enum CCM_DPISCALE = 0x0000200c;
 enum INFOTIPSIZE = 0x00000400;
+enum NM_LAST = 0xffffff9d;
+enum LVN_FIRST = 0xffffff9c;
+enum LVN_LAST = 0xffffff39;
+enum HDN_FIRST = 0xfffffed4;
+enum HDN_LAST = 0xfffffe71;
+enum TVN_FIRST = 0xfffffe70;
+enum TVN_LAST = 0xfffffe0d;
+enum TTN_FIRST = 0xfffffdf8;
+enum TTN_LAST = 0xfffffddb;
+enum TCN_FIRST = 0xfffffdda;
+enum TCN_LAST = 0xfffffdbc;
+enum CDN_FIRST = 0xfffffda7;
+enum CDN_LAST = 0xfffffd45;
+enum TBN_FIRST = 0xfffffd44;
+enum TBN_LAST = 0xfffffd30;
+enum UDN_FIRST = 0xfffffd2f;
+enum UDN_LAST = 0xfffffd27;
+enum DTN_FIRST = 0xfffffd1c;
+enum DTN_LAST = 0xfffffd17;
+enum MCN_FIRST = 0xfffffd16;
+enum MCN_LAST = 0xfffffd10;
+enum DTN_FIRST2 = 0xfffffd0f;
+enum DTN_LAST2 = 0xfffffce1;
+enum CBEN_FIRST = 0xfffffce0;
+enum CBEN_LAST = 0xfffffcc2;
+enum RBN_FIRST = 0xfffffcc1;
+enum RBN_LAST = 0xfffffca5;
+enum IPN_FIRST = 0xfffffca4;
+enum IPN_LAST = 0xfffffc91;
+enum SBN_FIRST = 0xfffffc90;
+enum SBN_LAST = 0xfffffc7d;
+enum PGN_FIRST = 0xfffffc7c;
+enum PGN_LAST = 0xfffffc4a;
+enum WMN_FIRST = 0xfffffc18;
+enum WMN_LAST = 0xfffffb50;
+enum BCN_FIRST = 0xfffffb1e;
+enum BCN_LAST = 0xfffffaba;
+enum TRBN_FIRST = 0xfffffa23;
+enum TRBN_LAST = 0xfffffa11;
+enum EN_FIRST = 0xfffffa10;
+enum EN_LAST = 0xfffff9fc;
 enum MSGF_COMMCTRL_BEGINDRAG = 0x00004200;
 enum MSGF_COMMCTRL_SIZEHEADER = 0x00004201;
 enum MSGF_COMMCTRL_DRAGSELECT = 0x00004202;
@@ -334,6 +397,43 @@ enum HDM_GETITEMDROPDOWNRECT = 0x00001219;
 enum HDM_GETOVERFLOWRECT = 0x0000121a;
 enum HDM_GETFOCUSEDITEM = 0x0000121b;
 enum HDM_SETFOCUSEDITEM = 0x0000121c;
+enum HDN_ITEMCHANGINGA = 0xfffffed4;
+enum HDN_ITEMCHANGINGW = 0xfffffec0;
+enum HDN_ITEMCHANGEDA = 0xfffffed3;
+enum HDN_ITEMCHANGEDW = 0xfffffebf;
+enum HDN_ITEMCLICKA = 0xfffffed2;
+enum HDN_ITEMCLICKW = 0xfffffebe;
+enum HDN_ITEMDBLCLICKA = 0xfffffed1;
+enum HDN_ITEMDBLCLICKW = 0xfffffebd;
+enum HDN_DIVIDERDBLCLICKA = 0xfffffecf;
+enum HDN_DIVIDERDBLCLICKW = 0xfffffebb;
+enum HDN_BEGINTRACKA = 0xfffffece;
+enum HDN_BEGINTRACKW = 0xfffffeba;
+enum HDN_ENDTRACKA = 0xfffffecd;
+enum HDN_ENDTRACKW = 0xfffffeb9;
+enum HDN_TRACKA = 0xfffffecc;
+enum HDN_TRACKW = 0xfffffeb8;
+enum HDN_GETDISPINFOA = 0xfffffecb;
+enum HDN_GETDISPINFOW = 0xfffffeb7;
+enum HDN_BEGINDRAG = 0xfffffeca;
+enum HDN_ENDDRAG = 0xfffffec9;
+enum HDN_FILTERCHANGE = 0xfffffec8;
+enum HDN_FILTERBTNCLICK = 0xfffffec7;
+enum HDN_BEGINFILTEREDIT = 0xfffffec6;
+enum HDN_ENDFILTEREDIT = 0xfffffec5;
+enum HDN_ITEMSTATEICONCLICK = 0xfffffec4;
+enum HDN_ITEMKEYDOWN = 0xfffffec3;
+enum HDN_DROPDOWN = 0xfffffec2;
+enum HDN_OVERFLOWCLICK = 0xfffffec1;
+enum HDN_ITEMCHANGING = 0xfffffec0;
+enum HDN_ITEMCHANGED = 0xfffffebf;
+enum HDN_ITEMCLICK = 0xfffffebe;
+enum HDN_ITEMDBLCLICK = 0xfffffebd;
+enum HDN_DIVIDERDBLCLICK = 0xfffffebb;
+enum HDN_BEGINTRACK = 0xfffffeba;
+enum HDN_ENDTRACK = 0xfffffeb9;
+enum HDN_TRACK = 0xfffffeb8;
+enum HDN_GETDISPINFO = 0xfffffeb7;
 enum TOOLBARCLASSNAMEW = "ToolbarWindow32";
 enum TOOLBARCLASSNAMEA = "ToolbarWindow32";
 enum TOOLBARCLASSNAME = "ToolbarWindow32";
@@ -542,11 +642,42 @@ enum TB_GETITEMDROPDOWNRECT = 0x00000467;
 enum TB_SETPRESSEDIMAGELIST = 0x00000468;
 enum TB_GETPRESSEDIMAGELIST = 0x00000469;
 enum TB_SETWINDOWTHEME = 0x0000200b;
+enum TBN_GETBUTTONINFOA = 0xfffffd44;
+enum TBN_BEGINDRAG = 0xfffffd43;
+enum TBN_ENDDRAG = 0xfffffd42;
+enum TBN_BEGINADJUST = 0xfffffd41;
+enum TBN_ENDADJUST = 0xfffffd40;
+enum TBN_RESET = 0xfffffd3f;
+enum TBN_QUERYINSERT = 0xfffffd3e;
+enum TBN_QUERYDELETE = 0xfffffd3d;
+enum TBN_TOOLBARCHANGE = 0xfffffd3c;
+enum TBN_CUSTHELP = 0xfffffd3b;
+enum TBN_DROPDOWN = 0xfffffd3a;
+enum TBN_GETOBJECT = 0xfffffd38;
+enum TBN_HOTITEMCHANGE = 0xfffffd37;
+enum TBN_DRAGOUT = 0xfffffd36;
+enum TBN_DELETINGBUTTON = 0xfffffd35;
+enum TBN_GETDISPINFOA = 0xfffffd34;
+enum TBN_GETDISPINFOW = 0xfffffd33;
+enum TBN_GETINFOTIPA = 0xfffffd32;
+enum TBN_GETINFOTIPW = 0xfffffd31;
+enum TBN_GETBUTTONINFOW = 0xfffffd30;
+enum TBN_RESTORE = 0xfffffd2f;
+enum TBN_SAVE = 0xfffffd2e;
+enum TBN_INITCUSTOMIZE = 0xfffffd2d;
 enum TBNRF_HIDEHELP = 0x00000001;
 enum TBNRF_ENDCUSTOMIZE = 0x00000002;
+enum TBN_WRAPHOTITEM = 0xfffffd2c;
+enum TBN_DUPACCELERATOR = 0xfffffd2b;
+enum TBN_WRAPACCELERATOR = 0xfffffd2a;
+enum TBN_DRAGOVER = 0xfffffd29;
+enum TBN_MAPACCELERATOR = 0xfffffd28;
+enum TBN_GETINFOTIP = 0xfffffd31;
+enum TBN_GETDISPINFO = 0xfffffd33;
 enum TBDDRET_DEFAULT = 0x00000000;
 enum TBDDRET_NODEFAULT = 0x00000001;
 enum TBDDRET_TREATPRESSED = 0x00000002;
+enum TBN_GETBUTTONINFO = 0xfffffd30;
 enum REBARCLASSNAMEW = "ReBarWindow32";
 enum REBARCLASSNAMEA = "ReBarWindow32";
 enum REBARCLASSNAME = "ReBarWindow32";
@@ -634,6 +765,19 @@ enum RB_SETEXTENDEDSTYLE = 0x00000429;
 enum RB_GETEXTENDEDSTYLE = 0x0000042a;
 enum RB_PUSHCHEVRON = 0x0000042b;
 enum RB_SETBANDWIDTH = 0x0000042c;
+enum RBN_HEIGHTCHANGE = 0xfffffcc1;
+enum RBN_GETOBJECT = 0xfffffcc0;
+enum RBN_LAYOUTCHANGED = 0xfffffcbf;
+enum RBN_AUTOSIZE = 0xfffffcbe;
+enum RBN_BEGINDRAG = 0xfffffcbd;
+enum RBN_ENDDRAG = 0xfffffcbc;
+enum RBN_DELETINGBAND = 0xfffffcbb;
+enum RBN_DELETEDBAND = 0xfffffcba;
+enum RBN_CHILDSIZE = 0xfffffcb9;
+enum RBN_CHEVRONPUSHED = 0xfffffcb7;
+enum RBN_SPLITTERDRAG = 0xfffffcb6;
+enum RBN_MINMAX = 0xfffffcac;
+enum RBN_AUTOBREAK = 0xfffffcab;
 enum RBAB_AUTOSIZE = 0x00000001;
 enum RBAB_ADDBAND = 0x00000002;
 enum RBHT_NOWHERE = 0x00000001;
@@ -712,6 +856,15 @@ enum TTM_ENUMTOOLS = 0x0000043a;
 enum TTM_GETCURRENTTOOL = 0x0000043b;
 enum TTM_SETTITLE = 0x00000421;
 enum TTM_SETWINDOWTHEME = 0x0000200b;
+enum TTN_GETDISPINFOA = 0xfffffdf8;
+enum TTN_GETDISPINFOW = 0xfffffdee;
+enum TTN_SHOW = 0xfffffdf7;
+enum TTN_POP = 0xfffffdf6;
+enum TTN_LINKCLICK = 0xfffffdf5;
+enum TTN_GETDISPINFO = 0xfffffdee;
+enum TTN_NEEDTEXT = 0xfffffdee;
+enum TTN_NEEDTEXTA = 0xfffffdf8;
+enum TTN_NEEDTEXTW = 0xfffffdee;
 enum SBARS_SIZEGRIP = 0x00000100;
 enum SBARS_TOOLTIPS = 0x00000800;
 enum SBT_TOOLTIPS = 0x00000800;
@@ -748,6 +901,7 @@ enum SBT_POPOUT = 0x00000200;
 enum SBT_RTLREADING = 0x00000400;
 enum SBT_NOTABPARSING = 0x00000800;
 enum SB_SETBKCOLOR = 0x00002001;
+enum SBN_SIMPLEMODECHANGE = 0xfffffc90;
 enum SB_SIMPLEID = 0x000000ff;
 enum TRACKBAR_CLASSA = "msctls_trackbar32";
 enum TRACKBAR_CLASSW = "msctls_trackbar32";
@@ -820,6 +974,7 @@ enum TB_ENDTRACK = 0x00000008;
 enum TBCD_TICS = 0x00000001;
 enum TBCD_THUMB = 0x00000002;
 enum TBCD_CHANNEL = 0x00000003;
+enum TRBN_THUMBPOSCHANGING = 0xfffffa22;
 enum DL_CURSORSET = 0x00000000;
 enum DL_STOPCURSOR = 0x00000001;
 enum DL_COPYCURSOR = 0x00000002;
@@ -854,6 +1009,7 @@ enum UDM_SETUNICODEFORMAT = 0x00002005;
 enum UDM_GETUNICODEFORMAT = 0x00002006;
 enum UDM_SETPOS32 = 0x00000471;
 enum UDM_GETPOS32 = 0x00000472;
+enum UDN_DELTAPOS = 0xfffffd2e;
 enum PROGRESS_CLASSA = "msctls_progress32";
 enum PROGRESS_CLASSW = "msctls_progress32";
 enum PROGRESS_CLASS = "msctls_progress32";
@@ -1195,9 +1351,50 @@ enum LVKF_CONTROL = 0x00000002;
 enum LVKF_SHIFT = 0x00000004;
 enum LVCDRF_NOSELECT = 0x00010000;
 enum LVCDRF_NOGROUPFRAME = 0x00020000;
+enum LVN_ITEMCHANGING = 0xffffff9c;
+enum LVN_ITEMCHANGED = 0xffffff9b;
+enum LVN_INSERTITEM = 0xffffff9a;
+enum LVN_DELETEITEM = 0xffffff99;
+enum LVN_DELETEALLITEMS = 0xffffff98;
+enum LVN_BEGINLABELEDITA = 0xffffff97;
+enum LVN_BEGINLABELEDITW = 0xffffff51;
+enum LVN_ENDLABELEDITA = 0xffffff96;
+enum LVN_ENDLABELEDITW = 0xffffff50;
+enum LVN_COLUMNCLICK = 0xffffff94;
+enum LVN_BEGINDRAG = 0xffffff93;
+enum LVN_BEGINRDRAG = 0xffffff91;
+enum LVN_ODCACHEHINT = 0xffffff8f;
+enum LVN_ODFINDITEMA = 0xffffff68;
+enum LVN_ODFINDITEMW = 0xffffff4d;
+enum LVN_ITEMACTIVATE = 0xffffff8e;
+enum LVN_ODSTATECHANGED = 0xffffff8d;
+enum LVN_ODFINDITEM = 0xffffff4d;
+enum LVN_HOTTRACK = 0xffffff87;
+enum LVN_GETDISPINFOA = 0xffffff6a;
+enum LVN_GETDISPINFOW = 0xffffff4f;
+enum LVN_SETDISPINFOA = 0xffffff69;
+enum LVN_SETDISPINFOW = 0xffffff4e;
+enum LVN_BEGINLABELEDIT = 0xffffff51;
+enum LVN_ENDLABELEDIT = 0xffffff50;
+enum LVN_GETDISPINFO = 0xffffff4f;
+enum LVN_SETDISPINFO = 0xffffff4e;
+enum LVN_KEYDOWN = 0xffffff65;
+enum LVN_MARQUEEBEGIN = 0xffffff64;
+enum LVN_GETINFOTIPA = 0xffffff63;
+enum LVN_GETINFOTIPW = 0xffffff62;
+enum LVN_GETINFOTIP = 0xffffff62;
 enum LVNSCH_DEFAULT = 0xffffffffffffffff;
 enum LVNSCH_ERROR = 0xfffffffffffffffe;
 enum LVNSCH_IGNORE = 0xfffffffffffffffd;
+enum LVN_INCREMENTALSEARCHA = 0xffffff5e;
+enum LVN_INCREMENTALSEARCHW = 0xffffff5d;
+enum LVN_INCREMENTALSEARCH = 0xffffff5d;
+enum LVN_COLUMNDROPDOWN = 0xffffff5c;
+enum LVN_COLUMNOVERFLOWCLICK = 0xffffff5a;
+enum LVN_BEGINSCROLL = 0xffffff4c;
+enum LVN_ENDSCROLL = 0xffffff4b;
+enum LVN_LINKCLICK = 0xffffff48;
+enum LVN_GETEMPTYMARKUP = 0xffffff45;
 enum WC_TREEVIEWA = "SysTreeView32";
 enum WC_TREEVIEWW = "SysTreeView32";
 enum WC_TREEVIEW = "SysTreeView32";
@@ -1306,10 +1503,55 @@ enum TVM_SETHOT = 0x0000113a;
 enum TVM_GETSELECTEDCOUNT = 0x00001146;
 enum TVM_SHOWINFOTIP = 0x00001147;
 enum TVM_GETITEMPARTRECT = 0x00001148;
+enum TVN_SELCHANGINGA = 0xfffffe6f;
+enum TVN_SELCHANGINGW = 0xfffffe3e;
+enum TVN_SELCHANGEDA = 0xfffffe6e;
+enum TVN_SELCHANGEDW = 0xfffffe3d;
+enum TVN_GETDISPINFOA = 0xfffffe6d;
+enum TVN_GETDISPINFOW = 0xfffffe3c;
+enum TVN_SETDISPINFOA = 0xfffffe6c;
+enum TVN_SETDISPINFOW = 0xfffffe3b;
+enum TVN_ITEMEXPANDINGA = 0xfffffe6b;
+enum TVN_ITEMEXPANDINGW = 0xfffffe3a;
+enum TVN_ITEMEXPANDEDA = 0xfffffe6a;
+enum TVN_ITEMEXPANDEDW = 0xfffffe39;
+enum TVN_BEGINDRAGA = 0xfffffe69;
+enum TVN_BEGINDRAGW = 0xfffffe38;
+enum TVN_BEGINRDRAGA = 0xfffffe68;
+enum TVN_BEGINRDRAGW = 0xfffffe37;
+enum TVN_DELETEITEMA = 0xfffffe67;
+enum TVN_DELETEITEMW = 0xfffffe36;
+enum TVN_BEGINLABELEDITA = 0xfffffe66;
+enum TVN_BEGINLABELEDITW = 0xfffffe35;
+enum TVN_ENDLABELEDITA = 0xfffffe65;
+enum TVN_ENDLABELEDITW = 0xfffffe34;
+enum TVN_KEYDOWN = 0xfffffe64;
+enum TVN_GETINFOTIPA = 0xfffffe63;
+enum TVN_GETINFOTIPW = 0xfffffe62;
+enum TVN_SINGLEEXPAND = 0xfffffe61;
 enum TVNRET_DEFAULT = 0x00000000;
 enum TVNRET_SKIPOLD = 0x00000001;
 enum TVNRET_SKIPNEW = 0x00000002;
+enum TVN_ITEMCHANGINGA = 0xfffffe60;
+enum TVN_ITEMCHANGINGW = 0xfffffe5f;
+enum TVN_ITEMCHANGEDA = 0xfffffe5e;
+enum TVN_ITEMCHANGEDW = 0xfffffe5d;
+enum TVN_ASYNCDRAW = 0xfffffe5c;
+enum TVN_SELCHANGING = 0xfffffe3e;
+enum TVN_SELCHANGED = 0xfffffe3d;
+enum TVN_GETDISPINFO = 0xfffffe3c;
+enum TVN_SETDISPINFO = 0xfffffe3b;
+enum TVN_ITEMEXPANDING = 0xfffffe3a;
+enum TVN_ITEMEXPANDED = 0xfffffe39;
+enum TVN_BEGINDRAG = 0xfffffe38;
+enum TVN_BEGINRDRAG = 0xfffffe37;
+enum TVN_DELETEITEM = 0xfffffe36;
+enum TVN_BEGINLABELEDIT = 0xfffffe35;
+enum TVN_ENDLABELEDIT = 0xfffffe34;
+enum TVN_GETINFOTIP = 0xfffffe62;
 enum TVCDRF_NOIMAGES = 0x00010000;
+enum TVN_ITEMCHANGING = 0xfffffe5f;
+enum TVN_ITEMCHANGED = 0xfffffe5d;
 enum WC_COMBOBOXEXW = "ComboBoxEx32";
 enum WC_COMBOBOXEXA = "ComboBoxEx32";
 enum WC_COMBOBOXEX = "ComboBoxEx32";
@@ -1340,6 +1582,17 @@ enum CBES_EX_PATHWORDBREAKPROC = 0x00000004;
 enum CBES_EX_NOSIZELIMIT = 0x00000008;
 enum CBES_EX_CASESENSITIVE = 0x00000010;
 enum CBES_EX_TEXTENDELLIPSIS = 0x00000020;
+enum CBEN_GETDISPINFOA = 0xfffffce0;
+enum CBEN_INSERTITEM = 0xfffffcdf;
+enum CBEN_DELETEITEM = 0xfffffcde;
+enum CBEN_BEGINEDIT = 0xfffffcdc;
+enum CBEN_ENDEDITA = 0xfffffcdb;
+enum CBEN_ENDEDITW = 0xfffffcda;
+enum CBEN_GETDISPINFOW = 0xfffffcd9;
+enum CBEN_DRAGBEGINA = 0xfffffcd8;
+enum CBEN_DRAGBEGINW = 0xfffffcd7;
+enum CBEN_DRAGBEGIN = 0xfffffcd7;
+enum CBEN_ENDEDIT = 0xfffffcda;
 enum CBENF_KILLFOCUS = 0x00000001;
 enum CBENF_RETURN = 0x00000002;
 enum CBENF_ESCAPE = 0x00000003;
@@ -1405,6 +1658,11 @@ enum TCM_SETEXTENDEDSTYLE = 0x00001334;
 enum TCM_GETEXTENDEDSTYLE = 0x00001335;
 enum TCM_SETUNICODEFORMAT = 0x00002005;
 enum TCM_GETUNICODEFORMAT = 0x00002006;
+enum TCN_KEYDOWN = 0xfffffdda;
+enum TCN_SELCHANGE = 0xfffffdd9;
+enum TCN_SELCHANGING = 0xfffffdd8;
+enum TCN_GETOBJECT = 0xfffffdd7;
+enum TCN_FOCUSCHANGE = 0xfffffdd6;
 enum ANIMATE_CLASSW = "SysAnimate32";
 enum ANIMATE_CLASSA = "SysAnimate32";
 enum ANIMATE_CLASS = "SysAnimate32";
@@ -1462,6 +1720,10 @@ enum MCM_SIZERECTTOMIN = 0x0000101d;
 enum MCM_SETCALENDARBORDER = 0x0000101e;
 enum MCM_GETCALENDARBORDER = 0x0000101f;
 enum MCM_SETCURRENTVIEW = 0x00001020;
+enum MCN_SELCHANGE = 0xfffffd13;
+enum MCN_GETDAYSTATE = 0xfffffd15;
+enum MCN_SELECT = 0xfffffd16;
+enum MCN_VIEWCHANGE = 0xfffffd12;
 enum MCS_DAYSTATE = 0x00000001;
 enum MCS_MULTISELECT = 0x00000002;
 enum MCS_WEEKNUMBERS = 0x00000004;
@@ -1501,6 +1763,21 @@ enum DTS_SHORTDATECENTURYFORMAT = 0x0000000c;
 enum DTS_TIMEFORMAT = 0x00000009;
 enum DTS_APPCANPARSE = 0x00000010;
 enum DTS_RIGHTALIGN = 0x00000020;
+enum DTN_DATETIMECHANGE = 0xfffffd09;
+enum DTN_USERSTRINGA = 0xfffffd0a;
+enum DTN_USERSTRINGW = 0xfffffd17;
+enum DTN_USERSTRING = 0xfffffd17;
+enum DTN_WMKEYDOWNA = 0xfffffd0b;
+enum DTN_WMKEYDOWNW = 0xfffffd18;
+enum DTN_WMKEYDOWN = 0xfffffd18;
+enum DTN_FORMATA = 0xfffffd0c;
+enum DTN_FORMATW = 0xfffffd19;
+enum DTN_FORMAT = 0xfffffd19;
+enum DTN_FORMATQUERYA = 0xfffffd0d;
+enum DTN_FORMATQUERYW = 0xfffffd1a;
+enum DTN_FORMATQUERY = 0xfffffd1a;
+enum DTN_DROPDOWN = 0xfffffd0e;
+enum DTN_CLOSEUP = 0xfffffd0f;
 enum GDTR_MIN = 0x00000001;
 enum GDTR_MAX = 0x00000002;
 enum GDT_ERROR = 0xffffffffffffffff;
@@ -1513,6 +1790,7 @@ enum IPM_ISBLANK = 0x00000469;
 enum WC_IPADDRESSW = "SysIPAddress32";
 enum WC_IPADDRESSA = "SysIPAddress32";
 enum WC_IPADDRESS = "SysIPAddress32";
+enum IPN_FIELDCHANGED = 0xfffffca4;
 enum WC_PAGESCROLLERW = "SysPager";
 enum WC_PAGESCROLLERA = "SysPager";
 enum WC_PAGESCROLLER = "SysPager";
@@ -1541,6 +1819,9 @@ enum PGM_GETBUTTONSIZE = 0x0000140b;
 enum PGM_GETBUTTONSTATE = 0x0000140c;
 enum PGM_GETDROPTARGET = 0x00002004;
 enum PGM_SETSCROLLINFO = 0x0000140d;
+enum PGN_SCROLL = 0xfffffc7b;
+enum PGN_CALCSIZE = 0xfffffc7a;
+enum PGN_HOTITEMCHANGE = 0xfffffc79;
 enum WC_NATIVEFONTCTLW = "NativeFontCtl";
 enum WC_NATIVEFONTCTLA = "NativeFontCtl";
 enum WC_NATIVEFONTCTL = "NativeFontCtl";
@@ -1612,6 +1893,7 @@ enum EM_FILELINEINDEX = 0x00001514;
 enum EM_FILELINELENGTH = 0x00001515;
 enum EM_GETFILELINE = 0x00001516;
 enum EM_GETFILELINECOUNT = 0x00001517;
+enum EN_SEARCHWEB = 0xfffffa10;
 enum WC_LISTBOXA = "ListBox";
 enum WC_LISTBOXW = "ListBox";
 enum WC_LISTBOX = "ListBox";
@@ -1625,10 +1907,10 @@ enum CB_GETCUEBANNER = 0x00001704;
 enum WC_SCROLLBARA = "ScrollBar";
 enum WC_SCROLLBARW = "ScrollBar";
 enum WC_SCROLLBAR = "ScrollBar";
-enum TD_WARNING_ICON = 0xffffffffffffffff;
-enum TD_ERROR_ICON = 0xfffffffffffffffe;
-enum TD_INFORMATION_ICON = 0xfffffffffffffffd;
-enum TD_SHIELD_ICON = 0xfffffffffffffffc;
+enum TD_WARNING_ICON = 0xffff;
+enum TD_ERROR_ICON = 0xfffe;
+enum TD_INFORMATION_ICON = 0xfffd;
+enum TD_SHIELD_ICON = 0xfffc;
 enum WM_MOUSEHOVER = 0x000002a1;
 enum WM_MOUSELEAVE = 0x000002a3;
 enum HOVER_DEFAULT = 0xffffffff;
@@ -1893,6 +2175,20 @@ enum PSH_NOMARGIN = 0x10000000;
 enum PSCB_INITIALIZED = 0x00000001;
 enum PSCB_PRECREATE = 0x00000002;
 enum PSCB_BUTTONPRESSED = 0x00000003;
+enum PSN_FIRST = 0xffffff38;
+enum PSN_LAST = 0xfffffed5;
+enum PSN_SETACTIVE = 0xffffff38;
+enum PSN_KILLACTIVE = 0xffffff37;
+enum PSN_APPLY = 0xffffff36;
+enum PSN_RESET = 0xffffff35;
+enum PSN_HELP = 0xffffff33;
+enum PSN_WIZBACK = 0xffffff32;
+enum PSN_WIZNEXT = 0xffffff31;
+enum PSN_WIZFINISH = 0xffffff30;
+enum PSN_QUERYCANCEL = 0xffffff2f;
+enum PSN_GETOBJECT = 0xffffff2e;
+enum PSN_TRANSLATEACCELERATOR = 0xffffff2c;
+enum PSN_QUERYINITIALFOCUS = 0xffffff2b;
 enum PSNRET_NOERROR = 0x00000000;
 enum PSNRET_INVALID = 0x00000001;
 enum PSNRET_INVALID_NOCHANGEPAGE = 0x00000002;
@@ -2096,6 +2392,12 @@ enum EM_GETMARGINS = 0x000000d4;
 enum EM_SETIMESTATUS = 0x000000d8;
 enum EM_GETIMESTATUS = 0x000000d9;
 enum EM_ENABLEFEATURE = 0x000000da;
+alias POPUPSUBMENUHCHOTSTATES = int;
+enum : int
+{
+    MSMHC_HOT = 0x00000001,
+}
+
 alias THEME_PROPERTY_SYMBOL_ID = uint;
 enum : uint
 {
@@ -2376,8 +2678,8 @@ enum : uint
     DL_DROPPED    = 0x00000487,
 }
 
-alias WORD_BREAK_ACTION = uint;
-enum : uint
+alias WORD_BREAK_ACTION = int;
+enum : int
 {
     WB_CLASSIFY      = 0x00000003,
     WB_ISDELIMITER   = 0x00000002,
@@ -2485,8 +2787,8 @@ enum : uint
     PSPCB_SI_INITDIALOG = 0x00000401,
 }
 
-alias HEADER_CONTROL_NOTIFICATION_BUTTON = uint;
-enum : uint
+alias HEADER_CONTROL_NOTIFICATION_BUTTON = int;
+enum : int
 {
     HEADER_CONTROL_NOTIFICATION_BUTTON_LEFT   = 0x00000000,
     HEADER_CONTROL_NOTIFICATION_BUTTON_RIGHT  = 0x00000001,
@@ -2547,8 +2849,8 @@ enum : uint
     RBNM_STYLE  = 0x00000002,
 }
 
-alias EDITBALLOONTIP_ICON = uint;
-enum : uint
+alias EDITBALLOONTIP_ICON = int;
+enum : int
 {
     TTI_ERROR         = 0x00000003,
     TTI_INFO          = 0x00000001,
@@ -2559,8 +2861,8 @@ enum : uint
     TTI_ERROR_LARGE   = 0x00000006,
 }
 
-alias LVCOLUMNW_FORMAT = uint;
-enum : uint
+alias LVCOLUMNW_FORMAT = int;
+enum : int
 {
     LVCFMT_LEFT            = 0x00000000,
     LVCFMT_RIGHT           = 0x00000001,
@@ -2730,8 +3032,8 @@ enum : uint
     LVTVIM_LABELMARGIN = 0x00000004,
 }
 
-alias NMPGSCROLL_DIR = uint;
-enum : uint
+alias NMPGSCROLL_DIR = int;
+enum : int
 {
     PGF_SCROLLDOWN  = 0x00000002,
     PGF_SCROLLLEFT  = 0x00000004,
@@ -3277,11 +3579,11 @@ enum : uint
 
 alias HPROPSHEETPAGE = void*;
 alias HIMAGELIST = void*;
+alias HTHEME = void*;
 alias HSYNTHETICPOINTERDEVICE = void*;
 alias HTREEITEM = void*;
 alias HDSA = void*;
 alias HDPA = void*;
-alias HTHEME = void*;
 struct TBBUTTON
 {
     int iBitmap;
@@ -5207,10 +5509,6 @@ enum : int
     LIM_LARGE = 0x00000001,
 }
 
-enum CLSID_ImageList = GUID(0x7c476ba2, 0x2b1, 0x48f4, [0x80, 0x48, 0xb2, 0x46, 0x19, 0xdd, 0xc0, 0x58]);
-struct ImageList
-{
-}
 enum IID_IImageList = GUID(0x46eb5926, 0x582e, 0x4017, [0x9f, 0xdf, 0xe8, 0x99, 0x8d, 0xaa, 0x9, 0x50]);
 interface IImageList : IUnknown
 {
@@ -5266,6 +5564,10 @@ interface IImageList2 : IImageList
     HRESULT Initialize(int, int, IMAGELIST_CREATION_FLAGS, int, int);
     HRESULT Replace2(int, HBITMAP, HBITMAP, IUnknown, uint);
     HRESULT ReplaceFromImageList(int, IImageList, int, IUnknown, uint);
+}
+enum CLSID_ImageList = GUID(0x7c476ba2, 0x2b1, 0x48f4, [0x80, 0x48, 0xb2, 0x46, 0x19, 0xdd, 0xc0, 0x58]);
+struct ImageList
+{
 }
 alias TA_PROPERTY = int;
 enum : int
@@ -6281,13 +6583,13 @@ enum : int
     MENU_SYSTEMMAXIMIZE           = 0x00000012,
     MENU_SYSTEMMINIMIZE           = 0x00000013,
     MENU_SYSTEMRESTORE            = 0x00000014,
-    MENU_POPUPSUBMENU_HCHOT       = 0x00000015,
     MENU_SYSTEMCLOSE_HCHOT        = 0x00000016,
     MENU_SYSTEMMAXIMIZE_HCHOT     = 0x00000017,
     MENU_SYSTEMMINIMIZE_HCHOT     = 0x00000018,
     MENU_SYSTEMRESTORE_HCHOT      = 0x00000019,
     MENU_POPUPITEMKBFOCUS         = 0x0000001a,
     MENU_POPUPITEM_FOCUSABLE      = 0x0000001b,
+    MENU_POPUPSUBMENU_HCHOT       = 0x00000015,
 }
 
 alias BARBACKGROUNDSTATES = int;
@@ -6369,13 +6671,6 @@ enum : int
     MSYSR_DISABLED = 0x00000002,
 }
 
-/+ [UNSUPPORTED] alias MENU_POPUPSUBMENU_HCHOT = int;
-enum : int
-{
-    MSMHC_HOT = 0x00000001,
-}
-
-+/
 alias SYSTEMCLOSEHCHOTSTATES = int;
 enum : int
 {

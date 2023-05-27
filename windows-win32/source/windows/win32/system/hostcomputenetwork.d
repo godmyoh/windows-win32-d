@@ -100,3 +100,5 @@ HRESULT HcnReserveGuestNetworkServicePortRange(void*, ushort, HCN_PORT_RANGE_RES
 HRESULT HcnReleaseGuestNetworkServicePortReservationHandle(HANDLE);
 HRESULT HcnEnumerateGuestNetworkPortReservations(uint*, HCN_PORT_RANGE_ENTRY**);
 void HcnFreeGuestNetworkPortReservations(HCN_PORT_RANGE_ENTRY*);
+HRESULT HcnQueryEndpointStats(void*, const(wchar)*, PWSTR*, PWSTR*);
+HRESULT HcnQueryEndpointAddresses(void*, const(wchar)*, PWSTR*, PWSTR*);

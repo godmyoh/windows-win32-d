@@ -3,7 +3,7 @@ module windows.win32.ai.machinelearning.winml;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HRESULT, PSTR, PWSTR;
 import windows.win32.graphics.direct3d12 : ID3D12Device, ID3D12Resource;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):

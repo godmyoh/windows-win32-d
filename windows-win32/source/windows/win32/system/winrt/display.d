@@ -2,9 +2,9 @@ module windows.win32.system.winrt.display;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : HANDLE, HRESULT;
-import windows.win32.security_ : SECURITY_ATTRIBUTES;
-import windows.win32.system.com_ : IUnknown;
-import windows.win32.system.winrt_ : HSTRING, IInspectable;
+import windows.win32.security : SECURITY_ATTRIBUTES;
+import windows.win32.system.com : IUnknown;
+import windows.win32.system.winrt : HSTRING, IInspectable;
 
 version (Windows):
 extern (Windows):

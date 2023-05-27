@@ -2,7 +2,7 @@ module windows.win32.system.parentalcontrols;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, HRESULT, HWND, PWSTR, SYSTEMTIME;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):
@@ -110,18 +110,6 @@ enum MSG_Event_ComputerUsage = 0xffffffffb0000015;
 enum MSG_Event_ContentUsage = 0xffffffffb0000016;
 enum FACILITY_WPC = 0x00000999;
 enum WPCPROV = GUID(0x1090065, 0xb467, 0x4503, [0x9b, 0x28, 0x53, 0x37, 0x66, 0x76, 0x10, 0x87]);
-enum CLSID_WpcSettingsProvider = GUID(0x355dffaa, 0x3b9f, 0x435c, [0xb4, 0x28, 0x5d, 0x44, 0x29, 0xb, 0xc5, 0xf2]);
-struct WpcSettingsProvider
-{
-}
-enum CLSID_WpcProviderSupport = GUID(0xbb18c7a0, 0x2186, 0x4be0, [0x97, 0xd8, 0x4, 0x84, 0x7b, 0x62, 0x8e, 0x2]);
-struct WpcProviderSupport
-{
-}
-enum CLSID_WindowsParentalControls = GUID(0xe77cc89b, 0x7401, 0x4c04, [0x8c, 0xed, 0x14, 0x9d, 0xb3, 0x5a, 0xdd, 0x4]);
-struct WindowsParentalControls
-{
-}
 enum IID_IWPCProviderState = GUID(0x50b6a267, 0xc4bd, 0x450b, [0xad, 0xb5, 0x75, 0x90, 0x73, 0x83, 0x7c, 0x9e]);
 interface IWPCProviderState : IUnknown
 {
@@ -139,7 +127,7 @@ interface IWPCProviderConfig : IUnknown
 {
     HRESULT GetUserSummary(BSTR, BSTR*);
     HRESULT Configure(HWND, BSTR);
-    HRESULT RequestOverride(HWND, BSTR, WPCFLAG_RESTRICTION);
+    HRESULT RequestOverride(HWND, BSTR, uint);
 }
 alias WPCFLAG_RESTRICTION = int;
 enum : int
@@ -203,6 +191,18 @@ enum IID_IWPCProviderSupport = GUID(0x41eba572, 0x23ed, 0x4779, [0xbe, 0xc1, 0x8
 interface IWPCProviderSupport : IUnknown
 {
     HRESULT GetCurrent(GUID*);
+}
+enum CLSID_WpcSettingsProvider = GUID(0x355dffaa, 0x3b9f, 0x435c, [0xb4, 0x28, 0x5d, 0x44, 0x29, 0xb, 0xc5, 0xf2]);
+struct WpcSettingsProvider
+{
+}
+enum CLSID_WpcProviderSupport = GUID(0xbb18c7a0, 0x2186, 0x4be0, [0x97, 0xd8, 0x4, 0x84, 0x7b, 0x62, 0x8e, 0x2]);
+struct WpcProviderSupport
+{
+}
+enum CLSID_WindowsParentalControls = GUID(0xe77cc89b, 0x7401, 0x4c04, [0x8c, 0xed, 0x14, 0x9d, 0xb3, 0x5a, 0xdd, 0x4]);
+struct WindowsParentalControls
+{
 }
 alias WPCFLAG_ISBLOCKED = int;
 enum : int

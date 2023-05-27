@@ -3,7 +3,7 @@ module windows.win32.media.pictureacquisition;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, FILETIME, HRESULT, HWND, PWSTR, SIZE;
 import windows.win32.graphics.gdi : HBITMAP;
-import windows.win32.system.com_ : IEnumString, IStream, IUnknown;
+import windows.win32.system.com : IEnumString, IStream, IUnknown;
 import windows.win32.system.com.structuredstorage : PROPVARIANT;
 import windows.win32.ui.shell.propertiessystem : IPropertyStore, PROPERTYKEY;
 import windows.win32.ui.windowsandmessaging : HICON;
@@ -49,30 +49,6 @@ enum DSF_SHOW_OFFLINE = 0x00020000;
 enum PAPS_PRESAVE = 0x00000000;
 enum PAPS_POSTSAVE = 0x00000001;
 enum PAPS_CLEANUP = 0x00000002;
-enum CLSID_PhotoAcquire = GUID(0xf26e02, 0xe9f2, 0x4a9f, [0x9f, 0xdd, 0x5a, 0x96, 0x2f, 0xb2, 0x6a, 0x98]);
-struct PhotoAcquire
-{
-}
-enum CLSID_PhotoAcquireAutoPlayDropTarget = GUID(0xf20eb5, 0x8fd6, 0x4d9d, [0xb7, 0x5e, 0x36, 0x80, 0x17, 0x66, 0xc8, 0xf1]);
-struct PhotoAcquireAutoPlayDropTarget
-{
-}
-enum CLSID_PhotoAcquireAutoPlayHWEventHandler = GUID(0xf2b433, 0x44e4, 0x4d88, [0xb2, 0xb0, 0x26, 0x98, 0xa0, 0xa9, 0x1d, 0xba]);
-struct PhotoAcquireAutoPlayHWEventHandler
-{
-}
-enum CLSID_PhotoAcquireOptionsDialog = GUID(0xf210a1, 0x62f0, 0x438b, [0x9f, 0x7e, 0x96, 0x18, 0xd7, 0x2a, 0x18, 0x31]);
-struct PhotoAcquireOptionsDialog
-{
-}
-enum CLSID_PhotoProgressDialog = GUID(0xf24ca0, 0x748f, 0x4e8a, [0x89, 0x4f, 0xe, 0x3, 0x57, 0xc6, 0x79, 0x9f]);
-struct PhotoProgressDialog
-{
-}
-enum CLSID_PhotoAcquireDeviceSelectionDialog = GUID(0xf29a34, 0xb8a1, 0x482c, [0xbc, 0xf8, 0x3a, 0xc7, 0xb0, 0xfe, 0x8f, 0x62]);
-struct PhotoAcquireDeviceSelectionDialog
-{
-}
 enum IID_IPhotoAcquireItem = GUID(0xf21c97, 0x28bf, 0x4c02, [0xb8, 0x42, 0x5e, 0x4e, 0x90, 0x13, 0x9a, 0x30]);
 interface IPhotoAcquireItem : IUnknown
 {
@@ -264,4 +240,28 @@ interface IPhotoAcquirePlugin : IUnknown
     HRESULT ProcessItem(uint, IPhotoAcquireItem, IStream, const(wchar)*, IPropertyStore);
     HRESULT TransferComplete(HRESULT);
     HRESULT DisplayConfigureDialog(HWND);
+}
+enum CLSID_PhotoAcquire = GUID(0xf26e02, 0xe9f2, 0x4a9f, [0x9f, 0xdd, 0x5a, 0x96, 0x2f, 0xb2, 0x6a, 0x98]);
+struct PhotoAcquire
+{
+}
+enum CLSID_PhotoAcquireAutoPlayDropTarget = GUID(0xf20eb5, 0x8fd6, 0x4d9d, [0xb7, 0x5e, 0x36, 0x80, 0x17, 0x66, 0xc8, 0xf1]);
+struct PhotoAcquireAutoPlayDropTarget
+{
+}
+enum CLSID_PhotoAcquireAutoPlayHWEventHandler = GUID(0xf2b433, 0x44e4, 0x4d88, [0xb2, 0xb0, 0x26, 0x98, 0xa0, 0xa9, 0x1d, 0xba]);
+struct PhotoAcquireAutoPlayHWEventHandler
+{
+}
+enum CLSID_PhotoAcquireOptionsDialog = GUID(0xf210a1, 0x62f0, 0x438b, [0x9f, 0x7e, 0x96, 0x18, 0xd7, 0x2a, 0x18, 0x31]);
+struct PhotoAcquireOptionsDialog
+{
+}
+enum CLSID_PhotoProgressDialog = GUID(0xf24ca0, 0x748f, 0x4e8a, [0x89, 0x4f, 0xe, 0x3, 0x57, 0xc6, 0x79, 0x9f]);
+struct PhotoProgressDialog
+{
+}
+enum CLSID_PhotoAcquireDeviceSelectionDialog = GUID(0xf29a34, 0xb8a1, 0x482c, [0xbc, 0xf8, 0x3a, 0xc7, 0xb0, 0xfe, 0x8f, 0x62]);
+struct PhotoAcquireDeviceSelectionDialog
+{
 }

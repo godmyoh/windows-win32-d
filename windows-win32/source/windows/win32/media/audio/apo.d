@@ -2,8 +2,8 @@ module windows.win32.media.audio.apo;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HANDLE, HRESULT, LPARAM, PWSTR;
-import windows.win32.media.audio_ : AUDIO_SYSTEMEFFECTS_PROPERTYSTORE_TYPE, AUDIO_VOLUME_NOTIFICATION_DATA, IMMDevice, IMMDeviceCollection, WAVEFORMATEX;
-import windows.win32.system.com_ : IServiceProvider, IUnknown;
+import windows.win32.media.audio : AUDIO_SYSTEMEFFECTS_PROPERTYSTORE_TYPE, AUDIO_VOLUME_NOTIFICATION_DATA, IMMDevice, IMMDeviceCollection, WAVEFORMATEX;
+import windows.win32.system.com : IServiceProvider, IUnknown;
 import windows.win32.ui.shell.propertiessystem : IPropertyStore, PROPERTYKEY;
 
 version (Windows):

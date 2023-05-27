@@ -7,9 +7,9 @@ import std.stdio, std.string;
 
 class ModuleWriter : IModuleWriter
 {
-    override void writeModule(File f, constr fqmn)
+    override void writeModule(File f, Module m)
     {
-        f.writefln("module %s;", fqmn);
+        f.writefln("module %s;", m.fqmn);
         f.writeln;
     }
 

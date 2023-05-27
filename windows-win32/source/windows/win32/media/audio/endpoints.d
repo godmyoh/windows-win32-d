@@ -2,10 +2,10 @@ module windows.win32.media.audio.endpoints;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HRESULT, PWSTR;
-import windows.win32.media.audio_ : AUDIO_VOLUME_NOTIFICATION_DATA, IMMDevice, WAVEFORMATEX;
+import windows.win32.media.audio : AUDIO_VOLUME_NOTIFICATION_DATA, IMMDevice, WAVEFORMATEX;
 import windows.win32.media.audio.apo : APO_CONNECTION_PROPERTY;
 import windows.win32.media.kernelstreaming : AUDIO_CURVE_TYPE;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):

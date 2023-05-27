@@ -14,6 +14,7 @@ HRESULT DiscoverManagementService(const(wchar)*, MANAGEMENT_SERVICE_INFO**);
 HRESULT RegisterDeviceWithManagementUsingAADCredentials(HANDLE);
 HRESULT RegisterDeviceWithManagementUsingAADDeviceCredentials();
 HRESULT RegisterDeviceWithManagementUsingAADDeviceCredentials2(const(wchar)*);
+HRESULT RegisterDeviceDualEnrollMmpcUsingAADDeviceCredentials(uint, PWSTR);
 HRESULT RegisterDeviceWithManagement(const(wchar)*, const(wchar)*, const(wchar)*);
 HRESULT UnregisterDeviceWithManagement(const(wchar)*);
 HRESULT GetDeviceManagementConfigInfo(const(wchar)*, uint*, PWSTR);

@@ -5,7 +5,7 @@ import windows.win32.foundation : BOOL, COLORREF, FILETIME, HANDLE, HRESULT, POI
 import windows.win32.globalization : FONTSIGNATURE;
 import windows.win32.graphics.direct2d.common : D2D_POINT_2F, D2D_SIZE_U, ID2D1SimplifiedGeometrySink;
 import windows.win32.graphics.gdi : HDC, HMONITOR, LOGFONTA, LOGFONTW;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):

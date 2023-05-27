@@ -1,10 +1,11 @@
-module windows.win32.security.cryptography_;
+module windows.win32.security.cryptography;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, NTSTATUS, PSID, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL;
-import windows.win32.security_ : NCRYPT_DESCRIPTOR_HANDLE, NCRYPT_STREAM_HANDLE, OBJECT_SECURITY_INFORMATION;
-import windows.win32.system.com_ : IDispatch, IUnknown, VARIANT;
+import windows.win32.foundation : BOOL, BSTR, CHAR, FILETIME, HANDLE, HMODULE, HRESULT, HWND, NTSTATUS, PSID, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL;
+import windows.win32.security : NCRYPT_DESCRIPTOR_HANDLE, NCRYPT_STREAM_HANDLE, OBJECT_SECURITY_INFORMATION;
+import windows.win32.system.com : IDispatch, IUnknown;
 import windows.win32.system.registry : HKEY, REG_VALUE_TYPE;
+import windows.win32.system.variant : VARIANT;
 
 version (Windows):
 extern (Windows):
@@ -148,8 +149,8 @@ enum : uint
     PKCS_7_ASN_ENCODING = 0x00010000,
 }
 
-alias CERT_RDN_ATTR_VALUE_TYPE = uint;
-enum : uint
+alias CERT_RDN_ATTR_VALUE_TYPE = int;
+enum : int
 {
     CERT_RDN_ANY_TYPE         = 0x00000000,
     CERT_RDN_NUMERIC_STRING   = 0x00000003,
@@ -793,6 +794,72 @@ enum : uint
     NCRYPT_SIGNATURE_INTERFACE             = 0x00000005,
 }
 
+alias BCRYPTGENRANDOM_FLAGS = uint;
+enum : uint
+{
+    BCRYPT_RNG_USE_ENTROPY_IN_BUFFER = 0x00000001,
+    BCRYPT_USE_SYSTEM_PREFERRED_RNG  = 0x00000002,
+}
+
+alias SIGNER_SIGN_FLAGS = uint;
+enum : uint
+{
+    SIG_APPEND                        = 0x00001000,
+    SPC_INC_PE_RESOURCES_FLAG         = 0x00000080,
+    SPC_INC_PE_DEBUG_INFO_FLAG        = 0x00000040,
+    SPC_INC_PE_IMPORT_ADDR_TABLE_FLAG = 0x00000020,
+    SPC_EXC_PE_PAGE_HASHES_FLAG       = 0x00000010,
+    SPC_INC_PE_PAGE_HASHES_FLAG       = 0x00000100,
+    SPC_DIGEST_GENERATE_FLAG          = 0x00000200,
+    SPC_DIGEST_SIGN_FLAG              = 0x00000400,
+    SPC_DIGEST_SIGN_EX_FLAG           = 0x00004000,
+}
+
+alias SIGNER_TIMESTAMP_FLAGS = uint;
+enum : uint
+{
+    SIGNER_TIMESTAMP_AUTHENTICODE = 0x00000001,
+    SIGNER_TIMESTAMP_RFC3161      = 0x00000002,
+}
+
+alias SIGNER_SUBJECT_CHOICE = uint;
+enum : uint
+{
+    SIGNER_SUBJECT_FILE = 0x00000001,
+    SIGNER_SUBJECT_BLOB = 0x00000002,
+}
+
+alias SIGNER_SIGNATURE_ATTRIBUTE_CHOICE = uint;
+enum : uint
+{
+    SIGNER_NO_ATTR       = 0x00000000,
+    SIGNER_AUTHCODE_ATTR = 0x00000001,
+}
+
+alias SIGNER_PRIVATE_KEY_CHOICE = uint;
+enum : uint
+{
+    PVK_TYPE_FILE_NAME    = 0x00000001,
+    PVK_TYPE_KEYCONTAINER = 0x00000002,
+}
+
+alias SIGNER_CERT_POLICY = uint;
+enum : uint
+{
+    SIGNER_CERT_POLICY_STORE         = 0x00000001,
+    SIGNER_CERT_POLICY_CHAIN         = 0x00000002,
+    SIGNER_CERT_POLICY_SPC           = 0x00000004,
+    SIGNER_CERT_POLICY_CHAIN_NO_ROOT = 0x00000008,
+}
+
+alias SIGNER_CERT_CHOICE = uint;
+enum : uint
+{
+    SIGNER_CERT_SPC_FILE  = 0x00000001,
+    SIGNER_CERT_STORE     = 0x00000002,
+    SIGNER_CERT_SPC_CHAIN = 0x00000003,
+}
+
 BOOL CryptAcquireContextA(ulong*, const(char)*, const(char)*, uint, uint);
 BOOL CryptAcquireContextW(ulong*, const(wchar)*, const(wchar)*, uint, uint);
 BOOL CryptReleaseContext(ulong, uint);
@@ -863,7 +930,7 @@ NTSTATUS BCryptProcessMultiOperations(BCRYPT_HANDLE, BCRYPT_MULTI_OPERATION_TYPE
 NTSTATUS BCryptDuplicateHash(BCRYPT_HASH_HANDLE, BCRYPT_HASH_HANDLE*, ubyte*, uint, uint);
 NTSTATUS BCryptDestroyHash(BCRYPT_HASH_HANDLE);
 NTSTATUS BCryptHash(BCRYPT_ALG_HANDLE, ubyte*, uint, ubyte*, uint, ubyte*, uint);
-NTSTATUS BCryptGenRandom(BCRYPT_ALG_HANDLE, ubyte*, uint, uint);
+NTSTATUS BCryptGenRandom(BCRYPT_ALG_HANDLE, ubyte*, uint, BCRYPTGENRANDOM_FLAGS);
 NTSTATUS BCryptDeriveKeyCapi(BCRYPT_HASH_HANDLE, BCRYPT_ALG_HANDLE, ubyte*, uint, uint);
 NTSTATUS BCryptDeriveKeyPBKDF2(BCRYPT_ALG_HANDLE, ubyte*, uint, ubyte*, uint, ulong, ubyte*, uint, uint);
 NTSTATUS BCryptQueryProviderRegistration(const(wchar)*, BCRYPT_QUERY_PROVIDER_MODE, BCRYPT_INTERFACE, uint*, CRYPT_PROVIDER_REG**);
@@ -917,7 +984,7 @@ BOOL CryptEncodeObjectEx(CERT_QUERY_ENCODING_TYPE, const(char)*, const(void)*, C
 BOOL CryptEncodeObject(CERT_QUERY_ENCODING_TYPE, const(char)*, const(void)*, ubyte*, uint*);
 BOOL CryptDecodeObjectEx(CERT_QUERY_ENCODING_TYPE, const(char)*, const(ubyte)*, uint, uint, CRYPT_DECODE_PARA*, void*, uint*);
 BOOL CryptDecodeObject(CERT_QUERY_ENCODING_TYPE, const(char)*, const(ubyte)*, uint, uint, void*, uint*);
-BOOL CryptInstallOIDFunctionAddress(HINSTANCE, uint, const(char)*, uint, const(CRYPT_OID_FUNC_ENTRY)*, uint);
+BOOL CryptInstallOIDFunctionAddress(HMODULE, uint, const(char)*, uint, const(CRYPT_OID_FUNC_ENTRY)*, uint);
 void* CryptInitOIDFunctionSet(const(char)*, uint);
 BOOL CryptGetOIDFunctionAddress(void*, uint, const(char)*, uint, void**, void**);
 BOOL CryptGetDefaultOIDDllList(void*, uint, PWSTR, uint*);
@@ -1154,6 +1221,16 @@ HRESULT NCryptStreamOpenToUnprotect(NCRYPT_PROTECT_STREAM_INFO*, uint, HWND, NCR
 HRESULT NCryptStreamOpenToUnprotectEx(NCRYPT_PROTECT_STREAM_INFO_EX*, uint, HWND, NCRYPT_STREAM_HANDLE*);
 HRESULT NCryptStreamUpdate(NCRYPT_STREAM_HANDLE, const(ubyte)*, ulong, BOOL);
 HRESULT NCryptStreamClose(NCRYPT_STREAM_HANDLE);
+HRESULT SignError();
+HRESULT SignerFreeSignerContext(SIGNER_CONTEXT*);
+HRESULT SignerSign(SIGNER_SUBJECT_INFO*, SIGNER_CERT*, SIGNER_SIGNATURE_INFO*, SIGNER_PROVIDER_INFO*, const(wchar)*, CRYPT_ATTRIBUTES*, void*);
+HRESULT SignerSignEx(SIGNER_SIGN_FLAGS, SIGNER_SUBJECT_INFO*, SIGNER_CERT*, SIGNER_SIGNATURE_INFO*, SIGNER_PROVIDER_INFO*, const(wchar)*, CRYPT_ATTRIBUTES*, void*, SIGNER_CONTEXT**);
+HRESULT SignerSignEx2(SIGNER_SIGN_FLAGS, SIGNER_SUBJECT_INFO*, SIGNER_CERT*, SIGNER_SIGNATURE_INFO*, SIGNER_PROVIDER_INFO*, SIGNER_TIMESTAMP_FLAGS, const(char)*, const(wchar)*, CRYPT_ATTRIBUTES*, void*, SIGNER_CONTEXT**, CERT_STRONG_SIGN_PARA*, void*);
+HRESULT SignerSignEx3(SIGNER_SIGN_FLAGS, SIGNER_SUBJECT_INFO*, SIGNER_CERT*, SIGNER_SIGNATURE_INFO*, SIGNER_PROVIDER_INFO*, SIGNER_TIMESTAMP_FLAGS, const(char)*, const(wchar)*, CRYPT_ATTRIBUTES*, void*, SIGNER_CONTEXT**, CERT_STRONG_SIGN_PARA*, SIGNER_DIGEST_SIGN_INFO*, void*);
+HRESULT SignerTimeStamp(SIGNER_SUBJECT_INFO*, const(wchar)*, CRYPT_ATTRIBUTES*, void*);
+HRESULT SignerTimeStampEx(uint, SIGNER_SUBJECT_INFO*, const(wchar)*, CRYPT_ATTRIBUTES*, void*, SIGNER_CONTEXT**);
+HRESULT SignerTimeStampEx2(SIGNER_TIMESTAMP_FLAGS, SIGNER_SUBJECT_INFO*, const(wchar)*, uint, CRYPT_ATTRIBUTES*, void*, SIGNER_CONTEXT**);
+HRESULT SignerTimeStampEx3(SIGNER_TIMESTAMP_FLAGS, uint, SIGNER_SUBJECT_INFO*, const(wchar)*, const(wchar)*, CRYPT_ATTRIBUTES*, void*, SIGNER_CONTEXT**, CERT_STRONG_SIGN_PARA*, void*);
 HRESULT CryptXmlClose(void*);
 HRESULT CryptXmlGetTransforms(const(CRYPT_XML_TRANSFORM_CHAIN_CONFIG)**);
 HRESULT CryptXmlOpenToEncode(const(CRYPT_XML_TRANSFORM_CHAIN_CONFIG)*, CRYPT_XML_FLAGS, const(wchar)*, const(CRYPT_XML_PROPERTY)*, uint, const(CRYPT_XML_BLOB)*, void**);
@@ -1484,8 +1561,6 @@ enum BCRYPT_NO_KEY_VALIDATION = 0x00000008;
 enum BCRYPT_KEY_VALIDATION_RANGE = 0x00000010;
 enum BCRYPT_KEY_VALIDATION_RANGE_AND_ORDER = 0x00000018;
 enum BCRYPT_KEY_VALIDATION_REGENERATE = 0x00000020;
-enum BCRYPT_RNG_USE_ENTROPY_IN_BUFFER = 0x00000001;
-enum BCRYPT_USE_SYSTEM_PREFERRED_RNG = 0x00000002;
 enum BCRYPT_HASH_INTERFACE_MAJORVERSION_2 = 0x00000002;
 enum CRYPT_OVERWRITE = 0x00000001;
 enum CRYPT_PRIORITY_TOP = 0x00000000;
@@ -4049,14 +4124,14 @@ enum AUDIT_STORE_DELETE = 0x40050205;
 enum AUDIT_SERVICE_IDLE_STOP = 0x40050206;
 alias HCRYPTASYNC = void*;
 alias HCERTCHAINENGINE = void*;
-alias BCRYPT_ALG_HANDLE = long;
-alias BCRYPT_KEY_HANDLE = long;
-alias BCRYPT_HASH_HANDLE = long;
-alias BCRYPT_SECRET_HANDLE = long;
-alias BCRYPT_HANDLE = long;
-alias NCRYPT_HANDLE = ulong;
+alias BCRYPT_ALG_HANDLE = void*;
+alias BCRYPT_KEY_HANDLE = void*;
+alias BCRYPT_HASH_HANDLE = void*;
+alias BCRYPT_SECRET_HANDLE = void*;
 alias NCRYPT_PROV_HANDLE = ulong;
 alias NCRYPT_KEY_HANDLE = ulong;
+alias BCRYPT_HANDLE = void*;
+alias NCRYPT_HANDLE = ulong;
 alias NCRYPT_HASH_HANDLE = ulong;
 alias NCRYPT_SECRET_HANDLE = ulong;
 alias HCRYPTPROV_LEGACY = void*;
@@ -4711,7 +4786,7 @@ struct CRYPT_ATTRIBUTES
 struct CERT_RDN_ATTR
 {
     PSTR pszObjId;
-    CERT_RDN_ATTR_VALUE_TYPE dwValueType;
+    uint dwValueType;
     CRYPT_INTEGER_BLOB Value;
 }
 struct CERT_RDN
@@ -6661,6 +6736,129 @@ struct NCRYPT_PROTECT_STREAM_INFO_EX
     PFNCryptStreamOutputCallbackEx pfnStreamOutput;
     void* pvCallbackCtxt;
 }
+alias PFN_AUTHENTICODE_DIGEST_SIGN = HRESULT function(const(CERT_CONTEXT)*, CRYPT_INTEGER_BLOB*, uint, ubyte*, uint, CRYPT_INTEGER_BLOB*);
+alias PFN_AUTHENTICODE_DIGEST_SIGN_EX = HRESULT function(CRYPT_INTEGER_BLOB*, uint, ubyte*, uint, CRYPT_INTEGER_BLOB*, CERT_CONTEXT**, HCERTSTORE);
+alias PFN_AUTHENTICODE_DIGEST_SIGN_EX_WITHFILEHANDLE = HRESULT function(CRYPT_INTEGER_BLOB*, uint, ubyte*, uint, HANDLE, CRYPT_INTEGER_BLOB*, CERT_CONTEXT**, HCERTSTORE);
+alias PFN_AUTHENTICODE_DIGEST_SIGN_WITHFILEHANDLE = HRESULT function(const(CERT_CONTEXT)*, CRYPT_INTEGER_BLOB*, uint, ubyte*, uint, HANDLE, CRYPT_INTEGER_BLOB*);
+struct SIGNER_ATTR_AUTHCODE
+{
+    uint cbSize;
+    BOOL fCommercial;
+    BOOL fIndividual;
+    const(wchar)* pwszName;
+    const(wchar)* pwszInfo;
+}
+struct SIGNER_BLOB_INFO
+{
+    uint cbSize;
+    GUID* pGuidSubject;
+    uint cbBlob;
+    ubyte* pbBlob;
+    const(wchar)* pwszDisplayName;
+}
+struct SIGNER_CERT_STORE_INFO
+{
+    uint cbSize;
+    const(CERT_CONTEXT)* pSigningCert;
+    SIGNER_CERT_POLICY dwCertPolicy;
+    HCERTSTORE hCertStore;
+}
+struct SIGNER_SPC_CHAIN_INFO
+{
+    uint cbSize;
+    const(wchar)* pwszSpcFile;
+    uint dwCertPolicy;
+    HCERTSTORE hCertStore;
+}
+struct SIGNER_CERT
+{
+    uint cbSize;
+    SIGNER_CERT_CHOICE dwCertChoice;
+    union
+    {
+        const(wchar)* pwszSpcFile;
+        SIGNER_CERT_STORE_INFO* pCertStoreInfo;
+        SIGNER_SPC_CHAIN_INFO* pSpcChainInfo;
+    }
+    HWND hwnd;
+}
+struct SIGNER_CONTEXT
+{
+    uint cbSize;
+    uint cbBlob;
+    ubyte* pbBlob;
+}
+struct SIGNER_DIGEST_SIGN_INFO
+{
+    uint cbSize;
+    uint dwDigestSignChoice;
+    union
+    {
+        PFN_AUTHENTICODE_DIGEST_SIGN pfnAuthenticodeDigestSign;
+        PFN_AUTHENTICODE_DIGEST_SIGN_WITHFILEHANDLE pfnAuthenticodeDigestSignWithFileHandle;
+        PFN_AUTHENTICODE_DIGEST_SIGN_EX pfnAuthenticodeDigestSignEx;
+        PFN_AUTHENTICODE_DIGEST_SIGN_EX_WITHFILEHANDLE pfnAuthenticodeDigestSignExWithFileHandle;
+    }
+    CRYPT_INTEGER_BLOB* pMetadataBlob;
+    uint dwReserved;
+    uint dwReserved2;
+    uint dwReserved3;
+}
+struct SIGNER_DIGEST_SIGN_INFO_V1
+{
+    uint cbSize;
+    PFN_AUTHENTICODE_DIGEST_SIGN pfnAuthenticodeDigestSign;
+    CRYPT_INTEGER_BLOB* pMetadataBlob;
+}
+struct SIGNER_DIGEST_SIGN_INFO_V2
+{
+    uint cbSize;
+    PFN_AUTHENTICODE_DIGEST_SIGN pfnAuthenticodeDigestSign;
+    PFN_AUTHENTICODE_DIGEST_SIGN_EX pfnAuthenticodeDigestSignEx;
+    CRYPT_INTEGER_BLOB* pMetadataBlob;
+}
+struct SIGNER_FILE_INFO
+{
+    uint cbSize;
+    const(wchar)* pwszFileName;
+    HANDLE hFile;
+}
+struct SIGNER_PROVIDER_INFO
+{
+    uint cbSize;
+    const(wchar)* pwszProviderName;
+    uint dwProviderType;
+    uint dwKeySpec;
+    SIGNER_PRIVATE_KEY_CHOICE dwPvkChoice;
+    union
+    {
+        PWSTR pwszPvkFileName;
+        PWSTR pwszKeyContainer;
+    }
+}
+struct SIGNER_SIGNATURE_INFO
+{
+    uint cbSize;
+    uint algidHash;
+    SIGNER_SIGNATURE_ATTRIBUTE_CHOICE dwAttrChoice;
+    union
+    {
+        SIGNER_ATTR_AUTHCODE* pAttrAuthcode;
+    }
+    CRYPT_ATTRIBUTES* psAuthenticated;
+    CRYPT_ATTRIBUTES* psUnauthenticated;
+}
+struct SIGNER_SUBJECT_INFO
+{
+    uint cbSize;
+    uint* pdwIndex;
+    SIGNER_SUBJECT_CHOICE dwSubjectChoice;
+    union
+    {
+        SIGNER_FILE_INFO* pSignerFileInfo;
+        SIGNER_BLOB_INFO* pSignerBlobInfo;
+    }
+}
 alias CRYPT_XML_CHARSET = int;
 enum : int
 {
@@ -7039,26 +7237,6 @@ struct RECIPIENTPOLICY2
     const(wchar)* privacyUrl;
     uint privacyVersion;
 }
-enum CLSID_CCertSrvSetupKeyInformation = GUID(0x38373906, 0x5433, 0x4633, [0xb0, 0xfb, 0x29, 0xb7, 0xe7, 0x82, 0x62, 0xe1]);
-struct CCertSrvSetupKeyInformation
-{
-}
-enum CLSID_CCertSrvSetup = GUID(0x961f180f, 0xf55c, 0x413d, [0xa9, 0xb3, 0x7d, 0x2a, 0xf4, 0xd8, 0xe4, 0x2f]);
-struct CCertSrvSetup
-{
-}
-enum CLSID_CMSCEPSetup = GUID(0xaa4f5c02, 0x8e7c, 0x49c4, [0x94, 0xfa, 0x67, 0xa5, 0xcc, 0x5e, 0xad, 0xb4]);
-struct CMSCEPSetup
-{
-}
-enum CLSID_CCertificateEnrollmentServerSetup = GUID(0x9902f3bc, 0x88af, 0x4cf8, [0xae, 0x62, 0x71, 0x40, 0x53, 0x15, 0x52, 0xb6]);
-struct CCertificateEnrollmentServerSetup
-{
-}
-enum CLSID_CCertificateEnrollmentPolicyServerSetup = GUID(0xafe2fa32, 0x41b1, 0x459d, [0xa5, 0xde, 0x49, 0xad, 0xd8, 0xa7, 0x21, 0x82]);
-struct CCertificateEnrollmentPolicyServerSetup
-{
-}
 enum IID_ICertSrvSetupKeyInformation = GUID(0x6ba73778, 0x36da, 0x4c39, [0x8a, 0x85, 0xbc, 0xfa, 0x7d, 0x0, 0x7, 0x93]);
 interface ICertSrvSetupKeyInformation : IDispatch
 {
@@ -7206,4 +7384,24 @@ interface ICertificateEnrollmentPolicyServerSetup : IDispatch
     HRESULT SetProperty(CEPSetupProperty, VARIANT*);
     HRESULT Install();
     HRESULT UnInstall(VARIANT*);
+}
+enum CLSID_CCertSrvSetupKeyInformation = GUID(0x38373906, 0x5433, 0x4633, [0xb0, 0xfb, 0x29, 0xb7, 0xe7, 0x82, 0x62, 0xe1]);
+struct CCertSrvSetupKeyInformation
+{
+}
+enum CLSID_CCertSrvSetup = GUID(0x961f180f, 0xf55c, 0x413d, [0xa9, 0xb3, 0x7d, 0x2a, 0xf4, 0xd8, 0xe4, 0x2f]);
+struct CCertSrvSetup
+{
+}
+enum CLSID_CMSCEPSetup = GUID(0xaa4f5c02, 0x8e7c, 0x49c4, [0x94, 0xfa, 0x67, 0xa5, 0xcc, 0x5e, 0xad, 0xb4]);
+struct CMSCEPSetup
+{
+}
+enum CLSID_CCertificateEnrollmentServerSetup = GUID(0x9902f3bc, 0x88af, 0x4cf8, [0xae, 0x62, 0x71, 0x40, 0x53, 0x15, 0x52, 0xb6]);
+struct CCertificateEnrollmentServerSetup
+{
+}
+enum CLSID_CCertificateEnrollmentPolicyServerSetup = GUID(0xafe2fa32, 0x41b1, 0x459d, [0xa5, 0xde, 0x49, 0xad, 0xd8, 0xa7, 0x21, 0x82]);
+struct CCertificateEnrollmentPolicyServerSetup
+{
 }

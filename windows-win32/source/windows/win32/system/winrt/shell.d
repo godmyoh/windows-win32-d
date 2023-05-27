@@ -2,8 +2,8 @@ module windows.win32.system.winrt.shell;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : HRESULT, PWSTR;
-import windows.win32.system.com_ : IUnknown;
-import windows.win32.ui.shell_ : IShellItem;
+import windows.win32.system.com : IUnknown;
+import windows.win32.ui.shell : IShellItem;
 
 version (Windows):
 extern (Windows):

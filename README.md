@@ -6,13 +6,16 @@ This project aims to replace `core.sys.windows`.
 
 ## Usage
 
-Clone this repository and build `windows-win32.lib` from `windows-win32-d\windows-win32\source`.
+Clone this repository and build `windows-win32.lib` (or `windows-win32-debug.lib`) from `windows-win32-d\windows-win32\source`.
 
 ```
 git clone https://github.com/godmyoh/windows-win32-d.git
 cd windows-win32-d\windows-win32
-dub build --build=release --config=release
+dub build --build=release --config=release --force
+dub build --build=debug --config=debug --force
 ```
+
+Instead of `dub build`, `dub-build.bat` in `windows-win32-d` folder can be used.
 
 You can import `windows-win32-d\windows-win32\source` and link `windows-win32-d\windows-win32\windows-win32.lib` instead of using `core.sys.windows`.
 Try following command to run an example program. (See `dub.sdl` in `windows-win32-d\example`)
@@ -29,22 +32,30 @@ cd ..\windows-win32-generator
 dub run
 ```
 
-## Debug build
+Also the following commands can be used.
 
-`debug` configuration generates `windows-win32-debug.lib`.
 ```
-dub build --build=debug --config=debug
+dub run -- usePackageModule
+dub run -- appendUnderscore
 ```
+
+`dub run -- usePackageModule` is same as `dub run`. See [Naming rules for packages and modules](#naming-rules-for-packages-and-modules)
+
+Instead of `dub run`, `dub-run-usePackageModule.bat` or `dub-run-appendUnderscore.bat` in `windows-win32-d` folder can be used.
 
 ## Naming rules for packages and modules
 
-- Packages and modules are lowercase of namespaces.
-  - `Windows.Win32.System.Console` -> `windows.win32.system.console`.
-- Append an underscore to the module name if the module conflicts with a package.
-  - `Windows.Win32.Media` -> `windows.win32.media_` (Windows.Win32.Media.* exists)
-- Append an underscore to the module name if the module conflicts with a keyword.
-  - `Windows.Win32.System.Diagnostics.Debug.WebApp` -> `windows.win32.system.diagnostics.debug_.webapp`
-- Namespaces other than `Windows.Win32` are not supported. However, only `System.Guid` type is supported as `windows.win32.guid.GUID`.
+- Common rules
+  - Packages and modules are lowercase of namespaces.
+    - `Windows.Win32.System.Console` -> `windows.win32.system.console`.
+  - Append an underscore to the module name if the module conflicts with a keyword.
+    - `Windows.Win32.System.Diagnostics.Debug.WebApp` -> `windows.win32.system.diagnostics.debug_.webapp`
+  - Namespaces other than `Windows.Win32` are not supported. However, only `System.Guid` type is supported as `windows.win32.guid.GUID`.
+- In `usePackageModule` mode (default)
+  - No additional rules. However, debug builds have limitations. See [Limitations](#limitations).
+- In `appendUnderscore` mode
+  - Append an underscore to the module name if the module conflicts with a package.
+    - `Windows.Win32.Media` -> `windows.win32.media_` (Windows.Win32.Media.* exists)
 
 ## Policies
 
@@ -59,6 +70,8 @@ dub build --build=debug --config=debug
 - When a field in a struct has the same name as the type name, an underscore is added to the field name to avoid compile errors.
 - Bitfields are not translated.
 - There are many missing constants. They are marked as [MISSING] and are commented out.
+- `Windows.Win32.Foundation.Metadata` is excluded.
+- Using `windows-win32-debug.lib` generated in `usePackageModule` mode causes unexplained linker errors.
 
 ## References
 

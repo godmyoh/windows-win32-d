@@ -2,8 +2,8 @@ module windows.win32.system.winrt.composition;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HANDLE, HRESULT, HWND, POINT, RECT, SIZE;
-import windows.win32.system.com_ : IUnknown;
-import windows.win32.system.winrt_ : IInspectable;
+import windows.win32.system.com : IUnknown;
+import windows.win32.system.winrt : IInspectable;
 import windows.win32.ui.input.pointer : POINTER_INFO;
 
 version (Windows):

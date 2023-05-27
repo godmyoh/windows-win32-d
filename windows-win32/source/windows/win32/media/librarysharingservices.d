@@ -2,15 +2,12 @@ module windows.win32.media.librarysharingservices;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BSTR, HRESULT, VARIANT_BOOL;
-import windows.win32.system.com_ : IDispatch, VARIANT;
+import windows.win32.system.com : IDispatch;
+import windows.win32.system.variant : VARIANT;
 
 version (Windows):
 extern (Windows):
 
-enum CLSID_WindowsMediaLibrarySharingServices = GUID(0xad581b00, 0x7b64, 0x4e59, [0xa3, 0x8d, 0xd2, 0xc5, 0xbf, 0x51, 0xdd, 0xb3]);
-struct WindowsMediaLibrarySharingServices
-{
-}
 alias WindowsMediaLibrarySharingDeviceAuthorizationStatus = int;
 enum : int
 {
@@ -69,4 +66,8 @@ interface IWindowsMediaLibrarySharingServices : IDispatch
     HRESULT setAuthorizationState(BSTR, VARIANT_BOOL);
     HRESULT getAllDevices(IWindowsMediaLibrarySharingDevices*);
     HRESULT get_customSettingsApplied(VARIANT_BOOL*);
+}
+enum CLSID_WindowsMediaLibrarySharingServices = GUID(0xad581b00, 0x7b64, 0x4e59, [0xa3, 0x8d, 0xd2, 0xc5, 0xbf, 0x51, 0xdd, 0xb3]);
+struct WindowsMediaLibrarySharingServices
+{
 }

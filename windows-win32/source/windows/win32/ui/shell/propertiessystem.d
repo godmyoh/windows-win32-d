@@ -1,17 +1,16 @@
 module windows.win32.ui.shell.propertiessystem;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, POINTL, POINTS, PSTR, PWSTR, RECTL;
-import windows.win32.system.com_ : IBindCtx, IStream, IUnknown, VARENUM, VARIANT;
+import windows.win32.foundation : BOOL, BSTR, CHAR, HANDLE, HRESULT, HWND, POINTL, POINTS, PSTR, PWSTR, RECTL;
+import windows.win32.system.com : IBindCtx, IStream, IUnknown;
 import windows.win32.system.com.structuredstorage : IPropertyBag, IPropertySetStorage, IPropertyStorage, PROPSPEC, PROPVARIANT;
 import windows.win32.system.search.common : CONDITION_OPERATION;
-import windows.win32.ui.shell.common : ITEMIDLIST, STRRET;
+import windows.win32.system.variant : VARENUM, VARIANT;
+import windows.win32.ui.shell.common : ITEMIDLIST;
 
 version (Windows):
 extern (Windows):
 
-HRESULT PropVariantToWinRTPropertyValue(const(PROPVARIANT)*, const(GUID)*, void**);
-HRESULT WinRTPropertyValueToPropVariant(IUnknown, PROPVARIANT*);
 HRESULT PSFormatForDisplay(const(PROPERTYKEY)*, const(PROPVARIANT)*, PROPDESC_FORMAT_FLAGS, PWSTR, uint);
 HRESULT PSFormatForDisplayAlloc(const(PROPERTYKEY)*, const(PROPVARIANT)*, PROPDESC_FORMAT_FLAGS, PWSTR*);
 HRESULT PSFormatPropertyValue(IPropertyStore, IPropertyDescription, PROPDESC_FORMAT_FLAGS, PWSTR*);
@@ -42,8 +41,8 @@ HRESULT PSCreatePropertyStoreFromPropertySetStorage(IPropertySetStorage, uint, c
 HRESULT PSCreatePropertyStoreFromObject(IUnknown, uint, const(GUID)*, void**);
 HRESULT PSCreateAdapterFromPropertyStore(IPropertyStore, const(GUID)*, void**);
 HRESULT PSGetPropertySystem(const(GUID)*, void**);
-HRESULT PSGetPropertyFromPropertyStorage(SERIALIZEDPROPSTORAGE*, uint, const(PROPERTYKEY)*, PROPVARIANT*);
-HRESULT PSGetNamedPropertyFromPropertyStorage(SERIALIZEDPROPSTORAGE*, uint, const(wchar)*, PROPVARIANT*);
+HRESULT PSGetPropertyFromPropertyStorage(PCUSERIALIZEDPROPSTORAGE, uint, const(PROPERTYKEY)*, PROPVARIANT*);
+HRESULT PSGetNamedPropertyFromPropertyStorage(PCUSERIALIZEDPROPSTORAGE, uint, const(wchar)*, PROPVARIANT*);
 HRESULT PSPropertyBag_ReadType(IPropertyBag, const(wchar)*, VARIANT*, VARENUM);
 HRESULT PSPropertyBag_ReadStr(IPropertyBag, const(wchar)*, PWSTR, int);
 HRESULT PSPropertyBag_ReadStrAlloc(IPropertyBag, const(wchar)*, PWSTR*);
@@ -77,155 +76,6 @@ HRESULT PSPropertyBag_ReadGUID(IPropertyBag, const(wchar)*, GUID*);
 HRESULT PSPropertyBag_WriteGUID(IPropertyBag, const(wchar)*, const(GUID)*);
 HRESULT PSPropertyBag_ReadPropertyKey(IPropertyBag, const(wchar)*, PROPERTYKEY*);
 HRESULT PSPropertyBag_WritePropertyKey(IPropertyBag, const(wchar)*, const(PROPERTYKEY)*);
-HRESULT InitPropVariantFromResource(HINSTANCE, uint, PROPVARIANT*);
-HRESULT InitPropVariantFromBuffer(const(void)*, uint, PROPVARIANT*);
-HRESULT InitPropVariantFromCLSID(const(GUID)*, PROPVARIANT*);
-HRESULT InitPropVariantFromGUIDAsString(const(GUID)*, PROPVARIANT*);
-HRESULT InitPropVariantFromFileTime(const(FILETIME)*, PROPVARIANT*);
-HRESULT InitPropVariantFromPropVariantVectorElem(const(PROPVARIANT)*, uint, PROPVARIANT*);
-HRESULT InitPropVariantVectorFromPropVariant(const(PROPVARIANT)*, PROPVARIANT*);
-HRESULT InitPropVariantFromStrRet(STRRET*, ITEMIDLIST*, PROPVARIANT*);
-HRESULT InitPropVariantFromBooleanVector(const(BOOL)*, uint, PROPVARIANT*);
-HRESULT InitPropVariantFromInt16Vector(const(short)*, uint, PROPVARIANT*);
-HRESULT InitPropVariantFromUInt16Vector(const(ushort)*, uint, PROPVARIANT*);
-HRESULT InitPropVariantFromInt32Vector(const(int)*, uint, PROPVARIANT*);
-HRESULT InitPropVariantFromUInt32Vector(const(uint)*, uint, PROPVARIANT*);
-HRESULT InitPropVariantFromInt64Vector(const(long)*, uint, PROPVARIANT*);
-HRESULT InitPropVariantFromUInt64Vector(const(ulong)*, uint, PROPVARIANT*);
-HRESULT InitPropVariantFromDoubleVector(const(double)*, uint, PROPVARIANT*);
-HRESULT InitPropVariantFromFileTimeVector(const(FILETIME)*, uint, PROPVARIANT*);
-HRESULT InitPropVariantFromStringVector(const(wchar)**, uint, PROPVARIANT*);
-HRESULT InitPropVariantFromStringAsVector(const(wchar)*, PROPVARIANT*);
-BOOL PropVariantToBooleanWithDefault(const(PROPVARIANT)*, BOOL);
-short PropVariantToInt16WithDefault(const(PROPVARIANT)*, short);
-ushort PropVariantToUInt16WithDefault(const(PROPVARIANT)*, ushort);
-int PropVariantToInt32WithDefault(const(PROPVARIANT)*, int);
-uint PropVariantToUInt32WithDefault(const(PROPVARIANT)*, uint);
-long PropVariantToInt64WithDefault(const(PROPVARIANT)*, long);
-ulong PropVariantToUInt64WithDefault(const(PROPVARIANT)*, ulong);
-double PropVariantToDoubleWithDefault(const(PROPVARIANT)*, double);
-PWSTR PropVariantToStringWithDefault(const(PROPVARIANT)*, const(wchar)*);
-HRESULT PropVariantToBoolean(const(PROPVARIANT)*, BOOL*);
-HRESULT PropVariantToInt16(const(PROPVARIANT)*, short*);
-HRESULT PropVariantToUInt16(const(PROPVARIANT)*, ushort*);
-HRESULT PropVariantToInt32(const(PROPVARIANT)*, int*);
-HRESULT PropVariantToUInt32(const(PROPVARIANT)*, uint*);
-HRESULT PropVariantToInt64(const(PROPVARIANT)*, long*);
-HRESULT PropVariantToUInt64(const(PROPVARIANT)*, ulong*);
-HRESULT PropVariantToDouble(const(PROPVARIANT)*, double*);
-HRESULT PropVariantToBuffer(const(PROPVARIANT)*, void*, uint);
-HRESULT PropVariantToString(const(PROPVARIANT)*, PWSTR, uint);
-HRESULT PropVariantToGUID(const(PROPVARIANT)*, GUID*);
-HRESULT PropVariantToStringAlloc(const(PROPVARIANT)*, PWSTR*);
-HRESULT PropVariantToBSTR(const(PROPVARIANT)*, BSTR*);
-HRESULT PropVariantToStrRet(const(PROPVARIANT)*, STRRET*);
-HRESULT PropVariantToFileTime(const(PROPVARIANT)*, PSTIME_FLAGS, FILETIME*);
-uint PropVariantGetElementCount(const(PROPVARIANT)*);
-HRESULT PropVariantToBooleanVector(const(PROPVARIANT)*, BOOL*, uint, uint*);
-HRESULT PropVariantToInt16Vector(const(PROPVARIANT)*, short*, uint, uint*);
-HRESULT PropVariantToUInt16Vector(const(PROPVARIANT)*, ushort*, uint, uint*);
-HRESULT PropVariantToInt32Vector(const(PROPVARIANT)*, int*, uint, uint*);
-HRESULT PropVariantToUInt32Vector(const(PROPVARIANT)*, uint*, uint, uint*);
-HRESULT PropVariantToInt64Vector(const(PROPVARIANT)*, long*, uint, uint*);
-HRESULT PropVariantToUInt64Vector(const(PROPVARIANT)*, ulong*, uint, uint*);
-HRESULT PropVariantToDoubleVector(const(PROPVARIANT)*, double*, uint, uint*);
-HRESULT PropVariantToFileTimeVector(const(PROPVARIANT)*, FILETIME*, uint, uint*);
-HRESULT PropVariantToStringVector(const(PROPVARIANT)*, PWSTR*, uint, uint*);
-HRESULT PropVariantToBooleanVectorAlloc(const(PROPVARIANT)*, BOOL**, uint*);
-HRESULT PropVariantToInt16VectorAlloc(const(PROPVARIANT)*, short**, uint*);
-HRESULT PropVariantToUInt16VectorAlloc(const(PROPVARIANT)*, ushort**, uint*);
-HRESULT PropVariantToInt32VectorAlloc(const(PROPVARIANT)*, int**, uint*);
-HRESULT PropVariantToUInt32VectorAlloc(const(PROPVARIANT)*, uint**, uint*);
-HRESULT PropVariantToInt64VectorAlloc(const(PROPVARIANT)*, long**, uint*);
-HRESULT PropVariantToUInt64VectorAlloc(const(PROPVARIANT)*, ulong**, uint*);
-HRESULT PropVariantToDoubleVectorAlloc(const(PROPVARIANT)*, double**, uint*);
-HRESULT PropVariantToFileTimeVectorAlloc(const(PROPVARIANT)*, FILETIME**, uint*);
-HRESULT PropVariantToStringVectorAlloc(const(PROPVARIANT)*, PWSTR**, uint*);
-HRESULT PropVariantGetBooleanElem(const(PROPVARIANT)*, uint, BOOL*);
-HRESULT PropVariantGetInt16Elem(const(PROPVARIANT)*, uint, short*);
-HRESULT PropVariantGetUInt16Elem(const(PROPVARIANT)*, uint, ushort*);
-HRESULT PropVariantGetInt32Elem(const(PROPVARIANT)*, uint, int*);
-HRESULT PropVariantGetUInt32Elem(const(PROPVARIANT)*, uint, uint*);
-HRESULT PropVariantGetInt64Elem(const(PROPVARIANT)*, uint, long*);
-HRESULT PropVariantGetUInt64Elem(const(PROPVARIANT)*, uint, ulong*);
-HRESULT PropVariantGetDoubleElem(const(PROPVARIANT)*, uint, double*);
-HRESULT PropVariantGetFileTimeElem(const(PROPVARIANT)*, uint, FILETIME*);
-HRESULT PropVariantGetStringElem(const(PROPVARIANT)*, uint, PWSTR*);
-void ClearPropVariantArray(PROPVARIANT*, uint);
-int PropVariantCompareEx(const(PROPVARIANT)*, const(PROPVARIANT)*, PROPVAR_COMPARE_UNIT, PROPVAR_COMPARE_FLAGS);
-HRESULT PropVariantChangeType(PROPVARIANT*, const(PROPVARIANT)*, PROPVAR_CHANGE_FLAGS, VARENUM);
-HRESULT PropVariantToVariant(const(PROPVARIANT)*, VARIANT*);
-HRESULT VariantToPropVariant(const(VARIANT)*, PROPVARIANT*);
-HRESULT InitVariantFromResource(HINSTANCE, uint, VARIANT*);
-HRESULT InitVariantFromBuffer(const(void)*, uint, VARIANT*);
-HRESULT InitVariantFromGUIDAsString(const(GUID)*, VARIANT*);
-HRESULT InitVariantFromFileTime(const(FILETIME)*, VARIANT*);
-HRESULT InitVariantFromFileTimeArray(const(FILETIME)*, uint, VARIANT*);
-HRESULT InitVariantFromStrRet(STRRET*, ITEMIDLIST*, VARIANT*);
-HRESULT InitVariantFromVariantArrayElem(const(VARIANT)*, uint, VARIANT*);
-HRESULT InitVariantFromBooleanArray(const(BOOL)*, uint, VARIANT*);
-HRESULT InitVariantFromInt16Array(const(short)*, uint, VARIANT*);
-HRESULT InitVariantFromUInt16Array(const(ushort)*, uint, VARIANT*);
-HRESULT InitVariantFromInt32Array(const(int)*, uint, VARIANT*);
-HRESULT InitVariantFromUInt32Array(const(uint)*, uint, VARIANT*);
-HRESULT InitVariantFromInt64Array(const(long)*, uint, VARIANT*);
-HRESULT InitVariantFromUInt64Array(const(ulong)*, uint, VARIANT*);
-HRESULT InitVariantFromDoubleArray(const(double)*, uint, VARIANT*);
-HRESULT InitVariantFromStringArray(const(wchar)**, uint, VARIANT*);
-BOOL VariantToBooleanWithDefault(const(VARIANT)*, BOOL);
-short VariantToInt16WithDefault(const(VARIANT)*, short);
-ushort VariantToUInt16WithDefault(const(VARIANT)*, ushort);
-int VariantToInt32WithDefault(const(VARIANT)*, int);
-uint VariantToUInt32WithDefault(const(VARIANT)*, uint);
-long VariantToInt64WithDefault(const(VARIANT)*, long);
-ulong VariantToUInt64WithDefault(const(VARIANT)*, ulong);
-double VariantToDoubleWithDefault(const(VARIANT)*, double);
-PWSTR VariantToStringWithDefault(const(VARIANT)*, const(wchar)*);
-HRESULT VariantToBoolean(const(VARIANT)*, BOOL*);
-HRESULT VariantToInt16(const(VARIANT)*, short*);
-HRESULT VariantToUInt16(const(VARIANT)*, ushort*);
-HRESULT VariantToInt32(const(VARIANT)*, int*);
-HRESULT VariantToUInt32(const(VARIANT)*, uint*);
-HRESULT VariantToInt64(const(VARIANT)*, long*);
-HRESULT VariantToUInt64(const(VARIANT)*, ulong*);
-HRESULT VariantToDouble(const(VARIANT)*, double*);
-HRESULT VariantToBuffer(const(VARIANT)*, void*, uint);
-HRESULT VariantToGUID(const(VARIANT)*, GUID*);
-HRESULT VariantToString(const(VARIANT)*, PWSTR, uint);
-HRESULT VariantToStringAlloc(const(VARIANT)*, PWSTR*);
-HRESULT VariantToDosDateTime(const(VARIANT)*, ushort*, ushort*);
-HRESULT VariantToStrRet(const(VARIANT)*, STRRET*);
-HRESULT VariantToFileTime(const(VARIANT)*, PSTIME_FLAGS, FILETIME*);
-uint VariantGetElementCount(const(VARIANT)*);
-HRESULT VariantToBooleanArray(const(VARIANT)*, BOOL*, uint, uint*);
-HRESULT VariantToInt16Array(const(VARIANT)*, short*, uint, uint*);
-HRESULT VariantToUInt16Array(const(VARIANT)*, ushort*, uint, uint*);
-HRESULT VariantToInt32Array(const(VARIANT)*, int*, uint, uint*);
-HRESULT VariantToUInt32Array(const(VARIANT)*, uint*, uint, uint*);
-HRESULT VariantToInt64Array(const(VARIANT)*, long*, uint, uint*);
-HRESULT VariantToUInt64Array(const(VARIANT)*, ulong*, uint, uint*);
-HRESULT VariantToDoubleArray(const(VARIANT)*, double*, uint, uint*);
-HRESULT VariantToStringArray(const(VARIANT)*, PWSTR*, uint, uint*);
-HRESULT VariantToBooleanArrayAlloc(const(VARIANT)*, BOOL**, uint*);
-HRESULT VariantToInt16ArrayAlloc(const(VARIANT)*, short**, uint*);
-HRESULT VariantToUInt16ArrayAlloc(const(VARIANT)*, ushort**, uint*);
-HRESULT VariantToInt32ArrayAlloc(const(VARIANT)*, int**, uint*);
-HRESULT VariantToUInt32ArrayAlloc(const(VARIANT)*, uint**, uint*);
-HRESULT VariantToInt64ArrayAlloc(const(VARIANT)*, long**, uint*);
-HRESULT VariantToUInt64ArrayAlloc(const(VARIANT)*, ulong**, uint*);
-HRESULT VariantToDoubleArrayAlloc(const(VARIANT)*, double**, uint*);
-HRESULT VariantToStringArrayAlloc(const(VARIANT)*, PWSTR**, uint*);
-HRESULT VariantGetBooleanElem(const(VARIANT)*, uint, BOOL*);
-HRESULT VariantGetInt16Elem(const(VARIANT)*, uint, short*);
-HRESULT VariantGetUInt16Elem(const(VARIANT)*, uint, ushort*);
-HRESULT VariantGetInt32Elem(const(VARIANT)*, uint, int*);
-HRESULT VariantGetUInt32Elem(const(VARIANT)*, uint, uint*);
-HRESULT VariantGetInt64Elem(const(VARIANT)*, uint, long*);
-HRESULT VariantGetUInt64Elem(const(VARIANT)*, uint, ulong*);
-HRESULT VariantGetDoubleElem(const(VARIANT)*, uint, double*);
-HRESULT VariantGetStringElem(const(VARIANT)*, uint, PWSTR*);
-void ClearVariantArray(VARIANT*, uint);
-int VariantCompare(const(VARIANT)*, const(VARIANT)*);
 HRESULT SHGetPropertyStoreFromIDList(ITEMIDLIST*, GETPROPERTYSTOREFLAGS, const(GUID)*, void**);
 HRESULT SHGetPropertyStoreFromParsingName(const(wchar)*, IBindCtx, GETPROPERTYSTOREFLAGS, const(GUID)*, void**);
 HRESULT SHAddDefaultPropertiesByExt(const(wchar)*, IPropertyStore);
@@ -238,22 +88,12 @@ HRESULT SHPropStgReadMultiple(IPropertyStorage, uint, uint, const(PROPSPEC)*, PR
 HRESULT SHPropStgWriteMultiple(IPropertyStorage, uint*, uint, const(PROPSPEC)*, PROPVARIANT*, uint);
 HRESULT SHGetPropertyStoreForWindow(HWND, const(GUID)*, void**);
 enum PKEY_PIDSTR_MAX = 0x0000000a;
+alias SERIALIZEDPROPSTORAGE = long;
+alias PCUSERIALIZEDPROPSTORAGE = long;
 struct PROPERTYKEY
 {
     GUID fmtid;
     uint pid;
-}
-enum CLSID_InMemoryPropertyStore = GUID(0x9a02e012, 0x6303, 0x4e1e, [0xb9, 0xa1, 0x63, 0xf, 0x80, 0x25, 0x92, 0xc5]);
-struct InMemoryPropertyStore
-{
-}
-enum CLSID_InMemoryPropertyStoreMarshalByValue = GUID(0xd4ca0e2d, 0x6da7, 0x4b75, [0xa9, 0x7c, 0x5f, 0x30, 0x6f, 0xe, 0xae, 0xdc]);
-struct InMemoryPropertyStoreMarshalByValue
-{
-}
-enum CLSID_PropertySystem = GUID(0xb8967f85, 0x58ae, 0x4f46, [0x9f, 0xb2, 0x5d, 0x79, 0x4, 0x79, 0x8f, 0x4b]);
-struct PropertySystem
-{
 }
 enum IID_IInitializeWithFile = GUID(0xb7d14566, 0x509, 0x4cce, [0xa7, 0x1f, 0xa, 0x55, 0x42, 0x33, 0xbd, 0x9b]);
 interface IInitializeWithFile : IUnknown
@@ -638,14 +478,11 @@ enum : int
     FPSPS_TREAT_NEW_VALUES_AS_DIRTY = 0x00000002,
 }
 
-struct SERIALIZEDPROPSTORAGE
-{
-}
 enum IID_IPersistSerializedPropStorage = GUID(0xe318ad57, 0xaa0, 0x450f, [0xac, 0xa5, 0x6f, 0xab, 0x71, 0x3, 0xd9, 0x17]);
 interface IPersistSerializedPropStorage : IUnknown
 {
     HRESULT SetFlags(int);
-    HRESULT SetPropertyStorage(SERIALIZEDPROPSTORAGE*, uint);
+    HRESULT SetPropertyStorage(PCUSERIALIZEDPROPSTORAGE, uint);
     HRESULT GetPropertyStorage(SERIALIZEDPROPSTORAGE**, uint*);
 }
 enum IID_IPersistSerializedPropStorage2 = GUID(0x77effa68, 0x4f98, 0x4366, [0xba, 0x72, 0x57, 0x3b, 0x3d, 0x88, 0x5, 0x71]);
@@ -664,59 +501,18 @@ interface ICreateObject : IUnknown
 {
     HRESULT CreateObject(const(GUID)*, IUnknown, const(GUID)*, void**);
 }
-alias PSTIME_FLAGS = int;
-enum : int
+enum CLSID_InMemoryPropertyStore = GUID(0x9a02e012, 0x6303, 0x4e1e, [0xb9, 0xa1, 0x63, 0xf, 0x80, 0x25, 0x92, 0xc5]);
+struct InMemoryPropertyStore
 {
-    PSTF_UTC   = 0x00000000,
-    PSTF_LOCAL = 0x00000001,
 }
-
-alias PROPVAR_COMPARE_UNIT = int;
-enum : int
+enum CLSID_InMemoryPropertyStoreMarshalByValue = GUID(0xd4ca0e2d, 0x6da7, 0x4b75, [0xa9, 0x7c, 0x5f, 0x30, 0x6f, 0xe, 0xae, 0xdc]);
+struct InMemoryPropertyStoreMarshalByValue
 {
-    PVCU_DEFAULT = 0x00000000,
-    PVCU_SECOND  = 0x00000001,
-    PVCU_MINUTE  = 0x00000002,
-    PVCU_HOUR    = 0x00000003,
-    PVCU_DAY     = 0x00000004,
-    PVCU_MONTH   = 0x00000005,
-    PVCU_YEAR    = 0x00000006,
 }
-
-alias PROPVAR_COMPARE_FLAGS = int;
-enum : int
+enum CLSID_PropertySystem = GUID(0xb8967f85, 0x58ae, 0x4f46, [0x9f, 0xb2, 0x5d, 0x79, 0x4, 0x79, 0x8f, 0x4b]);
+struct PropertySystem
 {
-    PVCF_DEFAULT                       = 0x00000000,
-    PVCF_TREATEMPTYASGREATERTHAN       = 0x00000001,
-    PVCF_USESTRCMP                     = 0x00000002,
-    PVCF_USESTRCMPC                    = 0x00000004,
-    PVCF_USESTRCMPI                    = 0x00000008,
-    PVCF_USESTRCMPIC                   = 0x00000010,
-    PVCF_DIGITSASNUMBERS_CASESENSITIVE = 0x00000020,
 }
-
-alias PROPVAR_CHANGE_FLAGS = int;
-enum : int
-{
-    PVCHF_DEFAULT        = 0x00000000,
-    PVCHF_NOVALUEPROP    = 0x00000001,
-    PVCHF_ALPHABOOL      = 0x00000002,
-    PVCHF_NOUSEROVERRIDE = 0x00000004,
-    PVCHF_LOCALBOOL      = 0x00000008,
-    PVCHF_NOHEXSTRING    = 0x00000010,
-}
-
-alias DRAWPROGRESSFLAGS = int;
-enum : int
-{
-    DPF_NONE             = 0x00000000,
-    DPF_MARQUEE          = 0x00000001,
-    DPF_MARQUEE_COMPLETE = 0x00000002,
-    DPF_ERROR            = 0x00000004,
-    DPF_WARNING          = 0x00000008,
-    DPF_STOPPED          = 0x00000010,
-}
-
 alias SYNC_TRANSFER_STATUS = int;
 enum : int
 {

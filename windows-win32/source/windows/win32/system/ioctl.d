@@ -2,7 +2,7 @@ module windows.win32.system.ioctl;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOLEAN, CHAR, HANDLE;
-import windows.win32.security_ : SID;
+import windows.win32.security : SID;
 import windows.win32.storage.filesystem : FILE_ID_128, STORAGE_BUS_TYPE;
 import windows.win32.storage.vhd : VIRTUAL_STORAGE_TYPE;
 

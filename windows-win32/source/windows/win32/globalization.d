@@ -3,7 +3,7 @@ module windows.win32.globalization;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, CHAR, HRESULT, HWND, LPARAM, PSTR, PWSTR, RECT, SIZE, SYSTEMTIME;
 import windows.win32.graphics.gdi : ABC, AXESLISTA, AXESLISTW, ETO_OPTIONS, HDC, HFONT, NEWTEXTMETRICA, NEWTEXTMETRICW;
-import windows.win32.system.com_ : IEnumString, IStream, IUnknown;
+import windows.win32.system.com : IEnumString, IStream, IUnknown;
 
 version (Windows):
 extern (Windows):
@@ -122,6 +122,14 @@ enum : uint
     IS_TEXT_UNICODE_NOT_ASCII_MASK     = 0x0000f000,
 }
 
+alias COMPARESTRING_RESULT = int;
+enum : int
+{
+    CSTR_LESS_THAN    = 0x00000001,
+    CSTR_EQUAL        = 0x00000002,
+    CSTR_GREATER_THAN = 0x00000003,
+}
+
 int GetTextCharset(HDC);
 int GetTextCharsetInfo(HDC, FONTSIGNATURE*, uint);
 BOOL TranslateCharsetInfo(uint*, CHARSETINFO*, TRANSLATE_CHARSET_INFO_FLAGS);
@@ -132,9 +140,9 @@ int GetTimeFormatW(uint, uint, const(SYSTEMTIME)*, const(wchar)*, PWSTR, int);
 int GetTimeFormatEx(const(wchar)*, TIME_FORMAT_FLAGS, const(SYSTEMTIME)*, const(wchar)*, PWSTR, int);
 int GetDateFormatEx(const(wchar)*, ENUM_DATE_FORMATS_FLAGS, const(SYSTEMTIME)*, const(wchar)*, PWSTR, int, const(wchar)*);
 int GetDurationFormatEx(const(wchar)*, uint, const(SYSTEMTIME)*, ulong, const(wchar)*, PWSTR, int);
-int CompareStringEx(const(wchar)*, COMPARE_STRING_FLAGS, const(wchar)*, int, const(wchar)*, int, NLSVERSIONINFO*, void*, LPARAM);
-int CompareStringOrdinal(const(wchar)*, int, const(wchar)*, int, BOOL);
-int CompareStringW(uint, uint, const(wchar)*, int, const(wchar)*, int);
+COMPARESTRING_RESULT CompareStringEx(const(wchar)*, COMPARE_STRING_FLAGS, const(wchar)*, int, const(wchar)*, int, NLSVERSIONINFO*, void*, LPARAM);
+COMPARESTRING_RESULT CompareStringOrdinal(const(wchar)*, int, const(wchar)*, int, BOOL);
+COMPARESTRING_RESULT CompareStringW(uint, uint, const(wchar)*, int, const(wchar)*, int);
 int FoldStringW(FOLD_STRING_MAP_FLAGS, const(wchar)*, int, PWSTR, int);
 BOOL GetStringTypeExW(uint, uint, const(wchar)*, int, ushort*);
 BOOL GetStringTypeW(uint, const(wchar)*, int, ushort*);
@@ -146,7 +154,7 @@ uint GetOEMCP();
 BOOL GetCPInfo(uint, CPINFO*);
 BOOL GetCPInfoExA(uint, uint, CPINFOEXA*);
 BOOL GetCPInfoExW(uint, uint, CPINFOEXW*);
-int CompareStringA(uint, uint, byte*, int, byte*, int);
+COMPARESTRING_RESULT CompareStringA(uint, uint, byte*, int, byte*, int);
 int FindNLSString(uint, uint, const(wchar)*, int, const(wchar)*, int, int*);
 int LCMapStringW(uint, uint, const(wchar)*, int, PWSTR, int);
 int LCMapStringA(uint, uint, const(char)*, int, PSTR, int);
@@ -1419,9 +1427,6 @@ enum LOCALE_ALTERNATE_SORTS = 0x00000004;
 enum LOCALE_REPLACEMENT = 0x00000008;
 enum LOCALE_NEUTRALDATA = 0x00000010;
 enum LOCALE_SPECIFICDATA = 0x00000020;
-enum CSTR_LESS_THAN = 0x00000001;
-enum CSTR_EQUAL = 0x00000002;
-enum CSTR_GREATER_THAN = 0x00000003;
 enum CP_ACP = 0x00000000;
 enum CP_OEMCP = 0x00000001;
 enum CP_MACCP = 0x00000002;
@@ -2217,6 +2222,49 @@ enum UMSGPAT_ARG_NAME_NOT_VALID = 0xfffffffffffffffe;
 alias HIMC = void*;
 alias HIMCC = void*;
 alias HSAVEDUILANGUAGES = void*;
+alias UBiDi = long;
+alias UBiDiTransform = long;
+alias UBreakIterator = long;
+alias UCaseMap = long;
+alias UCharsetDetector = long;
+alias UCharsetMatch = long;
+alias UCollationElements = long;
+alias UCollator = long;
+alias UConstrainedFieldPosition = long;
+alias UConverter = long;
+alias UConverterSelector = long;
+alias UCPMap = long;
+alias UDateFormatSymbols = long;
+alias UDateIntervalFormat = long;
+alias UEnumeration = long;
+alias UFieldPositionIterator = long;
+alias UFormattedDateInterval = long;
+alias UFormattedList = long;
+alias UFormattedNumber = long;
+alias UFormattedNumberRange = long;
+alias UFormattedRelativeDateTime = long;
+alias UFormattedValue = long;
+alias UGenderInfo = long;
+alias UHashtable = long;
+alias UIDNA = long;
+alias UListFormatter = long;
+alias ULocaleData = long;
+alias ULocaleDisplayNames = long;
+alias UMutableCPTrie = long;
+alias UNormalizer2 = long;
+alias UNumberFormatter = long;
+alias UNumberingSystem = long;
+alias UPluralRules = long;
+alias URegion = long;
+alias URegularExpression = long;
+alias URelativeDateTimeFormatter = long;
+alias UResourceBundle = long;
+alias USearch = long;
+alias USet = long;
+alias USpoofChecker = long;
+alias USpoofCheckResult = long;
+alias UStringPrepProfile = long;
+alias UStringSearch = long;
 struct FONTSIGNATURE
 {
     uint[4] fsUsb;
@@ -2508,10 +2556,6 @@ struct MAPPING_PROPERTY_BAG
     uint dwCallerDataSize;
     void* pContext;
 }
-enum CLSID_SpellCheckerFactory = GUID(0x7ab36653, 0x1796, 0x484b, [0xbd, 0xfa, 0xe7, 0x4f, 0x1d, 0xb7, 0xc1, 0xdc]);
-struct SpellCheckerFactory
-{
-}
 alias WORDLIST_TYPE = int;
 enum : int
 {
@@ -2591,6 +2635,10 @@ interface IUserDictionariesRegistrar : IUnknown
 {
     HRESULT RegisterUserDictionary(const(wchar)*, const(wchar)*);
     HRESULT UnregisterUserDictionary(const(wchar)*, const(wchar)*);
+}
+enum CLSID_SpellCheckerFactory = GUID(0x7ab36653, 0x1796, 0x484b, [0xbd, 0xfa, 0xe7, 0x4f, 0x1d, 0xb7, 0xc1, 0xdc]);
+struct SpellCheckerFactory
+{
 }
 enum IID_ISpellCheckProvider = GUID(0x73e976e0, 0x8ed4, 0x4eb1, [0x80, 0xd7, 0x1b, 0xe0, 0xa1, 0x6b, 0xc, 0x38]);
 interface ISpellCheckProvider : IUnknown
@@ -3197,9 +3245,6 @@ struct UCharIterator
     UCharIteratorGetState getState;
     UCharIteratorSetState setState;
 }
-struct UEnumeration
-{
-}
 alias ULocDataLocaleType = int;
 enum : int
 {
@@ -3233,9 +3278,6 @@ enum : int
     ULOC_ACCEPT_FALLBACK = 0x00000002,
 }
 
-struct UResourceBundle
-{
-}
 alias UResType = int;
 enum : int
 {
@@ -3281,9 +3323,6 @@ enum : int
     ULDN_DIALECT_NAMES  = 0x00000001,
 }
 
-struct ULocaleDisplayNames
-{
-}
 alias UCurrencyUsage = int;
 enum : int
 {
@@ -3309,9 +3348,6 @@ enum : int
     UCURR_NON_DEPRECATED = 0x00000008,
 }
 
-struct UCPMap
-{
-}
 alias UCPMapRangeOption = int;
 enum : int
 {
@@ -3361,12 +3397,6 @@ enum : int
     UCPTRIE_VALUE_BITS_8   = 0x00000002,
 }
 
-struct UMutableCPTrie
-{
-}
-struct UConverter
-{
-}
 alias UConverterCallbackReason = int;
 enum : int
 {
@@ -3399,9 +3429,6 @@ struct UConverterToUnicodeArgs
     ushort* target;
     const(ushort)* targetLimit;
     int* offsets;
-}
-struct USet
-{
 }
 alias UConverterType = int;
 enum : int
@@ -4361,9 +4388,6 @@ enum : int
     UBIDI_NEUTRAL = 0x00000003,
 }
 
-struct UBiDi
-{
-}
 alias UBiDiReorderingMode = int;
 enum : int
 {
@@ -4400,9 +4424,6 @@ enum : int
     UBIDI_MIRRORING_ON  = 0x00000001,
 }
 
-struct UBiDiTransform
-{
-}
 alias UTextClone = UText* function(UText*, const(UText)*, byte, UErrorCode*);
 alias UTextNativeLength = long function(UText*);
 alias UTextAccess = byte function(UText*, long, byte);
@@ -4490,9 +4511,6 @@ enum : int
     UNORM_MAYBE = 0x00000002,
 }
 
-struct UNormalizer2
-{
-}
 alias UNormalizationMode = int;
 enum : int
 {
@@ -4506,25 +4524,13 @@ enum : int
     UNORM_MODE_COUNT = 0x00000007,
 }
 
-struct UConverterSelector
-{
-}
-struct UBreakIterator
-{
-}
 alias UNESCAPE_CHAR_AT = ushort function(int, void*);
-struct UCaseMap
-{
-}
 struct UParseError
 {
     int line;
     int offset;
     ushort[16] preContext;
     ushort[16] postContext;
-}
-struct UStringPrepProfile
-{
 }
 alias UStringPrepProfileType = int;
 enum : int
@@ -4545,9 +4551,6 @@ enum : int
     USPREP_RFC4518_LDAP_CI                = 0x0000000d,
 }
 
-struct UIDNA
-{
-}
 struct UIDNAInfo
 {
     short size;
@@ -4738,9 +4741,6 @@ enum : int
     UCAL_TZ_TRANSITION_PREVIOUS_INCLUSIVE = 0x00000003,
 }
 
-struct UCollator
-{
-}
 alias UCollationResult = int;
 enum : int
 {
@@ -4812,18 +4812,6 @@ enum : int
     UCOL_BOUND_UPPER_LONG = 0x00000002,
 }
 
-struct UCollationElements
-{
-}
-struct UCharsetDetector
-{
-}
-struct UCharsetMatch
-{
-}
-struct UFieldPositionIterator
-{
-}
 alias UFormattableType = int;
 enum : int
 {
@@ -4849,18 +4837,6 @@ enum : int
     UFIELD_CATEGORY_DATE_INTERVAL_SPAN = 0x00001005,
 }
 
-struct UConstrainedFieldPosition
-{
-}
-struct UFormattedValue
-{
-}
-struct UDateIntervalFormat
-{
-}
-struct UFormattedDateInterval
-{
-}
 alias UGender = int;
 enum : int
 {
@@ -4869,15 +4845,6 @@ enum : int
     UGENDER_OTHER  = 0x00000002,
 }
 
-struct UGenderInfo
-{
-}
-struct UListFormatter
-{
-}
-struct UFormattedList
-{
-}
 alias UListFormatterField = int;
 enum : int
 {
@@ -4901,9 +4868,6 @@ enum : int
     ULISTFMT_WIDTH_NARROW = 0x00000002,
 }
 
-struct ULocaleData
-{
-}
 alias ULocaleDataExemplarSetType = int;
 enum : int
 {
@@ -5197,9 +5161,6 @@ enum : int
     UDAT_ZODIAC_NAMES_NARROW         = 0x0000001b,
 }
 
-struct UDateFormatSymbols
-{
-}
 alias UDateTimePatternField = int;
 enum : int
 {
@@ -5288,12 +5249,6 @@ enum : int
     UNUM_DECIMAL_SEPARATOR_COUNT  = 0x00000002,
 }
 
-struct UNumberFormatter
-{
-}
-struct UFormattedNumber
-{
-}
 alias UNumberRangeCollapse = int;
 enum : int
 {
@@ -5320,12 +5275,6 @@ enum : int
     UNUM_IDENTITY_RESULT_NOT_EQUAL             = 0x00000002,
 }
 
-struct UNumberingSystem
-{
-}
-struct UFormattedNumberRange
-{
-}
 alias UPluralType = int;
 enum : int
 {
@@ -5333,12 +5282,6 @@ enum : int
     UPLURAL_TYPE_ORDINAL  = 0x00000001,
 }
 
-struct UPluralRules
-{
-}
-struct URegularExpression
-{
-}
 alias URegexpFlag = int;
 enum : int
 {
@@ -5366,9 +5309,6 @@ enum : int
     URGN_DEPRECATED   = 0x00000006,
 }
 
-struct URegion
-{
-}
 alias UDateRelativeDateTimeFormatterStyle = int;
 enum : int
 {
@@ -5404,15 +5344,6 @@ enum : int
     UDAT_REL_NUMERIC_FIELD = 0x00000001,
 }
 
-struct URelativeDateTimeFormatter
-{
-}
-struct UFormattedRelativeDateTime
-{
-}
-struct UStringSearch
-{
-}
 alias USearchAttribute = int;
 enum : int
 {
@@ -5431,12 +5362,6 @@ enum : int
     USEARCH_ANY_BASE_WEIGHT_IS_WILDCARD     = 0x00000004,
 }
 
-struct USpoofChecker
-{
-}
-struct USpoofCheckResult
-{
-}
 alias USpoofChecks = int;
 enum : int
 {
@@ -5504,9 +5429,6 @@ struct UTransPosition
     int contextLimit;
     int start;
     int limit;
-}
-struct UHashtable
-{
 }
 alias UStringTrieBuildOption = int;
 enum : int
@@ -5681,21 +5603,6 @@ enum : int
     UDAT_DIRECTION_COUNT  = 0x00000006,
 }
 
-struct USearch
-{
-}
-enum CLSID_CMLangString = GUID(0xc04d65cf, 0xb70d, 0x11d0, [0xb1, 0x88, 0x0, 0xaa, 0x0, 0x38, 0xc9, 0x69]);
-struct CMLangString
-{
-}
-enum CLSID_CMLangConvertCharset = GUID(0xd66d6f99, 0xcdaa, 0x11d0, [0xb8, 0x22, 0x0, 0xc0, 0x4f, 0xc9, 0xb3, 0x1f]);
-struct CMLangConvertCharset
-{
-}
-enum CLSID_CMultiLanguage = GUID(0x275c23e2, 0x3747, 0x11d0, [0x9f, 0xea, 0x0, 0xaa, 0x0, 0x3f, 0x86, 0x46]);
-struct CMultiLanguage
-{
-}
 enum IID_IMLangStringBufW = GUID(0xd24acd21, 0xba72, 0x11d0, [0xb1, 0x88, 0x0, 0xaa, 0x0, 0x38, 0xc9, 0x69]);
 interface IMLangStringBufW : IUnknown
 {
@@ -6041,3 +5948,15 @@ enum : int
     MLSTR_WRITE = 0x00000002,
 }
 
+enum CLSID_CMLangString = GUID(0xc04d65cf, 0xb70d, 0x11d0, [0xb1, 0x88, 0x0, 0xaa, 0x0, 0x38, 0xc9, 0x69]);
+struct CMLangString
+{
+}
+enum CLSID_CMLangConvertCharset = GUID(0xd66d6f99, 0xcdaa, 0x11d0, [0xb8, 0x22, 0x0, 0xc0, 0x4f, 0xc9, 0xb3, 0x1f]);
+struct CMLangConvertCharset
+{
+}
+enum CLSID_CMultiLanguage = GUID(0x275c23e2, 0x3747, 0x11d0, [0x9f, 0xea, 0x0, 0xaa, 0x0, 0x3f, 0x86, 0x46]);
+struct CMultiLanguage
+{
+}

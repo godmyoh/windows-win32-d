@@ -80,6 +80,7 @@ HRESULT WHvEmulatorDestroyEmulator(void*);
 HRESULT WHvEmulatorTryIoEmulation(void*, void*, const(WHV_VP_EXIT_CONTEXT)*, const(WHV_X64_IO_PORT_ACCESS_CONTEXT)*, WHV_EMULATOR_STATUS*);
 HRESULT WHvEmulatorTryMmioEmulation(void*, void*, const(WHV_VP_EXIT_CONTEXT)*, const(WHV_MEMORY_ACCESS_CONTEXT)*, WHV_EMULATOR_STATUS*);
 HRESULT HdvInitializeDeviceHost(HCS_SYSTEM, void**);
+HRESULT HdvInitializeDeviceHostEx(HCS_SYSTEM, HDV_DEVICE_HOST_FLAGS, void**);
 HRESULT HdvTeardownDeviceHost(void*);
 HRESULT HdvCreateDeviceInstance(void*, HDV_DEVICE_TYPE, const(GUID)*, const(GUID)*, const(void)*, void*, void**);
 HRESULT HdvReadGuestMemory(void*, ulong, uint, ubyte*);

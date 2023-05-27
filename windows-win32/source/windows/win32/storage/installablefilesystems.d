@@ -1,7 +1,7 @@
 module windows.win32.storage.installablefilesystems;
 
 import windows.win32.foundation : HANDLE, HRESULT, NTSTATUS, PWSTR;
-import windows.win32.security_ : SECURITY_ATTRIBUTES;
+import windows.win32.security : SECURITY_ATTRIBUTES;
 import windows.win32.system.io : OVERLAPPED;
 
 version (Windows):
@@ -16,16 +16,16 @@ HRESULT FilterInstanceClose(HFILTER_INSTANCE);
 HRESULT FilterAttach(const(wchar)*, const(wchar)*, const(wchar)*, uint, PWSTR);
 HRESULT FilterAttachAtAltitude(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, uint, PWSTR);
 HRESULT FilterDetach(const(wchar)*, const(wchar)*, const(wchar)*);
-HRESULT FilterFindFirst(FILTER_INFORMATION_CLASS, void*, uint, uint*, FilterFindHandle*);
+HRESULT FilterFindFirst(FILTER_INFORMATION_CLASS, void*, uint, uint*, HANDLE*);
 HRESULT FilterFindNext(HANDLE, FILTER_INFORMATION_CLASS, void*, uint, uint*);
 HRESULT FilterFindClose(HANDLE);
-HRESULT FilterVolumeFindFirst(FILTER_VOLUME_INFORMATION_CLASS, void*, uint, uint*, FilterVolumeFindHandle*);
+HRESULT FilterVolumeFindFirst(FILTER_VOLUME_INFORMATION_CLASS, void*, uint, uint*, HANDLE*);
 HRESULT FilterVolumeFindNext(HANDLE, FILTER_VOLUME_INFORMATION_CLASS, void*, uint, uint*);
 HRESULT FilterVolumeFindClose(HANDLE);
-HRESULT FilterInstanceFindFirst(const(wchar)*, INSTANCE_INFORMATION_CLASS, void*, uint, uint*, FilterInstanceFindHandle*);
+HRESULT FilterInstanceFindFirst(const(wchar)*, INSTANCE_INFORMATION_CLASS, void*, uint, uint*, HANDLE*);
 HRESULT FilterInstanceFindNext(HANDLE, INSTANCE_INFORMATION_CLASS, void*, uint, uint*);
 HRESULT FilterInstanceFindClose(HANDLE);
-HRESULT FilterVolumeInstanceFindFirst(const(wchar)*, INSTANCE_INFORMATION_CLASS, void*, uint, uint*, FilterVolumeInstanceFindHandle*);
+HRESULT FilterVolumeInstanceFindFirst(const(wchar)*, INSTANCE_INFORMATION_CLASS, void*, uint, uint*, HANDLE*);
 HRESULT FilterVolumeInstanceFindNext(HANDLE, INSTANCE_INFORMATION_CLASS, void*, uint, uint*);
 HRESULT FilterVolumeInstanceFindClose(HANDLE);
 HRESULT FilterGetInformation(HFILTER, FILTER_INFORMATION_CLASS, void*, uint, uint*);
@@ -123,10 +123,6 @@ enum WNNC_CRED_MANAGER = 0xffff0000;
 enum WNNC_NET_LANMAN = 0x00020000;
 alias HFILTER = void*;
 alias HFILTER_INSTANCE = void*;
-alias FilterFindHandle = long;
-alias FilterVolumeFindHandle = long;
-alias FilterInstanceFindHandle = long;
-alias FilterVolumeInstanceFindHandle = long;
 alias FLT_FILESYSTEM_TYPE = int;
 enum : int
 {

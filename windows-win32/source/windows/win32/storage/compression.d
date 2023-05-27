@@ -14,7 +14,7 @@ enum : uint
     COMPRESS_ALGORITHM_LZMS        = 0x00000005,
 }
 
-BOOL CreateCompressor(COMPRESS_ALGORITHM, COMPRESS_ALLOCATION_ROUTINES*, long*);
+BOOL CreateCompressor(COMPRESS_ALGORITHM, COMPRESS_ALLOCATION_ROUTINES*, COMPRESSOR_HANDLE*);
 BOOL SetCompressorInformation(COMPRESSOR_HANDLE, COMPRESS_INFORMATION_CLASS, const(void)*, ulong);
 BOOL QueryCompressorInformation(COMPRESSOR_HANDLE, COMPRESS_INFORMATION_CLASS, void*, ulong);
 BOOL Compress(COMPRESSOR_HANDLE, const(void)*, ulong, void*, ulong, ulong*);

@@ -2,10 +2,10 @@ module windows.win32.graphics.direct3d11on12;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : HRESULT;
-import windows.win32.graphics.direct3d_ : D3D_FEATURE_LEVEL;
+import windows.win32.graphics.direct3d : D3D_FEATURE_LEVEL;
 import windows.win32.graphics.direct3d11 : ID3D11Device, ID3D11DeviceContext, ID3D11Resource;
 import windows.win32.graphics.direct3d12 : D3D12_RESOURCE_STATES, ID3D12CommandQueue, ID3D12Fence;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):

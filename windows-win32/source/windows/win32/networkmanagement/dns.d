@@ -125,8 +125,8 @@ int DnsCancelQuery(DNS_QUERY_CANCEL*);
 void DnsFreeCustomServers(uint*, DNS_CUSTOM_SERVER**);
 uint DnsGetApplicationSettings(uint*, DNS_CUSTOM_SERVER**, DNS_APPLICATION_SETTINGS*);
 uint DnsSetApplicationSettings(uint, const(DNS_CUSTOM_SERVER)*, const(DNS_APPLICATION_SETTINGS)*);
-int DnsAcquireContextHandle_W(uint, void*, DnsContextHandle*);
-int DnsAcquireContextHandle_A(uint, void*, DnsContextHandle*);
+int DnsAcquireContextHandle_W(uint, void*, HANDLE*);
+int DnsAcquireContextHandle_A(uint, void*, HANDLE*);
 void DnsReleaseContextHandle(HANDLE);
 int DnsModifyRecordsInSet_W(DNS_RECORDA*, DNS_RECORDA*, uint, HANDLE, void*, void*);
 int DnsModifyRecordsInSet_A(DNS_RECORDA*, DNS_RECORDA*, uint, HANDLE, void*, void*);
@@ -146,6 +146,7 @@ int DnsExtractRecordsFromMessage_UTF8(DNS_MESSAGE_BUFFER*, ushort, DNS_RECORDA**
 uint DnsGetProxyInformation(const(wchar)*, DNS_PROXY_INFORMATION*, DNS_PROXY_INFORMATION*, DNS_PROXY_COMPLETION_ROUTINE, void*);
 void DnsFreeProxyName(PWSTR);
 uint DnsConnectionGetProxyInfoForHostUrl(const(wchar)*, ubyte*, uint, uint, DNS_CONNECTION_PROXY_INFO_EX*);
+uint DnsConnectionGetProxyInfoForHostUrlEx(const(wchar)*, ubyte*, uint, uint, const(wchar)*, DNS_CONNECTION_PROXY_INFO_EX*);
 void DnsConnectionFreeProxyInfoEx(DNS_CONNECTION_PROXY_INFO_EX*);
 uint DnsConnectionGetProxyInfo(const(wchar)*, DNS_CONNECTION_PROXY_TYPE, DNS_CONNECTION_PROXY_INFO*);
 void DnsConnectionFreeProxyInfo(DNS_CONNECTION_PROXY_INFO*);
@@ -404,7 +405,6 @@ enum DNS_CONNECTION_PROXY_INFO_EXTRA_INFO_MAX_LENGTH = 0x00000400;
 enum DNS_CONNECTION_PROXY_INFO_FLAG_DISABLED = 0x00000001;
 enum DNS_CONNECTION_PROXY_INFO_FLAG_BYPASSLOCAL = 0x00000002;
 enum DNS_CONNECTION_POLICY_ENTRY_ONDEMAND = 0x00000001;
-alias DnsContextHandle = long;
 union IP6_ADDRESS
 {
     ulong[2] IP6Qword;

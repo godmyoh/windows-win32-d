@@ -2,7 +2,7 @@ module windows.win32.networkmanagement.windowsconnectnow;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : HRESULT, PWSTR;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):
@@ -372,10 +372,6 @@ struct WCN_VALUE_TYPE_PRIMARY_DEVICE_TYPE
     uint SubCategoryOUI;
     ushort SubCategory;
 }
-enum CLSID_WCNDeviceObject = GUID(0xc100bea7, 0xd33a, 0x4a4b, [0xbf, 0x23, 0xbb, 0xef, 0x46, 0x63, 0xd0, 0x17]);
-struct WCNDeviceObject
-{
-}
 alias WCN_PASSWORD_TYPE = int;
 enum : int
 {
@@ -421,4 +417,8 @@ interface IWCNConnectNotify : IUnknown
 {
     HRESULT ConnectSucceeded();
     HRESULT ConnectFailed(HRESULT);
+}
+enum CLSID_WCNDeviceObject = GUID(0xc100bea7, 0xd33a, 0x4a4b, [0xbf, 0x23, 0xbb, 0xef, 0x46, 0x63, 0xd0, 0x17]);
+struct WCNDeviceObject
+{
 }

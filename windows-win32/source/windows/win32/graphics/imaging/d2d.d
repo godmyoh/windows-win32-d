@@ -2,9 +2,9 @@ module windows.win32.graphics.imaging.d2d;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : HRESULT;
-import windows.win32.graphics.direct2d_ : ID2D1Device, ID2D1Image;
-import windows.win32.graphics.imaging_ : IWICBitmapEncoder, IWICBitmapFrameEncode, IWICImagingFactory, WICImageParameters;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.graphics.direct2d : ID2D1Device, ID2D1Image;
+import windows.win32.graphics.imaging : IWICBitmapEncoder, IWICBitmapFrameEncode, IWICImagingFactory, WICImageParameters;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):

@@ -2,7 +2,7 @@ module windows.win32.data.xml.xmllite;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HRESULT, PWSTR;
-import windows.win32.system.com_ : IMalloc, IUnknown;
+import windows.win32.system.com : IMalloc, IUnknown;
 
 version (Windows):
 extern (Windows):
@@ -279,6 +279,3 @@ HRESULT CreateXmlReaderInputWithEncodingName(IUnknown, IMalloc, const(wchar)*, B
 HRESULT CreateXmlWriter(const(GUID)*, void**, IMalloc);
 HRESULT CreateXmlWriterOutputWithEncodingCodePage(IUnknown, IMalloc, uint, IUnknown*);
 HRESULT CreateXmlWriterOutputWithEncodingName(IUnknown, IMalloc, const(wchar)*, IUnknown*);
-enum _IID_IXmlReader = GUID(0x7279fc81, 0x709d, 0x4095, [0xb6, 0x3d, 0x69, 0xfe, 0x4b, 0xd, 0x90, 0x30]);
-enum _IID_IXmlWriter = GUID(0x7279fc88, 0x709d, 0x4095, [0xb6, 0x3d, 0x69, 0xfe, 0x4b, 0xd, 0x90, 0x30]);
-enum _IID_IXmlResolver = GUID(0x7279fc82, 0x709d, 0x4095, [0xb6, 0x3d, 0x69, 0xfe, 0x4b, 0xd, 0x90, 0x30]);

@@ -1,7 +1,7 @@
 module windows.win32.system.pipes;
 
 import windows.win32.foundation : BOOL, HANDLE, PSTR, PWSTR;
-import windows.win32.security_ : SECURITY_ATTRIBUTES;
+import windows.win32.security : SECURITY_ATTRIBUTES;
 import windows.win32.storage.filesystem : FILE_FLAGS_AND_ATTRIBUTES;
 import windows.win32.system.io : OVERLAPPED;
 

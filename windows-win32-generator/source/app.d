@@ -9,8 +9,13 @@ import std.process;
 import std.stdio;
 
 
-int main()
+int main(string[] args)
 {
+    ConflictedModuleNaming mode = ConflictedModuleNaming.usePackageModule;
+
+    if (args.length > 1 && args[1] == "appendUnderscore")
+        mode = ConflictedModuleNaming.appendUnderscore;
+
     auto outDir = r"..\windows-win32\source";
 
     if (outDir.exists)
@@ -18,7 +23,7 @@ int main()
 
     PatchStatus patchStatus = new PatchStatus();
 
-    auto g = buildGenerator(outDir, patchStatus);
+    auto g = buildGenerator(outDir, patchStatus, mode);
     g.execute();
 
     execute(["xcopy", ".\\handmade", outDir, "/S", "/Y"]);

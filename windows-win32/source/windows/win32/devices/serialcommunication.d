@@ -5,7 +5,7 @@ import windows.win32.foundation : BOOL;
 version (Windows):
 extern (Windows):
 
-int ComDBOpen(long*);
+int ComDBOpen(HCOMDB*);
 int ComDBClose(HCOMDB);
 int ComDBGetCurrentPortUsage(HCOMDB, ubyte*, uint, uint, uint*);
 int ComDBClaimNextFreePort(HCOMDB, uint*);

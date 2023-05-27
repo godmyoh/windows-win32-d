@@ -1,18 +1,18 @@
 module windows.win32.graphics.direct3d11;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, HANDLE, HINSTANCE, HRESULT, PSTR, PWSTR, RECT, SIZE;
-import windows.win32.graphics.direct3d_ : D3D_CBUFFER_TYPE, D3D_DRIVER_TYPE, D3D_FEATURE_LEVEL, D3D_INTERPOLATION_MODE, D3D_MIN_PRECISION, D3D_NAME, D3D_PARAMETER_FLAGS, D3D_PRIMITIVE, D3D_PRIMITIVE_TOPOLOGY, D3D_REGISTER_COMPONENT_TYPE, D3D_RESOURCE_RETURN_TYPE, D3D_SHADER_INPUT_TYPE, D3D_SHADER_VARIABLE_CLASS, D3D_SHADER_VARIABLE_TYPE, D3D_SRV_DIMENSION, D3D_TESSELLATOR_DOMAIN, D3D_TESSELLATOR_OUTPUT_PRIMITIVE, D3D_TESSELLATOR_PARTITIONING, ID3DBlob;
-import windows.win32.graphics.dxgi_ : DXGI_HDR_METADATA_TYPE, DXGI_SWAP_CHAIN_DESC, IDXGIAdapter, IDXGISwapChain;
+import windows.win32.foundation : BOOL, HANDLE, HMODULE, HRESULT, PSTR, PWSTR, RECT, SIZE;
+import windows.win32.graphics.direct3d : D3D_CBUFFER_TYPE, D3D_DRIVER_TYPE, D3D_FEATURE_LEVEL, D3D_INTERPOLATION_MODE, D3D_MIN_PRECISION, D3D_NAME, D3D_PARAMETER_FLAGS, D3D_PRIMITIVE, D3D_PRIMITIVE_TOPOLOGY, D3D_REGISTER_COMPONENT_TYPE, D3D_RESOURCE_RETURN_TYPE, D3D_SHADER_INPUT_TYPE, D3D_SHADER_VARIABLE_CLASS, D3D_SHADER_VARIABLE_TYPE, D3D_SRV_DIMENSION, D3D_TESSELLATOR_DOMAIN, D3D_TESSELLATOR_OUTPUT_PRIMITIVE, D3D_TESSELLATOR_PARTITIONING, ID3DBlob;
+import windows.win32.graphics.dxgi : DXGI_HDR_METADATA_TYPE, DXGI_SWAP_CHAIN_DESC, IDXGIAdapter, IDXGISwapChain;
 import windows.win32.graphics.dxgi.common : DXGI_COLOR_SPACE_TYPE, DXGI_FORMAT, DXGI_RATIONAL, DXGI_SAMPLE_DESC;
-import windows.win32.security_ : SECURITY_ATTRIBUTES;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.security : SECURITY_ATTRIBUTES;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):
 
-HRESULT D3D11CreateDevice(IDXGIAdapter, D3D_DRIVER_TYPE, HINSTANCE, D3D11_CREATE_DEVICE_FLAG, const(D3D_FEATURE_LEVEL)*, uint, uint, ID3D11Device*, D3D_FEATURE_LEVEL*, ID3D11DeviceContext*);
-HRESULT D3D11CreateDeviceAndSwapChain(IDXGIAdapter, D3D_DRIVER_TYPE, HINSTANCE, D3D11_CREATE_DEVICE_FLAG, const(D3D_FEATURE_LEVEL)*, uint, uint, const(DXGI_SWAP_CHAIN_DESC)*, IDXGISwapChain*, ID3D11Device*, D3D_FEATURE_LEVEL*, ID3D11DeviceContext*);
+HRESULT D3D11CreateDevice(IDXGIAdapter, D3D_DRIVER_TYPE, HMODULE, D3D11_CREATE_DEVICE_FLAG, const(D3D_FEATURE_LEVEL)*, uint, uint, ID3D11Device*, D3D_FEATURE_LEVEL*, ID3D11DeviceContext*);
+HRESULT D3D11CreateDeviceAndSwapChain(IDXGIAdapter, D3D_DRIVER_TYPE, HMODULE, D3D11_CREATE_DEVICE_FLAG, const(D3D_FEATURE_LEVEL)*, uint, uint, const(DXGI_SWAP_CHAIN_DESC)*, IDXGISwapChain*, ID3D11Device*, D3D_FEATURE_LEVEL*, ID3D11DeviceContext*);
 HRESULT D3DDisassemble11Trace(const(void)*, ulong, ID3D11ShaderTrace, uint, uint, uint, ID3DBlob*);
 HRESULT D3DX11CreateScan(ID3D11DeviceContext, uint, uint, ID3DX11Scan*);
 HRESULT D3DX11CreateSegmentedScan(ID3D11DeviceContext, uint, ID3DX11SegmentedScan*);
@@ -902,9 +902,9 @@ struct D3D11_BUFFER_DESC
 {
     uint ByteWidth;
     D3D11_USAGE Usage;
-    D3D11_BIND_FLAG BindFlags;
-    D3D11_CPU_ACCESS_FLAG CPUAccessFlags;
-    D3D11_RESOURCE_MISC_FLAG MiscFlags;
+    uint BindFlags;
+    uint CPUAccessFlags;
+    uint MiscFlags;
     uint StructureByteStride;
 }
 enum IID_ID3D11Buffer = GUID(0x48570b85, 0xd1ee, 0x4fcd, [0xa2, 0x50, 0xeb, 0x35, 0x7, 0x22, 0xb0, 0x37]);
@@ -919,9 +919,9 @@ struct D3D11_TEXTURE1D_DESC
     uint ArraySize;
     DXGI_FORMAT Format;
     D3D11_USAGE Usage;
-    D3D11_BIND_FLAG BindFlags;
-    D3D11_CPU_ACCESS_FLAG CPUAccessFlags;
-    D3D11_RESOURCE_MISC_FLAG MiscFlags;
+    uint BindFlags;
+    uint CPUAccessFlags;
+    uint MiscFlags;
 }
 enum IID_ID3D11Texture1D = GUID(0xf8fb5c27, 0xc6b3, 0x4f75, [0xa4, 0xc8, 0x43, 0x9a, 0xf2, 0xef, 0x56, 0x4c]);
 interface ID3D11Texture1D : ID3D11Resource
@@ -937,9 +937,9 @@ struct D3D11_TEXTURE2D_DESC
     DXGI_FORMAT Format;
     DXGI_SAMPLE_DESC SampleDesc;
     D3D11_USAGE Usage;
-    D3D11_BIND_FLAG BindFlags;
-    D3D11_CPU_ACCESS_FLAG CPUAccessFlags;
-    D3D11_RESOURCE_MISC_FLAG MiscFlags;
+    uint BindFlags;
+    uint CPUAccessFlags;
+    uint MiscFlags;
 }
 enum IID_ID3D11Texture2D = GUID(0x6f15aaf2, 0xd208, 0x4e89, [0x9a, 0xb4, 0x48, 0x95, 0x35, 0xd3, 0x4f, 0x9c]);
 interface ID3D11Texture2D : ID3D11Resource
@@ -954,9 +954,9 @@ struct D3D11_TEXTURE3D_DESC
     uint MipLevels;
     DXGI_FORMAT Format;
     D3D11_USAGE Usage;
-    D3D11_BIND_FLAG BindFlags;
-    D3D11_CPU_ACCESS_FLAG CPUAccessFlags;
-    D3D11_RESOURCE_MISC_FLAG MiscFlags;
+    uint BindFlags;
+    uint CPUAccessFlags;
+    uint MiscFlags;
 }
 enum IID_ID3D11Texture3D = GUID(0x37e866e, 0xf56d, 0x4357, [0xa8, 0xaf, 0x9d, 0xab, 0xbe, 0x6e, 0x25, 0xe]);
 interface ID3D11Texture3D : ID3D11Resource
@@ -1870,9 +1870,6 @@ interface ID3D11DeviceContext : ID3D11DeviceChild
     D3D11_DEVICE_CONTEXT_TYPE GetType();
     uint GetContextFlags();
     HRESULT FinishCommandList(BOOL, ID3D11CommandList*);
-}
-struct CD3D11_VIDEO_DEFAULT
-{
 }
 struct D3D11_VIDEO_DECODER_DESC
 {
@@ -4230,8 +4227,8 @@ interface ID3D11InfoQueue : IUnknown
     void SetMuteDebugOutput(BOOL);
     BOOL GetMuteDebugOutput();
 }
-alias PFN_D3D11_CREATE_DEVICE = HRESULT function(IDXGIAdapter, D3D_DRIVER_TYPE, HINSTANCE, uint, const(D3D_FEATURE_LEVEL)*, uint, uint, ID3D11Device*, D3D_FEATURE_LEVEL*, ID3D11DeviceContext*);
-alias PFN_D3D11_CREATE_DEVICE_AND_SWAP_CHAIN = HRESULT function(IDXGIAdapter, D3D_DRIVER_TYPE, HINSTANCE, uint, const(D3D_FEATURE_LEVEL)*, uint, uint, const(DXGI_SWAP_CHAIN_DESC)*, IDXGISwapChain*, ID3D11Device*, D3D_FEATURE_LEVEL*, ID3D11DeviceContext*);
+alias PFN_D3D11_CREATE_DEVICE = HRESULT function(IDXGIAdapter, D3D_DRIVER_TYPE, HMODULE, uint, const(D3D_FEATURE_LEVEL)*, uint, uint, ID3D11Device*, D3D_FEATURE_LEVEL*, ID3D11DeviceContext*);
+alias PFN_D3D11_CREATE_DEVICE_AND_SWAP_CHAIN = HRESULT function(IDXGIAdapter, D3D_DRIVER_TYPE, HMODULE, uint, const(D3D_FEATURE_LEVEL)*, uint, uint, const(DXGI_SWAP_CHAIN_DESC)*, IDXGISwapChain*, ID3D11Device*, D3D_FEATURE_LEVEL*, ID3D11DeviceContext*);
 alias D3D11_COPY_FLAGS = int;
 enum : int
 {
@@ -4585,9 +4582,9 @@ struct D3D11_TEXTURE2D_DESC1
     DXGI_FORMAT Format;
     DXGI_SAMPLE_DESC SampleDesc;
     D3D11_USAGE Usage;
-    D3D11_BIND_FLAG BindFlags;
-    D3D11_CPU_ACCESS_FLAG CPUAccessFlags;
-    D3D11_RESOURCE_MISC_FLAG MiscFlags;
+    uint BindFlags;
+    uint CPUAccessFlags;
+    uint MiscFlags;
     D3D11_TEXTURE_LAYOUT TextureLayout;
 }
 enum IID_ID3D11Texture2D1 = GUID(0x51218251, 0x1e33, 0x4617, [0x9c, 0xcb, 0x4d, 0x3a, 0x43, 0x67, 0xe7, 0xbb]);
@@ -4603,9 +4600,9 @@ struct D3D11_TEXTURE3D_DESC1
     uint MipLevels;
     DXGI_FORMAT Format;
     D3D11_USAGE Usage;
-    D3D11_BIND_FLAG BindFlags;
-    D3D11_CPU_ACCESS_FLAG CPUAccessFlags;
-    D3D11_RESOURCE_MISC_FLAG MiscFlags;
+    uint BindFlags;
+    uint CPUAccessFlags;
+    uint MiscFlags;
     D3D11_TEXTURE_LAYOUT TextureLayout;
 }
 enum IID_ID3D11Texture3D1 = GUID(0xc711683, 0x2853, 0x4846, [0x9b, 0xb0, 0xf3, 0xe6, 0x6, 0x39, 0xe4, 0x6a]);

@@ -2,20 +2,12 @@ module windows.win32.security.tpm;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HRESULT, PWSTR;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):
 
 enum TPMVSC_DEFAULT_ADMIN_ALGORITHM_ID = 0x00000082;
-enum CLSID_TpmVirtualSmartCardManager = GUID(0x16a18e86, 0x7f6e, 0x4c20, [0xad, 0x89, 0x4f, 0xfc, 0xd, 0xb7, 0xa9, 0x6a]);
-struct TpmVirtualSmartCardManager
-{
-}
-enum CLSID_RemoteTpmVirtualSmartCardManager = GUID(0x152ea2a8, 0x70dc, 0x4c59, [0x8b, 0x2a, 0x32, 0xaa, 0x3c, 0xa0, 0xdc, 0xac]);
-struct RemoteTpmVirtualSmartCardManager
-{
-}
 alias TPMVSC_ATTESTATION_TYPE = int;
 enum : int
 {
@@ -88,4 +80,12 @@ enum IID_ITpmVirtualSmartCardManager3 = GUID(0x3c745a97, 0xf375, 0x4150, [0xbe, 
 interface ITpmVirtualSmartCardManager3 : ITpmVirtualSmartCardManager2
 {
     HRESULT CreateVirtualSmartCardWithAttestation(const(wchar)*, ubyte, const(ubyte)*, uint, const(ubyte)*, uint, const(ubyte)*, uint, const(ubyte)*, uint, const(ubyte)*, uint, TPMVSC_ATTESTATION_TYPE, BOOL, ITpmVirtualSmartCardManagerStatusCallback, PWSTR*);
+}
+enum CLSID_TpmVirtualSmartCardManager = GUID(0x16a18e86, 0x7f6e, 0x4c20, [0xad, 0x89, 0x4f, 0xfc, 0xd, 0xb7, 0xa9, 0x6a]);
+struct TpmVirtualSmartCardManager
+{
+}
+enum CLSID_RemoteTpmVirtualSmartCardManager = GUID(0x152ea2a8, 0x70dc, 0x4c59, [0x8b, 0x2a, 0x32, 0xaa, 0x3c, 0xa0, 0xdc, 0xac]);
+struct RemoteTpmVirtualSmartCardManager
+{
 }

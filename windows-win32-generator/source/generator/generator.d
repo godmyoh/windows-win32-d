@@ -65,20 +65,20 @@ class Win32ModuleGenerator
         }
     }
 
-    private constr[constr] createMap(CLINamespace[] namespaces, constr[] fqmns)
+    private constr[constr] createMap(CLINamespace[] namespaces, Module[] modules)
     {
         constr[constr] result;
 
-        foreach (i, fqmn; fqmns)
+        foreach (i, m; modules)
         {
-            result[namespaces[i].namespace] = fqmn;
+            result[namespaces[i].namespace] = m.fqmn;
         }
 
         return result;
     }
 
-    private constr moduleToFile(constr fqmn)
+    private constr moduleToFile(Module m)
     {
-        return buildPath(outDir, fqmn.replace(".", "\\") ~ ".d");
+        return buildPath(outDir, m.fqmn.replace(".", "\\") ~ (m.isPackageModule ? "\\package.d" : ".d"));
     }
 }

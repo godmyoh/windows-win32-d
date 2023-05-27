@@ -1,9 +1,9 @@
-module windows.win32.media_;
+module windows.win32.media;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : HANDLE, HRESULT;
 import windows.win32.media.multimedia : HDRVR;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):

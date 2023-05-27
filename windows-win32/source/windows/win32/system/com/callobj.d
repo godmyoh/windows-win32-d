@@ -2,7 +2,8 @@ module windows.win32.system.com.callobj;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BOOLEAN, HRESULT, PWSTR;
-import windows.win32.system.com_ : ITypeInfo, IUnknown, MSHLFLAGS, VARIANT;
+import windows.win32.system.com : ITypeInfo, IUnknown, MSHLFLAGS;
+import windows.win32.system.variant : VARIANT;
 
 version (Windows):
 extern (Windows):

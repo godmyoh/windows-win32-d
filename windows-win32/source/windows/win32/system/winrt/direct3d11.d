@@ -2,9 +2,9 @@ module windows.win32.system.winrt.direct3d11;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : HRESULT;
-import windows.win32.graphics.dxgi_ : IDXGIDevice, IDXGISurface;
-import windows.win32.system.com_ : IUnknown;
-import windows.win32.system.winrt_ : IInspectable;
+import windows.win32.graphics.dxgi : IDXGIDevice, IDXGISurface;
+import windows.win32.system.com : IUnknown;
+import windows.win32.system.winrt : IInspectable;
 
 version (Windows):
 extern (Windows):

@@ -1,8 +1,9 @@
 module windows.win32.system.threading;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, FILETIME, HANDLE, HINSTANCE, HRESULT, NTSTATUS, PAPCFUNC, PSID, PSTR, PWSTR, UNICODE_STRING, WIN32_ERROR;
-import windows.win32.security_ : SECURITY_ATTRIBUTES, TOKEN_ACCESS_MASK;
+import windows.win32.foundation : BOOL, BOOLEAN, FILETIME, HANDLE, HMODULE, HRESULT, NTSTATUS, PAPCFUNC, PSID, PSTR, PWSTR, UNICODE_STRING, WAIT_EVENT;
+import windows.win32.security : SECURITY_ATTRIBUTES, TOKEN_ACCESS_MASK;
+import windows.win32.system.com : IUnknown;
 import windows.win32.system.kernel : LIST_ENTRY, PROCESSOR_NUMBER, SLIST_ENTRY, SLIST_HEADER;
 import windows.win32.system.systeminformation : GROUP_AFFINITY, IMAGE_FILE_MACHINE;
 import windows.win32.system.systemservices : RTL_UMS_SCHEDULER_REASON;
@@ -218,6 +219,9 @@ enum : uint
     SYNCHRONIZATION_SYNCHRONIZE  = 0x00100000,
 }
 
+HANDLE GetCurrentProcessToken();
+HANDLE GetCurrentThreadToken();
+HANDLE GetCurrentThreadEffectiveToken();
 BOOL GetProcessWorkingSetSize(HANDLE, ulong*, ulong*);
 BOOL SetProcessWorkingSetSize(HANDLE, ulong, ulong);
 uint FlsAlloc(PFLS_CALLBACK_FUNCTION);
@@ -225,38 +229,38 @@ void* FlsGetValue(uint);
 BOOL FlsSetValue(uint, void*);
 BOOL FlsFree(uint);
 BOOL IsThreadAFiber();
-void InitializeSRWLock(RTL_SRWLOCK*);
-void ReleaseSRWLockExclusive(RTL_SRWLOCK*);
-void ReleaseSRWLockShared(RTL_SRWLOCK*);
-void AcquireSRWLockExclusive(RTL_SRWLOCK*);
-void AcquireSRWLockShared(RTL_SRWLOCK*);
-BOOLEAN TryAcquireSRWLockExclusive(RTL_SRWLOCK*);
-BOOLEAN TryAcquireSRWLockShared(RTL_SRWLOCK*);
-void InitializeCriticalSection(RTL_CRITICAL_SECTION*);
-void EnterCriticalSection(RTL_CRITICAL_SECTION*);
-void LeaveCriticalSection(RTL_CRITICAL_SECTION*);
-BOOL InitializeCriticalSectionAndSpinCount(RTL_CRITICAL_SECTION*, uint);
-BOOL InitializeCriticalSectionEx(RTL_CRITICAL_SECTION*, uint, uint);
-uint SetCriticalSectionSpinCount(RTL_CRITICAL_SECTION*, uint);
-BOOL TryEnterCriticalSection(RTL_CRITICAL_SECTION*);
-void DeleteCriticalSection(RTL_CRITICAL_SECTION*);
-void InitOnceInitialize(RTL_RUN_ONCE*);
-BOOL InitOnceExecuteOnce(RTL_RUN_ONCE*, PINIT_ONCE_FN, void*, void**);
-BOOL InitOnceBeginInitialize(RTL_RUN_ONCE*, uint, BOOL*, void**);
-BOOL InitOnceComplete(RTL_RUN_ONCE*, uint, void*);
-void InitializeConditionVariable(RTL_CONDITION_VARIABLE*);
-void WakeConditionVariable(RTL_CONDITION_VARIABLE*);
-void WakeAllConditionVariable(RTL_CONDITION_VARIABLE*);
-BOOL SleepConditionVariableCS(RTL_CONDITION_VARIABLE*, RTL_CRITICAL_SECTION*, uint);
-BOOL SleepConditionVariableSRW(RTL_CONDITION_VARIABLE*, RTL_SRWLOCK*, uint, uint);
+void InitializeSRWLock(SRWLOCK*);
+void ReleaseSRWLockExclusive(SRWLOCK*);
+void ReleaseSRWLockShared(SRWLOCK*);
+void AcquireSRWLockExclusive(SRWLOCK*);
+void AcquireSRWLockShared(SRWLOCK*);
+BOOLEAN TryAcquireSRWLockExclusive(SRWLOCK*);
+BOOLEAN TryAcquireSRWLockShared(SRWLOCK*);
+void InitializeCriticalSection(CRITICAL_SECTION*);
+void EnterCriticalSection(CRITICAL_SECTION*);
+void LeaveCriticalSection(CRITICAL_SECTION*);
+BOOL InitializeCriticalSectionAndSpinCount(CRITICAL_SECTION*, uint);
+BOOL InitializeCriticalSectionEx(CRITICAL_SECTION*, uint, uint);
+uint SetCriticalSectionSpinCount(CRITICAL_SECTION*, uint);
+BOOL TryEnterCriticalSection(CRITICAL_SECTION*);
+void DeleteCriticalSection(CRITICAL_SECTION*);
+void InitOnceInitialize(INIT_ONCE*);
+BOOL InitOnceExecuteOnce(INIT_ONCE*, PINIT_ONCE_FN, void*, void**);
+BOOL InitOnceBeginInitialize(INIT_ONCE*, uint, BOOL*, void**);
+BOOL InitOnceComplete(INIT_ONCE*, uint, void*);
+void InitializeConditionVariable(CONDITION_VARIABLE*);
+void WakeConditionVariable(CONDITION_VARIABLE*);
+void WakeAllConditionVariable(CONDITION_VARIABLE*);
+BOOL SleepConditionVariableCS(CONDITION_VARIABLE*, CRITICAL_SECTION*, uint);
+BOOL SleepConditionVariableSRW(CONDITION_VARIABLE*, SRWLOCK*, uint, uint);
 BOOL SetEvent(HANDLE);
 BOOL ResetEvent(HANDLE);
 BOOL ReleaseSemaphore(HANDLE, int, int*);
 BOOL ReleaseMutex(HANDLE);
-WIN32_ERROR WaitForSingleObject(HANDLE, uint);
+WAIT_EVENT WaitForSingleObject(HANDLE, uint);
 uint SleepEx(uint, BOOL);
-WIN32_ERROR WaitForSingleObjectEx(HANDLE, uint, BOOL);
-WIN32_ERROR WaitForMultipleObjectsEx(uint, const(HANDLE)*, BOOL, uint, BOOL);
+WAIT_EVENT WaitForSingleObjectEx(HANDLE, uint, BOOL);
+WAIT_EVENT WaitForMultipleObjectsEx(uint, const(HANDLE)*, BOOL, uint, BOOL);
 HANDLE CreateMutexA(SECURITY_ATTRIBUTES*, BOOL, const(char)*);
 HANDLE CreateMutexW(SECURITY_ATTRIBUTES*, BOOL, const(wchar)*);
 HANDLE OpenMutexW(SYNCHRONIZATION_ACCESS_RIGHTS, BOOL, const(wchar)*);
@@ -275,14 +279,14 @@ HANDLE CreateEventExA(SECURITY_ATTRIBUTES*, const(char)*, CREATE_EVENT, uint);
 HANDLE CreateEventExW(SECURITY_ATTRIBUTES*, const(wchar)*, CREATE_EVENT, uint);
 HANDLE CreateSemaphoreExW(SECURITY_ATTRIBUTES*, int, int, const(wchar)*, uint, uint);
 HANDLE CreateWaitableTimerExW(SECURITY_ATTRIBUTES*, const(wchar)*, uint, uint);
-BOOL EnterSynchronizationBarrier(RTL_BARRIER*, uint);
-BOOL InitializeSynchronizationBarrier(RTL_BARRIER*, int, int);
-BOOL DeleteSynchronizationBarrier(RTL_BARRIER*);
+BOOL EnterSynchronizationBarrier(SYNCHRONIZATION_BARRIER*, uint);
+BOOL InitializeSynchronizationBarrier(SYNCHRONIZATION_BARRIER*, int, int);
+BOOL DeleteSynchronizationBarrier(SYNCHRONIZATION_BARRIER*);
 void Sleep(uint);
 BOOL WaitOnAddress(void*, void*, ulong, uint);
 void WakeByAddressSingle(void*);
 void WakeByAddressAll(void*);
-WIN32_ERROR WaitForMultipleObjects(uint, const(HANDLE)*, BOOL, uint);
+WAIT_EVENT WaitForMultipleObjects(uint, const(HANDLE)*, BOOL, uint);
 HANDLE CreateSemaphoreW(SECURITY_ATTRIBUTES*, int, int, const(wchar)*);
 HANDLE CreateWaitableTimerW(SECURITY_ATTRIBUTES*, BOOL, const(wchar)*);
 void InitializeSListHead(SLIST_HEADER*);
@@ -392,14 +396,14 @@ BOOL SetThreadpoolThreadMinimum(PTP_POOL, uint);
 BOOL SetThreadpoolStackInformation(PTP_POOL, TP_POOL_STACK_INFORMATION*);
 BOOL QueryThreadpoolStackInformation(PTP_POOL, TP_POOL_STACK_INFORMATION*);
 void CloseThreadpool(PTP_POOL);
-long CreateThreadpoolCleanupGroup();
-void CloseThreadpoolCleanupGroupMembers(long, BOOL, void*);
-void CloseThreadpoolCleanupGroup(long);
+PTP_CLEANUP_GROUP CreateThreadpoolCleanupGroup();
+void CloseThreadpoolCleanupGroupMembers(PTP_CLEANUP_GROUP, BOOL, void*);
+void CloseThreadpoolCleanupGroup(PTP_CLEANUP_GROUP);
 void SetEventWhenCallbackReturns(PTP_CALLBACK_INSTANCE, HANDLE);
 void ReleaseSemaphoreWhenCallbackReturns(PTP_CALLBACK_INSTANCE, HANDLE, uint);
 void ReleaseMutexWhenCallbackReturns(PTP_CALLBACK_INSTANCE, HANDLE);
-void LeaveCriticalSectionWhenCallbackReturns(PTP_CALLBACK_INSTANCE, RTL_CRITICAL_SECTION*);
-void FreeLibraryWhenCallbackReturns(PTP_CALLBACK_INSTANCE, HINSTANCE);
+void LeaveCriticalSectionWhenCallbackReturns(PTP_CALLBACK_INSTANCE, CRITICAL_SECTION*);
+void FreeLibraryWhenCallbackReturns(PTP_CALLBACK_INSTANCE, HMODULE);
 BOOL CallbackMayRunLong(PTP_CALLBACK_INSTANCE);
 void DisassociateCurrentThreadFromCallback(PTP_CALLBACK_INSTANCE);
 BOOL TrySubmitThreadpoolCallback(PTP_SIMPLE_CALLBACK, void*, TP_CALLBACK_ENVIRON_V3*);
@@ -427,12 +431,12 @@ BOOL IsWow64Process(HANDLE, BOOL*);
 ushort Wow64SetThreadDefaultGuestMachine(ushort);
 BOOL IsWow64Process2(HANDLE, IMAGE_FILE_MACHINE*, IMAGE_FILE_MACHINE*);
 uint Wow64SuspendThread(HANDLE);
-NamespaceHandle CreatePrivateNamespaceW(SECURITY_ATTRIBUTES*, void*, const(wchar)*);
-NamespaceHandle OpenPrivateNamespaceW(void*, const(wchar)*);
-BOOLEAN ClosePrivateNamespace(NamespaceHandle, uint);
-BoundaryDescriptorHandle CreateBoundaryDescriptorW(const(wchar)*, uint);
+HANDLE CreatePrivateNamespaceW(SECURITY_ATTRIBUTES*, void*, const(wchar)*);
+HANDLE OpenPrivateNamespaceW(void*, const(wchar)*);
+BOOLEAN ClosePrivateNamespace(HANDLE, uint);
+HANDLE CreateBoundaryDescriptorW(const(wchar)*, uint);
 BOOL AddSIDToBoundaryDescriptor(HANDLE*, PSID);
-void DeleteBoundaryDescriptor(BoundaryDescriptorHandle);
+void DeleteBoundaryDescriptor(HANDLE);
 BOOL GetNumaHighestNodeNumber(uint*);
 BOOL GetNumaNodeProcessorMaskEx(ushort, GROUP_AFFINITY*);
 BOOL GetNumaNodeProcessorMask2(ushort, GROUP_AFFINITY*, ushort, ushort*);
@@ -454,6 +458,39 @@ BOOL AvRtWaitOnThreadOrderingGroup(HANDLE);
 BOOL AvRtLeaveThreadOrderingGroup(HANDLE);
 BOOL AvRtDeleteThreadOrderingGroup(HANDLE);
 BOOL AvQuerySystemResponsiveness(HANDLE, uint*);
+HRESULT RtwqStartup();
+HRESULT RtwqShutdown();
+HRESULT RtwqLockWorkQueue(uint);
+HRESULT RtwqUnlockWorkQueue(uint);
+HRESULT RtwqLockSharedWorkQueue(const(wchar)*, int, uint*, uint*);
+HRESULT RtwqJoinWorkQueue(uint, HANDLE, HANDLE*);
+HRESULT RtwqUnjoinWorkQueue(uint, HANDLE);
+HRESULT RtwqCreateAsyncResult(IUnknown, IRtwqAsyncCallback, IUnknown, IRtwqAsyncResult*);
+HRESULT RtwqInvokeCallback(IRtwqAsyncResult);
+HRESULT RtwqLockPlatform();
+HRESULT RtwqUnlockPlatform();
+HRESULT RtwqRegisterPlatformWithMMCSS(const(wchar)*, uint*, int);
+HRESULT RtwqUnregisterPlatformFromMMCSS();
+HRESULT RtwqPutWorkItem(uint, int, IRtwqAsyncResult);
+HRESULT RtwqPutWaitingWorkItem(HANDLE, int, IRtwqAsyncResult, ulong*);
+HRESULT RtwqAllocateSerialWorkQueue(uint, uint*);
+HRESULT RtwqScheduleWorkItem(IRtwqAsyncResult, long, ulong*);
+HRESULT RtwqAddPeriodicCallback(RTWQPERIODICCALLBACK, IUnknown, uint*);
+HRESULT RtwqRemovePeriodicCallback(uint);
+HRESULT RtwqCancelWorkItem(ulong);
+HRESULT RtwqAllocateWorkQueue(RTWQ_WORKQUEUE_TYPE, uint*);
+HRESULT RtwqBeginRegisterWorkQueueWithMMCSS(uint, const(wchar)*, uint, int, IRtwqAsyncCallback, IUnknown);
+HRESULT RtwqBeginUnregisterWorkQueueWithMMCSS(uint, IRtwqAsyncCallback, IUnknown);
+HRESULT RtwqEndRegisterWorkQueueWithMMCSS(IRtwqAsyncResult, uint*);
+HRESULT RtwqGetWorkQueueMMCSSClass(uint, PWSTR, uint*);
+HRESULT RtwqGetWorkQueueMMCSSTaskId(uint, uint*);
+HRESULT RtwqGetWorkQueueMMCSSPriority(uint, int*);
+HRESULT RtwqRegisterPlatformEvents(IRtwqPlatformEvents);
+HRESULT RtwqUnregisterPlatformEvents(IRtwqPlatformEvents);
+HRESULT RtwqSetLongRunning(uint, BOOL);
+HRESULT RtwqSetDeadline(uint, long, HANDLE*);
+HRESULT RtwqSetDeadline2(uint, long, long, HANDLE*);
+HRESULT RtwqCancelDeadline(HANDLE);
 BOOL AttachThreadInput(uint, uint, BOOL);
 uint WaitForInputIdle(HANDLE, uint);
 uint GetGuiResources(HANDLE, GET_GUI_RESOURCES_FLAGS);
@@ -477,8 +514,8 @@ BOOL UmsThreadYield(void*);
 BOOL DeleteUmsCompletionList(void*);
 void* GetCurrentUmsThread();
 void* GetNextUmsListItem(void*);
-BOOL QueryUmsThreadInformation(void*, RTL_UMS_THREAD_INFO_CLASS, void*, uint, uint*);
-BOOL SetUmsThreadInformation(void*, RTL_UMS_THREAD_INFO_CLASS, void*, uint);
+BOOL QueryUmsThreadInformation(void*, UMS_THREAD_INFO_CLASS, void*, uint, uint*);
+BOOL SetUmsThreadInformation(void*, UMS_THREAD_INFO_CLASS, void*, uint);
 BOOL DeleteUmsThreadContext(void*);
 BOOL CreateUmsThreadContext(void**);
 BOOL EnterUmsSchedulingMode(UMS_SCHEDULER_STARTUP_INFO*);
@@ -488,6 +525,7 @@ BOOL SetProcessDEPPolicy(PROCESS_DEP_FLAGS);
 BOOL GetProcessDEPPolicy(HANDLE, uint*, BOOL*);
 BOOL PulseEvent(HANDLE);
 uint WinExec(const(char)*, uint);
+WAIT_EVENT SignalObjectAndWait(HANDLE, HANDLE, uint, BOOL);
 HANDLE CreateSemaphoreA(SECURITY_ATTRIBUTES*, int, int, const(char)*);
 HANDLE CreateSemaphoreExA(SECURITY_ATTRIBUTES*, int, int, const(char)*, uint, uint);
 BOOL QueryFullProcessImageNameA(HANDLE, PROCESS_NAME_FORMAT, PSTR, uint*);
@@ -498,9 +536,9 @@ BOOL CreateProcessWithTokenW(HANDLE, CREATE_PROCESS_LOGON_FLAGS, const(wchar)*, 
 BOOL RegisterWaitForSingleObject(HANDLE*, HANDLE, WAITORTIMERCALLBACK, void*, uint, WORKER_THREAD_FLAGS);
 BOOL UnregisterWait(HANDLE);
 HANDLE SetTimerQueueTimer(HANDLE, WAITORTIMERCALLBACK, void*, uint, uint, BOOL);
-NamespaceHandle CreatePrivateNamespaceA(SECURITY_ATTRIBUTES*, void*, const(char)*);
-NamespaceHandle OpenPrivateNamespaceA(void*, const(char)*);
-BoundaryDescriptorHandle CreateBoundaryDescriptorA(const(char)*, uint);
+HANDLE CreatePrivateNamespaceA(SECURITY_ATTRIBUTES*, void*, const(char)*);
+HANDLE OpenPrivateNamespaceA(void*, const(char)*);
+HANDLE CreateBoundaryDescriptorA(const(char)*, uint);
 BOOL AddIntegrityLabelToBoundaryDescriptor(HANDLE*, PSID);
 ushort GetActiveProcessorGroupCount();
 ushort GetMaximumProcessorGroupCount();
@@ -513,9 +551,6 @@ BOOL GetNumaNodeProcessorMask(ubyte, ulong*);
 BOOL GetNumaAvailableMemoryNode(ubyte, ulong*);
 BOOL GetNumaAvailableMemoryNodeEx(ushort, ulong*);
 BOOL GetNumaProximityNode(uint, ubyte*);
-NTSTATUS NtQueryInformationProcess(HANDLE, PROCESSINFOCLASS, void*, uint, uint*);
-NTSTATUS NtQueryInformationThread(HANDLE, THREADINFOCLASS, void*, uint, uint*);
-NTSTATUS NtSetInformationThread(HANDLE, THREADINFOCLASS, void*, uint);
 enum FLS_OUT_OF_INDEXES = 0xffffffff;
 enum PRIVATE_NAMESPACE_FLAG_DESTROY = 0x00000001;
 enum TLS_OUT_OF_INDEXES = 0xffffffff;
@@ -542,6 +577,7 @@ enum CREATE_WAITABLE_TIMER_HIGH_RESOLUTION = 0x00000002;
 enum SYNCHRONIZATION_BARRIER_FLAGS_SPIN_ONLY = 0x00000001;
 enum SYNCHRONIZATION_BARRIER_FLAGS_BLOCK_ONLY = 0x00000002;
 enum SYNCHRONIZATION_BARRIER_FLAGS_NO_DELETE = 0x00000004;
+enum INFINITE = 0xffffffff;
 enum PROC_THREAD_ATTRIBUTE_PARENT_PROCESS = 0x00020000;
 enum PROC_THREAD_ATTRIBUTE_HANDLE_LIST = 0x00020002;
 enum PROC_THREAD_ATTRIBUTE_GROUP_AFFINITY = 0x00030003;
@@ -632,141 +668,14 @@ enum : uint
     PROCESS_STANDARD_RIGHTS_REQUIRED  = 0x000f0000,
 }
 
-alias PROCESSINFOCLASS = int;
-enum : int
-{
-    ProcessBasicInformation                     = 0x00000000,
-    ProcessQuotaLimits                          = 0x00000001,
-    ProcessIoCounters                           = 0x00000002,
-    ProcessVmCounters                           = 0x00000003,
-    ProcessTimes                                = 0x00000004,
-    ProcessBasePriority                         = 0x00000005,
-    ProcessRaisePriority                        = 0x00000006,
-    ProcessDebugPort                            = 0x00000007,
-    ProcessExceptionPort                        = 0x00000008,
-    ProcessAccessToken                          = 0x00000009,
-    ProcessLdtInformation                       = 0x0000000a,
-    ProcessLdtSize                              = 0x0000000b,
-    ProcessDefaultHardErrorMode                 = 0x0000000c,
-    ProcessIoPortHandlers                       = 0x0000000d,
-    ProcessPooledUsageAndLimits                 = 0x0000000e,
-    ProcessWorkingSetWatch                      = 0x0000000f,
-    ProcessUserModeIOPL                         = 0x00000010,
-    ProcessEnableAlignmentFaultFixup            = 0x00000011,
-    ProcessPriorityClass                        = 0x00000012,
-    ProcessWx86Information                      = 0x00000013,
-    ProcessHandleCount                          = 0x00000014,
-    ProcessAffinityMask                         = 0x00000015,
-    ProcessPriorityBoost                        = 0x00000016,
-    ProcessDeviceMap                            = 0x00000017,
-    ProcessSessionInformation                   = 0x00000018,
-    ProcessForegroundInformation                = 0x00000019,
-    ProcessWow64Information                     = 0x0000001a,
-    ProcessImageFileName                        = 0x0000001b,
-    ProcessLUIDDeviceMapsEnabled                = 0x0000001c,
-    ProcessBreakOnTermination                   = 0x0000001d,
-    ProcessDebugObjectHandle                    = 0x0000001e,
-    ProcessDebugFlags                           = 0x0000001f,
-    ProcessHandleTracing                        = 0x00000020,
-    ProcessIoPriority                           = 0x00000021,
-    ProcessExecuteFlags                         = 0x00000022,
-    ProcessTlsInformation                       = 0x00000023,
-    ProcessCookie                               = 0x00000024,
-    ProcessImageInformation                     = 0x00000025,
-    ProcessCycleTime                            = 0x00000026,
-    ProcessPagePriority                         = 0x00000027,
-    ProcessInstrumentationCallback              = 0x00000028,
-    ProcessThreadStackAllocation                = 0x00000029,
-    ProcessWorkingSetWatchEx                    = 0x0000002a,
-    ProcessImageFileNameWin32                   = 0x0000002b,
-    ProcessImageFileMapping                     = 0x0000002c,
-    ProcessAffinityUpdateMode                   = 0x0000002d,
-    ProcessMemoryAllocationMode                 = 0x0000002e,
-    ProcessGroupInformation                     = 0x0000002f,
-    ProcessTokenVirtualizationEnabled           = 0x00000030,
-    ProcessOwnerInformation                     = 0x00000031,
-    ProcessWindowInformation                    = 0x00000032,
-    ProcessHandleInformation                    = 0x00000033,
-    ProcessMitigationPolicy                     = 0x00000034,
-    ProcessDynamicFunctionTableInformation      = 0x00000035,
-    ProcessHandleCheckingMode                   = 0x00000036,
-    ProcessKeepAliveCount                       = 0x00000037,
-    ProcessRevokeFileHandles                    = 0x00000038,
-    ProcessWorkingSetControl                    = 0x00000039,
-    ProcessHandleTable                          = 0x0000003a,
-    ProcessCheckStackExtentsMode                = 0x0000003b,
-    ProcessCommandLineInformation               = 0x0000003c,
-    ProcessProtectionInformation                = 0x0000003d,
-    ProcessMemoryExhaustion                     = 0x0000003e,
-    ProcessFaultInformation                     = 0x0000003f,
-    ProcessTelemetryIdInformation               = 0x00000040,
-    ProcessCommitReleaseInformation             = 0x00000041,
-    ProcessReserved1Information                 = 0x00000042,
-    ProcessReserved2Information                 = 0x00000043,
-    ProcessSubsystemProcess                     = 0x00000044,
-    ProcessInPrivate                            = 0x00000046,
-    ProcessRaiseUMExceptionOnInvalidHandleClose = 0x00000047,
-    ProcessSubsystemInformation                 = 0x0000004b,
-    ProcessWin32kSyscallFilterInformation       = 0x0000004f,
-    ProcessEnergyTrackingState                  = 0x00000052,
-    MaxProcessInfoClass                         = 0x00000053,
-}
-
-alias THREADINFOCLASS = int;
-enum : int
-{
-    ThreadBasicInformation          = 0x00000000,
-    ThreadTimes                     = 0x00000001,
-    ThreadPriority                  = 0x00000002,
-    ThreadBasePriority              = 0x00000003,
-    ThreadAffinityMask              = 0x00000004,
-    ThreadImpersonationToken        = 0x00000005,
-    ThreadDescriptorTableEntry      = 0x00000006,
-    ThreadEnableAlignmentFaultFixup = 0x00000007,
-    ThreadEventPair_Reusable        = 0x00000008,
-    ThreadQuerySetWin32StartAddress = 0x00000009,
-    ThreadZeroTlsCell               = 0x0000000a,
-    ThreadPerformanceCount          = 0x0000000b,
-    ThreadAmILastThread             = 0x0000000c,
-    ThreadIdealProcessor            = 0x0000000d,
-    ThreadPriorityBoost             = 0x0000000e,
-    ThreadSetTlsArrayAddress        = 0x0000000f,
-    ThreadIsIoPending               = 0x00000010,
-    ThreadHideFromDebugger          = 0x00000011,
-    ThreadBreakOnTermination        = 0x00000012,
-    ThreadSwitchLegacyState         = 0x00000013,
-    ThreadIsTerminated              = 0x00000014,
-    ThreadLastSystemCall            = 0x00000015,
-    ThreadIoPriority                = 0x00000016,
-    ThreadCycleTime                 = 0x00000017,
-    ThreadPagePriority              = 0x00000018,
-    ThreadActualBasePriority        = 0x00000019,
-    ThreadTebInformation            = 0x0000001a,
-    ThreadCSwitchMon                = 0x0000001b,
-    ThreadCSwitchPmu                = 0x0000001c,
-    ThreadWow64Context              = 0x0000001d,
-    ThreadGroupInformation          = 0x0000001e,
-    ThreadUmsInformation            = 0x0000001f,
-    ThreadCounterProfiling          = 0x00000020,
-    ThreadIdealProcessorEx          = 0x00000021,
-    ThreadCpuAccountingInformation  = 0x00000022,
-    ThreadSuspendCount              = 0x00000023,
-    ThreadActualGroupAffinity       = 0x00000029,
-    ThreadDynamicCodePolicyInfo     = 0x0000002a,
-    ThreadSubsystemInformation      = 0x0000002d,
-    MaxThreadInfoClass              = 0x00000035,
-}
-
-alias TimerQueueHandle = long;
 alias PTP_POOL = long;
-alias NamespaceHandle = long;
-alias BoundaryDescriptorHandle = long;
+alias PTP_CLEANUP_GROUP = long;
+alias LPPROC_THREAD_ATTRIBUTE_LIST = void*;
 alias PTP_IO = long;
 alias PTP_TIMER = long;
 alias PTP_WAIT = long;
 alias PTP_WORK = long;
 alias PTP_CALLBACK_INSTANCE = long;
-alias LPPROC_THREAD_ATTRIBUTE_LIST = void*;
 struct REASON_CONTEXT
 {
     uint Version;
@@ -775,7 +684,7 @@ struct REASON_CONTEXT
     {
         struct _Detailed_e__Struct
         {
-            HINSTANCE LocalizedReasonModule;
+            HMODULE LocalizedReasonModule;
             uint LocalizedReasonId;
             uint ReasonStringCount;
             PWSTR* ReasonStrings;
@@ -784,7 +693,7 @@ struct REASON_CONTEXT
     }
 }
 alias LPTHREAD_START_ROUTINE = uint function(void*);
-alias PINIT_ONCE_FN = BOOL function(RTL_RUN_ONCE*, void*, void**);
+alias PINIT_ONCE_FN = BOOL function(INIT_ONCE*, void*, void**);
 alias PTIMERAPCROUTINE = void function(void*, uint, uint);
 struct PROCESS_INFORMATION
 {
@@ -940,6 +849,41 @@ enum : int
     AVRT_PRIORITY_CRITICAL = 0x00000002,
 }
 
+alias RTWQPERIODICCALLBACK = void function(IUnknown);
+alias RTWQ_WORKQUEUE_TYPE = int;
+enum : int
+{
+    RTWQ_STANDARD_WORKQUEUE      = 0x00000000,
+    RTWQ_WINDOW_WORKQUEUE        = 0x00000001,
+    RTWQ_MULTITHREADED_WORKQUEUE = 0x00000002,
+}
+
+enum IID_IRtwqAsyncResult = GUID(0xac6b7889, 0x740, 0x4d51, [0x86, 0x19, 0x90, 0x59, 0x94, 0xa5, 0x5c, 0xc6]);
+interface IRtwqAsyncResult : IUnknown
+{
+    HRESULT GetState(IUnknown*);
+    HRESULT GetStatus();
+    HRESULT SetStatus(HRESULT);
+    HRESULT GetObject(IUnknown*);
+    IUnknown GetStateNoAddRef();
+}
+enum IID_IRtwqAsyncCallback = GUID(0xa27003cf, 0x2354, 0x4f2a, [0x8d, 0x6a, 0xab, 0x7c, 0xff, 0x15, 0x43, 0x7e]);
+interface IRtwqAsyncCallback : IUnknown
+{
+    HRESULT GetParameters(uint*, uint*);
+    HRESULT Invoke(IRtwqAsyncResult);
+}
+// [Not Found] IID_RTWQASYNCRESULT
+interface RTWQASYNCRESULT : IRtwqAsyncResult
+{
+}
+enum IID_IRtwqPlatformEvents = GUID(0x63d9255a, 0x7ff1, 0x4b61, [0x8f, 0xaf, 0xed, 0x64, 0x60, 0xda, 0xcf, 0x2b]);
+interface IRtwqPlatformEvents : IUnknown
+{
+    HRESULT InitializationComplete();
+    HRESULT ShutdownStart();
+    HRESULT ShutdownComplete();
+}
 struct PROCESS_DYNAMIC_EH_CONTINUATION_TARGET
 {
     ulong TargetAddress;
@@ -999,11 +943,11 @@ enum : int
     MaxProcessMitigationPolicy         = 0x00000013,
 }
 
-union RTL_RUN_ONCE
+union INIT_ONCE
 {
     void* Ptr;
 }
-struct RTL_BARRIER
+struct SYNCHRONIZATION_BARRIER
 {
     uint Reserved1;
     uint Reserved2;
@@ -1011,7 +955,7 @@ struct RTL_BARRIER
     uint Reserved4;
     uint Reserved5;
 }
-alias RTL_UMS_THREAD_INFO_CLASS = int;
+alias UMS_THREAD_INFO_CLASS = int;
 enum : int
 {
     UmsThreadInvalidInfoClass = 0x00000000,
@@ -1025,11 +969,11 @@ enum : int
 }
 
 alias PRTL_UMS_SCHEDULER_ENTRY_POINT = void function(RTL_UMS_SCHEDULER_REASON, ulong, void*);
-struct RTL_CRITICAL_SECTION_DEBUG
+struct CRITICAL_SECTION_DEBUG
 {
     ushort Type;
     ushort CreatorBackTraceIndex;
-    RTL_CRITICAL_SECTION* CriticalSection;
+    CRITICAL_SECTION* CriticalSection;
     LIST_ENTRY ProcessLocksList;
     uint EntryCount;
     uint ContentionCount;
@@ -1037,20 +981,20 @@ struct RTL_CRITICAL_SECTION_DEBUG
     ushort CreatorBackTraceIndexHigh;
     ushort Identifier;
 }
-struct RTL_CRITICAL_SECTION
+struct CRITICAL_SECTION
 {
-    RTL_CRITICAL_SECTION_DEBUG* DebugInfo;
+    CRITICAL_SECTION_DEBUG* DebugInfo;
     int LockCount;
     int RecursionCount;
     HANDLE OwningThread;
     HANDLE LockSemaphore;
     ulong SpinCount;
 }
-struct RTL_SRWLOCK
+struct SRWLOCK
 {
     void* Ptr;
 }
-struct RTL_CONDITION_VARIABLE
+struct CONDITION_VARIABLE
 {
     void* Ptr;
 }
@@ -1079,7 +1023,7 @@ struct TP_CALLBACK_ENVIRON_V3
 {
     uint Version;
     PTP_POOL Pool;
-    long CleanupGroup;
+    PTP_CLEANUP_GROUP CleanupGroup;
     PTP_CLEANUP_GROUP_CANCEL_CALLBACK CleanupGroupCancelCallback;
     void* RaceDll;
     long ActivationContext;
@@ -1189,4 +1133,17 @@ struct PEB
     ubyte[128] Reserved11;
     void*[1] Reserved12;
     uint SessionId;
+}
+struct TEB
+{
+    void*[12] Reserved1;
+    PEB* ProcessEnvironmentBlock;
+    void*[399] Reserved2;
+    ubyte[1952] Reserved3;
+    void*[64] TlsSlots;
+    ubyte[8] Reserved4;
+    void*[26] Reserved5;
+    void* ReservedForOle;
+    void*[4] Reserved6;
+    void* TlsExpansionSlots;
 }

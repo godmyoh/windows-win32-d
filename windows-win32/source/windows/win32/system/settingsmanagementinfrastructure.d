@@ -1,8 +1,9 @@
 module windows.win32.system.settingsmanagementinfrastructure;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, HINSTANCE, HRESULT, PWSTR;
-import windows.win32.system.com_ : IStream, IUnknown, VARIANT;
+import windows.win32.foundation : BOOL, BSTR, HMODULE, HRESULT, PWSTR;
+import windows.win32.system.com : IStream, IUnknown;
+import windows.win32.system.variant : VARIANT;
 
 version (Windows):
 extern (Windows):
@@ -69,10 +70,6 @@ enum WCM_S_INVALIDATTRIBUTECOMBINATION = 0x00221004;
 enum WCM_S_ATTRIBUTENOTALLOWED = 0x00221005;
 enum WCM_S_NAMESPACENOTFOUND = 0x00221006;
 enum WCM_E_UNKNOWNRESULT = 0xffffffff80221003;
-enum CLSID_SettingsEngine = GUID(0x9f7d7bb5, 0x20b3, 0x11da, [0x81, 0xa5, 0x0, 0x30, 0xf1, 0x64, 0x2e, 0x3c]);
-struct SettingsEngine
-{
-}
 alias WcmTargetMode = int;
 enum : int
 {
@@ -170,7 +167,7 @@ interface ITargetInfo : IUnknown
     HRESULT ExpandTarget(BOOL, const(wchar)*, BSTR*);
     HRESULT ExpandTargetPath(BOOL, const(wchar)*, BSTR*);
     HRESULT SetModulePath(const(wchar)*, const(wchar)*);
-    HRESULT LoadModule(const(wchar)*, HINSTANCE*);
+    HRESULT LoadModule(const(wchar)*, HMODULE*);
     HRESULT SetWow64Context(const(wchar)*, ubyte*);
     HRESULT TranslateWow64(const(wchar)*, const(wchar)*, BSTR*);
     HRESULT SetSchemaHiveLocation(const(wchar)*);
@@ -255,4 +252,8 @@ interface ISettingsContext : IUnknown
     HRESULT GetNamespaces(IItemEnumerator*);
     HRESULT GetStoredSettings(ISettingsIdentity, IItemEnumerator*, IItemEnumerator*, IItemEnumerator*);
     HRESULT RevertSetting(ISettingsIdentity, const(wchar)*);
+}
+enum CLSID_SettingsEngine = GUID(0x9f7d7bb5, 0x20b3, 0x11da, [0x81, 0xa5, 0x0, 0x30, 0xf1, 0x64, 0x2e, 0x3c]);
+struct SettingsEngine
+{
 }

@@ -5,9 +5,9 @@ import windows.win32.data.htmlhelp : PRIORITY;
 import windows.win32.devices.properties : DEVPROPKEY, DEVPROPTYPE;
 import windows.win32.foundation : BOOL, CHAR, FILETIME, HANDLE, HINSTANCE, HWND, LPARAM, PSTR, PWSTR, RECT;
 import windows.win32.graphics.gdi : HDC;
-import windows.win32.system.diagnostics.debug__ : VER_PLATFORM;
+import windows.win32.system.diagnostics.debug_ : VER_PLATFORM;
 import windows.win32.system.registry : HKEY;
-import windows.win32.ui.controls_ : HIMAGELIST, HPROPSHEETPAGE, PROPSHEETHEADERA_V2, PROPSHEETHEADERW_V2;
+import windows.win32.ui.controls : HIMAGELIST, HPROPSHEETPAGE, PROPSHEETHEADERA_V2, PROPSHEETHEADERW_V2;
 import windows.win32.ui.windowsandmessaging : HICON;
 
 version (Windows):
@@ -568,8 +568,8 @@ CONFIGRET CM_Get_First_Log_Conf(ulong*, uint, uint);
 CONFIGRET CM_Get_First_Log_Conf_Ex(ulong*, uint, uint, long);
 CONFIGRET CM_Get_Global_State(uint*, uint);
 CONFIGRET CM_Get_Global_State_Ex(uint*, uint, long);
-CONFIGRET CM_Get_Hardware_Profile_InfoA(uint, HWProfileInfo_sA*, uint);
-CONFIGRET CM_Get_Hardware_Profile_Info_ExA(uint, HWProfileInfo_sA*, uint, long);
+CONFIGRET CM_Get_Hardware_Profile_InfoA(uint, HWPROFILEINFO_A*, uint);
+CONFIGRET CM_Get_Hardware_Profile_Info_ExA(uint, HWPROFILEINFO_A*, uint, long);
 CONFIGRET CM_Get_Hardware_Profile_InfoW(uint, HWPROFILEINFO_W*, uint);
 CONFIGRET CM_Get_Hardware_Profile_Info_ExW(uint, HWPROFILEINFO_W*, uint, long);
 CONFIGRET CM_Get_HW_Prof_FlagsA(PSTR, uint, uint*, uint);
@@ -707,12 +707,12 @@ CONFIGRET CM_Get_Class_Registry_PropertyW(GUID*, uint, uint*, void*, uint*, uint
 CONFIGRET CM_Set_Class_Registry_PropertyA(GUID*, uint, void*, uint, uint, long);
 CONFIGRET CM_Set_Class_Registry_PropertyW(GUID*, uint, void*, uint, uint, long);
 uint CMP_WaitNoPendingInstallEvents(uint);
-CONFIGRET CM_Register_Notification(CM_NOTIFY_FILTER*, void*, PCM_NOTIFY_CALLBACK, long*);
+CONFIGRET CM_Register_Notification(CM_NOTIFY_FILTER*, void*, PCM_NOTIFY_CALLBACK, HCMNOTIFICATION*);
 CONFIGRET CM_Unregister_Notification(HCMNOTIFICATION);
 uint CM_MapCrToWin32Err(CONFIGRET, uint);
 BOOL UpdateDriverForPlugAndPlayDevicesA(HWND, const(char)*, const(char)*, uint, BOOL*);
 BOOL UpdateDriverForPlugAndPlayDevicesW(HWND, const(wchar)*, const(wchar)*, uint, BOOL*);
-BOOL DiInstallDevice(HWND, HDEVINFO, SP_DEVINFO_DATA*, SP_DRVINFO_DATA_V2_A*, uint, BOOL*);
+BOOL DiInstallDevice(HWND, HDEVINFO, SP_DEVINFO_DATA*, SP_DRVINFO_DATA_V2_W*, uint, BOOL*);
 BOOL DiInstallDriverW(HWND, const(wchar)*, uint, BOOL*);
 BOOL DiInstallDriverA(HWND, const(char)*, uint, BOOL*);
 BOOL DiUninstallDevice(HWND, HDEVINFO, SP_DEVINFO_DATA*, uint, BOOL*);
@@ -2237,8 +2237,8 @@ enum GUID_POWER_DEVICE_WAKE_ENABLE = GUID(0xa9546a82, 0xfeb0, 0x11d0, [0xbd, 0x2
 enum GUID_WUDF_DEVICE_HOST_PROBLEM = GUID(0xc43d25bd, 0x9346, 0x40ee, [0xa2, 0xd2, 0xd7, 0xc, 0x15, 0xf8, 0xb7, 0x5b]);
 enum GUID_PARTITION_UNIT_INTERFACE_STANDARD = GUID(0x52363f5b, 0xd891, 0x429b, [0x81, 0x95, 0xae, 0xc5, 0xfe, 0xf6, 0x85, 0x3c]);
 enum GUID_QUERY_CRASHDUMP_FUNCTIONS = GUID(0x9cc6b8ff, 0x32e2, 0x4834, [0xb1, 0xde, 0xb3, 0x2e, 0xf8, 0x88, 0xa, 0x4b]);
-alias HCMNOTIFICATION = void*;
 alias HDEVINFO = void*;
+alias HCMNOTIFICATION = void*;
 struct INFCONTEXT
 {
     void* Inf;
@@ -2495,7 +2495,7 @@ struct SP_DEVINSTALL_PARAMS_W
     uint Flags;
     uint FlagsEx;
     HWND hwndParent;
-    PSP_FILE_CALLBACK_A InstallMsgHandler;
+    PSP_FILE_CALLBACK_W InstallMsgHandler;
     void* InstallMsgHandlerContext;
     void* FileQueue;
     ulong ClassInstallReserved;
@@ -3040,7 +3040,7 @@ alias PSP_FILE_CALLBACK_W = uint function(void*, uint, ulong, ulong);
     uint Flags;
     uint FlagsEx;
     HWND hwndParent;
-    PSP_FILE_CALLBACK_A InstallMsgHandler;
+    PSP_FILE_CALLBACK_W InstallMsgHandler;
     void* InstallMsgHandlerContext;
     void* FileQueue;
     ulong ClassInstallReserved;
@@ -3643,7 +3643,7 @@ struct CONNECTION_RESOURCE
     align (1):
     CONNECTION_DES Connection_Header;
 }
-struct HWProfileInfo_sA
+struct HWPROFILEINFO_A
 {
     align (1):
     uint HWPI_ulHWProfile;

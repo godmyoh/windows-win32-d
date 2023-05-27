@@ -3,8 +3,8 @@ module windows.win32.ui.xaml.diagnostics;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, HRESULT, PWSTR, RECT;
 import windows.win32.graphics.dxgi.common : DXGI_ALPHA_MODE, DXGI_FORMAT;
-import windows.win32.system.com_ : IUnknown, SAFEARRAY;
-import windows.win32.system.winrt_ : IInspectable;
+import windows.win32.system.com : IUnknown, SAFEARRAY;
+import windows.win32.system.winrt : IInspectable;
 
 version (Windows):
 extern (Windows):

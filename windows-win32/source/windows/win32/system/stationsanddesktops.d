@@ -2,7 +2,7 @@ module windows.win32.system.stationsanddesktops;
 
 import windows.win32.foundation : BOOL, HANDLE, HWND, LPARAM, LUID, PSTR, PWSTR, WPARAM;
 import windows.win32.graphics.gdi : DEVMODEA, DEVMODEW;
-import windows.win32.security_ : SECURITY_ATTRIBUTES;
+import windows.win32.security : SECURITY_ATTRIBUTES;
 import windows.win32.ui.windowsandmessaging : WNDENUMPROC;
 
 version (Windows):
@@ -32,8 +32,8 @@ enum : uint
     BSM_APPLICATIONS  = 0x00000008,
 }
 
-alias USER_OBJECT_INFORMATION_INDEX = uint;
-enum : uint
+alias USER_OBJECT_INFORMATION_INDEX = int;
+enum : int
 {
     UOI_FLAGS    = 0x00000001,
     UOI_HEAPSIZE = 0x00000005,

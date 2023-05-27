@@ -3,7 +3,7 @@ module windows.win32.graphics.dwm;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HRESULT, HWND, LPARAM, LRESULT, POINT, RECT, SIZE, WPARAM;
 import windows.win32.graphics.gdi : HBITMAP, HRGN;
-import windows.win32.ui.controls_ : MARGINS;
+import windows.win32.ui.controls : MARGINS;
 
 version (Windows):
 extern (Windows):
@@ -15,14 +15,14 @@ HRESULT DwmEnableMMCSS(BOOL);
 HRESULT DwmExtendFrameIntoClientArea(HWND, const(MARGINS)*);
 HRESULT DwmGetColorizationColor(uint*, BOOL*);
 HRESULT DwmGetCompositionTimingInfo(HWND, DWM_TIMING_INFO*);
-HRESULT DwmGetWindowAttribute(HWND, DWMWINDOWATTRIBUTE, void*, uint);
+HRESULT DwmGetWindowAttribute(HWND, uint, void*, uint);
 HRESULT DwmIsCompositionEnabled(BOOL*);
 HRESULT DwmModifyPreviousDxFrameDuration(HWND, int, BOOL);
 HRESULT DwmQueryThumbnailSourceSize(long, SIZE*);
 HRESULT DwmRegisterThumbnail(HWND, HWND, long*);
 HRESULT DwmSetDxFrameDuration(HWND, int);
 HRESULT DwmSetPresentParameters(HWND, DWM_PRESENT_PARAMETERS*);
-HRESULT DwmSetWindowAttribute(HWND, DWMWINDOWATTRIBUTE, const(void)*, uint);
+HRESULT DwmSetWindowAttribute(HWND, uint, const(void)*, uint);
 HRESULT DwmUnregisterThumbnail(long);
 HRESULT DwmUpdateThumbnailProperties(long, const(DWM_THUMBNAIL_PROPERTIES)*);
 HRESULT DwmSetIconicThumbnail(HWND, HBITMAP, uint);

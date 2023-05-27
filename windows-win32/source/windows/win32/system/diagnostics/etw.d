@@ -2,8 +2,8 @@ module windows.win32.system.diagnostics.etw;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BOOLEAN, BSTR, FILETIME, HANDLE, HRESULT, PSID, PSTR, PWSTR, WIN32_ERROR;
-import windows.win32.security_ : PSECURITY_DESCRIPTOR;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.security : PSECURITY_DESCRIPTOR;
+import windows.win32.system.com : IUnknown;
 import windows.win32.system.time : TIME_ZONE_INFORMATION;
 
 version (Windows):
@@ -42,6 +42,13 @@ uint GetTraceEnableFlags(ulong);
 PROCESSTRACE_HANDLE OpenTraceW(EVENT_TRACE_LOGFILEW*);
 WIN32_ERROR ProcessTrace(PROCESSTRACE_HANDLE*, uint, FILETIME*, FILETIME*);
 WIN32_ERROR CloseTrace(PROCESSTRACE_HANDLE);
+ulong OpenTraceFromBufferStream(const(ETW_OPEN_TRACE_OPTIONS)*, PETW_BUFFER_COMPLETION_CALLBACK, void*);
+ulong OpenTraceFromRealTimeLogger(const(wchar)*, const(ETW_OPEN_TRACE_OPTIONS)*, TRACE_LOGFILE_HEADER*);
+ulong OpenTraceFromRealTimeLoggerWithAllocationOptions(const(wchar)*, const(ETW_OPEN_TRACE_OPTIONS)*, ulong, HANDLE, TRACE_LOGFILE_HEADER*);
+ulong OpenTraceFromFile(const(wchar)*, const(ETW_OPEN_TRACE_OPTIONS)*, TRACE_LOGFILE_HEADER*);
+uint ProcessTraceBufferIncrementReference(ulong, const(ETW_BUFFER_HEADER)*);
+uint ProcessTraceBufferDecrementReference(const(ETW_BUFFER_HEADER)*);
+uint ProcessTraceAddBufferToBufferStream(ulong, const(ETW_BUFFER_HEADER)*, uint);
 WIN32_ERROR QueryTraceProcessingHandle(PROCESSTRACE_HANDLE, ETW_PROCESS_HANDLE_INFO_TYPE, void*, uint, void*, uint, uint*);
 PROCESSTRACE_HANDLE OpenTraceA(EVENT_TRACE_LOGFILEA*);
 WIN32_ERROR SetTraceCallback(const(GUID)*, PEVENT_CALLBACK);
@@ -1879,10 +1886,6 @@ struct TDH_CONTEXT
     TDH_CONTEXT_TYPE ParameterType;
     uint ParameterSize;
 }
-enum CLSID_CTraceRelogger = GUID(0x7b40792d, 0x5ff, 0x44c4, [0x90, 0x58, 0xf4, 0x40, 0xc7, 0x1f, 0x17, 0xd4]);
-struct CTraceRelogger
-{
-}
 enum IID_ITraceEvent = GUID(0x8cc97f40, 0x9028, 0x4ff3, [0x9b, 0x62, 0x7d, 0x1f, 0x79, 0xca, 0x7b, 0xcb]);
 interface ITraceEvent : IUnknown
 {
@@ -1918,4 +1921,8 @@ interface ITraceRelogger : IUnknown
     HRESULT SetOutputFilename(BSTR);
     HRESULT SetCompressionMode(BOOLEAN);
     HRESULT Cancel();
+}
+enum CLSID_CTraceRelogger = GUID(0x7b40792d, 0x5ff, 0x44c4, [0x90, 0x58, 0xf4, 0x40, 0xc7, 0x1f, 0x17, 0xd4]);
+struct CTraceRelogger
+{
 }

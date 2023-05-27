@@ -3,8 +3,9 @@ module windows.win32.devices.imageacquisition;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, CHAR, FILETIME, HANDLE, HGLOBAL, HRESULT, HWND, PWSTR, RECT;
 import windows.win32.graphics.gdi : HBITMAP;
-import windows.win32.system.com_ : IStream, IUnknown, STGMEDIUM, VARENUM;
+import windows.win32.system.com : IStream, IUnknown, STGMEDIUM;
 import windows.win32.system.com.structuredstorage : IEnumSTATPROPSTG, PROPSPEC, PROPVARIANT, STATPROPSETSTG;
+import windows.win32.system.variant : VARENUM;
 import windows.win32.ui.windowsandmessaging : HICON;
 
 version (Windows):
@@ -1252,18 +1253,6 @@ enum WIA_WSD_SERIAL_NUMBER = 0x00009809;
 enum WIA_WSD_SERIAL_NUMBER_STR = "Serial number";
 enum WIA_WSD_SCAN_AVAILABLE_ITEM = 0x0000980a;
 enum WIA_WSD_SCAN_AVAILABLE_ITEM_STR = "Scan Available Item";
-enum CLSID_WiaDevMgr = GUID(0xa1f4e726, 0x8cf1, 0x11d1, [0xbf, 0x92, 0x0, 0x60, 0x8, 0x1e, 0xd8, 0x11]);
-struct WiaDevMgr
-{
-}
-enum CLSID_WiaDevMgr2 = GUID(0xb6c292bc, 0x7c88, 0x41ee, [0x8b, 0x54, 0x8e, 0xc9, 0x26, 0x17, 0xe5, 0x99]);
-struct WiaDevMgr2
-{
-}
-enum CLSID_WiaLog = GUID(0xa1e75357, 0x881a, 0x419e, [0x83, 0xe2, 0xbb, 0x16, 0xdb, 0x19, 0x7c, 0x68]);
-struct WiaLog
-{
-}
 struct WIA_DITHER_PATTERN_DATA
 {
     int lSize;
@@ -1618,6 +1607,18 @@ interface IWiaDevMgr2 : IUnknown
     HRESULT RegisterEventCallbackCLSID(int, BSTR, const(GUID)*, const(GUID)*, BSTR, BSTR, BSTR);
     HRESULT GetImageDlg(int, BSTR, HWND, BSTR, BSTR, int*, BSTR**, IWiaItem2*);
 }
+enum CLSID_WiaDevMgr = GUID(0xa1f4e726, 0x8cf1, 0x11d1, [0xbf, 0x92, 0x0, 0x60, 0x8, 0x1e, 0xd8, 0x11]);
+struct WiaDevMgr
+{
+}
+enum CLSID_WiaDevMgr2 = GUID(0xb6c292bc, 0x7c88, 0x41ee, [0x8b, 0x54, 0x8e, 0xc9, 0x26, 0x17, 0xe5, 0x99]);
+struct WiaDevMgr2
+{
+}
+enum CLSID_WiaLog = GUID(0xa1e75357, 0x881a, 0x419e, [0x83, 0xe2, 0xbb, 0x16, 0xdb, 0x19, 0x7c, 0x68]);
+struct WiaLog
+{
+}
 struct MINIDRV_TRANSFER_CONTEXT
 {
     int lSize;
@@ -1811,10 +1812,6 @@ struct WIAS_ENDORSER_INFO
     uint ulNumEndorserValues;
     WIAS_ENDORSER_VALUE* pEndorserValues;
 }
-enum CLSID_WiaVideo = GUID(0x3908c3cd, 0x4478, 0x4536, [0xaf, 0x2f, 0x10, 0xc2, 0x5d, 0x4e, 0xf8, 0x9a]);
-struct WiaVideo
-{
-}
 alias WIAVIDEO_STATE = int;
 enum : int
 {
@@ -1842,6 +1839,10 @@ interface IWiaVideo : IUnknown
     HRESULT TakePicture(BSTR*);
     HRESULT ResizeVideo(BOOL);
     HRESULT GetCurrentState(WIAVIDEO_STATE*);
+}
+enum CLSID_WiaVideo = GUID(0x3908c3cd, 0x4478, 0x4536, [0xaf, 0x2f, 0x10, 0xc2, 0x5d, 0x4e, 0xf8, 0x9a]);
+struct WiaVideo
+{
 }
 struct DEVICEDIALOGDATA2
 {

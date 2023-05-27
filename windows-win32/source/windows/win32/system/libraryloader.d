@@ -1,6 +1,6 @@
 module windows.win32.system.libraryloader;
 
-import windows.win32.foundation : BOOL, FARPROC, HANDLE, HGLOBAL, HINSTANCE, HRSRC, PSTR, PWSTR;
+import windows.win32.foundation : BOOL, FARPROC, HANDLE, HGLOBAL, HMODULE, HRSRC, PSTR, PWSTR;
 
 version (Windows):
 extern (Windows):
@@ -24,51 +24,50 @@ enum : uint
     LOAD_LIBRARY_SEARCH_SYSTEM32_NO_FORWARDER = 0x00004000,
 }
 
-BOOL DisableThreadLibraryCalls(HINSTANCE);
-HRSRC FindResourceExW(HINSTANCE, const(wchar)*, const(wchar)*, ushort);
-BOOL FreeLibrary(HINSTANCE);
-void FreeLibraryAndExitThread(HINSTANCE, uint);
+BOOL DisableThreadLibraryCalls(HMODULE);
+HRSRC FindResourceExW(HMODULE, const(wchar)*, const(wchar)*, ushort);
+void FreeLibraryAndExitThread(HMODULE, uint);
 BOOL FreeResource(HGLOBAL);
-uint GetModuleFileNameA(HINSTANCE, PSTR, uint);
-uint GetModuleFileNameW(HINSTANCE, PWSTR, uint);
-HINSTANCE GetModuleHandleA(const(char)*);
-HINSTANCE GetModuleHandleW(const(wchar)*);
-BOOL GetModuleHandleExA(uint, const(char)*, HINSTANCE*);
-BOOL GetModuleHandleExW(uint, const(wchar)*, HINSTANCE*);
-FARPROC GetProcAddress(HINSTANCE, const(char)*);
-HINSTANCE LoadLibraryExA(const(char)*, HANDLE, LOAD_LIBRARY_FLAGS);
-HINSTANCE LoadLibraryExW(const(wchar)*, HANDLE, LOAD_LIBRARY_FLAGS);
-HGLOBAL LoadResource(HINSTANCE, HRSRC);
+uint GetModuleFileNameA(HMODULE, PSTR, uint);
+uint GetModuleFileNameW(HMODULE, PWSTR, uint);
+HMODULE GetModuleHandleA(const(char)*);
+HMODULE GetModuleHandleW(const(wchar)*);
+BOOL GetModuleHandleExA(uint, const(char)*, HMODULE*);
+BOOL GetModuleHandleExW(uint, const(wchar)*, HMODULE*);
+FARPROC GetProcAddress(HMODULE, const(char)*);
+HMODULE LoadLibraryExA(const(char)*, HANDLE, LOAD_LIBRARY_FLAGS);
+HMODULE LoadLibraryExW(const(wchar)*, HANDLE, LOAD_LIBRARY_FLAGS);
+HGLOBAL LoadResource(HMODULE, HRSRC);
 void* LockResource(HGLOBAL);
-uint SizeofResource(HINSTANCE, HRSRC);
+uint SizeofResource(HMODULE, HRSRC);
 void* AddDllDirectory(const(wchar)*);
 BOOL RemoveDllDirectory(void*);
 BOOL SetDefaultDllDirectories(LOAD_LIBRARY_FLAGS);
-BOOL EnumResourceLanguagesExA(HINSTANCE, const(char)*, const(char)*, ENUMRESLANGPROCA, long, uint, ushort);
-BOOL EnumResourceLanguagesExW(HINSTANCE, const(wchar)*, const(wchar)*, ENUMRESLANGPROCW, long, uint, ushort);
-BOOL EnumResourceNamesExA(HINSTANCE, const(char)*, ENUMRESNAMEPROCA, long, uint, ushort);
-BOOL EnumResourceNamesExW(HINSTANCE, const(wchar)*, ENUMRESNAMEPROCW, long, uint, ushort);
-BOOL EnumResourceTypesExA(HINSTANCE, ENUMRESTYPEPROCA, long, uint, ushort);
-BOOL EnumResourceTypesExW(HINSTANCE, ENUMRESTYPEPROCW, long, uint, ushort);
-HRSRC FindResourceW(HINSTANCE, const(wchar)*, const(wchar)*);
-HINSTANCE LoadLibraryA(const(char)*);
-HINSTANCE LoadLibraryW(const(wchar)*);
-BOOL EnumResourceNamesW(HINSTANCE, const(wchar)*, ENUMRESNAMEPROCW, long);
-BOOL EnumResourceNamesA(HINSTANCE, const(char)*, ENUMRESNAMEPROCA, long);
+BOOL EnumResourceLanguagesExA(HMODULE, const(char)*, const(char)*, ENUMRESLANGPROCA, long, uint, ushort);
+BOOL EnumResourceLanguagesExW(HMODULE, const(wchar)*, const(wchar)*, ENUMRESLANGPROCW, long, uint, ushort);
+BOOL EnumResourceNamesExA(HMODULE, const(char)*, ENUMRESNAMEPROCA, long, uint, ushort);
+BOOL EnumResourceNamesExW(HMODULE, const(wchar)*, ENUMRESNAMEPROCW, long, uint, ushort);
+BOOL EnumResourceTypesExA(HMODULE, ENUMRESTYPEPROCA, long, uint, ushort);
+BOOL EnumResourceTypesExW(HMODULE, ENUMRESTYPEPROCW, long, uint, ushort);
+HRSRC FindResourceW(HMODULE, const(wchar)*, const(wchar)*);
+HMODULE LoadLibraryA(const(char)*);
+HMODULE LoadLibraryW(const(wchar)*);
+BOOL EnumResourceNamesW(HMODULE, const(wchar)*, ENUMRESNAMEPROCW, long);
+BOOL EnumResourceNamesA(HMODULE, const(char)*, ENUMRESNAMEPROCA, long);
 uint LoadModule(const(char)*, void*);
-HINSTANCE LoadPackagedLibrary(const(wchar)*, uint);
-HRSRC FindResourceA(HINSTANCE, const(char)*, const(char)*);
-HRSRC FindResourceExA(HINSTANCE, const(char)*, const(char)*, ushort);
-BOOL EnumResourceTypesA(HINSTANCE, ENUMRESTYPEPROCA, long);
-BOOL EnumResourceTypesW(HINSTANCE, ENUMRESTYPEPROCW, long);
-BOOL EnumResourceLanguagesA(HINSTANCE, const(char)*, const(char)*, ENUMRESLANGPROCA, long);
-BOOL EnumResourceLanguagesW(HINSTANCE, const(wchar)*, const(wchar)*, ENUMRESLANGPROCW, long);
-UPDATERESOURCE_HANDLE BeginUpdateResourceA(const(char)*, BOOL);
-UPDATERESOURCE_HANDLE BeginUpdateResourceW(const(wchar)*, BOOL);
-BOOL UpdateResourceA(UPDATERESOURCE_HANDLE, const(char)*, const(char)*, ushort, void*, uint);
-BOOL UpdateResourceW(UPDATERESOURCE_HANDLE, const(wchar)*, const(wchar)*, ushort, void*, uint);
-BOOL EndUpdateResourceA(UPDATERESOURCE_HANDLE, BOOL);
-BOOL EndUpdateResourceW(UPDATERESOURCE_HANDLE, BOOL);
+HMODULE LoadPackagedLibrary(const(wchar)*, uint);
+HRSRC FindResourceA(HMODULE, const(char)*, const(char)*);
+HRSRC FindResourceExA(HMODULE, const(char)*, const(char)*, ushort);
+BOOL EnumResourceTypesA(HMODULE, ENUMRESTYPEPROCA, long);
+BOOL EnumResourceTypesW(HMODULE, ENUMRESTYPEPROCW, long);
+BOOL EnumResourceLanguagesA(HMODULE, const(char)*, const(char)*, ENUMRESLANGPROCA, long);
+BOOL EnumResourceLanguagesW(HMODULE, const(wchar)*, const(wchar)*, ENUMRESLANGPROCW, long);
+HANDLE BeginUpdateResourceA(const(char)*, BOOL);
+HANDLE BeginUpdateResourceW(const(wchar)*, BOOL);
+BOOL UpdateResourceA(HANDLE, const(char)*, const(char)*, ushort, void*, uint);
+BOOL UpdateResourceW(HANDLE, const(wchar)*, const(wchar)*, ushort, void*, uint);
+BOOL EndUpdateResourceA(HANDLE, BOOL);
+BOOL EndUpdateResourceW(HANDLE, BOOL);
 BOOL SetDllDirectoryA(const(char)*);
 BOOL SetDllDirectoryW(const(wchar)*);
 uint GetDllDirectoryA(uint, PSTR);
@@ -87,21 +86,20 @@ enum GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT = 0x00000002;
 enum GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS = 0x00000004;
 enum CURRENT_IMPORT_REDIRECTION_VERSION = 0x00000001;
 enum LOAD_LIBRARY_OS_INTEGRITY_CONTINUITY = 0x00008000;
-alias UPDATERESOURCE_HANDLE = long;
 struct ENUMUILANG
 {
     uint NumOfEnumUILang;
     uint SizeOfEnumUIBuffer;
     ushort* pEnumUIBuffer;
 }
-alias ENUMRESLANGPROCA = BOOL function(HINSTANCE, const(char)*, const(char)*, ushort, long);
-alias ENUMRESLANGPROCW = BOOL function(HINSTANCE, const(wchar)*, const(wchar)*, ushort, long);
-alias ENUMRESNAMEPROCA = BOOL function(HINSTANCE, const(char)*, PSTR, long);
-alias ENUMRESNAMEPROCW = BOOL function(HINSTANCE, const(wchar)*, PWSTR, long);
-alias ENUMRESTYPEPROCA = BOOL function(HINSTANCE, PSTR, long);
-alias ENUMRESTYPEPROCW = BOOL function(HINSTANCE, PWSTR, long);
-alias PGET_MODULE_HANDLE_EXA = BOOL function(uint, const(char)*, HINSTANCE*);
-alias PGET_MODULE_HANDLE_EXW = BOOL function(uint, const(wchar)*, HINSTANCE*);
+alias ENUMRESLANGPROCA = BOOL function(HMODULE, const(char)*, const(char)*, ushort, long);
+alias ENUMRESLANGPROCW = BOOL function(HMODULE, const(wchar)*, const(wchar)*, ushort, long);
+alias ENUMRESNAMEPROCA = BOOL function(HMODULE, const(char)*, PSTR, long);
+alias ENUMRESNAMEPROCW = BOOL function(HMODULE, const(wchar)*, PWSTR, long);
+alias ENUMRESTYPEPROCA = BOOL function(HMODULE, PSTR, long);
+alias ENUMRESTYPEPROCW = BOOL function(HMODULE, PWSTR, long);
+alias PGET_MODULE_HANDLE_EXA = BOOL function(uint, const(char)*, HMODULE*);
+alias PGET_MODULE_HANDLE_EXW = BOOL function(uint, const(wchar)*, HMODULE*);
 struct REDIRECTION_FUNCTION_DESCRIPTOR
 {
     const(char)* DllName;

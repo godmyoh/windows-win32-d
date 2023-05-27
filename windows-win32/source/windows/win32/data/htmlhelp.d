@@ -2,18 +2,13 @@ module windows.win32.data.htmlhelp;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, COLORREF, HINSTANCE, HRESULT, HWND, POINT, PSTR, PWSTR, RECT;
-import windows.win32.system.com_ : IPersistStreamInit, IStream, IUnknown, VARIANT;
-import windows.win32.system.search_ : IStemmer;
-import windows.win32.ui.controls_ : NMHDR;
+import windows.win32.system.com : IPersistStreamInit, IStream, IUnknown;
+import windows.win32.system.search : IStemmer;
+import windows.win32.system.variant : VARIANT;
+import windows.win32.ui.controls : NMHDR;
 
 version (Windows):
 extern (Windows):
-
-alias WORD_WHEEL_OPEN_FLAGS = uint;
-enum : uint
-{
-    ITWW_OPEN_CONNECT = 0x00000000,
-}
 
 alias HTML_HELP_COMMAND = int;
 enum : int
@@ -56,8 +51,8 @@ enum : int
     HH_FTS_DEFAULT_PROXIMITY = 0xffffffff,
 }
 
-HWND HtmlHelpA(HWND, const(char)*, HTML_HELP_COMMAND, ulong);
-HWND HtmlHelpW(HWND, const(wchar)*, HTML_HELP_COMMAND, ulong);
+HWND HtmlHelpA(HWND, const(char)*, uint, ulong);
+HWND HtmlHelpW(HWND, const(wchar)*, uint, ulong);
 enum HHWIN_PROP_TAB_AUTOHIDESHOW = 0x00000001;
 enum HHWIN_PROP_ONTOP = 0x00000002;
 enum HHWIN_PROP_NOTITLEBAR = 0x00000004;
@@ -146,6 +141,11 @@ enum IDTB_CUSTOMIZE = 0x000000dd;
 enum IDTB_ZOOM = 0x000000de;
 enum IDTB_TOC_NEXT = 0x000000df;
 enum IDTB_TOC_PREV = 0x000000e0;
+enum HHN_FIRST = 0xfffffca4;
+enum HHN_LAST = 0xfffffc91;
+enum HHN_NAVCOMPLETE = 0xfffffca4;
+enum HHN_TRACK = 0xfffffca3;
+enum HHN_WINDOW_CREATE = 0xfffffca2;
 enum CLSID_IITPropList = GUID(0x4662daae, 0xd393, 0x11d0, [0x9a, 0x56, 0x0, 0xc0, 0x4f, 0xb6, 0x8b, 0xf7]);
 enum PROP_ADD = 0x00000000;
 enum PROP_DELETE = 0x00000001;
@@ -461,29 +461,6 @@ interface IITDatabase : IUnknown
     HRESULT GetObject(uint, const(GUID)*, void**);
     HRESULT GetObjectPersistence(const(wchar)*, uint, void**, BOOL);
 }
-struct IITGroup
-{
-}
-struct IITQuery
-{
-}
-enum IID_IITWordWheel = GUID(0x8fa0d5a4, 0xdedf, 0x11d0, [0x9a, 0x61, 0x0, 0xc0, 0x4f, 0xb6, 0x8b, 0xf7]);
-interface IITWordWheel : IUnknown
-{
-    HRESULT Open(IITDatabase, const(wchar)*, WORD_WHEEL_OPEN_FLAGS);
-    HRESULT Close();
-    HRESULT GetLocaleInfo(uint*, uint*);
-    HRESULT GetSorterInstance(uint*);
-    HRESULT Count(int*);
-    HRESULT Lookup(const(void)*, BOOL, int*);
-    HRESULT Lookup(int, IITResultSet, int);
-    HRESULT Lookup(int, void*, uint);
-    HRESULT SetGroup(IITGroup*);
-    HRESULT GetGroup(IITGroup**);
-    HRESULT GetDataCount(int, uint*);
-    HRESULT GetData(int, IITResultSet);
-    HRESULT GetDataColumns(IITResultSet);
-}
 enum IID_IStemSink = GUID(0xfe77c330, 0x7f42, 0x11ce, [0xbe, 0x57, 0x0, 0xaa, 0x0, 0x51, 0xfe, 0x20]);
 interface IStemSink : IUnknown
 {
@@ -498,9 +475,6 @@ interface IStemmerConfig : IUnknown
     HRESULT SetControlInfo(uint, uint);
     HRESULT GetControlInfo(uint*, uint*);
     HRESULT LoadExternalStemmerData(IStream, uint);
-}
-struct IITStopWordList
-{
 }
 enum IID_IWordBreakerConfig = GUID(0x8fa0d5a6, 0xdedf, 0x11d0, [0x9a, 0x61, 0x0, 0xc0, 0x4f, 0xb6, 0x8b, 0xf7]);
 interface IWordBreakerConfig : IUnknown

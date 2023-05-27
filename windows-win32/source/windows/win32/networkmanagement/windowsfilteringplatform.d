@@ -2,7 +2,7 @@ module windows.win32.networkmanagement.windowsfilteringplatform;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, FILETIME, HANDLE, PSID, PSTR, PWSTR;
-import windows.win32.security_ : ACL, PSECURITY_DESCRIPTOR, SID, SID_AND_ATTRIBUTES;
+import windows.win32.security : ACL, PSECURITY_DESCRIPTOR, SID, SID_AND_ATTRIBUTES;
 import windows.win32.system.rpc : SEC_WINNT_AUTH_IDENTITY_W;
 
 version (Windows):

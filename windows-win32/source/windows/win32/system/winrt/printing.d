@@ -2,10 +2,10 @@ module windows.win32.system.winrt.printing;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : HRESULT, HWND, PWSTR;
-import windows.win32.graphics.printing_ : IPrinterPropertyBag, IPrinterQueue;
-import windows.win32.storage.xps_ : IXpsDocumentPackageTarget, IXpsOMObjectFactory1, IXpsOMPageReference;
-import windows.win32.system.com_ : IStream, IUnknown;
-import windows.win32.system.winrt_ : IInspectable;
+import windows.win32.graphics.printing : IPrinterPropertyBag, IPrinterQueue;
+import windows.win32.storage.xps : IXpsDocumentPackageTarget, IXpsOMObjectFactory1, IXpsOMPageReference;
+import windows.win32.system.com : IStream, IUnknown;
+import windows.win32.system.winrt : IInspectable;
 
 version (Windows):
 extern (Windows):

@@ -3,7 +3,7 @@ module windows.win32.networking.httpserver;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BOOLEAN, HANDLE, HRESULT, PSTR, PWSTR;
 import windows.win32.networking.winsock : SOCKADDR, SOCKADDR_STORAGE;
-import windows.win32.security_ : PSECURITY_DESCRIPTOR, SECURITY_ATTRIBUTES;
+import windows.win32.security : PSECURITY_DESCRIPTOR, SECURITY_ATTRIBUTES;
 import windows.win32.system.io : OVERLAPPED;
 
 version (Windows):

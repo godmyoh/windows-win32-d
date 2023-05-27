@@ -2,7 +2,7 @@ module windows.win32.system.errorreporting;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, FILETIME, HANDLE, HRESULT, HWND, PSTR, PWSTR;
-import windows.win32.system.diagnostics.debug__ : CONTEXT, EXCEPTION_POINTERS, EXCEPTION_RECORD;
+import windows.win32.system.diagnostics.debug_ : CONTEXT, EXCEPTION_POINTERS, EXCEPTION_RECORD;
 
 version (Windows):
 extern (Windows):

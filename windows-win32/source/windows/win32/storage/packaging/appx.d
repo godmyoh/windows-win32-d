@@ -3,7 +3,7 @@ module windows.win32.storage.packaging.appx;
 import windows.win32.guid : GUID;
 import windows.win32.data.xml.msxml : IXMLDOMDocument;
 import windows.win32.foundation : BOOL, HANDLE, HRESULT, PSID, PSTR, PWSTR, WIN32_ERROR;
-import windows.win32.system.com_ : IStream, IUnknown, IUri;
+import windows.win32.system.com : IStream, IUnknown, IUri;
 
 version (Windows):
 extern (Windows):
@@ -52,10 +52,11 @@ WIN32_ERROR GetPackageInfo2(_PACKAGE_INFO_REFERENCE*, const(uint), PackagePathTy
 HRESULT CheckIsMSIXPackage(const(wchar)*, BOOL*);
 HRESULT TryCreatePackageDependency(PSID, const(wchar)*, PACKAGE_VERSION, PackageDependencyProcessorArchitectures, PackageDependencyLifetimeKind, const(wchar)*, CreatePackageDependencyOptions, PWSTR*);
 HRESULT DeletePackageDependency(const(wchar)*);
-HRESULT AddPackageDependency(const(wchar)*, int, AddPackageDependencyOptions, PACKAGEDEPENDENCY_CONTEXT__**, PWSTR*);
-HRESULT RemovePackageDependency(PACKAGEDEPENDENCY_CONTEXT__*);
+HRESULT AddPackageDependency(const(wchar)*, int, AddPackageDependencyOptions, PACKAGEDEPENDENCY_CONTEXT*, PWSTR*);
+HRESULT RemovePackageDependency(PACKAGEDEPENDENCY_CONTEXT);
 HRESULT GetResolvedPackageFullNameForPackageDependency(const(wchar)*, PWSTR*);
-HRESULT GetIdForPackageDependencyContext(PACKAGEDEPENDENCY_CONTEXT__*, PWSTR*);
+HRESULT GetIdForPackageDependencyContext(PACKAGEDEPENDENCY_CONTEXT, PWSTR*);
+uint GetPackageGraphRevisionId();
 WIN32_ERROR AppPolicyGetLifecycleManagement(HANDLE, AppPolicyLifecycleManagement*);
 WIN32_ERROR AppPolicyGetWindowingModel(HANDLE, AppPolicyWindowingModel*);
 WIN32_ERROR AppPolicyGetMediaFoundationCodecLoading(HANDLE, AppPolicyMediaFoundationCodecLoading*);
@@ -64,12 +65,12 @@ WIN32_ERROR AppPolicyGetThreadInitializationType(HANDLE, AppPolicyThreadInitiali
 WIN32_ERROR AppPolicyGetShowDeveloperDiagnostic(HANDLE, AppPolicyShowDeveloperDiagnostic*);
 WIN32_ERROR AppPolicyGetProcessTerminationMethod(HANDLE, AppPolicyProcessTerminationMethod*);
 WIN32_ERROR AppPolicyGetCreateFileAccess(HANDLE, AppPolicyCreateFileAccess*);
-HRESULT CreatePackageVirtualizationContext(const(wchar)*, PACKAGE_VIRTUALIZATION_CONTEXT_HANDLE__**);
-HRESULT ActivatePackageVirtualizationContext(PACKAGE_VIRTUALIZATION_CONTEXT_HANDLE__*, ulong*);
-void ReleasePackageVirtualizationContext(PACKAGE_VIRTUALIZATION_CONTEXT_HANDLE__*);
+HRESULT CreatePackageVirtualizationContext(const(wchar)*, PACKAGE_VIRTUALIZATION_CONTEXT_HANDLE*);
+HRESULT ActivatePackageVirtualizationContext(PACKAGE_VIRTUALIZATION_CONTEXT_HANDLE, ulong*);
+void ReleasePackageVirtualizationContext(PACKAGE_VIRTUALIZATION_CONTEXT_HANDLE);
 void DeactivatePackageVirtualizationContext(ulong);
-HRESULT DuplicatePackageVirtualizationContext(PACKAGE_VIRTUALIZATION_CONTEXT_HANDLE__*, PACKAGE_VIRTUALIZATION_CONTEXT_HANDLE__**);
-PACKAGE_VIRTUALIZATION_CONTEXT_HANDLE__* GetCurrentPackageVirtualizationContext();
+HRESULT DuplicatePackageVirtualizationContext(PACKAGE_VIRTUALIZATION_CONTEXT_HANDLE, PACKAGE_VIRTUALIZATION_CONTEXT_HANDLE*);
+PACKAGE_VIRTUALIZATION_CONTEXT_HANDLE GetCurrentPackageVirtualizationContext();
 HRESULT GetProcessesInVirtualizationContext(const(wchar)*, uint*, HANDLE**);
 enum PACKAGE_PROPERTY_FRAMEWORK = 0x00000001;
 enum PACKAGE_PROPERTY_RESOURCE = 0x00000002;
@@ -93,25 +94,28 @@ enum PACKAGE_PROPERTY_HOSTRUNTIME = 0x00200000;
 enum PACKAGE_FILTER_HOSTRUNTIME = 0x00200000;
 enum PACKAGE_FILTER_ALL_LOADED = 0x00000000;
 enum PACKAGE_DEPENDENCY_RANK_DEFAULT = 0x00000000;
-enum CLSID_AppxFactory = GUID(0x5842a140, 0xff9f, 0x4166, [0x8f, 0x5c, 0x62, 0xf5, 0xb7, 0xb0, 0xc7, 0x81]);
-struct AppxFactory
+alias PACKAGE_VIRTUALIZATION_CONTEXT_HANDLE = long;
+alias PACKAGEDEPENDENCY_CONTEXT = long;
+struct PACKAGE_ID
 {
+    align (4):
+    uint reserved;
+    uint processorArchitecture;
+    PACKAGE_VERSION version_;
+    PWSTR name;
+    PWSTR publisher;
+    PWSTR resourceId;
+    PWSTR publisherId;
 }
-enum CLSID_AppxBundleFactory = GUID(0x378e0446, 0x5384, 0x43b7, [0x88, 0x77, 0xe7, 0xdb, 0xdd, 0x88, 0x34, 0x46]);
-struct AppxBundleFactory
+struct PACKAGE_INFO
 {
-}
-enum CLSID_AppxPackagingDiagnosticEventSinkManager = GUID(0x50ca0a46, 0x1588, 0x4161, [0x8e, 0xd2, 0xef, 0x9e, 0x46, 0x9c, 0xed, 0x5d]);
-struct AppxPackagingDiagnosticEventSinkManager
-{
-}
-enum CLSID_AppxEncryptionFactory = GUID(0xdc664fdd, 0xd868, 0x46ee, [0x87, 0x80, 0x8d, 0x19, 0x6c, 0xb7, 0x39, 0xf7]);
-struct AppxEncryptionFactory
-{
-}
-enum CLSID_AppxPackageEditor = GUID(0xf004f2ca, 0xaebc, 0x4b0d, [0xbf, 0x58, 0xe5, 0x16, 0xd5, 0xbc, 0xc0, 0xab]);
-struct AppxPackageEditor
-{
+    align (4):
+    uint reserved;
+    uint flags;
+    PWSTR path;
+    PWSTR packageFullName;
+    PWSTR packageFamilyName;
+    PACKAGE_ID packageId;
 }
 struct APPX_PACKAGE_SETTINGS
 {
@@ -851,6 +855,26 @@ interface IAppxPackageEditor : IUnknown
     HRESULT UpdateEncryptedPackage(IStream, IStream, APPX_PACKAGE_EDITOR_UPDATE_PACKAGE_OPTION, const(APPX_ENCRYPTED_PACKAGE_SETTINGS2)*, const(APPX_KEY_INFO)*);
     HRESULT UpdatePackageManifest(IStream, IStream, BOOL, APPX_PACKAGE_EDITOR_UPDATE_PACKAGE_MANIFEST_OPTIONS);
 }
+enum CLSID_AppxFactory = GUID(0x5842a140, 0xff9f, 0x4166, [0x8f, 0x5c, 0x62, 0xf5, 0xb7, 0xb0, 0xc7, 0x81]);
+struct AppxFactory
+{
+}
+enum CLSID_AppxBundleFactory = GUID(0x378e0446, 0x5384, 0x43b7, [0x88, 0x77, 0xe7, 0xdb, 0xdd, 0x88, 0x34, 0x46]);
+struct AppxBundleFactory
+{
+}
+enum CLSID_AppxPackagingDiagnosticEventSinkManager = GUID(0x50ca0a46, 0x1588, 0x4161, [0x8e, 0xd2, 0xef, 0x9e, 0x46, 0x9c, 0xed, 0x5d]);
+struct AppxPackagingDiagnosticEventSinkManager
+{
+}
+enum CLSID_AppxEncryptionFactory = GUID(0xdc664fdd, 0xd868, 0x46ee, [0x87, 0x80, 0x8d, 0x19, 0x6c, 0xb7, 0x39, 0xf7]);
+struct AppxEncryptionFactory
+{
+}
+enum CLSID_AppxPackageEditor = GUID(0xf004f2ca, 0xaebc, 0x4b0d, [0xbf, 0x58, 0xe5, 0x16, 0xd5, 0xbc, 0xc0, 0xab]);
+struct AppxPackageEditor
+{
+}
 struct PACKAGE_VERSION
 {
     union
@@ -866,9 +890,8 @@ struct PACKAGE_VERSION
         }
     }
 }
-struct PACKAGE_ID
+/+ [CONFLICTED] struct PACKAGE_ID
 {
-    align (4):
     uint reserved;
     uint processorArchitecture;
     PACKAGE_VERSION version_;
@@ -877,6 +900,7 @@ struct PACKAGE_ID
     PWSTR resourceId;
     PWSTR publisherId;
 }
++/
 alias PackagePathType = int;
 enum : int
 {
@@ -904,9 +928,8 @@ struct _PACKAGE_INFO_REFERENCE
 {
     void* reserved;
 }
-struct PACKAGE_INFO
+/+ [CONFLICTED] struct PACKAGE_INFO
 {
-    align (4):
     uint reserved;
     uint flags;
     PWSTR path;
@@ -914,6 +937,7 @@ struct PACKAGE_INFO
     PWSTR packageFamilyName;
     PACKAGE_ID packageId;
 }
++/
 alias CreatePackageDependencyOptions = int;
 enum : int
 {
@@ -949,10 +973,6 @@ enum : int
     PackageDependencyProcessorArchitectures_X86A64  = 0x00000020,
 }
 
-struct PACKAGEDEPENDENCY_CONTEXT__
-{
-    int unused;
-}
 alias AppPolicyLifecycleManagement = int;
 enum : int
 {
@@ -1013,7 +1033,3 @@ enum : int
     AppPolicyCreateFileAccess_Limited = 0x00000001,
 }
 
-struct PACKAGE_VIRTUALIZATION_CONTEXT_HANDLE__
-{
-    int unused;
-}

@@ -3,7 +3,7 @@ module windows.win32.system.winrt.media;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HRESULT;
 import windows.win32.media.mediafoundation : IMFDXGIDeviceManager, IMFSample, MFVideoArea;
-import windows.win32.system.winrt_ : IInspectable;
+import windows.win32.system.winrt : IInspectable;
 
 version (Windows):
 extern (Windows):

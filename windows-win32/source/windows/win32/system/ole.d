@@ -3,22 +3,19 @@ module windows.win32.system.ole;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, CHAR, COLORREF, DECIMAL, FILETIME, HANDLE, HGLOBAL, HINSTANCE, HRESULT, HRSRC, HWND, LPARAM, LRESULT, POINT, POINTL, PSTR, PWSTR, RECT, RECTL, SIZE, SYSTEMTIME, VARIANT_BOOL, WPARAM;
 import windows.win32.graphics.gdi : HBITMAP, HDC, HENHMETAFILE, HFONT, HMETAFILE, HPALETTE, HRGN, LOGPALETTE, TEXTMETRICW;
-import windows.win32.media_ : HTASK;
-import windows.win32.system.com_ : ADVF, BYTE_SIZEDARR, CALLCONV, CUSTDATA, CY, DISPPARAMS, DVASPECT, DVTARGETDEVICE, DWORD_SIZEDARR, EXCEPINFO, FLAGGED_WORD_BLOB, FORMATETC, FUNCDESC, HYPER_SIZEDARR, IAdviseSink, IBindCtx, IBindHost, IClassFactory, IDLDESC, IDataObject, IDispatch, IEnumFORMATETC, IEnumSTATDATA, IEnumUnknown, IErrorLog, IMPLTYPEFLAGS, IMoniker, INVOKEKIND, IPersist, IPersistStream, IServiceProvider, IStream, ITypeInfo, ITypeLib, IUnknown, SAFEARRAY, SAFEARRAYBOUND, STGMEDIUM, SYSKIND, TYPEDESC, TYPEKIND, VARDESC, VARENUM, VARIANT, WORD_SIZEDARR;
+import windows.win32.media : HTASK;
+import windows.win32.system.com : BYTE_SIZEDARR, CALLCONV, CUSTDATA, CY, DISPPARAMS, DVASPECT, DVTARGETDEVICE, DWORD_SIZEDARR, EXCEPINFO, FLAGGED_WORD_BLOB, FORMATETC, FUNCDESC, HYPER_SIZEDARR, IAdviseSink, IBindCtx, IBindHost, IClassFactory, IDLDESC, IDataObject, IDispatch, IEnumFORMATETC, IEnumSTATDATA, IEnumUnknown, IErrorLog, IMPLTYPEFLAGS, IMoniker, INVOKEKIND, IPersist, IPersistStream, IServiceProvider, IStream, ITypeInfo, ITypeLib, IUnknown, SAFEARRAY, SAFEARRAYBOUND, STGMEDIUM, SYSKIND, TYPEDESC, TYPEKIND, VARDESC, WORD_SIZEDARR;
 import windows.win32.system.com.structuredstorage : IPersistStorage, IPropertyBag, IPropertyBag2, IStorage;
-import windows.win32.system.memory_ : GLOBAL_ALLOC_FLAGS;
+import windows.win32.system.memory : GLOBAL_ALLOC_FLAGS;
 import windows.win32.system.systemservices : MODIFIERKEYS_FLAGS;
-import windows.win32.ui.controls_ : PROPSHEETHEADERA_V2, PROPSHEETHEADERW_V2;
+import windows.win32.system.variant : VARENUM, VARIANT;
+import windows.win32.ui.controls : PROPSHEETHEADERA_V2, PROPSHEETHEADERW_V2;
 import windows.win32.ui.controls.dialogs : OPENFILENAMEA, OPENFILENAMEW;
-import windows.win32.ui.windowsandmessaging : HACCEL, HCURSOR, HICON, HMENU, MENU_ITEM_FLAGS, MSG, SHOW_WINDOW_CMD;
+import windows.win32.ui.windowsandmessaging : HACCEL, HCURSOR, HICON, HMENU, MENU_ITEM_FLAGS, MSG;
 
 version (Windows):
 extern (Windows):
 
-int DosDateTimeToVariantTime(ushort, ushort, double*);
-int VariantTimeToDosDateTime(double, ushort*, ushort*);
-int SystemTimeToVariantTime(SYSTEMTIME*, double*);
-int VariantTimeToSystemTime(double, SYSTEMTIME*);
 HRESULT SafeArrayAllocDescriptor(uint, SAFEARRAY**);
 HRESULT SafeArrayAllocDescriptorEx(VARENUM, uint, SAFEARRAY**);
 HRESULT SafeArrayAllocData(SAFEARRAY*);
@@ -51,12 +48,6 @@ HRESULT SafeArrayGetIID(SAFEARRAY*, GUID*);
 HRESULT SafeArrayGetVartype(SAFEARRAY*, VARENUM*);
 SAFEARRAY* SafeArrayCreateVector(VARENUM, int, uint);
 SAFEARRAY* SafeArrayCreateVectorEx(VARENUM, int, uint, void*);
-void VariantInit(VARIANT*);
-HRESULT VariantClear(VARIANT*);
-HRESULT VariantCopy(VARIANT*, const(VARIANT)*);
-HRESULT VariantCopyInd(VARIANT*, const(VARIANT)*);
-HRESULT VariantChangeType(VARIANT*, const(VARIANT)*, ushort, VARENUM);
-HRESULT VariantChangeTypeEx(VARIANT*, const(VARIANT)*, uint, ushort, VARENUM);
 HRESULT VectorFromBstr(BSTR, SAFEARRAY**);
 HRESULT BstrFromVector(SAFEARRAY*, BSTR*);
 HRESULT VarUI1FromI2(short, ubyte*);
@@ -377,19 +368,19 @@ HRESULT OleInitialize(void*);
 void OleUninitialize();
 HRESULT OleQueryLinkFromData(IDataObject);
 HRESULT OleQueryCreateFromData(IDataObject);
-HRESULT OleCreate(const(GUID)*, const(GUID)*, OLERENDER, FORMATETC*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateEx(const(GUID)*, const(GUID)*, OLECREATE, OLERENDER, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateFromData(IDataObject, const(GUID)*, OLERENDER, FORMATETC*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateFromDataEx(IDataObject, const(GUID)*, OLECREATE, OLERENDER, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateLinkFromData(IDataObject, const(GUID)*, OLERENDER, FORMATETC*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateLinkFromDataEx(IDataObject, const(GUID)*, OLECREATE, OLERENDER, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateStaticFromData(IDataObject, const(GUID)*, OLERENDER, FORMATETC*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateLink(IMoniker, const(GUID)*, OLERENDER, FORMATETC*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateLinkEx(IMoniker, const(GUID)*, OLECREATE, OLERENDER, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateLinkToFile(const(wchar)*, const(GUID)*, OLERENDER, FORMATETC*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateLinkToFileEx(const(wchar)*, const(GUID)*, OLECREATE, OLERENDER, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateFromFile(const(GUID)*, const(wchar)*, const(GUID)*, OLERENDER, FORMATETC*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateFromFileEx(const(GUID)*, const(wchar)*, const(GUID)*, OLECREATE, OLERENDER, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
+HRESULT OleCreate(const(GUID)*, const(GUID)*, uint, FORMATETC*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateEx(const(GUID)*, const(GUID)*, OLECREATE, uint, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateFromData(IDataObject, const(GUID)*, uint, FORMATETC*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateFromDataEx(IDataObject, const(GUID)*, OLECREATE, uint, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateLinkFromData(IDataObject, const(GUID)*, uint, FORMATETC*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateLinkFromDataEx(IDataObject, const(GUID)*, OLECREATE, uint, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateStaticFromData(IDataObject, const(GUID)*, uint, FORMATETC*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateLink(IMoniker, const(GUID)*, uint, FORMATETC*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateLinkEx(IMoniker, const(GUID)*, OLECREATE, uint, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateLinkToFile(const(wchar)*, const(GUID)*, uint, FORMATETC*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateLinkToFileEx(const(wchar)*, const(GUID)*, OLECREATE, uint, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateFromFile(const(GUID)*, const(wchar)*, const(GUID)*, uint, FORMATETC*, IOleClientSite, IStorage, void**);
+HRESULT OleCreateFromFileEx(const(GUID)*, const(wchar)*, const(GUID)*, OLECREATE, uint, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
 HRESULT OleLoad(IStorage, const(GUID)*, IOleClientSite, void**);
 HRESULT OleSave(IPersistStorage, IStorage, BOOL);
 HRESULT OleLoadFromStream(IStream, const(GUID)*, void**);
@@ -421,7 +412,7 @@ BOOL IsAccelerator(HACCEL, int, MSG*, ushort*);
 HGLOBAL OleGetIconOfFile(PWSTR, BOOL);
 HGLOBAL OleGetIconOfClass(const(GUID)*, PWSTR, BOOL);
 HGLOBAL OleMetafilePictFromIconAndLabel(HICON, PWSTR, PWSTR, uint);
-HRESULT OleRegGetUserType(const(GUID)*, USERCLASSTYPE, PWSTR*);
+HRESULT OleRegGetUserType(const(GUID)*, uint, PWSTR*);
 HRESULT OleRegGetMiscStatus(const(GUID)*, uint, uint*);
 HRESULT OleRegEnumFormatEtc(const(GUID)*, uint, IEnumFORMATETC*);
 HRESULT OleRegEnumVerbs(const(GUID)*, IEnumOLEVERB*);
@@ -916,14 +907,6 @@ enum STDOLE_LCID = 0x00000000;
 enum STDOLE2_MAJORVERNUM = 0x00000002;
 enum STDOLE2_MINORVERNUM = 0x00000000;
 enum STDOLE2_LCID = 0x00000000;
-enum VARIANT_NOVALUEPROP = 0x00000001;
-enum VARIANT_ALPHABOOL = 0x00000002;
-enum VARIANT_NOUSEROVERRIDE = 0x00000004;
-enum VARIANT_CALENDAR_HIJRI = 0x00000008;
-enum VARIANT_LOCALBOOL = 0x00000010;
-enum VARIANT_CALENDAR_THAI = 0x00000020;
-enum VARIANT_CALENDAR_GREGORIAN = 0x00000040;
-enum VARIANT_USE_NLS = 0x00000080;
 enum VAR_TIMEVALUEONLY = 0x00000001;
 enum VAR_DATEVALUEONLY = 0x00000002;
 enum VAR_VALIDDATE = 0x00000004;
@@ -1081,8 +1064,8 @@ enum : uint
     CF_CONVERTONLY          = 0x00000100,
 }
 
-alias CHANGE_ICON_FLAGS = int;
-enum : int
+alias CHANGE_ICON_FLAGS = uint;
+enum : uint
 {
     CIF_SHOWHELP       = 0x00000001,
     CIF_SELECTCURRENT  = 0x00000002,
@@ -1180,15 +1163,15 @@ enum : uint
     NUMPRS_INEXACT        = 0x00020000,
 }
 
-alias PICTYPE = int;
-enum : int
+alias PICTYPE = short;
+enum : short
 {
-    PICTYPE_UNINITIALIZED = 0xffffffff,
-    PICTYPE_NONE          = 0x00000000,
-    PICTYPE_BITMAP        = 0x00000001,
-    PICTYPE_METAFILE      = 0x00000002,
-    PICTYPE_ICON          = 0x00000003,
-    PICTYPE_ENHMETAFILE   = 0x00000004,
+    PICTYPE_UNINITIALIZED = cast(short)0xffff,
+    PICTYPE_NONE          = 0x0000,
+    PICTYPE_BITMAP        = 0x0001,
+    PICTYPE_METAFILE      = 0x0002,
+    PICTYPE_ICON          = 0x0003,
+    PICTYPE_ENHMETAFILE   = 0x0004,
 }
 
 alias VARCMP = uint;
@@ -1630,8 +1613,8 @@ interface IRecordInfo : IUnknown
     HRESULT GetTypeInfo(ITypeInfo*);
     HRESULT GetField(void*, const(wchar)*, VARIANT*);
     HRESULT GetFieldNoCopy(void*, const(wchar)*, VARIANT*, void**);
-    HRESULT PutField(INVOKEKIND, void*, const(wchar)*, VARIANT*);
-    HRESULT PutFieldNoCopy(INVOKEKIND, void*, const(wchar)*, VARIANT*);
+    HRESULT PutField(uint, void*, const(wchar)*, VARIANT*);
+    HRESULT PutFieldNoCopy(uint, void*, const(wchar)*, VARIANT*);
     HRESULT GetFieldNames(uint*, BSTR*);
     BOOL IsMatchingType(IRecordInfo);
     void* RecordCreate();
@@ -1684,14 +1667,14 @@ interface IParseDisplayName : IUnknown
 enum IID_IOleContainer = GUID(0x11b, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IOleContainer : IParseDisplayName
 {
-    HRESULT EnumObjects(OLECONTF, IEnumUnknown*);
+    HRESULT EnumObjects(uint, IEnumUnknown*);
     HRESULT LockContainer(BOOL);
 }
 enum IID_IOleClientSite = GUID(0x118, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IOleClientSite : IUnknown
 {
     HRESULT SaveObject();
-    HRESULT GetMoniker(OLEGETMONIKER, OLEWHICHMK, IMoniker*);
+    HRESULT GetMoniker(uint, uint, IMoniker*);
     HRESULT GetContainer(IOleContainer*);
     HRESULT ShowObject();
     HRESULT OnShowWindow(BOOL);
@@ -1763,9 +1746,9 @@ interface IOleObject : IUnknown
     HRESULT SetClientSite(IOleClientSite);
     HRESULT GetClientSite(IOleClientSite*);
     HRESULT SetHostNames(const(wchar)*, const(wchar)*);
-    HRESULT Close(OLECLOSE);
-    HRESULT SetMoniker(OLEWHICHMK, IMoniker);
-    HRESULT GetMoniker(OLEGETMONIKER, OLEWHICHMK, IMoniker*);
+    HRESULT Close(uint);
+    HRESULT SetMoniker(uint, IMoniker);
+    HRESULT GetMoniker(uint, uint, IMoniker*);
     HRESULT InitFromData(IDataObject, BOOL, uint);
     HRESULT GetClipboardData(uint, IDataObject*);
     HRESULT DoVerb(int, MSG*, IOleClientSite, int, HWND, RECT*);
@@ -1773,7 +1756,7 @@ interface IOleObject : IUnknown
     HRESULT Update();
     HRESULT IsUpToDate();
     HRESULT GetUserClassID(GUID*);
-    HRESULT GetUserType(USERCLASSTYPE, PWSTR*);
+    HRESULT GetUserType(uint, PWSTR*);
     HRESULT SetExtent(DVASPECT, SIZE*);
     HRESULT GetExtent(DVASPECT, SIZE*);
     HRESULT Advise(IAdviseSink, uint*);
@@ -1934,7 +1917,7 @@ interface IViewObject : IUnknown
     HRESULT GetColorSet(DVASPECT, int, void*, DVTARGETDEVICE*, HDC, LOGPALETTE**);
     HRESULT Freeze(DVASPECT, int, void*, uint*);
     HRESULT Unfreeze(uint);
-    HRESULT SetAdvise(DVASPECT, ADVF, IAdviseSink);
+    HRESULT SetAdvise(DVASPECT, uint, IAdviseSink);
     HRESULT GetAdvise(uint*, uint*, IAdviseSink*);
 }
 enum IID_IViewObject2 = GUID(0x127, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
@@ -1973,7 +1956,7 @@ struct OLEVERB
     OLEIVERB lVerb;
     PWSTR lpszVerbName;
     MENU_ITEM_FLAGS fuFlags;
-    OLEVERBATTRIB grfAttribs;
+    uint grfAttribs;
 }
 alias OLEVERBATTRIB = int;
 enum : int
@@ -2092,7 +2075,7 @@ struct CONTROLINFO
     uint cb;
     HACCEL hAccel;
     ushort cAccel;
-    CTRLINFO dwFlags;
+    uint dwFlags;
 }
 alias CTRLINFO = int;
 enum : int
@@ -2130,7 +2113,7 @@ interface IOleControlSite : IUnknown
     HRESULT OnControlInfoChanged();
     HRESULT LockInPlaceActive(BOOL);
     HRESULT GetExtendedControl(IDispatch*);
-    HRESULT TransformCoords(POINTL*, POINTF*, XFORMCOORDS);
+    HRESULT TransformCoords(POINTL*, POINTF*, uint);
     HRESULT TranslateAccelerator(MSG*, KEYMODIFIERS);
     HRESULT OnFocus(BOOL);
     HRESULT ShowPropertyFrame();
@@ -2152,7 +2135,7 @@ interface IPropertyPage : IUnknown
     HRESULT Deactivate();
     HRESULT GetPageInfo(PROPPAGEINFO*);
     HRESULT SetObjects(uint, IUnknown*);
-    HRESULT Show(SHOW_WINDOW_CMD);
+    HRESULT Show(uint);
     HRESULT Move(RECT*);
     HRESULT IsPageDirty();
     HRESULT Apply();
@@ -2175,7 +2158,7 @@ enum : int
 enum IID_IPropertyPageSite = GUID(0xb196b28c, 0xbab4, 0x101a, [0xb6, 0x9c, 0x0, 0xaa, 0x0, 0x34, 0x1d, 0x7]);
 interface IPropertyPageSite : IUnknown
 {
-    HRESULT OnStatusChange(PROPPAGESTATUS);
+    HRESULT OnStatusChange(uint);
     HRESULT GetLocaleID(uint*);
     HRESULT GetPageContainer(IUnknown*);
     HRESULT TranslateAccelerator(MSG*);
@@ -2249,7 +2232,7 @@ interface IPicture : IUnknown
 {
     HRESULT get_Handle(OLE_HANDLE*);
     HRESULT get_hPal(OLE_HANDLE*);
-    HRESULT get_Type(short*);
+    HRESULT get_Type(PICTYPE*);
     HRESULT get_Width(int*);
     HRESULT get_Height(int*);
     HRESULT Render(HDC, int, int, int, int, int, int, int, int, RECT*);
@@ -2513,7 +2496,7 @@ struct QACONTAINER
     IAdviseSinkEx pAdviseSink;
     IPropertyNotifySink pPropertyNotifySink;
     IUnknown pUnkEventSink;
-    QACONTAINERFLAGS dwAmbientFlags;
+    uint dwAmbientFlags;
     uint colorFore;
     uint colorBack;
     IFont pFont;
@@ -2528,11 +2511,11 @@ struct QACONTAINER
 struct QACONTROL
 {
     uint cbSize;
-    OLEMISC dwMiscStatus;
-    VIEWSTATUS dwViewStatus;
+    uint dwMiscStatus;
+    uint dwViewStatus;
     uint dwEventCookie;
     uint dwPropNotifyCookie;
-    POINTERINACTIVE dwPointerActivationPolicy;
+    uint dwPointerActivationPolicy;
 }
 enum IID_IQuickActivate = GUID(0xcf51ed10, 0x62fe, 0x11cf, [0xbf, 0x86, 0x0, 0xa0, 0xc9, 0x3, 0x48, 0x36]);
 interface IQuickActivate : IUnknown
@@ -2569,7 +2552,7 @@ struct FONTDESC
 struct PICTDESC
 {
     uint cbSizeofstruct;
-    PICTYPE picType;
+    uint picType;
     union
     {
         struct _bmp_e__Struct
@@ -2604,7 +2587,7 @@ enum : int
 enum IID_IVBGetControl = GUID(0x40a050a0, 0x3c31, 0x101b, [0xa8, 0x2e, 0x8, 0x0, 0x2b, 0x2b, 0x23, 0x37]);
 interface IVBGetControl : IUnknown
 {
-    HRESULT EnumControls(OLECONTF, ENUM_CONTROLS_WHICH_FLAGS, IEnumUnknown*);
+    HRESULT EnumControls(uint, ENUM_CONTROLS_WHICH_FLAGS, IEnumUnknown*);
 }
 enum IID_IGetOleObject = GUID(0x8a701da0, 0x4feb, 0x101b, [0xa8, 0x2e, 0x8, 0x0, 0x2b, 0x2b, 0x23, 0x37]);
 interface IGetOleObject : IUnknown
@@ -2718,8 +2701,8 @@ enum : int
 
 struct OLECMD
 {
-    OLECMDID cmdID;
-    OLECMDF cmdf;
+    uint cmdID;
+    uint cmdf;
 }
 struct OLECMDTEXT
 {

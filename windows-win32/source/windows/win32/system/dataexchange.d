@@ -2,7 +2,7 @@ module windows.win32.system.dataexchange;
 
 import windows.win32.foundation : BOOL, CHAR, HANDLE, HWND, LPARAM, PSTR, PWSTR, WPARAM;
 import windows.win32.graphics.gdi : HDC, HENHMETAFILE, HMETAFILE;
-import windows.win32.security_ : SECURITY_QUALITY_OF_SERVICE;
+import windows.win32.security : SECURITY_QUALITY_OF_SERVICE;
 
 version (Windows):
 extern (Windows):

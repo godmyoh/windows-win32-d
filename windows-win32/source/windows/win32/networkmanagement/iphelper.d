@@ -1,11 +1,10 @@
 module windows.win32.networkmanagement.iphelper;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, CHAR, HANDLE, NTSTATUS, PSTR, PWSTR, WIN32_ERROR;
+import windows.win32.foundation : BOOL, BOOLEAN, CHAR, HANDLE, PSTR, PWSTR, WIN32_ERROR;
 import windows.win32.networkmanagement.ndis : IF_OPER_STATUS, NDIS_MEDIUM, NDIS_PHYSICAL_MEDIUM, NET_IF_ACCESS_TYPE, NET_IF_ADMIN_STATUS, NET_IF_CONNECTION_TYPE, NET_IF_DIRECTION_TYPE, NET_IF_MEDIA_CONNECT_STATE, NET_LUID_LH, TUNNEL_TYPE;
-import windows.win32.networking.winsock : ADDRESS_FAMILY, IN6_ADDR, NL_BANDWIDTH_INFORMATION, NL_DAD_STATE, NL_INTERFACE_OFFLOAD_ROD, NL_LINK_LOCAL_ADDRESS_BEHAVIOR, NL_NEIGHBOR_STATE, NL_NETWORK_CONNECTIVITY_HINT, NL_PREFIX_ORIGIN, NL_ROUTER_DISCOVERY_BEHAVIOR, NL_ROUTE_ORIGIN, NL_ROUTE_PROTOCOL, NL_SUFFIX_ORIGIN, SCOPE_ID, SOCKADDR, SOCKADDR_IN6, SOCKADDR_IN6_PAIR, SOCKADDR_INET, SOCKET_ADDRESS;
-import windows.win32.system.io : OVERLAPPED;
-import windows.win32.system.windowsprogramming : PIO_APC_ROUTINE;
+import windows.win32.networking.winsock : ADDRESS_FAMILY, IN6_ADDR, NL_BANDWIDTH_INFORMATION, NL_DAD_STATE, NL_INTERFACE_OFFLOAD_ROD, NL_LINK_LOCAL_ADDRESS_BEHAVIOR, NL_NEIGHBOR_STATE, NL_NETWORK_CONNECTIVITY_HINT, NL_PREFIX_ORIGIN, NL_ROUTER_DISCOVERY_BEHAVIOR, NL_ROUTE_ORIGIN, NL_ROUTE_PROTOCOL, NL_SUFFIX_ORIGIN, SCOPE_ID, SOCKADDR, SOCKADDR_IN, SOCKADDR_IN6, SOCKADDR_IN6_PAIR, SOCKADDR_INET, SOCKET_ADDRESS;
+import windows.win32.system.io : OVERLAPPED, PIO_APC_ROUTINE;
 
 version (Windows):
 extern (Windows):
@@ -26,98 +25,13 @@ enum : uint
     GAA_FLAG_INCLUDE_TUNNEL_BINDINGORDER = 0x00000400,
 }
 
-NTSTATUS GetIfEntry2(MIB_IF_ROW2*);
-NTSTATUS GetIfEntry2Ex(MIB_IF_ENTRY_LEVEL, MIB_IF_ROW2*);
-NTSTATUS GetIfTable2(MIB_IF_TABLE2**);
-NTSTATUS GetIfTable2Ex(MIB_IF_TABLE_LEVEL, MIB_IF_TABLE2**);
-NTSTATUS GetIfStackTable(MIB_IFSTACK_TABLE**);
-NTSTATUS GetInvertedIfStackTable(MIB_INVERTEDIFSTACK_TABLE**);
-NTSTATUS GetIpInterfaceEntry(MIB_IPINTERFACE_ROW*);
-NTSTATUS GetIpInterfaceTable(ADDRESS_FAMILY, MIB_IPINTERFACE_TABLE**);
-void InitializeIpInterfaceEntry(MIB_IPINTERFACE_ROW*);
-NTSTATUS NotifyIpInterfaceChange(ADDRESS_FAMILY, PIPINTERFACE_CHANGE_CALLBACK, void*, BOOLEAN, HANDLE*);
-NTSTATUS SetIpInterfaceEntry(MIB_IPINTERFACE_ROW*);
-NTSTATUS GetIpNetworkConnectionBandwidthEstimates(uint, ADDRESS_FAMILY, MIB_IP_NETWORK_CONNECTION_BANDWIDTH_ESTIMATES*);
-NTSTATUS CreateUnicastIpAddressEntry(const(MIB_UNICASTIPADDRESS_ROW)*);
-NTSTATUS DeleteUnicastIpAddressEntry(const(MIB_UNICASTIPADDRESS_ROW)*);
-NTSTATUS GetUnicastIpAddressEntry(MIB_UNICASTIPADDRESS_ROW*);
-NTSTATUS GetUnicastIpAddressTable(ADDRESS_FAMILY, MIB_UNICASTIPADDRESS_TABLE**);
-void InitializeUnicastIpAddressEntry(MIB_UNICASTIPADDRESS_ROW*);
-NTSTATUS NotifyUnicastIpAddressChange(ADDRESS_FAMILY, PUNICAST_IPADDRESS_CHANGE_CALLBACK, void*, BOOLEAN, HANDLE*);
-NTSTATUS NotifyStableUnicastIpAddressTable(ADDRESS_FAMILY, MIB_UNICASTIPADDRESS_TABLE**, PSTABLE_UNICAST_IPADDRESS_TABLE_CALLBACK, void*, HANDLE*);
-NTSTATUS SetUnicastIpAddressEntry(const(MIB_UNICASTIPADDRESS_ROW)*);
-NTSTATUS CreateAnycastIpAddressEntry(const(MIB_ANYCASTIPADDRESS_ROW)*);
-NTSTATUS DeleteAnycastIpAddressEntry(const(MIB_ANYCASTIPADDRESS_ROW)*);
-NTSTATUS GetAnycastIpAddressEntry(MIB_ANYCASTIPADDRESS_ROW*);
-NTSTATUS GetAnycastIpAddressTable(ADDRESS_FAMILY, MIB_ANYCASTIPADDRESS_TABLE**);
-NTSTATUS GetMulticastIpAddressEntry(MIB_MULTICASTIPADDRESS_ROW*);
-NTSTATUS GetMulticastIpAddressTable(ADDRESS_FAMILY, MIB_MULTICASTIPADDRESS_TABLE**);
-NTSTATUS CreateIpForwardEntry2(const(MIB_IPFORWARD_ROW2)*);
-NTSTATUS DeleteIpForwardEntry2(const(MIB_IPFORWARD_ROW2)*);
-NTSTATUS GetBestRoute2(NET_LUID_LH*, uint, const(SOCKADDR_INET)*, const(SOCKADDR_INET)*, uint, MIB_IPFORWARD_ROW2*, SOCKADDR_INET*);
-NTSTATUS GetIpForwardEntry2(MIB_IPFORWARD_ROW2*);
-NTSTATUS GetIpForwardTable2(ADDRESS_FAMILY, MIB_IPFORWARD_TABLE2**);
-void InitializeIpForwardEntry(MIB_IPFORWARD_ROW2*);
-NTSTATUS NotifyRouteChange2(ADDRESS_FAMILY, PIPFORWARD_CHANGE_CALLBACK, void*, BOOLEAN, HANDLE*);
-NTSTATUS SetIpForwardEntry2(const(MIB_IPFORWARD_ROW2)*);
-NTSTATUS FlushIpPathTable(ADDRESS_FAMILY);
-NTSTATUS GetIpPathEntry(MIB_IPPATH_ROW*);
-NTSTATUS GetIpPathTable(ADDRESS_FAMILY, MIB_IPPATH_TABLE**);
-NTSTATUS CreateIpNetEntry2(const(MIB_IPNET_ROW2)*);
-NTSTATUS DeleteIpNetEntry2(const(MIB_IPNET_ROW2)*);
-NTSTATUS FlushIpNetTable2(ADDRESS_FAMILY, uint);
-NTSTATUS GetIpNetEntry2(MIB_IPNET_ROW2*);
-NTSTATUS GetIpNetTable2(ADDRESS_FAMILY, MIB_IPNET_TABLE2**);
-NTSTATUS ResolveIpNetEntry2(MIB_IPNET_ROW2*, const(SOCKADDR_INET)*);
-NTSTATUS SetIpNetEntry2(MIB_IPNET_ROW2*);
-NTSTATUS NotifyTeredoPortChange(PTEREDO_PORT_CHANGE_CALLBACK, void*, BOOLEAN, HANDLE*);
-NTSTATUS GetTeredoPort(ushort*);
-NTSTATUS CancelMibChangeNotify2(HANDLE);
-void FreeMibTable(void*);
-NTSTATUS CreateSortedAddressPairs(const(SOCKADDR_IN6)*, uint, const(SOCKADDR_IN6)*, uint, uint, SOCKADDR_IN6_PAIR**, uint*);
-NTSTATUS ConvertCompartmentGuidToId(const(GUID)*, uint*);
-NTSTATUS ConvertCompartmentIdToGuid(uint, GUID*);
-NTSTATUS ConvertInterfaceNameToLuidA(const(char)*, NET_LUID_LH*);
-NTSTATUS ConvertInterfaceNameToLuidW(const(wchar)*, NET_LUID_LH*);
-NTSTATUS ConvertInterfaceLuidToNameA(const(NET_LUID_LH)*, PSTR, ulong);
-NTSTATUS ConvertInterfaceLuidToNameW(const(NET_LUID_LH)*, PWSTR, ulong);
-NTSTATUS ConvertInterfaceLuidToIndex(const(NET_LUID_LH)*, uint*);
-NTSTATUS ConvertInterfaceIndexToLuid(uint, NET_LUID_LH*);
-NTSTATUS ConvertInterfaceLuidToAlias(const(NET_LUID_LH)*, PWSTR, ulong);
-NTSTATUS ConvertInterfaceAliasToLuid(const(wchar)*, NET_LUID_LH*);
-NTSTATUS ConvertInterfaceLuidToGuid(const(NET_LUID_LH)*, GUID*);
-NTSTATUS ConvertInterfaceGuidToLuid(const(GUID)*, NET_LUID_LH*);
-uint if_nametoindex(const(char)*);
-PSTR if_indextoname(uint, PSTR);
-uint GetCurrentThreadCompartmentId();
-NTSTATUS SetCurrentThreadCompartmentId(uint);
-void GetCurrentThreadCompartmentScope(uint*, uint*);
-NTSTATUS SetCurrentThreadCompartmentScope(uint);
-uint GetJobCompartmentId(HANDLE);
-NTSTATUS SetJobCompartmentId(HANDLE, uint);
-uint GetSessionCompartmentId(uint);
-NTSTATUS SetSessionCompartmentId(uint, uint);
-uint GetDefaultCompartmentId();
-NTSTATUS GetNetworkInformation(const(GUID)*, uint*, uint*, PWSTR, uint);
-NTSTATUS SetNetworkInformation(const(GUID)*, uint, const(wchar)*);
-NTSTATUS ConvertLengthToIpv4Mask(uint, uint*);
-NTSTATUS ConvertIpv4MaskToLength(uint, ubyte*);
-NTSTATUS GetDnsSettings(DNS_SETTINGS*);
-void FreeDnsSettings(DNS_SETTINGS*);
-NTSTATUS SetDnsSettings(const(DNS_SETTINGS)*);
-NTSTATUS GetInterfaceDnsSettings(GUID, DNS_INTERFACE_SETTINGS*);
-void FreeInterfaceDnsSettings(DNS_INTERFACE_SETTINGS*);
-NTSTATUS SetInterfaceDnsSettings(GUID, const(DNS_INTERFACE_SETTINGS)*);
-NTSTATUS GetNetworkConnectivityHint(NL_NETWORK_CONNECTIVITY_HINT*);
-NTSTATUS GetNetworkConnectivityHintForInterface(uint, NL_NETWORK_CONNECTIVITY_HINT*);
-NTSTATUS NotifyNetworkConnectivityHintChange(PNETWORK_CONNECTIVITY_HINT_CHANGE_CALLBACK, void*, BOOLEAN, HANDLE*);
-IcmpHandle IcmpCreateFile();
-IcmpHandle Icmp6CreateFile();
-BOOL IcmpCloseHandle(IcmpHandle);
-uint IcmpSendEcho(IcmpHandle, uint, void*, ushort, IP_OPTION_INFORMATION*, void*, uint, uint);
-uint IcmpSendEcho2(IcmpHandle, HANDLE, PIO_APC_ROUTINE, void*, uint, void*, ushort, IP_OPTION_INFORMATION*, void*, uint, uint);
-uint IcmpSendEcho2Ex(IcmpHandle, HANDLE, PIO_APC_ROUTINE, void*, uint, uint, void*, ushort, IP_OPTION_INFORMATION*, void*, uint, uint);
-uint Icmp6SendEcho2(IcmpHandle, HANDLE, PIO_APC_ROUTINE, void*, SOCKADDR_IN6*, SOCKADDR_IN6*, void*, ushort, IP_OPTION_INFORMATION*, void*, uint, uint);
+HANDLE IcmpCreateFile();
+HANDLE Icmp6CreateFile();
+BOOL IcmpCloseHandle(HANDLE);
+uint IcmpSendEcho(HANDLE, uint, void*, ushort, IP_OPTION_INFORMATION*, void*, uint, uint);
+uint IcmpSendEcho2(HANDLE, HANDLE, PIO_APC_ROUTINE, void*, uint, void*, ushort, IP_OPTION_INFORMATION*, void*, uint, uint);
+uint IcmpSendEcho2Ex(HANDLE, HANDLE, PIO_APC_ROUTINE, void*, uint, uint, void*, ushort, IP_OPTION_INFORMATION*, void*, uint, uint);
+uint Icmp6SendEcho2(HANDLE, HANDLE, PIO_APC_ROUTINE, void*, SOCKADDR_IN6*, SOCKADDR_IN6*, void*, ushort, IP_OPTION_INFORMATION*, void*, uint, uint);
 uint IcmpParseReplies(void*, uint);
 uint Icmp6ParseReplies(void*, uint);
 uint GetNumberOfInterfaces(uint*);
@@ -189,6 +103,10 @@ uint GetInterfaceSupportedTimestampCapabilities(const(NET_LUID_LH)*, INTERFACE_T
 uint CaptureInterfaceHardwareCrossTimestamp(const(NET_LUID_LH)*, INTERFACE_HARDWARE_CROSSTIMESTAMP*);
 uint RegisterInterfaceTimestampConfigChange(PINTERFACE_TIMESTAMP_CONFIG_CHANGE_CALLBACK, void*, HIFTIMESTAMPCHANGE*);
 void UnregisterInterfaceTimestampConfigChange(HIFTIMESTAMPCHANGE);
+uint GetInterfaceCurrentTimestampCapabilities(const(NET_LUID_LH)*, INTERFACE_TIMESTAMP_CAPABILITIES*);
+uint GetInterfaceHardwareTimestampCapabilities(const(NET_LUID_LH)*, INTERFACE_TIMESTAMP_CAPABILITIES*);
+uint NotifyIfTimestampConfigChange(void*, PINTERFACE_TIMESTAMP_CONFIG_CHANGE_CALLBACK, HIFTIMESTAMPCHANGE*);
+void CancelIfTimestampConfigChange(HIFTIMESTAMPCHANGE);
 uint IpReleaseAddress(IP_ADAPTER_INDEX_MAP*);
 uint IpRenewAddress(IP_ADAPTER_INDEX_MAP*);
 uint SendARP(uint, uint, void*, uint*);
@@ -206,6 +124,92 @@ uint DeletePersistentTcpPortReservation(ushort, ushort);
 uint DeletePersistentUdpPortReservation(ushort, ushort);
 uint LookupPersistentTcpPortReservation(ushort, ushort, ulong*);
 uint LookupPersistentUdpPortReservation(ushort, ushort, ulong*);
+uint ParseNetworkString(const(wchar)*, uint, NET_ADDRESS_INFO*, ushort*, ubyte*);
+WIN32_ERROR GetIfEntry2(MIB_IF_ROW2*);
+WIN32_ERROR GetIfEntry2Ex(MIB_IF_ENTRY_LEVEL, MIB_IF_ROW2*);
+WIN32_ERROR GetIfTable2(MIB_IF_TABLE2**);
+WIN32_ERROR GetIfTable2Ex(MIB_IF_TABLE_LEVEL, MIB_IF_TABLE2**);
+WIN32_ERROR GetIfStackTable(MIB_IFSTACK_TABLE**);
+WIN32_ERROR GetInvertedIfStackTable(MIB_INVERTEDIFSTACK_TABLE**);
+WIN32_ERROR GetIpInterfaceEntry(MIB_IPINTERFACE_ROW*);
+WIN32_ERROR GetIpInterfaceTable(ADDRESS_FAMILY, MIB_IPINTERFACE_TABLE**);
+void InitializeIpInterfaceEntry(MIB_IPINTERFACE_ROW*);
+WIN32_ERROR NotifyIpInterfaceChange(ADDRESS_FAMILY, PIPINTERFACE_CHANGE_CALLBACK, void*, BOOLEAN, HANDLE*);
+WIN32_ERROR SetIpInterfaceEntry(MIB_IPINTERFACE_ROW*);
+WIN32_ERROR GetIpNetworkConnectionBandwidthEstimates(uint, ADDRESS_FAMILY, MIB_IP_NETWORK_CONNECTION_BANDWIDTH_ESTIMATES*);
+WIN32_ERROR CreateUnicastIpAddressEntry(const(MIB_UNICASTIPADDRESS_ROW)*);
+WIN32_ERROR DeleteUnicastIpAddressEntry(const(MIB_UNICASTIPADDRESS_ROW)*);
+WIN32_ERROR GetUnicastIpAddressEntry(MIB_UNICASTIPADDRESS_ROW*);
+WIN32_ERROR GetUnicastIpAddressTable(ADDRESS_FAMILY, MIB_UNICASTIPADDRESS_TABLE**);
+void InitializeUnicastIpAddressEntry(MIB_UNICASTIPADDRESS_ROW*);
+WIN32_ERROR NotifyUnicastIpAddressChange(ADDRESS_FAMILY, PUNICAST_IPADDRESS_CHANGE_CALLBACK, void*, BOOLEAN, HANDLE*);
+WIN32_ERROR NotifyStableUnicastIpAddressTable(ADDRESS_FAMILY, MIB_UNICASTIPADDRESS_TABLE**, PSTABLE_UNICAST_IPADDRESS_TABLE_CALLBACK, void*, HANDLE*);
+WIN32_ERROR SetUnicastIpAddressEntry(const(MIB_UNICASTIPADDRESS_ROW)*);
+WIN32_ERROR CreateAnycastIpAddressEntry(const(MIB_ANYCASTIPADDRESS_ROW)*);
+WIN32_ERROR DeleteAnycastIpAddressEntry(const(MIB_ANYCASTIPADDRESS_ROW)*);
+WIN32_ERROR GetAnycastIpAddressEntry(MIB_ANYCASTIPADDRESS_ROW*);
+WIN32_ERROR GetAnycastIpAddressTable(ADDRESS_FAMILY, MIB_ANYCASTIPADDRESS_TABLE**);
+WIN32_ERROR GetMulticastIpAddressEntry(MIB_MULTICASTIPADDRESS_ROW*);
+WIN32_ERROR GetMulticastIpAddressTable(ADDRESS_FAMILY, MIB_MULTICASTIPADDRESS_TABLE**);
+WIN32_ERROR CreateIpForwardEntry2(const(MIB_IPFORWARD_ROW2)*);
+WIN32_ERROR DeleteIpForwardEntry2(const(MIB_IPFORWARD_ROW2)*);
+WIN32_ERROR GetBestRoute2(NET_LUID_LH*, uint, const(SOCKADDR_INET)*, const(SOCKADDR_INET)*, uint, MIB_IPFORWARD_ROW2*, SOCKADDR_INET*);
+WIN32_ERROR GetIpForwardEntry2(MIB_IPFORWARD_ROW2*);
+WIN32_ERROR GetIpForwardTable2(ADDRESS_FAMILY, MIB_IPFORWARD_TABLE2**);
+void InitializeIpForwardEntry(MIB_IPFORWARD_ROW2*);
+WIN32_ERROR NotifyRouteChange2(ADDRESS_FAMILY, PIPFORWARD_CHANGE_CALLBACK, void*, BOOLEAN, HANDLE*);
+WIN32_ERROR SetIpForwardEntry2(const(MIB_IPFORWARD_ROW2)*);
+WIN32_ERROR FlushIpPathTable(ADDRESS_FAMILY);
+WIN32_ERROR GetIpPathEntry(MIB_IPPATH_ROW*);
+WIN32_ERROR GetIpPathTable(ADDRESS_FAMILY, MIB_IPPATH_TABLE**);
+WIN32_ERROR CreateIpNetEntry2(const(MIB_IPNET_ROW2)*);
+WIN32_ERROR DeleteIpNetEntry2(const(MIB_IPNET_ROW2)*);
+WIN32_ERROR FlushIpNetTable2(ADDRESS_FAMILY, uint);
+WIN32_ERROR GetIpNetEntry2(MIB_IPNET_ROW2*);
+WIN32_ERROR GetIpNetTable2(ADDRESS_FAMILY, MIB_IPNET_TABLE2**);
+WIN32_ERROR ResolveIpNetEntry2(MIB_IPNET_ROW2*, const(SOCKADDR_INET)*);
+WIN32_ERROR SetIpNetEntry2(MIB_IPNET_ROW2*);
+WIN32_ERROR NotifyTeredoPortChange(PTEREDO_PORT_CHANGE_CALLBACK, void*, BOOLEAN, HANDLE*);
+WIN32_ERROR GetTeredoPort(ushort*);
+WIN32_ERROR CancelMibChangeNotify2(HANDLE);
+WIN32_ERROR FreeMibTable(void*);
+WIN32_ERROR CreateSortedAddressPairs(const(SOCKADDR_IN6)*, uint, const(SOCKADDR_IN6)*, uint, uint, SOCKADDR_IN6_PAIR**, uint*);
+WIN32_ERROR ConvertCompartmentGuidToId(const(GUID)*, uint*);
+WIN32_ERROR ConvertCompartmentIdToGuid(uint, GUID*);
+WIN32_ERROR ConvertInterfaceNameToLuidA(const(char)*, NET_LUID_LH*);
+WIN32_ERROR ConvertInterfaceNameToLuidW(const(wchar)*, NET_LUID_LH*);
+WIN32_ERROR ConvertInterfaceLuidToNameA(const(NET_LUID_LH)*, PSTR, ulong);
+WIN32_ERROR ConvertInterfaceLuidToNameW(const(NET_LUID_LH)*, PWSTR, ulong);
+WIN32_ERROR ConvertInterfaceLuidToIndex(const(NET_LUID_LH)*, uint*);
+WIN32_ERROR ConvertInterfaceIndexToLuid(uint, NET_LUID_LH*);
+WIN32_ERROR ConvertInterfaceLuidToAlias(const(NET_LUID_LH)*, PWSTR, ulong);
+WIN32_ERROR ConvertInterfaceAliasToLuid(const(wchar)*, NET_LUID_LH*);
+WIN32_ERROR ConvertInterfaceLuidToGuid(const(NET_LUID_LH)*, GUID*);
+WIN32_ERROR ConvertInterfaceGuidToLuid(const(GUID)*, NET_LUID_LH*);
+uint if_nametoindex(const(char)*);
+PSTR if_indextoname(uint, PSTR);
+WIN32_ERROR GetCurrentThreadCompartmentId();
+WIN32_ERROR SetCurrentThreadCompartmentId(uint);
+void GetCurrentThreadCompartmentScope(uint*, uint*);
+WIN32_ERROR SetCurrentThreadCompartmentScope(uint);
+uint GetJobCompartmentId(HANDLE);
+WIN32_ERROR SetJobCompartmentId(HANDLE, uint);
+WIN32_ERROR GetSessionCompartmentId(uint);
+WIN32_ERROR SetSessionCompartmentId(uint, uint);
+WIN32_ERROR GetDefaultCompartmentId();
+WIN32_ERROR GetNetworkInformation(const(GUID)*, uint*, uint*, PWSTR, uint);
+WIN32_ERROR SetNetworkInformation(const(GUID)*, uint, const(wchar)*);
+WIN32_ERROR ConvertLengthToIpv4Mask(uint, uint*);
+WIN32_ERROR ConvertIpv4MaskToLength(uint, ubyte*);
+WIN32_ERROR GetDnsSettings(DNS_SETTINGS*);
+void FreeDnsSettings(DNS_SETTINGS*);
+WIN32_ERROR SetDnsSettings(const(DNS_SETTINGS)*);
+WIN32_ERROR GetInterfaceDnsSettings(GUID, DNS_INTERFACE_SETTINGS*);
+WIN32_ERROR FreeInterfaceDnsSettings(DNS_INTERFACE_SETTINGS*);
+WIN32_ERROR SetInterfaceDnsSettings(GUID, const(DNS_INTERFACE_SETTINGS)*);
+WIN32_ERROR GetNetworkConnectivityHint(NL_NETWORK_CONNECTIVITY_HINT*);
+WIN32_ERROR GetNetworkConnectivityHintForInterface(uint, NL_NETWORK_CONNECTIVITY_HINT*);
+WIN32_ERROR NotifyNetworkConnectivityHintChange(PNETWORK_CONNECTIVITY_HINT_CHANGE_CALLBACK, void*, BOOLEAN, HANDLE*);
 uint PfCreateInterface(uint, PFFORWARD_ACTION, PFFORWARD_ACTION, BOOL, BOOL, void**);
 uint PfDeleteInterface(void*);
 uint PfAddFiltersToInterface(void*, uint, PF_FILTER_DESCRIPTOR*, uint, PF_FILTER_DESCRIPTOR*, void**);
@@ -676,7 +680,6 @@ enum IP_IFFILTER_INFO_V6 = 0xffff0014;
 enum IP_FILTER_ENABLE_INFO = 0xffff0015;
 enum IP_FILTER_ENABLE_INFO_V6 = 0xffff0016;
 enum IP_PROT_PRIORITY_INFO_EX = 0xffff0017;
-alias IcmpHandle = long;
 alias HIFTIMESTAMPCHANGE = void*;
 struct IP_OPTION_INFORMATION32
 {
@@ -787,377 +790,6 @@ enum : int
     IF_OPER_STATUS_OPERATIONAL     = 0x00000005,
 }
 
-alias MIB_NOTIFICATION_TYPE = int;
-enum : int
-{
-    MibParameterNotification = 0x00000000,
-    MibAddInstance           = 0x00000001,
-    MibDeleteInstance        = 0x00000002,
-    MibInitialNotification   = 0x00000003,
-}
-
-struct MIB_IF_ROW2
-{
-    NET_LUID_LH InterfaceLuid;
-    uint InterfaceIndex;
-    GUID InterfaceGuid;
-    wchar[257] Alias;
-    wchar[257] Description;
-    uint PhysicalAddressLength;
-    ubyte[32] PhysicalAddress;
-    ubyte[32] PermanentPhysicalAddress;
-    uint Mtu;
-    uint Type;
-    TUNNEL_TYPE TunnelType;
-    NDIS_MEDIUM MediaType;
-    NDIS_PHYSICAL_MEDIUM PhysicalMediumType;
-    NET_IF_ACCESS_TYPE AccessType;
-    NET_IF_DIRECTION_TYPE DirectionType;
-    struct _InterfaceAndOperStatusFlags_e__Struct
-    {
-        ubyte _bitfield0;
-    }
-    IF_OPER_STATUS OperStatus;
-    NET_IF_ADMIN_STATUS AdminStatus;
-    NET_IF_MEDIA_CONNECT_STATE MediaConnectState;
-    GUID NetworkGuid;
-    NET_IF_CONNECTION_TYPE ConnectionType;
-    ulong TransmitLinkSpeed;
-    ulong ReceiveLinkSpeed;
-    ulong InOctets;
-    ulong InUcastPkts;
-    ulong InNUcastPkts;
-    ulong InDiscards;
-    ulong InErrors;
-    ulong InUnknownProtos;
-    ulong InUcastOctets;
-    ulong InMulticastOctets;
-    ulong InBroadcastOctets;
-    ulong OutOctets;
-    ulong OutUcastPkts;
-    ulong OutNUcastPkts;
-    ulong OutDiscards;
-    ulong OutErrors;
-    ulong OutUcastOctets;
-    ulong OutMulticastOctets;
-    ulong OutBroadcastOctets;
-    ulong OutQLen;
-}
-struct MIB_IF_TABLE2
-{
-    uint NumEntries;
-    MIB_IF_ROW2[1] Table;
-}
-alias MIB_IF_ENTRY_LEVEL = int;
-enum : int
-{
-    MibIfEntryNormal                  = 0x00000000,
-    MibIfEntryNormalWithoutStatistics = 0x00000002,
-}
-
-alias MIB_IF_TABLE_LEVEL = int;
-enum : int
-{
-    MibIfTableNormal                  = 0x00000000,
-    MibIfTableRaw                     = 0x00000001,
-    MibIfTableNormalWithoutStatistics = 0x00000002,
-}
-
-struct MIB_IPINTERFACE_ROW
-{
-    ADDRESS_FAMILY Family;
-    NET_LUID_LH InterfaceLuid;
-    uint InterfaceIndex;
-    uint MaxReassemblySize;
-    ulong InterfaceIdentifier;
-    uint MinRouterAdvertisementInterval;
-    uint MaxRouterAdvertisementInterval;
-    BOOLEAN AdvertisingEnabled;
-    BOOLEAN ForwardingEnabled;
-    BOOLEAN WeakHostSend;
-    BOOLEAN WeakHostReceive;
-    BOOLEAN UseAutomaticMetric;
-    BOOLEAN UseNeighborUnreachabilityDetection;
-    BOOLEAN ManagedAddressConfigurationSupported;
-    BOOLEAN OtherStatefulConfigurationSupported;
-    BOOLEAN AdvertiseDefaultRoute;
-    NL_ROUTER_DISCOVERY_BEHAVIOR RouterDiscoveryBehavior;
-    uint DadTransmits;
-    uint BaseReachableTime;
-    uint RetransmitTime;
-    uint PathMtuDiscoveryTimeout;
-    NL_LINK_LOCAL_ADDRESS_BEHAVIOR LinkLocalAddressBehavior;
-    uint LinkLocalAddressTimeout;
-    uint[16] ZoneIndices;
-    uint SitePrefixLength;
-    uint Metric;
-    uint NlMtu;
-    BOOLEAN Connected;
-    BOOLEAN SupportsWakeUpPatterns;
-    BOOLEAN SupportsNeighborDiscovery;
-    BOOLEAN SupportsRouterDiscovery;
-    uint ReachableTime;
-    NL_INTERFACE_OFFLOAD_ROD TransmitOffload;
-    NL_INTERFACE_OFFLOAD_ROD ReceiveOffload;
-    BOOLEAN DisableDefaultRoutes;
-}
-struct MIB_IPINTERFACE_TABLE
-{
-    uint NumEntries;
-    MIB_IPINTERFACE_ROW[1] Table;
-}
-struct MIB_IFSTACK_ROW
-{
-    uint HigherLayerInterfaceIndex;
-    uint LowerLayerInterfaceIndex;
-}
-struct MIB_INVERTEDIFSTACK_ROW
-{
-    uint LowerLayerInterfaceIndex;
-    uint HigherLayerInterfaceIndex;
-}
-struct MIB_IFSTACK_TABLE
-{
-    uint NumEntries;
-    MIB_IFSTACK_ROW[1] Table;
-}
-struct MIB_INVERTEDIFSTACK_TABLE
-{
-    uint NumEntries;
-    MIB_INVERTEDIFSTACK_ROW[1] Table;
-}
-alias PIPINTERFACE_CHANGE_CALLBACK = void function(void*, MIB_IPINTERFACE_ROW*, MIB_NOTIFICATION_TYPE);
-struct MIB_IP_NETWORK_CONNECTION_BANDWIDTH_ESTIMATES
-{
-    NL_BANDWIDTH_INFORMATION InboundBandwidthInformation;
-    NL_BANDWIDTH_INFORMATION OutboundBandwidthInformation;
-}
-struct MIB_UNICASTIPADDRESS_ROW
-{
-    SOCKADDR_INET Address;
-    NET_LUID_LH InterfaceLuid;
-    uint InterfaceIndex;
-    NL_PREFIX_ORIGIN PrefixOrigin;
-    NL_SUFFIX_ORIGIN SuffixOrigin;
-    uint ValidLifetime;
-    uint PreferredLifetime;
-    ubyte OnLinkPrefixLength;
-    BOOLEAN SkipAsSource;
-    NL_DAD_STATE DadState;
-    SCOPE_ID ScopeId;
-    long CreationTimeStamp;
-}
-struct MIB_UNICASTIPADDRESS_TABLE
-{
-    uint NumEntries;
-    MIB_UNICASTIPADDRESS_ROW[1] Table;
-}
-alias PUNICAST_IPADDRESS_CHANGE_CALLBACK = void function(void*, MIB_UNICASTIPADDRESS_ROW*, MIB_NOTIFICATION_TYPE);
-alias PSTABLE_UNICAST_IPADDRESS_TABLE_CALLBACK = void function(void*, MIB_UNICASTIPADDRESS_TABLE*);
-struct MIB_ANYCASTIPADDRESS_ROW
-{
-    SOCKADDR_INET Address;
-    NET_LUID_LH InterfaceLuid;
-    uint InterfaceIndex;
-    SCOPE_ID ScopeId;
-}
-struct MIB_ANYCASTIPADDRESS_TABLE
-{
-    uint NumEntries;
-    MIB_ANYCASTIPADDRESS_ROW[1] Table;
-}
-struct MIB_MULTICASTIPADDRESS_ROW
-{
-    SOCKADDR_INET Address;
-    uint InterfaceIndex;
-    NET_LUID_LH InterfaceLuid;
-    SCOPE_ID ScopeId;
-}
-struct MIB_MULTICASTIPADDRESS_TABLE
-{
-    uint NumEntries;
-    MIB_MULTICASTIPADDRESS_ROW[1] Table;
-}
-struct IP_ADDRESS_PREFIX
-{
-    SOCKADDR_INET Prefix;
-    ubyte PrefixLength;
-}
-struct MIB_IPFORWARD_ROW2
-{
-    NET_LUID_LH InterfaceLuid;
-    uint InterfaceIndex;
-    IP_ADDRESS_PREFIX DestinationPrefix;
-    SOCKADDR_INET NextHop;
-    ubyte SitePrefixLength;
-    uint ValidLifetime;
-    uint PreferredLifetime;
-    uint Metric;
-    NL_ROUTE_PROTOCOL Protocol;
-    BOOLEAN Loopback;
-    BOOLEAN AutoconfigureAddress;
-    BOOLEAN Publish;
-    BOOLEAN Immortal;
-    uint Age;
-    NL_ROUTE_ORIGIN Origin;
-}
-struct MIB_IPFORWARD_TABLE2
-{
-    uint NumEntries;
-    MIB_IPFORWARD_ROW2[1] Table;
-}
-alias PIPFORWARD_CHANGE_CALLBACK = void function(void*, MIB_IPFORWARD_ROW2*, MIB_NOTIFICATION_TYPE);
-struct MIB_IPPATH_ROW
-{
-    SOCKADDR_INET Source;
-    SOCKADDR_INET Destination;
-    NET_LUID_LH InterfaceLuid;
-    uint InterfaceIndex;
-    SOCKADDR_INET CurrentNextHop;
-    uint PathMtu;
-    uint RttMean;
-    uint RttDeviation;
-    union
-    {
-        uint LastReachable;
-        uint LastUnreachable;
-    }
-    BOOLEAN IsReachable;
-    ulong LinkTransmitSpeed;
-    ulong LinkReceiveSpeed;
-}
-struct MIB_IPPATH_TABLE
-{
-    uint NumEntries;
-    MIB_IPPATH_ROW[1] Table;
-}
-struct MIB_IPNET_ROW2
-{
-    SOCKADDR_INET Address;
-    uint InterfaceIndex;
-    NET_LUID_LH InterfaceLuid;
-    ubyte[32] PhysicalAddress;
-    uint PhysicalAddressLength;
-    NL_NEIGHBOR_STATE State;
-    union
-    {
-        struct
-        {
-            ubyte _bitfield0;
-        }
-        ubyte Flags;
-    }
-    union _ReachabilityTime_e__Union
-    {
-        uint LastReachable;
-        uint LastUnreachable;
-    }
-}
-struct MIB_IPNET_TABLE2
-{
-    uint NumEntries;
-    MIB_IPNET_ROW2[1] Table;
-}
-alias PTEREDO_PORT_CHANGE_CALLBACK = void function(void*, ushort, MIB_NOTIFICATION_TYPE);
-struct DNS_SETTINGS
-{
-    uint Version;
-    ulong Flags;
-    PWSTR Hostname;
-    PWSTR Domain;
-    PWSTR SearchList;
-}
-struct DNS_SETTINGS2
-{
-    uint Version;
-    ulong Flags;
-    PWSTR Hostname;
-    PWSTR Domain;
-    PWSTR SearchList;
-    ulong SettingFlags;
-}
-struct DNS_DOH_SERVER_SETTINGS
-{
-    PWSTR Template;
-    ulong Flags;
-}
-alias DNS_SERVER_PROPERTY_TYPE = int;
-enum : int
-{
-    DnsServerInvalidProperty = 0x00000000,
-    DnsServerDohProperty     = 0x00000001,
-}
-
-union DNS_SERVER_PROPERTY_TYPES
-{
-    DNS_DOH_SERVER_SETTINGS* DohSettings;
-}
-struct DNS_SERVER_PROPERTY
-{
-    uint Version;
-    uint ServerIndex;
-    DNS_SERVER_PROPERTY_TYPE Type;
-    DNS_SERVER_PROPERTY_TYPES Property;
-}
-struct DNS_INTERFACE_SETTINGS
-{
-    uint Version;
-    ulong Flags;
-    PWSTR Domain;
-    PWSTR NameServer;
-    PWSTR SearchList;
-    uint RegistrationEnabled;
-    uint RegisterAdapterName;
-    uint EnableLLMNR;
-    uint QueryAdapterName;
-    PWSTR ProfileNameServer;
-}
-struct DNS_INTERFACE_SETTINGS_EX
-{
-    DNS_INTERFACE_SETTINGS SettingsV1;
-    uint DisableUnconstrainedQueries;
-    PWSTR SupplementalSearchList;
-}
-struct DNS_INTERFACE_SETTINGS3
-{
-    uint Version;
-    ulong Flags;
-    PWSTR Domain;
-    PWSTR NameServer;
-    PWSTR SearchList;
-    uint RegistrationEnabled;
-    uint RegisterAdapterName;
-    uint EnableLLMNR;
-    uint QueryAdapterName;
-    PWSTR ProfileNameServer;
-    uint DisableUnconstrainedQueries;
-    PWSTR SupplementalSearchList;
-    uint cServerProperties;
-    DNS_SERVER_PROPERTY* ServerProperties;
-    uint cProfileServerProperties;
-    DNS_SERVER_PROPERTY* ProfileServerProperties;
-}
-struct DNS_INTERFACE_SETTINGS4
-{
-    uint Version;
-    ulong Flags;
-    PWSTR Domain;
-    PWSTR NameServer;
-    PWSTR SearchList;
-    uint RegistrationEnabled;
-    uint RegisterAdapterName;
-    uint EnableLLMNR;
-    uint QueryAdapterName;
-    PWSTR ProfileNameServer;
-    uint DisableUnconstrainedQueries;
-    PWSTR SupplementalSearchList;
-    uint cServerProperties;
-    DNS_SERVER_PROPERTY* ServerProperties;
-    uint cProfileServerProperties;
-    DNS_SERVER_PROPERTY* ProfileServerProperties;
-    uint EncryptedDnsAdapterFlags;
-}
-alias PNETWORK_CONNECTIVITY_HINT_CHANGE_CALLBACK = void function(void*, NL_NETWORK_CONNECTIVITY_HINT);
 struct MIB_OPAQUE_QUERY
 {
     uint dwVarId;
@@ -2587,6 +2219,392 @@ enum : int
     NET_ADDRESS_IPV6               = 0x00000003,
 }
 
+struct NET_ADDRESS_INFO
+{
+    NET_ADDRESS_FORMAT Format;
+    union
+    {
+        struct _NamedAddress_e__Struct
+        {
+            wchar[256] Address;
+            wchar[6] Port;
+        }
+        SOCKADDR_IN Ipv4Address;
+        SOCKADDR_IN6 Ipv6Address;
+        SOCKADDR IpAddress;
+    }
+}
+alias MIB_NOTIFICATION_TYPE = int;
+enum : int
+{
+    MibParameterNotification = 0x00000000,
+    MibAddInstance           = 0x00000001,
+    MibDeleteInstance        = 0x00000002,
+    MibInitialNotification   = 0x00000003,
+}
+
+struct MIB_IF_ROW2
+{
+    NET_LUID_LH InterfaceLuid;
+    uint InterfaceIndex;
+    GUID InterfaceGuid;
+    wchar[257] Alias;
+    wchar[257] Description;
+    uint PhysicalAddressLength;
+    ubyte[32] PhysicalAddress;
+    ubyte[32] PermanentPhysicalAddress;
+    uint Mtu;
+    uint Type;
+    TUNNEL_TYPE TunnelType;
+    NDIS_MEDIUM MediaType;
+    NDIS_PHYSICAL_MEDIUM PhysicalMediumType;
+    NET_IF_ACCESS_TYPE AccessType;
+    NET_IF_DIRECTION_TYPE DirectionType;
+    struct _InterfaceAndOperStatusFlags_e__Struct
+    {
+        ubyte _bitfield0;
+    }
+    IF_OPER_STATUS OperStatus;
+    NET_IF_ADMIN_STATUS AdminStatus;
+    NET_IF_MEDIA_CONNECT_STATE MediaConnectState;
+    GUID NetworkGuid;
+    NET_IF_CONNECTION_TYPE ConnectionType;
+    ulong TransmitLinkSpeed;
+    ulong ReceiveLinkSpeed;
+    ulong InOctets;
+    ulong InUcastPkts;
+    ulong InNUcastPkts;
+    ulong InDiscards;
+    ulong InErrors;
+    ulong InUnknownProtos;
+    ulong InUcastOctets;
+    ulong InMulticastOctets;
+    ulong InBroadcastOctets;
+    ulong OutOctets;
+    ulong OutUcastPkts;
+    ulong OutNUcastPkts;
+    ulong OutDiscards;
+    ulong OutErrors;
+    ulong OutUcastOctets;
+    ulong OutMulticastOctets;
+    ulong OutBroadcastOctets;
+    ulong OutQLen;
+}
+struct MIB_IF_TABLE2
+{
+    uint NumEntries;
+    MIB_IF_ROW2[1] Table;
+}
+alias MIB_IF_ENTRY_LEVEL = int;
+enum : int
+{
+    MibIfEntryNormal                  = 0x00000000,
+    MibIfEntryNormalWithoutStatistics = 0x00000002,
+}
+
+alias MIB_IF_TABLE_LEVEL = int;
+enum : int
+{
+    MibIfTableNormal                  = 0x00000000,
+    MibIfTableRaw                     = 0x00000001,
+    MibIfTableNormalWithoutStatistics = 0x00000002,
+}
+
+struct MIB_IPINTERFACE_ROW
+{
+    ADDRESS_FAMILY Family;
+    NET_LUID_LH InterfaceLuid;
+    uint InterfaceIndex;
+    uint MaxReassemblySize;
+    ulong InterfaceIdentifier;
+    uint MinRouterAdvertisementInterval;
+    uint MaxRouterAdvertisementInterval;
+    BOOLEAN AdvertisingEnabled;
+    BOOLEAN ForwardingEnabled;
+    BOOLEAN WeakHostSend;
+    BOOLEAN WeakHostReceive;
+    BOOLEAN UseAutomaticMetric;
+    BOOLEAN UseNeighborUnreachabilityDetection;
+    BOOLEAN ManagedAddressConfigurationSupported;
+    BOOLEAN OtherStatefulConfigurationSupported;
+    BOOLEAN AdvertiseDefaultRoute;
+    NL_ROUTER_DISCOVERY_BEHAVIOR RouterDiscoveryBehavior;
+    uint DadTransmits;
+    uint BaseReachableTime;
+    uint RetransmitTime;
+    uint PathMtuDiscoveryTimeout;
+    NL_LINK_LOCAL_ADDRESS_BEHAVIOR LinkLocalAddressBehavior;
+    uint LinkLocalAddressTimeout;
+    uint[16] ZoneIndices;
+    uint SitePrefixLength;
+    uint Metric;
+    uint NlMtu;
+    BOOLEAN Connected;
+    BOOLEAN SupportsWakeUpPatterns;
+    BOOLEAN SupportsNeighborDiscovery;
+    BOOLEAN SupportsRouterDiscovery;
+    uint ReachableTime;
+    NL_INTERFACE_OFFLOAD_ROD TransmitOffload;
+    NL_INTERFACE_OFFLOAD_ROD ReceiveOffload;
+    BOOLEAN DisableDefaultRoutes;
+}
+struct MIB_IPINTERFACE_TABLE
+{
+    uint NumEntries;
+    MIB_IPINTERFACE_ROW[1] Table;
+}
+struct MIB_IFSTACK_ROW
+{
+    uint HigherLayerInterfaceIndex;
+    uint LowerLayerInterfaceIndex;
+}
+struct MIB_INVERTEDIFSTACK_ROW
+{
+    uint LowerLayerInterfaceIndex;
+    uint HigherLayerInterfaceIndex;
+}
+struct MIB_IFSTACK_TABLE
+{
+    uint NumEntries;
+    MIB_IFSTACK_ROW[1] Table;
+}
+struct MIB_INVERTEDIFSTACK_TABLE
+{
+    uint NumEntries;
+    MIB_INVERTEDIFSTACK_ROW[1] Table;
+}
+alias PIPINTERFACE_CHANGE_CALLBACK = void function(void*, MIB_IPINTERFACE_ROW*, MIB_NOTIFICATION_TYPE);
+struct MIB_IP_NETWORK_CONNECTION_BANDWIDTH_ESTIMATES
+{
+    NL_BANDWIDTH_INFORMATION InboundBandwidthInformation;
+    NL_BANDWIDTH_INFORMATION OutboundBandwidthInformation;
+}
+struct MIB_UNICASTIPADDRESS_ROW
+{
+    SOCKADDR_INET Address;
+    NET_LUID_LH InterfaceLuid;
+    uint InterfaceIndex;
+    NL_PREFIX_ORIGIN PrefixOrigin;
+    NL_SUFFIX_ORIGIN SuffixOrigin;
+    uint ValidLifetime;
+    uint PreferredLifetime;
+    ubyte OnLinkPrefixLength;
+    BOOLEAN SkipAsSource;
+    NL_DAD_STATE DadState;
+    SCOPE_ID ScopeId;
+    long CreationTimeStamp;
+}
+struct MIB_UNICASTIPADDRESS_TABLE
+{
+    uint NumEntries;
+    MIB_UNICASTIPADDRESS_ROW[1] Table;
+}
+alias PUNICAST_IPADDRESS_CHANGE_CALLBACK = void function(void*, MIB_UNICASTIPADDRESS_ROW*, MIB_NOTIFICATION_TYPE);
+alias PSTABLE_UNICAST_IPADDRESS_TABLE_CALLBACK = void function(void*, MIB_UNICASTIPADDRESS_TABLE*);
+struct MIB_ANYCASTIPADDRESS_ROW
+{
+    SOCKADDR_INET Address;
+    NET_LUID_LH InterfaceLuid;
+    uint InterfaceIndex;
+    SCOPE_ID ScopeId;
+}
+struct MIB_ANYCASTIPADDRESS_TABLE
+{
+    uint NumEntries;
+    MIB_ANYCASTIPADDRESS_ROW[1] Table;
+}
+struct MIB_MULTICASTIPADDRESS_ROW
+{
+    SOCKADDR_INET Address;
+    uint InterfaceIndex;
+    NET_LUID_LH InterfaceLuid;
+    SCOPE_ID ScopeId;
+}
+struct MIB_MULTICASTIPADDRESS_TABLE
+{
+    uint NumEntries;
+    MIB_MULTICASTIPADDRESS_ROW[1] Table;
+}
+struct IP_ADDRESS_PREFIX
+{
+    SOCKADDR_INET Prefix;
+    ubyte PrefixLength;
+}
+struct MIB_IPFORWARD_ROW2
+{
+    NET_LUID_LH InterfaceLuid;
+    uint InterfaceIndex;
+    IP_ADDRESS_PREFIX DestinationPrefix;
+    SOCKADDR_INET NextHop;
+    ubyte SitePrefixLength;
+    uint ValidLifetime;
+    uint PreferredLifetime;
+    uint Metric;
+    NL_ROUTE_PROTOCOL Protocol;
+    BOOLEAN Loopback;
+    BOOLEAN AutoconfigureAddress;
+    BOOLEAN Publish;
+    BOOLEAN Immortal;
+    uint Age;
+    NL_ROUTE_ORIGIN Origin;
+}
+struct MIB_IPFORWARD_TABLE2
+{
+    uint NumEntries;
+    MIB_IPFORWARD_ROW2[1] Table;
+}
+alias PIPFORWARD_CHANGE_CALLBACK = void function(void*, MIB_IPFORWARD_ROW2*, MIB_NOTIFICATION_TYPE);
+struct MIB_IPPATH_ROW
+{
+    SOCKADDR_INET Source;
+    SOCKADDR_INET Destination;
+    NET_LUID_LH InterfaceLuid;
+    uint InterfaceIndex;
+    SOCKADDR_INET CurrentNextHop;
+    uint PathMtu;
+    uint RttMean;
+    uint RttDeviation;
+    union
+    {
+        uint LastReachable;
+        uint LastUnreachable;
+    }
+    BOOLEAN IsReachable;
+    ulong LinkTransmitSpeed;
+    ulong LinkReceiveSpeed;
+}
+struct MIB_IPPATH_TABLE
+{
+    uint NumEntries;
+    MIB_IPPATH_ROW[1] Table;
+}
+struct MIB_IPNET_ROW2
+{
+    SOCKADDR_INET Address;
+    uint InterfaceIndex;
+    NET_LUID_LH InterfaceLuid;
+    ubyte[32] PhysicalAddress;
+    uint PhysicalAddressLength;
+    NL_NEIGHBOR_STATE State;
+    union
+    {
+        struct
+        {
+            ubyte _bitfield0;
+        }
+        ubyte Flags;
+    }
+    union _ReachabilityTime_e__Union
+    {
+        uint LastReachable;
+        uint LastUnreachable;
+    }
+}
+struct MIB_IPNET_TABLE2
+{
+    uint NumEntries;
+    MIB_IPNET_ROW2[1] Table;
+}
+alias PTEREDO_PORT_CHANGE_CALLBACK = void function(void*, ushort, MIB_NOTIFICATION_TYPE);
+struct DNS_SETTINGS
+{
+    uint Version;
+    ulong Flags;
+    PWSTR Hostname;
+    PWSTR Domain;
+    PWSTR SearchList;
+}
+struct DNS_SETTINGS2
+{
+    uint Version;
+    ulong Flags;
+    PWSTR Hostname;
+    PWSTR Domain;
+    PWSTR SearchList;
+    ulong SettingFlags;
+}
+struct DNS_DOH_SERVER_SETTINGS
+{
+    PWSTR Template;
+    ulong Flags;
+}
+alias DNS_SERVER_PROPERTY_TYPE = int;
+enum : int
+{
+    DnsServerInvalidProperty = 0x00000000,
+    DnsServerDohProperty     = 0x00000001,
+}
+
+union DNS_SERVER_PROPERTY_TYPES
+{
+    DNS_DOH_SERVER_SETTINGS* DohSettings;
+}
+struct DNS_SERVER_PROPERTY
+{
+    uint Version;
+    uint ServerIndex;
+    DNS_SERVER_PROPERTY_TYPE Type;
+    DNS_SERVER_PROPERTY_TYPES Property;
+}
+struct DNS_INTERFACE_SETTINGS
+{
+    uint Version;
+    ulong Flags;
+    PWSTR Domain;
+    PWSTR NameServer;
+    PWSTR SearchList;
+    uint RegistrationEnabled;
+    uint RegisterAdapterName;
+    uint EnableLLMNR;
+    uint QueryAdapterName;
+    PWSTR ProfileNameServer;
+}
+struct DNS_INTERFACE_SETTINGS_EX
+{
+    DNS_INTERFACE_SETTINGS SettingsV1;
+    uint DisableUnconstrainedQueries;
+    PWSTR SupplementalSearchList;
+}
+struct DNS_INTERFACE_SETTINGS3
+{
+    uint Version;
+    ulong Flags;
+    PWSTR Domain;
+    PWSTR NameServer;
+    PWSTR SearchList;
+    uint RegistrationEnabled;
+    uint RegisterAdapterName;
+    uint EnableLLMNR;
+    uint QueryAdapterName;
+    PWSTR ProfileNameServer;
+    uint DisableUnconstrainedQueries;
+    PWSTR SupplementalSearchList;
+    uint cServerProperties;
+    DNS_SERVER_PROPERTY* ServerProperties;
+    uint cProfileServerProperties;
+    DNS_SERVER_PROPERTY* ProfileServerProperties;
+}
+struct DNS_INTERFACE_SETTINGS4
+{
+    uint Version;
+    ulong Flags;
+    PWSTR Domain;
+    PWSTR NameServer;
+    PWSTR SearchList;
+    uint RegistrationEnabled;
+    uint RegisterAdapterName;
+    uint EnableLLMNR;
+    uint QueryAdapterName;
+    PWSTR ProfileNameServer;
+    uint DisableUnconstrainedQueries;
+    PWSTR SupplementalSearchList;
+    uint cServerProperties;
+    DNS_SERVER_PROPERTY* ServerProperties;
+    uint cProfileServerProperties;
+    DNS_SERVER_PROPERTY* ProfileServerProperties;
+    uint EncryptedDnsAdapterFlags;
+}
+alias PNETWORK_CONNECTIVITY_HINT_CHANGE_CALLBACK = void function(void*, NL_NETWORK_CONNECTIVITY_HINT);
 alias GLOBAL_FILTER = int;
 enum : int
 {

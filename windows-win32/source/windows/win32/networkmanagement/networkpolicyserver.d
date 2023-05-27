@@ -2,7 +2,8 @@ module windows.win32.networkmanagement.networkpolicyserver;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BSTR, HRESULT, VARIANT_BOOL;
-import windows.win32.system.com_ : IDispatch, IUnknown, VARIANT;
+import windows.win32.system.com : IDispatch, IUnknown;
+import windows.win32.system.variant : VARIANT;
 
 version (Windows):
 extern (Windows):
@@ -18,10 +19,6 @@ enum AUTHSRV_AUTHORIZATION_VALUE_W = "AuthorizationDLLs";
 enum AUTHSRV_ENFORCE_NP_FOR_PAP_CHALLENGE_RESPONSE_VALUE_W = "EnforceNetworkPolicyForPAPBasedChallengeResponse";
 enum RADIUS_EXTENSION_VERSION = 0x00000001;
 enum RADIUS_EXTENSION_PROCESS2 = "RadiusExtensionProcess2";
-enum CLSID_SdoMachine = GUID(0xe9218ae7, 0x9e91, 0x11d1, [0xbf, 0x60, 0x0, 0x80, 0xc7, 0x84, 0x6b, 0xc0]);
-struct SdoMachine
-{
-}
 alias ATTRIBUTEID = uint;
 enum : uint
 {
@@ -758,6 +755,10 @@ interface ISdoDictionaryOld : IDispatch
     HRESULT EnumAttributeValues(ATTRIBUTEID, VARIANT*, VARIANT*);
     HRESULT CreateAttribute(ATTRIBUTEID, IDispatch*);
     HRESULT GetAttributeID(BSTR, ATTRIBUTEID*);
+}
+enum CLSID_SdoMachine = GUID(0xe9218ae7, 0x9e91, 0x11d1, [0xbf, 0x60, 0x0, 0x80, 0xc7, 0x84, 0x6b, 0xc0]);
+struct SdoMachine
+{
 }
 alias RADIUS_ATTRIBUTE_TYPE = int;
 enum : int

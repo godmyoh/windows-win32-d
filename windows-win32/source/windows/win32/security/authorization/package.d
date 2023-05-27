@@ -1,10 +1,11 @@
-module windows.win32.security.authorization_;
+module windows.win32.security.authorization;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, HANDLE, HRESULT, HWND, LUID, PSID, PSTR, PWSTR, VARIANT_BOOL, WIN32_ERROR;
-import windows.win32.security_ : ACE_FLAGS, ACE_HEADER, ACL, GENERIC_MAPPING, OBJECT_SECURITY_INFORMATION, OBJECT_TYPE_LIST, PSECURITY_DESCRIPTOR, SID, SID_AND_ATTRIBUTES, SYSTEM_AUDIT_OBJECT_ACE_FLAGS, TOKEN_GROUPS;
-import windows.win32.system.com_ : IDispatch, IUnknown, VARIANT;
+import windows.win32.security : ACE_FLAGS, ACE_HEADER, ACL, GENERIC_MAPPING, OBJECT_SECURITY_INFORMATION, OBJECT_TYPE_LIST, PSECURITY_DESCRIPTOR, SID, SID_AND_ATTRIBUTES, SYSTEM_AUDIT_OBJECT_ACE_FLAGS, TOKEN_GROUPS;
+import windows.win32.system.com : IDispatch, IUnknown;
 import windows.win32.system.threading : LPTHREAD_START_ROUTINE;
+import windows.win32.system.variant : VARIANT;
 
 version (Windows):
 extern (Windows):
@@ -62,7 +63,7 @@ enum : uint
     AUTHZ_SECURITY_ATTRIBUTE_VALUE_CASE_SENSITIVE = 0x00000002,
 }
 
-BOOL AuthzAccessCheck(AUTHZ_ACCESS_CHECK_FLAGS, AUTHZ_CLIENT_CONTEXT_HANDLE, AUTHZ_ACCESS_REQUEST*, AUTHZ_AUDIT_EVENT_HANDLE, PSECURITY_DESCRIPTOR, PSECURITY_DESCRIPTOR*, uint, AUTHZ_ACCESS_REPLY*, long*);
+BOOL AuthzAccessCheck(AUTHZ_ACCESS_CHECK_FLAGS, AUTHZ_CLIENT_CONTEXT_HANDLE, AUTHZ_ACCESS_REQUEST*, AUTHZ_AUDIT_EVENT_HANDLE, PSECURITY_DESCRIPTOR, PSECURITY_DESCRIPTOR*, uint, AUTHZ_ACCESS_REPLY*, AUTHZ_ACCESS_CHECK_RESULTS_HANDLE*);
 BOOL AuthzCachedAccessCheck(uint, AUTHZ_ACCESS_CHECK_RESULTS_HANDLE, AUTHZ_ACCESS_REQUEST*, AUTHZ_AUDIT_EVENT_HANDLE, AUTHZ_ACCESS_REPLY*);
 BOOL AuthzOpenObjectAudit(uint, AUTHZ_CLIENT_CONTEXT_HANDLE, AUTHZ_ACCESS_REQUEST*, AUTHZ_AUDIT_EVENT_HANDLE, PSECURITY_DESCRIPTOR, PSECURITY_DESCRIPTOR*, uint, AUTHZ_ACCESS_REPLY*);
 BOOL AuthzFreeHandle(AUTHZ_ACCESS_CHECK_RESULTS_HANDLE);
@@ -81,19 +82,19 @@ BOOL AuthzModifySids(AUTHZ_CLIENT_CONTEXT_HANDLE, AUTHZ_CONTEXT_INFORMATION_CLAS
 BOOL AuthzSetAppContainerInformation(AUTHZ_CLIENT_CONTEXT_HANDLE, PSID, uint, SID_AND_ATTRIBUTES*);
 BOOL AuthzGetInformationFromContext(AUTHZ_CLIENT_CONTEXT_HANDLE, AUTHZ_CONTEXT_INFORMATION_CLASS, uint, uint*, void*);
 BOOL AuthzFreeContext(AUTHZ_CLIENT_CONTEXT_HANDLE);
-BOOL AuthzInitializeObjectAccessAuditEvent(AUTHZ_INITIALIZE_OBJECT_ACCESS_AUDIT_EVENT_FLAGS, AUTHZ_AUDIT_EVENT_TYPE_HANDLE, PWSTR, PWSTR, PWSTR, PWSTR, long*, uint);
-BOOL AuthzInitializeObjectAccessAuditEvent2(uint, AUTHZ_AUDIT_EVENT_TYPE_HANDLE, PWSTR, PWSTR, PWSTR, PWSTR, PWSTR, long*, uint);
+BOOL AuthzInitializeObjectAccessAuditEvent(AUTHZ_INITIALIZE_OBJECT_ACCESS_AUDIT_EVENT_FLAGS, AUTHZ_AUDIT_EVENT_TYPE_HANDLE, PWSTR, PWSTR, PWSTR, PWSTR, AUTHZ_AUDIT_EVENT_HANDLE*, uint);
+BOOL AuthzInitializeObjectAccessAuditEvent2(uint, AUTHZ_AUDIT_EVENT_TYPE_HANDLE, PWSTR, PWSTR, PWSTR, PWSTR, PWSTR, AUTHZ_AUDIT_EVENT_HANDLE*, uint);
 BOOL AuthzFreeAuditEvent(AUTHZ_AUDIT_EVENT_HANDLE);
 BOOL AuthzEvaluateSacl(AUTHZ_CLIENT_CONTEXT_HANDLE, AUTHZ_ACCESS_REQUEST*, ACL*, uint, BOOL, BOOL*);
 BOOL AuthzInstallSecurityEventSource(uint, AUTHZ_SOURCE_SCHEMA_REGISTRATION*);
 BOOL AuthzUninstallSecurityEventSource(uint, const(wchar)*);
 BOOL AuthzEnumerateSecurityEventSources(uint, AUTHZ_SOURCE_SCHEMA_REGISTRATION*, uint*, uint*);
-BOOL AuthzRegisterSecurityEventSource(uint, const(wchar)*, long*);
-BOOL AuthzUnregisterSecurityEventSource(uint, long*);
+BOOL AuthzRegisterSecurityEventSource(uint, const(wchar)*, AUTHZ_SECURITY_EVENT_PROVIDER_HANDLE*);
+BOOL AuthzUnregisterSecurityEventSource(uint, AUTHZ_SECURITY_EVENT_PROVIDER_HANDLE*);
 BOOL AuthzReportSecurityEvent(uint, AUTHZ_SECURITY_EVENT_PROVIDER_HANDLE, uint, PSID, uint);
 BOOL AuthzReportSecurityEventFromParams(uint, AUTHZ_SECURITY_EVENT_PROVIDER_HANDLE, uint, PSID, AUDIT_PARAMS*);
-BOOL AuthzRegisterCapChangeNotification(AUTHZ_CAP_CHANGE_SUBSCRIPTION_HANDLE__**, LPTHREAD_START_ROUTINE, void*);
-BOOL AuthzUnregisterCapChangeNotification(AUTHZ_CAP_CHANGE_SUBSCRIPTION_HANDLE__*);
+BOOL AuthzRegisterCapChangeNotification(AUTHZ_CAP_CHANGE_SUBSCRIPTION_HANDLE*, LPTHREAD_START_ROUTINE, void*);
+BOOL AuthzUnregisterCapChangeNotification(AUTHZ_CAP_CHANGE_SUBSCRIPTION_HANDLE);
 BOOL AuthzFreeCentralAccessPolicyCache();
 WIN32_ERROR SetEntriesInAclA(uint, EXPLICIT_ACCESS_A*, ACL*, ACL**);
 WIN32_ERROR SetEntriesInAclW(uint, EXPLICIT_ACCESS_W*, ACL*, ACL**);
@@ -751,10 +752,6 @@ struct AUTHZ_AUDIT_EVENT_TYPE_OLD
     LUID LinkId;
     AUTHZ_AUDIT_EVENT_TYPE_UNION u;
 }
-struct AUTHZ_CAP_CHANGE_SUBSCRIPTION_HANDLE__
-{
-    int unused;
-}
 struct AUTHZ_ACCESS_REQUEST
 {
     uint DesiredAccess;
@@ -902,18 +899,6 @@ struct AUTHZ_SOURCE_SCHEMA_REGISTRATION
     }
     uint dwObjectTypeNameCount;
     AUTHZ_REGISTRATION_OBJECT_TYPE_NAME_OFFSET[1] ObjectTypeNames;
-}
-enum CLSID_AzAuthorizationStore = GUID(0xb2bcff59, 0xa757, 0x4b0b, [0xa1, 0xbc, 0xea, 0x69, 0x98, 0x1d, 0xa6, 0x9e]);
-struct AzAuthorizationStore
-{
-}
-enum CLSID_AzBizRuleContext = GUID(0x5c2dc96f, 0x8d51, 0x434b, [0xb3, 0x3c, 0x37, 0x9b, 0xcc, 0xae, 0x77, 0xc3]);
-struct AzBizRuleContext
-{
-}
-enum CLSID_AzPrincipalLocator = GUID(0x483afb5d, 0x70df, 0x4e16, [0xab, 0xdc, 0xa1, 0xde, 0x4d, 0x1, 0x5a, 0x3e]);
-struct AzPrincipalLocator
-{
 }
 enum IID_IAzAuthorizationStore = GUID(0xedbd9ca9, 0x9b82, 0x4f6a, [0x9e, 0x8b, 0x98, 0x30, 0x1e, 0x45, 0xf, 0x14]);
 interface IAzAuthorizationStore : IDispatch
@@ -1317,7 +1302,7 @@ interface IAzClientContext3 : IAzClientContext2
     HRESULT GetTasks(BSTR, IAzTasks*);
     HRESULT get_BizRuleParameters(IAzBizRuleParameters*);
     HRESULT get_BizRuleInterfaces(IAzBizRuleInterfaces*);
-    HRESULT GetGroups(BSTR, AZ_PROP_CONSTANTS, VARIANT*);
+    HRESULT GetGroups(BSTR, uint, VARIANT*);
     HRESULT get_Sids(VARIANT*);
 }
 enum IID_IAzScope2 = GUID(0xee9fe8c9, 0xc9f3, 0x40e2, [0xaa, 0x12, 0xd1, 0xd8, 0x59, 0x97, 0x27, 0xfd]);
@@ -1522,8 +1507,21 @@ enum : int
     AZ_CLIENT_CONTEXT_GET_GROUPS_STORE_LEVEL_ONLY = 0x00000002,
 }
 
+enum CLSID_AzAuthorizationStore = GUID(0xb2bcff59, 0xa757, 0x4b0b, [0xa1, 0xbc, 0xea, 0x69, 0x98, 0x1d, 0xa6, 0x9e]);
+struct AzAuthorizationStore
+{
+}
+enum CLSID_AzBizRuleContext = GUID(0x5c2dc96f, 0x8d51, 0x434b, [0xb3, 0x3c, 0x37, 0x9b, 0xcc, 0xae, 0x77, 0xc3]);
+struct AzBizRuleContext
+{
+}
+enum CLSID_AzPrincipalLocator = GUID(0x483afb5d, 0x70df, 0x4e16, [0xab, 0xdc, 0xa1, 0xde, 0x4d, 0x1, 0x5a, 0x3e]);
+struct AzPrincipalLocator
+{
+}
 alias FN_PROGRESS = void function(PWSTR, uint, PROG_INVOKE_SETTING*, void*, BOOL);
 alias AUTHZ_ACCESS_CHECK_RESULTS_HANDLE = long;
+alias AUTHZ_CAP_CHANGE_SUBSCRIPTION_HANDLE = long;
 alias AUTHZ_CLIENT_CONTEXT_HANDLE = long;
 alias AUTHZ_RESOURCE_MANAGER_HANDLE = long;
 alias AUTHZ_AUDIT_EVENT_HANDLE = long;

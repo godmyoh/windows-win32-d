@@ -4,11 +4,11 @@ import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, PSTR, PWSTR, SYSTEMTIME;
 import windows.win32.graphics.gdi : HBITMAP;
 import windows.win32.networking.winhttp : WIN_HTTP_CREATE_URL_FLAGS;
-import windows.win32.security.authentication.identity_ : SecPkgContext_Bindings, SecPkgContext_CipherInfo, SecPkgContext_ConnectionInfo;
-import windows.win32.security.cryptography_ : CERT_CHAIN_CONTEXT, CERT_CONTEXT;
+import windows.win32.security.authentication.identity : SecPkgContext_Bindings, SecPkgContext_CipherInfo, SecPkgContext_ConnectionInfo;
+import windows.win32.security.cryptography : CERT_CHAIN_CONTEXT, CERT_CONTEXT;
 import windows.win32.storage.filesystem : WIN32_FIND_DATAA, WIN32_FIND_DATAW;
-import windows.win32.system.com_ : IUnknown;
-import windows.win32.system.winrt_ : IInspectable;
+import windows.win32.system.com : IUnknown;
+import windows.win32.system.winrt : IInspectable;
 
 version (Windows):
 extern (Windows):
@@ -2193,10 +2193,6 @@ enum : int
 
 alias HTTP_POLICY_EXTENSION_INIT = uint function(HTTP_POLICY_EXTENSION_VERSION, HTTP_POLICY_EXTENSION_TYPE, void*, uint);
 alias HTTP_POLICY_EXTENSION_SHUTDOWN = uint function(HTTP_POLICY_EXTENSION_TYPE);
-enum CLSID_ProofOfPossessionCookieInfoManager = GUID(0xa9927f85, 0xa304, 0x4390, [0x8b, 0x23, 0xa7, 0x5f, 0x1c, 0x66, 0x86, 0x0]);
-struct ProofOfPossessionCookieInfoManager
-{
-}
 struct ProofOfPossessionCookieInfo
 {
     PWSTR name;
@@ -2213,4 +2209,8 @@ enum IID_IProofOfPossessionCookieInfoManager2 = GUID(0x15e41407, 0xb42f, 0x4ae7,
 interface IProofOfPossessionCookieInfoManager2 : IUnknown
 {
     HRESULT GetCookieInfoWithUriForAccount(IInspectable, const(wchar)*, uint*, ProofOfPossessionCookieInfo**);
+}
+enum CLSID_ProofOfPossessionCookieInfoManager = GUID(0xa9927f85, 0xa304, 0x4390, [0x8b, 0x23, 0xa7, 0x5f, 0x1c, 0x66, 0x86, 0x0]);
+struct ProofOfPossessionCookieInfoManager
+{
 }

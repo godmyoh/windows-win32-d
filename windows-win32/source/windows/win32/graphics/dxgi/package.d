@@ -1,11 +1,11 @@
-module windows.win32.graphics.dxgi_;
+module windows.win32.graphics.dxgi;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, HANDLE, HINSTANCE, HRESULT, HWND, LUID, POINT, PSTR, PWSTR, RECT;
+import windows.win32.foundation : BOOL, HANDLE, HMODULE, HRESULT, HWND, LUID, POINT, PSTR, PWSTR, RECT;
 import windows.win32.graphics.dxgi.common : DXGI_ALPHA_MODE, DXGI_COLOR_SPACE_TYPE, DXGI_FORMAT, DXGI_GAMMA_CONTROL, DXGI_GAMMA_CONTROL_CAPABILITIES, DXGI_MODE_DESC, DXGI_MODE_ROTATION, DXGI_MODE_SCALING, DXGI_MODE_SCANLINE_ORDER, DXGI_RATIONAL, DXGI_SAMPLE_DESC;
 import windows.win32.graphics.gdi : HDC, HMONITOR;
-import windows.win32.security_ : SECURITY_ATTRIBUTES;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.security : SECURITY_ATTRIBUTES;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):
@@ -17,16 +17,6 @@ struct DXGI_RGBA
     float b;
     float a;
 }
-alias DXGI_RESOURCE_PRIORITY = uint;
-enum : uint
-{
-    DXGI_RESOURCE_PRIORITY_MINIMUM = 0x28000000,
-    DXGI_RESOURCE_PRIORITY_LOW     = 0x50000000,
-    DXGI_RESOURCE_PRIORITY_NORMAL  = 0x78000000,
-    DXGI_RESOURCE_PRIORITY_HIGH    = 0xa0000000,
-    DXGI_RESOURCE_PRIORITY_MAXIMUM = 0xc8000000,
-}
-
 alias DXGI_USAGE = uint;
 enum : uint
 {
@@ -44,6 +34,12 @@ HRESULT CreateDXGIFactory1(const(GUID)*, void**);
 HRESULT CreateDXGIFactory2(uint, const(GUID)*, void**);
 HRESULT DXGIGetDebugInterface1(uint, const(GUID)*, void**);
 HRESULT DXGIDeclareAdapterRemovalSupport();
+HRESULT DXGIDisableVBlankVirtualization();
+enum DXGI_RESOURCE_PRIORITY_MINIMUM = 0x28000000;
+enum DXGI_RESOURCE_PRIORITY_LOW = 0x50000000;
+enum DXGI_RESOURCE_PRIORITY_NORMAL = 0x78000000;
+enum DXGI_RESOURCE_PRIORITY_HIGH = 0xa0000000;
+enum DXGI_RESOURCE_PRIORITY_MAXIMUM = 0xc8000000;
 enum DXGI_MAP_READ = 0x00000001;
 enum DXGI_MAP_WRITE = 0x00000002;
 enum DXGI_MAP_DISCARD = 0x00000004;
@@ -216,7 +212,7 @@ interface IDXGIResource : IDXGIDeviceSubObject
 {
     HRESULT GetSharedHandle(HANDLE*);
     HRESULT GetUsage(DXGI_USAGE*);
-    HRESULT SetEvictionPriority(DXGI_RESOURCE_PRIORITY);
+    HRESULT SetEvictionPriority(uint);
     HRESULT GetEvictionPriority(uint*);
 }
 enum IID_IDXGIKeyedMutex = GUID(0x9d8e1289, 0xd7b3, 0x465f, [0x81, 0x26, 0x25, 0xe, 0x34, 0x9a, 0xf8, 0x5d]);
@@ -282,7 +278,7 @@ interface IDXGIFactory : IDXGIObject
     HRESULT MakeWindowAssociation(HWND, uint);
     HRESULT GetWindowAssociation(HWND*);
     HRESULT CreateSwapChain(IUnknown, DXGI_SWAP_CHAIN_DESC*, IDXGISwapChain*);
-    HRESULT CreateSoftwareAdapter(HINSTANCE, IDXGIAdapter*);
+    HRESULT CreateSoftwareAdapter(HMODULE, IDXGIAdapter*);
 }
 enum IID_IDXGIDevice = GUID(0x54ec77fa, 0x1377, 0x44e6, [0x8c, 0x32, 0x88, 0xfd, 0x5f, 0x44, 0xc8, 0x4c]);
 interface IDXGIDevice : IDXGIObject
@@ -787,7 +783,6 @@ enum : uint
     DXGI_ADAPTER_FLAG3_SUPPORT_MONITORED_FENCES     = 0x00000008,
     DXGI_ADAPTER_FLAG3_SUPPORT_NON_MONITORED_FENCES = 0x00000010,
     DXGI_ADAPTER_FLAG3_KEYED_MUTEX_CONFORMANCE      = 0x00000020,
-    DXGI_ADAPTER_FLAG3_FORCE_DWORD                  = 0xffffffff,
 }
 
 struct DXGI_ADAPTER_DESC3

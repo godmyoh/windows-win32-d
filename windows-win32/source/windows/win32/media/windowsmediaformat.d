@@ -3,7 +3,8 @@ module windows.win32.media.windowsmediaformat;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, HRESULT, LPARAM, PWSTR, RECT;
 import windows.win32.graphics.gdi : BITMAPINFOHEADER;
-import windows.win32.system.com_ : IStream, IUnknown, VARIANT;
+import windows.win32.system.com : IStream, IUnknown;
+import windows.win32.system.variant : VARIANT;
 
 version (Windows):
 extern (Windows):

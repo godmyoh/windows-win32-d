@@ -762,9 +762,6 @@ struct DHCP_SUBNET_ELEMENT_DATA
         DHCP_IP_CLUSTER* IpUsedCluster;
     }
 }
-union DHCP_SUBNET_ELEMENT_UNION
-{
-}
 struct DHCP_SUBNET_ELEMENT_INFO_ARRAY
 {
     uint NumElements;
@@ -840,9 +837,6 @@ struct DHCP_OPTION_DATA_ELEMENT
         DHCP_BINARY_DATA EncapsulatedDataOption;
         PWSTR Ipv6AddressDataOption;
     }
-}
-union DHCP_OPTION_ELEMENT_UNION
-{
 }
 struct DHCP_OPTION_DATA
 {
@@ -929,9 +923,6 @@ struct DHCP_OPTION_SCOPE_INFO6
         DHCP_IPV6_ADDRESS SubnetScopeInfo;
         DHCP_RESERVED_SCOPE6 ReservedScopeInfo;
     }
-}
-union DHCP_OPTION_SCOPE_UNION6
-{
 }
 struct DHCP_OPTION_LIST
 {
@@ -1045,9 +1036,6 @@ struct DHCP_SEARCH_INFO
         DHCP_BINARY_DATA ClientHardwareAddress;
         PWSTR ClientName;
     }
-}
-union DHCP_CLIENT_SEARCH_UNION
-{
 }
 alias DHCP_PROPERTY_TYPE = int;
 enum : int
@@ -1283,9 +1271,6 @@ struct DHCP_SUBNET_ELEMENT_DATA_V4
         DHCP_IP_RANGE* ExcludeIpRange;
         DHCP_IP_CLUSTER* IpUsedCluster;
     }
-}
-union DHCP_SUBNET_ELEMENT_UNION_V4
-{
 }
 struct DHCP_SUBNET_ELEMENT_INFO_ARRAY_V4
 {
@@ -1595,9 +1580,6 @@ struct DHCP_SUBNET_ELEMENT_DATA_V6
         DHCP_IP_RESERVATION_V6* ReservedIp;
         DHCP_IP_RANGE_V6* ExcludeIpRange;
     }
-}
-union DHCP_SUBNET_ELEMENT_UNION_V6
-{
 }
 struct DHCP_SUBNET_ELEMENT_INFO_ARRAY_V6
 {

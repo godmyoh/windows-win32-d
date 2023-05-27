@@ -2,7 +2,7 @@ module windows.win32.system.distributedtransactioncoordinator;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, CHAR, FILETIME, HANDLE, HRESULT, PSTR, PWSTR;
-import windows.win32.system.com_ : IMoniker, IUnknown;
+import windows.win32.system.com : IMoniker, IUnknown;
 
 version (Windows):
 extern (Windows):

@@ -2,7 +2,7 @@ module windows.win32.system.services;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BOOLEAN, HANDLE, PSTR, PWSTR;
-import windows.win32.security_ : OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR, SC_HANDLE;
+import windows.win32.security : OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR, SC_HANDLE;
 import windows.win32.system.registry : HKEY;
 
 version (Windows):
@@ -59,6 +59,8 @@ uint NotifyServiceStatusChangeW(SC_HANDLE, SERVICE_NOTIFY, SERVICE_NOTIFY_2W*);
 BOOL ControlServiceExA(SC_HANDLE, uint, uint, void*);
 BOOL ControlServiceExW(SC_HANDLE, uint, uint, void*);
 BOOL QueryServiceDynamicInformation(SERVICE_STATUS_HANDLE, uint, void**);
+uint SubscribeServiceChangeNotifications(SC_HANDLE, SC_EVENT_TYPE, PSC_NOTIFICATION_CALLBACK, void*, PSC_NOTIFICATION_REGISTRATION*);
+void UnsubscribeServiceChangeNotifications(PSC_NOTIFICATION_REGISTRATION);
 uint WaitServiceState(SC_HANDLE, uint, uint, HANDLE);
 uint GetServiceRegistryStateKey(SERVICE_STATUS_HANDLE, SERVICE_REGISTRY_STATE_TYPE, uint, HKEY*);
 uint GetServiceDirectory(SERVICE_STATUS_HANDLE, SERVICE_DIRECTORY_TYPE, PWSTR, uint, uint*);
@@ -316,6 +318,7 @@ enum : uint
 }
 
 alias SERVICE_STATUS_HANDLE = long;
+alias PSC_NOTIFICATION_REGISTRATION = long;
 struct SERVICE_TRIGGER_CUSTOM_STATE_ID
 {
     uint[2] Data;
@@ -595,9 +598,6 @@ enum : int
 }
 
 alias PSC_NOTIFICATION_CALLBACK = void function(uint, void*);
-struct _SC_NOTIFICATION_REGISTRATION
-{
-}
 alias SERVICE_REGISTRY_STATE_TYPE = int;
 enum : int
 {

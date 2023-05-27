@@ -2,13 +2,13 @@ module windows.win32.security.configurationsnapin;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HRESULT;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):
 
-alias SCE_LOG_ERR_LEVEL = uint;
-enum : uint
+alias SCE_LOG_ERR_LEVEL = int;
+enum : int
 {
     SCE_LOG_LEVEL_ALWAYS = 0x00000000,
     SCE_LOG_LEVEL_ERROR  = 0x00000001,

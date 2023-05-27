@@ -2,7 +2,7 @@ module windows.win32.graphics.direct3d.fxc;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HRESULT, PSTR, PWSTR;
-import windows.win32.graphics.direct3d_ : D3D_SHADER_MACRO, ID3DBlob, ID3DInclude;
+import windows.win32.graphics.direct3d : D3D_SHADER_MACRO, ID3DBlob, ID3DInclude;
 import windows.win32.graphics.direct3d10 : ID3D10Effect;
 import windows.win32.graphics.direct3d11 : ID3D11FunctionLinkingGraph, ID3D11Linker, ID3D11Module;
 
@@ -91,7 +91,6 @@ enum : int
     D3DCOMPILER_STRIP_TEST_BLOBS      = 0x00000004,
     D3DCOMPILER_STRIP_PRIVATE_DATA    = 0x00000008,
     D3DCOMPILER_STRIP_ROOT_SIGNATURE  = 0x00000010,
-    D3DCOMPILER_STRIP_FORCE_DWORD     = 0x7fffffff,
 }
 
 alias D3D_BLOB_PART = int;

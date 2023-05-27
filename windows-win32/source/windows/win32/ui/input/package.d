@@ -1,4 +1,4 @@
-module windows.win32.ui.input_;
+module windows.win32.ui.input;
 
 import windows.win32.foundation : BOOL, HANDLE, HWND, LRESULT, WPARAM;
 

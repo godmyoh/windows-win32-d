@@ -2,8 +2,9 @@ module windows.win32.system.taskscheduler;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, HRESULT, HWND, PWSTR, SYSTEMTIME, VARIANT_BOOL;
-import windows.win32.system.com_ : IDispatch, IUnknown, SAFEARRAY, VARIANT;
-import windows.win32.ui.controls_ : HPROPSHEETPAGE;
+import windows.win32.system.com : IDispatch, IUnknown, SAFEARRAY;
+import windows.win32.system.variant : VARIANT;
+import windows.win32.ui.controls : HPROPSHEETPAGE;
 
 version (Windows):
 extern (Windows):
@@ -199,18 +200,6 @@ enum IID_IProvideTaskPage = GUID(0x4086658a, 0xcbbb, 0x11cf, [0xb6, 0x4, 0x0, 0x
 interface IProvideTaskPage : IUnknown
 {
     HRESULT GetPage(TASKPAGE, BOOL, HPROPSHEETPAGE*);
-}
-enum CLSID_TaskScheduler = GUID(0xf87369f, 0xa4e5, 0x4cfc, [0xbd, 0x3e, 0x73, 0xe6, 0x15, 0x45, 0x72, 0xdd]);
-struct TaskScheduler
-{
-}
-enum CLSID_TaskHandlerPS = GUID(0xf2a69db7, 0xda2c, 0x4352, [0x90, 0x66, 0x86, 0xfe, 0xe6, 0xda, 0xca, 0xc9]);
-struct TaskHandlerPS
-{
-}
-enum CLSID_TaskHandlerStatusPS = GUID(0x9f15266d, 0xd7ba, 0x48f0, [0x93, 0xc1, 0xe6, 0x89, 0x5f, 0x6f, 0xe5, 0xac]);
-struct TaskHandlerStatusPS
-{
 }
 alias TASK_RUN_FLAGS = int;
 enum : int
@@ -772,6 +761,18 @@ interface IMaintenanceSettings : IDispatch
     HRESULT get_Deadline(BSTR*);
     HRESULT put_Exclusive(VARIANT_BOOL);
     HRESULT get_Exclusive(VARIANT_BOOL*);
+}
+enum CLSID_TaskScheduler = GUID(0xf87369f, 0xa4e5, 0x4cfc, [0xbd, 0x3e, 0x73, 0xe6, 0x15, 0x45, 0x72, 0xdd]);
+struct TaskScheduler
+{
+}
+enum CLSID_TaskHandlerPS = GUID(0xf2a69db7, 0xda2c, 0x4352, [0x90, 0x66, 0x86, 0xfe, 0xe6, 0xda, 0xca, 0xc9]);
+struct TaskHandlerPS
+{
+}
+enum CLSID_TaskHandlerStatusPS = GUID(0x9f15266d, 0xd7ba, 0x48f0, [0x93, 0xc1, 0xe6, 0x89, 0x5f, 0x6f, 0xe5, 0xac]);
+struct TaskHandlerStatusPS
+{
 }
 enum IID_IRegisteredTaskCollection = GUID(0x86627eb4, 0x42a7, 0x41e4, [0xa4, 0xd9, 0xac, 0x33, 0xa7, 0x2f, 0x2d, 0x52]);
 interface IRegisteredTaskCollection : IDispatch

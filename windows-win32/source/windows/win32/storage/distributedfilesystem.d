@@ -2,7 +2,7 @@ module windows.win32.storage.distributedfilesystem;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : PWSTR;
-import windows.win32.security_ : PSECURITY_DESCRIPTOR;
+import windows.win32.security : PSECURITY_DESCRIPTOR;
 
 version (Windows):
 extern (Windows):

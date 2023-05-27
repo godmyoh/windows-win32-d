@@ -2,7 +2,7 @@ module windows.win32.security.cryptography.catalog;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HANDLE, PWSTR;
-import windows.win32.security.cryptography_ : CERT_STRONG_SIGN_PARA, CRYPT_INTEGER_BLOB;
+import windows.win32.security.cryptography : CERT_STRONG_SIGN_PARA, CRYPT_INTEGER_BLOB;
 import windows.win32.security.cryptography.sip : SIP_INDIRECT_DATA;
 
 version (Windows):

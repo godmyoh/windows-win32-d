@@ -4,7 +4,7 @@ import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, CHAR, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT, WPARAM;
 import windows.win32.globalization : HIMC, HIMCC;
 import windows.win32.graphics.gdi : HBITMAP, LOGFONTA, LOGFONTW;
-import windows.win32.system.com_ : IClassFactory, IUnknown, SAFEARRAY;
+import windows.win32.system.com : IClassFactory, IUnknown, SAFEARRAY;
 import windows.win32.ui.textservices : HKL;
 import windows.win32.ui.windowsandmessaging : HICON, MSG;
 
@@ -240,7 +240,7 @@ uint ImmGetImeMenuItemsA(HIMC, uint, uint, IMEMENUITEMINFOA*, IMEMENUITEMINFOA*,
 uint ImmGetImeMenuItemsW(HIMC, uint, uint, IMEMENUITEMINFOW*, IMEMENUITEMINFOW*, uint);
 BOOL ImmDisableTextFrameService(uint);
 BOOL ImmDisableLegacyIME();
-BOOL ImmGetHotKey(uint, uint*, uint*, long*);
+BOOL ImmGetHotKey(uint, uint*, uint*, HKL*);
 BOOL ImmSetHotKey(uint, uint, uint, HKL);
 BOOL ImmGenerateMessage(HIMC);
 LRESULT ImmRequestMessageA(HIMC, WPARAM, LPARAM);
@@ -1444,17 +1444,13 @@ interface IImePadApplet : IUnknown
 enum IID_IImePad = GUID(0x5d8e643a, 0xc3a9, 0x11d1, [0xaf, 0xef, 0x0, 0x80, 0x5f, 0xc, 0x8b, 0x6d]);
 interface IImePad : IUnknown
 {
-    HRESULT Request(IImePadApplet, IME_PAD_REQUEST_FLAGS, WPARAM, LPARAM);
+    HRESULT Request(IImePadApplet, int, WPARAM, LPARAM);
 }
 enum IID_IImePlugInDictDictionaryList = GUID(0x98752974, 0xb0a6, 0x489b, [0x8f, 0x6f, 0xbf, 0xf3, 0x76, 0x9c, 0x8e, 0xeb]);
 interface IImePlugInDictDictionaryList : IUnknown
 {
     HRESULT GetDictionariesInUse(SAFEARRAY**, SAFEARRAY**, SAFEARRAY**);
     HRESULT DeleteDictionary(BSTR);
-}
-enum CLSID_CActiveIMM = GUID(0x4955dd33, 0xb159, 0x11d0, [0x8f, 0xcf, 0x0, 0xaa, 0x0, 0x6b, 0xcc, 0x59]);
-struct CActiveIMM
-{
 }
 enum IID_IEnumRegisterWordA = GUID(0x8c03412, 0xf96b, 0x11d0, [0xa4, 0x75, 0x0, 0xaa, 0x0, 0x6b, 0xcc, 0x59]);
 interface IEnumRegisterWordA : IUnknown
@@ -1685,4 +1681,8 @@ interface IActiveIME2 : IActiveIME
 {
     HRESULT Sleep();
     HRESULT Unsleep(BOOL);
+}
+enum CLSID_CActiveIMM = GUID(0x4955dd33, 0xb159, 0x11d0, [0x8f, 0xcf, 0x0, 0xaa, 0x0, 0x6b, 0xcc, 0x59]);
+struct CActiveIMM
+{
 }

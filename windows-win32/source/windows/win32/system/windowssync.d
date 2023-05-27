@@ -2,7 +2,7 @@ module windows.win32.system.windowssync;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HANDLE, HRESULT, HWND, PWSTR;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 import windows.win32.ui.shell.propertiessystem : IPropertyStore;
 
 version (Windows):
@@ -731,10 +731,6 @@ interface ISyncDataConverter : IUnknown
     HRESULT ConvertDataFromProviderFormat(ILoadChangeContext, IUnknown, IUnknown*);
     HRESULT ConvertDataToProviderFormat(ILoadChangeContext, IUnknown, IUnknown*);
 }
-enum CLSID_SyncProviderRegistration = GUID(0xf82b4ef1, 0x93a9, 0x4dde, [0x80, 0x15, 0xf7, 0x95, 0xa, 0x1a, 0x6e, 0x31]);
-struct SyncProviderRegistration
-{
-}
 struct SyncProviderConfiguration
 {
     uint dwVersion;
@@ -833,4 +829,8 @@ interface ISyncRegistrationChange : IUnknown
 {
     HRESULT GetEvent(SYNC_REGISTRATION_EVENT*);
     HRESULT GetInstanceId(GUID*);
+}
+enum CLSID_SyncProviderRegistration = GUID(0xf82b4ef1, 0x93a9, 0x4dde, [0x80, 0x15, 0xf7, 0x95, 0xa, 0x1a, 0x6e, 0x31]);
+struct SyncProviderRegistration
+{
 }

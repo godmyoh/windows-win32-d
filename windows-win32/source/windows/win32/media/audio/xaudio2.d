@@ -2,8 +2,8 @@ module windows.win32.media.audio.xaudio2;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HRESULT, PWSTR;
-import windows.win32.media.audio_ : AUDIO_STREAM_CATEGORY, WAVEFORMATEX;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.media.audio : AUDIO_STREAM_CATEGORY, WAVEFORMATEX;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):

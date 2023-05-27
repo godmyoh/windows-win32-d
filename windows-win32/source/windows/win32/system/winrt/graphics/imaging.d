@@ -2,9 +2,9 @@ module windows.win32.system.winrt.graphics.imaging;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HRESULT;
-import windows.win32.graphics.imaging_ : IWICBitmap;
+import windows.win32.graphics.imaging : IWICBitmap;
 import windows.win32.media.mediafoundation : IMF2DBuffer2, MFVideoArea;
-import windows.win32.system.winrt_ : IInspectable;
+import windows.win32.system.winrt : IInspectable;
 
 version (Windows):
 extern (Windows):

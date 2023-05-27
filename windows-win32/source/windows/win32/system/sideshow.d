@@ -2,7 +2,7 @@ module windows.win32.system.sideshow;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HRESULT, PWSTR, SYSTEMTIME;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 import windows.win32.system.com.structuredstorage : PROPVARIANT;
 import windows.win32.ui.shell.propertiessystem : PROPERTYKEY;
 import windows.win32.ui.windowsandmessaging : HICON;
@@ -36,22 +36,6 @@ enum SIDESHOW_EVENTID_APPLICATION_ENTER = 0xffff0000;
 enum SIDESHOW_EVENTID_APPLICATION_EXIT = 0xffff0001;
 enum CONTENT_ID_HOME = 0x00000001;
 enum VERSION_1_WINDOWS_7 = 0x00000000;
-enum CLSID_SideShowSession = GUID(0xe20543b9, 0xf785, 0x4ea2, [0x98, 0x1e, 0xc4, 0xff, 0xa7, 0x6b, 0xbc, 0x7c]);
-struct SideShowSession
-{
-}
-enum CLSID_SideShowNotification = GUID(0xce3e86f, 0xd5cd, 0x4525, [0xa7, 0x66, 0x1a, 0xba, 0xb1, 0xa7, 0x52, 0xf5]);
-struct SideShowNotification
-{
-}
-enum CLSID_SideShowKeyCollection = GUID(0xdfbbdbf8, 0x18de, 0x49b8, [0x83, 0xdc, 0xeb, 0xc7, 0x27, 0xc6, 0x2d, 0x94]);
-struct SideShowKeyCollection
-{
-}
-enum CLSID_SideShowPropVariantCollection = GUID(0xe640f415, 0x539e, 0x4923, [0x96, 0xcd, 0x5f, 0x9, 0x3b, 0xc2, 0x50, 0xcd]);
-struct SideShowPropVariantCollection
-{
-}
 enum IID_ISideShowSession = GUID(0xe22331ee, 0x9e7d, 0x4922, [0x9f, 0xc2, 0xab, 0x7a, 0xa4, 0x1c, 0xe4, 0x91]);
 interface ISideShowSession : IUnknown
 {
@@ -136,6 +120,22 @@ interface ISideShowPropVariantCollection : IUnknown
     HRESULT GetAt(const(uint), PROPVARIANT*);
     HRESULT GetCount(uint*);
     HRESULT RemoveAt(const(uint));
+}
+enum CLSID_SideShowSession = GUID(0xe20543b9, 0xf785, 0x4ea2, [0x98, 0x1e, 0xc4, 0xff, 0xa7, 0x6b, 0xbc, 0x7c]);
+struct SideShowSession
+{
+}
+enum CLSID_SideShowNotification = GUID(0xce3e86f, 0xd5cd, 0x4525, [0xa7, 0x66, 0x1a, 0xba, 0xb1, 0xa7, 0x52, 0xf5]);
+struct SideShowNotification
+{
+}
+enum CLSID_SideShowKeyCollection = GUID(0xdfbbdbf8, 0x18de, 0x49b8, [0x83, 0xdc, 0xeb, 0xc7, 0x27, 0xc6, 0x2d, 0x94]);
+struct SideShowKeyCollection
+{
+}
+enum CLSID_SideShowPropVariantCollection = GUID(0xe640f415, 0x539e, 0x4923, [0x96, 0xcd, 0x5f, 0x9, 0x3b, 0xc2, 0x50, 0xcd]);
+struct SideShowPropVariantCollection
+{
 }
 alias SIDESHOW_SCREEN_TYPE = int;
 enum : int

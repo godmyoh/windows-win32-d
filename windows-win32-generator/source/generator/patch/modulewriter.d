@@ -33,8 +33,10 @@ class ModuleWriterPatch : IModuleWriter
             KSCAMERA_EXTENDEDPROP_VALUE = "KSCAMERA_EXTENDEDPROP_VALUE",
             ID2D1Bitmap = "ID2D1Bitmap",
             ID2D1RenderTarget = "ID2D1RenderTarget",
-            MENU_POPUPSUBMENU_HCHOT = "MENU_POPUPSUBMENU_HCHOT",
+            Handles = "Handles",
         }
+
+        Module currentModule;
     }
 
     this(PatchStatus patchStatus, IModuleWriter wrappee)
@@ -48,9 +50,11 @@ class ModuleWriterPatch : IModuleWriter
             patchStatus.addPatchName(patchName);
     }
 
-    override void writeModule(File f, constr fqmn)
+    override void writeModule(File f, Module m)
     {
-        wrappee.writeModule(f, fqmn);
+        wrappee.writeModule(f, m);
+
+        this.currentModule = m;
     }
 
     override void writeImports(File f, References[] references, constr[constr] namespaceToFqmn)
@@ -91,7 +95,7 @@ class ModuleWriterPatch : IModuleWriter
     {
         auto filename = baseName(f.name);
 
-        if (auto p = filename in patches)
+        if (auto p = this.currentModule.namespace in patches)
         {
             foreach (patch; *p)
             {
@@ -114,8 +118,10 @@ class ModuleWriterPatch : IModuleWriter
                 auto type = tokens[1];
                 if ((type.startsWith("H") && type != "HRESULT") || type == "CreatedHDC")
                 {
+                    assert(tokens[3] == "void*;" || tokens[3] == "long;" || tokens[3] == "ulong;", tokens[3]);
                     tokens[3] = "void*;";
                     decl = tokens.join(" ");
+                    patchStatus.logExecuted(PatchNames.Handles);
                 }
             }
         }
@@ -128,18 +134,18 @@ class ModuleWriterPatch : IModuleWriter
         Patch[][string] patches;
 
         alias P = Patch;
-        patches[r"foundation.d"] = [
+        patches["Windows.Win32.Foundation"] = [
             P(PatchNames.PSTR, (d) => d == "alias PSTR = ubyte*;", (d) => "alias PSTR = char*;"),
             ];
-        patches[r"qos.d"] = [
+        patches["Windows.Win32.NetworkManagement.QoS"] = [
             P(PatchNames.IPX_PATTERN, (d) => d.startsWith("struct IPX_PATTERN"), (d) => commentOutUnsupportedDecl(d)),
             ];
-        patches[r"winml.d"] = [
+        patches["Windows.Win32.AI.MachineLearning.WinML"] = [
             P(PatchNames.MLOperatorAttributeType, (d) => d.startsWith("alias MLOperatorAttributeType"), (d) => removeFirstLine(d).replace("enum", "enum MLOperatorAttributeType")),
             P(PatchNames.MLOperatorTensorDataType, (d) => d.startsWith("alias MLOperatorTensorDataType"), (d) => removeFirstLine(d).replace("enum", "enum MLOperatorTensorDataType")),
             P(PatchNames.MLOperatorEdgeType, (d) => d.startsWith("alias MLOperatorEdgeType"), (d) => removeFirstLine(d).replace("enum", "enum MLOperatorEdgeType")),
         ];
-        patches[r"kernelstreaming.d"] = [
+        patches["Windows.Win32.Media.KernelStreaming"] = [
             P(PatchNames.KSCAMERA_EXTENDEDPROP_VALUE, (d) => d.startsWith("alias KSCAMERA_EXTENDEDPROP_VALUE"), (d) => d = "// [UNSUPPORTED]\n//" ~ d ~ "\nalias KSCAMERA_EXTENDEDPROP_VALUE = ulong; // [DUMMY]"),
             ];
 
@@ -150,13 +156,9 @@ class ModuleWriterPatch : IModuleWriter
                 .replace("D2D1_PIXEL_FORMAT GetPixelFormat();", "void GetPixelFormat(D2D1_PIXEL_FORMAT*); // ABI bug workaround");
         };
 
-        patches[r"direct2d_.d"] = [
+        patches["Windows.Win32.Graphics.Direct2D"] = [
             P(PatchNames.ID2D1Bitmap, (d) => d.startsWith("interface ID2D1Bitmap "), abiBugWorkaround),
             P(PatchNames.ID2D1RenderTarget, (d) => d.startsWith("interface ID2D1RenderTarget "), abiBugWorkaround),
-        ];
-
-        patches[r"controls_.d"] = [
-            P(PatchNames.MENU_POPUPSUBMENU_HCHOT, (d) => d.startsWith("alias MENU_POPUPSUBMENU_HCHOT ="), (d) => commentOutUnsupportedDecl(d)),
         ];
 
         return patches;

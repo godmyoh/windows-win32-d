@@ -3,8 +3,8 @@ module windows.win32.security.enterprisedata;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HANDLE, HRESULT, HWND, NTSTATUS, PWSTR;
 import windows.win32.storage.packaging.appx : PACKAGE_ID;
-import windows.win32.system.com_ : IUnknown;
-import windows.win32.system.winrt_ : HSTRING, IInspectable;
+import windows.win32.system.com : IUnknown;
+import windows.win32.system.winrt : HSTRING, IInspectable;
 
 version (Windows):
 extern (Windows):

@@ -2,8 +2,9 @@ module windows.win32.system.winrt.metadata;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HRESULT, PSTR, PWSTR;
-import windows.win32.system.com_ : IStream, ITypeInfo, IUnknown, VARIANT;
-import windows.win32.system.winrt_ : HSTRING, ROPARAMIIDHANDLE;
+import windows.win32.system.com : IStream, ITypeInfo, IUnknown;
+import windows.win32.system.variant : VARIANT;
+import windows.win32.system.winrt : HSTRING, ROPARAMIIDHANDLE;
 
 version (Windows):
 extern (Windows):
@@ -21,7 +22,6 @@ HRESULT RoIsApiContractMajorVersionPresent(const(wchar)*, ushort, BOOL*);
 HRESULT RoGetParameterizedTypeInstanceIID(uint, const(wchar)**, const(IRoMetaDataLocator), GUID*, ROPARAMIIDHANDLE*);
 void RoFreeParameterizedTypeExtra(ROPARAMIIDHANDLE);
 PSTR RoParameterizedTypeExtraGetTypeSignature(ROPARAMIIDHANDLE);
-enum DEPRECATED_CLR_API_MESG = "This API has been deprecated. Refer to https://go.microsoft.com/fwlink/?LinkId=143720 for more details.";
 enum INVALID_CONNECTION_ID = 0x00000000;
 enum INVALID_TASK_ID = 0x00000000;
 enum MAX_CONNECTION_NAME = 0x00000104;
@@ -519,45 +519,45 @@ enum : int
     gpDefaultConstructorConstraint   = 0x00000010,
 }
 
-alias CorElementType = int;
-enum : int
+alias CorElementType = ubyte;
+enum : ubyte
 {
-    ELEMENT_TYPE_END         = 0x00000000,
-    ELEMENT_TYPE_VOID        = 0x00000001,
-    ELEMENT_TYPE_BOOLEAN     = 0x00000002,
-    ELEMENT_TYPE_CHAR        = 0x00000003,
-    ELEMENT_TYPE_I1          = 0x00000004,
-    ELEMENT_TYPE_U1          = 0x00000005,
-    ELEMENT_TYPE_I2          = 0x00000006,
-    ELEMENT_TYPE_U2          = 0x00000007,
-    ELEMENT_TYPE_I4          = 0x00000008,
-    ELEMENT_TYPE_U4          = 0x00000009,
-    ELEMENT_TYPE_I8          = 0x0000000a,
-    ELEMENT_TYPE_U8          = 0x0000000b,
-    ELEMENT_TYPE_R4          = 0x0000000c,
-    ELEMENT_TYPE_R8          = 0x0000000d,
-    ELEMENT_TYPE_STRING      = 0x0000000e,
-    ELEMENT_TYPE_PTR         = 0x0000000f,
-    ELEMENT_TYPE_BYREF       = 0x00000010,
-    ELEMENT_TYPE_VALUETYPE   = 0x00000011,
-    ELEMENT_TYPE_CLASS       = 0x00000012,
-    ELEMENT_TYPE_VAR         = 0x00000013,
-    ELEMENT_TYPE_ARRAY       = 0x00000014,
-    ELEMENT_TYPE_GENERICINST = 0x00000015,
-    ELEMENT_TYPE_TYPEDBYREF  = 0x00000016,
-    ELEMENT_TYPE_I           = 0x00000018,
-    ELEMENT_TYPE_U           = 0x00000019,
-    ELEMENT_TYPE_FNPTR       = 0x0000001b,
-    ELEMENT_TYPE_OBJECT      = 0x0000001c,
-    ELEMENT_TYPE_SZARRAY     = 0x0000001d,
-    ELEMENT_TYPE_MVAR        = 0x0000001e,
-    ELEMENT_TYPE_CMOD_REQD   = 0x0000001f,
-    ELEMENT_TYPE_CMOD_OPT    = 0x00000020,
-    ELEMENT_TYPE_INTERNAL    = 0x00000021,
-    ELEMENT_TYPE_MAX         = 0x00000022,
-    ELEMENT_TYPE_MODIFIER    = 0x00000040,
-    ELEMENT_TYPE_SENTINEL    = 0x00000041,
-    ELEMENT_TYPE_PINNED      = 0x00000045,
+    ELEMENT_TYPE_END         = 0x00,
+    ELEMENT_TYPE_VOID        = 0x01,
+    ELEMENT_TYPE_BOOLEAN     = 0x02,
+    ELEMENT_TYPE_CHAR        = 0x03,
+    ELEMENT_TYPE_I1          = 0x04,
+    ELEMENT_TYPE_U1          = 0x05,
+    ELEMENT_TYPE_I2          = 0x06,
+    ELEMENT_TYPE_U2          = 0x07,
+    ELEMENT_TYPE_I4          = 0x08,
+    ELEMENT_TYPE_U4          = 0x09,
+    ELEMENT_TYPE_I8          = 0x0a,
+    ELEMENT_TYPE_U8          = 0x0b,
+    ELEMENT_TYPE_R4          = 0x0c,
+    ELEMENT_TYPE_R8          = 0x0d,
+    ELEMENT_TYPE_STRING      = 0x0e,
+    ELEMENT_TYPE_PTR         = 0x0f,
+    ELEMENT_TYPE_BYREF       = 0x10,
+    ELEMENT_TYPE_VALUETYPE   = 0x11,
+    ELEMENT_TYPE_CLASS       = 0x12,
+    ELEMENT_TYPE_VAR         = 0x13,
+    ELEMENT_TYPE_ARRAY       = 0x14,
+    ELEMENT_TYPE_GENERICINST = 0x15,
+    ELEMENT_TYPE_TYPEDBYREF  = 0x16,
+    ELEMENT_TYPE_I           = 0x18,
+    ELEMENT_TYPE_U           = 0x19,
+    ELEMENT_TYPE_FNPTR       = 0x1b,
+    ELEMENT_TYPE_OBJECT      = 0x1c,
+    ELEMENT_TYPE_SZARRAY     = 0x1d,
+    ELEMENT_TYPE_MVAR        = 0x1e,
+    ELEMENT_TYPE_CMOD_REQD   = 0x1f,
+    ELEMENT_TYPE_CMOD_OPT    = 0x20,
+    ELEMENT_TYPE_INTERNAL    = 0x21,
+    ELEMENT_TYPE_MAX         = 0x22,
+    ELEMENT_TYPE_MODIFIER    = 0x40,
+    ELEMENT_TYPE_SENTINEL    = 0x41,
+    ELEMENT_TYPE_PINNED      = 0x45,
 }
 
 alias CorSerializationType = int;

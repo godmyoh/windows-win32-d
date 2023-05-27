@@ -1,13 +1,14 @@
-module windows.win32.system.search_;
+module windows.win32.system.search;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, FILETIME, HANDLE, HRESULT, HWND, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL;
-import windows.win32.security.authorization_ : EXPLICIT_ACCESS_W, TRUSTEE_W;
+import windows.win32.security.authorization : EXPLICIT_ACCESS_W, TRUSTEE_W;
 import windows.win32.storage.indexserver : DBID, FILTERREGION, FULLPROPSPEC, IFilter, IPhraseSink, WORDREP_BREAK_TYPE;
-import windows.win32.system.com_ : BLOB, COSERVERINFO, CY, DISPPARAMS, IAuthenticate, IDispatch, IEnumString, IEnumUnknown, IErrorInfo, IMoniker, IPersistStream, ISequentialStream, IStream, ITypeInfo, IUnknown, MULTI_QI, VARENUM, VARIANT;
+import windows.win32.system.com : BLOB, COSERVERINFO, CY, DISPPARAMS, IAuthenticate, IDispatch, IEnumString, IEnumUnknown, IErrorInfo, IMoniker, IPersistStream, ISequentialStream, IStream, ITypeInfo, IUnknown, MULTI_QI;
 import windows.win32.system.com.structuredstorage : IStorage, PROPSPEC, PROPVARIANT;
 import windows.win32.system.distributedtransactioncoordinator : ITransaction, ITransactionOptions;
 import windows.win32.system.search.common : CONDITION_OPERATION, CONDITION_TYPE;
+import windows.win32.system.variant : VARENUM, VARIANT;
 import windows.win32.ui.shell.common : IObjectArray;
 import windows.win32.ui.shell.propertiessystem : PROPERTYKEY;
 
@@ -1012,7 +1013,67 @@ enum SQL_INFO_SS_NETLIB_NAME = 0x000004af;
 enum SQL_SS_VARIANT = 0xffffffffffffff6a;
 enum SQL_DIAG_SS_BASE = 0xfffffffffffffb82;
 enum SQL_DIAG_SS_MSGSTATE = 0xfffffffffffffb82;
+enum SQL_DIAG_SS_SEVERITY = 0xfffffffffffffb81;
+enum SQL_DIAG_SS_SRVNAME = 0xfffffffffffffb80;
+enum SQL_DIAG_SS_PROCNAME = 0xfffffffffffffb7f;
+enum SQL_DIAG_SS_LINE = 0xfffffffffffffb7e;
 enum SQL_DIAG_DFC_SS_BASE = 0xffffffffffffff38;
+enum SQL_DIAG_DFC_SS_ALTER_DATABASE = 0xffffffffffffff38;
+enum SQL_DIAG_DFC_SS_CHECKPOINT = 0xffffffffffffff37;
+enum SQL_DIAG_DFC_SS_CONDITION = 0xffffffffffffff36;
+enum SQL_DIAG_DFC_SS_CREATE_DATABASE = 0xffffffffffffff35;
+enum SQL_DIAG_DFC_SS_CREATE_DEFAULT = 0xffffffffffffff34;
+enum SQL_DIAG_DFC_SS_CREATE_PROCEDURE = 0xffffffffffffff33;
+enum SQL_DIAG_DFC_SS_CREATE_RULE = 0xffffffffffffff32;
+enum SQL_DIAG_DFC_SS_CREATE_TRIGGER = 0xffffffffffffff31;
+enum SQL_DIAG_DFC_SS_CURSOR_DECLARE = 0xffffffffffffff30;
+enum SQL_DIAG_DFC_SS_CURSOR_OPEN = 0xffffffffffffff2f;
+enum SQL_DIAG_DFC_SS_CURSOR_FETCH = 0xffffffffffffff2e;
+enum SQL_DIAG_DFC_SS_CURSOR_CLOSE = 0xffffffffffffff2d;
+enum SQL_DIAG_DFC_SS_DEALLOCATE_CURSOR = 0xffffffffffffff2c;
+enum SQL_DIAG_DFC_SS_DBCC = 0xffffffffffffff2b;
+enum SQL_DIAG_DFC_SS_DISK = 0xffffffffffffff2a;
+enum SQL_DIAG_DFC_SS_DROP_DATABASE = 0xffffffffffffff29;
+enum SQL_DIAG_DFC_SS_DROP_DEFAULT = 0xffffffffffffff28;
+enum SQL_DIAG_DFC_SS_DROP_PROCEDURE = 0xffffffffffffff27;
+enum SQL_DIAG_DFC_SS_DROP_RULE = 0xffffffffffffff26;
+enum SQL_DIAG_DFC_SS_DROP_TRIGGER = 0xffffffffffffff25;
+enum SQL_DIAG_DFC_SS_DUMP_DATABASE = 0xffffffffffffff24;
+enum SQL_DIAG_DFC_SS_DUMP_TABLE = 0xffffffffffffff23;
+enum SQL_DIAG_DFC_SS_DUMP_TRANSACTION = 0xffffffffffffff22;
+enum SQL_DIAG_DFC_SS_GOTO = 0xffffffffffffff21;
+enum SQL_DIAG_DFC_SS_INSERT_BULK = 0xffffffffffffff20;
+enum SQL_DIAG_DFC_SS_KILL = 0xffffffffffffff1f;
+enum SQL_DIAG_DFC_SS_LOAD_DATABASE = 0xffffffffffffff1e;
+enum SQL_DIAG_DFC_SS_LOAD_HEADERONLY = 0xffffffffffffff1d;
+enum SQL_DIAG_DFC_SS_LOAD_TABLE = 0xffffffffffffff1c;
+enum SQL_DIAG_DFC_SS_LOAD_TRANSACTION = 0xffffffffffffff1b;
+enum SQL_DIAG_DFC_SS_PRINT = 0xffffffffffffff1a;
+enum SQL_DIAG_DFC_SS_RAISERROR = 0xffffffffffffff19;
+enum SQL_DIAG_DFC_SS_READTEXT = 0xffffffffffffff18;
+enum SQL_DIAG_DFC_SS_RECONFIGURE = 0xffffffffffffff17;
+enum SQL_DIAG_DFC_SS_RETURN = 0xffffffffffffff16;
+enum SQL_DIAG_DFC_SS_SELECT_INTO = 0xffffffffffffff15;
+enum SQL_DIAG_DFC_SS_SET = 0xffffffffffffff14;
+enum SQL_DIAG_DFC_SS_SET_IDENTITY_INSERT = 0xffffffffffffff13;
+enum SQL_DIAG_DFC_SS_SET_ROW_COUNT = 0xffffffffffffff12;
+enum SQL_DIAG_DFC_SS_SET_STATISTICS = 0xffffffffffffff11;
+enum SQL_DIAG_DFC_SS_SET_TEXTSIZE = 0xffffffffffffff10;
+enum SQL_DIAG_DFC_SS_SETUSER = 0xffffffffffffff0f;
+enum SQL_DIAG_DFC_SS_SHUTDOWN = 0xffffffffffffff0e;
+enum SQL_DIAG_DFC_SS_TRANS_BEGIN = 0xffffffffffffff0d;
+enum SQL_DIAG_DFC_SS_TRANS_COMMIT = 0xffffffffffffff0c;
+enum SQL_DIAG_DFC_SS_TRANS_PREPARE = 0xffffffffffffff0b;
+enum SQL_DIAG_DFC_SS_TRANS_ROLLBACK = 0xffffffffffffff0a;
+enum SQL_DIAG_DFC_SS_TRANS_SAVE = 0xffffffffffffff09;
+enum SQL_DIAG_DFC_SS_TRUNCATE_TABLE = 0xffffffffffffff08;
+enum SQL_DIAG_DFC_SS_UPDATE_STATISTICS = 0xffffffffffffff07;
+enum SQL_DIAG_DFC_SS_UPDATETEXT = 0xffffffffffffff06;
+enum SQL_DIAG_DFC_SS_USE = 0xffffffffffffff05;
+enum SQL_DIAG_DFC_SS_WAITFOR = 0xffffffffffffff04;
+enum SQL_DIAG_DFC_SS_WRITETEXT = 0xffffffffffffff03;
+enum SQL_DIAG_DFC_SS_DENY = 0xffffffffffffff02;
+enum SQL_DIAG_DFC_SS_SET_XCTLVL = 0xffffffffffffff01;
 enum EX_ANY = 0x00000000;
 enum EX_INFO = 0x0000000a;
 enum EX_MAXISEVERITY = 0x0000000a;
@@ -3669,9 +3730,6 @@ enum DBPROPSET_SQLSERVERROWSET = GUID(0x5cf4ca11, 0xef21, 0x11d0, [0x97, 0xe7, 0
 enum DBPROPSET_SQLSERVERSESSION = GUID(0x28efaee5, 0x2d2c, 0x11d1, [0x98, 0x7, 0x0, 0xc0, 0x4f, 0xc2, 0xad, 0x98]);
 enum DBPROPSET_SQLSERVERCOLUMN = GUID(0x3b63fb5e, 0x3fbb, 0x11d3, [0x9f, 0x29, 0x0, 0xc0, 0x4f, 0x8e, 0xe9, 0xdc]);
 enum DBPROPSET_SQLSERVERSTREAM = GUID(0x9f79c073, 0x8a6d, 0x4bca, [0xa8, 0xa8, 0xc9, 0xb7, 0x9a, 0x9b, 0x96, 0x2d]);
-struct IRowsetExactScroll
-{
-}
 alias HACCESSOR = void*;
 struct DBVECTOR
 {
@@ -3970,22 +4028,6 @@ enum IID_IColumnMapperCreator = GUID(0xb63e37b, 0x9ccc, 0x11d0, [0xbc, 0xdb, 0x0
 interface IColumnMapperCreator : IUnknown
 {
     HRESULT GetColumnMapper(const(wchar)*, const(wchar)*, IColumnMapper*);
-}
-enum CLSID_CSearchManager = GUID(0x7d096c5f, 0xac08, 0x4f1f, [0xbe, 0xb7, 0x5c, 0x22, 0xc5, 0x17, 0xce, 0x39]);
-struct CSearchManager
-{
-}
-enum CLSID_CSearchRoot = GUID(0x30766bd2, 0xea1c, 0x4f28, [0xbf, 0x27, 0xb, 0x44, 0xe2, 0xf6, 0x8d, 0xb7]);
-struct CSearchRoot
-{
-}
-enum CLSID_CSearchScopeRule = GUID(0xe63de750, 0x3bd7, 0x4be5, [0x9c, 0x84, 0x6b, 0x42, 0x81, 0x98, 0x8c, 0x44]);
-struct CSearchScopeRule
-{
-}
-enum CLSID_FilterRegistration = GUID(0x9e175b8d, 0xf52a, 0x11d8, [0xb9, 0xa5, 0x50, 0x50, 0x54, 0x50, 0x30, 0x30]);
-struct FilterRegistration
-{
 }
 struct FILTERED_DATA_SOURCES
 {
@@ -4358,6 +4400,12 @@ enum : int
     DBCOLUMNFLAGS_RESERVED        = 0x00008000,
 }
 
+alias DBCOLUMNFLAGSDEPRECATED = int;
+enum : int
+{
+    DBCOLUMNFLAGS_KEYCOLUMN = 0x00008000,
+}
+
 alias DBCOLUMNFLAGS15ENUM = int;
 enum : int
 {
@@ -4689,6 +4737,14 @@ enum : int
     DBPROP_SKIPROWCOUNTRESULTS = 0x00000123,
     DBPROP_IRowsetBookmark     = 0x00000124,
     MDPROP_VISUALMODE          = 0x00000125,
+}
+
+alias DBPROPENUMDEPRECATED = int;
+enum : int
+{
+    DBPROP_IRowsetExactScroll = 0x0000009a,
+    DBPROP_MARSHALLABLE       = 0x000000c5,
+    DBPROP_FILTEROPS          = 0x000000d0,
 }
 
 /+ [CONFLICTED] struct DBPARAMS
@@ -5215,6 +5271,11 @@ interface IRowsetView : IUnknown
 {
     HRESULT CreateView(IUnknown, const(GUID)*, IUnknown*);
     HRESULT GetView(ulong, const(GUID)*, ulong*, IUnknown*);
+}
+enum IID_IRowsetExactScroll = GUID(0xc733a7f, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
+interface IRowsetExactScroll : IRowsetScroll
+{
+    HRESULT GetExactPosition(ulong, ulong, const(ubyte)*, ulong*, ulong*);
 }
 enum IID_IRowsetChange = GUID(0xc733a05, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetChange : IUnknown
@@ -5833,34 +5894,6 @@ interface IRowsetBookmark : IUnknown
 {
     HRESULT PositionOnBookmark(ulong, ulong, const(ubyte)*);
 }
-enum CLSID_QueryParser = GUID(0xb72f8fd8, 0xfab, 0x4dd9, [0xbd, 0xbf, 0x24, 0x5a, 0x6c, 0xe1, 0x48, 0x5b]);
-struct QueryParser
-{
-}
-enum CLSID_NegationCondition = GUID(0x8de9c74c, 0x605a, 0x4acd, [0xbe, 0xe3, 0x2b, 0x22, 0x2a, 0xa2, 0xd2, 0x3d]);
-struct NegationCondition
-{
-}
-enum CLSID_CompoundCondition = GUID(0x116f8d13, 0x101e, 0x4fa5, [0x84, 0xd4, 0xff, 0x82, 0x79, 0x38, 0x19, 0x35]);
-struct CompoundCondition
-{
-}
-enum CLSID_LeafCondition = GUID(0x52f15c89, 0x5a17, 0x48e1, [0xbb, 0xcd, 0x46, 0xa3, 0xf8, 0x9c, 0x7c, 0xc2]);
-struct LeafCondition
-{
-}
-enum CLSID_ConditionFactory = GUID(0xe03e85b0, 0x7be3, 0x4000, [0xba, 0x98, 0x6c, 0x13, 0xde, 0x9f, 0xa4, 0x86]);
-struct ConditionFactory
-{
-}
-enum CLSID_Interval = GUID(0xd957171f, 0x4bf9, 0x4de2, [0xbc, 0xd5, 0xc7, 0xa, 0x7c, 0xa5, 0x58, 0x36]);
-struct Interval
-{
-}
-enum CLSID_QueryParserManager = GUID(0x5088b39a, 0x29b4, 0x4d9d, [0x82, 0x45, 0x4e, 0xe2, 0x89, 0x22, 0x2f, 0x66]);
-struct QueryParserManager
-{
-}
 alias STRUCTURED_QUERY_SYNTAX = int;
 enum : int
 {
@@ -6092,6 +6125,34 @@ struct HITRANGE
 {
     uint iPosition;
     uint cLength;
+}
+enum CLSID_QueryParser = GUID(0xb72f8fd8, 0xfab, 0x4dd9, [0xbd, 0xbf, 0x24, 0x5a, 0x6c, 0xe1, 0x48, 0x5b]);
+struct QueryParser
+{
+}
+enum CLSID_NegationCondition = GUID(0x8de9c74c, 0x605a, 0x4acd, [0xbe, 0xe3, 0x2b, 0x22, 0x2a, 0xa2, 0xd2, 0x3d]);
+struct NegationCondition
+{
+}
+enum CLSID_CompoundCondition = GUID(0x116f8d13, 0x101e, 0x4fa5, [0x84, 0xd4, 0xff, 0x82, 0x79, 0x38, 0x19, 0x35]);
+struct CompoundCondition
+{
+}
+enum CLSID_LeafCondition = GUID(0x52f15c89, 0x5a17, 0x48e1, [0xbb, 0xcd, 0x46, 0xa3, 0xf8, 0x9c, 0x7c, 0xc2]);
+struct LeafCondition
+{
+}
+enum CLSID_ConditionFactory = GUID(0xe03e85b0, 0x7be3, 0x4000, [0xba, 0x98, 0x6c, 0x13, 0xde, 0x9f, 0xa4, 0x86]);
+struct ConditionFactory
+{
+}
+enum CLSID_Interval = GUID(0xd957171f, 0x4bf9, 0x4de2, [0xbc, 0xd5, 0xc7, 0xa, 0x7c, 0xa5, 0x58, 0x36]);
+struct Interval
+{
+}
+enum CLSID_QueryParserManager = GUID(0x5088b39a, 0x29b4, 0x4d9d, [0x82, 0x45, 0x4e, 0xe2, 0x89, 0x22, 0x2f, 0x66]);
+struct QueryParserManager
+{
 }
 enum IID_IUrlAccessor = GUID(0xb63e318, 0x9ccc, 0x11d0, [0xbc, 0xdb, 0x0, 0x80, 0x5f, 0xcc, 0xce, 0x4]);
 interface IUrlAccessor : IUnknown
@@ -6567,8 +6628,20 @@ interface ISearchLanguageSupport : IUnknown
     HRESULT LoadStemmer(uint, const(GUID)*, void**, uint*);
     HRESULT IsPrefixNormalized(const(wchar)*, uint, const(wchar)*, uint, uint*);
 }
-enum CLSID_SubscriptionMgr = GUID(0xabbe31d0, 0x6dae, 0x11d0, [0xbe, 0xca, 0x0, 0xc0, 0x4f, 0xd9, 0x40, 0xbe]);
-struct SubscriptionMgr
+enum CLSID_CSearchManager = GUID(0x7d096c5f, 0xac08, 0x4f1f, [0xbe, 0xb7, 0x5c, 0x22, 0xc5, 0x17, 0xce, 0x39]);
+struct CSearchManager
+{
+}
+enum CLSID_CSearchRoot = GUID(0x30766bd2, 0xea1c, 0x4f28, [0xbf, 0x27, 0xb, 0x44, 0xe2, 0xf6, 0x8d, 0xb7]);
+struct CSearchRoot
+{
+}
+enum CLSID_CSearchScopeRule = GUID(0xe63de750, 0x3bd7, 0x4be5, [0x9c, 0x84, 0x6b, 0x42, 0x81, 0x98, 0x8c, 0x44]);
+struct CSearchScopeRule
+{
+}
+enum CLSID_FilterRegistration = GUID(0x9e175b8d, 0xf52a, 0x11d8, [0xb9, 0xa5, 0x50, 0x50, 0x54, 0x50, 0x30, 0x30]);
+struct FilterRegistration
 {
 }
 struct ITEMPROP
@@ -6706,6 +6779,10 @@ interface ISubscriptionMgr2 : ISubscriptionMgr
     HRESULT UpdateItems(uint, uint, const(GUID)*);
     HRESULT AbortItems(uint, const(GUID)*);
     HRESULT AbortAll();
+}
+enum CLSID_SubscriptionMgr = GUID(0xabbe31d0, 0x6dae, 0x11d0, [0xbe, 0xca, 0x0, 0xc0, 0x4f, 0xd9, 0x40, 0xbe]);
+struct SubscriptionMgr
+{
 }
 alias DELIVERY_AGENT_FLAGS = int;
 enum : int
@@ -6884,22 +6961,6 @@ enum IID_DataSourceObject = GUID(0xae9a4e4, 0x18d4, 0x11d1, [0xb3, 0xb3, 0x0, 0x
 interface DataSourceObject : IDispatch
 {
 }
-enum CLSID_DataLinks = GUID(0x2206cdb2, 0x19c1, 0x11d1, [0x89, 0xe0, 0x0, 0xc0, 0x4f, 0xd7, 0xa8, 0x29]);
-struct DataLinks
-{
-}
-enum CLSID_MSDAINITIALIZE = GUID(0x2206cdb0, 0x19c1, 0x11d1, [0x89, 0xe0, 0x0, 0xc0, 0x4f, 0xd7, 0xa8, 0x29]);
-struct MSDAINITIALIZE
-{
-}
-enum CLSID_PDPO = GUID(0xccb4ec60, 0xb9dc, 0x11d1, [0xac, 0x80, 0x0, 0xa0, 0xc9, 0x3, 0x48, 0x73]);
-struct PDPO
-{
-}
-enum CLSID_RootBinder = GUID(0xff151822, 0xb0bf, 0x11d1, [0xa8, 0xd, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
-struct RootBinder
-{
-}
 alias EBindInfoOptions = int;
 enum : int
 {
@@ -6945,6 +7006,22 @@ interface IDataSourceLocator : IDispatch
     HRESULT put_hWnd(HWND);
     HRESULT PromptNew(IDispatch*);
     HRESULT PromptEdit(IDispatch*, VARIANT_BOOL*);
+}
+enum CLSID_DataLinks = GUID(0x2206cdb2, 0x19c1, 0x11d1, [0x89, 0xe0, 0x0, 0xc0, 0x4f, 0xd7, 0xa8, 0x29]);
+struct DataLinks
+{
+}
+enum CLSID_MSDAINITIALIZE = GUID(0x2206cdb0, 0x19c1, 0x11d1, [0x89, 0xe0, 0x0, 0xc0, 0x4f, 0xd7, 0xa8, 0x29]);
+struct MSDAINITIALIZE
+{
+}
+enum CLSID_PDPO = GUID(0xccb4ec60, 0xb9dc, 0x11d1, [0xac, 0x80, 0x0, 0xa0, 0xc9, 0x3, 0x48, 0x73]);
+struct PDPO
+{
+}
+enum CLSID_RootBinder = GUID(0xff151822, 0xb0bf, 0x11d1, [0xa8, 0xd, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
+struct RootBinder
+{
 }
 alias KAGREQDIAGFLAGSENUM = int;
 enum : int

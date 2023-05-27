@@ -3,7 +3,7 @@ module windows.win32.system.com.urlmon;
 import windows.win32.guid : GUID;
 import windows.win32.data.xml.msxml : IXMLElement;
 import windows.win32.foundation : BOOL, HANDLE, HANDLE_PTR, HRESULT, HWND, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL;
-import windows.win32.system.com_ : BINDINFO, CLSCTX, FORMATETC, IBindCtx, IBindStatusCallback, IBinding, IClassFactory, IEnumFORMATETC, IEnumString, IMoniker, IServiceProvider, IStream, IUnknown, IUri, IUriBuilder, QUERYCONTEXT, STGMEDIUM, uCLSSPEC;
+import windows.win32.system.com : BINDINFO, CLSCTX, FORMATETC, IBindCtx, IBindStatusCallback, IBinding, IClassFactory, IEnumFORMATETC, IEnumString, IMoniker, IServiceProvider, IStream, IUnknown, IUri, IUriBuilder, QUERYCONTEXT, STGMEDIUM, uCLSSPEC;
 
 version (Windows):
 extern (Windows):

@@ -1,13 +1,13 @@
 module windows.win32.media.multimedia;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, CHAR, FARPROC, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT;
+import windows.win32.foundation : BOOL, CHAR, FARPROC, HANDLE, HINSTANCE, HMODULE, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT;
 import windows.win32.graphics.gdi : BITMAPINFO, BITMAPINFOHEADER, HDC, HPALETTE, PALETTEENTRY;
-import windows.win32.media_ : HTASK, LPTIMECALLBACK;
-import windows.win32.media.audio_ : HMIXER, HWAVE, WAVEFORMAT, WAVEFORMATEX, WAVEHDR;
-import windows.win32.system.com_ : IPersistFile, IUnknown;
+import windows.win32.media : HTASK, LPTIMECALLBACK;
+import windows.win32.media.audio : HMIXER, HWAVE, WAVEFORMAT, WAVEFORMATEX, WAVEHDR;
+import windows.win32.system.com : IPersistFile, IUnknown;
 import windows.win32.system.io : OVERLAPPED;
-import windows.win32.ui.controls_ : LPFNSVADDPROPSHEETPAGE;
+import windows.win32.ui.controls : LPFNSVADDPROPSHEETPAGE;
 import windows.win32.ui.controls.dialogs : OPENFILENAMEA, OPENFILENAMEW;
 
 version (Windows):
@@ -35,8 +35,8 @@ BOOL mciFreeCommandResource(uint);
 LRESULT CloseDriver(HDRVR, LPARAM, LPARAM);
 HDRVR OpenDriver(const(wchar)*, const(wchar)*, LPARAM);
 LRESULT SendDriverMessage(HDRVR, uint, LPARAM, LPARAM);
-HINSTANCE DrvGetModuleHandle(HDRVR);
-HINSTANCE GetDriverModuleHandle(HDRVR);
+HMODULE DrvGetModuleHandle(HDRVR);
+HMODULE GetDriverModuleHandle(HDRVR);
 LRESULT DefDriverProc(ulong, HDRVR, uint, LPARAM, LPARAM);
 BOOL DriverCallback(ulong, uint, HDRVR, uint, ulong, ulong, ulong);
 int sndOpenSound(const(wchar)*, const(wchar)*, int, HANDLE*);

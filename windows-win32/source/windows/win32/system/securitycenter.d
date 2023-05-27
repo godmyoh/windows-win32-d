@@ -2,20 +2,12 @@ module windows.win32.system.securitycenter;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, HANDLE, HRESULT, PWSTR;
-import windows.win32.system.com_ : IDispatch;
+import windows.win32.system.com : IDispatch;
 import windows.win32.system.threading : LPTHREAD_START_ROUTINE;
 
 version (Windows):
 extern (Windows):
 
-enum CLSID_WSCProductList = GUID(0x17072f7b, 0x9abe, 0x4a74, [0xa2, 0x61, 0x1e, 0xb7, 0x6b, 0x55, 0x10, 0x7a]);
-struct WSCProductList
-{
-}
-enum CLSID_WSCDefaultProduct = GUID(0x2981a36e, 0xf22d, 0x11e5, [0x9c, 0xe9, 0x5e, 0x55, 0x17, 0x50, 0x7c, 0x66]);
-struct WSCDefaultProduct
-{
-}
 alias WSC_SECURITY_PRODUCT_SUBSTATUS = int;
 enum : int
 {
@@ -78,7 +70,7 @@ interface IWscProduct3 : IWscProduct2
 enum IID_IWSCProductList = GUID(0x722a338c, 0x6e8e, 0x4e72, [0xac, 0x27, 0x14, 0x17, 0xfb, 0xc, 0x81, 0xc2]);
 interface IWSCProductList : IDispatch
 {
-    HRESULT Initialize(WSC_SECURITY_PROVIDER);
+    HRESULT Initialize(uint);
     HRESULT get_Count(int*);
     HRESULT get_Item(uint, IWscProduct*);
 }
@@ -86,6 +78,14 @@ enum IID_IWSCDefaultProduct = GUID(0x476d69c, 0xf21a, 0x11e5, [0x9c, 0xe9, 0x5e,
 interface IWSCDefaultProduct : IDispatch
 {
     HRESULT SetDefaultProduct(SECURITY_PRODUCT_TYPE, BSTR);
+}
+enum CLSID_WSCProductList = GUID(0x17072f7b, 0x9abe, 0x4a74, [0xa2, 0x61, 0x1e, 0xb7, 0x6b, 0x55, 0x10, 0x7a]);
+struct WSCProductList
+{
+}
+enum CLSID_WSCDefaultProduct = GUID(0x2981a36e, 0xf22d, 0x11e5, [0x9c, 0xe9, 0x5e, 0x55, 0x17, 0x50, 0x7c, 0x66]);
+struct WSCDefaultProduct
+{
 }
 alias WSC_SECURITY_PROVIDER = int;
 enum : int

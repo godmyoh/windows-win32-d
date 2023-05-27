@@ -2,8 +2,8 @@ module windows.win32.storage.xps.printing;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HANDLE, HRESULT, PWSTR;
-import windows.win32.storage.xps_ : IXpsOMPackageTarget;
-import windows.win32.system.com_ : IDispatch, ISequentialStream, IStream, IUnknown;
+import windows.win32.storage.xps : IXpsOMPackageTarget;
+import windows.win32.system.com : IDispatch, ISequentialStream, IStream, IUnknown;
 
 version (Windows):
 extern (Windows):
@@ -41,14 +41,6 @@ interface IXpsPrintJob : IUnknown
 {
     HRESULT Cancel();
     HRESULT GetJobStatus(XPS_JOB_STATUS*);
-}
-enum CLSID_PrintDocumentPackageTarget = GUID(0x4842669e, 0x9947, 0x46ea, [0x8b, 0xa2, 0xd8, 0xcc, 0xe4, 0x32, 0xc2, 0xca]);
-struct PrintDocumentPackageTarget
-{
-}
-enum CLSID_PrintDocumentPackageTargetFactory = GUID(0x348ef17d, 0x6c81, 0x4982, [0x92, 0xb4, 0xee, 0x18, 0x8a, 0x43, 0x86, 0x7a]);
-struct PrintDocumentPackageTargetFactory
-{
 }
 enum IID_IPrintDocumentPackageTarget = GUID(0x1b8efec4, 0x3019, 0x4c27, [0x96, 0x4e, 0x36, 0x72, 0x2, 0x15, 0x69, 0x6]);
 interface IPrintDocumentPackageTarget : IUnknown
@@ -90,4 +82,12 @@ enum IID_IPrintDocumentPackageTargetFactory = GUID(0xd2959bf7, 0xb31b, 0x4a3d, [
 interface IPrintDocumentPackageTargetFactory : IUnknown
 {
     HRESULT CreateDocumentPackageTargetForPrintJob(const(wchar)*, const(wchar)*, IStream, IStream, IPrintDocumentPackageTarget*);
+}
+enum CLSID_PrintDocumentPackageTarget = GUID(0x4842669e, 0x9947, 0x46ea, [0x8b, 0xa2, 0xd8, 0xcc, 0xe4, 0x32, 0xc2, 0xca]);
+struct PrintDocumentPackageTarget
+{
+}
+enum CLSID_PrintDocumentPackageTargetFactory = GUID(0x348ef17d, 0x6c81, 0x4982, [0x92, 0xb4, 0xee, 0x18, 0x8a, 0x43, 0x86, 0x7a]);
+struct PrintDocumentPackageTargetFactory
+{
 }

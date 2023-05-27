@@ -3,7 +3,7 @@ module windows.win32.ui.animation;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HRESULT;
 import windows.win32.graphics.directcomposition : IDCompositionAnimation;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):
@@ -14,34 +14,6 @@ enum UI_ANIMATION_REPEAT_INDEFINITELY_CONCLUDE_AT_END = 0xffffffffffffffff;
 enum UI_ANIMATION_REPEAT_INDEFINITELY_CONCLUDE_AT_START = 0xfffffffffffffffe;
 enum UI_ANIMATION_SECONDS_INFINITE = 0xffffffffffffffff;
 alias UI_ANIMATION_KEYFRAME = long;
-enum CLSID_UIAnimationManager = GUID(0x4c1fc63a, 0x695c, 0x47e8, [0xa3, 0x39, 0x1a, 0x19, 0x4b, 0xe3, 0xd0, 0xb8]);
-struct UIAnimationManager
-{
-}
-enum CLSID_UIAnimationManager2 = GUID(0xd25d8842, 0x8884, 0x4a4a, [0xb3, 0x21, 0x9, 0x13, 0x14, 0x37, 0x9b, 0xdd]);
-struct UIAnimationManager2
-{
-}
-enum CLSID_UIAnimationTransitionLibrary = GUID(0x1d6322ad, 0xaa85, 0x4ef5, [0xa8, 0x28, 0x86, 0xd7, 0x10, 0x67, 0xd1, 0x45]);
-struct UIAnimationTransitionLibrary
-{
-}
-enum CLSID_UIAnimationTransitionLibrary2 = GUID(0x812f944a, 0xc5c8, 0x4cd9, [0xb0, 0xa6, 0xb3, 0xda, 0x80, 0x2f, 0x22, 0x8d]);
-struct UIAnimationTransitionLibrary2
-{
-}
-enum CLSID_UIAnimationTransitionFactory = GUID(0x8a9b1cdd, 0xfcd7, 0x419c, [0x8b, 0x44, 0x42, 0xfd, 0x17, 0xdb, 0x18, 0x87]);
-struct UIAnimationTransitionFactory
-{
-}
-enum CLSID_UIAnimationTransitionFactory2 = GUID(0x84302f97, 0x7f7b, 0x4040, [0xb1, 0x90, 0x72, 0xac, 0x9d, 0x18, 0xe4, 0x20]);
-struct UIAnimationTransitionFactory2
-{
-}
-enum CLSID_UIAnimationTimer = GUID(0xbfcd4a0c, 0x6b6, 0x4384, [0xb7, 0x68, 0xd, 0xaa, 0x79, 0x2c, 0x38, 0xe]);
-struct UIAnimationTimer
-{
-}
 alias UI_ANIMATION_UPDATE_RESULT = int;
 enum : int
 {
@@ -468,4 +440,32 @@ interface IUIAnimationStoryboard2 : IUnknown
     HRESULT GetStatus(UI_ANIMATION_STORYBOARD_STATUS*);
     HRESULT GetElapsedTime(double*);
     HRESULT SetStoryboardEventHandler(IUIAnimationStoryboardEventHandler2, BOOL, BOOL);
+}
+enum CLSID_UIAnimationManager = GUID(0x4c1fc63a, 0x695c, 0x47e8, [0xa3, 0x39, 0x1a, 0x19, 0x4b, 0xe3, 0xd0, 0xb8]);
+struct UIAnimationManager
+{
+}
+enum CLSID_UIAnimationManager2 = GUID(0xd25d8842, 0x8884, 0x4a4a, [0xb3, 0x21, 0x9, 0x13, 0x14, 0x37, 0x9b, 0xdd]);
+struct UIAnimationManager2
+{
+}
+enum CLSID_UIAnimationTransitionLibrary = GUID(0x1d6322ad, 0xaa85, 0x4ef5, [0xa8, 0x28, 0x86, 0xd7, 0x10, 0x67, 0xd1, 0x45]);
+struct UIAnimationTransitionLibrary
+{
+}
+enum CLSID_UIAnimationTransitionLibrary2 = GUID(0x812f944a, 0xc5c8, 0x4cd9, [0xb0, 0xa6, 0xb3, 0xda, 0x80, 0x2f, 0x22, 0x8d]);
+struct UIAnimationTransitionLibrary2
+{
+}
+enum CLSID_UIAnimationTransitionFactory = GUID(0x8a9b1cdd, 0xfcd7, 0x419c, [0x8b, 0x44, 0x42, 0xfd, 0x17, 0xdb, 0x18, 0x87]);
+struct UIAnimationTransitionFactory
+{
+}
+enum CLSID_UIAnimationTransitionFactory2 = GUID(0x84302f97, 0x7f7b, 0x4040, [0xb1, 0x90, 0x72, 0xac, 0x9d, 0x18, 0xe4, 0x20]);
+struct UIAnimationTransitionFactory2
+{
+}
+enum CLSID_UIAnimationTimer = GUID(0xbfcd4a0c, 0x6b6, 0x4384, [0xb7, 0x68, 0xd, 0xaa, 0x79, 0x2c, 0x38, 0xe]);
+struct UIAnimationTimer
+{
 }

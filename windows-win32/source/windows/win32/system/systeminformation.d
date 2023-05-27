@@ -1,7 +1,6 @@
 module windows.win32.system.systeminformation;
 
 import windows.win32.foundation : BOOL, BOOLEAN, CHAR, FILETIME, HANDLE, HRESULT, PSTR, PWSTR, SYSTEMTIME;
-import windows.win32.system.diagnostics.debug__ : PROCESSOR_ARCHITECTURE;
 
 version (Windows):
 extern (Windows):
@@ -54,6 +53,27 @@ enum : ushort
     IMAGE_FILE_MACHINE_M32R        = 0x9041,
     IMAGE_FILE_MACHINE_ARM64       = 0xaa64,
     IMAGE_FILE_MACHINE_CEE         = 0xc0ee,
+}
+
+alias PROCESSOR_ARCHITECTURE = ushort;
+enum : ushort
+{
+    PROCESSOR_ARCHITECTURE_INTEL          = 0x0000,
+    PROCESSOR_ARCHITECTURE_MIPS           = 0x0001,
+    PROCESSOR_ARCHITECTURE_ALPHA          = 0x0002,
+    PROCESSOR_ARCHITECTURE_PPC            = 0x0003,
+    PROCESSOR_ARCHITECTURE_SHX            = 0x0004,
+    PROCESSOR_ARCHITECTURE_ARM            = 0x0005,
+    PROCESSOR_ARCHITECTURE_IA64           = 0x0006,
+    PROCESSOR_ARCHITECTURE_ALPHA64        = 0x0007,
+    PROCESSOR_ARCHITECTURE_MSIL           = 0x0008,
+    PROCESSOR_ARCHITECTURE_AMD64          = 0x0009,
+    PROCESSOR_ARCHITECTURE_IA32_ON_WIN64  = 0x000a,
+    PROCESSOR_ARCHITECTURE_NEUTRAL        = 0x000b,
+    PROCESSOR_ARCHITECTURE_ARM64          = 0x000c,
+    PROCESSOR_ARCHITECTURE_ARM32_ON_WIN64 = 0x000d,
+    PROCESSOR_ARCHITECTURE_IA32_ON_ARM64  = 0x000e,
+    PROCESSOR_ARCHITECTURE_UNKNOWN        = 0xffff,
 }
 
 alias FIRMWARE_TABLE_PROVIDER = uint;
@@ -282,8 +302,8 @@ void GetSystemTimePreciseAsFileTime(FILETIME*);
 BOOL GetProductInfo(uint, uint, uint, uint, OS_PRODUCT_TYPE*);
 ulong VerSetConditionMask(ulong, VER_FLAGS, ubyte);
 BOOL GetOsSafeBootMode(uint*);
-uint EnumSystemFirmwareTables(FIRMWARE_TABLE_PROVIDER, FIRMWARE_TABLE_ID*, uint);
-uint GetSystemFirmwareTable(FIRMWARE_TABLE_PROVIDER, FIRMWARE_TABLE_ID, void*, uint);
+uint EnumSystemFirmwareTables(FIRMWARE_TABLE_PROVIDER, ubyte*, uint);
+uint GetSystemFirmwareTable(FIRMWARE_TABLE_PROVIDER, uint, ubyte*, uint);
 BOOL DnsHostnameToComputerNameExW(const(wchar)*, PWSTR, uint*);
 BOOL GetPhysicallyInstalledSystemMemory(ulong*);
 BOOL SetComputerNameEx2W(COMPUTER_NAME_FORMAT, uint, const(wchar)*);
@@ -426,7 +446,6 @@ enum SPVERSION_MASK = 0x0000ff00;
 enum SUBVERSION_MASK = 0x000000ff;
 enum NTDDI_VERSION = 0x0a00000c;
 enum SCEX2_ALT_NETBIOS_NAME = 0x00000001;
-alias FIRMWARE_TABLE_ID = uint;
 struct GROUP_AFFINITY
 {
     ulong Mask;

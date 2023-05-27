@@ -2,9 +2,10 @@ module windows.win32.system.realtimecommunications;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BSTR, HRESULT, VARIANT_BOOL;
-import windows.win32.media.directshow_ : IVideoWindow;
+import windows.win32.media.directshow : IVideoWindow;
 import windows.win32.networking.winsock : TRANSPORT_SETTING_ID;
-import windows.win32.system.com_ : IDispatch, IUnknown, VARIANT;
+import windows.win32.system.com : IDispatch, IUnknown;
+import windows.win32.system.variant : VARIANT;
 
 version (Windows):
 extern (Windows):
@@ -261,10 +262,6 @@ enum RTC_E_PINT_STATUS_REJECTED_PL_FAILED = 0xffffffff80f00008;
 enum RTC_E_PINT_STATUS_REJECTED_SW_FAILED = 0xffffffff80f00009;
 enum RTC_E_PINT_STATUS_REJECTED_CANCELLED = 0xffffffff80f0000a;
 enum RTC_E_PINT_STATUS_REJECTED_BADNUMBER = 0xffffffff80f0000b;
-enum CLSID_RTCClient = GUID(0x7a42ea29, 0xa2b7, 0x40c4, [0xb0, 0x91, 0xf6, 0xf0, 0x24, 0xaa, 0x89, 0xbe]);
-struct RTCClient
-{
-}
 alias RTC_AUDIO_DEVICE = int;
 enum : int
 {
@@ -1257,6 +1254,10 @@ interface IRTCPresenceDevice : IUnknown
 }
 enum IID_IRTCDispatchEventNotification = GUID(0x176ddfbe, 0xfec0, 0x4d55, [0xbc, 0x87, 0x84, 0xcf, 0xf1, 0xef, 0x7f, 0x91]);
 interface IRTCDispatchEventNotification : IDispatch
+{
+}
+enum CLSID_RTCClient = GUID(0x7a42ea29, 0xa2b7, 0x40c4, [0xb0, 0x91, 0xf6, 0xf0, 0x24, 0xaa, 0x89, 0xbe]);
+struct RTCClient
 {
 }
 struct TRANSPORT_SETTING

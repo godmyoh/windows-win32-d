@@ -1,17 +1,20 @@
-module windows.win32.graphics.printing_;
+module windows.win32.graphics.printing;
 
 import windows.win32.guid : GUID;
 import windows.win32.data.xml.msxml : IXMLDOMDocument2;
+import windows.win32.devices.communication : COMMTIMEOUTS;
 import windows.win32.devices.display : FD_KERNINGPAIR;
 import windows.win32.foundation : BOOL, BSTR, CHAR, FARPROC, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, LRESULT, POINTL, PSTR, PWSTR, RECT, RECTL, SIZE, SYSTEMTIME, WPARAM;
-import windows.win32.graphics.dxgi_ : IDXGISurface;
+import windows.win32.graphics.dxgi : IDXGISurface;
 import windows.win32.graphics.gdi : DEVMODEA, DEVMODEW, HDC, PANOSE;
-import windows.win32.graphics.imaging_ : IWICBitmap;
-import windows.win32.security_ : PSECURITY_DESCRIPTOR;
-import windows.win32.storage.xps_ : DOCINFOW, IXpsOMPage;
-import windows.win32.system.com_ : IDispatch, IEnumUnknown, IErrorInfo, IStream, IUnknown, STREAM_SEEK, VARIANT;
+import windows.win32.graphics.imaging : IWICBitmap;
+import windows.win32.security : PSECURITY_DESCRIPTOR;
+import windows.win32.storage.xps : DOCINFOW, IXpsOMPage;
+import windows.win32.system.com : IDispatch, IEnumUnknown, IErrorInfo, IStream, IUnknown, STREAM_SEEK;
 import windows.win32.system.ole : ICreateErrorInfo;
+import windows.win32.system.power : POWERBROADCAST_SETTING;
 import windows.win32.system.registry : HKEY;
+import windows.win32.system.variant : VARIANT;
 import windows.win32.ui.windowsandmessaging : DLGPROC, HICON;
 
 version (Windows):
@@ -44,6 +47,45 @@ enum : uint
     PRINTER_ACCESS_MANAGE_LIMITED    = 0x00000040,
 }
 
+alias PFN_PRINTING_ENUMPORTS = BOOL function(PWSTR, uint, ubyte*, uint, uint*, uint*);
+alias PFN_PRINTING_OPENPORT = BOOL function(PWSTR, HANDLE*);
+alias PFN_PRINTING_OPENPORTEX = BOOL function(HANDLE, PWSTR, PWSTR, HANDLE*, MONITOR2*);
+alias PFN_PRINTING_STARTDOCPORT = BOOL function(HANDLE, PWSTR, uint, uint, ubyte*);
+alias PFN_PRINTING_WRITEPORT = BOOL function(HANDLE, ubyte*, uint, uint*);
+alias PFN_PRINTING_READPORT = BOOL function(HANDLE, ubyte*, uint, uint*);
+alias PFN_PRINTING_ENDDOCPORT = BOOL function(HANDLE);
+alias PFN_PRINTING_CLOSEPORT = BOOL function(HANDLE);
+alias PFN_PRINTING_ADDPORT = BOOL function(PWSTR, HWND, PWSTR);
+alias PFN_PRINTING_ADDPORTEX = BOOL function(PWSTR, uint, ubyte*, PWSTR);
+alias PFN_PRINTING_CONFIGUREPORT = BOOL function(PWSTR, HWND, PWSTR);
+alias PFN_PRINTING_DELETEPORT = BOOL function(PWSTR, HWND, PWSTR);
+alias PFN_PRINTING_GETPRINTERDATAFROMPORT = BOOL function(HANDLE, uint, PWSTR, PWSTR, uint, PWSTR, uint, uint*);
+alias PFN_PRINTING_SETPORTTIMEOUTS = BOOL function(HANDLE, COMMTIMEOUTS*, uint);
+alias PFN_PRINTING_XCVOPENPORT = BOOL function(const(wchar)*, uint, HANDLE*);
+alias PFN_PRINTING_XCVDATAPORT = uint function(HANDLE, const(wchar)*, ubyte*, uint, ubyte*, uint, uint*);
+alias PFN_PRINTING_XCVCLOSEPORT = BOOL function(HANDLE);
+alias PFN_PRINTING_ENUMPORTS2 = BOOL function(HANDLE, PWSTR, uint, ubyte*, uint, uint*, uint*);
+alias PFN_PRINTING_OPENPORT2 = BOOL function(HANDLE, PWSTR, HANDLE*);
+alias PFN_PRINTING_OPENPORTEX2 = BOOL function(HANDLE, HANDLE, PWSTR, PWSTR, HANDLE*, MONITOR2*);
+alias PFN_PRINTING_STARTDOCPORT2 = BOOL function(HANDLE, PWSTR, uint, uint, ubyte*);
+alias PFN_PRINTING_WRITEPORT2 = BOOL function(HANDLE, ubyte*, uint, uint*);
+alias PFN_PRINTING_READPORT2 = BOOL function(HANDLE, ubyte*, uint, uint*);
+alias PFN_PRINTING_ENDDOCPORT2 = BOOL function(HANDLE);
+alias PFN_PRINTING_CLOSEPORT2 = BOOL function(HANDLE);
+alias PFN_PRINTING_ADDPORT2 = BOOL function(HANDLE, PWSTR, HWND, PWSTR);
+alias PFN_PRINTING_ADDPORTEX2 = BOOL function(HANDLE, PWSTR, uint, ubyte*, PWSTR);
+alias PFN_PRINTING_CONFIGUREPORT2 = BOOL function(HANDLE, PWSTR, HWND, PWSTR);
+alias PFN_PRINTING_DELETEPORT2 = BOOL function(HANDLE, PWSTR, HWND, PWSTR);
+alias PFN_PRINTING_GETPRINTERDATAFROMPORT2 = BOOL function(HANDLE, uint, PWSTR, PWSTR, uint, PWSTR, uint, uint*);
+alias PFN_PRINTING_SETPORTTIMEOUTS2 = BOOL function(HANDLE, COMMTIMEOUTS*, uint);
+alias PFN_PRINTING_XCVOPENPORT2 = BOOL function(HANDLE, const(wchar)*, uint, HANDLE*);
+alias PFN_PRINTING_XCVDATAPORT2 = uint function(HANDLE, const(wchar)*, ubyte*, uint, ubyte*, uint, uint*);
+alias PFN_PRINTING_XCVCLOSEPORT2 = BOOL function(HANDLE);
+alias PFN_PRINTING_SHUTDOWN2 = void function(HANDLE);
+alias PFN_PRINTING_SENDRECVBIDIDATAFROMPORT2 = uint function(HANDLE, uint, const(wchar)*, BIDI_REQUEST_CONTAINER*, BIDI_RESPONSE_CONTAINER**);
+alias PFN_PRINTING_NOTIFYUSEDPORTS2 = uint function(HANDLE, uint, const(wchar)*);
+alias PFN_PRINTING_NOTIFYUNUSEDPORTS2 = uint function(HANDLE, uint, const(wchar)*);
+alias PFN_PRINTING_POWEREVENT2 = uint function(HANDLE, uint, POWERBROADCAST_SETTING*);
 int CommonPropertySheetUIA(HWND, PFNPROPSHEETUI, LPARAM, uint*);
 int CommonPropertySheetUIW(HWND, PFNPROPSHEETUI, LPARAM, uint*);
 ulong GetCPSUIUserData(HWND);
@@ -1658,18 +1700,6 @@ struct SPLCLIENT_INFO_2_WINXP
 {
     ulong hSplPrinter;
 }
-enum CLSID_BidiRequest = GUID(0xb9162a23, 0x45f9, 0x47cc, [0x80, 0xf5, 0xfe, 0xf, 0xe9, 0xb9, 0xe1, 0xa2]);
-struct BidiRequest
-{
-}
-enum CLSID_BidiRequestContainer = GUID(0xfc5b8a24, 0xdb05, 0x4a01, [0x83, 0x88, 0x22, 0xed, 0xf6, 0xc2, 0xbb, 0xba]);
-struct BidiRequestContainer
-{
-}
-enum CLSID_BidiSpl = GUID(0x2a614240, 0xa4c5, 0x4c33, [0xbd, 0x87, 0x1b, 0xc7, 0x9, 0x33, 0x16, 0x39]);
-struct BidiSpl
-{
-}
 enum IID_IBidiRequest = GUID(0x8f348bd7, 0x4b47, 0x4755, [0x8a, 0x9d, 0xf, 0x42, 0x2d, 0xf3, 0xdc, 0x89]);
 interface IBidiRequest : IUnknown
 {
@@ -1701,6 +1731,18 @@ interface IBidiSpl2 : IUnknown
     HRESULT UnbindDevice();
     HRESULT SendRecvXMLString(BSTR, BSTR*);
     HRESULT SendRecvXMLStream(IStream, IStream*);
+}
+enum CLSID_BidiRequest = GUID(0xb9162a23, 0x45f9, 0x47cc, [0x80, 0xf5, 0xfe, 0xf, 0xe9, 0xb9, 0xe1, 0xa2]);
+struct BidiRequest
+{
+}
+enum CLSID_BidiRequestContainer = GUID(0xfc5b8a24, 0xdb05, 0x4a01, [0x83, 0x88, 0x22, 0xed, 0xf6, 0xc2, 0xbb, 0xba]);
+struct BidiRequestContainer
+{
+}
+enum CLSID_BidiSpl = GUID(0x2a614240, 0xa4c5, 0x4c33, [0xbd, 0x87, 0x1b, 0xc7, 0x9, 0x33, 0x16, 0x39]);
+struct BidiSpl
+{
 }
 struct ImgErrorInfo
 {
@@ -2942,12 +2984,12 @@ enum : int
 struct PRINTER_OPTIONSA
 {
     uint cbSize;
-    PRINTER_OPTION_FLAGS dwFlags;
+    uint dwFlags;
 }
 struct PRINTER_OPTIONSW
 {
     uint cbSize;
-    PRINTER_OPTION_FLAGS dwFlags;
+    uint dwFlags;
 }
 struct PRINTER_CONNECTION_INFO_1A
 {
@@ -3497,22 +3539,6 @@ interface IPrintTicketProvider2 : IPrintTicketProvider
     HRESULT GetPrintDeviceCapabilities(IXMLDOMDocument2, IXMLDOMDocument2*);
     HRESULT GetPrintDeviceResources(const(wchar)*, IXMLDOMDocument2, IXMLDOMDocument2*);
 }
-enum CLSID_PrinterQueue = GUID(0xeb54c230, 0x798c, 0x4c9e, [0xb4, 0x61, 0x29, 0xfa, 0xd0, 0x40, 0x39, 0xb1]);
-struct PrinterQueue
-{
-}
-enum CLSID_PrinterQueueView = GUID(0xeb54c231, 0x798c, 0x4c9e, [0xb4, 0x61, 0x29, 0xfa, 0xd0, 0x40, 0x39, 0xb1]);
-struct PrinterQueueView
-{
-}
-enum CLSID_PrintSchemaAsyncOperation = GUID(0x43b2f83d, 0x10f2, 0x48ab, [0x83, 0x1b, 0x55, 0xfd, 0xbd, 0xbd, 0x34, 0xa4]);
-struct PrintSchemaAsyncOperation
-{
-}
-enum CLSID_PrinterExtensionManager = GUID(0x331b60da, 0x9e90, 0x4dd0, [0x9c, 0x84, 0xea, 0xc4, 0xe6, 0x59, 0xb6, 0x1f]);
-struct PrinterExtensionManager
-{
-}
 enum IID_IPrintSchemaElement = GUID(0x724c1646, 0xe64b, 0x4bbf, [0x8e, 0xb4, 0xd4, 0x5e, 0x4f, 0xd5, 0x80, 0xda]);
 interface IPrintSchemaElement : IDispatch
 {
@@ -3824,6 +3850,22 @@ interface IPrinterScriptContext : IDispatch
     HRESULT get_DriverProperties(IPrinterScriptablePropertyBag*);
     HRESULT get_QueueProperties(IPrinterScriptablePropertyBag*);
     HRESULT get_UserProperties(IPrinterScriptablePropertyBag*);
+}
+enum CLSID_PrinterQueue = GUID(0xeb54c230, 0x798c, 0x4c9e, [0xb4, 0x61, 0x29, 0xfa, 0xd0, 0x40, 0x39, 0xb1]);
+struct PrinterQueue
+{
+}
+enum CLSID_PrinterQueueView = GUID(0xeb54c231, 0x798c, 0x4c9e, [0xb4, 0x61, 0x29, 0xfa, 0xd0, 0x40, 0x39, 0xb1]);
+struct PrinterQueueView
+{
+}
+enum CLSID_PrintSchemaAsyncOperation = GUID(0x43b2f83d, 0x10f2, 0x48ab, [0x83, 0x1b, 0x55, 0xfd, 0xbd, 0xbd, 0x34, 0xa4]);
+struct PrintSchemaAsyncOperation
+{
+}
+enum CLSID_PrinterExtensionManager = GUID(0x331b60da, 0x9e90, 0x4dd0, [0x9c, 0x84, 0xea, 0xc4, 0xe6, 0x59, 0xb6, 0x1f]);
+struct PrinterExtensionManager
+{
 }
 alias PrintAsyncNotifyUserFilter = int;
 enum : int
@@ -4499,23 +4541,23 @@ struct MONITORINIT
 }
 struct MONITOR
 {
-    long pfnEnumPorts;
-    long pfnOpenPort;
-    long pfnOpenPortEx;
-    long pfnStartDocPort;
-    long pfnWritePort;
-    long pfnReadPort;
-    long pfnEndDocPort;
-    long pfnClosePort;
-    long pfnAddPort;
-    long pfnAddPortEx;
-    long pfnConfigurePort;
-    long pfnDeletePort;
-    long pfnGetPrinterDataFromPort;
-    long pfnSetPortTimeOuts;
-    long pfnXcvOpenPort;
-    long pfnXcvDataPort;
-    long pfnXcvClosePort;
+    PFN_PRINTING_ENUMPORTS pfnEnumPorts;
+    PFN_PRINTING_OPENPORT pfnOpenPort;
+    PFN_PRINTING_OPENPORTEX pfnOpenPortEx;
+    PFN_PRINTING_STARTDOCPORT pfnStartDocPort;
+    PFN_PRINTING_WRITEPORT pfnWritePort;
+    PFN_PRINTING_READPORT pfnReadPort;
+    PFN_PRINTING_ENDDOCPORT pfnEndDocPort;
+    PFN_PRINTING_CLOSEPORT pfnClosePort;
+    PFN_PRINTING_ADDPORT pfnAddPort;
+    PFN_PRINTING_ADDPORTEX pfnAddPortEx;
+    PFN_PRINTING_CONFIGUREPORT pfnConfigurePort;
+    PFN_PRINTING_DELETEPORT pfnDeletePort;
+    PFN_PRINTING_GETPRINTERDATAFROMPORT pfnGetPrinterDataFromPort;
+    PFN_PRINTING_SETPORTTIMEOUTS pfnSetPortTimeOuts;
+    PFN_PRINTING_XCVOPENPORT pfnXcvOpenPort;
+    PFN_PRINTING_XCVDATAPORT pfnXcvDataPort;
+    PFN_PRINTING_XCVCLOSEPORT pfnXcvClosePort;
 }
 struct MONITOREX
 {
@@ -4525,28 +4567,28 @@ struct MONITOREX
 struct MONITOR2
 {
     uint cbSize;
-    long pfnEnumPorts;
-    long pfnOpenPort;
-    long pfnOpenPortEx;
-    long pfnStartDocPort;
-    long pfnWritePort;
-    long pfnReadPort;
-    long pfnEndDocPort;
-    long pfnClosePort;
-    long pfnAddPort;
-    long pfnAddPortEx;
-    long pfnConfigurePort;
-    long pfnDeletePort;
-    long pfnGetPrinterDataFromPort;
-    long pfnSetPortTimeOuts;
-    long pfnXcvOpenPort;
-    long pfnXcvDataPort;
-    long pfnXcvClosePort;
-    long pfnShutdown;
-    long pfnSendRecvBidiDataFromPort;
-    long pfnNotifyUsedPorts;
-    long pfnNotifyUnusedPorts;
-    long pfnPowerEvent;
+    PFN_PRINTING_ENUMPORTS2 pfnEnumPorts;
+    PFN_PRINTING_OPENPORT2 pfnOpenPort;
+    PFN_PRINTING_OPENPORTEX2 pfnOpenPortEx;
+    PFN_PRINTING_STARTDOCPORT2 pfnStartDocPort;
+    PFN_PRINTING_WRITEPORT2 pfnWritePort;
+    PFN_PRINTING_READPORT2 pfnReadPort;
+    PFN_PRINTING_ENDDOCPORT2 pfnEndDocPort;
+    PFN_PRINTING_CLOSEPORT2 pfnClosePort;
+    PFN_PRINTING_ADDPORT2 pfnAddPort;
+    PFN_PRINTING_ADDPORTEX2 pfnAddPortEx;
+    PFN_PRINTING_CONFIGUREPORT2 pfnConfigurePort;
+    PFN_PRINTING_DELETEPORT2 pfnDeletePort;
+    PFN_PRINTING_GETPRINTERDATAFROMPORT2 pfnGetPrinterDataFromPort;
+    PFN_PRINTING_SETPORTTIMEOUTS2 pfnSetPortTimeOuts;
+    PFN_PRINTING_XCVOPENPORT2 pfnXcvOpenPort;
+    PFN_PRINTING_XCVDATAPORT2 pfnXcvDataPort;
+    PFN_PRINTING_XCVCLOSEPORT2 pfnXcvClosePort;
+    PFN_PRINTING_SHUTDOWN2 pfnShutdown;
+    PFN_PRINTING_SENDRECVBIDIDATAFROMPORT2 pfnSendRecvBidiDataFromPort;
+    PFN_PRINTING_NOTIFYUSEDPORTS2 pfnNotifyUsedPorts;
+    PFN_PRINTING_NOTIFYUNUSEDPORTS2 pfnNotifyUnusedPorts;
+    PFN_PRINTING_POWEREVENT2 pfnPowerEvent;
 }
 struct MONITORUI
 {

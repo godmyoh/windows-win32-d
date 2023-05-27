@@ -7,15 +7,17 @@ import std.algorithm, std.string;
 
 class NamespaceToModuleMapper : INamespaceToModuleMapper
 {
-    override constr[] map(CLINamespace[] namespaces)
+    override Module[] map(CLINamespace[] namespaces)
     {
-        constr[] fqmns;
-        fqmns.length = namespaces.length;
+        Module[] modules;
+        modules.length = namespaces.length;
 
         // assume ordered
         foreach (i, namespace; namespaces)
         {
             auto ns = namespace.namespace;
+            modules[i].namespace = ns;
+            modules[i].isPackageModule = false;
 
             // Avoid module name conflicts
             if (i + 1 < namespaces.length)
@@ -24,15 +26,15 @@ class NamespaceToModuleMapper : INamespaceToModuleMapper
 
                 if (nextNs.startsWith(ns) && ns.length < nextNs.length && nextNs[ns.length] == '.')
                 {
-                    fqmns[i] = ns.toLower.sanitizeKeywords ~ "_";
+                    modules[i].fqmn = ns.toLower.sanitizeKeywords ~ "_";
                     continue;
                 }
             }
 
-            fqmns[i] = ns.toLower.sanitizeKeywords;
+            modules[i].fqmn = ns.toLower.sanitizeKeywords;
         }
 
-        return fqmns;
+        return modules;
     }
 
 }

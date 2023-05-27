@@ -2,7 +2,7 @@ module windows.win32.system.winrt.alljoyn;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : HRESULT;
-import windows.win32.system.winrt_ : HSTRING, IInspectable;
+import windows.win32.system.winrt : HSTRING, IInspectable;
 
 version (Windows):
 extern (Windows):

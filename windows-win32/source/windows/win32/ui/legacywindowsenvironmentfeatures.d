@@ -2,7 +2,7 @@ module windows.win32.ui.legacywindowsenvironmentfeatures;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : HRESULT, HWND, PWSTR;
-import windows.win32.system.com_ : IMoniker, IUnknown;
+import windows.win32.system.com : IMoniker, IUnknown;
 import windows.win32.system.com.structuredstorage : IStorage;
 import windows.win32.system.ole : IOleObject;
 import windows.win32.system.registry : HKEY;

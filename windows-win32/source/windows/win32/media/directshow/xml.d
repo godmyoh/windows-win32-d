@@ -3,8 +3,8 @@ module windows.win32.media.directshow.xml;
 import windows.win32.guid : GUID;
 import windows.win32.data.xml.msxml : IXMLElement;
 import windows.win32.foundation : BSTR, HRESULT, PWSTR;
-import windows.win32.media.directshow_ : IGraphBuilder;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.media.directshow : IGraphBuilder;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):

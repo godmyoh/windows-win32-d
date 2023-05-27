@@ -12,7 +12,15 @@ interface INamespaceExtractor
 
 interface INamespaceToModuleMapper
 {
-    constr[] map(CLINamespace[] namespaces);
+    Module[] map(CLINamespace[] namespaces);
+}
+
+
+struct Module
+{
+    constr fqmn;
+    constr namespace;
+    bool isPackageModule;
 }
 
 
@@ -41,7 +49,7 @@ struct References
 
 interface IModuleWriter
 {
-    void writeModule(File f, constr fqmn);
+    void writeModule(File f, Module m);
     void writeImports(File f, References[] references, constr[constr] namespaceToFqmn);
     void writeWindowsSpecificAttributes(File f);
     void writeDeclarations(File f, constr[] declStrings);

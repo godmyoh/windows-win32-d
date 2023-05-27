@@ -4,8 +4,9 @@ import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, HRESULT, HWND, LPARAM, LRESULT, PWSTR, RECT, SIZE, SYSTEMTIME, VARIANT_BOOL, WPARAM;
 import windows.win32.graphics.gdi : HDC;
 import windows.win32.media.mediafoundation : IMFActivate;
-import windows.win32.system.com_ : BLOB, IDispatch, IStream, IUnknown, VARIANT;
+import windows.win32.system.com : BLOB, IDispatch, IStream, IUnknown;
 import windows.win32.system.ole : IEnumVARIANT;
+import windows.win32.system.variant : VARIANT;
 import windows.win32.ui.windowsandmessaging : MSG;
 
 version (Windows):
@@ -709,10 +710,6 @@ enum WMProfile_V80_56VideoOnly = GUID(0x6e2a6955, 0x81df, 0x4943, [0xba, 0x50, 0
 enum WMProfile_V80_FAIRVBRVideo = GUID(0x3510a862, 0x5850, 0x4886, [0x83, 0x5f, 0xd7, 0x8e, 0xc6, 0xa6, 0x40, 0x42]);
 enum WMProfile_V80_HIGHVBRVideo = GUID(0xf10d9d3, 0x3b04, 0x4fb0, [0xa3, 0xd3, 0x88, 0xd4, 0xac, 0x85, 0x4a, 0xcc]);
 enum WMProfile_V80_BESTVBRVideo = GUID(0x48439ba, 0x309c, 0x440e, [0x9c, 0xb4, 0x3d, 0xcc, 0xa3, 0x75, 0x64, 0x23]);
-enum CLSID_WindowsMediaPlayer = GUID(0x6bf52a52, 0x394a, 0x11d3, [0xb1, 0x53, 0x0, 0xc0, 0x4f, 0x79, 0xfa, 0xa6]);
-struct WindowsMediaPlayer
-{
-}
 alias WMPOpenState = int;
 enum : int
 {
@@ -1484,6 +1481,10 @@ enum IID__WMPOCXEvents = GUID(0x6bf52a51, 0x394a, 0x11d3, [0xb1, 0x53, 0x0, 0xc0
 interface _WMPOCXEvents : IDispatch
 {
 }
+enum CLSID_WindowsMediaPlayer = GUID(0x6bf52a52, 0x394a, 0x11d3, [0xb1, 0x53, 0x0, 0xc0, 0x4f, 0x79, 0xfa, 0xa6]);
+struct WindowsMediaPlayer
+{
+}
 enum IID_IWMPNodeRealEstate = GUID(0x42751198, 0x5a50, 0x4460, [0xbc, 0xb4, 0x70, 0x9f, 0x8b, 0xdc, 0x8e, 0x59]);
 interface IWMPNodeRealEstate : IUnknown
 {
@@ -1608,18 +1609,6 @@ enum IID_IWMPUserEventSink = GUID(0xcfccfa72, 0xc343, 0x48c3, [0xa2, 0xde, 0xb7,
 interface IWMPUserEventSink : IUnknown
 {
     HRESULT NotifyUserEvent(int);
-}
-enum CLSID_FeedsManager = GUID(0xfaeb54c4, 0xf66f, 0x4806, [0x83, 0xa0, 0x80, 0x52, 0x99, 0xf5, 0xe3, 0xad]);
-struct FeedsManager
-{
-}
-enum CLSID_FeedFolderWatcher = GUID(0x281001ed, 0x7765, 0x4cb0, [0x84, 0xaf, 0xe9, 0xb3, 0x87, 0xaf, 0x1, 0xff]);
-struct FeedFolderWatcher
-{
-}
-enum CLSID_FeedWatcher = GUID(0x18a6737b, 0xf433, 0x4687, [0x89, 0xbc, 0xa1, 0xb4, 0xdf, 0xb9, 0xf1, 0x23]);
-struct FeedWatcher
-{
 }
 alias FEEDS_BACKGROUNDSYNC_ACTION = int;
 enum : int
@@ -2099,6 +2088,18 @@ interface IFeedEnclosure : IDispatch
     HRESULT get_DownloadMimeType(BSTR*);
     HRESULT RemoveFile();
     HRESULT SetFile(BSTR, BSTR, BSTR, BSTR);
+}
+enum CLSID_FeedsManager = GUID(0xfaeb54c4, 0xf66f, 0x4806, [0x83, 0xa0, 0x80, 0x52, 0x99, 0xf5, 0xe3, 0xad]);
+struct FeedsManager
+{
+}
+enum CLSID_FeedFolderWatcher = GUID(0x281001ed, 0x7765, 0x4cb0, [0x84, 0xaf, 0xe9, 0xb3, 0x87, 0xaf, 0x1, 0xff]);
+struct FeedFolderWatcher
+{
+}
+enum CLSID_FeedWatcher = GUID(0x18a6737b, 0xf433, 0x4687, [0x89, 0xbc, 0xa1, 0xb4, 0xdf, 0xb9, 0xf1, 0x23]);
+struct FeedWatcher
+{
 }
 alias PlayerState = int;
 enum : int

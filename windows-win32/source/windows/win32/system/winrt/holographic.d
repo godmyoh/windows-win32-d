@@ -3,7 +3,7 @@ module windows.win32.system.winrt.holographic;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : HRESULT;
 import windows.win32.graphics.direct3d12 : D3D12_RESOURCE_DESC, ID3D12CommandQueue, ID3D12Device, ID3D12Fence, ID3D12ProtectedResourceSession, ID3D12Resource;
-import windows.win32.system.winrt_ : IInspectable;
+import windows.win32.system.winrt : IInspectable;
 
 version (Windows):
 extern (Windows):

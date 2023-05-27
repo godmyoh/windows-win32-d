@@ -4,7 +4,7 @@ import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, CHAR, FILETIME, HANDLE, HINSTANCE, HWND, LUID, PSTR, PWSTR;
 import windows.win32.networkmanagement.iphelper : MIB_IPMCAST_MFE;
 import windows.win32.networking.winsock : IN6_ADDR, IN_ADDR;
-import windows.win32.security.cryptography_ : CRYPT_INTEGER_BLOB;
+import windows.win32.security.cryptography : CRYPT_INTEGER_BLOB;
 
 version (Windows):
 extern (Windows):
@@ -1102,31 +1102,6 @@ enum ERROR_PLUGIN_NOT_INSTALLED = 0x0000036c;
 enum ERROR_ACTION_REQUIRED = 0x0000036d;
 enum RASBASEEND = 0x0000036d;
 alias HRASCONN = void*;
-alias RASAPIVERSION = int;
-enum : int
-{
-    RASAPIVERSION_500 = 0x00000001,
-    RASAPIVERSION_501 = 0x00000002,
-    RASAPIVERSION_600 = 0x00000003,
-    RASAPIVERSION_601 = 0x00000004,
-}
-
-struct RASIPADDR
-{
-    ubyte a;
-    ubyte b;
-    ubyte c;
-    ubyte d;
-}
-struct RASTUNNELENDPOINT
-{
-    uint dwType;
-    union
-    {
-        IN_ADDR ipv4;
-        IN6_ADDR ipv6;
-    }
-}
 struct RASCONNW
 {
     align (4):
@@ -1157,6 +1132,170 @@ struct RASCONNA
     LUID luid;
     GUID guidCorrelationId;
 }
+struct RASDIALPARAMSW
+{
+    align (4):
+    uint dwSize;
+    wchar[257] szEntryName;
+    wchar[129] szPhoneNumber;
+    wchar[129] szCallbackNumber;
+    wchar[257] szUserName;
+    wchar[257] szPassword;
+    wchar[16] szDomain;
+    uint dwSubEntry;
+    ulong dwCallbackId;
+    uint dwIfIndex;
+    PWSTR szEncPassword;
+}
+struct RASDIALPARAMSA
+{
+    align (4):
+    uint dwSize;
+    CHAR[257] szEntryName;
+    CHAR[129] szPhoneNumber;
+    CHAR[129] szCallbackNumber;
+    CHAR[257] szUserName;
+    CHAR[257] szPassword;
+    CHAR[16] szDomain;
+    uint dwSubEntry;
+    ulong dwCallbackId;
+    uint dwIfIndex;
+    PSTR szEncPassword;
+}
+struct RASDEVSPECIFICINFO
+{
+    align (4):
+    uint dwSize;
+    ubyte* pbDevSpecificInfo;
+}
+struct RASIKEV2_PROJECTION_INFO
+{
+    align (4):
+    uint dwIPv4NegotiationError;
+    IN_ADDR ipv4Address;
+    IN_ADDR ipv4ServerAddress;
+    uint dwIPv6NegotiationError;
+    IN6_ADDR ipv6Address;
+    IN6_ADDR ipv6ServerAddress;
+    uint dwPrefixLength;
+    uint dwAuthenticationProtocol;
+    uint dwEapTypeId;
+    RASIKEV_PROJECTION_INFO_FLAGS dwFlags;
+    uint dwEncryptionMethod;
+    uint numIPv4ServerAddresses;
+    IN_ADDR* ipv4ServerAddresses;
+    uint numIPv6ServerAddresses;
+    IN6_ADDR* ipv6ServerAddresses;
+}
+struct RASPBDLGW
+{
+    align (4):
+    uint dwSize;
+    HWND hwndOwner;
+    uint dwFlags;
+    int xDlg;
+    int yDlg;
+    ulong dwCallbackId;
+    RASPBDLGFUNCW pCallback;
+    uint dwError;
+    ulong reserved;
+    ulong reserved2;
+}
+struct RASPBDLGA
+{
+    align (4):
+    uint dwSize;
+    HWND hwndOwner;
+    uint dwFlags;
+    int xDlg;
+    int yDlg;
+    ulong dwCallbackId;
+    RASPBDLGFUNCA pCallback;
+    uint dwError;
+    ulong reserved;
+    ulong reserved2;
+}
+struct RASENTRYDLGW
+{
+    align (4):
+    uint dwSize;
+    HWND hwndOwner;
+    uint dwFlags;
+    int xDlg;
+    int yDlg;
+    wchar[257] szEntry;
+    uint dwError;
+    ulong reserved;
+    ulong reserved2;
+}
+struct RASENTRYDLGA
+{
+    align (4):
+    uint dwSize;
+    HWND hwndOwner;
+    uint dwFlags;
+    int xDlg;
+    int yDlg;
+    CHAR[257] szEntry;
+    uint dwError;
+    ulong reserved;
+    ulong reserved2;
+}
+alias RASAPIVERSION = int;
+enum : int
+{
+    RASAPIVERSION_500 = 0x00000001,
+    RASAPIVERSION_501 = 0x00000002,
+    RASAPIVERSION_600 = 0x00000003,
+    RASAPIVERSION_601 = 0x00000004,
+}
+
+struct RASIPADDR
+{
+    ubyte a;
+    ubyte b;
+    ubyte c;
+    ubyte d;
+}
+struct RASTUNNELENDPOINT
+{
+    uint dwType;
+    union
+    {
+        IN_ADDR ipv4;
+        IN6_ADDR ipv6;
+    }
+}
+/+ [CONFLICTED] struct RASCONNW
+{
+    uint dwSize;
+    HRASCONN hrasconn;
+    wchar[257] szEntryName;
+    wchar[17] szDeviceType;
+    wchar[129] szDeviceName;
+    wchar[260] szPhonebook;
+    uint dwSubEntry;
+    GUID guidEntry;
+    uint dwFlags;
+    LUID luid;
+    GUID guidCorrelationId;
+}
++/
+/+ [CONFLICTED] struct RASCONNA
+{
+    uint dwSize;
+    HRASCONN hrasconn;
+    CHAR[257] szEntryName;
+    CHAR[17] szDeviceType;
+    CHAR[129] szDeviceName;
+    CHAR[260] szPhonebook;
+    uint dwSubEntry;
+    GUID guidEntry;
+    uint dwFlags;
+    LUID luid;
+    GUID guidCorrelationId;
+}
++/
 alias RASCONNSTATE = int;
 enum : int
 {
@@ -1227,9 +1366,8 @@ struct RASCONNSTATUSA
     RASTUNNELENDPOINT remoteEndPoint;
     RASCONNSUBSTATE rasconnsubstate;
 }
-struct RASDIALPARAMSW
+/+ [CONFLICTED] struct RASDIALPARAMSW
 {
-    align (4):
     uint dwSize;
     wchar[257] szEntryName;
     wchar[129] szPhoneNumber;
@@ -1242,9 +1380,9 @@ struct RASDIALPARAMSW
     uint dwIfIndex;
     PWSTR szEncPassword;
 }
-struct RASDIALPARAMSA
++/
+/+ [CONFLICTED] struct RASDIALPARAMSA
 {
-    align (4):
     uint dwSize;
     CHAR[257] szEntryName;
     CHAR[129] szPhoneNumber;
@@ -1257,18 +1395,19 @@ struct RASDIALPARAMSA
     uint dwIfIndex;
     PSTR szEncPassword;
 }
++/
 struct RASEAPINFO
 {
     align (4):
     uint dwSizeofEapInfo;
     ubyte* pbEapInfo;
 }
-struct RASDEVSPECIFICINFO
+/+ [CONFLICTED] struct RASDEVSPECIFICINFO
 {
-    align (4):
     uint dwSize;
     ubyte* pbDevSpecificInfo;
 }
++/
 struct RASDIALEXTENSIONS
 {
     align (4):
@@ -1449,9 +1588,8 @@ struct RASPPP_PROJECTION_INFO
     uint dwCcpOptions;
     uint dwCcpServerOptions;
 }
-struct RASIKEV2_PROJECTION_INFO
+/+ [CONFLICTED] struct RASIKEV2_PROJECTION_INFO
 {
-    align (4):
     uint dwIPv4NegotiationError;
     IN_ADDR ipv4Address;
     IN_ADDR ipv4ServerAddress;
@@ -1468,6 +1606,7 @@ struct RASIKEV2_PROJECTION_INFO
     uint numIPv6ServerAddresses;
     IN6_ADDR* ipv6ServerAddresses;
 }
++/
 alias RASPROJECTION_INFO_TYPE = int;
 enum : int
 {
@@ -1797,9 +1936,8 @@ struct RASNOUSERA
     CHAR[257] szPassword;
     CHAR[16] szDomain;
 }
-struct RASPBDLGW
+/+ [CONFLICTED] struct RASPBDLGW
 {
-    align (4):
     uint dwSize;
     HWND hwndOwner;
     uint dwFlags;
@@ -1811,9 +1949,9 @@ struct RASPBDLGW
     ulong reserved;
     ulong reserved2;
 }
-struct RASPBDLGA
++/
+/+ [CONFLICTED] struct RASPBDLGA
 {
-    align (4):
     uint dwSize;
     HWND hwndOwner;
     uint dwFlags;
@@ -1825,9 +1963,9 @@ struct RASPBDLGA
     ulong reserved;
     ulong reserved2;
 }
-struct RASENTRYDLGW
++/
+/+ [CONFLICTED] struct RASENTRYDLGW
 {
-    align (4):
     uint dwSize;
     HWND hwndOwner;
     uint dwFlags;
@@ -1838,9 +1976,9 @@ struct RASENTRYDLGW
     ulong reserved;
     ulong reserved2;
 }
-struct RASENTRYDLGA
++/
+/+ [CONFLICTED] struct RASENTRYDLGA
 {
-    align (4):
     uint dwSize;
     HWND hwndOwner;
     uint dwFlags;
@@ -1851,6 +1989,7 @@ struct RASENTRYDLGA
     ulong reserved;
     ulong reserved2;
 }
++/
 struct RASDIALDLG
 {
     align (4):

@@ -2,8 +2,8 @@ module windows.win32.system.diagnostics.debug_.webapp;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, HRESULT, HWND, PWSTR;
-import windows.win32.system.com_ : IServiceProvider, IUnknown;
-import windows.win32.system.diagnostics.debug__ : IActiveScriptError;
+import windows.win32.system.com : IServiceProvider, IUnknown;
+import windows.win32.system.diagnostics.debug_.activescript : IActiveScriptError;
 import windows.win32.web.mshtml : IHTMLDocument2, IHTMLWindow2;
 
 version (Windows):

@@ -3,13 +3,14 @@ module windows.win32.ui.controls.richedit;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, CHAR, COLORREF, HANDLE, HGLOBAL, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT, RECTL, SIZE, WPARAM;
 import windows.win32.globalization : HIMC;
-import windows.win32.graphics.direct2d_ : ID2D1RenderTarget;
-import windows.win32.graphics.gdi : FONT_CHARSET, HBITMAP, HDC, HPALETTE, HRGN, SYS_COLOR_INDEX, TEXT_ALIGN_OPTIONS;
-import windows.win32.system.com_ : DVASPECT, DVTARGETDEVICE, IDataObject, IDispatch, IStream, IUnknown, VARIANT;
+import windows.win32.graphics.direct2d : ID2D1RenderTarget;
+import windows.win32.graphics.gdi : FONT_CHARSET, HBITMAP, HDC, HPALETTE, HRGN, SYS_COLOR_INDEX;
+import windows.win32.system.com : DVASPECT, DVTARGETDEVICE, IDataObject, IDispatch, IStream, IUnknown;
 import windows.win32.system.com.structuredstorage : IStorage;
 import windows.win32.system.ole : DROPEFFECT, IDropTarget, IOleClientSite, IOleInPlaceFrame, IOleInPlaceUIWindow, IOleObject, OLEINPLACEFRAMEINFO;
 import windows.win32.system.systemservices : MODIFIERKEYS_FLAGS, RECO_FLAGS;
-import windows.win32.ui.controls_ : ENABLE_SCROLL_BAR_ARROWS, NMHDR;
+import windows.win32.system.variant : VARIANT;
+import windows.win32.ui.controls : NMHDR;
 import windows.win32.ui.windowsandmessaging : HCURSOR, HMENU, SCROLLBAR_CONSTANTS, SCROLL_WINDOW_FLAGS;
 
 version (Windows):
@@ -696,67 +697,13 @@ enum TXTBIT_ADVANCEDINPUT = 0x20000000;
 enum TXES_ISDIALOG = 0x00000001;
 enum REO_NULL = 0x00000000;
 enum REO_READWRITEMASK = 0x000007ff;
-struct HYPHENATEINFO
-{
-    align (4):
-    short cbSize;
-    short dxHyphenateZone;
-    long pfnHyphenate;
-}
-alias TEXTMODE = int;
-enum : int
-{
-    TM_PLAINTEXT       = 0x00000001,
-    TM_RICHTEXT        = 0x00000002,
-    TM_SINGLELEVELUNDO = 0x00000004,
-    TM_MULTILEVELUNDO  = 0x00000008,
-    TM_SINGLECODEPAGE  = 0x00000010,
-    TM_MULTICODEPAGE   = 0x00000020,
-}
-
-struct IMECOMPTEXT
-{
-    int cb;
-    IMECOMPTEXT_FLAGS flags;
-}
-struct TABLEROWPARMS
-{
-    ubyte cbRow;
-    ubyte cbCell;
-    ubyte cCell;
-    ubyte cRow;
-    int dxCellMargin;
-    int dxIndent;
-    int dyHeight;
-    uint _bitfield0;
-    int cpStartRow;
-    ubyte bTableLevel;
-    ubyte iCell;
-}
-struct TABLECELLPARMS
-{
-    int dxWidth;
-    ushort _bitfield0;
-    ushort wShading;
-    short dxBrdrLeft;
-    short dyBrdrTop;
-    short dxBrdrRight;
-    short dyBrdrBottom;
-    COLORREF crBrdrLeft;
-    COLORREF crBrdrTop;
-    COLORREF crBrdrRight;
-    COLORREF crBrdrBottom;
-    COLORREF crBackPat;
-    COLORREF crForePat;
-}
-alias AutoCorrectProc = int function(ushort, const(wchar)*, PWSTR, int, int*);
 struct RICHEDIT_IMAGE_PARAMETERS
 {
     align (4):
     int xWidth;
     int yHeight;
     int Ascent;
-    TEXT_ALIGN_OPTIONS Type;
+    int Type;
     const(wchar)* pwszAlternateText;
     IStream pIStream;
 }
@@ -765,74 +712,6 @@ struct ENDCOMPOSITIONNOTIFY
     align (4):
     NMHDR nmhdr;
     ENDCOMPOSITIONNOTIFY_CODE dwCode;
-}
-alias EDITWORDBREAKPROCEX = int function(PSTR, int, ubyte, int);
-struct CHARFORMATA
-{
-    uint cbSize;
-    CFM_MASK dwMask;
-    CFE_EFFECTS dwEffects;
-    int yHeight;
-    int yOffset;
-    COLORREF crTextColor;
-    FONT_CHARSET bCharSet;
-    ubyte bPitchAndFamily;
-    CHAR[32] szFaceName;
-}
-struct CHARFORMATW
-{
-    uint cbSize;
-    CFM_MASK dwMask;
-    CFE_EFFECTS dwEffects;
-    int yHeight;
-    int yOffset;
-    COLORREF crTextColor;
-    FONT_CHARSET bCharSet;
-    ubyte bPitchAndFamily;
-    wchar[32] szFaceName;
-}
-struct CHARFORMAT2W
-{
-    CHARFORMATW Base;
-    ushort wWeight;
-    short sSpacing;
-    COLORREF crBackColor;
-    uint lcid;
-    union
-    {
-        uint dwReserved;
-        uint dwCookie;
-    }
-    short sStyle;
-    ushort wKerning;
-    ubyte bUnderlineType;
-    ubyte bAnimation;
-    ubyte bRevAuthor;
-    ubyte bUnderlineColor;
-}
-struct CHARFORMAT2A
-{
-    CHARFORMATA Base;
-    ushort wWeight;
-    short sSpacing;
-    COLORREF crBackColor;
-    uint lcid;
-    union
-    {
-        uint dwReserved;
-        uint dwCookie;
-    }
-    short sStyle;
-    ushort wKerning;
-    ubyte bUnderlineType;
-    ubyte bAnimation;
-    ubyte bRevAuthor;
-    ubyte bUnderlineColor;
-}
-struct CHARRANGE
-{
-    int cpMin;
-    int cpMax;
 }
 struct TEXTRANGEA
 {
@@ -846,7 +725,6 @@ struct TEXTRANGEW
     CHARRANGE chrg;
     PWSTR lpstrText;
 }
-alias EDITSTREAMCALLBACK = uint function(ulong, ubyte*, int, int*);
 struct EDITSTREAM
 {
     align (4):
@@ -889,41 +767,6 @@ struct FORMATRANGE
     RECT rcPage;
     CHARRANGE chrg;
 }
-struct PARAFORMAT
-{
-    uint cbSize;
-    PARAFORMAT_MASK dwMask;
-    PARAFORMAT_NUMBERING wNumbering;
-    union
-    {
-        ushort wReserved;
-        ushort wEffects;
-    }
-    int dxStartIndent;
-    int dxRightIndent;
-    int dxOffset;
-    PARAFORMAT_ALIGNMENT wAlignment;
-    short cTabCount;
-    uint[32] rgxTabs;
-}
-struct PARAFORMAT2
-{
-    PARAFORMAT Base;
-    int dySpaceBefore;
-    int dySpaceAfter;
-    int dyLineSpacing;
-    short sStyle;
-    ubyte bLineSpacingRule;
-    ubyte bOutlineLevel;
-    ushort wShadingWeight;
-    PARAFORMAT_SHADING_STYLE wShadingStyle;
-    ushort wNumberingStart;
-    PARAFORMAT_NUMBERING_STYLE wNumberingStyle;
-    ushort wNumberingTab;
-    ushort wBorderSpace;
-    ushort wBorderWidth;
-    PARAFORMAT_BORDERS wBorders;
-}
 struct MSGFILTER
 {
     align (4):
@@ -944,12 +787,6 @@ struct SELCHANGE
     NMHDR nmhdr;
     CHARRANGE chrg;
     RICH_EDIT_GET_CONTEXT_MENU_SEL_TYPE seltyp;
-}
-struct GROUPTYPINGCHANGE
-{
-    align (4):
-    NMHDR nmhdr;
-    BOOL fGroupTyping;
 }
 struct CLIPBOARDFORMAT
 {
@@ -1032,18 +869,369 @@ struct PUNCTUATION
     uint iSize;
     PSTR szPunctuation;
 }
-struct COMPCOLOR
-{
-    COLORREF crText;
-    COLORREF crBackground;
-    uint dwEffects;
-}
 struct REPASTESPECIAL
 {
     align (4):
     DVASPECT dwAspect;
     ulong dwParam;
 }
+struct GETTEXTEX
+{
+    align (4):
+    uint cb;
+    GETTEXTEX_FLAGS flags;
+    uint codepage;
+    const(char)* lpDefaultChar;
+    int* lpUsedDefChar;
+}
+struct HYPHENATEINFO
+{
+    align (4):
+    short cbSize;
+    short dxHyphenateZone;
+    long pfnHyphenate;
+}
+alias TEXTMODE = int;
+enum : int
+{
+    TM_PLAINTEXT       = 0x00000001,
+    TM_RICHTEXT        = 0x00000002,
+    TM_SINGLELEVELUNDO = 0x00000004,
+    TM_MULTILEVELUNDO  = 0x00000008,
+    TM_SINGLECODEPAGE  = 0x00000010,
+    TM_MULTICODEPAGE   = 0x00000020,
+}
+
+struct IMECOMPTEXT
+{
+    int cb;
+    IMECOMPTEXT_FLAGS flags;
+}
+struct TABLEROWPARMS
+{
+    ubyte cbRow;
+    ubyte cbCell;
+    ubyte cCell;
+    ubyte cRow;
+    int dxCellMargin;
+    int dxIndent;
+    int dyHeight;
+    uint _bitfield0;
+    int cpStartRow;
+    ubyte bTableLevel;
+    ubyte iCell;
+}
+struct TABLECELLPARMS
+{
+    int dxWidth;
+    ushort _bitfield0;
+    ushort wShading;
+    short dxBrdrLeft;
+    short dyBrdrTop;
+    short dxBrdrRight;
+    short dyBrdrBottom;
+    COLORREF crBrdrLeft;
+    COLORREF crBrdrTop;
+    COLORREF crBrdrRight;
+    COLORREF crBrdrBottom;
+    COLORREF crBackPat;
+    COLORREF crForePat;
+}
+alias AutoCorrectProc = int function(ushort, const(wchar)*, PWSTR, int, int*);
+/+ [CONFLICTED] struct RICHEDIT_IMAGE_PARAMETERS
+{
+    int xWidth;
+    int yHeight;
+    int Ascent;
+    int Type;
+    const(wchar)* pwszAlternateText;
+    IStream pIStream;
+}
++/
+/+ [CONFLICTED] struct ENDCOMPOSITIONNOTIFY
+{
+    NMHDR nmhdr;
+    ENDCOMPOSITIONNOTIFY_CODE dwCode;
+}
++/
+alias EDITWORDBREAKPROCEX = int function(PSTR, int, ubyte, int);
+struct CHARFORMATA
+{
+    uint cbSize;
+    CFM_MASK dwMask;
+    CFE_EFFECTS dwEffects;
+    int yHeight;
+    int yOffset;
+    COLORREF crTextColor;
+    FONT_CHARSET bCharSet;
+    ubyte bPitchAndFamily;
+    CHAR[32] szFaceName;
+}
+struct CHARFORMATW
+{
+    uint cbSize;
+    CFM_MASK dwMask;
+    CFE_EFFECTS dwEffects;
+    int yHeight;
+    int yOffset;
+    COLORREF crTextColor;
+    FONT_CHARSET bCharSet;
+    ubyte bPitchAndFamily;
+    wchar[32] szFaceName;
+}
+struct CHARFORMAT2W
+{
+    CHARFORMATW Base;
+    ushort wWeight;
+    short sSpacing;
+    COLORREF crBackColor;
+    uint lcid;
+    union
+    {
+        uint dwReserved;
+        uint dwCookie;
+    }
+    short sStyle;
+    ushort wKerning;
+    ubyte bUnderlineType;
+    ubyte bAnimation;
+    ubyte bRevAuthor;
+    ubyte bUnderlineColor;
+}
+struct CHARFORMAT2A
+{
+    CHARFORMATA Base;
+    ushort wWeight;
+    short sSpacing;
+    COLORREF crBackColor;
+    uint lcid;
+    union
+    {
+        uint dwReserved;
+        uint dwCookie;
+    }
+    short sStyle;
+    ushort wKerning;
+    ubyte bUnderlineType;
+    ubyte bAnimation;
+    ubyte bRevAuthor;
+    ubyte bUnderlineColor;
+}
+struct CHARRANGE
+{
+    int cpMin;
+    int cpMax;
+}
+/+ [CONFLICTED] struct TEXTRANGEA
+{
+    CHARRANGE chrg;
+    PSTR lpstrText;
+}
++/
+/+ [CONFLICTED] struct TEXTRANGEW
+{
+    CHARRANGE chrg;
+    PWSTR lpstrText;
+}
++/
+alias EDITSTREAMCALLBACK = uint function(ulong, ubyte*, int, int*);
+/+ [CONFLICTED] struct EDITSTREAM
+{
+    ulong dwCookie;
+    uint dwError;
+    EDITSTREAMCALLBACK pfnCallback;
+}
++/
+/+ [CONFLICTED] struct FINDTEXTA
+{
+    CHARRANGE chrg;
+    const(char)* lpstrText;
+}
++/
+/+ [CONFLICTED] struct FINDTEXTW
+{
+    CHARRANGE chrg;
+    const(wchar)* lpstrText;
+}
++/
+/+ [CONFLICTED] struct FINDTEXTEXA
+{
+    CHARRANGE chrg;
+    const(char)* lpstrText;
+    CHARRANGE chrgText;
+}
++/
+/+ [CONFLICTED] struct FINDTEXTEXW
+{
+    CHARRANGE chrg;
+    const(wchar)* lpstrText;
+    CHARRANGE chrgText;
+}
++/
+/+ [CONFLICTED] struct FORMATRANGE
+{
+    HDC hdc;
+    HDC hdcTarget;
+    RECT rc;
+    RECT rcPage;
+    CHARRANGE chrg;
+}
++/
+struct PARAFORMAT
+{
+    uint cbSize;
+    PARAFORMAT_MASK dwMask;
+    PARAFORMAT_NUMBERING wNumbering;
+    union
+    {
+        ushort wReserved;
+        ushort wEffects;
+    }
+    int dxStartIndent;
+    int dxRightIndent;
+    int dxOffset;
+    PARAFORMAT_ALIGNMENT wAlignment;
+    short cTabCount;
+    uint[32] rgxTabs;
+}
+struct PARAFORMAT2
+{
+    PARAFORMAT Base;
+    int dySpaceBefore;
+    int dySpaceAfter;
+    int dyLineSpacing;
+    short sStyle;
+    ubyte bLineSpacingRule;
+    ubyte bOutlineLevel;
+    ushort wShadingWeight;
+    PARAFORMAT_SHADING_STYLE wShadingStyle;
+    ushort wNumberingStart;
+    PARAFORMAT_NUMBERING_STYLE wNumberingStyle;
+    ushort wNumberingTab;
+    ushort wBorderSpace;
+    ushort wBorderWidth;
+    PARAFORMAT_BORDERS wBorders;
+}
+/+ [CONFLICTED] struct MSGFILTER
+{
+    NMHDR nmhdr;
+    uint msg;
+    WPARAM wParam;
+    LPARAM lParam;
+}
++/
+/+ [CONFLICTED] struct REQRESIZE
+{
+    NMHDR nmhdr;
+    RECT rc;
+}
++/
+/+ [CONFLICTED] struct SELCHANGE
+{
+    NMHDR nmhdr;
+    CHARRANGE chrg;
+    RICH_EDIT_GET_CONTEXT_MENU_SEL_TYPE seltyp;
+}
++/
+struct GROUPTYPINGCHANGE
+{
+    align (4):
+    NMHDR nmhdr;
+    BOOL fGroupTyping;
+}
+/+ [CONFLICTED] struct CLIPBOARDFORMAT
+{
+    NMHDR nmhdr;
+    ushort cf;
+}
++/
+/+ [CONFLICTED] struct GETCONTEXTMENUEX
+{
+    CHARRANGE chrg;
+    uint dwFlags;
+    POINT pt;
+    void* pvReserved;
+}
++/
+/+ [CONFLICTED] struct ENDROPFILES
+{
+    NMHDR nmhdr;
+    HANDLE hDrop;
+    int cp;
+    BOOL fProtected;
+}
++/
+/+ [CONFLICTED] struct ENPROTECTED
+{
+    NMHDR nmhdr;
+    uint msg;
+    WPARAM wParam;
+    LPARAM lParam;
+    CHARRANGE chrg;
+}
++/
+/+ [CONFLICTED] struct ENSAVECLIPBOARD
+{
+    NMHDR nmhdr;
+    int cObjectCount;
+    int cch;
+}
++/
+/+ [CONFLICTED] struct ENOLEOPFAILED
+{
+    NMHDR nmhdr;
+    int iob;
+    int lOper;
+    HRESULT hr;
+}
++/
+/+ [CONFLICTED] struct OBJECTPOSITIONS
+{
+    NMHDR nmhdr;
+    int cObjectCount;
+    int* pcpPositions;
+}
++/
+/+ [CONFLICTED] struct ENLINK
+{
+    NMHDR nmhdr;
+    uint msg;
+    WPARAM wParam;
+    LPARAM lParam;
+    CHARRANGE chrg;
+}
++/
+/+ [CONFLICTED] struct ENLOWFIRTF
+{
+    NMHDR nmhdr;
+    PSTR szControl;
+}
++/
+/+ [CONFLICTED] struct ENCORRECTTEXT
+{
+    NMHDR nmhdr;
+    CHARRANGE chrg;
+    RICH_EDIT_GET_CONTEXT_MENU_SEL_TYPE seltyp;
+}
++/
+/+ [CONFLICTED] struct PUNCTUATION
+{
+    uint iSize;
+    PSTR szPunctuation;
+}
++/
+struct COMPCOLOR
+{
+    COLORREF crText;
+    COLORREF crBackground;
+    uint dwEffects;
+}
+/+ [CONFLICTED] struct REPASTESPECIAL
+{
+    DVASPECT dwAspect;
+    ulong dwParam;
+}
++/
 alias UNDONAMEID = int;
 enum : int
 {
@@ -1061,15 +1249,15 @@ struct SETTEXTEX
     uint flags;
     uint codepage;
 }
-struct GETTEXTEX
+/+ [CONFLICTED] struct GETTEXTEX
 {
-    align (4):
     uint cb;
     GETTEXTEX_FLAGS flags;
     uint codepage;
     const(char)* lpDefaultChar;
     int* lpUsedDefChar;
 }
++/
 struct GETTEXTLENGTHEX
 {
     GETTEXTLENGTHEX_FLAGS flags;
@@ -1152,7 +1340,7 @@ enum : int
 
 struct CHANGENOTIFY
 {
-    CHANGETYPE dwChangeType;
+    uint dwChangeType;
     void* pvCookieData;
 }
 // [Not Found] IID_ITextServices
@@ -1199,7 +1387,7 @@ interface ITextHost : IUnknown
     HDC TxGetDC();
     int TxReleaseDC(HDC);
     BOOL TxShowScrollBar(int, BOOL);
-    BOOL TxEnableScrollBar(SCROLLBAR_CONSTANTS, ENABLE_SCROLL_BAR_ARROWS);
+    BOOL TxEnableScrollBar(SCROLLBAR_CONSTANTS, int);
     BOOL TxSetScrollRange(int, int, int, BOOL);
     BOOL TxSetScrollPos(int, int, BOOL);
     void TxInvalidateRect(RECT*, BOOL);
@@ -2258,7 +2446,7 @@ interface ITextRange2 : ITextSelection
     HRESULT UnicodeToHex();
     HRESULT SetInlineObject(int, int, int, int, int, int, int, int);
     HRESULT GetMathFunctionType(BSTR, int*);
-    HRESULT InsertImage(int, int, int, TEXT_ALIGN_OPTIONS, BSTR, IStream);
+    HRESULT InsertImage(int, int, int, int, BSTR, IStream);
 }
 enum IID_ITextSelection2 = GUID(0xc241f5e1, 0x7206, 0x11d8, [0xa2, 0xc7, 0x0, 0xa0, 0xd1, 0xd6, 0xc6, 0xb3]);
 interface ITextSelection2 : ITextRange2

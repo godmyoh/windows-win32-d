@@ -2,13 +2,15 @@ module windows.win32.system.rpc;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, FILETIME, HANDLE, HRESULT, HWND, LUID, PSTR, PWSTR, SYSTEMTIME;
-import windows.win32.security.cryptography_ : CERT_CONTEXT;
-import windows.win32.system.com_ : IRpcChannelBuffer, IRpcStubBuffer, IUnknown, RPC_C_IMP_LEVEL;
+import windows.win32.security.cryptography : CERT_CONTEXT;
+import windows.win32.system.com : IRpcChannelBuffer, IRpcStubBuffer, IUnknown, RPC_C_IMP_LEVEL;
 import windows.win32.system.io : OVERLAPPED;
 
 version (Windows):
 extern (Windows):
 
+alias PFN_RPC_ALLOCATE = void* function(ulong);
+alias PFN_RPC_FREE = void function(void*);
 alias RPC_C_QOS_CAPABILITIES = uint;
 enum : uint
 {
@@ -184,26 +186,26 @@ RPC_STATUS RpcBindingCopy(void*, void**);
 RPC_STATUS RpcBindingFree(void**);
 RPC_STATUS RpcBindingSetOption(void*, uint, ulong);
 RPC_STATUS RpcBindingInqOption(void*, uint, ulong*);
-RPC_STATUS RpcBindingFromStringBindingA(ubyte*, void**);
-RPC_STATUS RpcBindingFromStringBindingW(ushort*, void**);
+RPC_STATUS RpcBindingFromStringBindingA(PSTR, void**);
+RPC_STATUS RpcBindingFromStringBindingW(PWSTR, void**);
 RPC_STATUS RpcSsGetContextBinding(void*, void**);
 RPC_STATUS RpcBindingInqMaxCalls(void*, uint*);
 RPC_STATUS RpcBindingInqObject(void*, GUID*);
 RPC_STATUS RpcBindingReset(void*);
 RPC_STATUS RpcBindingSetObject(void*, GUID*);
 RPC_STATUS RpcMgmtInqDefaultProtectLevel(uint, uint*);
-RPC_STATUS RpcBindingToStringBindingA(void*, ubyte**);
-RPC_STATUS RpcBindingToStringBindingW(void*, ushort**);
+RPC_STATUS RpcBindingToStringBindingA(void*, PSTR*);
+RPC_STATUS RpcBindingToStringBindingW(void*, PWSTR*);
 RPC_STATUS RpcBindingVectorFree(RPC_BINDING_VECTOR**);
-RPC_STATUS RpcStringBindingComposeA(ubyte*, ubyte*, ubyte*, ubyte*, ubyte*, ubyte**);
-RPC_STATUS RpcStringBindingComposeW(ushort*, ushort*, ushort*, ushort*, ushort*, ushort**);
-RPC_STATUS RpcStringBindingParseA(ubyte*, ubyte**, ubyte**, ubyte**, ubyte**, ubyte**);
-RPC_STATUS RpcStringBindingParseW(ushort*, ushort**, ushort**, ushort**, ushort**, ushort**);
-RPC_STATUS RpcStringFreeA(ubyte**);
-RPC_STATUS RpcStringFreeW(ushort**);
+RPC_STATUS RpcStringBindingComposeA(PSTR, PSTR, PSTR, PSTR, PSTR, PSTR*);
+RPC_STATUS RpcStringBindingComposeW(PWSTR, PWSTR, PWSTR, PWSTR, PWSTR, PWSTR*);
+RPC_STATUS RpcStringBindingParseA(PSTR, PSTR*, PSTR*, PSTR*, PSTR*, PSTR*);
+RPC_STATUS RpcStringBindingParseW(PWSTR, PWSTR*, PWSTR*, PWSTR*, PWSTR*, PWSTR*);
+RPC_STATUS RpcStringFreeA(PSTR*);
+RPC_STATUS RpcStringFreeW(PWSTR*);
 RPC_STATUS RpcIfInqId(void*, RPC_IF_ID*);
-RPC_STATUS RpcNetworkIsProtseqValidA(ubyte*);
-RPC_STATUS RpcNetworkIsProtseqValidW(ushort*);
+RPC_STATUS RpcNetworkIsProtseqValidA(PSTR);
+RPC_STATUS RpcNetworkIsProtseqValidW(PWSTR);
 RPC_STATUS RpcMgmtInqComTimeout(void*, uint*);
 RPC_STATUS RpcMgmtSetComTimeout(void*, uint);
 RPC_STATUS RpcMgmtSetCancelTimeout(int);
@@ -228,18 +230,18 @@ RPC_STATUS RpcServerUseAllProtseqs(uint, void*);
 RPC_STATUS RpcServerUseAllProtseqsEx(uint, void*, RPC_POLICY*);
 RPC_STATUS RpcServerUseAllProtseqsIf(uint, void*, void*);
 RPC_STATUS RpcServerUseAllProtseqsIfEx(uint, void*, void*, RPC_POLICY*);
-RPC_STATUS RpcServerUseProtseqA(ubyte*, uint, void*);
-RPC_STATUS RpcServerUseProtseqExA(ubyte*, uint, void*, RPC_POLICY*);
-RPC_STATUS RpcServerUseProtseqW(ushort*, uint, void*);
-RPC_STATUS RpcServerUseProtseqExW(ushort*, uint, void*, RPC_POLICY*);
-RPC_STATUS RpcServerUseProtseqEpA(ubyte*, uint, ubyte*, void*);
-RPC_STATUS RpcServerUseProtseqEpExA(ubyte*, uint, ubyte*, void*, RPC_POLICY*);
-RPC_STATUS RpcServerUseProtseqEpW(ushort*, uint, ushort*, void*);
-RPC_STATUS RpcServerUseProtseqEpExW(ushort*, uint, ushort*, void*, RPC_POLICY*);
-RPC_STATUS RpcServerUseProtseqIfA(ubyte*, uint, void*, void*);
-RPC_STATUS RpcServerUseProtseqIfExA(ubyte*, uint, void*, void*, RPC_POLICY*);
-RPC_STATUS RpcServerUseProtseqIfW(ushort*, uint, void*, void*);
-RPC_STATUS RpcServerUseProtseqIfExW(ushort*, uint, void*, void*, RPC_POLICY*);
+RPC_STATUS RpcServerUseProtseqA(PSTR, uint, void*);
+RPC_STATUS RpcServerUseProtseqExA(PSTR, uint, void*, RPC_POLICY*);
+RPC_STATUS RpcServerUseProtseqW(PWSTR, uint, void*);
+RPC_STATUS RpcServerUseProtseqExW(PWSTR, uint, void*, RPC_POLICY*);
+RPC_STATUS RpcServerUseProtseqEpA(PSTR, uint, PSTR, void*);
+RPC_STATUS RpcServerUseProtseqEpExA(PSTR, uint, PSTR, void*, RPC_POLICY*);
+RPC_STATUS RpcServerUseProtseqEpW(PWSTR, uint, PWSTR, void*);
+RPC_STATUS RpcServerUseProtseqEpExW(PWSTR, uint, PWSTR, void*, RPC_POLICY*);
+RPC_STATUS RpcServerUseProtseqIfA(PSTR, uint, void*, void*);
+RPC_STATUS RpcServerUseProtseqIfExA(PSTR, uint, void*, void*, RPC_POLICY*);
+RPC_STATUS RpcServerUseProtseqIfW(PWSTR, uint, void*, void*);
+RPC_STATUS RpcServerUseProtseqIfExW(PWSTR, uint, void*, void*, RPC_POLICY*);
 void RpcServerYield();
 RPC_STATUS RpcMgmtStatsVectorFree(RPC_STATS_VECTOR**);
 RPC_STATUS RpcMgmtInqStats(void*, RPC_STATS_VECTOR**);
@@ -251,13 +253,13 @@ void RpcSsDontSerializeContext();
 RPC_STATUS RpcMgmtEnableIdleCleanup();
 RPC_STATUS RpcMgmtInqIfIds(void*, RPC_IF_ID_VECTOR**);
 RPC_STATUS RpcIfIdVectorFree(RPC_IF_ID_VECTOR**);
-RPC_STATUS RpcMgmtInqServerPrincNameA(void*, uint, ubyte**);
-RPC_STATUS RpcMgmtInqServerPrincNameW(void*, uint, ushort**);
-RPC_STATUS RpcServerInqDefaultPrincNameA(uint, ubyte**);
-RPC_STATUS RpcServerInqDefaultPrincNameW(uint, ushort**);
+RPC_STATUS RpcMgmtInqServerPrincNameA(void*, uint, PSTR*);
+RPC_STATUS RpcMgmtInqServerPrincNameW(void*, uint, PWSTR*);
+RPC_STATUS RpcServerInqDefaultPrincNameA(uint, PSTR*);
+RPC_STATUS RpcServerInqDefaultPrincNameW(uint, PWSTR*);
 RPC_STATUS RpcEpResolveBinding(void*, void*);
-RPC_STATUS RpcNsBindingInqEntryNameA(void*, uint, ubyte**);
-RPC_STATUS RpcNsBindingInqEntryNameW(void*, uint, ushort**);
+RPC_STATUS RpcNsBindingInqEntryNameA(void*, uint, PSTR*);
+RPC_STATUS RpcNsBindingInqEntryNameW(void*, uint, PWSTR*);
 RPC_STATUS RpcBindingCreateA(RPC_BINDING_HANDLE_TEMPLATE_V1_A*, RPC_BINDING_HANDLE_SECURITY_V1_A*, RPC_BINDING_HANDLE_OPTIONS_V1*, void**);
 RPC_STATUS RpcBindingCreateW(RPC_BINDING_HANDLE_TEMPLATE_V1_W*, RPC_BINDING_HANDLE_SECURITY_V1_W*, RPC_BINDING_HANDLE_OPTIONS_V1*, void**);
 RPC_STATUS RpcServerInqBindingHandle(void**);
@@ -267,21 +269,21 @@ RPC_STATUS RpcRevertToSelfEx(void*);
 RPC_STATUS RpcRevertToSelf();
 RPC_STATUS RpcImpersonateClientContainer(void*);
 RPC_STATUS RpcRevertContainerImpersonation();
-RPC_STATUS RpcBindingInqAuthClientA(void*, void**, ubyte**, uint*, uint*, uint*);
-RPC_STATUS RpcBindingInqAuthClientW(void*, void**, ushort**, uint*, uint*, uint*);
-RPC_STATUS RpcBindingInqAuthClientExA(void*, void**, ubyte**, uint*, uint*, uint*, uint);
-RPC_STATUS RpcBindingInqAuthClientExW(void*, void**, ushort**, uint*, uint*, uint*, uint);
-RPC_STATUS RpcBindingInqAuthInfoA(void*, ubyte**, uint*, uint*, void**, uint*);
-RPC_STATUS RpcBindingInqAuthInfoW(void*, ushort**, uint*, uint*, void**, uint*);
-RPC_STATUS RpcBindingSetAuthInfoA(void*, ubyte*, uint, uint, void*, uint);
-RPC_STATUS RpcBindingSetAuthInfoExA(void*, ubyte*, uint, uint, void*, uint, RPC_SECURITY_QOS*);
-RPC_STATUS RpcBindingSetAuthInfoW(void*, ushort*, uint, uint, void*, uint);
-RPC_STATUS RpcBindingSetAuthInfoExW(void*, ushort*, uint, uint, void*, uint, RPC_SECURITY_QOS*);
-RPC_STATUS RpcBindingInqAuthInfoExA(void*, ubyte**, uint*, uint*, void**, uint*, uint, RPC_SECURITY_QOS*);
-RPC_STATUS RpcBindingInqAuthInfoExW(void*, ushort**, uint*, uint*, void**, uint*, uint, RPC_SECURITY_QOS*);
+RPC_STATUS RpcBindingInqAuthClientA(void*, void**, PSTR*, uint*, uint*, uint*);
+RPC_STATUS RpcBindingInqAuthClientW(void*, void**, PWSTR*, uint*, uint*, uint*);
+RPC_STATUS RpcBindingInqAuthClientExA(void*, void**, PSTR*, uint*, uint*, uint*, uint);
+RPC_STATUS RpcBindingInqAuthClientExW(void*, void**, PWSTR*, uint*, uint*, uint*, uint);
+RPC_STATUS RpcBindingInqAuthInfoA(void*, PSTR*, uint*, uint*, void**, uint*);
+RPC_STATUS RpcBindingInqAuthInfoW(void*, PWSTR*, uint*, uint*, void**, uint*);
+RPC_STATUS RpcBindingSetAuthInfoA(void*, PSTR, uint, uint, void*, uint);
+RPC_STATUS RpcBindingSetAuthInfoExA(void*, PSTR, uint, uint, void*, uint, RPC_SECURITY_QOS*);
+RPC_STATUS RpcBindingSetAuthInfoW(void*, PWSTR, uint, uint, void*, uint);
+RPC_STATUS RpcBindingSetAuthInfoExW(void*, PWSTR, uint, uint, void*, uint, RPC_SECURITY_QOS*);
+RPC_STATUS RpcBindingInqAuthInfoExA(void*, PSTR*, uint*, uint*, void**, uint*, uint, RPC_SECURITY_QOS*);
+RPC_STATUS RpcBindingInqAuthInfoExW(void*, PWSTR*, uint*, uint*, void**, uint*, uint, RPC_SECURITY_QOS*);
 RPC_STATUS RpcServerCompleteSecurityCallback(void*, RPC_STATUS);
-RPC_STATUS RpcServerRegisterAuthInfoA(ubyte*, uint, RPC_AUTH_KEY_RETRIEVAL_FN, void*);
-RPC_STATUS RpcServerRegisterAuthInfoW(ushort*, uint, RPC_AUTH_KEY_RETRIEVAL_FN, void*);
+RPC_STATUS RpcServerRegisterAuthInfoA(PSTR, uint, RPC_AUTH_KEY_RETRIEVAL_FN, void*);
+RPC_STATUS RpcServerRegisterAuthInfoW(PWSTR, uint, RPC_AUTH_KEY_RETRIEVAL_FN, void*);
 RPC_STATUS RpcBindingServerFromClient(void*, void**);
 void RpcRaiseException(RPC_STATUS);
 RPC_STATUS RpcTestCancel();
@@ -290,26 +292,26 @@ RPC_STATUS RpcCancelThread(void*);
 RPC_STATUS RpcCancelThreadEx(void*, int);
 RPC_STATUS UuidCreate(GUID*);
 RPC_STATUS UuidCreateSequential(GUID*);
-RPC_STATUS UuidToStringA(const(GUID)*, ubyte**);
-RPC_STATUS UuidFromStringA(ubyte*, GUID*);
-RPC_STATUS UuidToStringW(const(GUID)*, ushort**);
-RPC_STATUS UuidFromStringW(ushort*, GUID*);
+RPC_STATUS UuidToStringA(const(GUID)*, PSTR*);
+RPC_STATUS UuidFromStringA(PSTR, GUID*);
+RPC_STATUS UuidToStringW(const(GUID)*, PWSTR*);
+RPC_STATUS UuidFromStringW(PWSTR, GUID*);
 int UuidCompare(GUID*, GUID*, RPC_STATUS*);
 RPC_STATUS UuidCreateNil(GUID*);
 int UuidEqual(GUID*, GUID*, RPC_STATUS*);
 ushort UuidHash(GUID*, RPC_STATUS*);
 int UuidIsNil(GUID*, RPC_STATUS*);
-RPC_STATUS RpcEpRegisterNoReplaceA(void*, RPC_BINDING_VECTOR*, UUID_VECTOR*, ubyte*);
-RPC_STATUS RpcEpRegisterNoReplaceW(void*, RPC_BINDING_VECTOR*, UUID_VECTOR*, ushort*);
-RPC_STATUS RpcEpRegisterA(void*, RPC_BINDING_VECTOR*, UUID_VECTOR*, ubyte*);
-RPC_STATUS RpcEpRegisterW(void*, RPC_BINDING_VECTOR*, UUID_VECTOR*, ushort*);
+RPC_STATUS RpcEpRegisterNoReplaceA(void*, RPC_BINDING_VECTOR*, UUID_VECTOR*, PSTR);
+RPC_STATUS RpcEpRegisterNoReplaceW(void*, RPC_BINDING_VECTOR*, UUID_VECTOR*, PWSTR);
+RPC_STATUS RpcEpRegisterA(void*, RPC_BINDING_VECTOR*, UUID_VECTOR*, PSTR);
+RPC_STATUS RpcEpRegisterW(void*, RPC_BINDING_VECTOR*, UUID_VECTOR*, PWSTR);
 RPC_STATUS RpcEpUnregister(void*, RPC_BINDING_VECTOR*, UUID_VECTOR*);
-RPC_STATUS DceErrorInqTextA(RPC_STATUS, ubyte*);
-RPC_STATUS DceErrorInqTextW(RPC_STATUS, ushort*);
+RPC_STATUS DceErrorInqTextA(RPC_STATUS, PSTR);
+RPC_STATUS DceErrorInqTextW(RPC_STATUS, PWSTR);
 RPC_STATUS RpcMgmtEpEltInqBegin(void*, uint, RPC_IF_ID*, uint, GUID*, void***);
 RPC_STATUS RpcMgmtEpEltInqDone(void***);
-RPC_STATUS RpcMgmtEpEltInqNextA(void**, RPC_IF_ID*, void**, GUID*, ubyte**);
-RPC_STATUS RpcMgmtEpEltInqNextW(void**, RPC_IF_ID*, void**, GUID*, ushort**);
+RPC_STATUS RpcMgmtEpEltInqNextA(void**, RPC_IF_ID*, void**, GUID*, PSTR*);
+RPC_STATUS RpcMgmtEpEltInqNextW(void**, RPC_IF_ID*, void**, GUID*, PWSTR*);
 RPC_STATUS RpcMgmtEpUnregister(void*, RPC_IF_ID*, void*, GUID*);
 RPC_STATUS RpcMgmtSetAuthorizationFn(RPC_MGMT_AUTHORIZATION_FN);
 int RpcExceptionFilter(uint);
@@ -343,25 +345,25 @@ RPC_STATUS I_RpcBindingToStaticStringBindingW(void*, ushort**);
 RPC_STATUS I_RpcBindingInqSecurityContext(void*, void**);
 RPC_STATUS I_RpcBindingInqSecurityContextKeyInfo(void*, void*);
 RPC_STATUS I_RpcBindingInqWireIdForSnego(void*, ubyte*);
-RPC_STATUS I_RpcBindingInqMarshalledTargetInfo(void*, uint*, ubyte**);
+RPC_STATUS I_RpcBindingInqMarshalledTargetInfo(void*, uint*, PSTR*);
 RPC_STATUS I_RpcBindingInqLocalClientPID(void*, uint*);
 RPC_STATUS I_RpcBindingHandleToAsyncHandle(void*, void**);
-RPC_STATUS I_RpcNsBindingSetEntryNameW(void*, uint, ushort*);
-RPC_STATUS I_RpcNsBindingSetEntryNameA(void*, uint, ubyte*);
-RPC_STATUS I_RpcServerUseProtseqEp2A(ubyte*, ubyte*, uint, ubyte*, void*, void*);
-RPC_STATUS I_RpcServerUseProtseqEp2W(ushort*, ushort*, uint, ushort*, void*, void*);
-RPC_STATUS I_RpcServerUseProtseq2W(ushort*, ushort*, uint, void*, void*);
-RPC_STATUS I_RpcServerUseProtseq2A(ubyte*, ubyte*, uint, void*, void*);
-RPC_STATUS I_RpcServerStartService(ushort*, ushort*, void*);
-RPC_STATUS I_RpcBindingInqDynamicEndpointW(void*, ushort**);
-RPC_STATUS I_RpcBindingInqDynamicEndpointA(void*, ubyte**);
+RPC_STATUS I_RpcNsBindingSetEntryNameW(void*, uint, PWSTR);
+RPC_STATUS I_RpcNsBindingSetEntryNameA(void*, uint, PSTR);
+RPC_STATUS I_RpcServerUseProtseqEp2A(PSTR, PSTR, uint, PSTR, void*, void*);
+RPC_STATUS I_RpcServerUseProtseqEp2W(PWSTR, PWSTR, uint, PWSTR, void*, void*);
+RPC_STATUS I_RpcServerUseProtseq2W(PWSTR, PWSTR, uint, void*, void*);
+RPC_STATUS I_RpcServerUseProtseq2A(PSTR, PSTR, uint, void*, void*);
+RPC_STATUS I_RpcServerStartService(PWSTR, PWSTR, void*);
+RPC_STATUS I_RpcBindingInqDynamicEndpointW(void*, PWSTR*);
+RPC_STATUS I_RpcBindingInqDynamicEndpointA(void*, PSTR*);
 RPC_STATUS I_RpcServerCheckClientRestriction(void*);
 RPC_STATUS I_RpcBindingInqTransportType(void*, uint*);
 RPC_STATUS I_RpcIfInqTransferSyntaxes(void*, RPC_TRANSFER_SYNTAX*, uint, uint*);
 RPC_STATUS I_UuidCreate(GUID*);
 RPC_STATUS I_RpcBindingCopy(void*, void**);
 RPC_STATUS I_RpcBindingIsClientLocal(void*, uint*);
-RPC_STATUS I_RpcBindingCreateNP(ushort*, ushort*, ushort*, void**);
+RPC_STATUS I_RpcBindingCreateNP(PWSTR, PWSTR, PWSTR, void**);
 void I_RpcSsDontSerializeContext();
 RPC_STATUS I_RpcServerRegisterForwardFunction(RPC_FORWARD_FUNCTION*);
 RPC_ADDRESS_CHANGE_FN* I_RpcServerInqAddressChangeFn();
@@ -383,59 +385,59 @@ RPC_STATUS I_RpcServerGetAssociationID(void*, uint*);
 int I_RpcServerDisableExceptionFilter();
 RPC_STATUS I_RpcServerSubscribeForDisconnectNotification2(void*, void*, GUID*);
 RPC_STATUS I_RpcServerUnsubscribeForDisconnectNotification(void*, GUID);
-RPC_STATUS RpcNsBindingExportA(uint, ubyte*, void*, RPC_BINDING_VECTOR*, UUID_VECTOR*);
-RPC_STATUS RpcNsBindingUnexportA(uint, ubyte*, void*, UUID_VECTOR*);
-RPC_STATUS RpcNsBindingExportW(uint, ushort*, void*, RPC_BINDING_VECTOR*, UUID_VECTOR*);
-RPC_STATUS RpcNsBindingUnexportW(uint, ushort*, void*, UUID_VECTOR*);
-RPC_STATUS RpcNsBindingExportPnPA(uint, ubyte*, void*, UUID_VECTOR*);
-RPC_STATUS RpcNsBindingUnexportPnPA(uint, ubyte*, void*, UUID_VECTOR*);
-RPC_STATUS RpcNsBindingExportPnPW(uint, ushort*, void*, UUID_VECTOR*);
-RPC_STATUS RpcNsBindingUnexportPnPW(uint, ushort*, void*, UUID_VECTOR*);
-RPC_STATUS RpcNsBindingLookupBeginA(uint, ubyte*, void*, GUID*, uint, void**);
-RPC_STATUS RpcNsBindingLookupBeginW(uint, ushort*, void*, GUID*, uint, void**);
+RPC_STATUS RpcNsBindingExportA(uint, PSTR, void*, RPC_BINDING_VECTOR*, UUID_VECTOR*);
+RPC_STATUS RpcNsBindingUnexportA(uint, PSTR, void*, UUID_VECTOR*);
+RPC_STATUS RpcNsBindingExportW(uint, PWSTR, void*, RPC_BINDING_VECTOR*, UUID_VECTOR*);
+RPC_STATUS RpcNsBindingUnexportW(uint, PWSTR, void*, UUID_VECTOR*);
+RPC_STATUS RpcNsBindingExportPnPA(uint, PSTR, void*, UUID_VECTOR*);
+RPC_STATUS RpcNsBindingUnexportPnPA(uint, PSTR, void*, UUID_VECTOR*);
+RPC_STATUS RpcNsBindingExportPnPW(uint, PWSTR, void*, UUID_VECTOR*);
+RPC_STATUS RpcNsBindingUnexportPnPW(uint, PWSTR, void*, UUID_VECTOR*);
+RPC_STATUS RpcNsBindingLookupBeginA(uint, PSTR, void*, GUID*, uint, void**);
+RPC_STATUS RpcNsBindingLookupBeginW(uint, PWSTR, void*, GUID*, uint, void**);
 RPC_STATUS RpcNsBindingLookupNext(void*, RPC_BINDING_VECTOR**);
 RPC_STATUS RpcNsBindingLookupDone(void**);
-RPC_STATUS RpcNsGroupDeleteA(GROUP_NAME_SYNTAX, ubyte*);
-RPC_STATUS RpcNsGroupMbrAddA(uint, ubyte*, uint, ubyte*);
-RPC_STATUS RpcNsGroupMbrRemoveA(uint, ubyte*, uint, ubyte*);
-RPC_STATUS RpcNsGroupMbrInqBeginA(uint, ubyte*, uint, void**);
-RPC_STATUS RpcNsGroupMbrInqNextA(void*, ubyte**);
-RPC_STATUS RpcNsGroupDeleteW(GROUP_NAME_SYNTAX, ushort*);
-RPC_STATUS RpcNsGroupMbrAddW(uint, ushort*, uint, ushort*);
-RPC_STATUS RpcNsGroupMbrRemoveW(uint, ushort*, uint, ushort*);
-RPC_STATUS RpcNsGroupMbrInqBeginW(uint, ushort*, uint, void**);
-RPC_STATUS RpcNsGroupMbrInqNextW(void*, ushort**);
+RPC_STATUS RpcNsGroupDeleteA(GROUP_NAME_SYNTAX, PSTR);
+RPC_STATUS RpcNsGroupMbrAddA(uint, PSTR, uint, PSTR);
+RPC_STATUS RpcNsGroupMbrRemoveA(uint, PSTR, uint, PSTR);
+RPC_STATUS RpcNsGroupMbrInqBeginA(uint, PSTR, uint, void**);
+RPC_STATUS RpcNsGroupMbrInqNextA(void*, PSTR*);
+RPC_STATUS RpcNsGroupDeleteW(GROUP_NAME_SYNTAX, PWSTR);
+RPC_STATUS RpcNsGroupMbrAddW(uint, PWSTR, uint, PWSTR);
+RPC_STATUS RpcNsGroupMbrRemoveW(uint, PWSTR, uint, PWSTR);
+RPC_STATUS RpcNsGroupMbrInqBeginW(uint, PWSTR, uint, void**);
+RPC_STATUS RpcNsGroupMbrInqNextW(void*, PWSTR*);
 RPC_STATUS RpcNsGroupMbrInqDone(void**);
-RPC_STATUS RpcNsProfileDeleteA(uint, ubyte*);
-RPC_STATUS RpcNsProfileEltAddA(uint, ubyte*, RPC_IF_ID*, uint, ubyte*, uint, ubyte*);
-RPC_STATUS RpcNsProfileEltRemoveA(uint, ubyte*, RPC_IF_ID*, uint, ubyte*);
-RPC_STATUS RpcNsProfileEltInqBeginA(uint, ubyte*, uint, RPC_IF_ID*, uint, uint, ubyte*, void**);
-RPC_STATUS RpcNsProfileEltInqNextA(void*, RPC_IF_ID*, ubyte**, uint*, ubyte**);
-RPC_STATUS RpcNsProfileDeleteW(uint, ushort*);
-RPC_STATUS RpcNsProfileEltAddW(uint, ushort*, RPC_IF_ID*, uint, ushort*, uint, ushort*);
-RPC_STATUS RpcNsProfileEltRemoveW(uint, ushort*, RPC_IF_ID*, uint, ushort*);
-RPC_STATUS RpcNsProfileEltInqBeginW(uint, ushort*, uint, RPC_IF_ID*, uint, uint, ushort*, void**);
-RPC_STATUS RpcNsProfileEltInqNextW(void*, RPC_IF_ID*, ushort**, uint*, ushort**);
+RPC_STATUS RpcNsProfileDeleteA(uint, PSTR);
+RPC_STATUS RpcNsProfileEltAddA(uint, PSTR, RPC_IF_ID*, uint, PSTR, uint, PSTR);
+RPC_STATUS RpcNsProfileEltRemoveA(uint, PSTR, RPC_IF_ID*, uint, PSTR);
+RPC_STATUS RpcNsProfileEltInqBeginA(uint, PSTR, uint, RPC_IF_ID*, uint, uint, PSTR, void**);
+RPC_STATUS RpcNsProfileEltInqNextA(void*, RPC_IF_ID*, PSTR*, uint*, PSTR*);
+RPC_STATUS RpcNsProfileDeleteW(uint, PWSTR);
+RPC_STATUS RpcNsProfileEltAddW(uint, PWSTR, RPC_IF_ID*, uint, PWSTR, uint, PWSTR);
+RPC_STATUS RpcNsProfileEltRemoveW(uint, PWSTR, RPC_IF_ID*, uint, PWSTR);
+RPC_STATUS RpcNsProfileEltInqBeginW(uint, PWSTR, uint, RPC_IF_ID*, uint, uint, PWSTR, void**);
+RPC_STATUS RpcNsProfileEltInqNextW(void*, RPC_IF_ID*, PWSTR*, uint*, PWSTR*);
 RPC_STATUS RpcNsProfileEltInqDone(void**);
-RPC_STATUS RpcNsEntryObjectInqBeginA(uint, ubyte*, void**);
-RPC_STATUS RpcNsEntryObjectInqBeginW(uint, ushort*, void**);
+RPC_STATUS RpcNsEntryObjectInqBeginA(uint, PSTR, void**);
+RPC_STATUS RpcNsEntryObjectInqBeginW(uint, PWSTR, void**);
 RPC_STATUS RpcNsEntryObjectInqNext(void*, GUID*);
 RPC_STATUS RpcNsEntryObjectInqDone(void**);
-RPC_STATUS RpcNsEntryExpandNameA(uint, ubyte*, ubyte**);
-RPC_STATUS RpcNsMgmtBindingUnexportA(uint, ubyte*, RPC_IF_ID*, uint, UUID_VECTOR*);
-RPC_STATUS RpcNsMgmtEntryCreateA(uint, ubyte*);
-RPC_STATUS RpcNsMgmtEntryDeleteA(uint, ubyte*);
-RPC_STATUS RpcNsMgmtEntryInqIfIdsA(uint, ubyte*, RPC_IF_ID_VECTOR**);
+RPC_STATUS RpcNsEntryExpandNameA(uint, PSTR, PSTR*);
+RPC_STATUS RpcNsMgmtBindingUnexportA(uint, PSTR, RPC_IF_ID*, uint, UUID_VECTOR*);
+RPC_STATUS RpcNsMgmtEntryCreateA(uint, PSTR);
+RPC_STATUS RpcNsMgmtEntryDeleteA(uint, PSTR);
+RPC_STATUS RpcNsMgmtEntryInqIfIdsA(uint, PSTR, RPC_IF_ID_VECTOR**);
 RPC_STATUS RpcNsMgmtHandleSetExpAge(void*, uint);
 RPC_STATUS RpcNsMgmtInqExpAge(uint*);
 RPC_STATUS RpcNsMgmtSetExpAge(uint);
-RPC_STATUS RpcNsEntryExpandNameW(uint, ushort*, ushort**);
-RPC_STATUS RpcNsMgmtBindingUnexportW(uint, ushort*, RPC_IF_ID*, uint, UUID_VECTOR*);
-RPC_STATUS RpcNsMgmtEntryCreateW(uint, ushort*);
-RPC_STATUS RpcNsMgmtEntryDeleteW(uint, ushort*);
-RPC_STATUS RpcNsMgmtEntryInqIfIdsW(uint, ushort*, RPC_IF_ID_VECTOR**);
-RPC_STATUS RpcNsBindingImportBeginA(uint, ubyte*, void*, GUID*, void**);
-RPC_STATUS RpcNsBindingImportBeginW(uint, ushort*, void*, GUID*, void**);
+RPC_STATUS RpcNsEntryExpandNameW(uint, PWSTR, PWSTR*);
+RPC_STATUS RpcNsMgmtBindingUnexportW(uint, PWSTR, RPC_IF_ID*, uint, UUID_VECTOR*);
+RPC_STATUS RpcNsMgmtEntryCreateW(uint, PWSTR);
+RPC_STATUS RpcNsMgmtEntryDeleteW(uint, PWSTR);
+RPC_STATUS RpcNsMgmtEntryInqIfIdsW(uint, PWSTR, RPC_IF_ID_VECTOR**);
+RPC_STATUS RpcNsBindingImportBeginA(uint, PSTR, void*, GUID*, void**);
+RPC_STATUS RpcNsBindingImportBeginW(uint, PWSTR, void*, GUID*, void**);
 RPC_STATUS RpcNsBindingImportNext(void*, void**);
 RPC_STATUS RpcNsBindingImportDone(void**);
 RPC_STATUS RpcNsBindingSelect(RPC_BINDING_VECTOR*, void**);
@@ -683,8 +685,8 @@ CLIENT_CALL_RETURN NdrMesProcEncodeDecode3(void*, const(MIDL_STUBLESS_PROXY_INFO
 void NdrMesSimpleTypeDecodeAll(void*, const(MIDL_STUBLESS_PROXY_INFO)*, void*, short);
 void NdrMesSimpleTypeEncodeAll(void*, const(MIDL_STUBLESS_PROXY_INFO)*, const(void)*, short);
 ulong NdrMesSimpleTypeAlignSizeAll(void*, const(MIDL_STUBLESS_PROXY_INFO)*);
-RPC_STATUS RpcCertGeneratePrincipalNameW(const(CERT_CONTEXT)*, uint, ushort**);
-RPC_STATUS RpcCertGeneratePrincipalNameA(const(CERT_CONTEXT)*, uint, ubyte**);
+RPC_STATUS RpcCertGeneratePrincipalNameW(const(CERT_CONTEXT)*, uint, PWSTR*);
+RPC_STATUS RpcCertGeneratePrincipalNameA(const(CERT_CONTEXT)*, uint, PSTR*);
 enum RPC_C_BINDING_INFINITE_TIMEOUT = 0x0000000a;
 enum RPC_C_BINDING_MIN_TIMEOUT = 0x00000000;
 enum RPC_C_BINDING_DEFAULT_TIMEOUT = 0x00000005;
@@ -917,6 +919,11 @@ enum NDR64_FC_NO_HANDLE = 0x00000005;
 enum __RPCPROXY_H_VERSION__ = 0x000001dd;
 enum MidlInterceptionInfoVersionOne = 0x00000001;
 enum MidlWinrtTypeSerializationInfoVersionOne = 0x00000001;
+alias PNDR_ASYNC_MESSAGE = long;
+alias PNDR_CORRELATION_INFO = long;
+alias _NDR_PROC_CONTEXT = long;
+alias NDR_ALLOC_ALL_NODES_CONTEXT = long;
+alias NDR_POINTER_QUEUE_STATE = long;
 struct RPC_BINDING_VECTOR
 {
     uint Count;
@@ -1224,9 +1231,9 @@ enum : int
     RPCHTTP_RS_INTERFACE = 0x00000005,
 }
 
-alias RPC_NEW_HTTP_PROXY_CHANNEL = RPC_STATUS function(RPC_HTTP_REDIRECTOR_STAGE, ushort*, ushort*, ushort*, ushort*, void*, void*, void*, void*, uint, ushort**, ushort**);
-alias RPC_HTTP_PROXY_FREE_STRING = void function(ushort*);
-alias RPC_AUTH_KEY_RETRIEVAL_FN = void function(void*, ushort*, uint, void**, RPC_STATUS*);
+alias RPC_NEW_HTTP_PROXY_CHANNEL = RPC_STATUS function(RPC_HTTP_REDIRECTOR_STAGE, PWSTR, PWSTR, PWSTR, PWSTR, void*, void*, void*, void*, uint, PWSTR*, PWSTR*);
+alias RPC_HTTP_PROXY_FREE_STRING = void function(PWSTR);
+alias RPC_AUTH_KEY_RETRIEVAL_FN = void function(void*, PWSTR, uint, void**, RPC_STATUS*);
 struct RPC_CLIENT_INFORMATION1
 {
     ubyte* UserName;
@@ -1238,16 +1245,16 @@ alias RPC_MGMT_AUTHORIZATION_FN = int function(void*, uint, RPC_STATUS*);
 struct RPC_ENDPOINT_TEMPLATEW
 {
     uint Version;
-    ushort* ProtSeq;
-    ushort* Endpoint;
+    PWSTR ProtSeq;
+    PWSTR Endpoint;
     void* SecurityDescriptor;
     uint Backlog;
 }
 struct RPC_ENDPOINT_TEMPLATEA
 {
     uint Version;
-    ubyte* ProtSeq;
-    ubyte* Endpoint;
+    PSTR ProtSeq;
+    PSTR Endpoint;
     void* SecurityDescriptor;
     uint Backlog;
 }
@@ -1262,7 +1269,7 @@ struct RPC_INTERFACE_TEMPLATEA
     uint MaxRpcSize;
     RPC_IF_CALLBACK_FN IfCallback;
     UUID_VECTOR* UuidVector;
-    ubyte* Annotation;
+    PSTR Annotation;
     void* SecurityDescriptor;
 }
 struct RPC_INTERFACE_TEMPLATEW
@@ -1276,7 +1283,7 @@ struct RPC_INTERFACE_TEMPLATEW
     uint MaxRpcSize;
     RPC_IF_CALLBACK_FN IfCallback;
     UUID_VECTOR* UuidVector;
-    ushort* Annotation;
+    PWSTR Annotation;
     void* SecurityDescriptor;
 }
 alias RPC_INTERFACE_GROUP_IDLE_CALLBACK_FN = void function(void*, void*, uint);
@@ -1395,7 +1402,7 @@ struct RDR_CALLOUT_STATE
     RPC_SYNTAX_IDENTIFIER Interface;
     void* CertContext;
 }
-alias I_RpcProxyIsValidMachineFn = RPC_STATUS function(ushort*, ushort*, uint);
+alias I_RpcProxyIsValidMachineFn = RPC_STATUS function(PWSTR, PWSTR, uint);
 alias I_RpcProxyGetClientAddressFn = RPC_STATUS function(void*, PSTR, uint*);
 alias I_RpcProxyGetConnectionTimeoutFn = RPC_STATUS function(uint*);
 alias I_RpcPerformCalloutFn = RPC_STATUS function(void*, RDR_CALLOUT_STATE*, RPC_HTTP_REDIRECTOR_STAGE);
@@ -1726,21 +1733,6 @@ struct ARRAY_INFO
     uint* OffsetArray;
     uint* ActualCountArray;
 }
-struct _NDR_ASYNC_MESSAGE
-{
-}
-struct _NDR_CORRELATION_INFO
-{
-}
-struct NDR_ALLOC_ALL_NODES_CONTEXT
-{
-}
-struct NDR_POINTER_QUEUE_STATE
-{
-}
-struct _NDR_PROC_CONTEXT
-{
-}
 struct MIDL_STUB_MESSAGE
 {
     RPC_MESSAGE* RpcMsg;
@@ -1765,8 +1757,8 @@ struct MIDL_STUB_MESSAGE
     ulong MaxCount;
     uint Offset;
     uint ActualCount;
-    long pfnAllocate;
-    long pfnFree;
+    PFN_RPC_ALLOCATE pfnAllocate;
+    PFN_RPC_FREE pfnFree;
     ubyte* StackTop;
     ubyte* pPresentedType;
     ubyte* pTransmitType;
@@ -1788,8 +1780,8 @@ struct MIDL_STUB_MESSAGE
     void* pArgQueue;
     uint dwStubPhase;
     void* LowStackMark;
-    _NDR_ASYNC_MESSAGE* pAsyncMsg;
-    _NDR_CORRELATION_INFO* pCorrInfo;
+    PNDR_ASYNC_MESSAGE pAsyncMsg;
+    PNDR_CORRELATION_INFO pCorrInfo;
     ubyte* pCorrMemory;
     void* pMemoryList;
     long pCSInfo;
@@ -1898,8 +1890,8 @@ struct NDR_EXPR_DESC
 struct MIDL_STUB_DESC
 {
     void* RpcInterfaceInformation;
-    long pfnAllocate;
-    long pfnFree;
+    PFN_RPC_ALLOCATE pfnAllocate;
+    PFN_RPC_FREE pfnFree;
     union _IMPLICIT_HANDLE_INFO_e__Union
     {
         void** pAutoHandle;

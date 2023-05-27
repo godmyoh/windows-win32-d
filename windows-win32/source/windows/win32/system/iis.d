@@ -2,12 +2,16 @@ module windows.win32.system.iis;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, CHAR, FILETIME, HANDLE, HRESULT, PSTR, PWSTR;
-import windows.win32.security.cryptography_ : CERT_CONTEXT;
-import windows.win32.system.com_ : IUnknown, SAFEARRAY;
+import windows.win32.security.cryptography : CERT_CONTEXT;
+import windows.win32.system.com : IUnknown, SAFEARRAY;
 
 version (Windows):
 extern (Windows):
 
+alias PFN_IIS_GETSERVERVARIABLE = BOOL function(HCONN, PSTR, void*, uint*);
+alias PFN_IIS_WRITECLIENT = BOOL function(HCONN, void*, uint*, uint);
+alias PFN_IIS_READCLIENT = BOOL function(HCONN, void*, uint*);
+alias PFN_IIS_SERVERSUPPORTFUNCTION = BOOL function(HCONN, uint, void*, uint*, uint*);
 BOOL GetExtensionVersion(HSE_VERSION_INFO*);
 uint HttpExtensionProc(EXTENSION_CONTROL_BLOCK*);
 uint HttpFilterProc(HTTP_FILTER_CONTEXT*, uint, void*);
@@ -942,10 +946,7 @@ enum WEB_CORE_DLL_NAME = "hwebcore.dll";
 enum WEB_CORE_ACTIVATE_DLL_ENTRY = "WebCoreActivate";
 enum WEB_CORE_SHUTDOWN_DLL_ENTRY = "WebCoreShutdown";
 enum WEB_CORE_SET_METADATA_DLL_ENTRY = "WebCoreSetMetadata";
-enum CLSID_FtpProvider = GUID(0x70bdc667, 0x33b2, 0x45f0, [0xac, 0x52, 0xc3, 0xca, 0x46, 0xf7, 0xa6, 0x56]);
-struct FtpProvider
-{
-}
+alias HCONN = void*;
 enum CLSID_CONFIGURATION_ENTRY = GUID(0x9e04226f, 0xe38c, 0x419e, [0xa4, 0x48, 0x62, 0xde, 0x3b, 0x3a, 0x8f, 0x43]);
 struct CONFIGURATION_ENTRY
 {
@@ -1115,6 +1116,10 @@ interface AsyncIFtpPostprocessProvider : IUnknown
     HRESULT Begin_HandlePostprocess(const(POST_PROCESS_PARAMETERS)*);
     HRESULT Finish_HandlePostprocess(FTP_PROCESS_STATUS*);
 }
+enum CLSID_FtpProvider = GUID(0x70bdc667, 0x33b2, 0x45f0, [0xac, 0x52, 0xc3, 0xca, 0x46, 0xf7, 0xa6, 0x56]);
+struct FtpProvider
+{
+}
 enum IID_IADMEXT = GUID(0x51dfe970, 0xf6f2, 0x11d0, [0xb9, 0xbd, 0x0, 0xa0, 0xc9, 0x22, 0xe7, 0x50]);
 interface IADMEXT : IUnknown
 {
@@ -1215,9 +1220,6 @@ interface IMSAdminBaseW : IUnknown
     HRESULT UnmarshalInterface(IMSAdminBaseW*);
     HRESULT GetServerGuid();
 }
-struct _IIS_CRYPTO_BLOB
-{
-}
 enum IID_IMSAdminBase2W = GUID(0x8298d101, 0xf992, 0x43b7, [0x8e, 0xca, 0x50, 0x52, 0xd8, 0x85, 0xb9, 0x95]);
 interface IMSAdminBase2W : IMSAdminBaseW
 {
@@ -1261,7 +1263,7 @@ struct EXTENSION_CONTROL_BLOCK
 {
     uint cbSize;
     uint dwVersion;
-    void* ConnID;
+    HCONN ConnID;
     uint dwHttpStatusCode;
     CHAR[80] lpszLogData;
     PSTR lpszMethod;
@@ -1272,10 +1274,10 @@ struct EXTENSION_CONTROL_BLOCK
     uint cbAvailable;
     ubyte* lpbData;
     PSTR lpszContentType;
-    long GetServerVariable;
-    long WriteClient;
-    long ReadClient;
-    long ServerSupportFunction;
+    PFN_IIS_GETSERVERVARIABLE GetServerVariable;
+    PFN_IIS_WRITECLIENT WriteClient;
+    PFN_IIS_READCLIENT ReadClient;
+    PFN_IIS_SERVERSUPPORTFUNCTION ServerSupportFunction;
 }
 struct HSE_URL_MAPEX_INFO
 {

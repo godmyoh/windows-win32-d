@@ -42,6 +42,7 @@ HRESULT CfGetPlaceholderInfo(HANDLE, CF_PLACEHOLDER_INFO_CLASS, void*, uint, uin
 HRESULT CfGetSyncRootInfoByPath(const(wchar)*, CF_SYNC_ROOT_INFO_CLASS, void*, uint, uint*);
 HRESULT CfGetSyncRootInfoByHandle(HANDLE, CF_SYNC_ROOT_INFO_CLASS, void*, uint, uint*);
 HRESULT CfGetPlaceholderRangeInfo(HANDLE, CF_PLACEHOLDER_RANGE_INFO_CLASS, long, long, void*, uint, uint*);
+HRESULT CfGetPlaceholderRangeInfoForHydration(CF_CONNECTION_KEY, long, long, CF_PLACEHOLDER_RANGE_INFO_CLASS, long, long, void*, uint, uint*);
 HRESULT CfReportProviderProgress(CF_CONNECTION_KEY, long, long, long);
 HRESULT CfReportProviderProgress2(CF_CONNECTION_KEY, long, long, long, long, uint);
 enum CF_REQUEST_KEY_DEFAULT = 0x00000000;

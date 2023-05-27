@@ -1,11 +1,10 @@
 module windows.win32.storage.filesystem;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, CHAR, FILETIME, HANDLE, HRESULT, NTSTATUS, PSID, PSTR, PWSTR, SYSTEMTIME;
-import windows.win32.security_ : GENERIC_MAPPING, PRIVILEGE_SET, PSECURITY_DESCRIPTOR, SECURITY_ATTRIBUTES, SID;
-import windows.win32.system.com_ : IConnectionPointContainer, IUnknown;
+import windows.win32.foundation : BOOL, BOOLEAN, CHAR, FILETIME, HANDLE, HRESULT, PSID, PSTR, PWSTR, SYSTEMTIME;
+import windows.win32.security : GENERIC_MAPPING, PRIVILEGE_SET, PSECURITY_DESCRIPTOR, SECURITY_ATTRIBUTES, SID;
+import windows.win32.system.com : IConnectionPointContainer, IUnknown;
 import windows.win32.system.io : LPOVERLAPPED_COMPLETION_ROUTINE, OVERLAPPED;
-import windows.win32.system.windowsprogramming : IO_STATUS_BLOCK, OBJECT_ATTRIBUTES;
 
 version (Windows):
 extern (Windows):
@@ -124,20 +123,20 @@ BOOL DeleteFileA(const(char)*);
 BOOL DeleteFileW(const(wchar)*);
 BOOL DeleteVolumeMountPointW(const(wchar)*);
 BOOL FileTimeToLocalFileTime(const(FILETIME)*, FILETIME*);
-BOOL FindClose(FindFileHandle);
-BOOL FindCloseChangeNotification(FindChangeNotificationHandle);
-FindChangeNotificationHandle FindFirstChangeNotificationA(const(char)*, BOOL, FILE_NOTIFY_CHANGE);
-FindChangeNotificationHandle FindFirstChangeNotificationW(const(wchar)*, BOOL, FILE_NOTIFY_CHANGE);
-FindFileHandle FindFirstFileA(const(char)*, WIN32_FIND_DATAA*);
-FindFileHandle FindFirstFileW(const(wchar)*, WIN32_FIND_DATAW*);
-FindFileHandle FindFirstFileExA(const(char)*, FINDEX_INFO_LEVELS, void*, FINDEX_SEARCH_OPS, void*, FIND_FIRST_EX_FLAGS);
-FindFileHandle FindFirstFileExW(const(wchar)*, FINDEX_INFO_LEVELS, void*, FINDEX_SEARCH_OPS, void*, FIND_FIRST_EX_FLAGS);
-FindVolumeHandle FindFirstVolumeW(PWSTR, uint);
-BOOL FindNextChangeNotification(FindChangeNotificationHandle);
-BOOL FindNextFileA(FindFileHandle, WIN32_FIND_DATAA*);
-BOOL FindNextFileW(FindFileHandle, WIN32_FIND_DATAW*);
-BOOL FindNextVolumeW(FindVolumeHandle, PWSTR, uint);
-BOOL FindVolumeClose(FindVolumeHandle);
+BOOL FindClose(HANDLE);
+BOOL FindCloseChangeNotification(HANDLE);
+HANDLE FindFirstChangeNotificationA(const(char)*, BOOL, FILE_NOTIFY_CHANGE);
+HANDLE FindFirstChangeNotificationW(const(wchar)*, BOOL, FILE_NOTIFY_CHANGE);
+HANDLE FindFirstFileA(const(char)*, WIN32_FIND_DATAA*);
+HANDLE FindFirstFileW(const(wchar)*, WIN32_FIND_DATAW*);
+HANDLE FindFirstFileExA(const(char)*, FINDEX_INFO_LEVELS, void*, FINDEX_SEARCH_OPS, void*, FIND_FIRST_EX_FLAGS);
+HANDLE FindFirstFileExW(const(wchar)*, FINDEX_INFO_LEVELS, void*, FINDEX_SEARCH_OPS, void*, FIND_FIRST_EX_FLAGS);
+HANDLE FindFirstVolumeW(PWSTR, uint);
+BOOL FindNextChangeNotification(HANDLE);
+BOOL FindNextFileA(HANDLE, WIN32_FIND_DATAA*);
+BOOL FindNextFileW(HANDLE, WIN32_FIND_DATAW*);
+BOOL FindNextVolumeW(HANDLE, PWSTR, uint);
+BOOL FindVolumeClose(HANDLE);
 BOOL FlushFileBuffers(HANDLE);
 BOOL GetDiskFreeSpaceA(const(char)*, uint*, uint*, uint*, uint*);
 BOOL GetDiskFreeSpaceW(const(wchar)*, uint*, uint*, uint*, uint*);
@@ -155,8 +154,8 @@ BOOL GetFileInformationByHandle(HANDLE, BY_HANDLE_FILE_INFORMATION*);
 uint GetFileSize(HANDLE, uint*);
 BOOL GetFileSizeEx(HANDLE, long*);
 FILE_TYPE GetFileType(HANDLE);
-uint GetFinalPathNameByHandleA(HANDLE, PSTR, uint, FILE_NAME);
-uint GetFinalPathNameByHandleW(HANDLE, PWSTR, uint, FILE_NAME);
+uint GetFinalPathNameByHandleA(HANDLE, PSTR, uint, GETFINALPATHNAMEBYHANDLE_FLAGS);
+uint GetFinalPathNameByHandleW(HANDLE, PWSTR, uint, GETFINALPATHNAMEBYHANDLE_FLAGS);
 BOOL GetFileTime(HANDLE, FILETIME*, FILETIME*, FILETIME*);
 uint GetFullPathNameW(const(wchar)*, uint, PWSTR, PWSTR*);
 uint GetFullPathNameA(const(char)*, uint, PSTR, PSTR*);
@@ -174,8 +173,8 @@ BOOL LocalFileTimeToFileTime(const(FILETIME)*, FILETIME*);
 BOOL LockFile(HANDLE, uint, uint, uint, uint);
 BOOL LockFileEx(HANDLE, LOCK_FILE_FLAGS, uint, uint, uint, OVERLAPPED*);
 uint QueryDosDeviceW(const(wchar)*, PWSTR, uint);
-BOOL ReadFile(HANDLE, void*, uint, uint*, OVERLAPPED*);
-BOOL ReadFileEx(HANDLE, void*, uint, OVERLAPPED*, LPOVERLAPPED_COMPLETION_ROUTINE);
+BOOL ReadFile(HANDLE, ubyte*, uint, uint*, OVERLAPPED*);
+BOOL ReadFileEx(HANDLE, ubyte*, uint, OVERLAPPED*, LPOVERLAPPED_COMPLETION_ROUTINE);
 BOOL ReadFileScatter(HANDLE, FILE_SEGMENT_ELEMENT*, uint, uint*, OVERLAPPED*);
 BOOL RemoveDirectoryA(const(char)*);
 BOOL RemoveDirectoryW(const(wchar)*);
@@ -199,12 +198,12 @@ HANDLE CreateFile2(const(wchar)*, uint, FILE_SHARE_MODE, FILE_CREATION_DISPOSITI
 BOOL SetFileIoOverlappedRange(HANDLE, ubyte*, uint);
 uint GetCompressedFileSizeA(const(char)*, uint*);
 uint GetCompressedFileSizeW(const(wchar)*, uint*);
-FindStreamHandle FindFirstStreamW(const(wchar)*, STREAM_INFO_LEVELS, void*, uint);
-BOOL FindNextStreamW(FindStreamHandle, void*);
+HANDLE FindFirstStreamW(const(wchar)*, STREAM_INFO_LEVELS, void*, uint);
+BOOL FindNextStreamW(HANDLE, void*);
 BOOL AreFileApisANSI();
 uint GetTempPathA(uint, PSTR);
-FindFileNameHandle FindFirstFileNameW(const(wchar)*, uint, uint*, PWSTR);
-BOOL FindNextFileNameW(FindFileNameHandle, uint*, PWSTR);
+HANDLE FindFirstFileNameW(const(wchar)*, uint, uint*, PWSTR);
+BOOL FindNextFileNameW(HANDLE, uint*, PWSTR);
 BOOL GetVolumeInformationA(const(char)*, PSTR, uint, uint*, uint*, uint*, PSTR, uint);
 uint GetTempFileNameA(const(char)*, const(char)*, uint, PSTR);
 void SetFileApisToOEM();
@@ -401,17 +400,19 @@ uint NetFileEnum(PWSTR, PWSTR, PWSTR, uint, ubyte**, uint, uint*, uint*, ulong*)
 uint NetFileGetInfo(PWSTR, uint, uint, ubyte**);
 uint NetStatisticsGet(byte*, byte*, uint, uint, ubyte**);
 HRESULT QueryIoRingCapabilities(IORING_CAPABILITIES*);
-BOOL IsIoRingOpSupported(HIORING__*, IORING_OP_CODE);
-HRESULT CreateIoRing(IORING_VERSION, IORING_CREATE_FLAGS, uint, uint, HIORING__**);
-HRESULT GetIoRingInfo(HIORING__*, IORING_INFO*);
-HRESULT SubmitIoRing(HIORING__*, uint, uint, uint*);
-HRESULT CloseIoRing(HIORING__*);
-HRESULT PopIoRingCompletion(HIORING__*, IORING_CQE*);
-HRESULT SetIoRingCompletionEvent(HIORING__*, HANDLE);
-HRESULT BuildIoRingCancelRequest(HIORING__*, IORING_HANDLE_REF, ulong, ulong);
-HRESULT BuildIoRingReadFile(HIORING__*, IORING_HANDLE_REF, IORING_BUFFER_REF, uint, ulong, ulong, IORING_SQE_FLAGS);
-HRESULT BuildIoRingRegisterFileHandles(HIORING__*, uint, const(HANDLE)*, ulong);
-HRESULT BuildIoRingRegisterBuffers(HIORING__*, uint, const(IORING_BUFFER_INFO)*, ulong);
+BOOL IsIoRingOpSupported(HIORING, IORING_OP_CODE);
+HRESULT CreateIoRing(IORING_VERSION, IORING_CREATE_FLAGS, uint, uint, HIORING*);
+HRESULT GetIoRingInfo(HIORING, IORING_INFO*);
+HRESULT SubmitIoRing(HIORING, uint, uint, uint*);
+HRESULT CloseIoRing(HIORING);
+HRESULT PopIoRingCompletion(HIORING, IORING_CQE*);
+HRESULT SetIoRingCompletionEvent(HIORING, HANDLE);
+HRESULT BuildIoRingCancelRequest(HIORING, IORING_HANDLE_REF, ulong, ulong);
+HRESULT BuildIoRingReadFile(HIORING, IORING_HANDLE_REF, IORING_BUFFER_REF, uint, ulong, ulong, IORING_SQE_FLAGS);
+HRESULT BuildIoRingRegisterFileHandles(HIORING, uint, const(HANDLE)*, ulong);
+HRESULT BuildIoRingRegisterBuffers(HIORING, uint, const(IORING_BUFFER_INFO)*, ulong);
+HRESULT BuildIoRingWriteFile(HIORING, IORING_HANDLE_REF, IORING_BUFFER_REF, uint, ulong, FILE_WRITE_FLAGS, ulong, IORING_SQE_FLAGS);
+HRESULT BuildIoRingFlushFile(HIORING, IORING_HANDLE_REF, FILE_FLUSH_MODE, ulong, IORING_SQE_FLAGS);
 BOOLEAN Wow64EnableWow64FsRedirection(BOOLEAN);
 BOOL Wow64DisableWow64FsRedirection(void**);
 BOOL Wow64RevertWow64FsRedirection(void*);
@@ -472,8 +473,8 @@ BOOL DeleteFileTransactedA(const(char)*, HANDLE);
 BOOL DeleteFileTransactedW(const(wchar)*, HANDLE);
 BOOL CheckNameLegalDOS8Dot3A(const(char)*, PSTR, uint, BOOL*, BOOL*);
 BOOL CheckNameLegalDOS8Dot3W(const(wchar)*, PSTR, uint, BOOL*, BOOL*);
-FindFileHandle FindFirstFileTransactedA(const(char)*, FINDEX_INFO_LEVELS, void*, FINDEX_SEARCH_OPS, void*, uint, HANDLE);
-FindFileHandle FindFirstFileTransactedW(const(wchar)*, FINDEX_INFO_LEVELS, void*, FINDEX_SEARCH_OPS, void*, uint, HANDLE);
+HANDLE FindFirstFileTransactedA(const(char)*, FINDEX_INFO_LEVELS, void*, FINDEX_SEARCH_OPS, void*, uint, HANDLE);
+HANDLE FindFirstFileTransactedW(const(wchar)*, FINDEX_INFO_LEVELS, void*, FINDEX_SEARCH_OPS, void*, uint, HANDLE);
 BOOL CopyFileA(const(char)*, const(char)*, BOOL);
 BOOL CopyFileW(const(wchar)*, const(wchar)*, BOOL);
 BOOL CopyFileExA(const(char)*, const(char)*, LPPROGRESS_ROUTINE, void*, int*, uint);
@@ -495,21 +496,21 @@ BOOL CreateHardLinkA(const(char)*, const(char)*, SECURITY_ATTRIBUTES*);
 BOOL CreateHardLinkW(const(wchar)*, const(wchar)*, SECURITY_ATTRIBUTES*);
 BOOL CreateHardLinkTransactedA(const(char)*, const(char)*, SECURITY_ATTRIBUTES*, HANDLE);
 BOOL CreateHardLinkTransactedW(const(wchar)*, const(wchar)*, SECURITY_ATTRIBUTES*, HANDLE);
-FindStreamHandle FindFirstStreamTransactedW(const(wchar)*, STREAM_INFO_LEVELS, void*, uint, HANDLE);
-FindFileNameHandle FindFirstFileNameTransactedW(const(wchar)*, uint, uint*, PWSTR, HANDLE);
+HANDLE FindFirstStreamTransactedW(const(wchar)*, STREAM_INFO_LEVELS, void*, uint, HANDLE);
+HANDLE FindFirstFileNameTransactedW(const(wchar)*, uint, uint*, PWSTR, HANDLE);
 BOOL SetVolumeLabelA(const(char)*, const(char)*);
 BOOL SetVolumeLabelW(const(wchar)*, const(wchar)*);
 BOOL SetFileBandwidthReservation(HANDLE, uint, uint, BOOL, uint*, uint*);
 BOOL GetFileBandwidthReservation(HANDLE, uint*, uint*, int*, uint*, uint*);
 BOOL ReadDirectoryChangesW(HANDLE, void*, uint, BOOL, FILE_NOTIFY_CHANGE, uint*, OVERLAPPED*, LPOVERLAPPED_COMPLETION_ROUTINE);
 BOOL ReadDirectoryChangesExW(HANDLE, void*, uint, BOOL, FILE_NOTIFY_CHANGE, uint*, OVERLAPPED*, LPOVERLAPPED_COMPLETION_ROUTINE, READ_DIRECTORY_NOTIFY_INFORMATION_CLASS);
-FindVolumeHandle FindFirstVolumeA(PSTR, uint);
-BOOL FindNextVolumeA(FindVolumeHandle, PSTR, uint);
-FindVolumeMountPointHandle FindFirstVolumeMountPointA(const(char)*, PSTR, uint);
-FindVolumeMountPointHandle FindFirstVolumeMountPointW(const(wchar)*, PWSTR, uint);
-BOOL FindNextVolumeMountPointA(FindVolumeMountPointHandle, PSTR, uint);
-BOOL FindNextVolumeMountPointW(FindVolumeMountPointHandle, PWSTR, uint);
-BOOL FindVolumeMountPointClose(FindVolumeMountPointHandle);
+HANDLE FindFirstVolumeA(PSTR, uint);
+BOOL FindNextVolumeA(HANDLE, PSTR, uint);
+HANDLE FindFirstVolumeMountPointA(const(char)*, PSTR, uint);
+HANDLE FindFirstVolumeMountPointW(const(wchar)*, PWSTR, uint);
+BOOL FindNextVolumeMountPointA(HANDLE, PSTR, uint);
+BOOL FindNextVolumeMountPointW(HANDLE, PWSTR, uint);
+BOOL FindVolumeMountPointClose(HANDLE);
 BOOL SetVolumeMountPointA(const(char)*, const(char)*);
 BOOL SetVolumeMountPointW(const(wchar)*, const(wchar)*);
 BOOL DeleteVolumeMountPointA(const(char)*);
@@ -522,7 +523,6 @@ BOOLEAN CreateSymbolicLinkA(const(char)*, const(char)*, SYMBOLIC_LINK_FLAGS);
 BOOLEAN CreateSymbolicLinkW(const(wchar)*, const(wchar)*, SYMBOLIC_LINK_FLAGS);
 BOOLEAN CreateSymbolicLinkTransactedA(const(char)*, const(char)*, SYMBOLIC_LINK_FLAGS, HANDLE);
 BOOLEAN CreateSymbolicLinkTransactedW(const(wchar)*, const(wchar)*, SYMBOLIC_LINK_FLAGS, HANDLE);
-NTSTATUS NtCreateFile(HANDLE*, uint, OBJECT_ATTRIBUTES*, IO_STATUS_BLOCK*, long*, uint, FILE_SHARE_MODE, NT_CREATE_FILE_DISPOSITION, uint, void*, uint);
 enum MAXIMUM_REPARSE_DATA_BUFFER_SIZE = 0x00004000;
 enum EA_CONTAINER_NAME = "ContainerName";
 enum EA_CONTAINER_SIZE = "ContainerSize";
@@ -876,8 +876,8 @@ enum : uint
     VS_FF_SPECIALBUILD = 0x00000020,
 }
 
-alias VS_FIXEDFILEINFO_FILE_OS = int;
-enum : int
+alias VS_FIXEDFILEINFO_FILE_OS = uint;
+enum : uint
 {
     VOS_UNKNOWN       = 0x00000000,
     VOS_DOS           = 0x00010000,
@@ -989,9 +989,13 @@ enum : uint
     MOVEFILE_FAIL_IF_NOT_TRACKABLE = 0x00000020,
 }
 
-alias FILE_NAME = uint;
+alias GETFINALPATHNAMEBYHANDLE_FLAGS = uint;
 enum : uint
 {
+    VOLUME_NAME_DOS      = 0x00000000,
+    VOLUME_NAME_GUID     = 0x00000001,
+    VOLUME_NAME_NT       = 0x00000002,
+    VOLUME_NAME_NONE     = 0x00000004,
     FILE_NAME_NORMALIZED = 0x00000000,
     FILE_NAME_OPENED     = 0x00000008,
 }
@@ -1038,15 +1042,15 @@ enum : uint
     TXFS_MINIVERSION_DEFAULT_VIEW   = 0x0000fffe,
 }
 
-alias TAPE_POSITION_TYPE = int;
-enum : int
+alias TAPE_POSITION_TYPE = uint;
+enum : uint
 {
     TAPE_ABSOLUTE_POSITION = 0x00000000,
     TAPE_LOGICAL_POSITION  = 0x00000001,
 }
 
-alias CREATE_TAPE_PARTITION_METHOD = int;
-enum : int
+alias CREATE_TAPE_PARTITION_METHOD = uint;
+enum : uint
 {
     TAPE_FIXED_PARTITIONS     = 0x00000000,
     TAPE_INITIATOR_PARTITIONS = 0x00000002,
@@ -1061,8 +1065,8 @@ enum : uint
     REPLACEFILE_IGNORE_ACL_ERRORS   = 0x00000004,
 }
 
-alias TAPEMARK_TYPE = int;
-enum : int
+alias TAPEMARK_TYPE = uint;
+enum : uint
 {
     TAPE_FILEMARKS       = 0x00000001,
     TAPE_LONG_FILEMARKS  = 0x00000003,
@@ -1078,8 +1082,8 @@ enum : uint
     DISKQUOTA_USERNAME_RESOLVE_SYNC  = 0x00000001,
 }
 
-alias TAPE_POSITION_METHOD = int;
-enum : int
+alias TAPE_POSITION_METHOD = uint;
+enum : uint
 {
     TAPE_ABSOLUTE_BLOCK        = 0x00000001,
     TAPE_LOGICAL_BLOCK         = 0x00000002,
@@ -1090,17 +1094,6 @@ enum : int
     TAPE_SPACE_SEQUENTIAL_FMKS = 0x00000007,
     TAPE_SPACE_SEQUENTIAL_SMKS = 0x00000009,
     TAPE_SPACE_SETMARKS        = 0x00000008,
-}
-
-alias NT_CREATE_FILE_DISPOSITION = uint;
-enum : uint
-{
-    FILE_SUPERSEDE    = 0x00000000,
-    FILE_CREATE       = 0x00000002,
-    FILE_OPEN         = 0x00000001,
-    FILE_OPEN_IF      = 0x00000003,
-    FILE_OVERWRITE    = 0x00000004,
-    FILE_OVERWRITE_IF = 0x00000005,
 }
 
 alias TAPE_INFORMATION_TYPE = uint;
@@ -1131,8 +1124,8 @@ enum : uint
     CALLBACK_STREAM_SWITCH  = 0x00000001,
 }
 
-alias PREPARE_TAPE_OPERATION = int;
-enum : int
+alias PREPARE_TAPE_OPERATION = uint;
+enum : uint
 {
     TAPE_FORMAT  = 0x00000005,
     TAPE_LOAD    = 0x00000000,
@@ -1149,8 +1142,8 @@ enum : uint
     GET_TAPE_MEDIA_INFORMATION = 0x00000000,
 }
 
-alias ERASE_TAPE_TYPE = int;
-enum : int
+alias ERASE_TAPE_TYPE = uint;
+enum : uint
 {
     TAPE_ERASE_LONG  = 0x00000001,
     TAPE_ERASE_SHORT = 0x00000000,
@@ -1254,16 +1247,22 @@ enum : uint
     FILE_TYPE_REMOTE  = 0x00008000,
 }
 
+alias FILE_DISPOSITION_INFO_EX_FLAGS = uint;
+enum : uint
+{
+    FILE_DISPOSITION_FLAG_DO_NOT_DELETE             = 0x00000000,
+    FILE_DISPOSITION_FLAG_DELETE                    = 0x00000001,
+    FILE_DISPOSITION_FLAG_POSIX_SEMANTICS           = 0x00000002,
+    FILE_DISPOSITION_FLAG_FORCE_IMAGE_SECTION_CHECK = 0x00000004,
+    FILE_DISPOSITION_FLAG_ON_CLOSE                  = 0x00000008,
+    FILE_DISPOSITION_FLAG_IGNORE_READONLY_ATTRIBUTE = 0x00000010,
+}
+
 struct FILE_DISPOSITION_INFO
 {
     BOOLEAN DeleteFile;
 }
-alias FindFileHandle = long;
-alias FindFileNameHandle = long;
-alias FindStreamHandle = long;
-alias FindChangeNotificationHandle = long;
-alias FindVolumeHandle = long;
-alias FindVolumeMountPointHandle = long;
+alias HIORING = void*;
 struct WIN32_FIND_DATAA
 {
     uint dwFileAttributes;
@@ -1481,8 +1480,8 @@ struct VS_FIXEDFILEINFO
     uint dwFileFlagsMask;
     VS_FIXEDFILEINFO_FILE_FLAGS dwFileFlags;
     VS_FIXEDFILEINFO_FILE_OS dwFileOS;
-    VS_FIXEDFILEINFO_FILE_TYPE dwFileType;
-    VS_FIXEDFILEINFO_FILE_SUBTYPE dwFileSubtype;
+    uint dwFileType;
+    uint dwFileSubtype;
     uint dwFileDateMS;
     uint dwFileDateLS;
 }
@@ -1615,7 +1614,7 @@ enum : int
 struct NTMS_DRIVEINFORMATIONA
 {
     uint Number;
-    NtmsDriveState State;
+    uint State;
     GUID DriveType;
     CHAR[64] szDeviceName;
     CHAR[32] szSerialNumber;
@@ -1634,7 +1633,7 @@ struct NTMS_DRIVEINFORMATIONA
 struct NTMS_DRIVEINFORMATIONW
 {
     uint Number;
-    NtmsDriveState State;
+    uint State;
     GUID DriveType;
     wchar[64] szDeviceName;
     wchar[32] szSerialNumber;
@@ -1683,12 +1682,12 @@ enum : int
 
 struct NTMS_LIBRARYINFORMATION
 {
-    NtmsLibraryType LibraryType;
+    uint LibraryType;
     GUID CleanerSlot;
     GUID CleanerSlotDefault;
     BOOL LibrarySupportsDriveCleaning;
     BOOL BarCodeReaderInstalled;
-    NtmsInventoryMethod InventoryMethod;
+    uint InventoryMethod;
     uint dwCleanerUsesRemaining;
     uint FirstDriveNumber;
     uint dwNumberOfDrives;
@@ -1705,7 +1704,7 @@ struct NTMS_LIBRARYINFORMATION
     uint dwNumberOfLibRequests;
     GUID Reserved;
     BOOL AutoRecovery;
-    NtmsLibraryFlags dwFlags;
+    uint dwFlags;
 }
 struct NTMS_CHANGERINFORMATIONA
 {
@@ -1760,7 +1759,7 @@ enum : int
 struct NTMS_IEDOORINFORMATION
 {
     uint Number;
-    NtmsDoorState State;
+    uint State;
     ushort MaxOpenSecs;
     GUID Library;
 }
@@ -1783,8 +1782,8 @@ enum : int
 struct NTMS_IEPORTINFORMATION
 {
     uint Number;
-    NtmsPortContent Content;
-    NtmsPortPosition Position;
+    uint Content;
+    uint Position;
     ushort MaxExtendSecs;
     GUID Library;
 }
@@ -1816,9 +1815,9 @@ struct NTMS_PMIDINFORMATIONA
     GUID MediaType;
     GUID HomeSlot;
     CHAR[64] szBarCode;
-    NtmsBarCodeState BarCodeState;
+    uint BarCodeState;
     CHAR[32] szSequenceNumber;
-    NtmsMediaState MediaState;
+    uint MediaState;
     uint dwNumberOfPartitions;
     uint dwMediaTypeCode;
     uint dwDensityCode;
@@ -1833,9 +1832,9 @@ struct NTMS_PMIDINFORMATIONW
     GUID MediaType;
     GUID HomeSlot;
     wchar[64] szBarCode;
-    NtmsBarCodeState BarCodeState;
+    uint BarCodeState;
     wchar[32] szSequenceNumber;
-    NtmsMediaState MediaState;
+    uint MediaState;
     uint dwNumberOfPartitions;
     uint dwMediaTypeCode;
     uint dwDensityCode;
@@ -1865,7 +1864,7 @@ struct NTMS_PARTITIONINFORMATIONA
 {
     GUID PhysicalMedia;
     GUID LogicalMedia;
-    NtmsPartitionState State;
+    uint State;
     ushort Side;
     uint dwOmidLabelIdLength;
     ubyte[255] OmidLabelId;
@@ -1879,7 +1878,7 @@ struct NTMS_PARTITIONINFORMATIONW
 {
     GUID PhysicalMedia;
     GUID LogicalMedia;
-    NtmsPartitionState State;
+    uint State;
     ushort Side;
     uint dwOmidLabelIdLength;
     ubyte[255] OmidLabelId;
@@ -1936,7 +1935,7 @@ struct NTMS_MEDIATYPEINFORMATION
 {
     uint MediaType;
     uint NumberOfSides;
-    NtmsReadWriteCharacteristics ReadWriteCharacteristics;
+    uint ReadWriteCharacteristics;
     FILE_DEVICE_TYPE DeviceType;
 }
 struct NTMS_DRIVETYPEINFORMATIONA
@@ -2012,9 +2011,9 @@ enum : int
 
 struct NTMS_LIBREQUESTINFORMATIONA
 {
-    NtmsLmOperation OperationCode;
+    uint OperationCode;
     uint OperationOption;
-    NtmsLmState State;
+    uint State;
     GUID PartitionId;
     GUID DriveId;
     GUID PhysMediaId;
@@ -2031,9 +2030,9 @@ struct NTMS_LIBREQUESTINFORMATIONA
 }
 struct NTMS_LIBREQUESTINFORMATIONW
 {
-    NtmsLmOperation OperationCode;
+    uint OperationCode;
     uint OperationOption;
-    NtmsLmState State;
+    uint State;
     GUID PartitionId;
     GUID DriveId;
     GUID PhysMediaId;
@@ -2072,13 +2071,13 @@ enum : int
 
 struct NTMS_OPREQUESTINFORMATIONA
 {
-    NtmsOpreqCommand Request;
+    uint Request;
     SYSTEMTIME Submitted;
-    NtmsOpreqState State;
+    uint State;
     CHAR[256] szMessage;
-    NtmsObjectsTypes Arg1Type;
+    uint Arg1Type;
     GUID Arg1;
-    NtmsObjectsTypes Arg2Type;
+    uint Arg2Type;
     GUID Arg2;
     CHAR[64] szApplication;
     CHAR[64] szUser;
@@ -2086,13 +2085,13 @@ struct NTMS_OPREQUESTINFORMATIONA
 }
 struct NTMS_OPREQUESTINFORMATIONW
 {
-    NtmsOpreqCommand Request;
+    uint Request;
     SYSTEMTIME Submitted;
-    NtmsOpreqState State;
+    uint State;
     wchar[256] szMessage;
-    NtmsObjectsTypes Arg1Type;
+    uint Arg1Type;
     GUID Arg1;
-    NtmsObjectsTypes Arg2Type;
+    uint Arg2Type;
     GUID Arg2;
     wchar[64] szApplication;
     wchar[64] szUser;
@@ -2141,12 +2140,12 @@ enum : int
 struct NTMS_OBJECTINFORMATIONA
 {
     uint dwSize;
-    NtmsObjectsTypes dwType;
+    uint dwType;
     SYSTEMTIME Created;
     SYSTEMTIME Modified;
     GUID ObjectGuid;
     BOOL Enabled;
-    NtmsOperationalState dwOperationalState;
+    uint dwOperationalState;
     CHAR[64] szName;
     CHAR[127] szDescription;
     union _Info_e__Union
@@ -2172,12 +2171,12 @@ struct NTMS_OBJECTINFORMATIONA
 struct NTMS_OBJECTINFORMATIONW
 {
     uint dwSize;
-    NtmsObjectsTypes dwType;
+    uint dwType;
     SYSTEMTIME Created;
     SYSTEMTIME Modified;
     GUID ObjectGuid;
     BOOL Enabled;
-    NtmsOperationalState dwOperationalState;
+    uint dwOperationalState;
     wchar[64] szName;
     wchar[127] szDescription;
     union _Info_e__Union
@@ -2482,7 +2481,7 @@ enum : int
 
 struct NTMS_NOTIFICATIONINFORMATION
 {
-    NtmsNotificationOperations dwOperation;
+    uint dwOperation;
     GUID ObjectId;
 }
 struct MediaLabelInfo
@@ -3388,10 +3387,6 @@ struct IORING_REGISTERED_BUFFER
     uint BufferIndex;
     uint Offset;
 }
-struct HIORING__
-{
-    int unused;
-}
 alias IORING_SQE_FLAGS = int;
 enum : int
 {
@@ -3571,6 +3566,22 @@ enum : int
     BusTypeUfs               = 0x00000013,
     BusTypeMax               = 0x00000014,
     BusTypeMaxReserved       = 0x0000007f,
+}
+
+alias FILE_WRITE_FLAGS = int;
+enum : int
+{
+    FILE_WRITE_FLAGS_NONE          = 0x00000000,
+    FILE_WRITE_FLAGS_WRITE_THROUGH = 0x00000001,
+}
+
+alias FILE_FLUSH_MODE = int;
+enum : int
+{
+    FILE_FLUSH_DEFAULT      = 0x00000000,
+    FILE_FLUSH_DATA         = 0x00000001,
+    FILE_FLUSH_MIN_METADATA = 0x00000002,
+    FILE_FLUSH_NO_SYNC      = 0x00000003,
 }
 
 struct OFSTRUCT
@@ -3779,6 +3790,10 @@ struct FILE_ATTRIBUTE_TAG_INFO
 {
     uint FileAttributes;
     uint ReparseTag;
+}
+struct FILE_DISPOSITION_INFO_EX
+{
+    FILE_DISPOSITION_INFO_EX_FLAGS Flags;
 }
 struct FILE_ID_BOTH_DIR_INFO
 {

@@ -2,10 +2,12 @@ module windows.win32.devices.tapi;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, CHAR, HANDLE, HINSTANCE, HRESULT, HWND, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL, WPARAM;
-import windows.win32.media.directshow_ : ALLOCATOR_PROPERTIES;
+import windows.win32.media.directshow : ALLOCATOR_PROPERTIES;
 import windows.win32.media.mediafoundation : AM_MEDIA_TYPE;
 import windows.win32.system.addressbook : IAddrBook, IMAPITable, IMessage, SPropTagArray, SPropValue;
-import windows.win32.system.com_ : CY, IDispatch, IEnumUnknown, IStream, IUnknown, VARIANT;
+import windows.win32.system.com : CY, IDispatch, IEnumUnknown, IStream, IUnknown;
+import windows.win32.system.variant : VARIANT;
+import windows.win32.ui.windowsandmessaging : HICON;
 
 version (Windows):
 extern (Windows):
@@ -90,9 +92,9 @@ int lineGetDevConfigA(uint, VARSTRING*, const(char)*);
 int lineGetDevConfigW(uint, VARSTRING*, const(wchar)*);
 int lineGetGroupListA(uint, LINEAGENTGROUPLIST*);
 int lineGetGroupListW(uint, LINEAGENTGROUPLIST*);
-int lineGetIcon(uint, const(char)*, long*);
-int lineGetIconA(uint, const(char)*, long*);
-int lineGetIconW(uint, const(wchar)*, long*);
+int lineGetIcon(uint, const(char)*, HICON*);
+int lineGetIconA(uint, const(char)*, HICON*);
+int lineGetIconW(uint, const(wchar)*, HICON*);
 int lineGetID(uint, uint, uint, uint, VARSTRING*, const(char)*);
 int lineGetIDA(uint, uint, uint, uint, VARSTRING*, const(char)*);
 int lineGetIDW(uint, uint, uint, uint, VARSTRING*, const(wchar)*);
@@ -217,9 +219,9 @@ int phoneGetDevCapsW(uint, uint, uint, uint, PHONECAPS*);
 int phoneGetDisplay(uint, VARSTRING*);
 int phoneGetGain(uint, uint, uint*);
 int phoneGetHookSwitch(uint, uint*);
-int phoneGetIcon(uint, const(char)*, long*);
-int phoneGetIconA(uint, const(char)*, long*);
-int phoneGetIconW(uint, const(wchar)*, long*);
+int phoneGetIcon(uint, const(char)*, HICON*);
+int phoneGetIconA(uint, const(char)*, HICON*);
+int phoneGetIconW(uint, const(wchar)*, HICON*);
 int phoneGetID(uint, VARSTRING*, const(char)*);
 int phoneGetIDA(uint, VARSTRING*, const(char)*);
 int phoneGetIDW(uint, VARSTRING*, const(wchar)*);
@@ -1390,6 +1392,15 @@ enum atypFile = 0x00000001;
 enum atypOle = 0x00000002;
 enum atypPicture = 0x00000003;
 enum atypMax = 0x00000004;
+alias HDRVCALL = void*;
+alias HDRVLINE = void*;
+alias HDRVPHONE = void*;
+alias HDRVMSPLINE = void*;
+alias HDRVDIALOGINSTANCE = void*;
+alias HTAPICALL = void*;
+alias HTAPILINE = void*;
+alias HTAPIPHONE = void*;
+alias HPROVIDER = void*;
 alias LINECALLBACK = void function(uint, uint, ulong, ulong, ulong, ulong);
 alias PHONECALLBACK = void function(uint, uint, ulong, ulong, ulong, ulong);
 struct LINEADDRESSCAPS
@@ -2473,66 +2484,18 @@ struct VARSTRING
     uint dwStringSize;
     uint dwStringOffset;
 }
-struct HDRVCALL__
-{
-    int unused;
-}
-struct HDRVLINE__
-{
-    int unused;
-}
-struct HDRVPHONE__
-{
-    int unused;
-}
-struct HDRVMSPLINE__
-{
-    int unused;
-}
-struct HDRVDIALOGINSTANCE__
-{
-    int unused;
-}
-struct HTAPICALL__
-{
-    int unused;
-}
-struct HTAPILINE__
-{
-    int unused;
-}
-struct HTAPIPHONE__
-{
-    int unused;
-}
-struct HPROVIDER__
-{
-    int unused;
-}
 alias ASYNC_COMPLETION = void function(uint, int);
-alias LINEEVENT = void function(HTAPILINE__*, HTAPICALL__*, uint, ulong, ulong, ulong);
-alias PHONEEVENT = void function(HTAPIPHONE__*, uint, ulong, ulong, ulong);
+alias LINEEVENT = void function(HTAPILINE, HTAPICALL, uint, ulong, ulong, ulong);
+alias PHONEEVENT = void function(HTAPIPHONE, uint, ulong, ulong, ulong);
 alias TUISPIDLLCALLBACK = int function(ulong, uint, void*, uint);
 struct TUISPICREATEDIALOGINSTANCEPARAMS
 {
     uint dwRequestID;
-    HDRVDIALOGINSTANCE__* hdDlgInst;
+    HDRVDIALOGINSTANCE hdDlgInst;
     uint htDlgInst;
     const(wchar)* lpszUIDLLName;
     void* lpParams;
     uint dwSize;
-}
-enum CLSID_TAPI = GUID(0x21d6d48e, 0xa88b, 0x11d0, [0x83, 0xdd, 0x0, 0xaa, 0x0, 0x3c, 0xca, 0xbd]);
-struct TAPI
-{
-}
-enum CLSID_DispatchMapper = GUID(0xe9225296, 0xc759, 0x11d1, [0xa0, 0x2b, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
-struct DispatchMapper
-{
-}
-enum CLSID_RequestMakeCall = GUID(0xac48ffe0, 0xf8c4, 0x11d1, [0xa0, 0x30, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
-struct RequestMakeCall
-{
 }
 alias TAPI_TONEMODE = int;
 enum : int
@@ -4315,8 +4278,16 @@ enum IID_ITTAPIDispatchEventNotification = GUID(0x9f34325b, 0x7e62, 0x11d2, [0x9
 interface ITTAPIDispatchEventNotification : IDispatch
 {
 }
-enum CLSID_Rendezvous = GUID(0xf1029e5b, 0xcb5b, 0x11d0, [0x8d, 0x59, 0x0, 0xc0, 0x4f, 0xd9, 0x1a, 0xc0]);
-struct Rendezvous
+enum CLSID_TAPI = GUID(0x21d6d48e, 0xa88b, 0x11d0, [0x83, 0xdd, 0x0, 0xaa, 0x0, 0x3c, 0xca, 0xbd]);
+struct TAPI
+{
+}
+enum CLSID_DispatchMapper = GUID(0xe9225296, 0xc759, 0x11d1, [0xa0, 0x2b, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
+struct DispatchMapper
+{
+}
+enum CLSID_RequestMakeCall = GUID(0xac48ffe0, 0xf8c4, 0x11d1, [0xa0, 0x30, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
+struct RequestMakeCall
 {
 }
 alias DIRECTORY_TYPE = int;
@@ -4434,8 +4405,8 @@ interface ITRendezvous : IDispatch
     HRESULT CreateDirectory(DIRECTORY_TYPE, BSTR, ITDirectory*);
     HRESULT CreateDirectoryObject(DIRECTORY_OBJECT_TYPE, BSTR, ITDirectoryObject*);
 }
-enum CLSID_McastAddressAllocation = GUID(0xdf0daef2, 0xa289, 0x11d1, [0x86, 0x97, 0x0, 0x60, 0x8, 0xb0, 0xe5, 0xd2]);
-struct McastAddressAllocation
+enum CLSID_Rendezvous = GUID(0xf1029e5b, 0xcb5b, 0x11d0, [0x8d, 0x59, 0x0, 0xc0, 0x4f, 0xd9, 0x1a, 0xc0]);
+struct Rendezvous
 {
 }
 enum IID_IMcastScope = GUID(0xdf0daef4, 0xa289, 0x11d1, [0x86, 0x97, 0x0, 0x60, 0x8, 0xb0, 0xe5, 0xd2]);
@@ -4479,6 +4450,10 @@ interface IMcastAddressAllocation : IDispatch
     HRESULT ReleaseAddress(IMcastLeaseInfo);
     HRESULT CreateLeaseInfo(double, double, uint, PWSTR*, PWSTR, PWSTR, IMcastLeaseInfo*);
     HRESULT CreateLeaseInfoFromVariant(double, double, VARIANT, BSTR, BSTR, IMcastLeaseInfo*);
+}
+enum CLSID_McastAddressAllocation = GUID(0xdf0daef2, 0xa289, 0x11d1, [0x86, 0x97, 0x0, 0x60, 0x8, 0xb0, 0xe5, 0xd2]);
+struct McastAddressAllocation
+{
 }
 struct STnefProblem
 {

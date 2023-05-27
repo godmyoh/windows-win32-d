@@ -3,8 +3,9 @@ module windows.win32.system.mmc;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, COLORREF, HRESULT, HWND, LPARAM, LRESULT, PWSTR, VARIANT_BOOL;
 import windows.win32.graphics.gdi : HBITMAP, HPALETTE;
-import windows.win32.system.com_ : IDataObject, IDispatch, IEnumString, IUnknown, VARIANT;
-import windows.win32.ui.controls_ : HPROPSHEETPAGE;
+import windows.win32.system.com : IDataObject, IDispatch, IEnumString, IUnknown;
+import windows.win32.system.variant : VARIANT;
+import windows.win32.ui.controls : HPROPSHEETPAGE;
 import windows.win32.ui.windowsandmessaging : HICON;
 
 version (Windows):
@@ -98,14 +99,6 @@ enum MMC_DEFAULT_OPERATION_COPY = 0x00000001;
 enum MMC_ITEM_OVERLAY_STATE_MASK = 0x00000f00;
 enum MMC_ITEM_OVERLAY_STATE_SHIFT = 0x00000008;
 enum MMC_ITEM_STATE_MASK = 0x000000ff;
-enum CLSID_Application = GUID(0x49b2791a, 0xb1ae, 0x4c90, [0x9b, 0x8e, 0xe8, 0x60, 0xba, 0x7, 0xf8, 0x89]);
-struct Application
-{
-}
-enum CLSID_AppEventsDHTMLConnector = GUID(0xade6444b, 0xc91f, 0x4e37, [0x92, 0xa4, 0x5b, 0xb4, 0x30, 0xa3, 0x33, 0x40]);
-struct AppEventsDHTMLConnector
-{
-}
 alias MMC_PROPERTY_ACTION = int;
 enum : int
 {
@@ -206,11 +199,19 @@ enum IID_AppEvents = GUID(0xfc7a4252, 0x78ac, 0x4532, [0x8c, 0x5a, 0x56, 0x3c, 0
 interface AppEvents : IDispatch
 {
 }
+enum CLSID_Application = GUID(0x49b2791a, 0xb1ae, 0x4c90, [0x9b, 0x8e, 0xe8, 0x60, 0xba, 0x7, 0xf8, 0x89]);
+struct Application
+{
+}
 enum IID__EventConnector = GUID(0xc0bccd30, 0xde44, 0x4528, [0x84, 0x3, 0xa0, 0x5a, 0x6a, 0x1c, 0xc8, 0xea]);
 interface _EventConnector : IDispatch
 {
     HRESULT ConnectTo(_Application);
     HRESULT Disconnect();
+}
+enum CLSID_AppEventsDHTMLConnector = GUID(0xade6444b, 0xc91f, 0x4e37, [0x92, 0xa4, 0x5b, 0xb4, 0x30, 0xa3, 0x33, 0x40]);
+struct AppEventsDHTMLConnector
+{
 }
 enum IID_Frame = GUID(0xe5e2d970, 0x5bb3, 0x4306, [0x88, 0x4, 0xb0, 0x96, 0x8a, 0x31, 0xc8, 0xe6]);
 interface Frame : IDispatch
@@ -422,14 +423,6 @@ interface Property : IDispatch
     HRESULT get_Value(VARIANT*);
     HRESULT put_Value(VARIANT);
     HRESULT get_Name(BSTR*);
-}
-enum CLSID_MMCVersionInfo = GUID(0xd6fedb1d, 0xcf21, 0x4bd9, [0xaf, 0x3b, 0xc5, 0x46, 0x8e, 0x9c, 0x66, 0x84]);
-struct MMCVersionInfo
-{
-}
-enum CLSID_ConsolePower = GUID(0xf0285374, 0xdff1, 0x11d3, [0xb4, 0x33, 0x0, 0xc0, 0x4f, 0x8e, 0xcd, 0x78]);
-struct ConsolePower
-{
 }
 alias MMC_RESULT_VIEW_STYLE = int;
 enum : int
@@ -1162,6 +1155,14 @@ enum IID_IMMCVersionInfo = GUID(0xa8d2c5fe, 0xcdcb, 0x4b9d, [0xbd, 0xe5, 0xa2, 0
 interface IMMCVersionInfo : IUnknown
 {
     HRESULT GetMMCVersion(int*, int*);
+}
+enum CLSID_MMCVersionInfo = GUID(0xd6fedb1d, 0xcf21, 0x4bd9, [0xaf, 0x3b, 0xc5, 0x46, 0x8e, 0x9c, 0x66, 0x84]);
+struct MMCVersionInfo
+{
+}
+enum CLSID_ConsolePower = GUID(0xf0285374, 0xdff1, 0x11d3, [0xb4, 0x33, 0x0, 0xc0, 0x4f, 0x8e, 0xcd, 0x78]);
+struct ConsolePower
+{
 }
 enum IID_IExtendView = GUID(0x89995cee, 0xd2ed, 0x4c0e, [0xae, 0x5e, 0xdf, 0x7e, 0x76, 0xf3, 0xfa, 0x53]);
 interface IExtendView : IUnknown

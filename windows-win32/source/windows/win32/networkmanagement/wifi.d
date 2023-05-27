@@ -4,7 +4,7 @@ import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BOOLEAN, HANDLE, HRESULT, HWND, PWSTR;
 import windows.win32.networkmanagement.ndis : NDIS_OBJECT_HEADER;
 import windows.win32.security.extensibleauthenticationprotocol : EAP_ATTRIBUTES, EAP_METHOD_TYPE;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 import windows.win32.system.remotedesktop : WTSSESSION_NOTIFICATION;
 
 version (Windows):
@@ -3723,10 +3723,6 @@ struct ONEX_USER_INFO
     ONEX_VARIABLE_BLOB UserName;
     ONEX_VARIABLE_BLOB DomainName;
 }
-enum CLSID_Dot11AdHocManager = GUID(0xdd06a84f, 0x83bd, 0x4d01, [0x8a, 0xb9, 0x23, 0x89, 0xfe, 0xa0, 0x86, 0x9e]);
-struct Dot11AdHocManager
-{
-}
 alias DOT11_ADHOC_CIPHER_ALGORITHM = int;
 enum : int
 {
@@ -3848,6 +3844,10 @@ enum IID_IDot11AdHocInterfaceNotificationSink = GUID(0x8f10cc2f, 0xcf0d, 0x42a0,
 interface IDot11AdHocInterfaceNotificationSink : IUnknown
 {
     HRESULT OnConnectionStatusChange(DOT11_ADHOC_NETWORK_CONNECTION_STATUS);
+}
+enum CLSID_Dot11AdHocManager = GUID(0xdd06a84f, 0x83bd, 0x4d01, [0x8a, 0xb9, 0x23, 0x89, 0xfe, 0xa0, 0x86, 0x9e]);
+struct Dot11AdHocManager
+{
 }
 struct DOT11_ADAPTER
 {

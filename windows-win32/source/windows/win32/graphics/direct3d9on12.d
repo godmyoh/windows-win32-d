@@ -4,7 +4,7 @@ import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HRESULT;
 import windows.win32.graphics.direct3d12 : ID3D12CommandQueue, ID3D12Fence;
 import windows.win32.graphics.direct3d9 : IDirect3D9, IDirect3D9Ex, IDirect3DResource9;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):

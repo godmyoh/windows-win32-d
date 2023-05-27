@@ -1,7 +1,7 @@
 module windows.win32.system.jobobjects;
 
 import windows.win32.foundation : BOOL, HANDLE, PSTR, PWSTR;
-import windows.win32.security_ : SECURITY_ATTRIBUTES, TOKEN_GROUPS, TOKEN_PRIVILEGES;
+import windows.win32.security : SECURITY_ATTRIBUTES, TOKEN_GROUPS, TOKEN_PRIVILEGES;
 import windows.win32.system.threading : IO_COUNTERS;
 
 version (Windows):
@@ -88,7 +88,7 @@ struct JOBOBJECT_IO_RATE_CONTROL_INFORMATION
     long ReservationIops;
     const(wchar)* VolumeName;
     uint BaseIoSize;
-    JOB_OBJECT_IO_RATE_CONTROL_FLAGS ControlFlags;
+    uint ControlFlags;
 }
 BOOL IsProcessInJob(HANDLE, HANDLE, BOOL*);
 HANDLE CreateJobObjectW(SECURITY_ATTRIBUTES*, const(wchar)*);

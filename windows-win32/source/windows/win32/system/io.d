@@ -1,6 +1,6 @@
 module windows.win32.system.io;
 
-import windows.win32.foundation : BOOL, HANDLE;
+import windows.win32.foundation : BOOL, HANDLE, NTSTATUS;
 
 version (Windows):
 extern (Windows):
@@ -39,3 +39,13 @@ BOOL CancelIo(HANDLE);
 BOOL GetOverlappedResultEx(HANDLE, OVERLAPPED*, uint*, uint, BOOL);
 BOOL CancelSynchronousIo(HANDLE);
 BOOL BindIoCompletionCallback(HANDLE, LPOVERLAPPED_COMPLETION_ROUTINE, uint);
+struct IO_STATUS_BLOCK
+{
+    union
+    {
+        NTSTATUS Status;
+        void* Pointer;
+    }
+    ulong Information;
+}
+alias PIO_APC_ROUTINE = void function(void*, IO_STATUS_BLOCK*, uint);

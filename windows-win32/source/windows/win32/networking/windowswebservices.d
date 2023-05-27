@@ -2,9 +2,9 @@ module windows.win32.networking.windowswebservices;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, CHAR, DECIMAL, FILETIME, HRESULT, HWND, PWSTR;
-import windows.win32.security.authentication.identity_ : SecPkgContext_IssuerListInfoEx;
-import windows.win32.security.cryptography_ : CERT_CONTEXT, NCRYPT_KEY_HANDLE;
-import windows.win32.system.winrt_ : IInspectable;
+import windows.win32.security.authentication.identity : SecPkgContext_IssuerListInfoEx;
+import windows.win32.security.cryptography : CERT_CONTEXT, NCRYPT_KEY_HANDLE;
+import windows.win32.system.winrt : IInspectable;
 
 version (Windows):
 extern (Windows):
@@ -210,6 +210,9 @@ void WebAuthNFreeCredentialAttestation(WEBAUTHN_CREDENTIAL_ATTESTATION*);
 void WebAuthNFreeAssertion(WEBAUTHN_ASSERTION*);
 HRESULT WebAuthNGetCancellationId(GUID*);
 HRESULT WebAuthNCancelCurrentOperation(const(GUID)*);
+HRESULT WebAuthNGetPlatformCredentialList(WEBAUTHN_GET_CREDENTIALS_OPTIONS*, WEBAUTHN_CREDENTIAL_DETAILS_LIST**);
+void WebAuthNFreePlatformCredentialList(WEBAUTHN_CREDENTIAL_DETAILS_LIST*);
+HRESULT WebAuthNDeletePlatformCredential(uint, const(ubyte)*);
 PWSTR WebAuthNGetErrorName(HRESULT);
 HRESULT WebAuthNGetW3CExceptionDOMError(HRESULT);
 enum WEBAUTHN_API_VERSION_1 = 0x00000001;
@@ -360,51 +363,21 @@ enum WS_SERVICE_OPERATION_MESSAGE_NILLABLE_ELEMENT = 0x00000001;
 enum WS_URL_FLAGS_ALLOW_HOST_WILDCARDS = 0x00000001;
 enum WS_URL_FLAGS_NO_PATH_COLLAPSE = 0x00000002;
 enum WS_URL_FLAGS_ZERO_TERMINATE = 0x00000004;
-struct WS_XML_READER
-{
-}
-struct WS_XML_WRITER
-{
-}
-struct WS_XML_BUFFER
-{
-}
-struct WS_CHANNEL
-{
-}
-struct WS_OPERATION_CONTEXT
-{
-}
-struct WS_ERROR
-{
-}
-struct WS_HEAP
-{
-}
-struct WS_LISTENER
-{
-}
-struct WS_MESSAGE
-{
-}
-struct WS_SECURITY_TOKEN
-{
-}
-struct WS_SECURITY_CONTEXT
-{
-}
-struct WS_SERVICE_HOST
-{
-}
-struct WS_SERVICE_PROXY
-{
-}
-struct WS_METADATA
-{
-}
-struct WS_POLICY
-{
-}
+alias WS_CHANNEL = long;
+alias WS_ERROR = long;
+alias WS_HEAP = long;
+alias WS_LISTENER = long;
+alias WS_MESSAGE = long;
+alias WS_METADATA = long;
+alias WS_OPERATION_CONTEXT = long;
+alias WS_POLICY = long;
+alias WS_SECURITY_CONTEXT = long;
+alias WS_SECURITY_TOKEN = long;
+alias WS_SERVICE_HOST = long;
+alias WS_SERVICE_PROXY = long;
+alias WS_XML_BUFFER = long;
+alias WS_XML_READER = long;
+alias WS_XML_WRITER = long;
 alias WS_XML_READER_PROPERTY_ID = int;
 enum : int
 {

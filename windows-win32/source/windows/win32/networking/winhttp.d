@@ -44,8 +44,8 @@ enum : uint
     WINHTTP_AUTH_SCHEME_NEGOTIATE = 0x00000010,
 }
 
-alias WINHTTP_INTERNET_SCHEME = uint;
-enum : uint
+alias WINHTTP_INTERNET_SCHEME = int;
+enum : int
 {
     WINHTTP_INTERNET_SCHEME_HTTP  = 0x00000001,
     WINHTTP_INTERNET_SCHEME_HTTPS = 0x00000002,
@@ -104,6 +104,11 @@ uint WinHttpWebSocketReceive(void*, void*, uint, uint*, WINHTTP_WEB_SOCKET_BUFFE
 uint WinHttpWebSocketShutdown(void*, ushort, void*, uint);
 uint WinHttpWebSocketClose(void*, ushort, void*, uint);
 uint WinHttpWebSocketQueryCloseStatus(void*, ushort*, void*, uint, uint*);
+uint WinHttpRegisterProxyChangeNotification(ulong, WINHTTP_PROXY_CHANGE_CALLBACK, void*, void**);
+uint WinHttpUnregisterProxyChangeNotification(void*);
+uint WinHttpGetProxySettingsEx(void*, WINHTTP_PROXY_SETTINGS_TYPE, WINHTTP_PROXY_SETTINGS_PARAM*, ulong);
+uint WinHttpGetProxySettingsResultEx(void*, void*);
+uint WinHttpFreeProxySettingsEx(WINHTTP_PROXY_SETTINGS_TYPE, void*);
 enum INTERNET_DEFAULT_PORT = 0x0000;
 enum INTERNET_DEFAULT_HTTP_PORT = 0x0050;
 enum INTERNET_DEFAULT_HTTPS_PORT = 0x01bb;

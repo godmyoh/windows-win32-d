@@ -1,8 +1,8 @@
 module windows.win32.networking.winsock;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, CHAR, FARPROC, HANDLE, HRESULT, HWND, LPARAM, LUID, PSTR, PWSTR, WPARAM;
-import windows.win32.system.com_ : BLOB;
+import windows.win32.foundation : BOOL, BOOLEAN, CHAR, FARPROC, HANDLE, HRESULT, HWND, LPARAM, LUID, PSTR, PWSTR, WAIT_EVENT, WPARAM;
+import windows.win32.system.com : BLOB;
 import windows.win32.system.io : OVERLAPPED, OVERLAPPED_ENTRY;
 import windows.win32.system.kernel : COMPARTMENT_ID, PROCESSOR_NUMBER;
 
@@ -283,7 +283,7 @@ int WSASendTo(SOCKET, WSABUF*, uint, uint*, uint, const(SOCKADDR)*, int, OVERLAP
 BOOL WSASetEvent(HANDLE);
 SOCKET WSASocketA(int, int, int, WSAPROTOCOL_INFOA*, uint, uint);
 SOCKET WSASocketW(int, int, int, WSAPROTOCOL_INFOW*, uint, uint);
-uint WSAWaitForMultipleEvents(uint, const(HANDLE)*, BOOL, uint, BOOL);
+WAIT_EVENT WSAWaitForMultipleEvents(uint, const(HANDLE)*, BOOL, uint, BOOL);
 int WSAAddressToStringA(SOCKADDR*, uint, WSAPROTOCOL_INFOA*, PSTR, uint*);
 int WSAAddressToStringW(SOCKADDR*, uint, WSAPROTOCOL_INFOW*, PWSTR, uint*);
 int WSAStringToAddressA(PSTR, int, WSAPROTOCOL_INFOA*, SOCKADDR*, int*);
@@ -495,6 +495,8 @@ enum AF_ICLFXBM = 0x001f;
 enum AF_LINK = 0x0021;
 enum AF_HYPERV = 0x0022;
 enum SOL_SOCKET = 0x0000ffff;
+enum SOL_IP = 0x0000fffb;
+enum SOL_IPV6 = 0x0000fffa;
 enum SO_DEBUG = 0x00000001;
 enum SO_ACCEPTCONN = 0x00000002;
 enum SO_REUSEADDR = 0x00000004;
@@ -1509,19 +1511,13 @@ enum LM_HB1_Fax = 0x00000020;
 enum LM_HB1_LANAccess = 0x00000040;
 enum LM_HB2_Telephony = 0x00000001;
 enum LM_HB2_FileServer = 0x00000002;
-struct RIO_BUFFERID_t
-{
-}
-struct RIO_CQ_t
-{
-}
-struct RIO_RQ_t
-{
-}
-alias HWSAEVENT = void*;
+alias WSAEVENT = long;
 alias SOCKET = ulong;
 alias socklen_t = int;
 alias sa_family_t = ushort;
+alias RIO_BUFFERID = long;
+alias RIO_CQ = long;
+alias RIO_RQ = long;
 struct FLOWSPEC
 {
     uint TokenRate;
@@ -3078,7 +3074,7 @@ struct RIORESULT
 }
 struct RIO_BUF
 {
-    RIO_BUFFERID_t* BufferId;
+    RIO_BUFFERID BufferId;
     uint Offset;
     uint Length;
 }
@@ -3380,11 +3376,11 @@ struct WSASENDMSG
 }
 alias LPFN_WSASENDMSG = int function(SOCKET, WSAMSG*, uint, uint*, OVERLAPPED*, LPWSAOVERLAPPED_COMPLETION_ROUTINE);
 alias LPFN_WSAPOLL = int function(WSAPOLLFD*, uint, int);
-alias LPFN_RIORECEIVE = BOOL function(RIO_RQ_t*, RIO_BUF*, uint, uint, void*);
-alias LPFN_RIORECEIVEEX = int function(RIO_RQ_t*, RIO_BUF*, uint, RIO_BUF*, RIO_BUF*, RIO_BUF*, RIO_BUF*, uint, void*);
-alias LPFN_RIOSEND = BOOL function(RIO_RQ_t*, RIO_BUF*, uint, uint, void*);
-alias LPFN_RIOSENDEX = BOOL function(RIO_RQ_t*, RIO_BUF*, uint, RIO_BUF*, RIO_BUF*, RIO_BUF*, RIO_BUF*, uint, void*);
-alias LPFN_RIOCLOSECOMPLETIONQUEUE = void function(RIO_CQ_t*);
+alias LPFN_RIORECEIVE = BOOL function(RIO_RQ, RIO_BUF*, uint, uint, void*);
+alias LPFN_RIORECEIVEEX = int function(RIO_RQ, RIO_BUF*, uint, RIO_BUF*, RIO_BUF*, RIO_BUF*, RIO_BUF*, uint, void*);
+alias LPFN_RIOSEND = BOOL function(RIO_RQ, RIO_BUF*, uint, uint, void*);
+alias LPFN_RIOSENDEX = BOOL function(RIO_RQ, RIO_BUF*, uint, RIO_BUF*, RIO_BUF*, RIO_BUF*, RIO_BUF*, uint, void*);
+alias LPFN_RIOCLOSECOMPLETIONQUEUE = void function(RIO_CQ);
 alias RIO_NOTIFICATION_COMPLETION_TYPE = int;
 enum : int
 {
@@ -3410,14 +3406,14 @@ struct RIO_NOTIFICATION_COMPLETION
         }
     }
 }
-alias LPFN_RIOCREATECOMPLETIONQUEUE = RIO_CQ_t* function(uint, RIO_NOTIFICATION_COMPLETION*);
-alias LPFN_RIOCREATEREQUESTQUEUE = RIO_RQ_t* function(SOCKET, uint, uint, uint, uint, RIO_CQ_t*, RIO_CQ_t*, void*);
-alias LPFN_RIODEQUEUECOMPLETION = uint function(RIO_CQ_t*, RIORESULT*, uint);
-alias LPFN_RIODEREGISTERBUFFER = void function(RIO_BUFFERID_t*);
-alias LPFN_RIONOTIFY = int function(RIO_CQ_t*);
-alias LPFN_RIOREGISTERBUFFER = RIO_BUFFERID_t* function(PSTR, uint);
-alias LPFN_RIORESIZECOMPLETIONQUEUE = BOOL function(RIO_CQ_t*, uint);
-alias LPFN_RIORESIZEREQUESTQUEUE = BOOL function(RIO_RQ_t*, uint, uint);
+alias LPFN_RIOCREATECOMPLETIONQUEUE = RIO_CQ function(uint, RIO_NOTIFICATION_COMPLETION*);
+alias LPFN_RIOCREATEREQUESTQUEUE = RIO_RQ function(SOCKET, uint, uint, uint, uint, RIO_CQ, RIO_CQ, void*);
+alias LPFN_RIODEQUEUECOMPLETION = uint function(RIO_CQ, RIORESULT*, uint);
+alias LPFN_RIODEREGISTERBUFFER = void function(RIO_BUFFERID);
+alias LPFN_RIONOTIFY = int function(RIO_CQ);
+alias LPFN_RIOREGISTERBUFFER = RIO_BUFFERID function(PSTR, uint);
+alias LPFN_RIORESIZECOMPLETIONQUEUE = BOOL function(RIO_CQ, uint);
+alias LPFN_RIORESIZEREQUESTQUEUE = BOOL function(RIO_RQ, uint, uint);
 struct RIO_EXTENSION_FUNCTION_TABLE
 {
     uint cbSize;

@@ -3,7 +3,7 @@ module windows.win32.graphics.compositionswapchain;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : HANDLE, HRESULT, LUID, RECT;
 import windows.win32.graphics.dxgi.common : DXGI_ALPHA_MODE, DXGI_COLOR_SPACE_TYPE;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):

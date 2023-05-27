@@ -2,7 +2,7 @@ module windows.win32.graphics.dxcore;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : HRESULT, LUID;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):

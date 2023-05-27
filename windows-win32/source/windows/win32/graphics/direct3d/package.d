@@ -1,8 +1,8 @@
-module windows.win32.graphics.direct3d_;
+module windows.win32.graphics.direct3d;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : HRESULT, PSTR;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):
@@ -346,11 +346,10 @@ interface ID3DDestructionNotifier : IUnknown
 alias D3D_INCLUDE_TYPE = int;
 enum : int
 {
-    D3D_INCLUDE_LOCAL       = 0x00000000,
-    D3D_INCLUDE_SYSTEM      = 0x00000001,
-    D3D10_INCLUDE_LOCAL     = 0x00000000,
-    D3D10_INCLUDE_SYSTEM    = 0x00000001,
-    D3D_INCLUDE_FORCE_DWORD = 0x7fffffff,
+    D3D_INCLUDE_LOCAL    = 0x00000000,
+    D3D_INCLUDE_SYSTEM   = 0x00000001,
+    D3D10_INCLUDE_LOCAL  = 0x00000000,
+    D3D10_INCLUDE_SYSTEM = 0x00000001,
 }
 
 // [Not Found] IID_ID3DInclude
@@ -378,7 +377,6 @@ enum : int
     D3D10_SVC_STRUCT            = 0x00000005,
     D3D11_SVC_INTERFACE_CLASS   = 0x00000006,
     D3D11_SVC_INTERFACE_POINTER = 0x00000007,
-    D3D_SVC_FORCE_DWORD         = 0x7fffffff,
 }
 
 alias D3D_SHADER_VARIABLE_FLAGS = int;
@@ -392,7 +390,6 @@ enum : int
     D3D10_SVF_USED                = 0x00000002,
     D3D11_SVF_INTERFACE_POINTER   = 0x00000004,
     D3D11_SVF_INTERFACE_PARAMETER = 0x00000008,
-    D3D_SVF_FORCE_DWORD           = 0x7fffffff,
 }
 
 alias D3D_SHADER_VARIABLE_TYPE = int;
@@ -513,7 +510,6 @@ enum : int
     D3D11_SVT_RWSTRUCTURED_BUFFER       = 0x00000031,
     D3D11_SVT_APPEND_STRUCTURED_BUFFER  = 0x00000032,
     D3D11_SVT_CONSUME_STRUCTURED_BUFFER = 0x00000033,
-    D3D_SVT_FORCE_DWORD                 = 0x7fffffff,
 }
 
 alias D3D_SHADER_INPUT_FLAGS = int;
@@ -530,7 +526,6 @@ enum : int
     D3D10_SIF_TEXTURE_COMPONENT_0 = 0x00000004,
     D3D10_SIF_TEXTURE_COMPONENT_1 = 0x00000008,
     D3D10_SIF_TEXTURE_COMPONENTS  = 0x0000000c,
-    D3D_SIF_FORCE_DWORD           = 0x7fffffff,
 }
 
 alias D3D_SHADER_INPUT_TYPE = int;
@@ -569,7 +564,6 @@ enum : int
 {
     D3D_CBF_USERPACKED   = 0x00000001,
     D3D10_CBF_USERPACKED = 0x00000001,
-    D3D_CBF_FORCE_DWORD  = 0x7fffffff,
 }
 
 alias D3D_CBUFFER_TYPE = int;
@@ -758,10 +752,9 @@ enum : int
 alias D3D_PARAMETER_FLAGS = int;
 enum : int
 {
-    D3D_PF_NONE        = 0x00000000,
-    D3D_PF_IN          = 0x00000001,
-    D3D_PF_OUT         = 0x00000002,
-    D3D_PF_FORCE_DWORD = 0x7fffffff,
+    D3D_PF_NONE = 0x00000000,
+    D3D_PF_IN   = 0x00000001,
+    D3D_PF_OUT  = 0x00000002,
 }
 
 alias D3D_FORMAT_LAYOUT = int;

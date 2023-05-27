@@ -1,28 +1,23 @@
 module windows.win32.system.applicationinstallationandservicing;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, PSTR, PWSTR, VARIANT_BOOL;
-import windows.win32.security.cryptography_ : CERT_CONTEXT;
-import windows.win32.system.com_ : IDispatch, IStream, IUnknown, SAFEARRAY;
+import windows.win32.foundation : BOOL, BSTR, FILETIME, HANDLE, HMODULE, HRESULT, HWND, PSTR, PWSTR, VARIANT_BOOL;
+import windows.win32.security.cryptography : CERT_CONTEXT;
+import windows.win32.system.com : IDispatch, IStream, IUnknown, SAFEARRAY;
 import windows.win32.system.registry : HKEY;
 import windows.win32.system.windowsprogramming : ACTCTX_SECTION_KEYED_DATA_ASSEMBLY_METADATA;
 
 version (Windows):
 extern (Windows):
 
-struct ACTIVATION_CONTEXT_COMPATIBILITY_INFORMATION
-{
-    uint ElementCount;
-    COMPATIBILITY_CONTEXT_ELEMENT* Elements;
-}
 uint MsiCloseHandle(MSIHANDLE);
 uint MsiCloseAllHandles();
 INSTALLUILEVEL MsiSetInternalUI(INSTALLUILEVEL, HWND*);
 INSTALLUI_HANDLERA MsiSetExternalUIA(INSTALLUI_HANDLERA, uint, void*);
 INSTALLUI_HANDLERW MsiSetExternalUIW(INSTALLUI_HANDLERW, uint, void*);
 uint MsiSetExternalUIRecord(PINSTALLUI_HANDLER_RECORD, uint, void*, PINSTALLUI_HANDLER_RECORD);
-uint MsiEnableLogA(INSTALLLOGMODE, const(char)*, uint);
-uint MsiEnableLogW(INSTALLLOGMODE, const(wchar)*, uint);
+uint MsiEnableLogA(uint, const(char)*, uint);
+uint MsiEnableLogW(uint, const(wchar)*, uint);
 INSTALLSTATE MsiQueryProductStateA(const(char)*);
 INSTALLSTATE MsiQueryProductStateW(const(wchar)*);
 uint MsiGetProductInfoA(const(char)*, const(char)*, PSTR, uint*);
@@ -35,8 +30,8 @@ uint MsiConfigureProductA(const(char)*, INSTALLLEVEL, INSTALLSTATE);
 uint MsiConfigureProductW(const(wchar)*, INSTALLLEVEL, INSTALLSTATE);
 uint MsiConfigureProductExA(const(char)*, INSTALLLEVEL, INSTALLSTATE, const(char)*);
 uint MsiConfigureProductExW(const(wchar)*, INSTALLLEVEL, INSTALLSTATE, const(wchar)*);
-uint MsiReinstallProductA(const(char)*, REINSTALLMODE);
-uint MsiReinstallProductW(const(wchar)*, REINSTALLMODE);
+uint MsiReinstallProductA(const(char)*, uint);
+uint MsiReinstallProductW(const(wchar)*, uint);
 uint MsiAdvertiseProductExA(const(char)*, const(char)*, const(char)*, ushort, uint, uint);
 uint MsiAdvertiseProductExW(const(wchar)*, const(wchar)*, const(wchar)*, ushort, uint, uint);
 uint MsiAdvertiseProductA(const(char)*, const(char)*, const(char)*, ushort);
@@ -85,20 +80,20 @@ uint MsiGetFeatureUsageA(const(char)*, const(char)*, uint*, ushort*);
 uint MsiGetFeatureUsageW(const(wchar)*, const(wchar)*, uint*, ushort*);
 uint MsiConfigureFeatureA(const(char)*, const(char)*, INSTALLSTATE);
 uint MsiConfigureFeatureW(const(wchar)*, const(wchar)*, INSTALLSTATE);
-uint MsiReinstallFeatureA(const(char)*, const(char)*, REINSTALLMODE);
-uint MsiReinstallFeatureW(const(wchar)*, const(wchar)*, REINSTALLMODE);
-uint MsiProvideComponentA(const(char)*, const(char)*, const(char)*, INSTALLMODE, PSTR, uint*);
-uint MsiProvideComponentW(const(wchar)*, const(wchar)*, const(wchar)*, INSTALLMODE, PWSTR, uint*);
-uint MsiProvideQualifiedComponentA(const(char)*, const(char)*, INSTALLMODE, PSTR, uint*);
-uint MsiProvideQualifiedComponentW(const(wchar)*, const(wchar)*, INSTALLMODE, PWSTR, uint*);
-uint MsiProvideQualifiedComponentExA(const(char)*, const(char)*, INSTALLMODE, const(char)*, uint, uint, PSTR, uint*);
-uint MsiProvideQualifiedComponentExW(const(wchar)*, const(wchar)*, INSTALLMODE, const(wchar)*, uint, uint, PWSTR, uint*);
+uint MsiReinstallFeatureA(const(char)*, const(char)*, uint);
+uint MsiReinstallFeatureW(const(wchar)*, const(wchar)*, uint);
+uint MsiProvideComponentA(const(char)*, const(char)*, const(char)*, uint, PSTR, uint*);
+uint MsiProvideComponentW(const(wchar)*, const(wchar)*, const(wchar)*, uint, PWSTR, uint*);
+uint MsiProvideQualifiedComponentA(const(char)*, const(char)*, uint, PSTR, uint*);
+uint MsiProvideQualifiedComponentW(const(wchar)*, const(wchar)*, uint, PWSTR, uint*);
+uint MsiProvideQualifiedComponentExA(const(char)*, const(char)*, uint, const(char)*, uint, uint, PSTR, uint*);
+uint MsiProvideQualifiedComponentExW(const(wchar)*, const(wchar)*, uint, const(wchar)*, uint, uint, PWSTR, uint*);
 INSTALLSTATE MsiGetComponentPathA(const(char)*, const(char)*, PSTR, uint*);
 INSTALLSTATE MsiGetComponentPathW(const(wchar)*, const(wchar)*, PWSTR, uint*);
 INSTALLSTATE MsiGetComponentPathExA(const(char)*, const(char)*, const(char)*, MSIINSTALLCONTEXT, PSTR, uint*);
 INSTALLSTATE MsiGetComponentPathExW(const(wchar)*, const(wchar)*, const(wchar)*, MSIINSTALLCONTEXT, PWSTR, uint*);
-uint MsiProvideAssemblyA(const(char)*, const(char)*, INSTALLMODE, MSIASSEMBLYINFO, PSTR, uint*);
-uint MsiProvideAssemblyW(const(wchar)*, const(wchar)*, INSTALLMODE, MSIASSEMBLYINFO, PWSTR, uint*);
+uint MsiProvideAssemblyA(const(char)*, const(char)*, uint, MSIASSEMBLYINFO, PSTR, uint*);
+uint MsiProvideAssemblyW(const(wchar)*, const(wchar)*, uint, MSIASSEMBLYINFO, PWSTR, uint*);
 uint MsiQueryComponentStateA(const(char)*, const(char)*, MSIINSTALLCONTEXT, const(char)*, INSTALLSTATE*);
 uint MsiQueryComponentStateW(const(wchar)*, const(wchar)*, MSIINSTALLCONTEXT, const(wchar)*, INSTALLSTATE*);
 uint MsiEnumProductsA(uint, PSTR);
@@ -115,8 +110,8 @@ uint MsiEnumComponentsExA(const(char)*, uint, uint, PSTR, MSIINSTALLCONTEXT*, PS
 uint MsiEnumComponentsExW(const(wchar)*, uint, uint, PWSTR, MSIINSTALLCONTEXT*, PWSTR, uint*);
 uint MsiEnumClientsA(const(char)*, uint, PSTR);
 uint MsiEnumClientsW(const(wchar)*, uint, PWSTR);
-uint MsiEnumClientsExA(const(char)*, const(char)*, MSIINSTALLCONTEXT, uint, PSTR, MSIINSTALLCONTEXT*, PSTR, uint*);
-uint MsiEnumClientsExW(const(wchar)*, const(wchar)*, MSIINSTALLCONTEXT, uint, PWSTR, MSIINSTALLCONTEXT*, PWSTR, uint*);
+uint MsiEnumClientsExA(const(char)*, const(char)*, uint, uint, PSTR, MSIINSTALLCONTEXT*, PSTR, uint*);
+uint MsiEnumClientsExW(const(wchar)*, const(wchar)*, uint, uint, PWSTR, MSIINSTALLCONTEXT*, PWSTR, uint*);
 uint MsiEnumComponentQualifiersA(const(char)*, uint, PSTR, uint*, PSTR, uint*);
 uint MsiEnumComponentQualifiersW(const(wchar)*, uint, PWSTR, uint*, PWSTR, uint*);
 uint MsiOpenProductA(const(char)*, MSIHANDLE*);
@@ -337,6 +332,12 @@ BOOL FindActCtxSectionStringW(uint, const(GUID)*, uint, const(wchar)*, ACTCTX_SE
 BOOL FindActCtxSectionGuid(uint, const(GUID)*, uint, const(GUID)*, ACTCTX_SECTION_KEYED_DATA*);
 BOOL QueryActCtxW(uint, HANDLE, void*, uint, void*, ulong, ulong*);
 BOOL QueryActCtxSettingsW(uint, HANDLE, const(wchar)*, const(wchar)*, PWSTR, ulong, ulong*);
+enum MSIDBOPEN_READONLY = 0x00000000;
+enum MSIDBOPEN_TRANSACT = 0x00000001;
+enum MSIDBOPEN_DIRECT = 0x00000002;
+enum MSIDBOPEN_CREATE = 0x00000003;
+enum MSIDBOPEN_CREATEDIRECT = 0x00000004;
+enum MSIDBOPEN_PATCHFILE = 0x00000010;
 enum UIALL = 0x00008000;
 enum LOGTOKEN_TYPE_MASK = 0x00000003;
 enum LOGTOKEN_UNSPECIFIED = 0x00000000;
@@ -1011,10 +1012,6 @@ interface IValidate : IUnknown
     HRESULT SetStatus(LPEVALCOMCALLBACK, void*);
     HRESULT Validate(const(wchar)*);
 }
-enum CLSID_MsmMerge = GUID(0xadda830, 0x2c26, 0x11d2, [0xad, 0x65, 0x0, 0xa0, 0xc9, 0xaf, 0x11, 0xa6]);
-struct MsmMerge
-{
-}
 alias msmErrorType = int;
 enum : int
 {
@@ -1112,6 +1109,10 @@ enum IID_IMsmGetFiles = GUID(0x7041ae26, 0x2d78, 0x11d2, [0x88, 0x8a, 0x0, 0xa0,
 interface IMsmGetFiles : IDispatch
 {
     HRESULT get_ModuleFiles(IMsmStrings*);
+}
+enum CLSID_MsmMerge = GUID(0xadda830, 0x2c26, 0x11d2, [0xad, 0x65, 0x0, 0xa0, 0xc9, 0xaf, 0x11, 0xa6]);
+struct MsmMerge
+{
 }
 struct PMSIHANDLE
 {
@@ -1952,10 +1953,6 @@ enum : int
     msifiFastInstallLessPrgMsg   = 0x00000004,
 }
 
-enum CLSID_PMSvc = GUID(0xb9e511fc, 0xe364, 0x497a, [0xa1, 0x21, 0xb7, 0xb3, 0x61, 0x2c, 0xed, 0xce]);
-struct PMSvc
-{
-}
 alias TILE_TEMPLATE_TYPE = int;
 enum : int
 {
@@ -2677,6 +2674,10 @@ interface IPMBackgroundWorkerInfoEnumerator : IUnknown
 {
     HRESULT get_Next(IPMBackgroundWorkerInfo*);
 }
+enum CLSID_PMSvc = GUID(0xb9e511fc, 0xe364, 0x497a, [0xa1, 0x21, 0xb7, 0xb3, 0x61, 0x2c, 0xed, 0xce]);
+struct PMSvc
+{
+}
 alias PPATCH_PROGRESS_CALLBACK = BOOL function(void*, uint, uint);
 alias PPATCH_SYMLOAD_CALLBACK = BOOL function(uint, const(char)*, uint, uint, uint, uint, uint, void*);
 struct PATCH_IGNORE_RANGE
@@ -2849,6 +2850,11 @@ struct COMPATIBILITY_CONTEXT_ELEMENT
     ACTCTX_COMPATIBILITY_ELEMENT_TYPE Type;
     ulong MaxVersionTested;
 }
+struct ACTIVATION_CONTEXT_COMPATIBILITY_INFORMATION
+{
+    uint ElementCount;
+    COMPATIBILITY_CONTEXT_ELEMENT[1] Elements;
+}
 struct ACTIVATION_CONTEXT_DETAILED_INFORMATION
 {
     uint dwFlags;
@@ -2874,7 +2880,7 @@ struct ACTCTXA
     const(char)* lpAssemblyDirectory;
     const(char)* lpResourceName;
     const(char)* lpApplicationName;
-    HINSTANCE hModule;
+    HMODULE hModule;
 }
 struct ACTCTXW
 {
@@ -2886,7 +2892,7 @@ struct ACTCTXW
     const(wchar)* lpAssemblyDirectory;
     const(wchar)* lpResourceName;
     const(wchar)* lpApplicationName;
-    HINSTANCE hModule;
+    HMODULE hModule;
 }
 struct ACTCTX_SECTION_KEYED_DATA
 {

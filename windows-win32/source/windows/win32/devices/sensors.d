@@ -4,7 +4,7 @@ import windows.win32.guid : GUID;
 import windows.win32.devices.portabledevices : IPortableDeviceKeyCollection, IPortableDeviceValues;
 import windows.win32.devices.properties : DEVPROPTYPE;
 import windows.win32.foundation : BOOL, BOOLEAN, BSTR, FILETIME, HRESULT, HWND, NTSTATUS, SYSTEMTIME, VARIANT_BOOL;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 import windows.win32.system.com.structuredstorage : PROPVARIANT;
 import windows.win32.ui.shell.propertiessystem : PROPERTYKEY;
 
@@ -329,22 +329,6 @@ enum GUID_SensorType_SimpleDeviceOrientation = GUID(0x86a19291, 0x482, 0x402c, [
 enum GUID_SensorType_Temperature = GUID(0x4fd0ec4, 0xd5da, 0x45fa, [0x95, 0xa9, 0x5d, 0xb3, 0x8e, 0xe1, 0x93, 0x6]);
 enum GUID_SensorType_HingeAngle = GUID(0x82358065, 0xf4c4, 0x4da1, [0xb2, 0x72, 0x13, 0xc2, 0x33, 0x32, 0xa2, 0x7]);
 enum SENSOR_PROPERTY_LIST_HEADER_SIZE = 0x00000008;
-enum CLSID_SensorManager = GUID(0x77a1c827, 0xfcd2, 0x4689, [0x89, 0x15, 0x9d, 0x61, 0x3c, 0xc5, 0xfa, 0x3e]);
-struct SensorManager
-{
-}
-enum CLSID_SensorCollection = GUID(0x79c43adb, 0xa429, 0x469f, [0xaa, 0x39, 0x2f, 0x2b, 0x74, 0xb7, 0x59, 0x37]);
-struct SensorCollection
-{
-}
-enum CLSID_Sensor = GUID(0xe97ced00, 0x523a, 0x4133, [0xbf, 0x6f, 0xd3, 0xa2, 0xda, 0xe7, 0xf6, 0xba]);
-struct Sensor
-{
-}
-enum CLSID_SensorDataReport = GUID(0x4ea9d6ef, 0x694b, 0x4218, [0x88, 0x16, 0xcc, 0xda, 0x8d, 0xa7, 0x4b, 0xba]);
-struct SensorDataReport
-{
-}
 alias SensorState = int;
 enum : int
 {
@@ -466,6 +450,22 @@ interface ISensorEvents : IUnknown
     HRESULT OnDataUpdated(ISensor, ISensorDataReport);
     HRESULT OnEvent(ISensor, const(GUID)*, IPortableDeviceValues);
     HRESULT OnLeave(GUID*);
+}
+enum CLSID_SensorManager = GUID(0x77a1c827, 0xfcd2, 0x4689, [0x89, 0x15, 0x9d, 0x61, 0x3c, 0xc5, 0xfa, 0x3e]);
+struct SensorManager
+{
+}
+enum CLSID_SensorCollection = GUID(0x79c43adb, 0xa429, 0x469f, [0xaa, 0x39, 0x2f, 0x2b, 0x74, 0xb7, 0x59, 0x37]);
+struct SensorCollection
+{
+}
+enum CLSID_Sensor = GUID(0xe97ced00, 0x523a, 0x4133, [0xbf, 0x6f, 0xd3, 0xa2, 0xda, 0xe7, 0xf6, 0xba]);
+struct Sensor
+{
+}
+enum CLSID_SensorDataReport = GUID(0x4ea9d6ef, 0x694b, 0x4218, [0x88, 0x16, 0xcc, 0xda, 0x8d, 0xa7, 0x4b, 0xba]);
+struct SensorDataReport
+{
 }
 alias ACTIVITY_STATE_COUNT = int;
 enum : int

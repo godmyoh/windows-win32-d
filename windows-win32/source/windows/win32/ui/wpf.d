@@ -3,8 +3,8 @@ module windows.win32.ui.wpf;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BSTR, HRESULT, VARIANT_BOOL;
 import windows.win32.graphics.dwm : MilMatrix3x2D;
-import windows.win32.graphics.imaging_ : IWICBitmapSource;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.graphics.imaging : IWICBitmapSource;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):

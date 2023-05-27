@@ -1,9 +1,9 @@
 module windows.win32.security.directoryservices;
 
 import windows.win32.foundation : HRESULT, HWND, LPARAM, PWSTR;
-import windows.win32.security_ : PSECURITY_DESCRIPTOR;
+import windows.win32.security : PSECURITY_DESCRIPTOR;
 import windows.win32.security.authorization.ui : ISecurityInformation;
-import windows.win32.ui.controls_ : HPROPSHEETPAGE;
+import windows.win32.ui.controls : HPROPSHEETPAGE;
 
 version (Windows):
 extern (Windows):

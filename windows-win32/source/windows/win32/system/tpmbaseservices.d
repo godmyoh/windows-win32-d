@@ -38,6 +38,7 @@ HRESULT GetDeviceID(ubyte*, uint, uint*, BOOL*);
 HRESULT GetDeviceIDString(PWSTR, uint, uint*, BOOL*);
 uint Tbsi_Create_Windows_Key(uint);
 uint Tbsi_Get_TCG_Log_Ex(uint, ubyte*, uint*);
+BOOL Tbsi_Is_Tpm_Present();
 enum TBS_CONTEXT_VERSION_ONE = 0x00000001;
 enum TBS_SUCCESS = 0x00000000;
 enum TBS_OWNERAUTH_TYPE_FULL = 0x00000001;

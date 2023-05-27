@@ -2,7 +2,8 @@ module windows.win32.networking.backgroundintelligenttransferservice;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, FILETIME, HRESULT, PWSTR;
-import windows.win32.system.com_ : IDispatch, IUnknown, VARIANT;
+import windows.win32.system.com : IDispatch, IUnknown;
+import windows.win32.system.variant : VARIANT;
 
 version (Windows):
 extern (Windows):
@@ -223,10 +224,6 @@ enum BITS_MC_FAILED_TO_START = 0xffffffff80194008;
 enum BITS_MC_FATAL_IGD_ERROR = 0xffffffff80194009;
 enum BITS_MC_PEERCACHING_PORT = 0xffffffff8019400a;
 enum BITS_MC_WSD_PORT = 0xffffffff8019400b;
-enum CLSID_BackgroundCopyManager = GUID(0x4991d34b, 0x80a1, 0x4291, [0x83, 0xb6, 0x33, 0x28, 0x36, 0x6b, 0x90, 0x97]);
-struct BackgroundCopyManager
-{
-}
 struct BG_FILE_PROGRESS
 {
     ulong BytesTotal;
@@ -400,8 +397,8 @@ interface IBackgroundCopyManager : IUnknown
     HRESULT EnumJobs(uint, IEnumBackgroundCopyJobs*);
     HRESULT GetErrorDescription(HRESULT, uint, PWSTR*);
 }
-enum CLSID_BackgroundCopyManager1_5 = GUID(0xf087771f, 0xd74f, 0x4c1a, [0xbb, 0x8a, 0xe1, 0x6a, 0xca, 0x91, 0x24, 0xea]);
-struct BackgroundCopyManager1_5
+enum CLSID_BackgroundCopyManager = GUID(0x4991d34b, 0x80a1, 0x4291, [0x83, 0xb6, 0x33, 0x28, 0x36, 0x6b, 0x90, 0x97]);
+struct BackgroundCopyManager
 {
 }
 struct BG_JOB_REPLY_PROGRESS
@@ -453,8 +450,8 @@ interface IBackgroundCopyJob2 : IBackgroundCopyJob
     HRESULT SetCredentials(BG_AUTH_CREDENTIALS*);
     HRESULT RemoveCredentials(BG_AUTH_TARGET, BG_AUTH_SCHEME);
 }
-enum CLSID_BackgroundCopyManager2_0 = GUID(0x6d18ad12, 0xbde3, 0x4393, [0xb3, 0x11, 0x9, 0x9c, 0x34, 0x6e, 0x6d, 0xf9]);
-struct BackgroundCopyManager2_0
+enum CLSID_BackgroundCopyManager1_5 = GUID(0xf087771f, 0xd74f, 0x4c1a, [0xbb, 0x8a, 0xe1, 0x6a, 0xca, 0x91, 0x24, 0xea]);
+struct BackgroundCopyManager1_5
 {
 }
 struct BG_FILE_RANGE
@@ -476,8 +473,8 @@ interface IBackgroundCopyFile2 : IBackgroundCopyFile
     HRESULT GetFileRanges(uint*, BG_FILE_RANGE**);
     HRESULT SetRemoteName(const(wchar)*);
 }
-enum CLSID_BackgroundCopyManager2_5 = GUID(0x3ca98d6, 0xff5d, 0x49b8, [0xab, 0xc6, 0x3, 0xdd, 0x84, 0x12, 0x70, 0x20]);
-struct BackgroundCopyManager2_5
+enum CLSID_BackgroundCopyManager2_0 = GUID(0x6d18ad12, 0xbde3, 0x4393, [0xb3, 0x11, 0x9, 0x9c, 0x34, 0x6e, 0x6d, 0xf9]);
+struct BackgroundCopyManager2_0
 {
 }
 alias BG_CERT_STORE_LOCATION = int;
@@ -505,8 +502,8 @@ interface IBackgroundCopyJobHttpOptions : IUnknown
     HRESULT SetSecurityFlags(uint);
     HRESULT GetSecurityFlags(uint*);
 }
-enum CLSID_BackgroundCopyManager3_0 = GUID(0x659cdea7, 0x489e, 0x11d9, [0xa9, 0xcd, 0x0, 0xd, 0x56, 0x96, 0x52, 0x51]);
-struct BackgroundCopyManager3_0
+enum CLSID_BackgroundCopyManager2_5 = GUID(0x3ca98d6, 0xff5d, 0x49b8, [0xab, 0xc6, 0x3, 0xdd, 0x84, 0x12, 0x70, 0x20]);
+struct BackgroundCopyManager2_5
 {
 }
 enum IID_IBitsPeerCacheRecord = GUID(0x659cdeaf, 0x489e, 0x11d9, [0xa9, 0xcd, 0x0, 0xd, 0x56, 0x96, 0x52, 0x51]);
@@ -586,8 +583,8 @@ interface IBackgroundCopyCallback2 : IBackgroundCopyCallback
 {
     HRESULT FileTransferred(IBackgroundCopyJob, IBackgroundCopyFile);
 }
-enum CLSID_BackgroundCopyManager4_0 = GUID(0xbb6df56b, 0xcace, 0x11dc, [0x99, 0x92, 0x0, 0x19, 0xb9, 0x3a, 0x3a, 0x84]);
-struct BackgroundCopyManager4_0
+enum CLSID_BackgroundCopyManager3_0 = GUID(0x659cdea7, 0x489e, 0x11d9, [0xa9, 0xcd, 0x0, 0xd, 0x56, 0x96, 0x52, 0x51]);
+struct BackgroundCopyManager3_0
 {
 }
 enum IID_IBitsTokenOptions = GUID(0x9a2584c3, 0xf7d2, 0x457a, [0x9a, 0x5e, 0x22, 0xb6, 0x7b, 0xff, 0xc7, 0xd2]);
@@ -604,8 +601,8 @@ interface IBackgroundCopyFile4 : IBackgroundCopyFile3
 {
     HRESULT GetPeerDownloadStats(ulong*, ulong*);
 }
-enum CLSID_BackgroundCopyManager5_0 = GUID(0x1ecca34c, 0xe88a, 0x44e3, [0x8d, 0x6a, 0x89, 0x21, 0xbd, 0xe9, 0xe4, 0x52]);
-struct BackgroundCopyManager5_0
+enum CLSID_BackgroundCopyManager4_0 = GUID(0xbb6df56b, 0xcace, 0x11dc, [0x99, 0x92, 0x0, 0x19, 0xb9, 0x3a, 0x3a, 0x84]);
+struct BackgroundCopyManager4_0
 {
 }
 alias BITS_JOB_TRANSFER_POLICY = int;
@@ -661,8 +658,8 @@ interface IBackgroundCopyFile5 : IBackgroundCopyFile4
     HRESULT SetProperty(BITS_FILE_PROPERTY_ID, BITS_FILE_PROPERTY_VALUE);
     HRESULT GetProperty(BITS_FILE_PROPERTY_ID, BITS_FILE_PROPERTY_VALUE*);
 }
-enum CLSID_BackgroundCopyManager10_1 = GUID(0x4bd3e4e1, 0x7bd4, 0x4a2b, [0x99, 0x64, 0x49, 0x64, 0x0, 0xde, 0x51, 0x93]);
-struct BackgroundCopyManager10_1
+enum CLSID_BackgroundCopyManager5_0 = GUID(0x1ecca34c, 0xe88a, 0x44e3, [0x8d, 0x6a, 0x89, 0x21, 0xbd, 0xe9, 0xe4, 0x52]);
+struct BackgroundCopyManager5_0
 {
 }
 enum IID_IBackgroundCopyCallback3 = GUID(0x98c97bd2, 0xe32b, 0x4ad8, [0xa5, 0x28, 0x95, 0xfd, 0x8b, 0x16, 0xbd, 0x42]);
@@ -677,8 +674,8 @@ interface IBackgroundCopyFile6 : IBackgroundCopyFile5
     HRESULT RequestFileRanges(uint, const(BG_FILE_RANGE)*);
     HRESULT GetFilledFileRanges(uint*, BG_FILE_RANGE**);
 }
-enum CLSID_BackgroundCopyManager10_2 = GUID(0x4575438f, 0xa6c8, 0x4976, [0xb0, 0xfe, 0x2f, 0x26, 0xb8, 0xd, 0x95, 0x9e]);
-struct BackgroundCopyManager10_2
+enum CLSID_BackgroundCopyManager10_1 = GUID(0x4bd3e4e1, 0x7bd4, 0x4a2b, [0x99, 0x64, 0x49, 0x64, 0x0, 0xde, 0x51, 0x93]);
+struct BackgroundCopyManager10_1
 {
 }
 enum IID_IBackgroundCopyJobHttpOptions2 = GUID(0xb591a192, 0xa405, 0x4fc3, [0x83, 0x23, 0x4c, 0x5c, 0x54, 0x25, 0x78, 0xfc]);
@@ -687,8 +684,8 @@ interface IBackgroundCopyJobHttpOptions2 : IBackgroundCopyJobHttpOptions
     HRESULT SetHttpMethod(const(wchar)*);
     HRESULT GetHttpMethod(PWSTR*);
 }
-enum CLSID_BackgroundCopyManager10_3 = GUID(0x5fd42ad5, 0xc04e, 0x4d36, [0xad, 0xc7, 0xe0, 0x8f, 0xf1, 0x57, 0x37, 0xad]);
-struct BackgroundCopyManager10_3
+enum CLSID_BackgroundCopyManager10_2 = GUID(0x4575438f, 0xa6c8, 0x4976, [0xb0, 0xfe, 0x2f, 0x26, 0xb8, 0xd, 0x95, 0x9e]);
+struct BackgroundCopyManager10_2
 {
 }
 enum IID_IBackgroundCopyServerCertificateValidationCallback = GUID(0x4cec0d02, 0xdef7, 0x4158, [0x81, 0x3a, 0xc3, 0x2a, 0x46, 0x94, 0x5f, 0xf7]);
@@ -702,8 +699,8 @@ interface IBackgroundCopyJobHttpOptions3 : IBackgroundCopyJobHttpOptions2
     HRESULT SetServerCertificateValidationInterface(IUnknown);
     HRESULT MakeCustomHeadersWriteOnly();
 }
-enum CLSID_BITSExtensionSetupFactory = GUID(0xefbbab68, 0x7286, 0x4783, [0x94, 0xbf, 0x94, 0x61, 0xd8, 0xb7, 0xe7, 0xe9]);
-struct BITSExtensionSetupFactory
+enum CLSID_BackgroundCopyManager10_3 = GUID(0x5fd42ad5, 0xc04e, 0x4d36, [0xad, 0xc7, 0xe0, 0x8f, 0xf1, 0x57, 0x37, 0xad]);
+struct BackgroundCopyManager10_3
 {
 }
 enum IID_IBITSExtensionSetup = GUID(0x29cfbbf7, 0x9e4, 0x4b97, [0xb0, 0xbc, 0xf2, 0x28, 0x7e, 0x3d, 0x8e, 0xb3]);
@@ -719,8 +716,8 @@ interface IBITSExtensionSetupFactory : IDispatch
 {
     HRESULT GetObject(BSTR, IBITSExtensionSetup*);
 }
-enum CLSID_BackgroundCopyQMgr = GUID(0x69ad4aee, 0x51be, 0x439b, [0xa9, 0x2c, 0x86, 0xae, 0x49, 0xe, 0x8b, 0x30]);
-struct BackgroundCopyQMgr
+enum CLSID_BITSExtensionSetupFactory = GUID(0xefbbab68, 0x7286, 0x4783, [0x94, 0xbf, 0x94, 0x61, 0xd8, 0xb7, 0xe7, 0xe9]);
+struct BITSExtensionSetupFactory
 {
 }
 struct FILESETINFO
@@ -809,4 +806,8 @@ interface IBackgroundCopyQMgr : IUnknown
     HRESULT CreateGroup(GUID, IBackgroundCopyGroup*);
     HRESULT GetGroup(GUID, IBackgroundCopyGroup*);
     HRESULT EnumGroups(uint, IEnumBackgroundCopyGroups*);
+}
+enum CLSID_BackgroundCopyQMgr = GUID(0x69ad4aee, 0x51be, 0x439b, [0xa9, 0x2c, 0x86, 0xae, 0x49, 0xe, 0x8b, 0x30]);
+struct BackgroundCopyQMgr
+{
 }

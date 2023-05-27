@@ -2,10 +2,10 @@ module windows.win32.security.authorization.ui;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BOOLEAN, HINSTANCE, HRESULT, HWND, PSID, PWSTR;
-import windows.win32.security_ : ACE_FLAGS, ACL, OBJECT_SECURITY_INFORMATION, OBJECT_TYPE_LIST, PSECURITY_DESCRIPTOR, TOKEN_GROUPS;
-import windows.win32.security.authorization_ : AUTHZ_SECURITY_ATTRIBUTES_INFORMATION, AUTHZ_SECURITY_ATTRIBUTE_OPERATION, AUTHZ_SID_OPERATION, INHERITED_FROMA;
-import windows.win32.system.com_ : IDataObject, IUnknown;
-import windows.win32.ui.controls_ : HPROPSHEETPAGE, PSPCB_MESSAGE;
+import windows.win32.security : ACE_FLAGS, ACL, OBJECT_SECURITY_INFORMATION, OBJECT_TYPE_LIST, PSECURITY_DESCRIPTOR, TOKEN_GROUPS;
+import windows.win32.security.authorization : AUTHZ_SECURITY_ATTRIBUTES_INFORMATION, AUTHZ_SECURITY_ATTRIBUTE_OPERATION, AUTHZ_SID_OPERATION, INHERITED_FROMA;
+import windows.win32.system.com : IDataObject, IUnknown;
+import windows.win32.ui.controls : HPROPSHEETPAGE, PSPCB_MESSAGE;
 
 version (Windows):
 extern (Windows):

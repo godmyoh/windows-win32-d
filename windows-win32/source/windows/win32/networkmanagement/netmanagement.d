@@ -3,9 +3,9 @@ module windows.win32.networkmanagement.netmanagement;
 import windows.win32.guid : GUID;
 import windows.win32.data.xml.msxml : IXMLDOMNodeList;
 import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HRESULT, HWND, NTSTATUS, PSID, PSTR, PWSTR;
-import windows.win32.security_ : SID_NAME_USE;
-import windows.win32.security.cryptography_ : CERT_CONTEXT;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.security : SID_NAME_USE;
+import windows.win32.security.cryptography : CERT_CONTEXT;
+import windows.win32.system.com : IUnknown;
 import windows.win32.system.registry : HKEY;
 
 version (Windows):
@@ -39,8 +39,8 @@ enum : uint
     NETSETUP_IGNORE_UNSUPPORTED_FLAGS = 0x10000000,
 }
 
-alias NET_REMOTE_COMPUTER_SUPPORTS_OPTIONS = int;
-enum : int
+alias NET_REMOTE_COMPUTER_SUPPORTS_OPTIONS = uint;
+enum : uint
 {
     SUPPORTS_REMOTE_ADMIN_PROTOCOL = 0x00000002,
     SUPPORTS_RPC                   = 0x00000004,
@@ -168,8 +168,8 @@ enum : uint
     USE_IPC      = 0x00000003,
 }
 
-alias SERVER_INFO_HIDDEN = uint;
-enum : uint
+alias SERVER_INFO_HIDDEN = int;
+enum : int
 {
     SV_VISIBLE = 0x00000000,
     SV_HIDDEN  = 0x00000001,
@@ -2425,6 +2425,7 @@ enum MFE_PROHIBITED = 0x0000000c;
 enum MFE_NO_SPACE = 0x0000000d;
 enum REGISTER_PROTOCOL_ENTRY_POINT_STRING = "RegisterProtocol";
 enum ALIGN_SIZE = 0x00000008;
+enum ALIGN_SHIFT = 0x00000007;
 enum RTR_INFO_BLOCK_VERSION = 0x00000001;
 enum TRACE_USE_FILE = 0x00000001;
 enum TRACE_USE_CONSOLE = 0x00000002;
@@ -4817,10 +4818,6 @@ interface INetCfgComponentSysPrep : IUnknown
     HRESULT SaveAdapterParameters(INetCfgSysPrep, const(wchar)*, GUID*);
     HRESULT RestoreAdapterParameters(const(wchar)*, const(wchar)*, GUID*);
 }
-enum CLSID_NetProvisioning = GUID(0x2aa2b5fe, 0xb846, 0x4d07, [0x81, 0xc, 0xb2, 0x1e, 0xe4, 0x53, 0x20, 0xe3]);
-struct NetProvisioning
-{
-}
 enum IID_IProvisioningDomain = GUID(0xc96fbd50, 0x24dd, 0x11d8, [0x89, 0xfb, 0x0, 0x90, 0x4b, 0x2e, 0xa9, 0xc6]);
 interface IProvisioningDomain : IUnknown
 {
@@ -4831,6 +4828,10 @@ enum IID_IProvisioningProfileWireless = GUID(0xc96fbd51, 0x24dd, 0x11d8, [0x89, 
 interface IProvisioningProfileWireless : IUnknown
 {
     HRESULT CreateProfile(BSTR, BSTR, GUID*, uint*);
+}
+enum CLSID_NetProvisioning = GUID(0x2aa2b5fe, 0xb846, 0x4d07, [0x81, 0xc, 0xb2, 0x1e, 0xe4, 0x53, 0x20, 0xe3]);
+struct NetProvisioning
+{
 }
 struct RTR_TOC_ENTRY
 {

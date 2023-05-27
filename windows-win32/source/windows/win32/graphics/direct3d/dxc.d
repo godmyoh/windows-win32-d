@@ -2,7 +2,7 @@ module windows.win32.graphics.direct3d.dxc;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, HRESULT, PSTR, PWSTR;
-import windows.win32.system.com_ : IMalloc, IStream, IUnknown;
+import windows.win32.system.com : IMalloc, IStream, IUnknown;
 
 version (Windows):
 extern (Windows):
@@ -183,7 +183,6 @@ enum : int
     DXC_OUT_REFLECTION     = 0x00000008,
     DXC_OUT_ROOT_SIGNATURE = 0x00000009,
     DXC_OUT_EXTRA_OUTPUTS  = 0x0000000a,
-    DXC_OUT_FORCE_DWORD    = 0xffffffff,
 }
 
 enum IID_IDxcResult = GUID(0x58346cda, 0xdde7, 0x4497, [0x94, 0x61, 0x6f, 0x87, 0xaf, 0x5e, 0x6, 0x59]);

@@ -6,8 +6,8 @@ import windows.win32.graphics.gdi : EMR, HDC, HENHMETAFILE;
 version (Windows):
 extern (Windows):
 
-alias PFD_PIXEL_TYPE = byte;
-enum : byte
+alias PFD_PIXEL_TYPE = ubyte;
+enum : ubyte
 {
     PFD_TYPE_RGBA       = 0x00,
     PFD_TYPE_COLORINDEX = 0x01,
@@ -1161,6 +1161,9 @@ enum GLU_END = 0x00018706;
 enum GLU_ERROR = 0x00018707;
 enum GLU_EDGE_FLAG = 0x00018708;
 alias HGLRC = void*;
+alias GLUnurbs = long;
+alias GLUquadric = long;
+alias GLUtesselator = long;
 struct PIXELFORMATDESCRIPTOR
 {
     ushort nSize;
@@ -1184,7 +1187,7 @@ struct PIXELFORMATDESCRIPTOR
     ubyte cDepthBits;
     ubyte cStencilBits;
     ubyte cAuxBuffers;
-    PFD_LAYER_TYPE iLayerType;
+    ubyte iLayerType;
     ubyte bReserved;
     uint dwLayerMask;
     uint dwVisibleMask;
@@ -1252,15 +1255,6 @@ alias PFNGLCOLORSUBTABLEEXTPROC = void function(uint, int, int, uint, uint, cons
 alias PFNGLGETCOLORTABLEEXTPROC = void function(uint, uint, uint, void*);
 alias PFNGLGETCOLORTABLEPARAMETERIVEXTPROC = void function(uint, uint, int*);
 alias PFNGLGETCOLORTABLEPARAMETERFVEXTPROC = void function(uint, uint, float*);
-struct GLUnurbs
-{
-}
-struct GLUquadric
-{
-}
-struct GLUtesselator
-{
-}
 alias GLUquadricErrorProc = void function(uint);
 alias GLUtessBeginProc = void function(uint);
 alias GLUtessEdgeFlagProc = void function(ubyte);

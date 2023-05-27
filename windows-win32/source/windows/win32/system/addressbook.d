@@ -2,7 +2,7 @@ module windows.win32.system.addressbook;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, FILETIME, HINSTANCE, HRESULT, HWND, PSTR, PWSTR;
-import windows.win32.system.com_ : CY, IMalloc, IStream, IUnknown;
+import windows.win32.system.com : CY, IMalloc, IStream, IUnknown;
 import windows.win32.system.com.structuredstorage : IStorage;
 
 version (Windows):
@@ -283,6 +283,7 @@ enum PRIUSER = 0x00000000;
 enum OPENSTREAMONFILE = "OpenStreamOnFile";
 enum szHrDispatchNotifications = "HrDispatchNotifications";
 enum szScCreateConversationIndex = "ScCreateConversationIndex";
+alias LPWABACTIONITEM = long;
 struct ENTRYID
 {
     ubyte[4] abFlags;
@@ -991,9 +992,6 @@ interface IAddrBook : IMAPIProp
     HRESULT GetSearchPath(uint, SRowSet**);
     HRESULT SetSearchPath(uint, SRowSet*);
     HRESULT PrepareRecips(uint, SPropTagArray*, ADRLIST*);
-}
-struct _WABACTIONITEM
-{
 }
 // [Not Found] IID_IWABObject
 interface IWABObject : IUnknown

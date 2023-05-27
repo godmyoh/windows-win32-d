@@ -2,8 +2,8 @@ module windows.win32.gaming;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, HRESULT, PWSTR;
-import windows.win32.system.com_ : IUnknown;
-import windows.win32.system.winrt_ : HSTRING, IInspectable;
+import windows.win32.system.com : IUnknown;
+import windows.win32.system.winrt : HSTRING, IInspectable;
 
 version (Windows):
 extern (Windows):
@@ -40,14 +40,6 @@ HRESULT ShowUserSettingsUI(GameUICompletionRoutine, void*);
 HRESULT ShowUserSettingsUIForUser(IInspectable, GameUICompletionRoutine, void*);
 enum ID_GDF_XML_STR = "__GDF_XML";
 enum ID_GDF_THUMBNAIL_STR = "__GDF_THUMBNAIL";
-enum CLSID_GameExplorer = GUID(0x9a5ea990, 0x3034, 0x4d6f, [0x91, 0x28, 0x1, 0xf3, 0xc6, 0x10, 0x22, 0xbc]);
-struct GameExplorer
-{
-}
-enum CLSID_GameStatistics = GUID(0xdbc85a2c, 0xc0dc, 0x4961, [0xb6, 0xe2, 0xd2, 0x8b, 0x62, 0xc1, 0x1a, 0xd4]);
-struct GameStatistics
-{
-}
 alias GAME_INSTALL_SCOPE = int;
 enum : int
 {
@@ -107,6 +99,14 @@ interface IGameExplorer2 : IUnknown
     HRESULT UninstallGame(const(wchar)*);
     HRESULT CheckAccess(const(wchar)*, BOOL*);
 }
+enum CLSID_GameExplorer = GUID(0x9a5ea990, 0x3034, 0x4d6f, [0x91, 0x28, 0x1, 0xf3, 0xc6, 0x10, 0x22, 0xbc]);
+struct GameExplorer
+{
+}
+enum CLSID_GameStatistics = GUID(0xdbc85a2c, 0xc0dc, 0x4961, [0xb6, 0xe2, 0xd2, 0x8b, 0x62, 0xc1, 0x1a, 0xd4]);
+struct GameStatistics
+{
+}
 alias GAMING_DEVICE_VENDOR_ID = int;
 enum : int
 {
@@ -161,14 +161,6 @@ enum : int
     XPRIVILEGE_ADD_FRIEND                  = 0x000000ff,
 }
 
-enum CLSID_XblIdpAuthManager = GUID(0xce23534b, 0x56d8, 0x4978, [0x86, 0xa2, 0x7e, 0xe5, 0x70, 0x64, 0x4, 0x68]);
-struct XblIdpAuthManager
-{
-}
-enum CLSID_XblIdpAuthTokenResult = GUID(0x9f493441, 0x744a, 0x410c, [0xae, 0x2b, 0x9a, 0x22, 0xf7, 0xc7, 0x73, 0x1f]);
-struct XblIdpAuthTokenResult
-{
-}
 alias XBL_IDP_AUTH_TOKEN_STATUS = int;
 enum : int
 {
@@ -228,4 +220,12 @@ interface IXblIdpAuthTokenResult2 : IUnknown
     HRESULT GetModernGamertag(PWSTR*);
     HRESULT GetModernGamertagSuffix(PWSTR*);
     HRESULT GetUniqueModernGamertag(PWSTR*);
+}
+enum CLSID_XblIdpAuthManager = GUID(0xce23534b, 0x56d8, 0x4978, [0x86, 0xa2, 0x7e, 0xe5, 0x70, 0x64, 0x4, 0x68]);
+struct XblIdpAuthManager
+{
+}
+enum CLSID_XblIdpAuthTokenResult = GUID(0x9f493441, 0x744a, 0x410c, [0xae, 0x2b, 0x9a, 0x22, 0xf7, 0xc7, 0x73, 0x1f]);
+struct XblIdpAuthTokenResult
+{
 }

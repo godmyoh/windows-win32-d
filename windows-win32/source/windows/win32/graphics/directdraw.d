@@ -3,7 +3,7 @@ module windows.win32.graphics.directdraw;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, CHAR, HANDLE, HINSTANCE, HRESULT, HWND, PSTR, PWSTR, RECT, RECTL, SIZE;
 import windows.win32.graphics.gdi : HDC, HMONITOR, HPALETTE, PALETTEENTRY, RGNDATA;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):
@@ -953,9 +953,10 @@ enum DDTRANSFER_INVERT = 0x00000004;
 enum DDTRANSFER_CANCEL = 0x00000080;
 enum DDTRANSFER_HALFLINES = 0x00000100;
 enum DXAPI_HALVERSION = 0x00000001;
-struct _DDFXROP
-{
-}
+alias PDD_DESTROYDRIVERDATA = long;
+alias PDD_GETVPORTAUTOFLIPSURFACEDATA = long;
+alias PDD_SETMODEDATA = long;
+alias LPDDFXROP = long;
 alias LPDDENUMCALLBACKA = BOOL function(GUID*, PSTR, PSTR, void*);
 alias LPDDENUMCALLBACKW = BOOL function(GUID*, PWSTR, PWSTR, void*);
 alias LPDDENUMCALLBACKEXA = BOOL function(GUID*, PSTR, PSTR, void*, HMONITOR);
@@ -3518,15 +3519,6 @@ struct DDHAL_DESTROYMOCOMPDATA
     HRESULT ddRVal;
     LPDDHALMOCOMPCB_DESTROY DestroyMoComp;
 }
-struct _DD_DESTROYDRIVERDATA
-{
-}
-struct _DD_SETMODEDATA
-{
-}
-struct _DD_GETVPORTAUTOFLIPSURFACEDATA
-{
-}
 struct VIDEOMEMORY
 {
     uint dwFlags;
@@ -3563,8 +3555,8 @@ alias PDD_SETCOLORKEY = uint function(DD_DRVSETCOLORKEYDATA*);
 alias PDD_CANCREATESURFACE = uint function(DD_CANCREATESURFACEDATA*);
 alias PDD_WAITFORVERTICALBLANK = uint function(DD_WAITFORVERTICALBLANKDATA*);
 alias PDD_CREATESURFACE = uint function(DD_CREATESURFACEDATA*);
-alias PDD_DESTROYDRIVER = uint function(_DD_DESTROYDRIVERDATA*);
-alias PDD_SETMODE = uint function(_DD_SETMODEDATA*);
+alias PDD_DESTROYDRIVER = uint function(PDD_DESTROYDRIVERDATA);
+alias PDD_SETMODE = uint function(PDD_SETMODEDATA);
 alias PDD_CREATEPALETTE = uint function(DD_CREATEPALETTEDATA*);
 alias PDD_GETSCANLINE = uint function(DD_GETSCANLINEDATA*);
 alias PDD_MAPMEMORY = uint function(DD_MAPMEMORYDATA*);
@@ -3661,7 +3653,7 @@ alias PDD_VPORTCB_FLIP = uint function(DD_FLIPVPORTDATA*);
 alias PDD_VPORTCB_GETBANDWIDTH = uint function(DD_GETVPORTBANDWIDTHDATA*);
 alias PDD_VPORTCB_GETINPUTFORMATS = uint function(DD_GETVPORTINPUTFORMATDATA*);
 alias PDD_VPORTCB_GETOUTPUTFORMATS = uint function(DD_GETVPORTOUTPUTFORMATDATA*);
-alias PDD_VPORTCB_GETAUTOFLIPSURF = uint function(_DD_GETVPORTAUTOFLIPSURFACEDATA*);
+alias PDD_VPORTCB_GETAUTOFLIPSURF = uint function(PDD_GETVPORTAUTOFLIPSURFACEDATA);
 alias PDD_VPORTCB_GETFIELD = uint function(DD_GETVPORTFIELDDATA*);
 alias PDD_VPORTCB_GETLINE = uint function(DD_GETVPORTLINEDATA*);
 alias PDD_VPORTCB_GETVPORTCONNECT = uint function(DD_GETVPORTCONNECTDATA*);
@@ -4546,14 +4538,12 @@ struct DD_DESTROYDDLOCALDATA
     DD_DIRECTDRAW_LOCAL* pDDLcl;
     HRESULT ddRVal;
 }
-struct MDL
+struct DDMDL
 {
-    MDL* MdlNext;
+    DDMDL* MdlNext;
     short MdlSize;
     short MdlFlags;
-    struct _EPROCESS
-    {
-    }
+    long Process;
     uint* lpMappedSystemVa;
     uint* lpStartVa;
     uint ByteCount;
@@ -4686,7 +4676,7 @@ struct DDTRANSFERININFO
     uint dwEndLine;
     ulong dwTransferID;
     uint dwTransferFlags;
-    MDL* lpDestMDL;
+    DDMDL* lpDestMDL;
 }
 struct DDTRANSFEROUTINFO
 {

@@ -2,7 +2,7 @@ module windows.win32.system.eventnotificationservice;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, HRESULT, PSTR, PWSTR;
-import windows.win32.system.com_ : IDispatch;
+import windows.win32.system.com : IDispatch;
 
 version (Windows):
 extern (Windows):
@@ -35,10 +35,6 @@ struct QOCINFO
     uint dwFlags;
     uint dwInSpeed;
     uint dwOutSpeed;
-}
-enum CLSID_SENS = GUID(0xd597cafe, 0x5b9f, 0x11d1, [0x8d, 0xd2, 0x0, 0xaa, 0x0, 0x4a, 0xbd, 0x5e]);
-struct SENS
-{
 }
 struct SENS_QOCINFO
 {
@@ -82,4 +78,8 @@ interface ISensLogon2 : IDispatch
     HRESULT SessionDisconnect(BSTR, uint);
     HRESULT SessionReconnect(BSTR, uint);
     HRESULT PostShell(BSTR, uint);
+}
+enum CLSID_SENS = GUID(0xd597cafe, 0x5b9f, 0x11d1, [0x8d, 0xd2, 0x0, 0xaa, 0x0, 0x4a, 0xbd, 0x5e]);
+struct SENS
+{
 }

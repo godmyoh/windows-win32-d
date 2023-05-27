@@ -1,18 +1,13 @@
 module windows.win32.ui.accessibility;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, HINSTANCE, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT, WPARAM;
-import windows.win32.system.com_ : IDispatch, IUnknown, SAFEARRAY, VARIANT;
+import windows.win32.foundation : BOOL, BSTR, HMODULE, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT, WPARAM;
+import windows.win32.system.com : IDispatch, IUnknown, SAFEARRAY;
+import windows.win32.system.variant : VARIANT;
 import windows.win32.ui.windowsandmessaging : HMENU, POINTER_INPUT_TYPE;
 
 version (Windows):
 extern (Windows):
-
-alias UIA_CHANGE_ID = uint;
-enum : uint
-{
-    UIA_SummaryChangeId = 0x00015f90,
-}
 
 alias STICKYKEYS_FLAGS = uint;
 enum : uint
@@ -148,8 +143,8 @@ enum : uint
     UIA_SelectionPattern2Id        = 0x00002732,
 }
 
-alias UIA_EVENT_ID = uint;
-enum : uint
+alias UIA_EVENT_ID = int;
+enum : int
 {
     UIA_ToolTipOpenedEventId                             = 0x00004e20,
     UIA_ToolTipClosedEventId                             = 0x00004e21,
@@ -542,6 +537,12 @@ enum : uint
     HeadingLevel9     = 0x000138bb,
 }
 
+alias UIA_CHANGE_ID = uint;
+enum : uint
+{
+    UIA_SummaryChangeId = 0x00015f90,
+}
+
 alias UIA_METADATA_ID = uint;
 enum : uint
 {
@@ -668,7 +669,7 @@ BOOL UnregisterPointerInputTarget(HWND, POINTER_INPUT_TYPE);
 BOOL RegisterPointerInputTargetEx(HWND, POINTER_INPUT_TYPE, BOOL);
 BOOL UnregisterPointerInputTargetEx(HWND, POINTER_INPUT_TYPE);
 void NotifyWinEvent(uint, HWND, int, int);
-HWINEVENTHOOK SetWinEventHook(uint, uint, HINSTANCE, WINEVENTPROC, uint, uint, uint);
+HWINEVENTHOOK SetWinEventHook(uint, uint, HMODULE, WINEVENTPROC, uint, uint, uint);
 BOOL IsWinEventHookInstalled(uint);
 BOOL UnhookWinEvent(HWINEVENTHOOK);
 enum LIBID_Accessibility = GUID(0x1ea4dbf0, 0x3c3b, 0x11cf, [0x81, 0xc, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
@@ -1207,10 +1208,6 @@ alias HUIANODE = void*;
 alias HUIAPATTERNOBJECT = void*;
 alias HUIATEXTRANGE = void*;
 alias HUIAEVENT = void*;
-enum CLSID_CAccPropServices = GUID(0xb5f8350b, 0x548, 0x48b1, [0xa6, 0xee, 0x88, 0xbd, 0x0, 0xb4, 0xa5, 0xe7]);
-struct CAccPropServices
-{
-}
 alias LPFNLRESULTFROMOBJECT = LRESULT function(const(GUID)*, WPARAM, IUnknown);
 alias LPFNOBJECTFROMLRESULT = HRESULT function(LRESULT, const(GUID)*, WPARAM, void**);
 alias LPFNACCESSIBLEOBJECTFROMWINDOW = HRESULT function(HWND, uint, const(GUID)*, void**);
@@ -1297,16 +1294,8 @@ interface IAccPropServices : IUnknown
     HRESULT ComposeHmenuIdentityString(HMENU, uint, ubyte**, uint*);
     HRESULT DecomposeHmenuIdentityString(const(ubyte)*, uint, HMENU*, uint*);
 }
-enum CLSID_CUIAutomation = GUID(0xff48dba4, 0x60ef, 0x4201, [0xaa, 0x87, 0x54, 0x10, 0x3e, 0xef, 0x59, 0x4e]);
-struct CUIAutomation
-{
-}
-enum CLSID_CUIAutomation8 = GUID(0xe22ad333, 0xb25f, 0x460c, [0x83, 0xd0, 0x5, 0x81, 0x10, 0x73, 0x95, 0xc9]);
-struct CUIAutomation8
-{
-}
-enum CLSID_CUIAutomationRegistrar = GUID(0x6e29fabf, 0x9977, 0x42d1, [0x8d, 0xe, 0xca, 0x7e, 0x61, 0xad, 0x87, 0xe6]);
-struct CUIAutomationRegistrar
+enum CLSID_CAccPropServices = GUID(0xb5f8350b, 0x548, 0x48b1, [0xa6, 0xee, 0x88, 0xbd, 0x0, 0xb4, 0xa5, 0xe7]);
+struct CAccPropServices
 {
 }
 alias NavigateDirection = int;
@@ -2158,6 +2147,10 @@ interface IUIAutomationRegistrar : IUnknown
     HRESULT RegisterProperty(const(UIAutomationPropertyInfo)*, int*);
     HRESULT RegisterEvent(const(UIAutomationEventInfo)*, int*);
     HRESULT RegisterPattern(const(UIAutomationPatternInfo)*, int*, int*, uint, int*, uint, int*);
+}
+enum CLSID_CUIAutomationRegistrar = GUID(0x6e29fabf, 0x9977, 0x42d1, [0x8d, 0xe, 0xca, 0x7e, 0x61, 0xad, 0x87, 0xe6]);
+struct CUIAutomationRegistrar
+{
 }
 alias TreeScope = int;
 enum : int
@@ -3019,6 +3012,14 @@ interface IUIAutomation6 : IUIAutomation5
     HRESULT put_CoalesceEvents(CoalesceEventsOptions);
     HRESULT AddActiveTextPositionChangedEventHandler(IUIAutomationElement, TreeScope, IUIAutomationCacheRequest, IUIAutomationActiveTextPositionChangedEventHandler);
     HRESULT RemoveActiveTextPositionChangedEventHandler(IUIAutomationElement, IUIAutomationActiveTextPositionChangedEventHandler);
+}
+enum CLSID_CUIAutomation = GUID(0xff48dba4, 0x60ef, 0x4201, [0xaa, 0x87, 0x54, 0x10, 0x3e, 0xef, 0x59, 0x4e]);
+struct CUIAutomation
+{
+}
+enum CLSID_CUIAutomation8 = GUID(0xe22ad333, 0xb25f, 0x460c, [0x83, 0xd0, 0x5, 0x81, 0x10, 0x73, 0x95, 0xc9]);
+struct CUIAutomation8
+{
 }
 alias ConditionType = int;
 enum : int

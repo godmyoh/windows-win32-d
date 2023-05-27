@@ -291,6 +291,7 @@ enum JET_ccolKeyMost = 0x00000010;
 enum JET_ccolMost = 0x0000fee0;
 enum JET_ccolFixedMost = 0x0000007f;
 enum JET_ccolVarMost = 0x00000080;
+enum JET_ccolTaggedMost = 0x0000fde1;
 enum JET_EventLoggingDisable = 0x00000000;
 enum JET_EventLoggingLevelMin = 0x00000001;
 enum JET_EventLoggingLevelLow = 0x00000019;

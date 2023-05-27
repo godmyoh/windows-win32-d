@@ -1,8 +1,8 @@
 module windows.win32.system.diagnostics.processsnapshotting;
 
 import windows.win32.foundation : BOOL, FILETIME, HANDLE, PWSTR;
-import windows.win32.system.diagnostics.debug__ : CONTEXT;
-import windows.win32.system.memory_ : MEMORY_BASIC_INFORMATION;
+import windows.win32.system.diagnostics.debug_ : CONTEXT;
+import windows.win32.system.memory : MEMORY_BASIC_INFORMATION;
 
 version (Windows):
 extern (Windows):

@@ -2,11 +2,11 @@ module windows.win32.media.audio.directmusic;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, CHAR, HANDLE, HRESULT, HWND, PSTR, PWSTR;
-import windows.win32.media_ : IReferenceClock;
-import windows.win32.media.audio_ : HMIDI, WAVEFORMATEX;
+import windows.win32.media : IReferenceClock;
+import windows.win32.media.audio : HMIDI, WAVEFORMATEX;
 import windows.win32.media.audio.directsound : IDirectSound, IDirectSoundBuffer;
 import windows.win32.media.multimedia : MIDIOPENSTRMID;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 import windows.win32.system.io : OVERLAPPED;
 
 version (Windows):

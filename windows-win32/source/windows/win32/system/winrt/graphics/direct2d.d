@@ -2,8 +2,8 @@ module windows.win32.system.winrt.graphics.direct2d;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : HRESULT, PWSTR;
-import windows.win32.graphics.direct2d_ : ID2D1Factory, ID2D1Geometry;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.graphics.direct2d : ID2D1Factory, ID2D1Geometry;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):

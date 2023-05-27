@@ -2,9 +2,9 @@ module windows.win32.security.cryptography.ui;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, PSTR, PWSTR, WPARAM;
-import windows.win32.security.cryptography_ : CERT_CHAIN_CONTEXT, CERT_CONTEXT, CRL_CONTEXT, CRYPT_ATTRIBUTES, CRYPT_INTEGER_BLOB, CRYPT_KEY_FLAGS, CRYPT_KEY_PROV_INFO, CTL_CONTEXT, HCERTSTORE;
+import windows.win32.security.cryptography : CERT_CHAIN_CONTEXT, CERT_CONTEXT, CRL_CONTEXT, CRYPT_ATTRIBUTES, CRYPT_INTEGER_BLOB, CRYPT_KEY_FLAGS, CRYPT_KEY_PROV_INFO, CTL_CONTEXT, HCERTSTORE;
 import windows.win32.security.wintrust : CRYPT_PROVIDER_DATA;
-import windows.win32.ui.controls_ : PROPSHEETPAGEA, PROPSHEETPAGEW;
+import windows.win32.ui.controls : PROPSHEETPAGEA, PROPSHEETPAGEW;
 
 version (Windows):
 extern (Windows):

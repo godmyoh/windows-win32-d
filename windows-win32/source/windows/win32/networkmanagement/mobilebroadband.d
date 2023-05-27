@@ -2,27 +2,11 @@ module windows.win32.networkmanagement.mobilebroadband;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, HRESULT, PWSTR, VARIANT_BOOL;
-import windows.win32.system.com_ : IDispatch, IUnknown, SAFEARRAY;
+import windows.win32.system.com : IDispatch, IUnknown, SAFEARRAY;
 
 version (Windows):
 extern (Windows):
 
-enum CLSID_MbnConnectionProfileManager = GUID(0xbdfee05a, 0x4418, 0x11dd, [0x90, 0xed, 0x0, 0x1c, 0x25, 0x7c, 0xcf, 0xf1]);
-struct MbnConnectionProfileManager
-{
-}
-enum CLSID_MbnInterfaceManager = GUID(0xbdfee05b, 0x4418, 0x11dd, [0x90, 0xed, 0x0, 0x1c, 0x25, 0x7c, 0xcf, 0xf1]);
-struct MbnInterfaceManager
-{
-}
-enum CLSID_MbnConnectionManager = GUID(0xbdfee05c, 0x4418, 0x11dd, [0x90, 0xed, 0x0, 0x1c, 0x25, 0x7c, 0xcf, 0xf1]);
-struct MbnConnectionManager
-{
-}
-enum CLSID_MbnDeviceServicesManager = GUID(0x2269daa3, 0x2a9f, 0x4165, [0xa5, 0x1, 0xce, 0x0, 0xa6, 0xf7, 0xa7, 0x5b]);
-struct MbnDeviceServicesManager
-{
-}
 enum IID_IDummyMBNUCMExt = GUID(0xdcbbbab6, 0xffff, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IDummyMBNUCMExt : IDispatch
 {
@@ -814,4 +798,20 @@ interface IMbnPin : IUnknown
     HRESULT Change(const(wchar)*, const(wchar)*, uint*);
     HRESULT Unblock(const(wchar)*, const(wchar)*, uint*);
     HRESULT GetPinManager(IMbnPinManager*);
+}
+enum CLSID_MbnConnectionProfileManager = GUID(0xbdfee05a, 0x4418, 0x11dd, [0x90, 0xed, 0x0, 0x1c, 0x25, 0x7c, 0xcf, 0xf1]);
+struct MbnConnectionProfileManager
+{
+}
+enum CLSID_MbnInterfaceManager = GUID(0xbdfee05b, 0x4418, 0x11dd, [0x90, 0xed, 0x0, 0x1c, 0x25, 0x7c, 0xcf, 0xf1]);
+struct MbnInterfaceManager
+{
+}
+enum CLSID_MbnConnectionManager = GUID(0xbdfee05c, 0x4418, 0x11dd, [0x90, 0xed, 0x0, 0x1c, 0x25, 0x7c, 0xcf, 0xf1]);
+struct MbnConnectionManager
+{
+}
+enum CLSID_MbnDeviceServicesManager = GUID(0x2269daa3, 0x2a9f, 0x4165, [0xa5, 0x1, 0xce, 0x0, 0xa6, 0xf7, 0xa7, 0x5b]);
+struct MbnDeviceServicesManager
+{
 }

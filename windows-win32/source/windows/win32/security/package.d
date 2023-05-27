@@ -1,4 +1,4 @@
-module windows.win32.security_;
+module windows.win32.security;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BOOLEAN, CHAR, FILETIME, HANDLE, LUID, NTSTATUS, PSID, PSTR, PWSTR, UNICODE_STRING;

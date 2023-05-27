@@ -2,9 +2,9 @@ module windows.win32.media.audio.directsound;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HANDLE, HRESULT, HWND, PSTR, PWSTR;
-import windows.win32.graphics.direct3d_ : D3DVECTOR;
-import windows.win32.media.audio_ : WAVEFORMATEX;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.graphics.direct3d : D3DVECTOR;
+import windows.win32.media.audio : WAVEFORMATEX;
+import windows.win32.system.com : IUnknown;
 
 version (Windows):
 extern (Windows):

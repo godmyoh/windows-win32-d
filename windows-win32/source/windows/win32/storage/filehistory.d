@@ -2,7 +2,7 @@ module windows.win32.storage.filehistory;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, FILETIME, HRESULT;
-import windows.win32.system.com_ : IUnknown;
+import windows.win32.system.com : IUnknown;
 import windows.win32.system.windowsprogramming : FH_SERVICE_PIPE_HANDLE;
 
 version (Windows):
@@ -57,14 +57,6 @@ enum FH_STATE_TOO_MUCH_BEHIND = 0x000000f0;
 enum FH_STATE_NO_ERROR = 0x000000ff;
 enum FH_STATE_BACKUP_NOT_SUPPORTED = 0x00000810;
 enum FH_STATE_RUNNING = 0x00000100;
-enum CLSID_FhConfigMgr = GUID(0xed43bb3c, 0x9e9, 0x498a, [0x9d, 0xf6, 0x21, 0x77, 0x24, 0x4c, 0x6d, 0xb4]);
-struct FhConfigMgr
-{
-}
-enum CLSID_FhReassociation = GUID(0x4d728e35, 0x16fa, 0x4320, [0x9e, 0x8b, 0xbf, 0xd7, 0x10, 0xa, 0x88, 0x46]);
-struct FhReassociation
-{
-}
 alias FH_TARGET_PROPERTY_TYPE = int;
 enum : int
 {
@@ -170,6 +162,14 @@ interface IFhReassociation : IUnknown
     HRESULT GetConfigurationDetails(uint, BSTR*, BSTR*, FILETIME*);
     HRESULT SelectConfiguration(uint);
     HRESULT PerformReassociation(BOOL);
+}
+enum CLSID_FhConfigMgr = GUID(0xed43bb3c, 0x9e9, 0x498a, [0x9d, 0xf6, 0x21, 0x77, 0x24, 0x4c, 0x6d, 0xb4]);
+struct FhConfigMgr
+{
+}
+enum CLSID_FhReassociation = GUID(0x4d728e35, 0x16fa, 0x4320, [0x9e, 0x8b, 0xbf, 0xd7, 0x10, 0xa, 0x88, 0x46]);
+struct FhReassociation
+{
 }
 alias FhBackupStopReason = int;
 enum : int

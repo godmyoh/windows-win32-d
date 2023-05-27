@@ -2,34 +2,35 @@ module windows.win32.system.remotemanagement;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, HANDLE, HRESULT, PWSTR, VARIANT_BOOL;
-import windows.win32.system.com_ : IDispatch, IUnknown, VARIANT;
+import windows.win32.system.com : IDispatch, IUnknown;
+import windows.win32.system.variant : VARIANT;
 
 version (Windows):
 extern (Windows):
 
-uint WSManInitialize(uint, WSMAN_API**);
-uint WSManDeinitialize(WSMAN_API*, uint);
-uint WSManGetErrorMessage(WSMAN_API*, uint, const(wchar)*, uint, uint, PWSTR, uint*);
-uint WSManCreateSession(WSMAN_API*, const(wchar)*, uint, WSMAN_AUTHENTICATION_CREDENTIALS*, WSMAN_PROXY_INFO*, WSMAN_SESSION**);
-uint WSManCloseSession(WSMAN_SESSION*, uint);
-uint WSManSetSessionOption(WSMAN_SESSION*, WSManSessionOption, WSMAN_DATA*);
-uint WSManGetSessionOptionAsDword(WSMAN_SESSION*, WSManSessionOption, uint*);
-uint WSManGetSessionOptionAsString(WSMAN_SESSION*, WSManSessionOption, uint, PWSTR, uint*);
-uint WSManCloseOperation(WSMAN_OPERATION*, uint);
-void WSManCreateShell(WSMAN_SESSION*, uint, const(wchar)*, WSMAN_SHELL_STARTUP_INFO_V11*, WSMAN_OPTION_SET*, WSMAN_DATA*, WSMAN_SHELL_ASYNC*, WSMAN_SHELL**);
-void WSManRunShellCommand(WSMAN_SHELL*, uint, const(wchar)*, WSMAN_COMMAND_ARG_SET*, WSMAN_OPTION_SET*, WSMAN_SHELL_ASYNC*, WSMAN_COMMAND**);
-void WSManSignalShell(WSMAN_SHELL*, WSMAN_COMMAND*, uint, const(wchar)*, WSMAN_SHELL_ASYNC*, WSMAN_OPERATION**);
-void WSManReceiveShellOutput(WSMAN_SHELL*, WSMAN_COMMAND*, uint, WSMAN_STREAM_ID_SET*, WSMAN_SHELL_ASYNC*, WSMAN_OPERATION**);
-void WSManSendShellInput(WSMAN_SHELL*, WSMAN_COMMAND*, uint, const(wchar)*, WSMAN_DATA*, BOOL, WSMAN_SHELL_ASYNC*, WSMAN_OPERATION**);
-void WSManCloseCommand(WSMAN_COMMAND*, uint, WSMAN_SHELL_ASYNC*);
-void WSManCloseShell(WSMAN_SHELL*, uint, WSMAN_SHELL_ASYNC*);
-void WSManCreateShellEx(WSMAN_SESSION*, uint, const(wchar)*, const(wchar)*, WSMAN_SHELL_STARTUP_INFO_V11*, WSMAN_OPTION_SET*, WSMAN_DATA*, WSMAN_SHELL_ASYNC*, WSMAN_SHELL**);
-void WSManRunShellCommandEx(WSMAN_SHELL*, uint, const(wchar)*, const(wchar)*, WSMAN_COMMAND_ARG_SET*, WSMAN_OPTION_SET*, WSMAN_SHELL_ASYNC*, WSMAN_COMMAND**);
-void WSManDisconnectShell(WSMAN_SHELL*, uint, WSMAN_SHELL_DISCONNECT_INFO*, WSMAN_SHELL_ASYNC*);
-void WSManReconnectShell(WSMAN_SHELL*, uint, WSMAN_SHELL_ASYNC*);
-void WSManReconnectShellCommand(WSMAN_COMMAND*, uint, WSMAN_SHELL_ASYNC*);
-void WSManConnectShell(WSMAN_SESSION*, uint, const(wchar)*, const(wchar)*, WSMAN_OPTION_SET*, WSMAN_DATA*, WSMAN_SHELL_ASYNC*, WSMAN_SHELL**);
-void WSManConnectShellCommand(WSMAN_SHELL*, uint, const(wchar)*, WSMAN_OPTION_SET*, WSMAN_DATA*, WSMAN_SHELL_ASYNC*, WSMAN_COMMAND**);
+uint WSManInitialize(uint, WSMAN_API_HANDLE*);
+uint WSManDeinitialize(WSMAN_API_HANDLE, uint);
+uint WSManGetErrorMessage(WSMAN_API_HANDLE, uint, const(wchar)*, uint, uint, PWSTR, uint*);
+uint WSManCreateSession(WSMAN_API_HANDLE, const(wchar)*, uint, WSMAN_AUTHENTICATION_CREDENTIALS*, WSMAN_PROXY_INFO*, WSMAN_SESSION_HANDLE*);
+uint WSManCloseSession(WSMAN_SESSION_HANDLE, uint);
+uint WSManSetSessionOption(WSMAN_SESSION_HANDLE, WSManSessionOption, WSMAN_DATA*);
+uint WSManGetSessionOptionAsDword(WSMAN_SESSION_HANDLE, WSManSessionOption, uint*);
+uint WSManGetSessionOptionAsString(WSMAN_SESSION_HANDLE, WSManSessionOption, uint, PWSTR, uint*);
+uint WSManCloseOperation(WSMAN_OPERATION_HANDLE, uint);
+void WSManCreateShell(WSMAN_SESSION_HANDLE, uint, const(wchar)*, WSMAN_SHELL_STARTUP_INFO_V11*, WSMAN_OPTION_SET*, WSMAN_DATA*, WSMAN_SHELL_ASYNC*, WSMAN_SHELL_HANDLE*);
+void WSManRunShellCommand(WSMAN_SHELL_HANDLE, uint, const(wchar)*, WSMAN_COMMAND_ARG_SET*, WSMAN_OPTION_SET*, WSMAN_SHELL_ASYNC*, WSMAN_COMMAND_HANDLE*);
+void WSManSignalShell(WSMAN_SHELL_HANDLE, WSMAN_COMMAND_HANDLE, uint, const(wchar)*, WSMAN_SHELL_ASYNC*, WSMAN_OPERATION_HANDLE*);
+void WSManReceiveShellOutput(WSMAN_SHELL_HANDLE, WSMAN_COMMAND_HANDLE, uint, WSMAN_STREAM_ID_SET*, WSMAN_SHELL_ASYNC*, WSMAN_OPERATION_HANDLE*);
+void WSManSendShellInput(WSMAN_SHELL_HANDLE, WSMAN_COMMAND_HANDLE, uint, const(wchar)*, WSMAN_DATA*, BOOL, WSMAN_SHELL_ASYNC*, WSMAN_OPERATION_HANDLE*);
+void WSManCloseCommand(WSMAN_COMMAND_HANDLE, uint, WSMAN_SHELL_ASYNC*);
+void WSManCloseShell(WSMAN_SHELL_HANDLE, uint, WSMAN_SHELL_ASYNC*);
+void WSManCreateShellEx(WSMAN_SESSION_HANDLE, uint, const(wchar)*, const(wchar)*, WSMAN_SHELL_STARTUP_INFO_V11*, WSMAN_OPTION_SET*, WSMAN_DATA*, WSMAN_SHELL_ASYNC*, WSMAN_SHELL_HANDLE*);
+void WSManRunShellCommandEx(WSMAN_SHELL_HANDLE, uint, const(wchar)*, const(wchar)*, WSMAN_COMMAND_ARG_SET*, WSMAN_OPTION_SET*, WSMAN_SHELL_ASYNC*, WSMAN_COMMAND_HANDLE*);
+void WSManDisconnectShell(WSMAN_SHELL_HANDLE, uint, WSMAN_SHELL_DISCONNECT_INFO*, WSMAN_SHELL_ASYNC*);
+void WSManReconnectShell(WSMAN_SHELL_HANDLE, uint, WSMAN_SHELL_ASYNC*);
+void WSManReconnectShellCommand(WSMAN_COMMAND_HANDLE, uint, WSMAN_SHELL_ASYNC*);
+void WSManConnectShell(WSMAN_SESSION_HANDLE, uint, const(wchar)*, const(wchar)*, WSMAN_OPTION_SET*, WSMAN_DATA*, WSMAN_SHELL_ASYNC*, WSMAN_SHELL_HANDLE*);
+void WSManConnectShellCommand(WSMAN_SHELL_HANDLE, uint, const(wchar)*, WSMAN_OPTION_SET*, WSMAN_DATA*, WSMAN_SHELL_ASYNC*, WSMAN_COMMAND_HANDLE*);
 uint WSManPluginReportContext(WSMAN_PLUGIN_REQUEST*, uint, void*);
 uint WSManPluginReceiveResult(WSMAN_PLUGIN_REQUEST*, uint, const(wchar)*, WSMAN_DATA*, const(wchar)*, uint);
 uint WSManPluginOperationComplete(WSMAN_PLUGIN_REQUEST*, uint, uint, const(wchar)*);
@@ -587,6 +588,11 @@ enum ERROR_WSMAN_VIRTUALACCOUNT_NOTSUPPORTED_DOWNLEVEL = 0x803381fc;
 enum ERROR_WSMAN_RUNASUSER_MANAGEDACCOUNT_LOGON_FAILED = 0x803381fd;
 enum ERROR_WSMAN_CERTMAPPING_CREDENTIAL_MANAGEMENT_FAILIED = 0x803381fe;
 enum ERROR_WSMAN_EVENTING_PUSH_SUBSCRIPTION_NOACTIVATE_EVENTSOURCE = 0x803381ff;
+alias WSMAN_API_HANDLE = long;
+alias WSMAN_COMMAND_HANDLE = long;
+alias WSMAN_OPERATION_HANDLE = long;
+alias WSMAN_SESSION_HANDLE = long;
+alias WSMAN_SHELL_HANDLE = long;
 struct WSMAN_DATA_TEXT
 {
     uint bufferLength;
@@ -709,9 +715,6 @@ struct WSMAN_OPERATION_INFOEX
     const(wchar)* uiLocale;
     const(wchar)* dataLocale;
 }
-struct WSMAN_API
-{
-}
 alias WSManProxyAccessType = int;
 enum : int
 {
@@ -725,9 +728,6 @@ struct WSMAN_PROXY_INFO
 {
     uint accessType;
     WSMAN_AUTHENTICATION_CREDENTIALS authenticationCredentials;
-}
-struct WSMAN_SESSION
-{
 }
 alias WSManSessionOption = int;
 enum : int
@@ -757,9 +757,6 @@ enum : int
     WSMAN_OPTION_USE_INTEARACTIVE_TOKEN               = 0x00000022,
 }
 
-struct WSMAN_OPERATION
-{
-}
 alias WSManCallbackFlags = int;
 enum : int
 {
@@ -775,12 +772,6 @@ enum : int
     WSMAN_FLAG_CALLBACK_RECEIVE_DELAY_STREAM_REQUEST_PROCESSED = 0x00002000,
 }
 
-struct WSMAN_SHELL
-{
-}
-struct WSMAN_COMMAND
-{
-}
 struct WSMAN_STREAM_ID_SET
 {
     uint streamIDsCount;
@@ -844,7 +835,7 @@ union WSMAN_RESPONSE_DATA
     WSMAN_CONNECT_DATA connectData;
     WSMAN_CREATE_SHELL_DATA createData;
 }
-alias WSMAN_SHELL_COMPLETION_FUNCTION = void function(void*, uint, WSMAN_ERROR*, WSMAN_SHELL*, WSMAN_COMMAND*, WSMAN_OPERATION*, WSMAN_RESPONSE_DATA*);
+alias WSMAN_SHELL_COMPLETION_FUNCTION = void function(void*, uint, WSMAN_ERROR*, WSMAN_SHELL_HANDLE, WSMAN_COMMAND_HANDLE, WSMAN_OPERATION_HANDLE, WSMAN_RESPONSE_DATA*);
 struct WSMAN_SHELL_ASYNC
 {
     void* operationContext;
@@ -901,14 +892,6 @@ alias WSMAN_PLUGIN_AUTHORIZE_USER = void function(void*, WSMAN_SENDER_DETAILS*, 
 alias WSMAN_PLUGIN_AUTHORIZE_OPERATION = void function(void*, WSMAN_SENDER_DETAILS*, uint, uint, const(wchar)*, const(wchar)*);
 alias WSMAN_PLUGIN_AUTHORIZE_QUERY_QUOTA = void function(void*, WSMAN_SENDER_DETAILS*, uint);
 alias WSMAN_PLUGIN_AUTHORIZE_RELEASE_CONTEXT = void function(void*);
-enum CLSID_WSMan = GUID(0xbced617b, 0xec03, 0x420b, [0x85, 0x8, 0x97, 0x7d, 0xc7, 0xa6, 0x86, 0xbd]);
-struct WSMan
-{
-}
-enum CLSID_WSManInternal = GUID(0x7de087a5, 0x5dcb, 0x4df7, [0xbb, 0x12, 0x9, 0x24, 0xad, 0x8f, 0xbd, 0x9a]);
-struct WSManInternal
-{
-}
 alias WSManSessionFlags = int;
 enum : int
 {
@@ -1079,8 +1062,16 @@ enum IID_IWSManResourceLocatorInternal = GUID(0xeffaead7, 0x7ec8, 0x4716, [0xb9,
 interface IWSManResourceLocatorInternal : IUnknown
 {
 }
+enum CLSID_WSMan = GUID(0xbced617b, 0xec03, 0x420b, [0x85, 0x8, 0x97, 0x7d, 0xc7, 0xa6, 0x86, 0xbd]);
+struct WSMan
+{
+}
 enum IID_IWSManInternal = GUID(0x4ae2b1d, 0x9954, 0x4d99, [0x94, 0xa9, 0xa9, 0x61, 0xe7, 0x2c, 0x3a, 0x13]);
 interface IWSManInternal : IDispatch
 {
     HRESULT ConfigSDDL(IDispatch, VARIANT, int, BSTR*);
+}
+enum CLSID_WSManInternal = GUID(0x7de087a5, 0x5dcb, 0x4df7, [0xbb, 0x12, 0x9, 0x24, 0xad, 0x8f, 0xbd, 0x9a]);
+struct WSManInternal
+{
 }

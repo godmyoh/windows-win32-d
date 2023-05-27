@@ -1,9 +1,9 @@
 module windows.win32.ui.windowsandmessaging;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, CHAR, COLORREF, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT, SIZE, WPARAM;
+import windows.win32.foundation : BOOL, BOOLEAN, CHAR, COLORREF, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT, SIZE, WAIT_EVENT, WPARAM;
 import windows.win32.graphics.gdi : BLENDFUNCTION, HBITMAP, HBRUSH, HDC, HRGN, LOGFONTA, LOGFONTW;
-import windows.win32.ui.shell_ : HELPINFO;
+import windows.win32.ui.shell : HELPINFO;
 
 version (Windows):
 extern (Windows):
@@ -110,8 +110,8 @@ enum : uint
     MF_END             = 0x00000080,
 }
 
-alias SHOW_WINDOW_CMD = uint;
-enum : uint
+alias SHOW_WINDOW_CMD = int;
+enum : int
 {
     SW_HIDE            = 0x00000000,
     SW_SHOWNORMAL      = 0x00000001,
@@ -548,8 +548,8 @@ enum : uint
     MFS_DEFAULT   = 0x00001000,
 }
 
-alias SCROLLBAR_CONSTANTS = uint;
-enum : uint
+alias SCROLLBAR_CONSTANTS = int;
+enum : int
 {
     SB_CTL  = 0x00000002,
     SB_HORZ = 0x00000000,
@@ -797,8 +797,8 @@ enum : uint
     GW_OWNER        = 0x00000004,
 }
 
-alias SYSTEM_METRICS_INDEX = uint;
-enum : uint
+alias SYSTEM_METRICS_INDEX = int;
+enum : int
 {
     SM_ARRANGE                     = 0x00000038,
     SM_CLEANBOOT                   = 0x00000043,
@@ -1153,9 +1153,9 @@ BOOL SendNotifyMessageA(HWND, uint, WPARAM, LPARAM);
 BOOL SendNotifyMessageW(HWND, uint, WPARAM, LPARAM);
 BOOL SendMessageCallbackA(HWND, uint, WPARAM, LPARAM, SENDASYNCPROC, ulong);
 BOOL SendMessageCallbackW(HWND, uint, WPARAM, LPARAM, SENDASYNCPROC, ulong);
-void* RegisterDeviceNotificationA(HANDLE, void*, REGISTER_NOTIFICATION_FLAGS);
-void* RegisterDeviceNotificationW(HANDLE, void*, REGISTER_NOTIFICATION_FLAGS);
-BOOL UnregisterDeviceNotification(void*);
+HDEVNOTIFY RegisterDeviceNotificationA(HANDLE, void*, REGISTER_NOTIFICATION_FLAGS);
+HDEVNOTIFY RegisterDeviceNotificationW(HANDLE, void*, REGISTER_NOTIFICATION_FLAGS);
+BOOL UnregisterDeviceNotification(HDEVNOTIFY);
 BOOL PostMessageA(HWND, uint, WPARAM, LPARAM);
 BOOL PostMessageW(HWND, uint, WPARAM, LPARAM);
 BOOL PostThreadMessageA(uint, uint, WPARAM, LPARAM);
@@ -1268,8 +1268,8 @@ BOOL IsCharUpperW(wchar);
 BOOL IsCharLowerA(CHAR);
 BOOL GetInputState();
 uint GetQueueStatus(QUEUE_STATUS_FLAGS);
-uint MsgWaitForMultipleObjects(uint, const(HANDLE)*, BOOL, uint, QUEUE_STATUS_FLAGS);
-uint MsgWaitForMultipleObjectsEx(uint, const(HANDLE)*, uint, QUEUE_STATUS_FLAGS, MSG_WAIT_FOR_MULTIPLE_OBJECTS_EX_FLAGS);
+WAIT_EVENT MsgWaitForMultipleObjects(uint, const(HANDLE)*, BOOL, uint, QUEUE_STATUS_FLAGS);
+WAIT_EVENT MsgWaitForMultipleObjectsEx(uint, const(HANDLE)*, uint, QUEUE_STATUS_FLAGS, MSG_WAIT_FOR_MULTIPLE_OBJECTS_EX_FLAGS);
 ulong SetTimer(HWND, ulong, uint, TIMERPROC);
 ulong SetCoalescableTimer(HWND, ulong, uint, TIMERPROC, uint);
 BOOL KillTimer(HWND, ulong);
@@ -1452,8 +1452,8 @@ int LookupIconIdFromDirectory(ubyte*, BOOL);
 int LookupIconIdFromDirectoryEx(ubyte*, BOOL, int, int, IMAGE_FLAGS);
 HICON CreateIconFromResource(ubyte*, uint, BOOL, uint);
 HICON CreateIconFromResourceEx(ubyte*, uint, BOOL, uint, int, int, IMAGE_FLAGS);
-LOADIMAGE_HANDLE LoadImageA(HINSTANCE, const(char)*, GDI_IMAGE_TYPE, int, int, IMAGE_FLAGS);
-LOADIMAGE_HANDLE LoadImageW(HINSTANCE, const(wchar)*, GDI_IMAGE_TYPE, int, int, IMAGE_FLAGS);
+HANDLE LoadImageA(HINSTANCE, const(char)*, GDI_IMAGE_TYPE, int, int, IMAGE_FLAGS);
+HANDLE LoadImageW(HINSTANCE, const(wchar)*, GDI_IMAGE_TYPE, int, int, IMAGE_FLAGS);
 HANDLE CopyImage(HANDLE, GDI_IMAGE_TYPE, int, int, IMAGE_FLAGS);
 BOOL DrawIconEx(HDC, int, int, HICON, int, int, uint, HBRUSH, DI_FLAGS);
 HICON CreateIconIndirect(ICONINFO*);
@@ -1500,6 +1500,8 @@ BOOL GetAltTabInfoA(HWND, int, ALTTABINFO*, PSTR, uint);
 BOOL GetAltTabInfoW(HWND, int, ALTTABINFO*, PWSTR, uint);
 BOOL ChangeWindowMessageFilter(uint, CHANGE_WINDOW_MESSAGE_FILTER_FLAGS);
 BOOL ChangeWindowMessageFilterEx(HWND, uint, WINDOW_MESSAGE_FILTER_ACTION, CHANGEFILTERSTRUCT*);
+BOOL SetAdditionalForegroundBoostProcesses(HWND, uint, HANDLE*);
+BOOL RegisterForTooltipDismissNotification(HWND, TOOLTIP_DISMISS_FLAGS);
 HRESULT CreateResourceIndexer(const(wchar)*, const(wchar)*, void**);
 void DestroyResourceIndexer(void*);
 HRESULT IndexFilePath(void*, const(wchar)*, PWSTR*, uint*, IndexedResourceQualifier**);
@@ -1566,6 +1568,7 @@ enum GUID_IO_DISK_LAYOUT_CHANGE = GUID(0x11dff54c, 0x8469, 0x41f9, [0xb3, 0xde, 
 enum GUID_IO_DISK_HEALTH_NOTIFICATION = GUID(0xf1bd644, 0x3916, 0x49c5, [0xb0, 0x63, 0x99, 0x19, 0x40, 0x11, 0x8f, 0xb2]);
 enum STRSAFE_USE_SECURE_CRT = 0x00000000;
 enum STRSAFE_MAX_CCH = 0x7fffffff;
+enum STRSAFE_MAX_LENGTH = 0x7ffffffe;
 enum STRSAFE_IGNORE_NULLS = 0x00000100;
 enum STRSAFE_FILL_BEHIND_NULL = 0x00000200;
 enum STRSAFE_FILL_ON_FAILURE = 0x00000400;
@@ -1638,23 +1641,23 @@ enum DBTF_XPORT = 0x00000002;
 enum DBTF_SLOWNET = 0x00000004;
 enum DBT_VPOWERDAPI = 0x00008100;
 enum DBT_USERDEFINED = 0x0000ffff;
-enum RT_CURSOR = 0x00000001;
-enum RT_BITMAP = 0x00000002;
-enum RT_ICON = 0x00000003;
-enum RT_MENU = 0x00000004;
-enum RT_DIALOG = 0x00000005;
-enum RT_FONTDIR = 0x00000007;
-enum RT_FONT = 0x00000008;
-enum RT_ACCELERATOR = 0x00000009;
-enum RT_MESSAGETABLE = 0x0000000b;
+enum RT_CURSOR = 0x0001;
+enum RT_BITMAP = 0x0002;
+enum RT_ICON = 0x0003;
+enum RT_MENU = 0x0004;
+enum RT_DIALOG = 0x0005;
+enum RT_FONTDIR = 0x0007;
+enum RT_FONT = 0x0008;
+enum RT_ACCELERATOR = 0x0009;
+enum RT_MESSAGETABLE = 0x000b;
 enum DIFFERENCE = 0x0000000b;
-enum RT_VERSION = 0x00000010;
-enum RT_DLGINCLUDE = 0x00000011;
-enum RT_PLUGPLAY = 0x00000013;
-enum RT_VXD = 0x00000014;
-enum RT_ANICURSOR = 0x00000015;
-enum RT_ANIICON = 0x00000016;
-enum RT_HTML = 0x00000017;
+enum RT_VERSION = 0x0010;
+enum RT_DLGINCLUDE = 0x0011;
+enum RT_PLUGPLAY = 0x0013;
+enum RT_VXD = 0x0014;
+enum RT_ANICURSOR = 0x0015;
+enum RT_ANIICON = 0x0016;
+enum RT_HTML = 0x0017;
 enum RT_MANIFEST = 0x00000018;
 enum CREATEPROCESS_MANIFEST_RESOURCE_ID = 0x00000001;
 enum ISOLATIONAWARE_MANIFEST_RESOURCE_ID = 0x00000002;
@@ -2237,24 +2240,24 @@ enum SC_SEPARATOR = 0x0000f00f;
 enum SCF_ISSECURE = 0x00000001;
 enum SC_ICON = 0x0000f020;
 enum SC_ZOOM = 0x0000f030;
-enum IDC_ARROW = 0x00007f00;
-enum IDC_IBEAM = 0x00007f01;
-enum IDC_WAIT = 0x00007f02;
-enum IDC_CROSS = 0x00007f03;
-enum IDC_UPARROW = 0x00007f04;
-enum IDC_SIZE = 0x00007f80;
-enum IDC_ICON = 0x00007f81;
-enum IDC_SIZENWSE = 0x00007f82;
-enum IDC_SIZENESW = 0x00007f83;
-enum IDC_SIZEWE = 0x00007f84;
-enum IDC_SIZENS = 0x00007f85;
-enum IDC_SIZEALL = 0x00007f86;
-enum IDC_NO = 0x00007f88;
-enum IDC_HAND = 0x00007f89;
-enum IDC_APPSTARTING = 0x00007f8a;
-enum IDC_HELP = 0x00007f8b;
-enum IDC_PIN = 0x00007f9f;
-enum IDC_PERSON = 0x00007fa0;
+enum IDC_ARROW = 0x7f00;
+enum IDC_IBEAM = 0x7f01;
+enum IDC_WAIT = 0x7f02;
+enum IDC_CROSS = 0x7f03;
+enum IDC_UPARROW = 0x7f04;
+enum IDC_SIZE = 0x7f80;
+enum IDC_ICON = 0x7f81;
+enum IDC_SIZENWSE = 0x7f82;
+enum IDC_SIZENESW = 0x7f83;
+enum IDC_SIZEWE = 0x7f84;
+enum IDC_SIZENS = 0x7f85;
+enum IDC_SIZEALL = 0x7f86;
+enum IDC_NO = 0x7f88;
+enum IDC_HAND = 0x7f89;
+enum IDC_APPSTARTING = 0x7f8a;
+enum IDC_HELP = 0x7f8b;
+enum IDC_PIN = 0x7f9f;
+enum IDC_PERSON = 0x7fa0;
 enum CURSOR_CREATION_SCALING_NONE = 0x00000001;
 enum CURSOR_CREATION_SCALING_DEFAULT = 0x00000002;
 enum IMAGE_ENHMETAFILE = 0x00000003;
@@ -2932,8 +2935,8 @@ alias HICON = void*;
 alias HMENU = void*;
 alias HCURSOR = void*;
 alias HACCEL = void*;
+alias HDEVNOTIFY = void*;
 alias HDWP = void*;
-alias LOADIMAGE_HANDLE = long;
 struct MESSAGE_RESOURCE_ENTRY
 {
     ushort Length;
@@ -3183,7 +3186,7 @@ struct WINDOWPLACEMENT
 {
     uint length;
     WINDOWPLACEMENT_FLAGS flags;
-    SHOW_WINDOW_CMD showCmd;
+    uint showCmd;
     POINT ptMinPosition;
     POINT ptMaxPosition;
     RECT rcNormalPosition;
@@ -3615,6 +3618,36 @@ enum : int
     TDF_UNREGISTER = 0x00000002,
 }
 
+struct MENUEX_TEMPLATE_HEADER
+{
+    ushort wVersion;
+    ushort wOffset;
+    uint dwHelpId;
+}
+struct MENUEX_TEMPLATE_ITEM
+{
+    uint dwType;
+    uint dwState;
+    uint uId;
+    ushort wFlags;
+    wchar[1] szText;
+}
+struct MENUTEMPLATEEX
+{
+    union
+    {
+        struct _Menu_e__Struct
+        {
+            MENUITEMTEMPLATEHEADER mitHeader;
+            MENUITEMTEMPLATE[1] miTemplate;
+        }
+        struct _MenuEx_e__Struct
+        {
+            MENUEX_TEMPLATE_HEADER mexHeader;
+            MENUEX_TEMPLATE_ITEM[1] mexItem;
+        }
+    }
+}
 struct IndexedResourceQualifier
 {
     PWSTR name;
@@ -3767,7 +3800,7 @@ struct DEV_BROADCAST_HANDLE
     uint dbch_devicetype;
     uint dbch_reserved;
     HANDLE dbch_handle;
-    void* dbch_hdevnotify;
+    HDEVNOTIFY dbch_hdevnotify;
     GUID dbch_eventguid;
     int dbch_nameoffset;
     ubyte[1] dbch_data;

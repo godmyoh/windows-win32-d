@@ -2,16 +2,13 @@ module windows.win32.storage.datadeduplication;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BSTR, HRESULT;
-import windows.win32.system.com_ : IStream, IUnknown, VARIANT;
+import windows.win32.system.com : IStream, IUnknown;
+import windows.win32.system.variant : VARIANT;
 
 version (Windows):
 extern (Windows):
 
 enum DEDUP_CHUNKLIB_MAX_CHUNKS_ENUM = 0x00000400;
-enum CLSID_DedupBackupSupport = GUID(0x73d6b2ad, 0x2984, 0x4715, [0xb2, 0xe3, 0x92, 0x4c, 0x14, 0x97, 0x44, 0xdd]);
-struct DedupBackupSupport
-{
-}
 struct DEDUP_CONTAINER_EXTENT
 {
     uint ContainerIndex;
@@ -41,6 +38,10 @@ enum IID_IDedupBackupSupport = GUID(0xc719d963, 0x2b2d, 0x415e, [0xac, 0xf7, 0x7
 interface IDedupBackupSupport : IUnknown
 {
     HRESULT RestoreFiles(uint, BSTR*, IDedupReadFileCallback, uint, HRESULT*);
+}
+enum CLSID_DedupBackupSupport = GUID(0x73d6b2ad, 0x2984, 0x4715, [0xb2, 0xe3, 0x92, 0x4c, 0x14, 0x97, 0x44, 0xdd]);
+struct DedupBackupSupport
+{
 }
 alias DEDUP_SET_PARAM_TYPE = int;
 enum : int
@@ -158,10 +159,6 @@ enum : int
     DedupCompressionAlgorithm_Xpress   = 0x00000001,
 }
 
-enum CLSID_DedupDataPort = GUID(0x8f107207, 0x1829, 0x48b2, [0xa6, 0x4b, 0xe6, 0x1f, 0x8e, 0xd, 0x9a, 0xcb]);
-struct DedupDataPort
-{
-}
 enum IID_IDedupDataPort = GUID(0x7963d734, 0x40a9, 0x4ea3, [0xbb, 0xf6, 0x5a, 0x89, 0xd2, 0x6f, 0x7a, 0xe8]);
 interface IDedupDataPort : IUnknown
 {
@@ -184,4 +181,8 @@ interface IDedupDataPortManager : IUnknown
     HRESULT GetConfiguration(uint*, uint*, DedupChunkingAlgorithm*, DedupHashingAlgorithm*, DedupCompressionAlgorithm*);
     HRESULT GetVolumeStatus(uint, BSTR, DedupDataPortVolumeStatus*);
     HRESULT GetVolumeDataPort(uint, BSTR, IDedupDataPort*);
+}
+enum CLSID_DedupDataPort = GUID(0x8f107207, 0x1829, 0x48b2, [0xa6, 0x4b, 0xe6, 0x1f, 0x8e, 0xd, 0x9a, 0xcb]);
+struct DedupDataPort
+{
 }

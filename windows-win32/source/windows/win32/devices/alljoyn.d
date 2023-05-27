@@ -1,7 +1,7 @@
 module windows.win32.devices.alljoyn;
 
 import windows.win32.foundation : BOOL, HANDLE, PSTR, PWSTR;
-import windows.win32.security_ : SECURITY_ATTRIBUTES;
+import windows.win32.security : SECURITY_ATTRIBUTES;
 
 version (Windows):
 extern (Windows):
@@ -140,14 +140,14 @@ ubyte alljoyn_aboutdata_isfieldrequired(alljoyn_aboutdata, const(char)*);
 ubyte alljoyn_aboutdata_isfieldannounced(alljoyn_aboutdata, const(char)*);
 ubyte alljoyn_aboutdata_isfieldlocalized(alljoyn_aboutdata, const(char)*);
 PSTR alljoyn_aboutdata_getfieldsignature(alljoyn_aboutdata, const(char)*);
-_alljoyn_abouticon_handle* alljoyn_abouticon_create();
-void alljoyn_abouticon_destroy(_alljoyn_abouticon_handle*);
-void alljoyn_abouticon_getcontent(_alljoyn_abouticon_handle*, const(ubyte)**, ulong*);
-QStatus alljoyn_abouticon_setcontent(_alljoyn_abouticon_handle*, const(char)*, ubyte*, ulong, ubyte);
-void alljoyn_abouticon_geturl(_alljoyn_abouticon_handle*, const(byte)**, const(byte)**);
-QStatus alljoyn_abouticon_seturl(_alljoyn_abouticon_handle*, const(char)*, const(char)*);
-void alljoyn_abouticon_clear(_alljoyn_abouticon_handle*);
-QStatus alljoyn_abouticon_setcontent_frommsgarg(_alljoyn_abouticon_handle*, const(alljoyn_msgarg));
+alljoyn_abouticon alljoyn_abouticon_create();
+void alljoyn_abouticon_destroy(alljoyn_abouticon);
+void alljoyn_abouticon_getcontent(alljoyn_abouticon, const(ubyte)**, ulong*);
+QStatus alljoyn_abouticon_setcontent(alljoyn_abouticon, const(char)*, ubyte*, ulong, ubyte);
+void alljoyn_abouticon_geturl(alljoyn_abouticon, const(byte)**, const(byte)**);
+QStatus alljoyn_abouticon_seturl(alljoyn_abouticon, const(char)*, const(char)*);
+void alljoyn_abouticon_clear(alljoyn_abouticon);
+QStatus alljoyn_abouticon_setcontent_frommsgarg(alljoyn_abouticon, const(alljoyn_msgarg));
 ushort alljoyn_permissionconfigurator_getdefaultclaimcapabilities();
 QStatus alljoyn_permissionconfigurator_getapplicationstate(const(alljoyn_permissionconfigurator), alljoyn_applicationstate*);
 QStatus alljoyn_permissionconfigurator_setapplicationstate(alljoyn_permissionconfigurator, alljoyn_applicationstate);
@@ -463,12 +463,12 @@ alljoyn_permissionconfigurator alljoyn_busattachment_getpermissionconfigurator(a
 QStatus alljoyn_busattachment_registerapplicationstatelistener(alljoyn_busattachment, alljoyn_applicationstatelistener);
 QStatus alljoyn_busattachment_unregisterapplicationstatelistener(alljoyn_busattachment, alljoyn_applicationstatelistener);
 QStatus alljoyn_busattachment_deletedefaultkeystore(const(char)*);
-_alljoyn_abouticonobj_handle* alljoyn_abouticonobj_create(alljoyn_busattachment, _alljoyn_abouticon_handle*);
-void alljoyn_abouticonobj_destroy(_alljoyn_abouticonobj_handle*);
-_alljoyn_abouticonproxy_handle* alljoyn_abouticonproxy_create(alljoyn_busattachment, const(char)*, uint);
-void alljoyn_abouticonproxy_destroy(_alljoyn_abouticonproxy_handle*);
-QStatus alljoyn_abouticonproxy_geticon(_alljoyn_abouticonproxy_handle*, _alljoyn_abouticon_handle*);
-QStatus alljoyn_abouticonproxy_getversion(_alljoyn_abouticonproxy_handle*, ushort*);
+alljoyn_abouticonobj alljoyn_abouticonobj_create(alljoyn_busattachment, alljoyn_abouticon);
+void alljoyn_abouticonobj_destroy(alljoyn_abouticonobj);
+alljoyn_abouticonproxy alljoyn_abouticonproxy_create(alljoyn_busattachment, const(char)*, uint);
+void alljoyn_abouticonproxy_destroy(alljoyn_abouticonproxy);
+QStatus alljoyn_abouticonproxy_geticon(alljoyn_abouticonproxy, alljoyn_abouticon);
+QStatus alljoyn_abouticonproxy_getversion(alljoyn_abouticonproxy, ushort*);
 alljoyn_aboutdatalistener alljoyn_aboutdatalistener_create(const(alljoyn_aboutdatalistener_callbacks)*, const(void)*);
 void alljoyn_aboutdatalistener_destroy(alljoyn_aboutdatalistener);
 alljoyn_aboutobj alljoyn_aboutobj_create(alljoyn_busattachment, alljoyn_about_announceflag);
@@ -1035,9 +1035,6 @@ enum : int
     ALLJOYN_WILDCARD         = 0x0000002a,
 }
 
-struct _alljoyn_abouticon_handle
-{
-}
 alias alljoyn_applicationstate = int;
 enum : int
 {
@@ -1244,12 +1241,6 @@ struct alljoyn_aboutlistener_callback
 }
 alias alljoyn_busattachment_joinsessioncb_ptr = void function(QStatus, uint, const(alljoyn_sessionopts), void*);
 alias alljoyn_busattachment_setlinktimeoutcb_ptr = void function(QStatus, uint, void*);
-struct _alljoyn_abouticonobj_handle
-{
-}
-struct _alljoyn_abouticonproxy_handle
-{
-}
 alias alljoyn_aboutdatalistener_getaboutdata_ptr = QStatus function(const(void)*, alljoyn_msgarg, const(char)*);
 alias alljoyn_aboutdatalistener_getannouncedaboutdata_ptr = QStatus function(const(void)*, alljoyn_msgarg);
 struct alljoyn_aboutdatalistener_callbacks
@@ -1273,6 +1264,9 @@ struct alljoyn_observerlistener_callback
 }
 alias alljoyn_aboutdata = long;
 alias alljoyn_aboutdatalistener = long;
+alias alljoyn_abouticon = long;
+alias alljoyn_abouticonobj = long;
+alias alljoyn_abouticonproxy = long;
 alias alljoyn_aboutlistener = long;
 alias alljoyn_aboutobj = long;
 alias alljoyn_aboutobjectdescription = long;

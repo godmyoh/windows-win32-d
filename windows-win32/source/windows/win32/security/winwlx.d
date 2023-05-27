@@ -1,7 +1,7 @@
 module windows.win32.security.winwlx;
 
 import windows.win32.foundation : BOOL, HANDLE, HWND, LPARAM, LUID, PWSTR;
-import windows.win32.security_ : QUOTA_LIMITS;
+import windows.win32.security : QUOTA_LIMITS;
 import windows.win32.system.stationsanddesktops : HDESK;
 import windows.win32.ui.windowsandmessaging : DLGPROC, DLGTEMPLATE;
 

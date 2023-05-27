@@ -2,7 +2,7 @@ module windows.win32.system.remoteassistance;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BSTR, HRESULT;
-import windows.win32.system.com_ : IDispatch, IUnknown;
+import windows.win32.system.com : IDispatch, IUnknown;
 
 version (Windows):
 extern (Windows):
@@ -11,10 +11,6 @@ enum DISPID_EVENT_ON_STATE_CHANGED = 0x00000005;
 enum DISPID_EVENT_ON_TERMINATION = 0x00000006;
 enum DISPID_EVENT_ON_CONTEXT_DATA = 0x00000007;
 enum DISPID_EVENT_ON_SEND_ERROR = 0x00000008;
-enum CLSID_RendezvousApplication = GUID(0xb7e019a, 0xb5de, 0x47fa, [0x89, 0x66, 0x90, 0x82, 0xf8, 0x2f, 0xb1, 0x92]);
-struct RendezvousApplication
-{
-}
 alias RENDEZVOUS_SESSION_STATE = int;
 enum : int
 {
@@ -56,4 +52,8 @@ enum IID_IRendezvousApplication = GUID(0x4f4d070b, 0xa275, 0x49fb, [0xb1, 0xd, 0
 interface IRendezvousApplication : IUnknown
 {
     HRESULT SetRendezvousSession(IUnknown);
+}
+enum CLSID_RendezvousApplication = GUID(0xb7e019a, 0xb5de, 0x47fa, [0x89, 0x66, 0x90, 0x82, 0xf8, 0x2f, 0xb1, 0x92]);
+struct RendezvousApplication
+{
 }

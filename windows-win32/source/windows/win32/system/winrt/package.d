@@ -1,8 +1,8 @@
-module windows.win32.system.winrt_;
+module windows.win32.system.winrt;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, HRESULT, HWND, PWSTR;
-import windows.win32.system.com_ : IStream, IUnknown;
+import windows.win32.system.com : IStream, IUnknown;
 import windows.win32.system.com.marshal : IMarshal;
 import windows.win32.ui.shell.propertiessystem : INamedPropertyStore;
 
@@ -44,8 +44,8 @@ HRESULT WindowsInspectString2(ulong, ushort, PINSPECT_HSTRING_CALLBACK2, void*, 
 HRESULT RoInitialize(RO_INIT_TYPE);
 void RoUninitialize();
 HRESULT RoActivateInstance(HSTRING, IInspectable*);
-HRESULT RoRegisterActivationFactories(HSTRING*, PFNGETACTIVATIONFACTORY*, uint, long*);
-void RoRevokeActivationFactories(long);
+HRESULT RoRegisterActivationFactories(HSTRING*, PFNGETACTIVATIONFACTORY*, uint, RO_REGISTRATION_COOKIE*);
+void RoRevokeActivationFactories(RO_REGISTRATION_COOKIE);
 HRESULT RoGetActivationFactory(HSTRING, const(GUID)*, void**);
 HRESULT RoRegisterForApartmentShutdown(IApartmentShutdown, ulong*, APARTMENT_SHUTDOWN_REGISTRATION_COOKIE*);
 HRESULT RoUnregisterForApartmentShutdown(APARTMENT_SHUTDOWN_REGISTRATION_COOKIE);
@@ -96,6 +96,7 @@ alias HSTRING = void*;
 alias HSTRING_BUFFER = void*;
 alias ROPARAMIIDHANDLE = long;
 alias APARTMENT_SHUTDOWN_REGISTRATION_COOKIE = long;
+alias RO_REGISTRATION_COOKIE = long;
 alias ACTIVATIONTYPE = int;
 enum : int
 {
@@ -332,9 +333,6 @@ enum : int
     RO_INIT_MULTITHREADED  = 0x00000001,
 }
 
-struct _RO_REGISTRATION_COOKIE
-{
-}
 alias PFNGETACTIVATIONFACTORY = HRESULT function(HSTRING, IActivationFactory*);
 enum IID_IBufferByteAccess = GUID(0x905a0fef, 0xbc53, 0x11df, [0x8c, 0x49, 0x0, 0x1e, 0x4f, 0xc6, 0x86, 0xda]);
 interface IBufferByteAccess : IUnknown

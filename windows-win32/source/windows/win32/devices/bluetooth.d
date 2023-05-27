@@ -6,13 +6,13 @@ import windows.win32.foundation : BOOL, BOOLEAN, CHAR, HANDLE, HRESULT, HWND, PW
 version (Windows):
 extern (Windows):
 
-long BluetoothFindFirstRadio(const(BLUETOOTH_FIND_RADIO_PARAMS)*, HANDLE*);
-BOOL BluetoothFindNextRadio(long, HANDLE*);
-BOOL BluetoothFindRadioClose(long);
+HBLUETOOTH_RADIO_FIND BluetoothFindFirstRadio(const(BLUETOOTH_FIND_RADIO_PARAMS)*, HANDLE*);
+BOOL BluetoothFindNextRadio(HBLUETOOTH_RADIO_FIND, HANDLE*);
+BOOL BluetoothFindRadioClose(HBLUETOOTH_RADIO_FIND);
 uint BluetoothGetRadioInfo(HANDLE, BLUETOOTH_RADIO_INFO*);
-long BluetoothFindFirstDevice(const(BLUETOOTH_DEVICE_SEARCH_PARAMS)*, BLUETOOTH_DEVICE_INFO*);
-BOOL BluetoothFindNextDevice(long, BLUETOOTH_DEVICE_INFO*);
-BOOL BluetoothFindDeviceClose(long);
+HBLUETOOTH_DEVICE_FIND BluetoothFindFirstDevice(const(BLUETOOTH_DEVICE_SEARCH_PARAMS)*, BLUETOOTH_DEVICE_INFO*);
+BOOL BluetoothFindNextDevice(HBLUETOOTH_DEVICE_FIND, BLUETOOTH_DEVICE_INFO*);
+BOOL BluetoothFindDeviceClose(HBLUETOOTH_DEVICE_FIND);
 uint BluetoothGetDeviceInfo(HANDLE, BLUETOOTH_DEVICE_INFO*);
 uint BluetoothUpdateDeviceRecord(const(BLUETOOTH_DEVICE_INFO)*);
 uint BluetoothRemoveDevice(const(BLUETOOTH_ADDRESS)*);
@@ -883,6 +883,8 @@ enum RFCOMM_CMD_RLS = 0x00000002;
 enum RFCOMM_CMD_RPN = 0x00000003;
 enum RFCOMM_CMD_RPN_REQUEST = 0x00000004;
 enum RFCOMM_CMD_RPN_RESPONSE = 0x00000005;
+alias HBLUETOOTH_DEVICE_FIND = void*;
+alias HBLUETOOTH_RADIO_FIND = void*;
 alias HANDLE_SDP_TYPE = void*;
 struct SDP_LARGE_INTEGER_16
 {
