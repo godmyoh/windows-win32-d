@@ -42,7 +42,7 @@ HRESULT CLRCreateInstance(const(GUID)*, const(GUID)*, void**);
 enum DEPRECATED_CLR_API_MESG = "This API has been deprecated. Refer to https://go.microsoft.com/fwlink/?LinkId=143720 for more details.";
 enum CLR_MAJOR_VERSION = 0x00000004;
 enum CLR_MINOR_VERSION = 0x00000000;
-enum CLR_BUILD_VERSION = 0x0000766f;
+enum CLR_BUILD_VERSION = 0x000056cc;
 enum CLR_ASSEMBLY_MAJOR_VERSION = 0x00000004;
 enum CLR_ASSEMBLY_MINOR_VERSION = 0x00000000;
 enum CLR_ASSEMBLY_BUILD_VERSION = 0x00000000;
@@ -150,6 +150,7 @@ enum : int
     RUNTIME_INFO_DONT_RETURN_VERSION    = 0x00000020,
     RUNTIME_INFO_DONT_SHOW_ERROR_DIALOG = 0x00000040,
     RUNTIME_INFO_IGNORE_ERROR_MODE      = 0x00001000,
+    RUNTIME_INFO_REQUEST_ARM64          = 0x00002000,
 }
 
 alias APPDOMAIN_SECURITY_FLAGS = int;
@@ -275,7 +276,7 @@ enum IID_IHostMalloc = GUID(0x1831991c, 0xcc53, 0x4a31, [0xb2, 0x18, 0x4, 0xe9, 
 interface IHostMalloc : IUnknown
 {
     HRESULT Alloc(ulong, EMemoryCriticalLevel, void**);
-    HRESULT DebugAlloc(ulong, EMemoryCriticalLevel, PSTR, int, void**);
+    HRESULT DebugAlloc(ulong, EMemoryCriticalLevel, ubyte*, int, void**);
     HRESULT Free(void*);
 }
 alias MALLOC_TYPE = int;

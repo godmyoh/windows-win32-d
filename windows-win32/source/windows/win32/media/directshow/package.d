@@ -5046,7 +5046,7 @@ interface IAMLine21Decoder : IUnknown
     HRESULT SetOutputFormat(BITMAPINFO*);
     HRESULT GetBackgroundColor(uint*);
     HRESULT SetBackgroundColor(uint);
-    HRESULT GetRedrawAlways(int*);
+    HRESULT GetRedrawAlways(BOOL*);
     HRESULT SetRedrawAlways(BOOL);
     HRESULT GetDrawBackgroundMode(AM_LINE21_DRAWBGMODE*);
     HRESULT SetDrawBackgroundMode(AM_LINE21_DRAWBGMODE);
@@ -5392,7 +5392,7 @@ interface IAMWstDecoder : IUnknown
     HRESULT SetOutputFormat(BITMAPINFO*);
     HRESULT GetBackgroundColor(uint*);
     HRESULT SetBackgroundColor(uint);
-    HRESULT GetRedrawAlways(int*);
+    HRESULT GetRedrawAlways(BOOL*);
     HRESULT SetRedrawAlways(BOOL);
     HRESULT GetDrawBackgroundMode(AM_WST_DRAWBGMODE*);
     HRESULT SetDrawBackgroundMode(AM_WST_DRAWBGMODE);
@@ -5507,12 +5507,6 @@ interface IVideoProcAmp : IUnknown
     HRESULT get_WhiteBalanceComponent(int*, int*, int*);
     HRESULT put_WhiteBalanceComponent(int, int, int);
     HRESULT getRange_WhiteBalanceComponent(int*, int*, int*, int*, int*);
-}
-enum IID_IKsNodeControl = GUID(0x11737c14, 0x24a7, 0x4bb5, [0x81, 0xa0, 0xd, 0x0, 0x38, 0x13, 0xb0, 0xc4]);
-interface IKsNodeControl : IUnknown
-{
-    HRESULT put_NodeId(uint);
-    HRESULT put_KsControl(void*);
 }
 enum IID_IAMWMBufferPass = GUID(0x6dd816d7, 0xe740, 0x4123, [0x9e, 0x24, 0x24, 0x44, 0x41, 0x26, 0x44, 0xd8]);
 interface IAMWMBufferPass : IUnknown
@@ -6352,7 +6346,7 @@ interface IVPBaseConfig : IUnknown
 enum IID_IVPConfig = GUID(0xbc29a660, 0x30e3, 0x11d0, [0x9e, 0x69, 0x0, 0xc0, 0x4f, 0xd7, 0xc1, 0x5b]);
 interface IVPConfig : IVPBaseConfig
 {
-    HRESULT IsVPDecimationAllowed(int*);
+    HRESULT IsVPDecimationAllowed(BOOL*);
     HRESULT SetScalingFactors(AMVPSIZE*);
 }
 enum IID_IVPVBIConfig = GUID(0xec529b00, 0x1a1f, 0x11d1, [0xba, 0xd9, 0x0, 0x60, 0x97, 0x44, 0x11, 0x1a]);

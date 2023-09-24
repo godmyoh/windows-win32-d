@@ -2,7 +2,7 @@ module windows.win32.system.messagequeuing;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BSTR, HANDLE, HRESULT, PWSTR, VARIANT_BOOL;
-import windows.win32.security : PSECURITY_DESCRIPTOR;
+import windows.win32.security : OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR;
 import windows.win32.system.com : IDispatch, IUnknown;
 import windows.win32.system.com.structuredstorage : PROPVARIANT;
 import windows.win32.system.distributedtransactioncoordinator : ITransaction;
@@ -48,7 +48,7 @@ HRESULT MQCloseQueue(long);
 HRESULT MQSetQueueProperties(const(wchar)*, MQQUEUEPROPS*);
 HRESULT MQGetQueueProperties(const(wchar)*, MQQUEUEPROPS*);
 HRESULT MQGetQueueSecurity(const(wchar)*, uint, PSECURITY_DESCRIPTOR, uint, uint*);
-HRESULT MQSetQueueSecurity(const(wchar)*, uint, PSECURITY_DESCRIPTOR);
+HRESULT MQSetQueueSecurity(const(wchar)*, OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR);
 HRESULT MQPathNameToFormatName(const(wchar)*, PWSTR, uint*);
 HRESULT MQHandleToFormatName(long, PWSTR, uint*);
 HRESULT MQInstanceToFormatName(GUID*, PWSTR, uint*);

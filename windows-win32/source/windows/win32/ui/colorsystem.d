@@ -145,7 +145,7 @@ long CMCreateTransformExtW(LOGCOLORSPACEW*, void*, void*, uint);
 BOOL CMDeleteTransform(long);
 uint CMGetInfo(uint);
 BOOL CMGetNamedProfileInfo(long, NAMED_PROFILE_INFO*);
-BOOL CMIsProfileValid(long, int*);
+BOOL CMIsProfileValid(long, BOOL*);
 BOOL CMTranslateColors(long, COLOR*, uint, COLORTYPE, COLOR*, COLORTYPE);
 BOOL CMTranslateRGBsExt(long, void*, BMFORMAT, uint, uint, uint, void*, BMFORMAT, uint, LPBMCALLBACKFN, LPARAM);
 long WcsOpenColorProfileA(PROFILE*, PROFILE*, PROFILE*, uint, uint, uint, uint);

@@ -9,8 +9,8 @@ version (Windows):
 extern (Windows):
 
 BOOL SetServiceBits(SERVICE_STATUS_HANDLE, uint, BOOL, BOOL);
-BOOL ChangeServiceConfigA(SC_HANDLE, uint, SERVICE_START_TYPE, SERVICE_ERROR, const(char)*, const(char)*, uint*, const(char)*, const(char)*, const(char)*, const(char)*);
-BOOL ChangeServiceConfigW(SC_HANDLE, uint, SERVICE_START_TYPE, SERVICE_ERROR, const(wchar)*, const(wchar)*, uint*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*);
+BOOL ChangeServiceConfigA(SC_HANDLE, ENUM_SERVICE_TYPE, SERVICE_START_TYPE, SERVICE_ERROR, const(char)*, const(char)*, uint*, const(char)*, const(char)*, const(char)*, const(char)*);
+BOOL ChangeServiceConfigW(SC_HANDLE, ENUM_SERVICE_TYPE, SERVICE_START_TYPE, SERVICE_ERROR, const(wchar)*, const(wchar)*, uint*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*);
 BOOL ChangeServiceConfig2A(SC_HANDLE, SERVICE_CONFIG, void*);
 BOOL ChangeServiceConfig2W(SC_HANDLE, SERVICE_CONFIG, void*);
 BOOL CloseServiceHandle(SC_HANDLE);

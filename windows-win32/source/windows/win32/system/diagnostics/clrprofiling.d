@@ -8,8 +8,6 @@ import windows.win32.system.winrt.metadata : ASSEMBLYMETADATA, COR_FIELD_OFFSET,
 version (Windows):
 extern (Windows):
 
-enum CorDB_CONTROL_Profiling = "Cor_Enable_Profiling";
-enum CorDB_CONTROL_ProfilingL = "Cor_Enable_Profiling";
 struct COR_IL_MAP
 {
     uint oldOffset;
@@ -104,6 +102,7 @@ alias FunctionEnter3WithInfo = void function(FunctionIDOrClientID, ulong);
 alias FunctionLeave3WithInfo = void function(FunctionIDOrClientID, ulong);
 alias FunctionTailcall3WithInfo = void function(FunctionIDOrClientID, ulong);
 alias StackSnapshotCallback = HRESULT function(ulong, ulong, ulong, uint, ubyte*, void*);
+alias ObjectReferenceCallback = BOOL function(ulong, ulong*, void*);
 alias COR_PRF_MONITOR = int;
 enum : int
 {
@@ -143,8 +142,9 @@ enum : int
     COR_PRF_DISABLE_ALL_NGEN_IMAGES                      = 0x80000000,
     COR_PRF_ALL                                          = 0x8fffffff,
     COR_PRF_REQUIRE_PROFILE_IMAGE                        = 0x20001800,
-    COR_PRF_ALLOWABLE_AFTER_ATTACH                       = 0x100102fe,
-    COR_PRF_MONITOR_IMMUTABLE                            = 0xeefccc00,
+    COR_PRF_ALLOWABLE_AFTER_ATTACH                       = 0x100502fe,
+    COR_PRF_ALLOWABLE_NOTIFICATION_PROFILER              = 0xb1e32b7f,
+    COR_PRF_MONITOR_IMMUTABLE                            = 0xeef8cc00,
 }
 
 alias COR_PRF_HIGH_MONITOR = int;
@@ -154,9 +154,16 @@ enum : int
     COR_PRF_HIGH_ADD_ASSEMBLY_REFERENCES          = 0x00000001,
     COR_PRF_HIGH_IN_MEMORY_SYMBOLS_UPDATED        = 0x00000002,
     COR_PRF_HIGH_MONITOR_DYNAMIC_FUNCTION_UNLOADS = 0x00000004,
+    COR_PRF_HIGH_DISABLE_TIERED_COMPILATION       = 0x00000008,
+    COR_PRF_HIGH_BASIC_GC                         = 0x00000010,
+    COR_PRF_HIGH_MONITOR_GC_MOVED_OBJECTS         = 0x00000020,
     COR_PRF_HIGH_REQUIRE_PROFILE_IMAGE            = 0x00000000,
-    COR_PRF_HIGH_ALLOWABLE_AFTER_ATTACH           = 0x00000006,
-    COR_PRF_HIGH_MONITOR_IMMUTABLE                = 0x00000000,
+    COR_PRF_HIGH_MONITOR_LARGEOBJECT_ALLOCATED    = 0x00000040,
+    COR_PRF_HIGH_MONITOR_EVENT_PIPE               = 0x00000080,
+    COR_PRF_HIGH_MONITOR_PINNEDOBJECT_ALLOCATED   = 0x00000100,
+    COR_PRF_HIGH_ALLOWABLE_AFTER_ATTACH           = 0x000000f6,
+    COR_PRF_HIGH_ALLOWABLE_NOTIFICATION_PROFILER  = 0x000000fe,
+    COR_PRF_HIGH_MONITOR_IMMUTABLE                = 0x00000008,
 }
 
 alias COR_PRF_MISC = int;
@@ -192,6 +199,7 @@ enum : int
     COR_PRF_SUSPEND_FOR_INPROC_DEBUGGER    = 0x00000006,
     COR_PRF_SUSPEND_FOR_GC_PREP            = 0x00000007,
     COR_PRF_SUSPEND_FOR_REJIT              = 0x00000008,
+    COR_PRF_SUSPEND_FOR_PROFILER           = 0x00000009,
 }
 
 alias COR_PRF_RUNTIME_TYPE = int;
@@ -199,6 +207,81 @@ enum : int
 {
     COR_PRF_DESKTOP_CLR = 0x00000001,
     COR_PRF_CORE_CLR    = 0x00000002,
+}
+
+alias COR_PRF_REJIT_FLAGS = int;
+enum : int
+{
+    COR_PRF_REJIT_BLOCK_INLINING     = 0x00000001,
+    COR_PRF_REJIT_INLINING_CALLBACKS = 0x00000002,
+}
+
+alias COR_PRF_EVENTPIPE_PARAM_TYPE = int;
+enum : int
+{
+    COR_PRF_EVENTPIPE_OBJECT   = 0x00000001,
+    COR_PRF_EVENTPIPE_BOOLEAN  = 0x00000003,
+    COR_PRF_EVENTPIPE_CHAR     = 0x00000004,
+    COR_PRF_EVENTPIPE_SBYTE    = 0x00000005,
+    COR_PRF_EVENTPIPE_BYTE     = 0x00000006,
+    COR_PRF_EVENTPIPE_INT16    = 0x00000007,
+    COR_PRF_EVENTPIPE_UINT16   = 0x00000008,
+    COR_PRF_EVENTPIPE_INT32    = 0x00000009,
+    COR_PRF_EVENTPIPE_UINT32   = 0x0000000a,
+    COR_PRF_EVENTPIPE_INT64    = 0x0000000b,
+    COR_PRF_EVENTPIPE_UINT64   = 0x0000000c,
+    COR_PRF_EVENTPIPE_SINGLE   = 0x0000000d,
+    COR_PRF_EVENTPIPE_DOUBLE   = 0x0000000e,
+    COR_PRF_EVENTPIPE_DECIMAL  = 0x0000000f,
+    COR_PRF_EVENTPIPE_DATETIME = 0x00000010,
+    COR_PRF_EVENTPIPE_GUID     = 0x00000011,
+    COR_PRF_EVENTPIPE_STRING   = 0x00000012,
+    COR_PRF_EVENTPIPE_ARRAY    = 0x00000013,
+}
+
+alias COR_PRF_EVENTPIPE_LEVEL = int;
+enum : int
+{
+    COR_PRF_EVENTPIPE_LOGALWAYS     = 0x00000000,
+    COR_PRF_EVENTPIPE_CRITICAL      = 0x00000001,
+    COR_PRF_EVENTPIPE_ERROR         = 0x00000002,
+    COR_PRF_EVENTPIPE_WARNING       = 0x00000003,
+    COR_PRF_EVENTPIPE_INFORMATIONAL = 0x00000004,
+    COR_PRF_EVENTPIPE_VERBOSE       = 0x00000005,
+}
+
+struct COR_PRF_EVENTPIPE_PROVIDER_CONFIG
+{
+    const(wchar)* providerName;
+    ulong keywords;
+    uint loggingLevel;
+    const(wchar)* filterData;
+}
+struct COR_PRF_EVENTPIPE_PARAM_DESC
+{
+    uint type;
+    uint elementType;
+    const(wchar)* name;
+}
+struct COR_PRF_EVENT_DATA
+{
+    ulong ptr;
+    uint size;
+    uint reserved;
+}
+struct COR_PRF_FILTER_DATA
+{
+    ulong Ptr;
+    uint Size;
+    uint Type;
+}
+alias EventPipeProviderCallback = void function(const(ubyte)*, uint, ubyte, ulong, ulong, COR_PRF_FILTER_DATA*, void*);
+alias COR_PRF_HANDLE_TYPE = int;
+enum : int
+{
+    COR_PRF_HANDLE_TYPE_WEAK   = 0x00000001,
+    COR_PRF_HANDLE_TYPE_STRONG = 0x00000002,
+    COR_PRF_HANDLE_TYPE_PINNED = 0x00000003,
 }
 
 enum IID_ICorProfilerCallback = GUID(0x176fbed1, 0xa55c, 0x4796, [0x98, 0xca, 0xa9, 0xda, 0xe, 0xf8, 0x83, 0xe7]);
@@ -301,15 +384,22 @@ enum : int
 alias COR_PRF_GC_GENERATION = int;
 enum : int
 {
-    COR_PRF_GC_GEN_0             = 0x00000000,
-    COR_PRF_GC_GEN_1             = 0x00000001,
-    COR_PRF_GC_GEN_2             = 0x00000002,
-    COR_PRF_GC_LARGE_OBJECT_HEAP = 0x00000003,
+    COR_PRF_GC_GEN_0              = 0x00000000,
+    COR_PRF_GC_GEN_1              = 0x00000001,
+    COR_PRF_GC_GEN_2              = 0x00000002,
+    COR_PRF_GC_LARGE_OBJECT_HEAP  = 0x00000003,
+    COR_PRF_GC_PINNED_OBJECT_HEAP = 0x00000004,
 }
 
 struct COR_PRF_GC_GENERATION_RANGE
 {
     COR_PRF_GC_GENERATION generation;
+    ulong rangeStart;
+    ulong rangeLength;
+    ulong rangeLengthReserved;
+}
+struct COR_PRF_NONGC_HEAP_RANGE
+{
     ulong rangeStart;
     ulong rangeLength;
     ulong rangeLengthReserved;
@@ -403,6 +493,17 @@ enum IID_ICorProfilerCallback9 = GUID(0x27583ec3, 0xc8f5, 0x482f, [0x80, 0x52, 0
 interface ICorProfilerCallback9 : ICorProfilerCallback8
 {
     HRESULT DynamicMethodUnloaded(ulong);
+}
+enum IID_ICorProfilerCallback10 = GUID(0xcec5b60e, 0xc69c, 0x495f, [0x87, 0xf6, 0x84, 0xd2, 0x8e, 0xe1, 0x6f, 0xfb]);
+interface ICorProfilerCallback10 : ICorProfilerCallback9
+{
+    HRESULT EventPipeEventDelivered(ulong, uint, uint, uint, ubyte*, uint, ubyte*, const(GUID)*, const(GUID)*, ulong, uint, ulong*);
+    HRESULT EventPipeProviderCreated(ulong);
+}
+enum IID_ICorProfilerCallback11 = GUID(0x42350846, 0xaaed, 0x47f7, [0xb1, 0x28, 0xfd, 0xc, 0x98, 0x88, 0x1c, 0xde]);
+interface ICorProfilerCallback11 : ICorProfilerCallback10
+{
+    HRESULT LoadAsNotificationOnly(BOOL*);
 }
 alias COR_PRF_CODEGEN_FLAGS = int;
 enum : int
@@ -568,6 +669,54 @@ interface ICorProfilerInfo8 : ICorProfilerInfo7
     HRESULT IsFunctionDynamic(ulong, BOOL*);
     HRESULT GetFunctionFromIP3(ubyte*, ulong*, ulong*);
     HRESULT GetDynamicFunctionInfo(ulong, ulong*, ubyte**, uint*, uint, uint*, PWSTR);
+}
+enum IID_ICorProfilerInfo9 = GUID(0x8170db, 0xf8cc, 0x4796, [0x9a, 0x51, 0xdc, 0x8a, 0xa0, 0xb4, 0x70, 0x12]);
+interface ICorProfilerInfo9 : ICorProfilerInfo8
+{
+    HRESULT GetNativeCodeStartAddresses(ulong, ulong, uint, uint*, ulong*);
+    HRESULT GetILToNativeMapping3(ulong, uint, uint*, COR_DEBUG_IL_TO_NATIVE_MAP*);
+    HRESULT GetCodeInfo4(ulong, uint, uint*, COR_PRF_CODE_INFO*);
+}
+enum IID_ICorProfilerInfo10 = GUID(0x2f1b5152, 0xc869, 0x40c9, [0xaa, 0x5f, 0x3a, 0xbe, 0x2, 0x6b, 0xd7, 0x20]);
+interface ICorProfilerInfo10 : ICorProfilerInfo9
+{
+    HRESULT EnumerateObjectReferences(ulong, ObjectReferenceCallback, void*);
+    HRESULT IsFrozenObject(ulong, BOOL*);
+    HRESULT GetLOHObjectSizeThreshold(uint*);
+    HRESULT RequestReJITWithInliners(uint, uint, ulong*, uint*);
+    HRESULT SuspendRuntime();
+    HRESULT ResumeRuntime();
+}
+enum IID_ICorProfilerInfo11 = GUID(0x6398876, 0x8987, 0x4154, [0xb6, 0x21, 0x40, 0xa0, 0xd, 0x6e, 0x4d, 0x4]);
+interface ICorProfilerInfo11 : ICorProfilerInfo10
+{
+    HRESULT GetEnvironmentVariableA(const(wchar)*, uint, uint*, PWSTR);
+    HRESULT SetEnvironmentVariable(const(wchar)*, const(wchar)*);
+}
+enum IID_ICorProfilerInfo12 = GUID(0x27b24ccd, 0x1cb1, 0x47c5, [0x96, 0xee, 0x98, 0x19, 0xd, 0xc3, 0x9, 0x59]);
+interface ICorProfilerInfo12 : ICorProfilerInfo11
+{
+    HRESULT EventPipeStartSession(uint, COR_PRF_EVENTPIPE_PROVIDER_CONFIG*, BOOL, ulong*);
+    HRESULT EventPipeAddProviderToSession(ulong, COR_PRF_EVENTPIPE_PROVIDER_CONFIG);
+    HRESULT EventPipeStopSession(ulong);
+    HRESULT EventPipeCreateProvider(const(wchar)*, ulong*);
+    HRESULT EventPipeGetProviderInfo(ulong, uint, uint*, PWSTR);
+    HRESULT EventPipeDefineEvent(ulong, const(wchar)*, uint, ulong, uint, uint, ubyte, BOOL, uint, COR_PRF_EVENTPIPE_PARAM_DESC*, ulong*);
+    HRESULT EventPipeWriteEvent(ulong, uint, COR_PRF_EVENT_DATA*, const(GUID)*, const(GUID)*);
+}
+enum IID_ICorProfilerInfo13 = GUID(0x6e6c7ee2, 0x701, 0x4ec2, [0x9d, 0x29, 0x2e, 0x87, 0x33, 0xb6, 0x69, 0x34]);
+interface ICorProfilerInfo13 : ICorProfilerInfo12
+{
+    HRESULT CreateHandle(ulong, COR_PRF_HANDLE_TYPE, void***);
+    HRESULT DestroyHandle(void**);
+    HRESULT GetObjectIDFromHandle(void**, ulong*);
+}
+enum IID_ICorProfilerInfo14 = GUID(0xf460e352, 0xd76d, 0x4fe9, [0x83, 0x5f, 0xf6, 0xaf, 0x9d, 0x6e, 0x86, 0x2d]);
+interface ICorProfilerInfo14 : ICorProfilerInfo13
+{
+    HRESULT EnumerateNonGCObjects(ICorProfilerObjectEnum*);
+    HRESULT GetNonGCHeapBounds(uint, uint*, COR_PRF_NONGC_HEAP_RANGE*);
+    HRESULT EventPipeCreateProvider2(const(wchar)*, EventPipeProviderCallback*, ulong*);
 }
 enum IID_ICorProfilerMethodEnum = GUID(0xfccee788, 0x88, 0x454b, [0xa8, 0x11, 0xc9, 0x9f, 0x29, 0x8d, 0x19, 0x42]);
 interface ICorProfilerMethodEnum : IUnknown

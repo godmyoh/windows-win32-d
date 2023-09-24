@@ -4,19 +4,25 @@ import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, HANDLE, HRESULT, HWND, PSID, PWSTR, VARIANT_BOOL;
 import windows.win32.security : SID, SID_AND_ATTRIBUTES;
 import windows.win32.system.com : IDispatch, IUnknown;
+import windows.win32.system.ole : IEnumVARIANT;
 import windows.win32.system.variant : VARIANT;
 
 version (Windows):
 extern (Windows):
 
+void NcFreeNetconProperties(NETCON_PROPERTIES*);
+BOOL NcIsValidConnectionName(const(wchar)*);
 HRESULT NetworkIsolationSetupAppContainerBinaries(PSID, const(wchar)*, const(wchar)*, const(wchar)*, BOOL, const(wchar)**, uint);
 uint NetworkIsolationRegisterForAppContainerChanges(uint, PAC_CHANGES_CALLBACK_FN, void*, HANDLE*);
 uint NetworkIsolationUnregisterForAppContainerChanges(HANDLE);
+HRESULT NetworkIsolationEnumerateAppContainerRules(IEnumVARIANT*);
 uint NetworkIsolationFreeAppContainers(INET_FIREWALL_APP_CONTAINER*);
 uint NetworkIsolationEnumAppContainers(uint, uint*, INET_FIREWALL_APP_CONTAINER**);
 uint NetworkIsolationGetAppContainerConfig(uint*, SID_AND_ATTRIBUTES**);
 uint NetworkIsolationSetAppContainerConfig(uint, SID_AND_ATTRIBUTES*);
 uint NetworkIsolationDiagnoseConnectFailureAndGetInfo(const(wchar)*, NETISO_ERROR_TYPE*);
+uint NetworkIsolationGetEnterpriseIdAsync(const(wchar)*, uint, void*, PNETISO_EDP_ID_CALLBACK_FN, HANDLE*);
+uint NetworkIsolationGetEnterpriseIdClose(HANDLE, BOOL);
 enum NETCON_MAX_NAME_LEN = 0x00000100;
 enum S_OBJECT_NO_LONGER_VALID = 0x00000002;
 enum NETISO_GEID_FOR_WDAG = 0x00000001;

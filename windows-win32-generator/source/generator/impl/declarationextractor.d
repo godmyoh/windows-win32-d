@@ -218,7 +218,7 @@ class DeclarationExtractor : IDeclarationExtractor
                 ret = Declaration(field.name, format(`enum %s = "%s";`, field.name, toDlangStringLiteral(*p)));
             else
             {
-                assert((ElementType.I1 <= et && et <= ElementType.U8) || et == ElementType.ValueType);
+                assert((ElementType.Char <= et && et <= ElementType.U8) || et == ElementType.ValueType);
                 auto bytes = constantValue.integerBytes;
 
                 ret = Declaration(field.name, format("enum %s = 0x%0" ~ (bytes * 2).to!string ~ "x;", field.name, constantValue.integerValue));

@@ -1466,7 +1466,7 @@ interface IDirectDraw : IUnknown
     HRESULT GetGDISurface(IDirectDrawSurface*);
     HRESULT GetMonitorFrequency(uint*);
     HRESULT GetScanLine(uint*);
-    HRESULT GetVerticalBlankStatus(int*);
+    HRESULT GetVerticalBlankStatus(BOOL*);
     HRESULT Initialize(GUID*);
     HRESULT RestoreDisplayMode();
     HRESULT SetCooperativeLevel(HWND, uint);
@@ -1490,7 +1490,7 @@ interface IDirectDraw2 : IUnknown
     HRESULT GetGDISurface(IDirectDrawSurface*);
     HRESULT GetMonitorFrequency(uint*);
     HRESULT GetScanLine(uint*);
-    HRESULT GetVerticalBlankStatus(int*);
+    HRESULT GetVerticalBlankStatus(BOOL*);
     HRESULT Initialize(GUID*);
     HRESULT RestoreDisplayMode();
     HRESULT SetCooperativeLevel(HWND, uint);
@@ -1515,7 +1515,7 @@ interface IDirectDraw4 : IUnknown
     HRESULT GetGDISurface(IDirectDrawSurface4*);
     HRESULT GetMonitorFrequency(uint*);
     HRESULT GetScanLine(uint*);
-    HRESULT GetVerticalBlankStatus(int*);
+    HRESULT GetVerticalBlankStatus(BOOL*);
     HRESULT Initialize(GUID*);
     HRESULT RestoreDisplayMode();
     HRESULT SetCooperativeLevel(HWND, uint);
@@ -1544,7 +1544,7 @@ interface IDirectDraw7 : IUnknown
     HRESULT GetGDISurface(IDirectDrawSurface7*);
     HRESULT GetMonitorFrequency(uint*);
     HRESULT GetScanLine(uint*);
-    HRESULT GetVerticalBlankStatus(int*);
+    HRESULT GetVerticalBlankStatus(BOOL*);
     HRESULT Initialize(GUID*);
     HRESULT RestoreDisplayMode();
     HRESULT SetCooperativeLevel(HWND, uint);
@@ -1910,7 +1910,7 @@ interface IDirectDrawVideoPort : IUnknown
     HRESULT GetColorControls(DDCOLORCONTROL*);
     HRESULT GetInputFormats(uint*, DDPIXELFORMAT*, uint);
     HRESULT GetOutputFormats(DDPIXELFORMAT*, uint*, DDPIXELFORMAT*, uint);
-    HRESULT GetFieldPolarity(int*);
+    HRESULT GetFieldPolarity(BOOL*);
     HRESULT GetVideoLine(uint*);
     HRESULT GetVideoSignalStatus(uint*);
     HRESULT SetColorControls(DDCOLORCONTROL*);

@@ -1,7 +1,7 @@
 module windows.win32.system.registry;
 
 import windows.win32.foundation : BOOL, FILETIME, HANDLE, PSTR, PWSTR, WIN32_ERROR;
-import windows.win32.security : PSECURITY_DESCRIPTOR, SECURITY_ATTRIBUTES;
+import windows.win32.security : OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR, SECURITY_ATTRIBUTES;
 
 version (Windows):
 extern (Windows):
@@ -40,7 +40,7 @@ WIN32_ERROR RegEnumKeyExW(HKEY, uint, PWSTR, uint*, uint*, PWSTR, uint*, FILETIM
 WIN32_ERROR RegEnumValueA(HKEY, uint, PSTR, uint*, uint*, uint*, ubyte*, uint*);
 WIN32_ERROR RegEnumValueW(HKEY, uint, PWSTR, uint*, uint*, uint*, ubyte*, uint*);
 WIN32_ERROR RegFlushKey(HKEY);
-WIN32_ERROR RegGetKeySecurity(HKEY, uint, PSECURITY_DESCRIPTOR, uint*);
+WIN32_ERROR RegGetKeySecurity(HKEY, OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR, uint*);
 WIN32_ERROR RegLoadKeyA(HKEY, const(char)*, const(char)*);
 WIN32_ERROR RegLoadKeyW(HKEY, const(wchar)*, const(wchar)*);
 WIN32_ERROR RegNotifyChangeKeyValue(HKEY, BOOL, REG_NOTIFY_FILTER, HANDLE, BOOL);
@@ -65,7 +65,7 @@ WIN32_ERROR RegRestoreKeyW(HKEY, const(wchar)*, uint);
 WIN32_ERROR RegRenameKey(HKEY, const(wchar)*, const(wchar)*);
 WIN32_ERROR RegSaveKeyA(HKEY, const(char)*, const(SECURITY_ATTRIBUTES)*);
 WIN32_ERROR RegSaveKeyW(HKEY, const(wchar)*, const(SECURITY_ATTRIBUTES)*);
-WIN32_ERROR RegSetKeySecurity(HKEY, uint, PSECURITY_DESCRIPTOR);
+WIN32_ERROR RegSetKeySecurity(HKEY, OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR);
 WIN32_ERROR RegSetValueA(HKEY, const(char)*, REG_VALUE_TYPE, const(char)*, uint);
 WIN32_ERROR RegSetValueW(HKEY, const(wchar)*, REG_VALUE_TYPE, const(wchar)*, uint);
 WIN32_ERROR RegSetValueExA(HKEY, const(char)*, uint, REG_VALUE_TYPE, const(ubyte)*, uint);

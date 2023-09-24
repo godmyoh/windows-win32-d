@@ -666,6 +666,13 @@ enum PipeFactor_Align = 0x00000200;
 enum PipeFactor_PhysicalEnd = 0x00000400;
 enum PipeFactor_LogicalEnd = 0x00000800;
 enum KSPROPERTY_MEMORY_TRANSPORT = 0x00000001;
+enum IID_IKsPropertySet = GUID(0x31efac30, 0x515c, 0x11d0, [0xa9, 0xaa, 0x0, 0xaa, 0x0, 0x61, 0xbe, 0x93]);
+interface IKsPropertySet : IUnknown
+{
+    HRESULT Set(const(GUID)*, uint, void*, uint, void*, uint);
+    HRESULT Get(const(GUID)*, uint, void*, uint, void*, uint, uint*);
+    HRESULT QuerySupported(const(GUID)*, uint, uint*);
+}
 enum IID_IKsTopologyInfo = GUID(0x720d4ac0, 0x7533, 0x11d0, [0xa5, 0xd6, 0x28, 0xdb, 0x4, 0xc1, 0x0, 0x0]);
 interface IKsTopologyInfo : IUnknown
 {
@@ -677,6 +684,12 @@ interface IKsTopologyInfo : IUnknown
     HRESULT get_NumNodes(uint*);
     HRESULT get_NodeType(uint, GUID*);
     HRESULT CreateNodeInstance(uint, const(GUID)*, void**);
+}
+enum IID_IKsNodeControl = GUID(0x11737c14, 0x24a7, 0x4bb5, [0x81, 0xa0, 0xd, 0x0, 0x38, 0x13, 0xb0, 0xc4]);
+interface IKsNodeControl : IUnknown
+{
+    HRESULT put_NodeId(uint);
+    HRESULT put_KsControl(void*);
 }
 struct KSSTREAM_HEADER
 {

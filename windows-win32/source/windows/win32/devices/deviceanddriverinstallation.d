@@ -18,21 +18,21 @@ enum : uint
 {
     SP_COPY_DELETESOURCE        = 0x00000001,
     SP_COPY_REPLACEONLY         = 0x00000002,
+    SP_COPY_NEWER               = 0x00000004,
     SP_COPY_NEWER_OR_SAME       = 0x00000004,
-    SP_COPY_NEWER_ONLY          = 0x00010000,
     SP_COPY_NOOVERWRITE         = 0x00000008,
     SP_COPY_NODECOMP            = 0x00000010,
     SP_COPY_LANGUAGEAWARE       = 0x00000020,
     SP_COPY_SOURCE_ABSOLUTE     = 0x00000040,
     SP_COPY_SOURCEPATH_ABSOLUTE = 0x00000080,
-    SP_COPY_FORCE_IN_USE        = 0x00000200,
     SP_COPY_IN_USE_NEEDS_REBOOT = 0x00000100,
+    SP_COPY_FORCE_IN_USE        = 0x00000200,
     SP_COPY_NOSKIP              = 0x00000400,
     SP_COPY_FORCE_NOOVERWRITE   = 0x00001000,
     SP_COPY_FORCE_NEWER         = 0x00002000,
     SP_COPY_WARNIFSKIP          = 0x00004000,
     SP_COPY_NOBROWSE            = 0x00008000,
-    SP_COPY_NEWER               = 0x00000004,
+    SP_COPY_NEWER_ONLY          = 0x00010000,
     SP_COPY_RESERVED            = 0x00020000,
     SP_COPY_OEMINF_CATALOG_ONLY = 0x00040000,
     SP_COPY_REPLACE_BOOT_FILE   = 0x00080000,
@@ -68,12 +68,330 @@ enum : uint
     SPDIT_COMPATDRIVER = 0x00000002,
 }
 
-alias SP_INF_STYLE = uint;
+alias DIINSTALLDEVICE_FLAGS = uint;
 enum : uint
 {
-    INF_STYLE_NONE  = 0x00000000,
-    INF_STYLE_OLDNT = 0x00000001,
-    INF_STYLE_WIN4  = 0x00000002,
+    DIIDFLAG_SHOWSEARCHUI          = 0x00000001,
+    DIIDFLAG_NOFINISHINSTALLUI     = 0x00000002,
+    DIIDFLAG_INSTALLNULLDRIVER     = 0x00000004,
+    DIIDFLAG_INSTALLCOPYINFDRIVERS = 0x00000008,
+    DIIDFLAG_BITS                  = 0x0000000f,
+}
+
+alias DIINSTALLDRIVER_FLAGS = uint;
+enum : uint
+{
+    DIIRFLAG_BITS               = 0x0000006a,
+    DIIRFLAG_SYSTEM_BITS        = 0x0000007f,
+    DIIRFLAG_INF_ALREADY_COPIED = 0x00000001,
+    DIIRFLAG_FORCE_INF          = 0x00000002,
+    DIIRFLAG_HW_USING_THE_INF   = 0x00000004,
+    DIIRFLAG_HOTPATCH           = 0x00000008,
+    DIIRFLAG_NOBACKUP           = 0x00000010,
+    DIIRFLAG_PRE_CONFIGURE_INF  = 0x00000020,
+    DIIRFLAG_INSTALL_AS_SET     = 0x00000040,
+}
+
+alias DIUNINSTALLDRIVER_FLAGS = uint;
+enum : uint
+{
+    DIURFLAG_VALID         = 0x00000003,
+    DIURFLAG_NO_REMOVE_INF = 0x00000001,
+    DIURFLAG_RESERVED      = 0x00000002,
+}
+
+alias DIROLLBACKDRIVER_FLAGS = uint;
+enum : uint
+{
+    ROLLBACK_FLAG_NO_UI = 0x00000001,
+    ROLLBACK_BITS       = 0x00000001,
+}
+
+alias UPDATEDRIVERFORPLUGANDPLAYDEVICES_FLAGS = uint;
+enum : uint
+{
+    INSTALLFLAG_FORCE          = 0x00000001,
+    INSTALLFLAG_READONLY       = 0x00000002,
+    INSTALLFLAG_NONINTERACTIVE = 0x00000004,
+    INSTALLFLAG_BITS           = 0x00000007,
+}
+
+alias CM_RESTYPE = uint;
+enum : uint
+{
+    ResType_All           = 0x00000000,
+    ResType_None          = 0x00000000,
+    ResType_Mem           = 0x00000001,
+    ResType_IO            = 0x00000002,
+    ResType_DMA           = 0x00000003,
+    ResType_IRQ           = 0x00000004,
+    ResType_DoNotUse      = 0x00000005,
+    ResType_BusNumber     = 0x00000006,
+    ResType_MemLarge      = 0x00000007,
+    ResType_MAX           = 0x00000007,
+    ResType_Ignored_Bit   = 0x00008000,
+    ResType_ClassSpecific = 0x0000ffff,
+    ResType_Reserved      = 0x00008000,
+    ResType_DevicePrivate = 0x00008001,
+    ResType_PcCardConfig  = 0x00008002,
+    ResType_MfCardConfig  = 0x00008003,
+    ResType_Connection    = 0x00008004,
+}
+
+alias CM_GET_DEVICE_INTERFACE_LIST_FLAGS = uint;
+enum : uint
+{
+    CM_GET_DEVICE_INTERFACE_LIST_PRESENT     = 0x00000000,
+    CM_GET_DEVICE_INTERFACE_LIST_ALL_DEVICES = 0x00000001,
+    CM_GET_DEVICE_INTERFACE_LIST_BITS        = 0x00000001,
+}
+
+alias CM_LOCATE_DEVNODE_FLAGS = uint;
+enum : uint
+{
+    CM_LOCATE_DEVNODE_NORMAL       = 0x00000000,
+    CM_LOCATE_DEVNODE_PHANTOM      = 0x00000001,
+    CM_LOCATE_DEVNODE_CANCELREMOVE = 0x00000002,
+    CM_LOCATE_DEVNODE_NOVALIDATION = 0x00000004,
+    CM_LOCATE_DEVNODE_BITS         = 0x00000007,
+}
+
+alias CM_REENUMERATE_FLAGS = uint;
+enum : uint
+{
+    CM_REENUMERATE_NORMAL             = 0x00000000,
+    CM_REENUMERATE_SYNCHRONOUS        = 0x00000001,
+    CM_REENUMERATE_RETRY_INSTALLATION = 0x00000002,
+    CM_REENUMERATE_ASYNCHRONOUS       = 0x00000004,
+    CM_REENUMERATE_BITS               = 0x00000007,
+}
+
+alias CM_ENUMERATE_FLAGS = uint;
+enum : uint
+{
+    CM_ENUMERATE_CLASSES_INSTALLER = 0x00000000,
+    CM_ENUMERATE_CLASSES_INTERFACE = 0x00000001,
+    CM_ENUMERATE_CLASSES_BITS      = 0x00000001,
+}
+
+alias INF_STYLE = uint;
+enum : uint
+{
+    INF_STYLE_NONE          = 0x00000000,
+    INF_STYLE_OLDNT         = 0x00000001,
+    INF_STYLE_WIN4          = 0x00000002,
+    INF_STYLE_CACHE_ENABLE  = 0x00000010,
+    INF_STYLE_CACHE_DISABLE = 0x00000020,
+    INF_STYLE_CACHE_IGNORE  = 0x00000040,
+}
+
+alias SETUPSCANFILEQUEUE_FLAGS = uint;
+enum : uint
+{
+    SPQ_SCAN_FILE_PRESENCE                = 0x00000001,
+    SPQ_SCAN_FILE_VALIDITY                = 0x00000002,
+    SPQ_SCAN_USE_CALLBACK                 = 0x00000004,
+    SPQ_SCAN_USE_CALLBACKEX               = 0x00000008,
+    SPQ_SCAN_INFORM_USER                  = 0x00000010,
+    SPQ_SCAN_PRUNE_COPY_QUEUE             = 0x00000020,
+    SPQ_SCAN_USE_CALLBACK_SIGNERINFO      = 0x00000040,
+    SPQ_SCAN_PRUNE_DELREN                 = 0x00000080,
+    SPQ_SCAN_FILE_PRESENCE_WITHOUT_SOURCE = 0x00000100,
+    SPQ_SCAN_FILE_COMPARISON              = 0x00000200,
+    SPQ_SCAN_ACTIVATE_DRP                 = 0x00000400,
+}
+
+alias CM_LOG_CONF = uint;
+enum : uint
+{
+    BASIC_LOG_CONF    = 0x00000000,
+    FILTERED_LOG_CONF = 0x00000001,
+    ALLOC_LOG_CONF    = 0x00000002,
+    BOOT_LOG_CONF     = 0x00000003,
+    FORCED_LOG_CONF   = 0x00000004,
+    OVERRIDE_LOG_CONF = 0x00000005,
+    NUM_LOG_CONF      = 0x00000006,
+}
+
+alias CM_DEVNODE_STATUS_FLAGS = uint;
+enum : uint
+{
+    DN_CHANGEABLE_FLAGS      = 0x61bb62c0,
+    DN_ROOT_ENUMERATED       = 0x00000001,
+    DN_DRIVER_LOADED         = 0x00000002,
+    DN_ENUM_LOADED           = 0x00000004,
+    DN_STARTED               = 0x00000008,
+    DN_MANUAL                = 0x00000010,
+    DN_NEED_TO_ENUM          = 0x00000020,
+    DN_NOT_FIRST_TIME        = 0x00000040,
+    DN_HARDWARE_ENUM         = 0x00000080,
+    DN_LIAR                  = 0x00000100,
+    DN_HAS_MARK              = 0x00000200,
+    DN_HAS_PROBLEM           = 0x00000400,
+    DN_FILTERED              = 0x00000800,
+    DN_MOVED                 = 0x00001000,
+    DN_DISABLEABLE           = 0x00002000,
+    DN_REMOVABLE             = 0x00004000,
+    DN_PRIVATE_PROBLEM       = 0x00008000,
+    DN_MF_PARENT             = 0x00010000,
+    DN_MF_CHILD              = 0x00020000,
+    DN_WILL_BE_REMOVED       = 0x00040000,
+    DN_NOT_FIRST_TIMEE       = 0x00080000,
+    DN_STOP_FREE_RES         = 0x00100000,
+    DN_REBAL_CANDIDATE       = 0x00200000,
+    DN_BAD_PARTIAL           = 0x00400000,
+    DN_NT_ENUMERATOR         = 0x00800000,
+    DN_NT_DRIVER             = 0x01000000,
+    DN_NEEDS_LOCKING         = 0x02000000,
+    DN_ARM_WAKEUP            = 0x04000000,
+    DN_APM_ENUMERATOR        = 0x08000000,
+    DN_APM_DRIVER            = 0x10000000,
+    DN_SILENT_INSTALL        = 0x20000000,
+    DN_NO_SHOW_IN_DM         = 0x40000000,
+    DN_BOOT_LOG_PROB         = 0x80000000,
+    DN_NEED_RESTART          = 0x00000100,
+    DN_DRIVER_BLOCKED        = 0x00000040,
+    DN_LEGACY_DRIVER         = 0x00001000,
+    DN_CHILD_WITH_INVALID_ID = 0x00000200,
+    DN_DEVICE_DISCONNECTED   = 0x02000000,
+    DN_QUERY_REMOVE_PENDING  = 0x00010000,
+    DN_QUERY_REMOVE_ACTIVE   = 0x00020000,
+}
+
+alias CM_PROB = uint;
+enum : uint
+{
+    CM_PROB_NOT_CONFIGURED             = 0x00000001,
+    CM_PROB_DEVLOADER_FAILED           = 0x00000002,
+    CM_PROB_OUT_OF_MEMORY              = 0x00000003,
+    CM_PROB_ENTRY_IS_WRONG_TYPE        = 0x00000004,
+    CM_PROB_LACKED_ARBITRATOR          = 0x00000005,
+    CM_PROB_BOOT_CONFIG_CONFLICT       = 0x00000006,
+    CM_PROB_FAILED_FILTER              = 0x00000007,
+    CM_PROB_DEVLOADER_NOT_FOUND        = 0x00000008,
+    CM_PROB_INVALID_DATA               = 0x00000009,
+    CM_PROB_FAILED_START               = 0x0000000a,
+    CM_PROB_LIAR                       = 0x0000000b,
+    CM_PROB_NORMAL_CONFLICT            = 0x0000000c,
+    CM_PROB_NOT_VERIFIED               = 0x0000000d,
+    CM_PROB_NEED_RESTART               = 0x0000000e,
+    CM_PROB_REENUMERATION              = 0x0000000f,
+    CM_PROB_PARTIAL_LOG_CONF           = 0x00000010,
+    CM_PROB_UNKNOWN_RESOURCE           = 0x00000011,
+    CM_PROB_REINSTALL                  = 0x00000012,
+    CM_PROB_REGISTRY                   = 0x00000013,
+    CM_PROB_VXDLDR                     = 0x00000014,
+    CM_PROB_WILL_BE_REMOVED            = 0x00000015,
+    CM_PROB_DISABLED                   = 0x00000016,
+    CM_PROB_DEVLOADER_NOT_READY        = 0x00000017,
+    CM_PROB_DEVICE_NOT_THERE           = 0x00000018,
+    CM_PROB_MOVED                      = 0x00000019,
+    CM_PROB_TOO_EARLY                  = 0x0000001a,
+    CM_PROB_NO_VALID_LOG_CONF          = 0x0000001b,
+    CM_PROB_FAILED_INSTALL             = 0x0000001c,
+    CM_PROB_HARDWARE_DISABLED          = 0x0000001d,
+    CM_PROB_CANT_SHARE_IRQ             = 0x0000001e,
+    CM_PROB_FAILED_ADD                 = 0x0000001f,
+    CM_PROB_DISABLED_SERVICE           = 0x00000020,
+    CM_PROB_TRANSLATION_FAILED         = 0x00000021,
+    CM_PROB_NO_SOFTCONFIG              = 0x00000022,
+    CM_PROB_BIOS_TABLE                 = 0x00000023,
+    CM_PROB_IRQ_TRANSLATION_FAILED     = 0x00000024,
+    CM_PROB_FAILED_DRIVER_ENTRY        = 0x00000025,
+    CM_PROB_DRIVER_FAILED_PRIOR_UNLOAD = 0x00000026,
+    CM_PROB_DRIVER_FAILED_LOAD         = 0x00000027,
+    CM_PROB_DRIVER_SERVICE_KEY_INVALID = 0x00000028,
+    CM_PROB_LEGACY_SERVICE_NO_DEVICES  = 0x00000029,
+    CM_PROB_DUPLICATE_DEVICE           = 0x0000002a,
+    CM_PROB_FAILED_POST_START          = 0x0000002b,
+    CM_PROB_HALTED                     = 0x0000002c,
+    CM_PROB_PHANTOM                    = 0x0000002d,
+    CM_PROB_SYSTEM_SHUTDOWN            = 0x0000002e,
+    CM_PROB_HELD_FOR_EJECT             = 0x0000002f,
+    CM_PROB_DRIVER_BLOCKED             = 0x00000030,
+    CM_PROB_REGISTRY_TOO_LARGE         = 0x00000031,
+    CM_PROB_SETPROPERTIES_FAILED       = 0x00000032,
+    CM_PROB_WAITING_ON_DEPENDENCY      = 0x00000033,
+    CM_PROB_UNSIGNED_DRIVER            = 0x00000034,
+    CM_PROB_USED_BY_DEBUGGER           = 0x00000035,
+    CM_PROB_DEVICE_RESET               = 0x00000036,
+    CM_PROB_CONSOLE_LOCKED             = 0x00000037,
+    CM_PROB_NEED_CLASS_CONFIG          = 0x00000038,
+    CM_PROB_GUEST_ASSIGNMENT_FAILED    = 0x00000039,
+}
+
+alias SPSVCINST_FLAGS = uint;
+enum : uint
+{
+    SPSVCINST_TAGTOFRONT                   = 0x00000001,
+    SPSVCINST_ASSOCSERVICE                 = 0x00000002,
+    SPSVCINST_DELETEEVENTLOGENTRY          = 0x00000004,
+    SPSVCINST_NOCLOBBER_DISPLAYNAME        = 0x00000008,
+    SPSVCINST_NOCLOBBER_STARTTYPE          = 0x00000010,
+    SPSVCINST_NOCLOBBER_ERRORCONTROL       = 0x00000020,
+    SPSVCINST_NOCLOBBER_LOADORDERGROUP     = 0x00000040,
+    SPSVCINST_NOCLOBBER_DEPENDENCIES       = 0x00000080,
+    SPSVCINST_NOCLOBBER_DESCRIPTION        = 0x00000100,
+    SPSVCINST_STOPSERVICE                  = 0x00000200,
+    SPSVCINST_CLOBBER_SECURITY             = 0x00000400,
+    SPSVCINST_STARTSERVICE                 = 0x00000800,
+    SPSVCINST_NOCLOBBER_REQUIREDPRIVILEGES = 0x00001000,
+    SPSVCINST_NOCLOBBER_TRIGGERS           = 0x00002000,
+    SPSVCINST_NOCLOBBER_SERVICESIDTYPE     = 0x00004000,
+    SPSVCINST_NOCLOBBER_DELAYEDAUTOSTART   = 0x00008000,
+    SPSVCINST_UNIQUE_NAME                  = 0x00010000,
+    SPSVCINST_NOCLOBBER_FAILUREACTIONS     = 0x00020000,
+}
+
+alias CM_CDMASK = uint;
+enum : uint
+{
+    CM_CDMASK_DEVINST     = 0x00000001,
+    CM_CDMASK_RESDES      = 0x00000002,
+    CM_CDMASK_FLAGS       = 0x00000004,
+    CM_CDMASK_DESCRIPTION = 0x00000008,
+    CM_CDMASK_VALID       = 0x0000000f,
+}
+
+alias CM_CDFLAGS = uint;
+enum : uint
+{
+    CM_CDFLAGS_DRIVER     = 0x00000001,
+    CM_CDFLAGS_ROOT_OWNED = 0x00000002,
+    CM_CDFLAGS_RESERVED   = 0x00000004,
+}
+
+alias CM_REMOVAL_POLICY = uint;
+enum : uint
+{
+    CM_REMOVAL_POLICY_EXPECT_NO_REMOVAL       = 0x00000001,
+    CM_REMOVAL_POLICY_EXPECT_ORDERLY_REMOVAL  = 0x00000002,
+    CM_REMOVAL_POLICY_EXPECT_SURPRISE_REMOVAL = 0x00000003,
+}
+
+alias CM_INSTALL_STATE = uint;
+enum : uint
+{
+    CM_INSTALL_STATE_INSTALLED       = 0x00000000,
+    CM_INSTALL_STATE_NEEDS_REINSTALL = 0x00000001,
+    CM_INSTALL_STATE_FAILED_INSTALL  = 0x00000002,
+    CM_INSTALL_STATE_FINISH_INSTALL  = 0x00000003,
+}
+
+alias CM_DEVCAP = uint;
+enum : uint
+{
+    CM_DEVCAP_LOCKSUPPORTED     = 0x00000001,
+    CM_DEVCAP_EJECTSUPPORTED    = 0x00000002,
+    CM_DEVCAP_REMOVABLE         = 0x00000004,
+    CM_DEVCAP_DOCKDEVICE        = 0x00000008,
+    CM_DEVCAP_UNIQUEID          = 0x00000010,
+    CM_DEVCAP_SILENTINSTALL     = 0x00000020,
+    CM_DEVCAP_RAWDEVICEOK       = 0x00000040,
+    CM_DEVCAP_SURPRISEREMOVALOK = 0x00000080,
+    CM_DEVCAP_HARDWAREDISABLED  = 0x00000100,
+    CM_DEVCAP_NONDYNAMIC        = 0x00000200,
+    CM_DEVCAP_SECUREDEVICE      = 0x00000400,
 }
 
 alias CONFIGRET = uint;
@@ -158,10 +476,10 @@ BOOL SetupGetInfDriverStoreLocationA(const(char)*, SP_ALTPLATFORM_INFO_V2*, cons
 BOOL SetupGetInfDriverStoreLocationW(const(wchar)*, SP_ALTPLATFORM_INFO_V2*, const(wchar)*, PWSTR, uint, uint*);
 BOOL SetupGetInfPublishedNameA(const(char)*, PSTR, uint, uint*);
 BOOL SetupGetInfPublishedNameW(const(wchar)*, PWSTR, uint, uint*);
-BOOL SetupGetInfFileListA(const(char)*, uint, PSTR, uint, uint*);
-BOOL SetupGetInfFileListW(const(wchar)*, uint, PWSTR, uint, uint*);
-void* SetupOpenInfFileW(const(wchar)*, const(wchar)*, uint, uint*);
-void* SetupOpenInfFileA(const(char)*, const(char)*, uint, uint*);
+BOOL SetupGetInfFileListA(const(char)*, INF_STYLE, PSTR, uint, uint*);
+BOOL SetupGetInfFileListW(const(wchar)*, INF_STYLE, PWSTR, uint, uint*);
+void* SetupOpenInfFileW(const(wchar)*, const(wchar)*, INF_STYLE, uint*);
+void* SetupOpenInfFileA(const(char)*, const(char)*, INF_STYLE, uint*);
 void* SetupOpenMasterInf();
 BOOL SetupOpenAppendInfFileW(const(wchar)*, void*, uint*);
 BOOL SetupOpenAppendInfFileA(const(char)*, void*, uint*);
@@ -251,13 +569,13 @@ BOOL SetupQueueRenameSectionA(void*, void*, void*, const(char)*);
 BOOL SetupQueueRenameSectionW(void*, void*, void*, const(wchar)*);
 BOOL SetupCommitFileQueueA(HWND, void*, PSP_FILE_CALLBACK_A, void*);
 BOOL SetupCommitFileQueueW(HWND, void*, PSP_FILE_CALLBACK_W, void*);
-BOOL SetupScanFileQueueA(void*, uint, HWND, PSP_FILE_CALLBACK_A, void*, uint*);
-BOOL SetupScanFileQueueW(void*, uint, HWND, PSP_FILE_CALLBACK_W, void*, uint*);
+BOOL SetupScanFileQueueA(void*, SETUPSCANFILEQUEUE_FLAGS, HWND, PSP_FILE_CALLBACK_A, void*, uint*);
+BOOL SetupScanFileQueueW(void*, SETUPSCANFILEQUEUE_FLAGS, HWND, PSP_FILE_CALLBACK_W, void*, uint*);
 BOOL SetupGetFileQueueCount(void*, uint, uint*);
 BOOL SetupGetFileQueueFlags(void*, uint*);
 BOOL SetupSetFileQueueFlags(void*, uint, uint);
-BOOL SetupCopyOEMInfA(const(char)*, const(char)*, OEM_SOURCE_MEDIA_TYPE, uint, PSTR, uint, uint*, PSTR*);
-BOOL SetupCopyOEMInfW(const(wchar)*, const(wchar)*, OEM_SOURCE_MEDIA_TYPE, uint, PWSTR, uint, uint*, PWSTR*);
+BOOL SetupCopyOEMInfA(const(char)*, const(char)*, OEM_SOURCE_MEDIA_TYPE, SP_COPY_STYLE, PSTR, uint, uint*, PSTR*);
+BOOL SetupCopyOEMInfW(const(wchar)*, const(wchar)*, OEM_SOURCE_MEDIA_TYPE, SP_COPY_STYLE, PWSTR, uint, uint*, PWSTR*);
 BOOL SetupUninstallOEMInfA(const(char)*, uint, void*);
 BOOL SetupUninstallOEMInfW(const(wchar)*, uint, void*);
 BOOL SetupUninstallNewlyCopiedInfs(void*, uint, void*);
@@ -296,10 +614,10 @@ BOOL SetupInstallFromInfSectionA(HWND, void*, const(char)*, uint, HKEY, const(ch
 BOOL SetupInstallFromInfSectionW(HWND, void*, const(wchar)*, uint, HKEY, const(wchar)*, uint, PSP_FILE_CALLBACK_W, void*, HDEVINFO, SP_DEVINFO_DATA*);
 BOOL SetupInstallFilesFromInfSectionA(void*, void*, void*, const(char)*, const(char)*, uint);
 BOOL SetupInstallFilesFromInfSectionW(void*, void*, void*, const(wchar)*, const(wchar)*, uint);
-BOOL SetupInstallServicesFromInfSectionA(void*, const(char)*, uint);
-BOOL SetupInstallServicesFromInfSectionW(void*, const(wchar)*, uint);
-BOOL SetupInstallServicesFromInfSectionExA(void*, const(char)*, uint, HDEVINFO, SP_DEVINFO_DATA*, void*, void*);
-BOOL SetupInstallServicesFromInfSectionExW(void*, const(wchar)*, uint, HDEVINFO, SP_DEVINFO_DATA*, void*, void*);
+BOOL SetupInstallServicesFromInfSectionA(void*, const(char)*, SPSVCINST_FLAGS);
+BOOL SetupInstallServicesFromInfSectionW(void*, const(wchar)*, SPSVCINST_FLAGS);
+BOOL SetupInstallServicesFromInfSectionExA(void*, const(char)*, SPSVCINST_FLAGS, HDEVINFO, SP_DEVINFO_DATA*, void*, void*);
+BOOL SetupInstallServicesFromInfSectionExW(void*, const(wchar)*, SPSVCINST_FLAGS, HDEVINFO, SP_DEVINFO_DATA*, void*, void*);
 void InstallHinfSectionA(HWND, HINSTANCE, const(char)*, int);
 void InstallHinfSectionW(HWND, HINSTANCE, const(wchar)*, int);
 void* SetupInitializeFileLogA(const(char)*, uint);
@@ -509,8 +827,8 @@ CONFIGRET CM_Disconnect_Machine(long);
 CONFIGRET CM_Dup_Range_List(ulong, ulong, uint);
 CONFIGRET CM_Enable_DevNode(uint, uint);
 CONFIGRET CM_Enable_DevNode_Ex(uint, uint, long);
-CONFIGRET CM_Enumerate_Classes(uint, GUID*, uint);
-CONFIGRET CM_Enumerate_Classes_Ex(uint, GUID*, uint, long);
+CONFIGRET CM_Enumerate_Classes(uint, GUID*, CM_ENUMERATE_FLAGS);
+CONFIGRET CM_Enumerate_Classes_Ex(uint, GUID*, CM_ENUMERATE_FLAGS, long);
 CONFIGRET CM_Enumerate_EnumeratorsA(uint, PSTR, uint*, uint);
 CONFIGRET CM_Enumerate_EnumeratorsW(uint, PWSTR, uint*, uint);
 CONFIGRET CM_Enumerate_Enumerators_ExA(uint, PSTR, uint*, uint, long);
@@ -562,10 +880,10 @@ CONFIGRET CM_Get_DevNode_Custom_PropertyA(uint, const(char)*, uint*, void*, uint
 CONFIGRET CM_Get_DevNode_Custom_PropertyW(uint, const(wchar)*, uint*, void*, uint*, uint);
 CONFIGRET CM_Get_DevNode_Custom_Property_ExA(uint, const(char)*, uint*, void*, uint*, uint, long);
 CONFIGRET CM_Get_DevNode_Custom_Property_ExW(uint, const(wchar)*, uint*, void*, uint*, uint, long);
-CONFIGRET CM_Get_DevNode_Status(uint*, uint*, uint, uint);
-CONFIGRET CM_Get_DevNode_Status_Ex(uint*, uint*, uint, uint, long);
-CONFIGRET CM_Get_First_Log_Conf(ulong*, uint, uint);
-CONFIGRET CM_Get_First_Log_Conf_Ex(ulong*, uint, uint, long);
+CONFIGRET CM_Get_DevNode_Status(CM_DEVNODE_STATUS_FLAGS*, CM_PROB*, uint, uint);
+CONFIGRET CM_Get_DevNode_Status_Ex(CM_DEVNODE_STATUS_FLAGS*, CM_PROB*, uint, uint, long);
+CONFIGRET CM_Get_First_Log_Conf(ulong*, uint, CM_LOG_CONF);
+CONFIGRET CM_Get_First_Log_Conf_Ex(ulong*, uint, CM_LOG_CONF, long);
 CONFIGRET CM_Get_Global_State(uint*, uint);
 CONFIGRET CM_Get_Global_State_Ex(uint*, uint, long);
 CONFIGRET CM_Get_Hardware_Profile_InfoA(uint, HWPROFILEINFO_A*, uint);
@@ -580,14 +898,14 @@ CONFIGRET CM_Get_Device_Interface_AliasA(const(char)*, GUID*, PSTR, uint*, uint)
 CONFIGRET CM_Get_Device_Interface_AliasW(const(wchar)*, GUID*, PWSTR, uint*, uint);
 CONFIGRET CM_Get_Device_Interface_Alias_ExA(const(char)*, GUID*, PSTR, uint*, uint, long);
 CONFIGRET CM_Get_Device_Interface_Alias_ExW(const(wchar)*, GUID*, PWSTR, uint*, uint, long);
-CONFIGRET CM_Get_Device_Interface_ListA(GUID*, PSTR, PSTR, uint, uint);
-CONFIGRET CM_Get_Device_Interface_ListW(GUID*, PWSTR, PWSTR, uint, uint);
+CONFIGRET CM_Get_Device_Interface_ListA(GUID*, PSTR, PSTR, uint, CM_GET_DEVICE_INTERFACE_LIST_FLAGS);
+CONFIGRET CM_Get_Device_Interface_ListW(GUID*, PWSTR, PWSTR, uint, CM_GET_DEVICE_INTERFACE_LIST_FLAGS);
 CONFIGRET CM_Get_Device_Interface_List_ExA(GUID*, PSTR, PSTR, uint, uint, long);
 CONFIGRET CM_Get_Device_Interface_List_ExW(GUID*, PWSTR, PWSTR, uint, uint, long);
-CONFIGRET CM_Get_Device_Interface_List_SizeA(uint*, GUID*, PSTR, uint);
-CONFIGRET CM_Get_Device_Interface_List_SizeW(uint*, GUID*, PWSTR, uint);
-CONFIGRET CM_Get_Device_Interface_List_Size_ExA(uint*, GUID*, PSTR, uint, long);
-CONFIGRET CM_Get_Device_Interface_List_Size_ExW(uint*, GUID*, PWSTR, uint, long);
+CONFIGRET CM_Get_Device_Interface_List_SizeA(uint*, GUID*, PSTR, CM_GET_DEVICE_INTERFACE_LIST_FLAGS);
+CONFIGRET CM_Get_Device_Interface_List_SizeW(uint*, GUID*, PWSTR, CM_GET_DEVICE_INTERFACE_LIST_FLAGS);
+CONFIGRET CM_Get_Device_Interface_List_Size_ExA(uint*, GUID*, PSTR, CM_GET_DEVICE_INTERFACE_LIST_FLAGS, long);
+CONFIGRET CM_Get_Device_Interface_List_Size_ExW(uint*, GUID*, PWSTR, CM_GET_DEVICE_INTERFACE_LIST_FLAGS, long);
 CONFIGRET CM_Get_Device_Interface_PropertyW(const(wchar)*, const(DEVPROPKEY)*, DEVPROPTYPE*, ubyte*, uint*, uint);
 CONFIGRET CM_Get_Device_Interface_Property_ExW(const(wchar)*, const(DEVPROPKEY)*, DEVPROPTYPE*, ubyte*, uint*, uint, long);
 CONFIGRET CM_Get_Device_Interface_Property_KeysW(const(wchar)*, DEVPROPKEY*, uint*, uint);
@@ -610,8 +928,8 @@ BOOL CM_Is_Version_Available(ushort);
 BOOL CM_Is_Version_Available_Ex(ushort, long);
 CONFIGRET CM_Intersect_Range_List(ulong, ulong, ulong, uint);
 CONFIGRET CM_Invert_Range_List(ulong, ulong, ulong, uint);
-CONFIGRET CM_Locate_DevNodeA(uint*, PSTR, uint);
-CONFIGRET CM_Locate_DevNodeW(uint*, PWSTR, uint);
+CONFIGRET CM_Locate_DevNodeA(uint*, PSTR, CM_LOCATE_DEVNODE_FLAGS);
+CONFIGRET CM_Locate_DevNodeW(uint*, PWSTR, CM_LOCATE_DEVNODE_FLAGS);
 CONFIGRET CM_Locate_DevNode_ExA(uint*, PSTR, uint, long);
 CONFIGRET CM_Locate_DevNode_ExW(uint*, PWSTR, uint, long);
 CONFIGRET CM_Merge_Range_List(ulong, ulong, ulong, uint);
@@ -620,8 +938,8 @@ CONFIGRET CM_Modify_Res_Des_Ex(ulong*, ulong, uint, void*, uint, uint, long);
 CONFIGRET CM_Move_DevNode(uint, uint, uint);
 CONFIGRET CM_Move_DevNode_Ex(uint, uint, uint, long);
 CONFIGRET CM_Next_Range(ulong*, ulong*, ulong*, uint);
-CONFIGRET CM_Get_Next_Res_Des(ulong*, ulong, uint, uint*, uint);
-CONFIGRET CM_Get_Next_Res_Des_Ex(ulong*, ulong, uint, uint*, uint, long);
+CONFIGRET CM_Get_Next_Res_Des(ulong*, ulong, CM_RESTYPE, CM_RESTYPE*, uint);
+CONFIGRET CM_Get_Next_Res_Des_Ex(ulong*, ulong, CM_RESTYPE, CM_RESTYPE*, uint, long);
 CONFIGRET CM_Open_Class_KeyA(GUID*, const(char)*, uint, uint, HKEY*, uint);
 CONFIGRET CM_Open_Class_KeyW(GUID*, const(wchar)*, uint, uint, HKEY*, uint);
 CONFIGRET CM_Open_Class_Key_ExA(GUID*, const(char)*, uint, uint, HKEY*, uint, long);
@@ -650,7 +968,7 @@ CONFIGRET CM_Request_Device_EjectA(uint, PNP_VETO_TYPE*, PSTR, uint, uint);
 CONFIGRET CM_Request_Device_Eject_ExA(uint, PNP_VETO_TYPE*, PSTR, uint, uint, long);
 CONFIGRET CM_Request_Device_EjectW(uint, PNP_VETO_TYPE*, PWSTR, uint, uint);
 CONFIGRET CM_Request_Device_Eject_ExW(uint, PNP_VETO_TYPE*, PWSTR, uint, uint, long);
-CONFIGRET CM_Reenumerate_DevNode(uint, uint);
+CONFIGRET CM_Reenumerate_DevNode(uint, CM_REENUMERATE_FLAGS);
 CONFIGRET CM_Reenumerate_DevNode_Ex(uint, uint, long);
 CONFIGRET CM_Register_Device_InterfaceA(uint, GUID*, const(char)*, PSTR, uint*, uint);
 CONFIGRET CM_Register_Device_InterfaceW(uint, GUID*, const(wchar)*, PWSTR, uint*, uint);
@@ -691,7 +1009,7 @@ CONFIGRET CM_Run_Detection(uint);
 CONFIGRET CM_Run_Detection_Ex(uint, long);
 CONFIGRET CM_Set_HW_Prof(uint, uint);
 CONFIGRET CM_Set_HW_Prof_Ex(uint, uint, long);
-CONFIGRET CM_Query_Resource_Conflict_List(ulong*, uint, uint, void*, uint, uint, long);
+CONFIGRET CM_Query_Resource_Conflict_List(ulong*, uint, CM_RESTYPE, void*, uint, uint, long);
 CONFIGRET CM_Free_Resource_Conflict_Handle(ulong);
 CONFIGRET CM_Get_Resource_Conflict_Count(ulong, uint*);
 CONFIGRET CM_Get_Resource_Conflict_DetailsA(ulong, uint, CONFLICT_DETAILS_A*);
@@ -710,74 +1028,17 @@ uint CMP_WaitNoPendingInstallEvents(uint);
 CONFIGRET CM_Register_Notification(CM_NOTIFY_FILTER*, void*, PCM_NOTIFY_CALLBACK, HCMNOTIFICATION*);
 CONFIGRET CM_Unregister_Notification(HCMNOTIFICATION);
 uint CM_MapCrToWin32Err(CONFIGRET, uint);
-BOOL UpdateDriverForPlugAndPlayDevicesA(HWND, const(char)*, const(char)*, uint, BOOL*);
-BOOL UpdateDriverForPlugAndPlayDevicesW(HWND, const(wchar)*, const(wchar)*, uint, BOOL*);
-BOOL DiInstallDevice(HWND, HDEVINFO, SP_DEVINFO_DATA*, SP_DRVINFO_DATA_V2_W*, uint, BOOL*);
-BOOL DiInstallDriverW(HWND, const(wchar)*, uint, BOOL*);
-BOOL DiInstallDriverA(HWND, const(char)*, uint, BOOL*);
+BOOL UpdateDriverForPlugAndPlayDevicesA(HWND, const(char)*, const(char)*, UPDATEDRIVERFORPLUGANDPLAYDEVICES_FLAGS, BOOL*);
+BOOL UpdateDriverForPlugAndPlayDevicesW(HWND, const(wchar)*, const(wchar)*, UPDATEDRIVERFORPLUGANDPLAYDEVICES_FLAGS, BOOL*);
+BOOL DiInstallDevice(HWND, HDEVINFO, SP_DEVINFO_DATA*, SP_DRVINFO_DATA_V2_W*, DIINSTALLDEVICE_FLAGS, BOOL*);
+BOOL DiInstallDriverW(HWND, const(wchar)*, DIINSTALLDRIVER_FLAGS, BOOL*);
+BOOL DiInstallDriverA(HWND, const(char)*, DIINSTALLDRIVER_FLAGS, BOOL*);
 BOOL DiUninstallDevice(HWND, HDEVINFO, SP_DEVINFO_DATA*, uint, BOOL*);
-BOOL DiUninstallDriverW(HWND, const(wchar)*, uint, BOOL*);
-BOOL DiUninstallDriverA(HWND, const(char)*, uint, BOOL*);
+BOOL DiUninstallDriverW(HWND, const(wchar)*, DIUNINSTALLDRIVER_FLAGS, BOOL*);
+BOOL DiUninstallDriverA(HWND, const(char)*, DIUNINSTALLDRIVER_FLAGS, BOOL*);
 BOOL DiShowUpdateDevice(HWND, HDEVINFO, SP_DEVINFO_DATA*, uint, BOOL*);
-BOOL DiRollbackDriver(HDEVINFO, SP_DEVINFO_DATA*, HWND, uint, BOOL*);
+BOOL DiRollbackDriver(HDEVINFO, SP_DEVINFO_DATA*, HWND, DIROLLBACKDRIVER_FLAGS, BOOL*);
 BOOL DiShowUpdateDriver(HWND, const(wchar)*, uint, BOOL*);
-enum CM_PROB_NOT_CONFIGURED = 0x00000001;
-enum CM_PROB_DEVLOADER_FAILED = 0x00000002;
-enum CM_PROB_OUT_OF_MEMORY = 0x00000003;
-enum CM_PROB_ENTRY_IS_WRONG_TYPE = 0x00000004;
-enum CM_PROB_LACKED_ARBITRATOR = 0x00000005;
-enum CM_PROB_BOOT_CONFIG_CONFLICT = 0x00000006;
-enum CM_PROB_FAILED_FILTER = 0x00000007;
-enum CM_PROB_DEVLOADER_NOT_FOUND = 0x00000008;
-enum CM_PROB_INVALID_DATA = 0x00000009;
-enum CM_PROB_FAILED_START = 0x0000000a;
-enum CM_PROB_LIAR = 0x0000000b;
-enum CM_PROB_NORMAL_CONFLICT = 0x0000000c;
-enum CM_PROB_NOT_VERIFIED = 0x0000000d;
-enum CM_PROB_NEED_RESTART = 0x0000000e;
-enum CM_PROB_REENUMERATION = 0x0000000f;
-enum CM_PROB_PARTIAL_LOG_CONF = 0x00000010;
-enum CM_PROB_UNKNOWN_RESOURCE = 0x00000011;
-enum CM_PROB_REINSTALL = 0x00000012;
-enum CM_PROB_REGISTRY = 0x00000013;
-enum CM_PROB_VXDLDR = 0x00000014;
-enum CM_PROB_WILL_BE_REMOVED = 0x00000015;
-enum CM_PROB_DISABLED = 0x00000016;
-enum CM_PROB_DEVLOADER_NOT_READY = 0x00000017;
-enum CM_PROB_DEVICE_NOT_THERE = 0x00000018;
-enum CM_PROB_MOVED = 0x00000019;
-enum CM_PROB_TOO_EARLY = 0x0000001a;
-enum CM_PROB_NO_VALID_LOG_CONF = 0x0000001b;
-enum CM_PROB_FAILED_INSTALL = 0x0000001c;
-enum CM_PROB_HARDWARE_DISABLED = 0x0000001d;
-enum CM_PROB_CANT_SHARE_IRQ = 0x0000001e;
-enum CM_PROB_FAILED_ADD = 0x0000001f;
-enum CM_PROB_DISABLED_SERVICE = 0x00000020;
-enum CM_PROB_TRANSLATION_FAILED = 0x00000021;
-enum CM_PROB_NO_SOFTCONFIG = 0x00000022;
-enum CM_PROB_BIOS_TABLE = 0x00000023;
-enum CM_PROB_IRQ_TRANSLATION_FAILED = 0x00000024;
-enum CM_PROB_FAILED_DRIVER_ENTRY = 0x00000025;
-enum CM_PROB_DRIVER_FAILED_PRIOR_UNLOAD = 0x00000026;
-enum CM_PROB_DRIVER_FAILED_LOAD = 0x00000027;
-enum CM_PROB_DRIVER_SERVICE_KEY_INVALID = 0x00000028;
-enum CM_PROB_LEGACY_SERVICE_NO_DEVICES = 0x00000029;
-enum CM_PROB_DUPLICATE_DEVICE = 0x0000002a;
-enum CM_PROB_FAILED_POST_START = 0x0000002b;
-enum CM_PROB_HALTED = 0x0000002c;
-enum CM_PROB_PHANTOM = 0x0000002d;
-enum CM_PROB_SYSTEM_SHUTDOWN = 0x0000002e;
-enum CM_PROB_HELD_FOR_EJECT = 0x0000002f;
-enum CM_PROB_DRIVER_BLOCKED = 0x00000030;
-enum CM_PROB_REGISTRY_TOO_LARGE = 0x00000031;
-enum CM_PROB_SETPROPERTIES_FAILED = 0x00000032;
-enum CM_PROB_WAITING_ON_DEPENDENCY = 0x00000033;
-enum CM_PROB_UNSIGNED_DRIVER = 0x00000034;
-enum CM_PROB_USED_BY_DEBUGGER = 0x00000035;
-enum CM_PROB_DEVICE_RESET = 0x00000036;
-enum CM_PROB_CONSOLE_LOCKED = 0x00000037;
-enum CM_PROB_NEED_CLASS_CONFIG = 0x00000038;
-enum CM_PROB_GUEST_ASSIGNMENT_FAILED = 0x00000039;
 enum NUM_CM_PROB_V1 = 0x00000025;
 enum NUM_CM_PROB_V2 = 0x00000032;
 enum NUM_CM_PROB_V3 = 0x00000033;
@@ -788,45 +1049,6 @@ enum NUM_CM_PROB_V7 = 0x00000037;
 enum NUM_CM_PROB_V8 = 0x00000039;
 enum NUM_CM_PROB_V9 = 0x0000003a;
 enum NUM_CM_PROB = 0x0000003a;
-enum DN_ROOT_ENUMERATED = 0x00000001;
-enum DN_DRIVER_LOADED = 0x00000002;
-enum DN_ENUM_LOADED = 0x00000004;
-enum DN_STARTED = 0x00000008;
-enum DN_MANUAL = 0x00000010;
-enum DN_NEED_TO_ENUM = 0x00000020;
-enum DN_NOT_FIRST_TIME = 0x00000040;
-enum DN_HARDWARE_ENUM = 0x00000080;
-enum DN_LIAR = 0x00000100;
-enum DN_HAS_MARK = 0x00000200;
-enum DN_HAS_PROBLEM = 0x00000400;
-enum DN_FILTERED = 0x00000800;
-enum DN_MOVED = 0x00001000;
-enum DN_DISABLEABLE = 0x00002000;
-enum DN_REMOVABLE = 0x00004000;
-enum DN_PRIVATE_PROBLEM = 0x00008000;
-enum DN_MF_PARENT = 0x00010000;
-enum DN_MF_CHILD = 0x00020000;
-enum DN_WILL_BE_REMOVED = 0x00040000;
-enum DN_NOT_FIRST_TIMEE = 0x00080000;
-enum DN_STOP_FREE_RES = 0x00100000;
-enum DN_REBAL_CANDIDATE = 0x00200000;
-enum DN_BAD_PARTIAL = 0x00400000;
-enum DN_NT_ENUMERATOR = 0x00800000;
-enum DN_NT_DRIVER = 0x01000000;
-enum DN_NEEDS_LOCKING = 0x02000000;
-enum DN_ARM_WAKEUP = 0x04000000;
-enum DN_APM_ENUMERATOR = 0x08000000;
-enum DN_APM_DRIVER = 0x10000000;
-enum DN_SILENT_INSTALL = 0x20000000;
-enum DN_NO_SHOW_IN_DM = 0x40000000;
-enum DN_BOOT_LOG_PROB = 0x80000000;
-enum DN_NEED_RESTART = 0x00000100;
-enum DN_DRIVER_BLOCKED = 0x00000040;
-enum DN_LEGACY_DRIVER = 0x00001000;
-enum DN_CHILD_WITH_INVALID_ID = 0x00000200;
-enum DN_DEVICE_DISCONNECTED = 0x02000000;
-enum DN_QUERY_REMOVE_PENDING = 0x00010000;
-enum DN_QUERY_REMOVE_ACTIVE = 0x00020000;
 enum LCPRI_FORCECONFIG = 0x00000000;
 enum LCPRI_BOOTCONFIG = 0x00000001;
 enum LCPRI_DESIRED = 0x00002000;
@@ -975,9 +1197,6 @@ enum MAX_SUBTITLE_LEN = 0x00000100;
 enum SP_MAX_MACHINENAME_LENGTH = 0x00000107;
 enum SP_ALTPLATFORM_FLAGS_VERSION_RANGE = 0x00000001;
 enum SP_ALTPLATFORM_FLAGS_SUITE_MASK = 0x00000002;
-enum INF_STYLE_CACHE_ENABLE = 0x00000010;
-enum INF_STYLE_CACHE_DISABLE = 0x00000020;
-enum INF_STYLE_CACHE_IGNORE = 0x00000040;
 enum DIRID_ABSOLUTE = 0xffffffffffffffff;
 enum DIRID_ABSOLUTE_16BIT = 0x0000ffff;
 enum DIRID_NULL = 0x00000000;
@@ -1325,17 +1544,6 @@ enum SP_BACKUP_BACKUPPASS = 0x00000001;
 enum SP_BACKUP_DEMANDPASS = 0x00000002;
 enum SP_BACKUP_SPECIAL = 0x00000004;
 enum SP_BACKUP_BOOTFILE = 0x00000008;
-enum SPQ_SCAN_FILE_PRESENCE = 0x00000001;
-enum SPQ_SCAN_FILE_VALIDITY = 0x00000002;
-enum SPQ_SCAN_USE_CALLBACK = 0x00000004;
-enum SPQ_SCAN_USE_CALLBACKEX = 0x00000008;
-enum SPQ_SCAN_INFORM_USER = 0x00000010;
-enum SPQ_SCAN_PRUNE_COPY_QUEUE = 0x00000020;
-enum SPQ_SCAN_USE_CALLBACK_SIGNERINFO = 0x00000040;
-enum SPQ_SCAN_PRUNE_DELREN = 0x00000080;
-enum SPQ_SCAN_FILE_PRESENCE_WITHOUT_SOURCE = 0x00000100;
-enum SPQ_SCAN_FILE_COMPARISON = 0x00000200;
-enum SPQ_SCAN_ACTIVATE_DRP = 0x00000400;
 enum SPQ_DELAYED_COPY = 0x00000001;
 enum SPQ_FLAG_BACKUP_AWARE = 0x00000001;
 enum SPQ_FLAG_ABORT_IF_UNSIGNED = 0x00000002;
@@ -1406,24 +1614,6 @@ enum SPINST_LOGCONFIG_IS_FORCED = 0x00020000;
 enum SPINST_LOGCONFIGS_ARE_OVERRIDES = 0x00040000;
 enum SPINST_REGISTERCALLBACKAWARE = 0x00080000;
 enum SPINST_DEVICEINSTALL = 0x00100000;
-enum SPSVCINST_TAGTOFRONT = 0x00000001;
-enum SPSVCINST_ASSOCSERVICE = 0x00000002;
-enum SPSVCINST_DELETEEVENTLOGENTRY = 0x00000004;
-enum SPSVCINST_NOCLOBBER_DISPLAYNAME = 0x00000008;
-enum SPSVCINST_NOCLOBBER_STARTTYPE = 0x00000010;
-enum SPSVCINST_NOCLOBBER_ERRORCONTROL = 0x00000020;
-enum SPSVCINST_NOCLOBBER_LOADORDERGROUP = 0x00000040;
-enum SPSVCINST_NOCLOBBER_DEPENDENCIES = 0x00000080;
-enum SPSVCINST_NOCLOBBER_DESCRIPTION = 0x00000100;
-enum SPSVCINST_STOPSERVICE = 0x00000200;
-enum SPSVCINST_CLOBBER_SECURITY = 0x00000400;
-enum SPSVCINST_STARTSERVICE = 0x00000800;
-enum SPSVCINST_NOCLOBBER_REQUIREDPRIVILEGES = 0x00001000;
-enum SPSVCINST_NOCLOBBER_TRIGGERS = 0x00002000;
-enum SPSVCINST_NOCLOBBER_SERVICESIDTYPE = 0x00004000;
-enum SPSVCINST_NOCLOBBER_DELAYEDAUTOSTART = 0x00008000;
-enum SPSVCINST_UNIQUE_NAME = 0x00010000;
-enum SPSVCINST_NOCLOBBER_FAILUREACTIONS = 0x00020000;
 enum SPFILELOG_SYSTEMLOG = 0x00000001;
 enum SPFILELOG_FORCENEW = 0x00000002;
 enum SPFILELOG_QUERYONLY = 0x00000004;
@@ -1547,14 +1737,6 @@ enum MAX_IRQS = 0x00000007;
 enum MAX_DMA_CHANNELS = 0x00000007;
 enum DWORD_MAX = 0xffffffff;
 enum CONFIGMG_VERSION = 0x00000400;
-enum CM_CDMASK_DEVINST = 0x00000001;
-enum CM_CDMASK_RESDES = 0x00000002;
-enum CM_CDMASK_FLAGS = 0x00000004;
-enum CM_CDMASK_DESCRIPTION = 0x00000008;
-enum CM_CDMASK_VALID = 0x0000000f;
-enum CM_CDFLAGS_DRIVER = 0x00000001;
-enum CM_CDFLAGS_ROOT_OWNED = 0x00000002;
-enum CM_CDFLAGS_RESERVED = 0x00000004;
 enum mMD_MemoryType = 0x00000001;
 enum fMD_MemoryType = 0x00000001;
 enum fMD_ROM = 0x00000000;
@@ -1665,33 +1847,9 @@ enum fPMF_AUDIO_ENABLE = 0x00000008;
 enum CM_HWPI_NOT_DOCKABLE = 0x00000000;
 enum CM_HWPI_UNDOCKED = 0x00000001;
 enum CM_HWPI_DOCKED = 0x00000002;
-enum ResType_All = 0x00000000;
-enum ResType_None = 0x00000000;
-enum ResType_Mem = 0x00000001;
-enum ResType_IO = 0x00000002;
-enum ResType_DMA = 0x00000003;
-enum ResType_IRQ = 0x00000004;
-enum ResType_DoNotUse = 0x00000005;
-enum ResType_BusNumber = 0x00000006;
-enum ResType_MemLarge = 0x00000007;
-enum ResType_MAX = 0x00000007;
-enum ResType_Ignored_Bit = 0x00008000;
-enum ResType_ClassSpecific = 0x0000ffff;
-enum ResType_Reserved = 0x00008000;
-enum ResType_DevicePrivate = 0x00008001;
-enum ResType_PcCardConfig = 0x00008002;
-enum ResType_MfCardConfig = 0x00008003;
-enum ResType_Connection = 0x00008004;
 enum CM_ADD_RANGE_ADDIFCONFLICT = 0x00000000;
 enum CM_ADD_RANGE_DONOTADDIFCONFLICT = 0x00000001;
 enum CM_ADD_RANGE_BITS = 0x00000001;
-enum BASIC_LOG_CONF = 0x00000000;
-enum FILTERED_LOG_CONF = 0x00000001;
-enum ALLOC_LOG_CONF = 0x00000002;
-enum BOOT_LOG_CONF = 0x00000003;
-enum FORCED_LOG_CONF = 0x00000004;
-enum OVERRIDE_LOG_CONF = 0x00000005;
-enum NUM_LOG_CONF = 0x00000006;
 enum LOG_CONF_BITS = 0x00000007;
 enum PRIORITY_EQUAL_FIRST = 0x00000008;
 enum PRIORITY_EQUAL_LAST = 0x00000000;
@@ -1718,9 +1876,6 @@ enum CM_DELETE_CLASS_ONLY = 0x00000000;
 enum CM_DELETE_CLASS_SUBKEYS = 0x00000001;
 enum CM_DELETE_CLASS_INTERFACE = 0x00000002;
 enum CM_DELETE_CLASS_BITS = 0x00000003;
-enum CM_ENUMERATE_CLASSES_INSTALLER = 0x00000000;
-enum CM_ENUMERATE_CLASSES_INTERFACE = 0x00000001;
-enum CM_ENUMERATE_CLASSES_BITS = 0x00000001;
 enum CM_DETECT_NEW_PROFILE = 0x00000001;
 enum CM_DETECT_CRASHED = 0x00000002;
 enum CM_DETECT_HWPROF_FIRST_BOOT = 0x00000004;
@@ -1744,9 +1899,6 @@ enum CM_GETIDLIST_FILTER_BITS = 0x1000007f;
 enum CM_GETIDLIST_FILTER_TRANSPORTRELATIONS = 0x00000080;
 enum CM_GETIDLIST_FILTER_PRESENT = 0x00000100;
 enum CM_GETIDLIST_FILTER_CLASS = 0x00000200;
-enum CM_GET_DEVICE_INTERFACE_LIST_PRESENT = 0x00000000;
-enum CM_GET_DEVICE_INTERFACE_LIST_ALL_DEVICES = 0x00000001;
-enum CM_GET_DEVICE_INTERFACE_LIST_BITS = 0x00000001;
 enum CM_DRP_DEVICEDESC = 0x00000001;
 enum CM_DRP_HARDWAREID = 0x00000002;
 enum CM_DRP_COMPATIBLEIDS = 0x00000003;
@@ -1795,34 +1947,6 @@ enum CM_DRP_MIN = 0x00000001;
 enum CM_CRP_MIN = 0x00000001;
 enum CM_DRP_MAX = 0x00000025;
 enum CM_CRP_MAX = 0x00000025;
-enum CM_DEVCAP_LOCKSUPPORTED = 0x00000001;
-enum CM_DEVCAP_EJECTSUPPORTED = 0x00000002;
-enum CM_DEVCAP_REMOVABLE = 0x00000004;
-enum CM_DEVCAP_DOCKDEVICE = 0x00000008;
-enum CM_DEVCAP_UNIQUEID = 0x00000010;
-enum CM_DEVCAP_SILENTINSTALL = 0x00000020;
-enum CM_DEVCAP_RAWDEVICEOK = 0x00000040;
-enum CM_DEVCAP_SURPRISEREMOVALOK = 0x00000080;
-enum CM_DEVCAP_HARDWAREDISABLED = 0x00000100;
-enum CM_DEVCAP_NONDYNAMIC = 0x00000200;
-enum CM_DEVCAP_SECUREDEVICE = 0x00000400;
-enum CM_REMOVAL_POLICY_EXPECT_NO_REMOVAL = 0x00000001;
-enum CM_REMOVAL_POLICY_EXPECT_ORDERLY_REMOVAL = 0x00000002;
-enum CM_REMOVAL_POLICY_EXPECT_SURPRISE_REMOVAL = 0x00000003;
-enum CM_INSTALL_STATE_INSTALLED = 0x00000000;
-enum CM_INSTALL_STATE_NEEDS_REINSTALL = 0x00000001;
-enum CM_INSTALL_STATE_FAILED_INSTALL = 0x00000002;
-enum CM_INSTALL_STATE_FINISH_INSTALL = 0x00000003;
-enum CM_LOCATE_DEVNODE_NORMAL = 0x00000000;
-enum CM_LOCATE_DEVNODE_PHANTOM = 0x00000001;
-enum CM_LOCATE_DEVNODE_CANCELREMOVE = 0x00000002;
-enum CM_LOCATE_DEVNODE_NOVALIDATION = 0x00000004;
-enum CM_LOCATE_DEVNODE_BITS = 0x00000007;
-enum CM_LOCATE_DEVINST_NORMAL = 0x00000000;
-enum CM_LOCATE_DEVINST_PHANTOM = 0x00000001;
-enum CM_LOCATE_DEVINST_CANCELREMOVE = 0x00000002;
-enum CM_LOCATE_DEVINST_NOVALIDATION = 0x00000004;
-enum CM_LOCATE_DEVINST_BITS = 0x00000007;
 enum CM_OPEN_CLASS_KEY_INSTALLER = 0x00000000;
 enum CM_OPEN_CLASS_KEY_INTERFACE = 0x00000001;
 enum CM_OPEN_CLASS_KEY_BITS = 0x00000001;
@@ -1833,11 +1957,6 @@ enum CM_REMOVE_DISABLE = 0x00000004;
 enum CM_REMOVE_BITS = 0x00000007;
 enum CM_QUERY_REMOVE_UI_OK = 0x00000000;
 enum CM_QUERY_REMOVE_UI_NOT_OK = 0x00000001;
-enum CM_REENUMERATE_NORMAL = 0x00000000;
-enum CM_REENUMERATE_SYNCHRONOUS = 0x00000001;
-enum CM_REENUMERATE_RETRY_INSTALLATION = 0x00000002;
-enum CM_REENUMERATE_ASYNCHRONOUS = 0x00000004;
-enum CM_REENUMERATE_BITS = 0x00000007;
 enum CM_REGISTER_DEVICE_DRIVER_STATIC = 0x00000000;
 enum CM_REGISTER_DEVICE_DRIVER_DISABLEABLE = 0x00000001;
 enum CM_REGISTER_DEVICE_DRIVER_REMOVABLE = 0x00000002;
@@ -1889,26 +2008,6 @@ enum CM_GLOBAL_STATE_SERVICES_AVAILABLE = 0x00000004;
 enum CM_GLOBAL_STATE_SHUTTING_DOWN = 0x00000008;
 enum CM_GLOBAL_STATE_DETECTION_PENDING = 0x00000010;
 enum CM_GLOBAL_STATE_REBOOT_REQUIRED = 0x00000020;
-enum INSTALLFLAG_FORCE = 0x00000001;
-enum INSTALLFLAG_READONLY = 0x00000002;
-enum INSTALLFLAG_NONINTERACTIVE = 0x00000004;
-enum INSTALLFLAG_BITS = 0x00000007;
-enum DIIDFLAG_SHOWSEARCHUI = 0x00000001;
-enum DIIDFLAG_NOFINISHINSTALLUI = 0x00000002;
-enum DIIDFLAG_INSTALLNULLDRIVER = 0x00000004;
-enum DIIDFLAG_INSTALLCOPYINFDRIVERS = 0x00000008;
-enum DIIDFLAG_BITS = 0x0000000f;
-enum DIIRFLAG_INF_ALREADY_COPIED = 0x00000001;
-enum DIIRFLAG_FORCE_INF = 0x00000002;
-enum DIIRFLAG_HW_USING_THE_INF = 0x00000004;
-enum DIIRFLAG_HOTPATCH = 0x00000008;
-enum DIIRFLAG_NOBACKUP = 0x00000010;
-enum DIIRFLAG_PRE_CONFIGURE_INF = 0x00000020;
-enum DIIRFLAG_INSTALL_AS_SET = 0x00000040;
-enum DIURFLAG_NO_REMOVE_INF = 0x00000001;
-enum DIURFLAG_RESERVED = 0x00000002;
-enum ROLLBACK_FLAG_NO_UI = 0x00000001;
-enum ROLLBACK_BITS = 0x00000001;
 enum MAX_KEY_LEN = 0x00000064;
 enum SZ_KEY_OPTIONDESC = "OptionDesc";
 enum SZ_KEY_LDIDOEM = "LdidOEM";
@@ -2248,7 +2347,7 @@ struct INFCONTEXT
 }
 struct SP_INF_INFORMATION
 {
-    SP_INF_STYLE InfStyle;
+    INF_STYLE InfStyle;
     uint InfCount;
     ubyte[1] VersionData;
 }
@@ -2735,7 +2834,7 @@ struct SP_INF_SIGNER_INFO_V2_W
 /+ [CONFLICTED] struct SP_INF_INFORMATION
 {
     align (1):
-    SP_INF_STYLE InfStyle;
+    INF_STYLE InfStyle;
     uint InfCount;
     ubyte[1] VersionData;
 }
@@ -3382,19 +3481,19 @@ enum : int
 struct CONFLICT_DETAILS_A
 {
     uint CD_ulSize;
-    uint CD_ulMask;
+    CM_CDMASK CD_ulMask;
     uint CD_dnDevInst;
     ulong CD_rdResDes;
-    uint CD_ulFlags;
+    CM_CDFLAGS CD_ulFlags;
     CHAR[260] CD_szDescription;
 }
 struct CONFLICT_DETAILS_W
 {
     uint CD_ulSize;
-    uint CD_ulMask;
+    CM_CDMASK CD_ulMask;
     uint CD_dnDevInst;
     ulong CD_rdResDes;
-    uint CD_ulFlags;
+    CM_CDFLAGS CD_ulFlags;
     wchar[260] CD_szDescription;
 }
 struct MEM_RANGE

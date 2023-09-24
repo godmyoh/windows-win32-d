@@ -496,8 +496,8 @@ enum : int
     WICComponentDisabled = 0x80000000,
 }
 
-alias WICGifLogicalScreenDescriptorProperties = uint;
-enum : uint
+alias WICGifLogicalScreenDescriptorProperties = int;
+enum : int
 {
     WICGifLogicalScreenSignature                      = 0x00000001,
     WICGifLogicalScreenDescriptorWidth                = 0x00000002,
@@ -510,8 +510,8 @@ enum : uint
     WICGifLogicalScreenDescriptorPixelAspectRatio     = 0x00000009,
 }
 
-alias WICGifImageDescriptorProperties = uint;
-enum : uint
+alias WICGifImageDescriptorProperties = int;
+enum : int
 {
     WICGifImageDescriptorLeft                = 0x00000001,
     WICGifImageDescriptorTop                 = 0x00000002,
@@ -523,8 +523,8 @@ enum : uint
     WICGifImageDescriptorLocalColorTableSize = 0x00000008,
 }
 
-alias WICGifGraphicControlExtensionProperties = uint;
-enum : uint
+alias WICGifGraphicControlExtensionProperties = int;
+enum : int
 {
     WICGifGraphicControlExtensionDisposal              = 0x00000001,
     WICGifGraphicControlExtensionUserInputFlag         = 0x00000002,
@@ -533,46 +533,46 @@ enum : uint
     WICGifGraphicControlExtensionTransparentColorIndex = 0x00000005,
 }
 
-alias WICGifApplicationExtensionProperties = uint;
-enum : uint
+alias WICGifApplicationExtensionProperties = int;
+enum : int
 {
     WICGifApplicationExtensionApplication = 0x00000001,
     WICGifApplicationExtensionData        = 0x00000002,
 }
 
-alias WICGifCommentExtensionProperties = uint;
-enum : uint
+alias WICGifCommentExtensionProperties = int;
+enum : int
 {
     WICGifCommentExtensionText = 0x00000001,
 }
 
-alias WICJpegCommentProperties = uint;
-enum : uint
+alias WICJpegCommentProperties = int;
+enum : int
 {
     WICJpegCommentText = 0x00000001,
 }
 
-alias WICJpegLuminanceProperties = uint;
-enum : uint
+alias WICJpegLuminanceProperties = int;
+enum : int
 {
     WICJpegLuminanceTable = 0x00000001,
 }
 
-alias WICJpegChrominanceProperties = uint;
-enum : uint
+alias WICJpegChrominanceProperties = int;
+enum : int
 {
     WICJpegChrominanceTable = 0x00000001,
 }
 
-alias WIC8BIMIptcProperties = uint;
-enum : uint
+alias WIC8BIMIptcProperties = int;
+enum : int
 {
     WIC8BIMIptcPString      = 0x00000000,
     WIC8BIMIptcEmbeddedIPTC = 0x00000001,
 }
 
-alias WIC8BIMResolutionInfoProperties = uint;
-enum : uint
+alias WIC8BIMResolutionInfoProperties = int;
+enum : int
 {
     WIC8BIMResolutionInfoPString         = 0x00000001,
     WIC8BIMResolutionInfoHResolution     = 0x00000002,
@@ -583,27 +583,27 @@ enum : uint
     WIC8BIMResolutionInfoHeightUnit      = 0x00000007,
 }
 
-alias WIC8BIMIptcDigestProperties = uint;
-enum : uint
+alias WIC8BIMIptcDigestProperties = int;
+enum : int
 {
     WIC8BIMIptcDigestPString    = 0x00000001,
     WIC8BIMIptcDigestIptcDigest = 0x00000002,
 }
 
-alias WICPngGamaProperties = uint;
-enum : uint
+alias WICPngGamaProperties = int;
+enum : int
 {
     WICPngGamaGamma = 0x00000001,
 }
 
-alias WICPngBkgdProperties = uint;
-enum : uint
+alias WICPngBkgdProperties = int;
+enum : int
 {
     WICPngBkgdBackgroundColor = 0x00000001,
 }
 
-alias WICPngItxtProperties = uint;
-enum : uint
+alias WICPngItxtProperties = int;
+enum : int
 {
     WICPngItxtKeyword           = 0x00000001,
     WICPngItxtCompressionFlag   = 0x00000002,
@@ -612,8 +612,8 @@ enum : uint
     WICPngItxtText              = 0x00000005,
 }
 
-alias WICPngChrmProperties = uint;
-enum : uint
+alias WICPngChrmProperties = int;
+enum : int
 {
     WICPngChrmWhitePointX = 0x00000001,
     WICPngChrmWhitePointY = 0x00000002,
@@ -625,27 +625,27 @@ enum : uint
     WICPngChrmBlueY       = 0x00000008,
 }
 
-alias WICPngHistProperties = uint;
-enum : uint
+alias WICPngHistProperties = int;
+enum : int
 {
     WICPngHistFrequencies = 0x00000001,
 }
 
-alias WICPngIccpProperties = uint;
-enum : uint
+alias WICPngIccpProperties = int;
+enum : int
 {
     WICPngIccpProfileName = 0x00000001,
     WICPngIccpProfileData = 0x00000002,
 }
 
-alias WICPngSrgbProperties = uint;
-enum : uint
+alias WICPngSrgbProperties = int;
+enum : int
 {
     WICPngSrgbRenderingIntent = 0x00000001,
 }
 
-alias WICPngTimeProperties = uint;
-enum : uint
+alias WICPngTimeProperties = int;
+enum : int
 {
     WICPngTimeYear   = 0x00000001,
     WICPngTimeMonth  = 0x00000002,
@@ -655,14 +655,14 @@ enum : uint
     WICPngTimeSecond = 0x00000006,
 }
 
-alias WICHeifProperties = uint;
-enum : uint
+alias WICHeifProperties = int;
+enum : int
 {
     WICHeifOrientation = 0x00000001,
 }
 
-alias WICHeifHdrProperties = uint;
-enum : uint
+alias WICHeifHdrProperties = int;
+enum : int
 {
     WICHeifHdrMaximumLuminanceLevel                 = 0x00000001,
     WICHeifHdrMaximumFrameAverageLuminanceLevel     = 0x00000002,
@@ -671,27 +671,27 @@ enum : uint
     WICHeifHdrCustomVideoPrimaries                  = 0x00000005,
 }
 
-alias WICWebpAnimProperties = uint;
-enum : uint
+alias WICWebpAnimProperties = int;
+enum : int
 {
     WICWebpAnimLoopCount = 0x00000001,
 }
 
-alias WICWebpAnmfProperties = uint;
-enum : uint
+alias WICWebpAnmfProperties = int;
+enum : int
 {
     WICWebpAnmfFrameDuration = 0x00000001,
 }
 
-alias WICSectionAccessLevel = uint;
-enum : uint
+alias WICSectionAccessLevel = int;
+enum : int
 {
     WICSectionAccessLevelRead      = 0x00000001,
     WICSectionAccessLevelReadWrite = 0x00000003,
 }
 
-alias WICPixelFormatNumericRepresentation = uint;
-enum : uint
+alias WICPixelFormatNumericRepresentation = int;
+enum : int
 {
     WICPixelFormatNumericRepresentationUnspecified     = 0x00000000,
     WICPixelFormatNumericRepresentationIndexed         = 0x00000001,
@@ -708,22 +708,22 @@ enum : int
     WICPlanarOptionsPreserveSubsampling = 0x00000001,
 }
 
-alias WICJpegIndexingOptions = uint;
-enum : uint
+alias WICJpegIndexingOptions = int;
+enum : int
 {
     WICJpegIndexingOptionsGenerateOnDemand = 0x00000000,
     WICJpegIndexingOptionsGenerateOnLoad   = 0x00000001,
 }
 
-alias WICJpegTransferMatrix = uint;
-enum : uint
+alias WICJpegTransferMatrix = int;
+enum : int
 {
     WICJpegTransferMatrixIdentity = 0x00000000,
     WICJpegTransferMatrixBT601    = 0x00000001,
 }
 
-alias WICJpegScanType = uint;
-enum : uint
+alias WICJpegScanType = int;
+enum : int
 {
     WICJpegScanTypeInterleaved      = 0x00000000,
     WICJpegScanTypePlanarComponents = 0x00000001,

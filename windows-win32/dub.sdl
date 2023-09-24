@@ -5,8 +5,12 @@ authors "godmyoh"
 targetType "library"
 targetName "windows-win32"
 
-configuration "release" {
+configuration "default" {
     targetName "windows-win32"
+}
+
+configuration "release" {
+    targetName "windows-win32-release"
 }
 
 configuration "debug" {

@@ -289,8 +289,8 @@ interface IDXGIDevice : IDXGIObject
     HRESULT SetGPUThreadPriority(int);
     HRESULT GetGPUThreadPriority(int*);
 }
-alias DXGI_ADAPTER_FLAG = uint;
-enum : uint
+alias DXGI_ADAPTER_FLAG = int;
+enum : int
 {
     DXGI_ADAPTER_FLAG_NONE     = 0x00000000,
     DXGI_ADAPTER_FLAG_REMOTE   = 0x00000001,
@@ -773,8 +773,8 @@ interface IDXGIFactory5 : IDXGIFactory4
 {
     HRESULT CheckFeatureSupport(DXGI_FEATURE, void*, uint);
 }
-alias DXGI_ADAPTER_FLAG3 = uint;
-enum : uint
+alias DXGI_ADAPTER_FLAG3 = int;
+enum : int
 {
     DXGI_ADAPTER_FLAG3_NONE                         = 0x00000000,
     DXGI_ADAPTER_FLAG3_REMOTE                       = 0x00000001,

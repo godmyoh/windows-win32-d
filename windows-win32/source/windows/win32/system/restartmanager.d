@@ -1,21 +1,21 @@
 module windows.win32.system.restartmanager;
 
-import windows.win32.foundation : BOOL, FILETIME, PWSTR;
+import windows.win32.foundation : BOOL, FILETIME, PWSTR, WIN32_ERROR;
 
 version (Windows):
 extern (Windows):
 
-uint RmStartSession(uint*, uint, PWSTR);
-uint RmJoinSession(uint*, const(wchar)*);
-uint RmEndSession(uint);
-uint RmRegisterResources(uint, uint, const(wchar)**, uint, RM_UNIQUE_PROCESS*, uint, const(wchar)**);
-uint RmGetList(uint, uint*, uint*, RM_PROCESS_INFO*, uint*);
-uint RmShutdown(uint, uint, RM_WRITE_STATUS_CALLBACK);
-uint RmRestart(uint, uint, RM_WRITE_STATUS_CALLBACK);
-uint RmCancelCurrentTask(uint);
-uint RmAddFilter(uint, const(wchar)*, RM_UNIQUE_PROCESS*, const(wchar)*, RM_FILTER_ACTION);
-uint RmRemoveFilter(uint, const(wchar)*, RM_UNIQUE_PROCESS*, const(wchar)*);
-uint RmGetFilterList(uint, ubyte*, uint, uint*);
+WIN32_ERROR RmStartSession(uint*, uint, PWSTR);
+WIN32_ERROR RmJoinSession(uint*, const(wchar)*);
+WIN32_ERROR RmEndSession(uint);
+WIN32_ERROR RmRegisterResources(uint, uint, const(wchar)**, uint, RM_UNIQUE_PROCESS*, uint, const(wchar)**);
+WIN32_ERROR RmGetList(uint, uint*, uint*, RM_PROCESS_INFO*, uint*);
+WIN32_ERROR RmShutdown(uint, uint, RM_WRITE_STATUS_CALLBACK);
+WIN32_ERROR RmRestart(uint, uint, RM_WRITE_STATUS_CALLBACK);
+WIN32_ERROR RmCancelCurrentTask(uint);
+WIN32_ERROR RmAddFilter(uint, const(wchar)*, RM_UNIQUE_PROCESS*, const(wchar)*, RM_FILTER_ACTION);
+WIN32_ERROR RmRemoveFilter(uint, const(wchar)*, RM_UNIQUE_PROCESS*, const(wchar)*);
+WIN32_ERROR RmGetFilterList(uint, ubyte*, uint, uint*);
 enum CCH_RM_SESSION_KEY = 0x00000020;
 enum CCH_RM_MAX_APP_NAME = 0x000000ff;
 enum CCH_RM_MAX_SVC_NAME = 0x0000003f;

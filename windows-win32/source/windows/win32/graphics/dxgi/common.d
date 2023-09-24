@@ -55,8 +55,8 @@ enum : int
     DXGI_COLOR_SPACE_CUSTOM                           = 0xffffffff,
 }
 
-alias DXGI_FORMAT = uint;
-enum : uint
+alias DXGI_FORMAT = int;
+enum : int
 {
     DXGI_FORMAT_UNKNOWN                                 = 0x00000000,
     DXGI_FORMAT_R32G32B32A32_TYPELESS                   = 0x00000001,
@@ -252,8 +252,8 @@ struct DXGI_JPEG_QUANTIZATION_TABLE
 {
     ubyte[64] Elements;
 }
-alias DXGI_ALPHA_MODE = uint;
-enum : uint
+alias DXGI_ALPHA_MODE = int;
+enum : int
 {
     DXGI_ALPHA_MODE_UNSPECIFIED   = 0x00000000,
     DXGI_ALPHA_MODE_PREMULTIPLIED = 0x00000001,

@@ -1,8 +1,10 @@
 module windows.win32.networking.winhttp;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, FILETIME, HANDLE, PSTR, PWSTR, SYSTEMTIME;
+import windows.win32.foundation : BOOL, BSTR, FILETIME, HANDLE, HRESULT, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL;
 import windows.win32.networking.winsock : SOCKADDR_STORAGE;
+import windows.win32.system.com : IDispatch, IUnknown, SAFEARRAY;
+import windows.win32.system.variant : VARIANT;
 
 version (Windows):
 extern (Windows):
@@ -109,6 +111,12 @@ uint WinHttpUnregisterProxyChangeNotification(void*);
 uint WinHttpGetProxySettingsEx(void*, WINHTTP_PROXY_SETTINGS_TYPE, WINHTTP_PROXY_SETTINGS_PARAM*, ulong);
 uint WinHttpGetProxySettingsResultEx(void*, void*);
 uint WinHttpFreeProxySettingsEx(WINHTTP_PROXY_SETTINGS_TYPE, void*);
+enum HTTPREQUEST_PROXYSETTING_DEFAULT = 0x00000000;
+enum HTTPREQUEST_PROXYSETTING_PRECONFIG = 0x00000000;
+enum HTTPREQUEST_PROXYSETTING_DIRECT = 0x00000001;
+enum HTTPREQUEST_PROXYSETTING_PROXY = 0x00000002;
+enum HTTPREQUEST_SETCREDENTIALS_FOR_SERVER = 0x00000000;
+enum HTTPREQUEST_SETCREDENTIALS_FOR_PROXY = 0x00000001;
 enum INTERNET_DEFAULT_PORT = 0x0000;
 enum INTERNET_DEFAULT_HTTP_PORT = 0x0050;
 enum INTERNET_DEFAULT_HTTPS_PORT = 0x01bb;
@@ -1076,3 +1084,92 @@ enum : int
     const(wchar)* pcwszProbeHost;
 }
 +/
+alias WinHttpRequestOption = int;
+enum : int
+{
+    WinHttpRequestOption_UserAgentString                  = 0x00000000,
+    WinHttpRequestOption_URL                              = 0x00000001,
+    WinHttpRequestOption_URLCodePage                      = 0x00000002,
+    WinHttpRequestOption_EscapePercentInURL               = 0x00000003,
+    WinHttpRequestOption_SslErrorIgnoreFlags              = 0x00000004,
+    WinHttpRequestOption_SelectCertificate                = 0x00000005,
+    WinHttpRequestOption_EnableRedirects                  = 0x00000006,
+    WinHttpRequestOption_UrlEscapeDisable                 = 0x00000007,
+    WinHttpRequestOption_UrlEscapeDisableQuery            = 0x00000008,
+    WinHttpRequestOption_SecureProtocols                  = 0x00000009,
+    WinHttpRequestOption_EnableTracing                    = 0x0000000a,
+    WinHttpRequestOption_RevertImpersonationOverSsl       = 0x0000000b,
+    WinHttpRequestOption_EnableHttpsToHttpRedirects       = 0x0000000c,
+    WinHttpRequestOption_EnablePassportAuthentication     = 0x0000000d,
+    WinHttpRequestOption_MaxAutomaticRedirects            = 0x0000000e,
+    WinHttpRequestOption_MaxResponseHeaderSize            = 0x0000000f,
+    WinHttpRequestOption_MaxResponseDrainSize             = 0x00000010,
+    WinHttpRequestOption_EnableHttp1_1                    = 0x00000011,
+    WinHttpRequestOption_EnableCertificateRevocationCheck = 0x00000012,
+    WinHttpRequestOption_RejectUserpwd                    = 0x00000013,
+}
+
+alias WinHttpRequestAutoLogonPolicy = int;
+enum : int
+{
+    AutoLogonPolicy_Always            = 0x00000000,
+    AutoLogonPolicy_OnlyIfBypassProxy = 0x00000001,
+    AutoLogonPolicy_Never             = 0x00000002,
+}
+
+alias WinHttpRequestSslErrorFlags = int;
+enum : int
+{
+    SslErrorFlag_UnknownCA       = 0x00000100,
+    SslErrorFlag_CertWrongUsage  = 0x00000200,
+    SslErrorFlag_CertCNInvalid   = 0x00001000,
+    SslErrorFlag_CertDateInvalid = 0x00002000,
+    SslErrorFlag_Ignore_All      = 0x00003300,
+}
+
+alias WinHttpRequestSecureProtocols = int;
+enum : int
+{
+    SecureProtocol_SSL2   = 0x00000008,
+    SecureProtocol_SSL3   = 0x00000020,
+    SecureProtocol_TLS1   = 0x00000080,
+    SecureProtocol_TLS1_1 = 0x00000200,
+    SecureProtocol_TLS1_2 = 0x00000800,
+    SecureProtocol_ALL    = 0x000000a8,
+}
+
+enum IID_IWinHttpRequest = GUID(0x16fe2ec, 0xb2c8, 0x45f8, [0xb2, 0x3b, 0x39, 0xe5, 0x3a, 0x75, 0x39, 0x6b]);
+interface IWinHttpRequest : IDispatch
+{
+    HRESULT SetProxy(int, VARIANT, VARIANT);
+    HRESULT SetCredentials(BSTR, BSTR, int);
+    HRESULT Open(BSTR, BSTR, VARIANT);
+    HRESULT SetRequestHeader(BSTR, BSTR);
+    HRESULT GetResponseHeader(BSTR, BSTR*);
+    HRESULT GetAllResponseHeaders(BSTR*);
+    HRESULT Send(VARIANT);
+    HRESULT get_Status(int*);
+    HRESULT get_StatusText(BSTR*);
+    HRESULT get_ResponseText(BSTR*);
+    HRESULT get_ResponseBody(VARIANT*);
+    HRESULT get_ResponseStream(VARIANT*);
+    HRESULT get_Option(WinHttpRequestOption, VARIANT*);
+    HRESULT put_Option(WinHttpRequestOption, VARIANT);
+    HRESULT WaitForResponse(VARIANT, VARIANT_BOOL*);
+    HRESULT Abort();
+    HRESULT SetTimeouts(int, int, int, int);
+    HRESULT SetClientCertificate(BSTR);
+    HRESULT SetAutoLogonPolicy(WinHttpRequestAutoLogonPolicy);
+}
+enum IID_IWinHttpRequestEvents = GUID(0xf97f4e15, 0xb787, 0x4212, [0x80, 0xd1, 0xd3, 0x80, 0xcb, 0xbf, 0x98, 0x2e]);
+interface IWinHttpRequestEvents : IUnknown
+{
+    void OnResponseStart(int, BSTR);
+    void OnResponseDataAvailable(SAFEARRAY**);
+    void OnResponseFinished();
+    void OnError(int, BSTR);
+}
+enum CLSID_WinHttpRequest = GUID(0x2087c2f4, 0x2cef, 0x4953, [0xa8, 0xab, 0x66, 0x77, 0x9b, 0x67, 0x4, 0x95]);
+struct WinHttpRequest
+{
+}

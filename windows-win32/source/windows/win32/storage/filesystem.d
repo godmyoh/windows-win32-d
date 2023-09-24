@@ -3,6 +3,7 @@ module windows.win32.storage.filesystem;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BOOLEAN, CHAR, FILETIME, HANDLE, HRESULT, PSID, PSTR, PWSTR, SYSTEMTIME;
 import windows.win32.security : GENERIC_MAPPING, PRIVILEGE_SET, PSECURITY_DESCRIPTOR, SECURITY_ATTRIBUTES, SID;
+import windows.win32.security.cryptography : ALG_ID;
 import windows.win32.system.com : IConnectionPointContainer, IUnknown;
 import windows.win32.system.io : LPOVERLAPPED_COMPLETION_ROUTINE, OVERLAPPED;
 
@@ -477,10 +478,10 @@ HANDLE FindFirstFileTransactedA(const(char)*, FINDEX_INFO_LEVELS, void*, FINDEX_
 HANDLE FindFirstFileTransactedW(const(wchar)*, FINDEX_INFO_LEVELS, void*, FINDEX_SEARCH_OPS, void*, uint, HANDLE);
 BOOL CopyFileA(const(char)*, const(char)*, BOOL);
 BOOL CopyFileW(const(wchar)*, const(wchar)*, BOOL);
-BOOL CopyFileExA(const(char)*, const(char)*, LPPROGRESS_ROUTINE, void*, int*, uint);
-BOOL CopyFileExW(const(wchar)*, const(wchar)*, LPPROGRESS_ROUTINE, void*, int*, uint);
-BOOL CopyFileTransactedA(const(char)*, const(char)*, LPPROGRESS_ROUTINE, void*, int*, uint, HANDLE);
-BOOL CopyFileTransactedW(const(wchar)*, const(wchar)*, LPPROGRESS_ROUTINE, void*, int*, uint, HANDLE);
+BOOL CopyFileExA(const(char)*, const(char)*, LPPROGRESS_ROUTINE, void*, BOOL*, uint);
+BOOL CopyFileExW(const(wchar)*, const(wchar)*, LPPROGRESS_ROUTINE, void*, BOOL*, uint);
+BOOL CopyFileTransactedA(const(char)*, const(char)*, LPPROGRESS_ROUTINE, void*, BOOL*, uint, HANDLE);
+BOOL CopyFileTransactedW(const(wchar)*, const(wchar)*, LPPROGRESS_ROUTINE, void*, BOOL*, uint, HANDLE);
 HRESULT CopyFile2(const(wchar)*, const(wchar)*, COPYFILE2_EXTENDED_PARAMETERS*);
 BOOL MoveFileA(const(char)*, const(char)*);
 BOOL MoveFileW(const(wchar)*, const(wchar)*);
@@ -501,7 +502,7 @@ HANDLE FindFirstFileNameTransactedW(const(wchar)*, uint, uint*, PWSTR, HANDLE);
 BOOL SetVolumeLabelA(const(char)*, const(char)*);
 BOOL SetVolumeLabelW(const(wchar)*, const(wchar)*);
 BOOL SetFileBandwidthReservation(HANDLE, uint, uint, BOOL, uint*, uint*);
-BOOL GetFileBandwidthReservation(HANDLE, uint*, uint*, int*, uint*, uint*);
+BOOL GetFileBandwidthReservation(HANDLE, uint*, uint*, BOOL*, uint*, uint*);
 BOOL ReadDirectoryChangesW(HANDLE, void*, uint, BOOL, FILE_NOTIFY_CHANGE, uint*, OVERLAPPED*, LPOVERLAPPED_COMPLETION_ROUTINE);
 BOOL ReadDirectoryChangesExW(HANDLE, void*, uint, BOOL, FILE_NOTIFY_CHANGE, uint*, OVERLAPPED*, LPOVERLAPPED_COMPLETION_ROUTINE, READ_DIRECTORY_NOTIFY_INFORMATION_CLASS);
 HANDLE FindFirstVolumeA(PSTR, uint);
@@ -2834,7 +2835,7 @@ struct EFS_KEY_INFO
 {
     uint dwVersion;
     uint Entropy;
-    uint Algorithm;
+    ALG_ID Algorithm;
     uint KeyLength;
 }
 struct EFS_COMPATIBILITY_INFO
@@ -3343,7 +3344,7 @@ alias CACHE_KEY_COMPARE = int function(uint, ubyte*, uint, ubyte*);
 alias CACHE_KEY_HASH = uint function(ubyte*, uint);
 alias CACHE_READ_CALLBACK = BOOL function(uint, ubyte*, void*);
 alias CACHE_DESTROY_CALLBACK = void function(uint, ubyte*);
-alias CACHE_ACCESS_CHECK = BOOL function(PSECURITY_DESCRIPTOR, HANDLE, uint, GENERIC_MAPPING*, PRIVILEGE_SET*, uint*, uint*, int*);
+alias CACHE_ACCESS_CHECK = BOOL function(PSECURITY_DESCRIPTOR, HANDLE, uint, GENERIC_MAPPING*, PRIVILEGE_SET*, uint*, uint*, BOOL*);
 struct NAME_CACHE_CONTEXT
 {
     uint m_dwSignature;

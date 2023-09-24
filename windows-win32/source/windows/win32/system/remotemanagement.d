@@ -867,7 +867,7 @@ struct WSMAN_PLUGIN_REQUEST
     const(wchar)* locale;
     const(wchar)* resourceUri;
     WSMAN_OPERATION_INFO* operationInfo;
-    int shutdownNotification;
+    BOOL shutdownNotification;
     HANDLE shutdownNotificationHandle;
     const(wchar)* dataLocale;
 }

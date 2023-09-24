@@ -3,6 +3,7 @@ module windows.win32.security.applocker;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BOOLEAN, FILETIME, HANDLE, HWND, PWSTR;
 import windows.win32.security : SAFER_LEVEL_HANDLE;
+import windows.win32.security.cryptography : ALG_ID;
 
 version (Windows):
 extern (Windows):
@@ -77,7 +78,7 @@ struct SAFER_CODE_PROPERTIES_V1
     ubyte[64] ImageHash;
     uint dwImageHashSize;
     long ImageSize;
-    uint HashAlgorithm;
+    ALG_ID HashAlgorithm;
     ubyte* pByteBlock;
     HWND hWndParent;
     uint dwWVTUIChoice;
@@ -92,7 +93,7 @@ struct SAFER_CODE_PROPERTIES_V2
     ubyte[64] ImageHash;
     uint dwImageHashSize;
     long ImageSize;
-    uint HashAlgorithm;
+    ALG_ID HashAlgorithm;
     ubyte* pByteBlock;
     HWND hWndParent;
     uint dwWVTUIChoice;
@@ -166,7 +167,7 @@ struct SAFER_HASH_IDENTIFICATION
     wchar[256] FriendlyName;
     uint HashSize;
     ubyte[64] ImageHash;
-    uint HashAlgorithm;
+    ALG_ID HashAlgorithm;
     long ImageSize;
     uint dwSaferFlags;
 }
@@ -175,7 +176,7 @@ struct SAFER_HASH_IDENTIFICATION2
     SAFER_HASH_IDENTIFICATION hashIdentification;
     uint HashSize;
     ubyte[64] ImageHash;
-    uint HashAlgorithm;
+    ALG_ID HashAlgorithm;
 }
 struct SAFER_URLZONE_IDENTIFICATION
 {

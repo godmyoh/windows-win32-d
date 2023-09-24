@@ -86,12 +86,19 @@ enum : uint
 alias EXIT_WINDOWS_FLAGS = uint;
 enum : uint
 {
-    EWX_HYBRID_SHUTDOWN = 0x00400000,
-    EWX_LOGOFF          = 0x00000000,
-    EWX_POWEROFF        = 0x00000008,
-    EWX_REBOOT          = 0x00000002,
-    EWX_RESTARTAPPS     = 0x00000040,
-    EWX_SHUTDOWN        = 0x00000001,
+    EWX_LOGOFF                = 0x00000000,
+    EWX_SHUTDOWN              = 0x00000001,
+    EWX_REBOOT                = 0x00000002,
+    EWX_FORCE                 = 0x00000004,
+    EWX_POWEROFF              = 0x00000008,
+    EWX_FORCEIFHUNG           = 0x00000010,
+    EWX_QUICKRESOLVE          = 0x00000020,
+    EWX_RESTARTAPPS           = 0x00000040,
+    EWX_HYBRID_SHUTDOWN       = 0x00400000,
+    EWX_BOOTOPTIONS           = 0x01000000,
+    EWX_ARSO                  = 0x04000000,
+    EWX_CHECK_SAFE_FOR_SERVER = 0x08000000,
+    EWX_SYSTEM_INITIATED      = 0x10000000,
 }
 
 BOOL InitiateSystemShutdownA(PSTR, PSTR, uint, BOOL, BOOL);

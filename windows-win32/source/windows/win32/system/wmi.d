@@ -2208,29 +2208,29 @@ interface IWbemQualifierSet : IUnknown
 enum IID_IWbemServices = GUID(0x9556dc99, 0x828c, 0x11cf, [0xa3, 0x7e, 0x0, 0xaa, 0x0, 0x32, 0x40, 0xc7]);
 interface IWbemServices : IUnknown
 {
-    HRESULT OpenNamespace(const(BSTR), int, IWbemContext, IWbemServices*, IWbemCallResult*);
+    HRESULT OpenNamespace(const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemServices*, IWbemCallResult*);
     HRESULT CancelAsyncCall(IWbemObjectSink);
-    HRESULT QueryObjectSink(int, IWbemObjectSink*);
-    HRESULT GetObject(const(BSTR), int, IWbemContext, IWbemClassObject*, IWbemCallResult*);
-    HRESULT GetObjectAsync(const(BSTR), int, IWbemContext, IWbemObjectSink);
-    HRESULT PutClass(IWbemClassObject, int, IWbemContext, IWbemCallResult*);
-    HRESULT PutClassAsync(IWbemClassObject, int, IWbemContext, IWbemObjectSink);
-    HRESULT DeleteClass(const(BSTR), int, IWbemContext, IWbemCallResult*);
-    HRESULT DeleteClassAsync(const(BSTR), int, IWbemContext, IWbemObjectSink);
-    HRESULT CreateClassEnum(const(BSTR), int, IWbemContext, IEnumWbemClassObject*);
-    HRESULT CreateClassEnumAsync(const(BSTR), int, IWbemContext, IWbemObjectSink);
-    HRESULT PutInstance(IWbemClassObject, int, IWbemContext, IWbemCallResult*);
-    HRESULT PutInstanceAsync(IWbemClassObject, int, IWbemContext, IWbemObjectSink);
-    HRESULT DeleteInstance(const(BSTR), int, IWbemContext, IWbemCallResult*);
-    HRESULT DeleteInstanceAsync(const(BSTR), int, IWbemContext, IWbemObjectSink);
-    HRESULT CreateInstanceEnum(const(BSTR), int, IWbemContext, IEnumWbemClassObject*);
-    HRESULT CreateInstanceEnumAsync(const(BSTR), int, IWbemContext, IWbemObjectSink);
+    HRESULT QueryObjectSink(WBEM_GENERIC_FLAG_TYPE, IWbemObjectSink*);
+    HRESULT GetObject(const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemClassObject*, IWbemCallResult*);
+    HRESULT GetObjectAsync(const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemObjectSink);
+    HRESULT PutClass(IWbemClassObject, WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemCallResult*);
+    HRESULT PutClassAsync(IWbemClassObject, WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemObjectSink);
+    HRESULT DeleteClass(const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemCallResult*);
+    HRESULT DeleteClassAsync(const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemObjectSink);
+    HRESULT CreateClassEnum(const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IEnumWbemClassObject*);
+    HRESULT CreateClassEnumAsync(const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemObjectSink);
+    HRESULT PutInstance(IWbemClassObject, WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemCallResult*);
+    HRESULT PutInstanceAsync(IWbemClassObject, WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemObjectSink);
+    HRESULT DeleteInstance(const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemCallResult*);
+    HRESULT DeleteInstanceAsync(const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemObjectSink);
+    HRESULT CreateInstanceEnum(const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IEnumWbemClassObject*);
+    HRESULT CreateInstanceEnumAsync(const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemObjectSink);
     HRESULT ExecQuery(const(BSTR), const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IEnumWbemClassObject*);
-    HRESULT ExecQueryAsync(const(BSTR), const(BSTR), int, IWbemContext, IWbemObjectSink);
-    HRESULT ExecNotificationQuery(const(BSTR), const(BSTR), int, IWbemContext, IEnumWbemClassObject*);
-    HRESULT ExecNotificationQueryAsync(const(BSTR), const(BSTR), int, IWbemContext, IWbemObjectSink);
-    HRESULT ExecMethod(const(BSTR), const(BSTR), int, IWbemContext, IWbemClassObject, IWbemClassObject*, IWbemCallResult*);
-    HRESULT ExecMethodAsync(const(BSTR), const(BSTR), int, IWbemContext, IWbemClassObject, IWbemObjectSink);
+    HRESULT ExecQueryAsync(const(BSTR), const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemObjectSink);
+    HRESULT ExecNotificationQuery(const(BSTR), const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IEnumWbemClassObject*);
+    HRESULT ExecNotificationQueryAsync(const(BSTR), const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemObjectSink);
+    HRESULT ExecMethod(const(BSTR), const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemClassObject, IWbemClassObject*, IWbemCallResult*);
+    HRESULT ExecMethodAsync(const(BSTR), const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemClassObject, IWbemObjectSink);
 }
 enum IID_IWbemLocator = GUID(0xdc12a687, 0x737f, 0x11cf, [0x88, 0x4d, 0x0, 0xaa, 0x0, 0x4b, 0x2e, 0x24]);
 interface IWbemLocator : IUnknown

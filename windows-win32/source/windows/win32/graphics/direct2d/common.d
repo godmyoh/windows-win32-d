@@ -22,8 +22,8 @@ struct D2D1_COLOR_F
     float b;
     float a;
 }
-alias D2D1_ALPHA_MODE = uint;
-enum : uint
+alias D2D1_ALPHA_MODE = int;
+enum : int
 {
     D2D1_ALPHA_MODE_UNKNOWN       = 0x00000000,
     D2D1_ALPHA_MODE_PREMULTIPLIED = 0x00000001,
@@ -191,15 +191,15 @@ struct D2D_MATRIX_5X4_F
         float[20] m;
     }
 }
-alias D2D1_FIGURE_BEGIN = uint;
-enum : uint
+alias D2D1_FIGURE_BEGIN = int;
+enum : int
 {
     D2D1_FIGURE_BEGIN_FILLED = 0x00000000,
     D2D1_FIGURE_BEGIN_HOLLOW = 0x00000001,
 }
 
-alias D2D1_FIGURE_END = uint;
-enum : uint
+alias D2D1_FIGURE_END = int;
+enum : int
 {
     D2D1_FIGURE_END_OPEN   = 0x00000000,
     D2D1_FIGURE_END_CLOSED = 0x00000001,
@@ -211,16 +211,16 @@ struct D2D1_BEZIER_SEGMENT
     D2D_POINT_2F point2;
     D2D_POINT_2F point3;
 }
-alias D2D1_PATH_SEGMENT = uint;
-enum : uint
+alias D2D1_PATH_SEGMENT = int;
+enum : int
 {
     D2D1_PATH_SEGMENT_NONE                  = 0x00000000,
     D2D1_PATH_SEGMENT_FORCE_UNSTROKED       = 0x00000001,
     D2D1_PATH_SEGMENT_FORCE_ROUND_LINE_JOIN = 0x00000002,
 }
 
-alias D2D1_FILL_MODE = uint;
-enum : uint
+alias D2D1_FILL_MODE = int;
+enum : int
 {
     D2D1_FILL_MODE_ALTERNATE = 0x00000000,
     D2D1_FILL_MODE_WINDING   = 0x00000001,
@@ -237,15 +237,15 @@ interface ID2D1SimplifiedGeometrySink : IUnknown
     void EndFigure(D2D1_FIGURE_END);
     HRESULT Close();
 }
-alias D2D1_BORDER_MODE = uint;
-enum : uint
+alias D2D1_BORDER_MODE = int;
+enum : int
 {
     D2D1_BORDER_MODE_SOFT = 0x00000000,
     D2D1_BORDER_MODE_HARD = 0x00000001,
 }
 
-alias D2D1_BLEND_MODE = uint;
-enum : uint
+alias D2D1_BLEND_MODE = int;
+enum : int
 {
     D2D1_BLEND_MODE_MULTIPLY      = 0x00000000,
     D2D1_BLEND_MODE_SCREEN        = 0x00000001,
@@ -275,15 +275,15 @@ enum : uint
     D2D1_BLEND_MODE_DIVISION      = 0x00000019,
 }
 
-alias D2D1_COLORMATRIX_ALPHA_MODE = uint;
-enum : uint
+alias D2D1_COLORMATRIX_ALPHA_MODE = int;
+enum : int
 {
     D2D1_COLORMATRIX_ALPHA_MODE_PREMULTIPLIED = 0x00000001,
     D2D1_COLORMATRIX_ALPHA_MODE_STRAIGHT      = 0x00000002,
 }
 
-alias D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE = uint;
-enum : uint
+alias D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE = int;
+enum : int
 {
     D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE_NEAREST_NEIGHBOR    = 0x00000000,
     D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE_LINEAR              = 0x00000001,
@@ -293,15 +293,15 @@ enum : uint
     D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE_HIGH_QUALITY_CUBIC  = 0x00000005,
 }
 
-alias D2D1_TURBULENCE_NOISE = uint;
-enum : uint
+alias D2D1_TURBULENCE_NOISE = int;
+enum : int
 {
     D2D1_TURBULENCE_NOISE_FRACTAL_SUM = 0x00000000,
     D2D1_TURBULENCE_NOISE_TURBULENCE  = 0x00000001,
 }
 
-alias D2D1_COMPOSITE_MODE = uint;
-enum : uint
+alias D2D1_COMPOSITE_MODE = int;
+enum : int
 {
     D2D1_COMPOSITE_MODE_SOURCE_OVER         = 0x00000000,
     D2D1_COMPOSITE_MODE_DESTINATION_OVER    = 0x00000001,

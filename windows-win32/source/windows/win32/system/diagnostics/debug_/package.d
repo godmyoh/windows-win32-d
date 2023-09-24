@@ -1197,7 +1197,7 @@ BOOL SetThreadErrorMode(THREAD_ERROR_MODE, THREAD_ERROR_MODE*);
 void TerminateProcessOnMemoryExhaustion(ulong);
 void* OpenThreadWaitChainSession(OPEN_THREAD_WAIT_CHAIN_SESSION_FLAGS, PWAITCHAINCALLBACK);
 void CloseThreadWaitChainSession(void*);
-BOOL GetThreadWaitChain(void*, ulong, WAIT_CHAIN_THREAD_OPTIONS, uint, uint*, WAITCHAIN_NODE_INFO*, int*);
+BOOL GetThreadWaitChain(void*, ulong, WAIT_CHAIN_THREAD_OPTIONS, uint, uint*, WAITCHAIN_NODE_INFO*, BOOL*);
 void RegisterWaitChainCOMCallback(PCOGETCALLSTATE, PCOGETACTIVATIONSTATE);
 BOOL MiniDumpWriteDump(HANDLE, uint, HANDLE, MINIDUMP_TYPE, MINIDUMP_EXCEPTION_INFORMATION*, MINIDUMP_USER_STREAM_INFORMATION*, MINIDUMP_CALLBACK_INFORMATION*);
 BOOL MiniDumpReadDumpStream(void*, uint, MINIDUMP_DIRECTORY**, void**, uint*);
@@ -2898,7 +2898,7 @@ struct WAITCHAIN_NODE_INFO
         }
     }
 }
-alias PWAITCHAINCALLBACK = void function(void*, ulong, uint, uint*, WAITCHAIN_NODE_INFO*, int*);
+alias PWAITCHAINCALLBACK = void function(void*, ulong, uint, uint*, WAITCHAIN_NODE_INFO*, BOOL*);
 alias PCOGETCALLSTATE = HRESULT function(int, uint*);
 alias PCOGETACTIVATIONSTATE = HRESULT function(GUID, uint, uint*);
 struct MINIDUMP_LOCATION_DESCRIPTOR

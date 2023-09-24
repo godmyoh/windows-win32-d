@@ -2,7 +2,7 @@ module windows.win32.system.applicationinstallationandservicing;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, FILETIME, HANDLE, HMODULE, HRESULT, HWND, PSTR, PWSTR, VARIANT_BOOL;
-import windows.win32.security.cryptography : CERT_CONTEXT;
+import windows.win32.security.cryptography : ALG_ID, CERT_CONTEXT;
 import windows.win32.system.com : IDispatch, IStream, IUnknown, SAFEARRAY;
 import windows.win32.system.registry : HKEY;
 import windows.win32.system.windowsprogramming : ACTCTX_SECTION_KEYED_DATA_ASSEMBLY_METADATA;
@@ -311,12 +311,12 @@ BOOL ApplyDeltaB(long, DELTA_INPUT, DELTA_INPUT, DELTA_OUTPUT*);
 BOOL ApplyDeltaProvidedB(long, DELTA_INPUT, DELTA_INPUT, void*, ulong);
 BOOL ApplyDeltaA(long, const(char)*, const(char)*, const(char)*);
 BOOL ApplyDeltaW(long, const(wchar)*, const(wchar)*, const(wchar)*);
-BOOL CreateDeltaB(long, long, long, DELTA_INPUT, DELTA_INPUT, DELTA_INPUT, DELTA_INPUT, DELTA_INPUT, const(FILETIME)*, uint, DELTA_OUTPUT*);
-BOOL CreateDeltaA(long, long, long, const(char)*, const(char)*, const(char)*, const(char)*, DELTA_INPUT, const(FILETIME)*, uint, const(char)*);
-BOOL CreateDeltaW(long, long, long, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, DELTA_INPUT, const(FILETIME)*, uint, const(wchar)*);
-BOOL GetDeltaSignatureB(long, uint, DELTA_INPUT, DELTA_HASH*);
-BOOL GetDeltaSignatureA(long, uint, const(char)*, DELTA_HASH*);
-BOOL GetDeltaSignatureW(long, uint, const(wchar)*, DELTA_HASH*);
+BOOL CreateDeltaB(long, long, long, DELTA_INPUT, DELTA_INPUT, DELTA_INPUT, DELTA_INPUT, DELTA_INPUT, const(FILETIME)*, ALG_ID, DELTA_OUTPUT*);
+BOOL CreateDeltaA(long, long, long, const(char)*, const(char)*, const(char)*, const(char)*, DELTA_INPUT, const(FILETIME)*, ALG_ID, const(char)*);
+BOOL CreateDeltaW(long, long, long, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, DELTA_INPUT, const(FILETIME)*, ALG_ID, const(wchar)*);
+BOOL GetDeltaSignatureB(long, ALG_ID, DELTA_INPUT, DELTA_HASH*);
+BOOL GetDeltaSignatureA(long, ALG_ID, const(char)*, DELTA_HASH*);
+BOOL GetDeltaSignatureW(long, ALG_ID, const(wchar)*, DELTA_HASH*);
 BOOL DeltaNormalizeProvidedB(long, long, DELTA_INPUT, void*, ulong);
 BOOL DeltaFree(void*);
 HANDLE CreateActCtxA(ACTCTXA*);
@@ -2781,7 +2781,7 @@ struct DELTA_HEADER_INFO
     long Flags;
     ulong TargetSize;
     FILETIME TargetFileTime;
-    uint TargetHashAlgId;
+    ALG_ID TargetHashAlgId;
     DELTA_HASH TargetHash;
 }
 struct ACTIVATION_CONTEXT_QUERY_INDEX

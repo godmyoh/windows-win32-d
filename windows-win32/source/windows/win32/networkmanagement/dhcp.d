@@ -635,7 +635,7 @@ struct DHCP_SERVER_OPTIONS
     uint* ScopeId;
 }
 alias LPDHCP_CONTROL = uint function(uint, void*);
-alias LPDHCP_NEWPKT = uint function(ubyte**, uint*, uint, void*, void**, int*);
+alias LPDHCP_NEWPKT = uint function(ubyte**, uint*, uint, void*, void**, BOOL*);
 alias LPDHCP_DROP_SEND = uint function(ubyte**, uint*, uint, uint, void*, void*);
 alias LPDHCP_PROB = uint function(ubyte*, uint, uint, uint, uint, void*, void*);
 alias LPDHCP_GIVE_ADDRESS = uint function(ubyte*, uint, uint, uint, uint, uint, uint, void*, void*);

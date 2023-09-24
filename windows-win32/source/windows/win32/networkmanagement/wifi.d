@@ -26,7 +26,7 @@ uint WlanGetNetworkBssList(HANDLE, const(GUID)*, const(DOT11_SSID)*, DOT11_BSS_T
 uint WlanConnect(HANDLE, const(GUID)*, const(WLAN_CONNECTION_PARAMETERS)*, void*);
 uint WlanConnect2(HANDLE, const(GUID)*, const(WLAN_CONNECTION_PARAMETERS_V2)*, void*);
 uint WlanDisconnect(HANDLE, const(GUID)*, void*);
-uint WlanRegisterNotification(HANDLE, uint, BOOL, WLAN_NOTIFICATION_CALLBACK, void*, void*, uint*);
+uint WlanRegisterNotification(HANDLE, WLAN_NOTIFICATION_SOURCES, BOOL, WLAN_NOTIFICATION_CALLBACK, void*, void*, uint*);
 uint WlanGetProfile(HANDLE, const(GUID)*, const(wchar)*, void*, PWSTR*, uint*, uint*);
 uint WlanSetProfileEapUserData(HANDLE, const(GUID)*, const(wchar)*, EAP_METHOD_TYPE, WLAN_SET_EAPHOST_FLAGS, uint, const(ubyte)*, void*);
 uint WlanSetProfileEapXmlUserData(HANDLE, const(GUID)*, const(wchar)*, WLAN_SET_EAPHOST_FLAGS, const(wchar)*, void*);
@@ -555,95 +555,24 @@ enum DOT11_MANUFACTURING_CALLBACK_REVISION_1 = 0x00000001;
 enum DOT11_SSID_MAX_LENGTH = 0x00000020;
 enum DOT11_OI_MAX_LENGTH = 0x00000005;
 enum DOT11_OI_MIN_LENGTH = 0x00000003;
-enum DevProp_PciRootBus_SecondaryInterface_PciConventional = 0x00000000;
-enum DevProp_PciRootBus_SecondaryInterface_PciXMode1 = 0x00000001;
-enum DevProp_PciRootBus_SecondaryInterface_PciXMode2 = 0x00000002;
-enum DevProp_PciRootBus_SecondaryInterface_PciExpress = 0x00000003;
-enum DevProp_PciRootBus_CurrentSpeedAndMode_Pci_Conventional_33Mhz = 0x00000000;
-enum DevProp_PciRootBus_CurrentSpeedAndMode_Pci_Conventional_66Mhz = 0x00000001;
-enum DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_Mode1_66Mhz = 0x00000002;
-enum DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_Mode1_100Mhz = 0x00000003;
-enum DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_Mode1_133Mhz = 0x00000004;
-enum DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_Mode1_ECC_66Mhz = 0x00000005;
-enum DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_Mode1_ECC_100Mhz = 0x00000006;
-enum DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_Mode1_ECC_133Mhz = 0x00000007;
-enum DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_266_Mode2_66Mhz = 0x00000008;
-enum DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_266_Mode2_100Mhz = 0x00000009;
-enum DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_266_Mode2_133Mhz = 0x0000000a;
-enum DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_533_Mode2_66Mhz = 0x0000000b;
-enum DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_533_Mode2_100Mhz = 0x0000000c;
-enum DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_533_Mode2_133Mhz = 0x0000000d;
-enum DevProp_PciRootBus_SupportedSpeedsAndModes_Pci_Conventional_33Mhz = 0x00000001;
-enum DevProp_PciRootBus_SupportedSpeedsAndModes_Pci_Conventional_66Mhz = 0x00000002;
-enum DevProp_PciRootBus_SupportedSpeedsAndModes_Pci_X_66Mhz = 0x00000004;
-enum DevProp_PciRootBus_SupportedSpeedsAndModes_Pci_X_133Mhz = 0x00000008;
-enum DevProp_PciRootBus_SupportedSpeedsAndModes_Pci_X_266Mhz = 0x00000010;
-enum DevProp_PciRootBus_SupportedSpeedsAndModes_Pci_X_533Mhz = 0x00000020;
-enum DevProp_PciRootBus_BusWidth_32Bits = 0x00000000;
-enum DevProp_PciRootBus_BusWidth_64Bits = 0x00000001;
-enum DevProp_PciDevice_DeviceType_PciConventional = 0x00000000;
-enum DevProp_PciDevice_DeviceType_PciX = 0x00000001;
-enum DevProp_PciDevice_DeviceType_PciExpressEndpoint = 0x00000002;
-enum DevProp_PciDevice_DeviceType_PciExpressLegacyEndpoint = 0x00000003;
-enum DevProp_PciDevice_DeviceType_PciExpressRootComplexIntegratedEndpoint = 0x00000004;
-enum DevProp_PciDevice_DeviceType_PciExpressTreatedAsPci = 0x00000005;
-enum DevProp_PciDevice_BridgeType_PciConventional = 0x00000006;
-enum DevProp_PciDevice_BridgeType_PciX = 0x00000007;
-enum DevProp_PciDevice_BridgeType_PciExpressRootPort = 0x00000008;
-enum DevProp_PciDevice_BridgeType_PciExpressUpstreamSwitchPort = 0x00000009;
-enum DevProp_PciDevice_BridgeType_PciExpressDownstreamSwitchPort = 0x0000000a;
-enum DevProp_PciDevice_BridgeType_PciExpressToPciXBridge = 0x0000000b;
-enum DevProp_PciDevice_BridgeType_PciXToExpressBridge = 0x0000000c;
-enum DevProp_PciDevice_BridgeType_PciExpressTreatedAsPci = 0x0000000d;
-enum DevProp_PciDevice_BridgeType_PciExpressEventCollector = 0x0000000e;
-enum DevProp_PciDevice_CurrentSpeedAndMode_Pci_Conventional_33MHz = 0x00000000;
-enum DevProp_PciDevice_CurrentSpeedAndMode_Pci_Conventional_66MHz = 0x00000001;
-enum DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode_Conventional_Pci = 0x00000000;
-enum DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode1_66Mhz = 0x00000001;
-enum DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode1_100Mhz = 0x00000002;
-enum DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode1_133MHZ = 0x00000003;
-enum DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode1_ECC_66Mhz = 0x00000005;
-enum DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode1_ECC_100Mhz = 0x00000006;
-enum DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode1_ECC_133Mhz = 0x00000007;
-enum DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode2_266_66MHz = 0x00000009;
-enum DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode2_266_100MHz = 0x0000000a;
-enum DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode2_266_133MHz = 0x0000000b;
-enum DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode2_533_66MHz = 0x0000000d;
-enum DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode2_533_100MHz = 0x0000000e;
-enum DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode2_533_133MHz = 0x0000000f;
-enum DevProp_PciExpressDevice_PayloadOrRequestSize_128Bytes = 0x00000000;
-enum DevProp_PciExpressDevice_PayloadOrRequestSize_256Bytes = 0x00000001;
-enum DevProp_PciExpressDevice_PayloadOrRequestSize_512Bytes = 0x00000002;
-enum DevProp_PciExpressDevice_PayloadOrRequestSize_1024Bytes = 0x00000003;
-enum DevProp_PciExpressDevice_PayloadOrRequestSize_2048Bytes = 0x00000004;
-enum DevProp_PciExpressDevice_PayloadOrRequestSize_4096Bytes = 0x00000005;
-enum DevProp_PciExpressDevice_LinkSpeed_TwoAndHalf_Gbps = 0x00000001;
-enum DevProp_PciExpressDevice_LinkSpeed_Five_Gbps = 0x00000002;
-enum DevProp_PciExpressDevice_LinkWidth_By_1 = 0x00000001;
-enum DevProp_PciExpressDevice_LinkWidth_By_2 = 0x00000002;
-enum DevProp_PciExpressDevice_LinkWidth_By_4 = 0x00000004;
-enum DevProp_PciExpressDevice_LinkWidth_By_8 = 0x00000008;
-enum DevProp_PciExpressDevice_LinkWidth_By_12 = 0x0000000c;
-enum DevProp_PciExpressDevice_LinkWidth_By_16 = 0x00000010;
-enum DevProp_PciExpressDevice_LinkWidth_By_32 = 0x00000020;
-enum DevProp_PciExpressDevice_Spec_Version_10 = 0x00000001;
-enum DevProp_PciExpressDevice_Spec_Version_11 = 0x00000002;
-enum DevProp_PciDevice_InterruptType_LineBased = 0x00000001;
-enum DevProp_PciDevice_InterruptType_Msi = 0x00000002;
-enum DevProp_PciDevice_InterruptType_MsiX = 0x00000004;
-enum DevProp_PciDevice_SriovSupport_Ok = 0x00000000;
-enum DevProp_PciDevice_SriovSupport_MissingAcs = 0x00000001;
-enum DevProp_PciDevice_SriovSupport_MissingPfDriver = 0x00000002;
-enum DevProp_PciDevice_SriovSupport_NoBusResource = 0x00000003;
-enum DevProp_PciDevice_SriovSupport_DidntGetVfBarSpace = 0x00000004;
-enum DevProp_PciDevice_AcsSupport_Present = 0x00000000;
-enum DevProp_PciDevice_AcsSupport_NotNeeded = 0x00000001;
-enum DevProp_PciDevice_AcsSupport_Missing = 0x00000002;
-enum DevProp_PciDevice_AcsCompatibleUpHierarchy_NotSupported = 0x00000000;
-enum DevProp_PciDevice_AcsCompatibleUpHierarchy_SingleFunctionSupported = 0x00000001;
-enum DevProp_PciDevice_AcsCompatibleUpHierarchy_NoP2PSupported = 0x00000002;
-enum DevProp_PciDevice_AcsCompatibleUpHierarchy_Supported = 0x00000003;
-enum DevProp_PciDevice_AcsCompatibleUpHierarchy_Enhanced = 0x00000004;
+//enum DEVPKEY_PciRootBus_SecondaryInterface = [MISSING];
+//enum DEVPKEY_PciRootBus_CurrentSpeedAndMode = [MISSING];
+//enum DEVPKEY_PciRootBus_SupportedSpeedsAndModes = [MISSING];
+//enum DEVPKEY_PciRootBus_DeviceIDMessagingCapable = [MISSING];
+//enum DEVPKEY_PciRootBus_SecondaryBusWidth = [MISSING];
+//enum DEVPKEY_PciRootBus_ExtendedConfigAvailable = [MISSING];
+//enum DEVPKEY_PciRootBus_ExtendedPCIConfigOpRegionSupport = [MISSING];
+//enum DEVPKEY_PciRootBus_ASPMSupport = [MISSING];
+//enum DEVPKEY_PciRootBus_ClockPowerManagementSupport = [MISSING];
+//enum DEVPKEY_PciRootBus_PCISegmentGroupsSupport = [MISSING];
+//enum DEVPKEY_PciRootBus_MSISupport = [MISSING];
+//enum DEVPKEY_PciRootBus_PCIExpressNativeHotPlugControl = [MISSING];
+//enum DEVPKEY_PciRootBus_SHPCNativeHotPlugControl = [MISSING];
+//enum DEVPKEY_PciRootBus_PCIExpressNativePMEControl = [MISSING];
+//enum DEVPKEY_PciRootBus_PCIExpressAERControl = [MISSING];
+//enum DEVPKEY_PciRootBus_PCIExpressCapabilityControl = [MISSING];
+//enum DEVPKEY_PciRootBus_NativePciExpressControl = [MISSING];
+//enum DEVPKEY_PciRootBus_SystemMsiSupport = [MISSING];
 enum WLAN_API_VERSION_1_0 = 0x00000001;
 enum WLAN_API_VERSION_2_0 = 0x00000002;
 enum WLAN_API_VERSION = 0x00000002;
@@ -812,15 +741,6 @@ enum WLAN_CONNECTION_EAPOL_PASSTHROUGH = 0x00000008;
 enum WLAN_CONNECTION_PERSIST_DISCOVERY_PROFILE = 0x00000010;
 enum WLAN_CONNECTION_PERSIST_DISCOVERY_PROFILE_CONNECTION_MODE_AUTO = 0x00000020;
 enum WLAN_CONNECTION_PERSIST_DISCOVERY_PROFILE_OVERWRITE_EXISTING = 0x00000040;
-enum WLAN_NOTIFICATION_SOURCE_NONE = 0x00000000;
-enum WLAN_NOTIFICATION_SOURCE_ALL = 0x0000ffff;
-enum WLAN_NOTIFICATION_SOURCE_ACM = 0x00000008;
-enum WLAN_NOTIFICATION_SOURCE_MSM = 0x00000010;
-enum WLAN_NOTIFICATION_SOURCE_SECURITY = 0x00000020;
-enum WLAN_NOTIFICATION_SOURCE_IHV = 0x00000040;
-enum WLAN_NOTIFICATION_SOURCE_HNWK = 0x00000080;
-enum WLAN_NOTIFICATION_SOURCE_ONEX = 0x00000004;
-enum WLAN_NOTIFICATION_SOURCE_DEVICE_SERVICE = 0x00000800;
 enum WFD_API_VERSION_1_0 = 0x00000001;
 enum WFD_API_VERSION = 0x00000001;
 enum WLAN_UI_API_VERSION = 0x00000001;
@@ -886,6 +806,179 @@ enum : uint
 {
     WLAN_CONNECTION_NOTIFICATION_ADHOC_NETWORK_FORMED = 0x00000001,
     WLAN_CONNECTION_NOTIFICATION_CONSOLE_USER_PROFILE = 0x00000004,
+}
+
+alias WLAN_NOTIFICATION_SOURCES = uint;
+enum : uint
+{
+    WLAN_NOTIFICATION_SOURCE_NONE           = 0x00000000,
+    WLAN_NOTIFICATION_SOURCE_ALL            = 0x0000ffff,
+    WLAN_NOTIFICATION_SOURCE_ACM            = 0x00000008,
+    WLAN_NOTIFICATION_SOURCE_MSM            = 0x00000010,
+    WLAN_NOTIFICATION_SOURCE_SECURITY       = 0x00000020,
+    WLAN_NOTIFICATION_SOURCE_IHV            = 0x00000040,
+    WLAN_NOTIFICATION_SOURCE_HNWK           = 0x00000080,
+    WLAN_NOTIFICATION_SOURCE_ONEX           = 0x00000004,
+    WLAN_NOTIFICATION_SOURCE_DEVICE_SERVICE = 0x00000800,
+}
+
+alias DEVPROP_PCIROOTBUS_SECONDARYINTERFACE = uint;
+enum : uint
+{
+    DevProp_PciRootBus_SecondaryInterface_PciConventional = 0x00000000,
+    DevProp_PciRootBus_SecondaryInterface_PciXMode1       = 0x00000001,
+    DevProp_PciRootBus_SecondaryInterface_PciXMode2       = 0x00000002,
+    DevProp_PciRootBus_SecondaryInterface_PciExpress      = 0x00000003,
+}
+
+alias DEVPROP_PCIROOTBUS_CURRENTSPEEDANDMODE = uint;
+enum : uint
+{
+    DevProp_PciRootBus_CurrentSpeedAndMode_Pci_Conventional_33Mhz = 0x00000000,
+    DevProp_PciRootBus_CurrentSpeedAndMode_Pci_Conventional_66Mhz = 0x00000001,
+    DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_Mode1_66Mhz      = 0x00000002,
+    DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_Mode1_100Mhz     = 0x00000003,
+    DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_Mode1_133Mhz     = 0x00000004,
+    DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_Mode1_ECC_66Mhz  = 0x00000005,
+    DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_Mode1_ECC_100Mhz = 0x00000006,
+    DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_Mode1_ECC_133Mhz = 0x00000007,
+    DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_266_Mode2_66Mhz  = 0x00000008,
+    DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_266_Mode2_100Mhz = 0x00000009,
+    DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_266_Mode2_133Mhz = 0x0000000a,
+    DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_533_Mode2_66Mhz  = 0x0000000b,
+    DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_533_Mode2_100Mhz = 0x0000000c,
+    DevProp_PciRootBus_CurrentSpeedAndMode_Pci_X_533_Mode2_133Mhz = 0x0000000d,
+}
+
+alias DEVPROP_PCIROOTBUS_SUPPORTEDSPEEDSANDMODES = uint;
+enum : uint
+{
+    DevProp_PciRootBus_SupportedSpeedsAndModes_Pci_Conventional_33Mhz = 0x00000001,
+    DevProp_PciRootBus_SupportedSpeedsAndModes_Pci_Conventional_66Mhz = 0x00000002,
+    DevProp_PciRootBus_SupportedSpeedsAndModes_Pci_X_66Mhz            = 0x00000004,
+    DevProp_PciRootBus_SupportedSpeedsAndModes_Pci_X_133Mhz           = 0x00000008,
+    DevProp_PciRootBus_SupportedSpeedsAndModes_Pci_X_266Mhz           = 0x00000010,
+    DevProp_PciRootBus_SupportedSpeedsAndModes_Pci_X_533Mhz           = 0x00000020,
+}
+
+alias DEVPROP_PCIROOTBUS_BUSWIDTH = uint;
+enum : uint
+{
+    DevProp_PciRootBus_BusWidth_32Bits = 0x00000000,
+    DevProp_PciRootBus_BusWidth_64Bits = 0x00000001,
+}
+
+alias DEVPROP_PCIDEVICE_DEVICEBRIDGETYPE = uint;
+enum : uint
+{
+    DevProp_PciDevice_DeviceType_PciConventional                         = 0x00000000,
+    DevProp_PciDevice_DeviceType_PciX                                    = 0x00000001,
+    DevProp_PciDevice_DeviceType_PciExpressEndpoint                      = 0x00000002,
+    DevProp_PciDevice_DeviceType_PciExpressLegacyEndpoint                = 0x00000003,
+    DevProp_PciDevice_DeviceType_PciExpressRootComplexIntegratedEndpoint = 0x00000004,
+    DevProp_PciDevice_DeviceType_PciExpressTreatedAsPci                  = 0x00000005,
+    DevProp_PciDevice_BridgeType_PciConventional                         = 0x00000006,
+    DevProp_PciDevice_BridgeType_PciX                                    = 0x00000007,
+    DevProp_PciDevice_BridgeType_PciExpressRootPort                      = 0x00000008,
+    DevProp_PciDevice_BridgeType_PciExpressUpstreamSwitchPort            = 0x00000009,
+    DevProp_PciDevice_BridgeType_PciExpressDownstreamSwitchPort          = 0x0000000a,
+    DevProp_PciDevice_BridgeType_PciExpressToPciXBridge                  = 0x0000000b,
+    DevProp_PciDevice_BridgeType_PciXToExpressBridge                     = 0x0000000c,
+    DevProp_PciDevice_BridgeType_PciExpressTreatedAsPci                  = 0x0000000d,
+    DevProp_PciDevice_BridgeType_PciExpressEventCollector                = 0x0000000e,
+}
+
+alias DEVPROP_PCIDEVICE_CURRENTSPEEDANDMODE = uint;
+enum : uint
+{
+    DevProp_PciDevice_CurrentSpeedAndMode_Pci_Conventional_33MHz     = 0x00000000,
+    DevProp_PciDevice_CurrentSpeedAndMode_Pci_Conventional_66MHz     = 0x00000001,
+    DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode_Conventional_Pci = 0x00000000,
+    DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode1_66Mhz           = 0x00000001,
+    DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode1_100Mhz          = 0x00000002,
+    DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode1_133MHZ          = 0x00000003,
+    DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode1_ECC_66Mhz       = 0x00000005,
+    DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode1_ECC_100Mhz      = 0x00000006,
+    DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode1_ECC_133Mhz      = 0x00000007,
+    DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode2_266_66MHz       = 0x00000009,
+    DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode2_266_100MHz      = 0x0000000a,
+    DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode2_266_133MHz      = 0x0000000b,
+    DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode2_533_66MHz       = 0x0000000d,
+    DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode2_533_100MHz      = 0x0000000e,
+    DevProp_PciDevice_CurrentSpeedAndMode_PciX_Mode2_533_133MHz      = 0x0000000f,
+}
+
+alias DEVPROP_PCIEXPRESSDEVICE_PAYLOADORREQUESTSIZE = uint;
+enum : uint
+{
+    DevProp_PciExpressDevice_PayloadOrRequestSize_128Bytes  = 0x00000000,
+    DevProp_PciExpressDevice_PayloadOrRequestSize_256Bytes  = 0x00000001,
+    DevProp_PciExpressDevice_PayloadOrRequestSize_512Bytes  = 0x00000002,
+    DevProp_PciExpressDevice_PayloadOrRequestSize_1024Bytes = 0x00000003,
+    DevProp_PciExpressDevice_PayloadOrRequestSize_2048Bytes = 0x00000004,
+    DevProp_PciExpressDevice_PayloadOrRequestSize_4096Bytes = 0x00000005,
+}
+
+alias DEVPROP_PCIEXPRESSDEVICE_LINKSPEED = uint;
+enum : uint
+{
+    DevProp_PciExpressDevice_LinkSpeed_TwoAndHalf_Gbps = 0x00000001,
+    DevProp_PciExpressDevice_LinkSpeed_Five_Gbps       = 0x00000002,
+}
+
+alias DEVPROP_PCIEXPRESSDEVICE_LINKWIDTH = uint;
+enum : uint
+{
+    DevProp_PciExpressDevice_LinkWidth_By_1  = 0x00000001,
+    DevProp_PciExpressDevice_LinkWidth_By_2  = 0x00000002,
+    DevProp_PciExpressDevice_LinkWidth_By_4  = 0x00000004,
+    DevProp_PciExpressDevice_LinkWidth_By_8  = 0x00000008,
+    DevProp_PciExpressDevice_LinkWidth_By_12 = 0x0000000c,
+    DevProp_PciExpressDevice_LinkWidth_By_16 = 0x00000010,
+    DevProp_PciExpressDevice_LinkWidth_By_32 = 0x00000020,
+}
+
+alias DEVPROP_PCIEXPRESSDEVICE_SPEC_VERSION = uint;
+enum : uint
+{
+    DevProp_PciExpressDevice_Spec_Version_10 = 0x00000001,
+    DevProp_PciExpressDevice_Spec_Version_11 = 0x00000002,
+}
+
+alias DEVPROP_PCIDEVICE_INTERRUPTTYPE = uint;
+enum : uint
+{
+    DevProp_PciDevice_InterruptType_LineBased = 0x00000001,
+    DevProp_PciDevice_InterruptType_Msi       = 0x00000002,
+    DevProp_PciDevice_InterruptType_MsiX      = 0x00000004,
+}
+
+alias DEVPROP_PCIDEVICE_SRIOVSUPPORT = uint;
+enum : uint
+{
+    DevProp_PciDevice_SriovSupport_Ok                 = 0x00000000,
+    DevProp_PciDevice_SriovSupport_MissingAcs         = 0x00000001,
+    DevProp_PciDevice_SriovSupport_MissingPfDriver    = 0x00000002,
+    DevProp_PciDevice_SriovSupport_NoBusResource      = 0x00000003,
+    DevProp_PciDevice_SriovSupport_DidntGetVfBarSpace = 0x00000004,
+}
+
+alias DEVPROP_PCIDEVICE_ACSSUPPORT = uint;
+enum : uint
+{
+    DevProp_PciDevice_AcsSupport_Present   = 0x00000000,
+    DevProp_PciDevice_AcsSupport_NotNeeded = 0x00000001,
+    DevProp_PciDevice_AcsSupport_Missing   = 0x00000002,
+}
+
+alias DEVPROP_PCIDEVICE_ACSCOMPATIBLEUPHIERARCHY = uint;
+enum : uint
+{
+    DevProp_PciDevice_AcsCompatibleUpHierarchy_NotSupported            = 0x00000000,
+    DevProp_PciDevice_AcsCompatibleUpHierarchy_SingleFunctionSupported = 0x00000001,
+    DevProp_PciDevice_AcsCompatibleUpHierarchy_NoP2PSupported          = 0x00000002,
+    DevProp_PciDevice_AcsCompatibleUpHierarchy_Supported               = 0x00000003,
+    DevProp_PciDevice_AcsCompatibleUpHierarchy_Enhanced                = 0x00000004,
 }
 
 alias DOT11_BSS_TYPE = int;
@@ -2937,7 +3030,7 @@ struct DOT11_MANUFACTURING_CALLBACK_PARAMETERS
 }
 struct L2_NOTIFICATION_DATA
 {
-    uint NotificationSource;
+    WLAN_NOTIFICATION_SOURCES NotificationSource;
     uint NotificationCode;
     GUID InterfaceGuid;
     uint dwDataSize;

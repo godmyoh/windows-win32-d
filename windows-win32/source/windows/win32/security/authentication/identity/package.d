@@ -2,9 +2,9 @@ module windows.win32.security.authentication.identity;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BOOLEAN, CHAR, FILETIME, HANDLE, HRESULT, HWND, LUID, NTSTATUS, PSID, PSTR, PWSTR;
-import windows.win32.security : ACL, PSECURITY_DESCRIPTOR, QUOTA_LIMITS, SECURITY_ATTRIBUTES, SECURITY_IMPERSONATION_LEVEL, SID_NAME_USE, TOKEN_DEFAULT_DACL, TOKEN_DEVICE_CLAIMS, TOKEN_GROUPS, TOKEN_OWNER, TOKEN_PRIMARY_GROUP, TOKEN_PRIVILEGES, TOKEN_SOURCE, TOKEN_USER, TOKEN_USER_CLAIMS;
+import windows.win32.security : ACL, OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR, QUOTA_LIMITS, SECURITY_ATTRIBUTES, SECURITY_IMPERSONATION_LEVEL, SID_NAME_USE, TOKEN_DEFAULT_DACL, TOKEN_DEVICE_CLAIMS, TOKEN_GROUPS, TOKEN_OWNER, TOKEN_PRIMARY_GROUP, TOKEN_PRIVILEGES, TOKEN_SOURCE, TOKEN_USER, TOKEN_USER_CLAIMS;
 import windows.win32.security.credentials : CREDENTIALW, CREDENTIAL_TARGET_INFORMATIONW, SecHandle;
-import windows.win32.security.cryptography : CERT_CONTEXT, CRYPT_INTEGER_BLOB, HCERTSTORE;
+import windows.win32.security.cryptography : ALG_ID, CERT_CONTEXT, CRYPT_INTEGER_BLOB, HCERTSTORE;
 import windows.win32.system.com : IUnknown;
 import windows.win32.system.kernel : LIST_ENTRY;
 import windows.win32.system.passwordmanagement : CYPHER_BLOCK, LM_OWF_PASSWORD;
@@ -77,8 +77,8 @@ BOOLEAN AuditLookupSubCategoryNameW(const(GUID)*, PWSTR*);
 BOOLEAN AuditLookupSubCategoryNameA(const(GUID)*, PSTR*);
 BOOLEAN AuditLookupCategoryIdFromCategoryGuid(const(GUID)*, POLICY_AUDIT_EVENT_TYPE*);
 BOOLEAN AuditLookupCategoryGuidFromCategoryId(POLICY_AUDIT_EVENT_TYPE, GUID*);
-BOOLEAN AuditSetSecurity(uint, PSECURITY_DESCRIPTOR);
-BOOLEAN AuditQuerySecurity(uint, PSECURITY_DESCRIPTOR*);
+BOOLEAN AuditSetSecurity(OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR);
+BOOLEAN AuditQuerySecurity(OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR*);
 BOOLEAN AuditSetGlobalSaclW(const(wchar)*, ACL*);
 BOOLEAN AuditSetGlobalSaclA(const(char)*, ACL*);
 BOOLEAN AuditQueryGlobalSaclW(const(wchar)*, ACL**);
@@ -4792,7 +4792,7 @@ struct SECPKG_KERNEL_FUNCTION_TABLE
 struct SecPkgCred_SupportedAlgs
 {
     uint cSupportedAlgs;
-    uint* palgSupportedAlgs;
+    ALG_ID* palgSupportedAlgs;
 }
 struct SecPkgCred_CipherStrengths
 {
@@ -4877,11 +4877,11 @@ struct SecPkgContext_IssuerListInfoEx
 struct SecPkgContext_ConnectionInfo
 {
     uint dwProtocol;
-    uint aiCipher;
+    ALG_ID aiCipher;
     uint dwCipherStrength;
-    uint aiHash;
+    ALG_ID aiHash;
     uint dwHashStrength;
-    uint aiExch;
+    ALG_ID aiExch;
     uint dwExchStrength;
 }
 struct SecPkgContext_ConnectionInfoEx
@@ -5018,13 +5018,55 @@ struct SCHANNEL_CRED
     uint cMappers;
     _HMAPPER** aphMappers;
     uint cSupportedAlgs;
-    uint* palgSupportedAlgs;
+    ALG_ID* palgSupportedAlgs;
     uint grbitEnabledProtocols;
     uint dwMinimumCipherStrength;
     uint dwMaximumCipherStrength;
     uint dwSessionLifespan;
     SCHANNEL_CRED_FLAGS dwFlags;
     uint dwCredFormat;
+}
+alias eTlsAlgorithmUsage = int;
+enum : int
+{
+    TlsParametersCngAlgUsageKeyExchange = 0x00000000,
+    TlsParametersCngAlgUsageSignature   = 0x00000001,
+    TlsParametersCngAlgUsageCipher      = 0x00000002,
+    TlsParametersCngAlgUsageDigest      = 0x00000003,
+    TlsParametersCngAlgUsageCertSig     = 0x00000004,
+}
+
+struct CRYPTO_SETTINGS
+{
+    eTlsAlgorithmUsage eAlgorithmUsage;
+    LSA_UNICODE_STRING strCngAlgId;
+    uint cChainingModes;
+    LSA_UNICODE_STRING* rgstrChainingModes;
+    uint dwMinBitLength;
+    uint dwMaxBitLength;
+}
+struct TLS_PARAMETERS
+{
+    uint cAlpnIds;
+    LSA_UNICODE_STRING* rgstrAlpnIds;
+    uint grbitDisabledProtocols;
+    uint cDisabledCrypto;
+    CRYPTO_SETTINGS* pDisabledCrypto;
+    uint dwFlags;
+}
+struct SCH_CREDENTIALS
+{
+    uint dwVersion;
+    uint dwCredFormat;
+    uint cCreds;
+    CERT_CONTEXT** paCred;
+    HCERTSTORE hRootStore;
+    uint cMappers;
+    _HMAPPER** aphMappers;
+    uint dwSessionLifespan;
+    uint dwFlags;
+    uint cTlsParameters;
+    TLS_PARAMETERS* pTlsParameters;
 }
 struct SEND_GENERIC_TLS_EXTENSION
 {
@@ -5074,7 +5116,7 @@ struct SCHANNEL_SESSION_TOKEN
 struct SCHANNEL_CLIENT_SIGNATURE
 {
     uint cbLength;
-    uint aiHash;
+    ALG_ID aiHash;
     uint cbHash;
     ubyte[36] HashValue;
     ubyte[20] CertThumbprint;
@@ -5126,7 +5168,7 @@ struct X509Certificate
 {
     uint Version;
     uint[4] SerialNumber;
-    uint SignatureAlgorithm;
+    ALG_ID SignatureAlgorithm;
     FILETIME ValidFrom;
     FILETIME ValidUntil;
     PSTR pszIssuer;

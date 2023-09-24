@@ -155,6 +155,15 @@ enum : uint
     MEM_IMAGE   = 0x01000000,
 }
 
+alias SETPROCESSWORKINGSETSIZEEX_FLAGS = uint;
+enum : uint
+{
+    QUOTA_LIMITS_HARDWS_MIN_ENABLE  = 0x00000001,
+    QUOTA_LIMITS_HARDWS_MIN_DISABLE = 0x00000002,
+    QUOTA_LIMITS_HARDWS_MAX_ENABLE  = 0x00000004,
+    QUOTA_LIMITS_HARDWS_MAX_DISABLE = 0x00000008,
+}
+
 HANDLE HeapCreate(HEAP_FLAGS, ulong, ulong);
 BOOL HeapDestroy(HANDLE);
 void* HeapAlloc(HANDLE, HEAP_FLAGS, ulong);
@@ -187,7 +196,7 @@ BOOL FlushViewOfFile(const(void)*, ulong);
 BOOL UnmapViewOfFile(const(MEMORY_MAPPED_VIEW_ADDRESS));
 ulong GetLargePageMinimum();
 BOOL GetProcessWorkingSetSizeEx(HANDLE, ulong*, ulong*, uint*);
-BOOL SetProcessWorkingSetSizeEx(HANDLE, ulong, ulong, uint);
+BOOL SetProcessWorkingSetSizeEx(HANDLE, ulong, ulong, SETPROCESSWORKINGSETSIZEEX_FLAGS);
 BOOL VirtualLock(void*, ulong);
 BOOL VirtualUnlock(void*, ulong);
 uint GetWriteWatch(uint, void*, ulong, void**, ulong*, uint*);

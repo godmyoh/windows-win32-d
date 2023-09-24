@@ -1,6 +1,6 @@
 module windows.win32.system.restore;
 
-import windows.win32.foundation : BOOL, CHAR, FILETIME;
+import windows.win32.foundation : BOOL, CHAR, FILETIME, WIN32_ERROR;
 
 version (Windows):
 extern (Windows):
@@ -26,6 +26,7 @@ enum : uint
 
 BOOL SRSetRestorePointA(RESTOREPOINTINFOA*, STATEMGRSTATUS*);
 BOOL SRSetRestorePointW(RESTOREPOINTINFOW*, STATEMGRSTATUS*);
+uint SRRemoveRestorePoint(uint);
 enum MIN_EVENT = 0x00000064;
 enum BEGIN_NESTED_SYSTEM_CHANGE_NORP = 0x00000068;
 enum MAX_EVENT = 0x00000068;
@@ -75,6 +76,6 @@ struct RESTOREPOINTINFOEX
 struct STATEMGRSTATUS
 {
     align (1):
-    uint nStatus;
+    WIN32_ERROR nStatus;
     long llSequenceNumber;
 }

@@ -663,7 +663,7 @@ interface IDirectMusicSynth : IUnknown
     HRESULT Open(DMUS_PORTPARAMS8*);
     HRESULT Close();
     HRESULT SetNumChannelGroups(uint);
-    HRESULT Download(HANDLE*, void*, int*);
+    HRESULT Download(HANDLE*, void*, BOOL*);
     HRESULT Unload(HANDLE, long, HANDLE);
     HRESULT PlayBuffer(long, ubyte*, uint);
     HRESULT GetRunningStats(DMUS_SYNTHSTATS*);

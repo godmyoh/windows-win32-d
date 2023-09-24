@@ -734,7 +734,7 @@ struct MOUSEINPUT
 {
     int dx;
     int dy;
-    int mouseData;
+    uint mouseData;
     MOUSE_EVENT_FLAGS dwFlags;
     uint time;
     ulong dwExtraInfo;

@@ -829,8 +829,8 @@ enum : int
     D3DFILL_SOLID     = 0x00000003,
 }
 
-alias D3DBLEND = uint;
-enum : uint
+alias D3DBLEND = int;
+enum : int
 {
     D3DBLEND_ZERO            = 0x00000001,
     D3DBLEND_ONE             = 0x00000002,
@@ -851,8 +851,8 @@ enum : uint
     D3DBLEND_INVSRCCOLOR2    = 0x00000011,
 }
 
-alias D3DBLENDOP = uint;
-enum : uint
+alias D3DBLENDOP = int;
+enum : int
 {
     D3DBLENDOP_ADD         = 0x00000001,
     D3DBLENDOP_SUBTRACT    = 0x00000002,
@@ -871,8 +871,8 @@ enum : int
     D3DTADDRESS_MIRRORONCE = 0x00000005,
 }
 
-alias D3DCULL = uint;
-enum : uint
+alias D3DCULL = int;
+enum : int
 {
     D3DCULL_NONE = 0x00000001,
     D3DCULL_CW   = 0x00000002,
@@ -892,8 +892,8 @@ enum : int
     D3DCMP_ALWAYS       = 0x00000008,
 }
 
-alias D3DSTENCILOP = uint;
-enum : uint
+alias D3DSTENCILOP = int;
+enum : int
 {
     D3DSTENCILOP_KEEP    = 0x00000001,
     D3DSTENCILOP_ZERO    = 0x00000002,
@@ -1460,8 +1460,8 @@ enum : int
     D3DTTFF_PROJECTED = 0x00000100,
 }
 
-alias D3DDEVTYPE = uint;
-enum : uint
+alias D3DDEVTYPE = int;
+enum : int
 {
     D3DDEVTYPE_HAL     = 0x00000001,
     D3DDEVTYPE_REF     = 0x00000002,
@@ -1575,8 +1575,8 @@ struct D3DDEVICE_CREATION_PARAMETERS
     HWND hFocusWindow;
     uint BehaviorFlags;
 }
-alias D3DSWAPEFFECT = uint;
-enum : uint
+alias D3DSWAPEFFECT = int;
+enum : int
 {
     D3DSWAPEFFECT_DISCARD = 0x00000001,
     D3DSWAPEFFECT_FLIP    = 0x00000002,
@@ -1585,8 +1585,8 @@ enum : uint
     D3DSWAPEFFECT_FLIPEX  = 0x00000005,
 }
 
-alias D3DPOOL = uint;
-enum : uint
+alias D3DPOOL = int;
+enum : int
 {
     D3DPOOL_DEFAULT   = 0x00000000,
     D3DPOOL_MANAGED   = 0x00000001,
@@ -1617,8 +1617,8 @@ struct D3DGAMMARAMP
     ushort[256] green;
     ushort[256] blue;
 }
-alias D3DBACKBUFFER_TYPE = uint;
-enum : uint
+alias D3DBACKBUFFER_TYPE = int;
+enum : int
 {
     D3DBACKBUFFER_TYPE_MONO  = 0x00000000,
     D3DBACKBUFFER_TYPE_LEFT  = 0x00000001,

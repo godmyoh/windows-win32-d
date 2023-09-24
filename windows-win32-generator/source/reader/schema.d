@@ -362,11 +362,12 @@ struct Row(Database.TableFormat t)
 
             with (ElementType)
             {
-                if (I1 <= et && et <= U8)
+                if (Char <= et && et <= U8)
                 {
                     ulong integerValue = parseInteger(blob);
                     switch (et)
                     {
+                        case Char: ret.value = cast(wchar)integerValue; break;
                         case I1: ret.value = cast(byte)integerValue; break;
                         case U1: ret.value = cast(ubyte)integerValue; break;
                         case I2: ret.value = cast(short)integerValue; break;
@@ -569,7 +570,7 @@ struct ConstantValue
     {
         if (value.peek!byte || value.peek!ubyte)
             return 1;
-        if (value.peek!short || value.peek!ushort)
+        if (value.peek!short || value.peek!ushort || value.peek!wchar)
             return 2;
         if (value.peek!int || value.peek!uint)
             return 4;
@@ -580,6 +581,7 @@ struct ConstantValue
 
     ulong integerValue() const
     {
+        if (auto p = value.peek!wchar) return *p;
         if (auto p = value.peek!byte) return *p;
         if (auto p = value.peek!ubyte) return *p;
         if (auto p = value.peek!short) return *p;

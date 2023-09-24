@@ -294,11 +294,16 @@ enum : uint
 alias CRYPT_ACQUIRE_FLAGS = uint;
 enum : uint
 {
-    CRYPT_ACQUIRE_CACHE_FLAG         = 0x00000001,
-    CRYPT_ACQUIRE_COMPARE_KEY_FLAG   = 0x00000004,
-    CRYPT_ACQUIRE_NO_HEALING         = 0x00000008,
-    CRYPT_ACQUIRE_SILENT_FLAG        = 0x00000040,
-    CRYPT_ACQUIRE_USE_PROV_INFO_FLAG = 0x00000002,
+    CRYPT_ACQUIRE_CACHE_FLAG             = 0x00000001,
+    CRYPT_ACQUIRE_USE_PROV_INFO_FLAG     = 0x00000002,
+    CRYPT_ACQUIRE_COMPARE_KEY_FLAG       = 0x00000004,
+    CRYPT_ACQUIRE_NO_HEALING             = 0x00000008,
+    CRYPT_ACQUIRE_SILENT_FLAG            = 0x00000040,
+    CRYPT_ACQUIRE_WINDOW_HANDLE_FLAG     = 0x00000080,
+    CRYPT_ACQUIRE_NCRYPT_KEY_FLAGS_MASK  = 0x00070000,
+    CRYPT_ACQUIRE_ALLOW_NCRYPT_KEY_FLAG  = 0x00010000,
+    CRYPT_ACQUIRE_PREFER_NCRYPT_KEY_FLAG = 0x00020000,
+    CRYPT_ACQUIRE_ONLY_NCRYPT_KEY_FLAG   = 0x00040000,
 }
 
 alias CRYPT_GET_URL_FLAGS = uint;
@@ -860,11 +865,71 @@ enum : uint
     SIGNER_CERT_SPC_CHAIN = 0x00000003,
 }
 
+alias ALG_ID = uint;
+enum : uint
+{
+    CALG_MD2                     = 0x00008001,
+    CALG_MD4                     = 0x00008002,
+    CALG_MD5                     = 0x00008003,
+    CALG_SHA                     = 0x00008004,
+    CALG_SHA1                    = 0x00008004,
+    CALG_MAC                     = 0x00008005,
+    CALG_RSA_SIGN                = 0x00002400,
+    CALG_DSS_SIGN                = 0x00002200,
+    CALG_NO_SIGN                 = 0x00002000,
+    CALG_RSA_KEYX                = 0x0000a400,
+    CALG_DES                     = 0x00006601,
+    CALG_3DES_112                = 0x00006609,
+    CALG_3DES                    = 0x00006603,
+    CALG_DESX                    = 0x00006604,
+    CALG_RC2                     = 0x00006602,
+    CALG_RC4                     = 0x00006801,
+    CALG_SEAL                    = 0x00006802,
+    CALG_DH_SF                   = 0x0000aa01,
+    CALG_DH_EPHEM                = 0x0000aa02,
+    CALG_AGREEDKEY_ANY           = 0x0000aa03,
+    CALG_KEA_KEYX                = 0x0000aa04,
+    CALG_HUGHES_MD5              = 0x0000a003,
+    CALG_SKIPJACK                = 0x0000660a,
+    CALG_TEK                     = 0x0000660b,
+    CALG_CYLINK_MEK              = 0x0000660c,
+    CALG_SSL3_SHAMD5             = 0x00008008,
+    CALG_SSL3_MASTER             = 0x00004c01,
+    CALG_SCHANNEL_MASTER_HASH    = 0x00004c02,
+    CALG_SCHANNEL_MAC_KEY        = 0x00004c03,
+    CALG_SCHANNEL_ENC_KEY        = 0x00004c07,
+    CALG_PCT1_MASTER             = 0x00004c04,
+    CALG_SSL2_MASTER             = 0x00004c05,
+    CALG_TLS1_MASTER             = 0x00004c06,
+    CALG_RC5                     = 0x0000660d,
+    CALG_HMAC                    = 0x00008009,
+    CALG_TLS1PRF                 = 0x0000800a,
+    CALG_HASH_REPLACE_OWF        = 0x0000800b,
+    CALG_AES_128                 = 0x0000660e,
+    CALG_AES_192                 = 0x0000660f,
+    CALG_AES_256                 = 0x00006610,
+    CALG_AES                     = 0x00006611,
+    CALG_SHA_256                 = 0x0000800c,
+    CALG_SHA_384                 = 0x0000800d,
+    CALG_SHA_512                 = 0x0000800e,
+    CALG_ECDH                    = 0x0000aa05,
+    CALG_ECDH_EPHEM              = 0x0000ae06,
+    CALG_ECMQV                   = 0x0000a001,
+    CALG_ECDSA                   = 0x00002203,
+    CALG_NULLCIPHER              = 0x00006000,
+    CALG_THIRDPARTY_KEY_EXCHANGE = 0x0000b000,
+    CALG_THIRDPARTY_SIGNATURE    = 0x00003000,
+    CALG_THIRDPARTY_CIPHER       = 0x00007000,
+    CALG_THIRDPARTY_HASH         = 0x00009000,
+}
+
+BOOL SystemPrng(ubyte*, ulong);
+BOOL ProcessPrng(ubyte*, ulong);
 BOOL CryptAcquireContextA(ulong*, const(char)*, const(char)*, uint, uint);
 BOOL CryptAcquireContextW(ulong*, const(wchar)*, const(wchar)*, uint, uint);
 BOOL CryptReleaseContext(ulong, uint);
-BOOL CryptGenKey(ulong, uint, CRYPT_KEY_FLAGS, ulong*);
-BOOL CryptDeriveKey(ulong, uint, ulong, uint, ulong*);
+BOOL CryptGenKey(ulong, ALG_ID, CRYPT_KEY_FLAGS, ulong*);
+BOOL CryptDeriveKey(ulong, ALG_ID, ulong, uint, ulong*);
 BOOL CryptDestroyKey(ulong);
 BOOL CryptSetKeyParam(ulong, CRYPT_KEY_PARAM_ID, const(ubyte)*, uint);
 BOOL CryptGetKeyParam(ulong, CRYPT_KEY_PARAM_ID, ubyte*, uint*, uint);
@@ -878,7 +943,7 @@ BOOL CryptExportKey(ulong, ulong, uint, CRYPT_KEY_FLAGS, ubyte*, uint*);
 BOOL CryptImportKey(ulong, const(ubyte)*, uint, ulong, CRYPT_KEY_FLAGS, ulong*);
 BOOL CryptEncrypt(ulong, ulong, BOOL, uint, ubyte*, uint*, uint);
 BOOL CryptDecrypt(ulong, ulong, BOOL, uint, ubyte*, uint*);
-BOOL CryptCreateHash(ulong, uint, ulong, uint, ulong*);
+BOOL CryptCreateHash(ulong, ALG_ID, ulong, uint, ulong*);
 BOOL CryptHashData(ulong, const(ubyte)*, uint, uint);
 BOOL CryptHashSessionKey(ulong, ulong, uint);
 BOOL CryptDestroyHash(ulong);
@@ -1102,7 +1167,7 @@ BOOL CryptVerifyCertificateSignature(HCRYPTPROV_LEGACY, CERT_QUERY_ENCODING_TYPE
 BOOL CryptVerifyCertificateSignatureEx(HCRYPTPROV_LEGACY, CERT_QUERY_ENCODING_TYPE, uint, void*, uint, void*, CRYPT_VERIFY_CERT_FLAGS, void*);
 BOOL CertIsStrongHashToSign(CERT_STRONG_SIGN_PARA*, const(wchar)*, const(CERT_CONTEXT)*);
 BOOL CryptHashToBeSigned(HCRYPTPROV_LEGACY, CERT_QUERY_ENCODING_TYPE, const(ubyte)*, uint, ubyte*, uint*);
-BOOL CryptHashCertificate(HCRYPTPROV_LEGACY, uint, uint, const(ubyte)*, uint, ubyte*, uint*);
+BOOL CryptHashCertificate(HCRYPTPROV_LEGACY, ALG_ID, uint, const(ubyte)*, uint, ubyte*, uint*);
 BOOL CryptHashCertificate2(const(wchar)*, uint, void*, const(ubyte)*, uint, ubyte*, uint*);
 BOOL CryptSignCertificate(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE, uint, CERT_QUERY_ENCODING_TYPE, const(ubyte)*, uint, CRYPT_ALGORITHM_IDENTIFIER*, const(void)*, ubyte*, uint*);
 BOOL CryptSignAndEncodeCertificate(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE, CERT_KEY_SPEC, CERT_QUERY_ENCODING_TYPE, const(char)*, const(void)*, CRYPT_ALGORITHM_IDENTIFIER*, const(void)*, ubyte*, uint*);
@@ -1122,13 +1187,13 @@ BOOL CryptExportPublicKeyInfo(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE, uint, CERT_QUERY_
 BOOL CryptExportPublicKeyInfoEx(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE, uint, CERT_QUERY_ENCODING_TYPE, PSTR, uint, void*, CERT_PUBLIC_KEY_INFO*, uint*);
 BOOL CryptExportPublicKeyInfoFromBCryptKeyHandle(BCRYPT_KEY_HANDLE, CERT_QUERY_ENCODING_TYPE, PSTR, uint, void*, CERT_PUBLIC_KEY_INFO*, uint*);
 BOOL CryptImportPublicKeyInfo(ulong, CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*, ulong*);
-BOOL CryptImportPublicKeyInfoEx(ulong, CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*, uint, uint, void*, ulong*);
+BOOL CryptImportPublicKeyInfoEx(ulong, CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*, ALG_ID, uint, void*, ulong*);
 BOOL CryptImportPublicKeyInfoEx2(CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*, CRYPT_IMPORT_PUBLIC_KEY_FLAGS, void*, BCRYPT_KEY_HANDLE*);
 BOOL CryptAcquireCertificatePrivateKey(const(CERT_CONTEXT)*, CRYPT_ACQUIRE_FLAGS, void*, HCRYPTPROV_OR_NCRYPT_KEY_HANDLE*, CERT_KEY_SPEC*, BOOL*);
 BOOL CryptFindCertificateKeyProvInfo(const(CERT_CONTEXT)*, CRYPT_FIND_FLAGS, void*);
 BOOL CryptImportPKCS8(CRYPT_PKCS8_IMPORT_PARAMS, CRYPT_KEY_FLAGS, ulong*, void*);
 BOOL CryptExportPKCS8(ulong, uint, PSTR, uint, void*, ubyte*, uint*);
-BOOL CryptHashPublicKeyInfo(HCRYPTPROV_LEGACY, uint, uint, CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*, ubyte*, uint*);
+BOOL CryptHashPublicKeyInfo(HCRYPTPROV_LEGACY, ALG_ID, uint, CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*, ubyte*, uint*);
 uint CertRDNValueToStrA(uint, CRYPT_INTEGER_BLOB*, PSTR, uint);
 uint CertRDNValueToStrW(uint, CRYPT_INTEGER_BLOB*, PWSTR, uint);
 uint CertNameToStrA(CERT_QUERY_ENCODING_TYPE, CRYPT_INTEGER_BLOB*, CERT_STRING_TYPE, PSTR, uint);
@@ -1229,7 +1294,7 @@ HRESULT SignerSignEx2(SIGNER_SIGN_FLAGS, SIGNER_SUBJECT_INFO*, SIGNER_CERT*, SIG
 HRESULT SignerSignEx3(SIGNER_SIGN_FLAGS, SIGNER_SUBJECT_INFO*, SIGNER_CERT*, SIGNER_SIGNATURE_INFO*, SIGNER_PROVIDER_INFO*, SIGNER_TIMESTAMP_FLAGS, const(char)*, const(wchar)*, CRYPT_ATTRIBUTES*, void*, SIGNER_CONTEXT**, CERT_STRONG_SIGN_PARA*, SIGNER_DIGEST_SIGN_INFO*, void*);
 HRESULT SignerTimeStamp(SIGNER_SUBJECT_INFO*, const(wchar)*, CRYPT_ATTRIBUTES*, void*);
 HRESULT SignerTimeStampEx(uint, SIGNER_SUBJECT_INFO*, const(wchar)*, CRYPT_ATTRIBUTES*, void*, SIGNER_CONTEXT**);
-HRESULT SignerTimeStampEx2(SIGNER_TIMESTAMP_FLAGS, SIGNER_SUBJECT_INFO*, const(wchar)*, uint, CRYPT_ATTRIBUTES*, void*, SIGNER_CONTEXT**);
+HRESULT SignerTimeStampEx2(SIGNER_TIMESTAMP_FLAGS, SIGNER_SUBJECT_INFO*, const(wchar)*, ALG_ID, CRYPT_ATTRIBUTES*, void*, SIGNER_CONTEXT**);
 HRESULT SignerTimeStampEx3(SIGNER_TIMESTAMP_FLAGS, uint, SIGNER_SUBJECT_INFO*, const(wchar)*, const(wchar)*, CRYPT_ATTRIBUTES*, void*, SIGNER_CONTEXT**, CERT_STRONG_SIGN_PARA*, void*);
 HRESULT CryptXmlClose(void*);
 HRESULT CryptXmlGetTransforms(const(CRYPT_XML_TRANSFORM_CHAIN_CONFIG)**);
@@ -3624,11 +3689,6 @@ enum CRYPT_OID_EXPORT_PUBLIC_KEY_INFO_EX2_FUNC = "CryptDllExportPublicKeyInfoEx2
 enum CRYPT_OID_EXPORT_PUBLIC_KEY_INFO_FROM_BCRYPT_HANDLE_FUNC = "CryptDllExportPublicKeyInfoFromBCryptKeyHandle";
 enum CRYPT_OID_IMPORT_PUBLIC_KEY_INFO_FUNC = "CryptDllImportPublicKeyInfoEx";
 enum CRYPT_OID_IMPORT_PUBLIC_KEY_INFO_EX2_FUNC = "CryptDllImportPublicKeyInfoEx2";
-enum CRYPT_ACQUIRE_WINDOW_HANDLE_FLAG = 0x00000080;
-enum CRYPT_ACQUIRE_NCRYPT_KEY_FLAGS_MASK = 0x00070000;
-enum CRYPT_ACQUIRE_ALLOW_NCRYPT_KEY_FLAG = 0x00010000;
-enum CRYPT_ACQUIRE_PREFER_NCRYPT_KEY_FLAG = 0x00020000;
-enum CRYPT_ACQUIRE_ONLY_NCRYPT_KEY_FLAG = 0x00040000;
 enum CRYPT_OID_IMPORT_PRIVATE_KEY_INFO_FUNC = "CryptDllImportPrivateKeyInfoEx";
 enum CRYPT_OID_EXPORT_PRIVATE_KEY_INFO_FUNC = "CryptDllExportPrivateKeyInfoEx";
 enum CRYPT_DELETE_KEYSET = 0x00000010;
@@ -4141,13 +4201,13 @@ alias HCERTSTOREPROV = void*;
 struct CMS_KEY_INFO
 {
     uint dwVersion;
-    uint Algid;
+    ALG_ID Algid;
     ubyte* pbOID;
     uint cbOID;
 }
 struct HMAC_INFO
 {
-    uint HashAlgid;
+    ALG_ID HashAlgid;
     ubyte* pbInnerString;
     uint cbInnerString;
     ubyte* pbOuterString;
@@ -4156,21 +4216,21 @@ struct HMAC_INFO
 struct SCHANNEL_ALG
 {
     uint dwUse;
-    uint Algid;
+    ALG_ID Algid;
     uint cBits;
     uint dwFlags;
     uint dwReserved;
 }
 struct PROV_ENUMALGS
 {
-    uint aiAlgid;
+    ALG_ID aiAlgid;
     uint dwBitLen;
     uint dwNameLen;
     CHAR[20] szName;
 }
 struct PROV_ENUMALGS_EX
 {
-    uint aiAlgid;
+    ALG_ID aiAlgid;
     uint dwDefaultLen;
     uint dwMinLen;
     uint dwMaxLen;
@@ -4185,7 +4245,7 @@ struct PUBLICKEYSTRUC
     ubyte bType;
     ubyte bVersion;
     ushort reserved;
-    uint aiKeyAlg;
+    ALG_ID aiKeyAlg;
 }
 struct RSAPUBKEY
 {
@@ -4275,7 +4335,7 @@ struct CRYPT_INTEGER_BLOB
 struct CMS_DH_KEY_INFO
 {
     uint dwVersion;
-    uint Algid;
+    ALG_ID Algid;
     PSTR pszContentEncObjId;
     CRYPT_INTEGER_BLOB PubInfo;
     void* pReserved;
@@ -5563,7 +5623,7 @@ struct CRYPT_OID_INFO
     union
     {
         uint dwValue;
-        uint Algid;
+        ALG_ID Algid;
         uint dwLength;
     }
     CRYPT_INTEGER_BLOB ExtraInfo;
@@ -6736,10 +6796,10 @@ struct NCRYPT_PROTECT_STREAM_INFO_EX
     PFNCryptStreamOutputCallbackEx pfnStreamOutput;
     void* pvCallbackCtxt;
 }
-alias PFN_AUTHENTICODE_DIGEST_SIGN = HRESULT function(const(CERT_CONTEXT)*, CRYPT_INTEGER_BLOB*, uint, ubyte*, uint, CRYPT_INTEGER_BLOB*);
-alias PFN_AUTHENTICODE_DIGEST_SIGN_EX = HRESULT function(CRYPT_INTEGER_BLOB*, uint, ubyte*, uint, CRYPT_INTEGER_BLOB*, CERT_CONTEXT**, HCERTSTORE);
-alias PFN_AUTHENTICODE_DIGEST_SIGN_EX_WITHFILEHANDLE = HRESULT function(CRYPT_INTEGER_BLOB*, uint, ubyte*, uint, HANDLE, CRYPT_INTEGER_BLOB*, CERT_CONTEXT**, HCERTSTORE);
-alias PFN_AUTHENTICODE_DIGEST_SIGN_WITHFILEHANDLE = HRESULT function(const(CERT_CONTEXT)*, CRYPT_INTEGER_BLOB*, uint, ubyte*, uint, HANDLE, CRYPT_INTEGER_BLOB*);
+alias PFN_AUTHENTICODE_DIGEST_SIGN = HRESULT function(const(CERT_CONTEXT)*, CRYPT_INTEGER_BLOB*, ALG_ID, ubyte*, uint, CRYPT_INTEGER_BLOB*);
+alias PFN_AUTHENTICODE_DIGEST_SIGN_EX = HRESULT function(CRYPT_INTEGER_BLOB*, ALG_ID, ubyte*, uint, CRYPT_INTEGER_BLOB*, CERT_CONTEXT**, HCERTSTORE);
+alias PFN_AUTHENTICODE_DIGEST_SIGN_EX_WITHFILEHANDLE = HRESULT function(CRYPT_INTEGER_BLOB*, ALG_ID, ubyte*, uint, HANDLE, CRYPT_INTEGER_BLOB*, CERT_CONTEXT**, HCERTSTORE);
+alias PFN_AUTHENTICODE_DIGEST_SIGN_WITHFILEHANDLE = HRESULT function(const(CERT_CONTEXT)*, CRYPT_INTEGER_BLOB*, ALG_ID, ubyte*, uint, HANDLE, CRYPT_INTEGER_BLOB*);
 struct SIGNER_ATTR_AUTHCODE
 {
     uint cbSize;
@@ -6839,7 +6899,7 @@ struct SIGNER_PROVIDER_INFO
 struct SIGNER_SIGNATURE_INFO
 {
     uint cbSize;
-    uint algidHash;
+    ALG_ID algidHash;
     SIGNER_SIGNATURE_ATTRIBUTE_CHOICE dwAttrChoice;
     union
     {
