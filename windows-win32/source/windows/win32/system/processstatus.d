@@ -146,6 +146,22 @@ struct PROCESS_MEMORY_COUNTERS_EX
     ulong PeakPagefileUsage;
     ulong PrivateUsage;
 }
+struct PROCESS_MEMORY_COUNTERS_EX2
+{
+    uint cb;
+    uint PageFaultCount;
+    ulong PeakWorkingSetSize;
+    ulong WorkingSetSize;
+    ulong QuotaPeakPagedPoolUsage;
+    ulong QuotaPagedPoolUsage;
+    ulong QuotaPeakNonPagedPoolUsage;
+    ulong QuotaNonPagedPoolUsage;
+    ulong PagefileUsage;
+    ulong PeakPagefileUsage;
+    ulong PrivateUsage;
+    ulong PrivateWorkingSetSize;
+    ulong SharedCommitUsage;
+}
 struct PERFORMANCE_INFORMATION
 {
     uint cb;

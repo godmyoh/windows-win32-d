@@ -506,7 +506,6 @@ enum wszREGFILEISSUERCERTURL_OLD = "FileIssuerCertURL";
 enum wszREGENABLEREQUESTEXTENSIONLIST = "EnableRequestExtensionList";
 enum wszREGENABLEENROLLEEREQUESTEXTENSIONLIST = "EnableEnrolleeRequestExtensionList";
 enum wszREGDISABLEEXTENSIONLIST = "DisableExtensionList";
-enum wszREGDISABLESECEXTENSION = "DisableSecExtension";
 enum wszREGEKUOIDSFORVOLATILEREQUESTS = "EKUOIDsforVolatileRequests";
 enum wszREGLDAPSESSIONOPTIONS = "LDAPSessionOptions";
 enum wszLDAPSESSIONOPTIONVALUE = "LDAPSessionOptionValue";

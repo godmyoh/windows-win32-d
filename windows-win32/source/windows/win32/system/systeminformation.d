@@ -315,6 +315,7 @@ HRESULT GetIntegratedDisplaySize(double*);
 BOOL SetComputerNameA(const(char)*);
 BOOL SetComputerNameW(const(wchar)*);
 BOOL SetComputerNameExA(COMPUTER_NAME_FORMAT, const(char)*);
+DEVELOPER_DRIVE_ENABLEMENT_STATE GetDeveloperDriveEnablementState();
 BOOL GetSystemCpuSetInformation(SYSTEM_CPU_SET_INFORMATION*, uint, uint*, HANDLE, uint);
 uint GetSystemWow64DirectoryA(PSTR, uint);
 uint GetSystemWow64DirectoryW(PWSTR, uint);
@@ -497,6 +498,15 @@ enum : int
     ComputerNamePhysicalDnsDomain         = 0x00000006,
     ComputerNamePhysicalDnsFullyQualified = 0x00000007,
     ComputerNameMax                       = 0x00000008,
+}
+
+alias DEVELOPER_DRIVE_ENABLEMENT_STATE = int;
+enum : int
+{
+    DeveloperDriveEnablementStateError   = 0x00000000,
+    DeveloperDriveEnabled                = 0x00000001,
+    DeveloperDriveDisabledBySystemPolicy = 0x00000002,
+    DeveloperDriveDisabledByGroupPolicy  = 0x00000003,
 }
 
 alias FIRMWARE_TYPE = int;

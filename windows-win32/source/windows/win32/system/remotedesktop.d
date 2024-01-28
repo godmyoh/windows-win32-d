@@ -2623,6 +2623,13 @@ interface IWRdsWddmIddProps : IUnknown
     HRESULT OnDriverUnload(uint);
     HRESULT EnableWddmIdd(BOOL);
 }
+enum IID_IWRdsWddmIddProps1 = GUID(0x60f71b1a, 0x3682, 0x4bc7, [0x99, 0x7e, 0x4e, 0x4f, 0x2, 0xa0, 0x81, 0x48]);
+interface IWRdsWddmIddProps1 : IUnknown
+{
+    HRESULT GetHardwareId(PWSTR, uint);
+    HRESULT OnDriverLoad(uint, const(wchar)*);
+    HRESULT OnDriverUnload(uint);
+}
 enum IID_IWRdsProtocolConnectionSettings = GUID(0x83fcf5d3, 0xf6f4, 0xea94, [0x9c, 0xd2, 0x32, 0xf2, 0x80, 0xe1, 0xe5, 0x10]);
 interface IWRdsProtocolConnectionSettings : IUnknown
 {

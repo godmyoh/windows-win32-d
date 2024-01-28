@@ -43,6 +43,16 @@ enum : uint
     RIDEV_DEVNOTIFY    = 0x00002000,
 }
 
+alias MOUSE_STATE = ushort;
+enum : ushort
+{
+    MOUSE_MOVE_RELATIVE      = 0x0000,
+    MOUSE_MOVE_ABSOLUTE      = 0x0001,
+    MOUSE_VIRTUAL_DESKTOP    = 0x0002,
+    MOUSE_ATTRIBUTES_CHANGED = 0x0004,
+    MOUSE_MOVE_NOCOALESCE    = 0x0008,
+}
+
 alias HRAWINPUT = void*;
 struct RAWINPUTHEADER
 {
@@ -53,7 +63,7 @@ struct RAWINPUTHEADER
 }
 struct RAWMOUSE
 {
-    ushort usFlags;
+    MOUSE_STATE usFlags;
     union
     {
         uint ulButtons;

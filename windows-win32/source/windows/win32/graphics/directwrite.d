@@ -3,7 +3,7 @@ module windows.win32.graphics.directwrite;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, COLORREF, FILETIME, HANDLE, HRESULT, POINT, PWSTR, RECT, SIZE;
 import windows.win32.globalization : FONTSIGNATURE;
-import windows.win32.graphics.direct2d.common : D2D_POINT_2F, D2D_SIZE_U, ID2D1SimplifiedGeometrySink;
+import windows.win32.graphics.direct2d.common : D2D1_GRADIENT_STOP, D2D_POINT_2F, D2D_RECT_F, D2D_SIZE_U, ID2D1SimplifiedGeometrySink;
 import windows.win32.graphics.gdi : HDC, HMONITOR, LOGFONTA, LOGFONTW;
 import windows.win32.system.com : IUnknown;
 
@@ -19,6 +19,7 @@ enum DWRITE_E_DOWNLOADCANCELLED = 0xffffffff8898500e;
 enum DWRITE_E_DOWNLOADFAILED = 0xffffffff8898500f;
 enum DWRITE_E_TOOMANYDOWNLOADS = 0xffffffff88985010;
 enum DWRITE_STANDARD_FONT_AXIS_COUNT = 0x00000005;
+enum DWRITE_NO_PALETTE_INDEX = 0x0000ffff;
 alias DWRITE_FONT_AXIS_TAG = uint;
 enum : uint
 {
@@ -56,6 +57,7 @@ enum : int
     DWRITE_GLYPH_IMAGE_FORMATS_JPEG                   = 0x00000020,
     DWRITE_GLYPH_IMAGE_FORMATS_TIFF                   = 0x00000040,
     DWRITE_GLYPH_IMAGE_FORMATS_PREMULTIPLIED_B8G8R8A8 = 0x00000080,
+    DWRITE_GLYPH_IMAGE_FORMATS_COLR_PAINT_TREE        = 0x00000100,
 }
 
 alias DWRITE_FONT_FILE_TYPE = int;
@@ -2091,4 +2093,180 @@ interface IDWriteFontSet4 : IDWriteFontSet3
 {
     uint ConvertWeightStretchStyleToFontAxisValues(const(DWRITE_FONT_AXIS_VALUE)*, uint, DWRITE_FONT_WEIGHT, DWRITE_FONT_STRETCH, DWRITE_FONT_STYLE, float, DWRITE_FONT_AXIS_VALUE*);
     HRESULT GetMatchingFonts(const(wchar)*, const(DWRITE_FONT_AXIS_VALUE)*, uint, DWRITE_FONT_SIMULATIONS, IDWriteFontSet4*);
+}
+struct DWRITE_BITMAP_DATA_BGRA32
+{
+    uint width;
+    uint height;
+    uint* pixels;
+}
+enum IID_IDWriteBitmapRenderTarget2 = GUID(0xc553a742, 0xfc01, 0x44da, [0xa6, 0x6e, 0xb8, 0xb9, 0xed, 0x6c, 0x39, 0x95]);
+interface IDWriteBitmapRenderTarget2 : IDWriteBitmapRenderTarget1
+{
+    HRESULT GetBitmapData(DWRITE_BITMAP_DATA_BGRA32*);
+}
+alias DWRITE_PAINT_FEATURE_LEVEL = int;
+enum : int
+{
+    DWRITE_PAINT_FEATURE_LEVEL_NONE    = 0x00000000,
+    DWRITE_PAINT_FEATURE_LEVEL_COLR_V0 = 0x00000001,
+    DWRITE_PAINT_FEATURE_LEVEL_COLR_V1 = 0x00000002,
+}
+
+alias DWRITE_PAINT_ATTRIBUTES = int;
+enum : int
+{
+    DWRITE_PAINT_ATTRIBUTES_NONE            = 0x00000000,
+    DWRITE_PAINT_ATTRIBUTES_USES_PALETTE    = 0x00000001,
+    DWRITE_PAINT_ATTRIBUTES_USES_TEXT_COLOR = 0x00000002,
+}
+
+struct DWRITE_PAINT_COLOR
+{
+    DWRITE_COLOR_F value;
+    ushort paletteEntryIndex;
+    float alphaMultiplier;
+    DWRITE_PAINT_ATTRIBUTES colorAttributes;
+}
+alias DWRITE_COLOR_COMPOSITE_MODE = int;
+enum : int
+{
+    DWRITE_COLOR_COMPOSITE_CLEAR          = 0x00000000,
+    DWRITE_COLOR_COMPOSITE_SRC            = 0x00000001,
+    DWRITE_COLOR_COMPOSITE_DEST           = 0x00000002,
+    DWRITE_COLOR_COMPOSITE_SRC_OVER       = 0x00000003,
+    DWRITE_COLOR_COMPOSITE_DEST_OVER      = 0x00000004,
+    DWRITE_COLOR_COMPOSITE_SRC_IN         = 0x00000005,
+    DWRITE_COLOR_COMPOSITE_DEST_IN        = 0x00000006,
+    DWRITE_COLOR_COMPOSITE_SRC_OUT        = 0x00000007,
+    DWRITE_COLOR_COMPOSITE_DEST_OUT       = 0x00000008,
+    DWRITE_COLOR_COMPOSITE_SRC_ATOP       = 0x00000009,
+    DWRITE_COLOR_COMPOSITE_DEST_ATOP      = 0x0000000a,
+    DWRITE_COLOR_COMPOSITE_XOR            = 0x0000000b,
+    DWRITE_COLOR_COMPOSITE_PLUS           = 0x0000000c,
+    DWRITE_COLOR_COMPOSITE_SCREEN         = 0x0000000d,
+    DWRITE_COLOR_COMPOSITE_OVERLAY        = 0x0000000e,
+    DWRITE_COLOR_COMPOSITE_DARKEN         = 0x0000000f,
+    DWRITE_COLOR_COMPOSITE_LIGHTEN        = 0x00000010,
+    DWRITE_COLOR_COMPOSITE_COLOR_DODGE    = 0x00000011,
+    DWRITE_COLOR_COMPOSITE_COLOR_BURN     = 0x00000012,
+    DWRITE_COLOR_COMPOSITE_HARD_LIGHT     = 0x00000013,
+    DWRITE_COLOR_COMPOSITE_SOFT_LIGHT     = 0x00000014,
+    DWRITE_COLOR_COMPOSITE_DIFFERENCE     = 0x00000015,
+    DWRITE_COLOR_COMPOSITE_EXCLUSION      = 0x00000016,
+    DWRITE_COLOR_COMPOSITE_MULTIPLY       = 0x00000017,
+    DWRITE_COLOR_COMPOSITE_HSL_HUE        = 0x00000018,
+    DWRITE_COLOR_COMPOSITE_HSL_SATURATION = 0x00000019,
+    DWRITE_COLOR_COMPOSITE_HSL_COLOR      = 0x0000001a,
+    DWRITE_COLOR_COMPOSITE_HSL_LUMINOSITY = 0x0000001b,
+}
+
+alias DWRITE_PAINT_TYPE = int;
+enum : int
+{
+    DWRITE_PAINT_TYPE_NONE            = 0x00000000,
+    DWRITE_PAINT_TYPE_LAYERS          = 0x00000001,
+    DWRITE_PAINT_TYPE_SOLID_GLYPH     = 0x00000002,
+    DWRITE_PAINT_TYPE_SOLID           = 0x00000003,
+    DWRITE_PAINT_TYPE_LINEAR_GRADIENT = 0x00000004,
+    DWRITE_PAINT_TYPE_RADIAL_GRADIENT = 0x00000005,
+    DWRITE_PAINT_TYPE_SWEEP_GRADIENT  = 0x00000006,
+    DWRITE_PAINT_TYPE_GLYPH           = 0x00000007,
+    DWRITE_PAINT_TYPE_COLOR_GLYPH     = 0x00000008,
+    DWRITE_PAINT_TYPE_TRANSFORM       = 0x00000009,
+    DWRITE_PAINT_TYPE_COMPOSITE       = 0x0000000a,
+}
+
+struct DWRITE_PAINT_ELEMENT
+{
+    DWRITE_PAINT_TYPE paintType;
+    union PAINT_UNION
+    {
+        struct PAINT_LAYERS
+        {
+            uint childCount;
+        }
+        struct PAINT_SOLID_GLYPH
+        {
+            uint glyphIndex;
+            DWRITE_PAINT_COLOR color;
+        }
+        DWRITE_PAINT_COLOR solid;
+        struct PAINT_LINEAR_GRADIENT
+        {
+            uint extendMode;
+            uint gradientStopCount;
+            float x0;
+            float y0;
+            float x1;
+            float y1;
+            float x2;
+            float y2;
+        }
+        struct PAINT_RADIAL_GRADIENT
+        {
+            uint extendMode;
+            uint gradientStopCount;
+            float x0;
+            float y0;
+            float radius0;
+            float x1;
+            float y1;
+            float radius1;
+        }
+        struct PAINT_SWEEP_GRADIENT
+        {
+            uint extendMode;
+            uint gradientStopCount;
+            float centerX;
+            float centerY;
+            float startAngle;
+            float endAngle;
+        }
+        struct PAINT_GLYPH
+        {
+            uint glyphIndex;
+        }
+        struct PAINT_COLOR_GLYPH
+        {
+            uint glyphIndex;
+            D2D_RECT_F clipBox;
+        }
+        DWRITE_MATRIX transform;
+        struct PAINT_COMPOSITE
+        {
+            DWRITE_COLOR_COMPOSITE_MODE mode;
+        }
+    }
+}
+enum IID_IDWritePaintReader = GUID(0x8128e912, 0x3b97, 0x42a5, [0xab, 0x6c, 0x24, 0xaa, 0xd3, 0xa8, 0x6e, 0x54]);
+interface IDWritePaintReader : IUnknown
+{
+    HRESULT SetCurrentGlyph(uint, DWRITE_PAINT_ELEMENT*, uint, D2D_RECT_F*, DWRITE_PAINT_ATTRIBUTES*);
+    HRESULT SetTextColor(const(DWRITE_COLOR_F)*);
+    HRESULT SetColorPaletteIndex(uint);
+    HRESULT SetCustomColorPalette(const(DWRITE_COLOR_F)*, uint);
+    HRESULT MoveToFirstChild(DWRITE_PAINT_ELEMENT*, uint);
+    HRESULT MoveToNextSibling(DWRITE_PAINT_ELEMENT*, uint);
+    HRESULT MoveToParent();
+    HRESULT GetGradientStops(uint, uint, D2D1_GRADIENT_STOP*);
+    HRESULT GetGradientStopColors(uint, uint, DWRITE_PAINT_COLOR*);
+}
+enum IID_IDWriteFontFace7 = GUID(0x3945b85b, 0xbc95, 0x40f7, [0xb7, 0x2c, 0x8b, 0x73, 0xbf, 0xc7, 0xe1, 0x3b]);
+interface IDWriteFontFace7 : IDWriteFontFace6
+{
+    DWRITE_PAINT_FEATURE_LEVEL GetPaintFeatureLevel(DWRITE_GLYPH_IMAGE_FORMATS);
+    HRESULT CreatePaintReader(DWRITE_GLYPH_IMAGE_FORMATS, DWRITE_PAINT_FEATURE_LEVEL, IDWritePaintReader*);
+}
+enum IID_IDWriteFactory8 = GUID(0xee0a7fb5, 0xdef4, 0x4c23, [0xa4, 0x54, 0xc9, 0xc7, 0xdc, 0x87, 0x83, 0x98]);
+interface IDWriteFactory8 : IDWriteFactory7
+{
+    HRESULT TranslateColorGlyphRun(D2D_POINT_2F, const(DWRITE_GLYPH_RUN)*, const(DWRITE_GLYPH_RUN_DESCRIPTION)*, DWRITE_GLYPH_IMAGE_FORMATS, DWRITE_PAINT_FEATURE_LEVEL, DWRITE_MEASURING_MODE, const(DWRITE_MATRIX)*, uint, IDWriteColorGlyphRunEnumerator1*);
+}
+enum IID_IDWriteBitmapRenderTarget3 = GUID(0xaeec37db, 0xc337, 0x40f1, [0x8e, 0x2a, 0x9a, 0x41, 0xb1, 0x67, 0xb2, 0x38]);
+interface IDWriteBitmapRenderTarget3 : IDWriteBitmapRenderTarget2
+{
+    DWRITE_PAINT_FEATURE_LEVEL GetPaintFeatureLevel();
+    HRESULT DrawPaintGlyphRun(float, float, DWRITE_MEASURING_MODE, const(DWRITE_GLYPH_RUN)*, DWRITE_GLYPH_IMAGE_FORMATS, COLORREF, uint, RECT*);
+    HRESULT DrawGlyphRunWithColorSupport(float, float, DWRITE_MEASURING_MODE, const(DWRITE_GLYPH_RUN)*, IDWriteRenderingParams, COLORREF, uint, RECT*);
 }

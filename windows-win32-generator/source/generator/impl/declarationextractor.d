@@ -243,8 +243,17 @@ class DeclarationExtractor : IDeclarationExtractor
                                       dlangType,
                                       tokens));
         }
+        else if (cliType.typeName == "CONDITION_VARIABLE" || cliType.typeName == "SRWLOCK" || cliType.typeName == "INIT_ONCE")
+        {
+            assert(tokens.length == 1);
+            assert(tokens[0] == "0");
+            return Declaration(declName,
+                               format("enum %s = %s(null);",
+                                      declName,
+                                      dlangType));
+        }
         else
-            assert(0);
+            assert(0, cliType.typeName);
     }
 
     private string toDlangStringLiteral(string s)

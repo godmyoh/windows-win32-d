@@ -2,7 +2,7 @@ module windows.win32.graphics.direct2d;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HRESULT, HWND, POINT, PSTR, PWSTR, RECT;
-import windows.win32.graphics.direct2d.common : D2D1_ALPHA_MODE, D2D1_BEZIER_SEGMENT, D2D1_BLEND_MODE, D2D1_COLOR_F, D2D1_COMPOSITE_MODE, D2D1_FILL_MODE, D2D1_PIXEL_FORMAT, D2D_MATRIX_3X2_F, D2D_MATRIX_4X4_F, D2D_POINT_2F, D2D_POINT_2U, D2D_RECT_F, D2D_RECT_U, D2D_SIZE_F, D2D_SIZE_U, ID2D1SimplifiedGeometrySink;
+import windows.win32.graphics.direct2d.common : D2D1_ALPHA_MODE, D2D1_BEZIER_SEGMENT, D2D1_BLEND_MODE, D2D1_COLOR_F, D2D1_COMPOSITE_MODE, D2D1_FILL_MODE, D2D1_GRADIENT_STOP, D2D1_PIXEL_FORMAT, D2D_MATRIX_3X2_F, D2D_MATRIX_4X4_F, D2D_POINT_2F, D2D_POINT_2U, D2D_RECT_F, D2D_RECT_U, D2D_SIZE_F, D2D_SIZE_U, ID2D1SimplifiedGeometrySink;
 import windows.win32.graphics.direct3d : D3D_FEATURE_LEVEL;
 import windows.win32.graphics.directwrite : DWRITE_GLYPH_IMAGE_FORMATS, DWRITE_GLYPH_RUN, DWRITE_GLYPH_RUN_DESCRIPTION, DWRITE_MEASURING_MODE, IDWriteFontFace, IDWriteRenderingParams, IDWriteTextFormat, IDWriteTextLayout;
 import windows.win32.graphics.dxgi : IDXGIDevice, IDXGISurface;
@@ -171,11 +171,6 @@ struct D2D1_BITMAP_PROPERTIES
     D2D1_PIXEL_FORMAT pixelFormat;
     float dpiX;
     float dpiY;
-}
-struct D2D1_GRADIENT_STOP
-{
-    float position;
-    D2D1_COLOR_F color;
 }
 struct D2D1_BRUSH_PROPERTIES
 {
@@ -2907,6 +2902,24 @@ enum IID_ID2D1Factory7 = GUID(0xbdc2bdd3, 0xb96c, 0x4de6, [0xbd, 0xf7, 0x99, 0xd
 interface ID2D1Factory7 : ID2D1Factory6
 {
     HRESULT CreateDevice(IDXGIDevice, ID2D1Device6*);
+}
+alias DWRITE_PAINT_FEATURE_LEVEL = int;
+enum IID_ID2D1DeviceContext7 = GUID(0xec891cf7, 0x9b69, 0x4851, [0x9d, 0xef, 0x4e, 0x9, 0x15, 0x77, 0x1e, 0x62]);
+interface ID2D1DeviceContext7 : ID2D1DeviceContext6
+{
+    DWRITE_PAINT_FEATURE_LEVEL GetPaintFeatureLevel();
+    void DrawPaintGlyphRun(D2D_POINT_2F, const(DWRITE_GLYPH_RUN)*, ID2D1Brush, uint, DWRITE_MEASURING_MODE);
+    void DrawGlyphRunWithColorSupport(D2D_POINT_2F, const(DWRITE_GLYPH_RUN)*, const(DWRITE_GLYPH_RUN_DESCRIPTION)*, ID2D1Brush, ID2D1SvgGlyphStyle, uint, DWRITE_MEASURING_MODE, D2D1_COLOR_BITMAP_GLYPH_SNAP_OPTION);
+}
+enum IID_ID2D1Device7 = GUID(0xf07c8968, 0xdd4e, 0x4ba6, [0x9c, 0xbd, 0xeb, 0x6d, 0x37, 0x52, 0xdc, 0xbb]);
+interface ID2D1Device7 : ID2D1Device6
+{
+    HRESULT CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS, ID2D1DeviceContext7*);
+}
+enum IID_ID2D1Factory8 = GUID(0x677c9311, 0xf36d, 0x4b1f, [0xae, 0x86, 0x86, 0xd1, 0x22, 0x3f, 0xfd, 0x3a]);
+interface ID2D1Factory8 : ID2D1Factory7
+{
+    HRESULT CreateDevice(IDXGIDevice, ID2D1Device7*);
 }
 enum IID_ID2D1EffectContext1 = GUID(0x84ab595a, 0xfc81, 0x4546, [0xba, 0xcd, 0xe8, 0xef, 0x4d, 0x8a, 0xbe, 0x7a]);
 interface ID2D1EffectContext1 : ID2D1EffectContext

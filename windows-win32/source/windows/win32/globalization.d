@@ -1329,6 +1329,13 @@ int utrans_toRules(const(void)**, byte, ushort*, int, UErrorCode*);
 USet* utrans_getSourceSet(const(void)**, byte, USet*, UErrorCode*);
 HRESULT GetDistanceOfClosestLanguageInList(const(wchar)*, const(wchar)*, wchar, double*);
 ubyte IsWellFormedTag(const(wchar)*);
+BOOL GetCalendarSupportedDateRange(uint, CALDATETIME*, CALDATETIME*);
+BOOL GetCalendarDateFormatEx(const(wchar)*, uint, const(CALDATETIME)*, const(wchar)*, PWSTR, int);
+BOOL ConvertSystemTimeToCalDateTime(const(SYSTEMTIME)*, uint, CALDATETIME*);
+BOOL UpdateCalendarDayOfWeek(CALDATETIME*);
+BOOL AdjustCalendarDate(CALDATETIME*, CALDATETIME_DATEUNIT, int);
+BOOL ConvertCalDateTimeToSystemTime(const(CALDATETIME)*, SYSTEMTIME*);
+BOOL IsCalendarLeapYear(uint, uint, uint);
 int FindStringOrdinal(uint, const(wchar)*, int, const(wchar)*, int, BOOL);
 int lstrcmpA(const(char)*, const(char)*);
 int lstrcmpW(const(wchar)*, const(wchar)*);
@@ -5959,4 +5966,31 @@ struct CMLangConvertCharset
 enum CLSID_CMultiLanguage = GUID(0x275c23e2, 0x3747, 0x11d0, [0x9f, 0xea, 0x0, 0xaa, 0x0, 0x3f, 0x86, 0x46]);
 struct CMultiLanguage
 {
+}
+alias CALDATETIME_DATEUNIT = int;
+enum : int
+{
+    EraUnit    = 0x00000000,
+    YearUnit   = 0x00000001,
+    MonthUnit  = 0x00000002,
+    WeekUnit   = 0x00000003,
+    DayUnit    = 0x00000004,
+    HourUnit   = 0x00000005,
+    MinuteUnit = 0x00000006,
+    SecondUnit = 0x00000007,
+    TickUnit   = 0x00000008,
+}
+
+struct CALDATETIME
+{
+    uint CalId;
+    uint Era;
+    uint Year;
+    uint Month;
+    uint Day;
+    uint DayOfWeek;
+    uint Hour;
+    uint Minute;
+    uint Second;
+    uint Tick;
 }

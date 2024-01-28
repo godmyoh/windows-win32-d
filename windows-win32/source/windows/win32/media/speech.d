@@ -1,7 +1,7 @@
 module windows.win32.media.speech;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, FILETIME, HANDLE, HMODULE, HRESULT, HWND, LPARAM, PWSTR, VARIANT_BOOL, WPARAM;
+import windows.win32.foundation : BOOL, BSTR, FILETIME, HANDLE, HMODULE, HRESULT, HWND, LPARAM, LRESULT, PWSTR, VARIANT_BOOL, WPARAM;
 import windows.win32.media.audio : WAVEFORMATEX;
 import windows.win32.system.com : IDispatch, IServiceProvider, IStream, IUnknown;
 import windows.win32.system.com.urlmon : IInternetSecurityManager;
@@ -3130,5 +3130,452 @@ struct SpFileStream
 }
 enum CLSID_SpMemoryStream = GUID(0x5fb7ef7d, 0xdff4, 0x468a, [0xb6, 0xb7, 0x2f, 0xcb, 0xd1, 0x88, 0xf9, 0x94]);
 struct SpMemoryStream
+{
+}
+enum IID_ISpTokenUI = GUID(0xf8e690f0, 0x39cb, 0x4843, [0xb8, 0xd7, 0xc8, 0x46, 0x96, 0xe1, 0x11, 0x9d]);
+interface ISpTokenUI : IUnknown
+{
+    HRESULT IsUISupported(const(wchar)*, void*, uint, IUnknown, BOOL*);
+    HRESULT DisplayUI(HWND, const(wchar)*, const(wchar)*, void*, uint, ISpObjectToken, IUnknown);
+}
+enum IID_ISpObjectTokenEnumBuilder = GUID(0x6b64f9f, 0x7fda, 0x11d2, [0xb4, 0xf2, 0x0, 0xc0, 0x4f, 0x79, 0x73, 0x96]);
+interface ISpObjectTokenEnumBuilder : IEnumSpObjectTokens
+{
+    HRESULT SetAttribs(const(wchar)*, const(wchar)*);
+    HRESULT AddTokens(uint, ISpObjectToken*);
+    HRESULT AddTokensFromDataKey(ISpDataKey, const(wchar)*, const(wchar)*);
+    HRESULT AddTokensFromTokenEnum(IEnumSpObjectTokens);
+    HRESULT Sort(const(wchar)*);
+}
+enum IID_ISpErrorLog = GUID(0xf4711347, 0xe608, 0x11d2, [0xa0, 0x86, 0x0, 0xc0, 0x4f, 0x8e, 0xf9, 0xb5]);
+interface ISpErrorLog : IUnknown
+{
+    HRESULT AddError(const(int), HRESULT, const(wchar)*, const(wchar)*, uint);
+}
+enum IID_ISpGrammarCompiler = GUID(0xb1e29d58, 0xa675, 0x11d2, [0x83, 0x2, 0x0, 0xc0, 0x4f, 0x8e, 0xe6, 0xc0]);
+interface ISpGrammarCompiler : IUnknown
+{
+    HRESULT CompileStream(IStream, IStream, IStream, IUnknown, ISpErrorLog, uint);
+}
+enum IID_ISpGramCompBackend = GUID(0x3ddca27c, 0x665c, 0x4786, [0x9f, 0x97, 0x8c, 0x90, 0xc3, 0x48, 0x8b, 0x61]);
+interface ISpGramCompBackend : ISpGrammarBuilder
+{
+    HRESULT SetSaveObjects(IStream, ISpErrorLog);
+    HRESULT InitFromBinaryGrammar(const(SPBINARYGRAMMAR)*);
+}
+enum IID_ISpITNProcessor = GUID(0x12d7360f, 0xa1c9, 0x11d3, [0xbc, 0x90, 0x0, 0xc0, 0x4f, 0x72, 0xdf, 0x9f]);
+interface ISpITNProcessor : IUnknown
+{
+    HRESULT LoadITNGrammar(PWSTR);
+    HRESULT ITNPhrase(ISpPhraseBuilder);
+}
+enum IID_ISpPhraseBuilder = GUID(0x88a3342a, 0xbed, 0x4834, [0x92, 0x2b, 0x88, 0xd4, 0x31, 0x73, 0x16, 0x2f]);
+interface ISpPhraseBuilder : ISpPhrase
+{
+    HRESULT InitFromPhrase(const(SPPHRASE)*);
+    HRESULT InitFromSerializedPhrase(const(SPSERIALIZEDPHRASE)*);
+    HRESULT AddElements(uint, const(SPPHRASEELEMENT)*);
+    HRESULT AddRules(const(SPPHRASERULEHANDLE), const(SPPHRASERULE)*, SPPHRASERULEHANDLE*);
+    HRESULT AddProperties(const(SPPHRASEPROPERTYHANDLE), const(SPPHRASEPROPERTY)*, SPPHRASEPROPERTYHANDLE*);
+    HRESULT AddReplacements(uint, const(SPPHRASEREPLACEMENT)*);
+}
+// [Not Found] IID_ISpTask
+interface ISpTask
+{
+    HRESULT Execute(void*, const(int)*);
+}
+// [Not Found] IID_ISpThreadTask
+interface ISpThreadTask
+{
+    HRESULT InitThread(void*, HWND);
+    HRESULT ThreadProc(void*, HANDLE, HANDLE, HWND, const(int)*);
+    LRESULT WindowMessage(void*, HWND, uint, WPARAM, LPARAM);
+}
+enum IID_ISpThreadControl = GUID(0xa6be4d73, 0x4403, 0x4358, [0xb2, 0x2d, 0x3, 0x46, 0xe2, 0x3b, 0x17, 0x64]);
+interface ISpThreadControl : ISpNotifySink
+{
+    HRESULT StartThread(uint, HWND*);
+    HRESULT WaitForThreadDone(BOOL, HRESULT*, uint);
+    HRESULT TerminateThread();
+    HANDLE ThreadHandle();
+    uint ThreadId();
+    HANDLE NotifyEvent();
+    HWND WindowHandle();
+    HANDLE ThreadCompleteEvent();
+    HANDLE ExitThreadEvent();
+}
+struct SPTMTHREADINFO
+{
+    int lPoolSize;
+    int lPriority;
+    uint ulConcurrencyLimit;
+    uint ulMaxQuickAllocThreads;
+}
+enum IID_ISpTaskManager = GUID(0x2baeef81, 0x2ca3, 0x4331, [0x98, 0xf3, 0x26, 0xec, 0x5a, 0xbe, 0xfb, 0x3]);
+interface ISpTaskManager : IUnknown
+{
+    HRESULT SetThreadPoolInfo(const(SPTMTHREADINFO)*);
+    HRESULT GetThreadPoolInfo(SPTMTHREADINFO*);
+    HRESULT QueueTask(ISpTask, void*, HANDLE, uint*, uint*);
+    HRESULT CreateReoccurringTask(ISpTask, void*, HANDLE, ISpNotifySink*);
+    HRESULT CreateThreadControl(ISpThreadTask, void*, int, ISpThreadControl*);
+    HRESULT TerminateTask(uint, uint);
+    HRESULT TerminateTaskGroup(uint, uint);
+}
+alias SPVSKIPTYPE = int;
+enum : int
+{
+    SPVST_SENTENCE = 0x00000001,
+}
+
+alias SPVESACTIONS = int;
+enum : int
+{
+    SPVES_CONTINUE = 0x00000000,
+    SPVES_ABORT    = 0x00000001,
+    SPVES_SKIP     = 0x00000002,
+    SPVES_RATE     = 0x00000004,
+    SPVES_VOLUME   = 0x00000008,
+}
+
+enum IID_ISpTTSEngineSite = GUID(0x9880499b, 0xcce9, 0x11d2, [0xb5, 0x3, 0x0, 0xc0, 0x4f, 0x79, 0x73, 0x96]);
+interface ISpTTSEngineSite : ISpEventSink
+{
+    uint GetActions();
+    HRESULT Write(const(void)*, uint, uint*);
+    HRESULT GetRate(int*);
+    HRESULT GetVolume(ushort*);
+    HRESULT GetSkipInfo(SPVSKIPTYPE*, int*);
+    HRESULT CompleteSkip(int);
+}
+struct SPVTEXTFRAG
+{
+    SPVTEXTFRAG* pNext;
+    SPVSTATE State;
+    const(wchar)* pTextStart;
+    uint ulTextLen;
+    uint ulTextSrcOffset;
+}
+enum IID_ISpTTSEngine = GUID(0xa74d7c8e, 0x4cc5, 0x4f2f, [0xa6, 0xeb, 0x80, 0x4d, 0xee, 0x18, 0x50, 0xe]);
+interface ISpTTSEngine : IUnknown
+{
+    HRESULT Speak(uint, const(GUID)*, const(WAVEFORMATEX)*, const(SPVTEXTFRAG)*, ISpTTSEngineSite);
+    HRESULT GetOutputFormat(const(GUID)*, const(WAVEFORMATEX)*, GUID*, WAVEFORMATEX**);
+}
+struct SPWORDENTRY
+{
+    SPWORDHANDLE hWord;
+    ushort LangID;
+    PWSTR pszDisplayText;
+    PWSTR pszLexicalForm;
+    ushort* aPhoneId;
+    void* pvClientContext;
+}
+struct SPRULEENTRY
+{
+    SPRULEHANDLE hRule;
+    SPSTATEHANDLE hInitialState;
+    uint Attributes;
+    void* pvClientRuleContext;
+    void* pvClientGrammarContext;
+}
+alias SPTRANSITIONTYPE = int;
+enum : int
+{
+    SPTRANSEPSILON   = 0x00000000,
+    SPTRANSWORD      = 0x00000001,
+    SPTRANSRULE      = 0x00000002,
+    SPTRANSTEXTBUF   = 0x00000003,
+    SPTRANSWILDCARD  = 0x00000004,
+    SPTRANSDICTATION = 0x00000005,
+}
+
+struct SPTRANSITIONENTRY
+{
+    SPTRANSITIONID ID;
+    SPSTATEHANDLE hNextState;
+    ubyte Type;
+    ubyte RequiredConfidence;
+    struct
+    {
+        uint fHasProperty;
+    }
+    float Weight;
+    union
+    {
+        struct
+        {
+            SPSTATEHANDLE hRuleInitialState;
+            SPRULEHANDLE hRule;
+            void* pvClientRuleContext;
+        }
+        struct
+        {
+            SPWORDHANDLE hWord;
+            void* pvClientWordContext;
+        }
+        struct
+        {
+            void* pvGrammarCookie;
+        }
+    }
+}
+struct SPTRANSITIONPROPERTY
+{
+    const(wchar)* pszName;
+    uint ulId;
+    const(wchar)* pszValue;
+    VARIANT vValue;
+}
+struct SPSTATEINFO
+{
+    uint cAllocatedEntries;
+    SPTRANSITIONENTRY* pTransitions;
+    uint cEpsilons;
+    uint cRules;
+    uint cWords;
+    uint cSpecialTransitions;
+}
+struct SPPATHENTRY
+{
+    SPTRANSITIONID hTransition;
+    SPPHRASEELEMENT elem;
+}
+enum IID_ISpCFGInterpreterSite = GUID(0x6a6ffad8, 0x78b6, 0x473d, [0xb8, 0x44, 0x98, 0x15, 0x2e, 0x4f, 0xb1, 0x6b]);
+interface ISpCFGInterpreterSite : IUnknown
+{
+    HRESULT AddTextReplacement(SPPHRASEREPLACEMENT*);
+    HRESULT AddProperty(const(SPPHRASEPROPERTY)*);
+    HRESULT GetResourceValue(const(wchar)*, PWSTR*);
+}
+enum IID_ISpCFGInterpreter = GUID(0xf3d3f926, 0x11fc, 0x11d3, [0xbb, 0x97, 0x0, 0xc0, 0x4f, 0x8e, 0xe6, 0xc0]);
+interface ISpCFGInterpreter : IUnknown
+{
+    HRESULT InitGrammar(const(wchar)*, const(void)**);
+    HRESULT Interpret(ISpPhraseBuilder, const(uint), const(uint), ISpCFGInterpreterSite);
+}
+alias SPCFGNOTIFY = int;
+enum : int
+{
+    SPCFGN_ADD        = 0x00000000,
+    SPCFGN_REMOVE     = 0x00000001,
+    SPCFGN_INVALIDATE = 0x00000002,
+    SPCFGN_ACTIVATE   = 0x00000003,
+    SPCFGN_DEACTIVATE = 0x00000004,
+}
+
+alias SPRESULTTYPE = int;
+enum : int
+{
+    SPRT_CFG               = 0x00000000,
+    SPRT_SLM               = 0x00000001,
+    SPRT_PROPRIETARY       = 0x00000002,
+    SPRT_FALSE_RECOGNITION = 0x00000004,
+    SPRT_TYPE_MASK         = 0x00000003,
+    SPRT_EMULATED          = 0x00000008,
+    SPRT_EXTENDABLE_PARSE  = 0x00000010,
+}
+
+struct SPPHRASEALT
+{
+    ISpPhraseBuilder pPhrase;
+    uint ulStartElementInParent;
+    uint cElementsInParent;
+    uint cElementsInAlternate;
+    void* pvAltExtra;
+    uint cbAltExtra;
+}
+struct SPRECORESULTINFO
+{
+    uint cbSize;
+    SPRESULTTYPE eResultType;
+    BOOL fHypothesis;
+    BOOL fProprietaryAutoPause;
+    ulong ullStreamPosStart;
+    ulong ullStreamPosEnd;
+    SPGRAMMARHANDLE hGrammar;
+    uint ulSizeEngineData;
+    void* pvEngineData;
+    ISpPhraseBuilder pPhrase;
+    SPPHRASEALT* aPhraseAlts;
+    uint ulNumAlts;
+}
+struct SPRECORESULTINFOEX
+{
+    SPRECORESULTINFO Base;
+    ulong ullStreamTimeStart;
+    ulong ullStreamTimeEnd;
+}
+alias SPWORDINFOOPT = int;
+enum : int
+{
+    SPWIO_NONE      = 0x00000000,
+    SPWIO_WANT_TEXT = 0x00000001,
+}
+
+alias SPRULEINFOOPT = int;
+enum : int
+{
+    SPRIO_NONE = 0x00000000,
+}
+
+struct SPPARSEINFO
+{
+    uint cbSize;
+    SPRULEHANDLE hRule;
+    ulong ullAudioStreamPosition;
+    uint ulAudioSize;
+    uint cTransitions;
+    SPPATHENTRY* pPath;
+    GUID SREngineID;
+    uint ulSREnginePrivateDataSize;
+    const(ubyte)* pSREnginePrivateData;
+    BOOL fHypothesis;
+}
+enum IID_ISpSREngineSite = GUID(0x3b414aec, 0x720c, 0x4883, [0xb9, 0xef, 0x17, 0x8c, 0xd3, 0x94, 0xfb, 0x3a]);
+interface ISpSREngineSite : IUnknown
+{
+    HRESULT Read(void*, uint, uint*);
+    HRESULT DataAvailable(uint*);
+    HRESULT SetBufferNotifySize(uint);
+    HRESULT ParseFromTransitions(const(SPPARSEINFO)*, ISpPhraseBuilder*);
+    HRESULT Recognition(const(SPRECORESULTINFO)*);
+    HRESULT AddEvent(const(SPEVENT)*, SPRECOCONTEXTHANDLE);
+    HRESULT Synchronize(ulong);
+    HRESULT GetWordInfo(SPWORDENTRY*, SPWORDINFOOPT);
+    HRESULT SetWordClientContext(SPWORDHANDLE, void*);
+    HRESULT GetRuleInfo(SPRULEENTRY*, SPRULEINFOOPT);
+    HRESULT SetRuleClientContext(SPRULEHANDLE, void*);
+    HRESULT GetStateInfo(SPSTATEHANDLE, SPSTATEINFO*);
+    HRESULT GetResource(SPRULEHANDLE, const(wchar)*, PWSTR*);
+    HRESULT GetTransitionProperty(SPTRANSITIONID, SPTRANSITIONPROPERTY**);
+    HRESULT IsAlternate(SPRULEHANDLE, SPRULEHANDLE);
+    HRESULT GetMaxAlternates(SPRULEHANDLE, uint*);
+    HRESULT GetContextMaxAlternates(SPRECOCONTEXTHANDLE, uint*);
+    HRESULT UpdateRecoPos(ulong);
+}
+enum IID_ISpSREngineSite2 = GUID(0x7bc6e012, 0x684a, 0x493e, [0xbd, 0xd4, 0x2b, 0xf5, 0xfb, 0xf4, 0x8c, 0xfe]);
+interface ISpSREngineSite2 : ISpSREngineSite
+{
+    HRESULT AddEventEx(const(SPEVENTEX)*, SPRECOCONTEXTHANDLE);
+    HRESULT UpdateRecoPosEx(ulong, ulong);
+    HRESULT GetRuleTransition(uint, uint, SPTRANSITIONENTRY*);
+    HRESULT RecognitionEx(const(SPRECORESULTINFOEX)*);
+}
+alias SPPROPSRC = int;
+enum : int
+{
+    SPPROPSRC_RECO_INST    = 0x00000000,
+    SPPROPSRC_RECO_CTX     = 0x00000001,
+    SPPROPSRC_RECO_GRAMMAR = 0x00000002,
+}
+
+enum IID_ISpSREngine = GUID(0x2f472991, 0x854b, 0x4465, [0xb6, 0x13, 0xfb, 0xaf, 0xb3, 0xad, 0x8e, 0xd8]);
+interface ISpSREngine : IUnknown
+{
+    HRESULT SetSite(ISpSREngineSite);
+    HRESULT GetInputAudioFormat(const(GUID)*, const(WAVEFORMATEX)*, GUID*, WAVEFORMATEX**);
+    HRESULT RecognizeStream(const(GUID)*, const(WAVEFORMATEX)*, HANDLE, HANDLE, HANDLE, BOOL, BOOL, ISpObjectToken);
+    HRESULT SetRecoProfile(ISpObjectToken);
+    HRESULT OnCreateGrammar(void*, SPGRAMMARHANDLE, void**);
+    HRESULT OnDeleteGrammar(void*);
+    HRESULT LoadProprietaryGrammar(void*, const(GUID)*, const(wchar)*, const(void)*, uint, SPLOADOPTIONS);
+    HRESULT UnloadProprietaryGrammar(void*);
+    HRESULT SetProprietaryRuleState(void*, const(wchar)*, void*, SPRULESTATE, uint*);
+    HRESULT SetProprietaryRuleIdState(void*, uint, SPRULESTATE);
+    HRESULT LoadSLM(void*, const(wchar)*);
+    HRESULT UnloadSLM(void*);
+    HRESULT SetSLMState(void*, SPRULESTATE);
+    HRESULT SetWordSequenceData(void*, const(wchar)*, uint, const(SPTEXTSELECTIONINFO)*);
+    HRESULT SetTextSelection(void*, const(SPTEXTSELECTIONINFO)*);
+    HRESULT IsPronounceable(void*, const(wchar)*, SPWORDPRONOUNCEABLE*);
+    HRESULT OnCreateRecoContext(SPRECOCONTEXTHANDLE, void**);
+    HRESULT OnDeleteRecoContext(void*);
+    HRESULT PrivateCall(void*, void*, uint);
+    HRESULT SetAdaptationData(void*, const(wchar)*, const(uint));
+    HRESULT SetPropertyNum(SPPROPSRC, void*, const(wchar)*, int);
+    HRESULT GetPropertyNum(SPPROPSRC, void*, const(wchar)*, int*);
+    HRESULT SetPropertyString(SPPROPSRC, void*, const(wchar)*, const(wchar)*);
+    HRESULT GetPropertyString(SPPROPSRC, void*, const(wchar)*, PWSTR*);
+    HRESULT SetGrammarState(void*, SPGRAMMARSTATE);
+    HRESULT WordNotify(SPCFGNOTIFY, uint, const(SPWORDENTRY)*);
+    HRESULT RuleNotify(SPCFGNOTIFY, uint, const(SPRULEENTRY)*);
+    HRESULT PrivateCallEx(void*, const(void)*, uint, void**, uint*);
+    HRESULT SetContextState(void*, SPCONTEXTSTATE);
+}
+enum IID_ISpSREngine2 = GUID(0x7ba627d8, 0x33f9, 0x4375, [0x90, 0xc5, 0x99, 0x85, 0xae, 0xe5, 0xed, 0xe5]);
+interface ISpSREngine2 : ISpSREngine
+{
+    HRESULT PrivateCallImmediate(void*, const(void)*, uint, void**, uint*);
+    HRESULT SetAdaptationData2(void*, const(wchar)*, const(uint), const(wchar)*, SPADAPTATIONSETTINGS, SPADAPTATIONRELEVANCE);
+    HRESULT SetGrammarPrefix(void*, const(wchar)*, BOOL);
+    HRESULT SetRulePriority(SPRULEHANDLE, void*, int);
+    HRESULT EmulateRecognition(ISpPhrase, uint);
+    HRESULT SetSLMWeight(void*, float);
+    HRESULT SetRuleWeight(SPRULEHANDLE, void*, float);
+    HRESULT SetTrainingState(BOOL, BOOL);
+    HRESULT ResetAcousticModelAdaptation();
+    HRESULT OnLoadCFG(void*, const(SPBINARYGRAMMAR)*, uint);
+    HRESULT OnUnloadCFG(void*, uint);
+}
+struct SPPHRASEALTREQUEST
+{
+    uint ulStartElement;
+    uint cElements;
+    uint ulRequestAltCount;
+    void* pvResultExtra;
+    uint cbResultExtra;
+    ISpPhrase pPhrase;
+    ISpRecoContext pRecoContext;
+}
+enum IID_ISpSRAlternates = GUID(0xfece8294, 0x2be1, 0x408f, [0x8e, 0x68, 0x2d, 0xe3, 0x77, 0x9, 0x2f, 0xe]);
+interface ISpSRAlternates : IUnknown
+{
+    HRESULT GetAlternates(SPPHRASEALTREQUEST*, SPPHRASEALT**, uint*);
+    HRESULT Commit(SPPHRASEALTREQUEST*, SPPHRASEALT*, void**, uint*);
+}
+enum IID_ISpSRAlternates2 = GUID(0xf338f437, 0xcb33, 0x4020, [0x9c, 0xab, 0xc7, 0x1f, 0xf9, 0xce, 0x12, 0xd3]);
+interface ISpSRAlternates2 : ISpSRAlternates
+{
+    HRESULT CommitText(SPPHRASEALTREQUEST*, const(wchar)*, SPCOMMITFLAGS);
+}
+enum IID__ISpPrivateEngineCall = GUID(0x8e7c791e, 0x4467, 0x11d3, [0x97, 0x23, 0x0, 0xc0, 0x4f, 0x72, 0xdb, 0x8]);
+interface _ISpPrivateEngineCall : IUnknown
+{
+    HRESULT CallEngine(void*, uint);
+    HRESULT CallEngineEx(const(void)*, uint, void**, uint*);
+}
+enum IID_ISpPrivateEngineCallEx = GUID(0xdefd682a, 0xfe0a, 0x42b9, [0xbf, 0xa1, 0x56, 0xd3, 0xd6, 0xce, 0xcf, 0xaf]);
+interface ISpPrivateEngineCallEx : IUnknown
+{
+    HRESULT CallEngineSynchronize(const(void)*, uint, void**, uint*);
+    HRESULT CallEngineImmediate(const(void)*, uint, void**, uint*);
+}
+enum CLSID_SpDataKey = GUID(0xd9f6ee60, 0x58c9, 0x458b, [0x88, 0xe1, 0x2f, 0x90, 0x8f, 0xd7, 0xf8, 0x7c]);
+struct SpDataKey
+{
+}
+enum CLSID_SpObjectTokenEnum = GUID(0x3918d75f, 0xacb, 0x41f2, [0xb7, 0x33, 0x92, 0xaa, 0x15, 0xbc, 0xec, 0xf6]);
+struct SpObjectTokenEnum
+{
+}
+enum CLSID_SpPhraseBuilder = GUID(0x777b6bbd, 0x2ff2, 0x11d3, [0x88, 0xfe, 0x0, 0xc0, 0x4f, 0x8e, 0xf9, 0xb5]);
+struct SpPhraseBuilder
+{
+}
+enum CLSID_SpITNProcessor = GUID(0x12d73610, 0xa1c9, 0x11d3, [0xbc, 0x90, 0x0, 0xc0, 0x4f, 0x72, 0xdf, 0x9f]);
+struct SpITNProcessor
+{
+}
+enum CLSID_SpGrammarCompiler = GUID(0xb1e29d59, 0xa675, 0x11d2, [0x83, 0x2, 0x0, 0xc0, 0x4f, 0x8e, 0xe6, 0xc0]);
+struct SpGrammarCompiler
+{
+}
+enum CLSID_SpW3CGrammarCompiler = GUID(0xd2c13906, 0x51ef, 0x454e, [0xbc, 0x67, 0xa5, 0x24, 0x75, 0xff, 0x7, 0x4c]);
+struct SpW3CGrammarCompiler
+{
+}
+enum CLSID_SpGramCompBackend = GUID(0xda93e903, 0xc843, 0x11d2, [0xa0, 0x84, 0x0, 0xc0, 0x4f, 0x8e, 0xf9, 0xb5]);
+struct SpGramCompBackend
 {
 }

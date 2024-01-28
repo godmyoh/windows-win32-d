@@ -159,6 +159,7 @@ HRESULT SspiUnmarshalAuthIdentity(uint, PSTR, void**);
 BOOLEAN SspiIsPromptingNeeded(uint);
 HRESULT SspiGetTargetHostName(const(wchar)*, PWSTR*);
 HRESULT SspiExcludePackage(void*, const(wchar)*, void**);
+HRESULT SspiSetChannelBindingFlags(SecPkgContext_Bindings*, uint);
 HRESULT AddSecurityPackageA(PSTR, SECURITY_PACKAGE_OPTIONS*);
 HRESULT AddSecurityPackageW(PWSTR, SECURITY_PACKAGE_OPTIONS*);
 HRESULT DeleteSecurityPackageA(PSTR);
@@ -304,10 +305,20 @@ enum SECBUFFER_SUBSCRIBE_GENERIC_TLS_EXTENSION = 0x0000001a;
 enum SECBUFFER_FLAGS = 0x0000001b;
 enum SECBUFFER_TRAFFIC_SECRETS = 0x0000001c;
 enum SECBUFFER_CERTIFICATE_REQUEST_CONTEXT = 0x0000001d;
+enum SECBUFFER_CHANNEL_BINDINGS_RESULT = 0x0000001e;
 enum SECBUFFER_ATTRMASK = 0xf0000000;
 enum SECBUFFER_READONLY = 0x80000000;
 enum SECBUFFER_READONLY_WITH_CHECKSUM = 0x10000000;
 enum SECBUFFER_RESERVED = 0x60000000;
+enum SEC_CHANNEL_BINDINGS_AUDIT_BINDINGS = 0x00000001;
+enum SEC_CHANNEL_BINDINGS_VALID_FLAGS = 0x00000001;
+enum SEC_CHANNEL_BINDINGS_RESULT_CLIENT_SUPPORT = 0x00000001;
+enum SEC_CHANNEL_BINDINGS_RESULT_ABSENT = 0x00000002;
+enum SEC_CHANNEL_BINDINGS_RESULT_NOTVALID_MISMATCH = 0x00000004;
+enum SEC_CHANNEL_BINDINGS_RESULT_NOTVALID_MISSING = 0x00000008;
+enum SEC_CHANNEL_BINDINGS_RESULT_VALID_MATCHED = 0x00000010;
+enum SEC_CHANNEL_BINDINGS_RESULT_VALID_PROXY = 0x00000020;
+enum SEC_CHANNEL_BINDINGS_RESULT_VALID_MISSING = 0x00000040;
 enum SZ_ALG_MAX_SIZE = 0x00000040;
 enum SECURITY_NATIVE_DREP = 0x00000010;
 enum SECURITY_NETWORK_DREP = 0x00000000;
@@ -552,6 +563,7 @@ enum LSAD_AES_CRYPT_SHA512_HASH_SIZE = 0x00000040;
 enum LSAD_AES_KEY_SIZE = 0x00000010;
 enum LSAD_AES_SALT_SIZE = 0x00000010;
 enum LSAD_AES_BLOCK_SIZE = 0x00000010;
+enum TRUST_TYPE_AAD = 0x00000005;
 enum TRUST_ATTRIBUTE_TREE_PARENT = 0x00400000;
 enum TRUST_ATTRIBUTE_TREE_ROOT = 0x00800000;
 enum TRUST_ATTRIBUTES_VALID = 0xff02ffff;
@@ -927,6 +939,7 @@ enum PRIMARY_CRED_INTERACTIVE_NGC_LOGON = 0x00080000;
 enum PRIMARY_CRED_INTERACTIVE_FIDO_LOGON = 0x00100000;
 enum PRIMARY_CRED_ARSO_LOGON = 0x00200000;
 enum PRIMARY_CRED_SUPPLEMENTAL = 0x00400000;
+enum PRIMARY_CRED_FOR_PASSWORD_CHANGE = 0x00800000;
 enum PRIMARY_CRED_LOGON_PACKAGE_SHIFT = 0x00000018;
 enum PRIMARY_CRED_PACKAGE_MASK = 0xff000000;
 enum SECPKG_PRIMARY_CRED_EX_FLAGS_EX_DELEGATION_TOKEN = 0x00000001;
@@ -2183,7 +2196,8 @@ enum : int
     PolicyDnsDomainInformationInt       = 0x0000000d,
     PolicyLocalAccountDomainInformation = 0x0000000e,
     PolicyMachineAccountInformation     = 0x0000000f,
-    PolicyLastEntry                     = 0x00000010,
+    PolicyMachineAccountInformation2    = 0x00000010,
+    PolicyLastEntry                     = 0x00000011,
 }
 
 struct POLICY_AUDIT_LOG_INFO
@@ -2272,6 +2286,12 @@ struct POLICY_MACHINE_ACCT_INFO
 {
     uint Rid;
     PSID Sid;
+}
+struct POLICY_MACHINE_ACCT_INFO2
+{
+    uint Rid;
+    PSID Sid;
+    GUID ObjectGuid;
 }
 alias POLICY_NOTIFICATION_INFORMATION_CLASS = int;
 enum : int
@@ -3508,6 +3528,25 @@ struct SEC_CHANNEL_BINDINGS
     uint dwAcceptorOffset;
     uint cbApplicationDataLength;
     uint dwApplicationDataOffset;
+}
+struct SEC_CHANNEL_BINDINGS_EX
+{
+    uint magicNumber;
+    uint flags;
+    uint cbHeaderLength;
+    uint cbStructureLength;
+    uint dwInitiatorAddrType;
+    uint cbInitiatorLength;
+    uint dwInitiatorOffset;
+    uint dwAcceptorAddrType;
+    uint cbAcceptorLength;
+    uint dwAcceptorOffset;
+    uint cbApplicationDataLength;
+    uint dwApplicationDataOffset;
+}
+struct SEC_CHANNEL_BINDINGS_RESULT
+{
+    uint flags;
 }
 alias SEC_APPLICATION_PROTOCOL_NEGOTIATION_EXT = int;
 enum : int

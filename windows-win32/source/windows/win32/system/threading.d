@@ -573,7 +573,22 @@ BOOL GetNumaNodeProcessorMask(ubyte, ulong*);
 BOOL GetNumaAvailableMemoryNode(ubyte, ulong*);
 BOOL GetNumaAvailableMemoryNodeEx(ushort, ulong*);
 BOOL GetNumaProximityNode(uint, ubyte*);
+enum CONDITION_VARIABLE_LOCKMODE_SHARED = 0x00000001;
+enum INIT_ONCE_CHECK_ONLY = 0x00000001;
+enum INIT_ONCE_ASYNC = 0x00000002;
+enum INIT_ONCE_INIT_FAILED = 0x00000004;
+enum INIT_ONCE_CTX_RESERVED_BITS = 0x00000002;
+enum CONDITION_VARIABLE_INIT = CONDITION_VARIABLE(null);
+enum SRWLOCK_INIT = SRWLOCK(null);
+enum INIT_ONCE_STATIC_INIT = INIT_ONCE(null);
 enum ALL_PROCESSOR_GROUPS = 0xffff;
+enum RTL_CRITICAL_SECTION_FLAG_NO_DEBUG_INFO = 0x01000000;
+enum RTL_CRITICAL_SECTION_FLAG_DYNAMIC_SPIN = 0x02000000;
+enum RTL_CRITICAL_SECTION_FLAG_STATIC_INIT = 0x04000000;
+enum RTL_CRITICAL_SECTION_FLAG_RESOURCE_TYPE = 0x08000000;
+enum RTL_CRITICAL_SECTION_FLAG_FORCE_DEBUG_INFO = 0x10000000;
+enum RTL_CRITICAL_SECTION_ALL_FLAG_BITS = 0xff000000;
+enum RTL_CRITICAL_SECTION_DEBUG_FLAG_STATIC_INIT = 0x00000001;
 enum FLS_OUT_OF_INDEXES = 0xffffffff;
 enum PRIVATE_NAMESPACE_FLAG_DESTROY = 0x00000001;
 enum TLS_OUT_OF_INDEXES = 0xffffffff;
@@ -589,11 +604,6 @@ enum PROCESS_POWER_THROTTLING_EXECUTION_SPEED = 0x00000001;
 enum PROCESS_POWER_THROTTLING_IGNORE_TIMER_RESOLUTION = 0x00000004;
 enum PROCESS_LEAP_SECOND_INFO_FLAG_ENABLE_SIXTY_SECOND = 0x00000001;
 enum PROCESS_LEAP_SECOND_INFO_VALID_FLAGS = 0x00000001;
-enum INIT_ONCE_CHECK_ONLY = 0x00000001;
-enum INIT_ONCE_ASYNC = 0x00000002;
-enum INIT_ONCE_INIT_FAILED = 0x00000004;
-enum INIT_ONCE_CTX_RESERVED_BITS = 0x00000002;
-enum CONDITION_VARIABLE_LOCKMODE_SHARED = 0x00000001;
 enum CREATE_MUTEX_INITIAL_OWNER = 0x00000001;
 enum CREATE_WAITABLE_TIMER_MANUAL_RESET = 0x00000001;
 enum CREATE_WAITABLE_TIMER_HIGH_RESOLUTION = 0x00000002;
@@ -798,17 +808,19 @@ struct THREAD_POWER_THROTTLING_STATE
 alias PROCESS_INFORMATION_CLASS = int;
 enum : int
 {
-    ProcessMemoryPriority        = 0x00000000,
-    ProcessMemoryExhaustionInfo  = 0x00000001,
-    ProcessAppMemoryInfo         = 0x00000002,
-    ProcessInPrivateInfo         = 0x00000003,
-    ProcessPowerThrottling       = 0x00000004,
-    ProcessReservedValue1        = 0x00000005,
-    ProcessTelemetryCoverageInfo = 0x00000006,
-    ProcessProtectionLevelInfo   = 0x00000007,
-    ProcessLeapSecondInfo        = 0x00000008,
-    ProcessMachineTypeInfo       = 0x00000009,
-    ProcessInformationClassMax   = 0x0000000a,
+    ProcessMemoryPriority                      = 0x00000000,
+    ProcessMemoryExhaustionInfo                = 0x00000001,
+    ProcessAppMemoryInfo                       = 0x00000002,
+    ProcessInPrivateInfo                       = 0x00000003,
+    ProcessPowerThrottling                     = 0x00000004,
+    ProcessReservedValue1                      = 0x00000005,
+    ProcessTelemetryCoverageInfo               = 0x00000006,
+    ProcessProtectionLevelInfo                 = 0x00000007,
+    ProcessLeapSecondInfo                      = 0x00000008,
+    ProcessMachineTypeInfo                     = 0x00000009,
+    ProcessOverrideSubsequentPrefetchParameter = 0x0000000a,
+    ProcessMaxOverridePrefetchParameter        = 0x0000000b,
+    ProcessInformationClassMax                 = 0x0000000c,
 }
 
 struct APP_MEMORY_INFORMATION
@@ -832,6 +844,7 @@ struct PROCESS_MACHINE_INFORMATION
     ushort Res0;
     MACHINE_ATTRIBUTES MachineAttributes;
 }
+alias OVERRIDE_PREFETCH_PARAMETER = uint;
 alias PROCESS_MEMORY_EXHAUSTION_TYPE = int;
 enum : int
 {
@@ -944,26 +957,27 @@ struct IO_COUNTERS
 alias PROCESS_MITIGATION_POLICY = int;
 enum : int
 {
-    ProcessDEPPolicy                   = 0x00000000,
-    ProcessASLRPolicy                  = 0x00000001,
-    ProcessDynamicCodePolicy           = 0x00000002,
-    ProcessStrictHandleCheckPolicy     = 0x00000003,
-    ProcessSystemCallDisablePolicy     = 0x00000004,
-    ProcessMitigationOptionsMask       = 0x00000005,
-    ProcessExtensionPointDisablePolicy = 0x00000006,
-    ProcessControlFlowGuardPolicy      = 0x00000007,
-    ProcessSignaturePolicy             = 0x00000008,
-    ProcessFontDisablePolicy           = 0x00000009,
-    ProcessImageLoadPolicy             = 0x0000000a,
-    ProcessSystemCallFilterPolicy      = 0x0000000b,
-    ProcessPayloadRestrictionPolicy    = 0x0000000c,
-    ProcessChildProcessPolicy          = 0x0000000d,
-    ProcessSideChannelIsolationPolicy  = 0x0000000e,
-    ProcessUserShadowStackPolicy       = 0x0000000f,
-    ProcessRedirectionTrustPolicy      = 0x00000010,
-    ProcessUserPointerAuthPolicy       = 0x00000011,
-    ProcessSEHOPPolicy                 = 0x00000012,
-    MaxProcessMitigationPolicy         = 0x00000013,
+    ProcessDEPPolicy                    = 0x00000000,
+    ProcessASLRPolicy                   = 0x00000001,
+    ProcessDynamicCodePolicy            = 0x00000002,
+    ProcessStrictHandleCheckPolicy      = 0x00000003,
+    ProcessSystemCallDisablePolicy      = 0x00000004,
+    ProcessMitigationOptionsMask        = 0x00000005,
+    ProcessExtensionPointDisablePolicy  = 0x00000006,
+    ProcessControlFlowGuardPolicy       = 0x00000007,
+    ProcessSignaturePolicy              = 0x00000008,
+    ProcessFontDisablePolicy            = 0x00000009,
+    ProcessImageLoadPolicy              = 0x0000000a,
+    ProcessSystemCallFilterPolicy       = 0x0000000b,
+    ProcessPayloadRestrictionPolicy     = 0x0000000c,
+    ProcessChildProcessPolicy           = 0x0000000d,
+    ProcessSideChannelIsolationPolicy   = 0x0000000e,
+    ProcessUserShadowStackPolicy        = 0x0000000f,
+    ProcessRedirectionTrustPolicy       = 0x00000010,
+    ProcessUserPointerAuthPolicy        = 0x00000011,
+    ProcessSEHOPPolicy                  = 0x00000012,
+    ProcessActivationContextTrustPolicy = 0x00000013,
+    MaxProcessMitigationPolicy          = 0x00000014,
 }
 
 union INIT_ONCE

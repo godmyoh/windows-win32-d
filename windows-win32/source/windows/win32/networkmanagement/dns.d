@@ -81,33 +81,36 @@ enum : ushort
 alias DNS_QUERY_OPTIONS = uint;
 enum : uint
 {
-    DNS_QUERY_STANDARD                  = 0x00000000,
-    DNS_QUERY_ACCEPT_TRUNCATED_RESPONSE = 0x00000001,
-    DNS_QUERY_USE_TCP_ONLY              = 0x00000002,
-    DNS_QUERY_NO_RECURSION              = 0x00000004,
-    DNS_QUERY_BYPASS_CACHE              = 0x00000008,
-    DNS_QUERY_NO_WIRE_QUERY             = 0x00000010,
-    DNS_QUERY_NO_LOCAL_NAME             = 0x00000020,
-    DNS_QUERY_NO_HOSTS_FILE             = 0x00000040,
-    DNS_QUERY_NO_NETBT                  = 0x00000080,
-    DNS_QUERY_WIRE_ONLY                 = 0x00000100,
-    DNS_QUERY_RETURN_MESSAGE            = 0x00000200,
-    DNS_QUERY_MULTICAST_ONLY            = 0x00000400,
-    DNS_QUERY_NO_MULTICAST              = 0x00000800,
-    DNS_QUERY_TREAT_AS_FQDN             = 0x00001000,
-    DNS_QUERY_ADDRCONFIG                = 0x00002000,
-    DNS_QUERY_DUAL_ADDR                 = 0x00004000,
-    DNS_QUERY_DONT_RESET_TTL_VALUES     = 0x00100000,
-    DNS_QUERY_DISABLE_IDN_ENCODING      = 0x00200000,
-    DNS_QUERY_APPEND_MULTILABEL         = 0x00800000,
-    DNS_QUERY_DNSSEC_OK                 = 0x01000000,
-    DNS_QUERY_DNSSEC_CHECKING_DISABLED  = 0x02000000,
-    DNS_QUERY_RESERVED                  = 0xf0000000,
-    DNS_QUERY_CACHE_ONLY                = 0x00000010,
-    DNS_QUERY_REQUEST_VERSION1          = 0x00000001,
-    DNS_QUERY_REQUEST_VERSION2          = 0x00000002,
-    DNS_QUERY_RESULTS_VERSION1          = 0x00000001,
-    DNS_QUERY_REQUEST_VERSION3          = 0x00000003,
+    DNS_QUERY_STANDARD                     = 0x00000000,
+    DNS_QUERY_ACCEPT_TRUNCATED_RESPONSE    = 0x00000001,
+    DNS_QUERY_USE_TCP_ONLY                 = 0x00000002,
+    DNS_QUERY_NO_RECURSION                 = 0x00000004,
+    DNS_QUERY_BYPASS_CACHE                 = 0x00000008,
+    DNS_QUERY_NO_WIRE_QUERY                = 0x00000010,
+    DNS_QUERY_NO_LOCAL_NAME                = 0x00000020,
+    DNS_QUERY_NO_HOSTS_FILE                = 0x00000040,
+    DNS_QUERY_NO_NETBT                     = 0x00000080,
+    DNS_QUERY_WIRE_ONLY                    = 0x00000100,
+    DNS_QUERY_RETURN_MESSAGE               = 0x00000200,
+    DNS_QUERY_MULTICAST_ONLY               = 0x00000400,
+    DNS_QUERY_NO_MULTICAST                 = 0x00000800,
+    DNS_QUERY_TREAT_AS_FQDN                = 0x00001000,
+    DNS_QUERY_ADDRCONFIG                   = 0x00002000,
+    DNS_QUERY_DUAL_ADDR                    = 0x00004000,
+    DNS_QUERY_DONT_RESET_TTL_VALUES        = 0x00100000,
+    DNS_QUERY_DISABLE_IDN_ENCODING         = 0x00200000,
+    DNS_QUERY_APPEND_MULTILABEL            = 0x00800000,
+    DNS_QUERY_DNSSEC_OK                    = 0x01000000,
+    DNS_QUERY_DNSSEC_CHECKING_DISABLED     = 0x02000000,
+    DNS_QUERY_RESERVED                     = 0xf0000000,
+    DNS_QUERY_CACHE_ONLY                   = 0x00000010,
+    DNS_QUERY_REQUEST_VERSION1             = 0x00000001,
+    DNS_QUERY_REQUEST_VERSION2             = 0x00000002,
+    DNS_QUERY_RESULTS_VERSION1             = 0x00000001,
+    DNS_QUERY_REQUEST_VERSION3             = 0x00000003,
+    DNS_QUERY_RAW_RESULTS_VERSION1         = 0x00000001,
+    DNS_QUERY_RAW_REQUEST_VERSION1         = 0x00000001,
+    DNS_QUERY_RAW_OPTION_BEST_EFFORT_PARSE = 0x00000001,
 }
 
 int DnsQueryConfig(DNS_CONFIG_TYPE, uint, const(wchar)*, void*, void*, uint*);
@@ -120,11 +123,14 @@ void DnsFree(void*, DNS_FREE_TYPE);
 WIN32_ERROR DnsQuery_A(const(char)*, DNS_TYPE, DNS_QUERY_OPTIONS, void*, DNS_RECORDA**, void**);
 WIN32_ERROR DnsQuery_UTF8(const(char)*, DNS_TYPE, DNS_QUERY_OPTIONS, void*, DNS_RECORDA**, void**);
 WIN32_ERROR DnsQuery_W(const(wchar)*, DNS_TYPE, DNS_QUERY_OPTIONS, void*, DNS_RECORDA**, void**);
-int DnsQueryEx(DNS_QUERY_REQUEST*, DNS_QUERY_RESULT*, DNS_QUERY_CANCEL*);
-int DnsCancelQuery(DNS_QUERY_CANCEL*);
 void DnsFreeCustomServers(uint*, DNS_CUSTOM_SERVER**);
 uint DnsGetApplicationSettings(uint*, DNS_CUSTOM_SERVER**, DNS_APPLICATION_SETTINGS*);
 uint DnsSetApplicationSettings(uint, const(DNS_CUSTOM_SERVER)*, const(DNS_APPLICATION_SETTINGS)*);
+int DnsQueryEx(DNS_QUERY_REQUEST*, DNS_QUERY_RESULT*, DNS_QUERY_CANCEL*);
+int DnsCancelQuery(DNS_QUERY_CANCEL*);
+void DnsQueryRawResultFree(DNS_QUERY_RAW_RESULT*);
+int DnsQueryRaw(DNS_QUERY_RAW_REQUEST*, DNS_QUERY_RAW_CANCEL*);
+int DnsCancelQueryRaw(DNS_QUERY_RAW_CANCEL*);
 int DnsAcquireContextHandle_W(uint, void*, HANDLE*);
 int DnsAcquireContextHandle_A(uint, void*, HANDLE*);
 void DnsReleaseContextHandle(HANDLE);
@@ -375,6 +381,11 @@ enum DNS_CUSTOM_SERVER_TYPE_DOH = 0x00000002;
 enum DNS_CUSTOM_SERVER_UDP_FALLBACK = 0x00000001;
 enum DNS_APP_SETTINGS_VERSION1 = 0x00000001;
 enum DNS_APP_SETTINGS_EXCLUSIVE_SERVERS = 0x00000001;
+enum DNS_PROTOCOL_UNSPECIFIED = 0x00000000;
+enum DNS_PROTOCOL_UDP = 0x00000001;
+enum DNS_PROTOCOL_TCP = 0x00000002;
+enum DNS_PROTOCOL_DOH = 0x00000003;
+enum DNS_PROTOCOL_NO_WIRE = 0x00000005;
 enum DNS_UPDATE_SECURITY_USE_DEFAULT = 0x00000000;
 enum DNS_UPDATE_SECURITY_OFF = 0x00000010;
 enum DNS_UPDATE_SECURITY_ON = 0x00000020;
@@ -1200,6 +1211,24 @@ struct DNS_QUERY_RESULT
     void* Reserved;
 }
 alias PDNS_QUERY_COMPLETION_ROUTINE = void function(void*, DNS_QUERY_RESULT*);
+struct DNS_CUSTOM_SERVER
+{
+    uint dwServerType;
+    ulong ullFlags;
+    union
+    {
+        PWSTR pwszTemplate;
+    }
+    union
+    {
+        CHAR[32] MaxSa;
+    }
+}
+struct DNS_APPLICATION_SETTINGS
+{
+    uint Version;
+    ulong Flags;
+}
 struct DNS_QUERY_REQUEST
 {
     uint Version;
@@ -1214,19 +1243,6 @@ struct DNS_QUERY_REQUEST
 struct DNS_QUERY_CANCEL
 {
     CHAR[32] Reserved;
-}
-struct DNS_CUSTOM_SERVER
-{
-    uint dwServerType;
-    ulong ullFlags;
-    union
-    {
-        PWSTR pwszTemplate;
-    }
-    union
-    {
-        CHAR[32] MaxSa;
-    }
 }
 struct DNS_QUERY_REQUEST3
 {
@@ -1243,10 +1259,47 @@ struct DNS_QUERY_REQUEST3
     uint cCustomServers;
     DNS_CUSTOM_SERVER* pCustomServers;
 }
-struct DNS_APPLICATION_SETTINGS
+struct DNS_QUERY_RAW_RESULT
 {
-    uint Version;
-    ulong Flags;
+    uint version_;
+    int queryStatus;
+    ulong queryOptions;
+    ulong queryRawOptions;
+    ulong responseFlags;
+    uint queryRawResponseSize;
+    ubyte* queryRawResponse;
+    DNS_RECORDA* queryRecords;
+    uint protocol;
+    union
+    {
+        CHAR[32] maxSa;
+    }
+}
+alias DNS_QUERY_RAW_COMPLETION_ROUTINE = void function(void*, DNS_QUERY_RAW_RESULT*);
+struct DNS_QUERY_RAW_REQUEST
+{
+    uint version_;
+    uint resultsVersion;
+    uint dnsQueryRawSize;
+    ubyte* dnsQueryRaw;
+    PWSTR dnsQueryName;
+    ushort dnsQueryType;
+    ulong queryOptions;
+    uint interfaceIndex;
+    DNS_QUERY_RAW_COMPLETION_ROUTINE queryCompletionCallback;
+    void* queryContext;
+    ulong queryRawOptions;
+    uint customServersSize;
+    DNS_CUSTOM_SERVER* customServers;
+    uint protocol;
+    union
+    {
+        CHAR[32] maxSa;
+    }
+}
+struct DNS_QUERY_RAW_CANCEL
+{
+    CHAR[32] reserved;
 }
 alias DNS_NAME_FORMAT = int;
 enum : int

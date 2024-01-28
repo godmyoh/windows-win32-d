@@ -61,6 +61,7 @@ HRESULT GetHGlobalFromILockBytes(ILockBytes, HGLOBAL*);
 HRESULT CreateILockBytesOnHGlobal(HGLOBAL, BOOL, ILockBytes*);
 HRESULT GetConvertStg(IStorage);
 SERIALIZEDPROPERTYVALUE* StgConvertVariantToProperty(const(PROPVARIANT)*, ushort, SERIALIZEDPROPERTYVALUE*, uint*, uint, BOOLEAN, uint*);
+BOOLEAN StgConvertPropertyToVariant(const(SERIALIZEDPROPERTYVALUE)*, ushort, PROPVARIANT*, IMemoryAllocator);
 uint StgPropertyLengthAsVariant(const(SERIALIZEDPROPERTYVALUE)*, uint, ushort, ubyte);
 HRESULT WriteFmtUserTypeStg(IStorage, ushort, PWSTR);
 HRESULT ReadFmtUserTypeStg(IStorage, ushort*, PWSTR*);
@@ -614,6 +615,12 @@ struct SERIALIZEDPROPERTYVALUE
 {
     uint dwType;
     ubyte[1] rgb;
+}
+// [Not Found] IID_IMemoryAllocator
+interface IMemoryAllocator
+{
+    void* Allocate(uint);
+    void Free(void*);
 }
 enum IID_IPropertyBag = GUID(0x55272a00, 0x42cb, 0x11ce, [0x81, 0x35, 0x0, 0xaa, 0x0, 0x4b, 0xb8, 0x51]);
 interface IPropertyBag : IUnknown

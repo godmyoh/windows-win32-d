@@ -7,16 +7,9 @@ import windows.win32.system.com : IMalloc, IStream, IUnknown;
 version (Windows):
 extern (Windows):
 
-alias DXC_CP = uint;
-enum : uint
-{
-    DXC_CP_ACP   = 0x00000000,
-    DXC_CP_UTF16 = 0x000004b0,
-    DXC_CP_UTF8  = 0x0000fde9,
-}
-
 HRESULT DxcCreateInstance(const(GUID)*, const(GUID)*, void**);
 HRESULT DxcCreateInstance2(IMalloc, const(GUID)*, const(GUID)*, void**);
+enum CLSID_DxcUtils = GUID(0x6245d6af, 0x66e0, 0x48fd, [0x80, 0xb4, 0x4d, 0x27, 0x17, 0x96, 0x74, 0x8c]);
 enum DXC_HASHFLAG_INCLUDES_SOURCE = 0x00000001;
 enum DXC_ARG_DEBUG = "-Zi";
 enum DXC_ARG_SKIP_VALIDATION = "-Vd";
@@ -58,6 +51,14 @@ enum CLSID_DxcContainerReflection = GUID(0xb9f54489, 0x55b8, 0x400c, [0xba, 0x3a
 enum CLSID_DxcOptimizer = GUID(0xae2cd79f, 0xcc22, 0x453f, [0x9b, 0x6b, 0xb1, 0x24, 0xe7, 0xa5, 0x20, 0x4c]);
 enum CLSID_DxcContainerBuilder = GUID(0x94134294, 0x411f, 0x4574, [0xb4, 0xd0, 0x87, 0x41, 0xe2, 0x52, 0x40, 0xd2]);
 enum CLSID_DxcPdbUtils = GUID(0x54621dfb, 0xf2ce, 0x457e, [0xae, 0x8c, 0xec, 0x35, 0x5f, 0xae, 0xec, 0x7c]);
+alias DXC_CP = uint;
+enum : uint
+{
+    DXC_CP_ACP   = 0x00000000,
+    DXC_CP_UTF16 = 0x000004b0,
+    DXC_CP_UTF8  = 0x0000fde9,
+}
+
 alias DxcCreateInstanceProc = HRESULT function(const(GUID)*, const(GUID)*, void**);
 alias DxcCreateInstance2Proc = HRESULT function(IMalloc, const(GUID)*, const(GUID)*, void**);
 struct DxcShaderHash

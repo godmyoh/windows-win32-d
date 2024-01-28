@@ -2,10 +2,10 @@ module windows.win32.graphics.directcomposition;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HANDLE, HRESULT, HWND, LUID, POINT, RECT;
-import windows.win32.graphics.direct2d.common : D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE, D2D1_BLEND_MODE, D2D1_BORDER_MODE, D2D1_COLORMATRIX_ALPHA_MODE, D2D1_COLOR_F, D2D1_COMPOSITE_MODE, D2D1_TURBULENCE_NOISE, D2D_MATRIX_3X2_F, D2D_MATRIX_4X4_F, D2D_MATRIX_5X4_F, D2D_RECT_F, D2D_VECTOR_2F, D2D_VECTOR_4F;
+import windows.win32.graphics.direct2d.common : D2D1_2DAFFINETRANSFORM_INTERPOLATION_MODE, D2D1_BLEND_MODE, D2D1_BORDER_MODE, D2D1_COLORMATRIX_ALPHA_MODE, D2D1_COLOR_F, D2D1_COMPOSITE_MODE, D2D1_TURBULENCE_NOISE, D2D_MATRIX_3X2_F, D2D_MATRIX_4X4_F, D2D_MATRIX_5X4_F, D2D_RECT_F, D2D_RECT_U, D2D_VECTOR_2F, D2D_VECTOR_4F;
 import windows.win32.graphics.direct3d : D3DMATRIX;
 import windows.win32.graphics.dxgi : IDXGIDevice;
-import windows.win32.graphics.dxgi.common : DXGI_ALPHA_MODE, DXGI_FORMAT, DXGI_RATIONAL;
+import windows.win32.graphics.dxgi.common : DXGI_ALPHA_MODE, DXGI_COLOR_SPACE_TYPE, DXGI_FORMAT, DXGI_RATIONAL;
 import windows.win32.security : SECURITY_ATTRIBUTES;
 import windows.win32.system.com : IUnknown;
 
@@ -612,4 +612,18 @@ interface IDCompositionInkTrailDevice : IUnknown
 {
     HRESULT CreateDelegatedInkTrail(IDCompositionDelegatedInkTrail*);
     HRESULT CreateDelegatedInkTrailForSwapChain(IUnknown, IDCompositionDelegatedInkTrail*);
+}
+enum IID_IDCompositionTexture = GUID(0x929bb1aa, 0x725f, 0x433b, [0xab, 0xd7, 0x27, 0x30, 0x75, 0xa8, 0x35, 0xf2]);
+interface IDCompositionTexture : IUnknown
+{
+    HRESULT SetSourceRect(const(D2D_RECT_U)*);
+    HRESULT SetColorSpace(DXGI_COLOR_SPACE_TYPE);
+    HRESULT SetAlphaMode(DXGI_ALPHA_MODE);
+    HRESULT GetAvailableFence(ulong*, const(GUID)*, void**);
+}
+enum IID_IDCompositionDevice4 = GUID(0x85fc5cca, 0x2da6, 0x494c, [0x86, 0xb6, 0x4a, 0x77, 0x5c, 0x4, 0x9b, 0x8a]);
+interface IDCompositionDevice4 : IDCompositionDevice3
+{
+    HRESULT CheckCompositionTextureSupport(IUnknown, BOOL*);
+    HRESULT CreateCompositionTexture(IUnknown, IDCompositionTexture*);
 }

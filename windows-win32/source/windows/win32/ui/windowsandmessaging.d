@@ -1529,6 +1529,7 @@ HRESULT MrmDumpPriDataInMemory(ubyte*, uint, ubyte*, uint, MrmDumpType, ubyte**,
 HRESULT MrmCreateConfig(MrmPlatformVersion, const(wchar)*, const(wchar)*);
 HRESULT MrmCreateConfigInMemory(MrmPlatformVersion, const(wchar)*, ubyte**, uint*);
 HRESULT MrmGetPriFileContentChecksum(const(wchar)*, uint*);
+BOOL IsWindowArranged(HWND);
 enum WM_CONTEXTMENU = 0x0000007b;
 enum WM_UNICHAR = 0x00000109;
 enum WM_PRINTCLIENT = 0x00000318;

@@ -921,7 +921,6 @@ enum VID_ThumbStrip = GUID(0x8eefa624, 0xd1e9, 0x445b, [0x94, 0xb7, 0x74, 0xfb, 
 enum SID_SInPlaceBrowser = GUID(0x1d2ae02b, 0x3655, 0x46cc, [0xb6, 0x3a, 0x28, 0x59, 0x88, 0x15, 0x3b, 0xca]);
 enum SID_SSearchBoxInfo = GUID(0x142daa61, 0x516b, 0x4713, [0xb4, 0x9c, 0xfb, 0x98, 0x5e, 0xf8, 0x29, 0x98]);
 enum SID_CommandsPropertyBag = GUID(0x6e043250, 0x4416, 0x485c, [0xb1, 0x43, 0xe6, 0x2a, 0x76, 0xd, 0x9f, 0xe5]);
-enum CLSID_CUrlHistory = GUID(0x3c374a40, 0xbae4, 0x11cf, [0xbf, 0x7d, 0x0, 0xaa, 0x0, 0x69, 0x46, 0xee]);
 enum CLSID_CURLSearchHook = GUID(0xcfbfae00, 0x17a6, 0x11d0, [0x99, 0xcb, 0x0, 0xc0, 0x4f, 0xd6, 0x44, 0x97]);
 enum CLSID_AutoComplete = GUID(0xbb2763, 0x6a77, 0x11d0, [0xa5, 0x35, 0x0, 0xc0, 0x4f, 0xd7, 0xd0, 0x62]);
 enum CLSID_ACLHistory = GUID(0xbb2764, 0x6a77, 0x11d0, [0xa5, 0x35, 0x0, 0xc0, 0x4f, 0xd7, 0xd0, 0x62]);
@@ -2188,6 +2187,7 @@ enum COPYENGINE_S_KEEP_BOTH = 0x0027000c;
 enum COPYENGINE_S_CLOSE_PROGRAM = 0x0027000d;
 enum COPYENGINE_S_COLLISIONRESOLVED = 0x0027000e;
 enum COPYENGINE_S_PROGRESS_PAUSE = 0x0027000f;
+enum COPYENGINE_S_PENDING_DELETE = 0x00270010;
 enum COPYENGINE_E_USER_CANCELLED = 0xffffffff80270000;
 enum COPYENGINE_E_CANCELLED = 0xffffffff80270001;
 enum COPYENGINE_E_REQUIRES_ELEVATION = 0xffffffff80270002;
@@ -2294,6 +2294,8 @@ enum SHC_E_SHELL_COMPONENT_STARTUP_FAILURE = 0xffffffff80270234;
 enum E_TILE_NOTIFICATIONS_PLATFORM_FAILURE = 0xffffffff80270249;
 enum E_SHELL_EXTENSION_BLOCKED = 0xffffffff80270301;
 enum E_IMAGEFEED_CHANGEDISABLED = 0xffffffff80270310;
+enum CLSID_CUrlHistory = GUID(0x3c374a40, 0xbae4, 0x11cf, [0xbf, 0x7d, 0x0, 0xaa, 0x0, 0x69, 0x46, 0xee]);
+enum CLSID_CUrlHistoryBoth = GUID(0x6659983c, 0x8476, 0x4eb4, [0xb7, 0x8c, 0xe5, 0x96, 0x8f, 0x32, 0x6b, 0xa0]);
 enum ISHCUTCMDID_DOWNLOADICON = 0x00000000;
 enum ISHCUTCMDID_INTSHORTCUTCREATE = 0x00000001;
 enum ISHCUTCMDID_COMMITHISTORY = 0x00000002;
@@ -3054,7 +3056,7 @@ struct NOTIFYICONDATAA
     HICON hIcon;
     CHAR[128] szTip;
     NOTIFY_ICON_STATE dwState;
-    uint dwStateMask;
+    NOTIFY_ICON_STATE dwStateMask;
     CHAR[256] szInfo;
     union
     {
@@ -3076,7 +3078,7 @@ struct NOTIFYICONDATAW
     HICON hIcon;
     wchar[128] szTip;
     NOTIFY_ICON_STATE dwState;
-    uint dwStateMask;
+    NOTIFY_ICON_STATE dwStateMask;
     wchar[256] szInfo;
     union
     {
@@ -8964,7 +8966,7 @@ enum : int
     HICON hIcon;
     CHAR[128] szTip;
     NOTIFY_ICON_STATE dwState;
-    uint dwStateMask;
+    NOTIFY_ICON_STATE dwStateMask;
     CHAR[256] szInfo;
     union
     {
@@ -8989,7 +8991,7 @@ enum : int
     HICON hIcon;
     wchar[128] szTip;
     NOTIFY_ICON_STATE dwState;
-    uint dwStateMask;
+    NOTIFY_ICON_STATE dwStateMask;
     wchar[256] szInfo;
     union
     {

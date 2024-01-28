@@ -1162,6 +1162,7 @@ enum ROUTER_UNKNOWN = 0x00000000;
 enum ROUTER_SUCCESS = 0x00000001;
 enum ROUTER_STOP_ROUTING = 0x00000002;
 enum DOC_INFO_INTERNAL_LEVEL = 0x00000064;
+enum SPLCLIENT_INFO_INTERNAL_LEVEL = 0x00000064;
 enum FILL_WITH_DEFAULTS = 0x00000001;
 enum PRINTER_NOTIFY_INFO_DATA_COMPACT = 0x00000001;
 enum COPYFILE_EVENT_SET_PRINTER_DATAEX = 0x00000001;
@@ -4394,6 +4395,21 @@ struct SPLCLIENT_INFO_3_VISTA
     uint dwMinorVersion;
     ushort wProcessorArchitecture;
     ulong hSplPrinter;
+}
+struct SPLCLIENT_INFO_INTERNAL
+{
+    uint cbSize;
+    uint dwFlags;
+    uint dwSize;
+    PWSTR pMachineName;
+    PWSTR pUserName;
+    uint dwBuildNum;
+    uint dwMajorVersion;
+    uint dwMinorVersion;
+    ushort wProcessorArchitecture;
+    ulong hSplPrinter;
+    uint dwProcessId;
+    uint dwSessionId;
 }
 struct PRINTPROVIDOR
 {

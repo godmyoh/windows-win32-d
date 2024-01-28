@@ -38,6 +38,18 @@ enum IID_ICompositorInterop = GUID(0x25297d5c, 0x3ad4, 0x4c9c, [0xb5, 0xcf, 0xe3
     HRESULT CreateGraphicsDevice(IUnknown, CompositionGraphicsDevice*);
 }
 +/
+enum IID_ICompositorInterop2 = GUID(0xd3eef34c, 0x667, 0x4afc, [0x8d, 0x13, 0x86, 0x76, 0x7, 0xb0, 0xfe, 0x91]);
+/+ [UNSUPPORTED] interface ICompositorInterop2 : IUnknown
+{
+    HRESULT CheckCompositionTextureSupport(IUnknown, BOOL*);
+    HRESULT CreateCompositionTexture(IUnknown, ICompositionTexture*);
+}
++/
+enum IID_ICompositionTextureInterop = GUID(0xd528a265, 0xf0a5, 0x422f, [0xa3, 0x9d, 0xef, 0x62, 0xd7, 0xcd, 0x1c, 0xc4]);
+interface ICompositionTextureInterop : IUnknown
+{
+    HRESULT GetAvailableFence(ulong*, const(GUID)*, void**);
+}
 enum IID_IVisualInteractionSourceInterop = GUID(0x11f62cd1, 0x2f9d, 0x42d3, [0xb0, 0x5f, 0xd6, 0x79, 0xd, 0x9e, 0x9f, 0x8e]);
 interface IVisualInteractionSourceInterop : IUnknown
 {

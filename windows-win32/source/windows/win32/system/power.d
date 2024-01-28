@@ -146,7 +146,7 @@ uint DevicePowerSetDeviceState(const(wchar)*, uint, void*);
 BOOLEAN DevicePowerOpen(uint);
 BOOLEAN DevicePowerClose();
 WIN32_ERROR PowerReportThermalEvent(THERMAL_EVENT*);
-HPOWERNOTIFY RegisterPowerSettingNotification(HANDLE, const(GUID)*, uint);
+HPOWERNOTIFY RegisterPowerSettingNotification(HANDLE, const(GUID)*, REGISTER_NOTIFICATION_FLAGS);
 BOOL UnregisterPowerSettingNotification(HPOWERNOTIFY);
 HPOWERNOTIFY RegisterSuspendResumeNotification(HANDLE, REGISTER_NOTIFICATION_FLAGS);
 BOOL UnregisterSuspendResumeNotification(HPOWERNOTIFY);

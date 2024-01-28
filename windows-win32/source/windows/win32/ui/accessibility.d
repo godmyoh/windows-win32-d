@@ -103,8 +103,8 @@ enum : uint
     SSWF_WINDOW  = 0x00000002,
 }
 
-alias UIA_PATTERN_ID = uint;
-enum : uint
+alias UIA_PATTERN_ID = int;
+enum : int
 {
     UIA_InvokePatternId            = 0x00002710,
     UIA_SelectionPatternId         = 0x00002711,
@@ -185,8 +185,8 @@ enum : int
     UIA_ActiveTextPositionChangedEventId                 = 0x00004e44,
 }
 
-alias UIA_PROPERTY_ID = uint;
-enum : uint
+alias UIA_PROPERTY_ID = int;
+enum : int
 {
     UIA_RuntimeIdPropertyId                           = 0x00007530,
     UIA_BoundingRectanglePropertyId                   = 0x00007531,
@@ -365,8 +365,8 @@ enum : uint
     UIA_IsDialogPropertyId                            = 0x000075de,
 }
 
-alias UIA_TEXTATTRIBUTE_ID = uint;
-enum : uint
+alias UIA_TEXTATTRIBUTE_ID = int;
+enum : int
 {
     UIA_AnimationStyleAttributeId          = 0x00009c40,
     UIA_BackgroundColorAttributeId         = 0x00009c41,
@@ -414,8 +414,8 @@ enum : uint
     UIA_SayAsInterpretAsAttributeId        = 0x00009c6b,
 }
 
-alias UIA_CONTROLTYPE_ID = uint;
-enum : uint
+alias UIA_CONTROLTYPE_ID = int;
+enum : int
 {
     UIA_ButtonControlTypeId       = 0x0000c350,
     UIA_CalendarControlTypeId     = 0x0000c351,
@@ -460,8 +460,8 @@ enum : uint
     UIA_AppBarControlTypeId       = 0x0000c378,
 }
 
-alias UIA_ANNOTATIONTYPE = uint;
-enum : uint
+alias UIA_ANNOTATIONTYPE = int;
+enum : int
 {
     AnnotationType_Unknown                = 0x0000ea60,
     AnnotationType_SpellingError          = 0x0000ea61,
@@ -490,8 +490,8 @@ enum : uint
     AnnotationType_Sensitive              = 0x0000ea78,
 }
 
-alias UIA_STYLE_ID = uint;
-enum : uint
+alias UIA_STYLE_ID = int;
+enum : int
 {
     StyleId_Custom       = 0x00011170,
     StyleId_Heading1     = 0x00011171,
@@ -512,8 +512,8 @@ enum : uint
     StyleId_NumberedList = 0x00011180,
 }
 
-alias UIA_LANDMARKTYPE_ID = uint;
-enum : uint
+alias UIA_LANDMARKTYPE_ID = int;
+enum : int
 {
     UIA_CustomLandmarkTypeId     = 0x00013880,
     UIA_FormLandmarkTypeId       = 0x00013881,
@@ -522,8 +522,8 @@ enum : uint
     UIA_SearchLandmarkTypeId     = 0x00013884,
 }
 
-alias UIA_HEADINGLEVEL_ID = uint;
-enum : uint
+alias UIA_HEADINGLEVEL_ID = int;
+enum : int
 {
     HeadingLevel_None = 0x000138b2,
     HeadingLevel1     = 0x000138b3,
@@ -537,14 +537,14 @@ enum : uint
     HeadingLevel9     = 0x000138bb,
 }
 
-alias UIA_CHANGE_ID = uint;
-enum : uint
+alias UIA_CHANGE_ID = int;
+enum : int
 {
     UIA_SummaryChangeId = 0x00015f90,
 }
 
-alias UIA_METADATA_ID = uint;
-enum : uint
+alias UIA_METADATA_ID = int;
+enum : int
 {
     UIA_SayAsInterpretAsMetadataId = 0x000186a0,
 }

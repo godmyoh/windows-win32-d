@@ -771,6 +771,16 @@ struct CONFIG_CI_PROV_INFO_RESULT
     uint dwPolicyIndex;
     BOOLEAN fIsExplicitDeny;
 }
+struct CONFIG_CI_PROV_INFO_RESULT2
+{
+    uint cbSize;
+    HRESULT hr;
+    uint dwResult;
+    uint dwPolicyIndex;
+    BOOLEAN fIsExplicitDeny;
+    uint cbCalculatedFileHash;
+    ubyte* pbCalculatedFileHash;
+}
 struct CONFIG_CI_PROV_INFO
 {
     uint cbSize;
@@ -778,4 +788,5 @@ struct CONFIG_CI_PROV_INFO
     CRYPT_INTEGER_BLOB* pPolicies;
     CONFIG_CI_PROV_INFO_RESULT result;
     uint dwScenario;
+    CONFIG_CI_PROV_INFO_RESULT2* result2;
 }

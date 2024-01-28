@@ -38,6 +38,14 @@ enum : uint
     CS_DELETE_TRANSFORM = 0x00000003,
 }
 
+alias LCSCSTYPE = int;
+enum : int
+{
+    LCS_CALIBRATED_RGB      = 0x00000000,
+    LCS_sRGB                = 0x73524742,
+    LCS_WINDOWS_COLOR_SPACE = 0x57696e20,
+}
+
 int SetICMMode(HDC, ICM_MODE);
 BOOL CheckColorsInGamut(HDC, RGBTRIPLE*, void*, uint);
 HCOLORSPACE GetColorSpace(HDC);
@@ -248,7 +256,7 @@ struct LOGCOLORSPACEA
     uint lcsSignature;
     uint lcsVersion;
     uint lcsSize;
-    int lcsCSType;
+    LCSCSTYPE lcsCSType;
     int lcsIntent;
     CIEXYZTRIPLE lcsEndpoints;
     uint lcsGammaRed;
@@ -261,7 +269,7 @@ struct LOGCOLORSPACEW
     uint lcsSignature;
     uint lcsVersion;
     uint lcsSize;
-    int lcsCSType;
+    LCSCSTYPE lcsCSType;
     int lcsIntent;
     CIEXYZTRIPLE lcsEndpoints;
     uint lcsGammaRed;

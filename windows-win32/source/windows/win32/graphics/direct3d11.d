@@ -1426,6 +1426,7 @@ enum : int
     D3D11_FORMAT_SUPPORT2_TILED                                        = 0x00000200,
     D3D11_FORMAT_SUPPORT2_SHAREABLE                                    = 0x00000400,
     D3D11_FORMAT_SUPPORT2_MULTIPLANE_OVERLAY                           = 0x00004000,
+    D3D11_FORMAT_SUPPORT2_DISPLAYABLE                                  = 0x00010000,
 }
 
 enum IID_ID3D11Asynchronous = GUID(0x4b35d0cd, 0x1e15, 0x4258, [0x9c, 0x98, 0x1b, 0x13, 0x33, 0xf6, 0xdd, 0x3b]);

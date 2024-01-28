@@ -5,7 +5,7 @@ import windows.win32.foundation : BOOL, BSTR, CHAR, COLORREF, DECIMAL, FILETIME,
 import windows.win32.graphics.gdi : HBITMAP, HDC, HENHMETAFILE, HFONT, HMETAFILE, HPALETTE, HRGN, LOGPALETTE, TEXTMETRICW;
 import windows.win32.media : HTASK;
 import windows.win32.system.com : BYTE_SIZEDARR, CALLCONV, CUSTDATA, CY, DISPPARAMS, DVASPECT, DVTARGETDEVICE, DWORD_SIZEDARR, EXCEPINFO, FLAGGED_WORD_BLOB, FORMATETC, FUNCDESC, HYPER_SIZEDARR, IAdviseSink, IBindCtx, IBindHost, IClassFactory, IDLDESC, IDataObject, IDispatch, IEnumFORMATETC, IEnumSTATDATA, IEnumUnknown, IErrorLog, IMPLTYPEFLAGS, IMoniker, INVOKEKIND, IPersist, IPersistStream, IServiceProvider, IStream, ITypeInfo, ITypeLib, IUnknown, SAFEARRAY, SAFEARRAYBOUND, STGMEDIUM, SYSKIND, TYPEDESC, TYPEKIND, VARDESC, WORD_SIZEDARR;
-import windows.win32.system.com.structuredstorage : IPersistStorage, IPropertyBag, IPropertyBag2, IStorage;
+import windows.win32.system.com.structuredstorage : IPersistStorage, IPropertyBag, IPropertyBag2, IStorage, OLESTREAM;
 import windows.win32.system.memory : GLOBAL_ALLOC_FLAGS;
 import windows.win32.system.systemservices : MODIFIERKEYS_FLAGS;
 import windows.win32.system.variant : VARENUM, VARIANT;
@@ -416,9 +416,11 @@ HRESULT OleRegGetUserType(const(GUID)*, uint, PWSTR*);
 HRESULT OleRegGetMiscStatus(const(GUID)*, uint, uint*);
 HRESULT OleRegEnumFormatEtc(const(GUID)*, uint, IEnumFORMATETC*);
 HRESULT OleRegEnumVerbs(const(GUID)*, IEnumOLEVERB*);
+HRESULT OleConvertOLESTREAMToIStorage2(OLESTREAM*, IStorage, const(DVTARGETDEVICE)*, uint, void*, OLESTREAMQUERYCONVERTOLELINKCALLBACK);
 HRESULT OleDoAutoConvert(IStorage, GUID*);
 HRESULT OleGetAutoConvert(const(GUID)*, GUID*);
 HRESULT OleSetAutoConvert(const(GUID)*, const(GUID)*);
+HRESULT OleConvertOLESTREAMToIStorageEx2(OLESTREAM*, IStorage, ushort*, int*, int*, uint*, STGMEDIUM*, uint, void*, OLESTREAMQUERYCONVERTOLELINKCALLBACK);
 uint HRGN_UserSize(uint*, uint, HRGN*);
 ubyte* HRGN_UserMarshal(uint*, ubyte*, HRGN*);
 ubyte* HRGN_UserUnmarshal(uint*, ubyte*, HRGN*);
@@ -665,6 +667,8 @@ enum OF_SET = 0x00000001;
 enum OF_GET = 0x00000002;
 enum OF_HANDLER = 0x00000004;
 enum WIN32 = 0x00000064;
+enum OLESTREAM_CONVERSION_DEFAULT = 0x00000000;
+enum OLESTREAM_CONVERSION_DISABLEOLELINK = 0x00000001;
 enum IDC_OLEUIHELP = 0x00000063;
 enum IDC_IO_CREATENEW = 0x00000834;
 enum IDC_IO_CREATEFROMFILE = 0x00000835;
@@ -2016,6 +2020,7 @@ struct INTERFACEDATA
     METHODDATA* pmethdata;
     uint cMembers;
 }
+alias OLESTREAMQUERYCONVERTOLELINKCALLBACK = HRESULT function(GUID*, PWSTR, PWSTR, PWSTR, PWSTR, uint, void*);
 alias UASFLAGS = int;
 enum : int
 {

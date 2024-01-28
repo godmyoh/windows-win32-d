@@ -675,7 +675,6 @@ enum SP_USERABORT = 0xfffffffffffffffd;
 enum SP_OUTOFDISK = 0xfffffffffffffffc;
 enum SP_OUTOFMEMORY = 0xfffffffffffffffb;
 enum PR_JOBSTATUS = 0x00000000;
-enum LCS_CALIBRATED_RGB = 0x00000000;
 enum LCS_GM_BUSINESS = 0x00000001;
 enum LCS_GM_GRAPHICS = 0x00000002;
 enum LCS_GM_IMAGES = 0x00000004;

@@ -274,10 +274,6 @@ enum SPTLAUDCLNT_E_STREAM_NOT_STOPPED = 0xffffffff8889010a;
 enum SPTLAUDCLNT_E_STATIC_OBJECT_NOT_AVAILABLE = 0xffffffff8889010b;
 enum SPTLAUDCLNT_E_OBJECT_ALREADY_ACTIVE = 0xffffffff8889010c;
 enum SPTLAUDCLNT_E_INTERNAL = 0xffffffff8889010d;
-enum DEVICE_STATE_ACTIVE = 0x00000001;
-enum DEVICE_STATE_DISABLED = 0x00000002;
-enum DEVICE_STATE_NOTPRESENT = 0x00000004;
-enum DEVICE_STATE_UNPLUGGED = 0x00000008;
 enum DEVICE_STATEMASK_ALL = 0x0000000f;
 enum PKEY_AudioEndpoint_FormFactor = PROPERTYKEY(GUID(497408003, 54418, 20189, [140, 35, 224, 192, 255, 238, 127, 14]), 0);
 enum PKEY_AudioEndpoint_ControlPanelPageProvider = PROPERTYKEY(GUID(497408003, 54418, 20189, [140, 35, 224, 192, 255, 238, 127, 14]), 1);
@@ -710,6 +706,15 @@ enum : uint
     MIXERLINE_COMPONENTTYPE_SRC_TELEPHONE   = 0x00001006,
     MIXERLINE_COMPONENTTYPE_SRC_UNDEFINED   = 0x00001000,
     MIXERLINE_COMPONENTTYPE_SRC_WAVEOUT     = 0x00001008,
+}
+
+alias DEVICE_STATE = uint;
+enum : uint
+{
+    DEVICE_STATE_ACTIVE     = 0x00000001,
+    DEVICE_STATE_DISABLED   = 0x00000002,
+    DEVICE_STATE_NOTPRESENT = 0x00000004,
+    DEVICE_STATE_UNPLUGGED  = 0x00000008,
 }
 
 struct AUDIO_VOLUME_NOTIFICATION_DATA
@@ -1870,7 +1875,7 @@ enum : int
 enum IID_IMMNotificationClient = GUID(0x7991eec9, 0x7e89, 0x4d85, [0x83, 0x90, 0x6c, 0x70, 0x3c, 0xec, 0x60, 0xc0]);
 interface IMMNotificationClient : IUnknown
 {
-    HRESULT OnDeviceStateChanged(const(wchar)*, uint);
+    HRESULT OnDeviceStateChanged(const(wchar)*, DEVICE_STATE);
     HRESULT OnDeviceAdded(const(wchar)*);
     HRESULT OnDeviceRemoved(const(wchar)*);
     HRESULT OnDefaultDeviceChanged(EDataFlow, ERole, const(wchar)*);
@@ -1882,7 +1887,7 @@ interface IMMDevice : IUnknown
     HRESULT Activate(const(GUID)*, CLSCTX, PROPVARIANT*, void**);
     HRESULT OpenPropertyStore(STGM, IPropertyStore*);
     HRESULT GetId(PWSTR*);
-    HRESULT GetState(uint*);
+    DEVICE_STATE GetState(uint*);
 }
 enum IID_IMMDeviceCollection = GUID(0xbd7a1be, 0x7a1a, 0x44db, [0x83, 0x97, 0xcc, 0x53, 0x92, 0x38, 0x7b, 0x5e]);
 interface IMMDeviceCollection : IUnknown
@@ -1898,7 +1903,7 @@ interface IMMEndpoint : IUnknown
 enum IID_IMMDeviceEnumerator = GUID(0xa95664d2, 0x9614, 0x4f35, [0xa7, 0x46, 0xde, 0x8d, 0xb6, 0x36, 0x17, 0xe6]);
 interface IMMDeviceEnumerator : IUnknown
 {
-    HRESULT EnumAudioEndpoints(EDataFlow, uint, IMMDeviceCollection*);
+    HRESULT EnumAudioEndpoints(EDataFlow, DEVICE_STATE, IMMDeviceCollection*);
     HRESULT GetDefaultAudioEndpoint(EDataFlow, ERole, IMMDevice*);
     HRESULT GetDevice(const(wchar)*, IMMDevice*);
     HRESULT RegisterEndpointNotificationCallback(IMMNotificationClient);

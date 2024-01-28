@@ -1,6 +1,6 @@
 module windows.win32.system.console;
 
-import windows.win32.foundation : BOOL, CHAR, COLORREF, HANDLE, HRESULT, HWND, PSTR, PWSTR;
+import windows.win32.foundation : BOOL, CHAR, COLORREF, HANDLE, HRESULT, HWND, NTSTATUS, PSTR, PWSTR, RECT;
 import windows.win32.security : SECURITY_ATTRIBUTES;
 
 version (Windows):
@@ -146,6 +146,7 @@ uint GetConsoleCommandHistoryLengthW(PWSTR);
 uint GetConsoleCommandHistoryA(PSTR, uint, PSTR);
 uint GetConsoleCommandHistoryW(PWSTR, uint, PWSTR);
 uint GetConsoleProcessList(uint*, uint);
+NTSTATUS ConsoleControl(CONSOLECONTROL, void*, uint);
 HANDLE GetStdHandle(STD_HANDLE);
 BOOL SetStdHandle(STD_HANDLE, HANDLE);
 BOOL SetStdHandleEx(STD_HANDLE, HANDLE, HANDLE*);
@@ -323,4 +324,45 @@ struct CONSOLE_HISTORY_INFO
     uint HistoryBufferSize;
     uint NumberOfHistoryBuffers;
     uint dwFlags;
+}
+alias CONSOLECONTROL = int;
+enum : int
+{
+    Reserved1                       = 0x00000000,
+    ConsoleNotifyConsoleApplication = 0x00000001,
+    Reserved2                       = 0x00000002,
+    ConsoleSetCaretInfo             = 0x00000003,
+    Reserved3                       = 0x00000004,
+    ConsoleSetForeground            = 0x00000005,
+    ConsoleSetWindowOwner           = 0x00000006,
+    ConsoleEndTask                  = 0x00000007,
+}
+
+struct CONSOLEENDTASK
+{
+    HANDLE ProcessId;
+    HWND hwnd;
+    uint ConsoleEventCode;
+    uint ConsoleFlags;
+}
+struct CONSOLEWINDOWOWNER
+{
+    HWND hwnd;
+    uint ProcessId;
+    uint ThreadId;
+}
+struct CONSOLESETFOREGROUND
+{
+    HANDLE hProcess;
+    BOOL bForeground;
+}
+struct CONSOLE_PROCESS_INFO
+{
+    uint dwProcessID;
+    uint dwFlags;
+}
+struct CONSOLE_CARET_INFO
+{
+    HWND hwnd;
+    RECT rc;
 }

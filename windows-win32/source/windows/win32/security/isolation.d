@@ -35,3 +35,17 @@ enum CLSID_IsolatedAppLauncher = GUID(0xbc812430, 0xe75e, 0x4fd1, [0x96, 0x41, 0
 struct IsolatedAppLauncher
 {
 }
+enum IID_IIsolatedProcessLauncher = GUID(0x1aa24232, 0x9a91, 0x4201, [0x88, 0xcb, 0x12, 0x2f, 0x9d, 0x65, 0x22, 0xe0]);
+interface IIsolatedProcessLauncher : IUnknown
+{
+    HRESULT LaunchProcess(const(wchar)*, const(wchar)*, const(wchar)*);
+    HRESULT ShareDirectory(const(wchar)*, const(wchar)*, BOOL);
+    HRESULT GetContainerGuid(GUID*);
+    HRESULT AllowSetForegroundAccess(uint);
+    HRESULT IsContainerRunning(BOOL*);
+}
+enum IID_IIsolatedProcessLauncher2 = GUID(0x780e4416, 0x5e72, 0x4123, [0x80, 0x8e, 0x66, 0xdc, 0x64, 0x79, 0xfe, 0xef]);
+interface IIsolatedProcessLauncher2 : IIsolatedProcessLauncher
+{
+    HRESULT LaunchProcess2(const(wchar)*, const(wchar)*, const(wchar)*, const(GUID)*);
+}

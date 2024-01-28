@@ -422,3 +422,9 @@ interface ICoreWindowAdapterInterop : IInspectable
     HRESULT get_TitleBarClientAdapter(IUnknown*);
     HRESULT SetWindowClientAdapter(IUnknown);
 }
+enum IID_ICoreInputInterop2 = GUID(0xb8a2acd7, 0xa0f0, 0x40ee, [0x8e, 0xe7, 0xc8, 0x2f, 0x59, 0xcc, 0x5c, 0xd4]);
+interface ICoreInputInterop2 : IInspectable
+{
+    HRESULT get_WindowHandle(HWND*);
+    HRESULT ChangeHostingContext(HWND, uint);
+}

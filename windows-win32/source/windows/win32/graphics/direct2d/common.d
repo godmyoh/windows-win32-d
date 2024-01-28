@@ -191,6 +191,11 @@ struct D2D_MATRIX_5X4_F
         float[20] m;
     }
 }
+struct D2D1_GRADIENT_STOP
+{
+    float position;
+    D2D1_COLOR_F color;
+}
 alias D2D1_FIGURE_BEGIN = int;
 enum : int
 {

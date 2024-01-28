@@ -293,7 +293,7 @@ enum D3D12_OS_RESERVED_REGISTER_SPACE_VALUES_END = 0xffffffff;
 enum D3D12_OS_RESERVED_REGISTER_SPACE_VALUES_START = 0xfffffff8;
 enum D3D12_PACKED_TILE = 0xffffffff;
 enum D3D12_PIXEL_ADDRESS_RANGE_BIT_COUNT = 0x0000000f;
-enum D3D12_PREVIEW_SDK_VERSION = 0x000002c6;
+enum D3D12_PREVIEW_SDK_VERSION = 0x000002c8;
 enum D3D12_PRE_SCISSOR_PIXEL_ADDRESS_RANGE_BIT_COUNT = 0x00000010;
 enum D3D12_PS_CS_UAV_REGISTER_COMPONENTS = 0x00000001;
 enum D3D12_PS_CS_UAV_REGISTER_COUNT = 0x00000008;
@@ -361,7 +361,7 @@ enum D3D12_REQ_TEXTURECUBE_DIMENSION = 0x00004000;
 enum D3D12_RESINFO_INSTRUCTION_MISSING_COMPONENT_RETVAL = 0x00000000;
 enum D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES = 0xffffffff;
 enum D3D12_RS_SET_SHADING_RATE_COMBINER_COUNT = 0x00000002;
-enum D3D12_SDK_VERSION = 0x00000262;
+enum D3D12_SDK_VERSION = 0x00000263;
 enum D3D12_SHADER_IDENTIFIER_SIZE_IN_BYTES = 0x00000020;
 enum D3D12_SHADER_MAJOR_VERSION = 0x00000005;
 enum D3D12_SHADER_MAX_INSTANCES = 0x0000ffff;
@@ -424,6 +424,11 @@ enum D3D12_VIDEO_DECODE_MAX_HISTOGRAM_COMPONENTS = 0x00000004;
 enum D3D12_VIDEO_DECODE_MIN_BITSTREAM_OFFSET_ALIGNMENT = 0x00000100;
 enum D3D12_VIDEO_DECODE_MIN_HISTOGRAM_OFFSET_ALIGNMENT = 0x00000100;
 enum D3D12_VIDEO_DECODE_STATUS_MACROBLOCKS_AFFECTED_UNKNOWN = 0xffffffff;
+enum D3D12_VIDEO_ENCODER_AV1_INVALID_DPB_RESOURCE_INDEX = 0x000000ff;
+enum D3D12_VIDEO_ENCODER_AV1_MAX_TILE_COLS = 0x00000040;
+enum D3D12_VIDEO_ENCODER_AV1_MAX_TILE_ROWS = 0x00000040;
+enum D3D12_VIDEO_ENCODER_AV1_SUPERRES_DENOM_MIN = 0x00000009;
+enum D3D12_VIDEO_ENCODER_AV1_SUPERRES_NUM = 0x00000008;
 enum D3D12_VIDEO_PROCESS_MAX_FILTERS = 0x00000020;
 enum D3D12_VIDEO_PROCESS_STEREO_VIEWS = 0x00000002;
 enum D3D12_VIEWPORT_AND_SCISSORRECT_MAX_INDEX = 0x0000000f;
@@ -457,7 +462,6 @@ enum CLSID_D3D12Tools = GUID(0xe38216b1, 0x3c8c, 0x4833, [0xaa, 0x9, 0xa, 0x6, 0
 enum CLSID_D3D12DeviceRemovedExtendedData = GUID(0x4a75bbc4, 0x9ff4, 0x4ad8, [0x9f, 0x18, 0xab, 0xae, 0x84, 0xdc, 0x5f, 0xf2]);
 enum CLSID_D3D12SDKConfiguration = GUID(0x7cda6aca, 0xa03e, 0x49c8, [0x94, 0x58, 0x3, 0x34, 0xd2, 0xe, 0x7, 0xce]);
 enum CLSID_D3D12DeviceFactory = GUID(0x114863bf, 0xc386, 0x4aee, [0xb3, 0x9d, 0x8f, 0xb, 0xbb, 0x6, 0x29, 0x55]);
-enum CLSID_D3D12DSRDeviceFactory = GUID(0x7f9bdcac, 0xf629, 0x455e, [0xab, 0x13, 0xa8, 0x7, 0xfb, 0xe9, 0xab, 0xa4]);
 enum D3D12_SHADING_RATE_X_AXIS_SHIFT = 0x00000002;
 enum D3D12_SHADING_RATE_VALID_MASK = 0x00000003;
 enum WKPDID_D3DAutoDebugObjectNameW = GUID(0xd4902e36, 0x757a, 0x4942, [0x95, 0x94, 0xb6, 0x76, 0x9a, 0xfa, 0x43, 0xcd]);
@@ -990,6 +994,10 @@ enum : int
     D3D12_FEATURE_D3D12_OPTIONS17                       = 0x0000002e,
     D3D12_FEATURE_D3D12_OPTIONS18                       = 0x0000002f,
     D3D12_FEATURE_D3D12_OPTIONS19                       = 0x00000030,
+    D3D12_FEATURE_D3D12_OPTIONS20                       = 0x00000031,
+    D3D12_FEATURE_PREDICATION                           = 0x00000032,
+    D3D12_FEATURE_PLACED_RESOURCE_SUPPORT_INFO          = 0x00000033,
+    D3D12_FEATURE_HARDWARE_COPY                         = 0x00000034,
 }
 
 alias D3D12_SHADER_MIN_PRECISION_SUPPORT = int;
@@ -1471,6 +1479,26 @@ struct D3D12_FEATURE_DATA_D3D12_OPTIONS19
     uint MaxViewDescriptorHeapSize;
     BOOL ComputeOnlyCustomHeapSupported;
 }
+alias D3D12_RECREATE_AT_TIER = int;
+enum : int
+{
+    D3D12_RECREATE_AT_TIER_NOT_SUPPORTED = 0x00000000,
+    D3D12_RECREATE_AT_TIER_1             = 0x00000001,
+}
+
+struct D3D12_FEATURE_DATA_D3D12_OPTIONS20
+{
+    BOOL ComputeOnlyWriteWatchSupported;
+    D3D12_RECREATE_AT_TIER RecreateAtTier;
+}
+struct D3D12_FEATURE_DATA_PREDICATION
+{
+    BOOL Supported;
+}
+struct D3D12_FEATURE_DATA_HARDWARE_COPY
+{
+    BOOL Supported;
+}
 struct D3D12_RESOURCE_ALLOCATION_INFO
 {
     ulong SizeInBytes;
@@ -1556,6 +1584,13 @@ enum : int
     D3D12_RESOURCE_DIMENSION_TEXTURE3D = 0x00000004,
 }
 
+struct D3D12_FEATURE_DATA_PLACED_RESOURCE_SUPPORT_INFO
+{
+    DXGI_FORMAT Format;
+    D3D12_RESOURCE_DIMENSION Dimension;
+    D3D12_HEAP_PROPERTIES DestHeapProperties;
+    BOOL Supported;
+}
 alias D3D12_TEXTURE_LAYOUT = int;
 enum : int
 {
@@ -1728,6 +1763,11 @@ enum : int
     D3D12_RESOURCE_STATE_RESOLVE_SOURCE                    = 0x00002000,
     D3D12_RESOURCE_STATE_RAYTRACING_ACCELERATION_STRUCTURE = 0x00400000,
     D3D12_RESOURCE_STATE_SHADING_RATE_SOURCE               = 0x01000000,
+    D3D12_RESOURCE_STATE_RESERVED_INTERNAL_8000            = 0x00008000,
+    D3D12_RESOURCE_STATE_RESERVED_INTERNAL_4000            = 0x00004000,
+    D3D12_RESOURCE_STATE_RESERVED_INTERNAL_100000          = 0x00100000,
+    D3D12_RESOURCE_STATE_RESERVED_INTERNAL_40000000        = 0x40000000,
+    D3D12_RESOURCE_STATE_RESERVED_INTERNAL_80000000        = 0x80000000,
     D3D12_RESOURCE_STATE_GENERIC_READ                      = 0x00000ac3,
     D3D12_RESOURCE_STATE_ALL_SHADER_RESOURCE               = 0x000000c0,
     D3D12_RESOURCE_STATE_PRESENT                           = 0x00000000,
@@ -3247,13 +3287,13 @@ struct D3D12_DXIL_LIBRARY_DESC
 {
     D3D12_SHADER_BYTECODE DXILLibrary;
     uint NumExports;
-    D3D12_EXPORT_DESC* pExports;
+    const(D3D12_EXPORT_DESC)* pExports;
 }
 struct D3D12_EXISTING_COLLECTION_DESC
 {
     ID3D12StateObject pExistingCollection;
     uint NumExports;
-    D3D12_EXPORT_DESC* pExports;
+    const(D3D12_EXPORT_DESC)* pExports;
 }
 struct D3D12_SUBOBJECT_TO_EXPORTS_ASSOCIATION
 {
@@ -3609,6 +3649,7 @@ enum : int
     D3D12_AUTO_BREADCRUMB_OP_ENCODEFRAME                                      = 0x0000002b,
     D3D12_AUTO_BREADCRUMB_OP_RESOLVEENCODEROUTPUTMETADATA                     = 0x0000002c,
     D3D12_AUTO_BREADCRUMB_OP_BARRIER                                          = 0x0000002d,
+    D3D12_AUTO_BREADCRUMB_OP_BEGIN_COMMAND_LIST                               = 0x0000002e,
 }
 
 struct D3D12_AUTO_BREADCRUMB_NODE
@@ -4273,6 +4314,11 @@ interface ID3D12Device12 : ID3D12Device11
 {
     D3D12_RESOURCE_ALLOCATION_INFO GetResourceAllocationInfo3(uint, uint, const(D3D12_RESOURCE_DESC1)*, const(uint)*, const(DXGI_FORMAT)**, D3D12_RESOURCE_ALLOCATION_INFO1*);
 }
+enum IID_ID3D12Device13 = GUID(0x14eecffc, 0x4df8, 0x40f7, [0xa1, 0x18, 0x5c, 0x81, 0x6f, 0x45, 0x69, 0x5e]);
+interface ID3D12Device13 : ID3D12Device12
+{
+    HRESULT OpenExistingHeapFromAddress1(const(void)*, ulong, const(GUID)*, void**);
+}
 enum IID_ID3D12VirtualizationGuestDevice = GUID(0xbc66d368, 0x7373, 0x4943, [0x87, 0x57, 0xfc, 0x87, 0xdc, 0x79, 0xe4, 0x76]);
 interface ID3D12VirtualizationGuestDevice : IUnknown
 {
@@ -4615,6 +4661,9 @@ enum : int
     D3D12_MESSAGE_ID_CREATEBLENDSTATE_INVALIDDESTBLENDALPHA                                                        = 0x00000073,
     D3D12_MESSAGE_ID_CREATEBLENDSTATE_INVALIDBLENDOPALPHA                                                          = 0x00000074,
     D3D12_MESSAGE_ID_CREATEBLENDSTATE_INVALIDRENDERTARGETWRITEMASK                                                 = 0x00000075,
+    D3D12_MESSAGE_ID_GET_PROGRAM_IDENTIFIER_ERROR                                                                  = 0x00000076,
+    D3D12_MESSAGE_ID_GET_WORK_GRAPH_PROPERTIES_ERROR                                                               = 0x00000077,
+    D3D12_MESSAGE_ID_SET_PROGRAM_ERROR                                                                             = 0x00000078,
     D3D12_MESSAGE_ID_CLEARDEPTHSTENCILVIEW_INVALID                                                                 = 0x00000087,
     D3D12_MESSAGE_ID_COMMAND_LIST_DRAW_ROOT_SIGNATURE_NOT_SET                                                      = 0x000000c8,
     D3D12_MESSAGE_ID_COMMAND_LIST_DRAW_ROOT_SIGNATURE_MISMATCH                                                     = 0x000000c9,
@@ -5451,7 +5500,13 @@ enum : int
     D3D12_MESSAGE_ID_DRAW_POTENTIALLY_OUTSIDE_OF_VALID_RENDER_AREA                                                 = 0x00000562,
     D3D12_MESSAGE_ID_CREATERASTERIZERSTATE_INVALID_LINERASTERIZATIONMODE                                           = 0x00000563,
     D3D12_MESSAGE_ID_CREATERESOURCE_INVALIDALIGNMENT_SMALLRESOURCE                                                 = 0x00000564,
-    D3D12_MESSAGE_ID_D3D12_MESSAGES_END                                                                            = 0x00000565,
+    D3D12_MESSAGE_ID_GENERIC_DEVICE_OPERATION_UNSUPPORTED                                                          = 0x00000565,
+    D3D12_MESSAGE_ID_CREATEGRAPHICSPIPELINESTATE_RENDER_TARGET_WRONG_WRITE_MASK                                    = 0x00000566,
+    D3D12_MESSAGE_ID_PROBABLE_PIX_EVENT_LEAK                                                                       = 0x00000567,
+    D3D12_MESSAGE_ID_PIX_EVENT_UNDERFLOW                                                                           = 0x00000568,
+    D3D12_MESSAGE_ID_RECREATEAT_INVALID_TARGET                                                                     = 0x00000569,
+    D3D12_MESSAGE_ID_RECREATEAT_INSUFFICIENT_SUPPORT                                                               = 0x0000056a,
+    D3D12_MESSAGE_ID_D3D12_MESSAGES_END                                                                            = 0x0000056b,
 }
 
 struct D3D12_MESSAGE
@@ -5657,11 +5712,6 @@ interface ID3D12GraphicsCommandList9 : ID3D12GraphicsCommandList8
 {
     void RSSetDepthBias(float, float, float);
     void IASetIndexBufferStripCutValue(D3D12_INDEX_BUFFER_STRIP_CUT_VALUE);
-}
-enum IID_ID3D12DSRDeviceFactory = GUID(0x51ee7783, 0x6426, 0x4428, [0xb1, 0x82, 0x42, 0xf3, 0x54, 0x1f, 0xca, 0x71]);
-interface ID3D12DSRDeviceFactory : IUnknown
-{
-    HRESULT CreateDSRDevice(ID3D12Device, uint, const(GUID)*, void**);
 }
 alias D3D12_SHADER_VERSION_TYPE = int;
 enum : int

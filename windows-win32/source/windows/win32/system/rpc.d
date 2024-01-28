@@ -56,6 +56,7 @@ enum : uint
 alias RPC_STATUS = int;
 enum : int
 {
+    RPC_S_OK                           = 0x00000000,
     RPC_S_INVALID_STRING_BINDING       = 0x000006a4,
     RPC_S_WRONG_KIND_OF_BINDING        = 0x000006a5,
     RPC_S_INVALID_BINDING              = 0x000006a6,
