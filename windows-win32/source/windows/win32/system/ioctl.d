@@ -1,6 +1,7 @@
 module windows.win32.system.ioctl;
 
 import windows.win32.guid : GUID;
+import windows.win32.devices.properties : DEVPROPKEY;
 import windows.win32.foundation : BOOLEAN, CHAR, HANDLE;
 import windows.win32.security : SID;
 import windows.win32.storage.filesystem : FILE_ID_128, STORAGE_BUS_TYPE;
@@ -33,14 +34,14 @@ enum GUID_DEVINTERFACE_HIDDEN_VOLUME = GUID(0x7f108a28, 0x9833, 0x4b3b, [0xb7, 0
 enum GUID_DEVINTERFACE_UNIFIED_ACCESS_RPMB = GUID(0x27447c21, 0xbcc3, 0x4d07, [0xa0, 0x5b, 0xa3, 0x39, 0x5b, 0xb4, 0xee, 0xe7]);
 enum GUID_DEVICEDUMP_STORAGE_DEVICE = GUID(0xd8e2592f, 0x1aab, 0x4d56, [0xa7, 0x46, 0x1f, 0x75, 0x85, 0xdf, 0x40, 0xf4]);
 enum GUID_DEVICEDUMP_DRIVER_STORAGE_PORT = GUID(0xda82441d, 0x7142, 0x4bc1, [0xb8, 0x44, 0x8, 0x7, 0xc5, 0xa4, 0xb6, 0x7f]);
-//enum DEVPKEY_Storage_Portable = [MISSING];
-//enum DEVPKEY_Storage_Removable_Media = [MISSING];
-//enum DEVPKEY_Storage_System_Critical = [MISSING];
-//enum DEVPKEY_Storage_Disk_Number = [MISSING];
-//enum DEVPKEY_Storage_Partition_Number = [MISSING];
-//enum DEVPKEY_Storage_Mbr_Type = [MISSING];
-//enum DEVPKEY_Storage_Gpt_Type = [MISSING];
-//enum DEVPKEY_Storage_Gpt_Name = [MISSING];
+enum DEVPKEY_Storage_Portable = DEVPROPKEY(GUID(1293860584, 2051, 18292, [152, 66, 183, 125, 181, 2, 101, 233]), 2);
+enum DEVPKEY_Storage_Removable_Media = DEVPROPKEY(GUID(1293860584, 2051, 18292, [152, 66, 183, 125, 181, 2, 101, 233]), 3);
+enum DEVPKEY_Storage_System_Critical = DEVPROPKEY(GUID(1293860584, 2051, 18292, [152, 66, 183, 125, 181, 2, 101, 233]), 4);
+enum DEVPKEY_Storage_Disk_Number = DEVPROPKEY(GUID(1293860584, 2051, 18292, [152, 66, 183, 125, 181, 2, 101, 233]), 5);
+enum DEVPKEY_Storage_Partition_Number = DEVPROPKEY(GUID(1293860584, 2051, 18292, [152, 66, 183, 125, 181, 2, 101, 233]), 6);
+enum DEVPKEY_Storage_Mbr_Type = DEVPROPKEY(GUID(1293860584, 2051, 18292, [152, 66, 183, 125, 181, 2, 101, 233]), 7);
+enum DEVPKEY_Storage_Gpt_Type = DEVPROPKEY(GUID(1293860584, 2051, 18292, [152, 66, 183, 125, 181, 2, 101, 233]), 8);
+enum DEVPKEY_Storage_Gpt_Name = DEVPROPKEY(GUID(1293860584, 2051, 18292, [152, 66, 183, 125, 181, 2, 101, 233]), 9);
 enum IOCTL_STORAGE_CHECK_VERIFY = 0x002d4800;
 enum IOCTL_STORAGE_CHECK_VERIFY2 = 0x002d0800;
 enum IOCTL_STORAGE_MEDIA_REMOVAL = 0x002d4804;
@@ -1351,9 +1352,9 @@ enum : int
 
 struct DEVICE_MEDIA_INFO
 {
-    union _DeviceSpecific_e__Union
+    union DeviceSpecific
     {
-        struct _DiskInfo_e__Struct
+        struct DiskInfo
         {
             long Cylinders;
             STORAGE_MEDIA_TYPE MediaType;
@@ -1363,7 +1364,7 @@ struct DEVICE_MEDIA_INFO
             uint NumberMediaSides;
             uint MediaCharacteristics;
         }
-        struct _RemovableDiskInfo_e__Struct
+        struct RemovableDiskInfo
         {
             long Cylinders;
             STORAGE_MEDIA_TYPE MediaType;
@@ -1373,15 +1374,15 @@ struct DEVICE_MEDIA_INFO
             uint NumberMediaSides;
             uint MediaCharacteristics;
         }
-        struct _TapeInfo_e__Struct
+        struct TapeInfo
         {
             STORAGE_MEDIA_TYPE MediaType;
             uint MediaCharacteristics;
             uint CurrentBlockSize;
             STORAGE_BUS_TYPE BusType;
-            union _BusSpecificData_e__Union
+            union BusSpecificData
             {
-                struct _ScsiInformation_e__Struct
+                struct ScsiInformation
                 {
                     ubyte MediumType;
                     ubyte DensityCode;
@@ -1555,7 +1556,7 @@ struct STORAGE_MINIPORT_DESCRIPTOR
     BOOLEAN TargetResetSupported;
     ushort IoTimeoutValue;
     BOOLEAN ExtraIoInfoSupported;
-    union _Flags_e__Union
+    union Flags
     {
         struct
         {
@@ -1952,7 +1953,7 @@ union STORAGE_SPEC_VERSION
 {
     struct
     {
-        union _MinorVersion_e__Union
+        union MinorVersion
         {
             struct
             {
@@ -2081,16 +2082,16 @@ struct STORAGE_OPERATIONAL_REASON
     uint Version;
     uint Size;
     STORAGE_OPERATIONAL_STATUS_REASON Reason;
-    union _RawBytes_e__Union
+    union RawBytes
     {
-        struct _ScsiSenseKey_e__Struct
+        struct ScsiSenseKey
         {
             ubyte SenseKey;
             ubyte ASC;
             ubyte ASCQ;
             ubyte Reserved;
         }
-        struct _NVDIMM_N_e__Struct
+        struct NVDIMM_N
         {
             ubyte CriticalHealth;
             ubyte[2] ModuleHealth;
@@ -2146,15 +2147,15 @@ struct STORAGE_ZONED_DEVICE_DESCRIPTOR
     uint Size;
     STORAGE_ZONED_DEVICE_TYPES DeviceType;
     uint ZoneCount;
-    union _ZoneAttributes_e__Union
+    union ZoneAttributes
     {
-        struct _SequentialRequiredZone_e__Struct
+        struct SequentialRequiredZone
         {
             uint MaxOpenZoneCount;
             BOOLEAN UnrestrictedRead;
             ubyte[3] Reserved;
         }
-        struct _SequentialPreferredZone_e__Struct
+        struct SequentialPreferredZone
         {
             uint OptimalOpenZoneCount;
             uint Reserved;
@@ -2206,7 +2207,7 @@ struct STORAGE_HW_ENDURANCE_INFO
 {
     uint ValidFields;
     uint GroupId;
-    struct _Flags_e__Struct
+    struct Flags
     {
         uint _bitfield0;
     }
@@ -2305,7 +2306,7 @@ struct STORAGE_OFFLOAD_TOKEN
     ubyte[2] TokenIdLength;
     union
     {
-        struct _StorageOffloadZeroDataToken_e__Struct
+        struct StorageOffloadZeroDataToken
         {
             ubyte[504] Reserved2;
         }
@@ -2687,7 +2688,7 @@ struct STORAGE_REINITIALIZE_MEDIA
     uint Version;
     uint Size;
     uint TimeoutInSeconds;
-    struct _SanitizeOption_e__Struct
+    struct SanitizeOption
     {
         uint _bitfield0;
     }
@@ -2757,12 +2758,12 @@ struct PERSISTENT_RESERVE_COMMAND
     uint Size;
     union
     {
-        struct _PR_IN_e__Struct
+        struct PR_IN
         {
             ubyte _bitfield0;
             ushort AllocationLength;
         }
-        struct _PR_OUT_e__Struct
+        struct PR_OUT
         {
             ubyte _bitfield1;
             ubyte _bitfield2;
@@ -2850,19 +2851,19 @@ struct DEVICEDUMP_STORAGESTACK_PUBLIC_STATE_RECORD
     ulong EndTime;
     uint OperationStatus;
     uint OperationError;
-    union _StackSpecific_e__Union
+    union StackSpecific
     {
-        struct _ExternalStack_e__Struct
+        struct ExternalStack
         {
             align (1):
             uint dwReserved;
         }
-        struct _AtaPort_e__Struct
+        struct AtaPort
         {
             align (1):
             uint dwAtaPortSpecific;
         }
-        struct _StorPort_e__Struct
+        struct StorPort
         {
             align (1):
             uint SrbTag;
@@ -2973,9 +2974,9 @@ enum : int
 struct STORAGE_COUNTER
 {
     STORAGE_COUNTER_TYPE Type;
-    union _Value_e__Union
+    union Value
     {
-        struct _ManufactureDate_e__Struct
+        struct ManufactureDate
         {
             uint Week;
             uint Year;
@@ -3197,7 +3198,7 @@ struct SCM_BUS_RUNTIME_FW_ACTIVATION_INFO
     uint Size;
     BOOLEAN RuntimeFwActivationSupported;
     SCM_BUS_FIRMWARE_ACTIVATION_STATE FirmwareActivationState;
-    struct _FirmwareActivationCapability_e__Struct
+    struct FirmwareActivationCapability
     {
         uint _bitfield0;
     }
@@ -3210,7 +3211,7 @@ struct SCM_BUS_DEDICATED_MEMORY_DEVICE_INFO
 {
     GUID DeviceGuid;
     uint DeviceNumber;
-    struct _Flags_e__Struct
+    struct Flags
     {
         uint _bitfield0;
     }
@@ -3520,7 +3521,7 @@ struct SCM_PD_REINITIALIZE_MEDIA_INPUT
 {
     uint Version;
     uint Size;
-    struct _Options_e__Struct
+    struct Options
     {
         uint _bitfield0;
     }
@@ -3774,12 +3775,12 @@ struct DISK_PARTITION_INFO
     PARTITION_STYLE PartitionStyle;
     union
     {
-        struct _Mbr_e__Struct
+        struct Mbr
         {
             uint Signature;
             uint CheckSum;
         }
-        struct _Gpt_e__Struct
+        struct Gpt
         {
             GUID DiskId;
         }
@@ -3815,13 +3816,13 @@ struct DISK_CACHE_INFORMATION
     BOOLEAN PrefetchScalar;
     union
     {
-        struct _ScalarPrefetch_e__Struct
+        struct ScalarPrefetch
         {
             ushort Minimum;
             ushort Maximum;
             ushort MaximumBlocks;
         }
-        struct _BlockPrefetch_e__Struct
+        struct BlockPrefetch
         {
             ushort Minimum;
             ushort Maximum;
@@ -4505,7 +4506,7 @@ struct NTFS_STATISTICS
     uint MftReadBytes;
     uint MftWrites;
     uint MftWriteBytes;
-    struct _MftWritesUserLevel_e__Struct
+    struct MftWritesUserLevel
     {
         ushort Write;
         ushort Create;
@@ -4517,7 +4518,7 @@ struct NTFS_STATISTICS
     ushort MftWritesUserRequest;
     uint Mft2Writes;
     uint Mft2WriteBytes;
-    struct _Mft2WritesUserLevel_e__Struct
+    struct Mft2WritesUserLevel
     {
         ushort Write;
         ushort Create;
@@ -4538,7 +4539,7 @@ struct NTFS_STATISTICS
     ushort BitmapWritesFlushForLogFileFull;
     ushort BitmapWritesLazyWriter;
     ushort BitmapWritesUserRequest;
-    struct _BitmapWritesUserLevel_e__Struct
+    struct BitmapWritesUserLevel
     {
         ushort Write;
         ushort Create;
@@ -4551,7 +4552,7 @@ struct NTFS_STATISTICS
     ushort MftBitmapWritesFlushForLogFileFull;
     ushort MftBitmapWritesLazyWriter;
     ushort MftBitmapWritesUserRequest;
-    struct _MftBitmapWritesUserLevel_e__Struct
+    struct MftBitmapWritesUserLevel
     {
         ushort Write;
         ushort Create;
@@ -4566,7 +4567,7 @@ struct NTFS_STATISTICS
     uint LogFileReadBytes;
     uint LogFileWrites;
     uint LogFileWriteBytes;
-    struct _Allocate_e__Struct
+    struct Allocate
     {
         uint Calls;
         uint Clusters;
@@ -4607,7 +4608,7 @@ struct NTFS_STATISTICS_EX
     ulong MftReadBytes;
     ulong MftWrites;
     ulong MftWriteBytes;
-    struct _MftWritesUserLevel_e__Struct
+    struct MftWritesUserLevel
     {
         uint Write;
         uint Create;
@@ -4619,7 +4620,7 @@ struct NTFS_STATISTICS_EX
     uint MftWritesUserRequest;
     ulong Mft2Writes;
     ulong Mft2WriteBytes;
-    struct _Mft2WritesUserLevel_e__Struct
+    struct Mft2WritesUserLevel
     {
         uint Write;
         uint Create;
@@ -4640,7 +4641,7 @@ struct NTFS_STATISTICS_EX
     uint BitmapWritesFlushForLogFileFull;
     uint BitmapWritesLazyWriter;
     uint BitmapWritesUserRequest;
-    struct _BitmapWritesUserLevel_e__Struct
+    struct BitmapWritesUserLevel
     {
         uint Write;
         uint Create;
@@ -4654,7 +4655,7 @@ struct NTFS_STATISTICS_EX
     uint MftBitmapWritesFlushForLogFileFull;
     uint MftBitmapWritesLazyWriter;
     uint MftBitmapWritesUserRequest;
-    struct _MftBitmapWritesUserLevel_e__Struct
+    struct MftBitmapWritesUserLevel
     {
         uint Write;
         uint Create;
@@ -4669,7 +4670,7 @@ struct NTFS_STATISTICS_EX
     ulong LogFileReadBytes;
     ulong LogFileWrites;
     ulong LogFileWriteBytes;
-    struct _Allocate_e__Struct
+    struct Allocate
     {
         uint Calls;
         uint RunsReturned;
@@ -4891,7 +4892,7 @@ struct TXFS_START_RM_INFORMATION
 }
 struct TXFS_GET_METADATA_INFO_OUT
 {
-    struct _TxfFileId_e__Struct
+    struct TxfFileId
     {
         long LowPart;
         long HighPart;
@@ -5325,7 +5326,7 @@ struct QUERY_FILE_LAYOUT_INPUT
     uint Flags;
     QUERY_FILE_LAYOUT_FILTER_TYPE FilterType;
     uint Reserved;
-    union _Filter_e__Union
+    union Filter
     {
         CLUSTER_RANGE[1] ClusterRanges;
         FILE_REFERENCE_RANGE[1] FileReferenceRanges;
@@ -5362,7 +5363,7 @@ struct FILE_LAYOUT_NAME_ENTRY
 }
 struct FILE_LAYOUT_INFO_ENTRY
 {
-    struct _BasicInformation_e__Struct
+    struct BasicInformation
     {
         long CreationTime;
         long LastAccessTime;
@@ -5392,7 +5393,7 @@ struct STREAM_LAYOUT_ENTRY
 struct STREAM_EXTENT_ENTRY
 {
     uint Flags;
-    union _ExtentInformation_e__Union
+    union ExtentInformation
     {
         RETRIEVAL_POINTERS_BUFFER RetrievalPointers;
     }

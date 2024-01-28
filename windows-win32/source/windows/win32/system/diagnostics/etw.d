@@ -792,7 +792,7 @@ struct EVENT_TRACE_HEADER
     union
     {
         uint Version;
-        struct _Class_e__Struct
+        struct Class
         {
             ubyte Type;
             ubyte Level;
@@ -837,7 +837,7 @@ struct EVENT_INSTANCE_HEADER
     union
     {
         uint Version;
-        struct _Class_e__Struct
+        struct Class
         {
             ubyte Type;
             ubyte Level;
@@ -878,7 +878,7 @@ struct TRACE_LOGFILE_HEADER
     union
     {
         uint Version;
-        struct _VersionDetail_e__Struct
+        struct VersionDetail
         {
             ubyte MajorVersion;
             ubyte MinorVersion;
@@ -919,7 +919,7 @@ struct TRACE_LOGFILE_HEADER32
     union
     {
         uint Version;
-        struct _VersionDetail_e__Struct
+        struct VersionDetail
         {
             ubyte MajorVersion;
             ubyte MinorVersion;
@@ -960,7 +960,7 @@ struct TRACE_LOGFILE_HEADER64
     union
     {
         uint Version;
-        struct _VersionDetail_e__Struct
+        struct VersionDetail
         {
             ubyte MajorVersion;
             ubyte MinorVersion;

@@ -1309,7 +1309,7 @@ struct INPUTCONTEXT
     POINT ptSoftKbdPos;
     uint fdwConversion;
     uint fdwSentence;
-    union _lfFont_e__Union
+    union lfFont
     {
         LOGFONTA A;
         LOGFONTW W;

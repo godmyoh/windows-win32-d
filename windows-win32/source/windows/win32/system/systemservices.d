@@ -2556,7 +2556,7 @@ struct RemHBRUSH
 struct userCLIPFORMAT
 {
     int fContext;
-    union _u_e__Struct
+    union u
     {
         uint dwValue;
         PWSTR pwszName;
@@ -2565,7 +2565,7 @@ struct userCLIPFORMAT
 struct GDI_NONREMOTE
 {
     int fContext;
-    union _u_e__Struct
+    union u
     {
         int hInproc;
         DWORD_BLOB* hRemote;
@@ -2574,7 +2574,7 @@ struct GDI_NONREMOTE
 struct userHGLOBAL
 {
     int fContext;
-    union _u_e__Struct
+    union u
     {
         int hInproc;
         FLAGGED_BYTE_BLOB* hRemote;
@@ -2584,7 +2584,7 @@ struct userHGLOBAL
 struct userHMETAFILE
 {
     int fContext;
-    union _u_e__Struct
+    union u
     {
         int hInproc;
         BYTE_BLOB* hRemote;
@@ -2601,7 +2601,7 @@ struct remoteMETAFILEPICT
 struct userHMETAFILEPICT
 {
     int fContext;
-    union _u_e__Struct
+    union u
     {
         int hInproc;
         remoteMETAFILEPICT* hRemote;
@@ -2611,7 +2611,7 @@ struct userHMETAFILEPICT
 struct userHENHMETAFILE
 {
     int fContext;
-    union _u_e__Struct
+    union u
     {
         int hInproc;
         BYTE_BLOB* hRemote;
@@ -2632,7 +2632,7 @@ struct userBITMAP
 struct userHBITMAP
 {
     int fContext;
-    union _u_e__Struct
+    union u
     {
         int hInproc;
         userBITMAP* hRemote;
@@ -2642,7 +2642,7 @@ struct userHBITMAP
 struct userHPALETTE
 {
     int fContext;
-    union _u_e__Struct
+    union u
     {
         int hInproc;
         LOGPALETTE* hRemote;
@@ -2652,7 +2652,7 @@ struct userHPALETTE
 struct RemotableHandle
 {
     int fContext;
-    union _u_e__Struct
+    union u
     {
         int hInproc;
         int hRemote;
@@ -3231,7 +3231,7 @@ struct PROCESSOR_IDLESTATE_INFO
 struct PROCESSOR_IDLESTATE_POLICY
 {
     ushort Revision;
-    union _Flags_e__Union
+    union Flags
     {
         ushort AsWORD;
         struct
@@ -3251,7 +3251,7 @@ struct PROCESSOR_PERFSTATE_POLICY
     union
     {
         ubyte Spare;
-        union _Flags_e__Union
+        union Flags
         {
             ubyte AsBYTE;
             struct
@@ -3438,11 +3438,11 @@ struct ANON_OBJECT_HEADER_BIGOBJ
 struct IMAGE_SYMBOL
 {
     align (2):
-    union _N_e__Union
+    union N
     {
         align (2):
         ubyte[8] ShortName;
-        struct _Name_e__Struct
+        struct Name
         {
             align (2):
             uint Short;
@@ -3459,11 +3459,11 @@ struct IMAGE_SYMBOL
 struct IMAGE_SYMBOL_EX
 {
     align (2):
-    union _N_e__Union
+    union N
     {
         align (2):
         ubyte[8] ShortName;
-        struct _Name_e__Struct
+        struct Name
         {
             align (2):
             uint Short;
@@ -3487,40 +3487,40 @@ struct IMAGE_AUX_SYMBOL_TOKEN_DEF
 }
 union IMAGE_AUX_SYMBOL
 {
-    struct _Sym_e__Struct
+    struct Sym
     {
         align (2):
         uint TagIndex;
-        union _Misc_e__Union
+        union Misc
         {
             align (2):
-            struct _LnSz_e__Struct
+            struct LnSz
             {
                 ushort Linenumber;
                 ushort Size;
             }
             uint TotalSize;
         }
-        union _FcnAry_e__Union
+        union FcnAry
         {
-            struct _Function_e__Struct
+            struct Function
             {
                 align (2):
                 uint PointerToLinenumber;
                 uint PointerToNextFunction;
             }
-            struct _Array_e__Struct
+            struct Array
             {
                 ushort[4] Dimension;
             }
         }
         ushort TvIndex;
     }
-    struct _File_e__Struct
+    struct File
     {
         ubyte[18] Name;
     }
-    struct _Section_e__Struct
+    struct Section
     {
         align (2):
         uint Length;
@@ -3533,7 +3533,7 @@ union IMAGE_AUX_SYMBOL
         short HighNumber;
     }
     IMAGE_AUX_SYMBOL_TOKEN_DEF TokenDef;
-    struct _CRC_e__Struct
+    struct CRC
     {
         align (2):
         uint crc;
@@ -3542,18 +3542,18 @@ union IMAGE_AUX_SYMBOL
 }
 union IMAGE_AUX_SYMBOL_EX
 {
-    struct _Sym_e__Struct
+    struct Sym
     {
         align (2):
         uint WeakDefaultSymIndex;
         uint WeakSearchType;
         ubyte[12] rgbReserved;
     }
-    struct _File_e__Struct
+    struct File
     {
         ubyte[20] Name;
     }
-    struct _Section_e__Struct
+    struct Section
     {
         align (2):
         uint Length;
@@ -3571,7 +3571,7 @@ union IMAGE_AUX_SYMBOL_EX
         IMAGE_AUX_SYMBOL_TOKEN_DEF TokenDef;
         ubyte[2] rgbReserved;
     }
-    struct _CRC_e__Struct
+    struct CRC
     {
         align (2):
         uint crc;
@@ -3598,7 +3598,7 @@ struct IMAGE_RELOCATION
 }
 struct IMAGE_LINENUMBER
 {
-    union _Type_e__Union
+    union Type
     {
         align (2):
         uint SymbolTableIndex;
@@ -4076,7 +4076,7 @@ struct IMAGE_POLICY_ENTRY
 {
     IMAGE_POLICY_ENTRY_TYPE Type;
     IMAGE_POLICY_ID PolicyId;
-    union _u_e__Union
+    union u
     {
         const(void)* None;
         BOOLEAN BoolValue;

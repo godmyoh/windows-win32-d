@@ -200,7 +200,7 @@ struct INTERACTION_CONTEXT_OUTPUT
     POINTER_INPUT_TYPE inputType;
     float x;
     float y;
-    union _arguments_e__Union
+    union arguments
     {
         INTERACTION_ARGUMENTS_MANIPULATION manipulation;
         INTERACTION_ARGUMENTS_TAP tap;
@@ -216,7 +216,7 @@ struct INTERACTION_CONTEXT_OUTPUT2
     uint currentContactCount;
     float x;
     float y;
-    union _arguments_e__Union
+    union arguments
     {
         INTERACTION_ARGUMENTS_MANIPULATION manipulation;
         INTERACTION_ARGUMENTS_TAP tap;

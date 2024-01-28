@@ -2309,7 +2309,7 @@ struct D3D11_AUTHENTICATED_QUERY_OUTPUT
 }
 union D3D11_AUTHENTICATED_PROTECTION_FLAGS
 {
-    struct _Flags_e__Struct
+    struct Flags
     {
         uint _bitfield0;
     }

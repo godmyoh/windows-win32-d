@@ -57,7 +57,7 @@ struct PRJ_EXTENDED_INFO
     uint NextInfoOffset;
     union
     {
-        struct _Symlink_e__Struct
+        struct Symlink
         {
             const(wchar)* TargetName;
         }
@@ -112,17 +112,17 @@ struct PRJ_FILE_BASIC_INFO
 struct PRJ_PLACEHOLDER_INFO
 {
     PRJ_FILE_BASIC_INFO FileBasicInfo;
-    struct _EaInformation_e__Struct
+    struct EaInformation
     {
         uint EaBufferSize;
         uint OffsetToFirstEa;
     }
-    struct _SecurityInformation_e__Struct
+    struct SecurityInformation
     {
         uint SecurityBufferSize;
         uint OffsetToSecurityDescriptor;
     }
-    struct _StreamsInformation_e__Struct
+    struct StreamsInformation
     {
         uint StreamsInfoBufferSize;
         uint OffsetToFirstStreamInfo;
@@ -192,15 +192,15 @@ alias PRJ_GET_FILE_DATA_CB = HRESULT function(const(PRJ_CALLBACK_DATA)*, ulong, 
 alias PRJ_QUERY_FILE_NAME_CB = HRESULT function(const(PRJ_CALLBACK_DATA)*);
 union PRJ_NOTIFICATION_PARAMETERS
 {
-    struct _PostCreate_e__Struct
+    struct PostCreate
     {
         PRJ_NOTIFY_TYPES NotificationMask;
     }
-    struct _FileRenamed_e__Struct
+    struct FileRenamed
     {
         PRJ_NOTIFY_TYPES NotificationMask;
     }
-    struct _FileDeletedOnHandleClose_e__Struct
+    struct FileDeletedOnHandleClose
     {
         BOOLEAN IsFileModified;
     }
@@ -230,11 +230,11 @@ struct PRJ_COMPLETE_COMMAND_EXTENDED_PARAMETERS
     PRJ_COMPLETE_COMMAND_TYPE CommandType;
     union
     {
-        struct _Notification_e__Struct
+        struct Notification
         {
             PRJ_NOTIFY_TYPES NotificationMask;
         }
-        struct _Enumeration_e__Struct
+        struct Enumeration
         {
             PRJ_DIR_ENTRY_BUFFER_HANDLE DirEntryBufferHandle;
         }

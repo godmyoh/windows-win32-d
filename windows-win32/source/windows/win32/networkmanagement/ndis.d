@@ -1908,7 +1908,7 @@ struct NET_IF_ALIAS_LH
 union NET_LUID_LH
 {
     ulong Value;
-    struct _Info_e__Struct
+    struct Info
     {
         ulong _bitfield0;
     }
@@ -2933,7 +2933,7 @@ struct NDIS_OFFLOAD_PARAMETERS
 }
 struct NDIS_TCP_LARGE_SEND_OFFLOAD_V1
 {
-    struct _IPv4_e__Struct
+    struct IPv4
     {
         uint Encapsulation;
         uint MaxOffLoadSize;
@@ -2943,22 +2943,22 @@ struct NDIS_TCP_LARGE_SEND_OFFLOAD_V1
 }
 struct NDIS_TCP_IP_CHECKSUM_OFFLOAD
 {
-    struct _IPv4Transmit_e__Struct
+    struct IPv4Transmit
     {
         uint Encapsulation;
         uint _bitfield0;
     }
-    struct _IPv4Receive_e__Struct
+    struct IPv4Receive
     {
         uint Encapsulation;
         uint _bitfield1;
     }
-    struct _IPv6Transmit_e__Struct
+    struct IPv6Transmit
     {
         uint Encapsulation;
         uint _bitfield2;
     }
-    struct _IPv6Receive_e__Struct
+    struct IPv6Receive
     {
         uint Encapsulation;
         uint _bitfield3;
@@ -2966,7 +2966,7 @@ struct NDIS_TCP_IP_CHECKSUM_OFFLOAD
 }
 struct NDIS_IPSEC_OFFLOAD_V1
 {
-    struct _Supported_e__Struct
+    struct Supported
     {
         uint Encapsulation;
         uint AhEspCombined;
@@ -2974,24 +2974,24 @@ struct NDIS_IPSEC_OFFLOAD_V1
         uint IPv4Options;
         uint Flags;
     }
-    struct _IPv4AH_e__Struct
+    struct IPv4AH
     {
         uint _bitfield0;
     }
-    struct _IPv4ESP_e__Struct
+    struct IPv4ESP
     {
         uint _bitfield1;
     }
 }
 struct NDIS_TCP_LARGE_SEND_OFFLOAD_V2
 {
-    struct _IPv4_e__Struct
+    struct IPv4
     {
         uint Encapsulation;
         uint MaxOffLoadSize;
         uint MinSegmentCount;
     }
-    struct _IPv6_e__Struct
+    struct IPv6
     {
         uint Encapsulation;
         uint MaxOffLoadSize;
@@ -3010,7 +3010,7 @@ struct NDIS_OFFLOAD
 }
 struct NDIS_WMI_TCP_LARGE_SEND_OFFLOAD_V1
 {
-    struct _IPv4_e__Struct
+    struct IPv4
     {
         uint Encapsulation;
         uint MaxOffLoadSize;
@@ -3021,7 +3021,7 @@ struct NDIS_WMI_TCP_LARGE_SEND_OFFLOAD_V1
 }
 struct NDIS_WMI_TCP_IP_CHECKSUM_OFFLOAD
 {
-    struct _IPv4Transmit_e__Struct
+    struct IPv4Transmit
     {
         uint Encapsulation;
         uint IpOptionsSupported;
@@ -3030,7 +3030,7 @@ struct NDIS_WMI_TCP_IP_CHECKSUM_OFFLOAD
         uint UdpChecksum;
         uint IpChecksum;
     }
-    struct _IPv4Receive_e__Struct
+    struct IPv4Receive
     {
         uint Encapsulation;
         uint IpOptionsSupported;
@@ -3039,7 +3039,7 @@ struct NDIS_WMI_TCP_IP_CHECKSUM_OFFLOAD
         uint UdpChecksum;
         uint IpChecksum;
     }
-    struct _IPv6Transmit_e__Struct
+    struct IPv6Transmit
     {
         uint Encapsulation;
         uint IpExtensionHeadersSupported;
@@ -3047,7 +3047,7 @@ struct NDIS_WMI_TCP_IP_CHECKSUM_OFFLOAD
         uint TcpChecksum;
         uint UdpChecksum;
     }
-    struct _IPv6Receive_e__Struct
+    struct IPv6Receive
     {
         uint Encapsulation;
         uint IpExtensionHeadersSupported;
@@ -3058,7 +3058,7 @@ struct NDIS_WMI_TCP_IP_CHECKSUM_OFFLOAD
 }
 struct NDIS_WMI_IPSEC_OFFLOAD_V1
 {
-    struct _Supported_e__Struct
+    struct Supported
     {
         uint Encapsulation;
         uint AhEspCombined;
@@ -3066,7 +3066,7 @@ struct NDIS_WMI_IPSEC_OFFLOAD_V1
         uint IPv4Options;
         uint Flags;
     }
-    struct _IPv4AH_e__Struct
+    struct IPv4AH
     {
         uint Md5;
         uint Sha_1;
@@ -3075,7 +3075,7 @@ struct NDIS_WMI_IPSEC_OFFLOAD_V1
         uint Send;
         uint Receive;
     }
-    struct _IPv4ESP_e__Struct
+    struct IPv4ESP
     {
         uint Des;
         uint Reserved;
@@ -3089,13 +3089,13 @@ struct NDIS_WMI_IPSEC_OFFLOAD_V1
 }
 struct NDIS_WMI_TCP_LARGE_SEND_OFFLOAD_V2
 {
-    struct _IPv4_e__Struct
+    struct IPv4
     {
         uint Encapsulation;
         uint MaxOffLoadSize;
         uint MinSegmentCount;
     }
-    struct _IPv6_e__Struct
+    struct IPv6
     {
         uint Encapsulation;
         uint MaxOffLoadSize;

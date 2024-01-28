@@ -341,19 +341,19 @@ struct CF_CALLBACK_PARAMETERS
     uint ParamSize;
     union
     {
-        struct _Cancel_e__Struct
+        struct Cancel
         {
             CF_CALLBACK_CANCEL_FLAGS Flags;
             union
             {
-                struct _FetchData_e__Struct
+                struct FetchData
                 {
                     long FileOffset;
                     long Length;
                 }
             }
         }
-        struct _FetchData_e__Struct
+        struct FetchData
         {
             CF_CALLBACK_FETCH_DATA_FLAGS Flags;
             long RequiredFileOffset;
@@ -363,49 +363,49 @@ struct CF_CALLBACK_PARAMETERS
             long LastDehydrationTime;
             CF_CALLBACK_DEHYDRATION_REASON LastDehydrationReason;
         }
-        struct _ValidateData_e__Struct
+        struct ValidateData
         {
             CF_CALLBACK_VALIDATE_DATA_FLAGS Flags;
             long RequiredFileOffset;
             long RequiredLength;
         }
-        struct _FetchPlaceholders_e__Struct
+        struct FetchPlaceholders
         {
             CF_CALLBACK_FETCH_PLACEHOLDERS_FLAGS Flags;
             const(wchar)* Pattern;
         }
-        struct _OpenCompletion_e__Struct
+        struct OpenCompletion
         {
             CF_CALLBACK_OPEN_COMPLETION_FLAGS Flags;
         }
-        struct _CloseCompletion_e__Struct
+        struct CloseCompletion
         {
             CF_CALLBACK_CLOSE_COMPLETION_FLAGS Flags;
         }
-        struct _Dehydrate_e__Struct
+        struct Dehydrate
         {
             CF_CALLBACK_DEHYDRATE_FLAGS Flags;
             CF_CALLBACK_DEHYDRATION_REASON Reason;
         }
-        struct _DehydrateCompletion_e__Struct
+        struct DehydrateCompletion
         {
             CF_CALLBACK_DEHYDRATE_COMPLETION_FLAGS Flags;
             CF_CALLBACK_DEHYDRATION_REASON Reason;
         }
-        struct _Delete_e__Struct
+        struct Delete
         {
             CF_CALLBACK_DELETE_FLAGS Flags;
         }
-        struct _DeleteCompletion_e__Struct
+        struct DeleteCompletion
         {
             CF_CALLBACK_DELETE_COMPLETION_FLAGS Flags;
         }
-        struct _Rename_e__Struct
+        struct Rename
         {
             CF_CALLBACK_RENAME_FLAGS Flags;
             const(wchar)* TargetPath;
         }
-        struct _RenameCompletion_e__Struct
+        struct RenameCompletion
         {
             CF_CALLBACK_RENAME_COMPLETION_FLAGS Flags;
             const(wchar)* SourcePath;
@@ -534,7 +534,7 @@ struct CF_OPERATION_PARAMETERS
     uint ParamSize;
     union
     {
-        struct _TransferData_e__Struct
+        struct TransferData
         {
             CF_OPERATION_TRANSFER_DATA_FLAGS Flags;
             NTSTATUS CompletionStatus;
@@ -542,7 +542,7 @@ struct CF_OPERATION_PARAMETERS
             long Offset;
             long Length;
         }
-        struct _RetrieveData_e__Struct
+        struct RetrieveData
         {
             CF_OPERATION_RETRIEVE_DATA_FLAGS Flags;
             void* Buffer;
@@ -550,21 +550,21 @@ struct CF_OPERATION_PARAMETERS
             long Length;
             long ReturnedLength;
         }
-        struct _AckData_e__Struct
+        struct AckData
         {
             CF_OPERATION_ACK_DATA_FLAGS Flags;
             NTSTATUS CompletionStatus;
             long Offset;
             long Length;
         }
-        struct _RestartHydration_e__Struct
+        struct RestartHydration
         {
             CF_OPERATION_RESTART_HYDRATION_FLAGS Flags;
             const(CF_FS_METADATA)* FsMetadata;
             const(void)* FileIdentity;
             uint FileIdentityLength;
         }
-        struct _TransferPlaceholders_e__Struct
+        struct TransferPlaceholders
         {
             CF_OPERATION_TRANSFER_PLACEHOLDERS_FLAGS Flags;
             NTSTATUS CompletionStatus;
@@ -573,19 +573,19 @@ struct CF_OPERATION_PARAMETERS
             uint PlaceholderCount;
             uint EntriesProcessed;
         }
-        struct _AckDehydrate_e__Struct
+        struct AckDehydrate
         {
             CF_OPERATION_ACK_DEHYDRATE_FLAGS Flags;
             NTSTATUS CompletionStatus;
             const(void)* FileIdentity;
             uint FileIdentityLength;
         }
-        struct _AckRename_e__Struct
+        struct AckRename
         {
             CF_OPERATION_ACK_RENAME_FLAGS Flags;
             NTSTATUS CompletionStatus;
         }
-        struct _AckDelete_e__Struct
+        struct AckDelete
         {
             CF_OPERATION_ACK_DELETE_FLAGS Flags;
             NTSTATUS CompletionStatus;

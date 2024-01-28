@@ -2410,7 +2410,7 @@ struct LSA_FOREST_TRUST_RECORD
     uint Flags;
     LSA_FOREST_TRUST_RECORD_TYPE ForestTrustType;
     long Time;
-    union _ForestTrustData_e__Union
+    union ForestTrustData
     {
         LSA_UNICODE_STRING TopLevelName;
         LSA_FOREST_TRUST_DOMAIN_INFO DomainInfo;
@@ -2422,7 +2422,7 @@ struct LSA_FOREST_TRUST_RECORD2
     uint Flags;
     LSA_FOREST_TRUST_RECORD_TYPE ForestTrustType;
     long Time;
-    union _ForestTrustData_e__Union
+    union ForestTrustData
     {
         LSA_UNICODE_STRING TopLevelName;
         LSA_FOREST_TRUST_DOMAIN_INFO DomainInfo;
@@ -4324,7 +4324,7 @@ struct SECPKG_NEGO2_INFO
 struct SECPKG_EXTENDED_INFORMATION
 {
     SECPKG_EXTENDED_INFORMATION_CLASS Class;
-    union _Info_e__Union
+    union Info
     {
         SECPKG_GSS_INFO GssInfo;
         SECPKG_CONTEXT_THUNKS ContextThunks;

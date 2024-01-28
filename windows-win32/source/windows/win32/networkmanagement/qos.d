@@ -601,7 +601,7 @@ struct Session_IPv4
 struct RSVP_SESSION
 {
     RsvpObjHdr sess_header;
-    union _sess_u_e__Union
+    union sess_u
     {
         Session_IPv4 sess_ipv4;
     }
@@ -614,7 +614,7 @@ struct Rsvp_Hop_IPv4
 struct RSVP_HOP
 {
     RsvpObjHdr hop_header;
-    union _hop_u_e__Union
+    union hop_u
     {
         Rsvp_Hop_IPv4 hop_ipv4;
     }
@@ -638,7 +638,7 @@ struct Filter_Spec_IPv4GPI
 struct FILTER_SPEC
 {
     RsvpObjHdr filt_header;
-    union _filt_u_e__Union
+    union filt_u
     {
         Filter_Spec_IPv4 filt_ipv4;
         Filter_Spec_IPv4GPI filt_ipv4gpi;
@@ -651,7 +651,7 @@ struct Scope_list_ipv4
 struct RSVP_SCOPE
 {
     RsvpObjHdr scopl_header;
-    union _scope_u_e__Union
+    union scope_u
     {
         Scope_list_ipv4 scopl_ipv4;
     }
@@ -666,7 +666,7 @@ struct Error_Spec_IPv4
 struct ERROR_SPEC
 {
     RsvpObjHdr errs_header;
-    union _errs_u_e__Union
+    union errs_u
     {
         Error_Spec_IPv4 errs_ipv4;
     }
@@ -745,7 +745,7 @@ struct QualAppFlowSpec
 struct IntServTspecBody
 {
     IntServMainHdr st_mh;
-    union _tspec_u_e__Union
+    union tspec_u
     {
         GenTspec gen_stspec;
         QualTspec qual_stspec;
@@ -778,7 +778,7 @@ struct GuarFlowSpec
 struct IntServFlowSpec
 {
     IntServMainHdr spec_mh;
-    union _spec_u_e__Union
+    union spec_u
     {
         CtrlLoadFlowspec CL_spec;
         GuarFlowSpec G_spec;
@@ -792,12 +792,12 @@ struct IS_FLOWSPEC
 }
 struct FLOW_DESC
 {
-    union _u1_e__Union
+    union u1
     {
         SENDER_TSPEC* stspec;
         IS_FLOWSPEC* isflow;
     }
-    union _u2_e__Union
+    union u2
     {
         FILTER_SPEC* stemp;
         FILTER_SPEC* fspec;
@@ -1051,14 +1051,14 @@ struct IP_PATTERN
     uint Reserved2;
     uint SrcAddr;
     uint DstAddr;
-    union _S_un_e__Union
+    union S_un
     {
-        struct _S_un_ports_e__Struct
+        struct S_un_ports
         {
             ushort s_srcport;
             ushort s_dstport;
         }
-        struct _S_un_icmp_e__Struct
+        struct S_un_icmp
         {
             ubyte s_type;
             ubyte s_code;
@@ -1071,13 +1071,13 @@ struct IP_PATTERN
 }
 /+ [UNSUPPORTED] struct IPX_PATTERN
 {
-    struct _Src_e__Struct
+    struct Src
     {
         uint NetworkAddress;
         ubyte[6] NodeAddress;
         ushort Socket;
     }
-    struct _Src_e__Struct
+    struct Src
     {
         uint NetworkAddress;
         ubyte[6] NodeAddress;

@@ -491,7 +491,7 @@ struct WMDM_PROP_DESC
 {
     PWSTR pwszPropName;
     WMDM_ENUM_PROP_VALID_VALUES_FORM ValidValuesForm;
-    union _ValidValues_e__Union
+    union ValidValues
     {
         WMDM_PROP_VALUES_RANGE ValidValuesRange;
         WMDM_PROP_VALUES_ENUM EnumeratedValidValues;

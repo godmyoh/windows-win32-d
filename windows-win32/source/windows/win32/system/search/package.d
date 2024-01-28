@@ -7130,7 +7130,7 @@ struct SQL_INTERVAL_STRUCT
 {
     SQLINTERVAL interval_type;
     short interval_sign;
-    union _intval_e__Union
+    union intval
     {
         SQL_YEAR_MONTH_STRUCT year_month;
         SQL_DAY_SECOND_STRUCT day_second;

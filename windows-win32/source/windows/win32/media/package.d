@@ -129,14 +129,14 @@ struct MMTIME
 {
     align (1):
     uint wType;
-    union _u_e__Union
+    union u
     {
         align (1):
         uint ms;
         uint sample;
         uint cb;
         uint ticks;
-        struct _smpte_e__Struct
+        struct smpte
         {
             ubyte hour;
             ubyte min;
@@ -146,7 +146,7 @@ struct MMTIME
             ubyte dummy;
             ubyte[2] pad;
         }
-        struct _midi_e__Struct
+        struct midi
         {
             align (1):
             uint songptrpos;

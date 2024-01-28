@@ -1971,7 +1971,7 @@ struct DEBUG_EVENT
     DEBUG_EVENT_CODE dwDebugEventCode;
     uint dwProcessId;
     uint dwThreadId;
-    union _u_e__Union
+    union u
     {
         EXCEPTION_DEBUG_INFO Exception;
         CREATE_THREAD_DEBUG_INFO CreateThread;
@@ -2362,16 +2362,16 @@ struct LDT_ENTRY
 {
     ushort LimitLow;
     ushort BaseLow;
-    union _HighWord_e__Union
+    union HighWord
     {
-        struct _Bytes_e__Struct
+        struct Bytes
         {
             ubyte BaseMid;
             ubyte Flags1;
             ubyte Flags2;
             ubyte BaseHi;
         }
-        struct _Bits_e__Struct
+        struct Bits
         {
             uint _bitfield0;
         }
@@ -2426,16 +2426,16 @@ struct WOW64_LDT_ENTRY
 {
     ushort LimitLow;
     ushort BaseLow;
-    union _HighWord_e__Union
+    union HighWord
     {
-        struct _Bytes_e__Struct
+        struct Bytes
         {
             ubyte BaseMid;
             ubyte Flags1;
             ubyte Flags2;
             ubyte BaseHi;
         }
-        struct _Bits_e__Struct
+        struct Bits
         {
             uint _bitfield0;
         }
@@ -2626,7 +2626,7 @@ struct IMAGE_ROM_HEADERS
 struct IMAGE_SECTION_HEADER
 {
     ubyte[8] Name;
-    union _Misc_e__Union
+    union Misc
     {
         uint PhysicalAddress;
         uint VirtualSize;
@@ -2883,13 +2883,13 @@ struct WAITCHAIN_NODE_INFO
     WCT_OBJECT_STATUS ObjectStatus;
     union
     {
-        struct _LockObject_e__Struct
+        struct LockObject
         {
             wchar[128] ObjectName;
             long Timeout;
             BOOL Alertable;
         }
-        struct _ThreadObject_e__Struct
+        struct ThreadObject
         {
             uint ProcessId;
             uint ThreadId;
@@ -2998,14 +2998,14 @@ enum : int
 
 union CPU_INFORMATION
 {
-    struct _X86CpuInfo_e__Struct
+    struct X86CpuInfo
     {
         uint[3] VendorId;
         uint VersionInformation;
         uint FeatureInformation;
         uint AMDExtendedCpuFeatures;
     }
-    struct _OtherCpuInfo_e__Struct
+    struct OtherCpuInfo
     {
         align (4):
         ulong[2] ProcessorFeatures;
@@ -4908,24 +4908,14 @@ struct WHEA_NOTIFICATION_DESCRIPTOR
     ubyte Type;
     ubyte Length;
     WHEA_NOTIFICATION_FLAGS Flags;
-    union _u_e__Union
+    union u
     {
-        struct _Polled_e__Struct
+        struct Polled
         {
             align (1):
             uint PollInterval;
         }
-        struct _Interrupt_e__Struct
-        {
-            align (1):
-            uint PollInterval;
-            uint Vector;
-            uint SwitchToPollingThreshold;
-            uint SwitchToPollingWindow;
-            uint ErrorThreshold;
-            uint ErrorThresholdWindow;
-        }
-        struct _LocalInterrupt_e__Struct
+        struct Interrupt
         {
             align (1):
             uint PollInterval;
@@ -4935,7 +4925,7 @@ struct WHEA_NOTIFICATION_DESCRIPTOR
             uint ErrorThreshold;
             uint ErrorThresholdWindow;
         }
-        struct _Sci_e__Struct
+        struct LocalInterrupt
         {
             align (1):
             uint PollInterval;
@@ -4945,7 +4935,7 @@ struct WHEA_NOTIFICATION_DESCRIPTOR
             uint ErrorThreshold;
             uint ErrorThresholdWindow;
         }
-        struct _Nmi_e__Struct
+        struct Sci
         {
             align (1):
             uint PollInterval;
@@ -4955,7 +4945,7 @@ struct WHEA_NOTIFICATION_DESCRIPTOR
             uint ErrorThreshold;
             uint ErrorThresholdWindow;
         }
-        struct _Sea_e__Struct
+        struct Nmi
         {
             align (1):
             uint PollInterval;
@@ -4965,7 +4955,7 @@ struct WHEA_NOTIFICATION_DESCRIPTOR
             uint ErrorThreshold;
             uint ErrorThresholdWindow;
         }
-        struct _Sei_e__Struct
+        struct Sea
         {
             align (1):
             uint PollInterval;
@@ -4975,7 +4965,17 @@ struct WHEA_NOTIFICATION_DESCRIPTOR
             uint ErrorThreshold;
             uint ErrorThresholdWindow;
         }
-        struct _Gsiv_e__Struct
+        struct Sei
+        {
+            align (1):
+            uint PollInterval;
+            uint Vector;
+            uint SwitchToPollingThreshold;
+            uint SwitchToPollingWindow;
+            uint ErrorThreshold;
+            uint ErrorThresholdWindow;
+        }
+        struct Gsiv
         {
             align (1):
             uint PollInterval;
@@ -5023,10 +5023,10 @@ struct WHEA_XPF_CMC_DESCRIPTOR
 }
 struct WHEA_PCI_SLOT_NUMBER
 {
-    union _u_e__Union
+    union u
     {
         align (1):
-        struct _bits_e__Struct
+        struct bits
         {
             align (1):
             uint _bitfield0;
@@ -5180,7 +5180,7 @@ struct WHEA_ERROR_SOURCE_DESCRIPTOR
     uint ErrorSourceId;
     uint PlatformErrorSourceId;
     uint Flags;
-    union _Info_e__Union
+    union Info
     {
         WHEA_XPF_MCE_DESCRIPTOR XpfMceDescriptor;
         WHEA_XPF_CMC_DESCRIPTOR XpfCmcDescriptor;

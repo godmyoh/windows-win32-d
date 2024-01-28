@@ -1150,21 +1150,21 @@ struct DRT_EVENT_DATA
     void* pvContext;
     union
     {
-        struct _leafsetKeyChange_e__Struct
+        struct leafsetKeyChange
         {
             DRT_LEAFSET_KEY_CHANGE_TYPE change;
             DRT_DATA localKey;
             DRT_DATA remoteKey;
         }
-        struct _registrationStateChange_e__Struct
+        struct registrationStateChange
         {
             DRT_REGISTRATION_STATE state;
             DRT_DATA localKey;
         }
-        struct _statusChange_e__Struct
+        struct statusChange
         {
             DRT_STATUS status;
-            struct _bootstrapAddresses_e__Struct
+            struct bootstrapAddresses
             {
                 uint cntAddress;
                 SOCKADDR_STORAGE* pAddresses;

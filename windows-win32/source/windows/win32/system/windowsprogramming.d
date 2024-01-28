@@ -872,7 +872,7 @@ struct DELAYLOAD_INFO
 }
 struct IMAGE_THUNK_DATA64
 {
-    union _u1_e__Union
+    union u1
     {
         ulong ForwarderString;
         ulong Function;
@@ -882,7 +882,7 @@ struct IMAGE_THUNK_DATA64
 }
 struct IMAGE_THUNK_DATA32
 {
-    union _u1_e__Union
+    union u1
     {
         uint ForwarderString;
         uint Function;
@@ -892,7 +892,7 @@ struct IMAGE_THUNK_DATA32
 }
 struct IMAGE_DELAYLOAD_DESCRIPTOR
 {
-    union _Attributes_e__Union
+    union Attributes
     {
         uint AllAttributes;
         struct
@@ -1648,7 +1648,7 @@ struct DefaultBrowserSyncSettings
 struct DELAYLOAD_PROC_DESCRIPTOR
 {
     uint ImportDescribedByName;
-    union _Description_e__Union
+    union Description
     {
         const(char)* Name;
         uint Ordinal;

@@ -424,21 +424,21 @@ struct XPS_COLOR
     XPS_COLOR_TYPE colorType;
     union XPS_COLOR_VALUE
     {
-        struct _sRGB_e__Struct
+        struct sRGB
         {
             ubyte alpha;
             ubyte red;
             ubyte green;
             ubyte blue;
         }
-        struct _scRGB_e__Struct
+        struct scRGB
         {
             float alpha;
             float red;
             float green;
             float blue;
         }
-        struct _context_e__Struct
+        struct context
         {
             ubyte channelCount;
             float[9] channels;

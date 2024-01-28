@@ -325,10 +325,10 @@ struct SERVICE_TRIGGER_CUSTOM_STATE_ID
 }
 struct SERVICE_CUSTOM_SYSTEM_STATE_CHANGE_DATA_ITEM
 {
-    union _u_e__Union
+    union u
     {
         SERVICE_TRIGGER_CUSTOM_STATE_ID CustomStateId;
-        struct _s_e__Struct
+        struct s
         {
             uint DataOffset;
             ubyte[1] Data;

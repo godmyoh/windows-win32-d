@@ -2226,7 +2226,7 @@ struct NET_ADDRESS_INFO
     NET_ADDRESS_FORMAT Format;
     union
     {
-        struct _NamedAddress_e__Struct
+        struct NamedAddress
         {
             wchar[256] Address;
             wchar[6] Port;
@@ -2262,7 +2262,7 @@ struct MIB_IF_ROW2
     NDIS_PHYSICAL_MEDIUM PhysicalMediumType;
     NET_IF_ACCESS_TYPE AccessType;
     NET_IF_DIRECTION_TYPE DirectionType;
-    struct _InterfaceAndOperStatusFlags_e__Struct
+    struct InterfaceAndOperStatusFlags
     {
         ubyte _bitfield0;
     }
@@ -2496,7 +2496,7 @@ struct MIB_IPNET_ROW2
         }
         ubyte Flags;
     }
-    union _ReachabilityTime_e__Union
+    union ReachabilityTime
     {
         uint LastReachable;
         uint LastUnreachable;

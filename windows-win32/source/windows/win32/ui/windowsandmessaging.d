@@ -3630,12 +3630,12 @@ struct MENUTEMPLATEEX
 {
     union
     {
-        struct _Menu_e__Struct
+        struct Menu
         {
             MENUITEMTEMPLATEHEADER mitHeader;
             MENUITEMTEMPLATE[1] miTemplate;
         }
-        struct _MenuEx_e__Struct
+        struct MenuEx
         {
             MENUEX_TEMPLATE_HEADER mexHeader;
             MENUEX_TEMPLATE_ITEM[1] mexItem;

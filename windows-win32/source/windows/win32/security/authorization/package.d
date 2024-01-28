@@ -809,7 +809,7 @@ struct AUTHZ_SECURITY_ATTRIBUTE_V1
     ushort Reserved;
     AUTHZ_SECURITY_ATTRIBUTE_FLAGS Flags;
     uint ValueCount;
-    union _Values_e__Union
+    union Values
     {
         long* pInt64;
         ulong* pUint64;
@@ -823,7 +823,7 @@ struct AUTHZ_SECURITY_ATTRIBUTES_INFORMATION
     ushort Version;
     ushort Reserved;
     uint AttributeCount;
-    union _Attribute_e__Union
+    union Attribute
     {
         AUTHZ_SECURITY_ATTRIBUTE_V1* pAttributeV1;
     }

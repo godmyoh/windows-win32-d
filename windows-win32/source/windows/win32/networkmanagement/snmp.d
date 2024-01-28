@@ -333,7 +333,7 @@ struct AsnAny
 {
     align (4):
     ubyte asnType;
-    union _asnValue_e__Union
+    union asnValue
     {
         align (4):
         int number;
@@ -387,7 +387,7 @@ struct smiCNTR64
 struct smiVALUE
 {
     uint syntax;
-    union _value_e__Union
+    union value
     {
         int sNumber;
         uint uNumber;

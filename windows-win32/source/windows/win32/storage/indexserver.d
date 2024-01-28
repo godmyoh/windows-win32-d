@@ -251,13 +251,13 @@ interface IFilter : IUnknown
 }
 struct DBID
 {
-    union _uGuid_e__Union
+    union uGuid
     {
         GUID guid;
         GUID* pguid;
     }
     uint eKind;
-    union _uName_e__Union
+    union uName
     {
         PWSTR pwszName;
         uint ulPropid;
@@ -293,14 +293,14 @@ enum : int
 /+ [CONFLICTED] struct DBID
 {
     align (2):
-    union _uGuid_e__Union
+    union uGuid
     {
         align (2):
         GUID guid;
         GUID* pguid;
     }
     uint eKind;
-    union _uName_e__Union
+    union uName
     {
         align (2):
         PWSTR pwszName;

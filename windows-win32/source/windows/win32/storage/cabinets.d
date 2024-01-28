@@ -152,20 +152,20 @@ struct FDIDECRYPT
     void* pvUser;
     union
     {
-        struct _cabinet_e__Struct
+        struct cabinet
         {
             void* pHeaderReserve;
             ushort cbHeaderReserve;
             ushort setID;
             int iCabinet;
         }
-        struct _folder_e__Struct
+        struct folder
         {
             void* pFolderReserve;
             ushort cbFolderReserve;
             ushort iFolder;
         }
-        struct _decrypt_e__Struct
+        struct decrypt
         {
             void* pDataReserve;
             ushort cbDataReserve;

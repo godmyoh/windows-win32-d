@@ -427,7 +427,7 @@ struct IP4_ARRAY
 struct DNS_ADDR
 {
     CHAR[32] MaxSa;
-    union _Data_e__Union
+    union Data
     {
         align (1):
         uint[8] DnsAddrUserDword;
@@ -913,14 +913,14 @@ struct DNS_RECORDW
     PWSTR pName;
     ushort wType;
     ushort wDataLength;
-    union _Flags_e__Union
+    union Flags
     {
         uint DW;
         DNS_RECORD_FLAGS S;
     }
     uint dwTtl;
     uint dwReserved;
-    union _Data_e__Union
+    union Data
     {
         DNS_A_DATA A;
         DNS_SOA_DATAW SOA;
@@ -1016,7 +1016,7 @@ struct DNS_RECORD_OPTW
     PWSTR pName;
     ushort wType;
     ushort wDataLength;
-    union _Flags_e__Union
+    union Flags
     {
         uint DW;
         DNS_RECORD_FLAGS S;
@@ -1024,7 +1024,7 @@ struct DNS_RECORD_OPTW
     DNS_HEADER_EXT ExtHeader;
     ushort wPayloadSize;
     ushort wReserved;
-    union _Data_e__Union
+    union Data
     {
         DNS_OPT_DATA OPT;
         DNS_OPT_DATA Opt;
@@ -1036,14 +1036,14 @@ struct DNS_RECORDA
     PSTR pName;
     ushort wType;
     ushort wDataLength;
-    union _Flags_e__Union
+    union Flags
     {
         uint DW;
         DNS_RECORD_FLAGS S;
     }
     uint dwTtl;
     uint dwReserved;
-    union _Data_e__Union
+    union Data
     {
         DNS_A_DATA A;
         DNS_SOA_DATAA SOA;
@@ -1139,7 +1139,7 @@ struct _DnsRecordOptA
     PSTR pName;
     ushort wType;
     ushort wDataLength;
-    union _Flags_e__Union
+    union Flags
     {
         uint DW;
         DNS_RECORD_FLAGS S;
@@ -1147,7 +1147,7 @@ struct _DnsRecordOptA
     DNS_HEADER_EXT ExtHeader;
     ushort wPayloadSize;
     ushort wReserved;
-    union _Data_e__Union
+    union Data
     {
         DNS_OPT_DATA OPT;
         DNS_OPT_DATA Opt;

@@ -1595,12 +1595,12 @@ struct CREATE_PARTITION_PARAMETERS
     VDS_PARTITION_STYLE style;
     union
     {
-        struct _MbrPartInfo_e__Struct
+        struct MbrPartInfo
         {
             ubyte partitionType;
             BOOLEAN bootIndicator;
         }
-        struct _GptPartInfo_e__Struct
+        struct GptPartInfo
         {
             GUID partitionType;
             GUID partitionId;
@@ -1614,11 +1614,11 @@ struct CHANGE_ATTRIBUTES_PARAMETERS
     VDS_PARTITION_STYLE style;
     union
     {
-        struct _MbrPartInfo_e__Struct
+        struct MbrPartInfo
         {
             BOOLEAN bootIndicator;
         }
-        struct _GptPartInfo_e__Struct
+        struct GptPartInfo
         {
             ulong attributes;
         }
@@ -1629,11 +1629,11 @@ struct CHANGE_PARTITION_TYPE_PARAMETERS
     VDS_PARTITION_STYLE style;
     union
     {
-        struct _MbrPartInfo_e__Struct
+        struct MbrPartInfo
         {
             ubyte partitionType;
         }
-        struct _GptPartInfo_e__Struct
+        struct GptPartInfo
         {
             GUID partitionType;
         }

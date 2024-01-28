@@ -1942,12 +1942,12 @@ struct DEBUG_VALUE
         ulong[2] VI64;
         float[4] VF32;
         double[2] VF64;
-        struct _I64Parts32_e__Struct
+        struct I64Parts32
         {
             uint LowPart;
             uint HighPart;
         }
-        struct _F128Parts64_e__Struct
+        struct F128Parts64
         {
             ulong LowPart;
             long HighPart;
@@ -4746,13 +4746,13 @@ struct ScriptDebugEventInformation
     ScriptDebugEvent DebugEvent;
     ScriptDebugPosition EventPosition;
     ScriptDebugPosition EventSpanEnd;
-    union _u_e__Union
+    union u
     {
-        struct _ExceptionInformation_e__Struct
+        struct ExceptionInformation
         {
             ubyte IsUncaught;
         }
-        struct _BreakpointInformation_e__Struct
+        struct BreakpointInformation
         {
             ulong BreakpointId;
         }
@@ -5631,7 +5631,7 @@ struct DEBUG_DRIVER_OBJECT_INFO
     ulong DriverStart;
     ulong DriverExtension;
     ulong DeviceObject;
-    struct _DriverName_e__Struct
+    struct DriverName
     {
         ushort Length;
         ushort MaximumLength;
@@ -6826,7 +6826,7 @@ struct OS_INFO
     uint ProductType;
     uint Suite;
     uint Revision;
-    struct _s_e__Struct
+    struct s
     {
         uint _bitfield0;
     }
@@ -6885,7 +6885,7 @@ struct OS_INFO_v1
     OS_TYPE Type;
     union
     {
-        struct _Version_e__Struct
+        struct Version
         {
             uint Major;
             uint Minor;
@@ -6894,7 +6894,7 @@ struct OS_INFO_v1
     }
     uint ProductType;
     uint Suite;
-    struct _s_e__Struct
+    struct s
     {
         uint _bitfield0;
     }

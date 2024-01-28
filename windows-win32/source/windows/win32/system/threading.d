@@ -703,9 +703,9 @@ struct REASON_CONTEXT
 {
     uint Version;
     POWER_REQUEST_CONTEXT_FLAGS Flags;
-    union _Reason_e__Union
+    union Reason
     {
-        struct _Detailed_e__Struct
+        struct Detailed
         {
             HMODULE LocalizedReasonModule;
             uint LocalizedReasonId;
@@ -1051,10 +1051,10 @@ struct TP_CALLBACK_ENVIRON_V3
     void* RaceDll;
     long ActivationContext;
     PTP_SIMPLE_CALLBACK FinalizationCallback;
-    union _u_e__Union
+    union u
     {
         uint Flags;
-        struct _s_e__Struct
+        struct s
         {
             uint _bitfield0;
         }

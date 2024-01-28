@@ -108,7 +108,7 @@ union PSAPI_WORKING_SET_EX_BLOCK
         {
             ulong _bitfield0;
         }
-        struct _Invalid_e__Struct
+        struct Invalid
         {
             ulong _bitfield1;
         }

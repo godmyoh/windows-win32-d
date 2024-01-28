@@ -523,7 +523,7 @@ struct NOTIFICATION
 {
     uint ulEventType;
     uint ulAlignPad;
-    union _info_e__Union
+    union info
     {
         ERROR_NOTIFICATION err;
         NEWMAIL_NOTIFICATION newmail;
@@ -552,7 +552,7 @@ struct MAPINAMEID
 {
     GUID* lpguid;
     uint ulKind;
-    union _Kind_e__Union
+    union Kind
     {
         int lID;
         PWSTR lpwstrName;
@@ -650,7 +650,7 @@ struct SCommentRestriction
 struct SRestriction
 {
     uint rt;
-    union _res_e__Union
+    union res
     {
         SComparePropsRestriction resCompareProps;
         SAndRestriction resAnd;
@@ -941,7 +941,7 @@ struct DTCTL
     uint cbNotif;
     byte* lpszFilter;
     uint ulItemID;
-    union _ctl_e__Union
+    union ctl
     {
         void* lpv;
         DTBLLABEL* lplabel;

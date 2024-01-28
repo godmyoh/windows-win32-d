@@ -710,7 +710,7 @@ struct READER_SEL_REQUEST
     READER_SEL_REQUEST_MATCH_TYPE MatchType;
     union
     {
-        struct _ReaderAndContainerParameter_e__Struct
+        struct ReaderAndContainerParameter
         {
             uint cbReaderNameOffset;
             uint cchReaderNameLength;
@@ -719,7 +719,7 @@ struct READER_SEL_REQUEST
             uint dwDesiredCardModuleVersion;
             uint dwCspFlags;
         }
-        struct _SerialNumberParameter_e__Struct
+        struct SerialNumberParameter
         {
             uint cbSerialNumberOffset;
             uint cbSerialNumberLength;

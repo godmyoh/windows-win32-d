@@ -6,14 +6,15 @@ import windows.win32.media.audio : AUDIO_VOLUME_NOTIFICATION_DATA, IMMDevice, WA
 import windows.win32.media.audio.apo : APO_CONNECTION_PROPERTY;
 import windows.win32.media.kernelstreaming : AUDIO_CURVE_TYPE;
 import windows.win32.system.com : IUnknown;
+import windows.win32.ui.shell.propertiessystem : PROPERTYKEY;
 
 version (Windows):
 extern (Windows):
 
-//enum DEVPKEY_AudioEndpointPlugin_FactoryCLSID = [MISSING];
-//enum DEVPKEY_AudioEndpointPlugin_DataFlow = [MISSING];
-//enum DEVPKEY_AudioEndpointPlugin_PnPInterface = [MISSING];
-//enum DEVPKEY_AudioEndpointPlugin2_FactoryCLSID = [MISSING];
+enum DEVPKEY_AudioEndpointPlugin_FactoryCLSID = PROPERTYKEY(GUID(316160983, 53010, 18110, [133, 64, 129, 39, 16, 211, 2, 28]), 1);
+enum DEVPKEY_AudioEndpointPlugin_DataFlow = PROPERTYKEY(GUID(316160983, 53010, 18110, [133, 64, 129, 39, 16, 211, 2, 28]), 2);
+enum DEVPKEY_AudioEndpointPlugin_PnPInterface = PROPERTYKEY(GUID(316160983, 53010, 18110, [133, 64, 129, 39, 16, 211, 2, 28]), 3);
+enum DEVPKEY_AudioEndpointPlugin2_FactoryCLSID = PROPERTYKEY(GUID(316160983, 53010, 18110, [133, 64, 129, 39, 16, 211, 2, 28]), 4);
 enum IID_IAudioEndpointFormatControl = GUID(0x784cfd40, 0x9f89, 0x456e, [0xa1, 0xa6, 0x87, 0x3b, 0x0, 0x6a, 0x66, 0x4e]);
 interface IAudioEndpointFormatControl : IUnknown
 {

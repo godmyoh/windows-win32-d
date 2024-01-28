@@ -581,27 +581,27 @@ struct HTTP_DATA_CHUNK
     HTTP_DATA_CHUNK_TYPE DataChunkType;
     union
     {
-        struct _FromMemory_e__Struct
+        struct FromMemory
         {
             void* pBuffer;
             uint BufferLength;
         }
-        struct _FromFileHandle_e__Struct
+        struct FromFileHandle
         {
             HTTP_BYTE_RANGE ByteRange;
             HANDLE FileHandle;
         }
-        struct _FromFragmentCache_e__Struct
+        struct FromFragmentCache
         {
             ushort FragmentNameLength;
             const(wchar)* pFragmentName;
         }
-        struct _FromFragmentCacheEx_e__Struct
+        struct FromFragmentCacheEx
         {
             HTTP_BYTE_RANGE ByteRange;
             const(wchar)* pFragmentName;
         }
-        struct _Trailers_e__Struct
+        struct Trailers
         {
             ushort TrailerCount;
             HTTP_UNKNOWN_HEADER* pTrailers;

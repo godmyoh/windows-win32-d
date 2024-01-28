@@ -6430,7 +6430,7 @@ struct AVISTREAMHEADER
     uint dwSuggestedBufferSize;
     uint dwQuality;
     uint dwSampleSize;
-    struct _rcFrame_e__Struct
+    struct rcFrame
     {
         short left;
         short top;

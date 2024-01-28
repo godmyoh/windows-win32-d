@@ -1408,7 +1408,7 @@ struct INTERNET_PROXY_INFO
 struct INTERNET_PER_CONN_OPTIONA
 {
     INTERNET_PER_CONN dwOption;
-    union _Value_e__Union
+    union Value
     {
         uint dwValue;
         PSTR pszValue;
@@ -1418,7 +1418,7 @@ struct INTERNET_PER_CONN_OPTIONA
 struct INTERNET_PER_CONN_OPTIONW
 {
     INTERNET_PER_CONN dwOption;
-    union _Value_e__Union
+    union Value
     {
         uint dwValue;
         PWSTR pszValue;
@@ -1666,7 +1666,7 @@ struct GOPHER_ATTRIBUTE_TYPE
 {
     uint CategoryId;
     uint AttributeId;
-    union _AttributeType_e__Union
+    union AttributeType
     {
         GOPHER_ADMIN_ATTRIBUTE_TYPE Admin;
         GOPHER_MOD_DATE_ATTRIBUTE_TYPE ModDate;

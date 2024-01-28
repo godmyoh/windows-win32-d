@@ -1,6 +1,7 @@
 module windows.win32.devices.display;
 
 import windows.win32.guid : GUID;
+import windows.win32.devices.properties : DEVPROPKEY;
 import windows.win32.foundation : BOOL, BOOLEAN, CHAR, HANDLE, HRESULT, HWND, LUID, NTSTATUS, POINTL, PSTR, PWSTR, RECT, RECTL, SIZE, WIN32_ERROR;
 import windows.win32.graphics.direct3d9 : IDirect3DDevice9;
 import windows.win32.graphics.directdraw : DD_CALLBACKS, DD_DIRECTDRAW_GLOBAL, DD_HALINFO, DD_PALETTECALLBACKS, DD_SURFACECALLBACKS, DD_SURFACE_LOCAL, VIDEOMEMORY;
@@ -169,10 +170,10 @@ enum GUID_DEVINTERFACE_DISPLAY_ADAPTER = GUID(0x5b45201d, 0xf2f2, 0x4f3b, [0x85,
 enum GUID_DEVINTERFACE_MONITOR = GUID(0xe6f07b5f, 0xee97, 0x4a90, [0xb0, 0x76, 0x33, 0xf5, 0x7b, 0xf4, 0xea, 0xa7]);
 enum GUID_DISPLAY_DEVICE_ARRIVAL = GUID(0x1ca05180, 0xa699, 0x450a, [0x9a, 0xc, 0xde, 0x4f, 0xbe, 0x3d, 0xdd, 0x89]);
 enum GUID_DEVINTERFACE_VIDEO_OUTPUT_ARRIVAL = GUID(0x1ad9e4f0, 0xf88d, 0x4360, [0xba, 0xb9, 0x4c, 0x2d, 0x55, 0xe5, 0x64, 0xcd]);
-//enum DEVPKEY_IndirectDisplay = [MISSING];
-//enum DEVPKEY_Device_TerminalLuid = [MISSING];
-//enum DEVPKEY_Device_AdapterLuid = [MISSING];
-//enum DEVPKEY_Device_ActivityId = [MISSING];
+enum DEVPKEY_IndirectDisplay = DEVPROPKEY(GUID(3305783056, 43612, 16967, [184, 48, 214, 166, 248, 234, 163, 16]), 1);
+enum DEVPKEY_Device_TerminalLuid = DEVPROPKEY(GUID(3305783056, 43612, 16967, [184, 48, 214, 166, 248, 234, 163, 16]), 2);
+enum DEVPKEY_Device_AdapterLuid = DEVPROPKEY(GUID(3305783056, 43612, 16967, [184, 48, 214, 166, 248, 234, 163, 16]), 3);
+enum DEVPKEY_Device_ActivityId = DEVPROPKEY(GUID(3305783056, 43612, 16967, [184, 48, 214, 166, 248, 234, 163, 16]), 4);
 enum INDIRECT_DISPLAY_INFO_FLAGS_CREATED_IDDCX_ADAPTER = 0x00000001;
 enum VIDEO_DEVICE_NAME = "DISPLAY%d";
 enum WVIDEO_DEVICE_NAME = "DISPLAY%d";
@@ -968,7 +969,7 @@ struct DISPLAYCONFIG_VIDEO_SIGNAL_INFO
     DISPLAYCONFIG_2DREGION totalSize;
     union
     {
-        struct _AdditionalSignalInfo_e__Struct
+        struct AdditionalSignalInfo
         {
             uint _bitfield0;
         }
@@ -2866,7 +2867,7 @@ struct COLORSPACE_TRANSFORM_MATRIX_V2
 struct COLORSPACE_TRANSFORM
 {
     COLORSPACE_TRANSFORM_TYPE Type;
-    union _Data_e__Union
+    union Data
     {
         GAMMA_RAMP_RGB256x3x16 Rgb256x3x16;
         GAMMA_RAMP_DXGI_1 Dxgi1;

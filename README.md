@@ -69,7 +69,6 @@ Instead of `dub run`, `dub-run-usePackageModule.bat` or `dub-run-appendUnderscor
 
 - When a field in a struct has the same name as the type name, an underscore is added to the field name to avoid compile errors.
 - Bitfields are not translated.
-- There are many missing constants. They are marked as [MISSING] and are commented out.
 - `Windows.Win32.Foundation.Metadata` is excluded.
 - Using `windows-win32-debug.lib` generated in `usePackageModule` mode causes unexplained linker errors.
 

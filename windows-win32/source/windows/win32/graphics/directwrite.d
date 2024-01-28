@@ -1323,7 +1323,7 @@ union DWRITE_PANOSE
 {
     ubyte[10] values;
     ubyte familyKind;
-    struct _text_e__Struct
+    struct text
     {
         ubyte familyKind;
         ubyte serifStyle;
@@ -1336,7 +1336,7 @@ union DWRITE_PANOSE
         ubyte midline;
         ubyte xHeight;
     }
-    struct _script_e__Struct
+    struct script
     {
         ubyte familyKind;
         ubyte toolKind;
@@ -1349,7 +1349,7 @@ union DWRITE_PANOSE
         ubyte finials;
         ubyte xAscent;
     }
-    struct _decorative_e__Struct
+    struct decorative
     {
         ubyte familyKind;
         ubyte decorativeClass;
@@ -1362,7 +1362,7 @@ union DWRITE_PANOSE
         ubyte decorativeTopology;
         ubyte characterRange;
     }
-    struct _symbol_e__Struct
+    struct symbol
     {
         ubyte familyKind;
         ubyte symbolKind;

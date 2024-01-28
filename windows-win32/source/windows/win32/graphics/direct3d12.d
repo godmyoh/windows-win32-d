@@ -2724,25 +2724,25 @@ struct D3D12_INDIRECT_ARGUMENT_DESC
     D3D12_INDIRECT_ARGUMENT_TYPE Type;
     union
     {
-        struct _VertexBuffer_e__Struct
+        struct VertexBuffer
         {
             uint Slot;
         }
-        struct _Constant_e__Struct
+        struct Constant
         {
             uint RootParameterIndex;
             uint DestOffsetIn32BitValues;
             uint Num32BitValuesToSet;
         }
-        struct _ConstantBufferView_e__Struct
+        struct ConstantBufferView
         {
             uint RootParameterIndex;
         }
-        struct _ShaderResourceView_e__Struct
+        struct ShaderResourceView
         {
             uint RootParameterIndex;
         }
-        struct _UnorderedAccessView_e__Struct
+        struct UnorderedAccessView
         {
             uint RootParameterIndex;
         }

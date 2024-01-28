@@ -1,6 +1,7 @@
 module windows.win32.devices.fax;
 
 import windows.win32.guid : GUID;
+import windows.win32.devices.properties : DEVPROPKEY;
 import windows.win32.foundation : BOOL, BSTR, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL;
 import windows.win32.graphics.gdi : HDC;
 import windows.win32.system.com : IDispatch, IUnknown;
@@ -333,8 +334,8 @@ enum STI_DEVICE_VALUE_DEFAULT_LAUNCHAPP_A = "DefaultLaunchApp";
 enum STI_DEVICE_VALUE_TIMEOUT_A = "PollTimeout";
 enum STI_DEVICE_VALUE_DISABLE_NOTIFICATIONS_A = "DisableNotifications";
 enum REGSTR_VAL_BAUDRATE_A = "BaudRate";
-//enum DEVPKEY_WIA_DeviceType = [MISSING];
-//enum DEVPKEY_WIA_USDClassId = [MISSING];
+enum DEVPKEY_WIA_DeviceType = DEVPROPKEY(GUID(1809653702, 33039, 4560, [190, 199, 8, 0, 43, 226, 9, 47]), 2);
+enum DEVPKEY_WIA_USDClassId = DEVPROPKEY(GUID(1809653702, 33039, 4560, [190, 199, 8, 0, 43, 226, 9, 47]), 3);
 enum STI_USD_GENCAP_NATIVE_PUSHSUPPORT = 0x00000001;
 enum STI_DEVICE_CREATE_FOR_MONITOR = 0x01000000;
 enum lDEFAULT_PREFETCH_SIZE = 0x00000064;

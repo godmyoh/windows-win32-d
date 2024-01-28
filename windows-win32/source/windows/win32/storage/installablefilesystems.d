@@ -179,9 +179,9 @@ struct FILTER_AGGREGATE_BASIC_INFORMATION
 {
     uint NextEntryOffset;
     uint Flags;
-    union _Type_e__Union
+    union Type
     {
-        struct _MiniFilter_e__Struct
+        struct MiniFilter
         {
             uint FrameID;
             uint NumberOfInstances;
@@ -190,7 +190,7 @@ struct FILTER_AGGREGATE_BASIC_INFORMATION
             ushort FilterAltitudeLength;
             ushort FilterAltitudeBufferOffset;
         }
-        struct _LegacyFilter_e__Struct
+        struct LegacyFilter
         {
             ushort FilterNameLength;
             ushort FilterNameBufferOffset;
@@ -201,9 +201,9 @@ struct FILTER_AGGREGATE_STANDARD_INFORMATION
 {
     uint NextEntryOffset;
     uint Flags;
-    union _Type_e__Union
+    union Type
     {
-        struct _MiniFilter_e__Struct
+        struct MiniFilter
         {
             uint Flags;
             uint FrameID;
@@ -213,7 +213,7 @@ struct FILTER_AGGREGATE_STANDARD_INFORMATION
             ushort FilterAltitudeLength;
             ushort FilterAltitudeBufferOffset;
         }
-        struct _LegacyFilter_e__Struct
+        struct LegacyFilter
         {
             uint Flags;
             ushort FilterNameLength;
@@ -283,9 +283,9 @@ struct INSTANCE_AGGREGATE_STANDARD_INFORMATION
 {
     uint NextEntryOffset;
     uint Flags;
-    union _Type_e__Union
+    union Type
     {
-        struct _MiniFilter_e__Struct
+        struct MiniFilter
         {
             uint Flags;
             uint FrameID;
@@ -300,7 +300,7 @@ struct INSTANCE_AGGREGATE_STANDARD_INFORMATION
             ushort FilterNameBufferOffset;
             uint SupportedFeatures;
         }
-        struct _LegacyFilter_e__Struct
+        struct LegacyFilter
         {
             uint Flags;
             ushort AltitudeLength;

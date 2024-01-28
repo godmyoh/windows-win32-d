@@ -3771,17 +3771,17 @@ struct CM_NOTIFY_FILTER
     uint Flags;
     CM_NOTIFY_FILTER_TYPE FilterType;
     uint Reserved;
-    union _u_e__Union
+    union u
     {
-        struct _DeviceInterface_e__Struct
+        struct DeviceInterface
         {
             GUID ClassGuid;
         }
-        struct _DeviceHandle_e__Struct
+        struct DeviceHandle
         {
             HANDLE hTarget;
         }
-        struct _DeviceInstance_e__Struct
+        struct DeviceInstance
         {
             wchar[200] InstanceId;
         }
@@ -3807,21 +3807,21 @@ struct CM_NOTIFY_EVENT_DATA
 {
     CM_NOTIFY_FILTER_TYPE FilterType;
     uint Reserved;
-    union _u_e__Union
+    union u
     {
-        struct _DeviceInterface_e__Struct
+        struct DeviceInterface
         {
             GUID ClassGuid;
             wchar[1] SymbolicLink;
         }
-        struct _DeviceHandle_e__Struct
+        struct DeviceHandle
         {
             GUID EventGuid;
             int NameOffset;
             uint DataSize;
             ubyte[1] Data;
         }
-        struct _DeviceInstance_e__Struct
+        struct DeviceInstance
         {
             wchar[1] InstanceId;
         }

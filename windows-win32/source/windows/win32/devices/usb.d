@@ -732,7 +732,7 @@ struct USB_DEVICE_CAPABILITY_USB20_EXTENSION_DESCRIPTOR
     ubyte bLength;
     ubyte bDescriptorType;
     ubyte bDevCapabilityType;
-    union _bmAttributes_e__Union
+    union bmAttributes
     {
         align (1):
         uint AsUlong;
@@ -750,7 +750,7 @@ struct USB_DEVICE_CAPABILITY_POWER_DELIVERY_DESCRIPTOR
     ubyte bDescriptorType;
     ubyte bDevCapabilityType;
     ubyte bReserved;
-    union _bmAttributes_e__Union
+    union bmAttributes
     {
         align (1):
         uint AsUlong;
@@ -773,7 +773,7 @@ struct USB_DEVICE_CAPABILITY_PD_CONSUMER_PORT_DESCRIPTOR
     ubyte bDescriptorType;
     ubyte bDevCapabilityType;
     ubyte bReserved;
-    union _bmCapabilities_e__Union
+    union bmCapabilities
     {
         align (1):
         ushort AsUshort;
@@ -819,7 +819,7 @@ struct USB_DEVICE_CAPABILITY_SUPERSPEEDPLUS_USB_DESCRIPTOR
     ubyte bDescriptorType;
     ubyte bDevCapabilityType;
     ubyte bReserved;
-    union _bmAttributes_e__Union
+    union bmAttributes
     {
         align (1):
         uint AsUlong;
@@ -829,7 +829,7 @@ struct USB_DEVICE_CAPABILITY_SUPERSPEEDPLUS_USB_DESCRIPTOR
             uint _bitfield0;
         }
     }
-    union _wFunctionalitySupport_e__Union
+    union wFunctionalitySupport
     {
         align (1):
         ushort AsUshort;
@@ -869,7 +869,7 @@ struct USB_DEVICE_CAPABILITY_BILLBOARD_DESCRIPTOR
     ubyte iAddtionalInfoURL;
     ubyte bNumberOfAlternateModes;
     ubyte bPreferredAlternateMode;
-    union _VconnPower_e__Union
+    union VconnPower
     {
         align (1):
         ushort AsUshort;
@@ -895,7 +895,7 @@ struct USB_DEVICE_CAPABILITY_FIRMWARE_STATUS_DESCRIPTOR
     ubyte bDescriptorType;
     ubyte bDevCapabilityType;
     ubyte bcdDescriptorVersion;
-    union _bmAttributes_e__Union
+    union bmAttributes
     {
         align (1):
         uint AsUlong;
@@ -975,14 +975,14 @@ struct USB_SUPERSPEED_ENDPOINT_COMPANION_DESCRIPTOR
     ubyte bLength;
     ubyte bDescriptorType;
     ubyte bMaxBurst;
-    union _bmAttributes_e__Union
+    union bmAttributes
     {
         ubyte AsUchar;
-        struct _Bulk_e__Struct
+        struct Bulk
         {
             ubyte _bitfield0;
         }
-        struct _Isochronous_e__Struct
+        struct Isochronous
         {
             ubyte _bitfield1;
         }
@@ -1923,7 +1923,7 @@ struct ALTERNATE_INTERFACE
 struct USBFN_NOTIFICATION
 {
     USBFN_EVENT Event;
-    union _u_e__Union
+    union u
     {
         USBFN_BUS_SPEED BusSpeed;
         USB_DEFAULT_PIPE_SETUP_PACKET SetupPacket;
@@ -2017,7 +2017,7 @@ struct USB_NODE_INFORMATION
 {
     align (1):
     USB_HUB_NODE NodeType;
-    union _u_e__Union
+    union u
     {
         USB_HUB_INFORMATION HubInformation;
         USB_MI_PARENT_INFORMATION MiParentInformation;
@@ -2094,7 +2094,7 @@ struct USB_DESCRIPTOR_REQUEST
 {
     align (1):
     uint ConnectionIndex;
-    struct _SetupPacket_e__Struct
+    struct SetupPacket
     {
         align (1):
         ubyte bmRequest;
@@ -2421,7 +2421,7 @@ struct USB_HUB_INFORMATION_EX
     align (1):
     USB_HUB_TYPE HubType;
     ushort HighestPortNumber;
-    union _u_e__Union
+    union u
     {
         USB_HUB_DESCRIPTOR UsbHubDescriptor;
         USB_30_HUB_DESCRIPTOR Usb30HubDescriptor;

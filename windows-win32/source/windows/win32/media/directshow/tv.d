@@ -3298,7 +3298,7 @@ struct SECTION
 {
     align (1):
     ubyte TableId;
-    union _Header_e__Union
+    union Header
     {
         align (1):
         MPEG_HEADER_BITS_MIDL S;
@@ -3310,14 +3310,14 @@ struct LONG_SECTION
 {
     align (1):
     ubyte TableId;
-    union _Header_e__Union
+    union Header
     {
         align (1):
         MPEG_HEADER_BITS_MIDL S;
         ushort W;
     }
     ushort TableIdExtension;
-    union _Version_e__Union
+    union Version
     {
         MPEG_HEADER_VERSION_BITS_MIDL S;
         ubyte B;
@@ -3330,14 +3330,14 @@ struct DSMCC_SECTION
 {
     align (1):
     ubyte TableId;
-    union _Header_e__Union
+    union Header
     {
         align (1):
         MPEG_HEADER_BITS_MIDL S;
         ushort W;
     }
     ushort TableIdExtension;
-    union _Version_e__Union
+    union Version
     {
         MPEG_HEADER_VERSION_BITS_MIDL S;
         ubyte B;
@@ -3497,7 +3497,7 @@ struct MPEG_CONTEXT
 {
     align (1):
     MPEG_CONTEXT_TYPE Type;
-    union _U_e__Union
+    union U
     {
         MPEG_BCS_DEMUX Demux;
         MPEG_WINSOCK Winsock;
@@ -3963,7 +3963,7 @@ struct TRANSPORT_PROPERTIES
 {
     uint PID;
     long PCR;
-    union _Fields_e__Union
+    union Fields
     {
         struct _Others
         {
@@ -5295,17 +5295,17 @@ struct ChannelInfo
     int lFrequency;
     union
     {
-        struct _DVB_e__Struct
+        struct DVB
         {
             int lONID;
             int lTSID;
             int lSID;
         }
-        struct _DC_e__Struct
+        struct DC
         {
             int lProgNumber;
         }
-        struct _ATSC_e__Struct
+        struct ATSC
         {
             int lProgNumber;
         }

@@ -217,7 +217,7 @@ struct KEY_EVENT_RECORD
     ushort wRepeatCount;
     ushort wVirtualKeyCode;
     ushort wVirtualScanCode;
-    union _uChar_e__Union
+    union uChar
     {
         wchar UnicodeChar;
         CHAR AsciiChar;
@@ -246,7 +246,7 @@ struct FOCUS_EVENT_RECORD
 struct INPUT_RECORD
 {
     ushort EventType;
-    union _Event_e__Union
+    union Event
     {
         KEY_EVENT_RECORD KeyEvent;
         MOUSE_EVENT_RECORD MouseEvent;
@@ -257,7 +257,7 @@ struct INPUT_RECORD
 }
 struct CHAR_INFO
 {
-    union _Char_e__Union
+    union Char
     {
         wchar UnicodeChar;
         CHAR AsciiChar;

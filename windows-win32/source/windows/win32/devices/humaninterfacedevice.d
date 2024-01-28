@@ -1,6 +1,7 @@
 module windows.win32.devices.humaninterfacedevice;
 
 import windows.win32.guid : GUID;
+import windows.win32.devices.properties : DEVPROPKEY;
 import windows.win32.foundation : BOOL, BOOLEAN, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, NTSTATUS, POINT, PSTR, PWSTR, RECT;
 import windows.win32.system.com : IUnknown;
 import windows.win32.system.registry : HKEY;
@@ -193,14 +194,14 @@ enum DIDIFT_DELETE = 0x01000000;
 enum GUID_DEVINTERFACE_HID = GUID(0x4d1e55b2, 0xf16f, 0x11cf, [0x88, 0xcb, 0x0, 0x11, 0x11, 0x0, 0x0, 0x30]);
 enum GUID_HID_INTERFACE_NOTIFY = GUID(0x2c4e2e88, 0x25e6, 0x4c33, [0x88, 0x2f, 0x3d, 0x82, 0xe6, 0x7, 0x36, 0x81]);
 enum GUID_HID_INTERFACE_HIDPARSE = GUID(0xf5c315a5, 0x69ac, 0x4bc2, [0x92, 0x79, 0xd0, 0xb6, 0x45, 0x76, 0xf4, 0x4b]);
-//enum DEVPKEY_DeviceInterface_HID_UsagePage = [MISSING];
-//enum DEVPKEY_DeviceInterface_HID_UsageId = [MISSING];
-//enum DEVPKEY_DeviceInterface_HID_IsReadOnly = [MISSING];
-//enum DEVPKEY_DeviceInterface_HID_VendorId = [MISSING];
-//enum DEVPKEY_DeviceInterface_HID_ProductId = [MISSING];
-//enum DEVPKEY_DeviceInterface_HID_VersionNumber = [MISSING];
-//enum DEVPKEY_DeviceInterface_HID_BackgroundAccess = [MISSING];
-//enum DEVPKEY_DeviceInterface_HID_WakeScreenOnInputCapable = [MISSING];
+enum DEVPKEY_DeviceInterface_HID_UsagePage = DEVPROPKEY(GUID(3421733648, 18967, 17168, [161, 235, 36, 127, 11, 103, 89, 59]), 2);
+enum DEVPKEY_DeviceInterface_HID_UsageId = DEVPROPKEY(GUID(3421733648, 18967, 17168, [161, 235, 36, 127, 11, 103, 89, 59]), 3);
+enum DEVPKEY_DeviceInterface_HID_IsReadOnly = DEVPROPKEY(GUID(3421733648, 18967, 17168, [161, 235, 36, 127, 11, 103, 89, 59]), 4);
+enum DEVPKEY_DeviceInterface_HID_VendorId = DEVPROPKEY(GUID(3421733648, 18967, 17168, [161, 235, 36, 127, 11, 103, 89, 59]), 5);
+enum DEVPKEY_DeviceInterface_HID_ProductId = DEVPROPKEY(GUID(3421733648, 18967, 17168, [161, 235, 36, 127, 11, 103, 89, 59]), 6);
+enum DEVPKEY_DeviceInterface_HID_VersionNumber = DEVPROPKEY(GUID(3421733648, 18967, 17168, [161, 235, 36, 127, 11, 103, 89, 59]), 7);
+enum DEVPKEY_DeviceInterface_HID_BackgroundAccess = DEVPROPKEY(GUID(3421733648, 18967, 17168, [161, 235, 36, 127, 11, 103, 89, 59]), 8);
+enum DEVPKEY_DeviceInterface_HID_WakeScreenOnInputCapable = DEVPROPKEY(GUID(3421733648, 18967, 17168, [161, 235, 36, 127, 11, 103, 89, 59]), 9);
 enum HID_REVISION = 0x00000001;
 enum HIDP_STATUS_SUCCESS = 0x00110000;
 enum HIDP_STATUS_NULL = 0xffffffff80110001;
@@ -3631,7 +3632,7 @@ struct HIDP_BUTTON_CAPS
     uint[9] Reserved;
     union
     {
-        struct _Range_e__Struct
+        struct Range
         {
             ushort UsageMin;
             ushort UsageMax;
@@ -3642,7 +3643,7 @@ struct HIDP_BUTTON_CAPS
             ushort DataIndexMin;
             ushort DataIndexMax;
         }
-        struct _NotRange_e__Struct
+        struct NotRange
         {
             ushort Usage;
             ushort Reserved1;
@@ -3681,7 +3682,7 @@ struct HIDP_VALUE_CAPS
     int PhysicalMax;
     union
     {
-        struct _Range_e__Struct
+        struct Range
         {
             ushort UsageMin;
             ushort UsageMax;
@@ -3692,7 +3693,7 @@ struct HIDP_VALUE_CAPS
             ushort DataIndexMin;
             ushort DataIndexMax;
         }
-        struct _NotRange_e__Struct
+        struct NotRange
         {
             ushort Usage;
             ushort Reserved1;

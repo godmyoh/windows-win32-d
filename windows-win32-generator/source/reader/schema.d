@@ -176,7 +176,9 @@ struct Row(Database.TableFormat t)
             if (fields.length != 1)
                 return false;
 
-            return fields[0].name == "Value";
+            auto field = fields[0];
+
+            return field.name == "Value" && !field.signature.typeSig.isArray;
         }
 
         bool isFunctionPointer()

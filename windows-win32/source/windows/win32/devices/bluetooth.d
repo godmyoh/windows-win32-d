@@ -1156,7 +1156,7 @@ struct SDP_ELEMENT_DATA
 {
     SDP_TYPE type;
     SDP_SPECIFICTYPE specificType;
-    union _data_e__Union
+    union data
     {
         SDP_LARGE_INTEGER_16 int128;
         long int64;
@@ -1172,22 +1172,22 @@ struct SDP_ELEMENT_DATA
         GUID uuid128;
         uint uuid32;
         ushort uuid16;
-        struct _string_e__Struct
+        struct string
         {
             ubyte* value;
             uint length;
         }
-        struct _url_e__Struct
+        struct url
         {
             ubyte* value;
             uint length;
         }
-        struct _sequence_e__Struct
+        struct sequence
         {
             ubyte* value;
             uint length;
         }
-        struct _alternative_e__Struct
+        struct alternative
         {
             ubyte* value;
             uint length;
@@ -1204,7 +1204,7 @@ alias PFN_BLUETOOTH_ENUM_ATTRIBUTES_CALLBACK = BOOL function(uint, ubyte*, uint,
 struct BTH_LE_UUID
 {
     BOOLEAN IsShortUuid;
-    union _Value_e__Union
+    union Value
     {
         ushort ShortUuid;
         GUID LongUuid;
@@ -1261,21 +1261,21 @@ struct BTH_LE_GATT_DESCRIPTOR_VALUE
     BTH_LE_UUID DescriptorUuid;
     union
     {
-        struct _CharacteristicExtendedProperties_e__Struct
+        struct CharacteristicExtendedProperties
         {
             BOOLEAN IsReliableWriteEnabled;
             BOOLEAN IsAuxiliariesWritable;
         }
-        struct _ClientCharacteristicConfiguration_e__Struct
+        struct ClientCharacteristicConfiguration
         {
             BOOLEAN IsSubscribeToNotification;
             BOOLEAN IsSubscribeToIndication;
         }
-        struct _ServerCharacteristicConfiguration_e__Struct
+        struct ServerCharacteristicConfiguration
         {
             BOOLEAN IsBroadcast;
         }
-        struct _CharacteristicFormat_e__Struct
+        struct CharacteristicFormat
         {
             ubyte Format;
             ubyte Exponent;
@@ -1361,7 +1361,7 @@ struct RFCOMM_COMMAND
 {
     align (1):
     uint CmdType;
-    union _Data_e__Union
+    union Data
     {
         RFCOMM_MSC_DATA MSC;
         RFCOMM_RLS_DATA RLS;

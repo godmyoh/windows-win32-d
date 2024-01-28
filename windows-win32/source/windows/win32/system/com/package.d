@@ -355,19 +355,19 @@ enum : int
 struct uCLSSPEC
 {
     uint tyspec;
-    union _tagged_union_e__Struct
+    union tagged_union
     {
         GUID clsid;
         PWSTR pFileExt;
         PWSTR pMimeType;
         PWSTR pProgId;
         PWSTR pFileName;
-        struct _ByName_e__Struct
+        struct ByName
         {
             PWSTR pPackageName;
             GUID PolicyId;
         }
-        struct _ByObjectId_e__Struct
+        struct ByObjectId
         {
             GUID ObjectId;
             GUID PolicyId;
@@ -1402,7 +1402,7 @@ struct RemSTGMEDIUM
 struct STGMEDIUM
 {
     uint tymed;
-    union _u_e__Union
+    union u
     {
         HBITMAP hBitmap;
         void* hMetaFilePict;
@@ -1417,7 +1417,7 @@ struct STGMEDIUM
 struct GDI_OBJECT
 {
     uint ObjectType;
-    union _u_e__Struct
+    union u
     {
         userHBITMAP* hBitmap;
         userHPALETTE* hPalette;
@@ -1429,7 +1429,7 @@ struct userSTGMEDIUM
     struct _STGMEDIUM_UNION
     {
         uint tymed;
-        union _u_e__Struct
+        union u
         {
             userHMETAFILEPICT* hMetaFilePict;
             userHENHMETAFILE* hHEnhMetaFile;

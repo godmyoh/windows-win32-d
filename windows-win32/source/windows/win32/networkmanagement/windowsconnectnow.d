@@ -3,6 +3,7 @@ module windows.win32.networkmanagement.windowsconnectnow;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : HRESULT, PWSTR;
 import windows.win32.system.com : IUnknown;
+import windows.win32.ui.shell.propertiessystem : PROPERTYKEY;
 
 version (Windows):
 extern (Windows):
@@ -92,10 +93,10 @@ enum WCN_FLAG_DISCOVERY_VE = 0x00000001;
 enum WCN_FLAG_AUTHENTICATED_VE = 0x00000002;
 enum WCN_FLAG_ENCRYPTED_VE = 0x00000004;
 enum SID_WcnProvider = GUID(0xc100beca, 0xd33a, 0x4a4b, [0xbf, 0x23, 0xbb, 0xef, 0x46, 0x63, 0xd0, 0x17]);
-//enum PKEY_WCN_DeviceType_Category = [MISSING];
-//enum PKEY_WCN_DeviceType_SubCategoryOUI = [MISSING];
-//enum PKEY_WCN_DeviceType_SubCategory = [MISSING];
-//enum PKEY_WCN_SSID = [MISSING];
+enum PKEY_WCN_DeviceType_Category = PROPERTYKEY(GUID(2283342731, 18052, 4570, [162, 106, 0, 2, 179, 152, 142, 129]), 16);
+enum PKEY_WCN_DeviceType_SubCategoryOUI = PROPERTYKEY(GUID(2283342731, 18052, 4570, [162, 106, 0, 2, 179, 152, 142, 129]), 17);
+enum PKEY_WCN_DeviceType_SubCategory = PROPERTYKEY(GUID(2283342731, 18052, 4570, [162, 106, 0, 2, 179, 152, 142, 129]), 18);
+enum PKEY_WCN_SSID = PROPERTYKEY(GUID(2283342731, 18052, 4570, [162, 106, 0, 2, 179, 152, 142, 129]), 32);
 alias WCN_ATTRIBUTE_TYPE = int;
 enum : int
 {

@@ -230,7 +230,7 @@ struct MI_Interval
 struct MI_Datetime
 {
     uint isTimestamp;
-    union _u_e__Union
+    union u
     {
         MI_Timestamp timestamp;
         MI_Interval interval;
@@ -1200,7 +1200,7 @@ struct MI_UsernamePasswordCreds
 struct MI_UserCredentials
 {
     const(ushort)* authenticationType;
-    union _credentials_e__Union
+    union credentials
     {
         MI_UsernamePasswordCreds usernamePassword;
         const(ushort)* certificateThumbprint;

@@ -51,7 +51,7 @@ union SLIST_HEADER
         ulong Alignment;
         ulong Region;
     }
-    struct _HeaderArm64_e__Struct
+    struct HeaderArm64
     {
         ulong _bitfield1;
         ulong _bitfield2;
@@ -208,7 +208,7 @@ enum : int
         ulong Alignment;
         ulong Region;
     }
-    struct _HeaderX64_e__Struct
+    struct HeaderX64
     {
         ulong _bitfield1;
         ulong _bitfield2;

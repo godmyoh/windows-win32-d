@@ -68,17 +68,17 @@ struct OPEN_VIRTUAL_DISK_PARAMETERS
     OPEN_VIRTUAL_DISK_VERSION Version;
     union
     {
-        struct _Version1_e__Struct
+        struct Version1
         {
             uint RWDepth;
         }
-        struct _Version2_e__Struct
+        struct Version2
         {
             BOOL GetInfoOnly;
             BOOL ReadOnly;
             GUID ResiliencyGuid;
         }
-        struct _Version3_e__Struct
+        struct Version3
         {
             BOOL GetInfoOnly;
             BOOL ReadOnly;
@@ -135,7 +135,7 @@ struct CREATE_VIRTUAL_DISK_PARAMETERS
     CREATE_VIRTUAL_DISK_VERSION Version;
     union
     {
-        struct _Version1_e__Struct
+        struct Version1
         {
             GUID UniqueId;
             ulong MaximumSize;
@@ -144,7 +144,7 @@ struct CREATE_VIRTUAL_DISK_PARAMETERS
             const(wchar)* ParentPath;
             const(wchar)* SourcePath;
         }
-        struct _Version2_e__Struct
+        struct Version2
         {
             GUID UniqueId;
             ulong MaximumSize;
@@ -158,7 +158,7 @@ struct CREATE_VIRTUAL_DISK_PARAMETERS
             VIRTUAL_STORAGE_TYPE SourceVirtualStorageType;
             GUID ResiliencyGuid;
         }
-        struct _Version3_e__Struct
+        struct Version3
         {
             GUID UniqueId;
             ulong MaximumSize;
@@ -174,7 +174,7 @@ struct CREATE_VIRTUAL_DISK_PARAMETERS
             const(wchar)* SourceLimitPath;
             VIRTUAL_STORAGE_TYPE BackingStorageType;
         }
-        struct _Version4_e__Struct
+        struct Version4
         {
             GUID UniqueId;
             ulong MaximumSize;
@@ -224,11 +224,11 @@ struct ATTACH_VIRTUAL_DISK_PARAMETERS
     ATTACH_VIRTUAL_DISK_VERSION Version;
     union
     {
-        struct _Version1_e__Struct
+        struct Version1
         {
             uint Reserved;
         }
-        struct _Version2_e__Struct
+        struct Version2
         {
             ulong RestrictedOffset;
             ulong RestrictedLength;
@@ -346,7 +346,7 @@ struct GET_VIRTUAL_DISK_INFO
     GET_VIRTUAL_DISK_INFO_VERSION Version;
     union
     {
-        struct _Size_e__Struct
+        struct Size
         {
             ulong VirtualSize;
             ulong PhysicalSize;
@@ -354,7 +354,7 @@ struct GET_VIRTUAL_DISK_INFO
             uint SectorSize;
         }
         GUID Identifier;
-        struct _ParentLocation_e__Struct
+        struct ParentLocation
         {
             BOOL ParentResolved;
             wchar[1] ParentLocationBuffer;
@@ -365,7 +365,7 @@ struct GET_VIRTUAL_DISK_INFO
         uint ProviderSubtype;
         BOOL Is4kAligned;
         BOOL IsLoaded;
-        struct _PhysicalDisk_e__Struct
+        struct PhysicalDisk
         {
             uint LogicalSectorSize;
             uint PhysicalSectorSize;
@@ -375,7 +375,7 @@ struct GET_VIRTUAL_DISK_INFO
         ulong SmallestSafeVirtualSize;
         uint FragmentationPercentage;
         GUID VirtualDiskId;
-        struct _ChangeTrackingState_e__Struct
+        struct ChangeTrackingState
         {
             BOOL Enabled;
             BOOL NewerChanges;
@@ -403,7 +403,7 @@ struct SET_VIRTUAL_DISK_INFO
     {
         const(wchar)* ParentFilePath;
         GUID UniqueIdentifier;
-        struct _ParentPathWithDepthInfo_e__Struct
+        struct ParentPathWithDepthInfo
         {
             uint ChildDepth;
             const(wchar)* ParentFilePath;
@@ -411,7 +411,7 @@ struct SET_VIRTUAL_DISK_INFO
         uint VhdPhysicalSectorSize;
         GUID VirtualDiskId;
         BOOL ChangeTrackingEnabled;
-        struct _ParentLocator_e__Struct
+        struct ParentLocator
         {
             GUID LinkageId;
             const(wchar)* ParentFilePath;
@@ -436,7 +436,7 @@ struct COMPACT_VIRTUAL_DISK_PARAMETERS
     COMPACT_VIRTUAL_DISK_VERSION Version;
     union
     {
-        struct _Version1_e__Struct
+        struct Version1
         {
             uint Reserved;
         }
@@ -463,11 +463,11 @@ struct MERGE_VIRTUAL_DISK_PARAMETERS
     MERGE_VIRTUAL_DISK_VERSION Version;
     union
     {
-        struct _Version1_e__Struct
+        struct Version1
         {
             uint MergeDepth;
         }
-        struct _Version2_e__Struct
+        struct Version2
         {
             uint MergeSourceDepth;
             uint MergeTargetDepth;
@@ -492,7 +492,7 @@ struct EXPAND_VIRTUAL_DISK_PARAMETERS
     EXPAND_VIRTUAL_DISK_VERSION Version;
     union
     {
-        struct _Version1_e__Struct
+        struct Version1
         {
             ulong NewSize;
         }
@@ -517,7 +517,7 @@ struct RESIZE_VIRTUAL_DISK_PARAMETERS
     RESIZE_VIRTUAL_DISK_VERSION Version;
     union
     {
-        struct _Version1_e__Struct
+        struct Version1
         {
             ulong NewSize;
         }
@@ -543,7 +543,7 @@ struct MIRROR_VIRTUAL_DISK_PARAMETERS
     MIRROR_VIRTUAL_DISK_VERSION Version;
     union
     {
-        struct _Version1_e__Struct
+        struct Version1
         {
             const(wchar)* MirrorVirtualDiskPath;
         }
@@ -590,7 +590,7 @@ struct TAKE_SNAPSHOT_VHDSET_PARAMETERS
     TAKE_SNAPSHOT_VHDSET_VERSION Version;
     union
     {
-        struct _Version1_e__Struct
+        struct Version1
         {
             GUID SnapshotId;
         }
@@ -615,7 +615,7 @@ struct DELETE_SNAPSHOT_VHDSET_PARAMETERS
     DELETE_SNAPSHOT_VHDSET_VERSION Version;
     union
     {
-        struct _Version1_e__Struct
+        struct Version1
         {
             GUID SnapshotId;
         }
@@ -642,7 +642,7 @@ struct MODIFY_VHDSET_PARAMETERS
     MODIFY_VHDSET_VERSION Version;
     union
     {
-        struct _SnapshotPath_e__Struct
+        struct SnapshotPath
         {
             GUID SnapshotId;
             const(wchar)* SnapshotFilePath;
@@ -670,7 +670,7 @@ struct APPLY_SNAPSHOT_VHDSET_PARAMETERS
     APPLY_SNAPSHOT_VHDSET_VERSION Version;
     union
     {
-        struct _Version1_e__Struct
+        struct Version1
         {
             GUID SnapshotId;
             GUID LeafSnapshotId;
@@ -695,7 +695,7 @@ struct RAW_SCSI_VIRTUAL_DISK_PARAMETERS
     RAW_SCSI_VIRTUAL_DISK_VERSION Version;
     union
     {
-        struct _Version1_e__Struct
+        struct Version1
         {
             BOOL RSVDHandle;
             ubyte DataIn;
@@ -714,7 +714,7 @@ struct RAW_SCSI_VIRTUAL_DISK_RESPONSE
     RAW_SCSI_VIRTUAL_DISK_VERSION Version;
     union
     {
-        struct _Version1_e__Struct
+        struct Version1
         {
             ubyte ScsiStatus;
             ubyte SenseInfoLength;
@@ -734,7 +734,7 @@ struct FORK_VIRTUAL_DISK_PARAMETERS
     FORK_VIRTUAL_DISK_VERSION Version;
     union
     {
-        struct _Version1_e__Struct
+        struct Version1
         {
             const(wchar)* ForkedVirtualDiskPath;
         }

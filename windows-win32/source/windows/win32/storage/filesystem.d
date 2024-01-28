@@ -2149,7 +2149,7 @@ struct NTMS_OBJECTINFORMATIONA
     uint dwOperationalState;
     CHAR[64] szName;
     CHAR[127] szDescription;
-    union _Info_e__Union
+    union Info
     {
         NTMS_DRIVEINFORMATIONA Drive;
         NTMS_DRIVETYPEINFORMATIONA DriveType;
@@ -2180,7 +2180,7 @@ struct NTMS_OBJECTINFORMATIONW
     uint dwOperationalState;
     wchar[64] szName;
     wchar[127] szDescription;
-    union _Info_e__Union
+    union Info
     {
         NTMS_DRIVEINFORMATIONW Drive;
         NTMS_DRIVETYPEINFORMATIONW DriveType;
@@ -2349,7 +2349,7 @@ struct NTMS_I1_OBJECTINFORMATIONA
     uint dwOperationalState;
     CHAR[64] szName;
     CHAR[127] szDescription;
-    union _Info_e__Union
+    union Info
     {
         NTMS_DRIVEINFORMATIONA Drive;
         NTMS_DRIVETYPEINFORMATIONA DriveType;
@@ -2379,7 +2379,7 @@ struct NTMS_I1_OBJECTINFORMATIONW
     uint dwOperationalState;
     wchar[64] szName;
     wchar[127] szDescription;
-    union _Info_e__Union
+    union Info
     {
         NTMS_DRIVEINFORMATIONW Drive;
         NTMS_DRIVETYPEINFORMATIONW DriveType;
@@ -2665,48 +2665,48 @@ struct CLFS_MGMT_POLICY
     uint LengthInBytes;
     uint PolicyFlags;
     CLFS_MGMT_POLICY_TYPE PolicyType;
-    union _PolicyParameters_e__Union
+    union PolicyParameters
     {
-        struct _MaximumSize_e__Struct
+        struct MaximumSize
         {
             uint Containers;
         }
-        struct _MinimumSize_e__Struct
+        struct MinimumSize
         {
             uint Containers;
         }
-        struct _NewContainerSize_e__Struct
+        struct NewContainerSize
         {
             uint SizeInBytes;
         }
-        struct _GrowthRate_e__Struct
+        struct GrowthRate
         {
             uint AbsoluteGrowthInContainers;
             uint RelativeGrowthPercentage;
         }
-        struct _LogTail_e__Struct
+        struct LogTail
         {
             uint MinimumAvailablePercentage;
             uint MinimumAvailableContainers;
         }
-        struct _AutoShrink_e__Struct
+        struct AutoShrink
         {
             uint Percentage;
         }
-        struct _AutoGrow_e__Struct
+        struct AutoGrow
         {
             uint Enabled;
         }
-        struct _NewContainerPrefix_e__Struct
+        struct NewContainerPrefix
         {
             ushort PrefixLengthInBytes;
             wchar[1] PrefixString;
         }
-        struct _NewContainerSuffix_e__Struct
+        struct NewContainerSuffix
         {
             ulong NextContainerSuffix;
         }
-        struct _NewContainerExtension_e__Struct
+        struct NewContainerExtension
         {
             ushort ExtensionLengthInBytes;
             wchar[1] ExtensionString;
@@ -3500,7 +3500,7 @@ struct REPARSE_GUID_DATA_BUFFER
     ushort ReparseDataLength;
     ushort Reserved;
     GUID ReparseGuid;
-    struct _GenericReparseBuffer_e__Struct
+    struct GenericReparseBuffer
     {
         ubyte[1] DataBuffer;
     }
@@ -3645,9 +3645,9 @@ struct COPYFILE2_MESSAGE
 {
     COPYFILE2_MESSAGE_TYPE Type;
     uint dwPadding;
-    union _Info_e__Union
+    union Info
     {
-        struct _ChunkStarted_e__Struct
+        struct ChunkStarted
         {
             uint dwStreamNumber;
             uint dwReserved;
@@ -3658,7 +3658,7 @@ struct COPYFILE2_MESSAGE
             ulong uliStreamSize;
             ulong uliTotalFileSize;
         }
-        struct _ChunkFinished_e__Struct
+        struct ChunkFinished
         {
             uint dwStreamNumber;
             uint dwFlags;
@@ -3671,7 +3671,7 @@ struct COPYFILE2_MESSAGE
             ulong uliTotalFileSize;
             ulong uliTotalBytesTransferred;
         }
-        struct _StreamStarted_e__Struct
+        struct StreamStarted
         {
             uint dwStreamNumber;
             uint dwReserved;
@@ -3680,7 +3680,7 @@ struct COPYFILE2_MESSAGE
             ulong uliStreamSize;
             ulong uliTotalFileSize;
         }
-        struct _StreamFinished_e__Struct
+        struct StreamFinished
         {
             uint dwStreamNumber;
             uint dwReserved;
@@ -3691,11 +3691,11 @@ struct COPYFILE2_MESSAGE
             ulong uliTotalFileSize;
             ulong uliTotalBytesTransferred;
         }
-        struct _PollContinue_e__Struct
+        struct PollContinue
         {
             uint dwReserved;
         }
-        struct _Error_e__Struct
+        struct Error
         {
             COPYFILE2_COPY_PHASE CopyPhase;
             uint dwStreamNumber;
@@ -3888,19 +3888,19 @@ struct FILE_REMOTE_PROTOCOL_INFO
     ushort ProtocolRevision;
     ushort Reserved;
     uint Flags;
-    struct _GenericReserved_e__Struct
+    struct GenericReserved
     {
         uint[8] Reserved;
     }
-    union _ProtocolSpecific_e__Union
+    union ProtocolSpecific
     {
-        struct _Smb2_e__Struct
+        struct Smb2
         {
-            struct _Server_e__Struct
+            struct Server
             {
                 uint Capabilities;
             }
-            struct _Share_e__Struct
+            struct Share
             {
                 uint Capabilities;
                 uint ShareFlags;

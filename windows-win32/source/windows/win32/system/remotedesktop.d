@@ -1994,15 +1994,15 @@ struct RFX_GFX_MSG_RDP_DATA
 struct WTS_SOCKADDR
 {
     ushort sin_family;
-    union _u_e__Union
+    union u
     {
-        struct _ipv4_e__Struct
+        struct ipv4
         {
             ushort sin_port;
             uint IN_ADDR;
             ubyte[8] sin_zero;
         }
-        struct _ipv6_e__Struct
+        struct ipv6
         {
             ushort sin6_port;
             uint sin6_flowinfo;
@@ -2226,15 +2226,15 @@ enum : int
 struct WTS_PROPERTY_VALUE
 {
     ushort Type;
-    union _u_e__Union
+    union u
     {
         uint ulVal;
-        struct _strVal_e__Struct
+        struct strVal
         {
             uint size;
             PWSTR pstrVal;
         }
-        struct _bVal_e__Struct
+        struct bVal
         {
             uint size;
             PSTR pbVal;

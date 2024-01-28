@@ -3468,12 +3468,12 @@ struct FWPM_VSWITCH_EVENT0
     PWSTR vSwitchId;
     union
     {
-        struct _positionInfo_e__Struct
+        struct positionInfo
         {
             uint numvSwitchFilterExtensions;
             PWSTR* vSwitchFilterExtensions;
         }
-        struct _reorderInfo_e__Struct
+        struct reorderInfo
         {
             BOOL inRequiredPosition;
             uint numvSwitchFilterExtensions;

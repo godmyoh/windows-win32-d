@@ -2226,7 +2226,7 @@ struct PM_BWTASKID
 struct PM_ENUM_FILTER
 {
     int FilterType;
-    union _FilterParameter_e__Union
+    union FilterParameter
     {
         int Dummy;
         PM_APP_GENRE Genre;

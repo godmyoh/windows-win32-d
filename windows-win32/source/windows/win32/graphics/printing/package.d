@@ -2878,10 +2878,10 @@ struct PRINTER_NOTIFY_INFO_DATA
     ushort Field;
     uint Reserved;
     uint Id;
-    union _NotifyData_e__Union
+    union NotifyData
     {
         uint[2] adwData;
-        struct _Data_e__Struct
+        struct Data
         {
             uint cbBuf;
             void* pBuf;
@@ -2903,7 +2903,7 @@ struct BINARY_CONTAINER
 struct BIDI_DATA
 {
     uint dwBidiType;
-    union _u_e__Union
+    union u
     {
         BOOL bData;
         int iData;
@@ -3055,13 +3055,13 @@ enum : int
 struct PrintPropertyValue
 {
     EPrintPropertyType ePropertyType;
-    union _value_e__Union
+    union value
     {
         ubyte propertyByte;
         PWSTR propertyString;
         int propertyInt32;
         long propertyInt64;
-        struct _propertyBlob_e__Struct
+        struct propertyBlob
         {
             uint cbBuf;
             void* pBuf;
@@ -4161,7 +4161,7 @@ struct TRANSDATA
 {
     ubyte ubCodePageID;
     ubyte ubType;
-    union _uCode_e__Union
+    union uCode
     {
         short sCode;
         ubyte ubCode;
@@ -4331,7 +4331,7 @@ struct BranchOfficeJobData
 {
     EBranchOfficeJobEventType eEventType;
     uint JobId;
-    union _JobInfo_e__Union
+    union JobInfo
     {
         BranchOfficeJobDataPrinted LogJobPrinted;
         BranchOfficeJobDataRendered LogJobRendered;

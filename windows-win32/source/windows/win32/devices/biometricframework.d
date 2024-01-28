@@ -222,12 +222,12 @@ struct WINBIO_VERSION
 struct WINBIO_IDENTITY
 {
     uint Type;
-    union _Value_e__Union
+    union Value
     {
         uint Null;
         uint Wildcard;
         GUID TemplateGuid;
-        struct _AccountSid_e__Struct
+        struct AccountSid
         {
             uint Size;
             ubyte[68] Data;
@@ -278,7 +278,7 @@ struct WINBIO_BIR_HEADER
     ubyte Purpose;
     byte DataQuality;
     long CreationDate;
-    struct _ValidityPeriod_e__Struct
+    struct ValidityPeriod
     {
         long BeginDate;
         long EndDate;
@@ -326,21 +326,21 @@ struct WINBIO_SECURE_BUFFER_HEADER_V1
 struct WINBIO_EVENT
 {
     uint Type;
-    union _Parameters_e__Union
+    union Parameters
     {
-        struct _Unclaimed_e__Struct
+        struct Unclaimed
         {
             uint UnitId;
             uint RejectDetail;
         }
-        struct _UnclaimedIdentify_e__Struct
+        struct UnclaimedIdentify
         {
             uint UnitId;
             WINBIO_IDENTITY Identity;
             ubyte SubFactor;
             uint RejectDetail;
         }
-        struct _Error_e__Struct
+        struct Error
         {
             HRESULT ErrorCode;
         }
@@ -348,17 +348,17 @@ struct WINBIO_EVENT
 }
 union WINBIO_PRESENCE_PROPERTIES
 {
-    struct _FacialFeatures_e__Struct
+    struct FacialFeatures
     {
         RECT BoundingBox;
         int Distance;
-        struct _OpaqueEngineData_e__Struct
+        struct OpaqueEngineData
         {
             GUID AdapterId;
             uint[78] Data;
         }
     }
-    struct _Iris_e__Struct
+    struct Iris
     {
         RECT EyeBoundingBox_1;
         RECT EyeBoundingBox_2;
@@ -377,7 +377,7 @@ struct WINBIO_PRESENCE
     ulong TrackingId;
     ulong Ticket;
     WINBIO_PRESENCE_PROPERTIES Properties;
-    struct _Authorization_e__Struct
+    struct Authorization
     {
         uint Size;
         ubyte[32] Data;
@@ -418,32 +418,32 @@ struct WINBIO_EXTENDED_SENSOR_INFO
 {
     uint GenericSensorCapabilities;
     uint Factor;
-    union _Specific_e__Union
+    union Specific
     {
         uint Null;
-        struct _FacialFeatures_e__Struct
+        struct FacialFeatures
         {
             RECT FrameSize;
             POINT FrameOffset;
             uint MandatoryOrientation;
-            struct _HardwareInfo_e__Struct
+            struct HardwareInfo
             {
                 wchar[260] ColorSensorId;
                 wchar[260] InfraredSensorId;
                 uint InfraredSensorRotationAngle;
             }
         }
-        struct _Fingerprint_e__Struct
+        struct Fingerprint
         {
             uint Reserved;
         }
-        struct _Iris_e__Struct
+        struct Iris
         {
             RECT FrameSize;
             POINT FrameOffset;
             uint MandatoryOrientation;
         }
-        struct _Voice_e__Struct
+        struct Voice
         {
             uint Reserved;
         }
@@ -453,21 +453,21 @@ struct WINBIO_EXTENDED_ENGINE_INFO
 {
     uint GenericEngineCapabilities;
     uint Factor;
-    union _Specific_e__Union
+    union Specific
     {
         uint Null;
-        struct _FacialFeatures_e__Struct
+        struct FacialFeatures
         {
             uint Capabilities;
-            struct _EnrollmentRequirements_e__Struct
+            struct EnrollmentRequirements
             {
                 uint Null;
             }
         }
-        struct _Fingerprint_e__Struct
+        struct Fingerprint
         {
             uint Capabilities;
-            struct _EnrollmentRequirements_e__Struct
+            struct EnrollmentRequirements
             {
                 uint GeneralSamples;
                 uint Center;
@@ -477,18 +477,18 @@ struct WINBIO_EXTENDED_ENGINE_INFO
                 uint RightEdge;
             }
         }
-        struct _Iris_e__Struct
+        struct Iris
         {
             uint Capabilities;
-            struct _EnrollmentRequirements_e__Struct
+            struct EnrollmentRequirements
             {
                 uint Null;
             }
         }
-        struct _Voice_e__Struct
+        struct Voice
         {
             uint Capabilities;
-            struct _EnrollmentRequirements_e__Struct
+            struct EnrollmentRequirements
             {
                 uint Null;
             }
@@ -499,22 +499,22 @@ struct WINBIO_EXTENDED_STORAGE_INFO
 {
     uint GenericStorageCapabilities;
     uint Factor;
-    union _Specific_e__Union
+    union Specific
     {
         uint Null;
-        struct _FacialFeatures_e__Struct
+        struct FacialFeatures
         {
             uint Capabilities;
         }
-        struct _Fingerprint_e__Struct
+        struct Fingerprint
         {
             uint Capabilities;
         }
-        struct _Iris_e__Struct
+        struct Iris
         {
             uint Capabilities;
         }
-        struct _Voice_e__Struct
+        struct Voice
         {
             uint Capabilities;
         }
@@ -527,20 +527,20 @@ struct WINBIO_EXTENDED_ENROLLMENT_STATUS
     uint PercentComplete;
     uint Factor;
     ubyte SubFactor;
-    union _Specific_e__Union
+    union Specific
     {
         uint Null;
-        struct _FacialFeatures_e__Struct
+        struct FacialFeatures
         {
             RECT BoundingBox;
             int Distance;
-            struct _OpaqueEngineData_e__Struct
+            struct OpaqueEngineData
             {
                 GUID AdapterId;
                 uint[78] Data;
             }
         }
-        struct _Fingerprint_e__Struct
+        struct Fingerprint
         {
             uint GeneralSamples;
             uint Center;
@@ -549,7 +549,7 @@ struct WINBIO_EXTENDED_ENROLLMENT_STATUS
             uint LeftEdge;
             uint RightEdge;
         }
-        struct _Iris_e__Struct
+        struct Iris
         {
             RECT EyeBoundingBox_1;
             RECT EyeBoundingBox_2;
@@ -558,7 +558,7 @@ struct WINBIO_EXTENDED_ENROLLMENT_STATUS
             int Distance;
             uint GridPointCompletionPercent;
             ushort GridPointIndex;
-            struct _Point3D_e__Struct
+            struct Point3D
             {
                 double X;
                 double Y;
@@ -566,7 +566,7 @@ struct WINBIO_EXTENDED_ENROLLMENT_STATUS
             }
             BOOL StopCaptureAndShowCriticalFeedback;
         }
-        struct _Voice_e__Struct
+        struct Voice
         {
             uint Reserved;
         }
@@ -670,59 +670,50 @@ struct WINBIO_ASYNC_RESULT
     HRESULT ApiStatus;
     uint UnitId;
     void* UserData;
-    union _Parameters_e__Union
+    union Parameters
     {
-        struct _Verify_e__Struct
+        struct Verify
         {
             BOOLEAN Match;
             uint RejectDetail;
         }
-        struct _Identify_e__Struct
+        struct Identify
         {
             WINBIO_IDENTITY Identity;
             ubyte SubFactor;
             uint RejectDetail;
         }
-        struct _EnrollBegin_e__Struct
+        struct EnrollBegin
         {
             ubyte SubFactor;
         }
-        struct _EnrollCapture_e__Struct
+        struct EnrollCapture
         {
             uint RejectDetail;
         }
-        struct _EnrollCommit_e__Struct
+        struct EnrollCommit
         {
             WINBIO_IDENTITY Identity;
             BOOLEAN IsNewTemplate;
         }
-        struct _EnumEnrollments_e__Struct
+        struct EnumEnrollments
         {
             WINBIO_IDENTITY Identity;
             ulong SubFactorCount;
             ubyte* SubFactorArray;
         }
-        struct _CaptureSample_e__Struct
+        struct CaptureSample
         {
             WINBIO_BIR* Sample;
             ulong SampleSize;
             uint RejectDetail;
         }
-        struct _DeleteTemplate_e__Struct
+        struct DeleteTemplate
         {
             WINBIO_IDENTITY Identity;
             ubyte SubFactor;
         }
-        struct _GetProperty_e__Struct
-        {
-            uint PropertyType;
-            uint PropertyId;
-            WINBIO_IDENTITY Identity;
-            ubyte SubFactor;
-            ulong PropertyBufferSize;
-            void* PropertyBuffer;
-        }
-        struct _SetProperty_e__Struct
+        struct GetProperty
         {
             uint PropertyType;
             uint PropertyId;
@@ -731,11 +722,20 @@ struct WINBIO_ASYNC_RESULT
             ulong PropertyBufferSize;
             void* PropertyBuffer;
         }
-        struct _GetEvent_e__Struct
+        struct SetProperty
+        {
+            uint PropertyType;
+            uint PropertyId;
+            WINBIO_IDENTITY Identity;
+            ubyte SubFactor;
+            ulong PropertyBufferSize;
+            void* PropertyBuffer;
+        }
+        struct GetEvent
         {
             WINBIO_EVENT Event;
         }
-        struct _ControlUnit_e__Struct
+        struct ControlUnit
         {
             WINBIO_COMPONENT Component;
             uint ControlCode;
@@ -746,50 +746,50 @@ struct WINBIO_ASYNC_RESULT
             ulong ReceiveBufferSize;
             ulong ReceiveDataSize;
         }
-        struct _EnumServiceProviders_e__Struct
+        struct EnumServiceProviders
         {
             ulong BspCount;
             WINBIO_BSP_SCHEMA* BspSchemaArray;
         }
-        struct _EnumBiometricUnits_e__Struct
+        struct EnumBiometricUnits
         {
             ulong UnitCount;
             WINBIO_UNIT_SCHEMA* UnitSchemaArray;
         }
-        struct _EnumDatabases_e__Struct
+        struct EnumDatabases
         {
             ulong StorageCount;
             WINBIO_STORAGE_SCHEMA* StorageSchemaArray;
         }
-        struct _VerifyAndReleaseTicket_e__Struct
+        struct VerifyAndReleaseTicket
         {
             BOOLEAN Match;
             uint RejectDetail;
             ulong Ticket;
         }
-        struct _IdentifyAndReleaseTicket_e__Struct
+        struct IdentifyAndReleaseTicket
         {
             WINBIO_IDENTITY Identity;
             ubyte SubFactor;
             uint RejectDetail;
             ulong Ticket;
         }
-        struct _EnrollSelect_e__Struct
+        struct EnrollSelect
         {
             ulong SelectorValue;
         }
-        struct _MonitorPresence_e__Struct
+        struct MonitorPresence
         {
             uint ChangeType;
             ulong PresenceCount;
             WINBIO_PRESENCE* PresenceArray;
         }
-        struct _GetProtectionPolicy_e__Struct
+        struct GetProtectionPolicy
         {
             WINBIO_IDENTITY Identity;
             WINBIO_PROTECTION_POLICY Policy;
         }
-        struct _NotifyUnitStatusChange_e__Struct
+        struct NotifyUnitStatusChange
         {
             WINBIO_EXTENDED_UNIT_STATUS ExtendedStatus;
         }

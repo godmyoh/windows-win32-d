@@ -11,15 +11,15 @@ import windows.win32.ui.windowsandmessaging : HICON;
 version (Windows):
 extern (Windows):
 
-//enum PKEY_PhotoAcquire_RelativePathname = [MISSING];
-//enum PKEY_PhotoAcquire_FinalFilename = [MISSING];
-//enum PKEY_PhotoAcquire_GroupTag = [MISSING];
-//enum PKEY_PhotoAcquire_TransferResult = [MISSING];
-//enum PKEY_PhotoAcquire_OriginalFilename = [MISSING];
-//enum PKEY_PhotoAcquire_CameraSequenceNumber = [MISSING];
-//enum PKEY_PhotoAcquire_IntermediateFile = [MISSING];
-//enum PKEY_PhotoAcquire_SkipImport = [MISSING];
-//enum PKEY_PhotoAcquire_DuplicateDetectionID = [MISSING];
+enum PKEY_PhotoAcquire_RelativePathname = PROPERTYKEY(GUID(15872887, 31430, 19322, [132, 67, 52, 94, 115, 31, 165, 122]), 2);
+enum PKEY_PhotoAcquire_FinalFilename = PROPERTYKEY(GUID(15872887, 31430, 19322, [132, 67, 52, 94, 115, 31, 165, 122]), 3);
+enum PKEY_PhotoAcquire_GroupTag = PROPERTYKEY(GUID(15872887, 31430, 19322, [132, 67, 52, 94, 115, 31, 165, 122]), 4);
+enum PKEY_PhotoAcquire_TransferResult = PROPERTYKEY(GUID(15872887, 31430, 19322, [132, 67, 52, 94, 115, 31, 165, 122]), 5);
+enum PKEY_PhotoAcquire_OriginalFilename = PROPERTYKEY(GUID(15872887, 31430, 19322, [132, 67, 52, 94, 115, 31, 165, 122]), 6);
+enum PKEY_PhotoAcquire_CameraSequenceNumber = PROPERTYKEY(GUID(15872887, 31430, 19322, [132, 67, 52, 94, 115, 31, 165, 122]), 7);
+enum PKEY_PhotoAcquire_IntermediateFile = PROPERTYKEY(GUID(15872887, 31430, 19322, [132, 67, 52, 94, 115, 31, 165, 122]), 8);
+enum PKEY_PhotoAcquire_SkipImport = PROPERTYKEY(GUID(15872887, 31430, 19322, [132, 67, 52, 94, 115, 31, 165, 122]), 9);
+enum PKEY_PhotoAcquire_DuplicateDetectionID = PROPERTYKEY(GUID(15872887, 31430, 19322, [132, 67, 52, 94, 115, 31, 165, 122]), 10);
 enum PROGRESS_INDETERMINATE = 0xffffffffffffffff;
 enum PHOTOACQ_ERROR_RESTART_REQUIRED = 0xffffffff8004a001;
 enum PHOTOACQ_RUN_DEFAULT = 0x00000000;

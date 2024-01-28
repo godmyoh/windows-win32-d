@@ -1366,7 +1366,7 @@ struct DDPIXELFORMAT
         uint dwUBitMask;
         uint dwZBitMask;
         uint dwBumpDvBitMask;
-        struct _MultiSampleCaps_e__Struct
+        struct MultiSampleCaps
         {
             ushort wFlipMSTypes;
             ushort wBltMSTypes;
@@ -2037,14 +2037,14 @@ struct SURFACEALIGNMENT
 {
     union
     {
-        struct _Linear_e__Struct
+        struct Linear
         {
             uint dwStartAlignment;
             uint dwPitchAlignment;
             uint dwFlags;
             uint dwReserved2;
         }
-        struct _Rectangular_e__Struct
+        struct Rectangular
         {
             uint dwXAlignment;
             uint dwYAlignment;

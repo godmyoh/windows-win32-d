@@ -1069,7 +1069,7 @@ struct RPC_SECURITY_QOS_V2_W
     RPC_C_QOS_IDENTITY IdentityTracking;
     RPC_C_IMP_LEVEL ImpersonationType;
     RPC_C_AUTHN_INFO_TYPE AdditionalSecurityInfoType;
-    union _u_e__Union
+    union u
     {
         RPC_HTTP_TRANSPORT_CREDENTIALS_W* HttpCredentials;
     }
@@ -1081,7 +1081,7 @@ struct RPC_SECURITY_QOS_V2_A
     RPC_C_QOS_IDENTITY IdentityTracking;
     RPC_C_IMP_LEVEL ImpersonationType;
     RPC_C_AUTHN_INFO_TYPE AdditionalSecurityInfoType;
-    union _u_e__Union
+    union u
     {
         RPC_HTTP_TRANSPORT_CREDENTIALS_A* HttpCredentials;
     }
@@ -1093,7 +1093,7 @@ struct RPC_SECURITY_QOS_V3_W
     RPC_C_QOS_IDENTITY IdentityTracking;
     RPC_C_IMP_LEVEL ImpersonationType;
     RPC_C_AUTHN_INFO_TYPE AdditionalSecurityInfoType;
-    union _u_e__Union
+    union u
     {
         RPC_HTTP_TRANSPORT_CREDENTIALS_W* HttpCredentials;
     }
@@ -1106,7 +1106,7 @@ struct RPC_SECURITY_QOS_V3_A
     RPC_C_QOS_IDENTITY IdentityTracking;
     RPC_C_IMP_LEVEL ImpersonationType;
     RPC_C_AUTHN_INFO_TYPE AdditionalSecurityInfoType;
-    union _u_e__Union
+    union u
     {
         RPC_HTTP_TRANSPORT_CREDENTIALS_A* HttpCredentials;
     }
@@ -1119,7 +1119,7 @@ struct RPC_SECURITY_QOS_V4_W
     RPC_C_QOS_IDENTITY IdentityTracking;
     RPC_C_IMP_LEVEL ImpersonationType;
     RPC_C_AUTHN_INFO_TYPE AdditionalSecurityInfoType;
-    union _u_e__Union
+    union u
     {
         RPC_HTTP_TRANSPORT_CREDENTIALS_W* HttpCredentials;
     }
@@ -1133,7 +1133,7 @@ struct RPC_SECURITY_QOS_V4_A
     RPC_C_QOS_IDENTITY IdentityTracking;
     RPC_C_IMP_LEVEL ImpersonationType;
     RPC_C_AUTHN_INFO_TYPE AdditionalSecurityInfoType;
-    union _u_e__Union
+    union u
     {
         RPC_HTTP_TRANSPORT_CREDENTIALS_A* HttpCredentials;
     }
@@ -1147,7 +1147,7 @@ struct RPC_SECURITY_QOS_V5_W
     RPC_C_QOS_IDENTITY IdentityTracking;
     RPC_C_IMP_LEVEL ImpersonationType;
     RPC_C_AUTHN_INFO_TYPE AdditionalSecurityInfoType;
-    union _u_e__Union
+    union u
     {
         RPC_HTTP_TRANSPORT_CREDENTIALS_W* HttpCredentials;
     }
@@ -1162,7 +1162,7 @@ struct RPC_SECURITY_QOS_V5_A
     RPC_C_QOS_IDENTITY IdentityTracking;
     RPC_C_IMP_LEVEL ImpersonationType;
     RPC_C_AUTHN_INFO_TYPE AdditionalSecurityInfoType;
-    union _u_e__Union
+    union u
     {
         RPC_HTTP_TRANSPORT_CREDENTIALS_A* HttpCredentials;
     }
@@ -1177,7 +1177,7 @@ struct RPC_BINDING_HANDLE_TEMPLATE_V1_W
     uint ProtocolSequence;
     ushort* NetworkAddress;
     ushort* StringEndpoint;
-    union _u1_e__Union
+    union u1
     {
         ushort* Reserved;
     }
@@ -1190,7 +1190,7 @@ struct RPC_BINDING_HANDLE_TEMPLATE_V1_A
     uint ProtocolSequence;
     ubyte* NetworkAddress;
     ubyte* StringEndpoint;
-    union _u1_e__Union
+    union u1
     {
         ubyte* Reserved;
     }
@@ -1464,19 +1464,19 @@ enum : int
 alias PFN_RPCNOTIFICATION_ROUTINE = void function(RPC_ASYNC_STATE*, void*, RPC_ASYNC_EVENT);
 union RPC_ASYNC_NOTIFICATION_INFO
 {
-    struct _APC_e__Struct
+    struct APC
     {
         PFN_RPCNOTIFICATION_ROUTINE NotificationRoutine;
         HANDLE hThread;
     }
-    struct _IOC_e__Struct
+    struct IOC
     {
         HANDLE hIOPort;
         uint dwNumberOfBytesTransferred;
         ulong dwCompletionKey;
         OVERLAPPED* lpOverlapped;
     }
-    struct _IntPtr_e__Struct
+    struct IntPtr
     {
         HWND hWnd;
         uint Msg;
@@ -1518,7 +1518,7 @@ struct BinaryParam
 struct RPC_EE_INFO_PARAM
 {
     ExtendedErrorParamTypes ParameterType;
-    union _u_e__Union
+    union u
     {
         PSTR AnsiString;
         PWSTR UnicodeString;
@@ -1533,7 +1533,7 @@ struct RPC_EXTENDED_ERROR_INFO
     uint Version;
     PWSTR ComputerName;
     uint ProcessID;
-    union _u_e__Union
+    union u
     {
         SYSTEMTIME SystemTime;
         FILETIME FileTime;
@@ -1892,7 +1892,7 @@ struct MIDL_STUB_DESC
     void* RpcInterfaceInformation;
     PFN_RPC_ALLOCATE pfnAllocate;
     PFN_RPC_FREE pfnFree;
-    union _IMPLICIT_HANDLE_INFO_e__Union
+    union IMPLICIT_HANDLE_INFO
     {
         void** pAutoHandle;
         void** pPrimitiveHandle;

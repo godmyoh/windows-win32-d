@@ -94,12 +94,12 @@ struct WEB_SOCKET_HTTP_HEADER
 }
 union WEB_SOCKET_BUFFER
 {
-    struct _Data_e__Struct
+    struct Data
     {
         ubyte* pbBuffer;
         uint ulBufferLength;
     }
-    struct _CloseStatus_e__Struct
+    struct CloseStatus
     {
         ubyte* pbReason;
         uint ulReasonLength;

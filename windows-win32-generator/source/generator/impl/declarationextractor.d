@@ -28,9 +28,18 @@ class DeclarationExtractor : IDeclarationExtractor
         ClassLayoutResolver classLayoutResolver;
         IDlangTypeResolver dlangTypeResolver;
 
-        Indentation indent;
+        StringHelper helper;
 
-        bool printRid = false;
+        enum string[string] keywordsMap =
+        [
+            "version": "version_",
+            "module": "module_",
+            "alias": "alias_",
+            "align": "align_",
+            "function": "function_",
+            "scope": "scope_",
+            "out": "out_",
+        ];
     }
 
     this(Database db,
@@ -45,20 +54,7 @@ class DeclarationExtractor : IDeclarationExtractor
         this.classLayoutResolver = new ClassLayoutResolver(db);
         this.dlangTypeResolver = dlangTypeResolver;
 
-        this.indent = Indentation(4);
-    }
-
-    private constr toRidCommentString(Database.TableFormat t)(Row!t row)
-    {
-        if (!printRid)
-            return "";
-
-        static if (t == Database.TableFormat.TypeDef)
-            return format(" // TypeDef RID:%d", row.rid);
-        else static if (t == Database.TableFormat.Field)
-            return format(" // Field RID:%d", row.rid);
-        else
-            assert(0);
+        this.helper = new StringHelper();
     }
 
     override Declaration[] extractFromTypeDef(uint typeDefRid)
@@ -74,9 +70,7 @@ class DeclarationExtractor : IDeclarationExtractor
             auto fields = typeDef.fieldList;
             foreach (field; fields)
             {
-                auto extracted = extractEnumFrom(field);
-                if (!extracted.isNull)
-                    decls ~= extracted.get;
+                decls ~= extractEnumFrom(field);
             }
         }
         else if (typeDef.flags.interface_)
@@ -117,9 +111,7 @@ class DeclarationExtractor : IDeclarationExtractor
 
         foreach (methodDef; typeDef.methodList)
         {
-            auto decl = toFunctionDecl(methodDef, methodDef.name);
-            decl.declString = format("%s;", decl.declString) ~ toRidCommentString(typeDef);
-            decls ~= decl;
+            decls ~= toFunctionDecl(methodDef, methodDef.name);
         }
 
         return decls;
@@ -140,7 +132,7 @@ class DeclarationExtractor : IDeclarationExtractor
             auto vt = type.get.valueType;
             auto ptrs = type.get.ptrCount;
             auto cliType = cliTypeResolver.getType(vt);
-            retTypeName = dlangTypeResolver.toDlangType(cliType) ~ (ptrs ? getPointerString(ptrs) : "");
+            retTypeName = dlangTypeResolver.toDlangType(cliType) ~ (ptrs ? helper.getPointerString(ptrs) : "");
             if (!cliType.namespace.empty)
                 decl.referencedTypes ~= cliType;
         }
@@ -160,23 +152,15 @@ class DeclarationExtractor : IDeclarationExtractor
             auto ptrs = p.typeSig.ptrCount;
             auto cliType = cliTypeResolver.getType(vt);
             auto paramString = dlangTypeResolver.toDlangType(cliType, isConst(params[pi]));
-            paramNames[pi] = paramString ~ (ptrs ? getPointerString(ptrs) : "");
+            paramNames[pi] = paramString ~ (ptrs ? helper.getPointerString(ptrs) : "");
             if (!cliType.namespace.empty)
                 decl.referencedTypes ~= cliType;
         }
 
         decl.declaredName = functionName;
-        decl.declString = format("%s %s(%-(%s, %))", retTypeName, functionName, paramNames);
+        decl.declString = format("%s %s(%-(%s, %));", retTypeName, functionName, paramNames);
 
         return decl;
-    }
-
-    private string pointerString = "***";
-
-    private constr getPointerString(uint n)
-    {
-        assert(n <= pointerString.length);
-        return pointerString[0..n];
     }
 
     private bool isConst(ParamRow paramRow)
@@ -191,41 +175,76 @@ class DeclarationExtractor : IDeclarationExtractor
         return false;
     }
 
-    private Nullable!Declaration extractEnumFrom(FieldRow field)
+    private Declaration extractEnumFrom(FieldRow field)
     {
-        Nullable!Declaration ret;
-
-        auto et = field.signature.typeSig.elementType;
-
         auto v = constantFieldResolver.getConstantValue(field.rid);
-        if (v.isNull)
-        {
-            assert(!(ElementType.I1 <= et && et <= ElementType.U8));
-            auto guidOrNull = extractGuidFromField(field.rid);
-            if (guidOrNull.isNull)
-                ret = Declaration(field.name, format("//enum %s = [MISSING];", field.name));
-            else
-                ret = toGUIDDecl(field.name, guidOrNull.get);
-        }
-        else
+        if (!v.isNull)
         {
             auto constantValue = v.get;
             if (auto p = constantValue.value.peek!float)
-                ret = Declaration(field.name, format("enum %s = %f;", field.name, *p));
+                return Declaration(field.name, format("enum %s = %f;", field.name, *p));
             else if (auto p = constantValue.value.peek!double)
-                ret = Declaration(field.name, format("enum %s = %f;", field.name, *p));
+                return Declaration(field.name, format("enum %s = %f;", field.name, *p));
             else if (auto p = constantValue.value.peek!string)
-                ret = Declaration(field.name, format(`enum %s = "%s";`, field.name, toDlangStringLiteral(*p)));
+                return Declaration(field.name, format(`enum %s = "%s";`, field.name, toDlangStringLiteral(*p)));
             else
             {
-                assert((ElementType.Char <= et && et <= ElementType.U8) || et == ElementType.ValueType);
                 auto bytes = constantValue.integerBytes;
 
-                ret = Declaration(field.name, format("enum %s = 0x%0" ~ (bytes * 2).to!string ~ "x;", field.name, constantValue.integerValue));
+                return Declaration(field.name, format("enum %s = 0x%0" ~ (bytes * 2).to!string ~ "x;", field.name, constantValue.integerValue));
             }
         }
 
-        return ret;
+        auto guid = extractGuidFromField(field.rid);
+        if (!guid.isNull)
+        {
+            return toGUIDDecl(field.name, guid.get);
+        }
+
+        auto str = extractConstantFromField(field.rid);
+        if (!str.isNull)
+        {
+            auto sig = field.signature;
+            auto vt = sig.typeSig.valueType;
+            auto ci = vt.match!((ElementType et) => assert(0), (CodedIndex!TypeDefOrRef ci) => ci);
+
+            assert(ci.type == TypeDefOrRef.TypeRef);
+
+            auto cliType = cliTypeResolver.getType(ci);
+            auto dlangType = dlangTypeResolver.toDlangType(cliType, false);
+
+            return toEnumWithStructLiteralDecl(field.name, dlangType, cliType, str.get);
+        }
+
+        assert(0);
+    }
+
+    private Declaration toEnumWithStructLiteralDecl(constr declName, constr dlangType, CLIType cliType, constr serString)
+    {
+        auto tokens = serString.replace("{", "").replace("}", "").split(",").map!(a=>a.strip(' ')).array;
+
+        if (cliType.typeName == "DEVPROPKEY" || cliType.typeName == "PROPERTYKEY" )
+        {
+            assert(tokens.length == 12);
+            return Declaration(declName,
+                               format("enum %s = %s(GUID(%s, %s, %s, [%-(%s, %)]), %s);",
+                                      declName,
+                                      dlangType,
+                                      tokens[0], tokens[1], tokens[2], tokens[3..11],
+                                      tokens[11]),
+                               [cliType, CLIType_Guid]);
+        }
+        else if (cliType.typeName == "SID_IDENTIFIER_AUTHORITY")
+        {
+            assert(tokens.length == 6);
+            return Declaration(declName,
+                               format("enum %s = %s([%-(%s, %)]);",
+                                      declName,
+                                      dlangType,
+                                      tokens));
+        }
+        else
+            assert(0);
     }
 
     private string toDlangStringLiteral(string s)
@@ -257,13 +276,13 @@ class DeclarationExtractor : IDeclarationExtractor
         auto decl = appender!constr;
 
         if (interfaceNames.empty)
-            decl ~= format("interface %s", name) ~ toRidCommentString(typeDef);
+            decl ~= format("interface %s", name);
         else
-            decl ~= format("interface %s : %-(%s, %)", name, interfaceNames) ~ toRidCommentString(typeDef);
+            decl ~= format("interface %s : %-(%s, %)", name, interfaceNames);
 
         decl ~= "\n{\n";
 
-        auto indentSpaces = indent.getAsString(1);
+        auto indentSpaces = helper.getIndentation(1);
         foreach (methodDef; typeDef.methodList)
         {
             decl ~= indentSpaces;
@@ -272,7 +291,6 @@ class DeclarationExtractor : IDeclarationExtractor
             interfaceDecl.referencedTypes ~= methodDecl.referencedTypes;
 
             decl ~= methodDecl.declString;
-            decl ~= ";" ~ toRidCommentString(typeDef);
             decl ~= "\n";
         }
 
@@ -365,6 +383,53 @@ class DeclarationExtractor : IDeclarationExtractor
         return guid;
     }
 
+    private Nullable!constr extractConstantFromField(uint rid)
+    {
+        return extractFromConstantAttribute(customAttributeResolver.getRidsForField(rid));
+    }
+
+    /*
+    II.23.3 Custom attributes
+
+    ...
+
+    If the parameter kind is System.Type, (also, the middle line in above diagram) its
+    value is stored as a SerString (as defined in the previous paragraph), representing its
+    canonical name.
+
+    ...
+    */
+    private Nullable!constr extractFromConstantAttribute(const(uint)[] customAttributeRids)
+    {
+        Nullable!constr ret;
+
+        foreach (customAttributeRid; customAttributeRids)
+        {
+            auto customAttribute = db.CustomAttribute.getRowByRid(customAttributeRid);
+            auto n = customAttribute.typeName;
+            if (n == "ConstantAttribute")
+            {
+                auto blob = customAttribute.value;
+
+                assert(blob[0..2] == [1, 0]);
+                assert(blob[$-2..$] == [0, 0]);
+
+                auto fixedArgData = blob[2..$-2];
+
+                auto packedLen = fixedArgData[0];
+                auto utf8Characters = fixedArgData[1..$];
+
+                assert(utf8Characters.length == packedLen);
+
+                ret = cast(constr)utf8Characters;
+
+                return ret;
+            }
+        }
+
+        return ret;
+    }
+
     private Declaration extractEnum(TypeDefRow typeDef)
     {
         auto fieldList = typeDef.fieldList;
@@ -403,7 +468,7 @@ class DeclarationExtractor : IDeclarationExtractor
 
                 signed = fieldTypeName[0] != 'u';
 
-                aliasDeclString = format("alias %s = %s;", typeDef.typeName, fieldTypeName) ~ toRidCommentString(typeDef);
+                aliasDeclString = format("alias %s = %s;", typeDef.typeName, fieldTypeName);
                 enumDeclString ~= format("enum : %s\n", fieldTypeName);
                 enumDeclString ~= "{\n";
 
@@ -424,7 +489,7 @@ class DeclarationExtractor : IDeclarationExtractor
                     case 8: decl = format(enumWriteFormat, fieldName, castString, cast(ulong)integerValue); break;
                     default: assert(0);
                 }
-                enumDeclString ~= decl ~ toRidCommentString(fieldDef) ~ "\n";
+                enumDeclString ~= decl ~ "\n";
             }
         }
 
@@ -454,7 +519,7 @@ class DeclarationExtractor : IDeclarationExtractor
         auto typeSig = fieldDef.signature.typeSig;
         auto ptr = typeSig.ptrCount;
         auto fieldTypeName = dlangTypeResolver.toDlangType(cliTypeResolver.getType(typeSig.valueType));
-        return Declaration(typeDef.typeName, format("alias %s = %s%s;", typeDef.typeName, fieldTypeName, getPointerString(ptr)) ~ toRidCommentString(typeDef) ~ toRidCommentString(fieldDef));
+        return Declaration(typeDef.typeName, format("alias %s = %s%s;", typeDef.typeName, fieldTypeName, helper.getPointerString(ptr)));
     }
 
     private Declaration extractFunctionPointer(TypeDefRow typeDef)
@@ -469,7 +534,7 @@ class DeclarationExtractor : IDeclarationExtractor
 
         auto decl = toFunctionDecl(methodList[1], "function");
 
-        return Declaration(typeDef.typeName, format("alias %s = %s;", typeDef.typeName, decl.declString) ~ toRidCommentString(typeDef), decl.referencedTypes);
+        return Declaration(typeDef.typeName, format("alias %s = %s", typeDef.typeName, decl.declString), decl.referencedTypes);
     }
 
 
@@ -509,7 +574,7 @@ class DeclarationExtractor : IDeclarationExtractor
         Declaration decl;
 
         auto declString = appender!string();
-        auto indentString = indent.getAsString(context.indentLevel);
+        auto indentString = helper.getIndentation(context.indentLevel);
 
         declString ~= indentString;
         declString ~= typeDef.isUnion ? "union" : "struct";
@@ -526,10 +591,15 @@ class DeclarationExtractor : IDeclarationExtractor
         else
         {
             declString ~= " ";
-            declString ~= dlangTypeResolver.toDlangType(cliTypeResolver.getType(typeDef));
+            auto encodedName = dlangTypeResolver.toDlangType(cliTypeResolver.getType(typeDef));
+            auto declName = encodedName;
+            if (encodedName.startsWith("_") && encodedName.endsWith("_e__Union"))
+                declName = encodedName[1..$-9];
+            else if (encodedName.startsWith("_") && encodedName.endsWith("_e__Struct"))
+                declName = encodedName[1..$-10];
+            declString ~= replaceKeyword(declName);
         }
 
-        declString ~= toRidCommentString(typeDef);
         declString ~= "\n";
         declString ~= indentString;
         declString ~= "{\n";
@@ -539,7 +609,7 @@ class DeclarationExtractor : IDeclarationExtractor
         Nullable!uint classLayoutRid = classLayoutResolver.getClassLayoutRid(typeDef.rid);
         if (!classLayoutRid.isNull)
         {
-            declString ~= indent.getAsString(context.indentLevel);
+            declString ~= helper.getIndentation(context.indentLevel);
             auto classLayout = db.ClassLayout.getRowByRid(classLayoutRid.get);
             declString ~= format("align (%d):\n", classLayout.packingSize);
         }
@@ -565,25 +635,14 @@ class DeclarationExtractor : IDeclarationExtractor
 
     private Declaration toFieldDecl(FieldRow field, uint[] maybeNestedClassRids, ExtractStructContext* context)
     {
-        auto indentString = indent.getAsString(context.indentLevel);
+        auto indentString = helper.getIndentation(context.indentLevel);
 
         auto toSimpleFieldDecl(CLIType typeName, constr fieldNameString, uint ptrs, Nullable!uint arraySize, FieldRow field)
         {
             auto fieldRid = field.rid;
-            string[string] keywordsMap =
-            [
-                "version": "version_",
-                "module": "module_",
-                "alias": "alias_",
-                "align": "align_",
-                "function": "function_",
-                "scope": "scope_",
-            ];
-
             auto fieldTypeString = typeName.typeName;
 
-            if (auto p = fieldNameString in keywordsMap)
-                fieldNameString = keywordsMap[fieldNameString];
+            fieldNameString = replaceKeyword(fieldNameString);
 
             if (fieldNameString == "_bitfield")
             {
@@ -600,7 +659,7 @@ class DeclarationExtractor : IDeclarationExtractor
             if (dlangTypeName == fieldNameString)
                 fieldNameString ~= "_";
 
-            return format("%s%s%s%s %s;", indentString, dlangTypeName, getPointerString(ptrs), arrayString, fieldNameString) ~ toRidCommentString(field);
+            return format("%s%s%s%s %s;", indentString, dlangTypeName, helper.getPointerString(ptrs), arrayString, fieldNameString);
         }
 
         auto typeSig = field.signature.typeSig;
@@ -670,24 +729,37 @@ class DeclarationExtractor : IDeclarationExtractor
 
         return false;
     }
+
+    private constr replaceKeyword(constr name)
+    {
+        if (auto p = name in keywordsMap)
+            return *p;
+        return name;
+    }
 }
 
-private struct Indentation
+private class StringHelper
 {
-    const char[20] spaces;
-    int nSpaces;
+    private
+    {
+        const char[20] spaces;
+        string pointerString = "***";
+    }
 
-    @disable
-    this();
-
-    this(int nSpaces)
+    this()
     {
         spaces[] = ' ';
     }
 
-    constr getAsString(int level) return
+    constr getIndentation(int level) return
     {
         assert(level * 4 <= spaces.length);
         return spaces[0..level*4];
+    }
+
+    constr getPointerString(uint n)
+    {
+        assert(n <= pointerString.length);
+        return pointerString[0..n];
     }
 }

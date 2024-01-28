@@ -52,7 +52,7 @@ struct WNV_NOTIFICATION_PARAM
 }
 struct WNV_IP_ADDRESS
 {
-    union _IP_e__Union
+    union IP
     {
         IN_ADDR v4;
         IN6_ADDR v6;
@@ -86,7 +86,7 @@ struct WNV_CUSTOMER_ADDRESS_CHANGE_PARAM
 struct WNV_OBJECT_CHANGE_PARAM
 {
     WNV_OBJECT_TYPE ObjectType;
-    union _ObjectParam_e__Union
+    union ObjectParam
     {
         WNV_PROVIDER_ADDRESS_CHANGE_PARAM ProviderAddressChange;
         WNV_CUSTOMER_ADDRESS_CHANGE_PARAM CustomerAddressChange;

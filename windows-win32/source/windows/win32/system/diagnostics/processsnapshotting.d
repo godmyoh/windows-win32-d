@@ -220,9 +220,9 @@ struct PSS_HANDLE_ENTRY
     const(wchar)* TypeName;
     ushort ObjectNameLength;
     const(wchar)* ObjectName;
-    union _TypeSpecificInformation_e__Union
+    union TypeSpecificInformation
     {
-        struct _Process_e__Struct
+        struct Process
         {
             uint ExitStatus;
             void* PebBaseAddress;
@@ -232,7 +232,7 @@ struct PSS_HANDLE_ENTRY
             uint ParentProcessId;
             uint Flags;
         }
-        struct _Thread_e__Struct
+        struct Thread
         {
             uint ExitStatus;
             void* TebBaseAddress;
@@ -243,25 +243,25 @@ struct PSS_HANDLE_ENTRY
             int BasePriority;
             void* Win32StartAddress;
         }
-        struct _Mutant_e__Struct
+        struct Mutant
         {
             int CurrentCount;
             BOOL Abandoned;
             uint OwnerProcessId;
             uint OwnerThreadId;
         }
-        struct _Event_e__Struct
+        struct Event
         {
             BOOL ManualReset;
             BOOL Signaled;
         }
-        struct _Section_e__Struct
+        struct Section
         {
             void* BaseAddress;
             uint AllocationAttributes;
             long MaximumSize;
         }
-        struct _Semaphore_e__Struct
+        struct Semaphore
         {
             int CurrentCount;
             int MaximumCount;

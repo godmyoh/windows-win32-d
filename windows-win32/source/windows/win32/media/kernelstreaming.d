@@ -1,6 +1,7 @@
 module windows.win32.media.kernelstreaming;
 
 import windows.win32.guid : GUID;
+import windows.win32.devices.properties : DEVPROPKEY;
 import windows.win32.foundation : BOOL, CHAR, HANDLE, HRESULT, LUID, PWSTR, RECT, SIZE;
 import windows.win32.media : TIMECODE_SAMPLE;
 import windows.win32.media.directshow : IMediaSample, IMemAllocator, IPin;
@@ -210,9 +211,9 @@ enum KSDSOUND_BUFFER_CTRL_FREQUENCY = 0x00000002;
 enum KSDSOUND_BUFFER_CTRL_PAN = 0x00000004;
 enum KSDSOUND_BUFFER_CTRL_VOLUME = 0x00000008;
 enum KSDSOUND_BUFFER_CTRL_POSITIONNOTIFY = 0x00000010;
-//enum DEVPKEY_KsAudio_PacketSize_Constraints = [MISSING];
-//enum DEVPKEY_KsAudio_Controller_DeviceInterface_Path = [MISSING];
-//enum DEVPKEY_KsAudio_PacketSize_Constraints2 = [MISSING];
+enum DEVPKEY_KsAudio_PacketSize_Constraints = DEVPROPKEY(GUID(333448406, 45158, 17341, [145, 59, 164, 21, 205, 19, 218, 135]), 2);
+enum DEVPKEY_KsAudio_Controller_DeviceInterface_Path = DEVPROPKEY(GUID(333448406, 45158, 17341, [145, 59, 164, 21, 205, 19, 218, 135]), 3);
+enum DEVPKEY_KsAudio_PacketSize_Constraints2 = DEVPROPKEY(GUID(2483353473, 29073, 16539, [139, 11, 128, 191, 110, 194, 41, 174]), 2);
 enum KSAUDIO_STEREO_SPEAKER_GEOMETRY_HEADPHONE = 0xffffffffffffffff;
 enum KSAUDIO_STEREO_SPEAKER_GEOMETRY_MIN = 0x00000005;
 enum KSAUDIO_STEREO_SPEAKER_GEOMETRY_NARROW = 0x0000000a;
@@ -877,18 +878,18 @@ struct KSEVENTDATA
     uint NotificationType;
     union
     {
-        struct _EventHandle_e__Struct
+        struct EventHandle
         {
             HANDLE Event;
             ulong[2] Reserved;
         }
-        struct _SemaphoreHandle_e__Struct
+        struct SemaphoreHandle
         {
             HANDLE Semaphore;
             uint Reserved;
             int Adjustment;
         }
-        struct _Alignment_e__Struct
+        struct Alignment
         {
             void* Unused;
             long[2] Alignment;
@@ -1771,7 +1772,7 @@ struct KSPROPERTY_SERIAL
 }
 union MF_MDL_SHARED_PAYLOAD_KEY
 {
-    struct _combined_e__Struct
+    struct combined
     {
         uint pHandle;
         uint fHandle;
@@ -5672,7 +5673,7 @@ struct KSCAMERA_EXTENDEDPROP_DIGITALWINDOW_CONFIGCAPS
 struct KSCAMERA_EXTENDEDPROP_BACKGROUNDSEGMENTATION_CONFIGCAPS
 {
     SIZE Resolution;
-    struct _MaxFrameRate_e__Struct
+    struct MaxFrameRate
     {
         int Numerator;
         int Denominator;
@@ -5748,12 +5749,12 @@ struct KSCAMERAPROFILE_CompressedCamera
 }
 struct KSCAMERA_PROFILE_MEDIAINFO
 {
-    struct _Resolution_e__Struct
+    struct Resolution
     {
         uint X;
         uint Y;
     }
-    struct _MaxFrameRate_e__Struct
+    struct MaxFrameRate
     {
         uint Numerator;
         uint Denominator;
@@ -5799,7 +5800,7 @@ struct KSDEVICE_PROFILE_INFO
     uint Size;
     union
     {
-        struct _Camera_e__Struct
+        struct Camera
         {
             KSCAMERA_PROFILE_INFO Info;
             uint Reserved;
@@ -5904,7 +5905,7 @@ struct DEVCAPS
 struct KSPROPERTY_EXTDEVICE_S
 {
     KSIDENTIFIER Property;
-    union _u_e__Union
+    union u
     {
         DEVCAPS Capabilities;
         uint DevPort;
@@ -6009,14 +6010,14 @@ struct TRANSPORT_STATE
 struct KSPROPERTY_EXTXPORT_S
 {
     KSIDENTIFIER Property;
-    union _u_e__Union
+    union u
     {
         uint Capabilities;
         uint SignalMode;
         uint LoadMedium;
         MEDIUM_INFO MediumInfo;
         TRANSPORT_STATE XPrtState;
-        struct _Timecode_e__Struct
+        struct Timecode
         {
             ubyte frame;
             ubyte second;
@@ -6025,7 +6026,7 @@ struct KSPROPERTY_EXTXPORT_S
         }
         uint dwTimecode;
         uint dwAbsTrackNumber;
-        struct _RawAVC_e__Struct
+        struct RawAVC
         {
             uint PayloadSize;
             ubyte[512] Payload;
@@ -6035,14 +6036,14 @@ struct KSPROPERTY_EXTXPORT_S
 struct KSPROPERTY_EXTXPORT_NODE_S
 {
     KSP_NODE NodeProperty;
-    union _u_e__Union
+    union u
     {
         uint Capabilities;
         uint SignalMode;
         uint LoadMedium;
         MEDIUM_INFO MediumInfo;
         TRANSPORT_STATE XPrtState;
-        struct _Timecode_e__Struct
+        struct Timecode
         {
             ubyte frame;
             ubyte second;
@@ -6051,7 +6052,7 @@ struct KSPROPERTY_EXTXPORT_NODE_S
         }
         uint dwTimecode;
         uint dwAbsTrackNumber;
-        struct _RawAVC_e__Struct
+        struct RawAVC
         {
             uint PayloadSize;
             ubyte[512] Payload;
@@ -6952,7 +6953,7 @@ struct KSAUDIOMODULE_NOTIFICATION
 {
     union
     {
-        struct _ProviderId_e__Struct
+        struct ProviderId
         {
             GUID DeviceId;
             GUID ClassId;

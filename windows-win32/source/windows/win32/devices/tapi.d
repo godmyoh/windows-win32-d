@@ -1523,7 +1523,7 @@ struct LINEAGENTCAPS
 struct LINEAGENTGROUPENTRY
 {
     align (1):
-    struct _GroupID_e__Struct
+    struct GroupID
     {
         align (1):
         uint dwGroupID1;
@@ -2029,7 +2029,7 @@ struct LINEINITIALIZEEXPARAMS
     uint dwNeededSize;
     uint dwUsedSize;
     uint dwOptions;
-    union _Handles_e__Union
+    union Handles
     {
         align (1):
         HANDLE hEvent;
@@ -2136,38 +2136,38 @@ struct LINEPROXYREQUEST
     uint dwRequestType;
     union
     {
-        struct _SetAgentGroup_e__Struct
+        struct SetAgentGroup
         {
             align (1):
             uint dwAddressID;
             LINEAGENTGROUPLIST GroupList;
         }
-        struct _SetAgentState_e__Struct
+        struct SetAgentState
         {
             align (1):
             uint dwAddressID;
             uint dwAgentState;
             uint dwNextAgentState;
         }
-        struct _SetAgentActivity_e__Struct
+        struct SetAgentActivity
         {
             align (1):
             uint dwAddressID;
             uint dwActivityID;
         }
-        struct _GetAgentCaps_e__Struct
+        struct GetAgentCaps
         {
             align (1):
             uint dwAddressID;
             LINEAGENTCAPS AgentCaps;
         }
-        struct _GetAgentStatus_e__Struct
+        struct GetAgentStatus
         {
             align (1):
             uint dwAddressID;
             LINEAGENTSTATUS AgentStatus;
         }
-        struct _AgentSpecific_e__Struct
+        struct AgentSpecific
         {
             align (1):
             uint dwAddressID;
@@ -2175,19 +2175,19 @@ struct LINEPROXYREQUEST
             uint dwSize;
             ubyte[1] Params;
         }
-        struct _GetAgentActivityList_e__Struct
+        struct GetAgentActivityList
         {
             align (1):
             uint dwAddressID;
             LINEAGENTACTIVITYLIST ActivityList;
         }
-        struct _GetAgentGroupList_e__Struct
+        struct GetAgentGroupList
         {
             align (1):
             uint dwAddressID;
             LINEAGENTGROUPLIST GroupList;
         }
-        struct _CreateAgent_e__Struct
+        struct CreateAgent
         {
             align (1):
             uint hAgent;
@@ -2196,26 +2196,26 @@ struct LINEPROXYREQUEST
             uint dwAgentPINSize;
             uint dwAgentPINOffset;
         }
-        struct _SetAgentStateEx_e__Struct
+        struct SetAgentStateEx
         {
             align (1):
             uint hAgent;
             uint dwAgentState;
             uint dwNextAgentState;
         }
-        struct _SetAgentMeasurementPeriod_e__Struct
+        struct SetAgentMeasurementPeriod
         {
             align (1):
             uint hAgent;
             uint dwMeasurementPeriod;
         }
-        struct _GetAgentInfo_e__Struct
+        struct GetAgentInfo
         {
             align (1):
             uint hAgent;
             LINEAGENTINFO AgentInfo;
         }
-        struct _CreateAgentSession_e__Struct
+        struct CreateAgentSession
         {
             align (1):
             uint hAgentSession;
@@ -2225,44 +2225,44 @@ struct LINEPROXYREQUEST
             GUID GroupID;
             uint dwWorkingAddressID;
         }
-        struct _GetAgentSessionList_e__Struct
+        struct GetAgentSessionList
         {
             align (1):
             uint hAgent;
             LINEAGENTSESSIONLIST SessionList;
         }
-        struct _GetAgentSessionInfo_e__Struct
+        struct GetAgentSessionInfo
         {
             align (1):
             uint hAgentSession;
             LINEAGENTSESSIONINFO SessionInfo;
         }
-        struct _SetAgentSessionState_e__Struct
+        struct SetAgentSessionState
         {
             align (1):
             uint hAgentSession;
             uint dwAgentSessionState;
             uint dwNextAgentSessionState;
         }
-        struct _GetQueueList_e__Struct
+        struct GetQueueList
         {
             align (1):
             GUID GroupID;
             LINEQUEUELIST QueueList;
         }
-        struct _SetQueueMeasurementPeriod_e__Struct
+        struct SetQueueMeasurementPeriod
         {
             align (1):
             uint dwQueueID;
             uint dwMeasurementPeriod;
         }
-        struct _GetQueueInfo_e__Struct
+        struct GetQueueInfo
         {
             align (1):
             uint dwQueueID;
             LINEQUEUEINFO QueueInfo;
         }
-        struct _GetGroupList_e__Struct
+        struct GetGroupList
         {
             LINEAGENTGROUPLIST GroupList;
         }
@@ -2426,7 +2426,7 @@ struct PHONEINITIALIZEEXPARAMS
     uint dwNeededSize;
     uint dwUsedSize;
     uint dwOptions;
-    union _Handles_e__Union
+    union Handles
     {
         align (1):
         HANDLE hEvent;
@@ -4205,12 +4205,12 @@ struct MSP_EVENT_INFO
     int* hCall;
     union
     {
-        struct _MSP_ADDRESS_EVENT_INFO_e__Struct
+        struct MSP_ADDRESS_EVENT_INFO
         {
             MSP_ADDRESS_EVENT Type;
             ITTerminal pTerminal;
         }
-        struct _MSP_CALL_EVENT_INFO_e__Struct
+        struct MSP_CALL_EVENT_INFO
         {
             MSP_CALL_EVENT Type;
             MSP_CALL_EVENT_CAUSE Cause;
@@ -4218,17 +4218,17 @@ struct MSP_EVENT_INFO
             ITTerminal pTerminal;
             HRESULT hrError;
         }
-        struct _MSP_TSP_DATA_e__Struct
+        struct MSP_TSP_DATA
         {
             uint dwBufferSize;
             ubyte[1] pBuffer;
         }
-        struct _MSP_PRIVATE_EVENT_INFO_e__Struct
+        struct MSP_PRIVATE_EVENT_INFO
         {
             IDispatch pEvent;
             int lEventCode;
         }
-        struct _MSP_FILE_TERMINAL_EVENT_INFO_e__Struct
+        struct MSP_FILE_TERMINAL_EVENT_INFO
         {
             ITTerminal pParentFileTerminal;
             ITFileTrack pFileTrack;
@@ -4236,17 +4236,17 @@ struct MSP_EVENT_INFO
             FT_STATE_EVENT_CAUSE ftecEventCause;
             HRESULT hrErrorCode;
         }
-        struct _MSP_ASR_TERMINAL_EVENT_INFO_e__Struct
+        struct MSP_ASR_TERMINAL_EVENT_INFO
         {
             ITTerminal pASRTerminal;
             HRESULT hrErrorCode;
         }
-        struct _MSP_TTS_TERMINAL_EVENT_INFO_e__Struct
+        struct MSP_TTS_TERMINAL_EVENT_INFO
         {
             ITTerminal pTTSTerminal;
             HRESULT hrErrorCode;
         }
-        struct _MSP_TONE_TERMINAL_EVENT_INFO_e__Struct
+        struct MSP_TONE_TERMINAL_EVENT_INFO
         {
             ITTerminal pToneTerminal;
             HRESULT hrErrorCode;
@@ -4522,7 +4522,7 @@ struct NSID
     ubyte[16] uchType;
     uint xtype;
     int lTime;
-    union _address_e__Union
+    union address
     {
         ADDRALIAS alias_;
         CHAR[1] rgchInterNet;

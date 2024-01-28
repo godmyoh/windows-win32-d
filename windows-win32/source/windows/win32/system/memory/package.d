@@ -284,12 +284,12 @@ struct PROCESS_HEAP_ENTRY
     ushort wFlags;
     union
     {
-        struct _Block_e__Struct
+        struct Block
         {
             HANDLE hMem;
             uint[3] dwReserved;
         }
-        struct _Region_e__Struct
+        struct Region
         {
             uint dwCommittedSize;
             uint dwUnCommittedSize;

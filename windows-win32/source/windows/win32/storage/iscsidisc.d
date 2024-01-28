@@ -625,9 +625,9 @@ struct NV_SEP_CACHE_PARAMETER
 {
     uint Version;
     uint Size;
-    union _Flags_e__Union
+    union Flags
     {
-        struct _CacheFlags_e__Struct
+        struct CacheFlags
         {
             ubyte _bitfield0;
         }
@@ -735,11 +735,11 @@ struct HYBRID_INFORMATION
     NVCACHE_TYPE CacheTypeDefault;
     uint FractionBase;
     ulong CacheSize;
-    struct _Attributes_e__Struct
+    struct Attributes
     {
         uint _bitfield0;
     }
-    struct _Priorities_e__Struct
+    struct Priorities
     {
         ubyte PriorityLevelCount;
         BOOLEAN MaxPriorityBehavior;
@@ -747,7 +747,7 @@ struct HYBRID_INFORMATION
         ubyte Reserved;
         uint DirtyThresholdLow;
         uint DirtyThresholdHigh;
-        struct _SupportedCommands_e__Struct
+        struct SupportedCommands
         {
             uint _bitfield1;
             uint MaxEvictCommands;
@@ -788,7 +788,7 @@ struct STORAGE_FIRMWARE_SLOT_INFO
     ubyte SlotNumber;
     BOOLEAN ReadOnly;
     ubyte[6] Reserved;
-    union _Revision_e__Union
+    union Revision
     {
         ubyte[8] Info;
         ulong AsUlonglong;
@@ -932,7 +932,7 @@ struct STORAGE_ENDURANCE_INFO
 {
     uint ValidFields;
     uint GroupId;
-    struct _Flags_e__Struct
+    struct Flags
     {
         uint _bitfield0;
     }

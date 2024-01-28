@@ -643,7 +643,7 @@ enum : int
 
 struct LDAP
 {
-    struct _ld_sb_e__Struct
+    struct ld_sb
     {
         ulong sb_sd;
         ubyte[41] Reserved1;
@@ -708,7 +708,7 @@ struct LDAPModW
 {
     uint mod_op;
     PWSTR mod_type;
-    union _mod_vals_e__Union
+    union mod_vals
     {
         PWSTR* modv_strvals;
         LDAP_BERVAL** modv_bvals;
@@ -718,7 +718,7 @@ struct LDAPModA
 {
     uint mod_op;
     PSTR mod_type;
-    union _mod_vals_e__Union
+    union mod_vals
     {
         PSTR* modv_strvals;
         LDAP_BERVAL** modv_bvals;

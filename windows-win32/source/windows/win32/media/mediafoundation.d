@@ -1737,9 +1737,9 @@ enum MF_INVALID_ACCESS_ERR = 0x8070000f;
 enum MF_QUOTA_EXCEEDED_ERR = 0x80700016;
 enum MF_PARSE_ERR = 0x80700051;
 enum MF_TYPE_ERR = 0x80704005;
-//enum DEVPKEY_DeviceInterface_IsVirtualCamera = [MISSING];
-//enum DEVPKEY_DeviceInterface_IsWindowsCameraEffectAvailable = [MISSING];
-//enum DEVPKEY_DeviceInterface_VirtualCameraAssociatedCameras = [MISSING];
+enum DEVPKEY_DeviceInterface_IsVirtualCamera = DEVPROPKEY(GUID(1859937037, 49891, 17335, [178, 209, 32, 82, 90, 26, 241, 32]), 3);
+enum DEVPKEY_DeviceInterface_IsWindowsCameraEffectAvailable = DEVPROPKEY(GUID(1859937037, 49891, 17335, [178, 209, 32, 82, 90, 26, 241, 32]), 4);
+enum DEVPKEY_DeviceInterface_VirtualCameraAssociatedCameras = DEVPROPKEY(GUID(1859937037, 49891, 17335, [178, 209, 32, 82, 90, 26, 241, 32]), 5);
 enum g_wszSpeechFormatCaps = "SpeechFormatCap";
 enum g_wszWMCPCodecName = "_CODECNAME";
 enum g_wszWMCPSupportedVBRModes = "_SUPPORTEDVBRMODES";
@@ -13677,7 +13677,7 @@ struct MFVideoAlphaBitmapParams
 struct MFVideoAlphaBitmap
 {
     BOOL GetBitmapFromDC;
-    union _bitmap_e__Union
+    union bitmap
     {
         HDC hdc;
         IDirect3DSurface9 pDDS;

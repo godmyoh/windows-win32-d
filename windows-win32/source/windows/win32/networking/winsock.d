@@ -1549,16 +1549,16 @@ struct WSADATA
 }
 struct IN_ADDR
 {
-    union _S_un_e__Union
+    union S_un
     {
-        struct _S_un_b_e__Struct
+        struct S_un_b
         {
             ubyte s_b1;
             ubyte s_b2;
             ubyte s_b3;
             ubyte s_b4;
         }
-        struct _S_un_w_e__Struct
+        struct S_un_w
         {
             ushort s_w1;
             ushort s_w2;
@@ -2013,24 +2013,24 @@ enum : int
 struct WSACOMPLETION
 {
     WSACOMPLETIONTYPE Type;
-    union _Parameters_e__Union
+    union Parameters
     {
-        struct _WindowMessage_e__Struct
+        struct WindowMessage
         {
             HWND hWnd;
             uint uMsg;
             WPARAM context;
         }
-        struct _Event_e__Struct
+        struct Event
         {
             OVERLAPPED* lpOverlapped;
         }
-        struct _Apc_e__Struct
+        struct Apc
         {
             OVERLAPPED* lpOverlapped;
             LPWSAOVERLAPPED_COMPLETION_ROUTINE lpfnCompletionProc;
         }
-        struct _Port_e__Struct
+        struct Port
         {
             OVERLAPPED* lpOverlapped;
             HANDLE hPort;
@@ -2214,7 +2214,7 @@ struct SOCK_NOTIFY_REGISTRATION
 }
 struct IN6_ADDR
 {
-    union _u_e__Union
+    union u
     {
         ubyte[16] Byte;
         ushort[8] Word;
@@ -2514,15 +2514,15 @@ struct WINDOWS_IAS_SET
     CHAR[64] irdaClassName;
     CHAR[256] irdaAttribName;
     uint irdaAttribType;
-    union _irdaAttribute_e__Union
+    union irdaAttribute
     {
         int irdaAttribInt;
-        struct _irdaAttribOctetSeq_e__Struct
+        struct irdaAttribOctetSeq
         {
             ushort Len;
             ubyte[1024] OctetSeq;
         }
-        struct _irdaAttribUsrStr_e__Struct
+        struct irdaAttribUsrStr
         {
             ubyte Len;
             ubyte CharSet;
@@ -2536,15 +2536,15 @@ struct WINDOWS_IAS_QUERY
     CHAR[64] irdaClassName;
     CHAR[256] irdaAttribName;
     uint irdaAttribType;
-    union _irdaAttribute_e__Union
+    union irdaAttribute
     {
         int irdaAttribInt;
-        struct _irdaAttribOctetSeq_e__Struct
+        struct irdaAttribOctetSeq
         {
             uint Len;
             ubyte[1024] OctetSeq;
         }
-        struct _irdaAttribUsrStr_e__Struct
+        struct irdaAttribUsrStr
         {
             uint Len;
             uint CharSet;
@@ -3155,7 +3155,7 @@ struct AALUSER_PARAMETERS
 struct AAL_PARAMETERS_IE
 {
     AAL_TYPE AALType;
-    union _AALSpecificParameters_e__Union
+    union AALSpecificParameters
     {
         AAL5_PARAMETERS AAL5Parameters;
         AALUSER_PARAMETERS AALUserParameters;
@@ -3322,33 +3322,33 @@ enum : int
 
 struct NLA_BLOB
 {
-    struct _header_e__Struct
+    struct header
     {
         NLA_BLOB_DATA_TYPE type;
         uint dwSize;
         uint nextOffset;
     }
-    union _data_e__Union
+    union data
     {
         CHAR[1] rawData;
-        struct _interfaceData_e__Struct
+        struct interfaceData
         {
             uint dwType;
             uint dwSpeed;
             CHAR[1] adapterName;
         }
-        struct _locationData_e__Struct
+        struct locationData
         {
             CHAR[1] information;
         }
-        struct _connectivity_e__Struct
+        struct connectivity
         {
             NLA_CONNECTIVITY_TYPE type;
             NLA_INTERNET internet;
         }
-        struct _ICS_e__Struct
+        struct ICS
         {
-            struct _remote_e__Struct
+            struct remote
             {
                 uint speed;
                 uint type;
@@ -3394,12 +3394,12 @@ struct RIO_NOTIFICATION_COMPLETION
     RIO_NOTIFICATION_COMPLETION_TYPE Type;
     union
     {
-        struct _Event_e__Struct
+        struct Event
         {
             HANDLE EventHandle;
             BOOL NotifyReset;
         }
-        struct _Iocp_e__Struct
+        struct Iocp
         {
             HANDLE IocpHandle;
             void* CompletionKey;
@@ -3891,7 +3891,7 @@ struct ICMP_HEADER
 struct ICMP_MESSAGE
 {
     ICMP_HEADER Header;
-    union _Data_e__Union
+    union Data
     {
         uint[1] Data32;
         ushort[2] Data16;
@@ -4267,7 +4267,7 @@ struct ND_OPTION_PREFIX_INFO
     union
     {
         ubyte nd_opt_pi_flags_reserved;
-        struct _Flags_e__Struct
+        struct Flags
         {
             ubyte _bitfield0;
         }
@@ -4307,7 +4307,7 @@ struct ND_OPTION_ROUTE_INFO
     union
     {
         ubyte nd_opt_ri_flags_reserved;
-        struct _Flags_e__Struct
+        struct Flags
         {
             ubyte _bitfield0;
         }

@@ -2944,7 +2944,7 @@ struct WS_SECURITY_BINDING_PROPERTY_CONSTRAINT
     WS_SECURITY_BINDING_PROPERTY_ID id;
     void* allowedValues;
     uint allowedValuesSize;
-    struct _out_e__Struct
+    struct out_
     {
         WS_SECURITY_BINDING_PROPERTY securityBindingProperty;
     }
@@ -2958,7 +2958,7 @@ struct WS_SECURITY_BINDING_CONSTRAINT
 struct WS_SSL_TRANSPORT_SECURITY_BINDING_CONSTRAINT
 {
     WS_SECURITY_BINDING_CONSTRAINT bindingConstraint;
-    struct _out_e__Struct
+    struct out_
     {
         BOOL clientCertCredentialRequired;
     }
@@ -2991,7 +2991,7 @@ struct WS_REQUEST_SECURITY_TOKEN_PROPERTY_CONSTRAINT
     WS_REQUEST_SECURITY_TOKEN_PROPERTY_ID id;
     void* allowedValues;
     uint allowedValuesSize;
-    struct _out_e__Struct
+    struct out_
     {
         WS_REQUEST_SECURITY_TOKEN_PROPERTY requestSecurityTokenProperty;
     }
@@ -3004,7 +3004,7 @@ struct WS_ISSUED_TOKEN_MESSAGE_SECURITY_BINDING_CONSTRAINT
     uint claimConstraintCount;
     WS_REQUEST_SECURITY_TOKEN_PROPERTY_CONSTRAINT* requestSecurityTokenPropertyConstraints;
     uint requestSecurityTokenPropertyConstraintCount;
-    struct _out_e__Struct
+    struct out_
     {
         WS_ENDPOINT_ADDRESS* issuerAddress;
         WS_XML_BUFFER* requestSecurityTokenTemplate;
@@ -3015,7 +3015,7 @@ struct WS_SECURITY_PROPERTY_CONSTRAINT
     WS_SECURITY_PROPERTY_ID id;
     void* allowedValues;
     uint allowedValuesSize;
-    struct _out_e__Struct
+    struct out_
     {
         WS_SECURITY_PROPERTY securityProperty;
     }
@@ -3038,7 +3038,7 @@ struct WS_CHANNEL_PROPERTY_CONSTRAINT
     WS_CHANNEL_PROPERTY_ID id;
     void* allowedValues;
     uint allowedValuesSize;
-    struct _out_e__Struct
+    struct out_
     {
         WS_CHANNEL_PROPERTY channelProperty;
     }
@@ -3052,7 +3052,7 @@ struct WS_ENDPOINT_POLICY_EXTENSION
     WS_POLICY_EXTENSION policyExtension;
     WS_XML_STRING* assertionName;
     WS_XML_STRING* assertionNs;
-    struct _out_e__Struct
+    struct out_
     {
         WS_XML_BUFFER* assertionValue;
     }

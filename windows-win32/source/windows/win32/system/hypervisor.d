@@ -1392,7 +1392,10 @@ struct WHV_VPCI_HARDWARE_IDS
     ushort SubVendorID;
     ushort SubSystemID;
 }
-alias WHV_VPCI_PROBED_BARS = uint;
+struct WHV_VPCI_PROBED_BARS
+{
+    uint[6] Value;
+}
 alias WHV_VPCI_MMIO_RANGE_FLAGS = int;
 enum : int
 {
@@ -1456,7 +1459,7 @@ struct WHV_TRIGGER_PARAMETERS
     {
         WHV_INTERRUPT_CONTROL Interrupt;
         WHV_SYNIC_EVENT_PARAMETERS SynicEvent;
-        struct _DeviceInterrupt_e__Struct
+        struct DeviceInterrupt
         {
             ulong LogicalDeviceId;
             ulong MsiAddress;
@@ -1495,7 +1498,7 @@ struct WHV_NOTIFICATION_PORT_PARAMETERS
     union
     {
         WHV_DOORBELL_MATCH_DATA Doorbell;
-        struct _Event_e__Struct
+        struct Event
         {
             uint ConnectionId;
         }
@@ -1718,11 +1721,11 @@ enum : int
 union GUEST_OS_INFO
 {
     ulong AsUINT64;
-    struct _ClosedSource_e__Struct
+    struct ClosedSource
     {
         ulong _bitfield0;
     }
-    struct _OpenSource_e__Struct
+    struct OpenSource
     {
         ulong _bitfield1;
     }
@@ -1897,14 +1900,14 @@ union VIRTUAL_PROCESSOR_REGISTER
     uint Reg32;
     ushort Reg16;
     ubyte Reg8;
-    struct _Reg128_e__Struct
+    struct Reg128
     {
         ulong Low64;
         ulong High64;
     }
-    union _X64_e__Union
+    union X64
     {
-        struct _Segment_e__Struct
+        struct Segment
         {
             ulong Base;
             uint Limit;
@@ -1918,12 +1921,12 @@ union VIRTUAL_PROCESSOR_REGISTER
                 }
             }
         }
-        struct _Table_e__Struct
+        struct Table
         {
             ushort Limit;
             ulong Base;
         }
-        struct _FpControlStatus_e__Struct
+        struct FpControlStatus
         {
             ushort FpControl;
             ushort FpStatus;
@@ -1940,7 +1943,7 @@ union VIRTUAL_PROCESSOR_REGISTER
                 }
             }
         }
-        struct _XmmControlStatus_e__Struct
+        struct XmmControlStatus
         {
             union
             {

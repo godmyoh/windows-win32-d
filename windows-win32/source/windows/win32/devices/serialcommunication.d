@@ -1,5 +1,7 @@
 module windows.win32.devices.serialcommunication;
 
+import windows.win32.guid : GUID;
+import windows.win32.devices.properties : DEVPROPKEY;
 import windows.win32.foundation : BOOL, BOOLEAN;
 
 version (Windows):
@@ -12,9 +14,9 @@ int ComDBClaimNextFreePort(HCOMDB, uint*);
 int ComDBClaimPort(HCOMDB, uint, BOOL, BOOL*);
 int ComDBReleasePort(HCOMDB, uint);
 int ComDBResizeDatabase(HCOMDB, uint);
-//enum DEVPKEY_DeviceInterface_Serial_UsbVendorId = [MISSING];
-//enum DEVPKEY_DeviceInterface_Serial_UsbProductId = [MISSING];
-//enum DEVPKEY_DeviceInterface_Serial_PortName = [MISSING];
+enum DEVPKEY_DeviceInterface_Serial_UsbVendorId = DEVPROPKEY(GUID(1282142556, 19459, 19116, [145, 245, 100, 192, 248, 82, 188, 244]), 2);
+enum DEVPKEY_DeviceInterface_Serial_UsbProductId = DEVPROPKEY(GUID(1282142556, 19459, 19116, [145, 245, 100, 192, 248, 82, 188, 244]), 3);
+enum DEVPKEY_DeviceInterface_Serial_PortName = DEVPROPKEY(GUID(1282142556, 19459, 19116, [145, 245, 100, 192, 248, 82, 188, 244]), 4);
 enum IOCTL_SERIAL_SET_BAUD_RATE = 0x001b0004;
 enum IOCTL_SERIAL_SET_QUEUE_SIZE = 0x001b0008;
 enum IOCTL_SERIAL_SET_LINE_CONTROL = 0x001b000c;

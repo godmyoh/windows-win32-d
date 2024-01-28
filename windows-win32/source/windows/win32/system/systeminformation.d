@@ -545,11 +545,11 @@ struct SYSTEM_LOGICAL_PROCESSOR_INFORMATION
     LOGICAL_PROCESSOR_RELATIONSHIP Relationship;
     union
     {
-        struct _ProcessorCore_e__Struct
+        struct ProcessorCore
         {
             ubyte Flags;
         }
-        struct _NumaNode_e__Struct
+        struct NumaNode
         {
             uint NodeNumber;
         }
@@ -629,7 +629,7 @@ struct SYSTEM_CPU_SET_INFORMATION
     CPU_SET_INFORMATION_TYPE Type;
     union
     {
-        struct _CpuSet_e__Struct
+        struct CpuSet
         {
             uint Id;
             ushort Group;

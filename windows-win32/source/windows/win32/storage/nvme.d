@@ -216,7 +216,7 @@ struct NVME_COMPLETION_ENTRY
 {
     uint DW0;
     uint DW1;
-    union _DW2_e__Union
+    union DW2
     {
         struct
         {
@@ -225,7 +225,7 @@ struct NVME_COMPLETION_ENTRY
         }
         uint AsUlong;
     }
-    union _DW3_e__Union
+    union DW3
     {
         struct
         {
@@ -575,37 +575,37 @@ struct NVME_IDENTIFY_NAMESPACE_DATA
     ulong NSZE;
     ulong NCAP;
     ulong NUSE;
-    struct _NSFEAT_e__Struct
+    struct NSFEAT
     {
         ubyte _bitfield0;
     }
     ubyte NLBAF;
-    struct _FLBAS_e__Struct
+    struct FLBAS
     {
         ubyte _bitfield1;
     }
-    struct _MC_e__Struct
+    struct MC
     {
         ubyte _bitfield2;
     }
-    struct _DPC_e__Struct
+    struct DPC
     {
         ubyte _bitfield3;
     }
-    struct _DPS_e__Struct
+    struct DPS
     {
         ubyte _bitfield4;
     }
-    struct _NMIC_e__Struct
+    struct NMIC
     {
         ubyte _bitfield5;
     }
     NVM_RESERVATION_CAPABILITIES RESCAP;
-    struct _FPI_e__Struct
+    struct FPI
     {
         ubyte _bitfield6;
     }
-    struct _DLFEAT_e__Struct
+    struct DLFEAT
     {
         ubyte _bitfield7;
     }
@@ -628,7 +628,7 @@ struct NVME_IDENTIFY_NAMESPACE_DATA
     ubyte[11] Reserved2;
     uint ANAGRPID;
     ubyte[3] Reserved3;
-    struct _NSATTR_e__Struct
+    struct NSATTR
     {
         ubyte _bitfield8;
     }
@@ -667,7 +667,7 @@ struct NVME_IDENTIFY_CONTROLLER_DATA
     ubyte[8] FR;
     ubyte RAB;
     ubyte[3] IEEE;
-    struct _CMIC_e__Struct
+    struct CMIC
     {
         ubyte _bitfield0;
     }
@@ -676,15 +676,15 @@ struct NVME_IDENTIFY_CONTROLLER_DATA
     uint VER;
     uint RTD3R;
     uint RTD3E;
-    struct _OAES_e__Struct
+    struct OAES
     {
         uint _bitfield1;
     }
-    struct _CTRATT_e__Struct
+    struct CTRATT
     {
         uint _bitfield2;
     }
-    struct _RRLS_e__Struct
+    struct RRLS
     {
         ushort _bitfield3;
     }
@@ -696,27 +696,27 @@ struct NVME_IDENTIFY_CONTROLLER_DATA
     ushort CRDT3;
     ubyte[106] Reserved0_1;
     ubyte[16] ReservedForManagement;
-    struct _OACS_e__Struct
+    struct OACS
     {
         ushort _bitfield4;
     }
     ubyte ACL;
     ubyte AERL;
-    struct _FRMW_e__Struct
+    struct FRMW
     {
         ubyte _bitfield5;
     }
-    struct _LPA_e__Struct
+    struct LPA
     {
         ubyte _bitfield6;
     }
     ubyte ELPE;
     ubyte NPSS;
-    struct _AVSCC_e__Struct
+    struct AVSCC
     {
         ubyte _bitfield7;
     }
-    struct _APSTA_e__Struct
+    struct APSTA
     {
         ubyte _bitfield8;
     }
@@ -727,7 +727,7 @@ struct NVME_IDENTIFY_CONTROLLER_DATA
     uint HMMIN;
     ubyte[16] TNVMCAP;
     ubyte[16] UNVMCAP;
-    struct _RPMBS_e__Struct
+    struct RPMBS
     {
         uint _bitfield9;
     }
@@ -735,13 +735,13 @@ struct NVME_IDENTIFY_CONTROLLER_DATA
     ubyte DSTO;
     ubyte FWUG;
     ushort KAS;
-    struct _HCTMA_e__Struct
+    struct HCTMA
     {
         ushort _bitfield10;
     }
     ushort MNTMT;
     ushort MXTMT;
-    struct _SANICAP_e__Struct
+    struct SANICAP
     {
         uint _bitfield11;
     }
@@ -750,7 +750,7 @@ struct NVME_IDENTIFY_CONTROLLER_DATA
     ushort NSETIDMAX;
     ushort ENDGIDMAX;
     ubyte ANATT;
-    struct _ANACAP_e__Struct
+    struct ANACAP
     {
         ubyte _bitfield12;
     }
@@ -758,45 +758,45 @@ struct NVME_IDENTIFY_CONTROLLER_DATA
     uint NANAGRPID;
     uint PELS;
     ubyte[156] Reserved1;
-    struct _SQES_e__Struct
+    struct SQES
     {
         ubyte _bitfield13;
     }
-    struct _CQES_e__Struct
+    struct CQES
     {
         ubyte _bitfield14;
     }
     ushort MAXCMD;
     uint NN;
-    struct _ONCS_e__Struct
+    struct ONCS
     {
         ushort _bitfield15;
     }
-    struct _FUSES_e__Struct
+    struct FUSES
     {
         ushort _bitfield16;
     }
-    struct _FNA_e__Struct
+    struct FNA
     {
         ubyte _bitfield17;
     }
-    struct _VWC_e__Struct
+    struct VWC
     {
         ubyte _bitfield18;
     }
     ushort AWUN;
     ushort AWUPF;
-    struct _NVSCC_e__Struct
+    struct NVSCC
     {
         ubyte _bitfield19;
     }
-    struct _NWPC_e__Struct
+    struct NWPC
     {
         ubyte _bitfield20;
     }
     ushort ACWU;
     ubyte[2] Reserved4;
-    struct _SGLS_e__Struct
+    struct SGLS
     {
         uint _bitfield21;
     }
@@ -862,11 +862,11 @@ struct NVME_LBA_ZONE_FORMAT
 }
 struct NVME_IDENTIFY_SPECIFIC_NAMESPACE_IO_COMMAND_SET
 {
-    struct _ZOC_e__Struct
+    struct ZOC
     {
         ushort _bitfield0;
     }
-    struct _OZCS_e__Struct
+    struct OZCS
     {
         ushort _bitfield1;
     }
@@ -916,7 +916,7 @@ enum : int
 struct NVME_LBA_RANGET_TYPE_ENTRY
 {
     ubyte Type;
-    struct _Attributes_e__Struct
+    struct Attributes
     {
         ubyte _bitfield0;
     }
@@ -1004,12 +1004,12 @@ struct NVME_WCS_DEVICE_SMART_ATTRIBUTES_LOG_V2
     align (1):
     ubyte[16] MediaUnitsWritten;
     ubyte[16] MediaUnitsRead;
-    struct _BadUserNANDBlockCount_e__Struct
+    struct BadUserNANDBlockCount
     {
         ubyte[6] RawCount;
         ubyte[2] Normalized;
     }
-    struct _BadSystemNANDBlockCount_e__Struct
+    struct BadSystemNANDBlockCount
     {
         ubyte[6] RawCount;
         ubyte[2] Normalized;
@@ -1017,7 +1017,7 @@ struct NVME_WCS_DEVICE_SMART_ATTRIBUTES_LOG_V2
     ulong XORRecoveryCount;
     ulong UnrecoverableReadErrorCount;
     ulong SoftECCErrorCount;
-    struct _EndToEndCorrectionCounts_e__Struct
+    struct EndToEndCorrectionCounts
     {
         align (1):
         uint DetectedCounts;
@@ -1025,13 +1025,13 @@ struct NVME_WCS_DEVICE_SMART_ATTRIBUTES_LOG_V2
     }
     ubyte PercentageSystemDataUsed;
     ubyte[7] RefreshCount;
-    struct _UserDataEraseCounts_e__Struct
+    struct UserDataEraseCounts
     {
         align (1):
         uint MaximumCount;
         uint MinimumCount;
     }
-    struct _ThermalThrottling_e__Struct
+    struct ThermalThrottling
     {
         ubyte EventCount;
         ubyte Status;
@@ -1058,12 +1058,12 @@ struct NVME_OCP_DEVICE_SMART_INFORMATION_LOG_V3
     align (1):
     ubyte[16] MediaUnitsWritten;
     ubyte[16] MediaUnitsRead;
-    struct _BadUserNANDBlockCount_e__Struct
+    struct BadUserNANDBlockCount
     {
         ubyte[6] RawCount;
         ubyte[2] Normalized;
     }
-    struct _BadSystemNANDBlockCount_e__Struct
+    struct BadSystemNANDBlockCount
     {
         ubyte[6] RawCount;
         ubyte[2] Normalized;
@@ -1071,7 +1071,7 @@ struct NVME_OCP_DEVICE_SMART_INFORMATION_LOG_V3
     ulong XORRecoveryCount;
     ulong UnrecoverableReadErrorCount;
     ulong SoftECCErrorCount;
-    struct _EndToEndCorrectionCounts_e__Struct
+    struct EndToEndCorrectionCounts
     {
         align (1):
         uint DetectedCounts;
@@ -1079,13 +1079,13 @@ struct NVME_OCP_DEVICE_SMART_INFORMATION_LOG_V3
     }
     ubyte PercentageSystemDataUsed;
     ubyte[7] RefreshCount;
-    struct _UserDataEraseCounts_e__Struct
+    struct UserDataEraseCounts
     {
         align (1):
         uint MaximumCount;
         uint MinimumCount;
     }
-    struct _ThermalThrottling_e__Struct
+    struct ThermalThrottling
     {
         ubyte EventCount;
         ubyte Status;
@@ -1282,7 +1282,7 @@ struct NVME_OCP_DEVICE_LATENCY_MONITOR_LOG
     ulong DebugLogLatencyStamp;
     ushort DebugLogPointer;
     DEBUG_BIT_FIELD DebugCounterTriggerSource;
-    union _DebugLogStampUnits_e__Union
+    union DebugLogStampUnits
     {
         struct
         {
@@ -1302,7 +1302,7 @@ struct NVME_OCP_DEVICE_CAPABILITIES_LOG
 {
     align (1):
     ushort PciePorts;
-    union _OobMgmtSupport_e__Union
+    union OobMgmtSupport
     {
         align (1):
         struct
@@ -1312,7 +1312,7 @@ struct NVME_OCP_DEVICE_CAPABILITIES_LOG
         }
         ushort AsUshort;
     }
-    union _WriteZeroesCommand_e__Union
+    union WriteZeroesCommand
     {
         align (1):
         struct
@@ -1322,7 +1322,7 @@ struct NVME_OCP_DEVICE_CAPABILITIES_LOG
         }
         ushort AsUshort;
     }
-    union _SanitizeCommand_e__Union
+    union SanitizeCommand
     {
         align (1):
         struct
@@ -1332,7 +1332,7 @@ struct NVME_OCP_DEVICE_CAPABILITIES_LOG
         }
         ushort AsUshort;
     }
-    union _DatasetMgmtCommand_e__Union
+    union DatasetMgmtCommand
     {
         align (1):
         struct
@@ -1342,7 +1342,7 @@ struct NVME_OCP_DEVICE_CAPABILITIES_LOG
         }
         ushort AsUshort;
     }
-    union _WriteUncorrectableCommand_e__Union
+    union WriteUncorrectableCommand
     {
         align (1):
         struct
@@ -1352,7 +1352,7 @@ struct NVME_OCP_DEVICE_CAPABILITIES_LOG
         }
         ushort AsUshort;
     }
-    union _FusedCommand_e__Union
+    union FusedCommand
     {
         align (1):
         struct
@@ -1386,7 +1386,7 @@ struct NVME_OCP_DEVICE_UNSUPPORTED_REQUIREMENTS_LOG
 struct NVME_OCP_DEVICE_TCG_CONFIGURATION_LOG
 {
     align (1):
-    union _State_e__Union
+    union State
     {
         struct
         {
@@ -1776,7 +1776,7 @@ union NVME_CDW0_FEATURE_ERROR_INJECTION
 }
 struct NVME_ERROR_INJECTION_ENTRY
 {
-    union _Flags_e__Union
+    union Flags
     {
         struct
         {
@@ -1983,7 +1983,7 @@ struct NVME_ERROR_INFO_LOG
     ushort SQID;
     ushort CMDID;
     NVME_COMMAND_STATUS Status;
-    struct _ParameterErrorLocation_e__Struct
+    struct ParameterErrorLocation
     {
         ushort _bitfield0;
     }
@@ -1996,7 +1996,7 @@ struct NVME_ERROR_INFO_LOG
 }
 struct NVME_HEALTH_INFO_LOG
 {
-    union _CriticalWarning_e__Union
+    union CriticalWarning
     {
         struct
         {
@@ -2064,7 +2064,7 @@ struct NVME_TELEMETRY_CONTROLLER_INITIATED_LOG
 }
 struct NVME_FIRMWARE_SLOT_INFO_LOG
 {
-    struct _AFI_e__Struct
+    struct AFI
     {
         ubyte _bitfield0;
     }
@@ -2107,12 +2107,12 @@ struct NVME_COMMAND_EFFECTS_LOG
 struct NVME_DEVICE_SELF_TEST_RESULT_DATA
 {
     align (1):
-    struct _Status_e__Struct
+    struct Status
     {
         ubyte _bitfield0;
     }
     ubyte SegmentNumber;
-    struct _ValidDiagnostics_e__Struct
+    struct ValidDiagnostics
     {
         ubyte _bitfield1;
     }
@@ -2120,7 +2120,7 @@ struct NVME_DEVICE_SELF_TEST_RESULT_DATA
     ulong POH;
     uint NSID;
     ulong FailingLBA;
-    struct _StatusCodeType_e__Struct
+    struct StatusCodeType
     {
         ubyte _bitfield2;
     }
@@ -2129,11 +2129,11 @@ struct NVME_DEVICE_SELF_TEST_RESULT_DATA
 }
 struct NVME_DEVICE_SELF_TEST_LOG
 {
-    struct _CurrentOperation_e__Struct
+    struct CurrentOperation
     {
         ubyte _bitfield0;
     }
-    struct _CurrentCompletion_e__Struct
+    struct CurrentCompletion
     {
         ubyte _bitfield1;
     }
@@ -2457,7 +2457,7 @@ struct NVME_RESERVATION_REPORT_STATUS_HEADER
 struct NVME_REGISTERED_CONTROLLER_DATA
 {
     ushort CNTLID;
-    struct _RCSTS_e__Struct
+    struct RCSTS
     {
         ubyte _bitfield0;
     }
@@ -2473,7 +2473,7 @@ struct NVME_RESERVATION_REPORT_STATUS_DATA_STRUCTURE
 struct NVME_REGISTERED_CONTROLLER_EXTENDED_DATA
 {
     ushort CNTLID;
-    struct _RCSTS_e__Struct
+    struct RCSTS
     {
         ubyte _bitfield0;
     }
@@ -2679,7 +2679,7 @@ union NVME_CDW13_READ_WRITE
 {
     struct
     {
-        struct _DSM_e__Struct
+        struct DSM
         {
             ubyte _bitfield0;
         }
@@ -2736,7 +2736,7 @@ struct NVME_ZONE_DESCRIPTOR
     {
         ubyte _bitfield1;
     }
-    struct _ZA_e__Struct
+    struct ZA
     {
         ubyte _bitfield2;
     }
@@ -2886,9 +2886,9 @@ struct NVME_COMMAND
     ulong MPTR;
     ulong PRP1;
     ulong PRP2;
-    union _u_e__Union
+    union u
     {
-        struct _GENERAL_e__Struct
+        struct GENERAL
         {
             uint CDW10;
             uint CDW11;
@@ -2897,7 +2897,7 @@ struct NVME_COMMAND
             uint CDW14;
             uint CDW15;
         }
-        struct _IDENTIFY_e__Struct
+        struct IDENTIFY
         {
             NVME_CDW10_IDENTIFY CDW10;
             NVME_CDW11_IDENTIFY CDW11;
@@ -2906,7 +2906,7 @@ struct NVME_COMMAND
             uint CDW14;
             uint CDW15;
         }
-        struct _ABORT_e__Struct
+        struct ABORT
         {
             NVME_CDW10_ABORT CDW10;
             uint CDW11;
@@ -2915,7 +2915,7 @@ struct NVME_COMMAND
             uint CDW14;
             uint CDW15;
         }
-        struct _GETFEATURES_e__Struct
+        struct GETFEATURES
         {
             NVME_CDW10_GET_FEATURES CDW10;
             NVME_CDW11_FEATURES CDW11;
@@ -2924,7 +2924,7 @@ struct NVME_COMMAND
             uint CDW14;
             uint CDW15;
         }
-        struct _SETFEATURES_e__Struct
+        struct SETFEATURES
         {
             NVME_CDW10_SET_FEATURES CDW10;
             NVME_CDW11_FEATURES CDW11;
@@ -2933,7 +2933,7 @@ struct NVME_COMMAND
             NVME_CDW14_FEATURES CDW14;
             NVME_CDW15_FEATURES CDW15;
         }
-        struct _GETLOGPAGE_e__Struct
+        struct GETLOGPAGE
         {
             union
             {
@@ -2946,7 +2946,7 @@ struct NVME_COMMAND
             NVME_CDW14_GET_LOG_PAGE CDW14;
             uint CDW15;
         }
-        struct _CREATEIOCQ_e__Struct
+        struct CREATEIOCQ
         {
             NVME_CDW10_CREATE_IO_QUEUE CDW10;
             NVME_CDW11_CREATE_IO_CQ CDW11;
@@ -2955,7 +2955,7 @@ struct NVME_COMMAND
             uint CDW14;
             uint CDW15;
         }
-        struct _CREATEIOSQ_e__Struct
+        struct CREATEIOSQ
         {
             NVME_CDW10_CREATE_IO_QUEUE CDW10;
             NVME_CDW11_CREATE_IO_SQ CDW11;
@@ -2964,7 +2964,7 @@ struct NVME_COMMAND
             uint CDW14;
             uint CDW15;
         }
-        struct _DATASETMANAGEMENT_e__Struct
+        struct DATASETMANAGEMENT
         {
             NVME_CDW10_DATASET_MANAGEMENT CDW10;
             NVME_CDW11_DATASET_MANAGEMENT CDW11;
@@ -2973,7 +2973,7 @@ struct NVME_COMMAND
             uint CDW14;
             uint CDW15;
         }
-        struct _SECURITYSEND_e__Struct
+        struct SECURITYSEND
         {
             NVME_CDW10_SECURITY_SEND_RECEIVE CDW10;
             NVME_CDW11_SECURITY_SEND CDW11;
@@ -2982,7 +2982,7 @@ struct NVME_COMMAND
             uint CDW14;
             uint CDW15;
         }
-        struct _SECURITYRECEIVE_e__Struct
+        struct SECURITYRECEIVE
         {
             NVME_CDW10_SECURITY_SEND_RECEIVE CDW10;
             NVME_CDW11_SECURITY_RECEIVE CDW11;
@@ -2991,7 +2991,7 @@ struct NVME_COMMAND
             uint CDW14;
             uint CDW15;
         }
-        struct _FIRMWAREDOWNLOAD_e__Struct
+        struct FIRMWAREDOWNLOAD
         {
             NVME_CDW10_FIRMWARE_DOWNLOAD CDW10;
             NVME_CDW11_FIRMWARE_DOWNLOAD CDW11;
@@ -3000,7 +3000,7 @@ struct NVME_COMMAND
             uint CDW14;
             uint CDW15;
         }
-        struct _FIRMWAREACTIVATE_e__Struct
+        struct FIRMWAREACTIVATE
         {
             NVME_CDW10_FIRMWARE_ACTIVATE CDW10;
             uint CDW11;
@@ -3009,7 +3009,7 @@ struct NVME_COMMAND
             uint CDW14;
             uint CDW15;
         }
-        struct _FORMATNVM_e__Struct
+        struct FORMATNVM
         {
             NVME_CDW10_FORMAT_NVM CDW10;
             uint CDW11;
@@ -3018,7 +3018,7 @@ struct NVME_COMMAND
             uint CDW14;
             uint CDW15;
         }
-        struct _DIRECTIVERECEIVE_e__Struct
+        struct DIRECTIVERECEIVE
         {
             NVME_CDW10_DIRECTIVE_RECEIVE CDW10;
             NVME_CDW11_DIRECTIVE_RECEIVE CDW11;
@@ -3027,7 +3027,7 @@ struct NVME_COMMAND
             uint CDW14;
             uint CDW15;
         }
-        struct _DIRECTIVESEND_e__Struct
+        struct DIRECTIVESEND
         {
             NVME_CDW10_DIRECTIVE_SEND CDW10;
             NVME_CDW11_DIRECTIVE_SEND CDW11;
@@ -3036,7 +3036,7 @@ struct NVME_COMMAND
             uint CDW14;
             uint CDW15;
         }
-        struct _SANITIZE_e__Struct
+        struct SANITIZE
         {
             NVME_CDW10_SANITIZE CDW10;
             NVME_CDW11_SANITIZE CDW11;
@@ -3045,7 +3045,7 @@ struct NVME_COMMAND
             uint CDW14;
             uint CDW15;
         }
-        struct _READWRITE_e__Struct
+        struct READWRITE
         {
             uint LBALOW;
             uint LBAHIGH;
@@ -3054,7 +3054,7 @@ struct NVME_COMMAND
             uint CDW14;
             NVME_CDW15_READ_WRITE CDW15;
         }
-        struct _RESERVATIONACQUIRE_e__Struct
+        struct RESERVATIONACQUIRE
         {
             NVME_CDW10_RESERVATION_ACQUIRE CDW10;
             uint CDW11;
@@ -3063,7 +3063,7 @@ struct NVME_COMMAND
             uint CDW14;
             uint CDW15;
         }
-        struct _RESERVATIONREGISTER_e__Struct
+        struct RESERVATIONREGISTER
         {
             NVME_CDW10_RESERVATION_REGISTER CDW10;
             uint CDW11;
@@ -3072,7 +3072,7 @@ struct NVME_COMMAND
             uint CDW14;
             uint CDW15;
         }
-        struct _RESERVATIONRELEASE_e__Struct
+        struct RESERVATIONRELEASE
         {
             NVME_CDW10_RESERVATION_RELEASE CDW10;
             uint CDW11;
@@ -3081,7 +3081,7 @@ struct NVME_COMMAND
             uint CDW14;
             uint CDW15;
         }
-        struct _RESERVATIONREPORT_e__Struct
+        struct RESERVATIONREPORT
         {
             NVME_CDW10_RESERVATION_REPORT CDW10;
             NVME_CDW11_RESERVATION_REPORT CDW11;
@@ -3090,7 +3090,7 @@ struct NVME_COMMAND
             uint CDW14;
             uint CDW15;
         }
-        struct _ZONEMANAGEMENTSEND_e__Struct
+        struct ZONEMANAGEMENTSEND
         {
             NVME_CDW10_ZONE_MANAGEMENT_SEND CDW1011;
             uint CDW12;
@@ -3098,7 +3098,7 @@ struct NVME_COMMAND
             uint CDW14;
             uint CDW15;
         }
-        struct _ZONEMANAGEMENTRECEIVE_e__Struct
+        struct ZONEMANAGEMENTRECEIVE
         {
             NVME_CDW10_ZONE_MANAGEMENT_RECEIVE CDW1011;
             uint DWORDCOUNT;
@@ -3106,7 +3106,7 @@ struct NVME_COMMAND
             uint CDW14;
             uint CDW15;
         }
-        struct _ZONEAPPEND_e__Struct
+        struct ZONEAPPEND
         {
             NVME_CDW10_ZONE_APPEND CDW1011;
             NVME_CDW12_ZONE_APPEND CDW12;

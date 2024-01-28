@@ -1010,14 +1010,14 @@ enum : int
 
 union INSTALLSPEC
 {
-    struct _AppName_e__Struct
+    struct AppName
     {
         PWSTR Name;
         GUID GPOId;
     }
     PWSTR FileExt;
     PWSTR ProgId;
-    struct _COMClass_e__Struct
+    struct COMClass
     {
         GUID Clsid;
         uint ClsCtx;

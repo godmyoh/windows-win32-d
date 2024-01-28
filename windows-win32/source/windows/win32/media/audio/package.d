@@ -279,24 +279,24 @@ enum DEVICE_STATE_DISABLED = 0x00000002;
 enum DEVICE_STATE_NOTPRESENT = 0x00000004;
 enum DEVICE_STATE_UNPLUGGED = 0x00000008;
 enum DEVICE_STATEMASK_ALL = 0x0000000f;
-//enum PKEY_AudioEndpoint_FormFactor = [MISSING];
-//enum PKEY_AudioEndpoint_ControlPanelPageProvider = [MISSING];
-//enum PKEY_AudioEndpoint_Association = [MISSING];
-//enum PKEY_AudioEndpoint_PhysicalSpeakers = [MISSING];
-//enum PKEY_AudioEndpoint_GUID = [MISSING];
-//enum PKEY_AudioEndpoint_Disable_SysFx = [MISSING];
+enum PKEY_AudioEndpoint_FormFactor = PROPERTYKEY(GUID(497408003, 54418, 20189, [140, 35, 224, 192, 255, 238, 127, 14]), 0);
+enum PKEY_AudioEndpoint_ControlPanelPageProvider = PROPERTYKEY(GUID(497408003, 54418, 20189, [140, 35, 224, 192, 255, 238, 127, 14]), 1);
+enum PKEY_AudioEndpoint_Association = PROPERTYKEY(GUID(497408003, 54418, 20189, [140, 35, 224, 192, 255, 238, 127, 14]), 2);
+enum PKEY_AudioEndpoint_PhysicalSpeakers = PROPERTYKEY(GUID(497408003, 54418, 20189, [140, 35, 224, 192, 255, 238, 127, 14]), 3);
+enum PKEY_AudioEndpoint_GUID = PROPERTYKEY(GUID(497408003, 54418, 20189, [140, 35, 224, 192, 255, 238, 127, 14]), 4);
+enum PKEY_AudioEndpoint_Disable_SysFx = PROPERTYKEY(GUID(497408003, 54418, 20189, [140, 35, 224, 192, 255, 238, 127, 14]), 5);
 enum ENDPOINT_SYSFX_ENABLED = 0x00000000;
 enum ENDPOINT_SYSFX_DISABLED = 0x00000001;
-//enum PKEY_AudioEndpoint_FullRangeSpeakers = [MISSING];
-//enum PKEY_AudioEndpoint_Supports_EventDriven_Mode = [MISSING];
-//enum PKEY_AudioEndpoint_JackSubType = [MISSING];
-//enum PKEY_AudioEndpoint_Default_VolumeInDb = [MISSING];
-//enum PKEY_AudioEngine_DeviceFormat = [MISSING];
-//enum PKEY_AudioEngine_OEMFormat = [MISSING];
-//enum PKEY_AudioEndpointLogo_IconEffects = [MISSING];
-//enum PKEY_AudioEndpointLogo_IconPath = [MISSING];
-//enum PKEY_AudioEndpointSettings_MenuText = [MISSING];
-//enum PKEY_AudioEndpointSettings_LaunchContract = [MISSING];
+enum PKEY_AudioEndpoint_FullRangeSpeakers = PROPERTYKEY(GUID(497408003, 54418, 20189, [140, 35, 224, 192, 255, 238, 127, 14]), 6);
+enum PKEY_AudioEndpoint_Supports_EventDriven_Mode = PROPERTYKEY(GUID(497408003, 54418, 20189, [140, 35, 224, 192, 255, 238, 127, 14]), 7);
+enum PKEY_AudioEndpoint_JackSubType = PROPERTYKEY(GUID(497408003, 54418, 20189, [140, 35, 224, 192, 255, 238, 127, 14]), 8);
+enum PKEY_AudioEndpoint_Default_VolumeInDb = PROPERTYKEY(GUID(497408003, 54418, 20189, [140, 35, 224, 192, 255, 238, 127, 14]), 9);
+enum PKEY_AudioEngine_DeviceFormat = PROPERTYKEY(GUID(4053730893, 2092, 20007, [188, 115, 104, 130, 161, 187, 142, 76]), 0);
+enum PKEY_AudioEngine_OEMFormat = PROPERTYKEY(GUID(3834056230, 15557, 19666, [186, 70, 202, 10, 154, 112, 237, 4]), 3);
+enum PKEY_AudioEndpointLogo_IconEffects = PROPERTYKEY(GUID(4054546445, 8208, 20179, [163, 166, 139, 135, 240, 240, 196, 118]), 0);
+enum PKEY_AudioEndpointLogo_IconPath = PROPERTYKEY(GUID(4054546445, 8208, 20179, [163, 166, 139, 135, 240, 240, 196, 118]), 1);
+enum PKEY_AudioEndpointSettings_MenuText = PROPERTYKEY(GUID(337911810, 800, 19940, [149, 85, 167, 216, 43, 115, 194, 134]), 0);
+enum PKEY_AudioEndpointSettings_LaunchContract = PROPERTYKEY(GUID(337911810, 800, 19940, [149, 85, 167, 216, 43, 115, 194, 134]), 1);
 enum DEVINTERFACE_AUDIO_RENDER = GUID(0xe6327cad, 0xdcec, 0x4949, [0xae, 0x8a, 0x99, 0x1e, 0x97, 0x6a, 0x79, 0xd2]);
 enum DEVINTERFACE_AUDIO_CAPTURE = GUID(0x2eef81be, 0x33fa, 0x4800, [0x96, 0x70, 0x1c, 0xd4, 0x74, 0x97, 0x2c, 0x3f]);
 enum DEVINTERFACE_MIDI_OUTPUT = GUID(0x6dc23320, 0xab33, 0x4ce4, [0x80, 0xd4, 0xbb, 0xb3, 0xeb, 0xbf, 0x28, 0x14]);
@@ -744,7 +744,7 @@ struct WAVEFORMATEXTENSIBLE
 {
     align (1):
     WAVEFORMATEX Format;
-    union _Samples_e__Union
+    union Samples
     {
         align (1):
         ushort wValidBitsPerSample;
@@ -1184,7 +1184,7 @@ struct MIXERLINEA
     uint cControls;
     CHAR[16] szShortName;
     CHAR[64] szName;
-    struct _Target_e__Struct
+    struct Target
     {
         align (1):
         uint dwType;
@@ -1210,7 +1210,7 @@ struct MIXERLINEW
     uint cControls;
     wchar[16] szShortName;
     wchar[64] szName;
-    struct _Target_e__Struct
+    struct Target
     {
         align (1):
         uint dwType;
@@ -1231,7 +1231,7 @@ struct MIXERCONTROLA
     uint cMultipleItems;
     CHAR[16] szShortName;
     CHAR[64] szName;
-    union _Bounds_e__Union
+    union Bounds
     {
         align (1):
         struct
@@ -1248,7 +1248,7 @@ struct MIXERCONTROLA
         }
         uint[6] dwReserved;
     }
-    union _Metrics_e__Union
+    union Metrics
     {
         align (1):
         uint cSteps;
@@ -1266,7 +1266,7 @@ struct MIXERCONTROLW
     uint cMultipleItems;
     wchar[16] szShortName;
     wchar[64] szName;
-    union _Bounds_e__Union
+    union Bounds
     {
         align (1):
         struct
@@ -1283,7 +1283,7 @@ struct MIXERCONTROLW
         }
         uint[6] dwReserved;
     }
-    union _Metrics_e__Union
+    union Metrics
     {
         align (1):
         uint cSteps;

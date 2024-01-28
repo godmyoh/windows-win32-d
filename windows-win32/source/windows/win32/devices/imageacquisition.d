@@ -1710,52 +1710,52 @@ struct WIA_PROPERTY_INFO
 {
     uint lAccessFlags;
     VARENUM vt;
-    union _ValidVal_e__Union
+    union ValidVal
     {
-        struct _Range_e__Struct
+        struct Range
         {
             int Min;
             int Nom;
             int Max;
             int Inc;
         }
-        struct _RangeFloat_e__Struct
+        struct RangeFloat
         {
             double Min;
             double Nom;
             double Max;
             double Inc;
         }
-        struct _List_e__Struct
+        struct List
         {
             int cNumList;
             int Nom;
             ubyte* pList;
         }
-        struct _ListFloat_e__Struct
+        struct ListFloat
         {
             int cNumList;
             double Nom;
             ubyte* pList;
         }
-        struct _ListGuid_e__Struct
+        struct ListGuid
         {
             int cNumList;
             GUID Nom;
             GUID* pList;
         }
-        struct _ListBStr_e__Struct
+        struct ListBStr
         {
             int cNumList;
             BSTR Nom;
             BSTR* pList;
         }
-        struct _Flag_e__Struct
+        struct Flag
         {
             int Nom;
             int ValidBits;
         }
-        struct _None_e__Struct
+        struct None
         {
             int Dummy;
         }
@@ -1771,14 +1771,14 @@ struct WIAS_CHANGED_VALUE_INFO
 {
     BOOL bChanged;
     int vt;
-    union _Old_e__Union
+    union Old
     {
         int lVal;
         float fltVal;
         BSTR bstrVal;
         GUID guidVal;
     }
-    union _Current_e__Union
+    union Current
     {
         int lVal;
         float fltVal;

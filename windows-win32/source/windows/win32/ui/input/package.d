@@ -86,7 +86,7 @@ struct RAWHID
 struct RAWINPUT
 {
     RAWINPUTHEADER header;
-    union _data_e__Union
+    union data
     {
         RAWMOUSE mouse;
         RAWKEYBOARD keyboard;

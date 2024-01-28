@@ -134,16 +134,16 @@ struct VDMLDT_ENTRY
 {
     ushort LimitLow;
     ushort BaseLow;
-    union _HighWord_e__Union
+    union HighWord
     {
-        struct _Bytes_e__Struct
+        struct Bytes
         {
             ubyte BaseMid;
             ubyte Flags1;
             ubyte Flags2;
             ubyte BaseHi;
         }
-        struct _Bits_e__Struct
+        struct Bits
         {
             uint _bitfield0;
         }

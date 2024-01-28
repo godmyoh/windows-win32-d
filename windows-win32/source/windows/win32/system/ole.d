@@ -1347,7 +1347,7 @@ enum : int
 struct SAFEARRAYUNION
 {
     uint sfType;
-    union _u_e__Struct
+    union u
     {
         SAFEARR_BSTR BstrStr;
         SAFEARR_UNKNOWN UnknownStr;
@@ -2555,22 +2555,22 @@ struct PICTDESC
     uint picType;
     union
     {
-        struct _bmp_e__Struct
+        struct bmp
         {
             HBITMAP hbitmap;
             HPALETTE hpal;
         }
-        struct _wmf_e__Struct
+        struct wmf
         {
             HMETAFILE hmeta;
             int xExt;
             int yExt;
         }
-        struct _icon_e__Struct
+        struct icon
         {
             HICON hicon;
         }
-        struct _emf_e__Struct
+        struct emf
         {
             HENHMETAFILE hemf;
         }
