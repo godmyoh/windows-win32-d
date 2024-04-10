@@ -1,9 +1,12 @@
-module reader.database;
+module database.reader.database;
 
-import reader.pe;
+public import database.database;
+
+import database.reader.pe;
+import std.array, std.conv;
 
 
-class Database
+class Database : IDatabase
 {
     private
     {
@@ -11,48 +14,6 @@ class Database
         const(ubyte)[] blobs;
         const(ubyte)[] guids;
         const(ubyte)[] tables;
-    }
-
-    enum TableFormat
-    {
-        Module = 0x00,
-        TypeRef = 0x01,
-        TypeDef = 0x02,
-        Field = 0x04,
-        MethodDef = 0x06,
-        Param = 0x08,
-        InterfaceImpl = 0x09,
-        MemberRef = 0x0a,
-        Constant = 0x0b,
-        CustomAttribute = 0x0c,
-        FieldMarshal = 0x0d,
-        DeclSecurity = 0x0e,
-        ClassLayout = 0x0f,
-        FieldLayout = 0x10,
-        StandAloneSig = 0x11,
-        EventMap = 0x12,
-        Event = 0x14,
-        PropertyMap = 0x15,
-        Property = 0x17,
-        MethodSemantics = 0x18,
-        MethodImpl = 0x19,
-        ModuleRef = 0x1a,
-        TypeSpec = 0x1b,
-        ImplMap = 0x1c,
-        FieldRVA = 0x1d,
-        Assembly = 0x20,
-        AssemblyProcessor = 0x21,
-        AssemblyOS = 0x22,
-        AssemblyRef = 0x23,
-        AssemblyRefProcessor = 0x24,
-        AssemblyRefOS = 0x25,
-        File = 0x26,
-        ExportedType = 0x27,
-        ManifestResource = 0x28,
-        NestedClass = 0x29,
-        GenericParam = 0x2a,
-        MethodSpec = 0x2b,
-        GenericParamConstraint = 0x2c,
     }
 
     public
@@ -97,9 +58,23 @@ class Database
         Table!(TableFormat.MethodSpec) MethodSpec;
     }
 
+    // IDatabase
+
+    override ITypeRefTable typeRef() => TypeRef;
+    override ITypeDefTable typeDef() => TypeDef;
+    override IFieldTable field() => Field;
+    override IMethodDefTable methodDef() => MethodDef;
+    override IParamTable param() => Param;
+    override IInterfaceImplTable interfaceImpl() => InterfaceImpl;
+    override IMemberRefTable memberRef() => MemberRef;
+    override IConstantTable constant() => Constant;
+    override ICustomAttributeTable customAttribute() => CustomAttribute;
+    override INestedClassTable nestedClass() => NestedClass;
+    override IClassLayoutTable classLayout() => ClassLayout;
+
     private void init(alias table)()
     {
-        table = new typeof(table)(this);
+        table = new typeof(table)(this, table.stringof[5..$]/+ this.TABLENAME +/);
     }
 
     this(void[] winmdFileContent)
@@ -475,7 +450,7 @@ class Database
 }
 
 
-ubyte bitsNeeded(uint value) pure
+private ubyte bitsNeeded(uint value) pure
 {
     --value;
     ubyte bits = 1;
@@ -495,7 +470,7 @@ static assert(bitsNeeded(5) == 3);
 static assert(bitsNeeded(22) == 5);
 
 
-struct StreamRange
+private struct StreamRange
 {
     uint offset;
     uint size;
@@ -525,16 +500,49 @@ private const(char)[] parseNullTerminatedString(const(ubyte)[] data)
 }
 
 
-class Table(Database.TableFormat t) : TableBase
+private class Table(TableFormat t) : TableBase, ITableSummary, ITable!t
 {
-    this(Database db)
+    private string _name;
+
+    this(Database db, string name)
     {
         this.db = db;
+        this._name = name;
+    }
+
+    override uint size() const
+    {
+        return super.size();
+    }
+
+    override string name() const
+    {
+        return _name;
+    }
+
+    override uint getUint(uint rid, uint column) const
+    {
+        return getValue!uint(rid, column);
+    }
+
+    override ushort getUshort(uint rid, uint column) const
+    {
+        return getValue!ushort(rid, column);
+    }
+
+    override const(char)[] getString(uint offset) const
+    {
+        return db.getString(offset);
+    }
+
+    override const(ubyte)[] getBlob(uint offset) const
+    {
+        return db.getBlob(offset);
     }
 }
 
 
-class TableBase
+private class TableBase
 {
     struct Column
     {
@@ -549,21 +557,24 @@ class TableBase
     private ubyte rowSize;
     private Column[6] columns;
 
+    abstract string name() const;
+
     uint size() const
     {
         return rowCount;
     }
 
-    T getValue(T)(uint row, uint column) const
+    private T getValue(T)(uint rid, uint column) const
     {
+        if (rid == 0 || rid > size())
+        {
+            throw new Exception("Invalid row index:" ~ name() ~ "[" ~ rid.to!string ~ "]");
+        }
+
+        uint row = rid - 1;
         uint dataSize = columns[column].size;
         assert(dataSize == 1 || dataSize == 2 || dataSize == 4 || dataSize == 8);
         assert(dataSize <= T.sizeof);
-
-        if (row > size())
-        {
-            throw new Exception("Invalid row index");
-        }
 
         auto rowView = data[row * rowSize..(row+1) * rowSize];
         auto dataView = rowView[columns[column].offset..columns[column].offset+dataSize];

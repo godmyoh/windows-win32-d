@@ -25,6 +25,10 @@ struct CLIType
     constr typeName;
     SupportedElementType elementType;
     bool isPremitive;
+    constr toFQTN() const
+    {
+        return namespace ~ "." ~ typeName;
+    }
 }
 
 

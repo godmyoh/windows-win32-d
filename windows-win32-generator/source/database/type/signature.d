@@ -1,11 +1,10 @@
-module reader.signature;
+module database.type.signature;
 
-public import reader.codedindex;
-public import reader.enum_;
-public import reader.valuetype;
+public import database.type.codedindex;
+public import database.type.enum_;
+public import database.type.valuetype;
 
 import std.typecons;
-import std.bitmanip;
 
 
 struct TypeSig

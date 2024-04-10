@@ -1,4 +1,4 @@
-module generator.resolver.dlangtyperesolver;
+module generator.impl.helper.dlangtyperesolver;
 
 import generator.type;
 import generator.impl.interfaces;

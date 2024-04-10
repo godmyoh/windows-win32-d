@@ -1,6 +1,6 @@
-module reader.codedindex;
+module database.type.codedindex;
 
-public import reader.enum_;
+public import database.type.enum_;
 
 import std.bitmanip;
 
@@ -28,12 +28,12 @@ struct CodedIndex(T)
                          ));
     }
 
-    uint index()
+    uint index() const
     {
         return _index;
     }
 
-    T type()
+    T type() const
     {
         return cast(T)_type;
     }

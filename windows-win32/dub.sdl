@@ -16,3 +16,19 @@ configuration "release" {
 configuration "debug" {
     targetName "windows-win32-debug"
 }
+
+configuration "dmd-release" {
+    targetName "windows-win32-dmd-release"
+}
+
+configuration "dmd-debug" {
+    targetName "windows-win32-dmd-debug"
+}
+
+configuration "ldc2-release" {
+    targetName "windows-win32-ldc2-release"
+}
+
+configuration "ldc2-debug" {
+    targetName "windows-win32-ldc2-debug"
+}

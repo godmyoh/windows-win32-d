@@ -1,9 +1,7 @@
 module generator.impl.namespaceextractor;
 
 public import generator.interfaces;
-
-public import reader.database;
-import reader.schema;
+public import database.schema;
 
 import std.algorithm, std.array;
 
@@ -12,19 +10,19 @@ class NamespaceExtractor : INamespaceExtractor
 {
     private
     {
-        Database db;
+        ITypeDefTable table;
     }
 
-    this(Database db)
+    this(ITypeDefTable table)
     {
-        this.db = db;
+        this.table = table;
     }
 
     override CLINamespace[] extract()
     {
         CLINamespace[constr] map;
 
-        foreach (typeDef; db.TypeDef.getRows())
+        foreach (typeDef; table.getRows())
         {
             auto name = typeDef.typeName;
             auto namespace = typeDef.typeNamespace;
@@ -32,7 +30,7 @@ class NamespaceExtractor : INamespaceExtractor
 
             // II.22.37 TypeDef : 0x02
             // The first row of the TypeDef table represents the pseudo class that acts as parent for functions and variables defined at module scope.
-            if (rid == 1)
+            if (rid.value == 1)
             {
                 assert(name == "<Module>");
                 assert(namespace == "");
@@ -46,13 +44,13 @@ class NamespaceExtractor : INamespaceExtractor
 
             if (auto p = namespace in map)
             {
-                (*p).typeDefRids ~= rid;
+                (*p).typeDefRids ~= rid.value;
             }
             else
             {
                 auto info = new CLINamespace;
                 info.namespace = namespace;
-                info.typeDefRids = [rid];
+                info.typeDefRids = [rid.value];
                 map[namespace] = info;
             }
         }

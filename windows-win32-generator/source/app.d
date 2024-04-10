@@ -11,6 +11,9 @@ import std.stdio;
 
 int main(string[] args)
 {
+    if (args.length > 1 && args[1] == "inspect")
+        return buildInteractiveInspector().execute();
+
     ConflictedModuleNaming mode = ConflictedModuleNaming.usePackageModule;
 
     if (args.length > 1 && args[1] == "appendUnderscore")

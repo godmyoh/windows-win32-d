@@ -1,22 +1,23 @@
-module generator.resolver.clityperesolver;
+module generator.impl.helper.clityperesolver;
 
 import generator.type;
 
-public import reader.database;
-import reader.schema;
-import reader.valuetype;
+import database.schema;
+import database.type.valuetype;
 
 
 class CLITypeResolver
 {
     private
     {
-        Database db;
+        ITypeRefTable typeRefTable;
+        ITypeDefTable typeDefTable;
     }
 
-    this(Database db)
+    this(ITypeRefTable typeRefTable, ITypeDefTable typeDefTable)
     {
-        this.db = db;
+        this.typeRefTable = typeRefTable;
+        this.typeDefTable = typeDefTable;
     }
 
     CLIType getType(ValueType vt)
@@ -26,30 +27,34 @@ class CLITypeResolver
                          );
     }
 
+    CLIType getType(TypeRefRID rid)
+    {
+        auto row = typeRefTable.getRowByRid(rid);
+        return toCLIType(row.typeNamespace, row.typeName);
+    }
+
     CLIType getType(TypeDefRow typeDef)
     {
-        return toTypeName(typeDef);
+        return toCLIType(typeDef.typeNamespace, typeDef.typeName);
     }
 
     CLIType getType(CodedIndex!TypeDefOrRef ci)
     {
         if (ci.type == TypeDefOrRef.TypeDef)
         {
-            auto row = db.TypeDef.getRowByRid(ci.index);
-            return toTypeName(row);
+            auto row = typeDefTable.getRowByRid(TypeDefRID(ci.index));
+            return toCLIType(row.typeNamespace, row.typeName);
         }
         else if (ci.type == TypeDefOrRef.TypeRef)
         {
-            auto row = db.TypeRef.getRowByRid(ci.index);
-            return toTypeName(row);
+            auto row = typeRefTable.getRowByRid(TypeRefRID(ci.index));
+            return toCLIType(row.typeNamespace, row.typeName);
         }
         else
-        {
             assert(0);
-        }
     }
 
-    CLIType getType(reader.enum_.ElementType et)
+    private CLIType getType(database.type.enum_.ElementType et)
     {
         SupportedElementType set;
 
@@ -107,10 +112,7 @@ class CLITypeResolver
 }
 
 
-import std.conv;
-import std.string;
-
-private CLIType toTypeName(TypeDefOrRefRow)(TypeDefOrRefRow row)
+private CLIType toCLIType(constr typeNamespace, constr typeName)
 {
-    return CLIType(row.typeNamespace, row.typeName.to!string, SupportedElementType.None, false);
+    return CLIType(typeNamespace, typeName, SupportedElementType.None, false);
 }

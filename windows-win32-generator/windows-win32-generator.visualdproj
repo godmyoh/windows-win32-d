@@ -251,16 +251,46 @@
   <filesToClean>*.obj;*.cmd;*.build;*.json;*.dep;*.tlog</filesToClean>
  </Config>
  <Folder name="windows-win32-generator">
-  <Folder name="handmade">
-   <Folder name="windows">
-    <Folder name="win32">
-     <File path="handmade\windows\win32\guid.d" />
-    </Folder>
-   </Folder>
-  </Folder>
   <Folder name="source">
+   <Folder name="database">
+    <Folder name="reader">
+     <File path="source\database\reader\database.d" />
+     <File path="source\database\reader\pe.d" />
+    </Folder>
+    <Folder name="relation">
+     <File path="source\database\relation\classlayoutresolver.d" />
+     <File path="source\database\relation\constantresolver.d" />
+     <File path="source\database\relation\customattributeresolver.d" />
+     <File path="source\database\relation\interfaceimplresolver.d" />
+     <File path="source\database\relation\nestedclassresolver.d" />
+    </Folder>
+    <Folder name="type">
+     <File path="source\database\type\codedindex.d" />
+     <File path="source\database\type\enum_.d" />
+     <File path="source\database\type\package.d" />
+     <File path="source\database\type\signature.d" />
+     <File path="source\database\type\valuetype.d" />
+    </Folder>
+    <File path="source\database\database.d" />
+    <File path="source\database\schema.d" />
+    <File path="source\database\table.d" />
+    <File path="source\database\tableformat.d" />
+   </Folder>
    <Folder name="generator">
     <Folder name="impl">
+     <Folder name="extractor">
+      <File path="source\generator\impl\extractor\constant.d" />
+      <File path="source\generator\impl\extractor\function_.d" />
+      <File path="source\generator\impl\extractor\guid.d" />
+      <File path="source\generator\impl\extractor\struct_.d" />
+     </Folder>
+     <Folder name="helper">
+      <File path="source\generator\impl\helper\clityperesolver.d" />
+      <File path="source\generator\impl\helper\dlangtyperesolver.d" />
+      <File path="source\generator\impl\helper\knowntypes.d" />
+      <File path="source\generator\impl\helper\stringhelper.d" />
+      <File path="source\generator\impl\helper\typeconverter.d" />
+     </Folder>
      <File path="source\generator\impl\declarationaggregator.d" />
      <File path="source\generator\impl\declarationextractor.d" />
      <File path="source\generator\impl\interfaces.d" />
@@ -276,33 +306,31 @@
      <File path="source\generator\patch\namespaceextractor.d" />
      <File path="source\generator\patch\patchstatus.d" />
     </Folder>
-    <Folder name="resolver">
-     <File path="source\generator\resolver\classlayoutresolver.d" />
-     <File path="source\generator\resolver\clityperesolver.d" />
-     <File path="source\generator\resolver\constantfieldresolver.d" />
-     <File path="source\generator\resolver\customattributeresolver.d" />
-     <File path="source\generator\resolver\dlangtyperesolver.d" />
-     <File path="source\generator\resolver\interfaceresolver.d" />
-     <File path="source\generator\resolver\nestedclassresolver.d" />
-    </Folder>
     <File path="source\generator\commentout.d" />
     <File path="source\generator\generator.d" />
     <File path="source\generator\interfaces.d" />
     <File path="source\generator\type.d" />
    </Folder>
-   <Folder name="reader">
+   <Folder name="inspector">
     <Folder name="helper">
-     <File path="source\reader\helper\integer.d" />
+     <File path="source\inspector\helper\customattribute.d" />
     </Folder>
-    <File path="source\reader\codedindex.d" />
-    <File path="source\reader\database.d" />
-    <File path="source\reader\enum_.d" />
-    <File path="source\reader\pe.d" />
-    <File path="source\reader\schema.d" />
-    <File path="source\reader\signature.d" />
-    <File path="source\reader\valuetype.d" />
+    <Folder name="rowprinter">
+     <File path="source\inspector\rowprinter\customattribute.d" />
+     <File path="source\inspector\rowprinter\field.d" />
+     <File path="source\inspector\rowprinter\interfaceimpl.d" />
+     <File path="source\inspector\rowprinter\typedef.d" />
+     <File path="source\inspector\rowprinter\typeref.d" />
+    </Folder>
+    <Folder name="searcher">
+     <File path="source\inspector\searcher\customattribute.d" />
+     <File path="source\inspector\searcher\typedef.d" />
+    </Folder>
+    <File path="source\inspector\interactive.d" />
+    <File path="source\inspector\interfaces.d" />
    </Folder>
    <File path="source\app.d" />
+   <File path="source\loader.d" />
    <File path="source\wiringboard.d" />
   </Folder>
  </Folder>

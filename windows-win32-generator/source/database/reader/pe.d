@@ -1,4 +1,4 @@
-module reader.pe;
+module database.reader.pe;
 
 
 struct ImageDosHeader

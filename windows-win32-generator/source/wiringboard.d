@@ -8,14 +8,14 @@ import generator.impl.namespaceextractor;
 import generator.impl.namespacetomodulemapper;
 import generator.impl.namespacetomoduleorpackagemodulemapper;
 
-import generator.resolver.dlangtyperesolver;
+import generator.impl.helper.dlangtyperesolver;
 
 import generator.patch.declarationaggregator;
 import generator.patch.dlangtyperesolver;
 import generator.patch.modulewriter;
 import generator.patch.namespaceextractor;
 
-import std.file;
+import loader;
 
 enum ConflictedModuleNaming
 {
@@ -25,10 +25,9 @@ enum ConflictedModuleNaming
 
 auto buildGenerator(string outDir, PatchStatus patchStatus, ConflictedModuleNaming conflictedModuleNaming)
 {
-    auto winmdFile = `.\meta\Windows.Win32.winmd`;
-    auto db = new Database(read(winmdFile));
+    IDatabase db = loadDatabase();
 
-    auto patchedNamespaceExtractor = new NamespaceExtractorPatch(patchStatus, new NamespaceExtractor(db));
+    auto patchedNamespaceExtractor = new NamespaceExtractorPatch(patchStatus, new NamespaceExtractor(db.typeDef));
     auto patchedDeclarationAggrigator = new DeclarationAggregatorPatch(patchStatus, new DeclarationAggregator());
     auto patchedModuleWriter = new ModuleWriterPatch(patchStatus, new ModuleWriter());
     auto patchedDlangTypeResolver = new DlangTypeResolverPatch(patchStatus, new DlangTypeResolver());
@@ -44,4 +43,11 @@ auto buildGenerator(string outDir, PatchStatus patchStatus, ConflictedModuleNami
                                     patchedDeclarationAggrigator,
                                     patchedModuleWriter
                                     );
+}
+
+import inspector.interactive;
+
+auto buildInteractiveInspector()
+{
+    return new Interactive(loadDatabase());
 }

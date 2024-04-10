@@ -1,4 +1,4 @@
-module reader.enum_;
+module database.type.enum_;
 
 
 enum TypeDefOrRef
