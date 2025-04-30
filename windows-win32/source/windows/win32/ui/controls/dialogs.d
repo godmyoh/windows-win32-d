@@ -234,27 +234,27 @@ enum : ushort
     SIMULATED_FONTTYPE = 0x8000,
 }
 
-BOOL GetOpenFileNameA(OPENFILENAMEA*);
-BOOL GetOpenFileNameW(OPENFILENAMEW*);
-BOOL GetSaveFileNameA(OPENFILENAMEA*);
-BOOL GetSaveFileNameW(OPENFILENAMEW*);
-short GetFileTitleA(const(char)*, PSTR, ushort);
-short GetFileTitleW(const(wchar)*, PWSTR, ushort);
-BOOL ChooseColorA(CHOOSECOLORA*);
-BOOL ChooseColorW(CHOOSECOLORW*);
-HWND FindTextA(FINDREPLACEA*);
-HWND FindTextW(FINDREPLACEW*);
-HWND ReplaceTextA(FINDREPLACEA*);
-HWND ReplaceTextW(FINDREPLACEW*);
-BOOL ChooseFontA(CHOOSEFONTA*);
-BOOL ChooseFontW(CHOOSEFONTW*);
-BOOL PrintDlgA(PRINTDLGA*);
-BOOL PrintDlgW(PRINTDLGW*);
-HRESULT PrintDlgExA(PRINTDLGEXA*);
-HRESULT PrintDlgExW(PRINTDLGEXW*);
+BOOL GetOpenFileNameA(OPENFILENAMEA* param0);
+BOOL GetOpenFileNameW(OPENFILENAMEW* param0);
+BOOL GetSaveFileNameA(OPENFILENAMEA* param0);
+BOOL GetSaveFileNameW(OPENFILENAMEW* param0);
+short GetFileTitleA(const(char)* param0, PSTR Buf, ushort cchSize);
+short GetFileTitleW(const(wchar)* param0, PWSTR Buf, ushort cchSize);
+BOOL ChooseColorA(CHOOSECOLORA* param0);
+BOOL ChooseColorW(CHOOSECOLORW* param0);
+HWND FindTextA(FINDREPLACEA* param0);
+HWND FindTextW(FINDREPLACEW* param0);
+HWND ReplaceTextA(FINDREPLACEA* param0);
+HWND ReplaceTextW(FINDREPLACEW* param0);
+BOOL ChooseFontA(CHOOSEFONTA* param0);
+BOOL ChooseFontW(CHOOSEFONTW* param0);
+BOOL PrintDlgA(PRINTDLGA* pPD);
+BOOL PrintDlgW(PRINTDLGW* pPD);
+HRESULT PrintDlgExA(PRINTDLGEXA* pPD);
+HRESULT PrintDlgExW(PRINTDLGEXW* pPD);
 COMMON_DLG_ERRORS CommDlgExtendedError();
-BOOL PageSetupDlgA(PAGESETUPDLGA*);
-BOOL PageSetupDlgW(PAGESETUPDLGW*);
+BOOL PageSetupDlgA(PAGESETUPDLGA* param0);
+BOOL PageSetupDlgW(PAGESETUPDLGW* param0);
 enum OFN_SHAREFALLTHROUGH = 0x00000002;
 enum OFN_SHARENOWARN = 0x00000001;
 enum OFN_SHAREWARN = 0x00000000;
@@ -707,7 +707,7 @@ struct PAGESETUPDLGW
     const(wchar)* lpPageSetupTemplateName;
     HGLOBAL hPageSetupTemplate;
 }
-alias LPOFNHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
+alias LPOFNHOOKPROC = ulong function(HWND param0, uint param1, WPARAM param2, LPARAM param3);
 /+ [CONFLICTED] struct OPENFILENAME_NT4A
 {
     align (1):
@@ -814,7 +814,7 @@ alias LPOFNHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
     OPEN_FILENAME_FLAGS_EX FlagsEx;
 }
 +/
-alias LPCCHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
+alias LPCCHOOKPROC = ulong function(HWND param0, uint param1, WPARAM param2, LPARAM param3);
 /+ [CONFLICTED] struct OFNOTIFYA
 {
     align (1):
@@ -877,7 +877,7 @@ alias LPCCHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
     const(wchar)* lpTemplateName;
 }
 +/
-alias LPFRHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
+alias LPFRHOOKPROC = ulong function(HWND param0, uint param1, WPARAM param2, LPARAM param3);
 /+ [CONFLICTED] struct FINDREPLACEA
 {
     align (1):
@@ -910,7 +910,7 @@ alias LPFRHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
     const(wchar)* lpTemplateName;
 }
 +/
-alias LPCFHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
+alias LPCFHOOKPROC = ulong function(HWND param0, uint param1, WPARAM param2, LPARAM param3);
 /+ [CONFLICTED] struct CHOOSEFONTA
 {
     align (1):
@@ -953,8 +953,8 @@ alias LPCFHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
     int nSizeMax;
 }
 +/
-alias LPPRINTHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
-alias LPSETUPHOOKPROC = ulong function(HWND, uint, WPARAM, LPARAM);
+alias LPPRINTHOOKPROC = ulong function(HWND param0, uint param1, WPARAM param2, LPARAM param3);
+alias LPSETUPHOOKPROC = ulong function(HWND param0, uint param1, WPARAM param2, LPARAM param3);
 /+ [CONFLICTED] struct PRINTDLGA
 {
     align (1):
@@ -1008,14 +1008,14 @@ interface IPrintDialogCallback : IUnknown
 {
     HRESULT InitDone();
     HRESULT SelectionChange();
-    HRESULT HandleMessage(HWND, uint, WPARAM, LPARAM, LRESULT*);
+    HRESULT HandleMessage(HWND hDlg, uint uMsg, WPARAM wParam, LPARAM lParam, LRESULT* pResult);
 }
 enum IID_IPrintDialogServices = GUID(0x509aaeda, 0x5639, 0x11d1, [0xb6, 0xa1, 0x0, 0x0, 0xf8, 0x75, 0x7b, 0xf9]);
 interface IPrintDialogServices : IUnknown
 {
-    HRESULT GetCurrentDevMode(DEVMODEA*, uint*);
-    HRESULT GetCurrentPrinterName(PWSTR, uint*);
-    HRESULT GetCurrentPortName(PWSTR, uint*);
+    HRESULT GetCurrentDevMode(DEVMODEA* pDevMode, uint* pcbSize);
+    HRESULT GetCurrentPrinterName(PWSTR pPrinterName, uint* pcchSize);
+    HRESULT GetCurrentPortName(PWSTR pPortName, uint* pcchSize);
 }
 /+ [CONFLICTED] struct PRINTPAGERANGE
 {
@@ -1085,8 +1085,8 @@ interface IPrintDialogServices : IUnknown
     ushort wDefault;
 }
 +/
-alias LPPAGEPAINTHOOK = ulong function(HWND, uint, WPARAM, LPARAM);
-alias LPPAGESETUPHOOK = ulong function(HWND, uint, WPARAM, LPARAM);
+alias LPPAGEPAINTHOOK = ulong function(HWND param0, uint param1, WPARAM param2, LPARAM param3);
+alias LPPAGESETUPHOOK = ulong function(HWND param0, uint param1, WPARAM param2, LPARAM param3);
 /+ [CONFLICTED] struct PAGESETUPDLGA
 {
     align (1):

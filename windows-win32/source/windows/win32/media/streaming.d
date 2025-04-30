@@ -1,8 +1,7 @@
 module windows.win32.media.streaming;
 
 import windows.win32.guid : GUID;
-import windows.win32.devices.properties : DEVPROPKEY;
-import windows.win32.foundation : RECT;
+import windows.win32.foundation : DEVPROPKEY, RECT;
 
 version (Windows):
 extern (Windows):

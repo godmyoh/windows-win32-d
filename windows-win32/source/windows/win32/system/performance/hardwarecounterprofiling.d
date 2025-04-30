@@ -30,7 +30,7 @@ struct PERFORMANCE_DATA
     uint Reserved;
     HARDWARE_COUNTER_DATA[16] HwCounters;
 }
-uint EnableThreadProfiling(HANDLE, uint, ulong, HANDLE*);
-uint DisableThreadProfiling(HANDLE);
-uint QueryThreadProfiling(HANDLE, BOOLEAN*);
-uint ReadThreadProfilingData(HANDLE, uint, PERFORMANCE_DATA*);
+uint EnableThreadProfiling(HANDLE ThreadHandle, uint Flags, ulong HardwareCounters, HANDLE* PerformanceDataHandle);
+uint DisableThreadProfiling(HANDLE PerformanceDataHandle);
+uint QueryThreadProfiling(HANDLE ThreadHandle, BOOLEAN* Enabled);
+uint ReadThreadProfilingData(HANDLE PerformanceDataHandle, uint Flags, PERFORMANCE_DATA* PerformanceData);

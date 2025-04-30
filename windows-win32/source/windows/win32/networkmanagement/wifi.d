@@ -1,8 +1,7 @@
 module windows.win32.networkmanagement.wifi;
 
 import windows.win32.guid : GUID;
-import windows.win32.devices.properties : DEVPROPKEY;
-import windows.win32.foundation : BOOL, BOOLEAN, HANDLE, HRESULT, HWND, PWSTR;
+import windows.win32.foundation : BOOL, BOOLEAN, DEVPROPKEY, HANDLE, HRESULT, HWND, PWSTR;
 import windows.win32.networkmanagement.ndis : NDIS_OBJECT_HEADER;
 import windows.win32.security.extensibleauthenticationprotocol : EAP_ATTRIBUTES, EAP_METHOD_TYPE;
 import windows.win32.system.com : IUnknown;
@@ -11,67 +10,67 @@ import windows.win32.system.remotedesktop : WTSSESSION_NOTIFICATION;
 version (Windows):
 extern (Windows):
 
-uint WlanOpenHandle(uint, void*, uint*, HANDLE*);
-uint WlanCloseHandle(HANDLE, void*);
-uint WlanEnumInterfaces(HANDLE, void*, WLAN_INTERFACE_INFO_LIST**);
-uint WlanSetAutoConfigParameter(HANDLE, WLAN_AUTOCONF_OPCODE, uint, const(void)*, void*);
-uint WlanQueryAutoConfigParameter(HANDLE, WLAN_AUTOCONF_OPCODE, void*, uint*, void**, WLAN_OPCODE_VALUE_TYPE*);
-uint WlanGetInterfaceCapability(HANDLE, const(GUID)*, void*, WLAN_INTERFACE_CAPABILITY**);
-uint WlanSetInterface(HANDLE, const(GUID)*, WLAN_INTF_OPCODE, uint, const(void)*, void*);
-uint WlanQueryInterface(HANDLE, const(GUID)*, WLAN_INTF_OPCODE, void*, uint*, void**, WLAN_OPCODE_VALUE_TYPE*);
-uint WlanIhvControl(HANDLE, const(GUID)*, WLAN_IHV_CONTROL_TYPE, uint, void*, uint, void*, uint*);
-uint WlanScan(HANDLE, const(GUID)*, const(DOT11_SSID)*, const(WLAN_RAW_DATA)*, void*);
-uint WlanGetAvailableNetworkList(HANDLE, const(GUID)*, uint, void*, WLAN_AVAILABLE_NETWORK_LIST**);
-uint WlanGetAvailableNetworkList2(HANDLE, const(GUID)*, uint, void*, WLAN_AVAILABLE_NETWORK_LIST_V2**);
-uint WlanGetNetworkBssList(HANDLE, const(GUID)*, const(DOT11_SSID)*, DOT11_BSS_TYPE, BOOL, void*, WLAN_BSS_LIST**);
-uint WlanConnect(HANDLE, const(GUID)*, const(WLAN_CONNECTION_PARAMETERS)*, void*);
-uint WlanConnect2(HANDLE, const(GUID)*, const(WLAN_CONNECTION_PARAMETERS_V2)*, void*);
-uint WlanDisconnect(HANDLE, const(GUID)*, void*);
-uint WlanRegisterNotification(HANDLE, WLAN_NOTIFICATION_SOURCES, BOOL, WLAN_NOTIFICATION_CALLBACK, void*, void*, uint*);
-uint WlanGetProfile(HANDLE, const(GUID)*, const(wchar)*, void*, PWSTR*, uint*, uint*);
-uint WlanSetProfileEapUserData(HANDLE, const(GUID)*, const(wchar)*, EAP_METHOD_TYPE, WLAN_SET_EAPHOST_FLAGS, uint, const(ubyte)*, void*);
-uint WlanSetProfileEapXmlUserData(HANDLE, const(GUID)*, const(wchar)*, WLAN_SET_EAPHOST_FLAGS, const(wchar)*, void*);
-uint WlanSetProfile(HANDLE, const(GUID)*, uint, const(wchar)*, const(wchar)*, BOOL, void*, uint*);
-uint WlanDeleteProfile(HANDLE, const(GUID)*, const(wchar)*, void*);
-uint WlanRenameProfile(HANDLE, const(GUID)*, const(wchar)*, const(wchar)*, void*);
-uint WlanGetProfileList(HANDLE, const(GUID)*, void*, WLAN_PROFILE_INFO_LIST**);
-uint WlanSetProfileList(HANDLE, const(GUID)*, uint, const(wchar)**, void*);
-uint WlanSetProfilePosition(HANDLE, const(GUID)*, const(wchar)*, uint, void*);
-uint WlanSetProfileCustomUserData(HANDLE, const(GUID)*, const(wchar)*, uint, const(ubyte)*, void*);
-uint WlanGetProfileCustomUserData(HANDLE, const(GUID)*, const(wchar)*, void*, uint*, ubyte**);
-uint WlanSetFilterList(HANDLE, WLAN_FILTER_LIST_TYPE, const(DOT11_NETWORK_LIST)*, void*);
-uint WlanGetFilterList(HANDLE, WLAN_FILTER_LIST_TYPE, void*, DOT11_NETWORK_LIST**);
-uint WlanSetPsdIEDataList(HANDLE, const(wchar)*, const(WLAN_RAW_DATA_LIST)*, void*);
-uint WlanSaveTemporaryProfile(HANDLE, const(GUID)*, const(wchar)*, const(wchar)*, uint, BOOL, void*);
-uint WlanDeviceServiceCommand(HANDLE, const(GUID)*, GUID*, uint, uint, void*, uint, void*, uint*);
-uint WlanGetSupportedDeviceServices(HANDLE, const(GUID)*, WLAN_DEVICE_SERVICE_GUID_LIST**);
-uint WlanRegisterDeviceServiceNotification(HANDLE, const(WLAN_DEVICE_SERVICE_GUID_LIST)*);
-uint WlanExtractPsdIEDataList(HANDLE, uint, const(ubyte)*, const(wchar)*, void*, WLAN_RAW_DATA_LIST**);
-uint WlanReasonCodeToString(uint, uint, PWSTR, void*);
-void* WlanAllocateMemory(uint);
-void WlanFreeMemory(void*);
-uint WlanSetSecuritySettings(HANDLE, WLAN_SECURABLE_OBJECT, const(wchar)*);
-uint WlanGetSecuritySettings(HANDLE, WLAN_SECURABLE_OBJECT, WLAN_OPCODE_VALUE_TYPE*, PWSTR*, uint*);
-uint WlanUIEditProfile(uint, const(wchar)*, GUID*, HWND, WL_DISPLAY_PAGES, void*, uint*);
-uint WlanHostedNetworkStartUsing(HANDLE, WLAN_HOSTED_NETWORK_REASON*, void*);
-uint WlanHostedNetworkStopUsing(HANDLE, WLAN_HOSTED_NETWORK_REASON*, void*);
-uint WlanHostedNetworkForceStart(HANDLE, WLAN_HOSTED_NETWORK_REASON*, void*);
-uint WlanHostedNetworkForceStop(HANDLE, WLAN_HOSTED_NETWORK_REASON*, void*);
-uint WlanHostedNetworkQueryProperty(HANDLE, WLAN_HOSTED_NETWORK_OPCODE, uint*, void**, WLAN_OPCODE_VALUE_TYPE*, void*);
-uint WlanHostedNetworkSetProperty(HANDLE, WLAN_HOSTED_NETWORK_OPCODE, uint, void*, WLAN_HOSTED_NETWORK_REASON*, void*);
-uint WlanHostedNetworkInitSettings(HANDLE, WLAN_HOSTED_NETWORK_REASON*, void*);
-uint WlanHostedNetworkRefreshSecuritySettings(HANDLE, WLAN_HOSTED_NETWORK_REASON*, void*);
-uint WlanHostedNetworkQueryStatus(HANDLE, WLAN_HOSTED_NETWORK_STATUS**, void*);
-uint WlanHostedNetworkSetSecondaryKey(HANDLE, uint, ubyte*, BOOL, BOOL, WLAN_HOSTED_NETWORK_REASON*, void*);
-uint WlanHostedNetworkQuerySecondaryKey(HANDLE, uint*, ubyte**, BOOL*, BOOL*, WLAN_HOSTED_NETWORK_REASON*, void*);
-uint WlanRegisterVirtualStationNotification(HANDLE, BOOL, void*);
-uint WFDOpenHandle(uint, uint*, HANDLE*);
-uint WFDCloseHandle(HANDLE);
-uint WFDStartOpenSession(HANDLE, ubyte**, void*, WFD_OPEN_SESSION_COMPLETE_CALLBACK, HANDLE*);
-uint WFDCancelOpenSession(HANDLE);
-uint WFDOpenLegacySession(HANDLE, ubyte**, HANDLE*, GUID*);
-uint WFDCloseSession(HANDLE);
-uint WFDUpdateDeviceVisibility(ubyte**);
+uint WlanOpenHandle(uint dwClientVersion, void* pReserved, uint* pdwNegotiatedVersion, HANDLE* phClientHandle);
+uint WlanCloseHandle(HANDLE hClientHandle, void* pReserved);
+uint WlanEnumInterfaces(HANDLE hClientHandle, void* pReserved, WLAN_INTERFACE_INFO_LIST** ppInterfaceList);
+uint WlanSetAutoConfigParameter(HANDLE hClientHandle, WLAN_AUTOCONF_OPCODE OpCode, uint dwDataSize, const(void)* pData, void* pReserved);
+uint WlanQueryAutoConfigParameter(HANDLE hClientHandle, WLAN_AUTOCONF_OPCODE OpCode, void* pReserved, uint* pdwDataSize, void** ppData, WLAN_OPCODE_VALUE_TYPE* pWlanOpcodeValueType);
+uint WlanGetInterfaceCapability(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, void* pReserved, WLAN_INTERFACE_CAPABILITY** ppCapability);
+uint WlanSetInterface(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, WLAN_INTF_OPCODE OpCode, uint dwDataSize, const(void)* pData, void* pReserved);
+uint WlanQueryInterface(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, WLAN_INTF_OPCODE OpCode, void* pReserved, uint* pdwDataSize, void** ppData, WLAN_OPCODE_VALUE_TYPE* pWlanOpcodeValueType);
+uint WlanIhvControl(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, WLAN_IHV_CONTROL_TYPE Type, uint dwInBufferSize, void* pInBuffer, uint dwOutBufferSize, void* pOutBuffer, uint* pdwBytesReturned);
+uint WlanScan(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, const(DOT11_SSID)* pDot11Ssid, const(WLAN_RAW_DATA)* pIeData, void* pReserved);
+uint WlanGetAvailableNetworkList(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, uint dwFlags, void* pReserved, WLAN_AVAILABLE_NETWORK_LIST** ppAvailableNetworkList);
+uint WlanGetAvailableNetworkList2(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, uint dwFlags, void* pReserved, WLAN_AVAILABLE_NETWORK_LIST_V2** ppAvailableNetworkList);
+uint WlanGetNetworkBssList(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, const(DOT11_SSID)* pDot11Ssid, DOT11_BSS_TYPE dot11BssType, BOOL bSecurityEnabled, void* pReserved, WLAN_BSS_LIST** ppWlanBssList);
+uint WlanConnect(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, const(WLAN_CONNECTION_PARAMETERS)* pConnectionParameters, void* pReserved);
+uint WlanConnect2(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, const(WLAN_CONNECTION_PARAMETERS_V2)* pConnectionParameters, void* pReserved);
+uint WlanDisconnect(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, void* pReserved);
+uint WlanRegisterNotification(HANDLE hClientHandle, WLAN_NOTIFICATION_SOURCES dwNotifSource, BOOL bIgnoreDuplicate, WLAN_NOTIFICATION_CALLBACK funcCallback, void* pCallbackContext, void* pReserved, uint* pdwPrevNotifSource);
+uint WlanGetProfile(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, const(wchar)* strProfileName, void* pReserved, PWSTR* pstrProfileXml, uint* pdwFlags, uint* pdwGrantedAccess);
+uint WlanSetProfileEapUserData(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, const(wchar)* strProfileName, EAP_METHOD_TYPE eapType, WLAN_SET_EAPHOST_FLAGS dwFlags, uint dwEapUserDataSize, const(ubyte)* pbEapUserData, void* pReserved);
+uint WlanSetProfileEapXmlUserData(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, const(wchar)* strProfileName, WLAN_SET_EAPHOST_FLAGS dwFlags, const(wchar)* strEapXmlUserData, void* pReserved);
+uint WlanSetProfile(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, uint dwFlags, const(wchar)* strProfileXml, const(wchar)* strAllUserProfileSecurity, BOOL bOverwrite, void* pReserved, uint* pdwReasonCode);
+uint WlanDeleteProfile(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, const(wchar)* strProfileName, void* pReserved);
+uint WlanRenameProfile(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, const(wchar)* strOldProfileName, const(wchar)* strNewProfileName, void* pReserved);
+uint WlanGetProfileList(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, void* pReserved, WLAN_PROFILE_INFO_LIST** ppProfileList);
+uint WlanSetProfileList(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, uint dwItems, const(wchar)** strProfileNames, void* pReserved);
+uint WlanSetProfilePosition(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, const(wchar)* strProfileName, uint dwPosition, void* pReserved);
+uint WlanSetProfileCustomUserData(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, const(wchar)* strProfileName, uint dwDataSize, const(ubyte)* pData, void* pReserved);
+uint WlanGetProfileCustomUserData(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, const(wchar)* strProfileName, void* pReserved, uint* pdwDataSize, ubyte** ppData);
+uint WlanSetFilterList(HANDLE hClientHandle, WLAN_FILTER_LIST_TYPE wlanFilterListType, const(DOT11_NETWORK_LIST)* pNetworkList, void* pReserved);
+uint WlanGetFilterList(HANDLE hClientHandle, WLAN_FILTER_LIST_TYPE wlanFilterListType, void* pReserved, DOT11_NETWORK_LIST** ppNetworkList);
+uint WlanSetPsdIEDataList(HANDLE hClientHandle, const(wchar)* strFormat, const(WLAN_RAW_DATA_LIST)* pPsdIEDataList, void* pReserved);
+uint WlanSaveTemporaryProfile(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, const(wchar)* strProfileName, const(wchar)* strAllUserProfileSecurity, uint dwFlags, BOOL bOverWrite, void* pReserved);
+uint WlanDeviceServiceCommand(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, GUID* pDeviceServiceGuid, uint dwOpCode, uint dwInBufferSize, void* pInBuffer, uint dwOutBufferSize, void* pOutBuffer, uint* pdwBytesReturned);
+uint WlanGetSupportedDeviceServices(HANDLE hClientHandle, const(GUID)* pInterfaceGuid, WLAN_DEVICE_SERVICE_GUID_LIST** ppDevSvcGuidList);
+uint WlanRegisterDeviceServiceNotification(HANDLE hClientHandle, const(WLAN_DEVICE_SERVICE_GUID_LIST)* pDevSvcGuidList);
+uint WlanExtractPsdIEDataList(HANDLE hClientHandle, uint dwIeDataSize, const(ubyte)* pRawIeData, const(wchar)* strFormat, void* pReserved, WLAN_RAW_DATA_LIST** ppPsdIEDataList);
+uint WlanReasonCodeToString(uint dwReasonCode, uint dwBufferSize, PWSTR pStringBuffer, void* pReserved);
+void* WlanAllocateMemory(uint dwMemorySize);
+void WlanFreeMemory(void* pMemory);
+uint WlanSetSecuritySettings(HANDLE hClientHandle, WLAN_SECURABLE_OBJECT SecurableObject, const(wchar)* strModifiedSDDL);
+uint WlanGetSecuritySettings(HANDLE hClientHandle, WLAN_SECURABLE_OBJECT SecurableObject, WLAN_OPCODE_VALUE_TYPE* pValueType, PWSTR* pstrCurrentSDDL, uint* pdwGrantedAccess);
+uint WlanUIEditProfile(uint dwClientVersion, const(wchar)* wstrProfileName, GUID* pInterfaceGuid, HWND hWnd, WL_DISPLAY_PAGES wlStartPage, void* pReserved, uint* pWlanReasonCode);
+uint WlanHostedNetworkStartUsing(HANDLE hClientHandle, WLAN_HOSTED_NETWORK_REASON* pFailReason, void* pvReserved);
+uint WlanHostedNetworkStopUsing(HANDLE hClientHandle, WLAN_HOSTED_NETWORK_REASON* pFailReason, void* pvReserved);
+uint WlanHostedNetworkForceStart(HANDLE hClientHandle, WLAN_HOSTED_NETWORK_REASON* pFailReason, void* pvReserved);
+uint WlanHostedNetworkForceStop(HANDLE hClientHandle, WLAN_HOSTED_NETWORK_REASON* pFailReason, void* pvReserved);
+uint WlanHostedNetworkQueryProperty(HANDLE hClientHandle, WLAN_HOSTED_NETWORK_OPCODE OpCode, uint* pdwDataSize, void** ppvData, WLAN_OPCODE_VALUE_TYPE* pWlanOpcodeValueType, void* pvReserved);
+uint WlanHostedNetworkSetProperty(HANDLE hClientHandle, WLAN_HOSTED_NETWORK_OPCODE OpCode, uint dwDataSize, void* pvData, WLAN_HOSTED_NETWORK_REASON* pFailReason, void* pvReserved);
+uint WlanHostedNetworkInitSettings(HANDLE hClientHandle, WLAN_HOSTED_NETWORK_REASON* pFailReason, void* pvReserved);
+uint WlanHostedNetworkRefreshSecuritySettings(HANDLE hClientHandle, WLAN_HOSTED_NETWORK_REASON* pFailReason, void* pvReserved);
+uint WlanHostedNetworkQueryStatus(HANDLE hClientHandle, WLAN_HOSTED_NETWORK_STATUS** ppWlanHostedNetworkStatus, void* pvReserved);
+uint WlanHostedNetworkSetSecondaryKey(HANDLE hClientHandle, uint dwKeyLength, ubyte* pucKeyData, BOOL bIsPassPhrase, BOOL bPersistent, WLAN_HOSTED_NETWORK_REASON* pFailReason, void* pvReserved);
+uint WlanHostedNetworkQuerySecondaryKey(HANDLE hClientHandle, uint* pdwKeyLength, ubyte** ppucKeyData, BOOL* pbIsPassPhrase, BOOL* pbPersistent, WLAN_HOSTED_NETWORK_REASON* pFailReason, void* pvReserved);
+uint WlanRegisterVirtualStationNotification(HANDLE hClientHandle, BOOL bRegister, void* pReserved);
+uint WFDOpenHandle(uint dwClientVersion, uint* pdwNegotiatedVersion, HANDLE* phClientHandle);
+uint WFDCloseHandle(HANDLE hClientHandle);
+uint WFDStartOpenSession(HANDLE hClientHandle, ubyte** pDeviceAddress, void* pvContext, WFD_OPEN_SESSION_COMPLETE_CALLBACK pfnCallback, HANDLE* phSessionHandle);
+uint WFDCancelOpenSession(HANDLE hSessionHandle);
+uint WFDOpenLegacySession(HANDLE hClientHandle, ubyte** pLegacyMacAddress, HANDLE* phSessionHandle, GUID* pGuidSessionInterface);
+uint WFDCloseSession(HANDLE hSessionHandle);
+uint WFDUpdateDeviceVisibility(ubyte** pDeviceAddress);
 enum L2_REASON_CODE_DOT11_AC_BASE = 0x00020000;
 enum L2_REASON_CODE_DOT11_MSM_BASE = 0x00030000;
 enum L2_REASON_CODE_DOT11_SECURITY_BASE = 0x00040000;
@@ -3448,7 +3447,7 @@ enum : int
     wlan_notification_security_end   = 0x00000001,
 }
 
-alias WLAN_NOTIFICATION_CALLBACK = void function(L2_NOTIFICATION_DATA*, void*);
+alias WLAN_NOTIFICATION_CALLBACK = void function(L2_NOTIFICATION_DATA* param0, void* param1);
 alias WLAN_OPCODE_VALUE_TYPE = int;
 enum : int
 {
@@ -3726,7 +3725,7 @@ struct WLAN_HOSTED_NETWORK_STATUS
     uint dwNumberOfPeers;
     WLAN_HOSTED_NETWORK_PEER_STATE[1] PeerList;
 }
-alias WFD_OPEN_SESSION_COMPLETE_CALLBACK = void function(HANDLE, void*, GUID, uint, uint);
+alias WFD_OPEN_SESSION_COMPLETE_CALLBACK = void function(HANDLE hSessionHandle, void* pvContext, GUID guidSessionInterface, uint dwError, uint dwReasonCode);
 alias ONEX_AUTH_IDENTITY = int;
 enum : int
 {
@@ -3899,89 +3898,89 @@ enum : int
 enum IID_IDot11AdHocManager = GUID(0x8f10cc26, 0xcf0d, 0x42a0, [0xac, 0xbe, 0xe2, 0xde, 0x70, 0x7, 0x38, 0x4d]);
 interface IDot11AdHocManager : IUnknown
 {
-    HRESULT CreateNetwork(const(wchar)*, const(wchar)*, int, IDot11AdHocInterface, IDot11AdHocSecuritySettings, GUID*, IDot11AdHocNetwork*);
-    HRESULT CommitCreatedNetwork(IDot11AdHocNetwork, BOOLEAN, BOOLEAN);
-    HRESULT GetIEnumDot11AdHocNetworks(GUID*, IEnumDot11AdHocNetworks*);
-    HRESULT GetIEnumDot11AdHocInterfaces(IEnumDot11AdHocInterfaces*);
-    HRESULT GetNetwork(GUID*, IDot11AdHocNetwork*);
+    HRESULT CreateNetwork(const(wchar)* Name, const(wchar)* Password, int GeographicalId, IDot11AdHocInterface pInterface, IDot11AdHocSecuritySettings pSecurity, GUID* pContextGuid, IDot11AdHocNetwork* pIAdHoc);
+    HRESULT CommitCreatedNetwork(IDot11AdHocNetwork pIAdHoc, BOOLEAN fSaveProfile, BOOLEAN fMakeSavedProfileUserSpecific);
+    HRESULT GetIEnumDot11AdHocNetworks(GUID* pContextGuid, IEnumDot11AdHocNetworks* ppEnum);
+    HRESULT GetIEnumDot11AdHocInterfaces(IEnumDot11AdHocInterfaces* ppEnum);
+    HRESULT GetNetwork(GUID* NetworkSignature, IDot11AdHocNetwork* pNetwork);
 }
 enum IID_IDot11AdHocManagerNotificationSink = GUID(0x8f10cc27, 0xcf0d, 0x42a0, [0xac, 0xbe, 0xe2, 0xde, 0x70, 0x7, 0x38, 0x4d]);
 interface IDot11AdHocManagerNotificationSink : IUnknown
 {
-    HRESULT OnNetworkAdd(IDot11AdHocNetwork);
-    HRESULT OnNetworkRemove(GUID*);
-    HRESULT OnInterfaceAdd(IDot11AdHocInterface);
-    HRESULT OnInterfaceRemove(GUID*);
+    HRESULT OnNetworkAdd(IDot11AdHocNetwork pIAdHocNetwork);
+    HRESULT OnNetworkRemove(GUID* Signature);
+    HRESULT OnInterfaceAdd(IDot11AdHocInterface pIAdHocInterface);
+    HRESULT OnInterfaceRemove(GUID* Signature);
 }
 enum IID_IEnumDot11AdHocNetworks = GUID(0x8f10cc28, 0xcf0d, 0x42a0, [0xac, 0xbe, 0xe2, 0xde, 0x70, 0x7, 0x38, 0x4d]);
 interface IEnumDot11AdHocNetworks : IUnknown
 {
-    HRESULT Next(uint, IDot11AdHocNetwork*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint cElt, IDot11AdHocNetwork* rgElt, uint* pcEltFetched);
+    HRESULT Skip(uint cElt);
     HRESULT Reset();
-    HRESULT Clone(IEnumDot11AdHocNetworks*);
+    HRESULT Clone(IEnumDot11AdHocNetworks* ppEnum);
 }
 enum IID_IDot11AdHocNetwork = GUID(0x8f10cc29, 0xcf0d, 0x42a0, [0xac, 0xbe, 0xe2, 0xde, 0x70, 0x7, 0x38, 0x4d]);
 interface IDot11AdHocNetwork : IUnknown
 {
-    HRESULT GetStatus(DOT11_ADHOC_NETWORK_CONNECTION_STATUS*);
-    HRESULT GetSSID(PWSTR*);
-    HRESULT HasProfile(ubyte*);
-    HRESULT GetProfileName(PWSTR*);
+    HRESULT GetStatus(DOT11_ADHOC_NETWORK_CONNECTION_STATUS* eStatus);
+    HRESULT GetSSID(PWSTR* ppszwSSID);
+    HRESULT HasProfile(ubyte* pf11d);
+    HRESULT GetProfileName(PWSTR* ppszwProfileName);
     HRESULT DeleteProfile();
-    HRESULT GetSignalQuality(uint*, uint*);
-    HRESULT GetSecuritySetting(IDot11AdHocSecuritySettings*);
-    HRESULT GetContextGuid(GUID*);
-    HRESULT GetSignature(GUID*);
-    HRESULT GetInterface(IDot11AdHocInterface*);
-    HRESULT Connect(const(wchar)*, int, BOOLEAN, BOOLEAN);
+    HRESULT GetSignalQuality(uint* puStrengthValue, uint* puStrengthMax);
+    HRESULT GetSecuritySetting(IDot11AdHocSecuritySettings* pAdHocSecuritySetting);
+    HRESULT GetContextGuid(GUID* pContextGuid);
+    HRESULT GetSignature(GUID* pSignature);
+    HRESULT GetInterface(IDot11AdHocInterface* pAdHocInterface);
+    HRESULT Connect(const(wchar)* Passphrase, int GeographicalId, BOOLEAN fSaveProfile, BOOLEAN fMakeSavedProfileUserSpecific);
     HRESULT Disconnect();
 }
 enum IID_IDot11AdHocNetworkNotificationSink = GUID(0x8f10cc2a, 0xcf0d, 0x42a0, [0xac, 0xbe, 0xe2, 0xde, 0x70, 0x7, 0x38, 0x4d]);
 interface IDot11AdHocNetworkNotificationSink : IUnknown
 {
-    HRESULT OnStatusChange(DOT11_ADHOC_NETWORK_CONNECTION_STATUS);
-    HRESULT OnConnectFail(DOT11_ADHOC_CONNECT_FAIL_REASON);
+    HRESULT OnStatusChange(DOT11_ADHOC_NETWORK_CONNECTION_STATUS eStatus);
+    HRESULT OnConnectFail(DOT11_ADHOC_CONNECT_FAIL_REASON eFailReason);
 }
 enum IID_IDot11AdHocInterface = GUID(0x8f10cc2b, 0xcf0d, 0x42a0, [0xac, 0xbe, 0xe2, 0xde, 0x70, 0x7, 0x38, 0x4d]);
 interface IDot11AdHocInterface : IUnknown
 {
-    HRESULT GetDeviceSignature(GUID*);
-    HRESULT GetFriendlyName(PWSTR*);
-    HRESULT IsDot11d(ubyte*);
-    HRESULT IsAdHocCapable(ubyte*);
-    HRESULT IsRadioOn(ubyte*);
-    HRESULT GetActiveNetwork(IDot11AdHocNetwork*);
-    HRESULT GetIEnumSecuritySettings(IEnumDot11AdHocSecuritySettings*);
-    HRESULT GetIEnumDot11AdHocNetworks(GUID*, IEnumDot11AdHocNetworks*);
-    HRESULT GetStatus(DOT11_ADHOC_NETWORK_CONNECTION_STATUS*);
+    HRESULT GetDeviceSignature(GUID* pSignature);
+    HRESULT GetFriendlyName(PWSTR* ppszName);
+    HRESULT IsDot11d(ubyte* pf11d);
+    HRESULT IsAdHocCapable(ubyte* pfAdHocCapable);
+    HRESULT IsRadioOn(ubyte* pfIsRadioOn);
+    HRESULT GetActiveNetwork(IDot11AdHocNetwork* ppNetwork);
+    HRESULT GetIEnumSecuritySettings(IEnumDot11AdHocSecuritySettings* ppEnum);
+    HRESULT GetIEnumDot11AdHocNetworks(GUID* pFilterGuid, IEnumDot11AdHocNetworks* ppEnum);
+    HRESULT GetStatus(DOT11_ADHOC_NETWORK_CONNECTION_STATUS* pState);
 }
 enum IID_IEnumDot11AdHocInterfaces = GUID(0x8f10cc2c, 0xcf0d, 0x42a0, [0xac, 0xbe, 0xe2, 0xde, 0x70, 0x7, 0x38, 0x4d]);
 interface IEnumDot11AdHocInterfaces : IUnknown
 {
-    HRESULT Next(uint, IDot11AdHocInterface*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint cElt, IDot11AdHocInterface* rgElt, uint* pcEltFetched);
+    HRESULT Skip(uint cElt);
     HRESULT Reset();
-    HRESULT Clone(IEnumDot11AdHocInterfaces*);
+    HRESULT Clone(IEnumDot11AdHocInterfaces* ppEnum);
 }
 enum IID_IEnumDot11AdHocSecuritySettings = GUID(0x8f10cc2d, 0xcf0d, 0x42a0, [0xac, 0xbe, 0xe2, 0xde, 0x70, 0x7, 0x38, 0x4d]);
 interface IEnumDot11AdHocSecuritySettings : IUnknown
 {
-    HRESULT Next(uint, IDot11AdHocSecuritySettings*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint cElt, IDot11AdHocSecuritySettings* rgElt, uint* pcEltFetched);
+    HRESULT Skip(uint cElt);
     HRESULT Reset();
-    HRESULT Clone(IEnumDot11AdHocSecuritySettings*);
+    HRESULT Clone(IEnumDot11AdHocSecuritySettings* ppEnum);
 }
 enum IID_IDot11AdHocSecuritySettings = GUID(0x8f10cc2e, 0xcf0d, 0x42a0, [0xac, 0xbe, 0xe2, 0xde, 0x70, 0x7, 0x38, 0x4d]);
 interface IDot11AdHocSecuritySettings : IUnknown
 {
-    HRESULT GetDot11AuthAlgorithm(DOT11_ADHOC_AUTH_ALGORITHM*);
-    HRESULT GetDot11CipherAlgorithm(DOT11_ADHOC_CIPHER_ALGORITHM*);
+    HRESULT GetDot11AuthAlgorithm(DOT11_ADHOC_AUTH_ALGORITHM* pAuth);
+    HRESULT GetDot11CipherAlgorithm(DOT11_ADHOC_CIPHER_ALGORITHM* pCipher);
 }
 enum IID_IDot11AdHocInterfaceNotificationSink = GUID(0x8f10cc2f, 0xcf0d, 0x42a0, [0xac, 0xbe, 0xe2, 0xde, 0x70, 0x7, 0x38, 0x4d]);
 interface IDot11AdHocInterfaceNotificationSink : IUnknown
 {
-    HRESULT OnConnectionStatusChange(DOT11_ADHOC_NETWORK_CONNECTION_STATUS);
+    HRESULT OnConnectionStatusChange(DOT11_ADHOC_NETWORK_CONNECTION_STATUS eStatus);
 }
 enum CLSID_Dot11AdHocManager = GUID(0xdd06a84f, 0x83bd, 0x4d01, [0x8a, 0xb9, 0x23, 0x89, 0xfe, 0xa0, 0x86, 0x9e]);
 struct Dot11AdHocManager
@@ -4129,54 +4128,54 @@ struct WDIAG_IHV_WLAN_ID
     uint dwFlags;
     uint dwReasonCode;
 }
-alias DOT11EXT_ALLOCATE_BUFFER = uint function(uint, void**);
-alias DOT11EXT_FREE_BUFFER = void function(void*);
-alias DOT11EXT_SET_PROFILE_CUSTOM_USER_DATA = uint function(HANDLE, HANDLE, uint, uint, void*);
-alias DOT11EXT_GET_PROFILE_CUSTOM_USER_DATA = uint function(HANDLE, HANDLE, uint, uint*, void**);
-alias DOT11EXT_SET_CURRENT_PROFILE = uint function(HANDLE, HANDLE, DOT11EXT_IHV_CONNECTIVITY_PROFILE*, DOT11EXT_IHV_SECURITY_PROFILE*);
-alias DOT11EXT_SEND_UI_REQUEST = uint function(HANDLE, DOT11EXT_IHV_UI_REQUEST*);
-alias DOT11EXT_PRE_ASSOCIATE_COMPLETION = uint function(HANDLE, HANDLE, uint, uint);
-alias DOT11EXT_POST_ASSOCIATE_COMPLETION = uint function(HANDLE, HANDLE, ubyte**, uint, uint);
-alias DOT11EXT_SEND_NOTIFICATION = uint function(HANDLE, L2_NOTIFICATION_DATA*);
-alias DOT11EXT_SEND_PACKET = uint function(HANDLE, uint, void*, HANDLE);
-alias DOT11EXT_SET_ETHERTYPE_HANDLING = uint function(HANDLE, uint, uint, DOT11_PRIVACY_EXEMPTION*, uint, ushort*);
-alias DOT11EXT_SET_AUTH_ALGORITHM = uint function(HANDLE, uint);
-alias DOT11EXT_SET_UNICAST_CIPHER_ALGORITHM = uint function(HANDLE, uint);
-alias DOT11EXT_SET_MULTICAST_CIPHER_ALGORITHM = uint function(HANDLE, uint);
-alias DOT11EXT_SET_DEFAULT_KEY = uint function(HANDLE, DOT11_CIPHER_DEFAULT_KEY_VALUE*, DOT11_DIRECTION);
-alias DOT11EXT_SET_KEY_MAPPING_KEY = uint function(HANDLE, DOT11_CIPHER_KEY_MAPPING_KEY_VALUE*);
-alias DOT11EXT_SET_DEFAULT_KEY_ID = uint function(HANDLE, uint);
-alias DOT11EXT_SET_EXCLUDE_UNENCRYPTED = uint function(HANDLE, BOOL);
-alias DOT11EXT_NIC_SPECIFIC_EXTENSION = uint function(HANDLE, uint, void*, uint*, void*);
-alias DOT11EXT_ONEX_START = uint function(HANDLE, EAP_ATTRIBUTES*);
-alias DOT11EXT_ONEX_STOP = uint function(HANDLE);
-alias DOT11EXT_PROCESS_ONEX_PACKET = uint function(HANDLE, uint, void*);
-alias DOT11EXT_REQUEST_VIRTUAL_STATION = uint function(HANDLE, void*);
-alias DOT11EXT_RELEASE_VIRTUAL_STATION = uint function(HANDLE, void*);
-alias DOT11EXT_QUERY_VIRTUAL_STATION_PROPERTIES = uint function(HANDLE, BOOL*, GUID*, void*);
-alias DOT11EXT_SET_VIRTUAL_STATION_AP_PROPERTIES = uint function(HANDLE, HANDLE, uint, DOT11EXT_VIRTUAL_STATION_AP_PROPERTY*, void*);
-alias DOT11EXTIHV_GET_VERSION_INFO = uint function(DOT11_IHV_VERSION_INFO*);
-alias DOT11EXTIHV_INIT_SERVICE = uint function(uint, DOT11EXT_APIS*, void*, DOT11EXT_IHV_HANDLERS*);
-alias DOT11EXTIHV_INIT_VIRTUAL_STATION = uint function(DOT11EXT_VIRTUAL_STATION_APIS*, void*);
+alias DOT11EXT_ALLOCATE_BUFFER = uint function(uint dwByteCount, void** ppvBuffer);
+alias DOT11EXT_FREE_BUFFER = void function(void* pvMemory);
+alias DOT11EXT_SET_PROFILE_CUSTOM_USER_DATA = uint function(HANDLE hDot11SvcHandle, HANDLE hConnectSession, uint dwSessionID, uint dwDataSize, void* pvData);
+alias DOT11EXT_GET_PROFILE_CUSTOM_USER_DATA = uint function(HANDLE hDot11SvcHandle, HANDLE hConnectSession, uint dwSessionID, uint* pdwDataSize, void** ppvData);
+alias DOT11EXT_SET_CURRENT_PROFILE = uint function(HANDLE hDot11SvcHandle, HANDLE hConnectSession, DOT11EXT_IHV_CONNECTIVITY_PROFILE* pIhvConnProfile, DOT11EXT_IHV_SECURITY_PROFILE* pIhvSecProfile);
+alias DOT11EXT_SEND_UI_REQUEST = uint function(HANDLE hDot11SvcHandle, DOT11EXT_IHV_UI_REQUEST* pIhvUIRequest);
+alias DOT11EXT_PRE_ASSOCIATE_COMPLETION = uint function(HANDLE hDot11SvcHandle, HANDLE hConnectSession, uint dwReasonCode, uint dwWin32Error);
+alias DOT11EXT_POST_ASSOCIATE_COMPLETION = uint function(HANDLE hDot11SvcHandle, HANDLE hSecuritySessionID, ubyte** pPeer, uint dwReasonCode, uint dwWin32Error);
+alias DOT11EXT_SEND_NOTIFICATION = uint function(HANDLE hDot11SvcHandle, L2_NOTIFICATION_DATA* pNotificationData);
+alias DOT11EXT_SEND_PACKET = uint function(HANDLE hDot11SvcHandle, uint uPacketLen, void* pvPacket, HANDLE hSendCompletion);
+alias DOT11EXT_SET_ETHERTYPE_HANDLING = uint function(HANDLE hDot11SvcHandle, uint uMaxBackLog, uint uNumOfExemption, DOT11_PRIVACY_EXEMPTION* pExemption, uint uNumOfRegistration, ushort* pusRegistration);
+alias DOT11EXT_SET_AUTH_ALGORITHM = uint function(HANDLE hDot11SvcHandle, uint dwAuthAlgo);
+alias DOT11EXT_SET_UNICAST_CIPHER_ALGORITHM = uint function(HANDLE hDot11SvcHandle, uint dwUnicastCipherAlgo);
+alias DOT11EXT_SET_MULTICAST_CIPHER_ALGORITHM = uint function(HANDLE hDot11SvcHandle, uint dwMulticastCipherAlgo);
+alias DOT11EXT_SET_DEFAULT_KEY = uint function(HANDLE hDot11SvcHandle, DOT11_CIPHER_DEFAULT_KEY_VALUE* pKey, DOT11_DIRECTION dot11Direction);
+alias DOT11EXT_SET_KEY_MAPPING_KEY = uint function(HANDLE hDot11SvcHandle, DOT11_CIPHER_KEY_MAPPING_KEY_VALUE* pKey);
+alias DOT11EXT_SET_DEFAULT_KEY_ID = uint function(HANDLE hDot11SvcHandle, uint uDefaultKeyId);
+alias DOT11EXT_SET_EXCLUDE_UNENCRYPTED = uint function(HANDLE hDot11SvcHandle, BOOL bExcludeUnencrypted);
+alias DOT11EXT_NIC_SPECIFIC_EXTENSION = uint function(HANDLE hDot11SvcHandle, uint dwInBufferSize, void* pvInBuffer, uint* pdwOutBufferSize, void* pvOutBuffer);
+alias DOT11EXT_ONEX_START = uint function(HANDLE hDot11SvcHandle, EAP_ATTRIBUTES* pEapAttributes);
+alias DOT11EXT_ONEX_STOP = uint function(HANDLE hDot11SvcHandle);
+alias DOT11EXT_PROCESS_ONEX_PACKET = uint function(HANDLE hDot11SvcHandle, uint dwInPacketSize, void* pvInPacket);
+alias DOT11EXT_REQUEST_VIRTUAL_STATION = uint function(HANDLE hDot11PrimaryHandle, void* pvReserved);
+alias DOT11EXT_RELEASE_VIRTUAL_STATION = uint function(HANDLE hDot11PrimaryHandle, void* pvReserved);
+alias DOT11EXT_QUERY_VIRTUAL_STATION_PROPERTIES = uint function(HANDLE hDot11SvcHandle, BOOL* pbIsVirtualStation, GUID* pgPrimary, void* pvReserved);
+alias DOT11EXT_SET_VIRTUAL_STATION_AP_PROPERTIES = uint function(HANDLE hDot11SvcHandle, HANDLE hConnectSession, uint dwNumProperties, DOT11EXT_VIRTUAL_STATION_AP_PROPERTY* pProperties, void* pvReserved);
+alias DOT11EXTIHV_GET_VERSION_INFO = uint function(DOT11_IHV_VERSION_INFO* pDot11IHVVersionInfo);
+alias DOT11EXTIHV_INIT_SERVICE = uint function(uint dwVerNumUsed, DOT11EXT_APIS* pDot11ExtAPI, void* pvReserved, DOT11EXT_IHV_HANDLERS* pDot11IHVHandlers);
+alias DOT11EXTIHV_INIT_VIRTUAL_STATION = uint function(DOT11EXT_VIRTUAL_STATION_APIS* pDot11ExtVSAPI, void* pvReserved);
 alias DOT11EXTIHV_DEINIT_SERVICE = void function();
-alias DOT11EXTIHV_INIT_ADAPTER = uint function(DOT11_ADAPTER*, HANDLE, HANDLE*);
-alias DOT11EXTIHV_DEINIT_ADAPTER = void function(HANDLE);
-alias DOT11EXTIHV_PERFORM_PRE_ASSOCIATE = uint function(HANDLE, HANDLE, DOT11EXT_IHV_PROFILE_PARAMS*, DOT11EXT_IHV_CONNECTIVITY_PROFILE*, DOT11EXT_IHV_SECURITY_PROFILE*, DOT11_BSS_LIST*, uint*);
-alias DOT11EXTIHV_ADAPTER_RESET = uint function(HANDLE);
-alias DOT11EXTIHV_PERFORM_POST_ASSOCIATE = uint function(HANDLE, HANDLE, DOT11_PORT_STATE*, uint, DOT11_ASSOCIATION_COMPLETION_PARAMETERS*);
-alias DOT11EXTIHV_STOP_POST_ASSOCIATE = uint function(HANDLE, ubyte**, uint);
-alias DOT11EXTIHV_VALIDATE_PROFILE = uint function(HANDLE, DOT11EXT_IHV_PROFILE_PARAMS*, DOT11EXT_IHV_CONNECTIVITY_PROFILE*, DOT11EXT_IHV_SECURITY_PROFILE*, uint*);
-alias DOT11EXTIHV_PERFORM_CAPABILITY_MATCH = uint function(HANDLE, DOT11EXT_IHV_PROFILE_PARAMS*, DOT11EXT_IHV_CONNECTIVITY_PROFILE*, DOT11EXT_IHV_SECURITY_PROFILE*, DOT11_BSS_LIST*, uint*);
-alias DOT11EXTIHV_CREATE_DISCOVERY_PROFILES = uint function(HANDLE, BOOL, DOT11EXT_IHV_PROFILE_PARAMS*, DOT11_BSS_LIST*, DOT11EXT_IHV_DISCOVERY_PROFILE_LIST*, uint*);
-alias DOT11EXTIHV_PROCESS_SESSION_CHANGE = uint function(uint, WTSSESSION_NOTIFICATION*);
-alias DOT11EXTIHV_RECEIVE_INDICATION = uint function(HANDLE, DOT11EXT_IHV_INDICATION_TYPE, uint, void*);
-alias DOT11EXTIHV_RECEIVE_PACKET = uint function(HANDLE, uint, void*);
-alias DOT11EXTIHV_SEND_PACKET_COMPLETION = uint function(HANDLE);
-alias DOT11EXTIHV_IS_UI_REQUEST_PENDING = uint function(GUID, BOOL*);
-alias DOT11EXTIHV_PROCESS_UI_RESPONSE = uint function(GUID, uint, void*);
-alias DOT11EXTIHV_QUERY_UI_REQUEST = uint function(HANDLE, DOT11EXT_IHV_CONNECTION_PHASE, DOT11EXT_IHV_UI_REQUEST**);
-alias DOT11EXTIHV_ONEX_INDICATE_RESULT = uint function(HANDLE, DOT11_MSONEX_RESULT, DOT11_MSONEX_RESULT_PARAMS*);
-alias DOT11EXTIHV_CONTROL = uint function(HANDLE, uint, ubyte*, uint, ubyte*, uint*);
+alias DOT11EXTIHV_INIT_ADAPTER = uint function(DOT11_ADAPTER* pDot11Adapter, HANDLE hDot11SvcHandle, HANDLE* phIhvExtAdapter);
+alias DOT11EXTIHV_DEINIT_ADAPTER = void function(HANDLE hIhvExtAdapter);
+alias DOT11EXTIHV_PERFORM_PRE_ASSOCIATE = uint function(HANDLE hIhvExtAdapter, HANDLE hConnectSession, DOT11EXT_IHV_PROFILE_PARAMS* pIhvProfileParams, DOT11EXT_IHV_CONNECTIVITY_PROFILE* pIhvConnProfile, DOT11EXT_IHV_SECURITY_PROFILE* pIhvSecProfile, DOT11_BSS_LIST* pConnectableBssid, uint* pdwReasonCode);
+alias DOT11EXTIHV_ADAPTER_RESET = uint function(HANDLE hIhvExtAdapter);
+alias DOT11EXTIHV_PERFORM_POST_ASSOCIATE = uint function(HANDLE hIhvExtAdapter, HANDLE hSecuritySessionID, DOT11_PORT_STATE* pPortState, uint uDot11AssocParamsBytes, DOT11_ASSOCIATION_COMPLETION_PARAMETERS* pDot11AssocParams);
+alias DOT11EXTIHV_STOP_POST_ASSOCIATE = uint function(HANDLE hIhvExtAdapter, ubyte** pPeer, uint dot11AssocStatus);
+alias DOT11EXTIHV_VALIDATE_PROFILE = uint function(HANDLE hIhvExtAdapter, DOT11EXT_IHV_PROFILE_PARAMS* pIhvProfileParams, DOT11EXT_IHV_CONNECTIVITY_PROFILE* pIhvConnProfile, DOT11EXT_IHV_SECURITY_PROFILE* pIhvSecProfile, uint* pdwReasonCode);
+alias DOT11EXTIHV_PERFORM_CAPABILITY_MATCH = uint function(HANDLE hIhvExtAdapter, DOT11EXT_IHV_PROFILE_PARAMS* pIhvProfileParams, DOT11EXT_IHV_CONNECTIVITY_PROFILE* pIhvConnProfile, DOT11EXT_IHV_SECURITY_PROFILE* pIhvSecProfile, DOT11_BSS_LIST* pConnectableBssid, uint* pdwReasonCode);
+alias DOT11EXTIHV_CREATE_DISCOVERY_PROFILES = uint function(HANDLE hIhvExtAdapter, BOOL bInsecure, DOT11EXT_IHV_PROFILE_PARAMS* pIhvProfileParams, DOT11_BSS_LIST* pConnectableBssid, DOT11EXT_IHV_DISCOVERY_PROFILE_LIST* pIhvDiscoveryProfileList, uint* pdwReasonCode);
+alias DOT11EXTIHV_PROCESS_SESSION_CHANGE = uint function(uint uEventType, WTSSESSION_NOTIFICATION* pSessionNotification);
+alias DOT11EXTIHV_RECEIVE_INDICATION = uint function(HANDLE hIhvExtAdapter, DOT11EXT_IHV_INDICATION_TYPE indicationType, uint uBufferLength, void* pvBuffer);
+alias DOT11EXTIHV_RECEIVE_PACKET = uint function(HANDLE hIhvExtAdapter, uint dwInBufferSize, void* pvInBuffer);
+alias DOT11EXTIHV_SEND_PACKET_COMPLETION = uint function(HANDLE hSendCompletion);
+alias DOT11EXTIHV_IS_UI_REQUEST_PENDING = uint function(GUID guidUIRequest, BOOL* pbIsRequestPending);
+alias DOT11EXTIHV_PROCESS_UI_RESPONSE = uint function(GUID guidUIRequest, uint dwByteCount, void* pvResponseBuffer);
+alias DOT11EXTIHV_QUERY_UI_REQUEST = uint function(HANDLE hIhvExtAdapter, DOT11EXT_IHV_CONNECTION_PHASE connectionPhase, DOT11EXT_IHV_UI_REQUEST** ppIhvUIRequest);
+alias DOT11EXTIHV_ONEX_INDICATE_RESULT = uint function(HANDLE hIhvExtAdapter, DOT11_MSONEX_RESULT msOneXResult, DOT11_MSONEX_RESULT_PARAMS* pDot11MsOneXResultParams);
+alias DOT11EXTIHV_CONTROL = uint function(HANDLE hIhvExtAdapter, uint dwInBufferSize, ubyte* pInBuffer, uint dwOutBufferSize, ubyte* pOutBuffer, uint* pdwBytesReturned);
 struct DOT11EXT_APIS
 {
     DOT11EXT_ALLOCATE_BUFFER Dot11ExtAllocateBuffer;

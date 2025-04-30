@@ -18,12 +18,12 @@ enum : uint
     RECORDER_OPENED        = 0x00000001,
 }
 
-int OpenIMsgSession(IMalloc, uint, LPMSGSESS*);
-void CloseIMsgSession(LPMSGSESS);
-int OpenIMsgOnIStg(LPMSGSESS, LPALLOCATEBUFFER, LPALLOCATEMORE, LPFREEBUFFER, IMalloc, void*, IStorage, MSGCALLRELEASE*, uint, uint, IMessage*);
-HRESULT GetAttribIMsgOnIStg(void*, SPropTagArray*, SPropAttrArray**);
-HRESULT SetAttribIMsgOnIStg(void*, SPropTagArray*, SPropAttrArray*, SPropProblemArray**);
-int MapStorageSCode(int);
+int OpenIMsgSession(IMalloc lpMalloc, uint ulFlags, LPMSGSESS* lppMsgSess);
+void CloseIMsgSession(LPMSGSESS lpMsgSess);
+int OpenIMsgOnIStg(LPMSGSESS lpMsgSess, LPALLOCATEBUFFER lpAllocateBuffer, LPALLOCATEMORE lpAllocateMore, LPFREEBUFFER lpFreeBuffer, IMalloc lpMalloc, void* lpMapiSup, IStorage lpStg, MSGCALLRELEASE* lpfMsgCallRelease, uint ulCallerData, uint ulFlags, IMessage* lppMsg);
+HRESULT GetAttribIMsgOnIStg(void* lpObject, SPropTagArray* lpPropTagArray, SPropAttrArray** lppPropAttrArray);
+HRESULT SetAttribIMsgOnIStg(void* lpObject, SPropTagArray* lpPropTags, SPropAttrArray* lpPropAttrs, SPropProblemArray** lppPropProblems);
+int MapStorageSCode(int StgSCode);
 enum IMAPI_SECTOR_SIZE = 0x00000800;
 enum IMAPI2_DEFAULT_COMMAND_TIMEOUT = 0x0000000a;
 enum DISPID_DDISCMASTER2EVENTS_DEVICEADDED = 0x00000100;
@@ -564,367 +564,367 @@ enum : int
 enum IID_IDiscMaster2 = GUID(0x27354130, 0x7f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface IDiscMaster2 : IDispatch
 {
-    HRESULT get__NewEnum(IEnumVARIANT*);
-    HRESULT get_Item(int, BSTR*);
-    HRESULT get_Count(int*);
-    HRESULT get_IsSupportedEnvironment(VARIANT_BOOL*);
+    HRESULT get__NewEnum(IEnumVARIANT* ppunk);
+    HRESULT get_Item(int index, BSTR* value);
+    HRESULT get_Count(int* value);
+    HRESULT get_IsSupportedEnvironment(VARIANT_BOOL* value);
 }
 enum IID_DDiscMaster2Events = GUID(0x27354131, 0x7f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface DDiscMaster2Events : IDispatch
 {
-    HRESULT NotifyDeviceAdded(IDispatch, BSTR);
-    HRESULT NotifyDeviceRemoved(IDispatch, BSTR);
+    HRESULT NotifyDeviceAdded(IDispatch object, BSTR uniqueId);
+    HRESULT NotifyDeviceRemoved(IDispatch object, BSTR uniqueId);
 }
 enum IID_IDiscRecorder2Ex = GUID(0x27354132, 0x7f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface IDiscRecorder2Ex : IUnknown
 {
-    HRESULT SendCommandNoData(ubyte*, uint, ubyte*, uint);
-    HRESULT SendCommandSendDataToDevice(ubyte*, uint, ubyte*, uint, ubyte*, uint);
-    HRESULT SendCommandGetDataFromDevice(ubyte*, uint, ubyte*, uint, ubyte*, uint, uint*);
-    HRESULT ReadDvdStructure(uint, uint, uint, uint, ubyte**, uint*);
-    HRESULT SendDvdStructure(uint, ubyte*, uint);
-    HRESULT GetAdapterDescriptor(ubyte**, uint*);
-    HRESULT GetDeviceDescriptor(ubyte**, uint*);
-    HRESULT GetDiscInformation(ubyte**, uint*);
-    HRESULT GetTrackInformation(uint, IMAPI_READ_TRACK_ADDRESS_TYPE, ubyte**, uint*);
-    HRESULT GetFeaturePage(IMAPI_FEATURE_PAGE_TYPE, BOOLEAN, ubyte**, uint*);
-    HRESULT GetModePage(IMAPI_MODE_PAGE_TYPE, IMAPI_MODE_PAGE_REQUEST_TYPE, ubyte**, uint*);
-    HRESULT SetModePage(IMAPI_MODE_PAGE_REQUEST_TYPE, ubyte*, uint);
-    HRESULT GetSupportedFeaturePages(BOOLEAN, IMAPI_FEATURE_PAGE_TYPE**, uint*);
-    HRESULT GetSupportedProfiles(BOOLEAN, IMAPI_PROFILE_TYPE**, uint*);
-    HRESULT GetSupportedModePages(IMAPI_MODE_PAGE_REQUEST_TYPE, IMAPI_MODE_PAGE_TYPE**, uint*);
-    HRESULT GetByteAlignmentMask(uint*);
-    HRESULT GetMaximumNonPageAlignedTransferSize(uint*);
-    HRESULT GetMaximumPageAlignedTransferSize(uint*);
+    HRESULT SendCommandNoData(ubyte* Cdb, uint CdbSize, ubyte* SenseBuffer, uint Timeout);
+    HRESULT SendCommandSendDataToDevice(ubyte* Cdb, uint CdbSize, ubyte* SenseBuffer, uint Timeout, ubyte* Buffer, uint BufferSize);
+    HRESULT SendCommandGetDataFromDevice(ubyte* Cdb, uint CdbSize, ubyte* SenseBuffer, uint Timeout, ubyte* Buffer, uint BufferSize, uint* BufferFetched);
+    HRESULT ReadDvdStructure(uint format, uint address, uint layer, uint agid, ubyte** data, uint* count);
+    HRESULT SendDvdStructure(uint format, ubyte* data, uint count);
+    HRESULT GetAdapterDescriptor(ubyte** data, uint* byteSize);
+    HRESULT GetDeviceDescriptor(ubyte** data, uint* byteSize);
+    HRESULT GetDiscInformation(ubyte** discInformation, uint* byteSize);
+    HRESULT GetTrackInformation(uint address, IMAPI_READ_TRACK_ADDRESS_TYPE addressType, ubyte** trackInformation, uint* byteSize);
+    HRESULT GetFeaturePage(IMAPI_FEATURE_PAGE_TYPE requestedFeature, BOOLEAN currentFeatureOnly, ubyte** featureData, uint* byteSize);
+    HRESULT GetModePage(IMAPI_MODE_PAGE_TYPE requestedModePage, IMAPI_MODE_PAGE_REQUEST_TYPE requestType, ubyte** modePageData, uint* byteSize);
+    HRESULT SetModePage(IMAPI_MODE_PAGE_REQUEST_TYPE requestType, ubyte* data, uint byteSize);
+    HRESULT GetSupportedFeaturePages(BOOLEAN currentFeatureOnly, IMAPI_FEATURE_PAGE_TYPE** featureData, uint* byteSize);
+    HRESULT GetSupportedProfiles(BOOLEAN currentOnly, IMAPI_PROFILE_TYPE** profileTypes, uint* validProfiles);
+    HRESULT GetSupportedModePages(IMAPI_MODE_PAGE_REQUEST_TYPE requestType, IMAPI_MODE_PAGE_TYPE** modePageTypes, uint* validPages);
+    HRESULT GetByteAlignmentMask(uint* value);
+    HRESULT GetMaximumNonPageAlignedTransferSize(uint* value);
+    HRESULT GetMaximumPageAlignedTransferSize(uint* value);
 }
 enum IID_IDiscRecorder2 = GUID(0x27354133, 0x7f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface IDiscRecorder2 : IDispatch
 {
     HRESULT EjectMedia();
     HRESULT CloseTray();
-    HRESULT AcquireExclusiveAccess(VARIANT_BOOL, BSTR);
+    HRESULT AcquireExclusiveAccess(VARIANT_BOOL force, BSTR __MIDL__IDiscRecorder20000);
     HRESULT ReleaseExclusiveAccess();
     HRESULT DisableMcn();
     HRESULT EnableMcn();
-    HRESULT InitializeDiscRecorder(BSTR);
-    HRESULT get_ActiveDiscRecorder(BSTR*);
-    HRESULT get_VendorId(BSTR*);
-    HRESULT get_ProductId(BSTR*);
-    HRESULT get_ProductRevision(BSTR*);
-    HRESULT get_VolumeName(BSTR*);
-    HRESULT get_VolumePathNames(SAFEARRAY**);
-    HRESULT get_DeviceCanLoadMedia(VARIANT_BOOL*);
-    HRESULT get_LegacyDeviceNumber(int*);
-    HRESULT get_SupportedFeaturePages(SAFEARRAY**);
-    HRESULT get_CurrentFeaturePages(SAFEARRAY**);
-    HRESULT get_SupportedProfiles(SAFEARRAY**);
-    HRESULT get_CurrentProfiles(SAFEARRAY**);
-    HRESULT get_SupportedModePages(SAFEARRAY**);
-    HRESULT get_ExclusiveAccessOwner(BSTR*);
+    HRESULT InitializeDiscRecorder(BSTR recorderUniqueId);
+    HRESULT get_ActiveDiscRecorder(BSTR* value);
+    HRESULT get_VendorId(BSTR* value);
+    HRESULT get_ProductId(BSTR* value);
+    HRESULT get_ProductRevision(BSTR* value);
+    HRESULT get_VolumeName(BSTR* value);
+    HRESULT get_VolumePathNames(SAFEARRAY** value);
+    HRESULT get_DeviceCanLoadMedia(VARIANT_BOOL* value);
+    HRESULT get_LegacyDeviceNumber(int* legacyDeviceNumber);
+    HRESULT get_SupportedFeaturePages(SAFEARRAY** value);
+    HRESULT get_CurrentFeaturePages(SAFEARRAY** value);
+    HRESULT get_SupportedProfiles(SAFEARRAY** value);
+    HRESULT get_CurrentProfiles(SAFEARRAY** value);
+    HRESULT get_SupportedModePages(SAFEARRAY** value);
+    HRESULT get_ExclusiveAccessOwner(BSTR* value);
 }
 enum IID_IWriteEngine2 = GUID(0x27354135, 0x7f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface IWriteEngine2 : IDispatch
 {
-    HRESULT WriteSection(IStream, int, int);
+    HRESULT WriteSection(IStream data, int startingBlockAddress, int numberOfBlocks);
     HRESULT CancelWrite();
-    HRESULT put_Recorder(IDiscRecorder2Ex);
-    HRESULT get_Recorder(IDiscRecorder2Ex*);
-    HRESULT put_UseStreamingWrite12(VARIANT_BOOL);
-    HRESULT get_UseStreamingWrite12(VARIANT_BOOL*);
-    HRESULT put_StartingSectorsPerSecond(int);
-    HRESULT get_StartingSectorsPerSecond(int*);
-    HRESULT put_EndingSectorsPerSecond(int);
-    HRESULT get_EndingSectorsPerSecond(int*);
-    HRESULT put_BytesPerSector(int);
-    HRESULT get_BytesPerSector(int*);
-    HRESULT get_WriteInProgress(VARIANT_BOOL*);
+    HRESULT put_Recorder(IDiscRecorder2Ex value);
+    HRESULT get_Recorder(IDiscRecorder2Ex* value);
+    HRESULT put_UseStreamingWrite12(VARIANT_BOOL value);
+    HRESULT get_UseStreamingWrite12(VARIANT_BOOL* value);
+    HRESULT put_StartingSectorsPerSecond(int value);
+    HRESULT get_StartingSectorsPerSecond(int* value);
+    HRESULT put_EndingSectorsPerSecond(int value);
+    HRESULT get_EndingSectorsPerSecond(int* value);
+    HRESULT put_BytesPerSector(int value);
+    HRESULT get_BytesPerSector(int* value);
+    HRESULT get_WriteInProgress(VARIANT_BOOL* value);
 }
 enum IID_IWriteEngine2EventArgs = GUID(0x27354136, 0x7f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface IWriteEngine2EventArgs : IDispatch
 {
-    HRESULT get_StartLba(int*);
-    HRESULT get_SectorCount(int*);
-    HRESULT get_LastReadLba(int*);
-    HRESULT get_LastWrittenLba(int*);
-    HRESULT get_TotalSystemBuffer(int*);
-    HRESULT get_UsedSystemBuffer(int*);
-    HRESULT get_FreeSystemBuffer(int*);
+    HRESULT get_StartLba(int* value);
+    HRESULT get_SectorCount(int* value);
+    HRESULT get_LastReadLba(int* value);
+    HRESULT get_LastWrittenLba(int* value);
+    HRESULT get_TotalSystemBuffer(int* value);
+    HRESULT get_UsedSystemBuffer(int* value);
+    HRESULT get_FreeSystemBuffer(int* value);
 }
 enum IID_DWriteEngine2Events = GUID(0x27354137, 0x7f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface DWriteEngine2Events : IDispatch
 {
-    HRESULT Update(IDispatch, IDispatch);
+    HRESULT Update(IDispatch object, IDispatch progress);
 }
 enum IID_IDiscFormat2 = GUID(0x27354152, 0x8f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface IDiscFormat2 : IDispatch
 {
-    HRESULT IsRecorderSupported(IDiscRecorder2, VARIANT_BOOL*);
-    HRESULT IsCurrentMediaSupported(IDiscRecorder2, VARIANT_BOOL*);
-    HRESULT get_MediaPhysicallyBlank(VARIANT_BOOL*);
-    HRESULT get_MediaHeuristicallyBlank(VARIANT_BOOL*);
-    HRESULT get_SupportedMediaTypes(SAFEARRAY**);
+    HRESULT IsRecorderSupported(IDiscRecorder2 recorder, VARIANT_BOOL* value);
+    HRESULT IsCurrentMediaSupported(IDiscRecorder2 recorder, VARIANT_BOOL* value);
+    HRESULT get_MediaPhysicallyBlank(VARIANT_BOOL* value);
+    HRESULT get_MediaHeuristicallyBlank(VARIANT_BOOL* value);
+    HRESULT get_SupportedMediaTypes(SAFEARRAY** value);
 }
 enum IID_IDiscFormat2Erase = GUID(0x27354156, 0x8f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface IDiscFormat2Erase : IDiscFormat2
 {
-    HRESULT put_Recorder(IDiscRecorder2);
-    HRESULT get_Recorder(IDiscRecorder2*);
-    HRESULT put_FullErase(VARIANT_BOOL);
-    HRESULT get_FullErase(VARIANT_BOOL*);
-    HRESULT get_CurrentPhysicalMediaType(IMAPI_MEDIA_PHYSICAL_TYPE*);
-    HRESULT put_ClientName(BSTR);
-    HRESULT get_ClientName(BSTR*);
+    HRESULT put_Recorder(IDiscRecorder2 value);
+    HRESULT get_Recorder(IDiscRecorder2* value);
+    HRESULT put_FullErase(VARIANT_BOOL value);
+    HRESULT get_FullErase(VARIANT_BOOL* value);
+    HRESULT get_CurrentPhysicalMediaType(IMAPI_MEDIA_PHYSICAL_TYPE* value);
+    HRESULT put_ClientName(BSTR value);
+    HRESULT get_ClientName(BSTR* value);
     HRESULT EraseMedia();
 }
 enum IID_DDiscFormat2EraseEvents = GUID(0x2735413a, 0x7f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface DDiscFormat2EraseEvents : IDispatch
 {
-    HRESULT Update(IDispatch, int, int);
+    HRESULT Update(IDispatch object, int elapsedSeconds, int estimatedTotalSeconds);
 }
 enum IID_IDiscFormat2Data = GUID(0x27354153, 0x9f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface IDiscFormat2Data : IDiscFormat2
 {
-    HRESULT put_Recorder(IDiscRecorder2);
-    HRESULT get_Recorder(IDiscRecorder2*);
-    HRESULT put_BufferUnderrunFreeDisabled(VARIANT_BOOL);
-    HRESULT get_BufferUnderrunFreeDisabled(VARIANT_BOOL*);
-    HRESULT put_PostgapAlreadyInImage(VARIANT_BOOL);
-    HRESULT get_PostgapAlreadyInImage(VARIANT_BOOL*);
-    HRESULT get_CurrentMediaStatus(IMAPI_FORMAT2_DATA_MEDIA_STATE*);
-    HRESULT get_WriteProtectStatus(IMAPI_MEDIA_WRITE_PROTECT_STATE*);
-    HRESULT get_TotalSectorsOnMedia(int*);
-    HRESULT get_FreeSectorsOnMedia(int*);
-    HRESULT get_NextWritableAddress(int*);
-    HRESULT get_StartAddressOfPreviousSession(int*);
-    HRESULT get_LastWrittenAddressOfPreviousSession(int*);
-    HRESULT put_ForceMediaToBeClosed(VARIANT_BOOL);
-    HRESULT get_ForceMediaToBeClosed(VARIANT_BOOL*);
-    HRESULT put_DisableConsumerDvdCompatibilityMode(VARIANT_BOOL);
-    HRESULT get_DisableConsumerDvdCompatibilityMode(VARIANT_BOOL*);
-    HRESULT get_CurrentPhysicalMediaType(IMAPI_MEDIA_PHYSICAL_TYPE*);
-    HRESULT put_ClientName(BSTR);
-    HRESULT get_ClientName(BSTR*);
-    HRESULT get_RequestedWriteSpeed(int*);
-    HRESULT get_RequestedRotationTypeIsPureCAV(VARIANT_BOOL*);
-    HRESULT get_CurrentWriteSpeed(int*);
-    HRESULT get_CurrentRotationTypeIsPureCAV(VARIANT_BOOL*);
-    HRESULT get_SupportedWriteSpeeds(SAFEARRAY**);
-    HRESULT get_SupportedWriteSpeedDescriptors(SAFEARRAY**);
-    HRESULT put_ForceOverwrite(VARIANT_BOOL);
-    HRESULT get_ForceOverwrite(VARIANT_BOOL*);
-    HRESULT get_MultisessionInterfaces(SAFEARRAY**);
-    HRESULT Write(IStream);
+    HRESULT put_Recorder(IDiscRecorder2 value);
+    HRESULT get_Recorder(IDiscRecorder2* value);
+    HRESULT put_BufferUnderrunFreeDisabled(VARIANT_BOOL value);
+    HRESULT get_BufferUnderrunFreeDisabled(VARIANT_BOOL* value);
+    HRESULT put_PostgapAlreadyInImage(VARIANT_BOOL value);
+    HRESULT get_PostgapAlreadyInImage(VARIANT_BOOL* value);
+    HRESULT get_CurrentMediaStatus(IMAPI_FORMAT2_DATA_MEDIA_STATE* value);
+    HRESULT get_WriteProtectStatus(IMAPI_MEDIA_WRITE_PROTECT_STATE* value);
+    HRESULT get_TotalSectorsOnMedia(int* value);
+    HRESULT get_FreeSectorsOnMedia(int* value);
+    HRESULT get_NextWritableAddress(int* value);
+    HRESULT get_StartAddressOfPreviousSession(int* value);
+    HRESULT get_LastWrittenAddressOfPreviousSession(int* value);
+    HRESULT put_ForceMediaToBeClosed(VARIANT_BOOL value);
+    HRESULT get_ForceMediaToBeClosed(VARIANT_BOOL* value);
+    HRESULT put_DisableConsumerDvdCompatibilityMode(VARIANT_BOOL value);
+    HRESULT get_DisableConsumerDvdCompatibilityMode(VARIANT_BOOL* value);
+    HRESULT get_CurrentPhysicalMediaType(IMAPI_MEDIA_PHYSICAL_TYPE* value);
+    HRESULT put_ClientName(BSTR value);
+    HRESULT get_ClientName(BSTR* value);
+    HRESULT get_RequestedWriteSpeed(int* value);
+    HRESULT get_RequestedRotationTypeIsPureCAV(VARIANT_BOOL* value);
+    HRESULT get_CurrentWriteSpeed(int* value);
+    HRESULT get_CurrentRotationTypeIsPureCAV(VARIANT_BOOL* value);
+    HRESULT get_SupportedWriteSpeeds(SAFEARRAY** supportedSpeeds);
+    HRESULT get_SupportedWriteSpeedDescriptors(SAFEARRAY** supportedSpeedDescriptors);
+    HRESULT put_ForceOverwrite(VARIANT_BOOL value);
+    HRESULT get_ForceOverwrite(VARIANT_BOOL* value);
+    HRESULT get_MultisessionInterfaces(SAFEARRAY** value);
+    HRESULT Write(IStream data);
     HRESULT CancelWrite();
-    HRESULT SetWriteSpeed(int, VARIANT_BOOL);
+    HRESULT SetWriteSpeed(int RequestedSectorsPerSecond, VARIANT_BOOL RotationTypeIsPureCAV);
 }
 enum IID_DDiscFormat2DataEvents = GUID(0x2735413c, 0x7f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface DDiscFormat2DataEvents : IDispatch
 {
-    HRESULT Update(IDispatch, IDispatch);
+    HRESULT Update(IDispatch object, IDispatch progress);
 }
 enum IID_IDiscFormat2DataEventArgs = GUID(0x2735413d, 0x7f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface IDiscFormat2DataEventArgs : IWriteEngine2EventArgs
 {
-    HRESULT get_ElapsedTime(int*);
-    HRESULT get_RemainingTime(int*);
-    HRESULT get_TotalTime(int*);
-    HRESULT get_CurrentAction(IMAPI_FORMAT2_DATA_WRITE_ACTION*);
+    HRESULT get_ElapsedTime(int* value);
+    HRESULT get_RemainingTime(int* value);
+    HRESULT get_TotalTime(int* value);
+    HRESULT get_CurrentAction(IMAPI_FORMAT2_DATA_WRITE_ACTION* value);
 }
 enum IID_IDiscFormat2TrackAtOnce = GUID(0x27354154, 0x8f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface IDiscFormat2TrackAtOnce : IDiscFormat2
 {
     HRESULT PrepareMedia();
-    HRESULT AddAudioTrack(IStream);
+    HRESULT AddAudioTrack(IStream data);
     HRESULT CancelAddTrack();
     HRESULT ReleaseMedia();
-    HRESULT SetWriteSpeed(int, VARIANT_BOOL);
-    HRESULT put_Recorder(IDiscRecorder2);
-    HRESULT get_Recorder(IDiscRecorder2*);
-    HRESULT put_BufferUnderrunFreeDisabled(VARIANT_BOOL);
-    HRESULT get_BufferUnderrunFreeDisabled(VARIANT_BOOL*);
-    HRESULT get_NumberOfExistingTracks(int*);
-    HRESULT get_TotalSectorsOnMedia(int*);
-    HRESULT get_FreeSectorsOnMedia(int*);
-    HRESULT get_UsedSectorsOnMedia(int*);
-    HRESULT put_DoNotFinalizeMedia(VARIANT_BOOL);
-    HRESULT get_DoNotFinalizeMedia(VARIANT_BOOL*);
-    HRESULT get_ExpectedTableOfContents(SAFEARRAY**);
-    HRESULT get_CurrentPhysicalMediaType(IMAPI_MEDIA_PHYSICAL_TYPE*);
-    HRESULT put_ClientName(BSTR);
-    HRESULT get_ClientName(BSTR*);
-    HRESULT get_RequestedWriteSpeed(int*);
-    HRESULT get_RequestedRotationTypeIsPureCAV(VARIANT_BOOL*);
-    HRESULT get_CurrentWriteSpeed(int*);
-    HRESULT get_CurrentRotationTypeIsPureCAV(VARIANT_BOOL*);
-    HRESULT get_SupportedWriteSpeeds(SAFEARRAY**);
-    HRESULT get_SupportedWriteSpeedDescriptors(SAFEARRAY**);
+    HRESULT SetWriteSpeed(int RequestedSectorsPerSecond, VARIANT_BOOL RotationTypeIsPureCAV);
+    HRESULT put_Recorder(IDiscRecorder2 value);
+    HRESULT get_Recorder(IDiscRecorder2* value);
+    HRESULT put_BufferUnderrunFreeDisabled(VARIANT_BOOL value);
+    HRESULT get_BufferUnderrunFreeDisabled(VARIANT_BOOL* value);
+    HRESULT get_NumberOfExistingTracks(int* value);
+    HRESULT get_TotalSectorsOnMedia(int* value);
+    HRESULT get_FreeSectorsOnMedia(int* value);
+    HRESULT get_UsedSectorsOnMedia(int* value);
+    HRESULT put_DoNotFinalizeMedia(VARIANT_BOOL value);
+    HRESULT get_DoNotFinalizeMedia(VARIANT_BOOL* value);
+    HRESULT get_ExpectedTableOfContents(SAFEARRAY** value);
+    HRESULT get_CurrentPhysicalMediaType(IMAPI_MEDIA_PHYSICAL_TYPE* value);
+    HRESULT put_ClientName(BSTR value);
+    HRESULT get_ClientName(BSTR* value);
+    HRESULT get_RequestedWriteSpeed(int* value);
+    HRESULT get_RequestedRotationTypeIsPureCAV(VARIANT_BOOL* value);
+    HRESULT get_CurrentWriteSpeed(int* value);
+    HRESULT get_CurrentRotationTypeIsPureCAV(VARIANT_BOOL* value);
+    HRESULT get_SupportedWriteSpeeds(SAFEARRAY** supportedSpeeds);
+    HRESULT get_SupportedWriteSpeedDescriptors(SAFEARRAY** supportedSpeedDescriptors);
 }
 enum IID_DDiscFormat2TrackAtOnceEvents = GUID(0x2735413f, 0x7f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface DDiscFormat2TrackAtOnceEvents : IDispatch
 {
-    HRESULT Update(IDispatch, IDispatch);
+    HRESULT Update(IDispatch object, IDispatch progress);
 }
 enum IID_IDiscFormat2TrackAtOnceEventArgs = GUID(0x27354140, 0x7f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface IDiscFormat2TrackAtOnceEventArgs : IWriteEngine2EventArgs
 {
-    HRESULT get_CurrentTrackNumber(int*);
-    HRESULT get_CurrentAction(IMAPI_FORMAT2_TAO_WRITE_ACTION*);
-    HRESULT get_ElapsedTime(int*);
-    HRESULT get_RemainingTime(int*);
+    HRESULT get_CurrentTrackNumber(int* value);
+    HRESULT get_CurrentAction(IMAPI_FORMAT2_TAO_WRITE_ACTION* value);
+    HRESULT get_ElapsedTime(int* value);
+    HRESULT get_RemainingTime(int* value);
 }
 enum IID_IDiscFormat2RawCD = GUID(0x27354155, 0x8f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface IDiscFormat2RawCD : IDiscFormat2
 {
     HRESULT PrepareMedia();
-    HRESULT WriteMedia(IStream);
-    HRESULT WriteMedia2(IStream, int);
+    HRESULT WriteMedia(IStream data);
+    HRESULT WriteMedia2(IStream data, int streamLeadInSectors);
     HRESULT CancelWrite();
     HRESULT ReleaseMedia();
-    HRESULT SetWriteSpeed(int, VARIANT_BOOL);
-    HRESULT put_Recorder(IDiscRecorder2);
-    HRESULT get_Recorder(IDiscRecorder2*);
-    HRESULT put_BufferUnderrunFreeDisabled(VARIANT_BOOL);
-    HRESULT get_BufferUnderrunFreeDisabled(VARIANT_BOOL*);
-    HRESULT get_StartOfNextSession(int*);
-    HRESULT get_LastPossibleStartOfLeadout(int*);
-    HRESULT get_CurrentPhysicalMediaType(IMAPI_MEDIA_PHYSICAL_TYPE*);
-    HRESULT get_SupportedSectorTypes(SAFEARRAY**);
-    HRESULT put_RequestedSectorType(IMAPI_FORMAT2_RAW_CD_DATA_SECTOR_TYPE);
-    HRESULT get_RequestedSectorType(IMAPI_FORMAT2_RAW_CD_DATA_SECTOR_TYPE*);
-    HRESULT put_ClientName(BSTR);
-    HRESULT get_ClientName(BSTR*);
-    HRESULT get_RequestedWriteSpeed(int*);
-    HRESULT get_RequestedRotationTypeIsPureCAV(VARIANT_BOOL*);
-    HRESULT get_CurrentWriteSpeed(int*);
-    HRESULT get_CurrentRotationTypeIsPureCAV(VARIANT_BOOL*);
-    HRESULT get_SupportedWriteSpeeds(SAFEARRAY**);
-    HRESULT get_SupportedWriteSpeedDescriptors(SAFEARRAY**);
+    HRESULT SetWriteSpeed(int RequestedSectorsPerSecond, VARIANT_BOOL RotationTypeIsPureCAV);
+    HRESULT put_Recorder(IDiscRecorder2 value);
+    HRESULT get_Recorder(IDiscRecorder2* value);
+    HRESULT put_BufferUnderrunFreeDisabled(VARIANT_BOOL value);
+    HRESULT get_BufferUnderrunFreeDisabled(VARIANT_BOOL* value);
+    HRESULT get_StartOfNextSession(int* value);
+    HRESULT get_LastPossibleStartOfLeadout(int* value);
+    HRESULT get_CurrentPhysicalMediaType(IMAPI_MEDIA_PHYSICAL_TYPE* value);
+    HRESULT get_SupportedSectorTypes(SAFEARRAY** value);
+    HRESULT put_RequestedSectorType(IMAPI_FORMAT2_RAW_CD_DATA_SECTOR_TYPE value);
+    HRESULT get_RequestedSectorType(IMAPI_FORMAT2_RAW_CD_DATA_SECTOR_TYPE* value);
+    HRESULT put_ClientName(BSTR value);
+    HRESULT get_ClientName(BSTR* value);
+    HRESULT get_RequestedWriteSpeed(int* value);
+    HRESULT get_RequestedRotationTypeIsPureCAV(VARIANT_BOOL* value);
+    HRESULT get_CurrentWriteSpeed(int* value);
+    HRESULT get_CurrentRotationTypeIsPureCAV(VARIANT_BOOL* value);
+    HRESULT get_SupportedWriteSpeeds(SAFEARRAY** supportedSpeeds);
+    HRESULT get_SupportedWriteSpeedDescriptors(SAFEARRAY** supportedSpeedDescriptors);
 }
 enum IID_DDiscFormat2RawCDEvents = GUID(0x27354142, 0x7f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface DDiscFormat2RawCDEvents : IDispatch
 {
-    HRESULT Update(IDispatch, IDispatch);
+    HRESULT Update(IDispatch object, IDispatch progress);
 }
 enum IID_IDiscFormat2RawCDEventArgs = GUID(0x27354143, 0x7f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface IDiscFormat2RawCDEventArgs : IWriteEngine2EventArgs
 {
-    HRESULT get_CurrentAction(IMAPI_FORMAT2_RAW_CD_WRITE_ACTION*);
-    HRESULT get_ElapsedTime(int*);
-    HRESULT get_RemainingTime(int*);
+    HRESULT get_CurrentAction(IMAPI_FORMAT2_RAW_CD_WRITE_ACTION* value);
+    HRESULT get_ElapsedTime(int* value);
+    HRESULT get_RemainingTime(int* value);
 }
 enum IID_IBurnVerification = GUID(0xd2ffd834, 0x958b, 0x426d, [0x84, 0x70, 0x2a, 0x13, 0x87, 0x9c, 0x6a, 0x91]);
 interface IBurnVerification : IUnknown
 {
-    HRESULT put_BurnVerificationLevel(IMAPI_BURN_VERIFICATION_LEVEL);
-    HRESULT get_BurnVerificationLevel(IMAPI_BURN_VERIFICATION_LEVEL*);
+    HRESULT put_BurnVerificationLevel(IMAPI_BURN_VERIFICATION_LEVEL value);
+    HRESULT get_BurnVerificationLevel(IMAPI_BURN_VERIFICATION_LEVEL* value);
 }
 enum IID_IWriteSpeedDescriptor = GUID(0x27354144, 0x7f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface IWriteSpeedDescriptor : IDispatch
 {
-    HRESULT get_MediaType(IMAPI_MEDIA_PHYSICAL_TYPE*);
-    HRESULT get_RotationTypeIsPureCAV(VARIANT_BOOL*);
-    HRESULT get_WriteSpeed(int*);
+    HRESULT get_MediaType(IMAPI_MEDIA_PHYSICAL_TYPE* value);
+    HRESULT get_RotationTypeIsPureCAV(VARIANT_BOOL* value);
+    HRESULT get_WriteSpeed(int* value);
 }
 enum IID_IMultisession = GUID(0x27354150, 0x7f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface IMultisession : IDispatch
 {
-    HRESULT get_IsSupportedOnCurrentMediaState(VARIANT_BOOL*);
-    HRESULT put_InUse(VARIANT_BOOL);
-    HRESULT get_InUse(VARIANT_BOOL*);
-    HRESULT get_ImportRecorder(IDiscRecorder2*);
+    HRESULT get_IsSupportedOnCurrentMediaState(VARIANT_BOOL* value);
+    HRESULT put_InUse(VARIANT_BOOL value);
+    HRESULT get_InUse(VARIANT_BOOL* value);
+    HRESULT get_ImportRecorder(IDiscRecorder2* value);
 }
 enum IID_IMultisessionSequential = GUID(0x27354151, 0x7f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface IMultisessionSequential : IMultisession
 {
-    HRESULT get_IsFirstDataSession(VARIANT_BOOL*);
-    HRESULT get_StartAddressOfPreviousSession(int*);
-    HRESULT get_LastWrittenAddressOfPreviousSession(int*);
-    HRESULT get_NextWritableAddress(int*);
-    HRESULT get_FreeSectorsOnMedia(int*);
+    HRESULT get_IsFirstDataSession(VARIANT_BOOL* value);
+    HRESULT get_StartAddressOfPreviousSession(int* value);
+    HRESULT get_LastWrittenAddressOfPreviousSession(int* value);
+    HRESULT get_NextWritableAddress(int* value);
+    HRESULT get_FreeSectorsOnMedia(int* value);
 }
 enum IID_IMultisessionSequential2 = GUID(0xb507ca22, 0x2204, 0x11dd, [0x96, 0x6a, 0x0, 0x1a, 0xa0, 0x1b, 0xbc, 0x58]);
 interface IMultisessionSequential2 : IMultisessionSequential
 {
-    HRESULT get_WriteUnitSize(int*);
+    HRESULT get_WriteUnitSize(int* value);
 }
 enum IID_IMultisessionRandomWrite = GUID(0xb507ca23, 0x2204, 0x11dd, [0x96, 0x6a, 0x0, 0x1a, 0xa0, 0x1b, 0xbc, 0x58]);
 interface IMultisessionRandomWrite : IMultisession
 {
-    HRESULT get_WriteUnitSize(int*);
-    HRESULT get_LastWrittenAddress(int*);
-    HRESULT get_TotalSectorsOnMedia(int*);
+    HRESULT get_WriteUnitSize(int* value);
+    HRESULT get_LastWrittenAddress(int* value);
+    HRESULT get_TotalSectorsOnMedia(int* value);
 }
 enum IID_IStreamPseudoRandomBased = GUID(0x27354145, 0x7f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface IStreamPseudoRandomBased : IStream
 {
-    HRESULT put_Seed(uint);
-    HRESULT get_Seed(uint*);
-    HRESULT put_ExtendedSeed(uint*, uint);
-    HRESULT get_ExtendedSeed(uint**, uint*);
+    HRESULT put_Seed(uint value);
+    HRESULT get_Seed(uint* value);
+    HRESULT put_ExtendedSeed(uint* values, uint eCount);
+    HRESULT get_ExtendedSeed(uint** values, uint* eCount);
 }
 enum IID_IStreamConcatenate = GUID(0x27354146, 0x7f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface IStreamConcatenate : IStream
 {
-    HRESULT Initialize(IStream, IStream);
-    HRESULT Initialize2(IStream*, uint);
-    HRESULT Append(IStream);
-    HRESULT Append2(IStream*, uint);
+    HRESULT Initialize(IStream stream1, IStream stream2);
+    HRESULT Initialize2(IStream* streams, uint streamCount);
+    HRESULT Append(IStream stream);
+    HRESULT Append2(IStream* streams, uint streamCount);
 }
 enum IID_IStreamInterleave = GUID(0x27354147, 0x7f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 interface IStreamInterleave : IStream
 {
-    HRESULT Initialize(IStream*, uint*, uint);
+    HRESULT Initialize(IStream* streams, uint* interleaveSizes, uint streamCount);
 }
 enum IID_IRawCDImageCreator = GUID(0x25983550, 0x9d65, 0x49ce, [0xb3, 0x35, 0x40, 0x63, 0xd, 0x90, 0x12, 0x27]);
 interface IRawCDImageCreator : IDispatch
 {
-    HRESULT CreateResultImage(IStream*);
-    HRESULT AddTrack(IMAPI_CD_SECTOR_TYPE, IStream, int*);
-    HRESULT AddSpecialPregap(IStream);
-    HRESULT AddSubcodeRWGenerator(IStream);
-    HRESULT put_ResultingImageType(IMAPI_FORMAT2_RAW_CD_DATA_SECTOR_TYPE);
-    HRESULT get_ResultingImageType(IMAPI_FORMAT2_RAW_CD_DATA_SECTOR_TYPE*);
-    HRESULT get_StartOfLeadout(int*);
-    HRESULT put_StartOfLeadoutLimit(int);
-    HRESULT get_StartOfLeadoutLimit(int*);
-    HRESULT put_DisableGaplessAudio(VARIANT_BOOL);
-    HRESULT get_DisableGaplessAudio(VARIANT_BOOL*);
-    HRESULT put_MediaCatalogNumber(BSTR);
-    HRESULT get_MediaCatalogNumber(BSTR*);
-    HRESULT put_StartingTrackNumber(int);
-    HRESULT get_StartingTrackNumber(int*);
-    HRESULT get_TrackInfo(int, IRawCDImageTrackInfo*);
-    HRESULT get_NumberOfExistingTracks(int*);
-    HRESULT get_LastUsedUserSectorInImage(int*);
-    HRESULT get_ExpectedTableOfContents(SAFEARRAY**);
+    HRESULT CreateResultImage(IStream* resultStream);
+    HRESULT AddTrack(IMAPI_CD_SECTOR_TYPE dataType, IStream data, int* trackIndex);
+    HRESULT AddSpecialPregap(IStream data);
+    HRESULT AddSubcodeRWGenerator(IStream subcode);
+    HRESULT put_ResultingImageType(IMAPI_FORMAT2_RAW_CD_DATA_SECTOR_TYPE value);
+    HRESULT get_ResultingImageType(IMAPI_FORMAT2_RAW_CD_DATA_SECTOR_TYPE* value);
+    HRESULT get_StartOfLeadout(int* value);
+    HRESULT put_StartOfLeadoutLimit(int value);
+    HRESULT get_StartOfLeadoutLimit(int* value);
+    HRESULT put_DisableGaplessAudio(VARIANT_BOOL value);
+    HRESULT get_DisableGaplessAudio(VARIANT_BOOL* value);
+    HRESULT put_MediaCatalogNumber(BSTR value);
+    HRESULT get_MediaCatalogNumber(BSTR* value);
+    HRESULT put_StartingTrackNumber(int value);
+    HRESULT get_StartingTrackNumber(int* value);
+    HRESULT get_TrackInfo(int trackIndex, IRawCDImageTrackInfo* value);
+    HRESULT get_NumberOfExistingTracks(int* value);
+    HRESULT get_LastUsedUserSectorInImage(int* value);
+    HRESULT get_ExpectedTableOfContents(SAFEARRAY** value);
 }
 enum IID_IRawCDImageTrackInfo = GUID(0x25983551, 0x9d65, 0x49ce, [0xb3, 0x35, 0x40, 0x63, 0xd, 0x90, 0x12, 0x27]);
 interface IRawCDImageTrackInfo : IDispatch
 {
-    HRESULT get_StartingLba(int*);
-    HRESULT get_SectorCount(int*);
-    HRESULT get_TrackNumber(int*);
-    HRESULT get_SectorType(IMAPI_CD_SECTOR_TYPE*);
-    HRESULT get_ISRC(BSTR*);
-    HRESULT put_ISRC(BSTR);
-    HRESULT get_DigitalAudioCopySetting(IMAPI_CD_TRACK_DIGITAL_COPY_SETTING*);
-    HRESULT put_DigitalAudioCopySetting(IMAPI_CD_TRACK_DIGITAL_COPY_SETTING);
-    HRESULT get_AudioHasPreemphasis(VARIANT_BOOL*);
-    HRESULT put_AudioHasPreemphasis(VARIANT_BOOL);
-    HRESULT get_TrackIndexes(SAFEARRAY**);
-    HRESULT AddTrackIndex(int);
-    HRESULT ClearTrackIndex(int);
+    HRESULT get_StartingLba(int* value);
+    HRESULT get_SectorCount(int* value);
+    HRESULT get_TrackNumber(int* value);
+    HRESULT get_SectorType(IMAPI_CD_SECTOR_TYPE* value);
+    HRESULT get_ISRC(BSTR* value);
+    HRESULT put_ISRC(BSTR value);
+    HRESULT get_DigitalAudioCopySetting(IMAPI_CD_TRACK_DIGITAL_COPY_SETTING* value);
+    HRESULT put_DigitalAudioCopySetting(IMAPI_CD_TRACK_DIGITAL_COPY_SETTING value);
+    HRESULT get_AudioHasPreemphasis(VARIANT_BOOL* value);
+    HRESULT put_AudioHasPreemphasis(VARIANT_BOOL value);
+    HRESULT get_TrackIndexes(SAFEARRAY** value);
+    HRESULT AddTrackIndex(int lbaOffset);
+    HRESULT ClearTrackIndex(int lbaOffset);
 }
 enum IID_IBlockRange = GUID(0xb507ca25, 0x2204, 0x11dd, [0x96, 0x6a, 0x0, 0x1a, 0xa0, 0x1b, 0xbc, 0x58]);
 interface IBlockRange : IDispatch
 {
-    HRESULT get_StartLba(int*);
-    HRESULT get_EndLba(int*);
+    HRESULT get_StartLba(int* value);
+    HRESULT get_EndLba(int* value);
 }
 enum IID_IBlockRangeList = GUID(0xb507ca26, 0x2204, 0x11dd, [0x96, 0x6a, 0x0, 0x1a, 0xa0, 0x1b, 0xbc, 0x58]);
 interface IBlockRangeList : IDispatch
 {
-    HRESULT get_BlockRanges(SAFEARRAY**);
+    HRESULT get_BlockRanges(SAFEARRAY** value);
 }
 enum CLSID_MsftDiscMaster2 = GUID(0x2735412e, 0x7f64, 0x5b0f, [0x8f, 0x0, 0x5d, 0x77, 0xaf, 0xbe, 0x26, 0x1e]);
 struct MsftDiscMaster2
@@ -1026,210 +1026,210 @@ enum : int
 enum IID_IBootOptions = GUID(0x2c941fd4, 0x975b, 0x59be, [0xa9, 0x60, 0x9a, 0x2a, 0x26, 0x28, 0x53, 0xa5]);
 interface IBootOptions : IDispatch
 {
-    HRESULT get_BootImage(IStream*);
-    HRESULT get_Manufacturer(BSTR*);
-    HRESULT put_Manufacturer(BSTR);
-    HRESULT get_PlatformId(PlatformId*);
-    HRESULT put_PlatformId(PlatformId);
-    HRESULT get_Emulation(EmulationType*);
-    HRESULT put_Emulation(EmulationType);
-    HRESULT get_ImageSize(uint*);
-    HRESULT AssignBootImage(IStream);
+    HRESULT get_BootImage(IStream* pVal);
+    HRESULT get_Manufacturer(BSTR* pVal);
+    HRESULT put_Manufacturer(BSTR newVal);
+    HRESULT get_PlatformId(PlatformId* pVal);
+    HRESULT put_PlatformId(PlatformId newVal);
+    HRESULT get_Emulation(EmulationType* pVal);
+    HRESULT put_Emulation(EmulationType newVal);
+    HRESULT get_ImageSize(uint* pVal);
+    HRESULT AssignBootImage(IStream newVal);
 }
 enum IID_IProgressItem = GUID(0x2c941fd5, 0x975b, 0x59be, [0xa9, 0x60, 0x9a, 0x2a, 0x26, 0x28, 0x53, 0xa5]);
 interface IProgressItem : IDispatch
 {
-    HRESULT get_Description(BSTR*);
-    HRESULT get_FirstBlock(uint*);
-    HRESULT get_LastBlock(uint*);
-    HRESULT get_BlockCount(uint*);
+    HRESULT get_Description(BSTR* desc);
+    HRESULT get_FirstBlock(uint* block);
+    HRESULT get_LastBlock(uint* block);
+    HRESULT get_BlockCount(uint* blocks);
 }
 enum IID_IEnumProgressItems = GUID(0x2c941fd6, 0x975b, 0x59be, [0xa9, 0x60, 0x9a, 0x2a, 0x26, 0x28, 0x53, 0xa5]);
 interface IEnumProgressItems : IUnknown
 {
-    HRESULT Next(uint, IProgressItem*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IProgressItem* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumProgressItems*);
+    HRESULT Clone(IEnumProgressItems* ppEnum);
 }
 enum IID_IProgressItems = GUID(0x2c941fd7, 0x975b, 0x59be, [0xa9, 0x60, 0x9a, 0x2a, 0x26, 0x28, 0x53, 0xa5]);
 interface IProgressItems : IDispatch
 {
-    HRESULT get__NewEnum(IEnumVARIANT*);
-    HRESULT get_Item(int, IProgressItem*);
-    HRESULT get_Count(int*);
-    HRESULT ProgressItemFromBlock(uint, IProgressItem*);
-    HRESULT ProgressItemFromDescription(BSTR, IProgressItem*);
-    HRESULT get_EnumProgressItems(IEnumProgressItems*);
+    HRESULT get__NewEnum(IEnumVARIANT* NewEnum);
+    HRESULT get_Item(int Index, IProgressItem* item);
+    HRESULT get_Count(int* Count);
+    HRESULT ProgressItemFromBlock(uint block, IProgressItem* item);
+    HRESULT ProgressItemFromDescription(BSTR description, IProgressItem* item);
+    HRESULT get_EnumProgressItems(IEnumProgressItems* NewEnum);
 }
 enum IID_IFileSystemImageResult = GUID(0x2c941fd8, 0x975b, 0x59be, [0xa9, 0x60, 0x9a, 0x2a, 0x26, 0x28, 0x53, 0xa5]);
 interface IFileSystemImageResult : IDispatch
 {
-    HRESULT get_ImageStream(IStream*);
-    HRESULT get_ProgressItems(IProgressItems*);
-    HRESULT get_TotalBlocks(int*);
-    HRESULT get_BlockSize(int*);
-    HRESULT get_DiscId(BSTR*);
+    HRESULT get_ImageStream(IStream* pVal);
+    HRESULT get_ProgressItems(IProgressItems* pVal);
+    HRESULT get_TotalBlocks(int* pVal);
+    HRESULT get_BlockSize(int* pVal);
+    HRESULT get_DiscId(BSTR* pVal);
 }
 enum IID_IFileSystemImageResult2 = GUID(0xb507ca29, 0x2204, 0x11dd, [0x96, 0x6a, 0x0, 0x1a, 0xa0, 0x1b, 0xbc, 0x58]);
 interface IFileSystemImageResult2 : IFileSystemImageResult
 {
-    HRESULT get_ModifiedBlocks(IBlockRangeList*);
+    HRESULT get_ModifiedBlocks(IBlockRangeList* pVal);
 }
 enum IID_IFsiItem = GUID(0x2c941fd9, 0x975b, 0x59be, [0xa9, 0x60, 0x9a, 0x2a, 0x26, 0x28, 0x53, 0xa5]);
 interface IFsiItem : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_FullPath(BSTR*);
-    HRESULT get_CreationTime(double*);
-    HRESULT put_CreationTime(double);
-    HRESULT get_LastAccessedTime(double*);
-    HRESULT put_LastAccessedTime(double);
-    HRESULT get_LastModifiedTime(double*);
-    HRESULT put_LastModifiedTime(double);
-    HRESULT get_IsHidden(VARIANT_BOOL*);
-    HRESULT put_IsHidden(VARIANT_BOOL);
-    HRESULT FileSystemName(FsiFileSystems, BSTR*);
-    HRESULT FileSystemPath(FsiFileSystems, BSTR*);
+    HRESULT get_Name(BSTR* pVal);
+    HRESULT get_FullPath(BSTR* pVal);
+    HRESULT get_CreationTime(double* pVal);
+    HRESULT put_CreationTime(double newVal);
+    HRESULT get_LastAccessedTime(double* pVal);
+    HRESULT put_LastAccessedTime(double newVal);
+    HRESULT get_LastModifiedTime(double* pVal);
+    HRESULT put_LastModifiedTime(double newVal);
+    HRESULT get_IsHidden(VARIANT_BOOL* pVal);
+    HRESULT put_IsHidden(VARIANT_BOOL newVal);
+    HRESULT FileSystemName(FsiFileSystems fileSystem, BSTR* pVal);
+    HRESULT FileSystemPath(FsiFileSystems fileSystem, BSTR* pVal);
 }
 enum IID_IEnumFsiItems = GUID(0x2c941fda, 0x975b, 0x59be, [0xa9, 0x60, 0x9a, 0x2a, 0x26, 0x28, 0x53, 0xa5]);
 interface IEnumFsiItems : IUnknown
 {
-    HRESULT Next(uint, IFsiItem*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IFsiItem* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumFsiItems*);
+    HRESULT Clone(IEnumFsiItems* ppEnum);
 }
 enum IID_IFsiFileItem = GUID(0x2c941fdb, 0x975b, 0x59be, [0xa9, 0x60, 0x9a, 0x2a, 0x26, 0x28, 0x53, 0xa5]);
 interface IFsiFileItem : IFsiItem
 {
-    HRESULT get_DataSize(long*);
-    HRESULT get_DataSize32BitLow(int*);
-    HRESULT get_DataSize32BitHigh(int*);
-    HRESULT get_Data(IStream*);
-    HRESULT put_Data(IStream);
+    HRESULT get_DataSize(long* pVal);
+    HRESULT get_DataSize32BitLow(int* pVal);
+    HRESULT get_DataSize32BitHigh(int* pVal);
+    HRESULT get_Data(IStream* pVal);
+    HRESULT put_Data(IStream newVal);
 }
 enum IID_IFsiFileItem2 = GUID(0x199d0c19, 0x11e1, 0x40eb, [0x8e, 0xc2, 0xc8, 0xc8, 0x22, 0xa0, 0x77, 0x92]);
 interface IFsiFileItem2 : IFsiFileItem
 {
-    HRESULT get_FsiNamedStreams(IFsiNamedStreams*);
-    HRESULT get_IsNamedStream(VARIANT_BOOL*);
-    HRESULT AddStream(BSTR, IStream);
-    HRESULT RemoveStream(BSTR);
-    HRESULT get_IsRealTime(VARIANT_BOOL*);
-    HRESULT put_IsRealTime(VARIANT_BOOL);
+    HRESULT get_FsiNamedStreams(IFsiNamedStreams* streams);
+    HRESULT get_IsNamedStream(VARIANT_BOOL* pVal);
+    HRESULT AddStream(BSTR name, IStream streamData);
+    HRESULT RemoveStream(BSTR name);
+    HRESULT get_IsRealTime(VARIANT_BOOL* pVal);
+    HRESULT put_IsRealTime(VARIANT_BOOL newVal);
 }
 enum IID_IFsiNamedStreams = GUID(0xed79ba56, 0x5294, 0x4250, [0x8d, 0x46, 0xf9, 0xae, 0xce, 0xe2, 0x34, 0x59]);
 interface IFsiNamedStreams : IDispatch
 {
-    HRESULT get__NewEnum(IEnumVARIANT*);
-    HRESULT get_Item(int, IFsiFileItem2*);
-    HRESULT get_Count(int*);
-    HRESULT get_EnumNamedStreams(IEnumFsiItems*);
+    HRESULT get__NewEnum(IEnumVARIANT* NewEnum);
+    HRESULT get_Item(int index, IFsiFileItem2* item);
+    HRESULT get_Count(int* count);
+    HRESULT get_EnumNamedStreams(IEnumFsiItems* NewEnum);
 }
 enum IID_IFsiDirectoryItem = GUID(0x2c941fdc, 0x975b, 0x59be, [0xa9, 0x60, 0x9a, 0x2a, 0x26, 0x28, 0x53, 0xa5]);
 interface IFsiDirectoryItem : IFsiItem
 {
-    HRESULT get__NewEnum(IEnumVARIANT*);
-    HRESULT get_Item(BSTR, IFsiItem*);
-    HRESULT get_Count(int*);
-    HRESULT get_EnumFsiItems(IEnumFsiItems*);
-    HRESULT AddDirectory(BSTR);
-    HRESULT AddFile(BSTR, IStream);
-    HRESULT AddTree(BSTR, VARIANT_BOOL);
-    HRESULT Add(IFsiItem);
-    HRESULT Remove(BSTR);
-    HRESULT RemoveTree(BSTR);
+    HRESULT get__NewEnum(IEnumVARIANT* NewEnum);
+    HRESULT get_Item(BSTR path, IFsiItem* item);
+    HRESULT get_Count(int* Count);
+    HRESULT get_EnumFsiItems(IEnumFsiItems* NewEnum);
+    HRESULT AddDirectory(BSTR path);
+    HRESULT AddFile(BSTR path, IStream fileData);
+    HRESULT AddTree(BSTR sourceDirectory, VARIANT_BOOL includeBaseDirectory);
+    HRESULT Add(IFsiItem item);
+    HRESULT Remove(BSTR path);
+    HRESULT RemoveTree(BSTR path);
 }
 enum IID_IFsiDirectoryItem2 = GUID(0xf7fb4b9b, 0x6d96, 0x4d7b, [0x91, 0x15, 0x20, 0x1b, 0x14, 0x48, 0x11, 0xef]);
 interface IFsiDirectoryItem2 : IFsiDirectoryItem
 {
-    HRESULT AddTreeWithNamedStreams(BSTR, VARIANT_BOOL);
+    HRESULT AddTreeWithNamedStreams(BSTR sourceDirectory, VARIANT_BOOL includeBaseDirectory);
 }
 enum IID_IFileSystemImage = GUID(0x2c941fe1, 0x975b, 0x59be, [0xa9, 0x60, 0x9a, 0x2a, 0x26, 0x28, 0x53, 0xa5]);
 interface IFileSystemImage : IDispatch
 {
-    HRESULT get_Root(IFsiDirectoryItem*);
-    HRESULT get_SessionStartBlock(int*);
-    HRESULT put_SessionStartBlock(int);
-    HRESULT get_FreeMediaBlocks(int*);
-    HRESULT put_FreeMediaBlocks(int);
-    HRESULT SetMaxMediaBlocksFromDevice(IDiscRecorder2);
-    HRESULT get_UsedBlocks(int*);
-    HRESULT get_VolumeName(BSTR*);
-    HRESULT put_VolumeName(BSTR);
-    HRESULT get_ImportedVolumeName(BSTR*);
-    HRESULT get_BootImageOptions(IBootOptions*);
-    HRESULT put_BootImageOptions(IBootOptions);
-    HRESULT get_FileCount(int*);
-    HRESULT get_DirectoryCount(int*);
-    HRESULT get_WorkingDirectory(BSTR*);
-    HRESULT put_WorkingDirectory(BSTR);
-    HRESULT get_ChangePoint(int*);
-    HRESULT get_StrictFileSystemCompliance(VARIANT_BOOL*);
-    HRESULT put_StrictFileSystemCompliance(VARIANT_BOOL);
-    HRESULT get_UseRestrictedCharacterSet(VARIANT_BOOL*);
-    HRESULT put_UseRestrictedCharacterSet(VARIANT_BOOL);
-    HRESULT get_FileSystemsToCreate(FsiFileSystems*);
-    HRESULT put_FileSystemsToCreate(FsiFileSystems);
-    HRESULT get_FileSystemsSupported(FsiFileSystems*);
-    HRESULT put_UDFRevision(int);
-    HRESULT get_UDFRevision(int*);
-    HRESULT get_UDFRevisionsSupported(SAFEARRAY**);
-    HRESULT ChooseImageDefaults(IDiscRecorder2);
-    HRESULT ChooseImageDefaultsForMediaType(IMAPI_MEDIA_PHYSICAL_TYPE);
-    HRESULT put_ISO9660InterchangeLevel(int);
-    HRESULT get_ISO9660InterchangeLevel(int*);
-    HRESULT get_ISO9660InterchangeLevelsSupported(SAFEARRAY**);
-    HRESULT CreateResultImage(IFileSystemImageResult*);
-    HRESULT Exists(BSTR, FsiItemType*);
-    HRESULT CalculateDiscIdentifier(BSTR*);
-    HRESULT IdentifyFileSystemsOnDisc(IDiscRecorder2, FsiFileSystems*);
-    HRESULT GetDefaultFileSystemForImport(FsiFileSystems, FsiFileSystems*);
-    HRESULT ImportFileSystem(FsiFileSystems*);
-    HRESULT ImportSpecificFileSystem(FsiFileSystems);
-    HRESULT RollbackToChangePoint(int);
+    HRESULT get_Root(IFsiDirectoryItem* pVal);
+    HRESULT get_SessionStartBlock(int* pVal);
+    HRESULT put_SessionStartBlock(int newVal);
+    HRESULT get_FreeMediaBlocks(int* pVal);
+    HRESULT put_FreeMediaBlocks(int newVal);
+    HRESULT SetMaxMediaBlocksFromDevice(IDiscRecorder2 discRecorder);
+    HRESULT get_UsedBlocks(int* pVal);
+    HRESULT get_VolumeName(BSTR* pVal);
+    HRESULT put_VolumeName(BSTR newVal);
+    HRESULT get_ImportedVolumeName(BSTR* pVal);
+    HRESULT get_BootImageOptions(IBootOptions* pVal);
+    HRESULT put_BootImageOptions(IBootOptions newVal);
+    HRESULT get_FileCount(int* pVal);
+    HRESULT get_DirectoryCount(int* pVal);
+    HRESULT get_WorkingDirectory(BSTR* pVal);
+    HRESULT put_WorkingDirectory(BSTR newVal);
+    HRESULT get_ChangePoint(int* pVal);
+    HRESULT get_StrictFileSystemCompliance(VARIANT_BOOL* pVal);
+    HRESULT put_StrictFileSystemCompliance(VARIANT_BOOL newVal);
+    HRESULT get_UseRestrictedCharacterSet(VARIANT_BOOL* pVal);
+    HRESULT put_UseRestrictedCharacterSet(VARIANT_BOOL newVal);
+    HRESULT get_FileSystemsToCreate(FsiFileSystems* pVal);
+    HRESULT put_FileSystemsToCreate(FsiFileSystems newVal);
+    HRESULT get_FileSystemsSupported(FsiFileSystems* pVal);
+    HRESULT put_UDFRevision(int newVal);
+    HRESULT get_UDFRevision(int* pVal);
+    HRESULT get_UDFRevisionsSupported(SAFEARRAY** pVal);
+    HRESULT ChooseImageDefaults(IDiscRecorder2 discRecorder);
+    HRESULT ChooseImageDefaultsForMediaType(IMAPI_MEDIA_PHYSICAL_TYPE value);
+    HRESULT put_ISO9660InterchangeLevel(int newVal);
+    HRESULT get_ISO9660InterchangeLevel(int* pVal);
+    HRESULT get_ISO9660InterchangeLevelsSupported(SAFEARRAY** pVal);
+    HRESULT CreateResultImage(IFileSystemImageResult* resultStream);
+    HRESULT Exists(BSTR fullPath, FsiItemType* itemType);
+    HRESULT CalculateDiscIdentifier(BSTR* discIdentifier);
+    HRESULT IdentifyFileSystemsOnDisc(IDiscRecorder2 discRecorder, FsiFileSystems* fileSystems);
+    HRESULT GetDefaultFileSystemForImport(FsiFileSystems fileSystems, FsiFileSystems* importDefault);
+    HRESULT ImportFileSystem(FsiFileSystems* importedFileSystem);
+    HRESULT ImportSpecificFileSystem(FsiFileSystems fileSystemToUse);
+    HRESULT RollbackToChangePoint(int changePoint);
     HRESULT LockInChangePoint();
-    HRESULT CreateDirectoryItem(BSTR, IFsiDirectoryItem*);
-    HRESULT CreateFileItem(BSTR, IFsiFileItem*);
-    HRESULT get_VolumeNameUDF(BSTR*);
-    HRESULT get_VolumeNameJoliet(BSTR*);
-    HRESULT get_VolumeNameISO9660(BSTR*);
-    HRESULT get_StageFiles(VARIANT_BOOL*);
-    HRESULT put_StageFiles(VARIANT_BOOL);
-    HRESULT get_MultisessionInterfaces(SAFEARRAY**);
-    HRESULT put_MultisessionInterfaces(SAFEARRAY*);
+    HRESULT CreateDirectoryItem(BSTR name, IFsiDirectoryItem* newItem);
+    HRESULT CreateFileItem(BSTR name, IFsiFileItem* newItem);
+    HRESULT get_VolumeNameUDF(BSTR* pVal);
+    HRESULT get_VolumeNameJoliet(BSTR* pVal);
+    HRESULT get_VolumeNameISO9660(BSTR* pVal);
+    HRESULT get_StageFiles(VARIANT_BOOL* pVal);
+    HRESULT put_StageFiles(VARIANT_BOOL newVal);
+    HRESULT get_MultisessionInterfaces(SAFEARRAY** pVal);
+    HRESULT put_MultisessionInterfaces(SAFEARRAY* newVal);
 }
 enum IID_IFileSystemImage2 = GUID(0xd7644b2c, 0x1537, 0x4767, [0xb6, 0x2f, 0xf1, 0x38, 0x7b, 0x2, 0xdd, 0xfd]);
 interface IFileSystemImage2 : IFileSystemImage
 {
-    HRESULT get_BootImageOptionsArray(SAFEARRAY**);
-    HRESULT put_BootImageOptionsArray(SAFEARRAY*);
+    HRESULT get_BootImageOptionsArray(SAFEARRAY** pVal);
+    HRESULT put_BootImageOptionsArray(SAFEARRAY* newVal);
 }
 enum IID_IFileSystemImage3 = GUID(0x7cff842c, 0x7e97, 0x4807, [0x83, 0x4, 0x91, 0xd, 0xd8, 0xf7, 0xc0, 0x51]);
 interface IFileSystemImage3 : IFileSystemImage2
 {
-    HRESULT get_CreateRedundantUdfMetadataFiles(VARIANT_BOOL*);
-    HRESULT put_CreateRedundantUdfMetadataFiles(VARIANT_BOOL);
-    HRESULT ProbeSpecificFileSystem(FsiFileSystems, VARIANT_BOOL*);
+    HRESULT get_CreateRedundantUdfMetadataFiles(VARIANT_BOOL* pVal);
+    HRESULT put_CreateRedundantUdfMetadataFiles(VARIANT_BOOL newVal);
+    HRESULT ProbeSpecificFileSystem(FsiFileSystems fileSystemToProbe, VARIANT_BOOL* isAppendable);
 }
 enum IID_DFileSystemImageEvents = GUID(0x2c941fdf, 0x975b, 0x59be, [0xa9, 0x60, 0x9a, 0x2a, 0x26, 0x28, 0x53, 0xa5]);
 interface DFileSystemImageEvents : IDispatch
 {
-    HRESULT Update(IDispatch, BSTR, int, int);
+    HRESULT Update(IDispatch object, BSTR currentFile, int copiedSectors, int totalSectors);
 }
 enum IID_DFileSystemImageImportEvents = GUID(0xd25c30f9, 0x4087, 0x4366, [0x9e, 0x24, 0xe5, 0x5b, 0xe2, 0x86, 0x42, 0x4b]);
 interface DFileSystemImageImportEvents : IDispatch
 {
-    HRESULT UpdateImport(IDispatch, FsiFileSystems, BSTR, int, int, int, int);
+    HRESULT UpdateImport(IDispatch object, FsiFileSystems fileSystem, BSTR currentItem, int importedDirectoryItems, int totalDirectoryItems, int importedFileItems, int totalFileItems);
 }
 enum IID_IIsoImageManager = GUID(0x6ca38be5, 0xfbbb, 0x4800, [0x95, 0xa1, 0xa4, 0x38, 0x86, 0x5e, 0xb0, 0xd4]);
 interface IIsoImageManager : IDispatch
 {
-    HRESULT get_Path(BSTR*);
-    HRESULT get_Stream(IStream*);
-    HRESULT SetPath(BSTR);
-    HRESULT SetStream(IStream);
+    HRESULT get_Path(BSTR* pVal);
+    HRESULT get_Stream(IStream* data);
+    HRESULT SetPath(BSTR Val);
+    HRESULT SetStream(IStream data);
     HRESULT Validate();
 }
 enum CLSID_BootOptions = GUID(0x2c941fce, 0x975b, 0x59be, [0xa9, 0x60, 0x9a, 0x2a, 0x26, 0x28, 0x53, 0xa5]);
@@ -1318,87 +1318,87 @@ enum : int
 enum IID_IDiscRecorder = GUID(0x85ac9776, 0xca88, 0x4cf2, [0x89, 0x4e, 0x9, 0x59, 0x8c, 0x7, 0x8a, 0x41]);
 interface IDiscRecorder : IUnknown
 {
-    HRESULT Init(ubyte*, uint, uint);
-    HRESULT GetRecorderGUID(ubyte*, uint, uint*);
-    HRESULT GetRecorderType(RECORDER_TYPES*);
-    HRESULT GetDisplayNames(BSTR*, BSTR*, BSTR*);
-    HRESULT GetBasePnPID(BSTR*);
-    HRESULT GetPath(BSTR*);
-    HRESULT GetRecorderProperties(IPropertyStorage*);
-    HRESULT SetRecorderProperties(IPropertyStorage);
-    HRESULT GetRecorderState(DISC_RECORDER_STATE_FLAGS*);
+    HRESULT Init(ubyte* pbyUniqueID, uint nulIDSize, uint nulDriveNumber);
+    HRESULT GetRecorderGUID(ubyte* pbyUniqueID, uint ulBufferSize, uint* pulReturnSizeRequired);
+    HRESULT GetRecorderType(RECORDER_TYPES* fTypeCode);
+    HRESULT GetDisplayNames(BSTR* pbstrVendorID, BSTR* pbstrProductID, BSTR* pbstrRevision);
+    HRESULT GetBasePnPID(BSTR* pbstrBasePnPID);
+    HRESULT GetPath(BSTR* pbstrPath);
+    HRESULT GetRecorderProperties(IPropertyStorage* ppPropStg);
+    HRESULT SetRecorderProperties(IPropertyStorage pPropStg);
+    HRESULT GetRecorderState(DISC_RECORDER_STATE_FLAGS* pulDevStateFlags);
     HRESULT OpenExclusive();
-    HRESULT QueryMediaType(MEDIA_TYPES*, MEDIA_FLAGS*);
-    HRESULT QueryMediaInfo(ubyte*, ubyte*, uint*, uint*, uint*);
+    HRESULT QueryMediaType(MEDIA_TYPES* fMediaType, MEDIA_FLAGS* fMediaFlags);
+    HRESULT QueryMediaInfo(ubyte* pbSessions, ubyte* pbLastTrack, uint* ulStartAddress, uint* ulNextWritable, uint* ulFreeBlocks);
     HRESULT Eject();
-    HRESULT Erase(ubyte);
+    HRESULT Erase(ubyte bFullErase);
     HRESULT Close();
 }
 enum IID_IEnumDiscRecorders = GUID(0x9b1921e1, 0x54ac, 0x11d3, [0x91, 0x44, 0x0, 0x10, 0x4b, 0xa1, 0x1c, 0x5e]);
 interface IEnumDiscRecorders : IUnknown
 {
-    HRESULT Next(uint, IDiscRecorder*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint cRecorders, IDiscRecorder* ppRecorder, uint* pcFetched);
+    HRESULT Skip(uint cRecorders);
     HRESULT Reset();
-    HRESULT Clone(IEnumDiscRecorders*);
+    HRESULT Clone(IEnumDiscRecorders* ppEnum);
 }
 enum IID_IEnumDiscMasterFormats = GUID(0xddf445e1, 0x54ba, 0x11d3, [0x91, 0x44, 0x0, 0x10, 0x4b, 0xa1, 0x1c, 0x5e]);
 interface IEnumDiscMasterFormats : IUnknown
 {
-    HRESULT Next(uint, GUID*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint cFormats, GUID* lpiidFormatID, uint* pcFetched);
+    HRESULT Skip(uint cFormats);
     HRESULT Reset();
-    HRESULT Clone(IEnumDiscMasterFormats*);
+    HRESULT Clone(IEnumDiscMasterFormats* ppEnum);
 }
 enum IID_IRedbookDiscMaster = GUID(0xe3bc42cd, 0x4e5c, 0x11d3, [0x91, 0x44, 0x0, 0x10, 0x4b, 0xa1, 0x1c, 0x5e]);
 interface IRedbookDiscMaster : IUnknown
 {
-    HRESULT GetTotalAudioTracks(int*);
-    HRESULT GetTotalAudioBlocks(int*);
-    HRESULT GetUsedAudioBlocks(int*);
-    HRESULT GetAvailableAudioTrackBlocks(int*);
-    HRESULT GetAudioBlockSize(int*);
-    HRESULT CreateAudioTrack(int);
-    HRESULT AddAudioTrackBlocks(ubyte*, int);
+    HRESULT GetTotalAudioTracks(int* pnTracks);
+    HRESULT GetTotalAudioBlocks(int* pnBlocks);
+    HRESULT GetUsedAudioBlocks(int* pnBlocks);
+    HRESULT GetAvailableAudioTrackBlocks(int* pnBlocks);
+    HRESULT GetAudioBlockSize(int* pnBlockBytes);
+    HRESULT CreateAudioTrack(int nBlocks);
+    HRESULT AddAudioTrackBlocks(ubyte* pby, int cb);
     HRESULT CloseAudioTrack();
 }
 enum IID_IJolietDiscMaster = GUID(0xe3bc42ce, 0x4e5c, 0x11d3, [0x91, 0x44, 0x0, 0x10, 0x4b, 0xa1, 0x1c, 0x5e]);
 interface IJolietDiscMaster : IUnknown
 {
-    HRESULT GetTotalDataBlocks(int*);
-    HRESULT GetUsedDataBlocks(int*);
-    HRESULT GetDataBlockSize(int*);
-    HRESULT AddData(IStorage, int);
-    HRESULT GetJolietProperties(IPropertyStorage*);
-    HRESULT SetJolietProperties(IPropertyStorage);
+    HRESULT GetTotalDataBlocks(int* pnBlocks);
+    HRESULT GetUsedDataBlocks(int* pnBlocks);
+    HRESULT GetDataBlockSize(int* pnBlockBytes);
+    HRESULT AddData(IStorage pStorage, int lFileOverwrite);
+    HRESULT GetJolietProperties(IPropertyStorage* ppPropStg);
+    HRESULT SetJolietProperties(IPropertyStorage pPropStg);
 }
 enum IID_IDiscMasterProgressEvents = GUID(0xec9e51c1, 0x4e5d, 0x11d3, [0x91, 0x44, 0x0, 0x10, 0x4b, 0xa1, 0x1c, 0x5e]);
 interface IDiscMasterProgressEvents : IUnknown
 {
-    HRESULT QueryCancel(ubyte*);
+    HRESULT QueryCancel(ubyte* pbCancel);
     HRESULT NotifyPnPActivity();
-    HRESULT NotifyAddProgress(int, int);
-    HRESULT NotifyBlockProgress(int, int);
-    HRESULT NotifyTrackProgress(int, int);
-    HRESULT NotifyPreparingBurn(int);
-    HRESULT NotifyClosingDisc(int);
-    HRESULT NotifyBurnComplete(HRESULT);
-    HRESULT NotifyEraseComplete(HRESULT);
+    HRESULT NotifyAddProgress(int nCompletedSteps, int nTotalSteps);
+    HRESULT NotifyBlockProgress(int nCompleted, int nTotal);
+    HRESULT NotifyTrackProgress(int nCurrentTrack, int nTotalTracks);
+    HRESULT NotifyPreparingBurn(int nEstimatedSeconds);
+    HRESULT NotifyClosingDisc(int nEstimatedSeconds);
+    HRESULT NotifyBurnComplete(HRESULT status);
+    HRESULT NotifyEraseComplete(HRESULT status);
 }
 enum IID_IDiscMaster = GUID(0x520cca62, 0x51a5, 0x11d3, [0x91, 0x44, 0x0, 0x10, 0x4b, 0xa1, 0x1c, 0x5e]);
 interface IDiscMaster : IUnknown
 {
     HRESULT Open();
-    HRESULT EnumDiscMasterFormats(IEnumDiscMasterFormats*);
-    HRESULT GetActiveDiscMasterFormat(GUID*);
-    HRESULT SetActiveDiscMasterFormat(const(GUID)*, void**);
-    HRESULT EnumDiscRecorders(IEnumDiscRecorders*);
-    HRESULT GetActiveDiscRecorder(IDiscRecorder*);
-    HRESULT SetActiveDiscRecorder(IDiscRecorder);
+    HRESULT EnumDiscMasterFormats(IEnumDiscMasterFormats* ppEnum);
+    HRESULT GetActiveDiscMasterFormat(GUID* lpiid);
+    HRESULT SetActiveDiscMasterFormat(const(GUID)* riid, void** ppUnk);
+    HRESULT EnumDiscRecorders(IEnumDiscRecorders* ppEnum);
+    HRESULT GetActiveDiscRecorder(IDiscRecorder* ppRecorder);
+    HRESULT SetActiveDiscRecorder(IDiscRecorder pRecorder);
     HRESULT ClearFormatContent();
-    HRESULT ProgressAdvise(IDiscMasterProgressEvents, ulong*);
-    HRESULT ProgressUnadvise(ulong);
-    HRESULT RecordDisc(ubyte, ubyte);
+    HRESULT ProgressAdvise(IDiscMasterProgressEvents pEvents, ulong* pvCookie);
+    HRESULT ProgressUnadvise(ulong vCookie);
+    HRESULT RecordDisc(ubyte bSimulate, ubyte bEjectAfterBurn);
     HRESULT Close();
 }
 enum CLSID_MSDiscRecorderObj = GUID(0x520cca61, 0x51a5, 0x11d3, [0x91, 0x44, 0x0, 0x10, 0x4b, 0xa1, 0x1c, 0x5e]);
@@ -1413,7 +1413,7 @@ enum CLSID_MSEnumDiscRecordersObj = GUID(0x8a03567a, 0x63cb, 0x4ba8, [0xba, 0xf6
 struct MSEnumDiscRecordersObj
 {
 }
-alias MSGCALLRELEASE = void function(uint, IMessage);
+alias MSGCALLRELEASE = void function(uint ulCallerData, IMessage lpMessage);
 struct SPropAttrArray
 {
     uint cValues;

@@ -2,9 +2,8 @@ module windows.win32.storage.enhancedstorage;
 
 import windows.win32.guid : GUID;
 import windows.win32.devices.portabledevices : IPortableDevice;
-import windows.win32.foundation : BOOL, HRESULT, PWSTR;
+import windows.win32.foundation : BOOL, HRESULT, PROPERTYKEY, PWSTR;
 import windows.win32.system.com : IUnknown;
-import windows.win32.ui.shell.propertiessystem : PROPERTYKEY;
 
 version (Windows):
 extern (Windows):
@@ -1479,46 +1478,46 @@ enum : int
 enum IID_IEnumEnhancedStorageACT = GUID(0x9b224bd, 0x1335, 0x4631, [0xa7, 0xff, 0xcf, 0xd3, 0xa9, 0x26, 0x46, 0xd7]);
 interface IEnumEnhancedStorageACT : IUnknown
 {
-    HRESULT GetACTs(IEnhancedStorageACT**, uint*);
-    HRESULT GetMatchingACT(const(wchar)*, IEnhancedStorageACT*);
+    HRESULT GetACTs(IEnhancedStorageACT** pppIEnhancedStorageACTs, uint* pcEnhancedStorageACTs);
+    HRESULT GetMatchingACT(const(wchar)* szVolume, IEnhancedStorageACT* ppIEnhancedStorageACT);
 }
 enum IID_IEnhancedStorageACT = GUID(0x6e7781f4, 0xe0f2, 0x4239, [0xb9, 0x76, 0xa0, 0x1a, 0xba, 0xb5, 0x29, 0x30]);
 interface IEnhancedStorageACT : IUnknown
 {
-    HRESULT Authorize(uint, uint);
+    HRESULT Authorize(uint hwndParent, uint dwFlags);
     HRESULT Unauthorize();
-    HRESULT GetAuthorizationState(ACT_AUTHORIZATION_STATE*);
-    HRESULT GetMatchingVolume(PWSTR*);
-    HRESULT GetUniqueIdentity(PWSTR*);
-    HRESULT GetSilos(IEnhancedStorageSilo**, uint*);
+    HRESULT GetAuthorizationState(ACT_AUTHORIZATION_STATE* pState);
+    HRESULT GetMatchingVolume(PWSTR* ppwszVolume);
+    HRESULT GetUniqueIdentity(PWSTR* ppwszIdentity);
+    HRESULT GetSilos(IEnhancedStorageSilo** pppIEnhancedStorageSilos, uint* pcEnhancedStorageSilos);
 }
 enum IID_IEnhancedStorageACT2 = GUID(0x4da57d2e, 0x8eb3, 0x41f6, [0xa0, 0x7e, 0x98, 0xb5, 0x2b, 0x88, 0x24, 0x2b]);
 interface IEnhancedStorageACT2 : IEnhancedStorageACT
 {
-    HRESULT GetDeviceName(PWSTR*);
-    HRESULT IsDeviceRemovable(BOOL*);
+    HRESULT GetDeviceName(PWSTR* ppwszDeviceName);
+    HRESULT IsDeviceRemovable(BOOL* pIsDeviceRemovable);
 }
 enum IID_IEnhancedStorageACT3 = GUID(0x22150a1, 0x113d, 0x11df, [0xbb, 0x61, 0x0, 0x1a, 0xa0, 0x1b, 0xbc, 0x58]);
 interface IEnhancedStorageACT3 : IEnhancedStorageACT2
 {
-    HRESULT UnauthorizeEx(uint);
-    HRESULT IsQueueFrozen(BOOL*);
-    HRESULT GetShellExtSupport(BOOL*);
+    HRESULT UnauthorizeEx(uint dwFlags);
+    HRESULT IsQueueFrozen(BOOL* pIsQueueFrozen);
+    HRESULT GetShellExtSupport(BOOL* pShellExtSupport);
 }
 enum IID_IEnhancedStorageSilo = GUID(0x5aef78c6, 0x2242, 0x4703, [0xbf, 0x49, 0x44, 0xb2, 0x93, 0x57, 0xa3, 0x59]);
 interface IEnhancedStorageSilo : IUnknown
 {
-    HRESULT GetInfo(SILO_INFO*);
-    HRESULT GetActions(IEnhancedStorageSiloAction**, uint*);
-    HRESULT SendCommand(ubyte, ubyte*, uint, ubyte*, uint*);
-    HRESULT GetPortableDevice(IPortableDevice*);
-    HRESULT GetDevicePath(PWSTR*);
+    HRESULT GetInfo(SILO_INFO* pSiloInfo);
+    HRESULT GetActions(IEnhancedStorageSiloAction** pppIEnhancedStorageSiloActions, uint* pcEnhancedStorageSiloActions);
+    HRESULT SendCommand(ubyte Command, ubyte* pbCommandBuffer, uint cbCommandBuffer, ubyte* pbResponseBuffer, uint* pcbResponseBuffer);
+    HRESULT GetPortableDevice(IPortableDevice* ppIPortableDevice);
+    HRESULT GetDevicePath(PWSTR* ppwszSiloDevicePath);
 }
 enum IID_IEnhancedStorageSiloAction = GUID(0xb6f7f311, 0x206f, 0x4ff8, [0x9c, 0x4b, 0x27, 0xef, 0xee, 0x77, 0xa8, 0x6f]);
 interface IEnhancedStorageSiloAction : IUnknown
 {
-    HRESULT GetName(PWSTR*);
-    HRESULT GetDescription(PWSTR*);
+    HRESULT GetName(PWSTR* ppwszActionName);
+    HRESULT GetDescription(PWSTR* ppwszActionDescription);
     HRESULT Invoke();
 }
 enum CLSID_EnumEnhancedStorageACT = GUID(0xfe841493, 0x835c, 0x4fa3, [0xb6, 0xcc, 0xb4, 0xb2, 0xd4, 0x71, 0x98, 0x48]);

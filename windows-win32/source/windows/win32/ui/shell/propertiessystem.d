@@ -1,7 +1,7 @@
 module windows.win32.ui.shell.propertiessystem;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, CHAR, HANDLE, HRESULT, HWND, POINTL, POINTS, PSTR, PWSTR, RECTL;
+import windows.win32.foundation : BOOL, BSTR, CHAR, HANDLE, HRESULT, HWND, POINTL, POINTS, PROPERTYKEY, PSTR, PWSTR, RECTL;
 import windows.win32.system.com : IBindCtx, IStream, IUnknown;
 import windows.win32.system.com.structuredstorage : IPropertyBag, IPropertySetStorage, IPropertyStorage, PROPSPEC, PROPVARIANT;
 import windows.win32.system.search.common : CONDITION_OPERATION;
@@ -11,116 +11,111 @@ import windows.win32.ui.shell.common : ITEMIDLIST;
 version (Windows):
 extern (Windows):
 
-HRESULT PSFormatForDisplay(const(PROPERTYKEY)*, const(PROPVARIANT)*, PROPDESC_FORMAT_FLAGS, PWSTR, uint);
-HRESULT PSFormatForDisplayAlloc(const(PROPERTYKEY)*, const(PROPVARIANT)*, PROPDESC_FORMAT_FLAGS, PWSTR*);
-HRESULT PSFormatPropertyValue(IPropertyStore, IPropertyDescription, PROPDESC_FORMAT_FLAGS, PWSTR*);
-HRESULT PSGetImageReferenceForValue(const(PROPERTYKEY)*, const(PROPVARIANT)*, PWSTR*);
-HRESULT PSStringFromPropertyKey(const(PROPERTYKEY)*, PWSTR, uint);
-HRESULT PSPropertyKeyFromString(const(wchar)*, PROPERTYKEY*);
-HRESULT PSCreateMemoryPropertyStore(const(GUID)*, void**);
-HRESULT PSCreateDelayedMultiplexPropertyStore(GETPROPERTYSTOREFLAGS, IDelayedPropertyStoreFactory, const(uint)*, uint, const(GUID)*, void**);
-HRESULT PSCreateMultiplexPropertyStore(IUnknown*, uint, const(GUID)*, void**);
-HRESULT PSCreatePropertyChangeArray(const(PROPERTYKEY)*, const(PKA_FLAGS)*, const(PROPVARIANT)*, uint, const(GUID)*, void**);
-HRESULT PSCreateSimplePropertyChange(PKA_FLAGS, const(PROPERTYKEY)*, const(PROPVARIANT)*, const(GUID)*, void**);
-HRESULT PSGetPropertyDescription(const(PROPERTYKEY)*, const(GUID)*, void**);
-HRESULT PSGetPropertyDescriptionByName(const(wchar)*, const(GUID)*, void**);
-HRESULT PSLookupPropertyHandlerCLSID(const(wchar)*, GUID*);
-HRESULT PSGetItemPropertyHandler(IUnknown, BOOL, const(GUID)*, void**);
-HRESULT PSGetItemPropertyHandlerWithCreateObject(IUnknown, BOOL, IUnknown, const(GUID)*, void**);
-HRESULT PSGetPropertyValue(IPropertyStore, IPropertyDescription, PROPVARIANT*);
-HRESULT PSSetPropertyValue(IPropertyStore, IPropertyDescription, const(PROPVARIANT)*);
-HRESULT PSRegisterPropertySchema(const(wchar)*);
-HRESULT PSUnregisterPropertySchema(const(wchar)*);
+HRESULT PSFormatForDisplay(const(PROPERTYKEY)* propkey, const(PROPVARIANT)* propvar, PROPDESC_FORMAT_FLAGS pdfFlags, PWSTR pwszText, uint cchText);
+HRESULT PSFormatForDisplayAlloc(const(PROPERTYKEY)* key, const(PROPVARIANT)* propvar, PROPDESC_FORMAT_FLAGS pdff, PWSTR* ppszDisplay);
+HRESULT PSFormatPropertyValue(IPropertyStore pps, IPropertyDescription ppd, PROPDESC_FORMAT_FLAGS pdff, PWSTR* ppszDisplay);
+HRESULT PSGetImageReferenceForValue(const(PROPERTYKEY)* propkey, const(PROPVARIANT)* propvar, PWSTR* ppszImageRes);
+HRESULT PSStringFromPropertyKey(const(PROPERTYKEY)* pkey, PWSTR psz, uint cch);
+HRESULT PSPropertyKeyFromString(const(wchar)* pszString, PROPERTYKEY* pkey);
+HRESULT PSCreateMemoryPropertyStore(const(GUID)* riid, void** ppv);
+HRESULT PSCreateDelayedMultiplexPropertyStore(GETPROPERTYSTOREFLAGS flags, IDelayedPropertyStoreFactory pdpsf, const(uint)* rgStoreIds, uint cStores, const(GUID)* riid, void** ppv);
+HRESULT PSCreateMultiplexPropertyStore(IUnknown* prgpunkStores, uint cStores, const(GUID)* riid, void** ppv);
+HRESULT PSCreatePropertyChangeArray(const(PROPERTYKEY)* rgpropkey, const(PKA_FLAGS)* rgflags, const(PROPVARIANT)* rgpropvar, uint cChanges, const(GUID)* riid, void** ppv);
+HRESULT PSCreateSimplePropertyChange(PKA_FLAGS flags, const(PROPERTYKEY)* key, const(PROPVARIANT)* propvar, const(GUID)* riid, void** ppv);
+HRESULT PSGetPropertyDescription(const(PROPERTYKEY)* propkey, const(GUID)* riid, void** ppv);
+HRESULT PSGetPropertyDescriptionByName(const(wchar)* pszCanonicalName, const(GUID)* riid, void** ppv);
+HRESULT PSLookupPropertyHandlerCLSID(const(wchar)* pszFilePath, GUID* pclsid);
+HRESULT PSGetItemPropertyHandler(IUnknown punkItem, BOOL fReadWrite, const(GUID)* riid, void** ppv);
+HRESULT PSGetItemPropertyHandlerWithCreateObject(IUnknown punkItem, BOOL fReadWrite, IUnknown punkCreateObject, const(GUID)* riid, void** ppv);
+HRESULT PSGetPropertyValue(IPropertyStore pps, IPropertyDescription ppd, PROPVARIANT* ppropvar);
+HRESULT PSSetPropertyValue(IPropertyStore pps, IPropertyDescription ppd, const(PROPVARIANT)* propvar);
+HRESULT PSRegisterPropertySchema(const(wchar)* pszPath);
+HRESULT PSUnregisterPropertySchema(const(wchar)* pszPath);
 HRESULT PSRefreshPropertySchema();
-HRESULT PSEnumeratePropertyDescriptions(PROPDESC_ENUMFILTER, const(GUID)*, void**);
-HRESULT PSGetPropertyKeyFromName(const(wchar)*, PROPERTYKEY*);
-HRESULT PSGetNameFromPropertyKey(const(PROPERTYKEY)*, PWSTR*);
-HRESULT PSCoerceToCanonicalValue(const(PROPERTYKEY)*, PROPVARIANT*);
-HRESULT PSGetPropertyDescriptionListFromString(const(wchar)*, const(GUID)*, void**);
-HRESULT PSCreatePropertyStoreFromPropertySetStorage(IPropertySetStorage, uint, const(GUID)*, void**);
-HRESULT PSCreatePropertyStoreFromObject(IUnknown, uint, const(GUID)*, void**);
-HRESULT PSCreateAdapterFromPropertyStore(IPropertyStore, const(GUID)*, void**);
-HRESULT PSGetPropertySystem(const(GUID)*, void**);
-HRESULT PSGetPropertyFromPropertyStorage(PCUSERIALIZEDPROPSTORAGE, uint, const(PROPERTYKEY)*, PROPVARIANT*);
-HRESULT PSGetNamedPropertyFromPropertyStorage(PCUSERIALIZEDPROPSTORAGE, uint, const(wchar)*, PROPVARIANT*);
-HRESULT PSPropertyBag_ReadType(IPropertyBag, const(wchar)*, VARIANT*, VARENUM);
-HRESULT PSPropertyBag_ReadStr(IPropertyBag, const(wchar)*, PWSTR, int);
-HRESULT PSPropertyBag_ReadStrAlloc(IPropertyBag, const(wchar)*, PWSTR*);
-HRESULT PSPropertyBag_ReadBSTR(IPropertyBag, const(wchar)*, BSTR*);
-HRESULT PSPropertyBag_WriteStr(IPropertyBag, const(wchar)*, const(wchar)*);
-HRESULT PSPropertyBag_WriteBSTR(IPropertyBag, const(wchar)*, BSTR);
-HRESULT PSPropertyBag_ReadInt(IPropertyBag, const(wchar)*, int*);
-HRESULT PSPropertyBag_WriteInt(IPropertyBag, const(wchar)*, int);
-HRESULT PSPropertyBag_ReadSHORT(IPropertyBag, const(wchar)*, short*);
-HRESULT PSPropertyBag_WriteSHORT(IPropertyBag, const(wchar)*, short);
-HRESULT PSPropertyBag_ReadLONG(IPropertyBag, const(wchar)*, int*);
-HRESULT PSPropertyBag_WriteLONG(IPropertyBag, const(wchar)*, int);
-HRESULT PSPropertyBag_ReadDWORD(IPropertyBag, const(wchar)*, uint*);
-HRESULT PSPropertyBag_WriteDWORD(IPropertyBag, const(wchar)*, uint);
-HRESULT PSPropertyBag_ReadBOOL(IPropertyBag, const(wchar)*, BOOL*);
-HRESULT PSPropertyBag_WriteBOOL(IPropertyBag, const(wchar)*, BOOL);
-HRESULT PSPropertyBag_ReadPOINTL(IPropertyBag, const(wchar)*, POINTL*);
-HRESULT PSPropertyBag_WritePOINTL(IPropertyBag, const(wchar)*, const(POINTL)*);
-HRESULT PSPropertyBag_ReadPOINTS(IPropertyBag, const(wchar)*, POINTS*);
-HRESULT PSPropertyBag_WritePOINTS(IPropertyBag, const(wchar)*, const(POINTS)*);
-HRESULT PSPropertyBag_ReadRECTL(IPropertyBag, const(wchar)*, RECTL*);
-HRESULT PSPropertyBag_WriteRECTL(IPropertyBag, const(wchar)*, const(RECTL)*);
-HRESULT PSPropertyBag_ReadStream(IPropertyBag, const(wchar)*, IStream*);
-HRESULT PSPropertyBag_WriteStream(IPropertyBag, const(wchar)*, IStream);
-HRESULT PSPropertyBag_Delete(IPropertyBag, const(wchar)*);
-HRESULT PSPropertyBag_ReadULONGLONG(IPropertyBag, const(wchar)*, ulong*);
-HRESULT PSPropertyBag_WriteULONGLONG(IPropertyBag, const(wchar)*, ulong);
-HRESULT PSPropertyBag_ReadUnknown(IPropertyBag, const(wchar)*, const(GUID)*, void**);
-HRESULT PSPropertyBag_WriteUnknown(IPropertyBag, const(wchar)*, IUnknown);
-HRESULT PSPropertyBag_ReadGUID(IPropertyBag, const(wchar)*, GUID*);
-HRESULT PSPropertyBag_WriteGUID(IPropertyBag, const(wchar)*, const(GUID)*);
-HRESULT PSPropertyBag_ReadPropertyKey(IPropertyBag, const(wchar)*, PROPERTYKEY*);
-HRESULT PSPropertyBag_WritePropertyKey(IPropertyBag, const(wchar)*, const(PROPERTYKEY)*);
-HRESULT SHGetPropertyStoreFromIDList(ITEMIDLIST*, GETPROPERTYSTOREFLAGS, const(GUID)*, void**);
-HRESULT SHGetPropertyStoreFromParsingName(const(wchar)*, IBindCtx, GETPROPERTYSTOREFLAGS, const(GUID)*, void**);
-HRESULT SHAddDefaultPropertiesByExt(const(wchar)*, IPropertyStore);
-HANDLE PifMgr_OpenProperties(const(wchar)*, const(wchar)*, uint, uint);
-int PifMgr_GetProperties(HANDLE, const(char)*, void*, int, uint);
-int PifMgr_SetProperties(HANDLE, const(char)*, const(void)*, int, uint);
-HANDLE PifMgr_CloseProperties(HANDLE, uint);
-HRESULT SHPropStgCreate(IPropertySetStorage, const(GUID)*, const(GUID)*, uint, uint, uint, IPropertyStorage*, uint*);
-HRESULT SHPropStgReadMultiple(IPropertyStorage, uint, uint, const(PROPSPEC)*, PROPVARIANT*);
-HRESULT SHPropStgWriteMultiple(IPropertyStorage, uint*, uint, const(PROPSPEC)*, PROPVARIANT*, uint);
-HRESULT SHGetPropertyStoreForWindow(HWND, const(GUID)*, void**);
+HRESULT PSEnumeratePropertyDescriptions(PROPDESC_ENUMFILTER filterOn, const(GUID)* riid, void** ppv);
+HRESULT PSGetPropertyKeyFromName(const(wchar)* pszName, PROPERTYKEY* ppropkey);
+HRESULT PSGetNameFromPropertyKey(const(PROPERTYKEY)* propkey, PWSTR* ppszCanonicalName);
+HRESULT PSCoerceToCanonicalValue(const(PROPERTYKEY)* key, PROPVARIANT* ppropvar);
+HRESULT PSGetPropertyDescriptionListFromString(const(wchar)* pszPropList, const(GUID)* riid, void** ppv);
+HRESULT PSCreatePropertyStoreFromPropertySetStorage(IPropertySetStorage ppss, uint grfMode, const(GUID)* riid, void** ppv);
+HRESULT PSCreatePropertyStoreFromObject(IUnknown punk, uint grfMode, const(GUID)* riid, void** ppv);
+HRESULT PSCreateAdapterFromPropertyStore(IPropertyStore pps, const(GUID)* riid, void** ppv);
+HRESULT PSGetPropertySystem(const(GUID)* riid, void** ppv);
+HRESULT PSGetPropertyFromPropertyStorage(PCUSERIALIZEDPROPSTORAGE psps, uint cb, const(PROPERTYKEY)* rpkey, PROPVARIANT* ppropvar);
+HRESULT PSGetNamedPropertyFromPropertyStorage(PCUSERIALIZEDPROPSTORAGE psps, uint cb, const(wchar)* pszName, PROPVARIANT* ppropvar);
+HRESULT PSPropertyBag_ReadType(IPropertyBag propBag, const(wchar)* propName, VARIANT* var, VARENUM type);
+HRESULT PSPropertyBag_ReadStr(IPropertyBag propBag, const(wchar)* propName, PWSTR value, int characterCount);
+HRESULT PSPropertyBag_ReadStrAlloc(IPropertyBag propBag, const(wchar)* propName, PWSTR* value);
+HRESULT PSPropertyBag_ReadBSTR(IPropertyBag propBag, const(wchar)* propName, BSTR* value);
+HRESULT PSPropertyBag_WriteStr(IPropertyBag propBag, const(wchar)* propName, const(wchar)* value);
+HRESULT PSPropertyBag_WriteBSTR(IPropertyBag propBag, const(wchar)* propName, BSTR value);
+HRESULT PSPropertyBag_ReadInt(IPropertyBag propBag, const(wchar)* propName, int* value);
+HRESULT PSPropertyBag_WriteInt(IPropertyBag propBag, const(wchar)* propName, int value);
+HRESULT PSPropertyBag_ReadSHORT(IPropertyBag propBag, const(wchar)* propName, short* value);
+HRESULT PSPropertyBag_WriteSHORT(IPropertyBag propBag, const(wchar)* propName, short value);
+HRESULT PSPropertyBag_ReadLONG(IPropertyBag propBag, const(wchar)* propName, int* value);
+HRESULT PSPropertyBag_WriteLONG(IPropertyBag propBag, const(wchar)* propName, int value);
+HRESULT PSPropertyBag_ReadDWORD(IPropertyBag propBag, const(wchar)* propName, uint* value);
+HRESULT PSPropertyBag_WriteDWORD(IPropertyBag propBag, const(wchar)* propName, uint value);
+HRESULT PSPropertyBag_ReadBOOL(IPropertyBag propBag, const(wchar)* propName, BOOL* value);
+HRESULT PSPropertyBag_WriteBOOL(IPropertyBag propBag, const(wchar)* propName, BOOL value);
+HRESULT PSPropertyBag_ReadPOINTL(IPropertyBag propBag, const(wchar)* propName, POINTL* value);
+HRESULT PSPropertyBag_WritePOINTL(IPropertyBag propBag, const(wchar)* propName, const(POINTL)* value);
+HRESULT PSPropertyBag_ReadPOINTS(IPropertyBag propBag, const(wchar)* propName, POINTS* value);
+HRESULT PSPropertyBag_WritePOINTS(IPropertyBag propBag, const(wchar)* propName, const(POINTS)* value);
+HRESULT PSPropertyBag_ReadRECTL(IPropertyBag propBag, const(wchar)* propName, RECTL* value);
+HRESULT PSPropertyBag_WriteRECTL(IPropertyBag propBag, const(wchar)* propName, const(RECTL)* value);
+HRESULT PSPropertyBag_ReadStream(IPropertyBag propBag, const(wchar)* propName, IStream* value);
+HRESULT PSPropertyBag_WriteStream(IPropertyBag propBag, const(wchar)* propName, IStream value);
+HRESULT PSPropertyBag_Delete(IPropertyBag propBag, const(wchar)* propName);
+HRESULT PSPropertyBag_ReadULONGLONG(IPropertyBag propBag, const(wchar)* propName, ulong* value);
+HRESULT PSPropertyBag_WriteULONGLONG(IPropertyBag propBag, const(wchar)* propName, ulong value);
+HRESULT PSPropertyBag_ReadUnknown(IPropertyBag propBag, const(wchar)* propName, const(GUID)* riid, void** ppv);
+HRESULT PSPropertyBag_WriteUnknown(IPropertyBag propBag, const(wchar)* propName, IUnknown punk);
+HRESULT PSPropertyBag_ReadGUID(IPropertyBag propBag, const(wchar)* propName, GUID* value);
+HRESULT PSPropertyBag_WriteGUID(IPropertyBag propBag, const(wchar)* propName, const(GUID)* value);
+HRESULT PSPropertyBag_ReadPropertyKey(IPropertyBag propBag, const(wchar)* propName, PROPERTYKEY* value);
+HRESULT PSPropertyBag_WritePropertyKey(IPropertyBag propBag, const(wchar)* propName, const(PROPERTYKEY)* value);
+HRESULT SHGetPropertyStoreFromIDList(ITEMIDLIST* pidl, GETPROPERTYSTOREFLAGS flags, const(GUID)* riid, void** ppv);
+HRESULT SHGetPropertyStoreFromParsingName(const(wchar)* pszPath, IBindCtx pbc, GETPROPERTYSTOREFLAGS flags, const(GUID)* riid, void** ppv);
+HRESULT SHAddDefaultPropertiesByExt(const(wchar)* pszExt, IPropertyStore pPropStore);
+HANDLE PifMgr_OpenProperties(const(wchar)* pszApp, const(wchar)* pszPIF, uint hInf, uint flOpt);
+int PifMgr_GetProperties(HANDLE hProps, const(char)* pszGroup, void* lpProps, int cbProps, uint flOpt);
+int PifMgr_SetProperties(HANDLE hProps, const(char)* pszGroup, const(void)* lpProps, int cbProps, uint flOpt);
+HANDLE PifMgr_CloseProperties(HANDLE hProps, uint flOpt);
+HRESULT SHPropStgCreate(IPropertySetStorage psstg, const(GUID)* fmtid, const(GUID)* pclsid, uint grfFlags, uint grfMode, uint dwDisposition, IPropertyStorage* ppstg, uint* puCodePage);
+HRESULT SHPropStgReadMultiple(IPropertyStorage pps, uint uCodePage, uint cpspec, const(PROPSPEC)* rgpspec, PROPVARIANT* rgvar);
+HRESULT SHPropStgWriteMultiple(IPropertyStorage pps, uint* puCodePage, uint cpspec, const(PROPSPEC)* rgpspec, PROPVARIANT* rgvar, uint propidNameFirst);
+HRESULT SHGetPropertyStoreForWindow(HWND hwnd, const(GUID)* riid, void** ppv);
 enum PKEY_PIDSTR_MAX = 0x0000000a;
 alias SERIALIZEDPROPSTORAGE = long;
 alias PCUSERIALIZEDPROPSTORAGE = long;
-struct PROPERTYKEY
-{
-    GUID fmtid;
-    uint pid;
-}
 enum IID_IInitializeWithFile = GUID(0xb7d14566, 0x509, 0x4cce, [0xa7, 0x1f, 0xa, 0x55, 0x42, 0x33, 0xbd, 0x9b]);
 interface IInitializeWithFile : IUnknown
 {
-    HRESULT Initialize(const(wchar)*, uint);
+    HRESULT Initialize(const(wchar)* pszFilePath, uint grfMode);
 }
 enum IID_IInitializeWithStream = GUID(0xb824b49d, 0x22ac, 0x4161, [0xac, 0x8a, 0x99, 0x16, 0xe8, 0xfa, 0x3f, 0x7f]);
 interface IInitializeWithStream : IUnknown
 {
-    HRESULT Initialize(IStream, uint);
+    HRESULT Initialize(IStream pstream, uint grfMode);
 }
 enum IID_IPropertyStore = GUID(0x886d8eeb, 0x8cf2, 0x4446, [0x8d, 0x2, 0xcd, 0xba, 0x1d, 0xbd, 0xcf, 0x99]);
 interface IPropertyStore : IUnknown
 {
-    HRESULT GetCount(uint*);
-    HRESULT GetAt(uint, PROPERTYKEY*);
-    HRESULT GetValue(const(PROPERTYKEY)*, PROPVARIANT*);
-    HRESULT SetValue(const(PROPERTYKEY)*, const(PROPVARIANT)*);
+    HRESULT GetCount(uint* cProps);
+    HRESULT GetAt(uint iProp, PROPERTYKEY* pkey);
+    HRESULT GetValue(const(PROPERTYKEY)* key, PROPVARIANT* pv);
+    HRESULT SetValue(const(PROPERTYKEY)* key, const(PROPVARIANT)* propvar);
     HRESULT Commit();
 }
 enum IID_INamedPropertyStore = GUID(0x71604b0f, 0x97b0, 0x4764, [0x85, 0x77, 0x2f, 0x13, 0xe9, 0x8a, 0x14, 0x22]);
 interface INamedPropertyStore : IUnknown
 {
-    HRESULT GetNamedValue(const(wchar)*, PROPVARIANT*);
-    HRESULT SetNamedValue(const(wchar)*, const(PROPVARIANT)*);
-    HRESULT GetNameCount(uint*);
-    HRESULT GetNameAt(uint, BSTR*);
+    HRESULT GetNamedValue(const(wchar)* pszName, PROPVARIANT* ppropvar);
+    HRESULT SetNamedValue(const(wchar)* pszName, const(PROPVARIANT)* propvar);
+    HRESULT GetNameCount(uint* pdwCount);
+    HRESULT GetNameAt(uint iProp, BSTR* pbstrName);
 }
 alias GETPROPERTYSTOREFLAGS = int;
 enum : int
@@ -145,8 +140,8 @@ enum : int
 enum IID_IObjectWithPropertyKey = GUID(0xfc0ca0a7, 0xc316, 0x4fd2, [0x90, 0x31, 0x3e, 0x62, 0x8e, 0x6d, 0x4f, 0x23]);
 interface IObjectWithPropertyKey : IUnknown
 {
-    HRESULT SetPropertyKey(const(PROPERTYKEY)*);
-    HRESULT GetPropertyKey(PROPERTYKEY*);
+    HRESULT SetPropertyKey(const(PROPERTYKEY)* key);
+    HRESULT GetPropertyKey(PROPERTYKEY* pkey);
 }
 alias PKA_FLAGS = int;
 enum : int
@@ -159,23 +154,23 @@ enum : int
 enum IID_IPropertyChange = GUID(0xf917bc8a, 0x1bba, 0x4478, [0xa2, 0x45, 0x1b, 0xde, 0x3, 0xeb, 0x94, 0x31]);
 interface IPropertyChange : IObjectWithPropertyKey
 {
-    HRESULT ApplyToPropVariant(const(PROPVARIANT)*, PROPVARIANT*);
+    HRESULT ApplyToPropVariant(const(PROPVARIANT)* propvarIn, PROPVARIANT* ppropvarOut);
 }
 enum IID_IPropertyChangeArray = GUID(0x380f5cad, 0x1b5e, 0x42f2, [0x80, 0x5d, 0x63, 0x7f, 0xd3, 0x92, 0xd3, 0x1e]);
 interface IPropertyChangeArray : IUnknown
 {
-    HRESULT GetCount(uint*);
-    HRESULT GetAt(uint, const(GUID)*, void**);
-    HRESULT InsertAt(uint, IPropertyChange);
-    HRESULT Append(IPropertyChange);
-    HRESULT AppendOrReplace(IPropertyChange);
-    HRESULT RemoveAt(uint);
-    HRESULT IsKeyInArray(const(PROPERTYKEY)*);
+    HRESULT GetCount(uint* pcOperations);
+    HRESULT GetAt(uint iIndex, const(GUID)* riid, void** ppv);
+    HRESULT InsertAt(uint iIndex, IPropertyChange ppropChange);
+    HRESULT Append(IPropertyChange ppropChange);
+    HRESULT AppendOrReplace(IPropertyChange ppropChange);
+    HRESULT RemoveAt(uint iIndex);
+    HRESULT IsKeyInArray(const(PROPERTYKEY)* key);
 }
 enum IID_IPropertyStoreCapabilities = GUID(0xc8e2d566, 0x186e, 0x4d49, [0xbf, 0x41, 0x69, 0x9, 0xea, 0xd5, 0x6a, 0xcc]);
 interface IPropertyStoreCapabilities : IUnknown
 {
-    HRESULT IsPropertyWritable(const(PROPERTYKEY)*);
+    HRESULT IsPropertyWritable(const(PROPERTYKEY)* key);
 }
 alias PSC_STATE = int;
 enum : int
@@ -189,10 +184,10 @@ enum : int
 enum IID_IPropertyStoreCache = GUID(0x3017056d, 0x9a91, 0x4e90, [0x93, 0x7d, 0x74, 0x6c, 0x72, 0xab, 0xbf, 0x4f]);
 interface IPropertyStoreCache : IPropertyStore
 {
-    HRESULT GetState(const(PROPERTYKEY)*, PSC_STATE*);
-    HRESULT GetValueAndState(const(PROPERTYKEY)*, PROPVARIANT*, PSC_STATE*);
-    HRESULT SetState(const(PROPERTYKEY)*, PSC_STATE);
-    HRESULT SetValueAndState(const(PROPERTYKEY)*, const(PROPVARIANT)*, PSC_STATE);
+    HRESULT GetState(const(PROPERTYKEY)* key, PSC_STATE* pstate);
+    HRESULT GetValueAndState(const(PROPERTYKEY)* key, PROPVARIANT* ppropvar, PSC_STATE* pstate);
+    HRESULT SetState(const(PROPERTYKEY)* key, PSC_STATE state);
+    HRESULT SetValueAndState(const(PROPERTYKEY)* key, const(PROPVARIANT)* ppropvar, PSC_STATE state);
 }
 alias PROPENUMTYPE = int;
 enum : int
@@ -206,24 +201,24 @@ enum : int
 enum IID_IPropertyEnumType = GUID(0x11e1fbf9, 0x2d56, 0x4a6b, [0x8d, 0xb3, 0x7c, 0xd1, 0x93, 0xa4, 0x71, 0xf2]);
 interface IPropertyEnumType : IUnknown
 {
-    HRESULT GetEnumType(PROPENUMTYPE*);
-    HRESULT GetValue(PROPVARIANT*);
-    HRESULT GetRangeMinValue(PROPVARIANT*);
-    HRESULT GetRangeSetValue(PROPVARIANT*);
-    HRESULT GetDisplayText(PWSTR*);
+    HRESULT GetEnumType(PROPENUMTYPE* penumtype);
+    HRESULT GetValue(PROPVARIANT* ppropvar);
+    HRESULT GetRangeMinValue(PROPVARIANT* ppropvarMin);
+    HRESULT GetRangeSetValue(PROPVARIANT* ppropvarSet);
+    HRESULT GetDisplayText(PWSTR* ppszDisplay);
 }
 enum IID_IPropertyEnumType2 = GUID(0x9b6e051c, 0x5ddd, 0x4321, [0x90, 0x70, 0xfe, 0x2a, 0xcb, 0x55, 0xe7, 0x94]);
 interface IPropertyEnumType2 : IPropertyEnumType
 {
-    HRESULT GetImageReference(PWSTR*);
+    HRESULT GetImageReference(PWSTR* ppszImageRes);
 }
 enum IID_IPropertyEnumTypeList = GUID(0xa99400f4, 0x3d84, 0x4557, [0x94, 0xba, 0x12, 0x42, 0xfb, 0x2c, 0xc9, 0xa6]);
 interface IPropertyEnumTypeList : IUnknown
 {
-    HRESULT GetCount(uint*);
-    HRESULT GetAt(uint, const(GUID)*, void**);
-    HRESULT GetConditionAt(uint, const(GUID)*, void**);
-    HRESULT FindMatchingIndex(const(PROPVARIANT)*, uint*);
+    HRESULT GetCount(uint* pctypes);
+    HRESULT GetAt(uint itype, const(GUID)* riid, void** ppv);
+    HRESULT GetConditionAt(uint nIndex, const(GUID)* riid, void** ppv);
+    HRESULT FindMatchingIndex(const(PROPVARIANT)* propvarCmp, uint* pnIndex);
 }
 alias PROPDESC_TYPE_FLAGS = uint;
 enum : uint
@@ -360,38 +355,38 @@ enum : int
 enum IID_IPropertyDescription = GUID(0x6f79d558, 0x3e96, 0x4549, [0xa1, 0xd1, 0x7d, 0x75, 0xd2, 0x28, 0x88, 0x14]);
 interface IPropertyDescription : IUnknown
 {
-    HRESULT GetPropertyKey(PROPERTYKEY*);
-    HRESULT GetCanonicalName(PWSTR*);
-    HRESULT GetPropertyType(ushort*);
-    HRESULT GetDisplayName(PWSTR*);
-    HRESULT GetEditInvitation(PWSTR*);
-    HRESULT GetTypeFlags(PROPDESC_TYPE_FLAGS, PROPDESC_TYPE_FLAGS*);
-    HRESULT GetViewFlags(PROPDESC_VIEW_FLAGS*);
-    HRESULT GetDefaultColumnWidth(uint*);
-    HRESULT GetDisplayType(PROPDESC_DISPLAYTYPE*);
-    HRESULT GetColumnState(uint*);
-    HRESULT GetGroupingRange(PROPDESC_GROUPING_RANGE*);
-    HRESULT GetRelativeDescriptionType(PROPDESC_RELATIVEDESCRIPTION_TYPE*);
-    HRESULT GetRelativeDescription(const(PROPVARIANT)*, const(PROPVARIANT)*, PWSTR*, PWSTR*);
-    HRESULT GetSortDescription(PROPDESC_SORTDESCRIPTION*);
-    HRESULT GetSortDescriptionLabel(BOOL, PWSTR*);
-    HRESULT GetAggregationType(PROPDESC_AGGREGATION_TYPE*);
-    HRESULT GetConditionType(PROPDESC_CONDITION_TYPE*, CONDITION_OPERATION*);
-    HRESULT GetEnumTypeList(const(GUID)*, void**);
-    HRESULT CoerceToCanonicalValue(PROPVARIANT*);
-    HRESULT FormatForDisplay(const(PROPVARIANT)*, PROPDESC_FORMAT_FLAGS, PWSTR*);
-    HRESULT IsValueCanonical(const(PROPVARIANT)*);
+    HRESULT GetPropertyKey(PROPERTYKEY* pkey);
+    HRESULT GetCanonicalName(PWSTR* ppszName);
+    HRESULT GetPropertyType(ushort* pvartype);
+    HRESULT GetDisplayName(PWSTR* ppszName);
+    HRESULT GetEditInvitation(PWSTR* ppszInvite);
+    HRESULT GetTypeFlags(PROPDESC_TYPE_FLAGS mask, PROPDESC_TYPE_FLAGS* ppdtFlags);
+    HRESULT GetViewFlags(PROPDESC_VIEW_FLAGS* ppdvFlags);
+    HRESULT GetDefaultColumnWidth(uint* pcxChars);
+    HRESULT GetDisplayType(PROPDESC_DISPLAYTYPE* pdisplaytype);
+    HRESULT GetColumnState(uint* pcsFlags);
+    HRESULT GetGroupingRange(PROPDESC_GROUPING_RANGE* pgr);
+    HRESULT GetRelativeDescriptionType(PROPDESC_RELATIVEDESCRIPTION_TYPE* prdt);
+    HRESULT GetRelativeDescription(const(PROPVARIANT)* propvar1, const(PROPVARIANT)* propvar2, PWSTR* ppszDesc1, PWSTR* ppszDesc2);
+    HRESULT GetSortDescription(PROPDESC_SORTDESCRIPTION* psd);
+    HRESULT GetSortDescriptionLabel(BOOL fDescending, PWSTR* ppszDescription);
+    HRESULT GetAggregationType(PROPDESC_AGGREGATION_TYPE* paggtype);
+    HRESULT GetConditionType(PROPDESC_CONDITION_TYPE* pcontype, CONDITION_OPERATION* popDefault);
+    HRESULT GetEnumTypeList(const(GUID)* riid, void** ppv);
+    HRESULT CoerceToCanonicalValue(PROPVARIANT* ppropvar);
+    HRESULT FormatForDisplay(const(PROPVARIANT)* propvar, PROPDESC_FORMAT_FLAGS pdfFlags, PWSTR* ppszDisplay);
+    HRESULT IsValueCanonical(const(PROPVARIANT)* propvar);
 }
 enum IID_IPropertyDescription2 = GUID(0x57d2eded, 0x5062, 0x400e, [0xb1, 0x7, 0x5d, 0xae, 0x79, 0xfe, 0x57, 0xa6]);
 interface IPropertyDescription2 : IPropertyDescription
 {
-    HRESULT GetImageReferenceForValue(const(PROPVARIANT)*, PWSTR*);
+    HRESULT GetImageReferenceForValue(const(PROPVARIANT)* propvar, PWSTR* ppszImageRes);
 }
 enum IID_IPropertyDescriptionAliasInfo = GUID(0xf67104fc, 0x2af9, 0x46fd, [0xb3, 0x2d, 0x24, 0x3c, 0x14, 0x4, 0xf3, 0xd1]);
 interface IPropertyDescriptionAliasInfo : IPropertyDescription
 {
-    HRESULT GetSortByAlias(const(GUID)*, void**);
-    HRESULT GetAdditionalSortByAliases(const(GUID)*, void**);
+    HRESULT GetSortByAlias(const(GUID)* riid, void** ppv);
+    HRESULT GetAdditionalSortByAliases(const(GUID)* riid, void** ppv);
 }
 alias PROPDESC_SEARCHINFO_FLAGS = int;
 enum : int
@@ -418,15 +413,15 @@ enum : int
 enum IID_IPropertyDescriptionSearchInfo = GUID(0x78f91bd, 0x29a2, 0x440f, [0x92, 0x4e, 0x46, 0xa2, 0x91, 0x52, 0x45, 0x20]);
 interface IPropertyDescriptionSearchInfo : IPropertyDescription
 {
-    HRESULT GetSearchInfoFlags(PROPDESC_SEARCHINFO_FLAGS*);
-    HRESULT GetColumnIndexType(PROPDESC_COLUMNINDEX_TYPE*);
-    HRESULT GetProjectionString(PWSTR*);
-    HRESULT GetMaxSize(uint*);
+    HRESULT GetSearchInfoFlags(PROPDESC_SEARCHINFO_FLAGS* ppdsiFlags);
+    HRESULT GetColumnIndexType(PROPDESC_COLUMNINDEX_TYPE* ppdciType);
+    HRESULT GetProjectionString(PWSTR* ppszProjection);
+    HRESULT GetMaxSize(uint* pcbMaxSize);
 }
 enum IID_IPropertyDescriptionRelatedPropertyInfo = GUID(0x507393f4, 0x2a3d, 0x4a60, [0xb5, 0x9e, 0xd9, 0xc7, 0x57, 0x16, 0xc2, 0xdd]);
 interface IPropertyDescriptionRelatedPropertyInfo : IPropertyDescription
 {
-    HRESULT GetRelatedProperty(const(wchar)*, const(GUID)*, void**);
+    HRESULT GetRelatedProperty(const(wchar)* pszRelationshipName, const(GUID)* riid, void** ppv);
 }
 alias PROPDESC_ENUMFILTER = int;
 enum : int
@@ -443,32 +438,32 @@ enum : int
 enum IID_IPropertySystem = GUID(0xca724e8a, 0xc3e6, 0x442b, [0x88, 0xa4, 0x6f, 0xb0, 0xdb, 0x80, 0x35, 0xa3]);
 interface IPropertySystem : IUnknown
 {
-    HRESULT GetPropertyDescription(const(PROPERTYKEY)*, const(GUID)*, void**);
-    HRESULT GetPropertyDescriptionByName(const(wchar)*, const(GUID)*, void**);
-    HRESULT GetPropertyDescriptionListFromString(const(wchar)*, const(GUID)*, void**);
-    HRESULT EnumeratePropertyDescriptions(PROPDESC_ENUMFILTER, const(GUID)*, void**);
-    HRESULT FormatForDisplay(const(PROPERTYKEY)*, const(PROPVARIANT)*, PROPDESC_FORMAT_FLAGS, PWSTR, uint);
-    HRESULT FormatForDisplayAlloc(const(PROPERTYKEY)*, const(PROPVARIANT)*, PROPDESC_FORMAT_FLAGS, PWSTR*);
-    HRESULT RegisterPropertySchema(const(wchar)*);
-    HRESULT UnregisterPropertySchema(const(wchar)*);
+    HRESULT GetPropertyDescription(const(PROPERTYKEY)* propkey, const(GUID)* riid, void** ppv);
+    HRESULT GetPropertyDescriptionByName(const(wchar)* pszCanonicalName, const(GUID)* riid, void** ppv);
+    HRESULT GetPropertyDescriptionListFromString(const(wchar)* pszPropList, const(GUID)* riid, void** ppv);
+    HRESULT EnumeratePropertyDescriptions(PROPDESC_ENUMFILTER filterOn, const(GUID)* riid, void** ppv);
+    HRESULT FormatForDisplay(const(PROPERTYKEY)* key, const(PROPVARIANT)* propvar, PROPDESC_FORMAT_FLAGS pdff, PWSTR pszText, uint cchText);
+    HRESULT FormatForDisplayAlloc(const(PROPERTYKEY)* key, const(PROPVARIANT)* propvar, PROPDESC_FORMAT_FLAGS pdff, PWSTR* ppszDisplay);
+    HRESULT RegisterPropertySchema(const(wchar)* pszPath);
+    HRESULT UnregisterPropertySchema(const(wchar)* pszPath);
     HRESULT RefreshPropertySchema();
 }
 enum IID_IPropertyDescriptionList = GUID(0x1f9fc1d0, 0xc39b, 0x4b26, [0x81, 0x7f, 0x1, 0x19, 0x67, 0xd3, 0x44, 0xe]);
 interface IPropertyDescriptionList : IUnknown
 {
-    HRESULT GetCount(uint*);
-    HRESULT GetAt(uint, const(GUID)*, void**);
+    HRESULT GetCount(uint* pcElem);
+    HRESULT GetAt(uint iElem, const(GUID)* riid, void** ppv);
 }
 enum IID_IPropertyStoreFactory = GUID(0xbc110b6d, 0x57e8, 0x4148, [0xa9, 0xc6, 0x91, 0x1, 0x5a, 0xb2, 0xf3, 0xa5]);
 interface IPropertyStoreFactory : IUnknown
 {
-    HRESULT GetPropertyStore(GETPROPERTYSTOREFLAGS, IUnknown, const(GUID)*, void**);
-    HRESULT GetPropertyStoreForKeys(const(PROPERTYKEY)*, uint, GETPROPERTYSTOREFLAGS, const(GUID)*, void**);
+    HRESULT GetPropertyStore(GETPROPERTYSTOREFLAGS flags, IUnknown pUnkFactory, const(GUID)* riid, void** ppv);
+    HRESULT GetPropertyStoreForKeys(const(PROPERTYKEY)* rgKeys, uint cKeys, GETPROPERTYSTOREFLAGS flags, const(GUID)* riid, void** ppv);
 }
 enum IID_IDelayedPropertyStoreFactory = GUID(0x40d4577f, 0xe237, 0x4bdb, [0xbd, 0x69, 0x58, 0xf0, 0x89, 0x43, 0x1b, 0x6a]);
 interface IDelayedPropertyStoreFactory : IPropertyStoreFactory
 {
-    HRESULT GetDelayedPropertyStore(GETPROPERTYSTOREFLAGS, uint, const(GUID)*, void**);
+    HRESULT GetDelayedPropertyStore(GETPROPERTYSTOREFLAGS flags, uint dwStoreId, const(GUID)* riid, void** ppv);
 }
 alias _PERSIST_SPROPSTORE_FLAGS = int;
 enum : int
@@ -481,15 +476,15 @@ enum : int
 enum IID_IPersistSerializedPropStorage = GUID(0xe318ad57, 0xaa0, 0x450f, [0xac, 0xa5, 0x6f, 0xab, 0x71, 0x3, 0xd9, 0x17]);
 interface IPersistSerializedPropStorage : IUnknown
 {
-    HRESULT SetFlags(int);
-    HRESULT SetPropertyStorage(PCUSERIALIZEDPROPSTORAGE, uint);
-    HRESULT GetPropertyStorage(SERIALIZEDPROPSTORAGE**, uint*);
+    HRESULT SetFlags(int flags);
+    HRESULT SetPropertyStorage(PCUSERIALIZEDPROPSTORAGE psps, uint cb);
+    HRESULT GetPropertyStorage(SERIALIZEDPROPSTORAGE** ppsps, uint* pcb);
 }
 enum IID_IPersistSerializedPropStorage2 = GUID(0x77effa68, 0x4f98, 0x4366, [0xba, 0x72, 0x57, 0x3b, 0x3d, 0x88, 0x5, 0x71]);
 interface IPersistSerializedPropStorage2 : IPersistSerializedPropStorage
 {
-    HRESULT GetPropertyStorageSize(uint*);
-    HRESULT GetPropertyStorageBuffer(SERIALIZEDPROPSTORAGE*, uint, uint*);
+    HRESULT GetPropertyStorageSize(uint* pcb);
+    HRESULT GetPropertyStorageBuffer(SERIALIZEDPROPSTORAGE* psps, uint cb, uint* pcbWritten);
 }
 enum IID_IPropertySystemChangeNotify = GUID(0xfa955fd9, 0x38be, 0x4879, [0xa6, 0xce, 0x82, 0x4c, 0xf5, 0x2d, 0x60, 0x9f]);
 interface IPropertySystemChangeNotify : IUnknown
@@ -499,7 +494,7 @@ interface IPropertySystemChangeNotify : IUnknown
 enum IID_ICreateObject = GUID(0x75121952, 0xe0d0, 0x43e5, [0x93, 0x80, 0x1d, 0x80, 0x48, 0x3a, 0xcf, 0x72]);
 interface ICreateObject : IUnknown
 {
-    HRESULT CreateObject(const(GUID)*, IUnknown, const(GUID)*, void**);
+    HRESULT CreateObject(const(GUID)* clsid, IUnknown pUnkOuter, const(GUID)* riid, void** ppv);
 }
 enum CLSID_InMemoryPropertyStore = GUID(0x9a02e012, 0x6303, 0x4e1e, [0xb9, 0xa1, 0x63, 0xf, 0x80, 0x25, 0x92, 0xc5]);
 struct InMemoryPropertyStore
@@ -570,14 +565,14 @@ enum : int
 enum IID_IPropertyUI = GUID(0x757a7d9f, 0x919a, 0x4118, [0x99, 0xd7, 0xdb, 0xb2, 0x8, 0xc8, 0xcc, 0x66]);
 interface IPropertyUI : IUnknown
 {
-    HRESULT ParsePropertyName(const(wchar)*, GUID*, uint*, uint*);
-    HRESULT GetCannonicalName(const(GUID)*, uint, PWSTR, uint);
-    HRESULT GetDisplayName(const(GUID)*, uint, PROPERTYUI_NAME_FLAGS, PWSTR, uint);
-    HRESULT GetPropertyDescription(const(GUID)*, uint, PWSTR, uint);
-    HRESULT GetDefaultWidth(const(GUID)*, uint, uint*);
-    HRESULT GetFlags(const(GUID)*, uint, PROPERTYUI_FLAGS*);
-    HRESULT FormatForDisplay(const(GUID)*, uint, const(PROPVARIANT)*, PROPERTYUI_FORMAT_FLAGS, PWSTR, uint);
-    HRESULT GetHelpInfo(const(GUID)*, uint, PWSTR, uint, uint*);
+    HRESULT ParsePropertyName(const(wchar)* pszName, GUID* pfmtid, uint* ppid, uint* pchEaten);
+    HRESULT GetCannonicalName(const(GUID)* fmtid, uint pid, PWSTR pwszText, uint cchText);
+    HRESULT GetDisplayName(const(GUID)* fmtid, uint pid, PROPERTYUI_NAME_FLAGS flags, PWSTR pwszText, uint cchText);
+    HRESULT GetPropertyDescription(const(GUID)* fmtid, uint pid, PWSTR pwszText, uint cchText);
+    HRESULT GetDefaultWidth(const(GUID)* fmtid, uint pid, uint* pcxChars);
+    HRESULT GetFlags(const(GUID)* fmtid, uint pid, PROPERTYUI_FLAGS* pflags);
+    HRESULT FormatForDisplay(const(GUID)* fmtid, uint pid, const(PROPVARIANT)* ppropvar, PROPERTYUI_FORMAT_FLAGS puiff, PWSTR pwszText, uint cchText);
+    HRESULT GetHelpInfo(const(GUID)* fmtid, uint pid, PWSTR pwszHelpFile, uint cch, uint* puHelpID);
 }
 alias PDOPSTATUS = int;
 enum : int

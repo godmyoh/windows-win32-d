@@ -137,13 +137,13 @@ enum : uint
     XINPUT_FLAG_GAMEPAD = 0x00000001,
 }
 
-uint XInputGetState(uint, XINPUT_STATE*);
-uint XInputSetState(uint, XINPUT_VIBRATION*);
-uint XInputGetCapabilities(uint, XINPUT_FLAG, XINPUT_CAPABILITIES*);
-void XInputEnable(BOOL);
-uint XInputGetAudioDeviceIds(uint, PWSTR, uint*, PWSTR, uint*);
-uint XInputGetBatteryInformation(uint, BATTERY_DEVTYPE, XINPUT_BATTERY_INFORMATION*);
-uint XInputGetKeystroke(uint, uint, XINPUT_KEYSTROKE*);
+uint XInputGetState(uint dwUserIndex, XINPUT_STATE* pState);
+uint XInputSetState(uint dwUserIndex, XINPUT_VIBRATION* pVibration);
+uint XInputGetCapabilities(uint dwUserIndex, XINPUT_FLAG dwFlags, XINPUT_CAPABILITIES* pCapabilities);
+void XInputEnable(BOOL enable);
+uint XInputGetAudioDeviceIds(uint dwUserIndex, PWSTR pRenderDeviceId, uint* pRenderCount, PWSTR pCaptureDeviceId, uint* pCaptureCount);
+uint XInputGetBatteryInformation(uint dwUserIndex, BATTERY_DEVTYPE devType, XINPUT_BATTERY_INFORMATION* pBatteryInformation);
+uint XInputGetKeystroke(uint dwUserIndex, uint dwReserved, XINPUT_KEYSTROKE* pKeystroke);
 enum XINPUT_DLL_A = "xinput1_4.dll";
 enum XINPUT_DLL_W = "xinput1_4.dll";
 enum XINPUT_DLL = "xinput1_4.dll";

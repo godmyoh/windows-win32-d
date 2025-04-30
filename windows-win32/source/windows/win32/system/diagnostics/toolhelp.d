@@ -25,22 +25,22 @@ enum : uint
     LF32_MOVEABLE = 0x00000004,
 }
 
-HANDLE CreateToolhelp32Snapshot(CREATE_TOOLHELP_SNAPSHOT_FLAGS, uint);
-BOOL Heap32ListFirst(HANDLE, HEAPLIST32*);
-BOOL Heap32ListNext(HANDLE, HEAPLIST32*);
-BOOL Heap32First(HEAPENTRY32*, uint, ulong);
-BOOL Heap32Next(HEAPENTRY32*);
-BOOL Toolhelp32ReadProcessMemory(uint, const(void)*, void*, ulong, ulong*);
-BOOL Process32FirstW(HANDLE, PROCESSENTRY32W*);
-BOOL Process32NextW(HANDLE, PROCESSENTRY32W*);
-BOOL Process32First(HANDLE, PROCESSENTRY32*);
-BOOL Process32Next(HANDLE, PROCESSENTRY32*);
-BOOL Thread32First(HANDLE, THREADENTRY32*);
-BOOL Thread32Next(HANDLE, THREADENTRY32*);
-BOOL Module32FirstW(HANDLE, MODULEENTRY32W*);
-BOOL Module32NextW(HANDLE, MODULEENTRY32W*);
-BOOL Module32First(HANDLE, MODULEENTRY32*);
-BOOL Module32Next(HANDLE, MODULEENTRY32*);
+HANDLE CreateToolhelp32Snapshot(CREATE_TOOLHELP_SNAPSHOT_FLAGS dwFlags, uint th32ProcessID);
+BOOL Heap32ListFirst(HANDLE hSnapshot, HEAPLIST32* lphl);
+BOOL Heap32ListNext(HANDLE hSnapshot, HEAPLIST32* lphl);
+BOOL Heap32First(HEAPENTRY32* lphe, uint th32ProcessID, ulong th32HeapID);
+BOOL Heap32Next(HEAPENTRY32* lphe);
+BOOL Toolhelp32ReadProcessMemory(uint th32ProcessID, const(void)* lpBaseAddress, void* lpBuffer, ulong cbRead, ulong* lpNumberOfBytesRead);
+BOOL Process32FirstW(HANDLE hSnapshot, PROCESSENTRY32W* lppe);
+BOOL Process32NextW(HANDLE hSnapshot, PROCESSENTRY32W* lppe);
+BOOL Process32First(HANDLE hSnapshot, PROCESSENTRY32* lppe);
+BOOL Process32Next(HANDLE hSnapshot, PROCESSENTRY32* lppe);
+BOOL Thread32First(HANDLE hSnapshot, THREADENTRY32* lpte);
+BOOL Thread32Next(HANDLE hSnapshot, THREADENTRY32* lpte);
+BOOL Module32FirstW(HANDLE hSnapshot, MODULEENTRY32W* lpme);
+BOOL Module32NextW(HANDLE hSnapshot, MODULEENTRY32W* lpme);
+BOOL Module32First(HANDLE hSnapshot, MODULEENTRY32* lpme);
+BOOL Module32Next(HANDLE hSnapshot, MODULEENTRY32* lpme);
 enum MAX_MODULE_NAME32 = 0x000000ff;
 enum HF32_DEFAULT = 0x00000001;
 enum HF32_SHARED = 0x00000002;

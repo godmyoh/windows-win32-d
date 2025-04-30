@@ -36,8 +36,8 @@ enum : uint
     MPEGLAYER3_FLAG_PADDING_OFF = 0x00000002,
 }
 
-uint AMGetErrorTextA(HRESULT, PSTR, uint);
-uint AMGetErrorTextW(HRESULT, PWSTR, uint);
+uint AMGetErrorTextA(HRESULT hr, PSTR pbuffer, uint MaxLen);
+uint AMGetErrorTextW(HRESULT hr, PWSTR pbuffer, uint MaxLen);
 enum EC_SND_DEVICE_ERROR_BASE = 0x00000200;
 enum EC_SNDDEV_IN_ERROR = 0x00000200;
 enum EC_SNDDEV_OUT_ERROR = 0x00000201;
@@ -934,7 +934,7 @@ struct AMVPDATAINFO
 enum IID_ICreateDevEnum = GUID(0x29840822, 0x5b84, 0x11d0, [0xbd, 0x3b, 0x0, 0xa0, 0xc9, 0x11, 0xce, 0x86]);
 interface ICreateDevEnum : IUnknown
 {
-    HRESULT CreateClassEnumerator(const(GUID)*, IEnumMoniker*, uint);
+    HRESULT CreateClassEnumerator(const(GUID)* clsidDeviceClass, IEnumMoniker* ppEnumMoniker, uint dwFlags);
 }
 alias PIN_DIRECTION = int;
 enum : int
@@ -959,57 +959,57 @@ struct PIN_INFO
 enum IID_IPin = GUID(0x56a86891, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IPin : IUnknown
 {
-    HRESULT Connect(IPin, const(AM_MEDIA_TYPE)*);
-    HRESULT ReceiveConnection(IPin, const(AM_MEDIA_TYPE)*);
+    HRESULT Connect(IPin pReceivePin, const(AM_MEDIA_TYPE)* pmt);
+    HRESULT ReceiveConnection(IPin pConnector, const(AM_MEDIA_TYPE)* pmt);
     HRESULT Disconnect();
-    HRESULT ConnectedTo(IPin*);
-    HRESULT ConnectionMediaType(AM_MEDIA_TYPE*);
-    HRESULT QueryPinInfo(PIN_INFO*);
-    HRESULT QueryDirection(PIN_DIRECTION*);
-    HRESULT QueryId(PWSTR*);
-    HRESULT QueryAccept(const(AM_MEDIA_TYPE)*);
-    HRESULT EnumMediaTypes(IEnumMediaTypes*);
-    HRESULT QueryInternalConnections(IPin*, uint*);
+    HRESULT ConnectedTo(IPin* pPin);
+    HRESULT ConnectionMediaType(AM_MEDIA_TYPE* pmt);
+    HRESULT QueryPinInfo(PIN_INFO* pInfo);
+    HRESULT QueryDirection(PIN_DIRECTION* pPinDir);
+    HRESULT QueryId(PWSTR* Id);
+    HRESULT QueryAccept(const(AM_MEDIA_TYPE)* pmt);
+    HRESULT EnumMediaTypes(IEnumMediaTypes* ppEnum);
+    HRESULT QueryInternalConnections(IPin* apPin, uint* nPin);
     HRESULT EndOfStream();
     HRESULT BeginFlush();
     HRESULT EndFlush();
-    HRESULT NewSegment(long, long, double);
+    HRESULT NewSegment(long tStart, long tStop, double dRate);
 }
 enum IID_IEnumPins = GUID(0x56a86892, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IEnumPins : IUnknown
 {
-    HRESULT Next(uint, IPin*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint cPins, IPin* ppPins, uint* pcFetched);
+    HRESULT Skip(uint cPins);
     HRESULT Reset();
-    HRESULT Clone(IEnumPins*);
+    HRESULT Clone(IEnumPins* ppEnum);
 }
 enum IID_IEnumMediaTypes = GUID(0x89c31040, 0x846b, 0x11ce, [0x97, 0xd3, 0x0, 0xaa, 0x0, 0x55, 0x59, 0x5a]);
 interface IEnumMediaTypes : IUnknown
 {
-    HRESULT Next(uint, AM_MEDIA_TYPE**, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint cMediaTypes, AM_MEDIA_TYPE** ppMediaTypes, uint* pcFetched);
+    HRESULT Skip(uint cMediaTypes);
     HRESULT Reset();
-    HRESULT Clone(IEnumMediaTypes*);
+    HRESULT Clone(IEnumMediaTypes* ppEnum);
 }
 enum IID_IFilterGraph = GUID(0x56a8689f, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IFilterGraph : IUnknown
 {
-    HRESULT AddFilter(IBaseFilter, const(wchar)*);
-    HRESULT RemoveFilter(IBaseFilter);
-    HRESULT EnumFilters(IEnumFilters*);
-    HRESULT FindFilterByName(const(wchar)*, IBaseFilter*);
-    HRESULT ConnectDirect(IPin, IPin, const(AM_MEDIA_TYPE)*);
-    HRESULT Reconnect(IPin);
-    HRESULT Disconnect(IPin);
+    HRESULT AddFilter(IBaseFilter pFilter, const(wchar)* pName);
+    HRESULT RemoveFilter(IBaseFilter pFilter);
+    HRESULT EnumFilters(IEnumFilters* ppEnum);
+    HRESULT FindFilterByName(const(wchar)* pName, IBaseFilter* ppFilter);
+    HRESULT ConnectDirect(IPin ppinOut, IPin ppinIn, const(AM_MEDIA_TYPE)* pmt);
+    HRESULT Reconnect(IPin ppin);
+    HRESULT Disconnect(IPin ppin);
     HRESULT SetDefaultSyncSource();
 }
 enum IID_IEnumFilters = GUID(0x56a86893, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IEnumFilters : IUnknown
 {
-    HRESULT Next(uint, IBaseFilter*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint cFilters, IBaseFilter* ppFilter, uint* pcFetched);
+    HRESULT Skip(uint cFilters);
     HRESULT Reset();
-    HRESULT Clone(IEnumFilters*);
+    HRESULT Clone(IEnumFilters* ppEnum);
 }
 alias FILTER_STATE = int;
 enum : int
@@ -1024,10 +1024,10 @@ interface IMediaFilter : IPersist
 {
     HRESULT Stop();
     HRESULT Pause();
-    HRESULT Run(long);
-    HRESULT GetState(uint, FILTER_STATE*);
-    HRESULT SetSyncSource(IReferenceClock);
-    HRESULT GetSyncSource(IReferenceClock*);
+    HRESULT Run(long tStart);
+    HRESULT GetState(uint dwMilliSecsTimeout, FILTER_STATE* State);
+    HRESULT SetSyncSource(IReferenceClock pClock);
+    HRESULT GetSyncSource(IReferenceClock* pClock);
 }
 struct FILTER_INFO
 {
@@ -1037,31 +1037,31 @@ struct FILTER_INFO
 enum IID_IBaseFilter = GUID(0x56a86895, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IBaseFilter : IMediaFilter
 {
-    HRESULT EnumPins(IEnumPins*);
-    HRESULT FindPin(const(wchar)*, IPin*);
-    HRESULT QueryFilterInfo(FILTER_INFO*);
-    HRESULT JoinFilterGraph(IFilterGraph, const(wchar)*);
-    HRESULT QueryVendorInfo(PWSTR*);
+    HRESULT EnumPins(IEnumPins* ppEnum);
+    HRESULT FindPin(const(wchar)* Id, IPin* ppPin);
+    HRESULT QueryFilterInfo(FILTER_INFO* pInfo);
+    HRESULT JoinFilterGraph(IFilterGraph pGraph, const(wchar)* pName);
+    HRESULT QueryVendorInfo(PWSTR* pVendorInfo);
 }
 enum IID_IMediaSample = GUID(0x56a8689a, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IMediaSample : IUnknown
 {
-    HRESULT GetPointer(ubyte**);
+    HRESULT GetPointer(ubyte** ppBuffer);
     int GetSize();
-    HRESULT GetTime(long*, long*);
-    HRESULT SetTime(long*, long*);
+    HRESULT GetTime(long* pTimeStart, long* pTimeEnd);
+    HRESULT SetTime(long* pTimeStart, long* pTimeEnd);
     HRESULT IsSyncPoint();
-    HRESULT SetSyncPoint(BOOL);
+    HRESULT SetSyncPoint(BOOL bIsSyncPoint);
     HRESULT IsPreroll();
-    HRESULT SetPreroll(BOOL);
+    HRESULT SetPreroll(BOOL bIsPreroll);
     int GetActualDataLength();
-    HRESULT SetActualDataLength(int);
-    HRESULT GetMediaType(AM_MEDIA_TYPE**);
-    HRESULT SetMediaType(AM_MEDIA_TYPE*);
+    HRESULT SetActualDataLength(int __MIDL__IMediaSample0000);
+    HRESULT GetMediaType(AM_MEDIA_TYPE** ppMediaType);
+    HRESULT SetMediaType(AM_MEDIA_TYPE* pMediaType);
     HRESULT IsDiscontinuity();
-    HRESULT SetDiscontinuity(BOOL);
-    HRESULT GetMediaTime(long*, long*);
-    HRESULT SetMediaTime(long*, long*);
+    HRESULT SetDiscontinuity(BOOL bDiscontinuity);
+    HRESULT GetMediaTime(long* pTimeStart, long* pTimeEnd);
+    HRESULT SetMediaTime(long* pTimeStart, long* pTimeEnd);
 }
 alias AM_SAMPLE_PROPERTY_FLAGS = int;
 enum : int
@@ -1095,29 +1095,29 @@ struct AM_SAMPLE2_PROPERTIES
 enum IID_IMediaSample2 = GUID(0x36b73884, 0xc2c8, 0x11cf, [0x8b, 0x46, 0x0, 0x80, 0x5f, 0x6c, 0xef, 0x60]);
 interface IMediaSample2 : IMediaSample
 {
-    HRESULT GetProperties(uint, ubyte*);
-    HRESULT SetProperties(uint, const(ubyte)*);
+    HRESULT GetProperties(uint cbProperties, ubyte* pbProperties);
+    HRESULT SetProperties(uint cbProperties, const(ubyte)* pbProperties);
 }
 enum IID_IMediaSample2Config = GUID(0x68961e68, 0x832b, 0x41ea, [0xbc, 0x91, 0x63, 0x59, 0x3f, 0x3e, 0x70, 0xe3]);
 interface IMediaSample2Config : IUnknown
 {
-    HRESULT GetSurface(IUnknown*);
+    HRESULT GetSurface(IUnknown* ppDirect3DSurface9);
 }
 enum IID_IMemAllocator = GUID(0x56a8689c, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IMemAllocator : IUnknown
 {
-    HRESULT SetProperties(ALLOCATOR_PROPERTIES*, ALLOCATOR_PROPERTIES*);
-    HRESULT GetProperties(ALLOCATOR_PROPERTIES*);
+    HRESULT SetProperties(ALLOCATOR_PROPERTIES* pRequest, ALLOCATOR_PROPERTIES* pActual);
+    HRESULT GetProperties(ALLOCATOR_PROPERTIES* pProps);
     HRESULT Commit();
     HRESULT Decommit();
-    HRESULT GetBuffer(IMediaSample*, long*, long*, uint);
-    HRESULT ReleaseBuffer(IMediaSample);
+    HRESULT GetBuffer(IMediaSample* ppBuffer, long* pStartTime, long* pEndTime, uint dwFlags);
+    HRESULT ReleaseBuffer(IMediaSample pBuffer);
 }
 enum IID_IMemAllocatorCallbackTemp = GUID(0x379a0cf0, 0xc1de, 0x11d2, [0xab, 0xf5, 0x0, 0xa0, 0xc9, 0x5, 0xf3, 0x75]);
 interface IMemAllocatorCallbackTemp : IMemAllocator
 {
-    HRESULT SetNotify(IMemAllocatorNotifyCallbackTemp);
-    HRESULT GetFreeCount(int*);
+    HRESULT SetNotify(IMemAllocatorNotifyCallbackTemp pNotify);
+    HRESULT GetFreeCount(int* plBuffersFree);
 }
 enum IID_IMemAllocatorNotifyCallbackTemp = GUID(0x92980b30, 0xc1de, 0x11d2, [0xab, 0xf5, 0x0, 0xa0, 0xc9, 0x5, 0xf3, 0x75]);
 interface IMemAllocatorNotifyCallbackTemp : IUnknown
@@ -1127,11 +1127,11 @@ interface IMemAllocatorNotifyCallbackTemp : IUnknown
 enum IID_IMemInputPin = GUID(0x56a8689d, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IMemInputPin : IUnknown
 {
-    HRESULT GetAllocator(IMemAllocator*);
-    HRESULT NotifyAllocator(IMemAllocator, BOOL);
-    HRESULT GetAllocatorRequirements(ALLOCATOR_PROPERTIES*);
-    HRESULT Receive(IMediaSample);
-    HRESULT ReceiveMultiple(IMediaSample*, int, int*);
+    HRESULT GetAllocator(IMemAllocator* ppAllocator);
+    HRESULT NotifyAllocator(IMemAllocator pAllocator, BOOL bReadOnly);
+    HRESULT GetAllocatorRequirements(ALLOCATOR_PROPERTIES* pProps);
+    HRESULT Receive(IMediaSample pSample);
+    HRESULT ReceiveMultiple(IMediaSample* pSamples, int nSamples, int* nSamplesProcessed);
     HRESULT ReceiveCanBlock();
 }
 enum IID_IAMovieSetup = GUID(0xa3d8cec0, 0x7e5a, 0x11cf, [0xbb, 0xc5, 0x0, 0x80, 0x5f, 0x6c, 0xef, 0x20]);
@@ -1171,23 +1171,23 @@ enum : int
 enum IID_IMediaSeeking = GUID(0x36b73880, 0xc2c8, 0x11cf, [0x8b, 0x46, 0x0, 0x80, 0x5f, 0x6c, 0xef, 0x60]);
 interface IMediaSeeking : IUnknown
 {
-    HRESULT GetCapabilities(uint*);
-    HRESULT CheckCapabilities(uint*);
-    HRESULT IsFormatSupported(const(GUID)*);
-    HRESULT QueryPreferredFormat(GUID*);
-    HRESULT GetTimeFormat(GUID*);
-    HRESULT IsUsingTimeFormat(const(GUID)*);
-    HRESULT SetTimeFormat(const(GUID)*);
-    HRESULT GetDuration(long*);
-    HRESULT GetStopPosition(long*);
-    HRESULT GetCurrentPosition(long*);
-    HRESULT ConvertTimeFormat(long*, const(GUID)*, long, const(GUID)*);
-    HRESULT SetPositions(long*, uint, long*, uint);
-    HRESULT GetPositions(long*, long*);
-    HRESULT GetAvailable(long*, long*);
-    HRESULT SetRate(double);
-    HRESULT GetRate(double*);
-    HRESULT GetPreroll(long*);
+    HRESULT GetCapabilities(uint* pCapabilities);
+    HRESULT CheckCapabilities(uint* pCapabilities);
+    HRESULT IsFormatSupported(const(GUID)* pFormat);
+    HRESULT QueryPreferredFormat(GUID* pFormat);
+    HRESULT GetTimeFormat(GUID* pFormat);
+    HRESULT IsUsingTimeFormat(const(GUID)* pFormat);
+    HRESULT SetTimeFormat(const(GUID)* pFormat);
+    HRESULT GetDuration(long* pDuration);
+    HRESULT GetStopPosition(long* pStop);
+    HRESULT GetCurrentPosition(long* pCurrent);
+    HRESULT ConvertTimeFormat(long* pTarget, const(GUID)* pTargetFormat, long Source, const(GUID)* pSourceFormat);
+    HRESULT SetPositions(long* pCurrent, uint dwCurrentFlags, long* pStop, uint dwStopFlags);
+    HRESULT GetPositions(long* pCurrent, long* pStop);
+    HRESULT GetAvailable(long* pEarliest, long* pLatest);
+    HRESULT SetRate(double dRate);
+    HRESULT GetRate(double* pdRate);
+    HRESULT GetPreroll(long* pllPreroll);
 }
 alias AM_MEDIAEVENT_FLAGS = int;
 enum : int
@@ -1203,10 +1203,10 @@ struct REGFILTER
 enum IID_IEnumRegFilters = GUID(0x56a868a4, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IEnumRegFilters : IUnknown
 {
-    HRESULT Next(uint, REGFILTER**, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint cFilters, REGFILTER** apRegFilter, uint* pcFetched);
+    HRESULT Skip(uint cFilters);
     HRESULT Reset();
-    HRESULT Clone(IEnumRegFilters*);
+    HRESULT Clone(IEnumRegFilters* ppEnum);
 }
 alias IFILTERMAPPER_MERIT = int;
 enum : int
@@ -1222,14 +1222,14 @@ enum : int
 enum IID_IFilterMapper = GUID(0x56a868a3, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IFilterMapper : IUnknown
 {
-    HRESULT RegisterFilter(GUID, const(wchar)*, uint);
-    HRESULT RegisterFilterInstance(GUID, const(wchar)*, GUID*);
-    HRESULT RegisterPin(GUID, const(wchar)*, BOOL, BOOL, BOOL, BOOL, GUID, const(wchar)*);
-    HRESULT RegisterPinType(GUID, const(wchar)*, GUID, GUID);
-    HRESULT UnregisterFilter(GUID);
-    HRESULT UnregisterFilterInstance(GUID);
-    HRESULT UnregisterPin(GUID, const(wchar)*);
-    HRESULT EnumMatchingFilters(IEnumRegFilters*, uint, BOOL, GUID, GUID, BOOL, BOOL, GUID, GUID);
+    HRESULT RegisterFilter(GUID clsid, const(wchar)* Name, uint dwMerit);
+    HRESULT RegisterFilterInstance(GUID clsid, const(wchar)* Name, GUID* MRId);
+    HRESULT RegisterPin(GUID Filter, const(wchar)* Name, BOOL bRendered, BOOL bOutput, BOOL bZero, BOOL bMany, GUID ConnectsToFilter, const(wchar)* ConnectsToPin);
+    HRESULT RegisterPinType(GUID clsFilter, const(wchar)* strName, GUID clsMajorType, GUID clsSubType);
+    HRESULT UnregisterFilter(GUID Filter);
+    HRESULT UnregisterFilterInstance(GUID MRId);
+    HRESULT UnregisterPin(GUID Filter, const(wchar)* Name);
+    HRESULT EnumMatchingFilters(IEnumRegFilters* ppEnum, uint dwMerit, BOOL bInputNeeded, GUID clsInMaj, GUID clsInSub, BOOL bRender, BOOL bOututNeeded, GUID clsOutMaj, GUID clsOutSub);
 }
 struct REGPINTYPES
 {
@@ -1294,15 +1294,15 @@ struct REGFILTER2
 enum IID_IFilterMapper2 = GUID(0xb79bb0b0, 0x33c1, 0x11d1, [0xab, 0xe1, 0x0, 0xa0, 0xc9, 0x5, 0xf3, 0x75]);
 interface IFilterMapper2 : IUnknown
 {
-    HRESULT CreateCategory(const(GUID)*, uint, const(wchar)*);
-    HRESULT UnregisterFilter(const(GUID)*, const(wchar)*, const(GUID)*);
-    HRESULT RegisterFilter(const(GUID)*, const(wchar)*, IMoniker*, const(GUID)*, const(wchar)*, const(REGFILTER2)*);
-    HRESULT EnumMatchingFilters(IEnumMoniker*, uint, BOOL, uint, BOOL, uint, const(GUID)*, const(REGPINMEDIUM)*, const(GUID)*, BOOL, BOOL, uint, const(GUID)*, const(REGPINMEDIUM)*, const(GUID)*);
+    HRESULT CreateCategory(const(GUID)* clsidCategory, uint dwCategoryMerit, const(wchar)* Description);
+    HRESULT UnregisterFilter(const(GUID)* pclsidCategory, const(wchar)* szInstance, const(GUID)* Filter);
+    HRESULT RegisterFilter(const(GUID)* clsidFilter, const(wchar)* Name, IMoniker* ppMoniker, const(GUID)* pclsidCategory, const(wchar)* szInstance, const(REGFILTER2)* prf2);
+    HRESULT EnumMatchingFilters(IEnumMoniker* ppEnum, uint dwFlags, BOOL bExactMatch, uint dwMerit, BOOL bInputNeeded, uint cInputTypes, const(GUID)* pInputTypes, const(REGPINMEDIUM)* pMedIn, const(GUID)* pPinCategoryIn, BOOL bRender, BOOL bOutputNeeded, uint cOutputTypes, const(GUID)* pOutputTypes, const(REGPINMEDIUM)* pMedOut, const(GUID)* pPinCategoryOut);
 }
 enum IID_IFilterMapper3 = GUID(0xb79bb0b1, 0x33c1, 0x11d1, [0xab, 0xe1, 0x0, 0xa0, 0xc9, 0x5, 0xf3, 0x75]);
 interface IFilterMapper3 : IFilterMapper2
 {
-    HRESULT GetICreateDevEnum(ICreateDevEnum*);
+    HRESULT GetICreateDevEnum(ICreateDevEnum* ppEnum);
 }
 alias QualityMessageType = int;
 enum : int
@@ -1321,8 +1321,8 @@ struct Quality
 enum IID_IQualityControl = GUID(0x56a868a5, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IQualityControl : IUnknown
 {
-    HRESULT Notify(IBaseFilter, Quality);
-    HRESULT SetSink(IQualityControl);
+    HRESULT Notify(IBaseFilter pSelf, Quality q);
+    HRESULT SetSink(IQualityControl piqc);
 }
 alias COLORKEY_TYPE = int;
 enum : int
@@ -1353,52 +1353,52 @@ enum : int
 enum IID_IOverlayNotify = GUID(0x56a868a0, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IOverlayNotify : IUnknown
 {
-    HRESULT OnPaletteChange(uint, const(PALETTEENTRY)*);
-    HRESULT OnClipChange(const(RECT)*, const(RECT)*, const(RGNDATA)*);
-    HRESULT OnColorKeyChange(const(COLORKEY)*);
-    HRESULT OnPositionChange(const(RECT)*, const(RECT)*);
+    HRESULT OnPaletteChange(uint dwColors, const(PALETTEENTRY)* pPalette);
+    HRESULT OnClipChange(const(RECT)* pSourceRect, const(RECT)* pDestinationRect, const(RGNDATA)* pRgnData);
+    HRESULT OnColorKeyChange(const(COLORKEY)* pColorKey);
+    HRESULT OnPositionChange(const(RECT)* pSourceRect, const(RECT)* pDestinationRect);
 }
 enum IID_IOverlayNotify2 = GUID(0x680efa10, 0xd535, 0x11d1, [0x87, 0xc8, 0x0, 0xa0, 0xc9, 0x22, 0x31, 0x96]);
 interface IOverlayNotify2 : IOverlayNotify
 {
-    HRESULT OnDisplayChange(HMONITOR);
+    HRESULT OnDisplayChange(HMONITOR hMonitor);
 }
 enum IID_IOverlay = GUID(0x56a868a1, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IOverlay : IUnknown
 {
-    HRESULT GetPalette(uint*, PALETTEENTRY**);
-    HRESULT SetPalette(uint, PALETTEENTRY*);
-    HRESULT GetDefaultColorKey(COLORKEY*);
-    HRESULT GetColorKey(COLORKEY*);
-    HRESULT SetColorKey(COLORKEY*);
-    HRESULT GetWindowHandle(HWND*);
-    HRESULT GetClipList(RECT*, RECT*, RGNDATA**);
-    HRESULT GetVideoPosition(RECT*, RECT*);
-    HRESULT Advise(IOverlayNotify, uint);
+    HRESULT GetPalette(uint* pdwColors, PALETTEENTRY** ppPalette);
+    HRESULT SetPalette(uint dwColors, PALETTEENTRY* pPalette);
+    HRESULT GetDefaultColorKey(COLORKEY* pColorKey);
+    HRESULT GetColorKey(COLORKEY* pColorKey);
+    HRESULT SetColorKey(COLORKEY* pColorKey);
+    HRESULT GetWindowHandle(HWND* pHwnd);
+    HRESULT GetClipList(RECT* pSourceRect, RECT* pDestinationRect, RGNDATA** ppRgnData);
+    HRESULT GetVideoPosition(RECT* pSourceRect, RECT* pDestinationRect);
+    HRESULT Advise(IOverlayNotify pOverlayNotify, uint dwInterests);
     HRESULT Unadvise();
 }
 enum IID_IMediaEventSink = GUID(0x56a868a2, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IMediaEventSink : IUnknown
 {
-    HRESULT Notify(int, long, long);
+    HRESULT Notify(int EventCode, long EventParam1, long EventParam2);
 }
 enum IID_IFileSourceFilter = GUID(0x56a868a6, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IFileSourceFilter : IUnknown
 {
-    HRESULT Load(const(wchar)*, const(AM_MEDIA_TYPE)*);
-    HRESULT GetCurFile(PWSTR*, AM_MEDIA_TYPE*);
+    HRESULT Load(const(wchar)* pszFileName, const(AM_MEDIA_TYPE)* pmt);
+    HRESULT GetCurFile(PWSTR* ppszFileName, AM_MEDIA_TYPE* pmt);
 }
 enum IID_IFileSinkFilter = GUID(0xa2104830, 0x7c70, 0x11cf, [0x8b, 0xce, 0x0, 0xaa, 0x0, 0xa3, 0xf1, 0xa6]);
 interface IFileSinkFilter : IUnknown
 {
-    HRESULT SetFileName(const(wchar)*, const(AM_MEDIA_TYPE)*);
-    HRESULT GetCurFile(PWSTR*, AM_MEDIA_TYPE*);
+    HRESULT SetFileName(const(wchar)* pszFileName, const(AM_MEDIA_TYPE)* pmt);
+    HRESULT GetCurFile(PWSTR* ppszFileName, AM_MEDIA_TYPE* pmt);
 }
 enum IID_IFileSinkFilter2 = GUID(0x855b90, 0xce1b, 0x11d0, [0xbd, 0x4f, 0x0, 0xa0, 0xc9, 0x11, 0xce, 0x86]);
 interface IFileSinkFilter2 : IFileSinkFilter
 {
-    HRESULT SetMode(uint);
-    HRESULT GetMode(uint*);
+    HRESULT SetMode(uint dwFlags);
+    HRESULT GetMode(uint* pdwFlags);
 }
 alias AM_FILESINK_FLAGS = int;
 enum : int
@@ -1409,43 +1409,43 @@ enum : int
 enum IID_IGraphBuilder = GUID(0x56a868a9, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IGraphBuilder : IFilterGraph
 {
-    HRESULT Connect(IPin, IPin);
-    HRESULT Render(IPin);
-    HRESULT RenderFile(const(wchar)*, const(wchar)*);
-    HRESULT AddSourceFilter(const(wchar)*, const(wchar)*, IBaseFilter*);
-    HRESULT SetLogFile(ulong);
+    HRESULT Connect(IPin ppinOut, IPin ppinIn);
+    HRESULT Render(IPin ppinOut);
+    HRESULT RenderFile(const(wchar)* lpcwstrFile, const(wchar)* lpcwstrPlayList);
+    HRESULT AddSourceFilter(const(wchar)* lpcwstrFileName, const(wchar)* lpcwstrFilterName, IBaseFilter* ppFilter);
+    HRESULT SetLogFile(ulong hFile);
     HRESULT Abort();
     HRESULT ShouldOperationContinue();
 }
 enum IID_ICaptureGraphBuilder = GUID(0xbf87b6e0, 0x8c27, 0x11d0, [0xb3, 0xf0, 0x0, 0xaa, 0x0, 0x37, 0x61, 0xc5]);
 interface ICaptureGraphBuilder : IUnknown
 {
-    HRESULT SetFiltergraph(IGraphBuilder);
-    HRESULT GetFiltergraph(IGraphBuilder*);
-    HRESULT SetOutputFileName(const(GUID)*, const(wchar)*, IBaseFilter*, IFileSinkFilter*);
-    HRESULT FindInterface(const(GUID)*, IBaseFilter, const(GUID)*, void**);
-    HRESULT RenderStream(const(GUID)*, IUnknown, IBaseFilter, IBaseFilter);
-    HRESULT ControlStream(const(GUID)*, IBaseFilter, long*, long*, ushort, ushort);
-    HRESULT AllocCapFile(const(wchar)*, ulong);
-    HRESULT CopyCaptureFile(PWSTR, PWSTR, int, IAMCopyCaptureFileProgress);
+    HRESULT SetFiltergraph(IGraphBuilder pfg);
+    HRESULT GetFiltergraph(IGraphBuilder* ppfg);
+    HRESULT SetOutputFileName(const(GUID)* pType, const(wchar)* lpstrFile, IBaseFilter* ppf, IFileSinkFilter* ppSink);
+    HRESULT FindInterface(const(GUID)* pCategory, IBaseFilter pf, const(GUID)* riid, void** ppint);
+    HRESULT RenderStream(const(GUID)* pCategory, IUnknown pSource, IBaseFilter pfCompressor, IBaseFilter pfRenderer);
+    HRESULT ControlStream(const(GUID)* pCategory, IBaseFilter pFilter, long* pstart, long* pstop, ushort wStartCookie, ushort wStopCookie);
+    HRESULT AllocCapFile(const(wchar)* lpstr, ulong dwlSize);
+    HRESULT CopyCaptureFile(PWSTR lpwstrOld, PWSTR lpwstrNew, int fAllowEscAbort, IAMCopyCaptureFileProgress pCallback);
 }
 enum IID_IAMCopyCaptureFileProgress = GUID(0x670d1d20, 0xa068, 0x11d0, [0xb3, 0xf0, 0x0, 0xaa, 0x0, 0x37, 0x61, 0xc5]);
 interface IAMCopyCaptureFileProgress : IUnknown
 {
-    HRESULT Progress(int);
+    HRESULT Progress(int iProgress);
 }
 enum IID_ICaptureGraphBuilder2 = GUID(0x93e5a4e0, 0x2d50, 0x11d2, [0xab, 0xfa, 0x0, 0xa0, 0xc9, 0xc6, 0xe3, 0x8d]);
 interface ICaptureGraphBuilder2 : IUnknown
 {
-    HRESULT SetFiltergraph(IGraphBuilder);
-    HRESULT GetFiltergraph(IGraphBuilder*);
-    HRESULT SetOutputFileName(const(GUID)*, const(wchar)*, IBaseFilter*, IFileSinkFilter*);
-    HRESULT FindInterface(const(GUID)*, const(GUID)*, IBaseFilter, const(GUID)*, void**);
-    HRESULT RenderStream(const(GUID)*, const(GUID)*, IUnknown, IBaseFilter, IBaseFilter);
-    HRESULT ControlStream(const(GUID)*, const(GUID)*, IBaseFilter, long*, long*, ushort, ushort);
-    HRESULT AllocCapFile(const(wchar)*, ulong);
-    HRESULT CopyCaptureFile(PWSTR, PWSTR, int, IAMCopyCaptureFileProgress);
-    HRESULT FindPin(IUnknown, PIN_DIRECTION, const(GUID)*, const(GUID)*, BOOL, int, IPin*);
+    HRESULT SetFiltergraph(IGraphBuilder pfg);
+    HRESULT GetFiltergraph(IGraphBuilder* ppfg);
+    HRESULT SetOutputFileName(const(GUID)* pType, const(wchar)* lpstrFile, IBaseFilter* ppf, IFileSinkFilter* ppSink);
+    HRESULT FindInterface(const(GUID)* pCategory, const(GUID)* pType, IBaseFilter pf, const(GUID)* riid, void** ppint);
+    HRESULT RenderStream(const(GUID)* pCategory, const(GUID)* pType, IUnknown pSource, IBaseFilter pfCompressor, IBaseFilter pfRenderer);
+    HRESULT ControlStream(const(GUID)* pCategory, const(GUID)* pType, IBaseFilter pFilter, long* pstart, long* pstop, ushort wStartCookie, ushort wStopCookie);
+    HRESULT AllocCapFile(const(wchar)* lpstr, ulong dwlSize);
+    HRESULT CopyCaptureFile(PWSTR lpwstrOld, PWSTR lpwstrNew, int fAllowEscAbort, IAMCopyCaptureFileProgress pCallback);
+    HRESULT FindPin(IUnknown pSource, PIN_DIRECTION pindir, const(GUID)* pCategory, const(GUID)* pType, BOOL fUnconnected, int num, IPin* ppPin);
 }
 alias _AM_RENSDEREXFLAGS = int;
 enum : int
@@ -1456,63 +1456,63 @@ enum : int
 enum IID_IFilterGraph2 = GUID(0x36b73882, 0xc2c8, 0x11cf, [0x8b, 0x46, 0x0, 0x80, 0x5f, 0x6c, 0xef, 0x60]);
 interface IFilterGraph2 : IGraphBuilder
 {
-    HRESULT AddSourceFilterForMoniker(IMoniker, IBindCtx, const(wchar)*, IBaseFilter*);
-    HRESULT ReconnectEx(IPin, const(AM_MEDIA_TYPE)*);
-    HRESULT RenderEx(IPin, uint, uint*);
+    HRESULT AddSourceFilterForMoniker(IMoniker pMoniker, IBindCtx pCtx, const(wchar)* lpcwstrFilterName, IBaseFilter* ppFilter);
+    HRESULT ReconnectEx(IPin ppin, const(AM_MEDIA_TYPE)* pmt);
+    HRESULT RenderEx(IPin pPinOut, uint dwFlags, uint* pvContext);
 }
 enum IID_IFilterGraph3 = GUID(0xaaf38154, 0xb80b, 0x422f, [0x91, 0xe6, 0xb6, 0x64, 0x67, 0x50, 0x9a, 0x7]);
 interface IFilterGraph3 : IFilterGraph2
 {
-    HRESULT SetSyncSourceEx(IReferenceClock, IReferenceClock, IBaseFilter);
+    HRESULT SetSyncSourceEx(IReferenceClock pClockForMostOfFilterGraph, IReferenceClock pClockForFilter, IBaseFilter pFilter);
 }
 enum IID_IStreamBuilder = GUID(0x56a868bf, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IStreamBuilder : IUnknown
 {
-    HRESULT Render(IPin, IGraphBuilder);
-    HRESULT Backout(IPin, IGraphBuilder);
+    HRESULT Render(IPin ppinOut, IGraphBuilder pGraph);
+    HRESULT Backout(IPin ppinOut, IGraphBuilder pGraph);
 }
 enum IID_IAsyncReader = GUID(0x56a868aa, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IAsyncReader : IUnknown
 {
-    HRESULT RequestAllocator(IMemAllocator, ALLOCATOR_PROPERTIES*, IMemAllocator*);
-    HRESULT Request(IMediaSample, ulong);
-    HRESULT WaitForNext(uint, IMediaSample*, ulong*);
-    HRESULT SyncReadAligned(IMediaSample);
-    HRESULT SyncRead(long, int, ubyte*);
-    HRESULT Length(long*, long*);
+    HRESULT RequestAllocator(IMemAllocator pPreferred, ALLOCATOR_PROPERTIES* pProps, IMemAllocator* ppActual);
+    HRESULT Request(IMediaSample pSample, ulong dwUser);
+    HRESULT WaitForNext(uint dwTimeout, IMediaSample* ppSample, ulong* pdwUser);
+    HRESULT SyncReadAligned(IMediaSample pSample);
+    HRESULT SyncRead(long llPosition, int lLength, ubyte* pBuffer);
+    HRESULT Length(long* pTotal, long* pAvailable);
     HRESULT BeginFlush();
     HRESULT EndFlush();
 }
 enum IID_IGraphVersion = GUID(0x56a868ab, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IGraphVersion : IUnknown
 {
-    HRESULT QueryVersion(int*);
+    HRESULT QueryVersion(int* pVersion);
 }
 enum IID_IResourceConsumer = GUID(0x56a868ad, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IResourceConsumer : IUnknown
 {
-    HRESULT AcquireResource(int);
-    HRESULT ReleaseResource(int);
+    HRESULT AcquireResource(int idResource);
+    HRESULT ReleaseResource(int idResource);
 }
 enum IID_IResourceManager = GUID(0x56a868ac, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IResourceManager : IUnknown
 {
-    HRESULT Register(const(wchar)*, int, int*);
-    HRESULT RegisterGroup(const(wchar)*, int, int*, int*);
-    HRESULT RequestResource(int, IUnknown, IResourceConsumer);
-    HRESULT NotifyAcquire(int, IResourceConsumer, HRESULT);
-    HRESULT NotifyRelease(int, IResourceConsumer, BOOL);
-    HRESULT CancelRequest(int, IResourceConsumer);
-    HRESULT SetFocus(IUnknown);
-    HRESULT ReleaseFocus(IUnknown);
+    HRESULT Register(const(wchar)* pName, int cResource, int* plToken);
+    HRESULT RegisterGroup(const(wchar)* pName, int cResource, int* palTokens, int* plToken);
+    HRESULT RequestResource(int idResource, IUnknown pFocusObject, IResourceConsumer pConsumer);
+    HRESULT NotifyAcquire(int idResource, IResourceConsumer pConsumer, HRESULT hr);
+    HRESULT NotifyRelease(int idResource, IResourceConsumer pConsumer, BOOL bStillWant);
+    HRESULT CancelRequest(int idResource, IResourceConsumer pConsumer);
+    HRESULT SetFocus(IUnknown pFocusObject);
+    HRESULT ReleaseFocus(IUnknown pFocusObject);
 }
 enum IID_IDistributorNotify = GUID(0x56a868af, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IDistributorNotify : IUnknown
 {
     HRESULT Stop();
     HRESULT Pause();
-    HRESULT Run(long);
-    HRESULT SetSyncSource(IReferenceClock);
+    HRESULT Run(long tStart);
+    HRESULT SetSyncSource(IReferenceClock pClock);
     HRESULT NotifyGraphChange();
 }
 alias AM_STREAM_INFO_FLAGS = int;
@@ -1535,14 +1535,14 @@ struct AM_STREAM_INFO
 enum IID_IAMStreamControl = GUID(0x36b73881, 0xc2c8, 0x11cf, [0x8b, 0x46, 0x0, 0x80, 0x5f, 0x6c, 0xef, 0x60]);
 interface IAMStreamControl : IUnknown
 {
-    HRESULT StartAt(const(long)*, uint);
-    HRESULT StopAt(const(long)*, BOOL, uint);
-    HRESULT GetInfo(AM_STREAM_INFO*);
+    HRESULT StartAt(const(long)* ptStart, uint dwCookie);
+    HRESULT StopAt(const(long)* ptStop, BOOL bSendExtra, uint dwCookie);
+    HRESULT GetInfo(AM_STREAM_INFO* pInfo);
 }
 enum IID_ISeekingPassThru = GUID(0x36b73883, 0xc2c8, 0x11cf, [0x8b, 0x46, 0x0, 0x80, 0x5f, 0x6c, 0xef, 0x60]);
 interface ISeekingPassThru : IUnknown
 {
-    HRESULT Init(BOOL, IPin);
+    HRESULT Init(BOOL bSupportRendering, IPin pPin);
 }
 struct VIDEO_STREAM_CONFIG_CAPS
 {
@@ -1584,10 +1584,10 @@ struct AUDIO_STREAM_CONFIG_CAPS
 enum IID_IAMStreamConfig = GUID(0xc6e13340, 0x30ac, 0x11d0, [0xa1, 0x8c, 0x0, 0xa0, 0xc9, 0x11, 0x89, 0x56]);
 interface IAMStreamConfig : IUnknown
 {
-    HRESULT SetFormat(AM_MEDIA_TYPE*);
-    HRESULT GetFormat(AM_MEDIA_TYPE**);
-    HRESULT GetNumberOfCapabilities(int*, int*);
-    HRESULT GetStreamCaps(int, AM_MEDIA_TYPE**, ubyte*);
+    HRESULT SetFormat(AM_MEDIA_TYPE* pmt);
+    HRESULT GetFormat(AM_MEDIA_TYPE** ppmt);
+    HRESULT GetNumberOfCapabilities(int* piCount, int* piSize);
+    HRESULT GetStreamCaps(int iIndex, AM_MEDIA_TYPE** ppmt, ubyte* pSCC);
 }
 alias InterleavingMode = int;
 enum : int
@@ -1601,18 +1601,18 @@ enum : int
 enum IID_IConfigInterleaving = GUID(0xbee3d220, 0x157b, 0x11d0, [0xbd, 0x23, 0x0, 0xa0, 0xc9, 0x11, 0xce, 0x86]);
 interface IConfigInterleaving : IUnknown
 {
-    HRESULT put_Mode(InterleavingMode);
-    HRESULT get_Mode(InterleavingMode*);
-    HRESULT put_Interleaving(const(long)*, const(long)*);
-    HRESULT get_Interleaving(long*, long*);
+    HRESULT put_Mode(InterleavingMode mode);
+    HRESULT get_Mode(InterleavingMode* pMode);
+    HRESULT put_Interleaving(const(long)* prtInterleave, const(long)* prtPreroll);
+    HRESULT get_Interleaving(long* prtInterleave, long* prtPreroll);
 }
 enum IID_IConfigAviMux = GUID(0x5acd6aa0, 0xf482, 0x11ce, [0x8b, 0x67, 0x0, 0xaa, 0x0, 0xa3, 0xf1, 0xa6]);
 interface IConfigAviMux : IUnknown
 {
-    HRESULT SetMasterStream(int);
-    HRESULT GetMasterStream(int*);
-    HRESULT SetOutputCompatibilityIndex(BOOL);
-    HRESULT GetOutputCompatibilityIndex(BOOL*);
+    HRESULT SetMasterStream(int iStream);
+    HRESULT GetMasterStream(int* pStream);
+    HRESULT SetOutputCompatibilityIndex(BOOL fOldIndex);
+    HRESULT GetOutputCompatibilityIndex(BOOL* pfOldIndex);
 }
 alias CompressionCaps = int;
 enum : int
@@ -1627,17 +1627,17 @@ enum : int
 enum IID_IAMVideoCompression = GUID(0xc6e13343, 0x30ac, 0x11d0, [0xa1, 0x8c, 0x0, 0xa0, 0xc9, 0x11, 0x89, 0x56]);
 interface IAMVideoCompression : IUnknown
 {
-    HRESULT put_KeyFrameRate(int);
-    HRESULT get_KeyFrameRate(int*);
-    HRESULT put_PFramesPerKeyFrame(int);
-    HRESULT get_PFramesPerKeyFrame(int*);
-    HRESULT put_Quality(double);
-    HRESULT get_Quality(double*);
-    HRESULT put_WindowSize(ulong);
-    HRESULT get_WindowSize(ulong*);
-    HRESULT GetInfo(PWSTR, int*, PWSTR, int*, int*, int*, double*, int*);
-    HRESULT OverrideKeyFrame(int);
-    HRESULT OverrideFrameSize(int, int);
+    HRESULT put_KeyFrameRate(int KeyFrameRate);
+    HRESULT get_KeyFrameRate(int* pKeyFrameRate);
+    HRESULT put_PFramesPerKeyFrame(int PFramesPerKeyFrame);
+    HRESULT get_PFramesPerKeyFrame(int* pPFramesPerKeyFrame);
+    HRESULT put_Quality(double Quality);
+    HRESULT get_Quality(double* pQuality);
+    HRESULT put_WindowSize(ulong WindowSize);
+    HRESULT get_WindowSize(ulong* pWindowSize);
+    HRESULT GetInfo(PWSTR pszVersion, int* pcbVersion, PWSTR pszDescription, int* pcbDescription, int* pDefaultKeyFrameRate, int* pDefaultPFramesPerKey, double* pDefaultQuality, int* pCapabilities);
+    HRESULT OverrideKeyFrame(int FrameNumber);
+    HRESULT OverrideFrameSize(int FrameNumber, int Size);
 }
 alias VfwCaptureDialogs = int;
 enum : int
@@ -1659,51 +1659,51 @@ enum : int
 enum IID_IAMVfwCaptureDialogs = GUID(0xd8d715a0, 0x6e5e, 0x11d0, [0xb3, 0xf0, 0x0, 0xaa, 0x0, 0x37, 0x61, 0xc5]);
 interface IAMVfwCaptureDialogs : IUnknown
 {
-    HRESULT HasDialog(int);
-    HRESULT ShowDialog(int, HWND);
-    HRESULT SendDriverMessage(int, int, int, int);
+    HRESULT HasDialog(int iDialog);
+    HRESULT ShowDialog(int iDialog, HWND hwnd);
+    HRESULT SendDriverMessage(int iDialog, int uMsg, int dw1, int dw2);
 }
 enum IID_IAMVfwCompressDialogs = GUID(0xd8d715a3, 0x6e5e, 0x11d0, [0xb3, 0xf0, 0x0, 0xaa, 0x0, 0x37, 0x61, 0xc5]);
 interface IAMVfwCompressDialogs : IUnknown
 {
-    HRESULT ShowDialog(int, HWND);
-    HRESULT GetState(void*, int*);
-    HRESULT SetState(void*, int);
-    HRESULT SendDriverMessage(int, int, int);
+    HRESULT ShowDialog(int iDialog, HWND hwnd);
+    HRESULT GetState(void* pState, int* pcbState);
+    HRESULT SetState(void* pState, int cbState);
+    HRESULT SendDriverMessage(int uMsg, int dw1, int dw2);
 }
 enum IID_IAMDroppedFrames = GUID(0xc6e13344, 0x30ac, 0x11d0, [0xa1, 0x8c, 0x0, 0xa0, 0xc9, 0x11, 0x89, 0x56]);
 interface IAMDroppedFrames : IUnknown
 {
-    HRESULT GetNumDropped(int*);
-    HRESULT GetNumNotDropped(int*);
-    HRESULT GetDroppedInfo(int, int*, int*);
-    HRESULT GetAverageFrameSize(int*);
+    HRESULT GetNumDropped(int* plDropped);
+    HRESULT GetNumNotDropped(int* plNotDropped);
+    HRESULT GetDroppedInfo(int lSize, int* plArray, int* plNumCopied);
+    HRESULT GetAverageFrameSize(int* plAverageSize);
 }
 enum IID_IAMAudioInputMixer = GUID(0x54c39221, 0x8380, 0x11d0, [0xb3, 0xf0, 0x0, 0xaa, 0x0, 0x37, 0x61, 0xc5]);
 interface IAMAudioInputMixer : IUnknown
 {
-    HRESULT put_Enable(BOOL);
-    HRESULT get_Enable(BOOL*);
-    HRESULT put_Mono(BOOL);
-    HRESULT get_Mono(BOOL*);
-    HRESULT put_MixLevel(double);
-    HRESULT get_MixLevel(double*);
-    HRESULT put_Pan(double);
-    HRESULT get_Pan(double*);
-    HRESULT put_Loudness(BOOL);
-    HRESULT get_Loudness(BOOL*);
-    HRESULT put_Treble(double);
-    HRESULT get_Treble(double*);
-    HRESULT get_TrebleRange(double*);
-    HRESULT put_Bass(double);
-    HRESULT get_Bass(double*);
-    HRESULT get_BassRange(double*);
+    HRESULT put_Enable(BOOL fEnable);
+    HRESULT get_Enable(BOOL* pfEnable);
+    HRESULT put_Mono(BOOL fMono);
+    HRESULT get_Mono(BOOL* pfMono);
+    HRESULT put_MixLevel(double Level);
+    HRESULT get_MixLevel(double* pLevel);
+    HRESULT put_Pan(double Pan);
+    HRESULT get_Pan(double* pPan);
+    HRESULT put_Loudness(BOOL fLoudness);
+    HRESULT get_Loudness(BOOL* pfLoudness);
+    HRESULT put_Treble(double Treble);
+    HRESULT get_Treble(double* pTreble);
+    HRESULT get_TrebleRange(double* pRange);
+    HRESULT put_Bass(double Bass);
+    HRESULT get_Bass(double* pBass);
+    HRESULT get_BassRange(double* pRange);
 }
 enum IID_IAMBufferNegotiation = GUID(0x56ed71a0, 0xaf5f, 0x11d0, [0xb3, 0xf0, 0x0, 0xaa, 0x0, 0x37, 0x61, 0xc5]);
 interface IAMBufferNegotiation : IUnknown
 {
-    HRESULT SuggestAllocatorProperties(const(ALLOCATOR_PROPERTIES)*);
-    HRESULT GetAllocatorProperties(ALLOCATOR_PROPERTIES*);
+    HRESULT SuggestAllocatorProperties(const(ALLOCATOR_PROPERTIES)* pprop);
+    HRESULT GetAllocatorProperties(ALLOCATOR_PROPERTIES* pprop);
 }
 alias AnalogVideoStandard = int;
 enum : int
@@ -1781,15 +1781,15 @@ enum : int
 enum IID_IAMAnalogVideoDecoder = GUID(0xc6e13350, 0x30ac, 0x11d0, [0xa1, 0x8c, 0x0, 0xa0, 0xc9, 0x11, 0x89, 0x56]);
 interface IAMAnalogVideoDecoder : IUnknown
 {
-    HRESULT get_AvailableTVFormats(int*);
-    HRESULT put_TVFormat(int);
-    HRESULT get_TVFormat(int*);
-    HRESULT get_HorizontalLocked(int*);
-    HRESULT put_VCRHorizontalLocking(int);
-    HRESULT get_VCRHorizontalLocking(int*);
-    HRESULT get_NumberOfLines(int*);
-    HRESULT put_OutputEnable(int);
-    HRESULT get_OutputEnable(int*);
+    HRESULT get_AvailableTVFormats(int* lAnalogVideoStandard);
+    HRESULT put_TVFormat(int lAnalogVideoStandard);
+    HRESULT get_TVFormat(int* plAnalogVideoStandard);
+    HRESULT get_HorizontalLocked(int* plLocked);
+    HRESULT put_VCRHorizontalLocking(int lVCRHorizontalLocking);
+    HRESULT get_VCRHorizontalLocking(int* plVCRHorizontalLocking);
+    HRESULT get_NumberOfLines(int* plNumberOfLines);
+    HRESULT put_OutputEnable(int lOutputEnable);
+    HRESULT get_OutputEnable(int* plOutputEnable);
 }
 alias VideoProcAmpProperty = int;
 enum : int
@@ -1816,9 +1816,9 @@ enum : int
 enum IID_IAMVideoProcAmp = GUID(0xc6e13360, 0x30ac, 0x11d0, [0xa1, 0x8c, 0x0, 0xa0, 0xc9, 0x11, 0x89, 0x56]);
 interface IAMVideoProcAmp : IUnknown
 {
-    HRESULT GetRange(int, int*, int*, int*, int*, int*);
-    HRESULT Set(int, int, int);
-    HRESULT Get(int, int*, int*);
+    HRESULT GetRange(int Property, int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlags);
+    HRESULT Set(int Property, int lValue, int Flags);
+    HRESULT Get(int Property, int* lValue, int* Flags);
 }
 alias CameraControlProperty = int;
 enum : int
@@ -1842,9 +1842,9 @@ enum : int
 enum IID_IAMCameraControl = GUID(0xc6e13370, 0x30ac, 0x11d0, [0xa1, 0x8c, 0x0, 0xa0, 0xc9, 0x11, 0x89, 0x56]);
 interface IAMCameraControl : IUnknown
 {
-    HRESULT GetRange(int, int*, int*, int*, int*, int*);
-    HRESULT Set(int, int, int);
-    HRESULT Get(int, int*, int*);
+    HRESULT GetRange(int Property, int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlags);
+    HRESULT Set(int Property, int lValue, int Flags);
+    HRESULT Get(int Property, int* lValue, int* Flags);
 }
 alias VideoControlFlags = int;
 enum : int
@@ -1858,21 +1858,21 @@ enum : int
 enum IID_IAMVideoControl = GUID(0x6a2e0670, 0x28e4, 0x11d0, [0xa1, 0x8c, 0x0, 0xa0, 0xc9, 0x11, 0x89, 0x56]);
 interface IAMVideoControl : IUnknown
 {
-    HRESULT GetCaps(IPin, int*);
-    HRESULT SetMode(IPin, int);
-    HRESULT GetMode(IPin, int*);
-    HRESULT GetCurrentActualFrameRate(IPin, long*);
-    HRESULT GetMaxAvailableFrameRate(IPin, int, SIZE, long*);
-    HRESULT GetFrameRateList(IPin, int, SIZE, int*, long**);
+    HRESULT GetCaps(IPin pPin, int* pCapsFlags);
+    HRESULT SetMode(IPin pPin, int Mode);
+    HRESULT GetMode(IPin pPin, int* Mode);
+    HRESULT GetCurrentActualFrameRate(IPin pPin, long* ActualFrameRate);
+    HRESULT GetMaxAvailableFrameRate(IPin pPin, int iIndex, SIZE Dimensions, long* MaxAvailableFrameRate);
+    HRESULT GetFrameRateList(IPin pPin, int iIndex, SIZE Dimensions, int* ListSize, long** FrameRates);
 }
 enum IID_IAMCrossbar = GUID(0xc6e13380, 0x30ac, 0x11d0, [0xa1, 0x8c, 0x0, 0xa0, 0xc9, 0x11, 0x89, 0x56]);
 interface IAMCrossbar : IUnknown
 {
-    HRESULT get_PinCounts(int*, int*);
-    HRESULT CanRoute(int, int);
-    HRESULT Route(int, int);
-    HRESULT get_IsRoutedTo(int, int*);
-    HRESULT get_CrossbarPinInfo(BOOL, int, int*, int*);
+    HRESULT get_PinCounts(int* OutputPinCount, int* InputPinCount);
+    HRESULT CanRoute(int OutputPinIndex, int InputPinIndex);
+    HRESULT Route(int OutputPinIndex, int InputPinIndex);
+    HRESULT get_IsRoutedTo(int OutputPinIndex, int* InputPinIndex);
+    HRESULT get_CrossbarPinInfo(BOOL IsInputPin, int PinIndex, int* PinIndexRelated, int* PhysicalType);
 }
 alias AMTunerSubChannel = int;
 enum : int
@@ -1908,47 +1908,47 @@ enum : int
 enum IID_IAMTuner = GUID(0x211a8761, 0x3ac, 0x11d1, [0x8d, 0x13, 0x0, 0xaa, 0x0, 0xbd, 0x83, 0x39]);
 interface IAMTuner : IUnknown
 {
-    HRESULT put_Channel(int, int, int);
-    HRESULT get_Channel(int*, int*, int*);
-    HRESULT ChannelMinMax(int*, int*);
-    HRESULT put_CountryCode(int);
-    HRESULT get_CountryCode(int*);
-    HRESULT put_TuningSpace(int);
-    HRESULT get_TuningSpace(int*);
-    HRESULT Logon(HANDLE);
+    HRESULT put_Channel(int lChannel, int lVideoSubChannel, int lAudioSubChannel);
+    HRESULT get_Channel(int* plChannel, int* plVideoSubChannel, int* plAudioSubChannel);
+    HRESULT ChannelMinMax(int* lChannelMin, int* lChannelMax);
+    HRESULT put_CountryCode(int lCountryCode);
+    HRESULT get_CountryCode(int* plCountryCode);
+    HRESULT put_TuningSpace(int lTuningSpace);
+    HRESULT get_TuningSpace(int* plTuningSpace);
+    HRESULT Logon(HANDLE hCurrentUser);
     HRESULT Logout();
-    HRESULT SignalPresent(int*);
-    HRESULT put_Mode(AMTunerModeType);
-    HRESULT get_Mode(AMTunerModeType*);
-    HRESULT GetAvailableModes(int*);
-    HRESULT RegisterNotificationCallBack(IAMTunerNotification, int);
-    HRESULT UnRegisterNotificationCallBack(IAMTunerNotification);
+    HRESULT SignalPresent(int* plSignalStrength);
+    HRESULT put_Mode(AMTunerModeType lMode);
+    HRESULT get_Mode(AMTunerModeType* plMode);
+    HRESULT GetAvailableModes(int* plModes);
+    HRESULT RegisterNotificationCallBack(IAMTunerNotification pNotify, int lEvents);
+    HRESULT UnRegisterNotificationCallBack(IAMTunerNotification pNotify);
 }
 enum IID_IAMTunerNotification = GUID(0x211a8760, 0x3ac, 0x11d1, [0x8d, 0x13, 0x0, 0xaa, 0x0, 0xbd, 0x83, 0x39]);
 interface IAMTunerNotification : IUnknown
 {
-    HRESULT OnEvent(AMTunerEventType);
+    HRESULT OnEvent(AMTunerEventType Event);
 }
 enum IID_IAMTVTuner = GUID(0x211a8766, 0x3ac, 0x11d1, [0x8d, 0x13, 0x0, 0xaa, 0x0, 0xbd, 0x83, 0x39]);
 interface IAMTVTuner : IAMTuner
 {
-    HRESULT get_AvailableTVFormats(int*);
-    HRESULT get_TVFormat(int*);
-    HRESULT AutoTune(int, int*);
+    HRESULT get_AvailableTVFormats(int* lAnalogVideoStandard);
+    HRESULT get_TVFormat(int* plAnalogVideoStandard);
+    HRESULT AutoTune(int lChannel, int* plFoundSignal);
     HRESULT StoreAutoTune();
-    HRESULT get_NumInputConnections(int*);
-    HRESULT put_InputType(int, TunerInputType);
-    HRESULT get_InputType(int, TunerInputType*);
-    HRESULT put_ConnectInput(int);
-    HRESULT get_ConnectInput(int*);
-    HRESULT get_VideoFrequency(int*);
-    HRESULT get_AudioFrequency(int*);
+    HRESULT get_NumInputConnections(int* plNumInputConnections);
+    HRESULT put_InputType(int lIndex, TunerInputType InputType);
+    HRESULT get_InputType(int lIndex, TunerInputType* pInputType);
+    HRESULT put_ConnectInput(int lIndex);
+    HRESULT get_ConnectInput(int* plIndex);
+    HRESULT get_VideoFrequency(int* lFreq);
+    HRESULT get_AudioFrequency(int* lFreq);
 }
 enum IID_IBPCSatelliteTuner = GUID(0x211a8765, 0x3ac, 0x11d1, [0x8d, 0x13, 0x0, 0xaa, 0x0, 0xbd, 0x83, 0x39]);
 interface IBPCSatelliteTuner : IAMTuner
 {
-    HRESULT get_DefaultSubChannelTypes(int*, int*);
-    HRESULT put_DefaultSubChannelTypes(int, int);
+    HRESULT get_DefaultSubChannelTypes(int* plDefaultVideoType, int* plDefaultAudioType);
+    HRESULT put_DefaultSubChannelTypes(int lDefaultVideoType, int lDefaultAudioType);
     HRESULT IsTapingPermitted();
 }
 alias TVAudioMode = int;
@@ -1974,28 +1974,28 @@ enum : int
 enum IID_IAMTVAudio = GUID(0x83ec1c30, 0x23d1, 0x11d1, [0x99, 0xe6, 0x0, 0xa0, 0xc9, 0x56, 0x2, 0x66]);
 interface IAMTVAudio : IUnknown
 {
-    HRESULT GetHardwareSupportedTVAudioModes(int*);
-    HRESULT GetAvailableTVAudioModes(int*);
-    HRESULT get_TVAudioMode(int*);
-    HRESULT put_TVAudioMode(int);
-    HRESULT RegisterNotificationCallBack(IAMTunerNotification, int);
-    HRESULT UnRegisterNotificationCallBack(IAMTunerNotification);
+    HRESULT GetHardwareSupportedTVAudioModes(int* plModes);
+    HRESULT GetAvailableTVAudioModes(int* plModes);
+    HRESULT get_TVAudioMode(int* plMode);
+    HRESULT put_TVAudioMode(int lMode);
+    HRESULT RegisterNotificationCallBack(IAMTunerNotification pNotify, int lEvents);
+    HRESULT UnRegisterNotificationCallBack(IAMTunerNotification pNotify);
 }
 enum IID_IAMTVAudioNotification = GUID(0x83ec1c33, 0x23d1, 0x11d1, [0x99, 0xe6, 0x0, 0xa0, 0xc9, 0x56, 0x2, 0x66]);
 interface IAMTVAudioNotification : IUnknown
 {
-    HRESULT OnEvent(AMTVAudioEventType);
+    HRESULT OnEvent(AMTVAudioEventType Event);
 }
 enum IID_IAMAnalogVideoEncoder = GUID(0xc6e133b0, 0x30ac, 0x11d0, [0xa1, 0x8c, 0x0, 0xa0, 0xc9, 0x11, 0x89, 0x56]);
 interface IAMAnalogVideoEncoder : IUnknown
 {
-    HRESULT get_AvailableTVFormats(int*);
-    HRESULT put_TVFormat(int);
-    HRESULT get_TVFormat(int*);
-    HRESULT put_CopyProtection(int);
-    HRESULT get_CopyProtection(int*);
-    HRESULT put_CCEnable(int);
-    HRESULT get_CCEnable(int*);
+    HRESULT get_AvailableTVFormats(int* lAnalogVideoStandard);
+    HRESULT put_TVFormat(int lAnalogVideoStandard);
+    HRESULT get_TVFormat(int* plAnalogVideoStandard);
+    HRESULT put_CopyProtection(int lVideoCopyProtection);
+    HRESULT get_CopyProtection(int* lVideoCopyProtection);
+    HRESULT put_CCEnable(int lCCEnable);
+    HRESULT get_CCEnable(int* lCCEnable);
 }
 alias AMPROPERTY_PIN = int;
 enum : int
@@ -2007,106 +2007,106 @@ enum : int
 enum IID_IMediaPropertyBag = GUID(0x6025a880, 0xc0d5, 0x11d0, [0xbd, 0x4e, 0x0, 0xa0, 0xc9, 0x11, 0xce, 0x86]);
 interface IMediaPropertyBag : IPropertyBag
 {
-    HRESULT EnumProperty(uint, VARIANT*, VARIANT*);
+    HRESULT EnumProperty(uint iProperty, VARIANT* pvarPropertyName, VARIANT* pvarPropertyValue);
 }
 enum IID_IPersistMediaPropertyBag = GUID(0x5738e040, 0xb67f, 0x11d0, [0xbd, 0x4d, 0x0, 0xa0, 0xc9, 0x11, 0xce, 0x86]);
 interface IPersistMediaPropertyBag : IPersist
 {
     HRESULT InitNew();
-    HRESULT Load(IMediaPropertyBag, IErrorLog);
-    HRESULT Save(IMediaPropertyBag, BOOL, BOOL);
+    HRESULT Load(IMediaPropertyBag pPropBag, IErrorLog pErrorLog);
+    HRESULT Save(IMediaPropertyBag pPropBag, BOOL fClearDirty, BOOL fSaveAllProperties);
 }
 enum IID_IAMPhysicalPinInfo = GUID(0xf938c991, 0x3029, 0x11cf, [0x8c, 0x44, 0x0, 0xaa, 0x0, 0x6b, 0x68, 0x14]);
 interface IAMPhysicalPinInfo : IUnknown
 {
-    HRESULT GetPhysicalType(int*, PWSTR*);
+    HRESULT GetPhysicalType(int* pType, PWSTR* ppszType);
 }
 enum IID_IAMExtDevice = GUID(0xb5730a90, 0x1a2c, 0x11cf, [0x8c, 0x23, 0x0, 0xaa, 0x0, 0x6b, 0x68, 0x14]);
 interface IAMExtDevice : IUnknown
 {
-    HRESULT GetCapability(int, int*, double*);
-    HRESULT get_ExternalDeviceID(PWSTR*);
-    HRESULT get_ExternalDeviceVersion(PWSTR*);
-    HRESULT put_DevicePower(int);
-    HRESULT get_DevicePower(int*);
-    HRESULT Calibrate(ulong, int, int*);
-    HRESULT put_DevicePort(int);
-    HRESULT get_DevicePort(int*);
+    HRESULT GetCapability(int Capability, int* pValue, double* pdblValue);
+    HRESULT get_ExternalDeviceID(PWSTR* ppszData);
+    HRESULT get_ExternalDeviceVersion(PWSTR* ppszData);
+    HRESULT put_DevicePower(int PowerMode);
+    HRESULT get_DevicePower(int* pPowerMode);
+    HRESULT Calibrate(ulong hEvent, int Mode, int* pStatus);
+    HRESULT put_DevicePort(int DevicePort);
+    HRESULT get_DevicePort(int* pDevicePort);
 }
 enum IID_IAMExtTransport = GUID(0xa03cd5f0, 0x3045, 0x11cf, [0x8c, 0x44, 0x0, 0xaa, 0x0, 0x6b, 0x68, 0x14]);
 interface IAMExtTransport : IUnknown
 {
-    HRESULT GetCapability(int, int*, double*);
-    HRESULT put_MediaState(int);
-    HRESULT get_MediaState(int*);
-    HRESULT put_LocalControl(int);
-    HRESULT get_LocalControl(int*);
-    HRESULT GetStatus(int, int*);
-    HRESULT GetTransportBasicParameters(int, int*, PWSTR*);
-    HRESULT SetTransportBasicParameters(int, int, const(wchar)*);
-    HRESULT GetTransportVideoParameters(int, int*);
-    HRESULT SetTransportVideoParameters(int, int);
-    HRESULT GetTransportAudioParameters(int, int*);
-    HRESULT SetTransportAudioParameters(int, int);
-    HRESULT put_Mode(int);
-    HRESULT get_Mode(int*);
-    HRESULT put_Rate(double);
-    HRESULT get_Rate(double*);
-    HRESULT GetChase(int*, int*, ulong*);
-    HRESULT SetChase(int, int, ulong);
-    HRESULT GetBump(int*, int*);
-    HRESULT SetBump(int, int);
-    HRESULT get_AntiClogControl(int*);
-    HRESULT put_AntiClogControl(int);
-    HRESULT GetEditPropertySet(int, int*);
-    HRESULT SetEditPropertySet(int*, int);
-    HRESULT GetEditProperty(int, int, int*);
-    HRESULT SetEditProperty(int, int, int);
-    HRESULT get_EditStart(int*);
-    HRESULT put_EditStart(int);
+    HRESULT GetCapability(int Capability, int* pValue, double* pdblValue);
+    HRESULT put_MediaState(int State);
+    HRESULT get_MediaState(int* pState);
+    HRESULT put_LocalControl(int State);
+    HRESULT get_LocalControl(int* pState);
+    HRESULT GetStatus(int StatusItem, int* pValue);
+    HRESULT GetTransportBasicParameters(int Param, int* pValue, PWSTR* ppszData);
+    HRESULT SetTransportBasicParameters(int Param, int Value, const(wchar)* pszData);
+    HRESULT GetTransportVideoParameters(int Param, int* pValue);
+    HRESULT SetTransportVideoParameters(int Param, int Value);
+    HRESULT GetTransportAudioParameters(int Param, int* pValue);
+    HRESULT SetTransportAudioParameters(int Param, int Value);
+    HRESULT put_Mode(int Mode);
+    HRESULT get_Mode(int* pMode);
+    HRESULT put_Rate(double dblRate);
+    HRESULT get_Rate(double* pdblRate);
+    HRESULT GetChase(int* pEnabled, int* pOffset, ulong* phEvent);
+    HRESULT SetChase(int Enable, int Offset, ulong hEvent);
+    HRESULT GetBump(int* pSpeed, int* pDuration);
+    HRESULT SetBump(int Speed, int Duration);
+    HRESULT get_AntiClogControl(int* pEnabled);
+    HRESULT put_AntiClogControl(int Enable);
+    HRESULT GetEditPropertySet(int EditID, int* pState);
+    HRESULT SetEditPropertySet(int* pEditID, int State);
+    HRESULT GetEditProperty(int EditID, int Param, int* pValue);
+    HRESULT SetEditProperty(int EditID, int Param, int Value);
+    HRESULT get_EditStart(int* pValue);
+    HRESULT put_EditStart(int Value);
 }
 enum IID_IAMTimecodeReader = GUID(0x9b496ce1, 0x811b, 0x11cf, [0x8c, 0x77, 0x0, 0xaa, 0x0, 0x6b, 0x68, 0x14]);
 interface IAMTimecodeReader : IUnknown
 {
-    HRESULT GetTCRMode(int, int*);
-    HRESULT SetTCRMode(int, int);
-    HRESULT put_VITCLine(int);
-    HRESULT get_VITCLine(int*);
-    HRESULT GetTimecode(TIMECODE_SAMPLE*);
+    HRESULT GetTCRMode(int Param, int* pValue);
+    HRESULT SetTCRMode(int Param, int Value);
+    HRESULT put_VITCLine(int Line);
+    HRESULT get_VITCLine(int* pLine);
+    HRESULT GetTimecode(TIMECODE_SAMPLE* pTimecodeSample);
 }
 enum IID_IAMTimecodeGenerator = GUID(0x9b496ce0, 0x811b, 0x11cf, [0x8c, 0x77, 0x0, 0xaa, 0x0, 0x6b, 0x68, 0x14]);
 interface IAMTimecodeGenerator : IUnknown
 {
-    HRESULT GetTCGMode(int, int*);
-    HRESULT SetTCGMode(int, int);
-    HRESULT put_VITCLine(int);
-    HRESULT get_VITCLine(int*);
-    HRESULT SetTimecode(TIMECODE_SAMPLE*);
-    HRESULT GetTimecode(TIMECODE_SAMPLE*);
+    HRESULT GetTCGMode(int Param, int* pValue);
+    HRESULT SetTCGMode(int Param, int Value);
+    HRESULT put_VITCLine(int Line);
+    HRESULT get_VITCLine(int* pLine);
+    HRESULT SetTimecode(TIMECODE_SAMPLE* pTimecodeSample);
+    HRESULT GetTimecode(TIMECODE_SAMPLE* pTimecodeSample);
 }
 enum IID_IAMTimecodeDisplay = GUID(0x9b496ce2, 0x811b, 0x11cf, [0x8c, 0x77, 0x0, 0xaa, 0x0, 0x6b, 0x68, 0x14]);
 interface IAMTimecodeDisplay : IUnknown
 {
-    HRESULT GetTCDisplayEnable(int*);
-    HRESULT SetTCDisplayEnable(int);
-    HRESULT GetTCDisplay(int, int*);
-    HRESULT SetTCDisplay(int, int);
+    HRESULT GetTCDisplayEnable(int* pState);
+    HRESULT SetTCDisplayEnable(int State);
+    HRESULT GetTCDisplay(int Param, int* pValue);
+    HRESULT SetTCDisplay(int Param, int Value);
 }
 enum IID_IAMDevMemoryAllocator = GUID(0xc6545bf0, 0xe76b, 0x11d0, [0xbd, 0x52, 0x0, 0xa0, 0xc9, 0x11, 0xce, 0x86]);
 interface IAMDevMemoryAllocator : IUnknown
 {
-    HRESULT GetInfo(uint*, uint*, uint*, uint*);
-    HRESULT CheckMemory(const(ubyte)*);
-    HRESULT Alloc(ubyte**, uint*);
-    HRESULT Free(ubyte*);
-    HRESULT GetDevMemoryObject(IUnknown*, IUnknown);
+    HRESULT GetInfo(uint* pdwcbTotalFree, uint* pdwcbLargestFree, uint* pdwcbTotalMemory, uint* pdwcbMinimumChunk);
+    HRESULT CheckMemory(const(ubyte)* pBuffer);
+    HRESULT Alloc(ubyte** ppBuffer, uint* pdwcbBuffer);
+    HRESULT Free(ubyte* pBuffer);
+    HRESULT GetDevMemoryObject(IUnknown* ppUnkInnner, IUnknown pUnkOuter);
 }
 enum IID_IAMDevMemoryControl = GUID(0xc6545bf1, 0xe76b, 0x11d0, [0xbd, 0x52, 0x0, 0xa0, 0xc9, 0x11, 0xce, 0x86]);
 interface IAMDevMemoryControl : IUnknown
 {
     HRESULT QueryWriteSync();
     HRESULT WriteSync();
-    HRESULT GetDevId(uint*);
+    HRESULT GetDevId(uint* pdwDevId);
 }
 alias _AMSTREAMSELECTINFOFLAGS = int;
 enum : int
@@ -2125,9 +2125,9 @@ enum : int
 enum IID_IAMStreamSelect = GUID(0xc1960960, 0x17f5, 0x11d1, [0xab, 0xe1, 0x0, 0xa0, 0xc9, 0x5, 0xf3, 0x75]);
 interface IAMStreamSelect : IUnknown
 {
-    HRESULT Count(uint*);
-    HRESULT Info(int, AM_MEDIA_TYPE**, uint*, uint*, uint*, PWSTR*, IUnknown*, IUnknown*);
-    HRESULT Enable(int, uint);
+    HRESULT Count(uint* pcStreams);
+    HRESULT Info(int lIndex, AM_MEDIA_TYPE** ppmt, uint* pdwFlags, uint* plcid, uint* pdwGroup, PWSTR* ppszName, IUnknown* ppObject, IUnknown* ppUnk);
+    HRESULT Enable(int lIndex, uint dwFlags);
 }
 alias _AMRESCTL_RESERVEFLAGS = int;
 enum : int
@@ -2139,12 +2139,12 @@ enum : int
 enum IID_IAMResourceControl = GUID(0x8389d2d0, 0x77d7, 0x11d1, [0xab, 0xe6, 0x0, 0xa0, 0xc9, 0x5, 0xf3, 0x75]);
 interface IAMResourceControl : IUnknown
 {
-    HRESULT Reserve(uint, void*);
+    HRESULT Reserve(uint dwFlags, void* pvReserved);
 }
 enum IID_IAMClockAdjust = GUID(0x4d5466b0, 0xa49c, 0x11d1, [0xab, 0xe8, 0x0, 0xa0, 0xc9, 0x5, 0xf3, 0x75]);
 interface IAMClockAdjust : IUnknown
 {
-    HRESULT SetClockDelta(long);
+    HRESULT SetClockDelta(long rtDelta);
 }
 alias _AM_FILTER_MISC_FLAGS = int;
 enum : int
@@ -2163,12 +2163,12 @@ interface IDrawVideoImage : IUnknown
 {
     HRESULT DrawVideoImageBegin();
     HRESULT DrawVideoImageEnd();
-    HRESULT DrawVideoImageDraw(HDC, RECT*, RECT*);
+    HRESULT DrawVideoImageDraw(HDC hdc, RECT* lprcSrc, RECT* lprcDst);
 }
 enum IID_IDecimateVideoImage = GUID(0x2e5ea3e0, 0xe924, 0x11d2, [0xb6, 0xda, 0x0, 0xa0, 0xc9, 0x95, 0xe8, 0xdf]);
 interface IDecimateVideoImage : IUnknown
 {
-    HRESULT SetDecimationImageSize(int, int);
+    HRESULT SetDecimationImageSize(int lWidth, int lHeight);
     HRESULT ResetDecimationImageSize();
 }
 alias DECIMATION_USAGE = int;
@@ -2184,14 +2184,14 @@ enum : int
 enum IID_IAMVideoDecimationProperties = GUID(0x60d32930, 0x13da, 0x11d3, [0x9e, 0xc6, 0xc4, 0xfc, 0xae, 0xf5, 0xc7, 0xbe]);
 interface IAMVideoDecimationProperties : IUnknown
 {
-    HRESULT QueryDecimationUsage(DECIMATION_USAGE*);
-    HRESULT SetDecimationUsage(DECIMATION_USAGE);
+    HRESULT QueryDecimationUsage(DECIMATION_USAGE* lpUsage);
+    HRESULT SetDecimationUsage(DECIMATION_USAGE Usage);
 }
 enum IID_IVideoFrameStep = GUID(0xe46a9787, 0x2b71, 0x444d, [0xa4, 0xb5, 0x1f, 0xab, 0x7b, 0x70, 0x8d, 0x6a]);
 interface IVideoFrameStep : IUnknown
 {
-    HRESULT Step(uint, IUnknown);
-    HRESULT CanStep(int, IUnknown);
+    HRESULT Step(uint dwFrames, IUnknown pStepObject);
+    HRESULT CanStep(int bMultiple, IUnknown pStepObject);
     HRESULT CancelStep();
 }
 alias _AM_PUSHSOURCE_FLAGS = int;
@@ -2207,22 +2207,22 @@ enum : int
 enum IID_IAMLatency = GUID(0x62ea93ba, 0xec62, 0x11d2, [0xb7, 0x70, 0x0, 0xc0, 0x4f, 0xb6, 0xbd, 0x3d]);
 interface IAMLatency : IUnknown
 {
-    HRESULT GetLatency(long*);
+    HRESULT GetLatency(long* prtLatency);
 }
 enum IID_IAMPushSource = GUID(0xf185fe76, 0xe64e, 0x11d2, [0xb7, 0x6e, 0x0, 0xc0, 0x4f, 0xb6, 0xbd, 0x3d]);
 interface IAMPushSource : IAMLatency
 {
-    HRESULT GetPushSourceFlags(uint*);
-    HRESULT SetPushSourceFlags(uint);
-    HRESULT SetStreamOffset(long);
-    HRESULT GetStreamOffset(long*);
-    HRESULT GetMaxStreamOffset(long*);
-    HRESULT SetMaxStreamOffset(long);
+    HRESULT GetPushSourceFlags(uint* pFlags);
+    HRESULT SetPushSourceFlags(uint Flags);
+    HRESULT SetStreamOffset(long rtOffset);
+    HRESULT GetStreamOffset(long* prtOffset);
+    HRESULT GetMaxStreamOffset(long* prtMaxOffset);
+    HRESULT SetMaxStreamOffset(long rtMaxOffset);
 }
 enum IID_IAMDeviceRemoval = GUID(0xf90a6130, 0xb658, 0x11d2, [0xae, 0x49, 0x0, 0x0, 0xf8, 0x75, 0x4b, 0x99]);
 interface IAMDeviceRemoval : IUnknown
 {
-    HRESULT DeviceInfo(GUID*, PWSTR*);
+    HRESULT DeviceInfo(GUID* pclsidInterfaceClass, PWSTR* pwszSymbolicLink);
     HRESULT Reassociate();
     HRESULT Disassociate();
 }
@@ -2263,8 +2263,8 @@ enum : int
 enum IID_IDVEnc = GUID(0xd18e17a0, 0xaacb, 0x11d0, [0xaf, 0xb0, 0x0, 0xaa, 0x0, 0xb6, 0x7a, 0x42]);
 interface IDVEnc : IUnknown
 {
-    HRESULT get_IFormatResolution(int*, int*, int*, ubyte, DVINFO*);
-    HRESULT put_IFormatResolution(int, int, int, ubyte, DVINFO*);
+    HRESULT get_IFormatResolution(int* VideoFormat, int* DVFormat, int* Resolution, ubyte fDVInfo, DVINFO* sDVInfo);
+    HRESULT put_IFormatResolution(int VideoFormat, int DVFormat, int Resolution, ubyte fDVInfo, DVINFO* sDVInfo);
 }
 alias _DVDECODERRESOLUTION = int;
 enum : int
@@ -2287,18 +2287,18 @@ enum : int
 enum IID_IIPDVDec = GUID(0xb8e8bd60, 0xbfe, 0x11d0, [0xaf, 0x91, 0x0, 0xaa, 0x0, 0xb6, 0x7a, 0x42]);
 interface IIPDVDec : IUnknown
 {
-    HRESULT get_IPDisplay(int*);
-    HRESULT put_IPDisplay(int);
+    HRESULT get_IPDisplay(int* displayPix);
+    HRESULT put_IPDisplay(int displayPix);
 }
 enum IID_IDVRGB219 = GUID(0x58473a19, 0x2bc8, 0x4663, [0x80, 0x12, 0x25, 0xf8, 0x1b, 0xab, 0xdd, 0xd1]);
 interface IDVRGB219 : IUnknown
 {
-    HRESULT SetRGB219(BOOL);
+    HRESULT SetRGB219(BOOL bState);
 }
 enum IID_IDVSplitter = GUID(0x92a3a302, 0xda7c, 0x4a1f, [0xba, 0x7e, 0x18, 0x2, 0xbb, 0x5d, 0x2d, 0x2]);
 interface IDVSplitter : IUnknown
 {
-    HRESULT DiscardAlternateVideoFrames(int);
+    HRESULT DiscardAlternateVideoFrames(int nDiscard);
 }
 alias _AM_AUDIO_RENDERER_STAT_PARAM = int;
 enum : int
@@ -2320,7 +2320,7 @@ enum : int
 enum IID_IAMAudioRendererStats = GUID(0x22320cb2, 0xd41a, 0x11d2, [0xbf, 0x7c, 0xd7, 0xcb, 0x9d, 0xf0, 0xbf, 0x93]);
 interface IAMAudioRendererStats : IUnknown
 {
-    HRESULT GetStatParam(uint, uint*, uint*);
+    HRESULT GetStatParam(uint dwParam, uint* pdwParam1, uint* pdwParam2);
 }
 alias _AM_INTF_SEARCH_FLAGS = int;
 enum : int
@@ -2333,9 +2333,9 @@ enum : int
 enum IID_IAMGraphStreams = GUID(0x632105fa, 0x72e, 0x11d3, [0x8a, 0xf9, 0x0, 0xc0, 0x4f, 0xb6, 0xbd, 0x3d]);
 interface IAMGraphStreams : IUnknown
 {
-    HRESULT FindUpstreamInterface(IPin, const(GUID)*, void**, uint);
-    HRESULT SyncUsingStreamOffset(BOOL);
-    HRESULT SetMaxGraphLatency(long);
+    HRESULT FindUpstreamInterface(IPin pPin, const(GUID)* riid, void** ppvInterface, uint dwFlags);
+    HRESULT SyncUsingStreamOffset(BOOL bUseStreamOffset);
+    HRESULT SetMaxGraphLatency(long rtMaxGraphLatency);
 }
 alias AMOVERLAYFX = int;
 enum : int
@@ -2349,22 +2349,22 @@ enum : int
 enum IID_IAMOverlayFX = GUID(0x62fae250, 0x7e65, 0x4460, [0xbf, 0xc9, 0x63, 0x98, 0xb3, 0x22, 0x7, 0x3c]);
 interface IAMOverlayFX : IUnknown
 {
-    HRESULT QueryOverlayFXCaps(uint*);
-    HRESULT SetOverlayFX(uint);
-    HRESULT GetOverlayFX(uint*);
+    HRESULT QueryOverlayFXCaps(uint* lpdwOverlayFXCaps);
+    HRESULT SetOverlayFX(uint dwOverlayFX);
+    HRESULT GetOverlayFX(uint* lpdwOverlayFX);
 }
 enum IID_IAMOpenProgress = GUID(0x8e1c39a1, 0xde53, 0x11cf, [0xaa, 0x63, 0x0, 0x80, 0xc7, 0x44, 0x52, 0x8d]);
 interface IAMOpenProgress : IUnknown
 {
-    HRESULT QueryProgress(long*, long*);
+    HRESULT QueryProgress(long* pllTotal, long* pllCurrent);
     HRESULT AbortOperation();
 }
 enum IID_IMpeg2Demultiplexer = GUID(0x436eee9c, 0x264f, 0x4242, [0x90, 0xe1, 0x4e, 0x33, 0xc, 0x10, 0x75, 0x12]);
 interface IMpeg2Demultiplexer : IUnknown
 {
-    HRESULT CreateOutputPin(AM_MEDIA_TYPE*, PWSTR, IPin*);
-    HRESULT SetOutputPinMediaType(PWSTR, AM_MEDIA_TYPE*);
-    HRESULT DeleteOutputPin(PWSTR);
+    HRESULT CreateOutputPin(AM_MEDIA_TYPE* pMediaType, PWSTR pszPinName, IPin* ppIPin);
+    HRESULT SetOutputPinMediaType(PWSTR pszPinName, AM_MEDIA_TYPE* pMediaType);
+    HRESULT DeleteOutputPin(PWSTR pszPinName);
 }
 struct STREAM_ID_MAP
 {
@@ -2376,55 +2376,55 @@ struct STREAM_ID_MAP
 enum IID_IEnumStreamIdMap = GUID(0x945c1566, 0x6202, 0x46fc, [0x96, 0xc7, 0xd8, 0x7f, 0x28, 0x9c, 0x65, 0x34]);
 interface IEnumStreamIdMap : IUnknown
 {
-    HRESULT Next(uint, STREAM_ID_MAP*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint cRequest, STREAM_ID_MAP* pStreamIdMap, uint* pcReceived);
+    HRESULT Skip(uint cRecords);
     HRESULT Reset();
-    HRESULT Clone(IEnumStreamIdMap*);
+    HRESULT Clone(IEnumStreamIdMap* ppIEnumStreamIdMap);
 }
 enum IID_IMPEG2StreamIdMap = GUID(0xd0e04c47, 0x25b8, 0x4369, [0x92, 0x5a, 0x36, 0x2a, 0x1, 0xd9, 0x54, 0x44]);
 interface IMPEG2StreamIdMap : IUnknown
 {
-    HRESULT MapStreamId(uint, uint, uint, int);
-    HRESULT UnmapStreamId(uint, uint*);
-    HRESULT EnumStreamIdMap(IEnumStreamIdMap*);
+    HRESULT MapStreamId(uint ulStreamId, uint MediaSampleContent, uint ulSubstreamFilterValue, int iDataOffset);
+    HRESULT UnmapStreamId(uint culStreamId, uint* pulStreamId);
+    HRESULT EnumStreamIdMap(IEnumStreamIdMap* ppIEnumStreamIdMap);
 }
 enum IID_IRegisterServiceProvider = GUID(0x7b3a2f01, 0x751, 0x48dd, [0xb5, 0x56, 0x0, 0x47, 0x85, 0x17, 0x1c, 0x54]);
 interface IRegisterServiceProvider : IUnknown
 {
-    HRESULT RegisterService(const(GUID)*, IUnknown);
+    HRESULT RegisterService(const(GUID)* guidService, IUnknown pUnkObject);
 }
 enum IID_IAMClockSlave = GUID(0x9fd52741, 0x176d, 0x4b36, [0x8f, 0x51, 0xca, 0x8f, 0x93, 0x32, 0x23, 0xbe]);
 interface IAMClockSlave : IUnknown
 {
-    HRESULT SetErrorTolerance(uint);
-    HRESULT GetErrorTolerance(uint*);
+    HRESULT SetErrorTolerance(uint dwTolerance);
+    HRESULT GetErrorTolerance(uint* pdwTolerance);
 }
 enum IID_IAMGraphBuilderCallback = GUID(0x4995f511, 0x9ddb, 0x4f12, [0xbd, 0x3b, 0xf0, 0x46, 0x11, 0x80, 0x7b, 0x79]);
 interface IAMGraphBuilderCallback : IUnknown
 {
-    HRESULT SelectedFilter(IMoniker);
-    HRESULT CreatedFilter(IBaseFilter);
+    HRESULT SelectedFilter(IMoniker pMon);
+    HRESULT CreatedFilter(IBaseFilter pFil);
 }
 enum IID_IAMFilterGraphCallback = GUID(0x56a868fd, 0xad4, 0x11ce, [0xb0, 0xa3, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IAMFilterGraphCallback : IUnknown
 {
-    HRESULT UnableToRender(IPin);
+    HRESULT UnableToRender(IPin pPin);
 }
 enum IID_IGetCapabilitiesKey = GUID(0xa8809222, 0x7bb, 0x48ea, [0x95, 0x1c, 0x33, 0x15, 0x81, 0x0, 0x62, 0x5b]);
 interface IGetCapabilitiesKey : IUnknown
 {
-    HRESULT GetCapabilitiesKey(HKEY*);
+    HRESULT GetCapabilitiesKey(HKEY* pHKey);
 }
 enum IID_IEncoderAPI = GUID(0x70423839, 0x6acc, 0x4b23, [0xb0, 0x79, 0x21, 0xdb, 0xf0, 0x81, 0x56, 0xa5]);
 interface IEncoderAPI : IUnknown
 {
-    HRESULT IsSupported(const(GUID)*);
-    HRESULT IsAvailable(const(GUID)*);
-    HRESULT GetParameterRange(const(GUID)*, VARIANT*, VARIANT*, VARIANT*);
-    HRESULT GetParameterValues(const(GUID)*, VARIANT**, uint*);
-    HRESULT GetDefaultValue(const(GUID)*, VARIANT*);
-    HRESULT GetValue(const(GUID)*, VARIANT*);
-    HRESULT SetValue(const(GUID)*, VARIANT*);
+    HRESULT IsSupported(const(GUID)* Api);
+    HRESULT IsAvailable(const(GUID)* Api);
+    HRESULT GetParameterRange(const(GUID)* Api, VARIANT* ValueMin, VARIANT* ValueMax, VARIANT* SteppingDelta);
+    HRESULT GetParameterValues(const(GUID)* Api, VARIANT** Values, uint* ValuesCount);
+    HRESULT GetDefaultValue(const(GUID)* Api, VARIANT* Value);
+    HRESULT GetValue(const(GUID)* Api, VARIANT* Value);
+    HRESULT SetValue(const(GUID)* Api, VARIANT* Value);
 }
 enum IID_IVideoEncoder = GUID(0x2997c3b, 0x8e1b, 0x460e, [0x92, 0x70, 0x54, 0x5e, 0xd, 0xe9, 0x56, 0x3e]);
 interface IVideoEncoder : IEncoderAPI
@@ -2433,7 +2433,7 @@ interface IVideoEncoder : IEncoderAPI
 enum IID_IAMDecoderCaps = GUID(0xc0dff467, 0xd499, 0x4986, [0x97, 0x2b, 0xe1, 0xd9, 0x9, 0xf, 0xa9, 0x41]);
 interface IAMDecoderCaps : IUnknown
 {
-    HRESULT GetDecoderCaps(uint, uint*);
+    HRESULT GetDecoderCaps(uint dwCapIndex, uint* lpdwCap);
 }
 struct AMCOPPSignature
 {
@@ -2464,40 +2464,40 @@ struct AMCOPPStatusOutput
 enum IID_IAMCertifiedOutputProtection = GUID(0x6feded3e, 0xff1, 0x4901, [0xa2, 0xf1, 0x43, 0xf7, 0x1, 0x2c, 0x85, 0x15]);
 interface IAMCertifiedOutputProtection : IUnknown
 {
-    HRESULT KeyExchange(GUID*, ubyte**, uint*);
-    HRESULT SessionSequenceStart(AMCOPPSignature*);
-    HRESULT ProtectionCommand(const(AMCOPPCommand)*);
-    HRESULT ProtectionStatus(const(AMCOPPStatusInput)*, AMCOPPStatusOutput*);
+    HRESULT KeyExchange(GUID* pRandom, ubyte** VarLenCertGH, uint* pdwLengthCertGH);
+    HRESULT SessionSequenceStart(AMCOPPSignature* pSig);
+    HRESULT ProtectionCommand(const(AMCOPPCommand)* cmd);
+    HRESULT ProtectionStatus(const(AMCOPPStatusInput)* pStatusInput, AMCOPPStatusOutput* pStatusOutput);
 }
 enum IID_IAMAsyncReaderTimestampScaling = GUID(0xcf7b26fc, 0x9a00, 0x485b, [0x81, 0x47, 0x3e, 0x78, 0x9d, 0x5e, 0x8f, 0x67]);
 interface IAMAsyncReaderTimestampScaling : IUnknown
 {
-    HRESULT GetTimestampMode(BOOL*);
-    HRESULT SetTimestampMode(BOOL);
+    HRESULT GetTimestampMode(BOOL* pfRaw);
+    HRESULT SetTimestampMode(BOOL fRaw);
 }
 enum IID_IAMPluginControl = GUID(0xe26a181, 0xf40c, 0x4635, [0x87, 0x86, 0x97, 0x62, 0x84, 0xb5, 0x29, 0x81]);
 interface IAMPluginControl : IUnknown
 {
-    HRESULT GetPreferredClsid(const(GUID)*, GUID*);
-    HRESULT GetPreferredClsidByIndex(uint, GUID*, GUID*);
-    HRESULT SetPreferredClsid(const(GUID)*, const(GUID)*);
-    HRESULT IsDisabled(const(GUID)*);
-    HRESULT GetDisabledByIndex(uint, GUID*);
-    HRESULT SetDisabled(const(GUID)*, BOOL);
-    HRESULT IsLegacyDisabled(const(wchar)*);
+    HRESULT GetPreferredClsid(const(GUID)* subType, GUID* clsid);
+    HRESULT GetPreferredClsidByIndex(uint index, GUID* subType, GUID* clsid);
+    HRESULT SetPreferredClsid(const(GUID)* subType, const(GUID)* clsid);
+    HRESULT IsDisabled(const(GUID)* clsid);
+    HRESULT GetDisabledByIndex(uint index, GUID* clsid);
+    HRESULT SetDisabled(const(GUID)* clsid, BOOL disabled);
+    HRESULT IsLegacyDisabled(const(wchar)* dllName);
 }
 enum IID_IPinConnection = GUID(0x4a9a62d3, 0x27d4, 0x403d, [0x91, 0xe9, 0x89, 0xf5, 0x40, 0xe5, 0x55, 0x34]);
 interface IPinConnection : IUnknown
 {
-    HRESULT DynamicQueryAccept(const(AM_MEDIA_TYPE)*);
-    HRESULT NotifyEndOfStream(HANDLE);
+    HRESULT DynamicQueryAccept(const(AM_MEDIA_TYPE)* pmt);
+    HRESULT NotifyEndOfStream(HANDLE hNotifyEvent);
     HRESULT IsEndPin();
     HRESULT DynamicDisconnect();
 }
 enum IID_IPinFlowControl = GUID(0xc56e9858, 0xdbf3, 0x4f6b, [0x81, 0x19, 0x38, 0x4a, 0xf2, 0x6, 0xd, 0xeb]);
 interface IPinFlowControl : IUnknown
 {
-    HRESULT Block(uint, HANDLE);
+    HRESULT Block(uint dwBlockFlags, HANDLE hEvent);
 }
 alias _AM_PIN_FLOW_CONTROL_BLOCK_FLAGS = int;
 enum : int
@@ -2528,29 +2528,29 @@ enum : int
 enum IID_IGraphConfig = GUID(0x3a1eb8e, 0x32bf, 0x4245, [0x85, 0x2, 0x11, 0x4d, 0x8, 0xa9, 0xcb, 0x88]);
 interface IGraphConfig : IUnknown
 {
-    HRESULT Reconnect(IPin, IPin, const(AM_MEDIA_TYPE)*, IBaseFilter, HANDLE, uint);
-    HRESULT Reconfigure(IGraphConfigCallback, void*, uint, HANDLE);
-    HRESULT AddFilterToCache(IBaseFilter);
-    HRESULT EnumCacheFilter(IEnumFilters*);
-    HRESULT RemoveFilterFromCache(IBaseFilter);
-    HRESULT GetStartTime(long*);
-    HRESULT PushThroughData(IPin, IPinConnection, HANDLE);
-    HRESULT SetFilterFlags(IBaseFilter, uint);
-    HRESULT GetFilterFlags(IBaseFilter, uint*);
-    HRESULT RemoveFilterEx(IBaseFilter, uint);
+    HRESULT Reconnect(IPin pOutputPin, IPin pInputPin, const(AM_MEDIA_TYPE)* pmtFirstConnection, IBaseFilter pUsingFilter, HANDLE hAbortEvent, uint dwFlags);
+    HRESULT Reconfigure(IGraphConfigCallback pCallback, void* pvContext, uint dwFlags, HANDLE hAbortEvent);
+    HRESULT AddFilterToCache(IBaseFilter pFilter);
+    HRESULT EnumCacheFilter(IEnumFilters* pEnum);
+    HRESULT RemoveFilterFromCache(IBaseFilter pFilter);
+    HRESULT GetStartTime(long* prtStart);
+    HRESULT PushThroughData(IPin pOutputPin, IPinConnection pConnection, HANDLE hEventAbort);
+    HRESULT SetFilterFlags(IBaseFilter pFilter, uint dwFlags);
+    HRESULT GetFilterFlags(IBaseFilter pFilter, uint* pdwFlags);
+    HRESULT RemoveFilterEx(IBaseFilter pFilter, uint Flags);
 }
 enum IID_IGraphConfigCallback = GUID(0xade0fd60, 0xd19d, 0x11d2, [0xab, 0xf6, 0x0, 0xa0, 0xc9, 0x5, 0xf3, 0x75]);
 interface IGraphConfigCallback : IUnknown
 {
-    HRESULT Reconfigure(void*, uint);
+    HRESULT Reconfigure(void* pvContext, uint dwFlags);
 }
 enum IID_IFilterChain = GUID(0xdcfbdcf6, 0xdc2, 0x45f5, [0x9a, 0xb2, 0x7c, 0x33, 0xe, 0xa0, 0x9c, 0x29]);
 interface IFilterChain : IUnknown
 {
-    HRESULT StartChain(IBaseFilter, IBaseFilter);
-    HRESULT PauseChain(IBaseFilter, IBaseFilter);
-    HRESULT StopChain(IBaseFilter, IBaseFilter);
-    HRESULT RemoveChain(IBaseFilter, IBaseFilter);
+    HRESULT StartChain(IBaseFilter pStartFilter, IBaseFilter pEndFilter);
+    HRESULT PauseChain(IBaseFilter pStartFilter, IBaseFilter pEndFilter);
+    HRESULT StopChain(IBaseFilter pStartFilter, IBaseFilter pEndFilter);
+    HRESULT RemoveChain(IBaseFilter pStartFilter, IBaseFilter pEndFilter);
 }
 alias VMRPresentationFlags = int;
 enum : int
@@ -2577,9 +2577,9 @@ struct VMRPRESENTATIONINFO
 enum IID_IVMRImagePresenter = GUID(0xce704fe7, 0xe71e, 0x41fb, [0xba, 0xa2, 0xc4, 0x40, 0x3e, 0x11, 0x82, 0xf5]);
 interface IVMRImagePresenter : IUnknown
 {
-    HRESULT StartPresenting(ulong);
-    HRESULT StopPresenting(ulong);
-    HRESULT PresentImage(ulong, VMRPRESENTATIONINFO*);
+    HRESULT StartPresenting(ulong dwUserID);
+    HRESULT StopPresenting(ulong dwUserID);
+    HRESULT PresentImage(ulong dwUserID, VMRPRESENTATIONINFO* lpPresInfo);
 }
 alias VMRSurfaceAllocationFlags = int;
 enum : int
@@ -2606,20 +2606,20 @@ struct VMRALLOCATIONINFO
 enum IID_IVMRSurfaceAllocator = GUID(0x31ce832e, 0x4484, 0x458b, [0x8c, 0xca, 0xf4, 0xd7, 0xe3, 0xdb, 0xb, 0x52]);
 interface IVMRSurfaceAllocator : IUnknown
 {
-    HRESULT AllocateSurface(ulong, VMRALLOCATIONINFO*, uint*, IDirectDrawSurface7*);
-    HRESULT FreeSurface(ulong);
-    HRESULT PrepareSurface(ulong, IDirectDrawSurface7, uint);
-    HRESULT AdviseNotify(IVMRSurfaceAllocatorNotify);
+    HRESULT AllocateSurface(ulong dwUserID, VMRALLOCATIONINFO* lpAllocInfo, uint* lpdwActualBuffers, IDirectDrawSurface7* lplpSurface);
+    HRESULT FreeSurface(ulong dwID);
+    HRESULT PrepareSurface(ulong dwUserID, IDirectDrawSurface7 lpSurface, uint dwSurfaceFlags);
+    HRESULT AdviseNotify(IVMRSurfaceAllocatorNotify lpIVMRSurfAllocNotify);
 }
 enum IID_IVMRSurfaceAllocatorNotify = GUID(0xaada05a8, 0x5a4e, 0x4729, [0xaf, 0xb, 0xce, 0xa2, 0x7a, 0xed, 0x51, 0xe2]);
 interface IVMRSurfaceAllocatorNotify : IUnknown
 {
-    HRESULT AdviseSurfaceAllocator(ulong, IVMRSurfaceAllocator);
-    HRESULT SetDDrawDevice(IDirectDraw7, HMONITOR);
-    HRESULT ChangeDDrawDevice(IDirectDraw7, HMONITOR);
+    HRESULT AdviseSurfaceAllocator(ulong dwUserID, IVMRSurfaceAllocator lpIVRMSurfaceAllocator);
+    HRESULT SetDDrawDevice(IDirectDraw7 lpDDrawDevice, HMONITOR hMonitor);
+    HRESULT ChangeDDrawDevice(IDirectDraw7 lpDDrawDevice, HMONITOR hMonitor);
     HRESULT RestoreDDrawSurfaces();
-    HRESULT NotifyEvent(int, long, long);
-    HRESULT SetBorderColor(COLORREF);
+    HRESULT NotifyEvent(int EventCode, long Param1, long Param2);
+    HRESULT SetBorderColor(COLORREF clrBorder);
 }
 alias VMR_ASPECT_RATIO_MODE = int;
 enum : int
@@ -2631,21 +2631,21 @@ enum : int
 enum IID_IVMRWindowlessControl = GUID(0xeb1088c, 0x4dcd, 0x46f0, [0x87, 0x8f, 0x39, 0xda, 0xe8, 0x6a, 0x51, 0xb7]);
 interface IVMRWindowlessControl : IUnknown
 {
-    HRESULT GetNativeVideoSize(int*, int*, int*, int*);
-    HRESULT GetMinIdealVideoSize(int*, int*);
-    HRESULT GetMaxIdealVideoSize(int*, int*);
-    HRESULT SetVideoPosition(const(RECT)*, const(RECT)*);
-    HRESULT GetVideoPosition(RECT*, RECT*);
-    HRESULT GetAspectRatioMode(uint*);
-    HRESULT SetAspectRatioMode(uint);
-    HRESULT SetVideoClippingWindow(HWND);
-    HRESULT RepaintVideo(HWND, HDC);
+    HRESULT GetNativeVideoSize(int* lpWidth, int* lpHeight, int* lpARWidth, int* lpARHeight);
+    HRESULT GetMinIdealVideoSize(int* lpWidth, int* lpHeight);
+    HRESULT GetMaxIdealVideoSize(int* lpWidth, int* lpHeight);
+    HRESULT SetVideoPosition(const(RECT)* lpSRCRect, const(RECT)* lpDSTRect);
+    HRESULT GetVideoPosition(RECT* lpSRCRect, RECT* lpDSTRect);
+    HRESULT GetAspectRatioMode(uint* lpAspectRatioMode);
+    HRESULT SetAspectRatioMode(uint AspectRatioMode);
+    HRESULT SetVideoClippingWindow(HWND hwnd);
+    HRESULT RepaintVideo(HWND hwnd, HDC hdc);
     HRESULT DisplayModeChanged();
-    HRESULT GetCurrentImage(ubyte**);
-    HRESULT SetBorderColor(COLORREF);
-    HRESULT GetBorderColor(COLORREF*);
-    HRESULT SetColorKey(COLORREF);
-    HRESULT GetColorKey(COLORREF*);
+    HRESULT GetCurrentImage(ubyte** lpDib);
+    HRESULT SetBorderColor(COLORREF Clr);
+    HRESULT GetBorderColor(COLORREF* lpClr);
+    HRESULT SetColorKey(COLORREF Clr);
+    HRESULT GetColorKey(COLORREF* lpClr);
 }
 alias VMRMixerPrefs = int;
 enum : int
@@ -2681,16 +2681,16 @@ struct NORMALIZEDRECT
 enum IID_IVMRMixerControl = GUID(0x1c1a17b0, 0xbed0, 0x415d, [0x97, 0x4b, 0xdc, 0x66, 0x96, 0x13, 0x15, 0x99]);
 interface IVMRMixerControl : IUnknown
 {
-    HRESULT SetAlpha(uint, float);
-    HRESULT GetAlpha(uint, float*);
-    HRESULT SetZOrder(uint, uint);
-    HRESULT GetZOrder(uint, uint*);
-    HRESULT SetOutputRect(uint, const(NORMALIZEDRECT)*);
-    HRESULT GetOutputRect(uint, NORMALIZEDRECT*);
-    HRESULT SetBackgroundClr(COLORREF);
-    HRESULT GetBackgroundClr(COLORREF*);
-    HRESULT SetMixingPrefs(uint);
-    HRESULT GetMixingPrefs(uint*);
+    HRESULT SetAlpha(uint dwStreamID, float Alpha);
+    HRESULT GetAlpha(uint dwStreamID, float* pAlpha);
+    HRESULT SetZOrder(uint dwStreamID, uint dwZ);
+    HRESULT GetZOrder(uint dwStreamID, uint* pZ);
+    HRESULT SetOutputRect(uint dwStreamID, const(NORMALIZEDRECT)* pRect);
+    HRESULT GetOutputRect(uint dwStreamID, NORMALIZEDRECT* pRect);
+    HRESULT SetBackgroundClr(COLORREF ClrBkg);
+    HRESULT GetBackgroundClr(COLORREF* lpClrBkg);
+    HRESULT SetMixingPrefs(uint dwMixerPrefs);
+    HRESULT GetMixingPrefs(uint* pdwMixerPrefs);
 }
 struct VMRGUID
 {
@@ -2714,11 +2714,11 @@ struct VMRMONITORINFO
 enum IID_IVMRMonitorConfig = GUID(0x9cf0b1b6, 0xfbaa, 0x4b7f, [0x88, 0xcf, 0xcf, 0x1f, 0x13, 0xa, 0xd, 0xce]);
 interface IVMRMonitorConfig : IUnknown
 {
-    HRESULT SetMonitor(const(VMRGUID)*);
-    HRESULT GetMonitor(VMRGUID*);
-    HRESULT SetDefaultMonitor(const(VMRGUID)*);
-    HRESULT GetDefaultMonitor(VMRGUID*);
-    HRESULT GetAvailableMonitors(VMRMONITORINFO*, uint, uint*);
+    HRESULT SetMonitor(const(VMRGUID)* pGUID);
+    HRESULT GetMonitor(VMRGUID* pGUID);
+    HRESULT SetDefaultMonitor(const(VMRGUID)* pGUID);
+    HRESULT GetDefaultMonitor(VMRGUID* pGUID);
+    HRESULT GetAvailableMonitors(VMRMONITORINFO* pInfo, uint dwMaxInfoArraySize, uint* pdwNumDevices);
 }
 alias VMRRenderPrefs = int;
 enum : int
@@ -2752,19 +2752,19 @@ enum : int
 enum IID_IVMRFilterConfig = GUID(0x9e5530c5, 0x7034, 0x48b4, [0xbb, 0x46, 0xb, 0x8a, 0x6e, 0xfc, 0x8e, 0x36]);
 interface IVMRFilterConfig : IUnknown
 {
-    HRESULT SetImageCompositor(IVMRImageCompositor);
-    HRESULT SetNumberOfStreams(uint);
-    HRESULT GetNumberOfStreams(uint*);
-    HRESULT SetRenderingPrefs(uint);
-    HRESULT GetRenderingPrefs(uint*);
-    HRESULT SetRenderingMode(uint);
-    HRESULT GetRenderingMode(uint*);
+    HRESULT SetImageCompositor(IVMRImageCompositor lpVMRImgCompositor);
+    HRESULT SetNumberOfStreams(uint dwMaxStreams);
+    HRESULT GetNumberOfStreams(uint* pdwMaxStreams);
+    HRESULT SetRenderingPrefs(uint dwRenderFlags);
+    HRESULT GetRenderingPrefs(uint* pdwRenderFlags);
+    HRESULT SetRenderingMode(uint Mode);
+    HRESULT GetRenderingMode(uint* pMode);
 }
 enum IID_IVMRAspectRatioControl = GUID(0xede80b5c, 0xbad6, 0x4623, [0xb5, 0x37, 0x65, 0x58, 0x6c, 0x9f, 0x8d, 0xfd]);
 interface IVMRAspectRatioControl : IUnknown
 {
-    HRESULT GetAspectRatioMode(uint*);
-    HRESULT SetAspectRatioMode(uint);
+    HRESULT GetAspectRatioMode(uint* lpdwARMode);
+    HRESULT SetAspectRatioMode(uint dwARMode);
 }
 alias VMRDeinterlacePrefs = int;
 enum : int
@@ -2814,13 +2814,13 @@ struct VMRDeinterlaceCaps
 enum IID_IVMRDeinterlaceControl = GUID(0xbb057577, 0xdb8, 0x4e6a, [0x87, 0xa7, 0x1a, 0x8c, 0x9a, 0x50, 0x5a, 0xf]);
 interface IVMRDeinterlaceControl : IUnknown
 {
-    HRESULT GetNumberOfDeinterlaceModes(VMRVideoDesc*, uint*, GUID*);
-    HRESULT GetDeinterlaceModeCaps(GUID*, VMRVideoDesc*, VMRDeinterlaceCaps*);
-    HRESULT GetDeinterlaceMode(uint, GUID*);
-    HRESULT SetDeinterlaceMode(uint, GUID*);
-    HRESULT GetDeinterlacePrefs(uint*);
-    HRESULT SetDeinterlacePrefs(uint);
-    HRESULT GetActualDeinterlaceMode(uint, GUID*);
+    HRESULT GetNumberOfDeinterlaceModes(VMRVideoDesc* lpVideoDescription, uint* lpdwNumDeinterlaceModes, GUID* lpDeinterlaceModes);
+    HRESULT GetDeinterlaceModeCaps(GUID* lpDeinterlaceMode, VMRVideoDesc* lpVideoDescription, VMRDeinterlaceCaps* lpDeinterlaceCaps);
+    HRESULT GetDeinterlaceMode(uint dwStreamID, GUID* lpDeinterlaceMode);
+    HRESULT SetDeinterlaceMode(uint dwStreamID, GUID* lpDeinterlaceMode);
+    HRESULT GetDeinterlacePrefs(uint* lpdwDeinterlacePrefs);
+    HRESULT SetDeinterlacePrefs(uint dwDeinterlacePrefs);
+    HRESULT GetActualDeinterlaceMode(uint dwStreamID, GUID* lpDeinterlaceMode);
 }
 struct VMRALPHABITMAP
 {
@@ -2835,9 +2835,9 @@ struct VMRALPHABITMAP
 enum IID_IVMRMixerBitmap = GUID(0x1e673275, 0x257, 0x40aa, [0xaf, 0x20, 0x7c, 0x60, 0x8d, 0x4a, 0x4, 0x28]);
 interface IVMRMixerBitmap : IUnknown
 {
-    HRESULT SetAlphaBitmap(const(VMRALPHABITMAP)*);
-    HRESULT UpdateAlphaBitmapParameters(VMRALPHABITMAP*);
-    HRESULT GetAlphaBitmapParameters(VMRALPHABITMAP*);
+    HRESULT SetAlphaBitmap(const(VMRALPHABITMAP)* pBmpParms);
+    HRESULT UpdateAlphaBitmapParameters(VMRALPHABITMAP* pBmpParms);
+    HRESULT GetAlphaBitmapParameters(VMRALPHABITMAP* pBmpParms);
 }
 struct VMRVIDEOSTREAMINFO
 {
@@ -2852,44 +2852,44 @@ struct VMRVIDEOSTREAMINFO
 enum IID_IVMRImageCompositor = GUID(0x7a4fb5af, 0x479f, 0x4074, [0xbb, 0x40, 0xce, 0x67, 0x22, 0xe4, 0x3c, 0x82]);
 interface IVMRImageCompositor : IUnknown
 {
-    HRESULT InitCompositionTarget(IUnknown, IDirectDrawSurface7);
-    HRESULT TermCompositionTarget(IUnknown, IDirectDrawSurface7);
-    HRESULT SetStreamMediaType(uint, AM_MEDIA_TYPE*, BOOL);
-    HRESULT CompositeImage(IUnknown, IDirectDrawSurface7, AM_MEDIA_TYPE*, long, long, uint, VMRVIDEOSTREAMINFO*, uint);
+    HRESULT InitCompositionTarget(IUnknown pD3DDevice, IDirectDrawSurface7 pddsRenderTarget);
+    HRESULT TermCompositionTarget(IUnknown pD3DDevice, IDirectDrawSurface7 pddsRenderTarget);
+    HRESULT SetStreamMediaType(uint dwStrmID, AM_MEDIA_TYPE* pmt, BOOL fTexture);
+    HRESULT CompositeImage(IUnknown pD3DDevice, IDirectDrawSurface7 pddsRenderTarget, AM_MEDIA_TYPE* pmtRenderTarget, long rtStart, long rtEnd, uint dwClrBkGnd, VMRVIDEOSTREAMINFO* pVideoStreamInfo, uint cStreams);
 }
 enum IID_IVMRVideoStreamControl = GUID(0x58d1f11, 0x2a54, 0x4bef, [0xbd, 0x54, 0xdf, 0x70, 0x66, 0x26, 0xb7, 0x27]);
 interface IVMRVideoStreamControl : IUnknown
 {
-    HRESULT SetColorKey(DDCOLORKEY*);
-    HRESULT GetColorKey(DDCOLORKEY*);
-    HRESULT SetStreamActiveState(BOOL);
-    HRESULT GetStreamActiveState(BOOL*);
+    HRESULT SetColorKey(DDCOLORKEY* lpClrKey);
+    HRESULT GetColorKey(DDCOLORKEY* lpClrKey);
+    HRESULT SetStreamActiveState(BOOL fActive);
+    HRESULT GetStreamActiveState(BOOL* lpfActive);
 }
 enum IID_IVMRSurface = GUID(0xa9849bbe, 0x9ec8, 0x4263, [0xb7, 0x64, 0x62, 0x73, 0xf, 0xd, 0x15, 0xd0]);
 interface IVMRSurface : IUnknown
 {
     HRESULT IsSurfaceLocked();
-    HRESULT LockSurface(ubyte**);
+    HRESULT LockSurface(ubyte** lpSurface);
     HRESULT UnlockSurface();
-    HRESULT GetSurface(IDirectDrawSurface7*);
+    HRESULT GetSurface(IDirectDrawSurface7* lplpSurface);
 }
 enum IID_IVMRImagePresenterConfig = GUID(0x9f3a1c85, 0x8555, 0x49ba, [0x93, 0x5f, 0xbe, 0x5b, 0x5b, 0x29, 0xd1, 0x78]);
 interface IVMRImagePresenterConfig : IUnknown
 {
-    HRESULT SetRenderingPrefs(uint);
-    HRESULT GetRenderingPrefs(uint*);
+    HRESULT SetRenderingPrefs(uint dwRenderFlags);
+    HRESULT GetRenderingPrefs(uint* dwRenderFlags);
 }
 enum IID_IVMRImagePresenterExclModeConfig = GUID(0xe6f7ce40, 0x4673, 0x44f1, [0x8f, 0x77, 0x54, 0x99, 0xd6, 0x8c, 0xb4, 0xea]);
 interface IVMRImagePresenterExclModeConfig : IVMRImagePresenterConfig
 {
-    HRESULT SetXlcModeDDObjAndPrimarySurface(IDirectDraw7, IDirectDrawSurface7);
-    HRESULT GetXlcModeDDObjAndPrimarySurface(IDirectDraw7*, IDirectDrawSurface7*);
+    HRESULT SetXlcModeDDObjAndPrimarySurface(IDirectDraw7 lpDDObj, IDirectDrawSurface7 lpPrimarySurf);
+    HRESULT GetXlcModeDDObjAndPrimarySurface(IDirectDraw7* lpDDObj, IDirectDrawSurface7* lpPrimarySurf);
 }
 enum IID_IVPManager = GUID(0xaac18c18, 0xe186, 0x46d2, [0x82, 0x5d, 0xa1, 0xf8, 0xdc, 0x8e, 0x39, 0x5a]);
 interface IVPManager : IUnknown
 {
-    HRESULT SetVideoPortIndex(uint);
-    HRESULT GetVideoPortIndex(uint*);
+    HRESULT SetVideoPortIndex(uint dwVideoPortIndex);
+    HRESULT GetVideoPortIndex(uint* pdwVideoPortIndex);
 }
 alias DVD_DOMAIN = int;
 enum : int
@@ -3283,68 +3283,68 @@ struct DVD_MenuAttributes
 enum IID_IDvdControl = GUID(0xa70efe61, 0xe2a3, 0x11d0, [0xa9, 0xbe, 0x0, 0xaa, 0x0, 0x61, 0xbe, 0x93]);
 interface IDvdControl : IUnknown
 {
-    HRESULT TitlePlay(uint);
-    HRESULT ChapterPlay(uint, uint);
-    HRESULT TimePlay(uint, uint);
+    HRESULT TitlePlay(uint ulTitle);
+    HRESULT ChapterPlay(uint ulTitle, uint ulChapter);
+    HRESULT TimePlay(uint ulTitle, uint bcdTime);
     HRESULT StopForResume();
     HRESULT GoUp();
-    HRESULT TimeSearch(uint);
-    HRESULT ChapterSearch(uint);
+    HRESULT TimeSearch(uint bcdTime);
+    HRESULT ChapterSearch(uint ulChapter);
     HRESULT PrevPGSearch();
     HRESULT TopPGSearch();
     HRESULT NextPGSearch();
-    HRESULT ForwardScan(double);
-    HRESULT BackwardScan(double);
-    HRESULT MenuCall(DVD_MENU_ID);
+    HRESULT ForwardScan(double dwSpeed);
+    HRESULT BackwardScan(double dwSpeed);
+    HRESULT MenuCall(DVD_MENU_ID MenuID);
     HRESULT Resume();
     HRESULT UpperButtonSelect();
     HRESULT LowerButtonSelect();
     HRESULT LeftButtonSelect();
     HRESULT RightButtonSelect();
     HRESULT ButtonActivate();
-    HRESULT ButtonSelectAndActivate(uint);
+    HRESULT ButtonSelectAndActivate(uint ulButton);
     HRESULT StillOff();
     HRESULT PauseOn();
     HRESULT PauseOff();
-    HRESULT MenuLanguageSelect(uint);
-    HRESULT AudioStreamChange(uint);
-    HRESULT SubpictureStreamChange(uint, BOOL);
-    HRESULT AngleChange(uint);
-    HRESULT ParentalLevelSelect(uint);
-    HRESULT ParentalCountrySelect(ushort);
-    HRESULT KaraokeAudioPresentationModeChange(uint);
-    HRESULT VideoModePreferrence(uint);
-    HRESULT SetRoot(const(wchar)*);
-    HRESULT MouseActivate(POINT);
-    HRESULT MouseSelect(POINT);
-    HRESULT ChapterPlayAutoStop(uint, uint, uint);
+    HRESULT MenuLanguageSelect(uint Language);
+    HRESULT AudioStreamChange(uint ulAudio);
+    HRESULT SubpictureStreamChange(uint ulSubPicture, BOOL bDisplay);
+    HRESULT AngleChange(uint ulAngle);
+    HRESULT ParentalLevelSelect(uint ulParentalLevel);
+    HRESULT ParentalCountrySelect(ushort wCountry);
+    HRESULT KaraokeAudioPresentationModeChange(uint ulMode);
+    HRESULT VideoModePreferrence(uint ulPreferredDisplayMode);
+    HRESULT SetRoot(const(wchar)* pszPath);
+    HRESULT MouseActivate(POINT point);
+    HRESULT MouseSelect(POINT point);
+    HRESULT ChapterPlayAutoStop(uint ulTitle, uint ulChapter, uint ulChaptersToPlay);
 }
 enum IID_IDvdInfo = GUID(0xa70efe60, 0xe2a3, 0x11d0, [0xa9, 0xbe, 0x0, 0xaa, 0x0, 0x61, 0xbe, 0x93]);
 interface IDvdInfo : IUnknown
 {
-    HRESULT GetCurrentDomain(DVD_DOMAIN*);
-    HRESULT GetCurrentLocation(DVD_PLAYBACK_LOCATION*);
-    HRESULT GetTotalTitleTime(uint*);
-    HRESULT GetCurrentButton(uint*, uint*);
-    HRESULT GetCurrentAngle(uint*, uint*);
-    HRESULT GetCurrentAudio(uint*, uint*);
-    HRESULT GetCurrentSubpicture(uint*, uint*, BOOL*);
-    HRESULT GetCurrentUOPS(uint*);
-    HRESULT GetAllSPRMs(ushort**);
-    HRESULT GetAllGPRMs(ushort**);
-    HRESULT GetAudioLanguage(uint, uint*);
-    HRESULT GetSubpictureLanguage(uint, uint*);
-    HRESULT GetTitleAttributes(uint, DVD_ATR*);
-    HRESULT GetVMGAttributes(DVD_ATR*);
-    HRESULT GetCurrentVideoAttributes(ubyte**);
-    HRESULT GetCurrentAudioAttributes(ubyte**);
-    HRESULT GetCurrentSubpictureAttributes(ubyte**);
-    HRESULT GetCurrentVolumeInfo(uint*, uint*, DVD_DISC_SIDE*, uint*);
-    HRESULT GetDVDTextInfo(ubyte*, uint, uint*);
-    HRESULT GetPlayerParentalLevel(uint*, uint*);
-    HRESULT GetNumberOfChapters(uint, uint*);
-    HRESULT GetTitleParentalLevels(uint, uint*);
-    HRESULT GetRoot(PSTR, uint, uint*);
+    HRESULT GetCurrentDomain(DVD_DOMAIN* pDomain);
+    HRESULT GetCurrentLocation(DVD_PLAYBACK_LOCATION* pLocation);
+    HRESULT GetTotalTitleTime(uint* pulTotalTime);
+    HRESULT GetCurrentButton(uint* pulButtonsAvailable, uint* pulCurrentButton);
+    HRESULT GetCurrentAngle(uint* pulAnglesAvailable, uint* pulCurrentAngle);
+    HRESULT GetCurrentAudio(uint* pulStreamsAvailable, uint* pulCurrentStream);
+    HRESULT GetCurrentSubpicture(uint* pulStreamsAvailable, uint* pulCurrentStream, BOOL* pIsDisabled);
+    HRESULT GetCurrentUOPS(uint* pUOP);
+    HRESULT GetAllSPRMs(ushort** pRegisterArray);
+    HRESULT GetAllGPRMs(ushort** pRegisterArray);
+    HRESULT GetAudioLanguage(uint ulStream, uint* pLanguage);
+    HRESULT GetSubpictureLanguage(uint ulStream, uint* pLanguage);
+    HRESULT GetTitleAttributes(uint ulTitle, DVD_ATR* pATR);
+    HRESULT GetVMGAttributes(DVD_ATR* pATR);
+    HRESULT GetCurrentVideoAttributes(ubyte** pATR);
+    HRESULT GetCurrentAudioAttributes(ubyte** pATR);
+    HRESULT GetCurrentSubpictureAttributes(ubyte** pATR);
+    HRESULT GetCurrentVolumeInfo(uint* pulNumOfVol, uint* pulThisVolNum, DVD_DISC_SIDE* pSide, uint* pulNumOfTitles);
+    HRESULT GetDVDTextInfo(ubyte* pTextManager, uint ulBufSize, uint* pulActualSize);
+    HRESULT GetPlayerParentalLevel(uint* pulParentalLevel, uint* pulCountryCode);
+    HRESULT GetNumberOfChapters(uint ulTitle, uint* pulNumberOfChapters);
+    HRESULT GetTitleParentalLevels(uint ulTitle, uint* pulParentalLevels);
+    HRESULT GetRoot(PSTR pRoot, uint ulBufSize, uint* pulActualSize);
 }
 enum IID_IDvdCmd = GUID(0x5a4a97e4, 0x94ee, 0x4a55, [0x97, 0x51, 0x74, 0xb5, 0x64, 0x3a, 0xa2, 0x7d]);
 interface IDvdCmd : IUnknown
@@ -3355,52 +3355,52 @@ interface IDvdCmd : IUnknown
 enum IID_IDvdState = GUID(0x86303d6d, 0x1c4a, 0x4087, [0xab, 0x42, 0xf7, 0x11, 0x16, 0x70, 0x48, 0xef]);
 interface IDvdState : IUnknown
 {
-    HRESULT GetDiscID(ulong*);
-    HRESULT GetParentalLevel(uint*);
+    HRESULT GetDiscID(ulong* pullUniqueID);
+    HRESULT GetParentalLevel(uint* pulParentalLevel);
 }
 enum IID_IDvdControl2 = GUID(0x33bc7430, 0xeec0, 0x11d2, [0x82, 0x1, 0x0, 0xa0, 0xc9, 0xd7, 0x48, 0x42]);
 interface IDvdControl2 : IUnknown
 {
-    HRESULT PlayTitle(uint, uint, IDvdCmd*);
-    HRESULT PlayChapterInTitle(uint, uint, uint, IDvdCmd*);
-    HRESULT PlayAtTimeInTitle(uint, DVD_HMSF_TIMECODE*, uint, IDvdCmd*);
+    HRESULT PlayTitle(uint ulTitle, uint dwFlags, IDvdCmd* ppCmd);
+    HRESULT PlayChapterInTitle(uint ulTitle, uint ulChapter, uint dwFlags, IDvdCmd* ppCmd);
+    HRESULT PlayAtTimeInTitle(uint ulTitle, DVD_HMSF_TIMECODE* pStartTime, uint dwFlags, IDvdCmd* ppCmd);
     HRESULT Stop();
-    HRESULT ReturnFromSubmenu(uint, IDvdCmd*);
-    HRESULT PlayAtTime(DVD_HMSF_TIMECODE*, uint, IDvdCmd*);
-    HRESULT PlayChapter(uint, uint, IDvdCmd*);
-    HRESULT PlayPrevChapter(uint, IDvdCmd*);
-    HRESULT ReplayChapter(uint, IDvdCmd*);
-    HRESULT PlayNextChapter(uint, IDvdCmd*);
-    HRESULT PlayForwards(double, uint, IDvdCmd*);
-    HRESULT PlayBackwards(double, uint, IDvdCmd*);
-    HRESULT ShowMenu(DVD_MENU_ID, uint, IDvdCmd*);
-    HRESULT Resume(uint, IDvdCmd*);
-    HRESULT SelectRelativeButton(DVD_RELATIVE_BUTTON);
+    HRESULT ReturnFromSubmenu(uint dwFlags, IDvdCmd* ppCmd);
+    HRESULT PlayAtTime(DVD_HMSF_TIMECODE* pTime, uint dwFlags, IDvdCmd* ppCmd);
+    HRESULT PlayChapter(uint ulChapter, uint dwFlags, IDvdCmd* ppCmd);
+    HRESULT PlayPrevChapter(uint dwFlags, IDvdCmd* ppCmd);
+    HRESULT ReplayChapter(uint dwFlags, IDvdCmd* ppCmd);
+    HRESULT PlayNextChapter(uint dwFlags, IDvdCmd* ppCmd);
+    HRESULT PlayForwards(double dSpeed, uint dwFlags, IDvdCmd* ppCmd);
+    HRESULT PlayBackwards(double dSpeed, uint dwFlags, IDvdCmd* ppCmd);
+    HRESULT ShowMenu(DVD_MENU_ID MenuID, uint dwFlags, IDvdCmd* ppCmd);
+    HRESULT Resume(uint dwFlags, IDvdCmd* ppCmd);
+    HRESULT SelectRelativeButton(DVD_RELATIVE_BUTTON buttonDir);
     HRESULT ActivateButton();
-    HRESULT SelectButton(uint);
-    HRESULT SelectAndActivateButton(uint);
+    HRESULT SelectButton(uint ulButton);
+    HRESULT SelectAndActivateButton(uint ulButton);
     HRESULT StillOff();
-    HRESULT Pause(BOOL);
-    HRESULT SelectAudioStream(uint, uint, IDvdCmd*);
-    HRESULT SelectSubpictureStream(uint, uint, IDvdCmd*);
-    HRESULT SetSubpictureState(BOOL, uint, IDvdCmd*);
-    HRESULT SelectAngle(uint, uint, IDvdCmd*);
-    HRESULT SelectParentalLevel(uint);
-    HRESULT SelectParentalCountry(ubyte*);
-    HRESULT SelectKaraokeAudioPresentationMode(uint);
-    HRESULT SelectVideoModePreference(uint);
-    HRESULT SetDVDDirectory(const(wchar)*);
-    HRESULT ActivateAtPosition(POINT);
-    HRESULT SelectAtPosition(POINT);
-    HRESULT PlayChaptersAutoStop(uint, uint, uint, uint, IDvdCmd*);
-    HRESULT AcceptParentalLevelChange(BOOL);
-    HRESULT SetOption(DVD_OPTION_FLAG, BOOL);
-    HRESULT SetState(IDvdState, uint, IDvdCmd*);
-    HRESULT PlayPeriodInTitleAutoStop(uint, DVD_HMSF_TIMECODE*, DVD_HMSF_TIMECODE*, uint, IDvdCmd*);
-    HRESULT SetGPRM(uint, ushort, uint, IDvdCmd*);
-    HRESULT SelectDefaultMenuLanguage(uint);
-    HRESULT SelectDefaultAudioLanguage(uint, DVD_AUDIO_LANG_EXT);
-    HRESULT SelectDefaultSubpictureLanguage(uint, DVD_SUBPICTURE_LANG_EXT);
+    HRESULT Pause(BOOL bState);
+    HRESULT SelectAudioStream(uint ulAudio, uint dwFlags, IDvdCmd* ppCmd);
+    HRESULT SelectSubpictureStream(uint ulSubPicture, uint dwFlags, IDvdCmd* ppCmd);
+    HRESULT SetSubpictureState(BOOL bState, uint dwFlags, IDvdCmd* ppCmd);
+    HRESULT SelectAngle(uint ulAngle, uint dwFlags, IDvdCmd* ppCmd);
+    HRESULT SelectParentalLevel(uint ulParentalLevel);
+    HRESULT SelectParentalCountry(ubyte* bCountry);
+    HRESULT SelectKaraokeAudioPresentationMode(uint ulMode);
+    HRESULT SelectVideoModePreference(uint ulPreferredDisplayMode);
+    HRESULT SetDVDDirectory(const(wchar)* pszwPath);
+    HRESULT ActivateAtPosition(POINT point);
+    HRESULT SelectAtPosition(POINT point);
+    HRESULT PlayChaptersAutoStop(uint ulTitle, uint ulChapter, uint ulChaptersToPlay, uint dwFlags, IDvdCmd* ppCmd);
+    HRESULT AcceptParentalLevelChange(BOOL bAccept);
+    HRESULT SetOption(DVD_OPTION_FLAG flag, BOOL fState);
+    HRESULT SetState(IDvdState pState, uint dwFlags, IDvdCmd* ppCmd);
+    HRESULT PlayPeriodInTitleAutoStop(uint ulTitle, DVD_HMSF_TIMECODE* pStartTime, DVD_HMSF_TIMECODE* pEndTime, uint dwFlags, IDvdCmd* ppCmd);
+    HRESULT SetGPRM(uint ulIndex, ushort wValue, uint dwFlags, IDvdCmd* ppCmd);
+    HRESULT SelectDefaultMenuLanguage(uint Language);
+    HRESULT SelectDefaultAudioLanguage(uint Language, DVD_AUDIO_LANG_EXT audioExtension);
+    HRESULT SelectDefaultSubpictureLanguage(uint Language, DVD_SUBPICTURE_LANG_EXT subpictureExtension);
 }
 alias DVD_TextStringType = int;
 enum : int
@@ -3467,45 +3467,45 @@ struct DVD_DECODER_CAPS
 enum IID_IDvdInfo2 = GUID(0x34151510, 0xeec0, 0x11d2, [0x82, 0x1, 0x0, 0xa0, 0xc9, 0xd7, 0x48, 0x42]);
 interface IDvdInfo2 : IUnknown
 {
-    HRESULT GetCurrentDomain(DVD_DOMAIN*);
-    HRESULT GetCurrentLocation(DVD_PLAYBACK_LOCATION2*);
-    HRESULT GetTotalTitleTime(DVD_HMSF_TIMECODE*, uint*);
-    HRESULT GetCurrentButton(uint*, uint*);
-    HRESULT GetCurrentAngle(uint*, uint*);
-    HRESULT GetCurrentAudio(uint*, uint*);
-    HRESULT GetCurrentSubpicture(uint*, uint*, BOOL*);
-    HRESULT GetCurrentUOPS(uint*);
-    HRESULT GetAllSPRMs(ushort**);
-    HRESULT GetAllGPRMs(ushort**);
-    HRESULT GetAudioLanguage(uint, uint*);
-    HRESULT GetSubpictureLanguage(uint, uint*);
-    HRESULT GetTitleAttributes(uint, DVD_MenuAttributes*, DVD_TitleAttributes*);
-    HRESULT GetVMGAttributes(DVD_MenuAttributes*);
-    HRESULT GetCurrentVideoAttributes(DVD_VideoAttributes*);
-    HRESULT GetAudioAttributes(uint, DVD_AudioAttributes*);
-    HRESULT GetKaraokeAttributes(uint, DVD_KaraokeAttributes*);
-    HRESULT GetSubpictureAttributes(uint, DVD_SubpictureAttributes*);
-    HRESULT GetDVDVolumeInfo(uint*, uint*, DVD_DISC_SIDE*, uint*);
-    HRESULT GetDVDTextNumberOfLanguages(uint*);
-    HRESULT GetDVDTextLanguageInfo(uint, uint*, uint*, DVD_TextCharSet*);
-    HRESULT GetDVDTextStringAsNative(uint, uint, ubyte*, uint, uint*, DVD_TextStringType*);
-    HRESULT GetDVDTextStringAsUnicode(uint, uint, PWSTR, uint, uint*, DVD_TextStringType*);
-    HRESULT GetPlayerParentalLevel(uint*, ubyte*);
-    HRESULT GetNumberOfChapters(uint, uint*);
-    HRESULT GetTitleParentalLevels(uint, uint*);
-    HRESULT GetDVDDirectory(PWSTR, uint, uint*);
-    HRESULT IsAudioStreamEnabled(uint, BOOL*);
-    HRESULT GetDiscID(const(wchar)*, ulong*);
-    HRESULT GetState(IDvdState*);
-    HRESULT GetMenuLanguages(uint*, uint, uint*);
-    HRESULT GetButtonAtPosition(POINT, uint*);
-    HRESULT GetCmdFromEvent(long, IDvdCmd*);
-    HRESULT GetDefaultMenuLanguage(uint*);
-    HRESULT GetDefaultAudioLanguage(uint*, DVD_AUDIO_LANG_EXT*);
-    HRESULT GetDefaultSubpictureLanguage(uint*, DVD_SUBPICTURE_LANG_EXT*);
-    HRESULT GetDecoderCaps(DVD_DECODER_CAPS*);
-    HRESULT GetButtonRect(uint, RECT*);
-    HRESULT IsSubpictureStreamEnabled(uint, BOOL*);
+    HRESULT GetCurrentDomain(DVD_DOMAIN* pDomain);
+    HRESULT GetCurrentLocation(DVD_PLAYBACK_LOCATION2* pLocation);
+    HRESULT GetTotalTitleTime(DVD_HMSF_TIMECODE* pTotalTime, uint* ulTimeCodeFlags);
+    HRESULT GetCurrentButton(uint* pulButtonsAvailable, uint* pulCurrentButton);
+    HRESULT GetCurrentAngle(uint* pulAnglesAvailable, uint* pulCurrentAngle);
+    HRESULT GetCurrentAudio(uint* pulStreamsAvailable, uint* pulCurrentStream);
+    HRESULT GetCurrentSubpicture(uint* pulStreamsAvailable, uint* pulCurrentStream, BOOL* pbIsDisabled);
+    HRESULT GetCurrentUOPS(uint* pulUOPs);
+    HRESULT GetAllSPRMs(ushort** pRegisterArray);
+    HRESULT GetAllGPRMs(ushort** pRegisterArray);
+    HRESULT GetAudioLanguage(uint ulStream, uint* pLanguage);
+    HRESULT GetSubpictureLanguage(uint ulStream, uint* pLanguage);
+    HRESULT GetTitleAttributes(uint ulTitle, DVD_MenuAttributes* pMenu, DVD_TitleAttributes* pTitle);
+    HRESULT GetVMGAttributes(DVD_MenuAttributes* pATR);
+    HRESULT GetCurrentVideoAttributes(DVD_VideoAttributes* pATR);
+    HRESULT GetAudioAttributes(uint ulStream, DVD_AudioAttributes* pATR);
+    HRESULT GetKaraokeAttributes(uint ulStream, DVD_KaraokeAttributes* pAttributes);
+    HRESULT GetSubpictureAttributes(uint ulStream, DVD_SubpictureAttributes* pATR);
+    HRESULT GetDVDVolumeInfo(uint* pulNumOfVolumes, uint* pulVolume, DVD_DISC_SIDE* pSide, uint* pulNumOfTitles);
+    HRESULT GetDVDTextNumberOfLanguages(uint* pulNumOfLangs);
+    HRESULT GetDVDTextLanguageInfo(uint ulLangIndex, uint* pulNumOfStrings, uint* pLangCode, DVD_TextCharSet* pbCharacterSet);
+    HRESULT GetDVDTextStringAsNative(uint ulLangIndex, uint ulStringIndex, ubyte* pbBuffer, uint ulMaxBufferSize, uint* pulActualSize, DVD_TextStringType* pType);
+    HRESULT GetDVDTextStringAsUnicode(uint ulLangIndex, uint ulStringIndex, PWSTR pchwBuffer, uint ulMaxBufferSize, uint* pulActualSize, DVD_TextStringType* pType);
+    HRESULT GetPlayerParentalLevel(uint* pulParentalLevel, ubyte* pbCountryCode);
+    HRESULT GetNumberOfChapters(uint ulTitle, uint* pulNumOfChapters);
+    HRESULT GetTitleParentalLevels(uint ulTitle, uint* pulParentalLevels);
+    HRESULT GetDVDDirectory(PWSTR pszwPath, uint ulMaxSize, uint* pulActualSize);
+    HRESULT IsAudioStreamEnabled(uint ulStreamNum, BOOL* pbEnabled);
+    HRESULT GetDiscID(const(wchar)* pszwPath, ulong* pullDiscID);
+    HRESULT GetState(IDvdState* pStateData);
+    HRESULT GetMenuLanguages(uint* pLanguages, uint ulMaxLanguages, uint* pulActualLanguages);
+    HRESULT GetButtonAtPosition(POINT point, uint* pulButtonIndex);
+    HRESULT GetCmdFromEvent(long lParam1, IDvdCmd* pCmdObj);
+    HRESULT GetDefaultMenuLanguage(uint* pLanguage);
+    HRESULT GetDefaultAudioLanguage(uint* pLanguage, DVD_AUDIO_LANG_EXT* pAudioExtension);
+    HRESULT GetDefaultSubpictureLanguage(uint* pLanguage, DVD_SUBPICTURE_LANG_EXT* pSubpictureExtension);
+    HRESULT GetDecoderCaps(DVD_DECODER_CAPS* pCaps);
+    HRESULT GetButtonRect(uint ulButton, RECT* pRect);
+    HRESULT IsSubpictureStreamEnabled(uint ulStreamNum, BOOL* pbEnabled);
 }
 alias AM_DVD_GRAPH_FLAGS = int;
 enum : int
@@ -3545,20 +3545,20 @@ struct AM_DVD_RENDERSTATUS
 enum IID_IDvdGraphBuilder = GUID(0xfcc152b6, 0xf372, 0x11d0, [0x8e, 0x0, 0x0, 0xc0, 0x4f, 0xd7, 0xc0, 0x8b]);
 interface IDvdGraphBuilder : IUnknown
 {
-    HRESULT GetFiltergraph(IGraphBuilder*);
-    HRESULT GetDvdInterface(const(GUID)*, void**);
-    HRESULT RenderDvdVideoVolume(const(wchar)*, uint, AM_DVD_RENDERSTATUS*);
+    HRESULT GetFiltergraph(IGraphBuilder* ppGB);
+    HRESULT GetDvdInterface(const(GUID)* riid, void** ppvIF);
+    HRESULT RenderDvdVideoVolume(const(wchar)* lpcwszPathName, uint dwFlags, AM_DVD_RENDERSTATUS* pStatus);
 }
 enum IID_IDDrawExclModeVideo = GUID(0x153acc21, 0xd83b, 0x11d1, [0x82, 0xbf, 0x0, 0xa0, 0xc9, 0x69, 0x6c, 0x8f]);
 interface IDDrawExclModeVideo : IUnknown
 {
-    HRESULT SetDDrawObject(IDirectDraw);
-    HRESULT GetDDrawObject(IDirectDraw*, BOOL*);
-    HRESULT SetDDrawSurface(IDirectDrawSurface);
-    HRESULT GetDDrawSurface(IDirectDrawSurface*, BOOL*);
-    HRESULT SetDrawParameters(const(RECT)*, const(RECT)*);
-    HRESULT GetNativeVideoProps(uint*, uint*, uint*, uint*);
-    HRESULT SetCallbackInterface(IDDrawExclModeVideoCallback, uint);
+    HRESULT SetDDrawObject(IDirectDraw pDDrawObject);
+    HRESULT GetDDrawObject(IDirectDraw* ppDDrawObject, BOOL* pbUsingExternal);
+    HRESULT SetDDrawSurface(IDirectDrawSurface pDDrawSurface);
+    HRESULT GetDDrawSurface(IDirectDrawSurface* ppDDrawSurface, BOOL* pbUsingExternal);
+    HRESULT SetDrawParameters(const(RECT)* prcSource, const(RECT)* prcTarget);
+    HRESULT GetNativeVideoProps(uint* pdwVideoWidth, uint* pdwVideoHeight, uint* pdwPictAspectRatioX, uint* pdwPictAspectRatioY);
+    HRESULT SetCallbackInterface(IDDrawExclModeVideoCallback pCallback, uint dwFlags);
 }
 alias _AM_OVERLAY_NOTIFY_FLAGS = int;
 enum : int
@@ -3571,9 +3571,9 @@ enum : int
 enum IID_IDDrawExclModeVideoCallback = GUID(0x913c24a0, 0x20ab, 0x11d2, [0x90, 0x38, 0x0, 0xa0, 0xc9, 0x69, 0x72, 0x98]);
 interface IDDrawExclModeVideoCallback : IUnknown
 {
-    HRESULT OnUpdateOverlay(BOOL, uint, BOOL, const(RECT)*, const(RECT)*, BOOL, const(RECT)*, const(RECT)*);
-    HRESULT OnUpdateColorKey(const(COLORKEY)*, uint);
-    HRESULT OnUpdateSize(uint, uint, uint, uint);
+    HRESULT OnUpdateOverlay(BOOL bBefore, uint dwFlags, BOOL bOldVisible, const(RECT)* prcOldSrc, const(RECT)* prcOldDest, BOOL bNewVisible, const(RECT)* prcNewSrc, const(RECT)* prcNewDest);
+    HRESULT OnUpdateColorKey(const(COLORKEY)* pKey, uint dwColor);
+    HRESULT OnUpdateSize(uint dwWidth, uint dwHeight, uint dwARWidth, uint dwARHeight);
 }
 struct BDA_TEMPLATE_CONNECTION
 {
@@ -4430,40 +4430,40 @@ enum : int
 enum IID_IBDA_NetworkProvider = GUID(0xfd501041, 0x8ebe, 0x11ce, [0x81, 0x83, 0x0, 0xaa, 0x0, 0x57, 0x7d, 0xa2]);
 interface IBDA_NetworkProvider : IUnknown
 {
-    HRESULT PutSignalSource(uint);
-    HRESULT GetSignalSource(uint*);
-    HRESULT GetNetworkType(GUID*);
-    HRESULT PutTuningSpace(const(GUID)*);
-    HRESULT GetTuningSpace(GUID*);
-    HRESULT RegisterDeviceFilter(IUnknown, uint*);
-    HRESULT UnRegisterDeviceFilter(uint);
+    HRESULT PutSignalSource(uint ulSignalSource);
+    HRESULT GetSignalSource(uint* pulSignalSource);
+    HRESULT GetNetworkType(GUID* pguidNetworkType);
+    HRESULT PutTuningSpace(const(GUID)* guidTuningSpace);
+    HRESULT GetTuningSpace(GUID* pguidTuingSpace);
+    HRESULT RegisterDeviceFilter(IUnknown pUnkFilterControl, uint* ppvRegisitrationContext);
+    HRESULT UnRegisterDeviceFilter(uint pvRegistrationContext);
 }
 enum IID_IBDA_EthernetFilter = GUID(0x71985f43, 0x1ca1, 0x11d3, [0x9c, 0xc8, 0x0, 0xc0, 0x4f, 0x79, 0x71, 0xe0]);
 interface IBDA_EthernetFilter : IUnknown
 {
-    HRESULT GetMulticastListSize(uint*);
-    HRESULT PutMulticastList(uint, ubyte*);
-    HRESULT GetMulticastList(uint*, ubyte*);
-    HRESULT PutMulticastMode(uint);
-    HRESULT GetMulticastMode(uint*);
+    HRESULT GetMulticastListSize(uint* pulcbAddresses);
+    HRESULT PutMulticastList(uint ulcbAddresses, ubyte* pAddressList);
+    HRESULT GetMulticastList(uint* pulcbAddresses, ubyte* pAddressList);
+    HRESULT PutMulticastMode(uint ulModeMask);
+    HRESULT GetMulticastMode(uint* pulModeMask);
 }
 enum IID_IBDA_IPV4Filter = GUID(0x71985f44, 0x1ca1, 0x11d3, [0x9c, 0xc8, 0x0, 0xc0, 0x4f, 0x79, 0x71, 0xe0]);
 interface IBDA_IPV4Filter : IUnknown
 {
-    HRESULT GetMulticastListSize(uint*);
-    HRESULT PutMulticastList(uint, ubyte*);
-    HRESULT GetMulticastList(uint*, ubyte*);
-    HRESULT PutMulticastMode(uint);
-    HRESULT GetMulticastMode(uint*);
+    HRESULT GetMulticastListSize(uint* pulcbAddresses);
+    HRESULT PutMulticastList(uint ulcbAddresses, ubyte* pAddressList);
+    HRESULT GetMulticastList(uint* pulcbAddresses, ubyte* pAddressList);
+    HRESULT PutMulticastMode(uint ulModeMask);
+    HRESULT GetMulticastMode(uint* pulModeMask);
 }
 enum IID_IBDA_IPV6Filter = GUID(0xe1785a74, 0x2a23, 0x4fb3, [0x92, 0x45, 0xa8, 0xf8, 0x80, 0x17, 0xef, 0x33]);
 interface IBDA_IPV6Filter : IUnknown
 {
-    HRESULT GetMulticastListSize(uint*);
-    HRESULT PutMulticastList(uint, ubyte*);
-    HRESULT GetMulticastList(uint*, ubyte*);
-    HRESULT PutMulticastMode(uint);
-    HRESULT GetMulticastMode(uint*);
+    HRESULT GetMulticastListSize(uint* pulcbAddresses);
+    HRESULT PutMulticastList(uint ulcbAddresses, ubyte* pAddressList);
+    HRESULT GetMulticastList(uint* pulcbAddresses, ubyte* pAddressList);
+    HRESULT PutMulticastMode(uint ulModeMask);
+    HRESULT GetMulticastMode(uint* pulModeMask);
 }
 enum IID_IBDA_DeviceControl = GUID(0xfd0a5af3, 0xb41d, 0x11d2, [0x9c, 0x95, 0x0, 0xc0, 0x4f, 0x79, 0x71, 0xe0]);
 interface IBDA_DeviceControl : IUnknown
@@ -4471,53 +4471,53 @@ interface IBDA_DeviceControl : IUnknown
     HRESULT StartChanges();
     HRESULT CheckChanges();
     HRESULT CommitChanges();
-    HRESULT GetChangeState(uint*);
+    HRESULT GetChangeState(uint* pState);
 }
 enum IID_IBDA_PinControl = GUID(0xded49d5, 0xa8b7, 0x4d5d, [0x97, 0xa1, 0x12, 0xb0, 0xc1, 0x95, 0x87, 0x4d]);
 interface IBDA_PinControl : IUnknown
 {
-    HRESULT GetPinID(uint*);
-    HRESULT GetPinType(uint*);
-    HRESULT RegistrationContext(uint*);
+    HRESULT GetPinID(uint* pulPinID);
+    HRESULT GetPinType(uint* pulPinType);
+    HRESULT RegistrationContext(uint* pulRegistrationCtx);
 }
 enum IID_IBDA_SignalProperties = GUID(0xd2f1644b, 0xb409, 0x11d2, [0xbc, 0x69, 0x0, 0xa0, 0xc9, 0xee, 0x9e, 0x16]);
 interface IBDA_SignalProperties : IUnknown
 {
-    HRESULT PutNetworkType(const(GUID)*);
-    HRESULT GetNetworkType(GUID*);
-    HRESULT PutSignalSource(uint);
-    HRESULT GetSignalSource(uint*);
-    HRESULT PutTuningSpace(const(GUID)*);
-    HRESULT GetTuningSpace(GUID*);
+    HRESULT PutNetworkType(const(GUID)* guidNetworkType);
+    HRESULT GetNetworkType(GUID* pguidNetworkType);
+    HRESULT PutSignalSource(uint ulSignalSource);
+    HRESULT GetSignalSource(uint* pulSignalSource);
+    HRESULT PutTuningSpace(const(GUID)* guidTuningSpace);
+    HRESULT GetTuningSpace(GUID* pguidTuingSpace);
 }
 enum IID_IBDA_SignalStatistics = GUID(0x1347d106, 0xcf3a, 0x428a, [0xa5, 0xcb, 0xac, 0xd, 0x9a, 0x2a, 0x43, 0x38]);
 interface IBDA_SignalStatistics : IUnknown
 {
-    HRESULT put_SignalStrength(int);
-    HRESULT get_SignalStrength(int*);
-    HRESULT put_SignalQuality(int);
-    HRESULT get_SignalQuality(int*);
-    HRESULT put_SignalPresent(BOOLEAN);
-    HRESULT get_SignalPresent(ubyte*);
-    HRESULT put_SignalLocked(BOOLEAN);
-    HRESULT get_SignalLocked(ubyte*);
-    HRESULT put_SampleTime(int);
-    HRESULT get_SampleTime(int*);
+    HRESULT put_SignalStrength(int lDbStrength);
+    HRESULT get_SignalStrength(int* plDbStrength);
+    HRESULT put_SignalQuality(int lPercentQuality);
+    HRESULT get_SignalQuality(int* plPercentQuality);
+    HRESULT put_SignalPresent(BOOLEAN fPresent);
+    HRESULT get_SignalPresent(ubyte* pfPresent);
+    HRESULT put_SignalLocked(BOOLEAN fLocked);
+    HRESULT get_SignalLocked(ubyte* pfLocked);
+    HRESULT put_SampleTime(int lmsSampleTime);
+    HRESULT get_SampleTime(int* plmsSampleTime);
 }
 enum IID_IBDA_Topology = GUID(0x79b56888, 0x7fea, 0x4690, [0xb4, 0x5d, 0x38, 0xfd, 0x3c, 0x78, 0x49, 0xbe]);
 interface IBDA_Topology : IUnknown
 {
-    HRESULT GetNodeTypes(uint*, uint, uint*);
-    HRESULT GetNodeDescriptors(uint*, uint, BDANODE_DESCRIPTOR*);
-    HRESULT GetNodeInterfaces(uint, uint*, uint, GUID*);
-    HRESULT GetPinTypes(uint*, uint, uint*);
-    HRESULT GetTemplateConnections(uint*, uint, BDA_TEMPLATE_CONNECTION*);
-    HRESULT CreatePin(uint, uint*);
-    HRESULT DeletePin(uint);
-    HRESULT SetMediaType(uint, AM_MEDIA_TYPE*);
-    HRESULT SetMedium(uint, REGPINMEDIUM*);
-    HRESULT CreateTopology(uint, uint);
-    HRESULT GetControlNode(uint, uint, uint, IUnknown*);
+    HRESULT GetNodeTypes(uint* pulcNodeTypes, uint ulcNodeTypesMax, uint* rgulNodeTypes);
+    HRESULT GetNodeDescriptors(uint* ulcNodeDescriptors, uint ulcNodeDescriptorsMax, BDANODE_DESCRIPTOR* rgNodeDescriptors);
+    HRESULT GetNodeInterfaces(uint ulNodeType, uint* pulcInterfaces, uint ulcInterfacesMax, GUID* rgguidInterfaces);
+    HRESULT GetPinTypes(uint* pulcPinTypes, uint ulcPinTypesMax, uint* rgulPinTypes);
+    HRESULT GetTemplateConnections(uint* pulcConnections, uint ulcConnectionsMax, BDA_TEMPLATE_CONNECTION* rgConnections);
+    HRESULT CreatePin(uint ulPinType, uint* pulPinId);
+    HRESULT DeletePin(uint ulPinId);
+    HRESULT SetMediaType(uint ulPinId, AM_MEDIA_TYPE* pMediaType);
+    HRESULT SetMedium(uint ulPinId, REGPINMEDIUM* pMedium);
+    HRESULT CreateTopology(uint ulInputPinId, uint ulOutputPinId);
+    HRESULT GetControlNode(uint ulInputPinId, uint ulOutputPinId, uint ulNodeType, IUnknown* ppControlNode);
 }
 enum IID_IBDA_VoidTransform = GUID(0x71985f46, 0x1ca1, 0x11d3, [0x9c, 0xc8, 0x0, 0xc0, 0x4f, 0x79, 0x71, 0xe0]);
 interface IBDA_VoidTransform : IUnknown
@@ -4534,38 +4534,38 @@ interface IBDA_NullTransform : IUnknown
 enum IID_IBDA_FrequencyFilter = GUID(0x71985f47, 0x1ca1, 0x11d3, [0x9c, 0xc8, 0x0, 0xc0, 0x4f, 0x79, 0x71, 0xe0]);
 interface IBDA_FrequencyFilter : IUnknown
 {
-    HRESULT put_Autotune(uint);
-    HRESULT get_Autotune(uint*);
-    HRESULT put_Frequency(uint);
-    HRESULT get_Frequency(uint*);
-    HRESULT put_Polarity(Polarisation);
-    HRESULT get_Polarity(Polarisation*);
-    HRESULT put_Range(uint);
-    HRESULT get_Range(uint*);
-    HRESULT put_Bandwidth(uint);
-    HRESULT get_Bandwidth(uint*);
-    HRESULT put_FrequencyMultiplier(uint);
-    HRESULT get_FrequencyMultiplier(uint*);
+    HRESULT put_Autotune(uint ulTransponder);
+    HRESULT get_Autotune(uint* pulTransponder);
+    HRESULT put_Frequency(uint ulFrequency);
+    HRESULT get_Frequency(uint* pulFrequency);
+    HRESULT put_Polarity(Polarisation Polarity);
+    HRESULT get_Polarity(Polarisation* pPolarity);
+    HRESULT put_Range(uint ulRange);
+    HRESULT get_Range(uint* pulRange);
+    HRESULT put_Bandwidth(uint ulBandwidth);
+    HRESULT get_Bandwidth(uint* pulBandwidth);
+    HRESULT put_FrequencyMultiplier(uint ulMultiplier);
+    HRESULT get_FrequencyMultiplier(uint* pulMultiplier);
 }
 enum IID_IBDA_LNBInfo = GUID(0x992cf102, 0x49f9, 0x4719, [0xa6, 0x64, 0xc4, 0xf2, 0x3e, 0x24, 0x8, 0xf4]);
 interface IBDA_LNBInfo : IUnknown
 {
-    HRESULT put_LocalOscilatorFrequencyLowBand(uint);
-    HRESULT get_LocalOscilatorFrequencyLowBand(uint*);
-    HRESULT put_LocalOscilatorFrequencyHighBand(uint);
-    HRESULT get_LocalOscilatorFrequencyHighBand(uint*);
-    HRESULT put_HighLowSwitchFrequency(uint);
-    HRESULT get_HighLowSwitchFrequency(uint*);
+    HRESULT put_LocalOscilatorFrequencyLowBand(uint ulLOFLow);
+    HRESULT get_LocalOscilatorFrequencyLowBand(uint* pulLOFLow);
+    HRESULT put_LocalOscilatorFrequencyHighBand(uint ulLOFHigh);
+    HRESULT get_LocalOscilatorFrequencyHighBand(uint* pulLOFHigh);
+    HRESULT put_HighLowSwitchFrequency(uint ulSwitchFrequency);
+    HRESULT get_HighLowSwitchFrequency(uint* pulSwitchFrequency);
 }
 enum IID_IBDA_DiseqCommand = GUID(0xf84e2ab0, 0x3c6b, 0x45e3, [0xa0, 0xfc, 0x86, 0x69, 0xd4, 0xb8, 0x1f, 0x11]);
 interface IBDA_DiseqCommand : IUnknown
 {
-    HRESULT put_EnableDiseqCommands(BOOLEAN);
-    HRESULT put_DiseqLNBSource(uint);
-    HRESULT put_DiseqUseToneBurst(BOOLEAN);
-    HRESULT put_DiseqRepeats(uint);
-    HRESULT put_DiseqSendCommand(uint, uint, ubyte*);
-    HRESULT get_DiseqResponse(uint, uint*, ubyte*);
+    HRESULT put_EnableDiseqCommands(BOOLEAN bEnable);
+    HRESULT put_DiseqLNBSource(uint ulLNBSource);
+    HRESULT put_DiseqUseToneBurst(BOOLEAN bUseToneBurst);
+    HRESULT put_DiseqRepeats(uint ulRepeats);
+    HRESULT put_DiseqSendCommand(uint ulRequestId, uint ulcbCommandLen, ubyte* pbCommand);
+    HRESULT get_DiseqResponse(uint ulRequestId, uint* pulcbResponseLen, ubyte* pbResponse);
 }
 enum IID_IBDA_AutoDemodulate = GUID(0xddf15b12, 0xbd25, 0x11d2, [0x9c, 0xa0, 0x0, 0xc0, 0x4f, 0x79, 0x71, 0xe0]);
 interface IBDA_AutoDemodulate : IUnknown
@@ -4575,47 +4575,47 @@ interface IBDA_AutoDemodulate : IUnknown
 enum IID_IBDA_AutoDemodulateEx = GUID(0x34518d13, 0x1182, 0x48e6, [0xb2, 0x8f, 0xb2, 0x49, 0x87, 0x78, 0x73, 0x26]);
 interface IBDA_AutoDemodulateEx : IBDA_AutoDemodulate
 {
-    HRESULT get_SupportedDeviceNodeTypes(uint, uint*, GUID*);
-    HRESULT get_SupportedVideoFormats(uint*, uint*);
-    HRESULT get_AuxInputCount(uint*, uint*);
+    HRESULT get_SupportedDeviceNodeTypes(uint ulcDeviceNodeTypesMax, uint* pulcDeviceNodeTypes, GUID* pguidDeviceNodeTypes);
+    HRESULT get_SupportedVideoFormats(uint* pulAMTunerModeType, uint* pulAnalogVideoStandard);
+    HRESULT get_AuxInputCount(uint* pulCompositeCount, uint* pulSvideoCount);
 }
 enum IID_IBDA_DigitalDemodulator = GUID(0xef30f379, 0x985b, 0x4d10, [0xb6, 0x40, 0xa7, 0x9d, 0x5e, 0x4, 0xe1, 0xe0]);
 interface IBDA_DigitalDemodulator : IUnknown
 {
-    HRESULT put_ModulationType(ModulationType*);
-    HRESULT get_ModulationType(ModulationType*);
-    HRESULT put_InnerFECMethod(FECMethod*);
-    HRESULT get_InnerFECMethod(FECMethod*);
-    HRESULT put_InnerFECRate(BinaryConvolutionCodeRate*);
-    HRESULT get_InnerFECRate(BinaryConvolutionCodeRate*);
-    HRESULT put_OuterFECMethod(FECMethod*);
-    HRESULT get_OuterFECMethod(FECMethod*);
-    HRESULT put_OuterFECRate(BinaryConvolutionCodeRate*);
-    HRESULT get_OuterFECRate(BinaryConvolutionCodeRate*);
-    HRESULT put_SymbolRate(uint*);
-    HRESULT get_SymbolRate(uint*);
-    HRESULT put_SpectralInversion(SpectralInversion*);
-    HRESULT get_SpectralInversion(SpectralInversion*);
+    HRESULT put_ModulationType(ModulationType* pModulationType);
+    HRESULT get_ModulationType(ModulationType* pModulationType);
+    HRESULT put_InnerFECMethod(FECMethod* pFECMethod);
+    HRESULT get_InnerFECMethod(FECMethod* pFECMethod);
+    HRESULT put_InnerFECRate(BinaryConvolutionCodeRate* pFECRate);
+    HRESULT get_InnerFECRate(BinaryConvolutionCodeRate* pFECRate);
+    HRESULT put_OuterFECMethod(FECMethod* pFECMethod);
+    HRESULT get_OuterFECMethod(FECMethod* pFECMethod);
+    HRESULT put_OuterFECRate(BinaryConvolutionCodeRate* pFECRate);
+    HRESULT get_OuterFECRate(BinaryConvolutionCodeRate* pFECRate);
+    HRESULT put_SymbolRate(uint* pSymbolRate);
+    HRESULT get_SymbolRate(uint* pSymbolRate);
+    HRESULT put_SpectralInversion(SpectralInversion* pSpectralInversion);
+    HRESULT get_SpectralInversion(SpectralInversion* pSpectralInversion);
 }
 enum IID_IBDA_DigitalDemodulator2 = GUID(0x525ed3ee, 0x5cf3, 0x4e1e, [0x9a, 0x6, 0x53, 0x68, 0xa8, 0x4f, 0x9a, 0x6e]);
 interface IBDA_DigitalDemodulator2 : IBDA_DigitalDemodulator
 {
-    HRESULT put_GuardInterval(GuardInterval*);
-    HRESULT get_GuardInterval(GuardInterval*);
-    HRESULT put_TransmissionMode(TransmissionMode*);
-    HRESULT get_TransmissionMode(TransmissionMode*);
-    HRESULT put_RollOff(RollOff*);
-    HRESULT get_RollOff(RollOff*);
-    HRESULT put_Pilot(Pilot*);
-    HRESULT get_Pilot(Pilot*);
+    HRESULT put_GuardInterval(GuardInterval* pGuardInterval);
+    HRESULT get_GuardInterval(GuardInterval* pGuardInterval);
+    HRESULT put_TransmissionMode(TransmissionMode* pTransmissionMode);
+    HRESULT get_TransmissionMode(TransmissionMode* pTransmissionMode);
+    HRESULT put_RollOff(RollOff* pRollOff);
+    HRESULT get_RollOff(RollOff* pRollOff);
+    HRESULT put_Pilot(Pilot* pPilot);
+    HRESULT get_Pilot(Pilot* pPilot);
 }
 enum IID_IBDA_DigitalDemodulator3 = GUID(0x13f19604, 0x7d32, 0x4359, [0x93, 0xa2, 0xa0, 0x52, 0x5, 0xd9, 0xa, 0xc9]);
 interface IBDA_DigitalDemodulator3 : IBDA_DigitalDemodulator2
 {
-    HRESULT put_SignalTimeouts(BDA_SIGNAL_TIMEOUTS*);
-    HRESULT get_SignalTimeouts(BDA_SIGNAL_TIMEOUTS*);
-    HRESULT put_PLPNumber(uint*);
-    HRESULT get_PLPNumber(uint*);
+    HRESULT put_SignalTimeouts(BDA_SIGNAL_TIMEOUTS* pSignalTimeouts);
+    HRESULT get_SignalTimeouts(BDA_SIGNAL_TIMEOUTS* pSignalTimeouts);
+    HRESULT put_PLPNumber(uint* pPLPNumber);
+    HRESULT get_PLPNumber(uint* pPLPNumber);
 }
 alias KSPROPERTY_IPSINK = int;
 enum : int
@@ -4628,70 +4628,70 @@ enum : int
 enum IID_ICCSubStreamFiltering = GUID(0x4b2bd7ea, 0x8347, 0x467b, [0x8d, 0xbf, 0x62, 0xf7, 0x84, 0x92, 0x9c, 0xc3]);
 interface ICCSubStreamFiltering : IUnknown
 {
-    HRESULT get_SubstreamTypes(int*);
-    HRESULT put_SubstreamTypes(int);
+    HRESULT get_SubstreamTypes(int* pTypes);
+    HRESULT put_SubstreamTypes(int Types);
 }
 enum IID_IBDA_IPSinkControl = GUID(0x3f4dc8e2, 0x4050, 0x11d3, [0x8f, 0x4b, 0x0, 0xc0, 0x4f, 0x79, 0x71, 0xe2]);
 interface IBDA_IPSinkControl : IUnknown
 {
-    HRESULT GetMulticastList(uint*, ubyte**);
-    HRESULT GetAdapterIPAddress(uint*, ubyte**);
+    HRESULT GetMulticastList(uint* pulcbSize, ubyte** pbBuffer);
+    HRESULT GetAdapterIPAddress(uint* pulcbSize, ubyte** pbBuffer);
 }
 enum IID_IBDA_IPSinkInfo = GUID(0xa750108f, 0x492e, 0x4d51, [0x95, 0xf7, 0x64, 0x9b, 0x23, 0xff, 0x7a, 0xd7]);
 interface IBDA_IPSinkInfo : IUnknown
 {
-    HRESULT get_MulticastList(uint*, ubyte**);
-    HRESULT get_AdapterIPAddress(BSTR*);
-    HRESULT get_AdapterDescription(BSTR*);
+    HRESULT get_MulticastList(uint* pulcbAddresses, ubyte** ppbAddressList);
+    HRESULT get_AdapterIPAddress(BSTR* pbstrBuffer);
+    HRESULT get_AdapterDescription(BSTR* pbstrBuffer);
 }
 enum IID_IEnumPIDMap = GUID(0xafb6c2a2, 0x2c41, 0x11d3, [0x8a, 0x60, 0x0, 0x0, 0xf8, 0x1e, 0xe, 0x4a]);
 interface IEnumPIDMap : IUnknown
 {
-    HRESULT Next(uint, PID_MAP*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint cRequest, PID_MAP* pPIDMap, uint* pcReceived);
+    HRESULT Skip(uint cRecords);
     HRESULT Reset();
-    HRESULT Clone(IEnumPIDMap*);
+    HRESULT Clone(IEnumPIDMap* ppIEnumPIDMap);
 }
 enum IID_IMPEG2PIDMap = GUID(0xafb6c2a1, 0x2c41, 0x11d3, [0x8a, 0x60, 0x0, 0x0, 0xf8, 0x1e, 0xe, 0x4a]);
 interface IMPEG2PIDMap : IUnknown
 {
-    HRESULT MapPID(uint, uint*, MEDIA_SAMPLE_CONTENT);
-    HRESULT UnmapPID(uint, uint*);
-    HRESULT EnumPIDMap(IEnumPIDMap*);
+    HRESULT MapPID(uint culPID, uint* pulPID, MEDIA_SAMPLE_CONTENT MediaSampleContent);
+    HRESULT UnmapPID(uint culPID, uint* pulPID);
+    HRESULT EnumPIDMap(IEnumPIDMap* pIEnumPIDMap);
 }
 enum IID_IFrequencyMap = GUID(0x6fb45c1, 0x693c, 0x4ea7, [0xb7, 0x9f, 0x7a, 0x6a, 0x54, 0xd8, 0xde, 0xf2]);
 interface IFrequencyMap : IUnknown
 {
-    HRESULT get_FrequencyMapping(uint*, uint**);
-    HRESULT put_FrequencyMapping(uint, uint*);
-    HRESULT get_CountryCode(uint*);
-    HRESULT put_CountryCode(uint);
-    HRESULT get_DefaultFrequencyMapping(uint, uint*, uint**);
-    HRESULT get_CountryCodeList(uint*, uint**);
+    HRESULT get_FrequencyMapping(uint* ulCount, uint** ppulList);
+    HRESULT put_FrequencyMapping(uint ulCount, uint* pList);
+    HRESULT get_CountryCode(uint* pulCountryCode);
+    HRESULT put_CountryCode(uint ulCountryCode);
+    HRESULT get_DefaultFrequencyMapping(uint ulCountryCode, uint* pulCount, uint** ppulList);
+    HRESULT get_CountryCodeList(uint* pulCount, uint** ppulList);
 }
 enum IID_IBDA_EasMessage = GUID(0xd806973d, 0x3ebe, 0x46de, [0x8f, 0xbb, 0x63, 0x58, 0xfe, 0x78, 0x42, 0x8]);
 interface IBDA_EasMessage : IUnknown
 {
-    HRESULT get_EasMessage(uint, IUnknown*);
+    HRESULT get_EasMessage(uint ulEventID, IUnknown* ppEASObject);
 }
 enum IID_IBDA_TransportStreamInfo = GUID(0x8e882535, 0x5f86, 0x47ab, [0x86, 0xcf, 0xc2, 0x81, 0xa7, 0x2a, 0x5, 0x49]);
 interface IBDA_TransportStreamInfo : IUnknown
 {
-    HRESULT get_PatTableTickCount(uint*);
+    HRESULT get_PatTableTickCount(uint* pPatTickCount);
 }
 enum IID_IBDA_ConditionalAccess = GUID(0xcd51f1e0, 0x7be9, 0x4123, [0x84, 0x82, 0xa2, 0xa7, 0x96, 0xc0, 0xa6, 0xb0]);
 interface IBDA_ConditionalAccess : IUnknown
 {
-    HRESULT get_SmartCardStatus(SmartCardStatusType*, SmartCardAssociationType*, BSTR*, VARIANT_BOOL*);
-    HRESULT get_SmartCardInfo(BSTR*, BSTR*, VARIANT_BOOL*, ubyte*, int*, BSTR*, EALocationCodeType*);
-    HRESULT get_SmartCardApplications(uint*, uint, SmartCardApplication*);
-    HRESULT get_Entitlement(ushort, EntitlementType*);
-    HRESULT TuneByChannel(ushort);
-    HRESULT SetProgram(ushort);
-    HRESULT AddProgram(ushort);
-    HRESULT RemoveProgram(ushort);
-    HRESULT GetModuleUI(ubyte, BSTR*);
-    HRESULT InformUIClosed(ubyte, UICloseReasonType);
+    HRESULT get_SmartCardStatus(SmartCardStatusType* pCardStatus, SmartCardAssociationType* pCardAssociation, BSTR* pbstrCardError, VARIANT_BOOL* pfOOBLocked);
+    HRESULT get_SmartCardInfo(BSTR* pbstrCardName, BSTR* pbstrCardManufacturer, VARIANT_BOOL* pfDaylightSavings, ubyte* pbyRatingRegion, int* plTimeZoneOffsetMinutes, BSTR* pbstrLanguage, EALocationCodeType* pEALocationCode);
+    HRESULT get_SmartCardApplications(uint* pulcApplications, uint ulcApplicationsMax, SmartCardApplication* rgApplications);
+    HRESULT get_Entitlement(ushort usVirtualChannel, EntitlementType* pEntitlement);
+    HRESULT TuneByChannel(ushort usVirtualChannel);
+    HRESULT SetProgram(ushort usProgramNumber);
+    HRESULT AddProgram(ushort usProgramNumber);
+    HRESULT RemoveProgram(ushort usProgramNumber);
+    HRESULT GetModuleUI(ubyte byDialogNumber, BSTR* pbstrURL);
+    HRESULT InformUIClosed(ubyte byDialogNumber, UICloseReasonType CloseReason);
 }
 enum IID_IBDA_DiagnosticProperties = GUID(0x20e80cb5, 0xc543, 0x4c1b, [0x8e, 0xb3, 0x49, 0xe7, 0x19, 0xee, 0xe7, 0xd4]);
 interface IBDA_DiagnosticProperties : IPropertyBag
@@ -4700,206 +4700,206 @@ interface IBDA_DiagnosticProperties : IPropertyBag
 enum IID_IBDA_DRM = GUID(0xf98d88b0, 0x1992, 0x4cd6, [0xa6, 0xd9, 0xb9, 0xaf, 0xab, 0x99, 0x33, 0xd]);
 interface IBDA_DRM : IUnknown
 {
-    HRESULT GetDRMPairingStatus(uint*, HRESULT*);
-    HRESULT PerformDRMPairing(BOOL);
+    HRESULT GetDRMPairingStatus(uint* pdwStatus, HRESULT* phError);
+    HRESULT PerformDRMPairing(BOOL fSync);
 }
 enum IID_IBDA_NameValueService = GUID(0x7f0b3150, 0x7b81, 0x4ad4, [0x98, 0xe3, 0x7e, 0x90, 0x97, 0x9, 0x43, 0x1]);
 interface IBDA_NameValueService : IUnknown
 {
-    HRESULT GetValueNameByIndex(uint, BSTR*);
-    HRESULT GetValue(BSTR, BSTR, BSTR*);
-    HRESULT SetValue(uint, BSTR, BSTR, BSTR, uint);
+    HRESULT GetValueNameByIndex(uint ulIndex, BSTR* pbstrName);
+    HRESULT GetValue(BSTR bstrName, BSTR bstrLanguage, BSTR* pbstrValue);
+    HRESULT SetValue(uint ulDialogRequest, BSTR bstrLanguage, BSTR bstrName, BSTR bstrValue, uint ulReserved);
 }
 enum IID_IBDA_ConditionalAccessEx = GUID(0x497c3418, 0x23cb, 0x44ba, [0xbb, 0x62, 0x76, 0x9f, 0x50, 0x6f, 0xce, 0xa7]);
 interface IBDA_ConditionalAccessEx : IUnknown
 {
-    HRESULT CheckEntitlementToken(uint, BSTR, BDA_CONDITIONALACCESS_REQUESTTYPE, uint, ubyte*, uint*);
-    HRESULT SetCaptureToken(uint, ubyte*);
-    HRESULT OpenBroadcastMmi(uint, BSTR, uint);
-    HRESULT CloseMmiDialog(uint, BSTR, uint, BDA_CONDITIONALACCESS_MMICLOSEREASON, uint*);
-    HRESULT CreateDialogRequestNumber(uint*);
+    HRESULT CheckEntitlementToken(uint ulDialogRequest, BSTR bstrLanguage, BDA_CONDITIONALACCESS_REQUESTTYPE RequestType, uint ulcbEntitlementTokenLen, ubyte* pbEntitlementToken, uint* pulDescrambleStatus);
+    HRESULT SetCaptureToken(uint ulcbCaptureTokenLen, ubyte* pbCaptureToken);
+    HRESULT OpenBroadcastMmi(uint ulDialogRequest, BSTR bstrLanguage, uint EventId);
+    HRESULT CloseMmiDialog(uint ulDialogRequest, BSTR bstrLanguage, uint ulDialogNumber, BDA_CONDITIONALACCESS_MMICLOSEREASON ReasonCode, uint* pulSessionResult);
+    HRESULT CreateDialogRequestNumber(uint* pulDialogRequestNumber);
 }
 enum IID_IBDA_ISDBConditionalAccess = GUID(0x5e68c627, 0x16c2, 0x4e6c, [0xb1, 0xe2, 0xd0, 0x1, 0x70, 0xcd, 0xaa, 0xf]);
 interface IBDA_ISDBConditionalAccess : IUnknown
 {
-    HRESULT SetIsdbCasRequest(uint, uint, ubyte*);
+    HRESULT SetIsdbCasRequest(uint ulRequestId, uint ulcbRequestBufferLen, ubyte* pbRequestBuffer);
 }
 enum IID_IBDA_EventingService = GUID(0x207c413f, 0xdc, 0x4c61, [0xba, 0xd6, 0x6f, 0xee, 0x1f, 0xf0, 0x70, 0x64]);
 interface IBDA_EventingService : IUnknown
 {
-    HRESULT CompleteEvent(uint, uint);
+    HRESULT CompleteEvent(uint ulEventID, uint ulEventResult);
 }
 enum IID_IBDA_AUX = GUID(0x7def4c09, 0x6e66, 0x4567, [0xa8, 0x19, 0xf0, 0xe1, 0x7f, 0x4a, 0x81, 0xab]);
 interface IBDA_AUX : IUnknown
 {
-    HRESULT QueryCapabilities(uint*);
-    HRESULT EnumCapability(uint, uint*, GUID*, uint*, uint*, ulong*);
+    HRESULT QueryCapabilities(uint* pdwNumAuxInputsBSTR);
+    HRESULT EnumCapability(uint dwIndex, uint* dwInputID, GUID* pConnectorType, uint* ConnTypeNum, uint* NumVideoStds, ulong* AnalogStds);
 }
 enum IID_IBDA_Encoder = GUID(0x3a8bad59, 0x59fe, 0x4559, [0xa0, 0xba, 0x39, 0x6c, 0xfa, 0xa9, 0x8a, 0xe3]);
 interface IBDA_Encoder : IUnknown
 {
-    HRESULT QueryCapabilities(uint*, uint*);
-    HRESULT EnumAudioCapability(uint, uint*, uint*, uint*, uint*, uint*);
-    HRESULT EnumVideoCapability(uint, uint*, uint*, uint*, uint*, uint*, uint*, uint*);
-    HRESULT SetParameters(uint, uint, uint, uint, uint, uint, uint);
-    HRESULT GetState(uint*, uint*, uint*, uint*, uint*, uint*, uint*, uint*, uint*, uint*, uint*, uint*, uint*, uint*, uint*, ulong*, BOOL*, int*, uint*);
+    HRESULT QueryCapabilities(uint* NumAudioFmts, uint* NumVideoFmts);
+    HRESULT EnumAudioCapability(uint FmtIndex, uint* MethodID, uint* AlgorithmType, uint* SamplingRate, uint* BitDepth, uint* NumChannels);
+    HRESULT EnumVideoCapability(uint FmtIndex, uint* MethodID, uint* AlgorithmType, uint* VerticalSize, uint* HorizontalSize, uint* AspectRatio, uint* FrameRateCode, uint* ProgressiveSequence);
+    HRESULT SetParameters(uint AudioBitrateMode, uint AudioBitrate, uint AudioMethodID, uint AudioProgram, uint VideoBitrateMode, uint VideoBitrate, uint VideoMethodID);
+    HRESULT GetState(uint* AudioBitrateMax, uint* AudioBitrateMin, uint* AudioBitrateMode, uint* AudioBitrateStepping, uint* AudioBitrate, uint* AudioMethodID, uint* AvailableAudioPrograms, uint* AudioProgram, uint* VideoBitrateMax, uint* VideoBitrateMin, uint* VideoBitrateMode, uint* VideoBitrate, uint* VideoBitrateStepping, uint* VideoMethodID, uint* SignalSourceID, ulong* SignalFormat, BOOL* SignalLock, int* SignalLevel, uint* SignalToNoiseRatio);
 }
 enum IID_IBDA_FDC = GUID(0x138adc7e, 0x58ae, 0x437f, [0xb0, 0xb4, 0xc9, 0xfe, 0x19, 0xd5, 0xb4, 0xac]);
 interface IBDA_FDC : IUnknown
 {
-    HRESULT GetStatus(uint*, BOOL*, uint*, BOOL*, BSTR*, BSTR*, BOOL*);
-    HRESULT RequestTables(BSTR);
-    HRESULT AddPid(BSTR, uint*);
-    HRESULT RemovePid(BSTR);
-    HRESULT AddTid(BSTR, BSTR*);
-    HRESULT RemoveTid(BSTR);
-    HRESULT GetTableSection(uint*, uint, uint*, ubyte*);
+    HRESULT GetStatus(uint* CurrentBitrate, BOOL* CarrierLock, uint* CurrentFrequency, BOOL* CurrentSpectrumInversion, BSTR* CurrentPIDList, BSTR* CurrentTIDList, BOOL* Overflow);
+    HRESULT RequestTables(BSTR TableIDs);
+    HRESULT AddPid(BSTR PidsToAdd, uint* RemainingFilterEntries);
+    HRESULT RemovePid(BSTR PidsToRemove);
+    HRESULT AddTid(BSTR TidsToAdd, BSTR* CurrentTidList);
+    HRESULT RemoveTid(BSTR TidsToRemove);
+    HRESULT GetTableSection(uint* Pid, uint MaxBufferSize, uint* ActualSize, ubyte* SecBuffer);
 }
 enum IID_IBDA_GuideDataDeliveryService = GUID(0xc0afcb73, 0x23e7, 0x4bc6, [0xba, 0xfa, 0xfd, 0xc1, 0x67, 0xb4, 0x71, 0x9f]);
 interface IBDA_GuideDataDeliveryService : IUnknown
 {
-    HRESULT GetGuideDataType(GUID*);
-    HRESULT GetGuideData(uint*, ubyte*, uint*);
+    HRESULT GetGuideDataType(GUID* pguidDataType);
+    HRESULT GetGuideData(uint* pulcbBufferLen, ubyte* pbBuffer, uint* pulGuideDataPercentageProgress);
     HRESULT RequestGuideDataUpdate();
-    HRESULT GetTuneXmlFromServiceIdx(ulong, BSTR*);
-    HRESULT GetServices(uint*, ubyte*);
-    HRESULT GetServiceInfoFromTuneXml(BSTR, BSTR*);
+    HRESULT GetTuneXmlFromServiceIdx(ulong ul64ServiceIdx, BSTR* pbstrTuneXml);
+    HRESULT GetServices(uint* pulcbBufferLen, ubyte* pbBuffer);
+    HRESULT GetServiceInfoFromTuneXml(BSTR bstrTuneXml, BSTR* pbstrServiceDescription);
 }
 enum IID_IBDA_DRMService = GUID(0xbff6b5bb, 0xb0ae, 0x484c, [0x9d, 0xca, 0x73, 0x52, 0x8f, 0xb0, 0xb4, 0x6e]);
 interface IBDA_DRMService : IUnknown
 {
-    HRESULT SetDRM(GUID*);
-    HRESULT GetDRMStatus(BSTR*, GUID*);
+    HRESULT SetDRM(GUID* puuidNewDrm);
+    HRESULT GetDRMStatus(BSTR* pbstrDrmUuidList, GUID* DrmUuid);
 }
 enum IID_IBDA_WMDRMSession = GUID(0x4be6fa3d, 0x7cd, 0x4139, [0x8b, 0x80, 0x8c, 0x18, 0xba, 0x3a, 0xec, 0x88]);
 interface IBDA_WMDRMSession : IUnknown
 {
-    HRESULT GetStatus(uint*, uint*, uint*, uint*, uint*, ulong*, uint*, uint*, uint*);
-    HRESULT SetRevInfo(uint, ubyte*);
-    HRESULT SetCrl(uint, ubyte*);
-    HRESULT TransactMessage(uint, ubyte*, uint*, ubyte*);
-    HRESULT GetLicense(GUID*, uint*, ubyte*);
-    HRESULT ReissueLicense(GUID*);
-    HRESULT RenewLicense(uint, ubyte*, uint, ubyte*, uint*, uint*, ubyte*);
-    HRESULT GetKeyInfo(uint*, ubyte*);
+    HRESULT GetStatus(uint* MaxCaptureToken, uint* MaxStreamingPid, uint* MaxLicense, uint* MinSecurityLevel, uint* RevInfoSequenceNumber, ulong* RevInfoIssuedTime, uint* RevInfoTTL, uint* RevListVersion, uint* ulState);
+    HRESULT SetRevInfo(uint ulRevInfoLen, ubyte* pbRevInfo);
+    HRESULT SetCrl(uint ulCrlLen, ubyte* pbCrlLen);
+    HRESULT TransactMessage(uint ulcbRequest, ubyte* pbRequest, uint* pulcbResponse, ubyte* pbResponse);
+    HRESULT GetLicense(GUID* uuidKey, uint* pulPackageLen, ubyte* pbPackage);
+    HRESULT ReissueLicense(GUID* uuidKey);
+    HRESULT RenewLicense(uint ulInXmrLicenseLen, ubyte* pbInXmrLicense, uint ulEntitlementTokenLen, ubyte* pbEntitlementToken, uint* pulDescrambleStatus, uint* pulOutXmrLicenseLen, ubyte* pbOutXmrLicense);
+    HRESULT GetKeyInfo(uint* pulKeyInfoLen, ubyte* pbKeyInfo);
 }
 enum IID_IBDA_WMDRMTuner = GUID(0x86d979cf, 0xa8a7, 0x4f94, [0xb5, 0xfb, 0x14, 0xc0, 0xac, 0xa6, 0x8f, 0xe6]);
 interface IBDA_WMDRMTuner : IUnknown
 {
-    HRESULT PurchaseEntitlement(uint, BSTR, uint, ubyte*, uint*, uint*, ubyte*);
-    HRESULT CancelCaptureToken(uint, ubyte*);
-    HRESULT SetPidProtection(uint, GUID*);
-    HRESULT GetPidProtection(uint, GUID*);
-    HRESULT SetSyncValue(uint);
-    HRESULT GetStartCodeProfile(uint*, ubyte*);
+    HRESULT PurchaseEntitlement(uint ulDialogRequest, BSTR bstrLanguage, uint ulPurchaseTokenLen, ubyte* pbPurchaseToken, uint* pulDescrambleStatus, uint* pulCaptureTokenLen, ubyte* pbCaptureToken);
+    HRESULT CancelCaptureToken(uint ulCaptureTokenLen, ubyte* pbCaptureToken);
+    HRESULT SetPidProtection(uint ulPid, GUID* uuidKey);
+    HRESULT GetPidProtection(uint pulPid, GUID* uuidKey);
+    HRESULT SetSyncValue(uint ulSyncValue);
+    HRESULT GetStartCodeProfile(uint* pulStartCodeProfileLen, ubyte* pbStartCodeProfile);
 }
 enum IID_IBDA_DRIDRMService = GUID(0x1f9bc2a5, 0x44a3, 0x4c52, [0xaa, 0xb1, 0xb, 0xbc, 0xe5, 0xa1, 0x38, 0x1d]);
 interface IBDA_DRIDRMService : IUnknown
 {
-    HRESULT SetDRM(BSTR);
-    HRESULT GetDRMStatus(BSTR*, GUID*);
-    HRESULT GetPairingStatus(BDA_DrmPairingError*);
+    HRESULT SetDRM(BSTR bstrNewDrm);
+    HRESULT GetDRMStatus(BSTR* pbstrDrmUuidList, GUID* DrmUuid);
+    HRESULT GetPairingStatus(BDA_DrmPairingError* penumPairingStatus);
 }
 enum IID_IBDA_DRIWMDRMSession = GUID(0x5c690f8, 0x56db, 0x4bb2, [0xb0, 0x53, 0x79, 0xc1, 0x20, 0x98, 0xbb, 0x26]);
 interface IBDA_DRIWMDRMSession : IUnknown
 {
-    HRESULT AcknowledgeLicense(HRESULT);
-    HRESULT ProcessLicenseChallenge(uint, ubyte*, uint*, ubyte**);
-    HRESULT ProcessRegistrationChallenge(uint, ubyte*, uint*, ubyte**);
-    HRESULT SetRevInfo(uint, ubyte*, uint*);
-    HRESULT SetCrl(uint, ubyte*, uint*);
+    HRESULT AcknowledgeLicense(HRESULT hrLicenseAck);
+    HRESULT ProcessLicenseChallenge(uint dwcbLicenseMessage, ubyte* pbLicenseMessage, uint* pdwcbLicenseResponse, ubyte** ppbLicenseResponse);
+    HRESULT ProcessRegistrationChallenge(uint dwcbRegistrationMessage, ubyte* pbRegistrationMessage, uint* pdwcbRegistrationResponse, ubyte** ppbRegistrationResponse);
+    HRESULT SetRevInfo(uint dwRevInfoLen, ubyte* pbRevInfo, uint* pdwResponse);
+    HRESULT SetCrl(uint dwCrlLen, ubyte* pbCrlLen, uint* pdwResponse);
     HRESULT GetHMSAssociationData();
-    HRESULT GetLastCardeaError(uint*);
+    HRESULT GetLastCardeaError(uint* pdwError);
 }
 enum IID_IBDA_MUX = GUID(0x942aafec, 0x4c05, 0x4c74, [0xb8, 0xeb, 0x87, 0x6, 0xc2, 0xa4, 0x94, 0x3f]);
 interface IBDA_MUX : IUnknown
 {
-    HRESULT SetPidList(uint, BDA_MUX_PIDLISTITEM*);
-    HRESULT GetPidList(uint*, BDA_MUX_PIDLISTITEM*);
+    HRESULT SetPidList(uint ulPidListCount, BDA_MUX_PIDLISTITEM* pbPidListBuffer);
+    HRESULT GetPidList(uint* pulPidListCount, BDA_MUX_PIDLISTITEM* pbPidListBuffer);
 }
 enum IID_IBDA_TransportStreamSelector = GUID(0x1dcfafe9, 0xb45e, 0x41b3, [0xbb, 0x2a, 0x56, 0x1e, 0xb1, 0x29, 0xae, 0x98]);
 interface IBDA_TransportStreamSelector : IUnknown
 {
-    HRESULT SetTSID(ushort);
-    HRESULT GetTSInformation(uint*, ubyte*);
+    HRESULT SetTSID(ushort usTSID);
+    HRESULT GetTSInformation(uint* pulTSInformationBufferLen, ubyte* pbTSInformationBuffer);
 }
 enum IID_IBDA_UserActivityService = GUID(0x53b14189, 0xe478, 0x4b7a, [0xa1, 0xff, 0x50, 0x6d, 0xb4, 0xb9, 0x9d, 0xfe]);
 interface IBDA_UserActivityService : IUnknown
 {
-    HRESULT SetCurrentTunerUseReason(uint);
-    HRESULT GetUserActivityInterval(uint*);
+    HRESULT SetCurrentTunerUseReason(uint dwUseReason);
+    HRESULT GetUserActivityInterval(uint* pdwActivityInterval);
     HRESULT UserActivityDetected();
 }
 enum IID_IESEvent = GUID(0x1f0e5357, 0xaf43, 0x44e6, [0x85, 0x47, 0x65, 0x4c, 0x64, 0x51, 0x45, 0xd2]);
 interface IESEvent : IUnknown
 {
-    HRESULT GetEventId(uint*);
-    HRESULT GetEventType(GUID*);
-    HRESULT SetCompletionStatus(uint);
-    HRESULT GetData(SAFEARRAY**);
-    HRESULT GetStringData(BSTR*);
+    HRESULT GetEventId(uint* pdwEventId);
+    HRESULT GetEventType(GUID* pguidEventType);
+    HRESULT SetCompletionStatus(uint dwResult);
+    HRESULT GetData(SAFEARRAY** pbData);
+    HRESULT GetStringData(BSTR* pbstrData);
 }
 enum IID_IESEvents = GUID(0xabd414bf, 0xcfe5, 0x4e5e, [0xaf, 0x5b, 0x4b, 0x4e, 0x49, 0xc5, 0xbf, 0xeb]);
 interface IESEvents : IUnknown
 {
-    HRESULT OnESEventReceived(GUID, IESEvent);
+    HRESULT OnESEventReceived(GUID guidEventType, IESEvent pESEvent);
 }
 enum IID_IBroadcastEvent = GUID(0x3b21263f, 0x26e8, 0x489d, [0xaa, 0xc4, 0x92, 0x4f, 0x7e, 0xfd, 0x95, 0x11]);
 interface IBroadcastEvent : IUnknown
 {
-    HRESULT Fire(GUID);
+    HRESULT Fire(GUID EventID);
 }
 enum IID_IBroadcastEventEx = GUID(0x3d9e3887, 0x1929, 0x423f, [0x80, 0x21, 0x43, 0x68, 0x2d, 0xe9, 0x54, 0x48]);
 interface IBroadcastEventEx : IBroadcastEvent
 {
-    HRESULT FireEx(GUID, uint, uint, uint, uint);
+    HRESULT FireEx(GUID EventID, uint Param1, uint Param2, uint Param3, uint Param4);
 }
 enum IID_IAMNetShowConfig = GUID(0xfa2aa8f1, 0x8b62, 0x11d0, [0xa5, 0x20, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
 interface IAMNetShowConfig : IDispatch
 {
-    HRESULT get_BufferingTime(double*);
-    HRESULT put_BufferingTime(double);
-    HRESULT get_UseFixedUDPPort(VARIANT_BOOL*);
-    HRESULT put_UseFixedUDPPort(VARIANT_BOOL);
-    HRESULT get_FixedUDPPort(int*);
-    HRESULT put_FixedUDPPort(int);
-    HRESULT get_UseHTTPProxy(VARIANT_BOOL*);
-    HRESULT put_UseHTTPProxy(VARIANT_BOOL);
-    HRESULT get_EnableAutoProxy(VARIANT_BOOL*);
-    HRESULT put_EnableAutoProxy(VARIANT_BOOL);
-    HRESULT get_HTTPProxyHost(BSTR*);
-    HRESULT put_HTTPProxyHost(BSTR);
-    HRESULT get_HTTPProxyPort(int*);
-    HRESULT put_HTTPProxyPort(int);
-    HRESULT get_EnableMulticast(VARIANT_BOOL*);
-    HRESULT put_EnableMulticast(VARIANT_BOOL);
-    HRESULT get_EnableUDP(VARIANT_BOOL*);
-    HRESULT put_EnableUDP(VARIANT_BOOL);
-    HRESULT get_EnableTCP(VARIANT_BOOL*);
-    HRESULT put_EnableTCP(VARIANT_BOOL);
-    HRESULT get_EnableHTTP(VARIANT_BOOL*);
-    HRESULT put_EnableHTTP(VARIANT_BOOL);
+    HRESULT get_BufferingTime(double* pBufferingTime);
+    HRESULT put_BufferingTime(double BufferingTime);
+    HRESULT get_UseFixedUDPPort(VARIANT_BOOL* pUseFixedUDPPort);
+    HRESULT put_UseFixedUDPPort(VARIANT_BOOL UseFixedUDPPort);
+    HRESULT get_FixedUDPPort(int* pFixedUDPPort);
+    HRESULT put_FixedUDPPort(int FixedUDPPort);
+    HRESULT get_UseHTTPProxy(VARIANT_BOOL* pUseHTTPProxy);
+    HRESULT put_UseHTTPProxy(VARIANT_BOOL UseHTTPProxy);
+    HRESULT get_EnableAutoProxy(VARIANT_BOOL* pEnableAutoProxy);
+    HRESULT put_EnableAutoProxy(VARIANT_BOOL EnableAutoProxy);
+    HRESULT get_HTTPProxyHost(BSTR* pbstrHTTPProxyHost);
+    HRESULT put_HTTPProxyHost(BSTR bstrHTTPProxyHost);
+    HRESULT get_HTTPProxyPort(int* pHTTPProxyPort);
+    HRESULT put_HTTPProxyPort(int HTTPProxyPort);
+    HRESULT get_EnableMulticast(VARIANT_BOOL* pEnableMulticast);
+    HRESULT put_EnableMulticast(VARIANT_BOOL EnableMulticast);
+    HRESULT get_EnableUDP(VARIANT_BOOL* pEnableUDP);
+    HRESULT put_EnableUDP(VARIANT_BOOL EnableUDP);
+    HRESULT get_EnableTCP(VARIANT_BOOL* pEnableTCP);
+    HRESULT put_EnableTCP(VARIANT_BOOL EnableTCP);
+    HRESULT get_EnableHTTP(VARIANT_BOOL* pEnableHTTP);
+    HRESULT put_EnableHTTP(VARIANT_BOOL EnableHTTP);
 }
 enum IID_IAMChannelInfo = GUID(0xfa2aa8f2, 0x8b62, 0x11d0, [0xa5, 0x20, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
 interface IAMChannelInfo : IDispatch
 {
-    HRESULT get_ChannelName(BSTR*);
-    HRESULT get_ChannelDescription(BSTR*);
-    HRESULT get_ChannelURL(BSTR*);
-    HRESULT get_ContactAddress(BSTR*);
-    HRESULT get_ContactPhone(BSTR*);
-    HRESULT get_ContactEmail(BSTR*);
+    HRESULT get_ChannelName(BSTR* pbstrChannelName);
+    HRESULT get_ChannelDescription(BSTR* pbstrChannelDescription);
+    HRESULT get_ChannelURL(BSTR* pbstrChannelURL);
+    HRESULT get_ContactAddress(BSTR* pbstrContactAddress);
+    HRESULT get_ContactPhone(BSTR* pbstrContactPhone);
+    HRESULT get_ContactEmail(BSTR* pbstrContactEmail);
 }
 enum IID_IAMNetworkStatus = GUID(0xfa2aa8f3, 0x8b62, 0x11d0, [0xa5, 0x20, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
 interface IAMNetworkStatus : IDispatch
 {
-    HRESULT get_ReceivedPackets(int*);
-    HRESULT get_RecoveredPackets(int*);
-    HRESULT get_LostPackets(int*);
-    HRESULT get_ReceptionQuality(int*);
-    HRESULT get_BufferingCount(int*);
-    HRESULT get_IsBroadcast(VARIANT_BOOL*);
-    HRESULT get_BufferingProgress(int*);
+    HRESULT get_ReceivedPackets(int* pReceivedPackets);
+    HRESULT get_RecoveredPackets(int* pRecoveredPackets);
+    HRESULT get_LostPackets(int* pLostPackets);
+    HRESULT get_ReceptionQuality(int* pReceptionQuality);
+    HRESULT get_BufferingCount(int* pBufferingCount);
+    HRESULT get_IsBroadcast(VARIANT_BOOL* pIsBroadcast);
+    HRESULT get_BufferingProgress(int* pBufferingProgress);
 }
 alias AMExtendedSeekingCapabilities = int;
 enum : int
@@ -4916,81 +4916,81 @@ enum : int
 enum IID_IAMExtendedSeeking = GUID(0xfa2aa8f9, 0x8b62, 0x11d0, [0xa5, 0x20, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
 interface IAMExtendedSeeking : IDispatch
 {
-    HRESULT get_ExSeekCapabilities(int*);
-    HRESULT get_MarkerCount(int*);
-    HRESULT get_CurrentMarker(int*);
-    HRESULT GetMarkerTime(int, double*);
-    HRESULT GetMarkerName(int, BSTR*);
-    HRESULT put_PlaybackSpeed(double);
-    HRESULT get_PlaybackSpeed(double*);
+    HRESULT get_ExSeekCapabilities(int* pExCapabilities);
+    HRESULT get_MarkerCount(int* pMarkerCount);
+    HRESULT get_CurrentMarker(int* pCurrentMarker);
+    HRESULT GetMarkerTime(int MarkerNum, double* pMarkerTime);
+    HRESULT GetMarkerName(int MarkerNum, BSTR* pbstrMarkerName);
+    HRESULT put_PlaybackSpeed(double Speed);
+    HRESULT get_PlaybackSpeed(double* pSpeed);
 }
 enum IID_IAMNetShowExProps = GUID(0xfa2aa8f5, 0x8b62, 0x11d0, [0xa5, 0x20, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
 interface IAMNetShowExProps : IDispatch
 {
-    HRESULT get_SourceProtocol(int*);
-    HRESULT get_Bandwidth(int*);
-    HRESULT get_ErrorCorrection(BSTR*);
-    HRESULT get_CodecCount(int*);
-    HRESULT GetCodecInstalled(int, VARIANT_BOOL*);
-    HRESULT GetCodecDescription(int, BSTR*);
-    HRESULT GetCodecURL(int, BSTR*);
-    HRESULT get_CreationDate(double*);
-    HRESULT get_SourceLink(BSTR*);
+    HRESULT get_SourceProtocol(int* pSourceProtocol);
+    HRESULT get_Bandwidth(int* pBandwidth);
+    HRESULT get_ErrorCorrection(BSTR* pbstrErrorCorrection);
+    HRESULT get_CodecCount(int* pCodecCount);
+    HRESULT GetCodecInstalled(int CodecNum, VARIANT_BOOL* pCodecInstalled);
+    HRESULT GetCodecDescription(int CodecNum, BSTR* pbstrCodecDescription);
+    HRESULT GetCodecURL(int CodecNum, BSTR* pbstrCodecURL);
+    HRESULT get_CreationDate(double* pCreationDate);
+    HRESULT get_SourceLink(BSTR* pbstrSourceLink);
 }
 enum IID_IAMExtendedErrorInfo = GUID(0xfa2aa8f6, 0x8b62, 0x11d0, [0xa5, 0x20, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
 interface IAMExtendedErrorInfo : IDispatch
 {
-    HRESULT get_HasError(VARIANT_BOOL*);
-    HRESULT get_ErrorDescription(BSTR*);
-    HRESULT get_ErrorCode(int*);
+    HRESULT get_HasError(VARIANT_BOOL* pHasError);
+    HRESULT get_ErrorDescription(BSTR* pbstrErrorDescription);
+    HRESULT get_ErrorCode(int* pErrorCode);
 }
 enum IID_IAMMediaContent = GUID(0xfa2aa8f4, 0x8b62, 0x11d0, [0xa5, 0x20, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
 interface IAMMediaContent : IDispatch
 {
-    HRESULT get_AuthorName(BSTR*);
-    HRESULT get_Title(BSTR*);
-    HRESULT get_Rating(BSTR*);
-    HRESULT get_Description(BSTR*);
-    HRESULT get_Copyright(BSTR*);
-    HRESULT get_BaseURL(BSTR*);
-    HRESULT get_LogoURL(BSTR*);
-    HRESULT get_LogoIconURL(BSTR*);
-    HRESULT get_WatermarkURL(BSTR*);
-    HRESULT get_MoreInfoURL(BSTR*);
-    HRESULT get_MoreInfoBannerImage(BSTR*);
-    HRESULT get_MoreInfoBannerURL(BSTR*);
-    HRESULT get_MoreInfoText(BSTR*);
+    HRESULT get_AuthorName(BSTR* pbstrAuthorName);
+    HRESULT get_Title(BSTR* pbstrTitle);
+    HRESULT get_Rating(BSTR* pbstrRating);
+    HRESULT get_Description(BSTR* pbstrDescription);
+    HRESULT get_Copyright(BSTR* pbstrCopyright);
+    HRESULT get_BaseURL(BSTR* pbstrBaseURL);
+    HRESULT get_LogoURL(BSTR* pbstrLogoURL);
+    HRESULT get_LogoIconURL(BSTR* pbstrLogoURL);
+    HRESULT get_WatermarkURL(BSTR* pbstrWatermarkURL);
+    HRESULT get_MoreInfoURL(BSTR* pbstrMoreInfoURL);
+    HRESULT get_MoreInfoBannerImage(BSTR* pbstrMoreInfoBannerImage);
+    HRESULT get_MoreInfoBannerURL(BSTR* pbstrMoreInfoBannerURL);
+    HRESULT get_MoreInfoText(BSTR* pbstrMoreInfoText);
 }
 enum IID_IAMMediaContent2 = GUID(0xce8f78c1, 0x74d9, 0x11d2, [0xb0, 0x9d, 0x0, 0xa0, 0xc9, 0xa8, 0x11, 0x17]);
 interface IAMMediaContent2 : IDispatch
 {
-    HRESULT get_MediaParameter(int, BSTR, BSTR*);
-    HRESULT get_MediaParameterName(int, int, BSTR*);
-    HRESULT get_PlaylistCount(int*);
+    HRESULT get_MediaParameter(int EntryNum, BSTR bstrName, BSTR* pbstrValue);
+    HRESULT get_MediaParameterName(int EntryNum, int Index, BSTR* pbstrName);
+    HRESULT get_PlaylistCount(int* pNumberEntries);
 }
 enum IID_IAMNetShowPreroll = GUID(0xaae7e4e2, 0x6388, 0x11d1, [0x8d, 0x93, 0x0, 0x60, 0x97, 0xc9, 0xa2, 0xb2]);
 interface IAMNetShowPreroll : IDispatch
 {
-    HRESULT put_Preroll(VARIANT_BOOL);
-    HRESULT get_Preroll(VARIANT_BOOL*);
+    HRESULT put_Preroll(VARIANT_BOOL fPreroll);
+    HRESULT get_Preroll(VARIANT_BOOL* pfPreroll);
 }
 enum IID_IDShowPlugin = GUID(0x4746b7c8, 0x700e, 0x11d1, [0xbe, 0xcc, 0x0, 0xc0, 0x4f, 0xb6, 0xe9, 0x37]);
 interface IDShowPlugin : IUnknown
 {
-    HRESULT get_URL(BSTR*);
-    HRESULT get_UserAgent(BSTR*);
+    HRESULT get_URL(BSTR* pURL);
+    HRESULT get_UserAgent(BSTR* pUserAgent);
 }
 enum IID_IAMDirectSound = GUID(0x546f4260, 0xd53e, 0x11cf, [0xb3, 0xf0, 0x0, 0xaa, 0x0, 0x37, 0x61, 0xc5]);
 interface IAMDirectSound : IUnknown
 {
-    HRESULT GetDirectSoundInterface(IDirectSound*);
-    HRESULT GetPrimaryBufferInterface(IDirectSoundBuffer*);
-    HRESULT GetSecondaryBufferInterface(IDirectSoundBuffer*);
-    HRESULT ReleaseDirectSoundInterface(IDirectSound);
-    HRESULT ReleasePrimaryBufferInterface(IDirectSoundBuffer);
-    HRESULT ReleaseSecondaryBufferInterface(IDirectSoundBuffer);
-    HRESULT SetFocusWindow(HWND, BOOL);
-    HRESULT GetFocusWindow(HWND*, BOOL*);
+    HRESULT GetDirectSoundInterface(IDirectSound* lplpds);
+    HRESULT GetPrimaryBufferInterface(IDirectSoundBuffer* lplpdsb);
+    HRESULT GetSecondaryBufferInterface(IDirectSoundBuffer* lplpdsb);
+    HRESULT ReleaseDirectSoundInterface(IDirectSound lpds);
+    HRESULT ReleasePrimaryBufferInterface(IDirectSoundBuffer lpdsb);
+    HRESULT ReleaseSecondaryBufferInterface(IDirectSoundBuffer lpdsb);
+    HRESULT SetFocusWindow(HWND param0, BOOL param1);
+    HRESULT GetFocusWindow(HWND* param0, BOOL* param1);
 }
 alias AM_LINE21_CCLEVEL = int;
 enum : int
@@ -5037,33 +5037,33 @@ enum : int
 enum IID_IAMLine21Decoder = GUID(0x6e8d4a21, 0x310c, 0x11d0, [0xb7, 0x9a, 0x0, 0xaa, 0x0, 0x37, 0x67, 0xa7]);
 interface IAMLine21Decoder : IUnknown
 {
-    HRESULT GetDecoderLevel(AM_LINE21_CCLEVEL*);
-    HRESULT GetCurrentService(AM_LINE21_CCSERVICE*);
-    HRESULT SetCurrentService(AM_LINE21_CCSERVICE);
-    HRESULT GetServiceState(AM_LINE21_CCSTATE*);
-    HRESULT SetServiceState(AM_LINE21_CCSTATE);
-    HRESULT GetOutputFormat(BITMAPINFOHEADER*);
-    HRESULT SetOutputFormat(BITMAPINFO*);
-    HRESULT GetBackgroundColor(uint*);
-    HRESULT SetBackgroundColor(uint);
-    HRESULT GetRedrawAlways(BOOL*);
-    HRESULT SetRedrawAlways(BOOL);
-    HRESULT GetDrawBackgroundMode(AM_LINE21_DRAWBGMODE*);
-    HRESULT SetDrawBackgroundMode(AM_LINE21_DRAWBGMODE);
+    HRESULT GetDecoderLevel(AM_LINE21_CCLEVEL* lpLevel);
+    HRESULT GetCurrentService(AM_LINE21_CCSERVICE* lpService);
+    HRESULT SetCurrentService(AM_LINE21_CCSERVICE Service);
+    HRESULT GetServiceState(AM_LINE21_CCSTATE* lpState);
+    HRESULT SetServiceState(AM_LINE21_CCSTATE State);
+    HRESULT GetOutputFormat(BITMAPINFOHEADER* lpbmih);
+    HRESULT SetOutputFormat(BITMAPINFO* lpbmi);
+    HRESULT GetBackgroundColor(uint* pdwPhysColor);
+    HRESULT SetBackgroundColor(uint dwPhysColor);
+    HRESULT GetRedrawAlways(BOOL* lpbOption);
+    HRESULT SetRedrawAlways(BOOL bOption);
+    HRESULT GetDrawBackgroundMode(AM_LINE21_DRAWBGMODE* lpMode);
+    HRESULT SetDrawBackgroundMode(AM_LINE21_DRAWBGMODE Mode);
 }
 enum IID_IAMParse = GUID(0xc47a3420, 0x5c, 0x11d2, [0x90, 0x38, 0x0, 0xa0, 0xc9, 0x69, 0x72, 0x98]);
 interface IAMParse : IUnknown
 {
-    HRESULT GetParseTime(long*);
-    HRESULT SetParseTime(long);
+    HRESULT GetParseTime(long* prtCurrent);
+    HRESULT SetParseTime(long rtCurrent);
     HRESULT Flush();
 }
 enum IID_IAMCollection = GUID(0x56a868b9, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IAMCollection : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT Item(int, IUnknown*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT Item(int lItem, IUnknown* ppUnk);
+    HRESULT get__NewEnum(IUnknown* ppUnk);
 }
 enum IID_IMediaControl = GUID(0x56a868b1, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IMediaControl : IDispatch
@@ -5071,150 +5071,150 @@ interface IMediaControl : IDispatch
     HRESULT Run();
     HRESULT Pause();
     HRESULT Stop();
-    HRESULT GetState(int, int*);
-    HRESULT RenderFile(BSTR);
-    HRESULT AddSourceFilter(BSTR, IDispatch*);
-    HRESULT get_FilterCollection(IDispatch*);
-    HRESULT get_RegFilterCollection(IDispatch*);
+    HRESULT GetState(int msTimeout, int* pfs);
+    HRESULT RenderFile(BSTR strFilename);
+    HRESULT AddSourceFilter(BSTR strFilename, IDispatch* ppUnk);
+    HRESULT get_FilterCollection(IDispatch* ppUnk);
+    HRESULT get_RegFilterCollection(IDispatch* ppUnk);
     HRESULT StopWhenReady();
 }
 enum IID_IMediaEvent = GUID(0x56a868b6, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IMediaEvent : IDispatch
 {
-    HRESULT GetEventHandle(long*);
-    HRESULT GetEvent(int*, long*, long*, int);
-    HRESULT WaitForCompletion(int, int*);
-    HRESULT CancelDefaultHandling(int);
-    HRESULT RestoreDefaultHandling(int);
-    HRESULT FreeEventParams(int, long, long);
+    HRESULT GetEventHandle(long* hEvent);
+    HRESULT GetEvent(int* lEventCode, long* lParam1, long* lParam2, int msTimeout);
+    HRESULT WaitForCompletion(int msTimeout, int* pEvCode);
+    HRESULT CancelDefaultHandling(int lEvCode);
+    HRESULT RestoreDefaultHandling(int lEvCode);
+    HRESULT FreeEventParams(int lEvCode, long lParam1, long lParam2);
 }
 enum IID_IMediaEventEx = GUID(0x56a868c0, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IMediaEventEx : IMediaEvent
 {
-    HRESULT SetNotifyWindow(long, int, long);
-    HRESULT SetNotifyFlags(int);
-    HRESULT GetNotifyFlags(int*);
+    HRESULT SetNotifyWindow(long hwnd, int lMsg, long lInstanceData);
+    HRESULT SetNotifyFlags(int lNoNotifyFlags);
+    HRESULT GetNotifyFlags(int* lplNoNotifyFlags);
 }
 enum IID_IMediaPosition = GUID(0x56a868b2, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IMediaPosition : IDispatch
 {
-    HRESULT get_Duration(double*);
-    HRESULT put_CurrentPosition(double);
-    HRESULT get_CurrentPosition(double*);
-    HRESULT get_StopTime(double*);
-    HRESULT put_StopTime(double);
-    HRESULT get_PrerollTime(double*);
-    HRESULT put_PrerollTime(double);
-    HRESULT put_Rate(double);
-    HRESULT get_Rate(double*);
-    HRESULT CanSeekForward(int*);
-    HRESULT CanSeekBackward(int*);
+    HRESULT get_Duration(double* plength);
+    HRESULT put_CurrentPosition(double llTime);
+    HRESULT get_CurrentPosition(double* pllTime);
+    HRESULT get_StopTime(double* pllTime);
+    HRESULT put_StopTime(double llTime);
+    HRESULT get_PrerollTime(double* pllTime);
+    HRESULT put_PrerollTime(double llTime);
+    HRESULT put_Rate(double dRate);
+    HRESULT get_Rate(double* pdRate);
+    HRESULT CanSeekForward(int* pCanSeekForward);
+    HRESULT CanSeekBackward(int* pCanSeekBackward);
 }
 enum IID_IBasicAudio = GUID(0x56a868b3, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IBasicAudio : IDispatch
 {
-    HRESULT put_Volume(int);
-    HRESULT get_Volume(int*);
-    HRESULT put_Balance(int);
-    HRESULT get_Balance(int*);
+    HRESULT put_Volume(int lVolume);
+    HRESULT get_Volume(int* plVolume);
+    HRESULT put_Balance(int lBalance);
+    HRESULT get_Balance(int* plBalance);
 }
 enum IID_IVideoWindow = GUID(0x56a868b4, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IVideoWindow : IDispatch
 {
-    HRESULT put_Caption(BSTR);
-    HRESULT get_Caption(BSTR*);
-    HRESULT put_WindowStyle(int);
-    HRESULT get_WindowStyle(int*);
-    HRESULT put_WindowStyleEx(int);
-    HRESULT get_WindowStyleEx(int*);
-    HRESULT put_AutoShow(int);
-    HRESULT get_AutoShow(int*);
-    HRESULT put_WindowState(int);
-    HRESULT get_WindowState(SHOW_WINDOW_CMD*);
-    HRESULT put_BackgroundPalette(int);
-    HRESULT get_BackgroundPalette(int*);
-    HRESULT put_Visible(int);
-    HRESULT get_Visible(int*);
-    HRESULT put_Left(int);
-    HRESULT get_Left(int*);
-    HRESULT put_Width(int);
-    HRESULT get_Width(int*);
-    HRESULT put_Top(int);
-    HRESULT get_Top(int*);
-    HRESULT put_Height(int);
-    HRESULT get_Height(int*);
-    HRESULT put_Owner(long);
-    HRESULT get_Owner(long*);
-    HRESULT put_MessageDrain(long);
-    HRESULT get_MessageDrain(long*);
-    HRESULT get_BorderColor(int*);
-    HRESULT put_BorderColor(int);
-    HRESULT get_FullScreenMode(int*);
-    HRESULT put_FullScreenMode(int);
-    HRESULT SetWindowForeground(int);
-    HRESULT NotifyOwnerMessage(long, int, long, long);
-    HRESULT SetWindowPosition(int, int, int, int);
-    HRESULT GetWindowPosition(int*, int*, int*, int*);
-    HRESULT GetMinIdealImageSize(int*, int*);
-    HRESULT GetMaxIdealImageSize(int*, int*);
-    HRESULT GetRestorePosition(int*, int*, int*, int*);
-    HRESULT HideCursor(OA_BOOL);
-    HRESULT IsCursorHidden(int*);
+    HRESULT put_Caption(BSTR strCaption);
+    HRESULT get_Caption(BSTR* strCaption);
+    HRESULT put_WindowStyle(int WindowStyle);
+    HRESULT get_WindowStyle(int* WindowStyle);
+    HRESULT put_WindowStyleEx(int WindowStyleEx);
+    HRESULT get_WindowStyleEx(int* WindowStyleEx);
+    HRESULT put_AutoShow(int AutoShow);
+    HRESULT get_AutoShow(int* AutoShow);
+    HRESULT put_WindowState(int WindowState);
+    HRESULT get_WindowState(SHOW_WINDOW_CMD* WindowState);
+    HRESULT put_BackgroundPalette(int BackgroundPalette);
+    HRESULT get_BackgroundPalette(int* pBackgroundPalette);
+    HRESULT put_Visible(int Visible);
+    HRESULT get_Visible(int* pVisible);
+    HRESULT put_Left(int Left);
+    HRESULT get_Left(int* pLeft);
+    HRESULT put_Width(int Width);
+    HRESULT get_Width(int* pWidth);
+    HRESULT put_Top(int Top);
+    HRESULT get_Top(int* pTop);
+    HRESULT put_Height(int Height);
+    HRESULT get_Height(int* pHeight);
+    HRESULT put_Owner(long Owner);
+    HRESULT get_Owner(long* Owner);
+    HRESULT put_MessageDrain(long Drain);
+    HRESULT get_MessageDrain(long* Drain);
+    HRESULT get_BorderColor(int* Color);
+    HRESULT put_BorderColor(int Color);
+    HRESULT get_FullScreenMode(int* FullScreenMode);
+    HRESULT put_FullScreenMode(int FullScreenMode);
+    HRESULT SetWindowForeground(int Focus);
+    HRESULT NotifyOwnerMessage(long hwnd, int uMsg, long wParam, long lParam);
+    HRESULT SetWindowPosition(int Left, int Top, int Width, int Height);
+    HRESULT GetWindowPosition(int* pLeft, int* pTop, int* pWidth, int* pHeight);
+    HRESULT GetMinIdealImageSize(int* pWidth, int* pHeight);
+    HRESULT GetMaxIdealImageSize(int* pWidth, int* pHeight);
+    HRESULT GetRestorePosition(int* pLeft, int* pTop, int* pWidth, int* pHeight);
+    HRESULT HideCursor(OA_BOOL HideCursor);
+    HRESULT IsCursorHidden(int* CursorHidden);
 }
 enum IID_IBasicVideo = GUID(0x56a868b5, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IBasicVideo : IDispatch
 {
-    HRESULT get_AvgTimePerFrame(double*);
-    HRESULT get_BitRate(int*);
-    HRESULT get_BitErrorRate(int*);
-    HRESULT get_VideoWidth(int*);
-    HRESULT get_VideoHeight(int*);
-    HRESULT put_SourceLeft(int);
-    HRESULT get_SourceLeft(int*);
-    HRESULT put_SourceWidth(int);
-    HRESULT get_SourceWidth(int*);
-    HRESULT put_SourceTop(int);
-    HRESULT get_SourceTop(int*);
-    HRESULT put_SourceHeight(int);
-    HRESULT get_SourceHeight(int*);
-    HRESULT put_DestinationLeft(int);
-    HRESULT get_DestinationLeft(int*);
-    HRESULT put_DestinationWidth(int);
-    HRESULT get_DestinationWidth(int*);
-    HRESULT put_DestinationTop(int);
-    HRESULT get_DestinationTop(int*);
-    HRESULT put_DestinationHeight(int);
-    HRESULT get_DestinationHeight(int*);
-    HRESULT SetSourcePosition(int, int, int, int);
-    HRESULT GetSourcePosition(int*, int*, int*, int*);
+    HRESULT get_AvgTimePerFrame(double* pAvgTimePerFrame);
+    HRESULT get_BitRate(int* pBitRate);
+    HRESULT get_BitErrorRate(int* pBitErrorRate);
+    HRESULT get_VideoWidth(int* pVideoWidth);
+    HRESULT get_VideoHeight(int* pVideoHeight);
+    HRESULT put_SourceLeft(int SourceLeft);
+    HRESULT get_SourceLeft(int* pSourceLeft);
+    HRESULT put_SourceWidth(int SourceWidth);
+    HRESULT get_SourceWidth(int* pSourceWidth);
+    HRESULT put_SourceTop(int SourceTop);
+    HRESULT get_SourceTop(int* pSourceTop);
+    HRESULT put_SourceHeight(int SourceHeight);
+    HRESULT get_SourceHeight(int* pSourceHeight);
+    HRESULT put_DestinationLeft(int DestinationLeft);
+    HRESULT get_DestinationLeft(int* pDestinationLeft);
+    HRESULT put_DestinationWidth(int DestinationWidth);
+    HRESULT get_DestinationWidth(int* pDestinationWidth);
+    HRESULT put_DestinationTop(int DestinationTop);
+    HRESULT get_DestinationTop(int* pDestinationTop);
+    HRESULT put_DestinationHeight(int DestinationHeight);
+    HRESULT get_DestinationHeight(int* pDestinationHeight);
+    HRESULT SetSourcePosition(int Left, int Top, int Width, int Height);
+    HRESULT GetSourcePosition(int* pLeft, int* pTop, int* pWidth, int* pHeight);
     HRESULT SetDefaultSourcePosition();
-    HRESULT SetDestinationPosition(int, int, int, int);
-    HRESULT GetDestinationPosition(int*, int*, int*, int*);
+    HRESULT SetDestinationPosition(int Left, int Top, int Width, int Height);
+    HRESULT GetDestinationPosition(int* pLeft, int* pTop, int* pWidth, int* pHeight);
     HRESULT SetDefaultDestinationPosition();
-    HRESULT GetVideoSize(int*, int*);
-    HRESULT GetVideoPaletteEntries(int, int, int*, int*);
-    HRESULT GetCurrentImage(int*, int*);
+    HRESULT GetVideoSize(int* pWidth, int* pHeight);
+    HRESULT GetVideoPaletteEntries(int StartIndex, int Entries, int* pRetrieved, int* pPalette);
+    HRESULT GetCurrentImage(int* pBufferSize, int* pDIBImage);
     HRESULT IsUsingDefaultSource();
     HRESULT IsUsingDefaultDestination();
 }
 enum IID_IBasicVideo2 = GUID(0x329bb360, 0xf6ea, 0x11d1, [0x90, 0x38, 0x0, 0xa0, 0xc9, 0x69, 0x72, 0x98]);
 interface IBasicVideo2 : IBasicVideo
 {
-    HRESULT GetPreferredAspectRatio(int*, int*);
+    HRESULT GetPreferredAspectRatio(int* plAspectX, int* plAspectY);
 }
 enum IID_IDeferredCommand = GUID(0x56a868b8, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IDeferredCommand : IUnknown
 {
     HRESULT Cancel();
-    HRESULT Confidence(int*);
-    HRESULT Postpone(double);
-    HRESULT GetHResult(HRESULT*);
+    HRESULT Confidence(int* pConfidence);
+    HRESULT Postpone(double newtime);
+    HRESULT GetHResult(HRESULT* phrResult);
 }
 enum IID_IQueueCommand = GUID(0x56a868b7, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IQueueCommand : IUnknown
 {
-    HRESULT InvokeAtStreamTime(IDeferredCommand*, double, GUID*, int, short, int, VARIANT*, VARIANT*, short*);
-    HRESULT InvokeAtPresentationTime(IDeferredCommand*, double, GUID*, int, short, int, VARIANT*, VARIANT*, short*);
+    HRESULT InvokeAtStreamTime(IDeferredCommand* pCmd, double time, GUID* iid, int dispidMethod, short wFlags, int cArgs, VARIANT* pDispParams, VARIANT* pvarResult, short* puArgErr);
+    HRESULT InvokeAtPresentationTime(IDeferredCommand* pCmd, double time, GUID* iid, int dispidMethod, short wFlags, int cArgs, VARIANT* pDispParams, VARIANT* pvarResult, short* puArgErr);
 }
 enum CLSID_FilgraphManager = GUID(0xe436ebb3, 0x524f, 0x11ce, [0x9f, 0x53, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 struct FilgraphManager
@@ -5223,41 +5223,41 @@ struct FilgraphManager
 enum IID_IFilterInfo = GUID(0x56a868ba, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IFilterInfo : IDispatch
 {
-    HRESULT FindPin(BSTR, IDispatch*);
-    HRESULT get_Name(BSTR*);
-    HRESULT get_VendorInfo(BSTR*);
-    HRESULT get_Filter(IUnknown*);
-    HRESULT get_Pins(IDispatch*);
-    HRESULT get_IsFileSource(int*);
-    HRESULT get_Filename(BSTR*);
-    HRESULT put_Filename(BSTR);
+    HRESULT FindPin(BSTR strPinID, IDispatch* ppUnk);
+    HRESULT get_Name(BSTR* strName);
+    HRESULT get_VendorInfo(BSTR* strVendorInfo);
+    HRESULT get_Filter(IUnknown* ppUnk);
+    HRESULT get_Pins(IDispatch* ppUnk);
+    HRESULT get_IsFileSource(int* pbIsSource);
+    HRESULT get_Filename(BSTR* pstrFilename);
+    HRESULT put_Filename(BSTR strFilename);
 }
 enum IID_IRegFilterInfo = GUID(0x56a868bb, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IRegFilterInfo : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT Filter(IDispatch*);
+    HRESULT get_Name(BSTR* strName);
+    HRESULT Filter(IDispatch* ppUnk);
 }
 enum IID_IMediaTypeInfo = GUID(0x56a868bc, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IMediaTypeInfo : IDispatch
 {
-    HRESULT get_Type(BSTR*);
-    HRESULT get_Subtype(BSTR*);
+    HRESULT get_Type(BSTR* strType);
+    HRESULT get_Subtype(BSTR* strType);
 }
 enum IID_IPinInfo = GUID(0x56a868bd, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IPinInfo : IDispatch
 {
-    HRESULT get_Pin(IUnknown*);
-    HRESULT get_ConnectedTo(IDispatch*);
-    HRESULT get_ConnectionMediaType(IDispatch*);
-    HRESULT get_FilterInfo(IDispatch*);
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Direction(int*);
-    HRESULT get_PinID(BSTR*);
-    HRESULT get_MediaTypes(IDispatch*);
-    HRESULT Connect(IUnknown);
-    HRESULT ConnectDirect(IUnknown);
-    HRESULT ConnectWithType(IUnknown, IDispatch);
+    HRESULT get_Pin(IUnknown* ppUnk);
+    HRESULT get_ConnectedTo(IDispatch* ppUnk);
+    HRESULT get_ConnectionMediaType(IDispatch* ppUnk);
+    HRESULT get_FilterInfo(IDispatch* ppUnk);
+    HRESULT get_Name(BSTR* ppUnk);
+    HRESULT get_Direction(int* ppDirection);
+    HRESULT get_PinID(BSTR* strPinID);
+    HRESULT get_MediaTypes(IDispatch* ppUnk);
+    HRESULT Connect(IUnknown pPin);
+    HRESULT ConnectDirect(IUnknown pPin);
+    HRESULT ConnectWithType(IUnknown pPin, IDispatch pMediaType);
     HRESULT Disconnect();
     HRESULT Render();
 }
@@ -5265,11 +5265,11 @@ enum IID_IAMStats = GUID(0xbc9bcf80, 0xdcd2, 0x11d2, [0xab, 0xf6, 0x0, 0xa0, 0xc
 interface IAMStats : IDispatch
 {
     HRESULT Reset();
-    HRESULT get_Count(int*);
-    HRESULT GetValueByIndex(int, BSTR*, int*, double*, double*, double*, double*, double*);
-    HRESULT GetValueByName(BSTR, int*, int*, double*, double*, double*, double*, double*);
-    HRESULT GetIndex(BSTR, int, int*);
-    HRESULT AddValue(int, double);
+    HRESULT get_Count(int* plCount);
+    HRESULT GetValueByIndex(int lIndex, BSTR* szName, int* lCount, double* dLast, double* dAverage, double* dStdDev, double* dMin, double* dMax);
+    HRESULT GetValueByName(BSTR szName, int* lIndex, int* lCount, double* dLast, double* dAverage, double* dStdDev, double* dMin, double* dMax);
+    HRESULT GetIndex(BSTR szName, int lCreate, int* plIndex);
+    HRESULT AddValue(int lIndex, double dValue);
 }
 struct AMVAUncompBufferInfo
 {
@@ -5319,25 +5319,25 @@ struct AMVABUFFERINFO
 enum IID_IAMVideoAcceleratorNotify = GUID(0x256a6a21, 0xfbad, 0x11d1, [0x82, 0xbf, 0x0, 0xa0, 0xc9, 0x69, 0x6c, 0x8f]);
 interface IAMVideoAcceleratorNotify : IUnknown
 {
-    HRESULT GetUncompSurfacesInfo(const(GUID)*, AMVAUncompBufferInfo*);
-    HRESULT SetUncompSurfacesInfo(uint);
-    HRESULT GetCreateVideoAcceleratorData(const(GUID)*, uint*, void**);
+    HRESULT GetUncompSurfacesInfo(const(GUID)* pGuid, AMVAUncompBufferInfo* pUncompBufferInfo);
+    HRESULT SetUncompSurfacesInfo(uint dwActualUncompSurfacesAllocated);
+    HRESULT GetCreateVideoAcceleratorData(const(GUID)* pGuid, uint* pdwSizeMiscData, void** ppMiscData);
 }
 enum IID_IAMVideoAccelerator = GUID(0x256a6a22, 0xfbad, 0x11d1, [0x82, 0xbf, 0x0, 0xa0, 0xc9, 0x69, 0x6c, 0x8f]);
 interface IAMVideoAccelerator : IUnknown
 {
-    HRESULT GetVideoAcceleratorGUIDs(uint*, GUID*);
-    HRESULT GetUncompFormatsSupported(const(GUID)*, uint*, DDPIXELFORMAT*);
-    HRESULT GetInternalMemInfo(const(GUID)*, const(AMVAUncompDataInfo)*, AMVAInternalMemInfo*);
-    HRESULT GetCompBufferInfo(const(GUID)*, const(AMVAUncompDataInfo)*, uint*, AMVACompBufferInfo*);
-    HRESULT GetInternalCompBufferInfo(uint*, AMVACompBufferInfo*);
-    HRESULT BeginFrame(const(AMVABeginFrameInfo)*);
-    HRESULT EndFrame(const(AMVAEndFrameInfo)*);
-    HRESULT GetBuffer(uint, uint, BOOL, void**, int*);
-    HRESULT ReleaseBuffer(uint, uint);
-    HRESULT Execute(uint, void*, uint, void*, uint, uint, const(AMVABUFFERINFO)*);
-    HRESULT QueryRenderStatus(uint, uint, uint);
-    HRESULT DisplayFrame(uint, IMediaSample);
+    HRESULT GetVideoAcceleratorGUIDs(uint* pdwNumGuidsSupported, GUID* pGuidsSupported);
+    HRESULT GetUncompFormatsSupported(const(GUID)* pGuid, uint* pdwNumFormatsSupported, DDPIXELFORMAT* pFormatsSupported);
+    HRESULT GetInternalMemInfo(const(GUID)* pGuid, const(AMVAUncompDataInfo)* pamvaUncompDataInfo, AMVAInternalMemInfo* pamvaInternalMemInfo);
+    HRESULT GetCompBufferInfo(const(GUID)* pGuid, const(AMVAUncompDataInfo)* pamvaUncompDataInfo, uint* pdwNumTypesCompBuffers, AMVACompBufferInfo* pamvaCompBufferInfo);
+    HRESULT GetInternalCompBufferInfo(uint* pdwNumTypesCompBuffers, AMVACompBufferInfo* pamvaCompBufferInfo);
+    HRESULT BeginFrame(const(AMVABeginFrameInfo)* amvaBeginFrameInfo);
+    HRESULT EndFrame(const(AMVAEndFrameInfo)* pEndFrameInfo);
+    HRESULT GetBuffer(uint dwTypeIndex, uint dwBufferIndex, BOOL bReadOnly, void** ppBuffer, int* lpStride);
+    HRESULT ReleaseBuffer(uint dwTypeIndex, uint dwBufferIndex);
+    HRESULT Execute(uint dwFunction, void* lpPrivateInputData, uint cbPrivateInputData, void* lpPrivateOutputDat, uint cbPrivateOutputData, uint dwNumBuffers, const(AMVABUFFERINFO)* pamvaBufferInfo);
+    HRESULT QueryRenderStatus(uint dwTypeIndex, uint dwBufferIndex, uint dwFlags);
+    HRESULT DisplayFrame(uint dwFlipToIndex, IMediaSample pMediaSample);
 }
 struct AM_WST_PAGE
 {
@@ -5384,158 +5384,158 @@ enum : int
 enum IID_IAMWstDecoder = GUID(0xc056de21, 0x75c2, 0x11d3, [0xa1, 0x84, 0x0, 0x10, 0x5a, 0xef, 0x9f, 0x33]);
 interface IAMWstDecoder : IUnknown
 {
-    HRESULT GetDecoderLevel(AM_WST_LEVEL*);
-    HRESULT GetCurrentService(AM_WST_SERVICE*);
-    HRESULT GetServiceState(AM_WST_STATE*);
-    HRESULT SetServiceState(AM_WST_STATE);
-    HRESULT GetOutputFormat(BITMAPINFOHEADER*);
-    HRESULT SetOutputFormat(BITMAPINFO*);
-    HRESULT GetBackgroundColor(uint*);
-    HRESULT SetBackgroundColor(uint);
-    HRESULT GetRedrawAlways(BOOL*);
-    HRESULT SetRedrawAlways(BOOL);
-    HRESULT GetDrawBackgroundMode(AM_WST_DRAWBGMODE*);
-    HRESULT SetDrawBackgroundMode(AM_WST_DRAWBGMODE);
-    HRESULT SetAnswerMode(BOOL);
-    HRESULT GetAnswerMode(BOOL*);
-    HRESULT SetHoldPage(BOOL);
-    HRESULT GetHoldPage(BOOL*);
-    HRESULT GetCurrentPage(AM_WST_PAGE*);
-    HRESULT SetCurrentPage(AM_WST_PAGE);
+    HRESULT GetDecoderLevel(AM_WST_LEVEL* lpLevel);
+    HRESULT GetCurrentService(AM_WST_SERVICE* lpService);
+    HRESULT GetServiceState(AM_WST_STATE* lpState);
+    HRESULT SetServiceState(AM_WST_STATE State);
+    HRESULT GetOutputFormat(BITMAPINFOHEADER* lpbmih);
+    HRESULT SetOutputFormat(BITMAPINFO* lpbmi);
+    HRESULT GetBackgroundColor(uint* pdwPhysColor);
+    HRESULT SetBackgroundColor(uint dwPhysColor);
+    HRESULT GetRedrawAlways(BOOL* lpbOption);
+    HRESULT SetRedrawAlways(BOOL bOption);
+    HRESULT GetDrawBackgroundMode(AM_WST_DRAWBGMODE* lpMode);
+    HRESULT SetDrawBackgroundMode(AM_WST_DRAWBGMODE Mode);
+    HRESULT SetAnswerMode(BOOL bAnswer);
+    HRESULT GetAnswerMode(BOOL* pbAnswer);
+    HRESULT SetHoldPage(BOOL bHoldPage);
+    HRESULT GetHoldPage(BOOL* pbHoldPage);
+    HRESULT GetCurrentPage(AM_WST_PAGE* pWstPage);
+    HRESULT SetCurrentPage(AM_WST_PAGE WstPage);
 }
 enum IID_ISelector = GUID(0x1abdaeca, 0x68b6, 0x4f83, [0x93, 0x71, 0xb4, 0x13, 0x90, 0x7c, 0x7b, 0x9f]);
 interface ISelector : IUnknown
 {
-    HRESULT get_NumSources(uint*);
-    HRESULT get_SourceNodeId(uint*);
-    HRESULT put_SourceNodeId(uint);
+    HRESULT get_NumSources(uint* pdwNumSources);
+    HRESULT get_SourceNodeId(uint* pdwPinId);
+    HRESULT put_SourceNodeId(uint dwPinId);
 }
 enum IID_ICameraControl = GUID(0x2ba1785d, 0x4d1b, 0x44ef, [0x85, 0xe8, 0xc7, 0xf1, 0xd3, 0xf2, 0x1, 0x84]);
 interface ICameraControl : IUnknown
 {
-    HRESULT get_Exposure(int*, int*);
-    HRESULT put_Exposure(int, int);
-    HRESULT getRange_Exposure(int*, int*, int*, int*, int*);
-    HRESULT get_Focus(int*, int*);
-    HRESULT put_Focus(int, int);
-    HRESULT getRange_Focus(int*, int*, int*, int*, int*);
-    HRESULT get_Iris(int*, int*);
-    HRESULT put_Iris(int, int);
-    HRESULT getRange_Iris(int*, int*, int*, int*, int*);
-    HRESULT get_Zoom(int*, int*);
-    HRESULT put_Zoom(int, int);
-    HRESULT getRange_Zoom(int*, int*, int*, int*, int*);
-    HRESULT get_FocalLengths(int*, int*, int*);
-    HRESULT get_Pan(int*, int*);
-    HRESULT put_Pan(int, int);
-    HRESULT getRange_Pan(int*, int*, int*, int*, int*);
-    HRESULT get_Tilt(int*, int*);
-    HRESULT put_Tilt(int, int);
-    HRESULT getRange_Tilt(int*, int*, int*, int*, int*);
-    HRESULT get_PanTilt(int*, int*, int*);
-    HRESULT put_PanTilt(int, int, int);
-    HRESULT get_Roll(int*, int*);
-    HRESULT put_Roll(int, int);
-    HRESULT getRange_Roll(int*, int*, int*, int*, int*);
-    HRESULT get_ExposureRelative(int*, int*);
-    HRESULT put_ExposureRelative(int, int);
-    HRESULT getRange_ExposureRelative(int*, int*, int*, int*, int*);
-    HRESULT get_FocusRelative(int*, int*);
-    HRESULT put_FocusRelative(int, int);
-    HRESULT getRange_FocusRelative(int*, int*, int*, int*, int*);
-    HRESULT get_IrisRelative(int*, int*);
-    HRESULT put_IrisRelative(int, int);
-    HRESULT getRange_IrisRelative(int*, int*, int*, int*, int*);
-    HRESULT get_ZoomRelative(int*, int*);
-    HRESULT put_ZoomRelative(int, int);
-    HRESULT getRange_ZoomRelative(int*, int*, int*, int*, int*);
-    HRESULT get_PanRelative(int*, int*);
-    HRESULT put_PanRelative(int, int);
-    HRESULT get_TiltRelative(int*, int*);
-    HRESULT put_TiltRelative(int, int);
-    HRESULT getRange_TiltRelative(int*, int*, int*, int*, int*);
-    HRESULT get_PanTiltRelative(int*, int*, int*);
-    HRESULT put_PanTiltRelative(int, int, int);
-    HRESULT getRange_PanRelative(int*, int*, int*, int*, int*);
-    HRESULT get_RollRelative(int*, int*);
-    HRESULT put_RollRelative(int, int);
-    HRESULT getRange_RollRelative(int*, int*, int*, int*, int*);
-    HRESULT get_ScanMode(int*, int*);
-    HRESULT put_ScanMode(int, int);
-    HRESULT get_PrivacyMode(int*, int*);
-    HRESULT put_PrivacyMode(int, int);
+    HRESULT get_Exposure(int* pValue, int* pFlags);
+    HRESULT put_Exposure(int Value, int Flags);
+    HRESULT getRange_Exposure(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_Focus(int* pValue, int* pFlags);
+    HRESULT put_Focus(int Value, int Flags);
+    HRESULT getRange_Focus(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_Iris(int* pValue, int* pFlags);
+    HRESULT put_Iris(int Value, int Flags);
+    HRESULT getRange_Iris(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_Zoom(int* pValue, int* pFlags);
+    HRESULT put_Zoom(int Value, int Flags);
+    HRESULT getRange_Zoom(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_FocalLengths(int* plOcularFocalLength, int* plObjectiveFocalLengthMin, int* plObjectiveFocalLengthMax);
+    HRESULT get_Pan(int* pValue, int* pFlags);
+    HRESULT put_Pan(int Value, int Flags);
+    HRESULT getRange_Pan(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_Tilt(int* pValue, int* pFlags);
+    HRESULT put_Tilt(int Value, int Flags);
+    HRESULT getRange_Tilt(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_PanTilt(int* pPanValue, int* pTiltValue, int* pFlags);
+    HRESULT put_PanTilt(int PanValue, int TiltValue, int Flags);
+    HRESULT get_Roll(int* pValue, int* pFlags);
+    HRESULT put_Roll(int Value, int Flags);
+    HRESULT getRange_Roll(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_ExposureRelative(int* pValue, int* pFlags);
+    HRESULT put_ExposureRelative(int Value, int Flags);
+    HRESULT getRange_ExposureRelative(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_FocusRelative(int* pValue, int* pFlags);
+    HRESULT put_FocusRelative(int Value, int Flags);
+    HRESULT getRange_FocusRelative(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_IrisRelative(int* pValue, int* pFlags);
+    HRESULT put_IrisRelative(int Value, int Flags);
+    HRESULT getRange_IrisRelative(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_ZoomRelative(int* pValue, int* pFlags);
+    HRESULT put_ZoomRelative(int Value, int Flags);
+    HRESULT getRange_ZoomRelative(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_PanRelative(int* pValue, int* pFlags);
+    HRESULT put_PanRelative(int Value, int Flags);
+    HRESULT get_TiltRelative(int* pValue, int* pFlags);
+    HRESULT put_TiltRelative(int Value, int Flags);
+    HRESULT getRange_TiltRelative(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_PanTiltRelative(int* pPanValue, int* pTiltValue, int* pFlags);
+    HRESULT put_PanTiltRelative(int PanValue, int TiltValue, int Flags);
+    HRESULT getRange_PanRelative(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_RollRelative(int* pValue, int* pFlags);
+    HRESULT put_RollRelative(int Value, int Flags);
+    HRESULT getRange_RollRelative(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_ScanMode(int* pValue, int* pFlags);
+    HRESULT put_ScanMode(int Value, int Flags);
+    HRESULT get_PrivacyMode(int* pValue, int* pFlags);
+    HRESULT put_PrivacyMode(int Value, int Flags);
 }
 enum IID_IVideoProcAmp = GUID(0x4050560e, 0x42a7, 0x413a, [0x85, 0xc2, 0x9, 0x26, 0x9a, 0x2d, 0xf, 0x44]);
 interface IVideoProcAmp : IUnknown
 {
-    HRESULT get_BacklightCompensation(int*, int*);
-    HRESULT put_BacklightCompensation(int, int);
-    HRESULT getRange_BacklightCompensation(int*, int*, int*, int*, int*);
-    HRESULT get_Brightness(int*, int*);
-    HRESULT put_Brightness(int, int);
-    HRESULT getRange_Brightness(int*, int*, int*, int*, int*);
-    HRESULT get_ColorEnable(int*, int*);
-    HRESULT put_ColorEnable(int, int);
-    HRESULT getRange_ColorEnable(int*, int*, int*, int*, int*);
-    HRESULT get_Contrast(int*, int*);
-    HRESULT put_Contrast(int, int);
-    HRESULT getRange_Contrast(int*, int*, int*, int*, int*);
-    HRESULT get_Gamma(int*, int*);
-    HRESULT put_Gamma(int, int);
-    HRESULT getRange_Gamma(int*, int*, int*, int*, int*);
-    HRESULT get_Saturation(int*, int*);
-    HRESULT put_Saturation(int, int);
-    HRESULT getRange_Saturation(int*, int*, int*, int*, int*);
-    HRESULT get_Sharpness(int*, int*);
-    HRESULT put_Sharpness(int, int);
-    HRESULT getRange_Sharpness(int*, int*, int*, int*, int*);
-    HRESULT get_WhiteBalance(int*, int*);
-    HRESULT put_WhiteBalance(int, int);
-    HRESULT getRange_WhiteBalance(int*, int*, int*, int*, int*);
-    HRESULT get_Gain(int*, int*);
-    HRESULT put_Gain(int, int);
-    HRESULT getRange_Gain(int*, int*, int*, int*, int*);
-    HRESULT get_Hue(int*, int*);
-    HRESULT put_Hue(int, int);
-    HRESULT getRange_Hue(int*, int*, int*, int*, int*);
-    HRESULT get_DigitalMultiplier(int*, int*);
-    HRESULT put_DigitalMultiplier(int, int);
-    HRESULT getRange_DigitalMultiplier(int*, int*, int*, int*, int*);
-    HRESULT get_PowerlineFrequency(int*, int*);
-    HRESULT put_PowerlineFrequency(int, int);
-    HRESULT getRange_PowerlineFrequency(int*, int*, int*, int*, int*);
-    HRESULT get_WhiteBalanceComponent(int*, int*, int*);
-    HRESULT put_WhiteBalanceComponent(int, int, int);
-    HRESULT getRange_WhiteBalanceComponent(int*, int*, int*, int*, int*);
+    HRESULT get_BacklightCompensation(int* pValue, int* pFlags);
+    HRESULT put_BacklightCompensation(int Value, int Flags);
+    HRESULT getRange_BacklightCompensation(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_Brightness(int* pValue, int* pFlags);
+    HRESULT put_Brightness(int Value, int Flags);
+    HRESULT getRange_Brightness(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_ColorEnable(int* pValue, int* pFlags);
+    HRESULT put_ColorEnable(int Value, int Flags);
+    HRESULT getRange_ColorEnable(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_Contrast(int* pValue, int* pFlags);
+    HRESULT put_Contrast(int Value, int Flags);
+    HRESULT getRange_Contrast(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_Gamma(int* pValue, int* pFlags);
+    HRESULT put_Gamma(int Value, int Flags);
+    HRESULT getRange_Gamma(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_Saturation(int* pValue, int* pFlags);
+    HRESULT put_Saturation(int Value, int Flags);
+    HRESULT getRange_Saturation(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_Sharpness(int* pValue, int* pFlags);
+    HRESULT put_Sharpness(int Value, int Flags);
+    HRESULT getRange_Sharpness(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_WhiteBalance(int* pValue, int* pFlags);
+    HRESULT put_WhiteBalance(int Value, int Flags);
+    HRESULT getRange_WhiteBalance(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_Gain(int* pValue, int* pFlags);
+    HRESULT put_Gain(int Value, int Flags);
+    HRESULT getRange_Gain(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_Hue(int* pValue, int* pFlags);
+    HRESULT put_Hue(int Value, int Flags);
+    HRESULT getRange_Hue(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_DigitalMultiplier(int* pValue, int* pFlags);
+    HRESULT put_DigitalMultiplier(int Value, int Flags);
+    HRESULT getRange_DigitalMultiplier(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_PowerlineFrequency(int* pValue, int* pFlags);
+    HRESULT put_PowerlineFrequency(int Value, int Flags);
+    HRESULT getRange_PowerlineFrequency(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
+    HRESULT get_WhiteBalanceComponent(int* pValue1, int* pValue2, int* pFlags);
+    HRESULT put_WhiteBalanceComponent(int Value1, int Value2, int Flags);
+    HRESULT getRange_WhiteBalanceComponent(int* pMin, int* pMax, int* pSteppingDelta, int* pDefault, int* pCapsFlag);
 }
 enum IID_IAMWMBufferPass = GUID(0x6dd816d7, 0xe740, 0x4123, [0x9e, 0x24, 0x24, 0x44, 0x41, 0x26, 0x44, 0xd8]);
 interface IAMWMBufferPass : IUnknown
 {
-    HRESULT SetNotify(IAMWMBufferPassCallback);
+    HRESULT SetNotify(IAMWMBufferPassCallback pCallback);
 }
 enum IID_IAMWMBufferPassCallback = GUID(0xb25b8372, 0xd2d2, 0x44b2, [0x86, 0x53, 0x1b, 0x8d, 0xae, 0x33, 0x24, 0x89]);
 interface IAMWMBufferPassCallback : IUnknown
 {
-    HRESULT Notify(INSSBuffer3, IPin, long*, long*);
+    HRESULT Notify(INSSBuffer3 pNSSBuffer3, IPin pPin, long* prtStart, long* prtEnd);
 }
 enum IID_IConfigAsfWriter = GUID(0x45086030, 0xf7e4, 0x486a, [0xb5, 0x4, 0x82, 0x6b, 0xb5, 0x79, 0x2a, 0x3b]);
 interface IConfigAsfWriter : IUnknown
 {
-    HRESULT ConfigureFilterUsingProfileId(uint);
-    HRESULT GetCurrentProfileId(uint*);
-    HRESULT ConfigureFilterUsingProfileGuid(const(GUID)*);
-    HRESULT GetCurrentProfileGuid(GUID*);
-    HRESULT ConfigureFilterUsingProfile(IWMProfile);
-    HRESULT GetCurrentProfile(IWMProfile*);
-    HRESULT SetIndexMode(BOOL);
-    HRESULT GetIndexMode(BOOL*);
+    HRESULT ConfigureFilterUsingProfileId(uint dwProfileId);
+    HRESULT GetCurrentProfileId(uint* pdwProfileId);
+    HRESULT ConfigureFilterUsingProfileGuid(const(GUID)* guidProfile);
+    HRESULT GetCurrentProfileGuid(GUID* pProfileGuid);
+    HRESULT ConfigureFilterUsingProfile(IWMProfile pProfile);
+    HRESULT GetCurrentProfile(IWMProfile* ppProfile);
+    HRESULT SetIndexMode(BOOL bIndexFile);
+    HRESULT GetIndexMode(BOOL* pbIndexFile);
 }
 enum IID_IConfigAsfWriter2 = GUID(0x7989ccaa, 0x53f0, 0x44f0, [0x88, 0x4a, 0xf3, 0xb0, 0x3f, 0x6a, 0xe0, 0x66]);
 interface IConfigAsfWriter2 : IConfigAsfWriter
 {
-    HRESULT StreamNumFromPin(IPin, ushort*);
-    HRESULT SetParam(uint, uint, uint);
-    HRESULT GetParam(uint, uint*, uint*);
+    HRESULT StreamNumFromPin(IPin pPin, ushort* pwStreamNum);
+    HRESULT SetParam(uint dwParam, uint dwParam1, uint dwParam2);
+    HRESULT GetParam(uint dwParam, uint* pdwParam1, uint* pdwParam2);
     HRESULT ResetMultiPassState();
 }
 alias STREAM_TYPE = int;
@@ -5579,34 +5579,34 @@ enum : int
 enum IID_IMultiMediaStream = GUID(0xb502d1bc, 0x9a57, 0x11d0, [0x8f, 0xde, 0x0, 0xc0, 0x4f, 0xd9, 0x18, 0x9d]);
 interface IMultiMediaStream : IUnknown
 {
-    HRESULT GetInformation(MMSSF_GET_INFORMATION_FLAGS*, STREAM_TYPE*);
-    HRESULT GetMediaStream(GUID*, IMediaStream*);
-    HRESULT EnumMediaStreams(int, IMediaStream*);
-    HRESULT GetState(STREAM_STATE*);
-    HRESULT SetState(STREAM_STATE);
-    HRESULT GetTime(long*);
-    HRESULT GetDuration(long*);
-    HRESULT Seek(long);
-    HRESULT GetEndOfStreamEventHandle(HANDLE*);
+    HRESULT GetInformation(MMSSF_GET_INFORMATION_FLAGS* pdwFlags, STREAM_TYPE* pStreamType);
+    HRESULT GetMediaStream(GUID* idPurpose, IMediaStream* ppMediaStream);
+    HRESULT EnumMediaStreams(int Index, IMediaStream* ppMediaStream);
+    HRESULT GetState(STREAM_STATE* pCurrentState);
+    HRESULT SetState(STREAM_STATE NewState);
+    HRESULT GetTime(long* pCurrentTime);
+    HRESULT GetDuration(long* pDuration);
+    HRESULT Seek(long SeekTime);
+    HRESULT GetEndOfStreamEventHandle(HANDLE* phEOS);
 }
 enum IID_IMediaStream = GUID(0xb502d1bd, 0x9a57, 0x11d0, [0x8f, 0xde, 0x0, 0xc0, 0x4f, 0xd9, 0x18, 0x9d]);
 interface IMediaStream : IUnknown
 {
-    HRESULT GetMultiMediaStream(IMultiMediaStream*);
-    HRESULT GetInformation(GUID*, STREAM_TYPE*);
-    HRESULT SetSameFormat(IMediaStream, uint);
-    HRESULT AllocateSample(uint, IStreamSample*);
-    HRESULT CreateSharedSample(IStreamSample, uint, IStreamSample*);
-    HRESULT SendEndOfStream(uint);
+    HRESULT GetMultiMediaStream(IMultiMediaStream* ppMultiMediaStream);
+    HRESULT GetInformation(GUID* pPurposeId, STREAM_TYPE* pType);
+    HRESULT SetSameFormat(IMediaStream pStreamThatHasDesiredFormat, uint dwFlags);
+    HRESULT AllocateSample(uint dwFlags, IStreamSample* ppSample);
+    HRESULT CreateSharedSample(IStreamSample pExistingSample, uint dwFlags, IStreamSample* ppNewSample);
+    HRESULT SendEndOfStream(uint dwFlags);
 }
 enum IID_IStreamSample = GUID(0xb502d1be, 0x9a57, 0x11d0, [0x8f, 0xde, 0x0, 0xc0, 0x4f, 0xd9, 0x18, 0x9d]);
 interface IStreamSample : IUnknown
 {
-    HRESULT GetMediaStream(IMediaStream*);
-    HRESULT GetSampleTimes(long*, long*, long*);
-    HRESULT SetSampleTimes(const(long)*, const(long)*);
-    HRESULT Update(uint, HANDLE, PAPCFUNC, ulong);
-    HRESULT CompletionStatus(uint, uint);
+    HRESULT GetMediaStream(IMediaStream* ppMediaStream);
+    HRESULT GetSampleTimes(long* pStartTime, long* pEndTime, long* pCurrentTime);
+    HRESULT SetSampleTimes(const(long)* pStartTime, const(long)* pEndTime);
+    HRESULT Update(uint dwFlags, HANDLE hEvent, PAPCFUNC pfnAPC, ulong dwAPCData);
+    HRESULT CompletionStatus(uint dwFlags, uint dwMilliseconds);
 }
 alias DDSFF_FLAGS = int;
 enum : int
@@ -5617,43 +5617,43 @@ enum : int
 enum IID_IDirectDrawMediaStream = GUID(0xf4104fce, 0x9a70, 0x11d0, [0x8f, 0xde, 0x0, 0xc0, 0x4f, 0xd9, 0x18, 0x9d]);
 interface IDirectDrawMediaStream : IMediaStream
 {
-    HRESULT GetFormat(DDSURFACEDESC*, IDirectDrawPalette*, DDSURFACEDESC*, uint*);
-    HRESULT SetFormat(const(DDSURFACEDESC)*, IDirectDrawPalette);
-    HRESULT GetDirectDraw(IDirectDraw*);
-    HRESULT SetDirectDraw(IDirectDraw);
-    HRESULT CreateSample(IDirectDrawSurface, const(RECT)*, uint, IDirectDrawStreamSample*);
-    HRESULT GetTimePerFrame(long*);
+    HRESULT GetFormat(DDSURFACEDESC* pDDSDCurrent, IDirectDrawPalette* ppDirectDrawPalette, DDSURFACEDESC* pDDSDDesired, uint* pdwFlags);
+    HRESULT SetFormat(const(DDSURFACEDESC)* pDDSurfaceDesc, IDirectDrawPalette pDirectDrawPalette);
+    HRESULT GetDirectDraw(IDirectDraw* ppDirectDraw);
+    HRESULT SetDirectDraw(IDirectDraw pDirectDraw);
+    HRESULT CreateSample(IDirectDrawSurface pSurface, const(RECT)* pRect, uint dwFlags, IDirectDrawStreamSample* ppSample);
+    HRESULT GetTimePerFrame(long* pFrameTime);
 }
 enum IID_IDirectDrawStreamSample = GUID(0xf4104fcf, 0x9a70, 0x11d0, [0x8f, 0xde, 0x0, 0xc0, 0x4f, 0xd9, 0x18, 0x9d]);
 interface IDirectDrawStreamSample : IStreamSample
 {
-    HRESULT GetSurface(IDirectDrawSurface*, RECT*);
-    HRESULT SetRect(const(RECT)*);
+    HRESULT GetSurface(IDirectDrawSurface* ppDirectDrawSurface, RECT* pRect);
+    HRESULT SetRect(const(RECT)* pRect);
 }
 enum IID_IAudioMediaStream = GUID(0xf7537560, 0xa3be, 0x11d0, [0x82, 0x12, 0x0, 0xc0, 0x4f, 0xc3, 0x2c, 0x45]);
 interface IAudioMediaStream : IMediaStream
 {
-    HRESULT GetFormat(WAVEFORMATEX*);
-    HRESULT SetFormat(const(WAVEFORMATEX)*);
-    HRESULT CreateSample(IAudioData, uint, IAudioStreamSample*);
+    HRESULT GetFormat(WAVEFORMATEX* pWaveFormatCurrent);
+    HRESULT SetFormat(const(WAVEFORMATEX)* lpWaveFormat);
+    HRESULT CreateSample(IAudioData pAudioData, uint dwFlags, IAudioStreamSample* ppSample);
 }
 enum IID_IAudioStreamSample = GUID(0x345fee00, 0xaba5, 0x11d0, [0x82, 0x12, 0x0, 0xc0, 0x4f, 0xc3, 0x2c, 0x45]);
 interface IAudioStreamSample : IStreamSample
 {
-    HRESULT GetAudioData(IAudioData*);
+    HRESULT GetAudioData(IAudioData* ppAudio);
 }
 enum IID_IMemoryData = GUID(0x327fc560, 0xaf60, 0x11d0, [0x82, 0x12, 0x0, 0xc0, 0x4f, 0xc3, 0x2c, 0x45]);
 interface IMemoryData : IUnknown
 {
-    HRESULT SetBuffer(uint, ubyte*, uint);
-    HRESULT GetInfo(uint*, ubyte**, uint*);
-    HRESULT SetActual(uint);
+    HRESULT SetBuffer(uint cbSize, ubyte* pbData, uint dwFlags);
+    HRESULT GetInfo(uint* pdwLength, ubyte** ppbData, uint* pcbActualData);
+    HRESULT SetActual(uint cbDataValid);
 }
 enum IID_IAudioData = GUID(0x54c719c0, 0xaf60, 0x11d0, [0x82, 0x12, 0x0, 0xc0, 0x4f, 0xc3, 0x2c, 0x45]);
 interface IAudioData : IMemoryData
 {
-    HRESULT GetFormat(WAVEFORMATEX*);
-    HRESULT SetFormat(const(WAVEFORMATEX)*);
+    HRESULT GetFormat(WAVEFORMATEX* pWaveFormatCurrent);
+    HRESULT SetFormat(const(WAVEFORMATEX)* lpWaveFormat);
 }
 alias AMMSF_MMS_INIT_FLAGS = int;
 enum : int
@@ -5692,146 +5692,146 @@ enum : int
 enum IID_IAMMultiMediaStream = GUID(0xbebe595c, 0x9a6f, 0x11d0, [0x8f, 0xde, 0x0, 0xc0, 0x4f, 0xd9, 0x18, 0x9d]);
 interface IAMMultiMediaStream : IMultiMediaStream
 {
-    HRESULT Initialize(STREAM_TYPE, uint, IGraphBuilder);
-    HRESULT GetFilterGraph(IGraphBuilder*);
-    HRESULT GetFilter(IMediaStreamFilter*);
-    HRESULT AddMediaStream(IUnknown, const(GUID)*, uint, IMediaStream*);
-    HRESULT OpenFile(const(wchar)*, uint);
-    HRESULT OpenMoniker(IBindCtx, IMoniker, uint);
-    HRESULT Render(uint);
+    HRESULT Initialize(STREAM_TYPE StreamType, uint dwFlags, IGraphBuilder pFilterGraph);
+    HRESULT GetFilterGraph(IGraphBuilder* ppGraphBuilder);
+    HRESULT GetFilter(IMediaStreamFilter* ppFilter);
+    HRESULT AddMediaStream(IUnknown pStreamObject, const(GUID)* PurposeId, uint dwFlags, IMediaStream* ppNewStream);
+    HRESULT OpenFile(const(wchar)* pszFileName, uint dwFlags);
+    HRESULT OpenMoniker(IBindCtx pCtx, IMoniker pMoniker, uint dwFlags);
+    HRESULT Render(uint dwFlags);
 }
 enum IID_IAMMediaStream = GUID(0xbebe595d, 0x9a6f, 0x11d0, [0x8f, 0xde, 0x0, 0xc0, 0x4f, 0xd9, 0x18, 0x9d]);
 interface IAMMediaStream : IMediaStream
 {
-    HRESULT Initialize(IUnknown, uint, GUID*, const(STREAM_TYPE));
-    HRESULT SetState(FILTER_STATE);
-    HRESULT JoinAMMultiMediaStream(IAMMultiMediaStream);
-    HRESULT JoinFilter(IMediaStreamFilter);
-    HRESULT JoinFilterGraph(IFilterGraph);
+    HRESULT Initialize(IUnknown pSourceObject, uint dwFlags, GUID* PurposeId, const(STREAM_TYPE) StreamType);
+    HRESULT SetState(FILTER_STATE State);
+    HRESULT JoinAMMultiMediaStream(IAMMultiMediaStream pAMMultiMediaStream);
+    HRESULT JoinFilter(IMediaStreamFilter pMediaStreamFilter);
+    HRESULT JoinFilterGraph(IFilterGraph pFilterGraph);
 }
 enum IID_IMediaStreamFilter = GUID(0xbebe595e, 0x9a6f, 0x11d0, [0x8f, 0xde, 0x0, 0xc0, 0x4f, 0xd9, 0x18, 0x9d]);
 interface IMediaStreamFilter : IBaseFilter
 {
-    HRESULT AddMediaStream(IAMMediaStream);
-    HRESULT GetMediaStream(GUID*, IMediaStream*);
-    HRESULT EnumMediaStreams(int, IMediaStream*);
-    HRESULT SupportSeeking(BOOL);
-    HRESULT ReferenceTimeToStreamTime(long*);
-    HRESULT GetCurrentStreamTime(long*);
-    HRESULT WaitUntil(long);
-    HRESULT Flush(BOOL);
+    HRESULT AddMediaStream(IAMMediaStream pAMMediaStream);
+    HRESULT GetMediaStream(GUID* idPurpose, IMediaStream* ppMediaStream);
+    HRESULT EnumMediaStreams(int Index, IMediaStream* ppMediaStream);
+    HRESULT SupportSeeking(BOOL bRenderer);
+    HRESULT ReferenceTimeToStreamTime(long* pTime);
+    HRESULT GetCurrentStreamTime(long* pCurrentStreamTime);
+    HRESULT WaitUntil(long WaitStreamTime);
+    HRESULT Flush(BOOL bCancelEOS);
     HRESULT EndOfStream();
 }
 enum IID_IDirectDrawMediaSampleAllocator = GUID(0xab6b4afc, 0xf6e4, 0x11d0, [0x90, 0xd, 0x0, 0xc0, 0x4f, 0xd9, 0x18, 0x9d]);
 interface IDirectDrawMediaSampleAllocator : IUnknown
 {
-    HRESULT GetDirectDraw(IDirectDraw*);
+    HRESULT GetDirectDraw(IDirectDraw* ppDirectDraw);
 }
 enum IID_IDirectDrawMediaSample = GUID(0xab6b4afe, 0xf6e4, 0x11d0, [0x90, 0xd, 0x0, 0xc0, 0x4f, 0xd9, 0x18, 0x9d]);
 interface IDirectDrawMediaSample : IUnknown
 {
-    HRESULT GetSurfaceAndReleaseLock(IDirectDrawSurface*, RECT*);
+    HRESULT GetSurfaceAndReleaseLock(IDirectDrawSurface* ppDirectDrawSurface, RECT* pRect);
     HRESULT LockMediaSamplePointer();
 }
 enum IID_IAMMediaTypeStream = GUID(0xab6b4afa, 0xf6e4, 0x11d0, [0x90, 0xd, 0x0, 0xc0, 0x4f, 0xd9, 0x18, 0x9d]);
 interface IAMMediaTypeStream : IMediaStream
 {
-    HRESULT GetFormat(AM_MEDIA_TYPE*, uint);
-    HRESULT SetFormat(AM_MEDIA_TYPE*, uint);
-    HRESULT CreateSample(int, ubyte*, uint, IUnknown, IAMMediaTypeSample*);
-    HRESULT GetStreamAllocatorRequirements(ALLOCATOR_PROPERTIES*);
-    HRESULT SetStreamAllocatorRequirements(ALLOCATOR_PROPERTIES*);
+    HRESULT GetFormat(AM_MEDIA_TYPE* pMediaType, uint dwFlags);
+    HRESULT SetFormat(AM_MEDIA_TYPE* pMediaType, uint dwFlags);
+    HRESULT CreateSample(int lSampleSize, ubyte* pbBuffer, uint dwFlags, IUnknown pUnkOuter, IAMMediaTypeSample* ppAMMediaTypeSample);
+    HRESULT GetStreamAllocatorRequirements(ALLOCATOR_PROPERTIES* pProps);
+    HRESULT SetStreamAllocatorRequirements(ALLOCATOR_PROPERTIES* pProps);
 }
 enum IID_IAMMediaTypeSample = GUID(0xab6b4afb, 0xf6e4, 0x11d0, [0x90, 0xd, 0x0, 0xc0, 0x4f, 0xd9, 0x18, 0x9d]);
 interface IAMMediaTypeSample : IStreamSample
 {
-    HRESULT SetPointer(ubyte*, int);
-    HRESULT GetPointer(ubyte**);
+    HRESULT SetPointer(ubyte* pBuffer, int lSize);
+    HRESULT GetPointer(ubyte** ppBuffer);
     int GetSize();
-    HRESULT GetTime(long*, long*);
-    HRESULT SetTime(long*, long*);
+    HRESULT GetTime(long* pTimeStart, long* pTimeEnd);
+    HRESULT SetTime(long* pTimeStart, long* pTimeEnd);
     HRESULT IsSyncPoint();
-    HRESULT SetSyncPoint(BOOL);
+    HRESULT SetSyncPoint(BOOL bIsSyncPoint);
     HRESULT IsPreroll();
-    HRESULT SetPreroll(BOOL);
+    HRESULT SetPreroll(BOOL bIsPreroll);
     int GetActualDataLength();
-    HRESULT SetActualDataLength(int);
-    HRESULT GetMediaType(AM_MEDIA_TYPE**);
-    HRESULT SetMediaType(AM_MEDIA_TYPE*);
+    HRESULT SetActualDataLength(int __MIDL__IAMMediaTypeSample0000);
+    HRESULT GetMediaType(AM_MEDIA_TYPE** ppMediaType);
+    HRESULT SetMediaType(AM_MEDIA_TYPE* pMediaType);
     HRESULT IsDiscontinuity();
-    HRESULT SetDiscontinuity(BOOL);
-    HRESULT GetMediaTime(long*, long*);
-    HRESULT SetMediaTime(long*, long*);
+    HRESULT SetDiscontinuity(BOOL bDiscontinuity);
+    HRESULT GetMediaTime(long* pTimeStart, long* pTimeEnd);
+    HRESULT SetMediaTime(long* pTimeStart, long* pTimeEnd);
 }
 enum IID_IDirectDrawVideo = GUID(0x36d39eb0, 0xdd75, 0x11ce, [0xbf, 0xe, 0x0, 0xaa, 0x0, 0x55, 0x59, 0x5a]);
 interface IDirectDrawVideo : IUnknown
 {
-    HRESULT GetSwitches(uint*);
-    HRESULT SetSwitches(uint);
-    HRESULT GetCaps(DDCAPS_DX7*);
-    HRESULT GetEmulatedCaps(DDCAPS_DX7*);
-    HRESULT GetSurfaceDesc(DDSURFACEDESC*);
-    HRESULT GetFourCCCodes(uint*, uint*);
-    HRESULT SetDirectDraw(IDirectDraw);
-    HRESULT GetDirectDraw(IDirectDraw*);
-    HRESULT GetSurfaceType(uint*);
+    HRESULT GetSwitches(uint* pSwitches);
+    HRESULT SetSwitches(uint Switches);
+    HRESULT GetCaps(DDCAPS_DX7* pCaps);
+    HRESULT GetEmulatedCaps(DDCAPS_DX7* pCaps);
+    HRESULT GetSurfaceDesc(DDSURFACEDESC* pSurfaceDesc);
+    HRESULT GetFourCCCodes(uint* pCount, uint* pCodes);
+    HRESULT SetDirectDraw(IDirectDraw pDirectDraw);
+    HRESULT GetDirectDraw(IDirectDraw* ppDirectDraw);
+    HRESULT GetSurfaceType(uint* pSurfaceType);
     HRESULT SetDefault();
-    HRESULT UseScanLine(int);
-    HRESULT CanUseScanLine(int*);
-    HRESULT UseOverlayStretch(int);
-    HRESULT CanUseOverlayStretch(int*);
-    HRESULT UseWhenFullScreen(int);
-    HRESULT WillUseFullScreen(int*);
+    HRESULT UseScanLine(int UseScanLine);
+    HRESULT CanUseScanLine(int* UseScanLine);
+    HRESULT UseOverlayStretch(int UseOverlayStretch);
+    HRESULT CanUseOverlayStretch(int* UseOverlayStretch);
+    HRESULT UseWhenFullScreen(int UseWhenFullScreen);
+    HRESULT WillUseFullScreen(int* UseWhenFullScreen);
 }
 enum IID_IQualProp = GUID(0x1bd0ecb0, 0xf8e2, 0x11ce, [0xaa, 0xc6, 0x0, 0x20, 0xaf, 0xb, 0x99, 0xa3]);
 interface IQualProp : IUnknown
 {
-    HRESULT get_FramesDroppedInRenderer(int*);
-    HRESULT get_FramesDrawn(int*);
-    HRESULT get_AvgFrameRate(int*);
-    HRESULT get_Jitter(int*);
-    HRESULT get_AvgSyncOffset(int*);
-    HRESULT get_DevSyncOffset(int*);
+    HRESULT get_FramesDroppedInRenderer(int* pcFrames);
+    HRESULT get_FramesDrawn(int* pcFramesDrawn);
+    HRESULT get_AvgFrameRate(int* piAvgFrameRate);
+    HRESULT get_Jitter(int* iJitter);
+    HRESULT get_AvgSyncOffset(int* piAvg);
+    HRESULT get_DevSyncOffset(int* piDev);
 }
 enum IID_IFullScreenVideo = GUID(0xdd1d7110, 0x7836, 0x11cf, [0xbf, 0x47, 0x0, 0xaa, 0x0, 0x55, 0x59, 0x5a]);
 interface IFullScreenVideo : IUnknown
 {
-    HRESULT CountModes(int*);
-    HRESULT GetModeInfo(int, int*, int*, int*);
-    HRESULT GetCurrentMode(int*);
-    HRESULT IsModeAvailable(int);
-    HRESULT IsModeEnabled(int);
-    HRESULT SetEnabled(int, int);
-    HRESULT GetClipFactor(int*);
-    HRESULT SetClipFactor(int);
-    HRESULT SetMessageDrain(HWND);
-    HRESULT GetMessageDrain(HWND*);
-    HRESULT SetMonitor(int);
-    HRESULT GetMonitor(int*);
-    HRESULT HideOnDeactivate(int);
+    HRESULT CountModes(int* pModes);
+    HRESULT GetModeInfo(int Mode, int* pWidth, int* pHeight, int* pDepth);
+    HRESULT GetCurrentMode(int* pMode);
+    HRESULT IsModeAvailable(int Mode);
+    HRESULT IsModeEnabled(int Mode);
+    HRESULT SetEnabled(int Mode, int bEnabled);
+    HRESULT GetClipFactor(int* pClipFactor);
+    HRESULT SetClipFactor(int ClipFactor);
+    HRESULT SetMessageDrain(HWND hwnd);
+    HRESULT GetMessageDrain(HWND* hwnd);
+    HRESULT SetMonitor(int Monitor);
+    HRESULT GetMonitor(int* Monitor);
+    HRESULT HideOnDeactivate(int Hide);
     HRESULT IsHideOnDeactivate();
-    HRESULT SetCaption(BSTR);
-    HRESULT GetCaption(BSTR*);
+    HRESULT SetCaption(BSTR strCaption);
+    HRESULT GetCaption(BSTR* pstrCaption);
     HRESULT SetDefault();
 }
 enum IID_IFullScreenVideoEx = GUID(0x53479470, 0xf1dd, 0x11cf, [0xbc, 0x42, 0x0, 0xaa, 0x0, 0xac, 0x74, 0xf6]);
 interface IFullScreenVideoEx : IFullScreenVideo
 {
-    HRESULT SetAcceleratorTable(HWND, HACCEL);
-    HRESULT GetAcceleratorTable(HWND*, HACCEL*);
-    HRESULT KeepPixelAspectRatio(int);
-    HRESULT IsKeepPixelAspectRatio(int*);
+    HRESULT SetAcceleratorTable(HWND hwnd, HACCEL hAccel);
+    HRESULT GetAcceleratorTable(HWND* phwnd, HACCEL* phAccel);
+    HRESULT KeepPixelAspectRatio(int KeepAspect);
+    HRESULT IsKeepPixelAspectRatio(int* pKeepAspect);
 }
 enum IID_IBaseVideoMixer = GUID(0x61ded640, 0xe912, 0x11ce, [0xa0, 0x99, 0x0, 0xaa, 0x0, 0x47, 0x9a, 0x58]);
 interface IBaseVideoMixer : IUnknown
 {
-    HRESULT SetLeadPin(int);
-    HRESULT GetLeadPin(int*);
-    HRESULT GetInputPinCount(int*);
-    HRESULT IsUsingClock(int*);
-    HRESULT SetUsingClock(int);
-    HRESULT GetClockPeriod(int*);
-    HRESULT SetClockPeriod(int);
+    HRESULT SetLeadPin(int iPin);
+    HRESULT GetLeadPin(int* piPin);
+    HRESULT GetInputPinCount(int* piPinCount);
+    HRESULT IsUsingClock(int* pbValue);
+    HRESULT SetUsingClock(int bValue);
+    HRESULT GetClockPeriod(int* pbValue);
+    HRESULT SetClockPeriod(int bValue);
 }
 struct TRUECOLORINFO
 {
@@ -5877,25 +5877,25 @@ struct AM_FRAMESTEP_STEP
 enum IID_IDMOWrapperFilter = GUID(0x52d6f586, 0x9f0f, 0x4824, [0x8f, 0xc8, 0xe3, 0x2c, 0xa0, 0x49, 0x30, 0xc2]);
 interface IDMOWrapperFilter : IUnknown
 {
-    HRESULT Init(const(GUID)*, const(GUID)*);
+    HRESULT Init(const(GUID)* clsidDMO, const(GUID)* catDMO);
 }
 enum IID_IMixerOCXNotify = GUID(0x81a3bd31, 0xdee1, 0x11d1, [0x85, 0x8, 0x0, 0xa0, 0xc9, 0x1f, 0x9c, 0xa0]);
 interface IMixerOCXNotify : IUnknown
 {
-    HRESULT OnInvalidateRect(RECT*);
-    HRESULT OnStatusChange(uint);
-    HRESULT OnDataChange(uint);
+    HRESULT OnInvalidateRect(RECT* lpcRect);
+    HRESULT OnStatusChange(uint ulStatusFlags);
+    HRESULT OnDataChange(uint ulDataFlags);
 }
 enum IID_IMixerOCX = GUID(0x81a3bd32, 0xdee1, 0x11d1, [0x85, 0x8, 0x0, 0xa0, 0xc9, 0x1f, 0x9c, 0xa0]);
 interface IMixerOCX : IUnknown
 {
-    HRESULT OnDisplayChange(uint, uint, uint);
-    HRESULT GetAspectRatio(uint*, uint*);
-    HRESULT GetVideoSize(uint*, uint*);
-    HRESULT GetStatus(uint**);
-    HRESULT OnDraw(HDC, RECT*);
-    HRESULT SetDrawRegion(POINT*, RECT*, RECT*);
-    HRESULT Advise(IMixerOCXNotify);
+    HRESULT OnDisplayChange(uint ulBitsPerPixel, uint ulScreenWidth, uint ulScreenHeight);
+    HRESULT GetAspectRatio(uint* pdwPictAspectRatioX, uint* pdwPictAspectRatioY);
+    HRESULT GetVideoSize(uint* pdwVideoWidth, uint* pdwVideoHeight);
+    HRESULT GetStatus(uint** pdwStatus);
+    HRESULT OnDraw(HDC hdcDraw, RECT* prcDraw);
+    HRESULT SetDrawRegion(POINT* lpptTopLeftSC, RECT* prcDrawCC, RECT* lprcClip);
+    HRESULT Advise(IMixerOCXNotify pmdns);
     HRESULT UnAdvise();
 }
 alias AM_ASPECT_RATIO_MODE = int;
@@ -5910,24 +5910,24 @@ enum : int
 enum IID_IMixerPinConfig = GUID(0x593cdde1, 0x759, 0x11d1, [0x9e, 0x69, 0x0, 0xc0, 0x4f, 0xd7, 0xc1, 0x5b]);
 interface IMixerPinConfig : IUnknown
 {
-    HRESULT SetRelativePosition(uint, uint, uint, uint);
-    HRESULT GetRelativePosition(uint*, uint*, uint*, uint*);
-    HRESULT SetZOrder(uint);
-    HRESULT GetZOrder(uint*);
-    HRESULT SetColorKey(COLORKEY*);
-    HRESULT GetColorKey(COLORKEY*, uint*);
-    HRESULT SetBlendingParameter(uint);
-    HRESULT GetBlendingParameter(uint*);
-    HRESULT SetAspectRatioMode(AM_ASPECT_RATIO_MODE);
-    HRESULT GetAspectRatioMode(AM_ASPECT_RATIO_MODE*);
-    HRESULT SetStreamTransparent(BOOL);
-    HRESULT GetStreamTransparent(BOOL*);
+    HRESULT SetRelativePosition(uint dwLeft, uint dwTop, uint dwRight, uint dwBottom);
+    HRESULT GetRelativePosition(uint* pdwLeft, uint* pdwTop, uint* pdwRight, uint* pdwBottom);
+    HRESULT SetZOrder(uint dwZOrder);
+    HRESULT GetZOrder(uint* pdwZOrder);
+    HRESULT SetColorKey(COLORKEY* pColorKey);
+    HRESULT GetColorKey(COLORKEY* pColorKey, uint* pColor);
+    HRESULT SetBlendingParameter(uint dwBlendingParameter);
+    HRESULT GetBlendingParameter(uint* pdwBlendingParameter);
+    HRESULT SetAspectRatioMode(AM_ASPECT_RATIO_MODE amAspectRatioMode);
+    HRESULT GetAspectRatioMode(AM_ASPECT_RATIO_MODE* pamAspectRatioMode);
+    HRESULT SetStreamTransparent(BOOL bStreamTransparent);
+    HRESULT GetStreamTransparent(BOOL* pbStreamTransparent);
 }
 enum IID_IMixerPinConfig2 = GUID(0xebf47182, 0x8764, 0x11d1, [0x9e, 0x69, 0x0, 0xc0, 0x4f, 0xd7, 0xc1, 0x5b]);
 interface IMixerPinConfig2 : IMixerPinConfig
 {
-    HRESULT SetOverlaySurfaceColorControls(DDCOLORCONTROL*);
-    HRESULT GetOverlaySurfaceColorControls(DDCOLORCONTROL*);
+    HRESULT SetOverlaySurfaceColorControls(DDCOLORCONTROL* pColorControl);
+    HRESULT GetOverlaySurfaceColorControls(DDCOLORCONTROL* pColorControl);
 }
 struct AM_MPEGSTREAMTYPE
 {
@@ -5945,19 +5945,19 @@ struct AM_MPEGSYSTEMTYPE
 enum IID_IMpegAudioDecoder = GUID(0xb45dd570, 0x3c77, 0x11d1, [0xab, 0xe1, 0x0, 0xa0, 0xc9, 0x5, 0xf3, 0x75]);
 interface IMpegAudioDecoder : IUnknown
 {
-    HRESULT get_FrequencyDivider(uint*);
-    HRESULT put_FrequencyDivider(uint);
-    HRESULT get_DecoderAccuracy(uint*);
-    HRESULT put_DecoderAccuracy(uint);
-    HRESULT get_Stereo(uint*);
-    HRESULT put_Stereo(uint);
-    HRESULT get_DecoderWordSize(uint*);
-    HRESULT put_DecoderWordSize(uint);
-    HRESULT get_IntegerDecode(uint*);
-    HRESULT put_IntegerDecode(uint);
-    HRESULT get_DualMode(uint*);
-    HRESULT put_DualMode(uint);
-    HRESULT get_AudioFormat(MPEG1WAVEFORMAT*);
+    HRESULT get_FrequencyDivider(uint* pDivider);
+    HRESULT put_FrequencyDivider(uint Divider);
+    HRESULT get_DecoderAccuracy(uint* pAccuracy);
+    HRESULT put_DecoderAccuracy(uint Accuracy);
+    HRESULT get_Stereo(uint* pStereo);
+    HRESULT put_Stereo(uint Stereo);
+    HRESULT get_DecoderWordSize(uint* pWordSize);
+    HRESULT put_DecoderWordSize(uint WordSize);
+    HRESULT get_IntegerDecode(uint* pIntDecode);
+    HRESULT put_IntegerDecode(uint IntDecode);
+    HRESULT get_DualMode(uint* pIntDecode);
+    HRESULT put_DualMode(uint IntDecode);
+    HRESULT get_AudioFormat(MPEG1WAVEFORMAT* lpFmt);
 }
 alias VMR9PresentationFlags = int;
 enum : int
@@ -5984,9 +5984,9 @@ struct VMR9PresentationInfo
 enum IID_IVMRImagePresenter9 = GUID(0x69188c61, 0x12a3, 0x40f0, [0x8f, 0xfc, 0x34, 0x2e, 0x7b, 0x43, 0x3f, 0xd7]);
 interface IVMRImagePresenter9 : IUnknown
 {
-    HRESULT StartPresenting(ulong);
-    HRESULT StopPresenting(ulong);
-    HRESULT PresentImage(ulong, VMR9PresentationInfo*);
+    HRESULT StartPresenting(ulong dwUserID);
+    HRESULT StopPresenting(ulong dwUserID);
+    HRESULT PresentImage(ulong dwUserID, VMR9PresentationInfo* lpPresInfo);
 }
 alias VMR9SurfaceAllocationFlags = int;
 enum : int
@@ -6014,24 +6014,24 @@ struct VMR9AllocationInfo
 enum IID_IVMRSurfaceAllocator9 = GUID(0x8d5148ea, 0x3f5d, 0x46cf, [0x9d, 0xf1, 0xd1, 0xb8, 0x96, 0xee, 0xdb, 0x1f]);
 interface IVMRSurfaceAllocator9 : IUnknown
 {
-    HRESULT InitializeDevice(ulong, VMR9AllocationInfo*, uint*);
-    HRESULT TerminateDevice(ulong);
-    HRESULT GetSurface(ulong, uint, uint, IDirect3DSurface9*);
-    HRESULT AdviseNotify(IVMRSurfaceAllocatorNotify9);
+    HRESULT InitializeDevice(ulong dwUserID, VMR9AllocationInfo* lpAllocInfo, uint* lpNumBuffers);
+    HRESULT TerminateDevice(ulong dwID);
+    HRESULT GetSurface(ulong dwUserID, uint SurfaceIndex, uint SurfaceFlags, IDirect3DSurface9* lplpSurface);
+    HRESULT AdviseNotify(IVMRSurfaceAllocatorNotify9 lpIVMRSurfAllocNotify);
 }
 enum IID_IVMRSurfaceAllocatorEx9 = GUID(0x6de9a68a, 0xa928, 0x4522, [0xbf, 0x57, 0x65, 0x5a, 0xe3, 0x86, 0x64, 0x56]);
 interface IVMRSurfaceAllocatorEx9 : IVMRSurfaceAllocator9
 {
-    HRESULT GetSurfaceEx(ulong, uint, uint, IDirect3DSurface9*, RECT*);
+    HRESULT GetSurfaceEx(ulong dwUserID, uint SurfaceIndex, uint SurfaceFlags, IDirect3DSurface9* lplpSurface, RECT* lprcDst);
 }
 enum IID_IVMRSurfaceAllocatorNotify9 = GUID(0xdca3f5df, 0xbb3a, 0x4d03, [0xbd, 0x81, 0x84, 0x61, 0x4b, 0xfb, 0xfa, 0xc]);
 interface IVMRSurfaceAllocatorNotify9 : IUnknown
 {
-    HRESULT AdviseSurfaceAllocator(ulong, IVMRSurfaceAllocator9);
-    HRESULT SetD3DDevice(IDirect3DDevice9, HMONITOR);
-    HRESULT ChangeD3DDevice(IDirect3DDevice9, HMONITOR);
-    HRESULT AllocateSurfaceHelper(VMR9AllocationInfo*, uint*, IDirect3DSurface9*);
-    HRESULT NotifyEvent(int, long, long);
+    HRESULT AdviseSurfaceAllocator(ulong dwUserID, IVMRSurfaceAllocator9 lpIVRMSurfaceAllocator);
+    HRESULT SetD3DDevice(IDirect3DDevice9 lpD3DDevice, HMONITOR hMonitor);
+    HRESULT ChangeD3DDevice(IDirect3DDevice9 lpD3DDevice, HMONITOR hMonitor);
+    HRESULT AllocateSurfaceHelper(VMR9AllocationInfo* lpAllocInfo, uint* lpNumBuffers, IDirect3DSurface9* lplpSurface);
+    HRESULT NotifyEvent(int EventCode, long Param1, long Param2);
 }
 alias VMR9AspectRatioMode = int;
 enum : int
@@ -6043,19 +6043,19 @@ enum : int
 enum IID_IVMRWindowlessControl9 = GUID(0x8f537d09, 0xf85e, 0x4414, [0xb2, 0x3b, 0x50, 0x2e, 0x54, 0xc7, 0x99, 0x27]);
 interface IVMRWindowlessControl9 : IUnknown
 {
-    HRESULT GetNativeVideoSize(int*, int*, int*, int*);
-    HRESULT GetMinIdealVideoSize(int*, int*);
-    HRESULT GetMaxIdealVideoSize(int*, int*);
-    HRESULT SetVideoPosition(const(RECT)*, const(RECT)*);
-    HRESULT GetVideoPosition(RECT*, RECT*);
-    HRESULT GetAspectRatioMode(uint*);
-    HRESULT SetAspectRatioMode(uint);
-    HRESULT SetVideoClippingWindow(HWND);
-    HRESULT RepaintVideo(HWND, HDC);
+    HRESULT GetNativeVideoSize(int* lpWidth, int* lpHeight, int* lpARWidth, int* lpARHeight);
+    HRESULT GetMinIdealVideoSize(int* lpWidth, int* lpHeight);
+    HRESULT GetMaxIdealVideoSize(int* lpWidth, int* lpHeight);
+    HRESULT SetVideoPosition(const(RECT)* lpSRCRect, const(RECT)* lpDSTRect);
+    HRESULT GetVideoPosition(RECT* lpSRCRect, RECT* lpDSTRect);
+    HRESULT GetAspectRatioMode(uint* lpAspectRatioMode);
+    HRESULT SetAspectRatioMode(uint AspectRatioMode);
+    HRESULT SetVideoClippingWindow(HWND hwnd);
+    HRESULT RepaintVideo(HWND hwnd, HDC hdc);
     HRESULT DisplayModeChanged();
-    HRESULT GetCurrentImage(ubyte**);
-    HRESULT SetBorderColor(COLORREF);
-    HRESULT GetBorderColor(COLORREF*);
+    HRESULT GetCurrentImage(ubyte** lpDib);
+    HRESULT SetBorderColor(COLORREF Clr);
+    HRESULT GetBorderColor(COLORREF* lpClr);
 }
 alias VMR9MixerPrefs = int;
 enum : int
@@ -6120,19 +6120,19 @@ struct VMR9ProcAmpControlRange
 enum IID_IVMRMixerControl9 = GUID(0x1a777eaa, 0x47c8, 0x4930, [0xb2, 0xc9, 0x8f, 0xee, 0x1c, 0x1b, 0xf, 0x3b]);
 interface IVMRMixerControl9 : IUnknown
 {
-    HRESULT SetAlpha(uint, float);
-    HRESULT GetAlpha(uint, float*);
-    HRESULT SetZOrder(uint, uint);
-    HRESULT GetZOrder(uint, uint*);
-    HRESULT SetOutputRect(uint, const(VMR9NormalizedRect)*);
-    HRESULT GetOutputRect(uint, VMR9NormalizedRect*);
-    HRESULT SetBackgroundClr(COLORREF);
-    HRESULT GetBackgroundClr(COLORREF*);
-    HRESULT SetMixingPrefs(uint);
-    HRESULT GetMixingPrefs(uint*);
-    HRESULT SetProcAmpControl(uint, VMR9ProcAmpControl*);
-    HRESULT GetProcAmpControl(uint, VMR9ProcAmpControl*);
-    HRESULT GetProcAmpControlRange(uint, VMR9ProcAmpControlRange*);
+    HRESULT SetAlpha(uint dwStreamID, float Alpha);
+    HRESULT GetAlpha(uint dwStreamID, float* pAlpha);
+    HRESULT SetZOrder(uint dwStreamID, uint dwZ);
+    HRESULT GetZOrder(uint dwStreamID, uint* pZ);
+    HRESULT SetOutputRect(uint dwStreamID, const(VMR9NormalizedRect)* pRect);
+    HRESULT GetOutputRect(uint dwStreamID, VMR9NormalizedRect* pRect);
+    HRESULT SetBackgroundClr(COLORREF ClrBkg);
+    HRESULT GetBackgroundClr(COLORREF* lpClrBkg);
+    HRESULT SetMixingPrefs(uint dwMixerPrefs);
+    HRESULT GetMixingPrefs(uint* pdwMixerPrefs);
+    HRESULT SetProcAmpControl(uint dwStreamID, VMR9ProcAmpControl* lpClrControl);
+    HRESULT GetProcAmpControl(uint dwStreamID, VMR9ProcAmpControl* lpClrControl);
+    HRESULT GetProcAmpControlRange(uint dwStreamID, VMR9ProcAmpControlRange* lpClrControl);
 }
 struct VMR9AlphaBitmap
 {
@@ -6159,17 +6159,17 @@ enum : int
 enum IID_IVMRMixerBitmap9 = GUID(0xced175e5, 0x1935, 0x4820, [0x81, 0xbd, 0xff, 0x6a, 0xd0, 0xc, 0x91, 0x8]);
 interface IVMRMixerBitmap9 : IUnknown
 {
-    HRESULT SetAlphaBitmap(const(VMR9AlphaBitmap)*);
-    HRESULT UpdateAlphaBitmapParameters(const(VMR9AlphaBitmap)*);
-    HRESULT GetAlphaBitmapParameters(VMR9AlphaBitmap*);
+    HRESULT SetAlphaBitmap(const(VMR9AlphaBitmap)* pBmpParms);
+    HRESULT UpdateAlphaBitmapParameters(const(VMR9AlphaBitmap)* pBmpParms);
+    HRESULT GetAlphaBitmapParameters(VMR9AlphaBitmap* pBmpParms);
 }
 enum IID_IVMRSurface9 = GUID(0xdfc581a1, 0x6e1f, 0x4c3a, [0x8d, 0xa, 0x5e, 0x97, 0x92, 0xea, 0x2a, 0xfc]);
 interface IVMRSurface9 : IUnknown
 {
     HRESULT IsSurfaceLocked();
-    HRESULT LockSurface(ubyte**);
+    HRESULT LockSurface(ubyte** lpSurface);
     HRESULT UnlockSurface();
-    HRESULT GetSurface(IDirect3DSurface9*);
+    HRESULT GetSurface(IDirect3DSurface9* lplpSurface);
 }
 alias VMR9RenderPrefs = int;
 enum : int
@@ -6181,14 +6181,14 @@ enum : int
 enum IID_IVMRImagePresenterConfig9 = GUID(0x45c15cab, 0x6e22, 0x420a, [0x80, 0x43, 0xae, 0x1f, 0xa, 0xc0, 0x2c, 0x7d]);
 interface IVMRImagePresenterConfig9 : IUnknown
 {
-    HRESULT SetRenderingPrefs(uint);
-    HRESULT GetRenderingPrefs(uint*);
+    HRESULT SetRenderingPrefs(uint dwRenderFlags);
+    HRESULT GetRenderingPrefs(uint* dwRenderFlags);
 }
 enum IID_IVMRVideoStreamControl9 = GUID(0xd0cfe38b, 0x93e7, 0x4772, [0x89, 0x57, 0x4, 0x0, 0xc4, 0x9a, 0x44, 0x85]);
 interface IVMRVideoStreamControl9 : IUnknown
 {
-    HRESULT SetStreamActiveState(BOOL);
-    HRESULT GetStreamActiveState(BOOL*);
+    HRESULT SetStreamActiveState(BOOL fActive);
+    HRESULT GetStreamActiveState(BOOL* lpfActive);
 }
 alias VMR9Mode = int;
 enum : int
@@ -6202,19 +6202,19 @@ enum : int
 enum IID_IVMRFilterConfig9 = GUID(0x5a804648, 0x4f66, 0x4867, [0x9c, 0x43, 0x4f, 0x5c, 0x82, 0x2c, 0xf1, 0xb8]);
 interface IVMRFilterConfig9 : IUnknown
 {
-    HRESULT SetImageCompositor(IVMRImageCompositor9);
-    HRESULT SetNumberOfStreams(uint);
-    HRESULT GetNumberOfStreams(uint*);
-    HRESULT SetRenderingPrefs(uint);
-    HRESULT GetRenderingPrefs(uint*);
-    HRESULT SetRenderingMode(uint);
-    HRESULT GetRenderingMode(uint*);
+    HRESULT SetImageCompositor(IVMRImageCompositor9 lpVMRImgCompositor);
+    HRESULT SetNumberOfStreams(uint dwMaxStreams);
+    HRESULT GetNumberOfStreams(uint* pdwMaxStreams);
+    HRESULT SetRenderingPrefs(uint dwRenderFlags);
+    HRESULT GetRenderingPrefs(uint* pdwRenderFlags);
+    HRESULT SetRenderingMode(uint Mode);
+    HRESULT GetRenderingMode(uint* pMode);
 }
 enum IID_IVMRAspectRatioControl9 = GUID(0xd96c29, 0xbbde, 0x4efc, [0x99, 0x1, 0xbb, 0x50, 0x36, 0x39, 0x21, 0x46]);
 interface IVMRAspectRatioControl9 : IUnknown
 {
-    HRESULT GetAspectRatioMode(uint*);
-    HRESULT SetAspectRatioMode(uint);
+    HRESULT GetAspectRatioMode(uint* lpdwARMode);
+    HRESULT SetAspectRatioMode(uint dwARMode);
 }
 struct VMR9MonitorInfo
 {
@@ -6233,11 +6233,11 @@ struct VMR9MonitorInfo
 enum IID_IVMRMonitorConfig9 = GUID(0x46c2e457, 0x8ba0, 0x4eef, [0xb8, 0xb, 0x6, 0x80, 0xf0, 0x97, 0x87, 0x49]);
 interface IVMRMonitorConfig9 : IUnknown
 {
-    HRESULT SetMonitor(uint);
-    HRESULT GetMonitor(uint*);
-    HRESULT SetDefaultMonitor(uint);
-    HRESULT GetDefaultMonitor(uint*);
-    HRESULT GetAvailableMonitors(VMR9MonitorInfo*, uint, uint*);
+    HRESULT SetMonitor(uint uDev);
+    HRESULT GetMonitor(uint* puDev);
+    HRESULT SetDefaultMonitor(uint uDev);
+    HRESULT GetDefaultMonitor(uint* puDev);
+    HRESULT GetAvailableMonitors(VMR9MonitorInfo* pInfo, uint dwMaxInfoArraySize, uint* pdwNumDevices);
 }
 alias VMR9DeinterlacePrefs = int;
 enum : int
@@ -6298,13 +6298,13 @@ struct VMR9DeinterlaceCaps
 enum IID_IVMRDeinterlaceControl9 = GUID(0xa215fb8d, 0x13c2, 0x4f7f, [0x99, 0x3c, 0x0, 0x3d, 0x62, 0x71, 0xa4, 0x59]);
 interface IVMRDeinterlaceControl9 : IUnknown
 {
-    HRESULT GetNumberOfDeinterlaceModes(VMR9VideoDesc*, uint*, GUID*);
-    HRESULT GetDeinterlaceModeCaps(GUID*, VMR9VideoDesc*, VMR9DeinterlaceCaps*);
-    HRESULT GetDeinterlaceMode(uint, GUID*);
-    HRESULT SetDeinterlaceMode(uint, GUID*);
-    HRESULT GetDeinterlacePrefs(uint*);
-    HRESULT SetDeinterlacePrefs(uint);
-    HRESULT GetActualDeinterlaceMode(uint, GUID*);
+    HRESULT GetNumberOfDeinterlaceModes(VMR9VideoDesc* lpVideoDescription, uint* lpdwNumDeinterlaceModes, GUID* lpDeinterlaceModes);
+    HRESULT GetDeinterlaceModeCaps(GUID* lpDeinterlaceMode, VMR9VideoDesc* lpVideoDescription, VMR9DeinterlaceCaps* lpDeinterlaceCaps);
+    HRESULT GetDeinterlaceMode(uint dwStreamID, GUID* lpDeinterlaceMode);
+    HRESULT SetDeinterlaceMode(uint dwStreamID, GUID* lpDeinterlaceMode);
+    HRESULT GetDeinterlacePrefs(uint* lpdwDeinterlacePrefs);
+    HRESULT SetDeinterlacePrefs(uint dwDeinterlacePrefs);
+    HRESULT GetActualDeinterlaceMode(uint dwStreamID, GUID* lpDeinterlaceMode);
 }
 struct VMR9VideoStreamInfo
 {
@@ -6321,33 +6321,33 @@ struct VMR9VideoStreamInfo
 enum IID_IVMRImageCompositor9 = GUID(0x4a5c89eb, 0xdf51, 0x4654, [0xac, 0x2a, 0xe4, 0x8e, 0x2, 0xbb, 0xab, 0xf6]);
 interface IVMRImageCompositor9 : IUnknown
 {
-    HRESULT InitCompositionDevice(IUnknown);
-    HRESULT TermCompositionDevice(IUnknown);
-    HRESULT SetStreamMediaType(uint, AM_MEDIA_TYPE*, BOOL);
-    HRESULT CompositeImage(IUnknown, IDirect3DSurface9, AM_MEDIA_TYPE*, long, long, uint, VMR9VideoStreamInfo*, uint);
+    HRESULT InitCompositionDevice(IUnknown pD3DDevice);
+    HRESULT TermCompositionDevice(IUnknown pD3DDevice);
+    HRESULT SetStreamMediaType(uint dwStrmID, AM_MEDIA_TYPE* pmt, BOOL fTexture);
+    HRESULT CompositeImage(IUnknown pD3DDevice, IDirect3DSurface9 pddsRenderTarget, AM_MEDIA_TYPE* pmtRenderTarget, long rtStart, long rtEnd, uint dwClrBkGnd, VMR9VideoStreamInfo* pVideoStreamInfo, uint cStreams);
 }
 // [Not Found] IID_IVPBaseConfig
 interface IVPBaseConfig : IUnknown
 {
-    HRESULT GetConnectInfo(uint*, DDVIDEOPORTCONNECT*);
-    HRESULT SetConnectInfo(uint);
-    HRESULT GetVPDataInfo(AMVPDATAINFO*);
-    HRESULT GetMaxPixelRate(AMVPSIZE*, uint*);
-    HRESULT InformVPInputFormats(uint, DDPIXELFORMAT*);
-    HRESULT GetVideoFormats(uint*, DDPIXELFORMAT*);
-    HRESULT SetVideoFormat(uint);
+    HRESULT GetConnectInfo(uint* pdwNumConnectInfo, DDVIDEOPORTCONNECT* pddVPConnectInfo);
+    HRESULT SetConnectInfo(uint dwChosenEntry);
+    HRESULT GetVPDataInfo(AMVPDATAINFO* pamvpDataInfo);
+    HRESULT GetMaxPixelRate(AMVPSIZE* pamvpSize, uint* pdwMaxPixelsPerSecond);
+    HRESULT InformVPInputFormats(uint dwNumFormats, DDPIXELFORMAT* pDDPixelFormats);
+    HRESULT GetVideoFormats(uint* pdwNumFormats, DDPIXELFORMAT* pddPixelFormats);
+    HRESULT SetVideoFormat(uint dwChosenEntry);
     HRESULT SetInvertPolarity();
-    HRESULT GetOverlaySurface(IDirectDrawSurface*);
-    HRESULT SetDirectDrawKernelHandle(ulong);
-    HRESULT SetVideoPortID(uint);
-    HRESULT SetDDSurfaceKernelHandles(uint, ulong*);
-    HRESULT SetSurfaceParameters(uint, uint, uint);
+    HRESULT GetOverlaySurface(IDirectDrawSurface* ppddOverlaySurface);
+    HRESULT SetDirectDrawKernelHandle(ulong dwDDKernelHandle);
+    HRESULT SetVideoPortID(uint dwVideoPortID);
+    HRESULT SetDDSurfaceKernelHandles(uint cHandles, ulong* rgDDKernelHandles);
+    HRESULT SetSurfaceParameters(uint dwPitch, uint dwXOrigin, uint dwYOrigin);
 }
 enum IID_IVPConfig = GUID(0xbc29a660, 0x30e3, 0x11d0, [0x9e, 0x69, 0x0, 0xc0, 0x4f, 0xd7, 0xc1, 0x5b]);
 interface IVPConfig : IVPBaseConfig
 {
-    HRESULT IsVPDecimationAllowed(BOOL*);
-    HRESULT SetScalingFactors(AMVPSIZE*);
+    HRESULT IsVPDecimationAllowed(BOOL* pbIsDecimationAllowed);
+    HRESULT SetScalingFactors(AMVPSIZE* pamvpSize);
 }
 enum IID_IVPVBIConfig = GUID(0xec529b00, 0x1a1f, 0x11d1, [0xba, 0xd9, 0x0, 0x60, 0x97, 0x44, 0x11, 0x1a]);
 interface IVPVBIConfig : IVPBaseConfig
@@ -6361,14 +6361,14 @@ interface IVPBaseNotify : IUnknown
 enum IID_IVPNotify = GUID(0xc76794a1, 0xd6c5, 0x11d0, [0x9e, 0x69, 0x0, 0xc0, 0x4f, 0xd7, 0xc1, 0x5b]);
 interface IVPNotify : IVPBaseNotify
 {
-    HRESULT SetDeinterlaceMode(AMVP_MODE);
-    HRESULT GetDeinterlaceMode(AMVP_MODE*);
+    HRESULT SetDeinterlaceMode(AMVP_MODE mode);
+    HRESULT GetDeinterlaceMode(AMVP_MODE* pMode);
 }
 enum IID_IVPNotify2 = GUID(0xebf47183, 0x8764, 0x11d1, [0x9e, 0x69, 0x0, 0xc0, 0x4f, 0xd7, 0xc1, 0x5b]);
 interface IVPNotify2 : IVPNotify
 {
-    HRESULT SetVPSyncMaster(BOOL);
-    HRESULT GetVPSyncMaster(BOOL*);
+    HRESULT SetVPSyncMaster(BOOL bVPSyncMaster);
+    HRESULT GetVPSyncMaster(BOOL* pbVPSyncMaster);
 }
 enum IID_IVPVBINotify = GUID(0xec529b01, 0x1a1f, 0x11d1, [0xba, 0xd9, 0x0, 0x60, 0x97, 0x44, 0x11, 0x1a]);
 interface IVPVBINotify : IVPBaseNotify
@@ -6784,13 +6784,6 @@ enum : int
     AM_MACROVISION_LEVEL3   = 0x00000003,
 }
 
-struct DVD_REGION
-{
-    ubyte CopySystem;
-    ubyte RegionData;
-    ubyte SystemRegion;
-    ubyte ResetCount;
-}
 alias AM_MPEG2Level = int;
 enum : int
 {
@@ -6923,8 +6916,8 @@ enum : int
     DVD_PB_STOPPED_CopyProtectOutputNotSupported = 0x0000000f,
 }
 
-alias AMGETERRORTEXTPROCA = BOOL function(HRESULT, PSTR, uint);
-alias AMGETERRORTEXTPROCW = BOOL function(HRESULT, PWSTR, uint);
+alias AMGETERRORTEXTPROCA = BOOL function(HRESULT param0, PSTR param1, uint param2);
+alias AMGETERRORTEXTPROCW = BOOL function(HRESULT param0, PWSTR param1, uint param2);
 alias SNDDEV_ERR = int;
 enum : int
 {
@@ -6986,21 +6979,21 @@ struct MP_ENVELOPE_SEGMENT
 enum IID_IMediaParamInfo = GUID(0x6d6cbb60, 0xa223, 0x44aa, [0x84, 0x2f, 0xa2, 0xf0, 0x67, 0x50, 0xbe, 0x6d]);
 interface IMediaParamInfo : IUnknown
 {
-    HRESULT GetParamCount(uint*);
-    HRESULT GetParamInfo(uint, MP_PARAMINFO*);
-    HRESULT GetParamText(uint, ushort**);
-    HRESULT GetNumTimeFormats(uint*);
-    HRESULT GetSupportedTimeFormat(uint, GUID*);
-    HRESULT GetCurrentTimeFormat(GUID*, uint*);
+    HRESULT GetParamCount(uint* pdwParams);
+    HRESULT GetParamInfo(uint dwParamIndex, MP_PARAMINFO* pInfo);
+    HRESULT GetParamText(uint dwParamIndex, ushort** ppwchText);
+    HRESULT GetNumTimeFormats(uint* pdwNumTimeFormats);
+    HRESULT GetSupportedTimeFormat(uint dwFormatIndex, GUID* pguidTimeFormat);
+    HRESULT GetCurrentTimeFormat(GUID* pguidTimeFormat, uint* pTimeData);
 }
 enum IID_IMediaParams = GUID(0x6d6cbb61, 0xa223, 0x44aa, [0x84, 0x2f, 0xa2, 0xf0, 0x67, 0x50, 0xbe, 0x6e]);
 interface IMediaParams : IUnknown
 {
-    HRESULT GetParam(uint, float*);
-    HRESULT SetParam(uint, float);
-    HRESULT AddEnvelope(uint, uint, MP_ENVELOPE_SEGMENT*);
-    HRESULT FlushEnvelope(uint, long, long);
-    HRESULT SetTimeFormat(GUID, uint);
+    HRESULT GetParam(uint dwParamIndex, float* pValue);
+    HRESULT SetParam(uint dwParamIndex, float value);
+    HRESULT AddEnvelope(uint dwParamIndex, uint cSegments, MP_ENVELOPE_SEGMENT* pEnvelopeSegments);
+    HRESULT FlushEnvelope(uint dwParamIndex, long refTimeStart, long refTimeEnd);
+    HRESULT SetTimeFormat(GUID guidTimeFormat, uint mpTimeData);
 }
 struct VFW_FILTERLIST
 {
@@ -7064,19 +7057,19 @@ struct DXVA2_VIDEOPROCESSBLT
     DXVA2_VIDEOSAMPLE* pSrcSurfaces;
     uint NumSrcSurfaces;
 }
-alias PDXVA2SW_GETVIDEOPROCESSORRENDERTARGETCOUNT = HRESULT function(const(DXVA2_VideoDesc)*, uint*);
-alias PDXVA2SW_GETVIDEOPROCESSORRENDERTARGETS = HRESULT function(const(DXVA2_VideoDesc)*, uint, D3DFORMAT*);
-alias PDXVA2SW_GETVIDEOPROCESSORCAPS = HRESULT function(const(DXVA2_VideoDesc)*, D3DFORMAT, DXVA2_VideoProcessorCaps*);
-alias PDXVA2SW_GETVIDEOPROCESSORSUBSTREAMFORMATCOUNT = HRESULT function(const(DXVA2_VideoDesc)*, D3DFORMAT, uint*);
-alias PDXVA2SW_GETVIDEOPROCESSORSUBSTREAMFORMATS = HRESULT function(const(DXVA2_VideoDesc)*, D3DFORMAT, uint, D3DFORMAT*);
-alias PDXVA2SW_GETPROCAMPRANGE = HRESULT function(const(DXVA2_VideoDesc)*, D3DFORMAT, uint, DXVA2_ValueRange*);
-alias PDXVA2SW_GETFILTERPROPERTYRANGE = HRESULT function(const(DXVA2_VideoDesc)*, D3DFORMAT, uint, DXVA2_ValueRange*);
-alias PDXVA2SW_CREATEVIDEOPROCESSDEVICE = HRESULT function(IDirect3DDevice9, const(DXVA2_VideoDesc)*, D3DFORMAT, uint, HANDLE*);
-alias PDXVA2SW_DESTROYVIDEOPROCESSDEVICE = HRESULT function(HANDLE);
-alias PDXVA2SW_VIDEOPROCESSBEGINFRAME = HRESULT function(HANDLE);
-alias PDXVA2SW_VIDEOPROCESSENDFRAME = HRESULT function(HANDLE, HANDLE*);
-alias PDXVA2SW_VIDEOPROCESSSETRENDERTARGET = HRESULT function(HANDLE, IDirect3DSurface9);
-alias PDXVA2SW_VIDEOPROCESSBLT = HRESULT function(HANDLE, const(DXVA2_VIDEOPROCESSBLT)*);
+alias PDXVA2SW_GETVIDEOPROCESSORRENDERTARGETCOUNT = HRESULT function(const(DXVA2_VideoDesc)* pVideoDesc, uint* pCount);
+alias PDXVA2SW_GETVIDEOPROCESSORRENDERTARGETS = HRESULT function(const(DXVA2_VideoDesc)* pVideoDesc, uint Count, D3DFORMAT* pFormats);
+alias PDXVA2SW_GETVIDEOPROCESSORCAPS = HRESULT function(const(DXVA2_VideoDesc)* pVideoDesc, D3DFORMAT RenderTargetFormat, DXVA2_VideoProcessorCaps* pCaps);
+alias PDXVA2SW_GETVIDEOPROCESSORSUBSTREAMFORMATCOUNT = HRESULT function(const(DXVA2_VideoDesc)* pVideoDesc, D3DFORMAT RenderTargetFormat, uint* pCount);
+alias PDXVA2SW_GETVIDEOPROCESSORSUBSTREAMFORMATS = HRESULT function(const(DXVA2_VideoDesc)* pVideoDesc, D3DFORMAT RenderTargetFormat, uint Count, D3DFORMAT* pFormats);
+alias PDXVA2SW_GETPROCAMPRANGE = HRESULT function(const(DXVA2_VideoDesc)* pVideoDesc, D3DFORMAT RenderTargetFormat, uint ProcAmpCap, DXVA2_ValueRange* pRange);
+alias PDXVA2SW_GETFILTERPROPERTYRANGE = HRESULT function(const(DXVA2_VideoDesc)* pVideoDesc, D3DFORMAT RenderTargetFormat, uint FilterSetting, DXVA2_ValueRange* pRange);
+alias PDXVA2SW_CREATEVIDEOPROCESSDEVICE = HRESULT function(IDirect3DDevice9 pD3DD9, const(DXVA2_VideoDesc)* pVideoDesc, D3DFORMAT RenderTargetFormat, uint MaxSubStreams, HANDLE* phDevice);
+alias PDXVA2SW_DESTROYVIDEOPROCESSDEVICE = HRESULT function(HANDLE hDevice);
+alias PDXVA2SW_VIDEOPROCESSBEGINFRAME = HRESULT function(HANDLE hDevice);
+alias PDXVA2SW_VIDEOPROCESSENDFRAME = HRESULT function(HANDLE hDevice, HANDLE* pHandleComplete);
+alias PDXVA2SW_VIDEOPROCESSSETRENDERTARGET = HRESULT function(HANDLE hDevice, IDirect3DSurface9 pRenderTarget);
+alias PDXVA2SW_VIDEOPROCESSBLT = HRESULT function(HANDLE hDevice, const(DXVA2_VIDEOPROCESSBLT)* pBlt);
 struct DXVA2SW_CALLBACKS
 {
     uint Size;
@@ -7160,17 +7153,17 @@ enum : int
 enum IID_IAMPlayListItem = GUID(0x56a868ff, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IAMPlayListItem : IUnknown
 {
-    HRESULT GetFlags(uint*);
-    HRESULT GetSourceCount(uint*);
-    HRESULT GetSourceURL(uint, BSTR*);
-    HRESULT GetSourceStart(uint, long*);
-    HRESULT GetSourceDuration(uint, long*);
-    HRESULT GetSourceStartMarker(uint, uint*);
-    HRESULT GetSourceEndMarker(uint, uint*);
-    HRESULT GetSourceStartMarkerName(uint, BSTR*);
-    HRESULT GetSourceEndMarkerName(uint, BSTR*);
-    HRESULT GetLinkURL(BSTR*);
-    HRESULT GetScanDuration(uint, long*);
+    HRESULT GetFlags(uint* pdwFlags);
+    HRESULT GetSourceCount(uint* pdwSources);
+    HRESULT GetSourceURL(uint dwSourceIndex, BSTR* pbstrURL);
+    HRESULT GetSourceStart(uint dwSourceIndex, long* prtStart);
+    HRESULT GetSourceDuration(uint dwSourceIndex, long* prtDuration);
+    HRESULT GetSourceStartMarker(uint dwSourceIndex, uint* pdwMarker);
+    HRESULT GetSourceEndMarker(uint dwSourceIndex, uint* pdwMarker);
+    HRESULT GetSourceStartMarkerName(uint dwSourceIndex, BSTR* pbstrStartMarker);
+    HRESULT GetSourceEndMarkerName(uint dwSourceIndex, BSTR* pbstrEndMarker);
+    HRESULT GetLinkURL(BSTR* pbstrURL);
+    HRESULT GetScanDuration(uint dwSourceIndex, long* prtScanDuration);
 }
 alias AMPlayListFlags = int;
 enum : int
@@ -7192,16 +7185,16 @@ enum : int
 enum IID_IAMPlayList = GUID(0x56a868fe, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IAMPlayList : IUnknown
 {
-    HRESULT GetFlags(uint*);
-    HRESULT GetItemCount(uint*);
-    HRESULT GetItem(uint, IAMPlayListItem*);
-    HRESULT GetNamedEvent(PWSTR, uint, IAMPlayListItem*, uint*);
-    HRESULT GetRepeatInfo(uint*, uint*, uint*);
+    HRESULT GetFlags(uint* pdwFlags);
+    HRESULT GetItemCount(uint* pdwItems);
+    HRESULT GetItem(uint dwItemIndex, IAMPlayListItem* ppItem);
+    HRESULT GetNamedEvent(PWSTR pwszEventName, uint dwItemIndex, IAMPlayListItem* ppItem, uint* pdwFlags);
+    HRESULT GetRepeatInfo(uint* pdwRepeatCount, uint* pdwRepeatStart, uint* pdwRepeatEnd);
 }
 enum IID_ISpecifyParticularPages = GUID(0x4c437b91, 0x6e9e, 0x11d1, [0xa7, 0x4, 0x0, 0x60, 0x97, 0xc4, 0xe4, 0x76]);
 interface ISpecifyParticularPages : IUnknown
 {
-    HRESULT GetPages(const(GUID)*, CAUUID*);
+    HRESULT GetPages(const(GUID)* guidWhatPages, CAUUID* pPages);
 }
 enum IID_IAMRebuild = GUID(0x2ef04dd, 0x7580, 0x11d1, [0xbe, 0xce, 0x0, 0xc0, 0x4f, 0xb6, 0xe9, 0x37]);
 interface IAMRebuild : IUnknown
@@ -7211,8 +7204,8 @@ interface IAMRebuild : IUnknown
 enum IID_IBufferingTime = GUID(0x1e00486a, 0x78dd, 0x11d2, [0x8d, 0xd3, 0x0, 0x60, 0x97, 0xc9, 0xa2, 0xb2]);
 interface IBufferingTime : IUnknown
 {
-    HRESULT GetBufferingTime(uint*);
-    HRESULT SetBufferingTime(uint);
+    HRESULT GetBufferingTime(uint* pdwMilliseconds);
+    HRESULT SetBufferingTime(uint dwMilliseconds);
 }
 struct MPEG1WAVEFORMAT
 {
@@ -7255,15 +7248,15 @@ struct HEAACWAVEFORMAT
 enum IID_IWMCodecAMVideoAccelerator = GUID(0xd98ee251, 0x34e0, 0x4a2d, [0x93, 0x12, 0x9b, 0x4c, 0x78, 0x8d, 0x9f, 0xa1]);
 interface IWMCodecAMVideoAccelerator : IUnknown
 {
-    HRESULT SetAcceleratorInterface(IAMVideoAccelerator);
-    HRESULT NegotiateConnection(AM_MEDIA_TYPE*);
-    HRESULT SetPlayerNotify(IWMPlayerTimestampHook);
+    HRESULT SetAcceleratorInterface(IAMVideoAccelerator pIAMVA);
+    HRESULT NegotiateConnection(AM_MEDIA_TYPE* pMediaType);
+    HRESULT SetPlayerNotify(IWMPlayerTimestampHook pHook);
 }
 enum IID_IWMCodecVideoAccelerator = GUID(0x990641b0, 0x739f, 0x4e94, [0xa8, 0x8, 0x98, 0x88, 0xda, 0x8f, 0x75, 0xaf]);
 interface IWMCodecVideoAccelerator : IUnknown
 {
-    HRESULT NegotiateConnection(IAMVideoAccelerator, AM_MEDIA_TYPE*);
-    HRESULT SetPlayerNotify(IWMPlayerTimestampHook);
+    HRESULT NegotiateConnection(IAMVideoAccelerator pIAMVA, AM_MEDIA_TYPE* pMediaType);
+    HRESULT SetPlayerNotify(IWMPlayerTimestampHook pHook);
 }
 alias VIDEOENCODER_BITRATE_MODE = int;
 enum : int

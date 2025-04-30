@@ -442,326 +442,326 @@ enum : int
 enum IID_IMbnConnection = GUID(0xdcbbbab6, 0x200d, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnConnection : IUnknown
 {
-    HRESULT get_ConnectionID(BSTR*);
-    HRESULT get_InterfaceID(BSTR*);
-    HRESULT Connect(MBN_CONNECTION_MODE, const(wchar)*, uint*);
-    HRESULT Disconnect(uint*);
-    HRESULT GetConnectionState(MBN_ACTIVATION_STATE*, BSTR*);
-    HRESULT GetVoiceCallState(MBN_VOICE_CALL_STATE*);
-    HRESULT GetActivationNetworkError(uint*);
+    HRESULT get_ConnectionID(BSTR* ConnectionID);
+    HRESULT get_InterfaceID(BSTR* InterfaceID);
+    HRESULT Connect(MBN_CONNECTION_MODE connectionMode, const(wchar)* strProfile, uint* requestID);
+    HRESULT Disconnect(uint* requestID);
+    HRESULT GetConnectionState(MBN_ACTIVATION_STATE* ConnectionState, BSTR* ProfileName);
+    HRESULT GetVoiceCallState(MBN_VOICE_CALL_STATE* voiceCallState);
+    HRESULT GetActivationNetworkError(uint* networkError);
 }
 enum IID_IMbnConnectionEvents = GUID(0xdcbbbab6, 0x200e, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnConnectionEvents : IUnknown
 {
-    HRESULT OnConnectComplete(IMbnConnection, uint, HRESULT);
-    HRESULT OnDisconnectComplete(IMbnConnection, uint, HRESULT);
-    HRESULT OnConnectStateChange(IMbnConnection);
-    HRESULT OnVoiceCallStateChange(IMbnConnection);
+    HRESULT OnConnectComplete(IMbnConnection newConnection, uint requestID, HRESULT status);
+    HRESULT OnDisconnectComplete(IMbnConnection newConnection, uint requestID, HRESULT status);
+    HRESULT OnConnectStateChange(IMbnConnection newConnection);
+    HRESULT OnVoiceCallStateChange(IMbnConnection newConnection);
 }
 enum IID_IMbnInterface = GUID(0xdcbbbab6, 0x2001, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnInterface : IUnknown
 {
-    HRESULT get_InterfaceID(BSTR*);
-    HRESULT GetInterfaceCapability(MBN_INTERFACE_CAPS*);
-    HRESULT GetSubscriberInformation(IMbnSubscriberInformation*);
-    HRESULT GetReadyState(MBN_READY_STATE*);
-    HRESULT InEmergencyMode(VARIANT_BOOL*);
-    HRESULT GetHomeProvider(MBN_PROVIDER*);
-    HRESULT GetPreferredProviders(SAFEARRAY**);
-    HRESULT SetPreferredProviders(SAFEARRAY*, uint*);
-    HRESULT GetVisibleProviders(uint*, SAFEARRAY**);
-    HRESULT ScanNetwork(uint*);
-    HRESULT GetConnection(IMbnConnection*);
+    HRESULT get_InterfaceID(BSTR* InterfaceID);
+    HRESULT GetInterfaceCapability(MBN_INTERFACE_CAPS* interfaceCaps);
+    HRESULT GetSubscriberInformation(IMbnSubscriberInformation* subscriberInformation);
+    HRESULT GetReadyState(MBN_READY_STATE* readyState);
+    HRESULT InEmergencyMode(VARIANT_BOOL* emergencyMode);
+    HRESULT GetHomeProvider(MBN_PROVIDER* homeProvider);
+    HRESULT GetPreferredProviders(SAFEARRAY** preferredProviders);
+    HRESULT SetPreferredProviders(SAFEARRAY* preferredProviders, uint* requestID);
+    HRESULT GetVisibleProviders(uint* age, SAFEARRAY** visibleProviders);
+    HRESULT ScanNetwork(uint* requestID);
+    HRESULT GetConnection(IMbnConnection* mbnConnection);
 }
 enum IID_IMbnInterfaceEvents = GUID(0xdcbbbab6, 0x2002, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnInterfaceEvents : IUnknown
 {
-    HRESULT OnInterfaceCapabilityAvailable(IMbnInterface);
-    HRESULT OnSubscriberInformationChange(IMbnInterface);
-    HRESULT OnReadyStateChange(IMbnInterface);
-    HRESULT OnEmergencyModeChange(IMbnInterface);
-    HRESULT OnHomeProviderAvailable(IMbnInterface);
-    HRESULT OnPreferredProvidersChange(IMbnInterface);
-    HRESULT OnSetPreferredProvidersComplete(IMbnInterface, uint, HRESULT);
-    HRESULT OnScanNetworkComplete(IMbnInterface, uint, HRESULT);
+    HRESULT OnInterfaceCapabilityAvailable(IMbnInterface newInterface);
+    HRESULT OnSubscriberInformationChange(IMbnInterface newInterface);
+    HRESULT OnReadyStateChange(IMbnInterface newInterface);
+    HRESULT OnEmergencyModeChange(IMbnInterface newInterface);
+    HRESULT OnHomeProviderAvailable(IMbnInterface newInterface);
+    HRESULT OnPreferredProvidersChange(IMbnInterface newInterface);
+    HRESULT OnSetPreferredProvidersComplete(IMbnInterface newInterface, uint requestID, HRESULT status);
+    HRESULT OnScanNetworkComplete(IMbnInterface newInterface, uint requestID, HRESULT status);
 }
 enum IID_IMbnInterfaceManager = GUID(0xdcbbbab6, 0x201b, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnInterfaceManager : IUnknown
 {
-    HRESULT GetInterface(const(wchar)*, IMbnInterface*);
-    HRESULT GetInterfaces(SAFEARRAY**);
+    HRESULT GetInterface(const(wchar)* interfaceID, IMbnInterface* mbnInterface);
+    HRESULT GetInterfaces(SAFEARRAY** mbnInterfaces);
 }
 enum IID_IMbnInterfaceManagerEvents = GUID(0xdcbbbab6, 0x201c, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnInterfaceManagerEvents : IUnknown
 {
-    HRESULT OnInterfaceArrival(IMbnInterface);
-    HRESULT OnInterfaceRemoval(IMbnInterface);
+    HRESULT OnInterfaceArrival(IMbnInterface newInterface);
+    HRESULT OnInterfaceRemoval(IMbnInterface oldInterface);
 }
 enum IID_IMbnRegistration = GUID(0xdcbbbab6, 0x2009, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnRegistration : IUnknown
 {
-    HRESULT GetRegisterState(MBN_REGISTER_STATE*);
-    HRESULT GetRegisterMode(MBN_REGISTER_MODE*);
-    HRESULT GetProviderID(BSTR*);
-    HRESULT GetProviderName(BSTR*);
-    HRESULT GetRoamingText(BSTR*);
-    HRESULT GetAvailableDataClasses(uint*);
-    HRESULT GetCurrentDataClass(uint*);
-    HRESULT GetRegistrationNetworkError(uint*);
-    HRESULT GetPacketAttachNetworkError(uint*);
-    HRESULT SetRegisterMode(MBN_REGISTER_MODE, const(wchar)*, uint, uint*);
+    HRESULT GetRegisterState(MBN_REGISTER_STATE* registerState);
+    HRESULT GetRegisterMode(MBN_REGISTER_MODE* registerMode);
+    HRESULT GetProviderID(BSTR* providerID);
+    HRESULT GetProviderName(BSTR* providerName);
+    HRESULT GetRoamingText(BSTR* roamingText);
+    HRESULT GetAvailableDataClasses(uint* availableDataClasses);
+    HRESULT GetCurrentDataClass(uint* currentDataClass);
+    HRESULT GetRegistrationNetworkError(uint* registrationNetworkError);
+    HRESULT GetPacketAttachNetworkError(uint* packetAttachNetworkError);
+    HRESULT SetRegisterMode(MBN_REGISTER_MODE registerMode, const(wchar)* providerID, uint dataClass, uint* requestID);
 }
 enum IID_IMbnRegistrationEvents = GUID(0xdcbbbab6, 0x200a, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnRegistrationEvents : IUnknown
 {
-    HRESULT OnRegisterModeAvailable(IMbnRegistration);
-    HRESULT OnRegisterStateChange(IMbnRegistration);
-    HRESULT OnPacketServiceStateChange(IMbnRegistration);
-    HRESULT OnSetRegisterModeComplete(IMbnRegistration, uint, HRESULT);
+    HRESULT OnRegisterModeAvailable(IMbnRegistration newInterface);
+    HRESULT OnRegisterStateChange(IMbnRegistration newInterface);
+    HRESULT OnPacketServiceStateChange(IMbnRegistration newInterface);
+    HRESULT OnSetRegisterModeComplete(IMbnRegistration newInterface, uint requestID, HRESULT status);
 }
 enum IID_IMbnConnectionManager = GUID(0xdcbbbab6, 0x201d, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnConnectionManager : IUnknown
 {
-    HRESULT GetConnection(const(wchar)*, IMbnConnection*);
-    HRESULT GetConnections(SAFEARRAY**);
+    HRESULT GetConnection(const(wchar)* connectionID, IMbnConnection* mbnConnection);
+    HRESULT GetConnections(SAFEARRAY** mbnConnections);
 }
 enum IID_IMbnConnectionManagerEvents = GUID(0xdcbbbab6, 0x201e, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnConnectionManagerEvents : IUnknown
 {
-    HRESULT OnConnectionArrival(IMbnConnection);
-    HRESULT OnConnectionRemoval(IMbnConnection);
+    HRESULT OnConnectionArrival(IMbnConnection newConnection);
+    HRESULT OnConnectionRemoval(IMbnConnection oldConnection);
 }
 enum IID_IMbnPinManager = GUID(0xdcbbbab6, 0x2005, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnPinManager : IUnknown
 {
-    HRESULT GetPinList(SAFEARRAY**);
-    HRESULT GetPin(MBN_PIN_TYPE, IMbnPin*);
-    HRESULT GetPinState(uint*);
+    HRESULT GetPinList(SAFEARRAY** pinList);
+    HRESULT GetPin(MBN_PIN_TYPE pinType, IMbnPin* pin);
+    HRESULT GetPinState(uint* requestID);
 }
 enum IID_IMbnPinManagerEvents = GUID(0xdcbbbab6, 0x2006, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnPinManagerEvents : IUnknown
 {
-    HRESULT OnPinListAvailable(IMbnPinManager);
-    HRESULT OnGetPinStateComplete(IMbnPinManager, MBN_PIN_INFO, uint, HRESULT);
+    HRESULT OnPinListAvailable(IMbnPinManager pinManager);
+    HRESULT OnGetPinStateComplete(IMbnPinManager pinManager, MBN_PIN_INFO pinInfo, uint requestID, HRESULT status);
 }
 enum IID_IMbnPinEvents = GUID(0xdcbbbab6, 0x2008, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnPinEvents : IUnknown
 {
-    HRESULT OnEnableComplete(IMbnPin, MBN_PIN_INFO*, uint, HRESULT);
-    HRESULT OnDisableComplete(IMbnPin, MBN_PIN_INFO*, uint, HRESULT);
-    HRESULT OnEnterComplete(IMbnPin, MBN_PIN_INFO*, uint, HRESULT);
-    HRESULT OnChangeComplete(IMbnPin, MBN_PIN_INFO*, uint, HRESULT);
-    HRESULT OnUnblockComplete(IMbnPin, MBN_PIN_INFO*, uint, HRESULT);
+    HRESULT OnEnableComplete(IMbnPin pin, MBN_PIN_INFO* pinInfo, uint requestID, HRESULT status);
+    HRESULT OnDisableComplete(IMbnPin pin, MBN_PIN_INFO* pinInfo, uint requestID, HRESULT status);
+    HRESULT OnEnterComplete(IMbnPin Pin, MBN_PIN_INFO* pinInfo, uint requestID, HRESULT status);
+    HRESULT OnChangeComplete(IMbnPin Pin, MBN_PIN_INFO* pinInfo, uint requestID, HRESULT status);
+    HRESULT OnUnblockComplete(IMbnPin Pin, MBN_PIN_INFO* pinInfo, uint requestID, HRESULT status);
 }
 enum IID_IMbnSubscriberInformation = GUID(0x459ecc43, 0xbcf5, 0x11dc, [0xa8, 0xa8, 0x0, 0x13, 0x21, 0xf1, 0x40, 0x5f]);
 interface IMbnSubscriberInformation : IUnknown
 {
-    HRESULT get_SubscriberID(BSTR*);
-    HRESULT get_SimIccID(BSTR*);
-    HRESULT get_TelephoneNumbers(SAFEARRAY**);
+    HRESULT get_SubscriberID(BSTR* SubscriberID);
+    HRESULT get_SimIccID(BSTR* SimIccID);
+    HRESULT get_TelephoneNumbers(SAFEARRAY** TelephoneNumbers);
 }
 enum IID_IMbnSignal = GUID(0xdcbbbab6, 0x2003, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnSignal : IUnknown
 {
-    HRESULT GetSignalStrength(uint*);
-    HRESULT GetSignalError(uint*);
+    HRESULT GetSignalStrength(uint* signalStrength);
+    HRESULT GetSignalError(uint* signalError);
 }
 enum IID_IMbnSignalEvents = GUID(0xdcbbbab6, 0x2004, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnSignalEvents : IUnknown
 {
-    HRESULT OnSignalStateChange(IMbnSignal);
+    HRESULT OnSignalStateChange(IMbnSignal newInterface);
 }
 enum IID_IMbnConnectionContext = GUID(0xdcbbbab6, 0x200b, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnConnectionContext : IUnknown
 {
-    HRESULT GetProvisionedContexts(SAFEARRAY**);
-    HRESULT SetProvisionedContext(MBN_CONTEXT, const(wchar)*, uint*);
+    HRESULT GetProvisionedContexts(SAFEARRAY** provisionedContexts);
+    HRESULT SetProvisionedContext(MBN_CONTEXT provisionedContexts, const(wchar)* providerID, uint* requestID);
 }
 enum IID_IMbnConnectionContextEvents = GUID(0xdcbbbab6, 0x200c, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnConnectionContextEvents : IUnknown
 {
-    HRESULT OnProvisionedContextListChange(IMbnConnectionContext);
-    HRESULT OnSetProvisionedContextComplete(IMbnConnectionContext, uint, HRESULT);
+    HRESULT OnProvisionedContextListChange(IMbnConnectionContext newInterface);
+    HRESULT OnSetProvisionedContextComplete(IMbnConnectionContext newInterface, uint requestID, HRESULT status);
 }
 enum IID_IMbnConnectionProfileManager = GUID(0xdcbbbab6, 0x200f, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnConnectionProfileManager : IUnknown
 {
-    HRESULT GetConnectionProfiles(IMbnInterface, SAFEARRAY**);
-    HRESULT GetConnectionProfile(IMbnInterface, const(wchar)*, IMbnConnectionProfile*);
-    HRESULT CreateConnectionProfile(const(wchar)*);
+    HRESULT GetConnectionProfiles(IMbnInterface mbnInterface, SAFEARRAY** connectionProfiles);
+    HRESULT GetConnectionProfile(IMbnInterface mbnInterface, const(wchar)* profileName, IMbnConnectionProfile* connectionProfile);
+    HRESULT CreateConnectionProfile(const(wchar)* xmlProfile);
 }
 enum IID_IMbnConnectionProfile = GUID(0xdcbbbab6, 0x2010, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnConnectionProfile : IUnknown
 {
-    HRESULT GetProfileXmlData(BSTR*);
-    HRESULT UpdateProfile(const(wchar)*);
+    HRESULT GetProfileXmlData(BSTR* profileData);
+    HRESULT UpdateProfile(const(wchar)* strProfile);
     HRESULT Delete();
 }
 enum IID_IMbnConnectionProfileEvents = GUID(0xdcbbbab6, 0x2011, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnConnectionProfileEvents : IUnknown
 {
-    HRESULT OnProfileUpdate(IMbnConnectionProfile);
+    HRESULT OnProfileUpdate(IMbnConnectionProfile newProfile);
 }
 enum IID_IMbnSmsConfiguration = GUID(0xdcbbbab6, 0x2012, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnSmsConfiguration : IUnknown
 {
-    HRESULT get_ServiceCenterAddress(BSTR*);
-    HRESULT put_ServiceCenterAddress(const(wchar)*);
-    HRESULT get_MaxMessageIndex(uint*);
-    HRESULT get_CdmaShortMsgSize(uint*);
-    HRESULT get_SmsFormat(MBN_SMS_FORMAT*);
-    HRESULT put_SmsFormat(MBN_SMS_FORMAT);
+    HRESULT get_ServiceCenterAddress(BSTR* scAddress);
+    HRESULT put_ServiceCenterAddress(const(wchar)* scAddress);
+    HRESULT get_MaxMessageIndex(uint* index);
+    HRESULT get_CdmaShortMsgSize(uint* shortMsgSize);
+    HRESULT get_SmsFormat(MBN_SMS_FORMAT* smsFormat);
+    HRESULT put_SmsFormat(MBN_SMS_FORMAT smsFormat);
 }
 enum IID_IMbnSmsReadMsgPdu = GUID(0xdcbbbab6, 0x2013, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnSmsReadMsgPdu : IUnknown
 {
-    HRESULT get_Index(uint*);
-    HRESULT get_Status(MBN_MSG_STATUS*);
-    HRESULT get_PduData(BSTR*);
-    HRESULT get_Message(SAFEARRAY**);
+    HRESULT get_Index(uint* Index);
+    HRESULT get_Status(MBN_MSG_STATUS* Status);
+    HRESULT get_PduData(BSTR* PduData);
+    HRESULT get_Message(SAFEARRAY** Message);
 }
 enum IID_IMbnSmsReadMsgTextCdma = GUID(0xdcbbbab6, 0x2014, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnSmsReadMsgTextCdma : IUnknown
 {
-    HRESULT get_Index(uint*);
-    HRESULT get_Status(MBN_MSG_STATUS*);
-    HRESULT get_Address(BSTR*);
-    HRESULT get_Timestamp(BSTR*);
-    HRESULT get_EncodingID(MBN_SMS_CDMA_ENCODING*);
-    HRESULT get_LanguageID(MBN_SMS_CDMA_LANG*);
-    HRESULT get_SizeInCharacters(uint*);
-    HRESULT get_Message(SAFEARRAY**);
+    HRESULT get_Index(uint* Index);
+    HRESULT get_Status(MBN_MSG_STATUS* Status);
+    HRESULT get_Address(BSTR* Address);
+    HRESULT get_Timestamp(BSTR* Timestamp);
+    HRESULT get_EncodingID(MBN_SMS_CDMA_ENCODING* EncodingID);
+    HRESULT get_LanguageID(MBN_SMS_CDMA_LANG* LanguageID);
+    HRESULT get_SizeInCharacters(uint* SizeInCharacters);
+    HRESULT get_Message(SAFEARRAY** Message);
 }
 enum IID_IMbnSms = GUID(0xdcbbbab6, 0x2015, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnSms : IUnknown
 {
-    HRESULT GetSmsConfiguration(IMbnSmsConfiguration*);
-    HRESULT SetSmsConfiguration(IMbnSmsConfiguration, uint*);
-    HRESULT SmsSendPdu(const(wchar)*, ubyte, uint*);
-    HRESULT SmsSendCdma(const(wchar)*, MBN_SMS_CDMA_ENCODING, MBN_SMS_CDMA_LANG, uint, SAFEARRAY*, uint*);
-    HRESULT SmsSendCdmaPdu(SAFEARRAY*, uint*);
-    HRESULT SmsRead(MBN_SMS_FILTER*, MBN_SMS_FORMAT, uint*);
-    HRESULT SmsDelete(MBN_SMS_FILTER*, uint*);
-    HRESULT GetSmsStatus(MBN_SMS_STATUS_INFO*);
+    HRESULT GetSmsConfiguration(IMbnSmsConfiguration* smsConfiguration);
+    HRESULT SetSmsConfiguration(IMbnSmsConfiguration smsConfiguration, uint* requestID);
+    HRESULT SmsSendPdu(const(wchar)* pduData, ubyte size, uint* requestID);
+    HRESULT SmsSendCdma(const(wchar)* address, MBN_SMS_CDMA_ENCODING encoding, MBN_SMS_CDMA_LANG language, uint sizeInCharacters, SAFEARRAY* message, uint* requestID);
+    HRESULT SmsSendCdmaPdu(SAFEARRAY* message, uint* requestID);
+    HRESULT SmsRead(MBN_SMS_FILTER* smsFilter, MBN_SMS_FORMAT smsFormat, uint* requestID);
+    HRESULT SmsDelete(MBN_SMS_FILTER* smsFilter, uint* requestID);
+    HRESULT GetSmsStatus(MBN_SMS_STATUS_INFO* smsStatusInfo);
 }
 enum IID_IMbnSmsEvents = GUID(0xdcbbbab6, 0x2016, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnSmsEvents : IUnknown
 {
-    HRESULT OnSmsConfigurationChange(IMbnSms);
-    HRESULT OnSetSmsConfigurationComplete(IMbnSms, uint, HRESULT);
-    HRESULT OnSmsSendComplete(IMbnSms, uint, HRESULT);
-    HRESULT OnSmsReadComplete(IMbnSms, MBN_SMS_FORMAT, SAFEARRAY*, VARIANT_BOOL, uint, HRESULT);
-    HRESULT OnSmsNewClass0Message(IMbnSms, MBN_SMS_FORMAT, SAFEARRAY*);
-    HRESULT OnSmsDeleteComplete(IMbnSms, uint, HRESULT);
-    HRESULT OnSmsStatusChange(IMbnSms);
+    HRESULT OnSmsConfigurationChange(IMbnSms sms);
+    HRESULT OnSetSmsConfigurationComplete(IMbnSms sms, uint requestID, HRESULT status);
+    HRESULT OnSmsSendComplete(IMbnSms sms, uint requestID, HRESULT status);
+    HRESULT OnSmsReadComplete(IMbnSms sms, MBN_SMS_FORMAT smsFormat, SAFEARRAY* readMsgs, VARIANT_BOOL moreMsgs, uint requestID, HRESULT status);
+    HRESULT OnSmsNewClass0Message(IMbnSms sms, MBN_SMS_FORMAT smsFormat, SAFEARRAY* readMsgs);
+    HRESULT OnSmsDeleteComplete(IMbnSms sms, uint requestID, HRESULT status);
+    HRESULT OnSmsStatusChange(IMbnSms sms);
 }
 enum IID_IMbnServiceActivation = GUID(0xdcbbbab6, 0x2017, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnServiceActivation : IUnknown
 {
-    HRESULT Activate(SAFEARRAY*, uint*);
+    HRESULT Activate(SAFEARRAY* vendorSpecificData, uint* requestID);
 }
 enum IID_IMbnServiceActivationEvents = GUID(0xdcbbbab6, 0x2018, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnServiceActivationEvents : IUnknown
 {
-    HRESULT OnActivationComplete(IMbnServiceActivation, SAFEARRAY*, uint, HRESULT, uint);
+    HRESULT OnActivationComplete(IMbnServiceActivation serviceActivation, SAFEARRAY* vendorSpecificData, uint requestID, HRESULT status, uint networkError);
 }
 enum IID_IMbnVendorSpecificOperation = GUID(0xdcbbbab6, 0x2019, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnVendorSpecificOperation : IUnknown
 {
-    HRESULT SetVendorSpecific(SAFEARRAY*, uint*);
+    HRESULT SetVendorSpecific(SAFEARRAY* vendorSpecificData, uint* requestID);
 }
 enum IID_IMbnVendorSpecificEvents = GUID(0xdcbbbab6, 0x201a, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnVendorSpecificEvents : IUnknown
 {
-    HRESULT OnEventNotification(IMbnVendorSpecificOperation, SAFEARRAY*);
-    HRESULT OnSetVendorSpecificComplete(IMbnVendorSpecificOperation, SAFEARRAY*, uint);
+    HRESULT OnEventNotification(IMbnVendorSpecificOperation vendorOperation, SAFEARRAY* vendorSpecificData);
+    HRESULT OnSetVendorSpecificComplete(IMbnVendorSpecificOperation vendorOperation, SAFEARRAY* vendorSpecificData, uint requestID);
 }
 enum IID_IMbnConnectionProfileManagerEvents = GUID(0xdcbbbab6, 0x201f, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnConnectionProfileManagerEvents : IUnknown
 {
-    HRESULT OnConnectionProfileArrival(IMbnConnectionProfile);
-    HRESULT OnConnectionProfileRemoval(IMbnConnectionProfile);
+    HRESULT OnConnectionProfileArrival(IMbnConnectionProfile newConnectionProfile);
+    HRESULT OnConnectionProfileRemoval(IMbnConnectionProfile oldConnectionProfile);
 }
 enum IID_IMbnRadio = GUID(0xdccccab6, 0x201f, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnRadio : IUnknown
 {
-    HRESULT get_SoftwareRadioState(MBN_RADIO*);
-    HRESULT get_HardwareRadioState(MBN_RADIO*);
-    HRESULT SetSoftwareRadioState(MBN_RADIO, uint*);
+    HRESULT get_SoftwareRadioState(MBN_RADIO* SoftwareRadioState);
+    HRESULT get_HardwareRadioState(MBN_RADIO* HardwareRadioState);
+    HRESULT SetSoftwareRadioState(MBN_RADIO radioState, uint* requestID);
 }
 enum IID_IMbnRadioEvents = GUID(0xdcdddab6, 0x201f, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnRadioEvents : IUnknown
 {
-    HRESULT OnRadioStateChange(IMbnRadio);
-    HRESULT OnSetSoftwareRadioStateComplete(IMbnRadio, uint, HRESULT);
+    HRESULT OnRadioStateChange(IMbnRadio newInterface);
+    HRESULT OnSetSoftwareRadioStateComplete(IMbnRadio newInterface, uint requestID, HRESULT status);
 }
 enum IID_IMbnMultiCarrier = GUID(0xdcbbbab6, 0x2020, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnMultiCarrier : IUnknown
 {
-    HRESULT SetHomeProvider(MBN_PROVIDER2*, uint*);
-    HRESULT GetPreferredProviders(SAFEARRAY**);
-    HRESULT GetVisibleProviders(uint*, SAFEARRAY**);
-    HRESULT GetSupportedCellularClasses(SAFEARRAY**);
-    HRESULT GetCurrentCellularClass(MBN_CELLULAR_CLASS*);
-    HRESULT ScanNetwork(uint*);
+    HRESULT SetHomeProvider(MBN_PROVIDER2* homeProvider, uint* requestID);
+    HRESULT GetPreferredProviders(SAFEARRAY** preferredMulticarrierProviders);
+    HRESULT GetVisibleProviders(uint* age, SAFEARRAY** visibleProviders);
+    HRESULT GetSupportedCellularClasses(SAFEARRAY** cellularClasses);
+    HRESULT GetCurrentCellularClass(MBN_CELLULAR_CLASS* currentCellularClass);
+    HRESULT ScanNetwork(uint* requestID);
 }
 enum IID_IMbnMultiCarrierEvents = GUID(0xdcdddab6, 0x2021, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnMultiCarrierEvents : IUnknown
 {
-    HRESULT OnSetHomeProviderComplete(IMbnMultiCarrier, uint, HRESULT);
-    HRESULT OnCurrentCellularClassChange(IMbnMultiCarrier);
-    HRESULT OnPreferredProvidersChange(IMbnMultiCarrier);
-    HRESULT OnScanNetworkComplete(IMbnMultiCarrier, uint, HRESULT);
-    HRESULT OnInterfaceCapabilityChange(IMbnMultiCarrier);
+    HRESULT OnSetHomeProviderComplete(IMbnMultiCarrier mbnInterface, uint requestID, HRESULT status);
+    HRESULT OnCurrentCellularClassChange(IMbnMultiCarrier mbnInterface);
+    HRESULT OnPreferredProvidersChange(IMbnMultiCarrier mbnInterface);
+    HRESULT OnScanNetworkComplete(IMbnMultiCarrier mbnInterface, uint requestID, HRESULT status);
+    HRESULT OnInterfaceCapabilityChange(IMbnMultiCarrier mbnInterface);
 }
 enum IID_IMbnDeviceServiceStateEvents = GUID(0x5d3ff196, 0x89ee, 0x49d8, [0x8b, 0x60, 0x33, 0xff, 0xdd, 0xff, 0xc5, 0x8d]);
 interface IMbnDeviceServiceStateEvents : IUnknown
 {
-    HRESULT OnSessionsStateChange(BSTR, MBN_DEVICE_SERVICE_SESSIONS_STATE);
+    HRESULT OnSessionsStateChange(BSTR interfaceID, MBN_DEVICE_SERVICE_SESSIONS_STATE stateChange);
 }
 enum IID_IMbnDeviceServicesManager = GUID(0x20a26258, 0x6811, 0x4478, [0xac, 0x1d, 0x13, 0x32, 0x4e, 0x45, 0xe4, 0x1c]);
 interface IMbnDeviceServicesManager : IUnknown
 {
-    HRESULT GetDeviceServicesContext(BSTR, IMbnDeviceServicesContext*);
+    HRESULT GetDeviceServicesContext(BSTR networkInterfaceID, IMbnDeviceServicesContext* mbnDevicesContext);
 }
 enum IID_IMbnDeviceServicesContext = GUID(0xfc5ac347, 0x1592, 0x4068, [0x80, 0xbb, 0x6a, 0x57, 0x58, 0x1, 0x50, 0xd8]);
 interface IMbnDeviceServicesContext : IUnknown
 {
-    HRESULT EnumerateDeviceServices(SAFEARRAY**);
-    HRESULT GetDeviceService(BSTR, IMbnDeviceService*);
-    HRESULT get_MaxCommandSize(uint*);
-    HRESULT get_MaxDataSize(uint*);
+    HRESULT EnumerateDeviceServices(SAFEARRAY** deviceServices);
+    HRESULT GetDeviceService(BSTR deviceServiceID, IMbnDeviceService* mbnDeviceService);
+    HRESULT get_MaxCommandSize(uint* maxCommandSize);
+    HRESULT get_MaxDataSize(uint* maxDataSize);
 }
 enum IID_IMbnDeviceServicesEvents = GUID(0xa900c19, 0x6824, 0x4e97, [0xb7, 0x6e, 0xcf, 0x23, 0x9d, 0xc, 0xa6, 0x42]);
 interface IMbnDeviceServicesEvents : IUnknown
 {
-    HRESULT OnQuerySupportedCommandsComplete(IMbnDeviceService, SAFEARRAY*, HRESULT, uint);
-    HRESULT OnOpenCommandSessionComplete(IMbnDeviceService, HRESULT, uint);
-    HRESULT OnCloseCommandSessionComplete(IMbnDeviceService, HRESULT, uint);
-    HRESULT OnSetCommandComplete(IMbnDeviceService, uint, SAFEARRAY*, HRESULT, uint);
-    HRESULT OnQueryCommandComplete(IMbnDeviceService, uint, SAFEARRAY*, HRESULT, uint);
-    HRESULT OnEventNotification(IMbnDeviceService, uint, SAFEARRAY*);
-    HRESULT OnOpenDataSessionComplete(IMbnDeviceService, HRESULT, uint);
-    HRESULT OnCloseDataSessionComplete(IMbnDeviceService, HRESULT, uint);
-    HRESULT OnWriteDataComplete(IMbnDeviceService, HRESULT, uint);
-    HRESULT OnReadData(IMbnDeviceService, SAFEARRAY*);
-    HRESULT OnInterfaceStateChange(BSTR, MBN_DEVICE_SERVICES_INTERFACE_STATE);
+    HRESULT OnQuerySupportedCommandsComplete(IMbnDeviceService deviceService, SAFEARRAY* commandIDList, HRESULT status, uint requestID);
+    HRESULT OnOpenCommandSessionComplete(IMbnDeviceService deviceService, HRESULT status, uint requestID);
+    HRESULT OnCloseCommandSessionComplete(IMbnDeviceService deviceService, HRESULT status, uint requestID);
+    HRESULT OnSetCommandComplete(IMbnDeviceService deviceService, uint responseID, SAFEARRAY* deviceServiceData, HRESULT status, uint requestID);
+    HRESULT OnQueryCommandComplete(IMbnDeviceService deviceService, uint responseID, SAFEARRAY* deviceServiceData, HRESULT status, uint requestID);
+    HRESULT OnEventNotification(IMbnDeviceService deviceService, uint eventID, SAFEARRAY* deviceServiceData);
+    HRESULT OnOpenDataSessionComplete(IMbnDeviceService deviceService, HRESULT status, uint requestID);
+    HRESULT OnCloseDataSessionComplete(IMbnDeviceService deviceService, HRESULT status, uint requestID);
+    HRESULT OnWriteDataComplete(IMbnDeviceService deviceService, HRESULT status, uint requestID);
+    HRESULT OnReadData(IMbnDeviceService deviceService, SAFEARRAY* deviceServiceData);
+    HRESULT OnInterfaceStateChange(BSTR interfaceID, MBN_DEVICE_SERVICES_INTERFACE_STATE stateChange);
 }
 enum IID_IMbnDeviceService = GUID(0xb3bb9a71, 0xdc70, 0x4be9, [0xa4, 0xda, 0x78, 0x86, 0xae, 0x8b, 0x19, 0x1b]);
 interface IMbnDeviceService : IUnknown
 {
-    HRESULT QuerySupportedCommands(uint*);
-    HRESULT OpenCommandSession(uint*);
-    HRESULT CloseCommandSession(uint*);
-    HRESULT SetCommand(uint, SAFEARRAY*, uint*);
-    HRESULT QueryCommand(uint, SAFEARRAY*, uint*);
-    HRESULT OpenDataSession(uint*);
-    HRESULT CloseDataSession(uint*);
-    HRESULT WriteData(SAFEARRAY*, uint*);
-    HRESULT get_InterfaceID(BSTR*);
-    HRESULT get_DeviceServiceID(BSTR*);
-    HRESULT get_IsCommandSessionOpen(BOOL*);
-    HRESULT get_IsDataSessionOpen(BOOL*);
+    HRESULT QuerySupportedCommands(uint* requestID);
+    HRESULT OpenCommandSession(uint* requestID);
+    HRESULT CloseCommandSession(uint* requestID);
+    HRESULT SetCommand(uint commandID, SAFEARRAY* deviceServiceData, uint* requestID);
+    HRESULT QueryCommand(uint commandID, SAFEARRAY* deviceServiceData, uint* requestID);
+    HRESULT OpenDataSession(uint* requestID);
+    HRESULT CloseDataSession(uint* requestID);
+    HRESULT WriteData(SAFEARRAY* deviceServiceData, uint* requestID);
+    HRESULT get_InterfaceID(BSTR* InterfaceID);
+    HRESULT get_DeviceServiceID(BSTR* DeviceServiceID);
+    HRESULT get_IsCommandSessionOpen(BOOL* value);
+    HRESULT get_IsDataSessionOpen(BOOL* value);
 }
 struct __mbnapi_ReferenceRemainingTypes__
 {
@@ -787,17 +787,17 @@ struct __DummyPinType__
 enum IID_IMbnPin = GUID(0xdcbbbab6, 0x2007, 0x4bbb, [0xaa, 0xee, 0x33, 0x8e, 0x36, 0x8a, 0xf6, 0xfa]);
 interface IMbnPin : IUnknown
 {
-    HRESULT get_PinType(MBN_PIN_TYPE*);
-    HRESULT get_PinFormat(MBN_PIN_FORMAT*);
-    HRESULT get_PinLengthMin(uint*);
-    HRESULT get_PinLengthMax(uint*);
-    HRESULT get_PinMode(MBN_PIN_MODE*);
-    HRESULT Enable(const(wchar)*, uint*);
-    HRESULT Disable(const(wchar)*, uint*);
-    HRESULT Enter(const(wchar)*, uint*);
-    HRESULT Change(const(wchar)*, const(wchar)*, uint*);
-    HRESULT Unblock(const(wchar)*, const(wchar)*, uint*);
-    HRESULT GetPinManager(IMbnPinManager*);
+    HRESULT get_PinType(MBN_PIN_TYPE* PinType);
+    HRESULT get_PinFormat(MBN_PIN_FORMAT* PinFormat);
+    HRESULT get_PinLengthMin(uint* PinLengthMin);
+    HRESULT get_PinLengthMax(uint* PinLengthMax);
+    HRESULT get_PinMode(MBN_PIN_MODE* PinMode);
+    HRESULT Enable(const(wchar)* pin, uint* requestID);
+    HRESULT Disable(const(wchar)* pin, uint* requestID);
+    HRESULT Enter(const(wchar)* pin, uint* requestID);
+    HRESULT Change(const(wchar)* pin, const(wchar)* newPin, uint* requestID);
+    HRESULT Unblock(const(wchar)* puk, const(wchar)* newPin, uint* requestID);
+    HRESULT GetPinManager(IMbnPinManager* pinManager);
 }
 enum CLSID_MbnConnectionProfileManager = GUID(0xbdfee05a, 0x4418, 0x11dd, [0x90, 0xed, 0x0, 0x1c, 0x25, 0x7c, 0xcf, 0xf1]);
 struct MbnConnectionProfileManager

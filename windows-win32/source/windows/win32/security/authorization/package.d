@@ -1,8 +1,8 @@
 module windows.win32.security.authorization;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, HANDLE, HRESULT, HWND, LUID, PSID, PSTR, PWSTR, VARIANT_BOOL, WIN32_ERROR;
-import windows.win32.security : ACE_FLAGS, ACE_HEADER, ACL, GENERIC_MAPPING, OBJECT_SECURITY_INFORMATION, OBJECT_TYPE_LIST, PSECURITY_DESCRIPTOR, SID, SID_AND_ATTRIBUTES, SYSTEM_AUDIT_OBJECT_ACE_FLAGS, TOKEN_GROUPS;
+import windows.win32.foundation : BOOL, BSTR, HANDLE, HRESULT, HWND, LUID, PSTR, PWSTR, VARIANT_BOOL, WIN32_ERROR;
+import windows.win32.security : ACE_FLAGS, ACE_HEADER, ACL, GENERIC_MAPPING, OBJECT_SECURITY_INFORMATION, OBJECT_TYPE_LIST, PSECURITY_DESCRIPTOR, PSID, SID, SID_AND_ATTRIBUTES, SYSTEM_AUDIT_OBJECT_ACE_FLAGS, TOKEN_GROUPS;
 import windows.win32.system.com : IDispatch, IUnknown;
 import windows.win32.system.threading : LPTHREAD_START_ROUTINE;
 import windows.win32.system.variant : VARIANT;
@@ -63,96 +63,96 @@ enum : uint
     AUTHZ_SECURITY_ATTRIBUTE_VALUE_CASE_SENSITIVE = 0x00000002,
 }
 
-BOOL AuthzAccessCheck(AUTHZ_ACCESS_CHECK_FLAGS, AUTHZ_CLIENT_CONTEXT_HANDLE, AUTHZ_ACCESS_REQUEST*, AUTHZ_AUDIT_EVENT_HANDLE, PSECURITY_DESCRIPTOR, PSECURITY_DESCRIPTOR*, uint, AUTHZ_ACCESS_REPLY*, AUTHZ_ACCESS_CHECK_RESULTS_HANDLE*);
-BOOL AuthzCachedAccessCheck(uint, AUTHZ_ACCESS_CHECK_RESULTS_HANDLE, AUTHZ_ACCESS_REQUEST*, AUTHZ_AUDIT_EVENT_HANDLE, AUTHZ_ACCESS_REPLY*);
-BOOL AuthzOpenObjectAudit(uint, AUTHZ_CLIENT_CONTEXT_HANDLE, AUTHZ_ACCESS_REQUEST*, AUTHZ_AUDIT_EVENT_HANDLE, PSECURITY_DESCRIPTOR, PSECURITY_DESCRIPTOR*, uint, AUTHZ_ACCESS_REPLY*);
-BOOL AuthzFreeHandle(AUTHZ_ACCESS_CHECK_RESULTS_HANDLE);
-BOOL AuthzInitializeResourceManager(uint, PFN_AUTHZ_DYNAMIC_ACCESS_CHECK, PFN_AUTHZ_COMPUTE_DYNAMIC_GROUPS, PFN_AUTHZ_FREE_DYNAMIC_GROUPS, const(wchar)*, AUTHZ_RESOURCE_MANAGER_HANDLE*);
-BOOL AuthzInitializeResourceManagerEx(AUTHZ_RESOURCE_MANAGER_FLAGS, AUTHZ_INIT_INFO*, AUTHZ_RESOURCE_MANAGER_HANDLE*);
-BOOL AuthzInitializeRemoteResourceManager(AUTHZ_RPC_INIT_INFO_CLIENT*, AUTHZ_RESOURCE_MANAGER_HANDLE*);
-BOOL AuthzFreeResourceManager(AUTHZ_RESOURCE_MANAGER_HANDLE);
-BOOL AuthzInitializeContextFromToken(uint, HANDLE, AUTHZ_RESOURCE_MANAGER_HANDLE, long*, LUID, void*, AUTHZ_CLIENT_CONTEXT_HANDLE*);
-BOOL AuthzInitializeContextFromSid(uint, PSID, AUTHZ_RESOURCE_MANAGER_HANDLE, long*, LUID, void*, AUTHZ_CLIENT_CONTEXT_HANDLE*);
-BOOL AuthzInitializeContextFromAuthzContext(uint, AUTHZ_CLIENT_CONTEXT_HANDLE, long*, LUID, void*, AUTHZ_CLIENT_CONTEXT_HANDLE*);
-BOOL AuthzInitializeCompoundContext(AUTHZ_CLIENT_CONTEXT_HANDLE, AUTHZ_CLIENT_CONTEXT_HANDLE, AUTHZ_CLIENT_CONTEXT_HANDLE*);
-BOOL AuthzAddSidsToContext(AUTHZ_CLIENT_CONTEXT_HANDLE, SID_AND_ATTRIBUTES*, uint, SID_AND_ATTRIBUTES*, uint, AUTHZ_CLIENT_CONTEXT_HANDLE*);
-BOOL AuthzModifySecurityAttributes(AUTHZ_CLIENT_CONTEXT_HANDLE, AUTHZ_SECURITY_ATTRIBUTE_OPERATION*, AUTHZ_SECURITY_ATTRIBUTES_INFORMATION*);
-BOOL AuthzModifyClaims(AUTHZ_CLIENT_CONTEXT_HANDLE, AUTHZ_CONTEXT_INFORMATION_CLASS, AUTHZ_SECURITY_ATTRIBUTE_OPERATION*, AUTHZ_SECURITY_ATTRIBUTES_INFORMATION*);
-BOOL AuthzModifySids(AUTHZ_CLIENT_CONTEXT_HANDLE, AUTHZ_CONTEXT_INFORMATION_CLASS, AUTHZ_SID_OPERATION*, TOKEN_GROUPS*);
-BOOL AuthzSetAppContainerInformation(AUTHZ_CLIENT_CONTEXT_HANDLE, PSID, uint, SID_AND_ATTRIBUTES*);
-BOOL AuthzGetInformationFromContext(AUTHZ_CLIENT_CONTEXT_HANDLE, AUTHZ_CONTEXT_INFORMATION_CLASS, uint, uint*, void*);
-BOOL AuthzFreeContext(AUTHZ_CLIENT_CONTEXT_HANDLE);
-BOOL AuthzInitializeObjectAccessAuditEvent(AUTHZ_INITIALIZE_OBJECT_ACCESS_AUDIT_EVENT_FLAGS, AUTHZ_AUDIT_EVENT_TYPE_HANDLE, PWSTR, PWSTR, PWSTR, PWSTR, AUTHZ_AUDIT_EVENT_HANDLE*, uint);
-BOOL AuthzInitializeObjectAccessAuditEvent2(uint, AUTHZ_AUDIT_EVENT_TYPE_HANDLE, PWSTR, PWSTR, PWSTR, PWSTR, PWSTR, AUTHZ_AUDIT_EVENT_HANDLE*, uint);
-BOOL AuthzFreeAuditEvent(AUTHZ_AUDIT_EVENT_HANDLE);
-BOOL AuthzEvaluateSacl(AUTHZ_CLIENT_CONTEXT_HANDLE, AUTHZ_ACCESS_REQUEST*, ACL*, uint, BOOL, BOOL*);
-BOOL AuthzInstallSecurityEventSource(uint, AUTHZ_SOURCE_SCHEMA_REGISTRATION*);
-BOOL AuthzUninstallSecurityEventSource(uint, const(wchar)*);
-BOOL AuthzEnumerateSecurityEventSources(uint, AUTHZ_SOURCE_SCHEMA_REGISTRATION*, uint*, uint*);
-BOOL AuthzRegisterSecurityEventSource(uint, const(wchar)*, AUTHZ_SECURITY_EVENT_PROVIDER_HANDLE*);
-BOOL AuthzUnregisterSecurityEventSource(uint, AUTHZ_SECURITY_EVENT_PROVIDER_HANDLE*);
-BOOL AuthzReportSecurityEvent(uint, AUTHZ_SECURITY_EVENT_PROVIDER_HANDLE, uint, PSID, uint);
-BOOL AuthzReportSecurityEventFromParams(uint, AUTHZ_SECURITY_EVENT_PROVIDER_HANDLE, uint, PSID, AUDIT_PARAMS*);
-BOOL AuthzRegisterCapChangeNotification(AUTHZ_CAP_CHANGE_SUBSCRIPTION_HANDLE*, LPTHREAD_START_ROUTINE, void*);
-BOOL AuthzUnregisterCapChangeNotification(AUTHZ_CAP_CHANGE_SUBSCRIPTION_HANDLE);
+BOOL AuthzAccessCheck(AUTHZ_ACCESS_CHECK_FLAGS Flags, AUTHZ_CLIENT_CONTEXT_HANDLE hAuthzClientContext, AUTHZ_ACCESS_REQUEST* pRequest, AUTHZ_AUDIT_EVENT_HANDLE hAuditEvent, PSECURITY_DESCRIPTOR pSecurityDescriptor, PSECURITY_DESCRIPTOR* OptionalSecurityDescriptorArray, uint OptionalSecurityDescriptorCount, AUTHZ_ACCESS_REPLY* pReply, AUTHZ_ACCESS_CHECK_RESULTS_HANDLE* phAccessCheckResults);
+BOOL AuthzCachedAccessCheck(uint Flags, AUTHZ_ACCESS_CHECK_RESULTS_HANDLE hAccessCheckResults, AUTHZ_ACCESS_REQUEST* pRequest, AUTHZ_AUDIT_EVENT_HANDLE hAuditEvent, AUTHZ_ACCESS_REPLY* pReply);
+BOOL AuthzOpenObjectAudit(uint Flags, AUTHZ_CLIENT_CONTEXT_HANDLE hAuthzClientContext, AUTHZ_ACCESS_REQUEST* pRequest, AUTHZ_AUDIT_EVENT_HANDLE hAuditEvent, PSECURITY_DESCRIPTOR pSecurityDescriptor, PSECURITY_DESCRIPTOR* OptionalSecurityDescriptorArray, uint OptionalSecurityDescriptorCount, AUTHZ_ACCESS_REPLY* pReply);
+BOOL AuthzFreeHandle(AUTHZ_ACCESS_CHECK_RESULTS_HANDLE hAccessCheckResults);
+BOOL AuthzInitializeResourceManager(uint Flags, PFN_AUTHZ_DYNAMIC_ACCESS_CHECK pfnDynamicAccessCheck, PFN_AUTHZ_COMPUTE_DYNAMIC_GROUPS pfnComputeDynamicGroups, PFN_AUTHZ_FREE_DYNAMIC_GROUPS pfnFreeDynamicGroups, const(wchar)* szResourceManagerName, AUTHZ_RESOURCE_MANAGER_HANDLE* phAuthzResourceManager);
+BOOL AuthzInitializeResourceManagerEx(AUTHZ_RESOURCE_MANAGER_FLAGS Flags, AUTHZ_INIT_INFO* pAuthzInitInfo, AUTHZ_RESOURCE_MANAGER_HANDLE* phAuthzResourceManager);
+BOOL AuthzInitializeRemoteResourceManager(AUTHZ_RPC_INIT_INFO_CLIENT* pRpcInitInfo, AUTHZ_RESOURCE_MANAGER_HANDLE* phAuthzResourceManager);
+BOOL AuthzFreeResourceManager(AUTHZ_RESOURCE_MANAGER_HANDLE hAuthzResourceManager);
+BOOL AuthzInitializeContextFromToken(uint Flags, HANDLE TokenHandle, AUTHZ_RESOURCE_MANAGER_HANDLE hAuthzResourceManager, long* pExpirationTime, LUID Identifier, void* DynamicGroupArgs, AUTHZ_CLIENT_CONTEXT_HANDLE* phAuthzClientContext);
+BOOL AuthzInitializeContextFromSid(uint Flags, PSID UserSid, AUTHZ_RESOURCE_MANAGER_HANDLE hAuthzResourceManager, long* pExpirationTime, LUID Identifier, void* DynamicGroupArgs, AUTHZ_CLIENT_CONTEXT_HANDLE* phAuthzClientContext);
+BOOL AuthzInitializeContextFromAuthzContext(uint Flags, AUTHZ_CLIENT_CONTEXT_HANDLE hAuthzClientContext, long* pExpirationTime, LUID Identifier, void* DynamicGroupArgs, AUTHZ_CLIENT_CONTEXT_HANDLE* phNewAuthzClientContext);
+BOOL AuthzInitializeCompoundContext(AUTHZ_CLIENT_CONTEXT_HANDLE UserContext, AUTHZ_CLIENT_CONTEXT_HANDLE DeviceContext, AUTHZ_CLIENT_CONTEXT_HANDLE* phCompoundContext);
+BOOL AuthzAddSidsToContext(AUTHZ_CLIENT_CONTEXT_HANDLE hAuthzClientContext, SID_AND_ATTRIBUTES* Sids, uint SidCount, SID_AND_ATTRIBUTES* RestrictedSids, uint RestrictedSidCount, AUTHZ_CLIENT_CONTEXT_HANDLE* phNewAuthzClientContext);
+BOOL AuthzModifySecurityAttributes(AUTHZ_CLIENT_CONTEXT_HANDLE hAuthzClientContext, AUTHZ_SECURITY_ATTRIBUTE_OPERATION* pOperations, AUTHZ_SECURITY_ATTRIBUTES_INFORMATION* pAttributes);
+BOOL AuthzModifyClaims(AUTHZ_CLIENT_CONTEXT_HANDLE hAuthzClientContext, AUTHZ_CONTEXT_INFORMATION_CLASS ClaimClass, AUTHZ_SECURITY_ATTRIBUTE_OPERATION* pClaimOperations, AUTHZ_SECURITY_ATTRIBUTES_INFORMATION* pClaims);
+BOOL AuthzModifySids(AUTHZ_CLIENT_CONTEXT_HANDLE hAuthzClientContext, AUTHZ_CONTEXT_INFORMATION_CLASS SidClass, AUTHZ_SID_OPERATION* pSidOperations, TOKEN_GROUPS* pSids);
+BOOL AuthzSetAppContainerInformation(AUTHZ_CLIENT_CONTEXT_HANDLE hAuthzClientContext, PSID pAppContainerSid, uint CapabilityCount, SID_AND_ATTRIBUTES* pCapabilitySids);
+BOOL AuthzGetInformationFromContext(AUTHZ_CLIENT_CONTEXT_HANDLE hAuthzClientContext, AUTHZ_CONTEXT_INFORMATION_CLASS InfoClass, uint BufferSize, uint* pSizeRequired, void* Buffer);
+BOOL AuthzFreeContext(AUTHZ_CLIENT_CONTEXT_HANDLE hAuthzClientContext);
+BOOL AuthzInitializeObjectAccessAuditEvent(AUTHZ_INITIALIZE_OBJECT_ACCESS_AUDIT_EVENT_FLAGS Flags, AUTHZ_AUDIT_EVENT_TYPE_HANDLE hAuditEventType, PWSTR szOperationType, PWSTR szObjectType, PWSTR szObjectName, PWSTR szAdditionalInfo, AUTHZ_AUDIT_EVENT_HANDLE* phAuditEvent, uint dwAdditionalParameterCount);
+BOOL AuthzInitializeObjectAccessAuditEvent2(uint Flags, AUTHZ_AUDIT_EVENT_TYPE_HANDLE hAuditEventType, PWSTR szOperationType, PWSTR szObjectType, PWSTR szObjectName, PWSTR szAdditionalInfo, PWSTR szAdditionalInfo2, AUTHZ_AUDIT_EVENT_HANDLE* phAuditEvent, uint dwAdditionalParameterCount);
+BOOL AuthzFreeAuditEvent(AUTHZ_AUDIT_EVENT_HANDLE hAuditEvent);
+BOOL AuthzEvaluateSacl(AUTHZ_CLIENT_CONTEXT_HANDLE AuthzClientContext, AUTHZ_ACCESS_REQUEST* pRequest, ACL* Sacl, uint GrantedAccess, BOOL AccessGranted, BOOL* pbGenerateAudit);
+BOOL AuthzInstallSecurityEventSource(uint dwFlags, AUTHZ_SOURCE_SCHEMA_REGISTRATION* pRegistration);
+BOOL AuthzUninstallSecurityEventSource(uint dwFlags, const(wchar)* szEventSourceName);
+BOOL AuthzEnumerateSecurityEventSources(uint dwFlags, AUTHZ_SOURCE_SCHEMA_REGISTRATION* Buffer, uint* pdwCount, uint* pdwLength);
+BOOL AuthzRegisterSecurityEventSource(uint dwFlags, const(wchar)* szEventSourceName, AUTHZ_SECURITY_EVENT_PROVIDER_HANDLE* phEventProvider);
+BOOL AuthzUnregisterSecurityEventSource(uint dwFlags, AUTHZ_SECURITY_EVENT_PROVIDER_HANDLE* phEventProvider);
+BOOL AuthzReportSecurityEvent(uint dwFlags, AUTHZ_SECURITY_EVENT_PROVIDER_HANDLE hEventProvider, uint dwAuditId, PSID pUserSid, uint dwCount);
+BOOL AuthzReportSecurityEventFromParams(uint dwFlags, AUTHZ_SECURITY_EVENT_PROVIDER_HANDLE hEventProvider, uint dwAuditId, PSID pUserSid, AUDIT_PARAMS* pParams);
+BOOL AuthzRegisterCapChangeNotification(AUTHZ_CAP_CHANGE_SUBSCRIPTION_HANDLE* phCapChangeSubscription, LPTHREAD_START_ROUTINE pfnCapChangeCallback, void* pCallbackContext);
+BOOL AuthzUnregisterCapChangeNotification(AUTHZ_CAP_CHANGE_SUBSCRIPTION_HANDLE hCapChangeSubscription);
 BOOL AuthzFreeCentralAccessPolicyCache();
-WIN32_ERROR SetEntriesInAclA(uint, EXPLICIT_ACCESS_A*, ACL*, ACL**);
-WIN32_ERROR SetEntriesInAclW(uint, EXPLICIT_ACCESS_W*, ACL*, ACL**);
-WIN32_ERROR GetExplicitEntriesFromAclA(ACL*, uint*, EXPLICIT_ACCESS_A**);
-WIN32_ERROR GetExplicitEntriesFromAclW(ACL*, uint*, EXPLICIT_ACCESS_W**);
-WIN32_ERROR GetEffectiveRightsFromAclA(ACL*, TRUSTEE_A*, uint*);
-WIN32_ERROR GetEffectiveRightsFromAclW(ACL*, TRUSTEE_W*, uint*);
-WIN32_ERROR GetAuditedPermissionsFromAclA(ACL*, TRUSTEE_A*, uint*, uint*);
-WIN32_ERROR GetAuditedPermissionsFromAclW(ACL*, TRUSTEE_W*, uint*, uint*);
-WIN32_ERROR GetNamedSecurityInfoA(const(char)*, SE_OBJECT_TYPE, OBJECT_SECURITY_INFORMATION, PSID*, PSID*, ACL**, ACL**, PSECURITY_DESCRIPTOR*);
-WIN32_ERROR GetNamedSecurityInfoW(const(wchar)*, SE_OBJECT_TYPE, OBJECT_SECURITY_INFORMATION, PSID*, PSID*, ACL**, ACL**, PSECURITY_DESCRIPTOR*);
-WIN32_ERROR GetSecurityInfo(HANDLE, SE_OBJECT_TYPE, OBJECT_SECURITY_INFORMATION, PSID*, PSID*, ACL**, ACL**, PSECURITY_DESCRIPTOR*);
-WIN32_ERROR SetNamedSecurityInfoA(PSTR, SE_OBJECT_TYPE, OBJECT_SECURITY_INFORMATION, PSID, PSID, ACL*, ACL*);
-WIN32_ERROR SetNamedSecurityInfoW(PWSTR, SE_OBJECT_TYPE, OBJECT_SECURITY_INFORMATION, PSID, PSID, ACL*, ACL*);
-WIN32_ERROR SetSecurityInfo(HANDLE, SE_OBJECT_TYPE, OBJECT_SECURITY_INFORMATION, PSID, PSID, ACL*, ACL*);
-WIN32_ERROR GetInheritanceSourceA(PSTR, SE_OBJECT_TYPE, OBJECT_SECURITY_INFORMATION, BOOL, GUID**, uint, ACL*, FN_OBJECT_MGR_FUNCTS*, GENERIC_MAPPING*, INHERITED_FROMA*);
-WIN32_ERROR GetInheritanceSourceW(PWSTR, SE_OBJECT_TYPE, OBJECT_SECURITY_INFORMATION, BOOL, GUID**, uint, ACL*, FN_OBJECT_MGR_FUNCTS*, GENERIC_MAPPING*, INHERITED_FROMW*);
-WIN32_ERROR FreeInheritedFromArray(INHERITED_FROMW*, ushort, FN_OBJECT_MGR_FUNCTS*);
-WIN32_ERROR TreeResetNamedSecurityInfoA(PSTR, SE_OBJECT_TYPE, OBJECT_SECURITY_INFORMATION, PSID, PSID, ACL*, ACL*, BOOL, FN_PROGRESS, PROG_INVOKE_SETTING, void*);
-WIN32_ERROR TreeResetNamedSecurityInfoW(PWSTR, SE_OBJECT_TYPE, OBJECT_SECURITY_INFORMATION, PSID, PSID, ACL*, ACL*, BOOL, FN_PROGRESS, PROG_INVOKE_SETTING, void*);
-WIN32_ERROR TreeSetNamedSecurityInfoA(PSTR, SE_OBJECT_TYPE, OBJECT_SECURITY_INFORMATION, PSID, PSID, ACL*, ACL*, TREE_SEC_INFO, FN_PROGRESS, PROG_INVOKE_SETTING, void*);
-WIN32_ERROR TreeSetNamedSecurityInfoW(PWSTR, SE_OBJECT_TYPE, OBJECT_SECURITY_INFORMATION, PSID, PSID, ACL*, ACL*, TREE_SEC_INFO, FN_PROGRESS, PROG_INVOKE_SETTING, void*);
-WIN32_ERROR BuildSecurityDescriptorA(TRUSTEE_A*, TRUSTEE_A*, uint, EXPLICIT_ACCESS_A*, uint, EXPLICIT_ACCESS_A*, PSECURITY_DESCRIPTOR, uint*, PSECURITY_DESCRIPTOR*);
-WIN32_ERROR BuildSecurityDescriptorW(TRUSTEE_W*, TRUSTEE_W*, uint, EXPLICIT_ACCESS_W*, uint, EXPLICIT_ACCESS_W*, PSECURITY_DESCRIPTOR, uint*, PSECURITY_DESCRIPTOR*);
-WIN32_ERROR LookupSecurityDescriptorPartsA(TRUSTEE_A**, TRUSTEE_A**, uint*, EXPLICIT_ACCESS_A**, uint*, EXPLICIT_ACCESS_A**, PSECURITY_DESCRIPTOR);
-WIN32_ERROR LookupSecurityDescriptorPartsW(TRUSTEE_W**, TRUSTEE_W**, uint*, EXPLICIT_ACCESS_W**, uint*, EXPLICIT_ACCESS_W**, PSECURITY_DESCRIPTOR);
-void BuildExplicitAccessWithNameA(EXPLICIT_ACCESS_A*, PSTR, uint, ACCESS_MODE, ACE_FLAGS);
-void BuildExplicitAccessWithNameW(EXPLICIT_ACCESS_W*, PWSTR, uint, ACCESS_MODE, ACE_FLAGS);
-void BuildImpersonateExplicitAccessWithNameA(EXPLICIT_ACCESS_A*, PSTR, TRUSTEE_A*, uint, ACCESS_MODE, uint);
-void BuildImpersonateExplicitAccessWithNameW(EXPLICIT_ACCESS_W*, PWSTR, TRUSTEE_W*, uint, ACCESS_MODE, uint);
-void BuildTrusteeWithNameA(TRUSTEE_A*, PSTR);
-void BuildTrusteeWithNameW(TRUSTEE_W*, PWSTR);
-void BuildImpersonateTrusteeA(TRUSTEE_A*, TRUSTEE_A*);
-void BuildImpersonateTrusteeW(TRUSTEE_W*, TRUSTEE_W*);
-void BuildTrusteeWithSidA(TRUSTEE_A*, PSID);
-void BuildTrusteeWithSidW(TRUSTEE_W*, PSID);
-void BuildTrusteeWithObjectsAndSidA(TRUSTEE_A*, OBJECTS_AND_SID*, GUID*, GUID*, PSID);
-void BuildTrusteeWithObjectsAndSidW(TRUSTEE_W*, OBJECTS_AND_SID*, GUID*, GUID*, PSID);
-void BuildTrusteeWithObjectsAndNameA(TRUSTEE_A*, OBJECTS_AND_NAME_A*, SE_OBJECT_TYPE, PSTR, PSTR, PSTR);
-void BuildTrusteeWithObjectsAndNameW(TRUSTEE_W*, OBJECTS_AND_NAME_W*, SE_OBJECT_TYPE, PWSTR, PWSTR, PWSTR);
-PSTR GetTrusteeNameA(TRUSTEE_A*);
-PWSTR GetTrusteeNameW(TRUSTEE_W*);
-TRUSTEE_TYPE GetTrusteeTypeA(TRUSTEE_A*);
-TRUSTEE_TYPE GetTrusteeTypeW(TRUSTEE_W*);
-TRUSTEE_FORM GetTrusteeFormA(TRUSTEE_A*);
-TRUSTEE_FORM GetTrusteeFormW(TRUSTEE_W*);
-MULTIPLE_TRUSTEE_OPERATION GetMultipleTrusteeOperationA(TRUSTEE_A*);
-MULTIPLE_TRUSTEE_OPERATION GetMultipleTrusteeOperationW(TRUSTEE_W*);
-TRUSTEE_A* GetMultipleTrusteeA(TRUSTEE_A*);
-TRUSTEE_W* GetMultipleTrusteeW(TRUSTEE_W*);
-BOOL ConvertSidToStringSidA(PSID, PSTR*);
-BOOL ConvertSidToStringSidW(PSID, PWSTR*);
-BOOL ConvertStringSidToSidA(const(char)*, PSID*);
-BOOL ConvertStringSidToSidW(const(wchar)*, PSID*);
-BOOL ConvertStringSecurityDescriptorToSecurityDescriptorA(const(char)*, uint, PSECURITY_DESCRIPTOR*, uint*);
-BOOL ConvertStringSecurityDescriptorToSecurityDescriptorW(const(wchar)*, uint, PSECURITY_DESCRIPTOR*, uint*);
-BOOL ConvertSecurityDescriptorToStringSecurityDescriptorA(PSECURITY_DESCRIPTOR, uint, OBJECT_SECURITY_INFORMATION, PSTR*, uint*);
-BOOL ConvertSecurityDescriptorToStringSecurityDescriptorW(PSECURITY_DESCRIPTOR, uint, OBJECT_SECURITY_INFORMATION, PWSTR*, uint*);
+WIN32_ERROR SetEntriesInAclA(uint cCountOfExplicitEntries, EXPLICIT_ACCESS_A* pListOfExplicitEntries, ACL* OldAcl, ACL** NewAcl);
+WIN32_ERROR SetEntriesInAclW(uint cCountOfExplicitEntries, EXPLICIT_ACCESS_W* pListOfExplicitEntries, ACL* OldAcl, ACL** NewAcl);
+WIN32_ERROR GetExplicitEntriesFromAclA(ACL* pacl, uint* pcCountOfExplicitEntries, EXPLICIT_ACCESS_A** pListOfExplicitEntries);
+WIN32_ERROR GetExplicitEntriesFromAclW(ACL* pacl, uint* pcCountOfExplicitEntries, EXPLICIT_ACCESS_W** pListOfExplicitEntries);
+WIN32_ERROR GetEffectiveRightsFromAclA(ACL* pacl, TRUSTEE_A* pTrustee, uint* pAccessRights);
+WIN32_ERROR GetEffectiveRightsFromAclW(ACL* pacl, TRUSTEE_W* pTrustee, uint* pAccessRights);
+WIN32_ERROR GetAuditedPermissionsFromAclA(ACL* pacl, TRUSTEE_A* pTrustee, uint* pSuccessfulAuditedRights, uint* pFailedAuditRights);
+WIN32_ERROR GetAuditedPermissionsFromAclW(ACL* pacl, TRUSTEE_W* pTrustee, uint* pSuccessfulAuditedRights, uint* pFailedAuditRights);
+WIN32_ERROR GetNamedSecurityInfoA(const(char)* pObjectName, SE_OBJECT_TYPE ObjectType, OBJECT_SECURITY_INFORMATION SecurityInfo, PSID* ppsidOwner, PSID* ppsidGroup, ACL** ppDacl, ACL** ppSacl, PSECURITY_DESCRIPTOR* ppSecurityDescriptor);
+WIN32_ERROR GetNamedSecurityInfoW(const(wchar)* pObjectName, SE_OBJECT_TYPE ObjectType, OBJECT_SECURITY_INFORMATION SecurityInfo, PSID* ppsidOwner, PSID* ppsidGroup, ACL** ppDacl, ACL** ppSacl, PSECURITY_DESCRIPTOR* ppSecurityDescriptor);
+WIN32_ERROR GetSecurityInfo(HANDLE handle, SE_OBJECT_TYPE ObjectType, OBJECT_SECURITY_INFORMATION SecurityInfo, PSID* ppsidOwner, PSID* ppsidGroup, ACL** ppDacl, ACL** ppSacl, PSECURITY_DESCRIPTOR* ppSecurityDescriptor);
+WIN32_ERROR SetNamedSecurityInfoA(PSTR pObjectName, SE_OBJECT_TYPE ObjectType, OBJECT_SECURITY_INFORMATION SecurityInfo, PSID psidOwner, PSID psidGroup, ACL* pDacl, ACL* pSacl);
+WIN32_ERROR SetNamedSecurityInfoW(PWSTR pObjectName, SE_OBJECT_TYPE ObjectType, OBJECT_SECURITY_INFORMATION SecurityInfo, PSID psidOwner, PSID psidGroup, ACL* pDacl, ACL* pSacl);
+WIN32_ERROR SetSecurityInfo(HANDLE handle, SE_OBJECT_TYPE ObjectType, OBJECT_SECURITY_INFORMATION SecurityInfo, PSID psidOwner, PSID psidGroup, ACL* pDacl, ACL* pSacl);
+WIN32_ERROR GetInheritanceSourceA(PSTR pObjectName, SE_OBJECT_TYPE ObjectType, OBJECT_SECURITY_INFORMATION SecurityInfo, BOOL Container, GUID** pObjectClassGuids, uint GuidCount, ACL* pAcl, FN_OBJECT_MGR_FUNCTS* pfnArray, GENERIC_MAPPING* pGenericMapping, INHERITED_FROMA* pInheritArray);
+WIN32_ERROR GetInheritanceSourceW(PWSTR pObjectName, SE_OBJECT_TYPE ObjectType, OBJECT_SECURITY_INFORMATION SecurityInfo, BOOL Container, GUID** pObjectClassGuids, uint GuidCount, ACL* pAcl, FN_OBJECT_MGR_FUNCTS* pfnArray, GENERIC_MAPPING* pGenericMapping, INHERITED_FROMW* pInheritArray);
+WIN32_ERROR FreeInheritedFromArray(INHERITED_FROMW* pInheritArray, ushort AceCnt, FN_OBJECT_MGR_FUNCTS* pfnArray);
+WIN32_ERROR TreeResetNamedSecurityInfoA(PSTR pObjectName, SE_OBJECT_TYPE ObjectType, OBJECT_SECURITY_INFORMATION SecurityInfo, PSID pOwner, PSID pGroup, ACL* pDacl, ACL* pSacl, BOOL KeepExplicit, FN_PROGRESS fnProgress, PROG_INVOKE_SETTING ProgressInvokeSetting, void* Args);
+WIN32_ERROR TreeResetNamedSecurityInfoW(PWSTR pObjectName, SE_OBJECT_TYPE ObjectType, OBJECT_SECURITY_INFORMATION SecurityInfo, PSID pOwner, PSID pGroup, ACL* pDacl, ACL* pSacl, BOOL KeepExplicit, FN_PROGRESS fnProgress, PROG_INVOKE_SETTING ProgressInvokeSetting, void* Args);
+WIN32_ERROR TreeSetNamedSecurityInfoA(PSTR pObjectName, SE_OBJECT_TYPE ObjectType, OBJECT_SECURITY_INFORMATION SecurityInfo, PSID pOwner, PSID pGroup, ACL* pDacl, ACL* pSacl, TREE_SEC_INFO dwAction, FN_PROGRESS fnProgress, PROG_INVOKE_SETTING ProgressInvokeSetting, void* Args);
+WIN32_ERROR TreeSetNamedSecurityInfoW(PWSTR pObjectName, SE_OBJECT_TYPE ObjectType, OBJECT_SECURITY_INFORMATION SecurityInfo, PSID pOwner, PSID pGroup, ACL* pDacl, ACL* pSacl, TREE_SEC_INFO dwAction, FN_PROGRESS fnProgress, PROG_INVOKE_SETTING ProgressInvokeSetting, void* Args);
+WIN32_ERROR BuildSecurityDescriptorA(TRUSTEE_A* pOwner, TRUSTEE_A* pGroup, uint cCountOfAccessEntries, EXPLICIT_ACCESS_A* pListOfAccessEntries, uint cCountOfAuditEntries, EXPLICIT_ACCESS_A* pListOfAuditEntries, PSECURITY_DESCRIPTOR pOldSD, uint* pSizeNewSD, PSECURITY_DESCRIPTOR* pNewSD);
+WIN32_ERROR BuildSecurityDescriptorW(TRUSTEE_W* pOwner, TRUSTEE_W* pGroup, uint cCountOfAccessEntries, EXPLICIT_ACCESS_W* pListOfAccessEntries, uint cCountOfAuditEntries, EXPLICIT_ACCESS_W* pListOfAuditEntries, PSECURITY_DESCRIPTOR pOldSD, uint* pSizeNewSD, PSECURITY_DESCRIPTOR* pNewSD);
+WIN32_ERROR LookupSecurityDescriptorPartsA(TRUSTEE_A** ppOwner, TRUSTEE_A** ppGroup, uint* pcCountOfAccessEntries, EXPLICIT_ACCESS_A** ppListOfAccessEntries, uint* pcCountOfAuditEntries, EXPLICIT_ACCESS_A** ppListOfAuditEntries, PSECURITY_DESCRIPTOR pSD);
+WIN32_ERROR LookupSecurityDescriptorPartsW(TRUSTEE_W** ppOwner, TRUSTEE_W** ppGroup, uint* pcCountOfAccessEntries, EXPLICIT_ACCESS_W** ppListOfAccessEntries, uint* pcCountOfAuditEntries, EXPLICIT_ACCESS_W** ppListOfAuditEntries, PSECURITY_DESCRIPTOR pSD);
+void BuildExplicitAccessWithNameA(EXPLICIT_ACCESS_A* pExplicitAccess, PSTR pTrusteeName, uint AccessPermissions, ACCESS_MODE AccessMode, ACE_FLAGS Inheritance);
+void BuildExplicitAccessWithNameW(EXPLICIT_ACCESS_W* pExplicitAccess, PWSTR pTrusteeName, uint AccessPermissions, ACCESS_MODE AccessMode, ACE_FLAGS Inheritance);
+void BuildImpersonateExplicitAccessWithNameA(EXPLICIT_ACCESS_A* pExplicitAccess, PSTR pTrusteeName, TRUSTEE_A* pTrustee, uint AccessPermissions, ACCESS_MODE AccessMode, uint Inheritance);
+void BuildImpersonateExplicitAccessWithNameW(EXPLICIT_ACCESS_W* pExplicitAccess, PWSTR pTrusteeName, TRUSTEE_W* pTrustee, uint AccessPermissions, ACCESS_MODE AccessMode, uint Inheritance);
+void BuildTrusteeWithNameA(TRUSTEE_A* pTrustee, PSTR pName);
+void BuildTrusteeWithNameW(TRUSTEE_W* pTrustee, PWSTR pName);
+void BuildImpersonateTrusteeA(TRUSTEE_A* pTrustee, TRUSTEE_A* pImpersonateTrustee);
+void BuildImpersonateTrusteeW(TRUSTEE_W* pTrustee, TRUSTEE_W* pImpersonateTrustee);
+void BuildTrusteeWithSidA(TRUSTEE_A* pTrustee, PSID pSid);
+void BuildTrusteeWithSidW(TRUSTEE_W* pTrustee, PSID pSid);
+void BuildTrusteeWithObjectsAndSidA(TRUSTEE_A* pTrustee, OBJECTS_AND_SID* pObjSid, GUID* pObjectGuid, GUID* pInheritedObjectGuid, PSID pSid);
+void BuildTrusteeWithObjectsAndSidW(TRUSTEE_W* pTrustee, OBJECTS_AND_SID* pObjSid, GUID* pObjectGuid, GUID* pInheritedObjectGuid, PSID pSid);
+void BuildTrusteeWithObjectsAndNameA(TRUSTEE_A* pTrustee, OBJECTS_AND_NAME_A* pObjName, SE_OBJECT_TYPE ObjectType, PSTR ObjectTypeName, PSTR InheritedObjectTypeName, PSTR Name);
+void BuildTrusteeWithObjectsAndNameW(TRUSTEE_W* pTrustee, OBJECTS_AND_NAME_W* pObjName, SE_OBJECT_TYPE ObjectType, PWSTR ObjectTypeName, PWSTR InheritedObjectTypeName, PWSTR Name);
+PSTR GetTrusteeNameA(TRUSTEE_A* pTrustee);
+PWSTR GetTrusteeNameW(TRUSTEE_W* pTrustee);
+TRUSTEE_TYPE GetTrusteeTypeA(TRUSTEE_A* pTrustee);
+TRUSTEE_TYPE GetTrusteeTypeW(TRUSTEE_W* pTrustee);
+TRUSTEE_FORM GetTrusteeFormA(TRUSTEE_A* pTrustee);
+TRUSTEE_FORM GetTrusteeFormW(TRUSTEE_W* pTrustee);
+MULTIPLE_TRUSTEE_OPERATION GetMultipleTrusteeOperationA(TRUSTEE_A* pTrustee);
+MULTIPLE_TRUSTEE_OPERATION GetMultipleTrusteeOperationW(TRUSTEE_W* pTrustee);
+TRUSTEE_A* GetMultipleTrusteeA(TRUSTEE_A* pTrustee);
+TRUSTEE_W* GetMultipleTrusteeW(TRUSTEE_W* pTrustee);
+BOOL ConvertSidToStringSidA(PSID Sid, PSTR* StringSid);
+BOOL ConvertSidToStringSidW(PSID Sid, PWSTR* StringSid);
+BOOL ConvertStringSidToSidA(const(char)* StringSid, PSID* Sid);
+BOOL ConvertStringSidToSidW(const(wchar)* StringSid, PSID* Sid);
+BOOL ConvertStringSecurityDescriptorToSecurityDescriptorA(const(char)* StringSecurityDescriptor, uint StringSDRevision, PSECURITY_DESCRIPTOR* SecurityDescriptor, uint* SecurityDescriptorSize);
+BOOL ConvertStringSecurityDescriptorToSecurityDescriptorW(const(wchar)* StringSecurityDescriptor, uint StringSDRevision, PSECURITY_DESCRIPTOR* SecurityDescriptor, uint* SecurityDescriptorSize);
+BOOL ConvertSecurityDescriptorToStringSecurityDescriptorA(PSECURITY_DESCRIPTOR SecurityDescriptor, uint RequestedStringSDRevision, OBJECT_SECURITY_INFORMATION SecurityInformation, PSTR* StringSecurityDescriptor, uint* StringSecurityDescriptorLen);
+BOOL ConvertSecurityDescriptorToStringSecurityDescriptorW(PSECURITY_DESCRIPTOR SecurityDescriptor, uint RequestedStringSDRevision, OBJECT_SECURITY_INFORMATION SecurityInformation, PWSTR* StringSecurityDescriptor, uint* StringSecurityDescriptorLen);
 enum SDDL_REVISION_1 = 0x00000001;
 enum SDDL_REVISION = 0x00000001;
 enum SDDL_OWNER = "O";
@@ -767,11 +767,11 @@ struct AUTHZ_ACCESS_REPLY
     AUTHZ_GENERATE_RESULTS* SaclEvaluationResults;
     uint* Error;
 }
-alias PFN_AUTHZ_DYNAMIC_ACCESS_CHECK = BOOL function(AUTHZ_CLIENT_CONTEXT_HANDLE, ACE_HEADER*, void*, BOOL*);
-alias PFN_AUTHZ_COMPUTE_DYNAMIC_GROUPS = BOOL function(AUTHZ_CLIENT_CONTEXT_HANDLE, void*, SID_AND_ATTRIBUTES**, uint*, SID_AND_ATTRIBUTES**, uint*);
-alias PFN_AUTHZ_FREE_DYNAMIC_GROUPS = void function(SID_AND_ATTRIBUTES*);
-alias PFN_AUTHZ_GET_CENTRAL_ACCESS_POLICY = BOOL function(AUTHZ_CLIENT_CONTEXT_HANDLE, PSID, void*, BOOL*, void**);
-alias PFN_AUTHZ_FREE_CENTRAL_ACCESS_POLICY = void function(void*);
+alias PFN_AUTHZ_DYNAMIC_ACCESS_CHECK = BOOL function(AUTHZ_CLIENT_CONTEXT_HANDLE hAuthzClientContext, ACE_HEADER* pAce, void* pArgs, BOOL* pbAceApplicable);
+alias PFN_AUTHZ_COMPUTE_DYNAMIC_GROUPS = BOOL function(AUTHZ_CLIENT_CONTEXT_HANDLE hAuthzClientContext, void* Args, SID_AND_ATTRIBUTES** pSidAttrArray, uint* pSidCount, SID_AND_ATTRIBUTES** pRestrictedSidAttrArray, uint* pRestrictedSidCount);
+alias PFN_AUTHZ_FREE_DYNAMIC_GROUPS = void function(SID_AND_ATTRIBUTES* pSidAttrArray);
+alias PFN_AUTHZ_GET_CENTRAL_ACCESS_POLICY = BOOL function(AUTHZ_CLIENT_CONTEXT_HANDLE hAuthzClientContext, PSID capid, void* pArgs, BOOL* pCentralAccessPolicyApplicable, void** ppCentralAccessPolicy);
+alias PFN_AUTHZ_FREE_CENTRAL_ACCESS_POLICY = void function(void* pCentralAccessPolicy);
 struct AUTHZ_SECURITY_ATTRIBUTE_FQBN_VALUE
 {
     ulong Version;
@@ -903,506 +903,506 @@ struct AUTHZ_SOURCE_SCHEMA_REGISTRATION
 enum IID_IAzAuthorizationStore = GUID(0xedbd9ca9, 0x9b82, 0x4f6a, [0x9e, 0x8b, 0x98, 0x30, 0x1e, 0x45, 0xf, 0x14]);
 interface IAzAuthorizationStore : IDispatch
 {
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
-    HRESULT get_ApplicationData(BSTR*);
-    HRESULT put_ApplicationData(BSTR);
-    HRESULT get_DomainTimeout(int*);
-    HRESULT put_DomainTimeout(int);
-    HRESULT get_ScriptEngineTimeout(int*);
-    HRESULT put_ScriptEngineTimeout(int);
-    HRESULT get_MaxScriptEngines(int*);
-    HRESULT put_MaxScriptEngines(int);
-    HRESULT get_GenerateAudits(BOOL*);
-    HRESULT put_GenerateAudits(BOOL);
-    HRESULT get_Writable(BOOL*);
-    HRESULT GetProperty(int, VARIANT, VARIANT*);
-    HRESULT SetProperty(int, VARIANT, VARIANT);
-    HRESULT AddPropertyItem(AZ_PROP_CONSTANTS, VARIANT, VARIANT);
-    HRESULT DeletePropertyItem(int, VARIANT, VARIANT);
-    HRESULT get_PolicyAdministrators(VARIANT*);
-    HRESULT get_PolicyReaders(VARIANT*);
-    HRESULT AddPolicyAdministrator(BSTR, VARIANT);
-    HRESULT DeletePolicyAdministrator(BSTR, VARIANT);
-    HRESULT AddPolicyReader(BSTR, VARIANT);
-    HRESULT DeletePolicyReader(BSTR, VARIANT);
-    HRESULT Initialize(AZ_PROP_CONSTANTS, BSTR, VARIANT);
-    HRESULT UpdateCache(VARIANT);
-    HRESULT Delete(VARIANT);
-    HRESULT get_Applications(IAzApplications*);
-    HRESULT OpenApplication(BSTR, VARIANT, IAzApplication*);
-    HRESULT CreateApplication(BSTR, VARIANT, IAzApplication*);
-    HRESULT DeleteApplication(BSTR, VARIANT);
-    HRESULT get_ApplicationGroups(IAzApplicationGroups*);
-    HRESULT CreateApplicationGroup(BSTR, VARIANT, IAzApplicationGroup*);
-    HRESULT OpenApplicationGroup(BSTR, VARIANT, IAzApplicationGroup*);
-    HRESULT DeleteApplicationGroup(BSTR, VARIANT);
-    HRESULT Submit(int, VARIANT);
-    HRESULT get_DelegatedPolicyUsers(VARIANT*);
-    HRESULT AddDelegatedPolicyUser(BSTR, VARIANT);
-    HRESULT DeleteDelegatedPolicyUser(BSTR, VARIANT);
-    HRESULT get_TargetMachine(BSTR*);
-    HRESULT get_ApplyStoreSacl(BOOL*);
-    HRESULT put_ApplyStoreSacl(BOOL);
-    HRESULT get_PolicyAdministratorsName(VARIANT*);
-    HRESULT get_PolicyReadersName(VARIANT*);
-    HRESULT AddPolicyAdministratorName(BSTR, VARIANT);
-    HRESULT DeletePolicyAdministratorName(BSTR, VARIANT);
-    HRESULT AddPolicyReaderName(BSTR, VARIANT);
-    HRESULT DeletePolicyReaderName(BSTR, VARIANT);
-    HRESULT get_DelegatedPolicyUsersName(VARIANT*);
-    HRESULT AddDelegatedPolicyUserName(BSTR, VARIANT);
-    HRESULT DeleteDelegatedPolicyUserName(BSTR, VARIANT);
-    HRESULT CloseApplication(BSTR, int);
+    HRESULT get_Description(BSTR* pbstrDescription);
+    HRESULT put_Description(BSTR bstrDescription);
+    HRESULT get_ApplicationData(BSTR* pbstrApplicationData);
+    HRESULT put_ApplicationData(BSTR bstrApplicationData);
+    HRESULT get_DomainTimeout(int* plProp);
+    HRESULT put_DomainTimeout(int lProp);
+    HRESULT get_ScriptEngineTimeout(int* plProp);
+    HRESULT put_ScriptEngineTimeout(int lProp);
+    HRESULT get_MaxScriptEngines(int* plProp);
+    HRESULT put_MaxScriptEngines(int lProp);
+    HRESULT get_GenerateAudits(BOOL* pbProp);
+    HRESULT put_GenerateAudits(BOOL bProp);
+    HRESULT get_Writable(BOOL* pfProp);
+    HRESULT GetProperty(int lPropId, VARIANT varReserved, VARIANT* pvarProp);
+    HRESULT SetProperty(int lPropId, VARIANT varProp, VARIANT varReserved);
+    HRESULT AddPropertyItem(AZ_PROP_CONSTANTS lPropId, VARIANT varProp, VARIANT varReserved);
+    HRESULT DeletePropertyItem(int lPropId, VARIANT varProp, VARIANT varReserved);
+    HRESULT get_PolicyAdministrators(VARIANT* pvarAdmins);
+    HRESULT get_PolicyReaders(VARIANT* pvarReaders);
+    HRESULT AddPolicyAdministrator(BSTR bstrAdmin, VARIANT varReserved);
+    HRESULT DeletePolicyAdministrator(BSTR bstrAdmin, VARIANT varReserved);
+    HRESULT AddPolicyReader(BSTR bstrReader, VARIANT varReserved);
+    HRESULT DeletePolicyReader(BSTR bstrReader, VARIANT varReserved);
+    HRESULT Initialize(AZ_PROP_CONSTANTS lFlags, BSTR bstrPolicyURL, VARIANT varReserved);
+    HRESULT UpdateCache(VARIANT varReserved);
+    HRESULT Delete(VARIANT varReserved);
+    HRESULT get_Applications(IAzApplications* ppAppCollection);
+    HRESULT OpenApplication(BSTR bstrApplicationName, VARIANT varReserved, IAzApplication* ppApplication);
+    HRESULT CreateApplication(BSTR bstrApplicationName, VARIANT varReserved, IAzApplication* ppApplication);
+    HRESULT DeleteApplication(BSTR bstrApplicationName, VARIANT varReserved);
+    HRESULT get_ApplicationGroups(IAzApplicationGroups* ppGroupCollection);
+    HRESULT CreateApplicationGroup(BSTR bstrGroupName, VARIANT varReserved, IAzApplicationGroup* ppGroup);
+    HRESULT OpenApplicationGroup(BSTR bstrGroupName, VARIANT varReserved, IAzApplicationGroup* ppGroup);
+    HRESULT DeleteApplicationGroup(BSTR bstrGroupName, VARIANT varReserved);
+    HRESULT Submit(int lFlags, VARIANT varReserved);
+    HRESULT get_DelegatedPolicyUsers(VARIANT* pvarDelegatedPolicyUsers);
+    HRESULT AddDelegatedPolicyUser(BSTR bstrDelegatedPolicyUser, VARIANT varReserved);
+    HRESULT DeleteDelegatedPolicyUser(BSTR bstrDelegatedPolicyUser, VARIANT varReserved);
+    HRESULT get_TargetMachine(BSTR* pbstrTargetMachine);
+    HRESULT get_ApplyStoreSacl(BOOL* pbApplyStoreSacl);
+    HRESULT put_ApplyStoreSacl(BOOL bApplyStoreSacl);
+    HRESULT get_PolicyAdministratorsName(VARIANT* pvarAdmins);
+    HRESULT get_PolicyReadersName(VARIANT* pvarReaders);
+    HRESULT AddPolicyAdministratorName(BSTR bstrAdmin, VARIANT varReserved);
+    HRESULT DeletePolicyAdministratorName(BSTR bstrAdmin, VARIANT varReserved);
+    HRESULT AddPolicyReaderName(BSTR bstrReader, VARIANT varReserved);
+    HRESULT DeletePolicyReaderName(BSTR bstrReader, VARIANT varReserved);
+    HRESULT get_DelegatedPolicyUsersName(VARIANT* pvarDelegatedPolicyUsers);
+    HRESULT AddDelegatedPolicyUserName(BSTR bstrDelegatedPolicyUser, VARIANT varReserved);
+    HRESULT DeleteDelegatedPolicyUserName(BSTR bstrDelegatedPolicyUser, VARIANT varReserved);
+    HRESULT CloseApplication(BSTR bstrApplicationName, int lFlag);
 }
 enum IID_IAzAuthorizationStore2 = GUID(0xb11e5584, 0xd577, 0x4273, [0xb6, 0xc5, 0x9, 0x73, 0xe0, 0xf8, 0xe8, 0xd]);
 interface IAzAuthorizationStore2 : IAzAuthorizationStore
 {
-    HRESULT OpenApplication2(BSTR, VARIANT, IAzApplication2*);
-    HRESULT CreateApplication2(BSTR, VARIANT, IAzApplication2*);
+    HRESULT OpenApplication2(BSTR bstrApplicationName, VARIANT varReserved, IAzApplication2* ppApplication);
+    HRESULT CreateApplication2(BSTR bstrApplicationName, VARIANT varReserved, IAzApplication2* ppApplication);
 }
 enum IID_IAzAuthorizationStore3 = GUID(0xabc08425, 0xc86, 0x4fa0, [0x9b, 0xe3, 0x71, 0x89, 0x95, 0x6c, 0x92, 0x6e]);
 interface IAzAuthorizationStore3 : IAzAuthorizationStore2
 {
-    HRESULT IsUpdateNeeded(VARIANT_BOOL*);
-    HRESULT BizruleGroupSupported(VARIANT_BOOL*);
-    HRESULT UpgradeStoresFunctionalLevel(int);
-    HRESULT IsFunctionalLevelUpgradeSupported(int, VARIANT_BOOL*);
-    HRESULT GetSchemaVersion(int*, int*);
+    HRESULT IsUpdateNeeded(VARIANT_BOOL* pbIsUpdateNeeded);
+    HRESULT BizruleGroupSupported(VARIANT_BOOL* pbSupported);
+    HRESULT UpgradeStoresFunctionalLevel(int lFunctionalLevel);
+    HRESULT IsFunctionalLevelUpgradeSupported(int lFunctionalLevel, VARIANT_BOOL* pbSupported);
+    HRESULT GetSchemaVersion(int* plMajorVersion, int* plMinorVersion);
 }
 enum IID_IAzApplication = GUID(0x987bc7c7, 0xb813, 0x4d27, [0xbe, 0xde, 0x6b, 0xa5, 0xae, 0x86, 0x7e, 0x95]);
 interface IAzApplication : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT put_Name(BSTR);
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
-    HRESULT get_ApplicationData(BSTR*);
-    HRESULT put_ApplicationData(BSTR);
-    HRESULT get_AuthzInterfaceClsid(BSTR*);
-    HRESULT put_AuthzInterfaceClsid(BSTR);
-    HRESULT get_Version(BSTR*);
-    HRESULT put_Version(BSTR);
-    HRESULT get_GenerateAudits(BOOL*);
-    HRESULT put_GenerateAudits(BOOL);
-    HRESULT get_ApplyStoreSacl(BOOL*);
-    HRESULT put_ApplyStoreSacl(BOOL);
-    HRESULT get_Writable(BOOL*);
-    HRESULT GetProperty(int, VARIANT, VARIANT*);
-    HRESULT SetProperty(int, VARIANT, VARIANT);
-    HRESULT get_PolicyAdministrators(VARIANT*);
-    HRESULT get_PolicyReaders(VARIANT*);
-    HRESULT AddPolicyAdministrator(BSTR, VARIANT);
-    HRESULT DeletePolicyAdministrator(BSTR, VARIANT);
-    HRESULT AddPolicyReader(BSTR, VARIANT);
-    HRESULT DeletePolicyReader(BSTR, VARIANT);
-    HRESULT get_Scopes(IAzScopes*);
-    HRESULT OpenScope(BSTR, VARIANT, IAzScope*);
-    HRESULT CreateScope(BSTR, VARIANT, IAzScope*);
-    HRESULT DeleteScope(BSTR, VARIANT);
-    HRESULT get_Operations(IAzOperations*);
-    HRESULT OpenOperation(BSTR, VARIANT, IAzOperation*);
-    HRESULT CreateOperation(BSTR, VARIANT, IAzOperation*);
-    HRESULT DeleteOperation(BSTR, VARIANT);
-    HRESULT get_Tasks(IAzTasks*);
-    HRESULT OpenTask(BSTR, VARIANT, IAzTask*);
-    HRESULT CreateTask(BSTR, VARIANT, IAzTask*);
-    HRESULT DeleteTask(BSTR, VARIANT);
-    HRESULT get_ApplicationGroups(IAzApplicationGroups*);
-    HRESULT OpenApplicationGroup(BSTR, VARIANT, IAzApplicationGroup*);
-    HRESULT CreateApplicationGroup(BSTR, VARIANT, IAzApplicationGroup*);
-    HRESULT DeleteApplicationGroup(BSTR, VARIANT);
-    HRESULT get_Roles(IAzRoles*);
-    HRESULT OpenRole(BSTR, VARIANT, IAzRole*);
-    HRESULT CreateRole(BSTR, VARIANT, IAzRole*);
-    HRESULT DeleteRole(BSTR, VARIANT);
-    HRESULT InitializeClientContextFromToken(ulong, VARIANT, IAzClientContext*);
-    HRESULT AddPropertyItem(int, VARIANT, VARIANT);
-    HRESULT DeletePropertyItem(int, VARIANT, VARIANT);
-    HRESULT Submit(int, VARIANT);
-    HRESULT InitializeClientContextFromName(BSTR, BSTR, VARIANT, IAzClientContext*);
-    HRESULT get_DelegatedPolicyUsers(VARIANT*);
-    HRESULT AddDelegatedPolicyUser(BSTR, VARIANT);
-    HRESULT DeleteDelegatedPolicyUser(BSTR, VARIANT);
-    HRESULT InitializeClientContextFromStringSid(BSTR, int, VARIANT, IAzClientContext*);
-    HRESULT get_PolicyAdministratorsName(VARIANT*);
-    HRESULT get_PolicyReadersName(VARIANT*);
-    HRESULT AddPolicyAdministratorName(BSTR, VARIANT);
-    HRESULT DeletePolicyAdministratorName(BSTR, VARIANT);
-    HRESULT AddPolicyReaderName(BSTR, VARIANT);
-    HRESULT DeletePolicyReaderName(BSTR, VARIANT);
-    HRESULT get_DelegatedPolicyUsersName(VARIANT*);
-    HRESULT AddDelegatedPolicyUserName(BSTR, VARIANT);
-    HRESULT DeleteDelegatedPolicyUserName(BSTR, VARIANT);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT put_Name(BSTR bstrName);
+    HRESULT get_Description(BSTR* pbstrDescription);
+    HRESULT put_Description(BSTR bstrDescription);
+    HRESULT get_ApplicationData(BSTR* pbstrApplicationData);
+    HRESULT put_ApplicationData(BSTR bstrApplicationData);
+    HRESULT get_AuthzInterfaceClsid(BSTR* pbstrProp);
+    HRESULT put_AuthzInterfaceClsid(BSTR bstrProp);
+    HRESULT get_Version(BSTR* pbstrProp);
+    HRESULT put_Version(BSTR bstrProp);
+    HRESULT get_GenerateAudits(BOOL* pbProp);
+    HRESULT put_GenerateAudits(BOOL bProp);
+    HRESULT get_ApplyStoreSacl(BOOL* pbProp);
+    HRESULT put_ApplyStoreSacl(BOOL bProp);
+    HRESULT get_Writable(BOOL* pfProp);
+    HRESULT GetProperty(int lPropId, VARIANT varReserved, VARIANT* pvarProp);
+    HRESULT SetProperty(int lPropId, VARIANT varProp, VARIANT varReserved);
+    HRESULT get_PolicyAdministrators(VARIANT* pvarAdmins);
+    HRESULT get_PolicyReaders(VARIANT* pvarReaders);
+    HRESULT AddPolicyAdministrator(BSTR bstrAdmin, VARIANT varReserved);
+    HRESULT DeletePolicyAdministrator(BSTR bstrAdmin, VARIANT varReserved);
+    HRESULT AddPolicyReader(BSTR bstrReader, VARIANT varReserved);
+    HRESULT DeletePolicyReader(BSTR bstrReader, VARIANT varReserved);
+    HRESULT get_Scopes(IAzScopes* ppScopeCollection);
+    HRESULT OpenScope(BSTR bstrScopeName, VARIANT varReserved, IAzScope* ppScope);
+    HRESULT CreateScope(BSTR bstrScopeName, VARIANT varReserved, IAzScope* ppScope);
+    HRESULT DeleteScope(BSTR bstrScopeName, VARIANT varReserved);
+    HRESULT get_Operations(IAzOperations* ppOperationCollection);
+    HRESULT OpenOperation(BSTR bstrOperationName, VARIANT varReserved, IAzOperation* ppOperation);
+    HRESULT CreateOperation(BSTR bstrOperationName, VARIANT varReserved, IAzOperation* ppOperation);
+    HRESULT DeleteOperation(BSTR bstrOperationName, VARIANT varReserved);
+    HRESULT get_Tasks(IAzTasks* ppTaskCollection);
+    HRESULT OpenTask(BSTR bstrTaskName, VARIANT varReserved, IAzTask* ppTask);
+    HRESULT CreateTask(BSTR bstrTaskName, VARIANT varReserved, IAzTask* ppTask);
+    HRESULT DeleteTask(BSTR bstrTaskName, VARIANT varReserved);
+    HRESULT get_ApplicationGroups(IAzApplicationGroups* ppGroupCollection);
+    HRESULT OpenApplicationGroup(BSTR bstrGroupName, VARIANT varReserved, IAzApplicationGroup* ppGroup);
+    HRESULT CreateApplicationGroup(BSTR bstrGroupName, VARIANT varReserved, IAzApplicationGroup* ppGroup);
+    HRESULT DeleteApplicationGroup(BSTR bstrGroupName, VARIANT varReserved);
+    HRESULT get_Roles(IAzRoles* ppRoleCollection);
+    HRESULT OpenRole(BSTR bstrRoleName, VARIANT varReserved, IAzRole* ppRole);
+    HRESULT CreateRole(BSTR bstrRoleName, VARIANT varReserved, IAzRole* ppRole);
+    HRESULT DeleteRole(BSTR bstrRoleName, VARIANT varReserved);
+    HRESULT InitializeClientContextFromToken(ulong ullTokenHandle, VARIANT varReserved, IAzClientContext* ppClientContext);
+    HRESULT AddPropertyItem(int lPropId, VARIANT varProp, VARIANT varReserved);
+    HRESULT DeletePropertyItem(int lPropId, VARIANT varProp, VARIANT varReserved);
+    HRESULT Submit(int lFlags, VARIANT varReserved);
+    HRESULT InitializeClientContextFromName(BSTR ClientName, BSTR DomainName, VARIANT varReserved, IAzClientContext* ppClientContext);
+    HRESULT get_DelegatedPolicyUsers(VARIANT* pvarDelegatedPolicyUsers);
+    HRESULT AddDelegatedPolicyUser(BSTR bstrDelegatedPolicyUser, VARIANT varReserved);
+    HRESULT DeleteDelegatedPolicyUser(BSTR bstrDelegatedPolicyUser, VARIANT varReserved);
+    HRESULT InitializeClientContextFromStringSid(BSTR SidString, int lOptions, VARIANT varReserved, IAzClientContext* ppClientContext);
+    HRESULT get_PolicyAdministratorsName(VARIANT* pvarAdmins);
+    HRESULT get_PolicyReadersName(VARIANT* pvarReaders);
+    HRESULT AddPolicyAdministratorName(BSTR bstrAdmin, VARIANT varReserved);
+    HRESULT DeletePolicyAdministratorName(BSTR bstrAdmin, VARIANT varReserved);
+    HRESULT AddPolicyReaderName(BSTR bstrReader, VARIANT varReserved);
+    HRESULT DeletePolicyReaderName(BSTR bstrReader, VARIANT varReserved);
+    HRESULT get_DelegatedPolicyUsersName(VARIANT* pvarDelegatedPolicyUsers);
+    HRESULT AddDelegatedPolicyUserName(BSTR bstrDelegatedPolicyUser, VARIANT varReserved);
+    HRESULT DeleteDelegatedPolicyUserName(BSTR bstrDelegatedPolicyUser, VARIANT varReserved);
 }
 enum IID_IAzApplication2 = GUID(0x86a68af, 0xa249, 0x437c, [0xb1, 0x8d, 0xd4, 0xd8, 0x6d, 0x6a, 0x96, 0x60]);
 interface IAzApplication2 : IAzApplication
 {
-    HRESULT InitializeClientContextFromToken2(uint, uint, VARIANT, IAzClientContext2*);
-    HRESULT InitializeClientContext2(BSTR, VARIANT, IAzClientContext2*);
+    HRESULT InitializeClientContextFromToken2(uint ulTokenHandleLowPart, uint ulTokenHandleHighPart, VARIANT varReserved, IAzClientContext2* ppClientContext);
+    HRESULT InitializeClientContext2(BSTR IdentifyingString, VARIANT varReserved, IAzClientContext2* ppClientContext);
 }
 enum IID_IAzApplications = GUID(0x929b11a9, 0x95c5, 0x4a84, [0xa2, 0x9a, 0x20, 0xad, 0x42, 0xc2, 0xf1, 0x6c]);
 interface IAzApplications : IDispatch
 {
-    HRESULT get_Item(int, VARIANT*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Item(int Index, VARIANT* pvarObtPtr);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* ppEnumPtr);
 }
 enum IID_IAzOperation = GUID(0x5e56b24f, 0xea01, 0x4d61, [0xbe, 0x44, 0xc4, 0x9b, 0x5e, 0x4e, 0xaf, 0x74]);
 interface IAzOperation : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT put_Name(BSTR);
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
-    HRESULT get_ApplicationData(BSTR*);
-    HRESULT put_ApplicationData(BSTR);
-    HRESULT get_OperationID(int*);
-    HRESULT put_OperationID(int);
-    HRESULT get_Writable(BOOL*);
-    HRESULT GetProperty(int, VARIANT, VARIANT*);
-    HRESULT SetProperty(int, VARIANT, VARIANT);
-    HRESULT Submit(int, VARIANT);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT put_Name(BSTR bstrName);
+    HRESULT get_Description(BSTR* pbstrDescription);
+    HRESULT put_Description(BSTR bstrDescription);
+    HRESULT get_ApplicationData(BSTR* pbstrApplicationData);
+    HRESULT put_ApplicationData(BSTR bstrApplicationData);
+    HRESULT get_OperationID(int* plProp);
+    HRESULT put_OperationID(int lProp);
+    HRESULT get_Writable(BOOL* pfProp);
+    HRESULT GetProperty(int lPropId, VARIANT varReserved, VARIANT* pvarProp);
+    HRESULT SetProperty(int lPropId, VARIANT varProp, VARIANT varReserved);
+    HRESULT Submit(int lFlags, VARIANT varReserved);
 }
 enum IID_IAzOperations = GUID(0x90ef9c07, 0x9706, 0x49d9, [0xaf, 0x80, 0x4, 0x38, 0xa5, 0xf3, 0xec, 0x35]);
 interface IAzOperations : IDispatch
 {
-    HRESULT get_Item(int, VARIANT*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Item(int Index, VARIANT* pvarObtPtr);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* ppEnumPtr);
 }
 enum IID_IAzTask = GUID(0xcb94e592, 0x2e0e, 0x4a6c, [0xa3, 0x36, 0xb8, 0x9a, 0x6d, 0xc1, 0xe3, 0x88]);
 interface IAzTask : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT put_Name(BSTR);
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
-    HRESULT get_ApplicationData(BSTR*);
-    HRESULT put_ApplicationData(BSTR);
-    HRESULT get_BizRule(BSTR*);
-    HRESULT put_BizRule(BSTR);
-    HRESULT get_BizRuleLanguage(BSTR*);
-    HRESULT put_BizRuleLanguage(BSTR);
-    HRESULT get_BizRuleImportedPath(BSTR*);
-    HRESULT put_BizRuleImportedPath(BSTR);
-    HRESULT get_IsRoleDefinition(BOOL*);
-    HRESULT put_IsRoleDefinition(BOOL);
-    HRESULT get_Operations(VARIANT*);
-    HRESULT get_Tasks(VARIANT*);
-    HRESULT AddOperation(BSTR, VARIANT);
-    HRESULT DeleteOperation(BSTR, VARIANT);
-    HRESULT AddTask(BSTR, VARIANT);
-    HRESULT DeleteTask(BSTR, VARIANT);
-    HRESULT get_Writable(BOOL*);
-    HRESULT GetProperty(int, VARIANT, VARIANT*);
-    HRESULT SetProperty(int, VARIANT, VARIANT);
-    HRESULT AddPropertyItem(int, VARIANT, VARIANT);
-    HRESULT DeletePropertyItem(int, VARIANT, VARIANT);
-    HRESULT Submit(int, VARIANT);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT put_Name(BSTR bstrName);
+    HRESULT get_Description(BSTR* pbstrDescription);
+    HRESULT put_Description(BSTR bstrDescription);
+    HRESULT get_ApplicationData(BSTR* pbstrApplicationData);
+    HRESULT put_ApplicationData(BSTR bstrApplicationData);
+    HRESULT get_BizRule(BSTR* pbstrProp);
+    HRESULT put_BizRule(BSTR bstrProp);
+    HRESULT get_BizRuleLanguage(BSTR* pbstrProp);
+    HRESULT put_BizRuleLanguage(BSTR bstrProp);
+    HRESULT get_BizRuleImportedPath(BSTR* pbstrProp);
+    HRESULT put_BizRuleImportedPath(BSTR bstrProp);
+    HRESULT get_IsRoleDefinition(BOOL* pfProp);
+    HRESULT put_IsRoleDefinition(BOOL fProp);
+    HRESULT get_Operations(VARIANT* pvarProp);
+    HRESULT get_Tasks(VARIANT* pvarProp);
+    HRESULT AddOperation(BSTR bstrOp, VARIANT varReserved);
+    HRESULT DeleteOperation(BSTR bstrOp, VARIANT varReserved);
+    HRESULT AddTask(BSTR bstrTask, VARIANT varReserved);
+    HRESULT DeleteTask(BSTR bstrTask, VARIANT varReserved);
+    HRESULT get_Writable(BOOL* pfProp);
+    HRESULT GetProperty(int lPropId, VARIANT varReserved, VARIANT* pvarProp);
+    HRESULT SetProperty(int lPropId, VARIANT varProp, VARIANT varReserved);
+    HRESULT AddPropertyItem(int lPropId, VARIANT varProp, VARIANT varReserved);
+    HRESULT DeletePropertyItem(int lPropId, VARIANT varProp, VARIANT varReserved);
+    HRESULT Submit(int lFlags, VARIANT varReserved);
 }
 enum IID_IAzTasks = GUID(0xb338ccab, 0x4c85, 0x4388, [0x8c, 0xa, 0xc5, 0x85, 0x92, 0xba, 0xd3, 0x98]);
 interface IAzTasks : IDispatch
 {
-    HRESULT get_Item(int, VARIANT*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Item(int Index, VARIANT* pvarObtPtr);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* ppEnumPtr);
 }
 enum IID_IAzScope = GUID(0xe52487, 0xe08d, 0x4514, [0xb6, 0x2e, 0x87, 0x7d, 0x56, 0x45, 0xf5, 0xab]);
 interface IAzScope : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT put_Name(BSTR);
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
-    HRESULT get_ApplicationData(BSTR*);
-    HRESULT put_ApplicationData(BSTR);
-    HRESULT get_Writable(BOOL*);
-    HRESULT GetProperty(int, VARIANT, VARIANT*);
-    HRESULT SetProperty(int, VARIANT, VARIANT);
-    HRESULT AddPropertyItem(int, VARIANT, VARIANT);
-    HRESULT DeletePropertyItem(int, VARIANT, VARIANT);
-    HRESULT get_PolicyAdministrators(VARIANT*);
-    HRESULT get_PolicyReaders(VARIANT*);
-    HRESULT AddPolicyAdministrator(BSTR, VARIANT);
-    HRESULT DeletePolicyAdministrator(BSTR, VARIANT);
-    HRESULT AddPolicyReader(BSTR, VARIANT);
-    HRESULT DeletePolicyReader(BSTR, VARIANT);
-    HRESULT get_ApplicationGroups(IAzApplicationGroups*);
-    HRESULT OpenApplicationGroup(BSTR, VARIANT, IAzApplicationGroup*);
-    HRESULT CreateApplicationGroup(BSTR, VARIANT, IAzApplicationGroup*);
-    HRESULT DeleteApplicationGroup(BSTR, VARIANT);
-    HRESULT get_Roles(IAzRoles*);
-    HRESULT OpenRole(BSTR, VARIANT, IAzRole*);
-    HRESULT CreateRole(BSTR, VARIANT, IAzRole*);
-    HRESULT DeleteRole(BSTR, VARIANT);
-    HRESULT get_Tasks(IAzTasks*);
-    HRESULT OpenTask(BSTR, VARIANT, IAzTask*);
-    HRESULT CreateTask(BSTR, VARIANT, IAzTask*);
-    HRESULT DeleteTask(BSTR, VARIANT);
-    HRESULT Submit(int, VARIANT);
-    HRESULT get_CanBeDelegated(BOOL*);
-    HRESULT get_BizrulesWritable(BOOL*);
-    HRESULT get_PolicyAdministratorsName(VARIANT*);
-    HRESULT get_PolicyReadersName(VARIANT*);
-    HRESULT AddPolicyAdministratorName(BSTR, VARIANT);
-    HRESULT DeletePolicyAdministratorName(BSTR, VARIANT);
-    HRESULT AddPolicyReaderName(BSTR, VARIANT);
-    HRESULT DeletePolicyReaderName(BSTR, VARIANT);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT put_Name(BSTR bstrName);
+    HRESULT get_Description(BSTR* pbstrDescription);
+    HRESULT put_Description(BSTR bstrDescription);
+    HRESULT get_ApplicationData(BSTR* pbstrApplicationData);
+    HRESULT put_ApplicationData(BSTR bstrApplicationData);
+    HRESULT get_Writable(BOOL* pfProp);
+    HRESULT GetProperty(int lPropId, VARIANT varReserved, VARIANT* pvarProp);
+    HRESULT SetProperty(int lPropId, VARIANT varProp, VARIANT varReserved);
+    HRESULT AddPropertyItem(int lPropId, VARIANT varProp, VARIANT varReserved);
+    HRESULT DeletePropertyItem(int lPropId, VARIANT varProp, VARIANT varReserved);
+    HRESULT get_PolicyAdministrators(VARIANT* pvarAdmins);
+    HRESULT get_PolicyReaders(VARIANT* pvarReaders);
+    HRESULT AddPolicyAdministrator(BSTR bstrAdmin, VARIANT varReserved);
+    HRESULT DeletePolicyAdministrator(BSTR bstrAdmin, VARIANT varReserved);
+    HRESULT AddPolicyReader(BSTR bstrReader, VARIANT varReserved);
+    HRESULT DeletePolicyReader(BSTR bstrReader, VARIANT varReserved);
+    HRESULT get_ApplicationGroups(IAzApplicationGroups* ppGroupCollection);
+    HRESULT OpenApplicationGroup(BSTR bstrGroupName, VARIANT varReserved, IAzApplicationGroup* ppGroup);
+    HRESULT CreateApplicationGroup(BSTR bstrGroupName, VARIANT varReserved, IAzApplicationGroup* ppGroup);
+    HRESULT DeleteApplicationGroup(BSTR bstrGroupName, VARIANT varReserved);
+    HRESULT get_Roles(IAzRoles* ppRoleCollection);
+    HRESULT OpenRole(BSTR bstrRoleName, VARIANT varReserved, IAzRole* ppRole);
+    HRESULT CreateRole(BSTR bstrRoleName, VARIANT varReserved, IAzRole* ppRole);
+    HRESULT DeleteRole(BSTR bstrRoleName, VARIANT varReserved);
+    HRESULT get_Tasks(IAzTasks* ppTaskCollection);
+    HRESULT OpenTask(BSTR bstrTaskName, VARIANT varReserved, IAzTask* ppTask);
+    HRESULT CreateTask(BSTR bstrTaskName, VARIANT varReserved, IAzTask* ppTask);
+    HRESULT DeleteTask(BSTR bstrTaskName, VARIANT varReserved);
+    HRESULT Submit(int lFlags, VARIANT varReserved);
+    HRESULT get_CanBeDelegated(BOOL* pfProp);
+    HRESULT get_BizrulesWritable(BOOL* pfProp);
+    HRESULT get_PolicyAdministratorsName(VARIANT* pvarAdmins);
+    HRESULT get_PolicyReadersName(VARIANT* pvarReaders);
+    HRESULT AddPolicyAdministratorName(BSTR bstrAdmin, VARIANT varReserved);
+    HRESULT DeletePolicyAdministratorName(BSTR bstrAdmin, VARIANT varReserved);
+    HRESULT AddPolicyReaderName(BSTR bstrReader, VARIANT varReserved);
+    HRESULT DeletePolicyReaderName(BSTR bstrReader, VARIANT varReserved);
 }
 enum IID_IAzScopes = GUID(0x78e14853, 0x9f5e, 0x406d, [0x9b, 0x91, 0x6b, 0xdb, 0xa6, 0x97, 0x35, 0x10]);
 interface IAzScopes : IDispatch
 {
-    HRESULT get_Item(int, VARIANT*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Item(int Index, VARIANT* pvarObtPtr);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* ppEnumPtr);
 }
 enum IID_IAzApplicationGroup = GUID(0xf1b744cd, 0x58a6, 0x4e06, [0x9f, 0xbf, 0x36, 0xf6, 0xd7, 0x79, 0xe2, 0x1e]);
 interface IAzApplicationGroup : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT put_Name(BSTR);
-    HRESULT get_Type(int*);
-    HRESULT put_Type(int);
-    HRESULT get_LdapQuery(BSTR*);
-    HRESULT put_LdapQuery(BSTR);
-    HRESULT get_AppMembers(VARIANT*);
-    HRESULT get_AppNonMembers(VARIANT*);
-    HRESULT get_Members(VARIANT*);
-    HRESULT get_NonMembers(VARIANT*);
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
-    HRESULT AddAppMember(BSTR, VARIANT);
-    HRESULT DeleteAppMember(BSTR, VARIANT);
-    HRESULT AddAppNonMember(BSTR, VARIANT);
-    HRESULT DeleteAppNonMember(BSTR, VARIANT);
-    HRESULT AddMember(BSTR, VARIANT);
-    HRESULT DeleteMember(BSTR, VARIANT);
-    HRESULT AddNonMember(BSTR, VARIANT);
-    HRESULT DeleteNonMember(BSTR, VARIANT);
-    HRESULT get_Writable(BOOL*);
-    HRESULT GetProperty(int, VARIANT, VARIANT*);
-    HRESULT SetProperty(int, VARIANT, VARIANT);
-    HRESULT AddPropertyItem(int, VARIANT, VARIANT);
-    HRESULT DeletePropertyItem(int, VARIANT, VARIANT);
-    HRESULT Submit(int, VARIANT);
-    HRESULT AddMemberName(BSTR, VARIANT);
-    HRESULT DeleteMemberName(BSTR, VARIANT);
-    HRESULT AddNonMemberName(BSTR, VARIANT);
-    HRESULT DeleteNonMemberName(BSTR, VARIANT);
-    HRESULT get_MembersName(VARIANT*);
-    HRESULT get_NonMembersName(VARIANT*);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT put_Name(BSTR bstrName);
+    HRESULT get_Type(int* plProp);
+    HRESULT put_Type(int lProp);
+    HRESULT get_LdapQuery(BSTR* pbstrProp);
+    HRESULT put_LdapQuery(BSTR bstrProp);
+    HRESULT get_AppMembers(VARIANT* pvarProp);
+    HRESULT get_AppNonMembers(VARIANT* pvarProp);
+    HRESULT get_Members(VARIANT* pvarProp);
+    HRESULT get_NonMembers(VARIANT* pvarProp);
+    HRESULT get_Description(BSTR* pbstrDescription);
+    HRESULT put_Description(BSTR bstrDescription);
+    HRESULT AddAppMember(BSTR bstrProp, VARIANT varReserved);
+    HRESULT DeleteAppMember(BSTR bstrProp, VARIANT varReserved);
+    HRESULT AddAppNonMember(BSTR bstrProp, VARIANT varReserved);
+    HRESULT DeleteAppNonMember(BSTR bstrProp, VARIANT varReserved);
+    HRESULT AddMember(BSTR bstrProp, VARIANT varReserved);
+    HRESULT DeleteMember(BSTR bstrProp, VARIANT varReserved);
+    HRESULT AddNonMember(BSTR bstrProp, VARIANT varReserved);
+    HRESULT DeleteNonMember(BSTR bstrProp, VARIANT varReserved);
+    HRESULT get_Writable(BOOL* pfProp);
+    HRESULT GetProperty(int lPropId, VARIANT varReserved, VARIANT* pvarProp);
+    HRESULT SetProperty(int lPropId, VARIANT varProp, VARIANT varReserved);
+    HRESULT AddPropertyItem(int lPropId, VARIANT varProp, VARIANT varReserved);
+    HRESULT DeletePropertyItem(int lPropId, VARIANT varProp, VARIANT varReserved);
+    HRESULT Submit(int lFlags, VARIANT varReserved);
+    HRESULT AddMemberName(BSTR bstrProp, VARIANT varReserved);
+    HRESULT DeleteMemberName(BSTR bstrProp, VARIANT varReserved);
+    HRESULT AddNonMemberName(BSTR bstrProp, VARIANT varReserved);
+    HRESULT DeleteNonMemberName(BSTR bstrProp, VARIANT varReserved);
+    HRESULT get_MembersName(VARIANT* pvarProp);
+    HRESULT get_NonMembersName(VARIANT* pvarProp);
 }
 enum IID_IAzApplicationGroups = GUID(0x4ce66ad5, 0x9f3c, 0x469d, [0xa9, 0x11, 0xb9, 0x98, 0x87, 0xa7, 0xe6, 0x85]);
 interface IAzApplicationGroups : IDispatch
 {
-    HRESULT get_Item(int, VARIANT*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Item(int Index, VARIANT* pvarObtPtr);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* ppEnumPtr);
 }
 enum IID_IAzRole = GUID(0x859e0d8d, 0x62d7, 0x41d8, [0xa0, 0x34, 0xc0, 0xcd, 0x5d, 0x43, 0xfd, 0xfa]);
 interface IAzRole : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT put_Name(BSTR);
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
-    HRESULT get_ApplicationData(BSTR*);
-    HRESULT put_ApplicationData(BSTR);
-    HRESULT AddAppMember(BSTR, VARIANT);
-    HRESULT DeleteAppMember(BSTR, VARIANT);
-    HRESULT AddTask(BSTR, VARIANT);
-    HRESULT DeleteTask(BSTR, VARIANT);
-    HRESULT AddOperation(BSTR, VARIANT);
-    HRESULT DeleteOperation(BSTR, VARIANT);
-    HRESULT AddMember(BSTR, VARIANT);
-    HRESULT DeleteMember(BSTR, VARIANT);
-    HRESULT get_Writable(BOOL*);
-    HRESULT GetProperty(int, VARIANT, VARIANT*);
-    HRESULT SetProperty(int, VARIANT, VARIANT);
-    HRESULT get_AppMembers(VARIANT*);
-    HRESULT get_Members(VARIANT*);
-    HRESULT get_Operations(VARIANT*);
-    HRESULT get_Tasks(VARIANT*);
-    HRESULT AddPropertyItem(int, VARIANT, VARIANT);
-    HRESULT DeletePropertyItem(int, VARIANT, VARIANT);
-    HRESULT Submit(int, VARIANT);
-    HRESULT AddMemberName(BSTR, VARIANT);
-    HRESULT DeleteMemberName(BSTR, VARIANT);
-    HRESULT get_MembersName(VARIANT*);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT put_Name(BSTR bstrName);
+    HRESULT get_Description(BSTR* pbstrDescription);
+    HRESULT put_Description(BSTR bstrDescription);
+    HRESULT get_ApplicationData(BSTR* pbstrApplicationData);
+    HRESULT put_ApplicationData(BSTR bstrApplicationData);
+    HRESULT AddAppMember(BSTR bstrProp, VARIANT varReserved);
+    HRESULT DeleteAppMember(BSTR bstrProp, VARIANT varReserved);
+    HRESULT AddTask(BSTR bstrProp, VARIANT varReserved);
+    HRESULT DeleteTask(BSTR bstrProp, VARIANT varReserved);
+    HRESULT AddOperation(BSTR bstrProp, VARIANT varReserved);
+    HRESULT DeleteOperation(BSTR bstrProp, VARIANT varReserved);
+    HRESULT AddMember(BSTR bstrProp, VARIANT varReserved);
+    HRESULT DeleteMember(BSTR bstrProp, VARIANT varReserved);
+    HRESULT get_Writable(BOOL* pfProp);
+    HRESULT GetProperty(int lPropId, VARIANT varReserved, VARIANT* pvarProp);
+    HRESULT SetProperty(int lPropId, VARIANT varProp, VARIANT varReserved);
+    HRESULT get_AppMembers(VARIANT* pvarProp);
+    HRESULT get_Members(VARIANT* pvarProp);
+    HRESULT get_Operations(VARIANT* pvarProp);
+    HRESULT get_Tasks(VARIANT* pvarProp);
+    HRESULT AddPropertyItem(int lPropId, VARIANT varProp, VARIANT varReserved);
+    HRESULT DeletePropertyItem(int lPropId, VARIANT varProp, VARIANT varReserved);
+    HRESULT Submit(int lFlags, VARIANT varReserved);
+    HRESULT AddMemberName(BSTR bstrProp, VARIANT varReserved);
+    HRESULT DeleteMemberName(BSTR bstrProp, VARIANT varReserved);
+    HRESULT get_MembersName(VARIANT* pvarProp);
 }
 enum IID_IAzRoles = GUID(0x95e0f119, 0x13b4, 0x4dae, [0xb6, 0x5f, 0x2f, 0x7d, 0x60, 0xd8, 0x22, 0xe4]);
 interface IAzRoles : IDispatch
 {
-    HRESULT get_Item(int, VARIANT*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Item(int Index, VARIANT* pvarObtPtr);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* ppEnumPtr);
 }
 enum IID_IAzClientContext = GUID(0xeff1f00b, 0x488a, 0x466d, [0xaf, 0xd9, 0xa4, 0x1, 0xc5, 0xf9, 0xee, 0xf5]);
 interface IAzClientContext : IDispatch
 {
-    HRESULT AccessCheck(BSTR, VARIANT, VARIANT, VARIANT, VARIANT, VARIANT, VARIANT, VARIANT, VARIANT*);
-    HRESULT GetBusinessRuleString(BSTR*);
-    HRESULT get_UserDn(BSTR*);
-    HRESULT get_UserSamCompat(BSTR*);
-    HRESULT get_UserDisplay(BSTR*);
-    HRESULT get_UserGuid(BSTR*);
-    HRESULT get_UserCanonical(BSTR*);
-    HRESULT get_UserUpn(BSTR*);
-    HRESULT get_UserDnsSamCompat(BSTR*);
-    HRESULT GetProperty(int, VARIANT, VARIANT*);
-    HRESULT GetRoles(BSTR, VARIANT*);
-    HRESULT get_RoleForAccessCheck(BSTR*);
-    HRESULT put_RoleForAccessCheck(BSTR);
+    HRESULT AccessCheck(BSTR bstrObjectName, VARIANT varScopeNames, VARIANT varOperations, VARIANT varParameterNames, VARIANT varParameterValues, VARIANT varInterfaceNames, VARIANT varInterfaceFlags, VARIANT varInterfaces, VARIANT* pvarResults);
+    HRESULT GetBusinessRuleString(BSTR* pbstrBusinessRuleString);
+    HRESULT get_UserDn(BSTR* pbstrProp);
+    HRESULT get_UserSamCompat(BSTR* pbstrProp);
+    HRESULT get_UserDisplay(BSTR* pbstrProp);
+    HRESULT get_UserGuid(BSTR* pbstrProp);
+    HRESULT get_UserCanonical(BSTR* pbstrProp);
+    HRESULT get_UserUpn(BSTR* pbstrProp);
+    HRESULT get_UserDnsSamCompat(BSTR* pbstrProp);
+    HRESULT GetProperty(int lPropId, VARIANT varReserved, VARIANT* pvarProp);
+    HRESULT GetRoles(BSTR bstrScopeName, VARIANT* pvarRoleNames);
+    HRESULT get_RoleForAccessCheck(BSTR* pbstrProp);
+    HRESULT put_RoleForAccessCheck(BSTR bstrProp);
 }
 enum IID_IAzClientContext2 = GUID(0x2b0c92b8, 0x208a, 0x488a, [0x8f, 0x81, 0xe4, 0xed, 0xb2, 0x21, 0x11, 0xcd]);
 interface IAzClientContext2 : IAzClientContext
 {
-    HRESULT GetAssignedScopesPage(int, int, VARIANT*, VARIANT*);
-    HRESULT AddRoles(VARIANT, BSTR);
-    HRESULT AddApplicationGroups(VARIANT);
-    HRESULT AddStringSids(VARIANT);
-    HRESULT put_LDAPQueryDN(BSTR);
-    HRESULT get_LDAPQueryDN(BSTR*);
+    HRESULT GetAssignedScopesPage(int lOptions, int PageSize, VARIANT* pvarCursor, VARIANT* pvarScopeNames);
+    HRESULT AddRoles(VARIANT varRoles, BSTR bstrScopeName);
+    HRESULT AddApplicationGroups(VARIANT varApplicationGroups);
+    HRESULT AddStringSids(VARIANT varStringSids);
+    HRESULT put_LDAPQueryDN(BSTR bstrLDAPQueryDN);
+    HRESULT get_LDAPQueryDN(BSTR* pbstrLDAPQueryDN);
 }
 enum IID_IAzBizRuleContext = GUID(0xe192f17d, 0xd59f, 0x455e, [0xa1, 0x52, 0x94, 0x3, 0x16, 0xcd, 0x77, 0xb2]);
 interface IAzBizRuleContext : IDispatch
 {
-    HRESULT put_BusinessRuleResult(BOOL);
-    HRESULT put_BusinessRuleString(BSTR);
-    HRESULT get_BusinessRuleString(BSTR*);
-    HRESULT GetParameter(BSTR, VARIANT*);
+    HRESULT put_BusinessRuleResult(BOOL bResult);
+    HRESULT put_BusinessRuleString(BSTR bstrBusinessRuleString);
+    HRESULT get_BusinessRuleString(BSTR* pbstrBusinessRuleString);
+    HRESULT GetParameter(BSTR bstrParameterName, VARIANT* pvarParameterValue);
 }
 enum IID_IAzBizRuleParameters = GUID(0xfc17685f, 0xe25d, 0x4dcd, [0xba, 0xe1, 0x27, 0x6e, 0xc9, 0x53, 0x3c, 0xb5]);
 interface IAzBizRuleParameters : IDispatch
 {
-    HRESULT AddParameter(BSTR, VARIANT);
-    HRESULT AddParameters(VARIANT, VARIANT);
-    HRESULT GetParameterValue(BSTR, VARIANT*);
-    HRESULT Remove(BSTR);
+    HRESULT AddParameter(BSTR bstrParameterName, VARIANT varParameterValue);
+    HRESULT AddParameters(VARIANT varParameterNames, VARIANT varParameterValues);
+    HRESULT GetParameterValue(BSTR bstrParameterName, VARIANT* pvarParameterValue);
+    HRESULT Remove(BSTR varParameterName);
     HRESULT RemoveAll();
-    HRESULT get_Count(uint*);
+    HRESULT get_Count(uint* plCount);
 }
 enum IID_IAzBizRuleInterfaces = GUID(0xe94128c7, 0xe9da, 0x44cc, [0xb0, 0xbd, 0x53, 0x3, 0x6f, 0x3a, 0xab, 0x3d]);
 interface IAzBizRuleInterfaces : IDispatch
 {
-    HRESULT AddInterface(BSTR, int, VARIANT);
-    HRESULT AddInterfaces(VARIANT, VARIANT, VARIANT);
-    HRESULT GetInterfaceValue(BSTR, int*, VARIANT*);
-    HRESULT Remove(BSTR);
+    HRESULT AddInterface(BSTR bstrInterfaceName, int lInterfaceFlag, VARIANT varInterface);
+    HRESULT AddInterfaces(VARIANT varInterfaceNames, VARIANT varInterfaceFlags, VARIANT varInterfaces);
+    HRESULT GetInterfaceValue(BSTR bstrInterfaceName, int* lInterfaceFlag, VARIANT* varInterface);
+    HRESULT Remove(BSTR bstrInterfaceName);
     HRESULT RemoveAll();
-    HRESULT get_Count(uint*);
+    HRESULT get_Count(uint* plCount);
 }
 enum IID_IAzClientContext3 = GUID(0x11894fde, 0x1deb, 0x4b4b, [0x89, 0x7, 0x6d, 0x1c, 0xda, 0x1f, 0x5d, 0x4f]);
 interface IAzClientContext3 : IAzClientContext2
 {
-    HRESULT AccessCheck2(BSTR, BSTR, int, uint*);
-    HRESULT IsInRoleAssignment(BSTR, BSTR, VARIANT_BOOL*);
-    HRESULT GetOperations(BSTR, IAzOperations*);
-    HRESULT GetTasks(BSTR, IAzTasks*);
-    HRESULT get_BizRuleParameters(IAzBizRuleParameters*);
-    HRESULT get_BizRuleInterfaces(IAzBizRuleInterfaces*);
-    HRESULT GetGroups(BSTR, uint, VARIANT*);
-    HRESULT get_Sids(VARIANT*);
+    HRESULT AccessCheck2(BSTR bstrObjectName, BSTR bstrScopeName, int lOperation, uint* plResult);
+    HRESULT IsInRoleAssignment(BSTR bstrScopeName, BSTR bstrRoleName, VARIANT_BOOL* pbIsInRole);
+    HRESULT GetOperations(BSTR bstrScopeName, IAzOperations* ppOperationCollection);
+    HRESULT GetTasks(BSTR bstrScopeName, IAzTasks* ppTaskCollection);
+    HRESULT get_BizRuleParameters(IAzBizRuleParameters* ppBizRuleParam);
+    HRESULT get_BizRuleInterfaces(IAzBizRuleInterfaces* ppBizRuleInterfaces);
+    HRESULT GetGroups(BSTR bstrScopeName, uint ulOptions, VARIANT* pGroupArray);
+    HRESULT get_Sids(VARIANT* pStringSidArray);
 }
 enum IID_IAzScope2 = GUID(0xee9fe8c9, 0xc9f3, 0x40e2, [0xaa, 0x12, 0xd1, 0xd8, 0x59, 0x97, 0x27, 0xfd]);
 interface IAzScope2 : IAzScope
 {
-    HRESULT get_RoleDefinitions(IAzRoleDefinitions*);
-    HRESULT CreateRoleDefinition(BSTR, IAzRoleDefinition*);
-    HRESULT OpenRoleDefinition(BSTR, IAzRoleDefinition*);
-    HRESULT DeleteRoleDefinition(BSTR);
-    HRESULT get_RoleAssignments(IAzRoleAssignments*);
-    HRESULT CreateRoleAssignment(BSTR, IAzRoleAssignment*);
-    HRESULT OpenRoleAssignment(BSTR, IAzRoleAssignment*);
-    HRESULT DeleteRoleAssignment(BSTR);
+    HRESULT get_RoleDefinitions(IAzRoleDefinitions* ppRoleDefinitions);
+    HRESULT CreateRoleDefinition(BSTR bstrRoleDefinitionName, IAzRoleDefinition* ppRoleDefinitions);
+    HRESULT OpenRoleDefinition(BSTR bstrRoleDefinitionName, IAzRoleDefinition* ppRoleDefinitions);
+    HRESULT DeleteRoleDefinition(BSTR bstrRoleDefinitionName);
+    HRESULT get_RoleAssignments(IAzRoleAssignments* ppRoleAssignments);
+    HRESULT CreateRoleAssignment(BSTR bstrRoleAssignmentName, IAzRoleAssignment* ppRoleAssignment);
+    HRESULT OpenRoleAssignment(BSTR bstrRoleAssignmentName, IAzRoleAssignment* ppRoleAssignment);
+    HRESULT DeleteRoleAssignment(BSTR bstrRoleAssignmentName);
 }
 enum IID_IAzApplication3 = GUID(0x181c845e, 0x7196, 0x4a7d, [0xac, 0x2e, 0x2, 0xc, 0xb, 0xb7, 0xa3, 0x3]);
 interface IAzApplication3 : IAzApplication2
 {
-    HRESULT ScopeExists(BSTR, VARIANT_BOOL*);
-    HRESULT OpenScope2(BSTR, IAzScope2*);
-    HRESULT CreateScope2(BSTR, IAzScope2*);
-    HRESULT DeleteScope2(BSTR);
-    HRESULT get_RoleDefinitions(IAzRoleDefinitions*);
-    HRESULT CreateRoleDefinition(BSTR, IAzRoleDefinition*);
-    HRESULT OpenRoleDefinition(BSTR, IAzRoleDefinition*);
-    HRESULT DeleteRoleDefinition(BSTR);
-    HRESULT get_RoleAssignments(IAzRoleAssignments*);
-    HRESULT CreateRoleAssignment(BSTR, IAzRoleAssignment*);
-    HRESULT OpenRoleAssignment(BSTR, IAzRoleAssignment*);
-    HRESULT DeleteRoleAssignment(BSTR);
-    HRESULT get_BizRulesEnabled(VARIANT_BOOL*);
-    HRESULT put_BizRulesEnabled(VARIANT_BOOL);
+    HRESULT ScopeExists(BSTR bstrScopeName, VARIANT_BOOL* pbExist);
+    HRESULT OpenScope2(BSTR bstrScopeName, IAzScope2* ppScope2);
+    HRESULT CreateScope2(BSTR bstrScopeName, IAzScope2* ppScope2);
+    HRESULT DeleteScope2(BSTR bstrScopeName);
+    HRESULT get_RoleDefinitions(IAzRoleDefinitions* ppRoleDefinitions);
+    HRESULT CreateRoleDefinition(BSTR bstrRoleDefinitionName, IAzRoleDefinition* ppRoleDefinitions);
+    HRESULT OpenRoleDefinition(BSTR bstrRoleDefinitionName, IAzRoleDefinition* ppRoleDefinitions);
+    HRESULT DeleteRoleDefinition(BSTR bstrRoleDefinitionName);
+    HRESULT get_RoleAssignments(IAzRoleAssignments* ppRoleAssignments);
+    HRESULT CreateRoleAssignment(BSTR bstrRoleAssignmentName, IAzRoleAssignment* ppRoleAssignment);
+    HRESULT OpenRoleAssignment(BSTR bstrRoleAssignmentName, IAzRoleAssignment* ppRoleAssignment);
+    HRESULT DeleteRoleAssignment(BSTR bstrRoleAssignmentName);
+    HRESULT get_BizRulesEnabled(VARIANT_BOOL* pbEnabled);
+    HRESULT put_BizRulesEnabled(VARIANT_BOOL bEnabled);
 }
 enum IID_IAzOperation2 = GUID(0x1f5ea01f, 0x44a2, 0x4184, [0x9c, 0x48, 0xa7, 0x5b, 0x4d, 0xcc, 0x8c, 0xcc]);
 interface IAzOperation2 : IAzOperation
 {
-    HRESULT RoleAssignments(BSTR, VARIANT_BOOL, IAzRoleAssignments*);
+    HRESULT RoleAssignments(BSTR bstrScopeName, VARIANT_BOOL bRecursive, IAzRoleAssignments* ppRoleAssignments);
 }
 enum IID_IAzRoleDefinitions = GUID(0x881f25a5, 0xd755, 0x4550, [0x95, 0x7a, 0xd5, 0x3, 0xa3, 0xb3, 0x40, 0x1]);
 interface IAzRoleDefinitions : IDispatch
 {
-    HRESULT get_Item(int, VARIANT*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Item(int Index, VARIANT* pvarObtPtr);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* ppEnumPtr);
 }
 enum IID_IAzRoleDefinition = GUID(0xd97fcea1, 0x2599, 0x44f1, [0x9f, 0xc3, 0x58, 0xe9, 0xfb, 0xe0, 0x94, 0x66]);
 interface IAzRoleDefinition : IAzTask
 {
-    HRESULT RoleAssignments(BSTR, VARIANT_BOOL, IAzRoleAssignments*);
-    HRESULT AddRoleDefinition(BSTR);
-    HRESULT DeleteRoleDefinition(BSTR);
-    HRESULT get_RoleDefinitions(IAzRoleDefinitions*);
+    HRESULT RoleAssignments(BSTR bstrScopeName, VARIANT_BOOL bRecursive, IAzRoleAssignments* ppRoleAssignments);
+    HRESULT AddRoleDefinition(BSTR bstrRoleDefinition);
+    HRESULT DeleteRoleDefinition(BSTR bstrRoleDefinition);
+    HRESULT get_RoleDefinitions(IAzRoleDefinitions* ppRoleDefinitions);
 }
 enum IID_IAzRoleAssignment = GUID(0x55647d31, 0xd5a, 0x4fa3, [0xb4, 0xac, 0x2b, 0x5f, 0x9a, 0xd5, 0xab, 0x76]);
 interface IAzRoleAssignment : IAzRole
 {
-    HRESULT AddRoleDefinition(BSTR);
-    HRESULT DeleteRoleDefinition(BSTR);
-    HRESULT get_RoleDefinitions(IAzRoleDefinitions*);
-    HRESULT get_Scope(IAzScope*);
+    HRESULT AddRoleDefinition(BSTR bstrRoleDefinition);
+    HRESULT DeleteRoleDefinition(BSTR bstrRoleDefinition);
+    HRESULT get_RoleDefinitions(IAzRoleDefinitions* ppRoleDefinitions);
+    HRESULT get_Scope(IAzScope* ppScope);
 }
 enum IID_IAzRoleAssignments = GUID(0x9c80b900, 0xfceb, 0x4d73, [0xa0, 0xf4, 0xc8, 0x3b, 0xb, 0xbf, 0x24, 0x81]);
 interface IAzRoleAssignments : IDispatch
 {
-    HRESULT get_Item(int, VARIANT*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Item(int Index, VARIANT* pvarObtPtr);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* ppEnumPtr);
 }
 enum IID_IAzPrincipalLocator = GUID(0xe5c3507d, 0xad6a, 0x4992, [0x9c, 0x7f, 0x74, 0xab, 0x48, 0xb, 0x44, 0xcc]);
 interface IAzPrincipalLocator : IDispatch
 {
-    HRESULT get_NameResolver(IAzNameResolver*);
-    HRESULT get_ObjectPicker(IAzObjectPicker*);
+    HRESULT get_NameResolver(IAzNameResolver* ppNameResolver);
+    HRESULT get_ObjectPicker(IAzObjectPicker* ppObjectPicker);
 }
 enum IID_IAzNameResolver = GUID(0x504d0f15, 0x73e2, 0x43df, [0xa8, 0x70, 0xa6, 0x4f, 0x40, 0x71, 0x4f, 0x53]);
 interface IAzNameResolver : IDispatch
 {
-    HRESULT NameFromSid(BSTR, int*, BSTR*);
-    HRESULT NamesFromSids(VARIANT, VARIANT*, VARIANT*);
+    HRESULT NameFromSid(BSTR bstrSid, int* pSidType, BSTR* pbstrName);
+    HRESULT NamesFromSids(VARIANT vSids, VARIANT* pvSidTypes, VARIANT* pvNames);
 }
 enum IID_IAzObjectPicker = GUID(0x63130a48, 0x699a, 0x42d8, [0xbf, 0x1, 0xc6, 0x2a, 0xc3, 0xfb, 0x79, 0xf9]);
 interface IAzObjectPicker : IDispatch
 {
-    HRESULT GetPrincipals(HWND, BSTR, VARIANT*, VARIANT*, VARIANT*);
-    HRESULT get_Name(BSTR*);
+    HRESULT GetPrincipals(HWND hParentWnd, BSTR bstrTitle, VARIANT* pvSidTypes, VARIANT* pvNames, VARIANT* pvSids);
+    HRESULT get_Name(BSTR* pbstrName);
 }
 enum IID_IAzApplicationGroup2 = GUID(0x3f0613fc, 0xb71a, 0x464e, [0xa1, 0x1d, 0x5b, 0x88, 0x1a, 0x56, 0xce, 0xfa]);
 interface IAzApplicationGroup2 : IAzApplicationGroup
 {
-    HRESULT get_BizRule(BSTR*);
-    HRESULT put_BizRule(BSTR);
-    HRESULT get_BizRuleLanguage(BSTR*);
-    HRESULT put_BizRuleLanguage(BSTR);
-    HRESULT get_BizRuleImportedPath(BSTR*);
-    HRESULT put_BizRuleImportedPath(BSTR);
-    HRESULT RoleAssignments(BSTR, VARIANT_BOOL, IAzRoleAssignments*);
+    HRESULT get_BizRule(BSTR* pbstrProp);
+    HRESULT put_BizRule(BSTR bstrProp);
+    HRESULT get_BizRuleLanguage(BSTR* pbstrProp);
+    HRESULT put_BizRuleLanguage(BSTR bstrProp);
+    HRESULT get_BizRuleImportedPath(BSTR* pbstrProp);
+    HRESULT put_BizRuleImportedPath(BSTR bstrProp);
+    HRESULT RoleAssignments(BSTR bstrScopeName, VARIANT_BOOL bRecursive, IAzRoleAssignments* ppRoleAssignments);
 }
 enum IID_IAzTask2 = GUID(0x3a9a5ee, 0x48c8, 0x4832, [0x90, 0x25, 0xaa, 0xd5, 0x3, 0xc4, 0x65, 0x26]);
 interface IAzTask2 : IAzTask
 {
-    HRESULT RoleAssignments(BSTR, VARIANT_BOOL, IAzRoleAssignments*);
+    HRESULT RoleAssignments(BSTR bstrScopeName, VARIANT_BOOL bRecursive, IAzRoleAssignments* ppRoleAssignments);
 }
 alias AZ_PROP_CONSTANTS = int;
 enum : int
@@ -1519,11 +1519,11 @@ enum CLSID_AzPrincipalLocator = GUID(0x483afb5d, 0x70df, 0x4e16, [0xab, 0xdc, 0x
 struct AzPrincipalLocator
 {
 }
-alias FN_PROGRESS = void function(PWSTR, uint, PROG_INVOKE_SETTING*, void*, BOOL);
-alias AUTHZ_ACCESS_CHECK_RESULTS_HANDLE = long;
-alias AUTHZ_CAP_CHANGE_SUBSCRIPTION_HANDLE = long;
-alias AUTHZ_CLIENT_CONTEXT_HANDLE = long;
-alias AUTHZ_RESOURCE_MANAGER_HANDLE = long;
-alias AUTHZ_AUDIT_EVENT_HANDLE = long;
-alias AUTHZ_AUDIT_EVENT_TYPE_HANDLE = long;
-alias AUTHZ_SECURITY_EVENT_PROVIDER_HANDLE = long;
+alias FN_PROGRESS = void function(PWSTR pObjectName, uint Status, PROG_INVOKE_SETTING* pInvokeSetting, void* Args, BOOL SecuritySet);
+alias AUTHZ_ACCESS_CHECK_RESULTS_HANDLE = void*;
+alias AUTHZ_CAP_CHANGE_SUBSCRIPTION_HANDLE = void*;
+alias AUTHZ_CLIENT_CONTEXT_HANDLE = void*;
+alias AUTHZ_RESOURCE_MANAGER_HANDLE = void*;
+alias AUTHZ_AUDIT_EVENT_HANDLE = void*;
+alias AUTHZ_AUDIT_EVENT_TYPE_HANDLE = void*;
+alias AUTHZ_SECURITY_EVENT_PROVIDER_HANDLE = void*;

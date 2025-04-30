@@ -47,259 +47,259 @@ enum : uint
     PRINTER_ACCESS_MANAGE_LIMITED    = 0x00000040,
 }
 
-alias PFN_PRINTING_ENUMPORTS = BOOL function(PWSTR, uint, ubyte*, uint, uint*, uint*);
-alias PFN_PRINTING_OPENPORT = BOOL function(PWSTR, HANDLE*);
-alias PFN_PRINTING_OPENPORTEX = BOOL function(HANDLE, PWSTR, PWSTR, HANDLE*, MONITOR2*);
-alias PFN_PRINTING_STARTDOCPORT = BOOL function(HANDLE, PWSTR, uint, uint, ubyte*);
-alias PFN_PRINTING_WRITEPORT = BOOL function(HANDLE, ubyte*, uint, uint*);
-alias PFN_PRINTING_READPORT = BOOL function(HANDLE, ubyte*, uint, uint*);
-alias PFN_PRINTING_ENDDOCPORT = BOOL function(HANDLE);
-alias PFN_PRINTING_CLOSEPORT = BOOL function(HANDLE);
-alias PFN_PRINTING_ADDPORT = BOOL function(PWSTR, HWND, PWSTR);
-alias PFN_PRINTING_ADDPORTEX = BOOL function(PWSTR, uint, ubyte*, PWSTR);
-alias PFN_PRINTING_CONFIGUREPORT = BOOL function(PWSTR, HWND, PWSTR);
-alias PFN_PRINTING_DELETEPORT = BOOL function(PWSTR, HWND, PWSTR);
-alias PFN_PRINTING_GETPRINTERDATAFROMPORT = BOOL function(HANDLE, uint, PWSTR, PWSTR, uint, PWSTR, uint, uint*);
-alias PFN_PRINTING_SETPORTTIMEOUTS = BOOL function(HANDLE, COMMTIMEOUTS*, uint);
-alias PFN_PRINTING_XCVOPENPORT = BOOL function(const(wchar)*, uint, HANDLE*);
-alias PFN_PRINTING_XCVDATAPORT = uint function(HANDLE, const(wchar)*, ubyte*, uint, ubyte*, uint, uint*);
-alias PFN_PRINTING_XCVCLOSEPORT = BOOL function(HANDLE);
-alias PFN_PRINTING_ENUMPORTS2 = BOOL function(HANDLE, PWSTR, uint, ubyte*, uint, uint*, uint*);
-alias PFN_PRINTING_OPENPORT2 = BOOL function(HANDLE, PWSTR, HANDLE*);
-alias PFN_PRINTING_OPENPORTEX2 = BOOL function(HANDLE, HANDLE, PWSTR, PWSTR, HANDLE*, MONITOR2*);
-alias PFN_PRINTING_STARTDOCPORT2 = BOOL function(HANDLE, PWSTR, uint, uint, ubyte*);
-alias PFN_PRINTING_WRITEPORT2 = BOOL function(HANDLE, ubyte*, uint, uint*);
-alias PFN_PRINTING_READPORT2 = BOOL function(HANDLE, ubyte*, uint, uint*);
-alias PFN_PRINTING_ENDDOCPORT2 = BOOL function(HANDLE);
-alias PFN_PRINTING_CLOSEPORT2 = BOOL function(HANDLE);
-alias PFN_PRINTING_ADDPORT2 = BOOL function(HANDLE, PWSTR, HWND, PWSTR);
-alias PFN_PRINTING_ADDPORTEX2 = BOOL function(HANDLE, PWSTR, uint, ubyte*, PWSTR);
-alias PFN_PRINTING_CONFIGUREPORT2 = BOOL function(HANDLE, PWSTR, HWND, PWSTR);
-alias PFN_PRINTING_DELETEPORT2 = BOOL function(HANDLE, PWSTR, HWND, PWSTR);
-alias PFN_PRINTING_GETPRINTERDATAFROMPORT2 = BOOL function(HANDLE, uint, PWSTR, PWSTR, uint, PWSTR, uint, uint*);
-alias PFN_PRINTING_SETPORTTIMEOUTS2 = BOOL function(HANDLE, COMMTIMEOUTS*, uint);
-alias PFN_PRINTING_XCVOPENPORT2 = BOOL function(HANDLE, const(wchar)*, uint, HANDLE*);
-alias PFN_PRINTING_XCVDATAPORT2 = uint function(HANDLE, const(wchar)*, ubyte*, uint, ubyte*, uint, uint*);
-alias PFN_PRINTING_XCVCLOSEPORT2 = BOOL function(HANDLE);
-alias PFN_PRINTING_SHUTDOWN2 = void function(HANDLE);
-alias PFN_PRINTING_SENDRECVBIDIDATAFROMPORT2 = uint function(HANDLE, uint, const(wchar)*, BIDI_REQUEST_CONTAINER*, BIDI_RESPONSE_CONTAINER**);
-alias PFN_PRINTING_NOTIFYUSEDPORTS2 = uint function(HANDLE, uint, const(wchar)*);
-alias PFN_PRINTING_NOTIFYUNUSEDPORTS2 = uint function(HANDLE, uint, const(wchar)*);
-alias PFN_PRINTING_POWEREVENT2 = uint function(HANDLE, uint, POWERBROADCAST_SETTING*);
-int CommonPropertySheetUIA(HWND, PFNPROPSHEETUI, LPARAM, uint*);
-int CommonPropertySheetUIW(HWND, PFNPROPSHEETUI, LPARAM, uint*);
-ulong GetCPSUIUserData(HWND);
-BOOL SetCPSUIUserData(HWND, ulong);
-BOOL EnumPrintersA(uint, PSTR, uint, ubyte*, uint, uint*, uint*);
-BOOL EnumPrintersW(uint, PWSTR, uint, ubyte*, uint, uint*, uint*);
-HANDLE GetSpoolFileHandle(HANDLE);
-HANDLE CommitSpoolData(HANDLE, HANDLE, uint);
-BOOL CloseSpoolFileHandle(HANDLE, HANDLE);
-BOOL OpenPrinterA(PSTR, HANDLE*, PRINTER_DEFAULTSA*);
-BOOL OpenPrinterW(PWSTR, HANDLE*, PRINTER_DEFAULTSW*);
-BOOL ResetPrinterA(HANDLE, PRINTER_DEFAULTSA*);
-BOOL ResetPrinterW(HANDLE, PRINTER_DEFAULTSW*);
-BOOL SetJobA(HANDLE, uint, uint, ubyte*, uint);
-BOOL SetJobW(HANDLE, uint, uint, ubyte*, uint);
-BOOL GetJobA(HANDLE, uint, uint, ubyte*, uint, uint*);
-BOOL GetJobW(HANDLE, uint, uint, ubyte*, uint, uint*);
-BOOL EnumJobsA(HANDLE, uint, uint, uint, ubyte*, uint, uint*, uint*);
-BOOL EnumJobsW(HANDLE, uint, uint, uint, ubyte*, uint, uint*, uint*);
-HANDLE AddPrinterA(PSTR, uint, ubyte*);
-HANDLE AddPrinterW(PWSTR, uint, ubyte*);
-BOOL DeletePrinter(HANDLE);
-BOOL SetPrinterA(HANDLE, uint, ubyte*, uint);
-BOOL SetPrinterW(HANDLE, uint, ubyte*, uint);
-BOOL GetPrinterA(HANDLE, uint, ubyte*, uint, uint*);
-BOOL GetPrinterW(HANDLE, uint, ubyte*, uint, uint*);
-BOOL AddPrinterDriverA(PSTR, uint, ubyte*);
-BOOL AddPrinterDriverW(PWSTR, uint, ubyte*);
-BOOL AddPrinterDriverExA(PSTR, uint, ubyte*, uint);
-BOOL AddPrinterDriverExW(PWSTR, uint, ubyte*, uint);
-BOOL EnumPrinterDriversA(PSTR, PSTR, uint, ubyte*, uint, uint*, uint*);
-BOOL EnumPrinterDriversW(PWSTR, PWSTR, uint, ubyte*, uint, uint*, uint*);
-BOOL GetPrinterDriverA(HANDLE, PSTR, uint, ubyte*, uint, uint*);
-BOOL GetPrinterDriverW(HANDLE, PWSTR, uint, ubyte*, uint, uint*);
-BOOL GetPrinterDriverDirectoryA(PSTR, PSTR, uint, ubyte*, uint, uint*);
-BOOL GetPrinterDriverDirectoryW(PWSTR, PWSTR, uint, ubyte*, uint, uint*);
-BOOL DeletePrinterDriverA(PSTR, PSTR, PSTR);
-BOOL DeletePrinterDriverW(PWSTR, PWSTR, PWSTR);
-BOOL DeletePrinterDriverExA(PSTR, PSTR, PSTR, uint, uint);
-BOOL DeletePrinterDriverExW(PWSTR, PWSTR, PWSTR, uint, uint);
-BOOL AddPrintProcessorA(PSTR, PSTR, PSTR, PSTR);
-BOOL AddPrintProcessorW(PWSTR, PWSTR, PWSTR, PWSTR);
-BOOL EnumPrintProcessorsA(PSTR, PSTR, uint, ubyte*, uint, uint*, uint*);
-BOOL EnumPrintProcessorsW(PWSTR, PWSTR, uint, ubyte*, uint, uint*, uint*);
-BOOL GetPrintProcessorDirectoryA(PSTR, PSTR, uint, ubyte*, uint, uint*);
-BOOL GetPrintProcessorDirectoryW(PWSTR, PWSTR, uint, ubyte*, uint, uint*);
-BOOL EnumPrintProcessorDatatypesA(PSTR, PSTR, uint, ubyte*, uint, uint*, uint*);
-BOOL EnumPrintProcessorDatatypesW(PWSTR, PWSTR, uint, ubyte*, uint, uint*, uint*);
-BOOL DeletePrintProcessorA(PSTR, PSTR, PSTR);
-BOOL DeletePrintProcessorW(PWSTR, PWSTR, PWSTR);
-uint StartDocPrinterA(HANDLE, uint, DOC_INFO_1A*);
-uint StartDocPrinterW(HANDLE, uint, DOC_INFO_1W*);
-BOOL StartPagePrinter(HANDLE);
-BOOL WritePrinter(HANDLE, void*, uint, uint*);
-BOOL FlushPrinter(HANDLE, void*, uint, uint*, uint);
-BOOL EndPagePrinter(HANDLE);
-BOOL AbortPrinter(HANDLE);
-BOOL ReadPrinter(HANDLE, void*, uint, uint*);
-BOOL EndDocPrinter(HANDLE);
-BOOL AddJobA(HANDLE, uint, ubyte*, uint, uint*);
-BOOL AddJobW(HANDLE, uint, ubyte*, uint, uint*);
-BOOL ScheduleJob(HANDLE, uint);
-BOOL PrinterProperties(HWND, HANDLE);
-int DocumentPropertiesA(HWND, HANDLE, PSTR, DEVMODEA*, DEVMODEA*, uint);
-int DocumentPropertiesW(HWND, HANDLE, PWSTR, DEVMODEW*, DEVMODEW*, uint);
-int AdvancedDocumentPropertiesA(HWND, HANDLE, PSTR, DEVMODEA*, DEVMODEA*);
-int AdvancedDocumentPropertiesW(HWND, HANDLE, PWSTR, DEVMODEW*, DEVMODEW*);
-int ExtDeviceMode(HWND, HANDLE, DEVMODEA*, PSTR, PSTR, DEVMODEA*, PSTR, uint);
-uint GetPrinterDataA(HANDLE, PSTR, uint*, ubyte*, uint, uint*);
-uint GetPrinterDataW(HANDLE, PWSTR, uint*, ubyte*, uint, uint*);
-uint GetPrinterDataExA(HANDLE, const(char)*, const(char)*, uint*, ubyte*, uint, uint*);
-uint GetPrinterDataExW(HANDLE, const(wchar)*, const(wchar)*, uint*, ubyte*, uint, uint*);
-uint EnumPrinterDataA(HANDLE, uint, PSTR, uint, uint*, uint*, ubyte*, uint, uint*);
-uint EnumPrinterDataW(HANDLE, uint, PWSTR, uint, uint*, uint*, ubyte*, uint, uint*);
-uint EnumPrinterDataExA(HANDLE, const(char)*, ubyte*, uint, uint*, uint*);
-uint EnumPrinterDataExW(HANDLE, const(wchar)*, ubyte*, uint, uint*, uint*);
-uint EnumPrinterKeyA(HANDLE, const(char)*, PSTR, uint, uint*);
-uint EnumPrinterKeyW(HANDLE, const(wchar)*, PWSTR, uint, uint*);
-uint SetPrinterDataA(HANDLE, PSTR, uint, ubyte*, uint);
-uint SetPrinterDataW(HANDLE, PWSTR, uint, ubyte*, uint);
-uint SetPrinterDataExA(HANDLE, const(char)*, const(char)*, uint, ubyte*, uint);
-uint SetPrinterDataExW(HANDLE, const(wchar)*, const(wchar)*, uint, ubyte*, uint);
-uint DeletePrinterDataA(HANDLE, PSTR);
-uint DeletePrinterDataW(HANDLE, PWSTR);
-uint DeletePrinterDataExA(HANDLE, const(char)*, const(char)*);
-uint DeletePrinterDataExW(HANDLE, const(wchar)*, const(wchar)*);
-uint DeletePrinterKeyA(HANDLE, const(char)*);
-uint DeletePrinterKeyW(HANDLE, const(wchar)*);
-uint WaitForPrinterChange(HANDLE, uint);
-HANDLE FindFirstPrinterChangeNotification(HANDLE, uint, uint, void*);
-BOOL FindNextPrinterChangeNotification(HANDLE, uint*, void*, void**);
-BOOL FreePrinterNotifyInfo(PRINTER_NOTIFY_INFO*);
-BOOL FindClosePrinterChangeNotification(HANDLE);
-uint PrinterMessageBoxA(HANDLE, uint, HWND, PSTR, PSTR, uint);
-uint PrinterMessageBoxW(HANDLE, uint, HWND, PWSTR, PWSTR, uint);
-BOOL ClosePrinter(HANDLE);
-BOOL AddFormA(HANDLE, uint, ubyte*);
-BOOL AddFormW(HANDLE, uint, ubyte*);
-BOOL DeleteFormA(HANDLE, PSTR);
-BOOL DeleteFormW(HANDLE, PWSTR);
-BOOL GetFormA(HANDLE, PSTR, uint, ubyte*, uint, uint*);
-BOOL GetFormW(HANDLE, PWSTR, uint, ubyte*, uint, uint*);
-BOOL SetFormA(HANDLE, PSTR, uint, ubyte*);
-BOOL SetFormW(HANDLE, PWSTR, uint, ubyte*);
-BOOL EnumFormsA(HANDLE, uint, ubyte*, uint, uint*, uint*);
-BOOL EnumFormsW(HANDLE, uint, ubyte*, uint, uint*, uint*);
-BOOL EnumMonitorsA(PSTR, uint, ubyte*, uint, uint*, uint*);
-BOOL EnumMonitorsW(PWSTR, uint, ubyte*, uint, uint*, uint*);
-BOOL AddMonitorA(PSTR, uint, ubyte*);
-BOOL AddMonitorW(PWSTR, uint, ubyte*);
-BOOL DeleteMonitorA(PSTR, PSTR, PSTR);
-BOOL DeleteMonitorW(PWSTR, PWSTR, PWSTR);
-BOOL EnumPortsA(PSTR, uint, ubyte*, uint, uint*, uint*);
-BOOL EnumPortsW(PWSTR, uint, ubyte*, uint, uint*, uint*);
-BOOL AddPortA(PSTR, HWND, PSTR);
-BOOL AddPortW(PWSTR, HWND, PWSTR);
-BOOL ConfigurePortA(PSTR, HWND, PSTR);
-BOOL ConfigurePortW(PWSTR, HWND, PWSTR);
-BOOL DeletePortA(PSTR, HWND, PSTR);
-BOOL DeletePortW(PWSTR, HWND, PWSTR);
-BOOL XcvDataW(HANDLE, const(wchar)*, ubyte*, uint, ubyte*, uint, uint*, uint*);
-BOOL GetDefaultPrinterA(PSTR, uint*);
-BOOL GetDefaultPrinterW(PWSTR, uint*);
-BOOL SetDefaultPrinterA(const(char)*);
-BOOL SetDefaultPrinterW(const(wchar)*);
-BOOL SetPortA(PSTR, PSTR, uint, ubyte*);
-BOOL SetPortW(PWSTR, PWSTR, uint, ubyte*);
-BOOL AddPrinterConnectionA(PSTR);
-BOOL AddPrinterConnectionW(PWSTR);
-BOOL DeletePrinterConnectionA(PSTR);
-BOOL DeletePrinterConnectionW(PWSTR);
-HANDLE ConnectToPrinterDlg(HWND, uint);
-BOOL AddPrintProvidorA(PSTR, uint, ubyte*);
-BOOL AddPrintProvidorW(PWSTR, uint, ubyte*);
-BOOL DeletePrintProvidorA(PSTR, PSTR, PSTR);
-BOOL DeletePrintProvidorW(PWSTR, PWSTR, PWSTR);
-BOOL IsValidDevmodeA(DEVMODEA*, ulong);
-BOOL IsValidDevmodeW(DEVMODEW*, ulong);
-BOOL OpenPrinter2A(const(char)*, HANDLE*, PRINTER_DEFAULTSA*, PRINTER_OPTIONSA*);
-BOOL OpenPrinter2W(const(wchar)*, HANDLE*, PRINTER_DEFAULTSW*, PRINTER_OPTIONSW*);
-BOOL AddPrinterConnection2A(HWND, const(char)*, uint, void*);
-BOOL AddPrinterConnection2W(HWND, const(wchar)*, uint, void*);
-HRESULT InstallPrinterDriverFromPackageA(const(char)*, const(char)*, const(char)*, const(char)*, uint);
-HRESULT InstallPrinterDriverFromPackageW(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, uint);
-HRESULT UploadPrinterDriverPackageA(const(char)*, const(char)*, const(char)*, uint, HWND, PSTR, uint*);
-HRESULT UploadPrinterDriverPackageW(const(wchar)*, const(wchar)*, const(wchar)*, uint, HWND, PWSTR, uint*);
-HRESULT GetCorePrinterDriversA(const(char)*, const(char)*, const(char)*, uint, CORE_PRINTER_DRIVERA*);
-HRESULT GetCorePrinterDriversW(const(wchar)*, const(wchar)*, const(wchar)*, uint, CORE_PRINTER_DRIVERW*);
-HRESULT CorePrinterDriverInstalledA(const(char)*, const(char)*, GUID, FILETIME, ulong, BOOL*);
-HRESULT CorePrinterDriverInstalledW(const(wchar)*, const(wchar)*, GUID, FILETIME, ulong, BOOL*);
-HRESULT GetPrinterDriverPackagePathA(const(char)*, const(char)*, const(char)*, const(char)*, PSTR, uint, uint*);
-HRESULT GetPrinterDriverPackagePathW(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, PWSTR, uint, uint*);
-HRESULT DeletePrinterDriverPackageA(const(char)*, const(char)*, const(char)*);
-HRESULT DeletePrinterDriverPackageW(const(wchar)*, const(wchar)*, const(wchar)*);
-HRESULT ReportJobProcessingProgress(HANDLE, uint, EPrintXPSJobOperation, EPrintXPSJobProgress);
-BOOL GetPrinterDriver2A(HWND, HANDLE, PSTR, uint, ubyte*, uint, uint*);
-BOOL GetPrinterDriver2W(HWND, HANDLE, PWSTR, uint, ubyte*, uint, uint*);
-BOOL GetPrintExecutionData(PRINT_EXECUTION_DATA*);
-uint GetJobNamedPropertyValue(HANDLE, uint, const(wchar)*, PrintPropertyValue*);
-void FreePrintPropertyValue(PrintPropertyValue*);
-void FreePrintNamedPropertyArray(uint, PrintNamedProperty**);
-uint SetJobNamedProperty(HANDLE, uint, const(PrintNamedProperty)*);
-uint DeleteJobNamedProperty(HANDLE, uint, const(wchar)*);
-uint EnumJobNamedProperties(HANDLE, uint, uint*, PrintNamedProperty**);
-HRESULT GetPrintOutputInfo(HWND, const(wchar)*, HANDLE*, PWSTR*);
-BOOL DevQueryPrintEx(DEVQUERYPRINT_INFO*);
-HRESULT RegisterForPrintAsyncNotifications(const(wchar)*, GUID*, PrintAsyncNotifyUserFilter, PrintAsyncNotifyConversationStyle, IPrintAsyncNotifyCallback, HANDLE*);
-HRESULT UnRegisterForPrintAsyncNotifications(HANDLE);
-HRESULT CreatePrintAsyncNotifyChannel(const(wchar)*, GUID*, PrintAsyncNotifyUserFilter, PrintAsyncNotifyConversationStyle, IPrintAsyncNotifyCallback, IPrintAsyncNotifyChannel*);
-HANDLE GdiGetSpoolFileHandle(PWSTR, DEVMODEW*, PWSTR);
-BOOL GdiDeleteSpoolFileHandle(HANDLE);
-uint GdiGetPageCount(HANDLE);
-HDC GdiGetDC(HANDLE);
-HANDLE GdiGetPageHandle(HANDLE, uint, uint*);
-BOOL GdiStartDocEMF(HANDLE, DOCINFOW*);
-BOOL GdiStartPageEMF(HANDLE);
-BOOL GdiPlayPageEMF(HANDLE, HANDLE, RECT*, RECT*, RECT*);
-BOOL GdiEndPageEMF(HANDLE, uint);
-BOOL GdiEndDocEMF(HANDLE);
-BOOL GdiGetDevmodeForPage(HANDLE, uint, DEVMODEW**, DEVMODEW**);
-BOOL GdiResetDCEMF(HANDLE, DEVMODEW*);
-BOOL GetJobAttributes(PWSTR, DEVMODEW*, ATTRIBUTE_INFO_3*);
-BOOL GetJobAttributesEx(PWSTR, DEVMODEW*, uint, ubyte*, uint, uint);
-HANDLE CreatePrinterIC(HANDLE, DEVMODEW*);
-BOOL PlayGdiScriptOnPrinterIC(HANDLE, ubyte*, uint, ubyte*, uint, uint);
-BOOL DeletePrinterIC(HANDLE);
-BOOL DevQueryPrint(HANDLE, DEVMODEA*, uint*);
+alias PFN_PRINTING_ENUMPORTS = BOOL function(PWSTR param0, uint param1, ubyte* param2, uint param3, uint* param4, uint* param5);
+alias PFN_PRINTING_OPENPORT = BOOL function(PWSTR param0, HANDLE* param1);
+alias PFN_PRINTING_OPENPORTEX = BOOL function(HANDLE param0, PWSTR param1, PWSTR param2, HANDLE* param3, MONITOR2* param4);
+alias PFN_PRINTING_STARTDOCPORT = BOOL function(HANDLE param0, PWSTR param1, uint param2, uint param3, ubyte* param4);
+alias PFN_PRINTING_WRITEPORT = BOOL function(HANDLE param0, ubyte* param1, uint param2, uint* param3);
+alias PFN_PRINTING_READPORT = BOOL function(HANDLE param0, ubyte* param1, uint param2, uint* param3);
+alias PFN_PRINTING_ENDDOCPORT = BOOL function(HANDLE param0);
+alias PFN_PRINTING_CLOSEPORT = BOOL function(HANDLE param0);
+alias PFN_PRINTING_ADDPORT = BOOL function(PWSTR param0, HWND param1, PWSTR param2);
+alias PFN_PRINTING_ADDPORTEX = BOOL function(PWSTR param0, uint param1, ubyte* param2, PWSTR param3);
+alias PFN_PRINTING_CONFIGUREPORT = BOOL function(PWSTR param0, HWND param1, PWSTR param2);
+alias PFN_PRINTING_DELETEPORT = BOOL function(PWSTR param0, HWND param1, PWSTR param2);
+alias PFN_PRINTING_GETPRINTERDATAFROMPORT = BOOL function(HANDLE param0, uint param1, PWSTR param2, PWSTR param3, uint param4, PWSTR param5, uint param6, uint* param7);
+alias PFN_PRINTING_SETPORTTIMEOUTS = BOOL function(HANDLE param0, COMMTIMEOUTS* param1, uint param2);
+alias PFN_PRINTING_XCVOPENPORT = BOOL function(const(wchar)* param0, uint param1, HANDLE* param2);
+alias PFN_PRINTING_XCVDATAPORT = uint function(HANDLE param0, const(wchar)* param1, ubyte* param2, uint param3, ubyte* param4, uint param5, uint* param6);
+alias PFN_PRINTING_XCVCLOSEPORT = BOOL function(HANDLE param0);
+alias PFN_PRINTING_ENUMPORTS2 = BOOL function(HANDLE param0, PWSTR param1, uint param2, ubyte* param3, uint param4, uint* param5, uint* param6);
+alias PFN_PRINTING_OPENPORT2 = BOOL function(HANDLE param0, PWSTR param1, HANDLE* param2);
+alias PFN_PRINTING_OPENPORTEX2 = BOOL function(HANDLE param0, HANDLE param1, PWSTR param2, PWSTR param3, HANDLE* param4, MONITOR2* param5);
+alias PFN_PRINTING_STARTDOCPORT2 = BOOL function(HANDLE param0, PWSTR param1, uint param2, uint param3, ubyte* param4);
+alias PFN_PRINTING_WRITEPORT2 = BOOL function(HANDLE param0, ubyte* param1, uint param2, uint* param3);
+alias PFN_PRINTING_READPORT2 = BOOL function(HANDLE param0, ubyte* param1, uint param2, uint* param3);
+alias PFN_PRINTING_ENDDOCPORT2 = BOOL function(HANDLE param0);
+alias PFN_PRINTING_CLOSEPORT2 = BOOL function(HANDLE param0);
+alias PFN_PRINTING_ADDPORT2 = BOOL function(HANDLE param0, PWSTR param1, HWND param2, PWSTR param3);
+alias PFN_PRINTING_ADDPORTEX2 = BOOL function(HANDLE param0, PWSTR param1, uint param2, ubyte* param3, PWSTR param4);
+alias PFN_PRINTING_CONFIGUREPORT2 = BOOL function(HANDLE param0, PWSTR param1, HWND param2, PWSTR param3);
+alias PFN_PRINTING_DELETEPORT2 = BOOL function(HANDLE param0, PWSTR param1, HWND param2, PWSTR param3);
+alias PFN_PRINTING_GETPRINTERDATAFROMPORT2 = BOOL function(HANDLE param0, uint param1, PWSTR param2, PWSTR param3, uint param4, PWSTR param5, uint param6, uint* param7);
+alias PFN_PRINTING_SETPORTTIMEOUTS2 = BOOL function(HANDLE param0, COMMTIMEOUTS* param1, uint param2);
+alias PFN_PRINTING_XCVOPENPORT2 = BOOL function(HANDLE param0, const(wchar)* param1, uint param2, HANDLE* param3);
+alias PFN_PRINTING_XCVDATAPORT2 = uint function(HANDLE param0, const(wchar)* param1, ubyte* param2, uint param3, ubyte* param4, uint param5, uint* param6);
+alias PFN_PRINTING_XCVCLOSEPORT2 = BOOL function(HANDLE param0);
+alias PFN_PRINTING_SHUTDOWN2 = void function(HANDLE param0);
+alias PFN_PRINTING_SENDRECVBIDIDATAFROMPORT2 = uint function(HANDLE param0, uint param1, const(wchar)* param2, BIDI_REQUEST_CONTAINER* param3, BIDI_RESPONSE_CONTAINER** param4);
+alias PFN_PRINTING_NOTIFYUSEDPORTS2 = uint function(HANDLE param0, uint param1, const(wchar)* param2);
+alias PFN_PRINTING_NOTIFYUNUSEDPORTS2 = uint function(HANDLE param0, uint param1, const(wchar)* param2);
+alias PFN_PRINTING_POWEREVENT2 = uint function(HANDLE param0, uint param1, POWERBROADCAST_SETTING* param2);
+int CommonPropertySheetUIA(HWND hWndOwner, PFNPROPSHEETUI pfnPropSheetUI, LPARAM lParam, uint* pResult);
+int CommonPropertySheetUIW(HWND hWndOwner, PFNPROPSHEETUI pfnPropSheetUI, LPARAM lParam, uint* pResult);
+ulong GetCPSUIUserData(HWND hDlg);
+BOOL SetCPSUIUserData(HWND hDlg, ulong CPSUIUserData);
+BOOL EnumPrintersA(uint Flags, PSTR Name, uint Level, ubyte* pPrinterEnum, uint cbBuf, uint* pcbNeeded, uint* pcReturned);
+BOOL EnumPrintersW(uint Flags, PWSTR Name, uint Level, ubyte* pPrinterEnum, uint cbBuf, uint* pcbNeeded, uint* pcReturned);
+HANDLE GetSpoolFileHandle(PRINTER_HANDLE hPrinter);
+HANDLE CommitSpoolData(PRINTER_HANDLE hPrinter, HANDLE hSpoolFile, uint cbCommit);
+BOOL CloseSpoolFileHandle(PRINTER_HANDLE hPrinter, HANDLE hSpoolFile);
+BOOL OpenPrinterA(PSTR pPrinterName, PRINTER_HANDLE* phPrinter, PRINTER_DEFAULTSA* pDefault);
+BOOL OpenPrinterW(PWSTR pPrinterName, PRINTER_HANDLE* phPrinter, PRINTER_DEFAULTSW* pDefault);
+BOOL ResetPrinterA(PRINTER_HANDLE hPrinter, PRINTER_DEFAULTSA* pDefault);
+BOOL ResetPrinterW(PRINTER_HANDLE hPrinter, PRINTER_DEFAULTSW* pDefault);
+BOOL SetJobA(PRINTER_HANDLE hPrinter, uint JobId, uint Level, ubyte* pJob, uint Command);
+BOOL SetJobW(PRINTER_HANDLE hPrinter, uint JobId, uint Level, ubyte* pJob, uint Command);
+BOOL GetJobA(PRINTER_HANDLE hPrinter, uint JobId, uint Level, ubyte* pJob, uint cbBuf, uint* pcbNeeded);
+BOOL GetJobW(PRINTER_HANDLE hPrinter, uint JobId, uint Level, ubyte* pJob, uint cbBuf, uint* pcbNeeded);
+BOOL EnumJobsA(PRINTER_HANDLE hPrinter, uint FirstJob, uint NoJobs, uint Level, ubyte* pJob, uint cbBuf, uint* pcbNeeded, uint* pcReturned);
+BOOL EnumJobsW(PRINTER_HANDLE hPrinter, uint FirstJob, uint NoJobs, uint Level, ubyte* pJob, uint cbBuf, uint* pcbNeeded, uint* pcReturned);
+HANDLE AddPrinterA(PSTR pName, uint Level, ubyte* pPrinter);
+HANDLE AddPrinterW(PWSTR pName, uint Level, ubyte* pPrinter);
+BOOL DeletePrinter(PRINTER_HANDLE hPrinter);
+BOOL SetPrinterA(PRINTER_HANDLE hPrinter, uint Level, ubyte* pPrinter, uint Command);
+BOOL SetPrinterW(PRINTER_HANDLE hPrinter, uint Level, ubyte* pPrinter, uint Command);
+BOOL GetPrinterA(PRINTER_HANDLE hPrinter, uint Level, ubyte* pPrinter, uint cbBuf, uint* pcbNeeded);
+BOOL GetPrinterW(PRINTER_HANDLE hPrinter, uint Level, ubyte* pPrinter, uint cbBuf, uint* pcbNeeded);
+BOOL AddPrinterDriverA(PSTR pName, uint Level, ubyte* pDriverInfo);
+BOOL AddPrinterDriverW(PWSTR pName, uint Level, ubyte* pDriverInfo);
+BOOL AddPrinterDriverExA(PSTR pName, uint Level, ubyte* lpbDriverInfo, uint dwFileCopyFlags);
+BOOL AddPrinterDriverExW(PWSTR pName, uint Level, ubyte* lpbDriverInfo, uint dwFileCopyFlags);
+BOOL EnumPrinterDriversA(PSTR pName, PSTR pEnvironment, uint Level, ubyte* pDriverInfo, uint cbBuf, uint* pcbNeeded, uint* pcReturned);
+BOOL EnumPrinterDriversW(PWSTR pName, PWSTR pEnvironment, uint Level, ubyte* pDriverInfo, uint cbBuf, uint* pcbNeeded, uint* pcReturned);
+BOOL GetPrinterDriverA(PRINTER_HANDLE hPrinter, PSTR pEnvironment, uint Level, ubyte* pDriverInfo, uint cbBuf, uint* pcbNeeded);
+BOOL GetPrinterDriverW(PRINTER_HANDLE hPrinter, PWSTR pEnvironment, uint Level, ubyte* pDriverInfo, uint cbBuf, uint* pcbNeeded);
+BOOL GetPrinterDriverDirectoryA(PSTR pName, PSTR pEnvironment, uint Level, ubyte* pDriverDirectory, uint cbBuf, uint* pcbNeeded);
+BOOL GetPrinterDriverDirectoryW(PWSTR pName, PWSTR pEnvironment, uint Level, ubyte* pDriverDirectory, uint cbBuf, uint* pcbNeeded);
+BOOL DeletePrinterDriverA(PSTR pName, PSTR pEnvironment, PSTR pDriverName);
+BOOL DeletePrinterDriverW(PWSTR pName, PWSTR pEnvironment, PWSTR pDriverName);
+BOOL DeletePrinterDriverExA(PSTR pName, PSTR pEnvironment, PSTR pDriverName, uint dwDeleteFlag, uint dwVersionFlag);
+BOOL DeletePrinterDriverExW(PWSTR pName, PWSTR pEnvironment, PWSTR pDriverName, uint dwDeleteFlag, uint dwVersionFlag);
+BOOL AddPrintProcessorA(PSTR pName, PSTR pEnvironment, PSTR pPathName, PSTR pPrintProcessorName);
+BOOL AddPrintProcessorW(PWSTR pName, PWSTR pEnvironment, PWSTR pPathName, PWSTR pPrintProcessorName);
+BOOL EnumPrintProcessorsA(PSTR pName, PSTR pEnvironment, uint Level, ubyte* pPrintProcessorInfo, uint cbBuf, uint* pcbNeeded, uint* pcReturned);
+BOOL EnumPrintProcessorsW(PWSTR pName, PWSTR pEnvironment, uint Level, ubyte* pPrintProcessorInfo, uint cbBuf, uint* pcbNeeded, uint* pcReturned);
+BOOL GetPrintProcessorDirectoryA(PSTR pName, PSTR pEnvironment, uint Level, ubyte* pPrintProcessorInfo, uint cbBuf, uint* pcbNeeded);
+BOOL GetPrintProcessorDirectoryW(PWSTR pName, PWSTR pEnvironment, uint Level, ubyte* pPrintProcessorInfo, uint cbBuf, uint* pcbNeeded);
+BOOL EnumPrintProcessorDatatypesA(PSTR pName, PSTR pPrintProcessorName, uint Level, ubyte* pDatatypes, uint cbBuf, uint* pcbNeeded, uint* pcReturned);
+BOOL EnumPrintProcessorDatatypesW(PWSTR pName, PWSTR pPrintProcessorName, uint Level, ubyte* pDatatypes, uint cbBuf, uint* pcbNeeded, uint* pcReturned);
+BOOL DeletePrintProcessorA(PSTR pName, PSTR pEnvironment, PSTR pPrintProcessorName);
+BOOL DeletePrintProcessorW(PWSTR pName, PWSTR pEnvironment, PWSTR pPrintProcessorName);
+uint StartDocPrinterA(PRINTER_HANDLE hPrinter, uint Level, DOC_INFO_1A* pDocInfo);
+uint StartDocPrinterW(PRINTER_HANDLE hPrinter, uint Level, DOC_INFO_1W* pDocInfo);
+BOOL StartPagePrinter(PRINTER_HANDLE hPrinter);
+BOOL WritePrinter(PRINTER_HANDLE hPrinter, void* pBuf, uint cbBuf, uint* pcWritten);
+BOOL FlushPrinter(PRINTER_HANDLE hPrinter, void* pBuf, uint cbBuf, uint* pcWritten, uint cSleep);
+BOOL EndPagePrinter(PRINTER_HANDLE hPrinter);
+BOOL AbortPrinter(PRINTER_HANDLE hPrinter);
+BOOL ReadPrinter(PRINTER_HANDLE hPrinter, void* pBuf, uint cbBuf, uint* pNoBytesRead);
+BOOL EndDocPrinter(PRINTER_HANDLE hPrinter);
+BOOL AddJobA(PRINTER_HANDLE hPrinter, uint Level, ubyte* pData, uint cbBuf, uint* pcbNeeded);
+BOOL AddJobW(PRINTER_HANDLE hPrinter, uint Level, ubyte* pData, uint cbBuf, uint* pcbNeeded);
+BOOL ScheduleJob(PRINTER_HANDLE hPrinter, uint JobId);
+BOOL PrinterProperties(HWND hWnd, PRINTER_HANDLE hPrinter);
+int DocumentPropertiesA(HWND hWnd, PRINTER_HANDLE hPrinter, PSTR pDeviceName, DEVMODEA* pDevModeOutput, DEVMODEA* pDevModeInput, uint fMode);
+int DocumentPropertiesW(HWND hWnd, PRINTER_HANDLE hPrinter, PWSTR pDeviceName, DEVMODEW* pDevModeOutput, DEVMODEW* pDevModeInput, uint fMode);
+int AdvancedDocumentPropertiesA(HWND hWnd, PRINTER_HANDLE hPrinter, PSTR pDeviceName, DEVMODEA* pDevModeOutput, DEVMODEA* pDevModeInput);
+int AdvancedDocumentPropertiesW(HWND hWnd, PRINTER_HANDLE hPrinter, PWSTR pDeviceName, DEVMODEW* pDevModeOutput, DEVMODEW* pDevModeInput);
+int ExtDeviceMode(HWND hWnd, HANDLE hInst, DEVMODEA* pDevModeOutput, PSTR pDeviceName, PSTR pPort, DEVMODEA* pDevModeInput, PSTR pProfile, uint fMode);
+uint GetPrinterDataA(PRINTER_HANDLE hPrinter, PSTR pValueName, uint* pType, ubyte* pData, uint nSize, uint* pcbNeeded);
+uint GetPrinterDataW(PRINTER_HANDLE hPrinter, PWSTR pValueName, uint* pType, ubyte* pData, uint nSize, uint* pcbNeeded);
+uint GetPrinterDataExA(PRINTER_HANDLE hPrinter, const(char)* pKeyName, const(char)* pValueName, uint* pType, ubyte* pData, uint nSize, uint* pcbNeeded);
+uint GetPrinterDataExW(PRINTER_HANDLE hPrinter, const(wchar)* pKeyName, const(wchar)* pValueName, uint* pType, ubyte* pData, uint nSize, uint* pcbNeeded);
+uint EnumPrinterDataA(PRINTER_HANDLE hPrinter, uint dwIndex, PSTR pValueName, uint cbValueName, uint* pcbValueName, uint* pType, ubyte* pData, uint cbData, uint* pcbData);
+uint EnumPrinterDataW(PRINTER_HANDLE hPrinter, uint dwIndex, PWSTR pValueName, uint cbValueName, uint* pcbValueName, uint* pType, ubyte* pData, uint cbData, uint* pcbData);
+uint EnumPrinterDataExA(PRINTER_HANDLE hPrinter, const(char)* pKeyName, ubyte* pEnumValues, uint cbEnumValues, uint* pcbEnumValues, uint* pnEnumValues);
+uint EnumPrinterDataExW(PRINTER_HANDLE hPrinter, const(wchar)* pKeyName, ubyte* pEnumValues, uint cbEnumValues, uint* pcbEnumValues, uint* pnEnumValues);
+uint EnumPrinterKeyA(PRINTER_HANDLE hPrinter, const(char)* pKeyName, PSTR pSubkey, uint cbSubkey, uint* pcbSubkey);
+uint EnumPrinterKeyW(PRINTER_HANDLE hPrinter, const(wchar)* pKeyName, PWSTR pSubkey, uint cbSubkey, uint* pcbSubkey);
+uint SetPrinterDataA(PRINTER_HANDLE hPrinter, PSTR pValueName, uint Type, ubyte* pData, uint cbData);
+uint SetPrinterDataW(PRINTER_HANDLE hPrinter, PWSTR pValueName, uint Type, ubyte* pData, uint cbData);
+uint SetPrinterDataExA(PRINTER_HANDLE hPrinter, const(char)* pKeyName, const(char)* pValueName, uint Type, ubyte* pData, uint cbData);
+uint SetPrinterDataExW(PRINTER_HANDLE hPrinter, const(wchar)* pKeyName, const(wchar)* pValueName, uint Type, ubyte* pData, uint cbData);
+uint DeletePrinterDataA(PRINTER_HANDLE hPrinter, PSTR pValueName);
+uint DeletePrinterDataW(PRINTER_HANDLE hPrinter, PWSTR pValueName);
+uint DeletePrinterDataExA(PRINTER_HANDLE hPrinter, const(char)* pKeyName, const(char)* pValueName);
+uint DeletePrinterDataExW(PRINTER_HANDLE hPrinter, const(wchar)* pKeyName, const(wchar)* pValueName);
+uint DeletePrinterKeyA(PRINTER_HANDLE hPrinter, const(char)* pKeyName);
+uint DeletePrinterKeyW(PRINTER_HANDLE hPrinter, const(wchar)* pKeyName);
+uint WaitForPrinterChange(PRINTER_HANDLE hPrinter, uint Flags);
+HANDLE FindFirstPrinterChangeNotification(PRINTER_HANDLE hPrinter, uint fdwFilter, uint fdwOptions, void* pPrinterNotifyOptions);
+BOOL FindNextPrinterChangeNotification(HANDLE hChange, uint* pdwChange, void* pvReserved, void** ppPrinterNotifyInfo);
+BOOL FreePrinterNotifyInfo(PRINTER_NOTIFY_INFO* pPrinterNotifyInfo);
+BOOL FindClosePrinterChangeNotification(HANDLE hChange);
+uint PrinterMessageBoxA(PRINTER_HANDLE hPrinter, uint Error, HWND hWnd, PSTR pText, PSTR pCaption, uint dwType);
+uint PrinterMessageBoxW(PRINTER_HANDLE hPrinter, uint Error, HWND hWnd, PWSTR pText, PWSTR pCaption, uint dwType);
+BOOL ClosePrinter(PRINTER_HANDLE hPrinter);
+BOOL AddFormA(PRINTER_HANDLE hPrinter, uint Level, ubyte* pForm);
+BOOL AddFormW(PRINTER_HANDLE hPrinter, uint Level, ubyte* pForm);
+BOOL DeleteFormA(PRINTER_HANDLE hPrinter, PSTR pFormName);
+BOOL DeleteFormW(PRINTER_HANDLE hPrinter, PWSTR pFormName);
+BOOL GetFormA(PRINTER_HANDLE hPrinter, PSTR pFormName, uint Level, ubyte* pForm, uint cbBuf, uint* pcbNeeded);
+BOOL GetFormW(PRINTER_HANDLE hPrinter, PWSTR pFormName, uint Level, ubyte* pForm, uint cbBuf, uint* pcbNeeded);
+BOOL SetFormA(PRINTER_HANDLE hPrinter, PSTR pFormName, uint Level, ubyte* pForm);
+BOOL SetFormW(PRINTER_HANDLE hPrinter, PWSTR pFormName, uint Level, ubyte* pForm);
+BOOL EnumFormsA(PRINTER_HANDLE hPrinter, uint Level, ubyte* pForm, uint cbBuf, uint* pcbNeeded, uint* pcReturned);
+BOOL EnumFormsW(PRINTER_HANDLE hPrinter, uint Level, ubyte* pForm, uint cbBuf, uint* pcbNeeded, uint* pcReturned);
+BOOL EnumMonitorsA(PSTR pName, uint Level, ubyte* pMonitor, uint cbBuf, uint* pcbNeeded, uint* pcReturned);
+BOOL EnumMonitorsW(PWSTR pName, uint Level, ubyte* pMonitor, uint cbBuf, uint* pcbNeeded, uint* pcReturned);
+BOOL AddMonitorA(PSTR pName, uint Level, ubyte* pMonitors);
+BOOL AddMonitorW(PWSTR pName, uint Level, ubyte* pMonitors);
+BOOL DeleteMonitorA(PSTR pName, PSTR pEnvironment, PSTR pMonitorName);
+BOOL DeleteMonitorW(PWSTR pName, PWSTR pEnvironment, PWSTR pMonitorName);
+BOOL EnumPortsA(PSTR pName, uint Level, ubyte* pPort, uint cbBuf, uint* pcbNeeded, uint* pcReturned);
+BOOL EnumPortsW(PWSTR pName, uint Level, ubyte* pPort, uint cbBuf, uint* pcbNeeded, uint* pcReturned);
+BOOL AddPortA(PSTR pName, HWND hWnd, PSTR pMonitorName);
+BOOL AddPortW(PWSTR pName, HWND hWnd, PWSTR pMonitorName);
+BOOL ConfigurePortA(PSTR pName, HWND hWnd, PSTR pPortName);
+BOOL ConfigurePortW(PWSTR pName, HWND hWnd, PWSTR pPortName);
+BOOL DeletePortA(PSTR pName, HWND hWnd, PSTR pPortName);
+BOOL DeletePortW(PWSTR pName, HWND hWnd, PWSTR pPortName);
+BOOL XcvDataW(HANDLE hXcv, const(wchar)* pszDataName, ubyte* pInputData, uint cbInputData, ubyte* pOutputData, uint cbOutputData, uint* pcbOutputNeeded, uint* pdwStatus);
+BOOL GetDefaultPrinterA(PSTR pszBuffer, uint* pcchBuffer);
+BOOL GetDefaultPrinterW(PWSTR pszBuffer, uint* pcchBuffer);
+BOOL SetDefaultPrinterA(const(char)* pszPrinter);
+BOOL SetDefaultPrinterW(const(wchar)* pszPrinter);
+BOOL SetPortA(PSTR pName, PSTR pPortName, uint dwLevel, ubyte* pPortInfo);
+BOOL SetPortW(PWSTR pName, PWSTR pPortName, uint dwLevel, ubyte* pPortInfo);
+BOOL AddPrinterConnectionA(PSTR pName);
+BOOL AddPrinterConnectionW(PWSTR pName);
+BOOL DeletePrinterConnectionA(PSTR pName);
+BOOL DeletePrinterConnectionW(PWSTR pName);
+HANDLE ConnectToPrinterDlg(HWND hwnd, uint Flags);
+BOOL AddPrintProvidorA(PSTR pName, uint Level, ubyte* pProvidorInfo);
+BOOL AddPrintProvidorW(PWSTR pName, uint Level, ubyte* pProvidorInfo);
+BOOL DeletePrintProvidorA(PSTR pName, PSTR pEnvironment, PSTR pPrintProvidorName);
+BOOL DeletePrintProvidorW(PWSTR pName, PWSTR pEnvironment, PWSTR pPrintProvidorName);
+BOOL IsValidDevmodeA(DEVMODEA* pDevmode, ulong DevmodeSize);
+BOOL IsValidDevmodeW(DEVMODEW* pDevmode, ulong DevmodeSize);
+BOOL OpenPrinter2A(const(char)* pPrinterName, PRINTER_HANDLE* phPrinter, PRINTER_DEFAULTSA* pDefault, PRINTER_OPTIONSA* pOptions);
+BOOL OpenPrinter2W(const(wchar)* pPrinterName, PRINTER_HANDLE* phPrinter, PRINTER_DEFAULTSW* pDefault, PRINTER_OPTIONSW* pOptions);
+BOOL AddPrinterConnection2A(HWND hWnd, const(char)* pszName, uint dwLevel, void* pConnectionInfo);
+BOOL AddPrinterConnection2W(HWND hWnd, const(wchar)* pszName, uint dwLevel, void* pConnectionInfo);
+HRESULT InstallPrinterDriverFromPackageA(const(char)* pszServer, const(char)* pszInfPath, const(char)* pszDriverName, const(char)* pszEnvironment, uint dwFlags);
+HRESULT InstallPrinterDriverFromPackageW(const(wchar)* pszServer, const(wchar)* pszInfPath, const(wchar)* pszDriverName, const(wchar)* pszEnvironment, uint dwFlags);
+HRESULT UploadPrinterDriverPackageA(const(char)* pszServer, const(char)* pszInfPath, const(char)* pszEnvironment, uint dwFlags, HWND hwnd, PSTR pszDestInfPath, uint* pcchDestInfPath);
+HRESULT UploadPrinterDriverPackageW(const(wchar)* pszServer, const(wchar)* pszInfPath, const(wchar)* pszEnvironment, uint dwFlags, HWND hwnd, PWSTR pszDestInfPath, uint* pcchDestInfPath);
+HRESULT GetCorePrinterDriversA(const(char)* pszServer, const(char)* pszEnvironment, const(char)* pszzCoreDriverDependencies, uint cCorePrinterDrivers, CORE_PRINTER_DRIVERA* pCorePrinterDrivers);
+HRESULT GetCorePrinterDriversW(const(wchar)* pszServer, const(wchar)* pszEnvironment, const(wchar)* pszzCoreDriverDependencies, uint cCorePrinterDrivers, CORE_PRINTER_DRIVERW* pCorePrinterDrivers);
+HRESULT CorePrinterDriverInstalledA(const(char)* pszServer, const(char)* pszEnvironment, GUID CoreDriverGUID, FILETIME ftDriverDate, ulong dwlDriverVersion, BOOL* pbDriverInstalled);
+HRESULT CorePrinterDriverInstalledW(const(wchar)* pszServer, const(wchar)* pszEnvironment, GUID CoreDriverGUID, FILETIME ftDriverDate, ulong dwlDriverVersion, BOOL* pbDriverInstalled);
+HRESULT GetPrinterDriverPackagePathA(const(char)* pszServer, const(char)* pszEnvironment, const(char)* pszLanguage, const(char)* pszPackageID, PSTR pszDriverPackageCab, uint cchDriverPackageCab, uint* pcchRequiredSize);
+HRESULT GetPrinterDriverPackagePathW(const(wchar)* pszServer, const(wchar)* pszEnvironment, const(wchar)* pszLanguage, const(wchar)* pszPackageID, PWSTR pszDriverPackageCab, uint cchDriverPackageCab, uint* pcchRequiredSize);
+HRESULT DeletePrinterDriverPackageA(const(char)* pszServer, const(char)* pszInfPath, const(char)* pszEnvironment);
+HRESULT DeletePrinterDriverPackageW(const(wchar)* pszServer, const(wchar)* pszInfPath, const(wchar)* pszEnvironment);
+HRESULT ReportJobProcessingProgress(HANDLE printerHandle, uint jobId, EPrintXPSJobOperation jobOperation, EPrintXPSJobProgress jobProgress);
+BOOL GetPrinterDriver2A(HWND hWnd, PRINTER_HANDLE hPrinter, PSTR pEnvironment, uint Level, ubyte* pDriverInfo, uint cbBuf, uint* pcbNeeded);
+BOOL GetPrinterDriver2W(HWND hWnd, PRINTER_HANDLE hPrinter, PWSTR pEnvironment, uint Level, ubyte* pDriverInfo, uint cbBuf, uint* pcbNeeded);
+BOOL GetPrintExecutionData(PRINT_EXECUTION_DATA* pData);
+uint GetJobNamedPropertyValue(PRINTER_HANDLE hPrinter, uint JobId, const(wchar)* pszName, PrintPropertyValue* pValue);
+void FreePrintPropertyValue(PrintPropertyValue* pValue);
+void FreePrintNamedPropertyArray(uint cProperties, PrintNamedProperty** ppProperties);
+uint SetJobNamedProperty(PRINTER_HANDLE hPrinter, uint JobId, const(PrintNamedProperty)* pProperty);
+uint DeleteJobNamedProperty(PRINTER_HANDLE hPrinter, uint JobId, const(wchar)* pszName);
+uint EnumJobNamedProperties(PRINTER_HANDLE hPrinter, uint JobId, uint* pcProperties, PrintNamedProperty** ppProperties);
+HRESULT GetPrintOutputInfo(HWND hWnd, const(wchar)* pszPrinter, HANDLE* phFile, PWSTR* ppszOutputFile);
+BOOL DevQueryPrintEx(DEVQUERYPRINT_INFO* pDQPInfo);
+HRESULT RegisterForPrintAsyncNotifications(const(wchar)* pszName, GUID* pNotificationType, PrintAsyncNotifyUserFilter eUserFilter, PrintAsyncNotifyConversationStyle eConversationStyle, IPrintAsyncNotifyCallback pCallback, HANDLE* phNotify);
+HRESULT UnRegisterForPrintAsyncNotifications(HANDLE param0);
+HRESULT CreatePrintAsyncNotifyChannel(const(wchar)* pszName, GUID* pNotificationType, PrintAsyncNotifyUserFilter eUserFilter, PrintAsyncNotifyConversationStyle eConversationStyle, IPrintAsyncNotifyCallback pCallback, IPrintAsyncNotifyChannel* ppIAsynchNotification);
+HANDLE GdiGetSpoolFileHandle(PWSTR pwszPrinterName, DEVMODEW* pDevmode, PWSTR pwszDocName);
+BOOL GdiDeleteSpoolFileHandle(HANDLE SpoolFileHandle);
+uint GdiGetPageCount(HANDLE SpoolFileHandle);
+HDC GdiGetDC(HANDLE SpoolFileHandle);
+HANDLE GdiGetPageHandle(HANDLE SpoolFileHandle, uint Page, uint* pdwPageType);
+BOOL GdiStartDocEMF(HANDLE SpoolFileHandle, DOCINFOW* pDocInfo);
+BOOL GdiStartPageEMF(HANDLE SpoolFileHandle);
+BOOL GdiPlayPageEMF(HANDLE SpoolFileHandle, HANDLE hemf, RECT* prectDocument, RECT* prectBorder, RECT* prectClip);
+BOOL GdiEndPageEMF(HANDLE SpoolFileHandle, uint dwOptimization);
+BOOL GdiEndDocEMF(HANDLE SpoolFileHandle);
+BOOL GdiGetDevmodeForPage(HANDLE SpoolFileHandle, uint dwPageNumber, DEVMODEW** pCurrDM, DEVMODEW** pLastDM);
+BOOL GdiResetDCEMF(HANDLE SpoolFileHandle, DEVMODEW* pCurrDM);
+BOOL GetJobAttributes(PWSTR pPrinterName, DEVMODEW* pDevmode, ATTRIBUTE_INFO_3* pAttributeInfo);
+BOOL GetJobAttributesEx(PWSTR pPrinterName, DEVMODEW* pDevmode, uint dwLevel, ubyte* pAttributeInfo, uint nSize, uint dwFlags);
+HANDLE CreatePrinterIC(PRINTER_HANDLE hPrinter, DEVMODEW* pDevMode);
+BOOL PlayGdiScriptOnPrinterIC(HANDLE hPrinterIC, ubyte* pIn, uint cIn, ubyte* pOut, uint cOut, uint ul);
+BOOL DeletePrinterIC(HANDLE hPrinterIC);
+BOOL DevQueryPrint(PRINTER_HANDLE hPrinter, DEVMODEA* pDevMode, uint* pResID);
 HANDLE RevertToPrinterSelf();
-BOOL ImpersonatePrinterClient(HANDLE);
-BOOL ReplyPrinterChangeNotification(HANDLE, uint, uint*, void*);
-BOOL ReplyPrinterChangeNotificationEx(HANDLE, uint, uint, uint*, void*);
-BOOL PartialReplyPrinterChangeNotification(HANDLE, PRINTER_NOTIFY_INFO_DATA*);
-PRINTER_NOTIFY_INFO* RouterAllocPrinterNotifyInfo(uint);
-BOOL RouterFreePrinterNotifyInfo(PRINTER_NOTIFY_INFO*);
-BIDI_RESPONSE_CONTAINER* RouterAllocBidiResponseContainer(uint);
-void* RouterAllocBidiMem(ulong);
-uint RouterFreeBidiResponseContainer(BIDI_RESPONSE_CONTAINER*);
-void RouterFreeBidiMem(void*);
-BOOL AppendPrinterNotifyInfoData(PRINTER_NOTIFY_INFO*, PRINTER_NOTIFY_INFO_DATA*, uint);
-uint CallRouterFindFirstPrinterChangeNotification(HANDLE, uint, uint, HANDLE, PRINTER_NOTIFY_OPTIONS*);
-BOOL ProvidorFindFirstPrinterChangeNotification(HANDLE, uint, uint, HANDLE, void*, void*);
-BOOL ProvidorFindClosePrinterChangeNotification(HANDLE);
-BOOL SpoolerFindFirstPrinterChangeNotification(HANDLE, uint, uint, void*, void*, void*, HANDLE*, HANDLE*);
-BOOL SpoolerFindNextPrinterChangeNotification(HANDLE, uint*, void*, void**);
-BOOL SpoolerRefreshPrinterChangeNotification(HANDLE, uint, PRINTER_NOTIFY_OPTIONS*, PRINTER_NOTIFY_INFO**);
-void SpoolerFreePrinterNotifyInfo(PRINTER_NOTIFY_INFO*);
-BOOL SpoolerFindClosePrinterChangeNotification(HANDLE);
-BOOL SpoolerCopyFileEvent(PWSTR, PWSTR, uint);
-uint GenerateCopyFilePaths(const(wchar)*, const(wchar)*, ubyte*, uint, PWSTR, uint*, PWSTR, uint*, uint);
-BOOL SplPromptUIInUsersSession(HANDLE, uint, SHOWUIPARAMS*, uint*);
-uint SplIsSessionZero(HANDLE, uint, BOOL*);
-HRESULT AddPrintDeviceObject(HANDLE, HANDLE*);
-HRESULT UpdatePrintDeviceObject(HANDLE, HANDLE);
-HRESULT RemovePrintDeviceObject(HANDLE);
+BOOL ImpersonatePrinterClient(HANDLE hToken);
+BOOL ReplyPrinterChangeNotification(PRINTER_HANDLE hPrinter, uint fdwChangeFlags, uint* pdwResult, void* pPrinterNotifyInfo);
+BOOL ReplyPrinterChangeNotificationEx(HANDLE hNotify, uint dwColor, uint fdwFlags, uint* pdwResult, void* pPrinterNotifyInfo);
+BOOL PartialReplyPrinterChangeNotification(PRINTER_HANDLE hPrinter, PRINTER_NOTIFY_INFO_DATA* pDataSrc);
+PRINTER_NOTIFY_INFO* RouterAllocPrinterNotifyInfo(uint cPrinterNotifyInfoData);
+BOOL RouterFreePrinterNotifyInfo(PRINTER_NOTIFY_INFO* pInfo);
+BIDI_RESPONSE_CONTAINER* RouterAllocBidiResponseContainer(uint Count);
+void* RouterAllocBidiMem(ulong NumBytes);
+uint RouterFreeBidiResponseContainer(BIDI_RESPONSE_CONTAINER* pData);
+void RouterFreeBidiMem(void* pMemPointer);
+BOOL AppendPrinterNotifyInfoData(PRINTER_NOTIFY_INFO* pInfoDest, PRINTER_NOTIFY_INFO_DATA* pDataSrc, uint fdwFlags);
+uint CallRouterFindFirstPrinterChangeNotification(HANDLE hPrinterRPC, uint fdwFilterFlags, uint fdwOptions, HANDLE hNotify, PRINTER_NOTIFY_OPTIONS* pPrinterNotifyOptions);
+BOOL ProvidorFindFirstPrinterChangeNotification(PRINTER_HANDLE hPrinter, uint fdwFlags, uint fdwOptions, HANDLE hNotify, void* pPrinterNotifyOptions, void* pvReserved1);
+BOOL ProvidorFindClosePrinterChangeNotification(PRINTER_HANDLE hPrinter);
+BOOL SpoolerFindFirstPrinterChangeNotification(PRINTER_HANDLE hPrinter, uint fdwFilterFlags, uint fdwOptions, void* pPrinterNotifyOptions, void* pvReserved, void* pNotificationConfig, HANDLE* phNotify, HANDLE* phEvent);
+BOOL SpoolerFindNextPrinterChangeNotification(PRINTER_HANDLE hPrinter, uint* pfdwChange, void* pPrinterNotifyOptions, void** ppPrinterNotifyInfo);
+BOOL SpoolerRefreshPrinterChangeNotification(PRINTER_HANDLE hPrinter, uint dwColor, PRINTER_NOTIFY_OPTIONS* pOptions, PRINTER_NOTIFY_INFO** ppInfo);
+void SpoolerFreePrinterNotifyInfo(PRINTER_NOTIFY_INFO* pInfo);
+BOOL SpoolerFindClosePrinterChangeNotification(PRINTER_HANDLE hPrinter);
+BOOL SpoolerCopyFileEvent(PWSTR pszPrinterName, PWSTR pszKey, uint dwCopyFileEvent);
+uint GenerateCopyFilePaths(const(wchar)* pszPrinterName, const(wchar)* pszDirectory, ubyte* pSplClientInfo, uint dwLevel, PWSTR pszSourceDir, uint* pcchSourceDirSize, PWSTR pszTargetDir, uint* pcchTargetDirSize, uint dwFlags);
+BOOL SplPromptUIInUsersSession(PRINTER_HANDLE hPrinter, uint JobId, SHOWUIPARAMS* pUIParams, uint* pResponse);
+uint SplIsSessionZero(PRINTER_HANDLE hPrinter, uint JobId, BOOL* pIsSessionZero);
+HRESULT AddPrintDeviceObject(PRINTER_HANDLE hPrinter, HANDLE* phDeviceObject);
+HRESULT UpdatePrintDeviceObject(PRINTER_HANDLE hPrinter, HANDLE hDeviceObject);
+HRESULT RemovePrintDeviceObject(HANDLE hDeviceObject);
 enum USB_PRINTER_INTERFACE_CLASSIC = 0x00000001;
 enum USB_PRINTER_INTERFACE_IPP = 0x00000002;
 enum USB_PRINTER_INTERFACE_DUAL = 0x00000003;
@@ -1697,6 +1697,7 @@ enum PRINT_PORT_MONITOR_NOTIFY_CHANNEL = GUID(0x25df3b0e, 0x74a9, 0x47f5, [0x80,
 enum GUID_DEVINTERFACE_USBPRINT = GUID(0x28d78fad, 0x5a12, 0x11d1, [0xae, 0x5b, 0x0, 0x0, 0xf8, 0x3, 0xa8, 0xc2]);
 enum GUID_DEVINTERFACE_IPPUSB_PRINT = GUID(0xf2f40381, 0xf46d, 0x4e51, [0xbc, 0xe7, 0x62, 0xde, 0x6c, 0xf2, 0xd0, 0x98]);
 enum CLSID_XPSRASTERIZER_FACTORY = GUID(0x503e79bf, 0x1d09, 0x4764, [0x9d, 0x72, 0x1e, 0xb0, 0xc6, 0x59, 0x67, 0xc6]);
+alias PRINTER_HANDLE = void*;
 struct SPLCLIENT_INFO_2_WINXP
 {
     ulong hSplPrinter;
@@ -1704,34 +1705,34 @@ struct SPLCLIENT_INFO_2_WINXP
 enum IID_IBidiRequest = GUID(0x8f348bd7, 0x4b47, 0x4755, [0x8a, 0x9d, 0xf, 0x42, 0x2d, 0xf3, 0xdc, 0x89]);
 interface IBidiRequest : IUnknown
 {
-    HRESULT SetSchema(const(wchar)*);
-    HRESULT SetInputData(const(uint), const(ubyte)*, const(uint));
-    HRESULT GetResult(HRESULT*);
-    HRESULT GetOutputData(const(uint), PWSTR*, uint*, ubyte**, uint*);
-    HRESULT GetEnumCount(uint*);
+    HRESULT SetSchema(const(wchar)* pszSchema);
+    HRESULT SetInputData(const(uint) dwType, const(ubyte)* pData, const(uint) uSize);
+    HRESULT GetResult(HRESULT* phr);
+    HRESULT GetOutputData(const(uint) dwIndex, PWSTR* ppszSchema, uint* pdwType, ubyte** ppData, uint* uSize);
+    HRESULT GetEnumCount(uint* pdwTotal);
 }
 enum IID_IBidiRequestContainer = GUID(0xd752f6c0, 0x94a8, 0x4275, [0xa7, 0x7d, 0x8f, 0x1d, 0x1a, 0x11, 0x21, 0xae]);
 interface IBidiRequestContainer : IUnknown
 {
-    HRESULT AddRequest(IBidiRequest);
-    HRESULT GetEnumObject(IEnumUnknown*);
-    HRESULT GetRequestCount(uint*);
+    HRESULT AddRequest(IBidiRequest pRequest);
+    HRESULT GetEnumObject(IEnumUnknown* ppenum);
+    HRESULT GetRequestCount(uint* puCount);
 }
 enum IID_IBidiSpl = GUID(0xd580dc0e, 0xde39, 0x4649, [0xba, 0xa8, 0xbf, 0xb, 0x85, 0xa0, 0x3a, 0x97]);
 interface IBidiSpl : IUnknown
 {
-    HRESULT BindDevice(const(wchar)*, const(uint));
+    HRESULT BindDevice(const(wchar)* pszDeviceName, const(uint) dwAccess);
     HRESULT UnbindDevice();
-    HRESULT SendRecv(const(wchar)*, IBidiRequest);
-    HRESULT MultiSendRecv(const(wchar)*, IBidiRequestContainer);
+    HRESULT SendRecv(const(wchar)* pszAction, IBidiRequest pRequest);
+    HRESULT MultiSendRecv(const(wchar)* pszAction, IBidiRequestContainer pRequestContainer);
 }
 enum IID_IBidiSpl2 = GUID(0xe8f51b8, 0x8273, 0x4906, [0x8e, 0x7b, 0xbe, 0x45, 0x3f, 0xfd, 0x2e, 0x2b]);
 interface IBidiSpl2 : IUnknown
 {
-    HRESULT BindDevice(const(wchar)*, const(uint));
+    HRESULT BindDevice(const(wchar)* pszDeviceName, const(uint) dwAccess);
     HRESULT UnbindDevice();
-    HRESULT SendRecvXMLString(BSTR, BSTR*);
-    HRESULT SendRecvXMLStream(IStream, IStream*);
+    HRESULT SendRecvXMLString(BSTR bstrRequest, BSTR* pbstrResponse);
+    HRESULT SendRecvXMLStream(IStream pSRequest, IStream* ppSResponse);
 }
 enum CLSID_BidiRequest = GUID(0xb9162a23, 0x45f9, 0x47cc, [0x80, 0xf5, 0xfe, 0xf, 0xe9, 0xb9, 0xe1, 0xa2]);
 struct BidiRequest
@@ -1762,18 +1763,18 @@ struct ImgErrorInfo
 enum IID_IImgErrorInfo = GUID(0x2bce4ece, 0xd30e, 0x445a, [0x94, 0x23, 0x68, 0x29, 0xbe, 0x94, 0x5a, 0xd8]);
 interface IImgErrorInfo : IErrorInfo
 {
-    HRESULT GetDeveloperDescription(BSTR*);
-    HRESULT GetUserErrorId(GUID*);
-    HRESULT GetUserParameterCount(uint*);
-    HRESULT GetUserParameter(uint, BSTR*);
-    HRESULT GetUserFallback(BSTR*);
-    HRESULT GetExceptionId(uint*);
-    HRESULT DetachErrorInfo(ImgErrorInfo*);
+    HRESULT GetDeveloperDescription(BSTR* pbstrDevDescription);
+    HRESULT GetUserErrorId(GUID* pErrorId);
+    HRESULT GetUserParameterCount(uint* pcUserParams);
+    HRESULT GetUserParameter(uint cParam, BSTR* pbstrParam);
+    HRESULT GetUserFallback(BSTR* pbstrFallback);
+    HRESULT GetExceptionId(uint* pExceptionId);
+    HRESULT DetachErrorInfo(ImgErrorInfo* pErrorInfo);
 }
 enum IID_IImgCreateErrorInfo = GUID(0x1c55a64c, 0x7cd, 0x4fb5, [0x90, 0xf7, 0xb7, 0x53, 0xd9, 0x1f, 0xc, 0x9e]);
 interface IImgCreateErrorInfo : ICreateErrorInfo
 {
-    HRESULT AttachToErrorInfo(ImgErrorInfo*);
+    HRESULT AttachToErrorInfo(ImgErrorInfo* pErrorInfo);
 }
 alias EXpsCompressionOptions = int;
 enum : int
@@ -1811,13 +1812,13 @@ enum : int
 enum IID_IPrintReadStream = GUID(0x4d47a67c, 0x66cc, 0x4430, [0x85, 0xe, 0xda, 0xf4, 0x66, 0xfe, 0x5b, 0xc4]);
 interface IPrintReadStream : IUnknown
 {
-    HRESULT Seek(long, uint, ulong*);
-    HRESULT ReadBytes(void*, uint, uint*, BOOL*);
+    HRESULT Seek(long dlibMove, uint dwOrigin, ulong* plibNewPosition);
+    HRESULT ReadBytes(void* pvBuffer, uint cbRequested, uint* pcbRead, BOOL* pbEndOfFile);
 }
 enum IID_IPrintWriteStream = GUID(0x65bb7f1b, 0x371e, 0x4571, [0x8a, 0xc7, 0x91, 0x2f, 0x51, 0xc, 0x1a, 0x38]);
 interface IPrintWriteStream : IUnknown
 {
-    HRESULT WriteBytes(const(void)*, uint, uint*);
+    HRESULT WriteBytes(const(void)* pvBuffer, uint cbBuffer, uint* pcbWritten);
     void Close();
 }
 enum IID_IPrintWriteStreamFlush = GUID(0x7d11ff8, 0x1753, 0x4873, [0xb7, 0x49, 0x6c, 0xda, 0xf0, 0x68, 0xe4, 0xc3]);
@@ -1828,117 +1829,117 @@ interface IPrintWriteStreamFlush : IUnknown
 enum IID_IInterFilterCommunicator = GUID(0x4daf1e69, 0x81fd, 0x462d, [0x94, 0xf, 0x8c, 0xd3, 0xdd, 0xf5, 0x6f, 0xca]);
 interface IInterFilterCommunicator : IUnknown
 {
-    HRESULT RequestReader(void**);
-    HRESULT RequestWriter(void**);
+    HRESULT RequestReader(void** ppIReader);
+    HRESULT RequestWriter(void** ppIWriter);
 }
 enum IID_IPrintPipelineManagerControl = GUID(0xaa3e4910, 0x5889, 0x4681, [0x91, 0xef, 0x82, 0x3a, 0xd4, 0xed, 0x4e, 0x44]);
 interface IPrintPipelineManagerControl : IUnknown
 {
-    HRESULT RequestShutdown(HRESULT, IImgErrorInfo);
+    HRESULT RequestShutdown(HRESULT hrReason, IImgErrorInfo pReason);
     HRESULT FilterFinished();
 }
 enum IID_IPrintPipelinePropertyBag = GUID(0x8b8c99dc, 0x7892, 0x4a95, [0x8a, 0x4, 0x57, 0x42, 0x2e, 0x9f, 0xbb, 0x47]);
 interface IPrintPipelinePropertyBag : IUnknown
 {
-    HRESULT AddProperty(const(wchar)*, const(VARIANT)*);
-    HRESULT GetProperty(const(wchar)*, VARIANT*);
-    BOOL DeleteProperty(const(wchar)*);
+    HRESULT AddProperty(const(wchar)* pszName, const(VARIANT)* pVar);
+    HRESULT GetProperty(const(wchar)* pszName, VARIANT* pVar);
+    BOOL DeleteProperty(const(wchar)* pszName);
 }
 enum IID_IPrintPipelineProgressReport = GUID(0xedc12c7c, 0xed40, 0x4ea5, [0x96, 0xa6, 0x5e, 0x43, 0x97, 0x49, 0x7a, 0x61]);
 interface IPrintPipelineProgressReport : IUnknown
 {
-    HRESULT ReportProgress(EXpsJobConsumption);
+    HRESULT ReportProgress(EXpsJobConsumption update);
 }
 enum IID_IPrintClassObjectFactory = GUID(0x9af593dd, 0x9b02, 0x48a8, [0x9b, 0xad, 0x69, 0xac, 0xe4, 0x23, 0xf8, 0x8b]);
 interface IPrintClassObjectFactory : IUnknown
 {
-    HRESULT GetPrintClassObject(const(wchar)*, const(GUID)*, void**);
+    HRESULT GetPrintClassObject(const(wchar)* pszPrinterName, const(GUID)* riid, void** ppNewObject);
 }
 enum IID_IPrintPipelineFilter = GUID(0xcdb62fc0, 0x8bed, 0x434e, [0x86, 0xfb, 0xa2, 0xca, 0xe5, 0x5f, 0x19, 0xea]);
 interface IPrintPipelineFilter : IUnknown
 {
-    HRESULT InitializeFilter(IInterFilterCommunicator, IPrintPipelinePropertyBag, IPrintPipelineManagerControl);
+    HRESULT InitializeFilter(IInterFilterCommunicator pINegotiation, IPrintPipelinePropertyBag pIPropertyBag, IPrintPipelineManagerControl pIPipelineControl);
     HRESULT ShutdownOperation();
     HRESULT StartOperation();
 }
 enum IID_IXpsDocumentProvider = GUID(0xb8cf8530, 0x5562, 0x47c4, [0xab, 0x67, 0xb1, 0xf6, 0x9e, 0xcf, 0x96, 0x1e]);
 interface IXpsDocumentProvider : IUnknown
 {
-    HRESULT GetXpsPart(IUnknown*);
+    HRESULT GetXpsPart(IUnknown* ppIXpsPart);
 }
 enum IID_IXpsDocumentConsumer = GUID(0x4368d8a2, 0x4181, 0x4a9f, [0xb2, 0x95, 0x3d, 0x9a, 0x38, 0xbb, 0x9b, 0xa0]);
 interface IXpsDocumentConsumer : IUnknown
 {
-    HRESULT SendXpsUnknown(IUnknown);
-    HRESULT SendXpsDocument(IXpsDocument);
-    HRESULT SendFixedDocumentSequence(IFixedDocumentSequence);
-    HRESULT SendFixedDocument(IFixedDocument);
-    HRESULT SendFixedPage(IFixedPage);
+    HRESULT SendXpsUnknown(IUnknown pUnknown);
+    HRESULT SendXpsDocument(IXpsDocument pIXpsDocument);
+    HRESULT SendFixedDocumentSequence(IFixedDocumentSequence pIFixedDocumentSequence);
+    HRESULT SendFixedDocument(IFixedDocument pIFixedDocument);
+    HRESULT SendFixedPage(IFixedPage pIFixedPage);
     HRESULT CloseSender();
-    HRESULT GetNewEmptyPart(const(wchar)*, const(GUID)*, void**, IPrintWriteStream*);
+    HRESULT GetNewEmptyPart(const(wchar)* uri, const(GUID)* riid, void** ppNewObject, IPrintWriteStream* ppWriteStream);
 }
 enum IID_IXpsDocument = GUID(0xe8d907db, 0x62a9, 0x4a95, [0xab, 0xe7, 0xe0, 0x17, 0x63, 0xdd, 0x30, 0xf8]);
 interface IXpsDocument : IUnknown
 {
-    HRESULT GetThumbnail(IPartThumbnail*);
-    HRESULT SetThumbnail(IPartThumbnail);
+    HRESULT GetThumbnail(IPartThumbnail* ppThumbnail);
+    HRESULT SetThumbnail(IPartThumbnail pThumbnail);
 }
 enum IID_IFixedDocumentSequence = GUID(0x8028d181, 0x2c32, 0x4249, [0x84, 0x93, 0x1b, 0xfb, 0x22, 0x4, 0x55, 0x74]);
 interface IFixedDocumentSequence : IUnknown
 {
-    HRESULT GetUri(BSTR*);
-    HRESULT GetPrintTicket(IPartPrintTicket*);
-    HRESULT SetPrintTicket(IPartPrintTicket);
+    HRESULT GetUri(BSTR* uri);
+    HRESULT GetPrintTicket(IPartPrintTicket* ppPrintTicket);
+    HRESULT SetPrintTicket(IPartPrintTicket pPrintTicket);
 }
 enum IID_IFixedDocument = GUID(0xf222ca9f, 0x9968, 0x4db9, [0x81, 0xbd, 0xab, 0xae, 0xbf, 0x15, 0xf9, 0x3f]);
 interface IFixedDocument : IUnknown
 {
-    HRESULT GetUri(BSTR*);
-    HRESULT GetPrintTicket(IPartPrintTicket*);
-    HRESULT SetPrintTicket(IPartPrintTicket);
+    HRESULT GetUri(BSTR* uri);
+    HRESULT GetPrintTicket(IPartPrintTicket* ppPrintTicket);
+    HRESULT SetPrintTicket(IPartPrintTicket pPrintTicket);
 }
 enum IID_IPartBase = GUID(0x36d51e28, 0x369e, 0x43ba, [0xa6, 0x66, 0x95, 0x40, 0xc6, 0x2c, 0x3f, 0x58]);
 interface IPartBase : IUnknown
 {
-    HRESULT GetUri(BSTR*);
-    HRESULT GetStream(IPrintReadStream*);
-    HRESULT GetPartCompression(EXpsCompressionOptions*);
-    HRESULT SetPartCompression(EXpsCompressionOptions);
+    HRESULT GetUri(BSTR* uri);
+    HRESULT GetStream(IPrintReadStream* ppStream);
+    HRESULT GetPartCompression(EXpsCompressionOptions* pCompression);
+    HRESULT SetPartCompression(EXpsCompressionOptions compression);
 }
 enum IID_IFixedPage = GUID(0x3d9f6448, 0x7e95, 0x4cb5, [0x94, 0xfb, 0x1, 0x80, 0xc2, 0x88, 0x3a, 0x57]);
 interface IFixedPage : IPartBase
 {
-    HRESULT GetPrintTicket(IPartPrintTicket*);
-    HRESULT GetPagePart(const(wchar)*, IUnknown*);
-    HRESULT GetWriteStream(IPrintWriteStream*);
-    HRESULT SetPrintTicket(IPartPrintTicket);
-    HRESULT SetPagePart(IUnknown);
-    HRESULT DeleteResource(const(wchar)*);
-    HRESULT GetXpsPartIterator(IXpsPartIterator*);
+    HRESULT GetPrintTicket(IPartPrintTicket* ppPrintTicket);
+    HRESULT GetPagePart(const(wchar)* uri, IUnknown* ppUnk);
+    HRESULT GetWriteStream(IPrintWriteStream* ppWriteStream);
+    HRESULT SetPrintTicket(IPartPrintTicket ppPrintTicket);
+    HRESULT SetPagePart(IUnknown pUnk);
+    HRESULT DeleteResource(const(wchar)* uri);
+    HRESULT GetXpsPartIterator(IXpsPartIterator* pXpsPartIt);
 }
 enum IID_IPartImage = GUID(0x725f2e3c, 0x401a, 0x4705, [0x9d, 0xe0, 0xfe, 0x6f, 0x13, 0x53, 0xb8, 0x7f]);
 interface IPartImage : IPartBase
 {
-    HRESULT GetImageProperties(BSTR*);
-    HRESULT SetImageContent(const(wchar)*);
+    HRESULT GetImageProperties(BSTR* pContentType);
+    HRESULT SetImageContent(const(wchar)* pContentType);
 }
 enum IID_IPartFont = GUID(0xe07fe0ab, 0x1124, 0x43d0, [0xa8, 0x65, 0xe8, 0xff, 0xb6, 0xa3, 0xea, 0x82]);
 interface IPartFont : IPartBase
 {
-    HRESULT GetFontProperties(BSTR*, EXpsFontOptions*);
-    HRESULT SetFontContent(const(wchar)*);
-    HRESULT SetFontOptions(EXpsFontOptions);
+    HRESULT GetFontProperties(BSTR* pContentType, EXpsFontOptions* pFontOptions);
+    HRESULT SetFontContent(const(wchar)* pContentType);
+    HRESULT SetFontOptions(EXpsFontOptions options);
 }
 enum IID_IPartFont2 = GUID(0x511e025f, 0xd6cb, 0x43be, [0xbf, 0x65, 0x63, 0xfe, 0x88, 0x51, 0x5a, 0x39]);
 interface IPartFont2 : IPartFont
 {
-    HRESULT GetFontRestriction(EXpsFontRestriction*);
+    HRESULT GetFontRestriction(EXpsFontRestriction* pRestriction);
 }
 enum IID_IPartThumbnail = GUID(0x27ed1c9, 0xba39, 0x4cc5, [0xaa, 0x55, 0x7e, 0xc3, 0xa0, 0xde, 0x17, 0x1a]);
 interface IPartThumbnail : IPartBase
 {
-    HRESULT GetThumbnailProperties(BSTR*);
-    HRESULT SetThumbnailContent(const(wchar)*);
+    HRESULT GetThumbnailProperties(BSTR* pContentType);
+    HRESULT SetThumbnailContent(const(wchar)* pContentType);
 }
 enum IID_IPartPrintTicket = GUID(0x4a0f50f6, 0xf9a2, 0x41f0, [0x99, 0xe7, 0x5a, 0xe9, 0x55, 0xbe, 0x8e, 0x9e]);
 interface IPartPrintTicket : IPartBase
@@ -1956,19 +1957,19 @@ enum IID_IXpsPartIterator = GUID(0x21d3cd, 0xaf6f, 0x42ab, [0x99, 0x99, 0x14, 0x
 interface IXpsPartIterator : IUnknown
 {
     void Reset();
-    HRESULT Current(BSTR*, IUnknown*);
+    HRESULT Current(BSTR* pUri, IUnknown* ppXpsPart);
     BOOL IsDone();
     void Next();
 }
 enum IID_IPrintReadStreamFactory = GUID(0xacb971e3, 0xdf8d, 0x4fc2, [0xbe, 0xe6, 0x6, 0x9, 0xd1, 0x5f, 0x3c, 0xf9]);
 interface IPrintReadStreamFactory : IUnknown
 {
-    HRESULT GetStream(IPrintReadStream*);
+    HRESULT GetStream(IPrintReadStream* ppStream);
 }
 enum IID_IPartDiscardControl = GUID(0xcc350c00, 0x95b, 0x42a5, [0xbf, 0xf, 0xc8, 0x78, 0xe, 0xda, 0xdb, 0x3c]);
 interface IPartDiscardControl : IUnknown
 {
-    HRESULT GetDiscardProperties(BSTR*, BSTR*);
+    HRESULT GetDiscardProperties(BSTR* uriSentinelPage, BSTR* uriPartToDiscard);
 }
 struct OPTPARAM
 {
@@ -2081,7 +2082,7 @@ struct CPSUICBPARAM
     ulong UserData;
     ulong Result;
 }
-alias _CPSUICALLBACK = int function(CPSUICBPARAM*);
+alias _CPSUICALLBACK = int function(CPSUICBPARAM* pCPSUICBParam);
 struct DLGPAGE
 {
     ushort cbSize;
@@ -2130,7 +2131,7 @@ struct INSERTPSUIPAGE_INFO
     ulong dwData2;
     ulong dwData3;
 }
-alias PFNCOMPROPSHEET = long function(HANDLE, uint, LPARAM, LPARAM);
+alias PFNCOMPROPSHEET = long function(HANDLE hComPropSheet, uint Function, LPARAM lParam1, LPARAM lParam2);
 struct PSPINFO
 {
     ushort cbSize;
@@ -2164,7 +2165,7 @@ struct PROPSHEETUI_GETICON_INFO
     ushort cyIcon;
     HICON hIcon;
 }
-alias PFNPROPSHEETUI = int function(PROPSHEETUI_INFO*, LPARAM);
+alias PFNPROPSHEETUI = int function(PROPSHEETUI_INFO* pPSUIInfo, LPARAM lParam);
 struct PROPSHEETUI_INFO_HEADER
 {
     ushort cbSize;
@@ -3347,9 +3348,9 @@ struct USERDATA
     PSTR pKeyWordName;
     uint[8] dwReserved;
 }
-alias PFN_DrvGetDriverSetting = BOOL function(void*, const(char)*, void*, uint, uint*, uint*);
-alias PFN_DrvUpgradeRegistrySetting = BOOL function(HANDLE, const(char)*, const(char)*);
-alias PFN_DrvUpdateUISetting = BOOL function(void*, void*, uint, uint);
+alias PFN_DrvGetDriverSetting = BOOL function(void* pdriverobj, const(char)* Feature, void* pOutput, uint cbSize, uint* pcbNeeded, uint* pdwOptionsReturned);
+alias PFN_DrvUpgradeRegistrySetting = BOOL function(HANDLE hPrinter, const(char)* pFeature, const(char)* pOption);
+alias PFN_DrvUpdateUISetting = BOOL function(void* pdriverobj, void* pOptItem, uint dwPreviousSelection, uint dwMode);
 struct SIMULATE_CAPS_1
 {
     uint dwLevel;
@@ -3368,7 +3369,7 @@ struct OEMUIOBJ
     uint cbSize;
     OEMUIPROCS* pOemUIProcs;
 }
-alias OEMCUIPCALLBACK = int function(CPSUICBPARAM*, OEMCUIPPARAM*);
+alias OEMCUIPCALLBACK = int function(CPSUICBPARAM* param0, OEMCUIPPARAM* param1);
 struct OEMCUIPPARAM
 {
     uint cbSize;
@@ -3431,90 +3432,90 @@ struct PRINT_FEATURE_OPTION
 enum IID_IPrintCoreHelper = GUID(0xa89ec53e, 0x3905, 0x49c6, [0x9c, 0x1a, 0xc0, 0xa8, 0x81, 0x17, 0xfd, 0xb6]);
 interface IPrintCoreHelper : IUnknown
 {
-    HRESULT GetOption(const(DEVMODEA)*, uint, const(char)*, const(char)**);
-    HRESULT SetOptions(DEVMODEA*, uint, BOOL, const(PRINT_FEATURE_OPTION)*, uint, uint*, uint*);
-    HRESULT EnumConstrainedOptions(const(DEVMODEA)*, uint, const(char)*, const(char)****, uint*);
-    HRESULT WhyConstrained(const(DEVMODEA)*, uint, const(char)*, const(char)*, const(PRINT_FEATURE_OPTION)**, uint*);
-    HRESULT EnumFeatures(const(char)****, uint*);
-    HRESULT EnumOptions(const(char)*, const(char)****, uint*);
-    HRESULT GetFontSubstitution(const(wchar)*, const(wchar)**);
-    HRESULT SetFontSubstitution(const(wchar)*, const(wchar)*);
-    HRESULT CreateInstanceOfMSXMLObject(const(GUID)*, IUnknown, uint, const(GUID)*, void**);
+    HRESULT GetOption(const(DEVMODEA)* pDevmode, uint cbSize, const(char)* pszFeatureRequested, const(char)** ppszOption);
+    HRESULT SetOptions(DEVMODEA* pDevmode, uint cbSize, BOOL bResolveConflicts, const(PRINT_FEATURE_OPTION)* pFOPairs, uint cPairs, uint* pcPairsWritten, uint* pdwResult);
+    HRESULT EnumConstrainedOptions(const(DEVMODEA)* pDevmode, uint cbSize, const(char)* pszFeatureKeyword, const(char)**** pConstrainedOptionList, uint* pdwNumOptions);
+    HRESULT WhyConstrained(const(DEVMODEA)* pDevmode, uint cbSize, const(char)* pszFeatureKeyword, const(char)* pszOptionKeyword, const(PRINT_FEATURE_OPTION)** ppFOConstraints, uint* pdwNumOptions);
+    HRESULT EnumFeatures(const(char)**** pFeatureList, uint* pdwNumFeatures);
+    HRESULT EnumOptions(const(char)* pszFeatureKeyword, const(char)**** pOptionList, uint* pdwNumOptions);
+    HRESULT GetFontSubstitution(const(wchar)* pszTrueTypeFontName, const(wchar)** ppszDevFontName);
+    HRESULT SetFontSubstitution(const(wchar)* pszTrueTypeFontName, const(wchar)* pszDevFontName);
+    HRESULT CreateInstanceOfMSXMLObject(const(GUID)* rclsid, IUnknown pUnkOuter, uint dwClsContext, const(GUID)* riid, void** ppv);
 }
 enum IID_IPrintCoreHelperUni = GUID(0x7e8e51d6, 0xe5ee, 0x4426, [0x81, 0x7b, 0x95, 0x8b, 0x94, 0x44, 0xeb, 0x79]);
 interface IPrintCoreHelperUni : IPrintCoreHelper
 {
-    HRESULT CreateGDLSnapshot(DEVMODEA*, uint, uint, IStream*);
-    HRESULT CreateDefaultGDLSnapshot(uint, IStream*);
+    HRESULT CreateGDLSnapshot(DEVMODEA* pDevmode, uint cbSize, uint dwFlags, IStream* ppSnapshotStream);
+    HRESULT CreateDefaultGDLSnapshot(uint dwFlags, IStream* ppSnapshotStream);
 }
 enum IID_IPrintCoreHelperUni2 = GUID(0x6c8afdfc, 0xead0, 0x4d2d, [0x80, 0x71, 0x9b, 0xf0, 0x17, 0x5a, 0x6c, 0x3a]);
 interface IPrintCoreHelperUni2 : IPrintCoreHelperUni
 {
-    HRESULT GetNamedCommand(DEVMODEA*, uint, const(wchar)*, ubyte**, uint*);
+    HRESULT GetNamedCommand(DEVMODEA* pDevmode, uint cbSize, const(wchar)* pszCommandName, ubyte** ppCommandBytes, uint* pcbCommandSize);
 }
 enum IID_IPrintCoreHelperPS = GUID(0xc2c14f6f, 0x95d3, 0x4d63, [0x96, 0xcf, 0x6b, 0xd9, 0xe6, 0xc9, 0x7, 0xc2]);
 interface IPrintCoreHelperPS : IPrintCoreHelper
 {
-    HRESULT GetGlobalAttribute(const(char)*, uint*, ubyte**, uint*);
-    HRESULT GetFeatureAttribute(const(char)*, const(char)*, uint*, ubyte**, uint*);
-    HRESULT GetOptionAttribute(const(char)*, const(char)*, const(char)*, uint*, ubyte**, uint*);
+    HRESULT GetGlobalAttribute(const(char)* pszAttribute, uint* pdwDataType, ubyte** ppbData, uint* pcbSize);
+    HRESULT GetFeatureAttribute(const(char)* pszFeatureKeyword, const(char)* pszAttribute, uint* pdwDataType, ubyte** ppbData, uint* pcbSize);
+    HRESULT GetOptionAttribute(const(char)* pszFeatureKeyword, const(char)* pszOptionKeyword, const(char)* pszAttribute, uint* pdwDataType, ubyte** ppbData, uint* pcbSize);
 }
 enum IID_IPrintOemCommon = GUID(0x7f42285e, 0x91d5, 0x11d1, [0x88, 0x20, 0x0, 0xc0, 0x4f, 0xb9, 0x61, 0xec]);
 interface IPrintOemCommon : IUnknown
 {
-    HRESULT GetInfo(uint, void*, uint, uint*);
-    HRESULT DevMode(uint, OEMDMPARAM*);
+    HRESULT GetInfo(uint dwMode, void* pBuffer, uint cbSize, uint* pcbNeeded);
+    HRESULT DevMode(uint dwMode, OEMDMPARAM* pOemDMParam);
 }
 enum IID_IPrintOemUI = GUID(0xc6a7a9d0, 0x774c, 0x11d1, [0x94, 0x7f, 0x0, 0xa0, 0xc9, 0x6, 0x40, 0xb8]);
 interface IPrintOemUI : IPrintOemCommon
 {
-    HRESULT PublishDriverInterface(IUnknown);
-    HRESULT CommonUIProp(uint, OEMCUIPPARAM*);
-    HRESULT DocumentPropertySheets(PROPSHEETUI_INFO*, LPARAM);
-    HRESULT DevicePropertySheets(PROPSHEETUI_INFO*, LPARAM);
-    HRESULT DevQueryPrintEx(OEMUIOBJ*, DEVQUERYPRINT_INFO*, DEVMODEA*, void*);
-    HRESULT DeviceCapabilitiesA(OEMUIOBJ*, HANDLE, PWSTR, ushort, void*, DEVMODEA*, void*, uint, uint*);
-    HRESULT UpgradePrinter(uint, ubyte*);
-    HRESULT PrinterEvent(PWSTR, int, uint, LPARAM);
-    HRESULT DriverEvent(uint, uint, ubyte*, LPARAM);
-    HRESULT QueryColorProfile(HANDLE, OEMUIOBJ*, DEVMODEA*, void*, uint, void*, uint*, uint*);
-    HRESULT FontInstallerDlgProc(HWND, uint, WPARAM, LPARAM);
-    HRESULT UpdateExternalFonts(HANDLE, HANDLE, PWSTR);
+    HRESULT PublishDriverInterface(IUnknown pIUnknown);
+    HRESULT CommonUIProp(uint dwMode, OEMCUIPPARAM* pOemCUIPParam);
+    HRESULT DocumentPropertySheets(PROPSHEETUI_INFO* pPSUIInfo, LPARAM lParam);
+    HRESULT DevicePropertySheets(PROPSHEETUI_INFO* pPSUIInfo, LPARAM lParam);
+    HRESULT DevQueryPrintEx(OEMUIOBJ* poemuiobj, DEVQUERYPRINT_INFO* pDQPInfo, DEVMODEA* pPublicDM, void* pOEMDM);
+    HRESULT DeviceCapabilitiesA(OEMUIOBJ* poemuiobj, HANDLE hPrinter, PWSTR pDeviceName, ushort wCapability, void* pOutput, DEVMODEA* pPublicDM, void* pOEMDM, uint dwOld, uint* dwResult);
+    HRESULT UpgradePrinter(uint dwLevel, ubyte* pDriverUpgradeInfo);
+    HRESULT PrinterEvent(PWSTR pPrinterName, int iDriverEvent, uint dwFlags, LPARAM lParam);
+    HRESULT DriverEvent(uint dwDriverEvent, uint dwLevel, ubyte* pDriverInfo, LPARAM lParam);
+    HRESULT QueryColorProfile(PRINTER_HANDLE hPrinter, OEMUIOBJ* poemuiobj, DEVMODEA* pPublicDM, void* pOEMDM, uint ulQueryMode, void* pvProfileData, uint* pcbProfileData, uint* pflProfileData);
+    HRESULT FontInstallerDlgProc(HWND hWnd, uint usMsg, WPARAM wParam, LPARAM lParam);
+    HRESULT UpdateExternalFonts(PRINTER_HANDLE hPrinter, HANDLE hHeap, PWSTR pwstrCartridges);
 }
 enum IID_IPrintOemUI2 = GUID(0x292515f9, 0xb54b, 0x489b, [0x92, 0x75, 0xba, 0xb5, 0x68, 0x21, 0x39, 0x5e]);
 interface IPrintOemUI2 : IPrintOemUI
 {
-    HRESULT QueryJobAttributes(HANDLE, DEVMODEA*, uint, ubyte*);
-    HRESULT HideStandardUI(uint);
-    HRESULT DocumentEvent(HANDLE, HDC, int, uint, void*, uint, void*, int*);
+    HRESULT QueryJobAttributes(PRINTER_HANDLE hPrinter, DEVMODEA* pDevmode, uint dwLevel, ubyte* lpAttributeInfo);
+    HRESULT HideStandardUI(uint dwMode);
+    HRESULT DocumentEvent(PRINTER_HANDLE hPrinter, HDC hdc, int iEsc, uint cbIn, void* pvIn, uint cbOut, void* pvOut, int* piResult);
 }
 enum IID_IPrintOemUIMXDC = GUID(0x7349d725, 0xe2c1, 0x4dca, [0xaf, 0xb5, 0xc1, 0x3e, 0x91, 0xbc, 0x93, 0x6]);
 interface IPrintOemUIMXDC : IUnknown
 {
-    HRESULT AdjustImageableArea(HANDLE, uint, const(DEVMODEA)*, uint, const(void)*, RECTL*);
-    HRESULT AdjustImageCompression(HANDLE, uint, const(DEVMODEA)*, uint, const(void)*, int*);
-    HRESULT AdjustDPI(HANDLE, uint, const(DEVMODEA)*, uint, const(void)*, int*);
+    HRESULT AdjustImageableArea(PRINTER_HANDLE hPrinter, uint cbDevMode, const(DEVMODEA)* pDevMode, uint cbOEMDM, const(void)* pOEMDM, RECTL* prclImageableArea);
+    HRESULT AdjustImageCompression(PRINTER_HANDLE hPrinter, uint cbDevMode, const(DEVMODEA)* pDevMode, uint cbOEMDM, const(void)* pOEMDM, int* pCompressionMode);
+    HRESULT AdjustDPI(PRINTER_HANDLE hPrinter, uint cbDevMode, const(DEVMODEA)* pDevMode, uint cbOEMDM, const(void)* pOEMDM, int* pDPI);
 }
 enum IID_IPrintOemDriverUI = GUID(0x92b05d50, 0x78bc, 0x11d1, [0x94, 0x80, 0x0, 0xa0, 0xc9, 0x6, 0x40, 0xb8]);
 interface IPrintOemDriverUI : IUnknown
 {
-    HRESULT DrvGetDriverSetting(void*, const(char)*, void*, uint, uint*, uint*);
-    HRESULT DrvUpgradeRegistrySetting(HANDLE, const(char)*, const(char)*);
-    HRESULT DrvUpdateUISetting(void*, void*, uint, uint);
+    HRESULT DrvGetDriverSetting(void* pci, const(char)* Feature, void* pOutput, uint cbSize, uint* pcbNeeded, uint* pdwOptionsReturned);
+    HRESULT DrvUpgradeRegistrySetting(HANDLE hPrinter, const(char)* pFeature, const(char)* pOption);
+    HRESULT DrvUpdateUISetting(void* pci, void* pOptItem, uint dwPreviousSelection, uint dwMode);
 }
 enum IID_IPrintCoreUI2 = GUID(0x85ccfca, 0x3adf, 0x4c9e, [0xb4, 0x91, 0xd8, 0x51, 0xa6, 0xed, 0xc9, 0x97]);
 interface IPrintCoreUI2 : IPrintOemDriverUI
 {
-    HRESULT GetOptions(OEMUIOBJ*, uint, byte*, uint, PSTR, uint, uint*);
-    HRESULT SetOptions(OEMUIOBJ*, uint, byte*, uint, uint*);
-    HRESULT EnumConstrainedOptions(OEMUIOBJ*, uint, const(char)*, PSTR, uint, uint*);
-    HRESULT WhyConstrained(OEMUIOBJ*, uint, const(char)*, const(char)*, PSTR, uint, uint*);
-    HRESULT GetGlobalAttribute(OEMUIOBJ*, uint, const(char)*, uint*, ubyte*, uint, uint*);
-    HRESULT GetFeatureAttribute(OEMUIOBJ*, uint, const(char)*, const(char)*, uint*, ubyte*, uint, uint*);
-    HRESULT GetOptionAttribute(OEMUIOBJ*, uint, const(char)*, const(char)*, const(char)*, uint*, ubyte*, uint, uint*);
-    HRESULT EnumFeatures(OEMUIOBJ*, uint, PSTR, uint, uint*);
-    HRESULT EnumOptions(OEMUIOBJ*, uint, const(char)*, PSTR, uint, uint*);
-    HRESULT QuerySimulationSupport(HANDLE, uint, ubyte*, uint, uint*);
+    HRESULT GetOptions(OEMUIOBJ* poemuiobj, uint dwFlags, byte* pmszFeaturesRequested, uint cbIn, PSTR pmszFeatureOptionBuf, uint cbSize, uint* pcbNeeded);
+    HRESULT SetOptions(OEMUIOBJ* poemuiobj, uint dwFlags, byte* pmszFeatureOptionBuf, uint cbIn, uint* pdwResult);
+    HRESULT EnumConstrainedOptions(OEMUIOBJ* poemuiobj, uint dwFlags, const(char)* pszFeatureKeyword, PSTR pmszConstrainedOptionList, uint cbSize, uint* pcbNeeded);
+    HRESULT WhyConstrained(OEMUIOBJ* poemuiobj, uint dwFlags, const(char)* pszFeatureKeyword, const(char)* pszOptionKeyword, PSTR pmszReasonList, uint cbSize, uint* pcbNeeded);
+    HRESULT GetGlobalAttribute(OEMUIOBJ* poemuiobj, uint dwFlags, const(char)* pszAttribute, uint* pdwDataType, ubyte* pbData, uint cbSize, uint* pcbNeeded);
+    HRESULT GetFeatureAttribute(OEMUIOBJ* poemuiobj, uint dwFlags, const(char)* pszFeatureKeyword, const(char)* pszAttribute, uint* pdwDataType, ubyte* pbData, uint cbSize, uint* pcbNeeded);
+    HRESULT GetOptionAttribute(OEMUIOBJ* poemuiobj, uint dwFlags, const(char)* pszFeatureKeyword, const(char)* pszOptionKeyword, const(char)* pszAttribute, uint* pdwDataType, ubyte* pbData, uint cbSize, uint* pcbNeeded);
+    HRESULT EnumFeatures(OEMUIOBJ* poemuiobj, uint dwFlags, PSTR pmszFeatureList, uint cbSize, uint* pcbNeeded);
+    HRESULT EnumOptions(OEMUIOBJ* poemuiobj, uint dwFlags, const(char)* pszFeatureKeyword, PSTR pmszOptionList, uint cbSize, uint* pcbNeeded);
+    HRESULT QuerySimulationSupport(HANDLE hPrinter, uint dwLevel, ubyte* pCaps, uint cbSize, uint* pcbNeeded);
 }
 alias SHIMOPTS = int;
 enum : int
@@ -3526,31 +3527,31 @@ enum : int
 enum IID_IPrintTicketProvider = GUID(0xbb5116db, 0xa23, 0x4c3a, [0xa6, 0xb6, 0x89, 0xe5, 0x55, 0x8d, 0xfb, 0x5d]);
 interface IPrintTicketProvider : IUnknown
 {
-    HRESULT GetSupportedVersions(HANDLE, int**, int*);
-    HRESULT BindPrinter(HANDLE, int, SHIMOPTS*, uint*, int*, BSTR**);
-    HRESULT QueryDeviceNamespace(BSTR*);
-    HRESULT ConvertPrintTicketToDevMode(IXMLDOMDocument2, uint, DEVMODEA*, uint*, DEVMODEA**);
-    HRESULT ConvertDevModeToPrintTicket(uint, DEVMODEA*, IXMLDOMDocument2);
-    HRESULT GetPrintCapabilities(IXMLDOMDocument2, IXMLDOMDocument2*);
-    HRESULT ValidatePrintTicket(IXMLDOMDocument2);
+    HRESULT GetSupportedVersions(PRINTER_HANDLE hPrinter, int** ppVersions, int* cVersions);
+    HRESULT BindPrinter(PRINTER_HANDLE hPrinter, int version_, SHIMOPTS* pOptions, uint* pDevModeFlags, int* cNamespaces, BSTR** ppNamespaces);
+    HRESULT QueryDeviceNamespace(BSTR* pDefaultNamespace);
+    HRESULT ConvertPrintTicketToDevMode(IXMLDOMDocument2 pPrintTicket, uint cbDevmodeIn, DEVMODEA* pDevmodeIn, uint* pcbDevmodeOut, DEVMODEA** ppDevmodeOut);
+    HRESULT ConvertDevModeToPrintTicket(uint cbDevmode, DEVMODEA* pDevmode, IXMLDOMDocument2 pPrintTicket);
+    HRESULT GetPrintCapabilities(IXMLDOMDocument2 pPrintTicket, IXMLDOMDocument2* ppCapabilities);
+    HRESULT ValidatePrintTicket(IXMLDOMDocument2 pBaseTicket);
 }
 enum IID_IPrintTicketProvider2 = GUID(0xb8a70ab2, 0x3dfc, 0x4fec, [0xa0, 0x74, 0x51, 0x1b, 0x13, 0xc6, 0x51, 0xcb]);
 interface IPrintTicketProvider2 : IPrintTicketProvider
 {
-    HRESULT GetPrintDeviceCapabilities(IXMLDOMDocument2, IXMLDOMDocument2*);
-    HRESULT GetPrintDeviceResources(const(wchar)*, IXMLDOMDocument2, IXMLDOMDocument2*);
+    HRESULT GetPrintDeviceCapabilities(IXMLDOMDocument2 pPrintTicket, IXMLDOMDocument2* ppDeviceCapabilities);
+    HRESULT GetPrintDeviceResources(const(wchar)* pszLocaleName, IXMLDOMDocument2 pPrintTicket, IXMLDOMDocument2* ppDeviceResources);
 }
 enum IID_IPrintSchemaElement = GUID(0x724c1646, 0xe64b, 0x4bbf, [0x8e, 0xb4, 0xd4, 0x5e, 0x4f, 0xd5, 0x80, 0xda]);
 interface IPrintSchemaElement : IDispatch
 {
-    HRESULT get_XmlNode(IUnknown*);
-    HRESULT get_Name(BSTR*);
-    HRESULT get_NamespaceUri(BSTR*);
+    HRESULT get_XmlNode(IUnknown* ppXmlNode);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT get_NamespaceUri(BSTR* pbstrNamespaceUri);
 }
 enum IID_IPrintSchemaDisplayableElement = GUID(0xaf45af49, 0xd6aa, 0x407d, [0xbf, 0x87, 0x39, 0x12, 0x23, 0x6e, 0x9d, 0x94]);
 interface IPrintSchemaDisplayableElement : IPrintSchemaElement
 {
-    HRESULT get_DisplayName(BSTR*);
+    HRESULT get_DisplayName(BSTR* pbstrDisplayName);
 }
 alias PrintSchemaConstrainedSetting = int;
 enum : int
@@ -3564,20 +3565,20 @@ enum : int
 enum IID_IPrintSchemaOption = GUID(0x66bb2f51, 0x5844, 0x4997, [0x8d, 0x70, 0x4b, 0x7c, 0xc2, 0x21, 0xcf, 0x92]);
 interface IPrintSchemaOption : IPrintSchemaDisplayableElement
 {
-    HRESULT get_Selected(BOOL*);
-    HRESULT get_Constrained(PrintSchemaConstrainedSetting*);
-    HRESULT GetPropertyValue(BSTR, BSTR, IUnknown*);
+    HRESULT get_Selected(BOOL* pbIsSelected);
+    HRESULT get_Constrained(PrintSchemaConstrainedSetting* pSetting);
+    HRESULT GetPropertyValue(BSTR bstrName, BSTR bstrNamespaceUri, IUnknown* ppXmlValueNode);
 }
 enum IID_IPrintSchemaPageMediaSizeOption = GUID(0x68746729, 0xf493, 0x4830, [0xa1, 0xf, 0x69, 0x2, 0x87, 0x74, 0x60, 0x5d]);
 interface IPrintSchemaPageMediaSizeOption : IPrintSchemaOption
 {
-    HRESULT get_WidthInMicrons(uint*);
-    HRESULT get_HeightInMicrons(uint*);
+    HRESULT get_WidthInMicrons(uint* pulWidth);
+    HRESULT get_HeightInMicrons(uint* pulHeight);
 }
 enum IID_IPrintSchemaNUpOption = GUID(0x1f6342f2, 0xd848, 0x42e3, [0x89, 0x95, 0xc1, 0xa, 0x9e, 0xf9, 0xa3, 0xba]);
 interface IPrintSchemaNUpOption : IPrintSchemaOption
 {
-    HRESULT get_PagesPerSheet(uint*);
+    HRESULT get_PagesPerSheet(uint* pulPagesPerSheet);
 }
 alias PrintSchemaSelectionType = int;
 enum : int
@@ -3589,28 +3590,28 @@ enum : int
 enum IID_IPrintSchemaOptionCollection = GUID(0xbaecb0bd, 0xa946, 0x4771, [0xbc, 0x30, 0xe8, 0xb2, 0x4f, 0x8d, 0x45, 0xc1]);
 interface IPrintSchemaOptionCollection : IDispatch
 {
-    HRESULT get_Count(uint*);
-    HRESULT GetAt(uint, IPrintSchemaOption*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(uint* pulCount);
+    HRESULT GetAt(uint ulIndex, IPrintSchemaOption* ppOption);
+    HRESULT get__NewEnum(IUnknown* ppUnk);
 }
 enum IID_IPrintSchemaFeature = GUID(0xef189461, 0x5d62, 0x4626, [0x8e, 0x57, 0xff, 0x83, 0x58, 0x3c, 0x48, 0x26]);
 interface IPrintSchemaFeature : IPrintSchemaDisplayableElement
 {
-    HRESULT get_SelectedOption(IPrintSchemaOption*);
-    HRESULT put_SelectedOption(IPrintSchemaOption);
-    HRESULT get_SelectionType(PrintSchemaSelectionType*);
-    HRESULT GetOption(BSTR, BSTR, IPrintSchemaOption*);
-    HRESULT get_DisplayUI(BOOL*);
+    HRESULT get_SelectedOption(IPrintSchemaOption* ppOption);
+    HRESULT put_SelectedOption(IPrintSchemaOption pOption);
+    HRESULT get_SelectionType(PrintSchemaSelectionType* pSelectionType);
+    HRESULT GetOption(BSTR bstrName, BSTR bstrNamespaceUri, IPrintSchemaOption* ppOption);
+    HRESULT get_DisplayUI(BOOL* pbShow);
 }
 enum IID_IPrintSchemaPageImageableSize = GUID(0x7c85bf5e, 0xdc7c, 0x4f61, [0x83, 0x9b, 0x41, 0x7, 0xe1, 0xc9, 0xb6, 0x8e]);
 interface IPrintSchemaPageImageableSize : IPrintSchemaElement
 {
-    HRESULT get_ImageableSizeWidthInMicrons(uint*);
-    HRESULT get_ImageableSizeHeightInMicrons(uint*);
-    HRESULT get_OriginWidthInMicrons(uint*);
-    HRESULT get_OriginHeightInMicrons(uint*);
-    HRESULT get_ExtentWidthInMicrons(uint*);
-    HRESULT get_ExtentHeightInMicrons(uint*);
+    HRESULT get_ImageableSizeWidthInMicrons(uint* pulImageableSizeWidth);
+    HRESULT get_ImageableSizeHeightInMicrons(uint* pulImageableSizeHeight);
+    HRESULT get_OriginWidthInMicrons(uint* pulOriginWidth);
+    HRESULT get_OriginHeightInMicrons(uint* pulOriginHeight);
+    HRESULT get_ExtentWidthInMicrons(uint* pulExtentWidth);
+    HRESULT get_ExtentHeightInMicrons(uint* pulExtentHeight);
 }
 alias PrintSchemaParameterDataType = int;
 enum : int
@@ -3623,33 +3624,33 @@ enum : int
 enum IID_IPrintSchemaParameterDefinition = GUID(0xb5ade81e, 0xe61, 0x4fe1, [0x81, 0xc6, 0xc3, 0x33, 0xe4, 0xff, 0xe0, 0xf1]);
 interface IPrintSchemaParameterDefinition : IPrintSchemaDisplayableElement
 {
-    HRESULT get_UserInputRequired(BOOL*);
-    HRESULT get_UnitType(BSTR*);
-    HRESULT get_DataType(PrintSchemaParameterDataType*);
-    HRESULT get_RangeMin(int*);
-    HRESULT get_RangeMax(int*);
+    HRESULT get_UserInputRequired(BOOL* pbIsRequired);
+    HRESULT get_UnitType(BSTR* pbstrUnitType);
+    HRESULT get_DataType(PrintSchemaParameterDataType* pDataType);
+    HRESULT get_RangeMin(int* pRangeMin);
+    HRESULT get_RangeMax(int* pRangeMax);
 }
 enum IID_IPrintSchemaParameterInitializer = GUID(0x52027082, 0xb74, 0x4648, [0x95, 0x64, 0x82, 0x8c, 0xc6, 0xcb, 0x65, 0x6c]);
 interface IPrintSchemaParameterInitializer : IPrintSchemaElement
 {
-    HRESULT get_Value(VARIANT*);
-    HRESULT put_Value(VARIANT*);
+    HRESULT get_Value(VARIANT* pVar);
+    HRESULT put_Value(VARIANT* pVar);
 }
 enum IID_IPrintSchemaCapabilities = GUID(0x5a577640, 0x501d, 0x4927, [0xbc, 0xd0, 0x5e, 0xf5, 0x7a, 0x7e, 0xd1, 0x75]);
 interface IPrintSchemaCapabilities : IPrintSchemaElement
 {
-    HRESULT GetFeatureByKeyName(BSTR, IPrintSchemaFeature*);
-    HRESULT GetFeature(BSTR, BSTR, IPrintSchemaFeature*);
-    HRESULT get_PageImageableSize(IPrintSchemaPageImageableSize*);
-    HRESULT get_JobCopiesAllDocumentsMinValue(uint*);
-    HRESULT get_JobCopiesAllDocumentsMaxValue(uint*);
-    HRESULT GetSelectedOptionInPrintTicket(IPrintSchemaFeature, IPrintSchemaOption*);
-    HRESULT GetOptions(IPrintSchemaFeature, IPrintSchemaOptionCollection*);
+    HRESULT GetFeatureByKeyName(BSTR bstrKeyName, IPrintSchemaFeature* ppFeature);
+    HRESULT GetFeature(BSTR bstrName, BSTR bstrNamespaceUri, IPrintSchemaFeature* ppFeature);
+    HRESULT get_PageImageableSize(IPrintSchemaPageImageableSize* ppPageImageableSize);
+    HRESULT get_JobCopiesAllDocumentsMinValue(uint* pulJobCopiesAllDocumentsMinValue);
+    HRESULT get_JobCopiesAllDocumentsMaxValue(uint* pulJobCopiesAllDocumentsMaxValue);
+    HRESULT GetSelectedOptionInPrintTicket(IPrintSchemaFeature pFeature, IPrintSchemaOption* ppOption);
+    HRESULT GetOptions(IPrintSchemaFeature pFeature, IPrintSchemaOptionCollection* ppOptionCollection);
 }
 enum IID_IPrintSchemaCapabilities2 = GUID(0xb58845f4, 0x9970, 0x4d87, [0xa6, 0x36, 0x16, 0x9f, 0xb8, 0x2e, 0xd6, 0x42]);
 interface IPrintSchemaCapabilities2 : IPrintSchemaCapabilities
 {
-    HRESULT GetParameterDefinition(BSTR, BSTR, IPrintSchemaParameterDefinition*);
+    HRESULT GetParameterDefinition(BSTR bstrName, BSTR bstrNamespaceUri, IPrintSchemaParameterDefinition* ppParameterDefinition);
 }
 enum IID_IPrintSchemaAsyncOperation = GUID(0x143c8dcb, 0xd37f, 0x47f7, [0x88, 0xe8, 0x6b, 0x1d, 0x21, 0xf2, 0xc5, 0xf7]);
 interface IPrintSchemaAsyncOperation : IDispatch
@@ -3660,78 +3661,78 @@ interface IPrintSchemaAsyncOperation : IDispatch
 enum IID_IPrintSchemaTicket = GUID(0xe480b861, 0x4708, 0x4e6d, [0xa5, 0xb4, 0xa2, 0xb4, 0xee, 0xb9, 0xba, 0xa4]);
 interface IPrintSchemaTicket : IPrintSchemaElement
 {
-    HRESULT GetFeatureByKeyName(BSTR, IPrintSchemaFeature*);
-    HRESULT GetFeature(BSTR, BSTR, IPrintSchemaFeature*);
-    HRESULT ValidateAsync(IPrintSchemaAsyncOperation*);
-    HRESULT CommitAsync(IPrintSchemaTicket, IPrintSchemaAsyncOperation*);
+    HRESULT GetFeatureByKeyName(BSTR bstrKeyName, IPrintSchemaFeature* ppFeature);
+    HRESULT GetFeature(BSTR bstrName, BSTR bstrNamespaceUri, IPrintSchemaFeature* ppFeature);
+    HRESULT ValidateAsync(IPrintSchemaAsyncOperation* ppAsyncOperation);
+    HRESULT CommitAsync(IPrintSchemaTicket pPrintTicketCommit, IPrintSchemaAsyncOperation* ppAsyncOperation);
     HRESULT NotifyXmlChanged();
-    HRESULT GetCapabilities(IPrintSchemaCapabilities*);
-    HRESULT get_JobCopiesAllDocuments(uint*);
-    HRESULT put_JobCopiesAllDocuments(uint);
+    HRESULT GetCapabilities(IPrintSchemaCapabilities* ppCapabilities);
+    HRESULT get_JobCopiesAllDocuments(uint* pulJobCopiesAllDocuments);
+    HRESULT put_JobCopiesAllDocuments(uint ulJobCopiesAllDocuments);
 }
 enum IID_IPrintSchemaTicket2 = GUID(0x2ec1f844, 0x766a, 0x47a1, [0x91, 0xf4, 0x2e, 0xeb, 0x61, 0x90, 0xf8, 0xc]);
 interface IPrintSchemaTicket2 : IPrintSchemaTicket
 {
-    HRESULT GetParameterInitializer(BSTR, BSTR, IPrintSchemaParameterInitializer*);
+    HRESULT GetParameterInitializer(BSTR bstrName, BSTR bstrNamespaceUri, IPrintSchemaParameterInitializer* ppParameterInitializer);
 }
 enum IID_IPrintSchemaAsyncOperationEvent = GUID(0x23adbb16, 0x133, 0x4906, [0xb2, 0x9a, 0x1d, 0xce, 0x1d, 0x2, 0x63, 0x79]);
 interface IPrintSchemaAsyncOperationEvent : IDispatch
 {
-    HRESULT Completed(IPrintSchemaTicket, HRESULT);
+    HRESULT Completed(IPrintSchemaTicket pTicket, HRESULT hrOperation);
 }
 enum IID_IPrinterScriptableSequentialStream = GUID(0x2072838a, 0x316f, 0x467a, [0xa9, 0x49, 0x27, 0xf6, 0x8c, 0x44, 0xa8, 0x54]);
 interface IPrinterScriptableSequentialStream : IDispatch
 {
-    HRESULT Read(int, IDispatch*);
-    HRESULT Write(IDispatch, int*);
+    HRESULT Read(int cbRead, IDispatch* ppArray);
+    HRESULT Write(IDispatch pArray, int* pcbWritten);
 }
 enum IID_IPrinterScriptableStream = GUID(0x7edf9a92, 0x4750, 0x41a5, [0xa1, 0x7f, 0x87, 0x9a, 0x6f, 0x4f, 0x7d, 0xcb]);
 interface IPrinterScriptableStream : IPrinterScriptableSequentialStream
 {
     HRESULT Commit();
-    HRESULT Seek(int, STREAM_SEEK, int*);
-    HRESULT SetSize(int);
+    HRESULT Seek(int lOffset, STREAM_SEEK streamSeek, int* plPosition);
+    HRESULT SetSize(int lSize);
 }
 enum IID_IPrinterPropertyBag = GUID(0xfea77364, 0xdf95, 0x4a23, [0xa9, 0x5, 0x1, 0x9b, 0x79, 0xa8, 0xe4, 0x81]);
 interface IPrinterPropertyBag : IDispatch
 {
-    HRESULT GetBool(BSTR, BOOL*);
-    HRESULT SetBool(BSTR, BOOL);
-    HRESULT GetInt32(BSTR, int*);
-    HRESULT SetInt32(BSTR, int);
-    HRESULT GetString(BSTR, BSTR*);
-    HRESULT SetString(BSTR, BSTR);
-    HRESULT GetBytes(BSTR, uint*, ubyte**);
-    HRESULT SetBytes(BSTR, uint, ubyte*);
-    HRESULT GetReadStream(BSTR, IStream*);
-    HRESULT GetWriteStream(BSTR, IStream*);
+    HRESULT GetBool(BSTR bstrName, BOOL* pbValue);
+    HRESULT SetBool(BSTR bstrName, BOOL bValue);
+    HRESULT GetInt32(BSTR bstrName, int* pnValue);
+    HRESULT SetInt32(BSTR bstrName, int nValue);
+    HRESULT GetString(BSTR bstrName, BSTR* pbstrValue);
+    HRESULT SetString(BSTR bstrName, BSTR bstrValue);
+    HRESULT GetBytes(BSTR bstrName, uint* pcbValue, ubyte** ppValue);
+    HRESULT SetBytes(BSTR bstrName, uint cbValue, ubyte* pValue);
+    HRESULT GetReadStream(BSTR bstrName, IStream* ppValue);
+    HRESULT GetWriteStream(BSTR bstrName, IStream* ppValue);
 }
 enum IID_IPrinterScriptablePropertyBag = GUID(0x91c7765f, 0xed57, 0x49ad, [0x8b, 0x1, 0xdc, 0x24, 0x81, 0x6a, 0x52, 0x94]);
 interface IPrinterScriptablePropertyBag : IDispatch
 {
-    HRESULT GetBool(BSTR, BOOL*);
-    HRESULT SetBool(BSTR, BOOL);
-    HRESULT GetInt32(BSTR, int*);
-    HRESULT SetInt32(BSTR, int);
-    HRESULT GetString(BSTR, BSTR*);
-    HRESULT SetString(BSTR, BSTR);
-    HRESULT GetBytes(BSTR, IDispatch*);
-    HRESULT SetBytes(BSTR, IDispatch);
-    HRESULT GetReadStream(BSTR, IPrinterScriptableStream*);
-    HRESULT GetWriteStream(BSTR, IPrinterScriptableStream*);
+    HRESULT GetBool(BSTR bstrName, BOOL* pbValue);
+    HRESULT SetBool(BSTR bstrName, BOOL bValue);
+    HRESULT GetInt32(BSTR bstrName, int* pnValue);
+    HRESULT SetInt32(BSTR bstrName, int nValue);
+    HRESULT GetString(BSTR bstrName, BSTR* pbstrValue);
+    HRESULT SetString(BSTR bstrName, BSTR bstrValue);
+    HRESULT GetBytes(BSTR bstrName, IDispatch* ppArray);
+    HRESULT SetBytes(BSTR bstrName, IDispatch pArray);
+    HRESULT GetReadStream(BSTR bstrName, IPrinterScriptableStream* ppStream);
+    HRESULT GetWriteStream(BSTR bstrName, IPrinterScriptableStream* ppStream);
 }
 enum IID_IPrinterScriptablePropertyBag2 = GUID(0x2a1c53c4, 0x8638, 0x4b3e, [0xb5, 0x18, 0x27, 0x73, 0xc9, 0x45, 0x56, 0xa3]);
 interface IPrinterScriptablePropertyBag2 : IPrinterScriptablePropertyBag
 {
-    HRESULT GetReadStreamAsXML(BSTR, IUnknown*);
+    HRESULT GetReadStreamAsXML(BSTR bstrName, IUnknown* ppXmlNode);
 }
 enum IID_IPrinterQueue = GUID(0x3580a828, 0x7fe, 0x4b94, [0xac, 0x1a, 0x75, 0x7d, 0x9d, 0x2d, 0x30, 0x56]);
 interface IPrinterQueue : IDispatch
 {
-    HRESULT get_Handle(HANDLE*);
-    HRESULT get_Name(BSTR*);
-    HRESULT SendBidiQuery(BSTR);
-    HRESULT GetProperties(IPrinterPropertyBag*);
+    HRESULT get_Handle(PRINTER_HANDLE* phPrinter);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT SendBidiQuery(BSTR bstrBidiQuery);
+    HRESULT GetProperties(IPrinterPropertyBag* ppPropertyBag);
 }
 alias PrintJobStatus = int;
 enum : int
@@ -3755,40 +3756,40 @@ enum : int
 enum IID_IPrintJob = GUID(0xb771dab8, 0x1282, 0x41b7, [0x85, 0x8c, 0xf2, 0x6, 0xe4, 0xd2, 0x5, 0x77]);
 interface IPrintJob : IUnknown
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Id(uint*);
-    HRESULT get_PrintedPages(uint*);
-    HRESULT get_TotalPages(uint*);
-    HRESULT get_Status(PrintJobStatus*);
-    HRESULT get_SubmissionTime(double*);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT get_Id(uint* pulID);
+    HRESULT get_PrintedPages(uint* pulPages);
+    HRESULT get_TotalPages(uint* pulPages);
+    HRESULT get_Status(PrintJobStatus* pStatus);
+    HRESULT get_SubmissionTime(double* pSubmissionTime);
     HRESULT RequestCancel();
 }
 enum IID_IPrintJobCollection = GUID(0x72b82a24, 0xa598, 0x4e87, [0x89, 0x5f, 0xcd, 0xb2, 0x3a, 0x49, 0xe9, 0xdc]);
 interface IPrintJobCollection : IDispatch
 {
-    HRESULT get_Count(uint*);
-    HRESULT GetAt(uint, IPrintJob*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(uint* pulCount);
+    HRESULT GetAt(uint ulIndex, IPrintJob* ppJob);
+    HRESULT get__NewEnum(IUnknown* ppUnk);
 }
 enum IID_IPrinterQueueViewEvent = GUID(0xc5b6042b, 0xfd21, 0x404a, [0xa0, 0xef, 0xe2, 0xfb, 0xb5, 0x2b, 0x90, 0x80]);
 interface IPrinterQueueViewEvent : IDispatch
 {
-    HRESULT OnChanged(IPrintJobCollection, uint, uint, uint);
+    HRESULT OnChanged(IPrintJobCollection pCollection, uint ulViewOffset, uint ulViewSize, uint ulCountJobsInPrintQueue);
 }
 enum IID_IPrinterQueueView = GUID(0x476e2969, 0x3b2b, 0x4b3f, [0x82, 0x77, 0xcf, 0xf6, 0x5, 0x60, 0x42, 0xaa]);
 interface IPrinterQueueView : IDispatch
 {
-    HRESULT SetViewRange(uint, uint);
+    HRESULT SetViewRange(uint ulViewOffset, uint ulViewSize);
 }
 enum IID_IPrinterQueueEvent = GUID(0x214685f6, 0x7b78, 0x4681, [0x87, 0xe0, 0x49, 0x5f, 0x73, 0x92, 0x73, 0xd1]);
 interface IPrinterQueueEvent : IDispatch
 {
-    HRESULT OnBidiResponseReceived(BSTR, HRESULT);
+    HRESULT OnBidiResponseReceived(BSTR bstrResponse, HRESULT hrStatus);
 }
 enum IID_IPrinterBidiSetRequestCallback = GUID(0xc52d32dd, 0xf2b4, 0x4052, [0x85, 0x2, 0xec, 0x43, 0x5, 0xec, 0xb7, 0x1f]);
 interface IPrinterBidiSetRequestCallback : IUnknown
 {
-    HRESULT Completed(BSTR, HRESULT);
+    HRESULT Completed(BSTR bstrResponse, HRESULT hrStatus);
 }
 enum IID_IPrinterExtensionAsyncOperation = GUID(0x108d6a23, 0x6a4b, 0x4552, [0x94, 0x48, 0x68, 0xb4, 0x27, 0x18, 0x6a, 0xcd]);
 interface IPrinterExtensionAsyncOperation : IUnknown
@@ -3798,59 +3799,59 @@ interface IPrinterExtensionAsyncOperation : IUnknown
 enum IID_IPrinterQueue2 = GUID(0x8cd444e8, 0xc9bb, 0x49b3, [0x8e, 0x38, 0xe0, 0x32, 0x9, 0x41, 0x61, 0x31]);
 interface IPrinterQueue2 : IPrinterQueue
 {
-    HRESULT SendBidiSetRequestAsync(BSTR, IPrinterBidiSetRequestCallback, IPrinterExtensionAsyncOperation*);
-    HRESULT GetPrinterQueueView(uint, uint, IPrinterQueueView*);
+    HRESULT SendBidiSetRequestAsync(BSTR bstrBidiRequest, IPrinterBidiSetRequestCallback pCallback, IPrinterExtensionAsyncOperation* ppAsyncOperation);
+    HRESULT GetPrinterQueueView(uint ulViewOffset, uint ulViewSize, IPrinterQueueView* ppJobView);
 }
 enum IID_IPrinterExtensionContext = GUID(0x39843bf2, 0xc4d2, 0x41fd, [0xb4, 0xb2, 0xae, 0xdb, 0xee, 0x5e, 0x19, 0x0]);
 interface IPrinterExtensionContext : IDispatch
 {
-    HRESULT get_PrinterQueue(IPrinterQueue*);
-    HRESULT get_PrintSchemaTicket(IPrintSchemaTicket*);
-    HRESULT get_DriverProperties(IPrinterPropertyBag*);
-    HRESULT get_UserProperties(IPrinterPropertyBag*);
+    HRESULT get_PrinterQueue(IPrinterQueue* ppQueue);
+    HRESULT get_PrintSchemaTicket(IPrintSchemaTicket* ppTicket);
+    HRESULT get_DriverProperties(IPrinterPropertyBag* ppPropertyBag);
+    HRESULT get_UserProperties(IPrinterPropertyBag* ppPropertyBag);
 }
 enum IID_IPrinterExtensionRequest = GUID(0x39843bf3, 0xc4d2, 0x41fd, [0xb4, 0xb2, 0xae, 0xdb, 0xee, 0x5e, 0x19, 0x0]);
 interface IPrinterExtensionRequest : IDispatch
 {
-    HRESULT Cancel(HRESULT, BSTR);
+    HRESULT Cancel(HRESULT hrStatus, BSTR bstrLogMessage);
     HRESULT Complete();
 }
 enum IID_IPrinterExtensionEventArgs = GUID(0x39843bf4, 0xc4d2, 0x41fd, [0xb4, 0xb2, 0xae, 0xdb, 0xee, 0x5e, 0x19, 0x0]);
 interface IPrinterExtensionEventArgs : IPrinterExtensionContext
 {
-    HRESULT get_BidiNotification(BSTR*);
-    HRESULT get_ReasonId(GUID*);
-    HRESULT get_Request(IPrinterExtensionRequest*);
-    HRESULT get_SourceApplication(BSTR*);
-    HRESULT get_DetailedReasonId(GUID*);
-    HRESULT get_WindowModal(BOOL*);
-    HRESULT get_WindowParent(HANDLE*);
+    HRESULT get_BidiNotification(BSTR* pbstrBidiNotification);
+    HRESULT get_ReasonId(GUID* pReasonId);
+    HRESULT get_Request(IPrinterExtensionRequest* ppRequest);
+    HRESULT get_SourceApplication(BSTR* pbstrApplication);
+    HRESULT get_DetailedReasonId(GUID* pDetailedReasonId);
+    HRESULT get_WindowModal(BOOL* pbModal);
+    HRESULT get_WindowParent(HANDLE* phwndParent);
 }
 enum IID_IPrinterExtensionContextCollection = GUID(0xfb476970, 0x9bab, 0x4861, [0x81, 0x1e, 0x3e, 0x98, 0xb0, 0xc5, 0xad, 0xdf]);
 interface IPrinterExtensionContextCollection : IDispatch
 {
-    HRESULT get_Count(uint*);
-    HRESULT GetAt(uint, IPrinterExtensionContext*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(uint* pulCount);
+    HRESULT GetAt(uint ulIndex, IPrinterExtensionContext* ppContext);
+    HRESULT get__NewEnum(IUnknown* ppUnk);
 }
 enum IID_IPrinterExtensionEvent = GUID(0xc093cb63, 0x5ef5, 0x4585, [0xaf, 0x8e, 0x4d, 0x56, 0x37, 0x48, 0x7b, 0x57]);
 interface IPrinterExtensionEvent : IDispatch
 {
-    HRESULT OnDriverEvent(IPrinterExtensionEventArgs);
-    HRESULT OnPrinterQueuesEnumerated(IPrinterExtensionContextCollection);
+    HRESULT OnDriverEvent(IPrinterExtensionEventArgs pEventArgs);
+    HRESULT OnPrinterQueuesEnumerated(IPrinterExtensionContextCollection pContextCollection);
 }
 enum IID_IPrinterExtensionManager = GUID(0x93c6eb8c, 0xb001, 0x4355, [0x96, 0x29, 0x8e, 0x8a, 0x1b, 0x3f, 0x8e, 0x77]);
 interface IPrinterExtensionManager : IUnknown
 {
-    HRESULT EnableEvents(GUID);
+    HRESULT EnableEvents(GUID printerDriverId);
     HRESULT DisableEvents();
 }
 enum IID_IPrinterScriptContext = GUID(0x66acbca, 0x8881, 0x49c9, [0xbb, 0x98, 0xfa, 0xe1, 0x6b, 0x48, 0x89, 0xe1]);
 interface IPrinterScriptContext : IDispatch
 {
-    HRESULT get_DriverProperties(IPrinterScriptablePropertyBag*);
-    HRESULT get_QueueProperties(IPrinterScriptablePropertyBag*);
-    HRESULT get_UserProperties(IPrinterScriptablePropertyBag*);
+    HRESULT get_DriverProperties(IPrinterScriptablePropertyBag* ppPropertyBag);
+    HRESULT get_QueueProperties(IPrinterScriptablePropertyBag* ppPropertyBag);
+    HRESULT get_UserProperties(IPrinterScriptablePropertyBag* ppPropertyBag);
 }
 enum CLSID_PrinterQueue = GUID(0xeb54c230, 0x798c, 0x4c9e, [0xb4, 0x61, 0x29, 0xfa, 0xd0, 0x40, 0x39, 0xb1]);
 struct PrinterQueue
@@ -3885,20 +3886,20 @@ enum : int
 enum IID_IPrintAsyncNotifyDataObject = GUID(0x77cf513e, 0x5d49, 0x4789, [0x9f, 0x30, 0xd0, 0x82, 0x2b, 0x33, 0x5c, 0xd]);
 interface IPrintAsyncNotifyDataObject : IUnknown
 {
-    HRESULT AcquireData(ubyte**, uint*, GUID**);
+    HRESULT AcquireData(ubyte** ppNotificationData, uint* pSize, GUID** ppSchema);
     HRESULT ReleaseData();
 }
 enum IID_IPrintAsyncNotifyChannel = GUID(0x4a5031b1, 0x1f3f, 0x4db0, [0xa4, 0x62, 0x45, 0x30, 0xed, 0x8b, 0x4, 0x51]);
 interface IPrintAsyncNotifyChannel : IUnknown
 {
-    HRESULT SendNotification(IPrintAsyncNotifyDataObject);
-    HRESULT CloseChannel(IPrintAsyncNotifyDataObject);
+    HRESULT SendNotification(IPrintAsyncNotifyDataObject pData);
+    HRESULT CloseChannel(IPrintAsyncNotifyDataObject pData);
 }
 enum IID_IPrintAsyncNotifyCallback = GUID(0x7def34c1, 0x9d92, 0x4c99, [0xb3, 0xb3, 0xdb, 0x94, 0xa9, 0xd4, 0x19, 0x1b]);
 interface IPrintAsyncNotifyCallback : IUnknown
 {
-    HRESULT OnEventNotify(IPrintAsyncNotifyChannel, IPrintAsyncNotifyDataObject);
-    HRESULT ChannelClosed(IPrintAsyncNotifyChannel, IPrintAsyncNotifyDataObject);
+    HRESULT OnEventNotify(IPrintAsyncNotifyChannel pChannel, IPrintAsyncNotifyDataObject pData);
+    HRESULT ChannelClosed(IPrintAsyncNotifyChannel pChannel, IPrintAsyncNotifyDataObject pData);
 }
 alias PrintAsyncNotifyError = int;
 enum : int
@@ -3938,57 +3939,57 @@ interface IPrintAsyncNotifyRegistration : IUnknown
 enum IID_IPrintAsyncNotify = GUID(0x532818f7, 0x921b, 0x4fb2, [0xbf, 0xf8, 0x2f, 0x4f, 0xd5, 0x2e, 0xbe, 0xbf]);
 interface IPrintAsyncNotify : IUnknown
 {
-    HRESULT CreatePrintAsyncNotifyChannel(uint, GUID*, PrintAsyncNotifyUserFilter, PrintAsyncNotifyConversationStyle, IPrintAsyncNotifyCallback, IPrintAsyncNotifyChannel*);
-    HRESULT CreatePrintAsyncNotifyRegistration(GUID*, PrintAsyncNotifyUserFilter, PrintAsyncNotifyConversationStyle, IPrintAsyncNotifyCallback, IPrintAsyncNotifyRegistration*);
+    HRESULT CreatePrintAsyncNotifyChannel(uint param0, GUID* param1, PrintAsyncNotifyUserFilter param2, PrintAsyncNotifyConversationStyle param3, IPrintAsyncNotifyCallback param4, IPrintAsyncNotifyChannel* param5);
+    HRESULT CreatePrintAsyncNotifyRegistration(GUID* param0, PrintAsyncNotifyUserFilter param1, PrintAsyncNotifyConversationStyle param2, IPrintAsyncNotifyCallback param3, IPrintAsyncNotifyRegistration* param4);
 }
 // [Not Found] IID_IPrintAsyncCookie
 interface IPrintAsyncCookie : IUnknown
 {
-    HRESULT FinishAsyncCall(HRESULT);
-    HRESULT CancelAsyncCall(HRESULT);
+    HRESULT FinishAsyncCall(HRESULT param0);
+    HRESULT CancelAsyncCall(HRESULT param0);
 }
 // [Not Found] IID_IPrintAsyncNewChannelCookie
 interface IPrintAsyncNewChannelCookie : IPrintAsyncCookie
 {
-    HRESULT FinishAsyncCallWithData(IPrintAsyncNotifyChannel*, uint);
+    HRESULT FinishAsyncCallWithData(IPrintAsyncNotifyChannel* param0, uint param1);
 }
 // [Not Found] IID_IAsyncGetSendNotificationCookie
 interface IAsyncGetSendNotificationCookie : IPrintAsyncCookie
 {
-    HRESULT FinishAsyncCallWithData(IPrintAsyncNotifyDataObject, BOOL);
+    HRESULT FinishAsyncCallWithData(IPrintAsyncNotifyDataObject param0, BOOL param1);
 }
 // [Not Found] IID_IAsyncGetSrvReferralCookie
 interface IAsyncGetSrvReferralCookie : IUnknown
 {
-    HRESULT FinishAsyncCall(HRESULT);
-    HRESULT CancelAsyncCall(HRESULT);
-    HRESULT FinishAsyncCallWithData(const(wchar)*);
+    HRESULT FinishAsyncCall(HRESULT param0);
+    HRESULT CancelAsyncCall(HRESULT param0);
+    HRESULT FinishAsyncCallWithData(const(wchar)* param0);
 }
 // [Not Found] IID_IPrintBidiAsyncNotifyRegistration
 interface IPrintBidiAsyncNotifyRegistration : IPrintAsyncNotifyRegistration
 {
-    HRESULT AsyncGetNewChannel(IPrintAsyncNewChannelCookie);
+    HRESULT AsyncGetNewChannel(IPrintAsyncNewChannelCookie param0);
 }
 // [Not Found] IID_IPrintUnidiAsyncNotifyRegistration
 interface IPrintUnidiAsyncNotifyRegistration : IPrintAsyncNotifyRegistration
 {
-    HRESULT AsyncGetNotification(IAsyncGetSendNotificationCookie);
+    HRESULT AsyncGetNotification(IAsyncGetSendNotificationCookie param0);
 }
 // [Not Found] IID_IPrintAsyncNotifyServerReferral
 interface IPrintAsyncNotifyServerReferral : IUnknown
 {
-    HRESULT GetServerReferral(PWSTR*);
-    HRESULT AsyncGetServerReferral(IAsyncGetSrvReferralCookie);
-    HRESULT SetServerReferral(const(wchar)*);
+    HRESULT GetServerReferral(PWSTR* param0);
+    HRESULT AsyncGetServerReferral(IAsyncGetSrvReferralCookie param0);
+    HRESULT SetServerReferral(const(wchar)* pRmtServerReferral);
 }
 enum IID_IBidiAsyncNotifyChannel = GUID(0x532818f7, 0x921b, 0x4fb2, [0xbf, 0xf8, 0x2f, 0x4f, 0xd5, 0x2e, 0xbe, 0xbf]);
 interface IBidiAsyncNotifyChannel : IPrintAsyncNotifyChannel
 {
     HRESULT CreateNotificationChannel();
-    HRESULT GetPrintName(IPrintAsyncNotifyDataObject*);
-    HRESULT GetChannelNotificationType(IPrintAsyncNotifyDataObject*);
-    HRESULT AsyncGetNotificationSendResponse(IPrintAsyncNotifyDataObject, IAsyncGetSendNotificationCookie);
-    HRESULT AsyncCloseChannel(IPrintAsyncNotifyDataObject, IPrintAsyncCookie);
+    HRESULT GetPrintName(IPrintAsyncNotifyDataObject* param0);
+    HRESULT GetChannelNotificationType(IPrintAsyncNotifyDataObject* param0);
+    HRESULT AsyncGetNotificationSendResponse(IPrintAsyncNotifyDataObject param0, IAsyncGetSendNotificationCookie param1);
+    HRESULT AsyncCloseChannel(IPrintAsyncNotifyDataObject param0, IPrintAsyncCookie param1);
 }
 struct UNIFM_HDR
 {
@@ -4270,7 +4271,7 @@ struct CONFIG_INFO_DATA_1
     ubyte[128] Reserved;
     uint dwVersion;
 }
-alias EMFPLAYPROC = int function(HDC, int, HANDLE);
+alias EMFPLAYPROC = int function(HDC param0, int param1, HANDLE param2);
 alias EBranchOfficeJobEventType = int;
 enum : int
 {
@@ -4613,7 +4614,7 @@ struct MONITORUI
     long pfnConfigurePortUI;
     long pfnDeletePortUI;
 }
-alias ROUTER_NOTIFY_CALLBACK = BOOL function(uint, void*, uint, PRINTER_NOTIFY_INFO*, uint, uint*);
+alias ROUTER_NOTIFY_CALLBACK = BOOL function(uint dwCommand, void* pContext, uint dwColor, PRINTER_NOTIFY_INFO* pNofityInfo, uint fdwFlags, uint* pdwResult);
 alias NOTIFICATION_CALLBACK_COMMANDS = int;
 enum : int
 {
@@ -4673,13 +4674,13 @@ enum : int
 enum IID_IXpsRasterizer = GUID(0x7567cfc8, 0xc156, 0x47a8, [0x9d, 0xac, 0x11, 0xa2, 0xae, 0x5b, 0xdd, 0x6b]);
 interface IXpsRasterizer : IUnknown
 {
-    HRESULT RasterizeRect(int, int, int, int, IXpsRasterizerNotificationCallback, IWICBitmap*);
-    HRESULT SetMinimalLineWidth(int);
+    HRESULT RasterizeRect(int x, int y, int width, int height, IXpsRasterizerNotificationCallback notificationCallback, IWICBitmap* bitmap);
+    HRESULT SetMinimalLineWidth(int width);
 }
 enum IID_IXpsRasterizationFactory = GUID(0xe094808a, 0x24c6, 0x482b, [0xa3, 0xa7, 0xc2, 0x1a, 0xc9, 0xb5, 0x5f, 0x17]);
 interface IXpsRasterizationFactory : IUnknown
 {
-    HRESULT CreateRasterizer(IXpsOMPage, float, XPSRAS_RENDERING_MODE, XPSRAS_RENDERING_MODE, IXpsRasterizer*);
+    HRESULT CreateRasterizer(IXpsOMPage xpsPage, float DPI, XPSRAS_RENDERING_MODE nonTextRenderingMode, XPSRAS_RENDERING_MODE textRenderingMode, IXpsRasterizer* ppIXPSRasterizer);
 }
 alias XPSRAS_PIXEL_FORMAT = int;
 enum : int
@@ -4692,7 +4693,7 @@ enum : int
 enum IID_IXpsRasterizationFactory1 = GUID(0x2d6e5f77, 0x6414, 0x4a1e, [0xa8, 0xe0, 0xd4, 0x19, 0x4c, 0xe6, 0xa2, 0x6f]);
 interface IXpsRasterizationFactory1 : IUnknown
 {
-    HRESULT CreateRasterizer(IXpsOMPage, float, XPSRAS_RENDERING_MODE, XPSRAS_RENDERING_MODE, XPSRAS_PIXEL_FORMAT, IXpsRasterizer*);
+    HRESULT CreateRasterizer(IXpsOMPage xpsPage, float DPI, XPSRAS_RENDERING_MODE nonTextRenderingMode, XPSRAS_RENDERING_MODE textRenderingMode, XPSRAS_PIXEL_FORMAT pixelFormat, IXpsRasterizer* ppIXPSRasterizer);
 }
 alias XPSRAS_BACKGROUND_COLOR = int;
 enum : int
@@ -4704,7 +4705,7 @@ enum : int
 enum IID_IXpsRasterizationFactory2 = GUID(0x9c16ce3e, 0x10f5, 0x41fd, [0x9d, 0xdc, 0x68, 0x26, 0x66, 0x9c, 0x2f, 0xf6]);
 interface IXpsRasterizationFactory2 : IUnknown
 {
-    HRESULT CreateRasterizer(IXpsOMPage, float, float, XPSRAS_RENDERING_MODE, XPSRAS_RENDERING_MODE, XPSRAS_PIXEL_FORMAT, XPSRAS_BACKGROUND_COLOR, IXpsRasterizer*);
+    HRESULT CreateRasterizer(IXpsOMPage xpsPage, float DPIX, float DPIY, XPSRAS_RENDERING_MODE nonTextRenderingMode, XPSRAS_RENDERING_MODE textRenderingMode, XPSRAS_PIXEL_FORMAT pixelFormat, XPSRAS_BACKGROUND_COLOR backgroundColor, IXpsRasterizer* ppIXpsRasterizer);
 }
 alias PageCountType = int;
 enum : int
@@ -4716,7 +4717,7 @@ enum : int
 enum IID_IPrintPreviewDxgiPackageTarget = GUID(0x1a6dd0ad, 0x1e2a, 0x4e99, [0xa5, 0xba, 0x91, 0xf1, 0x78, 0x18, 0x29, 0xe]);
 interface IPrintPreviewDxgiPackageTarget : IUnknown
 {
-    HRESULT SetJobPageCount(PageCountType, uint);
-    HRESULT DrawPage(uint, IDXGISurface, float, float);
+    HRESULT SetJobPageCount(PageCountType countType, uint count);
+    HRESULT DrawPage(uint jobPageNumber, IDXGISurface pageImage, float dpiX, float dpiY);
     HRESULT InvalidatePreview();
 }

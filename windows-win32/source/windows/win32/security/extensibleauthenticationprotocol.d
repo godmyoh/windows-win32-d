@@ -9,38 +9,38 @@ import windows.win32.system.com : IUnknown;
 version (Windows):
 extern (Windows):
 
-uint EapHostPeerGetMethods(EAP_METHOD_INFO_ARRAY*, EAP_ERROR**);
-uint EapHostPeerGetMethodProperties(uint, uint, EAP_METHOD_TYPE, HANDLE, uint, const(ubyte)*, uint, const(ubyte)*, EAP_METHOD_PROPERTY_ARRAY*, EAP_ERROR**);
-uint EapHostPeerInvokeConfigUI(HWND, uint, EAP_METHOD_TYPE, uint, const(ubyte)*, uint*, ubyte**, EAP_ERROR**);
-uint EapHostPeerQueryCredentialInputFields(HANDLE, EAP_METHOD_TYPE, uint, uint, const(ubyte)*, EAP_CONFIG_INPUT_FIELD_ARRAY*, EAP_ERROR**);
-uint EapHostPeerQueryUserBlobFromCredentialInputFields(HANDLE, EAP_METHOD_TYPE, uint, uint, const(ubyte)*, const(EAP_CONFIG_INPUT_FIELD_ARRAY)*, uint*, ubyte**, EAP_ERROR**);
-uint EapHostPeerInvokeIdentityUI(uint, EAP_METHOD_TYPE, uint, HWND, uint, const(ubyte)*, uint, const(ubyte)*, uint*, ubyte**, PWSTR*, EAP_ERROR**, void**);
-uint EapHostPeerInvokeInteractiveUI(HWND, uint, const(ubyte)*, uint*, ubyte**, EAP_ERROR**);
-uint EapHostPeerQueryInteractiveUIInputFields(uint, uint, uint, const(ubyte)*, EAP_INTERACTIVE_UI_DATA*, EAP_ERROR**, void**);
-uint EapHostPeerQueryUIBlobFromInteractiveUIInputFields(uint, uint, uint, const(ubyte)*, const(EAP_INTERACTIVE_UI_DATA)*, uint*, ubyte**, EAP_ERROR**, void**);
-uint EapHostPeerConfigXml2Blob(uint, IXMLDOMNode, uint*, ubyte**, EAP_METHOD_TYPE*, EAP_ERROR**);
-uint EapHostPeerCredentialsXml2Blob(uint, IXMLDOMNode, uint, ubyte*, uint*, ubyte**, EAP_METHOD_TYPE*, EAP_ERROR**);
-uint EapHostPeerConfigBlob2Xml(uint, EAP_METHOD_TYPE, uint, ubyte*, IXMLDOMDocument2*, EAP_ERROR**);
-void EapHostPeerFreeMemory(ubyte*);
-void EapHostPeerFreeErrorMemory(EAP_ERROR*);
+uint EapHostPeerGetMethods(EAP_METHOD_INFO_ARRAY* pEapMethodInfoArray, EAP_ERROR** ppEapError);
+uint EapHostPeerGetMethodProperties(uint dwVersion, uint dwFlags, EAP_METHOD_TYPE eapMethodType, HANDLE hUserImpersonationToken, uint dwEapConnDataSize, const(ubyte)* pbEapConnData, uint dwUserDataSize, const(ubyte)* pbUserData, EAP_METHOD_PROPERTY_ARRAY* pMethodPropertyArray, EAP_ERROR** ppEapError);
+uint EapHostPeerInvokeConfigUI(HWND hwndParent, uint dwFlags, EAP_METHOD_TYPE eapMethodType, uint dwSizeOfConfigIn, const(ubyte)* pConfigIn, uint* pdwSizeOfConfigOut, ubyte** ppConfigOut, EAP_ERROR** ppEapError);
+uint EapHostPeerQueryCredentialInputFields(HANDLE hUserImpersonationToken, EAP_METHOD_TYPE eapMethodType, uint dwFlags, uint dwEapConnDataSize, const(ubyte)* pbEapConnData, EAP_CONFIG_INPUT_FIELD_ARRAY* pEapConfigInputFieldArray, EAP_ERROR** ppEapError);
+uint EapHostPeerQueryUserBlobFromCredentialInputFields(HANDLE hUserImpersonationToken, EAP_METHOD_TYPE eapMethodType, uint dwFlags, uint dwEapConnDataSize, const(ubyte)* pbEapConnData, const(EAP_CONFIG_INPUT_FIELD_ARRAY)* pEapConfigInputFieldArray, uint* pdwUserBlobSize, ubyte** ppbUserBlob, EAP_ERROR** ppEapError);
+uint EapHostPeerInvokeIdentityUI(uint dwVersion, EAP_METHOD_TYPE eapMethodType, uint dwFlags, HWND hwndParent, uint dwSizeofConnectionData, const(ubyte)* pConnectionData, uint dwSizeofUserData, const(ubyte)* pUserData, uint* pdwSizeOfUserDataOut, ubyte** ppUserDataOut, PWSTR* ppwszIdentity, EAP_ERROR** ppEapError, void** ppvReserved);
+uint EapHostPeerInvokeInteractiveUI(HWND hwndParent, uint dwSizeofUIContextData, const(ubyte)* pUIContextData, uint* pdwSizeOfDataFromInteractiveUI, ubyte** ppDataFromInteractiveUI, EAP_ERROR** ppEapError);
+uint EapHostPeerQueryInteractiveUIInputFields(uint dwVersion, uint dwFlags, uint dwSizeofUIContextData, const(ubyte)* pUIContextData, EAP_INTERACTIVE_UI_DATA* pEapInteractiveUIData, EAP_ERROR** ppEapError, void** ppvReserved);
+uint EapHostPeerQueryUIBlobFromInteractiveUIInputFields(uint dwVersion, uint dwFlags, uint dwSizeofUIContextData, const(ubyte)* pUIContextData, const(EAP_INTERACTIVE_UI_DATA)* pEapInteractiveUIData, uint* pdwSizeOfDataFromInteractiveUI, ubyte** ppDataFromInteractiveUI, EAP_ERROR** ppEapError, void** ppvReserved);
+uint EapHostPeerConfigXml2Blob(uint dwFlags, IXMLDOMNode pConfigDoc, uint* pdwSizeOfConfigOut, ubyte** ppConfigOut, EAP_METHOD_TYPE* pEapMethodType, EAP_ERROR** ppEapError);
+uint EapHostPeerCredentialsXml2Blob(uint dwFlags, IXMLDOMNode pCredentialsDoc, uint dwSizeOfConfigIn, ubyte* pConfigIn, uint* pdwSizeOfCredentialsOut, ubyte** ppCredentialsOut, EAP_METHOD_TYPE* pEapMethodType, EAP_ERROR** ppEapError);
+uint EapHostPeerConfigBlob2Xml(uint dwFlags, EAP_METHOD_TYPE eapMethodType, uint dwSizeOfConfigIn, ubyte* pConfigIn, IXMLDOMDocument2* ppConfigDoc, EAP_ERROR** ppEapError);
+void EapHostPeerFreeMemory(ubyte* pData);
+void EapHostPeerFreeErrorMemory(EAP_ERROR* pEapError);
 uint EapHostPeerInitialize();
 void EapHostPeerUninitialize();
-uint EapHostPeerBeginSession(uint, EAP_METHOD_TYPE, const(EAP_ATTRIBUTES)*, HANDLE, uint, const(ubyte)*, uint, const(ubyte)*, uint, const(GUID)*, NotificationHandler, void*, uint*, EAP_ERROR**);
-uint EapHostPeerProcessReceivedPacket(uint, uint, const(ubyte)*, EapHostPeerResponseAction*, EAP_ERROR**);
-uint EapHostPeerGetSendPacket(uint, uint*, ubyte**, EAP_ERROR**);
-uint EapHostPeerGetResult(uint, EapHostPeerMethodResultReason, EapHostPeerMethodResult*, EAP_ERROR**);
-uint EapHostPeerGetUIContext(uint, uint*, ubyte**, EAP_ERROR**);
-uint EapHostPeerSetUIContext(uint, uint, const(ubyte)*, EapHostPeerResponseAction*, EAP_ERROR**);
-uint EapHostPeerGetResponseAttributes(uint, EAP_ATTRIBUTES*, EAP_ERROR**);
-uint EapHostPeerSetResponseAttributes(uint, const(EAP_ATTRIBUTES)*, EapHostPeerResponseAction*, EAP_ERROR**);
-uint EapHostPeerGetAuthStatus(uint, EapHostPeerAuthParams, uint*, ubyte**, EAP_ERROR**);
-uint EapHostPeerEndSession(uint, EAP_ERROR**);
-uint EapHostPeerGetDataToUnplumbCredentials(GUID*, long*, uint, EAP_ERROR**, BOOL*);
-uint EapHostPeerClearConnection(GUID*, EAP_ERROR**);
-void EapHostPeerFreeEapError(EAP_ERROR*);
-uint EapHostPeerGetIdentity(uint, uint, EAP_METHOD_TYPE, uint, const(ubyte)*, uint, const(ubyte)*, HANDLE, BOOL*, uint*, ubyte**, PWSTR*, EAP_ERROR**, ubyte**);
-uint EapHostPeerGetEncryptedPassword(uint, PWSTR, PWSTR*);
-void EapHostPeerFreeRuntimeMemory(ubyte*);
+uint EapHostPeerBeginSession(uint dwFlags, EAP_METHOD_TYPE eapType, const(EAP_ATTRIBUTES)* pAttributeArray, HANDLE hTokenImpersonateUser, uint dwSizeofConnectionData, const(ubyte)* pConnectionData, uint dwSizeofUserData, const(ubyte)* pUserData, uint dwMaxSendPacketSize, const(GUID)* pConnectionId, NotificationHandler func, void* pContextData, uint* pSessionId, EAP_ERROR** ppEapError);
+uint EapHostPeerProcessReceivedPacket(uint sessionHandle, uint cbReceivePacket, const(ubyte)* pReceivePacket, EapHostPeerResponseAction* pEapOutput, EAP_ERROR** ppEapError);
+uint EapHostPeerGetSendPacket(uint sessionHandle, uint* pcbSendPacket, ubyte** ppSendPacket, EAP_ERROR** ppEapError);
+uint EapHostPeerGetResult(uint sessionHandle, EapHostPeerMethodResultReason reason, EapHostPeerMethodResult* ppResult, EAP_ERROR** ppEapError);
+uint EapHostPeerGetUIContext(uint sessionHandle, uint* pdwSizeOfUIContextData, ubyte** ppUIContextData, EAP_ERROR** ppEapError);
+uint EapHostPeerSetUIContext(uint sessionHandle, uint dwSizeOfUIContextData, const(ubyte)* pUIContextData, EapHostPeerResponseAction* pEapOutput, EAP_ERROR** ppEapError);
+uint EapHostPeerGetResponseAttributes(uint sessionHandle, EAP_ATTRIBUTES* pAttribs, EAP_ERROR** ppEapError);
+uint EapHostPeerSetResponseAttributes(uint sessionHandle, const(EAP_ATTRIBUTES)* pAttribs, EapHostPeerResponseAction* pEapOutput, EAP_ERROR** ppEapError);
+uint EapHostPeerGetAuthStatus(uint sessionHandle, EapHostPeerAuthParams authParam, uint* pcbAuthData, ubyte** ppAuthData, EAP_ERROR** ppEapError);
+uint EapHostPeerEndSession(uint sessionHandle, EAP_ERROR** ppEapError);
+uint EapHostPeerGetDataToUnplumbCredentials(GUID* pConnectionIdThatLastSavedCreds, long* phCredentialImpersonationToken, uint sessionHandle, EAP_ERROR** ppEapError, BOOL* fSaveToCredMan);
+uint EapHostPeerClearConnection(GUID* pConnectionId, EAP_ERROR** ppEapError);
+void EapHostPeerFreeEapError(EAP_ERROR* pEapError);
+uint EapHostPeerGetIdentity(uint dwVersion, uint dwFlags, EAP_METHOD_TYPE eapMethodType, uint dwSizeofConnectionData, const(ubyte)* pConnectionData, uint dwSizeofUserData, const(ubyte)* pUserData, HANDLE hTokenImpersonateUser, BOOL* pfInvokeUI, uint* pdwSizeOfUserDataOut, ubyte** ppUserDataOut, PWSTR* ppwszIdentity, EAP_ERROR** ppEapError, ubyte** ppvReserved);
+uint EapHostPeerGetEncryptedPassword(uint dwSizeofPassword, PWSTR szPassword, PWSTR* ppszEncPassword);
+void EapHostPeerFreeRuntimeMemory(ubyte* pData);
 enum FACILITY_EAP_MESSAGE = 0x00000842;
 enum EAP_GROUP_MASK = 0x0000ff00;
 enum EAP_E_EAPHOST_FIRST = 0xffffffff80420000;
@@ -493,46 +493,46 @@ struct LEGACY_INTERACTIVE_UI_PARAMS
 enum IID_IRouterProtocolConfig = GUID(0x66a2db16, 0xd706, 0x11d0, [0xa3, 0x7b, 0x0, 0xc0, 0x4f, 0xc9, 0xda, 0x4]);
 interface IRouterProtocolConfig : IUnknown
 {
-    HRESULT AddProtocol(const(wchar)*, uint, uint, HWND, uint, IUnknown, ulong);
-    HRESULT RemoveProtocol(const(wchar)*, uint, uint, HWND, uint, IUnknown, ulong);
+    HRESULT AddProtocol(const(wchar)* pszMachineName, uint dwTransportId, uint dwProtocolId, HWND hWnd, uint dwFlags, IUnknown pRouter, ulong uReserved1);
+    HRESULT RemoveProtocol(const(wchar)* pszMachineName, uint dwTransportId, uint dwProtocolId, HWND hWnd, uint dwFlags, IUnknown pRouter, ulong uReserved1);
 }
 enum IID_IAuthenticationProviderConfig = GUID(0x66a2db17, 0xd706, 0x11d0, [0xa3, 0x7b, 0x0, 0xc0, 0x4f, 0xc9, 0xda, 0x4]);
 interface IAuthenticationProviderConfig : IUnknown
 {
-    HRESULT Initialize(const(wchar)*, ulong*);
-    HRESULT Uninitialize(ulong);
-    HRESULT Configure(ulong, HWND, uint, ulong, ulong);
-    HRESULT Activate(ulong, ulong, ulong);
-    HRESULT Deactivate(ulong, ulong, ulong);
+    HRESULT Initialize(const(wchar)* pszMachineName, ulong* puConnectionParam);
+    HRESULT Uninitialize(ulong uConnectionParam);
+    HRESULT Configure(ulong uConnectionParam, HWND hWnd, uint dwFlags, ulong uReserved1, ulong uReserved2);
+    HRESULT Activate(ulong uConnectionParam, ulong uReserved1, ulong uReserved2);
+    HRESULT Deactivate(ulong uConnectionParam, ulong uReserved1, ulong uReserved2);
 }
 enum IID_IAccountingProviderConfig = GUID(0x66a2db18, 0xd706, 0x11d0, [0xa3, 0x7b, 0x0, 0xc0, 0x4f, 0xc9, 0xda, 0x4]);
 interface IAccountingProviderConfig : IUnknown
 {
-    HRESULT Initialize(const(wchar)*, ulong*);
-    HRESULT Uninitialize(ulong);
-    HRESULT Configure(ulong, HWND, uint, ulong, ulong);
-    HRESULT Activate(ulong, ulong, ulong);
-    HRESULT Deactivate(ulong, ulong, ulong);
+    HRESULT Initialize(const(wchar)* pszMachineName, ulong* puConnectionParam);
+    HRESULT Uninitialize(ulong uConnectionParam);
+    HRESULT Configure(ulong uConnectionParam, HWND hWnd, uint dwFlags, ulong uReserved1, ulong uReserved2);
+    HRESULT Activate(ulong uConnectionParam, ulong uReserved1, ulong uReserved2);
+    HRESULT Deactivate(ulong uConnectionParam, ulong uReserved1, ulong uReserved2);
 }
 enum IID_IEAPProviderConfig = GUID(0x66a2db19, 0xd706, 0x11d0, [0xa3, 0x7b, 0x0, 0xc0, 0x4f, 0xc9, 0xda, 0x4]);
 interface IEAPProviderConfig : IUnknown
 {
-    HRESULT Initialize(const(wchar)*, uint, ulong*);
-    HRESULT Uninitialize(uint, ulong);
-    HRESULT ServerInvokeConfigUI(uint, ulong, HWND, ulong, ulong);
-    HRESULT RouterInvokeConfigUI(uint, ulong, HWND, uint, ubyte*, uint, ubyte**, uint*);
-    HRESULT RouterInvokeCredentialsUI(uint, ulong, HWND, uint, ubyte*, uint, ubyte*, uint, ubyte**, uint*);
+    HRESULT Initialize(const(wchar)* pszMachineName, uint dwEapTypeId, ulong* puConnectionParam);
+    HRESULT Uninitialize(uint dwEapTypeId, ulong uConnectionParam);
+    HRESULT ServerInvokeConfigUI(uint dwEapTypeId, ulong uConnectionParam, HWND hWnd, ulong uReserved1, ulong uReserved2);
+    HRESULT RouterInvokeConfigUI(uint dwEapTypeId, ulong uConnectionParam, HWND hwndParent, uint dwFlags, ubyte* pConnectionDataIn, uint dwSizeOfConnectionDataIn, ubyte** ppConnectionDataOut, uint* pdwSizeOfConnectionDataOut);
+    HRESULT RouterInvokeCredentialsUI(uint dwEapTypeId, ulong uConnectionParam, HWND hwndParent, uint dwFlags, ubyte* pConnectionDataIn, uint dwSizeOfConnectionDataIn, ubyte* pUserDataIn, uint dwSizeOfUserDataIn, ubyte** ppUserDataOut, uint* pdwSizeOfUserDataOut);
 }
 enum IID_IEAPProviderConfig2 = GUID(0xd565917a, 0x85c4, 0x4466, [0x85, 0x6e, 0x67, 0x1c, 0x37, 0x42, 0xea, 0x9a]);
 interface IEAPProviderConfig2 : IEAPProviderConfig
 {
-    HRESULT ServerInvokeConfigUI2(uint, ulong, HWND, const(ubyte)*, uint, ubyte**, uint*);
-    HRESULT GetGlobalConfig(uint, ubyte**, uint*);
+    HRESULT ServerInvokeConfigUI2(uint dwEapTypeId, ulong uConnectionParam, HWND hWnd, const(ubyte)* pConfigDataIn, uint dwSizeOfConfigDataIn, ubyte** ppConfigDataOut, uint* pdwSizeOfConfigDataOut);
+    HRESULT GetGlobalConfig(uint dwEapTypeId, ubyte** ppConfigDataOut, uint* pdwSizeOfConfigDataOut);
 }
 enum IID_IEAPProviderConfig3 = GUID(0xb78ecd12, 0x68bb, 0x4f86, [0x9b, 0xf0, 0x84, 0x38, 0xdd, 0x3b, 0xe9, 0x82]);
 interface IEAPProviderConfig3 : IEAPProviderConfig2
 {
-    HRESULT ServerInvokeCertificateConfigUI(uint, ulong, HWND, const(ubyte)*, uint, ubyte**, uint*, ulong);
+    HRESULT ServerInvokeCertificateConfigUI(uint dwEapTypeId, ulong uConnectionParam, HWND hWnd, const(ubyte)* pConfigDataIn, uint dwSizeOfConfigDataIn, ubyte** ppConfigDataOut, uint* pdwSizeOfConfigDataOut, ulong uReserved);
 }
 struct EAP_TYPE
 {
@@ -979,7 +979,7 @@ enum : int
     EapCodeMaximum  = 0x00000004,
 }
 
-alias NotificationHandler = void function(GUID, void*);
+alias NotificationHandler = void function(GUID connectionId, void* pContextData);
 alias EAP_METHOD_AUTHENTICATOR_RESPONSE_ACTION = int;
 enum : int
 {

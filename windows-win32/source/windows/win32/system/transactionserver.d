@@ -10,37 +10,37 @@ extern (Windows):
 enum IID_ICatalog = GUID(0x6eb22870, 0x8a19, 0x11d0, [0x81, 0xb6, 0x0, 0xa0, 0xc9, 0x23, 0x1c, 0x29]);
 interface ICatalog : IDispatch
 {
-    HRESULT GetCollection(BSTR, IDispatch*);
-    HRESULT Connect(BSTR, IDispatch*);
-    HRESULT get_MajorVersion(int*);
-    HRESULT get_MinorVersion(int*);
+    HRESULT GetCollection(BSTR bstrCollName, IDispatch* ppCatalogCollection);
+    HRESULT Connect(BSTR bstrConnectString, IDispatch* ppCatalogCollection);
+    HRESULT get_MajorVersion(int* retval);
+    HRESULT get_MinorVersion(int* retval);
 }
 enum IID_IComponentUtil = GUID(0x6eb22873, 0x8a19, 0x11d0, [0x81, 0xb6, 0x0, 0xa0, 0xc9, 0x23, 0x1c, 0x29]);
 interface IComponentUtil : IDispatch
 {
-    HRESULT InstallComponent(BSTR, BSTR, BSTR);
-    HRESULT ImportComponent(BSTR);
-    HRESULT ImportComponentByName(BSTR);
-    HRESULT GetCLSIDs(BSTR, BSTR, SAFEARRAY**);
+    HRESULT InstallComponent(BSTR bstrDLLFile, BSTR bstrTypelibFile, BSTR bstrProxyStubDLLFile);
+    HRESULT ImportComponent(BSTR bstrCLSID);
+    HRESULT ImportComponentByName(BSTR bstrProgID);
+    HRESULT GetCLSIDs(BSTR bstrDLLFile, BSTR bstrTypelibFile, SAFEARRAY** aCLSIDs);
 }
 enum IID_IPackageUtil = GUID(0x6eb22874, 0x8a19, 0x11d0, [0x81, 0xb6, 0x0, 0xa0, 0xc9, 0x23, 0x1c, 0x29]);
 interface IPackageUtil : IDispatch
 {
-    HRESULT InstallPackage(BSTR, BSTR, int);
-    HRESULT ExportPackage(BSTR, BSTR, int);
-    HRESULT ShutdownPackage(BSTR);
+    HRESULT InstallPackage(BSTR bstrPackageFile, BSTR bstrInstallPath, int lOptions);
+    HRESULT ExportPackage(BSTR bstrPackageID, BSTR bstrPackageFile, int lOptions);
+    HRESULT ShutdownPackage(BSTR bstrPackageID);
 }
 enum IID_IRemoteComponentUtil = GUID(0x6eb22875, 0x8a19, 0x11d0, [0x81, 0xb6, 0x0, 0xa0, 0xc9, 0x23, 0x1c, 0x29]);
 interface IRemoteComponentUtil : IDispatch
 {
-    HRESULT InstallRemoteComponent(BSTR, BSTR, BSTR);
-    HRESULT InstallRemoteComponentByName(BSTR, BSTR, BSTR);
+    HRESULT InstallRemoteComponent(BSTR bstrServer, BSTR bstrPackageID, BSTR bstrCLSID);
+    HRESULT InstallRemoteComponentByName(BSTR bstrServer, BSTR bstrPackageName, BSTR bstrProgID);
 }
 enum IID_IRoleAssociationUtil = GUID(0x6eb22876, 0x8a19, 0x11d0, [0x81, 0xb6, 0x0, 0xa0, 0xc9, 0x23, 0x1c, 0x29]);
 interface IRoleAssociationUtil : IDispatch
 {
-    HRESULT AssociateRole(BSTR);
-    HRESULT AssociateRoleByName(BSTR);
+    HRESULT AssociateRole(BSTR bstrRoleID);
+    HRESULT AssociateRoleByName(BSTR bstrRoleName);
 }
 alias MTSPackageInstallOptions = int;
 enum : int

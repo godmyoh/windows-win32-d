@@ -155,16 +155,16 @@ enum : uint
     CTL_MODIFY_REQUEST_REMOVE          = 0x00000002,
 }
 
-BOOL CryptUIDlgViewContext(uint, const(void)*, HWND, const(wchar)*, uint, void*);
-CERT_CONTEXT* CryptUIDlgSelectCertificateFromStore(HCERTSTORE, HWND, const(wchar)*, const(wchar)*, uint, uint, void*);
-HRESULT CertSelectionGetSerializedBlob(CERT_SELECTUI_INPUT*, void**, uint*);
-BOOL CryptUIDlgCertMgr(CRYPTUI_CERT_MGR_STRUCT*);
-BOOL CryptUIWizDigitalSign(uint, HWND, const(wchar)*, CRYPTUI_WIZ_DIGITAL_SIGN_INFO*, CRYPTUI_WIZ_DIGITAL_SIGN_CONTEXT**);
-BOOL CryptUIWizFreeDigitalSignContext(CRYPTUI_WIZ_DIGITAL_SIGN_CONTEXT*);
-BOOL CryptUIDlgViewCertificateW(CRYPTUI_VIEWCERTIFICATE_STRUCTW*, BOOL*);
-BOOL CryptUIDlgViewCertificateA(CRYPTUI_VIEWCERTIFICATE_STRUCTA*, BOOL*);
-BOOL CryptUIWizExport(CRYPTUI_WIZ_FLAGS, HWND, const(wchar)*, CRYPTUI_WIZ_EXPORT_INFO*, void*);
-BOOL CryptUIWizImport(CRYPTUI_WIZ_FLAGS, HWND, const(wchar)*, CRYPTUI_WIZ_IMPORT_SRC_INFO*, HCERTSTORE);
+BOOL CryptUIDlgViewContext(uint dwContextType, const(void)* pvContext, HWND hwnd, const(wchar)* pwszTitle, uint dwFlags, void* pvReserved);
+CERT_CONTEXT* CryptUIDlgSelectCertificateFromStore(HCERTSTORE hCertStore, HWND hwnd, const(wchar)* pwszTitle, const(wchar)* pwszDisplayString, uint dwDontUseColumn, uint dwFlags, void* pvReserved);
+HRESULT CertSelectionGetSerializedBlob(CERT_SELECTUI_INPUT* pcsi, void** ppOutBuffer, uint* pulOutBufferSize);
+BOOL CryptUIDlgCertMgr(CRYPTUI_CERT_MGR_STRUCT* pCryptUICertMgr);
+BOOL CryptUIWizDigitalSign(uint dwFlags, HWND hwndParent, const(wchar)* pwszWizardTitle, CRYPTUI_WIZ_DIGITAL_SIGN_INFO* pDigitalSignInfo, CRYPTUI_WIZ_DIGITAL_SIGN_CONTEXT** ppSignContext);
+BOOL CryptUIWizFreeDigitalSignContext(CRYPTUI_WIZ_DIGITAL_SIGN_CONTEXT* pSignContext);
+BOOL CryptUIDlgViewCertificateW(CRYPTUI_VIEWCERTIFICATE_STRUCTW* pCertViewInfo, BOOL* pfPropertiesChanged);
+BOOL CryptUIDlgViewCertificateA(CRYPTUI_VIEWCERTIFICATE_STRUCTA* pCertViewInfo, BOOL* pfPropertiesChanged);
+BOOL CryptUIWizExport(CRYPTUI_WIZ_FLAGS dwFlags, HWND hwndParent, const(wchar)* pwszWizardTitle, CRYPTUI_WIZ_EXPORT_INFO* pExportInfo, void* pvoid);
+BOOL CryptUIWizImport(CRYPTUI_WIZ_FLAGS dwFlags, HWND hwndParent, const(wchar)* pwszWizardTitle, CRYPTUI_WIZ_IMPORT_SRC_INFO* pImportSrc, HCERTSTORE hDestCertStore);
 enum CRYTPDLG_FLAGS_MASK = 0xff000000;
 enum CRYPTDLG_REVOCATION_DEFAULT = 0x00000000;
 enum CRYPTDLG_REVOCATION_ONLINE = 0x80000000;
@@ -245,8 +245,8 @@ enum CRYPTUI_CERT_MGR_SINGLE_TAB_FLAG = 0x00008000;
 enum CRYPTUI_WIZ_DIGITAL_SIGN_EXCLUDE_PAGE_HASHES = 0x00000002;
 enum CRYPTUI_WIZ_DIGITAL_SIGN_INCLUDE_PAGE_HASHES = 0x00000004;
 enum CRYPTUI_WIZ_EXPORT_FORMAT_SERIALIZED_CERT_STORE = 0x00000005;
-alias PFNCMFILTERPROC = BOOL function(const(CERT_CONTEXT)*, LPARAM, uint, uint);
-alias PFNCMHOOKPROC = uint function(HWND, uint, WPARAM, LPARAM);
+alias PFNCMFILTERPROC = BOOL function(const(CERT_CONTEXT)* pCertContext, LPARAM param1, uint param2, uint param3);
+alias PFNCMHOOKPROC = uint function(HWND hwndDialog, uint message, WPARAM wParam, LPARAM lParam);
 struct CERT_SELECT_STRUCT_A
 {
     uint dwSize;
@@ -351,7 +351,7 @@ struct CERT_FILTER_DATA
     CERT_FILTER_EXTENSION_MATCH* arrayExtensionChecks;
     uint dwCheckingFlags;
 }
-alias PFNTRUSTHELPER = HRESULT function(const(CERT_CONTEXT)*, LPARAM, BOOL, ubyte*);
+alias PFNTRUSTHELPER = HRESULT function(const(CERT_CONTEXT)* pCertContext, LPARAM lCustData, BOOL fLeafCertificate, ubyte* pbTrustBlob);
 struct CERT_VERIFY_CERTIFICATE_TRUST
 {
     uint cbSize;
@@ -380,7 +380,7 @@ struct CTL_MODIFY_REQUEST
     CTL_MODIFY_REQUEST_OPERATION dwOperation;
     uint dwError;
 }
-alias PFNCFILTERPROC = BOOL function(const(CERT_CONTEXT)*, BOOL*, void*);
+alias PFNCFILTERPROC = BOOL function(const(CERT_CONTEXT)* pCertContext, BOOL* pfInitialSelectedCert, void* pvCallbackData);
 struct CERT_SELECTUI_INPUT
 {
     HCERTSTORE hStore;

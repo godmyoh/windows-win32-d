@@ -5,21 +5,21 @@ import windows.win32.foundation : HRESULT, PSTR;
 version (Windows):
 extern (Windows):
 
-HRESULT WebSocketCreateClientHandle(const(WEB_SOCKET_PROPERTY)*, uint, WEB_SOCKET_HANDLE*);
-HRESULT WebSocketBeginClientHandshake(WEB_SOCKET_HANDLE, const(char)**, uint, const(char)**, uint, const(WEB_SOCKET_HTTP_HEADER)*, uint, WEB_SOCKET_HTTP_HEADER**, uint*);
-HRESULT WebSocketEndClientHandshake(WEB_SOCKET_HANDLE, const(WEB_SOCKET_HTTP_HEADER)*, uint, uint*, uint*, uint*);
-HRESULT WebSocketCreateServerHandle(const(WEB_SOCKET_PROPERTY)*, uint, WEB_SOCKET_HANDLE*);
-HRESULT WebSocketBeginServerHandshake(WEB_SOCKET_HANDLE, const(char)*, const(char)**, uint, const(WEB_SOCKET_HTTP_HEADER)*, uint, WEB_SOCKET_HTTP_HEADER**, uint*);
-HRESULT WebSocketEndServerHandshake(WEB_SOCKET_HANDLE);
-HRESULT WebSocketSend(WEB_SOCKET_HANDLE, WEB_SOCKET_BUFFER_TYPE, WEB_SOCKET_BUFFER*, void*);
-HRESULT WebSocketReceive(WEB_SOCKET_HANDLE, WEB_SOCKET_BUFFER*, void*);
-HRESULT WebSocketGetAction(WEB_SOCKET_HANDLE, WEB_SOCKET_ACTION_QUEUE, WEB_SOCKET_BUFFER*, uint*, WEB_SOCKET_ACTION*, WEB_SOCKET_BUFFER_TYPE*, void**, void**);
-void WebSocketCompleteAction(WEB_SOCKET_HANDLE, void*, uint);
-void WebSocketAbortHandle(WEB_SOCKET_HANDLE);
-void WebSocketDeleteHandle(WEB_SOCKET_HANDLE);
-HRESULT WebSocketGetGlobalProperty(WEB_SOCKET_PROPERTY_TYPE, void*, uint*);
+HRESULT WebSocketCreateClientHandle(const(WEB_SOCKET_PROPERTY)* pProperties, uint ulPropertyCount, WEB_SOCKET_HANDLE* phWebSocket);
+HRESULT WebSocketBeginClientHandshake(WEB_SOCKET_HANDLE hWebSocket, const(char)** pszSubprotocols, uint ulSubprotocolCount, const(char)** pszExtensions, uint ulExtensionCount, const(WEB_SOCKET_HTTP_HEADER)* pInitialHeaders, uint ulInitialHeaderCount, WEB_SOCKET_HTTP_HEADER** pAdditionalHeaders, uint* pulAdditionalHeaderCount);
+HRESULT WebSocketEndClientHandshake(WEB_SOCKET_HANDLE hWebSocket, const(WEB_SOCKET_HTTP_HEADER)* pResponseHeaders, uint ulReponseHeaderCount, uint* pulSelectedExtensions, uint* pulSelectedExtensionCount, uint* pulSelectedSubprotocol);
+HRESULT WebSocketCreateServerHandle(const(WEB_SOCKET_PROPERTY)* pProperties, uint ulPropertyCount, WEB_SOCKET_HANDLE* phWebSocket);
+HRESULT WebSocketBeginServerHandshake(WEB_SOCKET_HANDLE hWebSocket, const(char)* pszSubprotocolSelected, const(char)** pszExtensionSelected, uint ulExtensionSelectedCount, const(WEB_SOCKET_HTTP_HEADER)* pRequestHeaders, uint ulRequestHeaderCount, WEB_SOCKET_HTTP_HEADER** pResponseHeaders, uint* pulResponseHeaderCount);
+HRESULT WebSocketEndServerHandshake(WEB_SOCKET_HANDLE hWebSocket);
+HRESULT WebSocketSend(WEB_SOCKET_HANDLE hWebSocket, WEB_SOCKET_BUFFER_TYPE BufferType, WEB_SOCKET_BUFFER* pBuffer, void* Context);
+HRESULT WebSocketReceive(WEB_SOCKET_HANDLE hWebSocket, WEB_SOCKET_BUFFER* pBuffer, void* pvContext);
+HRESULT WebSocketGetAction(WEB_SOCKET_HANDLE hWebSocket, WEB_SOCKET_ACTION_QUEUE eActionQueue, WEB_SOCKET_BUFFER* pDataBuffers, uint* pulDataBufferCount, WEB_SOCKET_ACTION* pAction, WEB_SOCKET_BUFFER_TYPE* pBufferType, void** pvApplicationContext, void** pvActionContext);
+void WebSocketCompleteAction(WEB_SOCKET_HANDLE hWebSocket, void* pvActionContext, uint ulBytesTransferred);
+void WebSocketAbortHandle(WEB_SOCKET_HANDLE hWebSocket);
+void WebSocketDeleteHandle(WEB_SOCKET_HANDLE hWebSocket);
+HRESULT WebSocketGetGlobalProperty(WEB_SOCKET_PROPERTY_TYPE eType, void* pvValue, uint* ulSize);
 enum WEB_SOCKET_MAX_CLOSE_REASON_LENGTH = 0x0000007b;
-alias WEB_SOCKET_HANDLE = long;
+alias WEB_SOCKET_HANDLE = void*;
 alias WEB_SOCKET_CLOSE_STATUS = int;
 enum : int
 {

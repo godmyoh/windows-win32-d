@@ -1,8 +1,8 @@
 module windows.win32.security.authentication.identity;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, CHAR, FILETIME, HANDLE, HRESULT, HWND, LUID, NTSTATUS, PSID, PSTR, PWSTR;
-import windows.win32.security : ACL, OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR, QUOTA_LIMITS, SECURITY_ATTRIBUTES, SECURITY_IMPERSONATION_LEVEL, SID_NAME_USE, TOKEN_DEFAULT_DACL, TOKEN_DEVICE_CLAIMS, TOKEN_GROUPS, TOKEN_OWNER, TOKEN_PRIMARY_GROUP, TOKEN_PRIVILEGES, TOKEN_SOURCE, TOKEN_USER, TOKEN_USER_CLAIMS;
+import windows.win32.foundation : BOOL, BOOLEAN, CHAR, FILETIME, HANDLE, HRESULT, HWND, LUID, NTSTATUS, PSTR, PWSTR;
+import windows.win32.security : ACL, OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR, PSID, QUOTA_LIMITS, SECURITY_ATTRIBUTES, SECURITY_IMPERSONATION_LEVEL, SID_NAME_USE, TOKEN_DEFAULT_DACL, TOKEN_DEVICE_CLAIMS, TOKEN_GROUPS, TOKEN_OWNER, TOKEN_PRIMARY_GROUP, TOKEN_PRIVILEGES, TOKEN_SOURCE, TOKEN_USER, TOKEN_USER_CLAIMS;
 import windows.win32.security.credentials : CREDENTIALW, CREDENTIAL_TARGET_INFORMATIONW, SecHandle;
 import windows.win32.security.cryptography : ALG_ID, CERT_CONTEXT, CRYPT_INTEGER_BLOB, HCERTSTORE;
 import windows.win32.system.com : IUnknown;
@@ -14,222 +14,222 @@ import windows.win32.system.threading : LPTHREAD_START_ROUTINE;
 version (Windows):
 extern (Windows):
 
-BOOLEAN RtlGenRandom(void*, uint);
-NTSTATUS RtlEncryptMemory(void*, uint, uint);
-NTSTATUS RtlDecryptMemory(void*, uint, uint);
-NTSTATUS LsaRegisterLogonProcess(LSA_STRING*, HANDLE*, uint*);
-NTSTATUS LsaLogonUser(HANDLE, LSA_STRING*, SECURITY_LOGON_TYPE, uint, void*, uint, TOKEN_GROUPS*, TOKEN_SOURCE*, void**, uint*, LUID*, HANDLE*, QUOTA_LIMITS*, int*);
-NTSTATUS LsaLookupAuthenticationPackage(HANDLE, LSA_STRING*, uint*);
-NTSTATUS LsaFreeReturnBuffer(void*);
-NTSTATUS LsaCallAuthenticationPackage(HANDLE, uint, void*, uint, void**, uint*, int*);
-NTSTATUS LsaDeregisterLogonProcess(HANDLE);
-NTSTATUS LsaConnectUntrusted(HANDLE*);
-NTSTATUS LsaFreeMemory(void*);
-NTSTATUS LsaClose(LSA_HANDLE);
-NTSTATUS LsaEnumerateLogonSessions(uint*, LUID**);
-NTSTATUS LsaGetLogonSessionData(LUID*, SECURITY_LOGON_SESSION_DATA**);
-NTSTATUS LsaOpenPolicy(LSA_UNICODE_STRING*, LSA_OBJECT_ATTRIBUTES*, uint, LSA_HANDLE*);
-NTSTATUS LsaSetCAPs(LSA_UNICODE_STRING*, uint, uint);
-NTSTATUS LsaGetAppliedCAPIDs(LSA_UNICODE_STRING*, PSID**, uint*);
-NTSTATUS LsaQueryCAPs(PSID*, uint, CENTRAL_ACCESS_POLICY**, uint*);
-NTSTATUS LsaQueryInformationPolicy(LSA_HANDLE, POLICY_INFORMATION_CLASS, void**);
-NTSTATUS LsaSetInformationPolicy(LSA_HANDLE, POLICY_INFORMATION_CLASS, void*);
-NTSTATUS LsaQueryDomainInformationPolicy(LSA_HANDLE, POLICY_DOMAIN_INFORMATION_CLASS, void**);
-NTSTATUS LsaSetDomainInformationPolicy(LSA_HANDLE, POLICY_DOMAIN_INFORMATION_CLASS, void*);
-NTSTATUS LsaRegisterPolicyChangeNotification(POLICY_NOTIFICATION_INFORMATION_CLASS, HANDLE);
-NTSTATUS LsaUnregisterPolicyChangeNotification(POLICY_NOTIFICATION_INFORMATION_CLASS, HANDLE);
-NTSTATUS LsaEnumerateTrustedDomains(LSA_HANDLE, uint*, void**, uint, uint*);
-NTSTATUS LsaLookupNames(LSA_HANDLE, uint, LSA_UNICODE_STRING*, LSA_REFERENCED_DOMAIN_LIST**, LSA_TRANSLATED_SID**);
-NTSTATUS LsaLookupNames2(LSA_HANDLE, uint, uint, LSA_UNICODE_STRING*, LSA_REFERENCED_DOMAIN_LIST**, LSA_TRANSLATED_SID2**);
-NTSTATUS LsaLookupSids(LSA_HANDLE, uint, PSID*, LSA_REFERENCED_DOMAIN_LIST**, LSA_TRANSLATED_NAME**);
-NTSTATUS LsaLookupSids2(LSA_HANDLE, uint, uint, PSID*, LSA_REFERENCED_DOMAIN_LIST**, LSA_TRANSLATED_NAME**);
-NTSTATUS LsaEnumerateAccountsWithUserRight(LSA_HANDLE, LSA_UNICODE_STRING*, void**, uint*);
-NTSTATUS LsaEnumerateAccountRights(LSA_HANDLE, PSID, LSA_UNICODE_STRING**, uint*);
-NTSTATUS LsaAddAccountRights(LSA_HANDLE, PSID, LSA_UNICODE_STRING*, uint);
-NTSTATUS LsaRemoveAccountRights(LSA_HANDLE, PSID, BOOLEAN, LSA_UNICODE_STRING*, uint);
-NTSTATUS LsaOpenTrustedDomainByName(LSA_HANDLE, LSA_UNICODE_STRING*, uint, LSA_HANDLE*);
-NTSTATUS LsaQueryTrustedDomainInfo(LSA_HANDLE, PSID, TRUSTED_INFORMATION_CLASS, void**);
-NTSTATUS LsaSetTrustedDomainInformation(LSA_HANDLE, PSID, TRUSTED_INFORMATION_CLASS, void*);
-NTSTATUS LsaDeleteTrustedDomain(LSA_HANDLE, PSID);
-NTSTATUS LsaQueryTrustedDomainInfoByName(LSA_HANDLE, LSA_UNICODE_STRING*, TRUSTED_INFORMATION_CLASS, void**);
-NTSTATUS LsaSetTrustedDomainInfoByName(LSA_HANDLE, LSA_UNICODE_STRING*, TRUSTED_INFORMATION_CLASS, void*);
-NTSTATUS LsaEnumerateTrustedDomainsEx(LSA_HANDLE, uint*, void**, uint, uint*);
-NTSTATUS LsaCreateTrustedDomainEx(LSA_HANDLE, TRUSTED_DOMAIN_INFORMATION_EX*, TRUSTED_DOMAIN_AUTH_INFORMATION*, uint, LSA_HANDLE*);
-NTSTATUS LsaQueryForestTrustInformation(LSA_HANDLE, LSA_UNICODE_STRING*, LSA_FOREST_TRUST_INFORMATION**);
-NTSTATUS LsaSetForestTrustInformation(LSA_HANDLE, LSA_UNICODE_STRING*, LSA_FOREST_TRUST_INFORMATION*, BOOLEAN, LSA_FOREST_TRUST_COLLISION_INFORMATION**);
-NTSTATUS LsaStorePrivateData(LSA_HANDLE, LSA_UNICODE_STRING*, LSA_UNICODE_STRING*);
-NTSTATUS LsaRetrievePrivateData(LSA_HANDLE, LSA_UNICODE_STRING*, LSA_UNICODE_STRING**);
-uint LsaNtStatusToWinError(NTSTATUS);
-NTSTATUS LsaQueryForestTrustInformation2(LSA_HANDLE, LSA_UNICODE_STRING*, LSA_FOREST_TRUST_RECORD_TYPE, LSA_FOREST_TRUST_INFORMATION2**);
-NTSTATUS LsaSetForestTrustInformation2(LSA_HANDLE, LSA_UNICODE_STRING*, LSA_FOREST_TRUST_RECORD_TYPE, LSA_FOREST_TRUST_INFORMATION2*, BOOLEAN, LSA_FOREST_TRUST_COLLISION_INFORMATION**);
-BOOLEAN AuditSetSystemPolicy(AUDIT_POLICY_INFORMATION*, uint);
-BOOLEAN AuditSetPerUserPolicy(const(PSID), AUDIT_POLICY_INFORMATION*, uint);
-BOOLEAN AuditQuerySystemPolicy(const(GUID)*, uint, AUDIT_POLICY_INFORMATION**);
-BOOLEAN AuditQueryPerUserPolicy(const(PSID), const(GUID)*, uint, AUDIT_POLICY_INFORMATION**);
-BOOLEAN AuditEnumeratePerUserPolicy(POLICY_AUDIT_SID_ARRAY**);
-BOOLEAN AuditComputeEffectivePolicyBySid(const(PSID), const(GUID)*, uint, AUDIT_POLICY_INFORMATION**);
-BOOLEAN AuditComputeEffectivePolicyByToken(HANDLE, const(GUID)*, uint, AUDIT_POLICY_INFORMATION**);
-BOOLEAN AuditEnumerateCategories(GUID**, uint*);
-BOOLEAN AuditEnumerateSubCategories(const(GUID)*, BOOLEAN, GUID**, uint*);
-BOOLEAN AuditLookupCategoryNameW(const(GUID)*, PWSTR*);
-BOOLEAN AuditLookupCategoryNameA(const(GUID)*, PSTR*);
-BOOLEAN AuditLookupSubCategoryNameW(const(GUID)*, PWSTR*);
-BOOLEAN AuditLookupSubCategoryNameA(const(GUID)*, PSTR*);
-BOOLEAN AuditLookupCategoryIdFromCategoryGuid(const(GUID)*, POLICY_AUDIT_EVENT_TYPE*);
-BOOLEAN AuditLookupCategoryGuidFromCategoryId(POLICY_AUDIT_EVENT_TYPE, GUID*);
-BOOLEAN AuditSetSecurity(OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR);
-BOOLEAN AuditQuerySecurity(OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR*);
-BOOLEAN AuditSetGlobalSaclW(const(wchar)*, ACL*);
-BOOLEAN AuditSetGlobalSaclA(const(char)*, ACL*);
-BOOLEAN AuditQueryGlobalSaclW(const(wchar)*, ACL**);
-BOOLEAN AuditQueryGlobalSaclA(const(char)*, ACL**);
-void AuditFree(void*);
-HRESULT AcquireCredentialsHandleW(PWSTR, PWSTR, SECPKG_CRED, void*, void*, SEC_GET_KEY_FN, void*, SecHandle*, long*);
-HRESULT AcquireCredentialsHandleA(PSTR, PSTR, SECPKG_CRED, void*, void*, SEC_GET_KEY_FN, void*, SecHandle*, long*);
-HRESULT FreeCredentialsHandle(SecHandle*);
-HRESULT AddCredentialsW(SecHandle*, PWSTR, PWSTR, uint, void*, SEC_GET_KEY_FN, void*, long*);
-HRESULT AddCredentialsA(SecHandle*, PSTR, PSTR, uint, void*, SEC_GET_KEY_FN, void*, long*);
-HRESULT ChangeAccountPasswordW(ushort*, ushort*, ushort*, ushort*, ushort*, BOOLEAN, uint, SecBufferDesc*);
-HRESULT ChangeAccountPasswordA(byte*, byte*, byte*, byte*, byte*, BOOLEAN, uint, SecBufferDesc*);
-HRESULT InitializeSecurityContextW(SecHandle*, SecHandle*, ushort*, ISC_REQ_FLAGS, uint, uint, SecBufferDesc*, uint, SecHandle*, SecBufferDesc*, uint*, long*);
-HRESULT InitializeSecurityContextA(SecHandle*, SecHandle*, byte*, ISC_REQ_FLAGS, uint, uint, SecBufferDesc*, uint, SecHandle*, SecBufferDesc*, uint*, long*);
-HRESULT AcceptSecurityContext(SecHandle*, SecHandle*, SecBufferDesc*, ASC_REQ_FLAGS, uint, SecHandle*, SecBufferDesc*, uint*, long*);
-HRESULT CompleteAuthToken(SecHandle*, SecBufferDesc*);
-HRESULT ImpersonateSecurityContext(SecHandle*);
-HRESULT RevertSecurityContext(SecHandle*);
-HRESULT QuerySecurityContextToken(SecHandle*, void**);
-HRESULT DeleteSecurityContext(SecHandle*);
-HRESULT ApplyControlToken(SecHandle*, SecBufferDesc*);
-HRESULT QueryContextAttributesW(SecHandle*, SECPKG_ATTR, void*);
-HRESULT QueryContextAttributesExW(SecHandle*, SECPKG_ATTR, void*, uint);
-HRESULT QueryContextAttributesA(SecHandle*, SECPKG_ATTR, void*);
-HRESULT QueryContextAttributesExA(SecHandle*, SECPKG_ATTR, void*, uint);
-HRESULT SetContextAttributesW(SecHandle*, SECPKG_ATTR, void*, uint);
-HRESULT SetContextAttributesA(SecHandle*, SECPKG_ATTR, void*, uint);
-HRESULT QueryCredentialsAttributesW(SecHandle*, uint, void*);
-HRESULT QueryCredentialsAttributesExW(SecHandle*, uint, void*, uint);
-HRESULT QueryCredentialsAttributesA(SecHandle*, uint, void*);
-HRESULT QueryCredentialsAttributesExA(SecHandle*, uint, void*, uint);
-HRESULT SetCredentialsAttributesW(SecHandle*, uint, void*, uint);
-HRESULT SetCredentialsAttributesA(SecHandle*, uint, void*, uint);
-HRESULT FreeContextBuffer(void*);
-HRESULT MakeSignature(SecHandle*, uint, SecBufferDesc*, uint);
-HRESULT VerifySignature(SecHandle*, SecBufferDesc*, uint, uint*);
-HRESULT EncryptMessage(SecHandle*, uint, SecBufferDesc*, uint);
-HRESULT DecryptMessage(SecHandle*, SecBufferDesc*, uint, uint*);
-HRESULT EnumerateSecurityPackagesW(uint*, SecPkgInfoW**);
-HRESULT EnumerateSecurityPackagesA(uint*, SecPkgInfoA**);
-HRESULT QuerySecurityPackageInfoW(PWSTR, SecPkgInfoW**);
-HRESULT QuerySecurityPackageInfoA(PSTR, SecPkgInfoA**);
-HRESULT ExportSecurityContext(SecHandle*, EXPORT_SECURITY_CONTEXT_FLAGS, SecBuffer*, void**);
-HRESULT ImportSecurityContextW(PWSTR, SecBuffer*, void*, SecHandle*);
-HRESULT ImportSecurityContextA(PSTR, SecBuffer*, void*, SecHandle*);
+BOOLEAN RtlGenRandom(void* RandomBuffer, uint RandomBufferLength);
+NTSTATUS RtlEncryptMemory(void* Memory, uint MemorySize, uint OptionFlags);
+NTSTATUS RtlDecryptMemory(void* Memory, uint MemorySize, uint OptionFlags);
+NTSTATUS LsaRegisterLogonProcess(LSA_STRING* LogonProcessName, HANDLE* LsaHandle, uint* SecurityMode);
+NTSTATUS LsaLogonUser(HANDLE LsaHandle, LSA_STRING* OriginName, SECURITY_LOGON_TYPE LogonType, uint AuthenticationPackage, void* AuthenticationInformation, uint AuthenticationInformationLength, TOKEN_GROUPS* LocalGroups, TOKEN_SOURCE* SourceContext, void** ProfileBuffer, uint* ProfileBufferLength, LUID* LogonId, HANDLE* Token, QUOTA_LIMITS* Quotas, int* SubStatus);
+NTSTATUS LsaLookupAuthenticationPackage(HANDLE LsaHandle, LSA_STRING* PackageName, uint* AuthenticationPackage);
+NTSTATUS LsaFreeReturnBuffer(void* Buffer);
+NTSTATUS LsaCallAuthenticationPackage(HANDLE LsaHandle, uint AuthenticationPackage, void* ProtocolSubmitBuffer, uint SubmitBufferLength, void** ProtocolReturnBuffer, uint* ReturnBufferLength, int* ProtocolStatus);
+NTSTATUS LsaDeregisterLogonProcess(HANDLE LsaHandle);
+NTSTATUS LsaConnectUntrusted(HANDLE* LsaHandle);
+NTSTATUS LsaFreeMemory(void* Buffer);
+NTSTATUS LsaClose(LSA_HANDLE ObjectHandle);
+NTSTATUS LsaEnumerateLogonSessions(uint* LogonSessionCount, LUID** LogonSessionList);
+NTSTATUS LsaGetLogonSessionData(LUID* LogonId, SECURITY_LOGON_SESSION_DATA** ppLogonSessionData);
+NTSTATUS LsaOpenPolicy(LSA_UNICODE_STRING* SystemName, LSA_OBJECT_ATTRIBUTES* ObjectAttributes, uint DesiredAccess, LSA_HANDLE* PolicyHandle);
+NTSTATUS LsaSetCAPs(LSA_UNICODE_STRING* CAPDNs, uint CAPDNCount, uint Flags);
+NTSTATUS LsaGetAppliedCAPIDs(LSA_UNICODE_STRING* SystemName, PSID** CAPIDs, uint* CAPIDCount);
+NTSTATUS LsaQueryCAPs(PSID* CAPIDs, uint CAPIDCount, CENTRAL_ACCESS_POLICY** CAPs, uint* CAPCount);
+NTSTATUS LsaQueryInformationPolicy(LSA_HANDLE PolicyHandle, POLICY_INFORMATION_CLASS InformationClass, void** Buffer);
+NTSTATUS LsaSetInformationPolicy(LSA_HANDLE PolicyHandle, POLICY_INFORMATION_CLASS InformationClass, void* Buffer);
+NTSTATUS LsaQueryDomainInformationPolicy(LSA_HANDLE PolicyHandle, POLICY_DOMAIN_INFORMATION_CLASS InformationClass, void** Buffer);
+NTSTATUS LsaSetDomainInformationPolicy(LSA_HANDLE PolicyHandle, POLICY_DOMAIN_INFORMATION_CLASS InformationClass, void* Buffer);
+NTSTATUS LsaRegisterPolicyChangeNotification(POLICY_NOTIFICATION_INFORMATION_CLASS InformationClass, HANDLE NotificationEventHandle);
+NTSTATUS LsaUnregisterPolicyChangeNotification(POLICY_NOTIFICATION_INFORMATION_CLASS InformationClass, HANDLE NotificationEventHandle);
+NTSTATUS LsaEnumerateTrustedDomains(LSA_HANDLE PolicyHandle, uint* EnumerationContext, void** Buffer, uint PreferedMaximumLength, uint* CountReturned);
+NTSTATUS LsaLookupNames(LSA_HANDLE PolicyHandle, uint Count, LSA_UNICODE_STRING* Names, LSA_REFERENCED_DOMAIN_LIST** ReferencedDomains, LSA_TRANSLATED_SID** Sids);
+NTSTATUS LsaLookupNames2(LSA_HANDLE PolicyHandle, uint Flags, uint Count, LSA_UNICODE_STRING* Names, LSA_REFERENCED_DOMAIN_LIST** ReferencedDomains, LSA_TRANSLATED_SID2** Sids);
+NTSTATUS LsaLookupSids(LSA_HANDLE PolicyHandle, uint Count, PSID* Sids, LSA_REFERENCED_DOMAIN_LIST** ReferencedDomains, LSA_TRANSLATED_NAME** Names);
+NTSTATUS LsaLookupSids2(LSA_HANDLE PolicyHandle, uint LookupOptions, uint Count, PSID* Sids, LSA_REFERENCED_DOMAIN_LIST** ReferencedDomains, LSA_TRANSLATED_NAME** Names);
+NTSTATUS LsaEnumerateAccountsWithUserRight(LSA_HANDLE PolicyHandle, LSA_UNICODE_STRING* UserRight, void** Buffer, uint* CountReturned);
+NTSTATUS LsaEnumerateAccountRights(LSA_HANDLE PolicyHandle, PSID AccountSid, LSA_UNICODE_STRING** UserRights, uint* CountOfRights);
+NTSTATUS LsaAddAccountRights(LSA_HANDLE PolicyHandle, PSID AccountSid, LSA_UNICODE_STRING* UserRights, uint CountOfRights);
+NTSTATUS LsaRemoveAccountRights(LSA_HANDLE PolicyHandle, PSID AccountSid, BOOLEAN AllRights, LSA_UNICODE_STRING* UserRights, uint CountOfRights);
+NTSTATUS LsaOpenTrustedDomainByName(LSA_HANDLE PolicyHandle, LSA_UNICODE_STRING* TrustedDomainName, uint DesiredAccess, LSA_HANDLE* TrustedDomainHandle);
+NTSTATUS LsaQueryTrustedDomainInfo(LSA_HANDLE PolicyHandle, PSID TrustedDomainSid, TRUSTED_INFORMATION_CLASS InformationClass, void** Buffer);
+NTSTATUS LsaSetTrustedDomainInformation(LSA_HANDLE PolicyHandle, PSID TrustedDomainSid, TRUSTED_INFORMATION_CLASS InformationClass, void* Buffer);
+NTSTATUS LsaDeleteTrustedDomain(LSA_HANDLE PolicyHandle, PSID TrustedDomainSid);
+NTSTATUS LsaQueryTrustedDomainInfoByName(LSA_HANDLE PolicyHandle, LSA_UNICODE_STRING* TrustedDomainName, TRUSTED_INFORMATION_CLASS InformationClass, void** Buffer);
+NTSTATUS LsaSetTrustedDomainInfoByName(LSA_HANDLE PolicyHandle, LSA_UNICODE_STRING* TrustedDomainName, TRUSTED_INFORMATION_CLASS InformationClass, void* Buffer);
+NTSTATUS LsaEnumerateTrustedDomainsEx(LSA_HANDLE PolicyHandle, uint* EnumerationContext, void** Buffer, uint PreferedMaximumLength, uint* CountReturned);
+NTSTATUS LsaCreateTrustedDomainEx(LSA_HANDLE PolicyHandle, TRUSTED_DOMAIN_INFORMATION_EX* TrustedDomainInformation, TRUSTED_DOMAIN_AUTH_INFORMATION* AuthenticationInformation, uint DesiredAccess, LSA_HANDLE* TrustedDomainHandle);
+NTSTATUS LsaQueryForestTrustInformation(LSA_HANDLE PolicyHandle, LSA_UNICODE_STRING* TrustedDomainName, LSA_FOREST_TRUST_INFORMATION** ForestTrustInfo);
+NTSTATUS LsaSetForestTrustInformation(LSA_HANDLE PolicyHandle, LSA_UNICODE_STRING* TrustedDomainName, LSA_FOREST_TRUST_INFORMATION* ForestTrustInfo, BOOLEAN CheckOnly, LSA_FOREST_TRUST_COLLISION_INFORMATION** CollisionInfo);
+NTSTATUS LsaStorePrivateData(LSA_HANDLE PolicyHandle, LSA_UNICODE_STRING* KeyName, LSA_UNICODE_STRING* PrivateData);
+NTSTATUS LsaRetrievePrivateData(LSA_HANDLE PolicyHandle, LSA_UNICODE_STRING* KeyName, LSA_UNICODE_STRING** PrivateData);
+uint LsaNtStatusToWinError(NTSTATUS Status);
+NTSTATUS LsaQueryForestTrustInformation2(LSA_HANDLE PolicyHandle, LSA_UNICODE_STRING* TrustedDomainName, LSA_FOREST_TRUST_RECORD_TYPE HighestRecordType, LSA_FOREST_TRUST_INFORMATION2** ForestTrustInfo);
+NTSTATUS LsaSetForestTrustInformation2(LSA_HANDLE PolicyHandle, LSA_UNICODE_STRING* TrustedDomainName, LSA_FOREST_TRUST_RECORD_TYPE HighestRecordType, LSA_FOREST_TRUST_INFORMATION2* ForestTrustInfo, BOOLEAN CheckOnly, LSA_FOREST_TRUST_COLLISION_INFORMATION** CollisionInfo);
+BOOLEAN AuditSetSystemPolicy(AUDIT_POLICY_INFORMATION* pAuditPolicy, uint dwPolicyCount);
+BOOLEAN AuditSetPerUserPolicy(const(PSID) pSid, AUDIT_POLICY_INFORMATION* pAuditPolicy, uint dwPolicyCount);
+BOOLEAN AuditQuerySystemPolicy(const(GUID)* pSubCategoryGuids, uint dwPolicyCount, AUDIT_POLICY_INFORMATION** ppAuditPolicy);
+BOOLEAN AuditQueryPerUserPolicy(const(PSID) pSid, const(GUID)* pSubCategoryGuids, uint dwPolicyCount, AUDIT_POLICY_INFORMATION** ppAuditPolicy);
+BOOLEAN AuditEnumeratePerUserPolicy(POLICY_AUDIT_SID_ARRAY** ppAuditSidArray);
+BOOLEAN AuditComputeEffectivePolicyBySid(const(PSID) pSid, const(GUID)* pSubCategoryGuids, uint dwPolicyCount, AUDIT_POLICY_INFORMATION** ppAuditPolicy);
+BOOLEAN AuditComputeEffectivePolicyByToken(HANDLE hTokenHandle, const(GUID)* pSubCategoryGuids, uint dwPolicyCount, AUDIT_POLICY_INFORMATION** ppAuditPolicy);
+BOOLEAN AuditEnumerateCategories(GUID** ppAuditCategoriesArray, uint* pdwCountReturned);
+BOOLEAN AuditEnumerateSubCategories(const(GUID)* pAuditCategoryGuid, BOOLEAN bRetrieveAllSubCategories, GUID** ppAuditSubCategoriesArray, uint* pdwCountReturned);
+BOOLEAN AuditLookupCategoryNameW(const(GUID)* pAuditCategoryGuid, PWSTR* ppszCategoryName);
+BOOLEAN AuditLookupCategoryNameA(const(GUID)* pAuditCategoryGuid, PSTR* ppszCategoryName);
+BOOLEAN AuditLookupSubCategoryNameW(const(GUID)* pAuditSubCategoryGuid, PWSTR* ppszSubCategoryName);
+BOOLEAN AuditLookupSubCategoryNameA(const(GUID)* pAuditSubCategoryGuid, PSTR* ppszSubCategoryName);
+BOOLEAN AuditLookupCategoryIdFromCategoryGuid(const(GUID)* pAuditCategoryGuid, POLICY_AUDIT_EVENT_TYPE* pAuditCategoryId);
+BOOLEAN AuditLookupCategoryGuidFromCategoryId(POLICY_AUDIT_EVENT_TYPE AuditCategoryId, GUID* pAuditCategoryGuid);
+BOOLEAN AuditSetSecurity(OBJECT_SECURITY_INFORMATION SecurityInformation, PSECURITY_DESCRIPTOR pSecurityDescriptor);
+BOOLEAN AuditQuerySecurity(OBJECT_SECURITY_INFORMATION SecurityInformation, PSECURITY_DESCRIPTOR* ppSecurityDescriptor);
+BOOLEAN AuditSetGlobalSaclW(const(wchar)* ObjectTypeName, ACL* Acl);
+BOOLEAN AuditSetGlobalSaclA(const(char)* ObjectTypeName, ACL* Acl);
+BOOLEAN AuditQueryGlobalSaclW(const(wchar)* ObjectTypeName, ACL** Acl);
+BOOLEAN AuditQueryGlobalSaclA(const(char)* ObjectTypeName, ACL** Acl);
+void AuditFree(void* Buffer);
+HRESULT AcquireCredentialsHandleW(PWSTR pszPrincipal, PWSTR pszPackage, SECPKG_CRED fCredentialUse, void* pvLogonId, void* pAuthData, SEC_GET_KEY_FN pGetKeyFn, void* pvGetKeyArgument, SecHandle* phCredential, long* ptsExpiry);
+HRESULT AcquireCredentialsHandleA(PSTR pszPrincipal, PSTR pszPackage, SECPKG_CRED fCredentialUse, void* pvLogonId, void* pAuthData, SEC_GET_KEY_FN pGetKeyFn, void* pvGetKeyArgument, SecHandle* phCredential, long* ptsExpiry);
+HRESULT FreeCredentialsHandle(SecHandle* phCredential);
+HRESULT AddCredentialsW(SecHandle* hCredentials, PWSTR pszPrincipal, PWSTR pszPackage, uint fCredentialUse, void* pAuthData, SEC_GET_KEY_FN pGetKeyFn, void* pvGetKeyArgument, long* ptsExpiry);
+HRESULT AddCredentialsA(SecHandle* hCredentials, PSTR pszPrincipal, PSTR pszPackage, uint fCredentialUse, void* pAuthData, SEC_GET_KEY_FN pGetKeyFn, void* pvGetKeyArgument, long* ptsExpiry);
+HRESULT ChangeAccountPasswordW(ushort* pszPackageName, ushort* pszDomainName, ushort* pszAccountName, ushort* pszOldPassword, ushort* pszNewPassword, BOOLEAN bImpersonating, uint dwReserved, SecBufferDesc* pOutput);
+HRESULT ChangeAccountPasswordA(byte* pszPackageName, byte* pszDomainName, byte* pszAccountName, byte* pszOldPassword, byte* pszNewPassword, BOOLEAN bImpersonating, uint dwReserved, SecBufferDesc* pOutput);
+HRESULT InitializeSecurityContextW(SecHandle* phCredential, SecHandle* phContext, ushort* pszTargetName, ISC_REQ_FLAGS fContextReq, uint Reserved1, uint TargetDataRep, SecBufferDesc* pInput, uint Reserved2, SecHandle* phNewContext, SecBufferDesc* pOutput, uint* pfContextAttr, long* ptsExpiry);
+HRESULT InitializeSecurityContextA(SecHandle* phCredential, SecHandle* phContext, byte* pszTargetName, ISC_REQ_FLAGS fContextReq, uint Reserved1, uint TargetDataRep, SecBufferDesc* pInput, uint Reserved2, SecHandle* phNewContext, SecBufferDesc* pOutput, uint* pfContextAttr, long* ptsExpiry);
+HRESULT AcceptSecurityContext(SecHandle* phCredential, SecHandle* phContext, SecBufferDesc* pInput, ASC_REQ_FLAGS fContextReq, uint TargetDataRep, SecHandle* phNewContext, SecBufferDesc* pOutput, uint* pfContextAttr, long* ptsExpiry);
+HRESULT CompleteAuthToken(SecHandle* phContext, SecBufferDesc* pToken);
+HRESULT ImpersonateSecurityContext(SecHandle* phContext);
+HRESULT RevertSecurityContext(SecHandle* phContext);
+HRESULT QuerySecurityContextToken(SecHandle* phContext, void** Token);
+HRESULT DeleteSecurityContext(SecHandle* phContext);
+HRESULT ApplyControlToken(SecHandle* phContext, SecBufferDesc* pInput);
+HRESULT QueryContextAttributesW(SecHandle* phContext, SECPKG_ATTR ulAttribute, void* pBuffer);
+HRESULT QueryContextAttributesExW(SecHandle* phContext, SECPKG_ATTR ulAttribute, void* pBuffer, uint cbBuffer);
+HRESULT QueryContextAttributesA(SecHandle* phContext, SECPKG_ATTR ulAttribute, void* pBuffer);
+HRESULT QueryContextAttributesExA(SecHandle* phContext, SECPKG_ATTR ulAttribute, void* pBuffer, uint cbBuffer);
+HRESULT SetContextAttributesW(SecHandle* phContext, SECPKG_ATTR ulAttribute, void* pBuffer, uint cbBuffer);
+HRESULT SetContextAttributesA(SecHandle* phContext, SECPKG_ATTR ulAttribute, void* pBuffer, uint cbBuffer);
+HRESULT QueryCredentialsAttributesW(SecHandle* phCredential, uint ulAttribute, void* pBuffer);
+HRESULT QueryCredentialsAttributesExW(SecHandle* phCredential, uint ulAttribute, void* pBuffer, uint cbBuffer);
+HRESULT QueryCredentialsAttributesA(SecHandle* phCredential, uint ulAttribute, void* pBuffer);
+HRESULT QueryCredentialsAttributesExA(SecHandle* phCredential, uint ulAttribute, void* pBuffer, uint cbBuffer);
+HRESULT SetCredentialsAttributesW(SecHandle* phCredential, uint ulAttribute, void* pBuffer, uint cbBuffer);
+HRESULT SetCredentialsAttributesA(SecHandle* phCredential, uint ulAttribute, void* pBuffer, uint cbBuffer);
+HRESULT FreeContextBuffer(void* pvContextBuffer);
+HRESULT MakeSignature(SecHandle* phContext, uint fQOP, SecBufferDesc* pMessage, uint MessageSeqNo);
+HRESULT VerifySignature(SecHandle* phContext, SecBufferDesc* pMessage, uint MessageSeqNo, uint* pfQOP);
+HRESULT EncryptMessage(SecHandle* phContext, uint fQOP, SecBufferDesc* pMessage, uint MessageSeqNo);
+HRESULT DecryptMessage(SecHandle* phContext, SecBufferDesc* pMessage, uint MessageSeqNo, uint* pfQOP);
+HRESULT EnumerateSecurityPackagesW(uint* pcPackages, SecPkgInfoW** ppPackageInfo);
+HRESULT EnumerateSecurityPackagesA(uint* pcPackages, SecPkgInfoA** ppPackageInfo);
+HRESULT QuerySecurityPackageInfoW(PWSTR pszPackageName, SecPkgInfoW** ppPackageInfo);
+HRESULT QuerySecurityPackageInfoA(PSTR pszPackageName, SecPkgInfoA** ppPackageInfo);
+HRESULT ExportSecurityContext(SecHandle* phContext, EXPORT_SECURITY_CONTEXT_FLAGS fFlags, SecBuffer* pPackedContext, void** pToken);
+HRESULT ImportSecurityContextW(PWSTR pszPackage, SecBuffer* pPackedContext, void* Token, SecHandle* phContext);
+HRESULT ImportSecurityContextA(PSTR pszPackage, SecBuffer* pPackedContext, void* Token, SecHandle* phContext);
 SecurityFunctionTableA* InitSecurityInterfaceA();
 SecurityFunctionTableW* InitSecurityInterfaceW();
-HRESULT SaslEnumerateProfilesA(PSTR*, uint*);
-HRESULT SaslEnumerateProfilesW(PWSTR*, uint*);
-HRESULT SaslGetProfilePackageA(PSTR, SecPkgInfoA**);
-HRESULT SaslGetProfilePackageW(PWSTR, SecPkgInfoW**);
-HRESULT SaslIdentifyPackageA(SecBufferDesc*, SecPkgInfoA**);
-HRESULT SaslIdentifyPackageW(SecBufferDesc*, SecPkgInfoW**);
-HRESULT SaslInitializeSecurityContextW(SecHandle*, SecHandle*, PWSTR, ISC_REQ_FLAGS, uint, uint, SecBufferDesc*, uint, SecHandle*, SecBufferDesc*, uint*, long*);
-HRESULT SaslInitializeSecurityContextA(SecHandle*, SecHandle*, PSTR, ISC_REQ_FLAGS, uint, uint, SecBufferDesc*, uint, SecHandle*, SecBufferDesc*, uint*, long*);
-HRESULT SaslAcceptSecurityContext(SecHandle*, SecHandle*, SecBufferDesc*, ASC_REQ_FLAGS, uint, SecHandle*, SecBufferDesc*, uint*, long*);
-HRESULT SaslSetContextOption(SecHandle*, uint, void*, uint);
-HRESULT SaslGetContextOption(SecHandle*, uint, void*, uint, uint*);
-uint SspiPromptForCredentialsW(const(wchar)*, void*, uint, const(wchar)*, void*, void**, int*, uint);
-uint SspiPromptForCredentialsA(const(char)*, void*, uint, const(char)*, void*, void**, int*, uint);
-HRESULT SspiPrepareForCredRead(void*, const(wchar)*, uint*, const(wchar)**);
-HRESULT SspiPrepareForCredWrite(void*, const(wchar)*, uint*, const(wchar)**, const(wchar)**, ubyte**, uint*);
-HRESULT SspiEncryptAuthIdentity(void*);
-HRESULT SspiEncryptAuthIdentityEx(uint, void*);
-HRESULT SspiDecryptAuthIdentity(void*);
-HRESULT SspiDecryptAuthIdentityEx(uint, void*);
-BOOLEAN SspiIsAuthIdentityEncrypted(void*);
-HRESULT SspiEncodeAuthIdentityAsStrings(void*, const(wchar)**, const(wchar)**, const(wchar)**);
-HRESULT SspiValidateAuthIdentity(void*);
-HRESULT SspiCopyAuthIdentity(void*, void**);
-void SspiFreeAuthIdentity(void*);
-void SspiZeroAuthIdentity(void*);
-void SspiLocalFree(void*);
-HRESULT SspiEncodeStringsAsAuthIdentity(const(wchar)*, const(wchar)*, const(wchar)*, void**);
-HRESULT SspiCompareAuthIdentities(void*, void*, BOOLEAN*, BOOLEAN*);
-HRESULT SspiMarshalAuthIdentity(void*, uint*, byte**);
-HRESULT SspiUnmarshalAuthIdentity(uint, PSTR, void**);
-BOOLEAN SspiIsPromptingNeeded(uint);
-HRESULT SspiGetTargetHostName(const(wchar)*, PWSTR*);
-HRESULT SspiExcludePackage(void*, const(wchar)*, void**);
-HRESULT SspiSetChannelBindingFlags(SecPkgContext_Bindings*, uint);
-HRESULT AddSecurityPackageA(PSTR, SECURITY_PACKAGE_OPTIONS*);
-HRESULT AddSecurityPackageW(PWSTR, SECURITY_PACKAGE_OPTIONS*);
-HRESULT DeleteSecurityPackageA(PSTR);
-HRESULT DeleteSecurityPackageW(PWSTR);
-NTSTATUS CredMarshalTargetInfo(CREDENTIAL_TARGET_INFORMATIONW*, ushort**, uint*);
-NTSTATUS CredUnmarshalTargetInfo(ushort*, uint, CREDENTIAL_TARGET_INFORMATIONW**, uint*);
-BOOL SslEmptyCacheA(PSTR, uint);
-BOOL SslEmptyCacheW(PWSTR, uint);
-void SslGenerateRandomBits(ubyte*, int);
-BOOL SslCrackCertificate(ubyte*, uint, uint, X509Certificate**);
-void SslFreeCertificate(X509Certificate*);
-uint SslGetMaximumKeySize(uint);
-HRESULT SslGetServerIdentity(ubyte*, uint, ubyte**, uint*, uint);
-HRESULT SslGetExtensions(const(ubyte)*, uint, SCH_EXTENSION_DATA*, ubyte, uint*, SchGetExtensionsOptions);
-HRESULT SslDeserializeCertificateStore(CRYPT_INTEGER_BLOB, CERT_CONTEXT**);
-HRESULT TokenBindingGenerateBinding(TOKENBINDING_KEY_PARAMETERS_TYPE, const(wchar)*, TOKENBINDING_TYPE, const(void)*, uint, TOKENBINDING_EXTENSION_FORMAT, const(void)*, void**, uint*, TOKENBINDING_RESULT_DATA**);
-HRESULT TokenBindingGenerateMessage(const(void)**, const(uint)*, uint, void**, uint*);
-HRESULT TokenBindingVerifyMessage(const(void)*, uint, TOKENBINDING_KEY_PARAMETERS_TYPE, const(void)*, uint, TOKENBINDING_RESULT_LIST**);
-HRESULT TokenBindingGetKeyTypesClient(TOKENBINDING_KEY_TYPES**);
-HRESULT TokenBindingGetKeyTypesServer(TOKENBINDING_KEY_TYPES**);
-HRESULT TokenBindingDeleteBinding(const(wchar)*);
+HRESULT SaslEnumerateProfilesA(PSTR* ProfileList, uint* ProfileCount);
+HRESULT SaslEnumerateProfilesW(PWSTR* ProfileList, uint* ProfileCount);
+HRESULT SaslGetProfilePackageA(PSTR ProfileName, SecPkgInfoA** PackageInfo);
+HRESULT SaslGetProfilePackageW(PWSTR ProfileName, SecPkgInfoW** PackageInfo);
+HRESULT SaslIdentifyPackageA(SecBufferDesc* pInput, SecPkgInfoA** PackageInfo);
+HRESULT SaslIdentifyPackageW(SecBufferDesc* pInput, SecPkgInfoW** PackageInfo);
+HRESULT SaslInitializeSecurityContextW(SecHandle* phCredential, SecHandle* phContext, PWSTR pszTargetName, ISC_REQ_FLAGS fContextReq, uint Reserved1, uint TargetDataRep, SecBufferDesc* pInput, uint Reserved2, SecHandle* phNewContext, SecBufferDesc* pOutput, uint* pfContextAttr, long* ptsExpiry);
+HRESULT SaslInitializeSecurityContextA(SecHandle* phCredential, SecHandle* phContext, PSTR pszTargetName, ISC_REQ_FLAGS fContextReq, uint Reserved1, uint TargetDataRep, SecBufferDesc* pInput, uint Reserved2, SecHandle* phNewContext, SecBufferDesc* pOutput, uint* pfContextAttr, long* ptsExpiry);
+HRESULT SaslAcceptSecurityContext(SecHandle* phCredential, SecHandle* phContext, SecBufferDesc* pInput, ASC_REQ_FLAGS fContextReq, uint TargetDataRep, SecHandle* phNewContext, SecBufferDesc* pOutput, uint* pfContextAttr, long* ptsExpiry);
+HRESULT SaslSetContextOption(SecHandle* ContextHandle, uint Option, void* Value, uint Size);
+HRESULT SaslGetContextOption(SecHandle* ContextHandle, uint Option, void* Value, uint Size, uint* Needed);
+uint SspiPromptForCredentialsW(const(wchar)* pszTargetName, void* pUiInfo, uint dwAuthError, const(wchar)* pszPackage, void* pInputAuthIdentity, void** ppAuthIdentity, int* pfSave, uint dwFlags);
+uint SspiPromptForCredentialsA(const(char)* pszTargetName, void* pUiInfo, uint dwAuthError, const(char)* pszPackage, void* pInputAuthIdentity, void** ppAuthIdentity, int* pfSave, uint dwFlags);
+HRESULT SspiPrepareForCredRead(void* AuthIdentity, const(wchar)* pszTargetName, uint* pCredmanCredentialType, const(wchar)** ppszCredmanTargetName);
+HRESULT SspiPrepareForCredWrite(void* AuthIdentity, const(wchar)* pszTargetName, uint* pCredmanCredentialType, const(wchar)** ppszCredmanTargetName, const(wchar)** ppszCredmanUserName, ubyte** ppCredentialBlob, uint* pCredentialBlobSize);
+HRESULT SspiEncryptAuthIdentity(void* AuthData);
+HRESULT SspiEncryptAuthIdentityEx(uint Options, void* AuthData);
+HRESULT SspiDecryptAuthIdentity(void* EncryptedAuthData);
+HRESULT SspiDecryptAuthIdentityEx(uint Options, void* EncryptedAuthData);
+BOOLEAN SspiIsAuthIdentityEncrypted(void* EncryptedAuthData);
+HRESULT SspiEncodeAuthIdentityAsStrings(void* pAuthIdentity, const(wchar)** ppszUserName, const(wchar)** ppszDomainName, const(wchar)** ppszPackedCredentialsString);
+HRESULT SspiValidateAuthIdentity(void* AuthData);
+HRESULT SspiCopyAuthIdentity(void* AuthData, void** AuthDataCopy);
+void SspiFreeAuthIdentity(void* AuthData);
+void SspiZeroAuthIdentity(void* AuthData);
+void SspiLocalFree(void* DataBuffer);
+HRESULT SspiEncodeStringsAsAuthIdentity(const(wchar)* pszUserName, const(wchar)* pszDomainName, const(wchar)* pszPackedCredentialsString, void** ppAuthIdentity);
+HRESULT SspiCompareAuthIdentities(void* AuthIdentity1, void* AuthIdentity2, BOOLEAN* SameSuppliedUser, BOOLEAN* SameSuppliedIdentity);
+HRESULT SspiMarshalAuthIdentity(void* AuthIdentity, uint* AuthIdentityLength, byte** AuthIdentityByteArray);
+HRESULT SspiUnmarshalAuthIdentity(uint AuthIdentityLength, PSTR AuthIdentityByteArray, void** ppAuthIdentity);
+BOOLEAN SspiIsPromptingNeeded(uint ErrorOrNtStatus);
+HRESULT SspiGetTargetHostName(const(wchar)* pszTargetName, PWSTR* pszHostName);
+HRESULT SspiExcludePackage(void* AuthIdentity, const(wchar)* pszPackageName, void** ppNewAuthIdentity);
+HRESULT SspiSetChannelBindingFlags(SecPkgContext_Bindings* pBindings, uint flags);
+HRESULT AddSecurityPackageA(PSTR pszPackageName, SECURITY_PACKAGE_OPTIONS* pOptions);
+HRESULT AddSecurityPackageW(PWSTR pszPackageName, SECURITY_PACKAGE_OPTIONS* pOptions);
+HRESULT DeleteSecurityPackageA(PSTR pszPackageName);
+HRESULT DeleteSecurityPackageW(PWSTR pszPackageName);
+NTSTATUS CredMarshalTargetInfo(CREDENTIAL_TARGET_INFORMATIONW* InTargetInfo, ushort** Buffer, uint* BufferSize);
+NTSTATUS CredUnmarshalTargetInfo(ushort* Buffer, uint BufferSize, CREDENTIAL_TARGET_INFORMATIONW** RetTargetInfo, uint* RetActualSize);
+BOOL SslEmptyCacheA(PSTR pszTargetName, uint dwFlags);
+BOOL SslEmptyCacheW(PWSTR pszTargetName, uint dwFlags);
+void SslGenerateRandomBits(ubyte* pRandomData, int cRandomData);
+BOOL SslCrackCertificate(ubyte* pbCertificate, uint cbCertificate, uint dwFlags, X509Certificate** ppCertificate);
+void SslFreeCertificate(X509Certificate* pCertificate);
+uint SslGetMaximumKeySize(uint Reserved);
+HRESULT SslGetServerIdentity(ubyte* ClientHello, uint ClientHelloSize, ubyte** ServerIdentity, uint* ServerIdentitySize, uint Flags);
+HRESULT SslGetExtensions(const(ubyte)* clientHello, uint clientHelloByteSize, SCH_EXTENSION_DATA* genericExtensions, ubyte genericExtensionsCount, uint* bytesToRead, SchGetExtensionsOptions flags);
+HRESULT SslDeserializeCertificateStore(CRYPT_INTEGER_BLOB SerializedCertificateStore, CERT_CONTEXT** ppCertContext);
+HRESULT TokenBindingGenerateBinding(TOKENBINDING_KEY_PARAMETERS_TYPE keyType, const(wchar)* targetURL, TOKENBINDING_TYPE bindingType, const(void)* tlsEKM, uint tlsEKMSize, TOKENBINDING_EXTENSION_FORMAT extensionFormat, const(void)* extensionData, void** tokenBinding, uint* tokenBindingSize, TOKENBINDING_RESULT_DATA** resultData);
+HRESULT TokenBindingGenerateMessage(const(void)** tokenBindings, const(uint)* tokenBindingsSize, uint tokenBindingsCount, void** tokenBindingMessage, uint* tokenBindingMessageSize);
+HRESULT TokenBindingVerifyMessage(const(void)* tokenBindingMessage, uint tokenBindingMessageSize, TOKENBINDING_KEY_PARAMETERS_TYPE keyType, const(void)* tlsEKM, uint tlsEKMSize, TOKENBINDING_RESULT_LIST** resultList);
+HRESULT TokenBindingGetKeyTypesClient(TOKENBINDING_KEY_TYPES** keyTypes);
+HRESULT TokenBindingGetKeyTypesServer(TOKENBINDING_KEY_TYPES** keyTypes);
+HRESULT TokenBindingDeleteBinding(const(wchar)* targetURL);
 HRESULT TokenBindingDeleteAllBindings();
-HRESULT TokenBindingGenerateID(TOKENBINDING_KEY_PARAMETERS_TYPE, const(void)*, uint, TOKENBINDING_RESULT_DATA**);
-HRESULT TokenBindingGenerateIDForUri(TOKENBINDING_KEY_PARAMETERS_TYPE, const(wchar)*, TOKENBINDING_RESULT_DATA**);
-HRESULT TokenBindingGetHighestSupportedVersion(ubyte*, ubyte*);
-BOOLEAN GetUserNameExA(EXTENDED_NAME_FORMAT, PSTR, uint*);
-BOOLEAN GetUserNameExW(EXTENDED_NAME_FORMAT, PWSTR, uint*);
-BOOLEAN GetComputerObjectNameA(EXTENDED_NAME_FORMAT, PSTR, uint*);
-BOOLEAN GetComputerObjectNameW(EXTENDED_NAME_FORMAT, PWSTR, uint*);
-BOOLEAN TranslateNameA(const(char)*, EXTENDED_NAME_FORMAT, EXTENDED_NAME_FORMAT, PSTR, uint*);
-BOOLEAN TranslateNameW(const(wchar)*, EXTENDED_NAME_FORMAT, EXTENDED_NAME_FORMAT, PWSTR, uint*);
-HRESULT SLOpen(void**);
-HRESULT SLClose(void*);
-HRESULT SLInstallProofOfPurchase(void*, const(wchar)*, const(wchar)*, uint, ubyte*, GUID*);
-HRESULT SLUninstallProofOfPurchase(void*, const(GUID)*);
-HRESULT SLInstallLicense(void*, uint, const(ubyte)*, GUID*);
-HRESULT SLUninstallLicense(void*, const(GUID)*);
-HRESULT SLConsumeRight(void*, const(GUID)*, const(GUID)*, const(wchar)*, void*);
-HRESULT SLGetProductSkuInformation(void*, const(GUID)*, const(wchar)*, SLDATATYPE*, uint*, ubyte**);
-HRESULT SLGetPKeyInformation(void*, const(GUID)*, const(wchar)*, SLDATATYPE*, uint*, ubyte**);
-HRESULT SLGetLicenseInformation(void*, const(GUID)*, const(wchar)*, SLDATATYPE*, uint*, ubyte**);
-HRESULT SLGetLicensingStatusInformation(void*, const(GUID)*, const(GUID)*, const(wchar)*, uint*, SL_LICENSING_STATUS**);
-HRESULT SLGetPolicyInformation(void*, const(wchar)*, SLDATATYPE*, uint*, ubyte**);
-HRESULT SLGetPolicyInformationDWORD(void*, const(wchar)*, uint*);
-HRESULT SLGetServiceInformation(void*, const(wchar)*, SLDATATYPE*, uint*, ubyte**);
-HRESULT SLGetApplicationInformation(void*, const(GUID)*, const(wchar)*, SLDATATYPE*, uint*, ubyte**);
-HRESULT SLActivateProduct(void*, const(GUID)*, uint, const(void)*, const(SL_ACTIVATION_INFO_HEADER)*, const(wchar)*, ushort);
-HRESULT SLGetServerStatus(const(wchar)*, const(wchar)*, const(wchar)*, ushort, HRESULT*);
-HRESULT SLGenerateOfflineInstallationId(void*, const(GUID)*, PWSTR*);
-HRESULT SLGenerateOfflineInstallationIdEx(void*, const(GUID)*, const(SL_ACTIVATION_INFO_HEADER)*, PWSTR*);
-HRESULT SLDepositOfflineConfirmationId(void*, const(GUID)*, const(wchar)*, const(wchar)*);
-HRESULT SLDepositOfflineConfirmationIdEx(void*, const(GUID)*, const(SL_ACTIVATION_INFO_HEADER)*, const(wchar)*, const(wchar)*);
-HRESULT SLGetPKeyId(void*, const(wchar)*, const(wchar)*, uint, const(ubyte)*, GUID*);
-HRESULT SLGetInstalledProductKeyIds(void*, const(GUID)*, uint*, GUID**);
-HRESULT SLSetCurrentProductKey(void*, const(GUID)*, const(GUID)*);
-HRESULT SLGetSLIDList(void*, SLIDTYPE, const(GUID)*, SLIDTYPE, uint*, GUID**);
-HRESULT SLGetLicenseFileId(void*, uint, const(ubyte)*, GUID*);
-HRESULT SLGetLicense(void*, const(GUID)*, uint*, ubyte**);
-HRESULT SLFireEvent(void*, const(wchar)*, const(GUID)*);
-HRESULT SLRegisterEvent(void*, const(wchar)*, const(GUID)*, HANDLE);
-HRESULT SLUnregisterEvent(void*, const(wchar)*, const(GUID)*, HANDLE);
-HRESULT SLGetWindowsInformation(const(wchar)*, SLDATATYPE*, uint*, ubyte**);
-HRESULT SLGetWindowsInformationDWORD(const(wchar)*, uint*);
-HRESULT SLIsGenuineLocal(const(GUID)*, SL_GENUINE_STATE*, SL_NONGENUINE_UI_OPTIONS*);
-HRESULT SLAcquireGenuineTicket(void**, uint*, const(wchar)*, const(wchar)*, const(wchar)*);
-HRESULT SLSetGenuineInformation(const(GUID)*, const(wchar)*, SLDATATYPE, uint, const(ubyte)*);
-HRESULT SLGetReferralInformation(void*, SLREFERRALTYPE, const(GUID)*, const(wchar)*, PWSTR*);
-HRESULT SLGetGenuineInformation(const(GUID)*, const(wchar)*, SLDATATYPE*, uint*, ubyte**);
-HRESULT SLQueryLicenseValueFromApp(const(wchar)*, uint*, void*, uint, uint*);
-void SendSAS(BOOL);
+HRESULT TokenBindingGenerateID(TOKENBINDING_KEY_PARAMETERS_TYPE keyType, const(void)* publicKey, uint publicKeySize, TOKENBINDING_RESULT_DATA** resultData);
+HRESULT TokenBindingGenerateIDForUri(TOKENBINDING_KEY_PARAMETERS_TYPE keyType, const(wchar)* targetUri, TOKENBINDING_RESULT_DATA** resultData);
+HRESULT TokenBindingGetHighestSupportedVersion(ubyte* majorVersion, ubyte* minorVersion);
+BOOLEAN GetUserNameExA(EXTENDED_NAME_FORMAT NameFormat, PSTR lpNameBuffer, uint* nSize);
+BOOLEAN GetUserNameExW(EXTENDED_NAME_FORMAT NameFormat, PWSTR lpNameBuffer, uint* nSize);
+BOOLEAN GetComputerObjectNameA(EXTENDED_NAME_FORMAT NameFormat, PSTR lpNameBuffer, uint* nSize);
+BOOLEAN GetComputerObjectNameW(EXTENDED_NAME_FORMAT NameFormat, PWSTR lpNameBuffer, uint* nSize);
+BOOLEAN TranslateNameA(const(char)* lpAccountName, EXTENDED_NAME_FORMAT AccountNameFormat, EXTENDED_NAME_FORMAT DesiredNameFormat, PSTR lpTranslatedName, uint* nSize);
+BOOLEAN TranslateNameW(const(wchar)* lpAccountName, EXTENDED_NAME_FORMAT AccountNameFormat, EXTENDED_NAME_FORMAT DesiredNameFormat, PWSTR lpTranslatedName, uint* nSize);
+HRESULT SLOpen(void** phSLC);
+HRESULT SLClose(void* hSLC);
+HRESULT SLInstallProofOfPurchase(void* hSLC, const(wchar)* pwszPKeyAlgorithm, const(wchar)* pwszPKeyString, uint cbPKeySpecificData, ubyte* pbPKeySpecificData, GUID* pPkeyId);
+HRESULT SLUninstallProofOfPurchase(void* hSLC, const(GUID)* pPKeyId);
+HRESULT SLInstallLicense(void* hSLC, uint cbLicenseBlob, const(ubyte)* pbLicenseBlob, GUID* pLicenseFileId);
+HRESULT SLUninstallLicense(void* hSLC, const(GUID)* pLicenseFileId);
+HRESULT SLConsumeRight(void* hSLC, const(GUID)* pAppId, const(GUID)* pProductSkuId, const(wchar)* pwszRightName, void* pvReserved);
+HRESULT SLGetProductSkuInformation(void* hSLC, const(GUID)* pProductSkuId, const(wchar)* pwszValueName, SLDATATYPE* peDataType, uint* pcbValue, ubyte** ppbValue);
+HRESULT SLGetPKeyInformation(void* hSLC, const(GUID)* pPKeyId, const(wchar)* pwszValueName, SLDATATYPE* peDataType, uint* pcbValue, ubyte** ppbValue);
+HRESULT SLGetLicenseInformation(void* hSLC, const(GUID)* pSLLicenseId, const(wchar)* pwszValueName, SLDATATYPE* peDataType, uint* pcbValue, ubyte** ppbValue);
+HRESULT SLGetLicensingStatusInformation(void* hSLC, const(GUID)* pAppID, const(GUID)* pProductSkuId, const(wchar)* pwszRightName, uint* pnStatusCount, SL_LICENSING_STATUS** ppLicensingStatus);
+HRESULT SLGetPolicyInformation(void* hSLC, const(wchar)* pwszValueName, SLDATATYPE* peDataType, uint* pcbValue, ubyte** ppbValue);
+HRESULT SLGetPolicyInformationDWORD(void* hSLC, const(wchar)* pwszValueName, uint* pdwValue);
+HRESULT SLGetServiceInformation(void* hSLC, const(wchar)* pwszValueName, SLDATATYPE* peDataType, uint* pcbValue, ubyte** ppbValue);
+HRESULT SLGetApplicationInformation(void* hSLC, const(GUID)* pApplicationId, const(wchar)* pwszValueName, SLDATATYPE* peDataType, uint* pcbValue, ubyte** ppbValue);
+HRESULT SLActivateProduct(void* hSLC, const(GUID)* pProductSkuId, uint cbAppSpecificData, const(void)* pvAppSpecificData, const(SL_ACTIVATION_INFO_HEADER)* pActivationInfo, const(wchar)* pwszProxyServer, ushort wProxyPort);
+HRESULT SLGetServerStatus(const(wchar)* pwszServerURL, const(wchar)* pwszAcquisitionType, const(wchar)* pwszProxyServer, ushort wProxyPort, HRESULT* phrStatus);
+HRESULT SLGenerateOfflineInstallationId(void* hSLC, const(GUID)* pProductSkuId, PWSTR* ppwszInstallationId);
+HRESULT SLGenerateOfflineInstallationIdEx(void* hSLC, const(GUID)* pProductSkuId, const(SL_ACTIVATION_INFO_HEADER)* pActivationInfo, PWSTR* ppwszInstallationId);
+HRESULT SLDepositOfflineConfirmationId(void* hSLC, const(GUID)* pProductSkuId, const(wchar)* pwszInstallationId, const(wchar)* pwszConfirmationId);
+HRESULT SLDepositOfflineConfirmationIdEx(void* hSLC, const(GUID)* pProductSkuId, const(SL_ACTIVATION_INFO_HEADER)* pActivationInfo, const(wchar)* pwszInstallationId, const(wchar)* pwszConfirmationId);
+HRESULT SLGetPKeyId(void* hSLC, const(wchar)* pwszPKeyAlgorithm, const(wchar)* pwszPKeyString, uint cbPKeySpecificData, const(ubyte)* pbPKeySpecificData, GUID* pPKeyId);
+HRESULT SLGetInstalledProductKeyIds(void* hSLC, const(GUID)* pProductSkuId, uint* pnProductKeyIds, GUID** ppProductKeyIds);
+HRESULT SLSetCurrentProductKey(void* hSLC, const(GUID)* pProductSkuId, const(GUID)* pProductKeyId);
+HRESULT SLGetSLIDList(void* hSLC, SLIDTYPE eQueryIdType, const(GUID)* pQueryId, SLIDTYPE eReturnIdType, uint* pnReturnIds, GUID** ppReturnIds);
+HRESULT SLGetLicenseFileId(void* hSLC, uint cbLicenseBlob, const(ubyte)* pbLicenseBlob, GUID* pLicenseFileId);
+HRESULT SLGetLicense(void* hSLC, const(GUID)* pLicenseFileId, uint* pcbLicenseFile, ubyte** ppbLicenseFile);
+HRESULT SLFireEvent(void* hSLC, const(wchar)* pwszEventId, const(GUID)* pApplicationId);
+HRESULT SLRegisterEvent(void* hSLC, const(wchar)* pwszEventId, const(GUID)* pApplicationId, HANDLE hEvent);
+HRESULT SLUnregisterEvent(void* hSLC, const(wchar)* pwszEventId, const(GUID)* pApplicationId, HANDLE hEvent);
+HRESULT SLGetWindowsInformation(const(wchar)* pwszValueName, SLDATATYPE* peDataType, uint* pcbValue, ubyte** ppbValue);
+HRESULT SLGetWindowsInformationDWORD(const(wchar)* pwszValueName, uint* pdwValue);
+HRESULT SLIsGenuineLocal(const(GUID)* pAppId, SL_GENUINE_STATE* pGenuineState, SL_NONGENUINE_UI_OPTIONS* pUIOptions);
+HRESULT SLAcquireGenuineTicket(void** ppTicketBlob, uint* pcbTicketBlob, const(wchar)* pwszTemplateId, const(wchar)* pwszServerUrl, const(wchar)* pwszClientToken);
+HRESULT SLSetGenuineInformation(const(GUID)* pQueryId, const(wchar)* pwszValueName, SLDATATYPE eDataType, uint cbValue, const(ubyte)* pbValue);
+HRESULT SLGetReferralInformation(void* hSLC, SLREFERRALTYPE eReferralType, const(GUID)* pSkuOrAppId, const(wchar)* pwszValueName, PWSTR* ppwszValue);
+HRESULT SLGetGenuineInformation(const(GUID)* pQueryId, const(wchar)* pwszValueName, SLDATATYPE* peDataType, uint* pcbValue, ubyte** ppbValue);
+HRESULT SLQueryLicenseValueFromApp(const(wchar)* valueName, uint* valueType, void* dataBuffer, uint dataSize, uint* resultDataSize);
+void SendSAS(BOOL AsUser);
 enum NTLMSP_NAME_A = "NTLM";
 enum NTLMSP_NAME = "NTLM";
 enum MICROSOFT_KERBEROS_NAME_A = "Kerberos";
@@ -2582,9 +2582,9 @@ struct DOMAIN_PASSWORD_INFORMATION
     long MaxPasswordAge;
     long MinPasswordAge;
 }
-alias PSAM_PASSWORD_NOTIFICATION_ROUTINE = NTSTATUS function(LSA_UNICODE_STRING*, uint, LSA_UNICODE_STRING*);
+alias PSAM_PASSWORD_NOTIFICATION_ROUTINE = NTSTATUS function(LSA_UNICODE_STRING* UserName, uint RelativeId, LSA_UNICODE_STRING* NewPassword);
 alias PSAM_INIT_NOTIFICATION_ROUTINE = BOOLEAN function();
-alias PSAM_PASSWORD_FILTER_ROUTINE = BOOLEAN function(LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, BOOLEAN);
+alias PSAM_PASSWORD_FILTER_ROUTINE = BOOLEAN function(LSA_UNICODE_STRING* AccountName, LSA_UNICODE_STRING* FullName, LSA_UNICODE_STRING* Password, BOOLEAN SetOperation);
 alias MSV1_0_LOGON_SUBMIT_TYPE = int;
 enum : int
 {
@@ -3894,44 +3894,44 @@ struct SECPKG_APP_MODE_INFO
     SecBuffer UserData;
     BOOLEAN ReturnToLsa;
 }
-alias SEC_GET_KEY_FN = void function(void*, void*, uint, void**, HRESULT*);
-alias ACQUIRE_CREDENTIALS_HANDLE_FN_W = HRESULT function(ushort*, ushort*, uint, void*, void*, SEC_GET_KEY_FN, void*, SecHandle*, long*);
-alias ACQUIRE_CREDENTIALS_HANDLE_FN_A = HRESULT function(byte*, byte*, uint, void*, void*, SEC_GET_KEY_FN, void*, SecHandle*, long*);
-alias FREE_CREDENTIALS_HANDLE_FN = HRESULT function(SecHandle*);
-alias ADD_CREDENTIALS_FN_W = HRESULT function(SecHandle*, ushort*, ushort*, uint, void*, SEC_GET_KEY_FN, void*, long*);
-alias ADD_CREDENTIALS_FN_A = HRESULT function(SecHandle*, byte*, byte*, uint, void*, SEC_GET_KEY_FN, void*, long*);
-alias CHANGE_PASSWORD_FN_W = HRESULT function(ushort*, ushort*, ushort*, ushort*, ushort*, BOOLEAN, uint, SecBufferDesc*);
-alias CHANGE_PASSWORD_FN_A = HRESULT function(byte*, byte*, byte*, byte*, byte*, BOOLEAN, uint, SecBufferDesc*);
-alias INITIALIZE_SECURITY_CONTEXT_FN_W = HRESULT function(SecHandle*, SecHandle*, ushort*, uint, uint, uint, SecBufferDesc*, uint, SecHandle*, SecBufferDesc*, uint*, long*);
-alias INITIALIZE_SECURITY_CONTEXT_FN_A = HRESULT function(SecHandle*, SecHandle*, byte*, uint, uint, uint, SecBufferDesc*, uint, SecHandle*, SecBufferDesc*, uint*, long*);
-alias ACCEPT_SECURITY_CONTEXT_FN = HRESULT function(SecHandle*, SecHandle*, SecBufferDesc*, uint, uint, SecHandle*, SecBufferDesc*, uint*, long*);
-alias COMPLETE_AUTH_TOKEN_FN = HRESULT function(SecHandle*, SecBufferDesc*);
-alias IMPERSONATE_SECURITY_CONTEXT_FN = HRESULT function(SecHandle*);
-alias REVERT_SECURITY_CONTEXT_FN = HRESULT function(SecHandle*);
-alias QUERY_SECURITY_CONTEXT_TOKEN_FN = HRESULT function(SecHandle*, void**);
-alias DELETE_SECURITY_CONTEXT_FN = HRESULT function(SecHandle*);
-alias APPLY_CONTROL_TOKEN_FN = HRESULT function(SecHandle*, SecBufferDesc*);
-alias QUERY_CONTEXT_ATTRIBUTES_FN_W = HRESULT function(SecHandle*, uint, void*);
-alias QUERY_CONTEXT_ATTRIBUTES_EX_FN_W = HRESULT function(SecHandle*, uint, void*, uint);
-alias QUERY_CONTEXT_ATTRIBUTES_FN_A = HRESULT function(SecHandle*, uint, void*);
-alias QUERY_CONTEXT_ATTRIBUTES_EX_FN_A = HRESULT function(SecHandle*, uint, void*, uint);
-alias SET_CONTEXT_ATTRIBUTES_FN_W = HRESULT function(SecHandle*, uint, void*, uint);
-alias SET_CONTEXT_ATTRIBUTES_FN_A = HRESULT function(SecHandle*, uint, void*, uint);
-alias QUERY_CREDENTIALS_ATTRIBUTES_FN_W = HRESULT function(SecHandle*, uint, void*);
-alias QUERY_CREDENTIALS_ATTRIBUTES_EX_FN_W = HRESULT function(SecHandle*, uint, void*, uint);
-alias QUERY_CREDENTIALS_ATTRIBUTES_FN_A = HRESULT function(SecHandle*, uint, void*);
-alias QUERY_CREDENTIALS_ATTRIBUTES_EX_FN_A = HRESULT function(SecHandle*, uint, void*, uint);
-alias SET_CREDENTIALS_ATTRIBUTES_FN_W = HRESULT function(SecHandle*, uint, void*, uint);
-alias SET_CREDENTIALS_ATTRIBUTES_FN_A = HRESULT function(SecHandle*, uint, void*, uint);
-alias FREE_CONTEXT_BUFFER_FN = HRESULT function(void*);
-alias MAKE_SIGNATURE_FN = HRESULT function(SecHandle*, uint, SecBufferDesc*, uint);
-alias VERIFY_SIGNATURE_FN = HRESULT function(SecHandle*, SecBufferDesc*, uint, uint*);
-alias ENCRYPT_MESSAGE_FN = HRESULT function(SecHandle*, uint, SecBufferDesc*, uint);
-alias DECRYPT_MESSAGE_FN = HRESULT function(SecHandle*, SecBufferDesc*, uint, uint*);
-alias ENUMERATE_SECURITY_PACKAGES_FN_W = HRESULT function(uint*, SecPkgInfoW**);
-alias ENUMERATE_SECURITY_PACKAGES_FN_A = HRESULT function(uint*, SecPkgInfoA**);
-alias QUERY_SECURITY_PACKAGE_INFO_FN_W = HRESULT function(ushort*, SecPkgInfoW**);
-alias QUERY_SECURITY_PACKAGE_INFO_FN_A = HRESULT function(byte*, SecPkgInfoA**);
+alias SEC_GET_KEY_FN = void function(void* Arg, void* Principal, uint KeyVer, void** Key, HRESULT* Status);
+alias ACQUIRE_CREDENTIALS_HANDLE_FN_W = HRESULT function(ushort* param0, ushort* param1, uint param2, void* param3, void* param4, SEC_GET_KEY_FN param5, void* param6, SecHandle* param7, long* param8);
+alias ACQUIRE_CREDENTIALS_HANDLE_FN_A = HRESULT function(byte* param0, byte* param1, uint param2, void* param3, void* param4, SEC_GET_KEY_FN param5, void* param6, SecHandle* param7, long* param8);
+alias FREE_CREDENTIALS_HANDLE_FN = HRESULT function(SecHandle* param0);
+alias ADD_CREDENTIALS_FN_W = HRESULT function(SecHandle* param0, ushort* param1, ushort* param2, uint param3, void* param4, SEC_GET_KEY_FN param5, void* param6, long* param7);
+alias ADD_CREDENTIALS_FN_A = HRESULT function(SecHandle* param0, byte* param1, byte* param2, uint param3, void* param4, SEC_GET_KEY_FN param5, void* param6, long* param7);
+alias CHANGE_PASSWORD_FN_W = HRESULT function(ushort* param0, ushort* param1, ushort* param2, ushort* param3, ushort* param4, BOOLEAN param5, uint param6, SecBufferDesc* param7);
+alias CHANGE_PASSWORD_FN_A = HRESULT function(byte* param0, byte* param1, byte* param2, byte* param3, byte* param4, BOOLEAN param5, uint param6, SecBufferDesc* param7);
+alias INITIALIZE_SECURITY_CONTEXT_FN_W = HRESULT function(SecHandle* param0, SecHandle* param1, ushort* param2, uint param3, uint param4, uint param5, SecBufferDesc* param6, uint param7, SecHandle* param8, SecBufferDesc* param9, uint* param10, long* param11);
+alias INITIALIZE_SECURITY_CONTEXT_FN_A = HRESULT function(SecHandle* param0, SecHandle* param1, byte* param2, uint param3, uint param4, uint param5, SecBufferDesc* param6, uint param7, SecHandle* param8, SecBufferDesc* param9, uint* param10, long* param11);
+alias ACCEPT_SECURITY_CONTEXT_FN = HRESULT function(SecHandle* param0, SecHandle* param1, SecBufferDesc* param2, uint param3, uint param4, SecHandle* param5, SecBufferDesc* param6, uint* param7, long* param8);
+alias COMPLETE_AUTH_TOKEN_FN = HRESULT function(SecHandle* param0, SecBufferDesc* param1);
+alias IMPERSONATE_SECURITY_CONTEXT_FN = HRESULT function(SecHandle* param0);
+alias REVERT_SECURITY_CONTEXT_FN = HRESULT function(SecHandle* param0);
+alias QUERY_SECURITY_CONTEXT_TOKEN_FN = HRESULT function(SecHandle* param0, void** param1);
+alias DELETE_SECURITY_CONTEXT_FN = HRESULT function(SecHandle* param0);
+alias APPLY_CONTROL_TOKEN_FN = HRESULT function(SecHandle* param0, SecBufferDesc* param1);
+alias QUERY_CONTEXT_ATTRIBUTES_FN_W = HRESULT function(SecHandle* param0, uint param1, void* param2);
+alias QUERY_CONTEXT_ATTRIBUTES_EX_FN_W = HRESULT function(SecHandle* param0, uint param1, void* param2, uint param3);
+alias QUERY_CONTEXT_ATTRIBUTES_FN_A = HRESULT function(SecHandle* param0, uint param1, void* param2);
+alias QUERY_CONTEXT_ATTRIBUTES_EX_FN_A = HRESULT function(SecHandle* param0, uint param1, void* param2, uint param3);
+alias SET_CONTEXT_ATTRIBUTES_FN_W = HRESULT function(SecHandle* param0, uint param1, void* param2, uint param3);
+alias SET_CONTEXT_ATTRIBUTES_FN_A = HRESULT function(SecHandle* param0, uint param1, void* param2, uint param3);
+alias QUERY_CREDENTIALS_ATTRIBUTES_FN_W = HRESULT function(SecHandle* param0, uint param1, void* param2);
+alias QUERY_CREDENTIALS_ATTRIBUTES_EX_FN_W = HRESULT function(SecHandle* param0, uint param1, void* param2, uint param3);
+alias QUERY_CREDENTIALS_ATTRIBUTES_FN_A = HRESULT function(SecHandle* param0, uint param1, void* param2);
+alias QUERY_CREDENTIALS_ATTRIBUTES_EX_FN_A = HRESULT function(SecHandle* param0, uint param1, void* param2, uint param3);
+alias SET_CREDENTIALS_ATTRIBUTES_FN_W = HRESULT function(SecHandle* param0, uint param1, void* param2, uint param3);
+alias SET_CREDENTIALS_ATTRIBUTES_FN_A = HRESULT function(SecHandle* param0, uint param1, void* param2, uint param3);
+alias FREE_CONTEXT_BUFFER_FN = HRESULT function(void* param0);
+alias MAKE_SIGNATURE_FN = HRESULT function(SecHandle* param0, uint param1, SecBufferDesc* param2, uint param3);
+alias VERIFY_SIGNATURE_FN = HRESULT function(SecHandle* param0, SecBufferDesc* param1, uint param2, uint* param3);
+alias ENCRYPT_MESSAGE_FN = HRESULT function(SecHandle* param0, uint param1, SecBufferDesc* param2, uint param3);
+alias DECRYPT_MESSAGE_FN = HRESULT function(SecHandle* param0, SecBufferDesc* param1, uint param2, uint* param3);
+alias ENUMERATE_SECURITY_PACKAGES_FN_W = HRESULT function(uint* param0, SecPkgInfoW** param1);
+alias ENUMERATE_SECURITY_PACKAGES_FN_A = HRESULT function(uint* param0, SecPkgInfoA** param1);
+alias QUERY_SECURITY_PACKAGE_INFO_FN_W = HRESULT function(ushort* param0, SecPkgInfoW** param1);
+alias QUERY_SECURITY_PACKAGE_INFO_FN_A = HRESULT function(byte* param0, SecPkgInfoA** param1);
 alias SecDelegationType = int;
 enum : int
 {
@@ -3942,9 +3942,9 @@ enum : int
     SecObject    = 0x00000004,
 }
 
-alias EXPORT_SECURITY_CONTEXT_FN = HRESULT function(SecHandle*, uint, SecBuffer*, void**);
-alias IMPORT_SECURITY_CONTEXT_FN_W = HRESULT function(ushort*, SecBuffer*, void*, SecHandle*);
-alias IMPORT_SECURITY_CONTEXT_FN_A = HRESULT function(byte*, SecBuffer*, void*, SecHandle*);
+alias EXPORT_SECURITY_CONTEXT_FN = HRESULT function(SecHandle* param0, uint param1, SecBuffer* param2, void** param3);
+alias IMPORT_SECURITY_CONTEXT_FN_W = HRESULT function(ushort* param0, SecBuffer* param1, void* param2, SecHandle* param3);
+alias IMPORT_SECURITY_CONTEXT_FN_A = HRESULT function(byte* param0, SecBuffer* param1, void* param2, SecHandle* param3);
 struct SecurityFunctionTableW
 {
     uint dwVersion;
@@ -4120,19 +4120,19 @@ struct LSA_TOKEN_INFORMATION_V3
     TOKEN_DEVICE_CLAIMS DeviceClaims;
     TOKEN_GROUPS* DeviceGroups;
 }
-alias PLSA_CREATE_LOGON_SESSION = NTSTATUS function(LUID*);
-alias PLSA_DELETE_LOGON_SESSION = NTSTATUS function(LUID*);
-alias PLSA_ADD_CREDENTIAL = NTSTATUS function(LUID*, uint, LSA_STRING*, LSA_STRING*);
-alias PLSA_GET_CREDENTIALS = NTSTATUS function(LUID*, uint, uint*, BOOLEAN, LSA_STRING*, uint*, LSA_STRING*);
-alias PLSA_DELETE_CREDENTIAL = NTSTATUS function(LUID*, uint, LSA_STRING*);
-alias PLSA_ALLOCATE_LSA_HEAP = void* function(uint);
-alias PLSA_FREE_LSA_HEAP = void function(void*);
-alias PLSA_ALLOCATE_PRIVATE_HEAP = void* function(ulong);
-alias PLSA_FREE_PRIVATE_HEAP = void function(void*);
-alias PLSA_ALLOCATE_CLIENT_BUFFER = NTSTATUS function(void**, uint, void**);
-alias PLSA_FREE_CLIENT_BUFFER = NTSTATUS function(void**, void*);
-alias PLSA_COPY_TO_CLIENT_BUFFER = NTSTATUS function(void**, uint, void*, void*);
-alias PLSA_COPY_FROM_CLIENT_BUFFER = NTSTATUS function(void**, uint, void*, void*);
+alias PLSA_CREATE_LOGON_SESSION = NTSTATUS function(LUID* LogonId);
+alias PLSA_DELETE_LOGON_SESSION = NTSTATUS function(LUID* LogonId);
+alias PLSA_ADD_CREDENTIAL = NTSTATUS function(LUID* LogonId, uint AuthenticationPackage, LSA_STRING* PrimaryKeyValue, LSA_STRING* Credentials);
+alias PLSA_GET_CREDENTIALS = NTSTATUS function(LUID* LogonId, uint AuthenticationPackage, uint* QueryContext, BOOLEAN RetrieveAllCredentials, LSA_STRING* PrimaryKeyValue, uint* PrimaryKeyLength, LSA_STRING* Credentials);
+alias PLSA_DELETE_CREDENTIAL = NTSTATUS function(LUID* LogonId, uint AuthenticationPackage, LSA_STRING* PrimaryKeyValue);
+alias PLSA_ALLOCATE_LSA_HEAP = void* function(uint Length);
+alias PLSA_FREE_LSA_HEAP = void function(void* Base);
+alias PLSA_ALLOCATE_PRIVATE_HEAP = void* function(ulong Length);
+alias PLSA_FREE_PRIVATE_HEAP = void function(void* Base);
+alias PLSA_ALLOCATE_CLIENT_BUFFER = NTSTATUS function(void** ClientRequest, uint LengthRequired, void** ClientBaseAddress);
+alias PLSA_FREE_CLIENT_BUFFER = NTSTATUS function(void** ClientRequest, void* ClientBaseAddress);
+alias PLSA_COPY_TO_CLIENT_BUFFER = NTSTATUS function(void** ClientRequest, uint Length, void* ClientBaseAddress, void* BufferToCopy);
+alias PLSA_COPY_FROM_CLIENT_BUFFER = NTSTATUS function(void** ClientRequest, uint Length, void* BufferToCopy, void* ClientBaseAddress);
 struct LSA_DISPATCH_TABLE
 {
     PLSA_CREATE_LOGON_SESSION CreateLogonSession;
@@ -4147,15 +4147,15 @@ struct LSA_DISPATCH_TABLE
     PLSA_COPY_TO_CLIENT_BUFFER CopyToClientBuffer;
     PLSA_COPY_FROM_CLIENT_BUFFER CopyFromClientBuffer;
 }
-alias PLSA_AP_INITIALIZE_PACKAGE = NTSTATUS function(uint, LSA_DISPATCH_TABLE*, LSA_STRING*, LSA_STRING*, LSA_STRING**);
-alias PLSA_AP_LOGON_USER = NTSTATUS function(void**, SECURITY_LOGON_TYPE, void*, void*, uint, void**, uint*, LUID*, int*, LSA_TOKEN_INFORMATION_TYPE*, void**, LSA_UNICODE_STRING**, LSA_UNICODE_STRING**);
-alias PLSA_AP_LOGON_USER_EX = NTSTATUS function(void**, SECURITY_LOGON_TYPE, void*, void*, uint, void**, uint*, LUID*, int*, LSA_TOKEN_INFORMATION_TYPE*, void**, LSA_UNICODE_STRING**, LSA_UNICODE_STRING**, LSA_UNICODE_STRING**);
-alias PLSA_AP_CALL_PACKAGE = NTSTATUS function(void**, void*, void*, uint, void**, uint*, int*);
-alias PLSA_AP_CALL_PACKAGE_PASSTHROUGH = NTSTATUS function(void**, void*, void*, uint, void**, uint*, int*);
-alias PLSA_AP_LOGON_TERMINATED = void function(LUID*);
-alias PSAM_CREDENTIAL_UPDATE_NOTIFY_ROUTINE = NTSTATUS function(LSA_UNICODE_STRING*, void*, uint, uint, LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, void**, uint*);
-alias PSAM_CREDENTIAL_UPDATE_REGISTER_ROUTINE = BOOLEAN function(LSA_UNICODE_STRING*);
-alias PSAM_CREDENTIAL_UPDATE_FREE_ROUTINE = void function(void*);
+alias PLSA_AP_INITIALIZE_PACKAGE = NTSTATUS function(uint AuthenticationPackageId, LSA_DISPATCH_TABLE* LsaDispatchTable, LSA_STRING* Database, LSA_STRING* Confidentiality, LSA_STRING** AuthenticationPackageName);
+alias PLSA_AP_LOGON_USER = NTSTATUS function(void** ClientRequest, SECURITY_LOGON_TYPE LogonType, void* AuthenticationInformation, void* ClientAuthenticationBase, uint AuthenticationInformationLength, void** ProfileBuffer, uint* ProfileBufferLength, LUID* LogonId, int* SubStatus, LSA_TOKEN_INFORMATION_TYPE* TokenInformationType, void** TokenInformation, LSA_UNICODE_STRING** AccountName, LSA_UNICODE_STRING** AuthenticatingAuthority);
+alias PLSA_AP_LOGON_USER_EX = NTSTATUS function(void** ClientRequest, SECURITY_LOGON_TYPE LogonType, void* AuthenticationInformation, void* ClientAuthenticationBase, uint AuthenticationInformationLength, void** ProfileBuffer, uint* ProfileBufferLength, LUID* LogonId, int* SubStatus, LSA_TOKEN_INFORMATION_TYPE* TokenInformationType, void** TokenInformation, LSA_UNICODE_STRING** AccountName, LSA_UNICODE_STRING** AuthenticatingAuthority, LSA_UNICODE_STRING** MachineName);
+alias PLSA_AP_CALL_PACKAGE = NTSTATUS function(void** ClientRequest, void* ProtocolSubmitBuffer, void* ClientBufferBase, uint SubmitBufferLength, void** ProtocolReturnBuffer, uint* ReturnBufferLength, int* ProtocolStatus);
+alias PLSA_AP_CALL_PACKAGE_PASSTHROUGH = NTSTATUS function(void** ClientRequest, void* ProtocolSubmitBuffer, void* ClientBufferBase, uint SubmitBufferLength, void** ProtocolReturnBuffer, uint* ReturnBufferLength, int* ProtocolStatus);
+alias PLSA_AP_LOGON_TERMINATED = void function(LUID* LogonId);
+alias PSAM_CREDENTIAL_UPDATE_NOTIFY_ROUTINE = NTSTATUS function(LSA_UNICODE_STRING* ClearPassword, void* OldCredentials, uint OldCredentialSize, uint UserAccountControl, LSA_UNICODE_STRING* UPN, LSA_UNICODE_STRING* UserName, LSA_UNICODE_STRING* NetbiosDomainName, LSA_UNICODE_STRING* DnsDomainName, void** NewCredentials, uint* NewCredentialSize);
+alias PSAM_CREDENTIAL_UPDATE_REGISTER_ROUTINE = BOOLEAN function(LSA_UNICODE_STRING* CredentialName);
+alias PSAM_CREDENTIAL_UPDATE_FREE_ROUTINE = void function(void* p);
 struct SAM_REGISTER_MAPPING_ELEMENT
 {
     PSTR Original;
@@ -4172,7 +4172,7 @@ struct SAM_REGISTER_MAPPING_TABLE
     uint Count;
     SAM_REGISTER_MAPPING_LIST* Lists;
 }
-alias PSAM_CREDENTIAL_UPDATE_REGISTER_MAPPED_ENTRYPOINTS_ROUTINE = NTSTATUS function(SAM_REGISTER_MAPPING_TABLE*);
+alias PSAM_CREDENTIAL_UPDATE_REGISTER_MAPPED_ENTRYPOINTS_ROUTINE = NTSTATUS function(SAM_REGISTER_MAPPING_TABLE* Table);
 struct SECPKG_CLIENT_INFO
 {
     LUID LogonId;
@@ -4266,7 +4266,7 @@ struct SECPKG_SURROGATE_LOGON
     uint EntryCount;
     SECPKG_SURROGATE_LOGON_ENTRY* Entries;
 }
-alias PLSA_CALLBACK_FUNCTION = NTSTATUS function(ulong, ulong, SecBuffer*, SecBuffer*);
+alias PLSA_CALLBACK_FUNCTION = NTSTATUS function(ulong Argument1, ulong Argument2, SecBuffer* InputBuffer, SecBuffer* OutputBuffer);
 struct SECPKG_PRIMARY_CRED
 {
     LUID LogonId;
@@ -4431,12 +4431,12 @@ struct SECPKG_CALL_PACKAGE_TRANSFER_CRED_REQUEST
     LUID DestinationLogonId;
     uint Flags;
 }
-alias PLSA_REDIRECTED_LOGON_INIT = NTSTATUS function(HANDLE, const(LSA_UNICODE_STRING)*, uint, const(LUID)*);
-alias PLSA_REDIRECTED_LOGON_CALLBACK = NTSTATUS function(HANDLE, void*, uint, void**, uint*);
-alias PLSA_REDIRECTED_LOGON_CLEANUP_CALLBACK = void function(HANDLE);
-alias PLSA_REDIRECTED_LOGON_GET_LOGON_CREDS = NTSTATUS function(HANDLE, ubyte**, uint*);
-alias PLSA_REDIRECTED_LOGON_GET_SUPP_CREDS = NTSTATUS function(HANDLE, SECPKG_SUPPLEMENTAL_CRED_ARRAY**);
-alias PLSA_REDIRECTED_LOGON_GET_SID = NTSTATUS function(HANDLE, PSID*);
+alias PLSA_REDIRECTED_LOGON_INIT = NTSTATUS function(HANDLE RedirectedLogonHandle, const(LSA_UNICODE_STRING)* PackageName, uint SessionId, const(LUID)* LogonId);
+alias PLSA_REDIRECTED_LOGON_CALLBACK = NTSTATUS function(HANDLE RedirectedLogonHandle, void* Buffer, uint BufferLength, void** ReturnBuffer, uint* ReturnBufferLength);
+alias PLSA_REDIRECTED_LOGON_CLEANUP_CALLBACK = void function(HANDLE RedirectedLogonHandle);
+alias PLSA_REDIRECTED_LOGON_GET_LOGON_CREDS = NTSTATUS function(HANDLE RedirectedLogonHandle, ubyte** LogonBuffer, uint* LogonBufferLength);
+alias PLSA_REDIRECTED_LOGON_GET_SUPP_CREDS = NTSTATUS function(HANDLE RedirectedLogonHandle, SECPKG_SUPPLEMENTAL_CRED_ARRAY** SupplementalCredentials);
+alias PLSA_REDIRECTED_LOGON_GET_SID = NTSTATUS function(HANDLE RedirectedLogonHandle, PSID* Sid);
 struct SECPKG_REDIRECTED_LOGON_BUFFER
 {
     GUID RedirectedLogonGuid;
@@ -4456,33 +4456,33 @@ struct SECPKG_POST_LOGON_USER_INFO
 }
 alias PLSA_IMPERSONATE_CLIENT = NTSTATUS function();
 alias PLSA_UNLOAD_PACKAGE = NTSTATUS function();
-alias PLSA_DUPLICATE_HANDLE = NTSTATUS function(HANDLE, HANDLE*);
-alias PLSA_SAVE_SUPPLEMENTAL_CREDENTIALS = NTSTATUS function(LUID*, uint, void*, BOOLEAN);
-alias PLSA_CREATE_THREAD = HANDLE function(SECURITY_ATTRIBUTES*, uint, LPTHREAD_START_ROUTINE, void*, uint, uint*);
-alias PLSA_GET_CLIENT_INFO = NTSTATUS function(SECPKG_CLIENT_INFO*);
-alias PLSA_GET_CLIENT_INFO_EX = NTSTATUS function(SECPKG_CLIENT_INFO_EX*, uint);
-alias PLSA_REGISTER_NOTIFICATION = HANDLE function(LPTHREAD_START_ROUTINE, void*, uint, uint, uint, uint, HANDLE);
-alias PLSA_CANCEL_NOTIFICATION = NTSTATUS function(HANDLE);
-alias PLSA_MAP_BUFFER = NTSTATUS function(SecBuffer*, SecBuffer*);
-alias PLSA_CREATE_TOKEN = NTSTATUS function(LUID*, TOKEN_SOURCE*, SECURITY_LOGON_TYPE, SECURITY_IMPERSONATION_LEVEL, LSA_TOKEN_INFORMATION_TYPE, void*, TOKEN_GROUPS*, LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, HANDLE*, int*);
+alias PLSA_DUPLICATE_HANDLE = NTSTATUS function(HANDLE SourceHandle, HANDLE* DestionationHandle);
+alias PLSA_SAVE_SUPPLEMENTAL_CREDENTIALS = NTSTATUS function(LUID* LogonId, uint SupplementalCredSize, void* SupplementalCreds, BOOLEAN Synchronous);
+alias PLSA_CREATE_THREAD = HANDLE function(SECURITY_ATTRIBUTES* SecurityAttributes, uint StackSize, LPTHREAD_START_ROUTINE StartFunction, void* ThreadParameter, uint CreationFlags, uint* ThreadId);
+alias PLSA_GET_CLIENT_INFO = NTSTATUS function(SECPKG_CLIENT_INFO* ClientInfo);
+alias PLSA_GET_CLIENT_INFO_EX = NTSTATUS function(SECPKG_CLIENT_INFO_EX* ClientInfo, uint StructSize);
+alias PLSA_REGISTER_NOTIFICATION = HANDLE function(LPTHREAD_START_ROUTINE StartFunction, void* Parameter, uint NotificationType, uint NotificationClass, uint NotificationFlags, uint IntervalMinutes, HANDLE WaitEvent);
+alias PLSA_CANCEL_NOTIFICATION = NTSTATUS function(HANDLE NotifyHandle);
+alias PLSA_MAP_BUFFER = NTSTATUS function(SecBuffer* InputBuffer, SecBuffer* OutputBuffer);
+alias PLSA_CREATE_TOKEN = NTSTATUS function(LUID* LogonId, TOKEN_SOURCE* TokenSource, SECURITY_LOGON_TYPE LogonType, SECURITY_IMPERSONATION_LEVEL ImpersonationLevel, LSA_TOKEN_INFORMATION_TYPE TokenInformationType, void* TokenInformation, TOKEN_GROUPS* TokenGroups, LSA_UNICODE_STRING* AccountName, LSA_UNICODE_STRING* AuthorityName, LSA_UNICODE_STRING* Workstation, LSA_UNICODE_STRING* ProfilePath, HANDLE* Token, int* SubStatus);
 alias SECPKG_SESSIONINFO_TYPE = int;
 enum : int
 {
     SecSessionPrimaryCred = 0x00000000,
 }
 
-alias PLSA_CREATE_TOKEN_EX = NTSTATUS function(LUID*, TOKEN_SOURCE*, SECURITY_LOGON_TYPE, SECURITY_IMPERSONATION_LEVEL, LSA_TOKEN_INFORMATION_TYPE, void*, TOKEN_GROUPS*, LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, void*, SECPKG_SESSIONINFO_TYPE, HANDLE*, int*);
-alias PLSA_AUDIT_LOGON = void function(NTSTATUS, NTSTATUS, LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, PSID, SECURITY_LOGON_TYPE, TOKEN_SOURCE*, LUID*);
-alias PLSA_CALL_PACKAGE = NTSTATUS function(LSA_UNICODE_STRING*, void*, uint, void**, uint*, int*);
-alias PLSA_CALL_PACKAGEEX = NTSTATUS function(LSA_UNICODE_STRING*, void*, void*, uint, void**, uint*, int*);
-alias PLSA_CALL_PACKAGE_PASSTHROUGH = NTSTATUS function(LSA_UNICODE_STRING*, void*, void*, uint, void**, uint*, int*);
-alias PLSA_GET_CALL_INFO = BOOLEAN function(SECPKG_CALL_INFO*);
-alias PLSA_CREATE_SHARED_MEMORY = void* function(uint, uint);
-alias PLSA_ALLOCATE_SHARED_MEMORY = void* function(void*, uint);
-alias PLSA_FREE_SHARED_MEMORY = void function(void*, void*);
-alias PLSA_DELETE_SHARED_MEMORY = BOOLEAN function(void*);
-alias PLSA_GET_APP_MODE_INFO = NTSTATUS function(uint*, ulong*, ulong*, SecBuffer*, BOOLEAN*);
-alias PLSA_SET_APP_MODE_INFO = NTSTATUS function(uint, ulong, ulong, SecBuffer*, BOOLEAN);
+alias PLSA_CREATE_TOKEN_EX = NTSTATUS function(LUID* LogonId, TOKEN_SOURCE* TokenSource, SECURITY_LOGON_TYPE LogonType, SECURITY_IMPERSONATION_LEVEL ImpersonationLevel, LSA_TOKEN_INFORMATION_TYPE TokenInformationType, void* TokenInformation, TOKEN_GROUPS* TokenGroups, LSA_UNICODE_STRING* Workstation, LSA_UNICODE_STRING* ProfilePath, void* SessionInformation, SECPKG_SESSIONINFO_TYPE SessionInformationType, HANDLE* Token, int* SubStatus);
+alias PLSA_AUDIT_LOGON = void function(NTSTATUS Status, NTSTATUS SubStatus, LSA_UNICODE_STRING* AccountName, LSA_UNICODE_STRING* AuthenticatingAuthority, LSA_UNICODE_STRING* WorkstationName, PSID UserSid, SECURITY_LOGON_TYPE LogonType, TOKEN_SOURCE* TokenSource, LUID* LogonId);
+alias PLSA_CALL_PACKAGE = NTSTATUS function(LSA_UNICODE_STRING* AuthenticationPackage, void* ProtocolSubmitBuffer, uint SubmitBufferLength, void** ProtocolReturnBuffer, uint* ReturnBufferLength, int* ProtocolStatus);
+alias PLSA_CALL_PACKAGEEX = NTSTATUS function(LSA_UNICODE_STRING* AuthenticationPackage, void* ClientBufferBase, void* ProtocolSubmitBuffer, uint SubmitBufferLength, void** ProtocolReturnBuffer, uint* ReturnBufferLength, int* ProtocolStatus);
+alias PLSA_CALL_PACKAGE_PASSTHROUGH = NTSTATUS function(LSA_UNICODE_STRING* AuthenticationPackage, void* ClientBufferBase, void* ProtocolSubmitBuffer, uint SubmitBufferLength, void** ProtocolReturnBuffer, uint* ReturnBufferLength, int* ProtocolStatus);
+alias PLSA_GET_CALL_INFO = BOOLEAN function(SECPKG_CALL_INFO* Info);
+alias PLSA_CREATE_SHARED_MEMORY = void* function(uint MaxSize, uint InitialSize);
+alias PLSA_ALLOCATE_SHARED_MEMORY = void* function(void* SharedMem, uint Size);
+alias PLSA_FREE_SHARED_MEMORY = void function(void* SharedMem, void* Memory);
+alias PLSA_DELETE_SHARED_MEMORY = BOOLEAN function(void* SharedMem);
+alias PLSA_GET_APP_MODE_INFO = NTSTATUS function(uint* UserFunction, ulong* Argument1, ulong* Argument2, SecBuffer* UserData, BOOLEAN* ReturnToLsa);
+alias PLSA_SET_APP_MODE_INFO = NTSTATUS function(uint UserFunction, ulong Argument1, ulong Argument2, SecBuffer* UserData, BOOLEAN ReturnToLsa);
 alias SECPKG_NAME_TYPE = int;
 enum : int
 {
@@ -4493,17 +4493,17 @@ enum : int
     SecNameSPN           = 0x00000004,
 }
 
-alias PLSA_OPEN_SAM_USER = NTSTATUS function(SECURITY_STRING*, SECPKG_NAME_TYPE, SECURITY_STRING*, BOOLEAN, uint, void**);
-alias PLSA_GET_USER_CREDENTIALS = NTSTATUS function(void*, void**, uint*, void**, uint*);
-alias PLSA_GET_USER_AUTH_DATA = NTSTATUS function(void*, ubyte**, uint*);
-alias PLSA_CLOSE_SAM_USER = NTSTATUS function(void*);
-alias PLSA_GET_AUTH_DATA_FOR_USER = NTSTATUS function(SECURITY_STRING*, SECPKG_NAME_TYPE, SECURITY_STRING*, ubyte**, uint*, LSA_UNICODE_STRING*);
-alias PLSA_CONVERT_AUTH_DATA_TO_TOKEN = NTSTATUS function(void*, uint, SECURITY_IMPERSONATION_LEVEL, TOKEN_SOURCE*, SECURITY_LOGON_TYPE, LSA_UNICODE_STRING*, HANDLE*, LUID*, LSA_UNICODE_STRING*, int*);
-alias PLSA_CRACK_SINGLE_NAME = NTSTATUS function(uint, BOOLEAN, LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, uint, LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, uint*);
-alias PLSA_AUDIT_ACCOUNT_LOGON = NTSTATUS function(uint, BOOLEAN, LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, NTSTATUS);
-alias PLSA_CLIENT_CALLBACK = NTSTATUS function(PSTR, ulong, ulong, SecBuffer*, SecBuffer*);
-alias PLSA_REGISTER_CALLBACK = NTSTATUS function(uint, PLSA_CALLBACK_FUNCTION);
-alias PLSA_GET_EXTENDED_CALL_FLAGS = NTSTATUS function(uint*);
+alias PLSA_OPEN_SAM_USER = NTSTATUS function(SECURITY_STRING* Name, SECPKG_NAME_TYPE NameType, SECURITY_STRING* Prefix, BOOLEAN AllowGuest, uint Reserved, void** UserHandle);
+alias PLSA_GET_USER_CREDENTIALS = NTSTATUS function(void* UserHandle, void** PrimaryCreds, uint* PrimaryCredsSize, void** SupplementalCreds, uint* SupplementalCredsSize);
+alias PLSA_GET_USER_AUTH_DATA = NTSTATUS function(void* UserHandle, ubyte** UserAuthData, uint* UserAuthDataSize);
+alias PLSA_CLOSE_SAM_USER = NTSTATUS function(void* UserHandle);
+alias PLSA_GET_AUTH_DATA_FOR_USER = NTSTATUS function(SECURITY_STRING* Name, SECPKG_NAME_TYPE NameType, SECURITY_STRING* Prefix, ubyte** UserAuthData, uint* UserAuthDataSize, LSA_UNICODE_STRING* UserFlatName);
+alias PLSA_CONVERT_AUTH_DATA_TO_TOKEN = NTSTATUS function(void* UserAuthData, uint UserAuthDataSize, SECURITY_IMPERSONATION_LEVEL ImpersonationLevel, TOKEN_SOURCE* TokenSource, SECURITY_LOGON_TYPE LogonType, LSA_UNICODE_STRING* AuthorityName, HANDLE* Token, LUID* LogonId, LSA_UNICODE_STRING* AccountName, int* SubStatus);
+alias PLSA_CRACK_SINGLE_NAME = NTSTATUS function(uint FormatOffered, BOOLEAN PerformAtGC, LSA_UNICODE_STRING* NameInput, LSA_UNICODE_STRING* Prefix, uint RequestedFormat, LSA_UNICODE_STRING* CrackedName, LSA_UNICODE_STRING* DnsDomainName, uint* SubStatus);
+alias PLSA_AUDIT_ACCOUNT_LOGON = NTSTATUS function(uint AuditId, BOOLEAN Success, LSA_UNICODE_STRING* Source, LSA_UNICODE_STRING* ClientName, LSA_UNICODE_STRING* MappedName, NTSTATUS Status);
+alias PLSA_CLIENT_CALLBACK = NTSTATUS function(PSTR Callback, ulong Argument1, ulong Argument2, SecBuffer* Input, SecBuffer* Output);
+alias PLSA_REGISTER_CALLBACK = NTSTATUS function(uint CallbackId, PLSA_CALLBACK_FUNCTION Callback);
+alias PLSA_GET_EXTENDED_CALL_FLAGS = NTSTATUS function(uint* Flags);
 struct SECPKG_EVENT_PACKAGE_CHANGE
 {
     SECPKG_PACKAGE_CHANGE_TYPE ChangeType;
@@ -4523,10 +4523,10 @@ struct SECPKG_EVENT_NOTIFY
     void* EventData;
     void* PackageParameter;
 }
-alias PLSA_UPDATE_PRIMARY_CREDENTIALS = NTSTATUS function(SECPKG_PRIMARY_CRED*, SECPKG_SUPPLEMENTAL_CRED_ARRAY*);
-alias PLSA_PROTECT_MEMORY = void function(void*, uint);
-alias PLSA_OPEN_TOKEN_BY_LOGON_ID = NTSTATUS function(LUID*, HANDLE*);
-alias PLSA_EXPAND_AUTH_DATA_FOR_DOMAIN = NTSTATUS function(ubyte*, uint, void*, ubyte**, uint*);
+alias PLSA_UPDATE_PRIMARY_CREDENTIALS = NTSTATUS function(SECPKG_PRIMARY_CRED* PrimaryCredentials, SECPKG_SUPPLEMENTAL_CRED_ARRAY* Credentials);
+alias PLSA_PROTECT_MEMORY = void function(void* Buffer, uint BufferSize);
+alias PLSA_OPEN_TOKEN_BY_LOGON_ID = NTSTATUS function(LUID* LogonId, HANDLE* RetTokenHandle);
+alias PLSA_EXPAND_AUTH_DATA_FOR_DOMAIN = NTSTATUS function(ubyte* UserAuthData, uint UserAuthDataSize, void* Reserved, ubyte** ExpandedAuthData, uint* ExpandedAuthDataSize);
 alias CRED_FETCH = int;
 enum : int
 {
@@ -4535,20 +4535,20 @@ enum : int
     CredFetchForced  = 0x00000002,
 }
 
-alias PLSA_GET_SERVICE_ACCOUNT_PASSWORD = NTSTATUS function(LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, CRED_FETCH, FILETIME*, LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, FILETIME*);
-alias PLSA_AUDIT_LOGON_EX = void function(NTSTATUS, NTSTATUS, LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, PSID, SECURITY_LOGON_TYPE, SECURITY_IMPERSONATION_LEVEL, TOKEN_SOURCE*, LUID*);
-alias PLSA_CHECK_PROTECTED_USER_BY_TOKEN = NTSTATUS function(HANDLE, BOOLEAN*);
-alias PLSA_QUERY_CLIENT_REQUEST = NTSTATUS function(void**, uint, void**);
+alias PLSA_GET_SERVICE_ACCOUNT_PASSWORD = NTSTATUS function(LSA_UNICODE_STRING* AccountName, LSA_UNICODE_STRING* DomainName, CRED_FETCH CredFetch, FILETIME* FileTimeExpiry, LSA_UNICODE_STRING* CurrentPassword, LSA_UNICODE_STRING* PreviousPassword, FILETIME* FileTimeCurrPwdValidForOutbound);
+alias PLSA_AUDIT_LOGON_EX = void function(NTSTATUS Status, NTSTATUS SubStatus, LSA_UNICODE_STRING* AccountName, LSA_UNICODE_STRING* AuthenticatingAuthority, LSA_UNICODE_STRING* WorkstationName, PSID UserSid, SECURITY_LOGON_TYPE LogonType, SECURITY_IMPERSONATION_LEVEL ImpersonationLevel, TOKEN_SOURCE* TokenSource, LUID* LogonId);
+alias PLSA_CHECK_PROTECTED_USER_BY_TOKEN = NTSTATUS function(HANDLE UserToken, BOOLEAN* ProtectedUser);
+alias PLSA_QUERY_CLIENT_REQUEST = NTSTATUS function(void** ClientRequest, uint QueryType, void** ReplyBuffer);
 struct ENCRYPTED_CREDENTIALW
 {
     CREDENTIALW Cred;
     uint ClearCredentialBlobSize;
 }
-alias CredReadFn = NTSTATUS function(LUID*, uint, PWSTR, uint, uint, ENCRYPTED_CREDENTIALW**);
-alias CredReadDomainCredentialsFn = NTSTATUS function(LUID*, uint, CREDENTIAL_TARGET_INFORMATIONW*, uint, uint*, ENCRYPTED_CREDENTIALW***);
-alias CredFreeCredentialsFn = void function(uint, ENCRYPTED_CREDENTIALW**);
-alias CredWriteFn = NTSTATUS function(LUID*, uint, ENCRYPTED_CREDENTIALW*, uint);
-alias CrediUnmarshalandDecodeStringFn = NTSTATUS function(PWSTR, ubyte**, uint*, ubyte*);
+alias CredReadFn = NTSTATUS function(LUID* LogonId, uint CredFlags, PWSTR TargetName, uint Type, uint Flags, ENCRYPTED_CREDENTIALW** Credential);
+alias CredReadDomainCredentialsFn = NTSTATUS function(LUID* LogonId, uint CredFlags, CREDENTIAL_TARGET_INFORMATIONW* TargetInfo, uint Flags, uint* Count, ENCRYPTED_CREDENTIALW*** Credential);
+alias CredFreeCredentialsFn = void function(uint Count, ENCRYPTED_CREDENTIALW** Credentials);
+alias CredWriteFn = NTSTATUS function(LUID* LogonId, uint CredFlags, ENCRYPTED_CREDENTIALW* Credential, uint Flags);
+alias CrediUnmarshalandDecodeStringFn = NTSTATUS function(PWSTR MarshaledString, ubyte** Blob, uint* BlobSize, ubyte* IsFailureFatal);
 struct SEC_WINNT_AUTH_IDENTITY32
 {
     uint User;
@@ -4640,7 +4640,7 @@ struct LSA_SECPKG_FUNCTION_TABLE
     PLSA_SET_APP_MODE_INFO SetAppModeInfo;
     PLSA_GET_CLIENT_INFO_EX GetClientInfoEx;
 }
-alias PLSA_LOCATE_PKG_BY_ID = void* function(uint);
+alias PLSA_LOCATE_PKG_BY_ID = void* function(uint PackgeId);
 struct SECPKG_DLL_FUNCTIONS
 {
     PLSA_ALLOCATE_LSA_HEAP AllocateHeap;
@@ -4648,42 +4648,42 @@ struct SECPKG_DLL_FUNCTIONS
     PLSA_REGISTER_CALLBACK RegisterCallback;
     PLSA_LOCATE_PKG_BY_ID LocatePackageById;
 }
-alias SpInitializeFn = NTSTATUS function(ulong, SECPKG_PARAMETERS*, LSA_SECPKG_FUNCTION_TABLE*);
+alias SpInitializeFn = NTSTATUS function(ulong PackageId, SECPKG_PARAMETERS* Parameters, LSA_SECPKG_FUNCTION_TABLE* FunctionTable);
 alias SpShutdownFn = NTSTATUS function();
-alias SpGetInfoFn = NTSTATUS function(SecPkgInfoA*);
-alias SpGetExtendedInformationFn = NTSTATUS function(SECPKG_EXTENDED_INFORMATION_CLASS, SECPKG_EXTENDED_INFORMATION**);
-alias SpSetExtendedInformationFn = NTSTATUS function(SECPKG_EXTENDED_INFORMATION_CLASS, SECPKG_EXTENDED_INFORMATION*);
-alias PLSA_AP_LOGON_USER_EX2 = NTSTATUS function(void**, SECURITY_LOGON_TYPE, void*, void*, uint, void**, uint*, LUID*, int*, LSA_TOKEN_INFORMATION_TYPE*, void**, LSA_UNICODE_STRING**, LSA_UNICODE_STRING**, LSA_UNICODE_STRING**, SECPKG_PRIMARY_CRED*, SECPKG_SUPPLEMENTAL_CRED_ARRAY**);
-alias PLSA_AP_LOGON_USER_EX3 = NTSTATUS function(void**, SECURITY_LOGON_TYPE, void*, void*, uint, SECPKG_SURROGATE_LOGON*, void**, uint*, LUID*, int*, LSA_TOKEN_INFORMATION_TYPE*, void**, LSA_UNICODE_STRING**, LSA_UNICODE_STRING**, LSA_UNICODE_STRING**, SECPKG_PRIMARY_CRED*, SECPKG_SUPPLEMENTAL_CRED_ARRAY**);
-alias PLSA_AP_PRE_LOGON_USER_SURROGATE = NTSTATUS function(void**, SECURITY_LOGON_TYPE, void*, void*, uint, SECPKG_SURROGATE_LOGON*, int*);
-alias PLSA_AP_POST_LOGON_USER_SURROGATE = NTSTATUS function(void**, SECURITY_LOGON_TYPE, void*, void*, uint, SECPKG_SURROGATE_LOGON*, void*, uint, LUID*, NTSTATUS, NTSTATUS, LSA_TOKEN_INFORMATION_TYPE, void*, LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, SECPKG_PRIMARY_CRED*, SECPKG_SUPPLEMENTAL_CRED_ARRAY*);
-alias SpAcceptCredentialsFn = NTSTATUS function(SECURITY_LOGON_TYPE, LSA_UNICODE_STRING*, SECPKG_PRIMARY_CRED*, SECPKG_SUPPLEMENTAL_CRED*);
-alias SpAcquireCredentialsHandleFn = NTSTATUS function(LSA_UNICODE_STRING*, uint, LUID*, void*, void*, void*, ulong*, long*);
-alias SpFreeCredentialsHandleFn = NTSTATUS function(ulong);
-alias SpQueryCredentialsAttributesFn = NTSTATUS function(ulong, uint, void*);
-alias SpSetCredentialsAttributesFn = NTSTATUS function(ulong, uint, void*, uint);
-alias SpAddCredentialsFn = NTSTATUS function(ulong, LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, uint, void*, void*, void*, long*);
-alias SpSaveCredentialsFn = NTSTATUS function(ulong, SecBuffer*);
-alias SpGetCredentialsFn = NTSTATUS function(ulong, SecBuffer*);
-alias SpDeleteCredentialsFn = NTSTATUS function(ulong, SecBuffer*);
-alias SpInitLsaModeContextFn = NTSTATUS function(ulong, ulong, LSA_UNICODE_STRING*, uint, uint, SecBufferDesc*, ulong*, SecBufferDesc*, uint*, long*, BOOLEAN*, SecBuffer*);
-alias SpDeleteContextFn = NTSTATUS function(ulong);
-alias SpApplyControlTokenFn = NTSTATUS function(ulong, SecBufferDesc*);
-alias SpAcceptLsaModeContextFn = NTSTATUS function(ulong, ulong, SecBufferDesc*, uint, uint, ulong*, SecBufferDesc*, uint*, long*, BOOLEAN*, SecBuffer*);
-alias SpGetUserInfoFn = NTSTATUS function(LUID*, uint, SECURITY_USER_DATA**);
-alias SpQueryContextAttributesFn = NTSTATUS function(ulong, uint, void*);
-alias SpSetContextAttributesFn = NTSTATUS function(ulong, uint, void*, uint);
-alias SpChangeAccountPasswordFn = NTSTATUS function(LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, LSA_UNICODE_STRING*, BOOLEAN, SecBufferDesc*);
-alias SpQueryMetaDataFn = NTSTATUS function(ulong, LSA_UNICODE_STRING*, uint, uint*, ubyte**, ulong*);
-alias SpExchangeMetaDataFn = NTSTATUS function(ulong, LSA_UNICODE_STRING*, uint, uint, ubyte*, ulong*);
-alias SpGetCredUIContextFn = NTSTATUS function(ulong, GUID*, uint*, ubyte**);
-alias SpUpdateCredentialsFn = NTSTATUS function(ulong, GUID*, uint, ubyte*);
-alias SpValidateTargetInfoFn = NTSTATUS function(void**, void*, void*, uint, SECPKG_TARGETINFO*);
-alias SpExtractTargetInfoFn = NTSTATUS function(void**, void*, void*, uint, void**, uint*);
-alias LSA_AP_POST_LOGON_USER = NTSTATUS function(SECPKG_POST_LOGON_USER_INFO*);
-alias SpGetRemoteCredGuardLogonBufferFn = NTSTATUS function(ulong, ulong, const(LSA_UNICODE_STRING)*, HANDLE*, PLSA_REDIRECTED_LOGON_CALLBACK*, PLSA_REDIRECTED_LOGON_CLEANUP_CALLBACK*, uint*, void**);
-alias SpGetRemoteCredGuardSupplementalCredsFn = NTSTATUS function(ulong, const(LSA_UNICODE_STRING)*, HANDLE*, PLSA_REDIRECTED_LOGON_CALLBACK*, PLSA_REDIRECTED_LOGON_CLEANUP_CALLBACK*, uint*, void**);
-alias SpGetTbalSupplementalCredsFn = NTSTATUS function(LUID, uint*, void**);
+alias SpGetInfoFn = NTSTATUS function(SecPkgInfoA* PackageInfo);
+alias SpGetExtendedInformationFn = NTSTATUS function(SECPKG_EXTENDED_INFORMATION_CLASS Class, SECPKG_EXTENDED_INFORMATION** ppInformation);
+alias SpSetExtendedInformationFn = NTSTATUS function(SECPKG_EXTENDED_INFORMATION_CLASS Class, SECPKG_EXTENDED_INFORMATION* Info);
+alias PLSA_AP_LOGON_USER_EX2 = NTSTATUS function(void** ClientRequest, SECURITY_LOGON_TYPE LogonType, void* ProtocolSubmitBuffer, void* ClientBufferBase, uint SubmitBufferSize, void** ProfileBuffer, uint* ProfileBufferSize, LUID* LogonId, int* SubStatus, LSA_TOKEN_INFORMATION_TYPE* TokenInformationType, void** TokenInformation, LSA_UNICODE_STRING** AccountName, LSA_UNICODE_STRING** AuthenticatingAuthority, LSA_UNICODE_STRING** MachineName, SECPKG_PRIMARY_CRED* PrimaryCredentials, SECPKG_SUPPLEMENTAL_CRED_ARRAY** SupplementalCredentials);
+alias PLSA_AP_LOGON_USER_EX3 = NTSTATUS function(void** ClientRequest, SECURITY_LOGON_TYPE LogonType, void* ProtocolSubmitBuffer, void* ClientBufferBase, uint SubmitBufferSize, SECPKG_SURROGATE_LOGON* SurrogateLogon, void** ProfileBuffer, uint* ProfileBufferSize, LUID* LogonId, int* SubStatus, LSA_TOKEN_INFORMATION_TYPE* TokenInformationType, void** TokenInformation, LSA_UNICODE_STRING** AccountName, LSA_UNICODE_STRING** AuthenticatingAuthority, LSA_UNICODE_STRING** MachineName, SECPKG_PRIMARY_CRED* PrimaryCredentials, SECPKG_SUPPLEMENTAL_CRED_ARRAY** SupplementalCredentials);
+alias PLSA_AP_PRE_LOGON_USER_SURROGATE = NTSTATUS function(void** ClientRequest, SECURITY_LOGON_TYPE LogonType, void* ProtocolSubmitBuffer, void* ClientBufferBase, uint SubmitBufferSize, SECPKG_SURROGATE_LOGON* SurrogateLogon, int* SubStatus);
+alias PLSA_AP_POST_LOGON_USER_SURROGATE = NTSTATUS function(void** ClientRequest, SECURITY_LOGON_TYPE LogonType, void* ProtocolSubmitBuffer, void* ClientBufferBase, uint SubmitBufferSize, SECPKG_SURROGATE_LOGON* SurrogateLogon, void* ProfileBuffer, uint ProfileBufferSize, LUID* LogonId, NTSTATUS Status, NTSTATUS SubStatus, LSA_TOKEN_INFORMATION_TYPE TokenInformationType, void* TokenInformation, LSA_UNICODE_STRING* AccountName, LSA_UNICODE_STRING* AuthenticatingAuthority, LSA_UNICODE_STRING* MachineName, SECPKG_PRIMARY_CRED* PrimaryCredentials, SECPKG_SUPPLEMENTAL_CRED_ARRAY* SupplementalCredentials);
+alias SpAcceptCredentialsFn = NTSTATUS function(SECURITY_LOGON_TYPE LogonType, LSA_UNICODE_STRING* AccountName, SECPKG_PRIMARY_CRED* PrimaryCredentials, SECPKG_SUPPLEMENTAL_CRED* SupplementalCredentials);
+alias SpAcquireCredentialsHandleFn = NTSTATUS function(LSA_UNICODE_STRING* PrincipalName, uint CredentialUseFlags, LUID* LogonId, void* AuthorizationData, void* GetKeyFunciton, void* GetKeyArgument, ulong* CredentialHandle, long* ExpirationTime);
+alias SpFreeCredentialsHandleFn = NTSTATUS function(ulong CredentialHandle);
+alias SpQueryCredentialsAttributesFn = NTSTATUS function(ulong CredentialHandle, uint CredentialAttribute, void* Buffer);
+alias SpSetCredentialsAttributesFn = NTSTATUS function(ulong CredentialHandle, uint CredentialAttribute, void* Buffer, uint BufferSize);
+alias SpAddCredentialsFn = NTSTATUS function(ulong CredentialHandle, LSA_UNICODE_STRING* PrincipalName, LSA_UNICODE_STRING* Package, uint CredentialUseFlags, void* AuthorizationData, void* GetKeyFunciton, void* GetKeyArgument, long* ExpirationTime);
+alias SpSaveCredentialsFn = NTSTATUS function(ulong CredentialHandle, SecBuffer* Credentials);
+alias SpGetCredentialsFn = NTSTATUS function(ulong CredentialHandle, SecBuffer* Credentials);
+alias SpDeleteCredentialsFn = NTSTATUS function(ulong CredentialHandle, SecBuffer* Key);
+alias SpInitLsaModeContextFn = NTSTATUS function(ulong CredentialHandle, ulong ContextHandle, LSA_UNICODE_STRING* TargetName, uint ContextRequirements, uint TargetDataRep, SecBufferDesc* InputBuffers, ulong* NewContextHandle, SecBufferDesc* OutputBuffers, uint* ContextAttributes, long* ExpirationTime, BOOLEAN* MappedContext, SecBuffer* ContextData);
+alias SpDeleteContextFn = NTSTATUS function(ulong ContextHandle);
+alias SpApplyControlTokenFn = NTSTATUS function(ulong ContextHandle, SecBufferDesc* ControlToken);
+alias SpAcceptLsaModeContextFn = NTSTATUS function(ulong CredentialHandle, ulong ContextHandle, SecBufferDesc* InputBuffer, uint ContextRequirements, uint TargetDataRep, ulong* NewContextHandle, SecBufferDesc* OutputBuffer, uint* ContextAttributes, long* ExpirationTime, BOOLEAN* MappedContext, SecBuffer* ContextData);
+alias SpGetUserInfoFn = NTSTATUS function(LUID* LogonId, uint Flags, SECURITY_USER_DATA** UserData);
+alias SpQueryContextAttributesFn = NTSTATUS function(ulong ContextHandle, uint ContextAttribute, void* Buffer);
+alias SpSetContextAttributesFn = NTSTATUS function(ulong ContextHandle, uint ContextAttribute, void* Buffer, uint BufferSize);
+alias SpChangeAccountPasswordFn = NTSTATUS function(LSA_UNICODE_STRING* pDomainName, LSA_UNICODE_STRING* pAccountName, LSA_UNICODE_STRING* pOldPassword, LSA_UNICODE_STRING* pNewPassword, BOOLEAN Impersonating, SecBufferDesc* pOutput);
+alias SpQueryMetaDataFn = NTSTATUS function(ulong CredentialHandle, LSA_UNICODE_STRING* TargetName, uint ContextRequirements, uint* MetaDataLength, ubyte** MetaData, ulong* ContextHandle);
+alias SpExchangeMetaDataFn = NTSTATUS function(ulong CredentialHandle, LSA_UNICODE_STRING* TargetName, uint ContextRequirements, uint MetaDataLength, ubyte* MetaData, ulong* ContextHandle);
+alias SpGetCredUIContextFn = NTSTATUS function(ulong ContextHandle, GUID* CredType, uint* FlatCredUIContextLength, ubyte** FlatCredUIContext);
+alias SpUpdateCredentialsFn = NTSTATUS function(ulong ContextHandle, GUID* CredType, uint FlatCredUIContextLength, ubyte* FlatCredUIContext);
+alias SpValidateTargetInfoFn = NTSTATUS function(void** ClientRequest, void* ProtocolSubmitBuffer, void* ClientBufferBase, uint SubmitBufferLength, SECPKG_TARGETINFO* TargetInfo);
+alias SpExtractTargetInfoFn = NTSTATUS function(void** ClientRequest, void* ProtocolSubmitBuffer, void* ClientBufferBase, uint SubmitBufferLength, void** ppvTargetInfo, uint* pcbTargetInfo);
+alias LSA_AP_POST_LOGON_USER = NTSTATUS function(SECPKG_POST_LOGON_USER_INFO* PostLogonUserInfo);
+alias SpGetRemoteCredGuardLogonBufferFn = NTSTATUS function(ulong CredHandle, ulong ContextHandle, const(LSA_UNICODE_STRING)* TargetName, HANDLE* RedirectedLogonHandle, PLSA_REDIRECTED_LOGON_CALLBACK* Callback, PLSA_REDIRECTED_LOGON_CLEANUP_CALLBACK* CleanupCallback, uint* LogonBufferSize, void** LogonBuffer);
+alias SpGetRemoteCredGuardSupplementalCredsFn = NTSTATUS function(ulong CredHandle, const(LSA_UNICODE_STRING)* TargetName, HANDLE* RedirectedLogonHandle, PLSA_REDIRECTED_LOGON_CALLBACK* Callback, PLSA_REDIRECTED_LOGON_CLEANUP_CALLBACK* CleanupCallback, uint* SupplementalCredsSize, void** SupplementalCreds);
+alias SpGetTbalSupplementalCredsFn = NTSTATUS function(LUID LogonId, uint* SupplementalCredsSize, void** SupplementalCreds);
 struct SECPKG_FUNCTION_TABLE
 {
     PLSA_AP_INITIALIZE_PACKAGE InitializePackage;
@@ -4730,19 +4730,19 @@ struct SECPKG_FUNCTION_TABLE
     PLSA_AP_POST_LOGON_USER_SURROGATE PostLogonUserSurrogate;
     SpExtractTargetInfoFn ExtractTargetInfo;
 }
-alias SpInstanceInitFn = NTSTATUS function(uint, SECPKG_DLL_FUNCTIONS*, void**);
-alias SpInitUserModeContextFn = NTSTATUS function(ulong, SecBuffer*);
-alias SpMakeSignatureFn = NTSTATUS function(ulong, uint, SecBufferDesc*, uint);
-alias SpVerifySignatureFn = NTSTATUS function(ulong, SecBufferDesc*, uint, uint*);
-alias SpSealMessageFn = NTSTATUS function(ulong, uint, SecBufferDesc*, uint);
-alias SpUnsealMessageFn = NTSTATUS function(ulong, SecBufferDesc*, uint, uint*);
-alias SpGetContextTokenFn = NTSTATUS function(ulong, HANDLE*);
-alias SpExportSecurityContextFn = NTSTATUS function(ulong, uint, SecBuffer*, HANDLE*);
-alias SpImportSecurityContextFn = NTSTATUS function(SecBuffer*, HANDLE, ulong*);
-alias SpCompleteAuthTokenFn = NTSTATUS function(ulong, SecBufferDesc*);
-alias SpFormatCredentialsFn = NTSTATUS function(SecBuffer*, SecBuffer*);
-alias SpMarshallSupplementalCredsFn = NTSTATUS function(uint, ubyte*, uint*, void**);
-alias SpMarshalAttributeDataFn = NTSTATUS function(uint, uint, uint, ubyte*, uint*, ubyte**);
+alias SpInstanceInitFn = NTSTATUS function(uint Version, SECPKG_DLL_FUNCTIONS* FunctionTable, void** UserFunctions);
+alias SpInitUserModeContextFn = NTSTATUS function(ulong ContextHandle, SecBuffer* PackedContext);
+alias SpMakeSignatureFn = NTSTATUS function(ulong ContextHandle, uint QualityOfProtection, SecBufferDesc* MessageBuffers, uint MessageSequenceNumber);
+alias SpVerifySignatureFn = NTSTATUS function(ulong ContextHandle, SecBufferDesc* MessageBuffers, uint MessageSequenceNumber, uint* QualityOfProtection);
+alias SpSealMessageFn = NTSTATUS function(ulong ContextHandle, uint QualityOfProtection, SecBufferDesc* MessageBuffers, uint MessageSequenceNumber);
+alias SpUnsealMessageFn = NTSTATUS function(ulong ContextHandle, SecBufferDesc* MessageBuffers, uint MessageSequenceNumber, uint* QualityOfProtection);
+alias SpGetContextTokenFn = NTSTATUS function(ulong ContextHandle, HANDLE* ImpersonationToken);
+alias SpExportSecurityContextFn = NTSTATUS function(ulong phContext, uint fFlags, SecBuffer* pPackedContext, HANDLE* pToken);
+alias SpImportSecurityContextFn = NTSTATUS function(SecBuffer* pPackedContext, HANDLE Token, ulong* phContext);
+alias SpCompleteAuthTokenFn = NTSTATUS function(ulong ContextHandle, SecBufferDesc* InputBuffer);
+alias SpFormatCredentialsFn = NTSTATUS function(SecBuffer* Credentials, SecBuffer* FormattedCredentials);
+alias SpMarshallSupplementalCredsFn = NTSTATUS function(uint CredentialSize, ubyte* Credentials, uint* MarshalledCredSize, void** MarshalledCreds);
+alias SpMarshalAttributeDataFn = NTSTATUS function(uint AttributeInfo, uint Attribute, uint AttributeDataSize, ubyte* AttributeData, uint* MarshaledAttributeDataSize, ubyte** MarshaledAttributeData);
 struct SECPKG_USER_FUNCTION_TABLE
 {
     SpInstanceInitFn InstanceInit;
@@ -4761,8 +4761,8 @@ struct SECPKG_USER_FUNCTION_TABLE
     SpImportSecurityContextFn ImportContext;
     SpMarshalAttributeDataFn MarshalAttributeData;
 }
-alias SpLsaModeInitializeFn = NTSTATUS function(uint, uint*, SECPKG_FUNCTION_TABLE**, uint*);
-alias SpUserModeInitializeFn = NTSTATUS function(uint, uint*, SECPKG_USER_FUNCTION_TABLE**, uint*);
+alias SpLsaModeInitializeFn = NTSTATUS function(uint LsaVersion, uint* PackageVersion, SECPKG_FUNCTION_TABLE** ppTables, uint* pcTables);
+alias SpUserModeInitializeFn = NTSTATUS function(uint LsaVersion, uint* PackageVersion, SECPKG_USER_FUNCTION_TABLE** ppTables, uint* pcTables);
 alias KSEC_CONTEXT_TYPE = int;
 enum : int
 {
@@ -4778,13 +4778,13 @@ struct KSEC_LIST_ENTRY
     void* OwningList;
     void* Reserved;
 }
-alias PKSEC_CREATE_CONTEXT_LIST = void* function(KSEC_CONTEXT_TYPE);
-alias PKSEC_INSERT_LIST_ENTRY = void function(void*, KSEC_LIST_ENTRY*);
-alias PKSEC_REFERENCE_LIST_ENTRY = NTSTATUS function(KSEC_LIST_ENTRY*, uint, BOOLEAN);
-alias PKSEC_DEREFERENCE_LIST_ENTRY = void function(KSEC_LIST_ENTRY*, ubyte*);
-alias PKSEC_SERIALIZE_WINNT_AUTH_DATA = NTSTATUS function(void*, uint*, void**);
-alias PKSEC_SERIALIZE_SCHANNEL_AUTH_DATA = NTSTATUS function(void*, uint*, void**);
-alias PKSEC_LOCATE_PKG_BY_ID = void* function(uint);
+alias PKSEC_CREATE_CONTEXT_LIST = void* function(KSEC_CONTEXT_TYPE Type);
+alias PKSEC_INSERT_LIST_ENTRY = void function(void* List, KSEC_LIST_ENTRY* Entry);
+alias PKSEC_REFERENCE_LIST_ENTRY = NTSTATUS function(KSEC_LIST_ENTRY* Entry, uint Signature, BOOLEAN RemoveNoRef);
+alias PKSEC_DEREFERENCE_LIST_ENTRY = void function(KSEC_LIST_ENTRY* Entry, ubyte* Delete);
+alias PKSEC_SERIALIZE_WINNT_AUTH_DATA = NTSTATUS function(void* pvAuthData, uint* Size, void** SerializedData);
+alias PKSEC_SERIALIZE_SCHANNEL_AUTH_DATA = NTSTATUS function(void* pvAuthData, uint* Size, void** SerializedData);
+alias PKSEC_LOCATE_PKG_BY_ID = void* function(uint PackageId);
 struct SECPKG_KERNEL_FUNCTIONS
 {
     PLSA_ALLOCATE_LSA_HEAP AllocateHeap;
@@ -4797,19 +4797,19 @@ struct SECPKG_KERNEL_FUNCTIONS
     PKSEC_SERIALIZE_SCHANNEL_AUTH_DATA SerializeSchannelAuthData;
     PKSEC_LOCATE_PKG_BY_ID LocatePackageById;
 }
-alias KspInitPackageFn = NTSTATUS function(SECPKG_KERNEL_FUNCTIONS*);
-alias KspDeleteContextFn = NTSTATUS function(ulong, ulong*);
-alias KspInitContextFn = NTSTATUS function(ulong, SecBuffer*, ulong*);
-alias KspMakeSignatureFn = NTSTATUS function(ulong, uint, SecBufferDesc*, uint);
-alias KspVerifySignatureFn = NTSTATUS function(ulong, SecBufferDesc*, uint, uint*);
-alias KspSealMessageFn = NTSTATUS function(ulong, uint, SecBufferDesc*, uint);
-alias KspUnsealMessageFn = NTSTATUS function(ulong, SecBufferDesc*, uint, uint*);
-alias KspGetTokenFn = NTSTATUS function(ulong, HANDLE*, void**);
-alias KspQueryAttributesFn = NTSTATUS function(ulong, uint, void*);
-alias KspCompleteTokenFn = NTSTATUS function(ulong, SecBufferDesc*);
-alias KspMapHandleFn = NTSTATUS function(ulong, ulong*);
-alias KspSetPagingModeFn = NTSTATUS function(BOOLEAN);
-alias KspSerializeAuthDataFn = NTSTATUS function(void*, uint*, void**);
+alias KspInitPackageFn = NTSTATUS function(SECPKG_KERNEL_FUNCTIONS* FunctionTable);
+alias KspDeleteContextFn = NTSTATUS function(ulong ContextId, ulong* LsaContextId);
+alias KspInitContextFn = NTSTATUS function(ulong ContextId, SecBuffer* ContextData, ulong* NewContextId);
+alias KspMakeSignatureFn = NTSTATUS function(ulong ContextId, uint fQOP, SecBufferDesc* Message, uint MessageSeqNo);
+alias KspVerifySignatureFn = NTSTATUS function(ulong ContextId, SecBufferDesc* Message, uint MessageSeqNo, uint* pfQOP);
+alias KspSealMessageFn = NTSTATUS function(ulong ContextId, uint fQOP, SecBufferDesc* Message, uint MessageSeqNo);
+alias KspUnsealMessageFn = NTSTATUS function(ulong ContextId, SecBufferDesc* Message, uint MessageSeqNo, uint* pfQOP);
+alias KspGetTokenFn = NTSTATUS function(ulong ContextId, HANDLE* ImpersonationToken, void** RawToken);
+alias KspQueryAttributesFn = NTSTATUS function(ulong ContextId, uint Attribute, void* Buffer);
+alias KspCompleteTokenFn = NTSTATUS function(ulong ContextId, SecBufferDesc* Token);
+alias KspMapHandleFn = NTSTATUS function(ulong ContextId, ulong* LsaContextId);
+alias KspSetPagingModeFn = NTSTATUS function(BOOLEAN PagingMode);
+alias KspSerializeAuthDataFn = NTSTATUS function(void* pvAuthData, uint* Size, void** SerializedData);
 struct SECPKG_KERNEL_FUNCTION_TABLE
 {
     KspInitPackageFn Initialize;
@@ -5160,8 +5160,8 @@ struct SCHANNEL_CLIENT_SIGNATURE
     ubyte[36] HashValue;
     ubyte[20] CertThumbprint;
 }
-alias SSL_EMPTY_CACHE_FN_A = BOOL function(PSTR, uint);
-alias SSL_EMPTY_CACHE_FN_W = BOOL function(PWSTR, uint);
+alias SSL_EMPTY_CACHE_FN_A = BOOL function(PSTR pszTargetName, uint dwFlags);
+alias SSL_EMPTY_CACHE_FN_W = BOOL function(PWSTR pszTargetName, uint dwFlags);
 struct SSL_CREDENTIAL_CERTIFICATE
 {
     uint cbPrivateKey;
@@ -5214,9 +5214,9 @@ struct X509Certificate
     PSTR pszSubject;
     PctPublicKey* pPublicKey;
 }
-alias SSL_CRACK_CERTIFICATE_FN = BOOL function(ubyte*, uint, BOOL, X509Certificate**);
-alias SSL_FREE_CERTIFICATE_FN = void function(X509Certificate*);
-alias SslGetServerIdentityFn = HRESULT function(ubyte*, uint, ubyte**, uint*, uint);
+alias SSL_CRACK_CERTIFICATE_FN = BOOL function(ubyte* pbCertificate, uint cbCertificate, BOOL VerifySignature, X509Certificate** ppCertificate);
+alias SSL_FREE_CERTIFICATE_FN = void function(X509Certificate* pCertificate);
+alias SslGetServerIdentityFn = HRESULT function(ubyte* ClientHello, uint ClientHelloSize, ubyte** ServerIdentity, uint* ServerIdentitySize, uint Flags);
 struct SCH_EXTENSION_DATA
 {
     ushort ExtensionType;
@@ -5230,8 +5230,8 @@ enum : int
     SCH_NO_RECORD_HEADER        = 0x00000001,
 }
 
-alias SslGetExtensionsFn = HRESULT function(const(ubyte)*, uint, SCH_EXTENSION_DATA*, ubyte, uint*, SchGetExtensionsOptions);
-alias SslDeserializeCertificateStoreFn = HRESULT function(CRYPT_INTEGER_BLOB, CERT_CONTEXT**);
+alias SslGetExtensionsFn = HRESULT function(const(ubyte)* clientHello, uint clientHelloByteSize, SCH_EXTENSION_DATA* genericExtensions, ubyte genericExtensionsCount, uint* bytesToRead, SchGetExtensionsOptions flags);
+alias SslDeserializeCertificateStoreFn = HRESULT function(CRYPT_INTEGER_BLOB SerializedCertificateStore, CERT_CONTEXT** ppCertContext);
 struct LOGON_HOURS
 {
     ushort UnitsPerWeek;
@@ -5503,5 +5503,5 @@ struct SL_SYSTEM_POLICY_INFORMATION
 enum IID_ICcgDomainAuthCredentials = GUID(0x6ecda518, 0x2010, 0x4437, [0x8b, 0xc3, 0x46, 0xe7, 0x52, 0xb7, 0xb1, 0x72]);
 interface ICcgDomainAuthCredentials : IUnknown
 {
-    HRESULT GetPasswordCredentials(const(wchar)*, PWSTR*, PWSTR*, PWSTR*);
+    HRESULT GetPasswordCredentials(const(wchar)* pluginInput, PWSTR* domainName, PWSTR* username, PWSTR* password);
 }

@@ -1,11 +1,12 @@
 module windows.win32.media.directshow.tv;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, CHAR, HANDLE, HRESULT, HWND, PSID, PWSTR, RECT, SIZE, VARIANT_BOOL;
+import windows.win32.foundation : BOOL, BSTR, CHAR, HANDLE, HRESULT, HWND, PWSTR, RECT, SIZE, VARIANT_BOOL;
 import windows.win32.graphics.gdi : HDC;
 import windows.win32.media.directshow : AnalogVideoStandard, BinaryConvolutionCodeRate, ComponentCategory, ComponentStatus, DVBSystemType, FECMethod, GuardInterval, HierarchyAlpha, IESEvent, IESEvents, IEnumFilters, IFilterGraph, IGraphBuilder, IMediaSeeking, IPin, IVMRImageCompositor, IVMRMixerBitmap, IVMRSurfaceAllocator, LNB_Source, MPEG2StreamType, ModulationType, Pilot, Polarisation, RollOff, SpectralInversion, TVAudioMode, TransmissionMode, TunerInputType, VMRALPHABITMAP;
 import windows.win32.media.kernelstreaming : KSDATAFORMAT, KSEVENTDATA, KSIDENTIFIER, KSM_NODE, KSP_NODE;
 import windows.win32.media.mediafoundation : AM_MEDIA_TYPE, IMFVideoPresenter;
+import windows.win32.security : PSID;
 import windows.win32.system.com : IDispatch, IEnumGUID, IEnumMoniker, IPersist, IUnknown, SAFEARRAY;
 import windows.win32.system.ole : IEnumVARIANT, IPictureDisp;
 import windows.win32.system.registry : HKEY;
@@ -245,7 +246,7 @@ enum STREAMBUFFER_EC_SETPOSITIONS_EVENTS_DONE = 0x00000330;
 enum IID_ICreatePropBagOnRegKey = GUID(0x8a674b48, 0x1f63, 0x11d3, [0xb6, 0x4c, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface ICreatePropBagOnRegKey : IUnknown
 {
-    HRESULT Create(HKEY, const(wchar)*, uint, uint, const(GUID)*, void**);
+    HRESULT Create(HKEY hkey, const(wchar)* subkey, uint ulOptions, uint samDesired, const(GUID)* iid, void** ppBag);
 }
 alias DISPID_TUNER = int;
 enum : int
@@ -367,84 +368,84 @@ enum : int
 enum IID_ITuningSpaces = GUID(0x901284e4, 0x33fe, 0x4b69, [0x8d, 0x63, 0x63, 0x4a, 0x59, 0x6f, 0x37, 0x56]);
 interface ITuningSpaces : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IEnumVARIANT*);
-    HRESULT get_Item(VARIANT, ITuningSpace*);
-    HRESULT get_EnumTuningSpaces(IEnumTuningSpaces*);
+    HRESULT get_Count(int* Count);
+    HRESULT get__NewEnum(IEnumVARIANT* NewEnum);
+    HRESULT get_Item(VARIANT varIndex, ITuningSpace* TuningSpace);
+    HRESULT get_EnumTuningSpaces(IEnumTuningSpaces* NewEnum);
 }
 enum IID_ITuningSpaceContainer = GUID(0x5b692e84, 0xe2f1, 0x11d2, [0x94, 0x93, 0x0, 0xc0, 0x4f, 0x72, 0xd9, 0x80]);
 interface ITuningSpaceContainer : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IEnumVARIANT*);
-    HRESULT get_Item(VARIANT, ITuningSpace*);
-    HRESULT put_Item(VARIANT, ITuningSpace);
-    HRESULT TuningSpacesForCLSID(BSTR, ITuningSpaces*);
-    HRESULT _TuningSpacesForCLSID2(const(GUID)*, ITuningSpaces*);
-    HRESULT TuningSpacesForName(BSTR, ITuningSpaces*);
-    HRESULT FindID(ITuningSpace, int*);
-    HRESULT Add(ITuningSpace, VARIANT*);
-    HRESULT get_EnumTuningSpaces(IEnumTuningSpaces*);
-    HRESULT Remove(VARIANT);
-    HRESULT get_MaxCount(int*);
-    HRESULT put_MaxCount(int);
+    HRESULT get_Count(int* Count);
+    HRESULT get__NewEnum(IEnumVARIANT* NewEnum);
+    HRESULT get_Item(VARIANT varIndex, ITuningSpace* TuningSpace);
+    HRESULT put_Item(VARIANT varIndex, ITuningSpace TuningSpace);
+    HRESULT TuningSpacesForCLSID(BSTR SpaceCLSID, ITuningSpaces* NewColl);
+    HRESULT _TuningSpacesForCLSID2(const(GUID)* SpaceCLSID, ITuningSpaces* NewColl);
+    HRESULT TuningSpacesForName(BSTR Name, ITuningSpaces* NewColl);
+    HRESULT FindID(ITuningSpace TuningSpace, int* ID);
+    HRESULT Add(ITuningSpace TuningSpace, VARIANT* NewIndex);
+    HRESULT get_EnumTuningSpaces(IEnumTuningSpaces* ppEnum);
+    HRESULT Remove(VARIANT Index);
+    HRESULT get_MaxCount(int* MaxCount);
+    HRESULT put_MaxCount(int MaxCount);
 }
 enum IID_ITuningSpace = GUID(0x61c6e30, 0xe622, 0x11d2, [0x94, 0x93, 0x0, 0xc0, 0x4f, 0x72, 0xd9, 0x80]);
 interface ITuningSpace : IDispatch
 {
-    HRESULT get_UniqueName(BSTR*);
-    HRESULT put_UniqueName(BSTR);
-    HRESULT get_FriendlyName(BSTR*);
-    HRESULT put_FriendlyName(BSTR);
-    HRESULT get_CLSID(BSTR*);
-    HRESULT get_NetworkType(BSTR*);
-    HRESULT put_NetworkType(BSTR);
-    HRESULT get__NetworkType(GUID*);
-    HRESULT put__NetworkType(const(GUID)*);
-    HRESULT CreateTuneRequest(ITuneRequest*);
-    HRESULT EnumCategoryGUIDs(IEnumGUID*);
-    HRESULT EnumDeviceMonikers(IEnumMoniker*);
-    HRESULT get_DefaultPreferredComponentTypes(IComponentTypes*);
-    HRESULT put_DefaultPreferredComponentTypes(IComponentTypes);
-    HRESULT get_FrequencyMapping(BSTR*);
-    HRESULT put_FrequencyMapping(BSTR);
-    HRESULT get_DefaultLocator(ILocator*);
-    HRESULT put_DefaultLocator(ILocator);
-    HRESULT Clone(ITuningSpace*);
+    HRESULT get_UniqueName(BSTR* Name);
+    HRESULT put_UniqueName(BSTR Name);
+    HRESULT get_FriendlyName(BSTR* Name);
+    HRESULT put_FriendlyName(BSTR Name);
+    HRESULT get_CLSID(BSTR* SpaceCLSID);
+    HRESULT get_NetworkType(BSTR* NetworkTypeGuid);
+    HRESULT put_NetworkType(BSTR NetworkTypeGuid);
+    HRESULT get__NetworkType(GUID* NetworkTypeGuid);
+    HRESULT put__NetworkType(const(GUID)* NetworkTypeGuid);
+    HRESULT CreateTuneRequest(ITuneRequest* TuneRequest);
+    HRESULT EnumCategoryGUIDs(IEnumGUID* ppEnum);
+    HRESULT EnumDeviceMonikers(IEnumMoniker* ppEnum);
+    HRESULT get_DefaultPreferredComponentTypes(IComponentTypes* ComponentTypes);
+    HRESULT put_DefaultPreferredComponentTypes(IComponentTypes NewComponentTypes);
+    HRESULT get_FrequencyMapping(BSTR* pMapping);
+    HRESULT put_FrequencyMapping(BSTR Mapping);
+    HRESULT get_DefaultLocator(ILocator* LocatorVal);
+    HRESULT put_DefaultLocator(ILocator LocatorVal);
+    HRESULT Clone(ITuningSpace* NewTS);
 }
 enum IID_IEnumTuningSpaces = GUID(0x8b8eb248, 0xfc2b, 0x11d2, [0x9d, 0x8c, 0x0, 0xc0, 0x4f, 0x72, 0xd9, 0x80]);
 interface IEnumTuningSpaces : IUnknown
 {
-    HRESULT Next(uint, ITuningSpace*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, ITuningSpace* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumTuningSpaces*);
+    HRESULT Clone(IEnumTuningSpaces* ppEnum);
 }
 enum IID_IDVBTuningSpace = GUID(0xada0b268, 0x3b19, 0x4e5b, [0xac, 0xc4, 0x49, 0xf8, 0x52, 0xbe, 0x13, 0xba]);
 interface IDVBTuningSpace : ITuningSpace
 {
-    HRESULT get_SystemType(DVBSystemType*);
-    HRESULT put_SystemType(DVBSystemType);
+    HRESULT get_SystemType(DVBSystemType* SysType);
+    HRESULT put_SystemType(DVBSystemType SysType);
 }
 enum IID_IDVBTuningSpace2 = GUID(0x843188b4, 0xce62, 0x43db, [0x96, 0x6b, 0x81, 0x45, 0xa0, 0x94, 0xe0, 0x40]);
 interface IDVBTuningSpace2 : IDVBTuningSpace
 {
-    HRESULT get_NetworkID(int*);
-    HRESULT put_NetworkID(int);
+    HRESULT get_NetworkID(int* NetworkID);
+    HRESULT put_NetworkID(int NetworkID);
 }
 enum IID_IDVBSTuningSpace = GUID(0xcdf7be60, 0xd954, 0x42fd, [0xa9, 0x72, 0x78, 0x97, 0x19, 0x58, 0xe4, 0x70]);
 interface IDVBSTuningSpace : IDVBTuningSpace2
 {
-    HRESULT get_LowOscillator(int*);
-    HRESULT put_LowOscillator(int);
-    HRESULT get_HighOscillator(int*);
-    HRESULT put_HighOscillator(int);
-    HRESULT get_LNBSwitch(int*);
-    HRESULT put_LNBSwitch(int);
-    HRESULT get_InputRange(BSTR*);
-    HRESULT put_InputRange(BSTR);
-    HRESULT get_SpectralInversion(SpectralInversion*);
-    HRESULT put_SpectralInversion(SpectralInversion);
+    HRESULT get_LowOscillator(int* LowOscillator);
+    HRESULT put_LowOscillator(int LowOscillator);
+    HRESULT get_HighOscillator(int* HighOscillator);
+    HRESULT put_HighOscillator(int HighOscillator);
+    HRESULT get_LNBSwitch(int* LNBSwitch);
+    HRESULT put_LNBSwitch(int LNBSwitch);
+    HRESULT get_InputRange(BSTR* InputRange);
+    HRESULT put_InputRange(BSTR InputRange);
+    HRESULT get_SpectralInversion(SpectralInversion* SpectralInversionVal);
+    HRESULT put_SpectralInversion(SpectralInversion SpectralInversionVal);
 }
 enum IID_IAuxInTuningSpace = GUID(0xe48244b8, 0x7e17, 0x4f76, [0xa7, 0x63, 0x50, 0x90, 0xff, 0x1e, 0x2f, 0x30]);
 interface IAuxInTuningSpace : ITuningSpace
@@ -453,118 +454,118 @@ interface IAuxInTuningSpace : ITuningSpace
 enum IID_IAuxInTuningSpace2 = GUID(0xb10931ed, 0x8bfe, 0x4ab0, [0x9d, 0xce, 0xe4, 0x69, 0xc2, 0x9a, 0x97, 0x29]);
 interface IAuxInTuningSpace2 : IAuxInTuningSpace
 {
-    HRESULT get_CountryCode(int*);
-    HRESULT put_CountryCode(int);
+    HRESULT get_CountryCode(int* CountryCodeVal);
+    HRESULT put_CountryCode(int NewCountryCodeVal);
 }
 enum IID_IAnalogTVTuningSpace = GUID(0x2a6e293c, 0x2595, 0x11d3, [0xb6, 0x4c, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IAnalogTVTuningSpace : ITuningSpace
 {
-    HRESULT get_MinChannel(int*);
-    HRESULT put_MinChannel(int);
-    HRESULT get_MaxChannel(int*);
-    HRESULT put_MaxChannel(int);
-    HRESULT get_InputType(TunerInputType*);
-    HRESULT put_InputType(TunerInputType);
-    HRESULT get_CountryCode(int*);
-    HRESULT put_CountryCode(int);
+    HRESULT get_MinChannel(int* MinChannelVal);
+    HRESULT put_MinChannel(int NewMinChannelVal);
+    HRESULT get_MaxChannel(int* MaxChannelVal);
+    HRESULT put_MaxChannel(int NewMaxChannelVal);
+    HRESULT get_InputType(TunerInputType* InputTypeVal);
+    HRESULT put_InputType(TunerInputType NewInputTypeVal);
+    HRESULT get_CountryCode(int* CountryCodeVal);
+    HRESULT put_CountryCode(int NewCountryCodeVal);
 }
 enum IID_IATSCTuningSpace = GUID(0x369b4e2, 0x45b6, 0x11d3, [0xb6, 0x50, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IATSCTuningSpace : IAnalogTVTuningSpace
 {
-    HRESULT get_MinMinorChannel(int*);
-    HRESULT put_MinMinorChannel(int);
-    HRESULT get_MaxMinorChannel(int*);
-    HRESULT put_MaxMinorChannel(int);
-    HRESULT get_MinPhysicalChannel(int*);
-    HRESULT put_MinPhysicalChannel(int);
-    HRESULT get_MaxPhysicalChannel(int*);
-    HRESULT put_MaxPhysicalChannel(int);
+    HRESULT get_MinMinorChannel(int* MinMinorChannelVal);
+    HRESULT put_MinMinorChannel(int NewMinMinorChannelVal);
+    HRESULT get_MaxMinorChannel(int* MaxMinorChannelVal);
+    HRESULT put_MaxMinorChannel(int NewMaxMinorChannelVal);
+    HRESULT get_MinPhysicalChannel(int* MinPhysicalChannelVal);
+    HRESULT put_MinPhysicalChannel(int NewMinPhysicalChannelVal);
+    HRESULT get_MaxPhysicalChannel(int* MaxPhysicalChannelVal);
+    HRESULT put_MaxPhysicalChannel(int NewMaxPhysicalChannelVal);
 }
 enum IID_IDigitalCableTuningSpace = GUID(0x13f9f9c, 0xb449, 0x4ec7, [0xa6, 0xd2, 0x9d, 0x4f, 0x2f, 0xc7, 0xa, 0xe5]);
 interface IDigitalCableTuningSpace : IATSCTuningSpace
 {
-    HRESULT get_MinMajorChannel(int*);
-    HRESULT put_MinMajorChannel(int);
-    HRESULT get_MaxMajorChannel(int*);
-    HRESULT put_MaxMajorChannel(int);
-    HRESULT get_MinSourceID(int*);
-    HRESULT put_MinSourceID(int);
-    HRESULT get_MaxSourceID(int*);
-    HRESULT put_MaxSourceID(int);
+    HRESULT get_MinMajorChannel(int* MinMajorChannelVal);
+    HRESULT put_MinMajorChannel(int NewMinMajorChannelVal);
+    HRESULT get_MaxMajorChannel(int* MaxMajorChannelVal);
+    HRESULT put_MaxMajorChannel(int NewMaxMajorChannelVal);
+    HRESULT get_MinSourceID(int* MinSourceIDVal);
+    HRESULT put_MinSourceID(int NewMinSourceIDVal);
+    HRESULT get_MaxSourceID(int* MaxSourceIDVal);
+    HRESULT put_MaxSourceID(int NewMaxSourceIDVal);
 }
 enum IID_IAnalogRadioTuningSpace = GUID(0x2a6e293b, 0x2595, 0x11d3, [0xb6, 0x4c, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IAnalogRadioTuningSpace : ITuningSpace
 {
-    HRESULT get_MinFrequency(int*);
-    HRESULT put_MinFrequency(int);
-    HRESULT get_MaxFrequency(int*);
-    HRESULT put_MaxFrequency(int);
-    HRESULT get_Step(int*);
-    HRESULT put_Step(int);
+    HRESULT get_MinFrequency(int* MinFrequencyVal);
+    HRESULT put_MinFrequency(int NewMinFrequencyVal);
+    HRESULT get_MaxFrequency(int* MaxFrequencyVal);
+    HRESULT put_MaxFrequency(int NewMaxFrequencyVal);
+    HRESULT get_Step(int* StepVal);
+    HRESULT put_Step(int NewStepVal);
 }
 enum IID_IAnalogRadioTuningSpace2 = GUID(0x39dd45da, 0x2da8, 0x46ba, [0x8a, 0x8a, 0x87, 0xe2, 0xb7, 0x3d, 0x98, 0x3a]);
 interface IAnalogRadioTuningSpace2 : IAnalogRadioTuningSpace
 {
-    HRESULT get_CountryCode(int*);
-    HRESULT put_CountryCode(int);
+    HRESULT get_CountryCode(int* CountryCodeVal);
+    HRESULT put_CountryCode(int NewCountryCodeVal);
 }
 enum IID_ITuneRequest = GUID(0x7ddc146, 0xfc3d, 0x11d2, [0x9d, 0x8c, 0x0, 0xc0, 0x4f, 0x72, 0xd9, 0x80]);
 interface ITuneRequest : IDispatch
 {
-    HRESULT get_TuningSpace(ITuningSpace*);
-    HRESULT get_Components(IComponents*);
-    HRESULT Clone(ITuneRequest*);
-    HRESULT get_Locator(ILocator*);
-    HRESULT put_Locator(ILocator);
+    HRESULT get_TuningSpace(ITuningSpace* TuningSpace);
+    HRESULT get_Components(IComponents* Components);
+    HRESULT Clone(ITuneRequest* NewTuneRequest);
+    HRESULT get_Locator(ILocator* Locator);
+    HRESULT put_Locator(ILocator Locator);
 }
 enum IID_IChannelIDTuneRequest = GUID(0x156eff60, 0x86f4, 0x4e28, [0x89, 0xfc, 0x10, 0x97, 0x99, 0xfd, 0x57, 0xee]);
 interface IChannelIDTuneRequest : ITuneRequest
 {
-    HRESULT get_ChannelID(BSTR*);
-    HRESULT put_ChannelID(BSTR);
+    HRESULT get_ChannelID(BSTR* ChannelID);
+    HRESULT put_ChannelID(BSTR ChannelID);
 }
 enum IID_IChannelTuneRequest = GUID(0x369b4e0, 0x45b6, 0x11d3, [0xb6, 0x50, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IChannelTuneRequest : ITuneRequest
 {
-    HRESULT get_Channel(int*);
-    HRESULT put_Channel(int);
+    HRESULT get_Channel(int* Channel);
+    HRESULT put_Channel(int Channel);
 }
 enum IID_IATSCChannelTuneRequest = GUID(0x369b4e1, 0x45b6, 0x11d3, [0xb6, 0x50, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IATSCChannelTuneRequest : IChannelTuneRequest
 {
-    HRESULT get_MinorChannel(int*);
-    HRESULT put_MinorChannel(int);
+    HRESULT get_MinorChannel(int* MinorChannel);
+    HRESULT put_MinorChannel(int MinorChannel);
 }
 enum IID_IDigitalCableTuneRequest = GUID(0xbad7753b, 0x6b37, 0x4810, [0xae, 0x57, 0x3c, 0xe0, 0xc4, 0xa9, 0xe6, 0xcb]);
 interface IDigitalCableTuneRequest : IATSCChannelTuneRequest
 {
-    HRESULT get_MajorChannel(int*);
-    HRESULT put_MajorChannel(int);
-    HRESULT get_SourceID(int*);
-    HRESULT put_SourceID(int);
+    HRESULT get_MajorChannel(int* pMajorChannel);
+    HRESULT put_MajorChannel(int MajorChannel);
+    HRESULT get_SourceID(int* pSourceID);
+    HRESULT put_SourceID(int SourceID);
 }
 enum IID_IDVBTuneRequest = GUID(0xd6f567e, 0xa636, 0x42bb, [0x83, 0xba, 0xce, 0x4c, 0x17, 0x4, 0xaf, 0xa2]);
 interface IDVBTuneRequest : ITuneRequest
 {
-    HRESULT get_ONID(int*);
-    HRESULT put_ONID(int);
-    HRESULT get_TSID(int*);
-    HRESULT put_TSID(int);
-    HRESULT get_SID(int*);
-    HRESULT put_SID(int);
+    HRESULT get_ONID(int* ONID);
+    HRESULT put_ONID(int ONID);
+    HRESULT get_TSID(int* TSID);
+    HRESULT put_TSID(int TSID);
+    HRESULT get_SID(int* SID);
+    HRESULT put_SID(int SID);
 }
 enum IID_IMPEG2TuneRequest = GUID(0xeb7d987f, 0x8a01, 0x42ad, [0xb8, 0xae, 0x57, 0x4d, 0xee, 0xe4, 0x4d, 0x1a]);
 interface IMPEG2TuneRequest : ITuneRequest
 {
-    HRESULT get_TSID(int*);
-    HRESULT put_TSID(int);
-    HRESULT get_ProgNo(int*);
-    HRESULT put_ProgNo(int);
+    HRESULT get_TSID(int* TSID);
+    HRESULT put_TSID(int TSID);
+    HRESULT get_ProgNo(int* ProgNo);
+    HRESULT put_ProgNo(int ProgNo);
 }
 enum IID_IMPEG2TuneRequestFactory = GUID(0x14e11abd, 0xee37, 0x4893, [0x9e, 0xa1, 0x69, 0x64, 0xde, 0x93, 0x3e, 0x39]);
 interface IMPEG2TuneRequestFactory : IDispatch
 {
-    HRESULT CreateTuneRequest(ITuningSpace, IMPEG2TuneRequest*);
+    HRESULT CreateTuneRequest(ITuningSpace TuningSpace, IMPEG2TuneRequest* TuneRequest);
 }
 enum IID_IMPEG2TuneRequestSupport = GUID(0x1b9d5fc3, 0x5bbc, 0x4b6c, [0xbb, 0x18, 0xb9, 0xd1, 0xe, 0x3e, 0xee, 0xbf]);
 interface IMPEG2TuneRequestSupport : IUnknown
@@ -573,193 +574,193 @@ interface IMPEG2TuneRequestSupport : IUnknown
 enum IID_ITunerCap = GUID(0xe60dfa45, 0x8d56, 0x4e65, [0xa8, 0xab, 0xd6, 0xbe, 0x94, 0x12, 0xc2, 0x49]);
 interface ITunerCap : IUnknown
 {
-    HRESULT get_SupportedNetworkTypes(uint, uint*, GUID*);
-    HRESULT get_SupportedVideoFormats(uint*, uint*);
-    HRESULT get_AuxInputCount(uint*, uint*);
+    HRESULT get_SupportedNetworkTypes(uint ulcNetworkTypesMax, uint* pulcNetworkTypes, GUID* pguidNetworkTypes);
+    HRESULT get_SupportedVideoFormats(uint* pulAMTunerModeType, uint* pulAnalogVideoStandard);
+    HRESULT get_AuxInputCount(uint* pulCompositeCount, uint* pulSvideoCount);
 }
 enum IID_ITunerCapEx = GUID(0xed3e0c66, 0x18c8, 0x4ea6, [0x93, 0x0, 0xf6, 0x84, 0x1f, 0xdd, 0x35, 0xdc]);
 interface ITunerCapEx : IUnknown
 {
-    HRESULT get_Has608_708Caption(VARIANT_BOOL*);
+    HRESULT get_Has608_708Caption(VARIANT_BOOL* pbHasCaption);
 }
 enum IID_ITuner = GUID(0x28c52640, 0x18a, 0x11d3, [0x9d, 0x8e, 0x0, 0xc0, 0x4f, 0x72, 0xd9, 0x80]);
 interface ITuner : IUnknown
 {
-    HRESULT get_TuningSpace(ITuningSpace*);
-    HRESULT put_TuningSpace(ITuningSpace);
-    HRESULT EnumTuningSpaces(IEnumTuningSpaces*);
-    HRESULT get_TuneRequest(ITuneRequest*);
-    HRESULT put_TuneRequest(ITuneRequest);
-    HRESULT Validate(ITuneRequest);
-    HRESULT get_PreferredComponentTypes(IComponentTypes*);
-    HRESULT put_PreferredComponentTypes(IComponentTypes);
-    HRESULT get_SignalStrength(int*);
-    HRESULT TriggerSignalEvents(int);
+    HRESULT get_TuningSpace(ITuningSpace* TuningSpace);
+    HRESULT put_TuningSpace(ITuningSpace TuningSpace);
+    HRESULT EnumTuningSpaces(IEnumTuningSpaces* ppEnum);
+    HRESULT get_TuneRequest(ITuneRequest* TuneRequest);
+    HRESULT put_TuneRequest(ITuneRequest TuneRequest);
+    HRESULT Validate(ITuneRequest TuneRequest);
+    HRESULT get_PreferredComponentTypes(IComponentTypes* ComponentTypes);
+    HRESULT put_PreferredComponentTypes(IComponentTypes ComponentTypes);
+    HRESULT get_SignalStrength(int* Strength);
+    HRESULT TriggerSignalEvents(int Interval);
 }
 enum IID_IScanningTuner = GUID(0x1dfd0a5c, 0x284, 0x11d3, [0x9d, 0x8e, 0x0, 0xc0, 0x4f, 0x72, 0xd9, 0x80]);
 interface IScanningTuner : ITuner
 {
     HRESULT SeekUp();
     HRESULT SeekDown();
-    HRESULT ScanUp(int);
-    HRESULT ScanDown(int);
+    HRESULT ScanUp(int MillisecondsPause);
+    HRESULT ScanDown(int MillisecondsPause);
     HRESULT AutoProgram();
 }
 enum IID_IScanningTunerEx = GUID(0x4bbd195, 0xe2d, 0x4593, [0x9b, 0xd5, 0x4f, 0x90, 0x8b, 0xc3, 0x3c, 0xf5]);
 interface IScanningTunerEx : IScanningTuner
 {
-    HRESULT GetCurrentLocator(ILocator*);
-    HRESULT PerformExhaustiveScan(int, int, VARIANT_BOOL, ulong);
-    HRESULT TerminateCurrentScan(int*);
-    HRESULT ResumeCurrentScan(ulong);
-    HRESULT GetTunerScanningCapability(int*, int*, GUID*);
-    HRESULT GetTunerStatus(int*, int*, int*, int*);
-    HRESULT GetCurrentTunerStandardCapability(GUID, int*, int*);
-    HRESULT SetScanSignalTypeFilter(int, int);
+    HRESULT GetCurrentLocator(ILocator* pILocator);
+    HRESULT PerformExhaustiveScan(int dwLowerFreq, int dwHigherFreq, VARIANT_BOOL bFineTune, ulong hEvent);
+    HRESULT TerminateCurrentScan(int* pcurrentFreq);
+    HRESULT ResumeCurrentScan(ulong hEvent);
+    HRESULT GetTunerScanningCapability(int* HardwareAssistedScanning, int* NumStandardsSupported, GUID* BroadcastStandards);
+    HRESULT GetTunerStatus(int* SecondsLeft, int* CurrentLockType, int* AutoDetect, int* CurrentFreq);
+    HRESULT GetCurrentTunerStandardCapability(GUID CurrentBroadcastStandard, int* SettlingTime, int* TvStandardsSupported);
+    HRESULT SetScanSignalTypeFilter(int ScanModulationTypes, int AnalogVideoStandard);
 }
 enum IID_IComponentType = GUID(0x6a340dc0, 0x311, 0x11d3, [0x9d, 0x8e, 0x0, 0xc0, 0x4f, 0x72, 0xd9, 0x80]);
 interface IComponentType : IDispatch
 {
-    HRESULT get_Category(ComponentCategory*);
-    HRESULT put_Category(ComponentCategory);
-    HRESULT get_MediaMajorType(BSTR*);
-    HRESULT put_MediaMajorType(BSTR);
-    HRESULT get__MediaMajorType(GUID*);
-    HRESULT put__MediaMajorType(const(GUID)*);
-    HRESULT get_MediaSubType(BSTR*);
-    HRESULT put_MediaSubType(BSTR);
-    HRESULT get__MediaSubType(GUID*);
-    HRESULT put__MediaSubType(const(GUID)*);
-    HRESULT get_MediaFormatType(BSTR*);
-    HRESULT put_MediaFormatType(BSTR);
-    HRESULT get__MediaFormatType(GUID*);
-    HRESULT put__MediaFormatType(const(GUID)*);
-    HRESULT get_MediaType(AM_MEDIA_TYPE*);
-    HRESULT put_MediaType(AM_MEDIA_TYPE*);
-    HRESULT Clone(IComponentType*);
+    HRESULT get_Category(ComponentCategory* Category);
+    HRESULT put_Category(ComponentCategory Category);
+    HRESULT get_MediaMajorType(BSTR* MediaMajorType);
+    HRESULT put_MediaMajorType(BSTR MediaMajorType);
+    HRESULT get__MediaMajorType(GUID* MediaMajorTypeGuid);
+    HRESULT put__MediaMajorType(const(GUID)* MediaMajorTypeGuid);
+    HRESULT get_MediaSubType(BSTR* MediaSubType);
+    HRESULT put_MediaSubType(BSTR MediaSubType);
+    HRESULT get__MediaSubType(GUID* MediaSubTypeGuid);
+    HRESULT put__MediaSubType(const(GUID)* MediaSubTypeGuid);
+    HRESULT get_MediaFormatType(BSTR* MediaFormatType);
+    HRESULT put_MediaFormatType(BSTR MediaFormatType);
+    HRESULT get__MediaFormatType(GUID* MediaFormatTypeGuid);
+    HRESULT put__MediaFormatType(const(GUID)* MediaFormatTypeGuid);
+    HRESULT get_MediaType(AM_MEDIA_TYPE* MediaType);
+    HRESULT put_MediaType(AM_MEDIA_TYPE* MediaType);
+    HRESULT Clone(IComponentType* NewCT);
 }
 enum IID_ILanguageComponentType = GUID(0xb874c8ba, 0xfa2, 0x11d3, [0x9d, 0x8e, 0x0, 0xc0, 0x4f, 0x72, 0xd9, 0x80]);
 interface ILanguageComponentType : IComponentType
 {
-    HRESULT get_LangID(int*);
-    HRESULT put_LangID(int);
+    HRESULT get_LangID(int* LangID);
+    HRESULT put_LangID(int LangID);
 }
 enum IID_IMPEG2ComponentType = GUID(0x2c073d84, 0xb51c, 0x48c9, [0xaa, 0x9f, 0x68, 0x97, 0x1e, 0x1f, 0x6e, 0x38]);
 interface IMPEG2ComponentType : ILanguageComponentType
 {
-    HRESULT get_StreamType(MPEG2StreamType*);
-    HRESULT put_StreamType(MPEG2StreamType);
+    HRESULT get_StreamType(MPEG2StreamType* MP2StreamType);
+    HRESULT put_StreamType(MPEG2StreamType MP2StreamType);
 }
 enum IID_IATSCComponentType = GUID(0xfc189e4d, 0x7bd4, 0x4125, [0xb3, 0xb3, 0x3a, 0x76, 0xa3, 0x32, 0xcc, 0x96]);
 interface IATSCComponentType : IMPEG2ComponentType
 {
-    HRESULT get_Flags(int*);
-    HRESULT put_Flags(int);
+    HRESULT get_Flags(int* Flags);
+    HRESULT put_Flags(int flags);
 }
 enum IID_IEnumComponentTypes = GUID(0x8a674b4a, 0x1f63, 0x11d3, [0xb6, 0x4c, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IEnumComponentTypes : IUnknown
 {
-    HRESULT Next(uint, IComponentType*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IComponentType* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumComponentTypes*);
+    HRESULT Clone(IEnumComponentTypes* ppEnum);
 }
 enum IID_IComponentTypes = GUID(0xdc13d4a, 0x313, 0x11d3, [0x9d, 0x8e, 0x0, 0xc0, 0x4f, 0x72, 0xd9, 0x80]);
 interface IComponentTypes : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IEnumVARIANT*);
-    HRESULT EnumComponentTypes(IEnumComponentTypes*);
-    HRESULT get_Item(VARIANT, IComponentType*);
-    HRESULT put_Item(VARIANT, IComponentType);
-    HRESULT Add(IComponentType, VARIANT*);
-    HRESULT Remove(VARIANT);
-    HRESULT Clone(IComponentTypes*);
+    HRESULT get_Count(int* Count);
+    HRESULT get__NewEnum(IEnumVARIANT* ppNewEnum);
+    HRESULT EnumComponentTypes(IEnumComponentTypes* ppNewEnum);
+    HRESULT get_Item(VARIANT Index, IComponentType* ComponentType);
+    HRESULT put_Item(VARIANT Index, IComponentType ComponentType);
+    HRESULT Add(IComponentType ComponentType, VARIANT* NewIndex);
+    HRESULT Remove(VARIANT Index);
+    HRESULT Clone(IComponentTypes* NewList);
 }
 enum IID_IComponent = GUID(0x1a5576fc, 0xe19, 0x11d3, [0x9d, 0x8e, 0x0, 0xc0, 0x4f, 0x72, 0xd9, 0x80]);
 interface IComponent : IDispatch
 {
-    HRESULT get_Type(IComponentType*);
-    HRESULT put_Type(IComponentType);
-    HRESULT get_DescLangID(int*);
-    HRESULT put_DescLangID(int);
-    HRESULT get_Status(ComponentStatus*);
-    HRESULT put_Status(ComponentStatus);
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
-    HRESULT Clone(IComponent*);
+    HRESULT get_Type(IComponentType* CT);
+    HRESULT put_Type(IComponentType CT);
+    HRESULT get_DescLangID(int* LangID);
+    HRESULT put_DescLangID(int LangID);
+    HRESULT get_Status(ComponentStatus* Status);
+    HRESULT put_Status(ComponentStatus Status);
+    HRESULT get_Description(BSTR* Description);
+    HRESULT put_Description(BSTR Description);
+    HRESULT Clone(IComponent* NewComponent);
 }
 enum IID_IAnalogAudioComponentType = GUID(0x2cfeb2a8, 0x1787, 0x4a24, [0xa9, 0x41, 0xc6, 0xea, 0xec, 0x39, 0xc8, 0x42]);
 interface IAnalogAudioComponentType : IComponentType
 {
-    HRESULT get_AnalogAudioMode(TVAudioMode*);
-    HRESULT put_AnalogAudioMode(TVAudioMode);
+    HRESULT get_AnalogAudioMode(TVAudioMode* Mode);
+    HRESULT put_AnalogAudioMode(TVAudioMode Mode);
 }
 enum IID_IMPEG2Component = GUID(0x1493e353, 0x1eb6, 0x473c, [0x80, 0x2d, 0x8e, 0x6b, 0x8e, 0xc9, 0xd2, 0xa9]);
 interface IMPEG2Component : IComponent
 {
-    HRESULT get_PID(int*);
-    HRESULT put_PID(int);
-    HRESULT get_PCRPID(int*);
-    HRESULT put_PCRPID(int);
-    HRESULT get_ProgramNumber(int*);
-    HRESULT put_ProgramNumber(int);
+    HRESULT get_PID(int* PID);
+    HRESULT put_PID(int PID);
+    HRESULT get_PCRPID(int* PCRPID);
+    HRESULT put_PCRPID(int PCRPID);
+    HRESULT get_ProgramNumber(int* ProgramNumber);
+    HRESULT put_ProgramNumber(int ProgramNumber);
 }
 enum IID_IEnumComponents = GUID(0x2a6e2939, 0x2595, 0x11d3, [0xb6, 0x4c, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IEnumComponents : IUnknown
 {
-    HRESULT Next(uint, IComponent*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IComponent* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumComponents*);
+    HRESULT Clone(IEnumComponents* ppEnum);
 }
 enum IID_IComponents = GUID(0x39a48091, 0xfffe, 0x4182, [0xa1, 0x61, 0x3f, 0xf8, 0x2, 0x64, 0xe, 0x26]);
 interface IComponents : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IEnumVARIANT*);
-    HRESULT EnumComponents(IEnumComponents*);
-    HRESULT get_Item(VARIANT, IComponent*);
-    HRESULT Add(IComponent, VARIANT*);
-    HRESULT Remove(VARIANT);
-    HRESULT Clone(IComponents*);
-    HRESULT put_Item(VARIANT, IComponent);
+    HRESULT get_Count(int* Count);
+    HRESULT get__NewEnum(IEnumVARIANT* ppNewEnum);
+    HRESULT EnumComponents(IEnumComponents* ppNewEnum);
+    HRESULT get_Item(VARIANT Index, IComponent* ppComponent);
+    HRESULT Add(IComponent Component, VARIANT* NewIndex);
+    HRESULT Remove(VARIANT Index);
+    HRESULT Clone(IComponents* NewList);
+    HRESULT put_Item(VARIANT Index, IComponent ppComponent);
 }
 enum IID_IComponentsOld = GUID(0xfcd01846, 0xe19, 0x11d3, [0x9d, 0x8e, 0x0, 0xc0, 0x4f, 0x72, 0xd9, 0x80]);
 interface IComponentsOld : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IEnumVARIANT*);
-    HRESULT EnumComponents(IEnumComponents*);
-    HRESULT get_Item(VARIANT, IComponent*);
-    HRESULT Add(IComponent, VARIANT*);
-    HRESULT Remove(VARIANT);
-    HRESULT Clone(IComponents*);
+    HRESULT get_Count(int* Count);
+    HRESULT get__NewEnum(IEnumVARIANT* ppNewEnum);
+    HRESULT EnumComponents(IEnumComponents* ppNewEnum);
+    HRESULT get_Item(VARIANT Index, IComponent* ppComponent);
+    HRESULT Add(IComponent Component, VARIANT* NewIndex);
+    HRESULT Remove(VARIANT Index);
+    HRESULT Clone(IComponents* NewList);
 }
 enum IID_ILocator = GUID(0x286d7f89, 0x760c, 0x4f89, [0x80, 0xc4, 0x66, 0x84, 0x1d, 0x25, 0x7, 0xaa]);
 interface ILocator : IDispatch
 {
-    HRESULT get_CarrierFrequency(int*);
-    HRESULT put_CarrierFrequency(int);
-    HRESULT get_InnerFEC(FECMethod*);
-    HRESULT put_InnerFEC(FECMethod);
-    HRESULT get_InnerFECRate(BinaryConvolutionCodeRate*);
-    HRESULT put_InnerFECRate(BinaryConvolutionCodeRate);
-    HRESULT get_OuterFEC(FECMethod*);
-    HRESULT put_OuterFEC(FECMethod);
-    HRESULT get_OuterFECRate(BinaryConvolutionCodeRate*);
-    HRESULT put_OuterFECRate(BinaryConvolutionCodeRate);
-    HRESULT get_Modulation(ModulationType*);
-    HRESULT put_Modulation(ModulationType);
-    HRESULT get_SymbolRate(int*);
-    HRESULT put_SymbolRate(int);
-    HRESULT Clone(ILocator*);
+    HRESULT get_CarrierFrequency(int* Frequency);
+    HRESULT put_CarrierFrequency(int Frequency);
+    HRESULT get_InnerFEC(FECMethod* FEC);
+    HRESULT put_InnerFEC(FECMethod FEC);
+    HRESULT get_InnerFECRate(BinaryConvolutionCodeRate* FEC);
+    HRESULT put_InnerFECRate(BinaryConvolutionCodeRate FEC);
+    HRESULT get_OuterFEC(FECMethod* FEC);
+    HRESULT put_OuterFEC(FECMethod FEC);
+    HRESULT get_OuterFECRate(BinaryConvolutionCodeRate* FEC);
+    HRESULT put_OuterFECRate(BinaryConvolutionCodeRate FEC);
+    HRESULT get_Modulation(ModulationType* Modulation);
+    HRESULT put_Modulation(ModulationType Modulation);
+    HRESULT get_SymbolRate(int* Rate);
+    HRESULT put_SymbolRate(int Rate);
+    HRESULT Clone(ILocator* NewLocator);
 }
 enum IID_IAnalogLocator = GUID(0x34d1f26b, 0xe339, 0x430d, [0xab, 0xce, 0x73, 0x8c, 0xb4, 0x89, 0x84, 0xdc]);
 interface IAnalogLocator : ILocator
 {
-    HRESULT get_VideoStandard(AnalogVideoStandard*);
-    HRESULT put_VideoStandard(AnalogVideoStandard);
+    HRESULT get_VideoStandard(AnalogVideoStandard* AVS);
+    HRESULT put_VideoStandard(AnalogVideoStandard AVS);
 }
 enum IID_IDigitalLocator = GUID(0x19b595d8, 0x839a, 0x47f0, [0x96, 0xdf, 0x4f, 0x19, 0x4f, 0x3c, 0x76, 0x8c]);
 interface IDigitalLocator : ILocator
@@ -768,16 +769,16 @@ interface IDigitalLocator : ILocator
 enum IID_IATSCLocator = GUID(0xbf8d986f, 0x8c2b, 0x4131, [0x94, 0xd7, 0x4d, 0x3d, 0x9f, 0xcc, 0x21, 0xef]);
 interface IATSCLocator : IDigitalLocator
 {
-    HRESULT get_PhysicalChannel(int*);
-    HRESULT put_PhysicalChannel(int);
-    HRESULT get_TSID(int*);
-    HRESULT put_TSID(int);
+    HRESULT get_PhysicalChannel(int* PhysicalChannel);
+    HRESULT put_PhysicalChannel(int PhysicalChannel);
+    HRESULT get_TSID(int* TSID);
+    HRESULT put_TSID(int TSID);
 }
 enum IID_IATSCLocator2 = GUID(0x612aa885, 0x66cf, 0x4090, [0xba, 0xa, 0x56, 0x6f, 0x53, 0x12, 0xe4, 0xca]);
 interface IATSCLocator2 : IATSCLocator
 {
-    HRESULT get_ProgramNumber(int*);
-    HRESULT put_ProgramNumber(int);
+    HRESULT get_ProgramNumber(int* ProgramNumber);
+    HRESULT put_ProgramNumber(int ProgramNumber);
 }
 enum IID_IDigitalCableLocator = GUID(0x48f66a11, 0x171a, 0x419a, [0x95, 0x25, 0xbe, 0xee, 0xcd, 0x51, 0x58, 0x4c]);
 interface IDigitalCableLocator : IATSCLocator2
@@ -786,58 +787,58 @@ interface IDigitalCableLocator : IATSCLocator2
 enum IID_IDVBTLocator = GUID(0x8664da16, 0xdda2, 0x42ac, [0x92, 0x6a, 0xc1, 0x8f, 0x91, 0x27, 0xc3, 0x2]);
 interface IDVBTLocator : IDigitalLocator
 {
-    HRESULT get_Bandwidth(int*);
-    HRESULT put_Bandwidth(int);
-    HRESULT get_LPInnerFEC(FECMethod*);
-    HRESULT put_LPInnerFEC(FECMethod);
-    HRESULT get_LPInnerFECRate(BinaryConvolutionCodeRate*);
-    HRESULT put_LPInnerFECRate(BinaryConvolutionCodeRate);
-    HRESULT get_HAlpha(HierarchyAlpha*);
-    HRESULT put_HAlpha(HierarchyAlpha);
-    HRESULT get_Guard(GuardInterval*);
-    HRESULT put_Guard(GuardInterval);
-    HRESULT get_Mode(TransmissionMode*);
-    HRESULT put_Mode(TransmissionMode);
-    HRESULT get_OtherFrequencyInUse(VARIANT_BOOL*);
-    HRESULT put_OtherFrequencyInUse(VARIANT_BOOL);
+    HRESULT get_Bandwidth(int* BandWidthVal);
+    HRESULT put_Bandwidth(int BandwidthVal);
+    HRESULT get_LPInnerFEC(FECMethod* FEC);
+    HRESULT put_LPInnerFEC(FECMethod FEC);
+    HRESULT get_LPInnerFECRate(BinaryConvolutionCodeRate* FEC);
+    HRESULT put_LPInnerFECRate(BinaryConvolutionCodeRate FEC);
+    HRESULT get_HAlpha(HierarchyAlpha* Alpha);
+    HRESULT put_HAlpha(HierarchyAlpha Alpha);
+    HRESULT get_Guard(GuardInterval* GI);
+    HRESULT put_Guard(GuardInterval GI);
+    HRESULT get_Mode(TransmissionMode* mode);
+    HRESULT put_Mode(TransmissionMode mode);
+    HRESULT get_OtherFrequencyInUse(VARIANT_BOOL* OtherFrequencyInUseVal);
+    HRESULT put_OtherFrequencyInUse(VARIANT_BOOL OtherFrequencyInUseVal);
 }
 enum IID_IDVBTLocator2 = GUID(0x448a2edf, 0xae95, 0x4b43, [0xa3, 0xcc, 0x74, 0x78, 0x43, 0xc4, 0x53, 0xd4]);
 interface IDVBTLocator2 : IDVBTLocator
 {
-    HRESULT get_PhysicalLayerPipeId(int*);
-    HRESULT put_PhysicalLayerPipeId(int);
+    HRESULT get_PhysicalLayerPipeId(int* PhysicalLayerPipeIdVal);
+    HRESULT put_PhysicalLayerPipeId(int PhysicalLayerPipeIdVal);
 }
 enum IID_IDVBSLocator = GUID(0x3d7c353c, 0xd04, 0x45f1, [0xa7, 0x42, 0xf9, 0x7c, 0xc1, 0x18, 0x8d, 0xc8]);
 interface IDVBSLocator : IDigitalLocator
 {
-    HRESULT get_SignalPolarisation(Polarisation*);
-    HRESULT put_SignalPolarisation(Polarisation);
-    HRESULT get_WestPosition(VARIANT_BOOL*);
-    HRESULT put_WestPosition(VARIANT_BOOL);
-    HRESULT get_OrbitalPosition(int*);
-    HRESULT put_OrbitalPosition(int);
-    HRESULT get_Azimuth(int*);
-    HRESULT put_Azimuth(int);
-    HRESULT get_Elevation(int*);
-    HRESULT put_Elevation(int);
+    HRESULT get_SignalPolarisation(Polarisation* PolarisationVal);
+    HRESULT put_SignalPolarisation(Polarisation PolarisationVal);
+    HRESULT get_WestPosition(VARIANT_BOOL* WestLongitude);
+    HRESULT put_WestPosition(VARIANT_BOOL WestLongitude);
+    HRESULT get_OrbitalPosition(int* longitude);
+    HRESULT put_OrbitalPosition(int longitude);
+    HRESULT get_Azimuth(int* Azimuth);
+    HRESULT put_Azimuth(int Azimuth);
+    HRESULT get_Elevation(int* Elevation);
+    HRESULT put_Elevation(int Elevation);
 }
 enum IID_IDVBSLocator2 = GUID(0x6044634a, 0x1733, 0x4f99, [0xb9, 0x82, 0x5f, 0xb1, 0x2a, 0xfc, 0xe4, 0xf0]);
 interface IDVBSLocator2 : IDVBSLocator
 {
-    HRESULT get_DiseqLNBSource(LNB_Source*);
-    HRESULT put_DiseqLNBSource(LNB_Source);
-    HRESULT get_LocalOscillatorOverrideLow(int*);
-    HRESULT put_LocalOscillatorOverrideLow(int);
-    HRESULT get_LocalOscillatorOverrideHigh(int*);
-    HRESULT put_LocalOscillatorOverrideHigh(int);
-    HRESULT get_LocalLNBSwitchOverride(int*);
-    HRESULT put_LocalLNBSwitchOverride(int);
-    HRESULT get_LocalSpectralInversionOverride(SpectralInversion*);
-    HRESULT put_LocalSpectralInversionOverride(SpectralInversion);
-    HRESULT get_SignalRollOff(RollOff*);
-    HRESULT put_SignalRollOff(RollOff);
-    HRESULT get_SignalPilot(Pilot*);
-    HRESULT put_SignalPilot(Pilot);
+    HRESULT get_DiseqLNBSource(LNB_Source* DiseqLNBSourceVal);
+    HRESULT put_DiseqLNBSource(LNB_Source DiseqLNBSourceVal);
+    HRESULT get_LocalOscillatorOverrideLow(int* LocalOscillatorOverrideLowVal);
+    HRESULT put_LocalOscillatorOverrideLow(int LocalOscillatorOverrideLowVal);
+    HRESULT get_LocalOscillatorOverrideHigh(int* LocalOscillatorOverrideHighVal);
+    HRESULT put_LocalOscillatorOverrideHigh(int LocalOscillatorOverrideHighVal);
+    HRESULT get_LocalLNBSwitchOverride(int* LocalLNBSwitchOverrideVal);
+    HRESULT put_LocalLNBSwitchOverride(int LocalLNBSwitchOverrideVal);
+    HRESULT get_LocalSpectralInversionOverride(SpectralInversion* LocalSpectralInversionOverrideVal);
+    HRESULT put_LocalSpectralInversionOverride(SpectralInversion LocalSpectralInversionOverrideVal);
+    HRESULT get_SignalRollOff(RollOff* RollOffVal);
+    HRESULT put_SignalRollOff(RollOff RollOffVal);
+    HRESULT get_SignalPilot(Pilot* PilotVal);
+    HRESULT put_SignalPilot(Pilot PilotVal);
 }
 enum IID_IDVBCLocator = GUID(0x6e42f36e, 0x1dd2, 0x43c4, [0x9f, 0x78, 0x69, 0xd2, 0x5a, 0xe3, 0x90, 0x34]);
 interface IDVBCLocator : IDigitalLocator
@@ -850,124 +851,124 @@ interface IISDBSLocator : IDVBSLocator
 enum IID_IESOpenMmiEvent = GUID(0xba4b6526, 0x1a35, 0x4635, [0x8b, 0x56, 0x3e, 0xc6, 0x12, 0x74, 0x6a, 0x8c]);
 interface IESOpenMmiEvent : IESEvent
 {
-    HRESULT GetDialogNumber(uint*, uint*);
-    HRESULT GetDialogType(GUID*);
-    HRESULT GetDialogData(SAFEARRAY**);
-    HRESULT GetDialogStringData(BSTR*, BSTR*);
+    HRESULT GetDialogNumber(uint* pDialogRequest, uint* pDialogNumber);
+    HRESULT GetDialogType(GUID* guidDialogType);
+    HRESULT GetDialogData(SAFEARRAY** pbData);
+    HRESULT GetDialogStringData(BSTR* pbstrBaseUrl, BSTR* pbstrData);
 }
 enum IID_IESCloseMmiEvent = GUID(0x6b80e96f, 0x55e2, 0x45aa, [0xb7, 0x54, 0xc, 0x23, 0xc8, 0xe7, 0xd5, 0xc1]);
 interface IESCloseMmiEvent : IESEvent
 {
-    HRESULT GetDialogNumber(uint*);
+    HRESULT GetDialogNumber(uint* pDialogNumber);
 }
 enum IID_IESValueUpdatedEvent = GUID(0x8a24c46e, 0xbb63, 0x4664, [0x86, 0x2, 0x5d, 0x9c, 0x71, 0x8c, 0x14, 0x6d]);
 interface IESValueUpdatedEvent : IESEvent
 {
-    HRESULT GetValueNames(SAFEARRAY**);
+    HRESULT GetValueNames(SAFEARRAY** pbstrNames);
 }
 enum IID_IESRequestTunerEvent = GUID(0x54c7a5e8, 0xc3bb, 0x4f51, [0xaf, 0x14, 0xe0, 0xe2, 0xc0, 0xe3, 0x4c, 0x6d]);
 interface IESRequestTunerEvent : IESEvent
 {
-    HRESULT GetPriority(ubyte*);
-    HRESULT GetReason(ubyte*);
-    HRESULT GetConsequences(ubyte*);
-    HRESULT GetEstimatedTime(uint*);
+    HRESULT GetPriority(ubyte* pbyPriority);
+    HRESULT GetReason(ubyte* pbyReason);
+    HRESULT GetConsequences(ubyte* pbyConsequences);
+    HRESULT GetEstimatedTime(uint* pdwEstimatedTime);
 }
 enum IID_IESIsdbCasResponseEvent = GUID(0x2017cb03, 0xdc0f, 0x4c24, [0x83, 0xca, 0x36, 0x30, 0x7b, 0x2c, 0xd1, 0x9f]);
 interface IESIsdbCasResponseEvent : IESEvent
 {
-    HRESULT GetRequestId(uint*);
-    HRESULT GetStatus(uint*);
-    HRESULT GetDataLength(uint*);
-    HRESULT GetResponseData(SAFEARRAY**);
+    HRESULT GetRequestId(uint* pRequestId);
+    HRESULT GetStatus(uint* pStatus);
+    HRESULT GetDataLength(uint* pRequestLength);
+    HRESULT GetResponseData(SAFEARRAY** pbData);
 }
 enum IID_IGpnvsCommonBase = GUID(0x907e0b5c, 0xe42d, 0x4f04, [0x91, 0xf0, 0x26, 0xf4, 0x1, 0xf3, 0x69, 0x7]);
 interface IGpnvsCommonBase : IUnknown
 {
-    HRESULT GetValueUpdateName(BSTR*);
+    HRESULT GetValueUpdateName(BSTR* pbstrName);
 }
 enum IID_IESEventFactory = GUID(0x506a09b8, 0x7f86, 0x4e04, [0xac, 0x5, 0x33, 0x3, 0xbf, 0xe8, 0xfc, 0x49]);
 interface IESEventFactory : IUnknown
 {
-    HRESULT CreateESEvent(IUnknown, uint, GUID, uint, ubyte*, BSTR, IUnknown, IESEvent*);
+    HRESULT CreateESEvent(IUnknown pServiceProvider, uint dwEventId, GUID guidEventType, uint dwEventDataLength, ubyte* pEventData, BSTR bstrBaseUrl, IUnknown pInitContext, IESEvent* ppESEvent);
 }
 enum IID_IESLicenseRenewalResultEvent = GUID(0xd5a48ef5, 0xa81b, 0x4df0, [0xac, 0xaa, 0x5e, 0x35, 0xe7, 0xea, 0x45, 0xd4]);
 interface IESLicenseRenewalResultEvent : IESEvent
 {
-    HRESULT GetCallersId(uint*);
-    HRESULT GetFileName(BSTR*);
-    HRESULT IsRenewalSuccessful(BOOL*);
-    HRESULT IsCheckEntitlementCallRequired(BOOL*);
-    HRESULT GetDescrambledStatus(uint*);
-    HRESULT GetRenewalResultCode(uint*);
-    HRESULT GetCASFailureCode(uint*);
-    HRESULT GetRenewalHResult(HRESULT*);
-    HRESULT GetEntitlementTokenLength(uint*);
-    HRESULT GetEntitlementToken(SAFEARRAY**);
-    HRESULT GetExpiryDate(ulong*);
+    HRESULT GetCallersId(uint* pdwCallersId);
+    HRESULT GetFileName(BSTR* pbstrFilename);
+    HRESULT IsRenewalSuccessful(BOOL* pfRenewalSuccessful);
+    HRESULT IsCheckEntitlementCallRequired(BOOL* pfCheckEntTokenCallNeeded);
+    HRESULT GetDescrambledStatus(uint* pDescrambledStatus);
+    HRESULT GetRenewalResultCode(uint* pdwRenewalResultCode);
+    HRESULT GetCASFailureCode(uint* pdwCASFailureCode);
+    HRESULT GetRenewalHResult(HRESULT* phr);
+    HRESULT GetEntitlementTokenLength(uint* pdwLength);
+    HRESULT GetEntitlementToken(SAFEARRAY** pbData);
+    HRESULT GetExpiryDate(ulong* pqwExpiryDate);
 }
 enum IID_IESFileExpiryDateEvent = GUID(0xba9edcb6, 0x4d36, 0x4cfe, [0x8c, 0x56, 0x87, 0xa6, 0xb0, 0xca, 0x48, 0xe1]);
 interface IESFileExpiryDateEvent : IESEvent
 {
-    HRESULT GetTunerId(GUID*);
-    HRESULT GetExpiryDate(ulong*);
-    HRESULT GetFinalExpiryDate(ulong*);
-    HRESULT GetMaxRenewalCount(uint*);
-    HRESULT IsEntitlementTokenPresent(BOOL*);
-    HRESULT DoesExpireAfterFirstUse(BOOL*);
+    HRESULT GetTunerId(GUID* pguidTunerId);
+    HRESULT GetExpiryDate(ulong* pqwExpiryDate);
+    HRESULT GetFinalExpiryDate(ulong* pqwExpiryDate);
+    HRESULT GetMaxRenewalCount(uint* dwMaxRenewalCount);
+    HRESULT IsEntitlementTokenPresent(BOOL* pfEntTokenPresent);
+    HRESULT DoesExpireAfterFirstUse(BOOL* pfExpireAfterFirstUse);
 }
 enum IID_IESEventService = GUID(0xed89a619, 0x4c06, 0x4b2f, [0x99, 0xeb, 0xc7, 0x66, 0x9b, 0x13, 0x4, 0x7c]);
 interface IESEventService : IUnknown
 {
-    HRESULT FireESEvent(IESEvent);
+    HRESULT FireESEvent(IESEvent pESEvent);
 }
 enum IID_IESEventServiceConfiguration = GUID(0x33b9daae, 0x9309, 0x491d, [0xa0, 0x51, 0xbc, 0xad, 0x2a, 0x70, 0xcd, 0x66]);
 interface IESEventServiceConfiguration : IUnknown
 {
-    HRESULT SetParent(IESEventService);
+    HRESULT SetParent(IESEventService pEventService);
     HRESULT RemoveParent();
-    HRESULT SetOwner(IESEvents);
+    HRESULT SetOwner(IESEvents pESEvents);
     HRESULT RemoveOwner();
-    HRESULT SetGraph(IFilterGraph);
-    HRESULT RemoveGraph(IFilterGraph);
+    HRESULT SetGraph(IFilterGraph pGraph);
+    HRESULT RemoveGraph(IFilterGraph pGraph);
 }
 enum IID_IRegisterTuner = GUID(0x359b3901, 0x572c, 0x4854, [0xbb, 0x49, 0xcd, 0xef, 0x66, 0x60, 0x6a, 0x25]);
 interface IRegisterTuner : IUnknown
 {
-    HRESULT Register(ITuner, IGraphBuilder);
+    HRESULT Register(ITuner pTuner, IGraphBuilder pGraph);
     HRESULT Unregister();
 }
 enum IID_IBDAComparable = GUID(0xb34505e0, 0x2f0e, 0x497b, [0x80, 0xbc, 0xd4, 0x3f, 0x3b, 0x24, 0xed, 0x7f]);
 interface IBDAComparable : IUnknown
 {
-    HRESULT CompareExact(IDispatch, int*);
-    HRESULT CompareEquivalent(IDispatch, uint, int*);
-    HRESULT HashExact(long*);
-    HRESULT HashExactIncremental(long, long*);
-    HRESULT HashEquivalent(uint, long*);
-    HRESULT HashEquivalentIncremental(long, uint, long*);
+    HRESULT CompareExact(IDispatch CompareTo, int* Result);
+    HRESULT CompareEquivalent(IDispatch CompareTo, uint dwFlags, int* Result);
+    HRESULT HashExact(long* Result);
+    HRESULT HashExactIncremental(long PartialResult, long* Result);
+    HRESULT HashEquivalent(uint dwFlags, long* Result);
+    HRESULT HashEquivalentIncremental(long PartialResult, uint dwFlags, long* Result);
 }
 enum IID_IPersistTuneXml = GUID(0x754cd31, 0x8d15, 0x47a9, [0x82, 0x15, 0xd2, 0x0, 0x64, 0x15, 0x72, 0x44]);
 interface IPersistTuneXml : IPersist
 {
     HRESULT InitNew();
-    HRESULT Load(VARIANT);
-    HRESULT Save(VARIANT*);
+    HRESULT Load(VARIANT varValue);
+    HRESULT Save(VARIANT* pvarFragment);
 }
 enum IID_IPersistTuneXmlUtility = GUID(0x990237ae, 0xac11, 0x4614, [0xbe, 0x8f, 0xdd, 0x21, 0x7a, 0x4c, 0xb4, 0xcb]);
 interface IPersistTuneXmlUtility : IUnknown
 {
-    HRESULT Deserialize(VARIANT, IUnknown*);
+    HRESULT Deserialize(VARIANT varValue, IUnknown* ppObject);
 }
 enum IID_IPersistTuneXmlUtility2 = GUID(0x992e165f, 0xea24, 0x4b2f, [0x9a, 0x1d, 0x0, 0x9d, 0x92, 0x12, 0x4, 0x51]);
 interface IPersistTuneXmlUtility2 : IPersistTuneXmlUtility
 {
-    HRESULT Serialize(ITuneRequest, BSTR*);
+    HRESULT Serialize(ITuneRequest piTuneRequest, BSTR* pString);
 }
 enum IID_IBDACreateTuneRequestEx = GUID(0xc0a4a1d4, 0x2b3c, 0x491a, [0xba, 0x22, 0x49, 0x9f, 0xba, 0xdd, 0x4d, 0x12]);
 interface IBDACreateTuneRequestEx : IUnknown
 {
-    HRESULT CreateTuneRequestEx(const(GUID)*, ITuneRequest*);
+    HRESULT CreateTuneRequestEx(const(GUID)* TuneRequestIID, ITuneRequest* TuneRequest);
 }
 enum CLSID_SystemTuningSpaces = GUID(0xd02aac50, 0x27e, 0x11d3, [0x9d, 0x8e, 0x0, 0xc0, 0x4f, 0x72, 0xd9, 0x80]);
 struct SystemTuningSpaces
@@ -1421,29 +1422,29 @@ enum : int
 enum IID_IETFilterConfig = GUID(0xc4c4c4d1, 0x49, 0x4e2b, [0x98, 0xfb, 0x95, 0x37, 0xf6, 0xce, 0x51, 0x6d]);
 interface IETFilterConfig : IUnknown
 {
-    HRESULT InitLicense(int);
-    HRESULT GetSecureChannelObject(IUnknown*);
+    HRESULT InitLicense(int LicenseId);
+    HRESULT GetSecureChannelObject(IUnknown* ppUnkDRMSecureChannel);
 }
 enum IID_IDTFilterConfig = GUID(0xc4c4c4d2, 0x49, 0x4e2b, [0x98, 0xfb, 0x95, 0x37, 0xf6, 0xce, 0x51, 0x6d]);
 interface IDTFilterConfig : IUnknown
 {
-    HRESULT GetSecureChannelObject(IUnknown*);
+    HRESULT GetSecureChannelObject(IUnknown* ppUnkDRMSecureChannel);
 }
 enum IID_IXDSCodecConfig = GUID(0xc4c4c4d3, 0x49, 0x4e2b, [0x98, 0xfb, 0x95, 0x37, 0xf6, 0xce, 0x51, 0x6d]);
 interface IXDSCodecConfig : IUnknown
 {
-    HRESULT GetSecureChannelObject(IUnknown*);
-    HRESULT SetPauseBufferTime(uint);
+    HRESULT GetSecureChannelObject(IUnknown* ppUnkDRMSecureChannel);
+    HRESULT SetPauseBufferTime(uint dwPauseBufferTime);
 }
 enum IID_IDTFilterLicenseRenewal = GUID(0x8a78b317, 0xe405, 0x4a43, [0x99, 0x4a, 0x62, 0xd, 0x8f, 0x5c, 0xe2, 0x5e]);
 interface IDTFilterLicenseRenewal : IUnknown
 {
-    HRESULT GetLicenseRenewalData(PWSTR*, PWSTR*, PWSTR*);
+    HRESULT GetLicenseRenewalData(PWSTR* ppwszFileName, PWSTR* ppwszExpiredKid, PWSTR* ppwszTunerId);
 }
 enum IID_IPTFilterLicenseRenewal = GUID(0x26d836a5, 0xc15, 0x44c7, [0xac, 0x59, 0xb0, 0xda, 0x87, 0x28, 0xf2, 0x40]);
 interface IPTFilterLicenseRenewal : IUnknown
 {
-    HRESULT RenewLicenses(PWSTR, PWSTR, uint, BOOL);
+    HRESULT RenewLicenses(PWSTR wszFileName, PWSTR wszExpiredKid, uint dwCallersId, BOOL bHighPriority);
     HRESULT CancelLicenseRenewal();
 }
 enum IID_IMceBurnerControl = GUID(0x5a86b91a, 0xe71e, 0x46c1, [0x88, 0xa9, 0x9b, 0xb3, 0x38, 0x71, 0x5, 0x52]);
@@ -1454,11 +1455,11 @@ interface IMceBurnerControl : IUnknown
 enum IID_IETFilter = GUID(0xc4c4c4b1, 0x49, 0x4e2b, [0x98, 0xfb, 0x95, 0x37, 0xf6, 0xce, 0x51, 0x6d]);
 interface IETFilter : IUnknown
 {
-    HRESULT get_EvalRatObjOK(HRESULT*);
-    HRESULT GetCurrRating(EnTvRat_System*, EnTvRat_GenericLevel*, int*);
-    HRESULT GetCurrLicenseExpDate(ProtType*, int*);
+    HRESULT get_EvalRatObjOK(HRESULT* pHrCoCreateRetVal);
+    HRESULT GetCurrRating(EnTvRat_System* pEnSystem, EnTvRat_GenericLevel* pEnRating, int* plbfEnAttr);
+    HRESULT GetCurrLicenseExpDate(ProtType* protType, int* lpDateTime);
     HRESULT GetLastErrorCode();
-    HRESULT SetRecordingOn(BOOL);
+    HRESULT SetRecordingOn(BOOL fRecState);
 }
 enum IID_IETFilterEvents = GUID(0xc4c4c4c1, 0x49, 0x4e2b, [0x98, 0xfb, 0x95, 0x37, 0xf6, 0xce, 0x51, 0x6d]);
 interface IETFilterEvents : IDispatch
@@ -1471,28 +1472,28 @@ struct ETFilter
 enum IID_IDTFilter = GUID(0xc4c4c4b2, 0x49, 0x4e2b, [0x98, 0xfb, 0x95, 0x37, 0xf6, 0xce, 0x51, 0x6d]);
 interface IDTFilter : IUnknown
 {
-    HRESULT get_EvalRatObjOK(HRESULT*);
-    HRESULT GetCurrRating(EnTvRat_System*, EnTvRat_GenericLevel*, int*);
-    HRESULT get_BlockedRatingAttributes(EnTvRat_System, EnTvRat_GenericLevel, int*);
-    HRESULT put_BlockedRatingAttributes(EnTvRat_System, EnTvRat_GenericLevel, int);
-    HRESULT get_BlockUnRated(BOOL*);
-    HRESULT put_BlockUnRated(BOOL);
-    HRESULT get_BlockUnRatedDelay(int*);
-    HRESULT put_BlockUnRatedDelay(int);
+    HRESULT get_EvalRatObjOK(HRESULT* pHrCoCreateRetVal);
+    HRESULT GetCurrRating(EnTvRat_System* pEnSystem, EnTvRat_GenericLevel* pEnRating, int* plbfEnAttr);
+    HRESULT get_BlockedRatingAttributes(EnTvRat_System enSystem, EnTvRat_GenericLevel enLevel, int* plbfEnAttr);
+    HRESULT put_BlockedRatingAttributes(EnTvRat_System enSystem, EnTvRat_GenericLevel enLevel, int lbfAttrs);
+    HRESULT get_BlockUnRated(BOOL* pfBlockUnRatedShows);
+    HRESULT put_BlockUnRated(BOOL fBlockUnRatedShows);
+    HRESULT get_BlockUnRatedDelay(int* pmsecsDelayBeforeBlock);
+    HRESULT put_BlockUnRatedDelay(int msecsDelayBeforeBlock);
 }
 enum IID_IDTFilter2 = GUID(0xc4c4c4b4, 0x49, 0x4e2b, [0x98, 0xfb, 0x95, 0x37, 0xf6, 0xce, 0x51, 0x6d]);
 interface IDTFilter2 : IDTFilter
 {
-    HRESULT get_ChallengeUrl(BSTR*);
-    HRESULT GetCurrLicenseExpDate(ProtType*, int*);
+    HRESULT get_ChallengeUrl(BSTR* pbstrChallengeUrl);
+    HRESULT GetCurrLicenseExpDate(ProtType* protType, int* lpDateTime);
     HRESULT GetLastErrorCode();
 }
 enum IID_IDTFilter3 = GUID(0x513998cc, 0xe929, 0x4cdf, [0x9f, 0xbd, 0xba, 0xd1, 0xe0, 0x31, 0x48, 0x66]);
 interface IDTFilter3 : IDTFilter2
 {
-    HRESULT GetProtectionType(ProtType*);
-    HRESULT LicenseHasExpirationDate(BOOL*);
-    HRESULT SetRights(BSTR);
+    HRESULT GetProtectionType(ProtType* pProtectionType);
+    HRESULT LicenseHasExpirationDate(BOOL* pfLicenseHasExpirationDate);
+    HRESULT SetRights(BSTR bstrRights);
 }
 enum IID_IDTFilterEvents = GUID(0xc4c4c4c2, 0x49, 0x4e2b, [0x98, 0xfb, 0x95, 0x37, 0xf6, 0xce, 0x51, 0x6d]);
 interface IDTFilterEvents : IDispatch
@@ -1505,12 +1506,12 @@ struct DTFilter
 enum IID_IXDSCodec = GUID(0xc4c4c4b3, 0x49, 0x4e2b, [0x98, 0xfb, 0x95, 0x37, 0xf6, 0xce, 0x51, 0x6d]);
 interface IXDSCodec : IUnknown
 {
-    HRESULT get_XDSToRatObjOK(HRESULT*);
-    HRESULT put_CCSubstreamService(int);
-    HRESULT get_CCSubstreamService(int*);
-    HRESULT GetContentAdvisoryRating(int*, int*, int*, long*, long*);
-    HRESULT GetXDSPacket(int*, int*, BSTR*, int*, int*, long*, long*);
-    HRESULT GetCurrLicenseExpDate(ProtType*, int*);
+    HRESULT get_XDSToRatObjOK(HRESULT* pHrCoCreateRetVal);
+    HRESULT put_CCSubstreamService(int SubstreamMask);
+    HRESULT get_CCSubstreamService(int* pSubstreamMask);
+    HRESULT GetContentAdvisoryRating(int* pRat, int* pPktSeqID, int* pCallSeqID, long* pTimeStart, long* pTimeEnd);
+    HRESULT GetXDSPacket(int* pXDSClassPkt, int* pXDSTypePkt, BSTR* pBstrXDSPkt, int* pPktSeqID, int* pCallSeqID, long* pTimeStart, long* pTimeEnd);
+    HRESULT GetCurrLicenseExpDate(ProtType* protType, int* lpDateTime);
     HRESULT GetLastErrorCode();
 }
 enum IID_IXDSCodecEvents = GUID(0xc4c4c4c3, 0x49, 0x4e2b, [0x98, 0xfb, 0x95, 0x37, 0xf6, 0xce, 0x51, 0x6d]);
@@ -1529,17 +1530,17 @@ enum IID_IXDSToRat = GUID(0xc5c5c5b0, 0x3abc, 0x11d6, [0xb2, 0x5b, 0x0, 0xc0, 0x
 interface IXDSToRat : IDispatch
 {
     HRESULT Init();
-    HRESULT ParseXDSBytePair(ubyte, ubyte, EnTvRat_System*, EnTvRat_GenericLevel*, int*);
+    HRESULT ParseXDSBytePair(ubyte byte1, ubyte byte2, EnTvRat_System* pEnSystem, EnTvRat_GenericLevel* pEnLevel, int* plBfEnAttributes);
 }
 enum IID_IEvalRat = GUID(0xc5c5c5b1, 0x3abc, 0x11d6, [0xb2, 0x5b, 0x0, 0xc0, 0x4f, 0xa0, 0xc0, 0x26]);
 interface IEvalRat : IDispatch
 {
-    HRESULT get_BlockedRatingAttributes(EnTvRat_System, EnTvRat_GenericLevel, int*);
-    HRESULT put_BlockedRatingAttributes(EnTvRat_System, EnTvRat_GenericLevel, int);
-    HRESULT get_BlockUnRated(BOOL*);
-    HRESULT put_BlockUnRated(BOOL);
-    HRESULT MostRestrictiveRating(EnTvRat_System, EnTvRat_GenericLevel, int, EnTvRat_System, EnTvRat_GenericLevel, int, EnTvRat_System*, EnTvRat_GenericLevel*, int*);
-    HRESULT TestRating(EnTvRat_System, EnTvRat_GenericLevel, int);
+    HRESULT get_BlockedRatingAttributes(EnTvRat_System enSystem, EnTvRat_GenericLevel enLevel, int* plbfAttrs);
+    HRESULT put_BlockedRatingAttributes(EnTvRat_System enSystem, EnTvRat_GenericLevel enLevel, int lbfAttrs);
+    HRESULT get_BlockUnRated(BOOL* pfBlockUnRatedShows);
+    HRESULT put_BlockUnRated(BOOL fBlockUnRatedShows);
+    HRESULT MostRestrictiveRating(EnTvRat_System enSystem1, EnTvRat_GenericLevel enEnLevel1, int lbfEnAttr1, EnTvRat_System enSystem2, EnTvRat_GenericLevel enEnLevel2, int lbfEnAttr2, EnTvRat_System* penSystem, EnTvRat_GenericLevel* penEnLevel, int* plbfEnAttr);
+    HRESULT TestRating(EnTvRat_System enShowSystem, EnTvRat_GenericLevel enShowLevel, int lbfEnShowAttributes);
 }
 enum CLSID_XDSToRat = GUID(0xc5c5c5f0, 0x3abc, 0x11d6, [0xb2, 0x5b, 0x0, 0xc0, 0x4f, 0xa0, 0xc0, 0x26]);
 struct XDSToRat
@@ -1877,30 +1878,30 @@ enum : int
 enum IID_IMSVidRect = GUID(0x7f5000a6, 0xa440, 0x47ca, [0x8a, 0xcc, 0xc0, 0xe7, 0x55, 0x31, 0xa2, 0xc2]);
 interface IMSVidRect : IDispatch
 {
-    HRESULT get_Top(int*);
-    HRESULT put_Top(int);
-    HRESULT get_Left(int*);
-    HRESULT put_Left(int);
-    HRESULT get_Width(int*);
-    HRESULT put_Width(int);
-    HRESULT get_Height(int*);
-    HRESULT put_Height(int);
-    HRESULT get_HWnd(HWND*);
-    HRESULT put_HWnd(HWND);
-    HRESULT put_Rect(IMSVidRect);
+    HRESULT get_Top(int* TopVal);
+    HRESULT put_Top(int TopVal);
+    HRESULT get_Left(int* LeftVal);
+    HRESULT put_Left(int LeftVal);
+    HRESULT get_Width(int* WidthVal);
+    HRESULT put_Width(int WidthVal);
+    HRESULT get_Height(int* HeightVal);
+    HRESULT put_Height(int HeightVal);
+    HRESULT get_HWnd(HWND* HWndVal);
+    HRESULT put_HWnd(HWND HWndVal);
+    HRESULT put_Rect(IMSVidRect RectVal);
 }
 enum IID_IMSVidGraphSegmentContainer = GUID(0x3dd2903d, 0xe0aa, 0x11d2, [0xb6, 0x3a, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidGraphSegmentContainer : IUnknown
 {
-    HRESULT get_Graph(IGraphBuilder*);
-    HRESULT get_Input(IMSVidGraphSegment*);
-    HRESULT get_Outputs(IEnumMSVidGraphSegment*);
-    HRESULT get_VideoRenderer(IMSVidGraphSegment*);
-    HRESULT get_AudioRenderer(IMSVidGraphSegment*);
-    HRESULT get_Features(IEnumMSVidGraphSegment*);
-    HRESULT get_Composites(IEnumMSVidGraphSegment*);
-    HRESULT get_ParentContainer(IUnknown*);
-    HRESULT Decompose(IMSVidGraphSegment);
+    HRESULT get_Graph(IGraphBuilder* ppGraph);
+    HRESULT get_Input(IMSVidGraphSegment* ppInput);
+    HRESULT get_Outputs(IEnumMSVidGraphSegment* ppOutputs);
+    HRESULT get_VideoRenderer(IMSVidGraphSegment* ppVR);
+    HRESULT get_AudioRenderer(IMSVidGraphSegment* ppAR);
+    HRESULT get_Features(IEnumMSVidGraphSegment* ppFeatures);
+    HRESULT get_Composites(IEnumMSVidGraphSegment* ppComposites);
+    HRESULT get_ParentContainer(IUnknown* ppContainer);
+    HRESULT Decompose(IMSVidGraphSegment pSegment);
     HRESULT IsWindowless();
     HRESULT GetFocus();
 }
@@ -1915,20 +1916,20 @@ enum : int
 enum IID_IMSVidGraphSegment = GUID(0x238dec54, 0xadeb, 0x4005, [0xa3, 0x49, 0xf7, 0x72, 0xb9, 0xaf, 0xeb, 0xc4]);
 interface IMSVidGraphSegment : IPersist
 {
-    HRESULT get_Init(IUnknown*);
-    HRESULT put_Init(IUnknown);
-    HRESULT EnumFilters(IEnumFilters*);
-    HRESULT get_Container(IMSVidGraphSegmentContainer*);
-    HRESULT put_Container(IMSVidGraphSegmentContainer);
-    HRESULT get_Type(MSVidSegmentType*);
-    HRESULT get_Category(GUID*);
+    HRESULT get_Init(IUnknown* pInit);
+    HRESULT put_Init(IUnknown pInit);
+    HRESULT EnumFilters(IEnumFilters* pNewEnum);
+    HRESULT get_Container(IMSVidGraphSegmentContainer* ppCtl);
+    HRESULT put_Container(IMSVidGraphSegmentContainer pCtl);
+    HRESULT get_Type(MSVidSegmentType* pType);
+    HRESULT get_Category(GUID* pGuid);
     HRESULT Build();
     HRESULT PostBuild();
     HRESULT PreRun();
     HRESULT PostRun();
     HRESULT PreStop();
     HRESULT PostStop();
-    HRESULT OnEventNotify(int, long, long);
+    HRESULT OnEventNotify(int lEventCode, long lEventParm1, long lEventParm2);
     HRESULT Decompose();
 }
 alias MSVidCtlButtonstate = int;
@@ -1949,81 +1950,81 @@ interface IMSVidGraphSegmentUserInput : IUnknown
 {
     HRESULT Click();
     HRESULT DblClick();
-    HRESULT KeyDown(short*, short);
-    HRESULT KeyPress(short*);
-    HRESULT KeyUp(short*, short);
-    HRESULT MouseDown(short, short, int, int);
-    HRESULT MouseMove(short, short, int, int);
-    HRESULT MouseUp(short, short, int, int);
+    HRESULT KeyDown(short* KeyCode, short ShiftState);
+    HRESULT KeyPress(short* KeyAscii);
+    HRESULT KeyUp(short* KeyCode, short ShiftState);
+    HRESULT MouseDown(short ButtonState, short ShiftState, int x, int y);
+    HRESULT MouseMove(short ButtonState, short ShiftState, int x, int y);
+    HRESULT MouseUp(short ButtonState, short ShiftState, int x, int y);
 }
 enum IID_IMSVidCompositionSegment = GUID(0x1c15d483, 0x911d, 0x11d2, [0xb6, 0x32, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidCompositionSegment : IMSVidGraphSegment
 {
-    HRESULT Compose(IMSVidGraphSegment, IMSVidGraphSegment);
-    HRESULT get_Up(IMSVidGraphSegment*);
-    HRESULT get_Down(IMSVidGraphSegment*);
+    HRESULT Compose(IMSVidGraphSegment upstream, IMSVidGraphSegment downstream);
+    HRESULT get_Up(IMSVidGraphSegment* upstream);
+    HRESULT get_Down(IMSVidGraphSegment* downstream);
 }
 enum IID_IEnumMSVidGraphSegment = GUID(0x3dd2903e, 0xe0aa, 0x11d2, [0xb6, 0x3a, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IEnumMSVidGraphSegment : IUnknown
 {
-    HRESULT Next(uint, IMSVidGraphSegment*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IMSVidGraphSegment* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumMSVidGraphSegment*);
+    HRESULT Clone(IEnumMSVidGraphSegment* ppenum);
 }
 enum IID_IMSVidVRGraphSegment = GUID(0xdd47de3f, 0x9874, 0x4f7b, [0x8b, 0x22, 0x7c, 0xb2, 0x68, 0x84, 0x61, 0xe7]);
 interface IMSVidVRGraphSegment : IMSVidGraphSegment
 {
-    HRESULT put__VMRendererMode(int);
-    HRESULT put_Owner(HWND);
-    HRESULT get_Owner(HWND*);
-    HRESULT get_UseOverlay(VARIANT_BOOL*);
-    HRESULT put_UseOverlay(VARIANT_BOOL);
-    HRESULT get_Visible(VARIANT_BOOL*);
-    HRESULT put_Visible(VARIANT_BOOL);
-    HRESULT get_ColorKey(uint*);
-    HRESULT put_ColorKey(uint);
-    HRESULT get_Source(RECT*);
-    HRESULT put_Source(RECT);
-    HRESULT get_Destination(RECT*);
-    HRESULT put_Destination(RECT);
-    HRESULT get_NativeSize(SIZE*, SIZE*);
-    HRESULT get_BorderColor(uint*);
-    HRESULT put_BorderColor(uint);
-    HRESULT get_MaintainAspectRatio(VARIANT_BOOL*);
-    HRESULT put_MaintainAspectRatio(VARIANT_BOOL);
+    HRESULT put__VMRendererMode(int dwMode);
+    HRESULT put_Owner(HWND Window);
+    HRESULT get_Owner(HWND* Window);
+    HRESULT get_UseOverlay(VARIANT_BOOL* UseOverlayVal);
+    HRESULT put_UseOverlay(VARIANT_BOOL UseOverlayVal);
+    HRESULT get_Visible(VARIANT_BOOL* Visible);
+    HRESULT put_Visible(VARIANT_BOOL Visible);
+    HRESULT get_ColorKey(uint* ColorKey);
+    HRESULT put_ColorKey(uint ColorKey);
+    HRESULT get_Source(RECT* r);
+    HRESULT put_Source(RECT r);
+    HRESULT get_Destination(RECT* r);
+    HRESULT put_Destination(RECT r);
+    HRESULT get_NativeSize(SIZE* sizeval, SIZE* aspectratio);
+    HRESULT get_BorderColor(uint* color);
+    HRESULT put_BorderColor(uint color);
+    HRESULT get_MaintainAspectRatio(VARIANT_BOOL* fMaintain);
+    HRESULT put_MaintainAspectRatio(VARIANT_BOOL fMaintain);
     HRESULT Refresh();
     HRESULT DisplayChange();
-    HRESULT RePaint(HDC);
+    HRESULT RePaint(HDC hdc);
 }
 enum IID_IMSVidDevice = GUID(0x1c15d47c, 0x911d, 0x11d2, [0xb6, 0x32, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidDevice : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Status(int*);
-    HRESULT put_Power(VARIANT_BOOL);
-    HRESULT get_Power(VARIANT_BOOL*);
-    HRESULT get_Category(BSTR*);
-    HRESULT get_ClassID(BSTR*);
-    HRESULT get__Category(GUID*);
-    HRESULT get__ClassID(GUID*);
-    HRESULT IsEqualDevice(IMSVidDevice, VARIANT_BOOL*);
+    HRESULT get_Name(BSTR* Name);
+    HRESULT get_Status(int* Status);
+    HRESULT put_Power(VARIANT_BOOL Power);
+    HRESULT get_Power(VARIANT_BOOL* Power);
+    HRESULT get_Category(BSTR* Guid);
+    HRESULT get_ClassID(BSTR* Clsid);
+    HRESULT get__Category(GUID* Guid);
+    HRESULT get__ClassID(GUID* Clsid);
+    HRESULT IsEqualDevice(IMSVidDevice Device, VARIANT_BOOL* IsEqual);
 }
 enum IID_IMSVidDevice2 = GUID(0x87bd2783, 0xebc0, 0x478c, [0xb4, 0xa0, 0xe8, 0xe7, 0xf4, 0x3a, 0xb7, 0x8e]);
 interface IMSVidDevice2 : IUnknown
 {
-    HRESULT get_DevicePath(BSTR*);
+    HRESULT get_DevicePath(BSTR* DevPath);
 }
 enum IID_IMSVidInputDevice = GUID(0x37b0353d, 0xa4c8, 0x11d2, [0xb6, 0x34, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidInputDevice : IMSVidDevice
 {
-    HRESULT IsViewable(VARIANT*, VARIANT_BOOL*);
-    HRESULT View(VARIANT*);
+    HRESULT IsViewable(VARIANT* v, VARIANT_BOOL* pfViewable);
+    HRESULT View(VARIANT* v);
 }
 enum IID_IMSVidDeviceEvent = GUID(0x1c15d480, 0x911d, 0x11d2, [0xb6, 0x32, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidDeviceEvent : IDispatch
 {
-    HRESULT StateChange(IMSVidDevice, int, int);
+    HRESULT StateChange(IMSVidDevice lpd, int oldState, int newState);
 }
 enum IID_IMSVidInputDeviceEvent = GUID(0x37b0353e, 0xa4c8, 0x11d2, [0xb6, 0x34, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidInputDeviceEvent : IDispatch
@@ -2036,58 +2037,58 @@ interface IMSVidVideoInputDevice : IMSVidInputDevice
 enum IID_IMSVidPlayback = GUID(0x37b03538, 0xa4c8, 0x11d2, [0xb6, 0x34, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidPlayback : IMSVidInputDevice
 {
-    HRESULT get_EnableResetOnStop(VARIANT_BOOL*);
-    HRESULT put_EnableResetOnStop(VARIANT_BOOL);
+    HRESULT get_EnableResetOnStop(VARIANT_BOOL* pVal);
+    HRESULT put_EnableResetOnStop(VARIANT_BOOL newVal);
     HRESULT Run();
     HRESULT Pause();
     HRESULT Stop();
-    HRESULT get_CanStep(VARIANT_BOOL, VARIANT_BOOL*);
-    HRESULT Step(int);
-    HRESULT put_Rate(double);
-    HRESULT get_Rate(double*);
-    HRESULT put_CurrentPosition(int);
-    HRESULT get_CurrentPosition(int*);
-    HRESULT put_PositionMode(PositionModeList);
-    HRESULT get_PositionMode(PositionModeList*);
-    HRESULT get_Length(int*);
+    HRESULT get_CanStep(VARIANT_BOOL fBackwards, VARIANT_BOOL* pfCan);
+    HRESULT Step(int lStep);
+    HRESULT put_Rate(double plRate);
+    HRESULT get_Rate(double* plRate);
+    HRESULT put_CurrentPosition(int lPosition);
+    HRESULT get_CurrentPosition(int* lPosition);
+    HRESULT put_PositionMode(PositionModeList lPositionMode);
+    HRESULT get_PositionMode(PositionModeList* lPositionMode);
+    HRESULT get_Length(int* lLength);
 }
 enum IID_IMSVidPlaybackEvent = GUID(0x37b0353b, 0xa4c8, 0x11d2, [0xb6, 0x34, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidPlaybackEvent : IMSVidInputDeviceEvent
 {
-    HRESULT EndOfMedia(IMSVidPlayback);
+    HRESULT EndOfMedia(IMSVidPlayback lpd);
 }
 enum IID_IMSVidTuner = GUID(0x1c15d47d, 0x911d, 0x11d2, [0xb6, 0x32, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidTuner : IMSVidVideoInputDevice
 {
-    HRESULT get_Tune(ITuneRequest*);
-    HRESULT put_Tune(ITuneRequest);
-    HRESULT get_TuningSpace(ITuningSpace*);
-    HRESULT put_TuningSpace(ITuningSpace);
+    HRESULT get_Tune(ITuneRequest* ppTR);
+    HRESULT put_Tune(ITuneRequest pTR);
+    HRESULT get_TuningSpace(ITuningSpace* plTS);
+    HRESULT put_TuningSpace(ITuningSpace plTS);
 }
 enum IID_IMSVidTunerEvent = GUID(0x1c15d485, 0x911d, 0x11d2, [0xb6, 0x32, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidTunerEvent : IMSVidInputDeviceEvent
 {
-    HRESULT TuneChanged(IMSVidTuner);
+    HRESULT TuneChanged(IMSVidTuner lpd);
 }
 enum IID_IMSVidAnalogTuner = GUID(0x1c15d47e, 0x911d, 0x11d2, [0xb6, 0x32, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidAnalogTuner : IMSVidTuner
 {
-    HRESULT get_Channel(int*);
-    HRESULT put_Channel(int);
-    HRESULT get_VideoFrequency(int*);
-    HRESULT get_AudioFrequency(int*);
-    HRESULT get_CountryCode(int*);
-    HRESULT put_CountryCode(int);
-    HRESULT get_SAP(VARIANT_BOOL*);
-    HRESULT put_SAP(VARIANT_BOOL);
-    HRESULT ChannelAvailable(int, int*, VARIANT_BOOL*);
+    HRESULT get_Channel(int* Channel);
+    HRESULT put_Channel(int Channel);
+    HRESULT get_VideoFrequency(int* lcc);
+    HRESULT get_AudioFrequency(int* lcc);
+    HRESULT get_CountryCode(int* lcc);
+    HRESULT put_CountryCode(int lcc);
+    HRESULT get_SAP(VARIANT_BOOL* pfSapOn);
+    HRESULT put_SAP(VARIANT_BOOL fSapOn);
+    HRESULT ChannelAvailable(int nChannel, int* SignalStrength, VARIANT_BOOL* fSignalPresent);
 }
 enum IID_IMSVidAnalogTuner2 = GUID(0x37647bf7, 0x3dde, 0x4cc8, [0xa4, 0xdc, 0xd, 0x53, 0x4d, 0x3d, 0x0, 0x37]);
 interface IMSVidAnalogTuner2 : IMSVidAnalogTuner
 {
-    HRESULT get_TVFormats(int*);
-    HRESULT get_TunerModes(int*);
-    HRESULT get_NumAuxInputs(int*);
+    HRESULT get_TVFormats(int* Formats);
+    HRESULT get_TunerModes(int* Modes);
+    HRESULT get_NumAuxInputs(int* Inputs);
 }
 enum IID_IMSVidAnalogTunerEvent = GUID(0x1c15d486, 0x911d, 0x11d2, [0xb6, 0x32, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidAnalogTunerEvent : IMSVidTunerEvent
@@ -2096,14 +2097,14 @@ interface IMSVidAnalogTunerEvent : IMSVidTunerEvent
 enum IID_IMSVidFilePlayback = GUID(0x37b03539, 0xa4c8, 0x11d2, [0xb6, 0x34, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidFilePlayback : IMSVidPlayback
 {
-    HRESULT get_FileName(BSTR*);
-    HRESULT put_FileName(BSTR);
+    HRESULT get_FileName(BSTR* FileName);
+    HRESULT put_FileName(BSTR FileName);
 }
 enum IID_IMSVidFilePlayback2 = GUID(0x2f7e44af, 0x6e52, 0x4660, [0xbc, 0x8, 0xd8, 0xd5, 0x42, 0x58, 0x7d, 0x72]);
 interface IMSVidFilePlayback2 : IMSVidFilePlayback
 {
-    HRESULT put__SourceFilter(BSTR);
-    HRESULT put___SourceFilter(GUID);
+    HRESULT put__SourceFilter(BSTR FileName);
+    HRESULT put___SourceFilter(GUID FileName);
 }
 enum IID_IMSVidFilePlaybackEvent = GUID(0x37b0353a, 0xa4c8, 0x11d2, [0xb6, 0x34, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidFilePlaybackEvent : IMSVidPlaybackEvent
@@ -2186,152 +2187,152 @@ enum : int
 enum IID_IMSVidWebDVD = GUID(0xcf45f88b, 0xac56, 0x4ee2, [0xa7, 0x3a, 0xed, 0x4, 0xe2, 0x88, 0x5d, 0x3c]);
 interface IMSVidWebDVD : IMSVidPlayback
 {
-    HRESULT OnDVDEvent(int, long, long);
-    HRESULT PlayTitle(int);
-    HRESULT PlayChapterInTitle(int, int);
-    HRESULT PlayChapter(int);
-    HRESULT PlayChaptersAutoStop(int, int, int);
-    HRESULT PlayAtTime(BSTR);
-    HRESULT PlayAtTimeInTitle(int, BSTR);
-    HRESULT PlayPeriodInTitleAutoStop(int, BSTR, BSTR);
+    HRESULT OnDVDEvent(int lEvent, long lParam1, long lParam2);
+    HRESULT PlayTitle(int lTitle);
+    HRESULT PlayChapterInTitle(int lTitle, int lChapter);
+    HRESULT PlayChapter(int lChapter);
+    HRESULT PlayChaptersAutoStop(int lTitle, int lstrChapter, int lChapterCount);
+    HRESULT PlayAtTime(BSTR strTime);
+    HRESULT PlayAtTimeInTitle(int lTitle, BSTR strTime);
+    HRESULT PlayPeriodInTitleAutoStop(int lTitle, BSTR strStartTime, BSTR strEndTime);
     HRESULT ReplayChapter();
     HRESULT PlayPrevChapter();
     HRESULT PlayNextChapter();
     HRESULT StillOff();
-    HRESULT get_AudioLanguage(int, VARIANT_BOOL, BSTR*);
-    HRESULT ShowMenu(DVDMenuIDConstants);
+    HRESULT get_AudioLanguage(int lStream, VARIANT_BOOL fFormat, BSTR* strAudioLang);
+    HRESULT ShowMenu(DVDMenuIDConstants MenuID);
     HRESULT Resume();
     HRESULT ReturnFromSubmenu();
-    HRESULT get_ButtonsAvailable(int*);
-    HRESULT get_CurrentButton(int*);
-    HRESULT SelectAndActivateButton(int);
+    HRESULT get_ButtonsAvailable(int* pVal);
+    HRESULT get_CurrentButton(int* pVal);
+    HRESULT SelectAndActivateButton(int lButton);
     HRESULT ActivateButton();
     HRESULT SelectRightButton();
     HRESULT SelectLeftButton();
     HRESULT SelectLowerButton();
     HRESULT SelectUpperButton();
-    HRESULT ActivateAtPosition(int, int);
-    HRESULT SelectAtPosition(int, int);
-    HRESULT get_ButtonAtPosition(int, int, int*);
-    HRESULT get_NumberOfChapters(int, int*);
-    HRESULT get_TotalTitleTime(BSTR*);
-    HRESULT get_TitlesAvailable(int*);
-    HRESULT get_VolumesAvailable(int*);
-    HRESULT get_CurrentVolume(int*);
-    HRESULT get_CurrentDiscSide(int*);
-    HRESULT get_CurrentDomain(int*);
-    HRESULT get_CurrentChapter(int*);
-    HRESULT get_CurrentTitle(int*);
-    HRESULT get_CurrentTime(BSTR*);
-    HRESULT DVDTimeCode2bstr(int, BSTR*);
-    HRESULT get_DVDDirectory(BSTR*);
-    HRESULT put_DVDDirectory(BSTR);
-    HRESULT IsSubpictureStreamEnabled(int, VARIANT_BOOL*);
-    HRESULT IsAudioStreamEnabled(int, VARIANT_BOOL*);
-    HRESULT get_CurrentSubpictureStream(int*);
-    HRESULT put_CurrentSubpictureStream(int);
-    HRESULT get_SubpictureLanguage(int, BSTR*);
-    HRESULT get_CurrentAudioStream(int*);
-    HRESULT put_CurrentAudioStream(int);
-    HRESULT get_AudioStreamsAvailable(int*);
-    HRESULT get_AnglesAvailable(int*);
-    HRESULT get_CurrentAngle(int*);
-    HRESULT put_CurrentAngle(int);
-    HRESULT get_SubpictureStreamsAvailable(int*);
-    HRESULT get_SubpictureOn(VARIANT_BOOL*);
-    HRESULT put_SubpictureOn(VARIANT_BOOL);
-    HRESULT get_DVDUniqueID(BSTR*);
-    HRESULT AcceptParentalLevelChange(VARIANT_BOOL, BSTR, BSTR);
-    HRESULT NotifyParentalLevelChange(VARIANT_BOOL);
-    HRESULT SelectParentalCountry(int, BSTR, BSTR);
-    HRESULT SelectParentalLevel(int, BSTR, BSTR);
-    HRESULT get_TitleParentalLevels(int, int*);
-    HRESULT get_PlayerParentalCountry(int*);
-    HRESULT get_PlayerParentalLevel(int*);
+    HRESULT ActivateAtPosition(int xPos, int yPos);
+    HRESULT SelectAtPosition(int xPos, int yPos);
+    HRESULT get_ButtonAtPosition(int xPos, int yPos, int* plButton);
+    HRESULT get_NumberOfChapters(int lTitle, int* pVal);
+    HRESULT get_TotalTitleTime(BSTR* pVal);
+    HRESULT get_TitlesAvailable(int* pVal);
+    HRESULT get_VolumesAvailable(int* pVal);
+    HRESULT get_CurrentVolume(int* pVal);
+    HRESULT get_CurrentDiscSide(int* pVal);
+    HRESULT get_CurrentDomain(int* pVal);
+    HRESULT get_CurrentChapter(int* pVal);
+    HRESULT get_CurrentTitle(int* pVal);
+    HRESULT get_CurrentTime(BSTR* pVal);
+    HRESULT DVDTimeCode2bstr(int timeCode, BSTR* pTimeStr);
+    HRESULT get_DVDDirectory(BSTR* pVal);
+    HRESULT put_DVDDirectory(BSTR newVal);
+    HRESULT IsSubpictureStreamEnabled(int lstream, VARIANT_BOOL* fEnabled);
+    HRESULT IsAudioStreamEnabled(int lstream, VARIANT_BOOL* fEnabled);
+    HRESULT get_CurrentSubpictureStream(int* pVal);
+    HRESULT put_CurrentSubpictureStream(int newVal);
+    HRESULT get_SubpictureLanguage(int lStream, BSTR* strLanguage);
+    HRESULT get_CurrentAudioStream(int* pVal);
+    HRESULT put_CurrentAudioStream(int newVal);
+    HRESULT get_AudioStreamsAvailable(int* pVal);
+    HRESULT get_AnglesAvailable(int* pVal);
+    HRESULT get_CurrentAngle(int* pVal);
+    HRESULT put_CurrentAngle(int newVal);
+    HRESULT get_SubpictureStreamsAvailable(int* pVal);
+    HRESULT get_SubpictureOn(VARIANT_BOOL* pVal);
+    HRESULT put_SubpictureOn(VARIANT_BOOL newVal);
+    HRESULT get_DVDUniqueID(BSTR* pVal);
+    HRESULT AcceptParentalLevelChange(VARIANT_BOOL fAccept, BSTR strUserName, BSTR strPassword);
+    HRESULT NotifyParentalLevelChange(VARIANT_BOOL newVal);
+    HRESULT SelectParentalCountry(int lCountry, BSTR strUserName, BSTR strPassword);
+    HRESULT SelectParentalLevel(int lParentalLevel, BSTR strUserName, BSTR strPassword);
+    HRESULT get_TitleParentalLevels(int lTitle, int* plParentalLevels);
+    HRESULT get_PlayerParentalCountry(int* plCountryCode);
+    HRESULT get_PlayerParentalLevel(int* plParentalLevel);
     HRESULT Eject();
-    HRESULT UOPValid(int, VARIANT_BOOL*);
-    HRESULT get_SPRM(int, short*);
-    HRESULT get_GPRM(int, short*);
-    HRESULT put_GPRM(int, short);
-    HRESULT get_DVDTextStringType(int, int, DVDTextStringType*);
-    HRESULT get_DVDTextString(int, int, BSTR*);
-    HRESULT get_DVDTextNumberOfStrings(int, int*);
-    HRESULT get_DVDTextNumberOfLanguages(int*);
-    HRESULT get_DVDTextLanguageLCID(int, int*);
+    HRESULT UOPValid(int lUOP, VARIANT_BOOL* pfValid);
+    HRESULT get_SPRM(int lIndex, short* psSPRM);
+    HRESULT get_GPRM(int lIndex, short* psSPRM);
+    HRESULT put_GPRM(int lIndex, short sValue);
+    HRESULT get_DVDTextStringType(int lLangIndex, int lStringIndex, DVDTextStringType* pType);
+    HRESULT get_DVDTextString(int lLangIndex, int lStringIndex, BSTR* pstrText);
+    HRESULT get_DVDTextNumberOfStrings(int lLangIndex, int* plNumOfStrings);
+    HRESULT get_DVDTextNumberOfLanguages(int* plNumOfLangs);
+    HRESULT get_DVDTextLanguageLCID(int lLangIndex, int* lcid);
     HRESULT RegionChange();
-    HRESULT get_DVDAdm(IDispatch*);
+    HRESULT get_DVDAdm(IDispatch* pVal);
     HRESULT DeleteBookmark();
     HRESULT RestoreBookmark();
     HRESULT SaveBookmark();
-    HRESULT SelectDefaultAudioLanguage(int, int);
-    HRESULT SelectDefaultSubpictureLanguage(int, DVDSPExt);
-    HRESULT get_PreferredSubpictureStream(int*);
-    HRESULT get_DefaultMenuLanguage(int*);
-    HRESULT put_DefaultMenuLanguage(int);
-    HRESULT get_DefaultSubpictureLanguage(int*);
-    HRESULT get_DefaultAudioLanguage(int*);
-    HRESULT get_DefaultSubpictureLanguageExt(DVDSPExt*);
-    HRESULT get_DefaultAudioLanguageExt(int*);
-    HRESULT get_LanguageFromLCID(int, BSTR*);
-    HRESULT get_KaraokeAudioPresentationMode(int*);
-    HRESULT put_KaraokeAudioPresentationMode(int);
-    HRESULT get_KaraokeChannelContent(int, int, int*);
-    HRESULT get_KaraokeChannelAssignment(int, int*);
+    HRESULT SelectDefaultAudioLanguage(int lang, int ext);
+    HRESULT SelectDefaultSubpictureLanguage(int lang, DVDSPExt ext);
+    HRESULT get_PreferredSubpictureStream(int* pVal);
+    HRESULT get_DefaultMenuLanguage(int* lang);
+    HRESULT put_DefaultMenuLanguage(int lang);
+    HRESULT get_DefaultSubpictureLanguage(int* lang);
+    HRESULT get_DefaultAudioLanguage(int* lang);
+    HRESULT get_DefaultSubpictureLanguageExt(DVDSPExt* ext);
+    HRESULT get_DefaultAudioLanguageExt(int* ext);
+    HRESULT get_LanguageFromLCID(int lcid, BSTR* lang);
+    HRESULT get_KaraokeAudioPresentationMode(int* pVal);
+    HRESULT put_KaraokeAudioPresentationMode(int newVal);
+    HRESULT get_KaraokeChannelContent(int lStream, int lChan, int* lContent);
+    HRESULT get_KaraokeChannelAssignment(int lStream, int* lChannelAssignment);
     HRESULT RestorePreferredSettings();
-    HRESULT get_ButtonRect(int, IMSVidRect*);
-    HRESULT get_DVDScreenInMouseCoordinates(IMSVidRect*);
-    HRESULT put_DVDScreenInMouseCoordinates(IMSVidRect);
+    HRESULT get_ButtonRect(int lButton, IMSVidRect* pRect);
+    HRESULT get_DVDScreenInMouseCoordinates(IMSVidRect* ppRect);
+    HRESULT put_DVDScreenInMouseCoordinates(IMSVidRect pRect);
 }
 enum IID_IMSVidWebDVD2 = GUID(0x7027212f, 0xee9a, 0x4a7c, [0x8b, 0x67, 0xf0, 0x23, 0x71, 0x4c, 0xda, 0xff]);
 interface IMSVidWebDVD2 : IMSVidWebDVD
 {
-    HRESULT get_Bookmark(ubyte**, uint*);
-    HRESULT put_Bookmark(ubyte*, uint);
+    HRESULT get_Bookmark(ubyte** ppData, uint* pDataLength);
+    HRESULT put_Bookmark(ubyte* pData, uint dwDataLength);
 }
 enum IID_IMSVidWebDVDEvent = GUID(0xb4f7a674, 0x9b83, 0x49cb, [0xa3, 0x57, 0xc6, 0x3b, 0x87, 0x1b, 0xe9, 0x58]);
 interface IMSVidWebDVDEvent : IMSVidPlaybackEvent
 {
-    HRESULT DVDNotify(int, VARIANT, VARIANT);
-    HRESULT PlayForwards(VARIANT_BOOL);
-    HRESULT PlayBackwards(VARIANT_BOOL);
-    HRESULT ShowMenu(DVDMenuIDConstants, VARIANT_BOOL);
-    HRESULT Resume(VARIANT_BOOL);
-    HRESULT SelectOrActivateButton(VARIANT_BOOL);
-    HRESULT StillOff(VARIANT_BOOL);
-    HRESULT PauseOn(VARIANT_BOOL);
-    HRESULT ChangeCurrentAudioStream(VARIANT_BOOL);
-    HRESULT ChangeCurrentSubpictureStream(VARIANT_BOOL);
-    HRESULT ChangeCurrentAngle(VARIANT_BOOL);
-    HRESULT PlayAtTimeInTitle(VARIANT_BOOL);
-    HRESULT PlayAtTime(VARIANT_BOOL);
-    HRESULT PlayChapterInTitle(VARIANT_BOOL);
-    HRESULT PlayChapter(VARIANT_BOOL);
-    HRESULT ReplayChapter(VARIANT_BOOL);
-    HRESULT PlayNextChapter(VARIANT_BOOL);
-    HRESULT Stop(VARIANT_BOOL);
-    HRESULT ReturnFromSubmenu(VARIANT_BOOL);
-    HRESULT PlayTitle(VARIANT_BOOL);
-    HRESULT PlayPrevChapter(VARIANT_BOOL);
-    HRESULT ChangeKaraokePresMode(VARIANT_BOOL);
-    HRESULT ChangeVideoPresMode(VARIANT_BOOL);
+    HRESULT DVDNotify(int lEventCode, VARIANT lParam1, VARIANT lParam2);
+    HRESULT PlayForwards(VARIANT_BOOL bEnabled);
+    HRESULT PlayBackwards(VARIANT_BOOL bEnabled);
+    HRESULT ShowMenu(DVDMenuIDConstants MenuID, VARIANT_BOOL bEnabled);
+    HRESULT Resume(VARIANT_BOOL bEnabled);
+    HRESULT SelectOrActivateButton(VARIANT_BOOL bEnabled);
+    HRESULT StillOff(VARIANT_BOOL bEnabled);
+    HRESULT PauseOn(VARIANT_BOOL bEnabled);
+    HRESULT ChangeCurrentAudioStream(VARIANT_BOOL bEnabled);
+    HRESULT ChangeCurrentSubpictureStream(VARIANT_BOOL bEnabled);
+    HRESULT ChangeCurrentAngle(VARIANT_BOOL bEnabled);
+    HRESULT PlayAtTimeInTitle(VARIANT_BOOL bEnabled);
+    HRESULT PlayAtTime(VARIANT_BOOL bEnabled);
+    HRESULT PlayChapterInTitle(VARIANT_BOOL bEnabled);
+    HRESULT PlayChapter(VARIANT_BOOL bEnabled);
+    HRESULT ReplayChapter(VARIANT_BOOL bEnabled);
+    HRESULT PlayNextChapter(VARIANT_BOOL bEnabled);
+    HRESULT Stop(VARIANT_BOOL bEnabled);
+    HRESULT ReturnFromSubmenu(VARIANT_BOOL bEnabled);
+    HRESULT PlayTitle(VARIANT_BOOL bEnabled);
+    HRESULT PlayPrevChapter(VARIANT_BOOL bEnabled);
+    HRESULT ChangeKaraokePresMode(VARIANT_BOOL bEnabled);
+    HRESULT ChangeVideoPresMode(VARIANT_BOOL bEnabled);
 }
 enum IID_IMSVidWebDVDAdm = GUID(0xb8be681a, 0xeb2c, 0x47f0, [0xb4, 0x15, 0x94, 0xd5, 0x45, 0x2f, 0xe, 0x5]);
 interface IMSVidWebDVDAdm : IDispatch
 {
-    HRESULT ChangePassword(BSTR, BSTR, BSTR);
-    HRESULT SaveParentalLevel(int, BSTR, BSTR);
-    HRESULT SaveParentalCountry(int, BSTR, BSTR);
-    HRESULT ConfirmPassword(BSTR, BSTR, VARIANT_BOOL*);
-    HRESULT GetParentalLevel(int*);
-    HRESULT GetParentalCountry(int*);
-    HRESULT get_DefaultAudioLCID(int*);
-    HRESULT put_DefaultAudioLCID(int);
-    HRESULT get_DefaultSubpictureLCID(int*);
-    HRESULT put_DefaultSubpictureLCID(int);
-    HRESULT get_DefaultMenuLCID(int*);
-    HRESULT put_DefaultMenuLCID(int);
-    HRESULT get_BookmarkOnStop(VARIANT_BOOL*);
-    HRESULT put_BookmarkOnStop(VARIANT_BOOL);
+    HRESULT ChangePassword(BSTR strUserName, BSTR strOld, BSTR strNew);
+    HRESULT SaveParentalLevel(int level, BSTR strUserName, BSTR strPassword);
+    HRESULT SaveParentalCountry(int country, BSTR strUserName, BSTR strPassword);
+    HRESULT ConfirmPassword(BSTR strUserName, BSTR strPassword, VARIANT_BOOL* pVal);
+    HRESULT GetParentalLevel(int* lLevel);
+    HRESULT GetParentalCountry(int* lCountry);
+    HRESULT get_DefaultAudioLCID(int* pVal);
+    HRESULT put_DefaultAudioLCID(int newVal);
+    HRESULT get_DefaultSubpictureLCID(int* pVal);
+    HRESULT put_DefaultSubpictureLCID(int newVal);
+    HRESULT get_DefaultMenuLCID(int* pVal);
+    HRESULT put_DefaultMenuLCID(int newVal);
+    HRESULT get_BookmarkOnStop(VARIANT_BOOL* pVal);
+    HRESULT put_BookmarkOnStop(VARIANT_BOOL newVal);
 }
 enum IID_IMSVidOutputDevice = GUID(0x37b03546, 0xa4c8, 0x11d2, [0xb6, 0x34, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidOutputDevice : IMSVidDevice
@@ -2352,35 +2353,35 @@ interface IMSVidFeatureEvent : IMSVidDeviceEvent
 enum IID_IMSVidEncoder = GUID(0xc0020fd4, 0xbee7, 0x43d9, [0xa4, 0x95, 0x9f, 0x21, 0x31, 0x17, 0x10, 0x3d]);
 interface IMSVidEncoder : IMSVidFeature
 {
-    HRESULT get_VideoEncoderInterface(IUnknown*);
-    HRESULT get_AudioEncoderInterface(IUnknown*);
+    HRESULT get_VideoEncoderInterface(IUnknown* ppEncInt);
+    HRESULT get_AudioEncoderInterface(IUnknown* ppEncInt);
 }
 enum IID_IMSVidClosedCaptioning = GUID(0x99652ea1, 0xc1f7, 0x414f, [0xbb, 0x7b, 0x1c, 0x96, 0x7d, 0xe7, 0x59, 0x83]);
 interface IMSVidClosedCaptioning : IMSVidFeature
 {
-    HRESULT get_Enable(VARIANT_BOOL*);
-    HRESULT put_Enable(VARIANT_BOOL);
+    HRESULT get_Enable(VARIANT_BOOL* On);
+    HRESULT put_Enable(VARIANT_BOOL On);
 }
 enum IID_IMSVidClosedCaptioning2 = GUID(0xe00cb864, 0xa029, 0x4310, [0x99, 0x87, 0xa8, 0x73, 0xf5, 0x88, 0x7d, 0x97]);
 interface IMSVidClosedCaptioning2 : IMSVidClosedCaptioning
 {
-    HRESULT get_Service(MSVidCCService*);
-    HRESULT put_Service(MSVidCCService);
+    HRESULT get_Service(MSVidCCService* On);
+    HRESULT put_Service(MSVidCCService On);
 }
 enum IID_IMSVidClosedCaptioning3 = GUID(0xc8638e8a, 0x7625, 0x4c51, [0x93, 0x66, 0x2f, 0x40, 0xa9, 0x83, 0x1f, 0xc0]);
 interface IMSVidClosedCaptioning3 : IMSVidClosedCaptioning2
 {
-    HRESULT get_TeleTextFilter(IUnknown*);
+    HRESULT get_TeleTextFilter(IUnknown* punkTTFilter);
 }
 enum IID_IMSVidXDS = GUID(0x11ebc158, 0xe712, 0x4d1f, [0x8b, 0xb3, 0x1, 0xed, 0x52, 0x74, 0xc4, 0xce]);
 interface IMSVidXDS : IMSVidFeature
 {
-    HRESULT get_ChannelChangeInterface(IUnknown*);
+    HRESULT get_ChannelChangeInterface(IUnknown* punkCC);
 }
 enum IID_IMSVidXDSEvent = GUID(0x6db2317d, 0x3b23, 0x41ec, [0xba, 0x4b, 0x70, 0x1f, 0x40, 0x7e, 0xaf, 0x3a]);
 interface IMSVidXDSEvent : IMSVidFeatureEvent
 {
-    HRESULT RatingChange(EnTvRat_System, EnTvRat_GenericLevel, BfEnTvRat_GenericAttributes, EnTvRat_System, EnTvRat_GenericLevel, BfEnTvRat_GenericAttributes);
+    HRESULT RatingChange(EnTvRat_System PrevRatingSystem, EnTvRat_GenericLevel PrevLevel, BfEnTvRat_GenericAttributes PrevAttributes, EnTvRat_System NewRatingSystem, EnTvRat_GenericLevel NewLevel, BfEnTvRat_GenericAttributes NewAttributes);
 }
 enum IID_IMSVidDataServices = GUID(0x334125c1, 0x77e5, 0x11d3, [0xb6, 0x53, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidDataServices : IMSVidFeature
@@ -2401,36 +2402,36 @@ enum : int
 enum IID_IMSVidVideoRenderer = GUID(0x37b03540, 0xa4c8, 0x11d2, [0xb6, 0x34, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidVideoRenderer : IMSVidOutputDevice
 {
-    HRESULT get_CustomCompositorClass(BSTR*);
-    HRESULT put_CustomCompositorClass(BSTR);
-    HRESULT get__CustomCompositorClass(GUID*);
-    HRESULT put__CustomCompositorClass(const(GUID)*);
-    HRESULT get__CustomCompositor(IVMRImageCompositor*);
-    HRESULT put__CustomCompositor(IVMRImageCompositor);
-    HRESULT get_MixerBitmap(IPictureDisp*);
-    HRESULT get__MixerBitmap(IVMRMixerBitmap*);
-    HRESULT put_MixerBitmap(IPictureDisp);
-    HRESULT put__MixerBitmap(VMRALPHABITMAP*);
-    HRESULT get_MixerBitmapPositionRect(IMSVidRect*);
-    HRESULT put_MixerBitmapPositionRect(IMSVidRect);
-    HRESULT get_MixerBitmapOpacity(int*);
-    HRESULT put_MixerBitmapOpacity(int);
-    HRESULT SetupMixerBitmap(IPictureDisp, int, IMSVidRect);
-    HRESULT get_SourceSize(SourceSizeList*);
-    HRESULT put_SourceSize(SourceSizeList);
-    HRESULT get_OverScan(int*);
-    HRESULT put_OverScan(int);
-    HRESULT get_AvailableSourceRect(IMSVidRect*);
-    HRESULT get_MaxVidRect(IMSVidRect*);
-    HRESULT get_MinVidRect(IMSVidRect*);
-    HRESULT get_ClippedSourceRect(IMSVidRect*);
-    HRESULT put_ClippedSourceRect(IMSVidRect);
-    HRESULT get_UsingOverlay(VARIANT_BOOL*);
-    HRESULT put_UsingOverlay(VARIANT_BOOL);
-    HRESULT Capture(IPictureDisp*);
-    HRESULT get_FramesPerSecond(int*);
-    HRESULT get_DecimateInput(VARIANT_BOOL*);
-    HRESULT put_DecimateInput(VARIANT_BOOL);
+    HRESULT get_CustomCompositorClass(BSTR* CompositorCLSID);
+    HRESULT put_CustomCompositorClass(BSTR CompositorCLSID);
+    HRESULT get__CustomCompositorClass(GUID* CompositorCLSID);
+    HRESULT put__CustomCompositorClass(const(GUID)* CompositorCLSID);
+    HRESULT get__CustomCompositor(IVMRImageCompositor* Compositor);
+    HRESULT put__CustomCompositor(IVMRImageCompositor Compositor);
+    HRESULT get_MixerBitmap(IPictureDisp* MixerPictureDisp);
+    HRESULT get__MixerBitmap(IVMRMixerBitmap* MixerPicture);
+    HRESULT put_MixerBitmap(IPictureDisp MixerPictureDisp);
+    HRESULT put__MixerBitmap(VMRALPHABITMAP* MixerPicture);
+    HRESULT get_MixerBitmapPositionRect(IMSVidRect* rDest);
+    HRESULT put_MixerBitmapPositionRect(IMSVidRect rDest);
+    HRESULT get_MixerBitmapOpacity(int* opacity);
+    HRESULT put_MixerBitmapOpacity(int opacity);
+    HRESULT SetupMixerBitmap(IPictureDisp MixerPictureDisp, int Opacity, IMSVidRect rDest);
+    HRESULT get_SourceSize(SourceSizeList* CurrentSize);
+    HRESULT put_SourceSize(SourceSizeList NewSize);
+    HRESULT get_OverScan(int* plPercent);
+    HRESULT put_OverScan(int lPercent);
+    HRESULT get_AvailableSourceRect(IMSVidRect* pRect);
+    HRESULT get_MaxVidRect(IMSVidRect* ppVidRect);
+    HRESULT get_MinVidRect(IMSVidRect* ppVidRect);
+    HRESULT get_ClippedSourceRect(IMSVidRect* pRect);
+    HRESULT put_ClippedSourceRect(IMSVidRect pRect);
+    HRESULT get_UsingOverlay(VARIANT_BOOL* UseOverlayVal);
+    HRESULT put_UsingOverlay(VARIANT_BOOL UseOverlayVal);
+    HRESULT Capture(IPictureDisp* currentImage);
+    HRESULT get_FramesPerSecond(int* pVal);
+    HRESULT get_DecimateInput(VARIANT_BOOL* pDeci);
+    HRESULT put_DecimateInput(VARIANT_BOOL pDeci);
 }
 enum IID_IMSVidVideoRendererEvent = GUID(0x37b03545, 0xa4c8, 0x11d2, [0xb6, 0x34, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidVideoRendererEvent : IMSVidOutputDeviceEvent
@@ -2440,37 +2441,37 @@ interface IMSVidVideoRendererEvent : IMSVidOutputDeviceEvent
 enum IID_IMSVidGenericSink = GUID(0x6c29b41d, 0x455b, 0x4c33, [0x96, 0x3a, 0xd, 0x28, 0xe5, 0xe5, 0x55, 0xea]);
 interface IMSVidGenericSink : IMSVidOutputDevice
 {
-    HRESULT SetSinkFilter(BSTR);
-    HRESULT get_SinkStreams(MSVidSinkStreams*);
-    HRESULT put_SinkStreams(MSVidSinkStreams);
+    HRESULT SetSinkFilter(BSTR bstrName);
+    HRESULT get_SinkStreams(MSVidSinkStreams* pStreams);
+    HRESULT put_SinkStreams(MSVidSinkStreams Streams);
 }
 enum IID_IMSVidGenericSink2 = GUID(0x6b5a28f3, 0x47f1, 0x4092, [0xb1, 0x68, 0x60, 0xca, 0xbe, 0xc0, 0x8f, 0x1c]);
 interface IMSVidGenericSink2 : IMSVidGenericSink
 {
-    HRESULT AddFilter(BSTR);
+    HRESULT AddFilter(BSTR bstrName);
     HRESULT ResetFilterList();
 }
 enum IID_IMSVidStreamBufferRecordingControl = GUID(0x160621aa, 0xbbbc, 0x4326, [0xa8, 0x24, 0xc3, 0x95, 0xae, 0xbc, 0x6e, 0x74]);
 interface IMSVidStreamBufferRecordingControl : IDispatch
 {
-    HRESULT get_StartTime(int*);
-    HRESULT put_StartTime(int);
-    HRESULT get_StopTime(int*);
-    HRESULT put_StopTime(int);
-    HRESULT get_RecordingStopped(VARIANT_BOOL*);
-    HRESULT get_RecordingStarted(VARIANT_BOOL*);
-    HRESULT get_RecordingType(RecordingType*);
-    HRESULT get_RecordingAttribute(IUnknown*);
+    HRESULT get_StartTime(int* rtStart);
+    HRESULT put_StartTime(int rtStart);
+    HRESULT get_StopTime(int* rtStop);
+    HRESULT put_StopTime(int rtStop);
+    HRESULT get_RecordingStopped(VARIANT_BOOL* phResult);
+    HRESULT get_RecordingStarted(VARIANT_BOOL* phResult);
+    HRESULT get_RecordingType(RecordingType* dwType);
+    HRESULT get_RecordingAttribute(IUnknown* pRecordingAttribute);
 }
 enum IID_IMSVidStreamBufferSink = GUID(0x159dbb45, 0xcd1b, 0x4dab, [0x83, 0xea, 0x5c, 0xb1, 0xf4, 0xf2, 0x1d, 0x7]);
 interface IMSVidStreamBufferSink : IMSVidOutputDevice
 {
-    HRESULT get_ContentRecorder(BSTR, IMSVidStreamBufferRecordingControl*);
-    HRESULT get_ReferenceRecorder(BSTR, IMSVidStreamBufferRecordingControl*);
-    HRESULT get_SinkName(BSTR*);
-    HRESULT put_SinkName(BSTR);
+    HRESULT get_ContentRecorder(BSTR pszFilename, IMSVidStreamBufferRecordingControl* pRecordingIUnknown);
+    HRESULT get_ReferenceRecorder(BSTR pszFilename, IMSVidStreamBufferRecordingControl* pRecordingIUnknown);
+    HRESULT get_SinkName(BSTR* pName);
+    HRESULT put_SinkName(BSTR Name);
     HRESULT NameSetLock();
-    HRESULT get_SBESink(IUnknown*);
+    HRESULT get_SBESink(IUnknown* sbeConfig);
 }
 enum IID_IMSVidStreamBufferSink2 = GUID(0x2ca9fc63, 0xc131, 0x4e5a, [0x95, 0x5a, 0x54, 0x4a, 0x47, 0xc6, 0x71, 0x46]);
 interface IMSVidStreamBufferSink2 : IMSVidStreamBufferSink
@@ -2480,24 +2481,24 @@ interface IMSVidStreamBufferSink2 : IMSVidStreamBufferSink
 enum IID_IMSVidStreamBufferSink3 = GUID(0x4f8721d7, 0x7d59, 0x4d8b, [0x99, 0xf5, 0xa7, 0x77, 0x75, 0x58, 0x6b, 0xd5]);
 interface IMSVidStreamBufferSink3 : IMSVidStreamBufferSink2
 {
-    HRESULT SetMinSeek(int*);
-    HRESULT get_AudioCounter(IUnknown*);
-    HRESULT get_VideoCounter(IUnknown*);
-    HRESULT get_CCCounter(IUnknown*);
-    HRESULT get_WSTCounter(IUnknown*);
-    HRESULT put_AudioAnalysisFilter(BSTR);
-    HRESULT get_AudioAnalysisFilter(BSTR*);
-    HRESULT put__AudioAnalysisFilter(GUID);
-    HRESULT get__AudioAnalysisFilter(GUID*);
-    HRESULT put_VideoAnalysisFilter(BSTR);
-    HRESULT get_VideoAnalysisFilter(BSTR*);
-    HRESULT put__VideoAnalysisFilter(GUID);
-    HRESULT get__VideoAnalysisFilter(GUID*);
-    HRESULT put_DataAnalysisFilter(BSTR);
-    HRESULT get_DataAnalysisFilter(BSTR*);
-    HRESULT put__DataAnalysisFilter(GUID);
-    HRESULT get__DataAnalysisFilter(GUID*);
-    HRESULT get_LicenseErrorCode(HRESULT*);
+    HRESULT SetMinSeek(int* pdwMin);
+    HRESULT get_AudioCounter(IUnknown* ppUnk);
+    HRESULT get_VideoCounter(IUnknown* ppUnk);
+    HRESULT get_CCCounter(IUnknown* ppUnk);
+    HRESULT get_WSTCounter(IUnknown* ppUnk);
+    HRESULT put_AudioAnalysisFilter(BSTR szCLSID);
+    HRESULT get_AudioAnalysisFilter(BSTR* pszCLSID);
+    HRESULT put__AudioAnalysisFilter(GUID guid);
+    HRESULT get__AudioAnalysisFilter(GUID* pGuid);
+    HRESULT put_VideoAnalysisFilter(BSTR szCLSID);
+    HRESULT get_VideoAnalysisFilter(BSTR* pszCLSID);
+    HRESULT put__VideoAnalysisFilter(GUID guid);
+    HRESULT get__VideoAnalysisFilter(GUID* pGuid);
+    HRESULT put_DataAnalysisFilter(BSTR szCLSID);
+    HRESULT get_DataAnalysisFilter(BSTR* pszCLSID);
+    HRESULT put__DataAnalysisFilter(GUID guid);
+    HRESULT get__DataAnalysisFilter(GUID* pGuid);
+    HRESULT get_LicenseErrorCode(HRESULT* hres);
 }
 enum IID_IMSVidStreamBufferSinkEvent = GUID(0xf798a36b, 0xb05b, 0x4bbe, [0x97, 0x3, 0xea, 0xea, 0x7d, 0x61, 0xcd, 0x51]);
 interface IMSVidStreamBufferSinkEvent : IMSVidOutputDeviceEvent
@@ -2515,7 +2516,7 @@ interface IMSVidStreamBufferSinkEvent2 : IMSVidStreamBufferSinkEvent
 enum IID_IMSVidStreamBufferSinkEvent3 = GUID(0x735ad8d5, 0xc259, 0x48e9, [0x81, 0xe7, 0xd2, 0x79, 0x53, 0x66, 0x5b, 0x23]);
 interface IMSVidStreamBufferSinkEvent3 : IMSVidStreamBufferSinkEvent2
 {
-    HRESULT LicenseChange(int);
+    HRESULT LicenseChange(int dwProt);
 }
 enum IID_IMSVidStreamBufferSinkEvent4 = GUID(0x1b01dcb0, 0xdaf0, 0x412c, [0xa5, 0xd1, 0x59, 0xc, 0x7f, 0x62, 0xe2, 0xb8]);
 interface IMSVidStreamBufferSinkEvent4 : IMSVidStreamBufferSinkEvent3
@@ -2525,22 +2526,22 @@ interface IMSVidStreamBufferSinkEvent4 : IMSVidStreamBufferSinkEvent3
 enum IID_IMSVidStreamBufferSource = GUID(0xeb0c8cf9, 0x6950, 0x4772, [0x87, 0xb1, 0x47, 0xd1, 0x1c, 0xf3, 0xa0, 0x2f]);
 interface IMSVidStreamBufferSource : IMSVidFilePlayback
 {
-    HRESULT get_Start(int*);
-    HRESULT get_RecordingAttribute(IUnknown*);
-    HRESULT CurrentRatings(EnTvRat_System*, EnTvRat_GenericLevel*, int*);
-    HRESULT MaxRatingsLevel(EnTvRat_System, EnTvRat_GenericLevel, int);
-    HRESULT put_BlockUnrated(VARIANT_BOOL);
-    HRESULT put_UnratedDelay(int);
-    HRESULT get_SBESource(IUnknown*);
+    HRESULT get_Start(int* lStart);
+    HRESULT get_RecordingAttribute(IUnknown* pRecordingAttribute);
+    HRESULT CurrentRatings(EnTvRat_System* pEnSystem, EnTvRat_GenericLevel* pEnRating, int* pBfEnAttr);
+    HRESULT MaxRatingsLevel(EnTvRat_System enSystem, EnTvRat_GenericLevel enRating, int lbfEnAttr);
+    HRESULT put_BlockUnrated(VARIANT_BOOL bBlock);
+    HRESULT put_UnratedDelay(int dwDelay);
+    HRESULT get_SBESource(IUnknown* sbeFilter);
 }
 enum IID_IMSVidStreamBufferSource2 = GUID(0xe4ba9059, 0xb1ce, 0x40d8, [0xb9, 0xa0, 0xd4, 0xea, 0x4a, 0x99, 0x89, 0xd3]);
 interface IMSVidStreamBufferSource2 : IMSVidStreamBufferSource
 {
-    HRESULT put_RateEx(double, uint);
-    HRESULT get_AudioCounter(IUnknown*);
-    HRESULT get_VideoCounter(IUnknown*);
-    HRESULT get_CCCounter(IUnknown*);
-    HRESULT get_WSTCounter(IUnknown*);
+    HRESULT put_RateEx(double dwRate, uint dwFramesPerSecond);
+    HRESULT get_AudioCounter(IUnknown* ppUnk);
+    HRESULT get_VideoCounter(IUnknown* ppUnk);
+    HRESULT get_CCCounter(IUnknown* ppUnk);
+    HRESULT get_WSTCounter(IUnknown* ppUnk);
 }
 enum IID_IMSVidStreamBufferSourceEvent = GUID(0x50ce8a7d, 0x9c28, 0x4da8, [0x90, 0x42, 0xcd, 0xfa, 0x71, 0x16, 0xf9, 0x79]);
 interface IMSVidStreamBufferSourceEvent : IMSVidFilePlaybackEvent
@@ -2550,7 +2551,7 @@ interface IMSVidStreamBufferSourceEvent : IMSVidFilePlaybackEvent
     HRESULT RatingsBlocked();
     HRESULT RatingsUnblocked();
     HRESULT RatingsChanged();
-    HRESULT TimeHole(int, int);
+    HRESULT TimeHole(int StreamOffsetMS, int SizeMS);
     HRESULT StaleDataRead();
     HRESULT ContentBecomingStale();
     HRESULT StaleFileDeleted();
@@ -2558,13 +2559,13 @@ interface IMSVidStreamBufferSourceEvent : IMSVidFilePlaybackEvent
 enum IID_IMSVidStreamBufferSourceEvent2 = GUID(0x7aef50ce, 0x8e22, 0x4ba8, [0xbc, 0x6, 0xa9, 0x2a, 0x45, 0x8b, 0x4e, 0xf2]);
 interface IMSVidStreamBufferSourceEvent2 : IMSVidStreamBufferSourceEvent
 {
-    HRESULT RateChange(double, double);
+    HRESULT RateChange(double qwNewRate, double qwOldRate);
 }
 enum IID_IMSVidStreamBufferSourceEvent3 = GUID(0xceabd6ab, 0x9b90, 0x4570, [0xad, 0xf1, 0x3c, 0xe7, 0x6e, 0x0, 0xa7, 0x63]);
 interface IMSVidStreamBufferSourceEvent3 : IMSVidStreamBufferSourceEvent2
 {
-    HRESULT BroadcastEvent(BSTR);
-    HRESULT BroadcastEventEx(BSTR, uint, uint, uint, uint);
+    HRESULT BroadcastEvent(BSTR Guid);
+    HRESULT BroadcastEventEx(BSTR Guid, uint Param1, uint Param2, uint Param3, uint Param4);
     HRESULT COPPBlocked();
     HRESULT COPPUnblocked();
     HRESULT ContentPrimarilyAudio();
@@ -2573,25 +2574,25 @@ enum IID_IMSVidStreamBufferV2SourceEvent = GUID(0x49c771f9, 0x41b2, 0x4cf7, [0x9
 interface IMSVidStreamBufferV2SourceEvent : IMSVidFilePlaybackEvent
 {
     HRESULT RatingsChanged();
-    HRESULT TimeHole(int, int);
+    HRESULT TimeHole(int StreamOffsetMS, int SizeMS);
     HRESULT StaleDataRead();
     HRESULT ContentBecomingStale();
     HRESULT StaleFileDeleted();
-    HRESULT RateChange(double, double);
-    HRESULT BroadcastEvent(BSTR);
-    HRESULT BroadcastEventEx(BSTR, uint, uint, uint, uint);
+    HRESULT RateChange(double qwNewRate, double qwOldRate);
+    HRESULT BroadcastEvent(BSTR Guid);
+    HRESULT BroadcastEventEx(BSTR Guid, uint Param1, uint Param2, uint Param3, uint Param4);
     HRESULT ContentPrimarilyAudio();
 }
 enum IID_IMSVidVideoRenderer2 = GUID(0x6bdd5c1e, 0x2810, 0x4159, [0x94, 0xbc, 0x5, 0x51, 0x1a, 0xe8, 0x54, 0x9b]);
 interface IMSVidVideoRenderer2 : IMSVidVideoRenderer
 {
-    HRESULT get_Allocator(IUnknown*);
-    HRESULT get__Allocator(IVMRSurfaceAllocator*);
-    HRESULT get_Allocator_ID(int*);
-    HRESULT SetAllocator(IUnknown, int);
-    HRESULT _SetAllocator2(IVMRSurfaceAllocator, int);
-    HRESULT put_SuppressEffects(VARIANT_BOOL);
-    HRESULT get_SuppressEffects(VARIANT_BOOL*);
+    HRESULT get_Allocator(IUnknown* AllocPresent);
+    HRESULT get__Allocator(IVMRSurfaceAllocator* AllocPresent);
+    HRESULT get_Allocator_ID(int* ID);
+    HRESULT SetAllocator(IUnknown AllocPresent, int ID);
+    HRESULT _SetAllocator2(IVMRSurfaceAllocator AllocPresent, int ID);
+    HRESULT put_SuppressEffects(VARIANT_BOOL bSuppress);
+    HRESULT get_SuppressEffects(VARIANT_BOOL* bSuppress);
 }
 enum IID_IMSVidVideoRendererEvent2 = GUID(0x7145ed66, 0x4730, 0x4fdb, [0x8a, 0x53, 0xfd, 0xe7, 0x50, 0x8d, 0x3e, 0x5e]);
 interface IMSVidVideoRendererEvent2 : IMSVidOutputDeviceEvent
@@ -2601,32 +2602,32 @@ interface IMSVidVideoRendererEvent2 : IMSVidOutputDeviceEvent
 enum IID_IMSVidVMR9 = GUID(0xd58b0015, 0xebef, 0x44bb, [0xbb, 0xdd, 0x3f, 0x36, 0x99, 0xd7, 0x6e, 0xa1]);
 interface IMSVidVMR9 : IMSVidVideoRenderer
 {
-    HRESULT get_Allocator_ID(int*);
-    HRESULT SetAllocator(IUnknown, int);
-    HRESULT put_SuppressEffects(VARIANT_BOOL);
-    HRESULT get_SuppressEffects(VARIANT_BOOL*);
-    HRESULT get_Allocator(IUnknown*);
+    HRESULT get_Allocator_ID(int* ID);
+    HRESULT SetAllocator(IUnknown AllocPresent, int ID);
+    HRESULT put_SuppressEffects(VARIANT_BOOL bSuppress);
+    HRESULT get_SuppressEffects(VARIANT_BOOL* bSuppress);
+    HRESULT get_Allocator(IUnknown* AllocPresent);
 }
 enum IID_IMSVidEVR = GUID(0x15e496ae, 0x82a8, 0x4cf9, [0xa6, 0xb6, 0xc5, 0x61, 0xdc, 0x60, 0x39, 0x8f]);
 interface IMSVidEVR : IMSVidVideoRenderer
 {
-    HRESULT get_Presenter(IMFVideoPresenter*);
-    HRESULT put_Presenter(IMFVideoPresenter);
-    HRESULT put_SuppressEffects(VARIANT_BOOL);
-    HRESULT get_SuppressEffects(VARIANT_BOOL*);
+    HRESULT get_Presenter(IMFVideoPresenter* ppAllocPresent);
+    HRESULT put_Presenter(IMFVideoPresenter pAllocPresent);
+    HRESULT put_SuppressEffects(VARIANT_BOOL bSuppress);
+    HRESULT get_SuppressEffects(VARIANT_BOOL* bSuppress);
 }
 enum IID_IMSVidEVREvent = GUID(0x349abb10, 0x883c, 0x4f22, [0x87, 0x14, 0xce, 0xca, 0xee, 0xe4, 0x5d, 0x62]);
 interface IMSVidEVREvent : IMSVidOutputDeviceEvent
 {
-    HRESULT OnUserEvent(int);
+    HRESULT OnUserEvent(int lEventCode);
 }
 enum IID_IMSVidAudioRenderer = GUID(0x37b0353f, 0xa4c8, 0x11d2, [0xb6, 0x34, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidAudioRenderer : IMSVidOutputDevice
 {
-    HRESULT put_Volume(int);
-    HRESULT get_Volume(int*);
-    HRESULT put_Balance(int);
-    HRESULT get_Balance(int*);
+    HRESULT put_Volume(int lVol);
+    HRESULT get_Volume(int* lVol);
+    HRESULT put_Balance(int lBal);
+    HRESULT get_Balance(int* lBal);
 }
 enum IID_IMSVidAudioRendererEvent = GUID(0x37b03541, 0xa4c8, 0x11d2, [0xb6, 0x34, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidAudioRendererEvent : IMSVidOutputDeviceEvent
@@ -2647,47 +2648,47 @@ interface IMSVidAudioRendererEvent2 : IMSVidAudioRendererEvent
 enum IID_IMSVidInputDevices = GUID(0xc5702cd1, 0x9b79, 0x11d3, [0xb6, 0x54, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidInputDevices : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IEnumVARIANT*);
-    HRESULT get_Item(VARIANT, IMSVidInputDevice*);
-    HRESULT Add(IMSVidInputDevice);
-    HRESULT Remove(VARIANT);
+    HRESULT get_Count(int* lCount);
+    HRESULT get__NewEnum(IEnumVARIANT* pD);
+    HRESULT get_Item(VARIANT v, IMSVidInputDevice* pDB);
+    HRESULT Add(IMSVidInputDevice pDB);
+    HRESULT Remove(VARIANT v);
 }
 enum IID_IMSVidOutputDevices = GUID(0xc5702cd2, 0x9b79, 0x11d3, [0xb6, 0x54, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidOutputDevices : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IEnumVARIANT*);
-    HRESULT get_Item(VARIANT, IMSVidOutputDevice*);
-    HRESULT Add(IMSVidOutputDevice);
-    HRESULT Remove(VARIANT);
+    HRESULT get_Count(int* lCount);
+    HRESULT get__NewEnum(IEnumVARIANT* pD);
+    HRESULT get_Item(VARIANT v, IMSVidOutputDevice* pDB);
+    HRESULT Add(IMSVidOutputDevice pDB);
+    HRESULT Remove(VARIANT v);
 }
 enum IID_IMSVidVideoRendererDevices = GUID(0xc5702cd3, 0x9b79, 0x11d3, [0xb6, 0x54, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidVideoRendererDevices : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IEnumVARIANT*);
-    HRESULT get_Item(VARIANT, IMSVidVideoRenderer*);
-    HRESULT Add(IMSVidVideoRenderer);
-    HRESULT Remove(VARIANT);
+    HRESULT get_Count(int* lCount);
+    HRESULT get__NewEnum(IEnumVARIANT* pD);
+    HRESULT get_Item(VARIANT v, IMSVidVideoRenderer* pDB);
+    HRESULT Add(IMSVidVideoRenderer pDB);
+    HRESULT Remove(VARIANT v);
 }
 enum IID_IMSVidAudioRendererDevices = GUID(0xc5702cd4, 0x9b79, 0x11d3, [0xb6, 0x54, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidAudioRendererDevices : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IEnumVARIANT*);
-    HRESULT get_Item(VARIANT, IMSVidAudioRenderer*);
-    HRESULT Add(IMSVidAudioRenderer);
-    HRESULT Remove(VARIANT);
+    HRESULT get_Count(int* lCount);
+    HRESULT get__NewEnum(IEnumVARIANT* pD);
+    HRESULT get_Item(VARIANT v, IMSVidAudioRenderer* pDB);
+    HRESULT Add(IMSVidAudioRenderer pDB);
+    HRESULT Remove(VARIANT v);
 }
 enum IID_IMSVidFeatures = GUID(0xc5702cd5, 0x9b79, 0x11d3, [0xb6, 0x54, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidFeatures : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IEnumVARIANT*);
-    HRESULT get_Item(VARIANT, IMSVidFeature*);
-    HRESULT Add(IMSVidFeature);
-    HRESULT Remove(VARIANT);
+    HRESULT get_Count(int* lCount);
+    HRESULT get__NewEnum(IEnumVARIANT* pD);
+    HRESULT get_Item(VARIANT v, IMSVidFeature* pDB);
+    HRESULT Add(IMSVidFeature pDB);
+    HRESULT Remove(VARIANT v);
 }
 alias MSViddispidList = int;
 enum : int
@@ -2748,41 +2749,41 @@ enum : int
 enum IID_IMSVidCtl = GUID(0xb0edf162, 0x910a, 0x11d2, [0xb6, 0x32, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface IMSVidCtl : IDispatch
 {
-    HRESULT get_AutoSize(VARIANT_BOOL*);
-    HRESULT put_AutoSize(VARIANT_BOOL);
-    HRESULT get_BackColor(uint*);
-    HRESULT put_BackColor(uint);
-    HRESULT get_Enabled(VARIANT_BOOL*);
-    HRESULT put_Enabled(VARIANT_BOOL);
-    HRESULT get_TabStop(VARIANT_BOOL*);
-    HRESULT put_TabStop(VARIANT_BOOL);
-    HRESULT get_Window(HWND*);
+    HRESULT get_AutoSize(VARIANT_BOOL* pbool);
+    HRESULT put_AutoSize(VARIANT_BOOL vbool);
+    HRESULT get_BackColor(uint* backcolor);
+    HRESULT put_BackColor(uint backcolor);
+    HRESULT get_Enabled(VARIANT_BOOL* pbool);
+    HRESULT put_Enabled(VARIANT_BOOL vbool);
+    HRESULT get_TabStop(VARIANT_BOOL* pbool);
+    HRESULT put_TabStop(VARIANT_BOOL vbool);
+    HRESULT get_Window(HWND* phwnd);
     HRESULT Refresh();
-    HRESULT get_DisplaySize(DisplaySizeList*);
-    HRESULT put_DisplaySize(DisplaySizeList);
-    HRESULT get_MaintainAspectRatio(VARIANT_BOOL*);
-    HRESULT put_MaintainAspectRatio(VARIANT_BOOL);
-    HRESULT get_ColorKey(uint*);
-    HRESULT put_ColorKey(uint);
-    HRESULT get_InputsAvailable(BSTR, IMSVidInputDevices*);
-    HRESULT get_OutputsAvailable(BSTR, IMSVidOutputDevices*);
-    HRESULT get__InputsAvailable(const(GUID)*, IMSVidInputDevices*);
-    HRESULT get__OutputsAvailable(const(GUID)*, IMSVidOutputDevices*);
-    HRESULT get_VideoRenderersAvailable(IMSVidVideoRendererDevices*);
-    HRESULT get_AudioRenderersAvailable(IMSVidAudioRendererDevices*);
-    HRESULT get_FeaturesAvailable(IMSVidFeatures*);
-    HRESULT get_InputActive(IMSVidInputDevice*);
-    HRESULT put_InputActive(IMSVidInputDevice);
-    HRESULT get_OutputsActive(IMSVidOutputDevices*);
-    HRESULT put_OutputsActive(IMSVidOutputDevices);
-    HRESULT get_VideoRendererActive(IMSVidVideoRenderer*);
-    HRESULT put_VideoRendererActive(IMSVidVideoRenderer);
-    HRESULT get_AudioRendererActive(IMSVidAudioRenderer*);
-    HRESULT put_AudioRendererActive(IMSVidAudioRenderer);
-    HRESULT get_FeaturesActive(IMSVidFeatures*);
-    HRESULT put_FeaturesActive(IMSVidFeatures);
-    HRESULT get_State(MSVidCtlStateList*);
-    HRESULT View(VARIANT*);
+    HRESULT get_DisplaySize(DisplaySizeList* CurrentValue);
+    HRESULT put_DisplaySize(DisplaySizeList NewValue);
+    HRESULT get_MaintainAspectRatio(VARIANT_BOOL* CurrentValue);
+    HRESULT put_MaintainAspectRatio(VARIANT_BOOL NewValue);
+    HRESULT get_ColorKey(uint* CurrentValue);
+    HRESULT put_ColorKey(uint NewValue);
+    HRESULT get_InputsAvailable(BSTR CategoryGuid, IMSVidInputDevices* pVal);
+    HRESULT get_OutputsAvailable(BSTR CategoryGuid, IMSVidOutputDevices* pVal);
+    HRESULT get__InputsAvailable(const(GUID)* CategoryGuid, IMSVidInputDevices* pVal);
+    HRESULT get__OutputsAvailable(const(GUID)* CategoryGuid, IMSVidOutputDevices* pVal);
+    HRESULT get_VideoRenderersAvailable(IMSVidVideoRendererDevices* pVal);
+    HRESULT get_AudioRenderersAvailable(IMSVidAudioRendererDevices* pVal);
+    HRESULT get_FeaturesAvailable(IMSVidFeatures* pVal);
+    HRESULT get_InputActive(IMSVidInputDevice* pVal);
+    HRESULT put_InputActive(IMSVidInputDevice pVal);
+    HRESULT get_OutputsActive(IMSVidOutputDevices* pVal);
+    HRESULT put_OutputsActive(IMSVidOutputDevices pVal);
+    HRESULT get_VideoRendererActive(IMSVidVideoRenderer* pVal);
+    HRESULT put_VideoRendererActive(IMSVidVideoRenderer pVal);
+    HRESULT get_AudioRendererActive(IMSVidAudioRenderer* pVal);
+    HRESULT put_AudioRendererActive(IMSVidAudioRenderer pVal);
+    HRESULT get_FeaturesActive(IMSVidFeatures* pVal);
+    HRESULT put_FeaturesActive(IMSVidFeatures pVal);
+    HRESULT get_State(MSVidCtlStateList* lState);
+    HRESULT View(VARIANT* v);
     HRESULT Build();
     HRESULT Pause();
     HRESULT Run();
@@ -2790,13 +2791,13 @@ interface IMSVidCtl : IDispatch
     HRESULT Decompose();
     HRESULT DisableVideo();
     HRESULT DisableAudio();
-    HRESULT ViewNext(VARIANT*);
+    HRESULT ViewNext(VARIANT* v);
 }
 enum IID_IMSEventBinder = GUID(0xc3a9f406, 0x2222, 0x436d, [0x86, 0xd5, 0xba, 0x32, 0x29, 0x27, 0x9e, 0xfb]);
 interface IMSEventBinder : IDispatch
 {
-    HRESULT Bind(IDispatch, BSTR, BSTR, int*);
-    HRESULT Unbind(uint);
+    HRESULT Bind(IDispatch pEventObject, BSTR EventName, BSTR EventHandler, int* CancelID);
+    HRESULT Unbind(uint CancelCookie);
 }
 enum IID__IMSVidCtlEvents = GUID(0xb0edf164, 0x910a, 0x11d2, [0xb6, 0x32, 0x0, 0xc0, 0x4f, 0x79, 0x49, 0x8e]);
 interface _IMSVidCtlEvents : IDispatch
@@ -3057,8 +3058,8 @@ struct MSVidOutput
 enum IID_IStreamBufferInitialize = GUID(0x9ce50f2d, 0x6ba7, 0x40fb, [0xa0, 0x34, 0x50, 0xb1, 0xa6, 0x74, 0xec, 0x78]);
 interface IStreamBufferInitialize : IUnknown
 {
-    HRESULT SetHKEY(HKEY);
-    HRESULT SetSIDs(uint, PSID*);
+    HRESULT SetHKEY(HKEY hkeyRoot);
+    HRESULT SetSIDs(uint cSIDs, PSID* ppSID);
 }
 alias RECORDING_TYPE = int;
 enum : int
@@ -3070,8 +3071,8 @@ enum : int
 enum IID_IStreamBufferSink = GUID(0xafd1f242, 0x7efd, 0x45ee, [0xba, 0x4e, 0x40, 0x7a, 0x25, 0xc9, 0xa7, 0x7a]);
 interface IStreamBufferSink : IUnknown
 {
-    HRESULT LockProfile(const(wchar)*);
-    HRESULT CreateRecorder(const(wchar)*, uint, IUnknown*);
+    HRESULT LockProfile(const(wchar)* pszStreamBufferFilename);
+    HRESULT CreateRecorder(const(wchar)* pszFilename, uint dwRecordType, IUnknown* pRecordingIUnknown);
     HRESULT IsProfileLocked();
 }
 enum IID_IStreamBufferSink2 = GUID(0xdb94a660, 0xf4fb, 0x4bfa, [0xbc, 0xc6, 0xfe, 0x15, 0x9a, 0x4e, 0xea, 0x93]);
@@ -3082,27 +3083,27 @@ interface IStreamBufferSink2 : IStreamBufferSink
 enum IID_IStreamBufferSink3 = GUID(0x974723f2, 0x887a, 0x4452, [0x93, 0x66, 0x2c, 0xff, 0x30, 0x57, 0xbc, 0x8f]);
 interface IStreamBufferSink3 : IStreamBufferSink2
 {
-    HRESULT SetAvailableFilter(long*);
+    HRESULT SetAvailableFilter(long* prtMin);
 }
 enum IID_IStreamBufferSource = GUID(0x1c5bd776, 0x6ced, 0x4f44, [0x81, 0x64, 0x5e, 0xab, 0xe, 0x98, 0xdb, 0x12]);
 interface IStreamBufferSource : IUnknown
 {
-    HRESULT SetStreamSink(IStreamBufferSink);
+    HRESULT SetStreamSink(IStreamBufferSink pIStreamBufferSink);
 }
 enum IID_IStreamBufferRecordControl = GUID(0xba9b6c99, 0xf3c7, 0x4ff2, [0x92, 0xdb, 0xcf, 0xdd, 0x48, 0x51, 0xbf, 0x31]);
 interface IStreamBufferRecordControl : IUnknown
 {
-    HRESULT Start(long*);
-    HRESULT Stop(long);
-    HRESULT GetRecordingStatus(HRESULT*, BOOL*, BOOL*);
+    HRESULT Start(long* prtStart);
+    HRESULT Stop(long rtStop);
+    HRESULT GetRecordingStatus(HRESULT* phResult, BOOL* pbStarted, BOOL* pbStopped);
 }
 enum IID_IStreamBufferRecComp = GUID(0x9e259a9b, 0x8815, 0x42ae, [0xb0, 0x9f, 0x22, 0x19, 0x70, 0xb1, 0x54, 0xfd]);
 interface IStreamBufferRecComp : IUnknown
 {
-    HRESULT Initialize(const(wchar)*, const(wchar)*);
-    HRESULT Append(const(wchar)*);
-    HRESULT AppendEx(const(wchar)*, long, long);
-    HRESULT GetCurrentLength(uint*);
+    HRESULT Initialize(const(wchar)* pszTargetFilename, const(wchar)* pszSBRecProfileRef);
+    HRESULT Append(const(wchar)* pszSBRecording);
+    HRESULT AppendEx(const(wchar)* pszSBRecording, long rtStart, long rtStop);
+    HRESULT GetCurrentLength(uint* pcSeconds);
     HRESULT Close();
     HRESULT Cancel();
 }
@@ -3121,11 +3122,11 @@ enum : int
 enum IID_IStreamBufferRecordingAttribute = GUID(0x16ca4e03, 0xfe69, 0x4705, [0xbd, 0x41, 0x5b, 0x7d, 0xfc, 0xc, 0x95, 0xf3]);
 interface IStreamBufferRecordingAttribute : IUnknown
 {
-    HRESULT SetAttribute(uint, const(wchar)*, STREAMBUFFER_ATTR_DATATYPE, ubyte*, ushort);
-    HRESULT GetAttributeCount(uint, ushort*);
-    HRESULT GetAttributeByName(const(wchar)*, uint*, STREAMBUFFER_ATTR_DATATYPE*, ubyte*, ushort*);
-    HRESULT GetAttributeByIndex(ushort, uint*, PWSTR, ushort*, STREAMBUFFER_ATTR_DATATYPE*, ubyte*, ushort*);
-    HRESULT EnumAttributes(IEnumStreamBufferRecordingAttrib*);
+    HRESULT SetAttribute(uint ulReserved, const(wchar)* pszAttributeName, STREAMBUFFER_ATTR_DATATYPE StreamBufferAttributeType, ubyte* pbAttribute, ushort cbAttributeLength);
+    HRESULT GetAttributeCount(uint ulReserved, ushort* pcAttributes);
+    HRESULT GetAttributeByName(const(wchar)* pszAttributeName, uint* pulReserved, STREAMBUFFER_ATTR_DATATYPE* pStreamBufferAttributeType, ubyte* pbAttribute, ushort* pcbLength);
+    HRESULT GetAttributeByIndex(ushort wIndex, uint* pulReserved, PWSTR pszAttributeName, ushort* pcchNameLength, STREAMBUFFER_ATTR_DATATYPE* pStreamBufferAttributeType, ubyte* pbAttribute, ushort* pcbLength);
+    HRESULT EnumAttributes(IEnumStreamBufferRecordingAttrib* ppIEnumStreamBufferAttrib);
 }
 struct STREAMBUFFER_ATTRIBUTE
 {
@@ -3137,36 +3138,36 @@ struct STREAMBUFFER_ATTRIBUTE
 enum IID_IEnumStreamBufferRecordingAttrib = GUID(0xc18a9162, 0x1e82, 0x4142, [0x8c, 0x73, 0x56, 0x90, 0xfa, 0x62, 0xfe, 0x33]);
 interface IEnumStreamBufferRecordingAttrib : IUnknown
 {
-    HRESULT Next(uint, STREAMBUFFER_ATTRIBUTE*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint cRequest, STREAMBUFFER_ATTRIBUTE* pStreamBufferAttribute, uint* pcReceived);
+    HRESULT Skip(uint cRecords);
     HRESULT Reset();
-    HRESULT Clone(IEnumStreamBufferRecordingAttrib*);
+    HRESULT Clone(IEnumStreamBufferRecordingAttrib* ppIEnumStreamBufferAttrib);
 }
 enum IID_IStreamBufferConfigure = GUID(0xce14dfae, 0x4098, 0x4af7, [0xbb, 0xf7, 0xd6, 0x51, 0x1f, 0x83, 0x54, 0x14]);
 interface IStreamBufferConfigure : IUnknown
 {
-    HRESULT SetDirectory(const(wchar)*);
-    HRESULT GetDirectory(PWSTR*);
-    HRESULT SetBackingFileCount(uint, uint);
-    HRESULT GetBackingFileCount(uint*, uint*);
-    HRESULT SetBackingFileDuration(uint);
-    HRESULT GetBackingFileDuration(uint*);
+    HRESULT SetDirectory(const(wchar)* pszDirectoryName);
+    HRESULT GetDirectory(PWSTR* ppszDirectoryName);
+    HRESULT SetBackingFileCount(uint dwMin, uint dwMax);
+    HRESULT GetBackingFileCount(uint* pdwMin, uint* pdwMax);
+    HRESULT SetBackingFileDuration(uint dwSeconds);
+    HRESULT GetBackingFileDuration(uint* pdwSeconds);
 }
 enum IID_IStreamBufferConfigure2 = GUID(0x53e037bf, 0x3992, 0x4282, [0xae, 0x34, 0x24, 0x87, 0xb4, 0xda, 0xe0, 0x6b]);
 interface IStreamBufferConfigure2 : IStreamBufferConfigure
 {
-    HRESULT SetMultiplexedPacketSize(uint);
-    HRESULT GetMultiplexedPacketSize(uint*);
-    HRESULT SetFFTransitionRates(uint, uint);
-    HRESULT GetFFTransitionRates(uint*, uint*);
+    HRESULT SetMultiplexedPacketSize(uint cbBytesPerPacket);
+    HRESULT GetMultiplexedPacketSize(uint* pcbBytesPerPacket);
+    HRESULT SetFFTransitionRates(uint dwMaxFullFrameRate, uint dwMaxNonSkippingRate);
+    HRESULT GetFFTransitionRates(uint* pdwMaxFullFrameRate, uint* pdwMaxNonSkippingRate);
 }
 enum IID_IStreamBufferConfigure3 = GUID(0x7e2d2a1e, 0x7192, 0x4bd7, [0x80, 0xc1, 0x6, 0x1f, 0xd1, 0xd1, 0x4, 0x2]);
 interface IStreamBufferConfigure3 : IStreamBufferConfigure2
 {
-    HRESULT SetStartRecConfig(BOOL);
-    HRESULT GetStartRecConfig(BOOL*);
-    HRESULT SetNamespace(PWSTR);
-    HRESULT GetNamespace(PWSTR*);
+    HRESULT SetStartRecConfig(BOOL fStartStopsCur);
+    HRESULT GetStartRecConfig(BOOL* pfStartStopsCur);
+    HRESULT SetNamespace(PWSTR pszNamespace);
+    HRESULT GetNamespace(PWSTR* ppszNamespace);
 }
 enum IID_IStreamBufferMediaSeeking = GUID(0xf61f5c26, 0x863d, 0x4afa, [0xb0, 0xba, 0x2f, 0x81, 0xdc, 0x97, 0x85, 0x96]);
 interface IStreamBufferMediaSeeking : IMediaSeeking
@@ -3175,7 +3176,7 @@ interface IStreamBufferMediaSeeking : IMediaSeeking
 enum IID_IStreamBufferMediaSeeking2 = GUID(0x3a439ab0, 0x155f, 0x470a, [0x86, 0xa6, 0x9e, 0xa5, 0x4a, 0xfd, 0x6e, 0xaf]);
 interface IStreamBufferMediaSeeking2 : IStreamBufferMediaSeeking
 {
-    HRESULT SetRateEx(double, uint);
+    HRESULT SetRateEx(double dRate, uint dwFramesPerSec);
 }
 struct SBE_PIN_DATA
 {
@@ -3188,7 +3189,7 @@ struct SBE_PIN_DATA
 enum IID_IStreamBufferDataCounters = GUID(0x9d2a2563, 0x31ab, 0x402e, [0x9a, 0x6b, 0xad, 0xb9, 0x3, 0x48, 0x94, 0x40]);
 interface IStreamBufferDataCounters : IUnknown
 {
-    HRESULT GetData(SBE_PIN_DATA*);
+    HRESULT GetData(SBE_PIN_DATA* pPinData);
     HRESULT ResetData();
 }
 alias CROSSBAR_DEFAULT_FLAGS = int;
@@ -3219,53 +3220,53 @@ struct DVR_STREAM_DESC
 enum IID_ISBE2GlobalEvent = GUID(0xcaede759, 0xb6b1, 0x11db, [0xa5, 0x78, 0x0, 0x18, 0xf3, 0xfa, 0x24, 0xc6]);
 interface ISBE2GlobalEvent : IUnknown
 {
-    HRESULT GetEvent(const(GUID)*, uint, uint, uint, uint, BOOL*, uint*, ubyte*);
+    HRESULT GetEvent(const(GUID)* idEvt, uint param1, uint param2, uint param3, uint param4, BOOL* pSpanning, uint* pcb, ubyte* pb);
 }
 enum IID_ISBE2GlobalEvent2 = GUID(0x6d8309bf, 0xfe, 0x4506, [0x8b, 0x3, 0xf8, 0xc6, 0x5b, 0x5c, 0x9b, 0x39]);
 interface ISBE2GlobalEvent2 : ISBE2GlobalEvent
 {
-    HRESULT GetEventEx(const(GUID)*, uint, uint, uint, uint, BOOL*, uint*, ubyte*, long*);
+    HRESULT GetEventEx(const(GUID)* idEvt, uint param1, uint param2, uint param3, uint param4, BOOL* pSpanning, uint* pcb, ubyte* pb, long* pStreamTime);
 }
 enum IID_ISBE2SpanningEvent = GUID(0xcaede760, 0xb6b1, 0x11db, [0xa5, 0x78, 0x0, 0x18, 0xf3, 0xfa, 0x24, 0xc6]);
 interface ISBE2SpanningEvent : IUnknown
 {
-    HRESULT GetEvent(const(GUID)*, uint, uint*, ubyte*);
+    HRESULT GetEvent(const(GUID)* idEvt, uint streamId, uint* pcb, ubyte* pb);
 }
 enum IID_ISBE2Crossbar = GUID(0x547b6d26, 0x3226, 0x487e, [0x82, 0x53, 0x8a, 0xa1, 0x68, 0x74, 0x94, 0x34]);
 interface ISBE2Crossbar : IUnknown
 {
-    HRESULT EnableDefaultMode(uint);
-    HRESULT GetInitialProfile(ISBE2MediaTypeProfile*);
-    HRESULT SetOutputProfile(ISBE2MediaTypeProfile, uint*, IPin*);
-    HRESULT EnumStreams(ISBE2EnumStream*);
+    HRESULT EnableDefaultMode(uint DefaultFlags);
+    HRESULT GetInitialProfile(ISBE2MediaTypeProfile* ppProfile);
+    HRESULT SetOutputProfile(ISBE2MediaTypeProfile pProfile, uint* pcOutputPins, IPin* ppOutputPins);
+    HRESULT EnumStreams(ISBE2EnumStream* ppStreams);
 }
 enum IID_ISBE2StreamMap = GUID(0x667c7745, 0x85b1, 0x4c55, [0xae, 0x55, 0x4e, 0x25, 0x5, 0x61, 0x59, 0xfc]);
 interface ISBE2StreamMap : IUnknown
 {
-    HRESULT MapStream(uint);
-    HRESULT UnmapStream(uint);
-    HRESULT EnumMappedStreams(ISBE2EnumStream*);
+    HRESULT MapStream(uint Stream);
+    HRESULT UnmapStream(uint Stream);
+    HRESULT EnumMappedStreams(ISBE2EnumStream* ppStreams);
 }
 enum IID_ISBE2EnumStream = GUID(0xf7611092, 0x9fbc, 0x46ec, [0xa7, 0xc7, 0x54, 0x8e, 0xa7, 0x8b, 0x71, 0xa4]);
 interface ISBE2EnumStream : IUnknown
 {
-    HRESULT Next(uint, SBE2_STREAM_DESC*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint cRequest, SBE2_STREAM_DESC* pStreamDesc, uint* pcReceived);
+    HRESULT Skip(uint cRecords);
     HRESULT Reset();
-    HRESULT Clone(ISBE2EnumStream*);
+    HRESULT Clone(ISBE2EnumStream* ppIEnumStream);
 }
 enum IID_ISBE2MediaTypeProfile = GUID(0xf238267d, 0x4671, 0x40d7, [0x99, 0x7e, 0x25, 0xdc, 0x32, 0xcf, 0xed, 0x2a]);
 interface ISBE2MediaTypeProfile : IUnknown
 {
-    HRESULT GetStreamCount(uint*);
-    HRESULT GetStream(uint, AM_MEDIA_TYPE**);
-    HRESULT AddStream(AM_MEDIA_TYPE*);
-    HRESULT DeleteStream(uint);
+    HRESULT GetStreamCount(uint* pCount);
+    HRESULT GetStream(uint Index, AM_MEDIA_TYPE** ppMediaType);
+    HRESULT AddStream(AM_MEDIA_TYPE* pMediaType);
+    HRESULT DeleteStream(uint Index);
 }
 enum IID_ISBE2FileScan = GUID(0x3e2bf5a5, 0x4f96, 0x4899, [0xa1, 0xa3, 0x75, 0xe8, 0xbe, 0x9a, 0x5a, 0xc0]);
 interface ISBE2FileScan : IUnknown
 {
-    HRESULT RepairFile(const(wchar)*);
+    HRESULT RepairFile(const(wchar)* filename);
 }
 struct PID_BITS_MIDL
 {
@@ -3561,12 +3562,12 @@ struct MPEG_STREAM_FILTER
 enum IID_IMpeg2TableFilter = GUID(0xbdcdd913, 0x9ecd, 0x4fb2, [0x81, 0xae, 0xad, 0xf7, 0x47, 0xea, 0x75, 0xa5]);
 interface IMpeg2TableFilter : IUnknown
 {
-    HRESULT AddPID(ushort);
-    HRESULT AddTable(ushort, ubyte);
-    HRESULT AddExtension(ushort, ubyte, ushort);
-    HRESULT RemovePID(ushort);
-    HRESULT RemoveTable(ushort, ubyte);
-    HRESULT RemoveExtension(ushort, ubyte, ushort);
+    HRESULT AddPID(ushort p);
+    HRESULT AddTable(ushort p, ubyte t);
+    HRESULT AddExtension(ushort p, ubyte t, ushort e);
+    HRESULT RemovePID(ushort p);
+    HRESULT RemoveTable(ushort p, ubyte t);
+    HRESULT RemoveExtension(ushort p, ubyte t, ushort e);
 }
 struct Mpeg2TableSampleHdr
 {
@@ -3582,26 +3583,26 @@ struct Mpeg2DataLib
 enum IID_IMpeg2Data = GUID(0x9b396d40, 0xf380, 0x4e3c, [0xa5, 0x14, 0x1a, 0x82, 0xbf, 0x6e, 0xbf, 0xe6]);
 interface IMpeg2Data : IUnknown
 {
-    HRESULT GetSection(ushort, ubyte, MPEG2_FILTER*, uint, ISectionList*);
-    HRESULT GetTable(ushort, ubyte, MPEG2_FILTER*, uint, ISectionList*);
-    HRESULT GetStreamOfSections(ushort, ubyte, MPEG2_FILTER*, HANDLE, IMpeg2Stream*);
+    HRESULT GetSection(ushort pid, ubyte tid, MPEG2_FILTER* pFilter, uint dwTimeout, ISectionList* ppSectionList);
+    HRESULT GetTable(ushort pid, ubyte tid, MPEG2_FILTER* pFilter, uint dwTimeout, ISectionList* ppSectionList);
+    HRESULT GetStreamOfSections(ushort pid, ubyte tid, MPEG2_FILTER* pFilter, HANDLE hDataReadyEvent, IMpeg2Stream* ppMpegStream);
 }
 enum IID_ISectionList = GUID(0xafec1eb5, 0x2a64, 0x46c6, [0xbf, 0x4b, 0xae, 0x3c, 0xcb, 0x6a, 0xfd, 0xb0]);
 interface ISectionList : IUnknown
 {
-    HRESULT Initialize(MPEG_REQUEST_TYPE, IMpeg2Data, MPEG_CONTEXT*, ushort, ubyte, MPEG2_FILTER*, uint, HANDLE);
-    HRESULT InitializeWithRawSections(MPEG_PACKET_LIST*);
+    HRESULT Initialize(MPEG_REQUEST_TYPE requestType, IMpeg2Data pMpeg2Data, MPEG_CONTEXT* pContext, ushort pid, ubyte tid, MPEG2_FILTER* pFilter, uint timeout, HANDLE hDoneEvent);
+    HRESULT InitializeWithRawSections(MPEG_PACKET_LIST* pmplSections);
     HRESULT CancelPendingRequest();
-    HRESULT GetNumberOfSections(ushort*);
-    HRESULT GetSectionData(ushort, uint*, SECTION**);
-    HRESULT GetProgramIdentifier(ushort*);
-    HRESULT GetTableIdentifier(ubyte*);
+    HRESULT GetNumberOfSections(ushort* pCount);
+    HRESULT GetSectionData(ushort sectionNumber, uint* pdwRawPacketLength, SECTION** ppSection);
+    HRESULT GetProgramIdentifier(ushort* pPid);
+    HRESULT GetTableIdentifier(ubyte* pTableId);
 }
 enum IID_IMpeg2Stream = GUID(0x400cc286, 0x32a0, 0x4ce4, [0x90, 0x41, 0x39, 0x57, 0x11, 0x25, 0xa6, 0x35]);
 interface IMpeg2Stream : IUnknown
 {
-    HRESULT Initialize(MPEG_REQUEST_TYPE, IMpeg2Data, MPEG_CONTEXT*, ushort, ubyte, MPEG2_FILTER*, HANDLE);
-    HRESULT SupplyDataBuffer(MPEG_STREAM_BUFFER*);
+    HRESULT Initialize(MPEG_REQUEST_TYPE requestType, IMpeg2Data pMpeg2Data, MPEG_CONTEXT* pContext, ushort pid, ubyte tid, MPEG2_FILTER* pFilter, HANDLE hDataReadyEvent);
+    HRESULT SupplyDataBuffer(MPEG_STREAM_BUFFER* pStreamBuffer);
 }
 enum CLSID_SectionList = GUID(0x73da5d04, 0x4347, 0x45d3, [0xa9, 0xdc, 0xfa, 0xe9, 0xdd, 0xbe, 0x55, 0x8d]);
 struct SectionList
@@ -3618,16 +3619,16 @@ struct Mpeg2Data
 enum IID_IGenericDescriptor = GUID(0x6a5918f8, 0xa77a, 0x4f61, [0xae, 0xd0, 0x57, 0x2, 0xbd, 0xcd, 0xa3, 0xe6]);
 interface IGenericDescriptor : IUnknown
 {
-    HRESULT Initialize(ubyte*, int);
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetBody(ubyte**);
+    HRESULT Initialize(ubyte* pbDesc, int bCount);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetBody(ubyte** ppbVal);
 }
 enum IID_IGenericDescriptor2 = GUID(0xbf02fb7e, 0x9792, 0x4e10, [0xa6, 0x8d, 0x3, 0x3a, 0x2c, 0xc2, 0x46, 0xa5]);
 interface IGenericDescriptor2 : IGenericDescriptor
 {
-    HRESULT Initialize(ubyte*, ushort);
-    HRESULT GetLength(ushort*);
+    HRESULT Initialize(ubyte* pbDesc, ushort wCount);
+    HRESULT GetLength(ushort* pwVal);
 }
 struct ProgramElement
 {
@@ -3637,247 +3638,247 @@ struct ProgramElement
 enum IID_IPAT = GUID(0x6623b511, 0x4b5f, 0x43c3, [0x9a, 0x1, 0xe8, 0xff, 0x84, 0x18, 0x80, 0x60]);
 interface IPAT : IUnknown
 {
-    HRESULT Initialize(ISectionList, IMpeg2Data);
-    HRESULT GetTransportStreamId(ushort*);
-    HRESULT GetVersionNumber(ubyte*);
-    HRESULT GetCountOfRecords(uint*);
-    HRESULT GetRecordProgramNumber(uint, ushort*);
-    HRESULT GetRecordProgramMapPid(uint, ushort*);
-    HRESULT FindRecordProgramMapPid(ushort, ushort*);
-    HRESULT RegisterForNextTable(HANDLE);
-    HRESULT GetNextTable(IPAT*);
-    HRESULT RegisterForWhenCurrent(HANDLE);
+    HRESULT Initialize(ISectionList pSectionList, IMpeg2Data pMPEGData);
+    HRESULT GetTransportStreamId(ushort* pwVal);
+    HRESULT GetVersionNumber(ubyte* pbVal);
+    HRESULT GetCountOfRecords(uint* pdwVal);
+    HRESULT GetRecordProgramNumber(uint dwIndex, ushort* pwVal);
+    HRESULT GetRecordProgramMapPid(uint dwIndex, ushort* pwVal);
+    HRESULT FindRecordProgramMapPid(ushort wProgramNumber, ushort* pwVal);
+    HRESULT RegisterForNextTable(HANDLE hNextTableAvailable);
+    HRESULT GetNextTable(IPAT* ppPAT);
+    HRESULT RegisterForWhenCurrent(HANDLE hNextTableIsCurrent);
     HRESULT ConvertNextToCurrent();
 }
 enum IID_ICAT = GUID(0x7c6995fb, 0x2a31, 0x4bd7, [0x95, 0x3e, 0xb1, 0xad, 0x7f, 0xb7, 0xd3, 0x1c]);
 interface ICAT : IUnknown
 {
-    HRESULT Initialize(ISectionList, IMpeg2Data);
-    HRESULT GetVersionNumber(ubyte*);
-    HRESULT GetCountOfTableDescriptors(uint*);
-    HRESULT GetTableDescriptorByIndex(uint, IGenericDescriptor*);
-    HRESULT GetTableDescriptorByTag(ubyte, uint*, IGenericDescriptor*);
-    HRESULT RegisterForNextTable(HANDLE);
-    HRESULT GetNextTable(uint, ICAT*);
-    HRESULT RegisterForWhenCurrent(HANDLE);
+    HRESULT Initialize(ISectionList pSectionList, IMpeg2Data pMPEGData);
+    HRESULT GetVersionNumber(ubyte* pbVal);
+    HRESULT GetCountOfTableDescriptors(uint* pdwVal);
+    HRESULT GetTableDescriptorByIndex(uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetTableDescriptorByTag(ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
+    HRESULT RegisterForNextTable(HANDLE hNextTableAvailable);
+    HRESULT GetNextTable(uint dwTimeout, ICAT* ppCAT);
+    HRESULT RegisterForWhenCurrent(HANDLE hNextTableIsCurrent);
     HRESULT ConvertNextToCurrent();
 }
 enum IID_IPMT = GUID(0x1f3b398, 0x9527, 0x4736, [0x94, 0xdb, 0x51, 0x95, 0x87, 0x8e, 0x97, 0xa8]);
 interface IPMT : IUnknown
 {
-    HRESULT Initialize(ISectionList, IMpeg2Data);
-    HRESULT GetProgramNumber(ushort*);
-    HRESULT GetVersionNumber(ubyte*);
-    HRESULT GetPcrPid(ushort*);
-    HRESULT GetCountOfTableDescriptors(uint*);
-    HRESULT GetTableDescriptorByIndex(uint, IGenericDescriptor*);
-    HRESULT GetTableDescriptorByTag(ubyte, uint*, IGenericDescriptor*);
-    HRESULT GetCountOfRecords(ushort*);
-    HRESULT GetRecordStreamType(uint, ubyte*);
-    HRESULT GetRecordElementaryPid(uint, ushort*);
-    HRESULT GetRecordCountOfDescriptors(uint, uint*);
-    HRESULT GetRecordDescriptorByIndex(uint, uint, IGenericDescriptor*);
-    HRESULT GetRecordDescriptorByTag(uint, ubyte, uint*, IGenericDescriptor*);
-    HRESULT QueryServiceGatewayInfo(DSMCC_ELEMENT**, uint*);
-    HRESULT QueryMPEInfo(MPE_ELEMENT**, uint*);
-    HRESULT RegisterForNextTable(HANDLE);
-    HRESULT GetNextTable(IPMT*);
-    HRESULT RegisterForWhenCurrent(HANDLE);
+    HRESULT Initialize(ISectionList pSectionList, IMpeg2Data pMPEGData);
+    HRESULT GetProgramNumber(ushort* pwVal);
+    HRESULT GetVersionNumber(ubyte* pbVal);
+    HRESULT GetPcrPid(ushort* pPidVal);
+    HRESULT GetCountOfTableDescriptors(uint* pdwVal);
+    HRESULT GetTableDescriptorByIndex(uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetTableDescriptorByTag(ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
+    HRESULT GetCountOfRecords(ushort* pwVal);
+    HRESULT GetRecordStreamType(uint dwRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordElementaryPid(uint dwRecordIndex, ushort* pPidVal);
+    HRESULT GetRecordCountOfDescriptors(uint dwRecordIndex, uint* pdwVal);
+    HRESULT GetRecordDescriptorByIndex(uint dwRecordIndex, uint dwDescIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetRecordDescriptorByTag(uint dwRecordIndex, ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
+    HRESULT QueryServiceGatewayInfo(DSMCC_ELEMENT** ppDSMCCList, uint* puiCount);
+    HRESULT QueryMPEInfo(MPE_ELEMENT** ppMPEList, uint* puiCount);
+    HRESULT RegisterForNextTable(HANDLE hNextTableAvailable);
+    HRESULT GetNextTable(IPMT* ppPMT);
+    HRESULT RegisterForWhenCurrent(HANDLE hNextTableIsCurrent);
     HRESULT ConvertNextToCurrent();
 }
 enum IID_ITSDT = GUID(0xd19bdb43, 0x405b, 0x4a7c, [0xa7, 0x91, 0xc8, 0x91, 0x10, 0xc3, 0x31, 0x65]);
 interface ITSDT : IUnknown
 {
-    HRESULT Initialize(ISectionList, IMpeg2Data);
-    HRESULT GetVersionNumber(ubyte*);
-    HRESULT GetCountOfTableDescriptors(uint*);
-    HRESULT GetTableDescriptorByIndex(uint, IGenericDescriptor*);
-    HRESULT GetTableDescriptorByTag(ubyte, uint*, IGenericDescriptor*);
-    HRESULT RegisterForNextTable(HANDLE);
-    HRESULT GetNextTable(ITSDT*);
-    HRESULT RegisterForWhenCurrent(HANDLE);
+    HRESULT Initialize(ISectionList pSectionList, IMpeg2Data pMPEGData);
+    HRESULT GetVersionNumber(ubyte* pbVal);
+    HRESULT GetCountOfTableDescriptors(uint* pdwVal);
+    HRESULT GetTableDescriptorByIndex(uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetTableDescriptorByTag(ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
+    HRESULT RegisterForNextTable(HANDLE hNextTableAvailable);
+    HRESULT GetNextTable(ITSDT* ppTSDT);
+    HRESULT RegisterForWhenCurrent(HANDLE hNextTableIsCurrent);
     HRESULT ConvertNextToCurrent();
 }
 enum IID_IPSITables = GUID(0x919f24c5, 0x7b14, 0x42ac, [0xa4, 0xb0, 0x2a, 0xe0, 0x8d, 0xaf, 0x0, 0xac]);
 interface IPSITables : IUnknown
 {
-    HRESULT GetTable(uint, uint, uint, uint, IUnknown*);
+    HRESULT GetTable(uint dwTSID, uint dwTID_PID, uint dwHashedVer, uint dwPara4, IUnknown* ppIUnknown);
 }
 enum IID_IAtscPsipParser = GUID(0xb2c98995, 0x5eb2, 0x4fb1, [0xb4, 0x6, 0xf3, 0xe8, 0xe2, 0x2, 0x6a, 0x9a]);
 interface IAtscPsipParser : IUnknown
 {
-    HRESULT Initialize(IUnknown);
-    HRESULT GetPAT(IPAT*);
-    HRESULT GetCAT(uint, ICAT*);
-    HRESULT GetPMT(ushort, ushort*, IPMT*);
-    HRESULT GetTSDT(ITSDT*);
-    HRESULT GetMGT(IATSC_MGT*);
-    HRESULT GetVCT(ubyte, BOOL, IATSC_VCT*);
-    HRESULT GetEIT(ushort, ushort*, uint, IATSC_EIT*);
-    HRESULT GetETT(ushort, ushort*, ushort*, IATSC_ETT*);
-    HRESULT GetSTT(IATSC_STT*);
-    HRESULT GetEAS(ushort, ISCTE_EAS*);
+    HRESULT Initialize(IUnknown punkMpeg2Data);
+    HRESULT GetPAT(IPAT* ppPAT);
+    HRESULT GetCAT(uint dwTimeout, ICAT* ppCAT);
+    HRESULT GetPMT(ushort pid, ushort* pwProgramNumber, IPMT* ppPMT);
+    HRESULT GetTSDT(ITSDT* ppTSDT);
+    HRESULT GetMGT(IATSC_MGT* ppMGT);
+    HRESULT GetVCT(ubyte tableId, BOOL fGetNextTable, IATSC_VCT* ppVCT);
+    HRESULT GetEIT(ushort pid, ushort* pwSourceId, uint dwTimeout, IATSC_EIT* ppEIT);
+    HRESULT GetETT(ushort pid, ushort* wSourceId, ushort* pwEventId, IATSC_ETT* ppETT);
+    HRESULT GetSTT(IATSC_STT* ppSTT);
+    HRESULT GetEAS(ushort pid, ISCTE_EAS* ppEAS);
 }
 enum IID_IATSC_MGT = GUID(0x8877dabd, 0xc137, 0x4073, [0x97, 0xe3, 0x77, 0x94, 0x7, 0xa5, 0xd8, 0x7a]);
 interface IATSC_MGT : IUnknown
 {
-    HRESULT Initialize(ISectionList, IMpeg2Data);
-    HRESULT GetVersionNumber(ubyte*);
-    HRESULT GetProtocolVersion(ubyte*);
-    HRESULT GetCountOfRecords(uint*);
-    HRESULT GetRecordType(uint, ushort*);
-    HRESULT GetRecordTypePid(uint, ushort*);
-    HRESULT GetRecordVersionNumber(uint, ubyte*);
-    HRESULT GetRecordCountOfDescriptors(uint, uint*);
-    HRESULT GetRecordDescriptorByIndex(uint, uint, IGenericDescriptor*);
-    HRESULT GetRecordDescriptorByTag(uint, ubyte, uint*, IGenericDescriptor*);
-    HRESULT GetCountOfTableDescriptors(uint*);
-    HRESULT GetTableDescriptorByIndex(uint, IGenericDescriptor*);
-    HRESULT GetTableDescriptorByTag(ubyte, uint*, IGenericDescriptor*);
+    HRESULT Initialize(ISectionList pSectionList, IMpeg2Data pMPEGData);
+    HRESULT GetVersionNumber(ubyte* pbVal);
+    HRESULT GetProtocolVersion(ubyte* pbVal);
+    HRESULT GetCountOfRecords(uint* pdwVal);
+    HRESULT GetRecordType(uint dwRecordIndex, ushort* pwVal);
+    HRESULT GetRecordTypePid(uint dwRecordIndex, ushort* ppidVal);
+    HRESULT GetRecordVersionNumber(uint dwRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordCountOfDescriptors(uint dwRecordIndex, uint* pdwVal);
+    HRESULT GetRecordDescriptorByIndex(uint dwRecordIndex, uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetRecordDescriptorByTag(uint dwRecordIndex, ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
+    HRESULT GetCountOfTableDescriptors(uint* pdwVal);
+    HRESULT GetTableDescriptorByIndex(uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetTableDescriptorByTag(ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
 }
 enum IID_IATSC_VCT = GUID(0x26879a18, 0x32f9, 0x46c6, [0x91, 0xf0, 0xfb, 0x64, 0x79, 0x27, 0xe, 0x8c]);
 interface IATSC_VCT : IUnknown
 {
-    HRESULT Initialize(ISectionList, IMpeg2Data);
-    HRESULT GetVersionNumber(ubyte*);
-    HRESULT GetTransportStreamId(ushort*);
-    HRESULT GetProtocolVersion(ubyte*);
-    HRESULT GetCountOfRecords(uint*);
-    HRESULT GetRecordName(uint, PWSTR*);
-    HRESULT GetRecordMajorChannelNumber(uint, ushort*);
-    HRESULT GetRecordMinorChannelNumber(uint, ushort*);
-    HRESULT GetRecordModulationMode(uint, ubyte*);
-    HRESULT GetRecordCarrierFrequency(uint, uint*);
-    HRESULT GetRecordTransportStreamId(uint, ushort*);
-    HRESULT GetRecordProgramNumber(uint, ushort*);
-    HRESULT GetRecordEtmLocation(uint, ubyte*);
-    HRESULT GetRecordIsAccessControlledBitSet(uint, BOOL*);
-    HRESULT GetRecordIsHiddenBitSet(uint, BOOL*);
-    HRESULT GetRecordIsPathSelectBitSet(uint, BOOL*);
-    HRESULT GetRecordIsOutOfBandBitSet(uint, BOOL*);
-    HRESULT GetRecordIsHideGuideBitSet(uint, BOOL*);
-    HRESULT GetRecordServiceType(uint, ubyte*);
-    HRESULT GetRecordSourceId(uint, ushort*);
-    HRESULT GetRecordCountOfDescriptors(uint, uint*);
-    HRESULT GetRecordDescriptorByIndex(uint, uint, IGenericDescriptor*);
-    HRESULT GetRecordDescriptorByTag(uint, ubyte, uint*, IGenericDescriptor*);
-    HRESULT GetCountOfTableDescriptors(uint*);
-    HRESULT GetTableDescriptorByIndex(uint, IGenericDescriptor*);
-    HRESULT GetTableDescriptorByTag(ubyte, uint*, IGenericDescriptor*);
+    HRESULT Initialize(ISectionList pSectionList, IMpeg2Data pMPEGData);
+    HRESULT GetVersionNumber(ubyte* pbVal);
+    HRESULT GetTransportStreamId(ushort* pwVal);
+    HRESULT GetProtocolVersion(ubyte* pbVal);
+    HRESULT GetCountOfRecords(uint* pdwVal);
+    HRESULT GetRecordName(uint dwRecordIndex, PWSTR* pwsName);
+    HRESULT GetRecordMajorChannelNumber(uint dwRecordIndex, ushort* pwVal);
+    HRESULT GetRecordMinorChannelNumber(uint dwRecordIndex, ushort* pwVal);
+    HRESULT GetRecordModulationMode(uint dwRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordCarrierFrequency(uint dwRecordIndex, uint* pdwVal);
+    HRESULT GetRecordTransportStreamId(uint dwRecordIndex, ushort* pwVal);
+    HRESULT GetRecordProgramNumber(uint dwRecordIndex, ushort* pwVal);
+    HRESULT GetRecordEtmLocation(uint dwRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordIsAccessControlledBitSet(uint dwRecordIndex, BOOL* pfVal);
+    HRESULT GetRecordIsHiddenBitSet(uint dwRecordIndex, BOOL* pfVal);
+    HRESULT GetRecordIsPathSelectBitSet(uint dwRecordIndex, BOOL* pfVal);
+    HRESULT GetRecordIsOutOfBandBitSet(uint dwRecordIndex, BOOL* pfVal);
+    HRESULT GetRecordIsHideGuideBitSet(uint dwRecordIndex, BOOL* pfVal);
+    HRESULT GetRecordServiceType(uint dwRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordSourceId(uint dwRecordIndex, ushort* pwVal);
+    HRESULT GetRecordCountOfDescriptors(uint dwRecordIndex, uint* pdwVal);
+    HRESULT GetRecordDescriptorByIndex(uint dwRecordIndex, uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetRecordDescriptorByTag(uint dwRecordIndex, ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
+    HRESULT GetCountOfTableDescriptors(uint* pdwVal);
+    HRESULT GetTableDescriptorByIndex(uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetTableDescriptorByTag(ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
 }
 enum IID_IATSC_EIT = GUID(0xd7c212d7, 0x76a2, 0x4b4b, [0xaa, 0x56, 0x84, 0x68, 0x79, 0xa8, 0x0, 0x96]);
 interface IATSC_EIT : IUnknown
 {
-    HRESULT Initialize(ISectionList, IMpeg2Data);
-    HRESULT GetVersionNumber(ubyte*);
-    HRESULT GetSourceId(ushort*);
-    HRESULT GetProtocolVersion(ubyte*);
-    HRESULT GetCountOfRecords(uint*);
-    HRESULT GetRecordEventId(uint, ushort*);
-    HRESULT GetRecordStartTime(uint, MPEG_DATE_AND_TIME*);
-    HRESULT GetRecordEtmLocation(uint, ubyte*);
-    HRESULT GetRecordDuration(uint, MPEG_TIME*);
-    HRESULT GetRecordTitleText(uint, uint*, ubyte**);
-    HRESULT GetRecordCountOfDescriptors(uint, uint*);
-    HRESULT GetRecordDescriptorByIndex(uint, uint, IGenericDescriptor*);
-    HRESULT GetRecordDescriptorByTag(uint, ubyte, uint*, IGenericDescriptor*);
+    HRESULT Initialize(ISectionList pSectionList, IMpeg2Data pMPEGData);
+    HRESULT GetVersionNumber(ubyte* pbVal);
+    HRESULT GetSourceId(ushort* pwVal);
+    HRESULT GetProtocolVersion(ubyte* pbVal);
+    HRESULT GetCountOfRecords(uint* pdwVal);
+    HRESULT GetRecordEventId(uint dwRecordIndex, ushort* pwVal);
+    HRESULT GetRecordStartTime(uint dwRecordIndex, MPEG_DATE_AND_TIME* pmdtVal);
+    HRESULT GetRecordEtmLocation(uint dwRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordDuration(uint dwRecordIndex, MPEG_TIME* pmdVal);
+    HRESULT GetRecordTitleText(uint dwRecordIndex, uint* pdwLength, ubyte** ppText);
+    HRESULT GetRecordCountOfDescriptors(uint dwRecordIndex, uint* pdwVal);
+    HRESULT GetRecordDescriptorByIndex(uint dwRecordIndex, uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetRecordDescriptorByTag(uint dwRecordIndex, ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
 }
 enum IID_IATSC_ETT = GUID(0x5a142cc9, 0xb8cf, 0x4a86, [0xa0, 0x40, 0xe9, 0xca, 0xdf, 0x3e, 0xf3, 0xe7]);
 interface IATSC_ETT : IUnknown
 {
-    HRESULT Initialize(ISectionList, IMpeg2Data);
-    HRESULT GetVersionNumber(ubyte*);
-    HRESULT GetProtocolVersion(ubyte*);
-    HRESULT GetEtmId(uint*);
-    HRESULT GetExtendedMessageText(uint*, ubyte**);
+    HRESULT Initialize(ISectionList pSectionList, IMpeg2Data pMPEGData);
+    HRESULT GetVersionNumber(ubyte* pbVal);
+    HRESULT GetProtocolVersion(ubyte* pbVal);
+    HRESULT GetEtmId(uint* pdwVal);
+    HRESULT GetExtendedMessageText(uint* pdwLength, ubyte** ppText);
 }
 enum IID_IATSC_STT = GUID(0x6bf42423, 0x217d, 0x4d6f, [0x81, 0xe1, 0x3a, 0x7b, 0x36, 0xe, 0xc8, 0x96]);
 interface IATSC_STT : IUnknown
 {
-    HRESULT Initialize(ISectionList, IMpeg2Data);
-    HRESULT GetProtocolVersion(ubyte*);
-    HRESULT GetSystemTime(MPEG_DATE_AND_TIME*);
-    HRESULT GetGpsUtcOffset(ubyte*);
-    HRESULT GetDaylightSavings(ushort*);
-    HRESULT GetCountOfTableDescriptors(uint*);
-    HRESULT GetTableDescriptorByIndex(uint, IGenericDescriptor*);
-    HRESULT GetTableDescriptorByTag(ubyte, uint*, IGenericDescriptor*);
+    HRESULT Initialize(ISectionList pSectionList, IMpeg2Data pMPEGData);
+    HRESULT GetProtocolVersion(ubyte* pbVal);
+    HRESULT GetSystemTime(MPEG_DATE_AND_TIME* pmdtSystemTime);
+    HRESULT GetGpsUtcOffset(ubyte* pbVal);
+    HRESULT GetDaylightSavings(ushort* pwVal);
+    HRESULT GetCountOfTableDescriptors(uint* pdwVal);
+    HRESULT GetTableDescriptorByIndex(uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetTableDescriptorByTag(ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
 }
 enum IID_ISCTE_EAS = GUID(0x1ff544d6, 0x161d, 0x4fae, [0x9f, 0xaa, 0x4f, 0x9f, 0x49, 0x2a, 0xe9, 0x99]);
 interface ISCTE_EAS : IUnknown
 {
-    HRESULT Initialize(ISectionList, IMpeg2Data);
-    HRESULT GetVersionNumber(ubyte*);
-    HRESULT GetSequencyNumber(ubyte*);
-    HRESULT GetProtocolVersion(ubyte*);
-    HRESULT GetEASEventID(ushort*);
-    HRESULT GetOriginatorCode(ubyte*);
-    HRESULT GetEASEventCodeLen(ubyte*);
-    HRESULT GetEASEventCode(ubyte*);
-    HRESULT GetRawNatureOfActivationTextLen(ubyte*);
-    HRESULT GetRawNatureOfActivationText(ubyte*);
-    HRESULT GetNatureOfActivationText(BSTR, BSTR*);
-    HRESULT GetTimeRemaining(ubyte*);
-    HRESULT GetStartTime(uint*);
-    HRESULT GetDuration(ushort*);
-    HRESULT GetAlertPriority(ubyte*);
-    HRESULT GetDetailsOOBSourceID(ushort*);
-    HRESULT GetDetailsMajor(ushort*);
-    HRESULT GetDetailsMinor(ushort*);
-    HRESULT GetDetailsAudioOOBSourceID(ushort*);
-    HRESULT GetAlertText(BSTR, BSTR*);
-    HRESULT GetRawAlertTextLen(ushort*);
-    HRESULT GetRawAlertText(ubyte*);
-    HRESULT GetLocationCount(ubyte*);
-    HRESULT GetLocationCodes(ubyte, ubyte*, ubyte*, ushort*);
-    HRESULT GetExceptionCount(ubyte*);
-    HRESULT GetExceptionService(ubyte, ubyte*, ushort*, ushort*);
-    HRESULT GetCountOfTableDescriptors(uint*);
-    HRESULT GetTableDescriptorByIndex(uint, IGenericDescriptor*);
-    HRESULT GetTableDescriptorByTag(ubyte, uint*, IGenericDescriptor*);
+    HRESULT Initialize(ISectionList pSectionList, IMpeg2Data pMPEGData);
+    HRESULT GetVersionNumber(ubyte* pbVal);
+    HRESULT GetSequencyNumber(ubyte* pbVal);
+    HRESULT GetProtocolVersion(ubyte* pbVal);
+    HRESULT GetEASEventID(ushort* pwVal);
+    HRESULT GetOriginatorCode(ubyte* pbVal);
+    HRESULT GetEASEventCodeLen(ubyte* pbVal);
+    HRESULT GetEASEventCode(ubyte* pbVal);
+    HRESULT GetRawNatureOfActivationTextLen(ubyte* pbVal);
+    HRESULT GetRawNatureOfActivationText(ubyte* pbVal);
+    HRESULT GetNatureOfActivationText(BSTR bstrIS0639code, BSTR* pbstrString);
+    HRESULT GetTimeRemaining(ubyte* pbVal);
+    HRESULT GetStartTime(uint* pdwVal);
+    HRESULT GetDuration(ushort* pwVal);
+    HRESULT GetAlertPriority(ubyte* pbVal);
+    HRESULT GetDetailsOOBSourceID(ushort* pwVal);
+    HRESULT GetDetailsMajor(ushort* pwVal);
+    HRESULT GetDetailsMinor(ushort* pwVal);
+    HRESULT GetDetailsAudioOOBSourceID(ushort* pwVal);
+    HRESULT GetAlertText(BSTR bstrIS0639code, BSTR* pbstrString);
+    HRESULT GetRawAlertTextLen(ushort* pwVal);
+    HRESULT GetRawAlertText(ubyte* pbVal);
+    HRESULT GetLocationCount(ubyte* pbVal);
+    HRESULT GetLocationCodes(ubyte bIndex, ubyte* pbState, ubyte* pbCountySubdivision, ushort* pwCounty);
+    HRESULT GetExceptionCount(ubyte* pbVal);
+    HRESULT GetExceptionService(ubyte bIndex, ubyte* pbIBRef, ushort* pwFirst, ushort* pwSecond);
+    HRESULT GetCountOfTableDescriptors(uint* pdwVal);
+    HRESULT GetTableDescriptorByIndex(uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetTableDescriptorByTag(ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
 }
 enum IID_IAtscContentAdvisoryDescriptor = GUID(0xff76e60c, 0x283, 0x43ea, [0xba, 0x32, 0xb4, 0x22, 0x23, 0x85, 0x47, 0xee]);
 interface IAtscContentAdvisoryDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetRatingRegionCount(ubyte*);
-    HRESULT GetRecordRatingRegion(ubyte, ubyte*);
-    HRESULT GetRecordRatedDimensions(ubyte, ubyte*);
-    HRESULT GetRecordRatingDimension(ubyte, ubyte, ubyte*);
-    HRESULT GetRecordRatingValue(ubyte, ubyte, ubyte*);
-    HRESULT GetRecordRatingDescriptionText(ubyte, ubyte*, ubyte**);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetRatingRegionCount(ubyte* pbVal);
+    HRESULT GetRecordRatingRegion(ubyte bIndex, ubyte* pbVal);
+    HRESULT GetRecordRatedDimensions(ubyte bIndex, ubyte* pbVal);
+    HRESULT GetRecordRatingDimension(ubyte bIndexOuter, ubyte bIndexInner, ubyte* pbVal);
+    HRESULT GetRecordRatingValue(ubyte bIndexOuter, ubyte bIndexInner, ubyte* pbVal);
+    HRESULT GetRecordRatingDescriptionText(ubyte bIndex, ubyte* pbLength, ubyte** ppText);
 }
 enum IID_ICaptionServiceDescriptor = GUID(0x40834007, 0x6834, 0x46f0, [0xbd, 0x45, 0xd5, 0xf6, 0xa6, 0xbe, 0x25, 0x8c]);
 interface ICaptionServiceDescriptor : IUnknown
 {
-    HRESULT GetNumberOfServices(ubyte*);
-    HRESULT GetLanguageCode(ubyte, ubyte*);
-    HRESULT GetCaptionServiceNumber(ubyte, ubyte*);
-    HRESULT GetCCType(ubyte, ubyte*);
-    HRESULT GetEasyReader(ubyte, ubyte*);
-    HRESULT GetWideAspectRatio(ubyte, ubyte*);
+    HRESULT GetNumberOfServices(ubyte* pbVal);
+    HRESULT GetLanguageCode(ubyte bIndex, ubyte* LangCode);
+    HRESULT GetCaptionServiceNumber(ubyte bIndex, ubyte* pbVal);
+    HRESULT GetCCType(ubyte bIndex, ubyte* pbVal);
+    HRESULT GetEasyReader(ubyte bIndex, ubyte* pbVal);
+    HRESULT GetWideAspectRatio(ubyte bIndex, ubyte* pbVal);
 }
 enum IID_IServiceLocationDescriptor = GUID(0x58c3c827, 0x9d91, 0x4215, [0xbf, 0xf3, 0x82, 0xa, 0x49, 0xf0, 0x90, 0x4c]);
 interface IServiceLocationDescriptor : IUnknown
 {
-    HRESULT GetPCR_PID(ushort*);
-    HRESULT GetNumberOfElements(ubyte*);
-    HRESULT GetElementStreamType(ubyte, ubyte*);
-    HRESULT GetElementPID(ubyte, ushort*);
-    HRESULT GetElementLanguageCode(ubyte, ubyte*);
+    HRESULT GetPCR_PID(ushort* pwVal);
+    HRESULT GetNumberOfElements(ubyte* pbVal);
+    HRESULT GetElementStreamType(ubyte bIndex, ubyte* pbVal);
+    HRESULT GetElementPID(ubyte bIndex, ushort* pwVal);
+    HRESULT GetElementLanguageCode(ubyte bIndex, ubyte* LangCode);
 }
 enum IID_IAttributeSet = GUID(0x583ec3cc, 0x4960, 0x4857, [0x98, 0x2b, 0x41, 0xa3, 0x3e, 0xa0, 0xa0, 0x6]);
 interface IAttributeSet : IUnknown
 {
-    HRESULT SetAttrib(GUID, ubyte*, uint);
+    HRESULT SetAttrib(GUID guidAttribute, ubyte* pbAttribute, uint dwAttributeLength);
 }
 enum IID_IAttributeGet = GUID(0x52dbd1ec, 0xe48f, 0x4528, [0x92, 0x32, 0xf4, 0x42, 0xa6, 0x8f, 0xa, 0xe1]);
 interface IAttributeGet : IUnknown
 {
-    HRESULT GetCount(int*);
-    HRESULT GetAttribIndexed(int, GUID*, ubyte*, uint*);
-    HRESULT GetAttrib(GUID, ubyte*, uint*);
+    HRESULT GetCount(int* plCount);
+    HRESULT GetAttribIndexed(int lIndex, GUID* pguidAttribute, ubyte* pbAttribute, uint* pdwAttributeLength);
+    HRESULT GetAttrib(GUID guidAttribute, ubyte* pbAttribute, uint* pdwAttributeLength);
 }
 struct UDCR_TAG
 {
@@ -4009,306 +4010,306 @@ enum : int
 enum IID_IDvbSiParser = GUID(0xb758a7bd, 0x14dc, 0x449d, [0xb8, 0x28, 0x35, 0x90, 0x9a, 0xcb, 0x3b, 0x1e]);
 interface IDvbSiParser : IUnknown
 {
-    HRESULT Initialize(IUnknown);
-    HRESULT GetPAT(IPAT*);
-    HRESULT GetCAT(uint, ICAT*);
-    HRESULT GetPMT(ushort, ushort*, IPMT*);
-    HRESULT GetTSDT(ITSDT*);
-    HRESULT GetNIT(ubyte, ushort*, IDVB_NIT*);
-    HRESULT GetSDT(ubyte, ushort*, IDVB_SDT*);
-    HRESULT GetEIT(ubyte, ushort*, IDVB_EIT*);
-    HRESULT GetBAT(ushort*, IDVB_BAT*);
-    HRESULT GetRST(uint, IDVB_RST*);
-    HRESULT GetST(ushort, uint, IDVB_ST*);
-    HRESULT GetTDT(IDVB_TDT*);
-    HRESULT GetTOT(IDVB_TOT*);
-    HRESULT GetDIT(uint, IDVB_DIT*);
-    HRESULT GetSIT(uint, IDVB_SIT*);
+    HRESULT Initialize(IUnknown punkMpeg2Data);
+    HRESULT GetPAT(IPAT* ppPAT);
+    HRESULT GetCAT(uint dwTimeout, ICAT* ppCAT);
+    HRESULT GetPMT(ushort pid, ushort* pwProgramNumber, IPMT* ppPMT);
+    HRESULT GetTSDT(ITSDT* ppTSDT);
+    HRESULT GetNIT(ubyte tableId, ushort* pwNetworkId, IDVB_NIT* ppNIT);
+    HRESULT GetSDT(ubyte tableId, ushort* pwTransportStreamId, IDVB_SDT* ppSDT);
+    HRESULT GetEIT(ubyte tableId, ushort* pwServiceId, IDVB_EIT* ppEIT);
+    HRESULT GetBAT(ushort* pwBouquetId, IDVB_BAT* ppBAT);
+    HRESULT GetRST(uint dwTimeout, IDVB_RST* ppRST);
+    HRESULT GetST(ushort pid, uint dwTimeout, IDVB_ST* ppST);
+    HRESULT GetTDT(IDVB_TDT* ppTDT);
+    HRESULT GetTOT(IDVB_TOT* ppTOT);
+    HRESULT GetDIT(uint dwTimeout, IDVB_DIT* ppDIT);
+    HRESULT GetSIT(uint dwTimeout, IDVB_SIT* ppSIT);
 }
 enum IID_IDvbSiParser2 = GUID(0xac5525f, 0xf816, 0x42f4, [0x93, 0xba, 0x4c, 0xf, 0x32, 0xf4, 0x6e, 0x54]);
 interface IDvbSiParser2 : IDvbSiParser
 {
-    HRESULT GetEIT2(ubyte, ushort*, ubyte*, IDVB_EIT2*);
+    HRESULT GetEIT2(ubyte tableId, ushort* pwServiceId, ubyte* pbSegment, IDVB_EIT2* ppEIT);
 }
 enum IID_IIsdbSiParser2 = GUID(0x900e4bb7, 0x18cd, 0x453f, [0x98, 0xbe, 0x3b, 0xe6, 0xaa, 0x21, 0x17, 0x72]);
 interface IIsdbSiParser2 : IDvbSiParser2
 {
-    HRESULT GetSDT(ubyte, ushort*, IISDB_SDT*);
-    HRESULT GetBIT(ubyte, ushort*, IISDB_BIT*);
-    HRESULT GetNBIT(ubyte, ushort*, IISDB_NBIT*);
-    HRESULT GetLDT(ubyte, ushort*, IISDB_LDT*);
-    HRESULT GetSDTT(ubyte, ushort*, IISDB_SDTT*);
-    HRESULT GetCDT(ubyte, ubyte, ushort*, IISDB_CDT*);
-    HRESULT GetEMM(ushort, ushort, IISDB_EMM*);
+    HRESULT GetSDT(ubyte tableId, ushort* pwTransportStreamId, IISDB_SDT* ppSDT);
+    HRESULT GetBIT(ubyte tableId, ushort* pwOriginalNetworkId, IISDB_BIT* ppBIT);
+    HRESULT GetNBIT(ubyte tableId, ushort* pwOriginalNetworkId, IISDB_NBIT* ppNBIT);
+    HRESULT GetLDT(ubyte tableId, ushort* pwOriginalServiceId, IISDB_LDT* ppLDT);
+    HRESULT GetSDTT(ubyte tableId, ushort* pwTableIdExt, IISDB_SDTT* ppSDTT);
+    HRESULT GetCDT(ubyte tableId, ubyte bSectionNumber, ushort* pwDownloadDataId, IISDB_CDT* ppCDT);
+    HRESULT GetEMM(ushort pid, ushort wTableIdExt, IISDB_EMM* ppEMM);
 }
 enum IID_IDVB_NIT = GUID(0xc64935f4, 0x29e4, 0x4e22, [0x91, 0x1a, 0x63, 0xf7, 0xf5, 0x5c, 0xb0, 0x97]);
 interface IDVB_NIT : IUnknown
 {
-    HRESULT Initialize(ISectionList, IMpeg2Data);
-    HRESULT GetVersionNumber(ubyte*);
-    HRESULT GetNetworkId(ushort*);
-    HRESULT GetCountOfTableDescriptors(uint*);
-    HRESULT GetTableDescriptorByIndex(uint, IGenericDescriptor*);
-    HRESULT GetTableDescriptorByTag(ubyte, uint*, IGenericDescriptor*);
-    HRESULT GetCountOfRecords(uint*);
-    HRESULT GetRecordTransportStreamId(uint, ushort*);
-    HRESULT GetRecordOriginalNetworkId(uint, ushort*);
-    HRESULT GetRecordCountOfDescriptors(uint, uint*);
-    HRESULT GetRecordDescriptorByIndex(uint, uint, IGenericDescriptor*);
-    HRESULT GetRecordDescriptorByTag(uint, ubyte, uint*, IGenericDescriptor*);
-    HRESULT RegisterForNextTable(HANDLE);
-    HRESULT GetNextTable(IDVB_NIT*);
-    HRESULT RegisterForWhenCurrent(HANDLE);
+    HRESULT Initialize(ISectionList pSectionList, IMpeg2Data pMPEGData);
+    HRESULT GetVersionNumber(ubyte* pbVal);
+    HRESULT GetNetworkId(ushort* pwVal);
+    HRESULT GetCountOfTableDescriptors(uint* pdwVal);
+    HRESULT GetTableDescriptorByIndex(uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetTableDescriptorByTag(ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
+    HRESULT GetCountOfRecords(uint* pdwVal);
+    HRESULT GetRecordTransportStreamId(uint dwRecordIndex, ushort* pwVal);
+    HRESULT GetRecordOriginalNetworkId(uint dwRecordIndex, ushort* pwVal);
+    HRESULT GetRecordCountOfDescriptors(uint dwRecordIndex, uint* pdwVal);
+    HRESULT GetRecordDescriptorByIndex(uint dwRecordIndex, uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetRecordDescriptorByTag(uint dwRecordIndex, ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
+    HRESULT RegisterForNextTable(HANDLE hNextTableAvailable);
+    HRESULT GetNextTable(IDVB_NIT* ppNIT);
+    HRESULT RegisterForWhenCurrent(HANDLE hNextTableIsCurrent);
     HRESULT ConvertNextToCurrent();
-    HRESULT GetVersionHash(uint*);
+    HRESULT GetVersionHash(uint* pdwVersionHash);
 }
 enum IID_IDVB_SDT = GUID(0x2cad8d3, 0xfe43, 0x48e2, [0x90, 0xbd, 0x45, 0xe, 0xd9, 0xa8, 0xa5, 0xfd]);
 interface IDVB_SDT : IUnknown
 {
-    HRESULT Initialize(ISectionList, IMpeg2Data);
-    HRESULT GetVersionNumber(ubyte*);
-    HRESULT GetTransportStreamId(ushort*);
-    HRESULT GetOriginalNetworkId(ushort*);
-    HRESULT GetCountOfRecords(uint*);
-    HRESULT GetRecordServiceId(uint, ushort*);
-    HRESULT GetRecordEITScheduleFlag(uint, BOOL*);
-    HRESULT GetRecordEITPresentFollowingFlag(uint, BOOL*);
-    HRESULT GetRecordRunningStatus(uint, ubyte*);
-    HRESULT GetRecordFreeCAMode(uint, BOOL*);
-    HRESULT GetRecordCountOfDescriptors(uint, uint*);
-    HRESULT GetRecordDescriptorByIndex(uint, uint, IGenericDescriptor*);
-    HRESULT GetRecordDescriptorByTag(uint, ubyte, uint*, IGenericDescriptor*);
-    HRESULT RegisterForNextTable(HANDLE);
-    HRESULT GetNextTable(IDVB_SDT*);
-    HRESULT RegisterForWhenCurrent(HANDLE);
+    HRESULT Initialize(ISectionList pSectionList, IMpeg2Data pMPEGData);
+    HRESULT GetVersionNumber(ubyte* pbVal);
+    HRESULT GetTransportStreamId(ushort* pwVal);
+    HRESULT GetOriginalNetworkId(ushort* pwVal);
+    HRESULT GetCountOfRecords(uint* pdwVal);
+    HRESULT GetRecordServiceId(uint dwRecordIndex, ushort* pwVal);
+    HRESULT GetRecordEITScheduleFlag(uint dwRecordIndex, BOOL* pfVal);
+    HRESULT GetRecordEITPresentFollowingFlag(uint dwRecordIndex, BOOL* pfVal);
+    HRESULT GetRecordRunningStatus(uint dwRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordFreeCAMode(uint dwRecordIndex, BOOL* pfVal);
+    HRESULT GetRecordCountOfDescriptors(uint dwRecordIndex, uint* pdwVal);
+    HRESULT GetRecordDescriptorByIndex(uint dwRecordIndex, uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetRecordDescriptorByTag(uint dwRecordIndex, ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
+    HRESULT RegisterForNextTable(HANDLE hNextTableAvailable);
+    HRESULT GetNextTable(IDVB_SDT* ppSDT);
+    HRESULT RegisterForWhenCurrent(HANDLE hNextTableIsCurrent);
     HRESULT ConvertNextToCurrent();
-    HRESULT GetVersionHash(uint*);
+    HRESULT GetVersionHash(uint* pdwVersionHash);
 }
 enum IID_IISDB_SDT = GUID(0x3f3dc9a2, 0xbb32, 0x4fb9, [0xae, 0x9e, 0xd8, 0x56, 0x84, 0x89, 0x27, 0xa3]);
 interface IISDB_SDT : IDVB_SDT
 {
-    HRESULT GetRecordEITUserDefinedFlags(uint, ubyte*);
+    HRESULT GetRecordEITUserDefinedFlags(uint dwRecordIndex, ubyte* pbVal);
 }
 enum IID_IDVB_EIT = GUID(0x442db029, 0x2cb, 0x4495, [0x8b, 0x92, 0x1c, 0x13, 0x37, 0x5b, 0xce, 0x99]);
 interface IDVB_EIT : IUnknown
 {
-    HRESULT Initialize(ISectionList, IMpeg2Data);
-    HRESULT GetVersionNumber(ubyte*);
-    HRESULT GetServiceId(ushort*);
-    HRESULT GetTransportStreamId(ushort*);
-    HRESULT GetOriginalNetworkId(ushort*);
-    HRESULT GetSegmentLastSectionNumber(ubyte*);
-    HRESULT GetLastTableId(ubyte*);
-    HRESULT GetCountOfRecords(uint*);
-    HRESULT GetRecordEventId(uint, ushort*);
-    HRESULT GetRecordStartTime(uint, MPEG_DATE_AND_TIME*);
-    HRESULT GetRecordDuration(uint, MPEG_TIME*);
-    HRESULT GetRecordRunningStatus(uint, ubyte*);
-    HRESULT GetRecordFreeCAMode(uint, BOOL*);
-    HRESULT GetRecordCountOfDescriptors(uint, uint*);
-    HRESULT GetRecordDescriptorByIndex(uint, uint, IGenericDescriptor*);
-    HRESULT GetRecordDescriptorByTag(uint, ubyte, uint*, IGenericDescriptor*);
-    HRESULT RegisterForNextTable(HANDLE);
-    HRESULT GetNextTable(IDVB_EIT*);
-    HRESULT RegisterForWhenCurrent(HANDLE);
+    HRESULT Initialize(ISectionList pSectionList, IMpeg2Data pMPEGData);
+    HRESULT GetVersionNumber(ubyte* pbVal);
+    HRESULT GetServiceId(ushort* pwVal);
+    HRESULT GetTransportStreamId(ushort* pwVal);
+    HRESULT GetOriginalNetworkId(ushort* pwVal);
+    HRESULT GetSegmentLastSectionNumber(ubyte* pbVal);
+    HRESULT GetLastTableId(ubyte* pbVal);
+    HRESULT GetCountOfRecords(uint* pdwVal);
+    HRESULT GetRecordEventId(uint dwRecordIndex, ushort* pwVal);
+    HRESULT GetRecordStartTime(uint dwRecordIndex, MPEG_DATE_AND_TIME* pmdtVal);
+    HRESULT GetRecordDuration(uint dwRecordIndex, MPEG_TIME* pmdVal);
+    HRESULT GetRecordRunningStatus(uint dwRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordFreeCAMode(uint dwRecordIndex, BOOL* pfVal);
+    HRESULT GetRecordCountOfDescriptors(uint dwRecordIndex, uint* pdwVal);
+    HRESULT GetRecordDescriptorByIndex(uint dwRecordIndex, uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetRecordDescriptorByTag(uint dwRecordIndex, ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
+    HRESULT RegisterForNextTable(HANDLE hNextTableAvailable);
+    HRESULT GetNextTable(IDVB_EIT* ppEIT);
+    HRESULT RegisterForWhenCurrent(HANDLE hNextTableIsCurrent);
     HRESULT ConvertNextToCurrent();
-    HRESULT GetVersionHash(uint*);
+    HRESULT GetVersionHash(uint* pdwVersionHash);
 }
 enum IID_IDVB_EIT2 = GUID(0x61a389e0, 0x9b9e, 0x4ba0, [0xae, 0xea, 0x5d, 0xdd, 0x15, 0x98, 0x20, 0xea]);
 interface IDVB_EIT2 : IDVB_EIT
 {
-    HRESULT GetSegmentInfo(ubyte*, ubyte*);
-    HRESULT GetRecordSection(uint, ubyte*);
+    HRESULT GetSegmentInfo(ubyte* pbTid, ubyte* pbSegment);
+    HRESULT GetRecordSection(uint dwRecordIndex, ubyte* pbVal);
 }
 enum IID_IDVB_BAT = GUID(0xece9bb0c, 0x43b6, 0x4558, [0xa0, 0xec, 0x18, 0x12, 0xc3, 0x4c, 0xd6, 0xca]);
 interface IDVB_BAT : IUnknown
 {
-    HRESULT Initialize(ISectionList, IMpeg2Data);
-    HRESULT GetVersionNumber(ubyte*);
-    HRESULT GetBouquetId(ushort*);
-    HRESULT GetCountOfTableDescriptors(uint*);
-    HRESULT GetTableDescriptorByIndex(uint, IGenericDescriptor*);
-    HRESULT GetTableDescriptorByTag(ubyte, uint*, IGenericDescriptor*);
-    HRESULT GetCountOfRecords(uint*);
-    HRESULT GetRecordTransportStreamId(uint, ushort*);
-    HRESULT GetRecordOriginalNetworkId(uint, ushort*);
-    HRESULT GetRecordCountOfDescriptors(uint, uint*);
-    HRESULT GetRecordDescriptorByIndex(uint, uint, IGenericDescriptor*);
-    HRESULT GetRecordDescriptorByTag(uint, ubyte, uint*, IGenericDescriptor*);
-    HRESULT RegisterForNextTable(HANDLE);
-    HRESULT GetNextTable(IDVB_BAT*);
-    HRESULT RegisterForWhenCurrent(HANDLE);
+    HRESULT Initialize(ISectionList pSectionList, IMpeg2Data pMPEGData);
+    HRESULT GetVersionNumber(ubyte* pbVal);
+    HRESULT GetBouquetId(ushort* pwVal);
+    HRESULT GetCountOfTableDescriptors(uint* pdwVal);
+    HRESULT GetTableDescriptorByIndex(uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetTableDescriptorByTag(ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
+    HRESULT GetCountOfRecords(uint* pdwVal);
+    HRESULT GetRecordTransportStreamId(uint dwRecordIndex, ushort* pwVal);
+    HRESULT GetRecordOriginalNetworkId(uint dwRecordIndex, ushort* pwVal);
+    HRESULT GetRecordCountOfDescriptors(uint dwRecordIndex, uint* pdwVal);
+    HRESULT GetRecordDescriptorByIndex(uint dwRecordIndex, uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetRecordDescriptorByTag(uint dwRecordIndex, ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
+    HRESULT RegisterForNextTable(HANDLE hNextTableAvailable);
+    HRESULT GetNextTable(IDVB_BAT* ppBAT);
+    HRESULT RegisterForWhenCurrent(HANDLE hNextTableIsCurrent);
     HRESULT ConvertNextToCurrent();
 }
 enum IID_IDVB_RST = GUID(0xf47dcd04, 0x1e23, 0x4fb7, [0x9f, 0x96, 0xb4, 0xe, 0xea, 0xd1, 0xb, 0x2b]);
 interface IDVB_RST : IUnknown
 {
-    HRESULT Initialize(ISectionList);
-    HRESULT GetCountOfRecords(uint*);
-    HRESULT GetRecordTransportStreamId(uint, ushort*);
-    HRESULT GetRecordOriginalNetworkId(uint, ushort*);
-    HRESULT GetRecordServiceId(uint, ushort*);
-    HRESULT GetRecordEventId(uint, ushort*);
-    HRESULT GetRecordRunningStatus(uint, ubyte*);
+    HRESULT Initialize(ISectionList pSectionList);
+    HRESULT GetCountOfRecords(uint* pdwVal);
+    HRESULT GetRecordTransportStreamId(uint dwRecordIndex, ushort* pwVal);
+    HRESULT GetRecordOriginalNetworkId(uint dwRecordIndex, ushort* pwVal);
+    HRESULT GetRecordServiceId(uint dwRecordIndex, ushort* pwVal);
+    HRESULT GetRecordEventId(uint dwRecordIndex, ushort* pwVal);
+    HRESULT GetRecordRunningStatus(uint dwRecordIndex, ubyte* pbVal);
 }
 enum IID_IDVB_ST = GUID(0x4d5b9f23, 0x2a02, 0x45de, [0xbc, 0xda, 0x5d, 0x5d, 0xbf, 0xbf, 0xbe, 0x62]);
 interface IDVB_ST : IUnknown
 {
-    HRESULT Initialize(ISectionList);
-    HRESULT GetDataLength(ushort*);
-    HRESULT GetData(ubyte**);
+    HRESULT Initialize(ISectionList pSectionList);
+    HRESULT GetDataLength(ushort* pwVal);
+    HRESULT GetData(ubyte** ppData);
 }
 enum IID_IDVB_TDT = GUID(0x780dc7d, 0xd55c, 0x4aef, [0x97, 0xe6, 0x6b, 0x75, 0x90, 0x6e, 0x27, 0x96]);
 interface IDVB_TDT : IUnknown
 {
-    HRESULT Initialize(ISectionList);
-    HRESULT GetUTCTime(MPEG_DATE_AND_TIME*);
+    HRESULT Initialize(ISectionList pSectionList);
+    HRESULT GetUTCTime(MPEG_DATE_AND_TIME* pmdtVal);
 }
 enum IID_IDVB_TOT = GUID(0x83295d6a, 0xfaba, 0x4ee1, [0x9b, 0x15, 0x80, 0x67, 0x69, 0x69, 0x10, 0xae]);
 interface IDVB_TOT : IUnknown
 {
-    HRESULT Initialize(ISectionList);
-    HRESULT GetUTCTime(MPEG_DATE_AND_TIME*);
-    HRESULT GetCountOfTableDescriptors(uint*);
-    HRESULT GetTableDescriptorByIndex(uint, IGenericDescriptor*);
-    HRESULT GetTableDescriptorByTag(ubyte, uint*, IGenericDescriptor*);
+    HRESULT Initialize(ISectionList pSectionList);
+    HRESULT GetUTCTime(MPEG_DATE_AND_TIME* pmdtVal);
+    HRESULT GetCountOfTableDescriptors(uint* pdwVal);
+    HRESULT GetTableDescriptorByIndex(uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetTableDescriptorByTag(ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
 }
 enum IID_IDVB_DIT = GUID(0x91bffdf9, 0x9432, 0x410f, [0x86, 0xef, 0x1c, 0x22, 0x8e, 0xd0, 0xad, 0x70]);
 interface IDVB_DIT : IUnknown
 {
-    HRESULT Initialize(ISectionList);
-    HRESULT GetTransitionFlag(BOOL*);
+    HRESULT Initialize(ISectionList pSectionList);
+    HRESULT GetTransitionFlag(BOOL* pfVal);
 }
 enum IID_IDVB_SIT = GUID(0x68cdce53, 0x8bea, 0x45c2, [0x9d, 0x9d, 0xac, 0xf5, 0x75, 0xa0, 0x89, 0xb5]);
 interface IDVB_SIT : IUnknown
 {
-    HRESULT Initialize(ISectionList, IMpeg2Data);
-    HRESULT GetVersionNumber(ubyte*);
-    HRESULT GetCountOfTableDescriptors(uint*);
-    HRESULT GetTableDescriptorByIndex(uint, IGenericDescriptor*);
-    HRESULT GetTableDescriptorByTag(ubyte, uint*, IGenericDescriptor*);
-    HRESULT GetCountOfRecords(uint*);
-    HRESULT GetRecordServiceId(uint, ushort*);
-    HRESULT GetRecordRunningStatus(uint, ubyte*);
-    HRESULT GetRecordCountOfDescriptors(uint, uint*);
-    HRESULT GetRecordDescriptorByIndex(uint, uint, IGenericDescriptor*);
-    HRESULT GetRecordDescriptorByTag(uint, ubyte, uint*, IGenericDescriptor*);
-    HRESULT RegisterForNextTable(HANDLE);
-    HRESULT GetNextTable(uint, IDVB_SIT*);
-    HRESULT RegisterForWhenCurrent(HANDLE);
+    HRESULT Initialize(ISectionList pSectionList, IMpeg2Data pMPEGData);
+    HRESULT GetVersionNumber(ubyte* pbVal);
+    HRESULT GetCountOfTableDescriptors(uint* pdwVal);
+    HRESULT GetTableDescriptorByIndex(uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetTableDescriptorByTag(ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
+    HRESULT GetCountOfRecords(uint* pdwVal);
+    HRESULT GetRecordServiceId(uint dwRecordIndex, ushort* pwVal);
+    HRESULT GetRecordRunningStatus(uint dwRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordCountOfDescriptors(uint dwRecordIndex, uint* pdwVal);
+    HRESULT GetRecordDescriptorByIndex(uint dwRecordIndex, uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetRecordDescriptorByTag(uint dwRecordIndex, ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
+    HRESULT RegisterForNextTable(HANDLE hNextTableAvailable);
+    HRESULT GetNextTable(uint dwTimeout, IDVB_SIT* ppSIT);
+    HRESULT RegisterForWhenCurrent(HANDLE hNextTableIsCurrent);
     HRESULT ConvertNextToCurrent();
 }
 enum IID_IISDB_BIT = GUID(0x537cd71e, 0xe46, 0x4173, [0x90, 0x1, 0xba, 0x4, 0x3f, 0x3e, 0x49, 0xe2]);
 interface IISDB_BIT : IUnknown
 {
-    HRESULT Initialize(ISectionList, IMpeg2Data);
-    HRESULT GetVersionNumber(ubyte*);
-    HRESULT GetOriginalNetworkId(ushort*);
-    HRESULT GetBroadcastViewPropriety(ubyte*);
-    HRESULT GetCountOfTableDescriptors(uint*);
-    HRESULT GetTableDescriptorByIndex(uint, IGenericDescriptor*);
-    HRESULT GetTableDescriptorByTag(ubyte, uint*, IGenericDescriptor*);
-    HRESULT GetCountOfRecords(uint*);
-    HRESULT GetRecordBroadcasterId(uint, ubyte*);
-    HRESULT GetRecordCountOfDescriptors(uint, uint*);
-    HRESULT GetRecordDescriptorByIndex(uint, uint, IGenericDescriptor*);
-    HRESULT GetRecordDescriptorByTag(uint, ubyte, uint*, IGenericDescriptor*);
-    HRESULT GetVersionHash(uint*);
+    HRESULT Initialize(ISectionList pSectionList, IMpeg2Data pMPEGData);
+    HRESULT GetVersionNumber(ubyte* pbVal);
+    HRESULT GetOriginalNetworkId(ushort* pwVal);
+    HRESULT GetBroadcastViewPropriety(ubyte* pbVal);
+    HRESULT GetCountOfTableDescriptors(uint* pdwVal);
+    HRESULT GetTableDescriptorByIndex(uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetTableDescriptorByTag(ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
+    HRESULT GetCountOfRecords(uint* pdwVal);
+    HRESULT GetRecordBroadcasterId(uint dwRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordCountOfDescriptors(uint dwRecordIndex, uint* pdwVal);
+    HRESULT GetRecordDescriptorByIndex(uint dwRecordIndex, uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetRecordDescriptorByTag(uint dwRecordIndex, ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
+    HRESULT GetVersionHash(uint* pdwVersionHash);
 }
 enum IID_IISDB_NBIT = GUID(0x1b1863ef, 0x8f1, 0x40b7, [0xa5, 0x59, 0x3b, 0x1e, 0xff, 0x8c, 0xaf, 0xa6]);
 interface IISDB_NBIT : IUnknown
 {
-    HRESULT Initialize(ISectionList, IMpeg2Data);
-    HRESULT GetVersionNumber(ubyte*);
-    HRESULT GetOriginalNetworkId(ushort*);
-    HRESULT GetCountOfRecords(uint*);
-    HRESULT GetRecordInformationId(uint, ushort*);
-    HRESULT GetRecordInformationType(uint, ubyte*);
-    HRESULT GetRecordDescriptionBodyLocation(uint, ubyte*);
-    HRESULT GetRecordMessageSectionNumber(uint, ubyte*);
-    HRESULT GetRecordUserDefined(uint, ubyte*);
-    HRESULT GetRecordNumberOfKeys(uint, ubyte*);
-    HRESULT GetRecordKeys(uint, ubyte**);
-    HRESULT GetRecordCountOfDescriptors(uint, uint*);
-    HRESULT GetRecordDescriptorByIndex(uint, uint, IGenericDescriptor*);
-    HRESULT GetRecordDescriptorByTag(uint, ubyte, uint*, IGenericDescriptor*);
-    HRESULT GetVersionHash(uint*);
+    HRESULT Initialize(ISectionList pSectionList, IMpeg2Data pMPEGData);
+    HRESULT GetVersionNumber(ubyte* pbVal);
+    HRESULT GetOriginalNetworkId(ushort* pwVal);
+    HRESULT GetCountOfRecords(uint* pdwVal);
+    HRESULT GetRecordInformationId(uint dwRecordIndex, ushort* pwVal);
+    HRESULT GetRecordInformationType(uint dwRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordDescriptionBodyLocation(uint dwRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordMessageSectionNumber(uint dwRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordUserDefined(uint dwRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordNumberOfKeys(uint dwRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordKeys(uint dwRecordIndex, ubyte** pbKeys);
+    HRESULT GetRecordCountOfDescriptors(uint dwRecordIndex, uint* pdwVal);
+    HRESULT GetRecordDescriptorByIndex(uint dwRecordIndex, uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetRecordDescriptorByTag(uint dwRecordIndex, ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
+    HRESULT GetVersionHash(uint* pdwVersionHash);
 }
 enum IID_IISDB_LDT = GUID(0x141a546b, 0x2ff, 0x4fb9, [0xa3, 0xa3, 0x2f, 0x7, 0x4b, 0x74, 0xa9, 0xa9]);
 interface IISDB_LDT : IUnknown
 {
-    HRESULT Initialize(ISectionList, IMpeg2Data);
-    HRESULT GetVersionNumber(ubyte*);
-    HRESULT GetOriginalServiceId(ushort*);
-    HRESULT GetTransportStreamId(ushort*);
-    HRESULT GetOriginalNetworkId(ushort*);
-    HRESULT GetCountOfRecords(uint*);
-    HRESULT GetRecordDescriptionId(uint, ushort*);
-    HRESULT GetRecordCountOfDescriptors(uint, uint*);
-    HRESULT GetRecordDescriptorByIndex(uint, uint, IGenericDescriptor*);
-    HRESULT GetRecordDescriptorByTag(uint, ubyte, uint*, IGenericDescriptor*);
-    HRESULT GetVersionHash(uint*);
+    HRESULT Initialize(ISectionList pSectionList, IMpeg2Data pMPEGData);
+    HRESULT GetVersionNumber(ubyte* pbVal);
+    HRESULT GetOriginalServiceId(ushort* pwVal);
+    HRESULT GetTransportStreamId(ushort* pwVal);
+    HRESULT GetOriginalNetworkId(ushort* pwVal);
+    HRESULT GetCountOfRecords(uint* pdwVal);
+    HRESULT GetRecordDescriptionId(uint dwRecordIndex, ushort* pwVal);
+    HRESULT GetRecordCountOfDescriptors(uint dwRecordIndex, uint* pdwVal);
+    HRESULT GetRecordDescriptorByIndex(uint dwRecordIndex, uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetRecordDescriptorByTag(uint dwRecordIndex, ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
+    HRESULT GetVersionHash(uint* pdwVersionHash);
 }
 enum IID_IISDB_SDTT = GUID(0xee60ef2d, 0x813a, 0x4dc7, [0xbf, 0x92, 0xea, 0x13, 0xda, 0xc8, 0x53, 0x13]);
 interface IISDB_SDTT : IUnknown
 {
-    HRESULT Initialize(ISectionList, IMpeg2Data);
-    HRESULT GetVersionNumber(ubyte*);
-    HRESULT GetTableIdExt(ushort*);
-    HRESULT GetTransportStreamId(ushort*);
-    HRESULT GetOriginalNetworkId(ushort*);
-    HRESULT GetServiceId(ushort*);
-    HRESULT GetCountOfRecords(uint*);
-    HRESULT GetRecordGroup(uint, ubyte*);
-    HRESULT GetRecordTargetVersion(uint, ushort*);
-    HRESULT GetRecordNewVersion(uint, ushort*);
-    HRESULT GetRecordDownloadLevel(uint, ubyte*);
-    HRESULT GetRecordVersionIndicator(uint, ubyte*);
-    HRESULT GetRecordScheduleTimeShiftInformation(uint, ubyte*);
-    HRESULT GetRecordCountOfSchedules(uint, uint*);
-    HRESULT GetRecordStartTimeByIndex(uint, uint, MPEG_DATE_AND_TIME*);
-    HRESULT GetRecordDurationByIndex(uint, uint, MPEG_TIME*);
-    HRESULT GetRecordCountOfDescriptors(uint, uint*);
-    HRESULT GetRecordDescriptorByIndex(uint, uint, IGenericDescriptor*);
-    HRESULT GetRecordDescriptorByTag(uint, ubyte, uint*, IGenericDescriptor*);
-    HRESULT GetVersionHash(uint*);
+    HRESULT Initialize(ISectionList pSectionList, IMpeg2Data pMPEGData);
+    HRESULT GetVersionNumber(ubyte* pbVal);
+    HRESULT GetTableIdExt(ushort* pwVal);
+    HRESULT GetTransportStreamId(ushort* pwVal);
+    HRESULT GetOriginalNetworkId(ushort* pwVal);
+    HRESULT GetServiceId(ushort* pwVal);
+    HRESULT GetCountOfRecords(uint* pdwVal);
+    HRESULT GetRecordGroup(uint dwRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordTargetVersion(uint dwRecordIndex, ushort* pwVal);
+    HRESULT GetRecordNewVersion(uint dwRecordIndex, ushort* pwVal);
+    HRESULT GetRecordDownloadLevel(uint dwRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordVersionIndicator(uint dwRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordScheduleTimeShiftInformation(uint dwRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordCountOfSchedules(uint dwRecordIndex, uint* pdwVal);
+    HRESULT GetRecordStartTimeByIndex(uint dwRecordIndex, uint dwIndex, MPEG_DATE_AND_TIME* pmdtVal);
+    HRESULT GetRecordDurationByIndex(uint dwRecordIndex, uint dwIndex, MPEG_TIME* pmdVal);
+    HRESULT GetRecordCountOfDescriptors(uint dwRecordIndex, uint* pdwVal);
+    HRESULT GetRecordDescriptorByIndex(uint dwRecordIndex, uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetRecordDescriptorByTag(uint dwRecordIndex, ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
+    HRESULT GetVersionHash(uint* pdwVersionHash);
 }
 enum IID_IISDB_CDT = GUID(0x25fa92c2, 0x8b80, 0x4787, [0xa8, 0x41, 0x3a, 0xe, 0x8f, 0x17, 0x98, 0x4b]);
 interface IISDB_CDT : IUnknown
 {
-    HRESULT Initialize(ISectionList, IMpeg2Data, ubyte);
-    HRESULT GetVersionNumber(ubyte*);
-    HRESULT GetDownloadDataId(ushort*);
-    HRESULT GetSectionNumber(ubyte*);
-    HRESULT GetOriginalNetworkId(ushort*);
-    HRESULT GetDataType(ubyte*);
-    HRESULT GetCountOfTableDescriptors(uint*);
-    HRESULT GetTableDescriptorByIndex(uint, IGenericDescriptor*);
-    HRESULT GetTableDescriptorByTag(ubyte, uint*, IGenericDescriptor*);
-    HRESULT GetSizeOfDataModule(uint*);
-    HRESULT GetDataModule(ubyte**);
-    HRESULT GetVersionHash(uint*);
+    HRESULT Initialize(ISectionList pSectionList, IMpeg2Data pMPEGData, ubyte bSectionNumber);
+    HRESULT GetVersionNumber(ubyte* pbVal);
+    HRESULT GetDownloadDataId(ushort* pwVal);
+    HRESULT GetSectionNumber(ubyte* pbVal);
+    HRESULT GetOriginalNetworkId(ushort* pwVal);
+    HRESULT GetDataType(ubyte* pbVal);
+    HRESULT GetCountOfTableDescriptors(uint* pdwVal);
+    HRESULT GetTableDescriptorByIndex(uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetTableDescriptorByTag(ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
+    HRESULT GetSizeOfDataModule(uint* pdwVal);
+    HRESULT GetDataModule(ubyte** pbData);
+    HRESULT GetVersionHash(uint* pdwVersionHash);
 }
 enum IID_IISDB_EMM = GUID(0xedb556d, 0x43ad, 0x4938, [0x96, 0x68, 0x32, 0x1b, 0x2f, 0xfe, 0xcf, 0xd3]);
 interface IISDB_EMM : IUnknown
 {
-    HRESULT Initialize(ISectionList, IMpeg2Data);
-    HRESULT GetVersionNumber(ubyte*);
-    HRESULT GetTableIdExtension(ushort*);
-    HRESULT GetDataBytes(ushort*, ubyte*);
-    HRESULT GetSharedEmmMessage(ushort*, ubyte**);
-    HRESULT GetIndividualEmmMessage(IUnknown, ushort*, ubyte**);
-    HRESULT GetVersionHash(uint*);
+    HRESULT Initialize(ISectionList pSectionList, IMpeg2Data pMPEGData);
+    HRESULT GetVersionNumber(ubyte* pbVal);
+    HRESULT GetTableIdExtension(ushort* pwVal);
+    HRESULT GetDataBytes(ushort* pwBufferLength, ubyte* pbBuffer);
+    HRESULT GetSharedEmmMessage(ushort* pwLength, ubyte** ppbMessage);
+    HRESULT GetIndividualEmmMessage(IUnknown pUnknown, ushort* pwLength, ubyte** ppbMessage);
+    HRESULT GetVersionHash(uint* pdwVersionHash);
 }
 enum IID_IDvbServiceAttributeDescriptor = GUID(0xf37bd92, 0xd6a1, 0x4854, [0xb9, 0x50, 0x3a, 0x96, 0x9d, 0x27, 0xf3, 0xe]);
 interface IDvbServiceAttributeDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetCountOfRecords(ubyte*);
-    HRESULT GetRecordServiceId(ubyte, ushort*);
-    HRESULT GetRecordNumericSelectionFlag(ubyte, BOOL*);
-    HRESULT GetRecordVisibleServiceFlag(ubyte, BOOL*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetCountOfRecords(ubyte* pbVal);
+    HRESULT GetRecordServiceId(ubyte bRecordIndex, ushort* pwVal);
+    HRESULT GetRecordNumericSelectionFlag(ubyte bRecordIndex, BOOL* pfVal);
+    HRESULT GetRecordVisibleServiceFlag(ubyte bRecordIndex, BOOL* pfVal);
 }
 alias CRID_LOCATION = int;
 enum : int
@@ -4322,115 +4323,115 @@ enum : int
 enum IID_IDvbContentIdentifierDescriptor = GUID(0x5e0c1ea, 0xf661, 0x4053, [0x9f, 0xbf, 0xd9, 0x3b, 0x28, 0x35, 0x98, 0x38]);
 interface IDvbContentIdentifierDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetCountOfRecords(ubyte*);
-    HRESULT GetRecordCrid(ubyte, ubyte*, ubyte*, ubyte*, ubyte**);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetCountOfRecords(ubyte* pbVal);
+    HRESULT GetRecordCrid(ubyte bRecordIndex, ubyte* pbType, ubyte* pbLocation, ubyte* pbLength, ubyte** ppbBytes);
 }
 enum IID_IDvbDefaultAuthorityDescriptor = GUID(0x5ec24d1, 0x3a31, 0x44e7, [0xb4, 0x8, 0x67, 0xc6, 0xa, 0x35, 0x22, 0x76]);
 interface IDvbDefaultAuthorityDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetDefaultAuthority(ubyte*, ubyte**);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetDefaultAuthority(ubyte* pbLength, ubyte** ppbBytes);
 }
 enum IID_IDvbSatelliteDeliverySystemDescriptor = GUID(0x2f2225a, 0x805b, 0x4ec5, [0xa9, 0xa6, 0xf9, 0xb5, 0x91, 0x3c, 0xd4, 0x70]);
 interface IDvbSatelliteDeliverySystemDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetFrequency(uint*);
-    HRESULT GetOrbitalPosition(ushort*);
-    HRESULT GetWestEastFlag(ubyte*);
-    HRESULT GetPolarization(ubyte*);
-    HRESULT GetModulation(ubyte*);
-    HRESULT GetSymbolRate(uint*);
-    HRESULT GetFECInner(ubyte*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetFrequency(uint* pdwVal);
+    HRESULT GetOrbitalPosition(ushort* pwVal);
+    HRESULT GetWestEastFlag(ubyte* pbVal);
+    HRESULT GetPolarization(ubyte* pbVal);
+    HRESULT GetModulation(ubyte* pbVal);
+    HRESULT GetSymbolRate(uint* pdwVal);
+    HRESULT GetFECInner(ubyte* pbVal);
 }
 enum IID_IDvbCableDeliverySystemDescriptor = GUID(0xdfb98e36, 0x9e1a, 0x4862, [0x99, 0x46, 0x99, 0x3a, 0x4e, 0x59, 0x1, 0x7b]);
 interface IDvbCableDeliverySystemDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetFrequency(uint*);
-    HRESULT GetFECOuter(ubyte*);
-    HRESULT GetModulation(ubyte*);
-    HRESULT GetSymbolRate(uint*);
-    HRESULT GetFECInner(ubyte*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetFrequency(uint* pdwVal);
+    HRESULT GetFECOuter(ubyte* pbVal);
+    HRESULT GetModulation(ubyte* pbVal);
+    HRESULT GetSymbolRate(uint* pdwVal);
+    HRESULT GetFECInner(ubyte* pbVal);
 }
 enum IID_IDvbTerrestrialDeliverySystemDescriptor = GUID(0xed7e1b91, 0xd12e, 0x420c, [0xb4, 0x1d, 0xa4, 0x9d, 0x84, 0xfe, 0x18, 0x23]);
 interface IDvbTerrestrialDeliverySystemDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetCentreFrequency(uint*);
-    HRESULT GetBandwidth(ubyte*);
-    HRESULT GetConstellation(ubyte*);
-    HRESULT GetHierarchyInformation(ubyte*);
-    HRESULT GetCodeRateHPStream(ubyte*);
-    HRESULT GetCodeRateLPStream(ubyte*);
-    HRESULT GetGuardInterval(ubyte*);
-    HRESULT GetTransmissionMode(ubyte*);
-    HRESULT GetOtherFrequencyFlag(ubyte*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetCentreFrequency(uint* pdwVal);
+    HRESULT GetBandwidth(ubyte* pbVal);
+    HRESULT GetConstellation(ubyte* pbVal);
+    HRESULT GetHierarchyInformation(ubyte* pbVal);
+    HRESULT GetCodeRateHPStream(ubyte* pbVal);
+    HRESULT GetCodeRateLPStream(ubyte* pbVal);
+    HRESULT GetGuardInterval(ubyte* pbVal);
+    HRESULT GetTransmissionMode(ubyte* pbVal);
+    HRESULT GetOtherFrequencyFlag(ubyte* pbVal);
 }
 enum IID_IDvbTerrestrial2DeliverySystemDescriptor = GUID(0x20ee9be9, 0xcd57, 0x49ab, [0x8f, 0x6e, 0x1d, 0x7, 0xae, 0xb8, 0xe4, 0x82]);
 interface IDvbTerrestrial2DeliverySystemDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetTagExtension(ubyte*);
-    HRESULT GetCentreFrequency(uint*);
-    HRESULT GetPLPId(ubyte*);
-    HRESULT GetT2SystemId(ushort*);
-    HRESULT GetMultipleInputMode(ubyte*);
-    HRESULT GetBandwidth(ubyte*);
-    HRESULT GetGuardInterval(ubyte*);
-    HRESULT GetTransmissionMode(ubyte*);
-    HRESULT GetCellId(ushort*);
-    HRESULT GetOtherFrequencyFlag(ubyte*);
-    HRESULT GetTFSFlag(ubyte*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetTagExtension(ubyte* pbVal);
+    HRESULT GetCentreFrequency(uint* pdwVal);
+    HRESULT GetPLPId(ubyte* pbVal);
+    HRESULT GetT2SystemId(ushort* pwVal);
+    HRESULT GetMultipleInputMode(ubyte* pbVal);
+    HRESULT GetBandwidth(ubyte* pbVal);
+    HRESULT GetGuardInterval(ubyte* pbVal);
+    HRESULT GetTransmissionMode(ubyte* pbVal);
+    HRESULT GetCellId(ushort* pwVal);
+    HRESULT GetOtherFrequencyFlag(ubyte* pbVal);
+    HRESULT GetTFSFlag(ubyte* pbVal);
 }
 enum IID_IDvbFrequencyListDescriptor = GUID(0x1cadb613, 0xe1dd, 0x4512, [0xaf, 0xa8, 0xbb, 0x7a, 0x0, 0x7e, 0xf8, 0xb1]);
 interface IDvbFrequencyListDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetCodingType(ubyte*);
-    HRESULT GetCountOfRecords(ubyte*);
-    HRESULT GetRecordCentreFrequency(ubyte, uint*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetCodingType(ubyte* pbVal);
+    HRESULT GetCountOfRecords(ubyte* pbVal);
+    HRESULT GetRecordCentreFrequency(ubyte bRecordIndex, uint* pdwVal);
 }
 enum IID_IDvbPrivateDataSpecifierDescriptor = GUID(0x5660a019, 0xe75a, 0x4b82, [0x9b, 0x4c, 0xed, 0x22, 0x56, 0xd1, 0x65, 0xa2]);
 interface IDvbPrivateDataSpecifierDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetPrivateDataSpecifier(uint*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetPrivateDataSpecifier(uint* pdwVal);
 }
 enum IID_IDvbLogicalChannelDescriptor = GUID(0xcf1edaff, 0x3ffd, 0x4cf7, [0x82, 0x1, 0x35, 0x75, 0x6a, 0xcb, 0xf8, 0x5f]);
 interface IDvbLogicalChannelDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetCountOfRecords(ubyte*);
-    HRESULT GetRecordServiceId(ubyte, ushort*);
-    HRESULT GetRecordLogicalChannelNumber(ubyte, ushort*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetCountOfRecords(ubyte* pbVal);
+    HRESULT GetRecordServiceId(ubyte bRecordIndex, ushort* pwVal);
+    HRESULT GetRecordLogicalChannelNumber(ubyte bRecordIndex, ushort* pwVal);
 }
 enum IID_IDvbLogicalChannelDescriptor2 = GUID(0x43aca974, 0x4be8, 0x4b98, [0xbc, 0x17, 0x9e, 0xaf, 0xd7, 0x88, 0xb1, 0xd7]);
 interface IDvbLogicalChannelDescriptor2 : IDvbLogicalChannelDescriptor
 {
-    HRESULT GetRecordLogicalChannelAndVisibility(ubyte, ushort*);
+    HRESULT GetRecordLogicalChannelAndVisibility(ubyte bRecordIndex, ushort* pwVal);
 }
 enum IID_IDvbLogicalChannel2Descriptor = GUID(0xf69c3747, 0x8a30, 0x4980, [0x99, 0x8c, 0x1, 0xfe, 0x7f, 0xb, 0xa3, 0x5a]);
 interface IDvbLogicalChannel2Descriptor : IDvbLogicalChannelDescriptor2
 {
-    HRESULT GetCountOfLists(ubyte*);
-    HRESULT GetListId(ubyte, ubyte*);
-    HRESULT GetListNameW(ubyte, DVB_STRCONV_MODE, BSTR*);
-    HRESULT GetListCountryCode(ubyte, ubyte*);
-    HRESULT GetListCountOfRecords(ubyte, ubyte*);
-    HRESULT GetListRecordServiceId(ubyte, ubyte, ushort*);
-    HRESULT GetListRecordLogicalChannelNumber(ubyte, ubyte, ushort*);
-    HRESULT GetListRecordLogicalChannelAndVisibility(ubyte, ubyte, ushort*);
+    HRESULT GetCountOfLists(ubyte* pbVal);
+    HRESULT GetListId(ubyte bListIndex, ubyte* pbVal);
+    HRESULT GetListNameW(ubyte bListIndex, DVB_STRCONV_MODE convMode, BSTR* pbstrName);
+    HRESULT GetListCountryCode(ubyte bListIndex, ubyte* pszCode);
+    HRESULT GetListCountOfRecords(ubyte bChannelListIndex, ubyte* pbVal);
+    HRESULT GetListRecordServiceId(ubyte bListIndex, ubyte bRecordIndex, ushort* pwVal);
+    HRESULT GetListRecordLogicalChannelNumber(ubyte bListIndex, ubyte bRecordIndex, ushort* pwVal);
+    HRESULT GetListRecordLogicalChannelAndVisibility(ubyte bListIndex, ubyte bRecordIndex, ushort* pwVal);
 }
 enum IID_IDvbHDSimulcastLogicalChannelDescriptor = GUID(0x1ea8b738, 0xa307, 0x4680, [0x9e, 0x26, 0xd0, 0xa9, 0x8, 0xc8, 0x24, 0xf4]);
 interface IDvbHDSimulcastLogicalChannelDescriptor : IDvbLogicalChannelDescriptor2
@@ -4439,23 +4440,23 @@ interface IDvbHDSimulcastLogicalChannelDescriptor : IDvbLogicalChannelDescriptor
 enum IID_IDvbDataBroadcastIDDescriptor = GUID(0x5f26f518, 0x65c8, 0x4048, [0x91, 0xf2, 0x92, 0x90, 0xf5, 0x9f, 0x7b, 0x90]);
 interface IDvbDataBroadcastIDDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetDataBroadcastID(ushort*);
-    HRESULT GetIDSelectorBytes(ubyte*, ubyte*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetDataBroadcastID(ushort* pwVal);
+    HRESULT GetIDSelectorBytes(ubyte* pbLen, ubyte* pbVal);
 }
 enum IID_IDvbDataBroadcastDescriptor = GUID(0xd1ebc1d6, 0x8b60, 0x4c20, [0x9c, 0xaf, 0xe5, 0x93, 0x82, 0xe7, 0xc4, 0x0]);
 interface IDvbDataBroadcastDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetDataBroadcastID(ushort*);
-    HRESULT GetComponentTag(ubyte*);
-    HRESULT GetSelectorLength(ubyte*);
-    HRESULT GetSelectorBytes(ubyte*, ubyte*);
-    HRESULT GetLangID(uint*);
-    HRESULT GetTextLength(ubyte*);
-    HRESULT GetText(ubyte*, ubyte*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetDataBroadcastID(ushort* pwVal);
+    HRESULT GetComponentTag(ubyte* pbVal);
+    HRESULT GetSelectorLength(ubyte* pbVal);
+    HRESULT GetSelectorBytes(ubyte* pbLen, ubyte* pbVal);
+    HRESULT GetLangID(uint* pulVal);
+    HRESULT GetTextLength(ubyte* pbVal);
+    HRESULT GetText(ubyte* pbLen, ubyte* pbVal);
 }
 alias DESC_LINKAGE_TYPE = int;
 enum : int
@@ -4475,470 +4476,470 @@ enum : int
 enum IID_IDvbLinkageDescriptor = GUID(0x1cdf8b31, 0x994a, 0x46fc, [0xac, 0xfd, 0x6a, 0x6b, 0xe8, 0x93, 0x4d, 0xd5]);
 interface IDvbLinkageDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetTSId(ushort*);
-    HRESULT GetONId(ushort*);
-    HRESULT GetServiceId(ushort*);
-    HRESULT GetLinkageType(ubyte*);
-    HRESULT GetPrivateDataLength(ubyte*);
-    HRESULT GetPrivateData(ubyte*, ubyte*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetTSId(ushort* pwVal);
+    HRESULT GetONId(ushort* pwVal);
+    HRESULT GetServiceId(ushort* pwVal);
+    HRESULT GetLinkageType(ubyte* pbVal);
+    HRESULT GetPrivateDataLength(ubyte* pbVal);
+    HRESULT GetPrivateData(ubyte* pbLen, ubyte* pbData);
 }
 enum IID_IDvbTeletextDescriptor = GUID(0x9cd29d47, 0x69c6, 0x4f92, [0x98, 0xa9, 0x21, 0xa, 0xf1, 0xb7, 0x30, 0x3a]);
 interface IDvbTeletextDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetCountOfRecords(ubyte*);
-    HRESULT GetRecordLangId(ubyte, uint*);
-    HRESULT GetRecordTeletextType(ubyte, ubyte*);
-    HRESULT GetRecordMagazineNumber(ubyte, ubyte*);
-    HRESULT GetRecordPageNumber(ubyte, ubyte*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetCountOfRecords(ubyte* pbVal);
+    HRESULT GetRecordLangId(ubyte bRecordIndex, uint* pulVal);
+    HRESULT GetRecordTeletextType(ubyte bRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordMagazineNumber(ubyte bRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordPageNumber(ubyte bRecordIndex, ubyte* pbVal);
 }
 enum IID_IDvbSubtitlingDescriptor = GUID(0x9b25fe1d, 0xfa23, 0x4e50, [0x97, 0x84, 0x6d, 0xf8, 0xb2, 0x6f, 0x8a, 0x49]);
 interface IDvbSubtitlingDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetCountOfRecords(ubyte*);
-    HRESULT GetRecordLangId(ubyte, uint*);
-    HRESULT GetRecordSubtitlingType(ubyte, ubyte*);
-    HRESULT GetRecordCompositionPageID(ubyte, ushort*);
-    HRESULT GetRecordAncillaryPageID(ubyte, ushort*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetCountOfRecords(ubyte* pbVal);
+    HRESULT GetRecordLangId(ubyte bRecordIndex, uint* pulVal);
+    HRESULT GetRecordSubtitlingType(ubyte bRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordCompositionPageID(ubyte bRecordIndex, ushort* pwVal);
+    HRESULT GetRecordAncillaryPageID(ubyte bRecordIndex, ushort* pwVal);
 }
 enum IID_IDvbServiceDescriptor = GUID(0xf9c7fbcf, 0xe2d6, 0x464d, [0xb3, 0x2d, 0x2e, 0xf5, 0x26, 0xe4, 0x92, 0x90]);
 interface IDvbServiceDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetServiceType(ubyte*);
-    HRESULT GetServiceProviderName(ubyte**);
-    HRESULT GetServiceProviderNameW(BSTR*);
-    HRESULT GetServiceName(ubyte**);
-    HRESULT GetProcessedServiceName(BSTR*);
-    HRESULT GetServiceNameEmphasized(BSTR*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetServiceType(ubyte* pbVal);
+    HRESULT GetServiceProviderName(ubyte** pszName);
+    HRESULT GetServiceProviderNameW(BSTR* pbstrName);
+    HRESULT GetServiceName(ubyte** pszName);
+    HRESULT GetProcessedServiceName(BSTR* pbstrName);
+    HRESULT GetServiceNameEmphasized(BSTR* pbstrName);
 }
 enum IID_IDvbServiceDescriptor2 = GUID(0xd6c76506, 0x85ab, 0x487c, [0x9b, 0x2b, 0x36, 0x41, 0x65, 0x11, 0xe4, 0xa2]);
 interface IDvbServiceDescriptor2 : IDvbServiceDescriptor
 {
-    HRESULT GetServiceProviderNameW(DVB_STRCONV_MODE, BSTR*);
-    HRESULT GetServiceNameW(DVB_STRCONV_MODE, BSTR*);
+    HRESULT GetServiceProviderNameW(DVB_STRCONV_MODE convMode, BSTR* pbstrName);
+    HRESULT GetServiceNameW(DVB_STRCONV_MODE convMode, BSTR* pbstrName);
 }
 enum IID_IDvbServiceListDescriptor = GUID(0x5db0d8f, 0x6008, 0x491a, [0xac, 0xd3, 0x70, 0x90, 0x95, 0x27, 0x7, 0xd0]);
 interface IDvbServiceListDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetCountOfRecords(ubyte*);
-    HRESULT GetRecordServiceId(ubyte, ushort*);
-    HRESULT GetRecordServiceType(ubyte, ubyte*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetCountOfRecords(ubyte* pbVal);
+    HRESULT GetRecordServiceId(ubyte bRecordIndex, ushort* pwVal);
+    HRESULT GetRecordServiceType(ubyte bRecordIndex, ubyte* pbVal);
 }
 enum IID_IDvbMultilingualServiceNameDescriptor = GUID(0x2d80433b, 0xb32c, 0x47ef, [0x98, 0x7f, 0xe7, 0x8e, 0xbb, 0x77, 0x3e, 0x34]);
 interface IDvbMultilingualServiceNameDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetCountOfRecords(ubyte*);
-    HRESULT GetRecordLangId(ubyte, uint*);
-    HRESULT GetRecordServiceProviderNameW(ubyte, DVB_STRCONV_MODE, BSTR*);
-    HRESULT GetRecordServiceNameW(ubyte, DVB_STRCONV_MODE, BSTR*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetCountOfRecords(ubyte* pbVal);
+    HRESULT GetRecordLangId(ubyte bRecordIndex, uint* ulVal);
+    HRESULT GetRecordServiceProviderNameW(ubyte bRecordIndex, DVB_STRCONV_MODE convMode, BSTR* pbstrName);
+    HRESULT GetRecordServiceNameW(ubyte bRecordIndex, DVB_STRCONV_MODE convMode, BSTR* pbstrName);
 }
 enum IID_IDvbNetworkNameDescriptor = GUID(0x5b2a80cf, 0x35b9, 0x446c, [0xb3, 0xe4, 0x4, 0x8b, 0x76, 0x1d, 0xbc, 0x51]);
 interface IDvbNetworkNameDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetNetworkName(ubyte**);
-    HRESULT GetNetworkNameW(DVB_STRCONV_MODE, BSTR*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetNetworkName(ubyte** pszName);
+    HRESULT GetNetworkNameW(DVB_STRCONV_MODE convMode, BSTR* pbstrName);
 }
 enum IID_IDvbShortEventDescriptor = GUID(0xb170be92, 0x5b75, 0x458e, [0x9c, 0x6e, 0xb0, 0x0, 0x82, 0x31, 0x49, 0x1a]);
 interface IDvbShortEventDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetLanguageCode(ubyte*);
-    HRESULT GetEventNameW(DVB_STRCONV_MODE, BSTR*);
-    HRESULT GetTextW(DVB_STRCONV_MODE, BSTR*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetLanguageCode(ubyte* pszCode);
+    HRESULT GetEventNameW(DVB_STRCONV_MODE convMode, BSTR* pbstrName);
+    HRESULT GetTextW(DVB_STRCONV_MODE convMode, BSTR* pbstrText);
 }
 enum IID_IDvbExtendedEventDescriptor = GUID(0xc9b22eca, 0x85f4, 0x499f, [0xb1, 0xdb, 0xef, 0xa9, 0x3a, 0x91, 0xee, 0x57]);
 interface IDvbExtendedEventDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetDescriptorNumber(ubyte*);
-    HRESULT GetLastDescriptorNumber(ubyte*);
-    HRESULT GetLanguageCode(ubyte*);
-    HRESULT GetCountOfRecords(ubyte*);
-    HRESULT GetRecordItemW(ubyte, DVB_STRCONV_MODE, BSTR*, BSTR*);
-    HRESULT GetConcatenatedItemW(IDvbExtendedEventDescriptor, DVB_STRCONV_MODE, BSTR*, BSTR*);
-    HRESULT GetTextW(DVB_STRCONV_MODE, BSTR*);
-    HRESULT GetConcatenatedTextW(IDvbExtendedEventDescriptor, DVB_STRCONV_MODE, BSTR*);
-    HRESULT GetRecordItemRawBytes(ubyte, ubyte**, ubyte*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetDescriptorNumber(ubyte* pbVal);
+    HRESULT GetLastDescriptorNumber(ubyte* pbVal);
+    HRESULT GetLanguageCode(ubyte* pszCode);
+    HRESULT GetCountOfRecords(ubyte* pbVal);
+    HRESULT GetRecordItemW(ubyte bRecordIndex, DVB_STRCONV_MODE convMode, BSTR* pbstrDesc, BSTR* pbstrItem);
+    HRESULT GetConcatenatedItemW(IDvbExtendedEventDescriptor pFollowingDescriptor, DVB_STRCONV_MODE convMode, BSTR* pbstrDesc, BSTR* pbstrItem);
+    HRESULT GetTextW(DVB_STRCONV_MODE convMode, BSTR* pbstrText);
+    HRESULT GetConcatenatedTextW(IDvbExtendedEventDescriptor FollowingDescriptor, DVB_STRCONV_MODE convMode, BSTR* pbstrText);
+    HRESULT GetRecordItemRawBytes(ubyte bRecordIndex, ubyte** ppbRawItem, ubyte* pbItemLength);
 }
 enum IID_IDvbComponentDescriptor = GUID(0x91e405cf, 0x80e7, 0x457f, [0x90, 0x96, 0x1b, 0x9d, 0x1c, 0xe3, 0x21, 0x41]);
 interface IDvbComponentDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetStreamContent(ubyte*);
-    HRESULT GetComponentType(ubyte*);
-    HRESULT GetComponentTag(ubyte*);
-    HRESULT GetLanguageCode(ubyte*);
-    HRESULT GetTextW(DVB_STRCONV_MODE, BSTR*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetStreamContent(ubyte* pbVal);
+    HRESULT GetComponentType(ubyte* pbVal);
+    HRESULT GetComponentTag(ubyte* pbVal);
+    HRESULT GetLanguageCode(ubyte* pszCode);
+    HRESULT GetTextW(DVB_STRCONV_MODE convMode, BSTR* pbstrText);
 }
 enum IID_IDvbContentDescriptor = GUID(0x2e883881, 0xa467, 0x412a, [0x9d, 0x63, 0x6f, 0x2b, 0x6d, 0xa0, 0x5b, 0xf0]);
 interface IDvbContentDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetCountOfRecords(ubyte*);
-    HRESULT GetRecordContentNibbles(ubyte, ubyte*, ubyte*);
-    HRESULT GetRecordUserNibbles(ubyte, ubyte*, ubyte*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetCountOfRecords(ubyte* pbVal);
+    HRESULT GetRecordContentNibbles(ubyte bRecordIndex, ubyte* pbValLevel1, ubyte* pbValLevel2);
+    HRESULT GetRecordUserNibbles(ubyte bRecordIndex, ubyte* pbVal1, ubyte* pbVal2);
 }
 enum IID_IDvbParentalRatingDescriptor = GUID(0x3ad9dde1, 0xfb1b, 0x4186, [0x93, 0x7f, 0x22, 0xe6, 0xb5, 0xa7, 0x2a, 0x10]);
 interface IDvbParentalRatingDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetCountOfRecords(ubyte*);
-    HRESULT GetRecordRating(ubyte, ubyte*, ubyte*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetCountOfRecords(ubyte* pbVal);
+    HRESULT GetRecordRating(ubyte bRecordIndex, ubyte* pszCountryCode, ubyte* pbVal);
 }
 enum IID_IIsdbTerrestrialDeliverySystemDescriptor = GUID(0x39fae0a6, 0xd151, 0x44dd, [0xa2, 0x8a, 0x76, 0x5d, 0xe5, 0x99, 0x16, 0x70]);
 interface IIsdbTerrestrialDeliverySystemDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetAreaCode(ushort*);
-    HRESULT GetGuardInterval(ubyte*);
-    HRESULT GetTransmissionMode(ubyte*);
-    HRESULT GetCountOfRecords(ubyte*);
-    HRESULT GetRecordFrequency(ubyte, uint*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetAreaCode(ushort* pwVal);
+    HRESULT GetGuardInterval(ubyte* pbVal);
+    HRESULT GetTransmissionMode(ubyte* pbVal);
+    HRESULT GetCountOfRecords(ubyte* pbVal);
+    HRESULT GetRecordFrequency(ubyte bRecordIndex, uint* pdwVal);
 }
 enum IID_IIsdbTSInformationDescriptor = GUID(0xd7ad183e, 0x38f5, 0x4210, [0xb5, 0x5f, 0xec, 0x8d, 0x60, 0x1b, 0xbd, 0x47]);
 interface IIsdbTSInformationDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetRemoteControlKeyId(ubyte*);
-    HRESULT GetTSNameW(DVB_STRCONV_MODE, BSTR*);
-    HRESULT GetCountOfRecords(ubyte*);
-    HRESULT GetRecordTransmissionTypeInfo(ubyte, ubyte*);
-    HRESULT GetRecordNumberOfServices(ubyte, ubyte*);
-    HRESULT GetRecordServiceIdByIndex(ubyte, ubyte, ushort*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetRemoteControlKeyId(ubyte* pbVal);
+    HRESULT GetTSNameW(DVB_STRCONV_MODE convMode, BSTR* pbstrName);
+    HRESULT GetCountOfRecords(ubyte* pbVal);
+    HRESULT GetRecordTransmissionTypeInfo(ubyte bRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordNumberOfServices(ubyte bRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordServiceIdByIndex(ubyte bRecordIndex, ubyte bServiceIndex, ushort* pdwVal);
 }
 enum IID_IIsdbDigitalCopyControlDescriptor = GUID(0x1a28417e, 0x266a, 0x4bb8, [0xa4, 0xbd, 0xd7, 0x82, 0xbc, 0xfb, 0x81, 0x61]);
 interface IIsdbDigitalCopyControlDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetCopyControl(ubyte*, ubyte*, ubyte*, ubyte*);
-    HRESULT GetCountOfRecords(ubyte*);
-    HRESULT GetRecordCopyControl(ubyte, ubyte*, ubyte*, ubyte*, ubyte*, ubyte*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetCopyControl(ubyte* pbDigitalRecordingControlData, ubyte* pbCopyControlType, ubyte* pbAPSControlData, ubyte* pbMaximumBitrate);
+    HRESULT GetCountOfRecords(ubyte* pbVal);
+    HRESULT GetRecordCopyControl(ubyte bRecordIndex, ubyte* pbComponentTag, ubyte* pbDigitalRecordingControlData, ubyte* pbCopyControlType, ubyte* pbAPSControlData, ubyte* pbMaximumBitrate);
 }
 enum IID_IIsdbAudioComponentDescriptor = GUID(0x679d2002, 0x2425, 0x4be4, [0xa4, 0xc7, 0xd6, 0x63, 0x2a, 0x57, 0x4f, 0x4d]);
 interface IIsdbAudioComponentDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetStreamContent(ubyte*);
-    HRESULT GetComponentType(ubyte*);
-    HRESULT GetComponentTag(ubyte*);
-    HRESULT GetStreamType(ubyte*);
-    HRESULT GetSimulcastGroupTag(ubyte*);
-    HRESULT GetESMultiLingualFlag(BOOL*);
-    HRESULT GetMainComponentFlag(BOOL*);
-    HRESULT GetQualityIndicator(ubyte*);
-    HRESULT GetSamplingRate(ubyte*);
-    HRESULT GetLanguageCode(ubyte*);
-    HRESULT GetLanguageCode2(ubyte*);
-    HRESULT GetTextW(DVB_STRCONV_MODE, BSTR*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetStreamContent(ubyte* pbVal);
+    HRESULT GetComponentType(ubyte* pbVal);
+    HRESULT GetComponentTag(ubyte* pbVal);
+    HRESULT GetStreamType(ubyte* pbVal);
+    HRESULT GetSimulcastGroupTag(ubyte* pbVal);
+    HRESULT GetESMultiLingualFlag(BOOL* pfVal);
+    HRESULT GetMainComponentFlag(BOOL* pfVal);
+    HRESULT GetQualityIndicator(ubyte* pbVal);
+    HRESULT GetSamplingRate(ubyte* pbVal);
+    HRESULT GetLanguageCode(ubyte* pszCode);
+    HRESULT GetLanguageCode2(ubyte* pszCode);
+    HRESULT GetTextW(DVB_STRCONV_MODE convMode, BSTR* pbstrText);
 }
 enum IID_IIsdbDataContentDescriptor = GUID(0xa428100a, 0xe646, 0x4bd6, [0xaa, 0x14, 0x60, 0x87, 0xbd, 0xc0, 0x8c, 0xd5]);
 interface IIsdbDataContentDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetDataComponentId(ushort*);
-    HRESULT GetEntryComponent(ubyte*);
-    HRESULT GetSelectorLength(ubyte*);
-    HRESULT GetSelectorBytes(ubyte, ubyte*);
-    HRESULT GetCountOfRecords(ubyte*);
-    HRESULT GetRecordComponentRef(ubyte, ubyte*);
-    HRESULT GetLanguageCode(ubyte*);
-    HRESULT GetTextW(DVB_STRCONV_MODE, BSTR*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetDataComponentId(ushort* pwVal);
+    HRESULT GetEntryComponent(ubyte* pbVal);
+    HRESULT GetSelectorLength(ubyte* pbVal);
+    HRESULT GetSelectorBytes(ubyte bBufLength, ubyte* pbBuf);
+    HRESULT GetCountOfRecords(ubyte* pbVal);
+    HRESULT GetRecordComponentRef(ubyte bRecordIndex, ubyte* pbVal);
+    HRESULT GetLanguageCode(ubyte* pszCode);
+    HRESULT GetTextW(DVB_STRCONV_MODE convMode, BSTR* pbstrText);
 }
 enum IID_IIsdbCAContractInformationDescriptor = GUID(0x8e18b25, 0xa28f, 0x4e92, [0x82, 0x1e, 0x4f, 0xce, 0xd5, 0xcc, 0x22, 0x91]);
 interface IIsdbCAContractInformationDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetCASystemId(ushort*);
-    HRESULT GetCAUnitId(ubyte*);
-    HRESULT GetCountOfRecords(ubyte*);
-    HRESULT GetRecordComponentTag(ubyte, ubyte*);
-    HRESULT GetContractVerificationInfoLength(ubyte*);
-    HRESULT GetContractVerificationInfo(ubyte, ubyte*);
-    HRESULT GetFeeNameW(DVB_STRCONV_MODE, BSTR*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetCASystemId(ushort* pwVal);
+    HRESULT GetCAUnitId(ubyte* pbVal);
+    HRESULT GetCountOfRecords(ubyte* pbVal);
+    HRESULT GetRecordComponentTag(ubyte bRecordIndex, ubyte* pbVal);
+    HRESULT GetContractVerificationInfoLength(ubyte* pbVal);
+    HRESULT GetContractVerificationInfo(ubyte bBufLength, ubyte* pbBuf);
+    HRESULT GetFeeNameW(DVB_STRCONV_MODE convMode, BSTR* pbstrName);
 }
 enum IID_IIsdbEventGroupDescriptor = GUID(0x94b06780, 0x2e2a, 0x44dc, [0xa9, 0x66, 0xcc, 0x56, 0xfd, 0xab, 0xc6, 0xc2]);
 interface IIsdbEventGroupDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetGroupType(ubyte*);
-    HRESULT GetCountOfRecords(ubyte*);
-    HRESULT GetRecordEvent(ubyte, ushort*, ushort*);
-    HRESULT GetCountOfRefRecords(ubyte*);
-    HRESULT GetRefRecordEvent(ubyte, ushort*, ushort*, ushort*, ushort*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetGroupType(ubyte* pbVal);
+    HRESULT GetCountOfRecords(ubyte* pbVal);
+    HRESULT GetRecordEvent(ubyte bRecordIndex, ushort* pwServiceId, ushort* pwEventId);
+    HRESULT GetCountOfRefRecords(ubyte* pbVal);
+    HRESULT GetRefRecordEvent(ubyte bRecordIndex, ushort* pwOriginalNetworkId, ushort* pwTransportStreamId, ushort* pwServiceId, ushort* pwEventId);
 }
 enum IID_IIsdbComponentGroupDescriptor = GUID(0xa494f17f, 0xc592, 0x47d8, [0x89, 0x43, 0x64, 0xc9, 0xa3, 0x4b, 0xe7, 0xb9]);
 interface IIsdbComponentGroupDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetComponentGroupType(ubyte*);
-    HRESULT GetCountOfRecords(ubyte*);
-    HRESULT GetRecordGroupId(ubyte, ubyte*);
-    HRESULT GetRecordNumberOfCAUnit(ubyte, ubyte*);
-    HRESULT GetRecordCAUnitCAUnitId(ubyte, ubyte, ubyte*);
-    HRESULT GetRecordCAUnitNumberOfComponents(ubyte, ubyte, ubyte*);
-    HRESULT GetRecordCAUnitComponentTag(ubyte, ubyte, ubyte, ubyte*);
-    HRESULT GetRecordTotalBitRate(ubyte, ubyte*);
-    HRESULT GetRecordTextW(ubyte, DVB_STRCONV_MODE, BSTR*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetComponentGroupType(ubyte* pbVal);
+    HRESULT GetCountOfRecords(ubyte* pbVal);
+    HRESULT GetRecordGroupId(ubyte bRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordNumberOfCAUnit(ubyte bRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordCAUnitCAUnitId(ubyte bRecordIndex, ubyte bCAUnitIndex, ubyte* pbVal);
+    HRESULT GetRecordCAUnitNumberOfComponents(ubyte bRecordIndex, ubyte bCAUnitIndex, ubyte* pbVal);
+    HRESULT GetRecordCAUnitComponentTag(ubyte bRecordIndex, ubyte bCAUnitIndex, ubyte bComponentIndex, ubyte* pbVal);
+    HRESULT GetRecordTotalBitRate(ubyte bRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordTextW(ubyte bRecordIndex, DVB_STRCONV_MODE convMode, BSTR* pbstrText);
 }
 enum IID_IIsdbSeriesDescriptor = GUID(0x7ef6370, 0x1660, 0x4f26, [0x87, 0xfc, 0x61, 0x4a, 0xda, 0xb2, 0x4b, 0x11]);
 interface IIsdbSeriesDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetSeriesId(ushort*);
-    HRESULT GetRepeatLabel(ubyte*);
-    HRESULT GetProgramPattern(ubyte*);
-    HRESULT GetExpireDate(BOOL*, MPEG_DATE_AND_TIME*);
-    HRESULT GetEpisodeNumber(ushort*);
-    HRESULT GetLastEpisodeNumber(ushort*);
-    HRESULT GetSeriesNameW(DVB_STRCONV_MODE, BSTR*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetSeriesId(ushort* pwVal);
+    HRESULT GetRepeatLabel(ubyte* pbVal);
+    HRESULT GetProgramPattern(ubyte* pbVal);
+    HRESULT GetExpireDate(BOOL* pfValid, MPEG_DATE_AND_TIME* pmdtVal);
+    HRESULT GetEpisodeNumber(ushort* pwVal);
+    HRESULT GetLastEpisodeNumber(ushort* pwVal);
+    HRESULT GetSeriesNameW(DVB_STRCONV_MODE convMode, BSTR* pbstrName);
 }
 enum IID_IIsdbDownloadContentDescriptor = GUID(0x5298661e, 0xcb88, 0x4f5f, [0xa1, 0xde, 0x5f, 0x44, 0xc, 0x18, 0x5b, 0x92]);
 interface IIsdbDownloadContentDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetFlags(BOOL*, BOOL*, BOOL*, BOOL*, BOOL*);
-    HRESULT GetComponentSize(uint*);
-    HRESULT GetDownloadId(uint*);
-    HRESULT GetTimeOutValueDII(uint*);
-    HRESULT GetLeakRate(uint*);
-    HRESULT GetComponentTag(ubyte*);
-    HRESULT GetCompatiblityDescriptorLength(ushort*);
-    HRESULT GetCompatiblityDescriptor(ubyte**);
-    HRESULT GetCountOfRecords(ushort*);
-    HRESULT GetRecordModuleId(ushort, ushort*);
-    HRESULT GetRecordModuleSize(ushort, uint*);
-    HRESULT GetRecordModuleInfoLength(ushort, ubyte*);
-    HRESULT GetRecordModuleInfo(ushort, ubyte**);
-    HRESULT GetTextLanguageCode(ubyte*);
-    HRESULT GetTextW(DVB_STRCONV_MODE, BSTR*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetFlags(BOOL* pfReboot, BOOL* pfAddOn, BOOL* pfCompatibility, BOOL* pfModuleInfo, BOOL* pfTextInfo);
+    HRESULT GetComponentSize(uint* pdwVal);
+    HRESULT GetDownloadId(uint* pdwVal);
+    HRESULT GetTimeOutValueDII(uint* pdwVal);
+    HRESULT GetLeakRate(uint* pdwVal);
+    HRESULT GetComponentTag(ubyte* pbVal);
+    HRESULT GetCompatiblityDescriptorLength(ushort* pwLength);
+    HRESULT GetCompatiblityDescriptor(ubyte** ppbData);
+    HRESULT GetCountOfRecords(ushort* pwVal);
+    HRESULT GetRecordModuleId(ushort wRecordIndex, ushort* pwVal);
+    HRESULT GetRecordModuleSize(ushort wRecordIndex, uint* pdwVal);
+    HRESULT GetRecordModuleInfoLength(ushort wRecordIndex, ubyte* pbVal);
+    HRESULT GetRecordModuleInfo(ushort wRecordIndex, ubyte** ppbData);
+    HRESULT GetTextLanguageCode(ubyte* szCode);
+    HRESULT GetTextW(DVB_STRCONV_MODE convMode, BSTR* pbstrName);
 }
 enum IID_IIsdbLogoTransmissionDescriptor = GUID(0xe0103f49, 0x4ae1, 0x4f07, [0x90, 0x98, 0x75, 0x6d, 0xb1, 0xfa, 0x88, 0xcd]);
 interface IIsdbLogoTransmissionDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetLogoTransmissionType(ubyte*);
-    HRESULT GetLogoId(ushort*);
-    HRESULT GetLogoVersion(ushort*);
-    HRESULT GetDownloadDataId(ushort*);
-    HRESULT GetLogoCharW(DVB_STRCONV_MODE, BSTR*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetLogoTransmissionType(ubyte* pbVal);
+    HRESULT GetLogoId(ushort* pwVal);
+    HRESULT GetLogoVersion(ushort* pwVal);
+    HRESULT GetDownloadDataId(ushort* pwVal);
+    HRESULT GetLogoCharW(DVB_STRCONV_MODE convMode, BSTR* pbstrChar);
 }
 enum IID_IIsdbSIParameterDescriptor = GUID(0xf837dc36, 0x867c, 0x426a, [0x91, 0x11, 0xf6, 0x20, 0x93, 0x95, 0x1a, 0x45]);
 interface IIsdbSIParameterDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetParameterVersion(ubyte*);
-    HRESULT GetUpdateTime(MPEG_DATE*);
-    HRESULT GetRecordNumberOfTable(ubyte*);
-    HRESULT GetTableId(ubyte, ubyte*);
-    HRESULT GetTableDescriptionLength(ubyte, ubyte*);
-    HRESULT GetTableDescriptionBytes(ubyte, ubyte*, ubyte*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetParameterVersion(ubyte* pbVal);
+    HRESULT GetUpdateTime(MPEG_DATE* pVal);
+    HRESULT GetRecordNumberOfTable(ubyte* pbVal);
+    HRESULT GetTableId(ubyte bRecordIndex, ubyte* pbVal);
+    HRESULT GetTableDescriptionLength(ubyte bRecordIndex, ubyte* pbVal);
+    HRESULT GetTableDescriptionBytes(ubyte bRecordIndex, ubyte* pbBufferLength, ubyte* pbBuffer);
 }
 enum IID_IIsdbEmergencyInformationDescriptor = GUID(0xba6fa681, 0xb973, 0x4da1, [0x92, 0x7, 0xac, 0x3e, 0x7f, 0x3, 0x41, 0xeb]);
 interface IIsdbEmergencyInformationDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetCountOfRecords(ubyte*);
-    HRESULT GetServiceId(ubyte, ushort*);
-    HRESULT GetStartEndFlag(ubyte, ubyte*);
-    HRESULT GetSignalLevel(ubyte, ubyte*);
-    HRESULT GetAreaCode(ubyte, ushort**, ubyte*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetCountOfRecords(ubyte* pbVal);
+    HRESULT GetServiceId(ubyte bRecordIndex, ushort* pwVal);
+    HRESULT GetStartEndFlag(ubyte bRecordIndex, ubyte* pVal);
+    HRESULT GetSignalLevel(ubyte bRecordIndex, ubyte* pbVal);
+    HRESULT GetAreaCode(ubyte bRecordIndex, ushort** ppwVal, ubyte* pbNumAreaCodes);
 }
 enum IID_IIsdbCADescriptor = GUID(0x570aa47, 0x52bc, 0x42ae, [0x8c, 0xa5, 0x96, 0x9f, 0x41, 0xe8, 0x1a, 0xea]);
 interface IIsdbCADescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetCASystemId(ushort*);
-    HRESULT GetReservedBits(ubyte*);
-    HRESULT GetCAPID(ushort*);
-    HRESULT GetPrivateDataBytes(ubyte*, ubyte*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetCASystemId(ushort* pwVal);
+    HRESULT GetReservedBits(ubyte* pbVal);
+    HRESULT GetCAPID(ushort* pwVal);
+    HRESULT GetPrivateDataBytes(ubyte* pbBufferLength, ubyte* pbBuffer);
 }
 enum IID_IIsdbCAServiceDescriptor = GUID(0x39cbeb97, 0xff0b, 0x42a7, [0x9a, 0xb9, 0x7b, 0x9c, 0xfe, 0x70, 0xa7, 0x7a]);
 interface IIsdbCAServiceDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetCASystemId(ushort*);
-    HRESULT GetCABroadcasterGroupId(ubyte*);
-    HRESULT GetMessageControl(ubyte*);
-    HRESULT GetServiceIds(ubyte*, ushort*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetCASystemId(ushort* pwVal);
+    HRESULT GetCABroadcasterGroupId(ubyte* pbVal);
+    HRESULT GetMessageControl(ubyte* pbVal);
+    HRESULT GetServiceIds(ubyte* pbNumServiceIds, ushort* pwServiceIds);
 }
 enum IID_IIsdbHierarchicalTransmissionDescriptor = GUID(0xb7b3ae90, 0xee0b, 0x446d, [0x87, 0x69, 0xf7, 0xe2, 0xaa, 0x26, 0x6a, 0xa6]);
 interface IIsdbHierarchicalTransmissionDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ubyte*);
-    HRESULT GetFutureUse1(ubyte*);
-    HRESULT GetQualityLevel(ubyte*);
-    HRESULT GetFutureUse2(ubyte*);
-    HRESULT GetReferencePid(ushort*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ubyte* pbVal);
+    HRESULT GetFutureUse1(ubyte* pbVal);
+    HRESULT GetQualityLevel(ubyte* pbVal);
+    HRESULT GetFutureUse2(ubyte* pbVal);
+    HRESULT GetReferencePid(ushort* pwVal);
 }
 enum IID_IPBDASiParser = GUID(0x9de49a74, 0xaba2, 0x4a18, [0x93, 0xe1, 0x21, 0xf1, 0x7f, 0x95, 0xc3, 0xc3]);
 interface IPBDASiParser : IUnknown
 {
-    HRESULT Initialize(IUnknown);
-    HRESULT GetEIT(uint, ubyte*, IPBDA_EIT*);
-    HRESULT GetServices(uint, const(ubyte)*, IPBDA_Services*);
+    HRESULT Initialize(IUnknown punk);
+    HRESULT GetEIT(uint dwSize, ubyte* pBuffer, IPBDA_EIT* ppEIT);
+    HRESULT GetServices(uint dwSize, const(ubyte)* pBuffer, IPBDA_Services* ppServices);
 }
 enum IID_IPBDA_EIT = GUID(0xa35f2dea, 0x98f, 0x4ebd, [0x98, 0x4c, 0x2b, 0xd4, 0xc3, 0xc8, 0xce, 0xa]);
 interface IPBDA_EIT : IUnknown
 {
-    HRESULT Initialize(uint, const(ubyte)*);
-    HRESULT GetTableId(ubyte*);
-    HRESULT GetVersionNumber(ushort*);
-    HRESULT GetServiceIdx(ulong*);
-    HRESULT GetCountOfRecords(uint*);
-    HRESULT GetRecordEventId(uint, ulong*);
-    HRESULT GetRecordStartTime(uint, MPEG_DATE_AND_TIME*);
-    HRESULT GetRecordDuration(uint, MPEG_TIME*);
-    HRESULT GetRecordCountOfDescriptors(uint, uint*);
-    HRESULT GetRecordDescriptorByIndex(uint, uint, IGenericDescriptor*);
-    HRESULT GetRecordDescriptorByTag(uint, ubyte, uint*, IGenericDescriptor*);
+    HRESULT Initialize(uint size, const(ubyte)* pBuffer);
+    HRESULT GetTableId(ubyte* pbVal);
+    HRESULT GetVersionNumber(ushort* pwVal);
+    HRESULT GetServiceIdx(ulong* plwVal);
+    HRESULT GetCountOfRecords(uint* pdwVal);
+    HRESULT GetRecordEventId(uint dwRecordIndex, ulong* plwVal);
+    HRESULT GetRecordStartTime(uint dwRecordIndex, MPEG_DATE_AND_TIME* pmdtVal);
+    HRESULT GetRecordDuration(uint dwRecordIndex, MPEG_TIME* pmdVal);
+    HRESULT GetRecordCountOfDescriptors(uint dwRecordIndex, uint* pdwVal);
+    HRESULT GetRecordDescriptorByIndex(uint dwRecordIndex, uint dwIndex, IGenericDescriptor* ppDescriptor);
+    HRESULT GetRecordDescriptorByTag(uint dwRecordIndex, ubyte bTag, uint* pdwCookie, IGenericDescriptor* ppDescriptor);
 }
 enum IID_IPBDA_Services = GUID(0x944eab37, 0xeed4, 0x4850, [0xaf, 0xd2, 0x77, 0xe7, 0xef, 0xeb, 0x44, 0x27]);
 interface IPBDA_Services : IUnknown
 {
-    HRESULT Initialize(uint, ubyte*);
-    HRESULT GetCountOfRecords(uint*);
-    HRESULT GetRecordByIndex(uint, ulong*);
+    HRESULT Initialize(uint size, ubyte* pBuffer);
+    HRESULT GetCountOfRecords(uint* pdwVal);
+    HRESULT GetRecordByIndex(uint dwRecordIndex, ulong* pul64ServiceIdx);
 }
 enum IID_IPBDAEntitlementDescriptor = GUID(0x22632497, 0xde3, 0x4587, [0xaa, 0xdc, 0xd8, 0xd9, 0x90, 0x17, 0xe7, 0x60]);
 interface IPBDAEntitlementDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ushort*);
-    HRESULT GetToken(ubyte**, uint*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ushort* pwVal);
+    HRESULT GetToken(ubyte** ppbTokenBuffer, uint* pdwTokenLength);
 }
 enum IID_IPBDAAttributesDescriptor = GUID(0x313b3620, 0x3263, 0x45a6, [0x95, 0x33, 0x96, 0x8b, 0xef, 0xbe, 0xac, 0x3]);
 interface IPBDAAttributesDescriptor : IUnknown
 {
-    HRESULT GetTag(ubyte*);
-    HRESULT GetLength(ushort*);
-    HRESULT GetAttributePayload(ubyte**, uint*);
+    HRESULT GetTag(ubyte* pbVal);
+    HRESULT GetLength(ushort* pwVal);
+    HRESULT GetAttributePayload(ubyte** ppbAttributeBuffer, uint* pdwAttributeLength);
 }
 enum IID_IBDA_TIF_REGISTRATION = GUID(0xdfef4a68, 0xee61, 0x415f, [0x9c, 0xcb, 0xcd, 0x95, 0xf2, 0xf9, 0x8a, 0x3a]);
 interface IBDA_TIF_REGISTRATION : IUnknown
 {
-    HRESULT RegisterTIFEx(IPin, uint*, IUnknown*);
-    HRESULT UnregisterTIF(uint);
+    HRESULT RegisterTIFEx(IPin pTIFInputPin, uint* ppvRegistrationContext, IUnknown* ppMpeg2DataControl);
+    HRESULT UnregisterTIF(uint pvRegistrationContext);
 }
 enum IID_IMPEG2_TIF_CONTROL = GUID(0xf9bac2f9, 0x4149, 0x4916, [0xb2, 0xef, 0xfa, 0xa2, 0x2, 0x32, 0x68, 0x62]);
 interface IMPEG2_TIF_CONTROL : IUnknown
 {
-    HRESULT RegisterTIF(IUnknown, uint*);
-    HRESULT UnregisterTIF(uint);
-    HRESULT AddPIDs(uint, uint*);
-    HRESULT DeletePIDs(uint, uint*);
-    HRESULT GetPIDCount(uint*);
-    HRESULT GetPIDs(uint*, uint*);
+    HRESULT RegisterTIF(IUnknown pUnkTIF, uint* ppvRegistrationContext);
+    HRESULT UnregisterTIF(uint pvRegistrationContext);
+    HRESULT AddPIDs(uint ulcPIDs, uint* pulPIDs);
+    HRESULT DeletePIDs(uint ulcPIDs, uint* pulPIDs);
+    HRESULT GetPIDCount(uint* pulcPIDs);
+    HRESULT GetPIDs(uint* pulcPIDs, uint* pulPIDs);
 }
 enum IID_ITuneRequestInfo = GUID(0xa3b152df, 0x7a90, 0x4218, [0xac, 0x54, 0x98, 0x30, 0xbe, 0xe8, 0xc0, 0xb6]);
 interface ITuneRequestInfo : IUnknown
 {
-    HRESULT GetLocatorData(ITuneRequest);
-    HRESULT GetComponentData(ITuneRequest);
-    HRESULT CreateComponentList(ITuneRequest);
-    HRESULT GetNextProgram(ITuneRequest, ITuneRequest*);
-    HRESULT GetPreviousProgram(ITuneRequest, ITuneRequest*);
-    HRESULT GetNextLocator(ITuneRequest, ITuneRequest*);
-    HRESULT GetPreviousLocator(ITuneRequest, ITuneRequest*);
+    HRESULT GetLocatorData(ITuneRequest Request);
+    HRESULT GetComponentData(ITuneRequest CurrentRequest);
+    HRESULT CreateComponentList(ITuneRequest CurrentRequest);
+    HRESULT GetNextProgram(ITuneRequest CurrentRequest, ITuneRequest* TuneRequest);
+    HRESULT GetPreviousProgram(ITuneRequest CurrentRequest, ITuneRequest* TuneRequest);
+    HRESULT GetNextLocator(ITuneRequest CurrentRequest, ITuneRequest* TuneRequest);
+    HRESULT GetPreviousLocator(ITuneRequest CurrentRequest, ITuneRequest* TuneRequest);
 }
 enum IID_ITuneRequestInfoEx = GUID(0xee957c52, 0xb0d0, 0x4e78, [0x8d, 0xd1, 0xb8, 0x7a, 0x8, 0xbf, 0xd8, 0x93]);
 interface ITuneRequestInfoEx : ITuneRequestInfo
 {
-    HRESULT CreateComponentListEx(ITuneRequest, IUnknown*);
+    HRESULT CreateComponentListEx(ITuneRequest CurrentRequest, IUnknown* ppCurPMT);
 }
 enum IID_ISIInbandEPGEvent = GUID(0x7e47913a, 0x5a89, 0x423d, [0x9a, 0x2b, 0xe1, 0x51, 0x68, 0x85, 0x89, 0x34]);
 interface ISIInbandEPGEvent : IUnknown
 {
-    HRESULT SIObjectEvent(IDVB_EIT2, uint, uint);
+    HRESULT SIObjectEvent(IDVB_EIT2 pIDVB_EIT, uint dwTable_ID, uint dwService_ID);
 }
 enum IID_ISIInbandEPG = GUID(0xf90ad9d0, 0xb854, 0x4b68, [0x9c, 0xc1, 0xb2, 0xcc, 0x96, 0x11, 0x9d, 0x85]);
 interface ISIInbandEPG : IUnknown
 {
     HRESULT StartSIEPGScan();
     HRESULT StopSIEPGScan();
-    HRESULT IsSIEPGScanRunning(BOOL*);
+    HRESULT IsSIEPGScanRunning(BOOL* bRunning);
 }
 enum IID_IGuideDataEvent = GUID(0xefda0c80, 0xf395, 0x42c3, [0x9b, 0x3c, 0x56, 0xb3, 0x7d, 0xec, 0x7b, 0xb7]);
 interface IGuideDataEvent : IUnknown
 {
     HRESULT GuideDataAcquired();
-    HRESULT ProgramChanged(VARIANT);
-    HRESULT ServiceChanged(VARIANT);
-    HRESULT ScheduleEntryChanged(VARIANT);
-    HRESULT ProgramDeleted(VARIANT);
-    HRESULT ServiceDeleted(VARIANT);
-    HRESULT ScheduleDeleted(VARIANT);
+    HRESULT ProgramChanged(VARIANT varProgramDescriptionID);
+    HRESULT ServiceChanged(VARIANT varServiceDescriptionID);
+    HRESULT ScheduleEntryChanged(VARIANT varScheduleEntryDescriptionID);
+    HRESULT ProgramDeleted(VARIANT varProgramDescriptionID);
+    HRESULT ServiceDeleted(VARIANT varServiceDescriptionID);
+    HRESULT ScheduleDeleted(VARIANT varScheduleEntryDescriptionID);
 }
 enum IID_IGuideDataProperty = GUID(0x88ec5e58, 0xbb73, 0x41d6, [0x99, 0xce, 0x66, 0xc5, 0x24, 0xb8, 0xb5, 0x91]);
 interface IGuideDataProperty : IUnknown
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Language(int*);
-    HRESULT get_Value(VARIANT*);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT get_Language(int* idLang);
+    HRESULT get_Value(VARIANT* pvar);
 }
 enum IID_IEnumGuideDataProperties = GUID(0xae44423b, 0x4571, 0x475c, [0xad, 0x2c, 0xf4, 0xa, 0x77, 0x1d, 0x80, 0xef]);
 interface IEnumGuideDataProperties : IUnknown
 {
-    HRESULT Next(uint, IGuideDataProperty*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IGuideDataProperty* ppprop, uint* pcelt);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumGuideDataProperties*);
+    HRESULT Clone(IEnumGuideDataProperties* ppenum);
 }
 enum IID_IEnumTuneRequests = GUID(0x1993299c, 0xced6, 0x4788, [0x87, 0xa3, 0x42, 0x0, 0x67, 0xdc, 0xe0, 0xc7]);
 interface IEnumTuneRequests : IUnknown
 {
-    HRESULT Next(uint, ITuneRequest*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, ITuneRequest* ppprop, uint* pcelt);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumTuneRequests*);
+    HRESULT Clone(IEnumTuneRequests* ppenum);
 }
 enum IID_IGuideData = GUID(0x61571138, 0x5b01, 0x43cd, [0xae, 0xaf, 0x60, 0xb7, 0x84, 0xa0, 0xbf, 0x93]);
 interface IGuideData : IUnknown
 {
-    HRESULT GetServices(IEnumTuneRequests*);
-    HRESULT GetServiceProperties(ITuneRequest, IEnumGuideDataProperties*);
-    HRESULT GetGuideProgramIDs(IEnumVARIANT*);
-    HRESULT GetProgramProperties(VARIANT, IEnumGuideDataProperties*);
-    HRESULT GetScheduleEntryIDs(IEnumVARIANT*);
-    HRESULT GetScheduleEntryProperties(VARIANT, IEnumGuideDataProperties*);
+    HRESULT GetServices(IEnumTuneRequests* ppEnumTuneRequests);
+    HRESULT GetServiceProperties(ITuneRequest pTuneRequest, IEnumGuideDataProperties* ppEnumProperties);
+    HRESULT GetGuideProgramIDs(IEnumVARIANT* pEnumPrograms);
+    HRESULT GetProgramProperties(VARIANT varProgramDescriptionID, IEnumGuideDataProperties* ppEnumProperties);
+    HRESULT GetScheduleEntryIDs(IEnumVARIANT* pEnumScheduleEntries);
+    HRESULT GetScheduleEntryProperties(VARIANT varScheduleEntryDescriptionID, IEnumGuideDataProperties* ppEnumProperties);
 }
 enum IID_IGuideDataLoader = GUID(0x4764ff7c, 0xfa95, 0x4525, [0xaf, 0x4d, 0xd3, 0x22, 0x36, 0xdb, 0x9e, 0x38]);
 interface IGuideDataLoader : IUnknown
 {
-    HRESULT Init(IGuideData);
+    HRESULT Init(IGuideData pGuideStore);
     HRESULT Terminate();
 }
 enum CLSID_TIFLoad = GUID(0x14eb8748, 0x1753, 0x4393, [0x95, 0xae, 0x4f, 0x7e, 0x7a, 0x87, 0xaa, 0xd6]);

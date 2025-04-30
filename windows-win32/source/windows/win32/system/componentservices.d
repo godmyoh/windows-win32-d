@@ -1,7 +1,8 @@
 module windows.win32.system.componentservices;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, FILETIME, HRESULT, PSID, PWSTR, VARIANT_BOOL;
+import windows.win32.foundation : BOOL, BSTR, FILETIME, HRESULT, PWSTR, VARIANT_BOOL;
+import windows.win32.security : PSID;
 import windows.win32.system.com : APTTYPE, BLOB, IClassFactory, IDispatch, IUnknown, SAFEARRAY;
 import windows.win32.system.distributedtransactioncoordinator : ITransaction, ITransactionVoterBallotAsync2, ITransactionVoterNotifyAsync2;
 import windows.win32.system.variant : VARIANT;
@@ -9,15 +10,15 @@ import windows.win32.system.variant : VARIANT;
 version (Windows):
 extern (Windows):
 
-HRESULT CoGetDefaultContext(APTTYPE, const(GUID)*, void**);
-HRESULT CoCreateActivity(IUnknown, const(GUID)*, void**);
-HRESULT CoEnterServiceDomain(IUnknown);
-void CoLeaveServiceDomain(IUnknown);
-HRESULT GetManagedExtensions(uint*);
-void* SafeRef(const(GUID)*, IUnknown);
-HRESULT RecycleSurrogate(int);
-HRESULT MTSCreateActivity(const(GUID)*, void**);
-HRESULT GetDispenserManager(IDispenserManager*);
+HRESULT CoGetDefaultContext(APTTYPE aptType, const(GUID)* riid, void** ppv);
+HRESULT CoCreateActivity(IUnknown pIUnknown, const(GUID)* riid, void** ppObj);
+HRESULT CoEnterServiceDomain(IUnknown pConfigObject);
+void CoLeaveServiceDomain(IUnknown pUnkStatus);
+HRESULT GetManagedExtensions(uint* dwExts);
+void* SafeRef(const(GUID)* rid, IUnknown pUnk);
+HRESULT RecycleSurrogate(int lReasonCode);
+HRESULT MTSCreateActivity(const(GUID)* riid, void** ppobj);
+HRESULT GetDispenserManager(IDispenserManager* param0);
 enum TRACKER_STARTSTOP_EVENT = "Global\\COM+ Tracker Push Event";
 enum TRACKER_INIT_EVENT = "Global\\COM+ Tracker Init Event";
 enum GUID_STRING_SIZE = 0x00000028;
@@ -32,32 +33,32 @@ enum CRR_RECYCLED_FROM_UI = 0xfffffffb;
 enum IID_ICOMAdminCatalog = GUID(0xdd662187, 0xdfc2, 0x11d1, [0xa2, 0xcf, 0x0, 0x80, 0x5f, 0xc7, 0x92, 0x35]);
 interface ICOMAdminCatalog : IDispatch
 {
-    HRESULT GetCollection(BSTR, IDispatch*);
-    HRESULT Connect(BSTR, IDispatch*);
-    HRESULT get_MajorVersion(int*);
-    HRESULT get_MinorVersion(int*);
-    HRESULT GetCollectionByQuery(BSTR, SAFEARRAY**, IDispatch*);
-    HRESULT ImportComponent(BSTR, BSTR);
-    HRESULT InstallComponent(BSTR, BSTR, BSTR, BSTR);
-    HRESULT ShutdownApplication(BSTR);
-    HRESULT ExportApplication(BSTR, BSTR, COMAdminApplicationExportOptions);
-    HRESULT InstallApplication(BSTR, BSTR, COMAdminApplicationInstallOptions, BSTR, BSTR, BSTR);
+    HRESULT GetCollection(BSTR bstrCollName, IDispatch* ppCatalogCollection);
+    HRESULT Connect(BSTR bstrCatalogServerName, IDispatch* ppCatalogCollection);
+    HRESULT get_MajorVersion(int* plMajorVersion);
+    HRESULT get_MinorVersion(int* plMinorVersion);
+    HRESULT GetCollectionByQuery(BSTR bstrCollName, SAFEARRAY** ppsaVarQuery, IDispatch* ppCatalogCollection);
+    HRESULT ImportComponent(BSTR bstrApplIDOrName, BSTR bstrCLSIDOrProgID);
+    HRESULT InstallComponent(BSTR bstrApplIDOrName, BSTR bstrDLL, BSTR bstrTLB, BSTR bstrPSDLL);
+    HRESULT ShutdownApplication(BSTR bstrApplIDOrName);
+    HRESULT ExportApplication(BSTR bstrApplIDOrName, BSTR bstrApplicationFile, COMAdminApplicationExportOptions lOptions);
+    HRESULT InstallApplication(BSTR bstrApplicationFile, BSTR bstrDestinationDirectory, COMAdminApplicationInstallOptions lOptions, BSTR bstrUserId, BSTR bstrPassword, BSTR bstrRSN);
     HRESULT StopRouter();
     HRESULT RefreshRouter();
     HRESULT StartRouter();
     HRESULT Reserved1();
     HRESULT Reserved2();
-    HRESULT InstallMultipleComponents(BSTR, SAFEARRAY**, SAFEARRAY**);
-    HRESULT GetMultipleComponentsInfo(BSTR, SAFEARRAY**, SAFEARRAY**, SAFEARRAY**, SAFEARRAY**, SAFEARRAY**);
+    HRESULT InstallMultipleComponents(BSTR bstrApplIDOrName, SAFEARRAY** ppsaVarFileNames, SAFEARRAY** ppsaVarCLSIDs);
+    HRESULT GetMultipleComponentsInfo(BSTR bstrApplIdOrName, SAFEARRAY** ppsaVarFileNames, SAFEARRAY** ppsaVarCLSIDs, SAFEARRAY** ppsaVarClassNames, SAFEARRAY** ppsaVarFileFlags, SAFEARRAY** ppsaVarComponentFlags);
     HRESULT RefreshComponents();
-    HRESULT BackupREGDB(BSTR);
-    HRESULT RestoreREGDB(BSTR);
-    HRESULT QueryApplicationFile(BSTR, BSTR*, BSTR*, VARIANT_BOOL*, VARIANT_BOOL*, SAFEARRAY**);
-    HRESULT StartApplication(BSTR);
-    HRESULT ServiceCheck(int, int*);
-    HRESULT InstallMultipleEventClasses(BSTR, SAFEARRAY**, SAFEARRAY**);
-    HRESULT InstallEventClass(BSTR, BSTR, BSTR, BSTR);
-    HRESULT GetEventClassesForIID(BSTR, SAFEARRAY**, SAFEARRAY**, SAFEARRAY**);
+    HRESULT BackupREGDB(BSTR bstrBackupFilePath);
+    HRESULT RestoreREGDB(BSTR bstrBackupFilePath);
+    HRESULT QueryApplicationFile(BSTR bstrApplicationFile, BSTR* pbstrApplicationName, BSTR* pbstrApplicationDescription, VARIANT_BOOL* pbHasUsers, VARIANT_BOOL* pbIsProxy, SAFEARRAY** ppsaVarFileNames);
+    HRESULT StartApplication(BSTR bstrApplIdOrName);
+    HRESULT ServiceCheck(int lService, int* plStatus);
+    HRESULT InstallMultipleEventClasses(BSTR bstrApplIdOrName, SAFEARRAY** ppsaVarFileNames, SAFEARRAY** ppsaVarCLSIDS);
+    HRESULT InstallEventClass(BSTR bstrApplIdOrName, BSTR bstrDLL, BSTR bstrTLB, BSTR bstrPSDLL);
+    HRESULT GetEventClassesForIID(BSTR bstrIID, SAFEARRAY** ppsaVarCLSIDs, SAFEARRAY** ppsaVarProgIDs, SAFEARRAY** ppsaVarDescriptions);
 }
 alias COMAdminInUse = int;
 enum : int
@@ -73,68 +74,68 @@ enum : int
 enum IID_ICOMAdminCatalog2 = GUID(0x790c6e0b, 0x9194, 0x4cc9, [0x94, 0x26, 0xa4, 0x8a, 0x63, 0x18, 0x56, 0x96]);
 interface ICOMAdminCatalog2 : ICOMAdminCatalog
 {
-    HRESULT GetCollectionByQuery2(BSTR, VARIANT*, IDispatch*);
-    HRESULT GetApplicationInstanceIDFromProcessID(int, BSTR*);
-    HRESULT ShutdownApplicationInstances(VARIANT*);
-    HRESULT PauseApplicationInstances(VARIANT*);
-    HRESULT ResumeApplicationInstances(VARIANT*);
-    HRESULT RecycleApplicationInstances(VARIANT*, int);
-    HRESULT AreApplicationInstancesPaused(VARIANT*, VARIANT_BOOL*);
-    HRESULT DumpApplicationInstance(BSTR, BSTR, int, BSTR*);
-    HRESULT get_IsApplicationInstanceDumpSupported(VARIANT_BOOL*);
-    HRESULT CreateServiceForApplication(BSTR, BSTR, BSTR, BSTR, BSTR, BSTR, BSTR, VARIANT_BOOL);
-    HRESULT DeleteServiceForApplication(BSTR);
-    HRESULT GetPartitionID(BSTR, BSTR*);
-    HRESULT GetPartitionName(BSTR, BSTR*);
-    HRESULT put_CurrentPartition(BSTR);
-    HRESULT get_CurrentPartitionID(BSTR*);
-    HRESULT get_CurrentPartitionName(BSTR*);
-    HRESULT get_GlobalPartitionID(BSTR*);
+    HRESULT GetCollectionByQuery2(BSTR bstrCollectionName, VARIANT* pVarQueryStrings, IDispatch* ppCatalogCollection);
+    HRESULT GetApplicationInstanceIDFromProcessID(int lProcessID, BSTR* pbstrApplicationInstanceID);
+    HRESULT ShutdownApplicationInstances(VARIANT* pVarApplicationInstanceID);
+    HRESULT PauseApplicationInstances(VARIANT* pVarApplicationInstanceID);
+    HRESULT ResumeApplicationInstances(VARIANT* pVarApplicationInstanceID);
+    HRESULT RecycleApplicationInstances(VARIANT* pVarApplicationInstanceID, int lReasonCode);
+    HRESULT AreApplicationInstancesPaused(VARIANT* pVarApplicationInstanceID, VARIANT_BOOL* pVarBoolPaused);
+    HRESULT DumpApplicationInstance(BSTR bstrApplicationInstanceID, BSTR bstrDirectory, int lMaxImages, BSTR* pbstrDumpFile);
+    HRESULT get_IsApplicationInstanceDumpSupported(VARIANT_BOOL* pVarBoolDumpSupported);
+    HRESULT CreateServiceForApplication(BSTR bstrApplicationIDOrName, BSTR bstrServiceName, BSTR bstrStartType, BSTR bstrErrorControl, BSTR bstrDependencies, BSTR bstrRunAs, BSTR bstrPassword, VARIANT_BOOL bDesktopOk);
+    HRESULT DeleteServiceForApplication(BSTR bstrApplicationIDOrName);
+    HRESULT GetPartitionID(BSTR bstrApplicationIDOrName, BSTR* pbstrPartitionID);
+    HRESULT GetPartitionName(BSTR bstrApplicationIDOrName, BSTR* pbstrPartitionName);
+    HRESULT put_CurrentPartition(BSTR bstrPartitionIDOrName);
+    HRESULT get_CurrentPartitionID(BSTR* pbstrPartitionID);
+    HRESULT get_CurrentPartitionName(BSTR* pbstrPartitionName);
+    HRESULT get_GlobalPartitionID(BSTR* pbstrGlobalPartitionID);
     HRESULT FlushPartitionCache();
-    HRESULT CopyApplications(BSTR, VARIANT*, BSTR);
-    HRESULT CopyComponents(BSTR, VARIANT*, BSTR);
-    HRESULT MoveComponents(BSTR, VARIANT*, BSTR);
-    HRESULT AliasComponent(BSTR, BSTR, BSTR, BSTR, BSTR);
-    HRESULT IsSafeToDelete(BSTR, COMAdminInUse*);
-    HRESULT ImportUnconfiguredComponents(BSTR, VARIANT*, VARIANT*);
-    HRESULT PromoteUnconfiguredComponents(BSTR, VARIANT*, VARIANT*);
-    HRESULT ImportComponents(BSTR, VARIANT*, VARIANT*);
-    HRESULT get_Is64BitCatalogServer(VARIANT_BOOL*);
-    HRESULT ExportPartition(BSTR, BSTR, COMAdminApplicationExportOptions);
-    HRESULT InstallPartition(BSTR, BSTR, COMAdminApplicationInstallOptions, BSTR, BSTR, BSTR);
-    HRESULT QueryApplicationFile2(BSTR, IDispatch*);
-    HRESULT GetComponentVersionCount(BSTR, int*);
+    HRESULT CopyApplications(BSTR bstrSourcePartitionIDOrName, VARIANT* pVarApplicationID, BSTR bstrDestinationPartitionIDOrName);
+    HRESULT CopyComponents(BSTR bstrSourceApplicationIDOrName, VARIANT* pVarCLSIDOrProgID, BSTR bstrDestinationApplicationIDOrName);
+    HRESULT MoveComponents(BSTR bstrSourceApplicationIDOrName, VARIANT* pVarCLSIDOrProgID, BSTR bstrDestinationApplicationIDOrName);
+    HRESULT AliasComponent(BSTR bstrSrcApplicationIDOrName, BSTR bstrCLSIDOrProgID, BSTR bstrDestApplicationIDOrName, BSTR bstrNewProgId, BSTR bstrNewClsid);
+    HRESULT IsSafeToDelete(BSTR bstrDllName, COMAdminInUse* pCOMAdminInUse);
+    HRESULT ImportUnconfiguredComponents(BSTR bstrApplicationIDOrName, VARIANT* pVarCLSIDOrProgID, VARIANT* pVarComponentType);
+    HRESULT PromoteUnconfiguredComponents(BSTR bstrApplicationIDOrName, VARIANT* pVarCLSIDOrProgID, VARIANT* pVarComponentType);
+    HRESULT ImportComponents(BSTR bstrApplicationIDOrName, VARIANT* pVarCLSIDOrProgID, VARIANT* pVarComponentType);
+    HRESULT get_Is64BitCatalogServer(VARIANT_BOOL* pbIs64Bit);
+    HRESULT ExportPartition(BSTR bstrPartitionIDOrName, BSTR bstrPartitionFileName, COMAdminApplicationExportOptions lOptions);
+    HRESULT InstallPartition(BSTR bstrFileName, BSTR bstrDestDirectory, COMAdminApplicationInstallOptions lOptions, BSTR bstrUserID, BSTR bstrPassword, BSTR bstrRSN);
+    HRESULT QueryApplicationFile2(BSTR bstrApplicationFile, IDispatch* ppFilesForImport);
+    HRESULT GetComponentVersionCount(BSTR bstrCLSIDOrProgID, int* plVersionCount);
 }
 enum IID_ICatalogObject = GUID(0x6eb22871, 0x8a19, 0x11d0, [0x81, 0xb6, 0x0, 0xa0, 0xc9, 0x23, 0x1c, 0x29]);
 interface ICatalogObject : IDispatch
 {
-    HRESULT get_Value(BSTR, VARIANT*);
-    HRESULT put_Value(BSTR, VARIANT);
-    HRESULT get_Key(VARIANT*);
-    HRESULT get_Name(VARIANT*);
-    HRESULT IsPropertyReadOnly(BSTR, VARIANT_BOOL*);
-    HRESULT get_Valid(VARIANT_BOOL*);
-    HRESULT IsPropertyWriteOnly(BSTR, VARIANT_BOOL*);
+    HRESULT get_Value(BSTR bstrPropName, VARIANT* pvarRetVal);
+    HRESULT put_Value(BSTR bstrPropName, VARIANT val);
+    HRESULT get_Key(VARIANT* pvarRetVal);
+    HRESULT get_Name(VARIANT* pvarRetVal);
+    HRESULT IsPropertyReadOnly(BSTR bstrPropName, VARIANT_BOOL* pbRetVal);
+    HRESULT get_Valid(VARIANT_BOOL* pbRetVal);
+    HRESULT IsPropertyWriteOnly(BSTR bstrPropName, VARIANT_BOOL* pbRetVal);
 }
 enum IID_ICatalogCollection = GUID(0x6eb22872, 0x8a19, 0x11d0, [0x81, 0xb6, 0x0, 0xa0, 0xc9, 0x23, 0x1c, 0x29]);
 interface ICatalogCollection : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(int, IDispatch*);
-    HRESULT get_Count(int*);
-    HRESULT Remove(int);
-    HRESULT Add(IDispatch*);
+    HRESULT get__NewEnum(IUnknown* ppEnumVariant);
+    HRESULT get_Item(int lIndex, IDispatch* ppCatalogObject);
+    HRESULT get_Count(int* plObjectCount);
+    HRESULT Remove(int lIndex);
+    HRESULT Add(IDispatch* ppCatalogObject);
     HRESULT Populate();
-    HRESULT SaveChanges(int*);
-    HRESULT GetCollection(BSTR, VARIANT, IDispatch*);
-    HRESULT get_Name(VARIANT*);
-    HRESULT get_AddEnabled(VARIANT_BOOL*);
-    HRESULT get_RemoveEnabled(VARIANT_BOOL*);
-    HRESULT GetUtilInterface(IDispatch*);
-    HRESULT get_DataStoreMajorVersion(int*);
-    HRESULT get_DataStoreMinorVersion(int*);
-    HRESULT PopulateByKey(SAFEARRAY*);
-    HRESULT PopulateByQuery(BSTR, int);
+    HRESULT SaveChanges(int* pcChanges);
+    HRESULT GetCollection(BSTR bstrCollName, VARIANT varObjectKey, IDispatch* ppCatalogCollection);
+    HRESULT get_Name(VARIANT* pVarNamel);
+    HRESULT get_AddEnabled(VARIANT_BOOL* pVarBool);
+    HRESULT get_RemoveEnabled(VARIANT_BOOL* pVarBool);
+    HRESULT GetUtilInterface(IDispatch* ppIDispatch);
+    HRESULT get_DataStoreMajorVersion(int* plMajorVersion);
+    HRESULT get_DataStoreMinorVersion(int* plMinorVersionl);
+    HRESULT PopulateByKey(SAFEARRAY* psaKeys);
+    HRESULT PopulateByQuery(BSTR bstrQueryString, int lQueryType);
 }
 alias COMAdminComponentType = int;
 enum : int
@@ -458,101 +459,101 @@ struct COMAdminCatalogCollection
 enum IID_ISecurityIdentityColl = GUID(0xcafc823c, 0xb441, 0x11d1, [0xb8, 0x2b, 0x0, 0x0, 0xf8, 0x75, 0x7e, 0x2a]);
 interface ISecurityIdentityColl : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get_Item(BSTR, VARIANT*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get_Item(BSTR name, VARIANT* pItem);
+    HRESULT get__NewEnum(IUnknown* ppEnum);
 }
 enum IID_ISecurityCallersColl = GUID(0xcafc823d, 0xb441, 0x11d1, [0xb8, 0x2b, 0x0, 0x0, 0xf8, 0x75, 0x7e, 0x2a]);
 interface ISecurityCallersColl : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get_Item(int, ISecurityIdentityColl*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get_Item(int lIndex, ISecurityIdentityColl* pObj);
+    HRESULT get__NewEnum(IUnknown* ppEnum);
 }
 enum IID_ISecurityCallContext = GUID(0xcafc823e, 0xb441, 0x11d1, [0xb8, 0x2b, 0x0, 0x0, 0xf8, 0x75, 0x7e, 0x2a]);
 interface ISecurityCallContext : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get_Item(BSTR, VARIANT*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT IsCallerInRole(BSTR, VARIANT_BOOL*);
-    HRESULT IsSecurityEnabled(VARIANT_BOOL*);
-    HRESULT IsUserInRole(VARIANT*, BSTR, VARIANT_BOOL*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get_Item(BSTR name, VARIANT* pItem);
+    HRESULT get__NewEnum(IUnknown* ppEnum);
+    HRESULT IsCallerInRole(BSTR bstrRole, VARIANT_BOOL* pfInRole);
+    HRESULT IsSecurityEnabled(VARIANT_BOOL* pfIsEnabled);
+    HRESULT IsUserInRole(VARIANT* pUser, BSTR bstrRole, VARIANT_BOOL* pfInRole);
 }
 enum IID_IGetSecurityCallContext = GUID(0xcafc823f, 0xb441, 0x11d1, [0xb8, 0x2b, 0x0, 0x0, 0xf8, 0x75, 0x7e, 0x2a]);
 interface IGetSecurityCallContext : IDispatch
 {
-    HRESULT GetSecurityCallContext(ISecurityCallContext*);
+    HRESULT GetSecurityCallContext(ISecurityCallContext* ppObject);
 }
 enum IID_SecurityProperty = GUID(0xe74a7215, 0x14d, 0x11d1, [0xa6, 0x3c, 0x0, 0xa0, 0xc9, 0x11, 0xb4, 0xe0]);
 interface SecurityProperty : IDispatch
 {
-    HRESULT GetDirectCallerName(BSTR*);
-    HRESULT GetDirectCreatorName(BSTR*);
-    HRESULT GetOriginalCallerName(BSTR*);
-    HRESULT GetOriginalCreatorName(BSTR*);
+    HRESULT GetDirectCallerName(BSTR* bstrUserName);
+    HRESULT GetDirectCreatorName(BSTR* bstrUserName);
+    HRESULT GetOriginalCallerName(BSTR* bstrUserName);
+    HRESULT GetOriginalCreatorName(BSTR* bstrUserName);
 }
 enum IID_ContextInfo = GUID(0x19a5a02c, 0xac8, 0x11d2, [0xb2, 0x86, 0x0, 0xc0, 0x4f, 0x8e, 0xf9, 0x34]);
 interface ContextInfo : IDispatch
 {
-    HRESULT IsInTransaction(VARIANT_BOOL*);
-    HRESULT GetTransaction(IUnknown*);
-    HRESULT GetTransactionId(BSTR*);
-    HRESULT GetActivityId(BSTR*);
-    HRESULT GetContextId(BSTR*);
+    HRESULT IsInTransaction(VARIANT_BOOL* pbIsInTx);
+    HRESULT GetTransaction(IUnknown* ppTx);
+    HRESULT GetTransactionId(BSTR* pbstrTxId);
+    HRESULT GetActivityId(BSTR* pbstrActivityId);
+    HRESULT GetContextId(BSTR* pbstrCtxId);
 }
 enum IID_ContextInfo2 = GUID(0xc99d6e75, 0x2375, 0x11d4, [0x83, 0x31, 0x0, 0xc0, 0x4f, 0x60, 0x55, 0x88]);
 interface ContextInfo2 : ContextInfo
 {
-    HRESULT GetPartitionId(BSTR*);
-    HRESULT GetApplicationId(BSTR*);
-    HRESULT GetApplicationInstanceId(BSTR*);
+    HRESULT GetPartitionId(BSTR* __MIDL__ContextInfo20000);
+    HRESULT GetApplicationId(BSTR* __MIDL__ContextInfo20001);
+    HRESULT GetApplicationInstanceId(BSTR* __MIDL__ContextInfo20002);
 }
 enum IID_ObjectContext = GUID(0x74c08646, 0xcedb, 0x11cf, [0x8b, 0x49, 0x0, 0xaa, 0x0, 0xb8, 0xa7, 0x90]);
 interface ObjectContext : IDispatch
 {
-    HRESULT CreateInstance(BSTR, VARIANT*);
+    HRESULT CreateInstance(BSTR bstrProgID, VARIANT* pObject);
     HRESULT SetComplete();
     HRESULT SetAbort();
     HRESULT EnableCommit();
     HRESULT DisableCommit();
-    HRESULT IsInTransaction(VARIANT_BOOL*);
-    HRESULT IsSecurityEnabled(VARIANT_BOOL*);
-    HRESULT IsCallerInRole(BSTR, VARIANT_BOOL*);
-    HRESULT get_Count(int*);
-    HRESULT get_Item(BSTR, VARIANT*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Security(SecurityProperty*);
-    HRESULT get_ContextInfo(ContextInfo*);
+    HRESULT IsInTransaction(VARIANT_BOOL* pbIsInTx);
+    HRESULT IsSecurityEnabled(VARIANT_BOOL* pbIsEnabled);
+    HRESULT IsCallerInRole(BSTR bstrRole, VARIANT_BOOL* pbInRole);
+    HRESULT get_Count(int* plCount);
+    HRESULT get_Item(BSTR name, VARIANT* pItem);
+    HRESULT get__NewEnum(IUnknown* ppEnum);
+    HRESULT get_Security(SecurityProperty* ppSecurityProperty);
+    HRESULT get_ContextInfo(ContextInfo* ppContextInfo);
 }
 enum IID_ITransactionContextEx = GUID(0x7999fc22, 0xd3c6, 0x11cf, [0xac, 0xab, 0x0, 0xa0, 0x24, 0xa5, 0x5a, 0xef]);
 interface ITransactionContextEx : IUnknown
 {
-    HRESULT CreateInstance(const(GUID)*, const(GUID)*, void**);
+    HRESULT CreateInstance(const(GUID)* rclsid, const(GUID)* riid, void** pObject);
     HRESULT Commit();
     HRESULT Abort();
 }
 enum IID_ITransactionContext = GUID(0x7999fc21, 0xd3c6, 0x11cf, [0xac, 0xab, 0x0, 0xa0, 0x24, 0xa5, 0x5a, 0xef]);
 interface ITransactionContext : IDispatch
 {
-    HRESULT CreateInstance(BSTR, VARIANT*);
+    HRESULT CreateInstance(BSTR pszProgId, VARIANT* pObject);
     HRESULT Commit();
     HRESULT Abort();
 }
 enum IID_ICreateWithTransactionEx = GUID(0x455acf57, 0x5345, 0x11d2, [0x99, 0xcf, 0x0, 0xc0, 0x4f, 0x79, 0x7b, 0xc9]);
 interface ICreateWithTransactionEx : IUnknown
 {
-    HRESULT CreateInstance(ITransaction, const(GUID)*, const(GUID)*, void**);
+    HRESULT CreateInstance(ITransaction pTransaction, const(GUID)* rclsid, const(GUID)* riid, void** pObject);
 }
 enum IID_ICreateWithLocalTransaction = GUID(0x227ac7a8, 0x8423, 0x42ce, [0xb7, 0xcf, 0x3, 0x6, 0x1e, 0xc9, 0xaa, 0xa3]);
 interface ICreateWithLocalTransaction : IUnknown
 {
-    HRESULT CreateInstanceWithSysTx(IUnknown, const(GUID)*, const(GUID)*, void**);
+    HRESULT CreateInstanceWithSysTx(IUnknown pTransaction, const(GUID)* rclsid, const(GUID)* riid, void** pObject);
 }
 enum IID_ICreateWithTipTransactionEx = GUID(0x455acf59, 0x5345, 0x11d2, [0x99, 0xcf, 0x0, 0xc0, 0x4f, 0x79, 0x7b, 0xc9]);
 interface ICreateWithTipTransactionEx : IUnknown
 {
-    HRESULT CreateInstance(BSTR, const(GUID)*, const(GUID)*, void**);
+    HRESULT CreateInstance(BSTR bstrTipUrl, const(GUID)* rclsid, const(GUID)* riid, void** pObject);
 }
 struct COMSVCSEVENTINFO
 {
@@ -567,176 +568,176 @@ struct COMSVCSEVENTINFO
 enum IID_IComLTxEvents = GUID(0x605cf82c, 0x578e, 0x4298, [0x97, 0x5d, 0x82, 0xba, 0xbc, 0xd9, 0xe0, 0x53]);
 interface IComLTxEvents : IUnknown
 {
-    HRESULT OnLtxTransactionStart(COMSVCSEVENTINFO*, GUID, GUID, BOOL, int);
-    HRESULT OnLtxTransactionPrepare(COMSVCSEVENTINFO*, GUID, BOOL);
-    HRESULT OnLtxTransactionAbort(COMSVCSEVENTINFO*, GUID);
-    HRESULT OnLtxTransactionCommit(COMSVCSEVENTINFO*, GUID);
-    HRESULT OnLtxTransactionPromote(COMSVCSEVENTINFO*, GUID, GUID);
+    HRESULT OnLtxTransactionStart(COMSVCSEVENTINFO* pInfo, GUID guidLtx, GUID tsid, BOOL fRoot, int nIsolationLevel);
+    HRESULT OnLtxTransactionPrepare(COMSVCSEVENTINFO* pInfo, GUID guidLtx, BOOL fVote);
+    HRESULT OnLtxTransactionAbort(COMSVCSEVENTINFO* pInfo, GUID guidLtx);
+    HRESULT OnLtxTransactionCommit(COMSVCSEVENTINFO* pInfo, GUID guidLtx);
+    HRESULT OnLtxTransactionPromote(COMSVCSEVENTINFO* pInfo, GUID guidLtx, GUID txnId);
 }
 enum IID_IComUserEvent = GUID(0x683130a4, 0x2e50, 0x11d2, [0x98, 0xa5, 0x0, 0xc0, 0x4f, 0x8e, 0xe1, 0xc4]);
 interface IComUserEvent : IUnknown
 {
-    HRESULT OnUserEvent(COMSVCSEVENTINFO*, VARIANT*);
+    HRESULT OnUserEvent(COMSVCSEVENTINFO* pInfo, VARIANT* pvarEvent);
 }
 enum IID_IComThreadEvents = GUID(0x683130a5, 0x2e50, 0x11d2, [0x98, 0xa5, 0x0, 0xc0, 0x4f, 0x8e, 0xe1, 0xc4]);
 interface IComThreadEvents : IUnknown
 {
-    HRESULT OnThreadStart(COMSVCSEVENTINFO*, ulong, uint, uint);
-    HRESULT OnThreadTerminate(COMSVCSEVENTINFO*, ulong, uint, uint);
-    HRESULT OnThreadBindToApartment(COMSVCSEVENTINFO*, ulong, ulong, uint, uint);
-    HRESULT OnThreadUnBind(COMSVCSEVENTINFO*, ulong, ulong, uint);
-    HRESULT OnThreadWorkEnque(COMSVCSEVENTINFO*, ulong, ulong, uint);
-    HRESULT OnThreadWorkPrivate(COMSVCSEVENTINFO*, ulong, ulong);
-    HRESULT OnThreadWorkPublic(COMSVCSEVENTINFO*, ulong, ulong, uint);
-    HRESULT OnThreadWorkRedirect(COMSVCSEVENTINFO*, ulong, ulong, uint, ulong);
-    HRESULT OnThreadWorkReject(COMSVCSEVENTINFO*, ulong, ulong, uint);
-    HRESULT OnThreadAssignApartment(COMSVCSEVENTINFO*, const(GUID)*, ulong);
-    HRESULT OnThreadUnassignApartment(COMSVCSEVENTINFO*, ulong);
+    HRESULT OnThreadStart(COMSVCSEVENTINFO* pInfo, ulong ThreadID, uint dwThread, uint dwTheadCnt);
+    HRESULT OnThreadTerminate(COMSVCSEVENTINFO* pInfo, ulong ThreadID, uint dwThread, uint dwTheadCnt);
+    HRESULT OnThreadBindToApartment(COMSVCSEVENTINFO* pInfo, ulong ThreadID, ulong AptID, uint dwActCnt, uint dwLowCnt);
+    HRESULT OnThreadUnBind(COMSVCSEVENTINFO* pInfo, ulong ThreadID, ulong AptID, uint dwActCnt);
+    HRESULT OnThreadWorkEnque(COMSVCSEVENTINFO* pInfo, ulong ThreadID, ulong MsgWorkID, uint QueueLen);
+    HRESULT OnThreadWorkPrivate(COMSVCSEVENTINFO* pInfo, ulong ThreadID, ulong MsgWorkID);
+    HRESULT OnThreadWorkPublic(COMSVCSEVENTINFO* pInfo, ulong ThreadID, ulong MsgWorkID, uint QueueLen);
+    HRESULT OnThreadWorkRedirect(COMSVCSEVENTINFO* pInfo, ulong ThreadID, ulong MsgWorkID, uint QueueLen, ulong ThreadNum);
+    HRESULT OnThreadWorkReject(COMSVCSEVENTINFO* pInfo, ulong ThreadID, ulong MsgWorkID, uint QueueLen);
+    HRESULT OnThreadAssignApartment(COMSVCSEVENTINFO* pInfo, const(GUID)* guidActivity, ulong AptID);
+    HRESULT OnThreadUnassignApartment(COMSVCSEVENTINFO* pInfo, ulong AptID);
 }
 enum IID_IComAppEvents = GUID(0x683130a6, 0x2e50, 0x11d2, [0x98, 0xa5, 0x0, 0xc0, 0x4f, 0x8e, 0xe1, 0xc4]);
 interface IComAppEvents : IUnknown
 {
-    HRESULT OnAppActivation(COMSVCSEVENTINFO*, GUID);
-    HRESULT OnAppShutdown(COMSVCSEVENTINFO*, GUID);
-    HRESULT OnAppForceShutdown(COMSVCSEVENTINFO*, GUID);
+    HRESULT OnAppActivation(COMSVCSEVENTINFO* pInfo, GUID guidApp);
+    HRESULT OnAppShutdown(COMSVCSEVENTINFO* pInfo, GUID guidApp);
+    HRESULT OnAppForceShutdown(COMSVCSEVENTINFO* pInfo, GUID guidApp);
 }
 enum IID_IComInstanceEvents = GUID(0x683130a7, 0x2e50, 0x11d2, [0x98, 0xa5, 0x0, 0xc0, 0x4f, 0x8e, 0xe1, 0xc4]);
 interface IComInstanceEvents : IUnknown
 {
-    HRESULT OnObjectCreate(COMSVCSEVENTINFO*, const(GUID)*, const(GUID)*, const(GUID)*, ulong, ulong);
-    HRESULT OnObjectDestroy(COMSVCSEVENTINFO*, ulong);
+    HRESULT OnObjectCreate(COMSVCSEVENTINFO* pInfo, const(GUID)* guidActivity, const(GUID)* clsid, const(GUID)* tsid, ulong CtxtID, ulong ObjectID);
+    HRESULT OnObjectDestroy(COMSVCSEVENTINFO* pInfo, ulong CtxtID);
 }
 enum IID_IComTransactionEvents = GUID(0x683130a8, 0x2e50, 0x11d2, [0x98, 0xa5, 0x0, 0xc0, 0x4f, 0x8e, 0xe1, 0xc4]);
 interface IComTransactionEvents : IUnknown
 {
-    HRESULT OnTransactionStart(COMSVCSEVENTINFO*, const(GUID)*, const(GUID)*, BOOL);
-    HRESULT OnTransactionPrepare(COMSVCSEVENTINFO*, const(GUID)*, BOOL);
-    HRESULT OnTransactionAbort(COMSVCSEVENTINFO*, const(GUID)*);
-    HRESULT OnTransactionCommit(COMSVCSEVENTINFO*, const(GUID)*);
+    HRESULT OnTransactionStart(COMSVCSEVENTINFO* pInfo, const(GUID)* guidTx, const(GUID)* tsid, BOOL fRoot);
+    HRESULT OnTransactionPrepare(COMSVCSEVENTINFO* pInfo, const(GUID)* guidTx, BOOL fVoteYes);
+    HRESULT OnTransactionAbort(COMSVCSEVENTINFO* pInfo, const(GUID)* guidTx);
+    HRESULT OnTransactionCommit(COMSVCSEVENTINFO* pInfo, const(GUID)* guidTx);
 }
 enum IID_IComMethodEvents = GUID(0x683130a9, 0x2e50, 0x11d2, [0x98, 0xa5, 0x0, 0xc0, 0x4f, 0x8e, 0xe1, 0xc4]);
 interface IComMethodEvents : IUnknown
 {
-    HRESULT OnMethodCall(COMSVCSEVENTINFO*, ulong, const(GUID)*, const(GUID)*, uint);
-    HRESULT OnMethodReturn(COMSVCSEVENTINFO*, ulong, const(GUID)*, const(GUID)*, uint, HRESULT);
-    HRESULT OnMethodException(COMSVCSEVENTINFO*, ulong, const(GUID)*, const(GUID)*, uint);
+    HRESULT OnMethodCall(COMSVCSEVENTINFO* pInfo, ulong oid, const(GUID)* guidCid, const(GUID)* guidRid, uint iMeth);
+    HRESULT OnMethodReturn(COMSVCSEVENTINFO* pInfo, ulong oid, const(GUID)* guidCid, const(GUID)* guidRid, uint iMeth, HRESULT hresult);
+    HRESULT OnMethodException(COMSVCSEVENTINFO* pInfo, ulong oid, const(GUID)* guidCid, const(GUID)* guidRid, uint iMeth);
 }
 enum IID_IComObjectEvents = GUID(0x683130aa, 0x2e50, 0x11d2, [0x98, 0xa5, 0x0, 0xc0, 0x4f, 0x8e, 0xe1, 0xc4]);
 interface IComObjectEvents : IUnknown
 {
-    HRESULT OnObjectActivate(COMSVCSEVENTINFO*, ulong, ulong);
-    HRESULT OnObjectDeactivate(COMSVCSEVENTINFO*, ulong, ulong);
-    HRESULT OnDisableCommit(COMSVCSEVENTINFO*, ulong);
-    HRESULT OnEnableCommit(COMSVCSEVENTINFO*, ulong);
-    HRESULT OnSetComplete(COMSVCSEVENTINFO*, ulong);
-    HRESULT OnSetAbort(COMSVCSEVENTINFO*, ulong);
+    HRESULT OnObjectActivate(COMSVCSEVENTINFO* pInfo, ulong CtxtID, ulong ObjectID);
+    HRESULT OnObjectDeactivate(COMSVCSEVENTINFO* pInfo, ulong CtxtID, ulong ObjectID);
+    HRESULT OnDisableCommit(COMSVCSEVENTINFO* pInfo, ulong CtxtID);
+    HRESULT OnEnableCommit(COMSVCSEVENTINFO* pInfo, ulong CtxtID);
+    HRESULT OnSetComplete(COMSVCSEVENTINFO* pInfo, ulong CtxtID);
+    HRESULT OnSetAbort(COMSVCSEVENTINFO* pInfo, ulong CtxtID);
 }
 enum IID_IComResourceEvents = GUID(0x683130ab, 0x2e50, 0x11d2, [0x98, 0xa5, 0x0, 0xc0, 0x4f, 0x8e, 0xe1, 0xc4]);
 interface IComResourceEvents : IUnknown
 {
-    HRESULT OnResourceCreate(COMSVCSEVENTINFO*, ulong, const(wchar)*, ulong, BOOL);
-    HRESULT OnResourceAllocate(COMSVCSEVENTINFO*, ulong, const(wchar)*, ulong, BOOL, uint, uint);
-    HRESULT OnResourceRecycle(COMSVCSEVENTINFO*, ulong, const(wchar)*, ulong);
-    HRESULT OnResourceDestroy(COMSVCSEVENTINFO*, ulong, HRESULT, const(wchar)*, ulong);
-    HRESULT OnResourceTrack(COMSVCSEVENTINFO*, ulong, const(wchar)*, ulong, BOOL);
+    HRESULT OnResourceCreate(COMSVCSEVENTINFO* pInfo, ulong ObjectID, const(wchar)* pszType, ulong resId, BOOL enlisted);
+    HRESULT OnResourceAllocate(COMSVCSEVENTINFO* pInfo, ulong ObjectID, const(wchar)* pszType, ulong resId, BOOL enlisted, uint NumRated, uint Rating);
+    HRESULT OnResourceRecycle(COMSVCSEVENTINFO* pInfo, ulong ObjectID, const(wchar)* pszType, ulong resId);
+    HRESULT OnResourceDestroy(COMSVCSEVENTINFO* pInfo, ulong ObjectID, HRESULT hr, const(wchar)* pszType, ulong resId);
+    HRESULT OnResourceTrack(COMSVCSEVENTINFO* pInfo, ulong ObjectID, const(wchar)* pszType, ulong resId, BOOL enlisted);
 }
 enum IID_IComSecurityEvents = GUID(0x683130ac, 0x2e50, 0x11d2, [0x98, 0xa5, 0x0, 0xc0, 0x4f, 0x8e, 0xe1, 0xc4]);
 interface IComSecurityEvents : IUnknown
 {
-    HRESULT OnAuthenticate(COMSVCSEVENTINFO*, const(GUID)*, ulong, const(GUID)*, uint, uint, ubyte*, uint, ubyte*, BOOL);
-    HRESULT OnAuthenticateFail(COMSVCSEVENTINFO*, const(GUID)*, ulong, const(GUID)*, uint, uint, ubyte*, uint, ubyte*, BOOL);
+    HRESULT OnAuthenticate(COMSVCSEVENTINFO* pInfo, const(GUID)* guidActivity, ulong ObjectID, const(GUID)* guidIID, uint iMeth, uint cbByteOrig, ubyte* pSidOriginalUser, uint cbByteCur, ubyte* pSidCurrentUser, BOOL bCurrentUserInpersonatingInProc);
+    HRESULT OnAuthenticateFail(COMSVCSEVENTINFO* pInfo, const(GUID)* guidActivity, ulong ObjectID, const(GUID)* guidIID, uint iMeth, uint cbByteOrig, ubyte* pSidOriginalUser, uint cbByteCur, ubyte* pSidCurrentUser, BOOL bCurrentUserInpersonatingInProc);
 }
 enum IID_IComObjectPoolEvents = GUID(0x683130ad, 0x2e50, 0x11d2, [0x98, 0xa5, 0x0, 0xc0, 0x4f, 0x8e, 0xe1, 0xc4]);
 interface IComObjectPoolEvents : IUnknown
 {
-    HRESULT OnObjPoolPutObject(COMSVCSEVENTINFO*, const(GUID)*, int, uint, ulong);
-    HRESULT OnObjPoolGetObject(COMSVCSEVENTINFO*, const(GUID)*, const(GUID)*, uint, ulong);
-    HRESULT OnObjPoolRecycleToTx(COMSVCSEVENTINFO*, const(GUID)*, const(GUID)*, const(GUID)*, ulong);
-    HRESULT OnObjPoolGetFromTx(COMSVCSEVENTINFO*, const(GUID)*, const(GUID)*, const(GUID)*, ulong);
+    HRESULT OnObjPoolPutObject(COMSVCSEVENTINFO* pInfo, const(GUID)* guidObject, int nReason, uint dwAvailable, ulong oid);
+    HRESULT OnObjPoolGetObject(COMSVCSEVENTINFO* pInfo, const(GUID)* guidActivity, const(GUID)* guidObject, uint dwAvailable, ulong oid);
+    HRESULT OnObjPoolRecycleToTx(COMSVCSEVENTINFO* pInfo, const(GUID)* guidActivity, const(GUID)* guidObject, const(GUID)* guidTx, ulong objid);
+    HRESULT OnObjPoolGetFromTx(COMSVCSEVENTINFO* pInfo, const(GUID)* guidActivity, const(GUID)* guidObject, const(GUID)* guidTx, ulong objid);
 }
 enum IID_IComObjectPoolEvents2 = GUID(0x683130ae, 0x2e50, 0x11d2, [0x98, 0xa5, 0x0, 0xc0, 0x4f, 0x8e, 0xe1, 0xc4]);
 interface IComObjectPoolEvents2 : IUnknown
 {
-    HRESULT OnObjPoolCreateObject(COMSVCSEVENTINFO*, const(GUID)*, uint, ulong);
-    HRESULT OnObjPoolDestroyObject(COMSVCSEVENTINFO*, const(GUID)*, uint, ulong);
-    HRESULT OnObjPoolCreateDecision(COMSVCSEVENTINFO*, uint, uint, uint, uint, uint);
-    HRESULT OnObjPoolTimeout(COMSVCSEVENTINFO*, const(GUID)*, const(GUID)*, uint);
-    HRESULT OnObjPoolCreatePool(COMSVCSEVENTINFO*, const(GUID)*, uint, uint, uint);
+    HRESULT OnObjPoolCreateObject(COMSVCSEVENTINFO* pInfo, const(GUID)* guidObject, uint dwObjsCreated, ulong oid);
+    HRESULT OnObjPoolDestroyObject(COMSVCSEVENTINFO* pInfo, const(GUID)* guidObject, uint dwObjsCreated, ulong oid);
+    HRESULT OnObjPoolCreateDecision(COMSVCSEVENTINFO* pInfo, uint dwThreadsWaiting, uint dwAvail, uint dwCreated, uint dwMin, uint dwMax);
+    HRESULT OnObjPoolTimeout(COMSVCSEVENTINFO* pInfo, const(GUID)* guidObject, const(GUID)* guidActivity, uint dwTimeout);
+    HRESULT OnObjPoolCreatePool(COMSVCSEVENTINFO* pInfo, const(GUID)* guidObject, uint dwMin, uint dwMax, uint dwTimeout);
 }
 enum IID_IComObjectConstructionEvents = GUID(0x683130af, 0x2e50, 0x11d2, [0x98, 0xa5, 0x0, 0xc0, 0x4f, 0x8e, 0xe1, 0xc4]);
 interface IComObjectConstructionEvents : IUnknown
 {
-    HRESULT OnObjectConstruct(COMSVCSEVENTINFO*, const(GUID)*, const(wchar)*, ulong);
+    HRESULT OnObjectConstruct(COMSVCSEVENTINFO* pInfo, const(GUID)* guidObject, const(wchar)* sConstructString, ulong oid);
 }
 enum IID_IComActivityEvents = GUID(0x683130b0, 0x2e50, 0x11d2, [0x98, 0xa5, 0x0, 0xc0, 0x4f, 0x8e, 0xe1, 0xc4]);
 interface IComActivityEvents : IUnknown
 {
-    HRESULT OnActivityCreate(COMSVCSEVENTINFO*, const(GUID)*);
-    HRESULT OnActivityDestroy(COMSVCSEVENTINFO*, const(GUID)*);
-    HRESULT OnActivityEnter(COMSVCSEVENTINFO*, const(GUID)*, const(GUID)*, uint);
-    HRESULT OnActivityTimeout(COMSVCSEVENTINFO*, const(GUID)*, const(GUID)*, uint, uint);
-    HRESULT OnActivityReenter(COMSVCSEVENTINFO*, const(GUID)*, uint, uint);
-    HRESULT OnActivityLeave(COMSVCSEVENTINFO*, const(GUID)*, const(GUID)*);
-    HRESULT OnActivityLeaveSame(COMSVCSEVENTINFO*, const(GUID)*, uint);
+    HRESULT OnActivityCreate(COMSVCSEVENTINFO* pInfo, const(GUID)* guidActivity);
+    HRESULT OnActivityDestroy(COMSVCSEVENTINFO* pInfo, const(GUID)* guidActivity);
+    HRESULT OnActivityEnter(COMSVCSEVENTINFO* pInfo, const(GUID)* guidCurrent, const(GUID)* guidEntered, uint dwThread);
+    HRESULT OnActivityTimeout(COMSVCSEVENTINFO* pInfo, const(GUID)* guidCurrent, const(GUID)* guidEntered, uint dwThread, uint dwTimeout);
+    HRESULT OnActivityReenter(COMSVCSEVENTINFO* pInfo, const(GUID)* guidCurrent, uint dwThread, uint dwCallDepth);
+    HRESULT OnActivityLeave(COMSVCSEVENTINFO* pInfo, const(GUID)* guidCurrent, const(GUID)* guidLeft);
+    HRESULT OnActivityLeaveSame(COMSVCSEVENTINFO* pInfo, const(GUID)* guidCurrent, uint dwCallDepth);
 }
 enum IID_IComIdentityEvents = GUID(0x683130b1, 0x2e50, 0x11d2, [0x98, 0xa5, 0x0, 0xc0, 0x4f, 0x8e, 0xe1, 0xc4]);
 interface IComIdentityEvents : IUnknown
 {
-    HRESULT OnIISRequestInfo(COMSVCSEVENTINFO*, ulong, const(wchar)*, const(wchar)*, const(wchar)*);
+    HRESULT OnIISRequestInfo(COMSVCSEVENTINFO* pInfo, ulong ObjId, const(wchar)* pszClientIP, const(wchar)* pszServerIP, const(wchar)* pszURL);
 }
 enum IID_IComQCEvents = GUID(0x683130b2, 0x2e50, 0x11d2, [0x98, 0xa5, 0x0, 0xc0, 0x4f, 0x8e, 0xe1, 0xc4]);
 interface IComQCEvents : IUnknown
 {
-    HRESULT OnQCRecord(COMSVCSEVENTINFO*, ulong, PWSTR, const(GUID)*, const(GUID)*, HRESULT);
-    HRESULT OnQCQueueOpen(COMSVCSEVENTINFO*, PWSTR, ulong, HRESULT);
-    HRESULT OnQCReceive(COMSVCSEVENTINFO*, ulong, const(GUID)*, const(GUID)*, HRESULT);
-    HRESULT OnQCReceiveFail(COMSVCSEVENTINFO*, ulong, HRESULT);
-    HRESULT OnQCMoveToReTryQueue(COMSVCSEVENTINFO*, const(GUID)*, const(GUID)*, uint);
-    HRESULT OnQCMoveToDeadQueue(COMSVCSEVENTINFO*, const(GUID)*, const(GUID)*);
-    HRESULT OnQCPlayback(COMSVCSEVENTINFO*, ulong, const(GUID)*, const(GUID)*, HRESULT);
+    HRESULT OnQCRecord(COMSVCSEVENTINFO* pInfo, ulong objid, PWSTR szQueue, const(GUID)* guidMsgId, const(GUID)* guidWorkFlowId, HRESULT msmqhr);
+    HRESULT OnQCQueueOpen(COMSVCSEVENTINFO* pInfo, PWSTR szQueue, ulong QueueID, HRESULT hr);
+    HRESULT OnQCReceive(COMSVCSEVENTINFO* pInfo, ulong QueueID, const(GUID)* guidMsgId, const(GUID)* guidWorkFlowId, HRESULT hr);
+    HRESULT OnQCReceiveFail(COMSVCSEVENTINFO* pInfo, ulong QueueID, HRESULT msmqhr);
+    HRESULT OnQCMoveToReTryQueue(COMSVCSEVENTINFO* pInfo, const(GUID)* guidMsgId, const(GUID)* guidWorkFlowId, uint RetryIndex);
+    HRESULT OnQCMoveToDeadQueue(COMSVCSEVENTINFO* pInfo, const(GUID)* guidMsgId, const(GUID)* guidWorkFlowId);
+    HRESULT OnQCPlayback(COMSVCSEVENTINFO* pInfo, ulong objid, const(GUID)* guidMsgId, const(GUID)* guidWorkFlowId, HRESULT hr);
 }
 enum IID_IComExceptionEvents = GUID(0x683130b3, 0x2e50, 0x11d2, [0x98, 0xa5, 0x0, 0xc0, 0x4f, 0x8e, 0xe1, 0xc4]);
 interface IComExceptionEvents : IUnknown
 {
-    HRESULT OnExceptionUser(COMSVCSEVENTINFO*, uint, ulong, const(wchar)*);
+    HRESULT OnExceptionUser(COMSVCSEVENTINFO* pInfo, uint code, ulong address, const(wchar)* pszStackTrace);
 }
 enum IID_ILBEvents = GUID(0x683130b4, 0x2e50, 0x11d2, [0x98, 0xa5, 0x0, 0xc0, 0x4f, 0x8e, 0xe1, 0xc4]);
 interface ILBEvents : IUnknown
 {
-    HRESULT TargetUp(BSTR, BSTR);
-    HRESULT TargetDown(BSTR, BSTR);
-    HRESULT EngineDefined(BSTR, VARIANT*, BSTR);
+    HRESULT TargetUp(BSTR bstrServerName, BSTR bstrClsidEng);
+    HRESULT TargetDown(BSTR bstrServerName, BSTR bstrClsidEng);
+    HRESULT EngineDefined(BSTR bstrPropName, VARIANT* varPropValue, BSTR bstrClsidEng);
 }
 enum IID_IComCRMEvents = GUID(0x683130b5, 0x2e50, 0x11d2, [0x98, 0xa5, 0x0, 0xc0, 0x4f, 0x8e, 0xe1, 0xc4]);
 interface IComCRMEvents : IUnknown
 {
-    HRESULT OnCRMRecoveryStart(COMSVCSEVENTINFO*, GUID);
-    HRESULT OnCRMRecoveryDone(COMSVCSEVENTINFO*, GUID);
-    HRESULT OnCRMCheckpoint(COMSVCSEVENTINFO*, GUID);
-    HRESULT OnCRMBegin(COMSVCSEVENTINFO*, GUID, GUID, GUID, PWSTR, PWSTR);
-    HRESULT OnCRMPrepare(COMSVCSEVENTINFO*, GUID);
-    HRESULT OnCRMCommit(COMSVCSEVENTINFO*, GUID);
-    HRESULT OnCRMAbort(COMSVCSEVENTINFO*, GUID);
-    HRESULT OnCRMIndoubt(COMSVCSEVENTINFO*, GUID);
-    HRESULT OnCRMDone(COMSVCSEVENTINFO*, GUID);
-    HRESULT OnCRMRelease(COMSVCSEVENTINFO*, GUID);
-    HRESULT OnCRMAnalyze(COMSVCSEVENTINFO*, GUID, uint, uint);
-    HRESULT OnCRMWrite(COMSVCSEVENTINFO*, GUID, BOOL, uint);
-    HRESULT OnCRMForget(COMSVCSEVENTINFO*, GUID);
-    HRESULT OnCRMForce(COMSVCSEVENTINFO*, GUID);
-    HRESULT OnCRMDeliver(COMSVCSEVENTINFO*, GUID, BOOL, uint);
+    HRESULT OnCRMRecoveryStart(COMSVCSEVENTINFO* pInfo, GUID guidApp);
+    HRESULT OnCRMRecoveryDone(COMSVCSEVENTINFO* pInfo, GUID guidApp);
+    HRESULT OnCRMCheckpoint(COMSVCSEVENTINFO* pInfo, GUID guidApp);
+    HRESULT OnCRMBegin(COMSVCSEVENTINFO* pInfo, GUID guidClerkCLSID, GUID guidActivity, GUID guidTx, PWSTR szProgIdCompensator, PWSTR szDescription);
+    HRESULT OnCRMPrepare(COMSVCSEVENTINFO* pInfo, GUID guidClerkCLSID);
+    HRESULT OnCRMCommit(COMSVCSEVENTINFO* pInfo, GUID guidClerkCLSID);
+    HRESULT OnCRMAbort(COMSVCSEVENTINFO* pInfo, GUID guidClerkCLSID);
+    HRESULT OnCRMIndoubt(COMSVCSEVENTINFO* pInfo, GUID guidClerkCLSID);
+    HRESULT OnCRMDone(COMSVCSEVENTINFO* pInfo, GUID guidClerkCLSID);
+    HRESULT OnCRMRelease(COMSVCSEVENTINFO* pInfo, GUID guidClerkCLSID);
+    HRESULT OnCRMAnalyze(COMSVCSEVENTINFO* pInfo, GUID guidClerkCLSID, uint dwCrmRecordType, uint dwRecordSize);
+    HRESULT OnCRMWrite(COMSVCSEVENTINFO* pInfo, GUID guidClerkCLSID, BOOL fVariants, uint dwRecordSize);
+    HRESULT OnCRMForget(COMSVCSEVENTINFO* pInfo, GUID guidClerkCLSID);
+    HRESULT OnCRMForce(COMSVCSEVENTINFO* pInfo, GUID guidClerkCLSID);
+    HRESULT OnCRMDeliver(COMSVCSEVENTINFO* pInfo, GUID guidClerkCLSID, BOOL fVariants, uint dwRecordSize);
 }
 enum IID_IComMethod2Events = GUID(0xfb388aaa, 0x567d, 0x4024, [0xaf, 0x8e, 0x6e, 0x93, 0xee, 0x74, 0x85, 0x73]);
 interface IComMethod2Events : IUnknown
 {
-    HRESULT OnMethodCall2(COMSVCSEVENTINFO*, ulong, const(GUID)*, const(GUID)*, uint, uint);
-    HRESULT OnMethodReturn2(COMSVCSEVENTINFO*, ulong, const(GUID)*, const(GUID)*, uint, uint, HRESULT);
-    HRESULT OnMethodException2(COMSVCSEVENTINFO*, ulong, const(GUID)*, const(GUID)*, uint, uint);
+    HRESULT OnMethodCall2(COMSVCSEVENTINFO* pInfo, ulong oid, const(GUID)* guidCid, const(GUID)* guidRid, uint dwThread, uint iMeth);
+    HRESULT OnMethodReturn2(COMSVCSEVENTINFO* pInfo, ulong oid, const(GUID)* guidCid, const(GUID)* guidRid, uint dwThread, uint iMeth, HRESULT hresult);
+    HRESULT OnMethodException2(COMSVCSEVENTINFO* pInfo, ulong oid, const(GUID)* guidCid, const(GUID)* guidRid, uint dwThread, uint iMeth);
 }
 enum IID_IComTrackingInfoEvents = GUID(0x4e6cdcc9, 0xfb25, 0x4fd5, [0x9c, 0xc5, 0xc9, 0xf4, 0xb6, 0x55, 0x9c, 0xec]);
 interface IComTrackingInfoEvents : IUnknown
 {
-    HRESULT OnNewTrackingInfo(IUnknown);
+    HRESULT OnNewTrackingInfo(IUnknown pToplevelCollection);
 }
 alias TRACKING_COLL_TYPE = int;
 enum : int
@@ -749,110 +750,110 @@ enum : int
 enum IID_IComTrackingInfoCollection = GUID(0xc266c677, 0xc9ad, 0x49ab, [0x9f, 0xd9, 0xd9, 0x66, 0x10, 0x78, 0x58, 0x8a]);
 interface IComTrackingInfoCollection : IUnknown
 {
-    HRESULT Type(TRACKING_COLL_TYPE*);
-    HRESULT Count(uint*);
-    HRESULT Item(uint, const(GUID)*, void**);
+    HRESULT Type(TRACKING_COLL_TYPE* pType);
+    HRESULT Count(uint* pCount);
+    HRESULT Item(uint ulIndex, const(GUID)* riid, void** ppv);
 }
 enum IID_IComTrackingInfoObject = GUID(0x116e42c5, 0xd8b1, 0x47bf, [0xab, 0x1e, 0xc8, 0x95, 0xed, 0x3e, 0x23, 0x72]);
 interface IComTrackingInfoObject : IUnknown
 {
-    HRESULT GetValue(PWSTR, VARIANT*);
+    HRESULT GetValue(PWSTR szPropertyName, VARIANT* pvarOut);
 }
 enum IID_IComTrackingInfoProperties = GUID(0x789b42be, 0x6f6b, 0x443a, [0x89, 0x8e, 0x67, 0xab, 0xf3, 0x90, 0xaa, 0x14]);
 interface IComTrackingInfoProperties : IUnknown
 {
-    HRESULT PropCount(uint*);
-    HRESULT GetPropName(uint, PWSTR*);
+    HRESULT PropCount(uint* pCount);
+    HRESULT GetPropName(uint ulIndex, PWSTR* ppszPropName);
 }
 enum IID_IComApp2Events = GUID(0x1290bc1a, 0xb219, 0x418d, [0xb0, 0x78, 0x59, 0x34, 0xde, 0xd0, 0x82, 0x42]);
 interface IComApp2Events : IUnknown
 {
-    HRESULT OnAppActivation2(COMSVCSEVENTINFO*, GUID, GUID);
-    HRESULT OnAppShutdown2(COMSVCSEVENTINFO*, GUID);
-    HRESULT OnAppForceShutdown2(COMSVCSEVENTINFO*, GUID);
-    HRESULT OnAppPaused2(COMSVCSEVENTINFO*, GUID, BOOL);
-    HRESULT OnAppRecycle2(COMSVCSEVENTINFO*, GUID, GUID, int);
+    HRESULT OnAppActivation2(COMSVCSEVENTINFO* pInfo, GUID guidApp, GUID guidProcess);
+    HRESULT OnAppShutdown2(COMSVCSEVENTINFO* pInfo, GUID guidApp);
+    HRESULT OnAppForceShutdown2(COMSVCSEVENTINFO* pInfo, GUID guidApp);
+    HRESULT OnAppPaused2(COMSVCSEVENTINFO* pInfo, GUID guidApp, BOOL bPaused);
+    HRESULT OnAppRecycle2(COMSVCSEVENTINFO* pInfo, GUID guidApp, GUID guidProcess, int lReason);
 }
 enum IID_IComTransaction2Events = GUID(0xa136f62a, 0x2f94, 0x4288, [0x86, 0xe0, 0xd8, 0xa1, 0xfa, 0x4c, 0x2, 0x99]);
 interface IComTransaction2Events : IUnknown
 {
-    HRESULT OnTransactionStart2(COMSVCSEVENTINFO*, const(GUID)*, const(GUID)*, BOOL, int);
-    HRESULT OnTransactionPrepare2(COMSVCSEVENTINFO*, const(GUID)*, BOOL);
-    HRESULT OnTransactionAbort2(COMSVCSEVENTINFO*, const(GUID)*);
-    HRESULT OnTransactionCommit2(COMSVCSEVENTINFO*, const(GUID)*);
+    HRESULT OnTransactionStart2(COMSVCSEVENTINFO* pInfo, const(GUID)* guidTx, const(GUID)* tsid, BOOL fRoot, int nIsolationLevel);
+    HRESULT OnTransactionPrepare2(COMSVCSEVENTINFO* pInfo, const(GUID)* guidTx, BOOL fVoteYes);
+    HRESULT OnTransactionAbort2(COMSVCSEVENTINFO* pInfo, const(GUID)* guidTx);
+    HRESULT OnTransactionCommit2(COMSVCSEVENTINFO* pInfo, const(GUID)* guidTx);
 }
 enum IID_IComInstance2Events = GUID(0x20e3bf07, 0xb506, 0x4ad5, [0xa5, 0xc, 0xd2, 0xca, 0x5b, 0x9c, 0x15, 0x8e]);
 interface IComInstance2Events : IUnknown
 {
-    HRESULT OnObjectCreate2(COMSVCSEVENTINFO*, const(GUID)*, const(GUID)*, const(GUID)*, ulong, ulong, const(GUID)*);
-    HRESULT OnObjectDestroy2(COMSVCSEVENTINFO*, ulong);
+    HRESULT OnObjectCreate2(COMSVCSEVENTINFO* pInfo, const(GUID)* guidActivity, const(GUID)* clsid, const(GUID)* tsid, ulong CtxtID, ulong ObjectID, const(GUID)* guidPartition);
+    HRESULT OnObjectDestroy2(COMSVCSEVENTINFO* pInfo, ulong CtxtID);
 }
 enum IID_IComObjectPool2Events = GUID(0x65bf6534, 0x85ea, 0x4f64, [0x8c, 0xf4, 0x3d, 0x97, 0x4b, 0x2a, 0xb1, 0xcf]);
 interface IComObjectPool2Events : IUnknown
 {
-    HRESULT OnObjPoolPutObject2(COMSVCSEVENTINFO*, const(GUID)*, int, uint, ulong);
-    HRESULT OnObjPoolGetObject2(COMSVCSEVENTINFO*, const(GUID)*, const(GUID)*, uint, ulong, const(GUID)*);
-    HRESULT OnObjPoolRecycleToTx2(COMSVCSEVENTINFO*, const(GUID)*, const(GUID)*, const(GUID)*, ulong);
-    HRESULT OnObjPoolGetFromTx2(COMSVCSEVENTINFO*, const(GUID)*, const(GUID)*, const(GUID)*, ulong, const(GUID)*);
+    HRESULT OnObjPoolPutObject2(COMSVCSEVENTINFO* pInfo, const(GUID)* guidObject, int nReason, uint dwAvailable, ulong oid);
+    HRESULT OnObjPoolGetObject2(COMSVCSEVENTINFO* pInfo, const(GUID)* guidActivity, const(GUID)* guidObject, uint dwAvailable, ulong oid, const(GUID)* guidPartition);
+    HRESULT OnObjPoolRecycleToTx2(COMSVCSEVENTINFO* pInfo, const(GUID)* guidActivity, const(GUID)* guidObject, const(GUID)* guidTx, ulong objid);
+    HRESULT OnObjPoolGetFromTx2(COMSVCSEVENTINFO* pInfo, const(GUID)* guidActivity, const(GUID)* guidObject, const(GUID)* guidTx, ulong objid, const(GUID)* guidPartition);
 }
 enum IID_IComObjectConstruction2Events = GUID(0x4b5a7827, 0x8df2, 0x45c0, [0x8f, 0x6f, 0x57, 0xea, 0x1f, 0x85, 0x6a, 0x9f]);
 interface IComObjectConstruction2Events : IUnknown
 {
-    HRESULT OnObjectConstruct2(COMSVCSEVENTINFO*, const(GUID)*, const(wchar)*, ulong, const(GUID)*);
+    HRESULT OnObjectConstruct2(COMSVCSEVENTINFO* pInfo, const(GUID)* guidObject, const(wchar)* sConstructString, ulong oid, const(GUID)* guidPartition);
 }
 enum IID_ISystemAppEventData = GUID(0xd6d48a3c, 0xd5c5, 0x49e7, [0x8c, 0x74, 0x99, 0xe4, 0x88, 0x9e, 0xd5, 0x2f]);
 interface ISystemAppEventData : IUnknown
 {
     HRESULT Startup();
-    HRESULT OnDataChanged(uint, uint, uint, BSTR, uint, ulong);
+    HRESULT OnDataChanged(uint dwPID, uint dwMask, uint dwNumberSinks, BSTR bstrDwMethodMask, uint dwReason, ulong u64TraceHandle);
 }
 enum IID_IMtsEvents = GUID(0xbacedf4d, 0x74ab, 0x11d0, [0xb1, 0x62, 0x0, 0xaa, 0x0, 0xba, 0x32, 0x58]);
 interface IMtsEvents : IDispatch
 {
-    HRESULT get_PackageName(BSTR*);
-    HRESULT get_PackageGuid(BSTR*);
-    HRESULT PostEvent(VARIANT*);
-    HRESULT get_FireEvents(VARIANT_BOOL*);
-    HRESULT GetProcessID(int*);
+    HRESULT get_PackageName(BSTR* pVal);
+    HRESULT get_PackageGuid(BSTR* pVal);
+    HRESULT PostEvent(VARIANT* vEvent);
+    HRESULT get_FireEvents(VARIANT_BOOL* pVal);
+    HRESULT GetProcessID(int* id);
 }
 enum IID_IMtsEventInfo = GUID(0xd56c3dc1, 0x8482, 0x11d0, [0xb1, 0x70, 0x0, 0xaa, 0x0, 0xba, 0x32, 0x58]);
 interface IMtsEventInfo : IDispatch
 {
-    HRESULT get_Names(IUnknown*);
-    HRESULT get_DisplayName(BSTR*);
-    HRESULT get_EventID(BSTR*);
-    HRESULT get_Count(int*);
-    HRESULT get_Value(BSTR, VARIANT*);
+    HRESULT get_Names(IUnknown* pUnk);
+    HRESULT get_DisplayName(BSTR* sDisplayName);
+    HRESULT get_EventID(BSTR* sGuidEventID);
+    HRESULT get_Count(int* lCount);
+    HRESULT get_Value(BSTR sKey, VARIANT* pVal);
 }
 enum IID_IMTSLocator = GUID(0xd19b8bfd, 0x7f88, 0x11d0, [0xb1, 0x6e, 0x0, 0xaa, 0x0, 0xba, 0x32, 0x58]);
 interface IMTSLocator : IDispatch
 {
-    HRESULT GetEventDispatcher(IUnknown*);
+    HRESULT GetEventDispatcher(IUnknown* pUnk);
 }
 enum IID_IMtsGrp = GUID(0x4b2e958c, 0x393, 0x11d1, [0xb1, 0xab, 0x0, 0xaa, 0x0, 0xba, 0x32, 0x58]);
 interface IMtsGrp : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT Item(int, IUnknown*);
+    HRESULT get_Count(int* pVal);
+    HRESULT Item(int lIndex, IUnknown* ppUnkDispatcher);
     HRESULT Refresh();
 }
 enum IID_IMessageMover = GUID(0x588a085a, 0xb795, 0x11d1, [0x80, 0x54, 0x0, 0xc0, 0x4f, 0xc3, 0x40, 0xee]);
 interface IMessageMover : IDispatch
 {
-    HRESULT get_SourcePath(BSTR*);
-    HRESULT put_SourcePath(BSTR);
-    HRESULT get_DestPath(BSTR*);
-    HRESULT put_DestPath(BSTR);
-    HRESULT get_CommitBatchSize(int*);
-    HRESULT put_CommitBatchSize(int);
-    HRESULT MoveMessages(int*);
+    HRESULT get_SourcePath(BSTR* pVal);
+    HRESULT put_SourcePath(BSTR newVal);
+    HRESULT get_DestPath(BSTR* pVal);
+    HRESULT put_DestPath(BSTR newVal);
+    HRESULT get_CommitBatchSize(int* pVal);
+    HRESULT put_CommitBatchSize(int newVal);
+    HRESULT MoveMessages(int* plMessagesMoved);
 }
 enum IID_IEventServerTrace = GUID(0x9a9f12b8, 0x80af, 0x47ab, [0xa5, 0x79, 0x35, 0xea, 0x57, 0x72, 0x53, 0x70]);
 interface IEventServerTrace : IDispatch
 {
-    HRESULT StartTraceGuid(BSTR, BSTR, int);
-    HRESULT StopTraceGuid(BSTR, BSTR, int);
-    HRESULT EnumTraceGuid(int*, BSTR*);
+    HRESULT StartTraceGuid(BSTR bstrguidEvent, BSTR bstrguidFilter, int lPidFilter);
+    HRESULT StopTraceGuid(BSTR bstrguidEvent, BSTR bstrguidFilter, int lPidFilter);
+    HRESULT EnumTraceGuid(int* plCntGuids, BSTR* pbstrGuidList);
 }
 struct RECYCLE_INFO
 {
@@ -1023,75 +1024,75 @@ struct ComponentHangMonitorInfo
 enum IID_IGetAppTrackerData = GUID(0x507c3ac8, 0x3e12, 0x4cb0, [0x93, 0x66, 0x65, 0x3d, 0x3e, 0x5, 0x6, 0x38]);
 interface IGetAppTrackerData : IUnknown
 {
-    HRESULT GetApplicationProcesses(const(GUID)*, const(GUID)*, uint, uint*, ApplicationProcessSummary**);
-    HRESULT GetApplicationProcessDetails(const(GUID)*, uint, uint, ApplicationProcessSummary*, ApplicationProcessStatistics*, ApplicationProcessRecycleInfo*, BOOL*);
-    HRESULT GetApplicationsInProcess(const(GUID)*, uint, const(GUID)*, uint, uint*, ApplicationSummary**);
-    HRESULT GetComponentsInProcess(const(GUID)*, uint, const(GUID)*, const(GUID)*, uint, uint*, ComponentSummary**);
-    HRESULT GetComponentDetails(const(GUID)*, uint, const(GUID)*, uint, ComponentSummary*, ComponentStatistics*, ComponentHangMonitorInfo*);
-    HRESULT GetTrackerDataAsCollectionObject(IUnknown*);
-    HRESULT GetSuggestedPollingInterval(uint*);
+    HRESULT GetApplicationProcesses(const(GUID)* PartitionId, const(GUID)* ApplicationId, uint Flags, uint* NumApplicationProcesses, ApplicationProcessSummary** ApplicationProcesses);
+    HRESULT GetApplicationProcessDetails(const(GUID)* ApplicationInstanceId, uint ProcessId, uint Flags, ApplicationProcessSummary* Summary, ApplicationProcessStatistics* Statistics, ApplicationProcessRecycleInfo* RecycleInfo, BOOL* AnyComponentsHangMonitored);
+    HRESULT GetApplicationsInProcess(const(GUID)* ApplicationInstanceId, uint ProcessId, const(GUID)* PartitionId, uint Flags, uint* NumApplicationsInProcess, ApplicationSummary** Applications);
+    HRESULT GetComponentsInProcess(const(GUID)* ApplicationInstanceId, uint ProcessId, const(GUID)* PartitionId, const(GUID)* ApplicationId, uint Flags, uint* NumComponentsInProcess, ComponentSummary** Components);
+    HRESULT GetComponentDetails(const(GUID)* ApplicationInstanceId, uint ProcessId, const(GUID)* Clsid, uint Flags, ComponentSummary* Summary, ComponentStatistics* Statistics, ComponentHangMonitorInfo* HangMonitorInfo);
+    HRESULT GetTrackerDataAsCollectionObject(IUnknown* TopLevelCollection);
+    HRESULT GetSuggestedPollingInterval(uint* PollingIntervalInSeconds);
 }
 enum IID_IDispenserManager = GUID(0x5cb31e10, 0x2b5f, 0x11cf, [0xbe, 0x10, 0x0, 0xaa, 0x0, 0xa2, 0xfa, 0x25]);
 interface IDispenserManager : IUnknown
 {
-    HRESULT RegisterDispenser(IDispenserDriver, const(wchar)*, IHolder*);
-    HRESULT GetContext(ulong*, ulong*);
+    HRESULT RegisterDispenser(IDispenserDriver __MIDL__IDispenserManager0000, const(wchar)* szDispenserName, IHolder* __MIDL__IDispenserManager0001);
+    HRESULT GetContext(ulong* __MIDL__IDispenserManager0002, ulong* __MIDL__IDispenserManager0003);
 }
 enum IID_IHolder = GUID(0xbf6a1850, 0x2b45, 0x11cf, [0xbe, 0x10, 0x0, 0xaa, 0x0, 0xa2, 0xfa, 0x25]);
 interface IHolder : IUnknown
 {
-    HRESULT AllocResource(const(ulong), ulong*);
-    HRESULT FreeResource(const(ulong));
-    HRESULT TrackResource(const(ulong));
-    HRESULT TrackResourceS(ushort*);
-    HRESULT UntrackResource(const(ulong), const(BOOL));
-    HRESULT UntrackResourceS(ushort*, const(BOOL));
+    HRESULT AllocResource(const(ulong) __MIDL__IHolder0000, ulong* __MIDL__IHolder0001);
+    HRESULT FreeResource(const(ulong) __MIDL__IHolder0002);
+    HRESULT TrackResource(const(ulong) __MIDL__IHolder0003);
+    HRESULT TrackResourceS(ushort* __MIDL__IHolder0004);
+    HRESULT UntrackResource(const(ulong) __MIDL__IHolder0005, const(BOOL) __MIDL__IHolder0006);
+    HRESULT UntrackResourceS(ushort* __MIDL__IHolder0007, const(BOOL) __MIDL__IHolder0008);
     HRESULT Close();
-    HRESULT RequestDestroyResource(const(ulong));
+    HRESULT RequestDestroyResource(const(ulong) __MIDL__IHolder0009);
 }
 enum IID_IDispenserDriver = GUID(0x208b3651, 0x2b48, 0x11cf, [0xbe, 0x10, 0x0, 0xaa, 0x0, 0xa2, 0xfa, 0x25]);
 interface IDispenserDriver : IUnknown
 {
-    HRESULT CreateResource(const(ulong), ulong*, int*);
-    HRESULT RateResource(const(ulong), const(ulong), const(BOOL), uint*);
-    HRESULT EnlistResource(const(ulong), const(ulong));
-    HRESULT ResetResource(const(ulong));
-    HRESULT DestroyResource(const(ulong));
-    HRESULT DestroyResourceS(ushort*);
+    HRESULT CreateResource(const(ulong) ResTypId, ulong* pResId, int* pSecsFreeBeforeDestroy);
+    HRESULT RateResource(const(ulong) ResTypId, const(ulong) ResId, const(BOOL) fRequiresTransactionEnlistment, uint* pRating);
+    HRESULT EnlistResource(const(ulong) ResId, const(ulong) TransId);
+    HRESULT ResetResource(const(ulong) ResId);
+    HRESULT DestroyResource(const(ulong) ResId);
+    HRESULT DestroyResourceS(ushort* ResId);
 }
 enum IID_ITransactionProxy = GUID(0x2558374, 0xdf2e, 0x4dae, [0xbd, 0x6b, 0x1d, 0x5c, 0x99, 0x4f, 0x9b, 0xdc]);
 interface ITransactionProxy : IUnknown
 {
-    HRESULT Commit(GUID);
+    HRESULT Commit(GUID guid);
     HRESULT Abort();
-    HRESULT Promote(ITransaction*);
-    HRESULT CreateVoter(ITransactionVoterNotifyAsync2, ITransactionVoterBallotAsync2*);
-    HRESULT GetIsolationLevel(int*);
-    HRESULT GetIdentifier(GUID*);
-    HRESULT IsReusable(BOOL*);
+    HRESULT Promote(ITransaction* pTransaction);
+    HRESULT CreateVoter(ITransactionVoterNotifyAsync2 pTxAsync, ITransactionVoterBallotAsync2* ppBallot);
+    HRESULT GetIsolationLevel(int* __MIDL__ITransactionProxy0000);
+    HRESULT GetIdentifier(GUID* pbstrIdentifier);
+    HRESULT IsReusable(BOOL* pfIsReusable);
 }
 enum IID_IContextSecurityPerimeter = GUID(0xa7549a29, 0xa7c4, 0x42e1, [0x8d, 0xc1, 0x7e, 0x3d, 0x74, 0x8d, 0xc2, 0x4a]);
 interface IContextSecurityPerimeter : IUnknown
 {
-    HRESULT GetPerimeterFlag(BOOL*);
-    HRESULT SetPerimeterFlag(BOOL);
+    HRESULT GetPerimeterFlag(BOOL* pFlag);
+    HRESULT SetPerimeterFlag(BOOL fFlag);
 }
 enum IID_ITxProxyHolder = GUID(0x13d86f31, 0x139, 0x41af, [0xbc, 0xad, 0xc7, 0xd5, 0x4, 0x35, 0xfe, 0x9f]);
 interface ITxProxyHolder : IUnknown
 {
-    void GetIdentifier(GUID*);
+    void GetIdentifier(GUID* pGuidLtx);
 }
 enum IID_IObjectContext = GUID(0x51372ae0, 0xcae7, 0x11cf, [0xbe, 0x81, 0x0, 0xaa, 0x0, 0xa2, 0xfa, 0x25]);
 interface IObjectContext : IUnknown
 {
-    HRESULT CreateInstance(const(GUID)*, const(GUID)*, void**);
+    HRESULT CreateInstance(const(GUID)* rclsid, const(GUID)* riid, void** ppv);
     HRESULT SetComplete();
     HRESULT SetAbort();
     HRESULT EnableCommit();
     HRESULT DisableCommit();
     BOOL IsInTransaction();
     BOOL IsSecurityEnabled();
-    HRESULT IsCallerInRole(BSTR, BOOL*);
+    HRESULT IsCallerInRole(BSTR bstrRole, BOOL* pfIsInRole);
 }
 enum IID_IObjectControl = GUID(0x51372aec, 0xcae7, 0x11cf, [0xbe, 0x81, 0x0, 0xaa, 0x0, 0xa2, 0xfa, 0x25]);
 interface IObjectControl : IUnknown
@@ -1103,89 +1104,89 @@ interface IObjectControl : IUnknown
 enum IID_IEnumNames = GUID(0x51372af2, 0xcae7, 0x11cf, [0xbe, 0x81, 0x0, 0xaa, 0x0, 0xa2, 0xfa, 0x25]);
 interface IEnumNames : IUnknown
 {
-    HRESULT Next(uint, BSTR*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, BSTR* rgname, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumNames*);
+    HRESULT Clone(IEnumNames* ppenum);
 }
 enum IID_ISecurityProperty = GUID(0x51372aea, 0xcae7, 0x11cf, [0xbe, 0x81, 0x0, 0xaa, 0x0, 0xa2, 0xfa, 0x25]);
 interface ISecurityProperty : IUnknown
 {
-    HRESULT GetDirectCreatorSID(PSID*);
-    HRESULT GetOriginalCreatorSID(PSID*);
-    HRESULT GetDirectCallerSID(PSID*);
-    HRESULT GetOriginalCallerSID(PSID*);
-    HRESULT ReleaseSID(PSID);
+    HRESULT GetDirectCreatorSID(PSID* pSID);
+    HRESULT GetOriginalCreatorSID(PSID* pSID);
+    HRESULT GetDirectCallerSID(PSID* pSID);
+    HRESULT GetOriginalCallerSID(PSID* pSID);
+    HRESULT ReleaseSID(PSID pSID);
 }
 enum IID_ObjectControl = GUID(0x7dc41850, 0xc31, 0x11d0, [0x8b, 0x79, 0x0, 0xaa, 0x0, 0xb8, 0xa7, 0x90]);
 interface ObjectControl : IUnknown
 {
     HRESULT Activate();
     HRESULT Deactivate();
-    HRESULT CanBePooled(VARIANT_BOOL*);
+    HRESULT CanBePooled(VARIANT_BOOL* pbPoolable);
 }
 enum IID_ISharedProperty = GUID(0x2a005c01, 0xa5de, 0x11cf, [0x9e, 0x66, 0x0, 0xaa, 0x0, 0xa3, 0xf4, 0x64]);
 interface ISharedProperty : IDispatch
 {
-    HRESULT get_Value(VARIANT*);
-    HRESULT put_Value(VARIANT);
+    HRESULT get_Value(VARIANT* pVal);
+    HRESULT put_Value(VARIANT val);
 }
 enum IID_ISharedPropertyGroup = GUID(0x2a005c07, 0xa5de, 0x11cf, [0x9e, 0x66, 0x0, 0xaa, 0x0, 0xa3, 0xf4, 0x64]);
 interface ISharedPropertyGroup : IDispatch
 {
-    HRESULT CreatePropertyByPosition(int, VARIANT_BOOL*, ISharedProperty*);
-    HRESULT get_PropertyByPosition(int, ISharedProperty*);
-    HRESULT CreateProperty(BSTR, VARIANT_BOOL*, ISharedProperty*);
-    HRESULT get_Property(BSTR, ISharedProperty*);
+    HRESULT CreatePropertyByPosition(int Index, VARIANT_BOOL* fExists, ISharedProperty* ppProp);
+    HRESULT get_PropertyByPosition(int Index, ISharedProperty* ppProperty);
+    HRESULT CreateProperty(BSTR Name, VARIANT_BOOL* fExists, ISharedProperty* ppProp);
+    HRESULT get_Property(BSTR Name, ISharedProperty* ppProperty);
 }
 enum IID_ISharedPropertyGroupManager = GUID(0x2a005c0d, 0xa5de, 0x11cf, [0x9e, 0x66, 0x0, 0xaa, 0x0, 0xa3, 0xf4, 0x64]);
 interface ISharedPropertyGroupManager : IDispatch
 {
-    HRESULT CreatePropertyGroup(BSTR, int*, int*, VARIANT_BOOL*, ISharedPropertyGroup*);
-    HRESULT get_Group(BSTR, ISharedPropertyGroup*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT CreatePropertyGroup(BSTR Name, int* dwIsoMode, int* dwRelMode, VARIANT_BOOL* fExists, ISharedPropertyGroup* ppGroup);
+    HRESULT get_Group(BSTR Name, ISharedPropertyGroup* ppGroup);
+    HRESULT get__NewEnum(IUnknown* retval);
 }
 enum IID_IObjectConstruct = GUID(0x41c4f8b3, 0x7439, 0x11d2, [0x98, 0xcb, 0x0, 0xc0, 0x4f, 0x8e, 0xe1, 0xc4]);
 interface IObjectConstruct : IUnknown
 {
-    HRESULT Construct(IDispatch);
+    HRESULT Construct(IDispatch pCtorObj);
 }
 enum IID_IObjectConstructString = GUID(0x41c4f8b2, 0x7439, 0x11d2, [0x98, 0xcb, 0x0, 0xc0, 0x4f, 0x8e, 0xe1, 0xc4]);
 interface IObjectConstructString : IDispatch
 {
-    HRESULT get_ConstructString(BSTR*);
+    HRESULT get_ConstructString(BSTR* pVal);
 }
 enum IID_IObjectContextActivity = GUID(0x51372afc, 0xcae7, 0x11cf, [0xbe, 0x81, 0x0, 0xaa, 0x0, 0xa2, 0xfa, 0x25]);
 interface IObjectContextActivity : IUnknown
 {
-    HRESULT GetActivityId(GUID*);
+    HRESULT GetActivityId(GUID* pGUID);
 }
 enum IID_IObjectContextInfo = GUID(0x75b52ddb, 0xe8ed, 0x11d1, [0x93, 0xad, 0x0, 0xaa, 0x0, 0xba, 0x32, 0x58]);
 interface IObjectContextInfo : IUnknown
 {
     BOOL IsInTransaction();
-    HRESULT GetTransaction(IUnknown*);
-    HRESULT GetTransactionId(GUID*);
-    HRESULT GetActivityId(GUID*);
-    HRESULT GetContextId(GUID*);
+    HRESULT GetTransaction(IUnknown* pptrans);
+    HRESULT GetTransactionId(GUID* pGuid);
+    HRESULT GetActivityId(GUID* pGUID);
+    HRESULT GetContextId(GUID* pGuid);
 }
 enum IID_IObjectContextInfo2 = GUID(0x594be71a, 0x4bc4, 0x438b, [0x91, 0x97, 0xcf, 0xd1, 0x76, 0x24, 0x8b, 0x9]);
 interface IObjectContextInfo2 : IObjectContextInfo
 {
-    HRESULT GetPartitionId(GUID*);
-    HRESULT GetApplicationId(GUID*);
-    HRESULT GetApplicationInstanceId(GUID*);
+    HRESULT GetPartitionId(GUID* pGuid);
+    HRESULT GetApplicationId(GUID* pGuid);
+    HRESULT GetApplicationInstanceId(GUID* pGuid);
 }
 enum IID_ITransactionStatus = GUID(0x61f589e8, 0x3724, 0x4898, [0xa0, 0xa4, 0x66, 0x4a, 0xe9, 0xe1, 0xd1, 0xb4]);
 interface ITransactionStatus : IUnknown
 {
-    HRESULT SetTransactionStatus(HRESULT);
-    HRESULT GetTransactionStatus(HRESULT*);
+    HRESULT SetTransactionStatus(HRESULT hrStatus);
+    HRESULT GetTransactionStatus(HRESULT* pHrStatus);
 }
 enum IID_IObjectContextTip = GUID(0x92fd41ca, 0xbad9, 0x11d2, [0x9a, 0x2d, 0x0, 0xc0, 0x4f, 0x79, 0x7b, 0xc9]);
 interface IObjectContextTip : IUnknown
 {
-    HRESULT GetTipUrl(BSTR*);
+    HRESULT GetTipUrl(BSTR* pTipUrl);
 }
 enum IID_IPlaybackControl = GUID(0x51372afd, 0xcae7, 0x11cf, [0xbe, 0x81, 0x0, 0xaa, 0x0, 0xa2, 0xfa, 0x25]);
 interface IPlaybackControl : IUnknown
@@ -1196,9 +1197,9 @@ interface IPlaybackControl : IUnknown
 enum IID_IGetContextProperties = GUID(0x51372af4, 0xcae7, 0x11cf, [0xbe, 0x81, 0x0, 0xaa, 0x0, 0xa2, 0xfa, 0x25]);
 interface IGetContextProperties : IUnknown
 {
-    HRESULT Count(int*);
-    HRESULT GetProperty(BSTR, VARIANT*);
-    HRESULT EnumNames(IEnumNames*);
+    HRESULT Count(int* plCount);
+    HRESULT GetProperty(BSTR name, VARIANT* pProperty);
+    HRESULT EnumNames(IEnumNames* ppenum);
 }
 alias TransactionVote = int;
 enum : int
@@ -1210,53 +1211,53 @@ enum : int
 enum IID_IContextState = GUID(0x3c05e54b, 0xa42a, 0x11d2, [0xaf, 0xc4, 0x0, 0xc0, 0x4f, 0x8e, 0xe1, 0xc4]);
 interface IContextState : IUnknown
 {
-    HRESULT SetDeactivateOnReturn(VARIANT_BOOL);
-    HRESULT GetDeactivateOnReturn(VARIANT_BOOL*);
-    HRESULT SetMyTransactionVote(TransactionVote);
-    HRESULT GetMyTransactionVote(TransactionVote*);
+    HRESULT SetDeactivateOnReturn(VARIANT_BOOL bDeactivate);
+    HRESULT GetDeactivateOnReturn(VARIANT_BOOL* pbDeactivate);
+    HRESULT SetMyTransactionVote(TransactionVote txVote);
+    HRESULT GetMyTransactionVote(TransactionVote* ptxVote);
 }
 enum IID_IPoolManager = GUID(0xa469861, 0x5a91, 0x43a0, [0x99, 0xb6, 0xd5, 0xe1, 0x79, 0xbb, 0x6, 0x31]);
 interface IPoolManager : IDispatch
 {
-    HRESULT ShutdownPool(BSTR);
+    HRESULT ShutdownPool(BSTR CLSIDOrProgID);
 }
 enum IID_ISelectCOMLBServer = GUID(0xdcf443f4, 0x3f8a, 0x4872, [0xb9, 0xf0, 0x36, 0x9a, 0x79, 0x6d, 0x12, 0xd6]);
 interface ISelectCOMLBServer : IUnknown
 {
     HRESULT Init();
-    HRESULT GetLBServer(IUnknown);
+    HRESULT GetLBServer(IUnknown pUnk);
 }
 enum IID_ICOMLBArguments = GUID(0x3a0f150f, 0x8ee5, 0x4b94, [0xb4, 0xe, 0xae, 0xf2, 0xf9, 0xe4, 0x2e, 0xd2]);
 interface ICOMLBArguments : IUnknown
 {
-    HRESULT GetCLSID(GUID*);
-    HRESULT SetCLSID(GUID*);
-    HRESULT GetMachineName(uint, PWSTR);
-    HRESULT SetMachineName(uint, PWSTR);
+    HRESULT GetCLSID(GUID* pCLSID);
+    HRESULT SetCLSID(GUID* pCLSID);
+    HRESULT GetMachineName(uint cchSvr, PWSTR szServerName);
+    HRESULT SetMachineName(uint cchSvr, PWSTR szServerName);
 }
 enum IID_ICrmLogControl = GUID(0xa0e174b3, 0xd26e, 0x11d2, [0x8f, 0x84, 0x0, 0x80, 0x5f, 0xc7, 0xbc, 0xd9]);
 interface ICrmLogControl : IUnknown
 {
-    HRESULT get_TransactionUOW(BSTR*);
-    HRESULT RegisterCompensator(const(wchar)*, const(wchar)*, int);
-    HRESULT WriteLogRecordVariants(VARIANT*);
+    HRESULT get_TransactionUOW(BSTR* pVal);
+    HRESULT RegisterCompensator(const(wchar)* lpcwstrProgIdCompensator, const(wchar)* lpcwstrDescription, int lCrmRegFlags);
+    HRESULT WriteLogRecordVariants(VARIANT* pLogRecord);
     HRESULT ForceLog();
     HRESULT ForgetLogRecord();
     HRESULT ForceTransactionToAbort();
-    HRESULT WriteLogRecord(BLOB*, uint);
+    HRESULT WriteLogRecord(BLOB* rgBlob, uint cBlob);
 }
 enum IID_ICrmCompensatorVariants = GUID(0xf0baf8e4, 0x7804, 0x11d1, [0x82, 0xe9, 0x0, 0xa0, 0xc9, 0x1e, 0xed, 0xe9]);
 interface ICrmCompensatorVariants : IUnknown
 {
-    HRESULT SetLogControlVariants(ICrmLogControl);
+    HRESULT SetLogControlVariants(ICrmLogControl pLogControl);
     HRESULT BeginPrepareVariants();
-    HRESULT PrepareRecordVariants(VARIANT*, VARIANT_BOOL*);
-    HRESULT EndPrepareVariants(VARIANT_BOOL*);
-    HRESULT BeginCommitVariants(VARIANT_BOOL);
-    HRESULT CommitRecordVariants(VARIANT*, VARIANT_BOOL*);
+    HRESULT PrepareRecordVariants(VARIANT* pLogRecord, VARIANT_BOOL* pbForget);
+    HRESULT EndPrepareVariants(VARIANT_BOOL* pbOkToPrepare);
+    HRESULT BeginCommitVariants(VARIANT_BOOL bRecovery);
+    HRESULT CommitRecordVariants(VARIANT* pLogRecord, VARIANT_BOOL* pbForget);
     HRESULT EndCommitVariants();
-    HRESULT BeginAbortVariants(VARIANT_BOOL);
-    HRESULT AbortRecordVariants(VARIANT*, VARIANT_BOOL*);
+    HRESULT BeginAbortVariants(VARIANT_BOOL bRecovery);
+    HRESULT AbortRecordVariants(VARIANT* pLogRecord, VARIANT_BOOL* pbForget);
     HRESULT EndAbortVariants();
 }
 struct CrmLogRecordRead
@@ -1268,15 +1269,15 @@ struct CrmLogRecordRead
 enum IID_ICrmCompensator = GUID(0xbbc01830, 0x8d3b, 0x11d1, [0x82, 0xec, 0x0, 0xa0, 0xc9, 0x1e, 0xed, 0xe9]);
 interface ICrmCompensator : IUnknown
 {
-    HRESULT SetLogControl(ICrmLogControl);
+    HRESULT SetLogControl(ICrmLogControl pLogControl);
     HRESULT BeginPrepare();
-    HRESULT PrepareRecord(CrmLogRecordRead, BOOL*);
-    HRESULT EndPrepare(BOOL*);
-    HRESULT BeginCommit(BOOL);
-    HRESULT CommitRecord(CrmLogRecordRead, BOOL*);
+    HRESULT PrepareRecord(CrmLogRecordRead crmLogRec, BOOL* pfForget);
+    HRESULT EndPrepare(BOOL* pfOkToPrepare);
+    HRESULT BeginCommit(BOOL fRecovery);
+    HRESULT CommitRecord(CrmLogRecordRead crmLogRec, BOOL* pfForget);
     HRESULT EndCommit();
-    HRESULT BeginAbort(BOOL);
-    HRESULT AbortRecord(CrmLogRecordRead, BOOL*);
+    HRESULT BeginAbort(BOOL fRecovery);
+    HRESULT AbortRecord(CrmLogRecordRead crmLogRec, BOOL* pfForget);
     HRESULT EndAbort();
 }
 alias CrmTransactionState = int;
@@ -1291,36 +1292,36 @@ enum : int
 enum IID_ICrmMonitorLogRecords = GUID(0x70c8e441, 0xc7ed, 0x11d1, [0x82, 0xfb, 0x0, 0xa0, 0xc9, 0x1e, 0xed, 0xe9]);
 interface ICrmMonitorLogRecords : IUnknown
 {
-    HRESULT get_Count(int*);
-    HRESULT get_TransactionState(CrmTransactionState*);
-    HRESULT get_StructuredRecords(VARIANT_BOOL*);
-    HRESULT GetLogRecord(uint, CrmLogRecordRead*);
-    HRESULT GetLogRecordVariants(VARIANT, VARIANT*);
+    HRESULT get_Count(int* pVal);
+    HRESULT get_TransactionState(CrmTransactionState* pVal);
+    HRESULT get_StructuredRecords(VARIANT_BOOL* pVal);
+    HRESULT GetLogRecord(uint dwIndex, CrmLogRecordRead* pCrmLogRec);
+    HRESULT GetLogRecordVariants(VARIANT IndexNumber, VARIANT* pLogRecord);
 }
 enum IID_ICrmMonitorClerks = GUID(0x70c8e442, 0xc7ed, 0x11d1, [0x82, 0xfb, 0x0, 0xa0, 0xc9, 0x1e, 0xed, 0xe9]);
 interface ICrmMonitorClerks : IDispatch
 {
-    HRESULT Item(VARIANT, VARIANT*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Count(int*);
-    HRESULT ProgIdCompensator(VARIANT, VARIANT*);
-    HRESULT Description(VARIANT, VARIANT*);
-    HRESULT TransactionUOW(VARIANT, VARIANT*);
-    HRESULT ActivityId(VARIANT, VARIANT*);
+    HRESULT Item(VARIANT Index, VARIANT* pItem);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT get_Count(int* pVal);
+    HRESULT ProgIdCompensator(VARIANT Index, VARIANT* pItem);
+    HRESULT Description(VARIANT Index, VARIANT* pItem);
+    HRESULT TransactionUOW(VARIANT Index, VARIANT* pItem);
+    HRESULT ActivityId(VARIANT Index, VARIANT* pItem);
 }
 enum IID_ICrmMonitor = GUID(0x70c8e443, 0xc7ed, 0x11d1, [0x82, 0xfb, 0x0, 0xa0, 0xc9, 0x1e, 0xed, 0xe9]);
 interface ICrmMonitor : IUnknown
 {
-    HRESULT GetClerks(ICrmMonitorClerks*);
-    HRESULT HoldClerk(VARIANT, VARIANT*);
+    HRESULT GetClerks(ICrmMonitorClerks* pClerks);
+    HRESULT HoldClerk(VARIANT Index, VARIANT* pItem);
 }
 enum IID_ICrmFormatLogRecords = GUID(0x9c51d821, 0xc98b, 0x11d1, [0x82, 0xfb, 0x0, 0xa0, 0xc9, 0x1e, 0xed, 0xe9]);
 interface ICrmFormatLogRecords : IUnknown
 {
-    HRESULT GetColumnCount(int*);
-    HRESULT GetColumnHeaders(VARIANT*);
-    HRESULT GetColumn(CrmLogRecordRead, VARIANT*);
-    HRESULT GetColumnVariants(VARIANT, VARIANT*);
+    HRESULT GetColumnCount(int* plColumnCount);
+    HRESULT GetColumnHeaders(VARIANT* pHeaders);
+    HRESULT GetColumn(CrmLogRecordRead CrmLogRec, VARIANT* pFormattedLogRecord);
+    HRESULT GetColumnVariants(VARIANT LogRecord, VARIANT* pFormattedLogRecord);
 }
 alias CSC_InheritanceConfig = int;
 enum : int
@@ -1403,70 +1404,70 @@ enum : int
 enum IID_IServiceIISIntrinsicsConfig = GUID(0x1a0cf920, 0xd452, 0x46f4, [0xbc, 0x36, 0x48, 0x11, 0x8d, 0x54, 0xea, 0x52]);
 interface IServiceIISIntrinsicsConfig : IUnknown
 {
-    HRESULT IISIntrinsicsConfig(CSC_IISIntrinsicsConfig);
+    HRESULT IISIntrinsicsConfig(CSC_IISIntrinsicsConfig iisIntrinsicsConfig);
 }
 enum IID_IServiceComTIIntrinsicsConfig = GUID(0x9e6831e, 0x4e1, 0x4ed4, [0x9d, 0xf, 0xe8, 0xb1, 0x68, 0xba, 0xfe, 0xaf]);
 interface IServiceComTIIntrinsicsConfig : IUnknown
 {
-    HRESULT ComTIIntrinsicsConfig(CSC_COMTIIntrinsicsConfig);
+    HRESULT ComTIIntrinsicsConfig(CSC_COMTIIntrinsicsConfig comtiIntrinsicsConfig);
 }
 enum IID_IServiceSxsConfig = GUID(0xc7cd7379, 0xf3f2, 0x4634, [0x81, 0x1b, 0x70, 0x32, 0x81, 0xd7, 0x3e, 0x8]);
 interface IServiceSxsConfig : IUnknown
 {
-    HRESULT SxsConfig(CSC_SxsConfig);
-    HRESULT SxsName(const(wchar)*);
-    HRESULT SxsDirectory(const(wchar)*);
+    HRESULT SxsConfig(CSC_SxsConfig scsConfig);
+    HRESULT SxsName(const(wchar)* szSxsName);
+    HRESULT SxsDirectory(const(wchar)* szSxsDirectory);
 }
 enum IID_ICheckSxsConfig = GUID(0xff5a96f, 0x11fc, 0x47d1, [0xba, 0xa6, 0x25, 0xdd, 0x34, 0x7e, 0x72, 0x42]);
 interface ICheckSxsConfig : IUnknown
 {
-    HRESULT IsSameSxsConfig(const(wchar)*, const(wchar)*, const(wchar)*);
+    HRESULT IsSameSxsConfig(const(wchar)* wszSxsName, const(wchar)* wszSxsDirectory, const(wchar)* wszSxsAppName);
 }
 enum IID_IServiceInheritanceConfig = GUID(0x92186771, 0xd3b4, 0x4d77, [0xa8, 0xea, 0xee, 0x84, 0x2d, 0x58, 0x6f, 0x35]);
 interface IServiceInheritanceConfig : IUnknown
 {
-    HRESULT ContainingContextTreatment(CSC_InheritanceConfig);
+    HRESULT ContainingContextTreatment(CSC_InheritanceConfig inheritanceConfig);
 }
 enum IID_IServiceThreadPoolConfig = GUID(0x186d89bc, 0xf277, 0x4bcc, [0x80, 0xd5, 0x4d, 0xf7, 0xb8, 0x36, 0xef, 0x4a]);
 interface IServiceThreadPoolConfig : IUnknown
 {
-    HRESULT SelectThreadPool(CSC_ThreadPool);
-    HRESULT SetBindingInfo(CSC_Binding);
+    HRESULT SelectThreadPool(CSC_ThreadPool threadPool);
+    HRESULT SetBindingInfo(CSC_Binding binding);
 }
 enum IID_IServiceTransactionConfigBase = GUID(0x772b3fbe, 0x6ffd, 0x42fb, [0xb5, 0xf8, 0x8f, 0x9b, 0x26, 0xf, 0x38, 0x10]);
 interface IServiceTransactionConfigBase : IUnknown
 {
-    HRESULT ConfigureTransaction(CSC_TransactionConfig);
-    HRESULT IsolationLevel(COMAdminTxIsolationLevelOptions);
-    HRESULT TransactionTimeout(uint);
-    HRESULT BringYourOwnTransaction(const(wchar)*);
-    HRESULT NewTransactionDescription(const(wchar)*);
+    HRESULT ConfigureTransaction(CSC_TransactionConfig transactionConfig);
+    HRESULT IsolationLevel(COMAdminTxIsolationLevelOptions option);
+    HRESULT TransactionTimeout(uint ulTimeoutSec);
+    HRESULT BringYourOwnTransaction(const(wchar)* szTipURL);
+    HRESULT NewTransactionDescription(const(wchar)* szTxDesc);
 }
 enum IID_IServiceTransactionConfig = GUID(0x59f4c2a3, 0xd3d7, 0x4a31, [0xb6, 0xe4, 0x6a, 0xb3, 0x17, 0x7c, 0x50, 0xb9]);
 interface IServiceTransactionConfig : IServiceTransactionConfigBase
 {
-    HRESULT ConfigureBYOT(ITransaction);
+    HRESULT ConfigureBYOT(ITransaction pITxByot);
 }
 enum IID_IServiceSysTxnConfig = GUID(0x33caf1a1, 0xfcb8, 0x472b, [0xb4, 0x5e, 0x96, 0x74, 0x48, 0xde, 0xd6, 0xd8]);
 interface IServiceSysTxnConfig : IServiceTransactionConfig
 {
-    HRESULT ConfigureBYOTSysTxn(ITransactionProxy);
+    HRESULT ConfigureBYOTSysTxn(ITransactionProxy pTxProxy);
 }
 enum IID_IServiceSynchronizationConfig = GUID(0xfd880e81, 0x6dce, 0x4c58, [0xaf, 0x83, 0xa2, 0x8, 0x84, 0x6c, 0x0, 0x30]);
 interface IServiceSynchronizationConfig : IUnknown
 {
-    HRESULT ConfigureSynchronization(CSC_SynchronizationConfig);
+    HRESULT ConfigureSynchronization(CSC_SynchronizationConfig synchConfig);
 }
 enum IID_IServiceTrackerConfig = GUID(0x6c3a3e1d, 0xba6, 0x4036, [0xb7, 0x6f, 0xd0, 0x40, 0x4d, 0xb8, 0x16, 0xc9]);
 interface IServiceTrackerConfig : IUnknown
 {
-    HRESULT TrackerConfig(CSC_TrackerConfig, const(wchar)*, const(wchar)*);
+    HRESULT TrackerConfig(CSC_TrackerConfig trackerConfig, const(wchar)* szTrackerAppName, const(wchar)* szTrackerCtxName);
 }
 enum IID_IServicePartitionConfig = GUID(0x80182d03, 0x5ea4, 0x4831, [0xae, 0x97, 0x55, 0xbe, 0xff, 0xc2, 0xe5, 0x90]);
 interface IServicePartitionConfig : IUnknown
 {
-    HRESULT PartitionConfig(CSC_PartitionConfig);
-    HRESULT PartitionID(const(GUID)*);
+    HRESULT PartitionConfig(CSC_PartitionConfig partitionConfig);
+    HRESULT PartitionID(const(GUID)* guidPartitionID);
 }
 enum IID_IServiceCall = GUID(0xbd3e2e12, 0x42dd, 0x40f4, [0xa0, 0x9a, 0x95, 0xa5, 0xc, 0x58, 0x30, 0x4b]);
 interface IServiceCall : IUnknown
@@ -1476,98 +1477,98 @@ interface IServiceCall : IUnknown
 enum IID_IAsyncErrorNotify = GUID(0xfe6777fb, 0xa674, 0x4177, [0x8f, 0x32, 0x6d, 0x70, 0x7e, 0x11, 0x34, 0x84]);
 interface IAsyncErrorNotify : IUnknown
 {
-    HRESULT OnError(HRESULT);
+    HRESULT OnError(HRESULT hr);
 }
 enum IID_IServiceActivity = GUID(0x67532e0c, 0x9e2f, 0x4450, [0xa3, 0x54, 0x3, 0x56, 0x33, 0x94, 0x4e, 0x17]);
 interface IServiceActivity : IUnknown
 {
-    HRESULT SynchronousCall(IServiceCall);
-    HRESULT AsynchronousCall(IServiceCall);
+    HRESULT SynchronousCall(IServiceCall pIServiceCall);
+    HRESULT AsynchronousCall(IServiceCall pIServiceCall);
     HRESULT BindToCurrentThread();
     HRESULT UnbindFromThread();
 }
 enum IID_IThreadPoolKnobs = GUID(0x51372af7, 0xcae7, 0x11cf, [0xbe, 0x81, 0x0, 0xaa, 0x0, 0xa2, 0xfa, 0x25]);
 interface IThreadPoolKnobs : IUnknown
 {
-    HRESULT GetMaxThreads(int*);
-    HRESULT GetCurrentThreads(int*);
-    HRESULT SetMaxThreads(int);
-    HRESULT GetDeleteDelay(int*);
-    HRESULT SetDeleteDelay(int);
-    HRESULT GetMaxQueuedRequests(int*);
-    HRESULT GetCurrentQueuedRequests(int*);
-    HRESULT SetMaxQueuedRequests(int);
-    HRESULT SetMinThreads(int);
-    HRESULT SetQueueDepth(int);
+    HRESULT GetMaxThreads(int* plcMaxThreads);
+    HRESULT GetCurrentThreads(int* plcCurrentThreads);
+    HRESULT SetMaxThreads(int lcMaxThreads);
+    HRESULT GetDeleteDelay(int* pmsecDeleteDelay);
+    HRESULT SetDeleteDelay(int msecDeleteDelay);
+    HRESULT GetMaxQueuedRequests(int* plcMaxQueuedRequests);
+    HRESULT GetCurrentQueuedRequests(int* plcCurrentQueuedRequests);
+    HRESULT SetMaxQueuedRequests(int lcMaxQueuedRequests);
+    HRESULT SetMinThreads(int lcMinThreads);
+    HRESULT SetQueueDepth(int lcQueueDepth);
 }
 enum IID_IComStaThreadPoolKnobs = GUID(0x324b64fa, 0x33b6, 0x11d2, [0x98, 0xb7, 0x0, 0xc0, 0x4f, 0x8e, 0xe1, 0xc4]);
 interface IComStaThreadPoolKnobs : IUnknown
 {
-    HRESULT SetMinThreadCount(uint);
-    HRESULT GetMinThreadCount(uint*);
-    HRESULT SetMaxThreadCount(uint);
-    HRESULT GetMaxThreadCount(uint*);
-    HRESULT SetActivityPerThread(uint);
-    HRESULT GetActivityPerThread(uint*);
-    HRESULT SetActivityRatio(double);
-    HRESULT GetActivityRatio(double*);
-    HRESULT GetThreadCount(uint*);
-    HRESULT GetQueueDepth(uint*);
-    HRESULT SetQueueDepth(int);
+    HRESULT SetMinThreadCount(uint minThreads);
+    HRESULT GetMinThreadCount(uint* minThreads);
+    HRESULT SetMaxThreadCount(uint maxThreads);
+    HRESULT GetMaxThreadCount(uint* maxThreads);
+    HRESULT SetActivityPerThread(uint activitiesPerThread);
+    HRESULT GetActivityPerThread(uint* activitiesPerThread);
+    HRESULT SetActivityRatio(double activityRatio);
+    HRESULT GetActivityRatio(double* activityRatio);
+    HRESULT GetThreadCount(uint* pdwThreads);
+    HRESULT GetQueueDepth(uint* pdwQDepth);
+    HRESULT SetQueueDepth(int dwQDepth);
 }
 enum IID_IComMtaThreadPoolKnobs = GUID(0xf9a76d2e, 0x76a5, 0x43eb, [0xa0, 0xc4, 0x49, 0xbe, 0xc8, 0xe4, 0x84, 0x80]);
 interface IComMtaThreadPoolKnobs : IUnknown
 {
-    HRESULT MTASetMaxThreadCount(uint);
-    HRESULT MTAGetMaxThreadCount(uint*);
-    HRESULT MTASetThrottleValue(uint);
-    HRESULT MTAGetThrottleValue(uint*);
+    HRESULT MTASetMaxThreadCount(uint dwMaxThreads);
+    HRESULT MTAGetMaxThreadCount(uint* pdwMaxThreads);
+    HRESULT MTASetThrottleValue(uint dwThrottle);
+    HRESULT MTAGetThrottleValue(uint* pdwThrottle);
 }
 enum IID_IComStaThreadPoolKnobs2 = GUID(0x73707523, 0xff9a, 0x4974, [0xbf, 0x84, 0x21, 0x8, 0xdc, 0x21, 0x37, 0x40]);
 interface IComStaThreadPoolKnobs2 : IComStaThreadPoolKnobs
 {
-    HRESULT GetMaxCPULoad(uint*);
-    HRESULT SetMaxCPULoad(int);
-    HRESULT GetCPUMetricEnabled(BOOL*);
-    HRESULT SetCPUMetricEnabled(BOOL);
-    HRESULT GetCreateThreadsAggressively(BOOL*);
-    HRESULT SetCreateThreadsAggressively(BOOL);
-    HRESULT GetMaxCSR(uint*);
-    HRESULT SetMaxCSR(int);
-    HRESULT GetWaitTimeForThreadCleanup(uint*);
-    HRESULT SetWaitTimeForThreadCleanup(int);
+    HRESULT GetMaxCPULoad(uint* pdwLoad);
+    HRESULT SetMaxCPULoad(int pdwLoad);
+    HRESULT GetCPUMetricEnabled(BOOL* pbMetricEnabled);
+    HRESULT SetCPUMetricEnabled(BOOL bMetricEnabled);
+    HRESULT GetCreateThreadsAggressively(BOOL* pbMetricEnabled);
+    HRESULT SetCreateThreadsAggressively(BOOL bMetricEnabled);
+    HRESULT GetMaxCSR(uint* pdwCSR);
+    HRESULT SetMaxCSR(int dwCSR);
+    HRESULT GetWaitTimeForThreadCleanup(uint* pdwThreadCleanupWaitTime);
+    HRESULT SetWaitTimeForThreadCleanup(int dwThreadCleanupWaitTime);
 }
 enum IID_IProcessInitializer = GUID(0x1113f52d, 0xdc7f, 0x4943, [0xae, 0xd6, 0x88, 0xd0, 0x40, 0x27, 0xe3, 0x2a]);
 interface IProcessInitializer : IUnknown
 {
-    HRESULT Startup(IUnknown);
+    HRESULT Startup(IUnknown punkProcessControl);
     HRESULT Shutdown();
 }
 enum IID_IServicePoolConfig = GUID(0xa9690656, 0x5bca, 0x470c, [0x84, 0x51, 0x25, 0xc, 0x1f, 0x43, 0xa3, 0x3e]);
 interface IServicePoolConfig : IUnknown
 {
-    HRESULT put_MaxPoolSize(uint);
-    HRESULT get_MaxPoolSize(uint*);
-    HRESULT put_MinPoolSize(uint);
-    HRESULT get_MinPoolSize(uint*);
-    HRESULT put_CreationTimeout(uint);
-    HRESULT get_CreationTimeout(uint*);
-    HRESULT put_TransactionAffinity(BOOL);
-    HRESULT get_TransactionAffinity(BOOL*);
-    HRESULT put_ClassFactory(IClassFactory);
-    HRESULT get_ClassFactory(IClassFactory*);
+    HRESULT put_MaxPoolSize(uint dwMaxPool);
+    HRESULT get_MaxPoolSize(uint* pdwMaxPool);
+    HRESULT put_MinPoolSize(uint dwMinPool);
+    HRESULT get_MinPoolSize(uint* pdwMinPool);
+    HRESULT put_CreationTimeout(uint dwCreationTimeout);
+    HRESULT get_CreationTimeout(uint* pdwCreationTimeout);
+    HRESULT put_TransactionAffinity(BOOL fTxAffinity);
+    HRESULT get_TransactionAffinity(BOOL* pfTxAffinity);
+    HRESULT put_ClassFactory(IClassFactory pFactory);
+    HRESULT get_ClassFactory(IClassFactory* pFactory);
 }
 enum IID_IServicePool = GUID(0xb302df81, 0xea45, 0x451e, [0x99, 0xa2, 0x9, 0xf9, 0xfd, 0x1b, 0x1e, 0x13]);
 interface IServicePool : IUnknown
 {
-    HRESULT Initialize(IUnknown);
-    HRESULT GetObject(const(GUID)*, void**);
+    HRESULT Initialize(IUnknown pPoolConfig);
+    HRESULT GetObject(const(GUID)* riid, void** ppv);
     HRESULT Shutdown();
 }
 enum IID_IManagedPooledObj = GUID(0xc5da4bea, 0x1b42, 0x4437, [0x89, 0x26, 0xb6, 0xa3, 0x88, 0x60, 0xa7, 0x70]);
 interface IManagedPooledObj : IUnknown
 {
-    HRESULT SetHeld(BOOL);
+    HRESULT SetHeld(BOOL m_bHeld);
 }
 enum IID_IManagedPoolAction = GUID(0xda91b74e, 0x5388, 0x4783, [0x94, 0x9d, 0xc1, 0xcd, 0x5f, 0xb0, 0x5, 0x6]);
 interface IManagedPoolAction : IUnknown
@@ -1577,39 +1578,39 @@ interface IManagedPoolAction : IUnknown
 enum IID_IManagedObjectInfo = GUID(0x1427c51a, 0x4584, 0x49d8, [0x90, 0xa0, 0xc5, 0xd, 0x80, 0x86, 0xcb, 0xe9]);
 interface IManagedObjectInfo : IUnknown
 {
-    HRESULT GetIUnknown(IUnknown*);
-    HRESULT GetIObjectControl(IObjectControl*);
-    HRESULT SetInPool(BOOL, IManagedPooledObj);
-    HRESULT SetWrapperStrength(BOOL);
+    HRESULT GetIUnknown(IUnknown* pUnk);
+    HRESULT GetIObjectControl(IObjectControl* pCtrl);
+    HRESULT SetInPool(BOOL bInPool, IManagedPooledObj pPooledObj);
+    HRESULT SetWrapperStrength(BOOL bStrong);
 }
 enum IID_IAppDomainHelper = GUID(0xc7b67079, 0x8255, 0x42c6, [0x9e, 0xc0, 0x69, 0x94, 0xa3, 0x54, 0x87, 0x80]);
 interface IAppDomainHelper : IDispatch
 {
-    HRESULT Initialize(IUnknown, long, void*);
-    HRESULT DoCallback(IUnknown, long, void*);
+    HRESULT Initialize(IUnknown pUnkAD, long __MIDL__IAppDomainHelper0000, void* pPool);
+    HRESULT DoCallback(IUnknown pUnkAD, long __MIDL__IAppDomainHelper0001, void* pPool);
 }
 enum IID_IAssemblyLocator = GUID(0x391ffbb9, 0xa8ee, 0x432a, [0xab, 0xc8, 0xba, 0xa2, 0x38, 0xda, 0xb9, 0xf]);
 interface IAssemblyLocator : IDispatch
 {
-    HRESULT GetModules(BSTR, BSTR, BSTR, SAFEARRAY**);
+    HRESULT GetModules(BSTR applicationDir, BSTR applicationName, BSTR assemblyName, SAFEARRAY** pModules);
 }
 enum IID_IManagedActivationEvents = GUID(0xa5f325af, 0x572f, 0x46da, [0xb8, 0xab, 0x82, 0x7c, 0x3d, 0x95, 0xd9, 0x9e]);
 interface IManagedActivationEvents : IUnknown
 {
-    HRESULT CreateManagedStub(IManagedObjectInfo, BOOL);
-    HRESULT DestroyManagedStub(IManagedObjectInfo);
+    HRESULT CreateManagedStub(IManagedObjectInfo pInfo, BOOL fDist);
+    HRESULT DestroyManagedStub(IManagedObjectInfo pInfo);
 }
 enum IID_ISendMethodEvents = GUID(0x2732fd59, 0xb2b4, 0x4d44, [0x87, 0x8c, 0x8b, 0x8f, 0x9, 0x62, 0x60, 0x8]);
 interface ISendMethodEvents : IUnknown
 {
-    HRESULT SendMethodCall(const(void)*, const(GUID)*, uint);
-    HRESULT SendMethodReturn(const(void)*, const(GUID)*, uint, HRESULT, HRESULT);
+    HRESULT SendMethodCall(const(void)* pIdentity, const(GUID)* riid, uint dwMeth);
+    HRESULT SendMethodReturn(const(void)* pIdentity, const(GUID)* riid, uint dwMeth, HRESULT hrCall, HRESULT hrServer);
 }
 enum IID_ITransactionResourcePool = GUID(0xc5feb7c1, 0x346a, 0x11d1, [0xb1, 0xcc, 0x0, 0xaa, 0x0, 0xba, 0x32, 0x58]);
 interface ITransactionResourcePool : IUnknown
 {
-    HRESULT PutResource(IObjPool, IUnknown);
-    HRESULT GetResource(IObjPool, IUnknown*);
+    HRESULT PutResource(IObjPool pPool, IUnknown pUnk);
+    HRESULT GetResource(IObjPool pPool, IUnknown* ppUnk);
 }
 enum IID_IMTSCall = GUID(0x51372aef, 0xcae7, 0x11cf, [0xbe, 0x81, 0x0, 0xaa, 0x0, 0xa2, 0xfa, 0x25]);
 interface IMTSCall : IUnknown
@@ -1619,11 +1620,11 @@ interface IMTSCall : IUnknown
 enum IID_IContextProperties = GUID(0xd396da85, 0xbf8f, 0x11d1, [0xbb, 0xae, 0x0, 0xc0, 0x4f, 0xc2, 0xfa, 0x5f]);
 interface IContextProperties : IUnknown
 {
-    HRESULT Count(int*);
-    HRESULT GetProperty(BSTR, VARIANT*);
-    HRESULT EnumNames(IEnumNames*);
-    HRESULT SetProperty(BSTR, VARIANT);
-    HRESULT RemoveProperty(BSTR);
+    HRESULT Count(int* plCount);
+    HRESULT GetProperty(BSTR name, VARIANT* pProperty);
+    HRESULT EnumNames(IEnumNames* ppenum);
+    HRESULT SetProperty(BSTR name, VARIANT property);
+    HRESULT RemoveProperty(BSTR name);
 }
 enum IID_IObjPool = GUID(0x7d8805a0, 0x2ea7, 0x11d1, [0xb1, 0xcc, 0x0, 0xaa, 0x0, 0xba, 0x32, 0x58]);
 interface IObjPool : IUnknown
@@ -1632,7 +1633,7 @@ interface IObjPool : IUnknown
     void Reserved2();
     void Reserved3();
     void Reserved4();
-    void PutEndTx(IUnknown);
+    void PutEndTx(IUnknown pObj);
     void Reserved5();
     void Reserved6();
 }
@@ -1648,7 +1649,7 @@ interface ITransactionProperty : IUnknown
     void Reserved7();
     void Reserved8();
     void Reserved9();
-    HRESULT GetTransactionResourcePool(ITransactionResourcePool*);
+    HRESULT GetTransactionResourcePool(ITransactionResourcePool* ppTxPool);
     void Reserved10();
     void Reserved11();
     void Reserved12();
@@ -1661,8 +1662,8 @@ interface ITransactionProperty : IUnknown
 enum IID_IMTSActivity = GUID(0x51372af0, 0xcae7, 0x11cf, [0xbe, 0x81, 0x0, 0xaa, 0x0, 0xa2, 0xfa, 0x25]);
 interface IMTSActivity : IUnknown
 {
-    HRESULT SynchronousCall(IMTSCall);
-    HRESULT AsyncCall(IMTSCall);
+    HRESULT SynchronousCall(IMTSCall pCall);
+    HRESULT AsyncCall(IMTSCall pCall);
     void Reserved1();
     HRESULT BindToCurrentThread();
     HRESULT UnbindFromThread();

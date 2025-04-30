@@ -1,7 +1,7 @@
 module windows.win32.devices.devicequery;
 
-import windows.win32.devices.properties : DEVPROPCOMPKEY, DEVPROPERTY, DEVPROPKEY, DEVPROPSTORE, DEVPROPTYPE;
-import windows.win32.foundation : HRESULT, PWSTR;
+import windows.win32.devices.properties : DEVPROPCOMPKEY, DEVPROPERTY, DEVPROPSTORE, DEVPROPTYPE;
+import windows.win32.foundation : DEVPROPKEY, HRESULT, PWSTR;
 
 version (Windows):
 extern (Windows):
@@ -127,18 +127,18 @@ struct DEV_QUERY_PARAMETER
     uint BufferSize;
     void* Buffer;
 }
-alias PDEV_QUERY_RESULT_CALLBACK = void function(HDEVQUERY, void*, const(DEV_QUERY_RESULT_ACTION_DATA)*);
-HRESULT DevCreateObjectQuery(DEV_OBJECT_TYPE, uint, uint, const(DEVPROPCOMPKEY)*, uint, const(DEVPROP_FILTER_EXPRESSION)*, PDEV_QUERY_RESULT_CALLBACK, void*, HDEVQUERY*);
-HRESULT DevCreateObjectQueryEx(DEV_OBJECT_TYPE, uint, uint, const(DEVPROPCOMPKEY)*, uint, const(DEVPROP_FILTER_EXPRESSION)*, uint, const(DEV_QUERY_PARAMETER)*, PDEV_QUERY_RESULT_CALLBACK, void*, HDEVQUERY*);
-HRESULT DevCreateObjectQueryFromId(DEV_OBJECT_TYPE, const(wchar)*, uint, uint, const(DEVPROPCOMPKEY)*, uint, const(DEVPROP_FILTER_EXPRESSION)*, PDEV_QUERY_RESULT_CALLBACK, void*, HDEVQUERY*);
-HRESULT DevCreateObjectQueryFromIdEx(DEV_OBJECT_TYPE, const(wchar)*, uint, uint, const(DEVPROPCOMPKEY)*, uint, const(DEVPROP_FILTER_EXPRESSION)*, uint, const(DEV_QUERY_PARAMETER)*, PDEV_QUERY_RESULT_CALLBACK, void*, HDEVQUERY*);
-HRESULT DevCreateObjectQueryFromIds(DEV_OBJECT_TYPE, const(wchar)*, uint, uint, const(DEVPROPCOMPKEY)*, uint, const(DEVPROP_FILTER_EXPRESSION)*, PDEV_QUERY_RESULT_CALLBACK, void*, HDEVQUERY*);
-HRESULT DevCreateObjectQueryFromIdsEx(DEV_OBJECT_TYPE, const(wchar)*, uint, uint, const(DEVPROPCOMPKEY)*, uint, const(DEVPROP_FILTER_EXPRESSION)*, uint, const(DEV_QUERY_PARAMETER)*, PDEV_QUERY_RESULT_CALLBACK, void*, HDEVQUERY*);
-void DevCloseObjectQuery(HDEVQUERY);
-HRESULT DevGetObjects(DEV_OBJECT_TYPE, uint, uint, const(DEVPROPCOMPKEY)*, uint, const(DEVPROP_FILTER_EXPRESSION)*, uint*, const(DEV_OBJECT)**);
-HRESULT DevGetObjectsEx(DEV_OBJECT_TYPE, uint, uint, const(DEVPROPCOMPKEY)*, uint, const(DEVPROP_FILTER_EXPRESSION)*, uint, const(DEV_QUERY_PARAMETER)*, uint*, const(DEV_OBJECT)**);
-void DevFreeObjects(uint, const(DEV_OBJECT)*);
-HRESULT DevGetObjectProperties(DEV_OBJECT_TYPE, const(wchar)*, uint, uint, const(DEVPROPCOMPKEY)*, uint*, const(DEVPROPERTY)**);
-HRESULT DevGetObjectPropertiesEx(DEV_OBJECT_TYPE, const(wchar)*, uint, uint, const(DEVPROPCOMPKEY)*, uint, const(DEV_QUERY_PARAMETER)*, uint*, const(DEVPROPERTY)**);
-void DevFreeObjectProperties(uint, const(DEVPROPERTY)*);
-DEVPROPERTY* DevFindProperty(const(DEVPROPKEY)*, DEVPROPSTORE, const(wchar)*, uint, const(DEVPROPERTY)*);
+alias PDEV_QUERY_RESULT_CALLBACK = void function(HDEVQUERY hDevQuery, void* pContext, const(DEV_QUERY_RESULT_ACTION_DATA)* pActionData);
+HRESULT DevCreateObjectQuery(DEV_OBJECT_TYPE ObjectType, uint QueryFlags, uint cRequestedProperties, const(DEVPROPCOMPKEY)* pRequestedProperties, uint cFilterExpressionCount, const(DEVPROP_FILTER_EXPRESSION)* pFilter, PDEV_QUERY_RESULT_CALLBACK pCallback, void* pContext, HDEVQUERY* phDevQuery);
+HRESULT DevCreateObjectQueryEx(DEV_OBJECT_TYPE ObjectType, uint QueryFlags, uint cRequestedProperties, const(DEVPROPCOMPKEY)* pRequestedProperties, uint cFilterExpressionCount, const(DEVPROP_FILTER_EXPRESSION)* pFilter, uint cExtendedParameterCount, const(DEV_QUERY_PARAMETER)* pExtendedParameters, PDEV_QUERY_RESULT_CALLBACK pCallback, void* pContext, HDEVQUERY* phDevQuery);
+HRESULT DevCreateObjectQueryFromId(DEV_OBJECT_TYPE ObjectType, const(wchar)* pszObjectId, uint QueryFlags, uint cRequestedProperties, const(DEVPROPCOMPKEY)* pRequestedProperties, uint cFilterExpressionCount, const(DEVPROP_FILTER_EXPRESSION)* pFilter, PDEV_QUERY_RESULT_CALLBACK pCallback, void* pContext, HDEVQUERY* phDevQuery);
+HRESULT DevCreateObjectQueryFromIdEx(DEV_OBJECT_TYPE ObjectType, const(wchar)* pszObjectId, uint QueryFlags, uint cRequestedProperties, const(DEVPROPCOMPKEY)* pRequestedProperties, uint cFilterExpressionCount, const(DEVPROP_FILTER_EXPRESSION)* pFilter, uint cExtendedParameterCount, const(DEV_QUERY_PARAMETER)* pExtendedParameters, PDEV_QUERY_RESULT_CALLBACK pCallback, void* pContext, HDEVQUERY* phDevQuery);
+HRESULT DevCreateObjectQueryFromIds(DEV_OBJECT_TYPE ObjectType, const(wchar)* pszzObjectIds, uint QueryFlags, uint cRequestedProperties, const(DEVPROPCOMPKEY)* pRequestedProperties, uint cFilterExpressionCount, const(DEVPROP_FILTER_EXPRESSION)* pFilter, PDEV_QUERY_RESULT_CALLBACK pCallback, void* pContext, HDEVQUERY* phDevQuery);
+HRESULT DevCreateObjectQueryFromIdsEx(DEV_OBJECT_TYPE ObjectType, const(wchar)* pszzObjectIds, uint QueryFlags, uint cRequestedProperties, const(DEVPROPCOMPKEY)* pRequestedProperties, uint cFilterExpressionCount, const(DEVPROP_FILTER_EXPRESSION)* pFilter, uint cExtendedParameterCount, const(DEV_QUERY_PARAMETER)* pExtendedParameters, PDEV_QUERY_RESULT_CALLBACK pCallback, void* pContext, HDEVQUERY* phDevQuery);
+void DevCloseObjectQuery(HDEVQUERY hDevQuery);
+HRESULT DevGetObjects(DEV_OBJECT_TYPE ObjectType, uint QueryFlags, uint cRequestedProperties, const(DEVPROPCOMPKEY)* pRequestedProperties, uint cFilterExpressionCount, const(DEVPROP_FILTER_EXPRESSION)* pFilter, uint* pcObjectCount, const(DEV_OBJECT)** ppObjects);
+HRESULT DevGetObjectsEx(DEV_OBJECT_TYPE ObjectType, uint QueryFlags, uint cRequestedProperties, const(DEVPROPCOMPKEY)* pRequestedProperties, uint cFilterExpressionCount, const(DEVPROP_FILTER_EXPRESSION)* pFilter, uint cExtendedParameterCount, const(DEV_QUERY_PARAMETER)* pExtendedParameters, uint* pcObjectCount, const(DEV_OBJECT)** ppObjects);
+void DevFreeObjects(uint cObjectCount, const(DEV_OBJECT)* pObjects);
+HRESULT DevGetObjectProperties(DEV_OBJECT_TYPE ObjectType, const(wchar)* pszObjectId, uint QueryFlags, uint cRequestedProperties, const(DEVPROPCOMPKEY)* pRequestedProperties, uint* pcPropertyCount, const(DEVPROPERTY)** ppProperties);
+HRESULT DevGetObjectPropertiesEx(DEV_OBJECT_TYPE ObjectType, const(wchar)* pszObjectId, uint QueryFlags, uint cRequestedProperties, const(DEVPROPCOMPKEY)* pRequestedProperties, uint cExtendedParameterCount, const(DEV_QUERY_PARAMETER)* pExtendedParameters, uint* pcPropertyCount, const(DEVPROPERTY)** ppProperties);
+void DevFreeObjectProperties(uint cPropertyCount, const(DEVPROPERTY)* pProperties);
+DEVPROPERTY* DevFindProperty(const(DEVPROPKEY)* pKey, DEVPROPSTORE Store, const(wchar)* pszLocaleName, uint cProperties, const(DEVPROPERTY)* pProperties);

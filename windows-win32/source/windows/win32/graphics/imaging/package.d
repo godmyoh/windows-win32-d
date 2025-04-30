@@ -12,15 +12,15 @@ import windows.win32.ui.windowsandmessaging : HICON;
 version (Windows):
 extern (Windows):
 
-HRESULT WICConvertBitmapSource(GUID*, IWICBitmapSource, IWICBitmapSource*);
-HRESULT WICCreateBitmapFromSection(uint, uint, GUID*, HANDLE, uint, uint, IWICBitmap*);
-HRESULT WICCreateBitmapFromSectionEx(uint, uint, GUID*, HANDLE, uint, uint, WICSectionAccessLevel, IWICBitmap*);
-HRESULT WICMapGuidToShortName(const(GUID)*, uint, PWSTR, uint*);
-HRESULT WICMapShortNameToGuid(const(wchar)*, GUID*);
-HRESULT WICMapSchemaToName(const(GUID)*, PWSTR, uint, PWSTR, uint*);
-HRESULT WICMatchMetadataContent(const(GUID)*, const(GUID)*, IStream, GUID*);
-HRESULT WICSerializeMetadataContent(const(GUID)*, IWICMetadataWriter, uint, IStream);
-HRESULT WICGetMetadataContentSize(const(GUID)*, IWICMetadataWriter, ulong*);
+HRESULT WICConvertBitmapSource(GUID* dstFormat, IWICBitmapSource pISrc, IWICBitmapSource* ppIDst);
+HRESULT WICCreateBitmapFromSection(uint width, uint height, GUID* pixelFormat, HANDLE hSection, uint stride, uint offset, IWICBitmap* ppIBitmap);
+HRESULT WICCreateBitmapFromSectionEx(uint width, uint height, GUID* pixelFormat, HANDLE hSection, uint stride, uint offset, WICSectionAccessLevel desiredAccessLevel, IWICBitmap* ppIBitmap);
+HRESULT WICMapGuidToShortName(const(GUID)* guid, uint cchName, PWSTR wzName, uint* pcchActual);
+HRESULT WICMapShortNameToGuid(const(wchar)* wzName, GUID* pguid);
+HRESULT WICMapSchemaToName(const(GUID)* guidMetadataFormat, PWSTR pwzSchema, uint cchName, PWSTR wzName, uint* pcchActual);
+HRESULT WICMatchMetadataContent(const(GUID)* guidContainerFormat, const(GUID)* pguidVendor, IStream pIStream, GUID* pguidMetadataFormat);
+HRESULT WICSerializeMetadataContent(const(GUID)* guidContainerFormat, IWICMetadataWriter pIWriter, uint dwPersistOptions, IStream pIStream);
+HRESULT WICGetMetadataContentSize(const(GUID)* guidContainerFormat, IWICMetadataWriter pIWriter, ulong* pcbSize);
 enum WINCODEC_SDK_VERSION1 = 0x00000236;
 enum WINCODEC_SDK_VERSION2 = 0x00000237;
 enum CLSID_WICImagingFactory = GUID(0xcacaf262, 0x9370, 0x4615, [0xa1, 0x3b, 0x9f, 0x55, 0x39, 0xda, 0x4c, 0xa]);
@@ -778,297 +778,297 @@ struct WICJpegScanHeader
 enum IID_IWICPalette = GUID(0x40, 0xa8f2, 0x4877, [0xba, 0xa, 0xfd, 0x2b, 0x66, 0x45, 0xfb, 0x94]);
 interface IWICPalette : IUnknown
 {
-    HRESULT InitializePredefined(WICBitmapPaletteType, BOOL);
-    HRESULT InitializeCustom(uint*, uint);
-    HRESULT InitializeFromBitmap(IWICBitmapSource, uint, BOOL);
-    HRESULT InitializeFromPalette(IWICPalette);
-    HRESULT GetType(WICBitmapPaletteType*);
-    HRESULT GetColorCount(uint*);
-    HRESULT GetColors(uint, uint*, uint*);
-    HRESULT IsBlackWhite(BOOL*);
-    HRESULT IsGrayscale(BOOL*);
-    HRESULT HasAlpha(BOOL*);
+    HRESULT InitializePredefined(WICBitmapPaletteType ePaletteType, BOOL fAddTransparentColor);
+    HRESULT InitializeCustom(uint* pColors, uint cCount);
+    HRESULT InitializeFromBitmap(IWICBitmapSource pISurface, uint cCount, BOOL fAddTransparentColor);
+    HRESULT InitializeFromPalette(IWICPalette pIPalette);
+    HRESULT GetType(WICBitmapPaletteType* pePaletteType);
+    HRESULT GetColorCount(uint* pcCount);
+    HRESULT GetColors(uint cCount, uint* pColors, uint* pcActualColors);
+    HRESULT IsBlackWhite(BOOL* pfIsBlackWhite);
+    HRESULT IsGrayscale(BOOL* pfIsGrayscale);
+    HRESULT HasAlpha(BOOL* pfHasAlpha);
 }
 enum IID_IWICBitmapSource = GUID(0x120, 0xa8f2, 0x4877, [0xba, 0xa, 0xfd, 0x2b, 0x66, 0x45, 0xfb, 0x94]);
 interface IWICBitmapSource : IUnknown
 {
-    HRESULT GetSize(uint*, uint*);
-    HRESULT GetPixelFormat(GUID*);
-    HRESULT GetResolution(double*, double*);
-    HRESULT CopyPalette(IWICPalette);
-    HRESULT CopyPixels(const(WICRect)*, uint, uint, ubyte*);
+    HRESULT GetSize(uint* puiWidth, uint* puiHeight);
+    HRESULT GetPixelFormat(GUID* pPixelFormat);
+    HRESULT GetResolution(double* pDpiX, double* pDpiY);
+    HRESULT CopyPalette(IWICPalette pIPalette);
+    HRESULT CopyPixels(const(WICRect)* prc, uint cbStride, uint cbBufferSize, ubyte* pbBuffer);
 }
 enum IID_IWICFormatConverter = GUID(0x301, 0xa8f2, 0x4877, [0xba, 0xa, 0xfd, 0x2b, 0x66, 0x45, 0xfb, 0x94]);
 interface IWICFormatConverter : IWICBitmapSource
 {
-    HRESULT Initialize(IWICBitmapSource, GUID*, WICBitmapDitherType, IWICPalette, double, WICBitmapPaletteType);
-    HRESULT CanConvert(GUID*, GUID*, BOOL*);
+    HRESULT Initialize(IWICBitmapSource pISource, GUID* dstFormat, WICBitmapDitherType dither, IWICPalette pIPalette, double alphaThresholdPercent, WICBitmapPaletteType paletteTranslate);
+    HRESULT CanConvert(GUID* srcPixelFormat, GUID* dstPixelFormat, BOOL* pfCanConvert);
 }
 enum IID_IWICPlanarFormatConverter = GUID(0xbebee9cb, 0x83b0, 0x4dcc, [0x81, 0x32, 0xb0, 0xaa, 0xa5, 0x5e, 0xac, 0x96]);
 interface IWICPlanarFormatConverter : IWICBitmapSource
 {
-    HRESULT Initialize(IWICBitmapSource*, uint, GUID*, WICBitmapDitherType, IWICPalette, double, WICBitmapPaletteType);
-    HRESULT CanConvert(const(GUID)*, uint, GUID*, BOOL*);
+    HRESULT Initialize(IWICBitmapSource* ppPlanes, uint cPlanes, GUID* dstFormat, WICBitmapDitherType dither, IWICPalette pIPalette, double alphaThresholdPercent, WICBitmapPaletteType paletteTranslate);
+    HRESULT CanConvert(const(GUID)* pSrcPixelFormats, uint cSrcPlanes, GUID* dstPixelFormat, BOOL* pfCanConvert);
 }
 enum IID_IWICBitmapScaler = GUID(0x302, 0xa8f2, 0x4877, [0xba, 0xa, 0xfd, 0x2b, 0x66, 0x45, 0xfb, 0x94]);
 interface IWICBitmapScaler : IWICBitmapSource
 {
-    HRESULT Initialize(IWICBitmapSource, uint, uint, WICBitmapInterpolationMode);
+    HRESULT Initialize(IWICBitmapSource pISource, uint uiWidth, uint uiHeight, WICBitmapInterpolationMode mode);
 }
 enum IID_IWICBitmapClipper = GUID(0xe4fbcf03, 0x223d, 0x4e81, [0x93, 0x33, 0xd6, 0x35, 0x55, 0x6d, 0xd1, 0xb5]);
 interface IWICBitmapClipper : IWICBitmapSource
 {
-    HRESULT Initialize(IWICBitmapSource, const(WICRect)*);
+    HRESULT Initialize(IWICBitmapSource pISource, const(WICRect)* prc);
 }
 enum IID_IWICBitmapFlipRotator = GUID(0x5009834f, 0x2d6a, 0x41ce, [0x9e, 0x1b, 0x17, 0xc5, 0xaf, 0xf7, 0xa7, 0x82]);
 interface IWICBitmapFlipRotator : IWICBitmapSource
 {
-    HRESULT Initialize(IWICBitmapSource, WICBitmapTransformOptions);
+    HRESULT Initialize(IWICBitmapSource pISource, WICBitmapTransformOptions options);
 }
 enum IID_IWICBitmapLock = GUID(0x123, 0xa8f2, 0x4877, [0xba, 0xa, 0xfd, 0x2b, 0x66, 0x45, 0xfb, 0x94]);
 interface IWICBitmapLock : IUnknown
 {
-    HRESULT GetSize(uint*, uint*);
-    HRESULT GetStride(uint*);
-    HRESULT GetDataPointer(uint*, ubyte**);
-    HRESULT GetPixelFormat(GUID*);
+    HRESULT GetSize(uint* puiWidth, uint* puiHeight);
+    HRESULT GetStride(uint* pcbStride);
+    HRESULT GetDataPointer(uint* pcbBufferSize, ubyte** ppbData);
+    HRESULT GetPixelFormat(GUID* pPixelFormat);
 }
 enum IID_IWICBitmap = GUID(0x121, 0xa8f2, 0x4877, [0xba, 0xa, 0xfd, 0x2b, 0x66, 0x45, 0xfb, 0x94]);
 interface IWICBitmap : IWICBitmapSource
 {
-    HRESULT Lock(const(WICRect)*, uint, IWICBitmapLock*);
-    HRESULT SetPalette(IWICPalette);
-    HRESULT SetResolution(double, double);
+    HRESULT Lock(const(WICRect)* prcLock, uint flags, IWICBitmapLock* ppILock);
+    HRESULT SetPalette(IWICPalette pIPalette);
+    HRESULT SetResolution(double dpiX, double dpiY);
 }
 enum IID_IWICColorContext = GUID(0x3c613a02, 0x34b2, 0x44ea, [0x9a, 0x7c, 0x45, 0xae, 0xa9, 0xc6, 0xfd, 0x6d]);
 interface IWICColorContext : IUnknown
 {
-    HRESULT InitializeFromFilename(const(wchar)*);
-    HRESULT InitializeFromMemory(const(ubyte)*, uint);
-    HRESULT InitializeFromExifColorSpace(uint);
-    HRESULT GetType(WICColorContextType*);
-    HRESULT GetProfileBytes(uint, ubyte*, uint*);
-    HRESULT GetExifColorSpace(uint*);
+    HRESULT InitializeFromFilename(const(wchar)* wzFilename);
+    HRESULT InitializeFromMemory(const(ubyte)* pbBuffer, uint cbBufferSize);
+    HRESULT InitializeFromExifColorSpace(uint value);
+    HRESULT GetType(WICColorContextType* pType);
+    HRESULT GetProfileBytes(uint cbBuffer, ubyte* pbBuffer, uint* pcbActual);
+    HRESULT GetExifColorSpace(uint* pValue);
 }
 enum IID_IWICColorTransform = GUID(0xb66f034f, 0xd0e2, 0x40ab, [0xb4, 0x36, 0x6d, 0xe3, 0x9e, 0x32, 0x1a, 0x94]);
 interface IWICColorTransform : IWICBitmapSource
 {
-    HRESULT Initialize(IWICBitmapSource, IWICColorContext, IWICColorContext, GUID*);
+    HRESULT Initialize(IWICBitmapSource pIBitmapSource, IWICColorContext pIContextSource, IWICColorContext pIContextDest, GUID* pixelFmtDest);
 }
 enum IID_IWICFastMetadataEncoder = GUID(0xb84e2c09, 0x78c9, 0x4ac4, [0x8b, 0xd3, 0x52, 0x4a, 0xe1, 0x66, 0x3a, 0x2f]);
 interface IWICFastMetadataEncoder : IUnknown
 {
     HRESULT Commit();
-    HRESULT GetMetadataQueryWriter(IWICMetadataQueryWriter*);
+    HRESULT GetMetadataQueryWriter(IWICMetadataQueryWriter* ppIMetadataQueryWriter);
 }
 enum IID_IWICStream = GUID(0x135ff860, 0x22b7, 0x4ddf, [0xb0, 0xf6, 0x21, 0x8f, 0x4f, 0x29, 0x9a, 0x43]);
 interface IWICStream : IStream
 {
-    HRESULT InitializeFromIStream(IStream);
-    HRESULT InitializeFromFilename(const(wchar)*, uint);
-    HRESULT InitializeFromMemory(ubyte*, uint);
-    HRESULT InitializeFromIStreamRegion(IStream, ulong, ulong);
+    HRESULT InitializeFromIStream(IStream pIStream);
+    HRESULT InitializeFromFilename(const(wchar)* wzFileName, uint dwDesiredAccess);
+    HRESULT InitializeFromMemory(ubyte* pbBuffer, uint cbBufferSize);
+    HRESULT InitializeFromIStreamRegion(IStream pIStream, ulong ulOffset, ulong ulMaxSize);
 }
 enum IID_IWICEnumMetadataItem = GUID(0xdc2bb46d, 0x3f07, 0x481e, [0x86, 0x25, 0x22, 0xc, 0x4a, 0xed, 0xbb, 0x33]);
 interface IWICEnumMetadataItem : IUnknown
 {
-    HRESULT Next(uint, PROPVARIANT*, PROPVARIANT*, PROPVARIANT*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, PROPVARIANT* rgeltSchema, PROPVARIANT* rgeltId, PROPVARIANT* rgeltValue, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IWICEnumMetadataItem*);
+    HRESULT Clone(IWICEnumMetadataItem* ppIEnumMetadataItem);
 }
 enum IID_IWICMetadataQueryReader = GUID(0x30989668, 0xe1c9, 0x4597, [0xb3, 0x95, 0x45, 0x8e, 0xed, 0xb8, 0x8, 0xdf]);
 interface IWICMetadataQueryReader : IUnknown
 {
-    HRESULT GetContainerFormat(GUID*);
-    HRESULT GetLocation(uint, PWSTR, uint*);
-    HRESULT GetMetadataByName(const(wchar)*, PROPVARIANT*);
-    HRESULT GetEnumerator(IEnumString*);
+    HRESULT GetContainerFormat(GUID* pguidContainerFormat);
+    HRESULT GetLocation(uint cchMaxLength, PWSTR wzNamespace, uint* pcchActualLength);
+    HRESULT GetMetadataByName(const(wchar)* wzName, PROPVARIANT* pvarValue);
+    HRESULT GetEnumerator(IEnumString* ppIEnumString);
 }
 enum IID_IWICMetadataQueryWriter = GUID(0xa721791a, 0xdef, 0x4d06, [0xbd, 0x91, 0x21, 0x18, 0xbf, 0x1d, 0xb1, 0xb]);
 interface IWICMetadataQueryWriter : IWICMetadataQueryReader
 {
-    HRESULT SetMetadataByName(const(wchar)*, const(PROPVARIANT)*);
-    HRESULT RemoveMetadataByName(const(wchar)*);
+    HRESULT SetMetadataByName(const(wchar)* wzName, const(PROPVARIANT)* pvarValue);
+    HRESULT RemoveMetadataByName(const(wchar)* wzName);
 }
 enum IID_IWICBitmapEncoder = GUID(0x103, 0xa8f2, 0x4877, [0xba, 0xa, 0xfd, 0x2b, 0x66, 0x45, 0xfb, 0x94]);
 interface IWICBitmapEncoder : IUnknown
 {
-    HRESULT Initialize(IStream, WICBitmapEncoderCacheOption);
-    HRESULT GetContainerFormat(GUID*);
-    HRESULT GetEncoderInfo(IWICBitmapEncoderInfo*);
-    HRESULT SetColorContexts(uint, IWICColorContext*);
-    HRESULT SetPalette(IWICPalette);
-    HRESULT SetThumbnail(IWICBitmapSource);
-    HRESULT SetPreview(IWICBitmapSource);
-    HRESULT CreateNewFrame(IWICBitmapFrameEncode*, IPropertyBag2*);
+    HRESULT Initialize(IStream pIStream, WICBitmapEncoderCacheOption cacheOption);
+    HRESULT GetContainerFormat(GUID* pguidContainerFormat);
+    HRESULT GetEncoderInfo(IWICBitmapEncoderInfo* ppIEncoderInfo);
+    HRESULT SetColorContexts(uint cCount, IWICColorContext* ppIColorContext);
+    HRESULT SetPalette(IWICPalette pIPalette);
+    HRESULT SetThumbnail(IWICBitmapSource pIThumbnail);
+    HRESULT SetPreview(IWICBitmapSource pIPreview);
+    HRESULT CreateNewFrame(IWICBitmapFrameEncode* ppIFrameEncode, IPropertyBag2* ppIEncoderOptions);
     HRESULT Commit();
-    HRESULT GetMetadataQueryWriter(IWICMetadataQueryWriter*);
+    HRESULT GetMetadataQueryWriter(IWICMetadataQueryWriter* ppIMetadataQueryWriter);
 }
 enum IID_IWICBitmapFrameEncode = GUID(0x105, 0xa8f2, 0x4877, [0xba, 0xa, 0xfd, 0x2b, 0x66, 0x45, 0xfb, 0x94]);
 interface IWICBitmapFrameEncode : IUnknown
 {
-    HRESULT Initialize(IPropertyBag2);
-    HRESULT SetSize(uint, uint);
-    HRESULT SetResolution(double, double);
-    HRESULT SetPixelFormat(GUID*);
-    HRESULT SetColorContexts(uint, IWICColorContext*);
-    HRESULT SetPalette(IWICPalette);
-    HRESULT SetThumbnail(IWICBitmapSource);
-    HRESULT WritePixels(uint, uint, uint, ubyte*);
-    HRESULT WriteSource(IWICBitmapSource, WICRect*);
+    HRESULT Initialize(IPropertyBag2 pIEncoderOptions);
+    HRESULT SetSize(uint uiWidth, uint uiHeight);
+    HRESULT SetResolution(double dpiX, double dpiY);
+    HRESULT SetPixelFormat(GUID* pPixelFormat);
+    HRESULT SetColorContexts(uint cCount, IWICColorContext* ppIColorContext);
+    HRESULT SetPalette(IWICPalette pIPalette);
+    HRESULT SetThumbnail(IWICBitmapSource pIThumbnail);
+    HRESULT WritePixels(uint lineCount, uint cbStride, uint cbBufferSize, ubyte* pbPixels);
+    HRESULT WriteSource(IWICBitmapSource pIBitmapSource, WICRect* prc);
     HRESULT Commit();
-    HRESULT GetMetadataQueryWriter(IWICMetadataQueryWriter*);
+    HRESULT GetMetadataQueryWriter(IWICMetadataQueryWriter* ppIMetadataQueryWriter);
 }
 enum IID_IWICPlanarBitmapFrameEncode = GUID(0xf928b7b8, 0x2221, 0x40c1, [0xb7, 0x2e, 0x7e, 0x82, 0xf1, 0x97, 0x4d, 0x1a]);
 interface IWICPlanarBitmapFrameEncode : IUnknown
 {
-    HRESULT WritePixels(uint, WICBitmapPlane*, uint);
-    HRESULT WriteSource(IWICBitmapSource*, uint, WICRect*);
+    HRESULT WritePixels(uint lineCount, WICBitmapPlane* pPlanes, uint cPlanes);
+    HRESULT WriteSource(IWICBitmapSource* ppPlanes, uint cPlanes, WICRect* prcSource);
 }
 enum IID_IWICBitmapDecoder = GUID(0x9edde9e7, 0x8dee, 0x47ea, [0x99, 0xdf, 0xe6, 0xfa, 0xf2, 0xed, 0x44, 0xbf]);
 interface IWICBitmapDecoder : IUnknown
 {
-    HRESULT QueryCapability(IStream, uint*);
-    HRESULT Initialize(IStream, WICDecodeOptions);
-    HRESULT GetContainerFormat(GUID*);
-    HRESULT GetDecoderInfo(IWICBitmapDecoderInfo*);
-    HRESULT CopyPalette(IWICPalette);
-    HRESULT GetMetadataQueryReader(IWICMetadataQueryReader*);
-    HRESULT GetPreview(IWICBitmapSource*);
-    HRESULT GetColorContexts(uint, IWICColorContext*, uint*);
-    HRESULT GetThumbnail(IWICBitmapSource*);
-    HRESULT GetFrameCount(uint*);
-    HRESULT GetFrame(uint, IWICBitmapFrameDecode*);
+    HRESULT QueryCapability(IStream pIStream, uint* pdwCapability);
+    HRESULT Initialize(IStream pIStream, WICDecodeOptions cacheOptions);
+    HRESULT GetContainerFormat(GUID* pguidContainerFormat);
+    HRESULT GetDecoderInfo(IWICBitmapDecoderInfo* ppIDecoderInfo);
+    HRESULT CopyPalette(IWICPalette pIPalette);
+    HRESULT GetMetadataQueryReader(IWICMetadataQueryReader* ppIMetadataQueryReader);
+    HRESULT GetPreview(IWICBitmapSource* ppIBitmapSource);
+    HRESULT GetColorContexts(uint cCount, IWICColorContext* ppIColorContexts, uint* pcActualCount);
+    HRESULT GetThumbnail(IWICBitmapSource* ppIThumbnail);
+    HRESULT GetFrameCount(uint* pCount);
+    HRESULT GetFrame(uint index, IWICBitmapFrameDecode* ppIBitmapFrame);
 }
 enum IID_IWICBitmapSourceTransform = GUID(0x3b16811b, 0x6a43, 0x4ec9, [0xb7, 0x13, 0x3d, 0x5a, 0xc, 0x13, 0xb9, 0x40]);
 interface IWICBitmapSourceTransform : IUnknown
 {
-    HRESULT CopyPixels(const(WICRect)*, uint, uint, GUID*, WICBitmapTransformOptions, uint, uint, ubyte*);
-    HRESULT GetClosestSize(uint*, uint*);
-    HRESULT GetClosestPixelFormat(GUID*);
-    HRESULT DoesSupportTransform(WICBitmapTransformOptions, BOOL*);
+    HRESULT CopyPixels(const(WICRect)* prc, uint uiWidth, uint uiHeight, GUID* pguidDstFormat, WICBitmapTransformOptions dstTransform, uint nStride, uint cbBufferSize, ubyte* pbBuffer);
+    HRESULT GetClosestSize(uint* puiWidth, uint* puiHeight);
+    HRESULT GetClosestPixelFormat(GUID* pguidDstFormat);
+    HRESULT DoesSupportTransform(WICBitmapTransformOptions dstTransform, BOOL* pfIsSupported);
 }
 enum IID_IWICPlanarBitmapSourceTransform = GUID(0x3aff9cce, 0xbe95, 0x4303, [0xb9, 0x27, 0xe7, 0xd1, 0x6f, 0xf4, 0xa6, 0x13]);
 interface IWICPlanarBitmapSourceTransform : IUnknown
 {
-    HRESULT DoesSupportTransform(uint*, uint*, WICBitmapTransformOptions, WICPlanarOptions, const(GUID)*, WICBitmapPlaneDescription*, uint, BOOL*);
-    HRESULT CopyPixels(const(WICRect)*, uint, uint, WICBitmapTransformOptions, WICPlanarOptions, const(WICBitmapPlane)*, uint);
+    HRESULT DoesSupportTransform(uint* puiWidth, uint* puiHeight, WICBitmapTransformOptions dstTransform, WICPlanarOptions dstPlanarOptions, const(GUID)* pguidDstFormats, WICBitmapPlaneDescription* pPlaneDescriptions, uint cPlanes, BOOL* pfIsSupported);
+    HRESULT CopyPixels(const(WICRect)* prcSource, uint uiWidth, uint uiHeight, WICBitmapTransformOptions dstTransform, WICPlanarOptions dstPlanarOptions, const(WICBitmapPlane)* pDstPlanes, uint cPlanes);
 }
 enum IID_IWICBitmapFrameDecode = GUID(0x3b16811b, 0x6a43, 0x4ec9, [0xa8, 0x13, 0x3d, 0x93, 0xc, 0x13, 0xb9, 0x40]);
 interface IWICBitmapFrameDecode : IWICBitmapSource
 {
-    HRESULT GetMetadataQueryReader(IWICMetadataQueryReader*);
-    HRESULT GetColorContexts(uint, IWICColorContext*, uint*);
-    HRESULT GetThumbnail(IWICBitmapSource*);
+    HRESULT GetMetadataQueryReader(IWICMetadataQueryReader* ppIMetadataQueryReader);
+    HRESULT GetColorContexts(uint cCount, IWICColorContext* ppIColorContexts, uint* pcActualCount);
+    HRESULT GetThumbnail(IWICBitmapSource* ppIThumbnail);
 }
 enum IID_IWICProgressiveLevelControl = GUID(0xdaac296f, 0x7aa5, 0x4dbf, [0x8d, 0x15, 0x22, 0x5c, 0x59, 0x76, 0xf8, 0x91]);
 interface IWICProgressiveLevelControl : IUnknown
 {
-    HRESULT GetLevelCount(uint*);
-    HRESULT GetCurrentLevel(uint*);
-    HRESULT SetCurrentLevel(uint);
+    HRESULT GetLevelCount(uint* pcLevels);
+    HRESULT GetCurrentLevel(uint* pnLevel);
+    HRESULT SetCurrentLevel(uint nLevel);
 }
 enum IID_IWICProgressCallback = GUID(0x4776f9cd, 0x9517, 0x45fa, [0xbf, 0x24, 0xe8, 0x9c, 0x5e, 0xc5, 0xc6, 0xc]);
 interface IWICProgressCallback : IUnknown
 {
-    HRESULT Notify(uint, WICProgressOperation, double);
+    HRESULT Notify(uint uFrameNum, WICProgressOperation operation, double dblProgress);
 }
-alias PFNProgressNotification = HRESULT function(void*, uint, WICProgressOperation, double);
+alias PFNProgressNotification = HRESULT function(void* pvData, uint uFrameNum, WICProgressOperation operation, double dblProgress);
 enum IID_IWICBitmapCodecProgressNotification = GUID(0x64c1024e, 0xc3cf, 0x4462, [0x80, 0x78, 0x88, 0xc2, 0xb1, 0x1c, 0x46, 0xd9]);
 interface IWICBitmapCodecProgressNotification : IUnknown
 {
-    HRESULT RegisterProgressNotification(PFNProgressNotification, void*, uint);
+    HRESULT RegisterProgressNotification(PFNProgressNotification pfnProgressNotification, void* pvData, uint dwProgressFlags);
 }
 enum IID_IWICComponentInfo = GUID(0x23bc3f0a, 0x698b, 0x4357, [0x88, 0x6b, 0xf2, 0x4d, 0x50, 0x67, 0x13, 0x34]);
 interface IWICComponentInfo : IUnknown
 {
-    HRESULT GetComponentType(WICComponentType*);
-    HRESULT GetCLSID(GUID*);
-    HRESULT GetSigningStatus(uint*);
-    HRESULT GetAuthor(uint, PWSTR, uint*);
-    HRESULT GetVendorGUID(GUID*);
-    HRESULT GetVersion(uint, PWSTR, uint*);
-    HRESULT GetSpecVersion(uint, PWSTR, uint*);
-    HRESULT GetFriendlyName(uint, PWSTR, uint*);
+    HRESULT GetComponentType(WICComponentType* pType);
+    HRESULT GetCLSID(GUID* pclsid);
+    HRESULT GetSigningStatus(uint* pStatus);
+    HRESULT GetAuthor(uint cchAuthor, PWSTR wzAuthor, uint* pcchActual);
+    HRESULT GetVendorGUID(GUID* pguidVendor);
+    HRESULT GetVersion(uint cchVersion, PWSTR wzVersion, uint* pcchActual);
+    HRESULT GetSpecVersion(uint cchSpecVersion, PWSTR wzSpecVersion, uint* pcchActual);
+    HRESULT GetFriendlyName(uint cchFriendlyName, PWSTR wzFriendlyName, uint* pcchActual);
 }
 enum IID_IWICFormatConverterInfo = GUID(0x9f34fb65, 0x13f4, 0x4f15, [0xbc, 0x57, 0x37, 0x26, 0xb5, 0xe5, 0x3d, 0x9f]);
 interface IWICFormatConverterInfo : IWICComponentInfo
 {
-    HRESULT GetPixelFormats(uint, GUID*, uint*);
-    HRESULT CreateInstance(IWICFormatConverter*);
+    HRESULT GetPixelFormats(uint cFormats, GUID* pPixelFormatGUIDs, uint* pcActual);
+    HRESULT CreateInstance(IWICFormatConverter* ppIConverter);
 }
 enum IID_IWICBitmapCodecInfo = GUID(0xe87a44c4, 0xb76e, 0x4c47, [0x8b, 0x9, 0x29, 0x8e, 0xb1, 0x2a, 0x27, 0x14]);
 interface IWICBitmapCodecInfo : IWICComponentInfo
 {
-    HRESULT GetContainerFormat(GUID*);
-    HRESULT GetPixelFormats(uint, GUID*, uint*);
-    HRESULT GetColorManagementVersion(uint, PWSTR, uint*);
-    HRESULT GetDeviceManufacturer(uint, PWSTR, uint*);
-    HRESULT GetDeviceModels(uint, PWSTR, uint*);
-    HRESULT GetMimeTypes(uint, PWSTR, uint*);
-    HRESULT GetFileExtensions(uint, PWSTR, uint*);
-    HRESULT DoesSupportAnimation(BOOL*);
-    HRESULT DoesSupportChromakey(BOOL*);
-    HRESULT DoesSupportLossless(BOOL*);
-    HRESULT DoesSupportMultiframe(BOOL*);
-    HRESULT MatchesMimeType(const(wchar)*, BOOL*);
+    HRESULT GetContainerFormat(GUID* pguidContainerFormat);
+    HRESULT GetPixelFormats(uint cFormats, GUID* pguidPixelFormats, uint* pcActual);
+    HRESULT GetColorManagementVersion(uint cchColorManagementVersion, PWSTR wzColorManagementVersion, uint* pcchActual);
+    HRESULT GetDeviceManufacturer(uint cchDeviceManufacturer, PWSTR wzDeviceManufacturer, uint* pcchActual);
+    HRESULT GetDeviceModels(uint cchDeviceModels, PWSTR wzDeviceModels, uint* pcchActual);
+    HRESULT GetMimeTypes(uint cchMimeTypes, PWSTR wzMimeTypes, uint* pcchActual);
+    HRESULT GetFileExtensions(uint cchFileExtensions, PWSTR wzFileExtensions, uint* pcchActual);
+    HRESULT DoesSupportAnimation(BOOL* pfSupportAnimation);
+    HRESULT DoesSupportChromakey(BOOL* pfSupportChromakey);
+    HRESULT DoesSupportLossless(BOOL* pfSupportLossless);
+    HRESULT DoesSupportMultiframe(BOOL* pfSupportMultiframe);
+    HRESULT MatchesMimeType(const(wchar)* wzMimeType, BOOL* pfMatches);
 }
 enum IID_IWICBitmapEncoderInfo = GUID(0x94c9b4ee, 0xa09f, 0x4f92, [0x8a, 0x1e, 0x4a, 0x9b, 0xce, 0x7e, 0x76, 0xfb]);
 interface IWICBitmapEncoderInfo : IWICBitmapCodecInfo
 {
-    HRESULT CreateInstance(IWICBitmapEncoder*);
+    HRESULT CreateInstance(IWICBitmapEncoder* ppIBitmapEncoder);
 }
 enum IID_IWICBitmapDecoderInfo = GUID(0xd8cd007f, 0xd08f, 0x4191, [0x9b, 0xfc, 0x23, 0x6e, 0xa7, 0xf0, 0xe4, 0xb5]);
 interface IWICBitmapDecoderInfo : IWICBitmapCodecInfo
 {
-    HRESULT GetPatterns(uint, WICBitmapPattern*, uint*, uint*);
-    HRESULT MatchesPattern(IStream, BOOL*);
-    HRESULT CreateInstance(IWICBitmapDecoder*);
+    HRESULT GetPatterns(uint cbSizePatterns, WICBitmapPattern* pPatterns, uint* pcPatterns, uint* pcbPatternsActual);
+    HRESULT MatchesPattern(IStream pIStream, BOOL* pfMatches);
+    HRESULT CreateInstance(IWICBitmapDecoder* ppIBitmapDecoder);
 }
 enum IID_IWICPixelFormatInfo = GUID(0xe8eda601, 0x3d48, 0x431a, [0xab, 0x44, 0x69, 0x5, 0x9b, 0xe8, 0x8b, 0xbe]);
 interface IWICPixelFormatInfo : IWICComponentInfo
 {
-    HRESULT GetFormatGUID(GUID*);
-    HRESULT GetColorContext(IWICColorContext*);
-    HRESULT GetBitsPerPixel(uint*);
-    HRESULT GetChannelCount(uint*);
-    HRESULT GetChannelMask(uint, uint, ubyte*, uint*);
+    HRESULT GetFormatGUID(GUID* pFormat);
+    HRESULT GetColorContext(IWICColorContext* ppIColorContext);
+    HRESULT GetBitsPerPixel(uint* puiBitsPerPixel);
+    HRESULT GetChannelCount(uint* puiChannelCount);
+    HRESULT GetChannelMask(uint uiChannelIndex, uint cbMaskBuffer, ubyte* pbMaskBuffer, uint* pcbActual);
 }
 enum IID_IWICPixelFormatInfo2 = GUID(0xa9db33a2, 0xaf5f, 0x43c7, [0xb6, 0x79, 0x74, 0xf5, 0x98, 0x4b, 0x5a, 0xa4]);
 interface IWICPixelFormatInfo2 : IWICPixelFormatInfo
 {
-    HRESULT SupportsTransparency(BOOL*);
-    HRESULT GetNumericRepresentation(WICPixelFormatNumericRepresentation*);
+    HRESULT SupportsTransparency(BOOL* pfSupportsTransparency);
+    HRESULT GetNumericRepresentation(WICPixelFormatNumericRepresentation* pNumericRepresentation);
 }
 enum IID_IWICImagingFactory = GUID(0xec5ec8a9, 0xc395, 0x4314, [0x9c, 0x77, 0x54, 0xd7, 0xa9, 0x35, 0xff, 0x70]);
 interface IWICImagingFactory : IUnknown
 {
-    HRESULT CreateDecoderFromFilename(const(wchar)*, const(GUID)*, GENERIC_ACCESS_RIGHTS, WICDecodeOptions, IWICBitmapDecoder*);
-    HRESULT CreateDecoderFromStream(IStream, const(GUID)*, WICDecodeOptions, IWICBitmapDecoder*);
-    HRESULT CreateDecoderFromFileHandle(ulong, const(GUID)*, WICDecodeOptions, IWICBitmapDecoder*);
-    HRESULT CreateComponentInfo(const(GUID)*, IWICComponentInfo*);
-    HRESULT CreateDecoder(const(GUID)*, const(GUID)*, IWICBitmapDecoder*);
-    HRESULT CreateEncoder(const(GUID)*, const(GUID)*, IWICBitmapEncoder*);
-    HRESULT CreatePalette(IWICPalette*);
-    HRESULT CreateFormatConverter(IWICFormatConverter*);
-    HRESULT CreateBitmapScaler(IWICBitmapScaler*);
-    HRESULT CreateBitmapClipper(IWICBitmapClipper*);
-    HRESULT CreateBitmapFlipRotator(IWICBitmapFlipRotator*);
-    HRESULT CreateStream(IWICStream*);
-    HRESULT CreateColorContext(IWICColorContext*);
-    HRESULT CreateColorTransformer(IWICColorTransform*);
-    HRESULT CreateBitmap(uint, uint, GUID*, WICBitmapCreateCacheOption, IWICBitmap*);
-    HRESULT CreateBitmapFromSource(IWICBitmapSource, WICBitmapCreateCacheOption, IWICBitmap*);
-    HRESULT CreateBitmapFromSourceRect(IWICBitmapSource, uint, uint, uint, uint, IWICBitmap*);
-    HRESULT CreateBitmapFromMemory(uint, uint, GUID*, uint, uint, ubyte*, IWICBitmap*);
-    HRESULT CreateBitmapFromHBITMAP(HBITMAP, HPALETTE, WICBitmapAlphaChannelOption, IWICBitmap*);
-    HRESULT CreateBitmapFromHICON(HICON, IWICBitmap*);
-    HRESULT CreateComponentEnumerator(uint, uint, IEnumUnknown*);
-    HRESULT CreateFastMetadataEncoderFromDecoder(IWICBitmapDecoder, IWICFastMetadataEncoder*);
-    HRESULT CreateFastMetadataEncoderFromFrameDecode(IWICBitmapFrameDecode, IWICFastMetadataEncoder*);
-    HRESULT CreateQueryWriter(const(GUID)*, const(GUID)*, IWICMetadataQueryWriter*);
-    HRESULT CreateQueryWriterFromReader(IWICMetadataQueryReader, const(GUID)*, IWICMetadataQueryWriter*);
+    HRESULT CreateDecoderFromFilename(const(wchar)* wzFilename, const(GUID)* pguidVendor, GENERIC_ACCESS_RIGHTS dwDesiredAccess, WICDecodeOptions metadataOptions, IWICBitmapDecoder* ppIDecoder);
+    HRESULT CreateDecoderFromStream(IStream pIStream, const(GUID)* pguidVendor, WICDecodeOptions metadataOptions, IWICBitmapDecoder* ppIDecoder);
+    HRESULT CreateDecoderFromFileHandle(ulong hFile, const(GUID)* pguidVendor, WICDecodeOptions metadataOptions, IWICBitmapDecoder* ppIDecoder);
+    HRESULT CreateComponentInfo(const(GUID)* clsidComponent, IWICComponentInfo* ppIInfo);
+    HRESULT CreateDecoder(const(GUID)* guidContainerFormat, const(GUID)* pguidVendor, IWICBitmapDecoder* ppIDecoder);
+    HRESULT CreateEncoder(const(GUID)* guidContainerFormat, const(GUID)* pguidVendor, IWICBitmapEncoder* ppIEncoder);
+    HRESULT CreatePalette(IWICPalette* ppIPalette);
+    HRESULT CreateFormatConverter(IWICFormatConverter* ppIFormatConverter);
+    HRESULT CreateBitmapScaler(IWICBitmapScaler* ppIBitmapScaler);
+    HRESULT CreateBitmapClipper(IWICBitmapClipper* ppIBitmapClipper);
+    HRESULT CreateBitmapFlipRotator(IWICBitmapFlipRotator* ppIBitmapFlipRotator);
+    HRESULT CreateStream(IWICStream* ppIWICStream);
+    HRESULT CreateColorContext(IWICColorContext* ppIWICColorContext);
+    HRESULT CreateColorTransformer(IWICColorTransform* ppIWICColorTransform);
+    HRESULT CreateBitmap(uint uiWidth, uint uiHeight, GUID* pixelFormat, WICBitmapCreateCacheOption option, IWICBitmap* ppIBitmap);
+    HRESULT CreateBitmapFromSource(IWICBitmapSource pIBitmapSource, WICBitmapCreateCacheOption option, IWICBitmap* ppIBitmap);
+    HRESULT CreateBitmapFromSourceRect(IWICBitmapSource pIBitmapSource, uint x, uint y, uint width, uint height, IWICBitmap* ppIBitmap);
+    HRESULT CreateBitmapFromMemory(uint uiWidth, uint uiHeight, GUID* pixelFormat, uint cbStride, uint cbBufferSize, ubyte* pbBuffer, IWICBitmap* ppIBitmap);
+    HRESULT CreateBitmapFromHBITMAP(HBITMAP hBitmap, HPALETTE hPalette, WICBitmapAlphaChannelOption options, IWICBitmap* ppIBitmap);
+    HRESULT CreateBitmapFromHICON(HICON hIcon, IWICBitmap* ppIBitmap);
+    HRESULT CreateComponentEnumerator(uint componentTypes, uint options, IEnumUnknown* ppIEnumUnknown);
+    HRESULT CreateFastMetadataEncoderFromDecoder(IWICBitmapDecoder pIDecoder, IWICFastMetadataEncoder* ppIFastEncoder);
+    HRESULT CreateFastMetadataEncoderFromFrameDecode(IWICBitmapFrameDecode pIFrameDecoder, IWICFastMetadataEncoder* ppIFastEncoder);
+    HRESULT CreateQueryWriter(const(GUID)* guidMetadataFormat, const(GUID)* pguidVendor, IWICMetadataQueryWriter* ppIQueryWriter);
+    HRESULT CreateQueryWriterFromReader(IWICMetadataQueryReader pIQueryReader, const(GUID)* pguidVendor, IWICMetadataQueryWriter* ppIQueryWriter);
 }
 alias WICTiffCompressionOption = int;
 enum : int
@@ -1188,43 +1188,43 @@ struct WICRawToneCurve
 enum IID_IWICDevelopRawNotificationCallback = GUID(0x95c75a6e, 0x3e8c, 0x4ec2, [0x85, 0xa8, 0xae, 0xbc, 0xc5, 0x51, 0xe5, 0x9b]);
 interface IWICDevelopRawNotificationCallback : IUnknown
 {
-    HRESULT Notify(uint);
+    HRESULT Notify(uint NotificationMask);
 }
 enum IID_IWICDevelopRaw = GUID(0xfbec5e44, 0xf7be, 0x4b65, [0xb7, 0xf8, 0xc0, 0xc8, 0x1f, 0xef, 0x2, 0x6d]);
 interface IWICDevelopRaw : IWICBitmapFrameDecode
 {
-    HRESULT QueryRawCapabilitiesInfo(WICRawCapabilitiesInfo*);
-    HRESULT LoadParameterSet(WICRawParameterSet);
-    HRESULT GetCurrentParameterSet(IPropertyBag2*);
-    HRESULT SetExposureCompensation(double);
-    HRESULT GetExposureCompensation(double*);
-    HRESULT SetWhitePointRGB(uint, uint, uint);
-    HRESULT GetWhitePointRGB(uint*, uint*, uint*);
-    HRESULT SetNamedWhitePoint(WICNamedWhitePoint);
-    HRESULT GetNamedWhitePoint(WICNamedWhitePoint*);
-    HRESULT SetWhitePointKelvin(uint);
-    HRESULT GetWhitePointKelvin(uint*);
-    HRESULT GetKelvinRangeInfo(uint*, uint*, uint*);
-    HRESULT SetContrast(double);
-    HRESULT GetContrast(double*);
-    HRESULT SetGamma(double);
-    HRESULT GetGamma(double*);
-    HRESULT SetSharpness(double);
-    HRESULT GetSharpness(double*);
-    HRESULT SetSaturation(double);
-    HRESULT GetSaturation(double*);
-    HRESULT SetTint(double);
-    HRESULT GetTint(double*);
-    HRESULT SetNoiseReduction(double);
-    HRESULT GetNoiseReduction(double*);
-    HRESULT SetDestinationColorContext(IWICColorContext);
-    HRESULT SetToneCurve(uint, const(WICRawToneCurve)*);
-    HRESULT GetToneCurve(uint, WICRawToneCurve*, uint*);
-    HRESULT SetRotation(double);
-    HRESULT GetRotation(double*);
-    HRESULT SetRenderMode(WICRawRenderMode);
-    HRESULT GetRenderMode(WICRawRenderMode*);
-    HRESULT SetNotificationCallback(IWICDevelopRawNotificationCallback);
+    HRESULT QueryRawCapabilitiesInfo(WICRawCapabilitiesInfo* pInfo);
+    HRESULT LoadParameterSet(WICRawParameterSet ParameterSet);
+    HRESULT GetCurrentParameterSet(IPropertyBag2* ppCurrentParameterSet);
+    HRESULT SetExposureCompensation(double ev);
+    HRESULT GetExposureCompensation(double* pEV);
+    HRESULT SetWhitePointRGB(uint Red, uint Green, uint Blue);
+    HRESULT GetWhitePointRGB(uint* pRed, uint* pGreen, uint* pBlue);
+    HRESULT SetNamedWhitePoint(WICNamedWhitePoint WhitePoint);
+    HRESULT GetNamedWhitePoint(WICNamedWhitePoint* pWhitePoint);
+    HRESULT SetWhitePointKelvin(uint WhitePointKelvin);
+    HRESULT GetWhitePointKelvin(uint* pWhitePointKelvin);
+    HRESULT GetKelvinRangeInfo(uint* pMinKelvinTemp, uint* pMaxKelvinTemp, uint* pKelvinTempStepValue);
+    HRESULT SetContrast(double Contrast);
+    HRESULT GetContrast(double* pContrast);
+    HRESULT SetGamma(double Gamma);
+    HRESULT GetGamma(double* pGamma);
+    HRESULT SetSharpness(double Sharpness);
+    HRESULT GetSharpness(double* pSharpness);
+    HRESULT SetSaturation(double Saturation);
+    HRESULT GetSaturation(double* pSaturation);
+    HRESULT SetTint(double Tint);
+    HRESULT GetTint(double* pTint);
+    HRESULT SetNoiseReduction(double NoiseReduction);
+    HRESULT GetNoiseReduction(double* pNoiseReduction);
+    HRESULT SetDestinationColorContext(IWICColorContext pColorContext);
+    HRESULT SetToneCurve(uint cbToneCurveSize, const(WICRawToneCurve)* pToneCurve);
+    HRESULT GetToneCurve(uint cbToneCurveBufferSize, WICRawToneCurve* pToneCurve, uint* pcbActualToneCurveBufferSize);
+    HRESULT SetRotation(double Rotation);
+    HRESULT GetRotation(double* pRotation);
+    HRESULT SetRenderMode(WICRawRenderMode RenderMode);
+    HRESULT GetRenderMode(WICRawRenderMode* pRenderMode);
+    HRESULT SetNotificationCallback(IWICDevelopRawNotificationCallback pCallback);
 }
 alias WICDdsDimension = int;
 enum : int
@@ -1259,15 +1259,15 @@ struct WICDdsParameters
 enum IID_IWICDdsDecoder = GUID(0x409cd537, 0x8532, 0x40cb, [0x97, 0x74, 0xe2, 0xfe, 0xb2, 0xdf, 0x4e, 0x9c]);
 interface IWICDdsDecoder : IUnknown
 {
-    HRESULT GetParameters(WICDdsParameters*);
-    HRESULT GetFrame(uint, uint, uint, IWICBitmapFrameDecode*);
+    HRESULT GetParameters(WICDdsParameters* pParameters);
+    HRESULT GetFrame(uint arrayIndex, uint mipLevel, uint sliceIndex, IWICBitmapFrameDecode* ppIBitmapFrame);
 }
 enum IID_IWICDdsEncoder = GUID(0x5cacdb4c, 0x407e, 0x41b3, [0xb9, 0x36, 0xd0, 0xf0, 0x10, 0xcd, 0x67, 0x32]);
 interface IWICDdsEncoder : IUnknown
 {
-    HRESULT SetParameters(WICDdsParameters*);
-    HRESULT GetParameters(WICDdsParameters*);
-    HRESULT CreateNewFrame(IWICBitmapFrameEncode*, uint*, uint*, uint*);
+    HRESULT SetParameters(WICDdsParameters* pParameters);
+    HRESULT GetParameters(WICDdsParameters* pParameters);
+    HRESULT CreateNewFrame(IWICBitmapFrameEncode* ppIFrameEncode, uint* pArrayIndex, uint* pMipLevel, uint* pSliceIndex);
 }
 struct WICDdsFormatInfo
 {
@@ -1279,31 +1279,31 @@ struct WICDdsFormatInfo
 enum IID_IWICDdsFrameDecode = GUID(0x3d4c0c61, 0x18a4, 0x41e4, [0xbd, 0x80, 0x48, 0x1a, 0x4f, 0xc9, 0xf4, 0x64]);
 interface IWICDdsFrameDecode : IUnknown
 {
-    HRESULT GetSizeInBlocks(uint*, uint*);
-    HRESULT GetFormatInfo(WICDdsFormatInfo*);
-    HRESULT CopyBlocks(const(WICRect)*, uint, uint, ubyte*);
+    HRESULT GetSizeInBlocks(uint* pWidthInBlocks, uint* pHeightInBlocks);
+    HRESULT GetFormatInfo(WICDdsFormatInfo* pFormatInfo);
+    HRESULT CopyBlocks(const(WICRect)* prcBoundsInBlocks, uint cbStride, uint cbBufferSize, ubyte* pbBuffer);
 }
 enum IID_IWICJpegFrameDecode = GUID(0x8939f66e, 0xc46a, 0x4c21, [0xa9, 0xd1, 0x98, 0xb3, 0x27, 0xce, 0x16, 0x79]);
 interface IWICJpegFrameDecode : IUnknown
 {
-    HRESULT DoesSupportIndexing(BOOL*);
-    HRESULT SetIndexing(WICJpegIndexingOptions, uint);
+    HRESULT DoesSupportIndexing(BOOL* pfIndexingSupported);
+    HRESULT SetIndexing(WICJpegIndexingOptions options, uint horizontalIntervalSize);
     HRESULT ClearIndexing();
-    HRESULT GetAcHuffmanTable(uint, uint, DXGI_JPEG_AC_HUFFMAN_TABLE*);
-    HRESULT GetDcHuffmanTable(uint, uint, DXGI_JPEG_DC_HUFFMAN_TABLE*);
-    HRESULT GetQuantizationTable(uint, uint, DXGI_JPEG_QUANTIZATION_TABLE*);
-    HRESULT GetFrameHeader(WICJpegFrameHeader*);
-    HRESULT GetScanHeader(uint, WICJpegScanHeader*);
-    HRESULT CopyScan(uint, uint, uint, ubyte*, uint*);
-    HRESULT CopyMinimalStream(uint, uint, ubyte*, uint*);
+    HRESULT GetAcHuffmanTable(uint scanIndex, uint tableIndex, DXGI_JPEG_AC_HUFFMAN_TABLE* pAcHuffmanTable);
+    HRESULT GetDcHuffmanTable(uint scanIndex, uint tableIndex, DXGI_JPEG_DC_HUFFMAN_TABLE* pDcHuffmanTable);
+    HRESULT GetQuantizationTable(uint scanIndex, uint tableIndex, DXGI_JPEG_QUANTIZATION_TABLE* pQuantizationTable);
+    HRESULT GetFrameHeader(WICJpegFrameHeader* pFrameHeader);
+    HRESULT GetScanHeader(uint scanIndex, WICJpegScanHeader* pScanHeader);
+    HRESULT CopyScan(uint scanIndex, uint scanOffset, uint cbScanData, ubyte* pbScanData, uint* pcbScanDataActual);
+    HRESULT CopyMinimalStream(uint streamOffset, uint cbStreamData, ubyte* pbStreamData, uint* pcbStreamDataActual);
 }
 enum IID_IWICJpegFrameEncode = GUID(0x2f0c601f, 0xd2c6, 0x468c, [0xab, 0xfa, 0x49, 0x49, 0x5d, 0x98, 0x3e, 0xd1]);
 interface IWICJpegFrameEncode : IUnknown
 {
-    HRESULT GetAcHuffmanTable(uint, uint, DXGI_JPEG_AC_HUFFMAN_TABLE*);
-    HRESULT GetDcHuffmanTable(uint, uint, DXGI_JPEG_DC_HUFFMAN_TABLE*);
-    HRESULT GetQuantizationTable(uint, uint, DXGI_JPEG_QUANTIZATION_TABLE*);
-    HRESULT WriteScan(uint, const(ubyte)*);
+    HRESULT GetAcHuffmanTable(uint scanIndex, uint tableIndex, DXGI_JPEG_AC_HUFFMAN_TABLE* pAcHuffmanTable);
+    HRESULT GetDcHuffmanTable(uint scanIndex, uint tableIndex, DXGI_JPEG_DC_HUFFMAN_TABLE* pDcHuffmanTable);
+    HRESULT GetQuantizationTable(uint scanIndex, uint tableIndex, DXGI_JPEG_QUANTIZATION_TABLE* pQuantizationTable);
+    HRESULT WriteScan(uint cbScanData, const(ubyte)* pbScanData);
 }
 alias WICMetadataCreationOptions = int;
 enum : int
@@ -1329,62 +1329,62 @@ enum : int
 enum IID_IWICMetadataBlockReader = GUID(0xfeaa2a8d, 0xb3f3, 0x43e4, [0xb2, 0x5c, 0xd1, 0xde, 0x99, 0xa, 0x1a, 0xe1]);
 interface IWICMetadataBlockReader : IUnknown
 {
-    HRESULT GetContainerFormat(GUID*);
-    HRESULT GetCount(uint*);
-    HRESULT GetReaderByIndex(uint, IWICMetadataReader*);
-    HRESULT GetEnumerator(IEnumUnknown*);
+    HRESULT GetContainerFormat(GUID* pguidContainerFormat);
+    HRESULT GetCount(uint* pcCount);
+    HRESULT GetReaderByIndex(uint nIndex, IWICMetadataReader* ppIMetadataReader);
+    HRESULT GetEnumerator(IEnumUnknown* ppIEnumMetadata);
 }
 enum IID_IWICMetadataBlockWriter = GUID(0x8fb9676, 0xb444, 0x41e8, [0x8d, 0xbe, 0x6a, 0x53, 0xa5, 0x42, 0xbf, 0xf1]);
 interface IWICMetadataBlockWriter : IWICMetadataBlockReader
 {
-    HRESULT InitializeFromBlockReader(IWICMetadataBlockReader);
-    HRESULT GetWriterByIndex(uint, IWICMetadataWriter*);
-    HRESULT AddWriter(IWICMetadataWriter);
-    HRESULT SetWriterByIndex(uint, IWICMetadataWriter);
-    HRESULT RemoveWriterByIndex(uint);
+    HRESULT InitializeFromBlockReader(IWICMetadataBlockReader pIMDBlockReader);
+    HRESULT GetWriterByIndex(uint nIndex, IWICMetadataWriter* ppIMetadataWriter);
+    HRESULT AddWriter(IWICMetadataWriter pIMetadataWriter);
+    HRESULT SetWriterByIndex(uint nIndex, IWICMetadataWriter pIMetadataWriter);
+    HRESULT RemoveWriterByIndex(uint nIndex);
 }
 enum IID_IWICMetadataReader = GUID(0x9204fe99, 0xd8fc, 0x4fd5, [0xa0, 0x1, 0x95, 0x36, 0xb0, 0x67, 0xa8, 0x99]);
 interface IWICMetadataReader : IUnknown
 {
-    HRESULT GetMetadataFormat(GUID*);
-    HRESULT GetMetadataHandlerInfo(IWICMetadataHandlerInfo*);
-    HRESULT GetCount(uint*);
-    HRESULT GetValueByIndex(uint, PROPVARIANT*, PROPVARIANT*, PROPVARIANT*);
-    HRESULT GetValue(const(PROPVARIANT)*, const(PROPVARIANT)*, PROPVARIANT*);
-    HRESULT GetEnumerator(IWICEnumMetadataItem*);
+    HRESULT GetMetadataFormat(GUID* pguidMetadataFormat);
+    HRESULT GetMetadataHandlerInfo(IWICMetadataHandlerInfo* ppIHandler);
+    HRESULT GetCount(uint* pcCount);
+    HRESULT GetValueByIndex(uint nIndex, PROPVARIANT* pvarSchema, PROPVARIANT* pvarId, PROPVARIANT* pvarValue);
+    HRESULT GetValue(const(PROPVARIANT)* pvarSchema, const(PROPVARIANT)* pvarId, PROPVARIANT* pvarValue);
+    HRESULT GetEnumerator(IWICEnumMetadataItem* ppIEnumMetadata);
 }
 enum IID_IWICMetadataWriter = GUID(0xf7836e16, 0x3be0, 0x470b, [0x86, 0xbb, 0x16, 0xd, 0xa, 0xec, 0xd7, 0xde]);
 interface IWICMetadataWriter : IWICMetadataReader
 {
-    HRESULT SetValue(const(PROPVARIANT)*, const(PROPVARIANT)*, const(PROPVARIANT)*);
-    HRESULT SetValueByIndex(uint, const(PROPVARIANT)*, const(PROPVARIANT)*, const(PROPVARIANT)*);
-    HRESULT RemoveValue(const(PROPVARIANT)*, const(PROPVARIANT)*);
-    HRESULT RemoveValueByIndex(uint);
+    HRESULT SetValue(const(PROPVARIANT)* pvarSchema, const(PROPVARIANT)* pvarId, const(PROPVARIANT)* pvarValue);
+    HRESULT SetValueByIndex(uint nIndex, const(PROPVARIANT)* pvarSchema, const(PROPVARIANT)* pvarId, const(PROPVARIANT)* pvarValue);
+    HRESULT RemoveValue(const(PROPVARIANT)* pvarSchema, const(PROPVARIANT)* pvarId);
+    HRESULT RemoveValueByIndex(uint nIndex);
 }
 enum IID_IWICStreamProvider = GUID(0x449494bc, 0xb468, 0x4927, [0x96, 0xd7, 0xba, 0x90, 0xd3, 0x1a, 0xb5, 0x5]);
 interface IWICStreamProvider : IUnknown
 {
-    HRESULT GetStream(IStream*);
-    HRESULT GetPersistOptions(uint*);
-    HRESULT GetPreferredVendorGUID(GUID*);
+    HRESULT GetStream(IStream* ppIStream);
+    HRESULT GetPersistOptions(uint* pdwPersistOptions);
+    HRESULT GetPreferredVendorGUID(GUID* pguidPreferredVendor);
     HRESULT RefreshStream();
 }
 enum IID_IWICPersistStream = GUID(0x675040, 0x6908, 0x45f8, [0x86, 0xa3, 0x49, 0xc7, 0xdf, 0xd6, 0xd9, 0xad]);
 interface IWICPersistStream : IPersistStream
 {
-    HRESULT LoadEx(IStream, const(GUID)*, uint);
-    HRESULT SaveEx(IStream, uint, BOOL);
+    HRESULT LoadEx(IStream pIStream, const(GUID)* pguidPreferredVendor, uint dwPersistOptions);
+    HRESULT SaveEx(IStream pIStream, uint dwPersistOptions, BOOL fClearDirty);
 }
 enum IID_IWICMetadataHandlerInfo = GUID(0xaba958bf, 0xc672, 0x44d1, [0x8d, 0x61, 0xce, 0x6d, 0xf2, 0xe6, 0x82, 0xc2]);
 interface IWICMetadataHandlerInfo : IWICComponentInfo
 {
-    HRESULT GetMetadataFormat(GUID*);
-    HRESULT GetContainerFormats(uint, GUID*, uint*);
-    HRESULT GetDeviceManufacturer(uint, PWSTR, uint*);
-    HRESULT GetDeviceModels(uint, PWSTR, uint*);
-    HRESULT DoesRequireFullStream(BOOL*);
-    HRESULT DoesSupportPadding(BOOL*);
-    HRESULT DoesRequireFixedSize(BOOL*);
+    HRESULT GetMetadataFormat(GUID* pguidMetadataFormat);
+    HRESULT GetContainerFormats(uint cContainerFormats, GUID* pguidContainerFormats, uint* pcchActual);
+    HRESULT GetDeviceManufacturer(uint cchDeviceManufacturer, PWSTR wzDeviceManufacturer, uint* pcchActual);
+    HRESULT GetDeviceModels(uint cchDeviceModels, PWSTR wzDeviceModels, uint* pcchActual);
+    HRESULT DoesRequireFullStream(BOOL* pfRequiresFullStream);
+    HRESULT DoesSupportPadding(BOOL* pfSupportsPadding);
+    HRESULT DoesRequireFixedSize(BOOL* pfFixedSize);
 }
 struct WICMetadataPattern
 {
@@ -1397,9 +1397,9 @@ struct WICMetadataPattern
 enum IID_IWICMetadataReaderInfo = GUID(0xeebf1f5b, 0x7c1, 0x4447, [0xa3, 0xab, 0x22, 0xac, 0xaf, 0x78, 0xa8, 0x4]);
 interface IWICMetadataReaderInfo : IWICMetadataHandlerInfo
 {
-    HRESULT GetPatterns(const(GUID)*, uint, WICMetadataPattern*, uint*, uint*);
-    HRESULT MatchesPattern(const(GUID)*, IStream, BOOL*);
-    HRESULT CreateInstance(IWICMetadataReader*);
+    HRESULT GetPatterns(const(GUID)* guidContainerFormat, uint cbSize, WICMetadataPattern* pPattern, uint* pcCount, uint* pcbActual);
+    HRESULT MatchesPattern(const(GUID)* guidContainerFormat, IStream pIStream, BOOL* pfMatches);
+    HRESULT CreateInstance(IWICMetadataReader* ppIReader);
 }
 struct WICMetadataHeader
 {
@@ -1411,17 +1411,17 @@ struct WICMetadataHeader
 enum IID_IWICMetadataWriterInfo = GUID(0xb22e3fba, 0x3925, 0x4323, [0xb5, 0xc1, 0x9e, 0xbf, 0xc4, 0x30, 0xf2, 0x36]);
 interface IWICMetadataWriterInfo : IWICMetadataHandlerInfo
 {
-    HRESULT GetHeader(const(GUID)*, uint, WICMetadataHeader*, uint*);
-    HRESULT CreateInstance(IWICMetadataWriter*);
+    HRESULT GetHeader(const(GUID)* guidContainerFormat, uint cbSize, WICMetadataHeader* pHeader, uint* pcbActual);
+    HRESULT CreateInstance(IWICMetadataWriter* ppIWriter);
 }
 enum IID_IWICComponentFactory = GUID(0x412d0c3a, 0x9650, 0x44fa, [0xaf, 0x5b, 0xdd, 0x2a, 0x6, 0xc8, 0xe8, 0xfb]);
 interface IWICComponentFactory : IWICImagingFactory
 {
-    HRESULT CreateMetadataReader(const(GUID)*, const(GUID)*, uint, IStream, IWICMetadataReader*);
-    HRESULT CreateMetadataReaderFromContainer(const(GUID)*, const(GUID)*, uint, IStream, IWICMetadataReader*);
-    HRESULT CreateMetadataWriter(const(GUID)*, const(GUID)*, uint, IWICMetadataWriter*);
-    HRESULT CreateMetadataWriterFromReader(IWICMetadataReader, const(GUID)*, IWICMetadataWriter*);
-    HRESULT CreateQueryReaderFromBlockReader(IWICMetadataBlockReader, IWICMetadataQueryReader*);
-    HRESULT CreateQueryWriterFromBlockWriter(IWICMetadataBlockWriter, IWICMetadataQueryWriter*);
-    HRESULT CreateEncoderPropertyBag(PROPBAG2*, uint, IPropertyBag2*);
+    HRESULT CreateMetadataReader(const(GUID)* guidMetadataFormat, const(GUID)* pguidVendor, uint dwOptions, IStream pIStream, IWICMetadataReader* ppIReader);
+    HRESULT CreateMetadataReaderFromContainer(const(GUID)* guidContainerFormat, const(GUID)* pguidVendor, uint dwOptions, IStream pIStream, IWICMetadataReader* ppIReader);
+    HRESULT CreateMetadataWriter(const(GUID)* guidMetadataFormat, const(GUID)* pguidVendor, uint dwMetadataOptions, IWICMetadataWriter* ppIWriter);
+    HRESULT CreateMetadataWriterFromReader(IWICMetadataReader pIReader, const(GUID)* pguidVendor, IWICMetadataWriter* ppIWriter);
+    HRESULT CreateQueryReaderFromBlockReader(IWICMetadataBlockReader pIBlockReader, IWICMetadataQueryReader* ppIQueryReader);
+    HRESULT CreateQueryWriterFromBlockWriter(IWICMetadataBlockWriter pIBlockWriter, IWICMetadataQueryWriter* ppIQueryWriter);
+    HRESULT CreateEncoderPropertyBag(PROPBAG2* ppropOptions, uint cCount, IPropertyBag2* ppIPropertyBag);
 }

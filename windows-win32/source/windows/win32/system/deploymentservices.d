@@ -32,100 +32,100 @@ enum : uint
     WDS_TRANSPORTCLIENT_NO_AUTH = 0x00000002,
 }
 
-HRESULT WdsCliClose(HANDLE);
-HRESULT WdsCliRegisterTrace(PFN_WdsCliTraceFunction);
-HRESULT WdsCliFreeStringArray(PWSTR*, uint);
-HRESULT WdsCliFindFirstImage(HANDLE, HANDLE*);
-HRESULT WdsCliFindNextImage(HANDLE);
-HRESULT WdsCliGetEnumerationFlags(HANDLE, uint*);
-HRESULT WdsCliGetImageHandleFromFindHandle(HANDLE, HANDLE*);
-HRESULT WdsCliGetImageHandleFromTransferHandle(HANDLE, HANDLE*);
-HRESULT WdsCliCreateSession(PWSTR, WDS_CLI_CRED*, HANDLE*);
-HRESULT WdsCliAuthorizeSession(HANDLE, WDS_CLI_CRED*);
-HRESULT WdsCliInitializeLog(HANDLE, CPU_ARCHITECTURE, PWSTR, PWSTR);
-HRESULT WdsCliLog(HANDLE, uint, uint);
-HRESULT WdsCliGetImageName(HANDLE, PWSTR*);
-HRESULT WdsCliGetImageDescription(HANDLE, PWSTR*);
-HRESULT WdsCliGetImageType(HANDLE, WDS_CLI_IMAGE_TYPE*);
-HRESULT WdsCliGetImageFiles(HANDLE, PWSTR**, uint*);
-HRESULT WdsCliGetImageLanguage(HANDLE, PWSTR*);
-HRESULT WdsCliGetImageLanguages(HANDLE, byte***, uint*);
-HRESULT WdsCliGetImageVersion(HANDLE, PWSTR*);
-HRESULT WdsCliGetImagePath(HANDLE, PWSTR*);
-HRESULT WdsCliGetImageIndex(HANDLE, uint*);
-HRESULT WdsCliGetImageArchitecture(HANDLE, CPU_ARCHITECTURE*);
-HRESULT WdsCliGetImageLastModifiedTime(HANDLE, SYSTEMTIME**);
-HRESULT WdsCliGetImageSize(HANDLE, ulong*);
-HRESULT WdsCliGetImageHalName(HANDLE, PWSTR*);
-HRESULT WdsCliGetImageGroup(HANDLE, PWSTR*);
-HRESULT WdsCliGetImageNamespace(HANDLE, PWSTR*);
-HRESULT WdsCliGetImageParameter(HANDLE, WDS_CLI_IMAGE_PARAM_TYPE, void*, uint);
-HRESULT WdsCliGetTransferSize(HANDLE, ulong*);
-void WdsCliSetTransferBufferSize(uint);
-HRESULT WdsCliTransferImage(HANDLE, PWSTR, uint, uint, PFN_WdsCliCallback, void*, HANDLE*);
-HRESULT WdsCliTransferFile(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, uint, uint, PFN_WdsCliCallback, void*, HANDLE*);
-HRESULT WdsCliCancelTransfer(HANDLE);
-HRESULT WdsCliWaitForTransfer(HANDLE);
-HRESULT WdsCliObtainDriverPackages(HANDLE, PWSTR*, PWSTR**, uint*);
-HRESULT WdsCliObtainDriverPackagesEx(HANDLE, PWSTR, PWSTR*, PWSTR**, uint*);
-HRESULT WdsCliGetDriverQueryXml(PWSTR, PWSTR*);
-uint PxeProviderRegister(const(wchar)*, const(wchar)*, uint, BOOL, HKEY*);
-uint PxeProviderUnRegister(const(wchar)*);
-uint PxeProviderQueryIndex(const(wchar)*, uint*);
-uint PxeProviderEnumFirst(HANDLE*);
-uint PxeProviderEnumNext(HANDLE, PXE_PROVIDER**);
-uint PxeProviderEnumClose(HANDLE);
-uint PxeProviderFreeInfo(PXE_PROVIDER*);
-uint PxeRegisterCallback(HANDLE, uint, void*, void*);
-uint PxeSendReply(HANDLE, void*, uint, PXE_ADDRESS*);
-uint PxeAsyncRecvDone(HANDLE, uint);
-uint PxeTrace(HANDLE, uint, const(wchar)*);
-uint PxeTraceV(HANDLE, uint, const(wchar)*, byte*);
-void* PxePacketAllocate(HANDLE, HANDLE, uint);
-uint PxePacketFree(HANDLE, HANDLE, void*);
-uint PxeProviderSetAttribute(HANDLE, uint, void*, uint);
-uint PxeDhcpInitialize(void*, uint, void*, uint, uint*);
-uint PxeDhcpv6Initialize(void*, uint, void*, uint, uint*);
-uint PxeDhcpAppendOption(void*, uint, uint*, ubyte, ubyte, void*);
-uint PxeDhcpv6AppendOption(void*, uint, uint*, ushort, ushort, void*);
-uint PxeDhcpAppendOptionRaw(void*, uint, uint*, ushort, void*);
-uint PxeDhcpv6AppendOptionRaw(void*, uint, uint*, ushort, void*);
-uint PxeDhcpIsValid(void*, uint, BOOL, BOOL*);
-uint PxeDhcpv6IsValid(void*, uint, BOOL, BOOL*);
-uint PxeDhcpGetOptionValue(void*, uint, uint, ubyte, ubyte*, void**);
-uint PxeDhcpv6GetOptionValue(void*, uint, uint, ushort, ushort*, void**);
-uint PxeDhcpGetVendorOptionValue(void*, uint, ubyte, uint, ubyte*, void**);
-uint PxeDhcpv6GetVendorOptionValue(void*, uint, uint, ushort, uint, ushort*, void**);
-uint PxeDhcpv6ParseRelayForw(void*, uint, PXE_DHCPV6_NESTED_RELAY_MESSAGE*, uint, uint*, ubyte**, uint*);
-uint PxeDhcpv6CreateRelayRepl(PXE_DHCPV6_NESTED_RELAY_MESSAGE*, uint, ubyte*, uint, void*, uint, uint*);
-uint PxeGetServerInfo(uint, void*, uint);
-uint PxeGetServerInfoEx(uint, void*, uint, uint*);
-HRESULT WdsTransportServerRegisterCallback(HANDLE, TRANSPORTPROVIDER_CALLBACK_ID, void*);
-HRESULT WdsTransportServerCompleteRead(HANDLE, uint, void*, HRESULT);
-HRESULT WdsTransportServerTrace(HANDLE, uint, const(wchar)*);
-HRESULT WdsTransportServerTraceV(HANDLE, uint, const(wchar)*, byte*);
-void* WdsTransportServerAllocateBuffer(HANDLE, uint);
-HRESULT WdsTransportServerFreeBuffer(HANDLE, void*);
+HRESULT WdsCliClose(HANDLE Handle);
+HRESULT WdsCliRegisterTrace(PFN_WdsCliTraceFunction pfn);
+HRESULT WdsCliFreeStringArray(PWSTR* ppwszArray, uint ulCount);
+HRESULT WdsCliFindFirstImage(HANDLE hSession, HANDLE* phFindHandle);
+HRESULT WdsCliFindNextImage(HANDLE Handle);
+HRESULT WdsCliGetEnumerationFlags(HANDLE Handle, uint* pdwFlags);
+HRESULT WdsCliGetImageHandleFromFindHandle(HANDLE FindHandle, HANDLE* phImageHandle);
+HRESULT WdsCliGetImageHandleFromTransferHandle(HANDLE hTransfer, HANDLE* phImageHandle);
+HRESULT WdsCliCreateSession(PWSTR pwszServer, WDS_CLI_CRED* pCred, HANDLE* phSession);
+HRESULT WdsCliAuthorizeSession(HANDLE hSession, WDS_CLI_CRED* pCred);
+HRESULT WdsCliInitializeLog(HANDLE hSession, CPU_ARCHITECTURE ulClientArchitecture, PWSTR pwszClientId, PWSTR pwszClientAddress);
+HRESULT WdsCliLog(HANDLE hSession, uint ulLogLevel, uint ulMessageCode);
+HRESULT WdsCliGetImageName(HANDLE hIfh, PWSTR* ppwszValue);
+HRESULT WdsCliGetImageDescription(HANDLE hIfh, PWSTR* ppwszValue);
+HRESULT WdsCliGetImageType(HANDLE hIfh, WDS_CLI_IMAGE_TYPE* pImageType);
+HRESULT WdsCliGetImageFiles(HANDLE hIfh, PWSTR** pppwszFiles, uint* pdwCount);
+HRESULT WdsCliGetImageLanguage(HANDLE hIfh, PWSTR* ppwszValue);
+HRESULT WdsCliGetImageLanguages(HANDLE hIfh, byte*** pppszValues, uint* pdwNumValues);
+HRESULT WdsCliGetImageVersion(HANDLE hIfh, PWSTR* ppwszValue);
+HRESULT WdsCliGetImagePath(HANDLE hIfh, PWSTR* ppwszValue);
+HRESULT WdsCliGetImageIndex(HANDLE hIfh, uint* pdwValue);
+HRESULT WdsCliGetImageArchitecture(HANDLE hIfh, CPU_ARCHITECTURE* pdwValue);
+HRESULT WdsCliGetImageLastModifiedTime(HANDLE hIfh, SYSTEMTIME** ppSysTimeValue);
+HRESULT WdsCliGetImageSize(HANDLE hIfh, ulong* pullValue);
+HRESULT WdsCliGetImageHalName(HANDLE hIfh, PWSTR* ppwszValue);
+HRESULT WdsCliGetImageGroup(HANDLE hIfh, PWSTR* ppwszValue);
+HRESULT WdsCliGetImageNamespace(HANDLE hIfh, PWSTR* ppwszValue);
+HRESULT WdsCliGetImageParameter(HANDLE hIfh, WDS_CLI_IMAGE_PARAM_TYPE ParamType, void* pResponse, uint uResponseLen);
+HRESULT WdsCliGetTransferSize(HANDLE hIfh, ulong* pullValue);
+void WdsCliSetTransferBufferSize(uint ulSizeInBytes);
+HRESULT WdsCliTransferImage(HANDLE hImage, PWSTR pwszLocalPath, uint dwFlags, uint dwReserved, PFN_WdsCliCallback pfnWdsCliCallback, void* pvUserData, HANDLE* phTransfer);
+HRESULT WdsCliTransferFile(const(wchar)* pwszServer, const(wchar)* pwszNamespace, const(wchar)* pwszRemoteFilePath, const(wchar)* pwszLocalFilePath, uint dwFlags, uint dwReserved, PFN_WdsCliCallback pfnWdsCliCallback, void* pvUserData, HANDLE* phTransfer);
+HRESULT WdsCliCancelTransfer(HANDLE hTransfer);
+HRESULT WdsCliWaitForTransfer(HANDLE hTransfer);
+HRESULT WdsCliObtainDriverPackages(HANDLE hImage, PWSTR* ppwszServerName, PWSTR** pppwszDriverPackages, uint* pulCount);
+HRESULT WdsCliObtainDriverPackagesEx(HANDLE hSession, PWSTR pwszMachineInfo, PWSTR* ppwszServerName, PWSTR** pppwszDriverPackages, uint* pulCount);
+HRESULT WdsCliGetDriverQueryXml(PWSTR pwszWinDirPath, PWSTR* ppwszDriverQuery);
+uint PxeProviderRegister(const(wchar)* pszProviderName, const(wchar)* pszModulePath, uint Index, BOOL bIsCritical, HKEY* phProviderKey);
+uint PxeProviderUnRegister(const(wchar)* pszProviderName);
+uint PxeProviderQueryIndex(const(wchar)* pszProviderName, uint* puIndex);
+uint PxeProviderEnumFirst(HANDLE* phEnum);
+uint PxeProviderEnumNext(HANDLE hEnum, PXE_PROVIDER** ppProvider);
+uint PxeProviderEnumClose(HANDLE hEnum);
+uint PxeProviderFreeInfo(PXE_PROVIDER* pProvider);
+uint PxeRegisterCallback(HANDLE hProvider, uint CallbackType, void* pCallbackFunction, void* pContext);
+uint PxeSendReply(HANDLE hClientRequest, void* pPacket, uint uPacketLen, PXE_ADDRESS* pAddress);
+uint PxeAsyncRecvDone(HANDLE hClientRequest, uint Action);
+uint PxeTrace(HANDLE hProvider, uint Severity, const(wchar)* pszFormat);
+uint PxeTraceV(HANDLE hProvider, uint Severity, const(wchar)* pszFormat, byte* Params);
+void* PxePacketAllocate(HANDLE hProvider, HANDLE hClientRequest, uint uSize);
+uint PxePacketFree(HANDLE hProvider, HANDLE hClientRequest, void* pPacket);
+uint PxeProviderSetAttribute(HANDLE hProvider, uint Attribute, void* pParameterBuffer, uint uParamLen);
+uint PxeDhcpInitialize(void* pRecvPacket, uint uRecvPacketLen, void* pReplyPacket, uint uMaxReplyPacketLen, uint* puReplyPacketLen);
+uint PxeDhcpv6Initialize(void* pRequest, uint cbRequest, void* pReply, uint cbReply, uint* pcbReplyUsed);
+uint PxeDhcpAppendOption(void* pReplyPacket, uint uMaxReplyPacketLen, uint* puReplyPacketLen, ubyte bOption, ubyte bOptionLen, void* pValue);
+uint PxeDhcpv6AppendOption(void* pReply, uint cbReply, uint* pcbReplyUsed, ushort wOptionType, ushort cbOption, void* pOption);
+uint PxeDhcpAppendOptionRaw(void* pReplyPacket, uint uMaxReplyPacketLen, uint* puReplyPacketLen, ushort uBufferLen, void* pBuffer);
+uint PxeDhcpv6AppendOptionRaw(void* pReply, uint cbReply, uint* pcbReplyUsed, ushort cbBuffer, void* pBuffer);
+uint PxeDhcpIsValid(void* pPacket, uint uPacketLen, BOOL bRequestPacket, BOOL* pbPxeOptionPresent);
+uint PxeDhcpv6IsValid(void* pPacket, uint uPacketLen, BOOL bRequestPacket, BOOL* pbPxeOptionPresent);
+uint PxeDhcpGetOptionValue(void* pPacket, uint uPacketLen, uint uInstance, ubyte bOption, ubyte* pbOptionLen, void** ppOptionValue);
+uint PxeDhcpv6GetOptionValue(void* pPacket, uint uPacketLen, uint uInstance, ushort wOption, ushort* pwOptionLen, void** ppOptionValue);
+uint PxeDhcpGetVendorOptionValue(void* pPacket, uint uPacketLen, ubyte bOption, uint uInstance, ubyte* pbOptionLen, void** ppOptionValue);
+uint PxeDhcpv6GetVendorOptionValue(void* pPacket, uint uPacketLen, uint dwEnterpriseNumber, ushort wOption, uint uInstance, ushort* pwOptionLen, void** ppOptionValue);
+uint PxeDhcpv6ParseRelayForw(void* pRelayForwPacket, uint uRelayForwPacketLen, PXE_DHCPV6_NESTED_RELAY_MESSAGE* pRelayMessages, uint nRelayMessages, uint* pnRelayMessages, ubyte** ppInnerPacket, uint* pcbInnerPacket);
+uint PxeDhcpv6CreateRelayRepl(PXE_DHCPV6_NESTED_RELAY_MESSAGE* pRelayMessages, uint nRelayMessages, ubyte* pInnerPacket, uint cbInnerPacket, void* pReplyBuffer, uint cbReplyBuffer, uint* pcbReplyBuffer);
+uint PxeGetServerInfo(uint uInfoType, void* pBuffer, uint uBufferLen);
+uint PxeGetServerInfoEx(uint uInfoType, void* pBuffer, uint uBufferLen, uint* puBufferUsed);
+HRESULT WdsTransportServerRegisterCallback(HANDLE hProvider, TRANSPORTPROVIDER_CALLBACK_ID CallbackId, void* pfnCallback);
+HRESULT WdsTransportServerCompleteRead(HANDLE hProvider, uint ulBytesRead, void* pvUserData, HRESULT hReadResult);
+HRESULT WdsTransportServerTrace(HANDLE hProvider, uint Severity, const(wchar)* pwszFormat);
+HRESULT WdsTransportServerTraceV(HANDLE hProvider, uint Severity, const(wchar)* pwszFormat, byte* Params);
+void* WdsTransportServerAllocateBuffer(HANDLE hProvider, uint ulBufferSize);
+HRESULT WdsTransportServerFreeBuffer(HANDLE hProvider, void* pvBuffer);
 uint WdsTransportClientInitialize();
-uint WdsTransportClientInitializeSession(WDS_TRANSPORTCLIENT_REQUEST*, void*, HANDLE*);
-uint WdsTransportClientRegisterCallback(HANDLE, TRANSPORTCLIENT_CALLBACK_ID, void*);
-uint WdsTransportClientStartSession(HANDLE);
-uint WdsTransportClientCompleteReceive(HANDLE, uint, ulong*);
-uint WdsTransportClientCancelSession(HANDLE);
-uint WdsTransportClientCancelSessionEx(HANDLE, uint);
-uint WdsTransportClientWaitForCompletion(HANDLE, uint);
-uint WdsTransportClientQueryStatus(HANDLE, uint*, uint*);
-uint WdsTransportClientCloseSession(HANDLE);
-uint WdsTransportClientAddRefBuffer(void*);
-uint WdsTransportClientReleaseBuffer(void*);
+uint WdsTransportClientInitializeSession(WDS_TRANSPORTCLIENT_REQUEST* pSessionRequest, void* pCallerData, HANDLE* hSessionKey);
+uint WdsTransportClientRegisterCallback(HANDLE hSessionKey, TRANSPORTCLIENT_CALLBACK_ID CallbackId, void* pfnCallback);
+uint WdsTransportClientStartSession(HANDLE hSessionKey);
+uint WdsTransportClientCompleteReceive(HANDLE hSessionKey, uint ulSize, ulong* pullOffset);
+uint WdsTransportClientCancelSession(HANDLE hSessionKey);
+uint WdsTransportClientCancelSessionEx(HANDLE hSessionKey, uint dwErrorCode);
+uint WdsTransportClientWaitForCompletion(HANDLE hSessionKey, uint uTimeout);
+uint WdsTransportClientQueryStatus(HANDLE hSessionKey, uint* puStatus, uint* puErrorCode);
+uint WdsTransportClientCloseSession(HANDLE hSessionKey);
+uint WdsTransportClientAddRefBuffer(void* pvBuffer);
+uint WdsTransportClientReleaseBuffer(void* pvBuffer);
 uint WdsTransportClientShutdown();
-uint WdsBpParseInitialize(void*, uint, ubyte*, HANDLE*);
-uint WdsBpParseInitializev6(void*, uint, ubyte*, HANDLE*);
-uint WdsBpInitialize(ubyte, HANDLE*);
-uint WdsBpCloseHandle(HANDLE);
-uint WdsBpQueryOption(HANDLE, uint, uint, void*, uint*);
-uint WdsBpAddOption(HANDLE, uint, uint, void*);
-uint WdsBpGetOptionBuffer(HANDLE, uint, void*, uint*);
+uint WdsBpParseInitialize(void* pPacket, uint uPacketLen, ubyte* pbPacketType, HANDLE* phHandle);
+uint WdsBpParseInitializev6(void* pPacket, uint uPacketLen, ubyte* pbPacketType, HANDLE* phHandle);
+uint WdsBpInitialize(ubyte bPacketType, HANDLE* phHandle);
+uint WdsBpCloseHandle(HANDLE hHandle);
+uint WdsBpQueryOption(HANDLE hHandle, uint uOption, uint uValueLen, void* pValue, uint* puBytes);
+uint WdsBpAddOption(HANDLE hHandle, uint uOption, uint uValueLen, void* pValue);
+uint WdsBpGetOptionBuffer(HANDLE hHandle, uint uBufferLen, void* pBuffer, uint* puBytes);
 enum WDS_CLI_TRANSFER_ASYNCHRONOUS = 0x00000001;
 enum WDS_CLI_NO_SPARSE_FILE = 0x00000002;
 enum PXE_DHCP_SERVER_PORT = 0x00000043;
@@ -329,7 +329,7 @@ struct WDS_CLI_CRED
     const(wchar)* pwszDomain;
     const(wchar)* pwszPassword;
 }
-alias PFN_WdsCliTraceFunction = void function(const(wchar)*, byte*);
+alias PFN_WdsCliTraceFunction = void function(const(wchar)* pwszFormat, byte* Params);
 alias WDS_CLI_IMAGE_TYPE = int;
 enum : int
 {
@@ -355,7 +355,7 @@ enum : int
     WDS_CLI_IMAGE_PARAM_SUPPORTED_FIRMWARES = 0x00000002,
 }
 
-alias PFN_WdsCliCallback = void function(PFN_WDS_CLI_CALLBACK_MESSAGE_ID, WPARAM, LPARAM, void*);
+alias PFN_WdsCliCallback = void function(PFN_WDS_CLI_CALLBACK_MESSAGE_ID dwMessageId, WPARAM wParam, LPARAM lParam, void* pvUserData);
 struct PXE_DHCP_OPTION
 {
     align (1):
@@ -493,12 +493,12 @@ struct TRANSPORTCLIENT_SESSION_INFO
     ulong ullFileSize;
     uint ulBlockSize;
 }
-alias PFN_WdsTransportClientSessionStart = void function(HANDLE, void*, ulong*);
-alias PFN_WdsTransportClientSessionStartEx = void function(HANDLE, void*, TRANSPORTCLIENT_SESSION_INFO*);
-alias PFN_WdsTransportClientReceiveMetadata = void function(HANDLE, void*, void*, uint);
-alias PFN_WdsTransportClientReceiveContents = void function(HANDLE, void*, void*, uint, ulong*);
-alias PFN_WdsTransportClientSessionComplete = void function(HANDLE, void*, uint);
-alias PFN_WdsTransportClientSessionNegotiate = void function(HANDLE, void*, TRANSPORTCLIENT_SESSION_INFO*, HANDLE);
+alias PFN_WdsTransportClientSessionStart = void function(HANDLE hSessionKey, void* pCallerData, ulong* ullFileSize);
+alias PFN_WdsTransportClientSessionStartEx = void function(HANDLE hSessionKey, void* pCallerData, TRANSPORTCLIENT_SESSION_INFO* Info);
+alias PFN_WdsTransportClientReceiveMetadata = void function(HANDLE hSessionKey, void* pCallerData, void* pMetadata, uint ulSize);
+alias PFN_WdsTransportClientReceiveContents = void function(HANDLE hSessionKey, void* pCallerData, void* pContents, uint ulSize, ulong* pullContentOffset);
+alias PFN_WdsTransportClientSessionComplete = void function(HANDLE hSessionKey, void* pCallerData, uint dwError);
+alias PFN_WdsTransportClientSessionNegotiate = void function(HANDLE hSessionKey, void* pCallerData, TRANSPORTCLIENT_SESSION_INFO* pInfo, HANDLE hNegotiateKey);
 struct WDS_TRANSPORTCLIENT_REQUEST
 {
     uint ulLength;
@@ -621,7 +621,7 @@ enum : int
 enum IID_IWdsTransportCacheable = GUID(0x46ad894b, 0xbab, 0x47dc, [0x84, 0xb2, 0x7b, 0x55, 0x3f, 0x1d, 0x8f, 0x80]);
 interface IWdsTransportCacheable : IDispatch
 {
-    HRESULT get_Dirty(VARIANT_BOOL*);
+    HRESULT get_Dirty(VARIANT_BOOL* pbDirty);
     HRESULT Discard();
     HRESULT Refresh();
     HRESULT Commit();
@@ -629,144 +629,144 @@ interface IWdsTransportCacheable : IDispatch
 enum IID_IWdsTransportCollection = GUID(0xb8ba4b1a, 0x2ff4, 0x43ab, [0x99, 0x6c, 0xb2, 0xb1, 0xa, 0x91, 0xa6, 0xeb]);
 interface IWdsTransportCollection : IDispatch
 {
-    HRESULT get_Count(uint*);
-    HRESULT get_Item(uint, IDispatch*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(uint* pulCount);
+    HRESULT get_Item(uint ulIndex, IDispatch* ppVal);
+    HRESULT get__NewEnum(IUnknown* ppVal);
 }
 enum IID_IWdsTransportManager = GUID(0x5b0d35f5, 0x1b13, 0x4afd, [0xb8, 0x78, 0x65, 0x26, 0xdc, 0x34, 0xb, 0x5d]);
 interface IWdsTransportManager : IDispatch
 {
-    HRESULT GetWdsTransportServer(BSTR, IWdsTransportServer*);
+    HRESULT GetWdsTransportServer(BSTR bszServerName, IWdsTransportServer* ppWdsTransportServer);
 }
 enum IID_IWdsTransportServer = GUID(0x9ccd093, 0x830d, 0x4344, [0xa3, 0xa, 0x73, 0xae, 0x8e, 0x8f, 0xca, 0x90]);
 interface IWdsTransportServer : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_SetupManager(IWdsTransportSetupManager*);
-    HRESULT get_ConfigurationManager(IWdsTransportConfigurationManager*);
-    HRESULT get_NamespaceManager(IWdsTransportNamespaceManager*);
-    HRESULT DisconnectClient(uint, WDSTRANSPORT_DISCONNECT_TYPE);
+    HRESULT get_Name(BSTR* pbszName);
+    HRESULT get_SetupManager(IWdsTransportSetupManager* ppWdsTransportSetupManager);
+    HRESULT get_ConfigurationManager(IWdsTransportConfigurationManager* ppWdsTransportConfigurationManager);
+    HRESULT get_NamespaceManager(IWdsTransportNamespaceManager* ppWdsTransportNamespaceManager);
+    HRESULT DisconnectClient(uint ulClientId, WDSTRANSPORT_DISCONNECT_TYPE DisconnectionType);
 }
 enum IID_IWdsTransportServer2 = GUID(0x256e999f, 0x6df4, 0x4538, [0x81, 0xb9, 0x85, 0x7b, 0x9a, 0xb8, 0xfb, 0x47]);
 interface IWdsTransportServer2 : IWdsTransportServer
 {
-    HRESULT get_TftpManager(IWdsTransportTftpManager*);
+    HRESULT get_TftpManager(IWdsTransportTftpManager* ppWdsTransportTftpManager);
 }
 enum IID_IWdsTransportSetupManager = GUID(0xf7238425, 0xefa8, 0x40a4, [0xae, 0xf9, 0xc9, 0x8d, 0x96, 0x9c, 0xb, 0x75]);
 interface IWdsTransportSetupManager : IDispatch
 {
-    HRESULT get_Version(ulong*);
-    HRESULT get_InstalledFeatures(uint*);
-    HRESULT get_Protocols(uint*);
-    HRESULT RegisterContentProvider(BSTR, BSTR, BSTR, BSTR);
-    HRESULT DeregisterContentProvider(BSTR);
+    HRESULT get_Version(ulong* pullVersion);
+    HRESULT get_InstalledFeatures(uint* pulInstalledFeatures);
+    HRESULT get_Protocols(uint* pulProtocols);
+    HRESULT RegisterContentProvider(BSTR bszName, BSTR bszDescription, BSTR bszFilePath, BSTR bszInitializationRoutine);
+    HRESULT DeregisterContentProvider(BSTR bszName);
 }
 enum IID_IWdsTransportSetupManager2 = GUID(0x2be79da, 0x7e9e, 0x4366, [0x8b, 0x6e, 0x2a, 0xa9, 0xa9, 0x1b, 0xe4, 0x7f]);
 interface IWdsTransportSetupManager2 : IWdsTransportSetupManager
 {
-    HRESULT get_TftpCapabilities(uint*);
-    HRESULT get_ContentProviders(IWdsTransportCollection*);
+    HRESULT get_TftpCapabilities(uint* pulTftpCapabilities);
+    HRESULT get_ContentProviders(IWdsTransportCollection* ppProviderCollection);
 }
 enum IID_IWdsTransportConfigurationManager = GUID(0x84cc4779, 0x42dd, 0x4792, [0x89, 0x1e, 0x13, 0x21, 0xd6, 0xd7, 0x4b, 0x44]);
 interface IWdsTransportConfigurationManager : IDispatch
 {
-    HRESULT get_ServicePolicy(IWdsTransportServicePolicy*);
-    HRESULT get_DiagnosticsPolicy(IWdsTransportDiagnosticsPolicy*);
-    HRESULT get_WdsTransportServicesRunning(VARIANT_BOOL, VARIANT_BOOL*);
+    HRESULT get_ServicePolicy(IWdsTransportServicePolicy* ppWdsTransportServicePolicy);
+    HRESULT get_DiagnosticsPolicy(IWdsTransportDiagnosticsPolicy* ppWdsTransportDiagnosticsPolicy);
+    HRESULT get_WdsTransportServicesRunning(VARIANT_BOOL bRealtimeStatus, VARIANT_BOOL* pbServicesRunning);
     HRESULT EnableWdsTransportServices();
     HRESULT DisableWdsTransportServices();
     HRESULT StartWdsTransportServices();
     HRESULT StopWdsTransportServices();
     HRESULT RestartWdsTransportServices();
-    HRESULT NotifyWdsTransportServices(WDSTRANSPORT_SERVICE_NOTIFICATION);
+    HRESULT NotifyWdsTransportServices(WDSTRANSPORT_SERVICE_NOTIFICATION ServiceNotification);
 }
 enum IID_IWdsTransportConfigurationManager2 = GUID(0xd0d85caf, 0xa153, 0x4f1d, [0xa9, 0xdd, 0x96, 0xf4, 0x31, 0xc5, 0x7, 0x17]);
 interface IWdsTransportConfigurationManager2 : IWdsTransportConfigurationManager
 {
-    HRESULT get_MulticastSessionPolicy(IWdsTransportMulticastSessionPolicy*);
+    HRESULT get_MulticastSessionPolicy(IWdsTransportMulticastSessionPolicy* ppWdsTransportMulticastSessionPolicy);
 }
 enum IID_IWdsTransportNamespaceManager = GUID(0x3e22d9f6, 0x3777, 0x4d98, [0x83, 0xe1, 0xf9, 0x86, 0x96, 0x71, 0x7b, 0xa3]);
 interface IWdsTransportNamespaceManager : IDispatch
 {
-    HRESULT CreateNamespace(WDSTRANSPORT_NAMESPACE_TYPE, BSTR, BSTR, BSTR, IWdsTransportNamespace*);
-    HRESULT RetrieveNamespace(BSTR, IWdsTransportNamespace*);
-    HRESULT RetrieveNamespaces(BSTR, BSTR, VARIANT_BOOL, IWdsTransportCollection*);
+    HRESULT CreateNamespace(WDSTRANSPORT_NAMESPACE_TYPE NamespaceType, BSTR bszNamespaceName, BSTR bszContentProvider, BSTR bszConfiguration, IWdsTransportNamespace* ppWdsTransportNamespace);
+    HRESULT RetrieveNamespace(BSTR bszNamespaceName, IWdsTransportNamespace* ppWdsTransportNamespace);
+    HRESULT RetrieveNamespaces(BSTR bszContentProvider, BSTR bszNamespaceName, VARIANT_BOOL bIncludeTombstones, IWdsTransportCollection* ppWdsTransportNamespaces);
 }
 enum IID_IWdsTransportTftpManager = GUID(0x1327a7c8, 0xae8a, 0x4fb3, [0x81, 0x50, 0x13, 0x62, 0x27, 0xc3, 0x7e, 0x9a]);
 interface IWdsTransportTftpManager : IDispatch
 {
-    HRESULT RetrieveTftpClients(IWdsTransportCollection*);
+    HRESULT RetrieveTftpClients(IWdsTransportCollection* ppWdsTransportTftpClients);
 }
 enum IID_IWdsTransportServicePolicy = GUID(0xb9468578, 0x9f2b, 0x48cc, [0xb2, 0x7a, 0xa6, 0x7, 0x99, 0xc2, 0x75, 0xc]);
 interface IWdsTransportServicePolicy : IWdsTransportCacheable
 {
-    HRESULT get_IpAddressSource(WDSTRANSPORT_IP_ADDRESS_TYPE, WDSTRANSPORT_IP_ADDRESS_SOURCE_TYPE*);
-    HRESULT put_IpAddressSource(WDSTRANSPORT_IP_ADDRESS_TYPE, WDSTRANSPORT_IP_ADDRESS_SOURCE_TYPE);
-    HRESULT get_StartIpAddress(WDSTRANSPORT_IP_ADDRESS_TYPE, BSTR*);
-    HRESULT put_StartIpAddress(WDSTRANSPORT_IP_ADDRESS_TYPE, BSTR);
-    HRESULT get_EndIpAddress(WDSTRANSPORT_IP_ADDRESS_TYPE, BSTR*);
-    HRESULT put_EndIpAddress(WDSTRANSPORT_IP_ADDRESS_TYPE, BSTR);
-    HRESULT get_StartPort(uint*);
-    HRESULT put_StartPort(uint);
-    HRESULT get_EndPort(uint*);
-    HRESULT put_EndPort(uint);
-    HRESULT get_NetworkProfile(WDSTRANSPORT_NETWORK_PROFILE_TYPE*);
-    HRESULT put_NetworkProfile(WDSTRANSPORT_NETWORK_PROFILE_TYPE);
+    HRESULT get_IpAddressSource(WDSTRANSPORT_IP_ADDRESS_TYPE AddressType, WDSTRANSPORT_IP_ADDRESS_SOURCE_TYPE* pSourceType);
+    HRESULT put_IpAddressSource(WDSTRANSPORT_IP_ADDRESS_TYPE AddressType, WDSTRANSPORT_IP_ADDRESS_SOURCE_TYPE SourceType);
+    HRESULT get_StartIpAddress(WDSTRANSPORT_IP_ADDRESS_TYPE AddressType, BSTR* pbszStartIpAddress);
+    HRESULT put_StartIpAddress(WDSTRANSPORT_IP_ADDRESS_TYPE AddressType, BSTR bszStartIpAddress);
+    HRESULT get_EndIpAddress(WDSTRANSPORT_IP_ADDRESS_TYPE AddressType, BSTR* pbszEndIpAddress);
+    HRESULT put_EndIpAddress(WDSTRANSPORT_IP_ADDRESS_TYPE AddressType, BSTR bszEndIpAddress);
+    HRESULT get_StartPort(uint* pulStartPort);
+    HRESULT put_StartPort(uint ulStartPort);
+    HRESULT get_EndPort(uint* pulEndPort);
+    HRESULT put_EndPort(uint ulEndPort);
+    HRESULT get_NetworkProfile(WDSTRANSPORT_NETWORK_PROFILE_TYPE* pProfileType);
+    HRESULT put_NetworkProfile(WDSTRANSPORT_NETWORK_PROFILE_TYPE ProfileType);
 }
 enum IID_IWdsTransportServicePolicy2 = GUID(0x65c19e5c, 0xaa7e, 0x4b91, [0x89, 0x44, 0x91, 0xe0, 0xe5, 0x57, 0x27, 0x97]);
 interface IWdsTransportServicePolicy2 : IWdsTransportServicePolicy
 {
-    HRESULT get_UdpPortPolicy(WDSTRANSPORT_UDP_PORT_POLICY*);
-    HRESULT put_UdpPortPolicy(WDSTRANSPORT_UDP_PORT_POLICY);
-    HRESULT get_TftpMaximumBlockSize(uint*);
-    HRESULT put_TftpMaximumBlockSize(uint);
-    HRESULT get_EnableTftpVariableWindowExtension(VARIANT_BOOL*);
-    HRESULT put_EnableTftpVariableWindowExtension(VARIANT_BOOL);
+    HRESULT get_UdpPortPolicy(WDSTRANSPORT_UDP_PORT_POLICY* pUdpPortPolicy);
+    HRESULT put_UdpPortPolicy(WDSTRANSPORT_UDP_PORT_POLICY UdpPortPolicy);
+    HRESULT get_TftpMaximumBlockSize(uint* pulTftpMaximumBlockSize);
+    HRESULT put_TftpMaximumBlockSize(uint ulTftpMaximumBlockSize);
+    HRESULT get_EnableTftpVariableWindowExtension(VARIANT_BOOL* pbEnableTftpVariableWindowExtension);
+    HRESULT put_EnableTftpVariableWindowExtension(VARIANT_BOOL bEnableTftpVariableWindowExtension);
 }
 enum IID_IWdsTransportDiagnosticsPolicy = GUID(0x13b33efc, 0x7856, 0x4f61, [0x9a, 0x59, 0x8d, 0xe6, 0x7b, 0x6b, 0x87, 0xb6]);
 interface IWdsTransportDiagnosticsPolicy : IWdsTransportCacheable
 {
-    HRESULT get_Enabled(VARIANT_BOOL*);
-    HRESULT put_Enabled(VARIANT_BOOL);
-    HRESULT get_Components(uint*);
-    HRESULT put_Components(uint);
+    HRESULT get_Enabled(VARIANT_BOOL* pbEnabled);
+    HRESULT put_Enabled(VARIANT_BOOL bEnabled);
+    HRESULT get_Components(uint* pulComponents);
+    HRESULT put_Components(uint ulComponents);
 }
 enum IID_IWdsTransportMulticastSessionPolicy = GUID(0x4e5753cf, 0x68ec, 0x4504, [0xa9, 0x51, 0x4a, 0x0, 0x32, 0x66, 0x60, 0x6b]);
 interface IWdsTransportMulticastSessionPolicy : IWdsTransportCacheable
 {
-    HRESULT get_SlowClientHandling(WDSTRANSPORT_SLOW_CLIENT_HANDLING_TYPE*);
-    HRESULT put_SlowClientHandling(WDSTRANSPORT_SLOW_CLIENT_HANDLING_TYPE);
-    HRESULT get_AutoDisconnectThreshold(uint*);
-    HRESULT put_AutoDisconnectThreshold(uint);
-    HRESULT get_MultistreamStreamCount(uint*);
-    HRESULT put_MultistreamStreamCount(uint);
-    HRESULT get_SlowClientFallback(VARIANT_BOOL*);
-    HRESULT put_SlowClientFallback(VARIANT_BOOL);
+    HRESULT get_SlowClientHandling(WDSTRANSPORT_SLOW_CLIENT_HANDLING_TYPE* pSlowClientHandling);
+    HRESULT put_SlowClientHandling(WDSTRANSPORT_SLOW_CLIENT_HANDLING_TYPE SlowClientHandling);
+    HRESULT get_AutoDisconnectThreshold(uint* pulThreshold);
+    HRESULT put_AutoDisconnectThreshold(uint ulThreshold);
+    HRESULT get_MultistreamStreamCount(uint* pulStreamCount);
+    HRESULT put_MultistreamStreamCount(uint ulStreamCount);
+    HRESULT get_SlowClientFallback(VARIANT_BOOL* pbClientFallback);
+    HRESULT put_SlowClientFallback(VARIANT_BOOL bClientFallback);
 }
 enum IID_IWdsTransportNamespace = GUID(0xfa561f57, 0xfbef, 0x4ed3, [0xb0, 0x56, 0x12, 0x7c, 0xb1, 0xb3, 0x3b, 0x84]);
 interface IWdsTransportNamespace : IDispatch
 {
-    HRESULT get_Type(WDSTRANSPORT_NAMESPACE_TYPE*);
-    HRESULT get_Id(uint*);
-    HRESULT get_Name(BSTR*);
-    HRESULT put_Name(BSTR);
-    HRESULT get_FriendlyName(BSTR*);
-    HRESULT put_FriendlyName(BSTR);
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
-    HRESULT get_ContentProvider(BSTR*);
-    HRESULT put_ContentProvider(BSTR);
-    HRESULT get_Configuration(BSTR*);
-    HRESULT put_Configuration(BSTR);
-    HRESULT get_Registered(VARIANT_BOOL*);
-    HRESULT get_Tombstoned(VARIANT_BOOL*);
-    HRESULT get_TombstoneTime(double*);
-    HRESULT get_TransmissionStarted(VARIANT_BOOL*);
+    HRESULT get_Type(WDSTRANSPORT_NAMESPACE_TYPE* pType);
+    HRESULT get_Id(uint* pulId);
+    HRESULT get_Name(BSTR* pbszName);
+    HRESULT put_Name(BSTR bszName);
+    HRESULT get_FriendlyName(BSTR* pbszFriendlyName);
+    HRESULT put_FriendlyName(BSTR bszFriendlyName);
+    HRESULT get_Description(BSTR* pbszDescription);
+    HRESULT put_Description(BSTR bszDescription);
+    HRESULT get_ContentProvider(BSTR* pbszContentProvider);
+    HRESULT put_ContentProvider(BSTR bszContentProvider);
+    HRESULT get_Configuration(BSTR* pbszConfiguration);
+    HRESULT put_Configuration(BSTR bszConfiguration);
+    HRESULT get_Registered(VARIANT_BOOL* pbRegistered);
+    HRESULT get_Tombstoned(VARIANT_BOOL* pbTombstoned);
+    HRESULT get_TombstoneTime(double* pTombstoneTime);
+    HRESULT get_TransmissionStarted(VARIANT_BOOL* pbTransmissionStarted);
     HRESULT Register();
-    HRESULT Deregister(VARIANT_BOOL);
-    HRESULT Clone(IWdsTransportNamespace*);
+    HRESULT Deregister(VARIANT_BOOL bTerminateSessions);
+    HRESULT Clone(IWdsTransportNamespace* ppWdsTransportNamespaceClone);
     HRESULT Refresh();
-    HRESULT RetrieveContents(IWdsTransportCollection*);
+    HRESULT RetrieveContents(IWdsTransportCollection* ppWdsTransportContents);
 }
 enum IID_IWdsTransportNamespaceAutoCast = GUID(0xad931a72, 0xc4bd, 0x4c41, [0x8f, 0xbc, 0x59, 0xc9, 0xc7, 0x48, 0xdf, 0x9e]);
 interface IWdsTransportNamespaceAutoCast : IWdsTransportNamespace
@@ -784,66 +784,66 @@ interface IWdsTransportNamespaceScheduledCastManualStart : IWdsTransportNamespac
 enum IID_IWdsTransportNamespaceScheduledCastAutoStart = GUID(0xd606af3d, 0xea9c, 0x4219, [0x96, 0x1e, 0x74, 0x91, 0xd6, 0x18, 0xd9, 0xb9]);
 interface IWdsTransportNamespaceScheduledCastAutoStart : IWdsTransportNamespaceScheduledCast
 {
-    HRESULT get_MinimumClients(uint*);
-    HRESULT put_MinimumClients(uint);
-    HRESULT get_StartTime(double*);
-    HRESULT put_StartTime(double);
+    HRESULT get_MinimumClients(uint* pulMinimumClients);
+    HRESULT put_MinimumClients(uint ulMinimumClients);
+    HRESULT get_StartTime(double* pStartTime);
+    HRESULT put_StartTime(double StartTime);
 }
 enum IID_IWdsTransportContent = GUID(0xd405d711, 0x296, 0x4ab4, [0xa8, 0x60, 0xac, 0x7d, 0x32, 0xe6, 0x57, 0x98]);
 interface IWdsTransportContent : IDispatch
 {
-    HRESULT get_Namespace(IWdsTransportNamespace*);
-    HRESULT get_Id(uint*);
-    HRESULT get_Name(BSTR*);
-    HRESULT RetrieveSessions(IWdsTransportCollection*);
+    HRESULT get_Namespace(IWdsTransportNamespace* ppWdsTransportNamespace);
+    HRESULT get_Id(uint* pulId);
+    HRESULT get_Name(BSTR* pbszName);
+    HRESULT RetrieveSessions(IWdsTransportCollection* ppWdsTransportSessions);
     HRESULT Terminate();
 }
 enum IID_IWdsTransportSession = GUID(0xf4efea88, 0x65b1, 0x4f30, [0xa4, 0xb9, 0x27, 0x93, 0x98, 0x77, 0x96, 0xfb]);
 interface IWdsTransportSession : IDispatch
 {
-    HRESULT get_Content(IWdsTransportContent*);
-    HRESULT get_Id(uint*);
-    HRESULT get_NetworkInterfaceName(BSTR*);
-    HRESULT get_NetworkInterfaceAddress(BSTR*);
-    HRESULT get_TransferRate(uint*);
-    HRESULT get_MasterClientId(uint*);
-    HRESULT RetrieveClients(IWdsTransportCollection*);
+    HRESULT get_Content(IWdsTransportContent* ppWdsTransportContent);
+    HRESULT get_Id(uint* pulId);
+    HRESULT get_NetworkInterfaceName(BSTR* pbszNetworkInterfaceName);
+    HRESULT get_NetworkInterfaceAddress(BSTR* pbszNetworkInterfaceAddress);
+    HRESULT get_TransferRate(uint* pulTransferRate);
+    HRESULT get_MasterClientId(uint* pulMasterClientId);
+    HRESULT RetrieveClients(IWdsTransportCollection* ppWdsTransportClients);
     HRESULT Terminate();
 }
 enum IID_IWdsTransportClient = GUID(0xb5dbc93a, 0xcabe, 0x46ca, [0x83, 0x7f, 0x3e, 0x44, 0xe9, 0x3c, 0x65, 0x45]);
 interface IWdsTransportClient : IDispatch
 {
-    HRESULT get_Session(IWdsTransportSession*);
-    HRESULT get_Id(uint*);
-    HRESULT get_Name(BSTR*);
-    HRESULT get_MacAddress(BSTR*);
-    HRESULT get_IpAddress(BSTR*);
-    HRESULT get_PercentCompletion(uint*);
-    HRESULT get_JoinDuration(uint*);
-    HRESULT get_CpuUtilization(uint*);
-    HRESULT get_MemoryUtilization(uint*);
-    HRESULT get_NetworkUtilization(uint*);
-    HRESULT get_UserIdentity(BSTR*);
-    HRESULT Disconnect(WDSTRANSPORT_DISCONNECT_TYPE);
+    HRESULT get_Session(IWdsTransportSession* ppWdsTransportSession);
+    HRESULT get_Id(uint* pulId);
+    HRESULT get_Name(BSTR* pbszName);
+    HRESULT get_MacAddress(BSTR* pbszMacAddress);
+    HRESULT get_IpAddress(BSTR* pbszIpAddress);
+    HRESULT get_PercentCompletion(uint* pulPercentCompletion);
+    HRESULT get_JoinDuration(uint* pulJoinDuration);
+    HRESULT get_CpuUtilization(uint* pulCpuUtilization);
+    HRESULT get_MemoryUtilization(uint* pulMemoryUtilization);
+    HRESULT get_NetworkUtilization(uint* pulNetworkUtilization);
+    HRESULT get_UserIdentity(BSTR* pbszUserIdentity);
+    HRESULT Disconnect(WDSTRANSPORT_DISCONNECT_TYPE DisconnectionType);
 }
 enum IID_IWdsTransportTftpClient = GUID(0xb022d3ae, 0x884d, 0x4d85, [0xb1, 0x46, 0x53, 0x32, 0xe, 0x76, 0xef, 0x62]);
 interface IWdsTransportTftpClient : IDispatch
 {
-    HRESULT get_FileName(BSTR*);
-    HRESULT get_IpAddress(BSTR*);
-    HRESULT get_Timeout(uint*);
-    HRESULT get_CurrentFileOffset(ulong*);
-    HRESULT get_FileSize(ulong*);
-    HRESULT get_BlockSize(uint*);
-    HRESULT get_WindowSize(uint*);
+    HRESULT get_FileName(BSTR* pbszFileName);
+    HRESULT get_IpAddress(BSTR* pbszIpAddress);
+    HRESULT get_Timeout(uint* pulTimeout);
+    HRESULT get_CurrentFileOffset(ulong* pul64CurrentOffset);
+    HRESULT get_FileSize(ulong* pul64FileSize);
+    HRESULT get_BlockSize(uint* pulBlockSize);
+    HRESULT get_WindowSize(uint* pulWindowSize);
 }
 enum IID_IWdsTransportContentProvider = GUID(0xb9489f24, 0xf219, 0x4acf, [0xaa, 0xd7, 0x26, 0x5c, 0x7c, 0x8, 0xa6, 0xae]);
 interface IWdsTransportContentProvider : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Description(BSTR*);
-    HRESULT get_FilePath(BSTR*);
-    HRESULT get_InitializationRoutine(BSTR*);
+    HRESULT get_Name(BSTR* pbszName);
+    HRESULT get_Description(BSTR* pbszDescription);
+    HRESULT get_FilePath(BSTR* pbszFilePath);
+    HRESULT get_InitializationRoutine(BSTR* pbszInitializationRoutine);
 }
 enum CLSID_WdsTransportCacheable = GUID(0x70590b16, 0xf146, 0x46bd, [0xbd, 0x9d, 0x4a, 0xaa, 0x90, 0x8, 0x4b, 0xf5]);
 struct WdsTransportCacheable

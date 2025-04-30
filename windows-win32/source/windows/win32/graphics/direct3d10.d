@@ -10,35 +10,35 @@ import windows.win32.system.com : IUnknown;
 version (Windows):
 extern (Windows):
 
-HRESULT D3D10CreateDevice(IDXGIAdapter, D3D10_DRIVER_TYPE, HMODULE, uint, uint, ID3D10Device*);
-HRESULT D3D10CreateDeviceAndSwapChain(IDXGIAdapter, D3D10_DRIVER_TYPE, HMODULE, uint, uint, DXGI_SWAP_CHAIN_DESC*, IDXGISwapChain*, ID3D10Device*);
-HRESULT D3D10CreateBlob(ulong, ID3DBlob*);
-HRESULT D3D10CompileShader(const(char)*, ulong, const(char)*, const(D3D_SHADER_MACRO)*, ID3DInclude, const(char)*, const(char)*, uint, ID3DBlob*, ID3DBlob*);
-HRESULT D3D10DisassembleShader(const(void)*, ulong, BOOL, const(char)*, ID3DBlob*);
-PSTR D3D10GetPixelShaderProfile(ID3D10Device);
-PSTR D3D10GetVertexShaderProfile(ID3D10Device);
-PSTR D3D10GetGeometryShaderProfile(ID3D10Device);
-HRESULT D3D10ReflectShader(const(void)*, ulong, ID3D10ShaderReflection*);
-HRESULT D3D10PreprocessShader(const(char)*, ulong, const(char)*, const(D3D_SHADER_MACRO)*, ID3DInclude, ID3DBlob*, ID3DBlob*);
-HRESULT D3D10GetInputSignatureBlob(const(void)*, ulong, ID3DBlob*);
-HRESULT D3D10GetOutputSignatureBlob(const(void)*, ulong, ID3DBlob*);
-HRESULT D3D10GetInputAndOutputSignatureBlob(const(void)*, ulong, ID3DBlob*);
-HRESULT D3D10GetShaderDebugInfo(const(void)*, ulong, ID3DBlob*);
-HRESULT D3D10StateBlockMaskUnion(D3D10_STATE_BLOCK_MASK*, D3D10_STATE_BLOCK_MASK*, D3D10_STATE_BLOCK_MASK*);
-HRESULT D3D10StateBlockMaskIntersect(D3D10_STATE_BLOCK_MASK*, D3D10_STATE_BLOCK_MASK*, D3D10_STATE_BLOCK_MASK*);
-HRESULT D3D10StateBlockMaskDifference(D3D10_STATE_BLOCK_MASK*, D3D10_STATE_BLOCK_MASK*, D3D10_STATE_BLOCK_MASK*);
-HRESULT D3D10StateBlockMaskEnableCapture(D3D10_STATE_BLOCK_MASK*, D3D10_DEVICE_STATE_TYPES, uint, uint);
-HRESULT D3D10StateBlockMaskDisableCapture(D3D10_STATE_BLOCK_MASK*, D3D10_DEVICE_STATE_TYPES, uint, uint);
-HRESULT D3D10StateBlockMaskEnableAll(D3D10_STATE_BLOCK_MASK*);
-HRESULT D3D10StateBlockMaskDisableAll(D3D10_STATE_BLOCK_MASK*);
-BOOL D3D10StateBlockMaskGetSetting(D3D10_STATE_BLOCK_MASK*, D3D10_DEVICE_STATE_TYPES, uint);
-HRESULT D3D10CreateStateBlock(ID3D10Device, D3D10_STATE_BLOCK_MASK*, ID3D10StateBlock*);
-HRESULT D3D10CompileEffectFromMemory(void*, ulong, const(char)*, const(D3D_SHADER_MACRO)*, ID3DInclude, uint, uint, ID3DBlob*, ID3DBlob*);
-HRESULT D3D10CreateEffectFromMemory(void*, ulong, uint, ID3D10Device, ID3D10EffectPool, ID3D10Effect*);
-HRESULT D3D10CreateEffectPoolFromMemory(void*, ulong, uint, ID3D10Device, ID3D10EffectPool*);
-HRESULT D3D10DisassembleEffect(ID3D10Effect, BOOL, ID3DBlob*);
-HRESULT D3D10CreateDevice1(IDXGIAdapter, D3D10_DRIVER_TYPE, HMODULE, uint, D3D10_FEATURE_LEVEL1, uint, ID3D10Device1*);
-HRESULT D3D10CreateDeviceAndSwapChain1(IDXGIAdapter, D3D10_DRIVER_TYPE, HMODULE, uint, D3D10_FEATURE_LEVEL1, uint, DXGI_SWAP_CHAIN_DESC*, IDXGISwapChain*, ID3D10Device1*);
+HRESULT D3D10CreateDevice(IDXGIAdapter pAdapter, D3D10_DRIVER_TYPE DriverType, HMODULE Software, uint Flags, uint SDKVersion, ID3D10Device* ppDevice);
+HRESULT D3D10CreateDeviceAndSwapChain(IDXGIAdapter pAdapter, D3D10_DRIVER_TYPE DriverType, HMODULE Software, uint Flags, uint SDKVersion, DXGI_SWAP_CHAIN_DESC* pSwapChainDesc, IDXGISwapChain* ppSwapChain, ID3D10Device* ppDevice);
+HRESULT D3D10CreateBlob(ulong NumBytes, ID3DBlob* ppBuffer);
+HRESULT D3D10CompileShader(const(char)* pSrcData, ulong SrcDataSize, const(char)* pFileName, const(D3D_SHADER_MACRO)* pDefines, ID3DInclude pInclude, const(char)* pFunctionName, const(char)* pProfile, uint Flags, ID3DBlob* ppShader, ID3DBlob* ppErrorMsgs);
+HRESULT D3D10DisassembleShader(const(void)* pShader, ulong BytecodeLength, BOOL EnableColorCode, const(char)* pComments, ID3DBlob* ppDisassembly);
+PSTR D3D10GetPixelShaderProfile(ID3D10Device pDevice);
+PSTR D3D10GetVertexShaderProfile(ID3D10Device pDevice);
+PSTR D3D10GetGeometryShaderProfile(ID3D10Device pDevice);
+HRESULT D3D10ReflectShader(const(void)* pShaderBytecode, ulong BytecodeLength, ID3D10ShaderReflection* ppReflector);
+HRESULT D3D10PreprocessShader(const(char)* pSrcData, ulong SrcDataSize, const(char)* pFileName, const(D3D_SHADER_MACRO)* pDefines, ID3DInclude pInclude, ID3DBlob* ppShaderText, ID3DBlob* ppErrorMsgs);
+HRESULT D3D10GetInputSignatureBlob(const(void)* pShaderBytecode, ulong BytecodeLength, ID3DBlob* ppSignatureBlob);
+HRESULT D3D10GetOutputSignatureBlob(const(void)* pShaderBytecode, ulong BytecodeLength, ID3DBlob* ppSignatureBlob);
+HRESULT D3D10GetInputAndOutputSignatureBlob(const(void)* pShaderBytecode, ulong BytecodeLength, ID3DBlob* ppSignatureBlob);
+HRESULT D3D10GetShaderDebugInfo(const(void)* pShaderBytecode, ulong BytecodeLength, ID3DBlob* ppDebugInfo);
+HRESULT D3D10StateBlockMaskUnion(D3D10_STATE_BLOCK_MASK* pA, D3D10_STATE_BLOCK_MASK* pB, D3D10_STATE_BLOCK_MASK* pResult);
+HRESULT D3D10StateBlockMaskIntersect(D3D10_STATE_BLOCK_MASK* pA, D3D10_STATE_BLOCK_MASK* pB, D3D10_STATE_BLOCK_MASK* pResult);
+HRESULT D3D10StateBlockMaskDifference(D3D10_STATE_BLOCK_MASK* pA, D3D10_STATE_BLOCK_MASK* pB, D3D10_STATE_BLOCK_MASK* pResult);
+HRESULT D3D10StateBlockMaskEnableCapture(D3D10_STATE_BLOCK_MASK* pMask, D3D10_DEVICE_STATE_TYPES StateType, uint RangeStart, uint RangeLength);
+HRESULT D3D10StateBlockMaskDisableCapture(D3D10_STATE_BLOCK_MASK* pMask, D3D10_DEVICE_STATE_TYPES StateType, uint RangeStart, uint RangeLength);
+HRESULT D3D10StateBlockMaskEnableAll(D3D10_STATE_BLOCK_MASK* pMask);
+HRESULT D3D10StateBlockMaskDisableAll(D3D10_STATE_BLOCK_MASK* pMask);
+BOOL D3D10StateBlockMaskGetSetting(D3D10_STATE_BLOCK_MASK* pMask, D3D10_DEVICE_STATE_TYPES StateType, uint Entry);
+HRESULT D3D10CreateStateBlock(ID3D10Device pDevice, D3D10_STATE_BLOCK_MASK* pStateBlockMask, ID3D10StateBlock* ppStateBlock);
+HRESULT D3D10CompileEffectFromMemory(void* pData, ulong DataLength, const(char)* pSrcFileName, const(D3D_SHADER_MACRO)* pDefines, ID3DInclude pInclude, uint HLSLFlags, uint FXFlags, ID3DBlob* ppCompiledEffect, ID3DBlob* ppErrors);
+HRESULT D3D10CreateEffectFromMemory(void* pData, ulong DataLength, uint FXFlags, ID3D10Device pDevice, ID3D10EffectPool pEffectPool, ID3D10Effect* ppEffect);
+HRESULT D3D10CreateEffectPoolFromMemory(void* pData, ulong DataLength, uint FXFlags, ID3D10Device pDevice, ID3D10EffectPool* ppEffectPool);
+HRESULT D3D10DisassembleEffect(ID3D10Effect pEffect, BOOL EnableColorCode, ID3DBlob* ppDisassembly);
+HRESULT D3D10CreateDevice1(IDXGIAdapter pAdapter, D3D10_DRIVER_TYPE DriverType, HMODULE Software, uint Flags, D3D10_FEATURE_LEVEL1 HardwareLevel, uint SDKVersion, ID3D10Device1* ppDevice);
+HRESULT D3D10CreateDeviceAndSwapChain1(IDXGIAdapter pAdapter, D3D10_DRIVER_TYPE DriverType, HMODULE Software, uint Flags, D3D10_FEATURE_LEVEL1 HardwareLevel, uint SDKVersion, DXGI_SWAP_CHAIN_DESC* pSwapChainDesc, IDXGISwapChain* ppSwapChain, ID3D10Device1* ppDevice);
 enum D3D10_16BIT_INDEX_STRIP_CUT_VALUE = 0x0000ffff;
 enum D3D10_32BIT_INDEX_STRIP_CUT_VALUE = 0xffffffff;
 enum D3D10_8BIT_INDEX_STRIP_CUT_VALUE = 0x000000ff;
@@ -504,10 +504,10 @@ struct D3D10_BOX
 enum IID_ID3D10DeviceChild = GUID(0x9b7e4c00, 0x342c, 0x4106, [0xa1, 0x9f, 0x4f, 0x27, 0x4, 0xf6, 0x89, 0xf0]);
 interface ID3D10DeviceChild : IUnknown
 {
-    void GetDevice(ID3D10Device*);
-    HRESULT GetPrivateData(const(GUID)*, uint*, void*);
-    HRESULT SetPrivateData(const(GUID)*, uint, const(void)*);
-    HRESULT SetPrivateDataInterface(const(GUID)*, const(IUnknown));
+    void GetDevice(ID3D10Device* ppDevice);
+    HRESULT GetPrivateData(const(GUID)* guid, uint* pDataSize, void* pData);
+    HRESULT SetPrivateData(const(GUID)* guid, uint DataSize, const(void)* pData);
+    HRESULT SetPrivateDataInterface(const(GUID)* guid, const(IUnknown) pData);
 }
 alias D3D10_COMPARISON_FUNC = int;
 enum : int
@@ -563,7 +563,7 @@ struct D3D10_DEPTH_STENCIL_DESC
 enum IID_ID3D10DepthStencilState = GUID(0x2b4b1cc8, 0xa4ad, 0x41f8, [0x83, 0x22, 0xca, 0x86, 0xfc, 0x3e, 0xc6, 0x75]);
 interface ID3D10DepthStencilState : ID3D10DeviceChild
 {
-    void GetDesc(D3D10_DEPTH_STENCIL_DESC*);
+    void GetDesc(D3D10_DEPTH_STENCIL_DESC* pDesc);
 }
 alias D3D10_BLEND = int;
 enum : int
@@ -622,7 +622,7 @@ struct D3D10_BLEND_DESC
 enum IID_ID3D10BlendState = GUID(0xedad8d19, 0x8a35, 0x4d6d, [0x85, 0x66, 0x2e, 0xa2, 0x76, 0xcd, 0xe1, 0x61]);
 interface ID3D10BlendState : ID3D10DeviceChild
 {
-    void GetDesc(D3D10_BLEND_DESC*);
+    void GetDesc(D3D10_BLEND_DESC* pDesc);
 }
 struct D3D10_RASTERIZER_DESC
 {
@@ -640,7 +640,7 @@ struct D3D10_RASTERIZER_DESC
 enum IID_ID3D10RasterizerState = GUID(0xa2a07292, 0x89af, 0x4345, [0xbe, 0x2e, 0xc5, 0x3d, 0x9f, 0xbb, 0x6e, 0x9f]);
 interface ID3D10RasterizerState : ID3D10DeviceChild
 {
-    void GetDesc(D3D10_RASTERIZER_DESC*);
+    void GetDesc(D3D10_RASTERIZER_DESC* pDesc);
 }
 struct D3D10_SUBRESOURCE_DATA
 {
@@ -651,8 +651,8 @@ struct D3D10_SUBRESOURCE_DATA
 enum IID_ID3D10Resource = GUID(0x9b7e4c01, 0x342c, 0x4106, [0xa1, 0x9f, 0x4f, 0x27, 0x4, 0xf6, 0x89, 0xf0]);
 interface ID3D10Resource : ID3D10DeviceChild
 {
-    void GetType(D3D10_RESOURCE_DIMENSION*);
-    void SetEvictionPriority(uint);
+    void GetType(D3D10_RESOURCE_DIMENSION* rType);
+    void SetEvictionPriority(uint EvictionPriority);
     uint GetEvictionPriority();
 }
 struct D3D10_BUFFER_DESC
@@ -666,9 +666,9 @@ struct D3D10_BUFFER_DESC
 enum IID_ID3D10Buffer = GUID(0x9b7e4c02, 0x342c, 0x4106, [0xa1, 0x9f, 0x4f, 0x27, 0x4, 0xf6, 0x89, 0xf0]);
 interface ID3D10Buffer : ID3D10Resource
 {
-    HRESULT Map(D3D10_MAP, uint, void**);
+    HRESULT Map(D3D10_MAP MapType, uint MapFlags, void** ppData);
     void Unmap();
-    void GetDesc(D3D10_BUFFER_DESC*);
+    void GetDesc(D3D10_BUFFER_DESC* pDesc);
 }
 struct D3D10_TEXTURE1D_DESC
 {
@@ -684,9 +684,9 @@ struct D3D10_TEXTURE1D_DESC
 enum IID_ID3D10Texture1D = GUID(0x9b7e4c03, 0x342c, 0x4106, [0xa1, 0x9f, 0x4f, 0x27, 0x4, 0xf6, 0x89, 0xf0]);
 interface ID3D10Texture1D : ID3D10Resource
 {
-    HRESULT Map(uint, D3D10_MAP, uint, void**);
-    void Unmap(uint);
-    void GetDesc(D3D10_TEXTURE1D_DESC*);
+    HRESULT Map(uint Subresource, D3D10_MAP MapType, uint MapFlags, void** ppData);
+    void Unmap(uint Subresource);
+    void GetDesc(D3D10_TEXTURE1D_DESC* pDesc);
 }
 struct D3D10_TEXTURE2D_DESC
 {
@@ -709,9 +709,9 @@ struct D3D10_MAPPED_TEXTURE2D
 enum IID_ID3D10Texture2D = GUID(0x9b7e4c04, 0x342c, 0x4106, [0xa1, 0x9f, 0x4f, 0x27, 0x4, 0xf6, 0x89, 0xf0]);
 interface ID3D10Texture2D : ID3D10Resource
 {
-    HRESULT Map(uint, D3D10_MAP, uint, D3D10_MAPPED_TEXTURE2D*);
-    void Unmap(uint);
-    void GetDesc(D3D10_TEXTURE2D_DESC*);
+    HRESULT Map(uint Subresource, D3D10_MAP MapType, uint MapFlags, D3D10_MAPPED_TEXTURE2D* pMappedTex2D);
+    void Unmap(uint Subresource);
+    void GetDesc(D3D10_TEXTURE2D_DESC* pDesc);
 }
 struct D3D10_TEXTURE3D_DESC
 {
@@ -734,9 +734,9 @@ struct D3D10_MAPPED_TEXTURE3D
 enum IID_ID3D10Texture3D = GUID(0x9b7e4c05, 0x342c, 0x4106, [0xa1, 0x9f, 0x4f, 0x27, 0x4, 0xf6, 0x89, 0xf0]);
 interface ID3D10Texture3D : ID3D10Resource
 {
-    HRESULT Map(uint, D3D10_MAP, uint, D3D10_MAPPED_TEXTURE3D*);
-    void Unmap(uint);
-    void GetDesc(D3D10_TEXTURE3D_DESC*);
+    HRESULT Map(uint Subresource, D3D10_MAP MapType, uint MapFlags, D3D10_MAPPED_TEXTURE3D* pMappedTex3D);
+    void Unmap(uint Subresource);
+    void GetDesc(D3D10_TEXTURE3D_DESC* pDesc);
 }
 alias D3D10_TEXTURECUBE_FACE = int;
 enum : int
@@ -752,7 +752,7 @@ enum : int
 enum IID_ID3D10View = GUID(0xc902b03f, 0x60a7, 0x49ba, [0x99, 0x36, 0x2a, 0x3a, 0xb3, 0x7a, 0x7e, 0x33]);
 interface ID3D10View : ID3D10DeviceChild
 {
-    void GetResource(ID3D10Resource*);
+    void GetResource(ID3D10Resource* ppResource);
 }
 struct D3D10_BUFFER_SRV
 {
@@ -830,7 +830,7 @@ struct D3D10_SHADER_RESOURCE_VIEW_DESC
 enum IID_ID3D10ShaderResourceView = GUID(0x9b7e4c07, 0x342c, 0x4106, [0xa1, 0x9f, 0x4f, 0x27, 0x4, 0xf6, 0x89, 0xf0]);
 interface ID3D10ShaderResourceView : ID3D10View
 {
-    void GetDesc(D3D10_SHADER_RESOURCE_VIEW_DESC*);
+    void GetDesc(D3D10_SHADER_RESOURCE_VIEW_DESC* pDesc);
 }
 struct D3D10_BUFFER_RTV
 {
@@ -899,7 +899,7 @@ struct D3D10_RENDER_TARGET_VIEW_DESC
 enum IID_ID3D10RenderTargetView = GUID(0x9b7e4c08, 0x342c, 0x4106, [0xa1, 0x9f, 0x4f, 0x27, 0x4, 0xf6, 0x89, 0xf0]);
 interface ID3D10RenderTargetView : ID3D10View
 {
-    void GetDesc(D3D10_RENDER_TARGET_VIEW_DESC*);
+    void GetDesc(D3D10_RENDER_TARGET_VIEW_DESC* pDesc);
 }
 struct D3D10_TEX1D_DSV
 {
@@ -947,7 +947,7 @@ struct D3D10_DEPTH_STENCIL_VIEW_DESC
 enum IID_ID3D10DepthStencilView = GUID(0x9b7e4c09, 0x342c, 0x4106, [0xa1, 0x9f, 0x4f, 0x27, 0x4, 0xf6, 0x89, 0xf0]);
 interface ID3D10DepthStencilView : ID3D10View
 {
-    void GetDesc(D3D10_DEPTH_STENCIL_VIEW_DESC*);
+    void GetDesc(D3D10_DEPTH_STENCIL_VIEW_DESC* pDesc);
 }
 enum IID_ID3D10VertexShader = GUID(0x9b7e4c0a, 0x342c, 0x4106, [0xa1, 0x9f, 0x4f, 0x27, 0x4, 0xf6, 0x89, 0xf0]);
 interface ID3D10VertexShader : ID3D10DeviceChild
@@ -1022,7 +1022,7 @@ struct D3D10_SAMPLER_DESC
 enum IID_ID3D10SamplerState = GUID(0x9b7e4c0c, 0x342c, 0x4106, [0xa1, 0x9f, 0x4f, 0x27, 0x4, 0xf6, 0x89, 0xf0]);
 interface ID3D10SamplerState : ID3D10DeviceChild
 {
-    void GetDesc(D3D10_SAMPLER_DESC*);
+    void GetDesc(D3D10_SAMPLER_DESC* pDesc);
 }
 alias D3D10_FORMAT_SUPPORT = int;
 enum : int
@@ -1059,7 +1059,7 @@ interface ID3D10Asynchronous : ID3D10DeviceChild
 {
     void Begin();
     void End();
-    HRESULT GetData(void*, uint, uint);
+    HRESULT GetData(void* pData, uint DataSize, uint GetDataFlags);
     uint GetDataSize();
 }
 alias D3D10_ASYNC_GETDATA_FLAG = int;
@@ -1095,7 +1095,7 @@ struct D3D10_QUERY_DESC
 enum IID_ID3D10Query = GUID(0x9b7e4c0e, 0x342c, 0x4106, [0xa1, 0x9f, 0x4f, 0x27, 0x4, 0xf6, 0x89, 0xf0]);
 interface ID3D10Query : ID3D10Asynchronous
 {
-    void GetDesc(D3D10_QUERY_DESC*);
+    void GetDesc(D3D10_QUERY_DESC* pDesc);
 }
 enum IID_ID3D10Predicate = GUID(0x9b7e4c10, 0x342c, 0x4106, [0xa1, 0x9f, 0x4f, 0x27, 0x4, 0xf6, 0x89, 0xf0]);
 interface ID3D10Predicate : ID3D10Query
@@ -1169,113 +1169,113 @@ struct D3D10_COUNTER_INFO
 enum IID_ID3D10Counter = GUID(0x9b7e4c11, 0x342c, 0x4106, [0xa1, 0x9f, 0x4f, 0x27, 0x4, 0xf6, 0x89, 0xf0]);
 interface ID3D10Counter : ID3D10Asynchronous
 {
-    void GetDesc(D3D10_COUNTER_DESC*);
+    void GetDesc(D3D10_COUNTER_DESC* pDesc);
 }
 enum IID_ID3D10Device = GUID(0x9b7e4c0f, 0x342c, 0x4106, [0xa1, 0x9f, 0x4f, 0x27, 0x4, 0xf6, 0x89, 0xf0]);
 interface ID3D10Device : IUnknown
 {
-    void VSSetConstantBuffers(uint, uint, ID3D10Buffer*);
-    void PSSetShaderResources(uint, uint, ID3D10ShaderResourceView*);
-    void PSSetShader(ID3D10PixelShader);
-    void PSSetSamplers(uint, uint, ID3D10SamplerState*);
-    void VSSetShader(ID3D10VertexShader);
-    void DrawIndexed(uint, uint, int);
-    void Draw(uint, uint);
-    void PSSetConstantBuffers(uint, uint, ID3D10Buffer*);
-    void IASetInputLayout(ID3D10InputLayout);
-    void IASetVertexBuffers(uint, uint, ID3D10Buffer*, const(uint)*, const(uint)*);
-    void IASetIndexBuffer(ID3D10Buffer, DXGI_FORMAT, uint);
-    void DrawIndexedInstanced(uint, uint, uint, int, uint);
-    void DrawInstanced(uint, uint, uint, uint);
-    void GSSetConstantBuffers(uint, uint, ID3D10Buffer*);
-    void GSSetShader(ID3D10GeometryShader);
-    void IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY);
-    void VSSetShaderResources(uint, uint, ID3D10ShaderResourceView*);
-    void VSSetSamplers(uint, uint, ID3D10SamplerState*);
-    void SetPredication(ID3D10Predicate, BOOL);
-    void GSSetShaderResources(uint, uint, ID3D10ShaderResourceView*);
-    void GSSetSamplers(uint, uint, ID3D10SamplerState*);
-    void OMSetRenderTargets(uint, ID3D10RenderTargetView*, ID3D10DepthStencilView);
-    void OMSetBlendState(ID3D10BlendState, const(float)*, uint);
-    void OMSetDepthStencilState(ID3D10DepthStencilState, uint);
-    void SOSetTargets(uint, ID3D10Buffer*, const(uint)*);
+    void VSSetConstantBuffers(uint StartSlot, uint NumBuffers, ID3D10Buffer* ppConstantBuffers);
+    void PSSetShaderResources(uint StartSlot, uint NumViews, ID3D10ShaderResourceView* ppShaderResourceViews);
+    void PSSetShader(ID3D10PixelShader pPixelShader);
+    void PSSetSamplers(uint StartSlot, uint NumSamplers, ID3D10SamplerState* ppSamplers);
+    void VSSetShader(ID3D10VertexShader pVertexShader);
+    void DrawIndexed(uint IndexCount, uint StartIndexLocation, int BaseVertexLocation);
+    void Draw(uint VertexCount, uint StartVertexLocation);
+    void PSSetConstantBuffers(uint StartSlot, uint NumBuffers, ID3D10Buffer* ppConstantBuffers);
+    void IASetInputLayout(ID3D10InputLayout pInputLayout);
+    void IASetVertexBuffers(uint StartSlot, uint NumBuffers, ID3D10Buffer* ppVertexBuffers, const(uint)* pStrides, const(uint)* pOffsets);
+    void IASetIndexBuffer(ID3D10Buffer pIndexBuffer, DXGI_FORMAT Format, uint Offset);
+    void DrawIndexedInstanced(uint IndexCountPerInstance, uint InstanceCount, uint StartIndexLocation, int BaseVertexLocation, uint StartInstanceLocation);
+    void DrawInstanced(uint VertexCountPerInstance, uint InstanceCount, uint StartVertexLocation, uint StartInstanceLocation);
+    void GSSetConstantBuffers(uint StartSlot, uint NumBuffers, ID3D10Buffer* ppConstantBuffers);
+    void GSSetShader(ID3D10GeometryShader pShader);
+    void IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY Topology);
+    void VSSetShaderResources(uint StartSlot, uint NumViews, ID3D10ShaderResourceView* ppShaderResourceViews);
+    void VSSetSamplers(uint StartSlot, uint NumSamplers, ID3D10SamplerState* ppSamplers);
+    void SetPredication(ID3D10Predicate pPredicate, BOOL PredicateValue);
+    void GSSetShaderResources(uint StartSlot, uint NumViews, ID3D10ShaderResourceView* ppShaderResourceViews);
+    void GSSetSamplers(uint StartSlot, uint NumSamplers, ID3D10SamplerState* ppSamplers);
+    void OMSetRenderTargets(uint NumViews, ID3D10RenderTargetView* ppRenderTargetViews, ID3D10DepthStencilView pDepthStencilView);
+    void OMSetBlendState(ID3D10BlendState pBlendState, const(float)* BlendFactor, uint SampleMask);
+    void OMSetDepthStencilState(ID3D10DepthStencilState pDepthStencilState, uint StencilRef);
+    void SOSetTargets(uint NumBuffers, ID3D10Buffer* ppSOTargets, const(uint)* pOffsets);
     void DrawAuto();
-    void RSSetState(ID3D10RasterizerState);
-    void RSSetViewports(uint, const(D3D10_VIEWPORT)*);
-    void RSSetScissorRects(uint, const(RECT)*);
-    void CopySubresourceRegion(ID3D10Resource, uint, uint, uint, uint, ID3D10Resource, uint, const(D3D10_BOX)*);
-    void CopyResource(ID3D10Resource, ID3D10Resource);
-    void UpdateSubresource(ID3D10Resource, uint, const(D3D10_BOX)*, const(void)*, uint, uint);
-    void ClearRenderTargetView(ID3D10RenderTargetView, const(float)*);
-    void ClearDepthStencilView(ID3D10DepthStencilView, uint, float, ubyte);
-    void GenerateMips(ID3D10ShaderResourceView);
-    void ResolveSubresource(ID3D10Resource, uint, ID3D10Resource, uint, DXGI_FORMAT);
-    void VSGetConstantBuffers(uint, uint, ID3D10Buffer*);
-    void PSGetShaderResources(uint, uint, ID3D10ShaderResourceView*);
-    void PSGetShader(ID3D10PixelShader*);
-    void PSGetSamplers(uint, uint, ID3D10SamplerState*);
-    void VSGetShader(ID3D10VertexShader*);
-    void PSGetConstantBuffers(uint, uint, ID3D10Buffer*);
-    void IAGetInputLayout(ID3D10InputLayout*);
-    void IAGetVertexBuffers(uint, uint, ID3D10Buffer*, uint*, uint*);
-    void IAGetIndexBuffer(ID3D10Buffer*, DXGI_FORMAT*, uint*);
-    void GSGetConstantBuffers(uint, uint, ID3D10Buffer*);
-    void GSGetShader(ID3D10GeometryShader*);
-    void IAGetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY*);
-    void VSGetShaderResources(uint, uint, ID3D10ShaderResourceView*);
-    void VSGetSamplers(uint, uint, ID3D10SamplerState*);
-    void GetPredication(ID3D10Predicate*, BOOL*);
-    void GSGetShaderResources(uint, uint, ID3D10ShaderResourceView*);
-    void GSGetSamplers(uint, uint, ID3D10SamplerState*);
-    void OMGetRenderTargets(uint, ID3D10RenderTargetView*, ID3D10DepthStencilView*);
-    void OMGetBlendState(ID3D10BlendState*, float*, uint*);
-    void OMGetDepthStencilState(ID3D10DepthStencilState*, uint*);
-    void SOGetTargets(uint, ID3D10Buffer*, uint*);
-    void RSGetState(ID3D10RasterizerState*);
-    void RSGetViewports(uint*, D3D10_VIEWPORT*);
-    void RSGetScissorRects(uint*, RECT*);
+    void RSSetState(ID3D10RasterizerState pRasterizerState);
+    void RSSetViewports(uint NumViewports, const(D3D10_VIEWPORT)* pViewports);
+    void RSSetScissorRects(uint NumRects, const(RECT)* pRects);
+    void CopySubresourceRegion(ID3D10Resource pDstResource, uint DstSubresource, uint DstX, uint DstY, uint DstZ, ID3D10Resource pSrcResource, uint SrcSubresource, const(D3D10_BOX)* pSrcBox);
+    void CopyResource(ID3D10Resource pDstResource, ID3D10Resource pSrcResource);
+    void UpdateSubresource(ID3D10Resource pDstResource, uint DstSubresource, const(D3D10_BOX)* pDstBox, const(void)* pSrcData, uint SrcRowPitch, uint SrcDepthPitch);
+    void ClearRenderTargetView(ID3D10RenderTargetView pRenderTargetView, const(float)* ColorRGBA);
+    void ClearDepthStencilView(ID3D10DepthStencilView pDepthStencilView, uint ClearFlags, float Depth, ubyte Stencil);
+    void GenerateMips(ID3D10ShaderResourceView pShaderResourceView);
+    void ResolveSubresource(ID3D10Resource pDstResource, uint DstSubresource, ID3D10Resource pSrcResource, uint SrcSubresource, DXGI_FORMAT Format);
+    void VSGetConstantBuffers(uint StartSlot, uint NumBuffers, ID3D10Buffer* ppConstantBuffers);
+    void PSGetShaderResources(uint StartSlot, uint NumViews, ID3D10ShaderResourceView* ppShaderResourceViews);
+    void PSGetShader(ID3D10PixelShader* ppPixelShader);
+    void PSGetSamplers(uint StartSlot, uint NumSamplers, ID3D10SamplerState* ppSamplers);
+    void VSGetShader(ID3D10VertexShader* ppVertexShader);
+    void PSGetConstantBuffers(uint StartSlot, uint NumBuffers, ID3D10Buffer* ppConstantBuffers);
+    void IAGetInputLayout(ID3D10InputLayout* ppInputLayout);
+    void IAGetVertexBuffers(uint StartSlot, uint NumBuffers, ID3D10Buffer* ppVertexBuffers, uint* pStrides, uint* pOffsets);
+    void IAGetIndexBuffer(ID3D10Buffer* pIndexBuffer, DXGI_FORMAT* Format, uint* Offset);
+    void GSGetConstantBuffers(uint StartSlot, uint NumBuffers, ID3D10Buffer* ppConstantBuffers);
+    void GSGetShader(ID3D10GeometryShader* ppGeometryShader);
+    void IAGetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY* pTopology);
+    void VSGetShaderResources(uint StartSlot, uint NumViews, ID3D10ShaderResourceView* ppShaderResourceViews);
+    void VSGetSamplers(uint StartSlot, uint NumSamplers, ID3D10SamplerState* ppSamplers);
+    void GetPredication(ID3D10Predicate* ppPredicate, BOOL* pPredicateValue);
+    void GSGetShaderResources(uint StartSlot, uint NumViews, ID3D10ShaderResourceView* ppShaderResourceViews);
+    void GSGetSamplers(uint StartSlot, uint NumSamplers, ID3D10SamplerState* ppSamplers);
+    void OMGetRenderTargets(uint NumViews, ID3D10RenderTargetView* ppRenderTargetViews, ID3D10DepthStencilView* ppDepthStencilView);
+    void OMGetBlendState(ID3D10BlendState* ppBlendState, float* BlendFactor, uint* pSampleMask);
+    void OMGetDepthStencilState(ID3D10DepthStencilState* ppDepthStencilState, uint* pStencilRef);
+    void SOGetTargets(uint NumBuffers, ID3D10Buffer* ppSOTargets, uint* pOffsets);
+    void RSGetState(ID3D10RasterizerState* ppRasterizerState);
+    void RSGetViewports(uint* NumViewports, D3D10_VIEWPORT* pViewports);
+    void RSGetScissorRects(uint* NumRects, RECT* pRects);
     HRESULT GetDeviceRemovedReason();
-    HRESULT SetExceptionMode(uint);
+    HRESULT SetExceptionMode(uint RaiseFlags);
     uint GetExceptionMode();
-    HRESULT GetPrivateData(const(GUID)*, uint*, void*);
-    HRESULT SetPrivateData(const(GUID)*, uint, const(void)*);
-    HRESULT SetPrivateDataInterface(const(GUID)*, const(IUnknown));
+    HRESULT GetPrivateData(const(GUID)* guid, uint* pDataSize, void* pData);
+    HRESULT SetPrivateData(const(GUID)* guid, uint DataSize, const(void)* pData);
+    HRESULT SetPrivateDataInterface(const(GUID)* guid, const(IUnknown) pData);
     void ClearState();
     void Flush();
-    HRESULT CreateBuffer(const(D3D10_BUFFER_DESC)*, const(D3D10_SUBRESOURCE_DATA)*, ID3D10Buffer*);
-    HRESULT CreateTexture1D(const(D3D10_TEXTURE1D_DESC)*, const(D3D10_SUBRESOURCE_DATA)*, ID3D10Texture1D*);
-    HRESULT CreateTexture2D(const(D3D10_TEXTURE2D_DESC)*, const(D3D10_SUBRESOURCE_DATA)*, ID3D10Texture2D*);
-    HRESULT CreateTexture3D(const(D3D10_TEXTURE3D_DESC)*, const(D3D10_SUBRESOURCE_DATA)*, ID3D10Texture3D*);
-    HRESULT CreateShaderResourceView(ID3D10Resource, const(D3D10_SHADER_RESOURCE_VIEW_DESC)*, ID3D10ShaderResourceView*);
-    HRESULT CreateRenderTargetView(ID3D10Resource, const(D3D10_RENDER_TARGET_VIEW_DESC)*, ID3D10RenderTargetView*);
-    HRESULT CreateDepthStencilView(ID3D10Resource, const(D3D10_DEPTH_STENCIL_VIEW_DESC)*, ID3D10DepthStencilView*);
-    HRESULT CreateInputLayout(const(D3D10_INPUT_ELEMENT_DESC)*, uint, const(void)*, ulong, ID3D10InputLayout*);
-    HRESULT CreateVertexShader(const(void)*, ulong, ID3D10VertexShader*);
-    HRESULT CreateGeometryShader(const(void)*, ulong, ID3D10GeometryShader*);
-    HRESULT CreateGeometryShaderWithStreamOutput(const(void)*, ulong, const(D3D10_SO_DECLARATION_ENTRY)*, uint, uint, ID3D10GeometryShader*);
-    HRESULT CreatePixelShader(const(void)*, ulong, ID3D10PixelShader*);
-    HRESULT CreateBlendState(const(D3D10_BLEND_DESC)*, ID3D10BlendState*);
-    HRESULT CreateDepthStencilState(const(D3D10_DEPTH_STENCIL_DESC)*, ID3D10DepthStencilState*);
-    HRESULT CreateRasterizerState(const(D3D10_RASTERIZER_DESC)*, ID3D10RasterizerState*);
-    HRESULT CreateSamplerState(const(D3D10_SAMPLER_DESC)*, ID3D10SamplerState*);
-    HRESULT CreateQuery(const(D3D10_QUERY_DESC)*, ID3D10Query*);
-    HRESULT CreatePredicate(const(D3D10_QUERY_DESC)*, ID3D10Predicate*);
-    HRESULT CreateCounter(const(D3D10_COUNTER_DESC)*, ID3D10Counter*);
-    HRESULT CheckFormatSupport(DXGI_FORMAT, uint*);
-    HRESULT CheckMultisampleQualityLevels(DXGI_FORMAT, uint, uint*);
-    void CheckCounterInfo(D3D10_COUNTER_INFO*);
-    HRESULT CheckCounter(const(D3D10_COUNTER_DESC)*, D3D10_COUNTER_TYPE*, uint*, PSTR, uint*, PSTR, uint*, PSTR, uint*);
+    HRESULT CreateBuffer(const(D3D10_BUFFER_DESC)* pDesc, const(D3D10_SUBRESOURCE_DATA)* pInitialData, ID3D10Buffer* ppBuffer);
+    HRESULT CreateTexture1D(const(D3D10_TEXTURE1D_DESC)* pDesc, const(D3D10_SUBRESOURCE_DATA)* pInitialData, ID3D10Texture1D* ppTexture1D);
+    HRESULT CreateTexture2D(const(D3D10_TEXTURE2D_DESC)* pDesc, const(D3D10_SUBRESOURCE_DATA)* pInitialData, ID3D10Texture2D* ppTexture2D);
+    HRESULT CreateTexture3D(const(D3D10_TEXTURE3D_DESC)* pDesc, const(D3D10_SUBRESOURCE_DATA)* pInitialData, ID3D10Texture3D* ppTexture3D);
+    HRESULT CreateShaderResourceView(ID3D10Resource pResource, const(D3D10_SHADER_RESOURCE_VIEW_DESC)* pDesc, ID3D10ShaderResourceView* ppSRView);
+    HRESULT CreateRenderTargetView(ID3D10Resource pResource, const(D3D10_RENDER_TARGET_VIEW_DESC)* pDesc, ID3D10RenderTargetView* ppRTView);
+    HRESULT CreateDepthStencilView(ID3D10Resource pResource, const(D3D10_DEPTH_STENCIL_VIEW_DESC)* pDesc, ID3D10DepthStencilView* ppDepthStencilView);
+    HRESULT CreateInputLayout(const(D3D10_INPUT_ELEMENT_DESC)* pInputElementDescs, uint NumElements, const(void)* pShaderBytecodeWithInputSignature, ulong BytecodeLength, ID3D10InputLayout* ppInputLayout);
+    HRESULT CreateVertexShader(const(void)* pShaderBytecode, ulong BytecodeLength, ID3D10VertexShader* ppVertexShader);
+    HRESULT CreateGeometryShader(const(void)* pShaderBytecode, ulong BytecodeLength, ID3D10GeometryShader* ppGeometryShader);
+    HRESULT CreateGeometryShaderWithStreamOutput(const(void)* pShaderBytecode, ulong BytecodeLength, const(D3D10_SO_DECLARATION_ENTRY)* pSODeclaration, uint NumEntries, uint OutputStreamStride, ID3D10GeometryShader* ppGeometryShader);
+    HRESULT CreatePixelShader(const(void)* pShaderBytecode, ulong BytecodeLength, ID3D10PixelShader* ppPixelShader);
+    HRESULT CreateBlendState(const(D3D10_BLEND_DESC)* pBlendStateDesc, ID3D10BlendState* ppBlendState);
+    HRESULT CreateDepthStencilState(const(D3D10_DEPTH_STENCIL_DESC)* pDepthStencilDesc, ID3D10DepthStencilState* ppDepthStencilState);
+    HRESULT CreateRasterizerState(const(D3D10_RASTERIZER_DESC)* pRasterizerDesc, ID3D10RasterizerState* ppRasterizerState);
+    HRESULT CreateSamplerState(const(D3D10_SAMPLER_DESC)* pSamplerDesc, ID3D10SamplerState* ppSamplerState);
+    HRESULT CreateQuery(const(D3D10_QUERY_DESC)* pQueryDesc, ID3D10Query* ppQuery);
+    HRESULT CreatePredicate(const(D3D10_QUERY_DESC)* pPredicateDesc, ID3D10Predicate* ppPredicate);
+    HRESULT CreateCounter(const(D3D10_COUNTER_DESC)* pCounterDesc, ID3D10Counter* ppCounter);
+    HRESULT CheckFormatSupport(DXGI_FORMAT Format, uint* pFormatSupport);
+    HRESULT CheckMultisampleQualityLevels(DXGI_FORMAT Format, uint SampleCount, uint* pNumQualityLevels);
+    void CheckCounterInfo(D3D10_COUNTER_INFO* pCounterInfo);
+    HRESULT CheckCounter(const(D3D10_COUNTER_DESC)* pDesc, D3D10_COUNTER_TYPE* pType, uint* pActiveCounters, PSTR szName, uint* pNameLength, PSTR szUnits, uint* pUnitsLength, PSTR szDescription, uint* pDescriptionLength);
     uint GetCreationFlags();
-    HRESULT OpenSharedResource(HANDLE, const(GUID)*, void**);
-    void SetTextFilterSize(uint, uint);
-    void GetTextFilterSize(uint*, uint*);
+    HRESULT OpenSharedResource(HANDLE hResource, const(GUID)* ReturnedInterface, void** ppResource);
+    void SetTextFilterSize(uint Width, uint Height);
+    void GetTextFilterSize(uint* pWidth, uint* pHeight);
 }
 enum IID_ID3D10Multithread = GUID(0x9b7e4e00, 0x342c, 0x4106, [0xa1, 0x9f, 0x4f, 0x27, 0x4, 0xf6, 0x89, 0xf0]);
 interface ID3D10Multithread : IUnknown
 {
     void Enter();
     void Leave();
-    BOOL SetMultithreadProtected(BOOL);
+    BOOL SetMultithreadProtected(BOOL bMTProtect);
     BOOL GetMultithreadProtected();
 }
 alias D3D10_CREATE_DEVICE_FLAG = int;
@@ -1295,18 +1295,18 @@ enum : int
 enum IID_ID3D10Debug = GUID(0x9b7e4e01, 0x342c, 0x4106, [0xa1, 0x9f, 0x4f, 0x27, 0x4, 0xf6, 0x89, 0xf0]);
 interface ID3D10Debug : IUnknown
 {
-    HRESULT SetFeatureMask(uint);
+    HRESULT SetFeatureMask(uint Mask);
     uint GetFeatureMask();
-    HRESULT SetPresentPerRenderOpDelay(uint);
+    HRESULT SetPresentPerRenderOpDelay(uint Milliseconds);
     uint GetPresentPerRenderOpDelay();
-    HRESULT SetSwapChain(IDXGISwapChain);
-    HRESULT GetSwapChain(IDXGISwapChain*);
+    HRESULT SetSwapChain(IDXGISwapChain pSwapChain);
+    HRESULT GetSwapChain(IDXGISwapChain* ppSwapChain);
     HRESULT Validate();
 }
 enum IID_ID3D10SwitchToRef = GUID(0x9b7e4e02, 0x342c, 0x4106, [0xa1, 0x9f, 0x4f, 0x27, 0x4, 0xf6, 0x89, 0xf0]);
 interface ID3D10SwitchToRef : IUnknown
 {
-    BOOL SetUseRef(BOOL);
+    BOOL SetUseRef(BOOL UseRef);
     BOOL GetUseRef();
 }
 alias D3D10_MESSAGE_CATEGORY = int;
@@ -1872,40 +1872,40 @@ struct D3D10_INFO_QUEUE_FILTER
 enum IID_ID3D10InfoQueue = GUID(0x1b940b17, 0x2642, 0x4d1f, [0xab, 0x1f, 0xb9, 0x9b, 0xad, 0xc, 0x39, 0x5f]);
 interface ID3D10InfoQueue : IUnknown
 {
-    HRESULT SetMessageCountLimit(ulong);
+    HRESULT SetMessageCountLimit(ulong MessageCountLimit);
     void ClearStoredMessages();
-    HRESULT GetMessage(ulong, D3D10_MESSAGE*, ulong*);
+    HRESULT GetMessage(ulong MessageIndex, D3D10_MESSAGE* pMessage, ulong* pMessageByteLength);
     ulong GetNumMessagesAllowedByStorageFilter();
     ulong GetNumMessagesDeniedByStorageFilter();
     ulong GetNumStoredMessages();
     ulong GetNumStoredMessagesAllowedByRetrievalFilter();
     ulong GetNumMessagesDiscardedByMessageCountLimit();
     ulong GetMessageCountLimit();
-    HRESULT AddStorageFilterEntries(D3D10_INFO_QUEUE_FILTER*);
-    HRESULT GetStorageFilter(D3D10_INFO_QUEUE_FILTER*, ulong*);
+    HRESULT AddStorageFilterEntries(D3D10_INFO_QUEUE_FILTER* pFilter);
+    HRESULT GetStorageFilter(D3D10_INFO_QUEUE_FILTER* pFilter, ulong* pFilterByteLength);
     void ClearStorageFilter();
     HRESULT PushEmptyStorageFilter();
     HRESULT PushCopyOfStorageFilter();
-    HRESULT PushStorageFilter(D3D10_INFO_QUEUE_FILTER*);
+    HRESULT PushStorageFilter(D3D10_INFO_QUEUE_FILTER* pFilter);
     void PopStorageFilter();
     uint GetStorageFilterStackSize();
-    HRESULT AddRetrievalFilterEntries(D3D10_INFO_QUEUE_FILTER*);
-    HRESULT GetRetrievalFilter(D3D10_INFO_QUEUE_FILTER*, ulong*);
+    HRESULT AddRetrievalFilterEntries(D3D10_INFO_QUEUE_FILTER* pFilter);
+    HRESULT GetRetrievalFilter(D3D10_INFO_QUEUE_FILTER* pFilter, ulong* pFilterByteLength);
     void ClearRetrievalFilter();
     HRESULT PushEmptyRetrievalFilter();
     HRESULT PushCopyOfRetrievalFilter();
-    HRESULT PushRetrievalFilter(D3D10_INFO_QUEUE_FILTER*);
+    HRESULT PushRetrievalFilter(D3D10_INFO_QUEUE_FILTER* pFilter);
     void PopRetrievalFilter();
     uint GetRetrievalFilterStackSize();
-    HRESULT AddMessage(D3D10_MESSAGE_CATEGORY, D3D10_MESSAGE_SEVERITY, D3D10_MESSAGE_ID, const(char)*);
-    HRESULT AddApplicationMessage(D3D10_MESSAGE_SEVERITY, const(char)*);
-    HRESULT SetBreakOnCategory(D3D10_MESSAGE_CATEGORY, BOOL);
-    HRESULT SetBreakOnSeverity(D3D10_MESSAGE_SEVERITY, BOOL);
-    HRESULT SetBreakOnID(D3D10_MESSAGE_ID, BOOL);
-    BOOL GetBreakOnCategory(D3D10_MESSAGE_CATEGORY);
-    BOOL GetBreakOnSeverity(D3D10_MESSAGE_SEVERITY);
-    BOOL GetBreakOnID(D3D10_MESSAGE_ID);
-    void SetMuteDebugOutput(BOOL);
+    HRESULT AddMessage(D3D10_MESSAGE_CATEGORY Category, D3D10_MESSAGE_SEVERITY Severity, D3D10_MESSAGE_ID ID, const(char)* pDescription);
+    HRESULT AddApplicationMessage(D3D10_MESSAGE_SEVERITY Severity, const(char)* pDescription);
+    HRESULT SetBreakOnCategory(D3D10_MESSAGE_CATEGORY Category, BOOL bEnable);
+    HRESULT SetBreakOnSeverity(D3D10_MESSAGE_SEVERITY Severity, BOOL bEnable);
+    HRESULT SetBreakOnID(D3D10_MESSAGE_ID ID, BOOL bEnable);
+    BOOL GetBreakOnCategory(D3D10_MESSAGE_CATEGORY Category);
+    BOOL GetBreakOnSeverity(D3D10_MESSAGE_SEVERITY Severity);
+    BOOL GetBreakOnID(D3D10_MESSAGE_ID ID);
+    void SetMuteDebugOutput(BOOL bMute);
     BOOL GetMuteDebugOutput();
 }
 alias D3D10_DRIVER_TYPE = int;
@@ -1999,33 +1999,33 @@ struct D3D10_SIGNATURE_PARAMETER_DESC
 enum IID_ID3D10ShaderReflectionType = GUID(0xc530ad7d, 0x9b16, 0x4395, [0xa9, 0x79, 0xba, 0x2e, 0xcf, 0xf8, 0x3a, 0xdd]);
 interface ID3D10ShaderReflectionType
 {
-    HRESULT GetDesc(D3D10_SHADER_TYPE_DESC*);
-    ID3D10ShaderReflectionType GetMemberTypeByIndex(uint);
-    ID3D10ShaderReflectionType GetMemberTypeByName(const(char)*);
-    PSTR GetMemberTypeName(uint);
+    HRESULT GetDesc(D3D10_SHADER_TYPE_DESC* pDesc);
+    ID3D10ShaderReflectionType GetMemberTypeByIndex(uint Index);
+    ID3D10ShaderReflectionType GetMemberTypeByName(const(char)* Name);
+    PSTR GetMemberTypeName(uint Index);
 }
 enum IID_ID3D10ShaderReflectionVariable = GUID(0x1bf63c95, 0x2650, 0x405d, [0x99, 0xc1, 0x36, 0x36, 0xbd, 0x1d, 0xa0, 0xa1]);
 interface ID3D10ShaderReflectionVariable
 {
-    HRESULT GetDesc(D3D10_SHADER_VARIABLE_DESC*);
+    HRESULT GetDesc(D3D10_SHADER_VARIABLE_DESC* pDesc);
     ID3D10ShaderReflectionType GetType();
 }
 enum IID_ID3D10ShaderReflectionConstantBuffer = GUID(0x66c66a94, 0xdddd, 0x4b62, [0xa6, 0x6a, 0xf0, 0xda, 0x33, 0xc2, 0xb4, 0xd0]);
 interface ID3D10ShaderReflectionConstantBuffer
 {
-    HRESULT GetDesc(D3D10_SHADER_BUFFER_DESC*);
-    ID3D10ShaderReflectionVariable GetVariableByIndex(uint);
-    ID3D10ShaderReflectionVariable GetVariableByName(const(char)*);
+    HRESULT GetDesc(D3D10_SHADER_BUFFER_DESC* pDesc);
+    ID3D10ShaderReflectionVariable GetVariableByIndex(uint Index);
+    ID3D10ShaderReflectionVariable GetVariableByName(const(char)* Name);
 }
 enum IID_ID3D10ShaderReflection = GUID(0xd40e20b6, 0xf8f7, 0x42ad, [0xab, 0x20, 0x4b, 0xaf, 0x8f, 0x15, 0xdf, 0xaa]);
 interface ID3D10ShaderReflection : IUnknown
 {
-    HRESULT GetDesc(D3D10_SHADER_DESC*);
-    ID3D10ShaderReflectionConstantBuffer GetConstantBufferByIndex(uint);
-    ID3D10ShaderReflectionConstantBuffer GetConstantBufferByName(const(char)*);
-    HRESULT GetResourceBindingDesc(uint, D3D10_SHADER_INPUT_BIND_DESC*);
-    HRESULT GetInputParameterDesc(uint, D3D10_SIGNATURE_PARAMETER_DESC*);
-    HRESULT GetOutputParameterDesc(uint, D3D10_SIGNATURE_PARAMETER_DESC*);
+    HRESULT GetDesc(D3D10_SHADER_DESC* pDesc);
+    ID3D10ShaderReflectionConstantBuffer GetConstantBufferByIndex(uint Index);
+    ID3D10ShaderReflectionConstantBuffer GetConstantBufferByName(const(char)* Name);
+    HRESULT GetResourceBindingDesc(uint ResourceIndex, D3D10_SHADER_INPUT_BIND_DESC* pDesc);
+    HRESULT GetInputParameterDesc(uint ParameterIndex, D3D10_SIGNATURE_PARAMETER_DESC* pDesc);
+    HRESULT GetOutputParameterDesc(uint ParameterIndex, D3D10_SIGNATURE_PARAMETER_DESC* pDesc);
 }
 alias D3D10_DEVICE_STATE_TYPES = int;
 enum : int
@@ -2089,7 +2089,7 @@ interface ID3D10StateBlock : IUnknown
     HRESULT Capture();
     HRESULT Apply();
     HRESULT ReleaseAllDeviceObjects();
-    HRESULT GetDevice(ID3D10Device*);
+    HRESULT GetDevice(ID3D10Device* ppDevice);
 }
 struct D3D10_EFFECT_TYPE_DESC
 {
@@ -2108,12 +2108,12 @@ enum IID_ID3D10EffectType = GUID(0x4e9e1ddc, 0xcd9d, 0x4772, [0xa8, 0x37, 0x0, 0
 interface ID3D10EffectType
 {
     BOOL IsValid();
-    HRESULT GetDesc(D3D10_EFFECT_TYPE_DESC*);
-    ID3D10EffectType GetMemberTypeByIndex(uint);
-    ID3D10EffectType GetMemberTypeByName(const(char)*);
-    ID3D10EffectType GetMemberTypeBySemantic(const(char)*);
-    PSTR GetMemberName(uint);
-    PSTR GetMemberSemantic(uint);
+    HRESULT GetDesc(D3D10_EFFECT_TYPE_DESC* pDesc);
+    ID3D10EffectType GetMemberTypeByIndex(uint Index);
+    ID3D10EffectType GetMemberTypeByName(const(char)* Name);
+    ID3D10EffectType GetMemberTypeBySemantic(const(char)* Semantic);
+    PSTR GetMemberName(uint Index);
+    PSTR GetMemberSemantic(uint Index);
 }
 struct D3D10_EFFECT_VARIABLE_DESC
 {
@@ -2129,13 +2129,13 @@ interface ID3D10EffectVariable
 {
     BOOL IsValid();
     ID3D10EffectType GetType();
-    HRESULT GetDesc(D3D10_EFFECT_VARIABLE_DESC*);
-    ID3D10EffectVariable GetAnnotationByIndex(uint);
-    ID3D10EffectVariable GetAnnotationByName(const(char)*);
-    ID3D10EffectVariable GetMemberByIndex(uint);
-    ID3D10EffectVariable GetMemberByName(const(char)*);
-    ID3D10EffectVariable GetMemberBySemantic(const(char)*);
-    ID3D10EffectVariable GetElement(uint);
+    HRESULT GetDesc(D3D10_EFFECT_VARIABLE_DESC* pDesc);
+    ID3D10EffectVariable GetAnnotationByIndex(uint Index);
+    ID3D10EffectVariable GetAnnotationByName(const(char)* Name);
+    ID3D10EffectVariable GetMemberByIndex(uint Index);
+    ID3D10EffectVariable GetMemberByName(const(char)* Name);
+    ID3D10EffectVariable GetMemberBySemantic(const(char)* Semantic);
+    ID3D10EffectVariable GetElement(uint Index);
     ID3D10EffectConstantBuffer GetParentConstantBuffer();
     ID3D10EffectScalarVariable AsScalar();
     ID3D10EffectVectorVariable AsVector();
@@ -2150,90 +2150,90 @@ interface ID3D10EffectVariable
     ID3D10EffectDepthStencilVariable AsDepthStencil();
     ID3D10EffectRasterizerVariable AsRasterizer();
     ID3D10EffectSamplerVariable AsSampler();
-    HRESULT SetRawValue(void*, uint, uint);
-    HRESULT GetRawValue(void*, uint, uint);
+    HRESULT SetRawValue(void* pData, uint Offset, uint ByteCount);
+    HRESULT GetRawValue(void* pData, uint Offset, uint ByteCount);
 }
 enum IID_ID3D10EffectScalarVariable = GUID(0xe48f7b, 0xd2c8, 0x49e8, [0xa8, 0x6c, 0x2, 0x2d, 0xee, 0x53, 0x43, 0x1f]);
 interface ID3D10EffectScalarVariable : ID3D10EffectVariable
 {
-    HRESULT SetFloat(float);
-    HRESULT GetFloat(float*);
-    HRESULT SetFloatArray(float*, uint, uint);
-    HRESULT GetFloatArray(float*, uint, uint);
-    HRESULT SetInt(int);
-    HRESULT GetInt(int*);
-    HRESULT SetIntArray(int*, uint, uint);
-    HRESULT GetIntArray(int*, uint, uint);
-    HRESULT SetBool(BOOL);
-    HRESULT GetBool(BOOL*);
-    HRESULT SetBoolArray(BOOL*, uint, uint);
-    HRESULT GetBoolArray(BOOL*, uint, uint);
+    HRESULT SetFloat(float Value);
+    HRESULT GetFloat(float* pValue);
+    HRESULT SetFloatArray(float* pData, uint Offset, uint Count);
+    HRESULT GetFloatArray(float* pData, uint Offset, uint Count);
+    HRESULT SetInt(int Value);
+    HRESULT GetInt(int* pValue);
+    HRESULT SetIntArray(int* pData, uint Offset, uint Count);
+    HRESULT GetIntArray(int* pData, uint Offset, uint Count);
+    HRESULT SetBool(BOOL Value);
+    HRESULT GetBool(BOOL* pValue);
+    HRESULT SetBoolArray(BOOL* pData, uint Offset, uint Count);
+    HRESULT GetBoolArray(BOOL* pData, uint Offset, uint Count);
 }
 enum IID_ID3D10EffectVectorVariable = GUID(0x62b98c44, 0x1f82, 0x4c67, [0xbc, 0xd0, 0x72, 0xcf, 0x8f, 0x21, 0x7e, 0x81]);
 interface ID3D10EffectVectorVariable : ID3D10EffectVariable
 {
-    HRESULT SetBoolVector(BOOL*);
-    HRESULT SetIntVector(int*);
-    HRESULT SetFloatVector(float*);
-    HRESULT GetBoolVector(BOOL*);
-    HRESULT GetIntVector(int*);
-    HRESULT GetFloatVector(float*);
-    HRESULT SetBoolVectorArray(BOOL*, uint, uint);
-    HRESULT SetIntVectorArray(int*, uint, uint);
-    HRESULT SetFloatVectorArray(float*, uint, uint);
-    HRESULT GetBoolVectorArray(BOOL*, uint, uint);
-    HRESULT GetIntVectorArray(int*, uint, uint);
-    HRESULT GetFloatVectorArray(float*, uint, uint);
+    HRESULT SetBoolVector(BOOL* pData);
+    HRESULT SetIntVector(int* pData);
+    HRESULT SetFloatVector(float* pData);
+    HRESULT GetBoolVector(BOOL* pData);
+    HRESULT GetIntVector(int* pData);
+    HRESULT GetFloatVector(float* pData);
+    HRESULT SetBoolVectorArray(BOOL* pData, uint Offset, uint Count);
+    HRESULT SetIntVectorArray(int* pData, uint Offset, uint Count);
+    HRESULT SetFloatVectorArray(float* pData, uint Offset, uint Count);
+    HRESULT GetBoolVectorArray(BOOL* pData, uint Offset, uint Count);
+    HRESULT GetIntVectorArray(int* pData, uint Offset, uint Count);
+    HRESULT GetFloatVectorArray(float* pData, uint Offset, uint Count);
 }
 enum IID_ID3D10EffectMatrixVariable = GUID(0x50666c24, 0xb82f, 0x4eed, [0xa1, 0x72, 0x5b, 0x6e, 0x7e, 0x85, 0x22, 0xe0]);
 interface ID3D10EffectMatrixVariable : ID3D10EffectVariable
 {
-    HRESULT SetMatrix(float*);
-    HRESULT GetMatrix(float*);
-    HRESULT SetMatrixArray(float*, uint, uint);
-    HRESULT GetMatrixArray(float*, uint, uint);
-    HRESULT SetMatrixTranspose(float*);
-    HRESULT GetMatrixTranspose(float*);
-    HRESULT SetMatrixTransposeArray(float*, uint, uint);
-    HRESULT GetMatrixTransposeArray(float*, uint, uint);
+    HRESULT SetMatrix(float* pData);
+    HRESULT GetMatrix(float* pData);
+    HRESULT SetMatrixArray(float* pData, uint Offset, uint Count);
+    HRESULT GetMatrixArray(float* pData, uint Offset, uint Count);
+    HRESULT SetMatrixTranspose(float* pData);
+    HRESULT GetMatrixTranspose(float* pData);
+    HRESULT SetMatrixTransposeArray(float* pData, uint Offset, uint Count);
+    HRESULT GetMatrixTransposeArray(float* pData, uint Offset, uint Count);
 }
 enum IID_ID3D10EffectStringVariable = GUID(0x71417501, 0x8df9, 0x4e0a, [0xa7, 0x8a, 0x25, 0x5f, 0x97, 0x56, 0xba, 0xff]);
 interface ID3D10EffectStringVariable : ID3D10EffectVariable
 {
-    HRESULT GetString(const(char)**);
-    HRESULT GetStringArray(const(char)**, uint, uint);
+    HRESULT GetString(const(char)** ppString);
+    HRESULT GetStringArray(const(char)** ppStrings, uint Offset, uint Count);
 }
 enum IID_ID3D10EffectShaderResourceVariable = GUID(0xc0a7157b, 0xd872, 0x4b1d, [0x80, 0x73, 0xef, 0xc2, 0xac, 0xd4, 0xb1, 0xfc]);
 interface ID3D10EffectShaderResourceVariable : ID3D10EffectVariable
 {
-    HRESULT SetResource(ID3D10ShaderResourceView);
-    HRESULT GetResource(ID3D10ShaderResourceView*);
-    HRESULT SetResourceArray(ID3D10ShaderResourceView*, uint, uint);
-    HRESULT GetResourceArray(ID3D10ShaderResourceView*, uint, uint);
+    HRESULT SetResource(ID3D10ShaderResourceView pResource);
+    HRESULT GetResource(ID3D10ShaderResourceView* ppResource);
+    HRESULT SetResourceArray(ID3D10ShaderResourceView* ppResources, uint Offset, uint Count);
+    HRESULT GetResourceArray(ID3D10ShaderResourceView* ppResources, uint Offset, uint Count);
 }
 enum IID_ID3D10EffectRenderTargetViewVariable = GUID(0x28ca0cc3, 0xc2c9, 0x40bb, [0xb5, 0x7f, 0x67, 0xb7, 0x37, 0x12, 0x2b, 0x17]);
 interface ID3D10EffectRenderTargetViewVariable : ID3D10EffectVariable
 {
-    HRESULT SetRenderTarget(ID3D10RenderTargetView);
-    HRESULT GetRenderTarget(ID3D10RenderTargetView*);
-    HRESULT SetRenderTargetArray(ID3D10RenderTargetView*, uint, uint);
-    HRESULT GetRenderTargetArray(ID3D10RenderTargetView*, uint, uint);
+    HRESULT SetRenderTarget(ID3D10RenderTargetView pResource);
+    HRESULT GetRenderTarget(ID3D10RenderTargetView* ppResource);
+    HRESULT SetRenderTargetArray(ID3D10RenderTargetView* ppResources, uint Offset, uint Count);
+    HRESULT GetRenderTargetArray(ID3D10RenderTargetView* ppResources, uint Offset, uint Count);
 }
 enum IID_ID3D10EffectDepthStencilViewVariable = GUID(0x3e02c918, 0xcc79, 0x4985, [0xb6, 0x22, 0x2d, 0x92, 0xad, 0x70, 0x16, 0x23]);
 interface ID3D10EffectDepthStencilViewVariable : ID3D10EffectVariable
 {
-    HRESULT SetDepthStencil(ID3D10DepthStencilView);
-    HRESULT GetDepthStencil(ID3D10DepthStencilView*);
-    HRESULT SetDepthStencilArray(ID3D10DepthStencilView*, uint, uint);
-    HRESULT GetDepthStencilArray(ID3D10DepthStencilView*, uint, uint);
+    HRESULT SetDepthStencil(ID3D10DepthStencilView pResource);
+    HRESULT GetDepthStencil(ID3D10DepthStencilView* ppResource);
+    HRESULT SetDepthStencilArray(ID3D10DepthStencilView* ppResources, uint Offset, uint Count);
+    HRESULT GetDepthStencilArray(ID3D10DepthStencilView* ppResources, uint Offset, uint Count);
 }
 enum IID_ID3D10EffectConstantBuffer = GUID(0x56648f4d, 0xcc8b, 0x4444, [0xa5, 0xad, 0xb5, 0xa3, 0xd7, 0x6e, 0x91, 0xb3]);
 interface ID3D10EffectConstantBuffer : ID3D10EffectVariable
 {
-    HRESULT SetConstantBuffer(ID3D10Buffer);
-    HRESULT GetConstantBuffer(ID3D10Buffer*);
-    HRESULT SetTextureBuffer(ID3D10ShaderResourceView);
-    HRESULT GetTextureBuffer(ID3D10ShaderResourceView*);
+    HRESULT SetConstantBuffer(ID3D10Buffer pConstantBuffer);
+    HRESULT GetConstantBuffer(ID3D10Buffer* ppConstantBuffer);
+    HRESULT SetTextureBuffer(ID3D10ShaderResourceView pTextureBuffer);
+    HRESULT GetTextureBuffer(ID3D10ShaderResourceView* ppTextureBuffer);
 }
 struct D3D10_EFFECT_SHADER_DESC
 {
@@ -2248,36 +2248,36 @@ struct D3D10_EFFECT_SHADER_DESC
 enum IID_ID3D10EffectShaderVariable = GUID(0x80849279, 0xc799, 0x4797, [0x8c, 0x33, 0x4, 0x7, 0xa0, 0x7d, 0x9e, 0x6]);
 interface ID3D10EffectShaderVariable : ID3D10EffectVariable
 {
-    HRESULT GetShaderDesc(uint, D3D10_EFFECT_SHADER_DESC*);
-    HRESULT GetVertexShader(uint, ID3D10VertexShader*);
-    HRESULT GetGeometryShader(uint, ID3D10GeometryShader*);
-    HRESULT GetPixelShader(uint, ID3D10PixelShader*);
-    HRESULT GetInputSignatureElementDesc(uint, uint, D3D10_SIGNATURE_PARAMETER_DESC*);
-    HRESULT GetOutputSignatureElementDesc(uint, uint, D3D10_SIGNATURE_PARAMETER_DESC*);
+    HRESULT GetShaderDesc(uint ShaderIndex, D3D10_EFFECT_SHADER_DESC* pDesc);
+    HRESULT GetVertexShader(uint ShaderIndex, ID3D10VertexShader* ppVS);
+    HRESULT GetGeometryShader(uint ShaderIndex, ID3D10GeometryShader* ppGS);
+    HRESULT GetPixelShader(uint ShaderIndex, ID3D10PixelShader* ppPS);
+    HRESULT GetInputSignatureElementDesc(uint ShaderIndex, uint Element, D3D10_SIGNATURE_PARAMETER_DESC* pDesc);
+    HRESULT GetOutputSignatureElementDesc(uint ShaderIndex, uint Element, D3D10_SIGNATURE_PARAMETER_DESC* pDesc);
 }
 enum IID_ID3D10EffectBlendVariable = GUID(0x1fcd2294, 0xdf6d, 0x4eae, [0x86, 0xb3, 0xe, 0x91, 0x60, 0xcf, 0xb0, 0x7b]);
 interface ID3D10EffectBlendVariable : ID3D10EffectVariable
 {
-    HRESULT GetBlendState(uint, ID3D10BlendState*);
-    HRESULT GetBackingStore(uint, D3D10_BLEND_DESC*);
+    HRESULT GetBlendState(uint Index, ID3D10BlendState* ppBlendState);
+    HRESULT GetBackingStore(uint Index, D3D10_BLEND_DESC* pBlendDesc);
 }
 enum IID_ID3D10EffectDepthStencilVariable = GUID(0xaf482368, 0x330a, 0x46a5, [0x9a, 0x5c, 0x1, 0xc7, 0x1a, 0xf2, 0x4c, 0x8d]);
 interface ID3D10EffectDepthStencilVariable : ID3D10EffectVariable
 {
-    HRESULT GetDepthStencilState(uint, ID3D10DepthStencilState*);
-    HRESULT GetBackingStore(uint, D3D10_DEPTH_STENCIL_DESC*);
+    HRESULT GetDepthStencilState(uint Index, ID3D10DepthStencilState* ppDepthStencilState);
+    HRESULT GetBackingStore(uint Index, D3D10_DEPTH_STENCIL_DESC* pDepthStencilDesc);
 }
 enum IID_ID3D10EffectRasterizerVariable = GUID(0x21af9f0e, 0x4d94, 0x4ea9, [0x97, 0x85, 0x2c, 0xb7, 0x6b, 0x8c, 0xb, 0x34]);
 interface ID3D10EffectRasterizerVariable : ID3D10EffectVariable
 {
-    HRESULT GetRasterizerState(uint, ID3D10RasterizerState*);
-    HRESULT GetBackingStore(uint, D3D10_RASTERIZER_DESC*);
+    HRESULT GetRasterizerState(uint Index, ID3D10RasterizerState* ppRasterizerState);
+    HRESULT GetBackingStore(uint Index, D3D10_RASTERIZER_DESC* pRasterizerDesc);
 }
 enum IID_ID3D10EffectSamplerVariable = GUID(0x6530d5c7, 0x7e9, 0x4271, [0xa4, 0x18, 0xe7, 0xce, 0x4b, 0xd1, 0xe4, 0x80]);
 interface ID3D10EffectSamplerVariable : ID3D10EffectVariable
 {
-    HRESULT GetSampler(uint, ID3D10SamplerState*);
-    HRESULT GetBackingStore(uint, D3D10_SAMPLER_DESC*);
+    HRESULT GetSampler(uint Index, ID3D10SamplerState* ppSampler);
+    HRESULT GetBackingStore(uint Index, D3D10_SAMPLER_DESC* pSamplerDesc);
 }
 struct D3D10_PASS_DESC
 {
@@ -2298,14 +2298,14 @@ enum IID_ID3D10EffectPass = GUID(0x5cfbeb89, 0x1a06, 0x46e0, [0xb2, 0x82, 0xe3, 
 interface ID3D10EffectPass
 {
     BOOL IsValid();
-    HRESULT GetDesc(D3D10_PASS_DESC*);
-    HRESULT GetVertexShaderDesc(D3D10_PASS_SHADER_DESC*);
-    HRESULT GetGeometryShaderDesc(D3D10_PASS_SHADER_DESC*);
-    HRESULT GetPixelShaderDesc(D3D10_PASS_SHADER_DESC*);
-    ID3D10EffectVariable GetAnnotationByIndex(uint);
-    ID3D10EffectVariable GetAnnotationByName(const(char)*);
-    HRESULT Apply(uint);
-    HRESULT ComputeStateBlockMask(D3D10_STATE_BLOCK_MASK*);
+    HRESULT GetDesc(D3D10_PASS_DESC* pDesc);
+    HRESULT GetVertexShaderDesc(D3D10_PASS_SHADER_DESC* pDesc);
+    HRESULT GetGeometryShaderDesc(D3D10_PASS_SHADER_DESC* pDesc);
+    HRESULT GetPixelShaderDesc(D3D10_PASS_SHADER_DESC* pDesc);
+    ID3D10EffectVariable GetAnnotationByIndex(uint Index);
+    ID3D10EffectVariable GetAnnotationByName(const(char)* Name);
+    HRESULT Apply(uint Flags);
+    HRESULT ComputeStateBlockMask(D3D10_STATE_BLOCK_MASK* pStateBlockMask);
 }
 struct D3D10_TECHNIQUE_DESC
 {
@@ -2317,12 +2317,12 @@ enum IID_ID3D10EffectTechnique = GUID(0xdb122ce8, 0xd1c9, 0x4292, [0xb2, 0x37, 0
 interface ID3D10EffectTechnique
 {
     BOOL IsValid();
-    HRESULT GetDesc(D3D10_TECHNIQUE_DESC*);
-    ID3D10EffectVariable GetAnnotationByIndex(uint);
-    ID3D10EffectVariable GetAnnotationByName(const(char)*);
-    ID3D10EffectPass GetPassByIndex(uint);
-    ID3D10EffectPass GetPassByName(const(char)*);
-    HRESULT ComputeStateBlockMask(D3D10_STATE_BLOCK_MASK*);
+    HRESULT GetDesc(D3D10_TECHNIQUE_DESC* pDesc);
+    ID3D10EffectVariable GetAnnotationByIndex(uint Index);
+    ID3D10EffectVariable GetAnnotationByName(const(char)* Name);
+    ID3D10EffectPass GetPassByIndex(uint Index);
+    ID3D10EffectPass GetPassByName(const(char)* Name);
+    HRESULT ComputeStateBlockMask(D3D10_STATE_BLOCK_MASK* pStateBlockMask);
 }
 struct D3D10_EFFECT_DESC
 {
@@ -2338,15 +2338,15 @@ interface ID3D10Effect : IUnknown
 {
     BOOL IsValid();
     BOOL IsPool();
-    HRESULT GetDevice(ID3D10Device*);
-    HRESULT GetDesc(D3D10_EFFECT_DESC*);
-    ID3D10EffectConstantBuffer GetConstantBufferByIndex(uint);
-    ID3D10EffectConstantBuffer GetConstantBufferByName(const(char)*);
-    ID3D10EffectVariable GetVariableByIndex(uint);
-    ID3D10EffectVariable GetVariableByName(const(char)*);
-    ID3D10EffectVariable GetVariableBySemantic(const(char)*);
-    ID3D10EffectTechnique GetTechniqueByIndex(uint);
-    ID3D10EffectTechnique GetTechniqueByName(const(char)*);
+    HRESULT GetDevice(ID3D10Device* ppDevice);
+    HRESULT GetDesc(D3D10_EFFECT_DESC* pDesc);
+    ID3D10EffectConstantBuffer GetConstantBufferByIndex(uint Index);
+    ID3D10EffectConstantBuffer GetConstantBufferByName(const(char)* Name);
+    ID3D10EffectVariable GetVariableByIndex(uint Index);
+    ID3D10EffectVariable GetVariableByName(const(char)* Name);
+    ID3D10EffectVariable GetVariableBySemantic(const(char)* Semantic);
+    ID3D10EffectTechnique GetTechniqueByIndex(uint Index);
+    ID3D10EffectTechnique GetTechniqueByName(const(char)* Name);
     HRESULT Optimize();
     BOOL IsOptimized();
 }
@@ -2385,7 +2385,7 @@ struct D3D10_BLEND_DESC1
 enum IID_ID3D10BlendState1 = GUID(0xedad8d99, 0x8a35, 0x4d6d, [0x85, 0x66, 0x2e, 0xa2, 0x76, 0xcd, 0xe1, 0x61]);
 interface ID3D10BlendState1 : ID3D10BlendState
 {
-    void GetDesc1(D3D10_BLEND_DESC1*);
+    void GetDesc1(D3D10_BLEND_DESC1* pDesc);
 }
 struct D3D10_TEXCUBE_ARRAY_SRV1
 {
@@ -2415,7 +2415,7 @@ struct D3D10_SHADER_RESOURCE_VIEW_DESC1
 enum IID_ID3D10ShaderResourceView1 = GUID(0x9b7e4c87, 0x342c, 0x4106, [0xa1, 0x9f, 0x4f, 0x27, 0x4, 0xf6, 0x89, 0xf0]);
 interface ID3D10ShaderResourceView1 : ID3D10ShaderResourceView
 {
-    void GetDesc1(D3D10_SHADER_RESOURCE_VIEW_DESC1*);
+    void GetDesc1(D3D10_SHADER_RESOURCE_VIEW_DESC1* pDesc);
 }
 alias D3D10_STANDARD_MULTISAMPLE_QUALITY_LEVELS = int;
 enum : int
@@ -2427,8 +2427,8 @@ enum : int
 enum IID_ID3D10Device1 = GUID(0x9b7e4c8f, 0x342c, 0x4106, [0xa1, 0x9f, 0x4f, 0x27, 0x4, 0xf6, 0x89, 0xf0]);
 interface ID3D10Device1 : ID3D10Device
 {
-    HRESULT CreateShaderResourceView1(ID3D10Resource, const(D3D10_SHADER_RESOURCE_VIEW_DESC1)*, ID3D10ShaderResourceView1*);
-    HRESULT CreateBlendState1(const(D3D10_BLEND_DESC1)*, ID3D10BlendState1*);
+    HRESULT CreateShaderResourceView1(ID3D10Resource pResource, const(D3D10_SHADER_RESOURCE_VIEW_DESC1)* pDesc, ID3D10ShaderResourceView1* ppSRView);
+    HRESULT CreateBlendState1(const(D3D10_BLEND_DESC1)* pBlendStateDesc, ID3D10BlendState1* ppBlendState);
     D3D10_FEATURE_LEVEL1 GetFeatureLevel();
 }
 alias D3D10_SHADER_DEBUG_REGTYPE = int;
@@ -2586,21 +2586,21 @@ struct D3D10_SHADER_DEBUG_INFO
 enum IID_ID3D10ShaderReflection1 = GUID(0xc3457783, 0xa846, 0x47ce, [0x95, 0x20, 0xce, 0xa6, 0xf6, 0x6e, 0x74, 0x47]);
 interface ID3D10ShaderReflection1 : IUnknown
 {
-    HRESULT GetDesc(D3D10_SHADER_DESC*);
-    ID3D10ShaderReflectionConstantBuffer GetConstantBufferByIndex(uint);
-    ID3D10ShaderReflectionConstantBuffer GetConstantBufferByName(const(char)*);
-    HRESULT GetResourceBindingDesc(uint, D3D10_SHADER_INPUT_BIND_DESC*);
-    HRESULT GetInputParameterDesc(uint, D3D10_SIGNATURE_PARAMETER_DESC*);
-    HRESULT GetOutputParameterDesc(uint, D3D10_SIGNATURE_PARAMETER_DESC*);
-    ID3D10ShaderReflectionVariable GetVariableByName(const(char)*);
-    HRESULT GetResourceBindingDescByName(const(char)*, D3D10_SHADER_INPUT_BIND_DESC*);
-    HRESULT GetMovInstructionCount(uint*);
-    HRESULT GetMovcInstructionCount(uint*);
-    HRESULT GetConversionInstructionCount(uint*);
-    HRESULT GetBitwiseInstructionCount(uint*);
-    HRESULT GetGSInputPrimitive(D3D_PRIMITIVE*);
-    HRESULT IsLevel9Shader(BOOL*);
-    HRESULT IsSampleFrequencyShader(BOOL*);
+    HRESULT GetDesc(D3D10_SHADER_DESC* pDesc);
+    ID3D10ShaderReflectionConstantBuffer GetConstantBufferByIndex(uint Index);
+    ID3D10ShaderReflectionConstantBuffer GetConstantBufferByName(const(char)* Name);
+    HRESULT GetResourceBindingDesc(uint ResourceIndex, D3D10_SHADER_INPUT_BIND_DESC* pDesc);
+    HRESULT GetInputParameterDesc(uint ParameterIndex, D3D10_SIGNATURE_PARAMETER_DESC* pDesc);
+    HRESULT GetOutputParameterDesc(uint ParameterIndex, D3D10_SIGNATURE_PARAMETER_DESC* pDesc);
+    ID3D10ShaderReflectionVariable GetVariableByName(const(char)* Name);
+    HRESULT GetResourceBindingDescByName(const(char)* Name, D3D10_SHADER_INPUT_BIND_DESC* pDesc);
+    HRESULT GetMovInstructionCount(uint* pCount);
+    HRESULT GetMovcInstructionCount(uint* pCount);
+    HRESULT GetConversionInstructionCount(uint* pCount);
+    HRESULT GetBitwiseInstructionCount(uint* pCount);
+    HRESULT GetGSInputPrimitive(D3D_PRIMITIVE* pPrim);
+    HRESULT IsLevel9Shader(BOOL* pbLevel9Shader);
+    HRESULT IsSampleFrequencyShader(BOOL* pbSampleFrequency);
 }
-alias PFN_D3D10_CREATE_DEVICE1 = HRESULT function(IDXGIAdapter, D3D10_DRIVER_TYPE, HMODULE, uint, D3D10_FEATURE_LEVEL1, uint, ID3D10Device1*);
-alias PFN_D3D10_CREATE_DEVICE_AND_SWAP_CHAIN1 = HRESULT function(IDXGIAdapter, D3D10_DRIVER_TYPE, HMODULE, uint, D3D10_FEATURE_LEVEL1, uint, DXGI_SWAP_CHAIN_DESC*, IDXGISwapChain*, ID3D10Device1*);
+alias PFN_D3D10_CREATE_DEVICE1 = HRESULT function(IDXGIAdapter param0, D3D10_DRIVER_TYPE param1, HMODULE param2, uint param3, D3D10_FEATURE_LEVEL1 param4, uint param5, ID3D10Device1* param6);
+alias PFN_D3D10_CREATE_DEVICE_AND_SWAP_CHAIN1 = HRESULT function(IDXGIAdapter param0, D3D10_DRIVER_TYPE param1, HMODULE param2, uint param3, D3D10_FEATURE_LEVEL1 param4, uint param5, DXGI_SWAP_CHAIN_DESC* param6, IDXGISwapChain* param7, ID3D10Device1* param8);

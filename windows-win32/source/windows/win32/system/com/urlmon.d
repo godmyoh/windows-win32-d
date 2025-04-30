@@ -8,79 +8,79 @@ import windows.win32.system.com : BINDINFO, CLSCTX, FORMATETC, IBindCtx, IBindSt
 version (Windows):
 extern (Windows):
 
-HRESULT CreateURLMoniker(IMoniker, const(wchar)*, IMoniker*);
-HRESULT CreateURLMonikerEx(IMoniker, const(wchar)*, IMoniker*, uint);
-HRESULT GetClassURL(const(wchar)*, GUID*);
-HRESULT CreateAsyncBindCtx(uint, IBindStatusCallback, IEnumFORMATETC, IBindCtx*);
-HRESULT CreateURLMonikerEx2(IMoniker, IUri, IMoniker*, uint);
-HRESULT CreateAsyncBindCtxEx(IBindCtx, uint, IBindStatusCallback, IEnumFORMATETC, IBindCtx*, uint);
-HRESULT MkParseDisplayNameEx(IBindCtx, const(wchar)*, uint*, IMoniker*);
-HRESULT RegisterBindStatusCallback(IBindCtx, IBindStatusCallback, IBindStatusCallback*, uint);
-HRESULT RevokeBindStatusCallback(IBindCtx, IBindStatusCallback);
-HRESULT GetClassFileOrMime(IBindCtx, const(wchar)*, void*, uint, const(wchar)*, uint, GUID*);
-HRESULT IsValidURL(IBindCtx, const(wchar)*, uint);
-HRESULT CoGetClassObjectFromURL(const(GUID)*, const(wchar)*, uint, uint, const(wchar)*, IBindCtx, CLSCTX, void*, const(GUID)*, void**);
-HRESULT IEInstallScope(uint*);
-HRESULT FaultInIEFeature(HWND, uCLSSPEC*, QUERYCONTEXT*, uint);
-HRESULT GetComponentIDFromCLSSPEC(uCLSSPEC*, PSTR*);
-HRESULT IsAsyncMoniker(IMoniker);
-HRESULT RegisterMediaTypes(uint, const(char)**, ushort*);
-HRESULT FindMediaType(const(char)*, ushort*);
-HRESULT CreateFormatEnumerator(uint, FORMATETC*, IEnumFORMATETC*);
-HRESULT RegisterFormatEnumerator(IBindCtx, IEnumFORMATETC, uint);
-HRESULT RevokeFormatEnumerator(IBindCtx, IEnumFORMATETC);
-HRESULT RegisterMediaTypeClass(IBindCtx, uint, const(char)**, GUID*, uint);
-HRESULT FindMediaTypeClass(IBindCtx, const(char)*, GUID*, uint);
-HRESULT UrlMkSetSessionOption(uint, void*, uint, uint);
-HRESULT UrlMkGetSessionOption(uint, void*, uint, uint*, uint);
-HRESULT FindMimeFromData(IBindCtx, const(wchar)*, void*, uint, const(wchar)*, uint, PWSTR*, uint);
-HRESULT ObtainUserAgentString(uint, PSTR, uint*);
-HRESULT CompareSecurityIds(ubyte*, uint, ubyte*, uint, uint);
-HRESULT CompatFlagsFromClsid(GUID*, uint*, uint*);
-HRESULT SetAccessForIEAppContainer(HANDLE, IEObjectType, uint);
-HRESULT HlinkSimpleNavigateToString(const(wchar)*, const(wchar)*, const(wchar)*, IUnknown, IBindCtx, IBindStatusCallback, uint, uint);
-HRESULT HlinkSimpleNavigateToMoniker(IMoniker, const(wchar)*, const(wchar)*, IUnknown, IBindCtx, IBindStatusCallback, uint, uint);
-HRESULT URLOpenStreamA(IUnknown, const(char)*, uint, IBindStatusCallback);
-HRESULT URLOpenStreamW(IUnknown, const(wchar)*, uint, IBindStatusCallback);
-HRESULT URLOpenPullStreamA(IUnknown, const(char)*, uint, IBindStatusCallback);
-HRESULT URLOpenPullStreamW(IUnknown, const(wchar)*, uint, IBindStatusCallback);
-HRESULT URLDownloadToFileA(IUnknown, const(char)*, const(char)*, uint, IBindStatusCallback);
-HRESULT URLDownloadToFileW(IUnknown, const(wchar)*, const(wchar)*, uint, IBindStatusCallback);
-HRESULT URLDownloadToCacheFileA(IUnknown, const(char)*, PSTR, uint, uint, IBindStatusCallback);
-HRESULT URLDownloadToCacheFileW(IUnknown, const(wchar)*, PWSTR, uint, uint, IBindStatusCallback);
-HRESULT URLOpenBlockingStreamA(IUnknown, const(char)*, IStream*, uint, IBindStatusCallback);
-HRESULT URLOpenBlockingStreamW(IUnknown, const(wchar)*, IStream*, uint, IBindStatusCallback);
-HRESULT HlinkGoBack(IUnknown);
-HRESULT HlinkGoForward(IUnknown);
-HRESULT HlinkNavigateString(IUnknown, const(wchar)*);
-HRESULT HlinkNavigateMoniker(IUnknown, IMoniker);
-HRESULT CoInternetParseUrl(const(wchar)*, PARSEACTION, uint, PWSTR, uint, uint*, uint);
-HRESULT CoInternetParseIUri(IUri, PARSEACTION, uint, PWSTR, uint, uint*, ulong);
-HRESULT CoInternetCombineUrl(const(wchar)*, const(wchar)*, uint, PWSTR, uint, uint*, uint);
-HRESULT CoInternetCombineUrlEx(IUri, const(wchar)*, uint, IUri*, ulong);
-HRESULT CoInternetCombineIUri(IUri, IUri, uint, IUri*, ulong);
-HRESULT CoInternetCompareUrl(const(wchar)*, const(wchar)*, uint);
-HRESULT CoInternetGetProtocolFlags(const(wchar)*, uint*, uint);
-HRESULT CoInternetQueryInfo(const(wchar)*, QUERYOPTION, uint, void*, uint, uint*, uint);
-HRESULT CoInternetGetSession(uint, IInternetSession*, uint);
-HRESULT CoInternetGetSecurityUrl(const(wchar)*, PWSTR*, PSUACTION, uint);
-HRESULT CoInternetGetSecurityUrlEx(IUri, IUri*, PSUACTION, ulong);
-HRESULT CoInternetSetFeatureEnabled(INTERNETFEATURELIST, uint, BOOL);
-HRESULT CoInternetIsFeatureEnabled(INTERNETFEATURELIST, uint);
-HRESULT CoInternetIsFeatureEnabledForUrl(INTERNETFEATURELIST, uint, const(wchar)*, IInternetSecurityManager);
-HRESULT CoInternetIsFeatureEnabledForIUri(INTERNETFEATURELIST, uint, IUri, IInternetSecurityManagerEx2);
-HRESULT CoInternetIsFeatureZoneElevationEnabled(const(wchar)*, const(wchar)*, IInternetSecurityManager, uint);
-HRESULT CopyStgMedium(const(STGMEDIUM)*, STGMEDIUM*);
-HRESULT CopyBindInfo(const(BINDINFO)*, BINDINFO*);
-void ReleaseBindInfo(BINDINFO*);
+HRESULT CreateURLMoniker(IMoniker pMkCtx, const(wchar)* szURL, IMoniker* ppmk);
+HRESULT CreateURLMonikerEx(IMoniker pMkCtx, const(wchar)* szURL, IMoniker* ppmk, uint dwFlags);
+HRESULT GetClassURL(const(wchar)* szURL, GUID* pClsID);
+HRESULT CreateAsyncBindCtx(uint reserved, IBindStatusCallback pBSCb, IEnumFORMATETC pEFetc, IBindCtx* ppBC);
+HRESULT CreateURLMonikerEx2(IMoniker pMkCtx, IUri pUri, IMoniker* ppmk, uint dwFlags);
+HRESULT CreateAsyncBindCtxEx(IBindCtx pbc, uint dwOptions, IBindStatusCallback pBSCb, IEnumFORMATETC pEnum, IBindCtx* ppBC, uint reserved);
+HRESULT MkParseDisplayNameEx(IBindCtx pbc, const(wchar)* szDisplayName, uint* pchEaten, IMoniker* ppmk);
+HRESULT RegisterBindStatusCallback(IBindCtx pBC, IBindStatusCallback pBSCb, IBindStatusCallback* ppBSCBPrev, uint dwReserved);
+HRESULT RevokeBindStatusCallback(IBindCtx pBC, IBindStatusCallback pBSCb);
+HRESULT GetClassFileOrMime(IBindCtx pBC, const(wchar)* szFilename, void* pBuffer, uint cbSize, const(wchar)* szMime, uint dwReserved, GUID* pclsid);
+HRESULT IsValidURL(IBindCtx pBC, const(wchar)* szURL, uint dwReserved);
+HRESULT CoGetClassObjectFromURL(const(GUID)* rCLASSID, const(wchar)* szCODE, uint dwFileVersionMS, uint dwFileVersionLS, const(wchar)* szTYPE, IBindCtx pBindCtx, CLSCTX dwClsContext, void* pvReserved, const(GUID)* riid, void** ppv);
+HRESULT IEInstallScope(uint* pdwScope);
+HRESULT FaultInIEFeature(HWND hWnd, uCLSSPEC* pClassSpec, QUERYCONTEXT* pQuery, uint dwFlags);
+HRESULT GetComponentIDFromCLSSPEC(uCLSSPEC* pClassspec, PSTR* ppszComponentID);
+HRESULT IsAsyncMoniker(IMoniker pmk);
+HRESULT RegisterMediaTypes(uint ctypes, const(char)** rgszTypes, ushort* rgcfTypes);
+HRESULT FindMediaType(const(char)* rgszTypes, ushort* rgcfTypes);
+HRESULT CreateFormatEnumerator(uint cfmtetc, FORMATETC* rgfmtetc, IEnumFORMATETC* ppenumfmtetc);
+HRESULT RegisterFormatEnumerator(IBindCtx pBC, IEnumFORMATETC pEFetc, uint reserved);
+HRESULT RevokeFormatEnumerator(IBindCtx pBC, IEnumFORMATETC pEFetc);
+HRESULT RegisterMediaTypeClass(IBindCtx pBC, uint ctypes, const(char)** rgszTypes, GUID* rgclsID, uint reserved);
+HRESULT FindMediaTypeClass(IBindCtx pBC, const(char)* szType, GUID* pclsID, uint reserved);
+HRESULT UrlMkSetSessionOption(uint dwOption, void* pBuffer, uint dwBufferLength, uint dwReserved);
+HRESULT UrlMkGetSessionOption(uint dwOption, void* pBuffer, uint dwBufferLength, uint* pdwBufferLengthOut, uint dwReserved);
+HRESULT FindMimeFromData(IBindCtx pBC, const(wchar)* pwzUrl, void* pBuffer, uint cbSize, const(wchar)* pwzMimeProposed, uint dwMimeFlags, PWSTR* ppwzMimeOut, uint dwReserved);
+HRESULT ObtainUserAgentString(uint dwOption, PSTR pszUAOut, uint* cbSize);
+HRESULT CompareSecurityIds(ubyte* pbSecurityId1, uint dwLen1, ubyte* pbSecurityId2, uint dwLen2, uint dwReserved);
+HRESULT CompatFlagsFromClsid(GUID* pclsid, uint* pdwCompatFlags, uint* pdwMiscStatusFlags);
+HRESULT SetAccessForIEAppContainer(HANDLE hObject, IEObjectType ieObjectType, uint dwAccessMask);
+HRESULT HlinkSimpleNavigateToString(const(wchar)* szTarget, const(wchar)* szLocation, const(wchar)* szTargetFrameName, IUnknown pUnk, IBindCtx pbc, IBindStatusCallback param5, uint grfHLNF, uint dwReserved);
+HRESULT HlinkSimpleNavigateToMoniker(IMoniker pmkTarget, const(wchar)* szLocation, const(wchar)* szTargetFrameName, IUnknown pUnk, IBindCtx pbc, IBindStatusCallback param5, uint grfHLNF, uint dwReserved);
+HRESULT URLOpenStreamA(IUnknown param0, const(char)* param1, uint param2, IBindStatusCallback param3);
+HRESULT URLOpenStreamW(IUnknown param0, const(wchar)* param1, uint param2, IBindStatusCallback param3);
+HRESULT URLOpenPullStreamA(IUnknown param0, const(char)* param1, uint param2, IBindStatusCallback param3);
+HRESULT URLOpenPullStreamW(IUnknown param0, const(wchar)* param1, uint param2, IBindStatusCallback param3);
+HRESULT URLDownloadToFileA(IUnknown param0, const(char)* param1, const(char)* param2, uint param3, IBindStatusCallback param4);
+HRESULT URLDownloadToFileW(IUnknown param0, const(wchar)* param1, const(wchar)* param2, uint param3, IBindStatusCallback param4);
+HRESULT URLDownloadToCacheFileA(IUnknown param0, const(char)* param1, PSTR param2, uint cchFileName, uint param4, IBindStatusCallback param5);
+HRESULT URLDownloadToCacheFileW(IUnknown param0, const(wchar)* param1, PWSTR param2, uint cchFileName, uint param4, IBindStatusCallback param5);
+HRESULT URLOpenBlockingStreamA(IUnknown param0, const(char)* param1, IStream* param2, uint param3, IBindStatusCallback param4);
+HRESULT URLOpenBlockingStreamW(IUnknown param0, const(wchar)* param1, IStream* param2, uint param3, IBindStatusCallback param4);
+HRESULT HlinkGoBack(IUnknown pUnk);
+HRESULT HlinkGoForward(IUnknown pUnk);
+HRESULT HlinkNavigateString(IUnknown pUnk, const(wchar)* szTarget);
+HRESULT HlinkNavigateMoniker(IUnknown pUnk, IMoniker pmkTarget);
+HRESULT CoInternetParseUrl(const(wchar)* pwzUrl, PARSEACTION ParseAction, uint dwFlags, PWSTR pszResult, uint cchResult, uint* pcchResult, uint dwReserved);
+HRESULT CoInternetParseIUri(IUri pIUri, PARSEACTION ParseAction, uint dwFlags, PWSTR pwzResult, uint cchResult, uint* pcchResult, ulong dwReserved);
+HRESULT CoInternetCombineUrl(const(wchar)* pwzBaseUrl, const(wchar)* pwzRelativeUrl, uint dwCombineFlags, PWSTR pszResult, uint cchResult, uint* pcchResult, uint dwReserved);
+HRESULT CoInternetCombineUrlEx(IUri pBaseUri, const(wchar)* pwzRelativeUrl, uint dwCombineFlags, IUri* ppCombinedUri, ulong dwReserved);
+HRESULT CoInternetCombineIUri(IUri pBaseUri, IUri pRelativeUri, uint dwCombineFlags, IUri* ppCombinedUri, ulong dwReserved);
+HRESULT CoInternetCompareUrl(const(wchar)* pwzUrl1, const(wchar)* pwzUrl2, uint dwFlags);
+HRESULT CoInternetGetProtocolFlags(const(wchar)* pwzUrl, uint* pdwFlags, uint dwReserved);
+HRESULT CoInternetQueryInfo(const(wchar)* pwzUrl, QUERYOPTION QueryOptions, uint dwQueryFlags, void* pvBuffer, uint cbBuffer, uint* pcbBuffer, uint dwReserved);
+HRESULT CoInternetGetSession(uint dwSessionMode, IInternetSession* ppIInternetSession, uint dwReserved);
+HRESULT CoInternetGetSecurityUrl(const(wchar)* pwszUrl, PWSTR* ppwszSecUrl, PSUACTION psuAction, uint dwReserved);
+HRESULT CoInternetGetSecurityUrlEx(IUri pUri, IUri* ppSecUri, PSUACTION psuAction, ulong dwReserved);
+HRESULT CoInternetSetFeatureEnabled(INTERNETFEATURELIST FeatureEntry, uint dwFlags, BOOL fEnable);
+HRESULT CoInternetIsFeatureEnabled(INTERNETFEATURELIST FeatureEntry, uint dwFlags);
+HRESULT CoInternetIsFeatureEnabledForUrl(INTERNETFEATURELIST FeatureEntry, uint dwFlags, const(wchar)* szURL, IInternetSecurityManager pSecMgr);
+HRESULT CoInternetIsFeatureEnabledForIUri(INTERNETFEATURELIST FeatureEntry, uint dwFlags, IUri pIUri, IInternetSecurityManagerEx2 pSecMgr);
+HRESULT CoInternetIsFeatureZoneElevationEnabled(const(wchar)* szFromURL, const(wchar)* szToURL, IInternetSecurityManager pSecMgr, uint dwFlags);
+HRESULT CopyStgMedium(const(STGMEDIUM)* pcstgmedSrc, STGMEDIUM* pstgmedDest);
+HRESULT CopyBindInfo(const(BINDINFO)* pcbiSrc, BINDINFO* pbiDest);
+void ReleaseBindInfo(BINDINFO* pbindinfo);
 PWSTR IEGetUserPrivateNamespaceName();
-HRESULT CoInternetCreateSecurityManager(IServiceProvider, IInternetSecurityManager*, uint);
-HRESULT CoInternetCreateZoneManager(IServiceProvider, IInternetZoneManager*, uint);
-HRESULT GetSoftwareUpdateInfo(const(wchar)*, SOFTDISTINFO*);
-HRESULT SetSoftwareUpdateAdvertisementState(const(wchar)*, uint, uint, uint);
-BOOL IsLoggingEnabledA(const(char)*);
-BOOL IsLoggingEnabledW(const(wchar)*);
-BOOL WriteHitLogging(HIT_LOGGING_INFO*);
+HRESULT CoInternetCreateSecurityManager(IServiceProvider pSP, IInternetSecurityManager* ppSM, uint dwReserved);
+HRESULT CoInternetCreateZoneManager(IServiceProvider pSP, IInternetZoneManager* ppZM, uint dwReserved);
+HRESULT GetSoftwareUpdateInfo(const(wchar)* szDistUnit, SOFTDISTINFO* psdi);
+HRESULT SetSoftwareUpdateAdvertisementState(const(wchar)* szDistUnit, uint dwAdState, uint dwAdvertisedVersionMS, uint dwAdvertisedVersionLS);
+BOOL IsLoggingEnabledA(const(char)* pszUrl);
+BOOL IsLoggingEnabledW(const(wchar)* pwszUrl);
+BOOL WriteHitLogging(HIT_LOGGING_INFO* lpLogginginfo);
 enum MKSYS_URLMONIKER = 0x00000006;
 enum URL_MK_LEGACY = 0x00000000;
 enum URL_MK_UNIFORM = 0x00000001;
@@ -398,12 +398,12 @@ enum : int
 enum IID_IPersistMoniker = GUID(0x79eac9c9, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IPersistMoniker : IUnknown
 {
-    HRESULT GetClassID(GUID*);
+    HRESULT GetClassID(GUID* pClassID);
     HRESULT IsDirty();
-    HRESULT Load(BOOL, IMoniker, IBindCtx, uint);
-    HRESULT Save(IMoniker, IBindCtx, BOOL);
-    HRESULT SaveCompleted(IMoniker, IBindCtx);
-    HRESULT GetCurMoniker(IMoniker*);
+    HRESULT Load(BOOL fFullyAvailable, IMoniker pimkName, IBindCtx pibc, uint grfMode);
+    HRESULT Save(IMoniker pimkName, IBindCtx pbc, BOOL fRemember);
+    HRESULT SaveCompleted(IMoniker pimkName, IBindCtx pibc);
+    HRESULT GetCurMoniker(IMoniker* ppimkName);
 }
 alias MONIKERPROPERTY = int;
 enum : int
@@ -418,12 +418,12 @@ enum : int
 enum IID_IMonikerProp = GUID(0xa5ca5f7f, 0x1847, 0x4d87, [0x9c, 0x5b, 0x91, 0x85, 0x9, 0xf7, 0x51, 0x1d]);
 interface IMonikerProp : IUnknown
 {
-    HRESULT PutProperty(MONIKERPROPERTY, const(wchar)*);
+    HRESULT PutProperty(MONIKERPROPERTY mkp, const(wchar)* val);
 }
 enum IID_IBindProtocol = GUID(0x79eac9cd, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IBindProtocol : IUnknown
 {
-    HRESULT CreateBinding(const(wchar)*, IBindCtx, IBinding*);
+    HRESULT CreateBinding(const(wchar)* szUrl, IBindCtx pbc, IBinding* ppb);
 }
 alias BINDVERB = int;
 enum : int
@@ -672,29 +672,29 @@ enum : int
 enum IID_IHttpNegotiate = GUID(0x79eac9d2, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IHttpNegotiate : IUnknown
 {
-    HRESULT BeginningTransaction(const(wchar)*, const(wchar)*, uint, PWSTR*);
-    HRESULT OnResponse(uint, const(wchar)*, const(wchar)*, PWSTR*);
+    HRESULT BeginningTransaction(const(wchar)* szURL, const(wchar)* szHeaders, uint dwReserved, PWSTR* pszAdditionalHeaders);
+    HRESULT OnResponse(uint dwResponseCode, const(wchar)* szResponseHeaders, const(wchar)* szRequestHeaders, PWSTR* pszAdditionalRequestHeaders);
 }
 enum IID_IHttpNegotiate2 = GUID(0x4f9f9fcb, 0xe0f4, 0x48eb, [0xb7, 0xab, 0xfa, 0x2e, 0xa9, 0x36, 0x5c, 0xb4]);
 interface IHttpNegotiate2 : IHttpNegotiate
 {
-    HRESULT GetRootSecurityId(ubyte*, uint*, ulong);
+    HRESULT GetRootSecurityId(ubyte* pbSecurityId, uint* pcbSecurityId, ulong dwReserved);
 }
 enum IID_IHttpNegotiate3 = GUID(0x57b6c80a, 0x34c2, 0x4602, [0xbc, 0x26, 0x66, 0xa0, 0x2f, 0xc5, 0x71, 0x53]);
 interface IHttpNegotiate3 : IHttpNegotiate2
 {
-    HRESULT GetSerializedClientCertContext(ubyte**, uint*);
+    HRESULT GetSerializedClientCertContext(ubyte** ppbCert, uint* pcbCert);
 }
 enum IID_IWinInetFileStream = GUID(0xf134c4b7, 0xb1f8, 0x4e75, [0xb8, 0x86, 0x74, 0xb9, 0x9, 0x43, 0xbe, 0xcb]);
 interface IWinInetFileStream : IUnknown
 {
-    HRESULT SetHandleForUnlock(ulong, ulong);
-    HRESULT SetDeleteFile(ulong);
+    HRESULT SetHandleForUnlock(ulong hWinInetLockHandle, ulong dwReserved);
+    HRESULT SetDeleteFile(ulong dwReserved);
 }
 enum IID_IWindowForBindingUI = GUID(0x79eac9d5, 0xbafa, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IWindowForBindingUI : IUnknown
 {
-    HRESULT GetWindow(const(GUID)*, HWND*);
+    HRESULT GetWindow(const(GUID)* rguidReason, HWND* phwnd);
 }
 alias CIP_STATUS = int;
 enum : int
@@ -714,7 +714,7 @@ enum : int
 enum IID_ICodeInstall = GUID(0x79eac9d1, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface ICodeInstall : IWindowForBindingUI
 {
-    HRESULT OnCodeInstallProblem(uint, const(wchar)*, const(wchar)*, uint);
+    HRESULT OnCodeInstallProblem(uint ulStatusCode, const(wchar)* szDestination, const(wchar)* szSource, uint dwReserved);
 }
 alias Uri_HOST_TYPE = int;
 enum : int
@@ -729,43 +729,43 @@ enum : int
 enum IID_IUriContainer = GUID(0xa158a630, 0xed6f, 0x45fb, [0xb9, 0x87, 0xf6, 0x86, 0x76, 0xf5, 0x77, 0x52]);
 interface IUriContainer : IUnknown
 {
-    HRESULT GetIUri(IUri*);
+    HRESULT GetIUri(IUri* ppIUri);
 }
 enum IID_IUriBuilderFactory = GUID(0xe982ce48, 0xb96, 0x440c, [0xbc, 0x37, 0xc, 0x86, 0x9b, 0x27, 0xa2, 0x9e]);
 interface IUriBuilderFactory : IUnknown
 {
-    HRESULT CreateIUriBuilder(uint, ulong, IUriBuilder*);
-    HRESULT CreateInitializedIUriBuilder(uint, ulong, IUriBuilder*);
+    HRESULT CreateIUriBuilder(uint dwFlags, ulong dwReserved, IUriBuilder* ppIUriBuilder);
+    HRESULT CreateInitializedIUriBuilder(uint dwFlags, ulong dwReserved, IUriBuilder* ppIUriBuilder);
 }
 enum IID_IWinInetInfo = GUID(0x79eac9d6, 0xbafa, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IWinInetInfo : IUnknown
 {
-    HRESULT QueryOption(uint, void*, uint*);
+    HRESULT QueryOption(uint dwOption, void* pBuffer, uint* pcbBuf);
 }
 enum IID_IHttpSecurity = GUID(0x79eac9d7, 0xbafa, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IHttpSecurity : IWindowForBindingUI
 {
-    HRESULT OnSecurityProblem(uint);
+    HRESULT OnSecurityProblem(uint dwProblem);
 }
 enum IID_IWinInetHttpInfo = GUID(0x79eac9d8, 0xbafa, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IWinInetHttpInfo : IWinInetInfo
 {
-    HRESULT QueryInfo(uint, void*, uint*, uint*, uint*);
+    HRESULT QueryInfo(uint dwOption, void* pBuffer, uint* pcbBuf, uint* pdwFlags, uint* pdwReserved);
 }
 enum IID_IWinInetHttpTimeouts = GUID(0xf286fa56, 0xc1fd, 0x4270, [0x8e, 0x67, 0xb3, 0xeb, 0x79, 0xa, 0x81, 0xe8]);
 interface IWinInetHttpTimeouts : IUnknown
 {
-    HRESULT GetRequestTimeouts(uint*, uint*, uint*);
+    HRESULT GetRequestTimeouts(uint* pdwConnectTimeout, uint* pdwSendTimeout, uint* pdwReceiveTimeout);
 }
 enum IID_IWinInetCacheHints = GUID(0xdd1ec3b3, 0x8391, 0x4fdb, [0xa9, 0xe6, 0x34, 0x7c, 0x3c, 0xaa, 0xa7, 0xdd]);
 interface IWinInetCacheHints : IUnknown
 {
-    HRESULT SetCacheExtension(const(wchar)*, void*, uint*, uint*, uint*);
+    HRESULT SetCacheExtension(const(wchar)* pwzExt, void* pszCacheFile, uint* pcbCacheFile, uint* pdwWinInetError, uint* pdwReserved);
 }
 enum IID_IWinInetCacheHints2 = GUID(0x7857aeac, 0xd31f, 0x49bf, [0x88, 0x4e, 0xdd, 0x46, 0xdf, 0x36, 0x78, 0xa]);
 interface IWinInetCacheHints2 : IWinInetCacheHints
 {
-    HRESULT SetCacheExtension2(const(wchar)*, PWSTR, uint*, uint*, uint*);
+    HRESULT SetCacheExtension2(const(wchar)* pwzExt, PWSTR pwzCacheFile, uint* pcchCacheFile, uint* pdwWinInetError, uint* pdwReserved);
 }
 enum IID_IInternet = GUID(0x79eac9e0, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IInternet : IUnknown
@@ -805,13 +805,13 @@ enum : int
 enum IID_IInternetBindInfo = GUID(0x79eac9e1, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IInternetBindInfo : IUnknown
 {
-    HRESULT GetBindInfo(uint*, BINDINFO*);
-    HRESULT GetBindString(uint, PWSTR*, uint, uint*);
+    HRESULT GetBindInfo(uint* grfBINDF, BINDINFO* pbindinfo);
+    HRESULT GetBindString(uint ulStringType, PWSTR* ppwzStr, uint cEl, uint* pcElFetched);
 }
 enum IID_IInternetBindInfoEx = GUID(0xa3e015b7, 0xa82c, 0x4dcd, [0xa1, 0x50, 0x56, 0x9a, 0xee, 0xed, 0x36, 0xab]);
 interface IInternetBindInfoEx : IInternetBindInfo
 {
-    HRESULT GetBindInfoEx(uint*, BINDINFO*, uint*, uint*);
+    HRESULT GetBindInfoEx(uint* grfBINDF, BINDINFO* pbindinfo, uint* grfBINDF2, uint* pdwReserved);
 }
 alias PI_FLAGS = int;
 enum : int
@@ -849,38 +849,38 @@ struct StartParam
 enum IID_IInternetProtocolRoot = GUID(0x79eac9e3, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IInternetProtocolRoot : IUnknown
 {
-    HRESULT Start(const(wchar)*, IInternetProtocolSink, IInternetBindInfo, uint, HANDLE_PTR);
-    HRESULT Continue(PROTOCOLDATA*);
-    HRESULT Abort(HRESULT, uint);
-    HRESULT Terminate(uint);
+    HRESULT Start(const(wchar)* szUrl, IInternetProtocolSink pOIProtSink, IInternetBindInfo pOIBindInfo, uint grfPI, HANDLE_PTR dwReserved);
+    HRESULT Continue(PROTOCOLDATA* pProtocolData);
+    HRESULT Abort(HRESULT hrReason, uint dwOptions);
+    HRESULT Terminate(uint dwOptions);
     HRESULT Suspend();
     HRESULT Resume();
 }
 enum IID_IInternetProtocol = GUID(0x79eac9e4, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IInternetProtocol : IInternetProtocolRoot
 {
-    HRESULT Read(void*, uint, uint*);
-    HRESULT Seek(long, uint, ulong*);
-    HRESULT LockRequest(uint);
+    HRESULT Read(void* pv, uint cb, uint* pcbRead);
+    HRESULT Seek(long dlibMove, uint dwOrigin, ulong* plibNewPosition);
+    HRESULT LockRequest(uint dwOptions);
     HRESULT UnlockRequest();
 }
 enum IID_IInternetProtocolEx = GUID(0xc7a98e66, 0x1010, 0x492c, [0xa1, 0xc8, 0xc8, 0x9, 0xe1, 0xf7, 0x59, 0x5]);
 interface IInternetProtocolEx : IInternetProtocol
 {
-    HRESULT StartEx(IUri, IInternetProtocolSink, IInternetBindInfo, uint, HANDLE_PTR);
+    HRESULT StartEx(IUri pUri, IInternetProtocolSink pOIProtSink, IInternetBindInfo pOIBindInfo, uint grfPI, HANDLE_PTR dwReserved);
 }
 enum IID_IInternetProtocolSink = GUID(0x79eac9e5, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IInternetProtocolSink : IUnknown
 {
-    HRESULT Switch(PROTOCOLDATA*);
-    HRESULT ReportProgress(uint, const(wchar)*);
-    HRESULT ReportData(uint, uint, uint);
-    HRESULT ReportResult(HRESULT, uint, const(wchar)*);
+    HRESULT Switch(PROTOCOLDATA* pProtocolData);
+    HRESULT ReportProgress(uint ulStatusCode, const(wchar)* szStatusText);
+    HRESULT ReportData(uint grfBSCF, uint ulProgress, uint ulProgressMax);
+    HRESULT ReportResult(HRESULT hrResult, uint dwError, const(wchar)* szResult);
 }
 enum IID_IInternetProtocolSinkStackable = GUID(0x79eac9f0, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IInternetProtocolSinkStackable : IUnknown
 {
-    HRESULT SwitchSink(IInternetProtocolSink);
+    HRESULT SwitchSink(IInternetProtocolSink pOIProtSink);
     HRESULT CommitSwitch();
     HRESULT RollbackSwitch();
 }
@@ -894,13 +894,13 @@ enum : int
 enum IID_IInternetSession = GUID(0x79eac9e7, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IInternetSession : IUnknown
 {
-    HRESULT RegisterNameSpace(IClassFactory, const(GUID)*, const(wchar)*, uint, const(wchar)**, uint);
-    HRESULT UnregisterNameSpace(IClassFactory, const(wchar)*);
-    HRESULT RegisterMimeFilter(IClassFactory, const(GUID)*, const(wchar)*);
-    HRESULT UnregisterMimeFilter(IClassFactory, const(wchar)*);
-    HRESULT CreateBinding(IBindCtx, const(wchar)*, IUnknown, IUnknown*, IInternetProtocol*, uint);
-    HRESULT SetSessionOption(uint, void*, uint, uint);
-    HRESULT GetSessionOption(uint, void*, uint*, uint);
+    HRESULT RegisterNameSpace(IClassFactory pCF, const(GUID)* rclsid, const(wchar)* pwzProtocol, uint cPatterns, const(wchar)** ppwzPatterns, uint dwReserved);
+    HRESULT UnregisterNameSpace(IClassFactory pCF, const(wchar)* pszProtocol);
+    HRESULT RegisterMimeFilter(IClassFactory pCF, const(GUID)* rclsid, const(wchar)* pwzType);
+    HRESULT UnregisterMimeFilter(IClassFactory pCF, const(wchar)* pwzType);
+    HRESULT CreateBinding(IBindCtx pBC, const(wchar)* szUrl, IUnknown pUnkOuter, IUnknown* ppUnk, IInternetProtocol* ppOInetProt, uint dwOption);
+    HRESULT SetSessionOption(uint dwOption, void* pBuffer, uint dwBufferLength, uint dwReserved);
+    HRESULT GetSessionOption(uint dwOption, void* pBuffer, uint* pdwBufferLength, uint dwReserved);
 }
 enum IID_IInternetThreadSwitch = GUID(0x79eac9e8, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IInternetThreadSwitch : IUnknown
@@ -911,8 +911,8 @@ interface IInternetThreadSwitch : IUnknown
 enum IID_IInternetPriority = GUID(0x79eac9eb, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IInternetPriority : IUnknown
 {
-    HRESULT SetPriority(int);
-    HRESULT GetPriority(int*);
+    HRESULT SetPriority(int nPriority);
+    HRESULT GetPriority(int* pnPriority);
 }
 alias PARSEACTION = int;
 enum : int
@@ -969,10 +969,10 @@ enum : int
 enum IID_IInternetProtocolInfo = GUID(0x79eac9ec, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IInternetProtocolInfo : IUnknown
 {
-    HRESULT ParseUrl(const(wchar)*, PARSEACTION, uint, PWSTR, uint, uint*, uint);
-    HRESULT CombineUrl(const(wchar)*, const(wchar)*, uint, PWSTR, uint, uint*, uint);
-    HRESULT CompareUrl(const(wchar)*, const(wchar)*, uint);
-    HRESULT QueryInfo(const(wchar)*, QUERYOPTION, uint, void*, uint, uint*, uint);
+    HRESULT ParseUrl(const(wchar)* pwzUrl, PARSEACTION ParseAction, uint dwParseFlags, PWSTR pwzResult, uint cchResult, uint* pcchResult, uint dwReserved);
+    HRESULT CombineUrl(const(wchar)* pwzBaseUrl, const(wchar)* pwzRelativeUrl, uint dwCombineFlags, PWSTR pwzResult, uint cchResult, uint* pcchResult, uint dwReserved);
+    HRESULT CompareUrl(const(wchar)* pwzUrl1, const(wchar)* pwzUrl2, uint dwCompareFlags);
+    HRESULT QueryInfo(const(wchar)* pwzUrl, QUERYOPTION OueryOption, uint dwQueryFlags, void* pBuffer, uint cbBuffer, uint* pcbBuf, uint dwReserved);
 }
 alias INTERNETFEATURELIST = int;
 enum : int
@@ -1011,8 +1011,8 @@ enum : int
 enum IID_IInternetSecurityMgrSite = GUID(0x79eac9ed, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IInternetSecurityMgrSite : IUnknown
 {
-    HRESULT GetWindow(HWND*);
-    HRESULT EnableModeless(BOOL);
+    HRESULT GetWindow(HWND* phwnd);
+    HRESULT EnableModeless(BOOL fEnable);
 }
 alias PUAF = int;
 enum : int
@@ -1057,51 +1057,51 @@ enum : int
 enum IID_IInternetSecurityManager = GUID(0x79eac9ee, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IInternetSecurityManager : IUnknown
 {
-    HRESULT SetSecuritySite(IInternetSecurityMgrSite);
-    HRESULT GetSecuritySite(IInternetSecurityMgrSite*);
-    HRESULT MapUrlToZone(const(wchar)*, uint*, uint);
-    HRESULT GetSecurityId(const(wchar)*, ubyte*, uint*, ulong);
-    HRESULT ProcessUrlAction(const(wchar)*, uint, ubyte*, uint, ubyte*, uint, uint, uint);
-    HRESULT QueryCustomPolicy(const(wchar)*, const(GUID)*, ubyte**, uint*, ubyte*, uint, uint);
-    HRESULT SetZoneMapping(uint, const(wchar)*, uint);
-    HRESULT GetZoneMappings(uint, IEnumString*, uint);
+    HRESULT SetSecuritySite(IInternetSecurityMgrSite pSite);
+    HRESULT GetSecuritySite(IInternetSecurityMgrSite* ppSite);
+    HRESULT MapUrlToZone(const(wchar)* pwszUrl, uint* pdwZone, uint dwFlags);
+    HRESULT GetSecurityId(const(wchar)* pwszUrl, ubyte* pbSecurityId, uint* pcbSecurityId, ulong dwReserved);
+    HRESULT ProcessUrlAction(const(wchar)* pwszUrl, uint dwAction, ubyte* pPolicy, uint cbPolicy, ubyte* pContext, uint cbContext, uint dwFlags, uint dwReserved);
+    HRESULT QueryCustomPolicy(const(wchar)* pwszUrl, const(GUID)* guidKey, ubyte** ppPolicy, uint* pcbPolicy, ubyte* pContext, uint cbContext, uint dwReserved);
+    HRESULT SetZoneMapping(uint dwZone, const(wchar)* lpszPattern, uint dwFlags);
+    HRESULT GetZoneMappings(uint dwZone, IEnumString* ppenumString, uint dwFlags);
 }
 enum IID_IInternetSecurityManagerEx = GUID(0xf164edf1, 0xcc7c, 0x4f0d, [0x9a, 0x94, 0x34, 0x22, 0x26, 0x25, 0xc3, 0x93]);
 interface IInternetSecurityManagerEx : IInternetSecurityManager
 {
-    HRESULT ProcessUrlActionEx(const(wchar)*, uint, ubyte*, uint, ubyte*, uint, uint, uint, uint*);
+    HRESULT ProcessUrlActionEx(const(wchar)* pwszUrl, uint dwAction, ubyte* pPolicy, uint cbPolicy, ubyte* pContext, uint cbContext, uint dwFlags, uint dwReserved, uint* pdwOutFlags);
 }
 enum IID_IInternetSecurityManagerEx2 = GUID(0xf1e50292, 0xa795, 0x4117, [0x8e, 0x9, 0x2b, 0x56, 0xa, 0x72, 0xac, 0x60]);
 interface IInternetSecurityManagerEx2 : IInternetSecurityManagerEx
 {
-    HRESULT MapUrlToZoneEx2(IUri, uint*, uint, PWSTR*, uint*);
-    HRESULT ProcessUrlActionEx2(IUri, uint, ubyte*, uint, ubyte*, uint, uint, ulong, uint*);
-    HRESULT GetSecurityIdEx2(IUri, ubyte*, uint*, ulong);
-    HRESULT QueryCustomPolicyEx2(IUri, const(GUID)*, ubyte**, uint*, ubyte*, uint, ulong);
+    HRESULT MapUrlToZoneEx2(IUri pUri, uint* pdwZone, uint dwFlags, PWSTR* ppwszMappedUrl, uint* pdwOutFlags);
+    HRESULT ProcessUrlActionEx2(IUri pUri, uint dwAction, ubyte* pPolicy, uint cbPolicy, ubyte* pContext, uint cbContext, uint dwFlags, ulong dwReserved, uint* pdwOutFlags);
+    HRESULT GetSecurityIdEx2(IUri pUri, ubyte* pbSecurityId, uint* pcbSecurityId, ulong dwReserved);
+    HRESULT QueryCustomPolicyEx2(IUri pUri, const(GUID)* guidKey, ubyte** ppPolicy, uint* pcbPolicy, ubyte* pContext, uint cbContext, ulong dwReserved);
 }
 enum IID_IZoneIdentifier = GUID(0xcd45f185, 0x1b21, 0x48e2, [0x96, 0x7b, 0xea, 0xd7, 0x43, 0xa8, 0x91, 0x4e]);
 interface IZoneIdentifier : IUnknown
 {
-    HRESULT GetId(uint*);
-    HRESULT SetId(uint);
+    HRESULT GetId(uint* pdwZone);
+    HRESULT SetId(uint dwZone);
     HRESULT Remove();
 }
 enum IID_IZoneIdentifier2 = GUID(0xeb5e760c, 0x9ef, 0x45c0, [0xb5, 0x10, 0x70, 0x83, 0xc, 0xe3, 0x1e, 0x6a]);
 interface IZoneIdentifier2 : IZoneIdentifier
 {
-    HRESULT GetLastWriterPackageFamilyName(PWSTR*);
-    HRESULT SetLastWriterPackageFamilyName(const(wchar)*);
+    HRESULT GetLastWriterPackageFamilyName(PWSTR* packageFamilyName);
+    HRESULT SetLastWriterPackageFamilyName(const(wchar)* packageFamilyName);
     HRESULT RemoveLastWriterPackageFamilyName();
-    HRESULT GetAppZoneId(uint*);
-    HRESULT SetAppZoneId(uint);
+    HRESULT GetAppZoneId(uint* zone);
+    HRESULT SetAppZoneId(uint zone);
     HRESULT RemoveAppZoneId();
 }
 enum IID_IInternetHostSecurityManager = GUID(0x3af280b6, 0xcb3f, 0x11d0, [0x89, 0x1e, 0x0, 0xc0, 0x4f, 0xb6, 0xbf, 0xc4]);
 interface IInternetHostSecurityManager : IUnknown
 {
-    HRESULT GetSecurityId(ubyte*, uint*, ulong);
-    HRESULT ProcessUrlAction(uint, ubyte*, uint, ubyte*, uint, uint, uint);
-    HRESULT QueryCustomPolicy(const(GUID)*, ubyte**, uint*, ubyte*, uint, uint);
+    HRESULT GetSecurityId(ubyte* pbSecurityId, uint* pcbSecurityId, ulong dwReserved);
+    HRESULT ProcessUrlAction(uint dwAction, ubyte* pPolicy, uint cbPolicy, ubyte* pContext, uint cbContext, uint dwFlags, uint dwReserved);
+    HRESULT QueryCustomPolicy(const(GUID)* guidKey, ubyte** ppPolicy, uint* pcbPolicy, ubyte* pContext, uint cbContext, uint dwReserved);
 }
 alias URLZONE = int;
 enum : int
@@ -1177,31 +1177,31 @@ enum : int
 enum IID_IInternetZoneManager = GUID(0x79eac9ef, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IInternetZoneManager : IUnknown
 {
-    HRESULT GetZoneAttributes(uint, ZONEATTRIBUTES*);
-    HRESULT SetZoneAttributes(uint, ZONEATTRIBUTES*);
-    HRESULT GetZoneCustomPolicy(uint, const(GUID)*, ubyte**, uint*, URLZONEREG);
-    HRESULT SetZoneCustomPolicy(uint, const(GUID)*, ubyte*, uint, URLZONEREG);
-    HRESULT GetZoneActionPolicy(uint, uint, ubyte*, uint, URLZONEREG);
-    HRESULT SetZoneActionPolicy(uint, uint, ubyte*, uint, URLZONEREG);
-    HRESULT PromptAction(uint, HWND, const(wchar)*, const(wchar)*, uint);
-    HRESULT LogAction(uint, const(wchar)*, const(wchar)*, uint);
-    HRESULT CreateZoneEnumerator(uint*, uint*, uint);
-    HRESULT GetZoneAt(uint, uint, uint*);
-    HRESULT DestroyZoneEnumerator(uint);
-    HRESULT CopyTemplatePoliciesToZone(uint, uint, uint);
+    HRESULT GetZoneAttributes(uint dwZone, ZONEATTRIBUTES* pZoneAttributes);
+    HRESULT SetZoneAttributes(uint dwZone, ZONEATTRIBUTES* pZoneAttributes);
+    HRESULT GetZoneCustomPolicy(uint dwZone, const(GUID)* guidKey, ubyte** ppPolicy, uint* pcbPolicy, URLZONEREG urlZoneReg);
+    HRESULT SetZoneCustomPolicy(uint dwZone, const(GUID)* guidKey, ubyte* pPolicy, uint cbPolicy, URLZONEREG urlZoneReg);
+    HRESULT GetZoneActionPolicy(uint dwZone, uint dwAction, ubyte* pPolicy, uint cbPolicy, URLZONEREG urlZoneReg);
+    HRESULT SetZoneActionPolicy(uint dwZone, uint dwAction, ubyte* pPolicy, uint cbPolicy, URLZONEREG urlZoneReg);
+    HRESULT PromptAction(uint dwAction, HWND hwndParent, const(wchar)* pwszUrl, const(wchar)* pwszText, uint dwPromptFlags);
+    HRESULT LogAction(uint dwAction, const(wchar)* pwszUrl, const(wchar)* pwszText, uint dwLogFlags);
+    HRESULT CreateZoneEnumerator(uint* pdwEnum, uint* pdwCount, uint dwFlags);
+    HRESULT GetZoneAt(uint dwEnum, uint dwIndex, uint* pdwZone);
+    HRESULT DestroyZoneEnumerator(uint dwEnum);
+    HRESULT CopyTemplatePoliciesToZone(uint dwTemplate, uint dwZone, uint dwReserved);
 }
 enum IID_IInternetZoneManagerEx = GUID(0xa4c23339, 0x8e06, 0x431e, [0x9b, 0xf4, 0x7e, 0x71, 0x1c, 0x8, 0x56, 0x48]);
 interface IInternetZoneManagerEx : IInternetZoneManager
 {
-    HRESULT GetZoneActionPolicyEx(uint, uint, ubyte*, uint, URLZONEREG, uint);
-    HRESULT SetZoneActionPolicyEx(uint, uint, ubyte*, uint, URLZONEREG, uint);
+    HRESULT GetZoneActionPolicyEx(uint dwZone, uint dwAction, ubyte* pPolicy, uint cbPolicy, URLZONEREG urlZoneReg, uint dwFlags);
+    HRESULT SetZoneActionPolicyEx(uint dwZone, uint dwAction, ubyte* pPolicy, uint cbPolicy, URLZONEREG urlZoneReg, uint dwFlags);
 }
 enum IID_IInternetZoneManagerEx2 = GUID(0xedc17559, 0xdd5d, 0x4846, [0x8e, 0xef, 0x8b, 0xec, 0xba, 0x5a, 0x4a, 0xbf]);
 interface IInternetZoneManagerEx2 : IInternetZoneManagerEx
 {
-    HRESULT GetZoneAttributesEx(uint, ZONEATTRIBUTES*, uint);
-    HRESULT GetZoneSecurityState(uint, BOOL, uint*, BOOL*);
-    HRESULT GetIESecurityState(BOOL, uint*, BOOL*, BOOL);
+    HRESULT GetZoneAttributesEx(uint dwZone, ZONEATTRIBUTES* pZoneAttributes, uint dwFlags);
+    HRESULT GetZoneSecurityState(uint dwZoneIndex, BOOL fRespectPolicy, uint* pdwState, BOOL* pfPolicyEncountered);
+    HRESULT GetIESecurityState(BOOL fRespectPolicy, uint* pdwState, BOOL* pfPolicyEncountered, BOOL fNoCache);
     HRESULT FixUnsecureSettings();
 }
 struct CODEBASEHOLD
@@ -1232,23 +1232,23 @@ struct SOFTDISTINFO
 enum IID_ISoftDistExt = GUID(0xb15b8dc1, 0xc7e1, 0x11d0, [0x86, 0x80, 0x0, 0xaa, 0x0, 0xbd, 0xcb, 0x71]);
 interface ISoftDistExt : IUnknown
 {
-    HRESULT ProcessSoftDist(const(wchar)*, IXMLElement, SOFTDISTINFO*);
-    HRESULT GetFirstCodeBase(PWSTR*, uint*);
-    HRESULT GetNextCodeBase(PWSTR*, uint*);
-    HRESULT AsyncInstallDistributionUnit(IBindCtx, void*, uint, CODEBASEHOLD*);
+    HRESULT ProcessSoftDist(const(wchar)* szCDFURL, IXMLElement pSoftDistElement, SOFTDISTINFO* lpsdi);
+    HRESULT GetFirstCodeBase(PWSTR* szCodeBase, uint* dwMaxSize);
+    HRESULT GetNextCodeBase(PWSTR* szCodeBase, uint* dwMaxSize);
+    HRESULT AsyncInstallDistributionUnit(IBindCtx pbc, void* pvReserved, uint flags, CODEBASEHOLD* lpcbh);
 }
 enum IID_ICatalogFileInfo = GUID(0x711c7600, 0x6b48, 0x11d1, [0xb4, 0x3, 0x0, 0xaa, 0x0, 0xb9, 0x2a, 0xf1]);
 interface ICatalogFileInfo : IUnknown
 {
-    HRESULT GetCatalogFile(PSTR*);
-    HRESULT GetJavaTrust(void**);
+    HRESULT GetCatalogFile(PSTR* ppszCatalogFile);
+    HRESULT GetJavaTrust(void** ppJavaTrust);
 }
 enum IID_IDataFilter = GUID(0x69d14c80, 0xc18e, 0x11d0, [0xa9, 0xce, 0x0, 0x60, 0x97, 0x94, 0x23, 0x11]);
 interface IDataFilter : IUnknown
 {
-    HRESULT DoEncode(uint, int, ubyte*, int, ubyte*, int, int*, int*, uint);
-    HRESULT DoDecode(uint, int, ubyte*, int, ubyte*, int, int*, int*, uint);
-    HRESULT SetEncodingLevel(uint);
+    HRESULT DoEncode(uint dwFlags, int lInBufferSize, ubyte* pbInBuffer, int lOutBufferSize, ubyte* pbOutBuffer, int lInBytesAvailable, int* plInBytesRead, int* plOutBytesWritten, uint dwReserved);
+    HRESULT DoDecode(uint dwFlags, int lInBufferSize, ubyte* pbInBuffer, int lOutBufferSize, ubyte* pbOutBuffer, int lInBytesAvailable, int* plInBytesRead, int* plOutBytesWritten, uint dwReserved);
+    HRESULT SetEncodingLevel(uint dwEncLevel);
 }
 struct PROTOCOLFILTERDATA
 {
@@ -1268,8 +1268,8 @@ struct DATAINFO
 enum IID_IEncodingFilterFactory = GUID(0x70bdde00, 0xc18e, 0x11d0, [0xa9, 0xce, 0x0, 0x60, 0x97, 0x94, 0x23, 0x11]);
 interface IEncodingFilterFactory : IUnknown
 {
-    HRESULT FindBestFilter(const(wchar)*, const(wchar)*, DATAINFO, IDataFilter*);
-    HRESULT GetDefaultFilter(const(wchar)*, const(wchar)*, IDataFilter*);
+    HRESULT FindBestFilter(const(wchar)* pwzCodeIn, const(wchar)* pwzCodeOut, DATAINFO info, IDataFilter* ppDF);
+    HRESULT GetDefaultFilter(const(wchar)* pwzCodeIn, const(wchar)* pwzCodeOut, IDataFilter* ppDF);
 }
 struct HIT_LOGGING_INFO
 {
@@ -1288,7 +1288,7 @@ struct CONFIRMSAFETY
 enum IID_IWrappedProtocol = GUID(0x53c84785, 0x8425, 0x4dc5, [0x97, 0x1b, 0xe5, 0x8d, 0x9c, 0x19, 0xf9, 0xb6]);
 interface IWrappedProtocol : IUnknown
 {
-    HRESULT GetWrapperCode(int*, ulong);
+    HRESULT GetWrapperCode(int* pnCode, ulong dwReserved);
 }
 alias BINDHANDLETYPES = int;
 enum : int
@@ -1301,7 +1301,7 @@ enum : int
 enum IID_IGetBindHandle = GUID(0xaf0ff408, 0x129d, 0x4b20, [0x91, 0xf0, 0x2, 0xbd, 0x23, 0xd8, 0x83, 0x52]);
 interface IGetBindHandle : IUnknown
 {
-    HRESULT GetBindHandle(BINDHANDLETYPES, HANDLE*);
+    HRESULT GetBindHandle(BINDHANDLETYPES enumRequestedHandle, HANDLE* pRetHandle);
 }
 struct PROTOCOL_ARGUMENT
 {
@@ -1311,10 +1311,10 @@ struct PROTOCOL_ARGUMENT
 enum IID_IBindCallbackRedirect = GUID(0x11c81bc2, 0x121e, 0x4ed5, [0xb9, 0xc4, 0xb4, 0x30, 0xbd, 0x54, 0xf2, 0xc0]);
 interface IBindCallbackRedirect : IUnknown
 {
-    HRESULT Redirect(const(wchar)*, VARIANT_BOOL*);
+    HRESULT Redirect(const(wchar)* lpcUrl, VARIANT_BOOL* vbCancel);
 }
 enum IID_IBindHttpSecurity = GUID(0xa9eda967, 0xf50e, 0x4a33, [0xb3, 0x58, 0x20, 0x6f, 0x6e, 0xf3, 0x8, 0x6d]);
 interface IBindHttpSecurity : IUnknown
 {
-    HRESULT GetIgnoreCertMask(uint*);
+    HRESULT GetIgnoreCertMask(uint* pdwIgnoreCertMask);
 }

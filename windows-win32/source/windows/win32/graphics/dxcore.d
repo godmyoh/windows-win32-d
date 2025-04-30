@@ -7,7 +7,7 @@ import windows.win32.system.com : IUnknown;
 version (Windows):
 extern (Windows):
 
-HRESULT DXCoreCreateAdapterFactory(const(GUID)*, void**);
+HRESULT DXCoreCreateAdapterFactory(const(GUID)* riid, void** ppvFactory);
 enum _FACDXCORE = 0x00000880;
 enum DXCORE_ADAPTER_ATTRIBUTE_D3D11_GRAPHICS = GUID(0x8c47866b, 0x7583, 0x450d, [0xf0, 0xf0, 0x6b, 0xad, 0xa8, 0x95, 0xaf, 0x4b]);
 enum DXCORE_ADAPTER_ATTRIBUTE_D3D12_GRAPHICS = GUID(0xc9ece4d, 0x2f6e, 0x4f01, [0x8c, 0x96, 0xe8, 0x9e, 0x33, 0x1b, 0x47, 0xb1]);
@@ -90,37 +90,37 @@ struct DXCoreAdapterMemoryBudget
     ulong availableForReservation;
     ulong currentReservation;
 }
-alias PFN_DXCORE_NOTIFICATION_CALLBACK = void function(DXCoreNotificationType, IUnknown, void*);
+alias PFN_DXCORE_NOTIFICATION_CALLBACK = void function(DXCoreNotificationType notificationType, IUnknown object, void* context);
 enum IID_IDXCoreAdapter = GUID(0xf0db4c7f, 0xfe5a, 0x42a2, [0xbd, 0x62, 0xf2, 0xa6, 0xcf, 0x6f, 0xc8, 0x3e]);
 interface IDXCoreAdapter : IUnknown
 {
     bool IsValid();
-    bool IsAttributeSupported(const(GUID)*);
-    bool IsPropertySupported(DXCoreAdapterProperty);
-    HRESULT GetProperty(DXCoreAdapterProperty, ulong, void*);
-    HRESULT GetPropertySize(DXCoreAdapterProperty, ulong*);
-    bool IsQueryStateSupported(DXCoreAdapterState);
-    HRESULT QueryState(DXCoreAdapterState, ulong, const(void)*, ulong, void*);
-    bool IsSetStateSupported(DXCoreAdapterState);
-    HRESULT SetState(DXCoreAdapterState, ulong, const(void)*, ulong, const(void)*);
-    HRESULT GetFactory(const(GUID)*, void**);
+    bool IsAttributeSupported(const(GUID)* attributeGUID);
+    bool IsPropertySupported(DXCoreAdapterProperty property);
+    HRESULT GetProperty(DXCoreAdapterProperty property, ulong bufferSize, void* propertyData);
+    HRESULT GetPropertySize(DXCoreAdapterProperty property, ulong* bufferSize);
+    bool IsQueryStateSupported(DXCoreAdapterState property);
+    HRESULT QueryState(DXCoreAdapterState state, ulong inputStateDetailsSize, const(void)* inputStateDetails, ulong outputBufferSize, void* outputBuffer);
+    bool IsSetStateSupported(DXCoreAdapterState property);
+    HRESULT SetState(DXCoreAdapterState state, ulong inputStateDetailsSize, const(void)* inputStateDetails, ulong inputDataSize, const(void)* inputData);
+    HRESULT GetFactory(const(GUID)* riid, void** ppvFactory);
 }
 enum IID_IDXCoreAdapterList = GUID(0x526c7776, 0x40e9, 0x459b, [0xb7, 0x11, 0xf3, 0x2a, 0xd7, 0x6d, 0xfc, 0x28]);
 interface IDXCoreAdapterList : IUnknown
 {
-    HRESULT GetAdapter(uint, const(GUID)*, void**);
+    HRESULT GetAdapter(uint index, const(GUID)* riid, void** ppvAdapter);
     uint GetAdapterCount();
     bool IsStale();
-    HRESULT GetFactory(const(GUID)*, void**);
-    HRESULT Sort(uint, const(DXCoreAdapterPreference)*);
-    bool IsAdapterPreferenceSupported(DXCoreAdapterPreference);
+    HRESULT GetFactory(const(GUID)* riid, void** ppvFactory);
+    HRESULT Sort(uint numPreferences, const(DXCoreAdapterPreference)* preferences);
+    bool IsAdapterPreferenceSupported(DXCoreAdapterPreference preference);
 }
 enum IID_IDXCoreAdapterFactory = GUID(0x78ee5945, 0xc36e, 0x4b13, [0xa6, 0x69, 0x0, 0x5d, 0xd1, 0x1c, 0xf, 0x6]);
 interface IDXCoreAdapterFactory : IUnknown
 {
-    HRESULT CreateAdapterList(uint, const(GUID)*, const(GUID)*, void**);
-    HRESULT GetAdapterByLuid(const(LUID)*, const(GUID)*, void**);
-    bool IsNotificationTypeSupported(DXCoreNotificationType);
-    HRESULT RegisterEventNotification(IUnknown, DXCoreNotificationType, PFN_DXCORE_NOTIFICATION_CALLBACK, void*, uint*);
-    HRESULT UnregisterEventNotification(uint);
+    HRESULT CreateAdapterList(uint numAttributes, const(GUID)* filterAttributes, const(GUID)* riid, void** ppvAdapterList);
+    HRESULT GetAdapterByLuid(const(LUID)* adapterLUID, const(GUID)* riid, void** ppvAdapter);
+    bool IsNotificationTypeSupported(DXCoreNotificationType notificationType);
+    HRESULT RegisterEventNotification(IUnknown dxCoreObject, DXCoreNotificationType notificationType, PFN_DXCORE_NOTIFICATION_CALLBACK callbackFunction, void* callbackContext, uint* eventCookie);
+    HRESULT UnregisterEventNotification(uint eventCookie);
 }

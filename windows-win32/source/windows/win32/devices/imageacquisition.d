@@ -1346,29 +1346,29 @@ struct WIA_MICR
 enum IID_IWiaDevMgr = GUID(0x5eb2502a, 0x8cf1, 0x11d1, [0xbf, 0x92, 0x0, 0x60, 0x8, 0x1e, 0xd8, 0x11]);
 interface IWiaDevMgr : IUnknown
 {
-    HRESULT EnumDeviceInfo(int, IEnumWIA_DEV_INFO*);
-    HRESULT CreateDevice(BSTR, IWiaItem*);
-    HRESULT SelectDeviceDlg(HWND, int, int, BSTR*, IWiaItem*);
-    HRESULT SelectDeviceDlgID(HWND, int, int, BSTR*);
-    HRESULT GetImageDlg(HWND, int, int, int, IWiaItem, BSTR, GUID*);
-    HRESULT RegisterEventCallbackProgram(int, BSTR, const(GUID)*, BSTR, BSTR, BSTR, BSTR);
-    HRESULT RegisterEventCallbackInterface(int, BSTR, const(GUID)*, IWiaEventCallback, IUnknown*);
-    HRESULT RegisterEventCallbackCLSID(int, BSTR, const(GUID)*, const(GUID)*, BSTR, BSTR, BSTR);
-    HRESULT AddDeviceDlg(HWND, int);
+    HRESULT EnumDeviceInfo(int lFlag, IEnumWIA_DEV_INFO* ppIEnum);
+    HRESULT CreateDevice(BSTR bstrDeviceID, IWiaItem* ppWiaItemRoot);
+    HRESULT SelectDeviceDlg(HWND hwndParent, int lDeviceType, int lFlags, BSTR* pbstrDeviceID, IWiaItem* ppItemRoot);
+    HRESULT SelectDeviceDlgID(HWND hwndParent, int lDeviceType, int lFlags, BSTR* pbstrDeviceID);
+    HRESULT GetImageDlg(HWND hwndParent, int lDeviceType, int lFlags, int lIntent, IWiaItem pItemRoot, BSTR bstrFilename, GUID* pguidFormat);
+    HRESULT RegisterEventCallbackProgram(int lFlags, BSTR bstrDeviceID, const(GUID)* pEventGUID, BSTR bstrCommandline, BSTR bstrName, BSTR bstrDescription, BSTR bstrIcon);
+    HRESULT RegisterEventCallbackInterface(int lFlags, BSTR bstrDeviceID, const(GUID)* pEventGUID, IWiaEventCallback pIWiaEventCallback, IUnknown* pEventObject);
+    HRESULT RegisterEventCallbackCLSID(int lFlags, BSTR bstrDeviceID, const(GUID)* pEventGUID, const(GUID)* pClsID, BSTR bstrName, BSTR bstrDescription, BSTR bstrIcon);
+    HRESULT AddDeviceDlg(HWND hwndParent, int lFlags);
 }
 enum IID_IEnumWIA_DEV_INFO = GUID(0x5e38b83c, 0x8cf1, 0x11d1, [0xbf, 0x92, 0x0, 0x60, 0x8, 0x1e, 0xd8, 0x11]);
 interface IEnumWIA_DEV_INFO : IUnknown
 {
-    HRESULT Next(uint, IWiaPropertyStorage*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IWiaPropertyStorage* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumWIA_DEV_INFO*);
-    HRESULT GetCount(uint*);
+    HRESULT Clone(IEnumWIA_DEV_INFO* ppIEnum);
+    HRESULT GetCount(uint* celt);
 }
 enum IID_IWiaEventCallback = GUID(0xae6287b0, 0x84, 0x11d2, [0x97, 0x3b, 0x0, 0xa0, 0xc9, 0x6, 0x8f, 0x2e]);
 interface IWiaEventCallback : IUnknown
 {
-    HRESULT ImageEventCallback(const(GUID)*, BSTR, BSTR, BSTR, uint, BSTR, uint*, uint);
+    HRESULT ImageEventCallback(const(GUID)* pEventGUID, BSTR bstrEventDescription, BSTR bstrDeviceID, BSTR bstrDeviceDescription, uint dwDeviceType, BSTR bstrFullItemName, uint* pulEventType, uint ulReserved);
 }
 struct WIA_DATA_CALLBACK_HEADER
 {
@@ -1380,7 +1380,7 @@ struct WIA_DATA_CALLBACK_HEADER
 enum IID_IWiaDataCallback = GUID(0xa558a866, 0xa5b0, 0x11d2, [0xa0, 0x8f, 0x0, 0xc0, 0x4f, 0x72, 0xdc, 0x3c]);
 interface IWiaDataCallback : IUnknown
 {
-    HRESULT BandedDataCallback(int, int, int, int, int, int, int, ubyte*);
+    HRESULT BandedDataCallback(int lMessage, int lStatus, int lPercentComplete, int lOffset, int lLength, int lReserved, int lResLength, ubyte* pbBuffer);
 }
 struct WIA_DATA_TRANSFER_INFO
 {
@@ -1403,59 +1403,59 @@ struct WIA_EXTENDED_TRANSFER_INFO
 enum IID_IWiaDataTransfer = GUID(0xa6cef998, 0xa5b0, 0x11d2, [0xa0, 0x8f, 0x0, 0xc0, 0x4f, 0x72, 0xdc, 0x3c]);
 interface IWiaDataTransfer : IUnknown
 {
-    HRESULT idtGetData(STGMEDIUM*, IWiaDataCallback);
-    HRESULT idtGetBandedData(WIA_DATA_TRANSFER_INFO*, IWiaDataCallback);
-    HRESULT idtQueryGetData(WIA_FORMAT_INFO*);
-    HRESULT idtEnumWIA_FORMAT_INFO(IEnumWIA_FORMAT_INFO*);
-    HRESULT idtGetExtendedTransferInfo(WIA_EXTENDED_TRANSFER_INFO*);
+    HRESULT idtGetData(STGMEDIUM* pMedium, IWiaDataCallback pIWiaDataCallback);
+    HRESULT idtGetBandedData(WIA_DATA_TRANSFER_INFO* pWiaDataTransInfo, IWiaDataCallback pIWiaDataCallback);
+    HRESULT idtQueryGetData(WIA_FORMAT_INFO* pfe);
+    HRESULT idtEnumWIA_FORMAT_INFO(IEnumWIA_FORMAT_INFO* ppEnum);
+    HRESULT idtGetExtendedTransferInfo(WIA_EXTENDED_TRANSFER_INFO* pExtendedTransferInfo);
 }
 enum IID_IWiaItem = GUID(0x4db1ad10, 0x3391, 0x11d2, [0x9a, 0x33, 0x0, 0xc0, 0x4f, 0xa3, 0x61, 0x45]);
 interface IWiaItem : IUnknown
 {
-    HRESULT GetItemType(int*);
-    HRESULT AnalyzeItem(int);
-    HRESULT EnumChildItems(IEnumWiaItem*);
-    HRESULT DeleteItem(int);
-    HRESULT CreateChildItem(int, BSTR, BSTR, IWiaItem*);
-    HRESULT EnumRegisterEventInfo(int, const(GUID)*, IEnumWIA_DEV_CAPS*);
-    HRESULT FindItemByName(int, BSTR, IWiaItem*);
-    HRESULT DeviceDlg(HWND, int, int, int*, IWiaItem**);
-    HRESULT DeviceCommand(int, const(GUID)*, IWiaItem*);
-    HRESULT GetRootItem(IWiaItem*);
-    HRESULT EnumDeviceCapabilities(int, IEnumWIA_DEV_CAPS*);
-    HRESULT DumpItemData(BSTR*);
-    HRESULT DumpDrvItemData(BSTR*);
-    HRESULT DumpTreeItemData(BSTR*);
-    HRESULT Diagnostic(uint, ubyte*);
+    HRESULT GetItemType(int* pItemType);
+    HRESULT AnalyzeItem(int lFlags);
+    HRESULT EnumChildItems(IEnumWiaItem* ppIEnumWiaItem);
+    HRESULT DeleteItem(int lFlags);
+    HRESULT CreateChildItem(int lFlags, BSTR bstrItemName, BSTR bstrFullItemName, IWiaItem* ppIWiaItem);
+    HRESULT EnumRegisterEventInfo(int lFlags, const(GUID)* pEventGUID, IEnumWIA_DEV_CAPS* ppIEnum);
+    HRESULT FindItemByName(int lFlags, BSTR bstrFullItemName, IWiaItem* ppIWiaItem);
+    HRESULT DeviceDlg(HWND hwndParent, int lFlags, int lIntent, int* plItemCount, IWiaItem** ppIWiaItem);
+    HRESULT DeviceCommand(int lFlags, const(GUID)* pCmdGUID, IWiaItem* pIWiaItem);
+    HRESULT GetRootItem(IWiaItem* ppIWiaItem);
+    HRESULT EnumDeviceCapabilities(int lFlags, IEnumWIA_DEV_CAPS* ppIEnumWIA_DEV_CAPS);
+    HRESULT DumpItemData(BSTR* bstrData);
+    HRESULT DumpDrvItemData(BSTR* bstrData);
+    HRESULT DumpTreeItemData(BSTR* bstrData);
+    HRESULT Diagnostic(uint ulSize, ubyte* pBuffer);
 }
 enum IID_IWiaPropertyStorage = GUID(0x98b5e8a0, 0x29cc, 0x491a, [0xaa, 0xc0, 0xe6, 0xdb, 0x4f, 0xdc, 0xce, 0xb6]);
 interface IWiaPropertyStorage : IUnknown
 {
-    HRESULT ReadMultiple(uint, const(PROPSPEC)*, PROPVARIANT*);
-    HRESULT WriteMultiple(uint, const(PROPSPEC)*, const(PROPVARIANT)*, uint);
-    HRESULT DeleteMultiple(uint, const(PROPSPEC)*);
-    HRESULT ReadPropertyNames(uint, const(uint)*, PWSTR*);
-    HRESULT WritePropertyNames(uint, const(uint)*, const(wchar)**);
-    HRESULT DeletePropertyNames(uint, const(uint)*);
-    HRESULT Commit(uint);
+    HRESULT ReadMultiple(uint cpspec, const(PROPSPEC)* rgpspec, PROPVARIANT* rgpropvar);
+    HRESULT WriteMultiple(uint cpspec, const(PROPSPEC)* rgpspec, const(PROPVARIANT)* rgpropvar, uint propidNameFirst);
+    HRESULT DeleteMultiple(uint cpspec, const(PROPSPEC)* rgpspec);
+    HRESULT ReadPropertyNames(uint cpropid, const(uint)* rgpropid, PWSTR* rglpwstrName);
+    HRESULT WritePropertyNames(uint cpropid, const(uint)* rgpropid, const(wchar)** rglpwstrName);
+    HRESULT DeletePropertyNames(uint cpropid, const(uint)* rgpropid);
+    HRESULT Commit(uint grfCommitFlags);
     HRESULT Revert();
-    HRESULT Enum(IEnumSTATPROPSTG*);
-    HRESULT SetTimes(const(FILETIME)*, const(FILETIME)*, const(FILETIME)*);
-    HRESULT SetClass(const(GUID)*);
-    HRESULT Stat(STATPROPSETSTG*);
-    HRESULT GetPropertyAttributes(uint, PROPSPEC*, uint*, PROPVARIANT*);
-    HRESULT GetCount(uint*);
-    HRESULT GetPropertyStream(GUID*, IStream*);
-    HRESULT SetPropertyStream(GUID*, IStream);
+    HRESULT Enum(IEnumSTATPROPSTG* ppenum);
+    HRESULT SetTimes(const(FILETIME)* pctime, const(FILETIME)* patime, const(FILETIME)* pmtime);
+    HRESULT SetClass(const(GUID)* clsid);
+    HRESULT Stat(STATPROPSETSTG* pstatpsstg);
+    HRESULT GetPropertyAttributes(uint cpspec, PROPSPEC* rgpspec, uint* rgflags, PROPVARIANT* rgpropvar);
+    HRESULT GetCount(uint* pulNumProps);
+    HRESULT GetPropertyStream(GUID* pCompatibilityId, IStream* ppIStream);
+    HRESULT SetPropertyStream(GUID* pCompatibilityId, IStream pIStream);
 }
 enum IID_IEnumWiaItem = GUID(0x5e8383fc, 0x3391, 0x11d2, [0x9a, 0x33, 0x0, 0xc0, 0x4f, 0xa3, 0x61, 0x45]);
 interface IEnumWiaItem : IUnknown
 {
-    HRESULT Next(uint, IWiaItem*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IWiaItem* ppIWiaItem, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumWiaItem*);
-    HRESULT GetCount(uint*);
+    HRESULT Clone(IEnumWiaItem* ppIEnum);
+    HRESULT GetCount(uint* celt);
 }
 struct WIA_DEV_CAP
 {
@@ -1469,36 +1469,36 @@ struct WIA_DEV_CAP
 enum IID_IEnumWIA_DEV_CAPS = GUID(0x1fcc4287, 0xaca6, 0x11d2, [0xa0, 0x93, 0x0, 0xc0, 0x4f, 0x72, 0xdc, 0x3c]);
 interface IEnumWIA_DEV_CAPS : IUnknown
 {
-    HRESULT Next(uint, WIA_DEV_CAP*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, WIA_DEV_CAP* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumWIA_DEV_CAPS*);
-    HRESULT GetCount(uint*);
+    HRESULT Clone(IEnumWIA_DEV_CAPS* ppIEnum);
+    HRESULT GetCount(uint* pcelt);
 }
 enum IID_IEnumWIA_FORMAT_INFO = GUID(0x81befc5b, 0x656d, 0x44f1, [0xb2, 0x4c, 0xd4, 0x1d, 0x51, 0xb4, 0xdc, 0x81]);
 interface IEnumWIA_FORMAT_INFO : IUnknown
 {
-    HRESULT Next(uint, WIA_FORMAT_INFO*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, WIA_FORMAT_INFO* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumWIA_FORMAT_INFO*);
-    HRESULT GetCount(uint*);
+    HRESULT Clone(IEnumWIA_FORMAT_INFO* ppIEnum);
+    HRESULT GetCount(uint* pcelt);
 }
 enum IID_IWiaLog = GUID(0xa00c10b6, 0x82a1, 0x452f, [0x8b, 0x6c, 0x86, 0x6, 0x2a, 0xad, 0x68, 0x90]);
 interface IWiaLog : IUnknown
 {
-    HRESULT InitializeLog(int);
-    HRESULT hResult(HRESULT);
-    HRESULT Log(int, int, int, BSTR);
+    HRESULT InitializeLog(int hInstance);
+    HRESULT hResult(HRESULT hResult);
+    HRESULT Log(int lFlags, int lResID, int lDetail, BSTR bstrText);
 }
 enum IID_IWiaLogEx = GUID(0xaf1f22ac, 0x7a40, 0x4787, [0xb4, 0x21, 0xae, 0xb4, 0x7a, 0x1f, 0xbd, 0xb]);
 interface IWiaLogEx : IUnknown
 {
-    HRESULT InitializeLogEx(ubyte*);
-    HRESULT hResult(HRESULT);
-    HRESULT Log(int, int, int, BSTR);
-    HRESULT hResultEx(int, HRESULT);
-    HRESULT LogEx(int, int, int, int, BSTR);
+    HRESULT InitializeLogEx(ubyte* hInstance);
+    HRESULT hResult(HRESULT hResult);
+    HRESULT Log(int lFlags, int lResID, int lDetail, BSTR bstrText);
+    HRESULT hResultEx(int lMethodId, HRESULT hResult);
+    HRESULT LogEx(int lMethodId, int lFlags, int lResID, int lDetail, BSTR bstrText);
 }
 enum IID_IWiaNotifyDevMgr = GUID(0x70681ea0, 0xe7bf, 0x4291, [0x9f, 0xb1, 0x4e, 0x88, 0x13, 0xa3, 0xf7, 0x8e]);
 interface IWiaNotifyDevMgr : IUnknown
@@ -1508,29 +1508,29 @@ interface IWiaNotifyDevMgr : IUnknown
 enum IID_IWiaItemExtras = GUID(0x6291ef2c, 0x36ef, 0x4532, [0x87, 0x6a, 0x8e, 0x13, 0x25, 0x93, 0x77, 0x8d]);
 interface IWiaItemExtras : IUnknown
 {
-    HRESULT GetExtendedErrorInfo(BSTR*);
-    HRESULT Escape(uint, ubyte*, uint, ubyte*, uint, uint*);
+    HRESULT GetExtendedErrorInfo(BSTR* bstrErrorText);
+    HRESULT Escape(uint dwEscapeCode, ubyte* lpInData, uint cbInDataSize, ubyte* pOutData, uint dwOutDataSize, uint* pdwActualDataSize);
     HRESULT CancelPendingIO();
 }
 enum IID_IWiaAppErrorHandler = GUID(0x6c16186c, 0xd0a6, 0x400c, [0x80, 0xf4, 0xd2, 0x69, 0x86, 0xa0, 0xe7, 0x34]);
 interface IWiaAppErrorHandler : IUnknown
 {
-    HRESULT GetWindow(HWND*);
-    HRESULT ReportStatus(int, IWiaItem2, HRESULT, int);
+    HRESULT GetWindow(HWND* phwnd);
+    HRESULT ReportStatus(int lFlags, IWiaItem2 pWiaItem2, HRESULT hrStatus, int lPercentComplete);
 }
 enum IID_IWiaErrorHandler = GUID(0xe4a51b1, 0xbc1f, 0x443d, [0xa8, 0x35, 0x72, 0xe8, 0x90, 0x75, 0x9e, 0xf3]);
 interface IWiaErrorHandler : IUnknown
 {
-    HRESULT ReportStatus(int, HWND, IWiaItem2, HRESULT, int);
-    HRESULT GetStatusDescription(int, IWiaItem2, HRESULT, BSTR*);
+    HRESULT ReportStatus(int lFlags, HWND hwndParent, IWiaItem2 pWiaItem2, HRESULT hrStatus, int lPercentComplete);
+    HRESULT GetStatusDescription(int lFlags, IWiaItem2 pWiaItem2, HRESULT hrStatus, BSTR* pbstrDescription);
 }
 enum IID_IWiaTransfer = GUID(0xc39d6942, 0x2f4e, 0x4d04, [0x92, 0xfe, 0x4e, 0xf4, 0xd3, 0xa1, 0xde, 0x5a]);
 interface IWiaTransfer : IUnknown
 {
-    HRESULT Download(int, IWiaTransferCallback);
-    HRESULT Upload(int, IStream, IWiaTransferCallback);
+    HRESULT Download(int lFlags, IWiaTransferCallback pIWiaTransferCallback);
+    HRESULT Upload(int lFlags, IStream pSource, IWiaTransferCallback pIWiaTransferCallback);
     HRESULT Cancel();
-    HRESULT EnumWIA_FORMAT_INFO(IEnumWIA_FORMAT_INFO*);
+    HRESULT EnumWIA_FORMAT_INFO(IEnumWIA_FORMAT_INFO* ppEnum);
 }
 struct WiaTransferParams
 {
@@ -1542,70 +1542,70 @@ struct WiaTransferParams
 enum IID_IWiaTransferCallback = GUID(0x27d4eaaf, 0x28a6, 0x4ca5, [0x9a, 0xab, 0xe6, 0x78, 0x16, 0x8b, 0x95, 0x27]);
 interface IWiaTransferCallback : IUnknown
 {
-    HRESULT TransferCallback(int, WiaTransferParams*);
-    HRESULT GetNextStream(int, BSTR, BSTR, IStream*);
+    HRESULT TransferCallback(int lFlags, WiaTransferParams* pWiaTransferParams);
+    HRESULT GetNextStream(int lFlags, BSTR bstrItemName, BSTR bstrFullItemName, IStream* ppDestination);
 }
 enum IID_IWiaSegmentationFilter = GUID(0xec46a697, 0xac04, 0x4447, [0x8f, 0x65, 0xff, 0x63, 0xd5, 0x15, 0x4b, 0x21]);
 interface IWiaSegmentationFilter : IUnknown
 {
-    HRESULT DetectRegions(int, IStream, IWiaItem2);
+    HRESULT DetectRegions(int lFlags, IStream pInputStream, IWiaItem2 pWiaItem2);
 }
 enum IID_IWiaImageFilter = GUID(0xa8a79ffa, 0x450b, 0x41f1, [0x8f, 0x87, 0x84, 0x9c, 0xcd, 0x94, 0xeb, 0xf6]);
 interface IWiaImageFilter : IUnknown
 {
-    HRESULT InitializeFilter(IWiaItem2, IWiaTransferCallback);
-    HRESULT SetNewCallback(IWiaTransferCallback);
-    HRESULT FilterPreviewImage(int, IWiaItem2, RECT, IStream);
-    HRESULT ApplyProperties(IWiaPropertyStorage);
+    HRESULT InitializeFilter(IWiaItem2 pWiaItem2, IWiaTransferCallback pWiaTransferCallback);
+    HRESULT SetNewCallback(IWiaTransferCallback pWiaTransferCallback);
+    HRESULT FilterPreviewImage(int lFlags, IWiaItem2 pWiaChildItem2, RECT InputImageExtents, IStream pInputStream);
+    HRESULT ApplyProperties(IWiaPropertyStorage pWiaPropertyStorage);
 }
 enum IID_IWiaPreview = GUID(0x95c2b4fd, 0x33f2, 0x4d86, [0xad, 0x40, 0x94, 0x31, 0xf0, 0xdf, 0x8, 0xf7]);
 interface IWiaPreview : IUnknown
 {
-    HRESULT GetNewPreview(int, IWiaItem2, IWiaTransferCallback);
-    HRESULT UpdatePreview(int, IWiaItem2, IWiaTransferCallback);
-    HRESULT DetectRegions(int);
+    HRESULT GetNewPreview(int lFlags, IWiaItem2 pWiaItem2, IWiaTransferCallback pWiaTransferCallback);
+    HRESULT UpdatePreview(int lFlags, IWiaItem2 pChildWiaItem2, IWiaTransferCallback pWiaTransferCallback);
+    HRESULT DetectRegions(int lFlags);
     HRESULT Clear();
 }
 enum IID_IEnumWiaItem2 = GUID(0x59970af4, 0xcd0d, 0x44d9, [0xab, 0x24, 0x52, 0x29, 0x56, 0x30, 0xe5, 0x82]);
 interface IEnumWiaItem2 : IUnknown
 {
-    HRESULT Next(uint, IWiaItem2*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint cElt, IWiaItem2* ppIWiaItem2, uint* pcEltFetched);
+    HRESULT Skip(uint cElt);
     HRESULT Reset();
-    HRESULT Clone(IEnumWiaItem2*);
-    HRESULT GetCount(uint*);
+    HRESULT Clone(IEnumWiaItem2* ppIEnum);
+    HRESULT GetCount(uint* cElt);
 }
 enum IID_IWiaItem2 = GUID(0x6cba0075, 0x1287, 0x407d, [0x9b, 0x77, 0xcf, 0xe, 0x3, 0x4, 0x35, 0xcc]);
 interface IWiaItem2 : IUnknown
 {
-    HRESULT CreateChildItem(int, int, BSTR, IWiaItem2*);
-    HRESULT DeleteItem(int);
-    HRESULT EnumChildItems(const(GUID)*, IEnumWiaItem2*);
-    HRESULT FindItemByName(int, BSTR, IWiaItem2*);
-    HRESULT GetItemCategory(GUID*);
-    HRESULT GetItemType(int*);
-    HRESULT DeviceDlg(int, HWND, BSTR, BSTR, int*, BSTR**, IWiaItem2*);
-    HRESULT DeviceCommand(int, const(GUID)*, IWiaItem2*);
-    HRESULT EnumDeviceCapabilities(int, IEnumWIA_DEV_CAPS*);
-    HRESULT CheckExtension(int, BSTR, const(GUID)*, BOOL*);
-    HRESULT GetExtension(int, BSTR, const(GUID)*, void**);
-    HRESULT GetParentItem(IWiaItem2*);
-    HRESULT GetRootItem(IWiaItem2*);
-    HRESULT GetPreviewComponent(int, IWiaPreview*);
-    HRESULT EnumRegisterEventInfo(int, const(GUID)*, IEnumWIA_DEV_CAPS*);
-    HRESULT Diagnostic(uint, ubyte*);
+    HRESULT CreateChildItem(int lItemFlags, int lCreationFlags, BSTR bstrItemName, IWiaItem2* ppIWiaItem2);
+    HRESULT DeleteItem(int lFlags);
+    HRESULT EnumChildItems(const(GUID)* pCategoryGUID, IEnumWiaItem2* ppIEnumWiaItem2);
+    HRESULT FindItemByName(int lFlags, BSTR bstrFullItemName, IWiaItem2* ppIWiaItem2);
+    HRESULT GetItemCategory(GUID* pItemCategoryGUID);
+    HRESULT GetItemType(int* pItemType);
+    HRESULT DeviceDlg(int lFlags, HWND hwndParent, BSTR bstrFolderName, BSTR bstrFilename, int* plNumFiles, BSTR** ppbstrFilePaths, IWiaItem2* ppItem);
+    HRESULT DeviceCommand(int lFlags, const(GUID)* pCmdGUID, IWiaItem2* ppIWiaItem2);
+    HRESULT EnumDeviceCapabilities(int lFlags, IEnumWIA_DEV_CAPS* ppIEnumWIA_DEV_CAPS);
+    HRESULT CheckExtension(int lFlags, BSTR bstrName, const(GUID)* riidExtensionInterface, BOOL* pbExtensionExists);
+    HRESULT GetExtension(int lFlags, BSTR bstrName, const(GUID)* riidExtensionInterface, void** ppOut);
+    HRESULT GetParentItem(IWiaItem2* ppIWiaItem2);
+    HRESULT GetRootItem(IWiaItem2* ppIWiaItem2);
+    HRESULT GetPreviewComponent(int lFlags, IWiaPreview* ppWiaPreview);
+    HRESULT EnumRegisterEventInfo(int lFlags, const(GUID)* pEventGUID, IEnumWIA_DEV_CAPS* ppIEnum);
+    HRESULT Diagnostic(uint ulSize, ubyte* pBuffer);
 }
 enum IID_IWiaDevMgr2 = GUID(0x79c07cf1, 0xcbdd, 0x41ee, [0x8e, 0xc3, 0xf0, 0x0, 0x80, 0xca, 0xda, 0x7a]);
 interface IWiaDevMgr2 : IUnknown
 {
-    HRESULT EnumDeviceInfo(int, IEnumWIA_DEV_INFO*);
-    HRESULT CreateDevice(int, BSTR, IWiaItem2*);
-    HRESULT SelectDeviceDlg(HWND, int, int, BSTR*, IWiaItem2*);
-    HRESULT SelectDeviceDlgID(HWND, int, int, BSTR*);
-    HRESULT RegisterEventCallbackInterface(int, BSTR, const(GUID)*, IWiaEventCallback, IUnknown*);
-    HRESULT RegisterEventCallbackProgram(int, BSTR, const(GUID)*, BSTR, BSTR, BSTR, BSTR, BSTR);
-    HRESULT RegisterEventCallbackCLSID(int, BSTR, const(GUID)*, const(GUID)*, BSTR, BSTR, BSTR);
-    HRESULT GetImageDlg(int, BSTR, HWND, BSTR, BSTR, int*, BSTR**, IWiaItem2*);
+    HRESULT EnumDeviceInfo(int lFlags, IEnumWIA_DEV_INFO* ppIEnum);
+    HRESULT CreateDevice(int lFlags, BSTR bstrDeviceID, IWiaItem2* ppWiaItem2Root);
+    HRESULT SelectDeviceDlg(HWND hwndParent, int lDeviceType, int lFlags, BSTR* pbstrDeviceID, IWiaItem2* ppItemRoot);
+    HRESULT SelectDeviceDlgID(HWND hwndParent, int lDeviceType, int lFlags, BSTR* pbstrDeviceID);
+    HRESULT RegisterEventCallbackInterface(int lFlags, BSTR bstrDeviceID, const(GUID)* pEventGUID, IWiaEventCallback pIWiaEventCallback, IUnknown* pEventObject);
+    HRESULT RegisterEventCallbackProgram(int lFlags, BSTR bstrDeviceID, const(GUID)* pEventGUID, BSTR bstrFullAppName, BSTR bstrCommandLineArg, BSTR bstrName, BSTR bstrDescription, BSTR bstrIcon);
+    HRESULT RegisterEventCallbackCLSID(int lFlags, BSTR bstrDeviceID, const(GUID)* pEventGUID, const(GUID)* pClsID, BSTR bstrName, BSTR bstrDescription, BSTR bstrIcon);
+    HRESULT GetImageDlg(int lFlags, BSTR bstrDeviceID, HWND hwndParent, BSTR bstrFolderName, BSTR bstrFilename, int* plNumFiles, BSTR** ppbstrFilePaths, IWiaItem2* ppItem);
 }
 enum CLSID_WiaDevMgr = GUID(0xa1f4e726, 0x8cf1, 0x11d1, [0xbf, 0x92, 0x0, 0x60, 0x8, 0x1e, 0xd8, 0x11]);
 struct WiaDevMgr
@@ -1660,51 +1660,51 @@ struct WIA_DEV_CAP_DRV
 enum IID_IWiaMiniDrv = GUID(0xd8cdee14, 0x3c6c, 0x11d2, [0x9a, 0x35, 0x0, 0xc0, 0x4f, 0xa3, 0x61, 0x45]);
 interface IWiaMiniDrv : IUnknown
 {
-    HRESULT drvInitializeWia(ubyte*, int, BSTR, BSTR, IUnknown, IUnknown, IWiaDrvItem*, IUnknown*, int*);
-    HRESULT drvAcquireItemData(ubyte*, int, MINIDRV_TRANSFER_CONTEXT*, int*);
-    HRESULT drvInitItemProperties(ubyte*, int, int*);
-    HRESULT drvValidateItemProperties(ubyte*, int, uint, const(PROPSPEC)*, int*);
-    HRESULT drvWriteItemProperties(ubyte*, int, MINIDRV_TRANSFER_CONTEXT*, int*);
-    HRESULT drvReadItemProperties(ubyte*, int, uint, const(PROPSPEC)*, int*);
-    HRESULT drvLockWiaDevice(ubyte*, int, int*);
-    HRESULT drvUnLockWiaDevice(ubyte*, int, int*);
-    HRESULT drvAnalyzeItem(ubyte*, int, int*);
-    HRESULT drvGetDeviceErrorStr(int, int, PWSTR*, int*);
-    HRESULT drvDeviceCommand(ubyte*, int, const(GUID)*, IWiaDrvItem*, int*);
-    HRESULT drvGetCapabilities(ubyte*, int, int*, WIA_DEV_CAP_DRV**, int*);
-    HRESULT drvDeleteItem(ubyte*, int, int*);
-    HRESULT drvFreeDrvItemContext(int, ubyte*, int*);
-    HRESULT drvGetWiaFormatInfo(ubyte*, int, int*, WIA_FORMAT_INFO**, int*);
-    HRESULT drvNotifyPnpEvent(const(GUID)*, BSTR, uint);
-    HRESULT drvUnInitializeWia(ubyte*);
+    HRESULT drvInitializeWia(ubyte* __MIDL__IWiaMiniDrv0000, int __MIDL__IWiaMiniDrv0001, BSTR __MIDL__IWiaMiniDrv0002, BSTR __MIDL__IWiaMiniDrv0003, IUnknown __MIDL__IWiaMiniDrv0004, IUnknown __MIDL__IWiaMiniDrv0005, IWiaDrvItem* __MIDL__IWiaMiniDrv0006, IUnknown* __MIDL__IWiaMiniDrv0007, int* __MIDL__IWiaMiniDrv0008);
+    HRESULT drvAcquireItemData(ubyte* __MIDL__IWiaMiniDrv0009, int __MIDL__IWiaMiniDrv0010, MINIDRV_TRANSFER_CONTEXT* __MIDL__IWiaMiniDrv0011, int* __MIDL__IWiaMiniDrv0012);
+    HRESULT drvInitItemProperties(ubyte* __MIDL__IWiaMiniDrv0013, int __MIDL__IWiaMiniDrv0014, int* __MIDL__IWiaMiniDrv0015);
+    HRESULT drvValidateItemProperties(ubyte* __MIDL__IWiaMiniDrv0016, int __MIDL__IWiaMiniDrv0017, uint __MIDL__IWiaMiniDrv0018, const(PROPSPEC)* __MIDL__IWiaMiniDrv0019, int* __MIDL__IWiaMiniDrv0020);
+    HRESULT drvWriteItemProperties(ubyte* __MIDL__IWiaMiniDrv0021, int __MIDL__IWiaMiniDrv0022, MINIDRV_TRANSFER_CONTEXT* __MIDL__IWiaMiniDrv0023, int* __MIDL__IWiaMiniDrv0024);
+    HRESULT drvReadItemProperties(ubyte* __MIDL__IWiaMiniDrv0025, int __MIDL__IWiaMiniDrv0026, uint __MIDL__IWiaMiniDrv0027, const(PROPSPEC)* __MIDL__IWiaMiniDrv0028, int* __MIDL__IWiaMiniDrv0029);
+    HRESULT drvLockWiaDevice(ubyte* __MIDL__IWiaMiniDrv0030, int __MIDL__IWiaMiniDrv0031, int* __MIDL__IWiaMiniDrv0032);
+    HRESULT drvUnLockWiaDevice(ubyte* __MIDL__IWiaMiniDrv0033, int __MIDL__IWiaMiniDrv0034, int* __MIDL__IWiaMiniDrv0035);
+    HRESULT drvAnalyzeItem(ubyte* __MIDL__IWiaMiniDrv0036, int __MIDL__IWiaMiniDrv0037, int* __MIDL__IWiaMiniDrv0038);
+    HRESULT drvGetDeviceErrorStr(int __MIDL__IWiaMiniDrv0039, int __MIDL__IWiaMiniDrv0040, PWSTR* __MIDL__IWiaMiniDrv0041, int* __MIDL__IWiaMiniDrv0042);
+    HRESULT drvDeviceCommand(ubyte* __MIDL__IWiaMiniDrv0043, int __MIDL__IWiaMiniDrv0044, const(GUID)* __MIDL__IWiaMiniDrv0045, IWiaDrvItem* __MIDL__IWiaMiniDrv0046, int* __MIDL__IWiaMiniDrv0047);
+    HRESULT drvGetCapabilities(ubyte* __MIDL__IWiaMiniDrv0048, int __MIDL__IWiaMiniDrv0049, int* __MIDL__IWiaMiniDrv0050, WIA_DEV_CAP_DRV** __MIDL__IWiaMiniDrv0051, int* __MIDL__IWiaMiniDrv0052);
+    HRESULT drvDeleteItem(ubyte* __MIDL__IWiaMiniDrv0053, int __MIDL__IWiaMiniDrv0054, int* __MIDL__IWiaMiniDrv0055);
+    HRESULT drvFreeDrvItemContext(int __MIDL__IWiaMiniDrv0056, ubyte* __MIDL__IWiaMiniDrv0057, int* __MIDL__IWiaMiniDrv0058);
+    HRESULT drvGetWiaFormatInfo(ubyte* __MIDL__IWiaMiniDrv0059, int __MIDL__IWiaMiniDrv0060, int* __MIDL__IWiaMiniDrv0061, WIA_FORMAT_INFO** __MIDL__IWiaMiniDrv0062, int* __MIDL__IWiaMiniDrv0063);
+    HRESULT drvNotifyPnpEvent(const(GUID)* pEventGUID, BSTR bstrDeviceID, uint ulReserved);
+    HRESULT drvUnInitializeWia(ubyte* __MIDL__IWiaMiniDrv0064);
 }
 enum IID_IWiaMiniDrvCallBack = GUID(0x33a57d5a, 0x3de8, 0x11d2, [0x9a, 0x36, 0x0, 0xc0, 0x4f, 0xa3, 0x61, 0x45]);
 interface IWiaMiniDrvCallBack : IUnknown
 {
-    HRESULT MiniDrvCallback(int, int, int, int, int, MINIDRV_TRANSFER_CONTEXT*, int);
+    HRESULT MiniDrvCallback(int lReason, int lStatus, int lPercentComplete, int lOffset, int lLength, MINIDRV_TRANSFER_CONTEXT* pTranCtx, int lReserved);
 }
 enum IID_IWiaMiniDrvTransferCallback = GUID(0xa9d2ee89, 0x2ce5, 0x4ff0, [0x8a, 0xdb, 0xc9, 0x61, 0xd1, 0xd7, 0x74, 0xca]);
 interface IWiaMiniDrvTransferCallback : IUnknown
 {
-    HRESULT GetNextStream(int, BSTR, BSTR, IStream*);
-    HRESULT SendMessage(int, WiaTransferParams*);
+    HRESULT GetNextStream(int lFlags, BSTR bstrItemName, BSTR bstrFullItemName, IStream* ppIStream);
+    HRESULT SendMessage(int lFlags, WiaTransferParams* pWiaTransferParams);
 }
 enum IID_IWiaDrvItem = GUID(0x1f02b5c5, 0xb00c, 0x11d2, [0xa0, 0x94, 0x0, 0xc0, 0x4f, 0x72, 0xdc, 0x3c]);
 interface IWiaDrvItem : IUnknown
 {
-    HRESULT GetItemFlags(int*);
-    HRESULT GetDeviceSpecContext(ubyte**);
-    HRESULT GetFullItemName(BSTR*);
-    HRESULT GetItemName(BSTR*);
-    HRESULT AddItemToFolder(IWiaDrvItem);
-    HRESULT UnlinkItemTree(int);
-    HRESULT RemoveItemFromFolder(int);
-    HRESULT FindItemByName(int, BSTR, IWiaDrvItem*);
-    HRESULT FindChildItemByName(BSTR, IWiaDrvItem*);
-    HRESULT GetParentItem(IWiaDrvItem*);
-    HRESULT GetFirstChildItem(IWiaDrvItem*);
-    HRESULT GetNextSiblingItem(IWiaDrvItem*);
-    HRESULT DumpItemData(BSTR*);
+    HRESULT GetItemFlags(int* __MIDL__IWiaDrvItem0000);
+    HRESULT GetDeviceSpecContext(ubyte** __MIDL__IWiaDrvItem0001);
+    HRESULT GetFullItemName(BSTR* __MIDL__IWiaDrvItem0002);
+    HRESULT GetItemName(BSTR* __MIDL__IWiaDrvItem0003);
+    HRESULT AddItemToFolder(IWiaDrvItem __MIDL__IWiaDrvItem0004);
+    HRESULT UnlinkItemTree(int __MIDL__IWiaDrvItem0005);
+    HRESULT RemoveItemFromFolder(int __MIDL__IWiaDrvItem0006);
+    HRESULT FindItemByName(int __MIDL__IWiaDrvItem0007, BSTR __MIDL__IWiaDrvItem0008, IWiaDrvItem* __MIDL__IWiaDrvItem0009);
+    HRESULT FindChildItemByName(BSTR __MIDL__IWiaDrvItem0010, IWiaDrvItem* __MIDL__IWiaDrvItem0011);
+    HRESULT GetParentItem(IWiaDrvItem* __MIDL__IWiaDrvItem0012);
+    HRESULT GetFirstChildItem(IWiaDrvItem* __MIDL__IWiaDrvItem0013);
+    HRESULT GetNextSiblingItem(IWiaDrvItem* __MIDL__IWiaDrvItem0014);
+    HRESULT DumpItemData(BSTR* __MIDL__IWiaDrvItem0015);
 }
 struct WIA_PROPERTY_INFO
 {
@@ -1826,19 +1826,19 @@ enum : int
 enum IID_IWiaVideo = GUID(0xd52920aa, 0xdb88, 0x41f0, [0x94, 0x6c, 0xe0, 0xd, 0xc0, 0xa1, 0x9c, 0xfa]);
 interface IWiaVideo : IUnknown
 {
-    HRESULT get_PreviewVisible(BOOL*);
-    HRESULT put_PreviewVisible(BOOL);
-    HRESULT get_ImagesDirectory(BSTR*);
-    HRESULT put_ImagesDirectory(BSTR);
-    HRESULT CreateVideoByWiaDevID(BSTR, HWND, BOOL, BOOL);
-    HRESULT CreateVideoByDevNum(uint, HWND, BOOL, BOOL);
-    HRESULT CreateVideoByName(BSTR, HWND, BOOL, BOOL);
+    HRESULT get_PreviewVisible(BOOL* pbPreviewVisible);
+    HRESULT put_PreviewVisible(BOOL bPreviewVisible);
+    HRESULT get_ImagesDirectory(BSTR* pbstrImageDirectory);
+    HRESULT put_ImagesDirectory(BSTR bstrImageDirectory);
+    HRESULT CreateVideoByWiaDevID(BSTR bstrWiaDeviceID, HWND hwndParent, BOOL bStretchToFitParent, BOOL bAutoBeginPlayback);
+    HRESULT CreateVideoByDevNum(uint uiDeviceNumber, HWND hwndParent, BOOL bStretchToFitParent, BOOL bAutoBeginPlayback);
+    HRESULT CreateVideoByName(BSTR bstrFriendlyName, HWND hwndParent, BOOL bStretchToFitParent, BOOL bAutoBeginPlayback);
     HRESULT DestroyVideo();
     HRESULT Play();
     HRESULT Pause();
-    HRESULT TakePicture(BSTR*);
-    HRESULT ResizeVideo(BOOL);
-    HRESULT GetCurrentState(WIAVIDEO_STATE*);
+    HRESULT TakePicture(BSTR* pbstrNewImageFilename);
+    HRESULT ResizeVideo(BOOL bStretchToFitParent);
+    HRESULT GetCurrentState(WIAVIDEO_STATE* pState);
 }
 enum CLSID_WiaVideo = GUID(0x3908c3cd, 0x4478, 0x4536, [0xaf, 0x2f, 0x10, 0xc2, 0x5d, 0x4e, 0xf8, 0x9a]);
 struct WiaVideo
@@ -1859,8 +1859,8 @@ struct DEVICEDIALOGDATA2
 enum IID_IWiaUIExtension2 = GUID(0x305600d7, 0x5088, 0x46d7, [0x9a, 0x15, 0xb7, 0x7b, 0x9, 0xcd, 0xba, 0x7a]);
 interface IWiaUIExtension2 : IUnknown
 {
-    HRESULT DeviceDialog(DEVICEDIALOGDATA2*);
-    HRESULT GetDeviceIcon(BSTR, HICON*, uint);
+    HRESULT DeviceDialog(DEVICEDIALOGDATA2* pDeviceDialogData);
+    HRESULT GetDeviceIcon(BSTR bstrDeviceId, HICON* phIcon, uint nSize);
 }
 struct DEVICEDIALOGDATA
 {
@@ -1875,11 +1875,11 @@ struct DEVICEDIALOGDATA
 enum IID_IWiaUIExtension = GUID(0xda319113, 0x50ee, 0x4c80, [0xb4, 0x60, 0x57, 0xd0, 0x5, 0xd4, 0x4a, 0x2c]);
 interface IWiaUIExtension : IUnknown
 {
-    HRESULT DeviceDialog(DEVICEDIALOGDATA*);
-    HRESULT GetDeviceIcon(BSTR, HICON*, uint);
-    HRESULT GetDeviceBitmapLogo(BSTR, HBITMAP*, uint, uint);
+    HRESULT DeviceDialog(DEVICEDIALOGDATA* pDeviceDialogData);
+    HRESULT GetDeviceIcon(BSTR bstrDeviceId, HICON* phIcon, uint nSize);
+    HRESULT GetDeviceBitmapLogo(BSTR bstrDeviceId, HBITMAP* phBitmap, uint nMaxWidth, uint nMaxHeight);
 }
-alias DeviceDialogFunction = HRESULT function(DEVICEDIALOGDATA*);
+alias DeviceDialogFunction = HRESULT function(DEVICEDIALOGDATA* param0);
 struct RANGEVALUE
 {
     int lMin;

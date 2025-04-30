@@ -563,43 +563,43 @@ struct DMUS_CLOCKINFO8
 enum IID_IDirectMusic = GUID(0x6536115a, 0x7b2d, 0x11d2, [0xba, 0x18, 0x0, 0x0, 0xf8, 0x75, 0xac, 0x12]);
 interface IDirectMusic : IUnknown
 {
-    HRESULT EnumPort(uint, DMUS_PORTCAPS*);
-    HRESULT CreateMusicBuffer(DMUS_BUFFERDESC*, IDirectMusicBuffer*, IUnknown);
-    HRESULT CreatePort(const(GUID)*, DMUS_PORTPARAMS8*, IDirectMusicPort*, IUnknown);
-    HRESULT EnumMasterClock(uint, DMUS_CLOCKINFO8*);
-    HRESULT GetMasterClock(GUID*, IReferenceClock*);
-    HRESULT SetMasterClock(const(GUID)*);
-    HRESULT Activate(BOOL);
-    HRESULT GetDefaultPort(GUID*);
-    HRESULT SetDirectSound(IDirectSound, HWND);
+    HRESULT EnumPort(uint dwIndex, DMUS_PORTCAPS* pPortCaps);
+    HRESULT CreateMusicBuffer(DMUS_BUFFERDESC* pBufferDesc, IDirectMusicBuffer* ppBuffer, IUnknown pUnkOuter);
+    HRESULT CreatePort(const(GUID)* rclsidPort, DMUS_PORTPARAMS8* pPortParams, IDirectMusicPort* ppPort, IUnknown pUnkOuter);
+    HRESULT EnumMasterClock(uint dwIndex, DMUS_CLOCKINFO8* lpClockInfo);
+    HRESULT GetMasterClock(GUID* pguidClock, IReferenceClock* ppReferenceClock);
+    HRESULT SetMasterClock(const(GUID)* rguidClock);
+    HRESULT Activate(BOOL fEnable);
+    HRESULT GetDefaultPort(GUID* pguidPort);
+    HRESULT SetDirectSound(IDirectSound pDirectSound, HWND hWnd);
 }
 enum IID_IDirectMusic8 = GUID(0x2d3629f7, 0x813d, 0x4939, [0x85, 0x8, 0xf0, 0x5c, 0x6b, 0x75, 0xfd, 0x97]);
 interface IDirectMusic8 : IDirectMusic
 {
-    HRESULT SetExternalMasterClock(IReferenceClock);
+    HRESULT SetExternalMasterClock(IReferenceClock pClock);
 }
 enum IID_IDirectMusicBuffer = GUID(0xd2ac2878, 0xb39b, 0x11d1, [0x87, 0x4, 0x0, 0x60, 0x8, 0x93, 0xb1, 0xbd]);
 interface IDirectMusicBuffer : IUnknown
 {
     HRESULT Flush();
-    HRESULT TotalTime(long*);
-    HRESULT PackStructured(long, uint, uint);
-    HRESULT PackUnstructured(long, uint, uint, ubyte*);
+    HRESULT TotalTime(long* prtTime);
+    HRESULT PackStructured(long rt, uint dwChannelGroup, uint dwChannelMessage);
+    HRESULT PackUnstructured(long rt, uint dwChannelGroup, uint cb, ubyte* lpb);
     HRESULT ResetReadPtr();
-    HRESULT GetNextEvent(long*, uint*, uint*, ubyte**);
-    HRESULT GetRawBufferPtr(ubyte**);
-    HRESULT GetStartTime(long*);
-    HRESULT GetUsedBytes(uint*);
-    HRESULT GetMaxBytes(uint*);
-    HRESULT GetBufferFormat(GUID*);
-    HRESULT SetStartTime(long);
-    HRESULT SetUsedBytes(uint);
+    HRESULT GetNextEvent(long* prt, uint* pdwChannelGroup, uint* pdwLength, ubyte** ppData);
+    HRESULT GetRawBufferPtr(ubyte** ppData);
+    HRESULT GetStartTime(long* prt);
+    HRESULT GetUsedBytes(uint* pcb);
+    HRESULT GetMaxBytes(uint* pcb);
+    HRESULT GetBufferFormat(GUID* pGuidFormat);
+    HRESULT SetStartTime(long rt);
+    HRESULT SetUsedBytes(uint cb);
 }
 enum IID_IDirectMusicInstrument = GUID(0xd2ac287d, 0xb39b, 0x11d1, [0x87, 0x4, 0x0, 0x60, 0x8, 0x93, 0xb1, 0xbd]);
 interface IDirectMusicInstrument : IUnknown
 {
-    HRESULT GetPatch(uint*);
-    HRESULT SetPatch(uint);
+    HRESULT GetPatch(uint* pdwPatch);
+    HRESULT SetPatch(uint dwPatch);
 }
 enum IID_IDirectMusicDownloadedInstrument = GUID(0xd2ac287e, 0xb39b, 0x11d1, [0x87, 0x4, 0x0, 0x60, 0x8, 0x93, 0xb1, 0xbd]);
 interface IDirectMusicDownloadedInstrument : IUnknown
@@ -608,49 +608,49 @@ interface IDirectMusicDownloadedInstrument : IUnknown
 enum IID_IDirectMusicCollection = GUID(0xd2ac287c, 0xb39b, 0x11d1, [0x87, 0x4, 0x0, 0x60, 0x8, 0x93, 0xb1, 0xbd]);
 interface IDirectMusicCollection : IUnknown
 {
-    HRESULT GetInstrument(uint, IDirectMusicInstrument*);
-    HRESULT EnumInstrument(uint, uint*, PWSTR, uint);
+    HRESULT GetInstrument(uint dwPatch, IDirectMusicInstrument* ppInstrument);
+    HRESULT EnumInstrument(uint dwIndex, uint* pdwPatch, PWSTR pwszName, uint dwNameLen);
 }
 enum IID_IDirectMusicDownload = GUID(0xd2ac287b, 0xb39b, 0x11d1, [0x87, 0x4, 0x0, 0x60, 0x8, 0x93, 0xb1, 0xbd]);
 interface IDirectMusicDownload : IUnknown
 {
-    HRESULT GetBuffer(void**, uint*);
+    HRESULT GetBuffer(void** ppvBuffer, uint* pdwSize);
 }
 enum IID_IDirectMusicPortDownload = GUID(0xd2ac287a, 0xb39b, 0x11d1, [0x87, 0x4, 0x0, 0x60, 0x8, 0x93, 0xb1, 0xbd]);
 interface IDirectMusicPortDownload : IUnknown
 {
-    HRESULT GetBuffer(uint, IDirectMusicDownload*);
-    HRESULT AllocateBuffer(uint, IDirectMusicDownload*);
-    HRESULT GetDLId(uint*, uint);
-    HRESULT GetAppend(uint*);
-    HRESULT Download(IDirectMusicDownload);
-    HRESULT Unload(IDirectMusicDownload);
+    HRESULT GetBuffer(uint dwDLId, IDirectMusicDownload* ppIDMDownload);
+    HRESULT AllocateBuffer(uint dwSize, IDirectMusicDownload* ppIDMDownload);
+    HRESULT GetDLId(uint* pdwStartDLId, uint dwCount);
+    HRESULT GetAppend(uint* pdwAppend);
+    HRESULT Download(IDirectMusicDownload pIDMDownload);
+    HRESULT Unload(IDirectMusicDownload pIDMDownload);
 }
 enum IID_IDirectMusicPort = GUID(0x8f2d8c9, 0x37c2, 0x11d2, [0xb9, 0xf9, 0x0, 0x0, 0xf8, 0x75, 0xac, 0x12]);
 interface IDirectMusicPort : IUnknown
 {
-    HRESULT PlayBuffer(IDirectMusicBuffer);
-    HRESULT SetReadNotificationHandle(HANDLE);
-    HRESULT Read(IDirectMusicBuffer);
-    HRESULT DownloadInstrument(IDirectMusicInstrument, IDirectMusicDownloadedInstrument*, DMUS_NOTERANGE*, uint);
-    HRESULT UnloadInstrument(IDirectMusicDownloadedInstrument);
-    HRESULT GetLatencyClock(IReferenceClock*);
-    HRESULT GetRunningStats(DMUS_SYNTHSTATS*);
+    HRESULT PlayBuffer(IDirectMusicBuffer pBuffer);
+    HRESULT SetReadNotificationHandle(HANDLE hEvent);
+    HRESULT Read(IDirectMusicBuffer pBuffer);
+    HRESULT DownloadInstrument(IDirectMusicInstrument pInstrument, IDirectMusicDownloadedInstrument* ppDownloadedInstrument, DMUS_NOTERANGE* pNoteRanges, uint dwNumNoteRanges);
+    HRESULT UnloadInstrument(IDirectMusicDownloadedInstrument pDownloadedInstrument);
+    HRESULT GetLatencyClock(IReferenceClock* ppClock);
+    HRESULT GetRunningStats(DMUS_SYNTHSTATS* pStats);
     HRESULT Compact();
-    HRESULT GetCaps(DMUS_PORTCAPS*);
-    HRESULT DeviceIoControl(uint, void*, uint, void*, uint, uint*, OVERLAPPED*);
-    HRESULT SetNumChannelGroups(uint);
-    HRESULT GetNumChannelGroups(uint*);
-    HRESULT Activate(BOOL);
-    HRESULT SetChannelPriority(uint, uint, uint);
-    HRESULT GetChannelPriority(uint, uint, uint*);
-    HRESULT SetDirectSound(IDirectSound, IDirectSoundBuffer);
-    HRESULT GetFormat(WAVEFORMATEX*, uint*, uint*);
+    HRESULT GetCaps(DMUS_PORTCAPS* pPortCaps);
+    HRESULT DeviceIoControl(uint dwIoControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned, OVERLAPPED* lpOverlapped);
+    HRESULT SetNumChannelGroups(uint dwChannelGroups);
+    HRESULT GetNumChannelGroups(uint* pdwChannelGroups);
+    HRESULT Activate(BOOL fActive);
+    HRESULT SetChannelPriority(uint dwChannelGroup, uint dwChannel, uint dwPriority);
+    HRESULT GetChannelPriority(uint dwChannelGroup, uint dwChannel, uint* pdwPriority);
+    HRESULT SetDirectSound(IDirectSound pDirectSound, IDirectSoundBuffer pDirectSoundBuffer);
+    HRESULT GetFormat(WAVEFORMATEX* pWaveFormatEx, uint* pdwWaveFormatExSize, uint* pdwBufferSize);
 }
 enum IID_IDirectMusicThru = GUID(0xced153e7, 0x3606, 0x11d2, [0xb9, 0xf9, 0x0, 0x0, 0xf8, 0x75, 0xac, 0x12]);
 interface IDirectMusicThru : IUnknown
 {
-    HRESULT ThruChannel(uint, uint, uint, uint, IDirectMusicPort);
+    HRESULT ThruChannel(uint dwSourceChannelGroup, uint dwSourceChannel, uint dwDestinationChannelGroup, uint dwDestinationChannel, IDirectMusicPort pDestinationPort);
 }
 struct DMUS_VOICE_STATE
 {
@@ -660,44 +660,44 @@ struct DMUS_VOICE_STATE
 enum IID_IDirectMusicSynth = GUID(0x9823661, 0x5c85, 0x11d2, [0xaf, 0xa6, 0x0, 0xaa, 0x0, 0x24, 0xd8, 0xb6]);
 interface IDirectMusicSynth : IUnknown
 {
-    HRESULT Open(DMUS_PORTPARAMS8*);
+    HRESULT Open(DMUS_PORTPARAMS8* pPortParams);
     HRESULT Close();
-    HRESULT SetNumChannelGroups(uint);
-    HRESULT Download(HANDLE*, void*, BOOL*);
-    HRESULT Unload(HANDLE, long, HANDLE);
-    HRESULT PlayBuffer(long, ubyte*, uint);
-    HRESULT GetRunningStats(DMUS_SYNTHSTATS*);
-    HRESULT GetPortCaps(DMUS_PORTCAPS*);
-    HRESULT SetMasterClock(IReferenceClock);
-    HRESULT GetLatencyClock(IReferenceClock*);
-    HRESULT Activate(BOOL);
-    HRESULT SetSynthSink(IDirectMusicSynthSink);
-    HRESULT Render(short*, uint, long);
-    HRESULT SetChannelPriority(uint, uint, uint);
-    HRESULT GetChannelPriority(uint, uint, uint*);
-    HRESULT GetFormat(WAVEFORMATEX*, uint*);
-    HRESULT GetAppend(uint*);
+    HRESULT SetNumChannelGroups(uint dwGroups);
+    HRESULT Download(HANDLE* phDownload, void* pvData, BOOL* pbFree);
+    HRESULT Unload(HANDLE hDownload, long lpFreeHandle, HANDLE hUserData);
+    HRESULT PlayBuffer(long rt, ubyte* pbBuffer, uint cbBuffer);
+    HRESULT GetRunningStats(DMUS_SYNTHSTATS* pStats);
+    HRESULT GetPortCaps(DMUS_PORTCAPS* pCaps);
+    HRESULT SetMasterClock(IReferenceClock pClock);
+    HRESULT GetLatencyClock(IReferenceClock* ppClock);
+    HRESULT Activate(BOOL fEnable);
+    HRESULT SetSynthSink(IDirectMusicSynthSink pSynthSink);
+    HRESULT Render(short* pBuffer, uint dwLength, long llPosition);
+    HRESULT SetChannelPriority(uint dwChannelGroup, uint dwChannel, uint dwPriority);
+    HRESULT GetChannelPriority(uint dwChannelGroup, uint dwChannel, uint* pdwPriority);
+    HRESULT GetFormat(WAVEFORMATEX* pWaveFormatEx, uint* pdwWaveFormatExSize);
+    HRESULT GetAppend(uint* pdwAppend);
 }
 enum IID_IDirectMusicSynth8 = GUID(0x53cab625, 0x2711, 0x4c9f, [0x9d, 0xe7, 0x1b, 0x7f, 0x92, 0x5f, 0x6f, 0xc8]);
 interface IDirectMusicSynth8 : IDirectMusicSynth
 {
-    HRESULT PlayVoice(long, uint, uint, uint, uint, int, int, ulong, ulong, ulong);
-    HRESULT StopVoice(long, uint);
-    HRESULT GetVoiceState(uint*, uint, DMUS_VOICE_STATE*);
-    HRESULT Refresh(uint, uint);
-    HRESULT AssignChannelToBuses(uint, uint, uint*, uint);
+    HRESULT PlayVoice(long rt, uint dwVoiceId, uint dwChannelGroup, uint dwChannel, uint dwDLId, int prPitch, int vrVolume, ulong stVoiceStart, ulong stLoopStart, ulong stLoopEnd);
+    HRESULT StopVoice(long rt, uint dwVoiceId);
+    HRESULT GetVoiceState(uint* dwVoice, uint cbVoice, DMUS_VOICE_STATE* dwVoiceState);
+    HRESULT Refresh(uint dwDownloadID, uint dwFlags);
+    HRESULT AssignChannelToBuses(uint dwChannelGroup, uint dwChannel, uint* pdwBuses, uint cBuses);
 }
 enum IID_IDirectMusicSynthSink = GUID(0x9823663, 0x5c85, 0x11d2, [0xaf, 0xa6, 0x0, 0xaa, 0x0, 0x24, 0xd8, 0xb6]);
 interface IDirectMusicSynthSink : IUnknown
 {
-    HRESULT Init(IDirectMusicSynth);
-    HRESULT SetMasterClock(IReferenceClock);
-    HRESULT GetLatencyClock(IReferenceClock*);
-    HRESULT Activate(BOOL);
-    HRESULT SampleToRefTime(long, long*);
-    HRESULT RefTimeToSample(long, long*);
-    HRESULT SetDirectSound(IDirectSound, IDirectSoundBuffer);
-    HRESULT GetDesiredBufferSize(uint*);
+    HRESULT Init(IDirectMusicSynth pSynth);
+    HRESULT SetMasterClock(IReferenceClock pClock);
+    HRESULT GetLatencyClock(IReferenceClock* ppClock);
+    HRESULT Activate(BOOL fEnable);
+    HRESULT SampleToRefTime(long llSampleTime, long* prfTime);
+    HRESULT RefTimeToSample(long rfTime, long* pllSampleTime);
+    HRESULT SetDirectSound(IDirectSound pDirectSound, IDirectSoundBuffer pDirectSoundBuffer);
+    HRESULT GetDesiredBufferSize(uint* pdwBufferSizeInSamples);
 }
 alias DSPROPERTY_DIRECTSOUNDDEVICE = int;
 enum : int
@@ -771,9 +771,9 @@ struct DSPROPERTY_DIRECTSOUNDDEVICE_DESCRIPTION_W_DATA
     PWSTR Interface;
     uint WaveDeviceId;
 }
-alias LPFNDIRECTSOUNDDEVICEENUMERATECALLBACK1 = BOOL function(DSPROPERTY_DIRECTSOUNDDEVICE_DESCRIPTION_1_DATA*, void*);
-alias LPFNDIRECTSOUNDDEVICEENUMERATECALLBACKA = BOOL function(DSPROPERTY_DIRECTSOUNDDEVICE_DESCRIPTION_A_DATA*, void*);
-alias LPFNDIRECTSOUNDDEVICEENUMERATECALLBACKW = BOOL function(DSPROPERTY_DIRECTSOUNDDEVICE_DESCRIPTION_W_DATA*, void*);
+alias LPFNDIRECTSOUNDDEVICEENUMERATECALLBACK1 = BOOL function(DSPROPERTY_DIRECTSOUNDDEVICE_DESCRIPTION_1_DATA* param0, void* param1);
+alias LPFNDIRECTSOUNDDEVICEENUMERATECALLBACKA = BOOL function(DSPROPERTY_DIRECTSOUNDDEVICE_DESCRIPTION_A_DATA* param0, void* param1);
+alias LPFNDIRECTSOUNDDEVICEENUMERATECALLBACKW = BOOL function(DSPROPERTY_DIRECTSOUNDDEVICE_DESCRIPTION_W_DATA* param0, void* param1);
 struct DSPROPERTY_DIRECTSOUNDDEVICE_ENUMERATE_1_DATA
 {
     LPFNDIRECTSOUNDDEVICEENUMERATECALLBACK1 Callback;

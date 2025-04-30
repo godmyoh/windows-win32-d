@@ -16,13 +16,13 @@ enum : uint
     ED_DEVCAP_RTC_READ      = 0x000013ba,
 }
 
-uint timeGetSystemTime(MMTIME*, uint);
+uint timeGetSystemTime(MMTIME* pmmt, uint cbmmt);
 uint timeGetTime();
-uint timeGetDevCaps(TIMECAPS*, uint);
-uint timeBeginPeriod(uint);
-uint timeEndPeriod(uint);
-uint timeSetEvent(uint, uint, LPTIMECALLBACK, ulong, uint);
-uint timeKillEvent(uint);
+uint timeGetDevCaps(TIMECAPS* ptc, uint cbtc);
+uint timeBeginPeriod(uint uPeriod);
+uint timeEndPeriod(uint uPeriod);
+uint timeSetEvent(uint uDelay, uint uResolution, LPTIMECALLBACK fptc, ulong dwUser, uint fuEvent);
+uint timeKillEvent(uint uTimerID);
 enum TIMERR_NOERROR = 0x00000000;
 enum TIMERR_NOCANDO = 0x00000061;
 enum TIMERR_STRUCT = 0x00000081;
@@ -153,26 +153,26 @@ struct MMTIME
         }
     }
 }
-alias LPDRVCALLBACK = void function(HDRVR, uint, ulong, ulong, ulong);
+alias LPDRVCALLBACK = void function(HDRVR hdrvr, uint uMsg, ulong dwUser, ulong dw1, ulong dw2);
 struct TIMECAPS
 {
     uint wPeriodMin;
     uint wPeriodMax;
 }
-alias LPTIMECALLBACK = void function(uint, uint, ulong, ulong, ulong);
+alias LPTIMECALLBACK = void function(uint uTimerID, uint uMsg, ulong dwUser, ulong dw1, ulong dw2);
 enum IID_IReferenceClock = GUID(0x56a86897, 0xad4, 0x11ce, [0xb0, 0x3a, 0x0, 0x20, 0xaf, 0xb, 0xa7, 0x70]);
 interface IReferenceClock : IUnknown
 {
-    HRESULT GetTime(long*);
-    HRESULT AdviseTime(long, long, HANDLE, ulong*);
-    HRESULT AdvisePeriodic(long, long, HANDLE, ulong*);
-    HRESULT Unadvise(ulong);
+    HRESULT GetTime(long* pTime);
+    HRESULT AdviseTime(long baseTime, long streamTime, HANDLE hEvent, ulong* pdwAdviseCookie);
+    HRESULT AdvisePeriodic(long startTime, long periodTime, HANDLE hSemaphore, ulong* pdwAdviseCookie);
+    HRESULT Unadvise(ulong dwAdviseCookie);
 }
 enum IID_IReferenceClockTimerControl = GUID(0xebec459c, 0x2eca, 0x4d42, [0xa8, 0xaf, 0x30, 0xdf, 0x55, 0x76, 0x14, 0xb8]);
 interface IReferenceClockTimerControl : IUnknown
 {
-    HRESULT SetDefaultTimerResolution(long);
-    HRESULT GetDefaultTimerResolution(long*);
+    HRESULT SetDefaultTimerResolution(long timerResolution);
+    HRESULT GetDefaultTimerResolution(long* pTimerResolution);
 }
 enum IID_IReferenceClock2 = GUID(0x36b73885, 0xc2c8, 0x11cf, [0x8b, 0x46, 0x0, 0x80, 0x5f, 0x6c, 0xef, 0x60]);
 interface IReferenceClock2 : IReferenceClock

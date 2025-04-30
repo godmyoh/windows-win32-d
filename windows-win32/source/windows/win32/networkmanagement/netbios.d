@@ -5,7 +5,7 @@ import windows.win32.foundation : HANDLE;
 version (Windows):
 extern (Windows):
 
-ubyte Netbios(NCB*);
+ubyte Netbios(NCB* pncb);
 enum NCBNAMSZ = 0x00000010;
 enum MAX_LANA = 0x000000fe;
 enum NAME_FLAGS_MASK = 0x00000087;

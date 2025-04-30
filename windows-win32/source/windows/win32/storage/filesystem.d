@@ -1,8 +1,8 @@
 module windows.win32.storage.filesystem;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, CHAR, FILETIME, HANDLE, HRESULT, PSID, PSTR, PWSTR, SYSTEMTIME;
-import windows.win32.security : GENERIC_MAPPING, PRIVILEGE_SET, PSECURITY_DESCRIPTOR, SECURITY_ATTRIBUTES, SID;
+import windows.win32.foundation : BOOL, BOOLEAN, CHAR, FILETIME, HANDLE, HRESULT, PSTR, PWSTR, SYSTEMTIME;
+import windows.win32.security : GENERIC_MAPPING, PRIVILEGE_SET, PSECURITY_DESCRIPTOR, PSID, SECURITY_ATTRIBUTES, SID;
 import windows.win32.security.cryptography : ALG_ID;
 import windows.win32.system.com : IConnectionPointContainer, IUnknown;
 import windows.win32.system.io : LPOVERLAPPED_COMPLETION_ROUTINE, OVERLAPPED;
@@ -112,418 +112,418 @@ enum : uint
     FILE_GENERIC_EXECUTE      = 0x001200a0,
 }
 
-uint SearchPathW(const(wchar)*, const(wchar)*, const(wchar)*, uint, PWSTR, PWSTR*);
-uint SearchPathA(const(char)*, const(char)*, const(char)*, uint, PSTR, PSTR*);
-int CompareFileTime(const(FILETIME)*, const(FILETIME)*);
-BOOL CreateDirectoryA(const(char)*, SECURITY_ATTRIBUTES*);
-BOOL CreateDirectoryW(const(wchar)*, SECURITY_ATTRIBUTES*);
-HANDLE CreateFileA(const(char)*, uint, FILE_SHARE_MODE, SECURITY_ATTRIBUTES*, FILE_CREATION_DISPOSITION, FILE_FLAGS_AND_ATTRIBUTES, HANDLE);
-HANDLE CreateFileW(const(wchar)*, uint, FILE_SHARE_MODE, SECURITY_ATTRIBUTES*, FILE_CREATION_DISPOSITION, FILE_FLAGS_AND_ATTRIBUTES, HANDLE);
-BOOL DefineDosDeviceW(DEFINE_DOS_DEVICE_FLAGS, const(wchar)*, const(wchar)*);
-BOOL DeleteFileA(const(char)*);
-BOOL DeleteFileW(const(wchar)*);
-BOOL DeleteVolumeMountPointW(const(wchar)*);
-BOOL FileTimeToLocalFileTime(const(FILETIME)*, FILETIME*);
-BOOL FindClose(HANDLE);
-BOOL FindCloseChangeNotification(HANDLE);
-HANDLE FindFirstChangeNotificationA(const(char)*, BOOL, FILE_NOTIFY_CHANGE);
-HANDLE FindFirstChangeNotificationW(const(wchar)*, BOOL, FILE_NOTIFY_CHANGE);
-HANDLE FindFirstFileA(const(char)*, WIN32_FIND_DATAA*);
-HANDLE FindFirstFileW(const(wchar)*, WIN32_FIND_DATAW*);
-HANDLE FindFirstFileExA(const(char)*, FINDEX_INFO_LEVELS, void*, FINDEX_SEARCH_OPS, void*, FIND_FIRST_EX_FLAGS);
-HANDLE FindFirstFileExW(const(wchar)*, FINDEX_INFO_LEVELS, void*, FINDEX_SEARCH_OPS, void*, FIND_FIRST_EX_FLAGS);
-HANDLE FindFirstVolumeW(PWSTR, uint);
-BOOL FindNextChangeNotification(HANDLE);
-BOOL FindNextFileA(HANDLE, WIN32_FIND_DATAA*);
-BOOL FindNextFileW(HANDLE, WIN32_FIND_DATAW*);
-BOOL FindNextVolumeW(HANDLE, PWSTR, uint);
-BOOL FindVolumeClose(HANDLE);
-BOOL FlushFileBuffers(HANDLE);
-BOOL GetDiskFreeSpaceA(const(char)*, uint*, uint*, uint*, uint*);
-BOOL GetDiskFreeSpaceW(const(wchar)*, uint*, uint*, uint*, uint*);
-BOOL GetDiskFreeSpaceExA(const(char)*, ulong*, ulong*, ulong*);
-BOOL GetDiskFreeSpaceExW(const(wchar)*, ulong*, ulong*, ulong*);
-HRESULT GetDiskSpaceInformationA(const(char)*, DISK_SPACE_INFORMATION*);
-HRESULT GetDiskSpaceInformationW(const(wchar)*, DISK_SPACE_INFORMATION*);
-uint GetDriveTypeA(const(char)*);
-uint GetDriveTypeW(const(wchar)*);
-uint GetFileAttributesA(const(char)*);
-uint GetFileAttributesW(const(wchar)*);
-BOOL GetFileAttributesExA(const(char)*, GET_FILEEX_INFO_LEVELS, void*);
-BOOL GetFileAttributesExW(const(wchar)*, GET_FILEEX_INFO_LEVELS, void*);
-BOOL GetFileInformationByHandle(HANDLE, BY_HANDLE_FILE_INFORMATION*);
-uint GetFileSize(HANDLE, uint*);
-BOOL GetFileSizeEx(HANDLE, long*);
-FILE_TYPE GetFileType(HANDLE);
-uint GetFinalPathNameByHandleA(HANDLE, PSTR, uint, GETFINALPATHNAMEBYHANDLE_FLAGS);
-uint GetFinalPathNameByHandleW(HANDLE, PWSTR, uint, GETFINALPATHNAMEBYHANDLE_FLAGS);
-BOOL GetFileTime(HANDLE, FILETIME*, FILETIME*, FILETIME*);
-uint GetFullPathNameW(const(wchar)*, uint, PWSTR, PWSTR*);
-uint GetFullPathNameA(const(char)*, uint, PSTR, PSTR*);
+uint SearchPathW(const(wchar)* lpPath, const(wchar)* lpFileName, const(wchar)* lpExtension, uint nBufferLength, PWSTR lpBuffer, PWSTR* lpFilePart);
+uint SearchPathA(const(char)* lpPath, const(char)* lpFileName, const(char)* lpExtension, uint nBufferLength, PSTR lpBuffer, PSTR* lpFilePart);
+int CompareFileTime(const(FILETIME)* lpFileTime1, const(FILETIME)* lpFileTime2);
+BOOL CreateDirectoryA(const(char)* lpPathName, SECURITY_ATTRIBUTES* lpSecurityAttributes);
+BOOL CreateDirectoryW(const(wchar)* lpPathName, SECURITY_ATTRIBUTES* lpSecurityAttributes);
+HANDLE CreateFileA(const(char)* lpFileName, uint dwDesiredAccess, FILE_SHARE_MODE dwShareMode, SECURITY_ATTRIBUTES* lpSecurityAttributes, FILE_CREATION_DISPOSITION dwCreationDisposition, FILE_FLAGS_AND_ATTRIBUTES dwFlagsAndAttributes, HANDLE hTemplateFile);
+HANDLE CreateFileW(const(wchar)* lpFileName, uint dwDesiredAccess, FILE_SHARE_MODE dwShareMode, SECURITY_ATTRIBUTES* lpSecurityAttributes, FILE_CREATION_DISPOSITION dwCreationDisposition, FILE_FLAGS_AND_ATTRIBUTES dwFlagsAndAttributes, HANDLE hTemplateFile);
+BOOL DefineDosDeviceW(DEFINE_DOS_DEVICE_FLAGS dwFlags, const(wchar)* lpDeviceName, const(wchar)* lpTargetPath);
+BOOL DeleteFileA(const(char)* lpFileName);
+BOOL DeleteFileW(const(wchar)* lpFileName);
+BOOL DeleteVolumeMountPointW(const(wchar)* lpszVolumeMountPoint);
+BOOL FileTimeToLocalFileTime(const(FILETIME)* lpFileTime, FILETIME* lpLocalFileTime);
+BOOL FindClose(HANDLE hFindFile);
+BOOL FindCloseChangeNotification(HANDLE hChangeHandle);
+HANDLE FindFirstChangeNotificationA(const(char)* lpPathName, BOOL bWatchSubtree, FILE_NOTIFY_CHANGE dwNotifyFilter);
+HANDLE FindFirstChangeNotificationW(const(wchar)* lpPathName, BOOL bWatchSubtree, FILE_NOTIFY_CHANGE dwNotifyFilter);
+HANDLE FindFirstFileA(const(char)* lpFileName, WIN32_FIND_DATAA* lpFindFileData);
+HANDLE FindFirstFileW(const(wchar)* lpFileName, WIN32_FIND_DATAW* lpFindFileData);
+HANDLE FindFirstFileExA(const(char)* lpFileName, FINDEX_INFO_LEVELS fInfoLevelId, void* lpFindFileData, FINDEX_SEARCH_OPS fSearchOp, void* lpSearchFilter, FIND_FIRST_EX_FLAGS dwAdditionalFlags);
+HANDLE FindFirstFileExW(const(wchar)* lpFileName, FINDEX_INFO_LEVELS fInfoLevelId, void* lpFindFileData, FINDEX_SEARCH_OPS fSearchOp, void* lpSearchFilter, FIND_FIRST_EX_FLAGS dwAdditionalFlags);
+HANDLE FindFirstVolumeW(PWSTR lpszVolumeName, uint cchBufferLength);
+BOOL FindNextChangeNotification(HANDLE hChangeHandle);
+BOOL FindNextFileA(HANDLE hFindFile, WIN32_FIND_DATAA* lpFindFileData);
+BOOL FindNextFileW(HANDLE hFindFile, WIN32_FIND_DATAW* lpFindFileData);
+BOOL FindNextVolumeW(HANDLE hFindVolume, PWSTR lpszVolumeName, uint cchBufferLength);
+BOOL FindVolumeClose(HANDLE hFindVolume);
+BOOL FlushFileBuffers(HANDLE hFile);
+BOOL GetDiskFreeSpaceA(const(char)* lpRootPathName, uint* lpSectorsPerCluster, uint* lpBytesPerSector, uint* lpNumberOfFreeClusters, uint* lpTotalNumberOfClusters);
+BOOL GetDiskFreeSpaceW(const(wchar)* lpRootPathName, uint* lpSectorsPerCluster, uint* lpBytesPerSector, uint* lpNumberOfFreeClusters, uint* lpTotalNumberOfClusters);
+BOOL GetDiskFreeSpaceExA(const(char)* lpDirectoryName, ulong* lpFreeBytesAvailableToCaller, ulong* lpTotalNumberOfBytes, ulong* lpTotalNumberOfFreeBytes);
+BOOL GetDiskFreeSpaceExW(const(wchar)* lpDirectoryName, ulong* lpFreeBytesAvailableToCaller, ulong* lpTotalNumberOfBytes, ulong* lpTotalNumberOfFreeBytes);
+HRESULT GetDiskSpaceInformationA(const(char)* rootPath, DISK_SPACE_INFORMATION* diskSpaceInfo);
+HRESULT GetDiskSpaceInformationW(const(wchar)* rootPath, DISK_SPACE_INFORMATION* diskSpaceInfo);
+uint GetDriveTypeA(const(char)* lpRootPathName);
+uint GetDriveTypeW(const(wchar)* lpRootPathName);
+uint GetFileAttributesA(const(char)* lpFileName);
+uint GetFileAttributesW(const(wchar)* lpFileName);
+BOOL GetFileAttributesExA(const(char)* lpFileName, GET_FILEEX_INFO_LEVELS fInfoLevelId, void* lpFileInformation);
+BOOL GetFileAttributesExW(const(wchar)* lpFileName, GET_FILEEX_INFO_LEVELS fInfoLevelId, void* lpFileInformation);
+BOOL GetFileInformationByHandle(HANDLE hFile, BY_HANDLE_FILE_INFORMATION* lpFileInformation);
+uint GetFileSize(HANDLE hFile, uint* lpFileSizeHigh);
+BOOL GetFileSizeEx(HANDLE hFile, long* lpFileSize);
+FILE_TYPE GetFileType(HANDLE hFile);
+uint GetFinalPathNameByHandleA(HANDLE hFile, PSTR lpszFilePath, uint cchFilePath, GETFINALPATHNAMEBYHANDLE_FLAGS dwFlags);
+uint GetFinalPathNameByHandleW(HANDLE hFile, PWSTR lpszFilePath, uint cchFilePath, GETFINALPATHNAMEBYHANDLE_FLAGS dwFlags);
+BOOL GetFileTime(HANDLE hFile, FILETIME* lpCreationTime, FILETIME* lpLastAccessTime, FILETIME* lpLastWriteTime);
+uint GetFullPathNameW(const(wchar)* lpFileName, uint nBufferLength, PWSTR lpBuffer, PWSTR* lpFilePart);
+uint GetFullPathNameA(const(char)* lpFileName, uint nBufferLength, PSTR lpBuffer, PSTR* lpFilePart);
 uint GetLogicalDrives();
-uint GetLogicalDriveStringsW(uint, PWSTR);
-uint GetLongPathNameA(const(char)*, PSTR, uint);
-uint GetLongPathNameW(const(wchar)*, PWSTR, uint);
-BOOL AreShortNamesEnabled(HANDLE, BOOL*);
-uint GetShortPathNameW(const(wchar)*, PWSTR, uint);
-uint GetTempFileNameW(const(wchar)*, const(wchar)*, uint, PWSTR);
-BOOL GetVolumeInformationByHandleW(HANDLE, PWSTR, uint, uint*, uint*, uint*, PWSTR, uint);
-BOOL GetVolumeInformationW(const(wchar)*, PWSTR, uint, uint*, uint*, uint*, PWSTR, uint);
-BOOL GetVolumePathNameW(const(wchar)*, PWSTR, uint);
-BOOL LocalFileTimeToFileTime(const(FILETIME)*, FILETIME*);
-BOOL LockFile(HANDLE, uint, uint, uint, uint);
-BOOL LockFileEx(HANDLE, LOCK_FILE_FLAGS, uint, uint, uint, OVERLAPPED*);
-uint QueryDosDeviceW(const(wchar)*, PWSTR, uint);
-BOOL ReadFile(HANDLE, ubyte*, uint, uint*, OVERLAPPED*);
-BOOL ReadFileEx(HANDLE, ubyte*, uint, OVERLAPPED*, LPOVERLAPPED_COMPLETION_ROUTINE);
-BOOL ReadFileScatter(HANDLE, FILE_SEGMENT_ELEMENT*, uint, uint*, OVERLAPPED*);
-BOOL RemoveDirectoryA(const(char)*);
-BOOL RemoveDirectoryW(const(wchar)*);
-BOOL SetEndOfFile(HANDLE);
-BOOL SetFileAttributesA(const(char)*, FILE_FLAGS_AND_ATTRIBUTES);
-BOOL SetFileAttributesW(const(wchar)*, FILE_FLAGS_AND_ATTRIBUTES);
-BOOL SetFileInformationByHandle(HANDLE, FILE_INFO_BY_HANDLE_CLASS, void*, uint);
-uint SetFilePointer(HANDLE, int, int*, SET_FILE_POINTER_MOVE_METHOD);
-BOOL SetFilePointerEx(HANDLE, long, long*, SET_FILE_POINTER_MOVE_METHOD);
-BOOL SetFileTime(HANDLE, const(FILETIME)*, const(FILETIME)*, const(FILETIME)*);
-BOOL SetFileValidData(HANDLE, long);
-BOOL UnlockFile(HANDLE, uint, uint, uint, uint);
-BOOL UnlockFileEx(HANDLE, uint, uint, uint, OVERLAPPED*);
-BOOL WriteFile(HANDLE, const(ubyte)*, uint, uint*, OVERLAPPED*);
-BOOL WriteFileEx(HANDLE, const(ubyte)*, uint, OVERLAPPED*, LPOVERLAPPED_COMPLETION_ROUTINE);
-BOOL WriteFileGather(HANDLE, FILE_SEGMENT_ELEMENT*, uint, uint*, OVERLAPPED*);
-uint GetTempPathW(uint, PWSTR);
-BOOL GetVolumeNameForVolumeMountPointW(const(wchar)*, PWSTR, uint);
-BOOL GetVolumePathNamesForVolumeNameW(const(wchar)*, PWSTR, uint, uint*);
-HANDLE CreateFile2(const(wchar)*, uint, FILE_SHARE_MODE, FILE_CREATION_DISPOSITION, CREATEFILE2_EXTENDED_PARAMETERS*);
-BOOL SetFileIoOverlappedRange(HANDLE, ubyte*, uint);
-uint GetCompressedFileSizeA(const(char)*, uint*);
-uint GetCompressedFileSizeW(const(wchar)*, uint*);
-HANDLE FindFirstStreamW(const(wchar)*, STREAM_INFO_LEVELS, void*, uint);
-BOOL FindNextStreamW(HANDLE, void*);
+uint GetLogicalDriveStringsW(uint nBufferLength, PWSTR lpBuffer);
+uint GetLongPathNameA(const(char)* lpszShortPath, PSTR lpszLongPath, uint cchBuffer);
+uint GetLongPathNameW(const(wchar)* lpszShortPath, PWSTR lpszLongPath, uint cchBuffer);
+BOOL AreShortNamesEnabled(HANDLE Handle, BOOL* Enabled);
+uint GetShortPathNameW(const(wchar)* lpszLongPath, PWSTR lpszShortPath, uint cchBuffer);
+uint GetTempFileNameW(const(wchar)* lpPathName, const(wchar)* lpPrefixString, uint uUnique, PWSTR lpTempFileName);
+BOOL GetVolumeInformationByHandleW(HANDLE hFile, PWSTR lpVolumeNameBuffer, uint nVolumeNameSize, uint* lpVolumeSerialNumber, uint* lpMaximumComponentLength, uint* lpFileSystemFlags, PWSTR lpFileSystemNameBuffer, uint nFileSystemNameSize);
+BOOL GetVolumeInformationW(const(wchar)* lpRootPathName, PWSTR lpVolumeNameBuffer, uint nVolumeNameSize, uint* lpVolumeSerialNumber, uint* lpMaximumComponentLength, uint* lpFileSystemFlags, PWSTR lpFileSystemNameBuffer, uint nFileSystemNameSize);
+BOOL GetVolumePathNameW(const(wchar)* lpszFileName, PWSTR lpszVolumePathName, uint cchBufferLength);
+BOOL LocalFileTimeToFileTime(const(FILETIME)* lpLocalFileTime, FILETIME* lpFileTime);
+BOOL LockFile(HANDLE hFile, uint dwFileOffsetLow, uint dwFileOffsetHigh, uint nNumberOfBytesToLockLow, uint nNumberOfBytesToLockHigh);
+BOOL LockFileEx(HANDLE hFile, LOCK_FILE_FLAGS dwFlags, uint dwReserved, uint nNumberOfBytesToLockLow, uint nNumberOfBytesToLockHigh, OVERLAPPED* lpOverlapped);
+uint QueryDosDeviceW(const(wchar)* lpDeviceName, PWSTR lpTargetPath, uint ucchMax);
+BOOL ReadFile(HANDLE hFile, ubyte* lpBuffer, uint nNumberOfBytesToRead, uint* lpNumberOfBytesRead, OVERLAPPED* lpOverlapped);
+BOOL ReadFileEx(HANDLE hFile, ubyte* lpBuffer, uint nNumberOfBytesToRead, OVERLAPPED* lpOverlapped, LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine);
+BOOL ReadFileScatter(HANDLE hFile, FILE_SEGMENT_ELEMENT* aSegmentArray, uint nNumberOfBytesToRead, uint* lpReserved, OVERLAPPED* lpOverlapped);
+BOOL RemoveDirectoryA(const(char)* lpPathName);
+BOOL RemoveDirectoryW(const(wchar)* lpPathName);
+BOOL SetEndOfFile(HANDLE hFile);
+BOOL SetFileAttributesA(const(char)* lpFileName, FILE_FLAGS_AND_ATTRIBUTES dwFileAttributes);
+BOOL SetFileAttributesW(const(wchar)* lpFileName, FILE_FLAGS_AND_ATTRIBUTES dwFileAttributes);
+BOOL SetFileInformationByHandle(HANDLE hFile, FILE_INFO_BY_HANDLE_CLASS FileInformationClass, void* lpFileInformation, uint dwBufferSize);
+uint SetFilePointer(HANDLE hFile, int lDistanceToMove, int* lpDistanceToMoveHigh, SET_FILE_POINTER_MOVE_METHOD dwMoveMethod);
+BOOL SetFilePointerEx(HANDLE hFile, long liDistanceToMove, long* lpNewFilePointer, SET_FILE_POINTER_MOVE_METHOD dwMoveMethod);
+BOOL SetFileTime(HANDLE hFile, const(FILETIME)* lpCreationTime, const(FILETIME)* lpLastAccessTime, const(FILETIME)* lpLastWriteTime);
+BOOL SetFileValidData(HANDLE hFile, long ValidDataLength);
+BOOL UnlockFile(HANDLE hFile, uint dwFileOffsetLow, uint dwFileOffsetHigh, uint nNumberOfBytesToUnlockLow, uint nNumberOfBytesToUnlockHigh);
+BOOL UnlockFileEx(HANDLE hFile, uint dwReserved, uint nNumberOfBytesToUnlockLow, uint nNumberOfBytesToUnlockHigh, OVERLAPPED* lpOverlapped);
+BOOL WriteFile(HANDLE hFile, const(ubyte)* lpBuffer, uint nNumberOfBytesToWrite, uint* lpNumberOfBytesWritten, OVERLAPPED* lpOverlapped);
+BOOL WriteFileEx(HANDLE hFile, const(ubyte)* lpBuffer, uint nNumberOfBytesToWrite, OVERLAPPED* lpOverlapped, LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine);
+BOOL WriteFileGather(HANDLE hFile, FILE_SEGMENT_ELEMENT* aSegmentArray, uint nNumberOfBytesToWrite, uint* lpReserved, OVERLAPPED* lpOverlapped);
+uint GetTempPathW(uint nBufferLength, PWSTR lpBuffer);
+BOOL GetVolumeNameForVolumeMountPointW(const(wchar)* lpszVolumeMountPoint, PWSTR lpszVolumeName, uint cchBufferLength);
+BOOL GetVolumePathNamesForVolumeNameW(const(wchar)* lpszVolumeName, PWSTR lpszVolumePathNames, uint cchBufferLength, uint* lpcchReturnLength);
+HANDLE CreateFile2(const(wchar)* lpFileName, uint dwDesiredAccess, FILE_SHARE_MODE dwShareMode, FILE_CREATION_DISPOSITION dwCreationDisposition, CREATEFILE2_EXTENDED_PARAMETERS* pCreateExParams);
+BOOL SetFileIoOverlappedRange(HANDLE FileHandle, ubyte* OverlappedRangeStart, uint Length);
+uint GetCompressedFileSizeA(const(char)* lpFileName, uint* lpFileSizeHigh);
+uint GetCompressedFileSizeW(const(wchar)* lpFileName, uint* lpFileSizeHigh);
+HANDLE FindFirstStreamW(const(wchar)* lpFileName, STREAM_INFO_LEVELS InfoLevel, void* lpFindStreamData, uint dwFlags);
+BOOL FindNextStreamW(HANDLE hFindStream, void* lpFindStreamData);
 BOOL AreFileApisANSI();
-uint GetTempPathA(uint, PSTR);
-HANDLE FindFirstFileNameW(const(wchar)*, uint, uint*, PWSTR);
-BOOL FindNextFileNameW(HANDLE, uint*, PWSTR);
-BOOL GetVolumeInformationA(const(char)*, PSTR, uint, uint*, uint*, uint*, PSTR, uint);
-uint GetTempFileNameA(const(char)*, const(char)*, uint, PSTR);
+uint GetTempPathA(uint nBufferLength, PSTR lpBuffer);
+HANDLE FindFirstFileNameW(const(wchar)* lpFileName, uint dwFlags, uint* StringLength, PWSTR LinkName);
+BOOL FindNextFileNameW(HANDLE hFindStream, uint* StringLength, PWSTR LinkName);
+BOOL GetVolumeInformationA(const(char)* lpRootPathName, PSTR lpVolumeNameBuffer, uint nVolumeNameSize, uint* lpVolumeSerialNumber, uint* lpMaximumComponentLength, uint* lpFileSystemFlags, PSTR lpFileSystemNameBuffer, uint nFileSystemNameSize);
+uint GetTempFileNameA(const(char)* lpPathName, const(char)* lpPrefixString, uint uUnique, PSTR lpTempFileName);
 void SetFileApisToOEM();
 void SetFileApisToANSI();
-uint GetTempPath2W(uint, PWSTR);
-uint GetTempPath2A(uint, PSTR);
-BOOL CopyFileFromAppW(const(wchar)*, const(wchar)*, BOOL);
-BOOL CreateDirectoryFromAppW(const(wchar)*, SECURITY_ATTRIBUTES*);
-HANDLE CreateFileFromAppW(const(wchar)*, uint, uint, SECURITY_ATTRIBUTES*, uint, uint, HANDLE);
-HANDLE CreateFile2FromAppW(const(wchar)*, uint, uint, uint, CREATEFILE2_EXTENDED_PARAMETERS*);
-BOOL DeleteFileFromAppW(const(wchar)*);
-HANDLE FindFirstFileExFromAppW(const(wchar)*, FINDEX_INFO_LEVELS, void*, FINDEX_SEARCH_OPS, void*, uint);
-BOOL GetFileAttributesExFromAppW(const(wchar)*, GET_FILEEX_INFO_LEVELS, void*);
-BOOL MoveFileFromAppW(const(wchar)*, const(wchar)*);
-BOOL RemoveDirectoryFromAppW(const(wchar)*);
-BOOL ReplaceFileFromAppW(const(wchar)*, const(wchar)*, const(wchar)*, uint, void*, void*);
-BOOL SetFileAttributesFromAppW(const(wchar)*, uint);
-VER_FIND_FILE_STATUS VerFindFileA(VER_FIND_FILE_FLAGS, const(char)*, const(char)*, const(char)*, PSTR, uint*, PSTR, uint*);
-VER_FIND_FILE_STATUS VerFindFileW(VER_FIND_FILE_FLAGS, const(wchar)*, const(wchar)*, const(wchar)*, PWSTR, uint*, PWSTR, uint*);
-VER_INSTALL_FILE_STATUS VerInstallFileA(VER_INSTALL_FILE_FLAGS, const(char)*, const(char)*, const(char)*, const(char)*, const(char)*, PSTR, uint*);
-VER_INSTALL_FILE_STATUS VerInstallFileW(VER_INSTALL_FILE_FLAGS, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, PWSTR, uint*);
-uint GetFileVersionInfoSizeA(const(char)*, uint*);
-uint GetFileVersionInfoSizeW(const(wchar)*, uint*);
-BOOL GetFileVersionInfoA(const(char)*, uint, uint, void*);
-BOOL GetFileVersionInfoW(const(wchar)*, uint, uint, void*);
-uint GetFileVersionInfoSizeExA(GET_FILE_VERSION_INFO_FLAGS, const(char)*, uint*);
-uint GetFileVersionInfoSizeExW(GET_FILE_VERSION_INFO_FLAGS, const(wchar)*, uint*);
-BOOL GetFileVersionInfoExA(GET_FILE_VERSION_INFO_FLAGS, const(char)*, uint, uint, void*);
-BOOL GetFileVersionInfoExW(GET_FILE_VERSION_INFO_FLAGS, const(wchar)*, uint, uint, void*);
-uint VerLanguageNameA(uint, PSTR, uint);
-uint VerLanguageNameW(uint, PWSTR, uint);
-BOOL VerQueryValueA(const(void)*, const(char)*, void**, uint*);
-BOOL VerQueryValueW(const(void)*, const(wchar)*, void**, uint*);
-BOOLEAN LsnEqual(const(CLS_LSN)*, const(CLS_LSN)*);
-BOOLEAN LsnLess(const(CLS_LSN)*, const(CLS_LSN)*);
-BOOLEAN LsnGreater(const(CLS_LSN)*, const(CLS_LSN)*);
-BOOLEAN LsnNull(const(CLS_LSN)*);
-uint LsnContainer(const(CLS_LSN)*);
-CLS_LSN LsnCreate(uint, uint, uint);
-uint LsnBlockOffset(const(CLS_LSN)*);
-uint LsnRecordSequence(const(CLS_LSN)*);
-BOOLEAN LsnInvalid(const(CLS_LSN)*);
-CLS_LSN LsnIncrement(CLS_LSN*);
-HANDLE CreateLogFile(const(wchar)*, uint, FILE_SHARE_MODE, SECURITY_ATTRIBUTES*, FILE_CREATION_DISPOSITION, FILE_FLAGS_AND_ATTRIBUTES);
-BOOL DeleteLogByHandle(HANDLE);
-BOOL DeleteLogFile(const(wchar)*, void*);
-BOOL AddLogContainer(HANDLE, ulong*, PWSTR, void*);
-BOOL AddLogContainerSet(HANDLE, ushort, ulong*, PWSTR*, void*);
-BOOL RemoveLogContainer(HANDLE, PWSTR, BOOL, void*);
-BOOL RemoveLogContainerSet(HANDLE, ushort, PWSTR*, BOOL, void*);
-BOOL SetLogArchiveTail(HANDLE, CLS_LSN*, void*);
-BOOL SetEndOfLog(HANDLE, CLS_LSN*, OVERLAPPED*);
-BOOL TruncateLog(void*, CLS_LSN*, OVERLAPPED*);
-BOOL CreateLogContainerScanContext(HANDLE, uint, uint, ubyte, CLS_SCAN_CONTEXT*, OVERLAPPED*);
-BOOL ScanLogContainers(CLS_SCAN_CONTEXT*, ubyte, void*);
-BOOL AlignReservedLog(void*, uint, long*, long*);
-BOOL AllocReservedLog(void*, uint, long*);
-BOOL FreeReservedLog(void*, uint, long*);
-BOOL GetLogFileInformation(HANDLE, CLS_INFORMATION*, uint*);
-BOOL SetLogArchiveMode(HANDLE, CLFS_LOG_ARCHIVE_MODE);
-BOOL ReadLogRestartArea(void*, void**, uint*, CLS_LSN*, void**, OVERLAPPED*);
-BOOL ReadPreviousLogRestartArea(void*, void**, uint*, CLS_LSN*, OVERLAPPED*);
-BOOL WriteLogRestartArea(void*, void*, uint, CLS_LSN*, CLFS_FLAG, uint*, CLS_LSN*, OVERLAPPED*);
-BOOL GetLogReservationInfo(void*, uint*, long*, long*);
-BOOL AdvanceLogBase(void*, CLS_LSN*, uint, OVERLAPPED*);
-BOOL CloseAndResetLogFile(HANDLE);
-BOOL CreateLogMarshallingArea(HANDLE, CLFS_BLOCK_ALLOCATION, CLFS_BLOCK_DEALLOCATION, void*, uint, uint, uint, void**);
-BOOL DeleteLogMarshallingArea(void*);
-BOOL ReserveAndAppendLog(void*, CLS_WRITE_ENTRY*, uint, CLS_LSN*, CLS_LSN*, uint, long*, CLFS_FLAG, CLS_LSN*, OVERLAPPED*);
-BOOL ReserveAndAppendLogAligned(void*, CLS_WRITE_ENTRY*, uint, uint, CLS_LSN*, CLS_LSN*, uint, long*, CLFS_FLAG, CLS_LSN*, OVERLAPPED*);
-BOOL FlushLogBuffers(void*, OVERLAPPED*);
-BOOL FlushLogToLsn(void*, CLS_LSN*, CLS_LSN*, OVERLAPPED*);
-BOOL ReadLogRecord(void*, CLS_LSN*, CLFS_CONTEXT_MODE, void**, uint*, ubyte*, CLS_LSN*, CLS_LSN*, void**, OVERLAPPED*);
-BOOL ReadNextLogRecord(void*, void**, uint*, ubyte*, CLS_LSN*, CLS_LSN*, CLS_LSN*, CLS_LSN*, OVERLAPPED*);
-BOOL TerminateReadLog(void*);
-BOOL PrepareLogArchive(HANDLE, PWSTR, uint, const(CLS_LSN)*, const(CLS_LSN)*, uint*, ulong*, ulong*, CLS_LSN*, CLS_LSN*, CLS_LSN*, void**);
-BOOL ReadLogArchiveMetadata(void*, uint, uint, ubyte*, uint*);
-BOOL GetNextLogArchiveExtent(void*, CLS_ARCHIVE_DESCRIPTOR*, uint, uint*);
-BOOL TerminateLogArchive(void*);
-BOOL ValidateLog(const(wchar)*, SECURITY_ATTRIBUTES*, CLS_INFORMATION*, uint*);
-BOOL GetLogContainerName(HANDLE, uint, const(wchar)*, uint, uint*);
-BOOL GetLogIoStatistics(HANDLE, void*, uint, CLFS_IOSTATS_CLASS, uint*);
-BOOL RegisterManageableLogClient(HANDLE, LOG_MANAGEMENT_CALLBACKS*);
-BOOL DeregisterManageableLogClient(HANDLE);
-BOOL ReadLogNotification(HANDLE, CLFS_MGMT_NOTIFICATION*, OVERLAPPED*);
-BOOL InstallLogPolicy(HANDLE, CLFS_MGMT_POLICY*);
-BOOL RemoveLogPolicy(HANDLE, CLFS_MGMT_POLICY_TYPE);
-BOOL QueryLogPolicy(HANDLE, CLFS_MGMT_POLICY_TYPE, CLFS_MGMT_POLICY*, uint*);
-BOOL SetLogFileSizeWithPolicy(HANDLE, ulong*, ulong*);
-BOOL HandleLogFull(HANDLE);
-BOOL LogTailAdvanceFailure(HANDLE, uint);
-BOOL RegisterForLogWriteNotification(HANDLE, uint, BOOL);
-uint QueryUsersOnEncryptedFile(const(wchar)*, ENCRYPTION_CERTIFICATE_HASH_LIST**);
-uint QueryRecoveryAgentsOnEncryptedFile(const(wchar)*, ENCRYPTION_CERTIFICATE_HASH_LIST**);
-uint RemoveUsersFromEncryptedFile(const(wchar)*, ENCRYPTION_CERTIFICATE_HASH_LIST*);
-uint AddUsersToEncryptedFile(const(wchar)*, ENCRYPTION_CERTIFICATE_LIST*);
-uint SetUserFileEncryptionKey(ENCRYPTION_CERTIFICATE*);
-uint SetUserFileEncryptionKeyEx(ENCRYPTION_CERTIFICATE*, uint, uint, void*);
-void FreeEncryptionCertificateHashList(ENCRYPTION_CERTIFICATE_HASH_LIST*);
-BOOL EncryptionDisable(const(wchar)*, BOOL);
-uint DuplicateEncryptionInfoFile(const(wchar)*, const(wchar)*, uint, uint, const(SECURITY_ATTRIBUTES)*);
-uint GetEncryptedFileMetadata(const(wchar)*, uint*, ubyte**);
-uint SetEncryptedFileMetadata(const(wchar)*, ubyte*, ubyte*, ENCRYPTION_CERTIFICATE_HASH*, uint, ENCRYPTION_CERTIFICATE_HASH_LIST*);
-void FreeEncryptedFileMetadata(ubyte*);
+uint GetTempPath2W(uint BufferLength, PWSTR Buffer);
+uint GetTempPath2A(uint BufferLength, PSTR Buffer);
+BOOL CopyFileFromAppW(const(wchar)* lpExistingFileName, const(wchar)* lpNewFileName, BOOL bFailIfExists);
+BOOL CreateDirectoryFromAppW(const(wchar)* lpPathName, SECURITY_ATTRIBUTES* lpSecurityAttributes);
+HANDLE CreateFileFromAppW(const(wchar)* lpFileName, uint dwDesiredAccess, uint dwShareMode, SECURITY_ATTRIBUTES* lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes, HANDLE hTemplateFile);
+HANDLE CreateFile2FromAppW(const(wchar)* lpFileName, uint dwDesiredAccess, uint dwShareMode, uint dwCreationDisposition, CREATEFILE2_EXTENDED_PARAMETERS* pCreateExParams);
+BOOL DeleteFileFromAppW(const(wchar)* lpFileName);
+HANDLE FindFirstFileExFromAppW(const(wchar)* lpFileName, FINDEX_INFO_LEVELS fInfoLevelId, void* lpFindFileData, FINDEX_SEARCH_OPS fSearchOp, void* lpSearchFilter, uint dwAdditionalFlags);
+BOOL GetFileAttributesExFromAppW(const(wchar)* lpFileName, GET_FILEEX_INFO_LEVELS fInfoLevelId, void* lpFileInformation);
+BOOL MoveFileFromAppW(const(wchar)* lpExistingFileName, const(wchar)* lpNewFileName);
+BOOL RemoveDirectoryFromAppW(const(wchar)* lpPathName);
+BOOL ReplaceFileFromAppW(const(wchar)* lpReplacedFileName, const(wchar)* lpReplacementFileName, const(wchar)* lpBackupFileName, uint dwReplaceFlags, void* lpExclude, void* lpReserved);
+BOOL SetFileAttributesFromAppW(const(wchar)* lpFileName, uint dwFileAttributes);
+VER_FIND_FILE_STATUS VerFindFileA(VER_FIND_FILE_FLAGS uFlags, const(char)* szFileName, const(char)* szWinDir, const(char)* szAppDir, PSTR szCurDir, uint* puCurDirLen, PSTR szDestDir, uint* puDestDirLen);
+VER_FIND_FILE_STATUS VerFindFileW(VER_FIND_FILE_FLAGS uFlags, const(wchar)* szFileName, const(wchar)* szWinDir, const(wchar)* szAppDir, PWSTR szCurDir, uint* puCurDirLen, PWSTR szDestDir, uint* puDestDirLen);
+VER_INSTALL_FILE_STATUS VerInstallFileA(VER_INSTALL_FILE_FLAGS uFlags, const(char)* szSrcFileName, const(char)* szDestFileName, const(char)* szSrcDir, const(char)* szDestDir, const(char)* szCurDir, PSTR szTmpFile, uint* puTmpFileLen);
+VER_INSTALL_FILE_STATUS VerInstallFileW(VER_INSTALL_FILE_FLAGS uFlags, const(wchar)* szSrcFileName, const(wchar)* szDestFileName, const(wchar)* szSrcDir, const(wchar)* szDestDir, const(wchar)* szCurDir, PWSTR szTmpFile, uint* puTmpFileLen);
+uint GetFileVersionInfoSizeA(const(char)* lptstrFilename, uint* lpdwHandle);
+uint GetFileVersionInfoSizeW(const(wchar)* lptstrFilename, uint* lpdwHandle);
+BOOL GetFileVersionInfoA(const(char)* lptstrFilename, uint dwHandle, uint dwLen, void* lpData);
+BOOL GetFileVersionInfoW(const(wchar)* lptstrFilename, uint dwHandle, uint dwLen, void* lpData);
+uint GetFileVersionInfoSizeExA(GET_FILE_VERSION_INFO_FLAGS dwFlags, const(char)* lpwstrFilename, uint* lpdwHandle);
+uint GetFileVersionInfoSizeExW(GET_FILE_VERSION_INFO_FLAGS dwFlags, const(wchar)* lpwstrFilename, uint* lpdwHandle);
+BOOL GetFileVersionInfoExA(GET_FILE_VERSION_INFO_FLAGS dwFlags, const(char)* lpwstrFilename, uint dwHandle, uint dwLen, void* lpData);
+BOOL GetFileVersionInfoExW(GET_FILE_VERSION_INFO_FLAGS dwFlags, const(wchar)* lpwstrFilename, uint dwHandle, uint dwLen, void* lpData);
+uint VerLanguageNameA(uint wLang, PSTR szLang, uint cchLang);
+uint VerLanguageNameW(uint wLang, PWSTR szLang, uint cchLang);
+BOOL VerQueryValueA(const(void)* pBlock, const(char)* lpSubBlock, void** lplpBuffer, uint* puLen);
+BOOL VerQueryValueW(const(void)* pBlock, const(wchar)* lpSubBlock, void** lplpBuffer, uint* puLen);
+BOOLEAN LsnEqual(const(CLS_LSN)* plsn1, const(CLS_LSN)* plsn2);
+BOOLEAN LsnLess(const(CLS_LSN)* plsn1, const(CLS_LSN)* plsn2);
+BOOLEAN LsnGreater(const(CLS_LSN)* plsn1, const(CLS_LSN)* plsn2);
+BOOLEAN LsnNull(const(CLS_LSN)* plsn);
+uint LsnContainer(const(CLS_LSN)* plsn);
+CLS_LSN LsnCreate(uint cidContainer, uint offBlock, uint cRecord);
+uint LsnBlockOffset(const(CLS_LSN)* plsn);
+uint LsnRecordSequence(const(CLS_LSN)* plsn);
+BOOLEAN LsnInvalid(const(CLS_LSN)* plsn);
+CLS_LSN LsnIncrement(CLS_LSN* plsn);
+HANDLE CreateLogFile(const(wchar)* pszLogFileName, uint fDesiredAccess, FILE_SHARE_MODE dwShareMode, SECURITY_ATTRIBUTES* psaLogFile, FILE_CREATION_DISPOSITION fCreateDisposition, FILE_FLAGS_AND_ATTRIBUTES fFlagsAndAttributes);
+BOOL DeleteLogByHandle(HANDLE hLog);
+BOOL DeleteLogFile(const(wchar)* pszLogFileName, void* pvReserved);
+BOOL AddLogContainer(HANDLE hLog, ulong* pcbContainer, PWSTR pwszContainerPath, void* pReserved);
+BOOL AddLogContainerSet(HANDLE hLog, ushort cContainer, ulong* pcbContainer, PWSTR* rgwszContainerPath, void* pReserved);
+BOOL RemoveLogContainer(HANDLE hLog, PWSTR pwszContainerPath, BOOL fForce, void* pReserved);
+BOOL RemoveLogContainerSet(HANDLE hLog, ushort cContainer, PWSTR* rgwszContainerPath, BOOL fForce, void* pReserved);
+BOOL SetLogArchiveTail(HANDLE hLog, CLS_LSN* plsnArchiveTail, void* pReserved);
+BOOL SetEndOfLog(HANDLE hLog, CLS_LSN* plsnEnd, OVERLAPPED* lpOverlapped);
+BOOL TruncateLog(void* pvMarshal, CLS_LSN* plsnEnd, OVERLAPPED* lpOverlapped);
+BOOL CreateLogContainerScanContext(HANDLE hLog, uint cFromContainer, uint cContainers, ubyte eScanMode, CLS_SCAN_CONTEXT* pcxScan, OVERLAPPED* pOverlapped);
+BOOL ScanLogContainers(CLS_SCAN_CONTEXT* pcxScan, ubyte eScanMode, void* pReserved);
+BOOL AlignReservedLog(void* pvMarshal, uint cReservedRecords, long* rgcbReservation, long* pcbAlignReservation);
+BOOL AllocReservedLog(void* pvMarshal, uint cReservedRecords, long* pcbAdjustment);
+BOOL FreeReservedLog(void* pvMarshal, uint cReservedRecords, long* pcbAdjustment);
+BOOL GetLogFileInformation(HANDLE hLog, CLS_INFORMATION* pinfoBuffer, uint* cbBuffer);
+BOOL SetLogArchiveMode(HANDLE hLog, CLFS_LOG_ARCHIVE_MODE eMode);
+BOOL ReadLogRestartArea(void* pvMarshal, void** ppvRestartBuffer, uint* pcbRestartBuffer, CLS_LSN* plsn, void** ppvContext, OVERLAPPED* pOverlapped);
+BOOL ReadPreviousLogRestartArea(void* pvReadContext, void** ppvRestartBuffer, uint* pcbRestartBuffer, CLS_LSN* plsnRestart, OVERLAPPED* pOverlapped);
+BOOL WriteLogRestartArea(void* pvMarshal, void* pvRestartBuffer, uint cbRestartBuffer, CLS_LSN* plsnBase, CLFS_FLAG fFlags, uint* pcbWritten, CLS_LSN* plsnNext, OVERLAPPED* pOverlapped);
+BOOL GetLogReservationInfo(void* pvMarshal, uint* pcbRecordNumber, long* pcbUserReservation, long* pcbCommitReservation);
+BOOL AdvanceLogBase(void* pvMarshal, CLS_LSN* plsnBase, uint fFlags, OVERLAPPED* pOverlapped);
+BOOL CloseAndResetLogFile(HANDLE hLog);
+BOOL CreateLogMarshallingArea(HANDLE hLog, CLFS_BLOCK_ALLOCATION pfnAllocBuffer, CLFS_BLOCK_DEALLOCATION pfnFreeBuffer, void* pvBlockAllocContext, uint cbMarshallingBuffer, uint cMaxWriteBuffers, uint cMaxReadBuffers, void** ppvMarshal);
+BOOL DeleteLogMarshallingArea(void* pvMarshal);
+BOOL ReserveAndAppendLog(void* pvMarshal, CLS_WRITE_ENTRY* rgWriteEntries, uint cWriteEntries, CLS_LSN* plsnUndoNext, CLS_LSN* plsnPrevious, uint cReserveRecords, long* rgcbReservation, CLFS_FLAG fFlags, CLS_LSN* plsn, OVERLAPPED* pOverlapped);
+BOOL ReserveAndAppendLogAligned(void* pvMarshal, CLS_WRITE_ENTRY* rgWriteEntries, uint cWriteEntries, uint cbEntryAlignment, CLS_LSN* plsnUndoNext, CLS_LSN* plsnPrevious, uint cReserveRecords, long* rgcbReservation, CLFS_FLAG fFlags, CLS_LSN* plsn, OVERLAPPED* pOverlapped);
+BOOL FlushLogBuffers(void* pvMarshal, OVERLAPPED* pOverlapped);
+BOOL FlushLogToLsn(void* pvMarshalContext, CLS_LSN* plsnFlush, CLS_LSN* plsnLastFlushed, OVERLAPPED* pOverlapped);
+BOOL ReadLogRecord(void* pvMarshal, CLS_LSN* plsnFirst, CLFS_CONTEXT_MODE eContextMode, void** ppvReadBuffer, uint* pcbReadBuffer, ubyte* peRecordType, CLS_LSN* plsnUndoNext, CLS_LSN* plsnPrevious, void** ppvReadContext, OVERLAPPED* pOverlapped);
+BOOL ReadNextLogRecord(void* pvReadContext, void** ppvBuffer, uint* pcbBuffer, ubyte* peRecordType, CLS_LSN* plsnUser, CLS_LSN* plsnUndoNext, CLS_LSN* plsnPrevious, CLS_LSN* plsnRecord, OVERLAPPED* pOverlapped);
+BOOL TerminateReadLog(void* pvCursorContext);
+BOOL PrepareLogArchive(HANDLE hLog, PWSTR pszBaseLogFileName, uint cLen, const(CLS_LSN)* plsnLow, const(CLS_LSN)* plsnHigh, uint* pcActualLength, ulong* poffBaseLogFileData, ulong* pcbBaseLogFileLength, CLS_LSN* plsnBase, CLS_LSN* plsnLast, CLS_LSN* plsnCurrentArchiveTail, void** ppvArchiveContext);
+BOOL ReadLogArchiveMetadata(void* pvArchiveContext, uint cbOffset, uint cbBytesToRead, ubyte* pbReadBuffer, uint* pcbBytesRead);
+BOOL GetNextLogArchiveExtent(void* pvArchiveContext, CLS_ARCHIVE_DESCRIPTOR* rgadExtent, uint cDescriptors, uint* pcDescriptorsReturned);
+BOOL TerminateLogArchive(void* pvArchiveContext);
+BOOL ValidateLog(const(wchar)* pszLogFileName, SECURITY_ATTRIBUTES* psaLogFile, CLS_INFORMATION* pinfoBuffer, uint* pcbBuffer);
+BOOL GetLogContainerName(HANDLE hLog, uint cidLogicalContainer, const(wchar)* pwstrContainerName, uint cLenContainerName, uint* pcActualLenContainerName);
+BOOL GetLogIoStatistics(HANDLE hLog, void* pvStatsBuffer, uint cbStatsBuffer, CLFS_IOSTATS_CLASS eStatsClass, uint* pcbStatsWritten);
+BOOL RegisterManageableLogClient(HANDLE hLog, LOG_MANAGEMENT_CALLBACKS* pCallbacks);
+BOOL DeregisterManageableLogClient(HANDLE hLog);
+BOOL ReadLogNotification(HANDLE hLog, CLFS_MGMT_NOTIFICATION* pNotification, OVERLAPPED* lpOverlapped);
+BOOL InstallLogPolicy(HANDLE hLog, CLFS_MGMT_POLICY* pPolicy);
+BOOL RemoveLogPolicy(HANDLE hLog, CLFS_MGMT_POLICY_TYPE ePolicyType);
+BOOL QueryLogPolicy(HANDLE hLog, CLFS_MGMT_POLICY_TYPE ePolicyType, CLFS_MGMT_POLICY* pPolicyBuffer, uint* pcbPolicyBuffer);
+BOOL SetLogFileSizeWithPolicy(HANDLE hLog, ulong* pDesiredSize, ulong* pResultingSize);
+BOOL HandleLogFull(HANDLE hLog);
+BOOL LogTailAdvanceFailure(HANDLE hLog, uint dwReason);
+BOOL RegisterForLogWriteNotification(HANDLE hLog, uint cbThreshold, BOOL fEnable);
+uint QueryUsersOnEncryptedFile(const(wchar)* lpFileName, ENCRYPTION_CERTIFICATE_HASH_LIST** pUsers);
+uint QueryRecoveryAgentsOnEncryptedFile(const(wchar)* lpFileName, ENCRYPTION_CERTIFICATE_HASH_LIST** pRecoveryAgents);
+uint RemoveUsersFromEncryptedFile(const(wchar)* lpFileName, ENCRYPTION_CERTIFICATE_HASH_LIST* pHashes);
+uint AddUsersToEncryptedFile(const(wchar)* lpFileName, ENCRYPTION_CERTIFICATE_LIST* pEncryptionCertificates);
+uint SetUserFileEncryptionKey(ENCRYPTION_CERTIFICATE* pEncryptionCertificate);
+uint SetUserFileEncryptionKeyEx(ENCRYPTION_CERTIFICATE* pEncryptionCertificate, uint dwCapabilities, uint dwFlags, void* pvReserved);
+void FreeEncryptionCertificateHashList(ENCRYPTION_CERTIFICATE_HASH_LIST* pUsers);
+BOOL EncryptionDisable(const(wchar)* DirPath, BOOL Disable);
+uint DuplicateEncryptionInfoFile(const(wchar)* SrcFileName, const(wchar)* DstFileName, uint dwCreationDistribution, uint dwAttributes, const(SECURITY_ATTRIBUTES)* lpSecurityAttributes);
+uint GetEncryptedFileMetadata(const(wchar)* lpFileName, uint* pcbMetadata, ubyte** ppbMetadata);
+uint SetEncryptedFileMetadata(const(wchar)* lpFileName, ubyte* pbOldMetadata, ubyte* pbNewMetadata, ENCRYPTION_CERTIFICATE_HASH* pOwnerHash, uint dwOperation, ENCRYPTION_CERTIFICATE_HASH_LIST* pCertificatesAdded);
+void FreeEncryptedFileMetadata(ubyte* pbMetadata);
 int LZStart();
 void LZDone();
-int CopyLZFile(int, int);
-int LZCopy(int, int);
-int LZInit(int);
-int GetExpandedNameA(PSTR, PSTR);
-int GetExpandedNameW(PWSTR, PWSTR);
-int LZOpenFileA(PSTR, OFSTRUCT*, LZOPENFILE_STYLE);
-int LZOpenFileW(PWSTR, OFSTRUCT*, LZOPENFILE_STYLE);
-int LZSeek(int, int, int);
-int LZRead(int, PSTR, int);
-void LZClose(int);
-BOOL WofShouldCompressBinaries(const(wchar)*, uint*);
-HRESULT WofGetDriverVersion(HANDLE, uint, uint*);
-HRESULT WofSetFileDataLocation(HANDLE, uint, void*, uint);
-HRESULT WofIsExternalFile(const(wchar)*, BOOL*, uint*, void*, uint*);
-HRESULT WofEnumEntries(const(wchar)*, uint, WofEnumEntryProc, void*);
-HRESULT WofWimAddEntry(const(wchar)*, const(wchar)*, uint, uint, long*);
-HRESULT WofWimEnumFiles(const(wchar)*, long, WofEnumFilesProc, void*);
-HRESULT WofWimSuspendEntry(const(wchar)*, long);
-HRESULT WofWimRemoveEntry(const(wchar)*, long);
-HRESULT WofWimUpdateEntry(const(wchar)*, long, const(wchar)*);
-HRESULT WofFileEnumFiles(const(wchar)*, uint, WofEnumFilesProc, void*);
-BOOL TxfLogCreateFileReadContext(const(wchar)*, CLS_LSN, CLS_LSN, TXF_ID*, void**);
-BOOL TxfLogCreateRangeReadContext(const(wchar)*, CLS_LSN, CLS_LSN, long*, long*, uint, void**);
-BOOL TxfLogDestroyReadContext(void*);
-BOOL TxfLogReadRecords(void*, uint, void*, uint*, uint*);
-BOOL TxfReadMetadataInfo(HANDLE, TXF_ID*, CLS_LSN*, uint*, GUID*);
-BOOL TxfLogRecordGetFileName(void*, uint, PWSTR, uint*, TXF_ID*);
-BOOL TxfLogRecordGetGenericType(void*, uint, uint*, long*);
-void TxfSetThreadMiniVersionForCreate(ushort);
-void TxfGetThreadMiniVersionForCreate(ushort*);
-HANDLE CreateTransaction(SECURITY_ATTRIBUTES*, GUID*, uint, uint, uint, uint, PWSTR);
-HANDLE OpenTransaction(uint, GUID*);
-BOOL CommitTransaction(HANDLE);
-BOOL CommitTransactionAsync(HANDLE);
-BOOL RollbackTransaction(HANDLE);
-BOOL RollbackTransactionAsync(HANDLE);
-BOOL GetTransactionId(HANDLE, GUID*);
-BOOL GetTransactionInformation(HANDLE, uint*, uint*, uint*, uint*, uint, PWSTR);
-BOOL SetTransactionInformation(HANDLE, uint, uint, uint, PWSTR);
-HANDLE CreateTransactionManager(SECURITY_ATTRIBUTES*, PWSTR, uint, uint);
-HANDLE OpenTransactionManager(PWSTR, uint, uint);
-HANDLE OpenTransactionManagerById(GUID*, uint, uint);
-BOOL RenameTransactionManager(PWSTR, GUID*);
-BOOL RollforwardTransactionManager(HANDLE, long*);
-BOOL RecoverTransactionManager(HANDLE);
-BOOL GetCurrentClockTransactionManager(HANDLE, long*);
-BOOL GetTransactionManagerId(HANDLE, GUID*);
-HANDLE CreateResourceManager(SECURITY_ATTRIBUTES*, GUID*, uint, HANDLE, PWSTR);
-HANDLE OpenResourceManager(uint, HANDLE, GUID*);
-BOOL RecoverResourceManager(HANDLE);
-BOOL GetNotificationResourceManager(HANDLE, TRANSACTION_NOTIFICATION*, uint, uint, uint*);
-BOOL GetNotificationResourceManagerAsync(HANDLE, TRANSACTION_NOTIFICATION*, uint, uint*, OVERLAPPED*);
-BOOL SetResourceManagerCompletionPort(HANDLE, HANDLE, ulong);
-HANDLE CreateEnlistment(SECURITY_ATTRIBUTES*, HANDLE, HANDLE, uint, uint, void*);
-HANDLE OpenEnlistment(uint, HANDLE, GUID*);
-BOOL RecoverEnlistment(HANDLE, void*);
-BOOL GetEnlistmentRecoveryInformation(HANDLE, uint, void*, uint*);
-BOOL GetEnlistmentId(HANDLE, GUID*);
-BOOL SetEnlistmentRecoveryInformation(HANDLE, uint, void*);
-BOOL PrepareEnlistment(HANDLE, long*);
-BOOL PrePrepareEnlistment(HANDLE, long*);
-BOOL CommitEnlistment(HANDLE, long*);
-BOOL RollbackEnlistment(HANDLE, long*);
-BOOL PrePrepareComplete(HANDLE, long*);
-BOOL PrepareComplete(HANDLE, long*);
-BOOL ReadOnlyEnlistment(HANDLE, long*);
-BOOL CommitComplete(HANDLE, long*);
-BOOL RollbackComplete(HANDLE, long*);
-BOOL SinglePhaseReject(HANDLE, long*);
-uint NetShareAdd(PWSTR, uint, ubyte*, uint*);
-uint NetShareEnum(PWSTR, uint, ubyte**, uint, uint*, uint*, uint*);
-uint NetShareEnumSticky(PWSTR, uint, ubyte**, uint, uint*, uint*, uint*);
-uint NetShareGetInfo(PWSTR, PWSTR, uint, ubyte**);
-uint NetShareSetInfo(PWSTR, PWSTR, uint, ubyte*, uint*);
-uint NetShareDel(PWSTR, PWSTR, uint);
-uint NetShareDelSticky(PWSTR, PWSTR, uint);
-uint NetShareCheck(PWSTR, PWSTR, uint*);
-uint NetShareDelEx(PWSTR, uint, ubyte*);
-uint NetServerAliasAdd(PWSTR, uint, ubyte*);
-uint NetServerAliasDel(PWSTR, uint, ubyte*);
-uint NetServerAliasEnum(PWSTR, uint, ubyte**, uint, uint*, uint*, uint*);
-uint NetSessionEnum(PWSTR, PWSTR, PWSTR, uint, ubyte**, uint, uint*, uint*, uint*);
-uint NetSessionDel(PWSTR, PWSTR, PWSTR);
-uint NetSessionGetInfo(PWSTR, PWSTR, PWSTR, uint, ubyte**);
-uint NetConnectionEnum(PWSTR, PWSTR, uint, ubyte**, uint, uint*, uint*, uint*);
-uint NetFileClose(PWSTR, uint);
-uint NetFileEnum(PWSTR, PWSTR, PWSTR, uint, ubyte**, uint, uint*, uint*, ulong*);
-uint NetFileGetInfo(PWSTR, uint, uint, ubyte**);
-uint NetStatisticsGet(byte*, byte*, uint, uint, ubyte**);
-HRESULT QueryIoRingCapabilities(IORING_CAPABILITIES*);
-BOOL IsIoRingOpSupported(HIORING, IORING_OP_CODE);
-HRESULT CreateIoRing(IORING_VERSION, IORING_CREATE_FLAGS, uint, uint, HIORING*);
-HRESULT GetIoRingInfo(HIORING, IORING_INFO*);
-HRESULT SubmitIoRing(HIORING, uint, uint, uint*);
-HRESULT CloseIoRing(HIORING);
-HRESULT PopIoRingCompletion(HIORING, IORING_CQE*);
-HRESULT SetIoRingCompletionEvent(HIORING, HANDLE);
-HRESULT BuildIoRingCancelRequest(HIORING, IORING_HANDLE_REF, ulong, ulong);
-HRESULT BuildIoRingReadFile(HIORING, IORING_HANDLE_REF, IORING_BUFFER_REF, uint, ulong, ulong, IORING_SQE_FLAGS);
-HRESULT BuildIoRingRegisterFileHandles(HIORING, uint, const(HANDLE)*, ulong);
-HRESULT BuildIoRingRegisterBuffers(HIORING, uint, const(IORING_BUFFER_INFO)*, ulong);
-HRESULT BuildIoRingWriteFile(HIORING, IORING_HANDLE_REF, IORING_BUFFER_REF, uint, ulong, FILE_WRITE_FLAGS, ulong, IORING_SQE_FLAGS);
-HRESULT BuildIoRingFlushFile(HIORING, IORING_HANDLE_REF, FILE_FLUSH_MODE, ulong, IORING_SQE_FLAGS);
-BOOLEAN Wow64EnableWow64FsRedirection(BOOLEAN);
-BOOL Wow64DisableWow64FsRedirection(void**);
-BOOL Wow64RevertWow64FsRedirection(void*);
-BOOL GetBinaryTypeA(const(char)*, uint*);
-BOOL GetBinaryTypeW(const(wchar)*, uint*);
-uint GetShortPathNameA(const(char)*, PSTR, uint);
-uint GetLongPathNameTransactedA(const(char)*, PSTR, uint, HANDLE);
-uint GetLongPathNameTransactedW(const(wchar)*, PWSTR, uint, HANDLE);
-BOOL SetFileCompletionNotificationModes(HANDLE, ubyte);
-BOOL SetFileShortNameA(HANDLE, const(char)*);
-BOOL SetFileShortNameW(HANDLE, const(wchar)*);
-uint SetTapePosition(HANDLE, TAPE_POSITION_METHOD, uint, uint, uint, BOOL);
-uint GetTapePosition(HANDLE, TAPE_POSITION_TYPE, uint*, uint*, uint*);
-uint PrepareTape(HANDLE, PREPARE_TAPE_OPERATION, BOOL);
-uint EraseTape(HANDLE, ERASE_TAPE_TYPE, BOOL);
-uint CreateTapePartition(HANDLE, CREATE_TAPE_PARTITION_METHOD, uint, uint);
-uint WriteTapemark(HANDLE, TAPEMARK_TYPE, uint, BOOL);
-uint GetTapeStatus(HANDLE);
-uint GetTapeParameters(HANDLE, GET_TAPE_DRIVE_PARAMETERS_OPERATION, uint*, void*);
-uint SetTapeParameters(HANDLE, TAPE_INFORMATION_TYPE, void*);
-BOOL EncryptFileA(const(char)*);
-BOOL EncryptFileW(const(wchar)*);
-BOOL DecryptFileA(const(char)*, uint);
-BOOL DecryptFileW(const(wchar)*, uint);
-BOOL FileEncryptionStatusA(const(char)*, uint*);
-BOOL FileEncryptionStatusW(const(wchar)*, uint*);
-uint OpenEncryptedFileRawA(const(char)*, uint, void**);
-uint OpenEncryptedFileRawW(const(wchar)*, uint, void**);
-uint ReadEncryptedFileRaw(PFE_EXPORT_FUNC, void*, void*);
-uint WriteEncryptedFileRaw(PFE_IMPORT_FUNC, void*, void*);
-void CloseEncryptedFileRaw(void*);
-int OpenFile(const(char)*, OFSTRUCT*, uint);
-BOOL BackupRead(HANDLE, ubyte*, uint, uint*, BOOL, BOOL, void**);
-BOOL BackupSeek(HANDLE, uint, uint, uint*, uint*, void**);
-BOOL BackupWrite(HANDLE, ubyte*, uint, uint*, BOOL, BOOL, void**);
-uint GetLogicalDriveStringsA(uint, PSTR);
-BOOL SetSearchPathMode(uint);
-BOOL CreateDirectoryExA(const(char)*, const(char)*, SECURITY_ATTRIBUTES*);
-BOOL CreateDirectoryExW(const(wchar)*, const(wchar)*, SECURITY_ATTRIBUTES*);
-BOOL CreateDirectoryTransactedA(const(char)*, const(char)*, SECURITY_ATTRIBUTES*, HANDLE);
-BOOL CreateDirectoryTransactedW(const(wchar)*, const(wchar)*, SECURITY_ATTRIBUTES*, HANDLE);
-BOOL RemoveDirectoryTransactedA(const(char)*, HANDLE);
-BOOL RemoveDirectoryTransactedW(const(wchar)*, HANDLE);
-uint GetFullPathNameTransactedA(const(char)*, uint, PSTR, PSTR*, HANDLE);
-uint GetFullPathNameTransactedW(const(wchar)*, uint, PWSTR, PWSTR*, HANDLE);
-BOOL DefineDosDeviceA(DEFINE_DOS_DEVICE_FLAGS, const(char)*, const(char)*);
-uint QueryDosDeviceA(const(char)*, PSTR, uint);
-HANDLE CreateFileTransactedA(const(char)*, uint, FILE_SHARE_MODE, SECURITY_ATTRIBUTES*, FILE_CREATION_DISPOSITION, FILE_FLAGS_AND_ATTRIBUTES, HANDLE, HANDLE, TXFS_MINIVERSION*, void*);
-HANDLE CreateFileTransactedW(const(wchar)*, uint, FILE_SHARE_MODE, SECURITY_ATTRIBUTES*, FILE_CREATION_DISPOSITION, FILE_FLAGS_AND_ATTRIBUTES, HANDLE, HANDLE, TXFS_MINIVERSION*, void*);
-HANDLE ReOpenFile(HANDLE, uint, FILE_SHARE_MODE, FILE_FLAGS_AND_ATTRIBUTES);
-BOOL SetFileAttributesTransactedA(const(char)*, uint, HANDLE);
-BOOL SetFileAttributesTransactedW(const(wchar)*, uint, HANDLE);
-BOOL GetFileAttributesTransactedA(const(char)*, GET_FILEEX_INFO_LEVELS, void*, HANDLE);
-BOOL GetFileAttributesTransactedW(const(wchar)*, GET_FILEEX_INFO_LEVELS, void*, HANDLE);
-uint GetCompressedFileSizeTransactedA(const(char)*, uint*, HANDLE);
-uint GetCompressedFileSizeTransactedW(const(wchar)*, uint*, HANDLE);
-BOOL DeleteFileTransactedA(const(char)*, HANDLE);
-BOOL DeleteFileTransactedW(const(wchar)*, HANDLE);
-BOOL CheckNameLegalDOS8Dot3A(const(char)*, PSTR, uint, BOOL*, BOOL*);
-BOOL CheckNameLegalDOS8Dot3W(const(wchar)*, PSTR, uint, BOOL*, BOOL*);
-HANDLE FindFirstFileTransactedA(const(char)*, FINDEX_INFO_LEVELS, void*, FINDEX_SEARCH_OPS, void*, uint, HANDLE);
-HANDLE FindFirstFileTransactedW(const(wchar)*, FINDEX_INFO_LEVELS, void*, FINDEX_SEARCH_OPS, void*, uint, HANDLE);
-BOOL CopyFileA(const(char)*, const(char)*, BOOL);
-BOOL CopyFileW(const(wchar)*, const(wchar)*, BOOL);
-BOOL CopyFileExA(const(char)*, const(char)*, LPPROGRESS_ROUTINE, void*, BOOL*, uint);
-BOOL CopyFileExW(const(wchar)*, const(wchar)*, LPPROGRESS_ROUTINE, void*, BOOL*, uint);
-BOOL CopyFileTransactedA(const(char)*, const(char)*, LPPROGRESS_ROUTINE, void*, BOOL*, uint, HANDLE);
-BOOL CopyFileTransactedW(const(wchar)*, const(wchar)*, LPPROGRESS_ROUTINE, void*, BOOL*, uint, HANDLE);
-HRESULT CopyFile2(const(wchar)*, const(wchar)*, COPYFILE2_EXTENDED_PARAMETERS*);
-BOOL MoveFileA(const(char)*, const(char)*);
-BOOL MoveFileW(const(wchar)*, const(wchar)*);
-BOOL MoveFileExA(const(char)*, const(char)*, MOVE_FILE_FLAGS);
-BOOL MoveFileExW(const(wchar)*, const(wchar)*, MOVE_FILE_FLAGS);
-BOOL MoveFileWithProgressA(const(char)*, const(char)*, LPPROGRESS_ROUTINE, void*, MOVE_FILE_FLAGS);
-BOOL MoveFileWithProgressW(const(wchar)*, const(wchar)*, LPPROGRESS_ROUTINE, void*, MOVE_FILE_FLAGS);
-BOOL MoveFileTransactedA(const(char)*, const(char)*, LPPROGRESS_ROUTINE, void*, MOVE_FILE_FLAGS, HANDLE);
-BOOL MoveFileTransactedW(const(wchar)*, const(wchar)*, LPPROGRESS_ROUTINE, void*, MOVE_FILE_FLAGS, HANDLE);
-BOOL ReplaceFileA(const(char)*, const(char)*, const(char)*, REPLACE_FILE_FLAGS, void*, void*);
-BOOL ReplaceFileW(const(wchar)*, const(wchar)*, const(wchar)*, REPLACE_FILE_FLAGS, void*, void*);
-BOOL CreateHardLinkA(const(char)*, const(char)*, SECURITY_ATTRIBUTES*);
-BOOL CreateHardLinkW(const(wchar)*, const(wchar)*, SECURITY_ATTRIBUTES*);
-BOOL CreateHardLinkTransactedA(const(char)*, const(char)*, SECURITY_ATTRIBUTES*, HANDLE);
-BOOL CreateHardLinkTransactedW(const(wchar)*, const(wchar)*, SECURITY_ATTRIBUTES*, HANDLE);
-HANDLE FindFirstStreamTransactedW(const(wchar)*, STREAM_INFO_LEVELS, void*, uint, HANDLE);
-HANDLE FindFirstFileNameTransactedW(const(wchar)*, uint, uint*, PWSTR, HANDLE);
-BOOL SetVolumeLabelA(const(char)*, const(char)*);
-BOOL SetVolumeLabelW(const(wchar)*, const(wchar)*);
-BOOL SetFileBandwidthReservation(HANDLE, uint, uint, BOOL, uint*, uint*);
-BOOL GetFileBandwidthReservation(HANDLE, uint*, uint*, BOOL*, uint*, uint*);
-BOOL ReadDirectoryChangesW(HANDLE, void*, uint, BOOL, FILE_NOTIFY_CHANGE, uint*, OVERLAPPED*, LPOVERLAPPED_COMPLETION_ROUTINE);
-BOOL ReadDirectoryChangesExW(HANDLE, void*, uint, BOOL, FILE_NOTIFY_CHANGE, uint*, OVERLAPPED*, LPOVERLAPPED_COMPLETION_ROUTINE, READ_DIRECTORY_NOTIFY_INFORMATION_CLASS);
-HANDLE FindFirstVolumeA(PSTR, uint);
-BOOL FindNextVolumeA(HANDLE, PSTR, uint);
-HANDLE FindFirstVolumeMountPointA(const(char)*, PSTR, uint);
-HANDLE FindFirstVolumeMountPointW(const(wchar)*, PWSTR, uint);
-BOOL FindNextVolumeMountPointA(HANDLE, PSTR, uint);
-BOOL FindNextVolumeMountPointW(HANDLE, PWSTR, uint);
-BOOL FindVolumeMountPointClose(HANDLE);
-BOOL SetVolumeMountPointA(const(char)*, const(char)*);
-BOOL SetVolumeMountPointW(const(wchar)*, const(wchar)*);
-BOOL DeleteVolumeMountPointA(const(char)*);
-BOOL GetVolumeNameForVolumeMountPointA(const(char)*, PSTR, uint);
-BOOL GetVolumePathNameA(const(char)*, PSTR, uint);
-BOOL GetVolumePathNamesForVolumeNameA(const(char)*, PSTR, uint, uint*);
-BOOL GetFileInformationByHandleEx(HANDLE, FILE_INFO_BY_HANDLE_CLASS, void*, uint);
-HANDLE OpenFileById(HANDLE, FILE_ID_DESCRIPTOR*, uint, FILE_SHARE_MODE, SECURITY_ATTRIBUTES*, FILE_FLAGS_AND_ATTRIBUTES);
-BOOLEAN CreateSymbolicLinkA(const(char)*, const(char)*, SYMBOLIC_LINK_FLAGS);
-BOOLEAN CreateSymbolicLinkW(const(wchar)*, const(wchar)*, SYMBOLIC_LINK_FLAGS);
-BOOLEAN CreateSymbolicLinkTransactedA(const(char)*, const(char)*, SYMBOLIC_LINK_FLAGS, HANDLE);
-BOOLEAN CreateSymbolicLinkTransactedW(const(wchar)*, const(wchar)*, SYMBOLIC_LINK_FLAGS, HANDLE);
+int CopyLZFile(int hfSource, int hfDest);
+int LZCopy(int hfSource, int hfDest);
+int LZInit(int hfSource);
+int GetExpandedNameA(PSTR lpszSource, PSTR lpszBuffer);
+int GetExpandedNameW(PWSTR lpszSource, PWSTR lpszBuffer);
+int LZOpenFileA(PSTR lpFileName, OFSTRUCT* lpReOpenBuf, LZOPENFILE_STYLE wStyle);
+int LZOpenFileW(PWSTR lpFileName, OFSTRUCT* lpReOpenBuf, LZOPENFILE_STYLE wStyle);
+int LZSeek(int hFile, int lOffset, int iOrigin);
+int LZRead(int hFile, PSTR lpBuffer, int cbRead);
+void LZClose(int hFile);
+BOOL WofShouldCompressBinaries(const(wchar)* Volume, uint* Algorithm);
+HRESULT WofGetDriverVersion(HANDLE FileOrVolumeHandle, uint Provider, uint* WofVersion);
+HRESULT WofSetFileDataLocation(HANDLE FileHandle, uint Provider, void* ExternalFileInfo, uint Length);
+HRESULT WofIsExternalFile(const(wchar)* FilePath, BOOL* IsExternalFile, uint* Provider, void* ExternalFileInfo, uint* BufferLength);
+HRESULT WofEnumEntries(const(wchar)* VolumeName, uint Provider, WofEnumEntryProc EnumProc, void* UserData);
+HRESULT WofWimAddEntry(const(wchar)* VolumeName, const(wchar)* WimPath, uint WimType, uint WimIndex, long* DataSourceId);
+HRESULT WofWimEnumFiles(const(wchar)* VolumeName, long DataSourceId, WofEnumFilesProc EnumProc, void* UserData);
+HRESULT WofWimSuspendEntry(const(wchar)* VolumeName, long DataSourceId);
+HRESULT WofWimRemoveEntry(const(wchar)* VolumeName, long DataSourceId);
+HRESULT WofWimUpdateEntry(const(wchar)* VolumeName, long DataSourceId, const(wchar)* NewWimPath);
+HRESULT WofFileEnumFiles(const(wchar)* VolumeName, uint Algorithm, WofEnumFilesProc EnumProc, void* UserData);
+BOOL TxfLogCreateFileReadContext(const(wchar)* LogPath, CLS_LSN BeginningLsn, CLS_LSN EndingLsn, TXF_ID* TxfFileId, void** TxfLogContext);
+BOOL TxfLogCreateRangeReadContext(const(wchar)* LogPath, CLS_LSN BeginningLsn, CLS_LSN EndingLsn, long* BeginningVirtualClock, long* EndingVirtualClock, uint RecordTypeMask, void** TxfLogContext);
+BOOL TxfLogDestroyReadContext(void* TxfLogContext);
+BOOL TxfLogReadRecords(void* TxfLogContext, uint BufferLength, void* Buffer, uint* BytesUsed, uint* RecordCount);
+BOOL TxfReadMetadataInfo(HANDLE FileHandle, TXF_ID* TxfFileId, CLS_LSN* LastLsn, uint* TransactionState, GUID* LockingTransaction);
+BOOL TxfLogRecordGetFileName(void* RecordBuffer, uint RecordBufferLengthInBytes, PWSTR NameBuffer, uint* NameBufferLengthInBytes, TXF_ID* TxfId);
+BOOL TxfLogRecordGetGenericType(void* RecordBuffer, uint RecordBufferLengthInBytes, uint* GenericType, long* VirtualClock);
+void TxfSetThreadMiniVersionForCreate(ushort MiniVersion);
+void TxfGetThreadMiniVersionForCreate(ushort* MiniVersion);
+HANDLE CreateTransaction(SECURITY_ATTRIBUTES* lpTransactionAttributes, GUID* UOW, uint CreateOptions, uint IsolationLevel, uint IsolationFlags, uint Timeout, PWSTR Description);
+HANDLE OpenTransaction(uint dwDesiredAccess, GUID* TransactionId);
+BOOL CommitTransaction(HANDLE TransactionHandle);
+BOOL CommitTransactionAsync(HANDLE TransactionHandle);
+BOOL RollbackTransaction(HANDLE TransactionHandle);
+BOOL RollbackTransactionAsync(HANDLE TransactionHandle);
+BOOL GetTransactionId(HANDLE TransactionHandle, GUID* TransactionId);
+BOOL GetTransactionInformation(HANDLE TransactionHandle, uint* Outcome, uint* IsolationLevel, uint* IsolationFlags, uint* Timeout, uint BufferLength, PWSTR Description);
+BOOL SetTransactionInformation(HANDLE TransactionHandle, uint IsolationLevel, uint IsolationFlags, uint Timeout, PWSTR Description);
+HANDLE CreateTransactionManager(SECURITY_ATTRIBUTES* lpTransactionAttributes, PWSTR LogFileName, uint CreateOptions, uint CommitStrength);
+HANDLE OpenTransactionManager(PWSTR LogFileName, uint DesiredAccess, uint OpenOptions);
+HANDLE OpenTransactionManagerById(GUID* TransactionManagerId, uint DesiredAccess, uint OpenOptions);
+BOOL RenameTransactionManager(PWSTR LogFileName, GUID* ExistingTransactionManagerGuid);
+BOOL RollforwardTransactionManager(HANDLE TransactionManagerHandle, long* TmVirtualClock);
+BOOL RecoverTransactionManager(HANDLE TransactionManagerHandle);
+BOOL GetCurrentClockTransactionManager(HANDLE TransactionManagerHandle, long* TmVirtualClock);
+BOOL GetTransactionManagerId(HANDLE TransactionManagerHandle, GUID* TransactionManagerId);
+HANDLE CreateResourceManager(SECURITY_ATTRIBUTES* lpResourceManagerAttributes, GUID* ResourceManagerId, uint CreateOptions, HANDLE TmHandle, PWSTR Description);
+HANDLE OpenResourceManager(uint dwDesiredAccess, HANDLE TmHandle, GUID* ResourceManagerId);
+BOOL RecoverResourceManager(HANDLE ResourceManagerHandle);
+BOOL GetNotificationResourceManager(HANDLE ResourceManagerHandle, TRANSACTION_NOTIFICATION* TransactionNotification, uint NotificationLength, uint dwMilliseconds, uint* ReturnLength);
+BOOL GetNotificationResourceManagerAsync(HANDLE ResourceManagerHandle, TRANSACTION_NOTIFICATION* TransactionNotification, uint TransactionNotificationLength, uint* ReturnLength, OVERLAPPED* lpOverlapped);
+BOOL SetResourceManagerCompletionPort(HANDLE ResourceManagerHandle, HANDLE IoCompletionPortHandle, ulong CompletionKey);
+HANDLE CreateEnlistment(SECURITY_ATTRIBUTES* lpEnlistmentAttributes, HANDLE ResourceManagerHandle, HANDLE TransactionHandle, uint NotificationMask, uint CreateOptions, void* EnlistmentKey);
+HANDLE OpenEnlistment(uint dwDesiredAccess, HANDLE ResourceManagerHandle, GUID* EnlistmentId);
+BOOL RecoverEnlistment(HANDLE EnlistmentHandle, void* EnlistmentKey);
+BOOL GetEnlistmentRecoveryInformation(HANDLE EnlistmentHandle, uint BufferSize, void* Buffer, uint* BufferUsed);
+BOOL GetEnlistmentId(HANDLE EnlistmentHandle, GUID* EnlistmentId);
+BOOL SetEnlistmentRecoveryInformation(HANDLE EnlistmentHandle, uint BufferSize, void* Buffer);
+BOOL PrepareEnlistment(HANDLE EnlistmentHandle, long* TmVirtualClock);
+BOOL PrePrepareEnlistment(HANDLE EnlistmentHandle, long* TmVirtualClock);
+BOOL CommitEnlistment(HANDLE EnlistmentHandle, long* TmVirtualClock);
+BOOL RollbackEnlistment(HANDLE EnlistmentHandle, long* TmVirtualClock);
+BOOL PrePrepareComplete(HANDLE EnlistmentHandle, long* TmVirtualClock);
+BOOL PrepareComplete(HANDLE EnlistmentHandle, long* TmVirtualClock);
+BOOL ReadOnlyEnlistment(HANDLE EnlistmentHandle, long* TmVirtualClock);
+BOOL CommitComplete(HANDLE EnlistmentHandle, long* TmVirtualClock);
+BOOL RollbackComplete(HANDLE EnlistmentHandle, long* TmVirtualClock);
+BOOL SinglePhaseReject(HANDLE EnlistmentHandle, long* TmVirtualClock);
+uint NetShareAdd(PWSTR servername, uint level, ubyte* buf, uint* parm_err);
+uint NetShareEnum(PWSTR servername, uint level, ubyte** bufptr, uint prefmaxlen, uint* entriesread, uint* totalentries, uint* resume_handle);
+uint NetShareEnumSticky(PWSTR servername, uint level, ubyte** bufptr, uint prefmaxlen, uint* entriesread, uint* totalentries, uint* resume_handle);
+uint NetShareGetInfo(PWSTR servername, PWSTR netname, uint level, ubyte** bufptr);
+uint NetShareSetInfo(PWSTR servername, PWSTR netname, uint level, ubyte* buf, uint* parm_err);
+uint NetShareDel(PWSTR servername, PWSTR netname, uint reserved);
+uint NetShareDelSticky(PWSTR servername, PWSTR netname, uint reserved);
+uint NetShareCheck(PWSTR servername, PWSTR device, uint* type);
+uint NetShareDelEx(PWSTR servername, uint level, ubyte* buf);
+uint NetServerAliasAdd(PWSTR servername, uint level, ubyte* buf);
+uint NetServerAliasDel(PWSTR servername, uint level, ubyte* buf);
+uint NetServerAliasEnum(PWSTR servername, uint level, ubyte** bufptr, uint prefmaxlen, uint* entriesread, uint* totalentries, uint* resumehandle);
+uint NetSessionEnum(PWSTR servername, PWSTR UncClientName, PWSTR username, uint level, ubyte** bufptr, uint prefmaxlen, uint* entriesread, uint* totalentries, uint* resume_handle);
+uint NetSessionDel(PWSTR servername, PWSTR UncClientName, PWSTR username);
+uint NetSessionGetInfo(PWSTR servername, PWSTR UncClientName, PWSTR username, uint level, ubyte** bufptr);
+uint NetConnectionEnum(PWSTR servername, PWSTR qualifier, uint level, ubyte** bufptr, uint prefmaxlen, uint* entriesread, uint* totalentries, uint* resume_handle);
+uint NetFileClose(PWSTR servername, uint fileid);
+uint NetFileEnum(PWSTR servername, PWSTR basepath, PWSTR username, uint level, ubyte** bufptr, uint prefmaxlen, uint* entriesread, uint* totalentries, ulong* resume_handle);
+uint NetFileGetInfo(PWSTR servername, uint fileid, uint level, ubyte** bufptr);
+uint NetStatisticsGet(byte* ServerName, byte* Service, uint Level, uint Options, ubyte** Buffer);
+HRESULT QueryIoRingCapabilities(IORING_CAPABILITIES* capabilities);
+BOOL IsIoRingOpSupported(HIORING ioRing, IORING_OP_CODE op);
+HRESULT CreateIoRing(IORING_VERSION ioringVersion, IORING_CREATE_FLAGS flags, uint submissionQueueSize, uint completionQueueSize, HIORING* h);
+HRESULT GetIoRingInfo(HIORING ioRing, IORING_INFO* info);
+HRESULT SubmitIoRing(HIORING ioRing, uint waitOperations, uint milliseconds, uint* submittedEntries);
+HRESULT CloseIoRing(HIORING ioRing);
+HRESULT PopIoRingCompletion(HIORING ioRing, IORING_CQE* cqe);
+HRESULT SetIoRingCompletionEvent(HIORING ioRing, HANDLE hEvent);
+HRESULT BuildIoRingCancelRequest(HIORING ioRing, IORING_HANDLE_REF file, ulong opToCancel, ulong userData);
+HRESULT BuildIoRingReadFile(HIORING ioRing, IORING_HANDLE_REF fileRef, IORING_BUFFER_REF dataRef, uint numberOfBytesToRead, ulong fileOffset, ulong userData, IORING_SQE_FLAGS sqeFlags);
+HRESULT BuildIoRingRegisterFileHandles(HIORING ioRing, uint count, const(HANDLE)* handles, ulong userData);
+HRESULT BuildIoRingRegisterBuffers(HIORING ioRing, uint count, const(IORING_BUFFER_INFO)* buffers, ulong userData);
+HRESULT BuildIoRingWriteFile(HIORING ioRing, IORING_HANDLE_REF fileRef, IORING_BUFFER_REF bufferRef, uint numberOfBytesToWrite, ulong fileOffset, FILE_WRITE_FLAGS writeFlags, ulong userData, IORING_SQE_FLAGS sqeFlags);
+HRESULT BuildIoRingFlushFile(HIORING ioRing, IORING_HANDLE_REF fileRef, FILE_FLUSH_MODE flushMode, ulong userData, IORING_SQE_FLAGS sqeFlags);
+BOOLEAN Wow64EnableWow64FsRedirection(BOOLEAN Wow64FsEnableRedirection);
+BOOL Wow64DisableWow64FsRedirection(void** OldValue);
+BOOL Wow64RevertWow64FsRedirection(void* OlValue);
+BOOL GetBinaryTypeA(const(char)* lpApplicationName, uint* lpBinaryType);
+BOOL GetBinaryTypeW(const(wchar)* lpApplicationName, uint* lpBinaryType);
+uint GetShortPathNameA(const(char)* lpszLongPath, PSTR lpszShortPath, uint cchBuffer);
+uint GetLongPathNameTransactedA(const(char)* lpszShortPath, PSTR lpszLongPath, uint cchBuffer, HANDLE hTransaction);
+uint GetLongPathNameTransactedW(const(wchar)* lpszShortPath, PWSTR lpszLongPath, uint cchBuffer, HANDLE hTransaction);
+BOOL SetFileCompletionNotificationModes(HANDLE FileHandle, ubyte Flags);
+BOOL SetFileShortNameA(HANDLE hFile, const(char)* lpShortName);
+BOOL SetFileShortNameW(HANDLE hFile, const(wchar)* lpShortName);
+uint SetTapePosition(HANDLE hDevice, TAPE_POSITION_METHOD dwPositionMethod, uint dwPartition, uint dwOffsetLow, uint dwOffsetHigh, BOOL bImmediate);
+uint GetTapePosition(HANDLE hDevice, TAPE_POSITION_TYPE dwPositionType, uint* lpdwPartition, uint* lpdwOffsetLow, uint* lpdwOffsetHigh);
+uint PrepareTape(HANDLE hDevice, PREPARE_TAPE_OPERATION dwOperation, BOOL bImmediate);
+uint EraseTape(HANDLE hDevice, ERASE_TAPE_TYPE dwEraseType, BOOL bImmediate);
+uint CreateTapePartition(HANDLE hDevice, CREATE_TAPE_PARTITION_METHOD dwPartitionMethod, uint dwCount, uint dwSize);
+uint WriteTapemark(HANDLE hDevice, TAPEMARK_TYPE dwTapemarkType, uint dwTapemarkCount, BOOL bImmediate);
+uint GetTapeStatus(HANDLE hDevice);
+uint GetTapeParameters(HANDLE hDevice, GET_TAPE_DRIVE_PARAMETERS_OPERATION dwOperation, uint* lpdwSize, void* lpTapeInformation);
+uint SetTapeParameters(HANDLE hDevice, TAPE_INFORMATION_TYPE dwOperation, void* lpTapeInformation);
+BOOL EncryptFileA(const(char)* lpFileName);
+BOOL EncryptFileW(const(wchar)* lpFileName);
+BOOL DecryptFileA(const(char)* lpFileName, uint dwReserved);
+BOOL DecryptFileW(const(wchar)* lpFileName, uint dwReserved);
+BOOL FileEncryptionStatusA(const(char)* lpFileName, uint* lpStatus);
+BOOL FileEncryptionStatusW(const(wchar)* lpFileName, uint* lpStatus);
+uint OpenEncryptedFileRawA(const(char)* lpFileName, uint ulFlags, void** pvContext);
+uint OpenEncryptedFileRawW(const(wchar)* lpFileName, uint ulFlags, void** pvContext);
+uint ReadEncryptedFileRaw(PFE_EXPORT_FUNC pfExportCallback, void* pvCallbackContext, void* pvContext);
+uint WriteEncryptedFileRaw(PFE_IMPORT_FUNC pfImportCallback, void* pvCallbackContext, void* pvContext);
+void CloseEncryptedFileRaw(void* pvContext);
+int OpenFile(const(char)* lpFileName, OFSTRUCT* lpReOpenBuff, uint uStyle);
+BOOL BackupRead(HANDLE hFile, ubyte* lpBuffer, uint nNumberOfBytesToRead, uint* lpNumberOfBytesRead, BOOL bAbort, BOOL bProcessSecurity, void** lpContext);
+BOOL BackupSeek(HANDLE hFile, uint dwLowBytesToSeek, uint dwHighBytesToSeek, uint* lpdwLowByteSeeked, uint* lpdwHighByteSeeked, void** lpContext);
+BOOL BackupWrite(HANDLE hFile, ubyte* lpBuffer, uint nNumberOfBytesToWrite, uint* lpNumberOfBytesWritten, BOOL bAbort, BOOL bProcessSecurity, void** lpContext);
+uint GetLogicalDriveStringsA(uint nBufferLength, PSTR lpBuffer);
+BOOL SetSearchPathMode(uint Flags);
+BOOL CreateDirectoryExA(const(char)* lpTemplateDirectory, const(char)* lpNewDirectory, SECURITY_ATTRIBUTES* lpSecurityAttributes);
+BOOL CreateDirectoryExW(const(wchar)* lpTemplateDirectory, const(wchar)* lpNewDirectory, SECURITY_ATTRIBUTES* lpSecurityAttributes);
+BOOL CreateDirectoryTransactedA(const(char)* lpTemplateDirectory, const(char)* lpNewDirectory, SECURITY_ATTRIBUTES* lpSecurityAttributes, HANDLE hTransaction);
+BOOL CreateDirectoryTransactedW(const(wchar)* lpTemplateDirectory, const(wchar)* lpNewDirectory, SECURITY_ATTRIBUTES* lpSecurityAttributes, HANDLE hTransaction);
+BOOL RemoveDirectoryTransactedA(const(char)* lpPathName, HANDLE hTransaction);
+BOOL RemoveDirectoryTransactedW(const(wchar)* lpPathName, HANDLE hTransaction);
+uint GetFullPathNameTransactedA(const(char)* lpFileName, uint nBufferLength, PSTR lpBuffer, PSTR* lpFilePart, HANDLE hTransaction);
+uint GetFullPathNameTransactedW(const(wchar)* lpFileName, uint nBufferLength, PWSTR lpBuffer, PWSTR* lpFilePart, HANDLE hTransaction);
+BOOL DefineDosDeviceA(DEFINE_DOS_DEVICE_FLAGS dwFlags, const(char)* lpDeviceName, const(char)* lpTargetPath);
+uint QueryDosDeviceA(const(char)* lpDeviceName, PSTR lpTargetPath, uint ucchMax);
+HANDLE CreateFileTransactedA(const(char)* lpFileName, uint dwDesiredAccess, FILE_SHARE_MODE dwShareMode, SECURITY_ATTRIBUTES* lpSecurityAttributes, FILE_CREATION_DISPOSITION dwCreationDisposition, FILE_FLAGS_AND_ATTRIBUTES dwFlagsAndAttributes, HANDLE hTemplateFile, HANDLE hTransaction, TXFS_MINIVERSION* pusMiniVersion, void* lpExtendedParameter);
+HANDLE CreateFileTransactedW(const(wchar)* lpFileName, uint dwDesiredAccess, FILE_SHARE_MODE dwShareMode, SECURITY_ATTRIBUTES* lpSecurityAttributes, FILE_CREATION_DISPOSITION dwCreationDisposition, FILE_FLAGS_AND_ATTRIBUTES dwFlagsAndAttributes, HANDLE hTemplateFile, HANDLE hTransaction, TXFS_MINIVERSION* pusMiniVersion, void* lpExtendedParameter);
+HANDLE ReOpenFile(HANDLE hOriginalFile, uint dwDesiredAccess, FILE_SHARE_MODE dwShareMode, FILE_FLAGS_AND_ATTRIBUTES dwFlagsAndAttributes);
+BOOL SetFileAttributesTransactedA(const(char)* lpFileName, uint dwFileAttributes, HANDLE hTransaction);
+BOOL SetFileAttributesTransactedW(const(wchar)* lpFileName, uint dwFileAttributes, HANDLE hTransaction);
+BOOL GetFileAttributesTransactedA(const(char)* lpFileName, GET_FILEEX_INFO_LEVELS fInfoLevelId, void* lpFileInformation, HANDLE hTransaction);
+BOOL GetFileAttributesTransactedW(const(wchar)* lpFileName, GET_FILEEX_INFO_LEVELS fInfoLevelId, void* lpFileInformation, HANDLE hTransaction);
+uint GetCompressedFileSizeTransactedA(const(char)* lpFileName, uint* lpFileSizeHigh, HANDLE hTransaction);
+uint GetCompressedFileSizeTransactedW(const(wchar)* lpFileName, uint* lpFileSizeHigh, HANDLE hTransaction);
+BOOL DeleteFileTransactedA(const(char)* lpFileName, HANDLE hTransaction);
+BOOL DeleteFileTransactedW(const(wchar)* lpFileName, HANDLE hTransaction);
+BOOL CheckNameLegalDOS8Dot3A(const(char)* lpName, PSTR lpOemName, uint OemNameSize, BOOL* pbNameContainsSpaces, BOOL* pbNameLegal);
+BOOL CheckNameLegalDOS8Dot3W(const(wchar)* lpName, PSTR lpOemName, uint OemNameSize, BOOL* pbNameContainsSpaces, BOOL* pbNameLegal);
+HANDLE FindFirstFileTransactedA(const(char)* lpFileName, FINDEX_INFO_LEVELS fInfoLevelId, void* lpFindFileData, FINDEX_SEARCH_OPS fSearchOp, void* lpSearchFilter, uint dwAdditionalFlags, HANDLE hTransaction);
+HANDLE FindFirstFileTransactedW(const(wchar)* lpFileName, FINDEX_INFO_LEVELS fInfoLevelId, void* lpFindFileData, FINDEX_SEARCH_OPS fSearchOp, void* lpSearchFilter, uint dwAdditionalFlags, HANDLE hTransaction);
+BOOL CopyFileA(const(char)* lpExistingFileName, const(char)* lpNewFileName, BOOL bFailIfExists);
+BOOL CopyFileW(const(wchar)* lpExistingFileName, const(wchar)* lpNewFileName, BOOL bFailIfExists);
+BOOL CopyFileExA(const(char)* lpExistingFileName, const(char)* lpNewFileName, LPPROGRESS_ROUTINE lpProgressRoutine, void* lpData, BOOL* pbCancel, COPYFILE_FLAGS dwCopyFlags);
+BOOL CopyFileExW(const(wchar)* lpExistingFileName, const(wchar)* lpNewFileName, LPPROGRESS_ROUTINE lpProgressRoutine, void* lpData, BOOL* pbCancel, COPYFILE_FLAGS dwCopyFlags);
+BOOL CopyFileTransactedA(const(char)* lpExistingFileName, const(char)* lpNewFileName, LPPROGRESS_ROUTINE lpProgressRoutine, void* lpData, BOOL* pbCancel, uint dwCopyFlags, HANDLE hTransaction);
+BOOL CopyFileTransactedW(const(wchar)* lpExistingFileName, const(wchar)* lpNewFileName, LPPROGRESS_ROUTINE lpProgressRoutine, void* lpData, BOOL* pbCancel, uint dwCopyFlags, HANDLE hTransaction);
+HRESULT CopyFile2(const(wchar)* pwszExistingFileName, const(wchar)* pwszNewFileName, COPYFILE2_EXTENDED_PARAMETERS* pExtendedParameters);
+BOOL MoveFileA(const(char)* lpExistingFileName, const(char)* lpNewFileName);
+BOOL MoveFileW(const(wchar)* lpExistingFileName, const(wchar)* lpNewFileName);
+BOOL MoveFileExA(const(char)* lpExistingFileName, const(char)* lpNewFileName, MOVE_FILE_FLAGS dwFlags);
+BOOL MoveFileExW(const(wchar)* lpExistingFileName, const(wchar)* lpNewFileName, MOVE_FILE_FLAGS dwFlags);
+BOOL MoveFileWithProgressA(const(char)* lpExistingFileName, const(char)* lpNewFileName, LPPROGRESS_ROUTINE lpProgressRoutine, void* lpData, MOVE_FILE_FLAGS dwFlags);
+BOOL MoveFileWithProgressW(const(wchar)* lpExistingFileName, const(wchar)* lpNewFileName, LPPROGRESS_ROUTINE lpProgressRoutine, void* lpData, MOVE_FILE_FLAGS dwFlags);
+BOOL MoveFileTransactedA(const(char)* lpExistingFileName, const(char)* lpNewFileName, LPPROGRESS_ROUTINE lpProgressRoutine, void* lpData, MOVE_FILE_FLAGS dwFlags, HANDLE hTransaction);
+BOOL MoveFileTransactedW(const(wchar)* lpExistingFileName, const(wchar)* lpNewFileName, LPPROGRESS_ROUTINE lpProgressRoutine, void* lpData, MOVE_FILE_FLAGS dwFlags, HANDLE hTransaction);
+BOOL ReplaceFileA(const(char)* lpReplacedFileName, const(char)* lpReplacementFileName, const(char)* lpBackupFileName, REPLACE_FILE_FLAGS dwReplaceFlags, void* lpExclude, void* lpReserved);
+BOOL ReplaceFileW(const(wchar)* lpReplacedFileName, const(wchar)* lpReplacementFileName, const(wchar)* lpBackupFileName, REPLACE_FILE_FLAGS dwReplaceFlags, void* lpExclude, void* lpReserved);
+BOOL CreateHardLinkA(const(char)* lpFileName, const(char)* lpExistingFileName, SECURITY_ATTRIBUTES* lpSecurityAttributes);
+BOOL CreateHardLinkW(const(wchar)* lpFileName, const(wchar)* lpExistingFileName, SECURITY_ATTRIBUTES* lpSecurityAttributes);
+BOOL CreateHardLinkTransactedA(const(char)* lpFileName, const(char)* lpExistingFileName, SECURITY_ATTRIBUTES* lpSecurityAttributes, HANDLE hTransaction);
+BOOL CreateHardLinkTransactedW(const(wchar)* lpFileName, const(wchar)* lpExistingFileName, SECURITY_ATTRIBUTES* lpSecurityAttributes, HANDLE hTransaction);
+HANDLE FindFirstStreamTransactedW(const(wchar)* lpFileName, STREAM_INFO_LEVELS InfoLevel, void* lpFindStreamData, uint dwFlags, HANDLE hTransaction);
+HANDLE FindFirstFileNameTransactedW(const(wchar)* lpFileName, uint dwFlags, uint* StringLength, PWSTR LinkName, HANDLE hTransaction);
+BOOL SetVolumeLabelA(const(char)* lpRootPathName, const(char)* lpVolumeName);
+BOOL SetVolumeLabelW(const(wchar)* lpRootPathName, const(wchar)* lpVolumeName);
+BOOL SetFileBandwidthReservation(HANDLE hFile, uint nPeriodMilliseconds, uint nBytesPerPeriod, BOOL bDiscardable, uint* lpTransferSize, uint* lpNumOutstandingRequests);
+BOOL GetFileBandwidthReservation(HANDLE hFile, uint* lpPeriodMilliseconds, uint* lpBytesPerPeriod, BOOL* pDiscardable, uint* lpTransferSize, uint* lpNumOutstandingRequests);
+BOOL ReadDirectoryChangesW(HANDLE hDirectory, void* lpBuffer, uint nBufferLength, BOOL bWatchSubtree, FILE_NOTIFY_CHANGE dwNotifyFilter, uint* lpBytesReturned, OVERLAPPED* lpOverlapped, LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine);
+BOOL ReadDirectoryChangesExW(HANDLE hDirectory, void* lpBuffer, uint nBufferLength, BOOL bWatchSubtree, FILE_NOTIFY_CHANGE dwNotifyFilter, uint* lpBytesReturned, OVERLAPPED* lpOverlapped, LPOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine, READ_DIRECTORY_NOTIFY_INFORMATION_CLASS ReadDirectoryNotifyInformationClass);
+HANDLE FindFirstVolumeA(PSTR lpszVolumeName, uint cchBufferLength);
+BOOL FindNextVolumeA(HANDLE hFindVolume, PSTR lpszVolumeName, uint cchBufferLength);
+HANDLE FindFirstVolumeMountPointA(const(char)* lpszRootPathName, PSTR lpszVolumeMountPoint, uint cchBufferLength);
+HANDLE FindFirstVolumeMountPointW(const(wchar)* lpszRootPathName, PWSTR lpszVolumeMountPoint, uint cchBufferLength);
+BOOL FindNextVolumeMountPointA(HANDLE hFindVolumeMountPoint, PSTR lpszVolumeMountPoint, uint cchBufferLength);
+BOOL FindNextVolumeMountPointW(HANDLE hFindVolumeMountPoint, PWSTR lpszVolumeMountPoint, uint cchBufferLength);
+BOOL FindVolumeMountPointClose(HANDLE hFindVolumeMountPoint);
+BOOL SetVolumeMountPointA(const(char)* lpszVolumeMountPoint, const(char)* lpszVolumeName);
+BOOL SetVolumeMountPointW(const(wchar)* lpszVolumeMountPoint, const(wchar)* lpszVolumeName);
+BOOL DeleteVolumeMountPointA(const(char)* lpszVolumeMountPoint);
+BOOL GetVolumeNameForVolumeMountPointA(const(char)* lpszVolumeMountPoint, PSTR lpszVolumeName, uint cchBufferLength);
+BOOL GetVolumePathNameA(const(char)* lpszFileName, PSTR lpszVolumePathName, uint cchBufferLength);
+BOOL GetVolumePathNamesForVolumeNameA(const(char)* lpszVolumeName, PSTR lpszVolumePathNames, uint cchBufferLength, uint* lpcchReturnLength);
+BOOL GetFileInformationByHandleEx(HANDLE hFile, FILE_INFO_BY_HANDLE_CLASS FileInformationClass, void* lpFileInformation, uint dwBufferSize);
+HANDLE OpenFileById(HANDLE hVolumeHint, FILE_ID_DESCRIPTOR* lpFileId, uint dwDesiredAccess, FILE_SHARE_MODE dwShareMode, SECURITY_ATTRIBUTES* lpSecurityAttributes, FILE_FLAGS_AND_ATTRIBUTES dwFlagsAndAttributes);
+BOOLEAN CreateSymbolicLinkA(const(char)* lpSymlinkFileName, const(char)* lpTargetFileName, SYMBOLIC_LINK_FLAGS dwFlags);
+BOOLEAN CreateSymbolicLinkW(const(wchar)* lpSymlinkFileName, const(wchar)* lpTargetFileName, SYMBOLIC_LINK_FLAGS dwFlags);
+BOOLEAN CreateSymbolicLinkTransactedA(const(char)* lpSymlinkFileName, const(char)* lpTargetFileName, SYMBOLIC_LINK_FLAGS dwFlags, HANDLE hTransaction);
+BOOLEAN CreateSymbolicLinkTransactedW(const(wchar)* lpSymlinkFileName, const(wchar)* lpTargetFileName, SYMBOLIC_LINK_FLAGS dwFlags, HANDLE hTransaction);
 enum MAXIMUM_REPARSE_DATA_BUFFER_SIZE = 0x00004000;
 enum EA_CONTAINER_NAME = "ContainerName";
 enum EA_CONTAINER_SIZE = "ContainerSize";
@@ -788,6 +788,10 @@ enum FILE_PROVIDER_COMPRESSION_XPRESS4K = 0x00000000;
 enum FILE_PROVIDER_COMPRESSION_LZX = 0x00000001;
 enum FILE_PROVIDER_COMPRESSION_XPRESS8K = 0x00000002;
 enum FILE_PROVIDER_COMPRESSION_XPRESS16K = 0x00000003;
+enum COPYFILE2_MESSAGE_COPY_OFFLOAD = 0x00000001;
+enum COPYFILE2_IO_CYCLE_SIZE_MIN = 0x00001000;
+enum COPYFILE2_IO_CYCLE_SIZE_MAX = 0x40000000;
+enum COPYFILE2_IO_RATE_MIN = 0x00000200;
 enum ClfsNullRecord = 0x00;
 enum ClfsDataRecord = 0x01;
 enum ClfsRestartRecord = 0x02;
@@ -1257,6 +1261,46 @@ enum : uint
     FILE_DISPOSITION_FLAG_FORCE_IMAGE_SECTION_CHECK = 0x00000004,
     FILE_DISPOSITION_FLAG_ON_CLOSE                  = 0x00000008,
     FILE_DISPOSITION_FLAG_IGNORE_READONLY_ATTRIBUTE = 0x00000010,
+}
+
+alias COPYFILE_FLAGS = uint;
+enum : uint
+{
+    COPY_FILE_FAIL_IF_EXISTS              = 0x00000001,
+    COPY_FILE_RESTARTABLE                 = 0x00000002,
+    COPY_FILE_OPEN_SOURCE_FOR_WRITE       = 0x00000004,
+    COPY_FILE_ALLOW_DECRYPTED_DESTINATION = 0x00000008,
+    COPY_FILE_COPY_SYMLINK                = 0x00000800,
+    COPY_FILE_NO_BUFFERING                = 0x00001000,
+    COPY_FILE_REQUEST_SECURITY_PRIVILEGES = 0x00002000,
+    COPY_FILE_RESUME_FROM_PAUSE           = 0x00004000,
+    COPY_FILE_NO_OFFLOAD                  = 0x00040000,
+    COPY_FILE_IGNORE_EDP_BLOCK            = 0x00400000,
+    COPY_FILE_IGNORE_SOURCE_ENCRYPTION    = 0x00800000,
+    COPY_FILE_DONT_REQUEST_DEST_WRITE_DAC = 0x02000000,
+    COPY_FILE_REQUEST_COMPRESSED_TRAFFIC  = 0x10000000,
+    COPY_FILE_OPEN_AND_COPY_REPARSE_POINT = 0x00200000,
+    COPY_FILE_DIRECTORY                   = 0x00000080,
+    COPY_FILE_SKIP_ALTERNATE_STREAMS      = 0x00008000,
+    COPY_FILE_DISABLE_PRE_ALLOCATION      = 0x04000000,
+    COPY_FILE_ENABLE_LOW_FREE_SPACE_MODE  = 0x08000000,
+    COPY_FILE_ENABLE_SPARSE_COPY          = 0x20000000,
+}
+
+alias COPYFILE2_V2_FLAGS = uint;
+enum : uint
+{
+    COPY_FILE2_V2_DONT_COPY_JUNCTIONS = 0x00000001,
+    COPY_FILE2_V2_VALID_FLAGS         = 0x00000001,
+}
+
+alias COPYPROGRESSROUTINE_PROGRESS = uint;
+enum : uint
+{
+    PROGRESS_CONTINUE = 0x00000000,
+    PROGRESS_CANCEL   = 0x00000001,
+    PROGRESS_STOP     = 0x00000002,
+    PROGRESS_QUIET    = 0x00000003,
 }
 
 struct FILE_DISPOSITION_INFO
@@ -2492,9 +2536,9 @@ struct MediaLabelInfo
     ubyte[256] LabelID;
     wchar[256] LabelAppDescr;
 }
-alias MAXMEDIALABEL = uint function(uint*);
-alias CLAIMMEDIALABEL = uint function(const(ubyte)*, const(uint), MediaLabelInfo*);
-alias CLAIMMEDIALABELEX = uint function(const(ubyte)*, const(uint), MediaLabelInfo*, GUID*);
+alias MAXMEDIALABEL = uint function(uint* pMaxSize);
+alias CLAIMMEDIALABEL = uint function(const(ubyte)* pBuffer, const(uint) nBufferSize, MediaLabelInfo* pLabelInfo);
+alias CLAIMMEDIALABELEX = uint function(const(ubyte)* pBuffer, const(uint) nBufferSize, MediaLabelInfo* pLabelInfo, GUID* LabelGuid);
 struct CLS_LSN
 {
     ulong Internal;
@@ -2633,8 +2677,8 @@ struct CLS_ARCHIVE_DESCRIPTOR
     ulong coffHigh;
     CLS_CONTAINER_INFORMATION infoContainer;
 }
-alias CLFS_BLOCK_ALLOCATION = void* function(uint, void*);
-alias CLFS_BLOCK_DEALLOCATION = void function(void*, void*);
+alias CLFS_BLOCK_ALLOCATION = void* function(uint cbBufferLength, void* pvUserContext);
+alias CLFS_BLOCK_DEALLOCATION = void function(void* pvBuffer, void* pvUserContext);
 alias CLFS_LOG_ARCHIVE_MODE = int;
 enum : int
 {
@@ -2642,7 +2686,7 @@ enum : int
     ClfsLogArchiveDisabled = 0x00000002,
 }
 
-alias PCLFS_COMPLETION_ROUTINE = void function(void*, uint);
+alias PCLFS_COMPLETION_ROUTINE = void function(void* pvOverlapped, uint ulReserved);
 alias CLFS_MGMT_POLICY_TYPE = int;
 enum : int
 {
@@ -2728,9 +2772,9 @@ struct CLFS_MGMT_NOTIFICATION
     CLS_LSN Lsn;
     ushort LogIsPinned;
 }
-alias PLOG_TAIL_ADVANCE_CALLBACK = void function(HANDLE, CLS_LSN, void*);
-alias PLOG_FULL_HANDLER_CALLBACK = void function(HANDLE, uint, BOOL, void*);
-alias PLOG_UNPINNED_CALLBACK = void function(HANDLE, void*);
+alias PLOG_TAIL_ADVANCE_CALLBACK = void function(HANDLE hLogFile, CLS_LSN lsnTarget, void* pvClientContext);
+alias PLOG_FULL_HANDLER_CALLBACK = void function(HANDLE hLogFile, uint dwError, BOOL fLogIsPinned, void* pvClientContext);
+alias PLOG_UNPINNED_CALLBACK = void function(HANDLE hLogFile, void* pvClientContext);
 struct LOG_MANAGEMENT_CALLBACKS
 {
     void* CallbackContext;
@@ -2747,67 +2791,67 @@ struct DISKQUOTA_USER_INFORMATION
 enum IID_IDiskQuotaUser = GUID(0x7988b574, 0xec89, 0x11cf, [0x9c, 0x0, 0x0, 0xaa, 0x0, 0xa1, 0x4f, 0x56]);
 interface IDiskQuotaUser : IUnknown
 {
-    HRESULT GetID(uint*);
-    HRESULT GetName(PWSTR, uint, PWSTR, uint, PWSTR, uint);
-    HRESULT GetSidLength(uint*);
-    HRESULT GetSid(ubyte*, uint);
-    HRESULT GetQuotaThreshold(long*);
-    HRESULT GetQuotaThresholdText(PWSTR, uint);
-    HRESULT GetQuotaLimit(long*);
-    HRESULT GetQuotaLimitText(PWSTR, uint);
-    HRESULT GetQuotaUsed(long*);
-    HRESULT GetQuotaUsedText(PWSTR, uint);
-    HRESULT GetQuotaInformation(void*, uint);
-    HRESULT SetQuotaThreshold(long, BOOL);
-    HRESULT SetQuotaLimit(long, BOOL);
+    HRESULT GetID(uint* pulID);
+    HRESULT GetName(PWSTR pszAccountContainer, uint cchAccountContainer, PWSTR pszLogonName, uint cchLogonName, PWSTR pszDisplayName, uint cchDisplayName);
+    HRESULT GetSidLength(uint* pdwLength);
+    HRESULT GetSid(ubyte* pbSidBuffer, uint cbSidBuffer);
+    HRESULT GetQuotaThreshold(long* pllThreshold);
+    HRESULT GetQuotaThresholdText(PWSTR pszText, uint cchText);
+    HRESULT GetQuotaLimit(long* pllLimit);
+    HRESULT GetQuotaLimitText(PWSTR pszText, uint cchText);
+    HRESULT GetQuotaUsed(long* pllUsed);
+    HRESULT GetQuotaUsedText(PWSTR pszText, uint cchText);
+    HRESULT GetQuotaInformation(void* pbQuotaInfo, uint cbQuotaInfo);
+    HRESULT SetQuotaThreshold(long llThreshold, BOOL fWriteThrough);
+    HRESULT SetQuotaLimit(long llLimit, BOOL fWriteThrough);
     HRESULT Invalidate();
-    HRESULT GetAccountStatus(uint*);
+    HRESULT GetAccountStatus(uint* pdwStatus);
 }
 enum IID_IEnumDiskQuotaUsers = GUID(0x7988b577, 0xec89, 0x11cf, [0x9c, 0x0, 0x0, 0xaa, 0x0, 0xa1, 0x4f, 0x56]);
 interface IEnumDiskQuotaUsers : IUnknown
 {
-    HRESULT Next(uint, IDiskQuotaUser*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint cUsers, IDiskQuotaUser* rgUsers, uint* pcUsersFetched);
+    HRESULT Skip(uint cUsers);
     HRESULT Reset();
-    HRESULT Clone(IEnumDiskQuotaUsers*);
+    HRESULT Clone(IEnumDiskQuotaUsers* ppEnum);
 }
 enum IID_IDiskQuotaUserBatch = GUID(0x7988b576, 0xec89, 0x11cf, [0x9c, 0x0, 0x0, 0xaa, 0x0, 0xa1, 0x4f, 0x56]);
 interface IDiskQuotaUserBatch : IUnknown
 {
-    HRESULT Add(IDiskQuotaUser);
-    HRESULT Remove(IDiskQuotaUser);
+    HRESULT Add(IDiskQuotaUser pUser);
+    HRESULT Remove(IDiskQuotaUser pUser);
     HRESULT RemoveAll();
     HRESULT FlushToDisk();
 }
 enum IID_IDiskQuotaControl = GUID(0x7988b572, 0xec89, 0x11cf, [0x9c, 0x0, 0x0, 0xaa, 0x0, 0xa1, 0x4f, 0x56]);
 interface IDiskQuotaControl : IConnectionPointContainer
 {
-    HRESULT Initialize(const(wchar)*, BOOL);
-    HRESULT SetQuotaState(uint);
-    HRESULT GetQuotaState(uint*);
-    HRESULT SetQuotaLogFlags(uint);
-    HRESULT GetQuotaLogFlags(uint*);
-    HRESULT SetDefaultQuotaThreshold(long);
-    HRESULT GetDefaultQuotaThreshold(long*);
-    HRESULT GetDefaultQuotaThresholdText(PWSTR, uint);
-    HRESULT SetDefaultQuotaLimit(long);
-    HRESULT GetDefaultQuotaLimit(long*);
-    HRESULT GetDefaultQuotaLimitText(PWSTR, uint);
-    HRESULT AddUserSid(PSID, DISKQUOTA_USERNAME_RESOLVE, IDiskQuotaUser*);
-    HRESULT AddUserName(const(wchar)*, DISKQUOTA_USERNAME_RESOLVE, IDiskQuotaUser*);
-    HRESULT DeleteUser(IDiskQuotaUser);
-    HRESULT FindUserSid(PSID, DISKQUOTA_USERNAME_RESOLVE, IDiskQuotaUser*);
-    HRESULT FindUserName(const(wchar)*, IDiskQuotaUser*);
-    HRESULT CreateEnumUsers(PSID*, uint, DISKQUOTA_USERNAME_RESOLVE, IEnumDiskQuotaUsers*);
-    HRESULT CreateUserBatch(IDiskQuotaUserBatch*);
+    HRESULT Initialize(const(wchar)* pszPath, BOOL bReadWrite);
+    HRESULT SetQuotaState(uint dwState);
+    HRESULT GetQuotaState(uint* pdwState);
+    HRESULT SetQuotaLogFlags(uint dwFlags);
+    HRESULT GetQuotaLogFlags(uint* pdwFlags);
+    HRESULT SetDefaultQuotaThreshold(long llThreshold);
+    HRESULT GetDefaultQuotaThreshold(long* pllThreshold);
+    HRESULT GetDefaultQuotaThresholdText(PWSTR pszText, uint cchText);
+    HRESULT SetDefaultQuotaLimit(long llLimit);
+    HRESULT GetDefaultQuotaLimit(long* pllLimit);
+    HRESULT GetDefaultQuotaLimitText(PWSTR pszText, uint cchText);
+    HRESULT AddUserSid(PSID pUserSid, DISKQUOTA_USERNAME_RESOLVE fNameResolution, IDiskQuotaUser* ppUser);
+    HRESULT AddUserName(const(wchar)* pszLogonName, DISKQUOTA_USERNAME_RESOLVE fNameResolution, IDiskQuotaUser* ppUser);
+    HRESULT DeleteUser(IDiskQuotaUser pUser);
+    HRESULT FindUserSid(PSID pUserSid, DISKQUOTA_USERNAME_RESOLVE fNameResolution, IDiskQuotaUser* ppUser);
+    HRESULT FindUserName(const(wchar)* pszLogonName, IDiskQuotaUser* ppUser);
+    HRESULT CreateEnumUsers(PSID* rgpUserSids, uint cpSids, DISKQUOTA_USERNAME_RESOLVE fNameResolution, IEnumDiskQuotaUsers* ppEnum);
+    HRESULT CreateUserBatch(IDiskQuotaUserBatch* ppBatch);
     HRESULT InvalidateSidNameCache();
-    HRESULT GiveUserNameResolutionPriority(IDiskQuotaUser);
+    HRESULT GiveUserNameResolutionPriority(IDiskQuotaUser pUser);
     HRESULT ShutdownNameResolution();
 }
 enum IID_IDiskQuotaEvents = GUID(0x7988b579, 0xec89, 0x11cf, [0x9c, 0x0, 0x0, 0xaa, 0x0, 0xa1, 0x4f, 0x56]);
 interface IDiskQuotaEvents : IUnknown
 {
-    HRESULT OnUserNameChanged(IDiskQuotaUser);
+    HRESULT OnUserNameChanged(IDiskQuotaUser pUser);
 }
 struct EFS_CERTIFICATE_BLOB
 {
@@ -2899,8 +2943,8 @@ struct ENCRYPTION_PROTECTOR_LIST
     uint nProtectors;
     ENCRYPTION_PROTECTOR** pProtectors;
 }
-alias WofEnumEntryProc = BOOL function(const(void)*, void*);
-alias WofEnumFilesProc = BOOL function(const(wchar)*, void*, void*);
+alias WofEnumEntryProc = BOOL function(const(void)* EntryInfo, void* UserData);
+alias WofEnumFilesProc = BOOL function(const(wchar)* FilePath, void* ExternalFileInfo, void* UserData);
 struct WIM_ENTRY_INFO
 {
     uint WimEntryInfoSize;
@@ -3316,7 +3360,7 @@ struct STAT_SERVER_0
     uint sts0_reqbufneed;
     uint sts0_bigbufneed;
 }
-alias PFN_IO_COMPLETION = void function(FIO_CONTEXT*, FH_OVERLAPPED*, uint, uint);
+alias PFN_IO_COMPLETION = void function(FIO_CONTEXT* pContext, FH_OVERLAPPED* lpo, uint cb, uint dwCompletionStatus);
 struct FH_OVERLAPPED
 {
     ulong Internal;
@@ -3338,13 +3382,13 @@ struct FIO_CONTEXT
     uint m_dwLinesOffset;
     uint m_dwHeaderLength;
 }
-alias FCACHE_CREATE_CALLBACK = HANDLE function(PSTR, void*, uint*, uint*);
-alias FCACHE_RICHCREATE_CALLBACK = HANDLE function(PSTR, void*, uint*, uint*, BOOL*, BOOL*, BOOL*, BOOL*);
-alias CACHE_KEY_COMPARE = int function(uint, ubyte*, uint, ubyte*);
-alias CACHE_KEY_HASH = uint function(ubyte*, uint);
-alias CACHE_READ_CALLBACK = BOOL function(uint, ubyte*, void*);
-alias CACHE_DESTROY_CALLBACK = void function(uint, ubyte*);
-alias CACHE_ACCESS_CHECK = BOOL function(PSECURITY_DESCRIPTOR, HANDLE, uint, GENERIC_MAPPING*, PRIVILEGE_SET*, uint*, uint*, BOOL*);
+alias FCACHE_CREATE_CALLBACK = HANDLE function(PSTR lpstrName, void* lpvData, uint* cbFileSize, uint* cbFileSizeHigh);
+alias FCACHE_RICHCREATE_CALLBACK = HANDLE function(PSTR lpstrName, void* lpvData, uint* cbFileSize, uint* cbFileSizeHigh, BOOL* pfDidWeScanIt, BOOL* pfIsStuffed, BOOL* pfStoredWithDots, BOOL* pfStoredWithTerminatingDot);
+alias CACHE_KEY_COMPARE = int function(uint cbKey1, ubyte* lpbKey1, uint cbKey2, ubyte* lpbKey2);
+alias CACHE_KEY_HASH = uint function(ubyte* lpbKey, uint cbKey);
+alias CACHE_READ_CALLBACK = BOOL function(uint cb, ubyte* lpb, void* lpvContext);
+alias CACHE_DESTROY_CALLBACK = void function(uint cb, ubyte* lpb);
+alias CACHE_ACCESS_CHECK = BOOL function(PSECURITY_DESCRIPTOR pSecurityDescriptor, HANDLE hClientToken, uint dwDesiredAccess, GENERIC_MAPPING* GenericMapping, PRIVILEGE_SET* PrivilegeSet, uint* PrivilegeSetLength, uint* GrantedAccess, BOOL* AccessStatus);
 struct NAME_CACHE_CONTEXT
 {
     uint m_dwSignature;
@@ -3594,8 +3638,8 @@ struct OFSTRUCT
     ushort Reserved2;
     CHAR[128] szPathName;
 }
-alias PFE_EXPORT_FUNC = uint function(ubyte*, void*, uint);
-alias PFE_IMPORT_FUNC = uint function(ubyte*, void*, uint*);
+alias PFE_EXPORT_FUNC = uint function(ubyte* pbData, void* pvCallbackContext, uint ulLength);
+alias PFE_IMPORT_FUNC = uint function(ubyte* pbData, void* pvCallbackContext, uint* ulLength);
 struct WIN32_STREAM_ID
 {
     WIN_STREAM_ID dwStreamId;
@@ -3604,7 +3648,7 @@ struct WIN32_STREAM_ID
     uint dwStreamNameSize;
     wchar[1] cStreamName;
 }
-alias LPPROGRESS_ROUTINE = uint function(long, long, long, long, uint, LPPROGRESS_ROUTINE_CALLBACK_REASON, HANDLE, HANDLE, void*);
+alias LPPROGRESS_ROUTINE = COPYPROGRESSROUTINE_PROGRESS function(long TotalFileSize, long TotalBytesTransferred, long StreamSize, long StreamBytesTransferred, uint dwStreamNumber, LPPROGRESS_ROUTINE_CALLBACK_REASON dwCallbackReason, HANDLE hSourceFile, HANDLE hDestinationFile, void* lpData);
 alias COPYFILE2_MESSAGE_TYPE = int;
 enum : int
 {
@@ -3709,11 +3753,11 @@ struct COPYFILE2_MESSAGE
         }
     }
 }
-alias PCOPYFILE2_PROGRESS_ROUTINE = COPYFILE2_MESSAGE_ACTION function(const(COPYFILE2_MESSAGE)*, void*);
+alias PCOPYFILE2_PROGRESS_ROUTINE = COPYFILE2_MESSAGE_ACTION function(const(COPYFILE2_MESSAGE)* pMessage, void* pvCallbackContext);
 struct COPYFILE2_EXTENDED_PARAMETERS
 {
     uint dwSize;
-    uint dwCopyFlags;
+    COPYFILE_FLAGS dwCopyFlags;
     BOOL* pfCancel;
     PCOPYFILE2_PROGRESS_ROUTINE pProgressRoutine;
     void* pvCallbackContext;
@@ -3721,11 +3765,11 @@ struct COPYFILE2_EXTENDED_PARAMETERS
 struct COPYFILE2_EXTENDED_PARAMETERS_V2
 {
     uint dwSize;
-    uint dwCopyFlags;
+    COPYFILE_FLAGS dwCopyFlags;
     BOOL* pfCancel;
     PCOPYFILE2_PROGRESS_ROUTINE pProgressRoutine;
     void* pvCallbackContext;
-    uint dwCopyFlagsV2;
+    COPYFILE2_V2_FLAGS dwCopyFlagsV2;
     uint ioDesiredSize;
     uint ioDesiredRate;
     void*[8] reserved;
@@ -3750,6 +3794,10 @@ struct FILE_NAME_INFO
 {
     uint FileNameLength;
     wchar[1] FileName;
+}
+struct FILE_CASE_SENSITIVE_INFO
+{
+    uint Flags;
 }
 struct FILE_RENAME_INFO
 {

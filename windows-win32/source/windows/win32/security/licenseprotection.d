@@ -15,5 +15,5 @@ enum : int
     LicenseKeyAlreadyExists = 0x00000004,
 }
 
-HRESULT RegisterLicenseKeyWithExpiration(const(wchar)*, uint, LicenseProtectionStatus*);
-HRESULT ValidateLicenseKeyProtection(const(wchar)*, FILETIME*, FILETIME*, LicenseProtectionStatus*);
+HRESULT RegisterLicenseKeyWithExpiration(const(wchar)* licenseKey, uint validityInDays, LicenseProtectionStatus* status);
+HRESULT ValidateLicenseKeyProtection(const(wchar)* licenseKey, FILETIME* notValidBefore, FILETIME* notValidAfter, LicenseProtectionStatus* status);

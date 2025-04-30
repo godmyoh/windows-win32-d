@@ -55,7 +55,7 @@ struct OSUpdateAssessment
 enum IID_IWaaSAssessor = GUID(0x2347bbef, 0x1a3b, 0x45a4, [0x90, 0x2d, 0x3e, 0x9, 0xc2, 0x69, 0xb4, 0x5e]);
 interface IWaaSAssessor : IUnknown
 {
-    HRESULT GetOSUpdateAssessment(OSUpdateAssessment*);
+    HRESULT GetOSUpdateAssessment(OSUpdateAssessment* result);
 }
 enum CLSID_WaaSAssessor = GUID(0x98ef871, 0xfa9f, 0x46af, [0x89, 0x58, 0xc0, 0x83, 0x51, 0x5d, 0x7c, 0x9c]);
 struct WaaSAssessor

@@ -1,61 +1,60 @@
 module windows.win32.devices.humaninterfacedevice;
 
 import windows.win32.guid : GUID;
-import windows.win32.devices.properties : DEVPROPKEY;
-import windows.win32.foundation : BOOL, BOOLEAN, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, NTSTATUS, POINT, PSTR, PWSTR, RECT;
+import windows.win32.foundation : BOOL, BOOLEAN, CHAR, DEVPROPKEY, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, NTSTATUS, POINT, PSTR, PWSTR, RECT;
 import windows.win32.system.com : IUnknown;
 import windows.win32.system.registry : HKEY;
 
 version (Windows):
 extern (Windows):
 
-HRESULT DirectInput8Create(HINSTANCE, uint, const(GUID)*, void**, IUnknown);
-uint joyConfigChanged(uint);
-NTSTATUS HidP_GetCaps(PHIDP_PREPARSED_DATA, HIDP_CAPS*);
-NTSTATUS HidP_GetLinkCollectionNodes(HIDP_LINK_COLLECTION_NODE*, uint*, PHIDP_PREPARSED_DATA);
-NTSTATUS HidP_GetSpecificButtonCaps(HIDP_REPORT_TYPE, ushort, ushort, ushort, HIDP_BUTTON_CAPS*, ushort*, PHIDP_PREPARSED_DATA);
-NTSTATUS HidP_GetButtonCaps(HIDP_REPORT_TYPE, HIDP_BUTTON_CAPS*, ushort*, PHIDP_PREPARSED_DATA);
-NTSTATUS HidP_GetSpecificValueCaps(HIDP_REPORT_TYPE, ushort, ushort, ushort, HIDP_VALUE_CAPS*, ushort*, PHIDP_PREPARSED_DATA);
-NTSTATUS HidP_GetValueCaps(HIDP_REPORT_TYPE, HIDP_VALUE_CAPS*, ushort*, PHIDP_PREPARSED_DATA);
-NTSTATUS HidP_GetExtendedAttributes(HIDP_REPORT_TYPE, ushort, PHIDP_PREPARSED_DATA, HIDP_EXTENDED_ATTRIBUTES*, uint*);
-NTSTATUS HidP_InitializeReportForID(HIDP_REPORT_TYPE, ubyte, PHIDP_PREPARSED_DATA, PSTR, uint);
-NTSTATUS HidP_SetData(HIDP_REPORT_TYPE, HIDP_DATA*, uint*, PHIDP_PREPARSED_DATA, PSTR, uint);
-NTSTATUS HidP_GetData(HIDP_REPORT_TYPE, HIDP_DATA*, uint*, PHIDP_PREPARSED_DATA, PSTR, uint);
-uint HidP_MaxDataListLength(HIDP_REPORT_TYPE, PHIDP_PREPARSED_DATA);
-NTSTATUS HidP_SetUsages(HIDP_REPORT_TYPE, ushort, ushort, ushort*, uint*, PHIDP_PREPARSED_DATA, PSTR, uint);
-NTSTATUS HidP_UnsetUsages(HIDP_REPORT_TYPE, ushort, ushort, ushort*, uint*, PHIDP_PREPARSED_DATA, PSTR, uint);
-NTSTATUS HidP_GetUsages(HIDP_REPORT_TYPE, ushort, ushort, ushort*, uint*, PHIDP_PREPARSED_DATA, PSTR, uint);
-NTSTATUS HidP_GetUsagesEx(HIDP_REPORT_TYPE, ushort, USAGE_AND_PAGE*, uint*, PHIDP_PREPARSED_DATA, PSTR, uint);
-uint HidP_MaxUsageListLength(HIDP_REPORT_TYPE, ushort, PHIDP_PREPARSED_DATA);
-NTSTATUS HidP_SetUsageValue(HIDP_REPORT_TYPE, ushort, ushort, ushort, uint, PHIDP_PREPARSED_DATA, PSTR, uint);
-NTSTATUS HidP_SetScaledUsageValue(HIDP_REPORT_TYPE, ushort, ushort, ushort, int, PHIDP_PREPARSED_DATA, PSTR, uint);
-NTSTATUS HidP_SetUsageValueArray(HIDP_REPORT_TYPE, ushort, ushort, ushort, PSTR, ushort, PHIDP_PREPARSED_DATA, PSTR, uint);
-NTSTATUS HidP_GetUsageValue(HIDP_REPORT_TYPE, ushort, ushort, ushort, uint*, PHIDP_PREPARSED_DATA, PSTR, uint);
-NTSTATUS HidP_GetScaledUsageValue(HIDP_REPORT_TYPE, ushort, ushort, ushort, int*, PHIDP_PREPARSED_DATA, PSTR, uint);
-NTSTATUS HidP_GetUsageValueArray(HIDP_REPORT_TYPE, ushort, ushort, ushort, PSTR, ushort, PHIDP_PREPARSED_DATA, PSTR, uint);
-NTSTATUS HidP_UsageListDifference(ushort*, ushort*, ushort*, ushort*, uint);
-NTSTATUS HidP_GetButtonArray(HIDP_REPORT_TYPE, ushort, ushort, ushort, HIDP_BUTTON_ARRAY_DATA*, ushort*, PHIDP_PREPARSED_DATA, PSTR, uint);
-NTSTATUS HidP_SetButtonArray(HIDP_REPORT_TYPE, ushort, ushort, ushort, HIDP_BUTTON_ARRAY_DATA*, ushort, PHIDP_PREPARSED_DATA, PSTR, uint);
-NTSTATUS HidP_TranslateUsagesToI8042ScanCodes(ushort*, uint, HIDP_KEYBOARD_DIRECTION, HIDP_KEYBOARD_MODIFIER_STATE*, PHIDP_INSERT_SCANCODES, void*);
-BOOLEAN HidD_GetAttributes(HANDLE, HIDD_ATTRIBUTES*);
-void HidD_GetHidGuid(GUID*);
-BOOLEAN HidD_GetPreparsedData(HANDLE, PHIDP_PREPARSED_DATA*);
-BOOLEAN HidD_FreePreparsedData(PHIDP_PREPARSED_DATA);
-BOOLEAN HidD_FlushQueue(HANDLE);
-BOOLEAN HidD_GetConfiguration(HANDLE, HIDD_CONFIGURATION*, uint);
-BOOLEAN HidD_SetConfiguration(HANDLE, HIDD_CONFIGURATION*, uint);
-BOOLEAN HidD_GetFeature(HANDLE, void*, uint);
-BOOLEAN HidD_SetFeature(HANDLE, void*, uint);
-BOOLEAN HidD_GetInputReport(HANDLE, void*, uint);
-BOOLEAN HidD_SetOutputReport(HANDLE, void*, uint);
-BOOLEAN HidD_GetNumInputBuffers(HANDLE, uint*);
-BOOLEAN HidD_SetNumInputBuffers(HANDLE, uint);
-BOOLEAN HidD_GetPhysicalDescriptor(HANDLE, void*, uint);
-BOOLEAN HidD_GetManufacturerString(HANDLE, void*, uint);
-BOOLEAN HidD_GetProductString(HANDLE, void*, uint);
-BOOLEAN HidD_GetIndexedString(HANDLE, uint, void*, uint);
-BOOLEAN HidD_GetSerialNumberString(HANDLE, void*, uint);
-BOOLEAN HidD_GetMsGenreDescriptor(HANDLE, void*, uint);
+HRESULT DirectInput8Create(HINSTANCE hinst, uint dwVersion, const(GUID)* riidltf, void** ppvOut, IUnknown punkOuter);
+uint joyConfigChanged(uint dwFlags);
+NTSTATUS HidP_GetCaps(PHIDP_PREPARSED_DATA PreparsedData, HIDP_CAPS* Capabilities);
+NTSTATUS HidP_GetLinkCollectionNodes(HIDP_LINK_COLLECTION_NODE* LinkCollectionNodes, uint* LinkCollectionNodesLength, PHIDP_PREPARSED_DATA PreparsedData);
+NTSTATUS HidP_GetSpecificButtonCaps(HIDP_REPORT_TYPE ReportType, ushort UsagePage, ushort LinkCollection, ushort Usage, HIDP_BUTTON_CAPS* ButtonCaps, ushort* ButtonCapsLength, PHIDP_PREPARSED_DATA PreparsedData);
+NTSTATUS HidP_GetButtonCaps(HIDP_REPORT_TYPE ReportType, HIDP_BUTTON_CAPS* ButtonCaps, ushort* ButtonCapsLength, PHIDP_PREPARSED_DATA PreparsedData);
+NTSTATUS HidP_GetSpecificValueCaps(HIDP_REPORT_TYPE ReportType, ushort UsagePage, ushort LinkCollection, ushort Usage, HIDP_VALUE_CAPS* ValueCaps, ushort* ValueCapsLength, PHIDP_PREPARSED_DATA PreparsedData);
+NTSTATUS HidP_GetValueCaps(HIDP_REPORT_TYPE ReportType, HIDP_VALUE_CAPS* ValueCaps, ushort* ValueCapsLength, PHIDP_PREPARSED_DATA PreparsedData);
+NTSTATUS HidP_GetExtendedAttributes(HIDP_REPORT_TYPE ReportType, ushort DataIndex, PHIDP_PREPARSED_DATA PreparsedData, HIDP_EXTENDED_ATTRIBUTES* Attributes, uint* LengthAttributes);
+NTSTATUS HidP_InitializeReportForID(HIDP_REPORT_TYPE ReportType, ubyte ReportID, PHIDP_PREPARSED_DATA PreparsedData, PSTR Report, uint ReportLength);
+NTSTATUS HidP_SetData(HIDP_REPORT_TYPE ReportType, HIDP_DATA* DataList, uint* DataLength, PHIDP_PREPARSED_DATA PreparsedData, PSTR Report, uint ReportLength);
+NTSTATUS HidP_GetData(HIDP_REPORT_TYPE ReportType, HIDP_DATA* DataList, uint* DataLength, PHIDP_PREPARSED_DATA PreparsedData, PSTR Report, uint ReportLength);
+uint HidP_MaxDataListLength(HIDP_REPORT_TYPE ReportType, PHIDP_PREPARSED_DATA PreparsedData);
+NTSTATUS HidP_SetUsages(HIDP_REPORT_TYPE ReportType, ushort UsagePage, ushort LinkCollection, ushort* UsageList, uint* UsageLength, PHIDP_PREPARSED_DATA PreparsedData, PSTR Report, uint ReportLength);
+NTSTATUS HidP_UnsetUsages(HIDP_REPORT_TYPE ReportType, ushort UsagePage, ushort LinkCollection, ushort* UsageList, uint* UsageLength, PHIDP_PREPARSED_DATA PreparsedData, PSTR Report, uint ReportLength);
+NTSTATUS HidP_GetUsages(HIDP_REPORT_TYPE ReportType, ushort UsagePage, ushort LinkCollection, ushort* UsageList, uint* UsageLength, PHIDP_PREPARSED_DATA PreparsedData, PSTR Report, uint ReportLength);
+NTSTATUS HidP_GetUsagesEx(HIDP_REPORT_TYPE ReportType, ushort LinkCollection, USAGE_AND_PAGE* ButtonList, uint* UsageLength, PHIDP_PREPARSED_DATA PreparsedData, PSTR Report, uint ReportLength);
+uint HidP_MaxUsageListLength(HIDP_REPORT_TYPE ReportType, ushort UsagePage, PHIDP_PREPARSED_DATA PreparsedData);
+NTSTATUS HidP_SetUsageValue(HIDP_REPORT_TYPE ReportType, ushort UsagePage, ushort LinkCollection, ushort Usage, uint UsageValue, PHIDP_PREPARSED_DATA PreparsedData, PSTR Report, uint ReportLength);
+NTSTATUS HidP_SetScaledUsageValue(HIDP_REPORT_TYPE ReportType, ushort UsagePage, ushort LinkCollection, ushort Usage, int UsageValue, PHIDP_PREPARSED_DATA PreparsedData, PSTR Report, uint ReportLength);
+NTSTATUS HidP_SetUsageValueArray(HIDP_REPORT_TYPE ReportType, ushort UsagePage, ushort LinkCollection, ushort Usage, PSTR UsageValue, ushort UsageValueByteLength, PHIDP_PREPARSED_DATA PreparsedData, PSTR Report, uint ReportLength);
+NTSTATUS HidP_GetUsageValue(HIDP_REPORT_TYPE ReportType, ushort UsagePage, ushort LinkCollection, ushort Usage, uint* UsageValue, PHIDP_PREPARSED_DATA PreparsedData, PSTR Report, uint ReportLength);
+NTSTATUS HidP_GetScaledUsageValue(HIDP_REPORT_TYPE ReportType, ushort UsagePage, ushort LinkCollection, ushort Usage, int* UsageValue, PHIDP_PREPARSED_DATA PreparsedData, PSTR Report, uint ReportLength);
+NTSTATUS HidP_GetUsageValueArray(HIDP_REPORT_TYPE ReportType, ushort UsagePage, ushort LinkCollection, ushort Usage, PSTR UsageValue, ushort UsageValueByteLength, PHIDP_PREPARSED_DATA PreparsedData, PSTR Report, uint ReportLength);
+NTSTATUS HidP_UsageListDifference(ushort* PreviousUsageList, ushort* CurrentUsageList, ushort* BreakUsageList, ushort* MakeUsageList, uint UsageListLength);
+NTSTATUS HidP_GetButtonArray(HIDP_REPORT_TYPE ReportType, ushort UsagePage, ushort LinkCollection, ushort Usage, HIDP_BUTTON_ARRAY_DATA* ButtonData, ushort* ButtonDataLength, PHIDP_PREPARSED_DATA PreparsedData, PSTR Report, uint ReportLength);
+NTSTATUS HidP_SetButtonArray(HIDP_REPORT_TYPE ReportType, ushort UsagePage, ushort LinkCollection, ushort Usage, HIDP_BUTTON_ARRAY_DATA* ButtonData, ushort ButtonDataLength, PHIDP_PREPARSED_DATA PreparsedData, PSTR Report, uint ReportLength);
+NTSTATUS HidP_TranslateUsagesToI8042ScanCodes(ushort* ChangedUsageList, uint UsageListLength, HIDP_KEYBOARD_DIRECTION KeyAction, HIDP_KEYBOARD_MODIFIER_STATE* ModifierState, PHIDP_INSERT_SCANCODES InsertCodesProcedure, void* InsertCodesContext);
+BOOLEAN HidD_GetAttributes(HANDLE HidDeviceObject, HIDD_ATTRIBUTES* Attributes);
+void HidD_GetHidGuid(GUID* HidGuid);
+BOOLEAN HidD_GetPreparsedData(HANDLE HidDeviceObject, PHIDP_PREPARSED_DATA* PreparsedData);
+BOOLEAN HidD_FreePreparsedData(PHIDP_PREPARSED_DATA PreparsedData);
+BOOLEAN HidD_FlushQueue(HANDLE HidDeviceObject);
+BOOLEAN HidD_GetConfiguration(HANDLE HidDeviceObject, HIDD_CONFIGURATION* Configuration, uint ConfigurationLength);
+BOOLEAN HidD_SetConfiguration(HANDLE HidDeviceObject, HIDD_CONFIGURATION* Configuration, uint ConfigurationLength);
+BOOLEAN HidD_GetFeature(HANDLE HidDeviceObject, void* ReportBuffer, uint ReportBufferLength);
+BOOLEAN HidD_SetFeature(HANDLE HidDeviceObject, void* ReportBuffer, uint ReportBufferLength);
+BOOLEAN HidD_GetInputReport(HANDLE HidDeviceObject, void* ReportBuffer, uint ReportBufferLength);
+BOOLEAN HidD_SetOutputReport(HANDLE HidDeviceObject, void* ReportBuffer, uint ReportBufferLength);
+BOOLEAN HidD_GetNumInputBuffers(HANDLE HidDeviceObject, uint* NumberBuffers);
+BOOLEAN HidD_SetNumInputBuffers(HANDLE HidDeviceObject, uint NumberBuffers);
+BOOLEAN HidD_GetPhysicalDescriptor(HANDLE HidDeviceObject, void* Buffer, uint BufferLength);
+BOOLEAN HidD_GetManufacturerString(HANDLE HidDeviceObject, void* Buffer, uint BufferLength);
+BOOLEAN HidD_GetProductString(HANDLE HidDeviceObject, void* Buffer, uint BufferLength);
+BOOLEAN HidD_GetIndexedString(HANDLE HidDeviceObject, uint StringIndex, void* Buffer, uint BufferLength);
+BOOLEAN HidD_GetSerialNumberString(HANDLE HidDeviceObject, void* Buffer, uint BufferLength);
+BOOLEAN HidD_GetMsGenreDescriptor(HANDLE HidDeviceObject, void* Buffer, uint BufferLength);
 enum DIRECTINPUT_VERSION = 0x00000800;
 enum JOY_HW_NONE = 0x00000000;
 enum JOY_HW_CUSTOM = 0x00000001;
@@ -2620,7 +2619,7 @@ struct DIFILEEFFECT
     DIEFFECT* lpDiEffect;
     CHAR[260] szFriendlyName;
 }
-alias LPDIENUMEFFECTSINFILECALLBACK = BOOL function(DIFILEEFFECT*, void*);
+alias LPDIENUMEFFECTSINFILECALLBACK = BOOL function(DIFILEEFFECT* param0, void* param1);
 struct DIEFFESCAPE
 {
     uint dwSize;
@@ -2633,16 +2632,16 @@ struct DIEFFESCAPE
 enum IID_IDirectInputEffect = GUID(0xe7e1f7c0, 0x88d2, 0x11d0, [0x9a, 0xd0, 0x0, 0xa0, 0xc9, 0xa0, 0x6e, 0x35]);
 interface IDirectInputEffect : IUnknown
 {
-    HRESULT Initialize(HINSTANCE, uint, const(GUID)*);
-    HRESULT GetEffectGuid(GUID*);
-    HRESULT GetParameters(DIEFFECT*, uint);
-    HRESULT SetParameters(DIEFFECT*, uint);
-    HRESULT Start(uint, uint);
+    HRESULT Initialize(HINSTANCE param0, uint param1, const(GUID)* param2);
+    HRESULT GetEffectGuid(GUID* param0);
+    HRESULT GetParameters(DIEFFECT* param0, uint param1);
+    HRESULT SetParameters(DIEFFECT* param0, uint param1);
+    HRESULT Start(uint param0, uint param1);
     HRESULT Stop();
-    HRESULT GetEffectStatus(uint*);
+    HRESULT GetEffectStatus(uint* param0);
     HRESULT Download();
     HRESULT Unload();
-    HRESULT Escape(DIEFFESCAPE*);
+    HRESULT Escape(DIEFFESCAPE* param0);
 }
 struct DIDEVCAPS_DX3
 {
@@ -2881,8 +2880,8 @@ struct DIDEVICEOBJECTINSTANCEW
     ushort wExponent;
     ushort wReportId;
 }
-alias LPDIENUMDEVICEOBJECTSCALLBACKA = BOOL function(DIDEVICEOBJECTINSTANCEA*, void*);
-alias LPDIENUMDEVICEOBJECTSCALLBACKW = BOOL function(DIDEVICEOBJECTINSTANCEW*, void*);
+alias LPDIENUMDEVICEOBJECTSCALLBACKA = BOOL function(DIDEVICEOBJECTINSTANCEA* param0, void* param1);
+alias LPDIENUMDEVICEOBJECTSCALLBACKW = BOOL function(DIDEVICEOBJECTINSTANCEW* param0, void* param1);
 struct DIPROPHEADER
 {
     uint dwSize;
@@ -3001,40 +3000,40 @@ struct DIDEVICEINSTANCEW
 enum IID_IDirectInputDeviceW = GUID(0x5944e681, 0xc92e, 0x11cf, [0xbf, 0xc7, 0x44, 0x45, 0x53, 0x54, 0x0, 0x0]);
 interface IDirectInputDeviceW : IUnknown
 {
-    HRESULT GetCapabilities(DIDEVCAPS*);
-    HRESULT EnumObjects(LPDIENUMDEVICEOBJECTSCALLBACKW, void*, uint);
-    HRESULT GetProperty(const(GUID)*, DIPROPHEADER*);
-    HRESULT SetProperty(const(GUID)*, DIPROPHEADER*);
+    HRESULT GetCapabilities(DIDEVCAPS* param0);
+    HRESULT EnumObjects(LPDIENUMDEVICEOBJECTSCALLBACKW param0, void* param1, uint param2);
+    HRESULT GetProperty(const(GUID)* param0, DIPROPHEADER* param1);
+    HRESULT SetProperty(const(GUID)* param0, DIPROPHEADER* param1);
     HRESULT Acquire();
     HRESULT Unacquire();
-    HRESULT GetDeviceState(uint, void*);
-    HRESULT GetDeviceData(uint, DIDEVICEOBJECTDATA*, uint*, uint);
-    HRESULT SetDataFormat(DIDATAFORMAT*);
-    HRESULT SetEventNotification(HANDLE);
-    HRESULT SetCooperativeLevel(HWND, uint);
-    HRESULT GetObjectInfo(DIDEVICEOBJECTINSTANCEW*, uint, uint);
-    HRESULT GetDeviceInfo(DIDEVICEINSTANCEW*);
-    HRESULT RunControlPanel(HWND, uint);
-    HRESULT Initialize(HINSTANCE, uint, const(GUID)*);
+    HRESULT GetDeviceState(uint param0, void* param1);
+    HRESULT GetDeviceData(uint param0, DIDEVICEOBJECTDATA* param1, uint* param2, uint param3);
+    HRESULT SetDataFormat(DIDATAFORMAT* param0);
+    HRESULT SetEventNotification(HANDLE param0);
+    HRESULT SetCooperativeLevel(HWND param0, uint param1);
+    HRESULT GetObjectInfo(DIDEVICEOBJECTINSTANCEW* param0, uint param1, uint param2);
+    HRESULT GetDeviceInfo(DIDEVICEINSTANCEW* param0);
+    HRESULT RunControlPanel(HWND param0, uint param1);
+    HRESULT Initialize(HINSTANCE param0, uint param1, const(GUID)* param2);
 }
 enum IID_IDirectInputDeviceA = GUID(0x5944e680, 0xc92e, 0x11cf, [0xbf, 0xc7, 0x44, 0x45, 0x53, 0x54, 0x0, 0x0]);
 interface IDirectInputDeviceA : IUnknown
 {
-    HRESULT GetCapabilities(DIDEVCAPS*);
-    HRESULT EnumObjects(LPDIENUMDEVICEOBJECTSCALLBACKA, void*, uint);
-    HRESULT GetProperty(const(GUID)*, DIPROPHEADER*);
-    HRESULT SetProperty(const(GUID)*, DIPROPHEADER*);
+    HRESULT GetCapabilities(DIDEVCAPS* param0);
+    HRESULT EnumObjects(LPDIENUMDEVICEOBJECTSCALLBACKA param0, void* param1, uint param2);
+    HRESULT GetProperty(const(GUID)* param0, DIPROPHEADER* param1);
+    HRESULT SetProperty(const(GUID)* param0, DIPROPHEADER* param1);
     HRESULT Acquire();
     HRESULT Unacquire();
-    HRESULT GetDeviceState(uint, void*);
-    HRESULT GetDeviceData(uint, DIDEVICEOBJECTDATA*, uint*, uint);
-    HRESULT SetDataFormat(DIDATAFORMAT*);
-    HRESULT SetEventNotification(HANDLE);
-    HRESULT SetCooperativeLevel(HWND, uint);
-    HRESULT GetObjectInfo(DIDEVICEOBJECTINSTANCEA*, uint, uint);
-    HRESULT GetDeviceInfo(DIDEVICEINSTANCEA*);
-    HRESULT RunControlPanel(HWND, uint);
-    HRESULT Initialize(HINSTANCE, uint, const(GUID)*);
+    HRESULT GetDeviceState(uint param0, void* param1);
+    HRESULT GetDeviceData(uint param0, DIDEVICEOBJECTDATA* param1, uint* param2, uint param3);
+    HRESULT SetDataFormat(DIDATAFORMAT* param0);
+    HRESULT SetEventNotification(HANDLE param0);
+    HRESULT SetCooperativeLevel(HWND param0, uint param1);
+    HRESULT GetObjectInfo(DIDEVICEOBJECTINSTANCEA* param0, uint param1, uint param2);
+    HRESULT GetDeviceInfo(DIDEVICEINSTANCEA* param0);
+    HRESULT RunControlPanel(HWND param0, uint param1);
+    HRESULT Initialize(HINSTANCE param0, uint param1, const(GUID)* param2);
 }
 struct DIEFFECTINFOA
 {
@@ -3054,112 +3053,112 @@ struct DIEFFECTINFOW
     uint dwDynamicParams;
     wchar[260] tszName;
 }
-alias LPDIENUMEFFECTSCALLBACKA = BOOL function(DIEFFECTINFOA*, void*);
-alias LPDIENUMEFFECTSCALLBACKW = BOOL function(DIEFFECTINFOW*, void*);
-alias LPDIENUMCREATEDEFFECTOBJECTSCALLBACK = BOOL function(IDirectInputEffect, void*);
+alias LPDIENUMEFFECTSCALLBACKA = BOOL function(DIEFFECTINFOA* param0, void* param1);
+alias LPDIENUMEFFECTSCALLBACKW = BOOL function(DIEFFECTINFOW* param0, void* param1);
+alias LPDIENUMCREATEDEFFECTOBJECTSCALLBACK = BOOL function(IDirectInputEffect param0, void* param1);
 enum IID_IDirectInputDevice2W = GUID(0x5944e683, 0xc92e, 0x11cf, [0xbf, 0xc7, 0x44, 0x45, 0x53, 0x54, 0x0, 0x0]);
 interface IDirectInputDevice2W : IDirectInputDeviceW
 {
-    HRESULT CreateEffect(const(GUID)*, DIEFFECT*, IDirectInputEffect*, IUnknown);
-    HRESULT EnumEffects(LPDIENUMEFFECTSCALLBACKW, void*, uint);
-    HRESULT GetEffectInfo(DIEFFECTINFOW*, const(GUID)*);
-    HRESULT GetForceFeedbackState(uint*);
-    HRESULT SendForceFeedbackCommand(uint);
-    HRESULT EnumCreatedEffectObjects(LPDIENUMCREATEDEFFECTOBJECTSCALLBACK, void*, uint);
-    HRESULT Escape(DIEFFESCAPE*);
+    HRESULT CreateEffect(const(GUID)* param0, DIEFFECT* param1, IDirectInputEffect* param2, IUnknown param3);
+    HRESULT EnumEffects(LPDIENUMEFFECTSCALLBACKW param0, void* param1, uint param2);
+    HRESULT GetEffectInfo(DIEFFECTINFOW* param0, const(GUID)* param1);
+    HRESULT GetForceFeedbackState(uint* param0);
+    HRESULT SendForceFeedbackCommand(uint param0);
+    HRESULT EnumCreatedEffectObjects(LPDIENUMCREATEDEFFECTOBJECTSCALLBACK param0, void* param1, uint param2);
+    HRESULT Escape(DIEFFESCAPE* param0);
     HRESULT Poll();
-    HRESULT SendDeviceData(uint, DIDEVICEOBJECTDATA*, uint*, uint);
+    HRESULT SendDeviceData(uint param0, DIDEVICEOBJECTDATA* param1, uint* param2, uint param3);
 }
 enum IID_IDirectInputDevice2A = GUID(0x5944e682, 0xc92e, 0x11cf, [0xbf, 0xc7, 0x44, 0x45, 0x53, 0x54, 0x0, 0x0]);
 interface IDirectInputDevice2A : IDirectInputDeviceA
 {
-    HRESULT CreateEffect(const(GUID)*, DIEFFECT*, IDirectInputEffect*, IUnknown);
-    HRESULT EnumEffects(LPDIENUMEFFECTSCALLBACKA, void*, uint);
-    HRESULT GetEffectInfo(DIEFFECTINFOA*, const(GUID)*);
-    HRESULT GetForceFeedbackState(uint*);
-    HRESULT SendForceFeedbackCommand(uint);
-    HRESULT EnumCreatedEffectObjects(LPDIENUMCREATEDEFFECTOBJECTSCALLBACK, void*, uint);
-    HRESULT Escape(DIEFFESCAPE*);
+    HRESULT CreateEffect(const(GUID)* param0, DIEFFECT* param1, IDirectInputEffect* param2, IUnknown param3);
+    HRESULT EnumEffects(LPDIENUMEFFECTSCALLBACKA param0, void* param1, uint param2);
+    HRESULT GetEffectInfo(DIEFFECTINFOA* param0, const(GUID)* param1);
+    HRESULT GetForceFeedbackState(uint* param0);
+    HRESULT SendForceFeedbackCommand(uint param0);
+    HRESULT EnumCreatedEffectObjects(LPDIENUMCREATEDEFFECTOBJECTSCALLBACK param0, void* param1, uint param2);
+    HRESULT Escape(DIEFFESCAPE* param0);
     HRESULT Poll();
-    HRESULT SendDeviceData(uint, DIDEVICEOBJECTDATA*, uint*, uint);
+    HRESULT SendDeviceData(uint param0, DIDEVICEOBJECTDATA* param1, uint* param2, uint param3);
 }
 enum IID_IDirectInputDevice7W = GUID(0x57d7c6bd, 0x2356, 0x11d3, [0x8e, 0x9d, 0x0, 0xc0, 0x4f, 0x68, 0x44, 0xae]);
 interface IDirectInputDevice7W : IDirectInputDevice2W
 {
-    HRESULT EnumEffectsInFile(const(wchar)*, LPDIENUMEFFECTSINFILECALLBACK, void*, uint);
-    HRESULT WriteEffectToFile(const(wchar)*, uint, DIFILEEFFECT*, uint);
+    HRESULT EnumEffectsInFile(const(wchar)* param0, LPDIENUMEFFECTSINFILECALLBACK param1, void* param2, uint param3);
+    HRESULT WriteEffectToFile(const(wchar)* param0, uint param1, DIFILEEFFECT* param2, uint param3);
 }
 enum IID_IDirectInputDevice7A = GUID(0x57d7c6bc, 0x2356, 0x11d3, [0x8e, 0x9d, 0x0, 0xc0, 0x4f, 0x68, 0x44, 0xae]);
 interface IDirectInputDevice7A : IDirectInputDevice2A
 {
-    HRESULT EnumEffectsInFile(const(char)*, LPDIENUMEFFECTSINFILECALLBACK, void*, uint);
-    HRESULT WriteEffectToFile(const(char)*, uint, DIFILEEFFECT*, uint);
+    HRESULT EnumEffectsInFile(const(char)* param0, LPDIENUMEFFECTSINFILECALLBACK param1, void* param2, uint param3);
+    HRESULT WriteEffectToFile(const(char)* param0, uint param1, DIFILEEFFECT* param2, uint param3);
 }
 enum IID_IDirectInputDevice8W = GUID(0x54d41081, 0xdc15, 0x4833, [0xa4, 0x1b, 0x74, 0x8f, 0x73, 0xa3, 0x81, 0x79]);
 interface IDirectInputDevice8W : IUnknown
 {
-    HRESULT GetCapabilities(DIDEVCAPS*);
-    HRESULT EnumObjects(LPDIENUMDEVICEOBJECTSCALLBACKW, void*, uint);
-    HRESULT GetProperty(const(GUID)*, DIPROPHEADER*);
-    HRESULT SetProperty(const(GUID)*, DIPROPHEADER*);
+    HRESULT GetCapabilities(DIDEVCAPS* param0);
+    HRESULT EnumObjects(LPDIENUMDEVICEOBJECTSCALLBACKW param0, void* param1, uint param2);
+    HRESULT GetProperty(const(GUID)* param0, DIPROPHEADER* param1);
+    HRESULT SetProperty(const(GUID)* param0, DIPROPHEADER* param1);
     HRESULT Acquire();
     HRESULT Unacquire();
-    HRESULT GetDeviceState(uint, void*);
-    HRESULT GetDeviceData(uint, DIDEVICEOBJECTDATA*, uint*, uint);
-    HRESULT SetDataFormat(DIDATAFORMAT*);
-    HRESULT SetEventNotification(HANDLE);
-    HRESULT SetCooperativeLevel(HWND, uint);
-    HRESULT GetObjectInfo(DIDEVICEOBJECTINSTANCEW*, uint, uint);
-    HRESULT GetDeviceInfo(DIDEVICEINSTANCEW*);
-    HRESULT RunControlPanel(HWND, uint);
-    HRESULT Initialize(HINSTANCE, uint, const(GUID)*);
-    HRESULT CreateEffect(const(GUID)*, DIEFFECT*, IDirectInputEffect*, IUnknown);
-    HRESULT EnumEffects(LPDIENUMEFFECTSCALLBACKW, void*, uint);
-    HRESULT GetEffectInfo(DIEFFECTINFOW*, const(GUID)*);
-    HRESULT GetForceFeedbackState(uint*);
-    HRESULT SendForceFeedbackCommand(uint);
-    HRESULT EnumCreatedEffectObjects(LPDIENUMCREATEDEFFECTOBJECTSCALLBACK, void*, uint);
-    HRESULT Escape(DIEFFESCAPE*);
+    HRESULT GetDeviceState(uint param0, void* param1);
+    HRESULT GetDeviceData(uint param0, DIDEVICEOBJECTDATA* param1, uint* param2, uint param3);
+    HRESULT SetDataFormat(DIDATAFORMAT* param0);
+    HRESULT SetEventNotification(HANDLE param0);
+    HRESULT SetCooperativeLevel(HWND param0, uint param1);
+    HRESULT GetObjectInfo(DIDEVICEOBJECTINSTANCEW* param0, uint param1, uint param2);
+    HRESULT GetDeviceInfo(DIDEVICEINSTANCEW* param0);
+    HRESULT RunControlPanel(HWND param0, uint param1);
+    HRESULT Initialize(HINSTANCE param0, uint param1, const(GUID)* param2);
+    HRESULT CreateEffect(const(GUID)* param0, DIEFFECT* param1, IDirectInputEffect* param2, IUnknown param3);
+    HRESULT EnumEffects(LPDIENUMEFFECTSCALLBACKW param0, void* param1, uint param2);
+    HRESULT GetEffectInfo(DIEFFECTINFOW* param0, const(GUID)* param1);
+    HRESULT GetForceFeedbackState(uint* param0);
+    HRESULT SendForceFeedbackCommand(uint param0);
+    HRESULT EnumCreatedEffectObjects(LPDIENUMCREATEDEFFECTOBJECTSCALLBACK param0, void* param1, uint param2);
+    HRESULT Escape(DIEFFESCAPE* param0);
     HRESULT Poll();
-    HRESULT SendDeviceData(uint, DIDEVICEOBJECTDATA*, uint*, uint);
-    HRESULT EnumEffectsInFile(const(wchar)*, LPDIENUMEFFECTSINFILECALLBACK, void*, uint);
-    HRESULT WriteEffectToFile(const(wchar)*, uint, DIFILEEFFECT*, uint);
-    HRESULT BuildActionMap(DIACTIONFORMATW*, const(wchar)*, uint);
-    HRESULT SetActionMap(DIACTIONFORMATW*, const(wchar)*, uint);
-    HRESULT GetImageInfo(DIDEVICEIMAGEINFOHEADERW*);
+    HRESULT SendDeviceData(uint param0, DIDEVICEOBJECTDATA* param1, uint* param2, uint param3);
+    HRESULT EnumEffectsInFile(const(wchar)* param0, LPDIENUMEFFECTSINFILECALLBACK param1, void* param2, uint param3);
+    HRESULT WriteEffectToFile(const(wchar)* param0, uint param1, DIFILEEFFECT* param2, uint param3);
+    HRESULT BuildActionMap(DIACTIONFORMATW* param0, const(wchar)* param1, uint param2);
+    HRESULT SetActionMap(DIACTIONFORMATW* param0, const(wchar)* param1, uint param2);
+    HRESULT GetImageInfo(DIDEVICEIMAGEINFOHEADERW* param0);
 }
 enum IID_IDirectInputDevice8A = GUID(0x54d41080, 0xdc15, 0x4833, [0xa4, 0x1b, 0x74, 0x8f, 0x73, 0xa3, 0x81, 0x79]);
 interface IDirectInputDevice8A : IUnknown
 {
-    HRESULT GetCapabilities(DIDEVCAPS*);
-    HRESULT EnumObjects(LPDIENUMDEVICEOBJECTSCALLBACKA, void*, uint);
-    HRESULT GetProperty(const(GUID)*, DIPROPHEADER*);
-    HRESULT SetProperty(const(GUID)*, DIPROPHEADER*);
+    HRESULT GetCapabilities(DIDEVCAPS* param0);
+    HRESULT EnumObjects(LPDIENUMDEVICEOBJECTSCALLBACKA param0, void* param1, uint param2);
+    HRESULT GetProperty(const(GUID)* param0, DIPROPHEADER* param1);
+    HRESULT SetProperty(const(GUID)* param0, DIPROPHEADER* param1);
     HRESULT Acquire();
     HRESULT Unacquire();
-    HRESULT GetDeviceState(uint, void*);
-    HRESULT GetDeviceData(uint, DIDEVICEOBJECTDATA*, uint*, uint);
-    HRESULT SetDataFormat(DIDATAFORMAT*);
-    HRESULT SetEventNotification(HANDLE);
-    HRESULT SetCooperativeLevel(HWND, uint);
-    HRESULT GetObjectInfo(DIDEVICEOBJECTINSTANCEA*, uint, uint);
-    HRESULT GetDeviceInfo(DIDEVICEINSTANCEA*);
-    HRESULT RunControlPanel(HWND, uint);
-    HRESULT Initialize(HINSTANCE, uint, const(GUID)*);
-    HRESULT CreateEffect(const(GUID)*, DIEFFECT*, IDirectInputEffect*, IUnknown);
-    HRESULT EnumEffects(LPDIENUMEFFECTSCALLBACKA, void*, uint);
-    HRESULT GetEffectInfo(DIEFFECTINFOA*, const(GUID)*);
-    HRESULT GetForceFeedbackState(uint*);
-    HRESULT SendForceFeedbackCommand(uint);
-    HRESULT EnumCreatedEffectObjects(LPDIENUMCREATEDEFFECTOBJECTSCALLBACK, void*, uint);
-    HRESULT Escape(DIEFFESCAPE*);
+    HRESULT GetDeviceState(uint param0, void* param1);
+    HRESULT GetDeviceData(uint param0, DIDEVICEOBJECTDATA* param1, uint* param2, uint param3);
+    HRESULT SetDataFormat(DIDATAFORMAT* param0);
+    HRESULT SetEventNotification(HANDLE param0);
+    HRESULT SetCooperativeLevel(HWND param0, uint param1);
+    HRESULT GetObjectInfo(DIDEVICEOBJECTINSTANCEA* param0, uint param1, uint param2);
+    HRESULT GetDeviceInfo(DIDEVICEINSTANCEA* param0);
+    HRESULT RunControlPanel(HWND param0, uint param1);
+    HRESULT Initialize(HINSTANCE param0, uint param1, const(GUID)* param2);
+    HRESULT CreateEffect(const(GUID)* param0, DIEFFECT* param1, IDirectInputEffect* param2, IUnknown param3);
+    HRESULT EnumEffects(LPDIENUMEFFECTSCALLBACKA param0, void* param1, uint param2);
+    HRESULT GetEffectInfo(DIEFFECTINFOA* param0, const(GUID)* param1);
+    HRESULT GetForceFeedbackState(uint* param0);
+    HRESULT SendForceFeedbackCommand(uint param0);
+    HRESULT EnumCreatedEffectObjects(LPDIENUMCREATEDEFFECTOBJECTSCALLBACK param0, void* param1, uint param2);
+    HRESULT Escape(DIEFFESCAPE* param0);
     HRESULT Poll();
-    HRESULT SendDeviceData(uint, DIDEVICEOBJECTDATA*, uint*, uint);
-    HRESULT EnumEffectsInFile(const(char)*, LPDIENUMEFFECTSINFILECALLBACK, void*, uint);
-    HRESULT WriteEffectToFile(const(char)*, uint, DIFILEEFFECT*, uint);
-    HRESULT BuildActionMap(DIACTIONFORMATA*, const(char)*, uint);
-    HRESULT SetActionMap(DIACTIONFORMATA*, const(char)*, uint);
-    HRESULT GetImageInfo(DIDEVICEIMAGEINFOHEADERA*);
+    HRESULT SendDeviceData(uint param0, DIDEVICEOBJECTDATA* param1, uint* param2, uint param3);
+    HRESULT EnumEffectsInFile(const(char)* param0, LPDIENUMEFFECTSINFILECALLBACK param1, void* param2, uint param3);
+    HRESULT WriteEffectToFile(const(char)* param0, uint param1, DIFILEEFFECT* param2, uint param3);
+    HRESULT BuildActionMap(DIACTIONFORMATA* param0, const(char)* param1, uint param2);
+    HRESULT SetActionMap(DIACTIONFORMATA* param0, const(char)* param1, uint param2);
+    HRESULT GetImageInfo(DIDEVICEIMAGEINFOHEADERA* param0);
 }
 struct DIMOUSESTATE
 {
@@ -3220,74 +3219,74 @@ struct DIJOYSTATE2
     int lFRz;
     int[2] rglFSlider;
 }
-alias LPDIENUMDEVICESCALLBACKA = BOOL function(DIDEVICEINSTANCEA*, void*);
-alias LPDIENUMDEVICESCALLBACKW = BOOL function(DIDEVICEINSTANCEW*, void*);
-alias LPDICONFIGUREDEVICESCALLBACK = BOOL function(IUnknown, void*);
-alias LPDIENUMDEVICESBYSEMANTICSCBA = BOOL function(DIDEVICEINSTANCEA*, IDirectInputDevice8A, uint, uint, void*);
-alias LPDIENUMDEVICESBYSEMANTICSCBW = BOOL function(DIDEVICEINSTANCEW*, IDirectInputDevice8W, uint, uint, void*);
+alias LPDIENUMDEVICESCALLBACKA = BOOL function(DIDEVICEINSTANCEA* param0, void* param1);
+alias LPDIENUMDEVICESCALLBACKW = BOOL function(DIDEVICEINSTANCEW* param0, void* param1);
+alias LPDICONFIGUREDEVICESCALLBACK = BOOL function(IUnknown param0, void* param1);
+alias LPDIENUMDEVICESBYSEMANTICSCBA = BOOL function(DIDEVICEINSTANCEA* param0, IDirectInputDevice8A param1, uint param2, uint param3, void* param4);
+alias LPDIENUMDEVICESBYSEMANTICSCBW = BOOL function(DIDEVICEINSTANCEW* param0, IDirectInputDevice8W param1, uint param2, uint param3, void* param4);
 enum IID_IDirectInputW = GUID(0x89521361, 0xaa8a, 0x11cf, [0xbf, 0xc7, 0x44, 0x45, 0x53, 0x54, 0x0, 0x0]);
 interface IDirectInputW : IUnknown
 {
-    HRESULT CreateDevice(const(GUID)*, IDirectInputDeviceW*, IUnknown);
-    HRESULT EnumDevices(uint, LPDIENUMDEVICESCALLBACKW, void*, uint);
-    HRESULT GetDeviceStatus(const(GUID)*);
-    HRESULT RunControlPanel(HWND, uint);
-    HRESULT Initialize(HINSTANCE, uint);
+    HRESULT CreateDevice(const(GUID)* param0, IDirectInputDeviceW* param1, IUnknown param2);
+    HRESULT EnumDevices(uint param0, LPDIENUMDEVICESCALLBACKW param1, void* param2, uint param3);
+    HRESULT GetDeviceStatus(const(GUID)* param0);
+    HRESULT RunControlPanel(HWND param0, uint param1);
+    HRESULT Initialize(HINSTANCE param0, uint param1);
 }
 enum IID_IDirectInputA = GUID(0x89521360, 0xaa8a, 0x11cf, [0xbf, 0xc7, 0x44, 0x45, 0x53, 0x54, 0x0, 0x0]);
 interface IDirectInputA : IUnknown
 {
-    HRESULT CreateDevice(const(GUID)*, IDirectInputDeviceA*, IUnknown);
-    HRESULT EnumDevices(uint, LPDIENUMDEVICESCALLBACKA, void*, uint);
-    HRESULT GetDeviceStatus(const(GUID)*);
-    HRESULT RunControlPanel(HWND, uint);
-    HRESULT Initialize(HINSTANCE, uint);
+    HRESULT CreateDevice(const(GUID)* param0, IDirectInputDeviceA* param1, IUnknown param2);
+    HRESULT EnumDevices(uint param0, LPDIENUMDEVICESCALLBACKA param1, void* param2, uint param3);
+    HRESULT GetDeviceStatus(const(GUID)* param0);
+    HRESULT RunControlPanel(HWND param0, uint param1);
+    HRESULT Initialize(HINSTANCE param0, uint param1);
 }
 enum IID_IDirectInput2W = GUID(0x5944e663, 0xaa8a, 0x11cf, [0xbf, 0xc7, 0x44, 0x45, 0x53, 0x54, 0x0, 0x0]);
 interface IDirectInput2W : IDirectInputW
 {
-    HRESULT FindDevice(const(GUID)*, const(wchar)*, GUID*);
+    HRESULT FindDevice(const(GUID)* param0, const(wchar)* param1, GUID* param2);
 }
 enum IID_IDirectInput2A = GUID(0x5944e662, 0xaa8a, 0x11cf, [0xbf, 0xc7, 0x44, 0x45, 0x53, 0x54, 0x0, 0x0]);
 interface IDirectInput2A : IDirectInputA
 {
-    HRESULT FindDevice(const(GUID)*, const(char)*, GUID*);
+    HRESULT FindDevice(const(GUID)* param0, const(char)* param1, GUID* param2);
 }
 enum IID_IDirectInput7W = GUID(0x9a4cb685, 0x236d, 0x11d3, [0x8e, 0x9d, 0x0, 0xc0, 0x4f, 0x68, 0x44, 0xae]);
 interface IDirectInput7W : IDirectInput2W
 {
-    HRESULT CreateDeviceEx(const(GUID)*, const(GUID)*, void**, IUnknown);
+    HRESULT CreateDeviceEx(const(GUID)* param0, const(GUID)* param1, void** param2, IUnknown param3);
 }
 enum IID_IDirectInput7A = GUID(0x9a4cb684, 0x236d, 0x11d3, [0x8e, 0x9d, 0x0, 0xc0, 0x4f, 0x68, 0x44, 0xae]);
 interface IDirectInput7A : IDirectInput2A
 {
-    HRESULT CreateDeviceEx(const(GUID)*, const(GUID)*, void**, IUnknown);
+    HRESULT CreateDeviceEx(const(GUID)* param0, const(GUID)* param1, void** param2, IUnknown param3);
 }
 enum IID_IDirectInput8W = GUID(0xbf798031, 0x483a, 0x4da2, [0xaa, 0x99, 0x5d, 0x64, 0xed, 0x36, 0x97, 0x0]);
 interface IDirectInput8W : IUnknown
 {
-    HRESULT CreateDevice(const(GUID)*, IDirectInputDevice8W*, IUnknown);
-    HRESULT EnumDevices(uint, LPDIENUMDEVICESCALLBACKW, void*, uint);
-    HRESULT GetDeviceStatus(const(GUID)*);
-    HRESULT RunControlPanel(HWND, uint);
-    HRESULT Initialize(HINSTANCE, uint);
-    HRESULT FindDevice(const(GUID)*, const(wchar)*, GUID*);
-    HRESULT EnumDevicesBySemantics(const(wchar)*, DIACTIONFORMATW*, LPDIENUMDEVICESBYSEMANTICSCBW, void*, uint);
-    HRESULT ConfigureDevices(LPDICONFIGUREDEVICESCALLBACK, DICONFIGUREDEVICESPARAMSW*, uint, void*);
+    HRESULT CreateDevice(const(GUID)* param0, IDirectInputDevice8W* param1, IUnknown param2);
+    HRESULT EnumDevices(uint param0, LPDIENUMDEVICESCALLBACKW param1, void* param2, uint param3);
+    HRESULT GetDeviceStatus(const(GUID)* param0);
+    HRESULT RunControlPanel(HWND param0, uint param1);
+    HRESULT Initialize(HINSTANCE param0, uint param1);
+    HRESULT FindDevice(const(GUID)* param0, const(wchar)* param1, GUID* param2);
+    HRESULT EnumDevicesBySemantics(const(wchar)* param0, DIACTIONFORMATW* param1, LPDIENUMDEVICESBYSEMANTICSCBW param2, void* param3, uint param4);
+    HRESULT ConfigureDevices(LPDICONFIGUREDEVICESCALLBACK param0, DICONFIGUREDEVICESPARAMSW* param1, uint param2, void* param3);
 }
 enum IID_IDirectInput8A = GUID(0xbf798030, 0x483a, 0x4da2, [0xaa, 0x99, 0x5d, 0x64, 0xed, 0x36, 0x97, 0x0]);
 interface IDirectInput8A : IUnknown
 {
-    HRESULT CreateDevice(const(GUID)*, IDirectInputDevice8A*, IUnknown);
-    HRESULT EnumDevices(uint, LPDIENUMDEVICESCALLBACKA, void*, uint);
-    HRESULT GetDeviceStatus(const(GUID)*);
-    HRESULT RunControlPanel(HWND, uint);
-    HRESULT Initialize(HINSTANCE, uint);
-    HRESULT FindDevice(const(GUID)*, const(char)*, GUID*);
-    HRESULT EnumDevicesBySemantics(const(char)*, DIACTIONFORMATA*, LPDIENUMDEVICESBYSEMANTICSCBA, void*, uint);
-    HRESULT ConfigureDevices(LPDICONFIGUREDEVICESCALLBACK, DICONFIGUREDEVICESPARAMSA*, uint, void*);
+    HRESULT CreateDevice(const(GUID)* param0, IDirectInputDevice8A* param1, IUnknown param2);
+    HRESULT EnumDevices(uint param0, LPDIENUMDEVICESCALLBACKA param1, void* param2, uint param3);
+    HRESULT GetDeviceStatus(const(GUID)* param0);
+    HRESULT RunControlPanel(HWND param0, uint param1);
+    HRESULT Initialize(HINSTANCE param0, uint param1);
+    HRESULT FindDevice(const(GUID)* param0, const(char)* param1, GUID* param2);
+    HRESULT EnumDevicesBySemantics(const(char)* param0, DIACTIONFORMATA* param1, LPDIENUMDEVICESBYSEMANTICSCBA param2, void* param3, uint param4);
+    HRESULT ConfigureDevices(LPDICONFIGUREDEVICESCALLBACK param0, DICONFIGUREDEVICESPARAMSA* param1, uint param2, void* param3);
 }
-alias LPFNSHOWJOYCPL = void function(HWND);
+alias LPFNSHOWJOYCPL = void function(HWND hWnd);
 struct DIOBJECTATTRIBUTES
 {
     uint dwFlags;
@@ -3346,17 +3345,17 @@ struct DIHIDFFINITINFO
 enum IID_IDirectInputEffectDriver = GUID(0x2538130, 0x898f, 0x11d0, [0x9a, 0xd0, 0x0, 0xa0, 0xc9, 0xa0, 0x6e, 0x35]);
 interface IDirectInputEffectDriver : IUnknown
 {
-    HRESULT DeviceID(uint, uint, uint, uint, void*);
-    HRESULT GetVersions(DIDRIVERVERSIONS*);
-    HRESULT Escape(uint, uint, DIEFFESCAPE*);
-    HRESULT SetGain(uint, uint);
-    HRESULT SendForceFeedbackCommand(uint, uint);
-    HRESULT GetForceFeedbackState(uint, DIDEVICESTATE*);
-    HRESULT DownloadEffect(uint, uint, uint*, DIEFFECT*, uint);
-    HRESULT DestroyEffect(uint, uint);
-    HRESULT StartEffect(uint, uint, uint, uint);
-    HRESULT StopEffect(uint, uint);
-    HRESULT GetEffectStatus(uint, uint, uint*);
+    HRESULT DeviceID(uint param0, uint param1, uint param2, uint param3, void* param4);
+    HRESULT GetVersions(DIDRIVERVERSIONS* param0);
+    HRESULT Escape(uint param0, uint param1, DIEFFESCAPE* param2);
+    HRESULT SetGain(uint param0, uint param1);
+    HRESULT SendForceFeedbackCommand(uint param0, uint param1);
+    HRESULT GetForceFeedbackState(uint param0, DIDEVICESTATE* param1);
+    HRESULT DownloadEffect(uint param0, uint param1, uint* param2, DIEFFECT* param3, uint param4);
+    HRESULT DestroyEffect(uint param0, uint param1);
+    HRESULT StartEffect(uint param0, uint param1, uint param2, uint param3);
+    HRESULT StopEffect(uint param0, uint param1);
+    HRESULT GetEffectStatus(uint param0, uint param1, uint* param2);
 }
 struct JOYPOS
 {
@@ -3407,7 +3406,7 @@ struct JOYCALIBRATE
     uint wZbase;
     uint wZdelta;
 }
-alias LPDIJOYTYPECALLBACK = BOOL function(const(wchar)*, void*);
+alias LPDIJOYTYPECALLBACK = BOOL function(const(wchar)* param0, void* param1);
 struct DIJOYTYPEINFO_DX5
 {
     uint dwSize;
@@ -3469,40 +3468,40 @@ interface IDirectInputJoyConfig : IUnknown
 {
     HRESULT Acquire();
     HRESULT Unacquire();
-    HRESULT SetCooperativeLevel(HWND, uint);
+    HRESULT SetCooperativeLevel(HWND param0, uint param1);
     HRESULT SendNotify();
-    HRESULT EnumTypes(LPDIJOYTYPECALLBACK, void*);
-    HRESULT GetTypeInfo(const(wchar)*, DIJOYTYPEINFO*, uint);
-    HRESULT SetTypeInfo(const(wchar)*, DIJOYTYPEINFO*, uint);
-    HRESULT DeleteType(const(wchar)*);
-    HRESULT GetConfig(uint, DIJOYCONFIG*, uint);
-    HRESULT SetConfig(uint, DIJOYCONFIG*, uint);
-    HRESULT DeleteConfig(uint);
-    HRESULT GetUserValues(DIJOYUSERVALUES*, uint);
-    HRESULT SetUserValues(DIJOYUSERVALUES*, uint);
-    HRESULT AddNewHardware(HWND, const(GUID)*);
-    HRESULT OpenTypeKey(const(wchar)*, uint, HKEY*);
-    HRESULT OpenConfigKey(uint, uint, HKEY*);
+    HRESULT EnumTypes(LPDIJOYTYPECALLBACK param0, void* param1);
+    HRESULT GetTypeInfo(const(wchar)* param0, DIJOYTYPEINFO* param1, uint param2);
+    HRESULT SetTypeInfo(const(wchar)* param0, DIJOYTYPEINFO* param1, uint param2);
+    HRESULT DeleteType(const(wchar)* param0);
+    HRESULT GetConfig(uint param0, DIJOYCONFIG* param1, uint param2);
+    HRESULT SetConfig(uint param0, DIJOYCONFIG* param1, uint param2);
+    HRESULT DeleteConfig(uint param0);
+    HRESULT GetUserValues(DIJOYUSERVALUES* param0, uint param1);
+    HRESULT SetUserValues(DIJOYUSERVALUES* param0, uint param1);
+    HRESULT AddNewHardware(HWND param0, const(GUID)* param1);
+    HRESULT OpenTypeKey(const(wchar)* param0, uint param1, HKEY* param2);
+    HRESULT OpenConfigKey(uint param0, uint param1, HKEY* param2);
 }
 enum IID_IDirectInputJoyConfig8 = GUID(0xeb0d7dfa, 0x1990, 0x4f27, [0xb4, 0xd6, 0xed, 0xf2, 0xee, 0xc4, 0xa4, 0x4c]);
 interface IDirectInputJoyConfig8 : IUnknown
 {
     HRESULT Acquire();
     HRESULT Unacquire();
-    HRESULT SetCooperativeLevel(HWND, uint);
+    HRESULT SetCooperativeLevel(HWND param0, uint param1);
     HRESULT SendNotify();
-    HRESULT EnumTypes(LPDIJOYTYPECALLBACK, void*);
-    HRESULT GetTypeInfo(const(wchar)*, DIJOYTYPEINFO*, uint);
-    HRESULT SetTypeInfo(const(wchar)*, DIJOYTYPEINFO*, uint, PWSTR);
-    HRESULT DeleteType(const(wchar)*);
-    HRESULT GetConfig(uint, DIJOYCONFIG*, uint);
-    HRESULT SetConfig(uint, DIJOYCONFIG*, uint);
-    HRESULT DeleteConfig(uint);
-    HRESULT GetUserValues(DIJOYUSERVALUES*, uint);
-    HRESULT SetUserValues(DIJOYUSERVALUES*, uint);
-    HRESULT AddNewHardware(HWND, const(GUID)*);
-    HRESULT OpenTypeKey(const(wchar)*, uint, HKEY*);
-    HRESULT OpenAppStatusKey(HKEY*);
+    HRESULT EnumTypes(LPDIJOYTYPECALLBACK param0, void* param1);
+    HRESULT GetTypeInfo(const(wchar)* param0, DIJOYTYPEINFO* param1, uint param2);
+    HRESULT SetTypeInfo(const(wchar)* param0, DIJOYTYPEINFO* param1, uint param2, PWSTR param3);
+    HRESULT DeleteType(const(wchar)* param0);
+    HRESULT GetConfig(uint param0, DIJOYCONFIG* param1, uint param2);
+    HRESULT SetConfig(uint param0, DIJOYCONFIG* param1, uint param2);
+    HRESULT DeleteConfig(uint param0);
+    HRESULT GetUserValues(DIJOYUSERVALUES* param0, uint param1);
+    HRESULT SetUserValues(DIJOYUSERVALUES* param0, uint param1);
+    HRESULT AddNewHardware(HWND param0, const(GUID)* param1);
+    HRESULT OpenTypeKey(const(wchar)* param0, uint param1, HKEY* param2);
+    HRESULT OpenAppStatusKey(HKEY* param0);
 }
 struct KEYBOARD_INPUT_DATA
 {
@@ -3781,8 +3780,8 @@ struct HIDP_KEYBOARD_MODIFIER_STATE
         uint ul;
     }
 }
-alias PHIDP_INSERT_SCANCODES = BOOLEAN function(void*, PSTR, uint);
-alias PFN_HidP_GetVersionInternal = NTSTATUS function(uint*);
+alias PHIDP_INSERT_SCANCODES = BOOLEAN function(void* Context, PSTR NewScanCodes, uint Length);
+alias PFN_HidP_GetVersionInternal = NTSTATUS function(uint* Version);
 struct HIDD_CONFIGURATION
 {
     align (4):

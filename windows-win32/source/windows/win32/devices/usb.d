@@ -28,40 +28,40 @@ enum : uint
     SUSPEND_DELAY = 0x00000083,
 }
 
-BOOL WinUsb_Initialize(HANDLE, WINUSB_INTERFACE_HANDLE*);
-BOOL WinUsb_Free(WINUSB_INTERFACE_HANDLE);
-BOOL WinUsb_GetAssociatedInterface(WINUSB_INTERFACE_HANDLE, ubyte, WINUSB_INTERFACE_HANDLE*);
-BOOL WinUsb_GetDescriptor(WINUSB_INTERFACE_HANDLE, ubyte, ubyte, ushort, ubyte*, uint, uint*);
-BOOL WinUsb_QueryInterfaceSettings(WINUSB_INTERFACE_HANDLE, ubyte, USB_INTERFACE_DESCRIPTOR*);
-BOOL WinUsb_QueryDeviceInformation(WINUSB_INTERFACE_HANDLE, uint, uint*, void*);
-BOOL WinUsb_SetCurrentAlternateSetting(WINUSB_INTERFACE_HANDLE, ubyte);
-BOOL WinUsb_GetCurrentAlternateSetting(WINUSB_INTERFACE_HANDLE, ubyte*);
-BOOL WinUsb_QueryPipe(WINUSB_INTERFACE_HANDLE, ubyte, ubyte, WINUSB_PIPE_INFORMATION*);
-BOOL WinUsb_QueryPipeEx(WINUSB_INTERFACE_HANDLE, ubyte, ubyte, WINUSB_PIPE_INFORMATION_EX*);
-BOOL WinUsb_SetPipePolicy(WINUSB_INTERFACE_HANDLE, ubyte, WINUSB_PIPE_POLICY, uint, void*);
-BOOL WinUsb_GetPipePolicy(WINUSB_INTERFACE_HANDLE, ubyte, WINUSB_PIPE_POLICY, uint*, void*);
-BOOL WinUsb_ReadPipe(WINUSB_INTERFACE_HANDLE, ubyte, ubyte*, uint, uint*, OVERLAPPED*);
-BOOL WinUsb_WritePipe(WINUSB_INTERFACE_HANDLE, ubyte, ubyte*, uint, uint*, OVERLAPPED*);
-BOOL WinUsb_ControlTransfer(WINUSB_INTERFACE_HANDLE, WINUSB_SETUP_PACKET, ubyte*, uint, uint*, OVERLAPPED*);
-BOOL WinUsb_ResetPipe(WINUSB_INTERFACE_HANDLE, ubyte);
-BOOL WinUsb_AbortPipe(WINUSB_INTERFACE_HANDLE, ubyte);
-BOOL WinUsb_FlushPipe(WINUSB_INTERFACE_HANDLE, ubyte);
-BOOL WinUsb_SetPowerPolicy(WINUSB_INTERFACE_HANDLE, WINUSB_POWER_POLICY, uint, void*);
-BOOL WinUsb_GetPowerPolicy(WINUSB_INTERFACE_HANDLE, WINUSB_POWER_POLICY, uint*, void*);
-BOOL WinUsb_GetOverlappedResult(WINUSB_INTERFACE_HANDLE, OVERLAPPED*, uint*, BOOL);
-USB_INTERFACE_DESCRIPTOR* WinUsb_ParseConfigurationDescriptor(USB_CONFIGURATION_DESCRIPTOR*, void*, int, int, int, int, int);
-USB_COMMON_DESCRIPTOR* WinUsb_ParseDescriptors(void*, uint, void*, int);
-BOOL WinUsb_GetCurrentFrameNumber(WINUSB_INTERFACE_HANDLE, uint*, long*);
-BOOL WinUsb_GetAdjustedFrameNumber(uint*, long);
-BOOL WinUsb_RegisterIsochBuffer(WINUSB_INTERFACE_HANDLE, ubyte, ubyte*, uint, void**);
-BOOL WinUsb_UnregisterIsochBuffer(void*);
-BOOL WinUsb_WriteIsochPipe(void*, uint, uint, uint*, OVERLAPPED*);
-BOOL WinUsb_ReadIsochPipe(void*, uint, uint, uint*, uint, USBD_ISO_PACKET_DESCRIPTOR*, OVERLAPPED*);
-BOOL WinUsb_WriteIsochPipeAsap(void*, uint, uint, BOOL, OVERLAPPED*);
-BOOL WinUsb_ReadIsochPipeAsap(void*, uint, uint, BOOL, uint, USBD_ISO_PACKET_DESCRIPTOR*, OVERLAPPED*);
-BOOL WinUsb_StartTrackingForTimeSync(WINUSB_INTERFACE_HANDLE, USB_START_TRACKING_FOR_TIME_SYNC_INFORMATION*);
-BOOL WinUsb_GetCurrentFrameNumberAndQpc(WINUSB_INTERFACE_HANDLE, USB_FRAME_NUMBER_AND_QPC_FOR_TIME_SYNC_INFORMATION*);
-BOOL WinUsb_StopTrackingForTimeSync(WINUSB_INTERFACE_HANDLE, USB_STOP_TRACKING_FOR_TIME_SYNC_INFORMATION*);
+BOOL WinUsb_Initialize(HANDLE DeviceHandle, WINUSB_INTERFACE_HANDLE* InterfaceHandle);
+BOOL WinUsb_Free(WINUSB_INTERFACE_HANDLE InterfaceHandle);
+BOOL WinUsb_GetAssociatedInterface(WINUSB_INTERFACE_HANDLE InterfaceHandle, ubyte AssociatedInterfaceIndex, WINUSB_INTERFACE_HANDLE* AssociatedInterfaceHandle);
+BOOL WinUsb_GetDescriptor(WINUSB_INTERFACE_HANDLE InterfaceHandle, ubyte DescriptorType, ubyte Index, ushort LanguageID, ubyte* Buffer, uint BufferLength, uint* LengthTransferred);
+BOOL WinUsb_QueryInterfaceSettings(WINUSB_INTERFACE_HANDLE InterfaceHandle, ubyte AlternateInterfaceNumber, USB_INTERFACE_DESCRIPTOR* UsbAltInterfaceDescriptor);
+BOOL WinUsb_QueryDeviceInformation(WINUSB_INTERFACE_HANDLE InterfaceHandle, uint InformationType, uint* BufferLength, void* Buffer);
+BOOL WinUsb_SetCurrentAlternateSetting(WINUSB_INTERFACE_HANDLE InterfaceHandle, ubyte SettingNumber);
+BOOL WinUsb_GetCurrentAlternateSetting(WINUSB_INTERFACE_HANDLE InterfaceHandle, ubyte* SettingNumber);
+BOOL WinUsb_QueryPipe(WINUSB_INTERFACE_HANDLE InterfaceHandle, ubyte AlternateInterfaceNumber, ubyte PipeIndex, WINUSB_PIPE_INFORMATION* PipeInformation);
+BOOL WinUsb_QueryPipeEx(WINUSB_INTERFACE_HANDLE InterfaceHandle, ubyte AlternateSettingNumber, ubyte PipeIndex, WINUSB_PIPE_INFORMATION_EX* PipeInformationEx);
+BOOL WinUsb_SetPipePolicy(WINUSB_INTERFACE_HANDLE InterfaceHandle, ubyte PipeID, WINUSB_PIPE_POLICY PolicyType, uint ValueLength, void* Value);
+BOOL WinUsb_GetPipePolicy(WINUSB_INTERFACE_HANDLE InterfaceHandle, ubyte PipeID, WINUSB_PIPE_POLICY PolicyType, uint* ValueLength, void* Value);
+BOOL WinUsb_ReadPipe(WINUSB_INTERFACE_HANDLE InterfaceHandle, ubyte PipeID, ubyte* Buffer, uint BufferLength, uint* LengthTransferred, OVERLAPPED* Overlapped);
+BOOL WinUsb_WritePipe(WINUSB_INTERFACE_HANDLE InterfaceHandle, ubyte PipeID, ubyte* Buffer, uint BufferLength, uint* LengthTransferred, OVERLAPPED* Overlapped);
+BOOL WinUsb_ControlTransfer(WINUSB_INTERFACE_HANDLE InterfaceHandle, WINUSB_SETUP_PACKET SetupPacket, ubyte* Buffer, uint BufferLength, uint* LengthTransferred, OVERLAPPED* Overlapped);
+BOOL WinUsb_ResetPipe(WINUSB_INTERFACE_HANDLE InterfaceHandle, ubyte PipeID);
+BOOL WinUsb_AbortPipe(WINUSB_INTERFACE_HANDLE InterfaceHandle, ubyte PipeID);
+BOOL WinUsb_FlushPipe(WINUSB_INTERFACE_HANDLE InterfaceHandle, ubyte PipeID);
+BOOL WinUsb_SetPowerPolicy(WINUSB_INTERFACE_HANDLE InterfaceHandle, WINUSB_POWER_POLICY PolicyType, uint ValueLength, void* Value);
+BOOL WinUsb_GetPowerPolicy(WINUSB_INTERFACE_HANDLE InterfaceHandle, WINUSB_POWER_POLICY PolicyType, uint* ValueLength, void* Value);
+BOOL WinUsb_GetOverlappedResult(WINUSB_INTERFACE_HANDLE InterfaceHandle, OVERLAPPED* lpOverlapped, uint* lpNumberOfBytesTransferred, BOOL bWait);
+USB_INTERFACE_DESCRIPTOR* WinUsb_ParseConfigurationDescriptor(USB_CONFIGURATION_DESCRIPTOR* ConfigurationDescriptor, void* StartPosition, int InterfaceNumber, int AlternateSetting, int InterfaceClass, int InterfaceSubClass, int InterfaceProtocol);
+USB_COMMON_DESCRIPTOR* WinUsb_ParseDescriptors(void* DescriptorBuffer, uint TotalLength, void* StartPosition, int DescriptorType);
+BOOL WinUsb_GetCurrentFrameNumber(WINUSB_INTERFACE_HANDLE InterfaceHandle, uint* CurrentFrameNumber, long* TimeStamp);
+BOOL WinUsb_GetAdjustedFrameNumber(uint* CurrentFrameNumber, long TimeStamp);
+BOOL WinUsb_RegisterIsochBuffer(WINUSB_INTERFACE_HANDLE InterfaceHandle, ubyte PipeID, ubyte* Buffer, uint BufferLength, void** IsochBufferHandle);
+BOOL WinUsb_UnregisterIsochBuffer(void* IsochBufferHandle);
+BOOL WinUsb_WriteIsochPipe(void* BufferHandle, uint Offset, uint Length, uint* FrameNumber, OVERLAPPED* Overlapped);
+BOOL WinUsb_ReadIsochPipe(void* BufferHandle, uint Offset, uint Length, uint* FrameNumber, uint NumberOfPackets, USBD_ISO_PACKET_DESCRIPTOR* IsoPacketDescriptors, OVERLAPPED* Overlapped);
+BOOL WinUsb_WriteIsochPipeAsap(void* BufferHandle, uint Offset, uint Length, BOOL ContinueStream, OVERLAPPED* Overlapped);
+BOOL WinUsb_ReadIsochPipeAsap(void* BufferHandle, uint Offset, uint Length, BOOL ContinueStream, uint NumberOfPackets, USBD_ISO_PACKET_DESCRIPTOR* IsoPacketDescriptors, OVERLAPPED* Overlapped);
+BOOL WinUsb_StartTrackingForTimeSync(WINUSB_INTERFACE_HANDLE InterfaceHandle, USB_START_TRACKING_FOR_TIME_SYNC_INFORMATION* StartTrackingInfo);
+BOOL WinUsb_GetCurrentFrameNumberAndQpc(WINUSB_INTERFACE_HANDLE InterfaceHandle, USB_FRAME_NUMBER_AND_QPC_FOR_TIME_SYNC_INFORMATION* FrameQpcInfo);
+BOOL WinUsb_StopTrackingForTimeSync(WINUSB_INTERFACE_HANDLE InterfaceHandle, USB_STOP_TRACKING_FOR_TIME_SYNC_INFORMATION* StopTrackingInfo);
 enum DEVICE_SPEED = 0x00000001;
 enum LowSpeed = 0x00000001;
 enum FullSpeed = 0x00000002;
@@ -600,8 +600,8 @@ enum IOCTL_GET_PIPE_CONFIGURATION = 0x80002028;
 enum IOCTL_SET_TIMEOUT = 0x8000202c;
 enum IOCTL_ABORT_PIPE = 0x80002004;
 enum WinUSB_TestGuid = GUID(0xda812bff, 0x12c3, 0x46a2, [0x8e, 0x2b, 0xdb, 0xd3, 0xb7, 0x83, 0x4c, 0x43]);
-alias WINUSB_INTERFACE_HANDLE = long;
-alias USB_CHANGE_REGISTRATION_HANDLE = long;
+alias WINUSB_INTERFACE_HANDLE = void*;
+alias USB_CHANGE_REGISTRATION_HANDLE = void*;
 alias USB_DEVICE_SPEED = int;
 enum : int
 {
@@ -1559,7 +1559,7 @@ struct URB
         _URB_GET_ISOCH_PIPE_TRANSFER_PATH_DELAYS UrbGetIsochPipeTransferPathDelays;
     }
 }
-alias USB_IDLE_CALLBACK = void function(void*);
+alias USB_IDLE_CALLBACK = void function(void* Context);
 struct USB_IDLE_CALLBACK_INFO
 {
     USB_IDLE_CALLBACK IdleCallback;

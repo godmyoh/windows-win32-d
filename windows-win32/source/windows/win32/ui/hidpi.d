@@ -8,41 +8,41 @@ import windows.win32.ui.windowsandmessaging : SYSTEM_METRICS_INDEX, WINDOW_EX_ST
 version (Windows):
 extern (Windows):
 
-HTHEME OpenThemeDataForDpi(HWND, const(wchar)*, uint);
-BOOL SetDialogControlDpiChangeBehavior(HWND, DIALOG_CONTROL_DPI_CHANGE_BEHAVIORS, DIALOG_CONTROL_DPI_CHANGE_BEHAVIORS);
-DIALOG_CONTROL_DPI_CHANGE_BEHAVIORS GetDialogControlDpiChangeBehavior(HWND);
-BOOL SetDialogDpiChangeBehavior(HWND, DIALOG_DPI_CHANGE_BEHAVIORS, DIALOG_DPI_CHANGE_BEHAVIORS);
-DIALOG_DPI_CHANGE_BEHAVIORS GetDialogDpiChangeBehavior(HWND);
-int GetSystemMetricsForDpi(SYSTEM_METRICS_INDEX, uint);
-BOOL AdjustWindowRectExForDpi(RECT*, WINDOW_STYLE, BOOL, WINDOW_EX_STYLE, uint);
-BOOL LogicalToPhysicalPointForPerMonitorDPI(HWND, POINT*);
-BOOL PhysicalToLogicalPointForPerMonitorDPI(HWND, POINT*);
-BOOL SystemParametersInfoForDpi(uint, uint, void*, uint, uint);
-DPI_AWARENESS_CONTEXT SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT);
+HTHEME OpenThemeDataForDpi(HWND hwnd, const(wchar)* pszClassList, uint dpi);
+BOOL SetDialogControlDpiChangeBehavior(HWND hWnd, DIALOG_CONTROL_DPI_CHANGE_BEHAVIORS mask, DIALOG_CONTROL_DPI_CHANGE_BEHAVIORS values);
+DIALOG_CONTROL_DPI_CHANGE_BEHAVIORS GetDialogControlDpiChangeBehavior(HWND hWnd);
+BOOL SetDialogDpiChangeBehavior(HWND hDlg, DIALOG_DPI_CHANGE_BEHAVIORS mask, DIALOG_DPI_CHANGE_BEHAVIORS values);
+DIALOG_DPI_CHANGE_BEHAVIORS GetDialogDpiChangeBehavior(HWND hDlg);
+int GetSystemMetricsForDpi(SYSTEM_METRICS_INDEX nIndex, uint dpi);
+BOOL AdjustWindowRectExForDpi(RECT* lpRect, WINDOW_STYLE dwStyle, BOOL bMenu, WINDOW_EX_STYLE dwExStyle, uint dpi);
+BOOL LogicalToPhysicalPointForPerMonitorDPI(HWND hWnd, POINT* lpPoint);
+BOOL PhysicalToLogicalPointForPerMonitorDPI(HWND hWnd, POINT* lpPoint);
+BOOL SystemParametersInfoForDpi(uint uiAction, uint uiParam, void* pvParam, uint fWinIni, uint dpi);
+DPI_AWARENESS_CONTEXT SetThreadDpiAwarenessContext(DPI_AWARENESS_CONTEXT dpiContext);
 DPI_AWARENESS_CONTEXT GetThreadDpiAwarenessContext();
-DPI_AWARENESS_CONTEXT GetWindowDpiAwarenessContext(HWND);
-DPI_AWARENESS GetAwarenessFromDpiAwarenessContext(DPI_AWARENESS_CONTEXT);
-uint GetDpiFromDpiAwarenessContext(DPI_AWARENESS_CONTEXT);
-BOOL AreDpiAwarenessContextsEqual(DPI_AWARENESS_CONTEXT, DPI_AWARENESS_CONTEXT);
-BOOL IsValidDpiAwarenessContext(DPI_AWARENESS_CONTEXT);
-uint GetDpiForWindow(HWND);
+DPI_AWARENESS_CONTEXT GetWindowDpiAwarenessContext(HWND hwnd);
+DPI_AWARENESS GetAwarenessFromDpiAwarenessContext(DPI_AWARENESS_CONTEXT value);
+uint GetDpiFromDpiAwarenessContext(DPI_AWARENESS_CONTEXT value);
+BOOL AreDpiAwarenessContextsEqual(DPI_AWARENESS_CONTEXT dpiContextA, DPI_AWARENESS_CONTEXT dpiContextB);
+BOOL IsValidDpiAwarenessContext(DPI_AWARENESS_CONTEXT value);
+uint GetDpiForWindow(HWND hwnd);
 uint GetDpiForSystem();
-uint GetSystemDpiForProcess(HANDLE);
-BOOL EnableNonClientDpiScaling(HWND);
-BOOL SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT);
-DPI_AWARENESS_CONTEXT GetDpiAwarenessContextForProcess(HANDLE);
-DPI_HOSTING_BEHAVIOR SetThreadDpiHostingBehavior(DPI_HOSTING_BEHAVIOR);
+uint GetSystemDpiForProcess(HANDLE hProcess);
+BOOL EnableNonClientDpiScaling(HWND hwnd);
+BOOL SetProcessDpiAwarenessContext(DPI_AWARENESS_CONTEXT value);
+DPI_AWARENESS_CONTEXT GetDpiAwarenessContextForProcess(HANDLE hProcess);
+DPI_HOSTING_BEHAVIOR SetThreadDpiHostingBehavior(DPI_HOSTING_BEHAVIOR value);
 DPI_HOSTING_BEHAVIOR GetThreadDpiHostingBehavior();
-DPI_HOSTING_BEHAVIOR GetWindowDpiHostingBehavior(HWND);
-HRESULT SetProcessDpiAwareness(PROCESS_DPI_AWARENESS);
-HRESULT GetProcessDpiAwareness(HANDLE, PROCESS_DPI_AWARENESS*);
-HRESULT GetDpiForMonitor(HMONITOR, MONITOR_DPI_TYPE, uint*, uint*);
+DPI_HOSTING_BEHAVIOR GetWindowDpiHostingBehavior(HWND hwnd);
+HRESULT SetProcessDpiAwareness(PROCESS_DPI_AWARENESS value);
+HRESULT GetProcessDpiAwareness(HANDLE hprocess, PROCESS_DPI_AWARENESS* value);
+HRESULT GetDpiForMonitor(HMONITOR hmonitor, MONITOR_DPI_TYPE dpiType, uint* dpiX, uint* dpiY);
 enum DPI_AWARENESS_CONTEXT_UNAWARE = 0xffffffffffffffff;
 enum DPI_AWARENESS_CONTEXT_SYSTEM_AWARE = 0xfffffffffffffffe;
 enum DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE = 0xfffffffffffffffd;
 enum DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2 = 0xfffffffffffffffc;
 enum DPI_AWARENESS_CONTEXT_UNAWARE_GDISCALED = 0xfffffffffffffffb;
-alias DPI_AWARENESS_CONTEXT = long;
+alias DPI_AWARENESS_CONTEXT = void*;
 alias DPI_AWARENESS = int;
 enum : int
 {

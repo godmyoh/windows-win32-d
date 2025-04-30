@@ -90,20 +90,20 @@ struct JOBOBJECT_IO_RATE_CONTROL_INFORMATION
     uint BaseIoSize;
     uint ControlFlags;
 }
-BOOL IsProcessInJob(HANDLE, HANDLE, BOOL*);
-HANDLE CreateJobObjectW(SECURITY_ATTRIBUTES*, const(wchar)*);
-void FreeMemoryJobObject(void*);
-HANDLE OpenJobObjectW(uint, BOOL, const(wchar)*);
-BOOL AssignProcessToJobObject(HANDLE, HANDLE);
-BOOL TerminateJobObject(HANDLE, uint);
-BOOL SetInformationJobObject(HANDLE, JOBOBJECTINFOCLASS, void*, uint);
-uint SetIoRateControlInformationJobObject(HANDLE, JOBOBJECT_IO_RATE_CONTROL_INFORMATION*);
-BOOL QueryInformationJobObject(HANDLE, JOBOBJECTINFOCLASS, void*, uint, uint*);
-uint QueryIoRateControlInformationJobObject(HANDLE, const(wchar)*, JOBOBJECT_IO_RATE_CONTROL_INFORMATION**, uint*);
-BOOL UserHandleGrantAccess(HANDLE, HANDLE, BOOL);
-HANDLE CreateJobObjectA(SECURITY_ATTRIBUTES*, const(char)*);
-HANDLE OpenJobObjectA(uint, BOOL, const(char)*);
-BOOL CreateJobSet(uint, JOB_SET_ARRAY*, uint);
+BOOL IsProcessInJob(HANDLE ProcessHandle, HANDLE JobHandle, BOOL* Result);
+HANDLE CreateJobObjectW(SECURITY_ATTRIBUTES* lpJobAttributes, const(wchar)* lpName);
+void FreeMemoryJobObject(void* Buffer);
+HANDLE OpenJobObjectW(uint dwDesiredAccess, BOOL bInheritHandle, const(wchar)* lpName);
+BOOL AssignProcessToJobObject(HANDLE hJob, HANDLE hProcess);
+BOOL TerminateJobObject(HANDLE hJob, uint uExitCode);
+BOOL SetInformationJobObject(HANDLE hJob, JOBOBJECTINFOCLASS JobObjectInformationClass, void* lpJobObjectInformation, uint cbJobObjectInformationLength);
+uint SetIoRateControlInformationJobObject(HANDLE hJob, JOBOBJECT_IO_RATE_CONTROL_INFORMATION* IoRateControlInfo);
+BOOL QueryInformationJobObject(HANDLE hJob, JOBOBJECTINFOCLASS JobObjectInformationClass, void* lpJobObjectInformation, uint cbJobObjectInformationLength, uint* lpReturnLength);
+uint QueryIoRateControlInformationJobObject(HANDLE hJob, const(wchar)* VolumeName, JOBOBJECT_IO_RATE_CONTROL_INFORMATION** InfoBlocks, uint* InfoBlockCount);
+BOOL UserHandleGrantAccess(HANDLE hUserHandle, HANDLE hJob, BOOL bGrant);
+HANDLE CreateJobObjectA(SECURITY_ATTRIBUTES* lpJobAttributes, const(char)* lpName);
+HANDLE OpenJobObjectA(uint dwDesiredAccess, BOOL bInheritHandle, const(char)* lpName);
+BOOL CreateJobSet(uint NumJob, JOB_SET_ARRAY* UserJobSet, uint Flags);
 struct JOB_SET_ARRAY
 {
     HANDLE JobHandle;

@@ -13,11 +13,11 @@ extern (Windows):
 enum IID_IThumbnailExtractor = GUID(0x969dc708, 0x5c76, 0x11d1, [0x8d, 0x86, 0x0, 0x0, 0xf8, 0x4, 0xb0, 0x57]);
 interface IThumbnailExtractor : IUnknown
 {
-    HRESULT ExtractThumbnail(IStorage, uint, uint, uint*, uint*, HBITMAP*);
-    HRESULT OnFileUpdated(IStorage);
+    HRESULT ExtractThumbnail(IStorage pStg, uint ulLength, uint ulHeight, uint* pulOutputLength, uint* pulOutputHeight, HBITMAP* phOutputBitmap);
+    HRESULT OnFileUpdated(IStorage pStg);
 }
 enum IID_IDummyHICONIncluder = GUID(0x947990de, 0xcc28, 0x11d2, [0xa0, 0xf7, 0x0, 0x80, 0x5f, 0x85, 0x8f, 0xb1]);
 interface IDummyHICONIncluder : IUnknown
 {
-    HRESULT Dummy(HICON, HDC);
+    HRESULT Dummy(HICON h1, HDC h2);
 }

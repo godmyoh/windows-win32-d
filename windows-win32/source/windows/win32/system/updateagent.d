@@ -643,85 +643,85 @@ enum : int
 enum IID_IUpdateLockdown = GUID(0xa976c28d, 0x75a1, 0x42aa, [0x94, 0xae, 0x8a, 0xf8, 0xb8, 0x72, 0x8, 0x9a]);
 interface IUpdateLockdown : IUnknown
 {
-    HRESULT LockDown(int);
+    HRESULT LockDown(int flags);
 }
 enum IID_IStringCollection = GUID(0xeff90582, 0x2ddc, 0x480f, [0xa0, 0x6d, 0x60, 0xf3, 0xfb, 0xc3, 0x62, 0xc3]);
 interface IStringCollection : IDispatch
 {
-    HRESULT get_Item(int, BSTR*);
-    HRESULT put_Item(int, BSTR);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Count(int*);
-    HRESULT get_ReadOnly(VARIANT_BOOL*);
-    HRESULT Add(BSTR, int*);
+    HRESULT get_Item(int index, BSTR* retval);
+    HRESULT put_Item(int index, BSTR value);
+    HRESULT get__NewEnum(IUnknown* retval);
+    HRESULT get_Count(int* retval);
+    HRESULT get_ReadOnly(VARIANT_BOOL* retval);
+    HRESULT Add(BSTR value, int* retval);
     HRESULT Clear();
-    HRESULT Copy(IStringCollection*);
-    HRESULT Insert(int, BSTR);
-    HRESULT RemoveAt(int);
+    HRESULT Copy(IStringCollection* retval);
+    HRESULT Insert(int index, BSTR value);
+    HRESULT RemoveAt(int index);
 }
 enum IID_IWebProxy = GUID(0x174c81fe, 0xaecd, 0x4dae, [0xb8, 0xa0, 0x2c, 0x63, 0x18, 0xdd, 0x86, 0xa8]);
 interface IWebProxy : IDispatch
 {
-    HRESULT get_Address(BSTR*);
-    HRESULT put_Address(BSTR);
-    HRESULT get_BypassList(IStringCollection*);
-    HRESULT put_BypassList(IStringCollection);
-    HRESULT get_BypassProxyOnLocal(VARIANT_BOOL*);
-    HRESULT put_BypassProxyOnLocal(VARIANT_BOOL);
-    HRESULT get_ReadOnly(VARIANT_BOOL*);
-    HRESULT get_UserName(BSTR*);
-    HRESULT put_UserName(BSTR);
-    HRESULT SetPassword(BSTR);
-    HRESULT PromptForCredentials(IUnknown, BSTR);
-    HRESULT PromptForCredentialsFromHwnd(HWND, BSTR);
-    HRESULT get_AutoDetect(VARIANT_BOOL*);
-    HRESULT put_AutoDetect(VARIANT_BOOL);
+    HRESULT get_Address(BSTR* retval);
+    HRESULT put_Address(BSTR value);
+    HRESULT get_BypassList(IStringCollection* retval);
+    HRESULT put_BypassList(IStringCollection value);
+    HRESULT get_BypassProxyOnLocal(VARIANT_BOOL* retval);
+    HRESULT put_BypassProxyOnLocal(VARIANT_BOOL value);
+    HRESULT get_ReadOnly(VARIANT_BOOL* retval);
+    HRESULT get_UserName(BSTR* retval);
+    HRESULT put_UserName(BSTR value);
+    HRESULT SetPassword(BSTR value);
+    HRESULT PromptForCredentials(IUnknown parentWindow, BSTR title);
+    HRESULT PromptForCredentialsFromHwnd(HWND parentWindow, BSTR title);
+    HRESULT get_AutoDetect(VARIANT_BOOL* retval);
+    HRESULT put_AutoDetect(VARIANT_BOOL value);
 }
 enum IID_ISystemInformation = GUID(0xade87bf7, 0x7b56, 0x4275, [0x8f, 0xab, 0xb9, 0xb0, 0xe5, 0x91, 0x84, 0x4b]);
 interface ISystemInformation : IDispatch
 {
-    HRESULT get_OemHardwareSupportLink(BSTR*);
-    HRESULT get_RebootRequired(VARIANT_BOOL*);
+    HRESULT get_OemHardwareSupportLink(BSTR* retval);
+    HRESULT get_RebootRequired(VARIANT_BOOL* retval);
 }
 enum IID_IWindowsUpdateAgentInfo = GUID(0x85713fa1, 0x7796, 0x4fa2, [0xbe, 0x3b, 0xe2, 0xd6, 0x12, 0x4d, 0xd3, 0x73]);
 interface IWindowsUpdateAgentInfo : IDispatch
 {
-    HRESULT GetInfo(VARIANT, VARIANT*);
+    HRESULT GetInfo(VARIANT varInfoIdentifier, VARIANT* retval);
 }
 enum IID_IAutomaticUpdatesResults = GUID(0xe7a4d634, 0x7942, 0x4dd9, [0xa1, 0x11, 0x82, 0x22, 0x8b, 0xa3, 0x39, 0x1]);
 interface IAutomaticUpdatesResults : IDispatch
 {
-    HRESULT get_LastSearchSuccessDate(VARIANT*);
-    HRESULT get_LastInstallationSuccessDate(VARIANT*);
+    HRESULT get_LastSearchSuccessDate(VARIANT* retval);
+    HRESULT get_LastInstallationSuccessDate(VARIANT* retval);
 }
 enum IID_IAutomaticUpdatesSettings = GUID(0x2ee48f22, 0xaf3c, 0x405f, [0x89, 0x70, 0xf7, 0x1b, 0xe1, 0x2e, 0xe9, 0xa2]);
 interface IAutomaticUpdatesSettings : IDispatch
 {
-    HRESULT get_NotificationLevel(AutomaticUpdatesNotificationLevel*);
-    HRESULT put_NotificationLevel(AutomaticUpdatesNotificationLevel);
-    HRESULT get_ReadOnly(VARIANT_BOOL*);
-    HRESULT get_Required(VARIANT_BOOL*);
-    HRESULT get_ScheduledInstallationDay(AutomaticUpdatesScheduledInstallationDay*);
-    HRESULT put_ScheduledInstallationDay(AutomaticUpdatesScheduledInstallationDay);
-    HRESULT get_ScheduledInstallationTime(int*);
-    HRESULT put_ScheduledInstallationTime(int);
+    HRESULT get_NotificationLevel(AutomaticUpdatesNotificationLevel* retval);
+    HRESULT put_NotificationLevel(AutomaticUpdatesNotificationLevel value);
+    HRESULT get_ReadOnly(VARIANT_BOOL* retval);
+    HRESULT get_Required(VARIANT_BOOL* retval);
+    HRESULT get_ScheduledInstallationDay(AutomaticUpdatesScheduledInstallationDay* retval);
+    HRESULT put_ScheduledInstallationDay(AutomaticUpdatesScheduledInstallationDay value);
+    HRESULT get_ScheduledInstallationTime(int* retval);
+    HRESULT put_ScheduledInstallationTime(int value);
     HRESULT Refresh();
     HRESULT Save();
 }
 enum IID_IAutomaticUpdatesSettings2 = GUID(0x6abc136a, 0xc3ca, 0x4384, [0x81, 0x71, 0xcb, 0x2b, 0x1e, 0x59, 0xb8, 0xdc]);
 interface IAutomaticUpdatesSettings2 : IAutomaticUpdatesSettings
 {
-    HRESULT get_IncludeRecommendedUpdates(VARIANT_BOOL*);
-    HRESULT put_IncludeRecommendedUpdates(VARIANT_BOOL);
-    HRESULT CheckPermission(AutomaticUpdatesUserType, AutomaticUpdatesPermissionType, VARIANT_BOOL*);
+    HRESULT get_IncludeRecommendedUpdates(VARIANT_BOOL* retval);
+    HRESULT put_IncludeRecommendedUpdates(VARIANT_BOOL value);
+    HRESULT CheckPermission(AutomaticUpdatesUserType userType, AutomaticUpdatesPermissionType permissionType, VARIANT_BOOL* userHasPermission);
 }
 enum IID_IAutomaticUpdatesSettings3 = GUID(0xb587f5c3, 0xf57e, 0x485f, [0xbb, 0xf5, 0xd, 0x18, 0x1c, 0x5c, 0xd0, 0xdc]);
 interface IAutomaticUpdatesSettings3 : IAutomaticUpdatesSettings2
 {
-    HRESULT get_NonAdministratorsElevated(VARIANT_BOOL*);
-    HRESULT put_NonAdministratorsElevated(VARIANT_BOOL);
-    HRESULT get_FeaturedUpdatesEnabled(VARIANT_BOOL*);
-    HRESULT put_FeaturedUpdatesEnabled(VARIANT_BOOL);
+    HRESULT get_NonAdministratorsElevated(VARIANT_BOOL* retval);
+    HRESULT put_NonAdministratorsElevated(VARIANT_BOOL value);
+    HRESULT get_FeaturedUpdatesEnabled(VARIANT_BOOL* retval);
+    HRESULT put_FeaturedUpdatesEnabled(VARIANT_BOOL value);
 }
 enum IID_IAutomaticUpdates = GUID(0x673425bf, 0xc082, 0x4c7c, [0xbd, 0xfd, 0x56, 0x94, 0x64, 0xb8, 0xe0, 0xce]);
 interface IAutomaticUpdates : IDispatch
@@ -730,249 +730,249 @@ interface IAutomaticUpdates : IDispatch
     HRESULT Pause();
     HRESULT Resume();
     HRESULT ShowSettingsDialog();
-    HRESULT get_Settings(IAutomaticUpdatesSettings*);
-    HRESULT get_ServiceEnabled(VARIANT_BOOL*);
+    HRESULT get_Settings(IAutomaticUpdatesSettings* retval);
+    HRESULT get_ServiceEnabled(VARIANT_BOOL* retval);
     HRESULT EnableService();
 }
 enum IID_IAutomaticUpdates2 = GUID(0x4a2f5c31, 0xcfd9, 0x410e, [0xb7, 0xfb, 0x29, 0xa6, 0x53, 0x97, 0x3a, 0xf]);
 interface IAutomaticUpdates2 : IAutomaticUpdates
 {
-    HRESULT get_Results(IAutomaticUpdatesResults*);
+    HRESULT get_Results(IAutomaticUpdatesResults* retval);
 }
 enum IID_IUpdateIdentity = GUID(0x46297823, 0x9940, 0x4c09, [0xae, 0xd9, 0xcd, 0x3e, 0xa6, 0xd0, 0x59, 0x68]);
 interface IUpdateIdentity : IDispatch
 {
-    HRESULT get_RevisionNumber(int*);
-    HRESULT get_UpdateID(BSTR*);
+    HRESULT get_RevisionNumber(int* retval);
+    HRESULT get_UpdateID(BSTR* retval);
 }
 enum IID_IImageInformation = GUID(0x7c907864, 0x346c, 0x4aeb, [0x8f, 0x3f, 0x57, 0xda, 0x28, 0x9f, 0x96, 0x9f]);
 interface IImageInformation : IDispatch
 {
-    HRESULT get_AltText(BSTR*);
-    HRESULT get_Height(int*);
-    HRESULT get_Source(BSTR*);
-    HRESULT get_Width(int*);
+    HRESULT get_AltText(BSTR* retval);
+    HRESULT get_Height(int* retval);
+    HRESULT get_Source(BSTR* retval);
+    HRESULT get_Width(int* retval);
 }
 enum IID_ICategory = GUID(0x81ddc1b8, 0x9d35, 0x47a6, [0xb4, 0x71, 0x5b, 0x80, 0xf5, 0x19, 0x22, 0x3b]);
 interface ICategory : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_CategoryID(BSTR*);
-    HRESULT get_Children(ICategoryCollection*);
-    HRESULT get_Description(BSTR*);
-    HRESULT get_Image(IImageInformation*);
-    HRESULT get_Order(int*);
-    HRESULT get_Parent(ICategory*);
-    HRESULT get_Type(BSTR*);
-    HRESULT get_Updates(IUpdateCollection*);
+    HRESULT get_Name(BSTR* retval);
+    HRESULT get_CategoryID(BSTR* retval);
+    HRESULT get_Children(ICategoryCollection* retval);
+    HRESULT get_Description(BSTR* retval);
+    HRESULT get_Image(IImageInformation* retval);
+    HRESULT get_Order(int* retval);
+    HRESULT get_Parent(ICategory* retval);
+    HRESULT get_Type(BSTR* retval);
+    HRESULT get_Updates(IUpdateCollection* retval);
 }
 enum IID_ICategoryCollection = GUID(0x3a56bfb8, 0x576c, 0x43f7, [0x93, 0x35, 0xfe, 0x48, 0x38, 0xfd, 0x7e, 0x37]);
 interface ICategoryCollection : IDispatch
 {
-    HRESULT get_Item(int, ICategory*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Count(int*);
+    HRESULT get_Item(int index, ICategory* retval);
+    HRESULT get__NewEnum(IUnknown* retval);
+    HRESULT get_Count(int* retval);
 }
 enum IID_IInstallationBehavior = GUID(0xd9a59339, 0xe245, 0x4dbd, [0x96, 0x86, 0x4d, 0x57, 0x63, 0xe3, 0x96, 0x24]);
 interface IInstallationBehavior : IDispatch
 {
-    HRESULT get_CanRequestUserInput(VARIANT_BOOL*);
-    HRESULT get_Impact(InstallationImpact*);
-    HRESULT get_RebootBehavior(InstallationRebootBehavior*);
-    HRESULT get_RequiresNetworkConnectivity(VARIANT_BOOL*);
+    HRESULT get_CanRequestUserInput(VARIANT_BOOL* retval);
+    HRESULT get_Impact(InstallationImpact* retval);
+    HRESULT get_RebootBehavior(InstallationRebootBehavior* retval);
+    HRESULT get_RequiresNetworkConnectivity(VARIANT_BOOL* retval);
 }
 enum IID_IUpdateDownloadContent = GUID(0x54a2cb2d, 0x9a0c, 0x48b6, [0x8a, 0x50, 0x9a, 0xbb, 0x69, 0xee, 0x2d, 0x2]);
 interface IUpdateDownloadContent : IDispatch
 {
-    HRESULT get_DownloadUrl(BSTR*);
+    HRESULT get_DownloadUrl(BSTR* retval);
 }
 enum IID_IUpdateDownloadContent2 = GUID(0xc97ad11b, 0xf257, 0x420b, [0x9d, 0x9f, 0x37, 0x7f, 0x73, 0x3f, 0x6f, 0x68]);
 interface IUpdateDownloadContent2 : IUpdateDownloadContent
 {
-    HRESULT get_IsDeltaCompressedContent(VARIANT_BOOL*);
+    HRESULT get_IsDeltaCompressedContent(VARIANT_BOOL* retval);
 }
 enum IID_IUpdateDownloadContentCollection = GUID(0xbc5513c8, 0xb3b8, 0x4bf7, [0xa4, 0xd4, 0x36, 0x1c, 0xd, 0x8c, 0x88, 0xba]);
 interface IUpdateDownloadContentCollection : IDispatch
 {
-    HRESULT get_Item(int, IUpdateDownloadContent*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Count(int*);
+    HRESULT get_Item(int index, IUpdateDownloadContent* retval);
+    HRESULT get__NewEnum(IUnknown* retval);
+    HRESULT get_Count(int* retval);
 }
 enum IID_IUpdate = GUID(0x6a92b07a, 0xd821, 0x4682, [0xb4, 0x23, 0x5c, 0x80, 0x50, 0x22, 0xcc, 0x4d]);
 interface IUpdate : IDispatch
 {
-    HRESULT get_Title(BSTR*);
-    HRESULT get_AutoSelectOnWebSites(VARIANT_BOOL*);
-    HRESULT get_BundledUpdates(IUpdateCollection*);
-    HRESULT get_CanRequireSource(VARIANT_BOOL*);
-    HRESULT get_Categories(ICategoryCollection*);
-    HRESULT get_Deadline(VARIANT*);
-    HRESULT get_DeltaCompressedContentAvailable(VARIANT_BOOL*);
-    HRESULT get_DeltaCompressedContentPreferred(VARIANT_BOOL*);
-    HRESULT get_Description(BSTR*);
-    HRESULT get_EulaAccepted(VARIANT_BOOL*);
-    HRESULT get_EulaText(BSTR*);
-    HRESULT get_HandlerID(BSTR*);
-    HRESULT get_Identity(IUpdateIdentity*);
-    HRESULT get_Image(IImageInformation*);
-    HRESULT get_InstallationBehavior(IInstallationBehavior*);
-    HRESULT get_IsBeta(VARIANT_BOOL*);
-    HRESULT get_IsDownloaded(VARIANT_BOOL*);
-    HRESULT get_IsHidden(VARIANT_BOOL*);
-    HRESULT put_IsHidden(VARIANT_BOOL);
-    HRESULT get_IsInstalled(VARIANT_BOOL*);
-    HRESULT get_IsMandatory(VARIANT_BOOL*);
-    HRESULT get_IsUninstallable(VARIANT_BOOL*);
-    HRESULT get_Languages(IStringCollection*);
-    HRESULT get_LastDeploymentChangeTime(double*);
-    HRESULT get_MaxDownloadSize(DECIMAL*);
-    HRESULT get_MinDownloadSize(DECIMAL*);
-    HRESULT get_MoreInfoUrls(IStringCollection*);
-    HRESULT get_MsrcSeverity(BSTR*);
-    HRESULT get_RecommendedCpuSpeed(int*);
-    HRESULT get_RecommendedHardDiskSpace(int*);
-    HRESULT get_RecommendedMemory(int*);
-    HRESULT get_ReleaseNotes(BSTR*);
-    HRESULT get_SecurityBulletinIDs(IStringCollection*);
-    HRESULT get_SupersededUpdateIDs(IStringCollection*);
-    HRESULT get_SupportUrl(BSTR*);
-    HRESULT get_Type(UpdateType*);
-    HRESULT get_UninstallationNotes(BSTR*);
-    HRESULT get_UninstallationBehavior(IInstallationBehavior*);
-    HRESULT get_UninstallationSteps(IStringCollection*);
-    HRESULT get_KBArticleIDs(IStringCollection*);
+    HRESULT get_Title(BSTR* retval);
+    HRESULT get_AutoSelectOnWebSites(VARIANT_BOOL* retval);
+    HRESULT get_BundledUpdates(IUpdateCollection* retval);
+    HRESULT get_CanRequireSource(VARIANT_BOOL* retval);
+    HRESULT get_Categories(ICategoryCollection* retval);
+    HRESULT get_Deadline(VARIANT* retval);
+    HRESULT get_DeltaCompressedContentAvailable(VARIANT_BOOL* retval);
+    HRESULT get_DeltaCompressedContentPreferred(VARIANT_BOOL* retval);
+    HRESULT get_Description(BSTR* retval);
+    HRESULT get_EulaAccepted(VARIANT_BOOL* retval);
+    HRESULT get_EulaText(BSTR* retval);
+    HRESULT get_HandlerID(BSTR* retval);
+    HRESULT get_Identity(IUpdateIdentity* retval);
+    HRESULT get_Image(IImageInformation* retval);
+    HRESULT get_InstallationBehavior(IInstallationBehavior* retval);
+    HRESULT get_IsBeta(VARIANT_BOOL* retval);
+    HRESULT get_IsDownloaded(VARIANT_BOOL* retval);
+    HRESULT get_IsHidden(VARIANT_BOOL* retval);
+    HRESULT put_IsHidden(VARIANT_BOOL value);
+    HRESULT get_IsInstalled(VARIANT_BOOL* retval);
+    HRESULT get_IsMandatory(VARIANT_BOOL* retval);
+    HRESULT get_IsUninstallable(VARIANT_BOOL* retval);
+    HRESULT get_Languages(IStringCollection* retval);
+    HRESULT get_LastDeploymentChangeTime(double* retval);
+    HRESULT get_MaxDownloadSize(DECIMAL* retval);
+    HRESULT get_MinDownloadSize(DECIMAL* retval);
+    HRESULT get_MoreInfoUrls(IStringCollection* retval);
+    HRESULT get_MsrcSeverity(BSTR* retval);
+    HRESULT get_RecommendedCpuSpeed(int* retval);
+    HRESULT get_RecommendedHardDiskSpace(int* retval);
+    HRESULT get_RecommendedMemory(int* retval);
+    HRESULT get_ReleaseNotes(BSTR* retval);
+    HRESULT get_SecurityBulletinIDs(IStringCollection* retval);
+    HRESULT get_SupersededUpdateIDs(IStringCollection* retval);
+    HRESULT get_SupportUrl(BSTR* retval);
+    HRESULT get_Type(UpdateType* retval);
+    HRESULT get_UninstallationNotes(BSTR* retval);
+    HRESULT get_UninstallationBehavior(IInstallationBehavior* retval);
+    HRESULT get_UninstallationSteps(IStringCollection* retval);
+    HRESULT get_KBArticleIDs(IStringCollection* retval);
     HRESULT AcceptEula();
-    HRESULT get_DeploymentAction(DeploymentAction*);
-    HRESULT CopyFromCache(BSTR, VARIANT_BOOL);
-    HRESULT get_DownloadPriority(DownloadPriority*);
-    HRESULT get_DownloadContents(IUpdateDownloadContentCollection*);
+    HRESULT get_DeploymentAction(DeploymentAction* retval);
+    HRESULT CopyFromCache(BSTR path, VARIANT_BOOL toExtractCabFiles);
+    HRESULT get_DownloadPriority(DownloadPriority* retval);
+    HRESULT get_DownloadContents(IUpdateDownloadContentCollection* retval);
 }
 enum IID_IWindowsDriverUpdate = GUID(0xb383cd1a, 0x5ce9, 0x4504, [0x9f, 0x63, 0x76, 0x4b, 0x12, 0x36, 0xf1, 0x91]);
 interface IWindowsDriverUpdate : IUpdate
 {
-    HRESULT get_DriverClass(BSTR*);
-    HRESULT get_DriverHardwareID(BSTR*);
-    HRESULT get_DriverManufacturer(BSTR*);
-    HRESULT get_DriverModel(BSTR*);
-    HRESULT get_DriverProvider(BSTR*);
-    HRESULT get_DriverVerDate(double*);
-    HRESULT get_DeviceProblemNumber(int*);
-    HRESULT get_DeviceStatus(int*);
+    HRESULT get_DriverClass(BSTR* retval);
+    HRESULT get_DriverHardwareID(BSTR* retval);
+    HRESULT get_DriverManufacturer(BSTR* retval);
+    HRESULT get_DriverModel(BSTR* retval);
+    HRESULT get_DriverProvider(BSTR* retval);
+    HRESULT get_DriverVerDate(double* retval);
+    HRESULT get_DeviceProblemNumber(int* retval);
+    HRESULT get_DeviceStatus(int* retval);
 }
 enum IID_IUpdate2 = GUID(0x144fe9b0, 0xd23d, 0x4a8b, [0x86, 0x34, 0xfb, 0x44, 0x57, 0x53, 0x3b, 0x7a]);
 interface IUpdate2 : IUpdate
 {
-    HRESULT get_RebootRequired(VARIANT_BOOL*);
-    HRESULT get_IsPresent(VARIANT_BOOL*);
-    HRESULT get_CveIDs(IStringCollection*);
-    HRESULT CopyToCache(IStringCollection);
+    HRESULT get_RebootRequired(VARIANT_BOOL* retval);
+    HRESULT get_IsPresent(VARIANT_BOOL* retval);
+    HRESULT get_CveIDs(IStringCollection* retval);
+    HRESULT CopyToCache(IStringCollection pFiles);
 }
 enum IID_IUpdate3 = GUID(0x112eda6b, 0x95b3, 0x476f, [0x9d, 0x90, 0xae, 0xe8, 0x2c, 0x6b, 0x81, 0x81]);
 interface IUpdate3 : IUpdate2
 {
-    HRESULT get_BrowseOnly(VARIANT_BOOL*);
+    HRESULT get_BrowseOnly(VARIANT_BOOL* retval);
 }
 enum IID_IUpdate4 = GUID(0x27e94b0d, 0x5139, 0x49a2, [0x9a, 0x61, 0x93, 0x52, 0x2d, 0xc5, 0x46, 0x52]);
 interface IUpdate4 : IUpdate3
 {
-    HRESULT get_PerUser(VARIANT_BOOL*);
+    HRESULT get_PerUser(VARIANT_BOOL* retval);
 }
 enum IID_IUpdate5 = GUID(0xc1c2f21a, 0xd2f4, 0x4902, [0xb5, 0xc6, 0x8a, 0x8, 0x1c, 0x19, 0xa8, 0x90]);
 interface IUpdate5 : IUpdate4
 {
-    HRESULT get_AutoSelection(AutoSelectionMode*);
-    HRESULT get_AutoDownload(AutoDownloadMode*);
+    HRESULT get_AutoSelection(AutoSelectionMode* retval);
+    HRESULT get_AutoDownload(AutoDownloadMode* retval);
 }
 enum IID_IWindowsDriverUpdate2 = GUID(0x615c4269, 0x7a48, 0x43bd, [0x96, 0xb7, 0xbf, 0x6c, 0xa2, 0x7d, 0x6c, 0x3e]);
 interface IWindowsDriverUpdate2 : IWindowsDriverUpdate
 {
-    HRESULT get_RebootRequired(VARIANT_BOOL*);
-    HRESULT get_IsPresent(VARIANT_BOOL*);
-    HRESULT get_CveIDs(IStringCollection*);
-    HRESULT CopyToCache(IStringCollection);
+    HRESULT get_RebootRequired(VARIANT_BOOL* retval);
+    HRESULT get_IsPresent(VARIANT_BOOL* retval);
+    HRESULT get_CveIDs(IStringCollection* retval);
+    HRESULT CopyToCache(IStringCollection pFiles);
 }
 enum IID_IWindowsDriverUpdate3 = GUID(0x49ebd502, 0x4a96, 0x41bd, [0x9e, 0x3e, 0x4c, 0x50, 0x57, 0xf4, 0x25, 0xc]);
 interface IWindowsDriverUpdate3 : IWindowsDriverUpdate2
 {
-    HRESULT get_BrowseOnly(VARIANT_BOOL*);
+    HRESULT get_BrowseOnly(VARIANT_BOOL* retval);
 }
 enum IID_IWindowsDriverUpdateEntry = GUID(0xed8bfe40, 0xa60b, 0x42ea, [0x96, 0x52, 0x81, 0x7d, 0xfc, 0xfa, 0x23, 0xec]);
 interface IWindowsDriverUpdateEntry : IDispatch
 {
-    HRESULT get_DriverClass(BSTR*);
-    HRESULT get_DriverHardwareID(BSTR*);
-    HRESULT get_DriverManufacturer(BSTR*);
-    HRESULT get_DriverModel(BSTR*);
-    HRESULT get_DriverProvider(BSTR*);
-    HRESULT get_DriverVerDate(double*);
-    HRESULT get_DeviceProblemNumber(int*);
-    HRESULT get_DeviceStatus(int*);
+    HRESULT get_DriverClass(BSTR* retval);
+    HRESULT get_DriverHardwareID(BSTR* retval);
+    HRESULT get_DriverManufacturer(BSTR* retval);
+    HRESULT get_DriverModel(BSTR* retval);
+    HRESULT get_DriverProvider(BSTR* retval);
+    HRESULT get_DriverVerDate(double* retval);
+    HRESULT get_DeviceProblemNumber(int* retval);
+    HRESULT get_DeviceStatus(int* retval);
 }
 enum IID_IWindowsDriverUpdateEntryCollection = GUID(0xd521700, 0xa372, 0x4bef, [0x82, 0x8b, 0x3d, 0x0, 0xc1, 0xa, 0xde, 0xbd]);
 interface IWindowsDriverUpdateEntryCollection : IDispatch
 {
-    HRESULT get_Item(int, IWindowsDriverUpdateEntry*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Count(int*);
+    HRESULT get_Item(int index, IWindowsDriverUpdateEntry* retval);
+    HRESULT get__NewEnum(IUnknown* retval);
+    HRESULT get_Count(int* retval);
 }
 enum IID_IWindowsDriverUpdate4 = GUID(0x4c6a2b, 0xc19, 0x4c69, [0x9f, 0x5c, 0xa2, 0x69, 0xb2, 0x56, 0xd, 0xb9]);
 interface IWindowsDriverUpdate4 : IWindowsDriverUpdate3
 {
-    HRESULT get_WindowsDriverUpdateEntries(IWindowsDriverUpdateEntryCollection*);
-    HRESULT get_PerUser(VARIANT_BOOL*);
+    HRESULT get_WindowsDriverUpdateEntries(IWindowsDriverUpdateEntryCollection* retval);
+    HRESULT get_PerUser(VARIANT_BOOL* retval);
 }
 enum IID_IWindowsDriverUpdate5 = GUID(0x70cf5c82, 0x8642, 0x42bb, [0x9d, 0xbc, 0xc, 0xfd, 0x26, 0x3c, 0x6c, 0x4f]);
 interface IWindowsDriverUpdate5 : IWindowsDriverUpdate4
 {
-    HRESULT get_AutoSelection(AutoSelectionMode*);
-    HRESULT get_AutoDownload(AutoDownloadMode*);
+    HRESULT get_AutoSelection(AutoSelectionMode* retval);
+    HRESULT get_AutoDownload(AutoDownloadMode* retval);
 }
 enum IID_IUpdateCollection = GUID(0x7f7438c, 0x7709, 0x4ca5, [0xb5, 0x18, 0x91, 0x27, 0x92, 0x88, 0x13, 0x4e]);
 interface IUpdateCollection : IDispatch
 {
-    HRESULT get_Item(int, IUpdate*);
-    HRESULT put_Item(int, IUpdate);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Count(int*);
-    HRESULT get_ReadOnly(VARIANT_BOOL*);
-    HRESULT Add(IUpdate, int*);
+    HRESULT get_Item(int index, IUpdate* retval);
+    HRESULT put_Item(int index, IUpdate value);
+    HRESULT get__NewEnum(IUnknown* retval);
+    HRESULT get_Count(int* retval);
+    HRESULT get_ReadOnly(VARIANT_BOOL* retval);
+    HRESULT Add(IUpdate value, int* retval);
     HRESULT Clear();
-    HRESULT Copy(IUpdateCollection*);
-    HRESULT Insert(int, IUpdate);
-    HRESULT RemoveAt(int);
+    HRESULT Copy(IUpdateCollection* retval);
+    HRESULT Insert(int index, IUpdate value);
+    HRESULT RemoveAt(int index);
 }
 enum IID_IUpdateException = GUID(0xa376dd5e, 0x9d4, 0x427f, [0xaf, 0x7c, 0xfe, 0xd5, 0xb6, 0xe1, 0xc1, 0xd6]);
 interface IUpdateException : IDispatch
 {
-    HRESULT get_Message(BSTR*);
-    HRESULT get_HResult(int*);
-    HRESULT get_Context(UpdateExceptionContext*);
+    HRESULT get_Message(BSTR* retval);
+    HRESULT get_HResult(int* retval);
+    HRESULT get_Context(UpdateExceptionContext* retval);
 }
 enum IID_IInvalidProductLicenseException = GUID(0xa37d00f5, 0x7bb0, 0x4953, [0xb4, 0x14, 0xf9, 0xe9, 0x83, 0x26, 0xf2, 0xe8]);
 interface IInvalidProductLicenseException : IUpdateException
 {
-    HRESULT get_Product(BSTR*);
+    HRESULT get_Product(BSTR* retval);
 }
 enum IID_IUpdateExceptionCollection = GUID(0x503626a3, 0x8e14, 0x4729, [0x93, 0x55, 0xf, 0xe6, 0x64, 0xbd, 0x23, 0x21]);
 interface IUpdateExceptionCollection : IDispatch
 {
-    HRESULT get_Item(int, IUpdateException*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Count(int*);
+    HRESULT get_Item(int index, IUpdateException* retval);
+    HRESULT get__NewEnum(IUnknown* retval);
+    HRESULT get_Count(int* retval);
 }
 enum IID_ISearchResult = GUID(0xd40cff62, 0xe08c, 0x4498, [0x94, 0x1a, 0x1, 0xe2, 0x5f, 0xf, 0xd3, 0x3c]);
 interface ISearchResult : IDispatch
 {
-    HRESULT get_ResultCode(OperationResultCode*);
-    HRESULT get_RootCategories(ICategoryCollection*);
-    HRESULT get_Updates(IUpdateCollection*);
-    HRESULT get_Warnings(IUpdateExceptionCollection*);
+    HRESULT get_ResultCode(OperationResultCode* retval);
+    HRESULT get_RootCategories(ICategoryCollection* retval);
+    HRESULT get_Updates(IUpdateCollection* retval);
+    HRESULT get_Warnings(IUpdateExceptionCollection* retval);
 }
 enum IID_ISearchJob = GUID(0x7366ea16, 0x7a1a, 0x4ea2, [0xb0, 0x42, 0x97, 0x3d, 0x3e, 0x9c, 0xd9, 0x9b]);
 interface ISearchJob : IDispatch
 {
-    HRESULT get_AsyncState(VARIANT*);
-    HRESULT get_IsCompleted(VARIANT_BOOL*);
+    HRESULT get_AsyncState(VARIANT* retval);
+    HRESULT get_IsCompleted(VARIANT_BOOL* retval);
     HRESULT CleanUp();
     HRESULT RequestAbort();
 }
@@ -983,106 +983,106 @@ interface ISearchCompletedCallbackArgs : IDispatch
 enum IID_ISearchCompletedCallback = GUID(0x88aee058, 0xd4b0, 0x4725, [0xa2, 0xf1, 0x81, 0x4a, 0x67, 0xae, 0x96, 0x4c]);
 interface ISearchCompletedCallback : IUnknown
 {
-    HRESULT Invoke(ISearchJob, ISearchCompletedCallbackArgs);
+    HRESULT Invoke(ISearchJob searchJob, ISearchCompletedCallbackArgs callbackArgs);
 }
 enum IID_IUpdateHistoryEntry = GUID(0xbe56a644, 0xaf0e, 0x4e0e, [0xa3, 0x11, 0xc1, 0xd8, 0xe6, 0x95, 0xcb, 0xff]);
 interface IUpdateHistoryEntry : IDispatch
 {
-    HRESULT get_Operation(UpdateOperation*);
-    HRESULT get_ResultCode(OperationResultCode*);
-    HRESULT get_HResult(int*);
-    HRESULT get_Date(double*);
-    HRESULT get_UpdateIdentity(IUpdateIdentity*);
-    HRESULT get_Title(BSTR*);
-    HRESULT get_Description(BSTR*);
-    HRESULT get_UnmappedResultCode(int*);
-    HRESULT get_ClientApplicationID(BSTR*);
-    HRESULT get_ServerSelection(ServerSelection*);
-    HRESULT get_ServiceID(BSTR*);
-    HRESULT get_UninstallationSteps(IStringCollection*);
-    HRESULT get_UninstallationNotes(BSTR*);
-    HRESULT get_SupportUrl(BSTR*);
+    HRESULT get_Operation(UpdateOperation* retval);
+    HRESULT get_ResultCode(OperationResultCode* retval);
+    HRESULT get_HResult(int* retval);
+    HRESULT get_Date(double* retval);
+    HRESULT get_UpdateIdentity(IUpdateIdentity* retval);
+    HRESULT get_Title(BSTR* retval);
+    HRESULT get_Description(BSTR* retval);
+    HRESULT get_UnmappedResultCode(int* retval);
+    HRESULT get_ClientApplicationID(BSTR* retval);
+    HRESULT get_ServerSelection(ServerSelection* retval);
+    HRESULT get_ServiceID(BSTR* retval);
+    HRESULT get_UninstallationSteps(IStringCollection* retval);
+    HRESULT get_UninstallationNotes(BSTR* retval);
+    HRESULT get_SupportUrl(BSTR* retval);
 }
 enum IID_IUpdateHistoryEntry2 = GUID(0xc2bfb780, 0x4539, 0x4132, [0xab, 0x8c, 0xa, 0x87, 0x72, 0x1, 0x3a, 0xb6]);
 interface IUpdateHistoryEntry2 : IUpdateHistoryEntry
 {
-    HRESULT get_Categories(ICategoryCollection*);
+    HRESULT get_Categories(ICategoryCollection* retval);
 }
 enum IID_IUpdateHistoryEntryCollection = GUID(0xa7f04f3c, 0xa290, 0x435b, [0xaa, 0xdf, 0xa1, 0x16, 0xc3, 0x35, 0x7a, 0x5c]);
 interface IUpdateHistoryEntryCollection : IDispatch
 {
-    HRESULT get_Item(int, IUpdateHistoryEntry*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Count(int*);
+    HRESULT get_Item(int index, IUpdateHistoryEntry* retval);
+    HRESULT get__NewEnum(IUnknown* retval);
+    HRESULT get_Count(int* retval);
 }
 enum IID_IUpdateSearcher = GUID(0x8f45abf1, 0xf9ae, 0x4b95, [0xa9, 0x33, 0xf0, 0xf6, 0x6e, 0x50, 0x56, 0xea]);
 interface IUpdateSearcher : IDispatch
 {
-    HRESULT get_CanAutomaticallyUpgradeService(VARIANT_BOOL*);
-    HRESULT put_CanAutomaticallyUpgradeService(VARIANT_BOOL);
-    HRESULT get_ClientApplicationID(BSTR*);
-    HRESULT put_ClientApplicationID(BSTR);
-    HRESULT get_IncludePotentiallySupersededUpdates(VARIANT_BOOL*);
-    HRESULT put_IncludePotentiallySupersededUpdates(VARIANT_BOOL);
-    HRESULT get_ServerSelection(ServerSelection*);
-    HRESULT put_ServerSelection(ServerSelection);
-    HRESULT BeginSearch(BSTR, IUnknown, VARIANT, ISearchJob*);
-    HRESULT EndSearch(ISearchJob, ISearchResult*);
-    HRESULT EscapeString(BSTR, BSTR*);
-    HRESULT QueryHistory(int, int, IUpdateHistoryEntryCollection*);
-    HRESULT Search(BSTR, ISearchResult*);
-    HRESULT get_Online(VARIANT_BOOL*);
-    HRESULT put_Online(VARIANT_BOOL);
-    HRESULT GetTotalHistoryCount(int*);
-    HRESULT get_ServiceID(BSTR*);
-    HRESULT put_ServiceID(BSTR);
+    HRESULT get_CanAutomaticallyUpgradeService(VARIANT_BOOL* retval);
+    HRESULT put_CanAutomaticallyUpgradeService(VARIANT_BOOL value);
+    HRESULT get_ClientApplicationID(BSTR* retval);
+    HRESULT put_ClientApplicationID(BSTR value);
+    HRESULT get_IncludePotentiallySupersededUpdates(VARIANT_BOOL* retval);
+    HRESULT put_IncludePotentiallySupersededUpdates(VARIANT_BOOL value);
+    HRESULT get_ServerSelection(ServerSelection* retval);
+    HRESULT put_ServerSelection(ServerSelection value);
+    HRESULT BeginSearch(BSTR criteria, IUnknown onCompleted, VARIANT state, ISearchJob* retval);
+    HRESULT EndSearch(ISearchJob searchJob, ISearchResult* retval);
+    HRESULT EscapeString(BSTR unescaped, BSTR* retval);
+    HRESULT QueryHistory(int startIndex, int count, IUpdateHistoryEntryCollection* retval);
+    HRESULT Search(BSTR criteria, ISearchResult* retval);
+    HRESULT get_Online(VARIANT_BOOL* retval);
+    HRESULT put_Online(VARIANT_BOOL value);
+    HRESULT GetTotalHistoryCount(int* retval);
+    HRESULT get_ServiceID(BSTR* retval);
+    HRESULT put_ServiceID(BSTR value);
 }
 enum IID_IUpdateSearcher2 = GUID(0x4cbdcb2d, 0x1589, 0x4beb, [0xbd, 0x1c, 0x3e, 0x58, 0x2f, 0xf0, 0xad, 0xd0]);
 interface IUpdateSearcher2 : IUpdateSearcher
 {
-    HRESULT get_IgnoreDownloadPriority(VARIANT_BOOL*);
-    HRESULT put_IgnoreDownloadPriority(VARIANT_BOOL);
+    HRESULT get_IgnoreDownloadPriority(VARIANT_BOOL* retval);
+    HRESULT put_IgnoreDownloadPriority(VARIANT_BOOL value);
 }
 enum IID_IUpdateSearcher3 = GUID(0x4c6895d, 0xeaf2, 0x4034, [0x97, 0xf3, 0x31, 0x1d, 0xe9, 0xbe, 0x41, 0x3a]);
 interface IUpdateSearcher3 : IUpdateSearcher2
 {
-    HRESULT get_SearchScope(SearchScope*);
-    HRESULT put_SearchScope(SearchScope);
+    HRESULT get_SearchScope(SearchScope* retval);
+    HRESULT put_SearchScope(SearchScope value);
 }
 enum IID_IUpdateDownloadResult = GUID(0xbf99af76, 0xb575, 0x42ad, [0x8a, 0xa4, 0x33, 0xcb, 0xb5, 0x47, 0x7a, 0xf1]);
 interface IUpdateDownloadResult : IDispatch
 {
-    HRESULT get_HResult(int*);
-    HRESULT get_ResultCode(OperationResultCode*);
+    HRESULT get_HResult(int* retval);
+    HRESULT get_ResultCode(OperationResultCode* retval);
 }
 enum IID_IDownloadResult = GUID(0xdaa4fdd0, 0x4727, 0x4dbe, [0xa1, 0xe7, 0x74, 0x5d, 0xca, 0x31, 0x71, 0x44]);
 interface IDownloadResult : IDispatch
 {
-    HRESULT get_HResult(int*);
-    HRESULT get_ResultCode(OperationResultCode*);
-    HRESULT GetUpdateResult(int, IUpdateDownloadResult*);
+    HRESULT get_HResult(int* retval);
+    HRESULT get_ResultCode(OperationResultCode* retval);
+    HRESULT GetUpdateResult(int updateIndex, IUpdateDownloadResult* retval);
 }
 enum IID_IDownloadProgress = GUID(0xd31a5bac, 0xf719, 0x4178, [0x9d, 0xbb, 0x5e, 0x2c, 0xb4, 0x7f, 0xd1, 0x8a]);
 interface IDownloadProgress : IDispatch
 {
-    HRESULT get_CurrentUpdateBytesDownloaded(DECIMAL*);
-    HRESULT get_CurrentUpdateBytesToDownload(DECIMAL*);
-    HRESULT get_CurrentUpdateIndex(int*);
-    HRESULT get_PercentComplete(int*);
-    HRESULT get_TotalBytesDownloaded(DECIMAL*);
-    HRESULT get_TotalBytesToDownload(DECIMAL*);
-    HRESULT GetUpdateResult(int, IUpdateDownloadResult*);
-    HRESULT get_CurrentUpdateDownloadPhase(DownloadPhase*);
-    HRESULT get_CurrentUpdatePercentComplete(int*);
+    HRESULT get_CurrentUpdateBytesDownloaded(DECIMAL* retval);
+    HRESULT get_CurrentUpdateBytesToDownload(DECIMAL* retval);
+    HRESULT get_CurrentUpdateIndex(int* retval);
+    HRESULT get_PercentComplete(int* retval);
+    HRESULT get_TotalBytesDownloaded(DECIMAL* retval);
+    HRESULT get_TotalBytesToDownload(DECIMAL* retval);
+    HRESULT GetUpdateResult(int updateIndex, IUpdateDownloadResult* retval);
+    HRESULT get_CurrentUpdateDownloadPhase(DownloadPhase* retval);
+    HRESULT get_CurrentUpdatePercentComplete(int* retval);
 }
 enum IID_IDownloadJob = GUID(0xc574de85, 0x7358, 0x43f6, [0xaa, 0xe8, 0x86, 0x97, 0xe6, 0x2d, 0x8b, 0xa7]);
 interface IDownloadJob : IDispatch
 {
-    HRESULT get_AsyncState(VARIANT*);
-    HRESULT get_IsCompleted(VARIANT_BOOL*);
-    HRESULT get_Updates(IUpdateCollection*);
+    HRESULT get_AsyncState(VARIANT* retval);
+    HRESULT get_IsCompleted(VARIANT_BOOL* retval);
+    HRESULT get_Updates(IUpdateCollection* retval);
     HRESULT CleanUp();
-    HRESULT GetProgress(IDownloadProgress*);
+    HRESULT GetProgress(IDownloadProgress* retval);
     HRESULT RequestAbort();
 }
 enum IID_IDownloadCompletedCallbackArgs = GUID(0xfa565b23, 0x498c, 0x47a0, [0x97, 0x9d, 0xe7, 0xd5, 0xb1, 0x81, 0x33, 0x60]);
@@ -1092,64 +1092,64 @@ interface IDownloadCompletedCallbackArgs : IDispatch
 enum IID_IDownloadCompletedCallback = GUID(0x77254866, 0x9f5b, 0x4c8e, [0xb9, 0xe2, 0xc7, 0x7a, 0x85, 0x30, 0xd6, 0x4b]);
 interface IDownloadCompletedCallback : IUnknown
 {
-    HRESULT Invoke(IDownloadJob, IDownloadCompletedCallbackArgs);
+    HRESULT Invoke(IDownloadJob downloadJob, IDownloadCompletedCallbackArgs callbackArgs);
 }
 enum IID_IDownloadProgressChangedCallbackArgs = GUID(0x324ff2c6, 0x4981, 0x4b04, [0x94, 0x12, 0x57, 0x48, 0x17, 0x45, 0xab, 0x24]);
 interface IDownloadProgressChangedCallbackArgs : IDispatch
 {
-    HRESULT get_Progress(IDownloadProgress*);
+    HRESULT get_Progress(IDownloadProgress* retval);
 }
 enum IID_IDownloadProgressChangedCallback = GUID(0x8c3f1cdd, 0x6173, 0x4591, [0xae, 0xbd, 0xa5, 0x6a, 0x53, 0xca, 0x77, 0xc1]);
 interface IDownloadProgressChangedCallback : IUnknown
 {
-    HRESULT Invoke(IDownloadJob, IDownloadProgressChangedCallbackArgs);
+    HRESULT Invoke(IDownloadJob downloadJob, IDownloadProgressChangedCallbackArgs callbackArgs);
 }
 enum IID_IUpdateDownloader = GUID(0x68f1c6f9, 0x7ecc, 0x4666, [0xa4, 0x64, 0x24, 0x7f, 0xe1, 0x24, 0x96, 0xc3]);
 interface IUpdateDownloader : IDispatch
 {
-    HRESULT get_ClientApplicationID(BSTR*);
-    HRESULT put_ClientApplicationID(BSTR);
-    HRESULT get_IsForced(VARIANT_BOOL*);
-    HRESULT put_IsForced(VARIANT_BOOL);
-    HRESULT get_Priority(DownloadPriority*);
-    HRESULT put_Priority(DownloadPriority);
-    HRESULT get_Updates(IUpdateCollection*);
-    HRESULT put_Updates(IUpdateCollection);
-    HRESULT BeginDownload(IUnknown, IUnknown, VARIANT, IDownloadJob*);
-    HRESULT Download(IDownloadResult*);
-    HRESULT EndDownload(IDownloadJob, IDownloadResult*);
+    HRESULT get_ClientApplicationID(BSTR* retval);
+    HRESULT put_ClientApplicationID(BSTR value);
+    HRESULT get_IsForced(VARIANT_BOOL* retval);
+    HRESULT put_IsForced(VARIANT_BOOL value);
+    HRESULT get_Priority(DownloadPriority* retval);
+    HRESULT put_Priority(DownloadPriority value);
+    HRESULT get_Updates(IUpdateCollection* retval);
+    HRESULT put_Updates(IUpdateCollection value);
+    HRESULT BeginDownload(IUnknown onProgressChanged, IUnknown onCompleted, VARIANT state, IDownloadJob* retval);
+    HRESULT Download(IDownloadResult* retval);
+    HRESULT EndDownload(IDownloadJob value, IDownloadResult* retval);
 }
 enum IID_IUpdateInstallationResult = GUID(0xd940f0f8, 0x3cbb, 0x4fd0, [0x99, 0x3f, 0x47, 0x1e, 0x7f, 0x23, 0x28, 0xad]);
 interface IUpdateInstallationResult : IDispatch
 {
-    HRESULT get_HResult(int*);
-    HRESULT get_RebootRequired(VARIANT_BOOL*);
-    HRESULT get_ResultCode(OperationResultCode*);
+    HRESULT get_HResult(int* retval);
+    HRESULT get_RebootRequired(VARIANT_BOOL* retval);
+    HRESULT get_ResultCode(OperationResultCode* retval);
 }
 enum IID_IInstallationResult = GUID(0xa43c56d6, 0x7451, 0x48d4, [0xaf, 0x96, 0xb6, 0xcd, 0x2d, 0xd, 0x9b, 0x7a]);
 interface IInstallationResult : IDispatch
 {
-    HRESULT get_HResult(int*);
-    HRESULT get_RebootRequired(VARIANT_BOOL*);
-    HRESULT get_ResultCode(OperationResultCode*);
-    HRESULT GetUpdateResult(int, IUpdateInstallationResult*);
+    HRESULT get_HResult(int* retval);
+    HRESULT get_RebootRequired(VARIANT_BOOL* retval);
+    HRESULT get_ResultCode(OperationResultCode* retval);
+    HRESULT GetUpdateResult(int updateIndex, IUpdateInstallationResult* retval);
 }
 enum IID_IInstallationProgress = GUID(0x345c8244, 0x43a3, 0x4e32, [0xa3, 0x68, 0x65, 0xf0, 0x73, 0xb7, 0x6f, 0x36]);
 interface IInstallationProgress : IDispatch
 {
-    HRESULT get_CurrentUpdateIndex(int*);
-    HRESULT get_CurrentUpdatePercentComplete(int*);
-    HRESULT get_PercentComplete(int*);
-    HRESULT GetUpdateResult(int, IUpdateInstallationResult*);
+    HRESULT get_CurrentUpdateIndex(int* retval);
+    HRESULT get_CurrentUpdatePercentComplete(int* retval);
+    HRESULT get_PercentComplete(int* retval);
+    HRESULT GetUpdateResult(int updateIndex, IUpdateInstallationResult* retval);
 }
 enum IID_IInstallationJob = GUID(0x5c209f0b, 0xbad5, 0x432a, [0x95, 0x56, 0x46, 0x99, 0xbe, 0xd2, 0x63, 0x8a]);
 interface IInstallationJob : IDispatch
 {
-    HRESULT get_AsyncState(VARIANT*);
-    HRESULT get_IsCompleted(VARIANT_BOOL*);
-    HRESULT get_Updates(IUpdateCollection*);
+    HRESULT get_AsyncState(VARIANT* retval);
+    HRESULT get_IsCompleted(VARIANT_BOOL* retval);
+    HRESULT get_Updates(IUpdateCollection* retval);
     HRESULT CleanUp();
-    HRESULT GetProgress(IInstallationProgress*);
+    HRESULT GetProgress(IInstallationProgress* retval);
     HRESULT RequestAbort();
 }
 enum IID_IInstallationCompletedCallbackArgs = GUID(0x250e2106, 0x8efb, 0x4705, [0x96, 0x53, 0xef, 0x13, 0xc5, 0x81, 0xb6, 0xa1]);
@@ -1159,144 +1159,144 @@ interface IInstallationCompletedCallbackArgs : IDispatch
 enum IID_IInstallationCompletedCallback = GUID(0x45f4f6f3, 0xd602, 0x4f98, [0x9a, 0x8a, 0x3e, 0xfa, 0x15, 0x2a, 0xd2, 0xd3]);
 interface IInstallationCompletedCallback : IUnknown
 {
-    HRESULT Invoke(IInstallationJob, IInstallationCompletedCallbackArgs);
+    HRESULT Invoke(IInstallationJob installationJob, IInstallationCompletedCallbackArgs callbackArgs);
 }
 enum IID_IInstallationProgressChangedCallbackArgs = GUID(0xe4f14e1e, 0x689d, 0x4218, [0xa0, 0xb9, 0xbc, 0x18, 0x9c, 0x48, 0x4a, 0x1]);
 interface IInstallationProgressChangedCallbackArgs : IDispatch
 {
-    HRESULT get_Progress(IInstallationProgress*);
+    HRESULT get_Progress(IInstallationProgress* retval);
 }
 enum IID_IInstallationProgressChangedCallback = GUID(0xe01402d5, 0xf8da, 0x43ba, [0xa0, 0x12, 0x38, 0x89, 0x4b, 0xd0, 0x48, 0xf1]);
 interface IInstallationProgressChangedCallback : IUnknown
 {
-    HRESULT Invoke(IInstallationJob, IInstallationProgressChangedCallbackArgs);
+    HRESULT Invoke(IInstallationJob installationJob, IInstallationProgressChangedCallbackArgs callbackArgs);
 }
 enum IID_IUpdateInstaller = GUID(0x7b929c68, 0xccdc, 0x4226, [0x96, 0xb1, 0x87, 0x24, 0x60, 0xb, 0x54, 0xc2]);
 interface IUpdateInstaller : IDispatch
 {
-    HRESULT get_ClientApplicationID(BSTR*);
-    HRESULT put_ClientApplicationID(BSTR);
-    HRESULT get_IsForced(VARIANT_BOOL*);
-    HRESULT put_IsForced(VARIANT_BOOL);
-    HRESULT get_ParentHwnd(HWND*);
-    HRESULT put_ParentHwnd(HWND);
-    HRESULT put_ParentWindow(IUnknown);
-    HRESULT get_ParentWindow(IUnknown*);
-    HRESULT get_Updates(IUpdateCollection*);
-    HRESULT put_Updates(IUpdateCollection);
-    HRESULT BeginInstall(IUnknown, IUnknown, VARIANT, IInstallationJob*);
-    HRESULT BeginUninstall(IUnknown, IUnknown, VARIANT, IInstallationJob*);
-    HRESULT EndInstall(IInstallationJob, IInstallationResult*);
-    HRESULT EndUninstall(IInstallationJob, IInstallationResult*);
-    HRESULT Install(IInstallationResult*);
-    HRESULT RunWizard(BSTR, IInstallationResult*);
-    HRESULT get_IsBusy(VARIANT_BOOL*);
-    HRESULT Uninstall(IInstallationResult*);
-    HRESULT get_AllowSourcePrompts(VARIANT_BOOL*);
-    HRESULT put_AllowSourcePrompts(VARIANT_BOOL);
-    HRESULT get_RebootRequiredBeforeInstallation(VARIANT_BOOL*);
+    HRESULT get_ClientApplicationID(BSTR* retval);
+    HRESULT put_ClientApplicationID(BSTR value);
+    HRESULT get_IsForced(VARIANT_BOOL* retval);
+    HRESULT put_IsForced(VARIANT_BOOL value);
+    HRESULT get_ParentHwnd(HWND* retval);
+    HRESULT put_ParentHwnd(HWND value);
+    HRESULT put_ParentWindow(IUnknown value);
+    HRESULT get_ParentWindow(IUnknown* retval);
+    HRESULT get_Updates(IUpdateCollection* retval);
+    HRESULT put_Updates(IUpdateCollection value);
+    HRESULT BeginInstall(IUnknown onProgressChanged, IUnknown onCompleted, VARIANT state, IInstallationJob* retval);
+    HRESULT BeginUninstall(IUnknown onProgressChanged, IUnknown onCompleted, VARIANT state, IInstallationJob* retval);
+    HRESULT EndInstall(IInstallationJob value, IInstallationResult* retval);
+    HRESULT EndUninstall(IInstallationJob value, IInstallationResult* retval);
+    HRESULT Install(IInstallationResult* retval);
+    HRESULT RunWizard(BSTR dialogTitle, IInstallationResult* retval);
+    HRESULT get_IsBusy(VARIANT_BOOL* retval);
+    HRESULT Uninstall(IInstallationResult* retval);
+    HRESULT get_AllowSourcePrompts(VARIANT_BOOL* retval);
+    HRESULT put_AllowSourcePrompts(VARIANT_BOOL value);
+    HRESULT get_RebootRequiredBeforeInstallation(VARIANT_BOOL* retval);
 }
 enum IID_IUpdateInstaller2 = GUID(0x3442d4fe, 0x224d, 0x4cee, [0x98, 0xcf, 0x30, 0xe0, 0xc4, 0xd2, 0x29, 0xe6]);
 interface IUpdateInstaller2 : IUpdateInstaller
 {
-    HRESULT get_ForceQuiet(VARIANT_BOOL*);
-    HRESULT put_ForceQuiet(VARIANT_BOOL);
+    HRESULT get_ForceQuiet(VARIANT_BOOL* retval);
+    HRESULT put_ForceQuiet(VARIANT_BOOL value);
 }
 enum IID_IUpdateInstaller3 = GUID(0x16d11c35, 0x99a, 0x48d0, [0x83, 0x38, 0x5f, 0xae, 0x64, 0x4, 0x7f, 0x8e]);
 interface IUpdateInstaller3 : IUpdateInstaller2
 {
-    HRESULT get_AttemptCloseAppsIfNecessary(VARIANT_BOOL*);
-    HRESULT put_AttemptCloseAppsIfNecessary(VARIANT_BOOL);
+    HRESULT get_AttemptCloseAppsIfNecessary(VARIANT_BOOL* retval);
+    HRESULT put_AttemptCloseAppsIfNecessary(VARIANT_BOOL value);
 }
 enum IID_IUpdateInstaller4 = GUID(0xef8208ea, 0x2304, 0x492d, [0x91, 0x9, 0x23, 0x81, 0x3b, 0x9, 0x58, 0xe1]);
 interface IUpdateInstaller4 : IUpdateInstaller3
 {
-    HRESULT Commit(uint);
+    HRESULT Commit(uint dwFlags);
 }
 enum IID_IUpdateSession = GUID(0x816858a4, 0x260d, 0x4260, [0x93, 0x3a, 0x25, 0x85, 0xf1, 0xab, 0xc7, 0x6b]);
 interface IUpdateSession : IDispatch
 {
-    HRESULT get_ClientApplicationID(BSTR*);
-    HRESULT put_ClientApplicationID(BSTR);
-    HRESULT get_ReadOnly(VARIANT_BOOL*);
-    HRESULT get_WebProxy(IWebProxy*);
-    HRESULT put_WebProxy(IWebProxy);
-    HRESULT CreateUpdateSearcher(IUpdateSearcher*);
-    HRESULT CreateUpdateDownloader(IUpdateDownloader*);
-    HRESULT CreateUpdateInstaller(IUpdateInstaller*);
+    HRESULT get_ClientApplicationID(BSTR* retval);
+    HRESULT put_ClientApplicationID(BSTR value);
+    HRESULT get_ReadOnly(VARIANT_BOOL* retval);
+    HRESULT get_WebProxy(IWebProxy* retval);
+    HRESULT put_WebProxy(IWebProxy value);
+    HRESULT CreateUpdateSearcher(IUpdateSearcher* retval);
+    HRESULT CreateUpdateDownloader(IUpdateDownloader* retval);
+    HRESULT CreateUpdateInstaller(IUpdateInstaller* retval);
 }
 enum IID_IUpdateSession2 = GUID(0x91caf7b0, 0xeb23, 0x49ed, [0x99, 0x37, 0xc5, 0x2d, 0x81, 0x7f, 0x46, 0xf7]);
 interface IUpdateSession2 : IUpdateSession
 {
-    HRESULT get_UserLocale(uint*);
-    HRESULT put_UserLocale(uint);
+    HRESULT get_UserLocale(uint* retval);
+    HRESULT put_UserLocale(uint lcid);
 }
 enum IID_IUpdateSession3 = GUID(0x918efd1e, 0xb5d8, 0x4c90, [0x85, 0x40, 0xae, 0xb9, 0xbd, 0xc5, 0x6f, 0x9d]);
 interface IUpdateSession3 : IUpdateSession2
 {
-    HRESULT CreateUpdateServiceManager(IUpdateServiceManager2*);
-    HRESULT QueryHistory(BSTR, int, int, IUpdateHistoryEntryCollection*);
+    HRESULT CreateUpdateServiceManager(IUpdateServiceManager2* retval);
+    HRESULT QueryHistory(BSTR criteria, int startIndex, int count, IUpdateHistoryEntryCollection* retval);
 }
 enum IID_IUpdateService = GUID(0x76b3b17e, 0xaed6, 0x4da5, [0x85, 0xf0, 0x83, 0x58, 0x7f, 0x81, 0xab, 0xe3]);
 interface IUpdateService : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_ContentValidationCert(VARIANT*);
-    HRESULT get_ExpirationDate(double*);
-    HRESULT get_IsManaged(VARIANT_BOOL*);
-    HRESULT get_IsRegisteredWithAU(VARIANT_BOOL*);
-    HRESULT get_IssueDate(double*);
-    HRESULT get_OffersWindowsUpdates(VARIANT_BOOL*);
-    HRESULT get_RedirectUrls(IStringCollection*);
-    HRESULT get_ServiceID(BSTR*);
-    HRESULT get_IsScanPackageService(VARIANT_BOOL*);
-    HRESULT get_CanRegisterWithAU(VARIANT_BOOL*);
-    HRESULT get_ServiceUrl(BSTR*);
-    HRESULT get_SetupPrefix(BSTR*);
+    HRESULT get_Name(BSTR* retval);
+    HRESULT get_ContentValidationCert(VARIANT* retval);
+    HRESULT get_ExpirationDate(double* retval);
+    HRESULT get_IsManaged(VARIANT_BOOL* retval);
+    HRESULT get_IsRegisteredWithAU(VARIANT_BOOL* retval);
+    HRESULT get_IssueDate(double* retval);
+    HRESULT get_OffersWindowsUpdates(VARIANT_BOOL* retval);
+    HRESULT get_RedirectUrls(IStringCollection* retval);
+    HRESULT get_ServiceID(BSTR* retval);
+    HRESULT get_IsScanPackageService(VARIANT_BOOL* retval);
+    HRESULT get_CanRegisterWithAU(VARIANT_BOOL* retval);
+    HRESULT get_ServiceUrl(BSTR* retval);
+    HRESULT get_SetupPrefix(BSTR* retval);
 }
 enum IID_IUpdateService2 = GUID(0x1518b460, 0x6518, 0x4172, [0x94, 0xf, 0xc7, 0x58, 0x83, 0xb2, 0x4c, 0xeb]);
 interface IUpdateService2 : IUpdateService
 {
-    HRESULT get_IsDefaultAUService(VARIANT_BOOL*);
+    HRESULT get_IsDefaultAUService(VARIANT_BOOL* retval);
 }
 enum IID_IUpdateServiceCollection = GUID(0x9b0353aa, 0xe52, 0x44ff, [0xb8, 0xb0, 0x1f, 0x7f, 0xa0, 0x43, 0x7f, 0x88]);
 interface IUpdateServiceCollection : IDispatch
 {
-    HRESULT get_Item(int, IUpdateService*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Count(int*);
+    HRESULT get_Item(int index, IUpdateService* retval);
+    HRESULT get__NewEnum(IUnknown* retval);
+    HRESULT get_Count(int* retval);
 }
 enum IID_IUpdateServiceRegistration = GUID(0xdde02280, 0x12b3, 0x4e0b, [0x93, 0x7b, 0x67, 0x47, 0xf6, 0xac, 0xb2, 0x86]);
 interface IUpdateServiceRegistration : IDispatch
 {
-    HRESULT get_RegistrationState(UpdateServiceRegistrationState*);
-    HRESULT get_ServiceID(BSTR*);
-    HRESULT get_IsPendingRegistrationWithAU(VARIANT_BOOL*);
-    HRESULT get_Service(IUpdateService2*);
+    HRESULT get_RegistrationState(UpdateServiceRegistrationState* retval);
+    HRESULT get_ServiceID(BSTR* retval);
+    HRESULT get_IsPendingRegistrationWithAU(VARIANT_BOOL* retval);
+    HRESULT get_Service(IUpdateService2* retval);
 }
 enum IID_IUpdateServiceManager = GUID(0x23857e3c, 0x2ba, 0x44a3, [0x94, 0x23, 0xb1, 0xc9, 0x0, 0x80, 0x5f, 0x37]);
 interface IUpdateServiceManager : IDispatch
 {
-    HRESULT get_Services(IUpdateServiceCollection*);
-    HRESULT AddService(BSTR, BSTR, IUpdateService*);
-    HRESULT RegisterServiceWithAU(BSTR);
-    HRESULT RemoveService(BSTR);
-    HRESULT UnregisterServiceWithAU(BSTR);
-    HRESULT AddScanPackageService(BSTR, BSTR, int, IUpdateService*);
-    HRESULT SetOption(BSTR, VARIANT);
+    HRESULT get_Services(IUpdateServiceCollection* retval);
+    HRESULT AddService(BSTR serviceID, BSTR authorizationCabPath, IUpdateService* retval);
+    HRESULT RegisterServiceWithAU(BSTR serviceID);
+    HRESULT RemoveService(BSTR serviceID);
+    HRESULT UnregisterServiceWithAU(BSTR serviceID);
+    HRESULT AddScanPackageService(BSTR serviceName, BSTR scanFileLocation, int flags, IUpdateService* ppService);
+    HRESULT SetOption(BSTR optionName, VARIANT optionValue);
 }
 enum IID_IUpdateServiceManager2 = GUID(0xbb8531d, 0x7e8d, 0x424f, [0x98, 0x6c, 0xa0, 0xb8, 0xf6, 0xa, 0x3e, 0x7b]);
 interface IUpdateServiceManager2 : IUpdateServiceManager
 {
-    HRESULT get_ClientApplicationID(BSTR*);
-    HRESULT put_ClientApplicationID(BSTR);
-    HRESULT QueryServiceRegistration(BSTR, IUpdateServiceRegistration*);
-    HRESULT AddService2(BSTR, int, BSTR, IUpdateServiceRegistration*);
+    HRESULT get_ClientApplicationID(BSTR* retval);
+    HRESULT put_ClientApplicationID(BSTR value);
+    HRESULT QueryServiceRegistration(BSTR serviceID, IUpdateServiceRegistration* retval);
+    HRESULT AddService2(BSTR serviceID, int flags, BSTR authorizationCabPath, IUpdateServiceRegistration* retval);
 }
 enum IID_IInstallationAgent = GUID(0x925cbc18, 0xa2ea, 0x4648, [0xbf, 0x1c, 0xec, 0x8b, 0xad, 0xcf, 0xe2, 0xa]);
 interface IInstallationAgent : IDispatch
 {
-    HRESULT RecordInstallationResult(BSTR, int, IStringCollection);
+    HRESULT RecordInstallationResult(BSTR installationResultCookie, int hresult, IStringCollection extendedReportingData);
 }
 alias UpdateLockdownOption = int;
 enum : int

@@ -1,9 +1,9 @@
 module windows.win32.system.systemservices;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOLEAN, CHAR, HANDLE, PSID, PSTR, PWSTR;
+import windows.win32.foundation : BOOLEAN, CHAR, HANDLE, PSTR, PWSTR;
 import windows.win32.graphics.gdi : LOGPALETTE;
-import windows.win32.security : SID, SID_AND_ATTRIBUTES, TOKEN_USER;
+import windows.win32.security : PSID, SID, SID_AND_ATTRIBUTES, TOKEN_USER;
 import windows.win32.system.com : BYTE_BLOB, DWORD_BLOB, FLAGGED_BYTE_BLOB;
 import windows.win32.system.diagnostics.debug_ : EXCEPTION_POINTERS, IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY, IMAGE_RUNTIME_FUNCTION_ENTRY;
 
@@ -280,7 +280,7 @@ enum : uint
     SFGAO_PKEYSFGAOMASK   = 0x81044000,
 }
 
-alias PUMS_SCHEDULER_ENTRY_POINT = void function(RTL_UMS_SCHEDULER_REASON, ulong, void*);
+alias PUMS_SCHEDULER_ENTRY_POINT = void function(RTL_UMS_SCHEDULER_REASON Reason, ulong ActivationPayload, void* SchedulerParam);
 enum _MM_HINT_T0 = 0x00000001;
 enum _MM_HINT_T1 = 0x00000002;
 enum _MM_HINT_T2 = 0x00000003;
@@ -1695,15 +1695,6 @@ enum DIAGNOSTIC_REASON_SIMPLE_STRING = 0x00000001;
 enum DIAGNOSTIC_REASON_DETAILED_STRING = 0x00000002;
 enum DIAGNOSTIC_REASON_NOT_SPECIFIED = 0x80000000;
 enum POWER_REQUEST_CONTEXT_VERSION = 0x00000000;
-enum PDCAP_D0_SUPPORTED = 0x00000001;
-enum PDCAP_D1_SUPPORTED = 0x00000002;
-enum PDCAP_D2_SUPPORTED = 0x00000004;
-enum PDCAP_D3_SUPPORTED = 0x00000008;
-enum PDCAP_WAKE_FROM_D0_SUPPORTED = 0x00000010;
-enum PDCAP_WAKE_FROM_D1_SUPPORTED = 0x00000020;
-enum PDCAP_WAKE_FROM_D2_SUPPORTED = 0x00000040;
-enum PDCAP_WAKE_FROM_D3_SUPPORTED = 0x00000080;
-enum PDCAP_WARM_EJECT_SUPPORTED = 0x00000100;
 enum POWER_SETTING_VALUE_VERSION = 0x00000001;
 enum PROC_IDLE_BUCKET_COUNT = 0x00000006;
 enum PROC_IDLE_BUCKET_COUNT_EX = 0x00000010;
@@ -2508,8 +2499,8 @@ enum LMEM_DISCARDED = 0x00004000;
 enum LMEM_LOCKCOUNT = 0x000000ff;
 enum NUMA_NO_PREFERRED_NODE = 0xffffffff;
 enum REDBOOK_DIGITAL_AUDIO_EXTRACTION_INFO_VERSION = 0x00000001;
-alias PTERMINATION_HANDLER = void function(BOOLEAN, ulong);
-alias POUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK = uint function(HANDLE, void*, uint*, IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY**);
+alias PTERMINATION_HANDLER = void function(BOOLEAN _abnormal_termination, ulong EstablisherFrame);
+alias POUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK = uint function(HANDLE Process, void* TableAddress, uint* Entries, IMAGE_ARM64_RUNTIME_FUNCTION_ENTRY** Functions);
 struct RemHGLOBAL
 {
     int fNullHGlobal;
@@ -2656,10 +2647,10 @@ struct REDBOOK_DIGITAL_AUDIO_EXTRACTION_INFO
     uint Supported;
     uint AccurateMask0;
 }
-/+ [CONFLICTED] alias POUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK = uint function(HANDLE, void*, uint*, IMAGE_RUNTIME_FUNCTION_ENTRY**);
+/+ [CONFLICTED] alias POUT_OF_PROCESS_FUNCTION_TABLE_CALLBACK = uint function(HANDLE Process, void* TableAddress, uint* Entries, IMAGE_RUNTIME_FUNCTION_ENTRY** Functions);
 +/
-alias PEXCEPTION_FILTER = int function(EXCEPTION_POINTERS*, void*);
-/+ [CONFLICTED] alias PTERMINATION_HANDLER = void function(BOOLEAN, void*);
+alias PEXCEPTION_FILTER = int function(EXCEPTION_POINTERS* ExceptionPointers, void* EstablisherFrame);
+/+ [CONFLICTED] alias PTERMINATION_HANDLER = void function(BOOLEAN _abnormal_termination, void* EstablisherFrame);
 +/
 struct REARRANGE_FILE_DATA32
 {
@@ -3642,7 +3633,7 @@ struct IMAGE_IMPORT_BY_NAME
     ushort Hint;
     CHAR[1] Name;
 }
-alias PIMAGE_TLS_CALLBACK = void function(void*, uint, void*);
+alias PIMAGE_TLS_CALLBACK = void function(void* DllHandle, uint Reason, void* Reserved);
 struct IMAGE_TLS_DIRECTORY64
 {
     align (4):

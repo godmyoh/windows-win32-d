@@ -3,54 +3,53 @@ module windows.win32.devices.sensors;
 import windows.win32.guid : GUID;
 import windows.win32.devices.portabledevices : IPortableDeviceKeyCollection, IPortableDeviceValues;
 import windows.win32.devices.properties : DEVPROPTYPE;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, FILETIME, HRESULT, HWND, NTSTATUS, SYSTEMTIME, VARIANT_BOOL;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, FILETIME, HRESULT, HWND, NTSTATUS, PROPERTYKEY, SYSTEMTIME, VARIANT_BOOL;
 import windows.win32.system.com : IUnknown;
 import windows.win32.system.com.structuredstorage : PROPVARIANT;
-import windows.win32.ui.shell.propertiessystem : PROPERTYKEY;
 
 version (Windows):
 extern (Windows):
 
-NTSTATUS GetPerformanceTime(uint*);
-HRESULT InitPropVariantFromFloat(float, PROPVARIANT*);
-NTSTATUS PropKeyFindKeyGetPropVariant(const(SENSOR_COLLECTION_LIST)*, const(PROPERTYKEY)*, BOOLEAN, PROPVARIANT*);
-NTSTATUS PropKeyFindKeySetPropVariant(SENSOR_COLLECTION_LIST*, const(PROPERTYKEY)*, BOOLEAN, PROPVARIANT*);
-NTSTATUS PropKeyFindKeyGetFileTime(const(SENSOR_COLLECTION_LIST)*, const(PROPERTYKEY)*, FILETIME*);
-NTSTATUS PropKeyFindKeyGetGuid(const(SENSOR_COLLECTION_LIST)*, const(PROPERTYKEY)*, GUID*);
-NTSTATUS PropKeyFindKeyGetBool(const(SENSOR_COLLECTION_LIST)*, const(PROPERTYKEY)*, BOOL*);
-NTSTATUS PropKeyFindKeyGetUlong(const(SENSOR_COLLECTION_LIST)*, const(PROPERTYKEY)*, uint*);
-NTSTATUS PropKeyFindKeyGetUshort(const(SENSOR_COLLECTION_LIST)*, const(PROPERTYKEY)*, ushort*);
-NTSTATUS PropKeyFindKeyGetFloat(const(SENSOR_COLLECTION_LIST)*, const(PROPERTYKEY)*, float*);
-NTSTATUS PropKeyFindKeyGetDouble(const(SENSOR_COLLECTION_LIST)*, const(PROPERTYKEY)*, double*);
-NTSTATUS PropKeyFindKeyGetInt32(const(SENSOR_COLLECTION_LIST)*, const(PROPERTYKEY)*, int*);
-NTSTATUS PropKeyFindKeyGetInt64(const(SENSOR_COLLECTION_LIST)*, const(PROPERTYKEY)*, long*);
-NTSTATUS PropKeyFindKeyGetNthUlong(const(SENSOR_COLLECTION_LIST)*, const(PROPERTYKEY)*, const(uint), uint*);
-NTSTATUS PropKeyFindKeyGetNthUshort(const(SENSOR_COLLECTION_LIST)*, const(PROPERTYKEY)*, const(uint), ushort*);
-NTSTATUS PropKeyFindKeyGetNthInt64(const(SENSOR_COLLECTION_LIST)*, const(PROPERTYKEY)*, const(uint), long*);
-BOOLEAN IsKeyPresentInPropertyList(SENSOR_PROPERTY_LIST*, const(PROPERTYKEY)*);
-BOOLEAN IsKeyPresentInCollectionList(SENSOR_COLLECTION_LIST*, const(PROPERTYKEY)*);
-BOOLEAN IsCollectionListSame(const(SENSOR_COLLECTION_LIST)*, const(SENSOR_COLLECTION_LIST)*);
-NTSTATUS PropVariantGetInformation(const(PROPVARIANT)*, uint*, uint*, void**, DEVPROPTYPE*);
-NTSTATUS PropertiesListCopy(SENSOR_PROPERTY_LIST*, const(SENSOR_PROPERTY_LIST)*);
-uint PropertiesListGetFillableCount(uint);
-uint CollectionsListGetMarshalledSize(const(SENSOR_COLLECTION_LIST)*);
-NTSTATUS CollectionsListCopyAndMarshall(SENSOR_COLLECTION_LIST*, const(SENSOR_COLLECTION_LIST)*);
-NTSTATUS CollectionsListMarshall(SENSOR_COLLECTION_LIST*);
-uint CollectionsListGetMarshalledSizeWithoutSerialization(const(SENSOR_COLLECTION_LIST)*);
-NTSTATUS CollectionsListUpdateMarshalledPointer(SENSOR_COLLECTION_LIST*);
-NTSTATUS SerializationBufferAllocate(uint, ubyte**);
-void SerializationBufferFree(ubyte*);
-uint CollectionsListGetSerializedSize(const(SENSOR_COLLECTION_LIST)*);
-NTSTATUS CollectionsListSerializeToBuffer(const(SENSOR_COLLECTION_LIST)*, uint, ubyte*);
-NTSTATUS CollectionsListAllocateBufferAndSerialize(const(SENSOR_COLLECTION_LIST)*, uint*, ubyte**);
-NTSTATUS CollectionsListDeserializeFromBuffer(uint, const(ubyte)*, SENSOR_COLLECTION_LIST*);
-NTSTATUS SensorCollectionGetAt(uint, SENSOR_COLLECTION_LIST*, PROPERTYKEY*, PROPVARIANT*);
-uint CollectionsListGetFillableCount(uint);
-BOOLEAN EvaluateActivityThresholds(SENSOR_COLLECTION_LIST*, SENSOR_COLLECTION_LIST*, SENSOR_COLLECTION_LIST*);
-NTSTATUS CollectionsListSortSubscribedActivitiesByConfidence(SENSOR_COLLECTION_LIST*, SENSOR_COLLECTION_LIST*);
-HRESULT InitPropVariantFromCLSIDArray(GUID*, uint, PROPVARIANT*);
-BOOLEAN IsSensorSubscribed(SENSOR_COLLECTION_LIST*, GUID);
-BOOLEAN IsGUIDPresentInList(const(GUID)*, const(uint), const(GUID)*);
+NTSTATUS GetPerformanceTime(uint* TimeMs);
+HRESULT InitPropVariantFromFloat(float fltVal, PROPVARIANT* ppropvar);
+NTSTATUS PropKeyFindKeyGetPropVariant(const(SENSOR_COLLECTION_LIST)* pList, const(PROPERTYKEY)* pKey, BOOLEAN TypeCheck, PROPVARIANT* pValue);
+NTSTATUS PropKeyFindKeySetPropVariant(SENSOR_COLLECTION_LIST* pList, const(PROPERTYKEY)* pKey, BOOLEAN TypeCheck, PROPVARIANT* pValue);
+NTSTATUS PropKeyFindKeyGetFileTime(const(SENSOR_COLLECTION_LIST)* pList, const(PROPERTYKEY)* pKey, FILETIME* pRetValue);
+NTSTATUS PropKeyFindKeyGetGuid(const(SENSOR_COLLECTION_LIST)* pList, const(PROPERTYKEY)* pKey, GUID* pRetValue);
+NTSTATUS PropKeyFindKeyGetBool(const(SENSOR_COLLECTION_LIST)* pList, const(PROPERTYKEY)* pKey, BOOL* pRetValue);
+NTSTATUS PropKeyFindKeyGetUlong(const(SENSOR_COLLECTION_LIST)* pList, const(PROPERTYKEY)* pKey, uint* pRetValue);
+NTSTATUS PropKeyFindKeyGetUshort(const(SENSOR_COLLECTION_LIST)* pList, const(PROPERTYKEY)* pKey, ushort* pRetValue);
+NTSTATUS PropKeyFindKeyGetFloat(const(SENSOR_COLLECTION_LIST)* pList, const(PROPERTYKEY)* pKey, float* pRetValue);
+NTSTATUS PropKeyFindKeyGetDouble(const(SENSOR_COLLECTION_LIST)* pList, const(PROPERTYKEY)* pKey, double* pRetValue);
+NTSTATUS PropKeyFindKeyGetInt32(const(SENSOR_COLLECTION_LIST)* pList, const(PROPERTYKEY)* pKey, int* pRetValue);
+NTSTATUS PropKeyFindKeyGetInt64(const(SENSOR_COLLECTION_LIST)* pList, const(PROPERTYKEY)* pKey, long* pRetValue);
+NTSTATUS PropKeyFindKeyGetNthUlong(const(SENSOR_COLLECTION_LIST)* pList, const(PROPERTYKEY)* pKey, const(uint) Occurrence, uint* pRetValue);
+NTSTATUS PropKeyFindKeyGetNthUshort(const(SENSOR_COLLECTION_LIST)* pList, const(PROPERTYKEY)* pKey, const(uint) Occurrence, ushort* pRetValue);
+NTSTATUS PropKeyFindKeyGetNthInt64(const(SENSOR_COLLECTION_LIST)* pList, const(PROPERTYKEY)* pKey, const(uint) Occurrence, long* pRetValue);
+BOOLEAN IsKeyPresentInPropertyList(SENSOR_PROPERTY_LIST* pList, const(PROPERTYKEY)* pKey);
+BOOLEAN IsKeyPresentInCollectionList(SENSOR_COLLECTION_LIST* pList, const(PROPERTYKEY)* pKey);
+BOOLEAN IsCollectionListSame(const(SENSOR_COLLECTION_LIST)* ListA, const(SENSOR_COLLECTION_LIST)* ListB);
+NTSTATUS PropVariantGetInformation(const(PROPVARIANT)* PropVariantValue, uint* PropVariantOffset, uint* PropVariantSize, void** PropVariantPointer, DEVPROPTYPE* RemappedType);
+NTSTATUS PropertiesListCopy(SENSOR_PROPERTY_LIST* Target, const(SENSOR_PROPERTY_LIST)* Source);
+uint PropertiesListGetFillableCount(uint BufferSizeBytes);
+uint CollectionsListGetMarshalledSize(const(SENSOR_COLLECTION_LIST)* Collection);
+NTSTATUS CollectionsListCopyAndMarshall(SENSOR_COLLECTION_LIST* Target, const(SENSOR_COLLECTION_LIST)* Source);
+NTSTATUS CollectionsListMarshall(SENSOR_COLLECTION_LIST* Target);
+uint CollectionsListGetMarshalledSizeWithoutSerialization(const(SENSOR_COLLECTION_LIST)* Collection);
+NTSTATUS CollectionsListUpdateMarshalledPointer(SENSOR_COLLECTION_LIST* Collection);
+NTSTATUS SerializationBufferAllocate(uint SizeInBytes, ubyte** pBuffer);
+void SerializationBufferFree(ubyte* Buffer);
+uint CollectionsListGetSerializedSize(const(SENSOR_COLLECTION_LIST)* Collection);
+NTSTATUS CollectionsListSerializeToBuffer(const(SENSOR_COLLECTION_LIST)* SourceCollection, uint TargetBufferSizeInBytes, ubyte* TargetBuffer);
+NTSTATUS CollectionsListAllocateBufferAndSerialize(const(SENSOR_COLLECTION_LIST)* SourceCollection, uint* pTargetBufferSizeInBytes, ubyte** pTargetBuffer);
+NTSTATUS CollectionsListDeserializeFromBuffer(uint SourceBufferSizeInBytes, const(ubyte)* SourceBuffer, SENSOR_COLLECTION_LIST* TargetCollection);
+NTSTATUS SensorCollectionGetAt(uint Index, SENSOR_COLLECTION_LIST* pSensorsList, PROPERTYKEY* pKey, PROPVARIANT* pValue);
+uint CollectionsListGetFillableCount(uint BufferSizeBytes);
+BOOLEAN EvaluateActivityThresholds(SENSOR_COLLECTION_LIST* newSample, SENSOR_COLLECTION_LIST* oldSample, SENSOR_COLLECTION_LIST* thresholds);
+NTSTATUS CollectionsListSortSubscribedActivitiesByConfidence(SENSOR_COLLECTION_LIST* thresholds, SENSOR_COLLECTION_LIST* pCollection);
+HRESULT InitPropVariantFromCLSIDArray(GUID* members, uint size, PROPVARIANT* ppropvar);
+BOOLEAN IsSensorSubscribed(SENSOR_COLLECTION_LIST* subscriptionList, GUID currentType);
+BOOLEAN IsGUIDPresentInList(const(GUID)* guidArray, const(uint) arrayLength, const(GUID)* guidElem);
 enum GUID_DEVINTERFACE_SENSOR = GUID(0xba1bb692, 0x9b7a, 0x4833, [0x9a, 0x1e, 0x52, 0x5e, 0xd1, 0x34, 0xe7, 0xe2]);
 enum SENSOR_EVENT_STATE_CHANGED = GUID(0xbfd96016, 0x6bd7, 0x4560, [0xad, 0x34, 0xf2, 0xf6, 0x60, 0x7e, 0x8f, 0x81]);
 enum SENSOR_EVENT_DATA_UPDATED = GUID(0x2ed0f2a4, 0x87, 0x41d3, [0x87, 0xdb, 0x67, 0x73, 0x37, 0xb, 0x3c, 0x88]);
@@ -390,66 +389,66 @@ enum : int
 enum IID_ISensorManager = GUID(0xbd77db67, 0x45a8, 0x42dc, [0x8d, 0x0, 0x6d, 0xcf, 0x15, 0xf8, 0x37, 0x7a]);
 interface ISensorManager : IUnknown
 {
-    HRESULT GetSensorsByCategory(GUID*, ISensorCollection*);
-    HRESULT GetSensorsByType(GUID*, ISensorCollection*);
-    HRESULT GetSensorByID(GUID*, ISensor*);
-    HRESULT SetEventSink(ISensorManagerEvents);
-    HRESULT RequestPermissions(HWND, ISensorCollection, BOOL);
+    HRESULT GetSensorsByCategory(GUID* sensorCategory, ISensorCollection* ppSensorsFound);
+    HRESULT GetSensorsByType(GUID* sensorType, ISensorCollection* ppSensorsFound);
+    HRESULT GetSensorByID(GUID* sensorID, ISensor* ppSensor);
+    HRESULT SetEventSink(ISensorManagerEvents pEvents);
+    HRESULT RequestPermissions(HWND hParent, ISensorCollection pSensors, BOOL fModal);
 }
 enum IID_ILocationPermissions = GUID(0xd5fb0a7f, 0xe74e, 0x44f5, [0x8e, 0x2, 0x48, 0x6, 0x86, 0x3a, 0x27, 0x4f]);
 interface ILocationPermissions : IUnknown
 {
-    HRESULT GetGlobalLocationPermission(BOOL*);
-    HRESULT CheckLocationCapability(uint);
+    HRESULT GetGlobalLocationPermission(BOOL* pfEnabled);
+    HRESULT CheckLocationCapability(uint dwClientThreadId);
 }
 enum IID_ISensorCollection = GUID(0x23571e11, 0xe545, 0x4dd8, [0xa3, 0x37, 0xb8, 0x9b, 0xf4, 0x4b, 0x10, 0xdf]);
 interface ISensorCollection : IUnknown
 {
-    HRESULT GetAt(uint, ISensor*);
-    HRESULT GetCount(uint*);
-    HRESULT Add(ISensor);
-    HRESULT Remove(ISensor);
-    HRESULT RemoveByID(GUID*);
+    HRESULT GetAt(uint ulIndex, ISensor* ppSensor);
+    HRESULT GetCount(uint* pCount);
+    HRESULT Add(ISensor pSensor);
+    HRESULT Remove(ISensor pSensor);
+    HRESULT RemoveByID(GUID* sensorID);
     HRESULT Clear();
 }
 enum IID_ISensor = GUID(0x5fa08f80, 0x2657, 0x458e, [0xaf, 0x75, 0x46, 0xf7, 0x3f, 0xa6, 0xac, 0x5c]);
 interface ISensor : IUnknown
 {
-    HRESULT GetID(GUID*);
-    HRESULT GetCategory(GUID*);
-    HRESULT GetType(GUID*);
-    HRESULT GetFriendlyName(BSTR*);
-    HRESULT GetProperty(const(PROPERTYKEY)*, PROPVARIANT*);
-    HRESULT GetProperties(IPortableDeviceKeyCollection, IPortableDeviceValues*);
-    HRESULT GetSupportedDataFields(IPortableDeviceKeyCollection*);
-    HRESULT SetProperties(IPortableDeviceValues, IPortableDeviceValues*);
-    HRESULT SupportsDataField(const(PROPERTYKEY)*, VARIANT_BOOL*);
-    HRESULT GetState(SensorState*);
-    HRESULT GetData(ISensorDataReport*);
-    HRESULT SupportsEvent(const(GUID)*, VARIANT_BOOL*);
-    HRESULT GetEventInterest(GUID**, uint*);
-    HRESULT SetEventInterest(GUID*, uint);
-    HRESULT SetEventSink(ISensorEvents);
+    HRESULT GetID(GUID* pID);
+    HRESULT GetCategory(GUID* pSensorCategory);
+    HRESULT GetType(GUID* pSensorType);
+    HRESULT GetFriendlyName(BSTR* pFriendlyName);
+    HRESULT GetProperty(const(PROPERTYKEY)* key, PROPVARIANT* pProperty);
+    HRESULT GetProperties(IPortableDeviceKeyCollection pKeys, IPortableDeviceValues* ppProperties);
+    HRESULT GetSupportedDataFields(IPortableDeviceKeyCollection* ppDataFields);
+    HRESULT SetProperties(IPortableDeviceValues pProperties, IPortableDeviceValues* ppResults);
+    HRESULT SupportsDataField(const(PROPERTYKEY)* key, VARIANT_BOOL* pIsSupported);
+    HRESULT GetState(SensorState* pState);
+    HRESULT GetData(ISensorDataReport* ppDataReport);
+    HRESULT SupportsEvent(const(GUID)* eventGuid, VARIANT_BOOL* pIsSupported);
+    HRESULT GetEventInterest(GUID** ppValues, uint* pCount);
+    HRESULT SetEventInterest(GUID* pValues, uint count);
+    HRESULT SetEventSink(ISensorEvents pEvents);
 }
 enum IID_ISensorDataReport = GUID(0xab9df9b, 0xc4b5, 0x4796, [0x88, 0x98, 0x4, 0x70, 0x70, 0x6a, 0x2e, 0x1d]);
 interface ISensorDataReport : IUnknown
 {
-    HRESULT GetTimestamp(SYSTEMTIME*);
-    HRESULT GetSensorValue(const(PROPERTYKEY)*, PROPVARIANT*);
-    HRESULT GetSensorValues(IPortableDeviceKeyCollection, IPortableDeviceValues*);
+    HRESULT GetTimestamp(SYSTEMTIME* pTimeStamp);
+    HRESULT GetSensorValue(const(PROPERTYKEY)* pKey, PROPVARIANT* pValue);
+    HRESULT GetSensorValues(IPortableDeviceKeyCollection pKeys, IPortableDeviceValues* ppValues);
 }
 enum IID_ISensorManagerEvents = GUID(0x9b3b0b86, 0x266a, 0x4aad, [0xb2, 0x1f, 0xfd, 0xe5, 0x50, 0x10, 0x1, 0xb7]);
 interface ISensorManagerEvents : IUnknown
 {
-    HRESULT OnSensorEnter(ISensor, SensorState);
+    HRESULT OnSensorEnter(ISensor pSensor, SensorState state);
 }
 enum IID_ISensorEvents = GUID(0x5d8dcc91, 0x4641, 0x47e7, [0xb7, 0xc3, 0xb7, 0x4f, 0x48, 0xa6, 0xc3, 0x91]);
 interface ISensorEvents : IUnknown
 {
-    HRESULT OnStateChanged(ISensor, SensorState);
-    HRESULT OnDataUpdated(ISensor, ISensorDataReport);
-    HRESULT OnEvent(ISensor, const(GUID)*, IPortableDeviceValues);
-    HRESULT OnLeave(GUID*);
+    HRESULT OnStateChanged(ISensor pSensor, SensorState state);
+    HRESULT OnDataUpdated(ISensor pSensor, ISensorDataReport pNewData);
+    HRESULT OnEvent(ISensor pSensor, const(GUID)* eventID, IPortableDeviceValues pEventData);
+    HRESULT OnLeave(GUID* ID);
 }
 enum CLSID_SensorManager = GUID(0x77a1c827, 0xfcd2, 0x4689, [0x89, 0x15, 0x9d, 0x61, 0x3c, 0xc5, 0xfa, 0x3e]);
 struct SensorManager

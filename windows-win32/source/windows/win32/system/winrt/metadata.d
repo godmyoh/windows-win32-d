@@ -4,24 +4,24 @@ import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HRESULT, PSTR, PWSTR;
 import windows.win32.system.com : IStream, ITypeInfo, IUnknown;
 import windows.win32.system.variant : VARIANT;
-import windows.win32.system.winrt : HSTRING, ROPARAMIIDHANDLE;
+import windows.win32.system.winrt : HSTRING;
 
 version (Windows):
 extern (Windows):
 
-HRESULT MetaDataGetDispenser(const(GUID)*, const(GUID)*, void**);
-HRESULT RoGetMetaDataFile(const(HSTRING), IMetaDataDispenserEx, HSTRING*, IMetaDataImport2*, uint*);
-HRESULT RoParseTypeName(HSTRING, uint*, HSTRING**);
-HRESULT RoResolveNamespace(const(HSTRING), const(HSTRING), const(uint), const(HSTRING)*, uint*, HSTRING**, uint*, HSTRING**);
-HRESULT RoIsApiContractPresent(const(wchar)*, ushort, ushort, BOOL*);
-HRESULT RoIsApiContractMajorVersionPresent(const(wchar)*, ushort, BOOL*);
-/+ [UNSUPPORTED] HRESULT RoCreateNonAgilePropertySet(IPropertySet*);
+HRESULT MetaDataGetDispenser(const(GUID)* rclsid, const(GUID)* riid, void** ppv);
+HRESULT RoGetMetaDataFile(const(HSTRING) name, IMetaDataDispenserEx metaDataDispenser, HSTRING* metaDataFilePath, IMetaDataImport2* metaDataImport, uint* typeDefToken);
+HRESULT RoParseTypeName(HSTRING typeName, uint* partsCount, HSTRING** typeNameParts);
+HRESULT RoResolveNamespace(const(HSTRING) name, const(HSTRING) windowsMetaDataDir, const(uint) packageGraphDirsCount, const(HSTRING)* packageGraphDirs, uint* metaDataFilePathsCount, HSTRING** metaDataFilePaths, uint* subNamespacesCount, HSTRING** subNamespaces);
+HRESULT RoIsApiContractPresent(const(wchar)* name, ushort majorVersion, ushort minorVersion, BOOL* present);
+HRESULT RoIsApiContractMajorVersionPresent(const(wchar)* name, ushort majorVersion, BOOL* present);
+/+ [UNSUPPORTED] HRESULT RoCreateNonAgilePropertySet(IPropertySet* ppPropertySet);
 +/
-/+ [UNSUPPORTED] HRESULT RoCreatePropertySetSerializer(IPropertySetSerializer*);
+/+ [UNSUPPORTED] HRESULT RoCreatePropertySetSerializer(IPropertySetSerializer* ppPropertySetSerializer);
 +/
-HRESULT RoGetParameterizedTypeInstanceIID(uint, const(wchar)**, const(IRoMetaDataLocator), GUID*, ROPARAMIIDHANDLE*);
-void RoFreeParameterizedTypeExtra(ROPARAMIIDHANDLE);
-PSTR RoParameterizedTypeExtraGetTypeSignature(ROPARAMIIDHANDLE);
+HRESULT RoGetParameterizedTypeInstanceIID(uint nameElementCount, const(wchar)** nameElements, const(IRoMetaDataLocator) metaDataLocator, GUID* iid, ROPARAMIIDHANDLE* pExtra);
+void RoFreeParameterizedTypeExtra(ROPARAMIIDHANDLE extra);
+PSTR RoParameterizedTypeExtraGetTypeSignature(ROPARAMIIDHANDLE extra);
 enum INVALID_CONNECTION_ID = 0x00000000;
 enum INVALID_TASK_ID = 0x00000000;
 enum MAX_CONNECTION_NAME = 0x00000104;
@@ -214,6 +214,7 @@ enum CLSID_CorMetaDataReg = GUID(0x87f3a1f5, 0x7397, 0x11d2, [0x97, 0x71, 0x0, 0
 enum SIGN_MASK_ONEBYTE = 0xffffffffffffffc0;
 enum SIGN_MASK_TWOBYTE = 0xffffffffffffe000;
 enum SIGN_MASK_FOURBYTE = 0xfffffffff0000000;
+alias ROPARAMIIDHANDLE = void*;
 struct IMAGE_COR_ILMETHOD_SECT_EH_CLAUSE_SMALL
 {
     uint _bitfield1;
@@ -1066,174 +1067,174 @@ struct COR_SECATTR
 enum IID_IMetaDataError = GUID(0xb81ff171, 0x20f3, 0x11d2, [0x8d, 0xcc, 0x0, 0xa0, 0xc9, 0xb0, 0x9c, 0x19]);
 interface IMetaDataError : IUnknown
 {
-    HRESULT OnError(HRESULT, uint);
+    HRESULT OnError(HRESULT hrError, uint token);
 }
 enum IID_IMapToken = GUID(0x6a3ea8b, 0x225, 0x11d1, [0xbf, 0x72, 0x0, 0xc0, 0x4f, 0xc3, 0x1e, 0x12]);
 interface IMapToken : IUnknown
 {
-    HRESULT Map(uint, uint);
+    HRESULT Map(uint tkImp, uint tkEmit);
 }
 enum IID_IMetaDataDispenser = GUID(0x809c652e, 0x7396, 0x11d2, [0x97, 0x71, 0x0, 0xa0, 0xc9, 0xb4, 0xd5, 0xc]);
 interface IMetaDataDispenser : IUnknown
 {
-    HRESULT DefineScope(const(GUID)*, uint, const(GUID)*, IUnknown*);
-    HRESULT OpenScope(const(wchar)*, uint, const(GUID)*, IUnknown*);
-    HRESULT OpenScopeOnMemory(const(void)*, uint, uint, const(GUID)*, IUnknown*);
+    HRESULT DefineScope(const(GUID)* rclsid, uint dwCreateFlags, const(GUID)* riid, IUnknown* ppIUnk);
+    HRESULT OpenScope(const(wchar)* szScope, uint dwOpenFlags, const(GUID)* riid, IUnknown* ppIUnk);
+    HRESULT OpenScopeOnMemory(const(void)* pData, uint cbData, uint dwOpenFlags, const(GUID)* riid, IUnknown* ppIUnk);
 }
 enum IID_IMetaDataEmit = GUID(0xba3fee4c, 0xecb9, 0x4e41, [0x83, 0xb7, 0x18, 0x3f, 0xa4, 0x1c, 0xd8, 0x59]);
 interface IMetaDataEmit : IUnknown
 {
-    HRESULT SetModuleProps(const(wchar)*);
-    HRESULT Save(const(wchar)*, uint);
-    HRESULT SaveToStream(IStream, uint);
-    HRESULT GetSaveSize(CorSaveSize, uint*);
-    HRESULT DefineTypeDef(const(wchar)*, uint, uint, uint*, uint*);
-    HRESULT DefineNestedType(const(wchar)*, uint, uint, uint*, uint, uint*);
-    HRESULT SetHandler(IUnknown);
-    HRESULT DefineMethod(uint, const(wchar)*, uint, ubyte*, uint, uint, uint, uint*);
-    HRESULT DefineMethodImpl(uint, uint, uint);
-    HRESULT DefineTypeRefByName(uint, const(wchar)*, uint*);
-    HRESULT DefineImportType(IMetaDataAssemblyImport, const(void)*, uint, IMetaDataImport, uint, IMetaDataAssemblyEmit, uint*);
-    HRESULT DefineMemberRef(uint, const(wchar)*, ubyte*, uint, uint*);
-    HRESULT DefineImportMember(IMetaDataAssemblyImport, const(void)*, uint, IMetaDataImport, uint, IMetaDataAssemblyEmit, uint, uint*);
-    HRESULT DefineEvent(uint, const(wchar)*, uint, uint, uint, uint, uint, uint*, uint*);
-    HRESULT SetClassLayout(uint, uint, COR_FIELD_OFFSET*, uint);
-    HRESULT DeleteClassLayout(uint);
-    HRESULT SetFieldMarshal(uint, ubyte*, uint);
-    HRESULT DeleteFieldMarshal(uint);
-    HRESULT DefinePermissionSet(uint, uint, const(void)*, uint, uint*);
-    HRESULT SetRVA(uint, uint);
-    HRESULT GetTokenFromSig(ubyte*, uint, uint*);
-    HRESULT DefineModuleRef(const(wchar)*, uint*);
-    HRESULT SetParent(uint, uint);
-    HRESULT GetTokenFromTypeSpec(ubyte*, uint, uint*);
-    HRESULT SaveToMemory(void*, uint);
-    HRESULT DefineUserString(const(wchar)*, uint, uint*);
-    HRESULT DeleteToken(uint);
-    HRESULT SetMethodProps(uint, uint, uint, uint);
-    HRESULT SetTypeDefProps(uint, uint, uint, uint*);
-    HRESULT SetEventProps(uint, uint, uint, uint, uint, uint, uint*);
-    HRESULT SetPermissionSetProps(uint, uint, const(void)*, uint, uint*);
-    HRESULT DefinePinvokeMap(uint, uint, const(wchar)*, uint);
-    HRESULT SetPinvokeMap(uint, uint, const(wchar)*, uint);
-    HRESULT DeletePinvokeMap(uint);
-    HRESULT DefineCustomAttribute(uint, uint, const(void)*, uint, uint*);
-    HRESULT SetCustomAttributeValue(uint, const(void)*, uint);
-    HRESULT DefineField(uint, const(wchar)*, uint, ubyte*, uint, uint, const(void)*, uint, uint*);
-    HRESULT DefineProperty(uint, const(wchar)*, uint, ubyte*, uint, uint, const(void)*, uint, uint, uint, uint*, uint*);
-    HRESULT DefineParam(uint, uint, const(wchar)*, uint, uint, const(void)*, uint, uint*);
-    HRESULT SetFieldProps(uint, uint, uint, const(void)*, uint);
-    HRESULT SetPropertyProps(uint, uint, uint, const(void)*, uint, uint, uint, uint*);
-    HRESULT SetParamProps(uint, const(wchar)*, uint, uint, const(void)*, uint);
-    HRESULT DefineSecurityAttributeSet(uint, COR_SECATTR*, uint, uint*);
-    HRESULT ApplyEditAndContinue(IUnknown);
-    HRESULT TranslateSigWithScope(IMetaDataAssemblyImport, const(void)*, uint, IMetaDataImport, ubyte*, uint, IMetaDataAssemblyEmit, IMetaDataEmit, ubyte*, uint, uint*);
-    HRESULT SetMethodImplFlags(uint, uint);
-    HRESULT SetFieldRVA(uint, uint);
-    HRESULT Merge(IMetaDataImport, IMapToken, IUnknown);
+    HRESULT SetModuleProps(const(wchar)* szName);
+    HRESULT Save(const(wchar)* szFile, uint dwSaveFlags);
+    HRESULT SaveToStream(IStream pIStream, uint dwSaveFlags);
+    HRESULT GetSaveSize(CorSaveSize fSave, uint* pdwSaveSize);
+    HRESULT DefineTypeDef(const(wchar)* szTypeDef, uint dwTypeDefFlags, uint tkExtends, uint* rtkImplements, uint* ptd);
+    HRESULT DefineNestedType(const(wchar)* szTypeDef, uint dwTypeDefFlags, uint tkExtends, uint* rtkImplements, uint tdEncloser, uint* ptd);
+    HRESULT SetHandler(IUnknown pUnk);
+    HRESULT DefineMethod(uint td, const(wchar)* szName, uint dwMethodFlags, ubyte* pvSigBlob, uint cbSigBlob, uint ulCodeRVA, uint dwImplFlags, uint* pmd);
+    HRESULT DefineMethodImpl(uint td, uint tkBody, uint tkDecl);
+    HRESULT DefineTypeRefByName(uint tkResolutionScope, const(wchar)* szName, uint* ptr);
+    HRESULT DefineImportType(IMetaDataAssemblyImport pAssemImport, const(void)* pbHashValue, uint cbHashValue, IMetaDataImport pImport, uint tdImport, IMetaDataAssemblyEmit pAssemEmit, uint* ptr);
+    HRESULT DefineMemberRef(uint tkImport, const(wchar)* szName, ubyte* pvSigBlob, uint cbSigBlob, uint* pmr);
+    HRESULT DefineImportMember(IMetaDataAssemblyImport pAssemImport, const(void)* pbHashValue, uint cbHashValue, IMetaDataImport pImport, uint mbMember, IMetaDataAssemblyEmit pAssemEmit, uint tkParent, uint* pmr);
+    HRESULT DefineEvent(uint td, const(wchar)* szEvent, uint dwEventFlags, uint tkEventType, uint mdAddOn, uint mdRemoveOn, uint mdFire, uint* rmdOtherMethods, uint* pmdEvent);
+    HRESULT SetClassLayout(uint td, uint dwPackSize, COR_FIELD_OFFSET* rFieldOffsets, uint ulClassSize);
+    HRESULT DeleteClassLayout(uint td);
+    HRESULT SetFieldMarshal(uint tk, ubyte* pvNativeType, uint cbNativeType);
+    HRESULT DeleteFieldMarshal(uint tk);
+    HRESULT DefinePermissionSet(uint tk, uint dwAction, const(void)* pvPermission, uint cbPermission, uint* ppm);
+    HRESULT SetRVA(uint md, uint ulRVA);
+    HRESULT GetTokenFromSig(ubyte* pvSig, uint cbSig, uint* pmsig);
+    HRESULT DefineModuleRef(const(wchar)* szName, uint* pmur);
+    HRESULT SetParent(uint mr, uint tk);
+    HRESULT GetTokenFromTypeSpec(ubyte* pvSig, uint cbSig, uint* ptypespec);
+    HRESULT SaveToMemory(void* pbData, uint cbData);
+    HRESULT DefineUserString(const(wchar)* szString, uint cchString, uint* pstk);
+    HRESULT DeleteToken(uint tkObj);
+    HRESULT SetMethodProps(uint md, uint dwMethodFlags, uint ulCodeRVA, uint dwImplFlags);
+    HRESULT SetTypeDefProps(uint td, uint dwTypeDefFlags, uint tkExtends, uint* rtkImplements);
+    HRESULT SetEventProps(uint ev, uint dwEventFlags, uint tkEventType, uint mdAddOn, uint mdRemoveOn, uint mdFire, uint* rmdOtherMethods);
+    HRESULT SetPermissionSetProps(uint tk, uint dwAction, const(void)* pvPermission, uint cbPermission, uint* ppm);
+    HRESULT DefinePinvokeMap(uint tk, uint dwMappingFlags, const(wchar)* szImportName, uint mrImportDLL);
+    HRESULT SetPinvokeMap(uint tk, uint dwMappingFlags, const(wchar)* szImportName, uint mrImportDLL);
+    HRESULT DeletePinvokeMap(uint tk);
+    HRESULT DefineCustomAttribute(uint tkOwner, uint tkCtor, const(void)* pCustomAttribute, uint cbCustomAttribute, uint* pcv);
+    HRESULT SetCustomAttributeValue(uint pcv, const(void)* pCustomAttribute, uint cbCustomAttribute);
+    HRESULT DefineField(uint td, const(wchar)* szName, uint dwFieldFlags, ubyte* pvSigBlob, uint cbSigBlob, uint dwCPlusTypeFlag, const(void)* pValue, uint cchValue, uint* pmd);
+    HRESULT DefineProperty(uint td, const(wchar)* szProperty, uint dwPropFlags, ubyte* pvSig, uint cbSig, uint dwCPlusTypeFlag, const(void)* pValue, uint cchValue, uint mdSetter, uint mdGetter, uint* rmdOtherMethods, uint* pmdProp);
+    HRESULT DefineParam(uint md, uint ulParamSeq, const(wchar)* szName, uint dwParamFlags, uint dwCPlusTypeFlag, const(void)* pValue, uint cchValue, uint* ppd);
+    HRESULT SetFieldProps(uint fd, uint dwFieldFlags, uint dwCPlusTypeFlag, const(void)* pValue, uint cchValue);
+    HRESULT SetPropertyProps(uint pr, uint dwPropFlags, uint dwCPlusTypeFlag, const(void)* pValue, uint cchValue, uint mdSetter, uint mdGetter, uint* rmdOtherMethods);
+    HRESULT SetParamProps(uint pd, const(wchar)* szName, uint dwParamFlags, uint dwCPlusTypeFlag, const(void)* pValue, uint cchValue);
+    HRESULT DefineSecurityAttributeSet(uint tkObj, COR_SECATTR* rSecAttrs, uint cSecAttrs, uint* pulErrorAttr);
+    HRESULT ApplyEditAndContinue(IUnknown pImport);
+    HRESULT TranslateSigWithScope(IMetaDataAssemblyImport pAssemImport, const(void)* pbHashValue, uint cbHashValue, IMetaDataImport import_, ubyte* pbSigBlob, uint cbSigBlob, IMetaDataAssemblyEmit pAssemEmit, IMetaDataEmit emit, ubyte* pvTranslatedSig, uint cbTranslatedSigMax, uint* pcbTranslatedSig);
+    HRESULT SetMethodImplFlags(uint md, uint dwImplFlags);
+    HRESULT SetFieldRVA(uint fd, uint ulRVA);
+    HRESULT Merge(IMetaDataImport pImport, IMapToken pHostMapToken, IUnknown pHandler);
     HRESULT MergeEnd();
 }
 enum IID_IMetaDataEmit2 = GUID(0xf5dd9950, 0xf693, 0x42e6, [0x83, 0xe, 0x7b, 0x83, 0x3e, 0x81, 0x46, 0xa9]);
 interface IMetaDataEmit2 : IMetaDataEmit
 {
-    HRESULT DefineMethodSpec(uint, ubyte*, uint, uint*);
-    HRESULT GetDeltaSaveSize(CorSaveSize, uint*);
-    HRESULT SaveDelta(const(wchar)*, uint);
-    HRESULT SaveDeltaToStream(IStream, uint);
-    HRESULT SaveDeltaToMemory(void*, uint);
-    HRESULT DefineGenericParam(uint, uint, uint, const(wchar)*, uint, uint*, uint*);
-    HRESULT SetGenericParamProps(uint, uint, const(wchar)*, uint, uint*);
+    HRESULT DefineMethodSpec(uint tkParent, ubyte* pvSigBlob, uint cbSigBlob, uint* pmi);
+    HRESULT GetDeltaSaveSize(CorSaveSize fSave, uint* pdwSaveSize);
+    HRESULT SaveDelta(const(wchar)* szFile, uint dwSaveFlags);
+    HRESULT SaveDeltaToStream(IStream pIStream, uint dwSaveFlags);
+    HRESULT SaveDeltaToMemory(void* pbData, uint cbData);
+    HRESULT DefineGenericParam(uint tk, uint ulParamSeq, uint dwParamFlags, const(wchar)* szname, uint reserved, uint* rtkConstraints, uint* pgp);
+    HRESULT SetGenericParamProps(uint gp, uint dwParamFlags, const(wchar)* szName, uint reserved, uint* rtkConstraints);
     HRESULT ResetENCLog();
 }
 enum IID_IMetaDataImport = GUID(0x7dac8207, 0xd3ae, 0x4c75, [0x9b, 0x67, 0x92, 0x80, 0x1a, 0x49, 0x7d, 0x44]);
 interface IMetaDataImport : IUnknown
 {
-    void CloseEnum(void*);
-    HRESULT CountEnum(void*, uint*);
-    HRESULT ResetEnum(void*, uint);
-    HRESULT EnumTypeDefs(void**, uint*, uint, uint*);
-    HRESULT EnumInterfaceImpls(void**, uint, uint*, uint, uint*);
-    HRESULT EnumTypeRefs(void**, uint*, uint, uint*);
-    HRESULT FindTypeDefByName(const(wchar)*, uint, uint*);
-    HRESULT GetScopeProps(PWSTR, uint, uint*, GUID*);
-    HRESULT GetModuleFromScope(uint*);
-    HRESULT GetTypeDefProps(uint, PWSTR, uint, uint*, uint*, uint*);
-    HRESULT GetInterfaceImplProps(uint, uint*, uint*);
-    HRESULT GetTypeRefProps(uint, uint*, PWSTR, uint, uint*);
-    HRESULT ResolveTypeRef(uint, const(GUID)*, IUnknown*, uint*);
-    HRESULT EnumMembers(void**, uint, uint*, uint, uint*);
-    HRESULT EnumMembersWithName(void**, uint, const(wchar)*, uint*, uint, uint*);
-    HRESULT EnumMethods(void**, uint, uint*, uint, uint*);
-    HRESULT EnumMethodsWithName(void**, uint, const(wchar)*, uint*, uint, uint*);
-    HRESULT EnumFields(void**, uint, uint*, uint, uint*);
-    HRESULT EnumFieldsWithName(void**, uint, const(wchar)*, uint*, uint, uint*);
-    HRESULT EnumParams(void**, uint, uint*, uint, uint*);
-    HRESULT EnumMemberRefs(void**, uint, uint*, uint, uint*);
-    HRESULT EnumMethodImpls(void**, uint, uint*, uint*, uint, uint*);
-    HRESULT EnumPermissionSets(void**, uint, uint, uint*, uint, uint*);
-    HRESULT FindMember(uint, const(wchar)*, ubyte*, uint, uint*);
-    HRESULT FindMethod(uint, const(wchar)*, ubyte*, uint, uint*);
-    HRESULT FindField(uint, const(wchar)*, ubyte*, uint, uint*);
-    HRESULT FindMemberRef(uint, const(wchar)*, ubyte*, uint, uint*);
-    HRESULT GetMethodProps(uint, uint*, PWSTR, uint, uint*, uint*, ubyte**, uint*, uint*, uint*);
-    HRESULT GetMemberRefProps(uint, uint*, PWSTR, uint, uint*, ubyte**, uint*);
-    HRESULT EnumProperties(void**, uint, uint*, uint, uint*);
-    HRESULT EnumEvents(void**, uint, uint*, uint, uint*);
-    HRESULT GetEventProps(uint, uint*, const(wchar)*, uint, uint*, uint*, uint*, uint*, uint*, uint*, uint*, uint, uint*);
-    HRESULT EnumMethodSemantics(void**, uint, uint*, uint, uint*);
-    HRESULT GetMethodSemantics(uint, uint, uint*);
-    HRESULT GetClassLayout(uint, uint*, COR_FIELD_OFFSET*, uint, uint*, uint*);
-    HRESULT GetFieldMarshal(uint, ubyte**, uint*);
-    HRESULT GetRVA(uint, uint*, uint*);
-    HRESULT GetPermissionSetProps(uint, uint*, const(void)**, uint*);
-    HRESULT GetSigFromToken(uint, ubyte**, uint*);
-    HRESULT GetModuleRefProps(uint, PWSTR, uint, uint*);
-    HRESULT EnumModuleRefs(void**, uint*, uint, uint*);
-    HRESULT GetTypeSpecFromToken(uint, ubyte**, uint*);
-    HRESULT GetNameFromToken(uint, byte**);
-    HRESULT EnumUnresolvedMethods(void**, uint*, uint, uint*);
-    HRESULT GetUserString(uint, PWSTR, uint, uint*);
-    HRESULT GetPinvokeMap(uint, uint*, PWSTR, uint, uint*, uint*);
-    HRESULT EnumSignatures(void**, uint*, uint, uint*);
-    HRESULT EnumTypeSpecs(void**, uint*, uint, uint*);
-    HRESULT EnumUserStrings(void**, uint*, uint, uint*);
-    HRESULT GetParamForMethodIndex(uint, uint, uint*);
-    HRESULT EnumCustomAttributes(void**, uint, uint, uint*, uint, uint*);
-    HRESULT GetCustomAttributeProps(uint, uint*, uint*, const(void)**, uint*);
-    HRESULT FindTypeRef(uint, const(wchar)*, uint*);
-    HRESULT GetMemberProps(uint, uint*, PWSTR, uint, uint*, uint*, ubyte**, uint*, uint*, uint*, uint*, void**, uint*);
-    HRESULT GetFieldProps(uint, uint*, PWSTR, uint, uint*, uint*, ubyte**, uint*, uint*, void**, uint*);
-    HRESULT GetPropertyProps(uint, uint*, const(wchar)*, uint, uint*, uint*, ubyte**, uint*, uint*, void**, uint*, uint*, uint*, uint*, uint, uint*);
-    HRESULT GetParamProps(uint, uint*, uint*, PWSTR, uint, uint*, uint*, uint*, void**, uint*);
-    HRESULT GetCustomAttributeByName(uint, const(wchar)*, const(void)**, uint*);
-    BOOL IsValidToken(uint);
-    HRESULT GetNestedClassProps(uint, uint*);
-    HRESULT GetNativeCallConvFromSig(const(void)*, uint, uint*);
-    HRESULT IsGlobal(uint, int*);
+    void CloseEnum(void* hEnum);
+    HRESULT CountEnum(void* hEnum, uint* pulCount);
+    HRESULT ResetEnum(void* hEnum, uint ulPos);
+    HRESULT EnumTypeDefs(void** phEnum, uint* rTypeDefs, uint cMax, uint* pcTypeDefs);
+    HRESULT EnumInterfaceImpls(void** phEnum, uint td, uint* rImpls, uint cMax, uint* pcImpls);
+    HRESULT EnumTypeRefs(void** phEnum, uint* rTypeRefs, uint cMax, uint* pcTypeRefs);
+    HRESULT FindTypeDefByName(const(wchar)* szTypeDef, uint tkEnclosingClass, uint* ptd);
+    HRESULT GetScopeProps(PWSTR szName, uint cchName, uint* pchName, GUID* pmvid);
+    HRESULT GetModuleFromScope(uint* pmd);
+    HRESULT GetTypeDefProps(uint td, PWSTR szTypeDef, uint cchTypeDef, uint* pchTypeDef, uint* pdwTypeDefFlags, uint* ptkExtends);
+    HRESULT GetInterfaceImplProps(uint iiImpl, uint* pClass, uint* ptkIface);
+    HRESULT GetTypeRefProps(uint tr, uint* ptkResolutionScope, PWSTR szName, uint cchName, uint* pchName);
+    HRESULT ResolveTypeRef(uint tr, const(GUID)* riid, IUnknown* ppIScope, uint* ptd);
+    HRESULT EnumMembers(void** phEnum, uint cl, uint* rMembers, uint cMax, uint* pcTokens);
+    HRESULT EnumMembersWithName(void** phEnum, uint cl, const(wchar)* szName, uint* rMembers, uint cMax, uint* pcTokens);
+    HRESULT EnumMethods(void** phEnum, uint cl, uint* rMethods, uint cMax, uint* pcTokens);
+    HRESULT EnumMethodsWithName(void** phEnum, uint cl, const(wchar)* szName, uint* rMethods, uint cMax, uint* pcTokens);
+    HRESULT EnumFields(void** phEnum, uint cl, uint* rFields, uint cMax, uint* pcTokens);
+    HRESULT EnumFieldsWithName(void** phEnum, uint cl, const(wchar)* szName, uint* rFields, uint cMax, uint* pcTokens);
+    HRESULT EnumParams(void** phEnum, uint mb, uint* rParams, uint cMax, uint* pcTokens);
+    HRESULT EnumMemberRefs(void** phEnum, uint tkParent, uint* rMemberRefs, uint cMax, uint* pcTokens);
+    HRESULT EnumMethodImpls(void** phEnum, uint td, uint* rMethodBody, uint* rMethodDecl, uint cMax, uint* pcTokens);
+    HRESULT EnumPermissionSets(void** phEnum, uint tk, uint dwActions, uint* rPermission, uint cMax, uint* pcTokens);
+    HRESULT FindMember(uint td, const(wchar)* szName, ubyte* pvSigBlob, uint cbSigBlob, uint* pmb);
+    HRESULT FindMethod(uint td, const(wchar)* szName, ubyte* pvSigBlob, uint cbSigBlob, uint* pmb);
+    HRESULT FindField(uint td, const(wchar)* szName, ubyte* pvSigBlob, uint cbSigBlob, uint* pmb);
+    HRESULT FindMemberRef(uint td, const(wchar)* szName, ubyte* pvSigBlob, uint cbSigBlob, uint* pmr);
+    HRESULT GetMethodProps(uint mb, uint* pClass, PWSTR szMethod, uint cchMethod, uint* pchMethod, uint* pdwAttr, ubyte** ppvSigBlob, uint* pcbSigBlob, uint* pulCodeRVA, uint* pdwImplFlags);
+    HRESULT GetMemberRefProps(uint mr, uint* ptk, PWSTR szMember, uint cchMember, uint* pchMember, ubyte** ppvSigBlob, uint* pbSig);
+    HRESULT EnumProperties(void** phEnum, uint td, uint* rProperties, uint cMax, uint* pcProperties);
+    HRESULT EnumEvents(void** phEnum, uint td, uint* rEvents, uint cMax, uint* pcEvents);
+    HRESULT GetEventProps(uint ev, uint* pClass, const(wchar)* szEvent, uint cchEvent, uint* pchEvent, uint* pdwEventFlags, uint* ptkEventType, uint* pmdAddOn, uint* pmdRemoveOn, uint* pmdFire, uint* rmdOtherMethod, uint cMax, uint* pcOtherMethod);
+    HRESULT EnumMethodSemantics(void** phEnum, uint mb, uint* rEventProp, uint cMax, uint* pcEventProp);
+    HRESULT GetMethodSemantics(uint mb, uint tkEventProp, uint* pdwSemanticsFlags);
+    HRESULT GetClassLayout(uint td, uint* pdwPackSize, COR_FIELD_OFFSET* rFieldOffset, uint cMax, uint* pcFieldOffset, uint* pulClassSize);
+    HRESULT GetFieldMarshal(uint tk, ubyte** ppvNativeType, uint* pcbNativeType);
+    HRESULT GetRVA(uint tk, uint* pulCodeRVA, uint* pdwImplFlags);
+    HRESULT GetPermissionSetProps(uint pm, uint* pdwAction, const(void)** ppvPermission, uint* pcbPermission);
+    HRESULT GetSigFromToken(uint mdSig, ubyte** ppvSig, uint* pcbSig);
+    HRESULT GetModuleRefProps(uint mur, PWSTR szName, uint cchName, uint* pchName);
+    HRESULT EnumModuleRefs(void** phEnum, uint* rModuleRefs, uint cmax, uint* pcModuleRefs);
+    HRESULT GetTypeSpecFromToken(uint typespec, ubyte** ppvSig, uint* pcbSig);
+    HRESULT GetNameFromToken(uint tk, byte** pszUtf8NamePtr);
+    HRESULT EnumUnresolvedMethods(void** phEnum, uint* rMethods, uint cMax, uint* pcTokens);
+    HRESULT GetUserString(uint stk, PWSTR szString, uint cchString, uint* pchString);
+    HRESULT GetPinvokeMap(uint tk, uint* pdwMappingFlags, PWSTR szImportName, uint cchImportName, uint* pchImportName, uint* pmrImportDLL);
+    HRESULT EnumSignatures(void** phEnum, uint* rSignatures, uint cmax, uint* pcSignatures);
+    HRESULT EnumTypeSpecs(void** phEnum, uint* rTypeSpecs, uint cmax, uint* pcTypeSpecs);
+    HRESULT EnumUserStrings(void** phEnum, uint* rStrings, uint cmax, uint* pcStrings);
+    HRESULT GetParamForMethodIndex(uint md, uint ulParamSeq, uint* ppd);
+    HRESULT EnumCustomAttributes(void** phEnum, uint tk, uint tkType, uint* rCustomAttributes, uint cMax, uint* pcCustomAttributes);
+    HRESULT GetCustomAttributeProps(uint cv, uint* ptkObj, uint* ptkType, const(void)** ppBlob, uint* pcbSize);
+    HRESULT FindTypeRef(uint tkResolutionScope, const(wchar)* szName, uint* ptr);
+    HRESULT GetMemberProps(uint mb, uint* pClass, PWSTR szMember, uint cchMember, uint* pchMember, uint* pdwAttr, ubyte** ppvSigBlob, uint* pcbSigBlob, uint* pulCodeRVA, uint* pdwImplFlags, uint* pdwCPlusTypeFlag, void** ppValue, uint* pcchValue);
+    HRESULT GetFieldProps(uint mb, uint* pClass, PWSTR szField, uint cchField, uint* pchField, uint* pdwAttr, ubyte** ppvSigBlob, uint* pcbSigBlob, uint* pdwCPlusTypeFlag, void** ppValue, uint* pcchValue);
+    HRESULT GetPropertyProps(uint prop, uint* pClass, const(wchar)* szProperty, uint cchProperty, uint* pchProperty, uint* pdwPropFlags, ubyte** ppvSig, uint* pbSig, uint* pdwCPlusTypeFlag, void** ppDefaultValue, uint* pcchDefaultValue, uint* pmdSetter, uint* pmdGetter, uint* rmdOtherMethod, uint cMax, uint* pcOtherMethod);
+    HRESULT GetParamProps(uint tk, uint* pmd, uint* pulSequence, PWSTR szName, uint cchName, uint* pchName, uint* pdwAttr, uint* pdwCPlusTypeFlag, void** ppValue, uint* pcchValue);
+    HRESULT GetCustomAttributeByName(uint tkObj, const(wchar)* szName, const(void)** ppData, uint* pcbData);
+    BOOL IsValidToken(uint tk);
+    HRESULT GetNestedClassProps(uint tdNestedClass, uint* ptdEnclosingClass);
+    HRESULT GetNativeCallConvFromSig(const(void)* pvSig, uint cbSig, uint* pCallConv);
+    HRESULT IsGlobal(uint pd, int* pbGlobal);
 }
 enum IID_IMetaDataImport2 = GUID(0xfce5efa0, 0x8bba, 0x4f8e, [0xa0, 0x36, 0x8f, 0x20, 0x22, 0xb0, 0x84, 0x66]);
 interface IMetaDataImport2 : IMetaDataImport
 {
-    HRESULT EnumGenericParams(void**, uint, uint*, uint, uint*);
-    HRESULT GetGenericParamProps(uint, uint*, uint*, uint*, uint*, PWSTR, uint, uint*);
-    HRESULT GetMethodSpecProps(uint, uint*, ubyte**, uint*);
-    HRESULT EnumGenericParamConstraints(void**, uint, uint*, uint, uint*);
-    HRESULT GetGenericParamConstraintProps(uint, uint*, uint*);
-    HRESULT GetPEKind(uint*, uint*);
-    HRESULT GetVersionString(PWSTR, uint, uint*);
-    HRESULT EnumMethodSpecs(void**, uint, uint*, uint, uint*);
+    HRESULT EnumGenericParams(void** phEnum, uint tk, uint* rGenericParams, uint cMax, uint* pcGenericParams);
+    HRESULT GetGenericParamProps(uint gp, uint* pulParamSeq, uint* pdwParamFlags, uint* ptOwner, uint* reserved, PWSTR wzname, uint cchName, uint* pchName);
+    HRESULT GetMethodSpecProps(uint mi, uint* tkParent, ubyte** ppvSigBlob, uint* pcbSigBlob);
+    HRESULT EnumGenericParamConstraints(void** phEnum, uint tk, uint* rGenericParamConstraints, uint cMax, uint* pcGenericParamConstraints);
+    HRESULT GetGenericParamConstraintProps(uint gpc, uint* ptGenericParam, uint* ptkConstraintType);
+    HRESULT GetPEKind(uint* pdwPEKind, uint* pdwMAchine);
+    HRESULT GetVersionString(PWSTR pwzBuf, uint ccBufSize, uint* pccBufSize);
+    HRESULT EnumMethodSpecs(void** phEnum, uint tk, uint* rMethodSpecs, uint cMax, uint* pcMethodSpecs);
 }
 enum IID_IMetaDataFilter = GUID(0xd0e80dd1, 0x12d4, 0x11d3, [0xb3, 0x9d, 0x0, 0xc0, 0x4f, 0xf8, 0x17, 0x95]);
 interface IMetaDataFilter : IUnknown
 {
     HRESULT UnmarkAll();
-    HRESULT MarkToken(uint);
-    HRESULT IsTokenMarked(uint, BOOL*);
+    HRESULT MarkToken(uint tk);
+    HRESULT IsTokenMarked(uint tk, BOOL* pIsMarked);
 }
 enum IID_IHostFilter = GUID(0xd0e80dd3, 0x12d4, 0x11d3, [0xb3, 0x9d, 0x0, 0xc0, 0x4f, 0xf8, 0x17, 0x95]);
 interface IHostFilter : IUnknown
 {
-    HRESULT MarkToken(uint);
+    HRESULT MarkToken(uint tk);
 }
 struct OSINFO
 {
@@ -1257,34 +1258,34 @@ struct ASSEMBLYMETADATA
 enum IID_IMetaDataAssemblyEmit = GUID(0x211ef15b, 0x5317, 0x4438, [0xb1, 0x96, 0xde, 0xc8, 0x7b, 0x88, 0x76, 0x93]);
 interface IMetaDataAssemblyEmit : IUnknown
 {
-    HRESULT DefineAssembly(const(void)*, uint, uint, const(wchar)*, const(ASSEMBLYMETADATA)*, uint, uint*);
-    HRESULT DefineAssemblyRef(const(void)*, uint, const(wchar)*, const(ASSEMBLYMETADATA)*, const(void)*, uint, uint, uint*);
-    HRESULT DefineFile(const(wchar)*, const(void)*, uint, uint, uint*);
-    HRESULT DefineExportedType(const(wchar)*, uint, uint, uint, uint*);
-    HRESULT DefineManifestResource(const(wchar)*, uint, uint, uint, uint*);
-    HRESULT SetAssemblyProps(uint, const(void)*, uint, uint, const(wchar)*, const(ASSEMBLYMETADATA)*, uint);
-    HRESULT SetAssemblyRefProps(uint, const(void)*, uint, const(wchar)*, const(ASSEMBLYMETADATA)*, const(void)*, uint, uint);
-    HRESULT SetFileProps(uint, const(void)*, uint, uint);
-    HRESULT SetExportedTypeProps(uint, uint, uint, uint);
-    HRESULT SetManifestResourceProps(uint, uint, uint, uint);
+    HRESULT DefineAssembly(const(void)* pbPublicKey, uint cbPublicKey, uint ulHashAlgId, const(wchar)* szName, const(ASSEMBLYMETADATA)* pMetaData, uint dwAssemblyFlags, uint* pma);
+    HRESULT DefineAssemblyRef(const(void)* pbPublicKeyOrToken, uint cbPublicKeyOrToken, const(wchar)* szName, const(ASSEMBLYMETADATA)* pMetaData, const(void)* pbHashValue, uint cbHashValue, uint dwAssemblyRefFlags, uint* pmdar);
+    HRESULT DefineFile(const(wchar)* szName, const(void)* pbHashValue, uint cbHashValue, uint dwFileFlags, uint* pmdf);
+    HRESULT DefineExportedType(const(wchar)* szName, uint tkImplementation, uint tkTypeDef, uint dwExportedTypeFlags, uint* pmdct);
+    HRESULT DefineManifestResource(const(wchar)* szName, uint tkImplementation, uint dwOffset, uint dwResourceFlags, uint* pmdmr);
+    HRESULT SetAssemblyProps(uint pma, const(void)* pbPublicKey, uint cbPublicKey, uint ulHashAlgId, const(wchar)* szName, const(ASSEMBLYMETADATA)* pMetaData, uint dwAssemblyFlags);
+    HRESULT SetAssemblyRefProps(uint ar, const(void)* pbPublicKeyOrToken, uint cbPublicKeyOrToken, const(wchar)* szName, const(ASSEMBLYMETADATA)* pMetaData, const(void)* pbHashValue, uint cbHashValue, uint dwAssemblyRefFlags);
+    HRESULT SetFileProps(uint file, const(void)* pbHashValue, uint cbHashValue, uint dwFileFlags);
+    HRESULT SetExportedTypeProps(uint ct, uint tkImplementation, uint tkTypeDef, uint dwExportedTypeFlags);
+    HRESULT SetManifestResourceProps(uint mr, uint tkImplementation, uint dwOffset, uint dwResourceFlags);
 }
 enum IID_IMetaDataAssemblyImport = GUID(0xee62470b, 0xe94b, 0x424e, [0x9b, 0x7c, 0x2f, 0x0, 0xc9, 0x24, 0x9f, 0x93]);
 interface IMetaDataAssemblyImport : IUnknown
 {
-    HRESULT GetAssemblyProps(uint, const(void)**, uint*, uint*, PWSTR, uint, uint*, ASSEMBLYMETADATA*, uint*);
-    HRESULT GetAssemblyRefProps(uint, const(void)**, uint*, PWSTR, uint, uint*, ASSEMBLYMETADATA*, const(void)**, uint*, uint*);
-    HRESULT GetFileProps(uint, PWSTR, uint, uint*, const(void)**, uint*, uint*);
-    HRESULT GetExportedTypeProps(uint, PWSTR, uint, uint*, uint*, uint*, uint*);
-    HRESULT GetManifestResourceProps(uint, PWSTR, uint, uint*, uint*, uint*, uint*);
-    HRESULT EnumAssemblyRefs(void**, uint*, uint, uint*);
-    HRESULT EnumFiles(void**, uint*, uint, uint*);
-    HRESULT EnumExportedTypes(void**, uint*, uint, uint*);
-    HRESULT EnumManifestResources(void**, uint*, uint, uint*);
-    HRESULT GetAssemblyFromScope(uint*);
-    HRESULT FindExportedTypeByName(const(wchar)*, uint, uint*);
-    HRESULT FindManifestResourceByName(const(wchar)*, uint*);
-    void CloseEnum(void*);
-    HRESULT FindAssembliesByName(const(wchar)*, const(wchar)*, const(wchar)*, IUnknown*, uint, uint*);
+    HRESULT GetAssemblyProps(uint mda, const(void)** ppbPublicKey, uint* pcbPublicKey, uint* pulHashAlgId, PWSTR szName, uint cchName, uint* pchName, ASSEMBLYMETADATA* pMetaData, uint* pdwAssemblyFlags);
+    HRESULT GetAssemblyRefProps(uint mdar, const(void)** ppbPublicKeyOrToken, uint* pcbPublicKeyOrToken, PWSTR szName, uint cchName, uint* pchName, ASSEMBLYMETADATA* pMetaData, const(void)** ppbHashValue, uint* pcbHashValue, uint* pdwAssemblyRefFlags);
+    HRESULT GetFileProps(uint mdf, PWSTR szName, uint cchName, uint* pchName, const(void)** ppbHashValue, uint* pcbHashValue, uint* pdwFileFlags);
+    HRESULT GetExportedTypeProps(uint mdct, PWSTR szName, uint cchName, uint* pchName, uint* ptkImplementation, uint* ptkTypeDef, uint* pdwExportedTypeFlags);
+    HRESULT GetManifestResourceProps(uint mdmr, PWSTR szName, uint cchName, uint* pchName, uint* ptkImplementation, uint* pdwOffset, uint* pdwResourceFlags);
+    HRESULT EnumAssemblyRefs(void** phEnum, uint* rAssemblyRefs, uint cMax, uint* pcTokens);
+    HRESULT EnumFiles(void** phEnum, uint* rFiles, uint cMax, uint* pcTokens);
+    HRESULT EnumExportedTypes(void** phEnum, uint* rExportedTypes, uint cMax, uint* pcTokens);
+    HRESULT EnumManifestResources(void** phEnum, uint* rManifestResources, uint cMax, uint* pcTokens);
+    HRESULT GetAssemblyFromScope(uint* ptkAssembly);
+    HRESULT FindExportedTypeByName(const(wchar)* szName, uint mdtExportedType, uint* ptkExportedType);
+    HRESULT FindManifestResourceByName(const(wchar)* szName, uint* ptkManifestResource);
+    void CloseEnum(void* hEnum);
+    HRESULT FindAssembliesByName(const(wchar)* szAppBase, const(wchar)* szPrivateBin, const(wchar)* szAssemblyName, IUnknown* ppIUnk, uint cMax, uint* pcAssemblies);
 }
 alias CorValidatorModuleType = int;
 enum : int
@@ -1301,18 +1302,18 @@ enum : int
 enum IID_IMetaDataValidate = GUID(0x4709c9c6, 0x81ff, 0x11d3, [0x9f, 0xc7, 0x0, 0xc0, 0x4f, 0x79, 0xa0, 0xa3]);
 interface IMetaDataValidate : IUnknown
 {
-    HRESULT ValidatorInit(uint, IUnknown);
+    HRESULT ValidatorInit(uint dwModuleType, IUnknown pUnk);
     HRESULT ValidateMetaData();
 }
 enum IID_IMetaDataDispenserEx = GUID(0x31bcfce2, 0xdafb, 0x11d2, [0x9f, 0x81, 0x0, 0xc0, 0x4f, 0x79, 0xa0, 0xa3]);
 interface IMetaDataDispenserEx : IMetaDataDispenser
 {
-    HRESULT SetOption(const(GUID)*, const(VARIANT)*);
-    HRESULT GetOption(const(GUID)*, VARIANT*);
-    HRESULT OpenScopeOnITypeInfo(ITypeInfo, uint, const(GUID)*, IUnknown*);
-    HRESULT GetCORSystemDirectory(PWSTR, uint, uint*);
-    HRESULT FindAssembly(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, uint, uint*);
-    HRESULT FindAssemblyModule(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, PWSTR, uint, uint*);
+    HRESULT SetOption(const(GUID)* optionid, const(VARIANT)* value);
+    HRESULT GetOption(const(GUID)* optionid, VARIANT* pvalue);
+    HRESULT OpenScopeOnITypeInfo(ITypeInfo pITI, uint dwOpenFlags, const(GUID)* riid, IUnknown* ppIUnk);
+    HRESULT GetCORSystemDirectory(PWSTR szBuffer, uint cchBuffer, uint* pchBuffer);
+    HRESULT FindAssembly(const(wchar)* szAppBase, const(wchar)* szPrivateBin, const(wchar)* szGlobalBin, const(wchar)* szAssemblyName, const(wchar)* szName, uint cchName, uint* pcName);
+    HRESULT FindAssemblyModule(const(wchar)* szAppBase, const(wchar)* szPrivateBin, const(wchar)* szGlobalBin, const(wchar)* szAssemblyName, const(wchar)* szModuleName, PWSTR szName, uint cchName, uint* pcName);
 }
 alias CorRegFlags = int;
 enum : int
@@ -1370,60 +1371,60 @@ union CeeSectionRelocExtra
 enum IID_ICeeGen = GUID(0x7ed1bdff, 0x8e36, 0x11d2, [0x9c, 0x56, 0x0, 0xa0, 0xc9, 0xb7, 0xcc, 0x45]);
 interface ICeeGen : IUnknown
 {
-    HRESULT EmitString(PWSTR, uint*);
-    HRESULT GetString(uint, PWSTR*);
-    HRESULT AllocateMethodBuffer(uint, ubyte**, uint*);
-    HRESULT GetMethodBuffer(uint, ubyte**);
-    HRESULT GetIMapTokenIface(IUnknown*);
+    HRESULT EmitString(PWSTR lpString, uint* RVA);
+    HRESULT GetString(uint RVA, PWSTR* lpString);
+    HRESULT AllocateMethodBuffer(uint cchBuffer, ubyte** lpBuffer, uint* RVA);
+    HRESULT GetMethodBuffer(uint RVA, ubyte** lpBuffer);
+    HRESULT GetIMapTokenIface(IUnknown* pIMapToken);
     HRESULT GenerateCeeFile();
-    HRESULT GetIlSection(void**);
-    HRESULT GetStringSection(void**);
-    HRESULT AddSectionReloc(void*, uint, void*, CeeSectionRelocType);
-    HRESULT GetSectionCreate(const(char)*, uint, void**);
-    HRESULT GetSectionDataLen(void*, uint*);
-    HRESULT GetSectionBlock(void*, uint, uint, void**);
-    HRESULT TruncateSection(void*, uint);
-    HRESULT GenerateCeeMemoryImage(void**);
-    HRESULT ComputePointer(void*, uint, ubyte**);
+    HRESULT GetIlSection(void** section);
+    HRESULT GetStringSection(void** section);
+    HRESULT AddSectionReloc(void* section, uint offset, void* relativeTo, CeeSectionRelocType relocType);
+    HRESULT GetSectionCreate(const(char)* name, uint flags, void** section);
+    HRESULT GetSectionDataLen(void* section, uint* dataLen);
+    HRESULT GetSectionBlock(void* section, uint len, uint align_, void** ppBytes);
+    HRESULT TruncateSection(void* section, uint len);
+    HRESULT GenerateCeeMemoryImage(void** ppImage);
+    HRESULT ComputePointer(void* section, uint RVA, ubyte** lpBuffer);
 }
 enum IID_IMetaDataTables = GUID(0xd8f579ab, 0x402d, 0x4b8e, [0x82, 0xd9, 0x5d, 0x63, 0xb1, 0x6, 0x5c, 0x68]);
 interface IMetaDataTables : IUnknown
 {
-    HRESULT GetStringHeapSize(uint*);
-    HRESULT GetBlobHeapSize(uint*);
-    HRESULT GetGuidHeapSize(uint*);
-    HRESULT GetUserStringHeapSize(uint*);
-    HRESULT GetNumTables(uint*);
-    HRESULT GetTableIndex(uint, uint*);
-    HRESULT GetTableInfo(uint, uint*, uint*, uint*, uint*, const(byte)**);
-    HRESULT GetColumnInfo(uint, uint, uint*, uint*, uint*, const(byte)**);
-    HRESULT GetCodedTokenInfo(uint, uint*, uint**, const(byte)**);
-    HRESULT GetRow(uint, uint, void**);
-    HRESULT GetColumn(uint, uint, uint, uint*);
-    HRESULT GetString(uint, const(byte)**);
-    HRESULT GetBlob(uint, uint*, const(void)**);
-    HRESULT GetGuid(uint, const(GUID)**);
-    HRESULT GetUserString(uint, uint*, const(void)**);
-    HRESULT GetNextString(uint, uint*);
-    HRESULT GetNextBlob(uint, uint*);
-    HRESULT GetNextGuid(uint, uint*);
-    HRESULT GetNextUserString(uint, uint*);
+    HRESULT GetStringHeapSize(uint* pcbStrings);
+    HRESULT GetBlobHeapSize(uint* pcbBlobs);
+    HRESULT GetGuidHeapSize(uint* pcbGuids);
+    HRESULT GetUserStringHeapSize(uint* pcbBlobs);
+    HRESULT GetNumTables(uint* pcTables);
+    HRESULT GetTableIndex(uint token, uint* pixTbl);
+    HRESULT GetTableInfo(uint ixTbl, uint* pcbRow, uint* pcRows, uint* pcCols, uint* piKey, const(byte)** ppName);
+    HRESULT GetColumnInfo(uint ixTbl, uint ixCol, uint* poCol, uint* pcbCol, uint* pType, const(byte)** ppName);
+    HRESULT GetCodedTokenInfo(uint ixCdTkn, uint* pcTokens, uint** ppTokens, const(byte)** ppName);
+    HRESULT GetRow(uint ixTbl, uint rid, void** ppRow);
+    HRESULT GetColumn(uint ixTbl, uint ixCol, uint rid, uint* pVal);
+    HRESULT GetString(uint ixString, const(byte)** ppString);
+    HRESULT GetBlob(uint ixBlob, uint* pcbData, const(void)** ppData);
+    HRESULT GetGuid(uint ixGuid, const(GUID)** ppGUID);
+    HRESULT GetUserString(uint ixUserString, uint* pcbData, const(void)** ppData);
+    HRESULT GetNextString(uint ixString, uint* pNext);
+    HRESULT GetNextBlob(uint ixBlob, uint* pNext);
+    HRESULT GetNextGuid(uint ixGuid, uint* pNext);
+    HRESULT GetNextUserString(uint ixUserString, uint* pNext);
 }
 enum IID_IMetaDataTables2 = GUID(0xbadb5f70, 0x58da, 0x43a9, [0xa1, 0xc6, 0xd7, 0x48, 0x19, 0xf1, 0x9b, 0x15]);
 interface IMetaDataTables2 : IMetaDataTables
 {
-    HRESULT GetMetaDataStorage(const(void)**, uint*);
-    HRESULT GetMetaDataStreamInfo(uint, const(byte)**, const(void)**, uint*);
+    HRESULT GetMetaDataStorage(const(void)** ppvMd, uint* pcbMd);
+    HRESULT GetMetaDataStreamInfo(uint ix, const(byte)** ppchName, const(void)** ppv, uint* pcb);
 }
 enum IID_IMetaDataInfo = GUID(0x7998ea64, 0x7f95, 0x48b8, [0x86, 0xfc, 0x17, 0xca, 0xf4, 0x8b, 0xf5, 0xcb]);
 interface IMetaDataInfo : IUnknown
 {
-    HRESULT GetFileMapping(const(void)**, ulong*, uint*);
+    HRESULT GetFileMapping(const(void)** ppvData, ulong* pcbData, uint* pdwMappingType);
 }
 enum IID_IMetaDataWinMDImport = GUID(0x969ea0c5, 0x964e, 0x411b, [0xa8, 0x7, 0xb0, 0xf3, 0xc2, 0xdf, 0xcb, 0xd4]);
 interface IMetaDataWinMDImport : IUnknown
 {
-    HRESULT GetUntransformedTypeRefProps(uint, uint*, PWSTR, uint, uint*);
+    HRESULT GetUntransformedTypeRefProps(uint tr, uint* ptkResolutionScope, PWSTR szName, uint cchName, uint* pchName);
 }
 struct COR_NATIVE_LINK
 {
@@ -1455,19 +1456,19 @@ enum : int
 // [Not Found] IID_IRoSimpleMetaDataBuilder
 interface IRoSimpleMetaDataBuilder
 {
-    HRESULT SetWinRtInterface(GUID);
-    HRESULT SetDelegate(GUID);
-    HRESULT SetInterfaceGroupSimpleDefault(const(wchar)*, const(wchar)*, const(GUID)*);
-    HRESULT SetInterfaceGroupParameterizedDefault(const(wchar)*, uint, const(wchar)**);
-    HRESULT SetRuntimeClassSimpleDefault(const(wchar)*, const(wchar)*, const(GUID)*);
-    HRESULT SetRuntimeClassParameterizedDefault(const(wchar)*, uint, const(wchar)**);
-    HRESULT SetStruct(const(wchar)*, uint, const(wchar)**);
-    HRESULT SetEnum(const(wchar)*, const(wchar)*);
-    HRESULT SetParameterizedInterface(GUID, uint);
-    HRESULT SetParameterizedDelegate(GUID, uint);
+    HRESULT SetWinRtInterface(GUID iid);
+    HRESULT SetDelegate(GUID iid);
+    HRESULT SetInterfaceGroupSimpleDefault(const(wchar)* name, const(wchar)* defaultInterfaceName, const(GUID)* defaultInterfaceIID);
+    HRESULT SetInterfaceGroupParameterizedDefault(const(wchar)* name, uint elementCount, const(wchar)** defaultInterfaceNameElements);
+    HRESULT SetRuntimeClassSimpleDefault(const(wchar)* name, const(wchar)* defaultInterfaceName, const(GUID)* defaultInterfaceIID);
+    HRESULT SetRuntimeClassParameterizedDefault(const(wchar)* name, uint elementCount, const(wchar)** defaultInterfaceNameElements);
+    HRESULT SetStruct(const(wchar)* name, uint numFields, const(wchar)** fieldTypeNames);
+    HRESULT SetEnum(const(wchar)* name, const(wchar)* baseType);
+    HRESULT SetParameterizedInterface(GUID piid, uint numArgs);
+    HRESULT SetParameterizedDelegate(GUID piid, uint numArgs);
 }
 // [Not Found] IID_IRoMetaDataLocator
 interface IRoMetaDataLocator
 {
-    HRESULT Locate(const(wchar)*, IRoSimpleMetaDataBuilder);
+    HRESULT Locate(const(wchar)* nameElement, IRoSimpleMetaDataBuilder metaDataDestination);
 }

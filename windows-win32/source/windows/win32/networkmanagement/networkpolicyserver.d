@@ -690,23 +690,23 @@ enum : int
 enum IID_ISdoMachine = GUID(0x479f6e75, 0x49a2, 0x11d2, [0x8e, 0xca, 0x0, 0xc0, 0x4f, 0xc2, 0xf5, 0x19]);
 interface ISdoMachine : IDispatch
 {
-    HRESULT Attach(BSTR);
-    HRESULT GetDictionarySDO(IUnknown*);
-    HRESULT GetServiceSDO(IASDATASTORE, BSTR, IUnknown*);
-    HRESULT GetUserSDO(IASDATASTORE, BSTR, IUnknown*);
-    HRESULT GetOSType(IASOSTYPE*);
-    HRESULT GetDomainType(IASDOMAINTYPE*);
-    HRESULT IsDirectoryAvailable(VARIANT_BOOL*);
-    HRESULT GetAttachedComputer(BSTR*);
-    HRESULT GetSDOSchema(IUnknown*);
+    HRESULT Attach(BSTR bstrComputerName);
+    HRESULT GetDictionarySDO(IUnknown* ppDictionarySDO);
+    HRESULT GetServiceSDO(IASDATASTORE eDataStore, BSTR bstrServiceName, IUnknown* ppServiceSDO);
+    HRESULT GetUserSDO(IASDATASTORE eDataStore, BSTR bstrUserName, IUnknown* ppUserSDO);
+    HRESULT GetOSType(IASOSTYPE* eOSType);
+    HRESULT GetDomainType(IASDOMAINTYPE* eDomainType);
+    HRESULT IsDirectoryAvailable(VARIANT_BOOL* boolDirectoryAvailable);
+    HRESULT GetAttachedComputer(BSTR* bstrComputerName);
+    HRESULT GetSDOSchema(IUnknown* ppSDOSchema);
 }
 enum IID_ISdoMachine2 = GUID(0x518e5ffe, 0xd8ce, 0x4f7e, [0xa5, 0xdb, 0xb4, 0xa, 0x35, 0x41, 0x9d, 0x3b]);
 interface ISdoMachine2 : ISdoMachine
 {
-    HRESULT GetTemplatesSDO(BSTR, IUnknown*);
+    HRESULT GetTemplatesSDO(BSTR bstrServiceName, IUnknown* ppTemplatesSDO);
     HRESULT EnableTemplates();
-    HRESULT SyncConfigAgainstTemplates(BSTR, IUnknown*, IUnknown*, VARIANT_BOOL);
-    HRESULT ImportRemoteTemplates(IUnknown, BSTR);
+    HRESULT SyncConfigAgainstTemplates(BSTR bstrServiceName, IUnknown* ppConfigRoot, IUnknown* ppTemplatesRoot, VARIANT_BOOL bForcedSync);
+    HRESULT ImportRemoteTemplates(IUnknown pLocalTemplatesRoot, BSTR bstrRemoteMachineName);
     HRESULT Reload();
 }
 enum IID_ISdoServiceControl = GUID(0x479f6e74, 0x49a2, 0x11d2, [0x8e, 0xca, 0x0, 0xc0, 0x4f, 0xc2, 0xf5, 0x19]);
@@ -714,47 +714,47 @@ interface ISdoServiceControl : IDispatch
 {
     HRESULT StartService();
     HRESULT StopService();
-    HRESULT GetServiceStatus(int*);
+    HRESULT GetServiceStatus(int* status);
     HRESULT ResetService();
 }
 enum IID_ISdo = GUID(0x56bc53de, 0x96db, 0x11d1, [0xbf, 0x3f, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
 interface ISdo : IDispatch
 {
-    HRESULT GetPropertyInfo(int, IUnknown*);
-    HRESULT GetProperty(int, VARIANT*);
-    HRESULT PutProperty(int, VARIANT*);
-    HRESULT ResetProperty(int);
+    HRESULT GetPropertyInfo(int Id, IUnknown* ppPropertyInfo);
+    HRESULT GetProperty(int Id, VARIANT* pValue);
+    HRESULT PutProperty(int Id, VARIANT* pValue);
+    HRESULT ResetProperty(int Id);
     HRESULT Apply();
     HRESULT Restore();
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get__NewEnum(IUnknown* ppEnumVARIANT);
 }
 enum IID_ISdoCollection = GUID(0x56bc53e2, 0x96db, 0x11d1, [0xbf, 0x3f, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
 interface ISdoCollection : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT Add(BSTR, IDispatch*);
-    HRESULT Remove(IDispatch);
+    HRESULT get_Count(int* pCount);
+    HRESULT Add(BSTR bstrName, IDispatch* ppItem);
+    HRESULT Remove(IDispatch pItem);
     HRESULT RemoveAll();
     HRESULT Reload();
-    HRESULT IsNameUnique(BSTR, VARIANT_BOOL*);
-    HRESULT Item(VARIANT*, IDispatch*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT IsNameUnique(BSTR bstrName, VARIANT_BOOL* pBool);
+    HRESULT Item(VARIANT* Name, IDispatch* pItem);
+    HRESULT get__NewEnum(IUnknown* ppEnumVARIANT);
 }
 enum IID_ITemplateSdo = GUID(0x8aa85302, 0xd2e2, 0x4e20, [0x8b, 0x1f, 0xa5, 0x71, 0xe4, 0x37, 0xd6, 0xc9]);
 interface ITemplateSdo : ISdo
 {
-    HRESULT AddToCollection(BSTR, IDispatch, IDispatch*);
-    HRESULT AddToSdo(BSTR, IDispatch, IDispatch*);
-    HRESULT AddToSdoAsProperty(IDispatch, int);
+    HRESULT AddToCollection(BSTR bstrName, IDispatch pCollection, IDispatch* ppItem);
+    HRESULT AddToSdo(BSTR bstrName, IDispatch pSdoTarget, IDispatch* ppItem);
+    HRESULT AddToSdoAsProperty(IDispatch pSdoTarget, int id);
 }
 enum IID_ISdoDictionaryOld = GUID(0xd432e5f4, 0x53d8, 0x11d2, [0x9a, 0x3a, 0x0, 0xc0, 0x4f, 0xb9, 0x98, 0xac]);
 interface ISdoDictionaryOld : IDispatch
 {
-    HRESULT EnumAttributes(VARIANT*, VARIANT*);
-    HRESULT GetAttributeInfo(ATTRIBUTEID, VARIANT*, VARIANT*);
-    HRESULT EnumAttributeValues(ATTRIBUTEID, VARIANT*, VARIANT*);
-    HRESULT CreateAttribute(ATTRIBUTEID, IDispatch*);
-    HRESULT GetAttributeID(BSTR, ATTRIBUTEID*);
+    HRESULT EnumAttributes(VARIANT* Id, VARIANT* pValues);
+    HRESULT GetAttributeInfo(ATTRIBUTEID Id, VARIANT* pInfoIDs, VARIANT* pInfoValues);
+    HRESULT EnumAttributeValues(ATTRIBUTEID Id, VARIANT* pValueIds, VARIANT* pValuesDesc);
+    HRESULT CreateAttribute(ATTRIBUTEID Id, IDispatch* ppAttributeObject);
+    HRESULT GetAttributeID(BSTR bstrAttributeName, ATTRIBUTEID* pId);
 }
 enum CLSID_SdoMachine = GUID(0xe9218ae7, 0x9e91, 0x11d1, [0xbf, 0x60, 0x0, 0x80, 0xc7, 0x84, 0x6b, 0xc0]);
 struct SdoMachine
@@ -918,9 +918,9 @@ enum : int
 
 alias PRADIUS_EXTENSION_INIT = uint function();
 alias PRADIUS_EXTENSION_TERM = void function();
-alias PRADIUS_EXTENSION_PROCESS = uint function(const(RADIUS_ATTRIBUTE)*, RADIUS_ACTION*);
-alias PRADIUS_EXTENSION_PROCESS_EX = uint function(const(RADIUS_ATTRIBUTE)*, RADIUS_ATTRIBUTE**, RADIUS_ACTION*);
-alias PRADIUS_EXTENSION_FREE_ATTRIBUTES = void function(RADIUS_ATTRIBUTE*);
+alias PRADIUS_EXTENSION_PROCESS = uint function(const(RADIUS_ATTRIBUTE)* pAttrs, RADIUS_ACTION* pfAction);
+alias PRADIUS_EXTENSION_PROCESS_EX = uint function(const(RADIUS_ATTRIBUTE)* pInAttrs, RADIUS_ATTRIBUTE** pOutAttrs, RADIUS_ACTION* pfAction);
+alias PRADIUS_EXTENSION_FREE_ATTRIBUTES = void function(RADIUS_ATTRIBUTE* pAttrs);
 alias RADIUS_EXTENSION_POINT = int;
 enum : int
 {
@@ -949,4 +949,4 @@ struct RADIUS_EXTENSION_CONTROL_BLOCK
     long GetResponse;
     long SetResponseType;
 }
-alias PRADIUS_EXTENSION_PROCESS_2 = uint function(RADIUS_EXTENSION_CONTROL_BLOCK*);
+alias PRADIUS_EXTENSION_PROCESS_2 = uint function(RADIUS_EXTENSION_CONTROL_BLOCK* pECB);

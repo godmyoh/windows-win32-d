@@ -80,10 +80,10 @@ struct SCESVC_ANALYSIS_INFO
     uint Count;
     SCESVC_ANALYSIS_LINE* Lines;
 }
-alias PFSCE_QUERY_INFO = uint function(void*, SCESVC_INFO_TYPE, byte*, BOOL, void**, uint*);
-alias PFSCE_SET_INFO = uint function(void*, SCESVC_INFO_TYPE, byte*, BOOL, void*);
-alias PFSCE_FREE_INFO = uint function(void*);
-alias PFSCE_LOG_INFO = uint function(SCE_LOG_ERR_LEVEL, uint, byte*);
+alias PFSCE_QUERY_INFO = uint function(void* sceHandle, SCESVC_INFO_TYPE sceType, byte* lpPrefix, BOOL bExact, void** ppvInfo, uint* psceEnumHandle);
+alias PFSCE_SET_INFO = uint function(void* sceHandle, SCESVC_INFO_TYPE sceType, byte* lpPrefix, BOOL bExact, void* pvInfo);
+alias PFSCE_FREE_INFO = uint function(void* pvServiceInfo);
+alias PFSCE_LOG_INFO = uint function(SCE_LOG_ERR_LEVEL ErrLevel, uint Win32rc, byte* pErrFmt);
 struct SCESVC_CALLBACK_INFO
 {
     void* sceHandle;
@@ -92,20 +92,20 @@ struct SCESVC_CALLBACK_INFO
     PFSCE_FREE_INFO pfFreeInfo;
     PFSCE_LOG_INFO pfLogInfo;
 }
-alias PF_ConfigAnalyzeService = uint function(SCESVC_CALLBACK_INFO*);
-alias PF_UpdateService = uint function(SCESVC_CALLBACK_INFO*, SCESVC_CONFIGURATION_INFO*);
+alias PF_ConfigAnalyzeService = uint function(SCESVC_CALLBACK_INFO* pSceCbInfo);
+alias PF_UpdateService = uint function(SCESVC_CALLBACK_INFO* pSceCbInfo, SCESVC_CONFIGURATION_INFO* ServiceInfo);
 enum IID_ISceSvcAttachmentPersistInfo = GUID(0x6d90e0d0, 0x200d, 0x11d1, [0xaf, 0xfb, 0x0, 0xc0, 0x4f, 0xb9, 0x84, 0xf9]);
 interface ISceSvcAttachmentPersistInfo : IUnknown
 {
-    HRESULT Save(byte*, void**, void**, BOOL*);
-    HRESULT IsDirty(byte*);
-    HRESULT FreeBuffer(void*);
+    HRESULT Save(byte* lpTemplateName, void** scesvcHandle, void** ppvData, BOOL* pbOverwriteAll);
+    HRESULT IsDirty(byte* lpTemplateName);
+    HRESULT FreeBuffer(void* pvData);
 }
 enum IID_ISceSvcAttachmentData = GUID(0x17c35fde, 0x200d, 0x11d1, [0xaf, 0xfb, 0x0, 0xc0, 0x4f, 0xb9, 0x84, 0xf9]);
 interface ISceSvcAttachmentData : IUnknown
 {
-    HRESULT GetData(void*, SCESVC_INFO_TYPE, void**, uint*);
-    HRESULT Initialize(byte*, byte*, ISceSvcAttachmentPersistInfo, void**);
-    HRESULT FreeBuffer(void*);
-    HRESULT CloseHandle(void*);
+    HRESULT GetData(void* scesvcHandle, SCESVC_INFO_TYPE sceType, void** ppvData, uint* psceEnumHandle);
+    HRESULT Initialize(byte* lpServiceName, byte* lpTemplateName, ISceSvcAttachmentPersistInfo lpSceSvcPersistInfo, void** pscesvcHandle);
+    HRESULT FreeBuffer(void* pvData);
+    HRESULT CloseHandle(void* scesvcHandle);
 }

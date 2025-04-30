@@ -13,16 +13,16 @@ enum : int
     cpu80386   = 0x00000001,
 }
 
-void* FCICreate(ERF*, PFNFCIFILEPLACED, PFNFCIALLOC, PFNFCIFREE, PFNFCIOPEN, PFNFCIREAD, PFNFCIWRITE, PFNFCICLOSE, PFNFCISEEK, PFNFCIDELETE, PFNFCIGETTEMPFILE, CCAB*, void*);
-BOOL FCIAddFile(void*, PSTR, PSTR, BOOL, PFNFCIGETNEXTCABINET, PFNFCISTATUS, PFNFCIGETOPENINFO, ushort);
-BOOL FCIFlushCabinet(void*, BOOL, PFNFCIGETNEXTCABINET, PFNFCISTATUS);
-BOOL FCIFlushFolder(void*, PFNFCIGETNEXTCABINET, PFNFCISTATUS);
-BOOL FCIDestroy(void*);
-void* FDICreate(PFNALLOC, PFNFREE, PFNOPEN, PFNREAD, PFNWRITE, PFNCLOSE, PFNSEEK, FDICREATE_CPU_TYPE, ERF*);
-BOOL FDIIsCabinet(void*, long, FDICABINETINFO*);
-BOOL FDICopy(void*, PSTR, PSTR, int, PFNFDINOTIFY, PFNFDIDECRYPT, void*);
-BOOL FDIDestroy(void*);
-BOOL FDITruncateCabinet(void*, PSTR, ushort);
+void* FCICreate(ERF* perf, PFNFCIFILEPLACED pfnfcifp, PFNFCIALLOC pfna, PFNFCIFREE pfnf, PFNFCIOPEN pfnopen, PFNFCIREAD pfnread, PFNFCIWRITE pfnwrite, PFNFCICLOSE pfnclose, PFNFCISEEK pfnseek, PFNFCIDELETE pfndelete, PFNFCIGETTEMPFILE pfnfcigtf, CCAB* pccab, void* pv);
+BOOL FCIAddFile(void* hfci, PSTR pszSourceFile, PSTR pszFileName, BOOL fExecute, PFNFCIGETNEXTCABINET pfnfcignc, PFNFCISTATUS pfnfcis, PFNFCIGETOPENINFO pfnfcigoi, ushort typeCompress);
+BOOL FCIFlushCabinet(void* hfci, BOOL fGetNextCab, PFNFCIGETNEXTCABINET pfnfcignc, PFNFCISTATUS pfnfcis);
+BOOL FCIFlushFolder(void* hfci, PFNFCIGETNEXTCABINET pfnfcignc, PFNFCISTATUS pfnfcis);
+BOOL FCIDestroy(void* hfci);
+void* FDICreate(PFNALLOC pfnalloc, PFNFREE pfnfree, PFNOPEN pfnopen, PFNREAD pfnread, PFNWRITE pfnwrite, PFNCLOSE pfnclose, PFNSEEK pfnseek, FDICREATE_CPU_TYPE cpuType, ERF* perf);
+BOOL FDIIsCabinet(void* hfdi, long hf, FDICABINETINFO* pfdici);
+BOOL FDICopy(void* hfdi, PSTR pszCabinet, PSTR pszCabPath, int flags, PFNFDINOTIFY pfnfdin, PFNFDIDECRYPT pfnfdid, void* pvUser);
+BOOL FDIDestroy(void* hfdi);
+BOOL FDITruncateCabinet(void* hfdi, PSTR pszCabinetName, ushort iFolderToDelete);
 enum INCLUDED_FCI = 0x00000001;
 enum _A_NAME_IS_UTF = 0x00000080;
 enum _A_EXEC = 0x00000040;
@@ -96,19 +96,19 @@ struct CCAB
     CHAR[256] szCab;
     CHAR[256] szCabPath;
 }
-alias PFNFCIALLOC = void* function(uint);
-alias PFNFCIFREE = void function(void*);
-alias PFNFCIOPEN = long function(PSTR, int, int, int*, void*);
-alias PFNFCIREAD = uint function(long, void*, uint, int*, void*);
-alias PFNFCIWRITE = uint function(long, void*, uint, int*, void*);
-alias PFNFCICLOSE = int function(long, int*, void*);
-alias PFNFCISEEK = int function(long, int, int, int*, void*);
-alias PFNFCIDELETE = int function(PSTR, int*, void*);
-alias PFNFCIGETNEXTCABINET = BOOL function(CCAB*, uint, void*);
-alias PFNFCIFILEPLACED = int function(CCAB*, PSTR, int, BOOL, void*);
-alias PFNFCIGETOPENINFO = long function(PSTR, ushort*, ushort*, ushort*, int*, void*);
-alias PFNFCISTATUS = int function(uint, uint, uint, void*);
-alias PFNFCIGETTEMPFILE = BOOL function(PSTR, int, void*);
+alias PFNFCIALLOC = void* function(uint cb);
+alias PFNFCIFREE = void function(void* memory);
+alias PFNFCIOPEN = long function(PSTR pszFile, int oflag, int pmode, int* err, void* pv);
+alias PFNFCIREAD = uint function(long hf, void* memory, uint cb, int* err, void* pv);
+alias PFNFCIWRITE = uint function(long hf, void* memory, uint cb, int* err, void* pv);
+alias PFNFCICLOSE = int function(long hf, int* err, void* pv);
+alias PFNFCISEEK = int function(long hf, int dist, int seektype, int* err, void* pv);
+alias PFNFCIDELETE = int function(PSTR pszFile, int* err, void* pv);
+alias PFNFCIGETNEXTCABINET = BOOL function(CCAB* pccab, uint cbPrevCab, void* pv);
+alias PFNFCIFILEPLACED = int function(CCAB* pccab, PSTR pszFile, int cbFile, BOOL fContinuation, void* pv);
+alias PFNFCIGETOPENINFO = long function(PSTR pszName, ushort* pdate, ushort* ptime, ushort* pattribs, int* err, void* pv);
+alias PFNFCISTATUS = int function(uint typeStatus, uint cb1, uint cb2, void* pv);
+alias PFNFCIGETTEMPFILE = BOOL function(PSTR pszTempName, int cbTempName, void* pv);
 alias FDIERROR = int;
 enum : int
 {
@@ -176,14 +176,14 @@ struct FDIDECRYPT
         }
     }
 }
-alias PFNALLOC = void* function(uint);
-alias PFNFREE = void function(void*);
-alias PFNOPEN = long function(PSTR, int, int);
-alias PFNREAD = uint function(long, void*, uint);
-alias PFNWRITE = uint function(long, void*, uint);
-alias PFNCLOSE = int function(long);
-alias PFNSEEK = int function(long, int, int);
-alias PFNFDIDECRYPT = int function(FDIDECRYPT*);
+alias PFNALLOC = void* function(uint cb);
+alias PFNFREE = void function(void* pv);
+alias PFNOPEN = long function(PSTR pszFile, int oflag, int pmode);
+alias PFNREAD = uint function(long hf, void* pv, uint cb);
+alias PFNWRITE = uint function(long hf, void* pv, uint cb);
+alias PFNCLOSE = int function(long hf);
+alias PFNSEEK = int function(long hf, int dist, int seektype);
+alias PFNFDIDECRYPT = int function(FDIDECRYPT* pfdid);
 struct FDINOTIFICATION
 {
     int cb;
@@ -211,7 +211,7 @@ enum : int
     fdintENUMERATE       = 0x00000005,
 }
 
-alias PFNFDINOTIFY = long function(FDINOTIFICATIONTYPE, FDINOTIFICATION*);
+alias PFNFDINOTIFY = long function(FDINOTIFICATIONTYPE fdint, FDINOTIFICATION* pfdin);
 /+ [CONFLICTED] struct FDISPILLFILE
 {
     align (1):

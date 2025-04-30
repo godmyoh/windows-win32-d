@@ -6,10 +6,10 @@ import windows.win32.foundation : CHAR;
 version (Windows):
 extern (Windows):
 
-uint RtlInitializeCorrelationVector(CORRELATION_VECTOR*, int, const(GUID)*);
-uint RtlIncrementCorrelationVector(CORRELATION_VECTOR*);
-uint RtlExtendCorrelationVector(CORRELATION_VECTOR*);
-uint RtlValidateCorrelationVector(CORRELATION_VECTOR*);
+uint RtlInitializeCorrelationVector(CORRELATION_VECTOR* CorrelationVector, int Version, const(GUID)* Guid);
+uint RtlIncrementCorrelationVector(CORRELATION_VECTOR* CorrelationVector);
+uint RtlExtendCorrelationVector(CORRELATION_VECTOR* CorrelationVector);
+uint RtlValidateCorrelationVector(CORRELATION_VECTOR* Vector);
 enum RTL_CORRELATION_VECTOR_STRING_LENGTH = 0x00000081;
 enum RTL_CORRELATION_VECTOR_V1_PREFIX_LENGTH = 0x00000010;
 enum RTL_CORRELATION_VECTOR_V1_LENGTH = 0x00000040;

@@ -9,42 +9,42 @@ import windows.win32.system.io : OVERLAPPED;
 version (Windows):
 extern (Windows):
 
-HRESULT CfGetPlatformInfo(CF_PLATFORM_INFO*);
-HRESULT CfRegisterSyncRoot(const(wchar)*, const(CF_SYNC_REGISTRATION)*, const(CF_SYNC_POLICIES)*, CF_REGISTER_FLAGS);
-HRESULT CfUnregisterSyncRoot(const(wchar)*);
-HRESULT CfConnectSyncRoot(const(wchar)*, const(CF_CALLBACK_REGISTRATION)*, const(void)*, CF_CONNECT_FLAGS, CF_CONNECTION_KEY*);
-HRESULT CfDisconnectSyncRoot(CF_CONNECTION_KEY);
-HRESULT CfGetTransferKey(HANDLE, long*);
-void CfReleaseTransferKey(HANDLE, long*);
-HRESULT CfExecute(const(CF_OPERATION_INFO)*, CF_OPERATION_PARAMETERS*);
-HRESULT CfUpdateSyncProviderStatus(CF_CONNECTION_KEY, CF_SYNC_PROVIDER_STATUS);
-HRESULT CfQuerySyncProviderStatus(CF_CONNECTION_KEY, CF_SYNC_PROVIDER_STATUS*);
-HRESULT CfReportSyncStatus(const(wchar)*, CF_SYNC_STATUS*);
-HRESULT CfCreatePlaceholders(const(wchar)*, CF_PLACEHOLDER_CREATE_INFO*, uint, CF_CREATE_FLAGS, uint*);
-HRESULT CfOpenFileWithOplock(const(wchar)*, CF_OPEN_FILE_FLAGS, HANDLE*);
-BOOLEAN CfReferenceProtectedHandle(HANDLE);
-HANDLE CfGetWin32HandleFromProtectedHandle(HANDLE);
-void CfReleaseProtectedHandle(HANDLE);
-void CfCloseHandle(HANDLE);
-HRESULT CfConvertToPlaceholder(HANDLE, const(void)*, uint, CF_CONVERT_FLAGS, long*, OVERLAPPED*);
-HRESULT CfUpdatePlaceholder(HANDLE, const(CF_FS_METADATA)*, const(void)*, uint, const(CF_FILE_RANGE)*, uint, CF_UPDATE_FLAGS, long*, OVERLAPPED*);
-HRESULT CfRevertPlaceholder(HANDLE, CF_REVERT_FLAGS, OVERLAPPED*);
-HRESULT CfHydratePlaceholder(HANDLE, long, long, CF_HYDRATE_FLAGS, OVERLAPPED*);
-HRESULT CfDehydratePlaceholder(HANDLE, long, long, CF_DEHYDRATE_FLAGS, OVERLAPPED*);
-HRESULT CfSetPinState(HANDLE, CF_PIN_STATE, CF_SET_PIN_FLAGS, OVERLAPPED*);
-HRESULT CfSetInSyncState(HANDLE, CF_IN_SYNC_STATE, CF_SET_IN_SYNC_FLAGS, long*);
-HRESULT CfSetCorrelationVector(HANDLE, const(CORRELATION_VECTOR)*);
-HRESULT CfGetCorrelationVector(HANDLE, CORRELATION_VECTOR*);
-CF_PLACEHOLDER_STATE CfGetPlaceholderStateFromAttributeTag(uint, uint);
-CF_PLACEHOLDER_STATE CfGetPlaceholderStateFromFileInfo(const(void)*, FILE_INFO_BY_HANDLE_CLASS);
-CF_PLACEHOLDER_STATE CfGetPlaceholderStateFromFindData(const(WIN32_FIND_DATAA)*);
-HRESULT CfGetPlaceholderInfo(HANDLE, CF_PLACEHOLDER_INFO_CLASS, void*, uint, uint*);
-HRESULT CfGetSyncRootInfoByPath(const(wchar)*, CF_SYNC_ROOT_INFO_CLASS, void*, uint, uint*);
-HRESULT CfGetSyncRootInfoByHandle(HANDLE, CF_SYNC_ROOT_INFO_CLASS, void*, uint, uint*);
-HRESULT CfGetPlaceholderRangeInfo(HANDLE, CF_PLACEHOLDER_RANGE_INFO_CLASS, long, long, void*, uint, uint*);
-HRESULT CfGetPlaceholderRangeInfoForHydration(CF_CONNECTION_KEY, long, long, CF_PLACEHOLDER_RANGE_INFO_CLASS, long, long, void*, uint, uint*);
-HRESULT CfReportProviderProgress(CF_CONNECTION_KEY, long, long, long);
-HRESULT CfReportProviderProgress2(CF_CONNECTION_KEY, long, long, long, long, uint);
+HRESULT CfGetPlatformInfo(CF_PLATFORM_INFO* PlatformVersion);
+HRESULT CfRegisterSyncRoot(const(wchar)* SyncRootPath, const(CF_SYNC_REGISTRATION)* Registration, const(CF_SYNC_POLICIES)* Policies, CF_REGISTER_FLAGS RegisterFlags);
+HRESULT CfUnregisterSyncRoot(const(wchar)* SyncRootPath);
+HRESULT CfConnectSyncRoot(const(wchar)* SyncRootPath, const(CF_CALLBACK_REGISTRATION)* CallbackTable, const(void)* CallbackContext, CF_CONNECT_FLAGS ConnectFlags, CF_CONNECTION_KEY* ConnectionKey);
+HRESULT CfDisconnectSyncRoot(CF_CONNECTION_KEY ConnectionKey);
+HRESULT CfGetTransferKey(HANDLE FileHandle, long* TransferKey);
+void CfReleaseTransferKey(HANDLE FileHandle, long* TransferKey);
+HRESULT CfExecute(const(CF_OPERATION_INFO)* OpInfo, CF_OPERATION_PARAMETERS* OpParams);
+HRESULT CfUpdateSyncProviderStatus(CF_CONNECTION_KEY ConnectionKey, CF_SYNC_PROVIDER_STATUS ProviderStatus);
+HRESULT CfQuerySyncProviderStatus(CF_CONNECTION_KEY ConnectionKey, CF_SYNC_PROVIDER_STATUS* ProviderStatus);
+HRESULT CfReportSyncStatus(const(wchar)* SyncRootPath, CF_SYNC_STATUS* SyncStatus);
+HRESULT CfCreatePlaceholders(const(wchar)* BaseDirectoryPath, CF_PLACEHOLDER_CREATE_INFO* PlaceholderArray, uint PlaceholderCount, CF_CREATE_FLAGS CreateFlags, uint* EntriesProcessed);
+HRESULT CfOpenFileWithOplock(const(wchar)* FilePath, CF_OPEN_FILE_FLAGS Flags, HANDLE* ProtectedHandle);
+BOOLEAN CfReferenceProtectedHandle(HANDLE ProtectedHandle);
+HANDLE CfGetWin32HandleFromProtectedHandle(HANDLE ProtectedHandle);
+void CfReleaseProtectedHandle(HANDLE ProtectedHandle);
+void CfCloseHandle(HANDLE FileHandle);
+HRESULT CfConvertToPlaceholder(HANDLE FileHandle, const(void)* FileIdentity, uint FileIdentityLength, CF_CONVERT_FLAGS ConvertFlags, long* ConvertUsn, OVERLAPPED* Overlapped);
+HRESULT CfUpdatePlaceholder(HANDLE FileHandle, const(CF_FS_METADATA)* FsMetadata, const(void)* FileIdentity, uint FileIdentityLength, const(CF_FILE_RANGE)* DehydrateRangeArray, uint DehydrateRangeCount, CF_UPDATE_FLAGS UpdateFlags, long* UpdateUsn, OVERLAPPED* Overlapped);
+HRESULT CfRevertPlaceholder(HANDLE FileHandle, CF_REVERT_FLAGS RevertFlags, OVERLAPPED* Overlapped);
+HRESULT CfHydratePlaceholder(HANDLE FileHandle, long StartingOffset, long Length, CF_HYDRATE_FLAGS HydrateFlags, OVERLAPPED* Overlapped);
+HRESULT CfDehydratePlaceholder(HANDLE FileHandle, long StartingOffset, long Length, CF_DEHYDRATE_FLAGS DehydrateFlags, OVERLAPPED* Overlapped);
+HRESULT CfSetPinState(HANDLE FileHandle, CF_PIN_STATE PinState, CF_SET_PIN_FLAGS PinFlags, OVERLAPPED* Overlapped);
+HRESULT CfSetInSyncState(HANDLE FileHandle, CF_IN_SYNC_STATE InSyncState, CF_SET_IN_SYNC_FLAGS InSyncFlags, long* InSyncUsn);
+HRESULT CfSetCorrelationVector(HANDLE FileHandle, const(CORRELATION_VECTOR)* CorrelationVector);
+HRESULT CfGetCorrelationVector(HANDLE FileHandle, CORRELATION_VECTOR* CorrelationVector);
+CF_PLACEHOLDER_STATE CfGetPlaceholderStateFromAttributeTag(uint FileAttributes, uint ReparseTag);
+CF_PLACEHOLDER_STATE CfGetPlaceholderStateFromFileInfo(const(void)* InfoBuffer, FILE_INFO_BY_HANDLE_CLASS InfoClass);
+CF_PLACEHOLDER_STATE CfGetPlaceholderStateFromFindData(const(WIN32_FIND_DATAA)* FindData);
+HRESULT CfGetPlaceholderInfo(HANDLE FileHandle, CF_PLACEHOLDER_INFO_CLASS InfoClass, void* InfoBuffer, uint InfoBufferLength, uint* ReturnedLength);
+HRESULT CfGetSyncRootInfoByPath(const(wchar)* FilePath, CF_SYNC_ROOT_INFO_CLASS InfoClass, void* InfoBuffer, uint InfoBufferLength, uint* ReturnedLength);
+HRESULT CfGetSyncRootInfoByHandle(HANDLE FileHandle, CF_SYNC_ROOT_INFO_CLASS InfoClass, void* InfoBuffer, uint InfoBufferLength, uint* ReturnedLength);
+HRESULT CfGetPlaceholderRangeInfo(HANDLE FileHandle, CF_PLACEHOLDER_RANGE_INFO_CLASS InfoClass, long StartingOffset, long Length, void* InfoBuffer, uint InfoBufferLength, uint* ReturnedLength);
+HRESULT CfGetPlaceholderRangeInfoForHydration(CF_CONNECTION_KEY ConnectionKey, long TransferKey, long FileId, CF_PLACEHOLDER_RANGE_INFO_CLASS InfoClass, long StartingOffset, long RangeLength, void* InfoBuffer, uint InfoBufferSize, uint* InfoBufferWritten);
+HRESULT CfReportProviderProgress(CF_CONNECTION_KEY ConnectionKey, long TransferKey, long ProviderProgressTotal, long ProviderProgressCompleted);
+HRESULT CfReportProviderProgress2(CF_CONNECTION_KEY ConnectionKey, long TransferKey, long RequestKey, long ProviderProgressTotal, long ProviderProgressCompleted, uint TargetSessionId);
 enum CF_REQUEST_KEY_DEFAULT = 0x00000000;
 enum CF_PLACEHOLDER_MAX_FILE_IDENTITY_LENGTH = 0x00001000;
 enum CF_MAX_PRIORITY_HINT = 0x0000000f;
@@ -412,7 +412,7 @@ struct CF_CALLBACK_PARAMETERS
         }
     }
 }
-alias CF_CALLBACK = void function(const(CF_CALLBACK_INFO)*, const(CF_CALLBACK_PARAMETERS)*);
+alias CF_CALLBACK = void function(const(CF_CALLBACK_INFO)* CallbackInfo, const(CF_CALLBACK_PARAMETERS)* CallbackParameters);
 alias CF_CALLBACK_TYPE = int;
 enum : int
 {

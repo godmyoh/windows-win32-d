@@ -6,14 +6,14 @@ import windows.win32.foundation : BOOL, HANDLE, PWSTR;
 version (Windows):
 extern (Windows):
 
-uint MatchEnumTag(HANDLE, const(wchar)*, uint, const(TOKEN_VALUE)*, uint*);
-BOOL MatchToken(const(wchar)*, const(wchar)*);
-uint PreprocessCommand(HANDLE, PWSTR*, uint, uint, TAG_TYPE*, uint, uint, uint, uint*);
-uint PrintError(HANDLE, uint);
-uint PrintMessageFromModule(HANDLE, uint);
-uint PrintMessage(const(wchar)*);
-uint RegisterContext(const(NS_CONTEXT_ATTRIBUTES)*);
-uint RegisterHelper(const(GUID)*, const(NS_HELPER_ATTRIBUTES)*);
+uint MatchEnumTag(HANDLE hModule, const(wchar)* pwcArg, uint dwNumArg, const(TOKEN_VALUE)* pEnumTable, uint* pdwValue);
+BOOL MatchToken(const(wchar)* pwszUserToken, const(wchar)* pwszCmdToken);
+uint PreprocessCommand(HANDLE hModule, PWSTR* ppwcArguments, uint dwCurrentIndex, uint dwArgCount, TAG_TYPE* pttTags, uint dwTagCount, uint dwMinArgs, uint dwMaxArgs, uint* pdwTagType);
+uint PrintError(HANDLE hModule, uint dwErrId);
+uint PrintMessageFromModule(HANDLE hModule, uint dwMsgId);
+uint PrintMessage(const(wchar)* pwszFormat);
+uint RegisterContext(const(NS_CONTEXT_ATTRIBUTES)* pChildContext);
+uint RegisterHelper(const(GUID)* pguidParentContext, const(NS_HELPER_ATTRIBUTES)* pfnRegisterSubContext);
 enum NETSH_ERROR_BASE = 0x00003a98;
 enum ERROR_NO_ENTRIES = 0x00003a98;
 enum ERROR_INVALID_SYNTAX = 0x00003a99;
@@ -92,16 +92,16 @@ struct TOKEN_VALUE
     const(wchar)* pwszToken;
     uint dwValue;
 }
-alias PGET_RESOURCE_STRING_FN = uint function(uint, PWSTR, uint);
-alias PNS_CONTEXT_COMMIT_FN = uint function(uint);
-alias PNS_CONTEXT_CONNECT_FN = uint function(const(wchar)*);
-alias PNS_CONTEXT_DUMP_FN = uint function(const(wchar)*, PWSTR*, uint, const(void)*);
-alias PNS_DLL_STOP_FN = uint function(uint);
-alias PNS_HELPER_START_FN = uint function(const(GUID)*, uint);
-alias PNS_HELPER_STOP_FN = uint function(uint);
-alias PFN_HANDLE_CMD = uint function(const(wchar)*, PWSTR*, uint, uint, uint, const(void)*, BOOL*);
-alias PFN_CUSTOM_HELP = void function(HANDLE, const(wchar)*);
-alias PNS_OSVERSIONCHECK = BOOL function(uint, uint, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, uint, uint);
+alias PGET_RESOURCE_STRING_FN = uint function(uint dwMsgID, PWSTR lpBuffer, uint nBufferMax);
+alias PNS_CONTEXT_COMMIT_FN = uint function(uint dwAction);
+alias PNS_CONTEXT_CONNECT_FN = uint function(const(wchar)* pwszMachine);
+alias PNS_CONTEXT_DUMP_FN = uint function(const(wchar)* pwszRouter, PWSTR* ppwcArguments, uint dwArgCount, const(void)* pvData);
+alias PNS_DLL_STOP_FN = uint function(uint dwReserved);
+alias PNS_HELPER_START_FN = uint function(const(GUID)* pguidParent, uint dwVersion);
+alias PNS_HELPER_STOP_FN = uint function(uint dwReserved);
+alias PFN_HANDLE_CMD = uint function(const(wchar)* pwszMachine, PWSTR* ppwcArguments, uint dwCurrentIndex, uint dwArgCount, uint dwFlags, const(void)* pvData, BOOL* pbDone);
+alias PFN_CUSTOM_HELP = void function(HANDLE hModule, const(wchar)* pwszCmdToken);
+alias PNS_OSVERSIONCHECK = BOOL function(uint CIMOSType, uint CIMOSProductSuite, const(wchar)* CIMOSVersion, const(wchar)* CIMOSBuildNumber, const(wchar)* CIMServicePackMajorVersion, const(wchar)* CIMServicePackMinorVersion, uint uiReserved, uint dwReserved);
 struct NS_HELPER_ATTRIBUTES
 {
     union
@@ -167,4 +167,4 @@ struct TAG_TYPE
     uint dwRequired;
     BOOL bPresent;
 }
-alias PNS_DLL_INIT_FN = uint function(uint, void*);
+alias PNS_DLL_INIT_FN = uint function(uint dwNetshVersion, void* pReserved);

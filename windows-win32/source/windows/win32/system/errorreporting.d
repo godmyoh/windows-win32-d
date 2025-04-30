@@ -43,47 +43,47 @@ enum : uint
     WER_FAULT_REPORTING_ALWAYS_SHOW_UI                 = 0x00000010,
 }
 
-HRESULT WerReportCreate(const(wchar)*, WER_REPORT_TYPE, WER_REPORT_INFORMATION*, HREPORT*);
-HRESULT WerReportSetParameter(HREPORT, uint, const(wchar)*, const(wchar)*);
-HRESULT WerReportAddFile(HREPORT, const(wchar)*, WER_FILE_TYPE, WER_FILE);
-HRESULT WerReportSetUIOption(HREPORT, WER_REPORT_UI, const(wchar)*);
-HRESULT WerReportSubmit(HREPORT, WER_CONSENT, WER_SUBMIT_FLAGS, WER_SUBMIT_RESULT*);
-HRESULT WerReportAddDump(HREPORT, HANDLE, HANDLE, WER_DUMP_TYPE, WER_EXCEPTION_INFORMATION*, WER_DUMP_CUSTOM_OPTIONS*, uint);
-HRESULT WerReportCloseHandle(HREPORT);
-HRESULT WerRegisterFile(const(wchar)*, WER_REGISTER_FILE_TYPE, WER_FILE);
-HRESULT WerUnregisterFile(const(wchar)*);
-HRESULT WerRegisterMemoryBlock(void*, uint);
-HRESULT WerUnregisterMemoryBlock(void*);
-HRESULT WerRegisterExcludedMemoryBlock(const(void)*, uint);
-HRESULT WerUnregisterExcludedMemoryBlock(const(void)*);
-HRESULT WerRegisterCustomMetadata(const(wchar)*, const(wchar)*);
-HRESULT WerUnregisterCustomMetadata(const(wchar)*);
-HRESULT WerRegisterAdditionalProcess(uint, uint);
-HRESULT WerUnregisterAdditionalProcess(uint);
-HRESULT WerRegisterAppLocalDump(const(wchar)*);
+HRESULT WerReportCreate(const(wchar)* pwzEventType, WER_REPORT_TYPE repType, WER_REPORT_INFORMATION* pReportInformation, HREPORT* phReportHandle);
+HRESULT WerReportSetParameter(HREPORT hReportHandle, uint dwparamID, const(wchar)* pwzName, const(wchar)* pwzValue);
+HRESULT WerReportAddFile(HREPORT hReportHandle, const(wchar)* pwzPath, WER_FILE_TYPE repFileType, WER_FILE dwFileFlags);
+HRESULT WerReportSetUIOption(HREPORT hReportHandle, WER_REPORT_UI repUITypeID, const(wchar)* pwzValue);
+HRESULT WerReportSubmit(HREPORT hReportHandle, WER_CONSENT consent, WER_SUBMIT_FLAGS dwFlags, WER_SUBMIT_RESULT* pSubmitResult);
+HRESULT WerReportAddDump(HREPORT hReportHandle, HANDLE hProcess, HANDLE hThread, WER_DUMP_TYPE dumpType, WER_EXCEPTION_INFORMATION* pExceptionParam, WER_DUMP_CUSTOM_OPTIONS* pDumpCustomOptions, uint dwFlags);
+HRESULT WerReportCloseHandle(HREPORT hReportHandle);
+HRESULT WerRegisterFile(const(wchar)* pwzFile, WER_REGISTER_FILE_TYPE regFileType, WER_FILE dwFlags);
+HRESULT WerUnregisterFile(const(wchar)* pwzFilePath);
+HRESULT WerRegisterMemoryBlock(void* pvAddress, uint dwSize);
+HRESULT WerUnregisterMemoryBlock(void* pvAddress);
+HRESULT WerRegisterExcludedMemoryBlock(const(void)* address, uint size);
+HRESULT WerUnregisterExcludedMemoryBlock(const(void)* address);
+HRESULT WerRegisterCustomMetadata(const(wchar)* key, const(wchar)* value);
+HRESULT WerUnregisterCustomMetadata(const(wchar)* key);
+HRESULT WerRegisterAdditionalProcess(uint processId, uint captureExtraInfoForThreadId);
+HRESULT WerUnregisterAdditionalProcess(uint processId);
+HRESULT WerRegisterAppLocalDump(const(wchar)* localAppDataRelativePath);
 HRESULT WerUnregisterAppLocalDump();
-HRESULT WerSetFlags(WER_FAULT_REPORTING);
-HRESULT WerGetFlags(HANDLE, WER_FAULT_REPORTING*);
-HRESULT WerAddExcludedApplication(const(wchar)*, BOOL);
-HRESULT WerRemoveExcludedApplication(const(wchar)*, BOOL);
-HRESULT WerRegisterRuntimeExceptionModule(const(wchar)*, void*);
-HRESULT WerUnregisterRuntimeExceptionModule(const(wchar)*, void*);
-HRESULT WerStoreOpen(REPORT_STORE_TYPES, HREPORTSTORE*);
-void WerStoreClose(HREPORTSTORE);
-HRESULT WerStoreGetFirstReportKey(HREPORTSTORE, const(wchar)**);
-HRESULT WerStoreGetNextReportKey(HREPORTSTORE, const(wchar)**);
-HRESULT WerStoreQueryReportMetadataV2(HREPORTSTORE, const(wchar)*, WER_REPORT_METADATA_V2*);
-HRESULT WerStoreQueryReportMetadataV3(HREPORTSTORE, const(wchar)*, WER_REPORT_METADATA_V3*);
-void WerFreeString(const(wchar)*);
+HRESULT WerSetFlags(WER_FAULT_REPORTING dwFlags);
+HRESULT WerGetFlags(HANDLE hProcess, WER_FAULT_REPORTING* pdwFlags);
+HRESULT WerAddExcludedApplication(const(wchar)* pwzExeName, BOOL bAllUsers);
+HRESULT WerRemoveExcludedApplication(const(wchar)* pwzExeName, BOOL bAllUsers);
+HRESULT WerRegisterRuntimeExceptionModule(const(wchar)* pwszOutOfProcessCallbackDll, void* pContext);
+HRESULT WerUnregisterRuntimeExceptionModule(const(wchar)* pwszOutOfProcessCallbackDll, void* pContext);
+HRESULT WerStoreOpen(REPORT_STORE_TYPES repStoreType, HREPORTSTORE* phReportStore);
+void WerStoreClose(HREPORTSTORE hReportStore);
+HRESULT WerStoreGetFirstReportKey(HREPORTSTORE hReportStore, const(wchar)** ppszReportKey);
+HRESULT WerStoreGetNextReportKey(HREPORTSTORE hReportStore, const(wchar)** ppszReportKey);
+HRESULT WerStoreQueryReportMetadataV2(HREPORTSTORE hReportStore, const(wchar)* pszReportKey, WER_REPORT_METADATA_V2* pReportMetadata);
+HRESULT WerStoreQueryReportMetadataV3(HREPORTSTORE hReportStore, const(wchar)* pszReportKey, WER_REPORT_METADATA_V3* pReportMetadata);
+void WerFreeString(const(wchar)* pwszStr);
 HRESULT WerStorePurge();
-HRESULT WerStoreGetReportCount(HREPORTSTORE, uint*);
-HRESULT WerStoreGetSizeOnDisk(HREPORTSTORE, ulong*);
-HRESULT WerStoreQueryReportMetadataV1(HREPORTSTORE, const(wchar)*, WER_REPORT_METADATA_V1*);
-HRESULT WerStoreUploadReport(HREPORTSTORE, const(wchar)*, uint, WER_SUBMIT_RESULT*);
-EFaultRepRetVal ReportFault(EXCEPTION_POINTERS*, uint);
-BOOL AddERExcludedApplicationA(const(char)*);
-BOOL AddERExcludedApplicationW(const(wchar)*);
-HRESULT WerReportHang(HWND, const(wchar)*);
+HRESULT WerStoreGetReportCount(HREPORTSTORE hReportStore, uint* pdwReportCount);
+HRESULT WerStoreGetSizeOnDisk(HREPORTSTORE hReportStore, ulong* pqwSizeInBytes);
+HRESULT WerStoreQueryReportMetadataV1(HREPORTSTORE hReportStore, const(wchar)* pszReportKey, WER_REPORT_METADATA_V1* pReportMetadata);
+HRESULT WerStoreUploadReport(HREPORTSTORE hReportStore, const(wchar)* pszReportKey, uint dwFlags, WER_SUBMIT_RESULT* pSubmitResult);
+EFaultRepRetVal ReportFault(EXCEPTION_POINTERS* pep, uint dwOpt);
+BOOL AddERExcludedApplicationA(const(char)* szApplication);
+BOOL AddERExcludedApplicationW(const(wchar)* wszApplication);
+HRESULT WerReportHang(HWND hwndHungApp, const(wchar)* pwzHungApplicationName);
 enum WER_FAULT_REPORTING_NO_UI = 0x00000020;
 enum WER_FAULT_REPORTING_FLAG_NO_HEAP_ON_QUEUE = 0x00000040;
 enum WER_FAULT_REPORTING_DISABLE_SNAPSHOT_CRASH = 0x00000080;
@@ -342,9 +342,9 @@ struct WER_RUNTIME_EXCEPTION_INFORMATION
     BOOL bIsFatal;
     uint dwReserved;
 }
-alias PFN_WER_RUNTIME_EXCEPTION_EVENT = HRESULT function(void*, const(WER_RUNTIME_EXCEPTION_INFORMATION)*, BOOL*, PWSTR, uint*, uint*);
-alias PFN_WER_RUNTIME_EXCEPTION_EVENT_SIGNATURE = HRESULT function(void*, const(WER_RUNTIME_EXCEPTION_INFORMATION)*, uint, PWSTR, uint*, PWSTR, uint*);
-alias PFN_WER_RUNTIME_EXCEPTION_DEBUGGER_LAUNCH = HRESULT function(void*, const(WER_RUNTIME_EXCEPTION_INFORMATION)*, BOOL*, PWSTR, uint*, BOOL*);
+alias PFN_WER_RUNTIME_EXCEPTION_EVENT = HRESULT function(void* pContext, const(WER_RUNTIME_EXCEPTION_INFORMATION)* pExceptionInformation, BOOL* pbOwnershipClaimed, PWSTR pwszEventName, uint* pchSize, uint* pdwSignatureCount);
+alias PFN_WER_RUNTIME_EXCEPTION_EVENT_SIGNATURE = HRESULT function(void* pContext, const(WER_RUNTIME_EXCEPTION_INFORMATION)* pExceptionInformation, uint dwIndex, PWSTR pwszName, uint* pchName, PWSTR pwszValue, uint* pchValue);
+alias PFN_WER_RUNTIME_EXCEPTION_DEBUGGER_LAUNCH = HRESULT function(void* pContext, const(WER_RUNTIME_EXCEPTION_INFORMATION)* pExceptionInformation, BOOL* pbIsCustomDebugger, PWSTR pwszDebuggerLaunch, uint* pchDebuggerLaunch, BOOL* pbIsDebuggerAutolaunch);
 alias REPORT_STORE_TYPES = int;
 enum : int
 {
@@ -423,6 +423,6 @@ enum : int
     frrvErrDoubleFault     = 0x0000000a,
 }
 
-alias pfn_REPORTFAULT = EFaultRepRetVal function(EXCEPTION_POINTERS*, uint);
-alias pfn_ADDEREXCLUDEDAPPLICATIONA = EFaultRepRetVal function(const(char)*);
-alias pfn_ADDEREXCLUDEDAPPLICATIONW = EFaultRepRetVal function(const(wchar)*);
+alias pfn_REPORTFAULT = EFaultRepRetVal function(EXCEPTION_POINTERS* param0, uint param1);
+alias pfn_ADDEREXCLUDEDAPPLICATIONA = EFaultRepRetVal function(const(char)* param0);
+alias pfn_ADDEREXCLUDEDAPPLICATIONW = EFaultRepRetVal function(const(wchar)* param0);

@@ -8,8 +8,8 @@ import windows.win32.system.com : IUnknown;
 version (Windows):
 extern (Windows):
 
-HRESULT DMLCreateDevice(ID3D12Device, DML_CREATE_DEVICE_FLAGS, const(GUID)*, void**);
-HRESULT DMLCreateDevice1(ID3D12Device, DML_CREATE_DEVICE_FLAGS, DML_FEATURE_LEVEL, const(GUID)*, void**);
+HRESULT DMLCreateDevice(ID3D12Device d3d12Device, DML_CREATE_DEVICE_FLAGS flags, const(GUID)* riid, void** ppv);
+HRESULT DMLCreateDevice1(ID3D12Device d3d12Device, DML_CREATE_DEVICE_FLAGS flags, DML_FEATURE_LEVEL minimumFeatureLevel, const(GUID)* riid, void** ppv);
 enum DML_TARGET_VERSION = 0x00005000;
 enum DML_TENSOR_DIMENSION_COUNT_MAX = 0x00000005;
 enum DML_TENSOR_DIMENSION_COUNT_MAX1 = 0x00000008;
@@ -1552,29 +1552,29 @@ enum : int
 enum IID_IDMLObject = GUID(0xc8263aac, 0x9e0c, 0x4a2d, [0x9b, 0x8e, 0x0, 0x75, 0x21, 0xa3, 0x31, 0x7c]);
 interface IDMLObject : IUnknown
 {
-    HRESULT GetPrivateData(const(GUID)*, uint*, void*);
-    HRESULT SetPrivateData(const(GUID)*, uint, const(void)*);
-    HRESULT SetPrivateDataInterface(const(GUID)*, IUnknown);
-    HRESULT SetName(const(wchar)*);
+    HRESULT GetPrivateData(const(GUID)* guid, uint* dataSize, void* data);
+    HRESULT SetPrivateData(const(GUID)* guid, uint dataSize, const(void)* data);
+    HRESULT SetPrivateDataInterface(const(GUID)* guid, IUnknown data);
+    HRESULT SetName(const(wchar)* name);
 }
 enum IID_IDMLDevice = GUID(0x6dbd6437, 0x96fd, 0x423f, [0xa9, 0x8c, 0xae, 0x5e, 0x7c, 0x2a, 0x57, 0x3f]);
 interface IDMLDevice : IDMLObject
 {
-    HRESULT CheckFeatureSupport(DML_FEATURE, uint, const(void)*, uint, void*);
-    HRESULT CreateOperator(const(DML_OPERATOR_DESC)*, const(GUID)*, void**);
-    HRESULT CompileOperator(IDMLOperator, DML_EXECUTION_FLAGS, const(GUID)*, void**);
-    HRESULT CreateOperatorInitializer(uint, IDMLCompiledOperator*, const(GUID)*, void**);
-    HRESULT CreateCommandRecorder(const(GUID)*, void**);
-    HRESULT CreateBindingTable(const(DML_BINDING_TABLE_DESC)*, const(GUID)*, void**);
-    HRESULT Evict(uint, IDMLPageable*);
-    HRESULT MakeResident(uint, IDMLPageable*);
+    HRESULT CheckFeatureSupport(DML_FEATURE feature, uint featureQueryDataSize, const(void)* featureQueryData, uint featureSupportDataSize, void* featureSupportData);
+    HRESULT CreateOperator(const(DML_OPERATOR_DESC)* desc, const(GUID)* riid, void** ppv);
+    HRESULT CompileOperator(IDMLOperator op, DML_EXECUTION_FLAGS flags, const(GUID)* riid, void** ppv);
+    HRESULT CreateOperatorInitializer(uint operatorCount, IDMLCompiledOperator* operators, const(GUID)* riid, void** ppv);
+    HRESULT CreateCommandRecorder(const(GUID)* riid, void** ppv);
+    HRESULT CreateBindingTable(const(DML_BINDING_TABLE_DESC)* desc, const(GUID)* riid, void** ppv);
+    HRESULT Evict(uint count, IDMLPageable* ppObjects);
+    HRESULT MakeResident(uint count, IDMLPageable* ppObjects);
     HRESULT GetDeviceRemovedReason();
-    HRESULT GetParentDevice(const(GUID)*, void**);
+    HRESULT GetParentDevice(const(GUID)* riid, void** ppv);
 }
 enum IID_IDMLDeviceChild = GUID(0x27e83142, 0x8165, 0x49e3, [0x97, 0x4e, 0x2f, 0xd6, 0x6e, 0x4c, 0xb6, 0x9d]);
 interface IDMLDeviceChild : IDMLObject
 {
-    HRESULT GetDevice(const(GUID)*, void**);
+    HRESULT GetDevice(const(GUID)* riid, void** ppv);
 }
 enum IID_IDMLPageable = GUID(0xb1ab0825, 0x4542, 0x4a4b, [0x86, 0x17, 0x6d, 0xde, 0x6e, 0x8f, 0x62, 0x1]);
 interface IDMLPageable : IDMLDeviceChild
@@ -1602,7 +1602,7 @@ interface IDMLCompiledOperator : IDMLDispatchable
 enum IID_IDMLOperatorInitializer = GUID(0x427c1113, 0x435c, 0x469c, [0x86, 0x76, 0x4d, 0x5d, 0xd0, 0x72, 0xf8, 0x13]);
 interface IDMLOperatorInitializer : IDMLDispatchable
 {
-    HRESULT Reset(uint, IDMLCompiledOperator*);
+    HRESULT Reset(uint operatorCount, IDMLCompiledOperator* operators);
 }
 alias DML_BINDING_TYPE = int;
 enum : int
@@ -1631,21 +1631,21 @@ struct DML_BUFFER_ARRAY_BINDING
 enum IID_IDMLBindingTable = GUID(0x29c687dc, 0xde74, 0x4e3b, [0xab, 0x0, 0x11, 0x68, 0xf2, 0xfc, 0x3c, 0xfc]);
 interface IDMLBindingTable : IDMLDeviceChild
 {
-    void BindInputs(uint, const(DML_BINDING_DESC)*);
-    void BindOutputs(uint, const(DML_BINDING_DESC)*);
-    void BindTemporaryResource(const(DML_BINDING_DESC)*);
-    void BindPersistentResource(const(DML_BINDING_DESC)*);
-    HRESULT Reset(const(DML_BINDING_TABLE_DESC)*);
+    void BindInputs(uint bindingCount, const(DML_BINDING_DESC)* bindings);
+    void BindOutputs(uint bindingCount, const(DML_BINDING_DESC)* bindings);
+    void BindTemporaryResource(const(DML_BINDING_DESC)* binding);
+    void BindPersistentResource(const(DML_BINDING_DESC)* binding);
+    HRESULT Reset(const(DML_BINDING_TABLE_DESC)* desc);
 }
 enum IID_IDMLCommandRecorder = GUID(0xe6857a76, 0x2e3e, 0x4fdd, [0xbf, 0xf4, 0x5d, 0x2b, 0xa1, 0xf, 0xb4, 0x53]);
 interface IDMLCommandRecorder : IDMLDeviceChild
 {
-    void RecordDispatch(ID3D12CommandList, IDMLDispatchable, IDMLBindingTable);
+    void RecordDispatch(ID3D12CommandList commandList, IDMLDispatchable dispatchable, IDMLBindingTable bindings);
 }
 enum IID_IDMLDebugDevice = GUID(0x7d6f3ac9, 0x394a, 0x4ac3, [0x92, 0xa7, 0x39, 0xc, 0xc5, 0x7a, 0x82, 0x17]);
 interface IDMLDebugDevice : IUnknown
 {
-    void SetMuteDebugOutput(BOOL);
+    void SetMuteDebugOutput(BOOL mute);
 }
 alias DML_GRAPH_EDGE_TYPE = int;
 enum : int
@@ -1716,5 +1716,5 @@ struct DML_GRAPH_DESC
 enum IID_IDMLDevice1 = GUID(0xa0884f9a, 0xd2be, 0x4355, [0xaa, 0x5d, 0x59, 0x1, 0x28, 0x1a, 0xd1, 0xd2]);
 interface IDMLDevice1 : IDMLDevice
 {
-    HRESULT CompileGraph(const(DML_GRAPH_DESC)*, DML_EXECUTION_FLAGS, const(GUID)*, void**);
+    HRESULT CompileGraph(const(DML_GRAPH_DESC)* desc, DML_EXECUTION_FLAGS flags, const(GUID)* riid, void** ppv);
 }

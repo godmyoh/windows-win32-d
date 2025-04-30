@@ -1,8 +1,7 @@
 module windows.win32.media.kernelstreaming;
 
 import windows.win32.guid : GUID;
-import windows.win32.devices.properties : DEVPROPKEY;
-import windows.win32.foundation : BOOL, CHAR, HANDLE, HRESULT, LUID, PWSTR, RECT, SIZE;
+import windows.win32.foundation : BOOL, CHAR, DEVPROPKEY, HANDLE, HRESULT, LUID, PWSTR, RECT, SIZE;
 import windows.win32.media : TIMECODE_SAMPLE;
 import windows.win32.media.directshow : IMediaSample, IMemAllocator, IPin;
 import windows.win32.media.mediafoundation : AM_MEDIA_TYPE;
@@ -11,20 +10,20 @@ import windows.win32.system.com : IUnknown;
 version (Windows):
 extern (Windows):
 
-uint KsCreateAllocator(HANDLE, KSALLOCATOR_FRAMING*, HANDLE*);
-uint KsCreateClock(HANDLE, KSCLOCK_CREATE*, HANDLE*);
-uint KsCreatePin(HANDLE, KSPIN_CONNECT*, uint, HANDLE*);
-uint KsCreateTopologyNode(HANDLE, KSNODE_CREATE*, uint, HANDLE*);
-HRESULT KsCreateAllocator2(HANDLE, KSALLOCATOR_FRAMING*, HANDLE*);
-HRESULT KsCreateClock2(HANDLE, KSCLOCK_CREATE*, HANDLE*);
-HRESULT KsCreatePin2(HANDLE, KSPIN_CONNECT*, uint, HANDLE*);
-HRESULT KsCreateTopologyNode2(HANDLE, KSNODE_CREATE*, uint, HANDLE*);
-HRESULT KsResolveRequiredAttributes(KSDATAFORMAT*, KSMULTIPLE_ITEM*);
-HRESULT KsOpenDefaultDevice(const(GUID)*, uint, HANDLE*);
-HRESULT KsSynchronousDeviceControl(HANDLE, uint, void*, uint, void*, uint, uint*);
-HRESULT KsGetMultiplePinFactoryItems(HANDLE, uint, uint, void**);
-HRESULT KsGetMediaTypeCount(HANDLE, uint, uint*);
-HRESULT KsGetMediaType(int, AM_MEDIA_TYPE*, HANDLE, uint);
+uint KsCreateAllocator(HANDLE ConnectionHandle, KSALLOCATOR_FRAMING* AllocatorFraming, HANDLE* AllocatorHandle);
+uint KsCreateClock(HANDLE ConnectionHandle, KSCLOCK_CREATE* ClockCreate, HANDLE* ClockHandle);
+uint KsCreatePin(HANDLE FilterHandle, KSPIN_CONNECT* Connect, uint DesiredAccess, HANDLE* ConnectionHandle);
+uint KsCreateTopologyNode(HANDLE ParentHandle, KSNODE_CREATE* NodeCreate, uint DesiredAccess, HANDLE* NodeHandle);
+HRESULT KsCreateAllocator2(HANDLE ConnectionHandle, KSALLOCATOR_FRAMING* AllocatorFraming, HANDLE* AllocatorHandle);
+HRESULT KsCreateClock2(HANDLE ConnectionHandle, KSCLOCK_CREATE* ClockCreate, HANDLE* ClockHandle);
+HRESULT KsCreatePin2(HANDLE FilterHandle, KSPIN_CONNECT* Connect, uint DesiredAccess, HANDLE* ConnectionHandle);
+HRESULT KsCreateTopologyNode2(HANDLE ParentHandle, KSNODE_CREATE* NodeCreate, uint DesiredAccess, HANDLE* NodeHandle);
+HRESULT KsResolveRequiredAttributes(KSDATAFORMAT* DataRange, KSMULTIPLE_ITEM* Attributes);
+HRESULT KsOpenDefaultDevice(const(GUID)* Category, uint Access, HANDLE* DeviceHandle);
+HRESULT KsSynchronousDeviceControl(HANDLE Handle, uint IoControl, void* InBuffer, uint InLength, void* OutBuffer, uint OutLength, uint* BytesReturned);
+HRESULT KsGetMultiplePinFactoryItems(HANDLE FilterHandle, uint PinFactoryId, uint PropertyId, void** Items);
+HRESULT KsGetMediaTypeCount(HANDLE FilterHandle, uint PinFactoryId, uint* MediaTypeCount);
+HRESULT KsGetMediaType(int Position, AM_MEDIA_TYPE* AmMediaType, HANDLE FilterHandle, uint PinFactoryId);
 enum IOCTL_KS_PROPERTY = 0x002f0003;
 enum IOCTL_KS_ENABLE_EVENT = 0x002f0007;
 enum IOCTL_KS_DISABLE_EVENT = 0x002f000b;
@@ -670,27 +669,27 @@ enum KSPROPERTY_MEMORY_TRANSPORT = 0x00000001;
 enum IID_IKsPropertySet = GUID(0x31efac30, 0x515c, 0x11d0, [0xa9, 0xaa, 0x0, 0xaa, 0x0, 0x61, 0xbe, 0x93]);
 interface IKsPropertySet : IUnknown
 {
-    HRESULT Set(const(GUID)*, uint, void*, uint, void*, uint);
-    HRESULT Get(const(GUID)*, uint, void*, uint, void*, uint, uint*);
-    HRESULT QuerySupported(const(GUID)*, uint, uint*);
+    HRESULT Set(const(GUID)* guidPropSet, uint dwPropID, void* pInstanceData, uint cbInstanceData, void* pPropData, uint cbPropData);
+    HRESULT Get(const(GUID)* guidPropSet, uint dwPropID, void* pInstanceData, uint cbInstanceData, void* pPropData, uint cbPropData, uint* pcbReturned);
+    HRESULT QuerySupported(const(GUID)* guidPropSet, uint dwPropID, uint* pTypeSupport);
 }
 enum IID_IKsTopologyInfo = GUID(0x720d4ac0, 0x7533, 0x11d0, [0xa5, 0xd6, 0x28, 0xdb, 0x4, 0xc1, 0x0, 0x0]);
 interface IKsTopologyInfo : IUnknown
 {
-    HRESULT get_NumCategories(uint*);
-    HRESULT get_Category(uint, GUID*);
-    HRESULT get_NumConnections(uint*);
-    HRESULT get_ConnectionInfo(uint, KSTOPOLOGY_CONNECTION*);
-    HRESULT get_NodeName(uint, PWSTR, uint, uint*);
-    HRESULT get_NumNodes(uint*);
-    HRESULT get_NodeType(uint, GUID*);
-    HRESULT CreateNodeInstance(uint, const(GUID)*, void**);
+    HRESULT get_NumCategories(uint* pdwNumCategories);
+    HRESULT get_Category(uint dwIndex, GUID* pCategory);
+    HRESULT get_NumConnections(uint* pdwNumConnections);
+    HRESULT get_ConnectionInfo(uint dwIndex, KSTOPOLOGY_CONNECTION* pConnectionInfo);
+    HRESULT get_NodeName(uint dwNodeId, PWSTR pwchNodeName, uint dwBufSize, uint* pdwNameLen);
+    HRESULT get_NumNodes(uint* pdwNumNodes);
+    HRESULT get_NodeType(uint dwNodeId, GUID* pNodeType);
+    HRESULT CreateNodeInstance(uint dwNodeId, const(GUID)* iid, void** ppvObject);
 }
 enum IID_IKsNodeControl = GUID(0x11737c14, 0x24a7, 0x4bb5, [0x81, 0xa0, 0xd, 0x0, 0x38, 0x13, 0xb0, 0xc4]);
 interface IKsNodeControl : IUnknown
 {
-    HRESULT put_NodeId(uint);
-    HRESULT put_KsControl(void*);
+    HRESULT put_NodeId(uint dwNodeId);
+    HRESULT put_KsControl(void* pKsControl);
 }
 struct KSSTREAM_HEADER
 {
@@ -718,43 +717,43 @@ struct KSNODEPROPERTY_AUDIO_PROPERTY
 enum IID_IKsControl = GUID(0x28f54685, 0x6fd, 0x11d2, [0xb2, 0x7a, 0x0, 0xa0, 0xc9, 0x22, 0x31, 0x96]);
 interface IKsControl : IUnknown
 {
-    HRESULT KsProperty(KSIDENTIFIER*, uint, void*, uint, uint*);
-    HRESULT KsMethod(KSIDENTIFIER*, uint, void*, uint, uint*);
-    HRESULT KsEvent(KSIDENTIFIER*, uint, void*, uint, uint*);
+    HRESULT KsProperty(KSIDENTIFIER* Property, uint PropertyLength, void* PropertyData, uint DataLength, uint* BytesReturned);
+    HRESULT KsMethod(KSIDENTIFIER* Method, uint MethodLength, void* MethodData, uint DataLength, uint* BytesReturned);
+    HRESULT KsEvent(KSIDENTIFIER* Event, uint EventLength, void* EventData, uint DataLength, uint* BytesReturned);
 }
 enum IID_IKsFormatSupport = GUID(0x3cb4a69d, 0xbb6f, 0x4d2b, [0x95, 0xb7, 0x45, 0x2d, 0x2c, 0x15, 0x5d, 0xb5]);
 interface IKsFormatSupport : IUnknown
 {
-    HRESULT IsFormatSupported(KSDATAFORMAT*, uint, BOOL*);
-    HRESULT GetDevicePreferredFormat(KSDATAFORMAT**);
+    HRESULT IsFormatSupported(KSDATAFORMAT* pKsFormat, uint cbFormat, BOOL* pbSupported);
+    HRESULT GetDevicePreferredFormat(KSDATAFORMAT** ppKsFormat);
 }
 enum IID_IKsJackDescription = GUID(0x4509f757, 0x2d46, 0x4637, [0x8e, 0x62, 0xce, 0x7d, 0xb9, 0x44, 0xf5, 0x7b]);
 interface IKsJackDescription : IUnknown
 {
-    HRESULT GetJackCount(uint*);
-    HRESULT GetJackDescription(uint, KSJACK_DESCRIPTION*);
+    HRESULT GetJackCount(uint* pcJacks);
+    HRESULT GetJackDescription(uint nJack, KSJACK_DESCRIPTION* pDescription);
 }
 enum IID_IKsJackDescription2 = GUID(0x478f3a9b, 0xe0c9, 0x4827, [0x92, 0x28, 0x6f, 0x55, 0x5, 0xff, 0xe7, 0x6a]);
 interface IKsJackDescription2 : IUnknown
 {
-    HRESULT GetJackCount(uint*);
-    HRESULT GetJackDescription2(uint, KSJACK_DESCRIPTION2*);
+    HRESULT GetJackCount(uint* pcJacks);
+    HRESULT GetJackDescription2(uint nJack, KSJACK_DESCRIPTION2* pDescription2);
 }
 enum IID_IKsJackDescription3 = GUID(0xe3f6778b, 0x6660, 0x4cc8, [0xa2, 0x91, 0xec, 0xc4, 0x19, 0x2d, 0x99, 0x67]);
 interface IKsJackDescription3 : IUnknown
 {
-    HRESULT GetJackCount(uint*);
-    HRESULT GetJackDescription3(uint, KSJACK_DESCRIPTION3*);
+    HRESULT GetJackCount(uint* pcJacks);
+    HRESULT GetJackDescription3(uint nJack, KSJACK_DESCRIPTION3* pDescription3);
 }
 enum IID_IKsJackSinkInformation = GUID(0xd9bd72ed, 0x290f, 0x4581, [0x9f, 0xf3, 0x61, 0x2, 0x7a, 0x8f, 0xe5, 0x32]);
 interface IKsJackSinkInformation : IUnknown
 {
-    HRESULT GetJackSinkInformation(KSJACK_SINK_INFORMATION*);
+    HRESULT GetJackSinkInformation(KSJACK_SINK_INFORMATION* pJackSinkInformation);
 }
 enum IID_IKsJackContainerId = GUID(0xc99af463, 0xd629, 0x4ec4, [0x8c, 0x0, 0xe5, 0x4d, 0x68, 0x15, 0x42, 0x48]);
 interface IKsJackContainerId : IUnknown
 {
-    HRESULT GetJackContainerId(GUID*);
+    HRESULT GetJackContainerId(GUID* pJackContainerId);
 }
 enum CLSID_GUID_NULL = GUID(0x0, 0x0, 0x0, [0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
 struct GUID_NULL
@@ -7067,32 +7066,32 @@ struct ALLOCATOR_PROPERTIES_EX
 enum IID_IKsClockPropertySet = GUID(0x5c5cbd84, 0xe755, 0x11d0, [0xac, 0x18, 0x0, 0xa0, 0xc9, 0x22, 0x31, 0x96]);
 interface IKsClockPropertySet : IUnknown
 {
-    HRESULT KsGetTime(long*);
-    HRESULT KsSetTime(long);
-    HRESULT KsGetPhysicalTime(long*);
-    HRESULT KsSetPhysicalTime(long);
-    HRESULT KsGetCorrelatedTime(KSCORRELATED_TIME*);
-    HRESULT KsSetCorrelatedTime(KSCORRELATED_TIME*);
-    HRESULT KsGetCorrelatedPhysicalTime(KSCORRELATED_TIME*);
-    HRESULT KsSetCorrelatedPhysicalTime(KSCORRELATED_TIME*);
-    HRESULT KsGetResolution(KSRESOLUTION*);
-    HRESULT KsGetState(KSSTATE*);
+    HRESULT KsGetTime(long* Time);
+    HRESULT KsSetTime(long Time);
+    HRESULT KsGetPhysicalTime(long* Time);
+    HRESULT KsSetPhysicalTime(long Time);
+    HRESULT KsGetCorrelatedTime(KSCORRELATED_TIME* CorrelatedTime);
+    HRESULT KsSetCorrelatedTime(KSCORRELATED_TIME* CorrelatedTime);
+    HRESULT KsGetCorrelatedPhysicalTime(KSCORRELATED_TIME* CorrelatedTime);
+    HRESULT KsSetCorrelatedPhysicalTime(KSCORRELATED_TIME* CorrelatedTime);
+    HRESULT KsGetResolution(KSRESOLUTION* Resolution);
+    HRESULT KsGetState(KSSTATE* State);
 }
 enum IID_IKsAllocator = GUID(0x8da64899, 0xc0d9, 0x11d0, [0x84, 0x13, 0x0, 0x0, 0xf8, 0x22, 0xfe, 0x8a]);
 interface IKsAllocator : IUnknown
 {
     HANDLE KsGetAllocatorHandle();
     KSALLOCATORMODE KsGetAllocatorMode();
-    HRESULT KsGetAllocatorStatus(KSSTREAMALLOCATOR_STATUS*);
-    void KsSetAllocatorMode(KSALLOCATORMODE);
+    HRESULT KsGetAllocatorStatus(KSSTREAMALLOCATOR_STATUS* AllocatorStatus);
+    void KsSetAllocatorMode(KSALLOCATORMODE Mode);
 }
 enum IID_IKsAllocatorEx = GUID(0x91bb63a, 0x603f, 0x11d1, [0xb0, 0x67, 0x0, 0xa0, 0xc9, 0x6, 0x28, 0x2]);
 interface IKsAllocatorEx : IKsAllocator
 {
     ALLOCATOR_PROPERTIES_EX* KsGetProperties();
-    void KsSetProperties(ALLOCATOR_PROPERTIES_EX*);
-    void KsSetAllocatorHandle(HANDLE);
-    HANDLE KsCreateAllocatorAndGetHandle(IKsPin);
+    void KsSetProperties(ALLOCATOR_PROPERTIES_EX* param0);
+    void KsSetAllocatorHandle(HANDLE AllocatorHandle);
+    HANDLE KsCreateAllocatorAndGetHandle(IKsPin KsPin);
 }
 alias KSPEEKOPERATION = int;
 enum : int
@@ -7104,44 +7103,44 @@ enum : int
 enum IID_IKsPin = GUID(0xb61178d1, 0xa2d9, 0x11cf, [0x9e, 0x53, 0x0, 0xaa, 0x0, 0xa2, 0x16, 0xa1]);
 interface IKsPin : IUnknown
 {
-    HRESULT KsQueryMediums(KSMULTIPLE_ITEM**);
-    HRESULT KsQueryInterfaces(KSMULTIPLE_ITEM**);
-    HRESULT KsCreateSinkPinHandle(KSIDENTIFIER*, KSIDENTIFIER*);
-    HRESULT KsGetCurrentCommunication(KSPIN_COMMUNICATION*, KSIDENTIFIER*, KSIDENTIFIER*);
+    HRESULT KsQueryMediums(KSMULTIPLE_ITEM** MediumList);
+    HRESULT KsQueryInterfaces(KSMULTIPLE_ITEM** InterfaceList);
+    HRESULT KsCreateSinkPinHandle(KSIDENTIFIER* Interface, KSIDENTIFIER* Medium);
+    HRESULT KsGetCurrentCommunication(KSPIN_COMMUNICATION* Communication, KSIDENTIFIER* Interface, KSIDENTIFIER* Medium);
     HRESULT KsPropagateAcquire();
-    HRESULT KsDeliver(IMediaSample, uint);
-    HRESULT KsMediaSamplesCompleted(KSSTREAM_SEGMENT*);
-    IMemAllocator KsPeekAllocator(KSPEEKOPERATION);
-    HRESULT KsReceiveAllocator(IMemAllocator);
+    HRESULT KsDeliver(IMediaSample Sample, uint Flags);
+    HRESULT KsMediaSamplesCompleted(KSSTREAM_SEGMENT* StreamSegment);
+    IMemAllocator KsPeekAllocator(KSPEEKOPERATION Operation);
+    HRESULT KsReceiveAllocator(IMemAllocator MemAllocator);
     HRESULT KsRenegotiateAllocator();
     int KsIncrementPendingIoCount();
     int KsDecrementPendingIoCount();
-    HRESULT KsQualityNotify(uint, long);
+    HRESULT KsQualityNotify(uint Proportion, long TimeDelta);
 }
 enum IID_IKsPinEx = GUID(0x7bb38260, 0xd19c, 0x11d2, [0xb3, 0x8a, 0x0, 0xa0, 0xc9, 0x5e, 0xc2, 0x2e]);
 interface IKsPinEx : IKsPin
 {
-    void KsNotifyError(IMediaSample, HRESULT);
+    void KsNotifyError(IMediaSample Sample, HRESULT hr);
 }
 enum IID_IKsPinPipe = GUID(0xe539cd90, 0xa8b4, 0x11d1, [0x81, 0x89, 0x0, 0xa0, 0xc9, 0x6, 0x28, 0x2]);
 interface IKsPinPipe : IUnknown
 {
-    HRESULT KsGetPinFramingCache(KSALLOCATOR_FRAMING_EX**, FRAMING_PROP*, FRAMING_CACHE_OPS);
-    HRESULT KsSetPinFramingCache(KSALLOCATOR_FRAMING_EX*, FRAMING_PROP*, FRAMING_CACHE_OPS);
+    HRESULT KsGetPinFramingCache(KSALLOCATOR_FRAMING_EX** FramingEx, FRAMING_PROP* FramingProp, FRAMING_CACHE_OPS Option);
+    HRESULT KsSetPinFramingCache(KSALLOCATOR_FRAMING_EX* FramingEx, FRAMING_PROP* FramingProp, FRAMING_CACHE_OPS Option);
     IPin KsGetConnectedPin();
-    IKsAllocatorEx KsGetPipe(KSPEEKOPERATION);
-    HRESULT KsSetPipe(IKsAllocatorEx);
+    IKsAllocatorEx KsGetPipe(KSPEEKOPERATION Operation);
+    HRESULT KsSetPipe(IKsAllocatorEx KsAllocator);
     uint KsGetPipeAllocatorFlag();
-    HRESULT KsSetPipeAllocatorFlag(uint);
+    HRESULT KsSetPipeAllocatorFlag(uint Flag);
     GUID KsGetPinBusCache();
-    HRESULT KsSetPinBusCache(GUID);
+    HRESULT KsSetPinBusCache(GUID Bus);
     PWSTR KsGetPinName();
     PWSTR KsGetFilterName();
 }
 enum IID_IKsPinFactory = GUID(0xcd5ebe6b, 0x8b6e, 0x11d1, [0x8a, 0xe0, 0x0, 0xa0, 0xc9, 0x22, 0x31, 0x96]);
 interface IKsPinFactory : IUnknown
 {
-    HRESULT KsPinFactory(uint*);
+    HRESULT KsPinFactory(uint* PinFactory);
 }
 alias KSIOOPERATION = int;
 enum : int
@@ -7153,23 +7152,23 @@ enum : int
 enum IID_IKsDataTypeHandler = GUID(0x5ffbaa02, 0x49a3, 0x11d0, [0x9f, 0x36, 0x0, 0xaa, 0x0, 0xa2, 0x16, 0xa1]);
 interface IKsDataTypeHandler : IUnknown
 {
-    HRESULT KsCompleteIoOperation(IMediaSample, void*, KSIOOPERATION, BOOL);
-    HRESULT KsIsMediaTypeInRanges(void*);
-    HRESULT KsPrepareIoOperation(IMediaSample, void*, KSIOOPERATION);
-    HRESULT KsQueryExtendedSize(uint*);
-    HRESULT KsSetMediaType(const(AM_MEDIA_TYPE)*);
+    HRESULT KsCompleteIoOperation(IMediaSample Sample, void* StreamHeader, KSIOOPERATION IoOperation, BOOL Cancelled);
+    HRESULT KsIsMediaTypeInRanges(void* DataRanges);
+    HRESULT KsPrepareIoOperation(IMediaSample Sample, void* StreamHeader, KSIOOPERATION IoOperation);
+    HRESULT KsQueryExtendedSize(uint* ExtendedSize);
+    HRESULT KsSetMediaType(const(AM_MEDIA_TYPE)* AmMediaType);
 }
 enum IID_IKsDataTypeCompletion = GUID(0x827d1a0e, 0xf73, 0x11d2, [0xb2, 0x7a, 0x0, 0xa0, 0xc9, 0x22, 0x31, 0x96]);
 interface IKsDataTypeCompletion : IUnknown
 {
-    HRESULT KsCompleteMediaType(HANDLE, uint, AM_MEDIA_TYPE*);
+    HRESULT KsCompleteMediaType(HANDLE FilterHandle, uint PinFactoryId, AM_MEDIA_TYPE* AmMediaType);
 }
 enum IID_IKsInterfaceHandler = GUID(0xd3abc7e0, 0x9a61, 0x11d0, [0xa4, 0xd, 0x0, 0xa0, 0xc9, 0x22, 0x31, 0x96]);
 interface IKsInterfaceHandler : IUnknown
 {
-    HRESULT KsSetPin(IKsPin);
-    HRESULT KsProcessMediaSamples(IKsDataTypeHandler, IMediaSample*, int*, KSIOOPERATION, KSSTREAM_SEGMENT**);
-    HRESULT KsCompleteIo(KSSTREAM_SEGMENT*);
+    HRESULT KsSetPin(IKsPin KsPin);
+    HRESULT KsProcessMediaSamples(IKsDataTypeHandler KsDataTypeHandler, IMediaSample* SampleList, int* SampleCount, KSIOOPERATION IoOperation, KSSTREAM_SEGMENT** StreamSegment);
+    HRESULT KsCompleteIo(KSSTREAM_SEGMENT* StreamSegment);
 }
 struct KSSTREAM_SEGMENT
 {
@@ -7186,12 +7185,12 @@ interface IKsObject : IUnknown
 enum IID_IKsQualityForwarder = GUID(0x97ebaacb, 0x95bd, 0x11d0, [0xa3, 0xea, 0x0, 0xa0, 0xc9, 0x22, 0x31, 0x96]);
 interface IKsQualityForwarder : IKsObject
 {
-    void KsFlushClient(IKsPin);
+    void KsFlushClient(IKsPin Pin);
 }
 enum IID_IKsNotifyEvent = GUID(0x412bd695, 0xf84b, 0x46c1, [0xac, 0x73, 0x54, 0x19, 0x6d, 0xbc, 0x8f, 0xa7]);
 interface IKsNotifyEvent : IUnknown
 {
-    HRESULT KsNotifyEvent(uint, ulong, ulong);
+    HRESULT KsNotifyEvent(uint Event, ulong lParam1, ulong lParam2);
 }
 enum CLSID_CLSID_Proxy = GUID(0x17cca71b, 0xecd7, 0x11d0, [0xb9, 0x8, 0x0, 0xa0, 0xc9, 0x22, 0x31, 0x96]);
 struct CLSID_Proxy
@@ -7200,11 +7199,11 @@ struct CLSID_Proxy
 enum IID_IKsAggregateControl = GUID(0x7f40eac0, 0x3947, 0x11d2, [0x87, 0x4e, 0x0, 0xa0, 0xc9, 0x22, 0x31, 0x96]);
 interface IKsAggregateControl : IUnknown
 {
-    HRESULT KsAddAggregate(const(GUID)*);
-    HRESULT KsRemoveAggregate(const(GUID)*);
+    HRESULT KsAddAggregate(const(GUID)* AggregateClass);
+    HRESULT KsRemoveAggregate(const(GUID)* AggregateClass);
 }
 enum IID_IKsTopology = GUID(0x28f54683, 0x6fd, 0x11d2, [0xb2, 0x7a, 0x0, 0xa0, 0xc9, 0x22, 0x31, 0x96]);
 interface IKsTopology : IUnknown
 {
-    HRESULT CreateNodeInstance(uint, uint, uint, IUnknown, const(GUID)*, void**);
+    HRESULT CreateNodeInstance(uint NodeId, uint Flags, uint DesiredAccess, IUnknown UnkOuter, const(GUID)* InterfaceId, void** Interface);
 }

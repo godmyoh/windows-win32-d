@@ -6,53 +6,53 @@ import windows.win32.foundation : BOOL, BOOLEAN, CHAR, HANDLE, HRESULT, HWND, PW
 version (Windows):
 extern (Windows):
 
-HBLUETOOTH_RADIO_FIND BluetoothFindFirstRadio(const(BLUETOOTH_FIND_RADIO_PARAMS)*, HANDLE*);
-BOOL BluetoothFindNextRadio(HBLUETOOTH_RADIO_FIND, HANDLE*);
-BOOL BluetoothFindRadioClose(HBLUETOOTH_RADIO_FIND);
-uint BluetoothGetRadioInfo(HANDLE, BLUETOOTH_RADIO_INFO*);
-HBLUETOOTH_DEVICE_FIND BluetoothFindFirstDevice(const(BLUETOOTH_DEVICE_SEARCH_PARAMS)*, BLUETOOTH_DEVICE_INFO*);
-BOOL BluetoothFindNextDevice(HBLUETOOTH_DEVICE_FIND, BLUETOOTH_DEVICE_INFO*);
-BOOL BluetoothFindDeviceClose(HBLUETOOTH_DEVICE_FIND);
-uint BluetoothGetDeviceInfo(HANDLE, BLUETOOTH_DEVICE_INFO*);
-uint BluetoothUpdateDeviceRecord(const(BLUETOOTH_DEVICE_INFO)*);
-uint BluetoothRemoveDevice(const(BLUETOOTH_ADDRESS)*);
-BOOL BluetoothSelectDevices(BLUETOOTH_SELECT_DEVICE_PARAMS*);
-BOOL BluetoothSelectDevicesFree(BLUETOOTH_SELECT_DEVICE_PARAMS*);
-BOOL BluetoothDisplayDeviceProperties(HWND, BLUETOOTH_DEVICE_INFO*);
-uint BluetoothAuthenticateDevice(HWND, HANDLE, BLUETOOTH_DEVICE_INFO*, PWSTR, uint);
-uint BluetoothAuthenticateDeviceEx(HWND, HANDLE, BLUETOOTH_DEVICE_INFO*, BLUETOOTH_OOB_DATA_INFO*, AUTHENTICATION_REQUIREMENTS);
-uint BluetoothAuthenticateMultipleDevices(HWND, HANDLE, uint, BLUETOOTH_DEVICE_INFO*);
-uint BluetoothSetServiceState(HANDLE, const(BLUETOOTH_DEVICE_INFO)*, const(GUID)*, uint);
-uint BluetoothEnumerateInstalledServices(HANDLE, const(BLUETOOTH_DEVICE_INFO)*, uint*, GUID*);
-BOOL BluetoothEnableDiscovery(HANDLE, BOOL);
-BOOL BluetoothIsDiscoverable(HANDLE);
-BOOL BluetoothEnableIncomingConnections(HANDLE, BOOL);
-BOOL BluetoothIsConnectable(HANDLE);
-uint BluetoothRegisterForAuthentication(const(BLUETOOTH_DEVICE_INFO)*, long*, PFN_AUTHENTICATION_CALLBACK, void*);
-uint BluetoothRegisterForAuthenticationEx(const(BLUETOOTH_DEVICE_INFO)*, long*, PFN_AUTHENTICATION_CALLBACK_EX, void*);
-BOOL BluetoothUnregisterAuthentication(long);
-uint BluetoothSendAuthenticationResponse(HANDLE, const(BLUETOOTH_DEVICE_INFO)*, const(wchar)*);
-uint BluetoothSendAuthenticationResponseEx(HANDLE, BLUETOOTH_AUTHENTICATE_RESPONSE*);
-uint BluetoothSdpGetElementData(ubyte*, uint, SDP_ELEMENT_DATA*);
-uint BluetoothSdpGetContainerElementData(ubyte*, uint, long*, SDP_ELEMENT_DATA*);
-uint BluetoothSdpGetAttributeValue(ubyte*, uint, ushort, SDP_ELEMENT_DATA*);
-uint BluetoothSdpGetString(ubyte*, uint, const(SDP_STRING_TYPE_DATA)*, ushort, PWSTR, uint*);
-BOOL BluetoothSdpEnumAttributes(ubyte*, uint, PFN_BLUETOOTH_ENUM_ATTRIBUTES_CALLBACK, void*);
-uint BluetoothSetLocalServiceInfo(HANDLE, const(GUID)*, uint, const(BLUETOOTH_LOCAL_SERVICE_INFO)*);
-BOOL BluetoothIsVersionAvailable(ubyte, ubyte);
-HRESULT BluetoothGATTGetServices(HANDLE, ushort, BTH_LE_GATT_SERVICE*, ushort*, uint);
-HRESULT BluetoothGATTGetIncludedServices(HANDLE, BTH_LE_GATT_SERVICE*, ushort, BTH_LE_GATT_SERVICE*, ushort*, uint);
-HRESULT BluetoothGATTGetCharacteristics(HANDLE, BTH_LE_GATT_SERVICE*, ushort, BTH_LE_GATT_CHARACTERISTIC*, ushort*, uint);
-HRESULT BluetoothGATTGetDescriptors(HANDLE, BTH_LE_GATT_CHARACTERISTIC*, ushort, BTH_LE_GATT_DESCRIPTOR*, ushort*, uint);
-HRESULT BluetoothGATTGetCharacteristicValue(HANDLE, BTH_LE_GATT_CHARACTERISTIC*, uint, BTH_LE_GATT_CHARACTERISTIC_VALUE*, ushort*, uint);
-HRESULT BluetoothGATTGetDescriptorValue(HANDLE, BTH_LE_GATT_DESCRIPTOR*, uint, BTH_LE_GATT_DESCRIPTOR_VALUE*, ushort*, uint);
-HRESULT BluetoothGATTBeginReliableWrite(HANDLE, ulong*, uint);
-HRESULT BluetoothGATTSetCharacteristicValue(HANDLE, BTH_LE_GATT_CHARACTERISTIC*, BTH_LE_GATT_CHARACTERISTIC_VALUE*, ulong, uint);
-HRESULT BluetoothGATTEndReliableWrite(HANDLE, ulong, uint);
-HRESULT BluetoothGATTAbortReliableWrite(HANDLE, ulong, uint);
-HRESULT BluetoothGATTSetDescriptorValue(HANDLE, BTH_LE_GATT_DESCRIPTOR*, BTH_LE_GATT_DESCRIPTOR_VALUE*, uint);
-HRESULT BluetoothGATTRegisterEvent(HANDLE, BTH_LE_GATT_EVENT_TYPE, void*, PFNBLUETOOTH_GATT_EVENT_CALLBACK, void*, long*, uint);
-HRESULT BluetoothGATTUnregisterEvent(long, uint);
+HBLUETOOTH_RADIO_FIND BluetoothFindFirstRadio(const(BLUETOOTH_FIND_RADIO_PARAMS)* pbtfrp, HANDLE* phRadio);
+BOOL BluetoothFindNextRadio(HBLUETOOTH_RADIO_FIND hFind, HANDLE* phRadio);
+BOOL BluetoothFindRadioClose(HBLUETOOTH_RADIO_FIND hFind);
+uint BluetoothGetRadioInfo(HANDLE hRadio, BLUETOOTH_RADIO_INFO* pRadioInfo);
+HBLUETOOTH_DEVICE_FIND BluetoothFindFirstDevice(const(BLUETOOTH_DEVICE_SEARCH_PARAMS)* pbtsp, BLUETOOTH_DEVICE_INFO* pbtdi);
+BOOL BluetoothFindNextDevice(HBLUETOOTH_DEVICE_FIND hFind, BLUETOOTH_DEVICE_INFO* pbtdi);
+BOOL BluetoothFindDeviceClose(HBLUETOOTH_DEVICE_FIND hFind);
+uint BluetoothGetDeviceInfo(HANDLE hRadio, BLUETOOTH_DEVICE_INFO* pbtdi);
+uint BluetoothUpdateDeviceRecord(const(BLUETOOTH_DEVICE_INFO)* pbtdi);
+uint BluetoothRemoveDevice(const(BLUETOOTH_ADDRESS)* pAddress);
+BOOL BluetoothSelectDevices(BLUETOOTH_SELECT_DEVICE_PARAMS* pbtsdp);
+BOOL BluetoothSelectDevicesFree(BLUETOOTH_SELECT_DEVICE_PARAMS* pbtsdp);
+BOOL BluetoothDisplayDeviceProperties(HWND hwndParent, BLUETOOTH_DEVICE_INFO* pbtdi);
+uint BluetoothAuthenticateDevice(HWND hwndParent, HANDLE hRadio, BLUETOOTH_DEVICE_INFO* pbtbi, PWSTR pszPasskey, uint ulPasskeyLength);
+uint BluetoothAuthenticateDeviceEx(HWND hwndParentIn, HANDLE hRadioIn, BLUETOOTH_DEVICE_INFO* pbtdiInout, BLUETOOTH_OOB_DATA_INFO* pbtOobData, AUTHENTICATION_REQUIREMENTS authenticationRequirement);
+uint BluetoothAuthenticateMultipleDevices(HWND hwndParent, HANDLE hRadio, uint cDevices, BLUETOOTH_DEVICE_INFO* rgbtdi);
+uint BluetoothSetServiceState(HANDLE hRadio, const(BLUETOOTH_DEVICE_INFO)* pbtdi, const(GUID)* pGuidService, uint dwServiceFlags);
+uint BluetoothEnumerateInstalledServices(HANDLE hRadio, const(BLUETOOTH_DEVICE_INFO)* pbtdi, uint* pcServiceInout, GUID* pGuidServices);
+BOOL BluetoothEnableDiscovery(HANDLE hRadio, BOOL fEnabled);
+BOOL BluetoothIsDiscoverable(HANDLE hRadio);
+BOOL BluetoothEnableIncomingConnections(HANDLE hRadio, BOOL fEnabled);
+BOOL BluetoothIsConnectable(HANDLE hRadio);
+uint BluetoothRegisterForAuthentication(const(BLUETOOTH_DEVICE_INFO)* pbtdi, long* phRegHandle, PFN_AUTHENTICATION_CALLBACK pfnCallback, void* pvParam);
+uint BluetoothRegisterForAuthenticationEx(const(BLUETOOTH_DEVICE_INFO)* pbtdiIn, long* phRegHandleOut, PFN_AUTHENTICATION_CALLBACK_EX pfnCallbackIn, void* pvParam);
+BOOL BluetoothUnregisterAuthentication(long hRegHandle);
+uint BluetoothSendAuthenticationResponse(HANDLE hRadio, const(BLUETOOTH_DEVICE_INFO)* pbtdi, const(wchar)* pszPasskey);
+uint BluetoothSendAuthenticationResponseEx(HANDLE hRadioIn, BLUETOOTH_AUTHENTICATE_RESPONSE* pauthResponse);
+uint BluetoothSdpGetElementData(ubyte* pSdpStream, uint cbSdpStreamLength, SDP_ELEMENT_DATA* pData);
+uint BluetoothSdpGetContainerElementData(ubyte* pContainerStream, uint cbContainerLength, long* pElement, SDP_ELEMENT_DATA* pData);
+uint BluetoothSdpGetAttributeValue(ubyte* pRecordStream, uint cbRecordLength, ushort usAttributeId, SDP_ELEMENT_DATA* pAttributeData);
+uint BluetoothSdpGetString(ubyte* pRecordStream, uint cbRecordLength, const(SDP_STRING_TYPE_DATA)* pStringData, ushort usStringOffset, PWSTR pszString, uint* pcchStringLength);
+BOOL BluetoothSdpEnumAttributes(ubyte* pSDPStream, uint cbStreamSize, PFN_BLUETOOTH_ENUM_ATTRIBUTES_CALLBACK pfnCallback, void* pvParam);
+uint BluetoothSetLocalServiceInfo(HANDLE hRadioIn, const(GUID)* pClassGuid, uint ulInstance, const(BLUETOOTH_LOCAL_SERVICE_INFO)* pServiceInfoIn);
+BOOL BluetoothIsVersionAvailable(ubyte MajorVersion, ubyte MinorVersion);
+HRESULT BluetoothGATTGetServices(HANDLE hDevice, ushort ServicesBufferCount, BTH_LE_GATT_SERVICE* ServicesBuffer, ushort* ServicesBufferActual, uint Flags);
+HRESULT BluetoothGATTGetIncludedServices(HANDLE hDevice, BTH_LE_GATT_SERVICE* ParentService, ushort IncludedServicesBufferCount, BTH_LE_GATT_SERVICE* IncludedServicesBuffer, ushort* IncludedServicesBufferActual, uint Flags);
+HRESULT BluetoothGATTGetCharacteristics(HANDLE hDevice, BTH_LE_GATT_SERVICE* Service, ushort CharacteristicsBufferCount, BTH_LE_GATT_CHARACTERISTIC* CharacteristicsBuffer, ushort* CharacteristicsBufferActual, uint Flags);
+HRESULT BluetoothGATTGetDescriptors(HANDLE hDevice, BTH_LE_GATT_CHARACTERISTIC* Characteristic, ushort DescriptorsBufferCount, BTH_LE_GATT_DESCRIPTOR* DescriptorsBuffer, ushort* DescriptorsBufferActual, uint Flags);
+HRESULT BluetoothGATTGetCharacteristicValue(HANDLE hDevice, BTH_LE_GATT_CHARACTERISTIC* Characteristic, uint CharacteristicValueDataSize, BTH_LE_GATT_CHARACTERISTIC_VALUE* CharacteristicValue, ushort* CharacteristicValueSizeRequired, uint Flags);
+HRESULT BluetoothGATTGetDescriptorValue(HANDLE hDevice, BTH_LE_GATT_DESCRIPTOR* Descriptor, uint DescriptorValueDataSize, BTH_LE_GATT_DESCRIPTOR_VALUE* DescriptorValue, ushort* DescriptorValueSizeRequired, uint Flags);
+HRESULT BluetoothGATTBeginReliableWrite(HANDLE hDevice, ulong* ReliableWriteContext, uint Flags);
+HRESULT BluetoothGATTSetCharacteristicValue(HANDLE hDevice, BTH_LE_GATT_CHARACTERISTIC* Characteristic, BTH_LE_GATT_CHARACTERISTIC_VALUE* CharacteristicValue, ulong ReliableWriteContext, uint Flags);
+HRESULT BluetoothGATTEndReliableWrite(HANDLE hDevice, ulong ReliableWriteContext, uint Flags);
+HRESULT BluetoothGATTAbortReliableWrite(HANDLE hDevice, ulong ReliableWriteContext, uint Flags);
+HRESULT BluetoothGATTSetDescriptorValue(HANDLE hDevice, BTH_LE_GATT_DESCRIPTOR* Descriptor, BTH_LE_GATT_DESCRIPTOR_VALUE* DescriptorValue, uint Flags);
+HRESULT BluetoothGATTRegisterEvent(HANDLE hService, BTH_LE_GATT_EVENT_TYPE EventType, void* EventParameterIn, PFNBLUETOOTH_GATT_EVENT_CALLBACK Callback, void* CallbackContext, long* pEventHandle, uint Flags);
+HRESULT BluetoothGATTUnregisterEvent(long EventHandle, uint Flags);
 enum BTH_MAJORVERSION = 0x00000002;
 enum BTH_MINORVERSION = 0x00000001;
 enum GUID_BTHPORT_DEVICE_INTERFACE = GUID(0x850302a, 0xb344, 0x4fda, [0x9b, 0xe9, 0x90, 0x57, 0x6b, 0x8d, 0x46, 0xf0]);
@@ -1099,7 +1099,7 @@ struct BLUETOOTH_COD_PAIRS
     uint ulCODMask;
     const(wchar)* pcszDescription;
 }
-alias PFN_DEVICE_CALLBACK = BOOL function(void*, const(BLUETOOTH_DEVICE_INFO)*);
+alias PFN_DEVICE_CALLBACK = BOOL function(void* pvParam, const(BLUETOOTH_DEVICE_INFO)* pDevice);
 struct BLUETOOTH_SELECT_DEVICE_PARAMS
 {
     uint dwSize;
@@ -1136,8 +1136,8 @@ struct BLUETOOTH_PASSKEY_INFO
 {
     uint passkey;
 }
-alias PFN_AUTHENTICATION_CALLBACK = BOOL function(void*, BLUETOOTH_DEVICE_INFO*);
-alias PFN_AUTHENTICATION_CALLBACK_EX = BOOL function(void*, BLUETOOTH_AUTHENTICATION_CALLBACK_PARAMS*);
+alias PFN_AUTHENTICATION_CALLBACK = BOOL function(void* pvParam, BLUETOOTH_DEVICE_INFO* pDevice);
+alias PFN_AUTHENTICATION_CALLBACK_EX = BOOL function(void* pvParam, BLUETOOTH_AUTHENTICATION_CALLBACK_PARAMS* pAuthCallbackParams);
 struct BLUETOOTH_AUTHENTICATE_RESPONSE
 {
     BLUETOOTH_ADDRESS bthAddressRemote;
@@ -1199,7 +1199,7 @@ struct SDP_STRING_TYPE_DATA
     ushort mibeNum;
     ushort attributeId;
 }
-alias PFN_BLUETOOTH_ENUM_ATTRIBUTES_CALLBACK = BOOL function(uint, ubyte*, uint, void*);
+alias PFN_BLUETOOTH_ENUM_ATTRIBUTES_CALLBACK = BOOL function(uint uAttribId, ubyte* pValueStream, uint cbStreamSize, void* pvParam);
 struct BTH_LE_UUID
 {
     BOOLEAN IsShortUuid;
@@ -1292,7 +1292,7 @@ enum : int
     CharacteristicValueChangedEvent = 0x00000000,
 }
 
-alias PFNBLUETOOTH_GATT_EVENT_CALLBACK = void function(BTH_LE_GATT_EVENT_TYPE, void*, void*);
+alias PFNBLUETOOTH_GATT_EVENT_CALLBACK = void function(BTH_LE_GATT_EVENT_TYPE EventType, void* EventOutParameter, void* Context);
 struct BLUETOOTH_GATT_VALUE_CHANGED_EVENT_REGISTRATION
 {
     ushort NumCharacteristics;

@@ -549,129 +549,129 @@ enum : int
     UIA_SayAsInterpretAsMetadataId = 0x000186a0,
 }
 
-LRESULT LresultFromObject(const(GUID)*, WPARAM, IUnknown);
-HRESULT ObjectFromLresult(LRESULT, const(GUID)*, WPARAM, void**);
-HRESULT WindowFromAccessibleObject(IAccessible, HWND*);
-HRESULT AccessibleObjectFromWindow(HWND, uint, const(GUID)*, void**);
-HRESULT AccessibleObjectFromEvent(HWND, uint, uint, IAccessible*, VARIANT*);
-HRESULT AccessibleObjectFromPoint(POINT, IAccessible*, VARIANT*);
-HRESULT AccessibleChildren(IAccessible, int, int, VARIANT*, int*);
-uint GetRoleTextA(uint, PSTR, uint);
-uint GetRoleTextW(uint, PWSTR, uint);
-uint GetStateTextA(uint, PSTR, uint);
-uint GetStateTextW(uint, PWSTR, uint);
-void GetOleaccVersionInfo(uint*, uint*);
-HRESULT CreateStdAccessibleObject(HWND, int, const(GUID)*, void**);
-HRESULT CreateStdAccessibleProxyA(HWND, const(char)*, int, const(GUID)*, void**);
-HRESULT CreateStdAccessibleProxyW(HWND, const(wchar)*, int, const(GUID)*, void**);
-HRESULT AccSetRunningUtilityState(HWND, uint, ACC_UTILITY_STATE_FLAGS);
-HRESULT AccNotifyTouchInteraction(HWND, HWND, POINT);
-BOOL UiaGetErrorDescription(BSTR*);
-HRESULT UiaHUiaNodeFromVariant(VARIANT*, HUIANODE*);
-HRESULT UiaHPatternObjectFromVariant(VARIANT*, HUIAPATTERNOBJECT*);
-HRESULT UiaHTextRangeFromVariant(VARIANT*, HUIATEXTRANGE*);
-BOOL UiaNodeRelease(HUIANODE);
-HRESULT UiaGetPropertyValue(HUIANODE, int, VARIANT*);
-HRESULT UiaGetPatternProvider(HUIANODE, int, HUIAPATTERNOBJECT*);
-HRESULT UiaGetRuntimeId(HUIANODE, SAFEARRAY**);
-HRESULT UiaSetFocus(HUIANODE);
-HRESULT UiaNavigate(HUIANODE, NavigateDirection, UiaCondition*, UiaCacheRequest*, SAFEARRAY**, BSTR*);
-HRESULT UiaGetUpdatedCache(HUIANODE, UiaCacheRequest*, NormalizeState, UiaCondition*, SAFEARRAY**, BSTR*);
-HRESULT UiaFind(HUIANODE, UiaFindParams*, UiaCacheRequest*, SAFEARRAY**, SAFEARRAY**, SAFEARRAY**);
-HRESULT UiaNodeFromPoint(double, double, UiaCacheRequest*, SAFEARRAY**, BSTR*);
-HRESULT UiaNodeFromFocus(UiaCacheRequest*, SAFEARRAY**, BSTR*);
-HRESULT UiaNodeFromHandle(HWND, HUIANODE*);
-HRESULT UiaNodeFromProvider(IRawElementProviderSimple, HUIANODE*);
-HRESULT UiaGetRootNode(HUIANODE*);
-void UiaRegisterProviderCallback(UiaProviderCallback*);
-int UiaLookupId(AutomationIdentifierType, const(GUID)*);
-HRESULT UiaGetReservedNotSupportedValue(IUnknown*);
-HRESULT UiaGetReservedMixedAttributeValue(IUnknown*);
+LRESULT LresultFromObject(const(GUID)* riid, WPARAM wParam, IUnknown punk);
+HRESULT ObjectFromLresult(LRESULT lResult, const(GUID)* riid, WPARAM wParam, void** ppvObject);
+HRESULT WindowFromAccessibleObject(IAccessible param0, HWND* phwnd);
+HRESULT AccessibleObjectFromWindow(HWND hwnd, uint dwId, const(GUID)* riid, void** ppvObject);
+HRESULT AccessibleObjectFromEvent(HWND hwnd, uint dwId, uint dwChildId, IAccessible* ppacc, VARIANT* pvarChild);
+HRESULT AccessibleObjectFromPoint(POINT ptScreen, IAccessible* ppacc, VARIANT* pvarChild);
+HRESULT AccessibleChildren(IAccessible paccContainer, int iChildStart, int cChildren, VARIANT* rgvarChildren, int* pcObtained);
+uint GetRoleTextA(uint lRole, PSTR lpszRole, uint cchRoleMax);
+uint GetRoleTextW(uint lRole, PWSTR lpszRole, uint cchRoleMax);
+uint GetStateTextA(uint lStateBit, PSTR lpszState, uint cchState);
+uint GetStateTextW(uint lStateBit, PWSTR lpszState, uint cchState);
+void GetOleaccVersionInfo(uint* pVer, uint* pBuild);
+HRESULT CreateStdAccessibleObject(HWND hwnd, int idObject, const(GUID)* riid, void** ppvObject);
+HRESULT CreateStdAccessibleProxyA(HWND hwnd, const(char)* pClassName, int idObject, const(GUID)* riid, void** ppvObject);
+HRESULT CreateStdAccessibleProxyW(HWND hwnd, const(wchar)* pClassName, int idObject, const(GUID)* riid, void** ppvObject);
+HRESULT AccSetRunningUtilityState(HWND hwndApp, uint dwUtilityStateMask, ACC_UTILITY_STATE_FLAGS dwUtilityState);
+HRESULT AccNotifyTouchInteraction(HWND hwndApp, HWND hwndTarget, POINT ptTarget);
+BOOL UiaGetErrorDescription(BSTR* pDescription);
+HRESULT UiaHUiaNodeFromVariant(VARIANT* pvar, HUIANODE* phnode);
+HRESULT UiaHPatternObjectFromVariant(VARIANT* pvar, HUIAPATTERNOBJECT* phobj);
+HRESULT UiaHTextRangeFromVariant(VARIANT* pvar, HUIATEXTRANGE* phtextrange);
+BOOL UiaNodeRelease(HUIANODE hnode);
+HRESULT UiaGetPropertyValue(HUIANODE hnode, int propertyId, VARIANT* pValue);
+HRESULT UiaGetPatternProvider(HUIANODE hnode, int patternId, HUIAPATTERNOBJECT* phobj);
+HRESULT UiaGetRuntimeId(HUIANODE hnode, SAFEARRAY** pruntimeId);
+HRESULT UiaSetFocus(HUIANODE hnode);
+HRESULT UiaNavigate(HUIANODE hnode, NavigateDirection direction, UiaCondition* pCondition, UiaCacheRequest* pRequest, SAFEARRAY** ppRequestedData, BSTR* ppTreeStructure);
+HRESULT UiaGetUpdatedCache(HUIANODE hnode, UiaCacheRequest* pRequest, NormalizeState normalizeState, UiaCondition* pNormalizeCondition, SAFEARRAY** ppRequestedData, BSTR* ppTreeStructure);
+HRESULT UiaFind(HUIANODE hnode, UiaFindParams* pParams, UiaCacheRequest* pRequest, SAFEARRAY** ppRequestedData, SAFEARRAY** ppOffsets, SAFEARRAY** ppTreeStructures);
+HRESULT UiaNodeFromPoint(double x, double y, UiaCacheRequest* pRequest, SAFEARRAY** ppRequestedData, BSTR* ppTreeStructure);
+HRESULT UiaNodeFromFocus(UiaCacheRequest* pRequest, SAFEARRAY** ppRequestedData, BSTR* ppTreeStructure);
+HRESULT UiaNodeFromHandle(HWND hwnd, HUIANODE* phnode);
+HRESULT UiaNodeFromProvider(IRawElementProviderSimple pProvider, HUIANODE* phnode);
+HRESULT UiaGetRootNode(HUIANODE* phnode);
+void UiaRegisterProviderCallback(UiaProviderCallback* pCallback);
+int UiaLookupId(AutomationIdentifierType type, const(GUID)* pGuid);
+HRESULT UiaGetReservedNotSupportedValue(IUnknown* punkNotSupportedValue);
+HRESULT UiaGetReservedMixedAttributeValue(IUnknown* punkMixedAttributeValue);
 BOOL UiaClientsAreListening();
-HRESULT UiaRaiseAutomationPropertyChangedEvent(IRawElementProviderSimple, UIA_PROPERTY_ID, VARIANT, VARIANT);
-HRESULT UiaRaiseAutomationEvent(IRawElementProviderSimple, UIA_EVENT_ID);
-HRESULT UiaRaiseStructureChangedEvent(IRawElementProviderSimple, StructureChangeType, int*, int);
-HRESULT UiaRaiseAsyncContentLoadedEvent(IRawElementProviderSimple, AsyncContentLoadedState, double);
-HRESULT UiaRaiseTextEditTextChangedEvent(IRawElementProviderSimple, TextEditChangeType, SAFEARRAY*);
-HRESULT UiaRaiseChangesEvent(IRawElementProviderSimple, int, UiaChangeInfo*);
-HRESULT UiaRaiseNotificationEvent(IRawElementProviderSimple, NotificationKind, NotificationProcessing, BSTR, BSTR);
-HRESULT UiaRaiseActiveTextPositionChangedEvent(IRawElementProviderSimple, ITextRangeProvider);
-HRESULT UiaAddEvent(HUIANODE, int, UiaEventCallback*, TreeScope, int*, int, UiaCacheRequest*, HUIAEVENT*);
-HRESULT UiaRemoveEvent(HUIAEVENT);
-HRESULT UiaEventAddWindow(HUIAEVENT, HWND);
-HRESULT UiaEventRemoveWindow(HUIAEVENT, HWND);
-HRESULT DockPattern_SetDockPosition(HUIAPATTERNOBJECT, DockPosition);
-HRESULT ExpandCollapsePattern_Collapse(HUIAPATTERNOBJECT);
-HRESULT ExpandCollapsePattern_Expand(HUIAPATTERNOBJECT);
-HRESULT GridPattern_GetItem(HUIAPATTERNOBJECT, int, int, HUIANODE*);
-HRESULT InvokePattern_Invoke(HUIAPATTERNOBJECT);
-HRESULT MultipleViewPattern_GetViewName(HUIAPATTERNOBJECT, int, BSTR*);
-HRESULT MultipleViewPattern_SetCurrentView(HUIAPATTERNOBJECT, int);
-HRESULT RangeValuePattern_SetValue(HUIAPATTERNOBJECT, double);
-HRESULT ScrollItemPattern_ScrollIntoView(HUIAPATTERNOBJECT);
-HRESULT ScrollPattern_Scroll(HUIAPATTERNOBJECT, ScrollAmount, ScrollAmount);
-HRESULT ScrollPattern_SetScrollPercent(HUIAPATTERNOBJECT, double, double);
-HRESULT SelectionItemPattern_AddToSelection(HUIAPATTERNOBJECT);
-HRESULT SelectionItemPattern_RemoveFromSelection(HUIAPATTERNOBJECT);
-HRESULT SelectionItemPattern_Select(HUIAPATTERNOBJECT);
-HRESULT TogglePattern_Toggle(HUIAPATTERNOBJECT);
-HRESULT TransformPattern_Move(HUIAPATTERNOBJECT, double, double);
-HRESULT TransformPattern_Resize(HUIAPATTERNOBJECT, double, double);
-HRESULT TransformPattern_Rotate(HUIAPATTERNOBJECT, double);
-HRESULT ValuePattern_SetValue(HUIAPATTERNOBJECT, const(wchar)*);
-HRESULT WindowPattern_Close(HUIAPATTERNOBJECT);
-HRESULT WindowPattern_SetWindowVisualState(HUIAPATTERNOBJECT, WindowVisualState);
-HRESULT WindowPattern_WaitForInputIdle(HUIAPATTERNOBJECT, int, BOOL*);
-HRESULT TextPattern_GetSelection(HUIAPATTERNOBJECT, SAFEARRAY**);
-HRESULT TextPattern_GetVisibleRanges(HUIAPATTERNOBJECT, SAFEARRAY**);
-HRESULT TextPattern_RangeFromChild(HUIAPATTERNOBJECT, HUIANODE, HUIATEXTRANGE*);
-HRESULT TextPattern_RangeFromPoint(HUIAPATTERNOBJECT, UiaPoint, HUIATEXTRANGE*);
-HRESULT TextPattern_get_DocumentRange(HUIAPATTERNOBJECT, HUIATEXTRANGE*);
-HRESULT TextPattern_get_SupportedTextSelection(HUIAPATTERNOBJECT, SupportedTextSelection*);
-HRESULT TextRange_Clone(HUIATEXTRANGE, HUIATEXTRANGE*);
-HRESULT TextRange_Compare(HUIATEXTRANGE, HUIATEXTRANGE, BOOL*);
-HRESULT TextRange_CompareEndpoints(HUIATEXTRANGE, TextPatternRangeEndpoint, HUIATEXTRANGE, TextPatternRangeEndpoint, int*);
-HRESULT TextRange_ExpandToEnclosingUnit(HUIATEXTRANGE, TextUnit);
-HRESULT TextRange_GetAttributeValue(HUIATEXTRANGE, int, VARIANT*);
-HRESULT TextRange_FindAttribute(HUIATEXTRANGE, int, VARIANT, BOOL, HUIATEXTRANGE*);
-HRESULT TextRange_FindText(HUIATEXTRANGE, BSTR, BOOL, BOOL, HUIATEXTRANGE*);
-HRESULT TextRange_GetBoundingRectangles(HUIATEXTRANGE, SAFEARRAY**);
-HRESULT TextRange_GetEnclosingElement(HUIATEXTRANGE, HUIANODE*);
-HRESULT TextRange_GetText(HUIATEXTRANGE, int, BSTR*);
-HRESULT TextRange_Move(HUIATEXTRANGE, TextUnit, int, int*);
-HRESULT TextRange_MoveEndpointByUnit(HUIATEXTRANGE, TextPatternRangeEndpoint, TextUnit, int, int*);
-HRESULT TextRange_MoveEndpointByRange(HUIATEXTRANGE, TextPatternRangeEndpoint, HUIATEXTRANGE, TextPatternRangeEndpoint);
-HRESULT TextRange_Select(HUIATEXTRANGE);
-HRESULT TextRange_AddToSelection(HUIATEXTRANGE);
-HRESULT TextRange_RemoveFromSelection(HUIATEXTRANGE);
-HRESULT TextRange_ScrollIntoView(HUIATEXTRANGE, BOOL);
-HRESULT TextRange_GetChildren(HUIATEXTRANGE, SAFEARRAY**);
-HRESULT ItemContainerPattern_FindItemByProperty(HUIAPATTERNOBJECT, HUIANODE, int, VARIANT, HUIANODE*);
-HRESULT LegacyIAccessiblePattern_Select(HUIAPATTERNOBJECT, int);
-HRESULT LegacyIAccessiblePattern_DoDefaultAction(HUIAPATTERNOBJECT);
-HRESULT LegacyIAccessiblePattern_SetValue(HUIAPATTERNOBJECT, const(wchar)*);
-HRESULT LegacyIAccessiblePattern_GetIAccessible(HUIAPATTERNOBJECT, IAccessible*);
-HRESULT SynchronizedInputPattern_StartListening(HUIAPATTERNOBJECT, SynchronizedInputType);
-HRESULT SynchronizedInputPattern_Cancel(HUIAPATTERNOBJECT);
-HRESULT VirtualizedItemPattern_Realize(HUIAPATTERNOBJECT);
-BOOL UiaPatternRelease(HUIAPATTERNOBJECT);
-BOOL UiaTextRangeRelease(HUIATEXTRANGE);
-LRESULT UiaReturnRawElementProvider(HWND, WPARAM, LPARAM, IRawElementProviderSimple);
-HRESULT UiaHostProviderFromHwnd(HWND, IRawElementProviderSimple*);
-HRESULT UiaProviderForNonClient(HWND, int, int, IRawElementProviderSimple*);
-HRESULT UiaIAccessibleFromProvider(IRawElementProviderSimple, uint, IAccessible*, VARIANT*);
-HRESULT UiaProviderFromIAccessible(IAccessible, int, uint, IRawElementProviderSimple*);
+HRESULT UiaRaiseAutomationPropertyChangedEvent(IRawElementProviderSimple pProvider, UIA_PROPERTY_ID id, VARIANT oldValue, VARIANT newValue);
+HRESULT UiaRaiseAutomationEvent(IRawElementProviderSimple pProvider, UIA_EVENT_ID id);
+HRESULT UiaRaiseStructureChangedEvent(IRawElementProviderSimple pProvider, StructureChangeType structureChangeType, int* pRuntimeId, int cRuntimeIdLen);
+HRESULT UiaRaiseAsyncContentLoadedEvent(IRawElementProviderSimple pProvider, AsyncContentLoadedState asyncContentLoadedState, double percentComplete);
+HRESULT UiaRaiseTextEditTextChangedEvent(IRawElementProviderSimple pProvider, TextEditChangeType textEditChangeType, SAFEARRAY* pChangedData);
+HRESULT UiaRaiseChangesEvent(IRawElementProviderSimple pProvider, int eventIdCount, UiaChangeInfo* pUiaChanges);
+HRESULT UiaRaiseNotificationEvent(IRawElementProviderSimple provider, NotificationKind notificationKind, NotificationProcessing notificationProcessing, BSTR displayString, BSTR activityId);
+HRESULT UiaRaiseActiveTextPositionChangedEvent(IRawElementProviderSimple provider, ITextRangeProvider textRange);
+HRESULT UiaAddEvent(HUIANODE hnode, int eventId, UiaEventCallback* pCallback, TreeScope scope_, int* pProperties, int cProperties, UiaCacheRequest* pRequest, HUIAEVENT* phEvent);
+HRESULT UiaRemoveEvent(HUIAEVENT hEvent);
+HRESULT UiaEventAddWindow(HUIAEVENT hEvent, HWND hwnd);
+HRESULT UiaEventRemoveWindow(HUIAEVENT hEvent, HWND hwnd);
+HRESULT DockPattern_SetDockPosition(HUIAPATTERNOBJECT hobj, DockPosition dockPosition);
+HRESULT ExpandCollapsePattern_Collapse(HUIAPATTERNOBJECT hobj);
+HRESULT ExpandCollapsePattern_Expand(HUIAPATTERNOBJECT hobj);
+HRESULT GridPattern_GetItem(HUIAPATTERNOBJECT hobj, int row, int column, HUIANODE* pResult);
+HRESULT InvokePattern_Invoke(HUIAPATTERNOBJECT hobj);
+HRESULT MultipleViewPattern_GetViewName(HUIAPATTERNOBJECT hobj, int viewId, BSTR* ppStr);
+HRESULT MultipleViewPattern_SetCurrentView(HUIAPATTERNOBJECT hobj, int viewId);
+HRESULT RangeValuePattern_SetValue(HUIAPATTERNOBJECT hobj, double val);
+HRESULT ScrollItemPattern_ScrollIntoView(HUIAPATTERNOBJECT hobj);
+HRESULT ScrollPattern_Scroll(HUIAPATTERNOBJECT hobj, ScrollAmount horizontalAmount, ScrollAmount verticalAmount);
+HRESULT ScrollPattern_SetScrollPercent(HUIAPATTERNOBJECT hobj, double horizontalPercent, double verticalPercent);
+HRESULT SelectionItemPattern_AddToSelection(HUIAPATTERNOBJECT hobj);
+HRESULT SelectionItemPattern_RemoveFromSelection(HUIAPATTERNOBJECT hobj);
+HRESULT SelectionItemPattern_Select(HUIAPATTERNOBJECT hobj);
+HRESULT TogglePattern_Toggle(HUIAPATTERNOBJECT hobj);
+HRESULT TransformPattern_Move(HUIAPATTERNOBJECT hobj, double x, double y);
+HRESULT TransformPattern_Resize(HUIAPATTERNOBJECT hobj, double width, double height);
+HRESULT TransformPattern_Rotate(HUIAPATTERNOBJECT hobj, double degrees);
+HRESULT ValuePattern_SetValue(HUIAPATTERNOBJECT hobj, const(wchar)* pVal);
+HRESULT WindowPattern_Close(HUIAPATTERNOBJECT hobj);
+HRESULT WindowPattern_SetWindowVisualState(HUIAPATTERNOBJECT hobj, WindowVisualState state);
+HRESULT WindowPattern_WaitForInputIdle(HUIAPATTERNOBJECT hobj, int milliseconds, BOOL* pResult);
+HRESULT TextPattern_GetSelection(HUIAPATTERNOBJECT hobj, SAFEARRAY** pRetVal);
+HRESULT TextPattern_GetVisibleRanges(HUIAPATTERNOBJECT hobj, SAFEARRAY** pRetVal);
+HRESULT TextPattern_RangeFromChild(HUIAPATTERNOBJECT hobj, HUIANODE hnodeChild, HUIATEXTRANGE* pRetVal);
+HRESULT TextPattern_RangeFromPoint(HUIAPATTERNOBJECT hobj, UiaPoint point, HUIATEXTRANGE* pRetVal);
+HRESULT TextPattern_get_DocumentRange(HUIAPATTERNOBJECT hobj, HUIATEXTRANGE* pRetVal);
+HRESULT TextPattern_get_SupportedTextSelection(HUIAPATTERNOBJECT hobj, SupportedTextSelection* pRetVal);
+HRESULT TextRange_Clone(HUIATEXTRANGE hobj, HUIATEXTRANGE* pRetVal);
+HRESULT TextRange_Compare(HUIATEXTRANGE hobj, HUIATEXTRANGE range, BOOL* pRetVal);
+HRESULT TextRange_CompareEndpoints(HUIATEXTRANGE hobj, TextPatternRangeEndpoint endpoint, HUIATEXTRANGE targetRange, TextPatternRangeEndpoint targetEndpoint, int* pRetVal);
+HRESULT TextRange_ExpandToEnclosingUnit(HUIATEXTRANGE hobj, TextUnit unit);
+HRESULT TextRange_GetAttributeValue(HUIATEXTRANGE hobj, int attributeId, VARIANT* pRetVal);
+HRESULT TextRange_FindAttribute(HUIATEXTRANGE hobj, int attributeId, VARIANT val, BOOL backward, HUIATEXTRANGE* pRetVal);
+HRESULT TextRange_FindText(HUIATEXTRANGE hobj, BSTR text, BOOL backward, BOOL ignoreCase, HUIATEXTRANGE* pRetVal);
+HRESULT TextRange_GetBoundingRectangles(HUIATEXTRANGE hobj, SAFEARRAY** pRetVal);
+HRESULT TextRange_GetEnclosingElement(HUIATEXTRANGE hobj, HUIANODE* pRetVal);
+HRESULT TextRange_GetText(HUIATEXTRANGE hobj, int maxLength, BSTR* pRetVal);
+HRESULT TextRange_Move(HUIATEXTRANGE hobj, TextUnit unit, int count, int* pRetVal);
+HRESULT TextRange_MoveEndpointByUnit(HUIATEXTRANGE hobj, TextPatternRangeEndpoint endpoint, TextUnit unit, int count, int* pRetVal);
+HRESULT TextRange_MoveEndpointByRange(HUIATEXTRANGE hobj, TextPatternRangeEndpoint endpoint, HUIATEXTRANGE targetRange, TextPatternRangeEndpoint targetEndpoint);
+HRESULT TextRange_Select(HUIATEXTRANGE hobj);
+HRESULT TextRange_AddToSelection(HUIATEXTRANGE hobj);
+HRESULT TextRange_RemoveFromSelection(HUIATEXTRANGE hobj);
+HRESULT TextRange_ScrollIntoView(HUIATEXTRANGE hobj, BOOL alignToTop);
+HRESULT TextRange_GetChildren(HUIATEXTRANGE hobj, SAFEARRAY** pRetVal);
+HRESULT ItemContainerPattern_FindItemByProperty(HUIAPATTERNOBJECT hobj, HUIANODE hnodeStartAfter, int propertyId, VARIANT value, HUIANODE* pFound);
+HRESULT LegacyIAccessiblePattern_Select(HUIAPATTERNOBJECT hobj, int flagsSelect);
+HRESULT LegacyIAccessiblePattern_DoDefaultAction(HUIAPATTERNOBJECT hobj);
+HRESULT LegacyIAccessiblePattern_SetValue(HUIAPATTERNOBJECT hobj, const(wchar)* szValue);
+HRESULT LegacyIAccessiblePattern_GetIAccessible(HUIAPATTERNOBJECT hobj, IAccessible* pAccessible);
+HRESULT SynchronizedInputPattern_StartListening(HUIAPATTERNOBJECT hobj, SynchronizedInputType inputType);
+HRESULT SynchronizedInputPattern_Cancel(HUIAPATTERNOBJECT hobj);
+HRESULT VirtualizedItemPattern_Realize(HUIAPATTERNOBJECT hobj);
+BOOL UiaPatternRelease(HUIAPATTERNOBJECT hobj);
+BOOL UiaTextRangeRelease(HUIATEXTRANGE hobj);
+LRESULT UiaReturnRawElementProvider(HWND hwnd, WPARAM wParam, LPARAM lParam, IRawElementProviderSimple el);
+HRESULT UiaHostProviderFromHwnd(HWND hwnd, IRawElementProviderSimple* ppProvider);
+HRESULT UiaProviderForNonClient(HWND hwnd, int idObject, int idChild, IRawElementProviderSimple* ppProvider);
+HRESULT UiaIAccessibleFromProvider(IRawElementProviderSimple pProvider, uint dwFlags, IAccessible* ppAccessible, VARIANT* pvarChild);
+HRESULT UiaProviderFromIAccessible(IAccessible pAccessible, int idChild, uint dwFlags, IRawElementProviderSimple* ppProvider);
 HRESULT UiaDisconnectAllProviders();
-HRESULT UiaDisconnectProvider(IRawElementProviderSimple);
-BOOL UiaHasServerSideProvider(HWND);
-BOOL RegisterPointerInputTarget(HWND, POINTER_INPUT_TYPE);
-BOOL UnregisterPointerInputTarget(HWND, POINTER_INPUT_TYPE);
-BOOL RegisterPointerInputTargetEx(HWND, POINTER_INPUT_TYPE, BOOL);
-BOOL UnregisterPointerInputTargetEx(HWND, POINTER_INPUT_TYPE);
-void NotifyWinEvent(uint, HWND, int, int);
-HWINEVENTHOOK SetWinEventHook(uint, uint, HMODULE, WINEVENTPROC, uint, uint, uint);
-BOOL IsWinEventHookInstalled(uint);
-BOOL UnhookWinEvent(HWINEVENTHOOK);
+HRESULT UiaDisconnectProvider(IRawElementProviderSimple pProvider);
+BOOL UiaHasServerSideProvider(HWND hwnd);
+BOOL RegisterPointerInputTarget(HWND hwnd, POINTER_INPUT_TYPE pointerType);
+BOOL UnregisterPointerInputTarget(HWND hwnd, POINTER_INPUT_TYPE pointerType);
+BOOL RegisterPointerInputTargetEx(HWND hwnd, POINTER_INPUT_TYPE pointerType, BOOL fObserve);
+BOOL UnregisterPointerInputTargetEx(HWND hwnd, POINTER_INPUT_TYPE pointerType);
+void NotifyWinEvent(uint event, HWND hwnd, int idObject, int idChild);
+HWINEVENTHOOK SetWinEventHook(uint eventMin, uint eventMax, HMODULE hmodWinEventProc, WINEVENTPROC pfnWinEventProc, uint idProcess, uint idThread, uint dwFlags);
+BOOL IsWinEventHookInstalled(uint event);
+BOOL UnhookWinEvent(HWINEVENTHOOK hWinEventHook);
 enum LIBID_Accessibility = GUID(0x1ea4dbf0, 0x3c3b, 0x11cf, [0x81, 0xc, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 enum CLSID_AccPropServices = GUID(0xb5f8350b, 0x548, 0x48b1, [0xa6, 0xee, 0x88, 0xbd, 0x0, 0xb4, 0xa5, 0xe7]);
 enum IIS_IsOleaccProxy = GUID(0x902697fa, 0x80e4, 0x4560, [0x80, 0x2a, 0xa1, 0x3f, 0x22, 0xa6, 0x47, 0x9]);
@@ -1208,12 +1208,12 @@ alias HUIANODE = void*;
 alias HUIAPATTERNOBJECT = void*;
 alias HUIATEXTRANGE = void*;
 alias HUIAEVENT = void*;
-alias LPFNLRESULTFROMOBJECT = LRESULT function(const(GUID)*, WPARAM, IUnknown);
-alias LPFNOBJECTFROMLRESULT = HRESULT function(LRESULT, const(GUID)*, WPARAM, void**);
-alias LPFNACCESSIBLEOBJECTFROMWINDOW = HRESULT function(HWND, uint, const(GUID)*, void**);
-alias LPFNACCESSIBLEOBJECTFROMPOINT = HRESULT function(POINT, IAccessible*, VARIANT*);
-alias LPFNCREATESTDACCESSIBLEOBJECT = HRESULT function(HWND, int, const(GUID)*, void**);
-alias LPFNACCESSIBLECHILDREN = HRESULT function(IAccessible, int, int, VARIANT*, int*);
+alias LPFNLRESULTFROMOBJECT = LRESULT function(const(GUID)* riid, WPARAM wParam, IUnknown punk);
+alias LPFNOBJECTFROMLRESULT = HRESULT function(LRESULT lResult, const(GUID)* riid, WPARAM wParam, void** ppvObject);
+alias LPFNACCESSIBLEOBJECTFROMWINDOW = HRESULT function(HWND hwnd, uint dwId, const(GUID)* riid, void** ppvObject);
+alias LPFNACCESSIBLEOBJECTFROMPOINT = HRESULT function(POINT ptScreen, IAccessible* ppacc, VARIANT* pvarChild);
+alias LPFNCREATESTDACCESSIBLEOBJECT = HRESULT function(HWND hwnd, int idObject, const(GUID)* riid, void** ppvObject);
+alias LPFNACCESSIBLECHILDREN = HRESULT function(IAccessible paccContainer, int iChildStart, int cChildren, VARIANT* rgvarChildren, int* pcObtained);
 struct MSAAMENUINFO
 {
     uint dwMSAASignature;
@@ -1223,40 +1223,40 @@ struct MSAAMENUINFO
 enum IID_IAccessible = GUID(0x618736e0, 0x3c3d, 0x11cf, [0x81, 0xc, 0x0, 0xaa, 0x0, 0x38, 0x9b, 0x71]);
 interface IAccessible : IDispatch
 {
-    HRESULT get_accParent(IDispatch*);
-    HRESULT get_accChildCount(int*);
-    HRESULT get_accChild(VARIANT, IDispatch*);
-    HRESULT get_accName(VARIANT, BSTR*);
-    HRESULT get_accValue(VARIANT, BSTR*);
-    HRESULT get_accDescription(VARIANT, BSTR*);
-    HRESULT get_accRole(VARIANT, VARIANT*);
-    HRESULT get_accState(VARIANT, VARIANT*);
-    HRESULT get_accHelp(VARIANT, BSTR*);
-    HRESULT get_accHelpTopic(BSTR*, VARIANT, int*);
-    HRESULT get_accKeyboardShortcut(VARIANT, BSTR*);
-    HRESULT get_accFocus(VARIANT*);
-    HRESULT get_accSelection(VARIANT*);
-    HRESULT get_accDefaultAction(VARIANT, BSTR*);
-    HRESULT accSelect(int, VARIANT);
-    HRESULT accLocation(int*, int*, int*, int*, VARIANT);
-    HRESULT accNavigate(int, VARIANT, VARIANT*);
-    HRESULT accHitTest(int, int, VARIANT*);
-    HRESULT accDoDefaultAction(VARIANT);
-    HRESULT put_accName(VARIANT, BSTR);
-    HRESULT put_accValue(VARIANT, BSTR);
+    HRESULT get_accParent(IDispatch* ppdispParent);
+    HRESULT get_accChildCount(int* pcountChildren);
+    HRESULT get_accChild(VARIANT varChild, IDispatch* ppdispChild);
+    HRESULT get_accName(VARIANT varChild, BSTR* pszName);
+    HRESULT get_accValue(VARIANT varChild, BSTR* pszValue);
+    HRESULT get_accDescription(VARIANT varChild, BSTR* pszDescription);
+    HRESULT get_accRole(VARIANT varChild, VARIANT* pvarRole);
+    HRESULT get_accState(VARIANT varChild, VARIANT* pvarState);
+    HRESULT get_accHelp(VARIANT varChild, BSTR* pszHelp);
+    HRESULT get_accHelpTopic(BSTR* pszHelpFile, VARIANT varChild, int* pidTopic);
+    HRESULT get_accKeyboardShortcut(VARIANT varChild, BSTR* pszKeyboardShortcut);
+    HRESULT get_accFocus(VARIANT* pvarChild);
+    HRESULT get_accSelection(VARIANT* pvarChildren);
+    HRESULT get_accDefaultAction(VARIANT varChild, BSTR* pszDefaultAction);
+    HRESULT accSelect(int flagsSelect, VARIANT varChild);
+    HRESULT accLocation(int* pxLeft, int* pyTop, int* pcxWidth, int* pcyHeight, VARIANT varChild);
+    HRESULT accNavigate(int navDir, VARIANT varStart, VARIANT* pvarEndUpAt);
+    HRESULT accHitTest(int xLeft, int yTop, VARIANT* pvarChild);
+    HRESULT accDoDefaultAction(VARIANT varChild);
+    HRESULT put_accName(VARIANT varChild, BSTR szName);
+    HRESULT put_accValue(VARIANT varChild, BSTR szValue);
 }
 enum IID_IAccessibleHandler = GUID(0x3022430, 0xabc4, 0x11d0, [0xbd, 0xe2, 0x0, 0xaa, 0x0, 0x1a, 0x19, 0x53]);
 interface IAccessibleHandler : IUnknown
 {
-    HRESULT AccessibleObjectFromID(int, int, IAccessible*);
+    HRESULT AccessibleObjectFromID(int hwnd, int lObjectID, IAccessible* pIAccessible);
 }
 enum IID_IAccessibleWindowlessSite = GUID(0xbf3abd9c, 0x76da, 0x4389, [0x9e, 0xb6, 0x14, 0x27, 0xd2, 0x5a, 0xba, 0xb7]);
 interface IAccessibleWindowlessSite : IUnknown
 {
-    HRESULT AcquireObjectIdRange(int, IAccessibleHandler, int*);
-    HRESULT ReleaseObjectIdRange(int, IAccessibleHandler);
-    HRESULT QueryObjectIdRanges(IAccessibleHandler, SAFEARRAY**);
-    HRESULT GetParentAccessible(IAccessible*);
+    HRESULT AcquireObjectIdRange(int rangeSize, IAccessibleHandler pRangeOwner, int* pRangeBase);
+    HRESULT ReleaseObjectIdRange(int rangeBase, IAccessibleHandler pRangeOwner);
+    HRESULT QueryObjectIdRanges(IAccessibleHandler pRangesOwner, SAFEARRAY** psaRanges);
+    HRESULT GetParentAccessible(IAccessible* ppParent);
 }
 alias AnnoScope = int;
 enum : int
@@ -1268,31 +1268,31 @@ enum : int
 enum IID_IAccIdentity = GUID(0x7852b78d, 0x1cfd, 0x41c1, [0xa6, 0x15, 0x9c, 0xc, 0x85, 0x96, 0xb, 0x5f]);
 interface IAccIdentity : IUnknown
 {
-    HRESULT GetIdentityString(uint, ubyte**, uint*);
+    HRESULT GetIdentityString(uint dwIDChild, ubyte** ppIDString, uint* pdwIDStringLen);
 }
 enum IID_IAccPropServer = GUID(0x76c0dbbb, 0x15e0, 0x4e7b, [0xb6, 0x1b, 0x20, 0xee, 0xea, 0x20, 0x1, 0xe0]);
 interface IAccPropServer : IUnknown
 {
-    HRESULT GetPropValue(const(ubyte)*, uint, GUID, VARIANT*, BOOL*);
+    HRESULT GetPropValue(const(ubyte)* pIDString, uint dwIDStringLen, GUID idProp, VARIANT* pvarValue, BOOL* pfHasProp);
 }
 enum IID_IAccPropServices = GUID(0x6e26e776, 0x4f0, 0x495d, [0x80, 0xe4, 0x33, 0x30, 0x35, 0x2e, 0x31, 0x69]);
 interface IAccPropServices : IUnknown
 {
-    HRESULT SetPropValue(const(ubyte)*, uint, GUID, VARIANT);
-    HRESULT SetPropServer(const(ubyte)*, uint, const(GUID)*, int, IAccPropServer, AnnoScope);
-    HRESULT ClearProps(const(ubyte)*, uint, const(GUID)*, int);
-    HRESULT SetHwndProp(HWND, uint, uint, GUID, VARIANT);
-    HRESULT SetHwndPropStr(HWND, uint, uint, GUID, const(wchar)*);
-    HRESULT SetHwndPropServer(HWND, uint, uint, const(GUID)*, int, IAccPropServer, AnnoScope);
-    HRESULT ClearHwndProps(HWND, uint, uint, const(GUID)*, int);
-    HRESULT ComposeHwndIdentityString(HWND, uint, uint, ubyte**, uint*);
-    HRESULT DecomposeHwndIdentityString(const(ubyte)*, uint, HWND*, uint*, uint*);
-    HRESULT SetHmenuProp(HMENU, uint, GUID, VARIANT);
-    HRESULT SetHmenuPropStr(HMENU, uint, GUID, const(wchar)*);
-    HRESULT SetHmenuPropServer(HMENU, uint, const(GUID)*, int, IAccPropServer, AnnoScope);
-    HRESULT ClearHmenuProps(HMENU, uint, const(GUID)*, int);
-    HRESULT ComposeHmenuIdentityString(HMENU, uint, ubyte**, uint*);
-    HRESULT DecomposeHmenuIdentityString(const(ubyte)*, uint, HMENU*, uint*);
+    HRESULT SetPropValue(const(ubyte)* pIDString, uint dwIDStringLen, GUID idProp, VARIANT var);
+    HRESULT SetPropServer(const(ubyte)* pIDString, uint dwIDStringLen, const(GUID)* paProps, int cProps, IAccPropServer pServer, AnnoScope annoScope);
+    HRESULT ClearProps(const(ubyte)* pIDString, uint dwIDStringLen, const(GUID)* paProps, int cProps);
+    HRESULT SetHwndProp(HWND hwnd, uint idObject, uint idChild, GUID idProp, VARIANT var);
+    HRESULT SetHwndPropStr(HWND hwnd, uint idObject, uint idChild, GUID idProp, const(wchar)* str);
+    HRESULT SetHwndPropServer(HWND hwnd, uint idObject, uint idChild, const(GUID)* paProps, int cProps, IAccPropServer pServer, AnnoScope annoScope);
+    HRESULT ClearHwndProps(HWND hwnd, uint idObject, uint idChild, const(GUID)* paProps, int cProps);
+    HRESULT ComposeHwndIdentityString(HWND hwnd, uint idObject, uint idChild, ubyte** ppIDString, uint* pdwIDStringLen);
+    HRESULT DecomposeHwndIdentityString(const(ubyte)* pIDString, uint dwIDStringLen, HWND* phwnd, uint* pidObject, uint* pidChild);
+    HRESULT SetHmenuProp(HMENU hmenu, uint idChild, GUID idProp, VARIANT var);
+    HRESULT SetHmenuPropStr(HMENU hmenu, uint idChild, GUID idProp, const(wchar)* str);
+    HRESULT SetHmenuPropServer(HMENU hmenu, uint idChild, const(GUID)* paProps, int cProps, IAccPropServer pServer, AnnoScope annoScope);
+    HRESULT ClearHmenuProps(HMENU hmenu, uint idChild, const(GUID)* paProps, int cProps);
+    HRESULT ComposeHmenuIdentityString(HMENU hmenu, uint idChild, ubyte** ppIDString, uint* pdwIDStringLen);
+    HRESULT DecomposeHmenuIdentityString(const(ubyte)* pIDString, uint dwIDStringLen, HMENU* phmenu, uint* pidChild);
 }
 enum CLSID_CAccPropServices = GUID(0xb5f8350b, 0x548, 0x48b1, [0xa6, 0xee, 0x88, 0xbd, 0x0, 0xb4, 0xa5, 0xe7]);
 struct CAccPropServices
@@ -1752,18 +1752,18 @@ struct UIAutomationPatternInfo
 enum IID_IRawElementProviderSimple = GUID(0xd6dd68d1, 0x86fd, 0x4332, [0x86, 0x66, 0x9a, 0xbe, 0xde, 0xa2, 0xd2, 0x4c]);
 interface IRawElementProviderSimple : IUnknown
 {
-    HRESULT get_ProviderOptions(ProviderOptions*);
-    HRESULT GetPatternProvider(UIA_PATTERN_ID, IUnknown*);
-    HRESULT GetPropertyValue(UIA_PROPERTY_ID, VARIANT*);
-    HRESULT get_HostRawElementProvider(IRawElementProviderSimple*);
+    HRESULT get_ProviderOptions(ProviderOptions* pRetVal);
+    HRESULT GetPatternProvider(UIA_PATTERN_ID patternId, IUnknown* pRetVal);
+    HRESULT GetPropertyValue(UIA_PROPERTY_ID propertyId, VARIANT* pRetVal);
+    HRESULT get_HostRawElementProvider(IRawElementProviderSimple* pRetVal);
 }
 enum IID_IAccessibleEx = GUID(0xf8b80ada, 0x2c44, 0x48d0, [0x89, 0xbe, 0x5f, 0xf2, 0x3c, 0x9c, 0xd8, 0x75]);
 interface IAccessibleEx : IUnknown
 {
-    HRESULT GetObjectForChild(int, IAccessibleEx*);
-    HRESULT GetIAccessiblePair(IAccessible*, int*);
-    HRESULT GetRuntimeId(SAFEARRAY**);
-    HRESULT ConvertReturnedElement(IRawElementProviderSimple, IAccessibleEx*);
+    HRESULT GetObjectForChild(int idChild, IAccessibleEx* pRetVal);
+    HRESULT GetIAccessiblePair(IAccessible* ppAcc, int* pidChild);
+    HRESULT GetRuntimeId(SAFEARRAY** pRetVal);
+    HRESULT ConvertReturnedElement(IRawElementProviderSimple pIn, IAccessibleEx* ppRetValOut);
 }
 enum IID_IRawElementProviderSimple2 = GUID(0xa0a839a9, 0x8da1, 0x4a82, [0x80, 0x6a, 0x8e, 0xd, 0x44, 0xe7, 0x9f, 0x56]);
 interface IRawElementProviderSimple2 : IRawElementProviderSimple
@@ -1773,92 +1773,92 @@ interface IRawElementProviderSimple2 : IRawElementProviderSimple
 enum IID_IRawElementProviderSimple3 = GUID(0xfcf5d820, 0xd7ec, 0x4613, [0xbd, 0xf6, 0x42, 0xa8, 0x4c, 0xe7, 0xda, 0xaf]);
 interface IRawElementProviderSimple3 : IRawElementProviderSimple2
 {
-    HRESULT GetMetadataValue(int, UIA_METADATA_ID, VARIANT*);
+    HRESULT GetMetadataValue(int targetId, UIA_METADATA_ID metadataId, VARIANT* returnVal);
 }
 enum IID_IRawElementProviderFragmentRoot = GUID(0x620ce2a5, 0xab8f, 0x40a9, [0x86, 0xcb, 0xde, 0x3c, 0x75, 0x59, 0x9b, 0x58]);
 interface IRawElementProviderFragmentRoot : IUnknown
 {
-    HRESULT ElementProviderFromPoint(double, double, IRawElementProviderFragment*);
-    HRESULT GetFocus(IRawElementProviderFragment*);
+    HRESULT ElementProviderFromPoint(double x, double y, IRawElementProviderFragment* pRetVal);
+    HRESULT GetFocus(IRawElementProviderFragment* pRetVal);
 }
 enum IID_IRawElementProviderFragment = GUID(0xf7063da8, 0x8359, 0x439c, [0x92, 0x97, 0xbb, 0xc5, 0x29, 0x9a, 0x7d, 0x87]);
 interface IRawElementProviderFragment : IUnknown
 {
-    HRESULT Navigate(NavigateDirection, IRawElementProviderFragment*);
-    HRESULT GetRuntimeId(SAFEARRAY**);
-    HRESULT get_BoundingRectangle(UiaRect*);
-    HRESULT GetEmbeddedFragmentRoots(SAFEARRAY**);
+    HRESULT Navigate(NavigateDirection direction, IRawElementProviderFragment* pRetVal);
+    HRESULT GetRuntimeId(SAFEARRAY** pRetVal);
+    HRESULT get_BoundingRectangle(UiaRect* pRetVal);
+    HRESULT GetEmbeddedFragmentRoots(SAFEARRAY** pRetVal);
     HRESULT SetFocus();
-    HRESULT get_FragmentRoot(IRawElementProviderFragmentRoot*);
+    HRESULT get_FragmentRoot(IRawElementProviderFragmentRoot* pRetVal);
 }
 enum IID_IRawElementProviderAdviseEvents = GUID(0xa407b27b, 0xf6d, 0x4427, [0x92, 0x92, 0x47, 0x3c, 0x7b, 0xf9, 0x32, 0x58]);
 interface IRawElementProviderAdviseEvents : IUnknown
 {
-    HRESULT AdviseEventAdded(UIA_EVENT_ID, SAFEARRAY*);
-    HRESULT AdviseEventRemoved(UIA_EVENT_ID, SAFEARRAY*);
+    HRESULT AdviseEventAdded(UIA_EVENT_ID eventId, SAFEARRAY* propertyIDs);
+    HRESULT AdviseEventRemoved(UIA_EVENT_ID eventId, SAFEARRAY* propertyIDs);
 }
 enum IID_IRawElementProviderHwndOverride = GUID(0x1d5df27c, 0x8947, 0x4425, [0xb8, 0xd9, 0x79, 0x78, 0x7b, 0xb4, 0x60, 0xb8]);
 interface IRawElementProviderHwndOverride : IUnknown
 {
-    HRESULT GetOverrideProviderForHwnd(HWND, IRawElementProviderSimple*);
+    HRESULT GetOverrideProviderForHwnd(HWND hwnd, IRawElementProviderSimple* pRetVal);
 }
 enum IID_IProxyProviderWinEventSink = GUID(0x4fd82b78, 0xa43e, 0x46ac, [0x98, 0x3, 0xa, 0x69, 0x69, 0xc7, 0xc1, 0x83]);
 interface IProxyProviderWinEventSink : IUnknown
 {
-    HRESULT AddAutomationPropertyChangedEvent(IRawElementProviderSimple, UIA_PROPERTY_ID, VARIANT);
-    HRESULT AddAutomationEvent(IRawElementProviderSimple, UIA_EVENT_ID);
-    HRESULT AddStructureChangedEvent(IRawElementProviderSimple, StructureChangeType, SAFEARRAY*);
+    HRESULT AddAutomationPropertyChangedEvent(IRawElementProviderSimple pProvider, UIA_PROPERTY_ID id, VARIANT newValue);
+    HRESULT AddAutomationEvent(IRawElementProviderSimple pProvider, UIA_EVENT_ID id);
+    HRESULT AddStructureChangedEvent(IRawElementProviderSimple pProvider, StructureChangeType structureChangeType, SAFEARRAY* runtimeId);
 }
 enum IID_IProxyProviderWinEventHandler = GUID(0x89592ad4, 0xf4e0, 0x43d5, [0xa3, 0xb6, 0xba, 0xd7, 0xe1, 0x11, 0xb4, 0x35]);
 interface IProxyProviderWinEventHandler : IUnknown
 {
-    HRESULT RespondToWinEvent(uint, HWND, int, int, IProxyProviderWinEventSink);
+    HRESULT RespondToWinEvent(uint idWinEvent, HWND hwnd, int idObject, int idChild, IProxyProviderWinEventSink pSink);
 }
 enum IID_IRawElementProviderWindowlessSite = GUID(0xa2a93cc, 0xbfad, 0x42ac, [0x9b, 0x2e, 0x9, 0x91, 0xfb, 0xd, 0x3e, 0xa0]);
 interface IRawElementProviderWindowlessSite : IUnknown
 {
-    HRESULT GetAdjacentFragment(NavigateDirection, IRawElementProviderFragment*);
-    HRESULT GetRuntimeIdPrefix(SAFEARRAY**);
+    HRESULT GetAdjacentFragment(NavigateDirection direction, IRawElementProviderFragment* ppParent);
+    HRESULT GetRuntimeIdPrefix(SAFEARRAY** pRetVal);
 }
 enum IID_IAccessibleHostingElementProviders = GUID(0x33ac331b, 0x943e, 0x4020, [0xb2, 0x95, 0xdb, 0x37, 0x78, 0x49, 0x74, 0xa3]);
 interface IAccessibleHostingElementProviders : IUnknown
 {
-    HRESULT GetEmbeddedFragmentRoots(SAFEARRAY**);
-    HRESULT GetObjectIdForProvider(IRawElementProviderSimple, int*);
+    HRESULT GetEmbeddedFragmentRoots(SAFEARRAY** pRetVal);
+    HRESULT GetObjectIdForProvider(IRawElementProviderSimple pProvider, int* pidObject);
 }
 enum IID_IRawElementProviderHostingAccessibles = GUID(0x24be0b07, 0xd37d, 0x487a, [0x98, 0xcf, 0xa1, 0x3e, 0xd4, 0x65, 0xe9, 0xb3]);
 interface IRawElementProviderHostingAccessibles : IUnknown
 {
-    HRESULT GetEmbeddedAccessibles(SAFEARRAY**);
+    HRESULT GetEmbeddedAccessibles(SAFEARRAY** pRetVal);
 }
 enum IID_IDockProvider = GUID(0x159bc72c, 0x4ad3, 0x485e, [0x96, 0x37, 0xd7, 0x5, 0x2e, 0xdf, 0x1, 0x46]);
 interface IDockProvider : IUnknown
 {
-    HRESULT SetDockPosition(DockPosition);
-    HRESULT get_DockPosition(DockPosition*);
+    HRESULT SetDockPosition(DockPosition dockPosition);
+    HRESULT get_DockPosition(DockPosition* pRetVal);
 }
 enum IID_IExpandCollapseProvider = GUID(0xd847d3a5, 0xcab0, 0x4a98, [0x8c, 0x32, 0xec, 0xb4, 0x5c, 0x59, 0xad, 0x24]);
 interface IExpandCollapseProvider : IUnknown
 {
     HRESULT Expand();
     HRESULT Collapse();
-    HRESULT get_ExpandCollapseState(ExpandCollapseState*);
+    HRESULT get_ExpandCollapseState(ExpandCollapseState* pRetVal);
 }
 enum IID_IGridProvider = GUID(0xb17d6187, 0x907, 0x464b, [0xa1, 0x68, 0xe, 0xf1, 0x7a, 0x15, 0x72, 0xb1]);
 interface IGridProvider : IUnknown
 {
-    HRESULT GetItem(int, int, IRawElementProviderSimple*);
-    HRESULT get_RowCount(int*);
-    HRESULT get_ColumnCount(int*);
+    HRESULT GetItem(int row, int column, IRawElementProviderSimple* pRetVal);
+    HRESULT get_RowCount(int* pRetVal);
+    HRESULT get_ColumnCount(int* pRetVal);
 }
 enum IID_IGridItemProvider = GUID(0xd02541f1, 0xfb81, 0x4d64, [0xae, 0x32, 0xf5, 0x20, 0xf8, 0xa6, 0xdb, 0xd1]);
 interface IGridItemProvider : IUnknown
 {
-    HRESULT get_Row(int*);
-    HRESULT get_Column(int*);
-    HRESULT get_RowSpan(int*);
-    HRESULT get_ColumnSpan(int*);
-    HRESULT get_ContainingGrid(IRawElementProviderSimple*);
+    HRESULT get_Row(int* pRetVal);
+    HRESULT get_Column(int* pRetVal);
+    HRESULT get_RowSpan(int* pRetVal);
+    HRESULT get_ColumnSpan(int* pRetVal);
+    HRESULT get_ContainingGrid(IRawElementProviderSimple* pRetVal);
 }
 enum IID_IInvokeProvider = GUID(0x54fcb24b, 0xe18e, 0x47a2, [0xb4, 0xd3, 0xec, 0xcb, 0xe7, 0x75, 0x99, 0xa2]);
 interface IInvokeProvider : IUnknown
@@ -1868,21 +1868,21 @@ interface IInvokeProvider : IUnknown
 enum IID_IMultipleViewProvider = GUID(0x6278cab1, 0xb556, 0x4a1a, [0xb4, 0xe0, 0x41, 0x8a, 0xcc, 0x52, 0x32, 0x1]);
 interface IMultipleViewProvider : IUnknown
 {
-    HRESULT GetViewName(int, BSTR*);
-    HRESULT SetCurrentView(int);
-    HRESULT get_CurrentView(int*);
-    HRESULT GetSupportedViews(SAFEARRAY**);
+    HRESULT GetViewName(int viewId, BSTR* pRetVal);
+    HRESULT SetCurrentView(int viewId);
+    HRESULT get_CurrentView(int* pRetVal);
+    HRESULT GetSupportedViews(SAFEARRAY** pRetVal);
 }
 enum IID_IRangeValueProvider = GUID(0x36dc7aef, 0x33e6, 0x4691, [0xaf, 0xe1, 0x2b, 0xe7, 0x27, 0x4b, 0x3d, 0x33]);
 interface IRangeValueProvider : IUnknown
 {
-    HRESULT SetValue(double);
-    HRESULT get_Value(double*);
-    HRESULT get_IsReadOnly(BOOL*);
-    HRESULT get_Maximum(double*);
-    HRESULT get_Minimum(double*);
-    HRESULT get_LargeChange(double*);
-    HRESULT get_SmallChange(double*);
+    HRESULT SetValue(double val);
+    HRESULT get_Value(double* pRetVal);
+    HRESULT get_IsReadOnly(BOOL* pRetVal);
+    HRESULT get_Maximum(double* pRetVal);
+    HRESULT get_Minimum(double* pRetVal);
+    HRESULT get_LargeChange(double* pRetVal);
+    HRESULT get_SmallChange(double* pRetVal);
 }
 enum IID_IScrollItemProvider = GUID(0x2360c714, 0x4bf1, 0x4b26, [0xba, 0x65, 0x9b, 0x21, 0x31, 0x61, 0x27, 0xeb]);
 interface IScrollItemProvider : IUnknown
@@ -1892,29 +1892,29 @@ interface IScrollItemProvider : IUnknown
 enum IID_ISelectionProvider = GUID(0xfb8b03af, 0x3bdf, 0x48d4, [0xbd, 0x36, 0x1a, 0x65, 0x79, 0x3b, 0xe1, 0x68]);
 interface ISelectionProvider : IUnknown
 {
-    HRESULT GetSelection(SAFEARRAY**);
-    HRESULT get_CanSelectMultiple(BOOL*);
-    HRESULT get_IsSelectionRequired(BOOL*);
+    HRESULT GetSelection(SAFEARRAY** pRetVal);
+    HRESULT get_CanSelectMultiple(BOOL* pRetVal);
+    HRESULT get_IsSelectionRequired(BOOL* pRetVal);
 }
 enum IID_ISelectionProvider2 = GUID(0x14f68475, 0xee1c, 0x44f6, [0xa8, 0x69, 0xd2, 0x39, 0x38, 0x1f, 0xf, 0xe7]);
 interface ISelectionProvider2 : ISelectionProvider
 {
-    HRESULT get_FirstSelectedItem(IRawElementProviderSimple*);
-    HRESULT get_LastSelectedItem(IRawElementProviderSimple*);
-    HRESULT get_CurrentSelectedItem(IRawElementProviderSimple*);
-    HRESULT get_ItemCount(int*);
+    HRESULT get_FirstSelectedItem(IRawElementProviderSimple* retVal);
+    HRESULT get_LastSelectedItem(IRawElementProviderSimple* retVal);
+    HRESULT get_CurrentSelectedItem(IRawElementProviderSimple* retVal);
+    HRESULT get_ItemCount(int* retVal);
 }
 enum IID_IScrollProvider = GUID(0xb38b8077, 0x1fc3, 0x42a5, [0x8c, 0xae, 0xd4, 0xc, 0x22, 0x15, 0x5, 0x5a]);
 interface IScrollProvider : IUnknown
 {
-    HRESULT Scroll(ScrollAmount, ScrollAmount);
-    HRESULT SetScrollPercent(double, double);
-    HRESULT get_HorizontalScrollPercent(double*);
-    HRESULT get_VerticalScrollPercent(double*);
-    HRESULT get_HorizontalViewSize(double*);
-    HRESULT get_VerticalViewSize(double*);
-    HRESULT get_HorizontallyScrollable(BOOL*);
-    HRESULT get_VerticallyScrollable(BOOL*);
+    HRESULT Scroll(ScrollAmount horizontalAmount, ScrollAmount verticalAmount);
+    HRESULT SetScrollPercent(double horizontalPercent, double verticalPercent);
+    HRESULT get_HorizontalScrollPercent(double* pRetVal);
+    HRESULT get_VerticalScrollPercent(double* pRetVal);
+    HRESULT get_HorizontalViewSize(double* pRetVal);
+    HRESULT get_VerticalViewSize(double* pRetVal);
+    HRESULT get_HorizontallyScrollable(BOOL* pRetVal);
+    HRESULT get_VerticallyScrollable(BOOL* pRetVal);
 }
 enum IID_ISelectionItemProvider = GUID(0x2acad808, 0xb2d4, 0x452d, [0xa4, 0x7, 0x91, 0xff, 0x1a, 0xd1, 0x67, 0xb2]);
 interface ISelectionItemProvider : IUnknown
@@ -1922,86 +1922,86 @@ interface ISelectionItemProvider : IUnknown
     HRESULT Select();
     HRESULT AddToSelection();
     HRESULT RemoveFromSelection();
-    HRESULT get_IsSelected(BOOL*);
-    HRESULT get_SelectionContainer(IRawElementProviderSimple*);
+    HRESULT get_IsSelected(BOOL* pRetVal);
+    HRESULT get_SelectionContainer(IRawElementProviderSimple* pRetVal);
 }
 enum IID_ISynchronizedInputProvider = GUID(0x29db1a06, 0x2ce, 0x4cf7, [0x9b, 0x42, 0x56, 0x5d, 0x4f, 0xab, 0x20, 0xee]);
 interface ISynchronizedInputProvider : IUnknown
 {
-    HRESULT StartListening(SynchronizedInputType);
+    HRESULT StartListening(SynchronizedInputType inputType);
     HRESULT Cancel();
 }
 enum IID_ITableProvider = GUID(0x9c860395, 0x97b3, 0x490a, [0xb5, 0x2a, 0x85, 0x8c, 0xc2, 0x2a, 0xf1, 0x66]);
 interface ITableProvider : IUnknown
 {
-    HRESULT GetRowHeaders(SAFEARRAY**);
-    HRESULT GetColumnHeaders(SAFEARRAY**);
-    HRESULT get_RowOrColumnMajor(RowOrColumnMajor*);
+    HRESULT GetRowHeaders(SAFEARRAY** pRetVal);
+    HRESULT GetColumnHeaders(SAFEARRAY** pRetVal);
+    HRESULT get_RowOrColumnMajor(RowOrColumnMajor* pRetVal);
 }
 enum IID_ITableItemProvider = GUID(0xb9734fa6, 0x771f, 0x4d78, [0x9c, 0x90, 0x25, 0x17, 0x99, 0x93, 0x49, 0xcd]);
 interface ITableItemProvider : IUnknown
 {
-    HRESULT GetRowHeaderItems(SAFEARRAY**);
-    HRESULT GetColumnHeaderItems(SAFEARRAY**);
+    HRESULT GetRowHeaderItems(SAFEARRAY** pRetVal);
+    HRESULT GetColumnHeaderItems(SAFEARRAY** pRetVal);
 }
 enum IID_IToggleProvider = GUID(0x56d00bd0, 0xc4f4, 0x433c, [0xa8, 0x36, 0x1a, 0x52, 0xa5, 0x7e, 0x8, 0x92]);
 interface IToggleProvider : IUnknown
 {
     HRESULT Toggle();
-    HRESULT get_ToggleState(ToggleState*);
+    HRESULT get_ToggleState(ToggleState* pRetVal);
 }
 enum IID_ITransformProvider = GUID(0x6829ddc4, 0x4f91, 0x4ffa, [0xb8, 0x6f, 0xbd, 0x3e, 0x29, 0x87, 0xcb, 0x4c]);
 interface ITransformProvider : IUnknown
 {
-    HRESULT Move(double, double);
-    HRESULT Resize(double, double);
-    HRESULT Rotate(double);
-    HRESULT get_CanMove(BOOL*);
-    HRESULT get_CanResize(BOOL*);
-    HRESULT get_CanRotate(BOOL*);
+    HRESULT Move(double x, double y);
+    HRESULT Resize(double width, double height);
+    HRESULT Rotate(double degrees);
+    HRESULT get_CanMove(BOOL* pRetVal);
+    HRESULT get_CanResize(BOOL* pRetVal);
+    HRESULT get_CanRotate(BOOL* pRetVal);
 }
 enum IID_IValueProvider = GUID(0xc7935180, 0x6fb3, 0x4201, [0xb1, 0x74, 0x7d, 0xf7, 0x3a, 0xdb, 0xf6, 0x4a]);
 interface IValueProvider : IUnknown
 {
-    HRESULT SetValue(const(wchar)*);
-    HRESULT get_Value(BSTR*);
-    HRESULT get_IsReadOnly(BOOL*);
+    HRESULT SetValue(const(wchar)* val);
+    HRESULT get_Value(BSTR* pRetVal);
+    HRESULT get_IsReadOnly(BOOL* pRetVal);
 }
 enum IID_IWindowProvider = GUID(0x987df77b, 0xdb06, 0x4d77, [0x8f, 0x8a, 0x86, 0xa9, 0xc3, 0xbb, 0x90, 0xb9]);
 interface IWindowProvider : IUnknown
 {
-    HRESULT SetVisualState(WindowVisualState);
+    HRESULT SetVisualState(WindowVisualState state);
     HRESULT Close();
-    HRESULT WaitForInputIdle(int, BOOL*);
-    HRESULT get_CanMaximize(BOOL*);
-    HRESULT get_CanMinimize(BOOL*);
-    HRESULT get_IsModal(BOOL*);
-    HRESULT get_WindowVisualState(WindowVisualState*);
-    HRESULT get_WindowInteractionState(WindowInteractionState*);
-    HRESULT get_IsTopmost(BOOL*);
+    HRESULT WaitForInputIdle(int milliseconds, BOOL* pRetVal);
+    HRESULT get_CanMaximize(BOOL* pRetVal);
+    HRESULT get_CanMinimize(BOOL* pRetVal);
+    HRESULT get_IsModal(BOOL* pRetVal);
+    HRESULT get_WindowVisualState(WindowVisualState* pRetVal);
+    HRESULT get_WindowInteractionState(WindowInteractionState* pRetVal);
+    HRESULT get_IsTopmost(BOOL* pRetVal);
 }
 enum IID_ILegacyIAccessibleProvider = GUID(0xe44c3566, 0x915d, 0x4070, [0x99, 0xc6, 0x4, 0x7b, 0xff, 0x5a, 0x8, 0xf5]);
 interface ILegacyIAccessibleProvider : IUnknown
 {
-    HRESULT Select(int);
+    HRESULT Select(int flagsSelect);
     HRESULT DoDefaultAction();
-    HRESULT SetValue(const(wchar)*);
-    HRESULT GetIAccessible(IAccessible*);
-    HRESULT get_ChildId(int*);
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Value(BSTR*);
-    HRESULT get_Description(BSTR*);
-    HRESULT get_Role(uint*);
-    HRESULT get_State(uint*);
-    HRESULT get_Help(BSTR*);
-    HRESULT get_KeyboardShortcut(BSTR*);
-    HRESULT GetSelection(SAFEARRAY**);
-    HRESULT get_DefaultAction(BSTR*);
+    HRESULT SetValue(const(wchar)* szValue);
+    HRESULT GetIAccessible(IAccessible* ppAccessible);
+    HRESULT get_ChildId(int* pRetVal);
+    HRESULT get_Name(BSTR* pszName);
+    HRESULT get_Value(BSTR* pszValue);
+    HRESULT get_Description(BSTR* pszDescription);
+    HRESULT get_Role(uint* pdwRole);
+    HRESULT get_State(uint* pdwState);
+    HRESULT get_Help(BSTR* pszHelp);
+    HRESULT get_KeyboardShortcut(BSTR* pszKeyboardShortcut);
+    HRESULT GetSelection(SAFEARRAY** pvarSelectedChildren);
+    HRESULT get_DefaultAction(BSTR* pszDefaultAction);
 }
 enum IID_IItemContainerProvider = GUID(0xe747770b, 0x39ce, 0x4382, [0xab, 0x30, 0xd8, 0xfb, 0x3f, 0x33, 0x6f, 0x24]);
 interface IItemContainerProvider : IUnknown
 {
-    HRESULT FindItemByProperty(IRawElementProviderSimple, UIA_PROPERTY_ID, VARIANT, IRawElementProviderSimple*);
+    HRESULT FindItemByProperty(IRawElementProviderSimple pStartAfter, UIA_PROPERTY_ID propertyId, VARIANT value, IRawElementProviderSimple* pFound);
 }
 enum IID_IVirtualizedItemProvider = GUID(0xcb98b665, 0x2d35, 0x4fac, [0xad, 0x35, 0xf3, 0xc6, 0xd, 0xc, 0xb, 0x8b]);
 interface IVirtualizedItemProvider : IUnknown
@@ -2011,107 +2011,107 @@ interface IVirtualizedItemProvider : IUnknown
 enum IID_IObjectModelProvider = GUID(0x3ad86ebd, 0xf5ef, 0x483d, [0xbb, 0x18, 0xb1, 0x4, 0x2a, 0x47, 0x5d, 0x64]);
 interface IObjectModelProvider : IUnknown
 {
-    HRESULT GetUnderlyingObjectModel(IUnknown*);
+    HRESULT GetUnderlyingObjectModel(IUnknown* ppUnknown);
 }
 enum IID_IAnnotationProvider = GUID(0xf95c7e80, 0xbd63, 0x4601, [0x97, 0x82, 0x44, 0x5e, 0xbf, 0xf0, 0x11, 0xfc]);
 interface IAnnotationProvider : IUnknown
 {
-    HRESULT get_AnnotationTypeId(UIA_ANNOTATIONTYPE*);
-    HRESULT get_AnnotationTypeName(BSTR*);
-    HRESULT get_Author(BSTR*);
-    HRESULT get_DateTime(BSTR*);
-    HRESULT get_Target(IRawElementProviderSimple*);
+    HRESULT get_AnnotationTypeId(UIA_ANNOTATIONTYPE* retVal);
+    HRESULT get_AnnotationTypeName(BSTR* retVal);
+    HRESULT get_Author(BSTR* retVal);
+    HRESULT get_DateTime(BSTR* retVal);
+    HRESULT get_Target(IRawElementProviderSimple* retVal);
 }
 enum IID_IStylesProvider = GUID(0x19b6b649, 0xf5d7, 0x4a6d, [0xbd, 0xcb, 0x12, 0x92, 0x52, 0xbe, 0x58, 0x8a]);
 interface IStylesProvider : IUnknown
 {
-    HRESULT get_StyleId(UIA_STYLE_ID*);
-    HRESULT get_StyleName(BSTR*);
-    HRESULT get_FillColor(int*);
-    HRESULT get_FillPatternStyle(BSTR*);
-    HRESULT get_Shape(BSTR*);
-    HRESULT get_FillPatternColor(int*);
-    HRESULT get_ExtendedProperties(BSTR*);
+    HRESULT get_StyleId(UIA_STYLE_ID* retVal);
+    HRESULT get_StyleName(BSTR* retVal);
+    HRESULT get_FillColor(int* retVal);
+    HRESULT get_FillPatternStyle(BSTR* retVal);
+    HRESULT get_Shape(BSTR* retVal);
+    HRESULT get_FillPatternColor(int* retVal);
+    HRESULT get_ExtendedProperties(BSTR* retVal);
 }
 enum IID_ISpreadsheetProvider = GUID(0x6f6b5d35, 0x5525, 0x4f80, [0xb7, 0x58, 0x85, 0x47, 0x38, 0x32, 0xff, 0xc7]);
 interface ISpreadsheetProvider : IUnknown
 {
-    HRESULT GetItemByName(const(wchar)*, IRawElementProviderSimple*);
+    HRESULT GetItemByName(const(wchar)* name, IRawElementProviderSimple* pRetVal);
 }
 enum IID_ISpreadsheetItemProvider = GUID(0xeaed4660, 0x7b3d, 0x4879, [0xa2, 0xe6, 0x36, 0x5c, 0xe6, 0x3, 0xf3, 0xd0]);
 interface ISpreadsheetItemProvider : IUnknown
 {
-    HRESULT get_Formula(BSTR*);
-    HRESULT GetAnnotationObjects(SAFEARRAY**);
-    HRESULT GetAnnotationTypes(SAFEARRAY**);
+    HRESULT get_Formula(BSTR* pRetVal);
+    HRESULT GetAnnotationObjects(SAFEARRAY** pRetVal);
+    HRESULT GetAnnotationTypes(SAFEARRAY** pRetVal);
 }
 enum IID_ITransformProvider2 = GUID(0x4758742f, 0x7ac2, 0x460c, [0xbc, 0x48, 0x9, 0xfc, 0x9, 0x30, 0x8a, 0x93]);
 interface ITransformProvider2 : ITransformProvider
 {
-    HRESULT Zoom(double);
-    HRESULT get_CanZoom(BOOL*);
-    HRESULT get_ZoomLevel(double*);
-    HRESULT get_ZoomMinimum(double*);
-    HRESULT get_ZoomMaximum(double*);
-    HRESULT ZoomByUnit(ZoomUnit);
+    HRESULT Zoom(double zoom);
+    HRESULT get_CanZoom(BOOL* pRetVal);
+    HRESULT get_ZoomLevel(double* pRetVal);
+    HRESULT get_ZoomMinimum(double* pRetVal);
+    HRESULT get_ZoomMaximum(double* pRetVal);
+    HRESULT ZoomByUnit(ZoomUnit zoomUnit);
 }
 enum IID_IDragProvider = GUID(0x6aa7bbbb, 0x7ff9, 0x497d, [0x90, 0x4f, 0xd2, 0xb, 0x89, 0x79, 0x29, 0xd8]);
 interface IDragProvider : IUnknown
 {
-    HRESULT get_IsGrabbed(BOOL*);
-    HRESULT get_DropEffect(BSTR*);
-    HRESULT get_DropEffects(SAFEARRAY**);
-    HRESULT GetGrabbedItems(SAFEARRAY**);
+    HRESULT get_IsGrabbed(BOOL* pRetVal);
+    HRESULT get_DropEffect(BSTR* pRetVal);
+    HRESULT get_DropEffects(SAFEARRAY** pRetVal);
+    HRESULT GetGrabbedItems(SAFEARRAY** pRetVal);
 }
 enum IID_IDropTargetProvider = GUID(0xbae82bfd, 0x358a, 0x481c, [0x85, 0xa0, 0xd8, 0xb4, 0xd9, 0xa, 0x5d, 0x61]);
 interface IDropTargetProvider : IUnknown
 {
-    HRESULT get_DropTargetEffect(BSTR*);
-    HRESULT get_DropTargetEffects(SAFEARRAY**);
+    HRESULT get_DropTargetEffect(BSTR* pRetVal);
+    HRESULT get_DropTargetEffects(SAFEARRAY** pRetVal);
 }
 enum IID_ITextRangeProvider = GUID(0x5347ad7b, 0xc355, 0x46f8, [0xaf, 0xf5, 0x90, 0x90, 0x33, 0x58, 0x2f, 0x63]);
 interface ITextRangeProvider : IUnknown
 {
-    HRESULT Clone(ITextRangeProvider*);
-    HRESULT Compare(ITextRangeProvider, BOOL*);
-    HRESULT CompareEndpoints(TextPatternRangeEndpoint, ITextRangeProvider, TextPatternRangeEndpoint, int*);
-    HRESULT ExpandToEnclosingUnit(TextUnit);
-    HRESULT FindAttribute(UIA_TEXTATTRIBUTE_ID, VARIANT, BOOL, ITextRangeProvider*);
-    HRESULT FindText(BSTR, BOOL, BOOL, ITextRangeProvider*);
-    HRESULT GetAttributeValue(UIA_TEXTATTRIBUTE_ID, VARIANT*);
-    HRESULT GetBoundingRectangles(SAFEARRAY**);
-    HRESULT GetEnclosingElement(IRawElementProviderSimple*);
-    HRESULT GetText(int, BSTR*);
-    HRESULT Move(TextUnit, int, int*);
-    HRESULT MoveEndpointByUnit(TextPatternRangeEndpoint, TextUnit, int, int*);
-    HRESULT MoveEndpointByRange(TextPatternRangeEndpoint, ITextRangeProvider, TextPatternRangeEndpoint);
+    HRESULT Clone(ITextRangeProvider* pRetVal);
+    HRESULT Compare(ITextRangeProvider range, BOOL* pRetVal);
+    HRESULT CompareEndpoints(TextPatternRangeEndpoint endpoint, ITextRangeProvider targetRange, TextPatternRangeEndpoint targetEndpoint, int* pRetVal);
+    HRESULT ExpandToEnclosingUnit(TextUnit unit);
+    HRESULT FindAttribute(UIA_TEXTATTRIBUTE_ID attributeId, VARIANT val, BOOL backward, ITextRangeProvider* pRetVal);
+    HRESULT FindText(BSTR text, BOOL backward, BOOL ignoreCase, ITextRangeProvider* pRetVal);
+    HRESULT GetAttributeValue(UIA_TEXTATTRIBUTE_ID attributeId, VARIANT* pRetVal);
+    HRESULT GetBoundingRectangles(SAFEARRAY** pRetVal);
+    HRESULT GetEnclosingElement(IRawElementProviderSimple* pRetVal);
+    HRESULT GetText(int maxLength, BSTR* pRetVal);
+    HRESULT Move(TextUnit unit, int count, int* pRetVal);
+    HRESULT MoveEndpointByUnit(TextPatternRangeEndpoint endpoint, TextUnit unit, int count, int* pRetVal);
+    HRESULT MoveEndpointByRange(TextPatternRangeEndpoint endpoint, ITextRangeProvider targetRange, TextPatternRangeEndpoint targetEndpoint);
     HRESULT Select();
     HRESULT AddToSelection();
     HRESULT RemoveFromSelection();
-    HRESULT ScrollIntoView(BOOL);
-    HRESULT GetChildren(SAFEARRAY**);
+    HRESULT ScrollIntoView(BOOL alignToTop);
+    HRESULT GetChildren(SAFEARRAY** pRetVal);
 }
 enum IID_ITextProvider = GUID(0x3589c92c, 0x63f3, 0x4367, [0x99, 0xbb, 0xad, 0xa6, 0x53, 0xb7, 0x7c, 0xf2]);
 interface ITextProvider : IUnknown
 {
-    HRESULT GetSelection(SAFEARRAY**);
-    HRESULT GetVisibleRanges(SAFEARRAY**);
-    HRESULT RangeFromChild(IRawElementProviderSimple, ITextRangeProvider*);
-    HRESULT RangeFromPoint(UiaPoint, ITextRangeProvider*);
-    HRESULT get_DocumentRange(ITextRangeProvider*);
-    HRESULT get_SupportedTextSelection(SupportedTextSelection*);
+    HRESULT GetSelection(SAFEARRAY** pRetVal);
+    HRESULT GetVisibleRanges(SAFEARRAY** pRetVal);
+    HRESULT RangeFromChild(IRawElementProviderSimple childElement, ITextRangeProvider* pRetVal);
+    HRESULT RangeFromPoint(UiaPoint point, ITextRangeProvider* pRetVal);
+    HRESULT get_DocumentRange(ITextRangeProvider* pRetVal);
+    HRESULT get_SupportedTextSelection(SupportedTextSelection* pRetVal);
 }
 enum IID_ITextProvider2 = GUID(0xdc5e6ed, 0x3e16, 0x4bf1, [0x8f, 0x9a, 0xa9, 0x79, 0x87, 0x8b, 0xc1, 0x95]);
 interface ITextProvider2 : ITextProvider
 {
-    HRESULT RangeFromAnnotation(IRawElementProviderSimple, ITextRangeProvider*);
-    HRESULT GetCaretRange(BOOL*, ITextRangeProvider*);
+    HRESULT RangeFromAnnotation(IRawElementProviderSimple annotationElement, ITextRangeProvider* pRetVal);
+    HRESULT GetCaretRange(BOOL* isActive, ITextRangeProvider* pRetVal);
 }
 enum IID_ITextEditProvider = GUID(0xea3605b4, 0x3a05, 0x400e, [0xb5, 0xf9, 0x4e, 0x91, 0xb4, 0xf, 0x61, 0x76]);
 interface ITextEditProvider : ITextProvider
 {
-    HRESULT GetActiveComposition(ITextRangeProvider*);
-    HRESULT GetConversionTarget(ITextRangeProvider*);
+    HRESULT GetActiveComposition(ITextRangeProvider* pRetVal);
+    HRESULT GetConversionTarget(ITextRangeProvider* pRetVal);
 }
 enum IID_ITextRangeProvider2 = GUID(0x9bbce42c, 0x1921, 0x4f18, [0x89, 0xca, 0xdb, 0xa1, 0x91, 0xa, 0x3, 0x86]);
 interface ITextRangeProvider2 : ITextRangeProvider
@@ -2121,32 +2121,32 @@ interface ITextRangeProvider2 : ITextRangeProvider
 enum IID_ITextChildProvider = GUID(0x4c2de2b9, 0xc88f, 0x4f88, [0xa1, 0x11, 0xf1, 0xd3, 0x36, 0xb7, 0xd1, 0xa9]);
 interface ITextChildProvider : IUnknown
 {
-    HRESULT get_TextContainer(IRawElementProviderSimple*);
-    HRESULT get_TextRange(ITextRangeProvider*);
+    HRESULT get_TextContainer(IRawElementProviderSimple* pRetVal);
+    HRESULT get_TextRange(ITextRangeProvider* pRetVal);
 }
 enum IID_ICustomNavigationProvider = GUID(0x2062a28a, 0x8c07, 0x4b94, [0x8e, 0x12, 0x70, 0x37, 0xc6, 0x22, 0xae, 0xb8]);
 interface ICustomNavigationProvider : IUnknown
 {
-    HRESULT Navigate(NavigateDirection, IRawElementProviderSimple*);
+    HRESULT Navigate(NavigateDirection direction, IRawElementProviderSimple* pRetVal);
 }
 enum IID_IUIAutomationPatternInstance = GUID(0xc03a7fe4, 0x9431, 0x409f, [0xbe, 0xd8, 0xae, 0x7c, 0x22, 0x99, 0xbc, 0x8d]);
 interface IUIAutomationPatternInstance : IUnknown
 {
-    HRESULT GetProperty(uint, BOOL, UIAutomationType, void*);
-    HRESULT CallMethod(uint, const(UIAutomationParameter)*, uint);
+    HRESULT GetProperty(uint index, BOOL cached, UIAutomationType type, void* pPtr);
+    HRESULT CallMethod(uint index, const(UIAutomationParameter)* pParams, uint cParams);
 }
 enum IID_IUIAutomationPatternHandler = GUID(0xd97022f3, 0xa947, 0x465e, [0x8b, 0x2a, 0xac, 0x43, 0x15, 0xfa, 0x54, 0xe8]);
 interface IUIAutomationPatternHandler : IUnknown
 {
-    HRESULT CreateClientWrapper(IUIAutomationPatternInstance, IUnknown*);
-    HRESULT Dispatch(IUnknown, uint, const(UIAutomationParameter)*, uint);
+    HRESULT CreateClientWrapper(IUIAutomationPatternInstance pPatternInstance, IUnknown* pClientWrapper);
+    HRESULT Dispatch(IUnknown pTarget, uint index, const(UIAutomationParameter)* pParams, uint cParams);
 }
 enum IID_IUIAutomationRegistrar = GUID(0x8609c4ec, 0x4a1a, 0x4d88, [0xa3, 0x57, 0x5a, 0x66, 0xe0, 0x60, 0xe1, 0xcf]);
 interface IUIAutomationRegistrar : IUnknown
 {
-    HRESULT RegisterProperty(const(UIAutomationPropertyInfo)*, int*);
-    HRESULT RegisterEvent(const(UIAutomationEventInfo)*, int*);
-    HRESULT RegisterPattern(const(UIAutomationPatternInfo)*, int*, int*, uint, int*, uint, int*);
+    HRESULT RegisterProperty(const(UIAutomationPropertyInfo)* property, int* propertyId);
+    HRESULT RegisterEvent(const(UIAutomationEventInfo)* event, int* eventId);
+    HRESULT RegisterPattern(const(UIAutomationPatternInfo)* pattern, int* pPatternId, int* pPatternAvailablePropertyId, uint propertyIdCount, int* pPropertyIds, uint eventIdCount, int* pEventIds);
 }
 enum CLSID_CUIAutomationRegistrar = GUID(0x6e29fabf, 0x9977, 0x42d1, [0x8d, 0xe, 0xca, 0x7e, 0x61, 0xad, 0x87, 0xe6]);
 struct CUIAutomationRegistrar
@@ -2210,93 +2210,93 @@ enum IID_IUIAutomationElement = GUID(0xd22108aa, 0x8ac5, 0x49a5, [0x83, 0x7b, 0x
 interface IUIAutomationElement : IUnknown
 {
     HRESULT SetFocus();
-    HRESULT GetRuntimeId(SAFEARRAY**);
-    HRESULT FindFirst(TreeScope, IUIAutomationCondition, IUIAutomationElement*);
-    HRESULT FindAll(TreeScope, IUIAutomationCondition, IUIAutomationElementArray*);
-    HRESULT FindFirstBuildCache(TreeScope, IUIAutomationCondition, IUIAutomationCacheRequest, IUIAutomationElement*);
-    HRESULT FindAllBuildCache(TreeScope, IUIAutomationCondition, IUIAutomationCacheRequest, IUIAutomationElementArray*);
-    HRESULT BuildUpdatedCache(IUIAutomationCacheRequest, IUIAutomationElement*);
-    HRESULT GetCurrentPropertyValue(UIA_PROPERTY_ID, VARIANT*);
-    HRESULT GetCurrentPropertyValueEx(UIA_PROPERTY_ID, BOOL, VARIANT*);
-    HRESULT GetCachedPropertyValue(UIA_PROPERTY_ID, VARIANT*);
-    HRESULT GetCachedPropertyValueEx(UIA_PROPERTY_ID, BOOL, VARIANT*);
-    HRESULT GetCurrentPatternAs(UIA_PATTERN_ID, const(GUID)*, void**);
-    HRESULT GetCachedPatternAs(UIA_PATTERN_ID, const(GUID)*, void**);
-    HRESULT GetCurrentPattern(UIA_PATTERN_ID, IUnknown*);
-    HRESULT GetCachedPattern(UIA_PATTERN_ID, IUnknown*);
-    HRESULT GetCachedParent(IUIAutomationElement*);
-    HRESULT GetCachedChildren(IUIAutomationElementArray*);
-    HRESULT get_CurrentProcessId(int*);
-    HRESULT get_CurrentControlType(UIA_CONTROLTYPE_ID*);
-    HRESULT get_CurrentLocalizedControlType(BSTR*);
-    HRESULT get_CurrentName(BSTR*);
-    HRESULT get_CurrentAcceleratorKey(BSTR*);
-    HRESULT get_CurrentAccessKey(BSTR*);
-    HRESULT get_CurrentHasKeyboardFocus(BOOL*);
-    HRESULT get_CurrentIsKeyboardFocusable(BOOL*);
-    HRESULT get_CurrentIsEnabled(BOOL*);
-    HRESULT get_CurrentAutomationId(BSTR*);
-    HRESULT get_CurrentClassName(BSTR*);
-    HRESULT get_CurrentHelpText(BSTR*);
-    HRESULT get_CurrentCulture(int*);
-    HRESULT get_CurrentIsControlElement(BOOL*);
-    HRESULT get_CurrentIsContentElement(BOOL*);
-    HRESULT get_CurrentIsPassword(BOOL*);
-    HRESULT get_CurrentNativeWindowHandle(HWND*);
-    HRESULT get_CurrentItemType(BSTR*);
-    HRESULT get_CurrentIsOffscreen(BOOL*);
-    HRESULT get_CurrentOrientation(OrientationType*);
-    HRESULT get_CurrentFrameworkId(BSTR*);
-    HRESULT get_CurrentIsRequiredForForm(BOOL*);
-    HRESULT get_CurrentItemStatus(BSTR*);
-    HRESULT get_CurrentBoundingRectangle(RECT*);
-    HRESULT get_CurrentLabeledBy(IUIAutomationElement*);
-    HRESULT get_CurrentAriaRole(BSTR*);
-    HRESULT get_CurrentAriaProperties(BSTR*);
-    HRESULT get_CurrentIsDataValidForForm(BOOL*);
-    HRESULT get_CurrentControllerFor(IUIAutomationElementArray*);
-    HRESULT get_CurrentDescribedBy(IUIAutomationElementArray*);
-    HRESULT get_CurrentFlowsTo(IUIAutomationElementArray*);
-    HRESULT get_CurrentProviderDescription(BSTR*);
-    HRESULT get_CachedProcessId(int*);
-    HRESULT get_CachedControlType(UIA_CONTROLTYPE_ID*);
-    HRESULT get_CachedLocalizedControlType(BSTR*);
-    HRESULT get_CachedName(BSTR*);
-    HRESULT get_CachedAcceleratorKey(BSTR*);
-    HRESULT get_CachedAccessKey(BSTR*);
-    HRESULT get_CachedHasKeyboardFocus(BOOL*);
-    HRESULT get_CachedIsKeyboardFocusable(BOOL*);
-    HRESULT get_CachedIsEnabled(BOOL*);
-    HRESULT get_CachedAutomationId(BSTR*);
-    HRESULT get_CachedClassName(BSTR*);
-    HRESULT get_CachedHelpText(BSTR*);
-    HRESULT get_CachedCulture(int*);
-    HRESULT get_CachedIsControlElement(BOOL*);
-    HRESULT get_CachedIsContentElement(BOOL*);
-    HRESULT get_CachedIsPassword(BOOL*);
-    HRESULT get_CachedNativeWindowHandle(HWND*);
-    HRESULT get_CachedItemType(BSTR*);
-    HRESULT get_CachedIsOffscreen(BOOL*);
-    HRESULT get_CachedOrientation(OrientationType*);
-    HRESULT get_CachedFrameworkId(BSTR*);
-    HRESULT get_CachedIsRequiredForForm(BOOL*);
-    HRESULT get_CachedItemStatus(BSTR*);
-    HRESULT get_CachedBoundingRectangle(RECT*);
-    HRESULT get_CachedLabeledBy(IUIAutomationElement*);
-    HRESULT get_CachedAriaRole(BSTR*);
-    HRESULT get_CachedAriaProperties(BSTR*);
-    HRESULT get_CachedIsDataValidForForm(BOOL*);
-    HRESULT get_CachedControllerFor(IUIAutomationElementArray*);
-    HRESULT get_CachedDescribedBy(IUIAutomationElementArray*);
-    HRESULT get_CachedFlowsTo(IUIAutomationElementArray*);
-    HRESULT get_CachedProviderDescription(BSTR*);
-    HRESULT GetClickablePoint(POINT*, BOOL*);
+    HRESULT GetRuntimeId(SAFEARRAY** runtimeId);
+    HRESULT FindFirst(TreeScope scope_, IUIAutomationCondition condition, IUIAutomationElement* found);
+    HRESULT FindAll(TreeScope scope_, IUIAutomationCondition condition, IUIAutomationElementArray* found);
+    HRESULT FindFirstBuildCache(TreeScope scope_, IUIAutomationCondition condition, IUIAutomationCacheRequest cacheRequest, IUIAutomationElement* found);
+    HRESULT FindAllBuildCache(TreeScope scope_, IUIAutomationCondition condition, IUIAutomationCacheRequest cacheRequest, IUIAutomationElementArray* found);
+    HRESULT BuildUpdatedCache(IUIAutomationCacheRequest cacheRequest, IUIAutomationElement* updatedElement);
+    HRESULT GetCurrentPropertyValue(UIA_PROPERTY_ID propertyId, VARIANT* retVal);
+    HRESULT GetCurrentPropertyValueEx(UIA_PROPERTY_ID propertyId, BOOL ignoreDefaultValue, VARIANT* retVal);
+    HRESULT GetCachedPropertyValue(UIA_PROPERTY_ID propertyId, VARIANT* retVal);
+    HRESULT GetCachedPropertyValueEx(UIA_PROPERTY_ID propertyId, BOOL ignoreDefaultValue, VARIANT* retVal);
+    HRESULT GetCurrentPatternAs(UIA_PATTERN_ID patternId, const(GUID)* riid, void** patternObject);
+    HRESULT GetCachedPatternAs(UIA_PATTERN_ID patternId, const(GUID)* riid, void** patternObject);
+    HRESULT GetCurrentPattern(UIA_PATTERN_ID patternId, IUnknown* patternObject);
+    HRESULT GetCachedPattern(UIA_PATTERN_ID patternId, IUnknown* patternObject);
+    HRESULT GetCachedParent(IUIAutomationElement* parent);
+    HRESULT GetCachedChildren(IUIAutomationElementArray* children);
+    HRESULT get_CurrentProcessId(int* retVal);
+    HRESULT get_CurrentControlType(UIA_CONTROLTYPE_ID* retVal);
+    HRESULT get_CurrentLocalizedControlType(BSTR* retVal);
+    HRESULT get_CurrentName(BSTR* retVal);
+    HRESULT get_CurrentAcceleratorKey(BSTR* retVal);
+    HRESULT get_CurrentAccessKey(BSTR* retVal);
+    HRESULT get_CurrentHasKeyboardFocus(BOOL* retVal);
+    HRESULT get_CurrentIsKeyboardFocusable(BOOL* retVal);
+    HRESULT get_CurrentIsEnabled(BOOL* retVal);
+    HRESULT get_CurrentAutomationId(BSTR* retVal);
+    HRESULT get_CurrentClassName(BSTR* retVal);
+    HRESULT get_CurrentHelpText(BSTR* retVal);
+    HRESULT get_CurrentCulture(int* retVal);
+    HRESULT get_CurrentIsControlElement(BOOL* retVal);
+    HRESULT get_CurrentIsContentElement(BOOL* retVal);
+    HRESULT get_CurrentIsPassword(BOOL* retVal);
+    HRESULT get_CurrentNativeWindowHandle(HWND* retVal);
+    HRESULT get_CurrentItemType(BSTR* retVal);
+    HRESULT get_CurrentIsOffscreen(BOOL* retVal);
+    HRESULT get_CurrentOrientation(OrientationType* retVal);
+    HRESULT get_CurrentFrameworkId(BSTR* retVal);
+    HRESULT get_CurrentIsRequiredForForm(BOOL* retVal);
+    HRESULT get_CurrentItemStatus(BSTR* retVal);
+    HRESULT get_CurrentBoundingRectangle(RECT* retVal);
+    HRESULT get_CurrentLabeledBy(IUIAutomationElement* retVal);
+    HRESULT get_CurrentAriaRole(BSTR* retVal);
+    HRESULT get_CurrentAriaProperties(BSTR* retVal);
+    HRESULT get_CurrentIsDataValidForForm(BOOL* retVal);
+    HRESULT get_CurrentControllerFor(IUIAutomationElementArray* retVal);
+    HRESULT get_CurrentDescribedBy(IUIAutomationElementArray* retVal);
+    HRESULT get_CurrentFlowsTo(IUIAutomationElementArray* retVal);
+    HRESULT get_CurrentProviderDescription(BSTR* retVal);
+    HRESULT get_CachedProcessId(int* retVal);
+    HRESULT get_CachedControlType(UIA_CONTROLTYPE_ID* retVal);
+    HRESULT get_CachedLocalizedControlType(BSTR* retVal);
+    HRESULT get_CachedName(BSTR* retVal);
+    HRESULT get_CachedAcceleratorKey(BSTR* retVal);
+    HRESULT get_CachedAccessKey(BSTR* retVal);
+    HRESULT get_CachedHasKeyboardFocus(BOOL* retVal);
+    HRESULT get_CachedIsKeyboardFocusable(BOOL* retVal);
+    HRESULT get_CachedIsEnabled(BOOL* retVal);
+    HRESULT get_CachedAutomationId(BSTR* retVal);
+    HRESULT get_CachedClassName(BSTR* retVal);
+    HRESULT get_CachedHelpText(BSTR* retVal);
+    HRESULT get_CachedCulture(int* retVal);
+    HRESULT get_CachedIsControlElement(BOOL* retVal);
+    HRESULT get_CachedIsContentElement(BOOL* retVal);
+    HRESULT get_CachedIsPassword(BOOL* retVal);
+    HRESULT get_CachedNativeWindowHandle(HWND* retVal);
+    HRESULT get_CachedItemType(BSTR* retVal);
+    HRESULT get_CachedIsOffscreen(BOOL* retVal);
+    HRESULT get_CachedOrientation(OrientationType* retVal);
+    HRESULT get_CachedFrameworkId(BSTR* retVal);
+    HRESULT get_CachedIsRequiredForForm(BOOL* retVal);
+    HRESULT get_CachedItemStatus(BSTR* retVal);
+    HRESULT get_CachedBoundingRectangle(RECT* retVal);
+    HRESULT get_CachedLabeledBy(IUIAutomationElement* retVal);
+    HRESULT get_CachedAriaRole(BSTR* retVal);
+    HRESULT get_CachedAriaProperties(BSTR* retVal);
+    HRESULT get_CachedIsDataValidForForm(BOOL* retVal);
+    HRESULT get_CachedControllerFor(IUIAutomationElementArray* retVal);
+    HRESULT get_CachedDescribedBy(IUIAutomationElementArray* retVal);
+    HRESULT get_CachedFlowsTo(IUIAutomationElementArray* retVal);
+    HRESULT get_CachedProviderDescription(BSTR* retVal);
+    HRESULT GetClickablePoint(POINT* clickable, BOOL* gotClickable);
 }
 enum IID_IUIAutomationElementArray = GUID(0x14314595, 0xb4bc, 0x4055, [0x95, 0xf2, 0x58, 0xf2, 0xe4, 0x2c, 0x98, 0x55]);
 interface IUIAutomationElementArray : IUnknown
 {
-    HRESULT get_Length(int*);
-    HRESULT GetElement(int, IUIAutomationElement*);
+    HRESULT get_Length(int* length);
+    HRESULT GetElement(int index, IUIAutomationElement* element);
 }
 enum IID_IUIAutomationCondition = GUID(0x352ffba8, 0x973, 0x437c, [0xa6, 0x1f, 0xf6, 0x4c, 0xaf, 0xd8, 0x1d, 0xf9]);
 interface IUIAutomationCondition : IUnknown
@@ -2305,98 +2305,98 @@ interface IUIAutomationCondition : IUnknown
 enum IID_IUIAutomationBoolCondition = GUID(0x1b4e1f2e, 0x75eb, 0x4d0b, [0x89, 0x52, 0x5a, 0x69, 0x98, 0x8e, 0x23, 0x7]);
 interface IUIAutomationBoolCondition : IUIAutomationCondition
 {
-    HRESULT get_BooleanValue(BOOL*);
+    HRESULT get_BooleanValue(BOOL* boolVal);
 }
 enum IID_IUIAutomationPropertyCondition = GUID(0x99ebf2cb, 0x5578, 0x4267, [0x9a, 0xd4, 0xaf, 0xd6, 0xea, 0x77, 0xe9, 0x4b]);
 interface IUIAutomationPropertyCondition : IUIAutomationCondition
 {
-    HRESULT get_PropertyId(UIA_PROPERTY_ID*);
-    HRESULT get_PropertyValue(VARIANT*);
-    HRESULT get_PropertyConditionFlags(PropertyConditionFlags*);
+    HRESULT get_PropertyId(UIA_PROPERTY_ID* propertyId);
+    HRESULT get_PropertyValue(VARIANT* propertyValue);
+    HRESULT get_PropertyConditionFlags(PropertyConditionFlags* flags);
 }
 enum IID_IUIAutomationAndCondition = GUID(0xa7d0af36, 0xb912, 0x45fe, [0x98, 0x55, 0x9, 0x1d, 0xdc, 0x17, 0x4a, 0xec]);
 interface IUIAutomationAndCondition : IUIAutomationCondition
 {
-    HRESULT get_ChildCount(int*);
-    HRESULT GetChildrenAsNativeArray(IUIAutomationCondition**, int*);
-    HRESULT GetChildren(SAFEARRAY**);
+    HRESULT get_ChildCount(int* childCount);
+    HRESULT GetChildrenAsNativeArray(IUIAutomationCondition** childArray, int* childArrayCount);
+    HRESULT GetChildren(SAFEARRAY** childArray);
 }
 enum IID_IUIAutomationOrCondition = GUID(0x8753f032, 0x3db1, 0x47b5, [0xa1, 0xfc, 0x6e, 0x34, 0xa2, 0x66, 0xc7, 0x12]);
 interface IUIAutomationOrCondition : IUIAutomationCondition
 {
-    HRESULT get_ChildCount(int*);
-    HRESULT GetChildrenAsNativeArray(IUIAutomationCondition**, int*);
-    HRESULT GetChildren(SAFEARRAY**);
+    HRESULT get_ChildCount(int* childCount);
+    HRESULT GetChildrenAsNativeArray(IUIAutomationCondition** childArray, int* childArrayCount);
+    HRESULT GetChildren(SAFEARRAY** childArray);
 }
 enum IID_IUIAutomationNotCondition = GUID(0xf528b657, 0x847b, 0x498c, [0x88, 0x96, 0xd5, 0x2b, 0x56, 0x54, 0x7, 0xa1]);
 interface IUIAutomationNotCondition : IUIAutomationCondition
 {
-    HRESULT GetChild(IUIAutomationCondition*);
+    HRESULT GetChild(IUIAutomationCondition* condition);
 }
 enum IID_IUIAutomationCacheRequest = GUID(0xb32a92b5, 0xbc25, 0x4078, [0x9c, 0x8, 0xd7, 0xee, 0x95, 0xc4, 0x8e, 0x3]);
 interface IUIAutomationCacheRequest : IUnknown
 {
-    HRESULT AddProperty(UIA_PROPERTY_ID);
-    HRESULT AddPattern(UIA_PATTERN_ID);
-    HRESULT Clone(IUIAutomationCacheRequest*);
-    HRESULT get_TreeScope(TreeScope*);
-    HRESULT put_TreeScope(TreeScope);
-    HRESULT get_TreeFilter(IUIAutomationCondition*);
-    HRESULT put_TreeFilter(IUIAutomationCondition);
-    HRESULT get_AutomationElementMode(AutomationElementMode*);
-    HRESULT put_AutomationElementMode(AutomationElementMode);
+    HRESULT AddProperty(UIA_PROPERTY_ID propertyId);
+    HRESULT AddPattern(UIA_PATTERN_ID patternId);
+    HRESULT Clone(IUIAutomationCacheRequest* clonedRequest);
+    HRESULT get_TreeScope(TreeScope* scope_);
+    HRESULT put_TreeScope(TreeScope scope_);
+    HRESULT get_TreeFilter(IUIAutomationCondition* filter);
+    HRESULT put_TreeFilter(IUIAutomationCondition filter);
+    HRESULT get_AutomationElementMode(AutomationElementMode* mode);
+    HRESULT put_AutomationElementMode(AutomationElementMode mode);
 }
 enum IID_IUIAutomationTreeWalker = GUID(0x4042c624, 0x389c, 0x4afc, [0xa6, 0x30, 0x9d, 0xf8, 0x54, 0xa5, 0x41, 0xfc]);
 interface IUIAutomationTreeWalker : IUnknown
 {
-    HRESULT GetParentElement(IUIAutomationElement, IUIAutomationElement*);
-    HRESULT GetFirstChildElement(IUIAutomationElement, IUIAutomationElement*);
-    HRESULT GetLastChildElement(IUIAutomationElement, IUIAutomationElement*);
-    HRESULT GetNextSiblingElement(IUIAutomationElement, IUIAutomationElement*);
-    HRESULT GetPreviousSiblingElement(IUIAutomationElement, IUIAutomationElement*);
-    HRESULT NormalizeElement(IUIAutomationElement, IUIAutomationElement*);
-    HRESULT GetParentElementBuildCache(IUIAutomationElement, IUIAutomationCacheRequest, IUIAutomationElement*);
-    HRESULT GetFirstChildElementBuildCache(IUIAutomationElement, IUIAutomationCacheRequest, IUIAutomationElement*);
-    HRESULT GetLastChildElementBuildCache(IUIAutomationElement, IUIAutomationCacheRequest, IUIAutomationElement*);
-    HRESULT GetNextSiblingElementBuildCache(IUIAutomationElement, IUIAutomationCacheRequest, IUIAutomationElement*);
-    HRESULT GetPreviousSiblingElementBuildCache(IUIAutomationElement, IUIAutomationCacheRequest, IUIAutomationElement*);
-    HRESULT NormalizeElementBuildCache(IUIAutomationElement, IUIAutomationCacheRequest, IUIAutomationElement*);
-    HRESULT get_Condition(IUIAutomationCondition*);
+    HRESULT GetParentElement(IUIAutomationElement element, IUIAutomationElement* parent);
+    HRESULT GetFirstChildElement(IUIAutomationElement element, IUIAutomationElement* first);
+    HRESULT GetLastChildElement(IUIAutomationElement element, IUIAutomationElement* last);
+    HRESULT GetNextSiblingElement(IUIAutomationElement element, IUIAutomationElement* next);
+    HRESULT GetPreviousSiblingElement(IUIAutomationElement element, IUIAutomationElement* previous);
+    HRESULT NormalizeElement(IUIAutomationElement element, IUIAutomationElement* normalized);
+    HRESULT GetParentElementBuildCache(IUIAutomationElement element, IUIAutomationCacheRequest cacheRequest, IUIAutomationElement* parent);
+    HRESULT GetFirstChildElementBuildCache(IUIAutomationElement element, IUIAutomationCacheRequest cacheRequest, IUIAutomationElement* first);
+    HRESULT GetLastChildElementBuildCache(IUIAutomationElement element, IUIAutomationCacheRequest cacheRequest, IUIAutomationElement* last);
+    HRESULT GetNextSiblingElementBuildCache(IUIAutomationElement element, IUIAutomationCacheRequest cacheRequest, IUIAutomationElement* next);
+    HRESULT GetPreviousSiblingElementBuildCache(IUIAutomationElement element, IUIAutomationCacheRequest cacheRequest, IUIAutomationElement* previous);
+    HRESULT NormalizeElementBuildCache(IUIAutomationElement element, IUIAutomationCacheRequest cacheRequest, IUIAutomationElement* normalized);
+    HRESULT get_Condition(IUIAutomationCondition* condition);
 }
 enum IID_IUIAutomationEventHandler = GUID(0x146c3c17, 0xf12e, 0x4e22, [0x8c, 0x27, 0xf8, 0x94, 0xb9, 0xb7, 0x9c, 0x69]);
 interface IUIAutomationEventHandler : IUnknown
 {
-    HRESULT HandleAutomationEvent(IUIAutomationElement, UIA_EVENT_ID);
+    HRESULT HandleAutomationEvent(IUIAutomationElement sender, UIA_EVENT_ID eventId);
 }
 enum IID_IUIAutomationPropertyChangedEventHandler = GUID(0x40cd37d4, 0xc756, 0x4b0c, [0x8c, 0x6f, 0xbd, 0xdf, 0xee, 0xb1, 0x3b, 0x50]);
 interface IUIAutomationPropertyChangedEventHandler : IUnknown
 {
-    HRESULT HandlePropertyChangedEvent(IUIAutomationElement, UIA_PROPERTY_ID, VARIANT);
+    HRESULT HandlePropertyChangedEvent(IUIAutomationElement sender, UIA_PROPERTY_ID propertyId, VARIANT newValue);
 }
 enum IID_IUIAutomationStructureChangedEventHandler = GUID(0xe81d1b4e, 0x11c5, 0x42f8, [0x97, 0x54, 0xe7, 0x3, 0x6c, 0x79, 0xf0, 0x54]);
 interface IUIAutomationStructureChangedEventHandler : IUnknown
 {
-    HRESULT HandleStructureChangedEvent(IUIAutomationElement, StructureChangeType, SAFEARRAY*);
+    HRESULT HandleStructureChangedEvent(IUIAutomationElement sender, StructureChangeType changeType, SAFEARRAY* runtimeId);
 }
 enum IID_IUIAutomationFocusChangedEventHandler = GUID(0xc270f6b5, 0x5c69, 0x4290, [0x97, 0x45, 0x7a, 0x7f, 0x97, 0x16, 0x94, 0x68]);
 interface IUIAutomationFocusChangedEventHandler : IUnknown
 {
-    HRESULT HandleFocusChangedEvent(IUIAutomationElement);
+    HRESULT HandleFocusChangedEvent(IUIAutomationElement sender);
 }
 enum IID_IUIAutomationTextEditTextChangedEventHandler = GUID(0x92faa680, 0xe704, 0x4156, [0x93, 0x1a, 0xe3, 0x2d, 0x5b, 0xb3, 0x8f, 0x3f]);
 interface IUIAutomationTextEditTextChangedEventHandler : IUnknown
 {
-    HRESULT HandleTextEditTextChangedEvent(IUIAutomationElement, TextEditChangeType, SAFEARRAY*);
+    HRESULT HandleTextEditTextChangedEvent(IUIAutomationElement sender, TextEditChangeType textEditChangeType, SAFEARRAY* eventStrings);
 }
 enum IID_IUIAutomationChangesEventHandler = GUID(0x58edca55, 0x2c3e, 0x4980, [0xb1, 0xb9, 0x56, 0xc1, 0x7f, 0x27, 0xa2, 0xa0]);
 interface IUIAutomationChangesEventHandler : IUnknown
 {
-    HRESULT HandleChangesEvent(IUIAutomationElement, UiaChangeInfo*, int);
+    HRESULT HandleChangesEvent(IUIAutomationElement sender, UiaChangeInfo* uiaChanges, int changesCount);
 }
 enum IID_IUIAutomationNotificationEventHandler = GUID(0xc7cb2637, 0xe6c2, 0x4d0c, [0x85, 0xde, 0x49, 0x48, 0xc0, 0x21, 0x75, 0xc7]);
 interface IUIAutomationNotificationEventHandler : IUnknown
 {
-    HRESULT HandleNotificationEvent(IUIAutomationElement, NotificationKind, NotificationProcessing, BSTR, BSTR);
+    HRESULT HandleNotificationEvent(IUIAutomationElement sender, NotificationKind notificationKind, NotificationProcessing notificationProcessing, BSTR displayString, BSTR activityId);
 }
 enum IID_IUIAutomationInvokePattern = GUID(0xfb377fbe, 0x8ea6, 0x46d5, [0x9c, 0x73, 0x64, 0x99, 0x64, 0x2d, 0x30, 0x59]);
 interface IUIAutomationInvokePattern : IUnknown
@@ -2406,90 +2406,90 @@ interface IUIAutomationInvokePattern : IUnknown
 enum IID_IUIAutomationDockPattern = GUID(0xfde5ef97, 0x1464, 0x48f6, [0x90, 0xbf, 0x43, 0xd0, 0x94, 0x8e, 0x86, 0xec]);
 interface IUIAutomationDockPattern : IUnknown
 {
-    HRESULT SetDockPosition(DockPosition);
-    HRESULT get_CurrentDockPosition(DockPosition*);
-    HRESULT get_CachedDockPosition(DockPosition*);
+    HRESULT SetDockPosition(DockPosition dockPos);
+    HRESULT get_CurrentDockPosition(DockPosition* retVal);
+    HRESULT get_CachedDockPosition(DockPosition* retVal);
 }
 enum IID_IUIAutomationExpandCollapsePattern = GUID(0x619be086, 0x1f4e, 0x4ee4, [0xba, 0xfa, 0x21, 0x1, 0x28, 0x73, 0x87, 0x30]);
 interface IUIAutomationExpandCollapsePattern : IUnknown
 {
     HRESULT Expand();
     HRESULT Collapse();
-    HRESULT get_CurrentExpandCollapseState(ExpandCollapseState*);
-    HRESULT get_CachedExpandCollapseState(ExpandCollapseState*);
+    HRESULT get_CurrentExpandCollapseState(ExpandCollapseState* retVal);
+    HRESULT get_CachedExpandCollapseState(ExpandCollapseState* retVal);
 }
 enum IID_IUIAutomationGridPattern = GUID(0x414c3cdc, 0x856b, 0x4f5b, [0x85, 0x38, 0x31, 0x31, 0xc6, 0x30, 0x25, 0x50]);
 interface IUIAutomationGridPattern : IUnknown
 {
-    HRESULT GetItem(int, int, IUIAutomationElement*);
-    HRESULT get_CurrentRowCount(int*);
-    HRESULT get_CurrentColumnCount(int*);
-    HRESULT get_CachedRowCount(int*);
-    HRESULT get_CachedColumnCount(int*);
+    HRESULT GetItem(int row, int column, IUIAutomationElement* element);
+    HRESULT get_CurrentRowCount(int* retVal);
+    HRESULT get_CurrentColumnCount(int* retVal);
+    HRESULT get_CachedRowCount(int* retVal);
+    HRESULT get_CachedColumnCount(int* retVal);
 }
 enum IID_IUIAutomationGridItemPattern = GUID(0x78f8ef57, 0x66c3, 0x4e09, [0xbd, 0x7c, 0xe7, 0x9b, 0x20, 0x4, 0x89, 0x4d]);
 interface IUIAutomationGridItemPattern : IUnknown
 {
-    HRESULT get_CurrentContainingGrid(IUIAutomationElement*);
-    HRESULT get_CurrentRow(int*);
-    HRESULT get_CurrentColumn(int*);
-    HRESULT get_CurrentRowSpan(int*);
-    HRESULT get_CurrentColumnSpan(int*);
-    HRESULT get_CachedContainingGrid(IUIAutomationElement*);
-    HRESULT get_CachedRow(int*);
-    HRESULT get_CachedColumn(int*);
-    HRESULT get_CachedRowSpan(int*);
-    HRESULT get_CachedColumnSpan(int*);
+    HRESULT get_CurrentContainingGrid(IUIAutomationElement* retVal);
+    HRESULT get_CurrentRow(int* retVal);
+    HRESULT get_CurrentColumn(int* retVal);
+    HRESULT get_CurrentRowSpan(int* retVal);
+    HRESULT get_CurrentColumnSpan(int* retVal);
+    HRESULT get_CachedContainingGrid(IUIAutomationElement* retVal);
+    HRESULT get_CachedRow(int* retVal);
+    HRESULT get_CachedColumn(int* retVal);
+    HRESULT get_CachedRowSpan(int* retVal);
+    HRESULT get_CachedColumnSpan(int* retVal);
 }
 enum IID_IUIAutomationMultipleViewPattern = GUID(0x8d253c91, 0x1dc5, 0x4bb5, [0xb1, 0x8f, 0xad, 0xe1, 0x6f, 0xa4, 0x95, 0xe8]);
 interface IUIAutomationMultipleViewPattern : IUnknown
 {
-    HRESULT GetViewName(int, BSTR*);
-    HRESULT SetCurrentView(int);
-    HRESULT get_CurrentCurrentView(int*);
-    HRESULT GetCurrentSupportedViews(SAFEARRAY**);
-    HRESULT get_CachedCurrentView(int*);
-    HRESULT GetCachedSupportedViews(SAFEARRAY**);
+    HRESULT GetViewName(int view, BSTR* name);
+    HRESULT SetCurrentView(int view);
+    HRESULT get_CurrentCurrentView(int* retVal);
+    HRESULT GetCurrentSupportedViews(SAFEARRAY** retVal);
+    HRESULT get_CachedCurrentView(int* retVal);
+    HRESULT GetCachedSupportedViews(SAFEARRAY** retVal);
 }
 enum IID_IUIAutomationObjectModelPattern = GUID(0x71c284b3, 0xc14d, 0x4d14, [0x98, 0x1e, 0x19, 0x75, 0x1b, 0xd, 0x75, 0x6d]);
 interface IUIAutomationObjectModelPattern : IUnknown
 {
-    HRESULT GetUnderlyingObjectModel(IUnknown*);
+    HRESULT GetUnderlyingObjectModel(IUnknown* retVal);
 }
 enum IID_IUIAutomationRangeValuePattern = GUID(0x59213f4f, 0x7346, 0x49e5, [0xb1, 0x20, 0x80, 0x55, 0x59, 0x87, 0xa1, 0x48]);
 interface IUIAutomationRangeValuePattern : IUnknown
 {
-    HRESULT SetValue(double);
-    HRESULT get_CurrentValue(double*);
-    HRESULT get_CurrentIsReadOnly(BOOL*);
-    HRESULT get_CurrentMaximum(double*);
-    HRESULT get_CurrentMinimum(double*);
-    HRESULT get_CurrentLargeChange(double*);
-    HRESULT get_CurrentSmallChange(double*);
-    HRESULT get_CachedValue(double*);
-    HRESULT get_CachedIsReadOnly(BOOL*);
-    HRESULT get_CachedMaximum(double*);
-    HRESULT get_CachedMinimum(double*);
-    HRESULT get_CachedLargeChange(double*);
-    HRESULT get_CachedSmallChange(double*);
+    HRESULT SetValue(double val);
+    HRESULT get_CurrentValue(double* retVal);
+    HRESULT get_CurrentIsReadOnly(BOOL* retVal);
+    HRESULT get_CurrentMaximum(double* retVal);
+    HRESULT get_CurrentMinimum(double* retVal);
+    HRESULT get_CurrentLargeChange(double* retVal);
+    HRESULT get_CurrentSmallChange(double* retVal);
+    HRESULT get_CachedValue(double* retVal);
+    HRESULT get_CachedIsReadOnly(BOOL* retVal);
+    HRESULT get_CachedMaximum(double* retVal);
+    HRESULT get_CachedMinimum(double* retVal);
+    HRESULT get_CachedLargeChange(double* retVal);
+    HRESULT get_CachedSmallChange(double* retVal);
 }
 enum IID_IUIAutomationScrollPattern = GUID(0x88f4d42a, 0xe881, 0x459d, [0xa7, 0x7c, 0x73, 0xbb, 0xbb, 0x7e, 0x2, 0xdc]);
 interface IUIAutomationScrollPattern : IUnknown
 {
-    HRESULT Scroll(ScrollAmount, ScrollAmount);
-    HRESULT SetScrollPercent(double, double);
-    HRESULT get_CurrentHorizontalScrollPercent(double*);
-    HRESULT get_CurrentVerticalScrollPercent(double*);
-    HRESULT get_CurrentHorizontalViewSize(double*);
-    HRESULT get_CurrentVerticalViewSize(double*);
-    HRESULT get_CurrentHorizontallyScrollable(BOOL*);
-    HRESULT get_CurrentVerticallyScrollable(BOOL*);
-    HRESULT get_CachedHorizontalScrollPercent(double*);
-    HRESULT get_CachedVerticalScrollPercent(double*);
-    HRESULT get_CachedHorizontalViewSize(double*);
-    HRESULT get_CachedVerticalViewSize(double*);
-    HRESULT get_CachedHorizontallyScrollable(BOOL*);
-    HRESULT get_CachedVerticallyScrollable(BOOL*);
+    HRESULT Scroll(ScrollAmount horizontalAmount, ScrollAmount verticalAmount);
+    HRESULT SetScrollPercent(double horizontalPercent, double verticalPercent);
+    HRESULT get_CurrentHorizontalScrollPercent(double* retVal);
+    HRESULT get_CurrentVerticalScrollPercent(double* retVal);
+    HRESULT get_CurrentHorizontalViewSize(double* retVal);
+    HRESULT get_CurrentVerticalViewSize(double* retVal);
+    HRESULT get_CurrentHorizontallyScrollable(BOOL* retVal);
+    HRESULT get_CurrentVerticallyScrollable(BOOL* retVal);
+    HRESULT get_CachedHorizontalScrollPercent(double* retVal);
+    HRESULT get_CachedVerticalScrollPercent(double* retVal);
+    HRESULT get_CachedHorizontalViewSize(double* retVal);
+    HRESULT get_CachedVerticalViewSize(double* retVal);
+    HRESULT get_CachedHorizontallyScrollable(BOOL* retVal);
+    HRESULT get_CachedVerticallyScrollable(BOOL* retVal);
 }
 enum IID_IUIAutomationScrollItemPattern = GUID(0xb488300f, 0xd015, 0x4f19, [0x9c, 0x29, 0xbb, 0x59, 0x5e, 0x36, 0x45, 0xef]);
 interface IUIAutomationScrollItemPattern : IUnknown
@@ -2499,24 +2499,24 @@ interface IUIAutomationScrollItemPattern : IUnknown
 enum IID_IUIAutomationSelectionPattern = GUID(0x5ed5202e, 0xb2ac, 0x47a6, [0xb6, 0x38, 0x4b, 0xb, 0xf1, 0x40, 0xd7, 0x8e]);
 interface IUIAutomationSelectionPattern : IUnknown
 {
-    HRESULT GetCurrentSelection(IUIAutomationElementArray*);
-    HRESULT get_CurrentCanSelectMultiple(BOOL*);
-    HRESULT get_CurrentIsSelectionRequired(BOOL*);
-    HRESULT GetCachedSelection(IUIAutomationElementArray*);
-    HRESULT get_CachedCanSelectMultiple(BOOL*);
-    HRESULT get_CachedIsSelectionRequired(BOOL*);
+    HRESULT GetCurrentSelection(IUIAutomationElementArray* retVal);
+    HRESULT get_CurrentCanSelectMultiple(BOOL* retVal);
+    HRESULT get_CurrentIsSelectionRequired(BOOL* retVal);
+    HRESULT GetCachedSelection(IUIAutomationElementArray* retVal);
+    HRESULT get_CachedCanSelectMultiple(BOOL* retVal);
+    HRESULT get_CachedIsSelectionRequired(BOOL* retVal);
 }
 enum IID_IUIAutomationSelectionPattern2 = GUID(0x532bfae, 0xc011, 0x4e32, [0xa3, 0x43, 0x6d, 0x64, 0x2d, 0x79, 0x85, 0x55]);
 interface IUIAutomationSelectionPattern2 : IUIAutomationSelectionPattern
 {
-    HRESULT get_CurrentFirstSelectedItem(IUIAutomationElement*);
-    HRESULT get_CurrentLastSelectedItem(IUIAutomationElement*);
-    HRESULT get_CurrentCurrentSelectedItem(IUIAutomationElement*);
-    HRESULT get_CurrentItemCount(int*);
-    HRESULT get_CachedFirstSelectedItem(IUIAutomationElement*);
-    HRESULT get_CachedLastSelectedItem(IUIAutomationElement*);
-    HRESULT get_CachedCurrentSelectedItem(IUIAutomationElement*);
-    HRESULT get_CachedItemCount(int*);
+    HRESULT get_CurrentFirstSelectedItem(IUIAutomationElement* retVal);
+    HRESULT get_CurrentLastSelectedItem(IUIAutomationElement* retVal);
+    HRESULT get_CurrentCurrentSelectedItem(IUIAutomationElement* retVal);
+    HRESULT get_CurrentItemCount(int* retVal);
+    HRESULT get_CachedFirstSelectedItem(IUIAutomationElement* retVal);
+    HRESULT get_CachedLastSelectedItem(IUIAutomationElement* retVal);
+    HRESULT get_CachedCurrentSelectedItem(IUIAutomationElement* retVal);
+    HRESULT get_CachedItemCount(int* retVal);
 }
 enum IID_IUIAutomationSelectionItemPattern = GUID(0xa8efa66a, 0xfda, 0x421a, [0x91, 0x94, 0x38, 0x2, 0x1f, 0x35, 0x78, 0xea]);
 interface IUIAutomationSelectionItemPattern : IUnknown
@@ -2524,104 +2524,104 @@ interface IUIAutomationSelectionItemPattern : IUnknown
     HRESULT Select();
     HRESULT AddToSelection();
     HRESULT RemoveFromSelection();
-    HRESULT get_CurrentIsSelected(BOOL*);
-    HRESULT get_CurrentSelectionContainer(IUIAutomationElement*);
-    HRESULT get_CachedIsSelected(BOOL*);
-    HRESULT get_CachedSelectionContainer(IUIAutomationElement*);
+    HRESULT get_CurrentIsSelected(BOOL* retVal);
+    HRESULT get_CurrentSelectionContainer(IUIAutomationElement* retVal);
+    HRESULT get_CachedIsSelected(BOOL* retVal);
+    HRESULT get_CachedSelectionContainer(IUIAutomationElement* retVal);
 }
 enum IID_IUIAutomationSynchronizedInputPattern = GUID(0x2233be0b, 0xafb7, 0x448b, [0x9f, 0xda, 0x3b, 0x37, 0x8a, 0xa5, 0xea, 0xe1]);
 interface IUIAutomationSynchronizedInputPattern : IUnknown
 {
-    HRESULT StartListening(SynchronizedInputType);
+    HRESULT StartListening(SynchronizedInputType inputType);
     HRESULT Cancel();
 }
 enum IID_IUIAutomationTablePattern = GUID(0x620e691c, 0xea96, 0x4710, [0xa8, 0x50, 0x75, 0x4b, 0x24, 0xce, 0x24, 0x17]);
 interface IUIAutomationTablePattern : IUnknown
 {
-    HRESULT GetCurrentRowHeaders(IUIAutomationElementArray*);
-    HRESULT GetCurrentColumnHeaders(IUIAutomationElementArray*);
-    HRESULT get_CurrentRowOrColumnMajor(RowOrColumnMajor*);
-    HRESULT GetCachedRowHeaders(IUIAutomationElementArray*);
-    HRESULT GetCachedColumnHeaders(IUIAutomationElementArray*);
-    HRESULT get_CachedRowOrColumnMajor(RowOrColumnMajor*);
+    HRESULT GetCurrentRowHeaders(IUIAutomationElementArray* retVal);
+    HRESULT GetCurrentColumnHeaders(IUIAutomationElementArray* retVal);
+    HRESULT get_CurrentRowOrColumnMajor(RowOrColumnMajor* retVal);
+    HRESULT GetCachedRowHeaders(IUIAutomationElementArray* retVal);
+    HRESULT GetCachedColumnHeaders(IUIAutomationElementArray* retVal);
+    HRESULT get_CachedRowOrColumnMajor(RowOrColumnMajor* retVal);
 }
 enum IID_IUIAutomationTableItemPattern = GUID(0xb964eb3, 0xef2e, 0x4464, [0x9c, 0x79, 0x61, 0xd6, 0x17, 0x37, 0xa2, 0x7e]);
 interface IUIAutomationTableItemPattern : IUnknown
 {
-    HRESULT GetCurrentRowHeaderItems(IUIAutomationElementArray*);
-    HRESULT GetCurrentColumnHeaderItems(IUIAutomationElementArray*);
-    HRESULT GetCachedRowHeaderItems(IUIAutomationElementArray*);
-    HRESULT GetCachedColumnHeaderItems(IUIAutomationElementArray*);
+    HRESULT GetCurrentRowHeaderItems(IUIAutomationElementArray* retVal);
+    HRESULT GetCurrentColumnHeaderItems(IUIAutomationElementArray* retVal);
+    HRESULT GetCachedRowHeaderItems(IUIAutomationElementArray* retVal);
+    HRESULT GetCachedColumnHeaderItems(IUIAutomationElementArray* retVal);
 }
 enum IID_IUIAutomationTogglePattern = GUID(0x94cf8058, 0x9b8d, 0x4ab9, [0x8b, 0xfd, 0x4c, 0xd0, 0xa3, 0x3c, 0x8c, 0x70]);
 interface IUIAutomationTogglePattern : IUnknown
 {
     HRESULT Toggle();
-    HRESULT get_CurrentToggleState(ToggleState*);
-    HRESULT get_CachedToggleState(ToggleState*);
+    HRESULT get_CurrentToggleState(ToggleState* retVal);
+    HRESULT get_CachedToggleState(ToggleState* retVal);
 }
 enum IID_IUIAutomationTransformPattern = GUID(0xa9b55844, 0xa55d, 0x4ef0, [0x92, 0x6d, 0x56, 0x9c, 0x16, 0xff, 0x89, 0xbb]);
 interface IUIAutomationTransformPattern : IUnknown
 {
-    HRESULT Move(double, double);
-    HRESULT Resize(double, double);
-    HRESULT Rotate(double);
-    HRESULT get_CurrentCanMove(BOOL*);
-    HRESULT get_CurrentCanResize(BOOL*);
-    HRESULT get_CurrentCanRotate(BOOL*);
-    HRESULT get_CachedCanMove(BOOL*);
-    HRESULT get_CachedCanResize(BOOL*);
-    HRESULT get_CachedCanRotate(BOOL*);
+    HRESULT Move(double x, double y);
+    HRESULT Resize(double width, double height);
+    HRESULT Rotate(double degrees);
+    HRESULT get_CurrentCanMove(BOOL* retVal);
+    HRESULT get_CurrentCanResize(BOOL* retVal);
+    HRESULT get_CurrentCanRotate(BOOL* retVal);
+    HRESULT get_CachedCanMove(BOOL* retVal);
+    HRESULT get_CachedCanResize(BOOL* retVal);
+    HRESULT get_CachedCanRotate(BOOL* retVal);
 }
 enum IID_IUIAutomationValuePattern = GUID(0xa94cd8b1, 0x844, 0x4cd6, [0x9d, 0x2d, 0x64, 0x5, 0x37, 0xab, 0x39, 0xe9]);
 interface IUIAutomationValuePattern : IUnknown
 {
-    HRESULT SetValue(BSTR);
-    HRESULT get_CurrentValue(BSTR*);
-    HRESULT get_CurrentIsReadOnly(BOOL*);
-    HRESULT get_CachedValue(BSTR*);
-    HRESULT get_CachedIsReadOnly(BOOL*);
+    HRESULT SetValue(BSTR val);
+    HRESULT get_CurrentValue(BSTR* retVal);
+    HRESULT get_CurrentIsReadOnly(BOOL* retVal);
+    HRESULT get_CachedValue(BSTR* retVal);
+    HRESULT get_CachedIsReadOnly(BOOL* retVal);
 }
 enum IID_IUIAutomationWindowPattern = GUID(0xfaef453, 0x9208, 0x43ef, [0xbb, 0xb2, 0x3b, 0x48, 0x51, 0x77, 0x86, 0x4f]);
 interface IUIAutomationWindowPattern : IUnknown
 {
     HRESULT Close();
-    HRESULT WaitForInputIdle(int, BOOL*);
-    HRESULT SetWindowVisualState(WindowVisualState);
-    HRESULT get_CurrentCanMaximize(BOOL*);
-    HRESULT get_CurrentCanMinimize(BOOL*);
-    HRESULT get_CurrentIsModal(BOOL*);
-    HRESULT get_CurrentIsTopmost(BOOL*);
-    HRESULT get_CurrentWindowVisualState(WindowVisualState*);
-    HRESULT get_CurrentWindowInteractionState(WindowInteractionState*);
-    HRESULT get_CachedCanMaximize(BOOL*);
-    HRESULT get_CachedCanMinimize(BOOL*);
-    HRESULT get_CachedIsModal(BOOL*);
-    HRESULT get_CachedIsTopmost(BOOL*);
-    HRESULT get_CachedWindowVisualState(WindowVisualState*);
-    HRESULT get_CachedWindowInteractionState(WindowInteractionState*);
+    HRESULT WaitForInputIdle(int milliseconds, BOOL* success);
+    HRESULT SetWindowVisualState(WindowVisualState state);
+    HRESULT get_CurrentCanMaximize(BOOL* retVal);
+    HRESULT get_CurrentCanMinimize(BOOL* retVal);
+    HRESULT get_CurrentIsModal(BOOL* retVal);
+    HRESULT get_CurrentIsTopmost(BOOL* retVal);
+    HRESULT get_CurrentWindowVisualState(WindowVisualState* retVal);
+    HRESULT get_CurrentWindowInteractionState(WindowInteractionState* retVal);
+    HRESULT get_CachedCanMaximize(BOOL* retVal);
+    HRESULT get_CachedCanMinimize(BOOL* retVal);
+    HRESULT get_CachedIsModal(BOOL* retVal);
+    HRESULT get_CachedIsTopmost(BOOL* retVal);
+    HRESULT get_CachedWindowVisualState(WindowVisualState* retVal);
+    HRESULT get_CachedWindowInteractionState(WindowInteractionState* retVal);
 }
 enum IID_IUIAutomationTextRange = GUID(0xa543cc6a, 0xf4ae, 0x494b, [0x82, 0x39, 0xc8, 0x14, 0x48, 0x11, 0x87, 0xa8]);
 interface IUIAutomationTextRange : IUnknown
 {
-    HRESULT Clone(IUIAutomationTextRange*);
-    HRESULT Compare(IUIAutomationTextRange, BOOL*);
-    HRESULT CompareEndpoints(TextPatternRangeEndpoint, IUIAutomationTextRange, TextPatternRangeEndpoint, int*);
-    HRESULT ExpandToEnclosingUnit(TextUnit);
-    HRESULT FindAttribute(UIA_TEXTATTRIBUTE_ID, VARIANT, BOOL, IUIAutomationTextRange*);
-    HRESULT FindText(BSTR, BOOL, BOOL, IUIAutomationTextRange*);
-    HRESULT GetAttributeValue(UIA_TEXTATTRIBUTE_ID, VARIANT*);
-    HRESULT GetBoundingRectangles(SAFEARRAY**);
-    HRESULT GetEnclosingElement(IUIAutomationElement*);
-    HRESULT GetText(int, BSTR*);
-    HRESULT Move(TextUnit, int, int*);
-    HRESULT MoveEndpointByUnit(TextPatternRangeEndpoint, TextUnit, int, int*);
-    HRESULT MoveEndpointByRange(TextPatternRangeEndpoint, IUIAutomationTextRange, TextPatternRangeEndpoint);
+    HRESULT Clone(IUIAutomationTextRange* clonedRange);
+    HRESULT Compare(IUIAutomationTextRange range, BOOL* areSame);
+    HRESULT CompareEndpoints(TextPatternRangeEndpoint srcEndPoint, IUIAutomationTextRange range, TextPatternRangeEndpoint targetEndPoint, int* compValue);
+    HRESULT ExpandToEnclosingUnit(TextUnit textUnit);
+    HRESULT FindAttribute(UIA_TEXTATTRIBUTE_ID attr, VARIANT val, BOOL backward, IUIAutomationTextRange* found);
+    HRESULT FindText(BSTR text, BOOL backward, BOOL ignoreCase, IUIAutomationTextRange* found);
+    HRESULT GetAttributeValue(UIA_TEXTATTRIBUTE_ID attr, VARIANT* value);
+    HRESULT GetBoundingRectangles(SAFEARRAY** boundingRects);
+    HRESULT GetEnclosingElement(IUIAutomationElement* enclosingElement);
+    HRESULT GetText(int maxLength, BSTR* text);
+    HRESULT Move(TextUnit unit, int count, int* moved);
+    HRESULT MoveEndpointByUnit(TextPatternRangeEndpoint endpoint, TextUnit unit, int count, int* moved);
+    HRESULT MoveEndpointByRange(TextPatternRangeEndpoint srcEndPoint, IUIAutomationTextRange range, TextPatternRangeEndpoint targetEndPoint);
     HRESULT Select();
     HRESULT AddToSelection();
     HRESULT RemoveFromSelection();
-    HRESULT ScrollIntoView(BOOL);
-    HRESULT GetChildren(IUIAutomationElementArray*);
+    HRESULT ScrollIntoView(BOOL alignToTop);
+    HRESULT GetChildren(IUIAutomationElementArray* children);
 }
 enum IID_IUIAutomationTextRange2 = GUID(0xbb9b40e0, 0x5e04, 0x46bd, [0x9b, 0xe0, 0x4b, 0x60, 0x1b, 0x9a, 0xfa, 0xd4]);
 interface IUIAutomationTextRange2 : IUIAutomationTextRange
@@ -2631,80 +2631,80 @@ interface IUIAutomationTextRange2 : IUIAutomationTextRange
 enum IID_IUIAutomationTextRange3 = GUID(0x6a315d69, 0x5512, 0x4c2e, [0x85, 0xf0, 0x53, 0xfc, 0xe6, 0xdd, 0x4b, 0xc2]);
 interface IUIAutomationTextRange3 : IUIAutomationTextRange2
 {
-    HRESULT GetEnclosingElementBuildCache(IUIAutomationCacheRequest, IUIAutomationElement*);
-    HRESULT GetChildrenBuildCache(IUIAutomationCacheRequest, IUIAutomationElementArray*);
-    HRESULT GetAttributeValues(const(UIA_TEXTATTRIBUTE_ID)*, int, SAFEARRAY**);
+    HRESULT GetEnclosingElementBuildCache(IUIAutomationCacheRequest cacheRequest, IUIAutomationElement* enclosingElement);
+    HRESULT GetChildrenBuildCache(IUIAutomationCacheRequest cacheRequest, IUIAutomationElementArray* children);
+    HRESULT GetAttributeValues(const(UIA_TEXTATTRIBUTE_ID)* attributeIds, int attributeIdCount, SAFEARRAY** attributeValues);
 }
 enum IID_IUIAutomationTextRangeArray = GUID(0xce4ae76a, 0xe717, 0x4c98, [0x81, 0xea, 0x47, 0x37, 0x1d, 0x2, 0x8e, 0xb6]);
 interface IUIAutomationTextRangeArray : IUnknown
 {
-    HRESULT get_Length(int*);
-    HRESULT GetElement(int, IUIAutomationTextRange*);
+    HRESULT get_Length(int* length);
+    HRESULT GetElement(int index, IUIAutomationTextRange* element);
 }
 enum IID_IUIAutomationTextPattern = GUID(0x32eba289, 0x3583, 0x42c9, [0x9c, 0x59, 0x3b, 0x6d, 0x9a, 0x1e, 0x9b, 0x6a]);
 interface IUIAutomationTextPattern : IUnknown
 {
-    HRESULT RangeFromPoint(POINT, IUIAutomationTextRange*);
-    HRESULT RangeFromChild(IUIAutomationElement, IUIAutomationTextRange*);
-    HRESULT GetSelection(IUIAutomationTextRangeArray*);
-    HRESULT GetVisibleRanges(IUIAutomationTextRangeArray*);
-    HRESULT get_DocumentRange(IUIAutomationTextRange*);
-    HRESULT get_SupportedTextSelection(SupportedTextSelection*);
+    HRESULT RangeFromPoint(POINT pt, IUIAutomationTextRange* range);
+    HRESULT RangeFromChild(IUIAutomationElement child, IUIAutomationTextRange* range);
+    HRESULT GetSelection(IUIAutomationTextRangeArray* ranges);
+    HRESULT GetVisibleRanges(IUIAutomationTextRangeArray* ranges);
+    HRESULT get_DocumentRange(IUIAutomationTextRange* range);
+    HRESULT get_SupportedTextSelection(SupportedTextSelection* supportedTextSelection);
 }
 enum IID_IUIAutomationTextPattern2 = GUID(0x506a921a, 0xfcc9, 0x409f, [0xb2, 0x3b, 0x37, 0xeb, 0x74, 0x10, 0x68, 0x72]);
 interface IUIAutomationTextPattern2 : IUIAutomationTextPattern
 {
-    HRESULT RangeFromAnnotation(IUIAutomationElement, IUIAutomationTextRange*);
-    HRESULT GetCaretRange(BOOL*, IUIAutomationTextRange*);
+    HRESULT RangeFromAnnotation(IUIAutomationElement annotation, IUIAutomationTextRange* range);
+    HRESULT GetCaretRange(BOOL* isActive, IUIAutomationTextRange* range);
 }
 enum IID_IUIAutomationTextEditPattern = GUID(0x17e21576, 0x996c, 0x4870, [0x99, 0xd9, 0xbf, 0xf3, 0x23, 0x38, 0xc, 0x6]);
 interface IUIAutomationTextEditPattern : IUIAutomationTextPattern
 {
-    HRESULT GetActiveComposition(IUIAutomationTextRange*);
-    HRESULT GetConversionTarget(IUIAutomationTextRange*);
+    HRESULT GetActiveComposition(IUIAutomationTextRange* range);
+    HRESULT GetConversionTarget(IUIAutomationTextRange* range);
 }
 enum IID_IUIAutomationCustomNavigationPattern = GUID(0x1ea217a, 0x1766, 0x47ed, [0xa6, 0xcc, 0xac, 0xf4, 0x92, 0x85, 0x4b, 0x1f]);
 interface IUIAutomationCustomNavigationPattern : IUnknown
 {
-    HRESULT Navigate(NavigateDirection, IUIAutomationElement*);
+    HRESULT Navigate(NavigateDirection direction, IUIAutomationElement* pRetVal);
 }
 enum IID_IUIAutomationActiveTextPositionChangedEventHandler = GUID(0xf97933b0, 0x8dae, 0x4496, [0x89, 0x97, 0x5b, 0xa0, 0x15, 0xfe, 0xd, 0x82]);
 interface IUIAutomationActiveTextPositionChangedEventHandler : IUnknown
 {
-    HRESULT HandleActiveTextPositionChangedEvent(IUIAutomationElement, IUIAutomationTextRange);
+    HRESULT HandleActiveTextPositionChangedEvent(IUIAutomationElement sender, IUIAutomationTextRange range);
 }
 enum IID_IUIAutomationLegacyIAccessiblePattern = GUID(0x828055ad, 0x355b, 0x4435, [0x86, 0xd5, 0x3b, 0x51, 0xc1, 0x4a, 0x9b, 0x1b]);
 interface IUIAutomationLegacyIAccessiblePattern : IUnknown
 {
-    HRESULT Select(int);
+    HRESULT Select(int flagsSelect);
     HRESULT DoDefaultAction();
-    HRESULT SetValue(const(wchar)*);
-    HRESULT get_CurrentChildId(int*);
-    HRESULT get_CurrentName(BSTR*);
-    HRESULT get_CurrentValue(BSTR*);
-    HRESULT get_CurrentDescription(BSTR*);
-    HRESULT get_CurrentRole(uint*);
-    HRESULT get_CurrentState(uint*);
-    HRESULT get_CurrentHelp(BSTR*);
-    HRESULT get_CurrentKeyboardShortcut(BSTR*);
-    HRESULT GetCurrentSelection(IUIAutomationElementArray*);
-    HRESULT get_CurrentDefaultAction(BSTR*);
-    HRESULT get_CachedChildId(int*);
-    HRESULT get_CachedName(BSTR*);
-    HRESULT get_CachedValue(BSTR*);
-    HRESULT get_CachedDescription(BSTR*);
-    HRESULT get_CachedRole(uint*);
-    HRESULT get_CachedState(uint*);
-    HRESULT get_CachedHelp(BSTR*);
-    HRESULT get_CachedKeyboardShortcut(BSTR*);
-    HRESULT GetCachedSelection(IUIAutomationElementArray*);
-    HRESULT get_CachedDefaultAction(BSTR*);
-    HRESULT GetIAccessible(IAccessible*);
+    HRESULT SetValue(const(wchar)* szValue);
+    HRESULT get_CurrentChildId(int* pRetVal);
+    HRESULT get_CurrentName(BSTR* pszName);
+    HRESULT get_CurrentValue(BSTR* pszValue);
+    HRESULT get_CurrentDescription(BSTR* pszDescription);
+    HRESULT get_CurrentRole(uint* pdwRole);
+    HRESULT get_CurrentState(uint* pdwState);
+    HRESULT get_CurrentHelp(BSTR* pszHelp);
+    HRESULT get_CurrentKeyboardShortcut(BSTR* pszKeyboardShortcut);
+    HRESULT GetCurrentSelection(IUIAutomationElementArray* pvarSelectedChildren);
+    HRESULT get_CurrentDefaultAction(BSTR* pszDefaultAction);
+    HRESULT get_CachedChildId(int* pRetVal);
+    HRESULT get_CachedName(BSTR* pszName);
+    HRESULT get_CachedValue(BSTR* pszValue);
+    HRESULT get_CachedDescription(BSTR* pszDescription);
+    HRESULT get_CachedRole(uint* pdwRole);
+    HRESULT get_CachedState(uint* pdwState);
+    HRESULT get_CachedHelp(BSTR* pszHelp);
+    HRESULT get_CachedKeyboardShortcut(BSTR* pszKeyboardShortcut);
+    HRESULT GetCachedSelection(IUIAutomationElementArray* pvarSelectedChildren);
+    HRESULT get_CachedDefaultAction(BSTR* pszDefaultAction);
+    HRESULT GetIAccessible(IAccessible* ppAccessible);
 }
 enum IID_IUIAutomationItemContainerPattern = GUID(0xc690fdb2, 0x27a8, 0x423c, [0x81, 0x2d, 0x42, 0x97, 0x73, 0xc9, 0x8, 0x4e]);
 interface IUIAutomationItemContainerPattern : IUnknown
 {
-    HRESULT FindItemByProperty(IUIAutomationElement, UIA_PROPERTY_ID, VARIANT, IUIAutomationElement*);
+    HRESULT FindItemByProperty(IUIAutomationElement pStartAfter, UIA_PROPERTY_ID propertyId, VARIANT value, IUIAutomationElement* pFound);
 }
 enum IID_IUIAutomationVirtualizedItemPattern = GUID(0x6ba3d7a6, 0x4cf, 0x4f11, [0x87, 0x93, 0xa8, 0xd1, 0xcd, 0xe9, 0x96, 0x9f]);
 interface IUIAutomationVirtualizedItemPattern : IUnknown
@@ -2714,304 +2714,304 @@ interface IUIAutomationVirtualizedItemPattern : IUnknown
 enum IID_IUIAutomationAnnotationPattern = GUID(0x9a175b21, 0x339e, 0x41b1, [0x8e, 0x8b, 0x62, 0x3f, 0x6b, 0x68, 0x10, 0x98]);
 interface IUIAutomationAnnotationPattern : IUnknown
 {
-    HRESULT get_CurrentAnnotationTypeId(UIA_ANNOTATIONTYPE*);
-    HRESULT get_CurrentAnnotationTypeName(BSTR*);
-    HRESULT get_CurrentAuthor(BSTR*);
-    HRESULT get_CurrentDateTime(BSTR*);
-    HRESULT get_CurrentTarget(IUIAutomationElement*);
-    HRESULT get_CachedAnnotationTypeId(UIA_ANNOTATIONTYPE*);
-    HRESULT get_CachedAnnotationTypeName(BSTR*);
-    HRESULT get_CachedAuthor(BSTR*);
-    HRESULT get_CachedDateTime(BSTR*);
-    HRESULT get_CachedTarget(IUIAutomationElement*);
+    HRESULT get_CurrentAnnotationTypeId(UIA_ANNOTATIONTYPE* retVal);
+    HRESULT get_CurrentAnnotationTypeName(BSTR* retVal);
+    HRESULT get_CurrentAuthor(BSTR* retVal);
+    HRESULT get_CurrentDateTime(BSTR* retVal);
+    HRESULT get_CurrentTarget(IUIAutomationElement* retVal);
+    HRESULT get_CachedAnnotationTypeId(UIA_ANNOTATIONTYPE* retVal);
+    HRESULT get_CachedAnnotationTypeName(BSTR* retVal);
+    HRESULT get_CachedAuthor(BSTR* retVal);
+    HRESULT get_CachedDateTime(BSTR* retVal);
+    HRESULT get_CachedTarget(IUIAutomationElement* retVal);
 }
 enum IID_IUIAutomationStylesPattern = GUID(0x85b5f0a2, 0xbd79, 0x484a, [0xad, 0x2b, 0x38, 0x8c, 0x98, 0x38, 0xd5, 0xfb]);
 interface IUIAutomationStylesPattern : IUnknown
 {
-    HRESULT get_CurrentStyleId(UIA_STYLE_ID*);
-    HRESULT get_CurrentStyleName(BSTR*);
-    HRESULT get_CurrentFillColor(int*);
-    HRESULT get_CurrentFillPatternStyle(BSTR*);
-    HRESULT get_CurrentShape(BSTR*);
-    HRESULT get_CurrentFillPatternColor(int*);
-    HRESULT get_CurrentExtendedProperties(BSTR*);
-    HRESULT GetCurrentExtendedPropertiesAsArray(ExtendedProperty**, int*);
-    HRESULT get_CachedStyleId(UIA_STYLE_ID*);
-    HRESULT get_CachedStyleName(BSTR*);
-    HRESULT get_CachedFillColor(int*);
-    HRESULT get_CachedFillPatternStyle(BSTR*);
-    HRESULT get_CachedShape(BSTR*);
-    HRESULT get_CachedFillPatternColor(int*);
-    HRESULT get_CachedExtendedProperties(BSTR*);
-    HRESULT GetCachedExtendedPropertiesAsArray(ExtendedProperty**, int*);
+    HRESULT get_CurrentStyleId(UIA_STYLE_ID* retVal);
+    HRESULT get_CurrentStyleName(BSTR* retVal);
+    HRESULT get_CurrentFillColor(int* retVal);
+    HRESULT get_CurrentFillPatternStyle(BSTR* retVal);
+    HRESULT get_CurrentShape(BSTR* retVal);
+    HRESULT get_CurrentFillPatternColor(int* retVal);
+    HRESULT get_CurrentExtendedProperties(BSTR* retVal);
+    HRESULT GetCurrentExtendedPropertiesAsArray(ExtendedProperty** propertyArray, int* propertyCount);
+    HRESULT get_CachedStyleId(UIA_STYLE_ID* retVal);
+    HRESULT get_CachedStyleName(BSTR* retVal);
+    HRESULT get_CachedFillColor(int* retVal);
+    HRESULT get_CachedFillPatternStyle(BSTR* retVal);
+    HRESULT get_CachedShape(BSTR* retVal);
+    HRESULT get_CachedFillPatternColor(int* retVal);
+    HRESULT get_CachedExtendedProperties(BSTR* retVal);
+    HRESULT GetCachedExtendedPropertiesAsArray(ExtendedProperty** propertyArray, int* propertyCount);
 }
 enum IID_IUIAutomationSpreadsheetPattern = GUID(0x7517a7c8, 0xfaae, 0x4de9, [0x9f, 0x8, 0x29, 0xb9, 0x1e, 0x85, 0x95, 0xc1]);
 interface IUIAutomationSpreadsheetPattern : IUnknown
 {
-    HRESULT GetItemByName(BSTR, IUIAutomationElement*);
+    HRESULT GetItemByName(BSTR name, IUIAutomationElement* element);
 }
 enum IID_IUIAutomationSpreadsheetItemPattern = GUID(0x7d4fb86c, 0x8d34, 0x40e1, [0x8e, 0x83, 0x62, 0xc1, 0x52, 0x4, 0xe3, 0x35]);
 interface IUIAutomationSpreadsheetItemPattern : IUnknown
 {
-    HRESULT get_CurrentFormula(BSTR*);
-    HRESULT GetCurrentAnnotationObjects(IUIAutomationElementArray*);
-    HRESULT GetCurrentAnnotationTypes(SAFEARRAY**);
-    HRESULT get_CachedFormula(BSTR*);
-    HRESULT GetCachedAnnotationObjects(IUIAutomationElementArray*);
-    HRESULT GetCachedAnnotationTypes(SAFEARRAY**);
+    HRESULT get_CurrentFormula(BSTR* retVal);
+    HRESULT GetCurrentAnnotationObjects(IUIAutomationElementArray* retVal);
+    HRESULT GetCurrentAnnotationTypes(SAFEARRAY** retVal);
+    HRESULT get_CachedFormula(BSTR* retVal);
+    HRESULT GetCachedAnnotationObjects(IUIAutomationElementArray* retVal);
+    HRESULT GetCachedAnnotationTypes(SAFEARRAY** retVal);
 }
 enum IID_IUIAutomationTransformPattern2 = GUID(0x6d74d017, 0x6ecb, 0x4381, [0xb3, 0x8b, 0x3c, 0x17, 0xa4, 0x8f, 0xf1, 0xc2]);
 interface IUIAutomationTransformPattern2 : IUIAutomationTransformPattern
 {
-    HRESULT Zoom(double);
-    HRESULT ZoomByUnit(ZoomUnit);
-    HRESULT get_CurrentCanZoom(BOOL*);
-    HRESULT get_CachedCanZoom(BOOL*);
-    HRESULT get_CurrentZoomLevel(double*);
-    HRESULT get_CachedZoomLevel(double*);
-    HRESULT get_CurrentZoomMinimum(double*);
-    HRESULT get_CachedZoomMinimum(double*);
-    HRESULT get_CurrentZoomMaximum(double*);
-    HRESULT get_CachedZoomMaximum(double*);
+    HRESULT Zoom(double zoomValue);
+    HRESULT ZoomByUnit(ZoomUnit zoomUnit);
+    HRESULT get_CurrentCanZoom(BOOL* retVal);
+    HRESULT get_CachedCanZoom(BOOL* retVal);
+    HRESULT get_CurrentZoomLevel(double* retVal);
+    HRESULT get_CachedZoomLevel(double* retVal);
+    HRESULT get_CurrentZoomMinimum(double* retVal);
+    HRESULT get_CachedZoomMinimum(double* retVal);
+    HRESULT get_CurrentZoomMaximum(double* retVal);
+    HRESULT get_CachedZoomMaximum(double* retVal);
 }
 enum IID_IUIAutomationTextChildPattern = GUID(0x6552b038, 0xae05, 0x40c8, [0xab, 0xfd, 0xaa, 0x8, 0x35, 0x2a, 0xab, 0x86]);
 interface IUIAutomationTextChildPattern : IUnknown
 {
-    HRESULT get_TextContainer(IUIAutomationElement*);
-    HRESULT get_TextRange(IUIAutomationTextRange*);
+    HRESULT get_TextContainer(IUIAutomationElement* container);
+    HRESULT get_TextRange(IUIAutomationTextRange* range);
 }
 enum IID_IUIAutomationDragPattern = GUID(0x1dc7b570, 0x1f54, 0x4bad, [0xbc, 0xda, 0xd3, 0x6a, 0x72, 0x2f, 0xb7, 0xbd]);
 interface IUIAutomationDragPattern : IUnknown
 {
-    HRESULT get_CurrentIsGrabbed(BOOL*);
-    HRESULT get_CachedIsGrabbed(BOOL*);
-    HRESULT get_CurrentDropEffect(BSTR*);
-    HRESULT get_CachedDropEffect(BSTR*);
-    HRESULT get_CurrentDropEffects(SAFEARRAY**);
-    HRESULT get_CachedDropEffects(SAFEARRAY**);
-    HRESULT GetCurrentGrabbedItems(IUIAutomationElementArray*);
-    HRESULT GetCachedGrabbedItems(IUIAutomationElementArray*);
+    HRESULT get_CurrentIsGrabbed(BOOL* retVal);
+    HRESULT get_CachedIsGrabbed(BOOL* retVal);
+    HRESULT get_CurrentDropEffect(BSTR* retVal);
+    HRESULT get_CachedDropEffect(BSTR* retVal);
+    HRESULT get_CurrentDropEffects(SAFEARRAY** retVal);
+    HRESULT get_CachedDropEffects(SAFEARRAY** retVal);
+    HRESULT GetCurrentGrabbedItems(IUIAutomationElementArray* retVal);
+    HRESULT GetCachedGrabbedItems(IUIAutomationElementArray* retVal);
 }
 enum IID_IUIAutomationDropTargetPattern = GUID(0x69a095f7, 0xeee4, 0x430e, [0xa4, 0x6b, 0xfb, 0x73, 0xb1, 0xae, 0x39, 0xa5]);
 interface IUIAutomationDropTargetPattern : IUnknown
 {
-    HRESULT get_CurrentDropTargetEffect(BSTR*);
-    HRESULT get_CachedDropTargetEffect(BSTR*);
-    HRESULT get_CurrentDropTargetEffects(SAFEARRAY**);
-    HRESULT get_CachedDropTargetEffects(SAFEARRAY**);
+    HRESULT get_CurrentDropTargetEffect(BSTR* retVal);
+    HRESULT get_CachedDropTargetEffect(BSTR* retVal);
+    HRESULT get_CurrentDropTargetEffects(SAFEARRAY** retVal);
+    HRESULT get_CachedDropTargetEffects(SAFEARRAY** retVal);
 }
 enum IID_IUIAutomationElement2 = GUID(0x6749c683, 0xf70d, 0x4487, [0xa6, 0x98, 0x5f, 0x79, 0xd5, 0x52, 0x90, 0xd6]);
 interface IUIAutomationElement2 : IUIAutomationElement
 {
-    HRESULT get_CurrentOptimizeForVisualContent(BOOL*);
-    HRESULT get_CachedOptimizeForVisualContent(BOOL*);
-    HRESULT get_CurrentLiveSetting(LiveSetting*);
-    HRESULT get_CachedLiveSetting(LiveSetting*);
-    HRESULT get_CurrentFlowsFrom(IUIAutomationElementArray*);
-    HRESULT get_CachedFlowsFrom(IUIAutomationElementArray*);
+    HRESULT get_CurrentOptimizeForVisualContent(BOOL* retVal);
+    HRESULT get_CachedOptimizeForVisualContent(BOOL* retVal);
+    HRESULT get_CurrentLiveSetting(LiveSetting* retVal);
+    HRESULT get_CachedLiveSetting(LiveSetting* retVal);
+    HRESULT get_CurrentFlowsFrom(IUIAutomationElementArray* retVal);
+    HRESULT get_CachedFlowsFrom(IUIAutomationElementArray* retVal);
 }
 enum IID_IUIAutomationElement3 = GUID(0x8471df34, 0xaee0, 0x4a01, [0xa7, 0xde, 0x7d, 0xb9, 0xaf, 0x12, 0xc2, 0x96]);
 interface IUIAutomationElement3 : IUIAutomationElement2
 {
     HRESULT ShowContextMenu();
-    HRESULT get_CurrentIsPeripheral(BOOL*);
-    HRESULT get_CachedIsPeripheral(BOOL*);
+    HRESULT get_CurrentIsPeripheral(BOOL* retVal);
+    HRESULT get_CachedIsPeripheral(BOOL* retVal);
 }
 enum IID_IUIAutomationElement4 = GUID(0x3b6e233c, 0x52fb, 0x4063, [0xa4, 0xc9, 0x77, 0xc0, 0x75, 0xc2, 0xa0, 0x6b]);
 interface IUIAutomationElement4 : IUIAutomationElement3
 {
-    HRESULT get_CurrentPositionInSet(int*);
-    HRESULT get_CurrentSizeOfSet(int*);
-    HRESULT get_CurrentLevel(int*);
-    HRESULT get_CurrentAnnotationTypes(SAFEARRAY**);
-    HRESULT get_CurrentAnnotationObjects(IUIAutomationElementArray*);
-    HRESULT get_CachedPositionInSet(int*);
-    HRESULT get_CachedSizeOfSet(int*);
-    HRESULT get_CachedLevel(int*);
-    HRESULT get_CachedAnnotationTypes(SAFEARRAY**);
-    HRESULT get_CachedAnnotationObjects(IUIAutomationElementArray*);
+    HRESULT get_CurrentPositionInSet(int* retVal);
+    HRESULT get_CurrentSizeOfSet(int* retVal);
+    HRESULT get_CurrentLevel(int* retVal);
+    HRESULT get_CurrentAnnotationTypes(SAFEARRAY** retVal);
+    HRESULT get_CurrentAnnotationObjects(IUIAutomationElementArray* retVal);
+    HRESULT get_CachedPositionInSet(int* retVal);
+    HRESULT get_CachedSizeOfSet(int* retVal);
+    HRESULT get_CachedLevel(int* retVal);
+    HRESULT get_CachedAnnotationTypes(SAFEARRAY** retVal);
+    HRESULT get_CachedAnnotationObjects(IUIAutomationElementArray* retVal);
 }
 enum IID_IUIAutomationElement5 = GUID(0x98141c1d, 0xd0e, 0x4175, [0xbb, 0xe2, 0x6b, 0xff, 0x45, 0x58, 0x42, 0xa7]);
 interface IUIAutomationElement5 : IUIAutomationElement4
 {
-    HRESULT get_CurrentLandmarkType(UIA_LANDMARKTYPE_ID*);
-    HRESULT get_CurrentLocalizedLandmarkType(BSTR*);
-    HRESULT get_CachedLandmarkType(UIA_LANDMARKTYPE_ID*);
-    HRESULT get_CachedLocalizedLandmarkType(BSTR*);
+    HRESULT get_CurrentLandmarkType(UIA_LANDMARKTYPE_ID* retVal);
+    HRESULT get_CurrentLocalizedLandmarkType(BSTR* retVal);
+    HRESULT get_CachedLandmarkType(UIA_LANDMARKTYPE_ID* retVal);
+    HRESULT get_CachedLocalizedLandmarkType(BSTR* retVal);
 }
 enum IID_IUIAutomationElement6 = GUID(0x4780d450, 0x8bca, 0x4977, [0xaf, 0xa5, 0xa4, 0xa5, 0x17, 0xf5, 0x55, 0xe3]);
 interface IUIAutomationElement6 : IUIAutomationElement5
 {
-    HRESULT get_CurrentFullDescription(BSTR*);
-    HRESULT get_CachedFullDescription(BSTR*);
+    HRESULT get_CurrentFullDescription(BSTR* retVal);
+    HRESULT get_CachedFullDescription(BSTR* retVal);
 }
 enum IID_IUIAutomationElement7 = GUID(0x204e8572, 0xcfc3, 0x4c11, [0xb0, 0xc8, 0x7d, 0xa7, 0x42, 0x7, 0x50, 0xb7]);
 interface IUIAutomationElement7 : IUIAutomationElement6
 {
-    HRESULT FindFirstWithOptions(TreeScope, IUIAutomationCondition, TreeTraversalOptions, IUIAutomationElement, IUIAutomationElement*);
-    HRESULT FindAllWithOptions(TreeScope, IUIAutomationCondition, TreeTraversalOptions, IUIAutomationElement, IUIAutomationElementArray*);
-    HRESULT FindFirstWithOptionsBuildCache(TreeScope, IUIAutomationCondition, IUIAutomationCacheRequest, TreeTraversalOptions, IUIAutomationElement, IUIAutomationElement*);
-    HRESULT FindAllWithOptionsBuildCache(TreeScope, IUIAutomationCondition, IUIAutomationCacheRequest, TreeTraversalOptions, IUIAutomationElement, IUIAutomationElementArray*);
-    HRESULT GetCurrentMetadataValue(int, UIA_METADATA_ID, VARIANT*);
+    HRESULT FindFirstWithOptions(TreeScope scope_, IUIAutomationCondition condition, TreeTraversalOptions traversalOptions, IUIAutomationElement root, IUIAutomationElement* found);
+    HRESULT FindAllWithOptions(TreeScope scope_, IUIAutomationCondition condition, TreeTraversalOptions traversalOptions, IUIAutomationElement root, IUIAutomationElementArray* found);
+    HRESULT FindFirstWithOptionsBuildCache(TreeScope scope_, IUIAutomationCondition condition, IUIAutomationCacheRequest cacheRequest, TreeTraversalOptions traversalOptions, IUIAutomationElement root, IUIAutomationElement* found);
+    HRESULT FindAllWithOptionsBuildCache(TreeScope scope_, IUIAutomationCondition condition, IUIAutomationCacheRequest cacheRequest, TreeTraversalOptions traversalOptions, IUIAutomationElement root, IUIAutomationElementArray* found);
+    HRESULT GetCurrentMetadataValue(int targetId, UIA_METADATA_ID metadataId, VARIANT* returnVal);
 }
 enum IID_IUIAutomationElement8 = GUID(0x8c60217d, 0x5411, 0x4cde, [0xbc, 0xc0, 0x1c, 0xed, 0xa2, 0x23, 0x83, 0xc]);
 interface IUIAutomationElement8 : IUIAutomationElement7
 {
-    HRESULT get_CurrentHeadingLevel(UIA_HEADINGLEVEL_ID*);
-    HRESULT get_CachedHeadingLevel(UIA_HEADINGLEVEL_ID*);
+    HRESULT get_CurrentHeadingLevel(UIA_HEADINGLEVEL_ID* retVal);
+    HRESULT get_CachedHeadingLevel(UIA_HEADINGLEVEL_ID* retVal);
 }
 enum IID_IUIAutomationElement9 = GUID(0x39325fac, 0x39d, 0x440e, [0xa3, 0xa3, 0x5e, 0xb8, 0x1a, 0x5c, 0xec, 0xc3]);
 interface IUIAutomationElement9 : IUIAutomationElement8
 {
-    HRESULT get_CurrentIsDialog(BOOL*);
-    HRESULT get_CachedIsDialog(BOOL*);
+    HRESULT get_CurrentIsDialog(BOOL* retVal);
+    HRESULT get_CachedIsDialog(BOOL* retVal);
 }
 enum IID_IUIAutomationProxyFactory = GUID(0x85b94ecd, 0x849d, 0x42b6, [0xb9, 0x4d, 0xd6, 0xdb, 0x23, 0xfd, 0xf5, 0xa4]);
 interface IUIAutomationProxyFactory : IUnknown
 {
-    HRESULT CreateProvider(HWND, int, int, IRawElementProviderSimple*);
-    HRESULT get_ProxyFactoryId(BSTR*);
+    HRESULT CreateProvider(HWND hwnd, int idObject, int idChild, IRawElementProviderSimple* provider);
+    HRESULT get_ProxyFactoryId(BSTR* factoryId);
 }
 enum IID_IUIAutomationProxyFactoryEntry = GUID(0xd50e472e, 0xb64b, 0x490c, [0xbc, 0xa1, 0xd3, 0x6, 0x96, 0xf9, 0xf2, 0x89]);
 interface IUIAutomationProxyFactoryEntry : IUnknown
 {
-    HRESULT get_ProxyFactory(IUIAutomationProxyFactory*);
-    HRESULT get_ClassName(BSTR*);
-    HRESULT get_ImageName(BSTR*);
-    HRESULT get_AllowSubstringMatch(BOOL*);
-    HRESULT get_CanCheckBaseClass(BOOL*);
-    HRESULT get_NeedsAdviseEvents(BOOL*);
-    HRESULT put_ClassName(const(wchar)*);
-    HRESULT put_ImageName(const(wchar)*);
-    HRESULT put_AllowSubstringMatch(BOOL);
-    HRESULT put_CanCheckBaseClass(BOOL);
-    HRESULT put_NeedsAdviseEvents(BOOL);
-    HRESULT SetWinEventsForAutomationEvent(UIA_EVENT_ID, UIA_PROPERTY_ID, SAFEARRAY*);
-    HRESULT GetWinEventsForAutomationEvent(UIA_EVENT_ID, UIA_PROPERTY_ID, SAFEARRAY**);
+    HRESULT get_ProxyFactory(IUIAutomationProxyFactory* factory);
+    HRESULT get_ClassName(BSTR* className);
+    HRESULT get_ImageName(BSTR* imageName);
+    HRESULT get_AllowSubstringMatch(BOOL* allowSubstringMatch);
+    HRESULT get_CanCheckBaseClass(BOOL* canCheckBaseClass);
+    HRESULT get_NeedsAdviseEvents(BOOL* adviseEvents);
+    HRESULT put_ClassName(const(wchar)* className);
+    HRESULT put_ImageName(const(wchar)* imageName);
+    HRESULT put_AllowSubstringMatch(BOOL allowSubstringMatch);
+    HRESULT put_CanCheckBaseClass(BOOL canCheckBaseClass);
+    HRESULT put_NeedsAdviseEvents(BOOL adviseEvents);
+    HRESULT SetWinEventsForAutomationEvent(UIA_EVENT_ID eventId, UIA_PROPERTY_ID propertyId, SAFEARRAY* winEvents);
+    HRESULT GetWinEventsForAutomationEvent(UIA_EVENT_ID eventId, UIA_PROPERTY_ID propertyId, SAFEARRAY** winEvents);
 }
 enum IID_IUIAutomationProxyFactoryMapping = GUID(0x9e31e18, 0x872d, 0x4873, [0x93, 0xd1, 0x1e, 0x54, 0x1e, 0xc1, 0x33, 0xfd]);
 interface IUIAutomationProxyFactoryMapping : IUnknown
 {
-    HRESULT get_Count(uint*);
-    HRESULT GetTable(SAFEARRAY**);
-    HRESULT GetEntry(uint, IUIAutomationProxyFactoryEntry*);
-    HRESULT SetTable(SAFEARRAY*);
-    HRESULT InsertEntries(uint, SAFEARRAY*);
-    HRESULT InsertEntry(uint, IUIAutomationProxyFactoryEntry);
-    HRESULT RemoveEntry(uint);
+    HRESULT get_Count(uint* count);
+    HRESULT GetTable(SAFEARRAY** table);
+    HRESULT GetEntry(uint index, IUIAutomationProxyFactoryEntry* entry);
+    HRESULT SetTable(SAFEARRAY* factoryList);
+    HRESULT InsertEntries(uint before, SAFEARRAY* factoryList);
+    HRESULT InsertEntry(uint before, IUIAutomationProxyFactoryEntry factory);
+    HRESULT RemoveEntry(uint index);
     HRESULT ClearTable();
     HRESULT RestoreDefaultTable();
 }
 enum IID_IUIAutomationEventHandlerGroup = GUID(0xc9ee12f2, 0xc13b, 0x4408, [0x99, 0x7c, 0x63, 0x99, 0x14, 0x37, 0x7f, 0x4e]);
 interface IUIAutomationEventHandlerGroup : IUnknown
 {
-    HRESULT AddActiveTextPositionChangedEventHandler(TreeScope, IUIAutomationCacheRequest, IUIAutomationActiveTextPositionChangedEventHandler);
-    HRESULT AddAutomationEventHandler(UIA_EVENT_ID, TreeScope, IUIAutomationCacheRequest, IUIAutomationEventHandler);
-    HRESULT AddChangesEventHandler(TreeScope, int*, int, IUIAutomationCacheRequest, IUIAutomationChangesEventHandler);
-    HRESULT AddNotificationEventHandler(TreeScope, IUIAutomationCacheRequest, IUIAutomationNotificationEventHandler);
-    HRESULT AddPropertyChangedEventHandler(TreeScope, IUIAutomationCacheRequest, IUIAutomationPropertyChangedEventHandler, UIA_PROPERTY_ID*, int);
-    HRESULT AddStructureChangedEventHandler(TreeScope, IUIAutomationCacheRequest, IUIAutomationStructureChangedEventHandler);
-    HRESULT AddTextEditTextChangedEventHandler(TreeScope, TextEditChangeType, IUIAutomationCacheRequest, IUIAutomationTextEditTextChangedEventHandler);
+    HRESULT AddActiveTextPositionChangedEventHandler(TreeScope scope_, IUIAutomationCacheRequest cacheRequest, IUIAutomationActiveTextPositionChangedEventHandler handler);
+    HRESULT AddAutomationEventHandler(UIA_EVENT_ID eventId, TreeScope scope_, IUIAutomationCacheRequest cacheRequest, IUIAutomationEventHandler handler);
+    HRESULT AddChangesEventHandler(TreeScope scope_, int* changeTypes, int changesCount, IUIAutomationCacheRequest cacheRequest, IUIAutomationChangesEventHandler handler);
+    HRESULT AddNotificationEventHandler(TreeScope scope_, IUIAutomationCacheRequest cacheRequest, IUIAutomationNotificationEventHandler handler);
+    HRESULT AddPropertyChangedEventHandler(TreeScope scope_, IUIAutomationCacheRequest cacheRequest, IUIAutomationPropertyChangedEventHandler handler, UIA_PROPERTY_ID* propertyArray, int propertyCount);
+    HRESULT AddStructureChangedEventHandler(TreeScope scope_, IUIAutomationCacheRequest cacheRequest, IUIAutomationStructureChangedEventHandler handler);
+    HRESULT AddTextEditTextChangedEventHandler(TreeScope scope_, TextEditChangeType textEditChangeType, IUIAutomationCacheRequest cacheRequest, IUIAutomationTextEditTextChangedEventHandler handler);
 }
 enum IID_IUIAutomation = GUID(0x30cbe57d, 0xd9d0, 0x452a, [0xab, 0x13, 0x7a, 0xc5, 0xac, 0x48, 0x25, 0xee]);
 interface IUIAutomation : IUnknown
 {
-    HRESULT CompareElements(IUIAutomationElement, IUIAutomationElement, BOOL*);
-    HRESULT CompareRuntimeIds(SAFEARRAY*, SAFEARRAY*, BOOL*);
-    HRESULT GetRootElement(IUIAutomationElement*);
-    HRESULT ElementFromHandle(HWND, IUIAutomationElement*);
-    HRESULT ElementFromPoint(POINT, IUIAutomationElement*);
-    HRESULT GetFocusedElement(IUIAutomationElement*);
-    HRESULT GetRootElementBuildCache(IUIAutomationCacheRequest, IUIAutomationElement*);
-    HRESULT ElementFromHandleBuildCache(HWND, IUIAutomationCacheRequest, IUIAutomationElement*);
-    HRESULT ElementFromPointBuildCache(POINT, IUIAutomationCacheRequest, IUIAutomationElement*);
-    HRESULT GetFocusedElementBuildCache(IUIAutomationCacheRequest, IUIAutomationElement*);
-    HRESULT CreateTreeWalker(IUIAutomationCondition, IUIAutomationTreeWalker*);
-    HRESULT get_ControlViewWalker(IUIAutomationTreeWalker*);
-    HRESULT get_ContentViewWalker(IUIAutomationTreeWalker*);
-    HRESULT get_RawViewWalker(IUIAutomationTreeWalker*);
-    HRESULT get_RawViewCondition(IUIAutomationCondition*);
-    HRESULT get_ControlViewCondition(IUIAutomationCondition*);
-    HRESULT get_ContentViewCondition(IUIAutomationCondition*);
-    HRESULT CreateCacheRequest(IUIAutomationCacheRequest*);
-    HRESULT CreateTrueCondition(IUIAutomationCondition*);
-    HRESULT CreateFalseCondition(IUIAutomationCondition*);
-    HRESULT CreatePropertyCondition(UIA_PROPERTY_ID, VARIANT, IUIAutomationCondition*);
-    HRESULT CreatePropertyConditionEx(UIA_PROPERTY_ID, VARIANT, PropertyConditionFlags, IUIAutomationCondition*);
-    HRESULT CreateAndCondition(IUIAutomationCondition, IUIAutomationCondition, IUIAutomationCondition*);
-    HRESULT CreateAndConditionFromArray(SAFEARRAY*, IUIAutomationCondition*);
-    HRESULT CreateAndConditionFromNativeArray(IUIAutomationCondition*, int, IUIAutomationCondition*);
-    HRESULT CreateOrCondition(IUIAutomationCondition, IUIAutomationCondition, IUIAutomationCondition*);
-    HRESULT CreateOrConditionFromArray(SAFEARRAY*, IUIAutomationCondition*);
-    HRESULT CreateOrConditionFromNativeArray(IUIAutomationCondition*, int, IUIAutomationCondition*);
-    HRESULT CreateNotCondition(IUIAutomationCondition, IUIAutomationCondition*);
-    HRESULT AddAutomationEventHandler(UIA_EVENT_ID, IUIAutomationElement, TreeScope, IUIAutomationCacheRequest, IUIAutomationEventHandler);
-    HRESULT RemoveAutomationEventHandler(UIA_EVENT_ID, IUIAutomationElement, IUIAutomationEventHandler);
-    HRESULT AddPropertyChangedEventHandlerNativeArray(IUIAutomationElement, TreeScope, IUIAutomationCacheRequest, IUIAutomationPropertyChangedEventHandler, UIA_PROPERTY_ID*, int);
-    HRESULT AddPropertyChangedEventHandler(IUIAutomationElement, TreeScope, IUIAutomationCacheRequest, IUIAutomationPropertyChangedEventHandler, SAFEARRAY*);
-    HRESULT RemovePropertyChangedEventHandler(IUIAutomationElement, IUIAutomationPropertyChangedEventHandler);
-    HRESULT AddStructureChangedEventHandler(IUIAutomationElement, TreeScope, IUIAutomationCacheRequest, IUIAutomationStructureChangedEventHandler);
-    HRESULT RemoveStructureChangedEventHandler(IUIAutomationElement, IUIAutomationStructureChangedEventHandler);
-    HRESULT AddFocusChangedEventHandler(IUIAutomationCacheRequest, IUIAutomationFocusChangedEventHandler);
-    HRESULT RemoveFocusChangedEventHandler(IUIAutomationFocusChangedEventHandler);
+    HRESULT CompareElements(IUIAutomationElement el1, IUIAutomationElement el2, BOOL* areSame);
+    HRESULT CompareRuntimeIds(SAFEARRAY* runtimeId1, SAFEARRAY* runtimeId2, BOOL* areSame);
+    HRESULT GetRootElement(IUIAutomationElement* root);
+    HRESULT ElementFromHandle(HWND hwnd, IUIAutomationElement* element);
+    HRESULT ElementFromPoint(POINT pt, IUIAutomationElement* element);
+    HRESULT GetFocusedElement(IUIAutomationElement* element);
+    HRESULT GetRootElementBuildCache(IUIAutomationCacheRequest cacheRequest, IUIAutomationElement* root);
+    HRESULT ElementFromHandleBuildCache(HWND hwnd, IUIAutomationCacheRequest cacheRequest, IUIAutomationElement* element);
+    HRESULT ElementFromPointBuildCache(POINT pt, IUIAutomationCacheRequest cacheRequest, IUIAutomationElement* element);
+    HRESULT GetFocusedElementBuildCache(IUIAutomationCacheRequest cacheRequest, IUIAutomationElement* element);
+    HRESULT CreateTreeWalker(IUIAutomationCondition pCondition, IUIAutomationTreeWalker* walker);
+    HRESULT get_ControlViewWalker(IUIAutomationTreeWalker* walker);
+    HRESULT get_ContentViewWalker(IUIAutomationTreeWalker* walker);
+    HRESULT get_RawViewWalker(IUIAutomationTreeWalker* walker);
+    HRESULT get_RawViewCondition(IUIAutomationCondition* condition);
+    HRESULT get_ControlViewCondition(IUIAutomationCondition* condition);
+    HRESULT get_ContentViewCondition(IUIAutomationCondition* condition);
+    HRESULT CreateCacheRequest(IUIAutomationCacheRequest* cacheRequest);
+    HRESULT CreateTrueCondition(IUIAutomationCondition* newCondition);
+    HRESULT CreateFalseCondition(IUIAutomationCondition* newCondition);
+    HRESULT CreatePropertyCondition(UIA_PROPERTY_ID propertyId, VARIANT value, IUIAutomationCondition* newCondition);
+    HRESULT CreatePropertyConditionEx(UIA_PROPERTY_ID propertyId, VARIANT value, PropertyConditionFlags flags, IUIAutomationCondition* newCondition);
+    HRESULT CreateAndCondition(IUIAutomationCondition condition1, IUIAutomationCondition condition2, IUIAutomationCondition* newCondition);
+    HRESULT CreateAndConditionFromArray(SAFEARRAY* conditions, IUIAutomationCondition* newCondition);
+    HRESULT CreateAndConditionFromNativeArray(IUIAutomationCondition* conditions, int conditionCount, IUIAutomationCondition* newCondition);
+    HRESULT CreateOrCondition(IUIAutomationCondition condition1, IUIAutomationCondition condition2, IUIAutomationCondition* newCondition);
+    HRESULT CreateOrConditionFromArray(SAFEARRAY* conditions, IUIAutomationCondition* newCondition);
+    HRESULT CreateOrConditionFromNativeArray(IUIAutomationCondition* conditions, int conditionCount, IUIAutomationCondition* newCondition);
+    HRESULT CreateNotCondition(IUIAutomationCondition condition, IUIAutomationCondition* newCondition);
+    HRESULT AddAutomationEventHandler(UIA_EVENT_ID eventId, IUIAutomationElement element, TreeScope scope_, IUIAutomationCacheRequest cacheRequest, IUIAutomationEventHandler handler);
+    HRESULT RemoveAutomationEventHandler(UIA_EVENT_ID eventId, IUIAutomationElement element, IUIAutomationEventHandler handler);
+    HRESULT AddPropertyChangedEventHandlerNativeArray(IUIAutomationElement element, TreeScope scope_, IUIAutomationCacheRequest cacheRequest, IUIAutomationPropertyChangedEventHandler handler, UIA_PROPERTY_ID* propertyArray, int propertyCount);
+    HRESULT AddPropertyChangedEventHandler(IUIAutomationElement element, TreeScope scope_, IUIAutomationCacheRequest cacheRequest, IUIAutomationPropertyChangedEventHandler handler, SAFEARRAY* propertyArray);
+    HRESULT RemovePropertyChangedEventHandler(IUIAutomationElement element, IUIAutomationPropertyChangedEventHandler handler);
+    HRESULT AddStructureChangedEventHandler(IUIAutomationElement element, TreeScope scope_, IUIAutomationCacheRequest cacheRequest, IUIAutomationStructureChangedEventHandler handler);
+    HRESULT RemoveStructureChangedEventHandler(IUIAutomationElement element, IUIAutomationStructureChangedEventHandler handler);
+    HRESULT AddFocusChangedEventHandler(IUIAutomationCacheRequest cacheRequest, IUIAutomationFocusChangedEventHandler handler);
+    HRESULT RemoveFocusChangedEventHandler(IUIAutomationFocusChangedEventHandler handler);
     HRESULT RemoveAllEventHandlers();
-    HRESULT IntNativeArrayToSafeArray(int*, int, SAFEARRAY**);
-    HRESULT IntSafeArrayToNativeArray(SAFEARRAY*, int**, int*);
-    HRESULT RectToVariant(RECT, VARIANT*);
-    HRESULT VariantToRect(VARIANT, RECT*);
-    HRESULT SafeArrayToRectNativeArray(SAFEARRAY*, RECT**, int*);
-    HRESULT CreateProxyFactoryEntry(IUIAutomationProxyFactory, IUIAutomationProxyFactoryEntry*);
-    HRESULT get_ProxyFactoryMapping(IUIAutomationProxyFactoryMapping*);
-    HRESULT GetPropertyProgrammaticName(UIA_PROPERTY_ID, BSTR*);
-    HRESULT GetPatternProgrammaticName(UIA_PATTERN_ID, BSTR*);
-    HRESULT PollForPotentialSupportedPatterns(IUIAutomationElement, SAFEARRAY**, SAFEARRAY**);
-    HRESULT PollForPotentialSupportedProperties(IUIAutomationElement, SAFEARRAY**, SAFEARRAY**);
-    HRESULT CheckNotSupported(VARIANT, BOOL*);
-    HRESULT get_ReservedNotSupportedValue(IUnknown*);
-    HRESULT get_ReservedMixedAttributeValue(IUnknown*);
-    HRESULT ElementFromIAccessible(IAccessible, int, IUIAutomationElement*);
-    HRESULT ElementFromIAccessibleBuildCache(IAccessible, int, IUIAutomationCacheRequest, IUIAutomationElement*);
+    HRESULT IntNativeArrayToSafeArray(int* array, int arrayCount, SAFEARRAY** safeArray);
+    HRESULT IntSafeArrayToNativeArray(SAFEARRAY* intArray, int** array, int* arrayCount);
+    HRESULT RectToVariant(RECT rc, VARIANT* var);
+    HRESULT VariantToRect(VARIANT var, RECT* rc);
+    HRESULT SafeArrayToRectNativeArray(SAFEARRAY* rects, RECT** rectArray, int* rectArrayCount);
+    HRESULT CreateProxyFactoryEntry(IUIAutomationProxyFactory factory, IUIAutomationProxyFactoryEntry* factoryEntry);
+    HRESULT get_ProxyFactoryMapping(IUIAutomationProxyFactoryMapping* factoryMapping);
+    HRESULT GetPropertyProgrammaticName(UIA_PROPERTY_ID property, BSTR* name);
+    HRESULT GetPatternProgrammaticName(UIA_PATTERN_ID pattern, BSTR* name);
+    HRESULT PollForPotentialSupportedPatterns(IUIAutomationElement pElement, SAFEARRAY** patternIds, SAFEARRAY** patternNames);
+    HRESULT PollForPotentialSupportedProperties(IUIAutomationElement pElement, SAFEARRAY** propertyIds, SAFEARRAY** propertyNames);
+    HRESULT CheckNotSupported(VARIANT value, BOOL* isNotSupported);
+    HRESULT get_ReservedNotSupportedValue(IUnknown* notSupportedValue);
+    HRESULT get_ReservedMixedAttributeValue(IUnknown* mixedAttributeValue);
+    HRESULT ElementFromIAccessible(IAccessible accessible, int childId, IUIAutomationElement* element);
+    HRESULT ElementFromIAccessibleBuildCache(IAccessible accessible, int childId, IUIAutomationCacheRequest cacheRequest, IUIAutomationElement* element);
 }
 enum IID_IUIAutomation2 = GUID(0x34723aff, 0xc9d, 0x49d0, [0x98, 0x96, 0x7a, 0xb5, 0x2d, 0xf8, 0xcd, 0x8a]);
 interface IUIAutomation2 : IUIAutomation
 {
-    HRESULT get_AutoSetFocus(BOOL*);
-    HRESULT put_AutoSetFocus(BOOL);
-    HRESULT get_ConnectionTimeout(uint*);
-    HRESULT put_ConnectionTimeout(uint);
-    HRESULT get_TransactionTimeout(uint*);
-    HRESULT put_TransactionTimeout(uint);
+    HRESULT get_AutoSetFocus(BOOL* autoSetFocus);
+    HRESULT put_AutoSetFocus(BOOL autoSetFocus);
+    HRESULT get_ConnectionTimeout(uint* timeout);
+    HRESULT put_ConnectionTimeout(uint timeout);
+    HRESULT get_TransactionTimeout(uint* timeout);
+    HRESULT put_TransactionTimeout(uint timeout);
 }
 enum IID_IUIAutomation3 = GUID(0x73d768da, 0x9b51, 0x4b89, [0x93, 0x6e, 0xc2, 0x9, 0x29, 0x9, 0x73, 0xe7]);
 interface IUIAutomation3 : IUIAutomation2
 {
-    HRESULT AddTextEditTextChangedEventHandler(IUIAutomationElement, TreeScope, TextEditChangeType, IUIAutomationCacheRequest, IUIAutomationTextEditTextChangedEventHandler);
-    HRESULT RemoveTextEditTextChangedEventHandler(IUIAutomationElement, IUIAutomationTextEditTextChangedEventHandler);
+    HRESULT AddTextEditTextChangedEventHandler(IUIAutomationElement element, TreeScope scope_, TextEditChangeType textEditChangeType, IUIAutomationCacheRequest cacheRequest, IUIAutomationTextEditTextChangedEventHandler handler);
+    HRESULT RemoveTextEditTextChangedEventHandler(IUIAutomationElement element, IUIAutomationTextEditTextChangedEventHandler handler);
 }
 enum IID_IUIAutomation4 = GUID(0x1189c02a, 0x5f8, 0x4319, [0x8e, 0x21, 0xe8, 0x17, 0xe3, 0xdb, 0x28, 0x60]);
 interface IUIAutomation4 : IUIAutomation3
 {
-    HRESULT AddChangesEventHandler(IUIAutomationElement, TreeScope, int*, int, IUIAutomationCacheRequest, IUIAutomationChangesEventHandler);
-    HRESULT RemoveChangesEventHandler(IUIAutomationElement, IUIAutomationChangesEventHandler);
+    HRESULT AddChangesEventHandler(IUIAutomationElement element, TreeScope scope_, int* changeTypes, int changesCount, IUIAutomationCacheRequest pCacheRequest, IUIAutomationChangesEventHandler handler);
+    HRESULT RemoveChangesEventHandler(IUIAutomationElement element, IUIAutomationChangesEventHandler handler);
 }
 enum IID_IUIAutomation5 = GUID(0x25f700c8, 0xd816, 0x4057, [0xa9, 0xdc, 0x3c, 0xbd, 0xee, 0x77, 0xe2, 0x56]);
 interface IUIAutomation5 : IUIAutomation4
 {
-    HRESULT AddNotificationEventHandler(IUIAutomationElement, TreeScope, IUIAutomationCacheRequest, IUIAutomationNotificationEventHandler);
-    HRESULT RemoveNotificationEventHandler(IUIAutomationElement, IUIAutomationNotificationEventHandler);
+    HRESULT AddNotificationEventHandler(IUIAutomationElement element, TreeScope scope_, IUIAutomationCacheRequest cacheRequest, IUIAutomationNotificationEventHandler handler);
+    HRESULT RemoveNotificationEventHandler(IUIAutomationElement element, IUIAutomationNotificationEventHandler handler);
 }
 enum IID_IUIAutomation6 = GUID(0xaae072da, 0x29e3, 0x413d, [0x87, 0xa7, 0x19, 0x2d, 0xbf, 0x81, 0xed, 0x10]);
 interface IUIAutomation6 : IUIAutomation5
 {
-    HRESULT CreateEventHandlerGroup(IUIAutomationEventHandlerGroup*);
-    HRESULT AddEventHandlerGroup(IUIAutomationElement, IUIAutomationEventHandlerGroup);
-    HRESULT RemoveEventHandlerGroup(IUIAutomationElement, IUIAutomationEventHandlerGroup);
-    HRESULT get_ConnectionRecoveryBehavior(ConnectionRecoveryBehaviorOptions*);
-    HRESULT put_ConnectionRecoveryBehavior(ConnectionRecoveryBehaviorOptions);
-    HRESULT get_CoalesceEvents(CoalesceEventsOptions*);
-    HRESULT put_CoalesceEvents(CoalesceEventsOptions);
-    HRESULT AddActiveTextPositionChangedEventHandler(IUIAutomationElement, TreeScope, IUIAutomationCacheRequest, IUIAutomationActiveTextPositionChangedEventHandler);
-    HRESULT RemoveActiveTextPositionChangedEventHandler(IUIAutomationElement, IUIAutomationActiveTextPositionChangedEventHandler);
+    HRESULT CreateEventHandlerGroup(IUIAutomationEventHandlerGroup* handlerGroup);
+    HRESULT AddEventHandlerGroup(IUIAutomationElement element, IUIAutomationEventHandlerGroup handlerGroup);
+    HRESULT RemoveEventHandlerGroup(IUIAutomationElement element, IUIAutomationEventHandlerGroup handlerGroup);
+    HRESULT get_ConnectionRecoveryBehavior(ConnectionRecoveryBehaviorOptions* connectionRecoveryBehaviorOptions);
+    HRESULT put_ConnectionRecoveryBehavior(ConnectionRecoveryBehaviorOptions connectionRecoveryBehaviorOptions);
+    HRESULT get_CoalesceEvents(CoalesceEventsOptions* coalesceEventsOptions);
+    HRESULT put_CoalesceEvents(CoalesceEventsOptions coalesceEventsOptions);
+    HRESULT AddActiveTextPositionChangedEventHandler(IUIAutomationElement element, TreeScope scope_, IUIAutomationCacheRequest cacheRequest, IUIAutomationActiveTextPositionChangedEventHandler handler);
+    HRESULT RemoveActiveTextPositionChangedEventHandler(IUIAutomationElement element, IUIAutomationActiveTextPositionChangedEventHandler handler);
 }
 enum CLSID_CUIAutomation = GUID(0xff48dba4, 0x60ef, 0x4201, [0xaa, 0x87, 0x54, 0x10, 0x3e, 0xef, 0x59, 0x4e]);
 struct CUIAutomation
@@ -3087,7 +3087,7 @@ enum : int
     ProviderType_NonClientArea = 0x00000002,
 }
 
-alias UiaProviderCallback = SAFEARRAY* function(HWND, ProviderType);
+alias UiaProviderCallback = SAFEARRAY* function(HWND hwnd, ProviderType providerType);
 alias AutomationIdentifierType = int;
 enum : int
 {
@@ -3174,16 +3174,16 @@ struct UiaWindowClosedEventArgs
     int* pRuntimeId;
     int cRuntimeIdLen;
 }
-alias UiaEventCallback = void function(UiaEventArgs*, SAFEARRAY*, BSTR);
+alias UiaEventCallback = void function(UiaEventArgs* pArgs, SAFEARRAY* pRequestedData, BSTR pTreeStructure);
 // [Not Found] IID_IRicheditWindowlessAccessibility
 interface IRicheditWindowlessAccessibility : IUnknown
 {
-    HRESULT CreateProvider(IRawElementProviderWindowlessSite, IRawElementProviderSimple*);
+    HRESULT CreateProvider(IRawElementProviderWindowlessSite pSite, IRawElementProviderSimple* ppProvider);
 }
 // [Not Found] IID_IRichEditUiaInformation
 interface IRichEditUiaInformation : IUnknown
 {
-    HRESULT GetBoundaryRectangle(UiaRect*);
+    HRESULT GetBoundaryRectangle(UiaRect* pUiaRect);
     HRESULT IsVisible();
 }
 struct SERIALKEYSA
@@ -3283,4 +3283,4 @@ struct TOGGLEKEYS
     uint cbSize;
     uint dwFlags;
 }
-alias WINEVENTPROC = void function(HWINEVENTHOOK, uint, HWND, int, int, uint, uint);
+alias WINEVENTPROC = void function(HWINEVENTHOOK hWinEventHook, uint event, HWND hwnd, int idObject, int idChild, uint idEventThread, uint dwmsEventTime);

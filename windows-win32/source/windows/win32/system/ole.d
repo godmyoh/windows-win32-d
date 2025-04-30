@@ -16,454 +16,454 @@ import windows.win32.ui.windowsandmessaging : HACCEL, HCURSOR, HICON, HMENU, MEN
 version (Windows):
 extern (Windows):
 
-HRESULT SafeArrayAllocDescriptor(uint, SAFEARRAY**);
-HRESULT SafeArrayAllocDescriptorEx(VARENUM, uint, SAFEARRAY**);
-HRESULT SafeArrayAllocData(SAFEARRAY*);
-SAFEARRAY* SafeArrayCreate(VARENUM, uint, SAFEARRAYBOUND*);
-SAFEARRAY* SafeArrayCreateEx(VARENUM, uint, SAFEARRAYBOUND*, void*);
-HRESULT SafeArrayCopyData(SAFEARRAY*, SAFEARRAY*);
-void SafeArrayReleaseDescriptor(SAFEARRAY*);
-HRESULT SafeArrayDestroyDescriptor(SAFEARRAY*);
-void SafeArrayReleaseData(void*);
-HRESULT SafeArrayDestroyData(SAFEARRAY*);
-HRESULT SafeArrayAddRef(SAFEARRAY*, void**);
-HRESULT SafeArrayDestroy(SAFEARRAY*);
-HRESULT SafeArrayRedim(SAFEARRAY*, SAFEARRAYBOUND*);
-uint SafeArrayGetDim(SAFEARRAY*);
-uint SafeArrayGetElemsize(SAFEARRAY*);
-HRESULT SafeArrayGetUBound(SAFEARRAY*, uint, int*);
-HRESULT SafeArrayGetLBound(SAFEARRAY*, uint, int*);
-HRESULT SafeArrayLock(SAFEARRAY*);
-HRESULT SafeArrayUnlock(SAFEARRAY*);
-HRESULT SafeArrayAccessData(SAFEARRAY*, void**);
-HRESULT SafeArrayUnaccessData(SAFEARRAY*);
-HRESULT SafeArrayGetElement(SAFEARRAY*, int*, void*);
-HRESULT SafeArrayPutElement(SAFEARRAY*, int*, void*);
-HRESULT SafeArrayCopy(SAFEARRAY*, SAFEARRAY**);
-HRESULT SafeArrayPtrOfIndex(SAFEARRAY*, int*, void**);
-HRESULT SafeArraySetRecordInfo(SAFEARRAY*, IRecordInfo);
-HRESULT SafeArrayGetRecordInfo(SAFEARRAY*, IRecordInfo*);
-HRESULT SafeArraySetIID(SAFEARRAY*, const(GUID)*);
-HRESULT SafeArrayGetIID(SAFEARRAY*, GUID*);
-HRESULT SafeArrayGetVartype(SAFEARRAY*, VARENUM*);
-SAFEARRAY* SafeArrayCreateVector(VARENUM, int, uint);
-SAFEARRAY* SafeArrayCreateVectorEx(VARENUM, int, uint, void*);
-HRESULT VectorFromBstr(BSTR, SAFEARRAY**);
-HRESULT BstrFromVector(SAFEARRAY*, BSTR*);
-HRESULT VarUI1FromI2(short, ubyte*);
-HRESULT VarUI1FromI4(int, ubyte*);
-HRESULT VarUI1FromI8(long, ubyte*);
-HRESULT VarUI1FromR4(float, ubyte*);
-HRESULT VarUI1FromR8(double, ubyte*);
-HRESULT VarUI1FromCy(CY, ubyte*);
-HRESULT VarUI1FromDate(double, ubyte*);
-HRESULT VarUI1FromStr(const(wchar)*, uint, uint, ubyte*);
-HRESULT VarUI1FromDisp(IDispatch, uint, ubyte*);
-HRESULT VarUI1FromBool(VARIANT_BOOL, ubyte*);
-HRESULT VarUI1FromI1(CHAR, ubyte*);
-HRESULT VarUI1FromUI2(ushort, ubyte*);
-HRESULT VarUI1FromUI4(uint, ubyte*);
-HRESULT VarUI1FromUI8(ulong, ubyte*);
-HRESULT VarUI1FromDec(const(DECIMAL)*, ubyte*);
-HRESULT VarI2FromUI1(ubyte, short*);
-HRESULT VarI2FromI4(int, short*);
-HRESULT VarI2FromI8(long, short*);
-HRESULT VarI2FromR4(float, short*);
-HRESULT VarI2FromR8(double, short*);
-HRESULT VarI2FromCy(CY, short*);
-HRESULT VarI2FromDate(double, short*);
-HRESULT VarI2FromStr(const(wchar)*, uint, uint, short*);
-HRESULT VarI2FromDisp(IDispatch, uint, short*);
-HRESULT VarI2FromBool(VARIANT_BOOL, short*);
-HRESULT VarI2FromI1(CHAR, short*);
-HRESULT VarI2FromUI2(ushort, short*);
-HRESULT VarI2FromUI4(uint, short*);
-HRESULT VarI2FromUI8(ulong, short*);
-HRESULT VarI2FromDec(const(DECIMAL)*, short*);
-HRESULT VarI4FromUI1(ubyte, int*);
-HRESULT VarI4FromI2(short, int*);
-HRESULT VarI4FromI8(long, int*);
-HRESULT VarI4FromR4(float, int*);
-HRESULT VarI4FromR8(double, int*);
-HRESULT VarI4FromCy(CY, int*);
-HRESULT VarI4FromDate(double, int*);
-HRESULT VarI4FromStr(const(wchar)*, uint, uint, int*);
-HRESULT VarI4FromDisp(IDispatch, uint, int*);
-HRESULT VarI4FromBool(VARIANT_BOOL, int*);
-HRESULT VarI4FromI1(CHAR, int*);
-HRESULT VarI4FromUI2(ushort, int*);
-HRESULT VarI4FromUI4(uint, int*);
-HRESULT VarI4FromUI8(ulong, int*);
-HRESULT VarI4FromDec(const(DECIMAL)*, int*);
-HRESULT VarI8FromUI1(ubyte, long*);
-HRESULT VarI8FromI2(short, long*);
-HRESULT VarI8FromR4(float, long*);
-HRESULT VarI8FromR8(double, long*);
-HRESULT VarI8FromCy(CY, long*);
-HRESULT VarI8FromDate(double, long*);
-HRESULT VarI8FromStr(const(wchar)*, uint, uint, long*);
-HRESULT VarI8FromDisp(IDispatch, uint, long*);
-HRESULT VarI8FromBool(VARIANT_BOOL, long*);
-HRESULT VarI8FromI1(CHAR, long*);
-HRESULT VarI8FromUI2(ushort, long*);
-HRESULT VarI8FromUI4(uint, long*);
-HRESULT VarI8FromUI8(ulong, long*);
-HRESULT VarI8FromDec(const(DECIMAL)*, long*);
-HRESULT VarR4FromUI1(ubyte, float*);
-HRESULT VarR4FromI2(short, float*);
-HRESULT VarR4FromI4(int, float*);
-HRESULT VarR4FromI8(long, float*);
-HRESULT VarR4FromR8(double, float*);
-HRESULT VarR4FromCy(CY, float*);
-HRESULT VarR4FromDate(double, float*);
-HRESULT VarR4FromStr(const(wchar)*, uint, uint, float*);
-HRESULT VarR4FromDisp(IDispatch, uint, float*);
-HRESULT VarR4FromBool(VARIANT_BOOL, float*);
-HRESULT VarR4FromI1(CHAR, float*);
-HRESULT VarR4FromUI2(ushort, float*);
-HRESULT VarR4FromUI4(uint, float*);
-HRESULT VarR4FromUI8(ulong, float*);
-HRESULT VarR4FromDec(const(DECIMAL)*, float*);
-HRESULT VarR8FromUI1(ubyte, double*);
-HRESULT VarR8FromI2(short, double*);
-HRESULT VarR8FromI4(int, double*);
-HRESULT VarR8FromI8(long, double*);
-HRESULT VarR8FromR4(float, double*);
-HRESULT VarR8FromCy(CY, double*);
-HRESULT VarR8FromDate(double, double*);
-HRESULT VarR8FromStr(const(wchar)*, uint, uint, double*);
-HRESULT VarR8FromDisp(IDispatch, uint, double*);
-HRESULT VarR8FromBool(VARIANT_BOOL, double*);
-HRESULT VarR8FromI1(CHAR, double*);
-HRESULT VarR8FromUI2(ushort, double*);
-HRESULT VarR8FromUI4(uint, double*);
-HRESULT VarR8FromUI8(ulong, double*);
-HRESULT VarR8FromDec(const(DECIMAL)*, double*);
-HRESULT VarDateFromUI1(ubyte, double*);
-HRESULT VarDateFromI2(short, double*);
-HRESULT VarDateFromI4(int, double*);
-HRESULT VarDateFromI8(long, double*);
-HRESULT VarDateFromR4(float, double*);
-HRESULT VarDateFromR8(double, double*);
-HRESULT VarDateFromCy(CY, double*);
-HRESULT VarDateFromStr(const(wchar)*, uint, uint, double*);
-HRESULT VarDateFromDisp(IDispatch, uint, double*);
-HRESULT VarDateFromBool(VARIANT_BOOL, double*);
-HRESULT VarDateFromI1(CHAR, double*);
-HRESULT VarDateFromUI2(ushort, double*);
-HRESULT VarDateFromUI4(uint, double*);
-HRESULT VarDateFromUI8(ulong, double*);
-HRESULT VarDateFromDec(const(DECIMAL)*, double*);
-HRESULT VarCyFromUI1(ubyte, CY*);
-HRESULT VarCyFromI2(short, CY*);
-HRESULT VarCyFromI4(int, CY*);
-HRESULT VarCyFromI8(long, CY*);
-HRESULT VarCyFromR4(float, CY*);
-HRESULT VarCyFromR8(double, CY*);
-HRESULT VarCyFromDate(double, CY*);
-HRESULT VarCyFromStr(const(wchar)*, uint, uint, CY*);
-HRESULT VarCyFromDisp(IDispatch, uint, CY*);
-HRESULT VarCyFromBool(VARIANT_BOOL, CY*);
-HRESULT VarCyFromI1(CHAR, CY*);
-HRESULT VarCyFromUI2(ushort, CY*);
-HRESULT VarCyFromUI4(uint, CY*);
-HRESULT VarCyFromUI8(ulong, CY*);
-HRESULT VarCyFromDec(const(DECIMAL)*, CY*);
-HRESULT VarBstrFromUI1(ubyte, uint, uint, BSTR*);
-HRESULT VarBstrFromI2(short, uint, uint, BSTR*);
-HRESULT VarBstrFromI4(int, uint, uint, BSTR*);
-HRESULT VarBstrFromI8(long, uint, uint, BSTR*);
-HRESULT VarBstrFromR4(float, uint, uint, BSTR*);
-HRESULT VarBstrFromR8(double, uint, uint, BSTR*);
-HRESULT VarBstrFromCy(CY, uint, uint, BSTR*);
-HRESULT VarBstrFromDate(double, uint, uint, BSTR*);
-HRESULT VarBstrFromDisp(IDispatch, uint, uint, BSTR*);
-HRESULT VarBstrFromBool(VARIANT_BOOL, uint, uint, BSTR*);
-HRESULT VarBstrFromI1(CHAR, uint, uint, BSTR*);
-HRESULT VarBstrFromUI2(ushort, uint, uint, BSTR*);
-HRESULT VarBstrFromUI4(uint, uint, uint, BSTR*);
-HRESULT VarBstrFromUI8(ulong, uint, uint, BSTR*);
-HRESULT VarBstrFromDec(const(DECIMAL)*, uint, uint, BSTR*);
-HRESULT VarBoolFromUI1(ubyte, VARIANT_BOOL*);
-HRESULT VarBoolFromI2(short, VARIANT_BOOL*);
-HRESULT VarBoolFromI4(int, VARIANT_BOOL*);
-HRESULT VarBoolFromI8(long, VARIANT_BOOL*);
-HRESULT VarBoolFromR4(float, VARIANT_BOOL*);
-HRESULT VarBoolFromR8(double, VARIANT_BOOL*);
-HRESULT VarBoolFromDate(double, VARIANT_BOOL*);
-HRESULT VarBoolFromCy(CY, VARIANT_BOOL*);
-HRESULT VarBoolFromStr(const(wchar)*, uint, uint, VARIANT_BOOL*);
-HRESULT VarBoolFromDisp(IDispatch, uint, VARIANT_BOOL*);
-HRESULT VarBoolFromI1(CHAR, VARIANT_BOOL*);
-HRESULT VarBoolFromUI2(ushort, VARIANT_BOOL*);
-HRESULT VarBoolFromUI4(uint, VARIANT_BOOL*);
-HRESULT VarBoolFromUI8(ulong, VARIANT_BOOL*);
-HRESULT VarBoolFromDec(const(DECIMAL)*, VARIANT_BOOL*);
-HRESULT VarI1FromUI1(ubyte, PSTR);
-HRESULT VarI1FromI2(short, PSTR);
-HRESULT VarI1FromI4(int, PSTR);
-HRESULT VarI1FromI8(long, PSTR);
-HRESULT VarI1FromR4(float, PSTR);
-HRESULT VarI1FromR8(double, PSTR);
-HRESULT VarI1FromDate(double, PSTR);
-HRESULT VarI1FromCy(CY, PSTR);
-HRESULT VarI1FromStr(const(wchar)*, uint, uint, PSTR);
-HRESULT VarI1FromDisp(IDispatch, uint, PSTR);
-HRESULT VarI1FromBool(VARIANT_BOOL, PSTR);
-HRESULT VarI1FromUI2(ushort, PSTR);
-HRESULT VarI1FromUI4(uint, PSTR);
-HRESULT VarI1FromUI8(ulong, PSTR);
-HRESULT VarI1FromDec(const(DECIMAL)*, PSTR);
-HRESULT VarUI2FromUI1(ubyte, ushort*);
-HRESULT VarUI2FromI2(short, ushort*);
-HRESULT VarUI2FromI4(int, ushort*);
-HRESULT VarUI2FromI8(long, ushort*);
-HRESULT VarUI2FromR4(float, ushort*);
-HRESULT VarUI2FromR8(double, ushort*);
-HRESULT VarUI2FromDate(double, ushort*);
-HRESULT VarUI2FromCy(CY, ushort*);
-HRESULT VarUI2FromStr(const(wchar)*, uint, uint, ushort*);
-HRESULT VarUI2FromDisp(IDispatch, uint, ushort*);
-HRESULT VarUI2FromBool(VARIANT_BOOL, ushort*);
-HRESULT VarUI2FromI1(CHAR, ushort*);
-HRESULT VarUI2FromUI4(uint, ushort*);
-HRESULT VarUI2FromUI8(ulong, ushort*);
-HRESULT VarUI2FromDec(const(DECIMAL)*, ushort*);
-HRESULT VarUI4FromUI1(ubyte, uint*);
-HRESULT VarUI4FromI2(short, uint*);
-HRESULT VarUI4FromI4(int, uint*);
-HRESULT VarUI4FromI8(long, uint*);
-HRESULT VarUI4FromR4(float, uint*);
-HRESULT VarUI4FromR8(double, uint*);
-HRESULT VarUI4FromDate(double, uint*);
-HRESULT VarUI4FromCy(CY, uint*);
-HRESULT VarUI4FromStr(const(wchar)*, uint, uint, uint*);
-HRESULT VarUI4FromDisp(IDispatch, uint, uint*);
-HRESULT VarUI4FromBool(VARIANT_BOOL, uint*);
-HRESULT VarUI4FromI1(CHAR, uint*);
-HRESULT VarUI4FromUI2(ushort, uint*);
-HRESULT VarUI4FromUI8(ulong, uint*);
-HRESULT VarUI4FromDec(const(DECIMAL)*, uint*);
-HRESULT VarUI8FromUI1(ubyte, ulong*);
-HRESULT VarUI8FromI2(short, ulong*);
-HRESULT VarUI8FromI8(long, ulong*);
-HRESULT VarUI8FromR4(float, ulong*);
-HRESULT VarUI8FromR8(double, ulong*);
-HRESULT VarUI8FromCy(CY, ulong*);
-HRESULT VarUI8FromDate(double, ulong*);
-HRESULT VarUI8FromStr(const(wchar)*, uint, uint, ulong*);
-HRESULT VarUI8FromDisp(IDispatch, uint, ulong*);
-HRESULT VarUI8FromBool(VARIANT_BOOL, ulong*);
-HRESULT VarUI8FromI1(CHAR, ulong*);
-HRESULT VarUI8FromUI2(ushort, ulong*);
-HRESULT VarUI8FromUI4(uint, ulong*);
-HRESULT VarUI8FromDec(const(DECIMAL)*, ulong*);
-HRESULT VarDecFromUI1(ubyte, DECIMAL*);
-HRESULT VarDecFromI2(short, DECIMAL*);
-HRESULT VarDecFromI4(int, DECIMAL*);
-HRESULT VarDecFromI8(long, DECIMAL*);
-HRESULT VarDecFromR4(float, DECIMAL*);
-HRESULT VarDecFromR8(double, DECIMAL*);
-HRESULT VarDecFromDate(double, DECIMAL*);
-HRESULT VarDecFromCy(CY, DECIMAL*);
-HRESULT VarDecFromStr(const(wchar)*, uint, uint, DECIMAL*);
-HRESULT VarDecFromDisp(IDispatch, uint, DECIMAL*);
-HRESULT VarDecFromBool(VARIANT_BOOL, DECIMAL*);
-HRESULT VarDecFromI1(CHAR, DECIMAL*);
-HRESULT VarDecFromUI2(ushort, DECIMAL*);
-HRESULT VarDecFromUI4(uint, DECIMAL*);
-HRESULT VarDecFromUI8(ulong, DECIMAL*);
-HRESULT VarParseNumFromStr(const(wchar)*, uint, uint, NUMPARSE*, ubyte*);
-HRESULT VarNumFromParseNum(NUMPARSE*, ubyte*, uint, VARIANT*);
-HRESULT VarAdd(VARIANT*, VARIANT*, VARIANT*);
-HRESULT VarAnd(VARIANT*, VARIANT*, VARIANT*);
-HRESULT VarCat(VARIANT*, VARIANT*, VARIANT*);
-HRESULT VarDiv(VARIANT*, VARIANT*, VARIANT*);
-HRESULT VarEqv(VARIANT*, VARIANT*, VARIANT*);
-HRESULT VarIdiv(VARIANT*, VARIANT*, VARIANT*);
-HRESULT VarImp(VARIANT*, VARIANT*, VARIANT*);
-HRESULT VarMod(VARIANT*, VARIANT*, VARIANT*);
-HRESULT VarMul(VARIANT*, VARIANT*, VARIANT*);
-HRESULT VarOr(VARIANT*, VARIANT*, VARIANT*);
-HRESULT VarPow(VARIANT*, VARIANT*, VARIANT*);
-HRESULT VarSub(VARIANT*, VARIANT*, VARIANT*);
-HRESULT VarXor(VARIANT*, VARIANT*, VARIANT*);
-HRESULT VarAbs(VARIANT*, VARIANT*);
-HRESULT VarFix(VARIANT*, VARIANT*);
-HRESULT VarInt(VARIANT*, VARIANT*);
-HRESULT VarNeg(VARIANT*, VARIANT*);
-HRESULT VarNot(VARIANT*, VARIANT*);
-HRESULT VarRound(VARIANT*, int, VARIANT*);
-VARCMP VarCmp(VARIANT*, VARIANT*, uint, uint);
-HRESULT VarDecAdd(DECIMAL*, DECIMAL*, DECIMAL*);
-HRESULT VarDecDiv(DECIMAL*, DECIMAL*, DECIMAL*);
-HRESULT VarDecMul(DECIMAL*, DECIMAL*, DECIMAL*);
-HRESULT VarDecSub(DECIMAL*, DECIMAL*, DECIMAL*);
-HRESULT VarDecAbs(DECIMAL*, DECIMAL*);
-HRESULT VarDecFix(DECIMAL*, DECIMAL*);
-HRESULT VarDecInt(DECIMAL*, DECIMAL*);
-HRESULT VarDecNeg(DECIMAL*, DECIMAL*);
-HRESULT VarDecRound(DECIMAL*, int, DECIMAL*);
-VARCMP VarDecCmp(DECIMAL*, DECIMAL*);
-VARCMP VarDecCmpR8(DECIMAL*, double);
-HRESULT VarCyAdd(CY, CY, CY*);
-HRESULT VarCyMul(CY, CY, CY*);
-HRESULT VarCyMulI4(CY, int, CY*);
-HRESULT VarCyMulI8(CY, long, CY*);
-HRESULT VarCySub(CY, CY, CY*);
-HRESULT VarCyAbs(CY, CY*);
-HRESULT VarCyFix(CY, CY*);
-HRESULT VarCyInt(CY, CY*);
-HRESULT VarCyNeg(CY, CY*);
-HRESULT VarCyRound(CY, int, CY*);
-VARCMP VarCyCmp(CY, CY);
-VARCMP VarCyCmpR8(CY, double);
-HRESULT VarBstrCat(BSTR, BSTR, BSTR*);
-HRESULT VarBstrCmp(BSTR, BSTR, uint, uint);
-HRESULT VarR8Pow(double, double, double*);
-VARCMP VarR4CmpR8(float, double);
-HRESULT VarR8Round(double, int, double*);
-HRESULT VarDateFromUdate(UDATE*, uint, double*);
-HRESULT VarDateFromUdateEx(UDATE*, uint, uint, double*);
-HRESULT VarUdateFromDate(double, uint, UDATE*);
-HRESULT GetAltMonthNames(uint, PWSTR**);
-HRESULT VarFormat(VARIANT*, PWSTR, VARFORMAT_FIRST_DAY, VARFORMAT_FIRST_WEEK, uint, BSTR*);
-HRESULT VarFormatDateTime(VARIANT*, VARFORMAT_NAMED_FORMAT, uint, BSTR*);
-HRESULT VarFormatNumber(VARIANT*, int, VARFORMAT_LEADING_DIGIT, VARFORMAT_PARENTHESES, VARFORMAT_GROUP, uint, BSTR*);
-HRESULT VarFormatPercent(VARIANT*, int, VARFORMAT_LEADING_DIGIT, VARFORMAT_PARENTHESES, VARFORMAT_GROUP, uint, BSTR*);
-HRESULT VarFormatCurrency(VARIANT*, int, int, int, int, uint, BSTR*);
-HRESULT VarWeekdayName(int, int, int, uint, BSTR*);
-HRESULT VarMonthName(int, int, uint, BSTR*);
-HRESULT VarFormatFromTokens(VARIANT*, PWSTR, ubyte*, uint, BSTR*, uint);
-HRESULT VarTokenizeFormatString(PWSTR, ubyte*, int, VARFORMAT_FIRST_DAY, VARFORMAT_FIRST_WEEK, uint, int*);
-uint LHashValOfNameSysA(SYSKIND, uint, const(char)*);
-uint LHashValOfNameSys(SYSKIND, uint, const(wchar)*);
-HRESULT LoadTypeLib(const(wchar)*, ITypeLib*);
-HRESULT LoadTypeLibEx(const(wchar)*, REGKIND, ITypeLib*);
-HRESULT LoadRegTypeLib(const(GUID)*, ushort, ushort, uint, ITypeLib*);
-HRESULT QueryPathOfRegTypeLib(const(GUID)*, ushort, ushort, uint, BSTR*);
-HRESULT RegisterTypeLib(ITypeLib, const(wchar)*, const(wchar)*);
-HRESULT UnRegisterTypeLib(const(GUID)*, ushort, ushort, uint, SYSKIND);
-HRESULT RegisterTypeLibForUser(ITypeLib, PWSTR, PWSTR);
-HRESULT UnRegisterTypeLibForUser(const(GUID)*, ushort, ushort, uint, SYSKIND);
-HRESULT CreateTypeLib(SYSKIND, const(wchar)*, ICreateTypeLib*);
-HRESULT CreateTypeLib2(SYSKIND, const(wchar)*, ICreateTypeLib2*);
-HRESULT DispGetParam(DISPPARAMS*, uint, VARENUM, VARIANT*, uint*);
-HRESULT DispGetIDsOfNames(ITypeInfo, PWSTR*, uint, int*);
-HRESULT DispInvoke(void*, ITypeInfo, int, ushort, DISPPARAMS*, VARIANT*, EXCEPINFO*, uint*);
-HRESULT CreateDispTypeInfo(INTERFACEDATA*, uint, ITypeInfo*);
-HRESULT CreateStdDispatch(IUnknown, void*, ITypeInfo, IUnknown*);
-HRESULT DispCallFunc(void*, ulong, CALLCONV, VARENUM, uint, ushort*, VARIANT**, VARIANT*);
-HRESULT RegisterActiveObject(IUnknown, const(GUID)*, ACTIVEOBJECT_FLAGS, uint*);
-HRESULT RevokeActiveObject(uint, void*);
-HRESULT GetActiveObject(const(GUID)*, void*, IUnknown*);
-HRESULT CreateErrorInfo(ICreateErrorInfo*);
-HRESULT GetRecordInfoFromTypeInfo(ITypeInfo, IRecordInfo*);
-HRESULT GetRecordInfoFromGuids(const(GUID)*, uint, uint, uint, const(GUID)*, IRecordInfo*);
+HRESULT SafeArrayAllocDescriptor(uint cDims, SAFEARRAY** ppsaOut);
+HRESULT SafeArrayAllocDescriptorEx(VARENUM vt, uint cDims, SAFEARRAY** ppsaOut);
+HRESULT SafeArrayAllocData(SAFEARRAY* psa);
+SAFEARRAY* SafeArrayCreate(VARENUM vt, uint cDims, SAFEARRAYBOUND* rgsabound);
+SAFEARRAY* SafeArrayCreateEx(VARENUM vt, uint cDims, SAFEARRAYBOUND* rgsabound, void* pvExtra);
+HRESULT SafeArrayCopyData(SAFEARRAY* psaSource, SAFEARRAY* psaTarget);
+void SafeArrayReleaseDescriptor(SAFEARRAY* psa);
+HRESULT SafeArrayDestroyDescriptor(SAFEARRAY* psa);
+void SafeArrayReleaseData(void* pData);
+HRESULT SafeArrayDestroyData(SAFEARRAY* psa);
+HRESULT SafeArrayAddRef(SAFEARRAY* psa, void** ppDataToRelease);
+HRESULT SafeArrayDestroy(SAFEARRAY* psa);
+HRESULT SafeArrayRedim(SAFEARRAY* psa, SAFEARRAYBOUND* psaboundNew);
+uint SafeArrayGetDim(SAFEARRAY* psa);
+uint SafeArrayGetElemsize(SAFEARRAY* psa);
+HRESULT SafeArrayGetUBound(SAFEARRAY* psa, uint nDim, int* plUbound);
+HRESULT SafeArrayGetLBound(SAFEARRAY* psa, uint nDim, int* plLbound);
+HRESULT SafeArrayLock(SAFEARRAY* psa);
+HRESULT SafeArrayUnlock(SAFEARRAY* psa);
+HRESULT SafeArrayAccessData(SAFEARRAY* psa, void** ppvData);
+HRESULT SafeArrayUnaccessData(SAFEARRAY* psa);
+HRESULT SafeArrayGetElement(SAFEARRAY* psa, int* rgIndices, void* pv);
+HRESULT SafeArrayPutElement(SAFEARRAY* psa, int* rgIndices, void* pv);
+HRESULT SafeArrayCopy(SAFEARRAY* psa, SAFEARRAY** ppsaOut);
+HRESULT SafeArrayPtrOfIndex(SAFEARRAY* psa, int* rgIndices, void** ppvData);
+HRESULT SafeArraySetRecordInfo(SAFEARRAY* psa, IRecordInfo prinfo);
+HRESULT SafeArrayGetRecordInfo(SAFEARRAY* psa, IRecordInfo* prinfo);
+HRESULT SafeArraySetIID(SAFEARRAY* psa, const(GUID)* guid);
+HRESULT SafeArrayGetIID(SAFEARRAY* psa, GUID* pguid);
+HRESULT SafeArrayGetVartype(SAFEARRAY* psa, VARENUM* pvt);
+SAFEARRAY* SafeArrayCreateVector(VARENUM vt, int lLbound, uint cElements);
+SAFEARRAY* SafeArrayCreateVectorEx(VARENUM vt, int lLbound, uint cElements, void* pvExtra);
+HRESULT VectorFromBstr(BSTR bstr, SAFEARRAY** ppsa);
+HRESULT BstrFromVector(SAFEARRAY* psa, BSTR* pbstr);
+HRESULT VarUI1FromI2(short sIn, ubyte* pbOut);
+HRESULT VarUI1FromI4(int lIn, ubyte* pbOut);
+HRESULT VarUI1FromI8(long i64In, ubyte* pbOut);
+HRESULT VarUI1FromR4(float fltIn, ubyte* pbOut);
+HRESULT VarUI1FromR8(double dblIn, ubyte* pbOut);
+HRESULT VarUI1FromCy(CY cyIn, ubyte* pbOut);
+HRESULT VarUI1FromDate(double dateIn, ubyte* pbOut);
+HRESULT VarUI1FromStr(const(wchar)* strIn, uint lcid, uint dwFlags, ubyte* pbOut);
+HRESULT VarUI1FromDisp(IDispatch pdispIn, uint lcid, ubyte* pbOut);
+HRESULT VarUI1FromBool(VARIANT_BOOL boolIn, ubyte* pbOut);
+HRESULT VarUI1FromI1(CHAR cIn, ubyte* pbOut);
+HRESULT VarUI1FromUI2(ushort uiIn, ubyte* pbOut);
+HRESULT VarUI1FromUI4(uint ulIn, ubyte* pbOut);
+HRESULT VarUI1FromUI8(ulong ui64In, ubyte* pbOut);
+HRESULT VarUI1FromDec(const(DECIMAL)* pdecIn, ubyte* pbOut);
+HRESULT VarI2FromUI1(ubyte bIn, short* psOut);
+HRESULT VarI2FromI4(int lIn, short* psOut);
+HRESULT VarI2FromI8(long i64In, short* psOut);
+HRESULT VarI2FromR4(float fltIn, short* psOut);
+HRESULT VarI2FromR8(double dblIn, short* psOut);
+HRESULT VarI2FromCy(CY cyIn, short* psOut);
+HRESULT VarI2FromDate(double dateIn, short* psOut);
+HRESULT VarI2FromStr(const(wchar)* strIn, uint lcid, uint dwFlags, short* psOut);
+HRESULT VarI2FromDisp(IDispatch pdispIn, uint lcid, short* psOut);
+HRESULT VarI2FromBool(VARIANT_BOOL boolIn, short* psOut);
+HRESULT VarI2FromI1(CHAR cIn, short* psOut);
+HRESULT VarI2FromUI2(ushort uiIn, short* psOut);
+HRESULT VarI2FromUI4(uint ulIn, short* psOut);
+HRESULT VarI2FromUI8(ulong ui64In, short* psOut);
+HRESULT VarI2FromDec(const(DECIMAL)* pdecIn, short* psOut);
+HRESULT VarI4FromUI1(ubyte bIn, int* plOut);
+HRESULT VarI4FromI2(short sIn, int* plOut);
+HRESULT VarI4FromI8(long i64In, int* plOut);
+HRESULT VarI4FromR4(float fltIn, int* plOut);
+HRESULT VarI4FromR8(double dblIn, int* plOut);
+HRESULT VarI4FromCy(CY cyIn, int* plOut);
+HRESULT VarI4FromDate(double dateIn, int* plOut);
+HRESULT VarI4FromStr(const(wchar)* strIn, uint lcid, uint dwFlags, int* plOut);
+HRESULT VarI4FromDisp(IDispatch pdispIn, uint lcid, int* plOut);
+HRESULT VarI4FromBool(VARIANT_BOOL boolIn, int* plOut);
+HRESULT VarI4FromI1(CHAR cIn, int* plOut);
+HRESULT VarI4FromUI2(ushort uiIn, int* plOut);
+HRESULT VarI4FromUI4(uint ulIn, int* plOut);
+HRESULT VarI4FromUI8(ulong ui64In, int* plOut);
+HRESULT VarI4FromDec(const(DECIMAL)* pdecIn, int* plOut);
+HRESULT VarI8FromUI1(ubyte bIn, long* pi64Out);
+HRESULT VarI8FromI2(short sIn, long* pi64Out);
+HRESULT VarI8FromR4(float fltIn, long* pi64Out);
+HRESULT VarI8FromR8(double dblIn, long* pi64Out);
+HRESULT VarI8FromCy(CY cyIn, long* pi64Out);
+HRESULT VarI8FromDate(double dateIn, long* pi64Out);
+HRESULT VarI8FromStr(const(wchar)* strIn, uint lcid, uint dwFlags, long* pi64Out);
+HRESULT VarI8FromDisp(IDispatch pdispIn, uint lcid, long* pi64Out);
+HRESULT VarI8FromBool(VARIANT_BOOL boolIn, long* pi64Out);
+HRESULT VarI8FromI1(CHAR cIn, long* pi64Out);
+HRESULT VarI8FromUI2(ushort uiIn, long* pi64Out);
+HRESULT VarI8FromUI4(uint ulIn, long* pi64Out);
+HRESULT VarI8FromUI8(ulong ui64In, long* pi64Out);
+HRESULT VarI8FromDec(const(DECIMAL)* pdecIn, long* pi64Out);
+HRESULT VarR4FromUI1(ubyte bIn, float* pfltOut);
+HRESULT VarR4FromI2(short sIn, float* pfltOut);
+HRESULT VarR4FromI4(int lIn, float* pfltOut);
+HRESULT VarR4FromI8(long i64In, float* pfltOut);
+HRESULT VarR4FromR8(double dblIn, float* pfltOut);
+HRESULT VarR4FromCy(CY cyIn, float* pfltOut);
+HRESULT VarR4FromDate(double dateIn, float* pfltOut);
+HRESULT VarR4FromStr(const(wchar)* strIn, uint lcid, uint dwFlags, float* pfltOut);
+HRESULT VarR4FromDisp(IDispatch pdispIn, uint lcid, float* pfltOut);
+HRESULT VarR4FromBool(VARIANT_BOOL boolIn, float* pfltOut);
+HRESULT VarR4FromI1(CHAR cIn, float* pfltOut);
+HRESULT VarR4FromUI2(ushort uiIn, float* pfltOut);
+HRESULT VarR4FromUI4(uint ulIn, float* pfltOut);
+HRESULT VarR4FromUI8(ulong ui64In, float* pfltOut);
+HRESULT VarR4FromDec(const(DECIMAL)* pdecIn, float* pfltOut);
+HRESULT VarR8FromUI1(ubyte bIn, double* pdblOut);
+HRESULT VarR8FromI2(short sIn, double* pdblOut);
+HRESULT VarR8FromI4(int lIn, double* pdblOut);
+HRESULT VarR8FromI8(long i64In, double* pdblOut);
+HRESULT VarR8FromR4(float fltIn, double* pdblOut);
+HRESULT VarR8FromCy(CY cyIn, double* pdblOut);
+HRESULT VarR8FromDate(double dateIn, double* pdblOut);
+HRESULT VarR8FromStr(const(wchar)* strIn, uint lcid, uint dwFlags, double* pdblOut);
+HRESULT VarR8FromDisp(IDispatch pdispIn, uint lcid, double* pdblOut);
+HRESULT VarR8FromBool(VARIANT_BOOL boolIn, double* pdblOut);
+HRESULT VarR8FromI1(CHAR cIn, double* pdblOut);
+HRESULT VarR8FromUI2(ushort uiIn, double* pdblOut);
+HRESULT VarR8FromUI4(uint ulIn, double* pdblOut);
+HRESULT VarR8FromUI8(ulong ui64In, double* pdblOut);
+HRESULT VarR8FromDec(const(DECIMAL)* pdecIn, double* pdblOut);
+HRESULT VarDateFromUI1(ubyte bIn, double* pdateOut);
+HRESULT VarDateFromI2(short sIn, double* pdateOut);
+HRESULT VarDateFromI4(int lIn, double* pdateOut);
+HRESULT VarDateFromI8(long i64In, double* pdateOut);
+HRESULT VarDateFromR4(float fltIn, double* pdateOut);
+HRESULT VarDateFromR8(double dblIn, double* pdateOut);
+HRESULT VarDateFromCy(CY cyIn, double* pdateOut);
+HRESULT VarDateFromStr(const(wchar)* strIn, uint lcid, uint dwFlags, double* pdateOut);
+HRESULT VarDateFromDisp(IDispatch pdispIn, uint lcid, double* pdateOut);
+HRESULT VarDateFromBool(VARIANT_BOOL boolIn, double* pdateOut);
+HRESULT VarDateFromI1(CHAR cIn, double* pdateOut);
+HRESULT VarDateFromUI2(ushort uiIn, double* pdateOut);
+HRESULT VarDateFromUI4(uint ulIn, double* pdateOut);
+HRESULT VarDateFromUI8(ulong ui64In, double* pdateOut);
+HRESULT VarDateFromDec(const(DECIMAL)* pdecIn, double* pdateOut);
+HRESULT VarCyFromUI1(ubyte bIn, CY* pcyOut);
+HRESULT VarCyFromI2(short sIn, CY* pcyOut);
+HRESULT VarCyFromI4(int lIn, CY* pcyOut);
+HRESULT VarCyFromI8(long i64In, CY* pcyOut);
+HRESULT VarCyFromR4(float fltIn, CY* pcyOut);
+HRESULT VarCyFromR8(double dblIn, CY* pcyOut);
+HRESULT VarCyFromDate(double dateIn, CY* pcyOut);
+HRESULT VarCyFromStr(const(wchar)* strIn, uint lcid, uint dwFlags, CY* pcyOut);
+HRESULT VarCyFromDisp(IDispatch pdispIn, uint lcid, CY* pcyOut);
+HRESULT VarCyFromBool(VARIANT_BOOL boolIn, CY* pcyOut);
+HRESULT VarCyFromI1(CHAR cIn, CY* pcyOut);
+HRESULT VarCyFromUI2(ushort uiIn, CY* pcyOut);
+HRESULT VarCyFromUI4(uint ulIn, CY* pcyOut);
+HRESULT VarCyFromUI8(ulong ui64In, CY* pcyOut);
+HRESULT VarCyFromDec(const(DECIMAL)* pdecIn, CY* pcyOut);
+HRESULT VarBstrFromUI1(ubyte bVal, uint lcid, uint dwFlags, BSTR* pbstrOut);
+HRESULT VarBstrFromI2(short iVal, uint lcid, uint dwFlags, BSTR* pbstrOut);
+HRESULT VarBstrFromI4(int lIn, uint lcid, uint dwFlags, BSTR* pbstrOut);
+HRESULT VarBstrFromI8(long i64In, uint lcid, uint dwFlags, BSTR* pbstrOut);
+HRESULT VarBstrFromR4(float fltIn, uint lcid, uint dwFlags, BSTR* pbstrOut);
+HRESULT VarBstrFromR8(double dblIn, uint lcid, uint dwFlags, BSTR* pbstrOut);
+HRESULT VarBstrFromCy(CY cyIn, uint lcid, uint dwFlags, BSTR* pbstrOut);
+HRESULT VarBstrFromDate(double dateIn, uint lcid, uint dwFlags, BSTR* pbstrOut);
+HRESULT VarBstrFromDisp(IDispatch pdispIn, uint lcid, uint dwFlags, BSTR* pbstrOut);
+HRESULT VarBstrFromBool(VARIANT_BOOL boolIn, uint lcid, uint dwFlags, BSTR* pbstrOut);
+HRESULT VarBstrFromI1(CHAR cIn, uint lcid, uint dwFlags, BSTR* pbstrOut);
+HRESULT VarBstrFromUI2(ushort uiIn, uint lcid, uint dwFlags, BSTR* pbstrOut);
+HRESULT VarBstrFromUI4(uint ulIn, uint lcid, uint dwFlags, BSTR* pbstrOut);
+HRESULT VarBstrFromUI8(ulong ui64In, uint lcid, uint dwFlags, BSTR* pbstrOut);
+HRESULT VarBstrFromDec(const(DECIMAL)* pdecIn, uint lcid, uint dwFlags, BSTR* pbstrOut);
+HRESULT VarBoolFromUI1(ubyte bIn, VARIANT_BOOL* pboolOut);
+HRESULT VarBoolFromI2(short sIn, VARIANT_BOOL* pboolOut);
+HRESULT VarBoolFromI4(int lIn, VARIANT_BOOL* pboolOut);
+HRESULT VarBoolFromI8(long i64In, VARIANT_BOOL* pboolOut);
+HRESULT VarBoolFromR4(float fltIn, VARIANT_BOOL* pboolOut);
+HRESULT VarBoolFromR8(double dblIn, VARIANT_BOOL* pboolOut);
+HRESULT VarBoolFromDate(double dateIn, VARIANT_BOOL* pboolOut);
+HRESULT VarBoolFromCy(CY cyIn, VARIANT_BOOL* pboolOut);
+HRESULT VarBoolFromStr(const(wchar)* strIn, uint lcid, uint dwFlags, VARIANT_BOOL* pboolOut);
+HRESULT VarBoolFromDisp(IDispatch pdispIn, uint lcid, VARIANT_BOOL* pboolOut);
+HRESULT VarBoolFromI1(CHAR cIn, VARIANT_BOOL* pboolOut);
+HRESULT VarBoolFromUI2(ushort uiIn, VARIANT_BOOL* pboolOut);
+HRESULT VarBoolFromUI4(uint ulIn, VARIANT_BOOL* pboolOut);
+HRESULT VarBoolFromUI8(ulong i64In, VARIANT_BOOL* pboolOut);
+HRESULT VarBoolFromDec(const(DECIMAL)* pdecIn, VARIANT_BOOL* pboolOut);
+HRESULT VarI1FromUI1(ubyte bIn, PSTR pcOut);
+HRESULT VarI1FromI2(short uiIn, PSTR pcOut);
+HRESULT VarI1FromI4(int lIn, PSTR pcOut);
+HRESULT VarI1FromI8(long i64In, PSTR pcOut);
+HRESULT VarI1FromR4(float fltIn, PSTR pcOut);
+HRESULT VarI1FromR8(double dblIn, PSTR pcOut);
+HRESULT VarI1FromDate(double dateIn, PSTR pcOut);
+HRESULT VarI1FromCy(CY cyIn, PSTR pcOut);
+HRESULT VarI1FromStr(const(wchar)* strIn, uint lcid, uint dwFlags, PSTR pcOut);
+HRESULT VarI1FromDisp(IDispatch pdispIn, uint lcid, PSTR pcOut);
+HRESULT VarI1FromBool(VARIANT_BOOL boolIn, PSTR pcOut);
+HRESULT VarI1FromUI2(ushort uiIn, PSTR pcOut);
+HRESULT VarI1FromUI4(uint ulIn, PSTR pcOut);
+HRESULT VarI1FromUI8(ulong i64In, PSTR pcOut);
+HRESULT VarI1FromDec(const(DECIMAL)* pdecIn, PSTR pcOut);
+HRESULT VarUI2FromUI1(ubyte bIn, ushort* puiOut);
+HRESULT VarUI2FromI2(short uiIn, ushort* puiOut);
+HRESULT VarUI2FromI4(int lIn, ushort* puiOut);
+HRESULT VarUI2FromI8(long i64In, ushort* puiOut);
+HRESULT VarUI2FromR4(float fltIn, ushort* puiOut);
+HRESULT VarUI2FromR8(double dblIn, ushort* puiOut);
+HRESULT VarUI2FromDate(double dateIn, ushort* puiOut);
+HRESULT VarUI2FromCy(CY cyIn, ushort* puiOut);
+HRESULT VarUI2FromStr(const(wchar)* strIn, uint lcid, uint dwFlags, ushort* puiOut);
+HRESULT VarUI2FromDisp(IDispatch pdispIn, uint lcid, ushort* puiOut);
+HRESULT VarUI2FromBool(VARIANT_BOOL boolIn, ushort* puiOut);
+HRESULT VarUI2FromI1(CHAR cIn, ushort* puiOut);
+HRESULT VarUI2FromUI4(uint ulIn, ushort* puiOut);
+HRESULT VarUI2FromUI8(ulong i64In, ushort* puiOut);
+HRESULT VarUI2FromDec(const(DECIMAL)* pdecIn, ushort* puiOut);
+HRESULT VarUI4FromUI1(ubyte bIn, uint* pulOut);
+HRESULT VarUI4FromI2(short uiIn, uint* pulOut);
+HRESULT VarUI4FromI4(int lIn, uint* pulOut);
+HRESULT VarUI4FromI8(long i64In, uint* plOut);
+HRESULT VarUI4FromR4(float fltIn, uint* pulOut);
+HRESULT VarUI4FromR8(double dblIn, uint* pulOut);
+HRESULT VarUI4FromDate(double dateIn, uint* pulOut);
+HRESULT VarUI4FromCy(CY cyIn, uint* pulOut);
+HRESULT VarUI4FromStr(const(wchar)* strIn, uint lcid, uint dwFlags, uint* pulOut);
+HRESULT VarUI4FromDisp(IDispatch pdispIn, uint lcid, uint* pulOut);
+HRESULT VarUI4FromBool(VARIANT_BOOL boolIn, uint* pulOut);
+HRESULT VarUI4FromI1(CHAR cIn, uint* pulOut);
+HRESULT VarUI4FromUI2(ushort uiIn, uint* pulOut);
+HRESULT VarUI4FromUI8(ulong ui64In, uint* plOut);
+HRESULT VarUI4FromDec(const(DECIMAL)* pdecIn, uint* pulOut);
+HRESULT VarUI8FromUI1(ubyte bIn, ulong* pi64Out);
+HRESULT VarUI8FromI2(short sIn, ulong* pi64Out);
+HRESULT VarUI8FromI8(long ui64In, ulong* pi64Out);
+HRESULT VarUI8FromR4(float fltIn, ulong* pi64Out);
+HRESULT VarUI8FromR8(double dblIn, ulong* pi64Out);
+HRESULT VarUI8FromCy(CY cyIn, ulong* pi64Out);
+HRESULT VarUI8FromDate(double dateIn, ulong* pi64Out);
+HRESULT VarUI8FromStr(const(wchar)* strIn, uint lcid, uint dwFlags, ulong* pi64Out);
+HRESULT VarUI8FromDisp(IDispatch pdispIn, uint lcid, ulong* pi64Out);
+HRESULT VarUI8FromBool(VARIANT_BOOL boolIn, ulong* pi64Out);
+HRESULT VarUI8FromI1(CHAR cIn, ulong* pi64Out);
+HRESULT VarUI8FromUI2(ushort uiIn, ulong* pi64Out);
+HRESULT VarUI8FromUI4(uint ulIn, ulong* pi64Out);
+HRESULT VarUI8FromDec(const(DECIMAL)* pdecIn, ulong* pi64Out);
+HRESULT VarDecFromUI1(ubyte bIn, DECIMAL* pdecOut);
+HRESULT VarDecFromI2(short uiIn, DECIMAL* pdecOut);
+HRESULT VarDecFromI4(int lIn, DECIMAL* pdecOut);
+HRESULT VarDecFromI8(long i64In, DECIMAL* pdecOut);
+HRESULT VarDecFromR4(float fltIn, DECIMAL* pdecOut);
+HRESULT VarDecFromR8(double dblIn, DECIMAL* pdecOut);
+HRESULT VarDecFromDate(double dateIn, DECIMAL* pdecOut);
+HRESULT VarDecFromCy(CY cyIn, DECIMAL* pdecOut);
+HRESULT VarDecFromStr(const(wchar)* strIn, uint lcid, uint dwFlags, DECIMAL* pdecOut);
+HRESULT VarDecFromDisp(IDispatch pdispIn, uint lcid, DECIMAL* pdecOut);
+HRESULT VarDecFromBool(VARIANT_BOOL boolIn, DECIMAL* pdecOut);
+HRESULT VarDecFromI1(CHAR cIn, DECIMAL* pdecOut);
+HRESULT VarDecFromUI2(ushort uiIn, DECIMAL* pdecOut);
+HRESULT VarDecFromUI4(uint ulIn, DECIMAL* pdecOut);
+HRESULT VarDecFromUI8(ulong ui64In, DECIMAL* pdecOut);
+HRESULT VarParseNumFromStr(const(wchar)* strIn, uint lcid, uint dwFlags, NUMPARSE* pnumprs, ubyte* rgbDig);
+HRESULT VarNumFromParseNum(NUMPARSE* pnumprs, ubyte* rgbDig, uint dwVtBits, VARIANT* pvar);
+HRESULT VarAdd(VARIANT* pvarLeft, VARIANT* pvarRight, VARIANT* pvarResult);
+HRESULT VarAnd(VARIANT* pvarLeft, VARIANT* pvarRight, VARIANT* pvarResult);
+HRESULT VarCat(VARIANT* pvarLeft, VARIANT* pvarRight, VARIANT* pvarResult);
+HRESULT VarDiv(VARIANT* pvarLeft, VARIANT* pvarRight, VARIANT* pvarResult);
+HRESULT VarEqv(VARIANT* pvarLeft, VARIANT* pvarRight, VARIANT* pvarResult);
+HRESULT VarIdiv(VARIANT* pvarLeft, VARIANT* pvarRight, VARIANT* pvarResult);
+HRESULT VarImp(VARIANT* pvarLeft, VARIANT* pvarRight, VARIANT* pvarResult);
+HRESULT VarMod(VARIANT* pvarLeft, VARIANT* pvarRight, VARIANT* pvarResult);
+HRESULT VarMul(VARIANT* pvarLeft, VARIANT* pvarRight, VARIANT* pvarResult);
+HRESULT VarOr(VARIANT* pvarLeft, VARIANT* pvarRight, VARIANT* pvarResult);
+HRESULT VarPow(VARIANT* pvarLeft, VARIANT* pvarRight, VARIANT* pvarResult);
+HRESULT VarSub(VARIANT* pvarLeft, VARIANT* pvarRight, VARIANT* pvarResult);
+HRESULT VarXor(VARIANT* pvarLeft, VARIANT* pvarRight, VARIANT* pvarResult);
+HRESULT VarAbs(VARIANT* pvarIn, VARIANT* pvarResult);
+HRESULT VarFix(VARIANT* pvarIn, VARIANT* pvarResult);
+HRESULT VarInt(VARIANT* pvarIn, VARIANT* pvarResult);
+HRESULT VarNeg(VARIANT* pvarIn, VARIANT* pvarResult);
+HRESULT VarNot(VARIANT* pvarIn, VARIANT* pvarResult);
+HRESULT VarRound(VARIANT* pvarIn, int cDecimals, VARIANT* pvarResult);
+VARCMP VarCmp(VARIANT* pvarLeft, VARIANT* pvarRight, uint lcid, uint dwFlags);
+HRESULT VarDecAdd(DECIMAL* pdecLeft, DECIMAL* pdecRight, DECIMAL* pdecResult);
+HRESULT VarDecDiv(DECIMAL* pdecLeft, DECIMAL* pdecRight, DECIMAL* pdecResult);
+HRESULT VarDecMul(DECIMAL* pdecLeft, DECIMAL* pdecRight, DECIMAL* pdecResult);
+HRESULT VarDecSub(DECIMAL* pdecLeft, DECIMAL* pdecRight, DECIMAL* pdecResult);
+HRESULT VarDecAbs(DECIMAL* pdecIn, DECIMAL* pdecResult);
+HRESULT VarDecFix(DECIMAL* pdecIn, DECIMAL* pdecResult);
+HRESULT VarDecInt(DECIMAL* pdecIn, DECIMAL* pdecResult);
+HRESULT VarDecNeg(DECIMAL* pdecIn, DECIMAL* pdecResult);
+HRESULT VarDecRound(DECIMAL* pdecIn, int cDecimals, DECIMAL* pdecResult);
+VARCMP VarDecCmp(DECIMAL* pdecLeft, DECIMAL* pdecRight);
+VARCMP VarDecCmpR8(DECIMAL* pdecLeft, double dblRight);
+HRESULT VarCyAdd(CY cyLeft, CY cyRight, CY* pcyResult);
+HRESULT VarCyMul(CY cyLeft, CY cyRight, CY* pcyResult);
+HRESULT VarCyMulI4(CY cyLeft, int lRight, CY* pcyResult);
+HRESULT VarCyMulI8(CY cyLeft, long lRight, CY* pcyResult);
+HRESULT VarCySub(CY cyLeft, CY cyRight, CY* pcyResult);
+HRESULT VarCyAbs(CY cyIn, CY* pcyResult);
+HRESULT VarCyFix(CY cyIn, CY* pcyResult);
+HRESULT VarCyInt(CY cyIn, CY* pcyResult);
+HRESULT VarCyNeg(CY cyIn, CY* pcyResult);
+HRESULT VarCyRound(CY cyIn, int cDecimals, CY* pcyResult);
+VARCMP VarCyCmp(CY cyLeft, CY cyRight);
+VARCMP VarCyCmpR8(CY cyLeft, double dblRight);
+HRESULT VarBstrCat(BSTR bstrLeft, BSTR bstrRight, BSTR* pbstrResult);
+HRESULT VarBstrCmp(BSTR bstrLeft, BSTR bstrRight, uint lcid, uint dwFlags);
+HRESULT VarR8Pow(double dblLeft, double dblRight, double* pdblResult);
+VARCMP VarR4CmpR8(float fltLeft, double dblRight);
+HRESULT VarR8Round(double dblIn, int cDecimals, double* pdblResult);
+HRESULT VarDateFromUdate(UDATE* pudateIn, uint dwFlags, double* pdateOut);
+HRESULT VarDateFromUdateEx(UDATE* pudateIn, uint lcid, uint dwFlags, double* pdateOut);
+HRESULT VarUdateFromDate(double dateIn, uint dwFlags, UDATE* pudateOut);
+HRESULT GetAltMonthNames(uint lcid, PWSTR** prgp);
+HRESULT VarFormat(VARIANT* pvarIn, PWSTR pstrFormat, VARFORMAT_FIRST_DAY iFirstDay, VARFORMAT_FIRST_WEEK iFirstWeek, uint dwFlags, BSTR* pbstrOut);
+HRESULT VarFormatDateTime(VARIANT* pvarIn, VARFORMAT_NAMED_FORMAT iNamedFormat, uint dwFlags, BSTR* pbstrOut);
+HRESULT VarFormatNumber(VARIANT* pvarIn, int iNumDig, VARFORMAT_LEADING_DIGIT iIncLead, VARFORMAT_PARENTHESES iUseParens, VARFORMAT_GROUP iGroup, uint dwFlags, BSTR* pbstrOut);
+HRESULT VarFormatPercent(VARIANT* pvarIn, int iNumDig, VARFORMAT_LEADING_DIGIT iIncLead, VARFORMAT_PARENTHESES iUseParens, VARFORMAT_GROUP iGroup, uint dwFlags, BSTR* pbstrOut);
+HRESULT VarFormatCurrency(VARIANT* pvarIn, int iNumDig, int iIncLead, int iUseParens, int iGroup, uint dwFlags, BSTR* pbstrOut);
+HRESULT VarWeekdayName(int iWeekday, int fAbbrev, int iFirstDay, uint dwFlags, BSTR* pbstrOut);
+HRESULT VarMonthName(int iMonth, int fAbbrev, uint dwFlags, BSTR* pbstrOut);
+HRESULT VarFormatFromTokens(VARIANT* pvarIn, PWSTR pstrFormat, ubyte* pbTokCur, uint dwFlags, BSTR* pbstrOut, uint lcid);
+HRESULT VarTokenizeFormatString(PWSTR pstrFormat, ubyte* rgbTok, int cbTok, VARFORMAT_FIRST_DAY iFirstDay, VARFORMAT_FIRST_WEEK iFirstWeek, uint lcid, int* pcbActual);
+uint LHashValOfNameSysA(SYSKIND syskind, uint lcid, const(char)* szName);
+uint LHashValOfNameSys(SYSKIND syskind, uint lcid, const(wchar)* szName);
+HRESULT LoadTypeLib(const(wchar)* szFile, ITypeLib* pptlib);
+HRESULT LoadTypeLibEx(const(wchar)* szFile, REGKIND regkind, ITypeLib* pptlib);
+HRESULT LoadRegTypeLib(const(GUID)* rguid, ushort wVerMajor, ushort wVerMinor, uint lcid, ITypeLib* pptlib);
+HRESULT QueryPathOfRegTypeLib(const(GUID)* guid, ushort wMaj, ushort wMin, uint lcid, BSTR* lpbstrPathName);
+HRESULT RegisterTypeLib(ITypeLib ptlib, const(wchar)* szFullPath, const(wchar)* szHelpDir);
+HRESULT UnRegisterTypeLib(const(GUID)* libID, ushort wVerMajor, ushort wVerMinor, uint lcid, SYSKIND syskind);
+HRESULT RegisterTypeLibForUser(ITypeLib ptlib, PWSTR szFullPath, PWSTR szHelpDir);
+HRESULT UnRegisterTypeLibForUser(const(GUID)* libID, ushort wMajorVerNum, ushort wMinorVerNum, uint lcid, SYSKIND syskind);
+HRESULT CreateTypeLib(SYSKIND syskind, const(wchar)* szFile, ICreateTypeLib* ppctlib);
+HRESULT CreateTypeLib2(SYSKIND syskind, const(wchar)* szFile, ICreateTypeLib2* ppctlib);
+HRESULT DispGetParam(DISPPARAMS* pdispparams, uint position, VARENUM vtTarg, VARIANT* pvarResult, uint* puArgErr);
+HRESULT DispGetIDsOfNames(ITypeInfo ptinfo, PWSTR* rgszNames, uint cNames, int* rgdispid);
+HRESULT DispInvoke(void* _this, ITypeInfo ptinfo, int dispidMember, ushort wFlags, DISPPARAMS* pparams, VARIANT* pvarResult, EXCEPINFO* pexcepinfo, uint* puArgErr);
+HRESULT CreateDispTypeInfo(INTERFACEDATA* pidata, uint lcid, ITypeInfo* pptinfo);
+HRESULT CreateStdDispatch(IUnknown punkOuter, void* pvThis, ITypeInfo ptinfo, IUnknown* ppunkStdDisp);
+HRESULT DispCallFunc(void* pvInstance, ulong oVft, CALLCONV cc, VARENUM vtReturn, uint cActuals, ushort* prgvt, VARIANT** prgpvarg, VARIANT* pvargResult);
+HRESULT RegisterActiveObject(IUnknown punk, const(GUID)* rclsid, ACTIVEOBJECT_FLAGS dwFlags, uint* pdwRegister);
+HRESULT RevokeActiveObject(uint dwRegister, void* pvReserved);
+HRESULT GetActiveObject(const(GUID)* rclsid, void* pvReserved, IUnknown* ppunk);
+HRESULT CreateErrorInfo(ICreateErrorInfo* pperrinfo);
+HRESULT GetRecordInfoFromTypeInfo(ITypeInfo pTypeInfo, IRecordInfo* ppRecInfo);
+HRESULT GetRecordInfoFromGuids(const(GUID)* rGuidTypeLib, uint uVerMajor, uint uVerMinor, uint lcid, const(GUID)* rGuidTypeInfo, IRecordInfo* ppRecInfo);
 uint OaBuildVersion();
-void ClearCustData(CUSTDATA*);
+void ClearCustData(CUSTDATA* pCustData);
 void OaEnablePerUserTLibRegistration();
 uint OleBuildVersion();
-HRESULT OleInitialize(void*);
+HRESULT OleInitialize(void* pvReserved);
 void OleUninitialize();
-HRESULT OleQueryLinkFromData(IDataObject);
-HRESULT OleQueryCreateFromData(IDataObject);
-HRESULT OleCreate(const(GUID)*, const(GUID)*, uint, FORMATETC*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateEx(const(GUID)*, const(GUID)*, OLECREATE, uint, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateFromData(IDataObject, const(GUID)*, uint, FORMATETC*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateFromDataEx(IDataObject, const(GUID)*, OLECREATE, uint, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateLinkFromData(IDataObject, const(GUID)*, uint, FORMATETC*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateLinkFromDataEx(IDataObject, const(GUID)*, OLECREATE, uint, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateStaticFromData(IDataObject, const(GUID)*, uint, FORMATETC*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateLink(IMoniker, const(GUID)*, uint, FORMATETC*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateLinkEx(IMoniker, const(GUID)*, OLECREATE, uint, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateLinkToFile(const(wchar)*, const(GUID)*, uint, FORMATETC*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateLinkToFileEx(const(wchar)*, const(GUID)*, OLECREATE, uint, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateFromFile(const(GUID)*, const(wchar)*, const(GUID)*, uint, FORMATETC*, IOleClientSite, IStorage, void**);
-HRESULT OleCreateFromFileEx(const(GUID)*, const(wchar)*, const(GUID)*, OLECREATE, uint, uint, uint*, FORMATETC*, IAdviseSink, uint*, IOleClientSite, IStorage, void**);
-HRESULT OleLoad(IStorage, const(GUID)*, IOleClientSite, void**);
-HRESULT OleSave(IPersistStorage, IStorage, BOOL);
-HRESULT OleLoadFromStream(IStream, const(GUID)*, void**);
-HRESULT OleSaveToStream(IPersistStream, IStream);
-HRESULT OleSetContainedObject(IUnknown, BOOL);
-HRESULT OleNoteObjectVisible(IUnknown, BOOL);
-HRESULT RegisterDragDrop(HWND, IDropTarget);
-HRESULT RevokeDragDrop(HWND);
-HRESULT DoDragDrop(IDataObject, IDropSource, DROPEFFECT, DROPEFFECT*);
-HRESULT OleSetClipboard(IDataObject);
-HRESULT OleGetClipboard(IDataObject*);
-HRESULT OleGetClipboardWithEnterpriseInfo(IDataObject*, PWSTR*, PWSTR*, PWSTR*, PWSTR*);
+HRESULT OleQueryLinkFromData(IDataObject pSrcDataObject);
+HRESULT OleQueryCreateFromData(IDataObject pSrcDataObject);
+HRESULT OleCreate(const(GUID)* rclsid, const(GUID)* riid, uint renderopt, FORMATETC* pFormatEtc, IOleClientSite pClientSite, IStorage pStg, void** ppvObj);
+HRESULT OleCreateEx(const(GUID)* rclsid, const(GUID)* riid, OLECREATE dwFlags, uint renderopt, uint cFormats, uint* rgAdvf, FORMATETC* rgFormatEtc, IAdviseSink lpAdviseSink, uint* rgdwConnection, IOleClientSite pClientSite, IStorage pStg, void** ppvObj);
+HRESULT OleCreateFromData(IDataObject pSrcDataObj, const(GUID)* riid, uint renderopt, FORMATETC* pFormatEtc, IOleClientSite pClientSite, IStorage pStg, void** ppvObj);
+HRESULT OleCreateFromDataEx(IDataObject pSrcDataObj, const(GUID)* riid, OLECREATE dwFlags, uint renderopt, uint cFormats, uint* rgAdvf, FORMATETC* rgFormatEtc, IAdviseSink lpAdviseSink, uint* rgdwConnection, IOleClientSite pClientSite, IStorage pStg, void** ppvObj);
+HRESULT OleCreateLinkFromData(IDataObject pSrcDataObj, const(GUID)* riid, uint renderopt, FORMATETC* pFormatEtc, IOleClientSite pClientSite, IStorage pStg, void** ppvObj);
+HRESULT OleCreateLinkFromDataEx(IDataObject pSrcDataObj, const(GUID)* riid, OLECREATE dwFlags, uint renderopt, uint cFormats, uint* rgAdvf, FORMATETC* rgFormatEtc, IAdviseSink lpAdviseSink, uint* rgdwConnection, IOleClientSite pClientSite, IStorage pStg, void** ppvObj);
+HRESULT OleCreateStaticFromData(IDataObject pSrcDataObj, const(GUID)* iid, uint renderopt, FORMATETC* pFormatEtc, IOleClientSite pClientSite, IStorage pStg, void** ppvObj);
+HRESULT OleCreateLink(IMoniker pmkLinkSrc, const(GUID)* riid, uint renderopt, FORMATETC* lpFormatEtc, IOleClientSite pClientSite, IStorage pStg, void** ppvObj);
+HRESULT OleCreateLinkEx(IMoniker pmkLinkSrc, const(GUID)* riid, OLECREATE dwFlags, uint renderopt, uint cFormats, uint* rgAdvf, FORMATETC* rgFormatEtc, IAdviseSink lpAdviseSink, uint* rgdwConnection, IOleClientSite pClientSite, IStorage pStg, void** ppvObj);
+HRESULT OleCreateLinkToFile(const(wchar)* lpszFileName, const(GUID)* riid, uint renderopt, FORMATETC* lpFormatEtc, IOleClientSite pClientSite, IStorage pStg, void** ppvObj);
+HRESULT OleCreateLinkToFileEx(const(wchar)* lpszFileName, const(GUID)* riid, OLECREATE dwFlags, uint renderopt, uint cFormats, uint* rgAdvf, FORMATETC* rgFormatEtc, IAdviseSink lpAdviseSink, uint* rgdwConnection, IOleClientSite pClientSite, IStorage pStg, void** ppvObj);
+HRESULT OleCreateFromFile(const(GUID)* rclsid, const(wchar)* lpszFileName, const(GUID)* riid, uint renderopt, FORMATETC* lpFormatEtc, IOleClientSite pClientSite, IStorage pStg, void** ppvObj);
+HRESULT OleCreateFromFileEx(const(GUID)* rclsid, const(wchar)* lpszFileName, const(GUID)* riid, OLECREATE dwFlags, uint renderopt, uint cFormats, uint* rgAdvf, FORMATETC* rgFormatEtc, IAdviseSink lpAdviseSink, uint* rgdwConnection, IOleClientSite pClientSite, IStorage pStg, void** ppvObj);
+HRESULT OleLoad(IStorage pStg, const(GUID)* riid, IOleClientSite pClientSite, void** ppvObj);
+HRESULT OleSave(IPersistStorage pPS, IStorage pStg, BOOL fSameAsLoad);
+HRESULT OleLoadFromStream(IStream pStm, const(GUID)* iidInterface, void** ppvObj);
+HRESULT OleSaveToStream(IPersistStream pPStm, IStream pStm);
+HRESULT OleSetContainedObject(IUnknown pUnknown, BOOL fContained);
+HRESULT OleNoteObjectVisible(IUnknown pUnknown, BOOL fVisible);
+HRESULT RegisterDragDrop(HWND hwnd, IDropTarget pDropTarget);
+HRESULT RevokeDragDrop(HWND hwnd);
+HRESULT DoDragDrop(IDataObject pDataObj, IDropSource pDropSource, DROPEFFECT dwOKEffects, DROPEFFECT* pdwEffect);
+HRESULT OleSetClipboard(IDataObject pDataObj);
+HRESULT OleGetClipboard(IDataObject* ppDataObj);
+HRESULT OleGetClipboardWithEnterpriseInfo(IDataObject* dataObject, PWSTR* dataEnterpriseId, PWSTR* sourceDescription, PWSTR* targetDescription, PWSTR* dataDescription);
 HRESULT OleFlushClipboard();
-HRESULT OleIsCurrentClipboard(IDataObject);
-long OleCreateMenuDescriptor(HMENU, OLEMENUGROUPWIDTHS*);
-HRESULT OleSetMenuDescriptor(long, HWND, HWND, IOleInPlaceFrame, IOleInPlaceActiveObject);
-HRESULT OleDestroyMenuDescriptor(long);
-HRESULT OleTranslateAccelerator(IOleInPlaceFrame, OLEINPLACEFRAMEINFO*, MSG*);
-HANDLE OleDuplicateData(HANDLE, CLIPBOARD_FORMAT, GLOBAL_ALLOC_FLAGS);
-HRESULT OleDraw(IUnknown, uint, HDC, RECT*);
-HRESULT OleRun(IUnknown);
-BOOL OleIsRunning(IOleObject);
-HRESULT OleLockRunning(IUnknown, BOOL, BOOL);
-void ReleaseStgMedium(STGMEDIUM*);
-HRESULT CreateOleAdviseHolder(IOleAdviseHolder*);
-HRESULT OleCreateDefaultHandler(const(GUID)*, IUnknown, const(GUID)*, void**);
-HRESULT OleCreateEmbeddingHelper(const(GUID)*, IUnknown, EMBDHLP_FLAGS, IClassFactory, const(GUID)*, void**);
-BOOL IsAccelerator(HACCEL, int, MSG*, ushort*);
-HGLOBAL OleGetIconOfFile(PWSTR, BOOL);
-HGLOBAL OleGetIconOfClass(const(GUID)*, PWSTR, BOOL);
-HGLOBAL OleMetafilePictFromIconAndLabel(HICON, PWSTR, PWSTR, uint);
-HRESULT OleRegGetUserType(const(GUID)*, uint, PWSTR*);
-HRESULT OleRegGetMiscStatus(const(GUID)*, uint, uint*);
-HRESULT OleRegEnumFormatEtc(const(GUID)*, uint, IEnumFORMATETC*);
-HRESULT OleRegEnumVerbs(const(GUID)*, IEnumOLEVERB*);
-HRESULT OleConvertOLESTREAMToIStorage2(OLESTREAM*, IStorage, const(DVTARGETDEVICE)*, uint, void*, OLESTREAMQUERYCONVERTOLELINKCALLBACK);
-HRESULT OleDoAutoConvert(IStorage, GUID*);
-HRESULT OleGetAutoConvert(const(GUID)*, GUID*);
-HRESULT OleSetAutoConvert(const(GUID)*, const(GUID)*);
-HRESULT OleConvertOLESTREAMToIStorageEx2(OLESTREAM*, IStorage, ushort*, int*, int*, uint*, STGMEDIUM*, uint, void*, OLESTREAMQUERYCONVERTOLELINKCALLBACK);
-uint HRGN_UserSize(uint*, uint, HRGN*);
-ubyte* HRGN_UserMarshal(uint*, ubyte*, HRGN*);
-ubyte* HRGN_UserUnmarshal(uint*, ubyte*, HRGN*);
-void HRGN_UserFree(uint*, HRGN*);
-uint HRGN_UserSize64(uint*, uint, HRGN*);
-ubyte* HRGN_UserMarshal64(uint*, ubyte*, HRGN*);
-ubyte* HRGN_UserUnmarshal64(uint*, ubyte*, HRGN*);
-void HRGN_UserFree64(uint*, HRGN*);
-HRESULT OleCreatePropertyFrame(HWND, uint, uint, const(wchar)*, uint, IUnknown*, uint, GUID*, uint, uint, void*);
-HRESULT OleCreatePropertyFrameIndirect(OCPFIPARAMS*);
-HRESULT OleTranslateColor(uint, HPALETTE, COLORREF*);
-HRESULT OleCreateFontIndirect(FONTDESC*, const(GUID)*, void**);
-HRESULT OleCreatePictureIndirect(PICTDESC*, const(GUID)*, BOOL, void**);
-HRESULT OleLoadPicture(IStream, int, BOOL, const(GUID)*, void**);
-HRESULT OleLoadPictureEx(IStream, int, BOOL, const(GUID)*, uint, uint, LOAD_PICTURE_FLAGS, void**);
-HRESULT OleLoadPicturePath(PWSTR, IUnknown, uint, uint, const(GUID)*, void**);
-HRESULT OleLoadPictureFile(VARIANT, IDispatch*);
-HRESULT OleLoadPictureFileEx(VARIANT, uint, uint, LOAD_PICTURE_FLAGS, IDispatch*);
-HRESULT OleSavePictureFile(IDispatch, BSTR);
-HCURSOR OleIconToCursor(HINSTANCE, HICON);
-BOOL OleUIAddVerbMenuW(IOleObject, const(wchar)*, HMENU, uint, uint, uint, BOOL, uint, HMENU*);
-BOOL OleUIAddVerbMenuA(IOleObject, const(char)*, HMENU, uint, uint, uint, BOOL, uint, HMENU*);
-uint OleUIInsertObjectW(OLEUIINSERTOBJECTW*);
-uint OleUIInsertObjectA(OLEUIINSERTOBJECTA*);
-uint OleUIPasteSpecialW(OLEUIPASTESPECIALW*);
-uint OleUIPasteSpecialA(OLEUIPASTESPECIALA*);
-uint OleUIEditLinksW(OLEUIEDITLINKSW*);
-uint OleUIEditLinksA(OLEUIEDITLINKSA*);
-uint OleUIChangeIconW(OLEUICHANGEICONW*);
-uint OleUIChangeIconA(OLEUICHANGEICONA*);
-uint OleUIConvertW(OLEUICONVERTW*);
-uint OleUIConvertA(OLEUICONVERTA*);
-BOOL OleUICanConvertOrActivateAs(const(GUID)*, BOOL, ushort);
-uint OleUIBusyW(OLEUIBUSYW*);
-uint OleUIBusyA(OLEUIBUSYA*);
-uint OleUIChangeSourceW(OLEUICHANGESOURCEW*);
-uint OleUIChangeSourceA(OLEUICHANGESOURCEA*);
-uint OleUIObjectPropertiesW(OLEUIOBJECTPROPSW*);
-uint OleUIObjectPropertiesA(OLEUIOBJECTPROPSA*);
-int OleUIPromptUserW(int, HWND);
-int OleUIPromptUserA(int, HWND);
-BOOL OleUIUpdateLinksW(IOleUILinkContainerW, HWND, PWSTR, int);
-BOOL OleUIUpdateLinksA(IOleUILinkContainerA, HWND, PSTR, int);
+HRESULT OleIsCurrentClipboard(IDataObject pDataObj);
+long OleCreateMenuDescriptor(HMENU hmenuCombined, OLEMENUGROUPWIDTHS* lpMenuWidths);
+HRESULT OleSetMenuDescriptor(long holemenu, HWND hwndFrame, HWND hwndActiveObject, IOleInPlaceFrame lpFrame, IOleInPlaceActiveObject lpActiveObj);
+HRESULT OleDestroyMenuDescriptor(long holemenu);
+HRESULT OleTranslateAccelerator(IOleInPlaceFrame lpFrame, OLEINPLACEFRAMEINFO* lpFrameInfo, MSG* lpmsg);
+HANDLE OleDuplicateData(HANDLE hSrc, CLIPBOARD_FORMAT cfFormat, GLOBAL_ALLOC_FLAGS uiFlags);
+HRESULT OleDraw(IUnknown pUnknown, uint dwAspect, HDC hdcDraw, RECT* lprcBounds);
+HRESULT OleRun(IUnknown pUnknown);
+BOOL OleIsRunning(IOleObject pObject);
+HRESULT OleLockRunning(IUnknown pUnknown, BOOL fLock, BOOL fLastUnlockCloses);
+void ReleaseStgMedium(STGMEDIUM* param0);
+HRESULT CreateOleAdviseHolder(IOleAdviseHolder* ppOAHolder);
+HRESULT OleCreateDefaultHandler(const(GUID)* clsid, IUnknown pUnkOuter, const(GUID)* riid, void** lplpObj);
+HRESULT OleCreateEmbeddingHelper(const(GUID)* clsid, IUnknown pUnkOuter, EMBDHLP_FLAGS flags, IClassFactory pCF, const(GUID)* riid, void** lplpObj);
+BOOL IsAccelerator(HACCEL hAccel, int cAccelEntries, MSG* lpMsg, ushort* lpwCmd);
+HGLOBAL OleGetIconOfFile(PWSTR lpszPath, BOOL fUseFileAsLabel);
+HGLOBAL OleGetIconOfClass(const(GUID)* rclsid, PWSTR lpszLabel, BOOL fUseTypeAsLabel);
+HGLOBAL OleMetafilePictFromIconAndLabel(HICON hIcon, PWSTR lpszLabel, PWSTR lpszSourceFile, uint iIconIndex);
+HRESULT OleRegGetUserType(const(GUID)* clsid, uint dwFormOfType, PWSTR* pszUserType);
+HRESULT OleRegGetMiscStatus(const(GUID)* clsid, uint dwAspect, uint* pdwStatus);
+HRESULT OleRegEnumFormatEtc(const(GUID)* clsid, uint dwDirection, IEnumFORMATETC* ppenum);
+HRESULT OleRegEnumVerbs(const(GUID)* clsid, IEnumOLEVERB* ppenum);
+HRESULT OleConvertOLESTREAMToIStorage2(OLESTREAM* lpolestream, IStorage pstg, const(DVTARGETDEVICE)* ptd, uint opt, void* pvCallbackContext, OLESTREAMQUERYCONVERTOLELINKCALLBACK pQueryConvertOLELinkCallback);
+HRESULT OleDoAutoConvert(IStorage pStg, GUID* pClsidNew);
+HRESULT OleGetAutoConvert(const(GUID)* clsidOld, GUID* pClsidNew);
+HRESULT OleSetAutoConvert(const(GUID)* clsidOld, const(GUID)* clsidNew);
+HRESULT OleConvertOLESTREAMToIStorageEx2(OLESTREAM* polestm, IStorage pstg, ushort* pcfFormat, int* plwWidth, int* plHeight, uint* pdwSize, STGMEDIUM* pmedium, uint opt, void* pvCallbackContext, OLESTREAMQUERYCONVERTOLELINKCALLBACK pQueryConvertOLELinkCallback);
+uint HRGN_UserSize(uint* param0, uint param1, HRGN* param2);
+ubyte* HRGN_UserMarshal(uint* param0, ubyte* param1, HRGN* param2);
+ubyte* HRGN_UserUnmarshal(uint* param0, ubyte* param1, HRGN* param2);
+void HRGN_UserFree(uint* param0, HRGN* param1);
+uint HRGN_UserSize64(uint* param0, uint param1, HRGN* param2);
+ubyte* HRGN_UserMarshal64(uint* param0, ubyte* param1, HRGN* param2);
+ubyte* HRGN_UserUnmarshal64(uint* param0, ubyte* param1, HRGN* param2);
+void HRGN_UserFree64(uint* param0, HRGN* param1);
+HRESULT OleCreatePropertyFrame(HWND hwndOwner, uint x, uint y, const(wchar)* lpszCaption, uint cObjects, IUnknown* ppUnk, uint cPages, GUID* pPageClsID, uint lcid, uint dwReserved, void* pvReserved);
+HRESULT OleCreatePropertyFrameIndirect(OCPFIPARAMS* lpParams);
+HRESULT OleTranslateColor(uint clr, HPALETTE hpal, COLORREF* lpcolorref);
+HRESULT OleCreateFontIndirect(FONTDESC* lpFontDesc, const(GUID)* riid, void** lplpvObj);
+HRESULT OleCreatePictureIndirect(PICTDESC* lpPictDesc, const(GUID)* riid, BOOL fOwn, void** lplpvObj);
+HRESULT OleLoadPicture(IStream lpstream, int lSize, BOOL fRunmode, const(GUID)* riid, void** lplpvObj);
+HRESULT OleLoadPictureEx(IStream lpstream, int lSize, BOOL fRunmode, const(GUID)* riid, uint xSizeDesired, uint ySizeDesired, LOAD_PICTURE_FLAGS dwFlags, void** lplpvObj);
+HRESULT OleLoadPicturePath(PWSTR szURLorPath, IUnknown punkCaller, uint dwReserved, uint clrReserved, const(GUID)* riid, void** ppvRet);
+HRESULT OleLoadPictureFile(VARIANT varFileName, IDispatch* lplpdispPicture);
+HRESULT OleLoadPictureFileEx(VARIANT varFileName, uint xSizeDesired, uint ySizeDesired, LOAD_PICTURE_FLAGS dwFlags, IDispatch* lplpdispPicture);
+HRESULT OleSavePictureFile(IDispatch lpdispPicture, BSTR bstrFileName);
+HCURSOR OleIconToCursor(HINSTANCE hinstExe, HICON hIcon);
+BOOL OleUIAddVerbMenuW(IOleObject lpOleObj, const(wchar)* lpszShortType, HMENU hMenu, uint uPos, uint uIDVerbMin, uint uIDVerbMax, BOOL bAddConvert, uint idConvert, HMENU* lphMenu);
+BOOL OleUIAddVerbMenuA(IOleObject lpOleObj, const(char)* lpszShortType, HMENU hMenu, uint uPos, uint uIDVerbMin, uint uIDVerbMax, BOOL bAddConvert, uint idConvert, HMENU* lphMenu);
+uint OleUIInsertObjectW(OLEUIINSERTOBJECTW* param0);
+uint OleUIInsertObjectA(OLEUIINSERTOBJECTA* param0);
+uint OleUIPasteSpecialW(OLEUIPASTESPECIALW* param0);
+uint OleUIPasteSpecialA(OLEUIPASTESPECIALA* param0);
+uint OleUIEditLinksW(OLEUIEDITLINKSW* param0);
+uint OleUIEditLinksA(OLEUIEDITLINKSA* param0);
+uint OleUIChangeIconW(OLEUICHANGEICONW* param0);
+uint OleUIChangeIconA(OLEUICHANGEICONA* param0);
+uint OleUIConvertW(OLEUICONVERTW* param0);
+uint OleUIConvertA(OLEUICONVERTA* param0);
+BOOL OleUICanConvertOrActivateAs(const(GUID)* rClsid, BOOL fIsLinkedObject, ushort wFormat);
+uint OleUIBusyW(OLEUIBUSYW* param0);
+uint OleUIBusyA(OLEUIBUSYA* param0);
+uint OleUIChangeSourceW(OLEUICHANGESOURCEW* param0);
+uint OleUIChangeSourceA(OLEUICHANGESOURCEA* param0);
+uint OleUIObjectPropertiesW(OLEUIOBJECTPROPSW* param0);
+uint OleUIObjectPropertiesA(OLEUIOBJECTPROPSA* param0);
+int OleUIPromptUserW(int nTemplate, HWND hwndParent);
+int OleUIPromptUserA(int nTemplate, HWND hwndParent);
+BOOL OleUIUpdateLinksW(IOleUILinkContainerW lpOleUILinkCntr, HWND hwndParent, PWSTR lpszTitle, int cLinks);
+BOOL OleUIUpdateLinksA(IOleUILinkContainerA lpOleUILinkCntr, HWND hwndParent, PSTR lpszTitle, int cLinks);
 enum CTL_E_ILLEGALFUNCTIONCALL = 0xffffffff800a0005;
 enum CONNECT_E_FIRST = 0xffffffff80040200;
 enum SELFREG_E_FIRST = 0xffffffff80040200;
@@ -1482,78 +1482,78 @@ struct CLEANLOCALSTORAGE
 enum IID_ICreateTypeInfo = GUID(0x20405, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ICreateTypeInfo : IUnknown
 {
-    HRESULT SetGuid(const(GUID)*);
-    HRESULT SetTypeFlags(uint);
-    HRESULT SetDocString(PWSTR);
-    HRESULT SetHelpContext(uint);
-    HRESULT SetVersion(ushort, ushort);
-    HRESULT AddRefTypeInfo(ITypeInfo, uint*);
-    HRESULT AddFuncDesc(uint, FUNCDESC*);
-    HRESULT AddImplType(uint, uint);
-    HRESULT SetImplTypeFlags(uint, IMPLTYPEFLAGS);
-    HRESULT SetAlignment(ushort);
-    HRESULT SetSchema(PWSTR);
-    HRESULT AddVarDesc(uint, VARDESC*);
-    HRESULT SetFuncAndParamNames(uint, PWSTR*, uint);
-    HRESULT SetVarName(uint, PWSTR);
-    HRESULT SetTypeDescAlias(TYPEDESC*);
-    HRESULT DefineFuncAsDllEntry(uint, PWSTR, PWSTR);
-    HRESULT SetFuncDocString(uint, PWSTR);
-    HRESULT SetVarDocString(uint, PWSTR);
-    HRESULT SetFuncHelpContext(uint, uint);
-    HRESULT SetVarHelpContext(uint, uint);
-    HRESULT SetMops(uint, BSTR);
-    HRESULT SetTypeIdldesc(IDLDESC*);
+    HRESULT SetGuid(const(GUID)* guid);
+    HRESULT SetTypeFlags(uint uTypeFlags);
+    HRESULT SetDocString(PWSTR pStrDoc);
+    HRESULT SetHelpContext(uint dwHelpContext);
+    HRESULT SetVersion(ushort wMajorVerNum, ushort wMinorVerNum);
+    HRESULT AddRefTypeInfo(ITypeInfo pTInfo, uint* phRefType);
+    HRESULT AddFuncDesc(uint index, FUNCDESC* pFuncDesc);
+    HRESULT AddImplType(uint index, uint hRefType);
+    HRESULT SetImplTypeFlags(uint index, IMPLTYPEFLAGS implTypeFlags);
+    HRESULT SetAlignment(ushort cbAlignment);
+    HRESULT SetSchema(PWSTR pStrSchema);
+    HRESULT AddVarDesc(uint index, VARDESC* pVarDesc);
+    HRESULT SetFuncAndParamNames(uint index, PWSTR* rgszNames, uint cNames);
+    HRESULT SetVarName(uint index, PWSTR szName);
+    HRESULT SetTypeDescAlias(TYPEDESC* pTDescAlias);
+    HRESULT DefineFuncAsDllEntry(uint index, PWSTR szDllName, PWSTR szProcName);
+    HRESULT SetFuncDocString(uint index, PWSTR szDocString);
+    HRESULT SetVarDocString(uint index, PWSTR szDocString);
+    HRESULT SetFuncHelpContext(uint index, uint dwHelpContext);
+    HRESULT SetVarHelpContext(uint index, uint dwHelpContext);
+    HRESULT SetMops(uint index, BSTR bstrMops);
+    HRESULT SetTypeIdldesc(IDLDESC* pIdlDesc);
     HRESULT LayOut();
 }
 enum IID_ICreateTypeInfo2 = GUID(0x2040e, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ICreateTypeInfo2 : ICreateTypeInfo
 {
-    HRESULT DeleteFuncDesc(uint);
-    HRESULT DeleteFuncDescByMemId(int, INVOKEKIND);
-    HRESULT DeleteVarDesc(uint);
-    HRESULT DeleteVarDescByMemId(int);
-    HRESULT DeleteImplType(uint);
-    HRESULT SetCustData(const(GUID)*, VARIANT*);
-    HRESULT SetFuncCustData(uint, const(GUID)*, VARIANT*);
-    HRESULT SetParamCustData(uint, uint, const(GUID)*, VARIANT*);
-    HRESULT SetVarCustData(uint, const(GUID)*, VARIANT*);
-    HRESULT SetImplTypeCustData(uint, const(GUID)*, VARIANT*);
-    HRESULT SetHelpStringContext(uint);
-    HRESULT SetFuncHelpStringContext(uint, uint);
-    HRESULT SetVarHelpStringContext(uint, uint);
+    HRESULT DeleteFuncDesc(uint index);
+    HRESULT DeleteFuncDescByMemId(int memid, INVOKEKIND invKind);
+    HRESULT DeleteVarDesc(uint index);
+    HRESULT DeleteVarDescByMemId(int memid);
+    HRESULT DeleteImplType(uint index);
+    HRESULT SetCustData(const(GUID)* guid, VARIANT* pVarVal);
+    HRESULT SetFuncCustData(uint index, const(GUID)* guid, VARIANT* pVarVal);
+    HRESULT SetParamCustData(uint indexFunc, uint indexParam, const(GUID)* guid, VARIANT* pVarVal);
+    HRESULT SetVarCustData(uint index, const(GUID)* guid, VARIANT* pVarVal);
+    HRESULT SetImplTypeCustData(uint index, const(GUID)* guid, VARIANT* pVarVal);
+    HRESULT SetHelpStringContext(uint dwHelpStringContext);
+    HRESULT SetFuncHelpStringContext(uint index, uint dwHelpStringContext);
+    HRESULT SetVarHelpStringContext(uint index, uint dwHelpStringContext);
     HRESULT Invalidate();
-    HRESULT SetName(PWSTR);
+    HRESULT SetName(PWSTR szName);
 }
 enum IID_ICreateTypeLib = GUID(0x20406, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ICreateTypeLib : IUnknown
 {
-    HRESULT CreateTypeInfo(PWSTR, TYPEKIND, ICreateTypeInfo*);
-    HRESULT SetName(PWSTR);
-    HRESULT SetVersion(ushort, ushort);
-    HRESULT SetGuid(const(GUID)*);
-    HRESULT SetDocString(PWSTR);
-    HRESULT SetHelpFileName(PWSTR);
-    HRESULT SetHelpContext(uint);
-    HRESULT SetLcid(uint);
-    HRESULT SetLibFlags(uint);
+    HRESULT CreateTypeInfo(PWSTR szName, TYPEKIND tkind, ICreateTypeInfo* ppCTInfo);
+    HRESULT SetName(PWSTR szName);
+    HRESULT SetVersion(ushort wMajorVerNum, ushort wMinorVerNum);
+    HRESULT SetGuid(const(GUID)* guid);
+    HRESULT SetDocString(PWSTR szDoc);
+    HRESULT SetHelpFileName(PWSTR szHelpFileName);
+    HRESULT SetHelpContext(uint dwHelpContext);
+    HRESULT SetLcid(uint lcid);
+    HRESULT SetLibFlags(uint uLibFlags);
     HRESULT SaveAllChanges();
 }
 enum IID_ICreateTypeLib2 = GUID(0x2040f, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ICreateTypeLib2 : ICreateTypeLib
 {
-    HRESULT DeleteTypeInfo(PWSTR);
-    HRESULT SetCustData(const(GUID)*, VARIANT*);
-    HRESULT SetHelpStringContext(uint);
-    HRESULT SetHelpStringDll(PWSTR);
+    HRESULT DeleteTypeInfo(PWSTR szName);
+    HRESULT SetCustData(const(GUID)* guid, VARIANT* pVarVal);
+    HRESULT SetHelpStringContext(uint dwHelpStringContext);
+    HRESULT SetHelpStringDll(PWSTR szFileName);
 }
 enum IID_IEnumVARIANT = GUID(0x20404, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IEnumVARIANT : IUnknown
 {
-    HRESULT Next(uint, VARIANT*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, VARIANT* rgVar, uint* pCeltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumVARIANT*);
+    HRESULT Clone(IEnumVARIANT* ppEnum);
 }
 alias LIBFLAGS = int;
 enum : int
@@ -1580,69 +1580,69 @@ enum : int
 enum IID_ITypeChangeEvents = GUID(0x20410, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ITypeChangeEvents : IUnknown
 {
-    HRESULT RequestTypeChange(CHANGEKIND, ITypeInfo, PWSTR, int*);
-    HRESULT AfterTypeChange(CHANGEKIND, ITypeInfo, PWSTR);
+    HRESULT RequestTypeChange(CHANGEKIND changeKind, ITypeInfo pTInfoBefore, PWSTR pStrName, int* pfCancel);
+    HRESULT AfterTypeChange(CHANGEKIND changeKind, ITypeInfo pTInfoAfter, PWSTR pStrName);
 }
 enum IID_ICreateErrorInfo = GUID(0x22f03340, 0x547d, 0x101b, [0x8e, 0x65, 0x8, 0x0, 0x2b, 0x2b, 0xd1, 0x19]);
 interface ICreateErrorInfo : IUnknown
 {
-    HRESULT SetGUID(const(GUID)*);
-    HRESULT SetSource(PWSTR);
-    HRESULT SetDescription(PWSTR);
-    HRESULT SetHelpFile(PWSTR);
-    HRESULT SetHelpContext(uint);
+    HRESULT SetGUID(const(GUID)* rguid);
+    HRESULT SetSource(PWSTR szSource);
+    HRESULT SetDescription(PWSTR szDescription);
+    HRESULT SetHelpFile(PWSTR szHelpFile);
+    HRESULT SetHelpContext(uint dwHelpContext);
 }
 enum IID_ITypeFactory = GUID(0x2e, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ITypeFactory : IUnknown
 {
-    HRESULT CreateFromTypeInfo(ITypeInfo, const(GUID)*, IUnknown*);
+    HRESULT CreateFromTypeInfo(ITypeInfo pTypeInfo, const(GUID)* riid, IUnknown* ppv);
 }
 enum IID_ITypeMarshal = GUID(0x2d, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ITypeMarshal : IUnknown
 {
-    HRESULT Size(void*, uint, void*, uint*);
-    HRESULT Marshal(void*, uint, void*, uint, ubyte*, uint*);
-    HRESULT Unmarshal(void*, uint, uint, ubyte*, uint*);
-    HRESULT Free(void*);
+    HRESULT Size(void* pvType, uint dwDestContext, void* pvDestContext, uint* pSize);
+    HRESULT Marshal(void* pvType, uint dwDestContext, void* pvDestContext, uint cbBufferLength, ubyte* pBuffer, uint* pcbWritten);
+    HRESULT Unmarshal(void* pvType, uint dwFlags, uint cbBufferLength, ubyte* pBuffer, uint* pcbRead);
+    HRESULT Free(void* pvType);
 }
 enum IID_IRecordInfo = GUID(0x2f, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IRecordInfo : IUnknown
 {
-    HRESULT RecordInit(void*);
-    HRESULT RecordClear(void*);
-    HRESULT RecordCopy(void*, void*);
-    HRESULT GetGuid(GUID*);
-    HRESULT GetName(BSTR*);
-    HRESULT GetSize(uint*);
-    HRESULT GetTypeInfo(ITypeInfo*);
-    HRESULT GetField(void*, const(wchar)*, VARIANT*);
-    HRESULT GetFieldNoCopy(void*, const(wchar)*, VARIANT*, void**);
-    HRESULT PutField(uint, void*, const(wchar)*, VARIANT*);
-    HRESULT PutFieldNoCopy(uint, void*, const(wchar)*, VARIANT*);
-    HRESULT GetFieldNames(uint*, BSTR*);
-    BOOL IsMatchingType(IRecordInfo);
+    HRESULT RecordInit(void* pvNew);
+    HRESULT RecordClear(void* pvExisting);
+    HRESULT RecordCopy(void* pvExisting, void* pvNew);
+    HRESULT GetGuid(GUID* pguid);
+    HRESULT GetName(BSTR* pbstrName);
+    HRESULT GetSize(uint* pcbSize);
+    HRESULT GetTypeInfo(ITypeInfo* ppTypeInfo);
+    HRESULT GetField(void* pvData, const(wchar)* szFieldName, VARIANT* pvarField);
+    HRESULT GetFieldNoCopy(void* pvData, const(wchar)* szFieldName, VARIANT* pvarField, void** ppvDataCArray);
+    HRESULT PutField(uint wFlags, void* pvData, const(wchar)* szFieldName, VARIANT* pvarField);
+    HRESULT PutFieldNoCopy(uint wFlags, void* pvData, const(wchar)* szFieldName, VARIANT* pvarField);
+    HRESULT GetFieldNames(uint* pcNames, BSTR* rgBstrNames);
+    BOOL IsMatchingType(IRecordInfo pRecordInfo);
     void* RecordCreate();
-    HRESULT RecordCreateCopy(void*, void**);
-    HRESULT RecordDestroy(void*);
+    HRESULT RecordCreateCopy(void* pvSource, void** ppvDest);
+    HRESULT RecordDestroy(void* pvRecord);
 }
 enum IID_IOleAdviseHolder = GUID(0x111, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IOleAdviseHolder : IUnknown
 {
-    HRESULT Advise(IAdviseSink, uint*);
-    HRESULT Unadvise(uint);
-    HRESULT EnumAdvise(IEnumSTATDATA*);
-    HRESULT SendOnRename(IMoniker);
+    HRESULT Advise(IAdviseSink pAdvise, uint* pdwConnection);
+    HRESULT Unadvise(uint dwConnection);
+    HRESULT EnumAdvise(IEnumSTATDATA* ppenumAdvise);
+    HRESULT SendOnRename(IMoniker pmk);
     HRESULT SendOnSave();
     HRESULT SendOnClose();
 }
 enum IID_IOleCache = GUID(0x11e, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IOleCache : IUnknown
 {
-    HRESULT Cache(FORMATETC*, uint, uint*);
-    HRESULT Uncache(uint);
-    HRESULT EnumCache(IEnumSTATDATA*);
-    HRESULT InitCache(IDataObject);
-    HRESULT SetData(FORMATETC*, STGMEDIUM*, BOOL);
+    HRESULT Cache(FORMATETC* pformatetc, uint advf, uint* pdwConnection);
+    HRESULT Uncache(uint dwConnection);
+    HRESULT EnumCache(IEnumSTATDATA* ppenumSTATDATA);
+    HRESULT InitCache(IDataObject pDataObject);
+    HRESULT SetData(FORMATETC* pformatetc, STGMEDIUM* pmedium, BOOL fRelease);
 }
 alias DISCARDCACHE = int;
 enum : int
@@ -1654,34 +1654,34 @@ enum : int
 enum IID_IOleCache2 = GUID(0x128, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IOleCache2 : IOleCache
 {
-    HRESULT UpdateCache(IDataObject, UPDFCACHE_FLAGS, void*);
-    HRESULT DiscardCache(uint);
+    HRESULT UpdateCache(IDataObject pDataObject, UPDFCACHE_FLAGS grfUpdf, void* pReserved);
+    HRESULT DiscardCache(uint dwDiscardOptions);
 }
 enum IID_IOleCacheControl = GUID(0x129, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IOleCacheControl : IUnknown
 {
-    HRESULT OnRun(IDataObject);
+    HRESULT OnRun(IDataObject pDataObject);
     HRESULT OnStop();
 }
 enum IID_IParseDisplayName = GUID(0x11a, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IParseDisplayName : IUnknown
 {
-    HRESULT ParseDisplayName(IBindCtx, PWSTR, uint*, IMoniker*);
+    HRESULT ParseDisplayName(IBindCtx pbc, PWSTR pszDisplayName, uint* pchEaten, IMoniker* ppmkOut);
 }
 enum IID_IOleContainer = GUID(0x11b, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IOleContainer : IParseDisplayName
 {
-    HRESULT EnumObjects(uint, IEnumUnknown*);
-    HRESULT LockContainer(BOOL);
+    HRESULT EnumObjects(uint grfFlags, IEnumUnknown* ppenum);
+    HRESULT LockContainer(BOOL fLock);
 }
 enum IID_IOleClientSite = GUID(0x118, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IOleClientSite : IUnknown
 {
     HRESULT SaveObject();
-    HRESULT GetMoniker(uint, uint, IMoniker*);
-    HRESULT GetContainer(IOleContainer*);
+    HRESULT GetMoniker(uint dwAssign, uint dwWhichMoniker, IMoniker* ppmk);
+    HRESULT GetContainer(IOleContainer* ppContainer);
     HRESULT ShowObject();
-    HRESULT OnShowWindow(BOOL);
+    HRESULT OnShowWindow(BOOL fShow);
     HRESULT RequestNewObjectLayout();
 }
 alias OLEGETMONIKER = int;
@@ -1747,27 +1747,27 @@ enum : int
 enum IID_IOleObject = GUID(0x112, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IOleObject : IUnknown
 {
-    HRESULT SetClientSite(IOleClientSite);
-    HRESULT GetClientSite(IOleClientSite*);
-    HRESULT SetHostNames(const(wchar)*, const(wchar)*);
-    HRESULT Close(uint);
-    HRESULT SetMoniker(uint, IMoniker);
-    HRESULT GetMoniker(uint, uint, IMoniker*);
-    HRESULT InitFromData(IDataObject, BOOL, uint);
-    HRESULT GetClipboardData(uint, IDataObject*);
-    HRESULT DoVerb(int, MSG*, IOleClientSite, int, HWND, RECT*);
-    HRESULT EnumVerbs(IEnumOLEVERB*);
+    HRESULT SetClientSite(IOleClientSite pClientSite);
+    HRESULT GetClientSite(IOleClientSite* ppClientSite);
+    HRESULT SetHostNames(const(wchar)* szContainerApp, const(wchar)* szContainerObj);
+    HRESULT Close(uint dwSaveOption);
+    HRESULT SetMoniker(uint dwWhichMoniker, IMoniker pmk);
+    HRESULT GetMoniker(uint dwAssign, uint dwWhichMoniker, IMoniker* ppmk);
+    HRESULT InitFromData(IDataObject pDataObject, BOOL fCreation, uint dwReserved);
+    HRESULT GetClipboardData(uint dwReserved, IDataObject* ppDataObject);
+    HRESULT DoVerb(int iVerb, MSG* lpmsg, IOleClientSite pActiveSite, int lindex, HWND hwndParent, RECT* lprcPosRect);
+    HRESULT EnumVerbs(IEnumOLEVERB* ppEnumOleVerb);
     HRESULT Update();
     HRESULT IsUpToDate();
-    HRESULT GetUserClassID(GUID*);
-    HRESULT GetUserType(uint, PWSTR*);
-    HRESULT SetExtent(DVASPECT, SIZE*);
-    HRESULT GetExtent(DVASPECT, SIZE*);
-    HRESULT Advise(IAdviseSink, uint*);
-    HRESULT Unadvise(uint);
-    HRESULT EnumAdvise(IEnumSTATDATA*);
-    HRESULT GetMiscStatus(DVASPECT, OLEMISC*);
-    HRESULT SetColorScheme(LOGPALETTE*);
+    HRESULT GetUserClassID(GUID* pClsid);
+    HRESULT GetUserType(uint dwFormOfType, PWSTR* pszUserType);
+    HRESULT SetExtent(DVASPECT dwDrawAspect, SIZE* psizel);
+    HRESULT GetExtent(DVASPECT dwDrawAspect, SIZE* psizel);
+    HRESULT Advise(IAdviseSink pAdvSink, uint* pdwConnection);
+    HRESULT Unadvise(uint dwConnection);
+    HRESULT EnumAdvise(IEnumSTATDATA* ppenumAdvise);
+    HRESULT GetMiscStatus(DVASPECT dwAspect, OLEMISC* pdwStatus);
+    HRESULT SetColorScheme(LOGPALETTE* pLogpal);
 }
 alias OLERENDER = int;
 enum : int
@@ -1792,8 +1792,8 @@ struct OBJECTDESCRIPTOR
 enum IID_IOleWindow = GUID(0x114, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IOleWindow : IUnknown
 {
-    HRESULT GetWindow(HWND*);
-    HRESULT ContextSensitiveHelp(BOOL);
+    HRESULT GetWindow(HWND* phwnd);
+    HRESULT ContextSensitiveHelp(BOOL fEnterMode);
 }
 alias OLEUPDATE = int;
 enum : int
@@ -1811,17 +1811,17 @@ enum : int
 enum IID_IOleLink = GUID(0x11d, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IOleLink : IUnknown
 {
-    HRESULT SetUpdateOptions(uint);
-    HRESULT GetUpdateOptions(uint*);
-    HRESULT SetSourceMoniker(IMoniker, const(GUID)*);
-    HRESULT GetSourceMoniker(IMoniker*);
-    HRESULT SetSourceDisplayName(const(wchar)*);
-    HRESULT GetSourceDisplayName(PWSTR*);
-    HRESULT BindToSource(uint, IBindCtx);
+    HRESULT SetUpdateOptions(uint dwUpdateOpt);
+    HRESULT GetUpdateOptions(uint* pdwUpdateOpt);
+    HRESULT SetSourceMoniker(IMoniker pmk, const(GUID)* rclsid);
+    HRESULT GetSourceMoniker(IMoniker* ppmk);
+    HRESULT SetSourceDisplayName(const(wchar)* pszStatusText);
+    HRESULT GetSourceDisplayName(PWSTR* ppszDisplayName);
+    HRESULT BindToSource(uint bindflags, IBindCtx pbc);
     HRESULT BindIfRunning();
-    HRESULT GetBoundSource(IUnknown*);
+    HRESULT GetBoundSource(IUnknown* ppunk);
     HRESULT UnbindSource();
-    HRESULT Update(IBindCtx);
+    HRESULT Update(IBindCtx pbc);
 }
 alias BINDSPEED = int;
 enum : int
@@ -1844,26 +1844,26 @@ enum : int
 enum IID_IOleItemContainer = GUID(0x11c, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IOleItemContainer : IOleContainer
 {
-    HRESULT GetObject(PWSTR, uint, IBindCtx, const(GUID)*, void**);
-    HRESULT GetObjectStorage(PWSTR, IBindCtx, const(GUID)*, void**);
-    HRESULT IsRunning(PWSTR);
+    HRESULT GetObject(PWSTR pszItem, uint dwSpeedNeeded, IBindCtx pbc, const(GUID)* riid, void** ppvObject);
+    HRESULT GetObjectStorage(PWSTR pszItem, IBindCtx pbc, const(GUID)* riid, void** ppvStorage);
+    HRESULT IsRunning(PWSTR pszItem);
 }
 enum IID_IOleInPlaceUIWindow = GUID(0x115, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IOleInPlaceUIWindow : IOleWindow
 {
-    HRESULT GetBorder(RECT*);
-    HRESULT RequestBorderSpace(RECT*);
-    HRESULT SetBorderSpace(RECT*);
-    HRESULT SetActiveObject(IOleInPlaceActiveObject, const(wchar)*);
+    HRESULT GetBorder(RECT* lprectBorder);
+    HRESULT RequestBorderSpace(RECT* pborderwidths);
+    HRESULT SetBorderSpace(RECT* pborderwidths);
+    HRESULT SetActiveObject(IOleInPlaceActiveObject pActiveObject, const(wchar)* pszObjName);
 }
 enum IID_IOleInPlaceActiveObject = GUID(0x117, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IOleInPlaceActiveObject : IOleWindow
 {
-    HRESULT TranslateAccelerator(MSG*);
-    HRESULT OnFrameWindowActivate(BOOL);
-    HRESULT OnDocWindowActivate(BOOL);
-    HRESULT ResizeBorder(RECT*, IOleInPlaceUIWindow, BOOL);
-    HRESULT EnableModeless(BOOL);
+    HRESULT TranslateAccelerator(MSG* lpmsg);
+    HRESULT OnFrameWindowActivate(BOOL fActivate);
+    HRESULT OnDocWindowActivate(BOOL fActivate);
+    HRESULT ResizeBorder(RECT* prcBorder, IOleInPlaceUIWindow pUIWindow, BOOL fFrameWindow);
+    HRESULT EnableModeless(BOOL fEnable);
 }
 struct OLEINPLACEFRAMEINFO
 {
@@ -1880,19 +1880,19 @@ struct OLEMENUGROUPWIDTHS
 enum IID_IOleInPlaceFrame = GUID(0x116, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IOleInPlaceFrame : IOleInPlaceUIWindow
 {
-    HRESULT InsertMenus(HMENU, OLEMENUGROUPWIDTHS*);
-    HRESULT SetMenu(HMENU, long, HWND);
-    HRESULT RemoveMenus(HMENU);
-    HRESULT SetStatusText(const(wchar)*);
-    HRESULT EnableModeless(BOOL);
-    HRESULT TranslateAccelerator(MSG*, ushort);
+    HRESULT InsertMenus(HMENU hmenuShared, OLEMENUGROUPWIDTHS* lpMenuWidths);
+    HRESULT SetMenu(HMENU hmenuShared, long holemenu, HWND hwndActiveObject);
+    HRESULT RemoveMenus(HMENU hmenuShared);
+    HRESULT SetStatusText(const(wchar)* pszStatusText);
+    HRESULT EnableModeless(BOOL fEnable);
+    HRESULT TranslateAccelerator(MSG* lpmsg, ushort wID);
 }
 enum IID_IOleInPlaceObject = GUID(0x113, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IOleInPlaceObject : IOleWindow
 {
     HRESULT InPlaceDeactivate();
     HRESULT UIDeactivate();
-    HRESULT SetObjectRects(RECT*, RECT*);
+    HRESULT SetObjectRects(RECT* lprcPosRect, RECT* lprcClipRect);
     HRESULT ReactivateAndUndo();
 }
 enum IID_IOleInPlaceSite = GUID(0x119, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
@@ -1901,13 +1901,13 @@ interface IOleInPlaceSite : IOleWindow
     HRESULT CanInPlaceActivate();
     HRESULT OnInPlaceActivate();
     HRESULT OnUIActivate();
-    HRESULT GetWindowContext(IOleInPlaceFrame*, IOleInPlaceUIWindow*, RECT*, RECT*, OLEINPLACEFRAMEINFO*);
-    HRESULT Scroll(SIZE);
-    HRESULT OnUIDeactivate(BOOL);
+    HRESULT GetWindowContext(IOleInPlaceFrame* ppFrame, IOleInPlaceUIWindow* ppDoc, RECT* lprcPosRect, RECT* lprcClipRect, OLEINPLACEFRAMEINFO* lpFrameInfo);
+    HRESULT Scroll(SIZE scrollExtant);
+    HRESULT OnUIDeactivate(BOOL fUndoable);
     HRESULT OnInPlaceDeactivate();
     HRESULT DiscardUndoState();
     HRESULT DeactivateAndUndo();
-    HRESULT OnPosRectChange(RECT*);
+    HRESULT OnPosRectChange(RECT* lprcPosRect);
 }
 enum IID_IContinue = GUID(0x12a, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IContinue : IUnknown
@@ -1917,43 +1917,43 @@ interface IContinue : IUnknown
 enum IID_IViewObject = GUID(0x10d, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IViewObject : IUnknown
 {
-    HRESULT Draw(DVASPECT, int, void*, DVTARGETDEVICE*, HDC, HDC, RECTL*, RECTL*, long, ulong);
-    HRESULT GetColorSet(DVASPECT, int, void*, DVTARGETDEVICE*, HDC, LOGPALETTE**);
-    HRESULT Freeze(DVASPECT, int, void*, uint*);
-    HRESULT Unfreeze(uint);
-    HRESULT SetAdvise(DVASPECT, uint, IAdviseSink);
-    HRESULT GetAdvise(uint*, uint*, IAdviseSink*);
+    HRESULT Draw(DVASPECT dwDrawAspect, int lindex, void* pvAspect, DVTARGETDEVICE* ptd, HDC hdcTargetDev, HDC hdcDraw, RECTL* lprcBounds, RECTL* lprcWBounds, long pfnContinue, ulong dwContinue);
+    HRESULT GetColorSet(DVASPECT dwDrawAspect, int lindex, void* pvAspect, DVTARGETDEVICE* ptd, HDC hicTargetDev, LOGPALETTE** ppColorSet);
+    HRESULT Freeze(DVASPECT dwDrawAspect, int lindex, void* pvAspect, uint* pdwFreeze);
+    HRESULT Unfreeze(uint dwFreeze);
+    HRESULT SetAdvise(DVASPECT aspects, uint advf, IAdviseSink pAdvSink);
+    HRESULT GetAdvise(uint* pAspects, uint* pAdvf, IAdviseSink* ppAdvSink);
 }
 enum IID_IViewObject2 = GUID(0x127, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IViewObject2 : IViewObject
 {
-    HRESULT GetExtent(DVASPECT, int, DVTARGETDEVICE*, SIZE*);
+    HRESULT GetExtent(DVASPECT dwDrawAspect, int lindex, DVTARGETDEVICE* ptd, SIZE* lpsizel);
 }
 enum IID_IDropSource = GUID(0x121, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IDropSource : IUnknown
 {
-    HRESULT QueryContinueDrag(BOOL, MODIFIERKEYS_FLAGS);
-    HRESULT GiveFeedback(DROPEFFECT);
+    HRESULT QueryContinueDrag(BOOL fEscapePressed, MODIFIERKEYS_FLAGS grfKeyState);
+    HRESULT GiveFeedback(DROPEFFECT dwEffect);
 }
 enum IID_IDropTarget = GUID(0x122, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IDropTarget : IUnknown
 {
-    HRESULT DragEnter(IDataObject, MODIFIERKEYS_FLAGS, POINTL, DROPEFFECT*);
-    HRESULT DragOver(MODIFIERKEYS_FLAGS, POINTL, DROPEFFECT*);
+    HRESULT DragEnter(IDataObject pDataObj, MODIFIERKEYS_FLAGS grfKeyState, POINTL pt, DROPEFFECT* pdwEffect);
+    HRESULT DragOver(MODIFIERKEYS_FLAGS grfKeyState, POINTL pt, DROPEFFECT* pdwEffect);
     HRESULT DragLeave();
-    HRESULT Drop(IDataObject, MODIFIERKEYS_FLAGS, POINTL, DROPEFFECT*);
+    HRESULT Drop(IDataObject pDataObj, MODIFIERKEYS_FLAGS grfKeyState, POINTL pt, DROPEFFECT* pdwEffect);
 }
 enum IID_IDropSourceNotify = GUID(0x12b, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IDropSourceNotify : IUnknown
 {
-    HRESULT DragEnterTarget(HWND);
+    HRESULT DragEnterTarget(HWND hwndTarget);
     HRESULT DragLeaveTarget();
 }
 enum IID_IEnterpriseDropTarget = GUID(0x390e3878, 0xfd55, 0x4e18, [0x81, 0x9d, 0x46, 0x82, 0x8, 0x1c, 0xc, 0xfd]);
 interface IEnterpriseDropTarget : IUnknown
 {
-    HRESULT SetDropSourceEnterpriseId(const(wchar)*);
-    HRESULT IsEvaluatingEdpPolicy(BOOL*);
+    HRESULT SetDropSourceEnterpriseId(const(wchar)* identity);
+    HRESULT IsEvaluatingEdpPolicy(BOOL* value);
 }
 struct OLEVERB
 {
@@ -1972,10 +1972,10 @@ enum : int
 enum IID_IEnumOLEVERB = GUID(0x104, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IEnumOLEVERB : IUnknown
 {
-    HRESULT Next(uint, OLEVERB*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, OLEVERB* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumOLEVERB*);
+    HRESULT Clone(IEnumOLEVERB* ppenum);
 }
 struct NUMPARSE
 {
@@ -2020,7 +2020,7 @@ struct INTERFACEDATA
     METHODDATA* pmethdata;
     uint cMembers;
 }
-alias OLESTREAMQUERYCONVERTOLELINKCALLBACK = HRESULT function(GUID*, PWSTR, PWSTR, PWSTR, PWSTR, uint, void*);
+alias OLESTREAMQUERYCONVERTOLELINKCALLBACK = HRESULT function(GUID* pClsid, PWSTR szClass, PWSTR szTopicName, PWSTR szItemName, PWSTR szUNCName, uint linkUpdatingOption, void* pvContext);
 alias UASFLAGS = int;
 enum : int
 {
@@ -2049,14 +2049,14 @@ struct LICINFO
 enum IID_IClassFactory2 = GUID(0xb196b28f, 0xbab4, 0x101a, [0xb6, 0x9c, 0x0, 0xaa, 0x0, 0x34, 0x1d, 0x7]);
 interface IClassFactory2 : IClassFactory
 {
-    HRESULT GetLicInfo(LICINFO*);
-    HRESULT RequestLicKey(uint, BSTR*);
-    HRESULT CreateInstanceLic(IUnknown, IUnknown, const(GUID)*, BSTR, void**);
+    HRESULT GetLicInfo(LICINFO* pLicInfo);
+    HRESULT RequestLicKey(uint dwReserved, BSTR* pBstrKey);
+    HRESULT CreateInstanceLic(IUnknown pUnkOuter, IUnknown pUnkReserved, const(GUID)* riid, BSTR bstrKey, void** ppvObj);
 }
 enum IID_IProvideClassInfo = GUID(0xb196b283, 0xbab4, 0x101a, [0xb6, 0x9c, 0x0, 0xaa, 0x0, 0x34, 0x1d, 0x7]);
 interface IProvideClassInfo : IUnknown
 {
-    HRESULT GetClassInfo(ITypeInfo*);
+    HRESULT GetClassInfo(ITypeInfo* ppTI);
 }
 alias GUIDKIND = int;
 enum : int
@@ -2067,13 +2067,13 @@ enum : int
 enum IID_IProvideClassInfo2 = GUID(0xa6bc3ac0, 0xdbaa, 0x11ce, [0x9d, 0xe3, 0x0, 0xaa, 0x0, 0x4b, 0xb8, 0x51]);
 interface IProvideClassInfo2 : IProvideClassInfo
 {
-    HRESULT GetGUID(uint, GUID*);
+    HRESULT GetGUID(uint dwGuidKind, GUID* pGUID);
 }
 enum IID_IProvideMultipleClassInfo = GUID(0xa7aba9c1, 0x8983, 0x11cf, [0x8f, 0x20, 0x0, 0x80, 0x5f, 0x2c, 0xd0, 0x64]);
 interface IProvideMultipleClassInfo : IProvideClassInfo2
 {
-    HRESULT GetMultiTypeInfoCount(uint*);
-    HRESULT GetInfoOfIndex(uint, MULTICLASSINFO_FLAGS, ITypeInfo*, uint*, uint*, GUID*, GUID*);
+    HRESULT GetMultiTypeInfoCount(uint* pcti);
+    HRESULT GetInfoOfIndex(uint iti, MULTICLASSINFO_FLAGS dwFlags, ITypeInfo* pptiCoClass, uint* pdwTIFlags, uint* pcdispidReserved, GUID* piidPrimary, GUID* piidSource);
 }
 struct CONTROLINFO
 {
@@ -2092,10 +2092,10 @@ enum : int
 enum IID_IOleControl = GUID(0xb196b288, 0xbab4, 0x101a, [0xb6, 0x9c, 0x0, 0xaa, 0x0, 0x34, 0x1d, 0x7]);
 interface IOleControl : IUnknown
 {
-    HRESULT GetControlInfo(CONTROLINFO*);
-    HRESULT OnMnemonic(MSG*);
-    HRESULT OnAmbientPropertyChange(int);
-    HRESULT FreezeEvents(BOOL);
+    HRESULT GetControlInfo(CONTROLINFO* pCI);
+    HRESULT OnMnemonic(MSG* pMsg);
+    HRESULT OnAmbientPropertyChange(int dispID);
+    HRESULT FreezeEvents(BOOL bFreeze);
 }
 struct POINTF
 {
@@ -2116,11 +2116,11 @@ enum IID_IOleControlSite = GUID(0xb196b289, 0xbab4, 0x101a, [0xb6, 0x9c, 0x0, 0x
 interface IOleControlSite : IUnknown
 {
     HRESULT OnControlInfoChanged();
-    HRESULT LockInPlaceActive(BOOL);
-    HRESULT GetExtendedControl(IDispatch*);
-    HRESULT TransformCoords(POINTL*, POINTF*, uint);
-    HRESULT TranslateAccelerator(MSG*, KEYMODIFIERS);
-    HRESULT OnFocus(BOOL);
+    HRESULT LockInPlaceActive(BOOL fLock);
+    HRESULT GetExtendedControl(IDispatch* ppDisp);
+    HRESULT TransformCoords(POINTL* pPtlHimetric, POINTF* pPtfContainer, uint dwFlags);
+    HRESULT TranslateAccelerator(MSG* pMsg, KEYMODIFIERS grfModifiers);
+    HRESULT OnFocus(BOOL fGotFocus);
     HRESULT ShowPropertyFrame();
 }
 struct PROPPAGEINFO
@@ -2135,22 +2135,22 @@ struct PROPPAGEINFO
 enum IID_IPropertyPage = GUID(0xb196b28d, 0xbab4, 0x101a, [0xb6, 0x9c, 0x0, 0xaa, 0x0, 0x34, 0x1d, 0x7]);
 interface IPropertyPage : IUnknown
 {
-    HRESULT SetPageSite(IPropertyPageSite);
-    HRESULT Activate(HWND, RECT*, BOOL);
+    HRESULT SetPageSite(IPropertyPageSite pPageSite);
+    HRESULT Activate(HWND hWndParent, RECT* pRect, BOOL bModal);
     HRESULT Deactivate();
-    HRESULT GetPageInfo(PROPPAGEINFO*);
-    HRESULT SetObjects(uint, IUnknown*);
-    HRESULT Show(uint);
-    HRESULT Move(RECT*);
+    HRESULT GetPageInfo(PROPPAGEINFO* pPageInfo);
+    HRESULT SetObjects(uint cObjects, IUnknown* ppUnk);
+    HRESULT Show(uint nCmdShow);
+    HRESULT Move(RECT* pRect);
     HRESULT IsPageDirty();
     HRESULT Apply();
-    HRESULT Help(const(wchar)*);
-    HRESULT TranslateAccelerator(MSG*);
+    HRESULT Help(const(wchar)* pszHelpDir);
+    HRESULT TranslateAccelerator(MSG* pMsg);
 }
 enum IID_IPropertyPage2 = GUID(0x1e44665, 0x24ac, 0x101b, [0x84, 0xed, 0x8, 0x0, 0x2b, 0x2e, 0xc7, 0x13]);
 interface IPropertyPage2 : IPropertyPage
 {
-    HRESULT EditProperty(int);
+    HRESULT EditProperty(int dispID);
 }
 alias PROPPAGESTATUS = int;
 enum : int
@@ -2163,16 +2163,16 @@ enum : int
 enum IID_IPropertyPageSite = GUID(0xb196b28c, 0xbab4, 0x101a, [0xb6, 0x9c, 0x0, 0xaa, 0x0, 0x34, 0x1d, 0x7]);
 interface IPropertyPageSite : IUnknown
 {
-    HRESULT OnStatusChange(uint);
-    HRESULT GetLocaleID(uint*);
-    HRESULT GetPageContainer(IUnknown*);
-    HRESULT TranslateAccelerator(MSG*);
+    HRESULT OnStatusChange(uint dwFlags);
+    HRESULT GetLocaleID(uint* pLocaleID);
+    HRESULT GetPageContainer(IUnknown* ppUnk);
+    HRESULT TranslateAccelerator(MSG* pMsg);
 }
 enum IID_IPropertyNotifySink = GUID(0x9bfbbc02, 0xeff1, 0x101a, [0x84, 0xed, 0x0, 0xaa, 0x0, 0x34, 0x1d, 0x7]);
 interface IPropertyNotifySink : IUnknown
 {
-    HRESULT OnChanged(int);
-    HRESULT OnRequestEdit(int);
+    HRESULT OnChanged(int dispID);
+    HRESULT OnRequestEdit(int dispID);
 }
 struct CAUUID
 {
@@ -2182,48 +2182,48 @@ struct CAUUID
 enum IID_ISpecifyPropertyPages = GUID(0xb196b28b, 0xbab4, 0x101a, [0xb6, 0x9c, 0x0, 0xaa, 0x0, 0x34, 0x1d, 0x7]);
 interface ISpecifyPropertyPages : IUnknown
 {
-    HRESULT GetPages(CAUUID*);
+    HRESULT GetPages(CAUUID* pPages);
 }
 enum IID_IPersistPropertyBag = GUID(0x37d84f60, 0x42cb, 0x11ce, [0x81, 0x35, 0x0, 0xaa, 0x0, 0x4b, 0xb8, 0x51]);
 interface IPersistPropertyBag : IPersist
 {
     HRESULT InitNew();
-    HRESULT Load(IPropertyBag, IErrorLog);
-    HRESULT Save(IPropertyBag, BOOL, BOOL);
+    HRESULT Load(IPropertyBag pPropBag, IErrorLog pErrorLog);
+    HRESULT Save(IPropertyBag pPropBag, BOOL fClearDirty, BOOL fSaveAllProperties);
 }
 enum IID_ISimpleFrameSite = GUID(0x742b0e01, 0x14e6, 0x101b, [0x91, 0x4e, 0x0, 0xaa, 0x0, 0x30, 0xc, 0xab]);
 interface ISimpleFrameSite : IUnknown
 {
-    HRESULT PreMessageFilter(HWND, uint, WPARAM, LPARAM, LRESULT*, uint*);
-    HRESULT PostMessageFilter(HWND, uint, WPARAM, LPARAM, LRESULT*, uint);
+    HRESULT PreMessageFilter(HWND hWnd, uint msg, WPARAM wp, LPARAM lp, LRESULT* plResult, uint* pdwCookie);
+    HRESULT PostMessageFilter(HWND hWnd, uint msg, WPARAM wp, LPARAM lp, LRESULT* plResult, uint dwCookie);
 }
 enum IID_IFont = GUID(0xbef6e002, 0xa874, 0x101a, [0x8b, 0xba, 0x0, 0xaa, 0x0, 0x30, 0xc, 0xab]);
 interface IFont : IUnknown
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT put_Name(BSTR);
-    HRESULT get_Size(CY*);
-    HRESULT put_Size(CY);
-    HRESULT get_Bold(BOOL*);
-    HRESULT put_Bold(BOOL);
-    HRESULT get_Italic(BOOL*);
-    HRESULT put_Italic(BOOL);
-    HRESULT get_Underline(BOOL*);
-    HRESULT put_Underline(BOOL);
-    HRESULT get_Strikethrough(BOOL*);
-    HRESULT put_Strikethrough(BOOL);
-    HRESULT get_Weight(short*);
-    HRESULT put_Weight(short);
-    HRESULT get_Charset(short*);
-    HRESULT put_Charset(short);
-    HRESULT get_hFont(HFONT*);
-    HRESULT Clone(IFont*);
-    HRESULT IsEqual(IFont);
-    HRESULT SetRatio(int, int);
-    HRESULT QueryTextMetrics(TEXTMETRICW*);
-    HRESULT AddRefHfont(HFONT);
-    HRESULT ReleaseHfont(HFONT);
-    HRESULT SetHdc(HDC);
+    HRESULT get_Name(BSTR* pName);
+    HRESULT put_Name(BSTR name);
+    HRESULT get_Size(CY* pSize);
+    HRESULT put_Size(CY size);
+    HRESULT get_Bold(BOOL* pBold);
+    HRESULT put_Bold(BOOL bold);
+    HRESULT get_Italic(BOOL* pItalic);
+    HRESULT put_Italic(BOOL italic);
+    HRESULT get_Underline(BOOL* pUnderline);
+    HRESULT put_Underline(BOOL underline);
+    HRESULT get_Strikethrough(BOOL* pStrikethrough);
+    HRESULT put_Strikethrough(BOOL strikethrough);
+    HRESULT get_Weight(short* pWeight);
+    HRESULT put_Weight(short weight);
+    HRESULT get_Charset(short* pCharset);
+    HRESULT put_Charset(short charset);
+    HRESULT get_hFont(HFONT* phFont);
+    HRESULT Clone(IFont* ppFont);
+    HRESULT IsEqual(IFont pFontOther);
+    HRESULT SetRatio(int cyLogical, int cyHimetric);
+    HRESULT QueryTextMetrics(TEXTMETRICW* pTM);
+    HRESULT AddRefHfont(HFONT hFont);
+    HRESULT ReleaseHfont(HFONT hFont);
+    HRESULT SetHdc(HDC hDC);
 }
 alias PICTUREATTRIBUTES = int;
 enum : int
@@ -2235,38 +2235,38 @@ enum : int
 enum IID_IPicture = GUID(0x7bf80980, 0xbf32, 0x101a, [0x8b, 0xbb, 0x0, 0xaa, 0x0, 0x30, 0xc, 0xab]);
 interface IPicture : IUnknown
 {
-    HRESULT get_Handle(OLE_HANDLE*);
-    HRESULT get_hPal(OLE_HANDLE*);
-    HRESULT get_Type(PICTYPE*);
-    HRESULT get_Width(int*);
-    HRESULT get_Height(int*);
-    HRESULT Render(HDC, int, int, int, int, int, int, int, int, RECT*);
-    HRESULT set_hPal(OLE_HANDLE);
-    HRESULT get_CurDC(HDC*);
-    HRESULT SelectPicture(HDC, HDC*, OLE_HANDLE*);
-    HRESULT get_KeepOriginalFormat(BOOL*);
-    HRESULT put_KeepOriginalFormat(BOOL);
+    HRESULT get_Handle(OLE_HANDLE* pHandle);
+    HRESULT get_hPal(OLE_HANDLE* phPal);
+    HRESULT get_Type(PICTYPE* pType);
+    HRESULT get_Width(int* pWidth);
+    HRESULT get_Height(int* pHeight);
+    HRESULT Render(HDC hDC, int x, int y, int cx, int cy, int xSrc, int ySrc, int cxSrc, int cySrc, RECT* pRcWBounds);
+    HRESULT set_hPal(OLE_HANDLE hPal);
+    HRESULT get_CurDC(HDC* phDC);
+    HRESULT SelectPicture(HDC hDCIn, HDC* phDCOut, OLE_HANDLE* phBmpOut);
+    HRESULT get_KeepOriginalFormat(BOOL* pKeep);
+    HRESULT put_KeepOriginalFormat(BOOL keep);
     HRESULT PictureChanged();
-    HRESULT SaveAsFile(IStream, BOOL, int*);
-    HRESULT get_Attributes(uint*);
+    HRESULT SaveAsFile(IStream pStream, BOOL fSaveMemCopy, int* pCbSize);
+    HRESULT get_Attributes(uint* pDwAttr);
 }
 enum IID_IPicture2 = GUID(0xf5185dd8, 0x2012, 0x4b0b, [0xaa, 0xd9, 0xf0, 0x52, 0xc6, 0xbd, 0x48, 0x2b]);
 interface IPicture2 : IUnknown
 {
-    HRESULT get_Handle(ulong*);
-    HRESULT get_hPal(ulong*);
-    HRESULT get_Type(short*);
-    HRESULT get_Width(int*);
-    HRESULT get_Height(int*);
-    HRESULT Render(HDC, int, int, int, int, int, int, int, int, RECT*);
-    HRESULT set_hPal(ulong);
-    HRESULT get_CurDC(HDC*);
-    HRESULT SelectPicture(HDC, HDC*, ulong*);
-    HRESULT get_KeepOriginalFormat(BOOL*);
-    HRESULT put_KeepOriginalFormat(BOOL);
+    HRESULT get_Handle(ulong* pHandle);
+    HRESULT get_hPal(ulong* phPal);
+    HRESULT get_Type(short* pType);
+    HRESULT get_Width(int* pWidth);
+    HRESULT get_Height(int* pHeight);
+    HRESULT Render(HDC hDC, int x, int y, int cx, int cy, int xSrc, int ySrc, int cxSrc, int cySrc, RECT* pRcWBounds);
+    HRESULT set_hPal(ulong hPal);
+    HRESULT get_CurDC(HDC* phDC);
+    HRESULT SelectPicture(HDC hDCIn, HDC* phDCOut, ulong* phBmpOut);
+    HRESULT get_KeepOriginalFormat(BOOL* pKeep);
+    HRESULT put_KeepOriginalFormat(BOOL keep);
     HRESULT PictureChanged();
-    HRESULT SaveAsFile(IStream, BOOL, int*);
-    HRESULT get_Attributes(uint*);
+    HRESULT SaveAsFile(IStream pStream, BOOL fSaveMemCopy, int* pCbSize);
+    HRESULT get_Attributes(uint* pDwAttr);
 }
 enum IID_IFontEventsDisp = GUID(0x4ef6100a, 0xaf88, 0x11d0, [0x98, 0x46, 0x0, 0xc0, 0x4f, 0xc2, 0x99, 0x93]);
 interface IFontEventsDisp : IDispatch
@@ -2283,8 +2283,8 @@ interface IPictureDisp : IDispatch
 enum IID_IOleInPlaceObjectWindowless = GUID(0x1c2056cc, 0x5ef4, 0x101b, [0x8b, 0xc8, 0x0, 0xaa, 0x0, 0x3e, 0x3b, 0x29]);
 interface IOleInPlaceObjectWindowless : IOleInPlaceObject
 {
-    HRESULT OnWindowMessage(uint, WPARAM, LPARAM, LRESULT*);
-    HRESULT GetDropTarget(IDropTarget*);
+    HRESULT OnWindowMessage(uint msg, WPARAM wParam, LPARAM lParam, LRESULT* plResult);
+    HRESULT GetDropTarget(IDropTarget* ppDropTarget);
 }
 alias ACTIVATEFLAGS = int;
 enum : int
@@ -2295,8 +2295,8 @@ enum : int
 enum IID_IOleInPlaceSiteEx = GUID(0x9c2cad80, 0x3424, 0x11cf, [0xb6, 0x70, 0x0, 0xaa, 0x0, 0x4c, 0xd6, 0xd8]);
 interface IOleInPlaceSiteEx : IOleInPlaceSite
 {
-    HRESULT OnInPlaceActivateEx(BOOL*, uint);
-    HRESULT OnInPlaceDeactivateEx(BOOL);
+    HRESULT OnInPlaceActivateEx(BOOL* pfNoRedraw, uint dwFlags);
+    HRESULT OnInPlaceDeactivateEx(BOOL fNoRedraw);
     HRESULT RequestUIActivate();
 }
 alias OLEDCFLAGS = int;
@@ -2312,16 +2312,16 @@ interface IOleInPlaceSiteWindowless : IOleInPlaceSiteEx
 {
     HRESULT CanWindowlessActivate();
     HRESULT GetCapture();
-    HRESULT SetCapture(BOOL);
+    HRESULT SetCapture(BOOL fCapture);
     HRESULT GetFocus();
-    HRESULT SetFocus(BOOL);
-    HRESULT GetDC(RECT*, uint, HDC*);
-    HRESULT ReleaseDC(HDC);
-    HRESULT InvalidateRect(RECT*, BOOL);
-    HRESULT InvalidateRgn(HRGN, BOOL);
-    HRESULT ScrollRect(int, int, RECT*, RECT*);
-    HRESULT AdjustRect(RECT*);
-    HRESULT OnDefWindowMessage(uint, WPARAM, LPARAM, LRESULT*);
+    HRESULT SetFocus(BOOL fFocus);
+    HRESULT GetDC(RECT* pRect, uint grfFlags, HDC* phDC);
+    HRESULT ReleaseDC(HDC hDC);
+    HRESULT InvalidateRect(RECT* pRect, BOOL fErase);
+    HRESULT InvalidateRgn(HRGN hRGN, BOOL fErase);
+    HRESULT ScrollRect(int dx, int dy, RECT* pRectScroll, RECT* pRectClip);
+    HRESULT AdjustRect(RECT* prc);
+    HRESULT OnDefWindowMessage(uint msg, WPARAM wParam, LPARAM lParam, LRESULT* plResult);
 }
 alias VIEWSTATUS = int;
 enum : int
@@ -2370,52 +2370,52 @@ struct DVASPECTINFO
 enum IID_IViewObjectEx = GUID(0x3af24292, 0xc96, 0x11ce, [0xa0, 0xcf, 0x0, 0xaa, 0x0, 0x60, 0xa, 0xb8]);
 interface IViewObjectEx : IViewObject2
 {
-    HRESULT GetRect(uint, RECTL*);
-    HRESULT GetViewStatus(uint*);
-    HRESULT QueryHitPoint(uint, RECT*, POINT, int, uint*);
-    HRESULT QueryHitRect(uint, RECT*, RECT*, int, uint*);
-    HRESULT GetNaturalExtent(DVASPECT, int, DVTARGETDEVICE*, HDC, DVEXTENTINFO*, SIZE*);
+    HRESULT GetRect(uint dwAspect, RECTL* pRect);
+    HRESULT GetViewStatus(uint* pdwStatus);
+    HRESULT QueryHitPoint(uint dwAspect, RECT* pRectBounds, POINT ptlLoc, int lCloseHint, uint* pHitResult);
+    HRESULT QueryHitRect(uint dwAspect, RECT* pRectBounds, RECT* pRectLoc, int lCloseHint, uint* pHitResult);
+    HRESULT GetNaturalExtent(DVASPECT dwAspect, int lindex, DVTARGETDEVICE* ptd, HDC hicTargetDev, DVEXTENTINFO* pExtentInfo, SIZE* pSizel);
 }
 enum IID_IOleUndoUnit = GUID(0x894ad3b0, 0xef97, 0x11ce, [0x9b, 0xc9, 0x0, 0xaa, 0x0, 0x60, 0x8e, 0x1]);
 interface IOleUndoUnit : IUnknown
 {
-    HRESULT Do(IOleUndoManager);
-    HRESULT GetDescription(BSTR*);
-    HRESULT GetUnitType(GUID*, int*);
+    HRESULT Do(IOleUndoManager pUndoManager);
+    HRESULT GetDescription(BSTR* pBstr);
+    HRESULT GetUnitType(GUID* pClsid, int* plID);
     HRESULT OnNextAdd();
 }
 enum IID_IOleParentUndoUnit = GUID(0xa1faf330, 0xef97, 0x11ce, [0x9b, 0xc9, 0x0, 0xaa, 0x0, 0x60, 0x8e, 0x1]);
 interface IOleParentUndoUnit : IOleUndoUnit
 {
-    HRESULT Open(IOleParentUndoUnit);
-    HRESULT Close(IOleParentUndoUnit, BOOL);
-    HRESULT Add(IOleUndoUnit);
-    HRESULT FindUnit(IOleUndoUnit);
-    HRESULT GetParentState(uint*);
+    HRESULT Open(IOleParentUndoUnit pPUU);
+    HRESULT Close(IOleParentUndoUnit pPUU, BOOL fCommit);
+    HRESULT Add(IOleUndoUnit pUU);
+    HRESULT FindUnit(IOleUndoUnit pUU);
+    HRESULT GetParentState(uint* pdwState);
 }
 enum IID_IEnumOleUndoUnits = GUID(0xb3e7c340, 0xef97, 0x11ce, [0x9b, 0xc9, 0x0, 0xaa, 0x0, 0x60, 0x8e, 0x1]);
 interface IEnumOleUndoUnits : IUnknown
 {
-    HRESULT Next(uint, IOleUndoUnit*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint cElt, IOleUndoUnit* rgElt, uint* pcEltFetched);
+    HRESULT Skip(uint cElt);
     HRESULT Reset();
-    HRESULT Clone(IEnumOleUndoUnits*);
+    HRESULT Clone(IEnumOleUndoUnits* ppEnum);
 }
 enum IID_IOleUndoManager = GUID(0xd001f200, 0xef97, 0x11ce, [0x9b, 0xc9, 0x0, 0xaa, 0x0, 0x60, 0x8e, 0x1]);
 interface IOleUndoManager : IUnknown
 {
-    HRESULT Open(IOleParentUndoUnit);
-    HRESULT Close(IOleParentUndoUnit, BOOL);
-    HRESULT Add(IOleUndoUnit);
-    HRESULT GetOpenParentState(uint*);
-    HRESULT DiscardFrom(IOleUndoUnit);
-    HRESULT UndoTo(IOleUndoUnit);
-    HRESULT RedoTo(IOleUndoUnit);
-    HRESULT EnumUndoable(IEnumOleUndoUnits*);
-    HRESULT EnumRedoable(IEnumOleUndoUnits*);
-    HRESULT GetLastUndoDescription(BSTR*);
-    HRESULT GetLastRedoDescription(BSTR*);
-    HRESULT Enable(BOOL);
+    HRESULT Open(IOleParentUndoUnit pPUU);
+    HRESULT Close(IOleParentUndoUnit pPUU, BOOL fCommit);
+    HRESULT Add(IOleUndoUnit pUU);
+    HRESULT GetOpenParentState(uint* pdwState);
+    HRESULT DiscardFrom(IOleUndoUnit pUU);
+    HRESULT UndoTo(IOleUndoUnit pUU);
+    HRESULT RedoTo(IOleUndoUnit pUU);
+    HRESULT EnumUndoable(IEnumOleUndoUnits* ppEnum);
+    HRESULT EnumRedoable(IEnumOleUndoUnits* ppEnum);
+    HRESULT GetLastUndoDescription(BSTR* pBstr);
+    HRESULT GetLastRedoDescription(BSTR* pBstr);
+    HRESULT Enable(BOOL fEnable);
 }
 alias POINTERINACTIVE = int;
 enum : int
@@ -2428,15 +2428,15 @@ enum : int
 enum IID_IPointerInactive = GUID(0x55980ba0, 0x35aa, 0x11cf, [0xb6, 0x71, 0x0, 0xaa, 0x0, 0x4c, 0xd6, 0xd8]);
 interface IPointerInactive : IUnknown
 {
-    HRESULT GetActivationPolicy(POINTERINACTIVE*);
-    HRESULT OnInactiveMouseMove(RECT*, int, int, uint);
-    HRESULT OnInactiveSetCursor(RECT*, int, int, uint, BOOL);
+    HRESULT GetActivationPolicy(POINTERINACTIVE* pdwPolicy);
+    HRESULT OnInactiveMouseMove(RECT* pRectBounds, int x, int y, uint grfKeyState);
+    HRESULT OnInactiveSetCursor(RECT* pRectBounds, int x, int y, uint dwMouseMsg, BOOL fSetAlways);
 }
 enum IID_IObjectWithSite = GUID(0xfc4801a3, 0x2ba9, 0x11cf, [0xa2, 0x29, 0x0, 0xaa, 0x0, 0x3d, 0x73, 0x52]);
 interface IObjectWithSite : IUnknown
 {
-    HRESULT SetSite(IUnknown);
-    HRESULT GetSite(const(GUID)*, void**);
+    HRESULT SetSite(IUnknown pUnkSite);
+    HRESULT GetSite(const(GUID)* riid, void** ppvSite);
 }
 struct CALPOLESTR
 {
@@ -2451,10 +2451,10 @@ struct CADWORD
 enum IID_IPerPropertyBrowsing = GUID(0x376bd3aa, 0x3845, 0x101b, [0x84, 0xed, 0x8, 0x0, 0x2b, 0x2e, 0xc7, 0x13]);
 interface IPerPropertyBrowsing : IUnknown
 {
-    HRESULT GetDisplayString(int, BSTR*);
-    HRESULT MapPropertyToPage(int, GUID*);
-    HRESULT GetPredefinedStrings(int, CALPOLESTR*, CADWORD*);
-    HRESULT GetPredefinedValue(int, uint, VARIANT*);
+    HRESULT GetDisplayString(int dispID, BSTR* pBstr);
+    HRESULT MapPropertyToPage(int dispID, GUID* pClsid);
+    HRESULT GetPredefinedStrings(int dispID, CALPOLESTR* pCaStringsOut, CADWORD* pCaCookiesOut);
+    HRESULT GetPredefinedValue(int dispID, uint dwCookie, VARIANT* pVarOut);
 }
 alias PROPBAG2_TYPE = int;
 enum : int
@@ -2472,14 +2472,14 @@ enum IID_IPersistPropertyBag2 = GUID(0x22f55881, 0x280b, 0x11d0, [0xa8, 0xa9, 0x
 interface IPersistPropertyBag2 : IPersist
 {
     HRESULT InitNew();
-    HRESULT Load(IPropertyBag2, IErrorLog);
-    HRESULT Save(IPropertyBag2, BOOL, BOOL);
+    HRESULT Load(IPropertyBag2 pPropBag, IErrorLog pErrLog);
+    HRESULT Save(IPropertyBag2 pPropBag, BOOL fClearDirty, BOOL fSaveAllProperties);
     HRESULT IsDirty();
 }
 enum IID_IAdviseSinkEx = GUID(0x3af24290, 0xc96, 0x11ce, [0xa0, 0xcf, 0x0, 0xaa, 0x0, 0x60, 0xa, 0xb8]);
 interface IAdviseSinkEx : IAdviseSink
 {
-    void OnViewStatusChange(uint);
+    void OnViewStatusChange(uint dwViewStatus);
 }
 alias QACONTAINERFLAGS = int;
 enum : int
@@ -2525,9 +2525,9 @@ struct QACONTROL
 enum IID_IQuickActivate = GUID(0xcf51ed10, 0x62fe, 0x11cf, [0xbf, 0x86, 0x0, 0xa0, 0xc9, 0x3, 0x48, 0x36]);
 interface IQuickActivate : IUnknown
 {
-    HRESULT QuickActivate(QACONTAINER*, QACONTROL*);
-    HRESULT SetContentExtent(SIZE*);
-    HRESULT GetContentExtent(SIZE*);
+    HRESULT QuickActivate(QACONTAINER* pQaContainer, QACONTROL* pQaControl);
+    HRESULT SetContentExtent(SIZE* pSizel);
+    HRESULT GetContentExtent(SIZE* pSizel);
 }
 struct OCPFIPARAMS
 {
@@ -2592,22 +2592,22 @@ enum : int
 enum IID_IVBGetControl = GUID(0x40a050a0, 0x3c31, 0x101b, [0xa8, 0x2e, 0x8, 0x0, 0x2b, 0x2b, 0x23, 0x37]);
 interface IVBGetControl : IUnknown
 {
-    HRESULT EnumControls(uint, ENUM_CONTROLS_WHICH_FLAGS, IEnumUnknown*);
+    HRESULT EnumControls(uint dwOleContF, ENUM_CONTROLS_WHICH_FLAGS dwWhich, IEnumUnknown* ppenumUnk);
 }
 enum IID_IGetOleObject = GUID(0x8a701da0, 0x4feb, 0x101b, [0xa8, 0x2e, 0x8, 0x0, 0x2b, 0x2b, 0x23, 0x37]);
 interface IGetOleObject : IUnknown
 {
-    HRESULT GetOleObject(const(GUID)*, void**);
+    HRESULT GetOleObject(const(GUID)* riid, void** ppvObj);
 }
 enum IID_IVBFormat = GUID(0x9849fd60, 0x3768, 0x101b, [0x8d, 0x72, 0xae, 0x61, 0x64, 0xff, 0xe3, 0xcf]);
 interface IVBFormat : IUnknown
 {
-    HRESULT Format(VARIANT*, BSTR, void*, ushort, int, short, ushort, ushort*);
+    HRESULT Format(VARIANT* vData, BSTR bstrFormat, void* lpBuffer, ushort cb, int lcid, short sFirstDayOfWeek, ushort sFirstWeekOfYear, ushort* rcb);
 }
 enum IID_IGetVBAObject = GUID(0x91733a60, 0x3f4c, 0x101b, [0xa3, 0xf6, 0x0, 0xaa, 0x0, 0x34, 0xe4, 0xe9]);
 interface IGetVBAObject : IUnknown
 {
-    HRESULT GetObject(const(GUID)*, void**, uint);
+    HRESULT GetObject(const(GUID)* riid, void** ppvObj, uint dwReserved);
 }
 alias DOCMISC = int;
 enum : int
@@ -2621,45 +2621,45 @@ enum : int
 enum IID_IOleDocument = GUID(0xb722bcc5, 0x4e68, 0x101b, [0xa2, 0xbc, 0x0, 0xaa, 0x0, 0x40, 0x47, 0x70]);
 interface IOleDocument : IUnknown
 {
-    HRESULT CreateView(IOleInPlaceSite, IStream, uint, IOleDocumentView*);
-    HRESULT GetDocMiscStatus(uint*);
-    HRESULT EnumViews(IEnumOleDocumentViews*, IOleDocumentView*);
+    HRESULT CreateView(IOleInPlaceSite pIPSite, IStream pstm, uint dwReserved, IOleDocumentView* ppView);
+    HRESULT GetDocMiscStatus(uint* pdwStatus);
+    HRESULT EnumViews(IEnumOleDocumentViews* ppEnum, IOleDocumentView* ppView);
 }
 enum IID_IOleDocumentSite = GUID(0xb722bcc7, 0x4e68, 0x101b, [0xa2, 0xbc, 0x0, 0xaa, 0x0, 0x40, 0x47, 0x70]);
 interface IOleDocumentSite : IUnknown
 {
-    HRESULT ActivateMe(IOleDocumentView);
+    HRESULT ActivateMe(IOleDocumentView pViewToActivate);
 }
 enum IID_IOleDocumentView = GUID(0xb722bcc6, 0x4e68, 0x101b, [0xa2, 0xbc, 0x0, 0xaa, 0x0, 0x40, 0x47, 0x70]);
 interface IOleDocumentView : IUnknown
 {
-    HRESULT SetInPlaceSite(IOleInPlaceSite);
-    HRESULT GetInPlaceSite(IOleInPlaceSite*);
-    HRESULT GetDocument(IUnknown*);
-    HRESULT SetRect(RECT*);
-    HRESULT GetRect(RECT*);
-    HRESULT SetRectComplex(RECT*, RECT*, RECT*, RECT*);
-    HRESULT Show(BOOL);
-    HRESULT UIActivate(BOOL);
+    HRESULT SetInPlaceSite(IOleInPlaceSite pIPSite);
+    HRESULT GetInPlaceSite(IOleInPlaceSite* ppIPSite);
+    HRESULT GetDocument(IUnknown* ppunk);
+    HRESULT SetRect(RECT* prcView);
+    HRESULT GetRect(RECT* prcView);
+    HRESULT SetRectComplex(RECT* prcView, RECT* prcHScroll, RECT* prcVScroll, RECT* prcSizeBox);
+    HRESULT Show(BOOL fShow);
+    HRESULT UIActivate(BOOL fUIActivate);
     HRESULT Open();
-    HRESULT CloseView(uint);
-    HRESULT SaveViewState(IStream);
-    HRESULT ApplyViewState(IStream);
-    HRESULT Clone(IOleInPlaceSite, IOleDocumentView*);
+    HRESULT CloseView(uint dwReserved);
+    HRESULT SaveViewState(IStream pstm);
+    HRESULT ApplyViewState(IStream pstm);
+    HRESULT Clone(IOleInPlaceSite pIPSiteNew, IOleDocumentView* ppViewNew);
 }
 enum IID_IEnumOleDocumentViews = GUID(0xb722bcc8, 0x4e68, 0x101b, [0xa2, 0xbc, 0x0, 0xaa, 0x0, 0x40, 0x47, 0x70]);
 interface IEnumOleDocumentViews : IUnknown
 {
-    HRESULT Next(uint, IOleDocumentView*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint cViews, IOleDocumentView* rgpView, uint* pcFetched);
+    HRESULT Skip(uint cViews);
     HRESULT Reset();
-    HRESULT Clone(IEnumOleDocumentViews*);
+    HRESULT Clone(IEnumOleDocumentViews* ppEnum);
 }
 enum IID_IContinueCallback = GUID(0xb722bcca, 0x4e68, 0x101b, [0xa2, 0xbc, 0x0, 0xaa, 0x0, 0x40, 0x47, 0x70]);
 interface IContinueCallback : IUnknown
 {
     HRESULT FContinue();
-    HRESULT FContinuePrinting(int, int, PWSTR);
+    HRESULT FContinuePrinting(int nCntPrinted, int nCurPage, PWSTR pwszPrintStatus);
 }
 alias PRINTFLAG = int;
 enum : int
@@ -2689,9 +2689,9 @@ struct PAGESET
 enum IID_IPrint = GUID(0xb722bcc9, 0x4e68, 0x101b, [0xa2, 0xbc, 0x0, 0xaa, 0x0, 0x40, 0x47, 0x70]);
 interface IPrint : IUnknown
 {
-    HRESULT SetInitialPageNum(int);
-    HRESULT GetPageInfo(int*, int*);
-    HRESULT Print(uint, DVTARGETDEVICE**, PAGESET**, STGMEDIUM*, IContinueCallback, int, int*, int*);
+    HRESULT SetInitialPageNum(int nFirstPage);
+    HRESULT GetPageInfo(int* pnFirstPage, int* pcPages);
+    HRESULT Print(uint grfFlags, DVTARGETDEVICE** pptd, PAGESET** ppPageSet, STGMEDIUM* pstgmOptions, IContinueCallback pcallback, int nFirstPage, int* pcPagesPrinted, int* pnLastPage);
 }
 alias OLECMDF = int;
 enum : int
@@ -2847,8 +2847,8 @@ enum : int
 enum IID_IOleCommandTarget = GUID(0xb722bccb, 0x4e68, 0x101b, [0xa2, 0xbc, 0x0, 0xaa, 0x0, 0x40, 0x47, 0x70]);
 interface IOleCommandTarget : IUnknown
 {
-    HRESULT QueryStatus(const(GUID)*, uint, OLECMD*, OLECMDTEXT*);
-    HRESULT Exec(const(GUID)*, uint, uint, VARIANT*, VARIANT*);
+    HRESULT QueryStatus(const(GUID)* pguidCmdGroup, uint cCmds, OLECMD* prgCmds, OLECMDTEXT* pCmdText);
+    HRESULT Exec(const(GUID)* pguidCmdGroup, uint nCmdID, uint nCmdexecopt, VARIANT* pvaIn, VARIANT* pvaOut);
 }
 alias OLECMDID_REFRESHFLAG = int;
 enum : int
@@ -2967,21 +2967,21 @@ enum : int
 enum IID_IZoomEvents = GUID(0x41b68150, 0x904c, 0x4e17, [0xa0, 0xba, 0xa4, 0x38, 0x18, 0x2e, 0x35, 0x9d]);
 interface IZoomEvents : IUnknown
 {
-    HRESULT OnZoomPercentChanged(uint);
+    HRESULT OnZoomPercentChanged(uint ulZoomPercent);
 }
 enum IID_IProtectFocus = GUID(0xd81f90a3, 0x8156, 0x44f7, [0xad, 0x28, 0x5a, 0xbb, 0x87, 0x0, 0x32, 0x74]);
 interface IProtectFocus : IUnknown
 {
-    HRESULT AllowFocusChange(BOOL*);
+    HRESULT AllowFocusChange(BOOL* pfAllow);
 }
 enum IID_IProtectedModeMenuServices = GUID(0x73c105ee, 0x9dff, 0x4a07, [0xb8, 0x3c, 0x7e, 0xff, 0x29, 0xc, 0x26, 0x6e]);
 interface IProtectedModeMenuServices : IUnknown
 {
-    HRESULT CreateMenu(HMENU*);
-    HRESULT LoadMenu(const(wchar)*, const(wchar)*, HMENU*);
-    HRESULT LoadMenuID(const(wchar)*, ushort, HMENU*);
+    HRESULT CreateMenu(HMENU* phMenu);
+    HRESULT LoadMenu(const(wchar)* pszModuleName, const(wchar)* pszMenuName, HMENU* phMenu);
+    HRESULT LoadMenuID(const(wchar)* pszModuleName, ushort wResourceID, HMENU* phMenu);
 }
-alias LPFNOLEUIHOOK = uint function(HWND, uint, WPARAM, LPARAM);
+alias LPFNOLEUIHOOK = uint function(HWND param0, uint param1, WPARAM param2, LPARAM param3);
 struct OLEUIINSERTOBJECTW
 {
     uint cbStruct;
@@ -3114,26 +3114,26 @@ struct OLEUIPASTESPECIALA
 // [Not Found] IID_IOleUILinkContainerW
 interface IOleUILinkContainerW : IUnknown
 {
-    uint GetNextLink(uint);
-    HRESULT SetLinkUpdateOptions(uint, uint);
-    HRESULT GetLinkUpdateOptions(uint, uint*);
-    HRESULT SetLinkSource(uint, PWSTR, uint, uint*, BOOL);
-    HRESULT GetLinkSource(uint, PWSTR*, uint*, PWSTR*, PWSTR*, BOOL*, BOOL*);
-    HRESULT OpenLinkSource(uint);
-    HRESULT UpdateLink(uint, BOOL, BOOL);
-    HRESULT CancelLink(uint);
+    uint GetNextLink(uint dwLink);
+    HRESULT SetLinkUpdateOptions(uint dwLink, uint dwUpdateOpt);
+    HRESULT GetLinkUpdateOptions(uint dwLink, uint* lpdwUpdateOpt);
+    HRESULT SetLinkSource(uint dwLink, PWSTR lpszDisplayName, uint lenFileName, uint* pchEaten, BOOL fValidateSource);
+    HRESULT GetLinkSource(uint dwLink, PWSTR* lplpszDisplayName, uint* lplenFileName, PWSTR* lplpszFullLinkType, PWSTR* lplpszShortLinkType, BOOL* lpfSourceAvailable, BOOL* lpfIsSelected);
+    HRESULT OpenLinkSource(uint dwLink);
+    HRESULT UpdateLink(uint dwLink, BOOL fErrorMessage, BOOL fReserved);
+    HRESULT CancelLink(uint dwLink);
 }
 // [Not Found] IID_IOleUILinkContainerA
 interface IOleUILinkContainerA : IUnknown
 {
-    uint GetNextLink(uint);
-    HRESULT SetLinkUpdateOptions(uint, uint);
-    HRESULT GetLinkUpdateOptions(uint, uint*);
-    HRESULT SetLinkSource(uint, PSTR, uint, uint*, BOOL);
-    HRESULT GetLinkSource(uint, PSTR*, uint*, PSTR*, PSTR*, BOOL*, BOOL*);
-    HRESULT OpenLinkSource(uint);
-    HRESULT UpdateLink(uint, BOOL, BOOL);
-    HRESULT CancelLink(uint);
+    uint GetNextLink(uint dwLink);
+    HRESULT SetLinkUpdateOptions(uint dwLink, uint dwUpdateOpt);
+    HRESULT GetLinkUpdateOptions(uint dwLink, uint* lpdwUpdateOpt);
+    HRESULT SetLinkSource(uint dwLink, PSTR lpszDisplayName, uint lenFileName, uint* pchEaten, BOOL fValidateSource);
+    HRESULT GetLinkSource(uint dwLink, PSTR* lplpszDisplayName, uint* lplenFileName, PSTR* lplpszFullLinkType, PSTR* lplpszShortLinkType, BOOL* lpfSourceAvailable, BOOL* lpfIsSelected);
+    HRESULT OpenLinkSource(uint dwLink);
+    HRESULT UpdateLink(uint dwLink, BOOL fErrorMessage, BOOL fReserved);
+    HRESULT CancelLink(uint dwLink);
 }
 struct OLEUIEDITLINKSW
 {
@@ -3314,30 +3314,30 @@ struct OLEUICHANGESOURCEA
 // [Not Found] IID_IOleUIObjInfoW
 interface IOleUIObjInfoW : IUnknown
 {
-    HRESULT GetObjectInfo(uint, uint*, PWSTR*, PWSTR*, PWSTR*, PWSTR*);
-    HRESULT GetConvertInfo(uint, GUID*, ushort*, GUID*, GUID**, uint*);
-    HRESULT ConvertObject(uint, const(GUID)*);
-    HRESULT GetViewInfo(uint, HGLOBAL*, uint*, int*);
-    HRESULT SetViewInfo(uint, HGLOBAL, uint, int, BOOL);
+    HRESULT GetObjectInfo(uint dwObject, uint* lpdwObjSize, PWSTR* lplpszLabel, PWSTR* lplpszType, PWSTR* lplpszShortType, PWSTR* lplpszLocation);
+    HRESULT GetConvertInfo(uint dwObject, GUID* lpClassID, ushort* lpwFormat, GUID* lpConvertDefaultClassID, GUID** lplpClsidExclude, uint* lpcClsidExclude);
+    HRESULT ConvertObject(uint dwObject, const(GUID)* clsidNew);
+    HRESULT GetViewInfo(uint dwObject, HGLOBAL* phMetaPict, uint* pdvAspect, int* pnCurrentScale);
+    HRESULT SetViewInfo(uint dwObject, HGLOBAL hMetaPict, uint dvAspect, int nCurrentScale, BOOL bRelativeToOrig);
 }
 // [Not Found] IID_IOleUIObjInfoA
 interface IOleUIObjInfoA : IUnknown
 {
-    HRESULT GetObjectInfo(uint, uint*, PSTR*, PSTR*, PSTR*, PSTR*);
-    HRESULT GetConvertInfo(uint, GUID*, ushort*, GUID*, GUID**, uint*);
-    HRESULT ConvertObject(uint, const(GUID)*);
-    HRESULT GetViewInfo(uint, HGLOBAL*, uint*, int*);
-    HRESULT SetViewInfo(uint, HGLOBAL, uint, int, BOOL);
+    HRESULT GetObjectInfo(uint dwObject, uint* lpdwObjSize, PSTR* lplpszLabel, PSTR* lplpszType, PSTR* lplpszShortType, PSTR* lplpszLocation);
+    HRESULT GetConvertInfo(uint dwObject, GUID* lpClassID, ushort* lpwFormat, GUID* lpConvertDefaultClassID, GUID** lplpClsidExclude, uint* lpcClsidExclude);
+    HRESULT ConvertObject(uint dwObject, const(GUID)* clsidNew);
+    HRESULT GetViewInfo(uint dwObject, HGLOBAL* phMetaPict, uint* pdvAspect, int* pnCurrentScale);
+    HRESULT SetViewInfo(uint dwObject, HGLOBAL hMetaPict, uint dvAspect, int nCurrentScale, BOOL bRelativeToOrig);
 }
 // [Not Found] IID_IOleUILinkInfoW
 interface IOleUILinkInfoW : IOleUILinkContainerW
 {
-    HRESULT GetLastUpdate(uint, FILETIME*);
+    HRESULT GetLastUpdate(uint dwLink, FILETIME* lpLastUpdate);
 }
 // [Not Found] IID_IOleUILinkInfoA
 interface IOleUILinkInfoA : IOleUILinkContainerA
 {
-    HRESULT GetLastUpdate(uint, FILETIME*);
+    HRESULT GetLastUpdate(uint dwLink, FILETIME* lpLastUpdate);
 }
 struct OLEUIGNRLPROPSW
 {
@@ -3432,42 +3432,42 @@ struct OLEUIOBJECTPROPSA
 enum IID_IDispatchEx = GUID(0xa6ef9860, 0xc720, 0x11d0, [0x93, 0x37, 0x0, 0xa0, 0xc9, 0xd, 0xca, 0xa9]);
 interface IDispatchEx : IDispatch
 {
-    HRESULT GetDispID(BSTR, uint, int*);
-    HRESULT InvokeEx(int, uint, ushort, DISPPARAMS*, VARIANT*, EXCEPINFO*, IServiceProvider);
-    HRESULT DeleteMemberByName(BSTR, uint);
-    HRESULT DeleteMemberByDispID(int);
-    HRESULT GetMemberProperties(int, uint, FDEX_PROP_FLAGS*);
-    HRESULT GetMemberName(int, BSTR*);
-    HRESULT GetNextDispID(uint, int, int*);
-    HRESULT GetNameSpaceParent(IUnknown*);
+    HRESULT GetDispID(BSTR bstrName, uint grfdex, int* pid);
+    HRESULT InvokeEx(int id, uint lcid, ushort wFlags, DISPPARAMS* pdp, VARIANT* pvarRes, EXCEPINFO* pei, IServiceProvider pspCaller);
+    HRESULT DeleteMemberByName(BSTR bstrName, uint grfdex);
+    HRESULT DeleteMemberByDispID(int id);
+    HRESULT GetMemberProperties(int id, uint grfdexFetch, FDEX_PROP_FLAGS* pgrfdex);
+    HRESULT GetMemberName(int id, BSTR* pbstrName);
+    HRESULT GetNextDispID(uint grfdex, int id, int* pid);
+    HRESULT GetNameSpaceParent(IUnknown* ppunk);
 }
 enum IID_IDispError = GUID(0xa6ef9861, 0xc720, 0x11d0, [0x93, 0x37, 0x0, 0xa0, 0xc9, 0xd, 0xca, 0xa9]);
 interface IDispError : IUnknown
 {
-    HRESULT QueryErrorInfo(GUID, IDispError*);
-    HRESULT GetNext(IDispError*);
-    HRESULT GetHresult(HRESULT*);
-    HRESULT GetSource(BSTR*);
-    HRESULT GetHelpInfo(BSTR*, uint*);
-    HRESULT GetDescription(BSTR*);
+    HRESULT QueryErrorInfo(GUID guidErrorType, IDispError* ppde);
+    HRESULT GetNext(IDispError* ppde);
+    HRESULT GetHresult(HRESULT* phr);
+    HRESULT GetSource(BSTR* pbstrSource);
+    HRESULT GetHelpInfo(BSTR* pbstrFileName, uint* pdwContext);
+    HRESULT GetDescription(BSTR* pbstrDescription);
 }
 enum IID_IVariantChangeType = GUID(0xa6ef9862, 0xc720, 0x11d0, [0x93, 0x37, 0x0, 0xa0, 0xc9, 0xd, 0xca, 0xa9]);
 interface IVariantChangeType : IUnknown
 {
-    HRESULT ChangeType(VARIANT*, VARIANT*, uint, VARENUM);
+    HRESULT ChangeType(VARIANT* pvarDst, VARIANT* pvarSrc, uint lcid, VARENUM vtNew);
 }
 enum IID_IObjectIdentity = GUID(0xca04b7e6, 0xd21, 0x11d1, [0x8c, 0xc5, 0x0, 0xc0, 0x4f, 0xc2, 0xb0, 0x85]);
 interface IObjectIdentity : IUnknown
 {
-    HRESULT IsEqualObject(IUnknown);
+    HRESULT IsEqualObject(IUnknown punk);
 }
 enum IID_ICanHandleException = GUID(0xc5598e60, 0xb307, 0x11d1, [0xb2, 0x7d, 0x0, 0x60, 0x8, 0xc3, 0xfb, 0xfb]);
 interface ICanHandleException : IUnknown
 {
-    HRESULT CanHandleException(EXCEPINFO*, VARIANT*);
+    HRESULT CanHandleException(EXCEPINFO* pExcepInfo, VARIANT* pvar);
 }
 enum IID_IProvideRuntimeContext = GUID(0x10e2414a, 0xec59, 0x49d2, [0xbc, 0x51, 0x5a, 0xdd, 0x2c, 0x36, 0xfe, 0xbc]);
 interface IProvideRuntimeContext : IUnknown
 {
-    HRESULT GetCurrentSourceContext(ulong*, VARIANT_BOOL*);
+    HRESULT GetCurrentSourceContext(ulong* pdwContext, VARIANT_BOOL* pfExecutingGlobalCode);
 }

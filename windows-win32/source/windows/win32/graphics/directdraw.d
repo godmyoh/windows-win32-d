@@ -8,13 +8,13 @@ import windows.win32.system.com : IUnknown;
 version (Windows):
 extern (Windows):
 
-HRESULT DirectDrawEnumerateW(LPDDENUMCALLBACKW, void*);
-HRESULT DirectDrawEnumerateA(LPDDENUMCALLBACKA, void*);
-HRESULT DirectDrawEnumerateExW(LPDDENUMCALLBACKEXW, void*, uint);
-HRESULT DirectDrawEnumerateExA(LPDDENUMCALLBACKEXA, void*, uint);
-HRESULT DirectDrawCreate(GUID*, IDirectDraw*, IUnknown);
-HRESULT DirectDrawCreateEx(GUID*, void**, const(GUID)*, IUnknown);
-HRESULT DirectDrawCreateClipper(uint, IDirectDrawClipper*, IUnknown);
+HRESULT DirectDrawEnumerateW(LPDDENUMCALLBACKW lpCallback, void* lpContext);
+HRESULT DirectDrawEnumerateA(LPDDENUMCALLBACKA lpCallback, void* lpContext);
+HRESULT DirectDrawEnumerateExW(LPDDENUMCALLBACKEXW lpCallback, void* lpContext, uint dwFlags);
+HRESULT DirectDrawEnumerateExA(LPDDENUMCALLBACKEXA lpCallback, void* lpContext, uint dwFlags);
+HRESULT DirectDrawCreate(GUID* lpGUID, IDirectDraw* lplpDD, IUnknown pUnkOuter);
+HRESULT DirectDrawCreateEx(GUID* lpGuid, void** lplpDD, const(GUID)* iid, IUnknown pUnkOuter);
+HRESULT DirectDrawCreateClipper(uint dwFlags, IDirectDrawClipper* lplpDDClipper, IUnknown pUnkOuter);
 enum DIRECTDRAW_VERSION = 0x00000700;
 enum _FACDD = 0x00000876;
 enum CLSID_DirectDraw = GUID(0xd7b70ee0, 0x4340, 0x11cf, [0xb0, 0x63, 0x0, 0x20, 0xaf, 0xc2, 0xcd, 0x35]);
@@ -957,17 +957,17 @@ alias PDD_DESTROYDRIVERDATA = long;
 alias PDD_GETVPORTAUTOFLIPSURFACEDATA = long;
 alias PDD_SETMODEDATA = long;
 alias LPDDFXROP = long;
-alias LPDDENUMCALLBACKA = BOOL function(GUID*, PSTR, PSTR, void*);
-alias LPDDENUMCALLBACKW = BOOL function(GUID*, PWSTR, PWSTR, void*);
-alias LPDDENUMCALLBACKEXA = BOOL function(GUID*, PSTR, PSTR, void*, HMONITOR);
-alias LPDDENUMCALLBACKEXW = BOOL function(GUID*, PWSTR, PWSTR, void*, HMONITOR);
-alias LPDIRECTDRAWENUMERATEEXA = HRESULT function(LPDDENUMCALLBACKEXA, void*, uint);
-alias LPDIRECTDRAWENUMERATEEXW = HRESULT function(LPDDENUMCALLBACKEXW, void*, uint);
-alias LPDDENUMMODESCALLBACK = HRESULT function(DDSURFACEDESC*, void*);
-alias LPDDENUMMODESCALLBACK2 = HRESULT function(DDSURFACEDESC2*, void*);
-alias LPDDENUMSURFACESCALLBACK = HRESULT function(IDirectDrawSurface, DDSURFACEDESC*, void*);
-alias LPDDENUMSURFACESCALLBACK2 = HRESULT function(IDirectDrawSurface4, DDSURFACEDESC2*, void*);
-alias LPDDENUMSURFACESCALLBACK7 = HRESULT function(IDirectDrawSurface7, DDSURFACEDESC2*, void*);
+alias LPDDENUMCALLBACKA = BOOL function(GUID* param0, PSTR param1, PSTR param2, void* param3);
+alias LPDDENUMCALLBACKW = BOOL function(GUID* param0, PWSTR param1, PWSTR param2, void* param3);
+alias LPDDENUMCALLBACKEXA = BOOL function(GUID* param0, PSTR param1, PSTR param2, void* param3, HMONITOR param4);
+alias LPDDENUMCALLBACKEXW = BOOL function(GUID* param0, PWSTR param1, PWSTR param2, void* param3, HMONITOR param4);
+alias LPDIRECTDRAWENUMERATEEXA = HRESULT function(LPDDENUMCALLBACKEXA lpCallback, void* lpContext, uint dwFlags);
+alias LPDIRECTDRAWENUMERATEEXW = HRESULT function(LPDDENUMCALLBACKEXW lpCallback, void* lpContext, uint dwFlags);
+alias LPDDENUMMODESCALLBACK = HRESULT function(DDSURFACEDESC* param0, void* param1);
+alias LPDDENUMMODESCALLBACK2 = HRESULT function(DDSURFACEDESC2* param0, void* param1);
+alias LPDDENUMSURFACESCALLBACK = HRESULT function(IDirectDrawSurface param0, DDSURFACEDESC* param1, void* param2);
+alias LPDDENUMSURFACESCALLBACK2 = HRESULT function(IDirectDrawSurface4 param0, DDSURFACEDESC2* param1, void* param2);
+alias LPDDENUMSURFACESCALLBACK7 = HRESULT function(IDirectDrawSurface7 param0, DDSURFACEDESC2* param1, void* param2);
 struct DDARGB
 {
     ubyte blue;
@@ -1448,359 +1448,359 @@ struct DDDEVICEIDENTIFIER2
     GUID guidDeviceIdentifier;
     uint dwWHQLLevel;
 }
-alias LPCLIPPERCALLBACK = uint function(IDirectDrawClipper, HWND, uint, void*);
+alias LPCLIPPERCALLBACK = uint function(IDirectDrawClipper lpDDClipper, HWND hWnd, uint code, void* lpContext);
 enum IID_IDirectDraw = GUID(0x6c14db80, 0xa733, 0x11ce, [0xa5, 0x21, 0x0, 0x20, 0xaf, 0xb, 0xe5, 0x60]);
 interface IDirectDraw : IUnknown
 {
     HRESULT Compact();
-    HRESULT CreateClipper(uint, IDirectDrawClipper*, IUnknown);
-    HRESULT CreatePalette(uint, PALETTEENTRY*, IDirectDrawPalette*, IUnknown);
-    HRESULT CreateSurface(DDSURFACEDESC*, IDirectDrawSurface*, IUnknown);
-    HRESULT DuplicateSurface(IDirectDrawSurface, IDirectDrawSurface*);
-    HRESULT EnumDisplayModes(uint, DDSURFACEDESC*, void*, LPDDENUMMODESCALLBACK);
-    HRESULT EnumSurfaces(uint, DDSURFACEDESC*, void*, LPDDENUMSURFACESCALLBACK);
+    HRESULT CreateClipper(uint param0, IDirectDrawClipper* param1, IUnknown param2);
+    HRESULT CreatePalette(uint param0, PALETTEENTRY* param1, IDirectDrawPalette* param2, IUnknown param3);
+    HRESULT CreateSurface(DDSURFACEDESC* param0, IDirectDrawSurface* param1, IUnknown param2);
+    HRESULT DuplicateSurface(IDirectDrawSurface param0, IDirectDrawSurface* param1);
+    HRESULT EnumDisplayModes(uint param0, DDSURFACEDESC* param1, void* param2, LPDDENUMMODESCALLBACK param3);
+    HRESULT EnumSurfaces(uint param0, DDSURFACEDESC* param1, void* param2, LPDDENUMSURFACESCALLBACK param3);
     HRESULT FlipToGDISurface();
-    HRESULT GetCaps(DDCAPS_DX7*, DDCAPS_DX7*);
-    HRESULT GetDisplayMode(DDSURFACEDESC*);
-    HRESULT GetFourCCCodes(uint*, uint*);
-    HRESULT GetGDISurface(IDirectDrawSurface*);
-    HRESULT GetMonitorFrequency(uint*);
-    HRESULT GetScanLine(uint*);
-    HRESULT GetVerticalBlankStatus(BOOL*);
-    HRESULT Initialize(GUID*);
+    HRESULT GetCaps(DDCAPS_DX7* param0, DDCAPS_DX7* param1);
+    HRESULT GetDisplayMode(DDSURFACEDESC* param0);
+    HRESULT GetFourCCCodes(uint* param0, uint* param1);
+    HRESULT GetGDISurface(IDirectDrawSurface* param0);
+    HRESULT GetMonitorFrequency(uint* param0);
+    HRESULT GetScanLine(uint* param0);
+    HRESULT GetVerticalBlankStatus(BOOL* param0);
+    HRESULT Initialize(GUID* param0);
     HRESULT RestoreDisplayMode();
-    HRESULT SetCooperativeLevel(HWND, uint);
-    HRESULT SetDisplayMode(uint, uint, uint);
-    HRESULT WaitForVerticalBlank(uint, HANDLE);
+    HRESULT SetCooperativeLevel(HWND param0, uint param1);
+    HRESULT SetDisplayMode(uint param0, uint param1, uint param2);
+    HRESULT WaitForVerticalBlank(uint param0, HANDLE param1);
 }
 enum IID_IDirectDraw2 = GUID(0xb3a6f3e0, 0x2b43, 0x11cf, [0xa2, 0xde, 0x0, 0xaa, 0x0, 0xb9, 0x33, 0x56]);
 interface IDirectDraw2 : IUnknown
 {
     HRESULT Compact();
-    HRESULT CreateClipper(uint, IDirectDrawClipper*, IUnknown);
-    HRESULT CreatePalette(uint, PALETTEENTRY*, IDirectDrawPalette*, IUnknown);
-    HRESULT CreateSurface(DDSURFACEDESC*, IDirectDrawSurface*, IUnknown);
-    HRESULT DuplicateSurface(IDirectDrawSurface, IDirectDrawSurface*);
-    HRESULT EnumDisplayModes(uint, DDSURFACEDESC*, void*, LPDDENUMMODESCALLBACK);
-    HRESULT EnumSurfaces(uint, DDSURFACEDESC*, void*, LPDDENUMSURFACESCALLBACK);
+    HRESULT CreateClipper(uint param0, IDirectDrawClipper* param1, IUnknown param2);
+    HRESULT CreatePalette(uint param0, PALETTEENTRY* param1, IDirectDrawPalette* param2, IUnknown param3);
+    HRESULT CreateSurface(DDSURFACEDESC* param0, IDirectDrawSurface* param1, IUnknown param2);
+    HRESULT DuplicateSurface(IDirectDrawSurface param0, IDirectDrawSurface* param1);
+    HRESULT EnumDisplayModes(uint param0, DDSURFACEDESC* param1, void* param2, LPDDENUMMODESCALLBACK param3);
+    HRESULT EnumSurfaces(uint param0, DDSURFACEDESC* param1, void* param2, LPDDENUMSURFACESCALLBACK param3);
     HRESULT FlipToGDISurface();
-    HRESULT GetCaps(DDCAPS_DX7*, DDCAPS_DX7*);
-    HRESULT GetDisplayMode(DDSURFACEDESC*);
-    HRESULT GetFourCCCodes(uint*, uint*);
-    HRESULT GetGDISurface(IDirectDrawSurface*);
-    HRESULT GetMonitorFrequency(uint*);
-    HRESULT GetScanLine(uint*);
-    HRESULT GetVerticalBlankStatus(BOOL*);
-    HRESULT Initialize(GUID*);
+    HRESULT GetCaps(DDCAPS_DX7* param0, DDCAPS_DX7* param1);
+    HRESULT GetDisplayMode(DDSURFACEDESC* param0);
+    HRESULT GetFourCCCodes(uint* param0, uint* param1);
+    HRESULT GetGDISurface(IDirectDrawSurface* param0);
+    HRESULT GetMonitorFrequency(uint* param0);
+    HRESULT GetScanLine(uint* param0);
+    HRESULT GetVerticalBlankStatus(BOOL* param0);
+    HRESULT Initialize(GUID* param0);
     HRESULT RestoreDisplayMode();
-    HRESULT SetCooperativeLevel(HWND, uint);
-    HRESULT SetDisplayMode(uint, uint, uint, uint, uint);
-    HRESULT WaitForVerticalBlank(uint, HANDLE);
-    HRESULT GetAvailableVidMem(DDSCAPS*, uint*, uint*);
+    HRESULT SetCooperativeLevel(HWND param0, uint param1);
+    HRESULT SetDisplayMode(uint param0, uint param1, uint param2, uint param3, uint param4);
+    HRESULT WaitForVerticalBlank(uint param0, HANDLE param1);
+    HRESULT GetAvailableVidMem(DDSCAPS* param0, uint* param1, uint* param2);
 }
 enum IID_IDirectDraw4 = GUID(0x9c59509a, 0x39bd, 0x11d1, [0x8c, 0x4a, 0x0, 0xc0, 0x4f, 0xd9, 0x30, 0xc5]);
 interface IDirectDraw4 : IUnknown
 {
     HRESULT Compact();
-    HRESULT CreateClipper(uint, IDirectDrawClipper*, IUnknown);
-    HRESULT CreatePalette(uint, PALETTEENTRY*, IDirectDrawPalette*, IUnknown);
-    HRESULT CreateSurface(DDSURFACEDESC2*, IDirectDrawSurface4*, IUnknown);
-    HRESULT DuplicateSurface(IDirectDrawSurface4, IDirectDrawSurface4*);
-    HRESULT EnumDisplayModes(uint, DDSURFACEDESC2*, void*, LPDDENUMMODESCALLBACK2);
-    HRESULT EnumSurfaces(uint, DDSURFACEDESC2*, void*, LPDDENUMSURFACESCALLBACK2);
+    HRESULT CreateClipper(uint param0, IDirectDrawClipper* param1, IUnknown param2);
+    HRESULT CreatePalette(uint param0, PALETTEENTRY* param1, IDirectDrawPalette* param2, IUnknown param3);
+    HRESULT CreateSurface(DDSURFACEDESC2* param0, IDirectDrawSurface4* param1, IUnknown param2);
+    HRESULT DuplicateSurface(IDirectDrawSurface4 param0, IDirectDrawSurface4* param1);
+    HRESULT EnumDisplayModes(uint param0, DDSURFACEDESC2* param1, void* param2, LPDDENUMMODESCALLBACK2 param3);
+    HRESULT EnumSurfaces(uint param0, DDSURFACEDESC2* param1, void* param2, LPDDENUMSURFACESCALLBACK2 param3);
     HRESULT FlipToGDISurface();
-    HRESULT GetCaps(DDCAPS_DX7*, DDCAPS_DX7*);
-    HRESULT GetDisplayMode(DDSURFACEDESC2*);
-    HRESULT GetFourCCCodes(uint*, uint*);
-    HRESULT GetGDISurface(IDirectDrawSurface4*);
-    HRESULT GetMonitorFrequency(uint*);
-    HRESULT GetScanLine(uint*);
-    HRESULT GetVerticalBlankStatus(BOOL*);
-    HRESULT Initialize(GUID*);
+    HRESULT GetCaps(DDCAPS_DX7* param0, DDCAPS_DX7* param1);
+    HRESULT GetDisplayMode(DDSURFACEDESC2* param0);
+    HRESULT GetFourCCCodes(uint* param0, uint* param1);
+    HRESULT GetGDISurface(IDirectDrawSurface4* param0);
+    HRESULT GetMonitorFrequency(uint* param0);
+    HRESULT GetScanLine(uint* param0);
+    HRESULT GetVerticalBlankStatus(BOOL* param0);
+    HRESULT Initialize(GUID* param0);
     HRESULT RestoreDisplayMode();
-    HRESULT SetCooperativeLevel(HWND, uint);
-    HRESULT SetDisplayMode(uint, uint, uint, uint, uint);
-    HRESULT WaitForVerticalBlank(uint, HANDLE);
-    HRESULT GetAvailableVidMem(DDSCAPS2*, uint*, uint*);
-    HRESULT GetSurfaceFromDC(HDC, IDirectDrawSurface4*);
+    HRESULT SetCooperativeLevel(HWND param0, uint param1);
+    HRESULT SetDisplayMode(uint param0, uint param1, uint param2, uint param3, uint param4);
+    HRESULT WaitForVerticalBlank(uint param0, HANDLE param1);
+    HRESULT GetAvailableVidMem(DDSCAPS2* param0, uint* param1, uint* param2);
+    HRESULT GetSurfaceFromDC(HDC param0, IDirectDrawSurface4* param1);
     HRESULT RestoreAllSurfaces();
     HRESULT TestCooperativeLevel();
-    HRESULT GetDeviceIdentifier(DDDEVICEIDENTIFIER*, uint);
+    HRESULT GetDeviceIdentifier(DDDEVICEIDENTIFIER* param0, uint param1);
 }
 enum IID_IDirectDraw7 = GUID(0x15e65ec0, 0x3b9c, 0x11d2, [0xb9, 0x2f, 0x0, 0x60, 0x97, 0x97, 0xea, 0x5b]);
 interface IDirectDraw7 : IUnknown
 {
     HRESULT Compact();
-    HRESULT CreateClipper(uint, IDirectDrawClipper*, IUnknown);
-    HRESULT CreatePalette(uint, PALETTEENTRY*, IDirectDrawPalette*, IUnknown);
-    HRESULT CreateSurface(DDSURFACEDESC2*, IDirectDrawSurface7*, IUnknown);
-    HRESULT DuplicateSurface(IDirectDrawSurface7, IDirectDrawSurface7*);
-    HRESULT EnumDisplayModes(uint, DDSURFACEDESC2*, void*, LPDDENUMMODESCALLBACK2);
-    HRESULT EnumSurfaces(uint, DDSURFACEDESC2*, void*, LPDDENUMSURFACESCALLBACK7);
+    HRESULT CreateClipper(uint param0, IDirectDrawClipper* param1, IUnknown param2);
+    HRESULT CreatePalette(uint param0, PALETTEENTRY* param1, IDirectDrawPalette* param2, IUnknown param3);
+    HRESULT CreateSurface(DDSURFACEDESC2* param0, IDirectDrawSurface7* param1, IUnknown param2);
+    HRESULT DuplicateSurface(IDirectDrawSurface7 param0, IDirectDrawSurface7* param1);
+    HRESULT EnumDisplayModes(uint param0, DDSURFACEDESC2* param1, void* param2, LPDDENUMMODESCALLBACK2 param3);
+    HRESULT EnumSurfaces(uint param0, DDSURFACEDESC2* param1, void* param2, LPDDENUMSURFACESCALLBACK7 param3);
     HRESULT FlipToGDISurface();
-    HRESULT GetCaps(DDCAPS_DX7*, DDCAPS_DX7*);
-    HRESULT GetDisplayMode(DDSURFACEDESC2*);
-    HRESULT GetFourCCCodes(uint*, uint*);
-    HRESULT GetGDISurface(IDirectDrawSurface7*);
-    HRESULT GetMonitorFrequency(uint*);
-    HRESULT GetScanLine(uint*);
-    HRESULT GetVerticalBlankStatus(BOOL*);
-    HRESULT Initialize(GUID*);
+    HRESULT GetCaps(DDCAPS_DX7* param0, DDCAPS_DX7* param1);
+    HRESULT GetDisplayMode(DDSURFACEDESC2* param0);
+    HRESULT GetFourCCCodes(uint* param0, uint* param1);
+    HRESULT GetGDISurface(IDirectDrawSurface7* param0);
+    HRESULT GetMonitorFrequency(uint* param0);
+    HRESULT GetScanLine(uint* param0);
+    HRESULT GetVerticalBlankStatus(BOOL* param0);
+    HRESULT Initialize(GUID* param0);
     HRESULT RestoreDisplayMode();
-    HRESULT SetCooperativeLevel(HWND, uint);
-    HRESULT SetDisplayMode(uint, uint, uint, uint, uint);
-    HRESULT WaitForVerticalBlank(uint, HANDLE);
-    HRESULT GetAvailableVidMem(DDSCAPS2*, uint*, uint*);
-    HRESULT GetSurfaceFromDC(HDC, IDirectDrawSurface7*);
+    HRESULT SetCooperativeLevel(HWND param0, uint param1);
+    HRESULT SetDisplayMode(uint param0, uint param1, uint param2, uint param3, uint param4);
+    HRESULT WaitForVerticalBlank(uint param0, HANDLE param1);
+    HRESULT GetAvailableVidMem(DDSCAPS2* param0, uint* param1, uint* param2);
+    HRESULT GetSurfaceFromDC(HDC param0, IDirectDrawSurface7* param1);
     HRESULT RestoreAllSurfaces();
     HRESULT TestCooperativeLevel();
-    HRESULT GetDeviceIdentifier(DDDEVICEIDENTIFIER2*, uint);
-    HRESULT StartModeTest(SIZE*, uint, uint);
-    HRESULT EvaluateMode(uint, uint*);
+    HRESULT GetDeviceIdentifier(DDDEVICEIDENTIFIER2* param0, uint param1);
+    HRESULT StartModeTest(SIZE* param0, uint param1, uint param2);
+    HRESULT EvaluateMode(uint param0, uint* param1);
 }
 enum IID_IDirectDrawPalette = GUID(0x6c14db84, 0xa733, 0x11ce, [0xa5, 0x21, 0x0, 0x20, 0xaf, 0xb, 0xe5, 0x60]);
 interface IDirectDrawPalette : IUnknown
 {
-    HRESULT GetCaps(uint*);
-    HRESULT GetEntries(uint, uint, uint, PALETTEENTRY*);
-    HRESULT Initialize(IDirectDraw, uint, PALETTEENTRY*);
-    HRESULT SetEntries(uint, uint, uint, PALETTEENTRY*);
+    HRESULT GetCaps(uint* param0);
+    HRESULT GetEntries(uint param0, uint param1, uint param2, PALETTEENTRY* param3);
+    HRESULT Initialize(IDirectDraw param0, uint param1, PALETTEENTRY* param2);
+    HRESULT SetEntries(uint param0, uint param1, uint param2, PALETTEENTRY* param3);
 }
 enum IID_IDirectDrawClipper = GUID(0x6c14db85, 0xa733, 0x11ce, [0xa5, 0x21, 0x0, 0x20, 0xaf, 0xb, 0xe5, 0x60]);
 interface IDirectDrawClipper : IUnknown
 {
-    HRESULT GetClipList(RECT*, RGNDATA*, uint*);
-    HRESULT GetHWnd(HWND*);
-    HRESULT Initialize(IDirectDraw, uint);
-    HRESULT IsClipListChanged(BOOL*);
-    HRESULT SetClipList(RGNDATA*, uint);
-    HRESULT SetHWnd(uint, HWND);
+    HRESULT GetClipList(RECT* param0, RGNDATA* param1, uint* param2);
+    HRESULT GetHWnd(HWND* param0);
+    HRESULT Initialize(IDirectDraw param0, uint param1);
+    HRESULT IsClipListChanged(BOOL* param0);
+    HRESULT SetClipList(RGNDATA* param0, uint param1);
+    HRESULT SetHWnd(uint param0, HWND param1);
 }
 enum IID_IDirectDrawSurface = GUID(0x6c14db81, 0xa733, 0x11ce, [0xa5, 0x21, 0x0, 0x20, 0xaf, 0xb, 0xe5, 0x60]);
 interface IDirectDrawSurface : IUnknown
 {
-    HRESULT AddAttachedSurface(IDirectDrawSurface);
-    HRESULT AddOverlayDirtyRect(RECT*);
-    HRESULT Blt(RECT*, IDirectDrawSurface, RECT*, uint, DDBLTFX*);
-    HRESULT BltBatch(DDBLTBATCH*, uint, uint);
-    HRESULT BltFast(uint, uint, IDirectDrawSurface, RECT*, uint);
-    HRESULT DeleteAttachedSurface(uint, IDirectDrawSurface);
-    HRESULT EnumAttachedSurfaces(void*, LPDDENUMSURFACESCALLBACK);
-    HRESULT EnumOverlayZOrders(uint, void*, LPDDENUMSURFACESCALLBACK);
-    HRESULT Flip(IDirectDrawSurface, uint);
-    HRESULT GetAttachedSurface(DDSCAPS*, IDirectDrawSurface*);
-    HRESULT GetBltStatus(uint);
-    HRESULT GetCaps(DDSCAPS*);
-    HRESULT GetClipper(IDirectDrawClipper*);
-    HRESULT GetColorKey(uint, DDCOLORKEY*);
-    HRESULT GetDC(HDC*);
-    HRESULT GetFlipStatus(uint);
-    HRESULT GetOverlayPosition(int*, int*);
-    HRESULT GetPalette(IDirectDrawPalette*);
-    HRESULT GetPixelFormat(DDPIXELFORMAT*);
-    HRESULT GetSurfaceDesc(DDSURFACEDESC*);
-    HRESULT Initialize(IDirectDraw, DDSURFACEDESC*);
+    HRESULT AddAttachedSurface(IDirectDrawSurface param0);
+    HRESULT AddOverlayDirtyRect(RECT* param0);
+    HRESULT Blt(RECT* param0, IDirectDrawSurface param1, RECT* param2, uint param3, DDBLTFX* param4);
+    HRESULT BltBatch(DDBLTBATCH* param0, uint param1, uint param2);
+    HRESULT BltFast(uint param0, uint param1, IDirectDrawSurface param2, RECT* param3, uint param4);
+    HRESULT DeleteAttachedSurface(uint param0, IDirectDrawSurface param1);
+    HRESULT EnumAttachedSurfaces(void* param0, LPDDENUMSURFACESCALLBACK param1);
+    HRESULT EnumOverlayZOrders(uint param0, void* param1, LPDDENUMSURFACESCALLBACK param2);
+    HRESULT Flip(IDirectDrawSurface param0, uint param1);
+    HRESULT GetAttachedSurface(DDSCAPS* param0, IDirectDrawSurface* param1);
+    HRESULT GetBltStatus(uint param0);
+    HRESULT GetCaps(DDSCAPS* param0);
+    HRESULT GetClipper(IDirectDrawClipper* param0);
+    HRESULT GetColorKey(uint param0, DDCOLORKEY* param1);
+    HRESULT GetDC(HDC* param0);
+    HRESULT GetFlipStatus(uint param0);
+    HRESULT GetOverlayPosition(int* param0, int* param1);
+    HRESULT GetPalette(IDirectDrawPalette* param0);
+    HRESULT GetPixelFormat(DDPIXELFORMAT* param0);
+    HRESULT GetSurfaceDesc(DDSURFACEDESC* param0);
+    HRESULT Initialize(IDirectDraw param0, DDSURFACEDESC* param1);
     HRESULT IsLost();
-    HRESULT Lock(RECT*, DDSURFACEDESC*, uint, HANDLE);
-    HRESULT ReleaseDC(HDC);
+    HRESULT Lock(RECT* param0, DDSURFACEDESC* param1, uint param2, HANDLE param3);
+    HRESULT ReleaseDC(HDC param0);
     HRESULT Restore();
-    HRESULT SetClipper(IDirectDrawClipper);
-    HRESULT SetColorKey(uint, DDCOLORKEY*);
-    HRESULT SetOverlayPosition(int, int);
-    HRESULT SetPalette(IDirectDrawPalette);
-    HRESULT Unlock(void*);
-    HRESULT UpdateOverlay(RECT*, IDirectDrawSurface, RECT*, uint, DDOVERLAYFX*);
-    HRESULT UpdateOverlayDisplay(uint);
-    HRESULT UpdateOverlayZOrder(uint, IDirectDrawSurface);
+    HRESULT SetClipper(IDirectDrawClipper param0);
+    HRESULT SetColorKey(uint param0, DDCOLORKEY* param1);
+    HRESULT SetOverlayPosition(int param0, int param1);
+    HRESULT SetPalette(IDirectDrawPalette param0);
+    HRESULT Unlock(void* param0);
+    HRESULT UpdateOverlay(RECT* param0, IDirectDrawSurface param1, RECT* param2, uint param3, DDOVERLAYFX* param4);
+    HRESULT UpdateOverlayDisplay(uint param0);
+    HRESULT UpdateOverlayZOrder(uint param0, IDirectDrawSurface param1);
 }
 enum IID_IDirectDrawSurface2 = GUID(0x57805885, 0x6eec, 0x11cf, [0x94, 0x41, 0xa8, 0x23, 0x3, 0xc1, 0xe, 0x27]);
 interface IDirectDrawSurface2 : IUnknown
 {
-    HRESULT AddAttachedSurface(IDirectDrawSurface2);
-    HRESULT AddOverlayDirtyRect(RECT*);
-    HRESULT Blt(RECT*, IDirectDrawSurface2, RECT*, uint, DDBLTFX*);
-    HRESULT BltBatch(DDBLTBATCH*, uint, uint);
-    HRESULT BltFast(uint, uint, IDirectDrawSurface2, RECT*, uint);
-    HRESULT DeleteAttachedSurface(uint, IDirectDrawSurface2);
-    HRESULT EnumAttachedSurfaces(void*, LPDDENUMSURFACESCALLBACK);
-    HRESULT EnumOverlayZOrders(uint, void*, LPDDENUMSURFACESCALLBACK);
-    HRESULT Flip(IDirectDrawSurface2, uint);
-    HRESULT GetAttachedSurface(DDSCAPS*, IDirectDrawSurface2*);
-    HRESULT GetBltStatus(uint);
-    HRESULT GetCaps(DDSCAPS*);
-    HRESULT GetClipper(IDirectDrawClipper*);
-    HRESULT GetColorKey(uint, DDCOLORKEY*);
-    HRESULT GetDC(HDC*);
-    HRESULT GetFlipStatus(uint);
-    HRESULT GetOverlayPosition(int*, int*);
-    HRESULT GetPalette(IDirectDrawPalette*);
-    HRESULT GetPixelFormat(DDPIXELFORMAT*);
-    HRESULT GetSurfaceDesc(DDSURFACEDESC*);
-    HRESULT Initialize(IDirectDraw, DDSURFACEDESC*);
+    HRESULT AddAttachedSurface(IDirectDrawSurface2 param0);
+    HRESULT AddOverlayDirtyRect(RECT* param0);
+    HRESULT Blt(RECT* param0, IDirectDrawSurface2 param1, RECT* param2, uint param3, DDBLTFX* param4);
+    HRESULT BltBatch(DDBLTBATCH* param0, uint param1, uint param2);
+    HRESULT BltFast(uint param0, uint param1, IDirectDrawSurface2 param2, RECT* param3, uint param4);
+    HRESULT DeleteAttachedSurface(uint param0, IDirectDrawSurface2 param1);
+    HRESULT EnumAttachedSurfaces(void* param0, LPDDENUMSURFACESCALLBACK param1);
+    HRESULT EnumOverlayZOrders(uint param0, void* param1, LPDDENUMSURFACESCALLBACK param2);
+    HRESULT Flip(IDirectDrawSurface2 param0, uint param1);
+    HRESULT GetAttachedSurface(DDSCAPS* param0, IDirectDrawSurface2* param1);
+    HRESULT GetBltStatus(uint param0);
+    HRESULT GetCaps(DDSCAPS* param0);
+    HRESULT GetClipper(IDirectDrawClipper* param0);
+    HRESULT GetColorKey(uint param0, DDCOLORKEY* param1);
+    HRESULT GetDC(HDC* param0);
+    HRESULT GetFlipStatus(uint param0);
+    HRESULT GetOverlayPosition(int* param0, int* param1);
+    HRESULT GetPalette(IDirectDrawPalette* param0);
+    HRESULT GetPixelFormat(DDPIXELFORMAT* param0);
+    HRESULT GetSurfaceDesc(DDSURFACEDESC* param0);
+    HRESULT Initialize(IDirectDraw param0, DDSURFACEDESC* param1);
     HRESULT IsLost();
-    HRESULT Lock(RECT*, DDSURFACEDESC*, uint, HANDLE);
-    HRESULT ReleaseDC(HDC);
+    HRESULT Lock(RECT* param0, DDSURFACEDESC* param1, uint param2, HANDLE param3);
+    HRESULT ReleaseDC(HDC param0);
     HRESULT Restore();
-    HRESULT SetClipper(IDirectDrawClipper);
-    HRESULT SetColorKey(uint, DDCOLORKEY*);
-    HRESULT SetOverlayPosition(int, int);
-    HRESULT SetPalette(IDirectDrawPalette);
-    HRESULT Unlock(void*);
-    HRESULT UpdateOverlay(RECT*, IDirectDrawSurface2, RECT*, uint, DDOVERLAYFX*);
-    HRESULT UpdateOverlayDisplay(uint);
-    HRESULT UpdateOverlayZOrder(uint, IDirectDrawSurface2);
-    HRESULT GetDDInterface(void**);
-    HRESULT PageLock(uint);
-    HRESULT PageUnlock(uint);
+    HRESULT SetClipper(IDirectDrawClipper param0);
+    HRESULT SetColorKey(uint param0, DDCOLORKEY* param1);
+    HRESULT SetOverlayPosition(int param0, int param1);
+    HRESULT SetPalette(IDirectDrawPalette param0);
+    HRESULT Unlock(void* param0);
+    HRESULT UpdateOverlay(RECT* param0, IDirectDrawSurface2 param1, RECT* param2, uint param3, DDOVERLAYFX* param4);
+    HRESULT UpdateOverlayDisplay(uint param0);
+    HRESULT UpdateOverlayZOrder(uint param0, IDirectDrawSurface2 param1);
+    HRESULT GetDDInterface(void** param0);
+    HRESULT PageLock(uint param0);
+    HRESULT PageUnlock(uint param0);
 }
 enum IID_IDirectDrawSurface3 = GUID(0xda044e00, 0x69b2, 0x11d0, [0xa1, 0xd5, 0x0, 0xaa, 0x0, 0xb8, 0xdf, 0xbb]);
 interface IDirectDrawSurface3 : IUnknown
 {
-    HRESULT AddAttachedSurface(IDirectDrawSurface3);
-    HRESULT AddOverlayDirtyRect(RECT*);
-    HRESULT Blt(RECT*, IDirectDrawSurface3, RECT*, uint, DDBLTFX*);
-    HRESULT BltBatch(DDBLTBATCH*, uint, uint);
-    HRESULT BltFast(uint, uint, IDirectDrawSurface3, RECT*, uint);
-    HRESULT DeleteAttachedSurface(uint, IDirectDrawSurface3);
-    HRESULT EnumAttachedSurfaces(void*, LPDDENUMSURFACESCALLBACK);
-    HRESULT EnumOverlayZOrders(uint, void*, LPDDENUMSURFACESCALLBACK);
-    HRESULT Flip(IDirectDrawSurface3, uint);
-    HRESULT GetAttachedSurface(DDSCAPS*, IDirectDrawSurface3*);
-    HRESULT GetBltStatus(uint);
-    HRESULT GetCaps(DDSCAPS*);
-    HRESULT GetClipper(IDirectDrawClipper*);
-    HRESULT GetColorKey(uint, DDCOLORKEY*);
-    HRESULT GetDC(HDC*);
-    HRESULT GetFlipStatus(uint);
-    HRESULT GetOverlayPosition(int*, int*);
-    HRESULT GetPalette(IDirectDrawPalette*);
-    HRESULT GetPixelFormat(DDPIXELFORMAT*);
-    HRESULT GetSurfaceDesc(DDSURFACEDESC*);
-    HRESULT Initialize(IDirectDraw, DDSURFACEDESC*);
+    HRESULT AddAttachedSurface(IDirectDrawSurface3 param0);
+    HRESULT AddOverlayDirtyRect(RECT* param0);
+    HRESULT Blt(RECT* param0, IDirectDrawSurface3 param1, RECT* param2, uint param3, DDBLTFX* param4);
+    HRESULT BltBatch(DDBLTBATCH* param0, uint param1, uint param2);
+    HRESULT BltFast(uint param0, uint param1, IDirectDrawSurface3 param2, RECT* param3, uint param4);
+    HRESULT DeleteAttachedSurface(uint param0, IDirectDrawSurface3 param1);
+    HRESULT EnumAttachedSurfaces(void* param0, LPDDENUMSURFACESCALLBACK param1);
+    HRESULT EnumOverlayZOrders(uint param0, void* param1, LPDDENUMSURFACESCALLBACK param2);
+    HRESULT Flip(IDirectDrawSurface3 param0, uint param1);
+    HRESULT GetAttachedSurface(DDSCAPS* param0, IDirectDrawSurface3* param1);
+    HRESULT GetBltStatus(uint param0);
+    HRESULT GetCaps(DDSCAPS* param0);
+    HRESULT GetClipper(IDirectDrawClipper* param0);
+    HRESULT GetColorKey(uint param0, DDCOLORKEY* param1);
+    HRESULT GetDC(HDC* param0);
+    HRESULT GetFlipStatus(uint param0);
+    HRESULT GetOverlayPosition(int* param0, int* param1);
+    HRESULT GetPalette(IDirectDrawPalette* param0);
+    HRESULT GetPixelFormat(DDPIXELFORMAT* param0);
+    HRESULT GetSurfaceDesc(DDSURFACEDESC* param0);
+    HRESULT Initialize(IDirectDraw param0, DDSURFACEDESC* param1);
     HRESULT IsLost();
-    HRESULT Lock(RECT*, DDSURFACEDESC*, uint, HANDLE);
-    HRESULT ReleaseDC(HDC);
+    HRESULT Lock(RECT* param0, DDSURFACEDESC* param1, uint param2, HANDLE param3);
+    HRESULT ReleaseDC(HDC param0);
     HRESULT Restore();
-    HRESULT SetClipper(IDirectDrawClipper);
-    HRESULT SetColorKey(uint, DDCOLORKEY*);
-    HRESULT SetOverlayPosition(int, int);
-    HRESULT SetPalette(IDirectDrawPalette);
-    HRESULT Unlock(void*);
-    HRESULT UpdateOverlay(RECT*, IDirectDrawSurface3, RECT*, uint, DDOVERLAYFX*);
-    HRESULT UpdateOverlayDisplay(uint);
-    HRESULT UpdateOverlayZOrder(uint, IDirectDrawSurface3);
-    HRESULT GetDDInterface(void**);
-    HRESULT PageLock(uint);
-    HRESULT PageUnlock(uint);
-    HRESULT SetSurfaceDesc(DDSURFACEDESC*, uint);
+    HRESULT SetClipper(IDirectDrawClipper param0);
+    HRESULT SetColorKey(uint param0, DDCOLORKEY* param1);
+    HRESULT SetOverlayPosition(int param0, int param1);
+    HRESULT SetPalette(IDirectDrawPalette param0);
+    HRESULT Unlock(void* param0);
+    HRESULT UpdateOverlay(RECT* param0, IDirectDrawSurface3 param1, RECT* param2, uint param3, DDOVERLAYFX* param4);
+    HRESULT UpdateOverlayDisplay(uint param0);
+    HRESULT UpdateOverlayZOrder(uint param0, IDirectDrawSurface3 param1);
+    HRESULT GetDDInterface(void** param0);
+    HRESULT PageLock(uint param0);
+    HRESULT PageUnlock(uint param0);
+    HRESULT SetSurfaceDesc(DDSURFACEDESC* param0, uint param1);
 }
 enum IID_IDirectDrawSurface4 = GUID(0xb2b8630, 0xad35, 0x11d0, [0x8e, 0xa6, 0x0, 0x60, 0x97, 0x97, 0xea, 0x5b]);
 interface IDirectDrawSurface4 : IUnknown
 {
-    HRESULT AddAttachedSurface(IDirectDrawSurface4);
-    HRESULT AddOverlayDirtyRect(RECT*);
-    HRESULT Blt(RECT*, IDirectDrawSurface4, RECT*, uint, DDBLTFX*);
-    HRESULT BltBatch(DDBLTBATCH*, uint, uint);
-    HRESULT BltFast(uint, uint, IDirectDrawSurface4, RECT*, uint);
-    HRESULT DeleteAttachedSurface(uint, IDirectDrawSurface4);
-    HRESULT EnumAttachedSurfaces(void*, LPDDENUMSURFACESCALLBACK2);
-    HRESULT EnumOverlayZOrders(uint, void*, LPDDENUMSURFACESCALLBACK2);
-    HRESULT Flip(IDirectDrawSurface4, uint);
-    HRESULT GetAttachedSurface(DDSCAPS2*, IDirectDrawSurface4*);
-    HRESULT GetBltStatus(uint);
-    HRESULT GetCaps(DDSCAPS2*);
-    HRESULT GetClipper(IDirectDrawClipper*);
-    HRESULT GetColorKey(uint, DDCOLORKEY*);
-    HRESULT GetDC(HDC*);
-    HRESULT GetFlipStatus(uint);
-    HRESULT GetOverlayPosition(int*, int*);
-    HRESULT GetPalette(IDirectDrawPalette*);
-    HRESULT GetPixelFormat(DDPIXELFORMAT*);
-    HRESULT GetSurfaceDesc(DDSURFACEDESC2*);
-    HRESULT Initialize(IDirectDraw, DDSURFACEDESC2*);
+    HRESULT AddAttachedSurface(IDirectDrawSurface4 param0);
+    HRESULT AddOverlayDirtyRect(RECT* param0);
+    HRESULT Blt(RECT* param0, IDirectDrawSurface4 param1, RECT* param2, uint param3, DDBLTFX* param4);
+    HRESULT BltBatch(DDBLTBATCH* param0, uint param1, uint param2);
+    HRESULT BltFast(uint param0, uint param1, IDirectDrawSurface4 param2, RECT* param3, uint param4);
+    HRESULT DeleteAttachedSurface(uint param0, IDirectDrawSurface4 param1);
+    HRESULT EnumAttachedSurfaces(void* param0, LPDDENUMSURFACESCALLBACK2 param1);
+    HRESULT EnumOverlayZOrders(uint param0, void* param1, LPDDENUMSURFACESCALLBACK2 param2);
+    HRESULT Flip(IDirectDrawSurface4 param0, uint param1);
+    HRESULT GetAttachedSurface(DDSCAPS2* param0, IDirectDrawSurface4* param1);
+    HRESULT GetBltStatus(uint param0);
+    HRESULT GetCaps(DDSCAPS2* param0);
+    HRESULT GetClipper(IDirectDrawClipper* param0);
+    HRESULT GetColorKey(uint param0, DDCOLORKEY* param1);
+    HRESULT GetDC(HDC* param0);
+    HRESULT GetFlipStatus(uint param0);
+    HRESULT GetOverlayPosition(int* param0, int* param1);
+    HRESULT GetPalette(IDirectDrawPalette* param0);
+    HRESULT GetPixelFormat(DDPIXELFORMAT* param0);
+    HRESULT GetSurfaceDesc(DDSURFACEDESC2* param0);
+    HRESULT Initialize(IDirectDraw param0, DDSURFACEDESC2* param1);
     HRESULT IsLost();
-    HRESULT Lock(RECT*, DDSURFACEDESC2*, uint, HANDLE);
-    HRESULT ReleaseDC(HDC);
+    HRESULT Lock(RECT* param0, DDSURFACEDESC2* param1, uint param2, HANDLE param3);
+    HRESULT ReleaseDC(HDC param0);
     HRESULT Restore();
-    HRESULT SetClipper(IDirectDrawClipper);
-    HRESULT SetColorKey(uint, DDCOLORKEY*);
-    HRESULT SetOverlayPosition(int, int);
-    HRESULT SetPalette(IDirectDrawPalette);
-    HRESULT Unlock(RECT*);
-    HRESULT UpdateOverlay(RECT*, IDirectDrawSurface4, RECT*, uint, DDOVERLAYFX*);
-    HRESULT UpdateOverlayDisplay(uint);
-    HRESULT UpdateOverlayZOrder(uint, IDirectDrawSurface4);
-    HRESULT GetDDInterface(void**);
-    HRESULT PageLock(uint);
-    HRESULT PageUnlock(uint);
-    HRESULT SetSurfaceDesc(DDSURFACEDESC2*, uint);
-    HRESULT SetPrivateData(const(GUID)*, void*, uint, uint);
-    HRESULT GetPrivateData(const(GUID)*, void*, uint*);
-    HRESULT FreePrivateData(const(GUID)*);
-    HRESULT GetUniquenessValue(uint*);
+    HRESULT SetClipper(IDirectDrawClipper param0);
+    HRESULT SetColorKey(uint param0, DDCOLORKEY* param1);
+    HRESULT SetOverlayPosition(int param0, int param1);
+    HRESULT SetPalette(IDirectDrawPalette param0);
+    HRESULT Unlock(RECT* param0);
+    HRESULT UpdateOverlay(RECT* param0, IDirectDrawSurface4 param1, RECT* param2, uint param3, DDOVERLAYFX* param4);
+    HRESULT UpdateOverlayDisplay(uint param0);
+    HRESULT UpdateOverlayZOrder(uint param0, IDirectDrawSurface4 param1);
+    HRESULT GetDDInterface(void** param0);
+    HRESULT PageLock(uint param0);
+    HRESULT PageUnlock(uint param0);
+    HRESULT SetSurfaceDesc(DDSURFACEDESC2* param0, uint param1);
+    HRESULT SetPrivateData(const(GUID)* param0, void* param1, uint param2, uint param3);
+    HRESULT GetPrivateData(const(GUID)* param0, void* param1, uint* param2);
+    HRESULT FreePrivateData(const(GUID)* param0);
+    HRESULT GetUniquenessValue(uint* param0);
     HRESULT ChangeUniquenessValue();
 }
 enum IID_IDirectDrawSurface7 = GUID(0x6675a80, 0x3b9b, 0x11d2, [0xb9, 0x2f, 0x0, 0x60, 0x97, 0x97, 0xea, 0x5b]);
 interface IDirectDrawSurface7 : IUnknown
 {
-    HRESULT AddAttachedSurface(IDirectDrawSurface7);
-    HRESULT AddOverlayDirtyRect(RECT*);
-    HRESULT Blt(RECT*, IDirectDrawSurface7, RECT*, uint, DDBLTFX*);
-    HRESULT BltBatch(DDBLTBATCH*, uint, uint);
-    HRESULT BltFast(uint, uint, IDirectDrawSurface7, RECT*, uint);
-    HRESULT DeleteAttachedSurface(uint, IDirectDrawSurface7);
-    HRESULT EnumAttachedSurfaces(void*, LPDDENUMSURFACESCALLBACK7);
-    HRESULT EnumOverlayZOrders(uint, void*, LPDDENUMSURFACESCALLBACK7);
-    HRESULT Flip(IDirectDrawSurface7, uint);
-    HRESULT GetAttachedSurface(DDSCAPS2*, IDirectDrawSurface7*);
-    HRESULT GetBltStatus(uint);
-    HRESULT GetCaps(DDSCAPS2*);
-    HRESULT GetClipper(IDirectDrawClipper*);
-    HRESULT GetColorKey(uint, DDCOLORKEY*);
-    HRESULT GetDC(HDC*);
-    HRESULT GetFlipStatus(uint);
-    HRESULT GetOverlayPosition(int*, int*);
-    HRESULT GetPalette(IDirectDrawPalette*);
-    HRESULT GetPixelFormat(DDPIXELFORMAT*);
-    HRESULT GetSurfaceDesc(DDSURFACEDESC2*);
-    HRESULT Initialize(IDirectDraw, DDSURFACEDESC2*);
+    HRESULT AddAttachedSurface(IDirectDrawSurface7 param0);
+    HRESULT AddOverlayDirtyRect(RECT* param0);
+    HRESULT Blt(RECT* param0, IDirectDrawSurface7 param1, RECT* param2, uint param3, DDBLTFX* param4);
+    HRESULT BltBatch(DDBLTBATCH* param0, uint param1, uint param2);
+    HRESULT BltFast(uint param0, uint param1, IDirectDrawSurface7 param2, RECT* param3, uint param4);
+    HRESULT DeleteAttachedSurface(uint param0, IDirectDrawSurface7 param1);
+    HRESULT EnumAttachedSurfaces(void* param0, LPDDENUMSURFACESCALLBACK7 param1);
+    HRESULT EnumOverlayZOrders(uint param0, void* param1, LPDDENUMSURFACESCALLBACK7 param2);
+    HRESULT Flip(IDirectDrawSurface7 param0, uint param1);
+    HRESULT GetAttachedSurface(DDSCAPS2* param0, IDirectDrawSurface7* param1);
+    HRESULT GetBltStatus(uint param0);
+    HRESULT GetCaps(DDSCAPS2* param0);
+    HRESULT GetClipper(IDirectDrawClipper* param0);
+    HRESULT GetColorKey(uint param0, DDCOLORKEY* param1);
+    HRESULT GetDC(HDC* param0);
+    HRESULT GetFlipStatus(uint param0);
+    HRESULT GetOverlayPosition(int* param0, int* param1);
+    HRESULT GetPalette(IDirectDrawPalette* param0);
+    HRESULT GetPixelFormat(DDPIXELFORMAT* param0);
+    HRESULT GetSurfaceDesc(DDSURFACEDESC2* param0);
+    HRESULT Initialize(IDirectDraw param0, DDSURFACEDESC2* param1);
     HRESULT IsLost();
-    HRESULT Lock(RECT*, DDSURFACEDESC2*, uint, HANDLE);
-    HRESULT ReleaseDC(HDC);
+    HRESULT Lock(RECT* param0, DDSURFACEDESC2* param1, uint param2, HANDLE param3);
+    HRESULT ReleaseDC(HDC param0);
     HRESULT Restore();
-    HRESULT SetClipper(IDirectDrawClipper);
-    HRESULT SetColorKey(uint, DDCOLORKEY*);
-    HRESULT SetOverlayPosition(int, int);
-    HRESULT SetPalette(IDirectDrawPalette);
-    HRESULT Unlock(RECT*);
-    HRESULT UpdateOverlay(RECT*, IDirectDrawSurface7, RECT*, uint, DDOVERLAYFX*);
-    HRESULT UpdateOverlayDisplay(uint);
-    HRESULT UpdateOverlayZOrder(uint, IDirectDrawSurface7);
-    HRESULT GetDDInterface(void**);
-    HRESULT PageLock(uint);
-    HRESULT PageUnlock(uint);
-    HRESULT SetSurfaceDesc(DDSURFACEDESC2*, uint);
-    HRESULT SetPrivateData(const(GUID)*, void*, uint, uint);
-    HRESULT GetPrivateData(const(GUID)*, void*, uint*);
-    HRESULT FreePrivateData(const(GUID)*);
-    HRESULT GetUniquenessValue(uint*);
+    HRESULT SetClipper(IDirectDrawClipper param0);
+    HRESULT SetColorKey(uint param0, DDCOLORKEY* param1);
+    HRESULT SetOverlayPosition(int param0, int param1);
+    HRESULT SetPalette(IDirectDrawPalette param0);
+    HRESULT Unlock(RECT* param0);
+    HRESULT UpdateOverlay(RECT* param0, IDirectDrawSurface7 param1, RECT* param2, uint param3, DDOVERLAYFX* param4);
+    HRESULT UpdateOverlayDisplay(uint param0);
+    HRESULT UpdateOverlayZOrder(uint param0, IDirectDrawSurface7 param1);
+    HRESULT GetDDInterface(void** param0);
+    HRESULT PageLock(uint param0);
+    HRESULT PageUnlock(uint param0);
+    HRESULT SetSurfaceDesc(DDSURFACEDESC2* param0, uint param1);
+    HRESULT SetPrivateData(const(GUID)* param0, void* param1, uint param2, uint param3);
+    HRESULT GetPrivateData(const(GUID)* param0, void* param1, uint* param2);
+    HRESULT FreePrivateData(const(GUID)* param0);
+    HRESULT GetUniquenessValue(uint* param0);
     HRESULT ChangeUniquenessValue();
-    HRESULT SetPriority(uint);
-    HRESULT GetPriority(uint*);
-    HRESULT SetLOD(uint);
-    HRESULT GetLOD(uint*);
+    HRESULT SetPriority(uint param0);
+    HRESULT GetPriority(uint* param0);
+    HRESULT SetLOD(uint param0);
+    HRESULT GetLOD(uint* param0);
 }
 enum IID_IDirectDrawColorControl = GUID(0x4b9f0ee0, 0xd7e, 0x11d0, [0x9b, 0x6, 0x0, 0xa0, 0xc9, 0x3, 0xa3, 0xb8]);
 interface IDirectDrawColorControl : IUnknown
 {
-    HRESULT GetColorControls(DDCOLORCONTROL*);
-    HRESULT SetColorControls(DDCOLORCONTROL*);
+    HRESULT GetColorControls(DDCOLORCONTROL* param0);
+    HRESULT SetColorControls(DDCOLORCONTROL* param0);
 }
 enum IID_IDirectDrawGammaControl = GUID(0x69c11c3e, 0xb46b, 0x11d1, [0xad, 0x7a, 0x0, 0xc0, 0x4f, 0xc2, 0x9b, 0x4e]);
 interface IDirectDrawGammaControl : IUnknown
 {
-    HRESULT GetGammaRamp(uint, DDGAMMARAMP*);
-    HRESULT SetGammaRamp(uint, DDGAMMARAMP*);
+    HRESULT GetGammaRamp(uint param0, DDGAMMARAMP* param1);
+    HRESULT SetGammaRamp(uint param0, DDGAMMARAMP* param1);
 }
 struct DDSURFACEDESC
 {
@@ -1893,38 +1893,38 @@ struct DDCOLORCONTROL
     int lColorEnable;
     uint dwReserved1;
 }
-alias LPDDENUMVIDEOCALLBACK = HRESULT function(DDVIDEOPORTCAPS*, void*);
+alias LPDDENUMVIDEOCALLBACK = HRESULT function(DDVIDEOPORTCAPS* param0, void* param1);
 enum IID_IDDVideoPortContainer = GUID(0x6c142760, 0xa733, 0x11ce, [0xa5, 0x21, 0x0, 0x20, 0xaf, 0xb, 0xe5, 0x60]);
 interface IDDVideoPortContainer : IUnknown
 {
-    HRESULT CreateVideoPort(uint, DDVIDEOPORTDESC*, IDirectDrawVideoPort*, IUnknown);
-    HRESULT EnumVideoPorts(uint, DDVIDEOPORTCAPS*, void*, LPDDENUMVIDEOCALLBACK);
-    HRESULT GetVideoPortConnectInfo(uint, uint*, DDVIDEOPORTCONNECT*);
-    HRESULT QueryVideoPortStatus(uint, DDVIDEOPORTSTATUS*);
+    HRESULT CreateVideoPort(uint param0, DDVIDEOPORTDESC* param1, IDirectDrawVideoPort* param2, IUnknown param3);
+    HRESULT EnumVideoPorts(uint param0, DDVIDEOPORTCAPS* param1, void* param2, LPDDENUMVIDEOCALLBACK param3);
+    HRESULT GetVideoPortConnectInfo(uint param0, uint* pcInfo, DDVIDEOPORTCONNECT* param2);
+    HRESULT QueryVideoPortStatus(uint param0, DDVIDEOPORTSTATUS* param1);
 }
 enum IID_IDirectDrawVideoPort = GUID(0xb36d93e0, 0x2b43, 0x11cf, [0xa2, 0xde, 0x0, 0xaa, 0x0, 0xb9, 0x33, 0x56]);
 interface IDirectDrawVideoPort : IUnknown
 {
-    HRESULT Flip(IDirectDrawSurface, uint);
-    HRESULT GetBandwidthInfo(DDPIXELFORMAT*, uint, uint, uint, DDVIDEOPORTBANDWIDTH*);
-    HRESULT GetColorControls(DDCOLORCONTROL*);
-    HRESULT GetInputFormats(uint*, DDPIXELFORMAT*, uint);
-    HRESULT GetOutputFormats(DDPIXELFORMAT*, uint*, DDPIXELFORMAT*, uint);
-    HRESULT GetFieldPolarity(BOOL*);
-    HRESULT GetVideoLine(uint*);
-    HRESULT GetVideoSignalStatus(uint*);
-    HRESULT SetColorControls(DDCOLORCONTROL*);
-    HRESULT SetTargetSurface(IDirectDrawSurface, uint);
-    HRESULT StartVideo(DDVIDEOPORTINFO*);
+    HRESULT Flip(IDirectDrawSurface param0, uint param1);
+    HRESULT GetBandwidthInfo(DDPIXELFORMAT* param0, uint param1, uint param2, uint param3, DDVIDEOPORTBANDWIDTH* param4);
+    HRESULT GetColorControls(DDCOLORCONTROL* param0);
+    HRESULT GetInputFormats(uint* lpNumFormats, DDPIXELFORMAT* param1, uint param2);
+    HRESULT GetOutputFormats(DDPIXELFORMAT* param0, uint* lpNumFormats, DDPIXELFORMAT* param2, uint param3);
+    HRESULT GetFieldPolarity(BOOL* param0);
+    HRESULT GetVideoLine(uint* param0);
+    HRESULT GetVideoSignalStatus(uint* param0);
+    HRESULT SetColorControls(DDCOLORCONTROL* param0);
+    HRESULT SetTargetSurface(IDirectDrawSurface param0, uint param1);
+    HRESULT StartVideo(DDVIDEOPORTINFO* param0);
     HRESULT StopVideo();
-    HRESULT UpdateVideo(DDVIDEOPORTINFO*);
-    HRESULT WaitForSync(uint, uint, uint);
+    HRESULT UpdateVideo(DDVIDEOPORTINFO* param0);
+    HRESULT WaitForSync(uint param0, uint param1, uint param2);
 }
 enum IID_IDirectDrawVideoPortNotify = GUID(0xa655fb94, 0x589, 0x4e57, [0xb3, 0x33, 0x56, 0x7a, 0x89, 0x46, 0x8c, 0x88]);
 interface IDirectDrawVideoPortNotify : IUnknown
 {
-    HRESULT AcquireNotification(HANDLE*, DDVIDEOPORTNOTIFY*);
-    HRESULT ReleaseNotification(HANDLE);
+    HRESULT AcquireNotification(HANDLE* param0, DDVIDEOPORTNOTIFY* param1);
+    HRESULT ReleaseNotification(HANDLE param0);
 }
 struct DDVIDEOPORTCONNECT
 {
@@ -2017,14 +2017,14 @@ struct DDVIDEOPORTNOTIFY
 enum IID_IDirectDrawKernel = GUID(0x8d56c120, 0x6a08, 0x11d0, [0x9b, 0x6, 0x0, 0xa0, 0xc9, 0x3, 0xa3, 0xb8]);
 interface IDirectDrawKernel : IUnknown
 {
-    HRESULT GetCaps(DDKERNELCAPS*);
-    HRESULT GetKernelHandle(ulong*);
+    HRESULT GetCaps(DDKERNELCAPS* param0);
+    HRESULT GetKernelHandle(ulong* param0);
     HRESULT ReleaseKernelHandle();
 }
 enum IID_IDirectDrawSurfaceKernel = GUID(0x60755da0, 0x6a40, 0x11d0, [0x9b, 0x6, 0x0, 0xa0, 0xc9, 0x3, 0xa3, 0xb8]);
 interface IDirectDrawSurfaceKernel : IUnknown
 {
-    HRESULT GetKernelHandle(ulong*);
+    HRESULT GetKernelHandle(ulong* param0);
     HRESULT ReleaseKernelHandle();
 }
 struct DDKERNELCAPS
@@ -2154,7 +2154,7 @@ struct DDVERSIONDATA
     ulong dwReserved1;
     ulong dwReserved2;
 }
-alias LPDD32BITDRIVERINIT = uint function(uint);
+alias LPDD32BITDRIVERINIT = uint function(uint dwContext);
 struct VIDMEM
 {
     uint dwFlags;
@@ -2207,18 +2207,18 @@ struct IUNKNOWN_LIST
     GUID* lpGuid;
     IUnknown lpIUnknown;
 }
-alias LPDDHEL_INIT = BOOL function(DDRAWI_DIRECTDRAW_GBL*, BOOL);
-alias LPDDHAL_SETCOLORKEY = uint function(DDHAL_DRVSETCOLORKEYDATA*);
-alias LPDDHAL_CANCREATESURFACE = uint function(DDHAL_CANCREATESURFACEDATA*);
-alias LPDDHAL_WAITFORVERTICALBLANK = uint function(DDHAL_WAITFORVERTICALBLANKDATA*);
-alias LPDDHAL_CREATESURFACE = uint function(DDHAL_CREATESURFACEDATA*);
-alias LPDDHAL_DESTROYDRIVER = uint function(DDHAL_DESTROYDRIVERDATA*);
-alias LPDDHAL_SETMODE = uint function(DDHAL_SETMODEDATA*);
-alias LPDDHAL_CREATEPALETTE = uint function(DDHAL_CREATEPALETTEDATA*);
-alias LPDDHAL_GETSCANLINE = uint function(DDHAL_GETSCANLINEDATA*);
-alias LPDDHAL_SETEXCLUSIVEMODE = uint function(DDHAL_SETEXCLUSIVEMODEDATA*);
-alias LPDDHAL_FLIPTOGDISURFACE = uint function(DDHAL_FLIPTOGDISURFACEDATA*);
-alias LPDDHAL_GETDRIVERINFO = uint function(DDHAL_GETDRIVERINFODATA*);
+alias LPDDHEL_INIT = BOOL function(DDRAWI_DIRECTDRAW_GBL* param0, BOOL param1);
+alias LPDDHAL_SETCOLORKEY = uint function(DDHAL_DRVSETCOLORKEYDATA* param0);
+alias LPDDHAL_CANCREATESURFACE = uint function(DDHAL_CANCREATESURFACEDATA* param0);
+alias LPDDHAL_WAITFORVERTICALBLANK = uint function(DDHAL_WAITFORVERTICALBLANKDATA* param0);
+alias LPDDHAL_CREATESURFACE = uint function(DDHAL_CREATESURFACEDATA* param0);
+alias LPDDHAL_DESTROYDRIVER = uint function(DDHAL_DESTROYDRIVERDATA* param0);
+alias LPDDHAL_SETMODE = uint function(DDHAL_SETMODEDATA* param0);
+alias LPDDHAL_CREATEPALETTE = uint function(DDHAL_CREATEPALETTEDATA* param0);
+alias LPDDHAL_GETSCANLINE = uint function(DDHAL_GETSCANLINEDATA* param0);
+alias LPDDHAL_SETEXCLUSIVEMODE = uint function(DDHAL_SETEXCLUSIVEMODEDATA* param0);
+alias LPDDHAL_FLIPTOGDISURFACE = uint function(DDHAL_FLIPTOGDISURFACEDATA* param0);
+alias LPDDHAL_GETDRIVERINFO = uint function(DDHAL_GETDRIVERINFODATA* param0);
 struct DDHAL_DDCALLBACKS
 {
     uint dwSize;
@@ -2234,8 +2234,8 @@ struct DDHAL_DDCALLBACKS
     LPDDHAL_SETEXCLUSIVEMODE SetExclusiveMode;
     LPDDHAL_FLIPTOGDISURFACE FlipToGDISurface;
 }
-alias LPDDHALPALCB_DESTROYPALETTE = uint function(DDHAL_DESTROYPALETTEDATA*);
-alias LPDDHALPALCB_SETENTRIES = uint function(DDHAL_SETENTRIESDATA*);
+alias LPDDHALPALCB_DESTROYPALETTE = uint function(DDHAL_DESTROYPALETTEDATA* param0);
+alias LPDDHALPALCB_SETENTRIES = uint function(DDHAL_SETENTRIESDATA* param0);
 struct DDHAL_DDPALETTECALLBACKS
 {
     uint dwSize;
@@ -2243,19 +2243,19 @@ struct DDHAL_DDPALETTECALLBACKS
     LPDDHALPALCB_DESTROYPALETTE DestroyPalette;
     LPDDHALPALCB_SETENTRIES SetEntries;
 }
-alias LPDDHALSURFCB_LOCK = uint function(DDHAL_LOCKDATA*);
-alias LPDDHALSURFCB_UNLOCK = uint function(DDHAL_UNLOCKDATA*);
-alias LPDDHALSURFCB_BLT = uint function(DDHAL_BLTDATA*);
-alias LPDDHALSURFCB_UPDATEOVERLAY = uint function(DDHAL_UPDATEOVERLAYDATA*);
-alias LPDDHALSURFCB_SETOVERLAYPOSITION = uint function(DDHAL_SETOVERLAYPOSITIONDATA*);
-alias LPDDHALSURFCB_SETPALETTE = uint function(DDHAL_SETPALETTEDATA*);
-alias LPDDHALSURFCB_FLIP = uint function(DDHAL_FLIPDATA*);
-alias LPDDHALSURFCB_DESTROYSURFACE = uint function(DDHAL_DESTROYSURFACEDATA*);
-alias LPDDHALSURFCB_SETCLIPLIST = uint function(DDHAL_SETCLIPLISTDATA*);
-alias LPDDHALSURFCB_ADDATTACHEDSURFACE = uint function(DDHAL_ADDATTACHEDSURFACEDATA*);
-alias LPDDHALSURFCB_SETCOLORKEY = uint function(DDHAL_SETCOLORKEYDATA*);
-alias LPDDHALSURFCB_GETBLTSTATUS = uint function(DDHAL_GETBLTSTATUSDATA*);
-alias LPDDHALSURFCB_GETFLIPSTATUS = uint function(DDHAL_GETFLIPSTATUSDATA*);
+alias LPDDHALSURFCB_LOCK = uint function(DDHAL_LOCKDATA* param0);
+alias LPDDHALSURFCB_UNLOCK = uint function(DDHAL_UNLOCKDATA* param0);
+alias LPDDHALSURFCB_BLT = uint function(DDHAL_BLTDATA* param0);
+alias LPDDHALSURFCB_UPDATEOVERLAY = uint function(DDHAL_UPDATEOVERLAYDATA* param0);
+alias LPDDHALSURFCB_SETOVERLAYPOSITION = uint function(DDHAL_SETOVERLAYPOSITIONDATA* param0);
+alias LPDDHALSURFCB_SETPALETTE = uint function(DDHAL_SETPALETTEDATA* param0);
+alias LPDDHALSURFCB_FLIP = uint function(DDHAL_FLIPDATA* param0);
+alias LPDDHALSURFCB_DESTROYSURFACE = uint function(DDHAL_DESTROYSURFACEDATA* param0);
+alias LPDDHALSURFCB_SETCLIPLIST = uint function(DDHAL_SETCLIPLISTDATA* param0);
+alias LPDDHALSURFCB_ADDATTACHEDSURFACE = uint function(DDHAL_ADDATTACHEDSURFACEDATA* param0);
+alias LPDDHALSURFCB_SETCOLORKEY = uint function(DDHAL_SETCOLORKEYDATA* param0);
+alias LPDDHALSURFCB_GETBLTSTATUS = uint function(DDHAL_GETBLTSTATUSDATA* param0);
+alias LPDDHALSURFCB_GETFLIPSTATUS = uint function(DDHAL_GETFLIPSTATUSDATA* param0);
 struct DDHAL_DDSURFACECALLBACKS
 {
     uint dwSize;
@@ -2275,9 +2275,9 @@ struct DDHAL_DDSURFACECALLBACKS
     void* reserved4;
     LPDDHALSURFCB_SETPALETTE SetPalette;
 }
-alias LPDDHAL_GETAVAILDRIVERMEMORY = uint function(DDHAL_GETAVAILDRIVERMEMORYDATA*);
-alias LPDDHAL_UPDATENONLOCALHEAP = uint function(DDHAL_UPDATENONLOCALHEAPDATA*);
-alias LPDDHAL_GETHEAPALIGNMENT = uint function(DDHAL_GETHEAPALIGNMENTDATA*);
+alias LPDDHAL_GETAVAILDRIVERMEMORY = uint function(DDHAL_GETAVAILDRIVERMEMORYDATA* param0);
+alias LPDDHAL_UPDATENONLOCALHEAP = uint function(DDHAL_UPDATENONLOCALHEAPDATA* param0);
+alias LPDDHAL_GETHEAPALIGNMENT = uint function(DDHAL_GETHEAPALIGNMENTDATA* param0);
 struct DDHAL_DDMISCELLANEOUSCALLBACKS
 {
     uint dwSize;
@@ -2287,9 +2287,9 @@ struct DDHAL_DDMISCELLANEOUSCALLBACKS
     LPDDHAL_GETHEAPALIGNMENT GetHeapAlignment;
     LPDDHALSURFCB_GETBLTSTATUS GetSysmemBltStatus;
 }
-alias LPDDHAL_CREATESURFACEEX = uint function(DDHAL_CREATESURFACEEXDATA*);
-alias LPDDHAL_GETDRIVERSTATE = uint function(DDHAL_GETDRIVERSTATEDATA*);
-alias LPDDHAL_DESTROYDDLOCAL = uint function(DDHAL_DESTROYDDLOCALDATA*);
+alias LPDDHAL_CREATESURFACEEX = uint function(DDHAL_CREATESURFACEEXDATA* param0);
+alias LPDDHAL_GETDRIVERSTATE = uint function(DDHAL_GETDRIVERSTATEDATA* param0);
+alias LPDDHAL_DESTROYDDLOCAL = uint function(DDHAL_DESTROYDDLOCALDATA* param0);
 struct DDHAL_DDMISCELLANEOUS2CALLBACKS
 {
     uint dwSize;
@@ -2299,11 +2299,11 @@ struct DDHAL_DDMISCELLANEOUS2CALLBACKS
     LPDDHAL_GETDRIVERSTATE GetDriverState;
     LPDDHAL_DESTROYDDLOCAL DestroyDDLocal;
 }
-alias LPDDHALEXEBUFCB_CANCREATEEXEBUF = uint function(DDHAL_CANCREATESURFACEDATA*);
-alias LPDDHALEXEBUFCB_CREATEEXEBUF = uint function(DDHAL_CREATESURFACEDATA*);
-alias LPDDHALEXEBUFCB_DESTROYEXEBUF = uint function(DDHAL_DESTROYSURFACEDATA*);
-alias LPDDHALEXEBUFCB_LOCKEXEBUF = uint function(DDHAL_LOCKDATA*);
-alias LPDDHALEXEBUFCB_UNLOCKEXEBUF = uint function(DDHAL_UNLOCKDATA*);
+alias LPDDHALEXEBUFCB_CANCREATEEXEBUF = uint function(DDHAL_CANCREATESURFACEDATA* param0);
+alias LPDDHALEXEBUFCB_CREATEEXEBUF = uint function(DDHAL_CREATESURFACEDATA* param0);
+alias LPDDHALEXEBUFCB_DESTROYEXEBUF = uint function(DDHAL_DESTROYSURFACEDATA* param0);
+alias LPDDHALEXEBUFCB_LOCKEXEBUF = uint function(DDHAL_LOCKDATA* param0);
+alias LPDDHALEXEBUFCB_UNLOCKEXEBUF = uint function(DDHAL_UNLOCKDATA* param0);
 struct DDHAL_DDEXEBUFCALLBACKS
 {
     uint dwSize;
@@ -2314,21 +2314,21 @@ struct DDHAL_DDEXEBUFCALLBACKS
     LPDDHALEXEBUFCB_LOCKEXEBUF LockExecuteBuffer;
     LPDDHALEXEBUFCB_UNLOCKEXEBUF UnlockExecuteBuffer;
 }
-alias LPDDHALVPORTCB_CANCREATEVIDEOPORT = uint function(DDHAL_CANCREATEVPORTDATA*);
-alias LPDDHALVPORTCB_CREATEVIDEOPORT = uint function(DDHAL_CREATEVPORTDATA*);
-alias LPDDHALVPORTCB_FLIP = uint function(DDHAL_FLIPVPORTDATA*);
-alias LPDDHALVPORTCB_GETBANDWIDTH = uint function(DDHAL_GETVPORTBANDWIDTHDATA*);
-alias LPDDHALVPORTCB_GETINPUTFORMATS = uint function(DDHAL_GETVPORTINPUTFORMATDATA*);
-alias LPDDHALVPORTCB_GETOUTPUTFORMATS = uint function(DDHAL_GETVPORTOUTPUTFORMATDATA*);
-alias LPDDHALVPORTCB_GETFIELD = uint function(DDHAL_GETVPORTFIELDDATA*);
-alias LPDDHALVPORTCB_GETLINE = uint function(DDHAL_GETVPORTLINEDATA*);
-alias LPDDHALVPORTCB_GETVPORTCONNECT = uint function(DDHAL_GETVPORTCONNECTDATA*);
-alias LPDDHALVPORTCB_DESTROYVPORT = uint function(DDHAL_DESTROYVPORTDATA*);
-alias LPDDHALVPORTCB_GETFLIPSTATUS = uint function(DDHAL_GETVPORTFLIPSTATUSDATA*);
-alias LPDDHALVPORTCB_UPDATE = uint function(DDHAL_UPDATEVPORTDATA*);
-alias LPDDHALVPORTCB_WAITFORSYNC = uint function(DDHAL_WAITFORVPORTSYNCDATA*);
-alias LPDDHALVPORTCB_GETSIGNALSTATUS = uint function(DDHAL_GETVPORTSIGNALDATA*);
-alias LPDDHALVPORTCB_COLORCONTROL = uint function(DDHAL_VPORTCOLORDATA*);
+alias LPDDHALVPORTCB_CANCREATEVIDEOPORT = uint function(DDHAL_CANCREATEVPORTDATA* param0);
+alias LPDDHALVPORTCB_CREATEVIDEOPORT = uint function(DDHAL_CREATEVPORTDATA* param0);
+alias LPDDHALVPORTCB_FLIP = uint function(DDHAL_FLIPVPORTDATA* param0);
+alias LPDDHALVPORTCB_GETBANDWIDTH = uint function(DDHAL_GETVPORTBANDWIDTHDATA* param0);
+alias LPDDHALVPORTCB_GETINPUTFORMATS = uint function(DDHAL_GETVPORTINPUTFORMATDATA* param0);
+alias LPDDHALVPORTCB_GETOUTPUTFORMATS = uint function(DDHAL_GETVPORTOUTPUTFORMATDATA* param0);
+alias LPDDHALVPORTCB_GETFIELD = uint function(DDHAL_GETVPORTFIELDDATA* param0);
+alias LPDDHALVPORTCB_GETLINE = uint function(DDHAL_GETVPORTLINEDATA* param0);
+alias LPDDHALVPORTCB_GETVPORTCONNECT = uint function(DDHAL_GETVPORTCONNECTDATA* param0);
+alias LPDDHALVPORTCB_DESTROYVPORT = uint function(DDHAL_DESTROYVPORTDATA* param0);
+alias LPDDHALVPORTCB_GETFLIPSTATUS = uint function(DDHAL_GETVPORTFLIPSTATUSDATA* param0);
+alias LPDDHALVPORTCB_UPDATE = uint function(DDHAL_UPDATEVPORTDATA* param0);
+alias LPDDHALVPORTCB_WAITFORSYNC = uint function(DDHAL_WAITFORVPORTSYNCDATA* param0);
+alias LPDDHALVPORTCB_GETSIGNALSTATUS = uint function(DDHAL_GETVPORTSIGNALDATA* param0);
+alias LPDDHALVPORTCB_COLORCONTROL = uint function(DDHAL_VPORTCOLORDATA* param0);
 struct DDHAL_DDVIDEOPORTCALLBACKS
 {
     uint dwSize;
@@ -2350,15 +2350,15 @@ struct DDHAL_DDVIDEOPORTCALLBACKS
     LPDDHALVPORTCB_GETSIGNALSTATUS GetVideoSignalStatus;
     LPDDHALVPORTCB_COLORCONTROL ColorControl;
 }
-alias LPDDHALCOLORCB_COLORCONTROL = uint function(DDHAL_COLORCONTROLDATA*);
+alias LPDDHALCOLORCB_COLORCONTROL = uint function(DDHAL_COLORCONTROLDATA* param0);
 struct DDHAL_DDCOLORCONTROLCALLBACKS
 {
     uint dwSize;
     uint dwFlags;
     LPDDHALCOLORCB_COLORCONTROL ColorControl;
 }
-alias LPDDHALKERNELCB_SYNCSURFACE = uint function(DDHAL_SYNCSURFACEDATA*);
-alias LPDDHALKERNELCB_SYNCVIDEOPORT = uint function(DDHAL_SYNCVIDEOPORTDATA*);
+alias LPDDHALKERNELCB_SYNCSURFACE = uint function(DDHAL_SYNCSURFACEDATA* param0);
+alias LPDDHALKERNELCB_SYNCVIDEOPORT = uint function(DDHAL_SYNCVIDEOPORTDATA* param0);
 struct DDHAL_DDKERNELCALLBACKS
 {
     uint dwSize;
@@ -2366,17 +2366,17 @@ struct DDHAL_DDKERNELCALLBACKS
     LPDDHALKERNELCB_SYNCSURFACE SyncSurfaceData;
     LPDDHALKERNELCB_SYNCVIDEOPORT SyncVideoPortData;
 }
-alias LPDDGAMMACALIBRATORPROC = HRESULT function(DDGAMMARAMP*, ubyte*);
-alias LPDDHALMOCOMPCB_GETGUIDS = uint function(DDHAL_GETMOCOMPGUIDSDATA*);
-alias LPDDHALMOCOMPCB_GETFORMATS = uint function(DDHAL_GETMOCOMPFORMATSDATA*);
-alias LPDDHALMOCOMPCB_CREATE = uint function(DDHAL_CREATEMOCOMPDATA*);
-alias LPDDHALMOCOMPCB_GETCOMPBUFFINFO = uint function(DDHAL_GETMOCOMPCOMPBUFFDATA*);
-alias LPDDHALMOCOMPCB_GETINTERNALINFO = uint function(DDHAL_GETINTERNALMOCOMPDATA*);
-alias LPDDHALMOCOMPCB_BEGINFRAME = uint function(DDHAL_BEGINMOCOMPFRAMEDATA*);
-alias LPDDHALMOCOMPCB_ENDFRAME = uint function(DDHAL_ENDMOCOMPFRAMEDATA*);
-alias LPDDHALMOCOMPCB_RENDER = uint function(DDHAL_RENDERMOCOMPDATA*);
-alias LPDDHALMOCOMPCB_QUERYSTATUS = uint function(DDHAL_QUERYMOCOMPSTATUSDATA*);
-alias LPDDHALMOCOMPCB_DESTROY = uint function(DDHAL_DESTROYMOCOMPDATA*);
+alias LPDDGAMMACALIBRATORPROC = HRESULT function(DDGAMMARAMP* param0, ubyte* param1);
+alias LPDDHALMOCOMPCB_GETGUIDS = uint function(DDHAL_GETMOCOMPGUIDSDATA* param0);
+alias LPDDHALMOCOMPCB_GETFORMATS = uint function(DDHAL_GETMOCOMPFORMATSDATA* param0);
+alias LPDDHALMOCOMPCB_CREATE = uint function(DDHAL_CREATEMOCOMPDATA* param0);
+alias LPDDHALMOCOMPCB_GETCOMPBUFFINFO = uint function(DDHAL_GETMOCOMPCOMPBUFFDATA* param0);
+alias LPDDHALMOCOMPCB_GETINTERNALINFO = uint function(DDHAL_GETINTERNALMOCOMPDATA* param0);
+alias LPDDHALMOCOMPCB_BEGINFRAME = uint function(DDHAL_BEGINMOCOMPFRAMEDATA* param0);
+alias LPDDHALMOCOMPCB_ENDFRAME = uint function(DDHAL_ENDMOCOMPFRAMEDATA* param0);
+alias LPDDHALMOCOMPCB_RENDER = uint function(DDHAL_RENDERMOCOMPDATA* param0);
+alias LPDDHALMOCOMPCB_QUERYSTATUS = uint function(DDHAL_QUERYMOCOMPSTATUSDATA* param0);
+alias LPDDHALMOCOMPCB_DESTROY = uint function(DDHAL_DESTROYMOCOMPDATA* param0);
 struct DDHAL_DDMOTIONCOMPCALLBACKS
 {
     uint dwSize;
@@ -2925,9 +2925,9 @@ struct DDHALINFO
     ulong lpD3DHALCallbacks;
     DDHAL_DDEXEBUFCALLBACKS* lpDDExeBufCallbacks;
 }
-alias LPDDHAL_SETINFO = BOOL function(DDHALINFO*, BOOL);
-alias LPDDHAL_VIDMEMALLOC = ulong function(DDRAWI_DIRECTDRAW_GBL*, int, uint, uint);
-alias LPDDHAL_VIDMEMFREE = void function(DDRAWI_DIRECTDRAW_GBL*, int, ulong);
+alias LPDDHAL_SETINFO = BOOL function(DDHALINFO* lpDDHalInfo, BOOL reset);
+alias LPDDHAL_VIDMEMALLOC = ulong function(DDRAWI_DIRECTDRAW_GBL* lpDD, int heap, uint dwWidth, uint dwHeight);
+alias LPDDHAL_VIDMEMFREE = void function(DDRAWI_DIRECTDRAW_GBL* lpDD, int heap, ulong fpMem);
 struct DDHALDDRAWFNS
 {
     uint dwSize;
@@ -3551,16 +3551,16 @@ struct VIDEOMEMORYINFO
     uint dwAlphaAlign;
     void* pvPrimary;
 }
-alias PDD_SETCOLORKEY = uint function(DD_DRVSETCOLORKEYDATA*);
-alias PDD_CANCREATESURFACE = uint function(DD_CANCREATESURFACEDATA*);
-alias PDD_WAITFORVERTICALBLANK = uint function(DD_WAITFORVERTICALBLANKDATA*);
-alias PDD_CREATESURFACE = uint function(DD_CREATESURFACEDATA*);
-alias PDD_DESTROYDRIVER = uint function(PDD_DESTROYDRIVERDATA);
-alias PDD_SETMODE = uint function(PDD_SETMODEDATA);
-alias PDD_CREATEPALETTE = uint function(DD_CREATEPALETTEDATA*);
-alias PDD_GETSCANLINE = uint function(DD_GETSCANLINEDATA*);
-alias PDD_MAPMEMORY = uint function(DD_MAPMEMORYDATA*);
-alias PDD_GETDRIVERINFO = uint function(DD_GETDRIVERINFODATA*);
+alias PDD_SETCOLORKEY = uint function(DD_DRVSETCOLORKEYDATA* param0);
+alias PDD_CANCREATESURFACE = uint function(DD_CANCREATESURFACEDATA* param0);
+alias PDD_WAITFORVERTICALBLANK = uint function(DD_WAITFORVERTICALBLANKDATA* param0);
+alias PDD_CREATESURFACE = uint function(DD_CREATESURFACEDATA* param0);
+alias PDD_DESTROYDRIVER = uint function(PDD_DESTROYDRIVERDATA param0);
+alias PDD_SETMODE = uint function(PDD_SETMODEDATA param0);
+alias PDD_CREATEPALETTE = uint function(DD_CREATEPALETTEDATA* param0);
+alias PDD_GETSCANLINE = uint function(DD_GETSCANLINEDATA* param0);
+alias PDD_MAPMEMORY = uint function(DD_MAPMEMORYDATA* param0);
+alias PDD_GETDRIVERINFO = uint function(DD_GETDRIVERINFODATA* param0);
 struct DD_CALLBACKS
 {
     uint dwSize;
@@ -3575,17 +3575,17 @@ struct DD_CALLBACKS
     PDD_GETSCANLINE GetScanLine;
     PDD_MAPMEMORY MapMemory;
 }
-alias PDD_GETAVAILDRIVERMEMORY = uint function(DD_GETAVAILDRIVERMEMORYDATA*);
+alias PDD_GETAVAILDRIVERMEMORY = uint function(DD_GETAVAILDRIVERMEMORYDATA* param0);
 struct DD_MISCELLANEOUSCALLBACKS
 {
     uint dwSize;
     uint dwFlags;
     PDD_GETAVAILDRIVERMEMORY GetAvailDriverMemory;
 }
-alias PDD_ALPHABLT = uint function(DD_BLTDATA*);
-alias PDD_CREATESURFACEEX = uint function(DD_CREATESURFACEEXDATA*);
-alias PDD_GETDRIVERSTATE = uint function(DD_GETDRIVERSTATEDATA*);
-alias PDD_DESTROYDDLOCAL = uint function(DD_DESTROYDDLOCALDATA*);
+alias PDD_ALPHABLT = uint function(DD_BLTDATA* param0);
+alias PDD_CREATESURFACEEX = uint function(DD_CREATESURFACEEXDATA* param0);
+alias PDD_GETDRIVERSTATE = uint function(DD_GETDRIVERSTATEDATA* param0);
+alias PDD_DESTROYDDLOCAL = uint function(DD_DESTROYDDLOCALDATA* param0);
 struct DD_MISCELLANEOUS2CALLBACKS
 {
     uint dwSize;
@@ -3595,9 +3595,9 @@ struct DD_MISCELLANEOUS2CALLBACKS
     PDD_GETDRIVERSTATE GetDriverState;
     PDD_DESTROYDDLOCAL DestroyDDLocal;
 }
-alias PDD_FREEDRIVERMEMORY = uint function(DD_FREEDRIVERMEMORYDATA*);
-alias PDD_SETEXCLUSIVEMODE = uint function(DD_SETEXCLUSIVEMODEDATA*);
-alias PDD_FLIPTOGDISURFACE = uint function(DD_FLIPTOGDISURFACEDATA*);
+alias PDD_FREEDRIVERMEMORY = uint function(DD_FREEDRIVERMEMORYDATA* param0);
+alias PDD_SETEXCLUSIVEMODE = uint function(DD_SETEXCLUSIVEMODEDATA* param0);
+alias PDD_FLIPTOGDISURFACE = uint function(DD_FLIPTOGDISURFACEDATA* param0);
 struct DD_NTCALLBACKS
 {
     uint dwSize;
@@ -3606,8 +3606,8 @@ struct DD_NTCALLBACKS
     PDD_SETEXCLUSIVEMODE SetExclusiveMode;
     PDD_FLIPTOGDISURFACE FlipToGDISurface;
 }
-alias PDD_PALCB_DESTROYPALETTE = uint function(DD_DESTROYPALETTEDATA*);
-alias PDD_PALCB_SETENTRIES = uint function(DD_SETENTRIESDATA*);
+alias PDD_PALCB_DESTROYPALETTE = uint function(DD_DESTROYPALETTEDATA* param0);
+alias PDD_PALCB_SETENTRIES = uint function(DD_SETENTRIESDATA* param0);
 struct DD_PALETTECALLBACKS
 {
     uint dwSize;
@@ -3615,19 +3615,19 @@ struct DD_PALETTECALLBACKS
     PDD_PALCB_DESTROYPALETTE DestroyPalette;
     PDD_PALCB_SETENTRIES SetEntries;
 }
-alias PDD_SURFCB_LOCK = uint function(DD_LOCKDATA*);
-alias PDD_SURFCB_UNLOCK = uint function(DD_UNLOCKDATA*);
-alias PDD_SURFCB_BLT = uint function(DD_BLTDATA*);
-alias PDD_SURFCB_UPDATEOVERLAY = uint function(DD_UPDATEOVERLAYDATA*);
-alias PDD_SURFCB_SETOVERLAYPOSITION = uint function(DD_SETOVERLAYPOSITIONDATA*);
-alias PDD_SURFCB_SETPALETTE = uint function(DD_SETPALETTEDATA*);
-alias PDD_SURFCB_FLIP = uint function(DD_FLIPDATA*);
-alias PDD_SURFCB_DESTROYSURFACE = uint function(DD_DESTROYSURFACEDATA*);
-alias PDD_SURFCB_SETCLIPLIST = uint function(DD_SETCLIPLISTDATA*);
-alias PDD_SURFCB_ADDATTACHEDSURFACE = uint function(DD_ADDATTACHEDSURFACEDATA*);
-alias PDD_SURFCB_SETCOLORKEY = uint function(DD_SETCOLORKEYDATA*);
-alias PDD_SURFCB_GETBLTSTATUS = uint function(DD_GETBLTSTATUSDATA*);
-alias PDD_SURFCB_GETFLIPSTATUS = uint function(DD_GETFLIPSTATUSDATA*);
+alias PDD_SURFCB_LOCK = uint function(DD_LOCKDATA* param0);
+alias PDD_SURFCB_UNLOCK = uint function(DD_UNLOCKDATA* param0);
+alias PDD_SURFCB_BLT = uint function(DD_BLTDATA* param0);
+alias PDD_SURFCB_UPDATEOVERLAY = uint function(DD_UPDATEOVERLAYDATA* param0);
+alias PDD_SURFCB_SETOVERLAYPOSITION = uint function(DD_SETOVERLAYPOSITIONDATA* param0);
+alias PDD_SURFCB_SETPALETTE = uint function(DD_SETPALETTEDATA* param0);
+alias PDD_SURFCB_FLIP = uint function(DD_FLIPDATA* param0);
+alias PDD_SURFCB_DESTROYSURFACE = uint function(DD_DESTROYSURFACEDATA* param0);
+alias PDD_SURFCB_SETCLIPLIST = uint function(DD_SETCLIPLISTDATA* param0);
+alias PDD_SURFCB_ADDATTACHEDSURFACE = uint function(DD_ADDATTACHEDSURFACEDATA* param0);
+alias PDD_SURFCB_SETCOLORKEY = uint function(DD_SETCOLORKEYDATA* param0);
+alias PDD_SURFCB_GETBLTSTATUS = uint function(DD_GETBLTSTATUSDATA* param0);
+alias PDD_SURFCB_GETFLIPSTATUS = uint function(DD_GETFLIPSTATUSDATA* param0);
 struct DD_SURFACECALLBACKS
 {
     uint dwSize;
@@ -3647,22 +3647,22 @@ struct DD_SURFACECALLBACKS
     void* reserved4;
     PDD_SURFCB_SETPALETTE SetPalette;
 }
-alias PDD_VPORTCB_CANCREATEVIDEOPORT = uint function(DD_CANCREATEVPORTDATA*);
-alias PDD_VPORTCB_CREATEVIDEOPORT = uint function(DD_CREATEVPORTDATA*);
-alias PDD_VPORTCB_FLIP = uint function(DD_FLIPVPORTDATA*);
-alias PDD_VPORTCB_GETBANDWIDTH = uint function(DD_GETVPORTBANDWIDTHDATA*);
-alias PDD_VPORTCB_GETINPUTFORMATS = uint function(DD_GETVPORTINPUTFORMATDATA*);
-alias PDD_VPORTCB_GETOUTPUTFORMATS = uint function(DD_GETVPORTOUTPUTFORMATDATA*);
-alias PDD_VPORTCB_GETAUTOFLIPSURF = uint function(PDD_GETVPORTAUTOFLIPSURFACEDATA);
-alias PDD_VPORTCB_GETFIELD = uint function(DD_GETVPORTFIELDDATA*);
-alias PDD_VPORTCB_GETLINE = uint function(DD_GETVPORTLINEDATA*);
-alias PDD_VPORTCB_GETVPORTCONNECT = uint function(DD_GETVPORTCONNECTDATA*);
-alias PDD_VPORTCB_DESTROYVPORT = uint function(DD_DESTROYVPORTDATA*);
-alias PDD_VPORTCB_GETFLIPSTATUS = uint function(DD_GETVPORTFLIPSTATUSDATA*);
-alias PDD_VPORTCB_UPDATE = uint function(DD_UPDATEVPORTDATA*);
-alias PDD_VPORTCB_WAITFORSYNC = uint function(DD_WAITFORVPORTSYNCDATA*);
-alias PDD_VPORTCB_GETSIGNALSTATUS = uint function(DD_GETVPORTSIGNALDATA*);
-alias PDD_VPORTCB_COLORCONTROL = uint function(DD_VPORTCOLORDATA*);
+alias PDD_VPORTCB_CANCREATEVIDEOPORT = uint function(DD_CANCREATEVPORTDATA* param0);
+alias PDD_VPORTCB_CREATEVIDEOPORT = uint function(DD_CREATEVPORTDATA* param0);
+alias PDD_VPORTCB_FLIP = uint function(DD_FLIPVPORTDATA* param0);
+alias PDD_VPORTCB_GETBANDWIDTH = uint function(DD_GETVPORTBANDWIDTHDATA* param0);
+alias PDD_VPORTCB_GETINPUTFORMATS = uint function(DD_GETVPORTINPUTFORMATDATA* param0);
+alias PDD_VPORTCB_GETOUTPUTFORMATS = uint function(DD_GETVPORTOUTPUTFORMATDATA* param0);
+alias PDD_VPORTCB_GETAUTOFLIPSURF = uint function(PDD_GETVPORTAUTOFLIPSURFACEDATA param0);
+alias PDD_VPORTCB_GETFIELD = uint function(DD_GETVPORTFIELDDATA* param0);
+alias PDD_VPORTCB_GETLINE = uint function(DD_GETVPORTLINEDATA* param0);
+alias PDD_VPORTCB_GETVPORTCONNECT = uint function(DD_GETVPORTCONNECTDATA* param0);
+alias PDD_VPORTCB_DESTROYVPORT = uint function(DD_DESTROYVPORTDATA* param0);
+alias PDD_VPORTCB_GETFLIPSTATUS = uint function(DD_GETVPORTFLIPSTATUSDATA* param0);
+alias PDD_VPORTCB_UPDATE = uint function(DD_UPDATEVPORTDATA* param0);
+alias PDD_VPORTCB_WAITFORSYNC = uint function(DD_WAITFORVPORTSYNCDATA* param0);
+alias PDD_VPORTCB_GETSIGNALSTATUS = uint function(DD_GETVPORTSIGNALDATA* param0);
+alias PDD_VPORTCB_COLORCONTROL = uint function(DD_VPORTCOLORDATA* param0);
 struct DD_VIDEOPORTCALLBACKS
 {
     uint dwSize;
@@ -3684,15 +3684,15 @@ struct DD_VIDEOPORTCALLBACKS
     PDD_VPORTCB_GETSIGNALSTATUS GetVideoSignalStatus;
     PDD_VPORTCB_COLORCONTROL ColorControl;
 }
-alias PDD_COLORCB_COLORCONTROL = uint function(DD_COLORCONTROLDATA*);
+alias PDD_COLORCB_COLORCONTROL = uint function(DD_COLORCONTROLDATA* param0);
 struct DD_COLORCONTROLCALLBACKS
 {
     uint dwSize;
     uint dwFlags;
     PDD_COLORCB_COLORCONTROL ColorControl;
 }
-alias PDD_KERNELCB_SYNCSURFACE = uint function(DD_SYNCSURFACEDATA*);
-alias PDD_KERNELCB_SYNCVIDEOPORT = uint function(DD_SYNCVIDEOPORTDATA*);
+alias PDD_KERNELCB_SYNCSURFACE = uint function(DD_SYNCSURFACEDATA* param0);
+alias PDD_KERNELCB_SYNCVIDEOPORT = uint function(DD_SYNCVIDEOPORTDATA* param0);
 struct DD_KERNELCALLBACKS
 {
     uint dwSize;
@@ -3700,16 +3700,16 @@ struct DD_KERNELCALLBACKS
     PDD_KERNELCB_SYNCSURFACE SyncSurfaceData;
     PDD_KERNELCB_SYNCVIDEOPORT SyncVideoPortData;
 }
-alias PDD_MOCOMPCB_GETGUIDS = uint function(DD_GETMOCOMPGUIDSDATA*);
-alias PDD_MOCOMPCB_GETFORMATS = uint function(DD_GETMOCOMPFORMATSDATA*);
-alias PDD_MOCOMPCB_CREATE = uint function(DD_CREATEMOCOMPDATA*);
-alias PDD_MOCOMPCB_GETCOMPBUFFINFO = uint function(DD_GETMOCOMPCOMPBUFFDATA*);
-alias PDD_MOCOMPCB_GETINTERNALINFO = uint function(DD_GETINTERNALMOCOMPDATA*);
-alias PDD_MOCOMPCB_BEGINFRAME = uint function(DD_BEGINMOCOMPFRAMEDATA*);
-alias PDD_MOCOMPCB_ENDFRAME = uint function(DD_ENDMOCOMPFRAMEDATA*);
-alias PDD_MOCOMPCB_RENDER = uint function(DD_RENDERMOCOMPDATA*);
-alias PDD_MOCOMPCB_QUERYSTATUS = uint function(DD_QUERYMOCOMPSTATUSDATA*);
-alias PDD_MOCOMPCB_DESTROY = uint function(DD_DESTROYMOCOMPDATA*);
+alias PDD_MOCOMPCB_GETGUIDS = uint function(DD_GETMOCOMPGUIDSDATA* param0);
+alias PDD_MOCOMPCB_GETFORMATS = uint function(DD_GETMOCOMPFORMATSDATA* param0);
+alias PDD_MOCOMPCB_CREATE = uint function(DD_CREATEMOCOMPDATA* param0);
+alias PDD_MOCOMPCB_GETCOMPBUFFINFO = uint function(DD_GETMOCOMPCOMPBUFFDATA* param0);
+alias PDD_MOCOMPCB_GETINTERNALINFO = uint function(DD_GETINTERNALMOCOMPDATA* param0);
+alias PDD_MOCOMPCB_BEGINFRAME = uint function(DD_BEGINMOCOMPFRAMEDATA* param0);
+alias PDD_MOCOMPCB_ENDFRAME = uint function(DD_ENDMOCOMPFRAMEDATA* param0);
+alias PDD_MOCOMPCB_RENDER = uint function(DD_RENDERMOCOMPDATA* param0);
+alias PDD_MOCOMPCB_QUERYSTATUS = uint function(DD_QUERYMOCOMPSTATUSDATA* param0);
+alias PDD_MOCOMPCB_DESTROY = uint function(DD_DESTROYMOCOMPDATA* param0);
 struct DD_MOTIONCOMPCALLBACKS
 {
     uint dwSize;
@@ -4590,7 +4590,7 @@ struct DX_IRQDATA
 {
     uint dwIrqFlags;
 }
-alias PDX_IRQCALLBACK = void function(DX_IRQDATA*);
+alias PDX_IRQCALLBACK = void function(DX_IRQDATA* pIrqData);
 struct DDGETIRQINFO
 {
     uint dwFlags;
@@ -4686,19 +4686,19 @@ struct DDGETTRANSFERSTATUSOUTINFO
 {
     ulong dwTransferID;
 }
-alias PDX_GETIRQINFO = uint function(void*, void*, DDGETIRQINFO*);
-alias PDX_ENABLEIRQ = uint function(void*, DDENABLEIRQINFO*, void*);
-alias PDX_SKIPNEXTFIELD = uint function(void*, DDSKIPNEXTFIELDINFO*, void*);
-alias PDX_BOBNEXTFIELD = uint function(void*, DDBOBNEXTFIELDINFO*, void*);
-alias PDX_SETSTATE = uint function(void*, DDSETSTATEININFO*, DDSETSTATEOUTINFO*);
-alias PDX_LOCK = uint function(void*, DDLOCKININFO*, DDLOCKOUTINFO*);
-alias PDX_FLIPOVERLAY = uint function(void*, DDFLIPOVERLAYINFO*, void*);
-alias PDX_FLIPVIDEOPORT = uint function(void*, DDFLIPVIDEOPORTINFO*, void*);
-alias PDX_GETPOLARITY = uint function(void*, DDGETPOLARITYININFO*, DDGETPOLARITYOUTINFO*);
-alias PDX_GETCURRENTAUTOFLIP = uint function(void*, DDGETCURRENTAUTOFLIPININFO*, DDGETCURRENTAUTOFLIPOUTINFO*);
-alias PDX_GETPREVIOUSAUTOFLIP = uint function(void*, DDGETPREVIOUSAUTOFLIPININFO*, DDGETPREVIOUSAUTOFLIPOUTINFO*);
-alias PDX_TRANSFER = uint function(void*, DDTRANSFERININFO*, DDTRANSFEROUTINFO*);
-alias PDX_GETTRANSFERSTATUS = uint function(void*, void*, DDGETTRANSFERSTATUSOUTINFO*);
+alias PDX_GETIRQINFO = uint function(void* param0, void* param1, DDGETIRQINFO* param2);
+alias PDX_ENABLEIRQ = uint function(void* param0, DDENABLEIRQINFO* param1, void* param2);
+alias PDX_SKIPNEXTFIELD = uint function(void* param0, DDSKIPNEXTFIELDINFO* param1, void* param2);
+alias PDX_BOBNEXTFIELD = uint function(void* param0, DDBOBNEXTFIELDINFO* param1, void* param2);
+alias PDX_SETSTATE = uint function(void* param0, DDSETSTATEININFO* param1, DDSETSTATEOUTINFO* param2);
+alias PDX_LOCK = uint function(void* param0, DDLOCKININFO* param1, DDLOCKOUTINFO* param2);
+alias PDX_FLIPOVERLAY = uint function(void* param0, DDFLIPOVERLAYINFO* param1, void* param2);
+alias PDX_FLIPVIDEOPORT = uint function(void* param0, DDFLIPVIDEOPORTINFO* param1, void* param2);
+alias PDX_GETPOLARITY = uint function(void* param0, DDGETPOLARITYININFO* param1, DDGETPOLARITYOUTINFO* param2);
+alias PDX_GETCURRENTAUTOFLIP = uint function(void* param0, DDGETCURRENTAUTOFLIPININFO* param1, DDGETCURRENTAUTOFLIPOUTINFO* param2);
+alias PDX_GETPREVIOUSAUTOFLIP = uint function(void* param0, DDGETPREVIOUSAUTOFLIPININFO* param1, DDGETPREVIOUSAUTOFLIPOUTINFO* param2);
+alias PDX_TRANSFER = uint function(void* param0, DDTRANSFERININFO* param1, DDTRANSFEROUTINFO* param2);
+alias PDX_GETTRANSFERSTATUS = uint function(void* param0, void* param1, DDGETTRANSFERSTATUSOUTINFO* param2);
 struct DXAPI_INTERFACE
 {
     ushort Size;

@@ -51,8 +51,8 @@ enum : int
     HH_FTS_DEFAULT_PROXIMITY = 0xffffffff,
 }
 
-HWND HtmlHelpA(HWND, const(char)*, uint, ulong);
-HWND HtmlHelpW(HWND, const(wchar)*, uint, ulong);
+HWND HtmlHelpA(HWND hwndCaller, const(char)* pszFile, uint uCommand, ulong dwData);
+HWND HtmlHelpW(HWND hwndCaller, const(wchar)* pszFile, uint uCommand, ulong dwData);
 enum HHWIN_PROP_TAB_AUTOHIDESHOW = 0x00000001;
 enum HHWIN_PROP_ONTOP = 0x00000002;
 enum HHWIN_PROP_NOTITLEBAR = 0x00000004;
@@ -433,61 +433,61 @@ struct CProperty
 enum IID_IITPropList = GUID(0x1f403bb1, 0x9997, 0x11d0, [0xa8, 0x50, 0x0, 0xaa, 0x0, 0x6c, 0x7d, 0x1]);
 interface IITPropList : IPersistStreamInit
 {
-    HRESULT Set(uint, const(wchar)*, uint);
-    HRESULT Set(uint, void*, uint, uint);
-    HRESULT Set(uint, uint, uint);
-    HRESULT Add(CProperty*);
-    HRESULT Get(uint, CProperty*);
+    HRESULT Set(uint PropID, const(wchar)* lpszwString, uint dwOperation);
+    HRESULT Set(uint PropID, void* lpvData, uint cbData, uint dwOperation);
+    HRESULT Set(uint PropID, uint dwData, uint dwOperation);
+    HRESULT Add(CProperty* Prop);
+    HRESULT Get(uint PropID, CProperty* Property);
     HRESULT Clear();
-    HRESULT SetPersist(BOOL);
-    HRESULT SetPersist(uint, BOOL);
-    HRESULT GetFirst(CProperty*);
-    HRESULT GetNext(CProperty*);
-    HRESULT GetPropCount(int*);
-    HRESULT SaveHeader(void*, uint);
-    HRESULT SaveData(void*, uint, void*, uint);
-    HRESULT GetHeaderSize(uint*);
-    HRESULT GetDataSize(void*, uint, uint*);
-    HRESULT SaveDataToStream(void*, uint, IStream);
-    HRESULT LoadFromMem(void*, uint);
-    HRESULT SaveToMem(void*, uint);
+    HRESULT SetPersist(BOOL fPersist);
+    HRESULT SetPersist(uint PropID, BOOL fPersist);
+    HRESULT GetFirst(CProperty* Property);
+    HRESULT GetNext(CProperty* Property);
+    HRESULT GetPropCount(int* cProp);
+    HRESULT SaveHeader(void* lpvData, uint dwHdrSize);
+    HRESULT SaveData(void* lpvHeader, uint dwHdrSize, void* lpvData, uint dwBufSize);
+    HRESULT GetHeaderSize(uint* dwHdrSize);
+    HRESULT GetDataSize(void* lpvHeader, uint dwHdrSize, uint* dwDataSize);
+    HRESULT SaveDataToStream(void* lpvHeader, uint dwHdrSize, IStream pStream);
+    HRESULT LoadFromMem(void* lpvData, uint dwBufSize);
+    HRESULT SaveToMem(void* lpvData, uint dwBufSize);
 }
 enum IID_IITDatabase = GUID(0x8fa0d5a2, 0xdedf, 0x11d0, [0x9a, 0x61, 0x0, 0xc0, 0x4f, 0xb6, 0x8b, 0xf7]);
 interface IITDatabase : IUnknown
 {
-    HRESULT Open(const(wchar)*, const(wchar)*, uint);
+    HRESULT Open(const(wchar)* lpszHost, const(wchar)* lpszMoniker, uint dwFlags);
     HRESULT Close();
-    HRESULT CreateObject(const(GUID)*, uint*);
-    HRESULT GetObject(uint, const(GUID)*, void**);
-    HRESULT GetObjectPersistence(const(wchar)*, uint, void**, BOOL);
+    HRESULT CreateObject(const(GUID)* rclsid, uint* pdwObjInstance);
+    HRESULT GetObject(uint dwObjInstance, const(GUID)* riid, void** ppvObj);
+    HRESULT GetObjectPersistence(const(wchar)* lpwszObject, uint dwObjInstance, void** ppvPersistence, BOOL fStream);
 }
 enum IID_IStemSink = GUID(0xfe77c330, 0x7f42, 0x11ce, [0xbe, 0x57, 0x0, 0xaa, 0x0, 0x51, 0xfe, 0x20]);
 interface IStemSink : IUnknown
 {
-    HRESULT PutAltWord(const(wchar)*, uint);
-    HRESULT PutWord(const(wchar)*, uint);
+    HRESULT PutAltWord(const(wchar)* pwcInBuf, uint cwc);
+    HRESULT PutWord(const(wchar)* pwcInBuf, uint cwc);
 }
 enum IID_IStemmerConfig = GUID(0x8fa0d5a7, 0xdedf, 0x11d0, [0x9a, 0x61, 0x0, 0xc0, 0x4f, 0xb6, 0x8b, 0xf7]);
 interface IStemmerConfig : IUnknown
 {
-    HRESULT SetLocaleInfo(uint, uint);
-    HRESULT GetLocaleInfo(uint*, uint*);
-    HRESULT SetControlInfo(uint, uint);
-    HRESULT GetControlInfo(uint*, uint*);
-    HRESULT LoadExternalStemmerData(IStream, uint);
+    HRESULT SetLocaleInfo(uint dwCodePageID, uint lcid);
+    HRESULT GetLocaleInfo(uint* pdwCodePageID, uint* plcid);
+    HRESULT SetControlInfo(uint grfStemFlags, uint dwReserved);
+    HRESULT GetControlInfo(uint* pgrfStemFlags, uint* pdwReserved);
+    HRESULT LoadExternalStemmerData(IStream pStream, uint dwExtDataType);
 }
 enum IID_IWordBreakerConfig = GUID(0x8fa0d5a6, 0xdedf, 0x11d0, [0x9a, 0x61, 0x0, 0xc0, 0x4f, 0xb6, 0x8b, 0xf7]);
 interface IWordBreakerConfig : IUnknown
 {
-    HRESULT SetLocaleInfo(uint, uint);
-    HRESULT GetLocaleInfo(uint*, uint*);
-    HRESULT SetBreakWordType(uint);
-    HRESULT GetBreakWordType(uint*);
-    HRESULT SetControlInfo(uint, uint);
-    HRESULT GetControlInfo(uint*, uint*);
-    HRESULT LoadExternalBreakerData(IStream, uint);
-    HRESULT SetWordStemmer(const(GUID)*, IStemmer);
-    HRESULT GetWordStemmer(IStemmer*);
+    HRESULT SetLocaleInfo(uint dwCodePageID, uint lcid);
+    HRESULT GetLocaleInfo(uint* pdwCodePageID, uint* plcid);
+    HRESULT SetBreakWordType(uint dwBreakWordType);
+    HRESULT GetBreakWordType(uint* pdwBreakWordType);
+    HRESULT SetControlInfo(uint grfBreakFlags, uint dwReserved);
+    HRESULT GetControlInfo(uint* pgrfBreakFlags, uint* pdwReserved);
+    HRESULT LoadExternalBreakerData(IStream pStream, uint dwExtDataType);
+    HRESULT SetWordStemmer(const(GUID)* rclsid, IStemmer pStemmer);
+    HRESULT GetWordStemmer(IStemmer* ppStemmer);
 }
 alias PRIORITY = int;
 enum : int
@@ -509,38 +509,38 @@ struct COLUMNSTATUS
     int cPropCount;
     int cPropsLoaded;
 }
-alias PFNCOLHEAPFREE = int function(void*);
+alias PFNCOLHEAPFREE = int function(void* param0);
 enum IID_IITResultSet = GUID(0x3bb91d41, 0x998b, 0x11d0, [0xa8, 0x50, 0x0, 0xaa, 0x0, 0x6c, 0x7d, 0x1]);
 interface IITResultSet : IUnknown
 {
-    HRESULT SetColumnPriority(int, PRIORITY);
-    HRESULT SetColumnHeap(int, void*, PFNCOLHEAPFREE);
-    HRESULT SetKeyProp(uint);
-    HRESULT Add(uint, uint, PRIORITY);
-    HRESULT Add(uint, const(wchar)*, PRIORITY);
-    HRESULT Add(uint, void*, uint, PRIORITY);
-    HRESULT Add(void*);
-    HRESULT Append(void*, void*);
-    HRESULT Set(int, int, void*, uint);
-    HRESULT Set(int, int, const(wchar)*);
-    HRESULT Set(int, int, ulong);
-    HRESULT Set(int, void*, void*);
-    HRESULT Copy(IITResultSet);
-    HRESULT AppendRows(IITResultSet, int, int, int*);
-    HRESULT Get(int, int, CProperty*);
-    HRESULT GetKeyProp(uint*);
-    HRESULT GetColumnPriority(int, PRIORITY*);
-    HRESULT GetRowCount(int*);
-    HRESULT GetColumnCount(int*);
-    HRESULT GetColumn(int, uint*, uint*, void**, uint*, PRIORITY*);
-    HRESULT GetColumn(int, uint*);
-    HRESULT GetColumnFromPropID(uint, int*);
+    HRESULT SetColumnPriority(int lColumnIndex, PRIORITY ColumnPriority);
+    HRESULT SetColumnHeap(int lColumnIndex, void* lpvHeap, PFNCOLHEAPFREE pfnColHeapFree);
+    HRESULT SetKeyProp(uint PropID);
+    HRESULT Add(uint PropID, uint dwDefaultData, PRIORITY Priority);
+    HRESULT Add(uint PropID, const(wchar)* lpszwDefault, PRIORITY Priority);
+    HRESULT Add(uint PropID, void* lpvDefaultData, uint cbData, PRIORITY Priority);
+    HRESULT Add(void* lpvHdr);
+    HRESULT Append(void* lpvHdr, void* lpvData);
+    HRESULT Set(int lRowIndex, int lColumnIndex, void* lpvData, uint cbData);
+    HRESULT Set(int lRowIndex, int lColumnIndex, const(wchar)* lpwStr);
+    HRESULT Set(int lRowIndex, int lColumnIndex, ulong dwData);
+    HRESULT Set(int lRowIndex, void* lpvHdr, void* lpvData);
+    HRESULT Copy(IITResultSet pRSCopy);
+    HRESULT AppendRows(IITResultSet pResSrc, int lRowSrcFirst, int cSrcRows, int* lRowFirstDest);
+    HRESULT Get(int lRowIndex, int lColumnIndex, CProperty* Prop);
+    HRESULT GetKeyProp(uint* KeyPropID);
+    HRESULT GetColumnPriority(int lColumnIndex, PRIORITY* ColumnPriority);
+    HRESULT GetRowCount(int* lNumberOfRows);
+    HRESULT GetColumnCount(int* lNumberOfColumns);
+    HRESULT GetColumn(int lColumnIndex, uint* PropID, uint* dwType, void** lpvDefaultValue, uint* cbSize, PRIORITY* ColumnPriority);
+    HRESULT GetColumn(int lColumnIndex, uint* PropID);
+    HRESULT GetColumnFromPropID(uint PropID, int* lColumnIndex);
     HRESULT Clear();
     HRESULT ClearRows();
     HRESULT Free();
     HRESULT IsCompleted();
     HRESULT Cancel();
-    HRESULT Pause(BOOL);
-    HRESULT GetRowStatus(int, int, ROWSTATUS*);
-    HRESULT GetColumnStatus(COLUMNSTATUS*);
+    HRESULT Pause(BOOL fPause);
+    HRESULT GetRowStatus(int lRowFirst, int cRows, ROWSTATUS* lpRowStatus);
+    HRESULT GetColumnStatus(COLUMNSTATUS* lpColStatus);
 }

@@ -13,7 +13,7 @@ enum CLSID_XMLGraphBuilder = GUID(0x1bb05961, 0x5fbf, 0x11d2, [0xa5, 0x21, 0x44,
 enum IID_IXMLGraphBuilder = GUID(0x1bb05960, 0x5fbf, 0x11d2, [0xa5, 0x21, 0x44, 0xdf, 0x7, 0xc1, 0x0, 0x0]);
 interface IXMLGraphBuilder : IUnknown
 {
-    HRESULT BuildFromXML(IGraphBuilder, IXMLElement);
-    HRESULT SaveToXML(IGraphBuilder, BSTR*);
-    HRESULT BuildFromXMLFile(IGraphBuilder, const(wchar)*, const(wchar)*);
+    HRESULT BuildFromXML(IGraphBuilder pGraph, IXMLElement pxml);
+    HRESULT SaveToXML(IGraphBuilder pGraph, BSTR* pbstrxml);
+    HRESULT BuildFromXMLFile(IGraphBuilder pGraph, const(wchar)* wszFileName, const(wchar)* wszBaseURL);
 }

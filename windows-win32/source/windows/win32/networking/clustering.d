@@ -3,9 +3,10 @@ module windows.win32.networking.clustering;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BOOLEAN, BSTR, FILETIME, HANDLE, HRESULT, NTSTATUS, PWSTR, SYSTEMTIME;
 import windows.win32.graphics.gdi : HFONT;
-import windows.win32.security : OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR, SC_HANDLE, SECURITY_ATTRIBUTES, SECURITY_DESCRIPTOR_RELATIVE;
+import windows.win32.security : OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR, SECURITY_ATTRIBUTES, SECURITY_DESCRIPTOR_RELATIVE;
 import windows.win32.system.com : IDispatch, IUnknown;
 import windows.win32.system.registry : HKEY;
+import windows.win32.system.services : SC_HANDLE;
 import windows.win32.system.variant : VARIANT;
 import windows.win32.ui.windowsandmessaging : HICON;
 
@@ -52,411 +53,411 @@ struct CLUSPROP_SCSI_ADDRESS
     CLUSPROP_VALUE Base;
     CLUS_SCSI_ADDRESS Base2;
 }
-CLUSAPI_REASON_HANDLER* ClusapiSetReasonHandler(CLUSAPI_REASON_HANDLER*);
-uint GetNodeClusterState(const(wchar)*, uint*);
-HCLUSTER OpenCluster(const(wchar)*);
-HCLUSTER OpenClusterEx(const(wchar)*, uint, uint*);
-BOOL CloseCluster(HCLUSTER);
-uint SetClusterName(HCLUSTER, const(wchar)*);
-uint SetClusterNameEx(HCLUSTER, const(wchar)*, const(wchar)*);
-uint GetClusterInformation(HCLUSTER, PWSTR, uint*, CLUSTERVERSIONINFO*);
-uint GetClusterQuorumResource(HCLUSTER, PWSTR, uint*, PWSTR, uint*, uint*);
-uint SetClusterQuorumResource(HRESOURCE, const(wchar)*, uint);
-uint SetClusterQuorumResourceEx(HRESOURCE, const(wchar)*, uint, const(wchar)*);
-uint BackupClusterDatabase(HCLUSTER, const(wchar)*);
-uint RestoreClusterDatabase(const(wchar)*, BOOL, const(wchar)*);
-uint SetClusterNetworkPriorityOrder(HCLUSTER, uint, HNETWORK*);
-uint SetClusterServiceAccountPassword(const(wchar)*, const(wchar)*, uint, CLUSTER_SET_PASSWORD_STATUS*, uint*);
-uint ClusterControl(HCLUSTER, HNODE, uint, void*, uint, void*, uint, uint*);
-uint ClusterControlEx(HCLUSTER, HNODE, uint, void*, uint, void*, uint, uint*, const(wchar)*);
-uint ClusterUpgradeFunctionalLevel(HCLUSTER, BOOL, PCLUSTER_UPGRADE_PROGRESS_CALLBACK, void*);
-HCHANGE CreateClusterNotifyPortV2(HCHANGE, HCLUSTER, NOTIFY_FILTER_AND_TYPE*, uint, ulong);
-uint RegisterClusterNotifyV2(HCHANGE, NOTIFY_FILTER_AND_TYPE, HANDLE, ulong);
-uint GetNotifyEventHandle(HCHANGE, HANDLE*);
-uint GetClusterNotifyV2(HCHANGE, ulong*, NOTIFY_FILTER_AND_TYPE*, ubyte*, uint*, PWSTR, uint*, PWSTR, uint*, PWSTR, uint*, PWSTR, uint*, uint);
-HCHANGE CreateClusterNotifyPort(HCHANGE, HCLUSTER, uint, ulong);
-uint RegisterClusterNotify(HCHANGE, uint, HANDLE, ulong);
-uint GetClusterNotify(HCHANGE, ulong*, uint*, PWSTR, uint*, uint);
-BOOL CloseClusterNotifyPort(HCHANGE);
-HCLUSENUM ClusterOpenEnum(HCLUSTER, uint);
-uint ClusterGetEnumCount(HCLUSENUM);
-uint ClusterEnum(HCLUSENUM, uint, uint*, PWSTR, uint*);
-uint ClusterCloseEnum(HCLUSENUM);
-HCLUSENUMEX ClusterOpenEnumEx(HCLUSTER, uint, void*);
-uint ClusterGetEnumCountEx(HCLUSENUMEX);
-uint ClusterEnumEx(HCLUSENUMEX, uint, CLUSTER_ENUM_ITEM*, uint*);
-uint ClusterCloseEnumEx(HCLUSENUMEX);
-HGROUPSET CreateClusterGroupSet(HCLUSTER, const(wchar)*);
-HGROUPSET OpenClusterGroupSet(HCLUSTER, const(wchar)*);
-BOOL CloseClusterGroupSet(HGROUPSET);
-uint DeleteClusterGroupSet(HGROUPSET);
-uint DeleteClusterGroupSetEx(HGROUPSET, const(wchar)*);
-uint ClusterAddGroupToGroupSet(HGROUPSET, HGROUP);
-uint ClusterAddGroupToGroupSetWithDomains(HGROUPSET, HGROUP, uint, uint);
-uint ClusterAddGroupToGroupSetWithDomainsEx(HGROUPSET, HGROUP, uint, uint, const(wchar)*);
-uint ClusterRemoveGroupFromGroupSet(HGROUP);
-uint ClusterRemoveGroupFromGroupSetEx(HGROUP, const(wchar)*);
-uint ClusterGroupSetControl(HGROUPSET, HNODE, uint, void*, uint, void*, uint, uint*);
-uint ClusterGroupSetControlEx(HGROUPSET, HNODE, uint, void*, uint, void*, uint, uint*, const(wchar)*);
-uint AddClusterGroupDependency(HGROUP, HGROUP);
-uint AddClusterGroupDependencyEx(HGROUP, HGROUP, const(wchar)*);
-uint SetGroupDependencyExpression(HGROUP, const(wchar)*);
-uint SetGroupDependencyExpressionEx(HGROUP, const(wchar)*, const(wchar)*);
-uint RemoveClusterGroupDependency(HGROUP, HGROUP);
-uint RemoveClusterGroupDependencyEx(HGROUP, HGROUP, const(wchar)*);
-uint AddClusterGroupSetDependency(HGROUPSET, HGROUPSET);
-uint AddClusterGroupSetDependencyEx(HGROUPSET, HGROUPSET, const(wchar)*);
-uint SetClusterGroupSetDependencyExpression(HGROUPSET, const(wchar)*);
-uint SetClusterGroupSetDependencyExpressionEx(HGROUPSET, const(wchar)*, const(wchar)*);
-uint RemoveClusterGroupSetDependency(HGROUPSET, HGROUPSET);
-uint RemoveClusterGroupSetDependencyEx(HGROUPSET, HGROUPSET, const(wchar)*);
-uint AddClusterGroupToGroupSetDependency(HGROUP, HGROUPSET);
-uint AddClusterGroupToGroupSetDependencyEx(HGROUP, HGROUPSET, const(wchar)*);
-uint RemoveClusterGroupToGroupSetDependency(HGROUP, HGROUPSET);
-uint RemoveClusterGroupToGroupSetDependencyEx(HGROUP, HGROUPSET, const(wchar)*);
-HGROUPSETENUM ClusterGroupSetOpenEnum(HCLUSTER);
-uint ClusterGroupSetGetEnumCount(HGROUPSETENUM);
-uint ClusterGroupSetEnum(HGROUPSETENUM, uint, PWSTR, uint*);
-uint ClusterGroupSetCloseEnum(HGROUPSETENUM);
-uint AddCrossClusterGroupSetDependency(HGROUPSET, const(wchar)*, const(wchar)*);
-uint RemoveCrossClusterGroupSetDependency(HGROUPSET, const(wchar)*, const(wchar)*);
-HGROUPSET CreateClusterAvailabilitySet(HCLUSTER, const(wchar)*, CLUSTER_AVAILABILITY_SET_CONFIG*);
-uint ClusterNodeReplacement(HCLUSTER, const(wchar)*, const(wchar)*);
-uint ClusterCreateAffinityRule(HCLUSTER, const(wchar)*, CLUS_AFFINITY_RULE_TYPE);
-uint ClusterRemoveAffinityRule(HCLUSTER, const(wchar)*);
-uint ClusterAddGroupToAffinityRule(HCLUSTER, const(wchar)*, HGROUP);
-uint ClusterRemoveGroupFromAffinityRule(HCLUSTER, const(wchar)*, HGROUP);
-uint ClusterAffinityRuleControl(HCLUSTER, const(wchar)*, HNODE, uint, void*, uint, void*, uint, uint*);
-HNODE OpenClusterNode(HCLUSTER, const(wchar)*);
-HNODE OpenClusterNodeEx(HCLUSTER, const(wchar)*, uint, uint*);
-HNODE OpenClusterNodeById(HCLUSTER, uint);
-BOOL CloseClusterNode(HNODE);
-CLUSTER_NODE_STATE GetClusterNodeState(HNODE);
-uint GetClusterNodeId(HNODE, PWSTR, uint*);
-HCLUSTER GetClusterFromNode(HNODE);
-uint PauseClusterNode(HNODE);
-uint ResumeClusterNode(HNODE);
-uint EvictClusterNode(HNODE);
-HNETINTERFACEENUM ClusterNetInterfaceOpenEnum(HCLUSTER, const(wchar)*, const(wchar)*);
-uint ClusterNetInterfaceEnum(HNETINTERFACEENUM, uint, PWSTR, uint*);
-uint ClusterNetInterfaceCloseEnum(HNETINTERFACEENUM);
-HNODEENUM ClusterNodeOpenEnum(HNODE, uint);
-HNODEENUMEX ClusterNodeOpenEnumEx(HNODE, uint, void*);
-uint ClusterNodeGetEnumCountEx(HNODEENUMEX);
-uint ClusterNodeEnumEx(HNODEENUMEX, uint, CLUSTER_ENUM_ITEM*, uint*);
-uint ClusterNodeCloseEnumEx(HNODEENUMEX);
-uint ClusterNodeGetEnumCount(HNODEENUM);
-uint ClusterNodeCloseEnum(HNODEENUM);
-uint ClusterNodeEnum(HNODEENUM, uint, uint*, PWSTR, uint*);
-uint EvictClusterNodeEx(HNODE, uint, HRESULT*);
-uint EvictClusterNodeEx2(HNODE, uint, HRESULT*, const(wchar)*);
-HKEY GetClusterResourceTypeKey(HCLUSTER, const(wchar)*, uint);
-HGROUP CreateClusterGroup(HCLUSTER, const(wchar)*);
-HGROUP OpenClusterGroup(HCLUSTER, const(wchar)*);
-HGROUP OpenClusterGroupEx(HCLUSTER, const(wchar)*, uint, uint*);
-uint PauseClusterNodeEx(HNODE, BOOL, uint, HNODE);
-uint PauseClusterNodeEx2(HNODE, BOOL, uint, HNODE, const(wchar)*);
-uint ResumeClusterNodeEx(HNODE, CLUSTER_NODE_RESUME_FAILBACK_TYPE, uint);
-uint ResumeClusterNodeEx2(HNODE, CLUSTER_NODE_RESUME_FAILBACK_TYPE, uint, const(wchar)*);
-HGROUP CreateClusterGroupEx(HCLUSTER, const(wchar)*, CLUSTER_CREATE_GROUP_INFO*);
-HGROUPENUMEX ClusterGroupOpenEnumEx(HCLUSTER, const(wchar)*, uint, const(wchar)*, uint, uint);
-uint ClusterGroupGetEnumCountEx(HGROUPENUMEX);
-uint ClusterGroupEnumEx(HGROUPENUMEX, uint, CLUSTER_GROUP_ENUM_ITEM*, uint*);
-uint ClusterGroupCloseEnumEx(HGROUPENUMEX);
-HRESENUMEX ClusterResourceOpenEnumEx(HCLUSTER, const(wchar)*, uint, const(wchar)*, uint, uint);
-uint ClusterResourceGetEnumCountEx(HRESENUMEX);
-uint ClusterResourceEnumEx(HRESENUMEX, uint, CLUSTER_RESOURCE_ENUM_ITEM*, uint*);
-uint ClusterResourceCloseEnumEx(HRESENUMEX);
-uint OnlineClusterGroupEx(HGROUP, HNODE, uint, ubyte*, uint);
-uint OfflineClusterGroupEx(HGROUP, uint, ubyte*, uint);
-uint OnlineClusterGroupEx2(HGROUP, HNODE, uint, ubyte*, uint, const(wchar)*);
-uint OfflineClusterGroupEx2(HGROUP, uint, ubyte*, uint, const(wchar)*);
-uint OnlineClusterResourceEx(HRESOURCE, uint, ubyte*, uint);
-uint OnlineClusterResourceEx2(HRESOURCE, uint, ubyte*, uint, const(wchar)*);
-uint OfflineClusterResourceEx(HRESOURCE, uint, ubyte*, uint);
-uint OfflineClusterResourceEx2(HRESOURCE, uint, ubyte*, uint, const(wchar)*);
-uint MoveClusterGroupEx(HGROUP, HNODE, uint, ubyte*, uint);
-uint MoveClusterGroupEx2(HGROUP, HNODE, uint, ubyte*, uint, const(wchar)*);
-uint CancelClusterGroupOperation(HGROUP, uint);
-uint RestartClusterResource(HRESOURCE, uint);
-uint RestartClusterResourceEx(HRESOURCE, uint, const(wchar)*);
-BOOL CloseClusterGroup(HGROUP);
-HCLUSTER GetClusterFromGroup(HGROUP);
-CLUSTER_GROUP_STATE GetClusterGroupState(HGROUP, PWSTR, uint*);
-uint SetClusterGroupName(HGROUP, const(wchar)*);
-uint SetClusterGroupNodeList(HGROUP, uint, HNODE*);
-uint SetClusterGroupNameEx(HGROUP, const(wchar)*, const(wchar)*);
-uint SetClusterGroupNodeListEx(HGROUP, uint, HNODE*, const(wchar)*);
-uint OnlineClusterGroup(HGROUP, HNODE);
-uint MoveClusterGroup(HGROUP, HNODE);
-uint OfflineClusterGroup(HGROUP);
-uint DeleteClusterGroup(HGROUP);
-uint DestroyClusterGroup(HGROUP);
-uint DeleteClusterGroupEx(HGROUP, const(wchar)*);
-uint DestroyClusterGroupEx(HGROUP, const(wchar)*);
-HGROUPENUM ClusterGroupOpenEnum(HGROUP, uint);
-uint ClusterGroupGetEnumCount(HGROUPENUM);
-uint ClusterGroupEnum(HGROUPENUM, uint, uint*, PWSTR, uint*);
-uint ClusterGroupCloseEnum(HGROUPENUM);
-HRESOURCE CreateClusterResource(HGROUP, const(wchar)*, const(wchar)*, uint);
-HRESOURCE CreateClusterResourceEx(HGROUP, const(wchar)*, const(wchar)*, uint, const(wchar)*);
-HRESOURCE OpenClusterResource(HCLUSTER, const(wchar)*);
-HRESOURCE OpenClusterResourceEx(HCLUSTER, const(wchar)*, uint, uint*);
-BOOL CloseClusterResource(HRESOURCE);
-HCLUSTER GetClusterFromResource(HRESOURCE);
-uint DeleteClusterResource(HRESOURCE);
-uint DeleteClusterResourceEx(HRESOURCE, const(wchar)*);
-CLUSTER_RESOURCE_STATE GetClusterResourceState(HRESOURCE, PWSTR, uint*, PWSTR, uint*);
-uint SetClusterResourceName(HRESOURCE, const(wchar)*);
-uint SetClusterResourceNameEx(HRESOURCE, const(wchar)*, const(wchar)*);
-uint FailClusterResource(HRESOURCE);
-uint FailClusterResourceEx(HRESOURCE, const(wchar)*);
-uint OnlineClusterResource(HRESOURCE);
-uint OfflineClusterResource(HRESOURCE);
-uint ChangeClusterResourceGroup(HRESOURCE, HGROUP);
-uint ChangeClusterResourceGroupEx(HRESOURCE, HGROUP, ulong);
-uint ChangeClusterResourceGroupEx2(HRESOURCE, HGROUP, ulong, const(wchar)*);
-uint AddClusterResourceNode(HRESOURCE, HNODE);
-uint RemoveClusterResourceNode(HRESOURCE, HNODE);
-uint AddClusterResourceNodeEx(HRESOURCE, HNODE, const(wchar)*);
-uint RemoveClusterResourceNodeEx(HRESOURCE, HNODE, const(wchar)*);
-uint AddClusterResourceDependency(HRESOURCE, HRESOURCE);
-uint RemoveClusterResourceDependency(HRESOURCE, HRESOURCE);
-uint AddClusterResourceDependencyEx(HRESOURCE, HRESOURCE, const(wchar)*);
-uint RemoveClusterResourceDependencyEx(HRESOURCE, HRESOURCE, const(wchar)*);
-uint SetClusterResourceDependencyExpression(HRESOURCE, const(wchar)*);
-uint GetClusterResourceDependencyExpression(HRESOURCE, PWSTR, uint*);
-uint AddResourceToClusterSharedVolumes(HRESOURCE);
-uint RemoveResourceFromClusterSharedVolumes(HRESOURCE);
-uint IsFileOnClusterSharedVolume(const(wchar)*, BOOL*);
-uint ClusterSharedVolumeSetSnapshotState(GUID, const(wchar)*, CLUSTER_SHARED_VOLUME_SNAPSHOT_STATE);
-BOOL CanResourceBeDependent(HRESOURCE, HRESOURCE);
-uint ClusterResourceControl(HRESOURCE, HNODE, uint, void*, uint, void*, uint, uint*);
-uint ClusterResourceControlAsUser(HRESOURCE, HNODE, uint, void*, uint, void*, uint, uint*);
-uint ClusterResourceTypeControl(HCLUSTER, const(wchar)*, HNODE, uint, void*, uint, void*, uint, uint*);
-uint ClusterResourceTypeControlAsUser(HCLUSTER, const(wchar)*, HNODE, uint, void*, uint, void*, uint, uint*);
-uint ClusterGroupControl(HGROUP, HNODE, uint, void*, uint, void*, uint, uint*);
-uint ClusterResourceControlEx(HRESOURCE, HNODE, uint, void*, uint, void*, uint, uint*, const(wchar)*);
-uint ClusterResourceControlAsUserEx(HRESOURCE, HNODE, uint, void*, uint, void*, uint, uint*, const(wchar)*);
-uint ClusterResourceTypeControlEx(HCLUSTER, const(wchar)*, HNODE, uint, void*, uint, void*, uint, uint*, const(wchar)*);
-uint ClusterResourceTypeControlAsUserEx(HCLUSTER, const(wchar)*, HNODE, uint, void*, uint, void*, uint, uint*, const(wchar)*);
-uint ClusterGroupControlEx(HGROUP, HNODE, uint, void*, uint, void*, uint, uint*, const(wchar)*);
-uint ClusterNodeControl(HNODE, HNODE, uint, void*, uint, void*, uint, uint*);
-uint ClusterNodeControlEx(HNODE, HNODE, uint, void*, uint, void*, uint, uint*, const(wchar)*);
-BOOL GetClusterResourceNetworkName(HRESOURCE, PWSTR, uint*);
-HRESENUM ClusterResourceOpenEnum(HRESOURCE, uint);
-uint ClusterResourceGetEnumCount(HRESENUM);
-uint ClusterResourceEnum(HRESENUM, uint, uint*, PWSTR, uint*);
-uint ClusterResourceCloseEnum(HRESENUM);
-uint CreateClusterResourceType(HCLUSTER, const(wchar)*, const(wchar)*, const(wchar)*, uint, uint);
-uint DeleteClusterResourceType(HCLUSTER, const(wchar)*);
-uint CreateClusterResourceTypeEx(HCLUSTER, const(wchar)*, const(wchar)*, const(wchar)*, uint, uint, const(wchar)*);
-uint DeleteClusterResourceTypeEx(HCLUSTER, const(wchar)*, const(wchar)*);
-HRESTYPEENUM ClusterResourceTypeOpenEnum(HCLUSTER, const(wchar)*, uint);
-uint ClusterResourceTypeGetEnumCount(HRESTYPEENUM);
-uint ClusterResourceTypeEnum(HRESTYPEENUM, uint, uint*, PWSTR, uint*);
-uint ClusterResourceTypeCloseEnum(HRESTYPEENUM);
-HNETWORK OpenClusterNetwork(HCLUSTER, const(wchar)*);
-HNETWORK OpenClusterNetworkEx(HCLUSTER, const(wchar)*, uint, uint*);
-BOOL CloseClusterNetwork(HNETWORK);
-HCLUSTER GetClusterFromNetwork(HNETWORK);
-HNETWORKENUM ClusterNetworkOpenEnum(HNETWORK, uint);
-uint ClusterNetworkGetEnumCount(HNETWORKENUM);
-uint ClusterNetworkEnum(HNETWORKENUM, uint, uint*, PWSTR, uint*);
-uint ClusterNetworkCloseEnum(HNETWORKENUM);
-CLUSTER_NETWORK_STATE GetClusterNetworkState(HNETWORK);
-uint SetClusterNetworkName(HNETWORK, const(wchar)*);
-uint SetClusterNetworkNameEx(HNETWORK, const(wchar)*, const(wchar)*);
-uint GetClusterNetworkId(HNETWORK, PWSTR, uint*);
-uint ClusterNetworkControl(HNETWORK, HNODE, uint, void*, uint, void*, uint, uint*);
-uint ClusterNetworkControlEx(HNETWORK, HNODE, uint, void*, uint, void*, uint, uint*, const(wchar)*);
-HNETINTERFACE OpenClusterNetInterface(HCLUSTER, const(wchar)*);
-HNETINTERFACE OpenClusterNetInterfaceEx(HCLUSTER, const(wchar)*, uint, uint*);
-uint GetClusterNetInterface(HCLUSTER, const(wchar)*, const(wchar)*, PWSTR, uint*);
-BOOL CloseClusterNetInterface(HNETINTERFACE);
-HCLUSTER GetClusterFromNetInterface(HNETINTERFACE);
-CLUSTER_NETINTERFACE_STATE GetClusterNetInterfaceState(HNETINTERFACE);
-uint ClusterNetInterfaceControl(HNETINTERFACE, HNODE, uint, void*, uint, void*, uint, uint*);
-uint ClusterNetInterfaceControlEx(HNETINTERFACE, HNODE, uint, void*, uint, void*, uint, uint*, const(wchar)*);
-HKEY GetClusterKey(HCLUSTER, uint);
-HKEY GetClusterGroupKey(HGROUP, uint);
-HKEY GetClusterResourceKey(HRESOURCE, uint);
-HKEY GetClusterNodeKey(HNODE, uint);
-HKEY GetClusterNetworkKey(HNETWORK, uint);
-HKEY GetClusterNetInterfaceKey(HNETINTERFACE, uint);
-int ClusterRegCreateKey(HKEY, const(wchar)*, uint, uint, SECURITY_ATTRIBUTES*, HKEY*, uint*);
-int ClusterRegCreateKeyEx(HKEY, const(wchar)*, uint, uint, SECURITY_ATTRIBUTES*, HKEY*, uint*, const(wchar)*);
-int ClusterRegOpenKey(HKEY, const(wchar)*, uint, HKEY*);
-int ClusterRegDeleteKey(HKEY, const(wchar)*);
-int ClusterRegDeleteKeyEx(HKEY, const(wchar)*, const(wchar)*);
-int ClusterRegCloseKey(HKEY);
-int ClusterRegEnumKey(HKEY, uint, PWSTR, uint*, FILETIME*);
-uint ClusterRegSetValue(HKEY, const(wchar)*, uint, const(ubyte)*, uint);
-uint ClusterRegDeleteValue(HKEY, const(wchar)*);
-uint ClusterRegSetValueEx(HKEY, const(wchar)*, uint, const(ubyte)*, uint, const(wchar)*);
-uint ClusterRegDeleteValueEx(HKEY, const(wchar)*, const(wchar)*);
-int ClusterRegQueryValue(HKEY, const(wchar)*, uint*, ubyte*, uint*);
-uint ClusterRegEnumValue(HKEY, uint, PWSTR, uint*, uint*, ubyte*, uint*);
-int ClusterRegQueryInfoKey(HKEY, uint*, uint*, uint*, uint*, uint*, uint*, FILETIME*);
-int ClusterRegGetKeySecurity(HKEY, uint, PSECURITY_DESCRIPTOR, uint*);
-int ClusterRegSetKeySecurity(HKEY, uint, PSECURITY_DESCRIPTOR);
-int ClusterRegSetKeySecurityEx(HKEY, OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR, const(wchar)*);
-int ClusterRegSyncDatabase(HCLUSTER, uint);
-int ClusterRegCreateBatch(HKEY, HREGBATCH*);
-int ClusterRegBatchAddCommand(HREGBATCH, CLUSTER_REG_COMMAND, const(wchar)*, uint, const(void)*, uint);
-int ClusterRegCloseBatch(HREGBATCH, BOOL, int*);
-int ClusterRegCloseBatchEx(HREGBATCH, uint, int*);
-int ClusterRegBatchReadCommand(HREGBATCHNOTIFICATION, CLUSTER_BATCH_COMMAND*);
-int ClusterRegBatchCloseNotification(HREGBATCHNOTIFICATION);
-int ClusterRegCreateBatchNotifyPort(HKEY, HREGBATCHPORT*);
-int ClusterRegCloseBatchNotifyPort(HREGBATCHPORT);
-int ClusterRegGetBatchNotification(HREGBATCHPORT, HREGBATCHNOTIFICATION*);
-int ClusterRegCreateReadBatch(HKEY, HREGREADBATCH*);
-int ClusterRegReadBatchAddCommand(HREGREADBATCH, const(wchar)*, const(wchar)*);
-int ClusterRegCloseReadBatch(HREGREADBATCH, HREGREADBATCHREPLY*);
-int ClusterRegCloseReadBatchEx(HREGREADBATCH, uint, HREGREADBATCHREPLY*);
-int ClusterRegReadBatchReplyNextCommand(HREGREADBATCHREPLY, CLUSTER_READ_BATCH_COMMAND*);
-int ClusterRegCloseReadBatchReply(HREGREADBATCHREPLY);
-uint ClusterSetAccountAccess(HCLUSTER, const(wchar)*, uint, uint);
-HCLUSTER CreateCluster(CREATE_CLUSTER_CONFIG*, PCLUSTER_SETUP_PROGRESS_CALLBACK, void*);
-uint CreateClusterNameAccount(HCLUSTER, CREATE_CLUSTER_NAME_ACCOUNT*, PCLUSTER_SETUP_PROGRESS_CALLBACK, void*);
-uint RemoveClusterNameAccount(HCLUSTER, BOOL);
-uint DetermineCNOResTypeFromNodelist(uint, const(wchar)**, CLUSTER_MGMT_POINT_RESTYPE*);
-uint DetermineCNOResTypeFromCluster(HCLUSTER, CLUSTER_MGMT_POINT_RESTYPE*);
-uint DetermineClusterCloudTypeFromNodelist(uint, const(wchar)**, CLUSTER_CLOUD_TYPE*);
-uint DetermineClusterCloudTypeFromCluster(HCLUSTER, CLUSTER_CLOUD_TYPE*);
-uint GetNodeCloudTypeDW(const(wchar)*, uint*);
-uint RegisterClusterResourceTypeNotifyV2(HCHANGE, HCLUSTER, long, const(wchar)*, ulong);
-HNODE AddClusterNode(HCLUSTER, const(wchar)*, PCLUSTER_SETUP_PROGRESS_CALLBACK, void*);
-uint AddClusterStorageNode(HCLUSTER, const(wchar)*, PCLUSTER_SETUP_PROGRESS_CALLBACK, void*, const(wchar)*, const(wchar)*);
-HNODE AddClusterNodeEx(HCLUSTER, const(wchar)*, uint, PCLUSTER_SETUP_PROGRESS_CALLBACK, void*);
-uint RemoveClusterStorageNode(HCLUSTER, const(wchar)*, uint, uint);
-uint DestroyCluster(HCLUSTER, PCLUSTER_SETUP_PROGRESS_CALLBACK, void*, BOOL);
-uint InitializeClusterHealthFault(CLUSTER_HEALTH_FAULT*);
-uint InitializeClusterHealthFaultArray(CLUSTER_HEALTH_FAULT_ARRAY*);
-uint FreeClusterHealthFault(CLUSTER_HEALTH_FAULT*);
-uint FreeClusterHealthFaultArray(CLUSTER_HEALTH_FAULT_ARRAY*);
-uint ClusGetClusterHealthFaults(HCLUSTER, CLUSTER_HEALTH_FAULT_ARRAY*, uint);
-uint ClusRemoveClusterHealthFault(HCLUSTER, const(wchar)*, uint);
-uint ClusAddClusterHealthFault(HCLUSTER, CLUSTER_HEALTH_FAULT*, uint);
-uint ResUtilStartResourceService(const(wchar)*, SC_HANDLE*);
-uint ResUtilVerifyResourceService(const(wchar)*);
-uint ResUtilStopResourceService(const(wchar)*);
-uint ResUtilVerifyService(SC_HANDLE);
-uint ResUtilStopService(SC_HANDLE);
-uint ResUtilCreateDirectoryTree(const(wchar)*);
-BOOL ResUtilIsPathValid(const(wchar)*);
-uint ResUtilEnumProperties(const(RESUTIL_PROPERTY_ITEM)*, PWSTR, uint, uint*, uint*);
-uint ResUtilEnumPrivateProperties(HKEY, PWSTR, uint, uint*, uint*);
-uint ResUtilGetProperties(HKEY, const(RESUTIL_PROPERTY_ITEM)*, void*, uint, uint*, uint*);
-uint ResUtilGetAllProperties(HKEY, const(RESUTIL_PROPERTY_ITEM)*, void*, uint, uint*, uint*);
-uint ResUtilGetPrivateProperties(HKEY, void*, uint, uint*, uint*);
-uint ResUtilGetPropertySize(HKEY, const(RESUTIL_PROPERTY_ITEM)*, uint*, uint*);
-uint ResUtilGetProperty(HKEY, const(RESUTIL_PROPERTY_ITEM)*, void**, uint*);
-uint ResUtilVerifyPropertyTable(const(RESUTIL_PROPERTY_ITEM)*, void*, BOOL, const(void)*, uint, ubyte*);
-uint ResUtilSetPropertyTable(HKEY, const(RESUTIL_PROPERTY_ITEM)*, void*, BOOL, const(void)*, uint, ubyte*);
-uint ResUtilSetPropertyTableEx(HKEY, const(RESUTIL_PROPERTY_ITEM)*, void*, BOOL, const(void)*, uint, BOOL, ubyte*);
-uint ResUtilSetPropertyParameterBlock(HKEY, const(RESUTIL_PROPERTY_ITEM)*, void*, const(ubyte)*, const(void)*, uint, ubyte*);
-uint ResUtilSetPropertyParameterBlockEx(HKEY, const(RESUTIL_PROPERTY_ITEM)*, void*, const(ubyte)*, const(void)*, uint, BOOL, ubyte*);
-uint ResUtilSetUnknownProperties(HKEY, const(RESUTIL_PROPERTY_ITEM)*, const(void)*, uint);
-uint ResUtilGetPropertiesToParameterBlock(HKEY, const(RESUTIL_PROPERTY_ITEM)*, ubyte*, BOOL, PWSTR*);
-uint ResUtilPropertyListFromParameterBlock(const(RESUTIL_PROPERTY_ITEM)*, void*, uint*, const(ubyte)*, uint*, uint*);
-uint ResUtilDupParameterBlock(ubyte*, const(ubyte)*, const(RESUTIL_PROPERTY_ITEM)*);
-void ResUtilFreeParameterBlock(ubyte*, const(ubyte)*, const(RESUTIL_PROPERTY_ITEM)*);
-uint ResUtilAddUnknownProperties(HKEY, const(RESUTIL_PROPERTY_ITEM)*, void*, uint, uint*, uint*);
-uint ResUtilSetPrivatePropertyList(HKEY, const(void)*, uint);
-uint ResUtilVerifyPrivatePropertyList(const(void)*, uint);
-PWSTR ResUtilDupString(const(wchar)*);
-uint ResUtilGetBinaryValue(HKEY, const(wchar)*, ubyte**, uint*);
-PWSTR ResUtilGetSzValue(HKEY, const(wchar)*);
-uint ResUtilGetDwordValue(HKEY, const(wchar)*, uint*, uint);
-uint ResUtilGetQwordValue(HKEY, const(wchar)*, ulong*, ulong);
-uint ResUtilSetBinaryValue(HKEY, const(wchar)*, const(ubyte)*, uint, ubyte**, uint*);
-uint ResUtilSetSzValue(HKEY, const(wchar)*, const(wchar)*, PWSTR*);
-uint ResUtilSetExpandSzValue(HKEY, const(wchar)*, const(wchar)*, PWSTR*);
-uint ResUtilSetMultiSzValue(HKEY, const(wchar)*, const(wchar)*, uint, PWSTR*, uint*);
-uint ResUtilSetDwordValue(HKEY, const(wchar)*, uint, uint*);
-uint ResUtilSetQwordValue(HKEY, const(wchar)*, ulong, ulong*);
-uint ResUtilSetValueEx(HKEY, const(wchar)*, uint, const(ubyte)*, uint, uint);
-uint ResUtilGetBinaryProperty(ubyte**, uint*, const(CLUSPROP_BINARY)*, const(ubyte)*, uint, ubyte**, uint*);
-uint ResUtilGetSzProperty(PWSTR*, const(CLUSPROP_SZ)*, const(wchar)*, ubyte**, uint*);
-uint ResUtilGetMultiSzProperty(PWSTR*, uint*, const(CLUSPROP_SZ)*, const(wchar)*, uint, ubyte**, uint*);
-uint ResUtilGetDwordProperty(uint*, const(CLUSPROP_DWORD)*, uint, uint, uint, ubyte**, uint*);
-uint ResUtilGetLongProperty(int*, const(CLUSPROP_LONG)*, int, int, int, ubyte**, uint*);
-uint ResUtilGetFileTimeProperty(FILETIME*, const(CLUSPROP_FILETIME)*, FILETIME, FILETIME, FILETIME, ubyte**, uint*);
-void* ResUtilGetEnvironmentWithNetName(HRESOURCE);
-uint ResUtilFreeEnvironment(void*);
-PWSTR ResUtilExpandEnvironmentStrings(const(wchar)*);
-uint ResUtilSetResourceServiceEnvironment(const(wchar)*, HRESOURCE, PLOG_EVENT_ROUTINE, long);
-uint ResUtilRemoveResourceServiceEnvironment(const(wchar)*, PLOG_EVENT_ROUTINE, long);
-uint ResUtilSetResourceServiceStartParameters(const(wchar)*, SC_HANDLE, SC_HANDLE*, PLOG_EVENT_ROUTINE, long);
-uint ResUtilFindSzProperty(const(void)*, uint, const(wchar)*, PWSTR*);
-uint ResUtilFindExpandSzProperty(const(void)*, uint, const(wchar)*, PWSTR*);
-uint ResUtilFindExpandedSzProperty(const(void)*, uint, const(wchar)*, PWSTR*);
-uint ResUtilFindDwordProperty(const(void)*, uint, const(wchar)*, uint*);
-uint ResUtilFindBinaryProperty(const(void)*, uint, const(wchar)*, ubyte**, uint*);
-uint ResUtilFindMultiSzProperty(const(void)*, uint, const(wchar)*, PWSTR*, uint*);
-uint ResUtilFindLongProperty(const(void)*, uint, const(wchar)*, int*);
-uint ResUtilFindULargeIntegerProperty(const(void)*, uint, const(wchar)*, ulong*);
-uint ResUtilFindFileTimeProperty(const(void)*, uint, const(wchar)*, FILETIME*);
-uint ClusWorkerCreate(CLUS_WORKER*, PWORKER_START_ROUTINE, void*);
-BOOL ClusWorkerCheckTerminate(CLUS_WORKER*);
-void ClusWorkerTerminate(CLUS_WORKER*);
-uint ClusWorkerTerminateEx(CLUS_WORKER*, uint, BOOL);
-uint ClusWorkersTerminate(CLUS_WORKER**, const(ulong), uint, BOOL);
-BOOL ResUtilResourcesEqual(HRESOURCE, HRESOURCE);
-BOOL ResUtilResourceTypesEqual(const(wchar)*, HRESOURCE);
-BOOL ResUtilIsResourceClassEqual(CLUS_RESOURCE_CLASS_INFO*, HRESOURCE);
-uint ResUtilEnumResources(HRESOURCE, const(wchar)*, LPRESOURCE_CALLBACK, void*);
-uint ResUtilEnumResourcesEx(HCLUSTER, HRESOURCE, const(wchar)*, LPRESOURCE_CALLBACK_EX, void*);
-HRESOURCE ResUtilGetResourceDependency(HANDLE, const(wchar)*);
-HRESOURCE ResUtilGetResourceDependencyByName(HCLUSTER, HANDLE, const(wchar)*, BOOL);
-HRESOURCE ResUtilGetResourceDependencyByClass(HCLUSTER, HANDLE, CLUS_RESOURCE_CLASS_INFO*, BOOL);
-HRESOURCE ResUtilGetResourceNameDependency(const(wchar)*, const(wchar)*);
-uint ResUtilGetResourceDependentIPAddressProps(HRESOURCE, PWSTR, uint*, PWSTR, uint*, PWSTR, uint*);
-uint ResUtilFindDependentDiskResourceDriveLetter(HCLUSTER, HRESOURCE, PWSTR, uint*);
-uint ResUtilTerminateServiceProcessFromResDll(uint, BOOL, uint*, PLOG_EVENT_ROUTINE, long);
-uint ResUtilGetPropertyFormats(const(RESUTIL_PROPERTY_ITEM)*, void*, uint, uint*, uint*);
-uint ResUtilGetCoreClusterResources(HCLUSTER, HRESOURCE*, HRESOURCE*, HRESOURCE*);
-uint ResUtilGetResourceName(HRESOURCE, PWSTR, uint*);
-CLUSTER_ROLE_STATE ResUtilGetClusterRoleState(HCLUSTER, CLUSTER_ROLE);
-BOOL ClusterIsPathOnSharedVolume(const(wchar)*);
-BOOL ClusterGetVolumePathName(const(wchar)*, PWSTR, uint);
-BOOL ClusterGetVolumeNameForVolumeMountPoint(const(wchar)*, PWSTR, uint);
-uint ClusterPrepareSharedVolumeForBackup(const(wchar)*, PWSTR, uint*, PWSTR, uint*);
-uint ClusterClearBackupStateForSharedVolume(const(wchar)*);
-uint ResUtilSetResourceServiceStartParametersEx(const(wchar)*, SC_HANDLE, SC_HANDLE*, uint, PLOG_EVENT_ROUTINE, long);
-uint ResUtilEnumResourcesEx2(HCLUSTER, HRESOURCE, const(wchar)*, LPRESOURCE_CALLBACK_EX, void*, uint);
-HRESOURCE ResUtilGetResourceDependencyEx(HANDLE, const(wchar)*, uint);
-HRESOURCE ResUtilGetResourceDependencyByNameEx(HCLUSTER, HANDLE, const(wchar)*, BOOL, uint);
-HRESOURCE ResUtilGetResourceDependencyByClassEx(HCLUSTER, HANDLE, CLUS_RESOURCE_CLASS_INFO*, BOOL, uint);
-HRESOURCE ResUtilGetResourceNameDependencyEx(const(wchar)*, const(wchar)*, uint);
-uint ResUtilGetCoreClusterResourcesEx(HCLUSTER, HRESOURCE*, HRESOURCE*, uint);
-HCLUSCRYPTPROVIDER OpenClusterCryptProvider(const(wchar)*, byte*, uint, uint);
-HCLUSCRYPTPROVIDER OpenClusterCryptProviderEx(const(wchar)*, const(wchar)*, byte*, uint, uint);
-uint CloseClusterCryptProvider(HCLUSCRYPTPROVIDER);
-uint ClusterEncrypt(HCLUSCRYPTPROVIDER, ubyte*, uint, ubyte**, uint*);
-uint ClusterDecrypt(HCLUSCRYPTPROVIDER, ubyte*, uint, ubyte**, uint*);
-uint FreeClusterCrypt(void*);
-uint ResUtilVerifyShutdownSafe(uint, uint, uint*);
-BOOL ResUtilPaxosComparer(const(PaxosTagCStruct)*, const(PaxosTagCStruct)*);
-BOOL ResUtilLeftPaxosIsLessThanRight(const(PaxosTagCStruct)*, const(PaxosTagCStruct)*);
-uint ResUtilsDeleteKeyTree(HKEY, const(wchar)*, BOOL);
-uint ResUtilGroupsEqual(HGROUP, HGROUP, BOOL*);
-uint ResUtilEnumGroups(HCLUSTER, HGROUP, LPGROUP_CALLBACK_EX, void*);
-uint ResUtilEnumGroupsEx(HCLUSTER, HGROUP, CLUSGROUP_TYPE, LPGROUP_CALLBACK_EX, void*);
-uint ResUtilDupGroup(HGROUP, HGROUP*);
-uint ResUtilGetClusterGroupType(HGROUP, CLUSGROUP_TYPE*);
-HGROUP ResUtilGetCoreGroup(HCLUSTER);
-uint ResUtilResourceDepEnum(HRESOURCE, uint, LPRESOURCE_CALLBACK_EX, void*);
-uint ResUtilDupResource(HRESOURCE, HRESOURCE*);
-uint ResUtilGetClusterId(HCLUSTER, GUID*);
-uint ResUtilNodeEnum(HCLUSTER, LPNODE_CALLBACK, void*);
-uint RegisterAppInstance(HANDLE, GUID*, BOOL);
-uint RegisterAppInstanceVersion(GUID*, ulong, ulong);
-uint QueryAppInstanceVersion(GUID*, ulong*, ulong*, NTSTATUS*);
+CLUSAPI_REASON_HANDLER* ClusapiSetReasonHandler(CLUSAPI_REASON_HANDLER* lpHandler);
+uint GetNodeClusterState(const(wchar)* lpszNodeName, uint* pdwClusterState);
+HCLUSTER OpenCluster(const(wchar)* lpszClusterName);
+HCLUSTER OpenClusterEx(const(wchar)* lpszClusterName, uint DesiredAccess, uint* GrantedAccess);
+BOOL CloseCluster(HCLUSTER hCluster);
+uint SetClusterName(HCLUSTER hCluster, const(wchar)* lpszNewClusterName);
+uint SetClusterNameEx(HCLUSTER hCluster, const(wchar)* lpszNewClusterName, const(wchar)* lpszReason);
+uint GetClusterInformation(HCLUSTER hCluster, PWSTR lpszClusterName, uint* lpcchClusterName, CLUSTERVERSIONINFO* lpClusterInfo);
+uint GetClusterQuorumResource(HCLUSTER hCluster, PWSTR lpszResourceName, uint* lpcchResourceName, PWSTR lpszDeviceName, uint* lpcchDeviceName, uint* lpdwMaxQuorumLogSize);
+uint SetClusterQuorumResource(HRESOURCE hResource, const(wchar)* lpszDeviceName, uint dwMaxQuoLogSize);
+uint SetClusterQuorumResourceEx(HRESOURCE hResource, const(wchar)* lpszDeviceName, uint dwMaxQuorumLogSize, const(wchar)* lpszReason);
+uint BackupClusterDatabase(HCLUSTER hCluster, const(wchar)* lpszPathName);
+uint RestoreClusterDatabase(const(wchar)* lpszPathName, BOOL bForce, const(wchar)* lpszQuorumDriveLetter);
+uint SetClusterNetworkPriorityOrder(HCLUSTER hCluster, uint NetworkCount, HNETWORK* NetworkList);
+uint SetClusterServiceAccountPassword(const(wchar)* lpszClusterName, const(wchar)* lpszNewPassword, uint dwFlags, CLUSTER_SET_PASSWORD_STATUS* lpReturnStatusBuffer, uint* lpcbReturnStatusBufferSize);
+uint ClusterControl(HCLUSTER hCluster, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned);
+uint ClusterControlEx(HCLUSTER hCluster, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned, const(wchar)* lpszReason);
+uint ClusterUpgradeFunctionalLevel(HCLUSTER hCluster, BOOL perform, PCLUSTER_UPGRADE_PROGRESS_CALLBACK pfnProgressCallback, void* pvCallbackArg);
+HCHANGE CreateClusterNotifyPortV2(HCHANGE hChange, HCLUSTER hCluster, NOTIFY_FILTER_AND_TYPE* Filters, uint dwFilterCount, ulong dwNotifyKey);
+uint RegisterClusterNotifyV2(HCHANGE hChange, NOTIFY_FILTER_AND_TYPE Filter, HANDLE hObject, ulong dwNotifyKey);
+uint GetNotifyEventHandle(HCHANGE hChange, HANDLE* lphTargetEvent);
+uint GetClusterNotifyV2(HCHANGE hChange, ulong* lpdwNotifyKey, NOTIFY_FILTER_AND_TYPE* pFilterAndType, ubyte* buffer, uint* lpbBufferSize, PWSTR lpszObjectId, uint* lpcchObjectId, PWSTR lpszParentId, uint* lpcchParentId, PWSTR lpszName, uint* lpcchName, PWSTR lpszType, uint* lpcchType, uint dwMilliseconds);
+HCHANGE CreateClusterNotifyPort(HCHANGE hChange, HCLUSTER hCluster, uint dwFilter, ulong dwNotifyKey);
+uint RegisterClusterNotify(HCHANGE hChange, uint dwFilterType, HANDLE hObject, ulong dwNotifyKey);
+uint GetClusterNotify(HCHANGE hChange, ulong* lpdwNotifyKey, uint* lpdwFilterType, PWSTR lpszName, uint* lpcchName, uint dwMilliseconds);
+BOOL CloseClusterNotifyPort(HCHANGE hChange);
+HCLUSENUM ClusterOpenEnum(HCLUSTER hCluster, uint dwType);
+uint ClusterGetEnumCount(HCLUSENUM hEnum);
+uint ClusterEnum(HCLUSENUM hEnum, uint dwIndex, uint* lpdwType, PWSTR lpszName, uint* lpcchName);
+uint ClusterCloseEnum(HCLUSENUM hEnum);
+HCLUSENUMEX ClusterOpenEnumEx(HCLUSTER hCluster, uint dwType, void* pOptions);
+uint ClusterGetEnumCountEx(HCLUSENUMEX hClusterEnum);
+uint ClusterEnumEx(HCLUSENUMEX hClusterEnum, uint dwIndex, CLUSTER_ENUM_ITEM* pItem, uint* cbItem);
+uint ClusterCloseEnumEx(HCLUSENUMEX hClusterEnum);
+HGROUPSET CreateClusterGroupSet(HCLUSTER hCluster, const(wchar)* groupSetName);
+HGROUPSET OpenClusterGroupSet(HCLUSTER hCluster, const(wchar)* lpszGroupSetName);
+BOOL CloseClusterGroupSet(HGROUPSET hGroupSet);
+uint DeleteClusterGroupSet(HGROUPSET hGroupSet);
+uint DeleteClusterGroupSetEx(HGROUPSET hGroupSet, const(wchar)* lpszReason);
+uint ClusterAddGroupToGroupSet(HGROUPSET hGroupSet, HGROUP hGroup);
+uint ClusterAddGroupToGroupSetWithDomains(HGROUPSET hGroupSet, HGROUP hGroup, uint faultDomain, uint updateDomain);
+uint ClusterAddGroupToGroupSetWithDomainsEx(HGROUPSET hGroupSet, HGROUP hGroup, uint faultDomain, uint updateDomain, const(wchar)* lpszReason);
+uint ClusterRemoveGroupFromGroupSet(HGROUP hGroup);
+uint ClusterRemoveGroupFromGroupSetEx(HGROUP hGroup, const(wchar)* lpszReason);
+uint ClusterGroupSetControl(HGROUPSET hGroupSet, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint cbInBufferSize, void* lpOutBuffer, uint cbOutBufferSize, uint* lpBytesReturned);
+uint ClusterGroupSetControlEx(HGROUPSET hGroupSet, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint cbInBufferSize, void* lpOutBuffer, uint cbOutBufferSize, uint* lpBytesReturned, const(wchar)* lpszReason);
+uint AddClusterGroupDependency(HGROUP hDependentGroup, HGROUP hProviderGroup);
+uint AddClusterGroupDependencyEx(HGROUP hDependentGroup, HGROUP hProviderGroup, const(wchar)* lpszReason);
+uint SetGroupDependencyExpression(HGROUP hGroup, const(wchar)* lpszDependencyExpression);
+uint SetGroupDependencyExpressionEx(HGROUP hGroup, const(wchar)* lpszDependencyExpression, const(wchar)* lpszReason);
+uint RemoveClusterGroupDependency(HGROUP hGroup, HGROUP hDependsOn);
+uint RemoveClusterGroupDependencyEx(HGROUP hGroup, HGROUP hDependsOn, const(wchar)* lpszReason);
+uint AddClusterGroupSetDependency(HGROUPSET hDependentGroupSet, HGROUPSET hProviderGroupSet);
+uint AddClusterGroupSetDependencyEx(HGROUPSET hDependentGroupSet, HGROUPSET hProviderGroupSet, const(wchar)* lpszReason);
+uint SetClusterGroupSetDependencyExpression(HGROUPSET hGroupSet, const(wchar)* lpszDependencyExprssion);
+uint SetClusterGroupSetDependencyExpressionEx(HGROUPSET hGroupSet, const(wchar)* lpszDependencyExpression, const(wchar)* lpszReason);
+uint RemoveClusterGroupSetDependency(HGROUPSET hGroupSet, HGROUPSET hDependsOn);
+uint RemoveClusterGroupSetDependencyEx(HGROUPSET hGroupSet, HGROUPSET hDependsOn, const(wchar)* lpszReason);
+uint AddClusterGroupToGroupSetDependency(HGROUP hDependentGroup, HGROUPSET hProviderGroupSet);
+uint AddClusterGroupToGroupSetDependencyEx(HGROUP hDependentGroup, HGROUPSET hProviderGroupSet, const(wchar)* lpszReason);
+uint RemoveClusterGroupToGroupSetDependency(HGROUP hGroup, HGROUPSET hDependsOn);
+uint RemoveClusterGroupToGroupSetDependencyEx(HGROUP hGroup, HGROUPSET hDependsOn, const(wchar)* lpszReason);
+HGROUPSETENUM ClusterGroupSetOpenEnum(HCLUSTER hCluster);
+uint ClusterGroupSetGetEnumCount(HGROUPSETENUM hGroupSetEnum);
+uint ClusterGroupSetEnum(HGROUPSETENUM hGroupSetEnum, uint dwIndex, PWSTR lpszName, uint* lpcchName);
+uint ClusterGroupSetCloseEnum(HGROUPSETENUM hGroupSetEnum);
+uint AddCrossClusterGroupSetDependency(HGROUPSET hDependentGroupSet, const(wchar)* lpRemoteClusterName, const(wchar)* lpRemoteGroupSetName);
+uint RemoveCrossClusterGroupSetDependency(HGROUPSET hDependentGroupSet, const(wchar)* lpRemoteClusterName, const(wchar)* lpRemoteGroupSetName);
+HGROUPSET CreateClusterAvailabilitySet(HCLUSTER hCluster, const(wchar)* lpAvailabilitySetName, CLUSTER_AVAILABILITY_SET_CONFIG* pAvailabilitySetConfig);
+uint ClusterNodeReplacement(HCLUSTER hCluster, const(wchar)* lpszNodeNameCurrent, const(wchar)* lpszNodeNameNew);
+uint ClusterCreateAffinityRule(HCLUSTER hCluster, const(wchar)* ruleName, CLUS_AFFINITY_RULE_TYPE ruleType);
+uint ClusterRemoveAffinityRule(HCLUSTER hCluster, const(wchar)* ruleName);
+uint ClusterAddGroupToAffinityRule(HCLUSTER hCluster, const(wchar)* ruleName, HGROUP hGroup);
+uint ClusterRemoveGroupFromAffinityRule(HCLUSTER hCluster, const(wchar)* ruleName, HGROUP hGroup);
+uint ClusterAffinityRuleControl(HCLUSTER hCluster, const(wchar)* affinityRuleName, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint cbInBufferSize, void* lpOutBuffer, uint cbOutBufferSize, uint* lpBytesReturned);
+HNODE OpenClusterNode(HCLUSTER hCluster, const(wchar)* lpszNodeName);
+HNODE OpenClusterNodeEx(HCLUSTER hCluster, const(wchar)* lpszNodeName, uint dwDesiredAccess, uint* lpdwGrantedAccess);
+HNODE OpenClusterNodeById(HCLUSTER hCluster, uint nodeId);
+BOOL CloseClusterNode(HNODE hNode);
+CLUSTER_NODE_STATE GetClusterNodeState(HNODE hNode);
+uint GetClusterNodeId(HNODE hNode, PWSTR lpszNodeId, uint* lpcchName);
+HCLUSTER GetClusterFromNode(HNODE hNode);
+uint PauseClusterNode(HNODE hNode);
+uint ResumeClusterNode(HNODE hNode);
+uint EvictClusterNode(HNODE hNode);
+HNETINTERFACEENUM ClusterNetInterfaceOpenEnum(HCLUSTER hCluster, const(wchar)* lpszNodeName, const(wchar)* lpszNetworkName);
+uint ClusterNetInterfaceEnum(HNETINTERFACEENUM hNetInterfaceEnum, uint dwIndex, PWSTR lpszName, uint* lpcchName);
+uint ClusterNetInterfaceCloseEnum(HNETINTERFACEENUM hNetInterfaceEnum);
+HNODEENUM ClusterNodeOpenEnum(HNODE hNode, uint dwType);
+HNODEENUMEX ClusterNodeOpenEnumEx(HNODE hNode, uint dwType, void* pOptions);
+uint ClusterNodeGetEnumCountEx(HNODEENUMEX hNodeEnum);
+uint ClusterNodeEnumEx(HNODEENUMEX hNodeEnum, uint dwIndex, CLUSTER_ENUM_ITEM* pItem, uint* cbItem);
+uint ClusterNodeCloseEnumEx(HNODEENUMEX hNodeEnum);
+uint ClusterNodeGetEnumCount(HNODEENUM hNodeEnum);
+uint ClusterNodeCloseEnum(HNODEENUM hNodeEnum);
+uint ClusterNodeEnum(HNODEENUM hNodeEnum, uint dwIndex, uint* lpdwType, PWSTR lpszName, uint* lpcchName);
+uint EvictClusterNodeEx(HNODE hNode, uint dwTimeOut, HRESULT* phrCleanupStatus);
+uint EvictClusterNodeEx2(HNODE hNode, uint dwTimeout, HRESULT* phrCleanupStatus, const(wchar)* lpszReason);
+HKEY GetClusterResourceTypeKey(HCLUSTER hCluster, const(wchar)* lpszTypeName, uint samDesired);
+HGROUP CreateClusterGroup(HCLUSTER hCluster, const(wchar)* lpszGroupName);
+HGROUP OpenClusterGroup(HCLUSTER hCluster, const(wchar)* lpszGroupName);
+HGROUP OpenClusterGroupEx(HCLUSTER hCluster, const(wchar)* lpszGroupName, uint dwDesiredAccess, uint* lpdwGrantedAccess);
+uint PauseClusterNodeEx(HNODE hNode, BOOL bDrainNode, uint dwPauseFlags, HNODE hNodeDrainTarget);
+uint PauseClusterNodeEx2(HNODE hNode, BOOL bDrainNode, uint dwPauseFlags, HNODE hNodeDrainTarget, const(wchar)* lpszReason);
+uint ResumeClusterNodeEx(HNODE hNode, CLUSTER_NODE_RESUME_FAILBACK_TYPE eResumeFailbackType, uint dwResumeFlagsReserved);
+uint ResumeClusterNodeEx2(HNODE hNode, CLUSTER_NODE_RESUME_FAILBACK_TYPE eResumeFailbackType, uint dwResumeFlagsReserved, const(wchar)* lpszReason);
+HGROUP CreateClusterGroupEx(HCLUSTER hCluster, const(wchar)* lpszGroupName, CLUSTER_CREATE_GROUP_INFO* pGroupInfo);
+HGROUPENUMEX ClusterGroupOpenEnumEx(HCLUSTER hCluster, const(wchar)* lpszProperties, uint cbProperties, const(wchar)* lpszRoProperties, uint cbRoProperties, uint dwFlags);
+uint ClusterGroupGetEnumCountEx(HGROUPENUMEX hGroupEnumEx);
+uint ClusterGroupEnumEx(HGROUPENUMEX hGroupEnumEx, uint dwIndex, CLUSTER_GROUP_ENUM_ITEM* pItem, uint* cbItem);
+uint ClusterGroupCloseEnumEx(HGROUPENUMEX hGroupEnumEx);
+HRESENUMEX ClusterResourceOpenEnumEx(HCLUSTER hCluster, const(wchar)* lpszProperties, uint cbProperties, const(wchar)* lpszRoProperties, uint cbRoProperties, uint dwFlags);
+uint ClusterResourceGetEnumCountEx(HRESENUMEX hResourceEnumEx);
+uint ClusterResourceEnumEx(HRESENUMEX hResourceEnumEx, uint dwIndex, CLUSTER_RESOURCE_ENUM_ITEM* pItem, uint* cbItem);
+uint ClusterResourceCloseEnumEx(HRESENUMEX hResourceEnumEx);
+uint OnlineClusterGroupEx(HGROUP hGroup, HNODE hDestinationNode, uint dwOnlineFlags, ubyte* lpInBuffer, uint cbInBufferSize);
+uint OfflineClusterGroupEx(HGROUP hGroup, uint dwOfflineFlags, ubyte* lpInBuffer, uint cbInBufferSize);
+uint OnlineClusterGroupEx2(HGROUP hGroup, HNODE hDestinationNode, uint dwOnlineFlags, ubyte* lpInBuffer, uint cbInBufferSize, const(wchar)* lpszReason);
+uint OfflineClusterGroupEx2(HGROUP hGroup, uint dwOfflineFlags, ubyte* lpInBuffer, uint cbInBufferSize, const(wchar)* lpszReason);
+uint OnlineClusterResourceEx(HRESOURCE hResource, uint dwOnlineFlags, ubyte* lpInBuffer, uint cbInBufferSize);
+uint OnlineClusterResourceEx2(HRESOURCE hResource, uint dwOnlineFlags, ubyte* lpInBuffer, uint cbInBufferSize, const(wchar)* lpszReason);
+uint OfflineClusterResourceEx(HRESOURCE hResource, uint dwOfflineFlags, ubyte* lpInBuffer, uint cbInBufferSize);
+uint OfflineClusterResourceEx2(HRESOURCE hResource, uint dwOfflineFlags, ubyte* lpInBuffer, uint cbInBufferSize, const(wchar)* lpszReason);
+uint MoveClusterGroupEx(HGROUP hGroup, HNODE hDestinationNode, uint dwMoveFlags, ubyte* lpInBuffer, uint cbInBufferSize);
+uint MoveClusterGroupEx2(HGROUP hGroup, HNODE hDestinationNode, uint dwMoveFlags, ubyte* lpInBuffer, uint cbInBufferSize, const(wchar)* lpszReason);
+uint CancelClusterGroupOperation(HGROUP hGroup, uint dwCancelFlags_RESERVED);
+uint RestartClusterResource(HRESOURCE hResource, uint dwFlags);
+uint RestartClusterResourceEx(HRESOURCE hResource, uint dwFlags, const(wchar)* lpszReason);
+BOOL CloseClusterGroup(HGROUP hGroup);
+HCLUSTER GetClusterFromGroup(HGROUP hGroup);
+CLUSTER_GROUP_STATE GetClusterGroupState(HGROUP hGroup, PWSTR lpszNodeName, uint* lpcchNodeName);
+uint SetClusterGroupName(HGROUP hGroup, const(wchar)* lpszGroupName);
+uint SetClusterGroupNodeList(HGROUP hGroup, uint NodeCount, HNODE* NodeList);
+uint SetClusterGroupNameEx(HGROUP hGroup, const(wchar)* lpszGroupName, const(wchar)* lpszReason);
+uint SetClusterGroupNodeListEx(HGROUP hGroup, uint NodeCount, HNODE* NodeList, const(wchar)* lpszReason);
+uint OnlineClusterGroup(HGROUP hGroup, HNODE hDestinationNode);
+uint MoveClusterGroup(HGROUP hGroup, HNODE hDestinationNode);
+uint OfflineClusterGroup(HGROUP hGroup);
+uint DeleteClusterGroup(HGROUP hGroup);
+uint DestroyClusterGroup(HGROUP hGroup);
+uint DeleteClusterGroupEx(HGROUP hGroup, const(wchar)* lpszReason);
+uint DestroyClusterGroupEx(HGROUP hGroup, const(wchar)* lpszReason);
+HGROUPENUM ClusterGroupOpenEnum(HGROUP hGroup, uint dwType);
+uint ClusterGroupGetEnumCount(HGROUPENUM hGroupEnum);
+uint ClusterGroupEnum(HGROUPENUM hGroupEnum, uint dwIndex, uint* lpdwType, PWSTR lpszResourceName, uint* lpcchName);
+uint ClusterGroupCloseEnum(HGROUPENUM hGroupEnum);
+HRESOURCE CreateClusterResource(HGROUP hGroup, const(wchar)* lpszResourceName, const(wchar)* lpszResourceType, uint dwFlags);
+HRESOURCE CreateClusterResourceEx(HGROUP hGroup, const(wchar)* lpszResourceName, const(wchar)* lpszResourceType, uint dwFlags, const(wchar)* lpszReason);
+HRESOURCE OpenClusterResource(HCLUSTER hCluster, const(wchar)* lpszResourceName);
+HRESOURCE OpenClusterResourceEx(HCLUSTER hCluster, const(wchar)* lpszResourceName, uint dwDesiredAccess, uint* lpdwGrantedAccess);
+BOOL CloseClusterResource(HRESOURCE hResource);
+HCLUSTER GetClusterFromResource(HRESOURCE hResource);
+uint DeleteClusterResource(HRESOURCE hResource);
+uint DeleteClusterResourceEx(HRESOURCE hResource, const(wchar)* lpszReason);
+CLUSTER_RESOURCE_STATE GetClusterResourceState(HRESOURCE hResource, PWSTR lpszNodeName, uint* lpcchNodeName, PWSTR lpszGroupName, uint* lpcchGroupName);
+uint SetClusterResourceName(HRESOURCE hResource, const(wchar)* lpszResourceName);
+uint SetClusterResourceNameEx(HRESOURCE hResource, const(wchar)* lpszResourceName, const(wchar)* lpszReason);
+uint FailClusterResource(HRESOURCE hResource);
+uint FailClusterResourceEx(HRESOURCE hResource, const(wchar)* lpszReason);
+uint OnlineClusterResource(HRESOURCE hResource);
+uint OfflineClusterResource(HRESOURCE hResource);
+uint ChangeClusterResourceGroup(HRESOURCE hResource, HGROUP hGroup);
+uint ChangeClusterResourceGroupEx(HRESOURCE hResource, HGROUP hGroup, ulong Flags);
+uint ChangeClusterResourceGroupEx2(HRESOURCE hResource, HGROUP hGroup, ulong Flags, const(wchar)* lpszReason);
+uint AddClusterResourceNode(HRESOURCE hResource, HNODE hNode);
+uint RemoveClusterResourceNode(HRESOURCE hResource, HNODE hNode);
+uint AddClusterResourceNodeEx(HRESOURCE hResource, HNODE hNode, const(wchar)* lpszReason);
+uint RemoveClusterResourceNodeEx(HRESOURCE hResource, HNODE hNode, const(wchar)* lpszReason);
+uint AddClusterResourceDependency(HRESOURCE hResource, HRESOURCE hDependsOn);
+uint RemoveClusterResourceDependency(HRESOURCE hResource, HRESOURCE hDependsOn);
+uint AddClusterResourceDependencyEx(HRESOURCE hResource, HRESOURCE hDependsOn, const(wchar)* lpszReason);
+uint RemoveClusterResourceDependencyEx(HRESOURCE hResource, HRESOURCE hDependsOn, const(wchar)* lpszReason);
+uint SetClusterResourceDependencyExpression(HRESOURCE hResource, const(wchar)* lpszDependencyExpression);
+uint GetClusterResourceDependencyExpression(HRESOURCE hResource, PWSTR lpszDependencyExpression, uint* lpcchDependencyExpression);
+uint AddResourceToClusterSharedVolumes(HRESOURCE hResource);
+uint RemoveResourceFromClusterSharedVolumes(HRESOURCE hResource);
+uint IsFileOnClusterSharedVolume(const(wchar)* lpszPathName, BOOL* pbFileIsOnSharedVolume);
+uint ClusterSharedVolumeSetSnapshotState(GUID guidSnapshotSet, const(wchar)* lpszVolumeName, CLUSTER_SHARED_VOLUME_SNAPSHOT_STATE state);
+BOOL CanResourceBeDependent(HRESOURCE hResource, HRESOURCE hResourceDependent);
+uint ClusterResourceControl(HRESOURCE hResource, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint cbInBufferSize, void* lpOutBuffer, uint cbOutBufferSize, uint* lpBytesReturned);
+uint ClusterResourceControlAsUser(HRESOURCE hResource, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint cbInBufferSize, void* lpOutBuffer, uint cbOutBufferSize, uint* lpBytesReturned);
+uint ClusterResourceTypeControl(HCLUSTER hCluster, const(wchar)* lpszResourceTypeName, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned);
+uint ClusterResourceTypeControlAsUser(HCLUSTER hCluster, const(wchar)* lpszResourceTypeName, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned);
+uint ClusterGroupControl(HGROUP hGroup, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned);
+uint ClusterResourceControlEx(HRESOURCE hResource, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint cbInBufferSize, void* lpOutBuffer, uint cbOutBufferSize, uint* lpBytesReturned, const(wchar)* lpszReason);
+uint ClusterResourceControlAsUserEx(HRESOURCE hResource, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint cbInBufferSize, void* lpOutBuffer, uint cbOutBufferSize, uint* lpBytesReturned, const(wchar)* lpszReason);
+uint ClusterResourceTypeControlEx(HCLUSTER hCluster, const(wchar)* lpszResourceTypeName, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned, const(wchar)* lpszReason);
+uint ClusterResourceTypeControlAsUserEx(HCLUSTER hCluster, const(wchar)* lpszResourceTypeName, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned, const(wchar)* lpszReason);
+uint ClusterGroupControlEx(HGROUP hGroup, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned, const(wchar)* lpszReason);
+uint ClusterNodeControl(HNODE hNode, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned);
+uint ClusterNodeControlEx(HNODE hNode, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned, const(wchar)* lpszReason);
+BOOL GetClusterResourceNetworkName(HRESOURCE hResource, PWSTR lpBuffer, uint* nSize);
+HRESENUM ClusterResourceOpenEnum(HRESOURCE hResource, uint dwType);
+uint ClusterResourceGetEnumCount(HRESENUM hResEnum);
+uint ClusterResourceEnum(HRESENUM hResEnum, uint dwIndex, uint* lpdwType, PWSTR lpszName, uint* lpcchName);
+uint ClusterResourceCloseEnum(HRESENUM hResEnum);
+uint CreateClusterResourceType(HCLUSTER hCluster, const(wchar)* lpszResourceTypeName, const(wchar)* lpszDisplayName, const(wchar)* lpszResourceTypeDll, uint dwLooksAlivePollInterval, uint dwIsAlivePollInterval);
+uint DeleteClusterResourceType(HCLUSTER hCluster, const(wchar)* lpszResourceTypeName);
+uint CreateClusterResourceTypeEx(HCLUSTER hCluster, const(wchar)* lpszResourceTypeName, const(wchar)* lpszDisplayName, const(wchar)* lpszResourceTypeDll, uint dwLooksAlivePollInterval, uint dwIsAlivePollInterval, const(wchar)* lpszReason);
+uint DeleteClusterResourceTypeEx(HCLUSTER hCluster, const(wchar)* lpszTypeName, const(wchar)* lpszReason);
+HRESTYPEENUM ClusterResourceTypeOpenEnum(HCLUSTER hCluster, const(wchar)* lpszResourceTypeName, uint dwType);
+uint ClusterResourceTypeGetEnumCount(HRESTYPEENUM hResTypeEnum);
+uint ClusterResourceTypeEnum(HRESTYPEENUM hResTypeEnum, uint dwIndex, uint* lpdwType, PWSTR lpszName, uint* lpcchName);
+uint ClusterResourceTypeCloseEnum(HRESTYPEENUM hResTypeEnum);
+HNETWORK OpenClusterNetwork(HCLUSTER hCluster, const(wchar)* lpszNetworkName);
+HNETWORK OpenClusterNetworkEx(HCLUSTER hCluster, const(wchar)* lpszNetworkName, uint dwDesiredAccess, uint* lpdwGrantedAccess);
+BOOL CloseClusterNetwork(HNETWORK hNetwork);
+HCLUSTER GetClusterFromNetwork(HNETWORK hNetwork);
+HNETWORKENUM ClusterNetworkOpenEnum(HNETWORK hNetwork, uint dwType);
+uint ClusterNetworkGetEnumCount(HNETWORKENUM hNetworkEnum);
+uint ClusterNetworkEnum(HNETWORKENUM hNetworkEnum, uint dwIndex, uint* lpdwType, PWSTR lpszName, uint* lpcchName);
+uint ClusterNetworkCloseEnum(HNETWORKENUM hNetworkEnum);
+CLUSTER_NETWORK_STATE GetClusterNetworkState(HNETWORK hNetwork);
+uint SetClusterNetworkName(HNETWORK hNetwork, const(wchar)* lpszName);
+uint SetClusterNetworkNameEx(HNETWORK hNetwork, const(wchar)* lpszName, const(wchar)* lpszReason);
+uint GetClusterNetworkId(HNETWORK hNetwork, PWSTR lpszNetworkId, uint* lpcchName);
+uint ClusterNetworkControl(HNETWORK hNetwork, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned);
+uint ClusterNetworkControlEx(HNETWORK hNetwork, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned, const(wchar)* lpszReason);
+HNETINTERFACE OpenClusterNetInterface(HCLUSTER hCluster, const(wchar)* lpszInterfaceName);
+HNETINTERFACE OpenClusterNetInterfaceEx(HCLUSTER hCluster, const(wchar)* lpszInterfaceName, uint dwDesiredAccess, uint* lpdwGrantedAccess);
+uint GetClusterNetInterface(HCLUSTER hCluster, const(wchar)* lpszNodeName, const(wchar)* lpszNetworkName, PWSTR lpszInterfaceName, uint* lpcchInterfaceName);
+BOOL CloseClusterNetInterface(HNETINTERFACE hNetInterface);
+HCLUSTER GetClusterFromNetInterface(HNETINTERFACE hNetInterface);
+CLUSTER_NETINTERFACE_STATE GetClusterNetInterfaceState(HNETINTERFACE hNetInterface);
+uint ClusterNetInterfaceControl(HNETINTERFACE hNetInterface, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned);
+uint ClusterNetInterfaceControlEx(HNETINTERFACE hNetInterface, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned, const(wchar)* lpszReason);
+HKEY GetClusterKey(HCLUSTER hCluster, uint samDesired);
+HKEY GetClusterGroupKey(HGROUP hGroup, uint samDesired);
+HKEY GetClusterResourceKey(HRESOURCE hResource, uint samDesired);
+HKEY GetClusterNodeKey(HNODE hNode, uint samDesired);
+HKEY GetClusterNetworkKey(HNETWORK hNetwork, uint samDesired);
+HKEY GetClusterNetInterfaceKey(HNETINTERFACE hNetInterface, uint samDesired);
+int ClusterRegCreateKey(HKEY hKey, const(wchar)* lpszSubKey, uint dwOptions, uint samDesired, SECURITY_ATTRIBUTES* lpSecurityAttributes, HKEY* phkResult, uint* lpdwDisposition);
+int ClusterRegCreateKeyEx(HKEY hKey, const(wchar)* lpSubKey, uint dwOptions, uint samDesired, SECURITY_ATTRIBUTES* lpSecurityAttributes, HKEY* phkResult, uint* lpdwDisposition, const(wchar)* lpszReason);
+int ClusterRegOpenKey(HKEY hKey, const(wchar)* lpszSubKey, uint samDesired, HKEY* phkResult);
+int ClusterRegDeleteKey(HKEY hKey, const(wchar)* lpszSubKey);
+int ClusterRegDeleteKeyEx(HKEY hKey, const(wchar)* lpSubKey, const(wchar)* lpszReason);
+int ClusterRegCloseKey(HKEY hKey);
+int ClusterRegEnumKey(HKEY hKey, uint dwIndex, PWSTR lpszName, uint* lpcchName, FILETIME* lpftLastWriteTime);
+uint ClusterRegSetValue(HKEY hKey, const(wchar)* lpszValueName, uint dwType, const(ubyte)* lpData, uint cbData);
+uint ClusterRegDeleteValue(HKEY hKey, const(wchar)* lpszValueName);
+uint ClusterRegSetValueEx(HKEY hKey, const(wchar)* lpszValueName, uint dwType, const(ubyte)* lpData, uint cbData, const(wchar)* lpszReason);
+uint ClusterRegDeleteValueEx(HKEY hKey, const(wchar)* lpszValueName, const(wchar)* lpszReason);
+int ClusterRegQueryValue(HKEY hKey, const(wchar)* lpszValueName, uint* lpdwValueType, ubyte* lpData, uint* lpcbData);
+uint ClusterRegEnumValue(HKEY hKey, uint dwIndex, PWSTR lpszValueName, uint* lpcchValueName, uint* lpdwType, ubyte* lpData, uint* lpcbData);
+int ClusterRegQueryInfoKey(HKEY hKey, uint* lpcSubKeys, uint* lpcchMaxSubKeyLen, uint* lpcValues, uint* lpcchMaxValueNameLen, uint* lpcbMaxValueLen, uint* lpcbSecurityDescriptor, FILETIME* lpftLastWriteTime);
+int ClusterRegGetKeySecurity(HKEY hKey, uint RequestedInformation, PSECURITY_DESCRIPTOR pSecurityDescriptor, uint* lpcbSecurityDescriptor);
+int ClusterRegSetKeySecurity(HKEY hKey, uint SecurityInformation, PSECURITY_DESCRIPTOR pSecurityDescriptor);
+int ClusterRegSetKeySecurityEx(HKEY hKey, OBJECT_SECURITY_INFORMATION SecurityInformation, PSECURITY_DESCRIPTOR pSecurityDescriptor, const(wchar)* lpszReason);
+int ClusterRegSyncDatabase(HCLUSTER hCluster, uint flags);
+int ClusterRegCreateBatch(HKEY hKey, HREGBATCH* pHREGBATCH);
+int ClusterRegBatchAddCommand(HREGBATCH hRegBatch, CLUSTER_REG_COMMAND dwCommand, const(wchar)* wzName, uint dwOptions, const(void)* lpData, uint cbData);
+int ClusterRegCloseBatch(HREGBATCH hRegBatch, BOOL bCommit, int* failedCommandNumber);
+int ClusterRegCloseBatchEx(HREGBATCH hRegBatch, uint flags, int* failedCommandNumber);
+int ClusterRegBatchReadCommand(HREGBATCHNOTIFICATION hBatchNotification, CLUSTER_BATCH_COMMAND* pBatchCommand);
+int ClusterRegBatchCloseNotification(HREGBATCHNOTIFICATION hBatchNotification);
+int ClusterRegCreateBatchNotifyPort(HKEY hKey, HREGBATCHPORT* phBatchNotifyPort);
+int ClusterRegCloseBatchNotifyPort(HREGBATCHPORT hBatchNotifyPort);
+int ClusterRegGetBatchNotification(HREGBATCHPORT hBatchNotify, HREGBATCHNOTIFICATION* phBatchNotification);
+int ClusterRegCreateReadBatch(HKEY hKey, HREGREADBATCH* phRegReadBatch);
+int ClusterRegReadBatchAddCommand(HREGREADBATCH hRegReadBatch, const(wchar)* wzSubkeyName, const(wchar)* wzValueName);
+int ClusterRegCloseReadBatch(HREGREADBATCH hRegReadBatch, HREGREADBATCHREPLY* phRegReadBatchReply);
+int ClusterRegCloseReadBatchEx(HREGREADBATCH hRegReadBatch, uint flags, HREGREADBATCHREPLY* phRegReadBatchReply);
+int ClusterRegReadBatchReplyNextCommand(HREGREADBATCHREPLY hRegReadBatchReply, CLUSTER_READ_BATCH_COMMAND* pBatchCommand);
+int ClusterRegCloseReadBatchReply(HREGREADBATCHREPLY hRegReadBatchReply);
+uint ClusterSetAccountAccess(HCLUSTER hCluster, const(wchar)* szAccountSID, uint dwAccess, uint dwControlType);
+HCLUSTER CreateCluster(CREATE_CLUSTER_CONFIG* pConfig, PCLUSTER_SETUP_PROGRESS_CALLBACK pfnProgressCallback, void* pvCallbackArg);
+uint CreateClusterNameAccount(HCLUSTER hCluster, CREATE_CLUSTER_NAME_ACCOUNT* pConfig, PCLUSTER_SETUP_PROGRESS_CALLBACK pfnProgressCallback, void* pvCallbackArg);
+uint RemoveClusterNameAccount(HCLUSTER hCluster, BOOL bDeleteComputerObjects);
+uint DetermineCNOResTypeFromNodelist(uint cNodes, const(wchar)** ppszNodeNames, CLUSTER_MGMT_POINT_RESTYPE* pCNOResType);
+uint DetermineCNOResTypeFromCluster(HCLUSTER hCluster, CLUSTER_MGMT_POINT_RESTYPE* pCNOResType);
+uint DetermineClusterCloudTypeFromNodelist(uint cNodes, const(wchar)** ppszNodeNames, CLUSTER_CLOUD_TYPE* pCloudType);
+uint DetermineClusterCloudTypeFromCluster(HCLUSTER hCluster, CLUSTER_CLOUD_TYPE* pCloudType);
+uint GetNodeCloudTypeDW(const(wchar)* ppszNodeName, uint* NodeCloudType);
+uint RegisterClusterResourceTypeNotifyV2(HCHANGE hChange, HCLUSTER hCluster, long Flags, const(wchar)* resTypeName, ulong dwNotifyKey);
+HNODE AddClusterNode(HCLUSTER hCluster, const(wchar)* lpszNodeName, PCLUSTER_SETUP_PROGRESS_CALLBACK pfnProgressCallback, void* pvCallbackArg);
+uint AddClusterStorageNode(HCLUSTER hCluster, const(wchar)* lpszNodeName, PCLUSTER_SETUP_PROGRESS_CALLBACK pfnProgressCallback, void* pvCallbackArg, const(wchar)* lpszClusterStorageNodeDescription, const(wchar)* lpszClusterStorageNodeLocation);
+HNODE AddClusterNodeEx(HCLUSTER hCluster, const(wchar)* lpszNodeName, uint dwFlags, PCLUSTER_SETUP_PROGRESS_CALLBACK pfnProgressCallback, void* pvCallbackArg);
+uint RemoveClusterStorageNode(HCLUSTER hCluster, const(wchar)* lpszClusterStorageEnclosureName, uint dwTimeout, uint dwFlags);
+uint DestroyCluster(HCLUSTER hCluster, PCLUSTER_SETUP_PROGRESS_CALLBACK pfnProgressCallback, void* pvCallbackArg, BOOL fdeleteVirtualComputerObjects);
+uint InitializeClusterHealthFault(CLUSTER_HEALTH_FAULT* clusterHealthFault);
+uint InitializeClusterHealthFaultArray(CLUSTER_HEALTH_FAULT_ARRAY* clusterHealthFaultArray);
+uint FreeClusterHealthFault(CLUSTER_HEALTH_FAULT* clusterHealthFault);
+uint FreeClusterHealthFaultArray(CLUSTER_HEALTH_FAULT_ARRAY* clusterHealthFaultArray);
+uint ClusGetClusterHealthFaults(HCLUSTER hCluster, CLUSTER_HEALTH_FAULT_ARRAY* objects, uint flags);
+uint ClusRemoveClusterHealthFault(HCLUSTER hCluster, const(wchar)* id, uint flags);
+uint ClusAddClusterHealthFault(HCLUSTER hCluster, CLUSTER_HEALTH_FAULT* failure, uint param2);
+uint ResUtilStartResourceService(const(wchar)* pszServiceName, SC_HANDLE* phServiceHandle);
+uint ResUtilVerifyResourceService(const(wchar)* pszServiceName);
+uint ResUtilStopResourceService(const(wchar)* pszServiceName);
+uint ResUtilVerifyService(SC_HANDLE hServiceHandle);
+uint ResUtilStopService(SC_HANDLE hServiceHandle);
+uint ResUtilCreateDirectoryTree(const(wchar)* pszPath);
+BOOL ResUtilIsPathValid(const(wchar)* pszPath);
+uint ResUtilEnumProperties(const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, PWSTR pszOutProperties, uint cbOutPropertiesSize, uint* pcbBytesReturned, uint* pcbRequired);
+uint ResUtilEnumPrivateProperties(HKEY hkeyClusterKey, PWSTR pszOutProperties, uint cbOutPropertiesSize, uint* pcbBytesReturned, uint* pcbRequired);
+uint ResUtilGetProperties(HKEY hkeyClusterKey, const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, void* pOutPropertyList, uint cbOutPropertyListSize, uint* pcbBytesReturned, uint* pcbRequired);
+uint ResUtilGetAllProperties(HKEY hkeyClusterKey, const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, void* pOutPropertyList, uint cbOutPropertyListSize, uint* pcbBytesReturned, uint* pcbRequired);
+uint ResUtilGetPrivateProperties(HKEY hkeyClusterKey, void* pOutPropertyList, uint cbOutPropertyListSize, uint* pcbBytesReturned, uint* pcbRequired);
+uint ResUtilGetPropertySize(HKEY hkeyClusterKey, const(RESUTIL_PROPERTY_ITEM)* pPropertyTableItem, uint* pcbOutPropertyListSize, uint* pnPropertyCount);
+uint ResUtilGetProperty(HKEY hkeyClusterKey, const(RESUTIL_PROPERTY_ITEM)* pPropertyTableItem, void** pOutPropertyItem, uint* pcbOutPropertyItemSize);
+uint ResUtilVerifyPropertyTable(const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, void* Reserved, BOOL bAllowUnknownProperties, const(void)* pInPropertyList, uint cbInPropertyListSize, ubyte* pOutParams);
+uint ResUtilSetPropertyTable(HKEY hkeyClusterKey, const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, void* Reserved, BOOL bAllowUnknownProperties, const(void)* pInPropertyList, uint cbInPropertyListSize, ubyte* pOutParams);
+uint ResUtilSetPropertyTableEx(HKEY hkeyClusterKey, const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, void* Reserved, BOOL bAllowUnknownProperties, const(void)* pInPropertyList, uint cbInPropertyListSize, BOOL bForceWrite, ubyte* pOutParams);
+uint ResUtilSetPropertyParameterBlock(HKEY hkeyClusterKey, const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, void* Reserved, const(ubyte)* pInParams, const(void)* pInPropertyList, uint cbInPropertyListSize, ubyte* pOutParams);
+uint ResUtilSetPropertyParameterBlockEx(HKEY hkeyClusterKey, const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, void* Reserved, const(ubyte)* pInParams, const(void)* pInPropertyList, uint cbInPropertyListSize, BOOL bForceWrite, ubyte* pOutParams);
+uint ResUtilSetUnknownProperties(HKEY hkeyClusterKey, const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, const(void)* pInPropertyList, uint cbInPropertyListSize);
+uint ResUtilGetPropertiesToParameterBlock(HKEY hkeyClusterKey, const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, ubyte* pOutParams, BOOL bCheckForRequiredProperties, PWSTR* pszNameOfPropInError);
+uint ResUtilPropertyListFromParameterBlock(const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, void* pOutPropertyList, uint* pcbOutPropertyListSize, const(ubyte)* pInParams, uint* pcbBytesReturned, uint* pcbRequired);
+uint ResUtilDupParameterBlock(ubyte* pOutParams, const(ubyte)* pInParams, const(RESUTIL_PROPERTY_ITEM)* pPropertyTable);
+void ResUtilFreeParameterBlock(ubyte* pOutParams, const(ubyte)* pInParams, const(RESUTIL_PROPERTY_ITEM)* pPropertyTable);
+uint ResUtilAddUnknownProperties(HKEY hkeyClusterKey, const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, void* pOutPropertyList, uint pcbOutPropertyListSize, uint* pcbBytesReturned, uint* pcbRequired);
+uint ResUtilSetPrivatePropertyList(HKEY hkeyClusterKey, const(void)* pInPropertyList, uint cbInPropertyListSize);
+uint ResUtilVerifyPrivatePropertyList(const(void)* pInPropertyList, uint cbInPropertyListSize);
+PWSTR ResUtilDupString(const(wchar)* pszInString);
+uint ResUtilGetBinaryValue(HKEY hkeyClusterKey, const(wchar)* pszValueName, ubyte** ppbOutValue, uint* pcbOutValueSize);
+PWSTR ResUtilGetSzValue(HKEY hkeyClusterKey, const(wchar)* pszValueName);
+uint ResUtilGetDwordValue(HKEY hkeyClusterKey, const(wchar)* pszValueName, uint* pdwOutValue, uint dwDefaultValue);
+uint ResUtilGetQwordValue(HKEY hkeyClusterKey, const(wchar)* pszValueName, ulong* pqwOutValue, ulong qwDefaultValue);
+uint ResUtilSetBinaryValue(HKEY hkeyClusterKey, const(wchar)* pszValueName, const(ubyte)* pbNewValue, uint cbNewValueSize, ubyte** ppbOutValue, uint* pcbOutValueSize);
+uint ResUtilSetSzValue(HKEY hkeyClusterKey, const(wchar)* pszValueName, const(wchar)* pszNewValue, PWSTR* ppszOutString);
+uint ResUtilSetExpandSzValue(HKEY hkeyClusterKey, const(wchar)* pszValueName, const(wchar)* pszNewValue, PWSTR* ppszOutString);
+uint ResUtilSetMultiSzValue(HKEY hkeyClusterKey, const(wchar)* pszValueName, const(wchar)* pszNewValue, uint cbNewValueSize, PWSTR* ppszOutValue, uint* pcbOutValueSize);
+uint ResUtilSetDwordValue(HKEY hkeyClusterKey, const(wchar)* pszValueName, uint dwNewValue, uint* pdwOutValue);
+uint ResUtilSetQwordValue(HKEY hkeyClusterKey, const(wchar)* pszValueName, ulong qwNewValue, ulong* pqwOutValue);
+uint ResUtilSetValueEx(HKEY hkeyClusterKey, const(wchar)* valueName, uint valueType, const(ubyte)* valueData, uint valueSize, uint flags);
+uint ResUtilGetBinaryProperty(ubyte** ppbOutValue, uint* pcbOutValueSize, const(CLUSPROP_BINARY)* pValueStruct, const(ubyte)* pbOldValue, uint cbOldValueSize, ubyte** ppPropertyList, uint* pcbPropertyListSize);
+uint ResUtilGetSzProperty(PWSTR* ppszOutValue, const(CLUSPROP_SZ)* pValueStruct, const(wchar)* pszOldValue, ubyte** ppPropertyList, uint* pcbPropertyListSize);
+uint ResUtilGetMultiSzProperty(PWSTR* ppszOutValue, uint* pcbOutValueSize, const(CLUSPROP_SZ)* pValueStruct, const(wchar)* pszOldValue, uint cbOldValueSize, ubyte** ppPropertyList, uint* pcbPropertyListSize);
+uint ResUtilGetDwordProperty(uint* pdwOutValue, const(CLUSPROP_DWORD)* pValueStruct, uint dwOldValue, uint dwMinimum, uint dwMaximum, ubyte** ppPropertyList, uint* pcbPropertyListSize);
+uint ResUtilGetLongProperty(int* plOutValue, const(CLUSPROP_LONG)* pValueStruct, int lOldValue, int lMinimum, int lMaximum, ubyte** ppPropertyList, uint* pcbPropertyListSize);
+uint ResUtilGetFileTimeProperty(FILETIME* pftOutValue, const(CLUSPROP_FILETIME)* pValueStruct, FILETIME ftOldValue, FILETIME ftMinimum, FILETIME ftMaximum, ubyte** ppPropertyList, uint* pcbPropertyListSize);
+void* ResUtilGetEnvironmentWithNetName(HRESOURCE hResource);
+uint ResUtilFreeEnvironment(void* lpEnvironment);
+PWSTR ResUtilExpandEnvironmentStrings(const(wchar)* pszSrc);
+uint ResUtilSetResourceServiceEnvironment(const(wchar)* pszServiceName, HRESOURCE hResource, PLOG_EVENT_ROUTINE pfnLogEvent, long hResourceHandle);
+uint ResUtilRemoveResourceServiceEnvironment(const(wchar)* pszServiceName, PLOG_EVENT_ROUTINE pfnLogEvent, long hResourceHandle);
+uint ResUtilSetResourceServiceStartParameters(const(wchar)* pszServiceName, SC_HANDLE schSCMHandle, SC_HANDLE* phService, PLOG_EVENT_ROUTINE pfnLogEvent, long hResourceHandle);
+uint ResUtilFindSzProperty(const(void)* pPropertyList, uint cbPropertyListSize, const(wchar)* pszPropertyName, PWSTR* pszPropertyValue);
+uint ResUtilFindExpandSzProperty(const(void)* pPropertyList, uint cbPropertyListSize, const(wchar)* pszPropertyName, PWSTR* pszPropertyValue);
+uint ResUtilFindExpandedSzProperty(const(void)* pPropertyList, uint cbPropertyListSize, const(wchar)* pszPropertyName, PWSTR* pszPropertyValue);
+uint ResUtilFindDwordProperty(const(void)* pPropertyList, uint cbPropertyListSize, const(wchar)* pszPropertyName, uint* pdwPropertyValue);
+uint ResUtilFindBinaryProperty(const(void)* pPropertyList, uint cbPropertyListSize, const(wchar)* pszPropertyName, ubyte** pbPropertyValue, uint* pcbPropertyValueSize);
+uint ResUtilFindMultiSzProperty(const(void)* pPropertyList, uint cbPropertyListSize, const(wchar)* pszPropertyName, PWSTR* pszPropertyValue, uint* pcbPropertyValueSize);
+uint ResUtilFindLongProperty(const(void)* pPropertyList, uint cbPropertyListSize, const(wchar)* pszPropertyName, int* plPropertyValue);
+uint ResUtilFindULargeIntegerProperty(const(void)* pPropertyList, uint cbPropertyListSize, const(wchar)* pszPropertyName, ulong* plPropertyValue);
+uint ResUtilFindFileTimeProperty(const(void)* pPropertyList, uint cbPropertyListSize, const(wchar)* pszPropertyName, FILETIME* pftPropertyValue);
+uint ClusWorkerCreate(CLUS_WORKER* lpWorker, PWORKER_START_ROUTINE lpStartAddress, void* lpParameter);
+BOOL ClusWorkerCheckTerminate(CLUS_WORKER* lpWorker);
+void ClusWorkerTerminate(CLUS_WORKER* lpWorker);
+uint ClusWorkerTerminateEx(CLUS_WORKER* ClusWorker, uint TimeoutInMilliseconds, BOOL WaitOnly);
+uint ClusWorkersTerminate(CLUS_WORKER** ClusWorkers, const(ulong) ClusWorkersCount, uint TimeoutInMilliseconds, BOOL WaitOnly);
+BOOL ResUtilResourcesEqual(HRESOURCE hSelf, HRESOURCE hResource);
+BOOL ResUtilResourceTypesEqual(const(wchar)* lpszResourceTypeName, HRESOURCE hResource);
+BOOL ResUtilIsResourceClassEqual(CLUS_RESOURCE_CLASS_INFO* prci, HRESOURCE hResource);
+uint ResUtilEnumResources(HRESOURCE hSelf, const(wchar)* lpszResTypeName, LPRESOURCE_CALLBACK pResCallBack, void* pParameter);
+uint ResUtilEnumResourcesEx(HCLUSTER hCluster, HRESOURCE hSelf, const(wchar)* lpszResTypeName, LPRESOURCE_CALLBACK_EX pResCallBack, void* pParameter);
+HRESOURCE ResUtilGetResourceDependency(HANDLE hSelf, const(wchar)* lpszResourceType);
+HRESOURCE ResUtilGetResourceDependencyByName(HCLUSTER hCluster, HANDLE hSelf, const(wchar)* lpszResourceType, BOOL bRecurse);
+HRESOURCE ResUtilGetResourceDependencyByClass(HCLUSTER hCluster, HANDLE hSelf, CLUS_RESOURCE_CLASS_INFO* prci, BOOL bRecurse);
+HRESOURCE ResUtilGetResourceNameDependency(const(wchar)* lpszResourceName, const(wchar)* lpszResourceType);
+uint ResUtilGetResourceDependentIPAddressProps(HRESOURCE hResource, PWSTR pszAddress, uint* pcchAddress, PWSTR pszSubnetMask, uint* pcchSubnetMask, PWSTR pszNetwork, uint* pcchNetwork);
+uint ResUtilFindDependentDiskResourceDriveLetter(HCLUSTER hCluster, HRESOURCE hResource, PWSTR pszDriveLetter, uint* pcchDriveLetter);
+uint ResUtilTerminateServiceProcessFromResDll(uint dwServicePid, BOOL bOffline, uint* pdwResourceState, PLOG_EVENT_ROUTINE pfnLogEvent, long hResourceHandle);
+uint ResUtilGetPropertyFormats(const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, void* pOutPropertyFormatList, uint cbPropertyFormatListSize, uint* pcbBytesReturned, uint* pcbRequired);
+uint ResUtilGetCoreClusterResources(HCLUSTER hCluster, HRESOURCE* phClusterNameResource, HRESOURCE* phClusterIPAddressResource, HRESOURCE* phClusterQuorumResource);
+uint ResUtilGetResourceName(HRESOURCE hResource, PWSTR pszResourceName, uint* pcchResourceNameInOut);
+CLUSTER_ROLE_STATE ResUtilGetClusterRoleState(HCLUSTER hCluster, CLUSTER_ROLE eClusterRole);
+BOOL ClusterIsPathOnSharedVolume(const(wchar)* lpszPathName);
+BOOL ClusterGetVolumePathName(const(wchar)* lpszFileName, PWSTR lpszVolumePathName, uint cchBufferLength);
+BOOL ClusterGetVolumeNameForVolumeMountPoint(const(wchar)* lpszVolumeMountPoint, PWSTR lpszVolumeName, uint cchBufferLength);
+uint ClusterPrepareSharedVolumeForBackup(const(wchar)* lpszFileName, PWSTR lpszVolumePathName, uint* lpcchVolumePathName, PWSTR lpszVolumeName, uint* lpcchVolumeName);
+uint ClusterClearBackupStateForSharedVolume(const(wchar)* lpszVolumePathName);
+uint ResUtilSetResourceServiceStartParametersEx(const(wchar)* pszServiceName, SC_HANDLE schSCMHandle, SC_HANDLE* phService, uint dwDesiredAccess, PLOG_EVENT_ROUTINE pfnLogEvent, long hResourceHandle);
+uint ResUtilEnumResourcesEx2(HCLUSTER hCluster, HRESOURCE hSelf, const(wchar)* lpszResTypeName, LPRESOURCE_CALLBACK_EX pResCallBack, void* pParameter, uint dwDesiredAccess);
+HRESOURCE ResUtilGetResourceDependencyEx(HANDLE hSelf, const(wchar)* lpszResourceType, uint dwDesiredAccess);
+HRESOURCE ResUtilGetResourceDependencyByNameEx(HCLUSTER hCluster, HANDLE hSelf, const(wchar)* lpszResourceType, BOOL bRecurse, uint dwDesiredAccess);
+HRESOURCE ResUtilGetResourceDependencyByClassEx(HCLUSTER hCluster, HANDLE hSelf, CLUS_RESOURCE_CLASS_INFO* prci, BOOL bRecurse, uint dwDesiredAccess);
+HRESOURCE ResUtilGetResourceNameDependencyEx(const(wchar)* lpszResourceName, const(wchar)* lpszResourceType, uint dwDesiredAccess);
+uint ResUtilGetCoreClusterResourcesEx(HCLUSTER hClusterIn, HRESOURCE* phClusterNameResourceOut, HRESOURCE* phClusterQuorumResourceOut, uint dwDesiredAccess);
+HCLUSCRYPTPROVIDER OpenClusterCryptProvider(const(wchar)* lpszResource, byte* lpszProvider, uint dwType, uint dwFlags);
+HCLUSCRYPTPROVIDER OpenClusterCryptProviderEx(const(wchar)* lpszResource, const(wchar)* lpszKeyname, byte* lpszProvider, uint dwType, uint dwFlags);
+uint CloseClusterCryptProvider(HCLUSCRYPTPROVIDER hClusCryptProvider);
+uint ClusterEncrypt(HCLUSCRYPTPROVIDER hClusCryptProvider, ubyte* pData, uint cbData, ubyte** ppData, uint* pcbData);
+uint ClusterDecrypt(HCLUSCRYPTPROVIDER hClusCryptProvider, ubyte* pCryptInput, uint cbCryptInput, ubyte** ppCryptOutput, uint* pcbCryptOutput);
+uint FreeClusterCrypt(void* pCryptInfo);
+uint ResUtilVerifyShutdownSafe(uint flags, uint reason, uint* pResult);
+BOOL ResUtilPaxosComparer(const(PaxosTagCStruct)* left, const(PaxosTagCStruct)* right);
+BOOL ResUtilLeftPaxosIsLessThanRight(const(PaxosTagCStruct)* left, const(PaxosTagCStruct)* right);
+uint ResUtilsDeleteKeyTree(HKEY key, const(wchar)* keyName, BOOL treatNoKeyAsError);
+uint ResUtilGroupsEqual(HGROUP hSelf, HGROUP hGroup, BOOL* pEqual);
+uint ResUtilEnumGroups(HCLUSTER hCluster, HGROUP hSelf, LPGROUP_CALLBACK_EX pResCallBack, void* pParameter);
+uint ResUtilEnumGroupsEx(HCLUSTER hCluster, HGROUP hSelf, CLUSGROUP_TYPE groupType, LPGROUP_CALLBACK_EX pResCallBack, void* pParameter);
+uint ResUtilDupGroup(HGROUP group, HGROUP* copy);
+uint ResUtilGetClusterGroupType(HGROUP hGroup, CLUSGROUP_TYPE* groupType);
+HGROUP ResUtilGetCoreGroup(HCLUSTER hCluster);
+uint ResUtilResourceDepEnum(HRESOURCE hSelf, uint enumType, LPRESOURCE_CALLBACK_EX pResCallBack, void* pParameter);
+uint ResUtilDupResource(HRESOURCE group, HRESOURCE* copy);
+uint ResUtilGetClusterId(HCLUSTER hCluster, GUID* guid);
+uint ResUtilNodeEnum(HCLUSTER hCluster, LPNODE_CALLBACK pNodeCallBack, void* pParameter);
+uint RegisterAppInstance(HANDLE ProcessHandle, GUID* AppInstanceId, BOOL ChildrenInheritAppInstance);
+uint RegisterAppInstanceVersion(GUID* AppInstanceId, ulong InstanceVersionHigh, ulong InstanceVersionLow);
+uint QueryAppInstanceVersion(GUID* AppInstanceId, ulong* InstanceVersionHigh, ulong* InstanceVersionLow, NTSTATUS* VersionStatus);
 uint ResetAllAppInstanceVersions();
-uint SetAppInstanceCsvFlags(HANDLE, uint, uint);
+uint SetAppInstanceCsvFlags(HANDLE ProcessHandle, uint Mask, uint Flags);
 enum CLUSTER_VERSION_FLAG_MIXED_MODE = 0x00000001;
 enum CLUSTER_VERSION_UNKNOWN = 0xffffffff;
 enum NT4_MAJOR_VERSION = 0x00000001;
@@ -1367,29 +1368,29 @@ struct CREATE_CLUSTER_NAME_ACCOUNT
     CLUSTER_MGMT_POINT_RESTYPE managementPointResType;
     BOOLEAN bUpgradeVCOs;
 }
-alias PCLUSAPI_PFN_REASON_HANDLER = BOOL function(void*, HCLUSTER, PWSTR, uint*);
+alias PCLUSAPI_PFN_REASON_HANDLER = BOOL function(void* lpParameter, HCLUSTER hCluster, PWSTR szReason, uint* lpSize);
 struct CLUSAPI_REASON_HANDLER
 {
     void* lpParameter;
     PCLUSAPI_PFN_REASON_HANDLER pfnHandler;
 }
-alias PCLUSAPI_SET_REASON_HANDLER = CLUSAPI_REASON_HANDLER* function(CLUSAPI_REASON_HANDLER*);
-alias PCLUSAPI_GET_NODE_CLUSTER_STATE = uint function(const(wchar)*, uint*);
-alias PCLUSAPI_OPEN_CLUSTER = HCLUSTER function(const(wchar)*);
-alias PCLUSAPI_OPEN_CLUSTER_EX = HCLUSTER function(const(wchar)*, uint, uint*);
-alias PCLUSAPI_CLOSE_CLUSTER = BOOL function(HCLUSTER);
-alias PCLUSAPI_SetClusterName = uint function(HCLUSTER, const(wchar)*);
-alias PCLUSAPI_SET_CLUSTER_NAME_EX = uint function(HCLUSTER, const(wchar)*, const(wchar)*);
-alias PCLUSAPI_GET_CLUSTER_INFORMATION = uint function(HCLUSTER, PWSTR, uint*, CLUSTERVERSIONINFO*);
-alias PCLUSAPI_GET_CLUSTER_QUORUM_RESOURCE = uint function(HCLUSTER, PWSTR, uint*, PWSTR, uint*, uint*);
-alias PCLUSAPI_SET_CLUSTER_QUORUM_RESOURCE = uint function(HRESOURCE, const(wchar)*, uint);
-alias PCLUSAPI_SET_CLUSTER_QUORUM_RESOURCE_EX = uint function(HRESOURCE, const(wchar)*, uint, const(wchar)*);
-alias PCLUSAPI_BACKUP_CLUSTER_DATABASE = uint function(HCLUSTER, const(wchar)*);
-alias PCLUSAPI_RESTORE_CLUSTER_DATABASE = uint function(const(wchar)*, BOOL, const(wchar)*);
-alias PCLUSAPI_SET_CLUSTER_NETWORK_PRIORITY_ORDER = uint function(HCLUSTER, uint, HNETWORK*);
-alias PCLUSAPI_SET_CLUSTER_SERVICE_ACCOUNT_PASSWORD = uint function(const(wchar)*, const(wchar)*, uint, CLUSTER_SET_PASSWORD_STATUS*, uint*);
-alias PCLUSAPI_CLUSTER_CONTROL = uint function(HCLUSTER, HNODE, uint, void*, uint, void*, uint, uint*);
-alias PCLUSAPI_CLUSTER_CONTROL_EX = uint function(HCLUSTER, HNODE, uint, void*, uint, void*, uint, uint*, const(wchar)*);
+alias PCLUSAPI_SET_REASON_HANDLER = CLUSAPI_REASON_HANDLER* function(CLUSAPI_REASON_HANDLER* lpHandler);
+alias PCLUSAPI_GET_NODE_CLUSTER_STATE = uint function(const(wchar)* lpszNodeName, uint* pdwClusterState);
+alias PCLUSAPI_OPEN_CLUSTER = HCLUSTER function(const(wchar)* lpszClusterName);
+alias PCLUSAPI_OPEN_CLUSTER_EX = HCLUSTER function(const(wchar)* lpszClusterName, uint dwDesiredAccess, uint* lpdwGrantedAccess);
+alias PCLUSAPI_CLOSE_CLUSTER = BOOL function(HCLUSTER hCluster);
+alias PCLUSAPI_SetClusterName = uint function(HCLUSTER hCluster, const(wchar)* lpszNewClusterName);
+alias PCLUSAPI_SET_CLUSTER_NAME_EX = uint function(HCLUSTER hCluster, const(wchar)* lpszNewClusterName, const(wchar)* lpszReason);
+alias PCLUSAPI_GET_CLUSTER_INFORMATION = uint function(HCLUSTER hCluster, PWSTR lpszClusterName, uint* lpcchClusterName, CLUSTERVERSIONINFO* lpClusterInfo);
+alias PCLUSAPI_GET_CLUSTER_QUORUM_RESOURCE = uint function(HCLUSTER hCluster, PWSTR lpszResourceName, uint* lpcchResourceName, PWSTR lpszDeviceName, uint* lpcchDeviceName, uint* lpdwMaxQuorumLogSize);
+alias PCLUSAPI_SET_CLUSTER_QUORUM_RESOURCE = uint function(HRESOURCE hResource, const(wchar)* lpszDeviceName, uint dwMaxQuoLogSize);
+alias PCLUSAPI_SET_CLUSTER_QUORUM_RESOURCE_EX = uint function(HRESOURCE hResource, const(wchar)* lpszDeviceName, uint dwMaxQuorumLogSize, const(wchar)* lpszReason);
+alias PCLUSAPI_BACKUP_CLUSTER_DATABASE = uint function(HCLUSTER hCluster, const(wchar)* lpszPathName);
+alias PCLUSAPI_RESTORE_CLUSTER_DATABASE = uint function(const(wchar)* lpszPathName, BOOL bForce, const(wchar)* lpszQuorumDriveLetter);
+alias PCLUSAPI_SET_CLUSTER_NETWORK_PRIORITY_ORDER = uint function(HCLUSTER hCluster, uint NetworkCount, HNETWORK* NetworkList);
+alias PCLUSAPI_SET_CLUSTER_SERVICE_ACCOUNT_PASSWORD = uint function(const(wchar)* lpszClusterName, const(wchar)* lpszNewPassword, uint dwFlags, CLUSTER_SET_PASSWORD_STATUS* lpReturnStatusBuffer, uint* lpcbReturnStatusBufferSize);
+alias PCLUSAPI_CLUSTER_CONTROL = uint function(HCLUSTER hCluster, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned);
+alias PCLUSAPI_CLUSTER_CONTROL_EX = uint function(HCLUSTER hCluster, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned, const(wchar)* lpszReason);
 alias CLUSTER_UPGRADE_PHASE = int;
 enum : int
 {
@@ -1400,8 +1401,8 @@ enum : int
     ClusterUpgradePhaseUpgradeComplete         = 0x00000005,
 }
 
-alias PCLUSTER_UPGRADE_PROGRESS_CALLBACK = BOOL function(void*, CLUSTER_UPGRADE_PHASE);
-alias PCLUSAPI_CLUSTER_UPGRADE = uint function(HCLUSTER, BOOL, PCLUSTER_UPGRADE_PROGRESS_CALLBACK, void*);
+alias PCLUSTER_UPGRADE_PROGRESS_CALLBACK = BOOL function(void* pvCallbackArg, CLUSTER_UPGRADE_PHASE eUpgradePhase);
+alias PCLUSAPI_CLUSTER_UPGRADE = uint function(HCLUSTER hCluster, BOOL perform, PCLUSTER_UPGRADE_PROGRESS_CALLBACK pfnProgressCallback, void* pvCallbackArg);
 alias CLUSTER_CHANGE = int;
 enum : int
 {
@@ -1643,14 +1644,14 @@ struct CLUSTER_MEMBERSHIP_INFO
     uint UpnodesSize;
     ubyte[1] Upnodes;
 }
-alias PCLUSAPI_CREATE_CLUSTER_NOTIFY_PORT_V2 = HCHANGE function(HCHANGE, HCLUSTER, NOTIFY_FILTER_AND_TYPE*, uint, ulong);
-alias PCLUSAPI_REGISTER_CLUSTER_NOTIFY_V2 = uint function(HCHANGE, NOTIFY_FILTER_AND_TYPE, HANDLE, ulong);
-alias PCLUSAPI_GET_NOTIFY_EVENT_HANDLE_V2 = uint function(HCHANGE, HANDLE*);
-alias PCLUSAPI_GET_CLUSTER_NOTIFY_V2 = uint function(HCHANGE, ulong*, NOTIFY_FILTER_AND_TYPE*, ubyte*, uint*, PWSTR, uint*, PWSTR, uint*, PWSTR, uint*, PWSTR, uint*, uint);
-alias PCLUSAPI_CREATE_CLUSTER_NOTIFY_PORT = HCHANGE function(HCHANGE, HCLUSTER, uint, ulong);
-alias PCLUSAPI_REGISTER_CLUSTER_NOTIFY = uint function(HCHANGE, uint, HANDLE, ulong);
-alias PCLUSAPI_GET_CLUSTER_NOTIFY = uint function(HCHANGE, ulong*, uint*, PWSTR, uint*, uint);
-alias PCLUSAPI_CLOSE_CLUSTER_NOTIFY_PORT = BOOL function(HCHANGE);
+alias PCLUSAPI_CREATE_CLUSTER_NOTIFY_PORT_V2 = HCHANGE function(HCHANGE hChange, HCLUSTER hCluster, NOTIFY_FILTER_AND_TYPE* Filters, uint dwFilterCount, ulong dwNotifyKey);
+alias PCLUSAPI_REGISTER_CLUSTER_NOTIFY_V2 = uint function(HCHANGE hChange, NOTIFY_FILTER_AND_TYPE Filter, HANDLE hObject, ulong dwNotifyKey);
+alias PCLUSAPI_GET_NOTIFY_EVENT_HANDLE_V2 = uint function(HCHANGE hChange, HANDLE* lphTargetEvent);
+alias PCLUSAPI_GET_CLUSTER_NOTIFY_V2 = uint function(HCHANGE hChange, ulong* lpdwNotifyKey, NOTIFY_FILTER_AND_TYPE* pFilterAndType, ubyte* buffer, uint* lpcchBufferSize, PWSTR lpszObjectId, uint* lpcchObjectId, PWSTR lpszParentId, uint* lpcchParentId, PWSTR lpszName, uint* lpcchName, PWSTR lpszType, uint* lpcchType, uint dwMilliseconds);
+alias PCLUSAPI_CREATE_CLUSTER_NOTIFY_PORT = HCHANGE function(HCHANGE hChange, HCLUSTER hCluster, uint dwFilter, ulong dwNotifyKey);
+alias PCLUSAPI_REGISTER_CLUSTER_NOTIFY = uint function(HCHANGE hChange, uint dwFilterType, HANDLE hObject, ulong dwNotifyKey);
+alias PCLUSAPI_GET_CLUSTER_NOTIFY = uint function(HCHANGE hChange, ulong* lpdwNotifyKey, uint* lpdwFilterType, PWSTR lpszName, uint* lpcchName, uint dwMilliseconds);
+alias PCLUSAPI_CLOSE_CLUSTER_NOTIFY_PORT = BOOL function(HCHANGE hChange);
 alias CLUSTER_ENUM = int;
 enum : int
 {
@@ -1666,44 +1667,44 @@ enum : int
     CLUSTER_ENUM_ALL                    = 0x0000003f,
 }
 
-alias PCLUSAPI_CLUSTER_OPEN_ENUM = HCLUSENUM function(HCLUSTER, uint);
-alias PCLUSAPI_CLUSTER_GET_ENUM_COUNT = uint function(HCLUSENUM);
-alias PCLUSAPI_CLUSTER_ENUM = uint function(HCLUSENUM, uint, uint*, PWSTR, uint*);
-alias PCLUSAPI_CLUSTER_CLOSE_ENUM = uint function(HCLUSENUM);
-alias PCLUSAPI_CLUSTER_OPEN_ENUM_EX = HCLUSENUMEX function(HCLUSTER, uint, void*);
-alias PCLUSAPI_CLUSTER_GET_ENUM_COUNT_EX = uint function(HCLUSENUMEX);
-alias PCLUSAPI_CLUSTER_ENUM_EX = uint function(HCLUSENUMEX, uint, CLUSTER_ENUM_ITEM*, uint*);
-alias PCLUSAPI_CLUSTER_CLOSE_ENUM_EX = uint function(HCLUSENUMEX);
-alias PCLUSAPI_CREATE_CLUSTER_GROUP_GROUPSET = HGROUPSET function(HCLUSTER, const(wchar)*);
-alias PCLUSAPI_OPEN_CLUSTER_GROUP_GROUPSET = HGROUPSET function(HCLUSTER, const(wchar)*);
-alias PCLUSAPI_CLOSE_CLUSTER_GROUP_GROUPSET = BOOL function(HGROUPSET);
-alias PCLUSAPI_DELETE_CLUSTER_GROUP_GROUPSET = uint function(HGROUPSET);
-alias PCLUSAPI_DELETE_CLUSTER_GROUP_GROUPSET_EX = uint function(HGROUPSET, const(wchar)*);
-alias PCLUSAPI_CLUSTER_ADD_GROUP_TO_GROUP_GROUPSET = uint function(HGROUPSET, HGROUP);
-alias PCLUSAPI_CLUSTER_ADD_GROUP_TO_GROUPSET_WITH_DOMAINS_EX = uint function(HGROUPSET, HGROUP, uint, uint, const(wchar)*);
-alias PCLUSAPI_CLUSTER_REMOVE_GROUP_FROM_GROUPSET = uint function(HGROUPSET);
-alias PCLUSAPI_CLUSTER_REMOVE_GROUP_FROM_GROUPSET_EX = uint function(HGROUPSET, const(wchar)*);
-alias PCLUSAPI_CLUSTER_GROUP_GROUPSET_CONTROL = uint function(HGROUPSET, HNODE, uint, void*, uint, void*, uint, uint*);
-alias PCLUSAPI_CLUSTER_GROUP_GROUPSET_CONTROL_EX = uint function(HGROUPSET, HNODE, uint, void*, uint, void*, uint, uint*, const(wchar)*);
-alias PCLUSAPI_ADD_CLUSTER_GROUP_DEPENDENCY = uint function(HGROUP, HGROUP);
-alias PCLUSAPI_ADD_CLUSTER_GROUP_DEPENDENCY_EX = uint function(HGROUP, HGROUP, const(wchar)*);
-alias PCLUSAPI_SET_GROUP_DEPENDENCY_EXPRESSION = uint function(HGROUP, const(wchar)*);
-alias PCLUSAPI_SET_GROUP_DEPENDENCY_EXPRESSION_EX = uint function(HGROUP, const(wchar)*, const(wchar)*);
-alias PCLUSAPI_REMOVE_CLUSTER_GROUP_DEPENDENCY = uint function(HGROUP, HGROUP);
-alias PCLUSAPI_REMOVE_CLUSTER_GROUP_DEPENDENCY_EX = uint function(HGROUP, HGROUP, const(wchar)*);
-alias PCLUSAPI_ADD_CLUSTER_GROUP_GROUPSET_DEPENDENCY = uint function(HGROUPSET, HGROUPSET);
-alias PCLUSAPI_ADD_CLUSTER_GROUP_GROUPSET_DEPENDENCY_EX = uint function(HGROUPSET, HGROUPSET, const(wchar)*);
-alias PCLUSAPI_SET_CLUSTER_GROUP_GROUPSET_DEPENDENCY_EXPRESSION = uint function(HGROUPSET, const(wchar)*);
-alias PCLUSAPI_SET_CLUSTER_GROUP_GROUPSET_DEPENDENCY_EXPRESSION_EX = uint function(HGROUPSET, const(wchar)*, const(wchar)*);
-alias PCLUSAPI_REMOVE_CLUSTER_GROUP_GROUPSET_DEPENDENCY = uint function(HGROUPSET, HGROUPSET);
-alias PCLUSAPI_REMOVE_CLUSTER_GROUP_GROUPSET_DEPENDENCY_EX = uint function(HGROUPSET, HGROUPSET, const(wchar)*);
-alias PCLUSAPI_ADD_CLUSTER_GROUP_TO_GROUP_GROUPSET_DEPENDENCY = uint function(HGROUP, HGROUPSET);
-alias PCLUSAPI_ADD_CLUSTER_GROUP_TO_GROUP_GROUPSET_DEPENDENCY_EX = uint function(HGROUP, HGROUPSET, const(wchar)*);
-alias PCLUSAPI_REMOVE_CLUSTER_GROUP_TO_GROUP_GROUPSET_DEPENDENCY = uint function(HGROUP, HGROUPSET);
-alias PCLUSAPI_REMOVE_CLUSTER_GROUP_TO_GROUP_GROUPSET_DEPENDENCY_EX = uint function(HGROUP, HGROUPSET, const(wchar)*);
-alias PCLUSAPI_GET_CLUSTER_FROM_GROUP_GROUPSET = HCLUSTER function(HGROUPSET);
-alias PCLUSAPI_ADD_CROSS_CLUSTER_GROUPSET_DEPENDENCY = uint function(HGROUPSET, const(wchar)*, const(wchar)*);
-alias PCLUSAPI_REMOVE_CROSS_CLUSTER_GROUPSET_DEPENDENCY = uint function(HGROUPSET, const(wchar)*, const(wchar)*);
+alias PCLUSAPI_CLUSTER_OPEN_ENUM = HCLUSENUM function(HCLUSTER hCluster, uint dwType);
+alias PCLUSAPI_CLUSTER_GET_ENUM_COUNT = uint function(HCLUSENUM hEnum);
+alias PCLUSAPI_CLUSTER_ENUM = uint function(HCLUSENUM hEnum, uint dwIndex, uint* lpdwType, PWSTR lpszName, uint* lpcchName);
+alias PCLUSAPI_CLUSTER_CLOSE_ENUM = uint function(HCLUSENUM hEnum);
+alias PCLUSAPI_CLUSTER_OPEN_ENUM_EX = HCLUSENUMEX function(HCLUSTER hCluster, uint dwType, void* pOptions);
+alias PCLUSAPI_CLUSTER_GET_ENUM_COUNT_EX = uint function(HCLUSENUMEX hClusterEnum);
+alias PCLUSAPI_CLUSTER_ENUM_EX = uint function(HCLUSENUMEX hClusterEnum, uint dwIndex, CLUSTER_ENUM_ITEM* pItem, uint* cbItem);
+alias PCLUSAPI_CLUSTER_CLOSE_ENUM_EX = uint function(HCLUSENUMEX hClusterEnum);
+alias PCLUSAPI_CREATE_CLUSTER_GROUP_GROUPSET = HGROUPSET function(HCLUSTER hCluster, const(wchar)* lpszGroupSetName);
+alias PCLUSAPI_OPEN_CLUSTER_GROUP_GROUPSET = HGROUPSET function(HCLUSTER hCluster, const(wchar)* lpszGroupSetName);
+alias PCLUSAPI_CLOSE_CLUSTER_GROUP_GROUPSET = BOOL function(HGROUPSET hGroupSet);
+alias PCLUSAPI_DELETE_CLUSTER_GROUP_GROUPSET = uint function(HGROUPSET hGroupSet);
+alias PCLUSAPI_DELETE_CLUSTER_GROUP_GROUPSET_EX = uint function(HGROUPSET hGroupSet, const(wchar)* lpszReason);
+alias PCLUSAPI_CLUSTER_ADD_GROUP_TO_GROUP_GROUPSET = uint function(HGROUPSET hGroupSet, HGROUP hGroup);
+alias PCLUSAPI_CLUSTER_ADD_GROUP_TO_GROUPSET_WITH_DOMAINS_EX = uint function(HGROUPSET hGroupSet, HGROUP hGroup, uint faultDomain, uint updateDomain, const(wchar)* lpszReason);
+alias PCLUSAPI_CLUSTER_REMOVE_GROUP_FROM_GROUPSET = uint function(HGROUPSET hGroupSet);
+alias PCLUSAPI_CLUSTER_REMOVE_GROUP_FROM_GROUPSET_EX = uint function(HGROUPSET hGroupSet, const(wchar)* lpszReason);
+alias PCLUSAPI_CLUSTER_GROUP_GROUPSET_CONTROL = uint function(HGROUPSET hGroupSet, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint cbInBufferSize, void* lpOutBuffer, uint cbOutBufferSize, uint* lpBytesReturned);
+alias PCLUSAPI_CLUSTER_GROUP_GROUPSET_CONTROL_EX = uint function(HGROUPSET hGroupSet, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint cbInBufferSize, void* lpOutBuffer, uint cbOutBufferSize, uint* lpBytesReturned, const(wchar)* lpszReason);
+alias PCLUSAPI_ADD_CLUSTER_GROUP_DEPENDENCY = uint function(HGROUP hDependentGroup, HGROUP hProviderGroup);
+alias PCLUSAPI_ADD_CLUSTER_GROUP_DEPENDENCY_EX = uint function(HGROUP hDependentGroup, HGROUP hProviderGroup, const(wchar)* lpszReason);
+alias PCLUSAPI_SET_GROUP_DEPENDENCY_EXPRESSION = uint function(HGROUP hGroupSet, const(wchar)* lpszDependencyExpression);
+alias PCLUSAPI_SET_GROUP_DEPENDENCY_EXPRESSION_EX = uint function(HGROUP hGroup, const(wchar)* lpszDependencyExpression, const(wchar)* lpszReason);
+alias PCLUSAPI_REMOVE_CLUSTER_GROUP_DEPENDENCY = uint function(HGROUP hGroup, HGROUP hDependsOn);
+alias PCLUSAPI_REMOVE_CLUSTER_GROUP_DEPENDENCY_EX = uint function(HGROUP hGroup, HGROUP hDependsOn, const(wchar)* lpszReason);
+alias PCLUSAPI_ADD_CLUSTER_GROUP_GROUPSET_DEPENDENCY = uint function(HGROUPSET hDependentGroupSet, HGROUPSET hProviderGroupSet);
+alias PCLUSAPI_ADD_CLUSTER_GROUP_GROUPSET_DEPENDENCY_EX = uint function(HGROUPSET hDependentGroupSet, HGROUPSET hProviderGroupSet, const(wchar)* lpszReason);
+alias PCLUSAPI_SET_CLUSTER_GROUP_GROUPSET_DEPENDENCY_EXPRESSION = uint function(HGROUPSET hGroupSet, const(wchar)* lpszDependencyExpression);
+alias PCLUSAPI_SET_CLUSTER_GROUP_GROUPSET_DEPENDENCY_EXPRESSION_EX = uint function(HGROUPSET hGroupSet, const(wchar)* lpszDependencyExpression, const(wchar)* lpszReason);
+alias PCLUSAPI_REMOVE_CLUSTER_GROUP_GROUPSET_DEPENDENCY = uint function(HGROUPSET hGroupSet, HGROUPSET hDependsOn);
+alias PCLUSAPI_REMOVE_CLUSTER_GROUP_GROUPSET_DEPENDENCY_EX = uint function(HGROUPSET hGroupSet, HGROUPSET hDependsOn, const(wchar)* lpszReason);
+alias PCLUSAPI_ADD_CLUSTER_GROUP_TO_GROUP_GROUPSET_DEPENDENCY = uint function(HGROUP hDependentGroup, HGROUPSET hProviderGroupSet);
+alias PCLUSAPI_ADD_CLUSTER_GROUP_TO_GROUP_GROUPSET_DEPENDENCY_EX = uint function(HGROUP hDependentGroup, HGROUPSET hProviderGroupSet, const(wchar)* lpszReason);
+alias PCLUSAPI_REMOVE_CLUSTER_GROUP_TO_GROUP_GROUPSET_DEPENDENCY = uint function(HGROUP hGroup, HGROUPSET hDependsOn);
+alias PCLUSAPI_REMOVE_CLUSTER_GROUP_TO_GROUP_GROUPSET_DEPENDENCY_EX = uint function(HGROUP hGroup, HGROUPSET hDependsOn, const(wchar)* lpszReason);
+alias PCLUSAPI_GET_CLUSTER_FROM_GROUP_GROUPSET = HCLUSTER function(HGROUPSET hGroupSet);
+alias PCLUSAPI_ADD_CROSS_CLUSTER_GROUPSET_DEPENDENCY = uint function(HGROUPSET hDependentGroupSet, const(wchar)* lpRemoteClusterName, const(wchar)* lpRemoteGroupSetName);
+alias PCLUSAPI_REMOVE_CROSS_CLUSTER_GROUPSET_DEPENDENCY = uint function(HGROUPSET hDependentGroupSet, const(wchar)* lpRemoteClusterName, const(wchar)* lpRemoteGroupSetName);
 struct CLUSTER_AVAILABILITY_SET_CONFIG
 {
     uint dwVersion;
@@ -1711,12 +1712,12 @@ struct CLUSTER_AVAILABILITY_SET_CONFIG
     uint dwFaultDomains;
     BOOL bReserveSpareNode;
 }
-alias PCLUSAPI_CREATE_CLUSTER_AVAILABILITY_SET = HGROUPSET function(HCLUSTER, const(wchar)*, CLUSTER_AVAILABILITY_SET_CONFIG*);
-alias PCLUSAPI_CLUSTER_CREATE_AFFINITY_RULE = uint function(HCLUSTER, const(wchar)*, CLUS_AFFINITY_RULE_TYPE);
-alias PCLUSAPI_CLUSTER_REMOVE_AFFINITY_RULE = uint function(HCLUSTER, const(wchar)*);
-alias PCLUSAPI_CLUSTER_ADD_GROUP_TO_AFFINITY_RULE = uint function(HCLUSTER, const(wchar)*, HGROUP);
-alias PCLUSAPI_CLUSTER_REMOVE_GROUP_FROM_AFFINITY_RULE = uint function(HCLUSTER, const(wchar)*, HGROUP);
-alias PCLUSAPI_CLUSTER_AFFINITY_RULE_CONTROL = uint function(HCLUSTER, const(wchar)*, HNODE, uint, void*, uint, void*, uint, uint*);
+alias PCLUSAPI_CREATE_CLUSTER_AVAILABILITY_SET = HGROUPSET function(HCLUSTER hCluster, const(wchar)* lpAvailabilitySetName, CLUSTER_AVAILABILITY_SET_CONFIG* pAvailabilitySetConfig);
+alias PCLUSAPI_CLUSTER_CREATE_AFFINITY_RULE = uint function(HCLUSTER hCluster, const(wchar)* ruleName, CLUS_AFFINITY_RULE_TYPE ruleType);
+alias PCLUSAPI_CLUSTER_REMOVE_AFFINITY_RULE = uint function(HCLUSTER hCluster, const(wchar)* ruleName);
+alias PCLUSAPI_CLUSTER_ADD_GROUP_TO_AFFINITY_RULE = uint function(HCLUSTER hCluster, const(wchar)* ruleName, HGROUP hGroup);
+alias PCLUSAPI_CLUSTER_REMOVE_GROUP_FROM_AFFINITY_RULE = uint function(HCLUSTER hCluster, const(wchar)* ruleName, HGROUP hGroup);
+alias PCLUSAPI_CLUSTER_AFFINITY_RULE_CONTROL = uint function(HCLUSTER hCluster, const(wchar)* affinityRuleName, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint cbInBufferSize, void* lpOutBuffer, uint cbOutBufferSize, uint* lpBytesReturned);
 alias CLUSTER_NODE_ENUM = int;
 enum : int
 {
@@ -1770,27 +1771,27 @@ enum : int
     NodeStatusMax             = 0x00000033,
 }
 
-alias PCLUSAPI_OPEN_CLUSTER_NODE = HNODE function(HCLUSTER, const(wchar)*);
-alias PCLUSAPI_OPEN_CLUSTER_NODE_EX = HNODE function(HCLUSTER, const(wchar)*, uint, uint*);
-alias PCLUSAPI_OPEN_NODE_BY_ID = HNODE function(HCLUSTER, uint);
-alias PCLUSAPI_CLOSE_CLUSTER_NODE = BOOL function(HNODE);
-alias PCLUSAPI_GET_CLUSTER_NODE_STATE = CLUSTER_NODE_STATE function(HNODE);
-alias PCLUSAPI_GET_CLUSTER_NODE_ID = uint function(HNODE, PWSTR, uint*);
-alias PCLUSAPI_GET_CLUSTER_FROM_NODE = HCLUSTER function(HNODE);
-alias PCLUSAPI_PAUSE_CLUSTER_NODE = uint function(HNODE);
-alias PCLUSAPI_RESUME_CLUSTER_NODE = uint function(HNODE);
-alias PCLUSAPI_EVICT_CLUSTER_NODE = uint function(HNODE);
-alias PCLUSAPI_CLUSTER_NODE_OPEN_ENUM = HNODEENUM function(HNODE, uint);
-alias PCLUSAPI_CLUSTER_NODE_OPEN_ENUM_EX = HNODEENUMEX function(HNODE, uint, void*);
-alias PCLUSAPI_CLUSTER_NODE_GET_ENUM_COUNT_EX = uint function(HNODEENUMEX);
-alias PCLUSAPI_CLUSTER_NODE_ENUM_EX = uint function(HNODEENUMEX, uint, CLUSTER_ENUM_ITEM*, uint*);
-alias PCLUSAPI_CLUSTER_NODE_CLOSE_ENUM_EX = uint function(HNODEENUMEX);
-alias PCLUSAPI_CLUSTER_NODE_GET_ENUM_COUNT = uint function(HNODEENUM);
-alias PCLUSAPI_CLUSTER_NODE_CLOSE_ENUM = uint function(HNODEENUM);
-alias PCLUSAPI_CLUSTER_NODE_ENUM = uint function(HNODEENUM, uint, uint*, PWSTR, uint*);
-alias PCLUSAPI_EVICT_CLUSTER_NODE_EX = uint function(HNODE, uint, HRESULT*);
-alias PCLUSAPI_EVICT_CLUSTER_NODE_EX2 = uint function(HNODE, uint, HRESULT*, const(wchar)*);
-alias PCLUSAPI_GET_CLUSTER_RESOURCE_TYPE_KEY = HKEY function(HCLUSTER, const(wchar)*, uint);
+alias PCLUSAPI_OPEN_CLUSTER_NODE = HNODE function(HCLUSTER hCluster, const(wchar)* lpszNodeName);
+alias PCLUSAPI_OPEN_CLUSTER_NODE_EX = HNODE function(HCLUSTER hCluster, const(wchar)* lpszNodeName, uint dwDesiredAccess, uint* lpdwGrantedAccess);
+alias PCLUSAPI_OPEN_NODE_BY_ID = HNODE function(HCLUSTER hCluster, uint nodeId);
+alias PCLUSAPI_CLOSE_CLUSTER_NODE = BOOL function(HNODE hNode);
+alias PCLUSAPI_GET_CLUSTER_NODE_STATE = CLUSTER_NODE_STATE function(HNODE hNode);
+alias PCLUSAPI_GET_CLUSTER_NODE_ID = uint function(HNODE hNode, PWSTR lpszNodeId, uint* lpcchName);
+alias PCLUSAPI_GET_CLUSTER_FROM_NODE = HCLUSTER function(HNODE hNode);
+alias PCLUSAPI_PAUSE_CLUSTER_NODE = uint function(HNODE hNode);
+alias PCLUSAPI_RESUME_CLUSTER_NODE = uint function(HNODE hNode);
+alias PCLUSAPI_EVICT_CLUSTER_NODE = uint function(HNODE hNode);
+alias PCLUSAPI_CLUSTER_NODE_OPEN_ENUM = HNODEENUM function(HNODE hNode, uint dwType);
+alias PCLUSAPI_CLUSTER_NODE_OPEN_ENUM_EX = HNODEENUMEX function(HNODE hNode, uint dwType, void* pOptions);
+alias PCLUSAPI_CLUSTER_NODE_GET_ENUM_COUNT_EX = uint function(HNODEENUMEX hNodeEnum);
+alias PCLUSAPI_CLUSTER_NODE_ENUM_EX = uint function(HNODEENUMEX hNodeEnum, uint dwIndex, CLUSTER_ENUM_ITEM* pItem, uint* cbItem);
+alias PCLUSAPI_CLUSTER_NODE_CLOSE_ENUM_EX = uint function(HNODEENUMEX hNodeEnum);
+alias PCLUSAPI_CLUSTER_NODE_GET_ENUM_COUNT = uint function(HNODEENUM hNodeEnum);
+alias PCLUSAPI_CLUSTER_NODE_CLOSE_ENUM = uint function(HNODEENUM hNodeEnum);
+alias PCLUSAPI_CLUSTER_NODE_ENUM = uint function(HNODEENUM hNodeEnum, uint dwIndex, uint* lpdwType, PWSTR lpszName, uint* lpcchName);
+alias PCLUSAPI_EVICT_CLUSTER_NODE_EX = uint function(HNODE hNode, uint dwTimeOut, HRESULT* phrCleanupStatus);
+alias PCLUSAPI_EVICT_CLUSTER_NODE_EX2 = uint function(HNODE hNode, uint dwTimeout, HRESULT* phrCleanupStatus, const(wchar)* lpszReason);
+alias PCLUSAPI_GET_CLUSTER_RESOURCE_TYPE_KEY = HKEY function(HCLUSTER hCluster, const(wchar)* lpszTypeName, uint samDesired);
 alias CLUSTER_GROUP_ENUM = int;
 enum : int
 {
@@ -1859,11 +1860,11 @@ struct CLUSTER_RESOURCE_ENUM_ITEM
     uint cbRoProperties;
     void* pRoProperties;
 }
-alias PCLUSAPI_CREATE_CLUSTER_GROUP = HGROUP function(HCLUSTER, const(wchar)*);
-alias PCLUSAPI_OPEN_CLUSTER_GROUP = HGROUP function(HCLUSTER, const(wchar)*);
-alias PCLUSAPI_OPEN_CLUSTER_GROUP_EX = HGROUP function(HCLUSTER, const(wchar)*, uint, uint*);
-alias PCLUSAPI_PAUSE_CLUSTER_NODE_EX = uint function(HNODE, BOOL, uint, HNODE);
-alias PCLUSAPI_PAUSE_CLUSTER_NODE_EX2 = uint function(HNODE, BOOL, uint, HNODE, const(wchar)*);
+alias PCLUSAPI_CREATE_CLUSTER_GROUP = HGROUP function(HCLUSTER hCluster, const(wchar)* lpszGroupName);
+alias PCLUSAPI_OPEN_CLUSTER_GROUP = HGROUP function(HCLUSTER hCluster, const(wchar)* lpszGroupName);
+alias PCLUSAPI_OPEN_CLUSTER_GROUP_EX = HGROUP function(HCLUSTER hCluster, const(wchar)* lpszGroupName, uint dwDesiredAccess, uint* lpdwGrantedAccess);
+alias PCLUSAPI_PAUSE_CLUSTER_NODE_EX = uint function(HNODE hNode, BOOL bDrainNode, uint dwPauseFlags, HNODE hNodeDrainTarget);
+alias PCLUSAPI_PAUSE_CLUSTER_NODE_EX2 = uint function(HNODE hNode, BOOL bDrainNode, uint dwPauseFlags, HNODE hNodeDrainTarget, const(wchar)* lpszReason);
 alias CLUSTER_NODE_RESUME_FAILBACK_TYPE = int;
 enum : int
 {
@@ -1873,37 +1874,37 @@ enum : int
     ClusterNodeResumeFailbackTypeCount = 0x00000003,
 }
 
-alias PCLUSAPI_RESUME_CLUSTER_NODE_EX = uint function(HNODE, CLUSTER_NODE_RESUME_FAILBACK_TYPE, uint);
-alias PCLUSAPI_RESUME_CLUSTER_NODE_EX2 = uint function(HNODE, CLUSTER_NODE_RESUME_FAILBACK_TYPE, uint, const(wchar)*);
-alias PCLUSAPI_CREATE_CLUSTER_GROUPEX = HGROUP function(HCLUSTER, const(wchar)*, CLUSTER_CREATE_GROUP_INFO*);
-alias PCLUSAPI_CLUSTER_GROUP_OPEN_ENUM_EX = HGROUPENUMEX function(HCLUSTER, const(wchar)*, uint, const(wchar)*, uint, uint);
-alias PCLUSAPI_CLUSTER_GROUP_GET_ENUM_COUNT_EX = uint function(HGROUPENUMEX);
-alias PCLUSAPI_CLUSTER_GROUP_ENUM_EX = uint function(HGROUPENUMEX, uint, CLUSTER_GROUP_ENUM_ITEM*, uint*);
-alias PCLUSAPI_CLUSTER_GROUP_CLOSE_ENUM_EX = uint function(HGROUPENUMEX);
-alias PCLUSAPI_CLUSTER_RESOURCE_OPEN_ENUM_EX = HRESENUMEX function(HCLUSTER, const(wchar)*, uint, const(wchar)*, uint, uint);
-alias PCLUSAPI_CLUSTER_RESOURCE_GET_ENUM_COUNT_EX = uint function(HRESENUMEX);
-alias PCLUSAPI_CLUSTER_RESOURCE_ENUM_EX = uint function(HRESENUMEX, uint, CLUSTER_RESOURCE_ENUM_ITEM*, uint*);
-alias PCLUSAPI_CLUSTER_RESOURCE_CLOSE_ENUM_EX = uint function(HRESENUMEX);
-alias PCLUSAPI_RESTART_CLUSTER_RESOURCE = uint function(HRESOURCE, uint);
-alias PCLUSAPI_RESTART_CLUSTER_RESOURCE_EX = uint function(HRESOURCE, uint);
-alias PCLUSAPI_CLOSE_CLUSTER_GROUP = BOOL function(HGROUP);
-alias PCLUSAPI_GET_CLUSTER_FROM_GROUP = HCLUSTER function(HGROUP);
-alias PCLUSAPI_GET_CLUSTER_GROUP_STATE = CLUSTER_GROUP_STATE function(HGROUP, PWSTR, uint*);
-alias PCLUSAPI_SET_CLUSTER_GROUP_NAME = uint function(HGROUP, const(wchar)*);
-alias PCLUSAPI_SET_CLUSTER_GROUP_NODE_LIST = uint function(HGROUP, uint, HNODE*);
-alias PCLUSAPI_SET_CLUSTER_GROUP_NAME_EX = uint function(HGROUP, const(wchar)*, const(wchar)*);
-alias PCLUSAPI_SET_CLUSTER_GROUP_NODE_LIST_EX = uint function(HGROUP, uint, HNODE*, const(wchar)*);
-alias PCLUSAPI_ONLINE_CLUSTER_GROUP = uint function(HGROUP, HNODE);
-alias PCLUSAPI_MOVE_CLUSTER_GROUP = uint function(HGROUP, HNODE);
-alias PCLUSAPI_OFFLINE_CLUSTER_GROUP = uint function(HGROUP);
-alias PCLUSAPI_DELETE_CLUSTER_GROUP = uint function(HGROUP);
-alias PCLUSAPI_DESTROY_CLUSTER_GROUP = uint function(HGROUP);
-alias PCLUSAPI_DELETE_CLUSTER_GROUP_EX = uint function(HGROUP, const(wchar)*);
-alias PCLUSAPI_DESTROY_CLUSTER_GROUP_EX = uint function(HGROUP, const(wchar)*);
-alias PCLUSAPI_CLUSTER_GROUP_OPEN_ENUM = HGROUPENUM function(HGROUP, uint);
-alias PCLUSAPI_CLUSTER_GROUP_GET_ENUM_COUNT = uint function(HGROUPENUM);
-alias PCLUSAPI_CLUSTER_GROUP_ENUM = uint function(HGROUPENUM, uint, uint*, PWSTR, uint*);
-alias PCLUSAPI_CLUSTER_GROUP_CLOSE_ENUM = uint function(HGROUPENUM);
+alias PCLUSAPI_RESUME_CLUSTER_NODE_EX = uint function(HNODE hNode, CLUSTER_NODE_RESUME_FAILBACK_TYPE eResumeFailbackType, uint dwResumeFlagsReserved);
+alias PCLUSAPI_RESUME_CLUSTER_NODE_EX2 = uint function(HNODE hNode, CLUSTER_NODE_RESUME_FAILBACK_TYPE eResumeFailbackType, uint dwResumeFlagsReserved, const(wchar)* lpszReason);
+alias PCLUSAPI_CREATE_CLUSTER_GROUPEX = HGROUP function(HCLUSTER hCluster, const(wchar)* lpszGroupName, CLUSTER_CREATE_GROUP_INFO* pGroupInfo);
+alias PCLUSAPI_CLUSTER_GROUP_OPEN_ENUM_EX = HGROUPENUMEX function(HCLUSTER hCluster, const(wchar)* lpszProperties, uint cbProperties, const(wchar)* lpszRoProperties, uint cbRoProperties, uint dwFlags);
+alias PCLUSAPI_CLUSTER_GROUP_GET_ENUM_COUNT_EX = uint function(HGROUPENUMEX hGroupEnumEx);
+alias PCLUSAPI_CLUSTER_GROUP_ENUM_EX = uint function(HGROUPENUMEX hGroupEnumEx, uint dwIndex, CLUSTER_GROUP_ENUM_ITEM* pItem, uint* cbItem);
+alias PCLUSAPI_CLUSTER_GROUP_CLOSE_ENUM_EX = uint function(HGROUPENUMEX hGroupEnumEx);
+alias PCLUSAPI_CLUSTER_RESOURCE_OPEN_ENUM_EX = HRESENUMEX function(HCLUSTER hCluster, const(wchar)* lpszProperties, uint cbProperties, const(wchar)* lpszRoProperties, uint cbRoProperties, uint dwFlags);
+alias PCLUSAPI_CLUSTER_RESOURCE_GET_ENUM_COUNT_EX = uint function(HRESENUMEX hResourceEnumEx);
+alias PCLUSAPI_CLUSTER_RESOURCE_ENUM_EX = uint function(HRESENUMEX hResourceEnumEx, uint dwIndex, CLUSTER_RESOURCE_ENUM_ITEM* pItem, uint* cbItem);
+alias PCLUSAPI_CLUSTER_RESOURCE_CLOSE_ENUM_EX = uint function(HRESENUMEX hResourceEnumEx);
+alias PCLUSAPI_RESTART_CLUSTER_RESOURCE = uint function(HRESOURCE hResource, uint dwFlags);
+alias PCLUSAPI_RESTART_CLUSTER_RESOURCE_EX = uint function(HRESOURCE hResource, uint dwFlags);
+alias PCLUSAPI_CLOSE_CLUSTER_GROUP = BOOL function(HGROUP hGroup);
+alias PCLUSAPI_GET_CLUSTER_FROM_GROUP = HCLUSTER function(HGROUP hGroup);
+alias PCLUSAPI_GET_CLUSTER_GROUP_STATE = CLUSTER_GROUP_STATE function(HGROUP hGroup, PWSTR lpszNodeName, uint* lpcchNodeName);
+alias PCLUSAPI_SET_CLUSTER_GROUP_NAME = uint function(HGROUP hGroup, const(wchar)* lpszGroupName);
+alias PCLUSAPI_SET_CLUSTER_GROUP_NODE_LIST = uint function(HGROUP hGroup, uint NodeCount, HNODE* NodeList);
+alias PCLUSAPI_SET_CLUSTER_GROUP_NAME_EX = uint function(HGROUP hGroup, const(wchar)* lpszGroupName, const(wchar)* lpszReason);
+alias PCLUSAPI_SET_CLUSTER_GROUP_NODE_LIST_EX = uint function(HGROUP hGroup, uint NodeCount, HNODE* NodeList, const(wchar)* lpszReason);
+alias PCLUSAPI_ONLINE_CLUSTER_GROUP = uint function(HGROUP hGroup, HNODE hDestinationNode);
+alias PCLUSAPI_MOVE_CLUSTER_GROUP = uint function(HGROUP hGroup, HNODE hDestinationNode);
+alias PCLUSAPI_OFFLINE_CLUSTER_GROUP = uint function(HGROUP hGroup);
+alias PCLUSAPI_DELETE_CLUSTER_GROUP = uint function(HGROUP hGroup);
+alias PCLUSAPI_DESTROY_CLUSTER_GROUP = uint function(HGROUP hGroup);
+alias PCLUSAPI_DELETE_CLUSTER_GROUP_EX = uint function(HGROUP hGroup, const(wchar)* lpszReason);
+alias PCLUSAPI_DESTROY_CLUSTER_GROUP_EX = uint function(HGROUP hGroup, const(wchar)* lpszReason);
+alias PCLUSAPI_CLUSTER_GROUP_OPEN_ENUM = HGROUPENUM function(HGROUP hGroup, uint dwType);
+alias PCLUSAPI_CLUSTER_GROUP_GET_ENUM_COUNT = uint function(HGROUPENUM hGroupEnum);
+alias PCLUSAPI_CLUSTER_GROUP_ENUM = uint function(HGROUPENUM hGroupEnum, uint dwIndex, uint* lpdwType, PWSTR lpszResourceName, uint* lpcchName);
+alias PCLUSAPI_CLUSTER_GROUP_CLOSE_ENUM = uint function(HGROUPENUM hGroupEnum);
 alias CLUSTER_RESOURCE_STATE = int;
 enum : int
 {
@@ -1952,50 +1953,50 @@ enum : int
     ClusterSharedVolumePrepareForFreeze     = 0x00000003,
 }
 
-alias PCLUSAPI_CREATE_CLUSTER_RESOURCE = HRESOURCE function(HGROUP, const(wchar)*, const(wchar)*, uint);
-alias PCLUSAPI_CREATE_CLUSTER_RESOURCE_EX = HRESOURCE function(HGROUP, const(wchar)*, const(wchar)*, uint, const(wchar)*);
-alias PCLUSAPI_OPEN_CLUSTER_RESOURCE = HRESOURCE function(HCLUSTER, const(wchar)*);
-alias PCLUSAPI_OPEN_CLUSTER_RESOURCE_EX = HRESOURCE function(HCLUSTER, const(wchar)*, uint, uint*);
-alias PCLUSAPI_CLOSE_CLUSTER_RESOURCE = BOOL function(HRESOURCE);
-alias PCLUSAPI_GET_CLUSTER_FROM_RESOURCE = HCLUSTER function(HRESOURCE);
-alias PCLUSAPI_DELETE_CLUSTER_RESOURCE = uint function(HRESOURCE);
-alias PCLUSAPI_DELETE_CLUSTER_RESOURCE_EX = uint function(HRESOURCE, const(wchar)*);
-alias PCLUSAPI_GET_CLUSTER_RESOURCE_STATE = CLUSTER_RESOURCE_STATE function(HRESOURCE, PWSTR, uint*, PWSTR, uint*);
-alias PCLUSAPI_SET_CLUSTER_RESOURCE_NAME = uint function(HRESOURCE, const(wchar)*);
-alias PCLUSAPI_SET_CLUSTER_RESOURCE_NAME_EX = uint function(HRESOURCE, const(wchar)*, const(wchar)*);
-alias PCLUSAPI_FAIL_CLUSTER_RESOURCE = uint function(HRESOURCE);
-alias PCLUSAPI_FAIL_CLUSTER_RESOURCE_EX = uint function(HRESOURCE, const(wchar)*);
-alias PCLUSAPI_ONLINE_CLUSTER_RESOURCE = uint function(HRESOURCE);
-alias PCLUSAPI_OFFLINE_CLUSTER_RESOURCE = uint function(HRESOURCE);
-alias PCLUSAPI_CHANGE_CLUSTER_RESOURCE_GROUP = uint function(HRESOURCE, HGROUP);
-alias PCLUSAPI_CHANGE_CLUSTER_RESOURCE_GROUP_EX = uint function(HRESOURCE, HGROUP, ulong);
-alias PCLUSAPI_CHANGE_CLUSTER_RESOURCE_GROUP_EX2 = uint function(HRESOURCE, HGROUP, ulong, const(wchar)*);
-alias PCLUSAPI_ADD_CLUSTER_RESOURCE_NODE = uint function(HRESOURCE, HNODE);
-alias PCLUSAPI_REMOVE_CLUSTER_RESOURCE_NODE = uint function(HRESOURCE, HNODE);
-alias PCLUSAPI_ADD_CLUSTER_RESOURCE_NODE_EX = uint function(HRESOURCE, HNODE, const(wchar)*);
-alias PCLUSAPI_REMOVE_CLUSTER_RESOURCE_NODE_EX = uint function(HRESOURCE, HNODE, const(wchar)*);
-alias PCLUSAPI_ADD_CLUSTER_RESOURCE_DEPENDENCY = uint function(HRESOURCE, HRESOURCE);
-alias PCLUSAPI_REMOVE_CLUSTER_RESOURCE_DEPENDENCY = uint function(HRESOURCE, HRESOURCE);
-alias PCLUSAPI_ADD_CLUSTER_RESOURCE_DEPENDENCY_EX = uint function(HRESOURCE, HRESOURCE, const(wchar)*);
-alias PCLUSAPI_REMOVE_CLUSTER_RESOURCE_DEPENDENCY_EX = uint function(HRESOURCE, HRESOURCE, const(wchar)*);
-alias PCLUSAPI_SET_CLUSTER_RESOURCE_DEPENDENCY_EXPRESSION = uint function(HRESOURCE, const(wchar)*);
-alias PCLUSAPI_GET_CLUSTER_RESOURCE_DEPENDENCY_EXPRESSION = uint function(HRESOURCE, PWSTR, uint*);
-alias PCLUSAPI_ADD_RESOURCE_TO_CLUSTER_SHARED_VOLUMES = uint function(HRESOURCE);
-alias PCLUSAPI_REMOVE_RESOURCE_FROM_CLUSTER_SHARED_VOLUMES = uint function(HRESOURCE);
-alias PCLUSAPI_IS_FILE_ON_CLUSTER_SHARED_VOLUME = uint function(const(wchar)*, BOOL*);
-alias PCLUSAPI_SHARED_VOLUME_SET_SNAPSHOT_STATE = uint function(GUID, const(wchar)*, CLUSTER_SHARED_VOLUME_SNAPSHOT_STATE);
-alias PCLUSAPI_CAN_RESOURCE_BE_DEPENDENT = BOOL function(HRESOURCE, HRESOURCE);
-alias PCLUSAPI_CLUSTER_RESOURCE_CONTROL = uint function(HRESOURCE, HNODE, uint, void*, uint, void*, uint, uint*);
-alias PCLUSAPI_CLUSTER_RESOURCE_TYPE_CONTROL = uint function(HCLUSTER, const(wchar)*, HNODE, uint, void*, uint, void*, uint, uint*);
-alias PCLUSAPI_CLUSTER_GROUP_CONTROL = uint function(HGROUP, HNODE, uint, void*, uint, void*, uint, uint*);
-alias PCLUSAPI_CLUSTER_RESOURCE_CONTROL_EX = uint function(HRESOURCE, HNODE, uint, void*, uint, void*, uint, uint*, const(wchar)*);
-alias PCLUSAPI_CLUSTER_RESOURCE_CONTROL_AS_USER_EX = uint function(HRESOURCE, HNODE, uint, void*, uint, void*, uint, uint*, const(wchar)*);
-alias PCLUSAPI_CLUSTER_RESOURCE_TYPE_CONTROL_EX = uint function(HCLUSTER, const(wchar)*, HNODE, uint, void*, uint, void*, uint, uint*, const(wchar)*);
-alias PCLUSAPI_CLUSTER_RESOURCE_TYPE_CONTROL_AS_USER_EX = uint function(HCLUSTER, const(wchar)*, HNODE, uint, void*, uint, void*, uint, uint*, const(wchar)*);
-alias PCLUSAPI_CLUSTER_GROUP_CONTROL_EX = uint function(HGROUP, HNODE, uint, void*, uint, void*, uint, uint*, const(wchar)*);
-alias PCLUSAPI_CLUSTER_NODE_CONTROL = uint function(HNODE, HNODE, uint, void*, uint, void*, uint, uint*);
-alias PCLUSAPI_CLUSTER_NODE_CONTROL_EX = uint function(HNODE, HNODE, uint, void*, uint, void*, uint, uint*, const(wchar)*);
-alias PCLUSAPI_GET_CLUSTER_RESOURCE_NETWORK_NAME = BOOL function(HRESOURCE, PWSTR, uint*);
+alias PCLUSAPI_CREATE_CLUSTER_RESOURCE = HRESOURCE function(HGROUP hGroup, const(wchar)* lpszResourceName, const(wchar)* lpszResourceType, uint dwFlags);
+alias PCLUSAPI_CREATE_CLUSTER_RESOURCE_EX = HRESOURCE function(HGROUP hGroup, const(wchar)* lpszResourceName, const(wchar)* lpszResourceType, uint dwFlags, const(wchar)* lpszReason);
+alias PCLUSAPI_OPEN_CLUSTER_RESOURCE = HRESOURCE function(HCLUSTER hCluster, const(wchar)* lpszResourceName);
+alias PCLUSAPI_OPEN_CLUSTER_RESOURCE_EX = HRESOURCE function(HCLUSTER hCluster, const(wchar)* lpszResourceName, uint dwDesiredAccess, uint* lpdwGrantedAccess);
+alias PCLUSAPI_CLOSE_CLUSTER_RESOURCE = BOOL function(HRESOURCE hResource);
+alias PCLUSAPI_GET_CLUSTER_FROM_RESOURCE = HCLUSTER function(HRESOURCE hResource);
+alias PCLUSAPI_DELETE_CLUSTER_RESOURCE = uint function(HRESOURCE hResource);
+alias PCLUSAPI_DELETE_CLUSTER_RESOURCE_EX = uint function(HRESOURCE hResource, const(wchar)* lpszReason);
+alias PCLUSAPI_GET_CLUSTER_RESOURCE_STATE = CLUSTER_RESOURCE_STATE function(HRESOURCE hResource, PWSTR lpszNodeName, uint* lpcchNodeName, PWSTR lpszGroupName, uint* lpcchGroupName);
+alias PCLUSAPI_SET_CLUSTER_RESOURCE_NAME = uint function(HRESOURCE hResource, const(wchar)* lpszResourceName);
+alias PCLUSAPI_SET_CLUSTER_RESOURCE_NAME_EX = uint function(HRESOURCE hResource, const(wchar)* lpszResourceName, const(wchar)* lpszReason);
+alias PCLUSAPI_FAIL_CLUSTER_RESOURCE = uint function(HRESOURCE hResource);
+alias PCLUSAPI_FAIL_CLUSTER_RESOURCE_EX = uint function(HRESOURCE hResource, const(wchar)* lpszReason);
+alias PCLUSAPI_ONLINE_CLUSTER_RESOURCE = uint function(HRESOURCE hResource);
+alias PCLUSAPI_OFFLINE_CLUSTER_RESOURCE = uint function(HRESOURCE hResource);
+alias PCLUSAPI_CHANGE_CLUSTER_RESOURCE_GROUP = uint function(HRESOURCE hResource, HGROUP hGroup);
+alias PCLUSAPI_CHANGE_CLUSTER_RESOURCE_GROUP_EX = uint function(HRESOURCE hResource, HGROUP hGroup, ulong Flags);
+alias PCLUSAPI_CHANGE_CLUSTER_RESOURCE_GROUP_EX2 = uint function(HRESOURCE hResource, HGROUP hGroup, ulong Flags, const(wchar)* lpszReason);
+alias PCLUSAPI_ADD_CLUSTER_RESOURCE_NODE = uint function(HRESOURCE hResource, HNODE hNode);
+alias PCLUSAPI_REMOVE_CLUSTER_RESOURCE_NODE = uint function(HRESOURCE hResource, HNODE hNode);
+alias PCLUSAPI_ADD_CLUSTER_RESOURCE_NODE_EX = uint function(HRESOURCE hResource, HNODE hNode, const(wchar)* lpszReason);
+alias PCLUSAPI_REMOVE_CLUSTER_RESOURCE_NODE_EX = uint function(HRESOURCE hResource, HNODE hNode, const(wchar)* lpszReason);
+alias PCLUSAPI_ADD_CLUSTER_RESOURCE_DEPENDENCY = uint function(HRESOURCE hResource, HRESOURCE hDependsOn);
+alias PCLUSAPI_REMOVE_CLUSTER_RESOURCE_DEPENDENCY = uint function(HRESOURCE hResource, HRESOURCE hDependsOn);
+alias PCLUSAPI_ADD_CLUSTER_RESOURCE_DEPENDENCY_EX = uint function(HRESOURCE hResource, HRESOURCE hDependsOn, const(wchar)* lpszReason);
+alias PCLUSAPI_REMOVE_CLUSTER_RESOURCE_DEPENDENCY_EX = uint function(HRESOURCE hResource, HRESOURCE hDependsOn, const(wchar)* lpszReason);
+alias PCLUSAPI_SET_CLUSTER_RESOURCE_DEPENDENCY_EXPRESSION = uint function(HRESOURCE hResource, const(wchar)* lpszDependencyExpression);
+alias PCLUSAPI_GET_CLUSTER_RESOURCE_DEPENDENCY_EXPRESSION = uint function(HRESOURCE hResource, PWSTR lpszDependencyExpression, uint* lpcchDependencyExpression);
+alias PCLUSAPI_ADD_RESOURCE_TO_CLUSTER_SHARED_VOLUMES = uint function(HRESOURCE hResource);
+alias PCLUSAPI_REMOVE_RESOURCE_FROM_CLUSTER_SHARED_VOLUMES = uint function(HRESOURCE hResource);
+alias PCLUSAPI_IS_FILE_ON_CLUSTER_SHARED_VOLUME = uint function(const(wchar)* lpszPathName, BOOL* pbFileIsOnSharedVolume);
+alias PCLUSAPI_SHARED_VOLUME_SET_SNAPSHOT_STATE = uint function(GUID guidSnapshotSet, const(wchar)* lpszVolumeName, CLUSTER_SHARED_VOLUME_SNAPSHOT_STATE state);
+alias PCLUSAPI_CAN_RESOURCE_BE_DEPENDENT = BOOL function(HRESOURCE hResource, HRESOURCE hResourceDependent);
+alias PCLUSAPI_CLUSTER_RESOURCE_CONTROL = uint function(HRESOURCE hResource, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint cbInBufferSize, void* lpOutBuffer, uint cbOutBufferSize, uint* lpBytesReturned);
+alias PCLUSAPI_CLUSTER_RESOURCE_TYPE_CONTROL = uint function(HCLUSTER hCluster, const(wchar)* lpszResourceTypeName, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned);
+alias PCLUSAPI_CLUSTER_GROUP_CONTROL = uint function(HGROUP hGroup, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned);
+alias PCLUSAPI_CLUSTER_RESOURCE_CONTROL_EX = uint function(HRESOURCE hResource, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint cbInBufferSize, void* lpOutBuffer, uint cbOutBufferSize, uint* lpBytesReturned, const(wchar)* lpszReason);
+alias PCLUSAPI_CLUSTER_RESOURCE_CONTROL_AS_USER_EX = uint function(HRESOURCE hResource, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint cbInBufferSize, void* lpOutBuffer, uint cbOutBufferSize, uint* lpBytesReturned, const(wchar)* lpszReason);
+alias PCLUSAPI_CLUSTER_RESOURCE_TYPE_CONTROL_EX = uint function(HCLUSTER hCluster, const(wchar)* lpszResourceTypeName, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned, const(wchar)* lpszReason);
+alias PCLUSAPI_CLUSTER_RESOURCE_TYPE_CONTROL_AS_USER_EX = uint function(HCLUSTER hCluster, const(wchar)* lpszResourceTypeName, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned, const(wchar)* lpszReason);
+alias PCLUSAPI_CLUSTER_GROUP_CONTROL_EX = uint function(HGROUP hGroup, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned, const(wchar)* lpszReason);
+alias PCLUSAPI_CLUSTER_NODE_CONTROL = uint function(HNODE hNode, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned);
+alias PCLUSAPI_CLUSTER_NODE_CONTROL_EX = uint function(HNODE hNode, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned, const(wchar)* lpszReason);
+alias PCLUSAPI_GET_CLUSTER_RESOURCE_NETWORK_NAME = BOOL function(HRESOURCE hResource, PWSTR lpBuffer, uint* nSize);
 alias CLUSTER_PROPERTY_TYPE = int;
 enum : int
 {
@@ -3180,18 +3181,18 @@ enum : int
     CLUSTER_RESOURCE_TYPE_ENUM_ALL       = 0x00000003,
 }
 
-alias PCLUSAPI_CLUSTER_RESOURCE_OPEN_ENUM = HRESENUM function(HRESOURCE, uint);
-alias PCLUSAPI_CLUSTER_RESOURCE_GET_ENUM_COUNT = uint function(HRESENUM);
-alias PCLUSAPI_CLUSTER_RESOURCE_ENUM = uint function(HRESENUM, uint, uint*, PWSTR, uint*);
-alias PCLUSAPI_CLUSTER_RESOURCE_CLOSE_ENUM = uint function(HRESENUM);
-alias PCLUSAPI_CREATE_CLUSTER_RESOURCE_TYPE = uint function(HCLUSTER, const(wchar)*, const(wchar)*, const(wchar)*, uint, uint);
-alias PCLUSAPI_DELETE_CLUSTER_RESOURCE_TYPE = uint function(HCLUSTER, const(wchar)*);
-alias PCLUSAPI_CREATE_CLUSTER_RESOURCE_TYPE_EX = uint function(HCLUSTER, const(wchar)*, const(wchar)*, const(wchar)*, uint, uint, const(wchar)*);
-alias PCLUSAPI_DELETE_CLUSTER_RESOURCE_TYPE_EX = uint function(HCLUSTER, const(wchar)*, const(wchar)*);
-alias PCLUSAPI_CLUSTER_RESOURCE_TYPE_OPEN_ENUM = HRESTYPEENUM function(HCLUSTER, const(wchar)*, uint);
-alias PCLUSAPI_CLUSTER_RESOURCE_TYPE_GET_ENUM_COUNT = uint function(HRESTYPEENUM);
-alias PCLUSAPI_CLUSTER_RESOURCE_TYPE_ENUM = uint function(HRESTYPEENUM, uint, uint*, PWSTR, uint*);
-alias PCLUSAPI_CLUSTER_RESOURCE_TYPE_CLOSE_ENUM = uint function(HRESTYPEENUM);
+alias PCLUSAPI_CLUSTER_RESOURCE_OPEN_ENUM = HRESENUM function(HRESOURCE hResource, uint dwType);
+alias PCLUSAPI_CLUSTER_RESOURCE_GET_ENUM_COUNT = uint function(HRESENUM hResEnum);
+alias PCLUSAPI_CLUSTER_RESOURCE_ENUM = uint function(HRESENUM hResEnum, uint dwIndex, uint* lpdwType, PWSTR lpszName, uint* lpcchName);
+alias PCLUSAPI_CLUSTER_RESOURCE_CLOSE_ENUM = uint function(HRESENUM hResEnum);
+alias PCLUSAPI_CREATE_CLUSTER_RESOURCE_TYPE = uint function(HCLUSTER hCluster, const(wchar)* lpszResourceTypeName, const(wchar)* lpszDisplayName, const(wchar)* lpszResourceTypeDll, uint dwLooksAlivePollInterval, uint dwIsAlivePollInterval);
+alias PCLUSAPI_DELETE_CLUSTER_RESOURCE_TYPE = uint function(HCLUSTER hCluster, const(wchar)* lpszResourceTypeName);
+alias PCLUSAPI_CREATE_CLUSTER_RESOURCE_TYPE_EX = uint function(HCLUSTER hCluster, const(wchar)* lpszResourceTypeName, const(wchar)* lpszDisplayName, const(wchar)* lpszResourceTypeDll, uint dwLooksAlivePollInterval, uint dwIsAlivePollInterval, const(wchar)* lpszReason);
+alias PCLUSAPI_DELETE_CLUSTER_RESOURCE_TYPE_EX = uint function(HCLUSTER hCluster, const(wchar)* lpszTypeName, const(wchar)* lpszReason);
+alias PCLUSAPI_CLUSTER_RESOURCE_TYPE_OPEN_ENUM = HRESTYPEENUM function(HCLUSTER hCluster, const(wchar)* lpszResourceTypeName, uint dwType);
+alias PCLUSAPI_CLUSTER_RESOURCE_TYPE_GET_ENUM_COUNT = uint function(HRESTYPEENUM hResTypeEnum);
+alias PCLUSAPI_CLUSTER_RESOURCE_TYPE_ENUM = uint function(HRESTYPEENUM hResTypeEnum, uint dwIndex, uint* lpdwType, PWSTR lpszName, uint* lpcchName);
+alias PCLUSAPI_CLUSTER_RESOURCE_TYPE_CLOSE_ENUM = uint function(HRESTYPEENUM hResTypeEnum);
 alias CLUSTER_NETWORK_ENUM = int;
 enum : int
 {
@@ -3218,20 +3219,20 @@ enum : int
     ClusterNetworkRoleInternalAndClient = 0x00000003,
 }
 
-alias PCLUSAPI_OPEN_CLUSTER_NETWORK = HNETWORK function(HCLUSTER, const(wchar)*);
-alias PCLUSAPI_OPEN_CLUSTER_NETWORK_EX = HNETWORK function(HCLUSTER, const(wchar)*, uint, uint*);
-alias PCLUSAPI_CLOSE_CLUSTER_NETWORK = BOOL function(HNETWORK);
-alias PCLUSAPI_GET_CLUSTER_FROM_NETWORK = HCLUSTER function(HNETWORK);
-alias PCLUSAPI_CLUSTER_NETWORK_OPEN_ENUM = HNETWORKENUM function(HNETWORK, uint);
-alias PCLUSAPI_CLUSTER_NETWORK_GET_ENUM_COUNT = uint function(HNETWORKENUM);
-alias PCLUSAPI_CLUSTER_NETWORK_ENUM = uint function(HNETWORKENUM, uint, uint*, PWSTR, uint*);
-alias PCLUSAPI_CLUSTER_NETWORK_CLOSE_ENUM = uint function(HNETWORKENUM);
-alias PCLUSAPI_GET_CLUSTER_NETWORK_STATE = CLUSTER_NETWORK_STATE function(HNETWORK);
-alias PCLUSAPI_SET_CLUSTER_NETWORK_NAME = uint function(HNETWORK, const(wchar)*);
-alias PCLUSAPI_SET_CLUSTER_NETWORK_NAME_EX = uint function(HNETWORK, const(wchar)*, const(wchar)*);
-alias PCLUSAPI_GET_CLUSTER_NETWORK_ID = uint function(HNETWORK, PWSTR, uint*);
-alias PCLUSAPI_CLUSTER_NETWORK_CONTROL = uint function(HNETWORK, HNODE, uint, void*, uint, void*, uint, uint*);
-alias PCLUSAPI_CLUSTER_NETWORK_CONTROL_EX = uint function(HNETWORK, HNODE, uint, void*, uint, void*, uint, uint*, const(wchar)*);
+alias PCLUSAPI_OPEN_CLUSTER_NETWORK = HNETWORK function(HCLUSTER hCluster, const(wchar)* lpszNetworkName);
+alias PCLUSAPI_OPEN_CLUSTER_NETWORK_EX = HNETWORK function(HCLUSTER hCluster, const(wchar)* lpszNetworkName, uint dwDesiredAccess, uint* lpdwGrantedAccess);
+alias PCLUSAPI_CLOSE_CLUSTER_NETWORK = BOOL function(HNETWORK hNetwork);
+alias PCLUSAPI_GET_CLUSTER_FROM_NETWORK = HCLUSTER function(HNETWORK hNetwork);
+alias PCLUSAPI_CLUSTER_NETWORK_OPEN_ENUM = HNETWORKENUM function(HNETWORK hNetwork, uint dwType);
+alias PCLUSAPI_CLUSTER_NETWORK_GET_ENUM_COUNT = uint function(HNETWORKENUM hNetworkEnum);
+alias PCLUSAPI_CLUSTER_NETWORK_ENUM = uint function(HNETWORKENUM hNetworkEnum, uint dwIndex, uint* lpdwType, PWSTR lpszName, uint* lpcchName);
+alias PCLUSAPI_CLUSTER_NETWORK_CLOSE_ENUM = uint function(HNETWORKENUM hNetworkEnum);
+alias PCLUSAPI_GET_CLUSTER_NETWORK_STATE = CLUSTER_NETWORK_STATE function(HNETWORK hNetwork);
+alias PCLUSAPI_SET_CLUSTER_NETWORK_NAME = uint function(HNETWORK hNetwork, const(wchar)* lpszName);
+alias PCLUSAPI_SET_CLUSTER_NETWORK_NAME_EX = uint function(HNETWORK hNetwork, const(wchar)* lpszName, const(wchar)* lpszReason);
+alias PCLUSAPI_GET_CLUSTER_NETWORK_ID = uint function(HNETWORK hNetwork, PWSTR lpszNetworkId, uint* lpcchName);
+alias PCLUSAPI_CLUSTER_NETWORK_CONTROL = uint function(HNETWORK hNetwork, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned);
+alias PCLUSAPI_CLUSTER_NETWORK_CONTROL_EX = uint function(HNETWORK hNetwork, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned, const(wchar)* lpszReason);
 alias CLUSTER_NETINTERFACE_STATE = int;
 enum : int
 {
@@ -3242,53 +3243,53 @@ enum : int
     ClusterNetInterfaceUp           = 0x00000003,
 }
 
-alias PCLUSAPI_OPEN_CLUSTER_NET_INTERFACE = HNETINTERFACE function(HCLUSTER, const(wchar)*);
-alias PCLUSAPI_OPEN_CLUSTER_NETINTERFACE_EX = HNETINTERFACE function(HCLUSTER, const(wchar)*, uint, uint*);
-alias PCLUSAPI_GET_CLUSTER_NET_INTERFACE = uint function(HCLUSTER, const(wchar)*, const(wchar)*, PWSTR, uint*);
-alias PCLUSAPI_CLOSE_CLUSTER_NET_INTERFACE = BOOL function(HNETINTERFACE);
-alias PCLUSAPI_GET_CLUSTER_FROM_NET_INTERFACE = HCLUSTER function(HNETINTERFACE);
-alias PCLUSAPI_GET_CLUSTER_NET_INTERFACE_STATE = CLUSTER_NETINTERFACE_STATE function(HNETINTERFACE);
-alias PCLUSAPI_CLUSTER_NET_INTERFACE_CONTROL = uint function(HNETINTERFACE, HNODE, uint, void*, uint, void*, uint, uint*);
-alias PCLUSAPI_CLUSTER_NET_INTERFACE_CONTROL_EX = uint function(HNETINTERFACE, HNODE, uint, void*, uint, void*, uint, uint*, const(wchar)*);
-alias PCLUSAPI_GET_CLUSTER_KEY = HKEY function(HCLUSTER, uint);
-alias PCLUSAPI_GET_CLUSTER_GROUP_KEY = HKEY function(HGROUP, uint);
-alias PCLUSAPI_GET_CLUSTER_RESOURCE_KEY = HKEY function(HRESOURCE, uint);
-alias PCLUSAPI_GET_CLUSTER_NODE_KEY = HKEY function(HNODE, uint);
-alias PCLUSAPI_GET_CLUSTER_NETWORK_KEY = HKEY function(HNETWORK, uint);
-alias PCLUSAPI_GET_CLUSTER_NET_INTERFACE_KEY = HKEY function(HNETINTERFACE, uint);
-alias PCLUSAPI_CLUSTER_REG_CREATE_KEY = int function(HKEY, const(wchar)*, uint, uint, SECURITY_ATTRIBUTES*, HKEY*, uint*);
-alias PCLUSAPI_CLUSTER_REG_CREATE_KEY_EX = int function(HKEY, const(wchar)*, uint, uint, SECURITY_ATTRIBUTES*, HKEY*, uint*, const(wchar)*);
-alias PCLUSAPI_CLUSTER_REG_OPEN_KEY = int function(HKEY, const(wchar)*, uint, HKEY*);
-alias PCLUSAPI_CLUSTER_REG_DELETE_KEY = int function(HKEY, const(wchar)*);
-alias PCLUSAPI_CLUSTER_REG_DELETE_KEY_EX = int function(HKEY, const(wchar)*, const(wchar)*);
-alias PCLUSAPI_CLUSTER_REG_CLOSE_KEY = int function(HKEY);
-alias PCLUSAPI_CLUSTER_REG_ENUM_KEY = int function(HKEY, uint, PWSTR, uint*, FILETIME*);
-alias PCLUSAPI_CLUSTER_REG_SET_VALUE = uint function(HKEY, const(wchar)*, uint, const(ubyte)*, uint);
-alias PCLUSAPI_CLUSTER_REG_DELETE_VALUE = uint function(HKEY, const(wchar)*);
-alias PCLUSAPI_CLUSTER_REG_SET_VALUE_EX = uint function(HKEY, const(wchar)*, uint, const(ubyte)*, uint, const(wchar)*);
-alias PCLUSAPI_CLUSTER_REG_DELETE_VALUE_EX = uint function(HKEY, const(wchar)*, const(wchar)*);
-alias PCLUSAPI_CLUSTER_REG_QUERY_VALUE = int function(HKEY, const(wchar)*, uint*, ubyte*, uint*);
-alias PCLUSAPI_CLUSTER_REG_ENUM_VALUE = uint function(HKEY, uint, PWSTR, uint*, uint*, ubyte*, uint*);
-alias PCLUSAPI_CLUSTER_REG_QUERY_INFO_KEY = int function(HKEY, uint*, uint*, uint*, uint*, uint*, uint*, FILETIME*);
-alias PCLUSAPI_CLUSTER_REG_GET_KEY_SECURITY = int function(HKEY, uint, PSECURITY_DESCRIPTOR, uint*);
-alias PCLUSAPI_CLUSTER_REG_SET_KEY_SECURITY = int function(HKEY, uint, PSECURITY_DESCRIPTOR);
-alias PCLUSAPI_CLUSTER_REG_SET_KEY_SECURITY_EX = int function(HKEY, uint, PSECURITY_DESCRIPTOR, const(wchar)*);
-alias PCLUSAPI_CLUSTER_REG_SYNC_DATABASE = int function(HCLUSTER, uint);
-alias PCLUSAPI_CLUSTER_REG_CREATE_BATCH = int function(HKEY, HREGBATCH*);
-alias PCLUSTER_REG_BATCH_ADD_COMMAND = int function(HREGBATCH, CLUSTER_REG_COMMAND, PWSTR, uint, const(void)*, uint);
-alias PCLUSTER_REG_CLOSE_BATCH = int function(HREGBATCH, BOOL, int*);
-alias PCLUSTER_REG_BATCH_READ_COMMAND = int function(HREGBATCHNOTIFICATION, CLUSTER_BATCH_COMMAND*);
-alias PCLUSTER_REG_BATCH_CLOSE_NOTIFICATION = int function(HREGBATCHNOTIFICATION);
-alias PCLUSTER_REG_CREATE_BATCH_NOTIFY_PORT = int function(HKEY, HREGBATCHPORT*);
-alias PCLUSTER_REG_CLOSE_BATCH_NOTIFY_PORT = int function(HREGBATCHPORT);
-alias PCLUSTER_REG_GET_BATCH_NOTIFICATION = int function(HREGBATCHPORT, HREGBATCHNOTIFICATION*);
-alias PCLUSTER_REG_CREATE_READ_BATCH = int function(HKEY, HREGREADBATCH*);
-alias PCLUSTER_REG_READ_BATCH_ADD_COMMAND = int function(HREGREADBATCH, const(wchar)*, const(wchar)*);
-alias PCLUSTER_REG_CLOSE_READ_BATCH = int function(HREGREADBATCH, HREGREADBATCHREPLY*);
-alias PCLUSTER_REG_CLOSE_READ_BATCH_EX = int function(HREGREADBATCH, uint, HREGREADBATCHREPLY*);
-alias PCLUSTER_REG_READ_BATCH_REPLY_NEXT_COMMAND = int function(HREGREADBATCHREPLY, CLUSTER_READ_BATCH_COMMAND*);
-alias PCLUSTER_REG_CLOSE_READ_BATCH_REPLY = int function(HREGREADBATCHREPLY);
-alias PCLUSTER_SET_ACCOUNT_ACCESS = uint function(HCLUSTER, const(wchar)*, uint, uint);
+alias PCLUSAPI_OPEN_CLUSTER_NET_INTERFACE = HNETINTERFACE function(HCLUSTER hCluster, const(wchar)* lpszInterfaceName);
+alias PCLUSAPI_OPEN_CLUSTER_NETINTERFACE_EX = HNETINTERFACE function(HCLUSTER hCluster, const(wchar)* lpszNetInterfaceName, uint dwDesiredAccess, uint* lpdwGrantedAccess);
+alias PCLUSAPI_GET_CLUSTER_NET_INTERFACE = uint function(HCLUSTER hCluster, const(wchar)* lpszNodeName, const(wchar)* lpszNetworkName, PWSTR lpszInterfaceName, uint* lpcchInterfaceName);
+alias PCLUSAPI_CLOSE_CLUSTER_NET_INTERFACE = BOOL function(HNETINTERFACE hNetInterface);
+alias PCLUSAPI_GET_CLUSTER_FROM_NET_INTERFACE = HCLUSTER function(HNETINTERFACE hNetInterface);
+alias PCLUSAPI_GET_CLUSTER_NET_INTERFACE_STATE = CLUSTER_NETINTERFACE_STATE function(HNETINTERFACE hNetInterface);
+alias PCLUSAPI_CLUSTER_NET_INTERFACE_CONTROL = uint function(HNETINTERFACE hNetInterface, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned);
+alias PCLUSAPI_CLUSTER_NET_INTERFACE_CONTROL_EX = uint function(HNETINTERFACE hNetInterface, HNODE hHostNode, uint dwControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned, const(wchar)* lpszReason);
+alias PCLUSAPI_GET_CLUSTER_KEY = HKEY function(HCLUSTER hCluster, uint samDesired);
+alias PCLUSAPI_GET_CLUSTER_GROUP_KEY = HKEY function(HGROUP hGroup, uint samDesired);
+alias PCLUSAPI_GET_CLUSTER_RESOURCE_KEY = HKEY function(HRESOURCE hResource, uint samDesired);
+alias PCLUSAPI_GET_CLUSTER_NODE_KEY = HKEY function(HNODE hNode, uint samDesired);
+alias PCLUSAPI_GET_CLUSTER_NETWORK_KEY = HKEY function(HNETWORK hNetwork, uint samDesired);
+alias PCLUSAPI_GET_CLUSTER_NET_INTERFACE_KEY = HKEY function(HNETINTERFACE hNetInterface, uint samDesired);
+alias PCLUSAPI_CLUSTER_REG_CREATE_KEY = int function(HKEY hKey, const(wchar)* lpszSubKey, uint dwOptions, uint samDesired, SECURITY_ATTRIBUTES* lpSecurityAttributes, HKEY* phkResult, uint* lpdwDisposition);
+alias PCLUSAPI_CLUSTER_REG_CREATE_KEY_EX = int function(HKEY hKey, const(wchar)* lpszSubKey, uint dwOptions, uint samDesired, SECURITY_ATTRIBUTES* lpSecurityAttributes, HKEY* phkResult, uint* lpdwDisposition, const(wchar)* lpszReason);
+alias PCLUSAPI_CLUSTER_REG_OPEN_KEY = int function(HKEY hKey, const(wchar)* lpszSubKey, uint samDesired, HKEY* phkResult);
+alias PCLUSAPI_CLUSTER_REG_DELETE_KEY = int function(HKEY hKey, const(wchar)* lpszSubKey);
+alias PCLUSAPI_CLUSTER_REG_DELETE_KEY_EX = int function(HKEY hKey, const(wchar)* lpSubKey, const(wchar)* lpszReason);
+alias PCLUSAPI_CLUSTER_REG_CLOSE_KEY = int function(HKEY hKey);
+alias PCLUSAPI_CLUSTER_REG_ENUM_KEY = int function(HKEY hKey, uint dwIndex, PWSTR lpszName, uint* lpcchName, FILETIME* lpftLastWriteTime);
+alias PCLUSAPI_CLUSTER_REG_SET_VALUE = uint function(HKEY hKey, const(wchar)* lpszValueName, uint dwType, const(ubyte)* lpData, uint cbData);
+alias PCLUSAPI_CLUSTER_REG_DELETE_VALUE = uint function(HKEY hKey, const(wchar)* lpszValueName);
+alias PCLUSAPI_CLUSTER_REG_SET_VALUE_EX = uint function(HKEY hKey, const(wchar)* lpszValueName, uint dwType, const(ubyte)* lpData, uint cbData, const(wchar)* lpszReason);
+alias PCLUSAPI_CLUSTER_REG_DELETE_VALUE_EX = uint function(HKEY hKey, const(wchar)* lpszValueName, const(wchar)* lpszReason);
+alias PCLUSAPI_CLUSTER_REG_QUERY_VALUE = int function(HKEY hKey, const(wchar)* lpszValueName, uint* lpdwValueType, ubyte* lpData, uint* lpcbData);
+alias PCLUSAPI_CLUSTER_REG_ENUM_VALUE = uint function(HKEY hKey, uint dwIndex, PWSTR lpszValueName, uint* lpcchValueName, uint* lpdwType, ubyte* lpData, uint* lpcbData);
+alias PCLUSAPI_CLUSTER_REG_QUERY_INFO_KEY = int function(HKEY hKey, uint* lpcSubKeys, uint* lpcbMaxSubKeyLen, uint* lpcValues, uint* lpcbMaxValueNameLen, uint* lpcbMaxValueLen, uint* lpcbSecurityDescriptor, FILETIME* lpftLastWriteTime);
+alias PCLUSAPI_CLUSTER_REG_GET_KEY_SECURITY = int function(HKEY hKey, uint RequestedInformation, PSECURITY_DESCRIPTOR pSecurityDescriptor, uint* lpcbSecurityDescriptor);
+alias PCLUSAPI_CLUSTER_REG_SET_KEY_SECURITY = int function(HKEY hKey, uint SecurityInformation, PSECURITY_DESCRIPTOR pSecurityDescriptor);
+alias PCLUSAPI_CLUSTER_REG_SET_KEY_SECURITY_EX = int function(HKEY hKey, uint SecurityInformation, PSECURITY_DESCRIPTOR pSecurityDescriptor, const(wchar)* lpszReason);
+alias PCLUSAPI_CLUSTER_REG_SYNC_DATABASE = int function(HCLUSTER hCluster, uint flags);
+alias PCLUSAPI_CLUSTER_REG_CREATE_BATCH = int function(HKEY hKey, HREGBATCH* pHREGBATCH);
+alias PCLUSTER_REG_BATCH_ADD_COMMAND = int function(HREGBATCH hRegBatch, CLUSTER_REG_COMMAND dwCommand, PWSTR wzName, uint dwOptions, const(void)* lpData, uint cbData);
+alias PCLUSTER_REG_CLOSE_BATCH = int function(HREGBATCH hRegBatch, BOOL bCommit, int* failedCommandNumber);
+alias PCLUSTER_REG_BATCH_READ_COMMAND = int function(HREGBATCHNOTIFICATION hBatchNotification, CLUSTER_BATCH_COMMAND* pBatchCommand);
+alias PCLUSTER_REG_BATCH_CLOSE_NOTIFICATION = int function(HREGBATCHNOTIFICATION hBatchNotification);
+alias PCLUSTER_REG_CREATE_BATCH_NOTIFY_PORT = int function(HKEY hKey, HREGBATCHPORT* phBatchNotifyPort);
+alias PCLUSTER_REG_CLOSE_BATCH_NOTIFY_PORT = int function(HREGBATCHPORT hBatchNotifyPort);
+alias PCLUSTER_REG_GET_BATCH_NOTIFICATION = int function(HREGBATCHPORT hBatchNotify, HREGBATCHNOTIFICATION* phBatchNotification);
+alias PCLUSTER_REG_CREATE_READ_BATCH = int function(HKEY hKey, HREGREADBATCH* phRegReadBatch);
+alias PCLUSTER_REG_READ_BATCH_ADD_COMMAND = int function(HREGREADBATCH hRegReadBatch, const(wchar)* wzSubkeyName, const(wchar)* wzValueName);
+alias PCLUSTER_REG_CLOSE_READ_BATCH = int function(HREGREADBATCH hRegReadBatch, HREGREADBATCHREPLY* phRegReadBatchReply);
+alias PCLUSTER_REG_CLOSE_READ_BATCH_EX = int function(HREGREADBATCH hRegReadBatch, uint flags, HREGREADBATCHREPLY* phRegReadBatchReply);
+alias PCLUSTER_REG_READ_BATCH_REPLY_NEXT_COMMAND = int function(HREGREADBATCHREPLY hRegReadBatchReply, CLUSTER_READ_BATCH_COMMAND* pBatchCommand);
+alias PCLUSTER_REG_CLOSE_READ_BATCH_REPLY = int function(HREGREADBATCHREPLY hRegReadBatchReply);
+alias PCLUSTER_SET_ACCOUNT_ACCESS = uint function(HCLUSTER hCluster, const(wchar)* szAccountSID, uint dwAccess, uint dwControlType);
 alias CLUSTER_SETUP_PHASE = int;
 enum : int
 {
@@ -3339,14 +3340,14 @@ enum : int
     ClusterSetupPhaseFatal         = 0x00000003,
 }
 
-alias PCLUSTER_SETUP_PROGRESS_CALLBACK = BOOL function(void*, CLUSTER_SETUP_PHASE, CLUSTER_SETUP_PHASE_TYPE, CLUSTER_SETUP_PHASE_SEVERITY, uint, const(wchar)*, uint);
-alias PCLUSAPI_CREATE_CLUSTER = HCLUSTER function(CREATE_CLUSTER_CONFIG*, PCLUSTER_SETUP_PROGRESS_CALLBACK, void*);
-alias PCLUSAPI_CREATE_CLUSTER_CNOLESS = HCLUSTER function(CREATE_CLUSTER_CONFIG*, PCLUSTER_SETUP_PROGRESS_CALLBACK, void*);
-alias PCLUSAPI_CREATE_CLUSTER_NAME_ACCOUNT = uint function(HCLUSTER, CREATE_CLUSTER_NAME_ACCOUNT*, PCLUSTER_SETUP_PROGRESS_CALLBACK, void*);
-alias PCLUSAPI_REMOVE_CLUSTER_NAME_ACCOUNT = uint function(HCLUSTER);
-alias PCLUSAPI_ADD_CLUSTER_NODE = HNODE function(HCLUSTER, const(wchar)*, PCLUSTER_SETUP_PROGRESS_CALLBACK, void*);
-alias PCLUSAPI_ADD_CLUSTER_NODE_EX = HNODE function(HCLUSTER, const(wchar)*, uint, PCLUSTER_SETUP_PROGRESS_CALLBACK, void*);
-alias PCLUSAPI_DESTROY_CLUSTER = uint function(HCLUSTER, PCLUSTER_SETUP_PROGRESS_CALLBACK, void*, BOOL);
+alias PCLUSTER_SETUP_PROGRESS_CALLBACK = BOOL function(void* pvCallbackArg, CLUSTER_SETUP_PHASE eSetupPhase, CLUSTER_SETUP_PHASE_TYPE ePhaseType, CLUSTER_SETUP_PHASE_SEVERITY ePhaseSeverity, uint dwPercentComplete, const(wchar)* lpszObjectName, uint dwStatus);
+alias PCLUSAPI_CREATE_CLUSTER = HCLUSTER function(CREATE_CLUSTER_CONFIG* pConfig, PCLUSTER_SETUP_PROGRESS_CALLBACK pfnProgressCallback, void* pvCallbackArg);
+alias PCLUSAPI_CREATE_CLUSTER_CNOLESS = HCLUSTER function(CREATE_CLUSTER_CONFIG* pConfig, PCLUSTER_SETUP_PROGRESS_CALLBACK pfnProgressCallback, void* pvCallbackArg);
+alias PCLUSAPI_CREATE_CLUSTER_NAME_ACCOUNT = uint function(HCLUSTER hCluster, CREATE_CLUSTER_NAME_ACCOUNT* pConfig, PCLUSTER_SETUP_PROGRESS_CALLBACK pfnProgressCallback, void* pvCallbackArg);
+alias PCLUSAPI_REMOVE_CLUSTER_NAME_ACCOUNT = uint function(HCLUSTER hCluster);
+alias PCLUSAPI_ADD_CLUSTER_NODE = HNODE function(HCLUSTER hCluster, const(wchar)* lpszNodeName, PCLUSTER_SETUP_PROGRESS_CALLBACK pfnProgressCallback, void* pvCallbackArg);
+alias PCLUSAPI_ADD_CLUSTER_NODE_EX = HNODE function(HCLUSTER hCluster, const(wchar)* lpszNodeName, uint dwFlags, PCLUSTER_SETUP_PROGRESS_CALLBACK pfnProgressCallback, void* pvCallbackArg);
+alias PCLUSAPI_DESTROY_CLUSTER = uint function(HCLUSTER hCluster, PCLUSTER_SETUP_PROGRESS_CALLBACK pfnProgressCallback, void* pvCallbackArg, BOOL fdeleteVirtualComputerObjects);
 alias PLACEMENT_OPTIONS = int;
 enum : int
 {
@@ -3535,9 +3536,9 @@ struct RESOURCE_STATUS_EX
     uint Flags;
     uint WaitHint;
 }
-alias PSET_RESOURCE_STATUS_ROUTINE_EX = uint function(long, RESOURCE_STATUS_EX*);
-alias PSET_RESOURCE_STATUS_ROUTINE = uint function(long, RESOURCE_STATUS*);
-alias PQUORUM_RESOURCE_LOST = void function(long);
+alias PSET_RESOURCE_STATUS_ROUTINE_EX = uint function(long ResourceHandle, RESOURCE_STATUS_EX* ResourceStatus);
+alias PSET_RESOURCE_STATUS_ROUTINE = uint function(long ResourceHandle, RESOURCE_STATUS* ResourceStatus);
+alias PQUORUM_RESOURCE_LOST = void function(long Resource);
 alias LOG_LEVEL = int;
 enum : int
 {
@@ -3547,24 +3548,24 @@ enum : int
     LOG_SEVERE      = 0x00000003,
 }
 
-alias PLOG_EVENT_ROUTINE = void function(long, LOG_LEVEL, const(wchar)*);
-alias POPEN_ROUTINE = void* function(const(wchar)*, HKEY, long);
-alias PCLOSE_ROUTINE = void function(void*);
-alias PONLINE_ROUTINE = uint function(void*, HANDLE*);
-alias POFFLINE_ROUTINE = uint function(void*);
-alias PTERMINATE_ROUTINE = void function(void*);
-alias PIS_ALIVE_ROUTINE = BOOL function(void*);
-alias PLOOKS_ALIVE_ROUTINE = BOOL function(void*);
-alias PARBITRATE_ROUTINE = uint function(void*, PQUORUM_RESOURCE_LOST);
-alias PRELEASE_ROUTINE = uint function(void*);
-alias PRESOURCE_CONTROL_ROUTINE = uint function(void*, uint, void*, uint, void*, uint, uint*);
-alias PRESOURCE_TYPE_CONTROL_ROUTINE = uint function(const(wchar)*, uint, void*, uint, void*, uint, uint*);
-alias POPEN_V2_ROUTINE = void* function(const(wchar)*, HKEY, long, uint);
-alias PONLINE_V2_ROUTINE = uint function(void*, HANDLE*, uint, ubyte*, uint, uint);
-alias POFFLINE_V2_ROUTINE = uint function(void*, const(wchar)*, uint, ubyte*, uint, uint);
-alias PCANCEL_ROUTINE = uint function(void*, uint);
-alias PBEGIN_RESCALL_ROUTINE = uint function(void*, uint, void*, uint, void*, uint, uint*, long, BOOL*);
-alias PBEGIN_RESTYPECALL_ROUTINE = uint function(const(wchar)*, uint, void*, uint, void*, uint, uint*, long, BOOL*);
+alias PLOG_EVENT_ROUTINE = void function(long ResourceHandle, LOG_LEVEL LogLevel, const(wchar)* FormatString);
+alias POPEN_ROUTINE = void* function(const(wchar)* ResourceName, HKEY ResourceKey, long ResourceHandle);
+alias PCLOSE_ROUTINE = void function(void* Resource);
+alias PONLINE_ROUTINE = uint function(void* Resource, HANDLE* EventHandle);
+alias POFFLINE_ROUTINE = uint function(void* Resource);
+alias PTERMINATE_ROUTINE = void function(void* Resource);
+alias PIS_ALIVE_ROUTINE = BOOL function(void* Resource);
+alias PLOOKS_ALIVE_ROUTINE = BOOL function(void* Resource);
+alias PARBITRATE_ROUTINE = uint function(void* Resource, PQUORUM_RESOURCE_LOST LostQuorumResource);
+alias PRELEASE_ROUTINE = uint function(void* Resource);
+alias PRESOURCE_CONTROL_ROUTINE = uint function(void* Resource, uint ControlCode, void* InBuffer, uint InBufferSize, void* OutBuffer, uint OutBufferSize, uint* BytesReturned);
+alias PRESOURCE_TYPE_CONTROL_ROUTINE = uint function(const(wchar)* ResourceTypeName, uint ControlCode, void* InBuffer, uint InBufferSize, void* OutBuffer, uint OutBufferSize, uint* BytesReturned);
+alias POPEN_V2_ROUTINE = void* function(const(wchar)* ResourceName, HKEY ResourceKey, long ResourceHandle, uint OpenFlags);
+alias PONLINE_V2_ROUTINE = uint function(void* Resource, HANDLE* EventHandle, uint OnlineFlags, ubyte* InBuffer, uint InBufferSize, uint Reserved);
+alias POFFLINE_V2_ROUTINE = uint function(void* Resource, const(wchar)* DestinationNodeName, uint OfflineFlags, ubyte* InBuffer, uint InBufferSize, uint Reserved);
+alias PCANCEL_ROUTINE = uint function(void* Resource, uint CancelFlags_RESERVED);
+alias PBEGIN_RESCALL_ROUTINE = uint function(void* Resource, uint ControlCode, void* InBuffer, uint InBufferSize, void* OutBuffer, uint OutBufferSize, uint* BytesReturned, long context, BOOL* ReturnedAsynchronously);
+alias PBEGIN_RESTYPECALL_ROUTINE = uint function(const(wchar)* ResourceTypeName, uint ControlCode, void* InBuffer, uint InBufferSize, void* OutBuffer, uint OutBufferSize, uint* BytesReturned, long context, BOOL* ReturnedAsynchronously);
 alias RESOURCE_EXIT_STATE = int;
 enum : int
 {
@@ -3573,8 +3574,8 @@ enum : int
     ResourceExitStateMax       = 0x00000002,
 }
 
-alias PBEGIN_RESCALL_AS_USER_ROUTINE = uint function(void*, HANDLE, uint, void*, uint, void*, uint, uint*, long, BOOL*);
-alias PBEGIN_RESTYPECALL_AS_USER_ROUTINE = uint function(const(wchar)*, HANDLE, uint, void*, uint, void*, uint, uint*, long, BOOL*);
+alias PBEGIN_RESCALL_AS_USER_ROUTINE = uint function(void* Resource, HANDLE TokenHandle, uint ControlCode, void* InBuffer, uint InBufferSize, void* OutBuffer, uint OutBufferSize, uint* BytesReturned, long context, BOOL* ReturnedAsynchronously);
+alias PBEGIN_RESTYPECALL_AS_USER_ROUTINE = uint function(const(wchar)* ResourceTypeName, HANDLE TokenHandle, uint ControlCode, void* InBuffer, uint InBufferSize, void* OutBuffer, uint OutBufferSize, uint* BytesReturned, long context, BOOL* ReturnedAsynchronously);
 struct CLRES_V1_FUNCTIONS
 {
     POPEN_ROUTINE Open;
@@ -3685,7 +3686,7 @@ struct RESUTIL_PROPERTY_ITEM
     uint Flags;
     uint Offset;
 }
-alias PSTARTUP_ROUTINE = uint function(const(wchar)*, uint, uint, PSET_RESOURCE_STATUS_ROUTINE, PLOG_EVENT_ROUTINE, CLRES_FUNCTION_TABLE**);
+alias PSTARTUP_ROUTINE = uint function(const(wchar)* ResourceType, uint MinVersionSupported, uint MaxVersionSupported, PSET_RESOURCE_STATUS_ROUTINE SetResourceStatus, PLOG_EVENT_ROUTINE LogEvent, CLRES_FUNCTION_TABLE** FunctionTable);
 alias FAILURE_TYPE = int;
 enum : int
 {
@@ -3702,21 +3703,21 @@ enum : int
     ClusterResourceApplicationReady        = 0x00000003,
 }
 
-alias PSET_RESOURCE_LOCKED_MODE_ROUTINE = uint function(long, BOOL, uint);
-alias PSIGNAL_FAILURE_ROUTINE = uint function(long, FAILURE_TYPE, uint);
-alias PSET_RESOURCE_INMEMORY_NODELOCAL_PROPERTIES_ROUTINE = uint function(long, ubyte*, uint);
-alias PEND_CONTROL_CALL = uint function(const(long), uint);
-alias PEND_TYPE_CONTROL_CALL = uint function(const(long), uint);
-alias PEXTEND_RES_CONTROL_CALL = uint function(const(long), uint);
-alias PEXTEND_RES_TYPE_CONTROL_CALL = uint function(const(long), uint);
-alias PRAISE_RES_TYPE_NOTIFICATION = uint function(const(wchar)*, const(ubyte)*, uint);
-alias PCHANGE_RESOURCE_PROCESS_FOR_DUMPS = uint function(long, const(wchar)*, uint, BOOL);
-alias PCHANGE_RES_TYPE_PROCESS_FOR_DUMPS = uint function(const(wchar)*, const(wchar)*, uint, BOOL);
-alias PSET_INTERNAL_STATE = uint function(long, CLUSTER_RESOURCE_APPLICATION_STATE, BOOL);
-alias PSET_RESOURCE_LOCKED_MODE_EX_ROUTINE = uint function(long, BOOL, uint, uint);
-alias PREQUEST_DUMP_ROUTINE = uint function(long, BOOL, uint);
-alias PSET_RESOURCE_WPR_POLICY_ROUTINE = uint function(long, uint);
-alias PARM_WPR_WATCHDOG_FOR_CURRENT_RESOURCE_CALL_ROUTINE = uint function(long, ulong);
+alias PSET_RESOURCE_LOCKED_MODE_ROUTINE = uint function(long ResourceHandle, BOOL LockedModeEnabled, uint LockedModeReason);
+alias PSIGNAL_FAILURE_ROUTINE = uint function(long ResourceHandle, FAILURE_TYPE FailureType, uint ApplicationSpecificErrorCode);
+alias PSET_RESOURCE_INMEMORY_NODELOCAL_PROPERTIES_ROUTINE = uint function(long ResourceHandle, ubyte* propertyListBuffer, uint propertyListBufferSize);
+alias PEND_CONTROL_CALL = uint function(const(long) context, uint status);
+alias PEND_TYPE_CONTROL_CALL = uint function(const(long) context, uint status);
+alias PEXTEND_RES_CONTROL_CALL = uint function(const(long) context, uint newTimeoutInMs);
+alias PEXTEND_RES_TYPE_CONTROL_CALL = uint function(const(long) context, uint newTimeoutInMs);
+alias PRAISE_RES_TYPE_NOTIFICATION = uint function(const(wchar)* ResourceType, const(ubyte)* pPayload, uint payloadSize);
+alias PCHANGE_RESOURCE_PROCESS_FOR_DUMPS = uint function(long resource, const(wchar)* processName, uint processId, BOOL isAdd);
+alias PCHANGE_RES_TYPE_PROCESS_FOR_DUMPS = uint function(const(wchar)* resourceTypeName, const(wchar)* processName, uint processId, BOOL isAdd);
+alias PSET_INTERNAL_STATE = uint function(long param0, CLUSTER_RESOURCE_APPLICATION_STATE stateType, BOOL active);
+alias PSET_RESOURCE_LOCKED_MODE_EX_ROUTINE = uint function(long ResourceHandle, BOOL LockedModeEnabled, uint LockedModeReason, uint LockedModeFlags);
+alias PREQUEST_DUMP_ROUTINE = uint function(long ResourceHandle, BOOL DumpDueToCallInProgress, uint DumpDelayInMs);
+alias PSET_RESOURCE_WPR_POLICY_ROUTINE = uint function(long ResourceHandle, uint WprPolicyFlags);
+alias PARM_WPR_WATCHDOG_FOR_CURRENT_RESOURCE_CALL_ROUTINE = uint function(long ResourceHandle, ulong TimeoutInMs);
 struct CLRES_CALLBACK_FUNCTION_TABLE
 {
     PLOG_EVENT_ROUTINE LogEvent;
@@ -3737,7 +3738,7 @@ struct CLRES_CALLBACK_FUNCTION_TABLE
     PSET_RESOURCE_WPR_POLICY_ROUTINE SetResourceWprPolicy;
     PARM_WPR_WATCHDOG_FOR_CURRENT_RESOURCE_CALL_ROUTINE ArmWprWatchdogForCurrentResourceCall;
 }
-alias PSTARTUP_EX_ROUTINE = uint function(const(wchar)*, uint, uint, CLRES_CALLBACK_FUNCTION_TABLE*, CLRES_FUNCTION_TABLE**);
+alias PSTARTUP_EX_ROUTINE = uint function(const(wchar)* ResourceType, uint MinVersionSupported, uint MaxVersionSupported, CLRES_CALLBACK_FUNCTION_TABLE* MonitorCallbackFunctions, CLRES_FUNCTION_TABLE** ResourceDllInterfaceFunctions);
 alias RESOURCE_MONITOR_STATE = int;
 enum : int
 {
@@ -3789,94 +3790,94 @@ struct CLUSTER_HEALTH_FAULT_ARRAY
     uint numFaults;
     CLUSTER_HEALTH_FAULT* faults;
 }
-alias PRESUTIL_START_RESOURCE_SERVICE = uint function(const(wchar)*, SC_HANDLE*);
-alias PRESUTIL_VERIFY_RESOURCE_SERVICE = uint function(const(wchar)*);
-alias PRESUTIL_STOP_RESOURCE_SERVICE = uint function(const(wchar)*);
-alias PRESUTIL_VERIFY_SERVICE = uint function(SC_HANDLE);
-alias PRESUTIL_STOP_SERVICE = uint function(SC_HANDLE);
-alias PRESUTIL_CREATE_DIRECTORY_TREE = uint function(const(wchar)*);
-alias PRESUTIL_IS_PATH_VALID = BOOL function(const(wchar)*);
-alias PRESUTIL_ENUM_PROPERTIES = uint function(const(RESUTIL_PROPERTY_ITEM)*, PWSTR, uint, uint*, uint*);
-alias PRESUTIL_ENUM_PRIVATE_PROPERTIES = uint function(HKEY, PWSTR, uint, uint*, uint*);
-alias PRESUTIL_GET_PROPERTIES = uint function(HKEY, const(RESUTIL_PROPERTY_ITEM)*, void*, uint, uint*, uint*);
-alias PRESUTIL_GET_ALL_PROPERTIES = uint function(HKEY, const(RESUTIL_PROPERTY_ITEM)*, void*, uint, uint*, uint*);
-alias PRESUTIL_GET_PRIVATE_PROPERTIES = uint function(HKEY, void*, uint, uint*, uint*);
-alias PRESUTIL_GET_PROPERTY_SIZE = uint function(HKEY, const(RESUTIL_PROPERTY_ITEM)*, uint*, uint*);
-alias PRESUTIL_GET_PROPERTY = uint function(HKEY, const(RESUTIL_PROPERTY_ITEM)*, void**, uint*);
-alias PRESUTIL_VERIFY_PROPERTY_TABLE = uint function(const(RESUTIL_PROPERTY_ITEM)*, void*, BOOL, const(void)*, uint, ubyte*);
-alias PRESUTIL_SET_PROPERTY_TABLE = uint function(HKEY, const(RESUTIL_PROPERTY_ITEM)*, void*, BOOL, const(void)*, uint, ubyte*);
-alias PRESUTIL_SET_PROPERTY_TABLE_EX = uint function(HKEY, const(RESUTIL_PROPERTY_ITEM)*, void*, BOOL, const(void)*, uint, BOOL, ubyte*);
-alias PRESUTIL_SET_PROPERTY_PARAMETER_BLOCK = uint function(HKEY, const(RESUTIL_PROPERTY_ITEM)*, void*, const(ubyte)*, const(void)*, uint, ubyte*);
-alias PRESUTIL_SET_PROPERTY_PARAMETER_BLOCK_EX = uint function(HKEY, const(RESUTIL_PROPERTY_ITEM)*, void*, const(ubyte)*, const(void)*, uint, BOOL, ubyte*);
-alias PRESUTIL_SET_UNKNOWN_PROPERTIES = uint function(HKEY, const(RESUTIL_PROPERTY_ITEM)*, const(void)*, uint);
-alias PRESUTIL_GET_PROPERTIES_TO_PARAMETER_BLOCK = uint function(HKEY, const(RESUTIL_PROPERTY_ITEM)*, ubyte*, BOOL, PWSTR*);
-alias PRESUTIL_PROPERTY_LIST_FROM_PARAMETER_BLOCK = uint function(const(RESUTIL_PROPERTY_ITEM)*, void*, uint*, const(ubyte)*, uint*, uint*);
-alias PRESUTIL_DUP_PARAMETER_BLOCK = uint function(ubyte*, const(ubyte)*, const(RESUTIL_PROPERTY_ITEM)*);
-alias PRESUTIL_FREE_PARAMETER_BLOCK = void function(ubyte*, const(ubyte)*, const(RESUTIL_PROPERTY_ITEM)*);
-alias PRESUTIL_ADD_UNKNOWN_PROPERTIES = uint function(HKEY, const(RESUTIL_PROPERTY_ITEM)*, void*, uint, uint*, uint*);
-alias PRESUTIL_SET_PRIVATE_PROPERTY_LIST = uint function(HKEY, const(void)*, uint);
-alias PRESUTIL_VERIFY_PRIVATE_PROPERTY_LIST = uint function(const(void)*, uint);
-alias PRESUTIL_DUP_STRING = PWSTR function(const(wchar)*);
-alias PRESUTIL_GET_BINARY_VALUE = uint function(HKEY, const(wchar)*, ubyte**, uint*);
-alias PRESUTIL_GET_SZ_VALUE = PWSTR function(HKEY, const(wchar)*);
-alias PRESUTIL_GET_EXPAND_SZ_VALUE = PWSTR function(HKEY, const(wchar)*, BOOL);
-alias PRESUTIL_GET_DWORD_VALUE = uint function(HKEY, const(wchar)*, uint*, uint);
-alias PRESUTIL_GET_QWORD_VALUE = uint function(HKEY, const(wchar)*, ulong*, ulong);
-alias PRESUTIL_SET_BINARY_VALUE = uint function(HKEY, const(wchar)*, const(ubyte)*, uint, ubyte**, uint*);
-alias PRESUTIL_SET_SZ_VALUE = uint function(HKEY, const(wchar)*, const(wchar)*, PWSTR*);
-alias PRESUTIL_SET_EXPAND_SZ_VALUE = uint function(HKEY, const(wchar)*, const(wchar)*, PWSTR*);
-alias PRESUTIL_SET_MULTI_SZ_VALUE = uint function(HKEY, const(wchar)*, const(wchar)*, uint, PWSTR*, uint*);
-alias PRESUTIL_SET_DWORD_VALUE = uint function(HKEY, const(wchar)*, uint, uint*);
-alias PRESUTIL_SET_QWORD_VALUE = uint function(HKEY, const(wchar)*, ulong, ulong*);
-alias PRESUTIL_GET_BINARY_PROPERTY = uint function(ubyte**, uint*, const(CLUSPROP_BINARY)*, const(ubyte)*, uint, ubyte**, uint*);
-alias PRESUTIL_GET_SZ_PROPERTY = uint function(PWSTR*, const(CLUSPROP_SZ)*, const(wchar)*, ubyte**, uint*);
-alias PRESUTIL_GET_MULTI_SZ_PROPERTY = uint function(PWSTR*, uint*, const(CLUSPROP_SZ)*, const(wchar)*, uint, ubyte**, uint*);
-alias PRESUTIL_GET_DWORD_PROPERTY = uint function(uint*, const(CLUSPROP_DWORD)*, uint, uint, uint, ubyte**, uint*);
-alias PRESUTIL_GET_LONG_PROPERTY = uint function(int*, const(CLUSPROP_LONG)*, int, int, int, ubyte**, uint*);
-alias PRESUTIL_GET_FILETIME_PROPERTY = uint function(FILETIME*, const(CLUSPROP_FILETIME)*, FILETIME, FILETIME, FILETIME, ubyte**, uint*);
-alias PRESUTIL_GET_ENVIRONMENT_WITH_NET_NAME = void* function(HRESOURCE);
-alias PRESUTIL_FREE_ENVIRONMENT = uint function(void*);
-alias PRESUTIL_EXPAND_ENVIRONMENT_STRINGS = PWSTR function(const(wchar)*);
-alias PRESUTIL_SET_RESOURCE_SERVICE_ENVIRONMENT = uint function(const(wchar)*, HRESOURCE, PLOG_EVENT_ROUTINE, long);
-alias PRESUTIL_REMOVE_RESOURCE_SERVICE_ENVIRONMENT = uint function(const(wchar)*, PLOG_EVENT_ROUTINE, long);
-alias PRESUTIL_SET_RESOURCE_SERVICE_START_PARAMETERS = uint function(const(wchar)*, SC_HANDLE, SC_HANDLE*, PLOG_EVENT_ROUTINE, long);
-alias PRESUTIL_FIND_SZ_PROPERTY = uint function(const(void)*, uint, const(wchar)*, PWSTR*);
-alias PRESUTIL_FIND_EXPAND_SZ_PROPERTY = uint function(const(void)*, uint, const(wchar)*, PWSTR*);
-alias PRESUTIL_FIND_EXPANDED_SZ_PROPERTY = uint function(const(void)*, uint, const(wchar)*, PWSTR*);
-alias PRESUTIL_FIND_DWORD_PROPERTY = uint function(const(void)*, uint, const(wchar)*, uint*);
-alias PRESUTIL_FIND_BINARY_PROPERTY = uint function(const(void)*, uint, const(wchar)*, ubyte**, uint*);
-alias PRESUTIL_FIND_MULTI_SZ_PROPERTY = uint function(const(void)*, uint, const(wchar)*, PWSTR*, uint*);
-alias PRESUTIL_FIND_LONG_PROPERTY = uint function(const(void)*, uint, const(wchar)*, int*);
-alias PRESUTIL_FIND_ULARGEINTEGER_PROPERTY = uint function(const(void)*, uint, const(wchar)*, ulong*);
-alias PRESUTIL_FIND_FILETIME_PROPERTY = uint function(const(void)*, uint, const(wchar)*, FILETIME*);
+alias PRESUTIL_START_RESOURCE_SERVICE = uint function(const(wchar)* pszServiceName, SC_HANDLE* phServiceHandle);
+alias PRESUTIL_VERIFY_RESOURCE_SERVICE = uint function(const(wchar)* pszServiceName);
+alias PRESUTIL_STOP_RESOURCE_SERVICE = uint function(const(wchar)* pszServiceName);
+alias PRESUTIL_VERIFY_SERVICE = uint function(SC_HANDLE hServiceHandle);
+alias PRESUTIL_STOP_SERVICE = uint function(SC_HANDLE hServiceHandle);
+alias PRESUTIL_CREATE_DIRECTORY_TREE = uint function(const(wchar)* pszPath);
+alias PRESUTIL_IS_PATH_VALID = BOOL function(const(wchar)* pszPath);
+alias PRESUTIL_ENUM_PROPERTIES = uint function(const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, PWSTR pszOutProperties, uint cbOutPropertiesSize, uint* pcbBytesReturned, uint* pcbRequired);
+alias PRESUTIL_ENUM_PRIVATE_PROPERTIES = uint function(HKEY hkeyClusterKey, PWSTR pszOutProperties, uint cbOutPropertiesSize, uint* pcbBytesReturned, uint* pcbRequired);
+alias PRESUTIL_GET_PROPERTIES = uint function(HKEY hkeyClusterKey, const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, void* pOutPropertyList, uint cbOutPropertyListSize, uint* pcbBytesReturned, uint* pcbRequired);
+alias PRESUTIL_GET_ALL_PROPERTIES = uint function(HKEY hkeyClusterKey, const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, void* pOutPropertyList, uint cbOutPropertyListSize, uint* pcbBytesReturned, uint* pcbRequired);
+alias PRESUTIL_GET_PRIVATE_PROPERTIES = uint function(HKEY hkeyClusterKey, void* pOutPropertyList, uint cbOutPropertyListSize, uint* pcbBytesReturned, uint* pcbRequired);
+alias PRESUTIL_GET_PROPERTY_SIZE = uint function(HKEY hkeyClusterKey, const(RESUTIL_PROPERTY_ITEM)* pPropertyTableItem, uint* pcbOutPropertyListSize, uint* pnPropertyCount);
+alias PRESUTIL_GET_PROPERTY = uint function(HKEY hkeyClusterKey, const(RESUTIL_PROPERTY_ITEM)* pPropertyTableItem, void** pOutPropertyItem, uint* pcbOutPropertyItemSize);
+alias PRESUTIL_VERIFY_PROPERTY_TABLE = uint function(const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, void* Reserved, BOOL bAllowUnknownProperties, const(void)* pInPropertyList, uint cbInPropertyListSize, ubyte* pOutParams);
+alias PRESUTIL_SET_PROPERTY_TABLE = uint function(HKEY hkeyClusterKey, const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, void* Reserved, BOOL bAllowUnknownProperties, const(void)* pInPropertyList, uint cbInPropertyListSize, ubyte* pOutParams);
+alias PRESUTIL_SET_PROPERTY_TABLE_EX = uint function(HKEY hkeyClusterKey, const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, void* Reserved, BOOL bAllowUnknownProperties, const(void)* pInPropertyList, uint cbInPropertyListSize, BOOL bForceWrite, ubyte* pOutParams);
+alias PRESUTIL_SET_PROPERTY_PARAMETER_BLOCK = uint function(HKEY hkeyClusterKey, const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, void* Reserved, const(ubyte)* pInParams, const(void)* pInPropertyList, uint cbInPropertyListSize, ubyte* pOutParams);
+alias PRESUTIL_SET_PROPERTY_PARAMETER_BLOCK_EX = uint function(HKEY hkeyClusterKey, const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, void* Reserved, const(ubyte)* pInParams, const(void)* pInPropertyList, uint cbInPropertyListSize, BOOL bForceWrite, ubyte* pOutParams);
+alias PRESUTIL_SET_UNKNOWN_PROPERTIES = uint function(HKEY hkeyClusterKey, const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, const(void)* pInPropertyList, uint cbInPropertyListSize);
+alias PRESUTIL_GET_PROPERTIES_TO_PARAMETER_BLOCK = uint function(HKEY hkeyClusterKey, const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, ubyte* pOutParams, BOOL bCheckForRequiredProperties, PWSTR* pszNameOfPropInError);
+alias PRESUTIL_PROPERTY_LIST_FROM_PARAMETER_BLOCK = uint function(const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, void* pOutPropertyList, uint* pcbOutPropertyListSize, const(ubyte)* pInParams, uint* pcbBytesReturned, uint* pcbRequired);
+alias PRESUTIL_DUP_PARAMETER_BLOCK = uint function(ubyte* pOutParams, const(ubyte)* pInParams, const(RESUTIL_PROPERTY_ITEM)* pPropertyTable);
+alias PRESUTIL_FREE_PARAMETER_BLOCK = void function(ubyte* pOutParams, const(ubyte)* pInParams, const(RESUTIL_PROPERTY_ITEM)* pPropertyTable);
+alias PRESUTIL_ADD_UNKNOWN_PROPERTIES = uint function(HKEY hkeyClusterKey, const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, void* pOutPropertyList, uint pcbOutPropertyListSize, uint* pcbBytesReturned, uint* pcbRequired);
+alias PRESUTIL_SET_PRIVATE_PROPERTY_LIST = uint function(HKEY hkeyClusterKey, const(void)* pInPropertyList, uint cbInPropertyListSize);
+alias PRESUTIL_VERIFY_PRIVATE_PROPERTY_LIST = uint function(const(void)* pInPropertyList, uint cbInPropertyListSize);
+alias PRESUTIL_DUP_STRING = PWSTR function(const(wchar)* pszInString);
+alias PRESUTIL_GET_BINARY_VALUE = uint function(HKEY hkeyClusterKey, const(wchar)* pszValueName, ubyte** ppbOutValue, uint* pcbOutValueSize);
+alias PRESUTIL_GET_SZ_VALUE = PWSTR function(HKEY hkeyClusterKey, const(wchar)* pszValueName);
+alias PRESUTIL_GET_EXPAND_SZ_VALUE = PWSTR function(HKEY hkeyClusterKey, const(wchar)* pszValueName, BOOL bExpand);
+alias PRESUTIL_GET_DWORD_VALUE = uint function(HKEY hkeyClusterKey, const(wchar)* pszValueName, uint* pdwOutValue, uint dwDefaultValue);
+alias PRESUTIL_GET_QWORD_VALUE = uint function(HKEY hkeyClusterKey, const(wchar)* pszValueName, ulong* pqwOutValue, ulong qwDefaultValue);
+alias PRESUTIL_SET_BINARY_VALUE = uint function(HKEY hkeyClusterKey, const(wchar)* pszValueName, const(ubyte)* pbNewValue, uint cbNewValueSize, ubyte** ppbOutValue, uint* pcbOutValueSize);
+alias PRESUTIL_SET_SZ_VALUE = uint function(HKEY hkeyClusterKey, const(wchar)* pszValueName, const(wchar)* pszNewValue, PWSTR* ppszOutString);
+alias PRESUTIL_SET_EXPAND_SZ_VALUE = uint function(HKEY hkeyClusterKey, const(wchar)* pszValueName, const(wchar)* pszNewValue, PWSTR* ppszOutString);
+alias PRESUTIL_SET_MULTI_SZ_VALUE = uint function(HKEY hkeyClusterKey, const(wchar)* pszValueName, const(wchar)* pszNewValue, uint cbNewValueSize, PWSTR* ppszOutValue, uint* pcbOutValueSize);
+alias PRESUTIL_SET_DWORD_VALUE = uint function(HKEY hkeyClusterKey, const(wchar)* pszValueName, uint dwNewValue, uint* pdwOutValue);
+alias PRESUTIL_SET_QWORD_VALUE = uint function(HKEY hkeyClusterKey, const(wchar)* pszValueName, ulong qwNewValue, ulong* pqwOutValue);
+alias PRESUTIL_GET_BINARY_PROPERTY = uint function(ubyte** ppbOutValue, uint* pcbOutValueSize, const(CLUSPROP_BINARY)* pValueStruct, const(ubyte)* pbOldValue, uint cbOldValueSize, ubyte** ppPropertyList, uint* pcbPropertyListSize);
+alias PRESUTIL_GET_SZ_PROPERTY = uint function(PWSTR* ppszOutValue, const(CLUSPROP_SZ)* pValueStruct, const(wchar)* pszOldValue, ubyte** ppPropertyList, uint* pcbPropertyListSize);
+alias PRESUTIL_GET_MULTI_SZ_PROPERTY = uint function(PWSTR* ppszOutValue, uint* pcbOutValueSize, const(CLUSPROP_SZ)* pValueStruct, const(wchar)* pszOldValue, uint cbOldValueSize, ubyte** ppPropertyList, uint* pcbPropertyListSize);
+alias PRESUTIL_GET_DWORD_PROPERTY = uint function(uint* pdwOutValue, const(CLUSPROP_DWORD)* pValueStruct, uint dwOldValue, uint dwMinimum, uint dwMaximum, ubyte** ppPropertyList, uint* pcbPropertyListSize);
+alias PRESUTIL_GET_LONG_PROPERTY = uint function(int* plOutValue, const(CLUSPROP_LONG)* pValueStruct, int lOldValue, int lMinimum, int lMaximum, ubyte** ppPropertyList, uint* pcbPropertyListSize);
+alias PRESUTIL_GET_FILETIME_PROPERTY = uint function(FILETIME* pftOutValue, const(CLUSPROP_FILETIME)* pValueStruct, FILETIME ftOldValue, FILETIME ftMinimum, FILETIME ftMaximum, ubyte** ppPropertyList, uint* pcbPropertyListSize);
+alias PRESUTIL_GET_ENVIRONMENT_WITH_NET_NAME = void* function(HRESOURCE hResource);
+alias PRESUTIL_FREE_ENVIRONMENT = uint function(void* lpEnvironment);
+alias PRESUTIL_EXPAND_ENVIRONMENT_STRINGS = PWSTR function(const(wchar)* pszSrc);
+alias PRESUTIL_SET_RESOURCE_SERVICE_ENVIRONMENT = uint function(const(wchar)* pszServiceName, HRESOURCE hResource, PLOG_EVENT_ROUTINE pfnLogEvent, long hResourceHandle);
+alias PRESUTIL_REMOVE_RESOURCE_SERVICE_ENVIRONMENT = uint function(const(wchar)* pszServiceName, PLOG_EVENT_ROUTINE pfnLogEvent, long hResourceHandle);
+alias PRESUTIL_SET_RESOURCE_SERVICE_START_PARAMETERS = uint function(const(wchar)* pszServiceName, SC_HANDLE schSCMHandle, SC_HANDLE* phService, PLOG_EVENT_ROUTINE pfnLogEvent, long hResourceHandle);
+alias PRESUTIL_FIND_SZ_PROPERTY = uint function(const(void)* pPropertyList, uint cbPropertyListSize, const(wchar)* pszPropertyName, PWSTR* pszPropertyValue);
+alias PRESUTIL_FIND_EXPAND_SZ_PROPERTY = uint function(const(void)* pPropertyList, uint cbPropertyListSize, const(wchar)* pszPropertyName, PWSTR* pszPropertyValue);
+alias PRESUTIL_FIND_EXPANDED_SZ_PROPERTY = uint function(const(void)* pPropertyList, uint cbPropertyListSize, const(wchar)* pszPropertyName, PWSTR* pszPropertyValue);
+alias PRESUTIL_FIND_DWORD_PROPERTY = uint function(const(void)* pPropertyList, uint cbPropertyListSize, const(wchar)* pszPropertyName, uint* pdwPropertyValue);
+alias PRESUTIL_FIND_BINARY_PROPERTY = uint function(const(void)* pPropertyList, uint cbPropertyListSize, const(wchar)* pszPropertyName, ubyte** pbPropertyValue, uint* pcbPropertyValueSize);
+alias PRESUTIL_FIND_MULTI_SZ_PROPERTY = uint function(const(void)* pPropertyList, uint cbPropertyListSize, const(wchar)* pszPropertyName, PWSTR* pszPropertyValue, uint* pcbPropertyValueSize);
+alias PRESUTIL_FIND_LONG_PROPERTY = uint function(const(void)* pPropertyList, uint cbPropertyListSize, const(wchar)* pszPropertyName, int* plPropertyValue);
+alias PRESUTIL_FIND_ULARGEINTEGER_PROPERTY = uint function(const(void)* pPropertyList, uint cbPropertyListSize, const(wchar)* pszPropertyName, ulong* plPropertyValue);
+alias PRESUTIL_FIND_FILETIME_PROPERTY = uint function(const(void)* pPropertyList, uint cbPropertyListSize, const(wchar)* pszPropertyName, FILETIME* pftPropertyValue);
 struct CLUS_WORKER
 {
     HANDLE hThread;
     BOOL Terminate;
 }
-alias PWORKER_START_ROUTINE = uint function(CLUS_WORKER*, void*);
-alias PCLUSAPI_CLUS_WORKER_CREATE = uint function(CLUS_WORKER*, PWORKER_START_ROUTINE, void*);
-alias PCLUSAPIClusWorkerCheckTerminate = BOOL function(CLUS_WORKER*);
-alias PCLUSAPI_CLUS_WORKER_TERMINATE = void function(CLUS_WORKER*);
-alias LPRESOURCE_CALLBACK = uint function(HRESOURCE, HRESOURCE, void*);
-alias LPRESOURCE_CALLBACK_EX = uint function(HCLUSTER, HRESOURCE, HRESOURCE, void*);
-alias LPGROUP_CALLBACK_EX = uint function(HCLUSTER, HGROUP, HGROUP, void*);
-alias LPNODE_CALLBACK = uint function(HCLUSTER, HNODE, CLUSTER_NODE_STATE, void*);
-alias PRESUTIL_RESOURCES_EQUAL = BOOL function(HRESOURCE, HRESOURCE);
-alias PRESUTIL_RESOURCE_TYPES_EQUAL = BOOL function(const(wchar)*, HRESOURCE);
-alias PRESUTIL_IS_RESOURCE_CLASS_EQUAL = BOOL function(CLUS_RESOURCE_CLASS_INFO*, HRESOURCE);
-alias PRESUTIL_ENUM_RESOURCES = uint function(HRESOURCE, const(wchar)*, LPRESOURCE_CALLBACK, void*);
-alias PRESUTIL_ENUM_RESOURCES_EX = uint function(HCLUSTER, HRESOURCE, const(wchar)*, LPRESOURCE_CALLBACK_EX, void*);
-alias PRESUTIL_GET_RESOURCE_DEPENDENCY = HRESOURCE function(HANDLE, const(wchar)*);
-alias PRESUTIL_GET_RESOURCE_DEPENDENCY_BY_NAME = HRESOURCE function(HCLUSTER, HANDLE, const(wchar)*, BOOL);
-alias PRESUTIL_GET_RESOURCE_DEPENDENCY_BY_CLASS = HRESOURCE function(HCLUSTER, HANDLE, CLUS_RESOURCE_CLASS_INFO*, BOOL);
-alias PRESUTIL_GET_RESOURCE_NAME_DEPENDENCY = HRESOURCE function(const(wchar)*, const(wchar)*);
-alias PRESUTIL_GET_RESOURCE_DEPENDENTIP_ADDRESS_PROPS = uint function(HRESOURCE, PWSTR, uint*, PWSTR, uint*, PWSTR, uint*);
-alias PRESUTIL_FIND_DEPENDENT_DISK_RESOURCE_DRIVE_LETTER = uint function(HCLUSTER, HRESOURCE, PWSTR, uint*);
-alias PRESUTIL_TERMINATE_SERVICE_PROCESS_FROM_RES_DLL = uint function(uint, BOOL, uint*, PLOG_EVENT_ROUTINE, long);
-alias PRESUTIL_GET_PROPERTY_FORMATS = uint function(const(RESUTIL_PROPERTY_ITEM)*, void*, uint, uint*, uint*);
-alias PRESUTIL_GET_CORE_CLUSTER_RESOURCES = uint function(HCLUSTER, HRESOURCE*, HRESOURCE*, HRESOURCE*);
-alias PRESUTIL_GET_RESOURCE_NAME = uint function(HRESOURCE, PWSTR, uint*);
+alias PWORKER_START_ROUTINE = uint function(CLUS_WORKER* pWorker, void* lpThreadParameter);
+alias PCLUSAPI_CLUS_WORKER_CREATE = uint function(CLUS_WORKER* lpWorker, PWORKER_START_ROUTINE lpStartAddress, void* lpParameter);
+alias PCLUSAPIClusWorkerCheckTerminate = BOOL function(CLUS_WORKER* lpWorker);
+alias PCLUSAPI_CLUS_WORKER_TERMINATE = void function(CLUS_WORKER* lpWorker);
+alias LPRESOURCE_CALLBACK = uint function(HRESOURCE param0, HRESOURCE param1, void* param2);
+alias LPRESOURCE_CALLBACK_EX = uint function(HCLUSTER param0, HRESOURCE param1, HRESOURCE param2, void* param3);
+alias LPGROUP_CALLBACK_EX = uint function(HCLUSTER param0, HGROUP param1, HGROUP param2, void* param3);
+alias LPNODE_CALLBACK = uint function(HCLUSTER param0, HNODE param1, CLUSTER_NODE_STATE param2, void* param3);
+alias PRESUTIL_RESOURCES_EQUAL = BOOL function(HRESOURCE hSelf, HRESOURCE hResource);
+alias PRESUTIL_RESOURCE_TYPES_EQUAL = BOOL function(const(wchar)* lpszResourceTypeName, HRESOURCE hResource);
+alias PRESUTIL_IS_RESOURCE_CLASS_EQUAL = BOOL function(CLUS_RESOURCE_CLASS_INFO* prci, HRESOURCE hResource);
+alias PRESUTIL_ENUM_RESOURCES = uint function(HRESOURCE hSelf, const(wchar)* lpszResTypeName, LPRESOURCE_CALLBACK pResCallBack, void* pParameter);
+alias PRESUTIL_ENUM_RESOURCES_EX = uint function(HCLUSTER hCluster, HRESOURCE hSelf, const(wchar)* lpszResTypeName, LPRESOURCE_CALLBACK_EX pResCallBack, void* pParameter);
+alias PRESUTIL_GET_RESOURCE_DEPENDENCY = HRESOURCE function(HANDLE hSelf, const(wchar)* lpszResourceType);
+alias PRESUTIL_GET_RESOURCE_DEPENDENCY_BY_NAME = HRESOURCE function(HCLUSTER hCluster, HANDLE hSelf, const(wchar)* lpszResourceType, BOOL bRecurse);
+alias PRESUTIL_GET_RESOURCE_DEPENDENCY_BY_CLASS = HRESOURCE function(HCLUSTER hCluster, HANDLE hSelf, CLUS_RESOURCE_CLASS_INFO* prci, BOOL bRecurse);
+alias PRESUTIL_GET_RESOURCE_NAME_DEPENDENCY = HRESOURCE function(const(wchar)* lpszResourceName, const(wchar)* lpszResourceType);
+alias PRESUTIL_GET_RESOURCE_DEPENDENTIP_ADDRESS_PROPS = uint function(HRESOURCE hResource, PWSTR pszAddress, uint* pcchAddress, PWSTR pszSubnetMask, uint* pcchSubnetMask, PWSTR pszNetwork, uint* pcchNetwork);
+alias PRESUTIL_FIND_DEPENDENT_DISK_RESOURCE_DRIVE_LETTER = uint function(HCLUSTER hCluster, HRESOURCE hResource, PWSTR pszDriveLetter, uint* pcchDriveLetter);
+alias PRESUTIL_TERMINATE_SERVICE_PROCESS_FROM_RES_DLL = uint function(uint dwServicePid, BOOL bOffline, uint* pdwResourceState, PLOG_EVENT_ROUTINE pfnLogEvent, long hResourceHandle);
+alias PRESUTIL_GET_PROPERTY_FORMATS = uint function(const(RESUTIL_PROPERTY_ITEM)* pPropertyTable, void* pOutPropertyFormatList, uint cbPropertyFormatListSize, uint* pcbBytesReturned, uint* pcbRequired);
+alias PRESUTIL_GET_CORE_CLUSTER_RESOURCES = uint function(HCLUSTER hCluster, HRESOURCE* phClusterNameResource, HRESOURCE* phClusterIPAddressResource, HRESOURCE* phClusterQuorumResource);
+alias PRESUTIL_GET_RESOURCE_NAME = uint function(HRESOURCE hResource, PWSTR pszResourceName, uint* pcchResourceNameInOut);
 alias CLUSTER_ROLE = int;
 enum : int
 {
@@ -3922,25 +3923,25 @@ enum : int
     ClusterRoleUnclustered = 0x00000001,
 }
 
-alias PCLUSTER_IS_PATH_ON_SHARED_VOLUME = BOOL function(const(wchar)*);
-alias PCLUSTER_GET_VOLUME_PATH_NAME = BOOL function(const(wchar)*, PWSTR, uint);
-alias PCLUSTER_GET_VOLUME_NAME_FOR_VOLUME_MOUNT_POINT = BOOL function(const(wchar)*, PWSTR, uint);
-alias PCLUSTER_PREPARE_SHARED_VOLUME_FOR_BACKUP = uint function(const(wchar)*, PWSTR, uint*, PWSTR, uint*);
-alias PCLUSTER_CLEAR_BACKUP_STATE_FOR_SHARED_VOLUME = uint function(const(wchar)*);
-alias PRESUTIL_SET_RESOURCE_SERVICE_START_PARAMETERS_EX = uint function(const(wchar)*, SC_HANDLE, SC_HANDLE*, uint, PLOG_EVENT_ROUTINE, long);
-alias PRESUTIL_ENUM_RESOURCES_EX2 = uint function(HCLUSTER, HRESOURCE, const(wchar)*, LPRESOURCE_CALLBACK_EX, void*, uint);
-alias PRESUTIL_GET_RESOURCE_DEPENDENCY_EX = HRESOURCE function(HANDLE, const(wchar)*, uint);
-alias PRESUTIL_GET_RESOURCE_DEPENDENCY_BY_NAME_EX = HRESOURCE function(HCLUSTER, HANDLE, const(wchar)*, BOOL, uint);
-alias PRESUTIL_GET_RESOURCE_DEPENDENCY_BY_CLASS_EX = HRESOURCE function(HCLUSTER, HANDLE, CLUS_RESOURCE_CLASS_INFO*, BOOL, uint);
-alias PRESUTIL_GET_RESOURCE_NAME_DEPENDENCY_EX = HRESOURCE function(const(wchar)*, const(wchar)*, uint);
-alias PRESUTIL_GET_CORE_CLUSTER_RESOURCES_EX = uint function(HCLUSTER, HRESOURCE*, HRESOURCE*, HRESOURCE*, uint);
-alias POPEN_CLUSTER_CRYPT_PROVIDER = HCLUSCRYPTPROVIDER function(const(wchar)*, byte*, uint, uint);
-alias POPEN_CLUSTER_CRYPT_PROVIDEREX = HCLUSCRYPTPROVIDER function(const(wchar)*, const(wchar)*, byte*, uint, uint);
-alias PCLOSE_CLUSTER_CRYPT_PROVIDER = uint function(HCLUSCRYPTPROVIDER);
-alias PCLUSTER_ENCRYPT = uint function(HCLUSCRYPTPROVIDER, ubyte*, uint, ubyte**, uint*);
-alias PCLUSTER_DECRYPT = uint function(HCLUSCRYPTPROVIDER, ubyte*, uint, ubyte**, uint*);
-alias PFREE_CLUSTER_CRYPT = uint function(void*);
-alias PRES_UTIL_VERIFY_SHUTDOWN_SAFE = uint function(uint, uint, uint*);
+alias PCLUSTER_IS_PATH_ON_SHARED_VOLUME = BOOL function(const(wchar)* lpszPathName);
+alias PCLUSTER_GET_VOLUME_PATH_NAME = BOOL function(const(wchar)* lpszFileName, PWSTR lpszVolumePathName, uint cchBufferLength);
+alias PCLUSTER_GET_VOLUME_NAME_FOR_VOLUME_MOUNT_POINT = BOOL function(const(wchar)* lpszVolumeMountPoint, PWSTR lpszVolumeName, uint cchBufferLength);
+alias PCLUSTER_PREPARE_SHARED_VOLUME_FOR_BACKUP = uint function(const(wchar)* lpszFileName, PWSTR lpszVolumePathName, uint* lpcchVolumePathName, PWSTR lpszVolumeName, uint* lpcchVolumeName);
+alias PCLUSTER_CLEAR_BACKUP_STATE_FOR_SHARED_VOLUME = uint function(const(wchar)* lpszVolumePathName);
+alias PRESUTIL_SET_RESOURCE_SERVICE_START_PARAMETERS_EX = uint function(const(wchar)* pszServiceName, SC_HANDLE schSCMHandle, SC_HANDLE* phService, uint dwDesiredAccess, PLOG_EVENT_ROUTINE pfnLogEvent, long hResourceHandle);
+alias PRESUTIL_ENUM_RESOURCES_EX2 = uint function(HCLUSTER hCluster, HRESOURCE hSelf, const(wchar)* lpszResTypeName, LPRESOURCE_CALLBACK_EX pResCallBack, void* pParameter, uint dwDesiredAccess);
+alias PRESUTIL_GET_RESOURCE_DEPENDENCY_EX = HRESOURCE function(HANDLE hSelf, const(wchar)* lpszResourceType, uint dwDesiredAccess);
+alias PRESUTIL_GET_RESOURCE_DEPENDENCY_BY_NAME_EX = HRESOURCE function(HCLUSTER hCluster, HANDLE hSelf, const(wchar)* lpszResourceType, BOOL bRecurse, uint dwDesiredAccess);
+alias PRESUTIL_GET_RESOURCE_DEPENDENCY_BY_CLASS_EX = HRESOURCE function(HCLUSTER hCluster, HANDLE hSelf, CLUS_RESOURCE_CLASS_INFO* prci, BOOL bRecurse, uint dwDesiredAccess);
+alias PRESUTIL_GET_RESOURCE_NAME_DEPENDENCY_EX = HRESOURCE function(const(wchar)* lpszResourceName, const(wchar)* lpszResourceType, uint dwDesiredAccess);
+alias PRESUTIL_GET_CORE_CLUSTER_RESOURCES_EX = uint function(HCLUSTER hClusterIn, HRESOURCE* phClusterNameResourceOut, HRESOURCE* phClusterIPAddressResourceOut, HRESOURCE* phClusterQuorumResourceOut, uint dwDesiredAccess);
+alias POPEN_CLUSTER_CRYPT_PROVIDER = HCLUSCRYPTPROVIDER function(const(wchar)* lpszResource, byte* lpszProvider, uint dwType, uint dwFlags);
+alias POPEN_CLUSTER_CRYPT_PROVIDEREX = HCLUSCRYPTPROVIDER function(const(wchar)* lpszResource, const(wchar)* lpszKeyname, byte* lpszProvider, uint dwType, uint dwFlags);
+alias PCLOSE_CLUSTER_CRYPT_PROVIDER = uint function(HCLUSCRYPTPROVIDER hClusCryptProvider);
+alias PCLUSTER_ENCRYPT = uint function(HCLUSCRYPTPROVIDER hClusCryptProvider, ubyte* pData, uint cbData, ubyte** ppData, uint* pcbData);
+alias PCLUSTER_DECRYPT = uint function(HCLUSCRYPTPROVIDER hClusCryptProvider, ubyte* pCryptInput, uint cbCryptInput, ubyte** ppCryptOutput, uint* pcbCryptOutput);
+alias PFREE_CLUSTER_CRYPT = uint function(void* pCryptInfo);
+alias PRES_UTIL_VERIFY_SHUTDOWN_SAFE = uint function(uint flags, uint reason, uint* pResult);
 struct PaxosTagCStruct
 {
     ulong __padding__PaxosTagVtable;
@@ -3968,11 +3969,11 @@ struct WitnessTagHelper
     int Version;
     PaxosTagCStruct paxosToValidate;
 }
-alias PREGISTER_APPINSTANCE = uint function(HANDLE, GUID*, BOOL);
-alias PREGISTER_APPINSTANCE_VERSION = uint function(GUID*, ulong, ulong);
-alias PQUERY_APPINSTANCE_VERSION = uint function(GUID*, ulong*, ulong*, NTSTATUS*);
+alias PREGISTER_APPINSTANCE = uint function(HANDLE ProcessHandle, GUID* AppInstanceId, BOOL ChildrenInheritAppInstance);
+alias PREGISTER_APPINSTANCE_VERSION = uint function(GUID* AppInstanceId, ulong InstanceVersionHigh, ulong InstanceVersionLow);
+alias PQUERY_APPINSTANCE_VERSION = uint function(GUID* AppInstanceId, ulong* InstanceVersionHigh, ulong* InstanceVersionLow, NTSTATUS* VersionStatus);
 alias PRESET_ALL_APPINSTANCE_VERSIONS = uint function();
-alias SET_APP_INSTANCE_CSV_FLAGS = uint function(HANDLE, uint, uint);
+alias SET_APP_INSTANCE_CSV_FLAGS = uint function(HANDLE ProcessHandle, uint Mask, uint Flags);
 alias CLUADMEX_OBJECT_TYPE = int;
 enum : int
 {
@@ -3989,7 +3990,7 @@ enum : int
 enum IID_IGetClusterUIInfo = GUID(0x97dede50, 0xfc6b, 0x11cf, [0xb5, 0xf5, 0x0, 0xa0, 0xc9, 0xa, 0xb5, 0x5]);
 interface IGetClusterUIInfo : IUnknown
 {
-    HRESULT GetClusterName(BSTR, int*);
+    HRESULT GetClusterName(BSTR lpszName, int* pcchName);
     uint GetLocale();
     HFONT GetFont();
     HICON GetIcon();
@@ -3997,89 +3998,89 @@ interface IGetClusterUIInfo : IUnknown
 enum IID_IGetClusterDataInfo = GUID(0x97dede51, 0xfc6b, 0x11cf, [0xb5, 0xf5, 0x0, 0xa0, 0xc9, 0xa, 0xb5, 0x5]);
 interface IGetClusterDataInfo : IUnknown
 {
-    HRESULT GetClusterName(BSTR, int*);
+    HRESULT GetClusterName(BSTR lpszName, int* pcchName);
     HCLUSTER GetClusterHandle();
     int GetObjectCount();
 }
 enum IID_IGetClusterObjectInfo = GUID(0x97dede52, 0xfc6b, 0x11cf, [0xb5, 0xf5, 0x0, 0xa0, 0xc9, 0xa, 0xb5, 0x5]);
 interface IGetClusterObjectInfo : IUnknown
 {
-    HRESULT GetObjectName(int, BSTR, int*);
-    CLUADMEX_OBJECT_TYPE GetObjectType(int);
+    HRESULT GetObjectName(int lObjIndex, BSTR lpszName, int* pcchName);
+    CLUADMEX_OBJECT_TYPE GetObjectType(int lObjIndex);
 }
 enum IID_IGetClusterNodeInfo = GUID(0x97dede53, 0xfc6b, 0x11cf, [0xb5, 0xf5, 0x0, 0xa0, 0xc9, 0xa, 0xb5, 0x5]);
 interface IGetClusterNodeInfo : IUnknown
 {
-    HNODE GetNodeHandle(int);
+    HNODE GetNodeHandle(int lObjIndex);
 }
 enum IID_IGetClusterGroupInfo = GUID(0x97dede54, 0xfc6b, 0x11cf, [0xb5, 0xf5, 0x0, 0xa0, 0xc9, 0xa, 0xb5, 0x5]);
 interface IGetClusterGroupInfo : IUnknown
 {
-    HGROUP GetGroupHandle(int);
+    HGROUP GetGroupHandle(int lObjIndex);
 }
 enum IID_IGetClusterResourceInfo = GUID(0x97dede55, 0xfc6b, 0x11cf, [0xb5, 0xf5, 0x0, 0xa0, 0xc9, 0xa, 0xb5, 0x5]);
 interface IGetClusterResourceInfo : IUnknown
 {
-    HRESOURCE GetResourceHandle(int);
-    HRESULT GetResourceTypeName(int, BSTR, int*);
-    BOOL GetResourceNetworkName(int, BSTR, uint*);
+    HRESOURCE GetResourceHandle(int lObjIndex);
+    HRESULT GetResourceTypeName(int lObjIndex, BSTR lpszResTypeName, int* pcchResTypeName);
+    BOOL GetResourceNetworkName(int lObjIndex, BSTR lpszNetName, uint* pcchNetName);
 }
 enum IID_IGetClusterNetworkInfo = GUID(0x97dede56, 0xfc6b, 0x11cf, [0xb5, 0xf5, 0x0, 0xa0, 0xc9, 0xa, 0xb5, 0x5]);
 interface IGetClusterNetworkInfo : IUnknown
 {
-    HNETWORK GetNetworkHandle(int);
+    HNETWORK GetNetworkHandle(int lObjIndex);
 }
 enum IID_IGetClusterNetInterfaceInfo = GUID(0x97dede57, 0xfc6b, 0x11cf, [0xb5, 0xf5, 0x0, 0xa0, 0xc9, 0xa, 0xb5, 0x5]);
 interface IGetClusterNetInterfaceInfo : IUnknown
 {
-    HNETINTERFACE GetNetInterfaceHandle(int);
+    HNETINTERFACE GetNetInterfaceHandle(int lObjIndex);
 }
 enum IID_IWCPropertySheetCallback = GUID(0x97dede60, 0xfc6b, 0x11cf, [0xb5, 0xf5, 0x0, 0xa0, 0xc9, 0xa, 0xb5, 0x5]);
 interface IWCPropertySheetCallback : IUnknown
 {
-    HRESULT AddPropertySheetPage(int*);
+    HRESULT AddPropertySheetPage(int* hpage);
 }
 enum IID_IWEExtendPropertySheet = GUID(0x97dede61, 0xfc6b, 0x11cf, [0xb5, 0xf5, 0x0, 0xa0, 0xc9, 0xa, 0xb5, 0x5]);
 interface IWEExtendPropertySheet : IUnknown
 {
-    HRESULT CreatePropertySheetPages(IUnknown, IWCPropertySheetCallback);
+    HRESULT CreatePropertySheetPages(IUnknown piData, IWCPropertySheetCallback piCallback);
 }
 enum IID_IWCWizardCallback = GUID(0x97dede62, 0xfc6b, 0x11cf, [0xb5, 0xf5, 0x0, 0xa0, 0xc9, 0xa, 0xb5, 0x5]);
 interface IWCWizardCallback : IUnknown
 {
-    HRESULT AddWizardPage(int*);
-    HRESULT EnableNext(int*, BOOL);
+    HRESULT AddWizardPage(int* hpage);
+    HRESULT EnableNext(int* hpage, BOOL bEnable);
 }
 enum IID_IWEExtendWizard = GUID(0x97dede63, 0xfc6b, 0x11cf, [0xb5, 0xf5, 0x0, 0xa0, 0xc9, 0xa, 0xb5, 0x5]);
 interface IWEExtendWizard : IUnknown
 {
-    HRESULT CreateWizardPages(IUnknown, IWCWizardCallback);
+    HRESULT CreateWizardPages(IUnknown piData, IWCWizardCallback piCallback);
 }
 enum IID_IWCContextMenuCallback = GUID(0x97dede64, 0xfc6b, 0x11cf, [0xb5, 0xf5, 0x0, 0xa0, 0xc9, 0xa, 0xb5, 0x5]);
 interface IWCContextMenuCallback : IUnknown
 {
-    HRESULT AddExtensionMenuItem(BSTR, BSTR, uint, uint, uint);
+    HRESULT AddExtensionMenuItem(BSTR lpszName, BSTR lpszStatusBarText, uint nCommandID, uint nSubmenuCommandID, uint uFlags);
 }
 enum IID_IWEExtendContextMenu = GUID(0x97dede65, 0xfc6b, 0x11cf, [0xb5, 0xf5, 0x0, 0xa0, 0xc9, 0xa, 0xb5, 0x5]);
 interface IWEExtendContextMenu : IUnknown
 {
-    HRESULT AddContextMenuItems(IUnknown, IWCContextMenuCallback);
+    HRESULT AddContextMenuItems(IUnknown piData, IWCContextMenuCallback piCallback);
 }
 enum IID_IWEInvokeCommand = GUID(0x97dede66, 0xfc6b, 0x11cf, [0xb5, 0xf5, 0x0, 0xa0, 0xc9, 0xa, 0xb5, 0x5]);
 interface IWEInvokeCommand : IUnknown
 {
-    HRESULT InvokeCommand(uint, IUnknown);
+    HRESULT InvokeCommand(uint nCommandID, IUnknown piData);
 }
 enum IID_IWCWizard97Callback = GUID(0x97dede67, 0xfc6b, 0x11cf, [0xb5, 0xf5, 0x0, 0xa0, 0xc9, 0xa, 0xb5, 0x5]);
 interface IWCWizard97Callback : IUnknown
 {
-    HRESULT AddWizard97Page(int*);
-    HRESULT EnableNext(int*, BOOL);
+    HRESULT AddWizard97Page(int* hpage);
+    HRESULT EnableNext(int* hpage, BOOL bEnable);
 }
 enum IID_IWEExtendWizard97 = GUID(0x97dede68, 0xfc6b, 0x11cf, [0xb5, 0xf5, 0x0, 0xa0, 0xc9, 0xa, 0xb5, 0x5]);
 interface IWEExtendWizard97 : IUnknown
 {
-    HRESULT CreateWizard97Pages(IUnknown, IWCWizard97Callback);
+    HRESULT CreateWizard97Pages(IUnknown piData, IWCWizard97Callback piCallback);
 }
 enum CLSID_ClusApplication = GUID(0xf2e606e5, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 struct ClusApplication
@@ -4244,464 +4245,464 @@ struct ClusResDependents
 enum IID_ISClusApplication = GUID(0xf2e606e6, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusApplication : IDispatch
 {
-    HRESULT get_DomainNames(ISDomainNames*);
-    HRESULT get_ClusterNames(BSTR, ISClusterNames*);
-    HRESULT OpenCluster(BSTR, ISCluster*);
+    HRESULT get_DomainNames(ISDomainNames* ppDomains);
+    HRESULT get_ClusterNames(BSTR bstrDomainName, ISClusterNames* ppClusters);
+    HRESULT OpenCluster(BSTR bstrClusterName, ISCluster* pCluster);
 }
 enum IID_ISDomainNames = GUID(0xf2e606e2, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISDomainNames : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
     HRESULT Refresh();
-    HRESULT get_Item(VARIANT, BSTR*);
+    HRESULT get_Item(VARIANT varIndex, BSTR* pbstrDomainName);
 }
 enum IID_ISClusterNames = GUID(0xf2e606ec, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusterNames : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
     HRESULT Refresh();
-    HRESULT get_Item(VARIANT, BSTR*);
-    HRESULT get_DomainName(BSTR*);
+    HRESULT get_Item(VARIANT varIndex, BSTR* pbstrClusterName);
+    HRESULT get_DomainName(BSTR* pbstrDomainName);
 }
 enum IID_ISClusRefObject = GUID(0xf2e60702, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusRefObject : IDispatch
 {
-    HRESULT get_Handle(ulong*);
+    HRESULT get_Handle(ulong* phandle);
 }
 enum IID_ISClusVersion = GUID(0xf2e60716, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusVersion : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_MajorVersion(int*);
-    HRESULT get_MinorVersion(int*);
-    HRESULT get_BuildNumber(short*);
-    HRESULT get_VendorId(BSTR*);
-    HRESULT get_CSDVersion(BSTR*);
-    HRESULT get_ClusterHighestVersion(int*);
-    HRESULT get_ClusterLowestVersion(int*);
-    HRESULT get_Flags(int*);
-    HRESULT get_MixedVersion(VARIANT*);
+    HRESULT get_Name(BSTR* pbstrClusterName);
+    HRESULT get_MajorVersion(int* pnMajorVersion);
+    HRESULT get_MinorVersion(int* pnMinorVersion);
+    HRESULT get_BuildNumber(short* pnBuildNumber);
+    HRESULT get_VendorId(BSTR* pbstrVendorId);
+    HRESULT get_CSDVersion(BSTR* pbstrCSDVersion);
+    HRESULT get_ClusterHighestVersion(int* pnClusterHighestVersion);
+    HRESULT get_ClusterLowestVersion(int* pnClusterLowestVersion);
+    HRESULT get_Flags(int* pnFlags);
+    HRESULT get_MixedVersion(VARIANT* pvarMixedVersion);
 }
 enum IID_ISCluster = GUID(0xf2e606e4, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISCluster : IDispatch
 {
-    HRESULT get_CommonProperties(ISClusProperties*);
-    HRESULT get_PrivateProperties(ISClusProperties*);
-    HRESULT get_CommonROProperties(ISClusProperties*);
-    HRESULT get_PrivateROProperties(ISClusProperties*);
-    HRESULT get_Handle(ulong*);
-    HRESULT Open(BSTR);
-    HRESULT get_Name(BSTR*);
-    HRESULT put_Name(BSTR);
-    HRESULT get_Version(ISClusVersion*);
-    HRESULT put_QuorumResource(ISClusResource);
-    HRESULT get_QuorumResource(ISClusResource*);
-    HRESULT get_QuorumLogSize(int*);
-    HRESULT put_QuorumLogSize(int);
-    HRESULT get_QuorumPath(BSTR*);
-    HRESULT put_QuorumPath(BSTR);
-    HRESULT get_Nodes(ISClusNodes*);
-    HRESULT get_ResourceGroups(ISClusResGroups*);
-    HRESULT get_Resources(ISClusResources*);
-    HRESULT get_ResourceTypes(ISClusResTypes*);
-    HRESULT get_Networks(ISClusNetworks*);
-    HRESULT get_NetInterfaces(ISClusNetInterfaces*);
+    HRESULT get_CommonProperties(ISClusProperties* ppProperties);
+    HRESULT get_PrivateProperties(ISClusProperties* ppProperties);
+    HRESULT get_CommonROProperties(ISClusProperties* ppProperties);
+    HRESULT get_PrivateROProperties(ISClusProperties* ppProperties);
+    HRESULT get_Handle(ulong* phandle);
+    HRESULT Open(BSTR bstrClusterName);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT put_Name(BSTR bstrClusterName);
+    HRESULT get_Version(ISClusVersion* ppClusVersion);
+    HRESULT put_QuorumResource(ISClusResource pClusterResource);
+    HRESULT get_QuorumResource(ISClusResource* pClusterResource);
+    HRESULT get_QuorumLogSize(int* pnLogSize);
+    HRESULT put_QuorumLogSize(int nLogSize);
+    HRESULT get_QuorumPath(BSTR* ppPath);
+    HRESULT put_QuorumPath(BSTR pPath);
+    HRESULT get_Nodes(ISClusNodes* ppNodes);
+    HRESULT get_ResourceGroups(ISClusResGroups* ppClusterResourceGroups);
+    HRESULT get_Resources(ISClusResources* ppClusterResources);
+    HRESULT get_ResourceTypes(ISClusResTypes* ppResourceTypes);
+    HRESULT get_Networks(ISClusNetworks* ppNetworks);
+    HRESULT get_NetInterfaces(ISClusNetInterfaces* ppNetInterfaces);
 }
 enum IID_ISClusNode = GUID(0xf2e606f8, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusNode : IDispatch
 {
-    HRESULT get_CommonProperties(ISClusProperties*);
-    HRESULT get_PrivateProperties(ISClusProperties*);
-    HRESULT get_CommonROProperties(ISClusProperties*);
-    HRESULT get_PrivateROProperties(ISClusProperties*);
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Handle(ulong*);
-    HRESULT get_NodeID(BSTR*);
-    HRESULT get_State(CLUSTER_NODE_STATE*);
+    HRESULT get_CommonProperties(ISClusProperties* ppProperties);
+    HRESULT get_PrivateProperties(ISClusProperties* ppProperties);
+    HRESULT get_CommonROProperties(ISClusProperties* ppProperties);
+    HRESULT get_PrivateROProperties(ISClusProperties* ppProperties);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT get_Handle(ulong* phandle);
+    HRESULT get_NodeID(BSTR* pbstrNodeID);
+    HRESULT get_State(CLUSTER_NODE_STATE* dwState);
     HRESULT Pause();
     HRESULT Resume();
     HRESULT Evict();
-    HRESULT get_ResourceGroups(ISClusResGroups*);
-    HRESULT get_Cluster(ISCluster*);
-    HRESULT get_NetInterfaces(ISClusNodeNetInterfaces*);
+    HRESULT get_ResourceGroups(ISClusResGroups* ppResourceGroups);
+    HRESULT get_Cluster(ISCluster* ppCluster);
+    HRESULT get_NetInterfaces(ISClusNodeNetInterfaces* ppClusNetInterfaces);
 }
 enum IID_ISClusNodes = GUID(0xf2e606fa, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusNodes : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
     HRESULT Refresh();
-    HRESULT get_Item(VARIANT, ISClusNode*);
+    HRESULT get_Item(VARIANT varIndex, ISClusNode* ppNode);
 }
 enum IID_ISClusNetwork = GUID(0xf2e606f2, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusNetwork : IDispatch
 {
-    HRESULT get_CommonProperties(ISClusProperties*);
-    HRESULT get_PrivateProperties(ISClusProperties*);
-    HRESULT get_CommonROProperties(ISClusProperties*);
-    HRESULT get_PrivateROProperties(ISClusProperties*);
-    HRESULT get_Handle(ulong*);
-    HRESULT get_Name(BSTR*);
-    HRESULT put_Name(BSTR);
-    HRESULT get_NetworkID(BSTR*);
-    HRESULT get_State(CLUSTER_NETWORK_STATE*);
-    HRESULT get_NetInterfaces(ISClusNetworkNetInterfaces*);
-    HRESULT get_Cluster(ISCluster*);
+    HRESULT get_CommonProperties(ISClusProperties* ppProperties);
+    HRESULT get_PrivateProperties(ISClusProperties* ppProperties);
+    HRESULT get_CommonROProperties(ISClusProperties* ppProperties);
+    HRESULT get_PrivateROProperties(ISClusProperties* ppProperties);
+    HRESULT get_Handle(ulong* phandle);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT put_Name(BSTR bstrNetworkName);
+    HRESULT get_NetworkID(BSTR* pbstrNetworkID);
+    HRESULT get_State(CLUSTER_NETWORK_STATE* dwState);
+    HRESULT get_NetInterfaces(ISClusNetworkNetInterfaces* ppClusNetInterfaces);
+    HRESULT get_Cluster(ISCluster* ppCluster);
 }
 enum IID_ISClusNetworks = GUID(0xf2e606f4, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusNetworks : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
     HRESULT Refresh();
-    HRESULT get_Item(VARIANT, ISClusNetwork*);
+    HRESULT get_Item(VARIANT varIndex, ISClusNetwork* ppClusNetwork);
 }
 enum IID_ISClusNetInterface = GUID(0xf2e606ee, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusNetInterface : IDispatch
 {
-    HRESULT get_CommonProperties(ISClusProperties*);
-    HRESULT get_PrivateProperties(ISClusProperties*);
-    HRESULT get_CommonROProperties(ISClusProperties*);
-    HRESULT get_PrivateROProperties(ISClusProperties*);
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Handle(ulong*);
-    HRESULT get_State(CLUSTER_NETINTERFACE_STATE*);
-    HRESULT get_Cluster(ISCluster*);
+    HRESULT get_CommonProperties(ISClusProperties* ppProperties);
+    HRESULT get_PrivateProperties(ISClusProperties* ppProperties);
+    HRESULT get_CommonROProperties(ISClusProperties* ppProperties);
+    HRESULT get_PrivateROProperties(ISClusProperties* ppProperties);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT get_Handle(ulong* phandle);
+    HRESULT get_State(CLUSTER_NETINTERFACE_STATE* dwState);
+    HRESULT get_Cluster(ISCluster* ppCluster);
 }
 enum IID_ISClusNetInterfaces = GUID(0xf2e606f0, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusNetInterfaces : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
     HRESULT Refresh();
-    HRESULT get_Item(VARIANT, ISClusNetInterface*);
+    HRESULT get_Item(VARIANT varIndex, ISClusNetInterface* ppClusNetInterface);
 }
 enum IID_ISClusNodeNetInterfaces = GUID(0xf2e606fc, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusNodeNetInterfaces : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
     HRESULT Refresh();
-    HRESULT get_Item(VARIANT, ISClusNetInterface*);
+    HRESULT get_Item(VARIANT varIndex, ISClusNetInterface* ppClusNetInterface);
 }
 enum IID_ISClusNetworkNetInterfaces = GUID(0xf2e606f6, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusNetworkNetInterfaces : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
     HRESULT Refresh();
-    HRESULT get_Item(VARIANT, ISClusNetInterface*);
+    HRESULT get_Item(VARIANT varIndex, ISClusNetInterface* ppClusNetInterface);
 }
 enum IID_ISClusResGroup = GUID(0xf2e60706, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusResGroup : IDispatch
 {
-    HRESULT get_CommonProperties(ISClusProperties*);
-    HRESULT get_PrivateProperties(ISClusProperties*);
-    HRESULT get_CommonROProperties(ISClusProperties*);
-    HRESULT get_PrivateROProperties(ISClusProperties*);
-    HRESULT get_Handle(ulong*);
-    HRESULT get_Name(BSTR*);
-    HRESULT put_Name(BSTR);
-    HRESULT get_State(CLUSTER_GROUP_STATE*);
-    HRESULT get_OwnerNode(ISClusNode*);
-    HRESULT get_Resources(ISClusResGroupResources*);
-    HRESULT get_PreferredOwnerNodes(ISClusResGroupPreferredOwnerNodes*);
+    HRESULT get_CommonProperties(ISClusProperties* ppProperties);
+    HRESULT get_PrivateProperties(ISClusProperties* ppProperties);
+    HRESULT get_CommonROProperties(ISClusProperties* ppProperties);
+    HRESULT get_PrivateROProperties(ISClusProperties* ppProperties);
+    HRESULT get_Handle(ulong* phandle);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT put_Name(BSTR bstrGroupName);
+    HRESULT get_State(CLUSTER_GROUP_STATE* dwState);
+    HRESULT get_OwnerNode(ISClusNode* ppOwnerNode);
+    HRESULT get_Resources(ISClusResGroupResources* ppClusterGroupResources);
+    HRESULT get_PreferredOwnerNodes(ISClusResGroupPreferredOwnerNodes* ppOwnerNodes);
     HRESULT Delete();
-    HRESULT Online(VARIANT, VARIANT, VARIANT*);
-    HRESULT Move(VARIANT, VARIANT, VARIANT*);
-    HRESULT Offline(VARIANT, VARIANT*);
-    HRESULT get_Cluster(ISCluster*);
+    HRESULT Online(VARIANT varTimeout, VARIANT varNode, VARIANT* pvarPending);
+    HRESULT Move(VARIANT varTimeout, VARIANT varNode, VARIANT* pvarPending);
+    HRESULT Offline(VARIANT varTimeout, VARIANT* pvarPending);
+    HRESULT get_Cluster(ISCluster* ppCluster);
 }
 enum IID_ISClusResGroups = GUID(0xf2e60708, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusResGroups : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
     HRESULT Refresh();
-    HRESULT get_Item(VARIANT, ISClusResGroup*);
-    HRESULT CreateItem(BSTR, ISClusResGroup*);
-    HRESULT DeleteItem(VARIANT);
+    HRESULT get_Item(VARIANT varIndex, ISClusResGroup* ppClusResGroup);
+    HRESULT CreateItem(BSTR bstrResourceGroupName, ISClusResGroup* ppResourceGroup);
+    HRESULT DeleteItem(VARIANT varIndex);
 }
 enum IID_ISClusResource = GUID(0xf2e6070a, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusResource : IDispatch
 {
-    HRESULT get_CommonProperties(ISClusProperties*);
-    HRESULT get_PrivateProperties(ISClusProperties*);
-    HRESULT get_CommonROProperties(ISClusProperties*);
-    HRESULT get_PrivateROProperties(ISClusProperties*);
-    HRESULT get_Handle(ulong*);
-    HRESULT get_Name(BSTR*);
-    HRESULT put_Name(BSTR);
-    HRESULT get_State(CLUSTER_RESOURCE_STATE*);
-    HRESULT get_CoreFlag(CLUS_FLAGS*);
-    HRESULT BecomeQuorumResource(BSTR, int);
+    HRESULT get_CommonProperties(ISClusProperties* ppProperties);
+    HRESULT get_PrivateProperties(ISClusProperties* ppProperties);
+    HRESULT get_CommonROProperties(ISClusProperties* ppProperties);
+    HRESULT get_PrivateROProperties(ISClusProperties* ppProperties);
+    HRESULT get_Handle(ulong* phandle);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT put_Name(BSTR bstrResourceName);
+    HRESULT get_State(CLUSTER_RESOURCE_STATE* dwState);
+    HRESULT get_CoreFlag(CLUS_FLAGS* dwCoreFlag);
+    HRESULT BecomeQuorumResource(BSTR bstrDevicePath, int lMaxLogSize);
     HRESULT Delete();
     HRESULT Fail();
-    HRESULT Online(int, VARIANT*);
-    HRESULT Offline(int, VARIANT*);
-    HRESULT ChangeResourceGroup(ISClusResGroup);
-    HRESULT AddResourceNode(ISClusNode);
-    HRESULT RemoveResourceNode(ISClusNode);
-    HRESULT CanResourceBeDependent(ISClusResource, VARIANT*);
-    HRESULT get_PossibleOwnerNodes(ISClusResPossibleOwnerNodes*);
-    HRESULT get_Dependencies(ISClusResDependencies*);
-    HRESULT get_Dependents(ISClusResDependents*);
-    HRESULT get_Group(ISClusResGroup*);
-    HRESULT get_OwnerNode(ISClusNode*);
-    HRESULT get_Cluster(ISCluster*);
-    HRESULT get_ClassInfo(CLUSTER_RESOURCE_CLASS*);
-    HRESULT get_Disk(ISClusDisk*);
-    HRESULT get_RegistryKeys(ISClusRegistryKeys*);
-    HRESULT get_CryptoKeys(ISClusCryptoKeys*);
-    HRESULT get_TypeName(BSTR*);
-    HRESULT get_Type(ISClusResType*);
-    HRESULT get_MaintenanceMode(BOOL*);
-    HRESULT put_MaintenanceMode(BOOL);
+    HRESULT Online(int nTimeout, VARIANT* pvarPending);
+    HRESULT Offline(int nTimeout, VARIANT* pvarPending);
+    HRESULT ChangeResourceGroup(ISClusResGroup pResourceGroup);
+    HRESULT AddResourceNode(ISClusNode pNode);
+    HRESULT RemoveResourceNode(ISClusNode pNode);
+    HRESULT CanResourceBeDependent(ISClusResource pResource, VARIANT* pvarDependent);
+    HRESULT get_PossibleOwnerNodes(ISClusResPossibleOwnerNodes* ppOwnerNodes);
+    HRESULT get_Dependencies(ISClusResDependencies* ppResDependencies);
+    HRESULT get_Dependents(ISClusResDependents* ppResDependents);
+    HRESULT get_Group(ISClusResGroup* ppResGroup);
+    HRESULT get_OwnerNode(ISClusNode* ppOwnerNode);
+    HRESULT get_Cluster(ISCluster* ppCluster);
+    HRESULT get_ClassInfo(CLUSTER_RESOURCE_CLASS* prcClassInfo);
+    HRESULT get_Disk(ISClusDisk* ppDisk);
+    HRESULT get_RegistryKeys(ISClusRegistryKeys* ppRegistryKeys);
+    HRESULT get_CryptoKeys(ISClusCryptoKeys* ppCryptoKeys);
+    HRESULT get_TypeName(BSTR* pbstrTypeName);
+    HRESULT get_Type(ISClusResType* ppResourceType);
+    HRESULT get_MaintenanceMode(BOOL* pbMaintenanceMode);
+    HRESULT put_MaintenanceMode(BOOL bMaintenanceMode);
 }
 enum IID_ISClusResDependencies = GUID(0xf2e60704, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusResDependencies : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
     HRESULT Refresh();
-    HRESULT get_Item(VARIANT, ISClusResource*);
-    HRESULT CreateItem(BSTR, BSTR, CLUSTER_RESOURCE_CREATE_FLAGS, ISClusResource*);
-    HRESULT DeleteItem(VARIANT);
-    HRESULT AddItem(ISClusResource);
-    HRESULT RemoveItem(VARIANT);
+    HRESULT get_Item(VARIANT varIndex, ISClusResource* ppClusResource);
+    HRESULT CreateItem(BSTR bstrResourceName, BSTR bstrResourceType, CLUSTER_RESOURCE_CREATE_FLAGS dwFlags, ISClusResource* ppClusterResource);
+    HRESULT DeleteItem(VARIANT varIndex);
+    HRESULT AddItem(ISClusResource pResource);
+    HRESULT RemoveItem(VARIANT varIndex);
 }
 enum IID_ISClusResGroupResources = GUID(0xf2e606ea, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusResGroupResources : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
     HRESULT Refresh();
-    HRESULT get_Item(VARIANT, ISClusResource*);
-    HRESULT CreateItem(BSTR, BSTR, CLUSTER_RESOURCE_CREATE_FLAGS, ISClusResource*);
-    HRESULT DeleteItem(VARIANT);
+    HRESULT get_Item(VARIANT varIndex, ISClusResource* ppClusResource);
+    HRESULT CreateItem(BSTR bstrResourceName, BSTR bstrResourceType, CLUSTER_RESOURCE_CREATE_FLAGS dwFlags, ISClusResource* ppClusterResource);
+    HRESULT DeleteItem(VARIANT varIndex);
 }
 enum IID_ISClusResTypeResources = GUID(0xf2e60714, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusResTypeResources : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
     HRESULT Refresh();
-    HRESULT get_Item(VARIANT, ISClusResource*);
-    HRESULT CreateItem(BSTR, BSTR, CLUSTER_RESOURCE_CREATE_FLAGS, ISClusResource*);
-    HRESULT DeleteItem(VARIANT);
+    HRESULT get_Item(VARIANT varIndex, ISClusResource* ppClusResource);
+    HRESULT CreateItem(BSTR bstrResourceName, BSTR bstrGroupName, CLUSTER_RESOURCE_CREATE_FLAGS dwFlags, ISClusResource* ppClusterResource);
+    HRESULT DeleteItem(VARIANT varIndex);
 }
 enum IID_ISClusResources = GUID(0xf2e6070c, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusResources : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
     HRESULT Refresh();
-    HRESULT get_Item(VARIANT, ISClusResource*);
-    HRESULT CreateItem(BSTR, BSTR, BSTR, CLUSTER_RESOURCE_CREATE_FLAGS, ISClusResource*);
-    HRESULT DeleteItem(VARIANT);
+    HRESULT get_Item(VARIANT varIndex, ISClusResource* ppClusResource);
+    HRESULT CreateItem(BSTR bstrResourceName, BSTR bstrResourceType, BSTR bstrGroupName, CLUSTER_RESOURCE_CREATE_FLAGS dwFlags, ISClusResource* ppClusterResource);
+    HRESULT DeleteItem(VARIANT varIndex);
 }
 enum IID_ISClusResGroupPreferredOwnerNodes = GUID(0xf2e606e8, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusResGroupPreferredOwnerNodes : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
     HRESULT Refresh();
-    HRESULT get_Item(VARIANT, ISClusNode*);
-    HRESULT InsertItem(ISClusNode, int);
-    HRESULT RemoveItem(VARIANT);
-    HRESULT get_Modified(VARIANT*);
+    HRESULT get_Item(VARIANT varIndex, ISClusNode* ppNode);
+    HRESULT InsertItem(ISClusNode pNode, int nPosition);
+    HRESULT RemoveItem(VARIANT varIndex);
+    HRESULT get_Modified(VARIANT* pvarModified);
     HRESULT SaveChanges();
-    HRESULT AddItem(ISClusNode);
+    HRESULT AddItem(ISClusNode pNode);
 }
 enum IID_ISClusResPossibleOwnerNodes = GUID(0xf2e6070e, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusResPossibleOwnerNodes : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
     HRESULT Refresh();
-    HRESULT get_Item(VARIANT, ISClusNode*);
-    HRESULT AddItem(ISClusNode);
-    HRESULT RemoveItem(VARIANT);
-    HRESULT get_Modified(VARIANT*);
+    HRESULT get_Item(VARIANT varIndex, ISClusNode* ppNode);
+    HRESULT AddItem(ISClusNode pNode);
+    HRESULT RemoveItem(VARIANT varIndex);
+    HRESULT get_Modified(VARIANT* pvarModified);
 }
 enum IID_ISClusResTypePossibleOwnerNodes = GUID(0xf2e60718, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusResTypePossibleOwnerNodes : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
     HRESULT Refresh();
-    HRESULT get_Item(VARIANT, ISClusNode*);
+    HRESULT get_Item(VARIANT varIndex, ISClusNode* ppNode);
 }
 enum IID_ISClusResType = GUID(0xf2e60710, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusResType : IDispatch
 {
-    HRESULT get_CommonProperties(ISClusProperties*);
-    HRESULT get_PrivateProperties(ISClusProperties*);
-    HRESULT get_CommonROProperties(ISClusProperties*);
-    HRESULT get_PrivateROProperties(ISClusProperties*);
-    HRESULT get_Name(BSTR*);
+    HRESULT get_CommonProperties(ISClusProperties* ppProperties);
+    HRESULT get_PrivateProperties(ISClusProperties* ppProperties);
+    HRESULT get_CommonROProperties(ISClusProperties* ppProperties);
+    HRESULT get_PrivateROProperties(ISClusProperties* ppProperties);
+    HRESULT get_Name(BSTR* pbstrName);
     HRESULT Delete();
-    HRESULT get_Cluster(ISCluster*);
-    HRESULT get_Resources(ISClusResTypeResources*);
-    HRESULT get_PossibleOwnerNodes(ISClusResTypePossibleOwnerNodes*);
-    HRESULT get_AvailableDisks(ISClusDisks*);
+    HRESULT get_Cluster(ISCluster* ppCluster);
+    HRESULT get_Resources(ISClusResTypeResources* ppClusterResTypeResources);
+    HRESULT get_PossibleOwnerNodes(ISClusResTypePossibleOwnerNodes* ppOwnerNodes);
+    HRESULT get_AvailableDisks(ISClusDisks* ppAvailableDisks);
 }
 enum IID_ISClusResTypes = GUID(0xf2e60712, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusResTypes : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
     HRESULT Refresh();
-    HRESULT get_Item(VARIANT, ISClusResType*);
-    HRESULT CreateItem(BSTR, BSTR, BSTR, int, int, ISClusResType*);
-    HRESULT DeleteItem(VARIANT);
+    HRESULT get_Item(VARIANT varIndex, ISClusResType* ppClusResType);
+    HRESULT CreateItem(BSTR bstrResourceTypeName, BSTR bstrDisplayName, BSTR bstrResourceTypeDll, int dwLooksAlivePollInterval, int dwIsAlivePollInterval, ISClusResType* ppResourceType);
+    HRESULT DeleteItem(VARIANT varIndex);
 }
 enum IID_ISClusProperty = GUID(0xf2e606fe, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusProperty : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Length(int*);
-    HRESULT get_ValueCount(int*);
-    HRESULT get_Values(ISClusPropertyValues*);
-    HRESULT get_Value(VARIANT*);
-    HRESULT put_Value(VARIANT);
-    HRESULT get_Type(CLUSTER_PROPERTY_TYPE*);
-    HRESULT put_Type(CLUSTER_PROPERTY_TYPE);
-    HRESULT get_Format(CLUSTER_PROPERTY_FORMAT*);
-    HRESULT put_Format(CLUSTER_PROPERTY_FORMAT);
-    HRESULT get_ReadOnly(VARIANT*);
-    HRESULT get_Private(VARIANT*);
-    HRESULT get_Common(VARIANT*);
-    HRESULT get_Modified(VARIANT*);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT get_Length(int* pLength);
+    HRESULT get_ValueCount(int* pCount);
+    HRESULT get_Values(ISClusPropertyValues* ppClusterPropertyValues);
+    HRESULT get_Value(VARIANT* pvarValue);
+    HRESULT put_Value(VARIANT varValue);
+    HRESULT get_Type(CLUSTER_PROPERTY_TYPE* pType);
+    HRESULT put_Type(CLUSTER_PROPERTY_TYPE Type);
+    HRESULT get_Format(CLUSTER_PROPERTY_FORMAT* pFormat);
+    HRESULT put_Format(CLUSTER_PROPERTY_FORMAT Format);
+    HRESULT get_ReadOnly(VARIANT* pvarReadOnly);
+    HRESULT get_Private(VARIANT* pvarPrivate);
+    HRESULT get_Common(VARIANT* pvarCommon);
+    HRESULT get_Modified(VARIANT* pvarModified);
     HRESULT UseDefaultValue();
 }
 enum IID_ISClusPropertyValue = GUID(0xf2e6071a, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusPropertyValue : IDispatch
 {
-    HRESULT get_Value(VARIANT*);
-    HRESULT put_Value(VARIANT);
-    HRESULT get_Type(CLUSTER_PROPERTY_TYPE*);
-    HRESULT put_Type(CLUSTER_PROPERTY_TYPE);
-    HRESULT get_Format(CLUSTER_PROPERTY_FORMAT*);
-    HRESULT put_Format(CLUSTER_PROPERTY_FORMAT);
-    HRESULT get_Length(int*);
-    HRESULT get_DataCount(int*);
-    HRESULT get_Data(ISClusPropertyValueData*);
+    HRESULT get_Value(VARIANT* pvarValue);
+    HRESULT put_Value(VARIANT varValue);
+    HRESULT get_Type(CLUSTER_PROPERTY_TYPE* pType);
+    HRESULT put_Type(CLUSTER_PROPERTY_TYPE Type);
+    HRESULT get_Format(CLUSTER_PROPERTY_FORMAT* pFormat);
+    HRESULT put_Format(CLUSTER_PROPERTY_FORMAT Format);
+    HRESULT get_Length(int* pLength);
+    HRESULT get_DataCount(int* pCount);
+    HRESULT get_Data(ISClusPropertyValueData* ppClusterPropertyValueData);
 }
 enum IID_ISClusPropertyValues = GUID(0xf2e6071c, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusPropertyValues : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(VARIANT, ISClusPropertyValue*);
-    HRESULT CreateItem(BSTR, VARIANT, ISClusPropertyValue*);
-    HRESULT RemoveItem(VARIANT);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
+    HRESULT get_Item(VARIANT varIndex, ISClusPropertyValue* ppPropertyValue);
+    HRESULT CreateItem(BSTR bstrName, VARIANT varValue, ISClusPropertyValue* ppPropertyValue);
+    HRESULT RemoveItem(VARIANT varIndex);
 }
 enum IID_ISClusProperties = GUID(0xf2e60700, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusProperties : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
     HRESULT Refresh();
-    HRESULT get_Item(VARIANT, ISClusProperty*);
-    HRESULT CreateItem(BSTR, VARIANT, ISClusProperty*);
-    HRESULT UseDefaultValue(VARIANT);
-    HRESULT SaveChanges(VARIANT*);
-    HRESULT get_ReadOnly(VARIANT*);
-    HRESULT get_Private(VARIANT*);
-    HRESULT get_Common(VARIANT*);
-    HRESULT get_Modified(VARIANT*);
+    HRESULT get_Item(VARIANT varIndex, ISClusProperty* ppClusProperty);
+    HRESULT CreateItem(BSTR bstrName, VARIANT varValue, ISClusProperty* pProperty);
+    HRESULT UseDefaultValue(VARIANT varIndex);
+    HRESULT SaveChanges(VARIANT* pvarStatusCode);
+    HRESULT get_ReadOnly(VARIANT* pvarReadOnly);
+    HRESULT get_Private(VARIANT* pvarPrivate);
+    HRESULT get_Common(VARIANT* pvarCommon);
+    HRESULT get_Modified(VARIANT* pvarModified);
 }
 enum IID_ISClusPropertyValueData = GUID(0xf2e6071e, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusPropertyValueData : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(VARIANT, VARIANT*);
-    HRESULT CreateItem(VARIANT, VARIANT*);
-    HRESULT RemoveItem(VARIANT);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
+    HRESULT get_Item(VARIANT varIndex, VARIANT* pvarValue);
+    HRESULT CreateItem(VARIANT varValue, VARIANT* pvarData);
+    HRESULT RemoveItem(VARIANT varIndex);
 }
 enum IID_ISClusPartition = GUID(0xf2e60720, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusPartition : IDispatch
 {
-    HRESULT get_Flags(int*);
-    HRESULT get_DeviceName(BSTR*);
-    HRESULT get_VolumeLabel(BSTR*);
-    HRESULT get_SerialNumber(int*);
-    HRESULT get_MaximumComponentLength(int*);
-    HRESULT get_FileSystemFlags(int*);
-    HRESULT get_FileSystem(BSTR*);
+    HRESULT get_Flags(int* plFlags);
+    HRESULT get_DeviceName(BSTR* pbstrDeviceName);
+    HRESULT get_VolumeLabel(BSTR* pbstrVolumeLabel);
+    HRESULT get_SerialNumber(int* plSerialNumber);
+    HRESULT get_MaximumComponentLength(int* plMaximumComponentLength);
+    HRESULT get_FileSystemFlags(int* plFileSystemFlags);
+    HRESULT get_FileSystem(BSTR* pbstrFileSystem);
 }
 enum IID_ISClusPartitionEx = GUID(0x8802d4fe, 0xb32e, 0x4ad1, [0x9d, 0xbd, 0x64, 0xf1, 0x8e, 0x11, 0x66, 0xce]);
 interface ISClusPartitionEx : ISClusPartition
 {
-    HRESULT get_TotalSize(int*);
-    HRESULT get_FreeSpace(int*);
-    HRESULT get_DeviceNumber(int*);
-    HRESULT get_PartitionNumber(int*);
-    HRESULT get_VolumeGuid(BSTR*);
+    HRESULT get_TotalSize(int* plTotalSize);
+    HRESULT get_FreeSpace(int* plFreeSpace);
+    HRESULT get_DeviceNumber(int* plDeviceNumber);
+    HRESULT get_PartitionNumber(int* plPartitionNumber);
+    HRESULT get_VolumeGuid(BSTR* pbstrVolumeGuid);
 }
 enum IID_ISClusPartitions = GUID(0xf2e60722, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusPartitions : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(VARIANT, ISClusPartition*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
+    HRESULT get_Item(VARIANT varIndex, ISClusPartition* ppPartition);
 }
 enum IID_ISClusDisk = GUID(0xf2e60724, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusDisk : IDispatch
 {
-    HRESULT get_Signature(int*);
-    HRESULT get_ScsiAddress(ISClusScsiAddress*);
-    HRESULT get_DiskNumber(int*);
-    HRESULT get_Partitions(ISClusPartitions*);
+    HRESULT get_Signature(int* plSignature);
+    HRESULT get_ScsiAddress(ISClusScsiAddress* ppScsiAddress);
+    HRESULT get_DiskNumber(int* plDiskNumber);
+    HRESULT get_Partitions(ISClusPartitions* ppPartitions);
 }
 enum IID_ISClusDisks = GUID(0xf2e60726, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusDisks : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(VARIANT, ISClusDisk*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
+    HRESULT get_Item(VARIANT varIndex, ISClusDisk* ppDisk);
 }
 enum IID_ISClusScsiAddress = GUID(0xf2e60728, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusScsiAddress : IDispatch
 {
-    HRESULT get_PortNumber(VARIANT*);
-    HRESULT get_PathId(VARIANT*);
-    HRESULT get_TargetId(VARIANT*);
-    HRESULT get_Lun(VARIANT*);
+    HRESULT get_PortNumber(VARIANT* pvarPortNumber);
+    HRESULT get_PathId(VARIANT* pvarPathId);
+    HRESULT get_TargetId(VARIANT* pvarTargetId);
+    HRESULT get_Lun(VARIANT* pvarLun);
 }
 enum IID_ISClusRegistryKeys = GUID(0xf2e6072a, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusRegistryKeys : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
     HRESULT Refresh();
-    HRESULT get_Item(VARIANT, BSTR*);
-    HRESULT AddItem(BSTR);
-    HRESULT RemoveItem(VARIANT);
+    HRESULT get_Item(VARIANT varIndex, BSTR* pbstrRegistryKey);
+    HRESULT AddItem(BSTR bstrRegistryKey);
+    HRESULT RemoveItem(VARIANT varIndex);
 }
 enum IID_ISClusCryptoKeys = GUID(0xf2e6072c, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusCryptoKeys : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
     HRESULT Refresh();
-    HRESULT get_Item(VARIANT, BSTR*);
-    HRESULT AddItem(BSTR);
-    HRESULT RemoveItem(VARIANT);
+    HRESULT get_Item(VARIANT varIndex, BSTR* pbstrCyrptoKey);
+    HRESULT AddItem(BSTR bstrCryptoKey);
+    HRESULT RemoveItem(VARIANT varIndex);
 }
 enum IID_ISClusResDependents = GUID(0xf2e6072e, 0x2631, 0x11d1, [0x89, 0xf1, 0x0, 0xa0, 0xc9, 0xd, 0x6, 0x1e]);
 interface ISClusResDependents : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* retval);
     HRESULT Refresh();
-    HRESULT get_Item(VARIANT, ISClusResource*);
-    HRESULT CreateItem(BSTR, BSTR, CLUSTER_RESOURCE_CREATE_FLAGS, ISClusResource*);
-    HRESULT DeleteItem(VARIANT);
-    HRESULT AddItem(ISClusResource);
-    HRESULT RemoveItem(VARIANT);
+    HRESULT get_Item(VARIANT varIndex, ISClusResource* ppClusResource);
+    HRESULT CreateItem(BSTR bstrResourceName, BSTR bstrResourceType, CLUSTER_RESOURCE_CREATE_FLAGS dwFlags, ISClusResource* ppClusterResource);
+    HRESULT DeleteItem(VARIANT varIndex);
+    HRESULT AddItem(ISClusResource pResource);
+    HRESULT RemoveItem(VARIANT varIndex);
 }

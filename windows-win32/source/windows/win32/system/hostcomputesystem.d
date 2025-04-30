@@ -31,7 +31,7 @@ enum : int
     HcsOperationTypeCrash                = 0x0000000f,
 }
 
-alias HCS_OPERATION_COMPLETION = void function(HCS_OPERATION, void*);
+alias HCS_OPERATION_COMPLETION = void function(HCS_OPERATION operation, void* context);
 alias HCS_EVENT_TYPE = int;
 enum : int
 {
@@ -70,7 +70,7 @@ enum : int
     HcsOperationOptionProgressUpdate = 0x00000001,
 }
 
-alias HCS_EVENT_CALLBACK = void function(HCS_EVENT*, void*);
+alias HCS_EVENT_CALLBACK = void function(HCS_EVENT* event, void* context);
 alias HCS_RESOURCE_TYPE = int;
 enum : int
 {
@@ -113,7 +113,7 @@ enum : int
     HcsNotificationFlagsReserved                     = 0xf0000000,
 }
 
-alias HCS_NOTIFICATION_CALLBACK = void function(uint, void*, HRESULT, const(wchar)*);
+alias HCS_NOTIFICATION_CALLBACK = void function(uint notificationType, void* context, HRESULT notificationStatus, const(wchar)* notificationData);
 struct HCS_PROCESS_INFORMATION
 {
     uint ProcessId;
@@ -137,69 +137,69 @@ struct HCS_CREATE_OPTIONS_1
     void* CallbackContext;
     HCS_EVENT_CALLBACK Callback;
 }
-HRESULT HcsEnumerateComputeSystems(const(wchar)*, HCS_OPERATION);
-HRESULT HcsEnumerateComputeSystemsInNamespace(const(wchar)*, const(wchar)*, HCS_OPERATION);
-HCS_OPERATION HcsCreateOperation(const(void)*, HCS_OPERATION_COMPLETION);
-HCS_OPERATION HcsCreateOperationWithNotifications(HCS_OPERATION_OPTIONS, const(void)*, HCS_EVENT_CALLBACK);
-void HcsCloseOperation(HCS_OPERATION);
-void* HcsGetOperationContext(HCS_OPERATION);
-HRESULT HcsSetOperationContext(HCS_OPERATION, const(void)*);
-HCS_SYSTEM HcsGetComputeSystemFromOperation(HCS_OPERATION);
-HCS_PROCESS HcsGetProcessFromOperation(HCS_OPERATION);
-HCS_OPERATION_TYPE HcsGetOperationType(HCS_OPERATION);
-ulong HcsGetOperationId(HCS_OPERATION);
-HRESULT HcsGetOperationResult(HCS_OPERATION, PWSTR*);
-HRESULT HcsGetOperationResultAndProcessInfo(HCS_OPERATION, HCS_PROCESS_INFORMATION*, PWSTR*);
-HRESULT HcsAddResourceToOperation(HCS_OPERATION, HCS_RESOURCE_TYPE, const(wchar)*, HANDLE);
-HRESULT HcsGetProcessorCompatibilityFromSavedState(const(wchar)*, const(wchar)**);
-HRESULT HcsWaitForOperationResult(HCS_OPERATION, uint, PWSTR*);
-HRESULT HcsWaitForOperationResultAndProcessInfo(HCS_OPERATION, uint, HCS_PROCESS_INFORMATION*, PWSTR*);
-HRESULT HcsSetOperationCallback(HCS_OPERATION, const(void)*, HCS_OPERATION_COMPLETION);
-HRESULT HcsCancelOperation(HCS_OPERATION);
-HRESULT HcsCreateComputeSystem(const(wchar)*, const(wchar)*, HCS_OPERATION, const(SECURITY_DESCRIPTOR)*, HCS_SYSTEM*);
-HRESULT HcsCreateComputeSystemInNamespace(const(wchar)*, const(wchar)*, const(wchar)*, HCS_OPERATION, const(HCS_CREATE_OPTIONS)*, HCS_SYSTEM*);
-HRESULT HcsOpenComputeSystem(const(wchar)*, uint, HCS_SYSTEM*);
-HRESULT HcsOpenComputeSystemInNamespace(const(wchar)*, const(wchar)*, uint, HCS_SYSTEM*);
-void HcsCloseComputeSystem(HCS_SYSTEM);
-HRESULT HcsStartComputeSystem(HCS_SYSTEM, HCS_OPERATION, const(wchar)*);
-HRESULT HcsShutDownComputeSystem(HCS_SYSTEM, HCS_OPERATION, const(wchar)*);
-HRESULT HcsTerminateComputeSystem(HCS_SYSTEM, HCS_OPERATION, const(wchar)*);
-HRESULT HcsCrashComputeSystem(HCS_SYSTEM, HCS_OPERATION, const(wchar)*);
-HRESULT HcsPauseComputeSystem(HCS_SYSTEM, HCS_OPERATION, const(wchar)*);
-HRESULT HcsResumeComputeSystem(HCS_SYSTEM, HCS_OPERATION, const(wchar)*);
-HRESULT HcsSaveComputeSystem(HCS_SYSTEM, HCS_OPERATION, const(wchar)*);
-HRESULT HcsGetComputeSystemProperties(HCS_SYSTEM, HCS_OPERATION, const(wchar)*);
-HRESULT HcsModifyComputeSystem(HCS_SYSTEM, HCS_OPERATION, const(wchar)*, HANDLE);
-HRESULT HcsWaitForComputeSystemExit(HCS_SYSTEM, uint, PWSTR*);
-HRESULT HcsSetComputeSystemCallback(HCS_SYSTEM, HCS_EVENT_OPTIONS, const(void)*, HCS_EVENT_CALLBACK);
-HRESULT HcsCreateProcess(HCS_SYSTEM, const(wchar)*, HCS_OPERATION, const(SECURITY_DESCRIPTOR)*, HCS_PROCESS*);
-HRESULT HcsOpenProcess(HCS_SYSTEM, uint, uint, HCS_PROCESS*);
-void HcsCloseProcess(HCS_PROCESS);
-HRESULT HcsTerminateProcess(HCS_PROCESS, HCS_OPERATION, const(wchar)*);
-HRESULT HcsSignalProcess(HCS_PROCESS, HCS_OPERATION, const(wchar)*);
-HRESULT HcsGetProcessInfo(HCS_PROCESS, HCS_OPERATION);
-HRESULT HcsGetProcessProperties(HCS_PROCESS, HCS_OPERATION, const(wchar)*);
-HRESULT HcsModifyProcess(HCS_PROCESS, HCS_OPERATION, const(wchar)*);
-HRESULT HcsSetProcessCallback(HCS_PROCESS, HCS_EVENT_OPTIONS, void*, HCS_EVENT_CALLBACK);
-HRESULT HcsWaitForProcessExit(HCS_PROCESS, uint, PWSTR*);
-HRESULT HcsGetServiceProperties(const(wchar)*, PWSTR*);
-HRESULT HcsModifyServiceSettings(const(wchar)*, PWSTR*);
-HRESULT HcsSubmitWerReport(const(wchar)*);
-HRESULT HcsCreateEmptyGuestStateFile(const(wchar)*);
-HRESULT HcsCreateEmptyRuntimeStateFile(const(wchar)*);
-HRESULT HcsGrantVmAccess(const(wchar)*, const(wchar)*);
-HRESULT HcsRevokeVmAccess(const(wchar)*, const(wchar)*);
-HRESULT HcsGrantVmGroupAccess(const(wchar)*);
-HRESULT HcsRevokeVmGroupAccess(const(wchar)*);
-HRESULT HcsImportLayer(const(wchar)*, const(wchar)*, const(wchar)*);
-HRESULT HcsExportLayer(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*);
-HRESULT HcsExportLegacyWritableLayer(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*);
-HRESULT HcsDestroyLayer(const(wchar)*);
-HRESULT HcsSetupBaseOSLayer(const(wchar)*, HANDLE, const(wchar)*);
-HRESULT HcsInitializeWritableLayer(const(wchar)*, const(wchar)*, const(wchar)*);
-HRESULT HcsInitializeLegacyWritableLayer(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*);
-HRESULT HcsAttachLayerStorageFilter(const(wchar)*, const(wchar)*);
-HRESULT HcsDetachLayerStorageFilter(const(wchar)*);
-HRESULT HcsFormatWritableLayerVhd(HANDLE);
-HRESULT HcsGetLayerVhdMountPath(HANDLE, PWSTR*);
-HRESULT HcsSetupBaseOSVolume(const(wchar)*, const(wchar)*, const(wchar)*);
+HRESULT HcsEnumerateComputeSystems(const(wchar)* query, HCS_OPERATION operation);
+HRESULT HcsEnumerateComputeSystemsInNamespace(const(wchar)* idNamespace, const(wchar)* query, HCS_OPERATION operation);
+HCS_OPERATION HcsCreateOperation(const(void)* context, HCS_OPERATION_COMPLETION callback);
+HCS_OPERATION HcsCreateOperationWithNotifications(HCS_OPERATION_OPTIONS eventTypes, const(void)* context, HCS_EVENT_CALLBACK callback);
+void HcsCloseOperation(HCS_OPERATION operation);
+void* HcsGetOperationContext(HCS_OPERATION operation);
+HRESULT HcsSetOperationContext(HCS_OPERATION operation, const(void)* context);
+HCS_SYSTEM HcsGetComputeSystemFromOperation(HCS_OPERATION operation);
+HCS_PROCESS HcsGetProcessFromOperation(HCS_OPERATION operation);
+HCS_OPERATION_TYPE HcsGetOperationType(HCS_OPERATION operation);
+ulong HcsGetOperationId(HCS_OPERATION operation);
+HRESULT HcsGetOperationResult(HCS_OPERATION operation, PWSTR* resultDocument);
+HRESULT HcsGetOperationResultAndProcessInfo(HCS_OPERATION operation, HCS_PROCESS_INFORMATION* processInformation, PWSTR* resultDocument);
+HRESULT HcsAddResourceToOperation(HCS_OPERATION operation, HCS_RESOURCE_TYPE type, const(wchar)* uri, HANDLE handle);
+HRESULT HcsGetProcessorCompatibilityFromSavedState(const(wchar)* RuntimeFileName, const(wchar)** ProcessorFeaturesString);
+HRESULT HcsWaitForOperationResult(HCS_OPERATION operation, uint timeoutMs, PWSTR* resultDocument);
+HRESULT HcsWaitForOperationResultAndProcessInfo(HCS_OPERATION operation, uint timeoutMs, HCS_PROCESS_INFORMATION* processInformation, PWSTR* resultDocument);
+HRESULT HcsSetOperationCallback(HCS_OPERATION operation, const(void)* context, HCS_OPERATION_COMPLETION callback);
+HRESULT HcsCancelOperation(HCS_OPERATION operation);
+HRESULT HcsCreateComputeSystem(const(wchar)* id, const(wchar)* configuration, HCS_OPERATION operation, const(SECURITY_DESCRIPTOR)* securityDescriptor, HCS_SYSTEM* computeSystem);
+HRESULT HcsCreateComputeSystemInNamespace(const(wchar)* idNamespace, const(wchar)* id, const(wchar)* configuration, HCS_OPERATION operation, const(HCS_CREATE_OPTIONS)* options, HCS_SYSTEM* computeSystem);
+HRESULT HcsOpenComputeSystem(const(wchar)* id, uint requestedAccess, HCS_SYSTEM* computeSystem);
+HRESULT HcsOpenComputeSystemInNamespace(const(wchar)* idNamespace, const(wchar)* id, uint requestedAccess, HCS_SYSTEM* computeSystem);
+void HcsCloseComputeSystem(HCS_SYSTEM computeSystem);
+HRESULT HcsStartComputeSystem(HCS_SYSTEM computeSystem, HCS_OPERATION operation, const(wchar)* options);
+HRESULT HcsShutDownComputeSystem(HCS_SYSTEM computeSystem, HCS_OPERATION operation, const(wchar)* options);
+HRESULT HcsTerminateComputeSystem(HCS_SYSTEM computeSystem, HCS_OPERATION operation, const(wchar)* options);
+HRESULT HcsCrashComputeSystem(HCS_SYSTEM computeSystem, HCS_OPERATION operation, const(wchar)* options);
+HRESULT HcsPauseComputeSystem(HCS_SYSTEM computeSystem, HCS_OPERATION operation, const(wchar)* options);
+HRESULT HcsResumeComputeSystem(HCS_SYSTEM computeSystem, HCS_OPERATION operation, const(wchar)* options);
+HRESULT HcsSaveComputeSystem(HCS_SYSTEM computeSystem, HCS_OPERATION operation, const(wchar)* options);
+HRESULT HcsGetComputeSystemProperties(HCS_SYSTEM computeSystem, HCS_OPERATION operation, const(wchar)* propertyQuery);
+HRESULT HcsModifyComputeSystem(HCS_SYSTEM computeSystem, HCS_OPERATION operation, const(wchar)* configuration, HANDLE identity);
+HRESULT HcsWaitForComputeSystemExit(HCS_SYSTEM computeSystem, uint timeoutMs, PWSTR* result);
+HRESULT HcsSetComputeSystemCallback(HCS_SYSTEM computeSystem, HCS_EVENT_OPTIONS callbackOptions, const(void)* context, HCS_EVENT_CALLBACK callback);
+HRESULT HcsCreateProcess(HCS_SYSTEM computeSystem, const(wchar)* processParameters, HCS_OPERATION operation, const(SECURITY_DESCRIPTOR)* securityDescriptor, HCS_PROCESS* process);
+HRESULT HcsOpenProcess(HCS_SYSTEM computeSystem, uint processId, uint requestedAccess, HCS_PROCESS* process);
+void HcsCloseProcess(HCS_PROCESS process);
+HRESULT HcsTerminateProcess(HCS_PROCESS process, HCS_OPERATION operation, const(wchar)* options);
+HRESULT HcsSignalProcess(HCS_PROCESS process, HCS_OPERATION operation, const(wchar)* options);
+HRESULT HcsGetProcessInfo(HCS_PROCESS process, HCS_OPERATION operation);
+HRESULT HcsGetProcessProperties(HCS_PROCESS process, HCS_OPERATION operation, const(wchar)* propertyQuery);
+HRESULT HcsModifyProcess(HCS_PROCESS process, HCS_OPERATION operation, const(wchar)* settings);
+HRESULT HcsSetProcessCallback(HCS_PROCESS process, HCS_EVENT_OPTIONS callbackOptions, void* context, HCS_EVENT_CALLBACK callback);
+HRESULT HcsWaitForProcessExit(HCS_PROCESS computeSystem, uint timeoutMs, PWSTR* result);
+HRESULT HcsGetServiceProperties(const(wchar)* propertyQuery, PWSTR* result);
+HRESULT HcsModifyServiceSettings(const(wchar)* settings, PWSTR* result);
+HRESULT HcsSubmitWerReport(const(wchar)* settings);
+HRESULT HcsCreateEmptyGuestStateFile(const(wchar)* guestStateFilePath);
+HRESULT HcsCreateEmptyRuntimeStateFile(const(wchar)* runtimeStateFilePath);
+HRESULT HcsGrantVmAccess(const(wchar)* vmId, const(wchar)* filePath);
+HRESULT HcsRevokeVmAccess(const(wchar)* vmId, const(wchar)* filePath);
+HRESULT HcsGrantVmGroupAccess(const(wchar)* filePath);
+HRESULT HcsRevokeVmGroupAccess(const(wchar)* filePath);
+HRESULT HcsImportLayer(const(wchar)* layerPath, const(wchar)* sourceFolderPath, const(wchar)* layerData);
+HRESULT HcsExportLayer(const(wchar)* layerPath, const(wchar)* exportFolderPath, const(wchar)* layerData, const(wchar)* options);
+HRESULT HcsExportLegacyWritableLayer(const(wchar)* writableLayerMountPath, const(wchar)* writableLayerFolderPath, const(wchar)* exportFolderPath, const(wchar)* layerData);
+HRESULT HcsDestroyLayer(const(wchar)* layerPath);
+HRESULT HcsSetupBaseOSLayer(const(wchar)* layerPath, HANDLE vhdHandle, const(wchar)* options);
+HRESULT HcsInitializeWritableLayer(const(wchar)* writableLayerPath, const(wchar)* layerData, const(wchar)* options);
+HRESULT HcsInitializeLegacyWritableLayer(const(wchar)* writableLayerMountPath, const(wchar)* writableLayerFolderPath, const(wchar)* layerData, const(wchar)* options);
+HRESULT HcsAttachLayerStorageFilter(const(wchar)* layerPath, const(wchar)* layerData);
+HRESULT HcsDetachLayerStorageFilter(const(wchar)* layerPath);
+HRESULT HcsFormatWritableLayerVhd(HANDLE vhdHandle);
+HRESULT HcsGetLayerVhdMountPath(HANDLE vhdHandle, PWSTR* mountPath);
+HRESULT HcsSetupBaseOSVolume(const(wchar)* layerPath, const(wchar)* volumePath, const(wchar)* options);

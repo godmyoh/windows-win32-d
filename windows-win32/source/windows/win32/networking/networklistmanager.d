@@ -120,20 +120,20 @@ enum : int
 enum IID_INetworkListManager = GUID(0xdcb00000, 0x570f, 0x4a9b, [0x8d, 0x69, 0x19, 0x9f, 0xdb, 0xa5, 0x72, 0x3b]);
 interface INetworkListManager : IDispatch
 {
-    HRESULT GetNetworks(NLM_ENUM_NETWORK, IEnumNetworks*);
-    HRESULT GetNetwork(GUID, INetwork*);
-    HRESULT GetNetworkConnections(IEnumNetworkConnections*);
-    HRESULT GetNetworkConnection(GUID, INetworkConnection*);
-    HRESULT get_IsConnectedToInternet(VARIANT_BOOL*);
-    HRESULT get_IsConnected(VARIANT_BOOL*);
-    HRESULT GetConnectivity(NLM_CONNECTIVITY*);
-    HRESULT SetSimulatedProfileInfo(NLM_SIMULATED_PROFILE_INFO*);
+    HRESULT GetNetworks(NLM_ENUM_NETWORK Flags, IEnumNetworks* ppEnumNetwork);
+    HRESULT GetNetwork(GUID gdNetworkId, INetwork* ppNetwork);
+    HRESULT GetNetworkConnections(IEnumNetworkConnections* ppEnum);
+    HRESULT GetNetworkConnection(GUID gdNetworkConnectionId, INetworkConnection* ppNetworkConnection);
+    HRESULT get_IsConnectedToInternet(VARIANT_BOOL* pbIsConnected);
+    HRESULT get_IsConnected(VARIANT_BOOL* pbIsConnected);
+    HRESULT GetConnectivity(NLM_CONNECTIVITY* pConnectivity);
+    HRESULT SetSimulatedProfileInfo(NLM_SIMULATED_PROFILE_INFO* pSimulatedInfo);
     HRESULT ClearSimulatedProfileInfo();
 }
 enum IID_INetworkListManagerEvents = GUID(0xdcb00001, 0x570f, 0x4a9b, [0x8d, 0x69, 0x19, 0x9f, 0xdb, 0xa5, 0x72, 0x3b]);
 interface INetworkListManagerEvents : IUnknown
 {
-    HRESULT ConnectivityChanged(NLM_CONNECTIVITY);
+    HRESULT ConnectivityChanged(NLM_CONNECTIVITY newConnectivity);
 }
 alias NLM_NETWORK_CATEGORY = int;
 enum : int
@@ -146,33 +146,33 @@ enum : int
 enum IID_INetwork = GUID(0xdcb00002, 0x570f, 0x4a9b, [0x8d, 0x69, 0x19, 0x9f, 0xdb, 0xa5, 0x72, 0x3b]);
 interface INetwork : IDispatch
 {
-    HRESULT GetName(BSTR*);
-    HRESULT SetName(BSTR);
-    HRESULT GetDescription(BSTR*);
-    HRESULT SetDescription(BSTR);
-    HRESULT GetNetworkId(GUID*);
-    HRESULT GetDomainType(NLM_DOMAIN_TYPE*);
-    HRESULT GetNetworkConnections(IEnumNetworkConnections*);
-    HRESULT GetTimeCreatedAndConnected(uint*, uint*, uint*, uint*);
-    HRESULT get_IsConnectedToInternet(VARIANT_BOOL*);
-    HRESULT get_IsConnected(VARIANT_BOOL*);
-    HRESULT GetConnectivity(NLM_CONNECTIVITY*);
-    HRESULT GetCategory(NLM_NETWORK_CATEGORY*);
-    HRESULT SetCategory(NLM_NETWORK_CATEGORY);
+    HRESULT GetName(BSTR* pszNetworkName);
+    HRESULT SetName(BSTR szNetworkNewName);
+    HRESULT GetDescription(BSTR* pszDescription);
+    HRESULT SetDescription(BSTR szDescription);
+    HRESULT GetNetworkId(GUID* pgdGuidNetworkId);
+    HRESULT GetDomainType(NLM_DOMAIN_TYPE* pNetworkType);
+    HRESULT GetNetworkConnections(IEnumNetworkConnections* ppEnumNetworkConnection);
+    HRESULT GetTimeCreatedAndConnected(uint* pdwLowDateTimeCreated, uint* pdwHighDateTimeCreated, uint* pdwLowDateTimeConnected, uint* pdwHighDateTimeConnected);
+    HRESULT get_IsConnectedToInternet(VARIANT_BOOL* pbIsConnected);
+    HRESULT get_IsConnected(VARIANT_BOOL* pbIsConnected);
+    HRESULT GetConnectivity(NLM_CONNECTIVITY* pConnectivity);
+    HRESULT GetCategory(NLM_NETWORK_CATEGORY* pCategory);
+    HRESULT SetCategory(NLM_NETWORK_CATEGORY NewCategory);
 }
 enum IID_INetwork2 = GUID(0xb5550abb, 0x3391, 0x4310, [0x80, 0x4f, 0x25, 0xdc, 0xc3, 0x25, 0xed, 0x81]);
 interface INetwork2 : INetwork
 {
-    HRESULT IsDomainAuthenticatedBy(NLM_DOMAIN_AUTHENTICATION_KIND, BOOL*);
+    HRESULT IsDomainAuthenticatedBy(NLM_DOMAIN_AUTHENTICATION_KIND domainAuthenticationKind, BOOL* pValue);
 }
 enum IID_IEnumNetworks = GUID(0xdcb00003, 0x570f, 0x4a9b, [0x8d, 0x69, 0x19, 0x9f, 0xdb, 0xa5, 0x72, 0x3b]);
 interface IEnumNetworks : IDispatch
 {
-    HRESULT get__NewEnum(IEnumVARIANT*);
-    HRESULT Next(uint, INetwork*, uint*);
-    HRESULT Skip(uint);
+    HRESULT get__NewEnum(IEnumVARIANT* ppEnumVar);
+    HRESULT Next(uint celt, INetwork* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumNetworks*);
+    HRESULT Clone(IEnumNetworks* ppEnumNetwork);
 }
 alias NLM_NETWORK_PROPERTY_CHANGE = int;
 enum : int
@@ -187,35 +187,35 @@ enum : int
 enum IID_INetworkEvents = GUID(0xdcb00004, 0x570f, 0x4a9b, [0x8d, 0x69, 0x19, 0x9f, 0xdb, 0xa5, 0x72, 0x3b]);
 interface INetworkEvents : IUnknown
 {
-    HRESULT NetworkAdded(GUID);
-    HRESULT NetworkDeleted(GUID);
-    HRESULT NetworkConnectivityChanged(GUID, NLM_CONNECTIVITY);
-    HRESULT NetworkPropertyChanged(GUID, NLM_NETWORK_PROPERTY_CHANGE);
+    HRESULT NetworkAdded(GUID networkId);
+    HRESULT NetworkDeleted(GUID networkId);
+    HRESULT NetworkConnectivityChanged(GUID networkId, NLM_CONNECTIVITY newConnectivity);
+    HRESULT NetworkPropertyChanged(GUID networkId, NLM_NETWORK_PROPERTY_CHANGE flags);
 }
 enum IID_INetworkConnection = GUID(0xdcb00005, 0x570f, 0x4a9b, [0x8d, 0x69, 0x19, 0x9f, 0xdb, 0xa5, 0x72, 0x3b]);
 interface INetworkConnection : IDispatch
 {
-    HRESULT GetNetwork(INetwork*);
-    HRESULT get_IsConnectedToInternet(VARIANT_BOOL*);
-    HRESULT get_IsConnected(VARIANT_BOOL*);
-    HRESULT GetConnectivity(NLM_CONNECTIVITY*);
-    HRESULT GetConnectionId(GUID*);
-    HRESULT GetAdapterId(GUID*);
-    HRESULT GetDomainType(NLM_DOMAIN_TYPE*);
+    HRESULT GetNetwork(INetwork* ppNetwork);
+    HRESULT get_IsConnectedToInternet(VARIANT_BOOL* pbIsConnected);
+    HRESULT get_IsConnected(VARIANT_BOOL* pbIsConnected);
+    HRESULT GetConnectivity(NLM_CONNECTIVITY* pConnectivity);
+    HRESULT GetConnectionId(GUID* pgdConnectionId);
+    HRESULT GetAdapterId(GUID* pgdAdapterId);
+    HRESULT GetDomainType(NLM_DOMAIN_TYPE* pDomainType);
 }
 enum IID_INetworkConnection2 = GUID(0xe676ed, 0x5a35, 0x4738, [0x92, 0xeb, 0x85, 0x81, 0x73, 0x8d, 0xf, 0xa]);
 interface INetworkConnection2 : INetworkConnection
 {
-    HRESULT IsDomainAuthenticatedBy(NLM_DOMAIN_AUTHENTICATION_KIND, BOOL*);
+    HRESULT IsDomainAuthenticatedBy(NLM_DOMAIN_AUTHENTICATION_KIND domainAuthenticationKind, BOOL* pValue);
 }
 enum IID_IEnumNetworkConnections = GUID(0xdcb00006, 0x570f, 0x4a9b, [0x8d, 0x69, 0x19, 0x9f, 0xdb, 0xa5, 0x72, 0x3b]);
 interface IEnumNetworkConnections : IDispatch
 {
-    HRESULT get__NewEnum(IEnumVARIANT*);
-    HRESULT Next(uint, INetworkConnection*, uint*);
-    HRESULT Skip(uint);
+    HRESULT get__NewEnum(IEnumVARIANT* ppEnumVar);
+    HRESULT Next(uint celt, INetworkConnection* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumNetworkConnections*);
+    HRESULT Clone(IEnumNetworkConnections* ppEnumNetwork);
 }
 alias NLM_CONNECTION_PROPERTY_CHANGE = int;
 enum : int
@@ -226,33 +226,33 @@ enum : int
 enum IID_INetworkConnectionEvents = GUID(0xdcb00007, 0x570f, 0x4a9b, [0x8d, 0x69, 0x19, 0x9f, 0xdb, 0xa5, 0x72, 0x3b]);
 interface INetworkConnectionEvents : IUnknown
 {
-    HRESULT NetworkConnectionConnectivityChanged(GUID, NLM_CONNECTIVITY);
-    HRESULT NetworkConnectionPropertyChanged(GUID, NLM_CONNECTION_PROPERTY_CHANGE);
+    HRESULT NetworkConnectionConnectivityChanged(GUID connectionId, NLM_CONNECTIVITY newConnectivity);
+    HRESULT NetworkConnectionPropertyChanged(GUID connectionId, NLM_CONNECTION_PROPERTY_CHANGE flags);
 }
 enum IID_INetworkCostManager = GUID(0xdcb00008, 0x570f, 0x4a9b, [0x8d, 0x69, 0x19, 0x9f, 0xdb, 0xa5, 0x72, 0x3b]);
 interface INetworkCostManager : IUnknown
 {
-    HRESULT GetCost(uint*, NLM_SOCKADDR*);
-    HRESULT GetDataPlanStatus(NLM_DATAPLAN_STATUS*, NLM_SOCKADDR*);
-    HRESULT SetDestinationAddresses(uint, NLM_SOCKADDR*, VARIANT_BOOL);
+    HRESULT GetCost(uint* pCost, NLM_SOCKADDR* pDestIPAddr);
+    HRESULT GetDataPlanStatus(NLM_DATAPLAN_STATUS* pDataPlanStatus, NLM_SOCKADDR* pDestIPAddr);
+    HRESULT SetDestinationAddresses(uint length, NLM_SOCKADDR* pDestIPAddrList, VARIANT_BOOL bAppend);
 }
 enum IID_INetworkCostManagerEvents = GUID(0xdcb00009, 0x570f, 0x4a9b, [0x8d, 0x69, 0x19, 0x9f, 0xdb, 0xa5, 0x72, 0x3b]);
 interface INetworkCostManagerEvents : IUnknown
 {
-    HRESULT CostChanged(uint, NLM_SOCKADDR*);
-    HRESULT DataPlanStatusChanged(NLM_SOCKADDR*);
+    HRESULT CostChanged(uint newCost, NLM_SOCKADDR* pDestAddr);
+    HRESULT DataPlanStatusChanged(NLM_SOCKADDR* pDestAddr);
 }
 enum IID_INetworkConnectionCost = GUID(0xdcb0000a, 0x570f, 0x4a9b, [0x8d, 0x69, 0x19, 0x9f, 0xdb, 0xa5, 0x72, 0x3b]);
 interface INetworkConnectionCost : IUnknown
 {
-    HRESULT GetCost(uint*);
-    HRESULT GetDataPlanStatus(NLM_DATAPLAN_STATUS*);
+    HRESULT GetCost(uint* pCost);
+    HRESULT GetDataPlanStatus(NLM_DATAPLAN_STATUS* pDataPlanStatus);
 }
 enum IID_INetworkConnectionCostEvents = GUID(0xdcb0000b, 0x570f, 0x4a9b, [0x8d, 0x69, 0x19, 0x9f, 0xdb, 0xa5, 0x72, 0x3b]);
 interface INetworkConnectionCostEvents : IUnknown
 {
-    HRESULT ConnectionCostChanged(GUID, uint);
-    HRESULT ConnectionDataPlanStatusChanged(GUID);
+    HRESULT ConnectionCostChanged(GUID connectionId, uint newCost);
+    HRESULT ConnectionDataPlanStatusChanged(GUID connectionId);
 }
 enum CLSID_NetworkListManager = GUID(0xdcb00c01, 0x570f, 0x4a9b, [0x8d, 0x69, 0x19, 0x9f, 0xdb, 0xa5, 0x72, 0x3b]);
 struct NetworkListManager

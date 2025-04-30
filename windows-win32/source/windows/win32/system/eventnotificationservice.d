@@ -14,9 +14,9 @@ enum : uint
     CONNECTION_WAN = 0x00000001,
 }
 
-BOOL IsDestinationReachableA(const(char)*, QOCINFO*);
-BOOL IsDestinationReachableW(const(wchar)*, QOCINFO*);
-BOOL IsNetworkAlive(uint*);
+BOOL IsDestinationReachableA(const(char)* lpszDestination, QOCINFO* lpQOCInfo);
+BOOL IsDestinationReachableW(const(wchar)* lpszDestination, QOCINFO* lpQOCInfo);
+BOOL IsNetworkAlive(uint* lpdwFlags);
 enum NETWORK_ALIVE_LAN = 0x00000001;
 enum NETWORK_ALIVE_WAN = 0x00000002;
 enum NETWORK_ALIVE_AOL = 0x00000004;
@@ -46,38 +46,38 @@ struct SENS_QOCINFO
 enum IID_ISensNetwork = GUID(0xd597bab1, 0x5b9f, 0x11d1, [0x8d, 0xd2, 0x0, 0xaa, 0x0, 0x4a, 0xbd, 0x5e]);
 interface ISensNetwork : IDispatch
 {
-    HRESULT ConnectionMade(BSTR, uint, SENS_QOCINFO*);
-    HRESULT ConnectionMadeNoQOCInfo(BSTR, uint);
-    HRESULT ConnectionLost(BSTR, SENS_CONNECTION_TYPE);
-    HRESULT DestinationReachable(BSTR, BSTR, uint, SENS_QOCINFO*);
-    HRESULT DestinationReachableNoQOCInfo(BSTR, BSTR, uint);
+    HRESULT ConnectionMade(BSTR bstrConnection, uint ulType, SENS_QOCINFO* lpQOCInfo);
+    HRESULT ConnectionMadeNoQOCInfo(BSTR bstrConnection, uint ulType);
+    HRESULT ConnectionLost(BSTR bstrConnection, SENS_CONNECTION_TYPE ulType);
+    HRESULT DestinationReachable(BSTR bstrDestination, BSTR bstrConnection, uint ulType, SENS_QOCINFO* lpQOCInfo);
+    HRESULT DestinationReachableNoQOCInfo(BSTR bstrDestination, BSTR bstrConnection, uint ulType);
 }
 enum IID_ISensOnNow = GUID(0xd597bab2, 0x5b9f, 0x11d1, [0x8d, 0xd2, 0x0, 0xaa, 0x0, 0x4a, 0xbd, 0x5e]);
 interface ISensOnNow : IDispatch
 {
     HRESULT OnACPower();
-    HRESULT OnBatteryPower(uint);
-    HRESULT BatteryLow(uint);
+    HRESULT OnBatteryPower(uint dwBatteryLifePercent);
+    HRESULT BatteryLow(uint dwBatteryLifePercent);
 }
 enum IID_ISensLogon = GUID(0xd597bab3, 0x5b9f, 0x11d1, [0x8d, 0xd2, 0x0, 0xaa, 0x0, 0x4a, 0xbd, 0x5e]);
 interface ISensLogon : IDispatch
 {
-    HRESULT Logon(BSTR);
-    HRESULT Logoff(BSTR);
-    HRESULT StartShell(BSTR);
-    HRESULT DisplayLock(BSTR);
-    HRESULT DisplayUnlock(BSTR);
-    HRESULT StartScreenSaver(BSTR);
-    HRESULT StopScreenSaver(BSTR);
+    HRESULT Logon(BSTR bstrUserName);
+    HRESULT Logoff(BSTR bstrUserName);
+    HRESULT StartShell(BSTR bstrUserName);
+    HRESULT DisplayLock(BSTR bstrUserName);
+    HRESULT DisplayUnlock(BSTR bstrUserName);
+    HRESULT StartScreenSaver(BSTR bstrUserName);
+    HRESULT StopScreenSaver(BSTR bstrUserName);
 }
 enum IID_ISensLogon2 = GUID(0xd597bab4, 0x5b9f, 0x11d1, [0x8d, 0xd2, 0x0, 0xaa, 0x0, 0x4a, 0xbd, 0x5e]);
 interface ISensLogon2 : IDispatch
 {
-    HRESULT Logon(BSTR, uint);
-    HRESULT Logoff(BSTR, uint);
-    HRESULT SessionDisconnect(BSTR, uint);
-    HRESULT SessionReconnect(BSTR, uint);
-    HRESULT PostShell(BSTR, uint);
+    HRESULT Logon(BSTR bstrUserName, uint dwSessionId);
+    HRESULT Logoff(BSTR bstrUserName, uint dwSessionId);
+    HRESULT SessionDisconnect(BSTR bstrUserName, uint dwSessionId);
+    HRESULT SessionReconnect(BSTR bstrUserName, uint dwSessionId);
+    HRESULT PostShell(BSTR bstrUserName, uint dwSessionId);
 }
 enum CLSID_SENS = GUID(0xd597cafe, 0x5b9f, 0x11d1, [0x8d, 0xd2, 0x0, 0xaa, 0x0, 0x4a, 0xbd, 0x5e]);
 struct SENS

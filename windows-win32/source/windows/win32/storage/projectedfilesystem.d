@@ -6,8 +6,8 @@ import windows.win32.foundation : BOOLEAN, HRESULT, PWSTR;
 version (Windows):
 extern (Windows):
 
-alias PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT = long;
-alias PRJ_DIR_ENTRY_BUFFER_HANDLE = long;
+alias PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT = void*;
+alias PRJ_DIR_ENTRY_BUFFER_HANDLE = void*;
 alias PRJ_NOTIFY_TYPES = uint;
 enum : uint
 {
@@ -184,12 +184,12 @@ struct PRJ_CALLBACK_DATA
     const(wchar)* TriggeringProcessImageFileName;
     void* InstanceContext;
 }
-alias PRJ_START_DIRECTORY_ENUMERATION_CB = HRESULT function(const(PRJ_CALLBACK_DATA)*, const(GUID)*);
-alias PRJ_GET_DIRECTORY_ENUMERATION_CB = HRESULT function(const(PRJ_CALLBACK_DATA)*, const(GUID)*, const(wchar)*, PRJ_DIR_ENTRY_BUFFER_HANDLE);
-alias PRJ_END_DIRECTORY_ENUMERATION_CB = HRESULT function(const(PRJ_CALLBACK_DATA)*, const(GUID)*);
-alias PRJ_GET_PLACEHOLDER_INFO_CB = HRESULT function(const(PRJ_CALLBACK_DATA)*);
-alias PRJ_GET_FILE_DATA_CB = HRESULT function(const(PRJ_CALLBACK_DATA)*, ulong, uint);
-alias PRJ_QUERY_FILE_NAME_CB = HRESULT function(const(PRJ_CALLBACK_DATA)*);
+alias PRJ_START_DIRECTORY_ENUMERATION_CB = HRESULT function(const(PRJ_CALLBACK_DATA)* callbackData, const(GUID)* enumerationId);
+alias PRJ_GET_DIRECTORY_ENUMERATION_CB = HRESULT function(const(PRJ_CALLBACK_DATA)* callbackData, const(GUID)* enumerationId, const(wchar)* searchExpression, PRJ_DIR_ENTRY_BUFFER_HANDLE dirEntryBufferHandle);
+alias PRJ_END_DIRECTORY_ENUMERATION_CB = HRESULT function(const(PRJ_CALLBACK_DATA)* callbackData, const(GUID)* enumerationId);
+alias PRJ_GET_PLACEHOLDER_INFO_CB = HRESULT function(const(PRJ_CALLBACK_DATA)* callbackData);
+alias PRJ_GET_FILE_DATA_CB = HRESULT function(const(PRJ_CALLBACK_DATA)* callbackData, ulong byteOffset, uint length);
+alias PRJ_QUERY_FILE_NAME_CB = HRESULT function(const(PRJ_CALLBACK_DATA)* callbackData);
 union PRJ_NOTIFICATION_PARAMETERS
 {
     struct PostCreate
@@ -205,8 +205,8 @@ union PRJ_NOTIFICATION_PARAMETERS
         BOOLEAN IsFileModified;
     }
 }
-alias PRJ_NOTIFICATION_CB = HRESULT function(const(PRJ_CALLBACK_DATA)*, BOOLEAN, PRJ_NOTIFICATION, const(wchar)*, PRJ_NOTIFICATION_PARAMETERS*);
-alias PRJ_CANCEL_COMMAND_CB = void function(const(PRJ_CALLBACK_DATA)*);
+alias PRJ_NOTIFICATION_CB = HRESULT function(const(PRJ_CALLBACK_DATA)* callbackData, BOOLEAN isDirectory, PRJ_NOTIFICATION notification, const(wchar)* destinationFileName, PRJ_NOTIFICATION_PARAMETERS* operationParameters);
+alias PRJ_CANCEL_COMMAND_CB = void function(const(PRJ_CALLBACK_DATA)* callbackData);
 struct PRJ_CALLBACKS
 {
     PRJ_START_DIRECTORY_ENUMERATION_CB StartDirectoryEnumerationCallback;
@@ -240,22 +240,22 @@ struct PRJ_COMPLETE_COMMAND_EXTENDED_PARAMETERS
         }
     }
 }
-HRESULT PrjStartVirtualizing(const(wchar)*, const(PRJ_CALLBACKS)*, const(void)*, const(PRJ_STARTVIRTUALIZING_OPTIONS)*, PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT*);
-void PrjStopVirtualizing(PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT);
-HRESULT PrjClearNegativePathCache(PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT, uint*);
-HRESULT PrjGetVirtualizationInstanceInfo(PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT, PRJ_VIRTUALIZATION_INSTANCE_INFO*);
-HRESULT PrjMarkDirectoryAsPlaceholder(const(wchar)*, const(wchar)*, const(PRJ_PLACEHOLDER_VERSION_INFO)*, const(GUID)*);
-HRESULT PrjWritePlaceholderInfo(PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT, const(wchar)*, const(PRJ_PLACEHOLDER_INFO)*, uint);
-HRESULT PrjWritePlaceholderInfo2(PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT, const(wchar)*, const(PRJ_PLACEHOLDER_INFO)*, uint, const(PRJ_EXTENDED_INFO)*);
-HRESULT PrjUpdateFileIfNeeded(PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT, const(wchar)*, const(PRJ_PLACEHOLDER_INFO)*, uint, PRJ_UPDATE_TYPES, PRJ_UPDATE_FAILURE_CAUSES*);
-HRESULT PrjDeleteFile(PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT, const(wchar)*, PRJ_UPDATE_TYPES, PRJ_UPDATE_FAILURE_CAUSES*);
-HRESULT PrjWriteFileData(PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT, const(GUID)*, void*, ulong, uint);
-HRESULT PrjGetOnDiskFileState(const(wchar)*, PRJ_FILE_STATE*);
-void* PrjAllocateAlignedBuffer(PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT, ulong);
-void PrjFreeAlignedBuffer(void*);
-HRESULT PrjCompleteCommand(PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT, int, HRESULT, PRJ_COMPLETE_COMMAND_EXTENDED_PARAMETERS*);
-HRESULT PrjFillDirEntryBuffer(const(wchar)*, PRJ_FILE_BASIC_INFO*, PRJ_DIR_ENTRY_BUFFER_HANDLE);
-HRESULT PrjFillDirEntryBuffer2(PRJ_DIR_ENTRY_BUFFER_HANDLE, const(wchar)*, PRJ_FILE_BASIC_INFO*, PRJ_EXTENDED_INFO*);
-BOOLEAN PrjFileNameMatch(const(wchar)*, const(wchar)*);
-int PrjFileNameCompare(const(wchar)*, const(wchar)*);
-BOOLEAN PrjDoesNameContainWildCards(const(wchar)*);
+HRESULT PrjStartVirtualizing(const(wchar)* virtualizationRootPath, const(PRJ_CALLBACKS)* callbacks, const(void)* instanceContext, const(PRJ_STARTVIRTUALIZING_OPTIONS)* options, PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT* namespaceVirtualizationContext);
+void PrjStopVirtualizing(PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT namespaceVirtualizationContext);
+HRESULT PrjClearNegativePathCache(PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT namespaceVirtualizationContext, uint* totalEntryNumber);
+HRESULT PrjGetVirtualizationInstanceInfo(PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT namespaceVirtualizationContext, PRJ_VIRTUALIZATION_INSTANCE_INFO* virtualizationInstanceInfo);
+HRESULT PrjMarkDirectoryAsPlaceholder(const(wchar)* rootPathName, const(wchar)* targetPathName, const(PRJ_PLACEHOLDER_VERSION_INFO)* versionInfo, const(GUID)* virtualizationInstanceID);
+HRESULT PrjWritePlaceholderInfo(PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT namespaceVirtualizationContext, const(wchar)* destinationFileName, const(PRJ_PLACEHOLDER_INFO)* placeholderInfo, uint placeholderInfoSize);
+HRESULT PrjWritePlaceholderInfo2(PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT namespaceVirtualizationContext, const(wchar)* destinationFileName, const(PRJ_PLACEHOLDER_INFO)* placeholderInfo, uint placeholderInfoSize, const(PRJ_EXTENDED_INFO)* ExtendedInfo);
+HRESULT PrjUpdateFileIfNeeded(PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT namespaceVirtualizationContext, const(wchar)* destinationFileName, const(PRJ_PLACEHOLDER_INFO)* placeholderInfo, uint placeholderInfoSize, PRJ_UPDATE_TYPES updateFlags, PRJ_UPDATE_FAILURE_CAUSES* failureReason);
+HRESULT PrjDeleteFile(PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT namespaceVirtualizationContext, const(wchar)* destinationFileName, PRJ_UPDATE_TYPES updateFlags, PRJ_UPDATE_FAILURE_CAUSES* failureReason);
+HRESULT PrjWriteFileData(PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT namespaceVirtualizationContext, const(GUID)* dataStreamId, void* buffer, ulong byteOffset, uint length);
+HRESULT PrjGetOnDiskFileState(const(wchar)* destinationFileName, PRJ_FILE_STATE* fileState);
+void* PrjAllocateAlignedBuffer(PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT namespaceVirtualizationContext, ulong size);
+void PrjFreeAlignedBuffer(void* buffer);
+HRESULT PrjCompleteCommand(PRJ_NAMESPACE_VIRTUALIZATION_CONTEXT namespaceVirtualizationContext, int commandId, HRESULT completionResult, PRJ_COMPLETE_COMMAND_EXTENDED_PARAMETERS* extendedParameters);
+HRESULT PrjFillDirEntryBuffer(const(wchar)* fileName, PRJ_FILE_BASIC_INFO* fileBasicInfo, PRJ_DIR_ENTRY_BUFFER_HANDLE dirEntryBufferHandle);
+HRESULT PrjFillDirEntryBuffer2(PRJ_DIR_ENTRY_BUFFER_HANDLE dirEntryBufferHandle, const(wchar)* fileName, PRJ_FILE_BASIC_INFO* fileBasicInfo, PRJ_EXTENDED_INFO* extendedInfo);
+BOOLEAN PrjFileNameMatch(const(wchar)* fileNameToCheck, const(wchar)* pattern);
+int PrjFileNameCompare(const(wchar)* fileName1, const(wchar)* fileName2);
+BOOLEAN PrjDoesNameContainWildCards(const(wchar)* fileName);

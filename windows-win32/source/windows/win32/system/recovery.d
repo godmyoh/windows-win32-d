@@ -15,11 +15,11 @@ enum : uint
     RESTART_NO_REBOOT = 0x00000008,
 }
 
-HRESULT RegisterApplicationRecoveryCallback(APPLICATION_RECOVERY_CALLBACK, void*, uint, uint);
+HRESULT RegisterApplicationRecoveryCallback(APPLICATION_RECOVERY_CALLBACK pRecoveyCallback, void* pvParameter, uint dwPingInterval, uint dwFlags);
 HRESULT UnregisterApplicationRecoveryCallback();
-HRESULT RegisterApplicationRestart(const(wchar)*, REGISTER_APPLICATION_RESTART_FLAGS);
+HRESULT RegisterApplicationRestart(const(wchar)* pwzCommandline, REGISTER_APPLICATION_RESTART_FLAGS dwFlags);
 HRESULT UnregisterApplicationRestart();
-HRESULT GetApplicationRecoveryCallback(HANDLE, APPLICATION_RECOVERY_CALLBACK*, void**, uint*, uint*);
-HRESULT GetApplicationRestartSettings(HANDLE, PWSTR, uint*, uint*);
-HRESULT ApplicationRecoveryInProgress(BOOL*);
-void ApplicationRecoveryFinished(BOOL);
+HRESULT GetApplicationRecoveryCallback(HANDLE hProcess, APPLICATION_RECOVERY_CALLBACK* pRecoveryCallback, void** ppvParameter, uint* pdwPingInterval, uint* pdwFlags);
+HRESULT GetApplicationRestartSettings(HANDLE hProcess, PWSTR pwzCommandline, uint* pcchSize, uint* pdwFlags);
+HRESULT ApplicationRecoveryInProgress(BOOL* pbCancelled);
+void ApplicationRecoveryFinished(BOOL bSuccess);

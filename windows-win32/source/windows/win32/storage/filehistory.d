@@ -3,18 +3,17 @@ module windows.win32.storage.filehistory;
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, FILETIME, HRESULT;
 import windows.win32.system.com : IUnknown;
-import windows.win32.system.windowsprogramming : FH_SERVICE_PIPE_HANDLE;
 
 version (Windows):
 extern (Windows):
 
-HRESULT FhServiceOpenPipe(BOOL, FH_SERVICE_PIPE_HANDLE*);
-HRESULT FhServiceClosePipe(FH_SERVICE_PIPE_HANDLE);
-HRESULT FhServiceStartBackup(FH_SERVICE_PIPE_HANDLE, BOOL);
-HRESULT FhServiceStopBackup(FH_SERVICE_PIPE_HANDLE, BOOL);
-HRESULT FhServiceReloadConfiguration(FH_SERVICE_PIPE_HANDLE);
-HRESULT FhServiceBlockBackup(FH_SERVICE_PIPE_HANDLE);
-HRESULT FhServiceUnblockBackup(FH_SERVICE_PIPE_HANDLE);
+HRESULT FhServiceOpenPipe(BOOL StartServiceIfStopped, FH_SERVICE_PIPE_HANDLE* Pipe);
+HRESULT FhServiceClosePipe(FH_SERVICE_PIPE_HANDLE Pipe);
+HRESULT FhServiceStartBackup(FH_SERVICE_PIPE_HANDLE Pipe, BOOL LowPriorityIo);
+HRESULT FhServiceStopBackup(FH_SERVICE_PIPE_HANDLE Pipe, BOOL StopTracking);
+HRESULT FhServiceReloadConfiguration(FH_SERVICE_PIPE_HANDLE Pipe);
+HRESULT FhServiceBlockBackup(FH_SERVICE_PIPE_HANDLE Pipe);
+HRESULT FhServiceUnblockBackup(FH_SERVICE_PIPE_HANDLE Pipe);
 enum FHCFG_E_CORRUPT_CONFIG_FILE = 0xffffffff80040300;
 enum FHCFG_E_CONFIG_FILE_NOT_FOUND = 0xffffffff80040301;
 enum FHCFG_E_CONFIG_ALREADY_EXISTS = 0xffffffff80040302;
@@ -57,6 +56,7 @@ enum FH_STATE_TOO_MUCH_BEHIND = 0x000000f0;
 enum FH_STATE_NO_ERROR = 0x000000ff;
 enum FH_STATE_BACKUP_NOT_SUPPORTED = 0x00000810;
 enum FH_STATE_RUNNING = 0x00000100;
+alias FH_SERVICE_PIPE_HANDLE = void*;
 alias FH_TARGET_PROPERTY_TYPE = int;
 enum : int
 {
@@ -78,14 +78,14 @@ enum : int
 enum IID_IFhTarget = GUID(0xd87965fd, 0x2bad, 0x4657, [0xbd, 0x3b, 0x95, 0x67, 0xeb, 0x30, 0xc, 0xed]);
 interface IFhTarget : IUnknown
 {
-    HRESULT GetStringProperty(FH_TARGET_PROPERTY_TYPE, BSTR*);
-    HRESULT GetNumericalProperty(FH_TARGET_PROPERTY_TYPE, ulong*);
+    HRESULT GetStringProperty(FH_TARGET_PROPERTY_TYPE PropertyType, BSTR* PropertyValue);
+    HRESULT GetNumericalProperty(FH_TARGET_PROPERTY_TYPE PropertyType, ulong* PropertyValue);
 }
 enum IID_IFhScopeIterator = GUID(0x3197abce, 0x532a, 0x44c6, [0x86, 0x15, 0xf3, 0x66, 0x65, 0x66, 0xa7, 0x20]);
 interface IFhScopeIterator : IUnknown
 {
     HRESULT MoveToNextItem();
-    HRESULT GetItem(BSTR*);
+    HRESULT GetItem(BSTR* Item);
 }
 alias FH_PROTECTED_ITEM_CATEGORY = int;
 enum : int
@@ -140,28 +140,28 @@ enum IID_IFhConfigMgr = GUID(0x6a5fea5b, 0xbf8f, 0x4ee5, [0xb8, 0xc3, 0x44, 0xd8
 interface IFhConfigMgr : IUnknown
 {
     HRESULT LoadConfiguration();
-    HRESULT CreateDefaultConfiguration(BOOL);
+    HRESULT CreateDefaultConfiguration(BOOL OverwriteIfExists);
     HRESULT SaveConfiguration();
-    HRESULT AddRemoveExcludeRule(BOOL, FH_PROTECTED_ITEM_CATEGORY, BSTR);
-    HRESULT GetIncludeExcludeRules(BOOL, FH_PROTECTED_ITEM_CATEGORY, IFhScopeIterator*);
-    HRESULT GetLocalPolicy(FH_LOCAL_POLICY_TYPE, ulong*);
-    HRESULT SetLocalPolicy(FH_LOCAL_POLICY_TYPE, ulong);
-    HRESULT GetBackupStatus(FH_BACKUP_STATUS*);
-    HRESULT SetBackupStatus(FH_BACKUP_STATUS);
-    HRESULT GetDefaultTarget(IFhTarget*);
-    HRESULT ValidateTarget(BSTR, FH_DEVICE_VALIDATION_RESULT*);
-    HRESULT ProvisionAndSetNewTarget(BSTR, BSTR);
-    HRESULT ChangeDefaultTargetRecommendation(BOOL);
-    HRESULT QueryProtectionStatus(uint*, BSTR*);
+    HRESULT AddRemoveExcludeRule(BOOL Add, FH_PROTECTED_ITEM_CATEGORY Category, BSTR Item);
+    HRESULT GetIncludeExcludeRules(BOOL Include, FH_PROTECTED_ITEM_CATEGORY Category, IFhScopeIterator* Iterator);
+    HRESULT GetLocalPolicy(FH_LOCAL_POLICY_TYPE LocalPolicyType, ulong* PolicyValue);
+    HRESULT SetLocalPolicy(FH_LOCAL_POLICY_TYPE LocalPolicyType, ulong PolicyValue);
+    HRESULT GetBackupStatus(FH_BACKUP_STATUS* BackupStatus);
+    HRESULT SetBackupStatus(FH_BACKUP_STATUS BackupStatus);
+    HRESULT GetDefaultTarget(IFhTarget* DefaultTarget);
+    HRESULT ValidateTarget(BSTR TargetUrl, FH_DEVICE_VALIDATION_RESULT* ValidationResult);
+    HRESULT ProvisionAndSetNewTarget(BSTR TargetUrl, BSTR TargetName);
+    HRESULT ChangeDefaultTargetRecommendation(BOOL Recommend);
+    HRESULT QueryProtectionStatus(uint* ProtectionState, BSTR* ProtectedUntilTime);
 }
 enum IID_IFhReassociation = GUID(0x6544a28a, 0xf68d, 0x47ac, [0x91, 0xef, 0x16, 0xb2, 0xb3, 0x6a, 0xa3, 0xee]);
 interface IFhReassociation : IUnknown
 {
-    HRESULT ValidateTarget(BSTR, FH_DEVICE_VALIDATION_RESULT*);
-    HRESULT ScanTargetForConfigurations(BSTR);
-    HRESULT GetConfigurationDetails(uint, BSTR*, BSTR*, FILETIME*);
-    HRESULT SelectConfiguration(uint);
-    HRESULT PerformReassociation(BOOL);
+    HRESULT ValidateTarget(BSTR TargetUrl, FH_DEVICE_VALIDATION_RESULT* ValidationResult);
+    HRESULT ScanTargetForConfigurations(BSTR TargetUrl);
+    HRESULT GetConfigurationDetails(uint Index, BSTR* UserName, BSTR* PcName, FILETIME* BackupTime);
+    HRESULT SelectConfiguration(uint Index);
+    HRESULT PerformReassociation(BOOL OverwriteIfExists);
 }
 enum CLSID_FhConfigMgr = GUID(0xed43bb3c, 0x9e9, 0x498a, [0x9d, 0xf6, 0x21, 0x77, 0x24, 0x4c, 0x6d, 0xb4]);
 struct FhConfigMgr

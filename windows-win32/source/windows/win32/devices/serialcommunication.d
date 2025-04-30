@@ -1,19 +1,18 @@
 module windows.win32.devices.serialcommunication;
 
 import windows.win32.guid : GUID;
-import windows.win32.devices.properties : DEVPROPKEY;
-import windows.win32.foundation : BOOL, BOOLEAN;
+import windows.win32.foundation : BOOL, BOOLEAN, DEVPROPKEY;
 
 version (Windows):
 extern (Windows):
 
-int ComDBOpen(HCOMDB*);
-int ComDBClose(HCOMDB);
-int ComDBGetCurrentPortUsage(HCOMDB, ubyte*, uint, uint, uint*);
-int ComDBClaimNextFreePort(HCOMDB, uint*);
-int ComDBClaimPort(HCOMDB, uint, BOOL, BOOL*);
-int ComDBReleasePort(HCOMDB, uint);
-int ComDBResizeDatabase(HCOMDB, uint);
+int ComDBOpen(HCOMDB* PHComDB);
+int ComDBClose(HCOMDB HComDB);
+int ComDBGetCurrentPortUsage(HCOMDB HComDB, ubyte* Buffer, uint BufferSize, uint ReportType, uint* MaxPortsReported);
+int ComDBClaimNextFreePort(HCOMDB HComDB, uint* ComNumber);
+int ComDBClaimPort(HCOMDB HComDB, uint ComNumber, BOOL ForceClaim, BOOL* Forced);
+int ComDBReleasePort(HCOMDB HComDB, uint ComNumber);
+int ComDBResizeDatabase(HCOMDB HComDB, uint NewSize);
 enum DEVPKEY_DeviceInterface_Serial_UsbVendorId = DEVPROPKEY(GUID(1282142556, 19459, 19116, [145, 245, 100, 192, 248, 82, 188, 244]), 2);
 enum DEVPKEY_DeviceInterface_Serial_UsbProductId = DEVPROPKEY(GUID(1282142556, 19459, 19116, [145, 245, 100, 192, 248, 82, 188, 244]), 3);
 enum DEVPKEY_DeviceInterface_Serial_PortName = DEVPROPKEY(GUID(1282142556, 19459, 19116, [145, 245, 100, 192, 248, 82, 188, 244]), 4);
@@ -203,8 +202,8 @@ struct SERENUM_PORT_DESC
     long PortAddress;
     ushort[1] Reserved;
 }
-alias PSERENUM_READPORT = ubyte function(void*);
-alias PSERENUM_WRITEPORT = void function(void*, ubyte);
+alias PSERENUM_READPORT = ubyte function(void* SerPortAddress);
+alias PSERENUM_WRITEPORT = void function(void* SerPortAddress, ubyte Value);
 alias SERENUM_PORTION = int;
 enum : int
 {

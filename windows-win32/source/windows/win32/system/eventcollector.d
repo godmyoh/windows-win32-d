@@ -5,21 +5,21 @@ import windows.win32.foundation : BOOL, PWSTR;
 version (Windows):
 extern (Windows):
 
-long EcOpenSubscriptionEnum(uint);
-BOOL EcEnumNextSubscription(long, uint, PWSTR, uint*);
-long EcOpenSubscription(const(wchar)*, uint, uint);
-BOOL EcSetSubscriptionProperty(long, EC_SUBSCRIPTION_PROPERTY_ID, uint, EC_VARIANT*);
-BOOL EcGetSubscriptionProperty(long, EC_SUBSCRIPTION_PROPERTY_ID, uint, uint, EC_VARIANT*, uint*);
-BOOL EcSaveSubscription(long, uint);
-BOOL EcDeleteSubscription(const(wchar)*, uint);
-BOOL EcGetObjectArraySize(long, uint*);
-BOOL EcSetObjectArrayProperty(long, EC_SUBSCRIPTION_PROPERTY_ID, uint, uint, EC_VARIANT*);
-BOOL EcGetObjectArrayProperty(long, EC_SUBSCRIPTION_PROPERTY_ID, uint, uint, uint, EC_VARIANT*, uint*);
-BOOL EcInsertObjectArrayElement(long, uint);
-BOOL EcRemoveObjectArrayElement(long, uint);
-BOOL EcGetSubscriptionRunTimeStatus(const(wchar)*, EC_SUBSCRIPTION_RUNTIME_STATUS_INFO_ID, const(wchar)*, uint, uint, EC_VARIANT*, uint*);
-BOOL EcRetrySubscription(const(wchar)*, const(wchar)*, uint);
-BOOL EcClose(long);
+long EcOpenSubscriptionEnum(uint Flags);
+BOOL EcEnumNextSubscription(long SubscriptionEnum, uint SubscriptionNameBufferSize, PWSTR SubscriptionNameBuffer, uint* SubscriptionNameBufferUsed);
+long EcOpenSubscription(const(wchar)* SubscriptionName, uint AccessMask, uint Flags);
+BOOL EcSetSubscriptionProperty(long Subscription, EC_SUBSCRIPTION_PROPERTY_ID PropertyId, uint Flags, EC_VARIANT* PropertyValue);
+BOOL EcGetSubscriptionProperty(long Subscription, EC_SUBSCRIPTION_PROPERTY_ID PropertyId, uint Flags, uint PropertyValueBufferSize, EC_VARIANT* PropertyValueBuffer, uint* PropertyValueBufferUsed);
+BOOL EcSaveSubscription(long Subscription, uint Flags);
+BOOL EcDeleteSubscription(const(wchar)* SubscriptionName, uint Flags);
+BOOL EcGetObjectArraySize(long ObjectArray, uint* ObjectArraySize);
+BOOL EcSetObjectArrayProperty(long ObjectArray, EC_SUBSCRIPTION_PROPERTY_ID PropertyId, uint ArrayIndex, uint Flags, EC_VARIANT* PropertyValue);
+BOOL EcGetObjectArrayProperty(long ObjectArray, EC_SUBSCRIPTION_PROPERTY_ID PropertyId, uint ArrayIndex, uint Flags, uint PropertyValueBufferSize, EC_VARIANT* PropertyValueBuffer, uint* PropertyValueBufferUsed);
+BOOL EcInsertObjectArrayElement(long ObjectArray, uint ArrayIndex);
+BOOL EcRemoveObjectArrayElement(long ObjectArray, uint ArrayIndex);
+BOOL EcGetSubscriptionRunTimeStatus(const(wchar)* SubscriptionName, EC_SUBSCRIPTION_RUNTIME_STATUS_INFO_ID StatusInfoId, const(wchar)* EventSourceName, uint Flags, uint StatusValueBufferSize, EC_VARIANT* StatusValueBuffer, uint* StatusValueBufferUsed);
+BOOL EcRetrySubscription(const(wchar)* SubscriptionName, const(wchar)* EventSourceName, uint Flags);
+BOOL EcClose(long Object);
 enum EC_VARIANT_TYPE_MASK = 0x0000007f;
 enum EC_VARIANT_TYPE_ARRAY = 0x00000080;
 enum EC_READ_ACCESS = 0x00000001;

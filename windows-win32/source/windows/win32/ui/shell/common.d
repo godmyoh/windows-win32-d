@@ -126,14 +126,14 @@ enum : int
 enum IID_IObjectArray = GUID(0x92ca9dcd, 0x5622, 0x4bba, [0xa8, 0x5, 0x5e, 0x9f, 0x54, 0x1b, 0xd8, 0xc9]);
 interface IObjectArray : IUnknown
 {
-    HRESULT GetCount(uint*);
-    HRESULT GetAt(uint, const(GUID)*, void**);
+    HRESULT GetCount(uint* pcObjects);
+    HRESULT GetAt(uint uiIndex, const(GUID)* riid, void** ppv);
 }
 enum IID_IObjectCollection = GUID(0x5632b1a4, 0xe38a, 0x400a, [0x92, 0x8a, 0xd4, 0xcd, 0x63, 0x23, 0x2, 0x95]);
 interface IObjectCollection : IObjectArray
 {
-    HRESULT AddObject(IUnknown);
-    HRESULT AddFromArray(IObjectArray);
-    HRESULT RemoveObjectAt(uint);
+    HRESULT AddObject(IUnknown punk);
+    HRESULT AddFromArray(IObjectArray poaSource);
+    HRESULT RemoveObjectAt(uint uiIndex);
     HRESULT Clear();
 }

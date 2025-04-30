@@ -25,19 +25,19 @@ enum : uint
     TBS_COMMAND_LOCALITY_FOUR  = 0x00000004,
 }
 
-uint Tbsi_Context_Create(TBS_CONTEXT_PARAMS*, void**);
-uint Tbsip_Context_Close(void*);
-uint Tbsip_Submit_Command(void*, TBS_COMMAND_LOCALITY, TBS_COMMAND_PRIORITY, ubyte*, uint, ubyte*, uint*);
-uint Tbsip_Cancel_Commands(void*);
-uint Tbsi_Physical_Presence_Command(void*, ubyte*, uint, ubyte*, uint*);
-uint Tbsi_Get_TCG_Log(void*, ubyte*, uint*);
-uint Tbsi_GetDeviceInfo(uint, void*);
-uint Tbsi_Get_OwnerAuth(void*, uint, ubyte*, uint*);
+uint Tbsi_Context_Create(TBS_CONTEXT_PARAMS* pContextParams, void** phContext);
+uint Tbsip_Context_Close(void* hContext);
+uint Tbsip_Submit_Command(void* hContext, TBS_COMMAND_LOCALITY Locality, TBS_COMMAND_PRIORITY Priority, ubyte* pabCommand, uint cbCommand, ubyte* pabResult, uint* pcbResult);
+uint Tbsip_Cancel_Commands(void* hContext);
+uint Tbsi_Physical_Presence_Command(void* hContext, ubyte* pabInput, uint cbInput, ubyte* pabOutput, uint* pcbOutput);
+uint Tbsi_Get_TCG_Log(void* hContext, ubyte* pOutputBuf, uint* pOutputBufLen);
+uint Tbsi_GetDeviceInfo(uint Size, void* Info);
+uint Tbsi_Get_OwnerAuth(void* hContext, uint ownerauthType, ubyte* pOutputBuf, uint* pOutputBufLen);
 uint Tbsi_Revoke_Attestation();
-HRESULT GetDeviceID(ubyte*, uint, uint*, BOOL*);
-HRESULT GetDeviceIDString(PWSTR, uint, uint*, BOOL*);
-uint Tbsi_Create_Windows_Key(uint);
-uint Tbsi_Get_TCG_Log_Ex(uint, ubyte*, uint*);
+HRESULT GetDeviceID(ubyte* pbWindowsAIK, uint cbWindowsAIK, uint* pcbResult, BOOL* pfProtectedByTPM);
+HRESULT GetDeviceIDString(PWSTR pszWindowsAIK, uint cchWindowsAIK, uint* pcchResult, BOOL* pfProtectedByTPM);
+uint Tbsi_Create_Windows_Key(uint keyHandle);
+uint Tbsi_Get_TCG_Log_Ex(uint logType, ubyte* pbOutput, uint* pcbOutput);
 BOOL Tbsi_Is_Tpm_Present();
 enum TBS_CONTEXT_VERSION_ONE = 0x00000001;
 enum TBS_SUCCESS = 0x00000000;

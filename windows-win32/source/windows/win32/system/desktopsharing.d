@@ -226,216 +226,216 @@ enum : int
 enum IID_IRDPSRAPIDebug = GUID(0xaa1e42b5, 0x496d, 0x4ca4, [0xa6, 0x90, 0x34, 0x8d, 0xcb, 0x2e, 0xc4, 0xad]);
 interface IRDPSRAPIDebug : IUnknown
 {
-    HRESULT put_CLXCmdLine(BSTR);
-    HRESULT get_CLXCmdLine(BSTR*);
+    HRESULT put_CLXCmdLine(BSTR CLXCmdLine);
+    HRESULT get_CLXCmdLine(BSTR* pCLXCmdLine);
 }
 enum IID_IRDPSRAPIPerfCounterLogger = GUID(0x71c2533, 0xfa4, 0x4e8f, [0xae, 0x83, 0x9c, 0x10, 0xb4, 0x30, 0x5a, 0xb5]);
 interface IRDPSRAPIPerfCounterLogger : IUnknown
 {
-    HRESULT LogValue(long);
+    HRESULT LogValue(long lValue);
 }
 enum IID_IRDPSRAPIPerfCounterLoggingManager = GUID(0x9a512c86, 0xac6e, 0x4a8e, [0xb1, 0xa4, 0xfc, 0xef, 0x36, 0x3f, 0x6e, 0x64]);
 interface IRDPSRAPIPerfCounterLoggingManager : IUnknown
 {
-    HRESULT CreateLogger(BSTR, IRDPSRAPIPerfCounterLogger*);
+    HRESULT CreateLogger(BSTR bstrCounterName, IRDPSRAPIPerfCounterLogger* ppLogger);
 }
 enum IID_IRDPSRAPIAudioStream = GUID(0xe3e30ef9, 0x89c6, 0x4541, [0xba, 0x3b, 0x19, 0x33, 0x6a, 0xc6, 0xd3, 0x1c]);
 interface IRDPSRAPIAudioStream : IUnknown
 {
-    HRESULT Initialize(long*);
+    HRESULT Initialize(long* pnPeriodInHundredNsIntervals);
     HRESULT Start();
     HRESULT Stop();
-    HRESULT GetBuffer(ubyte**, uint*, ulong*);
+    HRESULT GetBuffer(ubyte** ppbData, uint* pcbData, ulong* pTimestamp);
     HRESULT FreeBuffer();
 }
 enum IID_IRDPSRAPIClipboardUseEvents = GUID(0xd559f59a, 0x7a27, 0x4138, [0x87, 0x63, 0x24, 0x7c, 0xe5, 0xf6, 0x59, 0xa8]);
 interface IRDPSRAPIClipboardUseEvents : IUnknown
 {
-    HRESULT OnPasteFromClipboard(uint, IDispatch, VARIANT_BOOL*);
+    HRESULT OnPasteFromClipboard(uint clipboardFormat, IDispatch pAttendee, VARIANT_BOOL* pRetVal);
 }
 enum IID_IRDPSRAPIWindow = GUID(0xbeafe0f9, 0xc77b, 0x4933, [0xba, 0x9f, 0xa2, 0x4c, 0xdd, 0xcc, 0x27, 0xcf]);
 interface IRDPSRAPIWindow : IDispatch
 {
-    HRESULT get_Id(int*);
-    HRESULT get_Application(IRDPSRAPIApplication*);
-    HRESULT get_Shared(VARIANT_BOOL*);
-    HRESULT put_Shared(VARIANT_BOOL);
-    HRESULT get_Name(BSTR*);
+    HRESULT get_Id(int* pRetVal);
+    HRESULT get_Application(IRDPSRAPIApplication* pApplication);
+    HRESULT get_Shared(VARIANT_BOOL* pRetVal);
+    HRESULT put_Shared(VARIANT_BOOL NewVal);
+    HRESULT get_Name(BSTR* pRetVal);
     HRESULT Show();
-    HRESULT get_Flags(uint*);
+    HRESULT get_Flags(uint* pdwFlags);
 }
 enum IID_IRDPSRAPIWindowList = GUID(0x8a05ce44, 0x715a, 0x4116, [0xa1, 0x89, 0xa1, 0x18, 0xf3, 0xa, 0x7, 0xbd]);
 interface IRDPSRAPIWindowList : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(int, IRDPSRAPIWindow*);
+    HRESULT get__NewEnum(IUnknown* retval);
+    HRESULT get_Item(int item, IRDPSRAPIWindow* pWindow);
 }
 enum IID_IRDPSRAPIApplication = GUID(0x41e7a09d, 0xeb7a, 0x436e, [0x93, 0x5d, 0x78, 0xc, 0xa2, 0x62, 0x83, 0x24]);
 interface IRDPSRAPIApplication : IDispatch
 {
-    HRESULT get_Windows(IRDPSRAPIWindowList*);
-    HRESULT get_Id(int*);
-    HRESULT get_Shared(VARIANT_BOOL*);
-    HRESULT put_Shared(VARIANT_BOOL);
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Flags(uint*);
+    HRESULT get_Windows(IRDPSRAPIWindowList* pWindowList);
+    HRESULT get_Id(int* pRetVal);
+    HRESULT get_Shared(VARIANT_BOOL* pRetVal);
+    HRESULT put_Shared(VARIANT_BOOL NewVal);
+    HRESULT get_Name(BSTR* pRetVal);
+    HRESULT get_Flags(uint* pdwFlags);
 }
 enum IID_IRDPSRAPIApplicationList = GUID(0xd4b4aeb3, 0x22dc, 0x4837, [0xb3, 0xb6, 0x42, 0xea, 0x25, 0x17, 0x84, 0x9a]);
 interface IRDPSRAPIApplicationList : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(int, IRDPSRAPIApplication*);
+    HRESULT get__NewEnum(IUnknown* retval);
+    HRESULT get_Item(int item, IRDPSRAPIApplication* pApplication);
 }
 enum IID_IRDPSRAPIApplicationFilter = GUID(0xd20f10ca, 0x6637, 0x4f06, [0xb1, 0xd5, 0x27, 0x7e, 0xa7, 0xe5, 0x16, 0xd]);
 interface IRDPSRAPIApplicationFilter : IDispatch
 {
-    HRESULT get_Applications(IRDPSRAPIApplicationList*);
-    HRESULT get_Windows(IRDPSRAPIWindowList*);
-    HRESULT get_Enabled(VARIANT_BOOL*);
-    HRESULT put_Enabled(VARIANT_BOOL);
+    HRESULT get_Applications(IRDPSRAPIApplicationList* pApplications);
+    HRESULT get_Windows(IRDPSRAPIWindowList* pWindows);
+    HRESULT get_Enabled(VARIANT_BOOL* pRetVal);
+    HRESULT put_Enabled(VARIANT_BOOL NewVal);
 }
 enum IID_IRDPSRAPISessionProperties = GUID(0x339b24f2, 0x9bc0, 0x4f16, [0x9a, 0xac, 0xf1, 0x65, 0x43, 0x3d, 0x13, 0xd4]);
 interface IRDPSRAPISessionProperties : IDispatch
 {
-    HRESULT get_Property(BSTR, VARIANT*);
-    HRESULT put_Property(BSTR, VARIANT);
+    HRESULT get_Property(BSTR PropertyName, VARIANT* pVal);
+    HRESULT put_Property(BSTR PropertyName, VARIANT newVal);
 }
 enum IID_IRDPSRAPIInvitation = GUID(0x4fac1d43, 0xfc51, 0x45bb, [0xb1, 0xb4, 0x2b, 0x53, 0xaa, 0x56, 0x2f, 0xa3]);
 interface IRDPSRAPIInvitation : IDispatch
 {
-    HRESULT get_ConnectionString(BSTR*);
-    HRESULT get_GroupName(BSTR*);
-    HRESULT get_Password(BSTR*);
-    HRESULT get_AttendeeLimit(int*);
-    HRESULT put_AttendeeLimit(int);
-    HRESULT get_Revoked(VARIANT_BOOL*);
-    HRESULT put_Revoked(VARIANT_BOOL);
+    HRESULT get_ConnectionString(BSTR* pbstrVal);
+    HRESULT get_GroupName(BSTR* pbstrVal);
+    HRESULT get_Password(BSTR* pbstrVal);
+    HRESULT get_AttendeeLimit(int* pRetVal);
+    HRESULT put_AttendeeLimit(int NewVal);
+    HRESULT get_Revoked(VARIANT_BOOL* pRetVal);
+    HRESULT put_Revoked(VARIANT_BOOL NewVal);
 }
 enum IID_IRDPSRAPIInvitationManager = GUID(0x4722b049, 0x92c3, 0x4c2d, [0x8a, 0x65, 0xf7, 0x34, 0x8f, 0x64, 0x4d, 0xcf]);
 interface IRDPSRAPIInvitationManager : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(VARIANT, IRDPSRAPIInvitation*);
-    HRESULT get_Count(int*);
-    HRESULT CreateInvitation(BSTR, BSTR, BSTR, int, IRDPSRAPIInvitation*);
+    HRESULT get__NewEnum(IUnknown* retval);
+    HRESULT get_Item(VARIANT item, IRDPSRAPIInvitation* ppInvitation);
+    HRESULT get_Count(int* pRetVal);
+    HRESULT CreateInvitation(BSTR bstrAuthString, BSTR bstrGroupName, BSTR bstrPassword, int AttendeeLimit, IRDPSRAPIInvitation* ppInvitation);
 }
 enum IID_IRDPSRAPITcpConnectionInfo = GUID(0xf74049a4, 0x3d06, 0x4028, [0x81, 0x93, 0xa, 0x8c, 0x29, 0xbc, 0x24, 0x52]);
 interface IRDPSRAPITcpConnectionInfo : IDispatch
 {
-    HRESULT get_Protocol(int*);
-    HRESULT get_LocalPort(int*);
-    HRESULT get_LocalIP(BSTR*);
-    HRESULT get_PeerPort(int*);
-    HRESULT get_PeerIP(BSTR*);
+    HRESULT get_Protocol(int* plProtocol);
+    HRESULT get_LocalPort(int* plPort);
+    HRESULT get_LocalIP(BSTR* pbsrLocalIP);
+    HRESULT get_PeerPort(int* plPort);
+    HRESULT get_PeerIP(BSTR* pbstrIP);
 }
 enum IID_IRDPSRAPIAttendee = GUID(0xec0671b3, 0x1b78, 0x4b80, [0xa4, 0x64, 0x91, 0x32, 0x24, 0x75, 0x43, 0xe3]);
 interface IRDPSRAPIAttendee : IDispatch
 {
-    HRESULT get_Id(int*);
-    HRESULT get_RemoteName(BSTR*);
-    HRESULT get_ControlLevel(CTRL_LEVEL*);
-    HRESULT put_ControlLevel(CTRL_LEVEL);
-    HRESULT get_Invitation(IRDPSRAPIInvitation*);
+    HRESULT get_Id(int* pId);
+    HRESULT get_RemoteName(BSTR* pVal);
+    HRESULT get_ControlLevel(CTRL_LEVEL* pVal);
+    HRESULT put_ControlLevel(CTRL_LEVEL pNewVal);
+    HRESULT get_Invitation(IRDPSRAPIInvitation* ppVal);
     HRESULT TerminateConnection();
-    HRESULT get_Flags(int*);
-    HRESULT get_ConnectivityInfo(IUnknown*);
+    HRESULT get_Flags(int* plFlags);
+    HRESULT get_ConnectivityInfo(IUnknown* ppVal);
 }
 enum IID_IRDPSRAPIAttendeeManager = GUID(0xba3a37e8, 0x33da, 0x4749, [0x8d, 0xa0, 0x7, 0xfa, 0x34, 0xda, 0x79, 0x44]);
 interface IRDPSRAPIAttendeeManager : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(int, IRDPSRAPIAttendee*);
+    HRESULT get__NewEnum(IUnknown* retval);
+    HRESULT get_Item(int id, IRDPSRAPIAttendee* ppItem);
 }
 enum IID_IRDPSRAPIAttendeeDisconnectInfo = GUID(0xc187689f, 0x447c, 0x44a1, [0x9c, 0x14, 0xff, 0xfb, 0xb3, 0xb7, 0xec, 0x17]);
 interface IRDPSRAPIAttendeeDisconnectInfo : IDispatch
 {
-    HRESULT get_Attendee(IRDPSRAPIAttendee*);
-    HRESULT get_Reason(ATTENDEE_DISCONNECT_REASON*);
-    HRESULT get_Code(int*);
+    HRESULT get_Attendee(IRDPSRAPIAttendee* retval);
+    HRESULT get_Reason(ATTENDEE_DISCONNECT_REASON* pReason);
+    HRESULT get_Code(int* pVal);
 }
 enum IID_IRDPSRAPIVirtualChannel = GUID(0x5e12f95, 0x28b3, 0x4c9a, [0x87, 0x80, 0xd0, 0x24, 0x85, 0x74, 0xa1, 0xe0]);
 interface IRDPSRAPIVirtualChannel : IDispatch
 {
-    HRESULT SendData(BSTR, int, uint);
-    HRESULT SetAccess(int, CHANNEL_ACCESS_ENUM);
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Flags(int*);
-    HRESULT get_Priority(CHANNEL_PRIORITY*);
+    HRESULT SendData(BSTR bstrData, int lAttendeeId, uint ChannelSendFlags);
+    HRESULT SetAccess(int lAttendeeId, CHANNEL_ACCESS_ENUM AccessType);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT get_Flags(int* plFlags);
+    HRESULT get_Priority(CHANNEL_PRIORITY* pPriority);
 }
 enum IID_IRDPSRAPIVirtualChannelManager = GUID(0xd11c661, 0x5d0d, 0x4ee4, [0x89, 0xdf, 0x21, 0x66, 0xae, 0x1f, 0xdf, 0xed]);
 interface IRDPSRAPIVirtualChannelManager : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(VARIANT, IRDPSRAPIVirtualChannel*);
-    HRESULT CreateVirtualChannel(BSTR, CHANNEL_PRIORITY, uint, IRDPSRAPIVirtualChannel*);
+    HRESULT get__NewEnum(IUnknown* retval);
+    HRESULT get_Item(VARIANT item, IRDPSRAPIVirtualChannel* pChannel);
+    HRESULT CreateVirtualChannel(BSTR bstrChannelName, CHANNEL_PRIORITY Priority, uint ChannelFlags, IRDPSRAPIVirtualChannel* ppChannel);
 }
 enum IID_IRDPSRAPIViewer = GUID(0xc6bfcd38, 0x8ce9, 0x404d, [0x8a, 0xe8, 0xf3, 0x1d, 0x0, 0xc6, 0x5c, 0xb5]);
 interface IRDPSRAPIViewer : IDispatch
 {
-    HRESULT Connect(BSTR, BSTR, BSTR);
+    HRESULT Connect(BSTR bstrConnectionString, BSTR bstrName, BSTR bstrPassword);
     HRESULT Disconnect();
-    HRESULT get_Attendees(IRDPSRAPIAttendeeManager*);
-    HRESULT get_Invitations(IRDPSRAPIInvitationManager*);
-    HRESULT get_ApplicationFilter(IRDPSRAPIApplicationFilter*);
-    HRESULT get_VirtualChannelManager(IRDPSRAPIVirtualChannelManager*);
-    HRESULT put_SmartSizing(VARIANT_BOOL);
-    HRESULT get_SmartSizing(VARIANT_BOOL*);
-    HRESULT RequestControl(CTRL_LEVEL);
-    HRESULT put_DisconnectedText(BSTR);
-    HRESULT get_DisconnectedText(BSTR*);
-    HRESULT RequestColorDepthChange(int);
-    HRESULT get_Properties(IRDPSRAPISessionProperties*);
-    HRESULT StartReverseConnectListener(BSTR, BSTR, BSTR, BSTR*);
+    HRESULT get_Attendees(IRDPSRAPIAttendeeManager* ppVal);
+    HRESULT get_Invitations(IRDPSRAPIInvitationManager* ppVal);
+    HRESULT get_ApplicationFilter(IRDPSRAPIApplicationFilter* ppVal);
+    HRESULT get_VirtualChannelManager(IRDPSRAPIVirtualChannelManager* ppVal);
+    HRESULT put_SmartSizing(VARIANT_BOOL vbSmartSizing);
+    HRESULT get_SmartSizing(VARIANT_BOOL* pvbSmartSizing);
+    HRESULT RequestControl(CTRL_LEVEL CtrlLevel);
+    HRESULT put_DisconnectedText(BSTR bstrDisconnectedText);
+    HRESULT get_DisconnectedText(BSTR* pbstrDisconnectedText);
+    HRESULT RequestColorDepthChange(int Bpp);
+    HRESULT get_Properties(IRDPSRAPISessionProperties* ppVal);
+    HRESULT StartReverseConnectListener(BSTR bstrConnectionString, BSTR bstrUserName, BSTR bstrPassword, BSTR* pbstrReverseConnectString);
 }
 enum IID_IRDPViewerInputSink = GUID(0xbb590853, 0xa6c5, 0x4a7b, [0x8d, 0xd4, 0x76, 0xb6, 0x9e, 0xea, 0x12, 0xd5]);
 interface IRDPViewerInputSink : IUnknown
 {
-    HRESULT SendMouseButtonEvent(RDPSRAPI_MOUSE_BUTTON_TYPE, VARIANT_BOOL, uint, uint);
-    HRESULT SendMouseMoveEvent(uint, uint);
-    HRESULT SendMouseWheelEvent(ushort);
-    HRESULT SendKeyboardEvent(RDPSRAPI_KBD_CODE_TYPE, ushort, VARIANT_BOOL, VARIANT_BOOL, VARIANT_BOOL);
-    HRESULT SendSyncEvent(uint);
+    HRESULT SendMouseButtonEvent(RDPSRAPI_MOUSE_BUTTON_TYPE buttonType, VARIANT_BOOL vbButtonDown, uint xPos, uint yPos);
+    HRESULT SendMouseMoveEvent(uint xPos, uint yPos);
+    HRESULT SendMouseWheelEvent(ushort wheelRotation);
+    HRESULT SendKeyboardEvent(RDPSRAPI_KBD_CODE_TYPE codeType, ushort keycode, VARIANT_BOOL vbKeyUp, VARIANT_BOOL vbRepeat, VARIANT_BOOL vbExtended);
+    HRESULT SendSyncEvent(uint syncFlags);
     HRESULT BeginTouchFrame();
-    HRESULT AddTouchInput(uint, uint, int, int);
+    HRESULT AddTouchInput(uint contactId, uint event, int x, int y);
     HRESULT EndTouchFrame();
 }
 enum IID_IRDPSRAPIFrameBuffer = GUID(0x3d67e7d2, 0xb27b, 0x448e, [0x81, 0xb3, 0xc6, 0x11, 0xe, 0xd8, 0xb4, 0xbe]);
 interface IRDPSRAPIFrameBuffer : IDispatch
 {
-    HRESULT get_Width(int*);
-    HRESULT get_Height(int*);
-    HRESULT get_Bpp(int*);
-    HRESULT GetFrameBufferBits(int, int, int, int, SAFEARRAY**);
+    HRESULT get_Width(int* plWidth);
+    HRESULT get_Height(int* plHeight);
+    HRESULT get_Bpp(int* plBpp);
+    HRESULT GetFrameBufferBits(int x, int y, int Width, int Heigth, SAFEARRAY** ppBits);
 }
 enum IID_IRDPSRAPITransportStreamBuffer = GUID(0x81c80290, 0x5085, 0x44b0, [0xb4, 0x60, 0xf8, 0x65, 0xc3, 0x9c, 0xb4, 0xa9]);
 interface IRDPSRAPITransportStreamBuffer : IUnknown
 {
-    HRESULT get_Storage(ubyte**);
-    HRESULT get_StorageSize(int*);
-    HRESULT get_PayloadSize(int*);
-    HRESULT put_PayloadSize(int);
-    HRESULT get_PayloadOffset(int*);
-    HRESULT put_PayloadOffset(int);
-    HRESULT get_Flags(int*);
-    HRESULT put_Flags(int);
-    HRESULT get_Context(IUnknown*);
-    HRESULT put_Context(IUnknown);
+    HRESULT get_Storage(ubyte** ppbStorage);
+    HRESULT get_StorageSize(int* plMaxStore);
+    HRESULT get_PayloadSize(int* plRetVal);
+    HRESULT put_PayloadSize(int lVal);
+    HRESULT get_PayloadOffset(int* plRetVal);
+    HRESULT put_PayloadOffset(int lRetVal);
+    HRESULT get_Flags(int* plFlags);
+    HRESULT put_Flags(int lFlags);
+    HRESULT get_Context(IUnknown* ppContext);
+    HRESULT put_Context(IUnknown pContext);
 }
 enum IID_IRDPSRAPITransportStreamEvents = GUID(0xea81c254, 0xf5af, 0x4e40, [0x98, 0x2e, 0x3e, 0x63, 0xbb, 0x59, 0x52, 0x76]);
 interface IRDPSRAPITransportStreamEvents : IUnknown
 {
-    void OnWriteCompleted(IRDPSRAPITransportStreamBuffer);
-    void OnReadCompleted(IRDPSRAPITransportStreamBuffer);
-    void OnStreamClosed(HRESULT);
+    void OnWriteCompleted(IRDPSRAPITransportStreamBuffer pBuffer);
+    void OnReadCompleted(IRDPSRAPITransportStreamBuffer pBuffer);
+    void OnStreamClosed(HRESULT hrReason);
 }
 enum IID_IRDPSRAPITransportStream = GUID(0x36cfa065, 0x43bb, 0x4ef7, [0xae, 0xd7, 0x9b, 0x88, 0xa5, 0x5, 0x30, 0x36]);
 interface IRDPSRAPITransportStream : IUnknown
 {
-    HRESULT AllocBuffer(int, IRDPSRAPITransportStreamBuffer*);
-    HRESULT FreeBuffer(IRDPSRAPITransportStreamBuffer);
-    HRESULT WriteBuffer(IRDPSRAPITransportStreamBuffer);
-    HRESULT ReadBuffer(IRDPSRAPITransportStreamBuffer);
-    HRESULT Open(IRDPSRAPITransportStreamEvents);
+    HRESULT AllocBuffer(int maxPayload, IRDPSRAPITransportStreamBuffer* ppBuffer);
+    HRESULT FreeBuffer(IRDPSRAPITransportStreamBuffer pBuffer);
+    HRESULT WriteBuffer(IRDPSRAPITransportStreamBuffer pBuffer);
+    HRESULT ReadBuffer(IRDPSRAPITransportStreamBuffer pBuffer);
+    HRESULT Open(IRDPSRAPITransportStreamEvents pCallbacks);
     HRESULT Close();
 }
 enum IID_IRDPSRAPISharingSession = GUID(0xeeb20886, 0xe470, 0x4cf6, [0x84, 0x2b, 0x27, 0x39, 0xc0, 0xec, 0x5c, 0xfb]);
@@ -443,25 +443,25 @@ interface IRDPSRAPISharingSession : IDispatch
 {
     HRESULT Open();
     HRESULT Close();
-    HRESULT put_ColorDepth(int);
-    HRESULT get_ColorDepth(int*);
-    HRESULT get_Properties(IRDPSRAPISessionProperties*);
-    HRESULT get_Attendees(IRDPSRAPIAttendeeManager*);
-    HRESULT get_Invitations(IRDPSRAPIInvitationManager*);
-    HRESULT get_ApplicationFilter(IRDPSRAPIApplicationFilter*);
-    HRESULT get_VirtualChannelManager(IRDPSRAPIVirtualChannelManager*);
+    HRESULT put_ColorDepth(int colorDepth);
+    HRESULT get_ColorDepth(int* pColorDepth);
+    HRESULT get_Properties(IRDPSRAPISessionProperties* ppVal);
+    HRESULT get_Attendees(IRDPSRAPIAttendeeManager* ppVal);
+    HRESULT get_Invitations(IRDPSRAPIInvitationManager* ppVal);
+    HRESULT get_ApplicationFilter(IRDPSRAPIApplicationFilter* ppVal);
+    HRESULT get_VirtualChannelManager(IRDPSRAPIVirtualChannelManager* ppVal);
     HRESULT Pause();
     HRESULT Resume();
-    HRESULT ConnectToClient(BSTR);
-    HRESULT SetDesktopSharedRect(int, int, int, int);
-    HRESULT GetDesktopSharedRect(int*, int*, int*, int*);
+    HRESULT ConnectToClient(BSTR bstrConnectionString);
+    HRESULT SetDesktopSharedRect(int left, int top, int right, int bottom);
+    HRESULT GetDesktopSharedRect(int* pleft, int* ptop, int* pright, int* pbottom);
 }
 enum IID_IRDPSRAPISharingSession2 = GUID(0xfee4ee57, 0xe3e8, 0x4205, [0x8f, 0xb0, 0x8f, 0xd1, 0xd0, 0x67, 0x5c, 0x21]);
 interface IRDPSRAPISharingSession2 : IRDPSRAPISharingSession
 {
-    HRESULT ConnectUsingTransportStream(IRDPSRAPITransportStream, BSTR, BSTR);
-    HRESULT get_FrameBuffer(IRDPSRAPIFrameBuffer*);
-    HRESULT SendControlLevelChangeResponse(IRDPSRAPIAttendee, CTRL_LEVEL, int);
+    HRESULT ConnectUsingTransportStream(IRDPSRAPITransportStream pStream, BSTR bstrGroup, BSTR bstrAuthenticatedAttendeeName);
+    HRESULT get_FrameBuffer(IRDPSRAPIFrameBuffer* ppVal);
+    HRESULT SendControlLevelChangeResponse(IRDPSRAPIAttendee pAttendee, CTRL_LEVEL RequestedLevel, int ReasonCode);
 }
 alias RDPENCOMAPI_CONSTANTS = int;
 enum : int

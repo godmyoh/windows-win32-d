@@ -9,38 +9,38 @@ import windows.win32.system.com : IUnknown;
 version (Windows):
 extern (Windows):
 
-HRESULT WSDCreateUdpMessageParameters(IWSDUdpMessageParameters*);
-HRESULT WSDCreateUdpAddress(IWSDUdpAddress*);
-HRESULT WSDCreateHttpMessageParameters(IWSDHttpMessageParameters*);
-HRESULT WSDCreateHttpAddress(IWSDHttpAddress*);
-HRESULT WSDCreateOutboundAttachment(IWSDOutboundAttachment*);
-HRESULT WSDXMLGetNameFromBuiltinNamespace(const(wchar)*, const(wchar)*, WSDXML_NAME**);
-HRESULT WSDXMLCreateContext(IWSDXMLContext*);
-HRESULT WSDCreateDiscoveryProvider(IWSDXMLContext, IWSDiscoveryProvider*);
-HRESULT WSDCreateDiscoveryProvider2(IWSDXMLContext, WSD_CONFIG_PARAM*, uint, IWSDiscoveryProvider*);
-HRESULT WSDCreateDiscoveryPublisher(IWSDXMLContext, IWSDiscoveryPublisher*);
-HRESULT WSDCreateDiscoveryPublisher2(IWSDXMLContext, WSD_CONFIG_PARAM*, uint, IWSDiscoveryPublisher*);
-HRESULT WSDCreateDeviceProxy(const(wchar)*, const(wchar)*, IWSDXMLContext, IWSDDeviceProxy*);
-HRESULT WSDCreateDeviceProxyAdvanced(const(wchar)*, IWSDAddress, const(wchar)*, IWSDXMLContext, IWSDDeviceProxy*);
-HRESULT WSDCreateDeviceProxy2(const(wchar)*, const(wchar)*, IWSDXMLContext, WSD_CONFIG_PARAM*, uint, IWSDDeviceProxy*);
-HRESULT WSDCreateDeviceHost(const(wchar)*, IWSDXMLContext, IWSDDeviceHost*);
-HRESULT WSDCreateDeviceHostAdvanced(const(wchar)*, IWSDXMLContext, IWSDAddress*, uint, IWSDDeviceHost*);
-HRESULT WSDCreateDeviceHost2(const(wchar)*, IWSDXMLContext, WSD_CONFIG_PARAM*, uint, IWSDDeviceHost*);
-HRESULT WSDSetConfigurationOption(uint, void*, uint);
-HRESULT WSDGetConfigurationOption(uint, void*, uint);
-void* WSDAllocateLinkedMemory(void*, ulong);
-void WSDFreeLinkedMemory(void*);
-void WSDAttachLinkedMemory(void*, void*);
-void WSDDetachLinkedMemory(void*);
-HRESULT WSDXMLBuildAnyForSingleElement(WSDXML_NAME*, const(wchar)*, WSDXML_ELEMENT**);
-HRESULT WSDXMLGetValueFromAny(const(wchar)*, const(wchar)*, WSDXML_ELEMENT*, const(wchar)**);
-HRESULT WSDXMLAddSibling(WSDXML_ELEMENT*, WSDXML_ELEMENT*);
-HRESULT WSDXMLAddChild(WSDXML_ELEMENT*, WSDXML_ELEMENT*);
-HRESULT WSDXMLCleanupElement(WSDXML_ELEMENT*);
-HRESULT WSDGenerateFault(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, IWSDXMLContext, WSD_SOAP_FAULT**);
-HRESULT WSDGenerateFaultEx(WSDXML_NAME*, WSDXML_NAME*, WSD_LOCALIZED_STRING_LIST*, const(wchar)*, WSD_SOAP_FAULT**);
-HRESULT WSDUriEncode(const(wchar)*, uint, PWSTR*, uint*);
-HRESULT WSDUriDecode(const(wchar)*, uint, PWSTR*, uint*);
+HRESULT WSDCreateUdpMessageParameters(IWSDUdpMessageParameters* ppTxParams);
+HRESULT WSDCreateUdpAddress(IWSDUdpAddress* ppAddress);
+HRESULT WSDCreateHttpMessageParameters(IWSDHttpMessageParameters* ppTxParams);
+HRESULT WSDCreateHttpAddress(IWSDHttpAddress* ppAddress);
+HRESULT WSDCreateOutboundAttachment(IWSDOutboundAttachment* ppAttachment);
+HRESULT WSDXMLGetNameFromBuiltinNamespace(const(wchar)* pszNamespace, const(wchar)* pszName, WSDXML_NAME** ppName);
+HRESULT WSDXMLCreateContext(IWSDXMLContext* ppContext);
+HRESULT WSDCreateDiscoveryProvider(IWSDXMLContext pContext, IWSDiscoveryProvider* ppProvider);
+HRESULT WSDCreateDiscoveryProvider2(IWSDXMLContext pContext, WSD_CONFIG_PARAM* pConfigParams, uint dwConfigParamCount, IWSDiscoveryProvider* ppProvider);
+HRESULT WSDCreateDiscoveryPublisher(IWSDXMLContext pContext, IWSDiscoveryPublisher* ppPublisher);
+HRESULT WSDCreateDiscoveryPublisher2(IWSDXMLContext pContext, WSD_CONFIG_PARAM* pConfigParams, uint dwConfigParamCount, IWSDiscoveryPublisher* ppPublisher);
+HRESULT WSDCreateDeviceProxy(const(wchar)* pszDeviceId, const(wchar)* pszLocalId, IWSDXMLContext pContext, IWSDDeviceProxy* ppDeviceProxy);
+HRESULT WSDCreateDeviceProxyAdvanced(const(wchar)* pszDeviceId, IWSDAddress pDeviceAddress, const(wchar)* pszLocalId, IWSDXMLContext pContext, IWSDDeviceProxy* ppDeviceProxy);
+HRESULT WSDCreateDeviceProxy2(const(wchar)* pszDeviceId, const(wchar)* pszLocalId, IWSDXMLContext pContext, WSD_CONFIG_PARAM* pConfigParams, uint dwConfigParamCount, IWSDDeviceProxy* ppDeviceProxy);
+HRESULT WSDCreateDeviceHost(const(wchar)* pszLocalId, IWSDXMLContext pContext, IWSDDeviceHost* ppDeviceHost);
+HRESULT WSDCreateDeviceHostAdvanced(const(wchar)* pszLocalId, IWSDXMLContext pContext, IWSDAddress* ppHostAddresses, uint dwHostAddressCount, IWSDDeviceHost* ppDeviceHost);
+HRESULT WSDCreateDeviceHost2(const(wchar)* pszLocalId, IWSDXMLContext pContext, WSD_CONFIG_PARAM* pConfigParams, uint dwConfigParamCount, IWSDDeviceHost* ppDeviceHost);
+HRESULT WSDSetConfigurationOption(uint dwOption, void* pVoid, uint cbInBuffer);
+HRESULT WSDGetConfigurationOption(uint dwOption, void* pVoid, uint cbOutBuffer);
+void* WSDAllocateLinkedMemory(void* pParent, ulong cbSize);
+void WSDFreeLinkedMemory(void* pVoid);
+void WSDAttachLinkedMemory(void* pParent, void* pChild);
+void WSDDetachLinkedMemory(void* pVoid);
+HRESULT WSDXMLBuildAnyForSingleElement(WSDXML_NAME* pElementName, const(wchar)* pszText, WSDXML_ELEMENT** ppAny);
+HRESULT WSDXMLGetValueFromAny(const(wchar)* pszNamespace, const(wchar)* pszName, WSDXML_ELEMENT* pAny, const(wchar)** ppszValue);
+HRESULT WSDXMLAddSibling(WSDXML_ELEMENT* pFirst, WSDXML_ELEMENT* pSecond);
+HRESULT WSDXMLAddChild(WSDXML_ELEMENT* pParent, WSDXML_ELEMENT* pChild);
+HRESULT WSDXMLCleanupElement(WSDXML_ELEMENT* pAny);
+HRESULT WSDGenerateFault(const(wchar)* pszCode, const(wchar)* pszSubCode, const(wchar)* pszReason, const(wchar)* pszDetail, IWSDXMLContext pContext, WSD_SOAP_FAULT** ppFault);
+HRESULT WSDGenerateFaultEx(WSDXML_NAME* pCode, WSDXML_NAME* pSubCode, WSD_LOCALIZED_STRING_LIST* pReasons, const(wchar)* pszDetail, WSD_SOAP_FAULT** ppFault);
+HRESULT WSDUriEncode(const(wchar)* source, uint cchSource, PWSTR* destOut, uint* cchDestOut);
+HRESULT WSDUriDecode(const(wchar)* source, uint cchSource, PWSTR* destOut, uint* cchDestOut);
 enum WSD_DEFAULT_HOSTING_ADDRESS = "http://*:5357/";
 enum WSD_DEFAULT_SECURE_HOSTING_ADDRESS = "https://*:5358/";
 enum WSD_DEFAULT_EVENTING_ADDRESS = "http://*:5357/";
@@ -116,26 +116,26 @@ struct WSD_CONFIG_ADDRESSES
 enum IID_IWSDAddress = GUID(0xb9574c6c, 0x12a6, 0x4f74, [0x93, 0xa1, 0x33, 0x18, 0xff, 0x60, 0x57, 0x59]);
 interface IWSDAddress : IUnknown
 {
-    HRESULT Serialize(PWSTR, uint, BOOL);
-    HRESULT Deserialize(const(wchar)*);
+    HRESULT Serialize(PWSTR pszBuffer, uint cchLength, BOOL fSafe);
+    HRESULT Deserialize(const(wchar)* pszBuffer);
 }
 enum IID_IWSDTransportAddress = GUID(0x70d23498, 0x4ee6, 0x4340, [0xa3, 0xdf, 0xd8, 0x45, 0xd2, 0x23, 0x54, 0x67]);
 interface IWSDTransportAddress : IWSDAddress
 {
-    HRESULT GetPort(ushort*);
-    HRESULT SetPort(ushort);
-    HRESULT GetTransportAddress(const(wchar)**);
-    HRESULT GetTransportAddressEx(BOOL, const(wchar)**);
-    HRESULT SetTransportAddress(const(wchar)*);
+    HRESULT GetPort(ushort* pwPort);
+    HRESULT SetPort(ushort wPort);
+    HRESULT GetTransportAddress(const(wchar)** ppszAddress);
+    HRESULT GetTransportAddressEx(BOOL fSafe, const(wchar)** ppszAddress);
+    HRESULT SetTransportAddress(const(wchar)* pszAddress);
 }
 enum IID_IWSDMessageParameters = GUID(0x1fafe8a2, 0xe6fc, 0x4b80, [0xb6, 0xcf, 0xb7, 0xd4, 0x5c, 0x41, 0x6d, 0x7c]);
 interface IWSDMessageParameters : IUnknown
 {
-    HRESULT GetLocalAddress(IWSDAddress*);
-    HRESULT SetLocalAddress(IWSDAddress);
-    HRESULT GetRemoteAddress(IWSDAddress*);
-    HRESULT SetRemoteAddress(IWSDAddress);
-    HRESULT GetLowerParameters(IWSDMessageParameters*);
+    HRESULT GetLocalAddress(IWSDAddress* ppAddress);
+    HRESULT SetLocalAddress(IWSDAddress pAddress);
+    HRESULT GetRemoteAddress(IWSDAddress* ppAddress);
+    HRESULT SetRemoteAddress(IWSDAddress pAddress);
+    HRESULT GetLowerParameters(IWSDMessageParameters* ppTxParams);
 }
 struct WSDUdpRetransmitParams
 {
@@ -148,8 +148,8 @@ struct WSDUdpRetransmitParams
 enum IID_IWSDUdpMessageParameters = GUID(0x9934149f, 0x8f0c, 0x447b, [0xaa, 0xb, 0x73, 0x12, 0x4b, 0xc, 0xa7, 0xf0]);
 interface IWSDUdpMessageParameters : IWSDMessageParameters
 {
-    HRESULT SetRetransmitParams(const(WSDUdpRetransmitParams)*);
-    HRESULT GetRetransmitParams(WSDUdpRetransmitParams*);
+    HRESULT SetRetransmitParams(const(WSDUdpRetransmitParams)* pParams);
+    HRESULT GetRetransmitParams(WSDUdpRetransmitParams* pParams);
 }
 alias WSDUdpMessageType = int;
 enum : int
@@ -161,58 +161,58 @@ enum : int
 enum IID_IWSDUdpAddress = GUID(0x74d6124a, 0xa441, 0x4f78, [0xa1, 0xeb, 0x97, 0xa8, 0xd1, 0x99, 0x68, 0x93]);
 interface IWSDUdpAddress : IWSDTransportAddress
 {
-    HRESULT SetSockaddr(const(SOCKADDR_STORAGE)*);
-    HRESULT GetSockaddr(SOCKADDR_STORAGE*);
-    HRESULT SetExclusive(BOOL);
+    HRESULT SetSockaddr(const(SOCKADDR_STORAGE)* pSockAddr);
+    HRESULT GetSockaddr(SOCKADDR_STORAGE* pSockAddr);
+    HRESULT SetExclusive(BOOL fExclusive);
     HRESULT GetExclusive();
-    HRESULT SetMessageType(WSDUdpMessageType);
-    HRESULT GetMessageType(WSDUdpMessageType*);
-    HRESULT SetTTL(uint);
-    HRESULT GetTTL(uint*);
-    HRESULT SetAlias(const(GUID)*);
-    HRESULT GetAlias(GUID*);
+    HRESULT SetMessageType(WSDUdpMessageType messageType);
+    HRESULT GetMessageType(WSDUdpMessageType* pMessageType);
+    HRESULT SetTTL(uint dwTTL);
+    HRESULT GetTTL(uint* pdwTTL);
+    HRESULT SetAlias(const(GUID)* pAlias);
+    HRESULT GetAlias(GUID* pAlias);
 }
 enum IID_IWSDHttpMessageParameters = GUID(0x540bd122, 0x5c83, 0x4dec, [0xb3, 0x96, 0xea, 0x62, 0xa2, 0x69, 0x7f, 0xdf]);
 interface IWSDHttpMessageParameters : IWSDMessageParameters
 {
-    HRESULT SetInboundHttpHeaders(const(wchar)*);
-    HRESULT GetInboundHttpHeaders(const(wchar)**);
-    HRESULT SetOutboundHttpHeaders(const(wchar)*);
-    HRESULT GetOutboundHttpHeaders(const(wchar)**);
-    HRESULT SetID(const(wchar)*);
-    HRESULT GetID(const(wchar)**);
-    HRESULT SetContext(IUnknown);
-    HRESULT GetContext(IUnknown*);
+    HRESULT SetInboundHttpHeaders(const(wchar)* pszHeaders);
+    HRESULT GetInboundHttpHeaders(const(wchar)** ppszHeaders);
+    HRESULT SetOutboundHttpHeaders(const(wchar)* pszHeaders);
+    HRESULT GetOutboundHttpHeaders(const(wchar)** ppszHeaders);
+    HRESULT SetID(const(wchar)* pszId);
+    HRESULT GetID(const(wchar)** ppszId);
+    HRESULT SetContext(IUnknown pContext);
+    HRESULT GetContext(IUnknown* ppContext);
     HRESULT Clear();
 }
 enum IID_IWSDHttpAddress = GUID(0xd09ac7bd, 0x2a3e, 0x4b85, [0x86, 0x5, 0x27, 0x37, 0xff, 0x3e, 0x4e, 0xa0]);
 interface IWSDHttpAddress : IWSDTransportAddress
 {
     HRESULT GetSecure();
-    HRESULT SetSecure(BOOL);
-    HRESULT GetPath(const(wchar)**);
-    HRESULT SetPath(const(wchar)*);
+    HRESULT SetSecure(BOOL fSecure);
+    HRESULT GetPath(const(wchar)** ppszPath);
+    HRESULT SetPath(const(wchar)* pszPath);
 }
 enum IID_IWSDSSLClientCertificate = GUID(0xde105e87, 0xa0da, 0x418e, [0x98, 0xad, 0x27, 0xb9, 0xee, 0xd8, 0x7b, 0xdc]);
 interface IWSDSSLClientCertificate : IUnknown
 {
-    HRESULT GetClientCertificate(CERT_CONTEXT**);
-    HRESULT GetMappedAccessToken(HANDLE*);
+    HRESULT GetClientCertificate(CERT_CONTEXT** ppCertContext);
+    HRESULT GetMappedAccessToken(HANDLE* phToken);
 }
 enum IID_IWSDHttpAuthParameters = GUID(0xb476df0, 0x8dac, 0x480d, [0xb0, 0x5c, 0x99, 0x78, 0x1a, 0x58, 0x84, 0xaa]);
 interface IWSDHttpAuthParameters : IUnknown
 {
-    HRESULT GetClientAccessToken(HANDLE*);
-    HRESULT GetAuthType(uint*);
+    HRESULT GetClientAccessToken(HANDLE* phToken);
+    HRESULT GetAuthType(uint* pAuthType);
 }
 enum IID_IWSDSignatureProperty = GUID(0x3ce20aa, 0x71c4, 0x45e2, [0xb3, 0x2e, 0x37, 0x66, 0xc6, 0x1c, 0x79, 0xf]);
 interface IWSDSignatureProperty : IUnknown
 {
-    HRESULT IsMessageSigned(BOOL*);
-    HRESULT IsMessageSignatureTrusted(BOOL*);
-    HRESULT GetKeyInfo(ubyte*, uint*);
-    HRESULT GetSignature(ubyte*, uint*);
-    HRESULT GetSignedInfoHash(ubyte*, uint*);
+    HRESULT IsMessageSigned(BOOL* pbSigned);
+    HRESULT IsMessageSignatureTrusted(BOOL* pbSignatureTrusted);
+    HRESULT GetKeyInfo(ubyte* pbKeyInfo, uint* pdwKeyInfoSize);
+    HRESULT GetSignature(ubyte* pbSignature, uint* pdwSignatureSize);
+    HRESULT GetSignedInfoHash(ubyte* pbSignedInfoHash, uint* pdwHashSize);
 }
 enum IID_IWSDAttachment = GUID(0x5d55a616, 0x9df8, 0x4b09, [0xb1, 0x56, 0x9b, 0xa3, 0x51, 0xa4, 0x8b, 0x76]);
 interface IWSDAttachment : IUnknown
@@ -221,14 +221,14 @@ interface IWSDAttachment : IUnknown
 enum IID_IWSDOutboundAttachment = GUID(0xaa302f8d, 0x5a22, 0x4ba5, [0xb3, 0x92, 0xaa, 0x84, 0x86, 0xf4, 0xc1, 0x5d]);
 interface IWSDOutboundAttachment : IWSDAttachment
 {
-    HRESULT Write(const(ubyte)*, uint, uint*);
+    HRESULT Write(const(ubyte)* pBuffer, uint dwBytesToWrite, uint* pdwNumberOfBytesWritten);
     HRESULT Close();
     HRESULT Abort();
 }
 enum IID_IWSDInboundAttachment = GUID(0x5bd6ca65, 0x233c, 0x4fb8, [0x9f, 0x7a, 0x26, 0x41, 0x61, 0x96, 0x55, 0xc9]);
 interface IWSDInboundAttachment : IWSDAttachment
 {
-    HRESULT Read(ubyte*, uint, uint*);
+    HRESULT Read(ubyte* pBuffer, uint dwBytesToRead, uint* pdwNumberOfBytesRead);
     HRESULT Close();
 }
 struct WSD_DATETIME
@@ -312,10 +312,10 @@ enum : int
 enum IID_IWSDXMLContext = GUID(0x75d8f3ee, 0x3e5a, 0x43b4, [0xa1, 0x5a, 0xbc, 0xf6, 0x88, 0x74, 0x60, 0xc0]);
 interface IWSDXMLContext : IUnknown
 {
-    HRESULT AddNamespace(const(wchar)*, const(wchar)*, WSDXML_NAMESPACE**);
-    HRESULT AddNameToNamespace(const(wchar)*, const(wchar)*, WSDXML_NAME**);
-    HRESULT SetNamespaces(const(WSDXML_NAMESPACE)**, ushort, ubyte);
-    HRESULT SetTypes(const(WSDXML_TYPE)**, uint, ubyte);
+    HRESULT AddNamespace(const(wchar)* pszUri, const(wchar)* pszSuggestedPrefix, WSDXML_NAMESPACE** ppNamespace);
+    HRESULT AddNameToNamespace(const(wchar)* pszUri, const(wchar)* pszName, WSDXML_NAME** ppName);
+    HRESULT SetNamespaces(const(WSDXML_NAMESPACE)** pNamespaces, ushort wNamespacesCount, ubyte bLayerNumber);
+    HRESULT SetTypes(const(WSDXML_TYPE)** pTypes, uint dwTypesCount, ubyte bLayerNumber);
 }
 struct WSDXML_NAMESPACE
 {
@@ -375,7 +375,7 @@ struct WSDXML_ELEMENT_LIST
     WSDXML_ELEMENT_LIST* Next;
     WSDXML_ELEMENT* Element;
 }
-alias WSD_STUB_FUNCTION = HRESULT function(IUnknown, IWSDServiceMessaging, WSD_EVENT*);
+alias WSD_STUB_FUNCTION = HRESULT function(IUnknown server, IWSDServiceMessaging session, WSD_EVENT* event);
 alias DeviceDiscoveryMechanism = int;
 enum : int
 {
@@ -400,7 +400,7 @@ struct WSD_OPERATION
     WSDXML_TYPE* ResponseType;
     WSD_STUB_FUNCTION RequestStubFunction;
 }
-alias PWSD_SOAP_MESSAGE_HANDLER = HRESULT function(IUnknown, WSD_EVENT*);
+alias PWSD_SOAP_MESSAGE_HANDLER = HRESULT function(IUnknown thisUnknown, WSD_EVENT* event);
 struct WSD_HANDLER_CONTEXT
 {
     PWSD_SOAP_MESSAGE_HANDLER Handler;
@@ -731,170 +731,170 @@ struct WSD_EVENT
 enum IID_IWSDiscoveryProvider = GUID(0x8ffc8e55, 0xf0eb, 0x480f, [0x88, 0xb7, 0xb4, 0x35, 0xdd, 0x28, 0x1d, 0x45]);
 interface IWSDiscoveryProvider : IUnknown
 {
-    HRESULT SetAddressFamily(uint);
-    HRESULT Attach(IWSDiscoveryProviderNotify);
+    HRESULT SetAddressFamily(uint dwAddressFamily);
+    HRESULT Attach(IWSDiscoveryProviderNotify pSink);
     HRESULT Detach();
-    HRESULT SearchById(const(wchar)*, const(wchar)*);
-    HRESULT SearchByAddress(const(wchar)*, const(wchar)*);
-    HRESULT SearchByType(const(WSD_NAME_LIST)*, const(WSD_URI_LIST)*, const(wchar)*, const(wchar)*);
-    HRESULT GetXMLContext(IWSDXMLContext*);
+    HRESULT SearchById(const(wchar)* pszId, const(wchar)* pszTag);
+    HRESULT SearchByAddress(const(wchar)* pszAddress, const(wchar)* pszTag);
+    HRESULT SearchByType(const(WSD_NAME_LIST)* pTypesList, const(WSD_URI_LIST)* pScopesList, const(wchar)* pszMatchBy, const(wchar)* pszTag);
+    HRESULT GetXMLContext(IWSDXMLContext* ppContext);
 }
 enum IID_IWSDiscoveryProviderNotify = GUID(0x73ee3ced, 0xb6e6, 0x4329, [0xa5, 0x46, 0x3e, 0x8a, 0xd4, 0x65, 0x63, 0xd2]);
 interface IWSDiscoveryProviderNotify : IUnknown
 {
-    HRESULT Add(IWSDiscoveredService);
-    HRESULT Remove(IWSDiscoveredService);
-    HRESULT SearchFailed(HRESULT, const(wchar)*);
-    HRESULT SearchComplete(const(wchar)*);
+    HRESULT Add(IWSDiscoveredService pService);
+    HRESULT Remove(IWSDiscoveredService pService);
+    HRESULT SearchFailed(HRESULT hr, const(wchar)* pszTag);
+    HRESULT SearchComplete(const(wchar)* pszTag);
 }
 enum IID_IWSDiscoveredService = GUID(0x4bad8a3b, 0xb374, 0x4420, [0x96, 0x32, 0xaa, 0xc9, 0x45, 0xb3, 0x74, 0xaa]);
 interface IWSDiscoveredService : IUnknown
 {
-    HRESULT GetEndpointReference(WSD_ENDPOINT_REFERENCE**);
-    HRESULT GetTypes(WSD_NAME_LIST**);
-    HRESULT GetScopes(WSD_URI_LIST**);
-    HRESULT GetXAddrs(WSD_URI_LIST**);
-    HRESULT GetMetadataVersion(ulong*);
-    HRESULT GetExtendedDiscoXML(WSDXML_ELEMENT**, WSDXML_ELEMENT**);
-    HRESULT GetProbeResolveTag(const(wchar)**);
-    HRESULT GetRemoteTransportAddress(const(wchar)**);
-    HRESULT GetLocalTransportAddress(const(wchar)**);
-    HRESULT GetLocalInterfaceGUID(GUID*);
-    HRESULT GetInstanceId(ulong*);
+    HRESULT GetEndpointReference(WSD_ENDPOINT_REFERENCE** ppEndpointReference);
+    HRESULT GetTypes(WSD_NAME_LIST** ppTypesList);
+    HRESULT GetScopes(WSD_URI_LIST** ppScopesList);
+    HRESULT GetXAddrs(WSD_URI_LIST** ppXAddrsList);
+    HRESULT GetMetadataVersion(ulong* pullMetadataVersion);
+    HRESULT GetExtendedDiscoXML(WSDXML_ELEMENT** ppHeaderAny, WSDXML_ELEMENT** ppBodyAny);
+    HRESULT GetProbeResolveTag(const(wchar)** ppszTag);
+    HRESULT GetRemoteTransportAddress(const(wchar)** ppszRemoteTransportAddress);
+    HRESULT GetLocalTransportAddress(const(wchar)** ppszLocalTransportAddress);
+    HRESULT GetLocalInterfaceGUID(GUID* pGuid);
+    HRESULT GetInstanceId(ulong* pullInstanceId);
 }
 enum IID_IWSDiscoveryPublisher = GUID(0xae01e1a8, 0x3ff9, 0x4148, [0x81, 0x16, 0x5, 0x7c, 0xc6, 0x16, 0xfe, 0x13]);
 interface IWSDiscoveryPublisher : IUnknown
 {
-    HRESULT SetAddressFamily(uint);
-    HRESULT RegisterNotificationSink(IWSDiscoveryPublisherNotify);
-    HRESULT UnRegisterNotificationSink(IWSDiscoveryPublisherNotify);
-    HRESULT Publish(const(wchar)*, ulong, ulong, ulong, const(wchar)*, const(WSD_NAME_LIST)*, const(WSD_URI_LIST)*, const(WSD_URI_LIST)*);
-    HRESULT UnPublish(const(wchar)*, ulong, ulong, const(wchar)*, const(WSDXML_ELEMENT)*);
-    HRESULT MatchProbe(const(WSD_SOAP_MESSAGE)*, IWSDMessageParameters, const(wchar)*, ulong, ulong, ulong, const(wchar)*, const(WSD_NAME_LIST)*, const(WSD_URI_LIST)*, const(WSD_URI_LIST)*);
-    HRESULT MatchResolve(const(WSD_SOAP_MESSAGE)*, IWSDMessageParameters, const(wchar)*, ulong, ulong, ulong, const(wchar)*, const(WSD_NAME_LIST)*, const(WSD_URI_LIST)*, const(WSD_URI_LIST)*);
-    HRESULT PublishEx(const(wchar)*, ulong, ulong, ulong, const(wchar)*, const(WSD_NAME_LIST)*, const(WSD_URI_LIST)*, const(WSD_URI_LIST)*, const(WSDXML_ELEMENT)*, const(WSDXML_ELEMENT)*, const(WSDXML_ELEMENT)*, const(WSDXML_ELEMENT)*, const(WSDXML_ELEMENT)*);
-    HRESULT MatchProbeEx(const(WSD_SOAP_MESSAGE)*, IWSDMessageParameters, const(wchar)*, ulong, ulong, ulong, const(wchar)*, const(WSD_NAME_LIST)*, const(WSD_URI_LIST)*, const(WSD_URI_LIST)*, const(WSDXML_ELEMENT)*, const(WSDXML_ELEMENT)*, const(WSDXML_ELEMENT)*, const(WSDXML_ELEMENT)*, const(WSDXML_ELEMENT)*);
-    HRESULT MatchResolveEx(const(WSD_SOAP_MESSAGE)*, IWSDMessageParameters, const(wchar)*, ulong, ulong, ulong, const(wchar)*, const(WSD_NAME_LIST)*, const(WSD_URI_LIST)*, const(WSD_URI_LIST)*, const(WSDXML_ELEMENT)*, const(WSDXML_ELEMENT)*, const(WSDXML_ELEMENT)*, const(WSDXML_ELEMENT)*, const(WSDXML_ELEMENT)*);
-    HRESULT RegisterScopeMatchingRule(IWSDScopeMatchingRule);
-    HRESULT UnRegisterScopeMatchingRule(IWSDScopeMatchingRule);
-    HRESULT GetXMLContext(IWSDXMLContext*);
+    HRESULT SetAddressFamily(uint dwAddressFamily);
+    HRESULT RegisterNotificationSink(IWSDiscoveryPublisherNotify pSink);
+    HRESULT UnRegisterNotificationSink(IWSDiscoveryPublisherNotify pSink);
+    HRESULT Publish(const(wchar)* pszId, ulong ullMetadataVersion, ulong ullInstanceId, ulong ullMessageNumber, const(wchar)* pszSessionId, const(WSD_NAME_LIST)* pTypesList, const(WSD_URI_LIST)* pScopesList, const(WSD_URI_LIST)* pXAddrsList);
+    HRESULT UnPublish(const(wchar)* pszId, ulong ullInstanceId, ulong ullMessageNumber, const(wchar)* pszSessionId, const(WSDXML_ELEMENT)* pAny);
+    HRESULT MatchProbe(const(WSD_SOAP_MESSAGE)* pProbeMessage, IWSDMessageParameters pMessageParameters, const(wchar)* pszId, ulong ullMetadataVersion, ulong ullInstanceId, ulong ullMessageNumber, const(wchar)* pszSessionId, const(WSD_NAME_LIST)* pTypesList, const(WSD_URI_LIST)* pScopesList, const(WSD_URI_LIST)* pXAddrsList);
+    HRESULT MatchResolve(const(WSD_SOAP_MESSAGE)* pResolveMessage, IWSDMessageParameters pMessageParameters, const(wchar)* pszId, ulong ullMetadataVersion, ulong ullInstanceId, ulong ullMessageNumber, const(wchar)* pszSessionId, const(WSD_NAME_LIST)* pTypesList, const(WSD_URI_LIST)* pScopesList, const(WSD_URI_LIST)* pXAddrsList);
+    HRESULT PublishEx(const(wchar)* pszId, ulong ullMetadataVersion, ulong ullInstanceId, ulong ullMessageNumber, const(wchar)* pszSessionId, const(WSD_NAME_LIST)* pTypesList, const(WSD_URI_LIST)* pScopesList, const(WSD_URI_LIST)* pXAddrsList, const(WSDXML_ELEMENT)* pHeaderAny, const(WSDXML_ELEMENT)* pReferenceParameterAny, const(WSDXML_ELEMENT)* pPolicyAny, const(WSDXML_ELEMENT)* pEndpointReferenceAny, const(WSDXML_ELEMENT)* pAny);
+    HRESULT MatchProbeEx(const(WSD_SOAP_MESSAGE)* pProbeMessage, IWSDMessageParameters pMessageParameters, const(wchar)* pszId, ulong ullMetadataVersion, ulong ullInstanceId, ulong ullMessageNumber, const(wchar)* pszSessionId, const(WSD_NAME_LIST)* pTypesList, const(WSD_URI_LIST)* pScopesList, const(WSD_URI_LIST)* pXAddrsList, const(WSDXML_ELEMENT)* pHeaderAny, const(WSDXML_ELEMENT)* pReferenceParameterAny, const(WSDXML_ELEMENT)* pPolicyAny, const(WSDXML_ELEMENT)* pEndpointReferenceAny, const(WSDXML_ELEMENT)* pAny);
+    HRESULT MatchResolveEx(const(WSD_SOAP_MESSAGE)* pResolveMessage, IWSDMessageParameters pMessageParameters, const(wchar)* pszId, ulong ullMetadataVersion, ulong ullInstanceId, ulong ullMessageNumber, const(wchar)* pszSessionId, const(WSD_NAME_LIST)* pTypesList, const(WSD_URI_LIST)* pScopesList, const(WSD_URI_LIST)* pXAddrsList, const(WSDXML_ELEMENT)* pHeaderAny, const(WSDXML_ELEMENT)* pReferenceParameterAny, const(WSDXML_ELEMENT)* pPolicyAny, const(WSDXML_ELEMENT)* pEndpointReferenceAny, const(WSDXML_ELEMENT)* pAny);
+    HRESULT RegisterScopeMatchingRule(IWSDScopeMatchingRule pScopeMatchingRule);
+    HRESULT UnRegisterScopeMatchingRule(IWSDScopeMatchingRule pScopeMatchingRule);
+    HRESULT GetXMLContext(IWSDXMLContext* ppContext);
 }
 enum IID_IWSDiscoveryPublisherNotify = GUID(0xe67651b0, 0x337a, 0x4b3c, [0x97, 0x58, 0x73, 0x33, 0x88, 0x56, 0x82, 0x51]);
 interface IWSDiscoveryPublisherNotify : IUnknown
 {
-    HRESULT ProbeHandler(const(WSD_SOAP_MESSAGE)*, IWSDMessageParameters);
-    HRESULT ResolveHandler(const(WSD_SOAP_MESSAGE)*, IWSDMessageParameters);
+    HRESULT ProbeHandler(const(WSD_SOAP_MESSAGE)* pSoap, IWSDMessageParameters pMessageParameters);
+    HRESULT ResolveHandler(const(WSD_SOAP_MESSAGE)* pSoap, IWSDMessageParameters pMessageParameters);
 }
 enum IID_IWSDScopeMatchingRule = GUID(0xfcafe424, 0xfef5, 0x481a, [0xbd, 0x9f, 0x33, 0xce, 0x5, 0x74, 0x25, 0x6f]);
 interface IWSDScopeMatchingRule : IUnknown
 {
-    HRESULT GetScopeRule(const(wchar)**);
-    HRESULT MatchScopes(const(wchar)*, const(wchar)*, BOOL*);
+    HRESULT GetScopeRule(const(wchar)** ppszScopeMatchingRule);
+    HRESULT MatchScopes(const(wchar)* pszScope1, const(wchar)* pszScope2, BOOL* pfMatch);
 }
 enum IID_IWSDEndpointProxy = GUID(0x1860d430, 0xb24c, 0x4975, [0x9f, 0x90, 0xdb, 0xb3, 0x9b, 0xaa, 0x24, 0xec]);
 interface IWSDEndpointProxy : IUnknown
 {
-    HRESULT SendOneWayRequest(const(void)*, const(WSD_OPERATION)*);
-    HRESULT SendTwoWayRequest(const(void)*, const(WSD_OPERATION)*, const(WSD_SYNCHRONOUS_RESPONSE_CONTEXT)*);
-    HRESULT SendTwoWayRequestAsync(const(void)*, const(WSD_OPERATION)*, IUnknown, IWSDAsyncCallback, IWSDAsyncResult*);
-    HRESULT AbortAsyncOperation(IWSDAsyncResult);
-    HRESULT ProcessFault(const(WSD_SOAP_FAULT)*);
-    HRESULT GetErrorInfo(const(wchar)**);
-    HRESULT GetFaultInfo(WSD_SOAP_FAULT**);
+    HRESULT SendOneWayRequest(const(void)* pBody, const(WSD_OPERATION)* pOperation);
+    HRESULT SendTwoWayRequest(const(void)* pBody, const(WSD_OPERATION)* pOperation, const(WSD_SYNCHRONOUS_RESPONSE_CONTEXT)* pResponseContext);
+    HRESULT SendTwoWayRequestAsync(const(void)* pBody, const(WSD_OPERATION)* pOperation, IUnknown pAsyncState, IWSDAsyncCallback pCallback, IWSDAsyncResult* pResult);
+    HRESULT AbortAsyncOperation(IWSDAsyncResult pAsyncResult);
+    HRESULT ProcessFault(const(WSD_SOAP_FAULT)* pFault);
+    HRESULT GetErrorInfo(const(wchar)** ppszErrorInfo);
+    HRESULT GetFaultInfo(WSD_SOAP_FAULT** ppFault);
 }
 enum IID_IWSDMetadataExchange = GUID(0x6996d57, 0x1d67, 0x4928, [0x93, 0x7, 0x3d, 0x78, 0x33, 0xfd, 0xb8, 0x46]);
 interface IWSDMetadataExchange : IUnknown
 {
-    HRESULT GetMetadata(WSD_METADATA_SECTION_LIST**);
+    HRESULT GetMetadata(WSD_METADATA_SECTION_LIST** MetadataOut);
 }
 enum IID_IWSDServiceProxy = GUID(0xd4c7fb9c, 0x3ab, 0x4175, [0x9d, 0x67, 0x9, 0x4f, 0xaf, 0xeb, 0xf4, 0x87]);
 interface IWSDServiceProxy : IWSDMetadataExchange
 {
-    HRESULT BeginGetMetadata(IWSDAsyncResult*);
-    HRESULT EndGetMetadata(IWSDAsyncResult, WSD_METADATA_SECTION_LIST**);
-    HRESULT GetServiceMetadata(WSD_SERVICE_METADATA**);
-    HRESULT SubscribeToOperation(const(WSD_OPERATION)*, IUnknown, const(WSDXML_ELEMENT)*, WSDXML_ELEMENT**);
-    HRESULT UnsubscribeToOperation(const(WSD_OPERATION)*);
-    HRESULT SetEventingStatusCallback(IWSDEventingStatus);
-    HRESULT GetEndpointProxy(IWSDEndpointProxy*);
+    HRESULT BeginGetMetadata(IWSDAsyncResult* ppResult);
+    HRESULT EndGetMetadata(IWSDAsyncResult pResult, WSD_METADATA_SECTION_LIST** ppMetadata);
+    HRESULT GetServiceMetadata(WSD_SERVICE_METADATA** ppServiceMetadata);
+    HRESULT SubscribeToOperation(const(WSD_OPERATION)* pOperation, IUnknown pUnknown, const(WSDXML_ELEMENT)* pAny, WSDXML_ELEMENT** ppAny);
+    HRESULT UnsubscribeToOperation(const(WSD_OPERATION)* pOperation);
+    HRESULT SetEventingStatusCallback(IWSDEventingStatus pStatus);
+    HRESULT GetEndpointProxy(IWSDEndpointProxy* ppProxy);
 }
 enum IID_IWSDServiceProxyEventing = GUID(0xf9279d6d, 0x1012, 0x4a94, [0xb8, 0xcc, 0xfd, 0x35, 0xd2, 0x20, 0x2b, 0xfe]);
 interface IWSDServiceProxyEventing : IWSDServiceProxy
 {
-    HRESULT SubscribeToMultipleOperations(const(WSD_OPERATION)*, uint, IUnknown, const(WSD_EVENTING_EXPIRES)*, const(WSDXML_ELEMENT)*, WSD_EVENTING_EXPIRES**, WSDXML_ELEMENT**);
-    HRESULT BeginSubscribeToMultipleOperations(const(WSD_OPERATION)*, uint, IUnknown, const(WSD_EVENTING_EXPIRES)*, const(WSDXML_ELEMENT)*, IUnknown, IWSDAsyncCallback, IWSDAsyncResult*);
-    HRESULT EndSubscribeToMultipleOperations(const(WSD_OPERATION)*, uint, IWSDAsyncResult, WSD_EVENTING_EXPIRES**, WSDXML_ELEMENT**);
-    HRESULT UnsubscribeToMultipleOperations(const(WSD_OPERATION)*, uint, const(WSDXML_ELEMENT)*);
-    HRESULT BeginUnsubscribeToMultipleOperations(const(WSD_OPERATION)*, uint, const(WSDXML_ELEMENT)*, IUnknown, IWSDAsyncCallback, IWSDAsyncResult*);
-    HRESULT EndUnsubscribeToMultipleOperations(const(WSD_OPERATION)*, uint, IWSDAsyncResult);
-    HRESULT RenewMultipleOperations(const(WSD_OPERATION)*, uint, const(WSD_EVENTING_EXPIRES)*, const(WSDXML_ELEMENT)*, WSD_EVENTING_EXPIRES**, WSDXML_ELEMENT**);
-    HRESULT BeginRenewMultipleOperations(const(WSD_OPERATION)*, uint, const(WSD_EVENTING_EXPIRES)*, const(WSDXML_ELEMENT)*, IUnknown, IWSDAsyncCallback, IWSDAsyncResult*);
-    HRESULT EndRenewMultipleOperations(const(WSD_OPERATION)*, uint, IWSDAsyncResult, WSD_EVENTING_EXPIRES**, WSDXML_ELEMENT**);
-    HRESULT GetStatusForMultipleOperations(const(WSD_OPERATION)*, uint, const(WSDXML_ELEMENT)*, WSD_EVENTING_EXPIRES**, WSDXML_ELEMENT**);
-    HRESULT BeginGetStatusForMultipleOperations(const(WSD_OPERATION)*, uint, const(WSDXML_ELEMENT)*, IUnknown, IWSDAsyncCallback, IWSDAsyncResult*);
-    HRESULT EndGetStatusForMultipleOperations(const(WSD_OPERATION)*, uint, IWSDAsyncResult, WSD_EVENTING_EXPIRES**, WSDXML_ELEMENT**);
+    HRESULT SubscribeToMultipleOperations(const(WSD_OPERATION)* pOperations, uint dwOperationCount, IUnknown pUnknown, const(WSD_EVENTING_EXPIRES)* pExpires, const(WSDXML_ELEMENT)* pAny, WSD_EVENTING_EXPIRES** ppExpires, WSDXML_ELEMENT** ppAny);
+    HRESULT BeginSubscribeToMultipleOperations(const(WSD_OPERATION)* pOperations, uint dwOperationCount, IUnknown pUnknown, const(WSD_EVENTING_EXPIRES)* pExpires, const(WSDXML_ELEMENT)* pAny, IUnknown pAsyncState, IWSDAsyncCallback pAsyncCallback, IWSDAsyncResult* ppResult);
+    HRESULT EndSubscribeToMultipleOperations(const(WSD_OPERATION)* pOperations, uint dwOperationCount, IWSDAsyncResult pResult, WSD_EVENTING_EXPIRES** ppExpires, WSDXML_ELEMENT** ppAny);
+    HRESULT UnsubscribeToMultipleOperations(const(WSD_OPERATION)* pOperations, uint dwOperationCount, const(WSDXML_ELEMENT)* pAny);
+    HRESULT BeginUnsubscribeToMultipleOperations(const(WSD_OPERATION)* pOperations, uint dwOperationCount, const(WSDXML_ELEMENT)* pAny, IUnknown pAsyncState, IWSDAsyncCallback pAsyncCallback, IWSDAsyncResult* ppResult);
+    HRESULT EndUnsubscribeToMultipleOperations(const(WSD_OPERATION)* pOperations, uint dwOperationCount, IWSDAsyncResult pResult);
+    HRESULT RenewMultipleOperations(const(WSD_OPERATION)* pOperations, uint dwOperationCount, const(WSD_EVENTING_EXPIRES)* pExpires, const(WSDXML_ELEMENT)* pAny, WSD_EVENTING_EXPIRES** ppExpires, WSDXML_ELEMENT** ppAny);
+    HRESULT BeginRenewMultipleOperations(const(WSD_OPERATION)* pOperations, uint dwOperationCount, const(WSD_EVENTING_EXPIRES)* pExpires, const(WSDXML_ELEMENT)* pAny, IUnknown pAsyncState, IWSDAsyncCallback pAsyncCallback, IWSDAsyncResult* ppResult);
+    HRESULT EndRenewMultipleOperations(const(WSD_OPERATION)* pOperations, uint dwOperationCount, IWSDAsyncResult pResult, WSD_EVENTING_EXPIRES** ppExpires, WSDXML_ELEMENT** ppAny);
+    HRESULT GetStatusForMultipleOperations(const(WSD_OPERATION)* pOperations, uint dwOperationCount, const(WSDXML_ELEMENT)* pAny, WSD_EVENTING_EXPIRES** ppExpires, WSDXML_ELEMENT** ppAny);
+    HRESULT BeginGetStatusForMultipleOperations(const(WSD_OPERATION)* pOperations, uint dwOperationCount, const(WSDXML_ELEMENT)* pAny, IUnknown pAsyncState, IWSDAsyncCallback pAsyncCallback, IWSDAsyncResult* ppResult);
+    HRESULT EndGetStatusForMultipleOperations(const(WSD_OPERATION)* pOperations, uint dwOperationCount, IWSDAsyncResult pResult, WSD_EVENTING_EXPIRES** ppExpires, WSDXML_ELEMENT** ppAny);
 }
 enum IID_IWSDDeviceProxy = GUID(0xeee0c031, 0xc578, 0x4c0e, [0x9a, 0x3b, 0x97, 0x3c, 0x35, 0xf4, 0x9, 0xdb]);
 interface IWSDDeviceProxy : IUnknown
 {
-    HRESULT Init(const(wchar)*, IWSDAddress, const(wchar)*, IWSDXMLContext, IWSDDeviceProxy);
-    HRESULT BeginGetMetadata(IWSDAsyncResult*);
-    HRESULT EndGetMetadata(IWSDAsyncResult);
-    HRESULT GetHostMetadata(WSD_HOST_METADATA**);
-    HRESULT GetThisModelMetadata(WSD_THIS_MODEL_METADATA**);
-    HRESULT GetThisDeviceMetadata(WSD_THIS_DEVICE_METADATA**);
-    HRESULT GetAllMetadata(WSD_METADATA_SECTION_LIST**);
-    HRESULT GetServiceProxyById(const(wchar)*, IWSDServiceProxy*);
-    HRESULT GetServiceProxyByType(const(WSDXML_NAME)*, IWSDServiceProxy*);
-    HRESULT GetEndpointProxy(IWSDEndpointProxy*);
+    HRESULT Init(const(wchar)* pszDeviceId, IWSDAddress pDeviceAddress, const(wchar)* pszLocalId, IWSDXMLContext pContext, IWSDDeviceProxy pSponsor);
+    HRESULT BeginGetMetadata(IWSDAsyncResult* ppResult);
+    HRESULT EndGetMetadata(IWSDAsyncResult pResult);
+    HRESULT GetHostMetadata(WSD_HOST_METADATA** ppHostMetadata);
+    HRESULT GetThisModelMetadata(WSD_THIS_MODEL_METADATA** ppManufacturerMetadata);
+    HRESULT GetThisDeviceMetadata(WSD_THIS_DEVICE_METADATA** ppThisDeviceMetadata);
+    HRESULT GetAllMetadata(WSD_METADATA_SECTION_LIST** ppMetadata);
+    HRESULT GetServiceProxyById(const(wchar)* pszServiceId, IWSDServiceProxy* ppServiceProxy);
+    HRESULT GetServiceProxyByType(const(WSDXML_NAME)* pType, IWSDServiceProxy* ppServiceProxy);
+    HRESULT GetEndpointProxy(IWSDEndpointProxy* ppProxy);
 }
 enum IID_IWSDAsyncResult = GUID(0x11a9852a, 0x8dd8, 0x423e, [0xb5, 0x37, 0x93, 0x56, 0xdb, 0x4f, 0xbf, 0xb8]);
 interface IWSDAsyncResult : IUnknown
 {
-    HRESULT SetCallback(IWSDAsyncCallback, IUnknown);
-    HRESULT SetWaitHandle(HANDLE);
+    HRESULT SetCallback(IWSDAsyncCallback pCallback, IUnknown pAsyncState);
+    HRESULT SetWaitHandle(HANDLE hWaitHandle);
     HRESULT HasCompleted();
-    HRESULT GetAsyncState(IUnknown*);
+    HRESULT GetAsyncState(IUnknown* ppAsyncState);
     HRESULT Abort();
-    HRESULT GetEvent(WSD_EVENT*);
-    HRESULT GetEndpointProxy(IWSDEndpointProxy*);
+    HRESULT GetEvent(WSD_EVENT* pEvent);
+    HRESULT GetEndpointProxy(IWSDEndpointProxy* ppEndpoint);
 }
 enum IID_IWSDAsyncCallback = GUID(0xa63e109d, 0xce72, 0x49e2, [0xba, 0x98, 0xe8, 0x45, 0xf5, 0xee, 0x16, 0x66]);
 interface IWSDAsyncCallback : IUnknown
 {
-    HRESULT AsyncOperationComplete(IWSDAsyncResult, IUnknown);
+    HRESULT AsyncOperationComplete(IWSDAsyncResult pAsyncResult, IUnknown pAsyncState);
 }
 enum IID_IWSDEventingStatus = GUID(0x49b17f52, 0x637a, 0x407a, [0xae, 0x99, 0xfb, 0xe8, 0x2a, 0x4d, 0x38, 0xc0]);
 interface IWSDEventingStatus : IUnknown
 {
-    void SubscriptionRenewed(const(wchar)*);
-    void SubscriptionRenewalFailed(const(wchar)*, HRESULT);
-    void SubscriptionEnded(const(wchar)*);
+    void SubscriptionRenewed(const(wchar)* pszSubscriptionAction);
+    void SubscriptionRenewalFailed(const(wchar)* pszSubscriptionAction, HRESULT hr);
+    void SubscriptionEnded(const(wchar)* pszSubscriptionAction);
 }
 enum IID_IWSDDeviceHost = GUID(0x917fe891, 0x3d13, 0x4138, [0x98, 0x9, 0x93, 0x4c, 0x8a, 0xbe, 0xb1, 0x2c]);
 interface IWSDDeviceHost : IUnknown
 {
-    HRESULT Init(const(wchar)*, IWSDXMLContext, IWSDAddress*, uint);
-    HRESULT Start(ulong, const(WSD_URI_LIST)*, IWSDDeviceHostNotify);
+    HRESULT Init(const(wchar)* pszLocalId, IWSDXMLContext pContext, IWSDAddress* ppHostAddresses, uint dwHostAddressCount);
+    HRESULT Start(ulong ullInstanceId, const(WSD_URI_LIST)* pScopeList, IWSDDeviceHostNotify pNotificationSink);
     HRESULT Stop();
     HRESULT Terminate();
-    HRESULT RegisterPortType(const(WSD_PORT_TYPE)*);
-    HRESULT SetMetadata(const(WSD_THIS_MODEL_METADATA)*, const(WSD_THIS_DEVICE_METADATA)*, const(WSD_HOST_METADATA)*, const(WSD_METADATA_SECTION_LIST)*);
-    HRESULT RegisterService(const(wchar)*, IUnknown);
-    HRESULT RetireService(const(wchar)*);
-    HRESULT AddDynamicService(const(wchar)*, const(wchar)*, const(WSD_PORT_TYPE)*, const(WSDXML_NAME)*, const(WSDXML_ELEMENT)*, IUnknown);
-    HRESULT RemoveDynamicService(const(wchar)*);
-    HRESULT SetServiceDiscoverable(const(wchar)*, BOOL);
-    HRESULT SignalEvent(const(wchar)*, const(void)*, const(WSD_OPERATION)*);
+    HRESULT RegisterPortType(const(WSD_PORT_TYPE)* pPortType);
+    HRESULT SetMetadata(const(WSD_THIS_MODEL_METADATA)* pThisModelMetadata, const(WSD_THIS_DEVICE_METADATA)* pThisDeviceMetadata, const(WSD_HOST_METADATA)* pHostMetadata, const(WSD_METADATA_SECTION_LIST)* pCustomMetadata);
+    HRESULT RegisterService(const(wchar)* pszServiceId, IUnknown pService);
+    HRESULT RetireService(const(wchar)* pszServiceId);
+    HRESULT AddDynamicService(const(wchar)* pszServiceId, const(wchar)* pszEndpointAddress, const(WSD_PORT_TYPE)* pPortType, const(WSDXML_NAME)* pPortName, const(WSDXML_ELEMENT)* pAny, IUnknown pService);
+    HRESULT RemoveDynamicService(const(wchar)* pszServiceId);
+    HRESULT SetServiceDiscoverable(const(wchar)* pszServiceId, BOOL fDiscoverable);
+    HRESULT SignalEvent(const(wchar)* pszServiceId, const(void)* pBody, const(WSD_OPERATION)* pOperation);
 }
 enum IID_IWSDDeviceHostNotify = GUID(0xb5bee9f9, 0xeeda, 0x41fe, [0x96, 0xf7, 0xf4, 0x5e, 0x14, 0x99, 0xf, 0xb0]);
 interface IWSDDeviceHostNotify : IUnknown
 {
-    HRESULT GetService(const(wchar)*, IUnknown*);
+    HRESULT GetService(const(wchar)* pszServiceId, IUnknown* ppService);
 }
 enum IID_IWSDServiceMessaging = GUID(0x94974cf4, 0xcab, 0x460d, [0xa3, 0xf6, 0x7a, 0xa, 0xd6, 0x23, 0xc0, 0xe6]);
 interface IWSDServiceMessaging : IUnknown
 {
-    HRESULT SendResponse(void*, WSD_OPERATION*, IWSDMessageParameters);
-    HRESULT FaultRequest(WSD_SOAP_HEADER*, IWSDMessageParameters, WSD_SOAP_FAULT*);
+    HRESULT SendResponse(void* pBody, WSD_OPERATION* pOperation, IWSDMessageParameters pMessageParameters);
+    HRESULT FaultRequest(WSD_SOAP_HEADER* pRequestHeader, IWSDMessageParameters pMessageParameters, WSD_SOAP_FAULT* pFault);
 }

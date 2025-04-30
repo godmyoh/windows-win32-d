@@ -8,10 +8,10 @@ import windows.win32.system.variant : VARIANT;
 version (Windows):
 extern (Windows):
 
-uint OfflineFilesEnable(BOOL, BOOL*);
+uint OfflineFilesEnable(BOOL bEnable, BOOL* pbRebootRequired);
 uint OfflineFilesStart();
-uint OfflineFilesQueryStatus(BOOL*, BOOL*);
-uint OfflineFilesQueryStatusEx(BOOL*, BOOL*, BOOL*);
+uint OfflineFilesQueryStatus(BOOL* pbActive, BOOL* pbEnabled);
+uint OfflineFilesQueryStatusEx(BOOL* pbActive, BOOL* pbEnabled, BOOL* pbAvailable);
 enum OFFLINEFILES_SYNC_STATE_LOCAL_KNOWN = 0x00000001;
 enum OFFLINEFILES_SYNC_STATE_REMOTE_KNOWN = 0x00000002;
 enum OFFLINEFILES_CHANGES_NONE = 0x00000000;
@@ -341,29 +341,29 @@ enum : int
 enum IID_IOfflineFilesEvents = GUID(0xe25585c1, 0xcaa, 0x4eb1, [0x87, 0x3b, 0x1c, 0xae, 0x5b, 0x77, 0xc3, 0x14]);
 interface IOfflineFilesEvents : IUnknown
 {
-    HRESULT CacheMoved(const(wchar)*, const(wchar)*);
+    HRESULT CacheMoved(const(wchar)* pszOldPath, const(wchar)* pszNewPath);
     HRESULT CacheIsFull();
     HRESULT CacheIsCorrupted();
-    HRESULT Enabled(BOOL);
-    HRESULT EncryptionChanged(BOOL, BOOL, BOOL, BOOL);
-    HRESULT SyncBegin(const(GUID)*);
-    HRESULT SyncFileResult(const(GUID)*, const(wchar)*, HRESULT);
-    HRESULT SyncConflictRecAdded(const(wchar)*, const(FILETIME)*, OFFLINEFILES_SYNC_STATE);
-    HRESULT SyncConflictRecUpdated(const(wchar)*, const(FILETIME)*, OFFLINEFILES_SYNC_STATE);
-    HRESULT SyncConflictRecRemoved(const(wchar)*, const(FILETIME)*, OFFLINEFILES_SYNC_STATE);
-    HRESULT SyncEnd(const(GUID)*, HRESULT);
+    HRESULT Enabled(BOOL bEnabled);
+    HRESULT EncryptionChanged(BOOL bWasEncrypted, BOOL bWasPartial, BOOL bIsEncrypted, BOOL bIsPartial);
+    HRESULT SyncBegin(const(GUID)* rSyncId);
+    HRESULT SyncFileResult(const(GUID)* rSyncId, const(wchar)* pszFile, HRESULT hrResult);
+    HRESULT SyncConflictRecAdded(const(wchar)* pszConflictPath, const(FILETIME)* pftConflictDateTime, OFFLINEFILES_SYNC_STATE ConflictSyncState);
+    HRESULT SyncConflictRecUpdated(const(wchar)* pszConflictPath, const(FILETIME)* pftConflictDateTime, OFFLINEFILES_SYNC_STATE ConflictSyncState);
+    HRESULT SyncConflictRecRemoved(const(wchar)* pszConflictPath, const(FILETIME)* pftConflictDateTime, OFFLINEFILES_SYNC_STATE ConflictSyncState);
+    HRESULT SyncEnd(const(GUID)* rSyncId, HRESULT hrResult);
     HRESULT NetTransportArrived();
     HRESULT NoNetTransports();
-    HRESULT ItemDisconnected(const(wchar)*, OFFLINEFILES_ITEM_TYPE);
-    HRESULT ItemReconnected(const(wchar)*, OFFLINEFILES_ITEM_TYPE);
-    HRESULT ItemAvailableOffline(const(wchar)*, OFFLINEFILES_ITEM_TYPE);
-    HRESULT ItemNotAvailableOffline(const(wchar)*, OFFLINEFILES_ITEM_TYPE);
-    HRESULT ItemPinned(const(wchar)*, OFFLINEFILES_ITEM_TYPE);
-    HRESULT ItemNotPinned(const(wchar)*, OFFLINEFILES_ITEM_TYPE);
-    HRESULT ItemModified(const(wchar)*, OFFLINEFILES_ITEM_TYPE, BOOL, BOOL);
-    HRESULT ItemAddedToCache(const(wchar)*, OFFLINEFILES_ITEM_TYPE);
-    HRESULT ItemDeletedFromCache(const(wchar)*, OFFLINEFILES_ITEM_TYPE);
-    HRESULT ItemRenamed(const(wchar)*, const(wchar)*, OFFLINEFILES_ITEM_TYPE);
+    HRESULT ItemDisconnected(const(wchar)* pszPath, OFFLINEFILES_ITEM_TYPE ItemType);
+    HRESULT ItemReconnected(const(wchar)* pszPath, OFFLINEFILES_ITEM_TYPE ItemType);
+    HRESULT ItemAvailableOffline(const(wchar)* pszPath, OFFLINEFILES_ITEM_TYPE ItemType);
+    HRESULT ItemNotAvailableOffline(const(wchar)* pszPath, OFFLINEFILES_ITEM_TYPE ItemType);
+    HRESULT ItemPinned(const(wchar)* pszPath, OFFLINEFILES_ITEM_TYPE ItemType);
+    HRESULT ItemNotPinned(const(wchar)* pszPath, OFFLINEFILES_ITEM_TYPE ItemType);
+    HRESULT ItemModified(const(wchar)* pszPath, OFFLINEFILES_ITEM_TYPE ItemType, BOOL bModifiedData, BOOL bModifiedAttributes);
+    HRESULT ItemAddedToCache(const(wchar)* pszPath, OFFLINEFILES_ITEM_TYPE ItemType);
+    HRESULT ItemDeletedFromCache(const(wchar)* pszPath, OFFLINEFILES_ITEM_TYPE ItemType);
+    HRESULT ItemRenamed(const(wchar)* pszOldPath, const(wchar)* pszNewPath, OFFLINEFILES_ITEM_TYPE ItemType);
     HRESULT DataLost();
     HRESULT Ping();
 }
@@ -374,8 +374,8 @@ interface IOfflineFilesEvents2 : IOfflineFilesEvents
     HRESULT ItemReconnectEnd();
     HRESULT CacheEvictBegin();
     HRESULT CacheEvictEnd();
-    HRESULT BackgroundSyncBegin(uint);
-    HRESULT BackgroundSyncEnd(uint);
+    HRESULT BackgroundSyncBegin(uint dwSyncControlFlags);
+    HRESULT BackgroundSyncEnd(uint dwSyncControlFlags);
     HRESULT PolicyChangeDetected();
     HRESULT PreferenceChangeDetected();
     HRESULT SettingsChangesApplied();
@@ -383,86 +383,86 @@ interface IOfflineFilesEvents2 : IOfflineFilesEvents
 enum IID_IOfflineFilesEvents3 = GUID(0x9ba04a45, 0xee69, 0x42f0, [0x9a, 0xb1, 0x7d, 0xb5, 0xc8, 0x80, 0x58, 0x8]);
 interface IOfflineFilesEvents3 : IOfflineFilesEvents2
 {
-    HRESULT TransparentCacheItemNotify(const(wchar)*, OFFLINEFILES_EVENTS, OFFLINEFILES_ITEM_TYPE, BOOL, BOOL, const(wchar)*);
-    HRESULT PrefetchFileBegin(const(wchar)*);
-    HRESULT PrefetchFileEnd(const(wchar)*, HRESULT);
+    HRESULT TransparentCacheItemNotify(const(wchar)* pszPath, OFFLINEFILES_EVENTS EventType, OFFLINEFILES_ITEM_TYPE ItemType, BOOL bModifiedData, BOOL bModifiedAttributes, const(wchar)* pzsOldPath);
+    HRESULT PrefetchFileBegin(const(wchar)* pszPath);
+    HRESULT PrefetchFileEnd(const(wchar)* pszPath, HRESULT hrResult);
 }
 enum IID_IOfflineFilesEvents4 = GUID(0xdbd69b1e, 0xc7d2, 0x473e, [0xb3, 0x5f, 0x9d, 0x8c, 0x24, 0xc0, 0xc4, 0x84]);
 interface IOfflineFilesEvents4 : IOfflineFilesEvents3
 {
     HRESULT PrefetchCloseHandleBegin();
-    HRESULT PrefetchCloseHandleEnd(uint, uint, HRESULT);
+    HRESULT PrefetchCloseHandleEnd(uint dwClosedHandleCount, uint dwOpenHandleCount, HRESULT hrResult);
 }
 enum IID_IOfflineFilesEventsFilter = GUID(0x33fc4e1b, 0x716, 0x40fa, [0xba, 0x65, 0x6e, 0x62, 0xa8, 0x4a, 0x84, 0x6f]);
 interface IOfflineFilesEventsFilter : IUnknown
 {
-    HRESULT GetPathFilter(PWSTR*, OFFLINEFILES_PATHFILTER_MATCH*);
-    HRESULT GetIncludedEvents(uint, OFFLINEFILES_EVENTS*, uint*);
-    HRESULT GetExcludedEvents(uint, OFFLINEFILES_EVENTS*, uint*);
+    HRESULT GetPathFilter(PWSTR* ppszFilter, OFFLINEFILES_PATHFILTER_MATCH* pMatch);
+    HRESULT GetIncludedEvents(uint cElements, OFFLINEFILES_EVENTS* prgEvents, uint* pcEvents);
+    HRESULT GetExcludedEvents(uint cElements, OFFLINEFILES_EVENTS* prgEvents, uint* pcEvents);
 }
 enum IID_IOfflineFilesErrorInfo = GUID(0x7112fa5f, 0x7571, 0x435a, [0x8e, 0xb7, 0x19, 0x5c, 0x7c, 0x14, 0x29, 0xbc]);
 interface IOfflineFilesErrorInfo : IUnknown
 {
-    HRESULT GetRawData(BYTE_BLOB**);
-    HRESULT GetDescription(PWSTR*);
+    HRESULT GetRawData(BYTE_BLOB** ppBlob);
+    HRESULT GetDescription(PWSTR* ppszDescription);
 }
 enum IID_IOfflineFilesSyncErrorItemInfo = GUID(0xecdbaf0d, 0x6a18, 0x4d55, [0x80, 0x17, 0x10, 0x8f, 0x76, 0x60, 0xba, 0x44]);
 interface IOfflineFilesSyncErrorItemInfo : IUnknown
 {
-    HRESULT GetFileAttributes(uint*);
-    HRESULT GetFileTimes(FILETIME*, FILETIME*);
-    HRESULT GetFileSize(long*);
+    HRESULT GetFileAttributes(uint* pdwAttributes);
+    HRESULT GetFileTimes(FILETIME* pftLastWrite, FILETIME* pftChange);
+    HRESULT GetFileSize(long* pSize);
 }
 enum IID_IOfflineFilesSyncErrorInfo = GUID(0x59f95e46, 0xeb54, 0x49d1, [0xbe, 0x76, 0xde, 0x95, 0x45, 0x8d, 0x1, 0xb0]);
 interface IOfflineFilesSyncErrorInfo : IOfflineFilesErrorInfo
 {
-    HRESULT GetSyncOperation(OFFLINEFILES_SYNC_OPERATION*);
-    HRESULT GetItemChangeFlags(uint*);
-    HRESULT InfoEnumerated(BOOL*, BOOL*, BOOL*);
-    HRESULT InfoAvailable(BOOL*, BOOL*, BOOL*);
-    HRESULT GetLocalInfo(IOfflineFilesSyncErrorItemInfo*);
-    HRESULT GetRemoteInfo(IOfflineFilesSyncErrorItemInfo*);
-    HRESULT GetOriginalInfo(IOfflineFilesSyncErrorItemInfo*);
+    HRESULT GetSyncOperation(OFFLINEFILES_SYNC_OPERATION* pSyncOp);
+    HRESULT GetItemChangeFlags(uint* pdwItemChangeFlags);
+    HRESULT InfoEnumerated(BOOL* pbLocalEnumerated, BOOL* pbRemoteEnumerated, BOOL* pbOriginalEnumerated);
+    HRESULT InfoAvailable(BOOL* pbLocalInfo, BOOL* pbRemoteInfo, BOOL* pbOriginalInfo);
+    HRESULT GetLocalInfo(IOfflineFilesSyncErrorItemInfo* ppInfo);
+    HRESULT GetRemoteInfo(IOfflineFilesSyncErrorItemInfo* ppInfo);
+    HRESULT GetOriginalInfo(IOfflineFilesSyncErrorItemInfo* ppInfo);
 }
 enum IID_IOfflineFilesProgress = GUID(0xfad63237, 0xc55b, 0x4911, [0x98, 0x50, 0xbc, 0xf9, 0x6d, 0x4c, 0x97, 0x9e]);
 interface IOfflineFilesProgress : IUnknown
 {
-    HRESULT Begin(BOOL*);
-    HRESULT QueryAbort(BOOL*);
-    HRESULT End(HRESULT);
+    HRESULT Begin(BOOL* pbAbort);
+    HRESULT QueryAbort(BOOL* pbAbort);
+    HRESULT End(HRESULT hrResult);
 }
 enum IID_IOfflineFilesSimpleProgress = GUID(0xc34f7f9b, 0xc43d, 0x4f9d, [0xa7, 0x76, 0xc0, 0xeb, 0x6d, 0xe5, 0xd4, 0x1]);
 interface IOfflineFilesSimpleProgress : IOfflineFilesProgress
 {
-    HRESULT ItemBegin(const(wchar)*, OFFLINEFILES_OP_RESPONSE*);
-    HRESULT ItemResult(const(wchar)*, HRESULT, OFFLINEFILES_OP_RESPONSE*);
+    HRESULT ItemBegin(const(wchar)* pszFile, OFFLINEFILES_OP_RESPONSE* pResponse);
+    HRESULT ItemResult(const(wchar)* pszFile, HRESULT hrResult, OFFLINEFILES_OP_RESPONSE* pResponse);
 }
 enum IID_IOfflineFilesSyncProgress = GUID(0x6931f49a, 0x6fc7, 0x4c1b, [0xb2, 0x65, 0x56, 0x79, 0x3f, 0xc4, 0x51, 0xb7]);
 interface IOfflineFilesSyncProgress : IOfflineFilesProgress
 {
-    HRESULT SyncItemBegin(const(wchar)*, OFFLINEFILES_OP_RESPONSE*);
-    HRESULT SyncItemResult(const(wchar)*, HRESULT, IOfflineFilesSyncErrorInfo, OFFLINEFILES_OP_RESPONSE*);
+    HRESULT SyncItemBegin(const(wchar)* pszFile, OFFLINEFILES_OP_RESPONSE* pResponse);
+    HRESULT SyncItemResult(const(wchar)* pszFile, HRESULT hrResult, IOfflineFilesSyncErrorInfo pErrorInfo, OFFLINEFILES_OP_RESPONSE* pResponse);
 }
 enum IID_IOfflineFilesSyncConflictHandler = GUID(0xb6dd5092, 0xc65c, 0x46b6, [0x97, 0xb8, 0xfa, 0xdd, 0x8, 0xe7, 0xe1, 0xbe]);
 interface IOfflineFilesSyncConflictHandler : IUnknown
 {
-    HRESULT ResolveConflict(const(wchar)*, uint, OFFLINEFILES_SYNC_STATE, uint, OFFLINEFILES_SYNC_CONFLICT_RESOLVE*, PWSTR*);
+    HRESULT ResolveConflict(const(wchar)* pszPath, uint fStateKnown, OFFLINEFILES_SYNC_STATE state, uint fChangeDetails, OFFLINEFILES_SYNC_CONFLICT_RESOLVE* pConflictResolution, PWSTR* ppszNewName);
 }
 enum IID_IOfflineFilesItemFilter = GUID(0xf4b5a26c, 0xdc05, 0x4f20, [0xad, 0xa4, 0x55, 0x1f, 0x10, 0x77, 0xbe, 0x5c]);
 interface IOfflineFilesItemFilter : IUnknown
 {
-    HRESULT GetFilterFlags(ulong*, ulong*);
-    HRESULT GetTimeFilter(FILETIME*, BOOL*, OFFLINEFILES_ITEM_TIME*, OFFLINEFILES_COMPARE*);
-    HRESULT GetPatternFilter(PWSTR, uint);
+    HRESULT GetFilterFlags(ulong* pullFlags, ulong* pullMask);
+    HRESULT GetTimeFilter(FILETIME* pftTime, BOOL* pbEvalTimeOfDay, OFFLINEFILES_ITEM_TIME* pTimeType, OFFLINEFILES_COMPARE* pCompare);
+    HRESULT GetPatternFilter(PWSTR pszPattern, uint cchPattern);
 }
 enum IID_IOfflineFilesItem = GUID(0x4a753da6, 0xe044, 0x4f12, [0xa7, 0x18, 0x5d, 0x14, 0xd0, 0x79, 0xa9, 0x6]);
 interface IOfflineFilesItem : IUnknown
 {
-    HRESULT GetItemType(OFFLINEFILES_ITEM_TYPE*);
-    HRESULT GetPath(PWSTR*);
-    HRESULT GetParentItem(IOfflineFilesItem*);
-    HRESULT Refresh(uint);
-    HRESULT IsMarkedForDeletion(BOOL*);
+    HRESULT GetItemType(OFFLINEFILES_ITEM_TYPE* pItemType);
+    HRESULT GetPath(PWSTR* ppszPath);
+    HRESULT GetParentItem(IOfflineFilesItem* ppItem);
+    HRESULT Refresh(uint dwQueryFlags);
+    HRESULT IsMarkedForDeletion(BOOL* pbMarkedForDeletion);
 }
 enum IID_IOfflineFilesServerItem = GUID(0x9b1c9576, 0xa92b, 0x4151, [0x8e, 0x9e, 0x7c, 0x7b, 0x3e, 0xc2, 0xe0, 0x16]);
 interface IOfflineFilesServerItem : IOfflineFilesItem
@@ -479,141 +479,141 @@ interface IOfflineFilesDirectoryItem : IOfflineFilesItem
 enum IID_IOfflineFilesFileItem = GUID(0x8dfadead, 0x26c2, 0x4eff, [0x8a, 0x72, 0x6b, 0x50, 0x72, 0x3d, 0x9a, 0x0]);
 interface IOfflineFilesFileItem : IOfflineFilesItem
 {
-    HRESULT IsSparse(BOOL*);
-    HRESULT IsEncrypted(BOOL*);
+    HRESULT IsSparse(BOOL* pbIsSparse);
+    HRESULT IsEncrypted(BOOL* pbIsEncrypted);
 }
 enum IID_IEnumOfflineFilesItems = GUID(0xda70e815, 0xc361, 0x4407, [0xbc, 0xb, 0xd, 0x70, 0x46, 0xe5, 0xf2, 0xcd]);
 interface IEnumOfflineFilesItems : IUnknown
 {
-    HRESULT Next(uint, IOfflineFilesItem*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IOfflineFilesItem* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumOfflineFilesItems*);
+    HRESULT Clone(IEnumOfflineFilesItems* ppenum);
 }
 enum IID_IOfflineFilesItemContainer = GUID(0x3836f049, 0x9413, 0x45dd, [0xbf, 0x46, 0xb5, 0xaa, 0xa8, 0x2d, 0xc3, 0x10]);
 interface IOfflineFilesItemContainer : IUnknown
 {
-    HRESULT EnumItems(uint, IEnumOfflineFilesItems*);
-    HRESULT EnumItemsEx(IOfflineFilesItemFilter, IOfflineFilesItemFilter, IOfflineFilesItemFilter, IOfflineFilesItemFilter, uint, uint, IEnumOfflineFilesItems*);
+    HRESULT EnumItems(uint dwQueryFlags, IEnumOfflineFilesItems* ppenum);
+    HRESULT EnumItemsEx(IOfflineFilesItemFilter pIncludeFileFilter, IOfflineFilesItemFilter pIncludeDirFilter, IOfflineFilesItemFilter pExcludeFileFilter, IOfflineFilesItemFilter pExcludeDirFilter, uint dwEnumFlags, uint dwQueryFlags, IEnumOfflineFilesItems* ppenum);
 }
 enum IID_IOfflineFilesChangeInfo = GUID(0xa96e6fa4, 0xe0d1, 0x4c29, [0x96, 0xb, 0xee, 0x50, 0x8f, 0xe6, 0x8c, 0x72]);
 interface IOfflineFilesChangeInfo : IUnknown
 {
-    HRESULT IsDirty(BOOL*);
-    HRESULT IsDeletedOffline(BOOL*);
-    HRESULT IsCreatedOffline(BOOL*);
-    HRESULT IsLocallyModifiedData(BOOL*);
-    HRESULT IsLocallyModifiedAttributes(BOOL*);
-    HRESULT IsLocallyModifiedTime(BOOL*);
+    HRESULT IsDirty(BOOL* pbDirty);
+    HRESULT IsDeletedOffline(BOOL* pbDeletedOffline);
+    HRESULT IsCreatedOffline(BOOL* pbCreatedOffline);
+    HRESULT IsLocallyModifiedData(BOOL* pbLocallyModifiedData);
+    HRESULT IsLocallyModifiedAttributes(BOOL* pbLocallyModifiedAttributes);
+    HRESULT IsLocallyModifiedTime(BOOL* pbLocallyModifiedTime);
 }
 enum IID_IOfflineFilesDirtyInfo = GUID(0xf50ce33, 0xbac9, 0x4eaa, [0xa1, 0x1d, 0xda, 0xe, 0x52, 0x7d, 0x4, 0x7d]);
 interface IOfflineFilesDirtyInfo : IUnknown
 {
-    HRESULT LocalDirtyByteCount(long*);
-    HRESULT RemoteDirtyByteCount(long*);
+    HRESULT LocalDirtyByteCount(long* pDirtyByteCount);
+    HRESULT RemoteDirtyByteCount(long* pDirtyByteCount);
 }
 enum IID_IOfflineFilesFileSysInfo = GUID(0xbc1a163f, 0x7bfd, 0x4d88, [0x9c, 0x66, 0x96, 0xea, 0x9a, 0x6a, 0x3d, 0x6b]);
 interface IOfflineFilesFileSysInfo : IUnknown
 {
-    HRESULT GetAttributes(OFFLINEFILES_ITEM_COPY, uint*);
-    HRESULT GetTimes(OFFLINEFILES_ITEM_COPY, FILETIME*, FILETIME*, FILETIME*, FILETIME*);
-    HRESULT GetFileSize(OFFLINEFILES_ITEM_COPY, long*);
+    HRESULT GetAttributes(OFFLINEFILES_ITEM_COPY copy, uint* pdwAttributes);
+    HRESULT GetTimes(OFFLINEFILES_ITEM_COPY copy, FILETIME* pftCreationTime, FILETIME* pftLastWriteTime, FILETIME* pftChangeTime, FILETIME* pftLastAccessTime);
+    HRESULT GetFileSize(OFFLINEFILES_ITEM_COPY copy, long* pSize);
 }
 enum IID_IOfflineFilesPinInfo = GUID(0x5b2b0655, 0xb3fd, 0x497d, [0xad, 0xeb, 0xbd, 0x15, 0x6b, 0xc8, 0x35, 0x5b]);
 interface IOfflineFilesPinInfo : IUnknown
 {
-    HRESULT IsPinned(BOOL*);
-    HRESULT IsPinnedForUser(BOOL*, BOOL*);
-    HRESULT IsPinnedForUserByPolicy(BOOL*, BOOL*);
-    HRESULT IsPinnedForComputer(BOOL*, BOOL*);
-    HRESULT IsPinnedForFolderRedirection(BOOL*, BOOL*);
+    HRESULT IsPinned(BOOL* pbPinned);
+    HRESULT IsPinnedForUser(BOOL* pbPinnedForUser, BOOL* pbInherit);
+    HRESULT IsPinnedForUserByPolicy(BOOL* pbPinnedForUser, BOOL* pbInherit);
+    HRESULT IsPinnedForComputer(BOOL* pbPinnedForComputer, BOOL* pbInherit);
+    HRESULT IsPinnedForFolderRedirection(BOOL* pbPinnedForFolderRedirection, BOOL* pbInherit);
 }
 enum IID_IOfflineFilesPinInfo2 = GUID(0x623c58a2, 0x42ed, 0x4ad7, [0xb6, 0x9a, 0xf, 0x1b, 0x30, 0xa7, 0x2d, 0xd]);
 interface IOfflineFilesPinInfo2 : IOfflineFilesPinInfo
 {
-    HRESULT IsPartlyPinned(BOOL*);
+    HRESULT IsPartlyPinned(BOOL* pbPartlyPinned);
 }
 enum IID_IOfflineFilesTransparentCacheInfo = GUID(0xbcaf4a01, 0x5b68, 0x4b56, [0xa6, 0xa1, 0x8d, 0x27, 0x86, 0xed, 0xe8, 0xe3]);
 interface IOfflineFilesTransparentCacheInfo : IUnknown
 {
-    HRESULT IsTransparentlyCached(BOOL*);
+    HRESULT IsTransparentlyCached(BOOL* pbTransparentlyCached);
 }
 enum IID_IOfflineFilesGhostInfo = GUID(0x2b09d48c, 0x8ab5, 0x464f, [0xa7, 0x55, 0xa5, 0x9d, 0x92, 0xf9, 0x94, 0x29]);
 interface IOfflineFilesGhostInfo : IUnknown
 {
-    HRESULT IsGhosted(BOOL*);
+    HRESULT IsGhosted(BOOL* pbGhosted);
 }
 enum IID_IOfflineFilesConnectionInfo = GUID(0xefb23a09, 0xa867, 0x4be8, [0x83, 0xa6, 0x86, 0x96, 0x9a, 0x7d, 0x8, 0x56]);
 interface IOfflineFilesConnectionInfo : IUnknown
 {
-    HRESULT GetConnectState(OFFLINEFILES_CONNECT_STATE*, OFFLINEFILES_OFFLINE_REASON*);
-    HRESULT SetConnectState(HWND, uint, OFFLINEFILES_CONNECT_STATE);
-    HRESULT TransitionOnline(HWND, uint);
-    HRESULT TransitionOffline(HWND, uint, BOOL, BOOL*);
+    HRESULT GetConnectState(OFFLINEFILES_CONNECT_STATE* pConnectState, OFFLINEFILES_OFFLINE_REASON* pOfflineReason);
+    HRESULT SetConnectState(HWND hwndParent, uint dwFlags, OFFLINEFILES_CONNECT_STATE ConnectState);
+    HRESULT TransitionOnline(HWND hwndParent, uint dwFlags);
+    HRESULT TransitionOffline(HWND hwndParent, uint dwFlags, BOOL bForceOpenFilesClosed, BOOL* pbOpenFilesPreventedTransition);
 }
 enum IID_IOfflineFilesShareInfo = GUID(0x7bcc43e7, 0x31ce, 0x4ca4, [0x8c, 0xcd, 0x1c, 0xff, 0x2d, 0xc4, 0x94, 0xda]);
 interface IOfflineFilesShareInfo : IUnknown
 {
-    HRESULT GetShareItem(IOfflineFilesShareItem*);
-    HRESULT GetShareCachingMode(OFFLINEFILES_CACHING_MODE*);
-    HRESULT IsShareDfsJunction(BOOL*);
+    HRESULT GetShareItem(IOfflineFilesShareItem* ppShareItem);
+    HRESULT GetShareCachingMode(OFFLINEFILES_CACHING_MODE* pCachingMode);
+    HRESULT IsShareDfsJunction(BOOL* pbIsDfsJunction);
 }
 enum IID_IOfflineFilesSuspend = GUID(0x62c4560f, 0xbc0b, 0x48ca, [0xad, 0x9d, 0x34, 0xcb, 0x52, 0x8d, 0x99, 0xa9]);
 interface IOfflineFilesSuspend : IUnknown
 {
-    HRESULT SuspendRoot(BOOL);
+    HRESULT SuspendRoot(BOOL bSuspend);
 }
 enum IID_IOfflineFilesSuspendInfo = GUID(0xa457c25b, 0x4e9c, 0x4b04, [0x85, 0xaf, 0x89, 0x32, 0xcc, 0xd9, 0x78, 0x89]);
 interface IOfflineFilesSuspendInfo : IUnknown
 {
-    HRESULT IsSuspended(BOOL*, BOOL*);
+    HRESULT IsSuspended(BOOL* pbSuspended, BOOL* pbSuspendedRoot);
 }
 enum IID_IOfflineFilesSetting = GUID(0xd871d3f7, 0xf613, 0x48a1, [0x82, 0x7e, 0x7a, 0x34, 0xe5, 0x60, 0xff, 0xf6]);
 interface IOfflineFilesSetting : IUnknown
 {
-    HRESULT GetName(PWSTR*);
-    HRESULT GetValueType(OFFLINEFILES_SETTING_VALUE_TYPE*);
-    HRESULT GetPreference(VARIANT*, uint);
-    HRESULT GetPreferenceScope(uint*);
-    HRESULT SetPreference(const(VARIANT)*, uint);
-    HRESULT DeletePreference(uint);
-    HRESULT GetPolicy(VARIANT*, uint);
-    HRESULT GetPolicyScope(uint*);
-    HRESULT GetValue(VARIANT*, BOOL*);
+    HRESULT GetName(PWSTR* ppszName);
+    HRESULT GetValueType(OFFLINEFILES_SETTING_VALUE_TYPE* pType);
+    HRESULT GetPreference(VARIANT* pvarValue, uint dwScope);
+    HRESULT GetPreferenceScope(uint* pdwScope);
+    HRESULT SetPreference(const(VARIANT)* pvarValue, uint dwScope);
+    HRESULT DeletePreference(uint dwScope);
+    HRESULT GetPolicy(VARIANT* pvarValue, uint dwScope);
+    HRESULT GetPolicyScope(uint* pdwScope);
+    HRESULT GetValue(VARIANT* pvarValue, BOOL* pbSetByPolicy);
 }
 enum IID_IEnumOfflineFilesSettings = GUID(0x729680c4, 0x1a38, 0x47bc, [0x9e, 0x5c, 0x2, 0xc5, 0x15, 0x62, 0xac, 0x30]);
 interface IEnumOfflineFilesSettings : IUnknown
 {
-    HRESULT Next(uint, IOfflineFilesSetting*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IOfflineFilesSetting* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumOfflineFilesSettings*);
+    HRESULT Clone(IEnumOfflineFilesSettings* ppenum);
 }
 enum IID_IOfflineFilesCache = GUID(0x855d6203, 0x7914, 0x48b9, [0x8d, 0x40, 0x4c, 0x56, 0xf5, 0xac, 0xff, 0xc5]);
 interface IOfflineFilesCache : IUnknown
 {
-    HRESULT Synchronize(HWND, const(wchar)**, uint, BOOL, uint, IOfflineFilesSyncConflictHandler, IOfflineFilesSyncProgress, GUID*);
-    HRESULT DeleteItems(const(wchar)**, uint, uint, BOOL, IOfflineFilesSimpleProgress);
-    HRESULT DeleteItemsForUser(const(wchar)*, const(wchar)**, uint, uint, BOOL, IOfflineFilesSimpleProgress);
-    HRESULT Pin(HWND, const(wchar)**, uint, BOOL, BOOL, uint, IOfflineFilesSyncProgress);
-    HRESULT Unpin(HWND, const(wchar)**, uint, BOOL, BOOL, uint, IOfflineFilesSyncProgress);
-    HRESULT GetEncryptionStatus(BOOL*, BOOL*);
-    HRESULT Encrypt(HWND, BOOL, uint, BOOL, IOfflineFilesSyncProgress);
-    HRESULT FindItem(const(wchar)*, uint, IOfflineFilesItem*);
-    HRESULT FindItemEx(const(wchar)*, IOfflineFilesItemFilter, IOfflineFilesItemFilter, IOfflineFilesItemFilter, IOfflineFilesItemFilter, uint, IOfflineFilesItem*);
-    HRESULT RenameItem(const(wchar)*, const(wchar)*, BOOL);
-    HRESULT GetLocation(PWSTR*);
-    HRESULT GetDiskSpaceInformation(ulong*, ulong*, ulong*, ulong*, ulong*);
-    HRESULT SetDiskSpaceLimits(ulong, ulong);
-    HRESULT ProcessAdminPinPolicy(IOfflineFilesSyncProgress, IOfflineFilesSyncProgress);
-    HRESULT GetSettingObject(const(wchar)*, IOfflineFilesSetting*);
-    HRESULT EnumSettingObjects(IEnumOfflineFilesSettings*);
-    HRESULT IsPathCacheable(const(wchar)*, BOOL*, OFFLINEFILES_CACHING_MODE*);
+    HRESULT Synchronize(HWND hwndParent, const(wchar)** rgpszPaths, uint cPaths, BOOL bAsync, uint dwSyncControl, IOfflineFilesSyncConflictHandler pISyncConflictHandler, IOfflineFilesSyncProgress pIProgress, GUID* pSyncId);
+    HRESULT DeleteItems(const(wchar)** rgpszPaths, uint cPaths, uint dwFlags, BOOL bAsync, IOfflineFilesSimpleProgress pIProgress);
+    HRESULT DeleteItemsForUser(const(wchar)* pszUser, const(wchar)** rgpszPaths, uint cPaths, uint dwFlags, BOOL bAsync, IOfflineFilesSimpleProgress pIProgress);
+    HRESULT Pin(HWND hwndParent, const(wchar)** rgpszPaths, uint cPaths, BOOL bDeep, BOOL bAsync, uint dwPinControlFlags, IOfflineFilesSyncProgress pIProgress);
+    HRESULT Unpin(HWND hwndParent, const(wchar)** rgpszPaths, uint cPaths, BOOL bDeep, BOOL bAsync, uint dwPinControlFlags, IOfflineFilesSyncProgress pIProgress);
+    HRESULT GetEncryptionStatus(BOOL* pbEncrypted, BOOL* pbPartial);
+    HRESULT Encrypt(HWND hwndParent, BOOL bEncrypt, uint dwEncryptionControlFlags, BOOL bAsync, IOfflineFilesSyncProgress pIProgress);
+    HRESULT FindItem(const(wchar)* pszPath, uint dwQueryFlags, IOfflineFilesItem* ppItem);
+    HRESULT FindItemEx(const(wchar)* pszPath, IOfflineFilesItemFilter pIncludeFileFilter, IOfflineFilesItemFilter pIncludeDirFilter, IOfflineFilesItemFilter pExcludeFileFilter, IOfflineFilesItemFilter pExcludeDirFilter, uint dwQueryFlags, IOfflineFilesItem* ppItem);
+    HRESULT RenameItem(const(wchar)* pszPathOriginal, const(wchar)* pszPathNew, BOOL bReplaceIfExists);
+    HRESULT GetLocation(PWSTR* ppszPath);
+    HRESULT GetDiskSpaceInformation(ulong* pcbVolumeTotal, ulong* pcbLimit, ulong* pcbUsed, ulong* pcbUnpinnedLimit, ulong* pcbUnpinnedUsed);
+    HRESULT SetDiskSpaceLimits(ulong cbLimit, ulong cbUnpinnedLimit);
+    HRESULT ProcessAdminPinPolicy(IOfflineFilesSyncProgress pPinProgress, IOfflineFilesSyncProgress pUnpinProgress);
+    HRESULT GetSettingObject(const(wchar)* pszSettingName, IOfflineFilesSetting* ppSetting);
+    HRESULT EnumSettingObjects(IEnumOfflineFilesSettings* ppEnum);
+    HRESULT IsPathCacheable(const(wchar)* pszPath, BOOL* pbCacheable, OFFLINEFILES_CACHING_MODE* pShareCachingMode);
 }
 enum IID_IOfflineFilesCache2 = GUID(0x8c075039, 0x1551, 0x4ed9, [0x87, 0x81, 0x56, 0x70, 0x5c, 0x4, 0xd3, 0xc0]);
 interface IOfflineFilesCache2 : IOfflineFilesCache
 {
-    HRESULT RenameItemEx(const(wchar)*, const(wchar)*, BOOL);
+    HRESULT RenameItemEx(const(wchar)* pszPathOriginal, const(wchar)* pszPathNew, BOOL bReplaceIfExists);
 }
 enum CLSID_OfflineFilesSetting = GUID(0xfd3659e9, 0xa920, 0x4123, [0xad, 0x64, 0x7f, 0xc7, 0x6c, 0x7a, 0xac, 0xdf]);
 struct OfflineFilesSetting

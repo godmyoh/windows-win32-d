@@ -196,37 +196,37 @@ enum : int
 enum IID_IActiveScriptSite = GUID(0xdb01a1e3, 0xa42b, 0x11cf, [0x8f, 0x20, 0x0, 0x80, 0x5f, 0x2c, 0xd0, 0x64]);
 interface IActiveScriptSite : IUnknown
 {
-    HRESULT GetLCID(uint*);
-    HRESULT GetItemInfo(const(wchar)*, uint, IUnknown*, ITypeInfo*);
-    HRESULT GetDocVersionString(BSTR*);
-    HRESULT OnScriptTerminate(const(VARIANT)*, const(EXCEPINFO)*);
-    HRESULT OnStateChange(SCRIPTSTATE);
-    HRESULT OnScriptError(IActiveScriptError);
+    HRESULT GetLCID(uint* plcid);
+    HRESULT GetItemInfo(const(wchar)* pstrName, uint dwReturnMask, IUnknown* ppiunkItem, ITypeInfo* ppti);
+    HRESULT GetDocVersionString(BSTR* pbstrVersion);
+    HRESULT OnScriptTerminate(const(VARIANT)* pvarResult, const(EXCEPINFO)* pexcepinfo);
+    HRESULT OnStateChange(SCRIPTSTATE ssScriptState);
+    HRESULT OnScriptError(IActiveScriptError pscripterror);
     HRESULT OnEnterScript();
     HRESULT OnLeaveScript();
 }
 enum IID_IActiveScriptError = GUID(0xeae1ba61, 0xa4ed, 0x11cf, [0x8f, 0x20, 0x0, 0x80, 0x5f, 0x2c, 0xd0, 0x64]);
 interface IActiveScriptError : IUnknown
 {
-    HRESULT GetExceptionInfo(EXCEPINFO*);
-    HRESULT GetSourcePosition(uint*, uint*, int*);
-    HRESULT GetSourceLineText(BSTR*);
+    HRESULT GetExceptionInfo(EXCEPINFO* pexcepinfo);
+    HRESULT GetSourcePosition(uint* pdwSourceContext, uint* pulLineNumber, int* plCharacterPosition);
+    HRESULT GetSourceLineText(BSTR* pbstrSourceLine);
 }
 enum IID_IActiveScriptError64 = GUID(0xb21fb2a1, 0x5b8f, 0x4963, [0x8c, 0x21, 0x21, 0x45, 0xf, 0x84, 0xed, 0x7f]);
 interface IActiveScriptError64 : IActiveScriptError
 {
-    HRESULT GetSourcePosition64(ulong*, uint*, int*);
+    HRESULT GetSourcePosition64(ulong* pdwSourceContext, uint* pulLineNumber, int* plCharacterPosition);
 }
 enum IID_IActiveScriptSiteWindow = GUID(0xd10f6761, 0x83e9, 0x11cf, [0x8f, 0x20, 0x0, 0x80, 0x5f, 0x2c, 0xd0, 0x64]);
 interface IActiveScriptSiteWindow : IUnknown
 {
-    HRESULT GetWindow(HWND*);
-    HRESULT EnableModeless(BOOL);
+    HRESULT GetWindow(HWND* phwnd);
+    HRESULT EnableModeless(BOOL fEnable);
 }
 enum IID_IActiveScriptSiteUIControl = GUID(0xaedae97e, 0xd7ee, 0x4796, [0xb9, 0x60, 0x7f, 0x9, 0x2a, 0xe8, 0x44, 0xab]);
 interface IActiveScriptSiteUIControl : IUnknown
 {
-    HRESULT GetUIBehavior(SCRIPTUICITEM, SCRIPTUICHANDLING*);
+    HRESULT GetUIBehavior(SCRIPTUICITEM UicItem, SCRIPTUICHANDLING* pUicHandling);
 }
 enum IID_IActiveScriptSiteInterruptPoll = GUID(0x539698a0, 0xcdca, 0x11cf, [0xa5, 0xeb, 0x0, 0xaa, 0x0, 0x47, 0xa0, 0x63]);
 interface IActiveScriptSiteInterruptPoll : IUnknown
@@ -236,53 +236,53 @@ interface IActiveScriptSiteInterruptPoll : IUnknown
 enum IID_IActiveScript = GUID(0xbb1a2ae1, 0xa4f9, 0x11cf, [0x8f, 0x20, 0x0, 0x80, 0x5f, 0x2c, 0xd0, 0x64]);
 interface IActiveScript : IUnknown
 {
-    HRESULT SetScriptSite(IActiveScriptSite);
-    HRESULT GetScriptSite(const(GUID)*, void**);
-    HRESULT SetScriptState(SCRIPTSTATE);
-    HRESULT GetScriptState(SCRIPTSTATE*);
+    HRESULT SetScriptSite(IActiveScriptSite pass);
+    HRESULT GetScriptSite(const(GUID)* riid, void** ppvObject);
+    HRESULT SetScriptState(SCRIPTSTATE ss);
+    HRESULT GetScriptState(SCRIPTSTATE* pssState);
     HRESULT Close();
-    HRESULT AddNamedItem(const(wchar)*, uint);
-    HRESULT AddTypeLib(const(GUID)*, uint, uint, uint);
-    HRESULT GetScriptDispatch(const(wchar)*, IDispatch*);
-    HRESULT GetCurrentScriptThreadID(uint*);
-    HRESULT GetScriptThreadID(uint, uint*);
-    HRESULT GetScriptThreadState(uint, SCRIPTTHREADSTATE*);
-    HRESULT InterruptScriptThread(uint, const(EXCEPINFO)*, uint);
-    HRESULT Clone(IActiveScript*);
+    HRESULT AddNamedItem(const(wchar)* pstrName, uint dwFlags);
+    HRESULT AddTypeLib(const(GUID)* rguidTypeLib, uint dwMajor, uint dwMinor, uint dwFlags);
+    HRESULT GetScriptDispatch(const(wchar)* pstrItemName, IDispatch* ppdisp);
+    HRESULT GetCurrentScriptThreadID(uint* pstidThread);
+    HRESULT GetScriptThreadID(uint dwWin32ThreadId, uint* pstidThread);
+    HRESULT GetScriptThreadState(uint stidThread, SCRIPTTHREADSTATE* pstsState);
+    HRESULT InterruptScriptThread(uint stidThread, const(EXCEPINFO)* pexcepinfo, uint dwFlags);
+    HRESULT Clone(IActiveScript* ppscript);
 }
 enum IID_IActiveScriptParse32 = GUID(0xbb1a2ae2, 0xa4f9, 0x11cf, [0x8f, 0x20, 0x0, 0x80, 0x5f, 0x2c, 0xd0, 0x64]);
 interface IActiveScriptParse32 : IUnknown
 {
     HRESULT InitNew();
-    HRESULT AddScriptlet(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, uint, uint, uint, BSTR*, EXCEPINFO*);
-    HRESULT ParseScriptText(const(wchar)*, const(wchar)*, IUnknown, const(wchar)*, uint, uint, uint, VARIANT*, EXCEPINFO*);
+    HRESULT AddScriptlet(const(wchar)* pstrDefaultName, const(wchar)* pstrCode, const(wchar)* pstrItemName, const(wchar)* pstrSubItemName, const(wchar)* pstrEventName, const(wchar)* pstrDelimiter, uint dwSourceContextCookie, uint ulStartingLineNumber, uint dwFlags, BSTR* pbstrName, EXCEPINFO* pexcepinfo);
+    HRESULT ParseScriptText(const(wchar)* pstrCode, const(wchar)* pstrItemName, IUnknown punkContext, const(wchar)* pstrDelimiter, uint dwSourceContextCookie, uint ulStartingLineNumber, uint dwFlags, VARIANT* pvarResult, EXCEPINFO* pexcepinfo);
 }
 enum IID_IActiveScriptParse64 = GUID(0xc7ef7658, 0xe1ee, 0x480e, [0x97, 0xea, 0xd5, 0x2c, 0xb4, 0xd7, 0x6d, 0x17]);
 interface IActiveScriptParse64 : IUnknown
 {
     HRESULT InitNew();
-    HRESULT AddScriptlet(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, ulong, uint, uint, BSTR*, EXCEPINFO*);
-    HRESULT ParseScriptText(const(wchar)*, const(wchar)*, IUnknown, const(wchar)*, ulong, uint, uint, VARIANT*, EXCEPINFO*);
+    HRESULT AddScriptlet(const(wchar)* pstrDefaultName, const(wchar)* pstrCode, const(wchar)* pstrItemName, const(wchar)* pstrSubItemName, const(wchar)* pstrEventName, const(wchar)* pstrDelimiter, ulong dwSourceContextCookie, uint ulStartingLineNumber, uint dwFlags, BSTR* pbstrName, EXCEPINFO* pexcepinfo);
+    HRESULT ParseScriptText(const(wchar)* pstrCode, const(wchar)* pstrItemName, IUnknown punkContext, const(wchar)* pstrDelimiter, ulong dwSourceContextCookie, uint ulStartingLineNumber, uint dwFlags, VARIANT* pvarResult, EXCEPINFO* pexcepinfo);
 }
 enum IID_IActiveScriptParseProcedureOld32 = GUID(0x1cff0050, 0x6fdd, 0x11d0, [0x93, 0x28, 0x0, 0xa0, 0xc9, 0xd, 0xca, 0xa9]);
 interface IActiveScriptParseProcedureOld32 : IUnknown
 {
-    HRESULT ParseProcedureText(const(wchar)*, const(wchar)*, const(wchar)*, IUnknown, const(wchar)*, uint, uint, uint, IDispatch*);
+    HRESULT ParseProcedureText(const(wchar)* pstrCode, const(wchar)* pstrFormalParams, const(wchar)* pstrItemName, IUnknown punkContext, const(wchar)* pstrDelimiter, uint dwSourceContextCookie, uint ulStartingLineNumber, uint dwFlags, IDispatch* ppdisp);
 }
 enum IID_IActiveScriptParseProcedureOld64 = GUID(0x21f57128, 0x8c9, 0x4638, [0xba, 0x12, 0x22, 0xd1, 0x5d, 0x88, 0xdc, 0x5c]);
 interface IActiveScriptParseProcedureOld64 : IUnknown
 {
-    HRESULT ParseProcedureText(const(wchar)*, const(wchar)*, const(wchar)*, IUnknown, const(wchar)*, ulong, uint, uint, IDispatch*);
+    HRESULT ParseProcedureText(const(wchar)* pstrCode, const(wchar)* pstrFormalParams, const(wchar)* pstrItemName, IUnknown punkContext, const(wchar)* pstrDelimiter, ulong dwSourceContextCookie, uint ulStartingLineNumber, uint dwFlags, IDispatch* ppdisp);
 }
 enum IID_IActiveScriptParseProcedure32 = GUID(0xaa5b6a80, 0xb834, 0x11d0, [0x93, 0x2f, 0x0, 0xa0, 0xc9, 0xd, 0xca, 0xa9]);
 interface IActiveScriptParseProcedure32 : IUnknown
 {
-    HRESULT ParseProcedureText(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, IUnknown, const(wchar)*, uint, uint, uint, IDispatch*);
+    HRESULT ParseProcedureText(const(wchar)* pstrCode, const(wchar)* pstrFormalParams, const(wchar)* pstrProcedureName, const(wchar)* pstrItemName, IUnknown punkContext, const(wchar)* pstrDelimiter, uint dwSourceContextCookie, uint ulStartingLineNumber, uint dwFlags, IDispatch* ppdisp);
 }
 enum IID_IActiveScriptParseProcedure64 = GUID(0xc64713b6, 0xe029, 0x4cc5, [0x92, 0x0, 0x43, 0x8b, 0x72, 0x89, 0xb, 0x6a]);
 interface IActiveScriptParseProcedure64 : IUnknown
 {
-    HRESULT ParseProcedureText(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, IUnknown, const(wchar)*, ulong, uint, uint, IDispatch*);
+    HRESULT ParseProcedureText(const(wchar)* pstrCode, const(wchar)* pstrFormalParams, const(wchar)* pstrProcedureName, const(wchar)* pstrItemName, IUnknown punkContext, const(wchar)* pstrDelimiter, ulong dwSourceContextCookie, uint ulStartingLineNumber, uint dwFlags, IDispatch* ppdisp);
 }
 enum IID_IActiveScriptParseProcedure2_32 = GUID(0x71ee5b20, 0xfb04, 0x11d1, [0xb3, 0xa8, 0x0, 0xa0, 0xc9, 0x11, 0xe8, 0xb2]);
 interface IActiveScriptParseProcedure2_32 : IActiveScriptParseProcedure32
@@ -295,63 +295,63 @@ interface IActiveScriptParseProcedure2_64 : IActiveScriptParseProcedure64
 enum IID_IActiveScriptEncode = GUID(0xbb1a2ae3, 0xa4f9, 0x11cf, [0x8f, 0x20, 0x0, 0x80, 0x5f, 0x2c, 0xd0, 0x64]);
 interface IActiveScriptEncode : IUnknown
 {
-    HRESULT EncodeSection(const(wchar)*, uint, PWSTR, uint, uint*);
-    HRESULT DecodeScript(const(wchar)*, uint, PWSTR, uint, uint*);
-    HRESULT GetEncodeProgId(BSTR*);
+    HRESULT EncodeSection(const(wchar)* pchIn, uint cchIn, PWSTR pchOut, uint cchOut, uint* pcchRet);
+    HRESULT DecodeScript(const(wchar)* pchIn, uint cchIn, PWSTR pchOut, uint cchOut, uint* pcchRet);
+    HRESULT GetEncodeProgId(BSTR* pbstrOut);
 }
 enum IID_IActiveScriptHostEncode = GUID(0xbee9b76e, 0xcfe3, 0x11d1, [0xb7, 0x47, 0x0, 0xc0, 0x4f, 0xc2, 0xb0, 0x85]);
 interface IActiveScriptHostEncode : IUnknown
 {
-    HRESULT EncodeScriptHostFile(BSTR, BSTR*, uint, BSTR);
+    HRESULT EncodeScriptHostFile(BSTR bstrInFile, BSTR* pbstrOutFile, uint cFlags, BSTR bstrDefaultLang);
 }
 enum IID_IBindEventHandler = GUID(0x63cdbcb0, 0xc1b1, 0x11d0, [0x93, 0x36, 0x0, 0xa0, 0xc9, 0xd, 0xca, 0xa9]);
 interface IBindEventHandler : IUnknown
 {
-    HRESULT BindHandler(const(wchar)*, IDispatch);
+    HRESULT BindHandler(const(wchar)* pstrEvent, IDispatch pdisp);
 }
 enum IID_IActiveScriptStats = GUID(0xb8da6310, 0xe19b, 0x11d0, [0x93, 0x3c, 0x0, 0xa0, 0xc9, 0xd, 0xca, 0xa9]);
 interface IActiveScriptStats : IUnknown
 {
-    HRESULT GetStat(uint, uint*, uint*);
-    HRESULT GetStatEx(const(GUID)*, uint*, uint*);
+    HRESULT GetStat(uint stid, uint* pluHi, uint* pluLo);
+    HRESULT GetStatEx(const(GUID)* guid, uint* pluHi, uint* pluLo);
     HRESULT ResetStats();
 }
 enum IID_IActiveScriptProperty = GUID(0x4954e0d0, 0xfbc7, 0x11d1, [0x84, 0x10, 0x0, 0x60, 0x8, 0xc3, 0xfb, 0xfc]);
 interface IActiveScriptProperty : IUnknown
 {
-    HRESULT GetProperty(uint, VARIANT*, VARIANT*);
-    HRESULT SetProperty(uint, VARIANT*, VARIANT*);
+    HRESULT GetProperty(uint dwProperty, VARIANT* pvarIndex, VARIANT* pvarValue);
+    HRESULT SetProperty(uint dwProperty, VARIANT* pvarIndex, VARIANT* pvarValue);
 }
 enum IID_ITridentEventSink = GUID(0x1dc9ca50, 0x6ef, 0x11d2, [0x84, 0x15, 0x0, 0x60, 0x8, 0xc3, 0xfb, 0xfc]);
 interface ITridentEventSink : IUnknown
 {
-    HRESULT FireEvent(const(wchar)*, DISPPARAMS*, VARIANT*, EXCEPINFO*);
+    HRESULT FireEvent(const(wchar)* pstrEvent, DISPPARAMS* pdp, VARIANT* pvarRes, EXCEPINFO* pei);
 }
 enum IID_IActiveScriptGarbageCollector = GUID(0x6aa2c4a0, 0x2b53, 0x11d4, [0xa2, 0xa0, 0x0, 0x10, 0x4b, 0xd3, 0x50, 0x90]);
 interface IActiveScriptGarbageCollector : IUnknown
 {
-    HRESULT CollectGarbage(SCRIPTGCTYPE);
+    HRESULT CollectGarbage(SCRIPTGCTYPE scriptgctype);
 }
 enum IID_IActiveScriptSIPInfo = GUID(0x764651d0, 0x38de, 0x11d4, [0xa2, 0xa3, 0x0, 0x10, 0x4b, 0xd3, 0x50, 0x90]);
 interface IActiveScriptSIPInfo : IUnknown
 {
-    HRESULT GetSIPOID(GUID*);
+    HRESULT GetSIPOID(GUID* poid_sip);
 }
 enum IID_IActiveScriptSiteTraceInfo = GUID(0x4b7272ae, 0x1955, 0x4bfe, [0x98, 0xb0, 0x78, 0x6, 0x21, 0x88, 0x85, 0x69]);
 interface IActiveScriptSiteTraceInfo : IUnknown
 {
-    HRESULT SendScriptTraceInfo(SCRIPTTRACEINFO, GUID, uint, int, int, ulong);
+    HRESULT SendScriptTraceInfo(SCRIPTTRACEINFO stiEventType, GUID guidContextID, uint dwScriptContextCookie, int lScriptStatementStart, int lScriptStatementEnd, ulong dwReserved);
 }
 enum IID_IActiveScriptTraceInfo = GUID(0xc35456e7, 0xbebf, 0x4a1b, [0x86, 0xa9, 0x24, 0xd5, 0x6b, 0xe8, 0xb3, 0x69]);
 interface IActiveScriptTraceInfo : IUnknown
 {
-    HRESULT StartScriptTracing(IActiveScriptSiteTraceInfo, GUID);
+    HRESULT StartScriptTracing(IActiveScriptSiteTraceInfo pSiteTraceInfo, GUID guidContextID);
     HRESULT StopScriptTracing();
 }
 enum IID_IActiveScriptStringCompare = GUID(0x58562769, 0xed52, 0x42f7, [0x84, 0x3, 0x49, 0x63, 0x51, 0x4e, 0x1f, 0x11]);
 interface IActiveScriptStringCompare : IUnknown
 {
-    HRESULT StrComp(BSTR, BSTR, int*);
+    HRESULT StrComp(BSTR bszStr1, BSTR bszStr2, int* iRet);
 }
 alias BREAKPOINT_STATE = int;
 enum : int
@@ -409,64 +409,64 @@ enum : int
 enum IID_IActiveScriptDebug32 = GUID(0x51973c10, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IActiveScriptDebug32 : IUnknown
 {
-    HRESULT GetScriptTextAttributes(const(wchar)*, uint, const(wchar)*, uint, ushort*);
-    HRESULT GetScriptletTextAttributes(const(wchar)*, uint, const(wchar)*, uint, ushort*);
-    HRESULT EnumCodeContextsOfPosition(uint, uint, uint, IEnumDebugCodeContexts*);
+    HRESULT GetScriptTextAttributes(const(wchar)* pstrCode, uint uNumCodeChars, const(wchar)* pstrDelimiter, uint dwFlags, ushort* pattr);
+    HRESULT GetScriptletTextAttributes(const(wchar)* pstrCode, uint uNumCodeChars, const(wchar)* pstrDelimiter, uint dwFlags, ushort* pattr);
+    HRESULT EnumCodeContextsOfPosition(uint dwSourceContext, uint uCharacterOffset, uint uNumChars, IEnumDebugCodeContexts* ppescc);
 }
 enum IID_IActiveScriptDebug64 = GUID(0xbc437e23, 0xf5b8, 0x47f4, [0xbb, 0x79, 0x7d, 0x1c, 0xe5, 0x48, 0x3b, 0x86]);
 interface IActiveScriptDebug64 : IUnknown
 {
-    HRESULT GetScriptTextAttributes(const(wchar)*, uint, const(wchar)*, uint, ushort*);
-    HRESULT GetScriptletTextAttributes(const(wchar)*, uint, const(wchar)*, uint, ushort*);
-    HRESULT EnumCodeContextsOfPosition(ulong, uint, uint, IEnumDebugCodeContexts*);
+    HRESULT GetScriptTextAttributes(const(wchar)* pstrCode, uint uNumCodeChars, const(wchar)* pstrDelimiter, uint dwFlags, ushort* pattr);
+    HRESULT GetScriptletTextAttributes(const(wchar)* pstrCode, uint uNumCodeChars, const(wchar)* pstrDelimiter, uint dwFlags, ushort* pattr);
+    HRESULT EnumCodeContextsOfPosition(ulong dwSourceContext, uint uCharacterOffset, uint uNumChars, IEnumDebugCodeContexts* ppescc);
 }
 enum IID_IActiveScriptSiteDebug32 = GUID(0x51973c11, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IActiveScriptSiteDebug32 : IUnknown
 {
-    HRESULT GetDocumentContextFromPosition(uint, uint, uint, IDebugDocumentContext*);
-    HRESULT GetApplication(IDebugApplication32*);
-    HRESULT GetRootApplicationNode(IDebugApplicationNode*);
-    HRESULT OnScriptErrorDebug(IActiveScriptErrorDebug, BOOL*, BOOL*);
+    HRESULT GetDocumentContextFromPosition(uint dwSourceContext, uint uCharacterOffset, uint uNumChars, IDebugDocumentContext* ppsc);
+    HRESULT GetApplication(IDebugApplication32* ppda);
+    HRESULT GetRootApplicationNode(IDebugApplicationNode* ppdanRoot);
+    HRESULT OnScriptErrorDebug(IActiveScriptErrorDebug pErrorDebug, BOOL* pfEnterDebugger, BOOL* pfCallOnScriptErrorWhenContinuing);
 }
 enum IID_IActiveScriptSiteDebug64 = GUID(0xd6b96b0a, 0x7463, 0x402c, [0x92, 0xac, 0x89, 0x98, 0x42, 0x26, 0x94, 0x2f]);
 interface IActiveScriptSiteDebug64 : IUnknown
 {
-    HRESULT GetDocumentContextFromPosition(ulong, uint, uint, IDebugDocumentContext*);
-    HRESULT GetApplication(IDebugApplication64*);
-    HRESULT GetRootApplicationNode(IDebugApplicationNode*);
-    HRESULT OnScriptErrorDebug(IActiveScriptErrorDebug, BOOL*, BOOL*);
+    HRESULT GetDocumentContextFromPosition(ulong dwSourceContext, uint uCharacterOffset, uint uNumChars, IDebugDocumentContext* ppsc);
+    HRESULT GetApplication(IDebugApplication64* ppda);
+    HRESULT GetRootApplicationNode(IDebugApplicationNode* ppdanRoot);
+    HRESULT OnScriptErrorDebug(IActiveScriptErrorDebug pErrorDebug, BOOL* pfEnterDebugger, BOOL* pfCallOnScriptErrorWhenContinuing);
 }
 enum IID_IActiveScriptSiteDebugEx = GUID(0xbb722ccb, 0x6ad2, 0x41c6, [0xb7, 0x80, 0xaf, 0x9c, 0x3, 0xee, 0x69, 0xf5]);
 interface IActiveScriptSiteDebugEx : IUnknown
 {
-    HRESULT OnCanNotJITScriptErrorDebug(IActiveScriptErrorDebug, BOOL*);
+    HRESULT OnCanNotJITScriptErrorDebug(IActiveScriptErrorDebug pErrorDebug, BOOL* pfCallOnScriptErrorWhenContinuing);
 }
 enum IID_IActiveScriptErrorDebug = GUID(0x51973c12, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IActiveScriptErrorDebug : IActiveScriptError
 {
-    HRESULT GetDocumentContext(IDebugDocumentContext*);
-    HRESULT GetStackFrame(IDebugStackFrame*);
+    HRESULT GetDocumentContext(IDebugDocumentContext* ppssc);
+    HRESULT GetStackFrame(IDebugStackFrame* ppdsf);
 }
 enum IID_IDebugCodeContext = GUID(0x51973c13, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugCodeContext : IUnknown
 {
-    HRESULT GetDocumentContext(IDebugDocumentContext*);
-    HRESULT SetBreakPoint(BREAKPOINT_STATE);
+    HRESULT GetDocumentContext(IDebugDocumentContext* ppsc);
+    HRESULT SetBreakPoint(BREAKPOINT_STATE bps);
 }
 enum IID_IDebugExpression = GUID(0x51973c14, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugExpression : IUnknown
 {
-    HRESULT Start(IDebugExpressionCallBack);
+    HRESULT Start(IDebugExpressionCallBack pdecb);
     HRESULT Abort();
     HRESULT QueryIsComplete();
-    HRESULT GetResultAsString(HRESULT*, BSTR*);
-    HRESULT GetResultAsDebugProperty(HRESULT*, IDebugProperty*);
+    HRESULT GetResultAsString(HRESULT* phrResult, BSTR* pbstrResult);
+    HRESULT GetResultAsDebugProperty(HRESULT* phrResult, IDebugProperty* ppdp);
 }
 enum IID_IDebugExpressionContext = GUID(0x51973c15, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugExpressionContext : IUnknown
 {
-    HRESULT ParseLanguageText(const(wchar)*, uint, const(wchar)*, uint, IDebugExpression*);
-    HRESULT GetLanguageInfo(BSTR*, GUID*);
+    HRESULT ParseLanguageText(const(wchar)* pstrCode, uint nRadix, const(wchar)* pstrDelimiter, uint dwFlags, IDebugExpression* ppe);
+    HRESULT GetLanguageInfo(BSTR* pbstrLanguageName, GUID* pLanguageID);
 }
 enum IID_IDebugExpressionCallBack = GUID(0x51973c16, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugExpressionCallBack : IUnknown
@@ -476,42 +476,42 @@ interface IDebugExpressionCallBack : IUnknown
 enum IID_IDebugStackFrame = GUID(0x51973c17, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugStackFrame : IUnknown
 {
-    HRESULT GetCodeContext(IDebugCodeContext*);
-    HRESULT GetDescriptionString(BOOL, BSTR*);
-    HRESULT GetLanguageString(BOOL, BSTR*);
-    HRESULT GetThread(IDebugApplicationThread*);
-    HRESULT GetDebugProperty(IDebugProperty*);
+    HRESULT GetCodeContext(IDebugCodeContext* ppcc);
+    HRESULT GetDescriptionString(BOOL fLong, BSTR* pbstrDescription);
+    HRESULT GetLanguageString(BOOL fLong, BSTR* pbstrLanguage);
+    HRESULT GetThread(IDebugApplicationThread* ppat);
+    HRESULT GetDebugProperty(IDebugProperty* ppDebugProp);
 }
 enum IID_IDebugStackFrameSniffer = GUID(0x51973c18, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugStackFrameSniffer : IUnknown
 {
-    HRESULT EnumStackFrames(IEnumDebugStackFrames*);
+    HRESULT EnumStackFrames(IEnumDebugStackFrames* ppedsf);
 }
 enum IID_IDebugStackFrameSnifferEx32 = GUID(0x51973c19, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugStackFrameSnifferEx32 : IDebugStackFrameSniffer
 {
-    HRESULT EnumStackFramesEx32(uint, IEnumDebugStackFrames*);
+    HRESULT EnumStackFramesEx32(uint dwSpMin, IEnumDebugStackFrames* ppedsf);
 }
 enum IID_IDebugStackFrameSnifferEx64 = GUID(0x8cd12af4, 0x49c1, 0x4d52, [0x8d, 0x8a, 0xc1, 0x46, 0xf4, 0x75, 0x81, 0xaa]);
 interface IDebugStackFrameSnifferEx64 : IDebugStackFrameSniffer
 {
-    HRESULT EnumStackFramesEx64(ulong, IEnumDebugStackFrames64*);
+    HRESULT EnumStackFramesEx64(ulong dwSpMin, IEnumDebugStackFrames64* ppedsf);
 }
 enum IID_IDebugSyncOperation = GUID(0x51973c1a, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugSyncOperation : IUnknown
 {
-    HRESULT GetTargetThread(IDebugApplicationThread*);
-    HRESULT Execute(IUnknown*);
+    HRESULT GetTargetThread(IDebugApplicationThread* ppatTarget);
+    HRESULT Execute(IUnknown* ppunkResult);
     HRESULT InProgressAbort();
 }
 enum IID_IDebugAsyncOperation = GUID(0x51973c1b, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugAsyncOperation : IUnknown
 {
-    HRESULT GetSyncDebugOperation(IDebugSyncOperation*);
-    HRESULT Start(IDebugAsyncOperationCallBack);
+    HRESULT GetSyncDebugOperation(IDebugSyncOperation* ppsdo);
+    HRESULT Start(IDebugAsyncOperationCallBack padocb);
     HRESULT Abort();
     HRESULT QueryIsComplete();
-    HRESULT GetResult(HRESULT*, IUnknown*);
+    HRESULT GetResult(HRESULT* phrResult, IUnknown* ppunkResult);
 }
 enum IID_IDebugAsyncOperationCallBack = GUID(0x51973c1c, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugAsyncOperationCallBack : IUnknown
@@ -521,10 +521,10 @@ interface IDebugAsyncOperationCallBack : IUnknown
 enum IID_IEnumDebugCodeContexts = GUID(0x51973c1d, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IEnumDebugCodeContexts : IUnknown
 {
-    HRESULT Next(uint, IDebugCodeContext*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IDebugCodeContext* pscc, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumDebugCodeContexts*);
+    HRESULT Clone(IEnumDebugCodeContexts* ppescc);
 }
 struct DebugStackFrameDescriptor
 {
@@ -545,26 +545,26 @@ struct DebugStackFrameDescriptor64
 enum IID_IEnumDebugStackFrames = GUID(0x51973c1e, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IEnumDebugStackFrames : IUnknown
 {
-    HRESULT Next(uint, DebugStackFrameDescriptor*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, DebugStackFrameDescriptor* prgdsfd, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumDebugStackFrames*);
+    HRESULT Clone(IEnumDebugStackFrames* ppedsf);
 }
 enum IID_IEnumDebugStackFrames64 = GUID(0xdc38853, 0xc1b0, 0x4176, [0xa9, 0x84, 0xb2, 0x98, 0x36, 0x10, 0x27, 0xaf]);
 interface IEnumDebugStackFrames64 : IEnumDebugStackFrames
 {
-    HRESULT Next64(uint, DebugStackFrameDescriptor64*, uint*);
+    HRESULT Next64(uint celt, DebugStackFrameDescriptor64* prgdsfd, uint* pceltFetched);
 }
 enum IID_IDebugDocumentInfo = GUID(0x51973c1f, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugDocumentInfo : IUnknown
 {
-    HRESULT GetName(DOCUMENTNAMETYPE, BSTR*);
-    HRESULT GetDocumentClassId(GUID*);
+    HRESULT GetName(DOCUMENTNAMETYPE dnt, BSTR* pbstrName);
+    HRESULT GetDocumentClassId(GUID* pclsidDocument);
 }
 enum IID_IDebugDocumentProvider = GUID(0x51973c20, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugDocumentProvider : IDebugDocumentInfo
 {
-    HRESULT GetDocument(IDebugDocument*);
+    HRESULT GetDocument(IDebugDocument* ppssd);
 }
 enum IID_IDebugDocument = GUID(0x51973c21, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugDocument : IDebugDocumentInfo
@@ -573,364 +573,364 @@ interface IDebugDocument : IDebugDocumentInfo
 enum IID_IDebugDocumentText = GUID(0x51973c22, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugDocumentText : IDebugDocument
 {
-    HRESULT GetDocumentAttributes(uint*);
-    HRESULT GetSize(uint*, uint*);
-    HRESULT GetPositionOfLine(uint, uint*);
-    HRESULT GetLineOfPosition(uint, uint*, uint*);
-    HRESULT GetText(uint, PWSTR, ushort*, uint*, uint);
-    HRESULT GetPositionOfContext(IDebugDocumentContext, uint*, uint*);
-    HRESULT GetContextOfPosition(uint, uint, IDebugDocumentContext*);
+    HRESULT GetDocumentAttributes(uint* ptextdocattr);
+    HRESULT GetSize(uint* pcNumLines, uint* pcNumChars);
+    HRESULT GetPositionOfLine(uint cLineNumber, uint* pcCharacterPosition);
+    HRESULT GetLineOfPosition(uint cCharacterPosition, uint* pcLineNumber, uint* pcCharacterOffsetInLine);
+    HRESULT GetText(uint cCharacterPosition, PWSTR pcharText, ushort* pstaTextAttr, uint* pcNumChars, uint cMaxChars);
+    HRESULT GetPositionOfContext(IDebugDocumentContext psc, uint* pcCharacterPosition, uint* cNumChars);
+    HRESULT GetContextOfPosition(uint cCharacterPosition, uint cNumChars, IDebugDocumentContext* ppsc);
 }
 enum IID_IDebugDocumentTextEvents = GUID(0x51973c23, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugDocumentTextEvents : IUnknown
 {
     HRESULT onDestroy();
-    HRESULT onInsertText(uint, uint);
-    HRESULT onRemoveText(uint, uint);
-    HRESULT onReplaceText(uint, uint);
-    HRESULT onUpdateTextAttributes(uint, uint);
-    HRESULT onUpdateDocumentAttributes(uint);
+    HRESULT onInsertText(uint cCharacterPosition, uint cNumToInsert);
+    HRESULT onRemoveText(uint cCharacterPosition, uint cNumToRemove);
+    HRESULT onReplaceText(uint cCharacterPosition, uint cNumToReplace);
+    HRESULT onUpdateTextAttributes(uint cCharacterPosition, uint cNumToUpdate);
+    HRESULT onUpdateDocumentAttributes(uint textdocattr);
 }
 enum IID_IDebugDocumentTextAuthor = GUID(0x51973c24, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugDocumentTextAuthor : IDebugDocumentText
 {
-    HRESULT InsertText(uint, uint, PWSTR);
-    HRESULT RemoveText(uint, uint);
-    HRESULT ReplaceText(uint, uint, PWSTR);
+    HRESULT InsertText(uint cCharacterPosition, uint cNumToInsert, PWSTR pcharText);
+    HRESULT RemoveText(uint cCharacterPosition, uint cNumToRemove);
+    HRESULT ReplaceText(uint cCharacterPosition, uint cNumToReplace, PWSTR pcharText);
 }
 enum IID_IDebugDocumentTextExternalAuthor = GUID(0x51973c25, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugDocumentTextExternalAuthor : IUnknown
 {
-    HRESULT GetPathName(BSTR*, BOOL*);
-    HRESULT GetFileName(BSTR*);
+    HRESULT GetPathName(BSTR* pbstrLongName, BOOL* pfIsOriginalFile);
+    HRESULT GetFileName(BSTR* pbstrShortName);
     HRESULT NotifyChanged();
 }
 enum IID_IDebugDocumentHelper32 = GUID(0x51973c26, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugDocumentHelper32 : IUnknown
 {
-    HRESULT Init(IDebugApplication32, const(wchar)*, const(wchar)*, uint);
-    HRESULT Attach(IDebugDocumentHelper32);
+    HRESULT Init(IDebugApplication32 pda, const(wchar)* pszShortName, const(wchar)* pszLongName, uint docAttr);
+    HRESULT Attach(IDebugDocumentHelper32 pddhParent);
     HRESULT Detach();
-    HRESULT AddUnicodeText(const(wchar)*);
-    HRESULT AddDBCSText(const(char)*);
-    HRESULT SetDebugDocumentHost(IDebugDocumentHost);
-    HRESULT AddDeferredText(uint, uint);
-    HRESULT DefineScriptBlock(uint, uint, IActiveScript, BOOL, uint*);
-    HRESULT SetDefaultTextAttr(ushort);
-    HRESULT SetTextAttributes(uint, uint, ushort*);
-    HRESULT SetLongName(const(wchar)*);
-    HRESULT SetShortName(const(wchar)*);
-    HRESULT SetDocumentAttr(uint);
-    HRESULT GetDebugApplicationNode(IDebugApplicationNode*);
-    HRESULT GetScriptBlockInfo(uint, IActiveScript*, uint*, uint*);
-    HRESULT CreateDebugDocumentContext(uint, uint, IDebugDocumentContext*);
+    HRESULT AddUnicodeText(const(wchar)* pszText);
+    HRESULT AddDBCSText(const(char)* pszText);
+    HRESULT SetDebugDocumentHost(IDebugDocumentHost pddh);
+    HRESULT AddDeferredText(uint cChars, uint dwTextStartCookie);
+    HRESULT DefineScriptBlock(uint ulCharOffset, uint cChars, IActiveScript pas, BOOL fScriptlet, uint* pdwSourceContext);
+    HRESULT SetDefaultTextAttr(ushort staTextAttr);
+    HRESULT SetTextAttributes(uint ulCharOffset, uint cChars, ushort* pstaTextAttr);
+    HRESULT SetLongName(const(wchar)* pszLongName);
+    HRESULT SetShortName(const(wchar)* pszShortName);
+    HRESULT SetDocumentAttr(uint pszAttributes);
+    HRESULT GetDebugApplicationNode(IDebugApplicationNode* ppdan);
+    HRESULT GetScriptBlockInfo(uint dwSourceContext, IActiveScript* ppasd, uint* piCharPos, uint* pcChars);
+    HRESULT CreateDebugDocumentContext(uint iCharPos, uint cChars, IDebugDocumentContext* ppddc);
     HRESULT BringDocumentToTop();
-    HRESULT BringDocumentContextToTop(IDebugDocumentContext);
+    HRESULT BringDocumentContextToTop(IDebugDocumentContext pddc);
 }
 enum IID_IDebugDocumentHelper64 = GUID(0xc4c7363c, 0x20fd, 0x47f9, [0xbd, 0x82, 0x48, 0x55, 0xe0, 0x15, 0x8, 0x71]);
 interface IDebugDocumentHelper64 : IUnknown
 {
-    HRESULT Init(IDebugApplication64, const(wchar)*, const(wchar)*, uint);
-    HRESULT Attach(IDebugDocumentHelper64);
+    HRESULT Init(IDebugApplication64 pda, const(wchar)* pszShortName, const(wchar)* pszLongName, uint docAttr);
+    HRESULT Attach(IDebugDocumentHelper64 pddhParent);
     HRESULT Detach();
-    HRESULT AddUnicodeText(const(wchar)*);
-    HRESULT AddDBCSText(const(char)*);
-    HRESULT SetDebugDocumentHost(IDebugDocumentHost);
-    HRESULT AddDeferredText(uint, uint);
-    HRESULT DefineScriptBlock(uint, uint, IActiveScript, BOOL, ulong*);
-    HRESULT SetDefaultTextAttr(ushort);
-    HRESULT SetTextAttributes(uint, uint, ushort*);
-    HRESULT SetLongName(const(wchar)*);
-    HRESULT SetShortName(const(wchar)*);
-    HRESULT SetDocumentAttr(uint);
-    HRESULT GetDebugApplicationNode(IDebugApplicationNode*);
-    HRESULT GetScriptBlockInfo(ulong, IActiveScript*, uint*, uint*);
-    HRESULT CreateDebugDocumentContext(uint, uint, IDebugDocumentContext*);
+    HRESULT AddUnicodeText(const(wchar)* pszText);
+    HRESULT AddDBCSText(const(char)* pszText);
+    HRESULT SetDebugDocumentHost(IDebugDocumentHost pddh);
+    HRESULT AddDeferredText(uint cChars, uint dwTextStartCookie);
+    HRESULT DefineScriptBlock(uint ulCharOffset, uint cChars, IActiveScript pas, BOOL fScriptlet, ulong* pdwSourceContext);
+    HRESULT SetDefaultTextAttr(ushort staTextAttr);
+    HRESULT SetTextAttributes(uint ulCharOffset, uint cChars, ushort* pstaTextAttr);
+    HRESULT SetLongName(const(wchar)* pszLongName);
+    HRESULT SetShortName(const(wchar)* pszShortName);
+    HRESULT SetDocumentAttr(uint pszAttributes);
+    HRESULT GetDebugApplicationNode(IDebugApplicationNode* ppdan);
+    HRESULT GetScriptBlockInfo(ulong dwSourceContext, IActiveScript* ppasd, uint* piCharPos, uint* pcChars);
+    HRESULT CreateDebugDocumentContext(uint iCharPos, uint cChars, IDebugDocumentContext* ppddc);
     HRESULT BringDocumentToTop();
-    HRESULT BringDocumentContextToTop(IDebugDocumentContext);
+    HRESULT BringDocumentContextToTop(IDebugDocumentContext pddc);
 }
 enum IID_IDebugDocumentHost = GUID(0x51973c27, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugDocumentHost : IUnknown
 {
-    HRESULT GetDeferredText(uint, PWSTR, ushort*, uint*, uint);
-    HRESULT GetScriptTextAttributes(const(wchar)*, uint, const(wchar)*, uint, ushort*);
-    HRESULT OnCreateDocumentContext(IUnknown*);
-    HRESULT GetPathName(BSTR*, BOOL*);
-    HRESULT GetFileName(BSTR*);
+    HRESULT GetDeferredText(uint dwTextStartCookie, PWSTR pcharText, ushort* pstaTextAttr, uint* pcNumChars, uint cMaxChars);
+    HRESULT GetScriptTextAttributes(const(wchar)* pstrCode, uint uNumCodeChars, const(wchar)* pstrDelimiter, uint dwFlags, ushort* pattr);
+    HRESULT OnCreateDocumentContext(IUnknown* ppunkOuter);
+    HRESULT GetPathName(BSTR* pbstrLongName, BOOL* pfIsOriginalFile);
+    HRESULT GetFileName(BSTR* pbstrShortName);
     HRESULT NotifyChanged();
 }
 enum IID_IDebugDocumentContext = GUID(0x51973c28, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugDocumentContext : IUnknown
 {
-    HRESULT GetDocument(IDebugDocument*);
-    HRESULT EnumCodeContexts(IEnumDebugCodeContexts*);
+    HRESULT GetDocument(IDebugDocument* ppsd);
+    HRESULT EnumCodeContexts(IEnumDebugCodeContexts* ppescc);
 }
 enum IID_IDebugSessionProvider = GUID(0x51973c29, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugSessionProvider : IUnknown
 {
-    HRESULT StartDebugSession(IRemoteDebugApplication);
+    HRESULT StartDebugSession(IRemoteDebugApplication pda);
 }
 enum IID_IApplicationDebugger = GUID(0x51973c2a, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IApplicationDebugger : IUnknown
 {
     HRESULT QueryAlive();
-    HRESULT CreateInstanceAtDebugger(const(GUID)*, IUnknown, uint, const(GUID)*, IUnknown*);
-    HRESULT onDebugOutput(const(wchar)*);
-    HRESULT onHandleBreakPoint(IRemoteDebugApplicationThread, BREAKREASON, IActiveScriptErrorDebug);
+    HRESULT CreateInstanceAtDebugger(const(GUID)* rclsid, IUnknown pUnkOuter, uint dwClsContext, const(GUID)* riid, IUnknown* ppvObject);
+    HRESULT onDebugOutput(const(wchar)* pstr);
+    HRESULT onHandleBreakPoint(IRemoteDebugApplicationThread prpt, BREAKREASON br, IActiveScriptErrorDebug pError);
     HRESULT onClose();
-    HRESULT onDebuggerEvent(const(GUID)*, IUnknown);
+    HRESULT onDebuggerEvent(const(GUID)* riid, IUnknown punk);
 }
 enum IID_IApplicationDebuggerUI = GUID(0x51973c2b, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IApplicationDebuggerUI : IUnknown
 {
-    HRESULT BringDocumentToTop(IDebugDocumentText);
-    HRESULT BringDocumentContextToTop(IDebugDocumentContext);
+    HRESULT BringDocumentToTop(IDebugDocumentText pddt);
+    HRESULT BringDocumentContextToTop(IDebugDocumentContext pddc);
 }
 enum IID_IMachineDebugManager = GUID(0x51973c2c, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IMachineDebugManager : IUnknown
 {
-    HRESULT AddApplication(IRemoteDebugApplication, uint*);
-    HRESULT RemoveApplication(uint);
-    HRESULT EnumApplications(IEnumRemoteDebugApplications*);
+    HRESULT AddApplication(IRemoteDebugApplication pda, uint* pdwAppCookie);
+    HRESULT RemoveApplication(uint dwAppCookie);
+    HRESULT EnumApplications(IEnumRemoteDebugApplications* ppeda);
 }
 enum IID_IMachineDebugManagerCookie = GUID(0x51973c2d, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IMachineDebugManagerCookie : IUnknown
 {
-    HRESULT AddApplication(IRemoteDebugApplication, uint, uint*);
-    HRESULT RemoveApplication(uint, uint);
-    HRESULT EnumApplications(IEnumRemoteDebugApplications*);
+    HRESULT AddApplication(IRemoteDebugApplication pda, uint dwDebugAppCookie, uint* pdwAppCookie);
+    HRESULT RemoveApplication(uint dwDebugAppCookie, uint dwAppCookie);
+    HRESULT EnumApplications(IEnumRemoteDebugApplications* ppeda);
 }
 enum IID_IMachineDebugManagerEvents = GUID(0x51973c2e, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IMachineDebugManagerEvents : IUnknown
 {
-    HRESULT onAddApplication(IRemoteDebugApplication, uint);
-    HRESULT onRemoveApplication(IRemoteDebugApplication, uint);
+    HRESULT onAddApplication(IRemoteDebugApplication pda, uint dwAppCookie);
+    HRESULT onRemoveApplication(IRemoteDebugApplication pda, uint dwAppCookie);
 }
 enum IID_IProcessDebugManager32 = GUID(0x51973c2f, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IProcessDebugManager32 : IUnknown
 {
-    HRESULT CreateApplication(IDebugApplication32*);
-    HRESULT GetDefaultApplication(IDebugApplication32*);
-    HRESULT AddApplication(IDebugApplication32, uint*);
-    HRESULT RemoveApplication(uint);
-    HRESULT CreateDebugDocumentHelper(IUnknown, IDebugDocumentHelper32*);
+    HRESULT CreateApplication(IDebugApplication32* ppda);
+    HRESULT GetDefaultApplication(IDebugApplication32* ppda);
+    HRESULT AddApplication(IDebugApplication32 pda, uint* pdwAppCookie);
+    HRESULT RemoveApplication(uint dwAppCookie);
+    HRESULT CreateDebugDocumentHelper(IUnknown punkOuter, IDebugDocumentHelper32* pddh);
 }
 enum IID_IProcessDebugManager64 = GUID(0x56b9fc1c, 0x63a9, 0x4cc1, [0xac, 0x21, 0x8, 0x7d, 0x69, 0xa1, 0x7f, 0xab]);
 interface IProcessDebugManager64 : IUnknown
 {
-    HRESULT CreateApplication(IDebugApplication64*);
-    HRESULT GetDefaultApplication(IDebugApplication64*);
-    HRESULT AddApplication(IDebugApplication64, uint*);
-    HRESULT RemoveApplication(uint);
-    HRESULT CreateDebugDocumentHelper(IUnknown, IDebugDocumentHelper64*);
+    HRESULT CreateApplication(IDebugApplication64* ppda);
+    HRESULT GetDefaultApplication(IDebugApplication64* ppda);
+    HRESULT AddApplication(IDebugApplication64 pda, uint* pdwAppCookie);
+    HRESULT RemoveApplication(uint dwAppCookie);
+    HRESULT CreateDebugDocumentHelper(IUnknown punkOuter, IDebugDocumentHelper64* pddh);
 }
 enum IID_IRemoteDebugApplication = GUID(0x51973c30, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IRemoteDebugApplication : IUnknown
 {
-    HRESULT ResumeFromBreakPoint(IRemoteDebugApplicationThread, BREAKRESUMEACTION, ERRORRESUMEACTION);
+    HRESULT ResumeFromBreakPoint(IRemoteDebugApplicationThread prptFocus, BREAKRESUMEACTION bra, ERRORRESUMEACTION era);
     HRESULT CauseBreak();
-    HRESULT ConnectDebugger(IApplicationDebugger);
+    HRESULT ConnectDebugger(IApplicationDebugger pad);
     HRESULT DisconnectDebugger();
-    HRESULT GetDebugger(IApplicationDebugger*);
-    HRESULT CreateInstanceAtApplication(const(GUID)*, IUnknown, uint, const(GUID)*, IUnknown*);
+    HRESULT GetDebugger(IApplicationDebugger* pad);
+    HRESULT CreateInstanceAtApplication(const(GUID)* rclsid, IUnknown pUnkOuter, uint dwClsContext, const(GUID)* riid, IUnknown* ppvObject);
     HRESULT QueryAlive();
-    HRESULT EnumThreads(IEnumRemoteDebugApplicationThreads*);
-    HRESULT GetName(BSTR*);
-    HRESULT GetRootNode(IDebugApplicationNode*);
-    HRESULT EnumGlobalExpressionContexts(IEnumDebugExpressionContexts*);
+    HRESULT EnumThreads(IEnumRemoteDebugApplicationThreads* pperdat);
+    HRESULT GetName(BSTR* pbstrName);
+    HRESULT GetRootNode(IDebugApplicationNode* ppdanRoot);
+    HRESULT EnumGlobalExpressionContexts(IEnumDebugExpressionContexts* ppedec);
 }
 enum IID_IDebugApplication32 = GUID(0x51973c32, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugApplication32 : IRemoteDebugApplication
 {
-    HRESULT SetName(const(wchar)*);
+    HRESULT SetName(const(wchar)* pstrName);
     HRESULT StepOutComplete();
-    HRESULT DebugOutput(const(wchar)*);
+    HRESULT DebugOutput(const(wchar)* pstr);
     HRESULT StartDebugSession();
-    HRESULT HandleBreakPoint(BREAKREASON, BREAKRESUMEACTION*);
+    HRESULT HandleBreakPoint(BREAKREASON br, BREAKRESUMEACTION* pbra);
     HRESULT Close();
-    HRESULT GetBreakFlags(uint*, IRemoteDebugApplicationThread*);
-    HRESULT GetCurrentThread(IDebugApplicationThread*);
-    HRESULT CreateAsyncDebugOperation(IDebugSyncOperation, IDebugAsyncOperation*);
-    HRESULT AddStackFrameSniffer(IDebugStackFrameSniffer, uint*);
-    HRESULT RemoveStackFrameSniffer(uint);
+    HRESULT GetBreakFlags(uint* pabf, IRemoteDebugApplicationThread* pprdatSteppingThread);
+    HRESULT GetCurrentThread(IDebugApplicationThread* pat);
+    HRESULT CreateAsyncDebugOperation(IDebugSyncOperation psdo, IDebugAsyncOperation* ppado);
+    HRESULT AddStackFrameSniffer(IDebugStackFrameSniffer pdsfs, uint* pdwCookie);
+    HRESULT RemoveStackFrameSniffer(uint dwCookie);
     HRESULT QueryCurrentThreadIsDebuggerThread();
-    HRESULT SynchronousCallInDebuggerThread(IDebugThreadCall32, uint, uint, uint);
-    HRESULT CreateApplicationNode(IDebugApplicationNode*);
-    HRESULT FireDebuggerEvent(const(GUID)*, IUnknown);
-    HRESULT HandleRuntimeError(IActiveScriptErrorDebug, IActiveScriptSite, BREAKRESUMEACTION*, ERRORRESUMEACTION*, BOOL*);
+    HRESULT SynchronousCallInDebuggerThread(IDebugThreadCall32 pptc, uint dwParam1, uint dwParam2, uint dwParam3);
+    HRESULT CreateApplicationNode(IDebugApplicationNode* ppdanNew);
+    HRESULT FireDebuggerEvent(const(GUID)* riid, IUnknown punk);
+    HRESULT HandleRuntimeError(IActiveScriptErrorDebug pErrorDebug, IActiveScriptSite pScriptSite, BREAKRESUMEACTION* pbra, ERRORRESUMEACTION* perra, BOOL* pfCallOnScriptError);
     BOOL FCanJitDebug();
     BOOL FIsAutoJitDebugEnabled();
-    HRESULT AddGlobalExpressionContextProvider(IProvideExpressionContexts, uint*);
-    HRESULT RemoveGlobalExpressionContextProvider(uint);
+    HRESULT AddGlobalExpressionContextProvider(IProvideExpressionContexts pdsfs, uint* pdwCookie);
+    HRESULT RemoveGlobalExpressionContextProvider(uint dwCookie);
 }
 enum IID_IDebugApplication64 = GUID(0x4dedc754, 0x4c7, 0x4f10, [0x9e, 0x60, 0x16, 0xa3, 0x90, 0xfe, 0x6e, 0x62]);
 interface IDebugApplication64 : IRemoteDebugApplication
 {
-    HRESULT SetName(const(wchar)*);
+    HRESULT SetName(const(wchar)* pstrName);
     HRESULT StepOutComplete();
-    HRESULT DebugOutput(const(wchar)*);
+    HRESULT DebugOutput(const(wchar)* pstr);
     HRESULT StartDebugSession();
-    HRESULT HandleBreakPoint(BREAKREASON, BREAKRESUMEACTION*);
+    HRESULT HandleBreakPoint(BREAKREASON br, BREAKRESUMEACTION* pbra);
     HRESULT Close();
-    HRESULT GetBreakFlags(uint*, IRemoteDebugApplicationThread*);
-    HRESULT GetCurrentThread(IDebugApplicationThread*);
-    HRESULT CreateAsyncDebugOperation(IDebugSyncOperation, IDebugAsyncOperation*);
-    HRESULT AddStackFrameSniffer(IDebugStackFrameSniffer, uint*);
-    HRESULT RemoveStackFrameSniffer(uint);
+    HRESULT GetBreakFlags(uint* pabf, IRemoteDebugApplicationThread* pprdatSteppingThread);
+    HRESULT GetCurrentThread(IDebugApplicationThread* pat);
+    HRESULT CreateAsyncDebugOperation(IDebugSyncOperation psdo, IDebugAsyncOperation* ppado);
+    HRESULT AddStackFrameSniffer(IDebugStackFrameSniffer pdsfs, uint* pdwCookie);
+    HRESULT RemoveStackFrameSniffer(uint dwCookie);
     HRESULT QueryCurrentThreadIsDebuggerThread();
-    HRESULT SynchronousCallInDebuggerThread(IDebugThreadCall64, ulong, ulong, ulong);
-    HRESULT CreateApplicationNode(IDebugApplicationNode*);
-    HRESULT FireDebuggerEvent(const(GUID)*, IUnknown);
-    HRESULT HandleRuntimeError(IActiveScriptErrorDebug, IActiveScriptSite, BREAKRESUMEACTION*, ERRORRESUMEACTION*, BOOL*);
+    HRESULT SynchronousCallInDebuggerThread(IDebugThreadCall64 pptc, ulong dwParam1, ulong dwParam2, ulong dwParam3);
+    HRESULT CreateApplicationNode(IDebugApplicationNode* ppdanNew);
+    HRESULT FireDebuggerEvent(const(GUID)* riid, IUnknown punk);
+    HRESULT HandleRuntimeError(IActiveScriptErrorDebug pErrorDebug, IActiveScriptSite pScriptSite, BREAKRESUMEACTION* pbra, ERRORRESUMEACTION* perra, BOOL* pfCallOnScriptError);
     BOOL FCanJitDebug();
     BOOL FIsAutoJitDebugEnabled();
-    HRESULT AddGlobalExpressionContextProvider(IProvideExpressionContexts, ulong*);
-    HRESULT RemoveGlobalExpressionContextProvider(ulong);
+    HRESULT AddGlobalExpressionContextProvider(IProvideExpressionContexts pdsfs, ulong* pdwCookie);
+    HRESULT RemoveGlobalExpressionContextProvider(ulong dwCookie);
 }
 enum IID_IRemoteDebugApplicationEvents = GUID(0x51973c33, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IRemoteDebugApplicationEvents : IUnknown
 {
-    HRESULT OnConnectDebugger(IApplicationDebugger);
+    HRESULT OnConnectDebugger(IApplicationDebugger pad);
     HRESULT OnDisconnectDebugger();
-    HRESULT OnSetName(const(wchar)*);
-    HRESULT OnDebugOutput(const(wchar)*);
+    HRESULT OnSetName(const(wchar)* pstrName);
+    HRESULT OnDebugOutput(const(wchar)* pstr);
     HRESULT OnClose();
-    HRESULT OnEnterBreakPoint(IRemoteDebugApplicationThread);
-    HRESULT OnLeaveBreakPoint(IRemoteDebugApplicationThread);
-    HRESULT OnCreateThread(IRemoteDebugApplicationThread);
-    HRESULT OnDestroyThread(IRemoteDebugApplicationThread);
-    HRESULT OnBreakFlagChange(uint, IRemoteDebugApplicationThread);
+    HRESULT OnEnterBreakPoint(IRemoteDebugApplicationThread prdat);
+    HRESULT OnLeaveBreakPoint(IRemoteDebugApplicationThread prdat);
+    HRESULT OnCreateThread(IRemoteDebugApplicationThread prdat);
+    HRESULT OnDestroyThread(IRemoteDebugApplicationThread prdat);
+    HRESULT OnBreakFlagChange(uint abf, IRemoteDebugApplicationThread prdatSteppingThread);
 }
 enum IID_IDebugApplicationNode = GUID(0x51973c34, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugApplicationNode : IDebugDocumentProvider
 {
-    HRESULT EnumChildren(IEnumDebugApplicationNodes*);
-    HRESULT GetParent(IDebugApplicationNode*);
-    HRESULT SetDocumentProvider(IDebugDocumentProvider);
+    HRESULT EnumChildren(IEnumDebugApplicationNodes* pperddp);
+    HRESULT GetParent(IDebugApplicationNode* pprddp);
+    HRESULT SetDocumentProvider(IDebugDocumentProvider pddp);
     HRESULT Close();
-    HRESULT Attach(IDebugApplicationNode);
+    HRESULT Attach(IDebugApplicationNode pdanParent);
     HRESULT Detach();
 }
 enum IID_IDebugApplicationNodeEvents = GUID(0x51973c35, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugApplicationNodeEvents : IUnknown
 {
-    HRESULT onAddChild(IDebugApplicationNode);
-    HRESULT onRemoveChild(IDebugApplicationNode);
+    HRESULT onAddChild(IDebugApplicationNode prddpChild);
+    HRESULT onRemoveChild(IDebugApplicationNode prddpChild);
     HRESULT onDetach();
-    HRESULT onAttach(IDebugApplicationNode);
+    HRESULT onAttach(IDebugApplicationNode prddpParent);
 }
 enum IID_AsyncIDebugApplicationNodeEvents = GUID(0xa2e3aa3b, 0xaa8d, 0x4ebf, [0x84, 0xcd, 0x64, 0x8b, 0x73, 0x7b, 0x8c, 0x13]);
 interface AsyncIDebugApplicationNodeEvents : IUnknown
 {
-    HRESULT Begin_onAddChild(IDebugApplicationNode);
+    HRESULT Begin_onAddChild(IDebugApplicationNode prddpChild);
     HRESULT Finish_onAddChild();
-    HRESULT Begin_onRemoveChild(IDebugApplicationNode);
+    HRESULT Begin_onRemoveChild(IDebugApplicationNode prddpChild);
     HRESULT Finish_onRemoveChild();
     HRESULT Begin_onDetach();
     HRESULT Finish_onDetach();
-    HRESULT Begin_onAttach(IDebugApplicationNode);
+    HRESULT Begin_onAttach(IDebugApplicationNode prddpParent);
     HRESULT Finish_onAttach();
 }
 enum IID_IDebugThreadCall32 = GUID(0x51973c36, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugThreadCall32 : IUnknown
 {
-    HRESULT ThreadCallHandler(uint, uint, uint);
+    HRESULT ThreadCallHandler(uint dwParam1, uint dwParam2, uint dwParam3);
 }
 enum IID_IDebugThreadCall64 = GUID(0xcb3fa335, 0xe979, 0x42fd, [0x9f, 0xcf, 0xa7, 0x54, 0x6a, 0xf, 0x39, 0x5]);
 interface IDebugThreadCall64 : IUnknown
 {
-    HRESULT ThreadCallHandler(ulong, ulong, ulong);
+    HRESULT ThreadCallHandler(ulong dwParam1, ulong dwParam2, ulong dwParam3);
 }
 enum IID_IRemoteDebugApplicationThread = GUID(0x51973c37, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IRemoteDebugApplicationThread : IUnknown
 {
-    HRESULT GetSystemThreadId(uint*);
-    HRESULT GetApplication(IRemoteDebugApplication*);
-    HRESULT EnumStackFrames(IEnumDebugStackFrames*);
-    HRESULT GetDescription(BSTR*, BSTR*);
-    HRESULT SetNextStatement(IDebugStackFrame, IDebugCodeContext);
-    HRESULT GetState(uint*);
-    HRESULT Suspend(uint*);
-    HRESULT Resume(uint*);
-    HRESULT GetSuspendCount(uint*);
+    HRESULT GetSystemThreadId(uint* dwThreadId);
+    HRESULT GetApplication(IRemoteDebugApplication* pprda);
+    HRESULT EnumStackFrames(IEnumDebugStackFrames* ppedsf);
+    HRESULT GetDescription(BSTR* pbstrDescription, BSTR* pbstrState);
+    HRESULT SetNextStatement(IDebugStackFrame pStackFrame, IDebugCodeContext pCodeContext);
+    HRESULT GetState(uint* pState);
+    HRESULT Suspend(uint* pdwCount);
+    HRESULT Resume(uint* pdwCount);
+    HRESULT GetSuspendCount(uint* pdwCount);
 }
 enum IID_IDebugApplicationThread = GUID(0x51973c38, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugApplicationThread : IRemoteDebugApplicationThread
 {
-    HRESULT SynchronousCallIntoThread32(IDebugThreadCall32, uint, uint, uint);
+    HRESULT SynchronousCallIntoThread32(IDebugThreadCall32 pstcb, uint dwParam1, uint dwParam2, uint dwParam3);
     HRESULT QueryIsCurrentThread();
     HRESULT QueryIsDebuggerThread();
-    HRESULT SetDescription(const(wchar)*);
-    HRESULT SetStateString(const(wchar)*);
+    HRESULT SetDescription(const(wchar)* pstrDescription);
+    HRESULT SetStateString(const(wchar)* pstrState);
 }
 enum IID_IDebugApplicationThread64 = GUID(0x9dac5886, 0xdbad, 0x456d, [0x9d, 0xee, 0x5d, 0xec, 0x39, 0xab, 0x3d, 0xda]);
 interface IDebugApplicationThread64 : IDebugApplicationThread
 {
-    HRESULT SynchronousCallIntoThread64(IDebugThreadCall64, ulong, ulong, ulong);
+    HRESULT SynchronousCallIntoThread64(IDebugThreadCall64 pstcb, ulong dwParam1, ulong dwParam2, ulong dwParam3);
 }
 enum IID_IDebugCookie = GUID(0x51973c39, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugCookie : IUnknown
 {
-    HRESULT SetDebugCookie(uint);
+    HRESULT SetDebugCookie(uint dwDebugAppCookie);
 }
 enum IID_IEnumDebugApplicationNodes = GUID(0x51973c3a, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IEnumDebugApplicationNodes : IUnknown
 {
-    HRESULT Next(uint, IDebugApplicationNode*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IDebugApplicationNode* pprddp, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumDebugApplicationNodes*);
+    HRESULT Clone(IEnumDebugApplicationNodes* pperddp);
 }
 enum IID_IEnumRemoteDebugApplications = GUID(0x51973c3b, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IEnumRemoteDebugApplications : IUnknown
 {
-    HRESULT Next(uint, IRemoteDebugApplication*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IRemoteDebugApplication* ppda, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumRemoteDebugApplications*);
+    HRESULT Clone(IEnumRemoteDebugApplications* ppessd);
 }
 enum IID_IEnumRemoteDebugApplicationThreads = GUID(0x51973c3c, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IEnumRemoteDebugApplicationThreads : IUnknown
 {
-    HRESULT Next(uint, IRemoteDebugApplicationThread*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IRemoteDebugApplicationThread* pprdat, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumRemoteDebugApplicationThreads*);
+    HRESULT Clone(IEnumRemoteDebugApplicationThreads* pperdat);
 }
 enum IID_IDebugFormatter = GUID(0x51973c05, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugFormatter : IUnknown
 {
-    HRESULT GetStringForVariant(VARIANT*, uint, BSTR*);
-    HRESULT GetVariantForString(const(wchar)*, VARIANT*);
-    HRESULT GetStringForVarType(VARENUM, TYPEDESC*, BSTR*);
+    HRESULT GetStringForVariant(VARIANT* pvar, uint nRadix, BSTR* pbstrValue);
+    HRESULT GetVariantForString(const(wchar)* pwstrValue, VARIANT* pvar);
+    HRESULT GetStringForVarType(VARENUM vt, TYPEDESC* ptdescArrayType, BSTR* pbstr);
 }
 enum IID_ISimpleConnectionPoint = GUID(0x51973c3e, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface ISimpleConnectionPoint : IUnknown
 {
-    HRESULT GetEventCount(uint*);
-    HRESULT DescribeEvents(uint, uint, int*, BSTR*, uint*);
-    HRESULT Advise(IDispatch, uint*);
-    HRESULT Unadvise(uint);
+    HRESULT GetEventCount(uint* pulCount);
+    HRESULT DescribeEvents(uint iEvent, uint cEvents, int* prgid, BSTR* prgbstr, uint* pcEventsFetched);
+    HRESULT Advise(IDispatch pdisp, uint* pdwCookie);
+    HRESULT Unadvise(uint dwCookie);
 }
 enum IID_IDebugHelper = GUID(0x51973c3f, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IDebugHelper : IUnknown
 {
-    HRESULT CreatePropertyBrowser(VARIANT*, const(wchar)*, IDebugApplicationThread, IDebugProperty*);
-    HRESULT CreatePropertyBrowserEx(VARIANT*, const(wchar)*, IDebugApplicationThread, IDebugFormatter, IDebugProperty*);
-    HRESULT CreateSimpleConnectionPoint(IDispatch, ISimpleConnectionPoint*);
+    HRESULT CreatePropertyBrowser(VARIANT* pvar, const(wchar)* bstrName, IDebugApplicationThread pdat, IDebugProperty* ppdob);
+    HRESULT CreatePropertyBrowserEx(VARIANT* pvar, const(wchar)* bstrName, IDebugApplicationThread pdat, IDebugFormatter pdf, IDebugProperty* ppdob);
+    HRESULT CreateSimpleConnectionPoint(IDispatch pdisp, ISimpleConnectionPoint* ppscp);
 }
 enum IID_IEnumDebugExpressionContexts = GUID(0x51973c40, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IEnumDebugExpressionContexts : IUnknown
 {
-    HRESULT Next(uint, IDebugExpressionContext*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IDebugExpressionContext* ppdec, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumDebugExpressionContexts*);
+    HRESULT Clone(IEnumDebugExpressionContexts* ppedec);
 }
 enum IID_IProvideExpressionContexts = GUID(0x51973c41, 0xcb0c, 0x11d0, [0xb5, 0xc9, 0x0, 0xa0, 0x24, 0x4a, 0xe, 0x7a]);
 interface IProvideExpressionContexts : IUnknown
 {
-    HRESULT EnumExpressionContexts(IEnumDebugExpressionContexts*);
+    HRESULT EnumExpressionContexts(IEnumDebugExpressionContexts* ppedec);
 }
 enum CLSID_ProcessDebugManager = GUID(0x78a51822, 0x51f4, 0x11d0, [0x8f, 0x20, 0x0, 0x80, 0x5f, 0x2c, 0xd0, 0x64]);
 struct ProcessDebugManager
@@ -978,9 +978,9 @@ enum : int
 enum IID_IActiveScriptProfilerControl = GUID(0x784b5ff0, 0x69b0, 0x47d1, [0xa7, 0xdc, 0x25, 0x18, 0xf4, 0x23, 0xe, 0x90]);
 interface IActiveScriptProfilerControl : IUnknown
 {
-    HRESULT StartProfiling(const(GUID)*, uint, uint);
-    HRESULT SetProfilerEventMask(uint);
-    HRESULT StopProfiling(HRESULT);
+    HRESULT StartProfiling(const(GUID)* clsidProfilerObject, uint dwEventMask, uint dwContext);
+    HRESULT SetProfilerEventMask(uint dwEventMask);
+    HRESULT StopProfiling(HRESULT hrShutdownReason);
 }
 enum IID_IActiveScriptProfilerControl2 = GUID(0x47810165, 0x498f, 0x40be, [0x94, 0xf1, 0x65, 0x35, 0x57, 0xe9, 0xe7, 0xda]);
 interface IActiveScriptProfilerControl2 : IActiveScriptProfilerControl
@@ -1120,15 +1120,15 @@ struct PROFILER_HEAP_OBJECT
 enum IID_IActiveScriptProfilerHeapEnum = GUID(0x32e4694e, 0xd37, 0x419b, [0xb9, 0x3d, 0xfa, 0x20, 0xde, 0xd6, 0xe8, 0xea]);
 interface IActiveScriptProfilerHeapEnum : IUnknown
 {
-    HRESULT Next(uint, PROFILER_HEAP_OBJECT**, uint*);
-    HRESULT GetOptionalInfo(PROFILER_HEAP_OBJECT*, uint, PROFILER_HEAP_OBJECT_OPTIONAL_INFO*);
-    HRESULT FreeObjectAndOptionalInfo(uint, PROFILER_HEAP_OBJECT**);
-    HRESULT GetNameIdMap(const(wchar)****, uint*);
+    HRESULT Next(uint celt, PROFILER_HEAP_OBJECT** heapObjects, uint* pceltFetched);
+    HRESULT GetOptionalInfo(PROFILER_HEAP_OBJECT* heapObject, uint celt, PROFILER_HEAP_OBJECT_OPTIONAL_INFO* optionalInfo);
+    HRESULT FreeObjectAndOptionalInfo(uint celt, PROFILER_HEAP_OBJECT** heapObjects);
+    HRESULT GetNameIdMap(const(wchar)**** pNameList, uint* pcelt);
 }
 enum IID_IActiveScriptProfilerControl3 = GUID(0xb403015, 0xf381, 0x4023, [0xa5, 0xd0, 0x6f, 0xed, 0x7, 0x6d, 0xe7, 0x16]);
 interface IActiveScriptProfilerControl3 : IActiveScriptProfilerControl2
 {
-    HRESULT EnumHeap(IActiveScriptProfilerHeapEnum*);
+    HRESULT EnumHeap(IActiveScriptProfilerHeapEnum* ppEnum);
 }
 alias PROFILER_HEAP_SUMMARY_VERSION = int;
 enum : int
@@ -1144,95 +1144,95 @@ struct PROFILER_HEAP_SUMMARY
 enum IID_IActiveScriptProfilerControl4 = GUID(0x160f94fd, 0x9dbc, 0x40d4, [0x9e, 0xac, 0x2b, 0x71, 0xdb, 0x31, 0x32, 0xf4]);
 interface IActiveScriptProfilerControl4 : IActiveScriptProfilerControl3
 {
-    HRESULT SummarizeHeap(PROFILER_HEAP_SUMMARY*);
+    HRESULT SummarizeHeap(PROFILER_HEAP_SUMMARY* heapSummary);
 }
 enum IID_IActiveScriptProfilerControl5 = GUID(0x1c01a2d1, 0x8f0f, 0x46a5, [0x97, 0x20, 0xd, 0x7e, 0xd2, 0xc6, 0x2f, 0xa]);
 interface IActiveScriptProfilerControl5 : IActiveScriptProfilerControl4
 {
-    HRESULT EnumHeap2(PROFILER_HEAP_ENUM_FLAGS, IActiveScriptProfilerHeapEnum*);
+    HRESULT EnumHeap2(PROFILER_HEAP_ENUM_FLAGS enumFlags, IActiveScriptProfilerHeapEnum* ppEnum);
 }
 enum IID_IActiveScriptProfilerCallback = GUID(0x740eca23, 0x7d9d, 0x42e5, [0xba, 0x9d, 0xf8, 0xb2, 0x4b, 0x1c, 0x7a, 0x9b]);
 interface IActiveScriptProfilerCallback : IUnknown
 {
-    HRESULT Initialize(uint);
-    HRESULT Shutdown(HRESULT);
-    HRESULT ScriptCompiled(int, PROFILER_SCRIPT_TYPE, IUnknown);
-    HRESULT FunctionCompiled(int, int, const(wchar)*, const(wchar)*, IUnknown);
-    HRESULT OnFunctionEnter(int, int);
-    HRESULT OnFunctionExit(int, int);
+    HRESULT Initialize(uint dwContext);
+    HRESULT Shutdown(HRESULT hrReason);
+    HRESULT ScriptCompiled(int scriptId, PROFILER_SCRIPT_TYPE type, IUnknown pIDebugDocumentContext);
+    HRESULT FunctionCompiled(int functionId, int scriptId, const(wchar)* pwszFunctionName, const(wchar)* pwszFunctionNameHint, IUnknown pIDebugDocumentContext);
+    HRESULT OnFunctionEnter(int scriptId, int functionId);
+    HRESULT OnFunctionExit(int scriptId, int functionId);
 }
 enum IID_IActiveScriptProfilerCallback2 = GUID(0x31b7f8ad, 0xa637, 0x409c, [0xb2, 0x2f, 0x4, 0x9, 0x95, 0xb6, 0x10, 0x3d]);
 interface IActiveScriptProfilerCallback2 : IActiveScriptProfilerCallback
 {
-    HRESULT OnFunctionEnterByName(const(wchar)*, PROFILER_SCRIPT_TYPE);
-    HRESULT OnFunctionExitByName(const(wchar)*, PROFILER_SCRIPT_TYPE);
+    HRESULT OnFunctionEnterByName(const(wchar)* pwszFunctionName, PROFILER_SCRIPT_TYPE type);
+    HRESULT OnFunctionExitByName(const(wchar)* pwszFunctionName, PROFILER_SCRIPT_TYPE type);
 }
 enum IID_IActiveScriptProfilerCallback3 = GUID(0x6ac5ad25, 0x2037, 0x4687, [0x91, 0xdf, 0xb5, 0x99, 0x79, 0xd9, 0x3d, 0x73]);
 interface IActiveScriptProfilerCallback3 : IActiveScriptProfilerCallback2
 {
-    HRESULT SetWebWorkerId(uint);
+    HRESULT SetWebWorkerId(uint webWorkerId);
 }
 enum IID_IScriptNode = GUID(0xaee2a94, 0xbcbb, 0x11d0, [0x8c, 0x72, 0x0, 0xc0, 0x4f, 0xc2, 0xb0, 0x85]);
 interface IScriptNode : IUnknown
 {
     HRESULT Alive();
     HRESULT Delete();
-    HRESULT GetParent(IScriptNode*);
-    HRESULT GetIndexInParent(uint*);
-    HRESULT GetCookie(uint*);
-    HRESULT GetNumberOfChildren(uint*);
-    HRESULT GetChild(uint, IScriptNode*);
-    HRESULT GetLanguage(BSTR*);
-    HRESULT CreateChildEntry(uint, uint, const(wchar)*, IScriptEntry*);
-    HRESULT CreateChildHandler(const(wchar)*, PWSTR*, uint, const(wchar)*, const(wchar)*, ITypeInfo, uint, uint, uint, IScriptEntry*);
+    HRESULT GetParent(IScriptNode* ppsnParent);
+    HRESULT GetIndexInParent(uint* pisn);
+    HRESULT GetCookie(uint* pdwCookie);
+    HRESULT GetNumberOfChildren(uint* pcsn);
+    HRESULT GetChild(uint isn, IScriptNode* ppsn);
+    HRESULT GetLanguage(BSTR* pbstr);
+    HRESULT CreateChildEntry(uint isn, uint dwCookie, const(wchar)* pszDelimiter, IScriptEntry* ppse);
+    HRESULT CreateChildHandler(const(wchar)* pszDefaultName, PWSTR* prgpszNames, uint cpszNames, const(wchar)* pszEvent, const(wchar)* pszDelimiter, ITypeInfo ptiSignature, uint iMethodSignature, uint isn, uint dwCookie, IScriptEntry* ppse);
 }
 enum IID_IScriptEntry = GUID(0xaee2a95, 0xbcbb, 0x11d0, [0x8c, 0x72, 0x0, 0xc0, 0x4f, 0xc2, 0xb0, 0x85]);
 interface IScriptEntry : IScriptNode
 {
-    HRESULT GetText(BSTR*);
-    HRESULT SetText(const(wchar)*);
-    HRESULT GetBody(BSTR*);
-    HRESULT SetBody(const(wchar)*);
-    HRESULT GetName(BSTR*);
-    HRESULT SetName(const(wchar)*);
-    HRESULT GetItemName(BSTR*);
-    HRESULT SetItemName(const(wchar)*);
-    HRESULT GetSignature(ITypeInfo*, uint*);
-    HRESULT SetSignature(ITypeInfo, uint);
-    HRESULT GetRange(uint*, uint*);
+    HRESULT GetText(BSTR* pbstr);
+    HRESULT SetText(const(wchar)* psz);
+    HRESULT GetBody(BSTR* pbstr);
+    HRESULT SetBody(const(wchar)* psz);
+    HRESULT GetName(BSTR* pbstr);
+    HRESULT SetName(const(wchar)* psz);
+    HRESULT GetItemName(BSTR* pbstr);
+    HRESULT SetItemName(const(wchar)* psz);
+    HRESULT GetSignature(ITypeInfo* ppti, uint* piMethod);
+    HRESULT SetSignature(ITypeInfo pti, uint iMethod);
+    HRESULT GetRange(uint* pichMin, uint* pcch);
 }
 enum IID_IScriptScriptlet = GUID(0xaee2a96, 0xbcbb, 0x11d0, [0x8c, 0x72, 0x0, 0xc0, 0x4f, 0xc2, 0xb0, 0x85]);
 interface IScriptScriptlet : IScriptEntry
 {
-    HRESULT GetSubItemName(BSTR*);
-    HRESULT SetSubItemName(const(wchar)*);
-    HRESULT GetEventName(BSTR*);
-    HRESULT SetEventName(const(wchar)*);
-    HRESULT GetSimpleEventName(BSTR*);
-    HRESULT SetSimpleEventName(const(wchar)*);
+    HRESULT GetSubItemName(BSTR* pbstr);
+    HRESULT SetSubItemName(const(wchar)* psz);
+    HRESULT GetEventName(BSTR* pbstr);
+    HRESULT SetEventName(const(wchar)* psz);
+    HRESULT GetSimpleEventName(BSTR* pbstr);
+    HRESULT SetSimpleEventName(const(wchar)* psz);
 }
 enum IID_IActiveScriptAuthor = GUID(0x9c109da0, 0x7006, 0x11d1, [0xb3, 0x6c, 0x0, 0xa0, 0xc9, 0x11, 0xe8, 0xb2]);
 interface IActiveScriptAuthor : IUnknown
 {
-    HRESULT AddNamedItem(const(wchar)*, uint, IDispatch);
-    HRESULT AddScriptlet(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, uint, uint);
-    HRESULT ParseScriptText(const(wchar)*, const(wchar)*, const(wchar)*, uint, uint);
-    HRESULT GetScriptTextAttributes(const(wchar)*, uint, const(wchar)*, uint, ushort*);
-    HRESULT GetScriptletTextAttributes(const(wchar)*, uint, const(wchar)*, uint, ushort*);
-    HRESULT GetRoot(IScriptNode*);
-    HRESULT GetLanguageFlags(uint*);
-    HRESULT GetEventHandler(IDispatch, const(wchar)*, const(wchar)*, const(wchar)*, IScriptEntry*);
-    HRESULT RemoveNamedItem(const(wchar)*);
-    HRESULT AddTypeLib(const(GUID)*, uint, uint, uint);
-    HRESULT RemoveTypeLib(const(GUID)*, uint, uint);
-    HRESULT GetChars(uint, BSTR*);
-    HRESULT GetInfoFromContext(const(wchar)*, uint, uint, uint, uint*, uint*, uint*, int*, int*, IUnknown*);
-    HRESULT IsCommitChar(wchar, BOOL*);
+    HRESULT AddNamedItem(const(wchar)* pszName, uint dwFlags, IDispatch pdisp);
+    HRESULT AddScriptlet(const(wchar)* pszDefaultName, const(wchar)* pszCode, const(wchar)* pszItemName, const(wchar)* pszSubItemName, const(wchar)* pszEventName, const(wchar)* pszDelimiter, uint dwCookie, uint dwFlags);
+    HRESULT ParseScriptText(const(wchar)* pszCode, const(wchar)* pszItemName, const(wchar)* pszDelimiter, uint dwCookie, uint dwFlags);
+    HRESULT GetScriptTextAttributes(const(wchar)* pszCode, uint cch, const(wchar)* pszDelimiter, uint dwFlags, ushort* pattr);
+    HRESULT GetScriptletTextAttributes(const(wchar)* pszCode, uint cch, const(wchar)* pszDelimiter, uint dwFlags, ushort* pattr);
+    HRESULT GetRoot(IScriptNode* ppsp);
+    HRESULT GetLanguageFlags(uint* pgrfasa);
+    HRESULT GetEventHandler(IDispatch pdisp, const(wchar)* pszItem, const(wchar)* pszSubItem, const(wchar)* pszEvent, IScriptEntry* ppse);
+    HRESULT RemoveNamedItem(const(wchar)* pszName);
+    HRESULT AddTypeLib(const(GUID)* rguidTypeLib, uint dwMajor, uint dwMinor, uint dwFlags);
+    HRESULT RemoveTypeLib(const(GUID)* rguidTypeLib, uint dwMajor, uint dwMinor);
+    HRESULT GetChars(uint fRequestedList, BSTR* pbstrChars);
+    HRESULT GetInfoFromContext(const(wchar)* pszCode, uint cchCode, uint ichCurrentPosition, uint dwListTypesRequested, uint* pdwListTypesProvided, uint* pichListAnchorPosition, uint* pichFuncAnchorPosition, int* pmemid, int* piCurrentParameter, IUnknown* ppunk);
+    HRESULT IsCommitChar(wchar ch, BOOL* pfcommit);
 }
 enum IID_IActiveScriptAuthorProcedure = GUID(0x7e2d4b70, 0xbd9a, 0x11d0, [0x93, 0x36, 0x0, 0xa0, 0xc9, 0xd, 0xca, 0xa9]);
 interface IActiveScriptAuthorProcedure : IUnknown
 {
-    HRESULT ParseProcedureText(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, uint, uint, IDispatch);
+    HRESULT ParseProcedureText(const(wchar)* pszCode, const(wchar)* pszFormalParams, const(wchar)* pszProcedureName, const(wchar)* pszItemName, const(wchar)* pszDelimiter, uint dwCookie, uint dwFlags, IDispatch pdispFor);
 }
 alias APPLICATION_NODE_EVENT_FILTER = int;
 enum : int
@@ -1250,15 +1250,15 @@ struct TEXT_DOCUMENT_ARRAY
 enum IID_IDebugApplicationNode100 = GUID(0x90a7734e, 0x841b, 0x4f77, [0x93, 0x84, 0xa2, 0x89, 0x1e, 0x76, 0xe7, 0xe2]);
 interface IDebugApplicationNode100 : IUnknown
 {
-    HRESULT SetFilterForEventSink(uint, APPLICATION_NODE_EVENT_FILTER);
-    HRESULT GetExcludedDocuments(APPLICATION_NODE_EVENT_FILTER, TEXT_DOCUMENT_ARRAY*);
-    HRESULT QueryIsChildNode(IDebugDocument);
+    HRESULT SetFilterForEventSink(uint dwCookie, APPLICATION_NODE_EVENT_FILTER filter);
+    HRESULT GetExcludedDocuments(APPLICATION_NODE_EVENT_FILTER filter, TEXT_DOCUMENT_ARRAY* pDocuments);
+    HRESULT QueryIsChildNode(IDebugDocument pSearchKey);
 }
 enum IID_IWebAppDiagnosticsSetup = GUID(0x379bfbe1, 0xc6c9, 0x432a, [0x93, 0xe1, 0x6d, 0x17, 0x65, 0x6c, 0x53, 0x8c]);
 interface IWebAppDiagnosticsSetup : IUnknown
 {
-    HRESULT DiagnosticsSupported(VARIANT_BOOL*);
-    HRESULT CreateObjectWithSiteAtWebApp(const(GUID)*, uint, const(GUID)*, ulong);
+    HRESULT DiagnosticsSupported(VARIANT_BOOL* pRetVal);
+    HRESULT CreateObjectWithSiteAtWebApp(const(GUID)* rclsid, uint dwClsContext, const(GUID)* riid, ulong hPassToObject);
 }
 alias SCRIPT_DEBUGGER_OPTIONS = int;
 enum : int
@@ -1273,35 +1273,35 @@ enum : int
 enum IID_IRemoteDebugApplication110 = GUID(0xd5fe005b, 0x2836, 0x485e, [0xb1, 0xf9, 0x89, 0xd9, 0x1a, 0xa2, 0x4f, 0xd4]);
 interface IRemoteDebugApplication110 : IUnknown
 {
-    HRESULT SetDebuggerOptions(SCRIPT_DEBUGGER_OPTIONS, SCRIPT_DEBUGGER_OPTIONS);
-    HRESULT GetCurrentDebuggerOptions(SCRIPT_DEBUGGER_OPTIONS*);
-    HRESULT GetMainThread(IRemoteDebugApplicationThread*);
+    HRESULT SetDebuggerOptions(SCRIPT_DEBUGGER_OPTIONS mask, SCRIPT_DEBUGGER_OPTIONS value);
+    HRESULT GetCurrentDebuggerOptions(SCRIPT_DEBUGGER_OPTIONS* pCurrentOptions);
+    HRESULT GetMainThread(IRemoteDebugApplicationThread* ppThread);
 }
 enum IID_IDebugApplication11032 = GUID(0xbdb3b5de, 0x89f2, 0x4e11, [0x84, 0xa5, 0x97, 0x44, 0x5f, 0x94, 0x1c, 0x7d]);
 interface IDebugApplication11032 : IRemoteDebugApplication110
 {
-    HRESULT SynchronousCallInMainThread(IDebugThreadCall32, ulong, ulong, ulong);
-    HRESULT AsynchronousCallInMainThread(IDebugThreadCall32, ulong, ulong, ulong);
-    HRESULT CallableWaitForHandles(uint, const(HANDLE)*, uint*);
+    HRESULT SynchronousCallInMainThread(IDebugThreadCall32 pptc, ulong dwParam1, ulong dwParam2, ulong dwParam3);
+    HRESULT AsynchronousCallInMainThread(IDebugThreadCall32 pptc, ulong dwParam1, ulong dwParam2, ulong dwParam3);
+    HRESULT CallableWaitForHandles(uint handleCount, const(HANDLE)* pHandles, uint* pIndex);
 }
 enum IID_IDebugApplication11064 = GUID(0x2039d958, 0x4eeb, 0x496a, [0x87, 0xbb, 0x2e, 0x52, 0x1, 0xea, 0xde, 0xef]);
 interface IDebugApplication11064 : IRemoteDebugApplication110
 {
-    HRESULT SynchronousCallInMainThread(IDebugThreadCall64, ulong, ulong, ulong);
-    HRESULT AsynchronousCallInMainThread(IDebugThreadCall64, ulong, ulong, ulong);
-    HRESULT CallableWaitForHandles(uint, const(HANDLE)*, uint*);
+    HRESULT SynchronousCallInMainThread(IDebugThreadCall64 pptc, ulong dwParam1, ulong dwParam2, ulong dwParam3);
+    HRESULT AsynchronousCallInMainThread(IDebugThreadCall64 pptc, ulong dwParam1, ulong dwParam2, ulong dwParam3);
+    HRESULT CallableWaitForHandles(uint handleCount, const(HANDLE)* pHandles, uint* pIndex);
 }
 enum IID_IWebAppDiagnosticsObjectInitialization = GUID(0x16ff3a42, 0xa5f5, 0x432b, [0xb6, 0x25, 0x8e, 0x8e, 0x16, 0xf5, 0x7e, 0x15]);
 interface IWebAppDiagnosticsObjectInitialization : IUnknown
 {
-    HRESULT Initialize(HANDLE_PTR, IUnknown);
+    HRESULT Initialize(HANDLE_PTR hPassedHandle, IUnknown pDebugApplication);
 }
 enum IID_IActiveScriptWinRTErrorDebug = GUID(0x73a3f82a, 0xfe9, 0x4b33, [0xba, 0x3b, 0xfe, 0x9, 0x5f, 0x69, 0x7e, 0xa]);
 interface IActiveScriptWinRTErrorDebug : IActiveScriptError
 {
-    HRESULT GetRestrictedErrorString(BSTR*);
-    HRESULT GetRestrictedErrorReference(BSTR*);
-    HRESULT GetCapabilitySid(BSTR*);
+    HRESULT GetRestrictedErrorString(BSTR* errorString);
+    HRESULT GetRestrictedErrorReference(BSTR* referenceString);
+    HRESULT GetCapabilitySid(BSTR* capabilitySid);
 }
 alias SCRIPT_ERROR_DEBUG_EXCEPTION_THROWN_KIND = int;
 enum : int
@@ -1314,7 +1314,7 @@ enum : int
 enum IID_IActiveScriptErrorDebug110 = GUID(0x516e42b6, 0x89a8, 0x4530, [0x93, 0x7b, 0x5f, 0x7, 0x8, 0x43, 0x14, 0x42]);
 interface IActiveScriptErrorDebug110 : IUnknown
 {
-    HRESULT GetExceptionThrownKind(SCRIPT_ERROR_DEBUG_EXCEPTION_THROWN_KIND*);
+    HRESULT GetExceptionThrownKind(SCRIPT_ERROR_DEBUG_EXCEPTION_THROWN_KIND* pExceptionKind);
 }
 enum IID_IDebugApplicationThreadEvents110 = GUID(0x84e5e468, 0xd5da, 0x48a8, [0x83, 0xf4, 0x40, 0x36, 0x64, 0x29, 0x0, 0x7b]);
 interface IDebugApplicationThreadEvents110 : IUnknown
@@ -1327,23 +1327,23 @@ interface IDebugApplicationThreadEvents110 : IUnknown
 enum IID_IDebugApplicationThread11032 = GUID(0x2194ac5c, 0x6561, 0x404a, [0xa2, 0xe9, 0xf5, 0x7d, 0x72, 0xde, 0x37, 0x2]);
 interface IDebugApplicationThread11032 : IUnknown
 {
-    HRESULT GetActiveThreadRequestCount(uint*);
-    HRESULT IsSuspendedForBreakPoint(BOOL*);
-    HRESULT IsThreadCallable(BOOL*);
-    HRESULT AsynchronousCallIntoThread(IDebugThreadCall32, ulong, ulong, ulong);
+    HRESULT GetActiveThreadRequestCount(uint* puiThreadRequests);
+    HRESULT IsSuspendedForBreakPoint(BOOL* pfIsSuspended);
+    HRESULT IsThreadCallable(BOOL* pfIsCallable);
+    HRESULT AsynchronousCallIntoThread(IDebugThreadCall32 pptc, ulong dwParam1, ulong dwParam2, ulong dwParam3);
 }
 enum IID_IDebugApplicationThread11064 = GUID(0x420aa4cc, 0xefd8, 0x4dac, [0x98, 0x3b, 0x47, 0x12, 0x78, 0x26, 0x91, 0x7d]);
 interface IDebugApplicationThread11064 : IUnknown
 {
-    HRESULT GetActiveThreadRequestCount(uint*);
-    HRESULT IsSuspendedForBreakPoint(BOOL*);
-    HRESULT IsThreadCallable(BOOL*);
-    HRESULT AsynchronousCallIntoThread(IDebugThreadCall64, ulong, ulong, ulong);
+    HRESULT GetActiveThreadRequestCount(uint* puiThreadRequests);
+    HRESULT IsSuspendedForBreakPoint(BOOL* pfIsSuspended);
+    HRESULT IsThreadCallable(BOOL* pfIsCallable);
+    HRESULT AsynchronousCallIntoThread(IDebugThreadCall64 pptc, ulong dwParam1, ulong dwParam2, ulong dwParam3);
 }
 enum IID_IRemoteDebugCriticalErrorEvent110 = GUID(0x2f69c611, 0x6b14, 0x47e8, [0x92, 0x60, 0x4b, 0xb7, 0xc5, 0x2f, 0x50, 0x4b]);
 interface IRemoteDebugCriticalErrorEvent110 : IUnknown
 {
-    HRESULT GetErrorInfo(BSTR*, int*, BSTR*, IDebugDocumentContext*);
+    HRESULT GetErrorInfo(BSTR* pbstrSource, int* pMessageId, BSTR* pbstrMessage, IDebugDocumentContext* ppLocation);
 }
 alias SCRIPT_INVOCATION_CONTEXT_TYPE = int;
 enum : int
@@ -1362,9 +1362,9 @@ enum : int
 enum IID_IScriptInvocationContext = GUID(0x5d7741b7, 0xaf7e, 0x4a2a, [0x85, 0xe5, 0xc7, 0x7f, 0x4d, 0x6, 0x59, 0xfb]);
 interface IScriptInvocationContext : IUnknown
 {
-    HRESULT GetContextType(SCRIPT_INVOCATION_CONTEXT_TYPE*);
-    HRESULT GetContextDescription(BSTR*);
-    HRESULT GetContextObject(IUnknown*);
+    HRESULT GetContextType(SCRIPT_INVOCATION_CONTEXT_TYPE* pInvocationContextType);
+    HRESULT GetContextDescription(BSTR* pDescription);
+    HRESULT GetContextObject(IUnknown* ppContextObject);
 }
 alias DEBUG_STACKFRAME_TYPE = int;
 enum : int
@@ -1377,8 +1377,8 @@ enum : int
 enum IID_IDebugStackFrame110 = GUID(0x4b509611, 0xb6ea, 0x4b24, [0xad, 0xcb, 0xd0, 0xcc, 0xfd, 0x1a, 0x7e, 0x33]);
 interface IDebugStackFrame110 : IDebugStackFrame
 {
-    HRESULT GetStackFrameType(DEBUG_STACKFRAME_TYPE*);
-    HRESULT GetScriptInvocationContext(IScriptInvocationContext*);
+    HRESULT GetStackFrameType(DEBUG_STACKFRAME_TYPE* pStackFrameKind);
+    HRESULT GetScriptInvocationContext(IScriptInvocationContext* ppInvocationContext);
 }
 alias DEBUG_EVENT_INFO_TYPE = int;
 enum : int
@@ -1392,36 +1392,36 @@ enum : int
 enum IID_IRemoteDebugInfoEvent110 = GUID(0x9ff56bb6, 0xeb89, 0x4c0f, [0x88, 0x23, 0xcc, 0x2a, 0x4c, 0xb, 0x7f, 0x26]);
 interface IRemoteDebugInfoEvent110 : IUnknown
 {
-    HRESULT GetEventInfo(DEBUG_EVENT_INFO_TYPE*, BSTR*, BSTR*, IDebugDocumentContext*);
+    HRESULT GetEventInfo(DEBUG_EVENT_INFO_TYPE* pMessageType, BSTR* pbstrMessage, BSTR* pbstrUrl, IDebugDocumentContext* ppLocation);
 }
 enum IID_IJsDebug = GUID(0xbe0e89da, 0x2ac5, 0x4c04, [0xac, 0x5e, 0x59, 0x95, 0x6a, 0xae, 0x36, 0x13]);
 interface IJsDebug : IUnknown
 {
-    HRESULT OpenVirtualProcess(uint, ulong, IJsDebugDataTarget, IJsDebugProcess*);
+    HRESULT OpenVirtualProcess(uint processId, ulong runtimeJsBaseAddress, IJsDebugDataTarget pDataTarget, IJsDebugProcess* ppProcess);
 }
 enum IID_IJsDebugProcess = GUID(0x3d587168, 0x6a2d, 0x4041, [0xbd, 0x3b, 0xd, 0xe6, 0x74, 0x50, 0x28, 0x62]);
 interface IJsDebugProcess : IUnknown
 {
-    HRESULT CreateStackWalker(uint, IJsDebugStackWalker*);
-    HRESULT CreateBreakPoint(ulong, uint, uint, BOOL, IJsDebugBreakPoint*);
-    HRESULT PerformAsyncBreak(uint);
-    HRESULT GetExternalStepAddress(ulong*);
+    HRESULT CreateStackWalker(uint threadId, IJsDebugStackWalker* ppStackWalker);
+    HRESULT CreateBreakPoint(ulong documentId, uint characterOffset, uint characterCount, BOOL isEnabled, IJsDebugBreakPoint* ppDebugBreakPoint);
+    HRESULT PerformAsyncBreak(uint threadId);
+    HRESULT GetExternalStepAddress(ulong* pCodeAddress);
 }
 enum IID_IJsDebugStackWalker = GUID(0xdb24b094, 0x73c4, 0x456c, [0xa4, 0xec, 0xe9, 0xe, 0xa0, 0xb, 0xdf, 0xe3]);
 interface IJsDebugStackWalker : IUnknown
 {
-    HRESULT GetNext(IJsDebugFrame*);
+    HRESULT GetNext(IJsDebugFrame* ppFrame);
 }
 enum IID_IJsDebugFrame = GUID(0xc9196637, 0xab9d, 0x44b2, [0xba, 0xd2, 0x13, 0xb9, 0x5b, 0x3f, 0x39, 0xe]);
 interface IJsDebugFrame : IUnknown
 {
-    HRESULT GetStackRange(ulong*, ulong*);
-    HRESULT GetName(BSTR*);
-    HRESULT GetDocumentPositionWithId(ulong*, uint*, uint*);
-    HRESULT GetDocumentPositionWithName(BSTR*, uint*, uint*);
-    HRESULT GetDebugProperty(IJsDebugProperty*);
-    HRESULT GetReturnAddress(ulong*);
-    HRESULT Evaluate(const(wchar)*, IJsDebugProperty*, BSTR*);
+    HRESULT GetStackRange(ulong* pStart, ulong* pEnd);
+    HRESULT GetName(BSTR* pName);
+    HRESULT GetDocumentPositionWithId(ulong* pDocumentId, uint* pCharacterOffset, uint* pStatementCharCount);
+    HRESULT GetDocumentPositionWithName(BSTR* pDocumentName, uint* pLine, uint* pColumn);
+    HRESULT GetDebugProperty(IJsDebugProperty* ppDebugProperty);
+    HRESULT GetReturnAddress(ulong* pReturnAddress);
+    HRESULT Evaluate(const(wchar)* pExpressionText, IJsDebugProperty* ppDebugProperty, BSTR* pError);
 }
 alias JS_PROPERTY_MEMBERS = int;
 enum : int
@@ -1455,23 +1455,23 @@ struct JsDebugPropertyInfo
 enum IID_IJsDebugProperty = GUID(0xf8ffcf2b, 0x3aa4, 0x4320, [0x85, 0xc3, 0x52, 0xa3, 0x12, 0xba, 0x96, 0x33]);
 interface IJsDebugProperty : IUnknown
 {
-    HRESULT GetPropertyInfo(uint, JsDebugPropertyInfo*);
-    HRESULT GetMembers(JS_PROPERTY_MEMBERS, IJsEnumDebugProperty*);
+    HRESULT GetPropertyInfo(uint nRadix, JsDebugPropertyInfo* pPropertyInfo);
+    HRESULT GetMembers(JS_PROPERTY_MEMBERS members, IJsEnumDebugProperty* ppEnum);
 }
 enum IID_IJsEnumDebugProperty = GUID(0x4092432f, 0x2f0f, 0x4fe1, [0xb6, 0x38, 0x5b, 0x74, 0xa5, 0x2c, 0xdc, 0xbe]);
 interface IJsEnumDebugProperty : IUnknown
 {
-    HRESULT Next(uint, IJsDebugProperty*, uint*);
-    HRESULT GetCount(uint*);
+    HRESULT Next(uint count, IJsDebugProperty* ppDebugProperty, uint* pActualCount);
+    HRESULT GetCount(uint* pCount);
 }
 enum IID_IJsDebugBreakPoint = GUID(0xdf6773e3, 0xed8d, 0x488b, [0x8a, 0x3e, 0x58, 0x12, 0x57, 0x7d, 0x15, 0x42]);
 interface IJsDebugBreakPoint : IUnknown
 {
-    HRESULT IsEnabled(BOOL*);
+    HRESULT IsEnabled(BOOL* pIsEnabled);
     HRESULT Enable();
     HRESULT Disable();
     HRESULT Delete();
-    HRESULT GetDocumentPosition(ulong*, uint*, uint*);
+    HRESULT GetDocumentPosition(ulong* pDocumentId, uint* pCharacterOffset, uint* pStatementCharCount);
 }
 struct JS_NATIVE_FRAME
 {
@@ -1483,7 +1483,7 @@ struct JS_NATIVE_FRAME
 enum IID_IEnumJsStackFrames = GUID(0x5e7da34b, 0xfb51, 0x4791, [0xab, 0xe7, 0xcb, 0x5b, 0xdf, 0x41, 0x97, 0x55]);
 interface IEnumJsStackFrames : IUnknown
 {
-    HRESULT Next(uint, JS_NATIVE_FRAME*, uint*);
+    HRESULT Next(uint cFrameCount, JS_NATIVE_FRAME* pFrames, uint* pcFetched);
     HRESULT Reset();
 }
 alias JsDebugReadMemoryFlags = int;
@@ -1496,13 +1496,13 @@ enum : int
 enum IID_IJsDebugDataTarget = GUID(0x53b28977, 0x53a1, 0x48e5, [0x90, 0x0, 0x5d, 0xd, 0xfa, 0x89, 0x39, 0x31]);
 interface IJsDebugDataTarget : IUnknown
 {
-    HRESULT ReadMemory(ulong, JsDebugReadMemoryFlags, ubyte*, uint, uint*);
-    HRESULT WriteMemory(ulong, ubyte*, uint);
-    HRESULT AllocateVirtualMemory(ulong, uint, uint, uint, ulong*);
-    HRESULT FreeVirtualMemory(ulong, uint, uint);
-    HRESULT GetTlsValue(uint, uint, ulong*);
-    HRESULT ReadBSTR(ulong, BSTR*);
-    HRESULT ReadNullTerminatedString(ulong, ushort, uint, BSTR*);
-    HRESULT CreateStackFrameEnumerator(uint, IEnumJsStackFrames*);
-    HRESULT GetThreadContext(uint, uint, uint, void*);
+    HRESULT ReadMemory(ulong address, JsDebugReadMemoryFlags flags, ubyte* pBuffer, uint size, uint* pBytesRead);
+    HRESULT WriteMemory(ulong address, ubyte* pMemory, uint size);
+    HRESULT AllocateVirtualMemory(ulong address, uint size, uint allocationType, uint pageProtection, ulong* pAllocatedAddress);
+    HRESULT FreeVirtualMemory(ulong address, uint size, uint freeType);
+    HRESULT GetTlsValue(uint threadId, uint tlsIndex, ulong* pValue);
+    HRESULT ReadBSTR(ulong address, BSTR* pString);
+    HRESULT ReadNullTerminatedString(ulong address, ushort characterSize, uint maxCharacters, BSTR* pString);
+    HRESULT CreateStackFrameEnumerator(uint threadId, IEnumJsStackFrames* ppEnumerator);
+    HRESULT GetThreadContext(uint threadId, uint contextFlags, uint contextSize, void* pContext);
 }

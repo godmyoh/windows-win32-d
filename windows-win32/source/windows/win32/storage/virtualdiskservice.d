@@ -69,25 +69,25 @@ enum : uint
 enum IID_IVdsProviderPrivate = GUID(0x11f3cd41, 0xb7e8, 0x48ff, [0x94, 0x72, 0x9d, 0xff, 0x1, 0x8a, 0xa2, 0x92]);
 interface IVdsProviderPrivate : IUnknown
 {
-    HRESULT GetObject(GUID, VDS_OBJECT_TYPE, IUnknown*);
-    HRESULT OnLoad(PWSTR, IUnknown);
-    HRESULT OnUnload(BOOL);
+    HRESULT GetObject(GUID ObjectId, VDS_OBJECT_TYPE type, IUnknown* ppObjectUnk);
+    HRESULT OnLoad(PWSTR pwszMachineName, IUnknown pCallbackObject);
+    HRESULT OnUnload(BOOL bForceUnload);
 }
 enum IID_IVdsHwProviderPrivate = GUID(0x98f17bf3, 0x9f33, 0x4f12, [0x87, 0x14, 0x8b, 0x40, 0x75, 0x9, 0x2c, 0x2e]);
 interface IVdsHwProviderPrivate : IUnknown
 {
-    HRESULT QueryIfCreatedLun(PWSTR, VDS_LUN_INFORMATION*, GUID*);
+    HRESULT QueryIfCreatedLun(PWSTR pwszDevicePath, VDS_LUN_INFORMATION* pVdsLunInformation, GUID* pLunId);
 }
 enum IID_IVdsHwProviderPrivateMpio = GUID(0x310a7715, 0xac2b, 0x4c6f, [0x98, 0x27, 0x3d, 0x74, 0x2f, 0x35, 0x16, 0x76]);
 interface IVdsHwProviderPrivateMpio : IUnknown
 {
-    HRESULT SetAllPathStatusesFromHbaPort(VDS_HBAPORT_PROP, VDS_PATH_STATUS);
+    HRESULT SetAllPathStatusesFromHbaPort(VDS_HBAPORT_PROP hbaPortProp, VDS_PATH_STATUS status);
 }
 enum IID_IVdsAdmin = GUID(0xd188e97d, 0x85aa, 0x4d33, [0xab, 0xc6, 0x26, 0x29, 0x9a, 0x10, 0xff, 0xc1]);
 interface IVdsAdmin : IUnknown
 {
-    HRESULT RegisterProvider(GUID, GUID, PWSTR, VDS_PROVIDER_TYPE, PWSTR, PWSTR, GUID);
-    HRESULT UnregisterProvider(GUID);
+    HRESULT RegisterProvider(GUID providerId, GUID providerClsid, PWSTR pwszName, VDS_PROVIDER_TYPE type, PWSTR pwszMachineName, PWSTR pwszVersion, GUID guidVersionId);
+    HRESULT UnregisterProvider(GUID providerId);
 }
 enum VDS_NF_VOLUME_ARRIVE = 0x00000004;
 enum VDS_NF_VOLUME_DEPART = 0x00000005;
@@ -1189,32 +1189,32 @@ struct VDS_PATH_POLICY
 enum IID_IEnumVdsObject = GUID(0x118610b7, 0x8d94, 0x4030, [0xb5, 0xb8, 0x50, 0x8, 0x89, 0x78, 0x8e, 0x4e]);
 interface IEnumVdsObject : IUnknown
 {
-    HRESULT Next(uint, IUnknown*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IUnknown* ppObjectArray, uint* pcFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumVdsObject*);
+    HRESULT Clone(IEnumVdsObject* ppEnum);
 }
 enum IID_IVdsAsync = GUID(0xd5d23b6d, 0x5a55, 0x4492, [0x98, 0x89, 0x39, 0x7a, 0x3c, 0x2d, 0x2d, 0xbc]);
 interface IVdsAsync : IUnknown
 {
     HRESULT Cancel();
-    HRESULT Wait(HRESULT*, VDS_ASYNC_OUTPUT*);
-    HRESULT QueryStatus(HRESULT*, uint*);
+    HRESULT Wait(HRESULT* pHrResult, VDS_ASYNC_OUTPUT* pAsyncOut);
+    HRESULT QueryStatus(HRESULT* pHrResult, uint* pulPercentCompleted);
 }
 enum IID_IVdsAdviseSink = GUID(0x8326cd1d, 0xcf59, 0x4936, [0xb7, 0x86, 0x5e, 0xfc, 0x8, 0x79, 0x8e, 0x25]);
 interface IVdsAdviseSink : IUnknown
 {
-    HRESULT OnNotify(int, VDS_NOTIFICATION*);
+    HRESULT OnNotify(int lNumberOfNotifications, VDS_NOTIFICATION* pNotificationArray);
 }
 enum IID_IVdsProvider = GUID(0x10c5e575, 0x7984, 0x4e81, [0xa5, 0x6b, 0x43, 0x1f, 0x5f, 0x92, 0xae, 0x42]);
 interface IVdsProvider : IUnknown
 {
-    HRESULT GetProperties(VDS_PROVIDER_PROP*);
+    HRESULT GetProperties(VDS_PROVIDER_PROP* pProviderProp);
 }
 enum IID_IVdsProviderSupport = GUID(0x1732be13, 0xe8f9, 0x4a03, [0xbf, 0xbc, 0x5f, 0x61, 0x6a, 0xa6, 0x6c, 0xe1]);
 interface IVdsProviderSupport : IUnknown
 {
-    HRESULT GetVersionSupport(uint*);
+    HRESULT GetVersionSupport(uint* ulVersionSupport);
 }
 alias VDS_PACK_STATUS = int;
 enum : int
@@ -1642,43 +1642,43 @@ struct CHANGE_PARTITION_TYPE_PARAMETERS
 enum IID_IVdsSwProvider = GUID(0x9aa58360, 0xce33, 0x4f92, [0xb6, 0x58, 0xed, 0x24, 0xb1, 0x44, 0x25, 0xb8]);
 interface IVdsSwProvider : IUnknown
 {
-    HRESULT QueryPacks(IEnumVdsObject*);
-    HRESULT CreatePack(IVdsPack*);
+    HRESULT QueryPacks(IEnumVdsObject* ppEnum);
+    HRESULT CreatePack(IVdsPack* ppPack);
 }
 enum IID_IVdsPack = GUID(0x3b69d7f5, 0x9d94, 0x4648, [0x91, 0xca, 0x79, 0x93, 0x9b, 0xa2, 0x63, 0xbf]);
 interface IVdsPack : IUnknown
 {
-    HRESULT GetProperties(VDS_PACK_PROP*);
-    HRESULT GetProvider(IVdsProvider*);
-    HRESULT QueryVolumes(IEnumVdsObject*);
-    HRESULT QueryDisks(IEnumVdsObject*);
-    HRESULT CreateVolume(VDS_VOLUME_TYPE, VDS_INPUT_DISK*, int, uint, IVdsAsync*);
-    HRESULT AddDisk(GUID, VDS_PARTITION_STYLE, BOOL);
-    HRESULT MigrateDisks(GUID*, int, GUID, BOOL, BOOL, HRESULT*, BOOL*);
-    HRESULT ReplaceDisk(GUID, GUID, IVdsAsync*);
-    HRESULT RemoveMissingDisk(GUID);
-    HRESULT Recover(IVdsAsync*);
+    HRESULT GetProperties(VDS_PACK_PROP* pPackProp);
+    HRESULT GetProvider(IVdsProvider* ppProvider);
+    HRESULT QueryVolumes(IEnumVdsObject* ppEnum);
+    HRESULT QueryDisks(IEnumVdsObject* ppEnum);
+    HRESULT CreateVolume(VDS_VOLUME_TYPE type, VDS_INPUT_DISK* pInputDiskArray, int lNumberOfDisks, uint ulStripeSize, IVdsAsync* ppAsync);
+    HRESULT AddDisk(GUID DiskId, VDS_PARTITION_STYLE PartitionStyle, BOOL bAsHotSpare);
+    HRESULT MigrateDisks(GUID* pDiskArray, int lNumberOfDisks, GUID TargetPack, BOOL bForce, BOOL bQueryOnly, HRESULT* pResults, BOOL* pbRebootNeeded);
+    HRESULT ReplaceDisk(GUID OldDiskId, GUID NewDiskId, IVdsAsync* ppAsync);
+    HRESULT RemoveMissingDisk(GUID DiskId);
+    HRESULT Recover(IVdsAsync* ppAsync);
 }
 enum IID_IVdsPack2 = GUID(0x13b50bff, 0x290a, 0x47dd, [0x85, 0x58, 0xb7, 0xc5, 0x8d, 0xb1, 0xa7, 0x1a]);
 interface IVdsPack2 : IUnknown
 {
-    HRESULT CreateVolume2(VDS_VOLUME_TYPE, VDS_INPUT_DISK*, int, uint, uint, IVdsAsync*);
+    HRESULT CreateVolume2(VDS_VOLUME_TYPE type, VDS_INPUT_DISK* pInputDiskArray, int lNumberOfDisks, uint ulStripeSize, uint ulAlign, IVdsAsync* ppAsync);
 }
 enum IID_IVdsDisk = GUID(0x7e5c822, 0xf00c, 0x47a1, [0x8f, 0xce, 0xb2, 0x44, 0xda, 0x56, 0xfd, 0x6]);
 interface IVdsDisk : IUnknown
 {
-    HRESULT GetProperties(VDS_DISK_PROP*);
-    HRESULT GetPack(IVdsPack*);
-    HRESULT GetIdentificationData(VDS_LUN_INFORMATION*);
-    HRESULT QueryExtents(VDS_DISK_EXTENT**, int*);
-    HRESULT ConvertStyle(VDS_PARTITION_STYLE);
-    HRESULT SetFlags(uint);
-    HRESULT ClearFlags(uint);
+    HRESULT GetProperties(VDS_DISK_PROP* pDiskProperties);
+    HRESULT GetPack(IVdsPack* ppPack);
+    HRESULT GetIdentificationData(VDS_LUN_INFORMATION* pLunInfo);
+    HRESULT QueryExtents(VDS_DISK_EXTENT** ppExtentArray, int* plNumberOfExtents);
+    HRESULT ConvertStyle(VDS_PARTITION_STYLE NewStyle);
+    HRESULT SetFlags(uint ulFlags);
+    HRESULT ClearFlags(uint ulFlags);
 }
 enum IID_IVdsDisk2 = GUID(0x40f73c8b, 0x687d, 0x4a13, [0x8d, 0x96, 0x3d, 0x7f, 0x2e, 0x68, 0x39, 0x36]);
 interface IVdsDisk2 : IUnknown
 {
-    HRESULT SetSANMode(BOOL);
+    HRESULT SetSANMode(BOOL bEnable);
 }
 enum IID_IVdsDiskOnline = GUID(0x90681b1d, 0x6a7f, 0x48e8, [0x90, 0x61, 0x31, 0xb7, 0xaa, 0x12, 0x53, 0x22]);
 interface IVdsDiskOnline : IUnknown
@@ -1689,32 +1689,32 @@ interface IVdsDiskOnline : IUnknown
 enum IID_IVdsAdvancedDisk = GUID(0x6e6f6b40, 0x977c, 0x4069, [0xbd, 0xdd, 0xac, 0x71, 0x0, 0x59, 0xf8, 0xc0]);
 interface IVdsAdvancedDisk : IUnknown
 {
-    HRESULT GetPartitionProperties(ulong, VDS_PARTITION_PROP*);
-    HRESULT QueryPartitions(VDS_PARTITION_PROP**, int*);
-    HRESULT CreatePartition(ulong, ulong, CREATE_PARTITION_PARAMETERS*, IVdsAsync*);
-    HRESULT DeletePartition(ulong, BOOL, BOOL);
-    HRESULT ChangeAttributes(ulong, CHANGE_ATTRIBUTES_PARAMETERS*);
-    HRESULT AssignDriveLetter(ulong, wchar);
-    HRESULT DeleteDriveLetter(ulong, wchar);
-    HRESULT GetDriveLetter(ulong, PWSTR);
-    HRESULT FormatPartition(ulong, VDS_FILE_SYSTEM_TYPE, PWSTR, uint, BOOL, BOOL, BOOL, IVdsAsync*);
-    HRESULT Clean(BOOL, BOOL, BOOL, IVdsAsync*);
+    HRESULT GetPartitionProperties(ulong ullOffset, VDS_PARTITION_PROP* pPartitionProp);
+    HRESULT QueryPartitions(VDS_PARTITION_PROP** ppPartitionPropArray, int* plNumberOfPartitions);
+    HRESULT CreatePartition(ulong ullOffset, ulong ullSize, CREATE_PARTITION_PARAMETERS* para, IVdsAsync* ppAsync);
+    HRESULT DeletePartition(ulong ullOffset, BOOL bForce, BOOL bForceProtected);
+    HRESULT ChangeAttributes(ulong ullOffset, CHANGE_ATTRIBUTES_PARAMETERS* para);
+    HRESULT AssignDriveLetter(ulong ullOffset, wchar wcLetter);
+    HRESULT DeleteDriveLetter(ulong ullOffset, wchar wcLetter);
+    HRESULT GetDriveLetter(ulong ullOffset, PWSTR pwcLetter);
+    HRESULT FormatPartition(ulong ullOffset, VDS_FILE_SYSTEM_TYPE type, PWSTR pwszLabel, uint dwUnitAllocationSize, BOOL bForce, BOOL bQuickFormat, BOOL bEnableCompression, IVdsAsync* ppAsync);
+    HRESULT Clean(BOOL bForce, BOOL bForceOEM, BOOL bFullClean, IVdsAsync* ppAsync);
 }
 enum IID_IVdsAdvancedDisk2 = GUID(0x9723f420, 0x9355, 0x42de, [0xab, 0x66, 0xe3, 0x1b, 0xb1, 0x5b, 0xee, 0xac]);
 interface IVdsAdvancedDisk2 : IUnknown
 {
-    HRESULT ChangePartitionType(ulong, BOOL, CHANGE_PARTITION_TYPE_PARAMETERS*);
+    HRESULT ChangePartitionType(ulong ullOffset, BOOL bForce, CHANGE_PARTITION_TYPE_PARAMETERS* para);
 }
 enum IID_IVdsAdvancedDisk3 = GUID(0x3858c0d5, 0xf35, 0x4bf5, [0x97, 0x14, 0x69, 0x87, 0x49, 0x63, 0xbc, 0x36]);
 interface IVdsAdvancedDisk3 : IUnknown
 {
-    HRESULT GetProperties(VDS_ADVANCEDDISK_PROP*);
-    HRESULT GetUniqueId(PWSTR*);
+    HRESULT GetProperties(VDS_ADVANCEDDISK_PROP* pAdvDiskProp);
+    HRESULT GetUniqueId(PWSTR* ppwszId);
 }
 enum IID_IVdsCreatePartitionEx = GUID(0x9882f547, 0xcfc3, 0x420b, [0x97, 0x50, 0x0, 0xdf, 0xbe, 0xc5, 0x6, 0x62]);
 interface IVdsCreatePartitionEx : IUnknown
 {
-    HRESULT CreatePartitionEx(ulong, ulong, uint, CREATE_PARTITION_PARAMETERS*, IVdsAsync*);
+    HRESULT CreatePartitionEx(ulong ullOffset, ulong ullSize, uint ulAlign, CREATE_PARTITION_PARAMETERS* para, IVdsAsync* ppAsync);
 }
 enum IID_IVdsRemovable = GUID(0x316560b, 0x5db4, 0x4ed9, [0xbb, 0xb5, 0x21, 0x34, 0x36, 0xdd, 0xc0, 0xd9]);
 interface IVdsRemovable : IUnknown
@@ -1725,22 +1725,22 @@ interface IVdsRemovable : IUnknown
 enum IID_IVdsVolume = GUID(0x88306bb2, 0xe71f, 0x478c, [0x86, 0xa2, 0x79, 0xda, 0x20, 0xa, 0xf, 0x11]);
 interface IVdsVolume : IUnknown
 {
-    HRESULT GetProperties(VDS_VOLUME_PROP*);
-    HRESULT GetPack(IVdsPack*);
-    HRESULT QueryPlexes(IEnumVdsObject*);
-    HRESULT Extend(VDS_INPUT_DISK*, int, IVdsAsync*);
-    HRESULT Shrink(ulong, IVdsAsync*);
-    HRESULT AddPlex(GUID, IVdsAsync*);
-    HRESULT BreakPlex(GUID, IVdsAsync*);
-    HRESULT RemovePlex(GUID, IVdsAsync*);
-    HRESULT Delete(BOOL);
-    HRESULT SetFlags(uint, BOOL);
-    HRESULT ClearFlags(uint);
+    HRESULT GetProperties(VDS_VOLUME_PROP* pVolumeProperties);
+    HRESULT GetPack(IVdsPack* ppPack);
+    HRESULT QueryPlexes(IEnumVdsObject* ppEnum);
+    HRESULT Extend(VDS_INPUT_DISK* pInputDiskArray, int lNumberOfDisks, IVdsAsync* ppAsync);
+    HRESULT Shrink(ulong ullNumberOfBytesToRemove, IVdsAsync* ppAsync);
+    HRESULT AddPlex(GUID VolumeId, IVdsAsync* ppAsync);
+    HRESULT BreakPlex(GUID plexId, IVdsAsync* ppAsync);
+    HRESULT RemovePlex(GUID plexId, IVdsAsync* ppAsync);
+    HRESULT Delete(BOOL bForce);
+    HRESULT SetFlags(uint ulFlags, BOOL bRevertOnClose);
+    HRESULT ClearFlags(uint ulFlags);
 }
 enum IID_IVdsVolume2 = GUID(0x72ae6713, 0xdcbb, 0x4a03, [0xb3, 0x6b, 0x37, 0x1f, 0x6a, 0xc6, 0xb5, 0x3d]);
 interface IVdsVolume2 : IUnknown
 {
-    HRESULT GetProperties2(VDS_VOLUME_PROP2*);
+    HRESULT GetProperties2(VDS_VOLUME_PROP2* pVolumeProperties);
 }
 enum IID_IVdsVolumeOnline = GUID(0x1be2275a, 0xb315, 0x4f70, [0x9e, 0x44, 0x87, 0x9b, 0x3a, 0x2a, 0x53, 0xf2]);
 interface IVdsVolumeOnline : IUnknown
@@ -1750,16 +1750,16 @@ interface IVdsVolumeOnline : IUnknown
 enum IID_IVdsVolumePlex = GUID(0x4daa0135, 0xe1d1, 0x40f1, [0xaa, 0xa5, 0x3c, 0xc1, 0xe5, 0x32, 0x21, 0xc3]);
 interface IVdsVolumePlex : IUnknown
 {
-    HRESULT GetProperties(VDS_VOLUME_PLEX_PROP*);
-    HRESULT GetVolume(IVdsVolume*);
-    HRESULT QueryExtents(VDS_DISK_EXTENT**, int*);
-    HRESULT Repair(VDS_INPUT_DISK*, int, IVdsAsync*);
+    HRESULT GetProperties(VDS_VOLUME_PLEX_PROP* pPlexProperties);
+    HRESULT GetVolume(IVdsVolume* ppVolume);
+    HRESULT QueryExtents(VDS_DISK_EXTENT** ppExtentArray, int* plNumberOfExtents);
+    HRESULT Repair(VDS_INPUT_DISK* pInputDiskArray, int lNumberOfDisks, IVdsAsync* ppAsync);
 }
 enum IID_IVdsDisk3 = GUID(0x8f4b2f5d, 0xec15, 0x4357, [0x99, 0x2f, 0x47, 0x3e, 0xf1, 0x9, 0x75, 0xb9]);
 interface IVdsDisk3 : IUnknown
 {
-    HRESULT GetProperties2(VDS_DISK_PROP2*);
-    HRESULT QueryFreeExtents(uint, VDS_DISK_FREE_EXTENT**, int*);
+    HRESULT GetProperties2(VDS_DISK_PROP2* pDiskProperties);
+    HRESULT QueryFreeExtents(uint ulAlign, VDS_DISK_FREE_EXTENT** ppFreeExtentArray, int* plNumberOfFreeExtents);
 }
 alias VDS_SUB_SYSTEM_STATUS = int;
 enum : int
@@ -2274,227 +2274,227 @@ struct VDS_STORAGE_POOL_DRIVE_EXTENT
 enum IID_IVdsHwProvider = GUID(0xd99bdaae, 0xb13a, 0x4178, [0x9f, 0xdb, 0xe2, 0x7f, 0x16, 0xb4, 0x60, 0x3e]);
 interface IVdsHwProvider : IUnknown
 {
-    HRESULT QuerySubSystems(IEnumVdsObject*);
+    HRESULT QuerySubSystems(IEnumVdsObject* ppEnum);
     HRESULT Reenumerate();
     HRESULT Refresh();
 }
 enum IID_IVdsHwProviderType = GUID(0x3e0f5166, 0x542d, 0x4fc6, [0x94, 0x7a, 0x1, 0x21, 0x74, 0x24, 0xb, 0x7e]);
 interface IVdsHwProviderType : IUnknown
 {
-    HRESULT GetProviderType(VDS_HWPROVIDER_TYPE*);
+    HRESULT GetProviderType(VDS_HWPROVIDER_TYPE* pType);
 }
 enum IID_IVdsHwProviderType2 = GUID(0x8190236f, 0xc4d0, 0x4e81, [0x80, 0x11, 0xd6, 0x95, 0x12, 0xfc, 0xc9, 0x84]);
 interface IVdsHwProviderType2 : IUnknown
 {
-    HRESULT GetProviderType2(VDS_HWPROVIDER_TYPE*);
+    HRESULT GetProviderType2(VDS_HWPROVIDER_TYPE* pType);
 }
 enum IID_IVdsHwProviderStoragePools = GUID(0xd5b5937a, 0xf188, 0x4c79, [0xb8, 0x6c, 0x11, 0xc9, 0x20, 0xad, 0x11, 0xb8]);
 interface IVdsHwProviderStoragePools : IUnknown
 {
-    HRESULT QueryStoragePools(uint, ulong, VDS_POOL_ATTRIBUTES*, IEnumVdsObject*);
-    HRESULT CreateLunInStoragePool(VDS_LUN_TYPE, ulong, GUID, PWSTR, VDS_HINTS2*, IVdsAsync*);
-    HRESULT QueryMaxLunCreateSizeInStoragePool(VDS_LUN_TYPE, GUID, VDS_HINTS2*, ulong*);
+    HRESULT QueryStoragePools(uint ulFlags, ulong ullRemainingFreeSpace, VDS_POOL_ATTRIBUTES* pPoolAttributes, IEnumVdsObject* ppEnum);
+    HRESULT CreateLunInStoragePool(VDS_LUN_TYPE type, ulong ullSizeInBytes, GUID StoragePoolId, PWSTR pwszUnmaskingList, VDS_HINTS2* pHints2, IVdsAsync* ppAsync);
+    HRESULT QueryMaxLunCreateSizeInStoragePool(VDS_LUN_TYPE type, GUID StoragePoolId, VDS_HINTS2* pHints2, ulong* pullMaxLunSize);
 }
 enum IID_IVdsSubSystem = GUID(0x6fcee2d3, 0x6d90, 0x4f91, [0x80, 0xe2, 0xa5, 0xc7, 0xca, 0xac, 0xa9, 0xd8]);
 interface IVdsSubSystem : IUnknown
 {
-    HRESULT GetProperties(VDS_SUB_SYSTEM_PROP*);
-    HRESULT GetProvider(IVdsProvider*);
-    HRESULT QueryControllers(IEnumVdsObject*);
-    HRESULT QueryLuns(IEnumVdsObject*);
-    HRESULT QueryDrives(IEnumVdsObject*);
-    HRESULT GetDrive(short, short, IVdsDrive*);
+    HRESULT GetProperties(VDS_SUB_SYSTEM_PROP* pSubSystemProp);
+    HRESULT GetProvider(IVdsProvider* ppProvider);
+    HRESULT QueryControllers(IEnumVdsObject* ppEnum);
+    HRESULT QueryLuns(IEnumVdsObject* ppEnum);
+    HRESULT QueryDrives(IEnumVdsObject* ppEnum);
+    HRESULT GetDrive(short sBusNumber, short sSlotNumber, IVdsDrive* ppDrive);
     HRESULT Reenumerate();
-    HRESULT SetControllerStatus(GUID*, int, GUID*, int);
-    HRESULT CreateLun(VDS_LUN_TYPE, ulong, GUID*, int, PWSTR, VDS_HINTS*, IVdsAsync*);
-    HRESULT ReplaceDrive(GUID, GUID);
-    HRESULT SetStatus(VDS_SUB_SYSTEM_STATUS);
-    HRESULT QueryMaxLunCreateSize(VDS_LUN_TYPE, GUID*, int, VDS_HINTS*, ulong*);
+    HRESULT SetControllerStatus(GUID* pOnlineControllerIdArray, int lNumberOfOnlineControllers, GUID* pOfflineControllerIdArray, int lNumberOfOfflineControllers);
+    HRESULT CreateLun(VDS_LUN_TYPE type, ulong ullSizeInBytes, GUID* pDriveIdArray, int lNumberOfDrives, PWSTR pwszUnmaskingList, VDS_HINTS* pHints, IVdsAsync* ppAsync);
+    HRESULT ReplaceDrive(GUID DriveToBeReplaced, GUID ReplacementDrive);
+    HRESULT SetStatus(VDS_SUB_SYSTEM_STATUS status);
+    HRESULT QueryMaxLunCreateSize(VDS_LUN_TYPE type, GUID* pDriveIdArray, int lNumberOfDrives, VDS_HINTS* pHints, ulong* pullMaxLunSize);
 }
 enum IID_IVdsSubSystem2 = GUID(0xbe666735, 0x7800, 0x4a77, [0x9d, 0x9c, 0x40, 0xf8, 0x5b, 0x87, 0xe2, 0x92]);
 interface IVdsSubSystem2 : IUnknown
 {
-    HRESULT GetProperties2(VDS_SUB_SYSTEM_PROP2*);
-    HRESULT GetDrive2(short, short, uint, IVdsDrive*);
-    HRESULT CreateLun2(VDS_LUN_TYPE, ulong, GUID*, int, PWSTR, VDS_HINTS2*, IVdsAsync*);
-    HRESULT QueryMaxLunCreateSize2(VDS_LUN_TYPE, GUID*, int, VDS_HINTS2*, ulong*);
+    HRESULT GetProperties2(VDS_SUB_SYSTEM_PROP2* pSubSystemProp2);
+    HRESULT GetDrive2(short sBusNumber, short sSlotNumber, uint ulEnclosureNumber, IVdsDrive* ppDrive);
+    HRESULT CreateLun2(VDS_LUN_TYPE type, ulong ullSizeInBytes, GUID* pDriveIdArray, int lNumberOfDrives, PWSTR pwszUnmaskingList, VDS_HINTS2* pHints2, IVdsAsync* ppAsync);
+    HRESULT QueryMaxLunCreateSize2(VDS_LUN_TYPE type, GUID* pDriveIdArray, int lNumberOfDrives, VDS_HINTS2* pHints2, ulong* pullMaxLunSize);
 }
 enum IID_IVdsSubSystemNaming = GUID(0xd70faa3, 0x9cd4, 0x4900, [0xaa, 0x20, 0x69, 0x81, 0xb6, 0xaa, 0xfc, 0x75]);
 interface IVdsSubSystemNaming : IUnknown
 {
-    HRESULT SetFriendlyName(PWSTR);
+    HRESULT SetFriendlyName(PWSTR pwszFriendlyName);
 }
 enum IID_IVdsSubSystemIscsi = GUID(0x27346f, 0x40d0, 0x4b45, [0x8c, 0xec, 0x59, 0x6, 0xdc, 0x3, 0x80, 0xc8]);
 interface IVdsSubSystemIscsi : IUnknown
 {
-    HRESULT QueryTargets(IEnumVdsObject*);
-    HRESULT QueryPortals(IEnumVdsObject*);
-    HRESULT CreateTarget(PWSTR, PWSTR, IVdsAsync*);
-    HRESULT SetIpsecGroupPresharedKey(VDS_ISCSI_IPSEC_KEY*);
+    HRESULT QueryTargets(IEnumVdsObject* ppEnum);
+    HRESULT QueryPortals(IEnumVdsObject* ppEnum);
+    HRESULT CreateTarget(PWSTR pwszIscsiName, PWSTR pwszFriendlyName, IVdsAsync* ppAsync);
+    HRESULT SetIpsecGroupPresharedKey(VDS_ISCSI_IPSEC_KEY* pIpsecKey);
 }
 enum IID_IVdsSubSystemInterconnect = GUID(0x9e6fa560, 0xc141, 0x477b, [0x83, 0xba, 0xb, 0x6c, 0x38, 0xf7, 0xfe, 0xbf]);
 interface IVdsSubSystemInterconnect : IUnknown
 {
-    HRESULT GetSupportedInterconnects(uint*);
+    HRESULT GetSupportedInterconnects(uint* pulSupportedInterconnectsFlag);
 }
 enum IID_IVdsControllerPort = GUID(0x18691d0d, 0x4e7f, 0x43e8, [0x92, 0xe4, 0xcf, 0x44, 0xbe, 0xee, 0xd1, 0x1c]);
 interface IVdsControllerPort : IUnknown
 {
-    HRESULT GetProperties(VDS_PORT_PROP*);
-    HRESULT GetController(IVdsController*);
-    HRESULT QueryAssociatedLuns(IEnumVdsObject*);
+    HRESULT GetProperties(VDS_PORT_PROP* pPortProp);
+    HRESULT GetController(IVdsController* ppController);
+    HRESULT QueryAssociatedLuns(IEnumVdsObject* ppEnum);
     HRESULT Reset();
-    HRESULT SetStatus(VDS_PORT_STATUS);
+    HRESULT SetStatus(VDS_PORT_STATUS status);
 }
 enum IID_IVdsController = GUID(0xcb53d96e, 0xdffb, 0x474a, [0xa0, 0x78, 0x79, 0xd, 0x1e, 0x2b, 0xc0, 0x82]);
 interface IVdsController : IUnknown
 {
-    HRESULT GetProperties(VDS_CONTROLLER_PROP*);
-    HRESULT GetSubSystem(IVdsSubSystem*);
-    HRESULT GetPortProperties(short, VDS_PORT_PROP*);
+    HRESULT GetProperties(VDS_CONTROLLER_PROP* pControllerProp);
+    HRESULT GetSubSystem(IVdsSubSystem* ppSubSystem);
+    HRESULT GetPortProperties(short sPortNumber, VDS_PORT_PROP* pPortProp);
     HRESULT FlushCache();
     HRESULT InvalidateCache();
     HRESULT Reset();
-    HRESULT QueryAssociatedLuns(IEnumVdsObject*);
-    HRESULT SetStatus(VDS_CONTROLLER_STATUS);
+    HRESULT QueryAssociatedLuns(IEnumVdsObject* ppEnum);
+    HRESULT SetStatus(VDS_CONTROLLER_STATUS status);
 }
 enum IID_IVdsControllerControllerPort = GUID(0xca5d735f, 0x6bae, 0x42c0, [0xb3, 0xe, 0xf2, 0x66, 0x60, 0x45, 0xce, 0x71]);
 interface IVdsControllerControllerPort : IUnknown
 {
-    HRESULT QueryControllerPorts(IEnumVdsObject*);
+    HRESULT QueryControllerPorts(IEnumVdsObject* ppEnum);
 }
 enum IID_IVdsDrive = GUID(0xff24efa4, 0xaade, 0x4b6b, [0x89, 0x8b, 0xea, 0xa6, 0xa2, 0x8, 0x87, 0xc7]);
 interface IVdsDrive : IUnknown
 {
-    HRESULT GetProperties(VDS_DRIVE_PROP*);
-    HRESULT GetSubSystem(IVdsSubSystem*);
-    HRESULT QueryExtents(VDS_DRIVE_EXTENT**, int*);
-    HRESULT SetFlags(uint);
-    HRESULT ClearFlags(uint);
-    HRESULT SetStatus(VDS_DRIVE_STATUS);
+    HRESULT GetProperties(VDS_DRIVE_PROP* pDriveProp);
+    HRESULT GetSubSystem(IVdsSubSystem* ppSubSystem);
+    HRESULT QueryExtents(VDS_DRIVE_EXTENT** ppExtentArray, int* plNumberOfExtents);
+    HRESULT SetFlags(uint ulFlags);
+    HRESULT ClearFlags(uint ulFlags);
+    HRESULT SetStatus(VDS_DRIVE_STATUS status);
 }
 enum IID_IVdsDrive2 = GUID(0x60b5a730, 0xaddf, 0x4436, [0x8c, 0xa7, 0x57, 0x69, 0xe2, 0xd1, 0xff, 0xa4]);
 interface IVdsDrive2 : IUnknown
 {
-    HRESULT GetProperties2(VDS_DRIVE_PROP2*);
+    HRESULT GetProperties2(VDS_DRIVE_PROP2* pDriveProp2);
 }
 enum IID_IVdsLun = GUID(0x3540a9c7, 0xe60f, 0x4111, [0xa8, 0x40, 0x8b, 0xba, 0x6c, 0x2c, 0x83, 0xd8]);
 interface IVdsLun : IUnknown
 {
-    HRESULT GetProperties(VDS_LUN_PROP*);
-    HRESULT GetSubSystem(IVdsSubSystem*);
-    HRESULT GetIdentificationData(VDS_LUN_INFORMATION*);
-    HRESULT QueryActiveControllers(IEnumVdsObject*);
-    HRESULT Extend(ulong, GUID*, int, IVdsAsync*);
-    HRESULT Shrink(ulong, IVdsAsync*);
-    HRESULT QueryPlexes(IEnumVdsObject*);
-    HRESULT AddPlex(GUID, IVdsAsync*);
-    HRESULT RemovePlex(GUID, IVdsAsync*);
-    HRESULT Recover(IVdsAsync*);
-    HRESULT SetMask(PWSTR);
+    HRESULT GetProperties(VDS_LUN_PROP* pLunProp);
+    HRESULT GetSubSystem(IVdsSubSystem* ppSubSystem);
+    HRESULT GetIdentificationData(VDS_LUN_INFORMATION* pLunInfo);
+    HRESULT QueryActiveControllers(IEnumVdsObject* ppEnum);
+    HRESULT Extend(ulong ullNumberOfBytesToAdd, GUID* pDriveIdArray, int lNumberOfDrives, IVdsAsync* ppAsync);
+    HRESULT Shrink(ulong ullNumberOfBytesToRemove, IVdsAsync* ppAsync);
+    HRESULT QueryPlexes(IEnumVdsObject* ppEnum);
+    HRESULT AddPlex(GUID lunId, IVdsAsync* ppAsync);
+    HRESULT RemovePlex(GUID plexId, IVdsAsync* ppAsync);
+    HRESULT Recover(IVdsAsync* ppAsync);
+    HRESULT SetMask(PWSTR pwszUnmaskingList);
     HRESULT Delete();
-    HRESULT AssociateControllers(GUID*, int, GUID*, int);
-    HRESULT QueryHints(VDS_HINTS*);
-    HRESULT ApplyHints(VDS_HINTS*);
-    HRESULT SetStatus(VDS_LUN_STATUS);
-    HRESULT QueryMaxLunExtendSize(GUID*, int, ulong*);
+    HRESULT AssociateControllers(GUID* pActiveControllerIdArray, int lNumberOfActiveControllers, GUID* pInactiveControllerIdArray, int lNumberOfInactiveControllers);
+    HRESULT QueryHints(VDS_HINTS* pHints);
+    HRESULT ApplyHints(VDS_HINTS* pHints);
+    HRESULT SetStatus(VDS_LUN_STATUS status);
+    HRESULT QueryMaxLunExtendSize(GUID* pDriveIdArray, int lNumberOfDrives, ulong* pullMaxBytesToBeAdded);
 }
 enum IID_IVdsLun2 = GUID(0xe5b3a735, 0x9efb, 0x499a, [0x80, 0x71, 0x43, 0x94, 0xd9, 0xee, 0x6f, 0xcb]);
 interface IVdsLun2 : IUnknown
 {
-    HRESULT QueryHints2(VDS_HINTS2*);
-    HRESULT ApplyHints2(VDS_HINTS2*);
+    HRESULT QueryHints2(VDS_HINTS2* pHints2);
+    HRESULT ApplyHints2(VDS_HINTS2* pHints2);
 }
 enum IID_IVdsLunNaming = GUID(0x907504cb, 0x6b4e, 0x4d88, [0xa3, 0x4d, 0x17, 0xba, 0x66, 0x1f, 0xbb, 0x6]);
 interface IVdsLunNaming : IUnknown
 {
-    HRESULT SetFriendlyName(PWSTR);
+    HRESULT SetFriendlyName(PWSTR pwszFriendlyName);
 }
 enum IID_IVdsLunNumber = GUID(0xd3f95e46, 0x54b3, 0x41f9, [0xb6, 0x78, 0xf, 0x18, 0x71, 0x44, 0x3a, 0x8]);
 interface IVdsLunNumber : IUnknown
 {
-    HRESULT GetLunNumber(uint*);
+    HRESULT GetLunNumber(uint* pulLunNumber);
 }
 enum IID_IVdsLunControllerPorts = GUID(0x451fe266, 0xda6d, 0x406a, [0xbb, 0x60, 0x82, 0xe5, 0x34, 0xf8, 0x5a, 0xeb]);
 interface IVdsLunControllerPorts : IUnknown
 {
-    HRESULT AssociateControllerPorts(GUID*, int, GUID*, int);
-    HRESULT QueryActiveControllerPorts(IEnumVdsObject*);
+    HRESULT AssociateControllerPorts(GUID* pActiveControllerPortIdArray, int lNumberOfActiveControllerPorts, GUID* pInactiveControllerPortIdArray, int lNumberOfInactiveControllerPorts);
+    HRESULT QueryActiveControllerPorts(IEnumVdsObject* ppEnum);
 }
 enum IID_IVdsLunMpio = GUID(0x7c5fbae3, 0x333a, 0x48a1, [0xa9, 0x82, 0x33, 0xc1, 0x57, 0x88, 0xcd, 0xe3]);
 interface IVdsLunMpio : IUnknown
 {
-    HRESULT GetPathInfo(VDS_PATH_INFO**, int*);
-    HRESULT GetLoadBalancePolicy(VDS_LOADBALANCE_POLICY_ENUM*, VDS_PATH_POLICY**, int*);
-    HRESULT SetLoadBalancePolicy(VDS_LOADBALANCE_POLICY_ENUM, VDS_PATH_POLICY*, int);
-    HRESULT GetSupportedLbPolicies(uint*);
+    HRESULT GetPathInfo(VDS_PATH_INFO** ppPaths, int* plNumberOfPaths);
+    HRESULT GetLoadBalancePolicy(VDS_LOADBALANCE_POLICY_ENUM* pPolicy, VDS_PATH_POLICY** ppPaths, int* plNumberOfPaths);
+    HRESULT SetLoadBalancePolicy(VDS_LOADBALANCE_POLICY_ENUM policy, VDS_PATH_POLICY* pPaths, int lNumberOfPaths);
+    HRESULT GetSupportedLbPolicies(uint* pulLbFlags);
 }
 enum IID_IVdsLunIscsi = GUID(0xd7c1e64, 0xb59b, 0x45ae, [0xb8, 0x6a, 0x2c, 0x2c, 0xc6, 0xa4, 0x20, 0x67]);
 interface IVdsLunIscsi : IUnknown
 {
-    HRESULT AssociateTargets(GUID*, int);
-    HRESULT QueryAssociatedTargets(IEnumVdsObject*);
+    HRESULT AssociateTargets(GUID* pTargetIdArray, int lNumberOfTargets);
+    HRESULT QueryAssociatedTargets(IEnumVdsObject* ppEnum);
 }
 enum IID_IVdsLunPlex = GUID(0xee1a790, 0x5d2e, 0x4abb, [0x8c, 0x99, 0xc4, 0x81, 0xe8, 0xbe, 0x21, 0x38]);
 interface IVdsLunPlex : IUnknown
 {
-    HRESULT GetProperties(VDS_LUN_PLEX_PROP*);
-    HRESULT GetLun(IVdsLun*);
-    HRESULT QueryExtents(VDS_DRIVE_EXTENT**, int*);
-    HRESULT QueryHints(VDS_HINTS*);
-    HRESULT ApplyHints(VDS_HINTS*);
+    HRESULT GetProperties(VDS_LUN_PLEX_PROP* pPlexProp);
+    HRESULT GetLun(IVdsLun* ppLun);
+    HRESULT QueryExtents(VDS_DRIVE_EXTENT** ppExtentArray, int* plNumberOfExtents);
+    HRESULT QueryHints(VDS_HINTS* pHints);
+    HRESULT ApplyHints(VDS_HINTS* pHints);
 }
 enum IID_IVdsIscsiPortal = GUID(0x7fa1499d, 0xec85, 0x4a8a, [0xa4, 0x7b, 0xff, 0x69, 0x20, 0x1f, 0xcd, 0x34]);
 interface IVdsIscsiPortal : IUnknown
 {
-    HRESULT GetProperties(VDS_ISCSI_PORTAL_PROP*);
-    HRESULT GetSubSystem(IVdsSubSystem*);
-    HRESULT QueryAssociatedPortalGroups(IEnumVdsObject*);
-    HRESULT SetStatus(VDS_ISCSI_PORTAL_STATUS);
-    HRESULT SetIpsecTunnelAddress(VDS_IPADDRESS*, VDS_IPADDRESS*);
-    HRESULT GetIpsecSecurity(VDS_IPADDRESS*, ulong*);
-    HRESULT SetIpsecSecurity(VDS_IPADDRESS*, ulong, VDS_ISCSI_IPSEC_KEY*);
+    HRESULT GetProperties(VDS_ISCSI_PORTAL_PROP* pPortalProp);
+    HRESULT GetSubSystem(IVdsSubSystem* ppSubSystem);
+    HRESULT QueryAssociatedPortalGroups(IEnumVdsObject* ppEnum);
+    HRESULT SetStatus(VDS_ISCSI_PORTAL_STATUS status);
+    HRESULT SetIpsecTunnelAddress(VDS_IPADDRESS* pTunnelAddress, VDS_IPADDRESS* pDestinationAddress);
+    HRESULT GetIpsecSecurity(VDS_IPADDRESS* pInitiatorPortalAddress, ulong* pullSecurityFlags);
+    HRESULT SetIpsecSecurity(VDS_IPADDRESS* pInitiatorPortalAddress, ulong ullSecurityFlags, VDS_ISCSI_IPSEC_KEY* pIpsecKey);
 }
 enum IID_IVdsIscsiTarget = GUID(0xaa8f5055, 0x83e5, 0x4bcc, [0xaa, 0x73, 0x19, 0x85, 0x1a, 0x36, 0xa8, 0x49]);
 interface IVdsIscsiTarget : IUnknown
 {
-    HRESULT GetProperties(VDS_ISCSI_TARGET_PROP*);
-    HRESULT GetSubSystem(IVdsSubSystem*);
-    HRESULT QueryPortalGroups(IEnumVdsObject*);
-    HRESULT QueryAssociatedLuns(IEnumVdsObject*);
-    HRESULT CreatePortalGroup(IVdsAsync*);
-    HRESULT Delete(IVdsAsync*);
-    HRESULT SetFriendlyName(PWSTR);
-    HRESULT SetSharedSecret(VDS_ISCSI_SHARED_SECRET*, PWSTR);
-    HRESULT RememberInitiatorSharedSecret(PWSTR, VDS_ISCSI_SHARED_SECRET*);
-    HRESULT GetConnectedInitiators(PWSTR**, int*);
+    HRESULT GetProperties(VDS_ISCSI_TARGET_PROP* pTargetProp);
+    HRESULT GetSubSystem(IVdsSubSystem* ppSubSystem);
+    HRESULT QueryPortalGroups(IEnumVdsObject* ppEnum);
+    HRESULT QueryAssociatedLuns(IEnumVdsObject* ppEnum);
+    HRESULT CreatePortalGroup(IVdsAsync* ppAsync);
+    HRESULT Delete(IVdsAsync* ppAsync);
+    HRESULT SetFriendlyName(PWSTR pwszFriendlyName);
+    HRESULT SetSharedSecret(VDS_ISCSI_SHARED_SECRET* pTargetSharedSecret, PWSTR pwszInitiatorName);
+    HRESULT RememberInitiatorSharedSecret(PWSTR pwszInitiatorName, VDS_ISCSI_SHARED_SECRET* pInitiatorSharedSecret);
+    HRESULT GetConnectedInitiators(PWSTR** pppwszInitiatorList, int* plNumberOfInitiators);
 }
 enum IID_IVdsIscsiPortalGroup = GUID(0xfef5f89d, 0xa3dd, 0x4b36, [0xbf, 0x28, 0xe7, 0xdd, 0xe0, 0x45, 0xc5, 0x93]);
 interface IVdsIscsiPortalGroup : IUnknown
 {
-    HRESULT GetProperties(VDS_ISCSI_PORTALGROUP_PROP*);
-    HRESULT GetTarget(IVdsIscsiTarget*);
-    HRESULT QueryAssociatedPortals(IEnumVdsObject*);
-    HRESULT AddPortal(GUID, IVdsAsync*);
-    HRESULT RemovePortal(GUID, IVdsAsync*);
-    HRESULT Delete(IVdsAsync*);
+    HRESULT GetProperties(VDS_ISCSI_PORTALGROUP_PROP* pPortalGroupProp);
+    HRESULT GetTarget(IVdsIscsiTarget* ppTarget);
+    HRESULT QueryAssociatedPortals(IEnumVdsObject* ppEnum);
+    HRESULT AddPortal(GUID portalId, IVdsAsync* ppAsync);
+    HRESULT RemovePortal(GUID portalId, IVdsAsync* ppAsync);
+    HRESULT Delete(IVdsAsync* ppAsync);
 }
 enum IID_IVdsStoragePool = GUID(0x932ca8cf, 0xeb3, 0x4ba8, [0x96, 0x20, 0x22, 0x66, 0x5d, 0x7f, 0x84, 0x50]);
 interface IVdsStoragePool : IUnknown
 {
-    HRESULT GetProvider(IVdsProvider*);
-    HRESULT GetProperties(VDS_STORAGE_POOL_PROP*);
-    HRESULT GetAttributes(VDS_POOL_ATTRIBUTES*);
-    HRESULT QueryDriveExtents(VDS_STORAGE_POOL_DRIVE_EXTENT**, int*);
-    HRESULT QueryAllocatedLuns(IEnumVdsObject*);
-    HRESULT QueryAllocatedStoragePools(IEnumVdsObject*);
+    HRESULT GetProvider(IVdsProvider* ppProvider);
+    HRESULT GetProperties(VDS_STORAGE_POOL_PROP* pStoragePoolProp);
+    HRESULT GetAttributes(VDS_POOL_ATTRIBUTES* pStoragePoolAttributes);
+    HRESULT QueryDriveExtents(VDS_STORAGE_POOL_DRIVE_EXTENT** ppExtentArray, int* plNumberOfExtents);
+    HRESULT QueryAllocatedLuns(IEnumVdsObject* ppEnum);
+    HRESULT QueryAllocatedStoragePools(IEnumVdsObject* ppEnum);
 }
 enum IID_IVdsMaintenance = GUID(0xdaebeef3, 0x8523, 0x47ed, [0xa2, 0xb9, 0x5, 0xce, 0xcc, 0xe2, 0xa1, 0xae]);
 interface IVdsMaintenance : IUnknown
 {
-    HRESULT StartMaintenance(VDS_MAINTENANCE_OPERATION);
-    HRESULT StopMaintenance(VDS_MAINTENANCE_OPERATION);
-    HRESULT PulseMaintenance(VDS_MAINTENANCE_OPERATION, uint);
+    HRESULT StartMaintenance(VDS_MAINTENANCE_OPERATION operation);
+    HRESULT StopMaintenance(VDS_MAINTENANCE_OPERATION operation);
+    HRESULT PulseMaintenance(VDS_MAINTENANCE_OPERATION operation, uint ulCount);
 }
 struct VDS_CREATE_VDISK_PARAMETERS
 {
@@ -2508,11 +2508,11 @@ struct VDS_CREATE_VDISK_PARAMETERS
 enum IID_IVdsVdProvider = GUID(0xb481498c, 0x8354, 0x45f9, [0x84, 0xa0, 0xb, 0xdd, 0x28, 0x32, 0xa9, 0x1f]);
 interface IVdsVdProvider : IUnknown
 {
-    HRESULT QueryVDisks(IEnumVdsObject*);
-    HRESULT CreateVDisk(VIRTUAL_STORAGE_TYPE*, PWSTR, PWSTR, CREATE_VIRTUAL_DISK_FLAG, uint, uint, VDS_CREATE_VDISK_PARAMETERS*, IVdsAsync*);
-    HRESULT AddVDisk(VIRTUAL_STORAGE_TYPE*, PWSTR, IVdsVDisk*);
-    HRESULT GetDiskFromVDisk(IVdsVDisk, IVdsDisk*);
-    HRESULT GetVDiskFromDisk(IVdsDisk, IVdsVDisk*);
+    HRESULT QueryVDisks(IEnumVdsObject* ppEnum);
+    HRESULT CreateVDisk(VIRTUAL_STORAGE_TYPE* VirtualDeviceType, PWSTR pPath, PWSTR pStringSecurityDescriptor, CREATE_VIRTUAL_DISK_FLAG Flags, uint ProviderSpecificFlags, uint Reserved, VDS_CREATE_VDISK_PARAMETERS* pCreateDiskParameters, IVdsAsync* ppAsync);
+    HRESULT AddVDisk(VIRTUAL_STORAGE_TYPE* VirtualDeviceType, PWSTR pPath, IVdsVDisk* ppVDisk);
+    HRESULT GetDiskFromVDisk(IVdsVDisk pVDisk, IVdsDisk* ppDisk);
+    HRESULT GetVDiskFromDisk(IVdsDisk pDisk, IVdsVDisk* ppVDisk);
 }
 alias VDS_VDISK_STATE = int;
 enum : int
@@ -2547,20 +2547,20 @@ struct VDS_VDISK_PROPERTIES
 enum IID_IVdsVDisk = GUID(0x1e062b84, 0xe5e6, 0x4b4b, [0x8a, 0x25, 0x67, 0xb8, 0x1e, 0x8f, 0x13, 0xe8]);
 interface IVdsVDisk : IUnknown
 {
-    HRESULT Open(VIRTUAL_DISK_ACCESS_MASK, OPEN_VIRTUAL_DISK_FLAG, uint, IVdsOpenVDisk*);
-    HRESULT GetProperties(VDS_VDISK_PROPERTIES*);
-    HRESULT GetHostVolume(IVdsVolume*);
-    HRESULT GetDeviceName(PWSTR*);
+    HRESULT Open(VIRTUAL_DISK_ACCESS_MASK AccessMask, OPEN_VIRTUAL_DISK_FLAG Flags, uint ReadWriteDepth, IVdsOpenVDisk* ppOpenVDisk);
+    HRESULT GetProperties(VDS_VDISK_PROPERTIES* pDiskProperties);
+    HRESULT GetHostVolume(IVdsVolume* ppVolume);
+    HRESULT GetDeviceName(PWSTR* ppDeviceName);
 }
 enum IID_IVdsOpenVDisk = GUID(0x75c8f324, 0xf715, 0x4fe3, [0xa2, 0x8e, 0xf9, 0x1, 0x1b, 0x61, 0xa4, 0xa1]);
 interface IVdsOpenVDisk : IUnknown
 {
-    HRESULT Attach(PWSTR, ATTACH_VIRTUAL_DISK_FLAG, uint, uint, IVdsAsync*);
-    HRESULT Detach(DETACH_VIRTUAL_DISK_FLAG, uint);
-    HRESULT DetachAndDelete(DETACH_VIRTUAL_DISK_FLAG, uint);
-    HRESULT Compact(COMPACT_VIRTUAL_DISK_FLAG, uint, IVdsAsync*);
-    HRESULT Merge(MERGE_VIRTUAL_DISK_FLAG, uint, IVdsAsync*);
-    HRESULT Expand(EXPAND_VIRTUAL_DISK_FLAG, ulong, IVdsAsync*);
+    HRESULT Attach(PWSTR pStringSecurityDescriptor, ATTACH_VIRTUAL_DISK_FLAG Flags, uint ProviderSpecificFlags, uint TimeoutInMs, IVdsAsync* ppAsync);
+    HRESULT Detach(DETACH_VIRTUAL_DISK_FLAG Flags, uint ProviderSpecificFlags);
+    HRESULT DetachAndDelete(DETACH_VIRTUAL_DISK_FLAG Flags, uint ProviderSpecificFlags);
+    HRESULT Compact(COMPACT_VIRTUAL_DISK_FLAG Flags, uint Reserved, IVdsAsync* ppAsync);
+    HRESULT Merge(MERGE_VIRTUAL_DISK_FLAG Flags, uint MergeDepth, IVdsAsync* ppAsync);
+    HRESULT Expand(EXPAND_VIRTUAL_DISK_FLAG Flags, ulong NewSize, IVdsAsync* ppAsync);
 }
 alias VDS_SERVICE_FLAG = int;
 enum : int
@@ -2696,145 +2696,145 @@ enum : int
 enum IID_IVdsServiceLoader = GUID(0xe0393303, 0x90d4, 0x4a97, [0xab, 0x71, 0xe9, 0xb6, 0x71, 0xee, 0x27, 0x29]);
 interface IVdsServiceLoader : IUnknown
 {
-    HRESULT LoadService(PWSTR, IVdsService*);
+    HRESULT LoadService(PWSTR pwszMachineName, IVdsService* ppService);
 }
 enum IID_IVdsService = GUID(0x818a8ef, 0x9ba9, 0x40d8, [0xa6, 0xf9, 0xe2, 0x28, 0x33, 0xcc, 0x77, 0x1e]);
 interface IVdsService : IUnknown
 {
     HRESULT IsServiceReady();
     HRESULT WaitForServiceReady();
-    HRESULT GetProperties(VDS_SERVICE_PROP*);
-    HRESULT QueryProviders(uint, IEnumVdsObject*);
-    HRESULT QueryMaskedDisks(IEnumVdsObject*);
-    HRESULT QueryUnallocatedDisks(IEnumVdsObject*);
-    HRESULT GetObject(GUID, VDS_OBJECT_TYPE, IUnknown*);
-    HRESULT QueryDriveLetters(wchar, uint, VDS_DRIVE_LETTER_PROP*);
-    HRESULT QueryFileSystemTypes(VDS_FILE_SYSTEM_TYPE_PROP**, int*);
+    HRESULT GetProperties(VDS_SERVICE_PROP* pServiceProp);
+    HRESULT QueryProviders(uint masks, IEnumVdsObject* ppEnum);
+    HRESULT QueryMaskedDisks(IEnumVdsObject* ppEnum);
+    HRESULT QueryUnallocatedDisks(IEnumVdsObject* ppEnum);
+    HRESULT GetObject(GUID ObjectId, VDS_OBJECT_TYPE type, IUnknown* ppObjectUnk);
+    HRESULT QueryDriveLetters(wchar wcFirstLetter, uint count, VDS_DRIVE_LETTER_PROP* pDriveLetterPropArray);
+    HRESULT QueryFileSystemTypes(VDS_FILE_SYSTEM_TYPE_PROP** ppFileSystemTypeProps, int* plNumberOfFileSystems);
     HRESULT Reenumerate();
     HRESULT Refresh();
     HRESULT CleanupObsoleteMountPoints();
-    HRESULT Advise(IVdsAdviseSink, uint*);
-    HRESULT Unadvise(uint);
+    HRESULT Advise(IVdsAdviseSink pSink, uint* pdwCookie);
+    HRESULT Unadvise(uint dwCookie);
     HRESULT Reboot();
-    HRESULT SetFlags(uint);
-    HRESULT ClearFlags(uint);
+    HRESULT SetFlags(uint ulFlags);
+    HRESULT ClearFlags(uint ulFlags);
 }
 enum IID_IVdsServiceUninstallDisk = GUID(0xb6b22da8, 0xf903, 0x4be7, [0xb4, 0x92, 0xc0, 0x9d, 0x87, 0x5a, 0xc9, 0xda]);
 interface IVdsServiceUninstallDisk : IUnknown
 {
-    HRESULT GetDiskIdFromLunInfo(VDS_LUN_INFORMATION*, GUID*);
-    HRESULT UninstallDisks(GUID*, uint, BOOLEAN, ubyte*, HRESULT*);
+    HRESULT GetDiskIdFromLunInfo(VDS_LUN_INFORMATION* pLunInfo, GUID* pDiskId);
+    HRESULT UninstallDisks(GUID* pDiskIdArray, uint ulCount, BOOLEAN bForce, ubyte* pbReboot, HRESULT* pResults);
 }
 enum IID_IVdsServiceHba = GUID(0xac13689, 0x3134, 0x47c6, [0xa1, 0x7c, 0x46, 0x69, 0x21, 0x68, 0x1, 0xbe]);
 interface IVdsServiceHba : IUnknown
 {
-    HRESULT QueryHbaPorts(IEnumVdsObject*);
+    HRESULT QueryHbaPorts(IEnumVdsObject* ppEnum);
 }
 enum IID_IVdsServiceIscsi = GUID(0x14fbe036, 0x3ed7, 0x4e10, [0x90, 0xe9, 0xa5, 0xff, 0x99, 0x1a, 0xff, 0x1]);
 interface IVdsServiceIscsi : IUnknown
 {
-    HRESULT GetInitiatorName(PWSTR*);
-    HRESULT QueryInitiatorAdapters(IEnumVdsObject*);
-    HRESULT SetIpsecGroupPresharedKey(VDS_ISCSI_IPSEC_KEY*);
-    HRESULT SetAllIpsecTunnelAddresses(VDS_IPADDRESS*, VDS_IPADDRESS*);
-    HRESULT SetAllIpsecSecurity(GUID, ulong, VDS_ISCSI_IPSEC_KEY*);
-    HRESULT SetInitiatorSharedSecret(VDS_ISCSI_SHARED_SECRET*, GUID);
-    HRESULT RememberTargetSharedSecret(GUID, VDS_ISCSI_SHARED_SECRET*);
+    HRESULT GetInitiatorName(PWSTR* ppwszIscsiName);
+    HRESULT QueryInitiatorAdapters(IEnumVdsObject* ppEnum);
+    HRESULT SetIpsecGroupPresharedKey(VDS_ISCSI_IPSEC_KEY* pIpsecKey);
+    HRESULT SetAllIpsecTunnelAddresses(VDS_IPADDRESS* pTunnelAddress, VDS_IPADDRESS* pDestinationAddress);
+    HRESULT SetAllIpsecSecurity(GUID targetPortalId, ulong ullSecurityFlags, VDS_ISCSI_IPSEC_KEY* pIpsecKey);
+    HRESULT SetInitiatorSharedSecret(VDS_ISCSI_SHARED_SECRET* pInitiatorSharedSecret, GUID targetId);
+    HRESULT RememberTargetSharedSecret(GUID targetId, VDS_ISCSI_SHARED_SECRET* pTargetSharedSecret);
 }
 enum IID_IVdsServiceInitialization = GUID(0x4afc3636, 0xdb01, 0x4052, [0x80, 0xc3, 0x3, 0xbb, 0xcb, 0x8d, 0x3c, 0x69]);
 interface IVdsServiceInitialization : IUnknown
 {
-    HRESULT Initialize(PWSTR);
+    HRESULT Initialize(PWSTR pwszMachineName);
 }
 enum IID_IVdsHbaPort = GUID(0x2abd757f, 0x2851, 0x4997, [0x9a, 0x13, 0x47, 0xd2, 0xa8, 0x85, 0xd6, 0xca]);
 interface IVdsHbaPort : IUnknown
 {
-    HRESULT GetProperties(VDS_HBAPORT_PROP*);
-    HRESULT SetAllPathStatuses(VDS_PATH_STATUS);
+    HRESULT GetProperties(VDS_HBAPORT_PROP* pHbaPortProp);
+    HRESULT SetAllPathStatuses(VDS_PATH_STATUS status);
 }
 enum IID_IVdsIscsiInitiatorAdapter = GUID(0xb07fedd4, 0x1682, 0x4440, [0x91, 0x89, 0xa3, 0x9b, 0x55, 0x19, 0x4d, 0xc5]);
 interface IVdsIscsiInitiatorAdapter : IUnknown
 {
-    HRESULT GetProperties(VDS_ISCSI_INITIATOR_ADAPTER_PROP*);
-    HRESULT QueryInitiatorPortals(IEnumVdsObject*);
-    HRESULT LoginToTarget(VDS_ISCSI_LOGIN_TYPE, GUID, GUID, GUID, uint, BOOL, BOOL, VDS_ISCSI_AUTH_TYPE, IVdsAsync*);
-    HRESULT LogoutFromTarget(GUID, IVdsAsync*);
+    HRESULT GetProperties(VDS_ISCSI_INITIATOR_ADAPTER_PROP* pInitiatorAdapterProp);
+    HRESULT QueryInitiatorPortals(IEnumVdsObject* ppEnum);
+    HRESULT LoginToTarget(VDS_ISCSI_LOGIN_TYPE loginType, GUID targetId, GUID targetPortalId, GUID initiatorPortalId, uint ulLoginFlags, BOOL bHeaderDigest, BOOL bDataDigest, VDS_ISCSI_AUTH_TYPE authType, IVdsAsync* ppAsync);
+    HRESULT LogoutFromTarget(GUID targetId, IVdsAsync* ppAsync);
 }
 enum IID_IVdsIscsiInitiatorPortal = GUID(0x38a0a9ab, 0x7cc8, 0x4693, [0xac, 0x7, 0x1f, 0x28, 0xbd, 0x3, 0xc3, 0xda]);
 interface IVdsIscsiInitiatorPortal : IUnknown
 {
-    HRESULT GetProperties(VDS_ISCSI_INITIATOR_PORTAL_PROP*);
-    HRESULT GetInitiatorAdapter(IVdsIscsiInitiatorAdapter*);
-    HRESULT SetIpsecTunnelAddress(VDS_IPADDRESS*, VDS_IPADDRESS*);
-    HRESULT GetIpsecSecurity(GUID, ulong*);
-    HRESULT SetIpsecSecurity(GUID, ulong, VDS_ISCSI_IPSEC_KEY*);
+    HRESULT GetProperties(VDS_ISCSI_INITIATOR_PORTAL_PROP* pInitiatorPortalProp);
+    HRESULT GetInitiatorAdapter(IVdsIscsiInitiatorAdapter* ppInitiatorAdapter);
+    HRESULT SetIpsecTunnelAddress(VDS_IPADDRESS* pTunnelAddress, VDS_IPADDRESS* pDestinationAddress);
+    HRESULT GetIpsecSecurity(GUID targetPortalId, ulong* pullSecurityFlags);
+    HRESULT SetIpsecSecurity(GUID targetPortalId, ulong ullSecurityFlags, VDS_ISCSI_IPSEC_KEY* pIpsecKey);
 }
 enum IID_IVdsDiskPartitionMF = GUID(0x538684e0, 0xba3d, 0x4bc0, [0xac, 0xa9, 0x16, 0x4a, 0xff, 0x85, 0xc2, 0xa9]);
 interface IVdsDiskPartitionMF : IUnknown
 {
-    HRESULT GetPartitionFileSystemProperties(ulong, VDS_FILE_SYSTEM_PROP*);
-    HRESULT GetPartitionFileSystemTypeName(ulong, PWSTR*);
-    HRESULT QueryPartitionFileSystemFormatSupport(ulong, VDS_FILE_SYSTEM_FORMAT_SUPPORT_PROP**, int*);
-    HRESULT FormatPartitionEx(ulong, PWSTR, ushort, uint, PWSTR, BOOL, BOOL, BOOL, IVdsAsync*);
+    HRESULT GetPartitionFileSystemProperties(ulong ullOffset, VDS_FILE_SYSTEM_PROP* pFileSystemProp);
+    HRESULT GetPartitionFileSystemTypeName(ulong ullOffset, PWSTR* ppwszFileSystemTypeName);
+    HRESULT QueryPartitionFileSystemFormatSupport(ulong ullOffset, VDS_FILE_SYSTEM_FORMAT_SUPPORT_PROP** ppFileSystemSupportProps, int* plNumberOfFileSystems);
+    HRESULT FormatPartitionEx(ulong ullOffset, PWSTR pwszFileSystemTypeName, ushort usFileSystemRevision, uint ulDesiredUnitAllocationSize, PWSTR pwszLabel, BOOL bForce, BOOL bQuickFormat, BOOL bEnableCompression, IVdsAsync* ppAsync);
 }
 enum IID_IVdsVolumeMF = GUID(0xee2d5ded, 0x6236, 0x4169, [0x93, 0x1d, 0xb9, 0x77, 0x8c, 0xe0, 0x3d, 0xc6]);
 interface IVdsVolumeMF : IUnknown
 {
-    HRESULT GetFileSystemProperties(VDS_FILE_SYSTEM_PROP*);
-    HRESULT Format(VDS_FILE_SYSTEM_TYPE, PWSTR, uint, BOOL, BOOL, BOOL, IVdsAsync*);
-    HRESULT AddAccessPath(PWSTR);
-    HRESULT QueryAccessPaths(PWSTR**, int*);
-    HRESULT QueryReparsePoints(VDS_REPARSE_POINT_PROP**, int*);
-    HRESULT DeleteAccessPath(PWSTR, BOOL);
+    HRESULT GetFileSystemProperties(VDS_FILE_SYSTEM_PROP* pFileSystemProp);
+    HRESULT Format(VDS_FILE_SYSTEM_TYPE type, PWSTR pwszLabel, uint dwUnitAllocationSize, BOOL bForce, BOOL bQuickFormat, BOOL bEnableCompression, IVdsAsync* ppAsync);
+    HRESULT AddAccessPath(PWSTR pwszPath);
+    HRESULT QueryAccessPaths(PWSTR** pwszPathArray, int* plNumberOfAccessPaths);
+    HRESULT QueryReparsePoints(VDS_REPARSE_POINT_PROP** ppReparsePointProps, int* plNumberOfReparsePointProps);
+    HRESULT DeleteAccessPath(PWSTR pwszPath, BOOL bForce);
     HRESULT Mount();
-    HRESULT Dismount(BOOL, BOOL);
-    HRESULT SetFileSystemFlags(uint);
-    HRESULT ClearFileSystemFlags(uint);
+    HRESULT Dismount(BOOL bForce, BOOL bPermanent);
+    HRESULT SetFileSystemFlags(uint ulFlags);
+    HRESULT ClearFileSystemFlags(uint ulFlags);
 }
 enum IID_IVdsVolumeMF2 = GUID(0x4dbcee9a, 0x6343, 0x4651, [0xb8, 0x5f, 0x5e, 0x75, 0xd7, 0x4d, 0x98, 0x3c]);
 interface IVdsVolumeMF2 : IUnknown
 {
-    HRESULT GetFileSystemTypeName(PWSTR*);
-    HRESULT QueryFileSystemFormatSupport(VDS_FILE_SYSTEM_FORMAT_SUPPORT_PROP**, int*);
-    HRESULT FormatEx(PWSTR, ushort, uint, PWSTR, BOOL, BOOL, BOOL, IVdsAsync*);
+    HRESULT GetFileSystemTypeName(PWSTR* ppwszFileSystemTypeName);
+    HRESULT QueryFileSystemFormatSupport(VDS_FILE_SYSTEM_FORMAT_SUPPORT_PROP** ppFileSystemSupportProps, int* plNumberOfFileSystems);
+    HRESULT FormatEx(PWSTR pwszFileSystemTypeName, ushort usFileSystemRevision, uint ulDesiredUnitAllocationSize, PWSTR pwszLabel, BOOL bForce, BOOL bQuickFormat, BOOL bEnableCompression, IVdsAsync* ppAsync);
 }
 enum IID_IVdsVolumeShrink = GUID(0xd68168c9, 0x82a2, 0x4f85, [0xb6, 0xe9, 0x74, 0x70, 0x7c, 0x49, 0xa5, 0x8f]);
 interface IVdsVolumeShrink : IUnknown
 {
-    HRESULT QueryMaxReclaimableBytes(ulong*);
-    HRESULT Shrink(ulong, ulong, IVdsAsync*);
+    HRESULT QueryMaxReclaimableBytes(ulong* pullMaxNumberOfReclaimableBytes);
+    HRESULT Shrink(ulong ullDesiredNumberOfReclaimableBytes, ulong ullMinNumberOfReclaimableBytes, IVdsAsync* ppAsync);
 }
 enum IID_IVdsSubSystemImportTarget = GUID(0x83bfb87f, 0x43fb, 0x4903, [0xba, 0xa6, 0x12, 0x7f, 0x1, 0x2, 0x9e, 0xec]);
 interface IVdsSubSystemImportTarget : IUnknown
 {
-    HRESULT GetImportTarget(PWSTR*);
-    HRESULT SetImportTarget(PWSTR);
+    HRESULT GetImportTarget(PWSTR* ppwszIscsiName);
+    HRESULT SetImportTarget(PWSTR pwszIscsiName);
 }
 enum IID_IVdsIscsiPortalLocal = GUID(0xad837c28, 0x52c1, 0x421d, [0xbf, 0x4, 0xfa, 0xe7, 0xda, 0x66, 0x53, 0x96]);
 interface IVdsIscsiPortalLocal : IUnknown
 {
-    HRESULT SetIpsecSecurityLocal(ulong, VDS_ISCSI_IPSEC_KEY*);
+    HRESULT SetIpsecSecurityLocal(ulong ullSecurityFlags, VDS_ISCSI_IPSEC_KEY* pIpsecKey);
 }
 enum IID_IVdsServiceSAN = GUID(0xfc5d23e8, 0xa88b, 0x41a5, [0x8d, 0xe0, 0x2d, 0x2f, 0x73, 0xc5, 0xa6, 0x30]);
 interface IVdsServiceSAN : IUnknown
 {
-    HRESULT GetSANPolicy(VDS_SAN_POLICY*);
-    HRESULT SetSANPolicy(VDS_SAN_POLICY);
+    HRESULT GetSANPolicy(VDS_SAN_POLICY* pSanPolicy);
+    HRESULT SetSANPolicy(VDS_SAN_POLICY SanPolicy);
 }
 enum IID_IVdsVolumeMF3 = GUID(0x6788faf9, 0x214e, 0x4b85, [0xba, 0x59, 0x26, 0x69, 0x53, 0x61, 0x6e, 0x9]);
 interface IVdsVolumeMF3 : IUnknown
 {
-    HRESULT QueryVolumeGuidPathnames(PWSTR**, uint*);
-    HRESULT FormatEx2(PWSTR, ushort, uint, PWSTR, uint, IVdsAsync*);
+    HRESULT QueryVolumeGuidPathnames(PWSTR** pwszPathArray, uint* pulNumberOfPaths);
+    HRESULT FormatEx2(PWSTR pwszFileSystemTypeName, ushort usFileSystemRevision, uint ulDesiredUnitAllocationSize, PWSTR pwszLabel, uint Options, IVdsAsync* ppAsync);
     HRESULT OfflineVolume();
 }
 enum IID_IVdsDiskPartitionMF2 = GUID(0x9cbe50ca, 0xf2d2, 0x4bf4, [0xac, 0xe1, 0x96, 0x89, 0x6b, 0x72, 0x96, 0x25]);
 interface IVdsDiskPartitionMF2 : IUnknown
 {
-    HRESULT FormatPartitionEx2(ulong, PWSTR, ushort, uint, PWSTR, uint, IVdsAsync*);
+    HRESULT FormatPartitionEx2(ulong ullOffset, PWSTR pwszFileSystemTypeName, ushort usFileSystemRevision, uint ulDesiredUnitAllocationSize, PWSTR pwszLabel, uint Options, IVdsAsync* ppAsync);
 }
 enum IID_IVdsServiceSw = GUID(0x15fc031c, 0x652, 0x4306, [0xb2, 0xc3, 0xf5, 0x58, 0xb8, 0xf8, 0x37, 0xe2]);
 interface IVdsServiceSw : IUnknown
 {
-    HRESULT GetDiskObject(const(wchar)*, IUnknown*);
+    HRESULT GetDiskObject(const(wchar)* pwszDeviceID, IUnknown* ppDiskUnk);
 }

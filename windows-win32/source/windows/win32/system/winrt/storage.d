@@ -10,7 +10,7 @@ extern (Windows):
 enum IID_IRandomAccessStreamFileAccessMode = GUID(0x332e5848, 0x2e15, 0x458e, [0x85, 0xc4, 0xc9, 0x11, 0xc0, 0xc3, 0xd6, 0xf4]);
 interface IRandomAccessStreamFileAccessMode : IUnknown
 {
-    HRESULT GetMode(uint*);
+    HRESULT GetMode(uint* fileAccessMode);
 }
 enum IID_IUnbufferedFileHandleOplockCallback = GUID(0xd1019a0e, 0x6243, 0x4329, [0x84, 0x97, 0x2e, 0x75, 0x89, 0x4d, 0x77, 0x10]);
 interface IUnbufferedFileHandleOplockCallback : IUnknown
@@ -20,7 +20,7 @@ interface IUnbufferedFileHandleOplockCallback : IUnknown
 enum IID_IUnbufferedFileHandleProvider = GUID(0xa65c9109, 0x42ab, 0x4b94, [0xa7, 0xb1, 0xdd, 0x2e, 0x4e, 0x68, 0x51, 0x5e]);
 interface IUnbufferedFileHandleProvider : IUnknown
 {
-    HRESULT OpenUnbufferedFileHandle(IUnbufferedFileHandleOplockCallback, ulong*);
+    HRESULT OpenUnbufferedFileHandle(IUnbufferedFileHandleOplockCallback oplockBreakCallback, ulong* fileHandle);
     HRESULT CloseUnbufferedFileHandle();
 }
 alias HANDLE_OPTIONS = uint;
@@ -73,10 +73,10 @@ interface IOplockBreakingHandler : IUnknown
 enum IID_IStorageItemHandleAccess = GUID(0x5ca296b2, 0x2c25, 0x4d22, [0xb7, 0x85, 0xb8, 0x85, 0xc8, 0x20, 0x1e, 0x6a]);
 interface IStorageItemHandleAccess : IUnknown
 {
-    HRESULT Create(HANDLE_ACCESS_OPTIONS, HANDLE_SHARING_OPTIONS, HANDLE_OPTIONS, IOplockBreakingHandler, HANDLE*);
+    HRESULT Create(HANDLE_ACCESS_OPTIONS accessOptions, HANDLE_SHARING_OPTIONS sharingOptions, HANDLE_OPTIONS options, IOplockBreakingHandler oplockBreakingHandler, HANDLE* interopHandle);
 }
 enum IID_IStorageFolderHandleAccess = GUID(0xdf19938f, 0x5462, 0x48a0, [0xbe, 0x65, 0xd2, 0xa3, 0x27, 0x1a, 0x8, 0xd6]);
 interface IStorageFolderHandleAccess : IUnknown
 {
-    HRESULT Create(const(wchar)*, HANDLE_CREATION_OPTIONS, HANDLE_ACCESS_OPTIONS, HANDLE_SHARING_OPTIONS, HANDLE_OPTIONS, IOplockBreakingHandler, HANDLE*);
+    HRESULT Create(const(wchar)* fileName, HANDLE_CREATION_OPTIONS creationOptions, HANDLE_ACCESS_OPTIONS accessOptions, HANDLE_SHARING_OPTIONS sharingOptions, HANDLE_OPTIONS options, IOplockBreakingHandler oplockBreakingHandler, HANDLE* interopHandle);
 }

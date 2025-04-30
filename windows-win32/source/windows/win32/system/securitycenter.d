@@ -44,40 +44,40 @@ enum : int
 enum IID_IWscProduct = GUID(0x8c38232e, 0x3a45, 0x4a27, [0x92, 0xb0, 0x1a, 0x16, 0xa9, 0x75, 0xf6, 0x69]);
 interface IWscProduct : IDispatch
 {
-    HRESULT get_ProductName(BSTR*);
-    HRESULT get_ProductState(WSC_SECURITY_PRODUCT_STATE*);
-    HRESULT get_SignatureStatus(WSC_SECURITY_SIGNATURE_STATUS*);
-    HRESULT get_RemediationPath(BSTR*);
-    HRESULT get_ProductStateTimestamp(BSTR*);
-    HRESULT get_ProductGuid(BSTR*);
-    HRESULT get_ProductIsDefault(BOOL*);
+    HRESULT get_ProductName(BSTR* pVal);
+    HRESULT get_ProductState(WSC_SECURITY_PRODUCT_STATE* pVal);
+    HRESULT get_SignatureStatus(WSC_SECURITY_SIGNATURE_STATUS* pVal);
+    HRESULT get_RemediationPath(BSTR* pVal);
+    HRESULT get_ProductStateTimestamp(BSTR* pVal);
+    HRESULT get_ProductGuid(BSTR* pVal);
+    HRESULT get_ProductIsDefault(BOOL* pVal);
 }
 enum IID_IWscProduct2 = GUID(0xf896ca54, 0xfe09, 0x4403, [0x86, 0xd4, 0x23, 0xcb, 0x48, 0x8d, 0x81, 0xd8]);
 interface IWscProduct2 : IWscProduct
 {
-    HRESULT get_AntivirusScanSubstatus(WSC_SECURITY_PRODUCT_SUBSTATUS*);
-    HRESULT get_AntivirusSettingsSubstatus(WSC_SECURITY_PRODUCT_SUBSTATUS*);
-    HRESULT get_AntivirusProtectionUpdateSubstatus(WSC_SECURITY_PRODUCT_SUBSTATUS*);
-    HRESULT get_FirewallDomainProfileSubstatus(WSC_SECURITY_PRODUCT_SUBSTATUS*);
-    HRESULT get_FirewallPrivateProfileSubstatus(WSC_SECURITY_PRODUCT_SUBSTATUS*);
-    HRESULT get_FirewallPublicProfileSubstatus(WSC_SECURITY_PRODUCT_SUBSTATUS*);
+    HRESULT get_AntivirusScanSubstatus(WSC_SECURITY_PRODUCT_SUBSTATUS* peStatus);
+    HRESULT get_AntivirusSettingsSubstatus(WSC_SECURITY_PRODUCT_SUBSTATUS* peStatus);
+    HRESULT get_AntivirusProtectionUpdateSubstatus(WSC_SECURITY_PRODUCT_SUBSTATUS* peStatus);
+    HRESULT get_FirewallDomainProfileSubstatus(WSC_SECURITY_PRODUCT_SUBSTATUS* peStatus);
+    HRESULT get_FirewallPrivateProfileSubstatus(WSC_SECURITY_PRODUCT_SUBSTATUS* peStatus);
+    HRESULT get_FirewallPublicProfileSubstatus(WSC_SECURITY_PRODUCT_SUBSTATUS* peStatus);
 }
 enum IID_IWscProduct3 = GUID(0x55536524, 0xd1d1, 0x4726, [0x8c, 0x7c, 0x4, 0x99, 0x6a, 0x19, 0x4, 0xe7]);
 interface IWscProduct3 : IWscProduct2
 {
-    HRESULT get_AntivirusDaysUntilExpired(uint*);
+    HRESULT get_AntivirusDaysUntilExpired(uint* pdwDays);
 }
 enum IID_IWSCProductList = GUID(0x722a338c, 0x6e8e, 0x4e72, [0xac, 0x27, 0x14, 0x17, 0xfb, 0xc, 0x81, 0xc2]);
 interface IWSCProductList : IDispatch
 {
-    HRESULT Initialize(uint);
-    HRESULT get_Count(int*);
-    HRESULT get_Item(uint, IWscProduct*);
+    HRESULT Initialize(uint provider);
+    HRESULT get_Count(int* pVal);
+    HRESULT get_Item(uint index, IWscProduct* pVal);
 }
 enum IID_IWSCDefaultProduct = GUID(0x476d69c, 0xf21a, 0x11e5, [0x9c, 0xe9, 0x5e, 0x55, 0x17, 0x50, 0x7c, 0x66]);
 interface IWSCDefaultProduct : IDispatch
 {
-    HRESULT SetDefaultProduct(SECURITY_PRODUCT_TYPE, BSTR);
+    HRESULT SetDefaultProduct(SECURITY_PRODUCT_TYPE eType, BSTR pGuid);
 }
 enum CLSID_WSCProductList = GUID(0x17072f7b, 0x9abe, 0x4a74, [0xa2, 0x61, 0x1e, 0xb7, 0x6b, 0x55, 0x10, 0x7a]);
 struct WSCProductList
@@ -110,9 +110,9 @@ enum : int
     WSC_SECURITY_PROVIDER_HEALTH_SNOOZE       = 0x00000003,
 }
 
-HRESULT WscRegisterForChanges(void*, HANDLE*, LPTHREAD_START_ROUTINE, void*);
-HRESULT WscUnRegisterChanges(HANDLE);
+HRESULT WscRegisterForChanges(void* Reserved, HANDLE* phCallbackRegistration, LPTHREAD_START_ROUTINE lpCallbackAddress, void* pContext);
+HRESULT WscUnRegisterChanges(HANDLE hRegistrationHandle);
 HRESULT WscRegisterForUserNotifications();
-HRESULT WscGetSecurityProviderHealth(uint, WSC_SECURITY_PROVIDER_HEALTH*);
+HRESULT WscGetSecurityProviderHealth(uint Providers, WSC_SECURITY_PROVIDER_HEALTH* pHealth);
 HRESULT WscQueryAntiMalwareUri();
-HRESULT WscGetAntiMalwareUri(PWSTR*);
+HRESULT WscGetAntiMalwareUri(PWSTR* ppszUri);

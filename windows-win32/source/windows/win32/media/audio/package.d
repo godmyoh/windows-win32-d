@@ -1,177 +1,177 @@
 module windows.win32.media.audio;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, CHAR, HANDLE, HINSTANCE, HMODULE, HRESULT, HWND, LPARAM, LRESULT, PSTR, PWSTR, WPARAM;
+import windows.win32.foundation : BOOL, CHAR, HANDLE, HINSTANCE, HMODULE, HRESULT, HWND, LPARAM, LRESULT, PROPERTYKEY, PSTR, PWSTR, WPARAM;
 import windows.win32.media : HTASK, MMTIME;
 import windows.win32.media.multimedia : HDRVR;
 import windows.win32.system.com : CLSCTX, INTERFACEINFO, IUnknown, STGM;
 import windows.win32.system.com.structuredstorage : PROPVARIANT;
-import windows.win32.ui.shell.propertiessystem : IPropertyStore, PROPERTYKEY;
+import windows.win32.ui.shell.propertiessystem : IPropertyStore;
 import windows.win32.ui.windowsandmessaging : HICON;
 
 version (Windows):
 extern (Windows):
 
-alias LPWAVECALLBACK = void function(HDRVR, uint, ulong, ulong, ulong);
-alias LPMIDICALLBACK = void function(HDRVR, uint, ulong, ulong, ulong);
-HRESULT CoRegisterMessageFilter(IMessageFilter, IMessageFilter*);
-BOOL sndPlaySoundA(const(char)*, uint);
-BOOL sndPlaySoundW(const(wchar)*, uint);
-BOOL PlaySoundA(const(char)*, HMODULE, SND_FLAGS);
-BOOL PlaySoundW(const(wchar)*, HMODULE, SND_FLAGS);
+alias LPWAVECALLBACK = void function(HDRVR hdrvr, uint uMsg, ulong dwUser, ulong dw1, ulong dw2);
+alias LPMIDICALLBACK = void function(HDRVR hdrvr, uint uMsg, ulong dwUser, ulong dw1, ulong dw2);
+HRESULT CoRegisterMessageFilter(IMessageFilter lpMessageFilter, IMessageFilter* lplpMessageFilter);
+BOOL sndPlaySoundA(const(char)* pszSound, uint fuSound);
+BOOL sndPlaySoundW(const(wchar)* pszSound, uint fuSound);
+BOOL PlaySoundA(const(char)* pszSound, HMODULE hmod, SND_FLAGS fdwSound);
+BOOL PlaySoundW(const(wchar)* pszSound, HMODULE hmod, SND_FLAGS fdwSound);
 uint waveOutGetNumDevs();
-uint waveOutGetDevCapsA(ulong, WAVEOUTCAPSA*, uint);
-uint waveOutGetDevCapsW(ulong, WAVEOUTCAPSW*, uint);
-uint waveOutGetVolume(HWAVEOUT, uint*);
-uint waveOutSetVolume(HWAVEOUT, uint);
-uint waveOutGetErrorTextA(uint, PSTR, uint);
-uint waveOutGetErrorTextW(uint, PWSTR, uint);
-uint waveOutOpen(HWAVEOUT*, uint, WAVEFORMATEX*, ulong, ulong, MIDI_WAVE_OPEN_TYPE);
-uint waveOutClose(HWAVEOUT);
-uint waveOutPrepareHeader(HWAVEOUT, WAVEHDR*, uint);
-uint waveOutUnprepareHeader(HWAVEOUT, WAVEHDR*, uint);
-uint waveOutWrite(HWAVEOUT, WAVEHDR*, uint);
-uint waveOutPause(HWAVEOUT);
-uint waveOutRestart(HWAVEOUT);
-uint waveOutReset(HWAVEOUT);
-uint waveOutBreakLoop(HWAVEOUT);
-uint waveOutGetPosition(HWAVEOUT, MMTIME*, uint);
-uint waveOutGetPitch(HWAVEOUT, uint*);
-uint waveOutSetPitch(HWAVEOUT, uint);
-uint waveOutGetPlaybackRate(HWAVEOUT, uint*);
-uint waveOutSetPlaybackRate(HWAVEOUT, uint);
-uint waveOutGetID(HWAVEOUT, uint*);
-uint waveOutMessage(HWAVEOUT, uint, ulong, ulong);
+uint waveOutGetDevCapsA(ulong uDeviceID, WAVEOUTCAPSA* pwoc, uint cbwoc);
+uint waveOutGetDevCapsW(ulong uDeviceID, WAVEOUTCAPSW* pwoc, uint cbwoc);
+uint waveOutGetVolume(HWAVEOUT hwo, uint* pdwVolume);
+uint waveOutSetVolume(HWAVEOUT hwo, uint dwVolume);
+uint waveOutGetErrorTextA(uint mmrError, PSTR pszText, uint cchText);
+uint waveOutGetErrorTextW(uint mmrError, PWSTR pszText, uint cchText);
+uint waveOutOpen(HWAVEOUT* phwo, uint uDeviceID, WAVEFORMATEX* pwfx, ulong dwCallback, ulong dwInstance, MIDI_WAVE_OPEN_TYPE fdwOpen);
+uint waveOutClose(HWAVEOUT hwo);
+uint waveOutPrepareHeader(HWAVEOUT hwo, WAVEHDR* pwh, uint cbwh);
+uint waveOutUnprepareHeader(HWAVEOUT hwo, WAVEHDR* pwh, uint cbwh);
+uint waveOutWrite(HWAVEOUT hwo, WAVEHDR* pwh, uint cbwh);
+uint waveOutPause(HWAVEOUT hwo);
+uint waveOutRestart(HWAVEOUT hwo);
+uint waveOutReset(HWAVEOUT hwo);
+uint waveOutBreakLoop(HWAVEOUT hwo);
+uint waveOutGetPosition(HWAVEOUT hwo, MMTIME* pmmt, uint cbmmt);
+uint waveOutGetPitch(HWAVEOUT hwo, uint* pdwPitch);
+uint waveOutSetPitch(HWAVEOUT hwo, uint dwPitch);
+uint waveOutGetPlaybackRate(HWAVEOUT hwo, uint* pdwRate);
+uint waveOutSetPlaybackRate(HWAVEOUT hwo, uint dwRate);
+uint waveOutGetID(HWAVEOUT hwo, uint* puDeviceID);
+uint waveOutMessage(HWAVEOUT hwo, uint uMsg, ulong dw1, ulong dw2);
 uint waveInGetNumDevs();
-uint waveInGetDevCapsA(ulong, WAVEINCAPSA*, uint);
-uint waveInGetDevCapsW(ulong, WAVEINCAPSW*, uint);
-uint waveInGetErrorTextA(uint, PSTR, uint);
-uint waveInGetErrorTextW(uint, PWSTR, uint);
-uint waveInOpen(HWAVEIN*, uint, WAVEFORMATEX*, ulong, ulong, MIDI_WAVE_OPEN_TYPE);
-uint waveInClose(HWAVEIN);
-uint waveInPrepareHeader(HWAVEIN, WAVEHDR*, uint);
-uint waveInUnprepareHeader(HWAVEIN, WAVEHDR*, uint);
-uint waveInAddBuffer(HWAVEIN, WAVEHDR*, uint);
-uint waveInStart(HWAVEIN);
-uint waveInStop(HWAVEIN);
-uint waveInReset(HWAVEIN);
-uint waveInGetPosition(HWAVEIN, MMTIME*, uint);
-uint waveInGetID(HWAVEIN, uint*);
-uint waveInMessage(HWAVEIN, uint, ulong, ulong);
+uint waveInGetDevCapsA(ulong uDeviceID, WAVEINCAPSA* pwic, uint cbwic);
+uint waveInGetDevCapsW(ulong uDeviceID, WAVEINCAPSW* pwic, uint cbwic);
+uint waveInGetErrorTextA(uint mmrError, PSTR pszText, uint cchText);
+uint waveInGetErrorTextW(uint mmrError, PWSTR pszText, uint cchText);
+uint waveInOpen(HWAVEIN* phwi, uint uDeviceID, WAVEFORMATEX* pwfx, ulong dwCallback, ulong dwInstance, MIDI_WAVE_OPEN_TYPE fdwOpen);
+uint waveInClose(HWAVEIN hwi);
+uint waveInPrepareHeader(HWAVEIN hwi, WAVEHDR* pwh, uint cbwh);
+uint waveInUnprepareHeader(HWAVEIN hwi, WAVEHDR* pwh, uint cbwh);
+uint waveInAddBuffer(HWAVEIN hwi, WAVEHDR* pwh, uint cbwh);
+uint waveInStart(HWAVEIN hwi);
+uint waveInStop(HWAVEIN hwi);
+uint waveInReset(HWAVEIN hwi);
+uint waveInGetPosition(HWAVEIN hwi, MMTIME* pmmt, uint cbmmt);
+uint waveInGetID(HWAVEIN hwi, uint* puDeviceID);
+uint waveInMessage(HWAVEIN hwi, uint uMsg, ulong dw1, ulong dw2);
 uint midiOutGetNumDevs();
-uint midiStreamOpen(HMIDISTRM*, uint*, uint, ulong, ulong, uint);
-uint midiStreamClose(HMIDISTRM);
-uint midiStreamProperty(HMIDISTRM, ubyte*, uint);
-uint midiStreamPosition(HMIDISTRM, MMTIME*, uint);
-uint midiStreamOut(HMIDISTRM, MIDIHDR*, uint);
-uint midiStreamPause(HMIDISTRM);
-uint midiStreamRestart(HMIDISTRM);
-uint midiStreamStop(HMIDISTRM);
-uint midiConnect(HMIDI, HMIDIOUT, void*);
-uint midiDisconnect(HMIDI, HMIDIOUT, void*);
-uint midiOutGetDevCapsA(ulong, MIDIOUTCAPSA*, uint);
-uint midiOutGetDevCapsW(ulong, MIDIOUTCAPSW*, uint);
-uint midiOutGetVolume(HMIDIOUT, uint*);
-uint midiOutSetVolume(HMIDIOUT, uint);
-uint midiOutGetErrorTextA(uint, PSTR, uint);
-uint midiOutGetErrorTextW(uint, PWSTR, uint);
-uint midiOutOpen(HMIDIOUT*, uint, ulong, ulong, MIDI_WAVE_OPEN_TYPE);
-uint midiOutClose(HMIDIOUT);
-uint midiOutPrepareHeader(HMIDIOUT, MIDIHDR*, uint);
-uint midiOutUnprepareHeader(HMIDIOUT, MIDIHDR*, uint);
-uint midiOutShortMsg(HMIDIOUT, uint);
-uint midiOutLongMsg(HMIDIOUT, MIDIHDR*, uint);
-uint midiOutReset(HMIDIOUT);
-uint midiOutCachePatches(HMIDIOUT, uint, ushort*, uint);
-uint midiOutCacheDrumPatches(HMIDIOUT, uint, ushort*, uint);
-uint midiOutGetID(HMIDIOUT, uint*);
-uint midiOutMessage(HMIDIOUT, uint, ulong, ulong);
+uint midiStreamOpen(HMIDISTRM* phms, uint* puDeviceID, uint cMidi, ulong dwCallback, ulong dwInstance, uint fdwOpen);
+uint midiStreamClose(HMIDISTRM hms);
+uint midiStreamProperty(HMIDISTRM hms, ubyte* lppropdata, uint dwProperty);
+uint midiStreamPosition(HMIDISTRM hms, MMTIME* lpmmt, uint cbmmt);
+uint midiStreamOut(HMIDISTRM hms, MIDIHDR* pmh, uint cbmh);
+uint midiStreamPause(HMIDISTRM hms);
+uint midiStreamRestart(HMIDISTRM hms);
+uint midiStreamStop(HMIDISTRM hms);
+uint midiConnect(HMIDI hmi, HMIDIOUT hmo, void* pReserved);
+uint midiDisconnect(HMIDI hmi, HMIDIOUT hmo, void* pReserved);
+uint midiOutGetDevCapsA(ulong uDeviceID, MIDIOUTCAPSA* pmoc, uint cbmoc);
+uint midiOutGetDevCapsW(ulong uDeviceID, MIDIOUTCAPSW* pmoc, uint cbmoc);
+uint midiOutGetVolume(HMIDIOUT hmo, uint* pdwVolume);
+uint midiOutSetVolume(HMIDIOUT hmo, uint dwVolume);
+uint midiOutGetErrorTextA(uint mmrError, PSTR pszText, uint cchText);
+uint midiOutGetErrorTextW(uint mmrError, PWSTR pszText, uint cchText);
+uint midiOutOpen(HMIDIOUT* phmo, uint uDeviceID, ulong dwCallback, ulong dwInstance, MIDI_WAVE_OPEN_TYPE fdwOpen);
+uint midiOutClose(HMIDIOUT hmo);
+uint midiOutPrepareHeader(HMIDIOUT hmo, MIDIHDR* pmh, uint cbmh);
+uint midiOutUnprepareHeader(HMIDIOUT hmo, MIDIHDR* pmh, uint cbmh);
+uint midiOutShortMsg(HMIDIOUT hmo, uint dwMsg);
+uint midiOutLongMsg(HMIDIOUT hmo, MIDIHDR* pmh, uint cbmh);
+uint midiOutReset(HMIDIOUT hmo);
+uint midiOutCachePatches(HMIDIOUT hmo, uint uBank, ushort* pwpa, uint fuCache);
+uint midiOutCacheDrumPatches(HMIDIOUT hmo, uint uPatch, ushort* pwkya, uint fuCache);
+uint midiOutGetID(HMIDIOUT hmo, uint* puDeviceID);
+uint midiOutMessage(HMIDIOUT hmo, uint uMsg, ulong dw1, ulong dw2);
 uint midiInGetNumDevs();
-uint midiInGetDevCapsA(ulong, MIDIINCAPSA*, uint);
-uint midiInGetDevCapsW(ulong, MIDIINCAPSW*, uint);
-uint midiInGetErrorTextA(uint, PSTR, uint);
-uint midiInGetErrorTextW(uint, PWSTR, uint);
-uint midiInOpen(HMIDIIN*, uint, ulong, ulong, MIDI_WAVE_OPEN_TYPE);
-uint midiInClose(HMIDIIN);
-uint midiInPrepareHeader(HMIDIIN, MIDIHDR*, uint);
-uint midiInUnprepareHeader(HMIDIIN, MIDIHDR*, uint);
-uint midiInAddBuffer(HMIDIIN, MIDIHDR*, uint);
-uint midiInStart(HMIDIIN);
-uint midiInStop(HMIDIIN);
-uint midiInReset(HMIDIIN);
-uint midiInGetID(HMIDIIN, uint*);
-uint midiInMessage(HMIDIIN, uint, ulong, ulong);
+uint midiInGetDevCapsA(ulong uDeviceID, MIDIINCAPSA* pmic, uint cbmic);
+uint midiInGetDevCapsW(ulong uDeviceID, MIDIINCAPSW* pmic, uint cbmic);
+uint midiInGetErrorTextA(uint mmrError, PSTR pszText, uint cchText);
+uint midiInGetErrorTextW(uint mmrError, PWSTR pszText, uint cchText);
+uint midiInOpen(HMIDIIN* phmi, uint uDeviceID, ulong dwCallback, ulong dwInstance, MIDI_WAVE_OPEN_TYPE fdwOpen);
+uint midiInClose(HMIDIIN hmi);
+uint midiInPrepareHeader(HMIDIIN hmi, MIDIHDR* pmh, uint cbmh);
+uint midiInUnprepareHeader(HMIDIIN hmi, MIDIHDR* pmh, uint cbmh);
+uint midiInAddBuffer(HMIDIIN hmi, MIDIHDR* pmh, uint cbmh);
+uint midiInStart(HMIDIIN hmi);
+uint midiInStop(HMIDIIN hmi);
+uint midiInReset(HMIDIIN hmi);
+uint midiInGetID(HMIDIIN hmi, uint* puDeviceID);
+uint midiInMessage(HMIDIIN hmi, uint uMsg, ulong dw1, ulong dw2);
 uint auxGetNumDevs();
-uint auxGetDevCapsA(ulong, AUXCAPSA*, uint);
-uint auxGetDevCapsW(ulong, AUXCAPSW*, uint);
-uint auxSetVolume(uint, uint);
-uint auxGetVolume(uint, uint*);
-uint auxOutMessage(uint, uint, ulong, ulong);
+uint auxGetDevCapsA(ulong uDeviceID, AUXCAPSA* pac, uint cbac);
+uint auxGetDevCapsW(ulong uDeviceID, AUXCAPSW* pac, uint cbac);
+uint auxSetVolume(uint uDeviceID, uint dwVolume);
+uint auxGetVolume(uint uDeviceID, uint* pdwVolume);
+uint auxOutMessage(uint uDeviceID, uint uMsg, ulong dw1, ulong dw2);
 uint mixerGetNumDevs();
-uint mixerGetDevCapsA(ulong, MIXERCAPSA*, uint);
-uint mixerGetDevCapsW(ulong, MIXERCAPSW*, uint);
-uint mixerOpen(HMIXER*, uint, ulong, ulong, uint);
-uint mixerClose(HMIXER);
-uint mixerMessage(HMIXER, uint, ulong, ulong);
-uint mixerGetLineInfoA(HMIXEROBJ, MIXERLINEA*, uint);
-uint mixerGetLineInfoW(HMIXEROBJ, MIXERLINEW*, uint);
-uint mixerGetID(HMIXEROBJ, uint*, uint);
-uint mixerGetLineControlsA(HMIXEROBJ, MIXERLINECONTROLSA*, uint);
-uint mixerGetLineControlsW(HMIXEROBJ, MIXERLINECONTROLSW*, uint);
-uint mixerGetControlDetailsA(HMIXEROBJ, MIXERCONTROLDETAILS*, uint);
-uint mixerGetControlDetailsW(HMIXEROBJ, MIXERCONTROLDETAILS*, uint);
-uint mixerSetControlDetails(HMIXEROBJ, MIXERCONTROLDETAILS*, uint);
-HRESULT ActivateAudioInterfaceAsync(const(wchar)*, const(GUID)*, PROPVARIANT*, IActivateAudioInterfaceCompletionHandler, IActivateAudioInterfaceAsyncOperation*);
-HRESULT CreateRenderAudioStateMonitor(IAudioStateMonitor*);
-HRESULT CreateRenderAudioStateMonitorForCategory(AUDIO_STREAM_CATEGORY, IAudioStateMonitor*);
-HRESULT CreateRenderAudioStateMonitorForCategoryAndDeviceRole(AUDIO_STREAM_CATEGORY, ERole, IAudioStateMonitor*);
-HRESULT CreateRenderAudioStateMonitorForCategoryAndDeviceId(AUDIO_STREAM_CATEGORY, const(wchar)*, IAudioStateMonitor*);
-HRESULT CreateCaptureAudioStateMonitor(IAudioStateMonitor*);
-HRESULT CreateCaptureAudioStateMonitorForCategory(AUDIO_STREAM_CATEGORY, IAudioStateMonitor*);
-HRESULT CreateCaptureAudioStateMonitorForCategoryAndDeviceRole(AUDIO_STREAM_CATEGORY, ERole, IAudioStateMonitor*);
-HRESULT CreateCaptureAudioStateMonitorForCategoryAndDeviceId(AUDIO_STREAM_CATEGORY, const(wchar)*, IAudioStateMonitor*);
+uint mixerGetDevCapsA(ulong uMxId, MIXERCAPSA* pmxcaps, uint cbmxcaps);
+uint mixerGetDevCapsW(ulong uMxId, MIXERCAPSW* pmxcaps, uint cbmxcaps);
+uint mixerOpen(HMIXER* phmx, uint uMxId, ulong dwCallback, ulong dwInstance, uint fdwOpen);
+uint mixerClose(HMIXER hmx);
+uint mixerMessage(HMIXER hmx, uint uMsg, ulong dwParam1, ulong dwParam2);
+uint mixerGetLineInfoA(HMIXEROBJ hmxobj, MIXERLINEA* pmxl, uint fdwInfo);
+uint mixerGetLineInfoW(HMIXEROBJ hmxobj, MIXERLINEW* pmxl, uint fdwInfo);
+uint mixerGetID(HMIXEROBJ hmxobj, uint* puMxId, uint fdwId);
+uint mixerGetLineControlsA(HMIXEROBJ hmxobj, MIXERLINECONTROLSA* pmxlc, uint fdwControls);
+uint mixerGetLineControlsW(HMIXEROBJ hmxobj, MIXERLINECONTROLSW* pmxlc, uint fdwControls);
+uint mixerGetControlDetailsA(HMIXEROBJ hmxobj, MIXERCONTROLDETAILS* pmxcd, uint fdwDetails);
+uint mixerGetControlDetailsW(HMIXEROBJ hmxobj, MIXERCONTROLDETAILS* pmxcd, uint fdwDetails);
+uint mixerSetControlDetails(HMIXEROBJ hmxobj, MIXERCONTROLDETAILS* pmxcd, uint fdwDetails);
+HRESULT ActivateAudioInterfaceAsync(const(wchar)* deviceInterfacePath, const(GUID)* riid, PROPVARIANT* activationParams, IActivateAudioInterfaceCompletionHandler completionHandler, IActivateAudioInterfaceAsyncOperation* activationOperation);
+HRESULT CreateRenderAudioStateMonitor(IAudioStateMonitor* audioStateMonitor);
+HRESULT CreateRenderAudioStateMonitorForCategory(AUDIO_STREAM_CATEGORY category, IAudioStateMonitor* audioStateMonitor);
+HRESULT CreateRenderAudioStateMonitorForCategoryAndDeviceRole(AUDIO_STREAM_CATEGORY category, ERole role, IAudioStateMonitor* audioStateMonitor);
+HRESULT CreateRenderAudioStateMonitorForCategoryAndDeviceId(AUDIO_STREAM_CATEGORY category, const(wchar)* deviceId, IAudioStateMonitor* audioStateMonitor);
+HRESULT CreateCaptureAudioStateMonitor(IAudioStateMonitor* audioStateMonitor);
+HRESULT CreateCaptureAudioStateMonitorForCategory(AUDIO_STREAM_CATEGORY category, IAudioStateMonitor* audioStateMonitor);
+HRESULT CreateCaptureAudioStateMonitorForCategoryAndDeviceRole(AUDIO_STREAM_CATEGORY category, ERole role, IAudioStateMonitor* audioStateMonitor);
+HRESULT CreateCaptureAudioStateMonitorForCategoryAndDeviceId(AUDIO_STREAM_CATEGORY category, const(wchar)* deviceId, IAudioStateMonitor* audioStateMonitor);
 uint acmGetVersion();
-uint acmMetrics(HACMOBJ, uint, void*);
-uint acmDriverEnum(ACMDRIVERENUMCB, ulong, uint);
-uint acmDriverID(HACMOBJ, HACMDRIVERID*, uint);
-uint acmDriverAddA(HACMDRIVERID*, HINSTANCE, LPARAM, uint, uint);
-uint acmDriverAddW(HACMDRIVERID*, HINSTANCE, LPARAM, uint, uint);
-uint acmDriverRemove(HACMDRIVERID, uint);
-uint acmDriverOpen(HACMDRIVER*, HACMDRIVERID, uint);
-uint acmDriverClose(HACMDRIVER, uint);
-LRESULT acmDriverMessage(HACMDRIVER, uint, LPARAM, LPARAM);
-uint acmDriverPriority(HACMDRIVERID, uint, uint);
-uint acmDriverDetailsA(HACMDRIVERID, ACMDRIVERDETAILSA*, uint);
-uint acmDriverDetailsW(HACMDRIVERID, ACMDRIVERDETAILSW*, uint);
-uint acmFormatTagDetailsA(HACMDRIVER, ACMFORMATTAGDETAILSA*, uint);
-uint acmFormatTagDetailsW(HACMDRIVER, ACMFORMATTAGDETAILSW*, uint);
-uint acmFormatTagEnumA(HACMDRIVER, ACMFORMATTAGDETAILSA*, ACMFORMATTAGENUMCBA, ulong, uint);
-uint acmFormatTagEnumW(HACMDRIVER, ACMFORMATTAGDETAILSW*, ACMFORMATTAGENUMCBW, ulong, uint);
-uint acmFormatDetailsA(HACMDRIVER, ACMFORMATDETAILSA*, uint);
-uint acmFormatDetailsW(HACMDRIVER, tACMFORMATDETAILSW*, uint);
-uint acmFormatEnumA(HACMDRIVER, ACMFORMATDETAILSA*, ACMFORMATENUMCBA, ulong, uint);
-uint acmFormatEnumW(HACMDRIVER, tACMFORMATDETAILSW*, ACMFORMATENUMCBW, ulong, uint);
-uint acmFormatSuggest(HACMDRIVER, WAVEFORMATEX*, WAVEFORMATEX*, uint, uint);
-uint acmFormatChooseA(ACMFORMATCHOOSEA*);
-uint acmFormatChooseW(ACMFORMATCHOOSEW*);
-uint acmFilterTagDetailsA(HACMDRIVER, ACMFILTERTAGDETAILSA*, uint);
-uint acmFilterTagDetailsW(HACMDRIVER, ACMFILTERTAGDETAILSW*, uint);
-uint acmFilterTagEnumA(HACMDRIVER, ACMFILTERTAGDETAILSA*, ACMFILTERTAGENUMCBA, ulong, uint);
-uint acmFilterTagEnumW(HACMDRIVER, ACMFILTERTAGDETAILSW*, ACMFILTERTAGENUMCBW, ulong, uint);
-uint acmFilterDetailsA(HACMDRIVER, ACMFILTERDETAILSA*, uint);
-uint acmFilterDetailsW(HACMDRIVER, ACMFILTERDETAILSW*, uint);
-uint acmFilterEnumA(HACMDRIVER, ACMFILTERDETAILSA*, ACMFILTERENUMCBA, ulong, uint);
-uint acmFilterEnumW(HACMDRIVER, ACMFILTERDETAILSW*, ACMFILTERENUMCBW, ulong, uint);
-uint acmFilterChooseA(ACMFILTERCHOOSEA*);
-uint acmFilterChooseW(ACMFILTERCHOOSEW*);
-uint acmStreamOpen(HACMSTREAM*, HACMDRIVER, WAVEFORMATEX*, WAVEFORMATEX*, WAVEFILTER*, ulong, ulong, uint);
-uint acmStreamClose(HACMSTREAM, uint);
-uint acmStreamSize(HACMSTREAM, uint, uint*, uint);
-uint acmStreamReset(HACMSTREAM, uint);
-uint acmStreamMessage(HACMSTREAM, uint, LPARAM, LPARAM);
-uint acmStreamConvert(HACMSTREAM, ACMSTREAMHEADER*, uint);
-uint acmStreamPrepareHeader(HACMSTREAM, ACMSTREAMHEADER*, uint);
-uint acmStreamUnprepareHeader(HACMSTREAM, ACMSTREAMHEADER*, uint);
+uint acmMetrics(HACMOBJ hao, uint uMetric, void* pMetric);
+uint acmDriverEnum(ACMDRIVERENUMCB fnCallback, ulong dwInstance, uint fdwEnum);
+uint acmDriverID(HACMOBJ hao, HACMDRIVERID* phadid, uint fdwDriverID);
+uint acmDriverAddA(HACMDRIVERID* phadid, HINSTANCE hinstModule, LPARAM lParam, uint dwPriority, uint fdwAdd);
+uint acmDriverAddW(HACMDRIVERID* phadid, HINSTANCE hinstModule, LPARAM lParam, uint dwPriority, uint fdwAdd);
+uint acmDriverRemove(HACMDRIVERID hadid, uint fdwRemove);
+uint acmDriverOpen(HACMDRIVER* phad, HACMDRIVERID hadid, uint fdwOpen);
+uint acmDriverClose(HACMDRIVER had, uint fdwClose);
+LRESULT acmDriverMessage(HACMDRIVER had, uint uMsg, LPARAM lParam1, LPARAM lParam2);
+uint acmDriverPriority(HACMDRIVERID hadid, uint dwPriority, uint fdwPriority);
+uint acmDriverDetailsA(HACMDRIVERID hadid, ACMDRIVERDETAILSA* padd, uint fdwDetails);
+uint acmDriverDetailsW(HACMDRIVERID hadid, ACMDRIVERDETAILSW* padd, uint fdwDetails);
+uint acmFormatTagDetailsA(HACMDRIVER had, ACMFORMATTAGDETAILSA* paftd, uint fdwDetails);
+uint acmFormatTagDetailsW(HACMDRIVER had, ACMFORMATTAGDETAILSW* paftd, uint fdwDetails);
+uint acmFormatTagEnumA(HACMDRIVER had, ACMFORMATTAGDETAILSA* paftd, ACMFORMATTAGENUMCBA fnCallback, ulong dwInstance, uint fdwEnum);
+uint acmFormatTagEnumW(HACMDRIVER had, ACMFORMATTAGDETAILSW* paftd, ACMFORMATTAGENUMCBW fnCallback, ulong dwInstance, uint fdwEnum);
+uint acmFormatDetailsA(HACMDRIVER had, ACMFORMATDETAILSA* pafd, uint fdwDetails);
+uint acmFormatDetailsW(HACMDRIVER had, tACMFORMATDETAILSW* pafd, uint fdwDetails);
+uint acmFormatEnumA(HACMDRIVER had, ACMFORMATDETAILSA* pafd, ACMFORMATENUMCBA fnCallback, ulong dwInstance, uint fdwEnum);
+uint acmFormatEnumW(HACMDRIVER had, tACMFORMATDETAILSW* pafd, ACMFORMATENUMCBW fnCallback, ulong dwInstance, uint fdwEnum);
+uint acmFormatSuggest(HACMDRIVER had, WAVEFORMATEX* pwfxSrc, WAVEFORMATEX* pwfxDst, uint cbwfxDst, uint fdwSuggest);
+uint acmFormatChooseA(ACMFORMATCHOOSEA* pafmtc);
+uint acmFormatChooseW(ACMFORMATCHOOSEW* pafmtc);
+uint acmFilterTagDetailsA(HACMDRIVER had, ACMFILTERTAGDETAILSA* paftd, uint fdwDetails);
+uint acmFilterTagDetailsW(HACMDRIVER had, ACMFILTERTAGDETAILSW* paftd, uint fdwDetails);
+uint acmFilterTagEnumA(HACMDRIVER had, ACMFILTERTAGDETAILSA* paftd, ACMFILTERTAGENUMCBA fnCallback, ulong dwInstance, uint fdwEnum);
+uint acmFilterTagEnumW(HACMDRIVER had, ACMFILTERTAGDETAILSW* paftd, ACMFILTERTAGENUMCBW fnCallback, ulong dwInstance, uint fdwEnum);
+uint acmFilterDetailsA(HACMDRIVER had, ACMFILTERDETAILSA* pafd, uint fdwDetails);
+uint acmFilterDetailsW(HACMDRIVER had, ACMFILTERDETAILSW* pafd, uint fdwDetails);
+uint acmFilterEnumA(HACMDRIVER had, ACMFILTERDETAILSA* pafd, ACMFILTERENUMCBA fnCallback, ulong dwInstance, uint fdwEnum);
+uint acmFilterEnumW(HACMDRIVER had, ACMFILTERDETAILSW* pafd, ACMFILTERENUMCBW fnCallback, ulong dwInstance, uint fdwEnum);
+uint acmFilterChooseA(ACMFILTERCHOOSEA* pafltrc);
+uint acmFilterChooseW(ACMFILTERCHOOSEW* pafltrc);
+uint acmStreamOpen(HACMSTREAM* phas, HACMDRIVER had, WAVEFORMATEX* pwfxSrc, WAVEFORMATEX* pwfxDst, WAVEFILTER* pwfltr, ulong dwCallback, ulong dwInstance, uint fdwOpen);
+uint acmStreamClose(HACMSTREAM has, uint fdwClose);
+uint acmStreamSize(HACMSTREAM has, uint cbInput, uint* pdwOutputBytes, uint fdwSize);
+uint acmStreamReset(HACMSTREAM has, uint fdwReset);
+uint acmStreamMessage(HACMSTREAM has, uint uMsg, LPARAM lParam1, LPARAM lParam2);
+uint acmStreamConvert(HACMSTREAM has, ACMSTREAMHEADER* pash, uint fdwConvert);
+uint acmStreamPrepareHeader(HACMSTREAM has, ACMSTREAMHEADER* pash, uint fdwPrepare);
+uint acmStreamUnprepareHeader(HACMSTREAM has, ACMSTREAMHEADER* pash, uint fdwUnprepare);
 enum MIXERCONTROL_CONTROLTYPE_CUSTOM = 0x00000000;
 enum MIXERCONTROL_CONTROLTYPE_BOOLEANMETER = 0x10010000;
 enum MIXERCONTROL_CONTROLTYPE_SIGNEDMETER = 0x10020000;
@@ -741,9 +741,9 @@ alias HACMOBJ = void*;
 enum IID_IMessageFilter = GUID(0x16, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IMessageFilter : IUnknown
 {
-    uint HandleInComingCall(uint, HTASK, uint, INTERFACEINFO*);
-    uint RetryRejectedCall(HTASK, uint, uint);
-    uint MessagePending(HTASK, uint, uint);
+    uint HandleInComingCall(uint dwCallType, HTASK htaskCaller, uint dwTickCount, INTERFACEINFO* lpInterfaceInfo);
+    uint RetryRejectedCall(HTASK htaskCallee, uint dwTickCount, uint dwRejectType);
+    uint MessagePending(HTASK htaskCallee, uint dwTickCount, uint dwPendingType);
 }
 struct WAVEFORMATEXTENSIBLE
 {
@@ -1431,25 +1431,25 @@ struct AudioClientProperties
 enum IID_IAudioClient = GUID(0x1cb9ad4c, 0xdbfa, 0x4c32, [0xb1, 0x78, 0xc2, 0xf5, 0x68, 0xa7, 0x3, 0xb2]);
 interface IAudioClient : IUnknown
 {
-    HRESULT Initialize(AUDCLNT_SHAREMODE, uint, long, long, const(WAVEFORMATEX)*, const(GUID)*);
-    HRESULT GetBufferSize(uint*);
-    HRESULT GetStreamLatency(long*);
-    HRESULT GetCurrentPadding(uint*);
-    HRESULT IsFormatSupported(AUDCLNT_SHAREMODE, const(WAVEFORMATEX)*, WAVEFORMATEX**);
-    HRESULT GetMixFormat(WAVEFORMATEX**);
-    HRESULT GetDevicePeriod(long*, long*);
+    HRESULT Initialize(AUDCLNT_SHAREMODE ShareMode, uint StreamFlags, long hnsBufferDuration, long hnsPeriodicity, const(WAVEFORMATEX)* pFormat, const(GUID)* AudioSessionGuid);
+    HRESULT GetBufferSize(uint* pNumBufferFrames);
+    HRESULT GetStreamLatency(long* phnsLatency);
+    HRESULT GetCurrentPadding(uint* pNumPaddingFrames);
+    HRESULT IsFormatSupported(AUDCLNT_SHAREMODE ShareMode, const(WAVEFORMATEX)* pFormat, WAVEFORMATEX** ppClosestMatch);
+    HRESULT GetMixFormat(WAVEFORMATEX** ppDeviceFormat);
+    HRESULT GetDevicePeriod(long* phnsDefaultDevicePeriod, long* phnsMinimumDevicePeriod);
     HRESULT Start();
     HRESULT Stop();
     HRESULT Reset();
-    HRESULT SetEventHandle(HANDLE);
-    HRESULT GetService(const(GUID)*, void**);
+    HRESULT SetEventHandle(HANDLE eventHandle);
+    HRESULT GetService(const(GUID)* riid, void** ppv);
 }
 enum IID_IAudioClient2 = GUID(0x726778cd, 0xf60a, 0x4eda, [0x82, 0xde, 0xe4, 0x76, 0x10, 0xcd, 0x78, 0xaa]);
 interface IAudioClient2 : IAudioClient
 {
-    HRESULT IsOffloadCapable(AUDIO_STREAM_CATEGORY, BOOL*);
-    HRESULT SetClientProperties(const(AudioClientProperties)*);
-    HRESULT GetBufferSizeLimits(const(WAVEFORMATEX)*, BOOL, long*, long*);
+    HRESULT IsOffloadCapable(AUDIO_STREAM_CATEGORY Category, BOOL* pbOffloadCapable);
+    HRESULT SetClientProperties(const(AudioClientProperties)* pProperties);
+    HRESULT GetBufferSizeLimits(const(WAVEFORMATEX)* pFormat, BOOL bEventDriven, long* phnsMinBufferDuration, long* phnsMaxBufferDuration);
 }
 struct AudioClient3ActivationParams
 {
@@ -1458,47 +1458,47 @@ struct AudioClient3ActivationParams
 enum IID_IAudioClient3 = GUID(0x7ed4ee07, 0x8e67, 0x4cd4, [0x8c, 0x1a, 0x2b, 0x7a, 0x59, 0x87, 0xad, 0x42]);
 interface IAudioClient3 : IAudioClient2
 {
-    HRESULT GetSharedModeEnginePeriod(const(WAVEFORMATEX)*, uint*, uint*, uint*, uint*);
-    HRESULT GetCurrentSharedModeEnginePeriod(WAVEFORMATEX**, uint*);
-    HRESULT InitializeSharedAudioStream(uint, uint, const(WAVEFORMATEX)*, const(GUID)*);
+    HRESULT GetSharedModeEnginePeriod(const(WAVEFORMATEX)* pFormat, uint* pDefaultPeriodInFrames, uint* pFundamentalPeriodInFrames, uint* pMinPeriodInFrames, uint* pMaxPeriodInFrames);
+    HRESULT GetCurrentSharedModeEnginePeriod(WAVEFORMATEX** ppFormat, uint* pCurrentPeriodInFrames);
+    HRESULT InitializeSharedAudioStream(uint StreamFlags, uint PeriodInFrames, const(WAVEFORMATEX)* pFormat, const(GUID)* AudioSessionGuid);
 }
 enum IID_IAudioRenderClient = GUID(0xf294acfc, 0x3146, 0x4483, [0xa7, 0xbf, 0xad, 0xdc, 0xa7, 0xc2, 0x60, 0xe2]);
 interface IAudioRenderClient : IUnknown
 {
-    HRESULT GetBuffer(uint, ubyte**);
-    HRESULT ReleaseBuffer(uint, uint);
+    HRESULT GetBuffer(uint NumFramesRequested, ubyte** ppData);
+    HRESULT ReleaseBuffer(uint NumFramesWritten, uint dwFlags);
 }
 enum IID_IAudioCaptureClient = GUID(0xc8adbd64, 0xe71e, 0x48a0, [0xa4, 0xde, 0x18, 0x5c, 0x39, 0x5c, 0xd3, 0x17]);
 interface IAudioCaptureClient : IUnknown
 {
-    HRESULT GetBuffer(ubyte**, uint*, uint*, ulong*, ulong*);
-    HRESULT ReleaseBuffer(uint);
-    HRESULT GetNextPacketSize(uint*);
+    HRESULT GetBuffer(ubyte** ppData, uint* pNumFramesToRead, uint* pdwFlags, ulong* pu64DevicePosition, ulong* pu64QPCPosition);
+    HRESULT ReleaseBuffer(uint NumFramesRead);
+    HRESULT GetNextPacketSize(uint* pNumFramesInNextPacket);
 }
 enum IID_IAudioClock = GUID(0xcd63314f, 0x3fba, 0x4a1b, [0x81, 0x2c, 0xef, 0x96, 0x35, 0x87, 0x28, 0xe7]);
 interface IAudioClock : IUnknown
 {
-    HRESULT GetFrequency(ulong*);
-    HRESULT GetPosition(ulong*, ulong*);
-    HRESULT GetCharacteristics(uint*);
+    HRESULT GetFrequency(ulong* pu64Frequency);
+    HRESULT GetPosition(ulong* pu64Position, ulong* pu64QPCPosition);
+    HRESULT GetCharacteristics(uint* pdwCharacteristics);
 }
 enum IID_IAudioClock2 = GUID(0x6f49ff73, 0x6727, 0x49ac, [0xa0, 0x8, 0xd9, 0x8c, 0xf5, 0xe7, 0x0, 0x48]);
 interface IAudioClock2 : IUnknown
 {
-    HRESULT GetDevicePosition(ulong*, ulong*);
+    HRESULT GetDevicePosition(ulong* DevicePosition, ulong* QPCPosition);
 }
 enum IID_IAudioClockAdjustment = GUID(0xf6e4c0a0, 0x46d9, 0x4fb8, [0xbe, 0x21, 0x57, 0xa3, 0xef, 0x2b, 0x62, 0x6c]);
 interface IAudioClockAdjustment : IUnknown
 {
-    HRESULT SetSampleRate(float);
+    HRESULT SetSampleRate(float flSampleRate);
 }
 enum IID_ISimpleAudioVolume = GUID(0x87ce5498, 0x68d6, 0x44e5, [0x92, 0x15, 0x6d, 0xa4, 0x7e, 0xf8, 0x83, 0xd8]);
 interface ISimpleAudioVolume : IUnknown
 {
-    HRESULT SetMasterVolume(float, const(GUID)*);
-    HRESULT GetMasterVolume(float*);
-    HRESULT SetMute(const(BOOL), const(GUID)*);
-    HRESULT GetMute(BOOL*);
+    HRESULT SetMasterVolume(float fLevel, const(GUID)* EventContext);
+    HRESULT GetMasterVolume(float* pfLevel);
+    HRESULT SetMute(const(BOOL) bMute, const(GUID)* EventContext);
+    HRESULT GetMute(BOOL* pbMute);
 }
 alias AUDIO_DUCKING_OPTIONS = int;
 enum : int
@@ -1510,12 +1510,12 @@ enum : int
 enum IID_IAudioClientDuckingControl = GUID(0xc789d381, 0xa28c, 0x4168, [0xb2, 0x8f, 0xd3, 0xa8, 0x37, 0x92, 0x4d, 0xc3]);
 interface IAudioClientDuckingControl : IUnknown
 {
-    HRESULT SetDuckingOptionsForCurrentStream(AUDIO_DUCKING_OPTIONS);
+    HRESULT SetDuckingOptionsForCurrentStream(AUDIO_DUCKING_OPTIONS options);
 }
 enum IID_IAudioViewManagerService = GUID(0xa7a7ef10, 0x1f49, 0x45e0, [0xad, 0x35, 0x61, 0x20, 0x57, 0xcc, 0x8f, 0x74]);
 interface IAudioViewManagerService : IUnknown
 {
-    HRESULT SetAudioStreamWindow(HWND);
+    HRESULT SetAudioStreamWindow(HWND hwnd);
 }
 alias AUDIO_EFFECT_STATE = int;
 enum : int
@@ -1538,19 +1538,19 @@ interface IAudioEffectsChangedNotificationClient : IUnknown
 enum IID_IAudioEffectsManager = GUID(0x4460b3ae, 0x4b44, 0x4527, [0x86, 0x76, 0x75, 0x48, 0xa8, 0xac, 0xd2, 0x60]);
 interface IAudioEffectsManager : IUnknown
 {
-    HRESULT RegisterAudioEffectsChangedNotificationCallback(IAudioEffectsChangedNotificationClient);
-    HRESULT UnregisterAudioEffectsChangedNotificationCallback(IAudioEffectsChangedNotificationClient);
-    HRESULT GetAudioEffects(AUDIO_EFFECT**, uint*);
-    HRESULT SetAudioEffectState(GUID, AUDIO_EFFECT_STATE);
+    HRESULT RegisterAudioEffectsChangedNotificationCallback(IAudioEffectsChangedNotificationClient client);
+    HRESULT UnregisterAudioEffectsChangedNotificationCallback(IAudioEffectsChangedNotificationClient client);
+    HRESULT GetAudioEffects(AUDIO_EFFECT** effects, uint* numEffects);
+    HRESULT SetAudioEffectState(GUID effectId, AUDIO_EFFECT_STATE state);
 }
 enum IID_IAudioStreamVolume = GUID(0x93014887, 0x242d, 0x4068, [0x8a, 0x15, 0xcf, 0x5e, 0x93, 0xb9, 0xf, 0xe3]);
 interface IAudioStreamVolume : IUnknown
 {
-    HRESULT GetChannelCount(uint*);
-    HRESULT SetChannelVolume(uint, const(float));
-    HRESULT GetChannelVolume(uint, float*);
-    HRESULT SetAllVolumes(uint, const(float)*);
-    HRESULT GetAllVolumes(uint, float*);
+    HRESULT GetChannelCount(uint* pdwCount);
+    HRESULT SetChannelVolume(uint dwIndex, const(float) fLevel);
+    HRESULT GetChannelVolume(uint dwIndex, float* pfLevel);
+    HRESULT SetAllVolumes(uint dwCount, const(float)* pfVolumes);
+    HRESULT GetAllVolumes(uint dwCount, float* pfVolumes);
 }
 alias AMBISONICS_TYPE = int;
 enum : int
@@ -1585,24 +1585,24 @@ struct AMBISONICS_PARAMS
 enum IID_IAudioAmbisonicsControl = GUID(0x28724c91, 0xdf35, 0x4856, [0x9f, 0x76, 0xd6, 0xa2, 0x64, 0x13, 0xf3, 0xdf]);
 interface IAudioAmbisonicsControl : IUnknown
 {
-    HRESULT SetData(const(AMBISONICS_PARAMS)*, uint);
-    HRESULT SetHeadTracking(BOOL);
-    HRESULT GetHeadTracking(BOOL*);
-    HRESULT SetRotation(float, float, float, float);
+    HRESULT SetData(const(AMBISONICS_PARAMS)* pAmbisonicsParams, uint cbAmbisonicsParams);
+    HRESULT SetHeadTracking(BOOL bEnableHeadTracking);
+    HRESULT GetHeadTracking(BOOL* pbEnableHeadTracking);
+    HRESULT SetRotation(float X, float Y, float Z, float W);
 }
 enum IID_IChannelAudioVolume = GUID(0x1c158861, 0xb533, 0x4b30, [0xb1, 0xcf, 0xe8, 0x53, 0xe5, 0x1c, 0x59, 0xb8]);
 interface IChannelAudioVolume : IUnknown
 {
-    HRESULT GetChannelCount(uint*);
-    HRESULT SetChannelVolume(uint, const(float), const(GUID)*);
-    HRESULT GetChannelVolume(uint, float*);
-    HRESULT SetAllVolumes(uint, const(float)*, const(GUID)*);
-    HRESULT GetAllVolumes(uint, float*);
+    HRESULT GetChannelCount(uint* pdwCount);
+    HRESULT SetChannelVolume(uint dwIndex, const(float) fLevel, const(GUID)* EventContext);
+    HRESULT GetChannelVolume(uint dwIndex, float* pfLevel);
+    HRESULT SetAllVolumes(uint dwCount, const(float)* pfVolumes, const(GUID)* EventContext);
+    HRESULT GetAllVolumes(uint dwCount, float* pfVolumes);
 }
 enum IID_IAcousticEchoCancellationControl = GUID(0xf4ae25b5, 0xaaa3, 0x437d, [0xb6, 0xb3, 0xdb, 0xbe, 0x2d, 0xe, 0x95, 0x49]);
 interface IAcousticEchoCancellationControl : IUnknown
 {
-    HRESULT SetEchoCancellationRenderEndpoint(const(wchar)*);
+    HRESULT SetEchoCancellationRenderEndpoint(const(wchar)* endpointId);
 }
 alias AudioObjectType = int;
 enum : int
@@ -1661,61 +1661,61 @@ struct SpatialAudioObjectRenderStreamActivationParams2
 enum IID_IAudioFormatEnumerator = GUID(0xdcdaa858, 0x895a, 0x4a22, [0xa5, 0xeb, 0x67, 0xbd, 0xa5, 0x6, 0x9, 0x6d]);
 interface IAudioFormatEnumerator : IUnknown
 {
-    HRESULT GetCount(uint*);
-    HRESULT GetFormat(uint, WAVEFORMATEX**);
+    HRESULT GetCount(uint* count);
+    HRESULT GetFormat(uint index, WAVEFORMATEX** format);
 }
 enum IID_ISpatialAudioObjectBase = GUID(0xcce0b8f2, 0x8d4d, 0x4efb, [0xa8, 0xcf, 0x3d, 0x6e, 0xcf, 0x1c, 0x30, 0xe0]);
 interface ISpatialAudioObjectBase : IUnknown
 {
-    HRESULT GetBuffer(ubyte**, uint*);
-    HRESULT SetEndOfStream(uint);
-    HRESULT IsActive(BOOL*);
-    HRESULT GetAudioObjectType(AudioObjectType*);
+    HRESULT GetBuffer(ubyte** buffer, uint* bufferLength);
+    HRESULT SetEndOfStream(uint frameCount);
+    HRESULT IsActive(BOOL* isActive);
+    HRESULT GetAudioObjectType(AudioObjectType* audioObjectType);
 }
 enum IID_ISpatialAudioObject = GUID(0xdde28967, 0x521b, 0x46e5, [0x8f, 0x0, 0xbd, 0x6f, 0x2b, 0xc8, 0xab, 0x1d]);
 interface ISpatialAudioObject : ISpatialAudioObjectBase
 {
-    HRESULT SetPosition(float, float, float);
-    HRESULT SetVolume(float);
+    HRESULT SetPosition(float x, float y, float z);
+    HRESULT SetVolume(float volume);
 }
 enum IID_ISpatialAudioObjectRenderStreamBase = GUID(0xfeaaf403, 0xc1d8, 0x450d, [0xaa, 0x5, 0xe0, 0xcc, 0xee, 0x75, 0x2, 0xa8]);
 interface ISpatialAudioObjectRenderStreamBase : IUnknown
 {
-    HRESULT GetAvailableDynamicObjectCount(uint*);
-    HRESULT GetService(const(GUID)*, void**);
+    HRESULT GetAvailableDynamicObjectCount(uint* value);
+    HRESULT GetService(const(GUID)* riid, void** service);
     HRESULT Start();
     HRESULT Stop();
     HRESULT Reset();
-    HRESULT BeginUpdatingAudioObjects(uint*, uint*);
+    HRESULT BeginUpdatingAudioObjects(uint* availableDynamicObjectCount, uint* frameCountPerBuffer);
     HRESULT EndUpdatingAudioObjects();
 }
 enum IID_ISpatialAudioObjectRenderStream = GUID(0xbab5f473, 0xb423, 0x477b, [0x85, 0xf5, 0xb5, 0xa3, 0x32, 0xa0, 0x41, 0x53]);
 interface ISpatialAudioObjectRenderStream : ISpatialAudioObjectRenderStreamBase
 {
-    HRESULT ActivateSpatialAudioObject(AudioObjectType, ISpatialAudioObject*);
+    HRESULT ActivateSpatialAudioObject(AudioObjectType type, ISpatialAudioObject* audioObject);
 }
 enum IID_ISpatialAudioObjectRenderStreamNotify = GUID(0xdddf83e6, 0x68d7, 0x4c70, [0x88, 0x3f, 0xa1, 0x83, 0x6a, 0xfb, 0x4a, 0x50]);
 interface ISpatialAudioObjectRenderStreamNotify : IUnknown
 {
-    HRESULT OnAvailableDynamicObjectCountChange(ISpatialAudioObjectRenderStreamBase, long, uint);
+    HRESULT OnAvailableDynamicObjectCountChange(ISpatialAudioObjectRenderStreamBase sender, long hnsComplianceDeadlineTime, uint availableDynamicObjectCountChange);
 }
 enum IID_ISpatialAudioClient = GUID(0xbbf8e066, 0xaaaa, 0x49be, [0x9a, 0x4d, 0xfd, 0x2a, 0x85, 0x8e, 0xa2, 0x7f]);
 interface ISpatialAudioClient : IUnknown
 {
-    HRESULT GetStaticObjectPosition(AudioObjectType, float*, float*, float*);
-    HRESULT GetNativeStaticObjectTypeMask(AudioObjectType*);
-    HRESULT GetMaxDynamicObjectCount(uint*);
-    HRESULT GetSupportedAudioObjectFormatEnumerator(IAudioFormatEnumerator*);
-    HRESULT GetMaxFrameCount(const(WAVEFORMATEX)*, uint*);
-    HRESULT IsAudioObjectFormatSupported(const(WAVEFORMATEX)*);
-    HRESULT IsSpatialAudioStreamAvailable(const(GUID)*, const(PROPVARIANT)*);
-    HRESULT ActivateSpatialAudioStream(const(PROPVARIANT)*, const(GUID)*, void**);
+    HRESULT GetStaticObjectPosition(AudioObjectType type, float* x, float* y, float* z);
+    HRESULT GetNativeStaticObjectTypeMask(AudioObjectType* mask);
+    HRESULT GetMaxDynamicObjectCount(uint* value);
+    HRESULT GetSupportedAudioObjectFormatEnumerator(IAudioFormatEnumerator* enumerator);
+    HRESULT GetMaxFrameCount(const(WAVEFORMATEX)* objectFormat, uint* frameCountPerBuffer);
+    HRESULT IsAudioObjectFormatSupported(const(WAVEFORMATEX)* objectFormat);
+    HRESULT IsSpatialAudioStreamAvailable(const(GUID)* streamUuid, const(PROPVARIANT)* auxiliaryInfo);
+    HRESULT ActivateSpatialAudioStream(const(PROPVARIANT)* activationParams, const(GUID)* riid, void** stream);
 }
 enum IID_ISpatialAudioClient2 = GUID(0xcaabe452, 0xa66a, 0x4bee, [0xa9, 0x3e, 0xe3, 0x20, 0x46, 0x3f, 0x6a, 0x53]);
 interface ISpatialAudioClient2 : ISpatialAudioClient
 {
-    HRESULT IsOffloadCapable(AUDIO_STREAM_CATEGORY, BOOL*);
-    HRESULT GetMaxFrameCountForCategory(AUDIO_STREAM_CATEGORY, BOOL, const(WAVEFORMATEX)*, uint*);
+    HRESULT IsOffloadCapable(AUDIO_STREAM_CATEGORY category, BOOL* isOffloadCapable);
+    HRESULT GetMaxFrameCountForCategory(AUDIO_STREAM_CATEGORY category, BOOL offloadEnabled, const(WAVEFORMATEX)* objectFormat, uint* frameCountPerBuffer);
 }
 struct SpatialAudioClientActivationParams
 {
@@ -1819,17 +1819,17 @@ struct SpatialAudioHrtfActivationParams2
 enum IID_ISpatialAudioObjectForHrtf = GUID(0xd7436ade, 0x1978, 0x4e14, [0xab, 0xa0, 0x55, 0x5b, 0xd8, 0xeb, 0x83, 0xb4]);
 interface ISpatialAudioObjectForHrtf : ISpatialAudioObjectBase
 {
-    HRESULT SetPosition(float, float, float);
-    HRESULT SetGain(float);
-    HRESULT SetOrientation(const(float)**);
-    HRESULT SetEnvironment(SpatialAudioHrtfEnvironmentType);
-    HRESULT SetDistanceDecay(SpatialAudioHrtfDistanceDecay*);
-    HRESULT SetDirectivity(SpatialAudioHrtfDirectivityUnion*);
+    HRESULT SetPosition(float x, float y, float z);
+    HRESULT SetGain(float gain);
+    HRESULT SetOrientation(const(float)** orientation);
+    HRESULT SetEnvironment(SpatialAudioHrtfEnvironmentType environment);
+    HRESULT SetDistanceDecay(SpatialAudioHrtfDistanceDecay* distanceDecay);
+    HRESULT SetDirectivity(SpatialAudioHrtfDirectivityUnion* directivity);
 }
 enum IID_ISpatialAudioObjectRenderStreamForHrtf = GUID(0xe08deef9, 0x5363, 0x406e, [0x9f, 0xdc, 0x8, 0xe, 0xe2, 0x47, 0xbb, 0xe0]);
 interface ISpatialAudioObjectRenderStreamForHrtf : ISpatialAudioObjectRenderStreamBase
 {
-    HRESULT ActivateSpatialAudioObjectForHrtf(AudioObjectType, ISpatialAudioObjectForHrtf*);
+    HRESULT ActivateSpatialAudioObjectForHrtf(AudioObjectType type, ISpatialAudioObjectForHrtf* audioObject);
 }
 struct DIRECTX_AUDIO_ACTIVATION_PARAMS
 {
@@ -1875,54 +1875,54 @@ enum : int
 enum IID_IMMNotificationClient = GUID(0x7991eec9, 0x7e89, 0x4d85, [0x83, 0x90, 0x6c, 0x70, 0x3c, 0xec, 0x60, 0xc0]);
 interface IMMNotificationClient : IUnknown
 {
-    HRESULT OnDeviceStateChanged(const(wchar)*, DEVICE_STATE);
-    HRESULT OnDeviceAdded(const(wchar)*);
-    HRESULT OnDeviceRemoved(const(wchar)*);
-    HRESULT OnDefaultDeviceChanged(EDataFlow, ERole, const(wchar)*);
-    HRESULT OnPropertyValueChanged(const(wchar)*, const(PROPERTYKEY));
+    HRESULT OnDeviceStateChanged(const(wchar)* pwstrDeviceId, DEVICE_STATE dwNewState);
+    HRESULT OnDeviceAdded(const(wchar)* pwstrDeviceId);
+    HRESULT OnDeviceRemoved(const(wchar)* pwstrDeviceId);
+    HRESULT OnDefaultDeviceChanged(EDataFlow flow, ERole role, const(wchar)* pwstrDefaultDeviceId);
+    HRESULT OnPropertyValueChanged(const(wchar)* pwstrDeviceId, const(PROPERTYKEY) key);
 }
 enum IID_IMMDevice = GUID(0xd666063f, 0x1587, 0x4e43, [0x81, 0xf1, 0xb9, 0x48, 0xe8, 0x7, 0x36, 0x3f]);
 interface IMMDevice : IUnknown
 {
-    HRESULT Activate(const(GUID)*, CLSCTX, PROPVARIANT*, void**);
-    HRESULT OpenPropertyStore(STGM, IPropertyStore*);
-    HRESULT GetId(PWSTR*);
-    DEVICE_STATE GetState(uint*);
+    HRESULT Activate(const(GUID)* iid, CLSCTX dwClsCtx, PROPVARIANT* pActivationParams, void** ppInterface);
+    HRESULT OpenPropertyStore(STGM stgmAccess, IPropertyStore* ppProperties);
+    HRESULT GetId(PWSTR* ppstrId);
+    HRESULT GetState(DEVICE_STATE* pdwState);
 }
 enum IID_IMMDeviceCollection = GUID(0xbd7a1be, 0x7a1a, 0x44db, [0x83, 0x97, 0xcc, 0x53, 0x92, 0x38, 0x7b, 0x5e]);
 interface IMMDeviceCollection : IUnknown
 {
-    HRESULT GetCount(uint*);
-    HRESULT Item(uint, IMMDevice*);
+    HRESULT GetCount(uint* pcDevices);
+    HRESULT Item(uint nDevice, IMMDevice* ppDevice);
 }
 enum IID_IMMEndpoint = GUID(0x1be09788, 0x6894, 0x4089, [0x85, 0x86, 0x9a, 0x2a, 0x6c, 0x26, 0x5a, 0xc5]);
 interface IMMEndpoint : IUnknown
 {
-    HRESULT GetDataFlow(EDataFlow*);
+    HRESULT GetDataFlow(EDataFlow* pDataFlow);
 }
 enum IID_IMMDeviceEnumerator = GUID(0xa95664d2, 0x9614, 0x4f35, [0xa7, 0x46, 0xde, 0x8d, 0xb6, 0x36, 0x17, 0xe6]);
 interface IMMDeviceEnumerator : IUnknown
 {
-    HRESULT EnumAudioEndpoints(EDataFlow, DEVICE_STATE, IMMDeviceCollection*);
-    HRESULT GetDefaultAudioEndpoint(EDataFlow, ERole, IMMDevice*);
-    HRESULT GetDevice(const(wchar)*, IMMDevice*);
-    HRESULT RegisterEndpointNotificationCallback(IMMNotificationClient);
-    HRESULT UnregisterEndpointNotificationCallback(IMMNotificationClient);
+    HRESULT EnumAudioEndpoints(EDataFlow dataFlow, DEVICE_STATE dwStateMask, IMMDeviceCollection* ppDevices);
+    HRESULT GetDefaultAudioEndpoint(EDataFlow dataFlow, ERole role, IMMDevice* ppEndpoint);
+    HRESULT GetDevice(const(wchar)* pwstrId, IMMDevice* ppDevice);
+    HRESULT RegisterEndpointNotificationCallback(IMMNotificationClient pClient);
+    HRESULT UnregisterEndpointNotificationCallback(IMMNotificationClient pClient);
 }
 enum IID_IMMDeviceActivator = GUID(0x3b0d0ea4, 0xd0a9, 0x4b0e, [0x93, 0x5b, 0x9, 0x51, 0x67, 0x46, 0xfa, 0xc0]);
 interface IMMDeviceActivator : IUnknown
 {
-    HRESULT Activate(const(GUID)*, IMMDevice, PROPVARIANT*, void**);
+    HRESULT Activate(const(GUID)* iid, IMMDevice pDevice, PROPVARIANT* pActivationParams, void** ppInterface);
 }
 enum IID_IActivateAudioInterfaceCompletionHandler = GUID(0x41d949ab, 0x9862, 0x444a, [0x80, 0xf6, 0xc2, 0x61, 0x33, 0x4d, 0xa5, 0xeb]);
 interface IActivateAudioInterfaceCompletionHandler : IUnknown
 {
-    HRESULT ActivateCompleted(IActivateAudioInterfaceAsyncOperation);
+    HRESULT ActivateCompleted(IActivateAudioInterfaceAsyncOperation activateOperation);
 }
 enum IID_IActivateAudioInterfaceAsyncOperation = GUID(0x72a22d78, 0xcde4, 0x431d, [0xb8, 0xcc, 0x84, 0x3a, 0x71, 0x19, 0x9b, 0x6d]);
 interface IActivateAudioInterfaceAsyncOperation : IUnknown
 {
-    HRESULT GetActivateResult(HRESULT*, IUnknown*);
+    HRESULT GetActivateResult(HRESULT* activateResult, IUnknown* activatedInterface);
 }
 struct AudioExtensionParams
 {
@@ -1943,18 +1943,18 @@ enum : int
 enum IID_IAudioSystemEffectsPropertyChangeNotificationClient = GUID(0x20049d40, 0x56d5, 0x400e, [0xa2, 0xef, 0x38, 0x55, 0x99, 0xfe, 0xed, 0x49]);
 interface IAudioSystemEffectsPropertyChangeNotificationClient : IUnknown
 {
-    HRESULT OnPropertyChanged(AUDIO_SYSTEMEFFECTS_PROPERTYSTORE_TYPE, const(PROPERTYKEY));
+    HRESULT OnPropertyChanged(AUDIO_SYSTEMEFFECTS_PROPERTYSTORE_TYPE type, const(PROPERTYKEY) key);
 }
 enum IID_IAudioSystemEffectsPropertyStore = GUID(0x302ae7f9, 0xd7e0, 0x43e4, [0x97, 0x1b, 0x1f, 0x82, 0x93, 0x61, 0x3d, 0x2a]);
 interface IAudioSystemEffectsPropertyStore : IUnknown
 {
-    HRESULT OpenDefaultPropertyStore(uint, IPropertyStore*);
-    HRESULT OpenUserPropertyStore(uint, IPropertyStore*);
-    HRESULT OpenVolatilePropertyStore(uint, IPropertyStore*);
+    HRESULT OpenDefaultPropertyStore(uint stgmAccess, IPropertyStore* propStore);
+    HRESULT OpenUserPropertyStore(uint stgmAccess, IPropertyStore* propStore);
+    HRESULT OpenVolatilePropertyStore(uint stgmAccess, IPropertyStore* propStore);
     HRESULT ResetUserPropertyStore();
     HRESULT ResetVolatilePropertyStore();
-    HRESULT RegisterPropertyChangeNotification(IAudioSystemEffectsPropertyChangeNotificationClient);
-    HRESULT UnregisterPropertyChangeNotification(IAudioSystemEffectsPropertyChangeNotificationClient);
+    HRESULT RegisterPropertyChangeNotification(IAudioSystemEffectsPropertyChangeNotificationClient callback);
+    HRESULT UnregisterPropertyChangeNotification(IAudioSystemEffectsPropertyChangeNotificationClient callback);
 }
 enum CLSID_MMDeviceEnumerator = GUID(0xbcde0395, 0xe52f, 0x467c, [0x8e, 0x3d, 0xc4, 0x57, 0x92, 0x91, 0x69, 0x2e]);
 struct MMDeviceEnumerator
@@ -1988,12 +1988,12 @@ enum : int
 enum IID_IPerChannelDbLevel = GUID(0xc2f8e001, 0xf205, 0x4bc9, [0x99, 0xbc, 0xc1, 0x3b, 0x1e, 0x4, 0x8c, 0xcb]);
 interface IPerChannelDbLevel : IUnknown
 {
-    HRESULT GetChannelCount(uint*);
-    HRESULT GetLevelRange(uint, float*, float*, float*);
-    HRESULT GetLevel(uint, float*);
-    HRESULT SetLevel(uint, float, const(GUID)*);
-    HRESULT SetLevelUniform(float, const(GUID)*);
-    HRESULT SetLevelAllChannels(float*, uint, const(GUID)*);
+    HRESULT GetChannelCount(uint* pcChannels);
+    HRESULT GetLevelRange(uint nChannel, float* pfMinLevelDB, float* pfMaxLevelDB, float* pfStepping);
+    HRESULT GetLevel(uint nChannel, float* pfLevelDB);
+    HRESULT SetLevel(uint nChannel, float fLevelDB, const(GUID)* pguidEventContext);
+    HRESULT SetLevelUniform(float fLevelDB, const(GUID)* pguidEventContext);
+    HRESULT SetLevelAllChannels(float* aLevelsDB, uint cChannels, const(GUID)* pguidEventContext);
 }
 enum IID_IAudioVolumeLevel = GUID(0x7fb7b48f, 0x531d, 0x44a2, [0xbc, 0xb3, 0x5a, 0xd5, 0xa1, 0x34, 0xb3, 0xdc]);
 interface IAudioVolumeLevel : IPerChannelDbLevel
@@ -2002,32 +2002,32 @@ interface IAudioVolumeLevel : IPerChannelDbLevel
 enum IID_IAudioChannelConfig = GUID(0xbb11c46f, 0xec28, 0x493c, [0xb8, 0x8a, 0x5d, 0xb8, 0x80, 0x62, 0xce, 0x98]);
 interface IAudioChannelConfig : IUnknown
 {
-    HRESULT SetChannelConfig(uint, const(GUID)*);
-    HRESULT GetChannelConfig(uint*);
+    HRESULT SetChannelConfig(uint dwConfig, const(GUID)* pguidEventContext);
+    HRESULT GetChannelConfig(uint* pdwConfig);
 }
 enum IID_IAudioLoudness = GUID(0x7d8b1437, 0xdd53, 0x4350, [0x9c, 0x1b, 0x1e, 0xe2, 0x89, 0xb, 0xd9, 0x38]);
 interface IAudioLoudness : IUnknown
 {
-    HRESULT GetEnabled(BOOL*);
-    HRESULT SetEnabled(BOOL, const(GUID)*);
+    HRESULT GetEnabled(BOOL* pbEnabled);
+    HRESULT SetEnabled(BOOL bEnable, const(GUID)* pguidEventContext);
 }
 enum IID_IAudioInputSelector = GUID(0x4f03dc02, 0x5e6e, 0x4653, [0x8f, 0x72, 0xa0, 0x30, 0xc1, 0x23, 0xd5, 0x98]);
 interface IAudioInputSelector : IUnknown
 {
-    HRESULT GetSelection(uint*);
-    HRESULT SetSelection(uint, const(GUID)*);
+    HRESULT GetSelection(uint* pnIdSelected);
+    HRESULT SetSelection(uint nIdSelect, const(GUID)* pguidEventContext);
 }
 enum IID_IAudioOutputSelector = GUID(0xbb515f69, 0x94a7, 0x429e, [0x8b, 0x9c, 0x27, 0x1b, 0x3f, 0x11, 0xa3, 0xab]);
 interface IAudioOutputSelector : IUnknown
 {
-    HRESULT GetSelection(uint*);
-    HRESULT SetSelection(uint, const(GUID)*);
+    HRESULT GetSelection(uint* pnIdSelected);
+    HRESULT SetSelection(uint nIdSelect, const(GUID)* pguidEventContext);
 }
 enum IID_IAudioMute = GUID(0xdf45aeea, 0xb74a, 0x4b6b, [0xaf, 0xad, 0x23, 0x66, 0xb6, 0xaa, 0x1, 0x2e]);
 interface IAudioMute : IUnknown
 {
-    HRESULT SetMute(BOOL, const(GUID)*);
-    HRESULT GetMute(BOOL*);
+    HRESULT SetMute(BOOL bMuted, const(GUID)* pguidEventContext);
+    HRESULT GetMute(BOOL* pbMuted);
 }
 enum IID_IAudioBass = GUID(0xa2b1a1d9, 0x4db3, 0x425d, [0xa2, 0xb2, 0xbd, 0x33, 0x5c, 0xb3, 0xe2, 0xe5]);
 interface IAudioBass : IPerChannelDbLevel
@@ -2044,57 +2044,57 @@ interface IAudioTreble : IPerChannelDbLevel
 enum IID_IAudioAutoGainControl = GUID(0x85401fd4, 0x6de4, 0x4b9d, [0x98, 0x69, 0x2d, 0x67, 0x53, 0xa8, 0x2f, 0x3c]);
 interface IAudioAutoGainControl : IUnknown
 {
-    HRESULT GetEnabled(BOOL*);
-    HRESULT SetEnabled(BOOL, const(GUID)*);
+    HRESULT GetEnabled(BOOL* pbEnabled);
+    HRESULT SetEnabled(BOOL bEnable, const(GUID)* pguidEventContext);
 }
 enum IID_IAudioPeakMeter = GUID(0xdd79923c, 0x599, 0x45e0, [0xb8, 0xb6, 0xc8, 0xdf, 0x7d, 0xb6, 0xe7, 0x96]);
 interface IAudioPeakMeter : IUnknown
 {
-    HRESULT GetChannelCount(uint*);
-    HRESULT GetLevel(uint, float*);
+    HRESULT GetChannelCount(uint* pcChannels);
+    HRESULT GetLevel(uint nChannel, float* pfLevel);
 }
 enum IID_IDeviceSpecificProperty = GUID(0x3b22bcbf, 0x2586, 0x4af0, [0x85, 0x83, 0x20, 0x5d, 0x39, 0x1b, 0x80, 0x7c]);
 interface IDeviceSpecificProperty : IUnknown
 {
-    HRESULT GetType(ushort*);
-    HRESULT GetValue(void*, uint*);
-    HRESULT SetValue(void*, uint, const(GUID)*);
-    HRESULT Get4BRange(int*, int*, int*);
+    HRESULT GetType(ushort* pVType);
+    HRESULT GetValue(void* pvValue, uint* pcbValue);
+    HRESULT SetValue(void* pvValue, uint cbValue, const(GUID)* pguidEventContext);
+    HRESULT Get4BRange(int* plMin, int* plMax, int* plStepping);
 }
 enum IID_IPartsList = GUID(0x6daa848c, 0x5eb0, 0x45cc, [0xae, 0xa5, 0x99, 0x8a, 0x2c, 0xda, 0x1f, 0xfb]);
 interface IPartsList : IUnknown
 {
-    HRESULT GetCount(uint*);
-    HRESULT GetPart(uint, IPart*);
+    HRESULT GetCount(uint* pCount);
+    HRESULT GetPart(uint nIndex, IPart* ppPart);
 }
 enum IID_IPart = GUID(0xae2de0e4, 0x5bca, 0x4f2d, [0xaa, 0x46, 0x5d, 0x13, 0xf8, 0xfd, 0xb3, 0xa9]);
 interface IPart : IUnknown
 {
-    HRESULT GetName(PWSTR*);
-    HRESULT GetLocalId(uint*);
-    HRESULT GetGlobalId(PWSTR*);
-    HRESULT GetPartType(PartType*);
-    HRESULT GetSubType(GUID*);
-    HRESULT GetControlInterfaceCount(uint*);
-    HRESULT GetControlInterface(uint, IControlInterface*);
-    HRESULT EnumPartsIncoming(IPartsList*);
-    HRESULT EnumPartsOutgoing(IPartsList*);
-    HRESULT GetTopologyObject(IDeviceTopology*);
-    HRESULT Activate(uint, const(GUID)*, void**);
-    HRESULT RegisterControlChangeCallback(const(GUID)*, IControlChangeNotify);
-    HRESULT UnregisterControlChangeCallback(IControlChangeNotify);
+    HRESULT GetName(PWSTR* ppwstrName);
+    HRESULT GetLocalId(uint* pnId);
+    HRESULT GetGlobalId(PWSTR* ppwstrGlobalId);
+    HRESULT GetPartType(PartType* pPartType);
+    HRESULT GetSubType(GUID* pSubType);
+    HRESULT GetControlInterfaceCount(uint* pCount);
+    HRESULT GetControlInterface(uint nIndex, IControlInterface* ppInterfaceDesc);
+    HRESULT EnumPartsIncoming(IPartsList* ppParts);
+    HRESULT EnumPartsOutgoing(IPartsList* ppParts);
+    HRESULT GetTopologyObject(IDeviceTopology* ppTopology);
+    HRESULT Activate(uint dwClsContext, const(GUID)* refiid, void** ppvObject);
+    HRESULT RegisterControlChangeCallback(const(GUID)* riid, IControlChangeNotify pNotify);
+    HRESULT UnregisterControlChangeCallback(IControlChangeNotify pNotify);
 }
 enum IID_IConnector = GUID(0x9c2c4058, 0x23f5, 0x41de, [0x87, 0x7a, 0xdf, 0x3a, 0xf2, 0x36, 0xa0, 0x9e]);
 interface IConnector : IUnknown
 {
-    HRESULT GetType(ConnectorType*);
-    HRESULT GetDataFlow(DataFlow*);
-    HRESULT ConnectTo(IConnector);
+    HRESULT GetType(ConnectorType* pType);
+    HRESULT GetDataFlow(DataFlow* pFlow);
+    HRESULT ConnectTo(IConnector pConnectTo);
     HRESULT Disconnect();
-    HRESULT IsConnected(BOOL*);
-    HRESULT GetConnectedTo(IConnector*);
-    HRESULT GetConnectorIdConnectedTo(PWSTR*);
-    HRESULT GetDeviceIdConnectedTo(PWSTR*);
+    HRESULT IsConnected(BOOL* pbConnected);
+    HRESULT GetConnectedTo(IConnector* ppConTo);
+    HRESULT GetConnectorIdConnectedTo(PWSTR* ppwstrConnectorId);
+    HRESULT GetDeviceIdConnectedTo(PWSTR* ppwstrDeviceId);
 }
 enum IID_ISubunit = GUID(0x82149a85, 0xdba6, 0x4487, [0x86, 0xbb, 0xea, 0x8f, 0x7f, 0xef, 0xcc, 0x71]);
 interface ISubunit : IUnknown
@@ -2103,24 +2103,24 @@ interface ISubunit : IUnknown
 enum IID_IControlInterface = GUID(0x45d37c3f, 0x5140, 0x444a, [0xae, 0x24, 0x40, 0x7, 0x89, 0xf3, 0xcb, 0xf3]);
 interface IControlInterface : IUnknown
 {
-    HRESULT GetName(PWSTR*);
-    HRESULT GetIID(GUID*);
+    HRESULT GetName(PWSTR* ppwstrName);
+    HRESULT GetIID(GUID* pIID);
 }
 enum IID_IControlChangeNotify = GUID(0xa09513ed, 0xc709, 0x4d21, [0xbd, 0x7b, 0x5f, 0x34, 0xc4, 0x7f, 0x39, 0x47]);
 interface IControlChangeNotify : IUnknown
 {
-    HRESULT OnNotify(uint, const(GUID)*);
+    HRESULT OnNotify(uint dwSenderProcessId, const(GUID)* pguidEventContext);
 }
 enum IID_IDeviceTopology = GUID(0x2a07407e, 0x6497, 0x4a18, [0x97, 0x87, 0x32, 0xf7, 0x9b, 0xd0, 0xd9, 0x8f]);
 interface IDeviceTopology : IUnknown
 {
-    HRESULT GetConnectorCount(uint*);
-    HRESULT GetConnector(uint, IConnector*);
-    HRESULT GetSubunitCount(uint*);
-    HRESULT GetSubunit(uint, ISubunit*);
-    HRESULT GetPartById(uint, IPart*);
-    HRESULT GetDeviceId(PWSTR*);
-    HRESULT GetSignalPath(IPart, IPart, BOOL, IPartsList*);
+    HRESULT GetConnectorCount(uint* pCount);
+    HRESULT GetConnector(uint nIndex, IConnector* ppConnector);
+    HRESULT GetSubunitCount(uint* pCount);
+    HRESULT GetSubunit(uint nIndex, ISubunit* ppSubunit);
+    HRESULT GetPartById(uint nId, IPart* ppPart);
+    HRESULT GetDeviceId(PWSTR* ppwstrDeviceId);
+    HRESULT GetSignalPath(IPart pIPartFrom, IPart pIPartTo, BOOL bRejectMixedPaths, IPartsList* ppParts);
 }
 enum CLSID_DeviceTopology = GUID(0x1df639d0, 0x5ec1, 0x47aa, [0x93, 0x79, 0x82, 0x8d, 0xc1, 0xaa, 0x8c, 0x59]);
 struct DeviceTopology
@@ -2140,67 +2140,67 @@ enum : int
 enum IID_IAudioSessionEvents = GUID(0x24918acc, 0x64b3, 0x37c1, [0x8c, 0xa9, 0x74, 0xa6, 0x6e, 0x99, 0x57, 0xa8]);
 interface IAudioSessionEvents : IUnknown
 {
-    HRESULT OnDisplayNameChanged(const(wchar)*, const(GUID)*);
-    HRESULT OnIconPathChanged(const(wchar)*, const(GUID)*);
-    HRESULT OnSimpleVolumeChanged(float, BOOL, const(GUID)*);
-    HRESULT OnChannelVolumeChanged(uint, float*, uint, const(GUID)*);
-    HRESULT OnGroupingParamChanged(const(GUID)*, const(GUID)*);
-    HRESULT OnStateChanged(AudioSessionState);
-    HRESULT OnSessionDisconnected(AudioSessionDisconnectReason);
+    HRESULT OnDisplayNameChanged(const(wchar)* NewDisplayName, const(GUID)* EventContext);
+    HRESULT OnIconPathChanged(const(wchar)* NewIconPath, const(GUID)* EventContext);
+    HRESULT OnSimpleVolumeChanged(float NewVolume, BOOL NewMute, const(GUID)* EventContext);
+    HRESULT OnChannelVolumeChanged(uint ChannelCount, float* NewChannelVolumeArray, uint ChangedChannel, const(GUID)* EventContext);
+    HRESULT OnGroupingParamChanged(const(GUID)* NewGroupingParam, const(GUID)* EventContext);
+    HRESULT OnStateChanged(AudioSessionState NewState);
+    HRESULT OnSessionDisconnected(AudioSessionDisconnectReason DisconnectReason);
 }
 enum IID_IAudioSessionControl = GUID(0xf4b1a599, 0x7266, 0x4319, [0xa8, 0xca, 0xe7, 0xa, 0xcb, 0x11, 0xe8, 0xcd]);
 interface IAudioSessionControl : IUnknown
 {
-    HRESULT GetState(AudioSessionState*);
-    HRESULT GetDisplayName(PWSTR*);
-    HRESULT SetDisplayName(const(wchar)*, const(GUID)*);
-    HRESULT GetIconPath(PWSTR*);
-    HRESULT SetIconPath(const(wchar)*, const(GUID)*);
-    HRESULT GetGroupingParam(GUID*);
-    HRESULT SetGroupingParam(const(GUID)*, const(GUID)*);
-    HRESULT RegisterAudioSessionNotification(IAudioSessionEvents);
-    HRESULT UnregisterAudioSessionNotification(IAudioSessionEvents);
+    HRESULT GetState(AudioSessionState* pRetVal);
+    HRESULT GetDisplayName(PWSTR* pRetVal);
+    HRESULT SetDisplayName(const(wchar)* Value, const(GUID)* EventContext);
+    HRESULT GetIconPath(PWSTR* pRetVal);
+    HRESULT SetIconPath(const(wchar)* Value, const(GUID)* EventContext);
+    HRESULT GetGroupingParam(GUID* pRetVal);
+    HRESULT SetGroupingParam(const(GUID)* Override, const(GUID)* EventContext);
+    HRESULT RegisterAudioSessionNotification(IAudioSessionEvents NewNotifications);
+    HRESULT UnregisterAudioSessionNotification(IAudioSessionEvents NewNotifications);
 }
 enum IID_IAudioSessionControl2 = GUID(0xbfb7ff88, 0x7239, 0x4fc9, [0x8f, 0xa2, 0x7, 0xc9, 0x50, 0xbe, 0x9c, 0x6d]);
 interface IAudioSessionControl2 : IAudioSessionControl
 {
-    HRESULT GetSessionIdentifier(PWSTR*);
-    HRESULT GetSessionInstanceIdentifier(PWSTR*);
-    HRESULT GetProcessId(uint*);
+    HRESULT GetSessionIdentifier(PWSTR* pRetVal);
+    HRESULT GetSessionInstanceIdentifier(PWSTR* pRetVal);
+    HRESULT GetProcessId(uint* pRetVal);
     HRESULT IsSystemSoundsSession();
-    HRESULT SetDuckingPreference(BOOL);
+    HRESULT SetDuckingPreference(BOOL optOut);
 }
 enum IID_IAudioSessionManager = GUID(0xbfa971f1, 0x4d5e, 0x40bb, [0x93, 0x5e, 0x96, 0x70, 0x39, 0xbf, 0xbe, 0xe4]);
 interface IAudioSessionManager : IUnknown
 {
-    HRESULT GetAudioSessionControl(const(GUID)*, uint, IAudioSessionControl*);
-    HRESULT GetSimpleAudioVolume(const(GUID)*, uint, ISimpleAudioVolume*);
+    HRESULT GetAudioSessionControl(const(GUID)* AudioSessionGuid, uint StreamFlags, IAudioSessionControl* SessionControl);
+    HRESULT GetSimpleAudioVolume(const(GUID)* AudioSessionGuid, uint StreamFlags, ISimpleAudioVolume* AudioVolume);
 }
 enum IID_IAudioVolumeDuckNotification = GUID(0xc3b284d4, 0x6d39, 0x4359, [0xb3, 0xcf, 0xb5, 0x6d, 0xdb, 0x3b, 0xb3, 0x9c]);
 interface IAudioVolumeDuckNotification : IUnknown
 {
-    HRESULT OnVolumeDuckNotification(const(wchar)*, uint);
-    HRESULT OnVolumeUnduckNotification(const(wchar)*);
+    HRESULT OnVolumeDuckNotification(const(wchar)* sessionID, uint countCommunicationSessions);
+    HRESULT OnVolumeUnduckNotification(const(wchar)* sessionID);
 }
 enum IID_IAudioSessionNotification = GUID(0x641dd20b, 0x4d41, 0x49cc, [0xab, 0xa3, 0x17, 0x4b, 0x94, 0x77, 0xbb, 0x8]);
 interface IAudioSessionNotification : IUnknown
 {
-    HRESULT OnSessionCreated(IAudioSessionControl);
+    HRESULT OnSessionCreated(IAudioSessionControl NewSession);
 }
 enum IID_IAudioSessionEnumerator = GUID(0xe2f5bb11, 0x570, 0x40ca, [0xac, 0xdd, 0x3a, 0xa0, 0x12, 0x77, 0xde, 0xe8]);
 interface IAudioSessionEnumerator : IUnknown
 {
-    HRESULT GetCount(int*);
-    HRESULT GetSession(int, IAudioSessionControl*);
+    HRESULT GetCount(int* SessionCount);
+    HRESULT GetSession(int SessionCount, IAudioSessionControl* Session);
 }
 enum IID_IAudioSessionManager2 = GUID(0x77aa99a0, 0x1bd6, 0x484f, [0x8b, 0xc7, 0x2c, 0x65, 0x4c, 0x9a, 0x9b, 0x6f]);
 interface IAudioSessionManager2 : IAudioSessionManager
 {
-    HRESULT GetSessionEnumerator(IAudioSessionEnumerator*);
-    HRESULT RegisterSessionNotification(IAudioSessionNotification);
-    HRESULT UnregisterSessionNotification(IAudioSessionNotification);
-    HRESULT RegisterDuckNotification(const(wchar)*, IAudioVolumeDuckNotification);
-    HRESULT UnregisterDuckNotification(IAudioVolumeDuckNotification);
+    HRESULT GetSessionEnumerator(IAudioSessionEnumerator* SessionEnum);
+    HRESULT RegisterSessionNotification(IAudioSessionNotification SessionNotification);
+    HRESULT UnregisterSessionNotification(IAudioSessionNotification SessionNotification);
+    HRESULT RegisterDuckNotification(const(wchar)* sessionID, IAudioVolumeDuckNotification duckNotification);
+    HRESULT UnregisterDuckNotification(IAudioVolumeDuckNotification duckNotification);
 }
 alias SpatialAudioMetadataWriterOverflowMode = int;
 enum : int
@@ -2259,66 +2259,66 @@ struct SpatialAudioObjectRenderStreamForMetadataActivationParams2
 enum IID_ISpatialAudioMetadataItems = GUID(0xbcd7c78f, 0x3098, 0x4f22, [0xb5, 0x47, 0xa2, 0xf2, 0x5a, 0x38, 0x12, 0x69]);
 interface ISpatialAudioMetadataItems : IUnknown
 {
-    HRESULT GetFrameCount(ushort*);
-    HRESULT GetItemCount(ushort*);
-    HRESULT GetMaxItemCount(ushort*);
-    HRESULT GetMaxValueBufferLength(uint*);
-    HRESULT GetInfo(SpatialAudioMetadataItemsInfo*);
+    HRESULT GetFrameCount(ushort* frameCount);
+    HRESULT GetItemCount(ushort* itemCount);
+    HRESULT GetMaxItemCount(ushort* maxItemCount);
+    HRESULT GetMaxValueBufferLength(uint* maxValueBufferLength);
+    HRESULT GetInfo(SpatialAudioMetadataItemsInfo* info);
 }
 enum IID_ISpatialAudioMetadataWriter = GUID(0x1b17ca01, 0x2955, 0x444d, [0xa4, 0x30, 0x53, 0x7d, 0xc5, 0x89, 0xa8, 0x44]);
 interface ISpatialAudioMetadataWriter : IUnknown
 {
-    HRESULT Open(ISpatialAudioMetadataItems);
-    HRESULT WriteNextItem(ushort);
-    HRESULT WriteNextItemCommand(ubyte, const(void)*, uint);
+    HRESULT Open(ISpatialAudioMetadataItems metadataItems);
+    HRESULT WriteNextItem(ushort frameOffset);
+    HRESULT WriteNextItemCommand(ubyte commandID, const(void)* valueBuffer, uint valueBufferLength);
     HRESULT Close();
 }
 enum IID_ISpatialAudioMetadataReader = GUID(0xb78e86a2, 0x31d9, 0x4c32, [0x94, 0xd2, 0x7d, 0xf4, 0xf, 0xc7, 0xeb, 0xec]);
 interface ISpatialAudioMetadataReader : IUnknown
 {
-    HRESULT Open(ISpatialAudioMetadataItems);
-    HRESULT ReadNextItem(ubyte*, ushort*);
-    HRESULT ReadNextItemCommand(ubyte*, void*, uint, uint*);
+    HRESULT Open(ISpatialAudioMetadataItems metadataItems);
+    HRESULT ReadNextItem(ubyte* commandCount, ushort* frameOffset);
+    HRESULT ReadNextItemCommand(ubyte* commandID, void* valueBuffer, uint maxValueBufferLength, uint* valueBufferLength);
     HRESULT Close();
 }
 enum IID_ISpatialAudioMetadataCopier = GUID(0xd224b233, 0xe251, 0x4fd0, [0x9c, 0xa2, 0xd5, 0xec, 0xf9, 0xa6, 0x84, 0x4]);
 interface ISpatialAudioMetadataCopier : IUnknown
 {
-    HRESULT Open(ISpatialAudioMetadataItems);
-    HRESULT CopyMetadataForFrames(ushort, SpatialAudioMetadataCopyMode, ISpatialAudioMetadataItems, ushort*);
+    HRESULT Open(ISpatialAudioMetadataItems metadataItems);
+    HRESULT CopyMetadataForFrames(ushort copyFrameCount, SpatialAudioMetadataCopyMode copyMode, ISpatialAudioMetadataItems dstMetadataItems, ushort* itemsCopied);
     HRESULT Close();
 }
 enum IID_ISpatialAudioMetadataItemsBuffer = GUID(0x42640a16, 0xe1bd, 0x42d9, [0x9f, 0xf6, 0x3, 0x1a, 0xb7, 0x1a, 0x2d, 0xba]);
 interface ISpatialAudioMetadataItemsBuffer : IUnknown
 {
-    HRESULT AttachToBuffer(ubyte*, uint);
-    HRESULT AttachToPopulatedBuffer(ubyte*, uint);
+    HRESULT AttachToBuffer(ubyte* buffer, uint bufferLength);
+    HRESULT AttachToPopulatedBuffer(ubyte* buffer, uint bufferLength);
     HRESULT DetachBuffer();
 }
 enum IID_ISpatialAudioMetadataClient = GUID(0x777d4a3b, 0xf6ff, 0x4a26, [0x85, 0xdc, 0x68, 0xd7, 0xcd, 0xed, 0xa1, 0xd4]);
 interface ISpatialAudioMetadataClient : IUnknown
 {
-    HRESULT ActivateSpatialAudioMetadataItems(ushort, ushort, ISpatialAudioMetadataItemsBuffer*, ISpatialAudioMetadataItems*);
-    HRESULT GetSpatialAudioMetadataItemsBufferLength(ushort, uint*);
-    HRESULT ActivateSpatialAudioMetadataWriter(SpatialAudioMetadataWriterOverflowMode, ISpatialAudioMetadataWriter*);
-    HRESULT ActivateSpatialAudioMetadataCopier(ISpatialAudioMetadataCopier*);
-    HRESULT ActivateSpatialAudioMetadataReader(ISpatialAudioMetadataReader*);
+    HRESULT ActivateSpatialAudioMetadataItems(ushort maxItemCount, ushort frameCount, ISpatialAudioMetadataItemsBuffer* metadataItemsBuffer, ISpatialAudioMetadataItems* metadataItems);
+    HRESULT GetSpatialAudioMetadataItemsBufferLength(ushort maxItemCount, uint* bufferLength);
+    HRESULT ActivateSpatialAudioMetadataWriter(SpatialAudioMetadataWriterOverflowMode overflowMode, ISpatialAudioMetadataWriter* metadataWriter);
+    HRESULT ActivateSpatialAudioMetadataCopier(ISpatialAudioMetadataCopier* metadataCopier);
+    HRESULT ActivateSpatialAudioMetadataReader(ISpatialAudioMetadataReader* metadataReader);
 }
 enum IID_ISpatialAudioObjectForMetadataCommands = GUID(0xdf2c94b, 0xf5f9, 0x472d, [0xaf, 0x6b, 0xc4, 0x6e, 0xa, 0xc9, 0xcd, 0x5]);
 interface ISpatialAudioObjectForMetadataCommands : ISpatialAudioObjectBase
 {
-    HRESULT WriteNextMetadataCommand(ubyte, void*, uint);
+    HRESULT WriteNextMetadataCommand(ubyte commandID, void* valueBuffer, uint valueBufferLength);
 }
 enum IID_ISpatialAudioObjectForMetadataItems = GUID(0xddea49ff, 0x3bc0, 0x4377, [0x8a, 0xad, 0x9f, 0xbc, 0xfd, 0x80, 0x85, 0x66]);
 interface ISpatialAudioObjectForMetadataItems : ISpatialAudioObjectBase
 {
-    HRESULT GetSpatialAudioMetadataItems(ISpatialAudioMetadataItems*);
+    HRESULT GetSpatialAudioMetadataItems(ISpatialAudioMetadataItems* metadataItems);
 }
 enum IID_ISpatialAudioObjectRenderStreamForMetadata = GUID(0xbbc9c907, 0x48d5, 0x4a2e, [0xa0, 0xc7, 0xf7, 0xf0, 0xd6, 0x7c, 0x1f, 0xb1]);
 interface ISpatialAudioObjectRenderStreamForMetadata : ISpatialAudioObjectRenderStreamBase
 {
-    HRESULT ActivateSpatialAudioObjectForMetadataCommands(AudioObjectType, ISpatialAudioObjectForMetadataCommands*);
-    HRESULT ActivateSpatialAudioObjectForMetadataItems(AudioObjectType, ISpatialAudioObjectForMetadataItems*);
+    HRESULT ActivateSpatialAudioObjectForMetadataCommands(AudioObjectType type, ISpatialAudioObjectForMetadataCommands* audioObject);
+    HRESULT ActivateSpatialAudioObjectForMetadataItems(AudioObjectType type, ISpatialAudioObjectForMetadataItems* audioObject);
 }
 alias PROCESS_LOOPBACK_MODE = int;
 enum : int
@@ -2347,7 +2347,7 @@ struct AUDIOCLIENT_ACTIVATION_PARAMS
         AUDIOCLIENT_PROCESS_LOOPBACK_PARAMS ProcessLoopbackParams;
     }
 }
-alias PAudioStateMonitorCallback = void function(IAudioStateMonitor, void*);
+alias PAudioStateMonitorCallback = void function(IAudioStateMonitor audioStateMonitor, void* context);
 alias AudioStateMonitorSoundLevel = int;
 enum : int
 {
@@ -2359,12 +2359,12 @@ enum : int
 enum IID_IAudioStateMonitor = GUID(0x63bd8738, 0xe30d, 0x4c77, [0xbf, 0x5c, 0x83, 0x4e, 0x87, 0xc6, 0x57, 0xe2]);
 interface IAudioStateMonitor : IUnknown
 {
-    HRESULT RegisterCallback(PAudioStateMonitorCallback, void*, long*);
-    void UnregisterCallback(long);
+    HRESULT RegisterCallback(PAudioStateMonitorCallback callback, void* context, long* registration);
+    void UnregisterCallback(long registration);
     AudioStateMonitorSoundLevel GetSoundLevel();
 }
-alias ACMDRIVERENUMCB = BOOL function(HACMDRIVERID, ulong, uint);
-alias LPACMDRIVERPROC = LRESULT function(ulong, HACMDRIVERID, uint, LPARAM, LPARAM);
+alias ACMDRIVERENUMCB = BOOL function(HACMDRIVERID hadid, ulong dwInstance, uint fdwSupport);
+alias LPACMDRIVERPROC = LRESULT function(ulong param0, HACMDRIVERID param1, uint param2, LPARAM param3, LPARAM param4);
 struct ACMDRIVERDETAILSA
 {
     align (1):
@@ -2427,8 +2427,8 @@ struct ACMFORMATTAGDETAILSW
     uint cStandardFormats;
     wchar[48] szFormatTag;
 }
-alias ACMFORMATTAGENUMCBA = BOOL function(HACMDRIVERID, ACMFORMATTAGDETAILSA*, ulong, uint);
-alias ACMFORMATTAGENUMCBW = BOOL function(HACMDRIVERID, ACMFORMATTAGDETAILSW*, ulong, uint);
+alias ACMFORMATTAGENUMCBA = BOOL function(HACMDRIVERID hadid, ACMFORMATTAGDETAILSA* paftd, ulong dwInstance, uint fdwSupport);
+alias ACMFORMATTAGENUMCBW = BOOL function(HACMDRIVERID hadid, ACMFORMATTAGDETAILSW* paftd, ulong dwInstance, uint fdwSupport);
 struct ACMFORMATDETAILSA
 {
     align (1):
@@ -2451,10 +2451,10 @@ struct tACMFORMATDETAILSW
     uint cbwfx;
     wchar[128] szFormat;
 }
-alias ACMFORMATENUMCBA = BOOL function(HACMDRIVERID, ACMFORMATDETAILSA*, ulong, uint);
-alias ACMFORMATENUMCBW = BOOL function(HACMDRIVERID, tACMFORMATDETAILSW*, ulong, uint);
-alias ACMFORMATCHOOSEHOOKPROCA = uint function(HWND, uint, WPARAM, LPARAM);
-alias ACMFORMATCHOOSEHOOKPROCW = uint function(HWND, uint, WPARAM, LPARAM);
+alias ACMFORMATENUMCBA = BOOL function(HACMDRIVERID hadid, ACMFORMATDETAILSA* pafd, ulong dwInstance, uint fdwSupport);
+alias ACMFORMATENUMCBW = BOOL function(HACMDRIVERID hadid, tACMFORMATDETAILSW* pafd, ulong dwInstance, uint fdwSupport);
+alias ACMFORMATCHOOSEHOOKPROCA = uint function(HWND hwnd, uint uMsg, WPARAM wParam, LPARAM lParam);
+alias ACMFORMATCHOOSEHOOKPROCW = uint function(HWND hwnd, uint uMsg, WPARAM wParam, LPARAM lParam);
 struct ACMFORMATCHOOSEA
 {
     align (1):
@@ -2517,8 +2517,8 @@ struct ACMFILTERTAGDETAILSW
     uint cStandardFilters;
     wchar[48] szFilterTag;
 }
-alias ACMFILTERTAGENUMCBA = BOOL function(HACMDRIVERID, ACMFILTERTAGDETAILSA*, ulong, uint);
-alias ACMFILTERTAGENUMCBW = BOOL function(HACMDRIVERID, ACMFILTERTAGDETAILSW*, ulong, uint);
+alias ACMFILTERTAGENUMCBA = BOOL function(HACMDRIVERID hadid, ACMFILTERTAGDETAILSA* paftd, ulong dwInstance, uint fdwSupport);
+alias ACMFILTERTAGENUMCBW = BOOL function(HACMDRIVERID hadid, ACMFILTERTAGDETAILSW* paftd, ulong dwInstance, uint fdwSupport);
 struct ACMFILTERDETAILSA
 {
     align (1):
@@ -2541,10 +2541,10 @@ struct ACMFILTERDETAILSW
     uint cbwfltr;
     wchar[128] szFilter;
 }
-alias ACMFILTERENUMCBA = BOOL function(HACMDRIVERID, ACMFILTERDETAILSA*, ulong, uint);
-alias ACMFILTERENUMCBW = BOOL function(HACMDRIVERID, ACMFILTERDETAILSW*, ulong, uint);
-alias ACMFILTERCHOOSEHOOKPROCA = uint function(HWND, uint, WPARAM, LPARAM);
-alias ACMFILTERCHOOSEHOOKPROCW = uint function(HWND, uint, WPARAM, LPARAM);
+alias ACMFILTERENUMCBA = BOOL function(HACMDRIVERID hadid, ACMFILTERDETAILSA* pafd, ulong dwInstance, uint fdwSupport);
+alias ACMFILTERENUMCBW = BOOL function(HACMDRIVERID hadid, ACMFILTERDETAILSW* pafd, ulong dwInstance, uint fdwSupport);
+alias ACMFILTERCHOOSEHOOKPROCA = uint function(HWND hwnd, uint uMsg, WPARAM wParam, LPARAM lParam);
+alias ACMFILTERCHOOSEHOOKPROCW = uint function(HWND hwnd, uint uMsg, WPARAM wParam, LPARAM lParam);
 struct ACMFILTERCHOOSEA
 {
     align (1):

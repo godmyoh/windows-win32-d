@@ -1,7 +1,7 @@
 module windows.win32.system.search;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, FILETIME, HANDLE, HRESULT, HWND, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL;
+import windows.win32.foundation : BOOL, BSTR, FILETIME, HANDLE, HRESULT, HWND, PROPERTYKEY, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL;
 import windows.win32.security.authorization : EXPLICIT_ACCESS_W, TRUSTEE_W;
 import windows.win32.storage.indexserver : DBID, FILTERREGION, FULLPROPSPEC, IFilter, IPhraseSink, WORDREP_BREAK_TYPE;
 import windows.win32.system.com : BLOB, COSERVERINFO, CY, DISPPARAMS, IAuthenticate, IDispatch, IEnumString, IEnumUnknown, IErrorInfo, IMoniker, IPersistStream, ISequentialStream, IStream, ITypeInfo, IUnknown, MULTI_QI;
@@ -10,252 +10,251 @@ import windows.win32.system.distributedtransactioncoordinator : ITransaction, IT
 import windows.win32.system.search.common : CONDITION_OPERATION, CONDITION_TYPE;
 import windows.win32.system.variant : VARENUM, VARIANT;
 import windows.win32.ui.shell.common : IObjectArray;
-import windows.win32.ui.shell.propertiessystem : PROPERTYKEY;
 
 version (Windows):
 extern (Windows):
 
-short SQLBindCol(void*, ushort, short, void*, long, long*);
-short SQLBindParam(void*, ushort, short, short, ulong, short, void*, long*);
-short SQLColAttribute(void*, ushort, ushort, void*, short, short*, long*);
-short SQLDescribeCol(void*, ushort, ubyte*, short, short*, short*, ulong*, short*, short*);
-short SQLFetchScroll(void*, short, long);
-short SQLGetData(void*, ushort, short, void*, long, long*);
-short SQLGetDescRec(void*, short, ubyte*, short, short*, short*, short*, long*, short*, short*, short*);
-short SQLPutData(void*, void*, long);
-short SQLRowCount(void*, long*);
-short SQLSetConnectOption(void*, ushort, ulong);
-short SQLSetDescRec(void*, short, short, short, long, short, short, void*, long*, long*);
-short SQLSetParam(void*, ushort, short, short, ulong, short, void*, long*);
-short SQLSetStmtOption(void*, ushort, ulong);
-short SQLColAttributes(void*, ushort, ushort, void*, short, short*, long*);
-short SQLDescribeParam(void*, ushort, short*, ulong*, short*, short*);
-short SQLExtendedFetch(void*, ushort, long, ulong*, ushort*);
-short SQLParamOptions(void*, ulong, ulong*);
-short SQLSetPos(void*, ulong, ushort, ushort);
-short SQLBindParameter(void*, ushort, short, short, short, ulong, short, void*, long, long*);
-short SQLSetScrollOptions(void*, ushort, long, ushort);
-short SQLColAttributeW(void*, ushort, ushort, void*, short, short*, long*);
-short SQLColAttributesW(void*, ushort, ushort, void*, short, short*, long*);
-short SQLDescribeColW(void*, ushort, ushort*, short, short*, short*, ulong*, short*, short*);
-short SQLGetDescRecW(void*, short, ushort*, short, short*, short*, short*, long*, short*, short*, short*);
-short SQLSetConnectOptionW(void*, ushort, ulong);
-short SQLColAttributeA(void*, short, short, void*, short, short*, long*);
-short SQLColAttributesA(void*, ushort, ushort, void*, short, short*, long*);
-short SQLDescribeColA(void*, ushort, ubyte*, short, short*, short*, ulong*, short*, short*);
-short SQLGetDescRecA(void*, short, ubyte*, short, short*, short*, short*, long*, short*, short*, short*);
-short SQLSetConnectOptionA(void*, ushort, ulong);
-short SQLAllocConnect(void*, void**);
-short SQLAllocEnv(void**);
-short SQLAllocHandle(short, void*, void**);
-short SQLAllocStmt(void*, void**);
-/+ [CONFLICTED] short SQLBindCol(void*, ushort, short, void*, int, int*);
+short SQLBindCol(void* StatementHandle, ushort ColumnNumber, short TargetType, void* TargetValue, long BufferLength, long* StrLen_or_Ind);
+short SQLBindParam(void* StatementHandle, ushort ParameterNumber, short ValueType, short ParameterType, ulong LengthPrecision, short ParameterScale, void* ParameterValue, long* StrLen_or_Ind);
+short SQLColAttribute(void* StatementHandle, ushort ColumnNumber, ushort FieldIdentifier, void* CharacterAttribute, short BufferLength, short* StringLength, long* NumericAttribute);
+short SQLDescribeCol(void* StatementHandle, ushort ColumnNumber, ubyte* ColumnName, short BufferLength, short* NameLength, short* DataType, ulong* ColumnSize, short* DecimalDigits, short* Nullable);
+short SQLFetchScroll(void* StatementHandle, short FetchOrientation, long FetchOffset);
+short SQLGetData(void* StatementHandle, ushort ColumnNumber, short TargetType, void* TargetValue, long BufferLength, long* StrLen_or_IndPtr);
+short SQLGetDescRec(void* DescriptorHandle, short RecNumber, ubyte* Name, short BufferLength, short* StringLengthPtr, short* TypePtr, short* SubTypePtr, long* LengthPtr, short* PrecisionPtr, short* ScalePtr, short* NullablePtr);
+short SQLPutData(void* StatementHandle, void* Data, long StrLen_or_Ind);
+short SQLRowCount(void* StatementHandle, long* RowCount);
+short SQLSetConnectOption(void* ConnectionHandle, ushort Option, ulong Value);
+short SQLSetDescRec(void* DescriptorHandle, short RecNumber, short Type, short SubType, long Length, short Precision, short Scale, void* Data, long* StringLength, long* Indicator);
+short SQLSetParam(void* StatementHandle, ushort ParameterNumber, short ValueType, short ParameterType, ulong LengthPrecision, short ParameterScale, void* ParameterValue, long* StrLen_or_Ind);
+short SQLSetStmtOption(void* StatementHandle, ushort Option, ulong Value);
+short SQLColAttributes(void* hstmt, ushort icol, ushort fDescType, void* rgbDesc, short cbDescMax, short* pcbDesc, long* pfDesc);
+short SQLDescribeParam(void* hstmt, ushort ipar, short* pfSqlType, ulong* pcbParamDef, short* pibScale, short* pfNullable);
+short SQLExtendedFetch(void* hstmt, ushort fFetchType, long irow, ulong* pcrow, ushort* rgfRowStatus);
+short SQLParamOptions(void* hstmt, ulong crow, ulong* pirow);
+short SQLSetPos(void* hstmt, ulong irow, ushort fOption, ushort fLock);
+short SQLBindParameter(void* hstmt, ushort ipar, short fParamType, short fCType, short fSqlType, ulong cbColDef, short ibScale, void* rgbValue, long cbValueMax, long* pcbValue);
+short SQLSetScrollOptions(void* hstmt, ushort fConcurrency, long crowKeyset, ushort crowRowset);
+short SQLColAttributeW(void* hstmt, ushort iCol, ushort iField, void* pCharAttr, short cbDescMax, short* pcbCharAttr, long* pNumAttr);
+short SQLColAttributesW(void* hstmt, ushort icol, ushort fDescType, void* rgbDesc, short cbDescMax, short* pcbDesc, long* pfDesc);
+short SQLDescribeColW(void* hstmt, ushort icol, ushort* szColName, short cchColNameMax, short* pcchColName, short* pfSqlType, ulong* pcbColDef, short* pibScale, short* pfNullable);
+short SQLGetDescRecW(void* hdesc, short iRecord, ushort* szName, short cchNameMax, short* pcchName, short* pfType, short* pfSubType, long* pLength, short* pPrecision, short* pScale, short* pNullable);
+short SQLSetConnectOptionW(void* hdbc, ushort fOption, ulong vParam);
+short SQLColAttributeA(void* hstmt, short iCol, short iField, void* pCharAttr, short cbCharAttrMax, short* pcbCharAttr, long* pNumAttr);
+short SQLColAttributesA(void* hstmt, ushort icol, ushort fDescType, void* rgbDesc, short cbDescMax, short* pcbDesc, long* pfDesc);
+short SQLDescribeColA(void* hstmt, ushort icol, ubyte* szColName, short cbColNameMax, short* pcbColName, short* pfSqlType, ulong* pcbColDef, short* pibScale, short* pfNullable);
+short SQLGetDescRecA(void* hdesc, short iRecord, ubyte* szName, short cbNameMax, short* pcbName, short* pfType, short* pfSubType, long* pLength, short* pPrecision, short* pScale, short* pNullable);
+short SQLSetConnectOptionA(void* hdbc, ushort fOption, ulong vParam);
+short SQLAllocConnect(void* EnvironmentHandle, void** ConnectionHandle);
+short SQLAllocEnv(void** EnvironmentHandle);
+short SQLAllocHandle(short HandleType, void* InputHandle, void** OutputHandle);
+short SQLAllocStmt(void* ConnectionHandle, void** StatementHandle);
+/+ [CONFLICTED] short SQLBindCol(void* StatementHandle, ushort ColumnNumber, short TargetType, void* TargetValue, int BufferLength, int* StrLen_or_Ind);
 +/
-/+ [CONFLICTED] short SQLBindParam(void*, ushort, short, short, uint, short, void*, int*);
+/+ [CONFLICTED] short SQLBindParam(void* StatementHandle, ushort ParameterNumber, short ValueType, short ParameterType, uint LengthPrecision, short ParameterScale, void* ParameterValue, int* StrLen_or_Ind);
 +/
-short SQLCancel(void*);
-short SQLCancelHandle(short, void*);
-short SQLCloseCursor(void*);
-/+ [CONFLICTED] short SQLColAttribute(void*, ushort, ushort, void*, short, short*, void*);
+short SQLCancel(void* StatementHandle);
+short SQLCancelHandle(short HandleType, void* InputHandle);
+short SQLCloseCursor(void* StatementHandle);
+/+ [CONFLICTED] short SQLColAttribute(void* StatementHandle, ushort ColumnNumber, ushort FieldIdentifier, void* CharacterAttribute, short BufferLength, short* StringLength, void* NumericAttribute);
 +/
-short SQLColumns(void*, ubyte*, short, ubyte*, short, ubyte*, short, ubyte*, short);
-short SQLCompleteAsync(short, void*, short*);
-short SQLConnect(void*, ubyte*, short, ubyte*, short, ubyte*, short);
-short SQLCopyDesc(void*, void*);
-short SQLDataSources(void*, ushort, ubyte*, short, short*, ubyte*, short, short*);
-/+ [CONFLICTED] short SQLDescribeCol(void*, ushort, ubyte*, short, short*, short*, uint*, short*, short*);
+short SQLColumns(void* StatementHandle, ubyte* CatalogName, short NameLength1, ubyte* SchemaName, short NameLength2, ubyte* TableName, short NameLength3, ubyte* ColumnName, short NameLength4);
+short SQLCompleteAsync(short HandleType, void* Handle, short* AsyncRetCodePtr);
+short SQLConnect(void* ConnectionHandle, ubyte* ServerName, short NameLength1, ubyte* UserName, short NameLength2, ubyte* Authentication, short NameLength3);
+short SQLCopyDesc(void* SourceDescHandle, void* TargetDescHandle);
+short SQLDataSources(void* EnvironmentHandle, ushort Direction, ubyte* ServerName, short BufferLength1, short* NameLength1Ptr, ubyte* Description, short BufferLength2, short* NameLength2Ptr);
+/+ [CONFLICTED] short SQLDescribeCol(void* StatementHandle, ushort ColumnNumber, ubyte* ColumnName, short BufferLength, short* NameLength, short* DataType, uint* ColumnSize, short* DecimalDigits, short* Nullable);
 +/
-short SQLDisconnect(void*);
-short SQLEndTran(short, void*, short);
-short SQLError(void*, void*, void*, ubyte*, int*, ubyte*, short, short*);
-short SQLExecDirect(void*, ubyte*, int);
-short SQLExecute(void*);
-short SQLFetch(void*);
-/+ [CONFLICTED] short SQLFetchScroll(void*, short, int);
+short SQLDisconnect(void* ConnectionHandle);
+short SQLEndTran(short HandleType, void* Handle, short CompletionType);
+short SQLError(void* EnvironmentHandle, void* ConnectionHandle, void* StatementHandle, ubyte* Sqlstate, int* NativeError, ubyte* MessageText, short BufferLength, short* TextLength);
+short SQLExecDirect(void* StatementHandle, ubyte* StatementText, int TextLength);
+short SQLExecute(void* StatementHandle);
+short SQLFetch(void* StatementHandle);
+/+ [CONFLICTED] short SQLFetchScroll(void* StatementHandle, short FetchOrientation, int FetchOffset);
 +/
-short SQLFreeConnect(void*);
-short SQLFreeEnv(void*);
-short SQLFreeHandle(short, void*);
-short SQLFreeStmt(void*, ushort);
-short SQLGetConnectAttr(void*, int, void*, int, int*);
-short SQLGetConnectOption(void*, ushort, void*);
-short SQLGetCursorName(void*, ubyte*, short, short*);
-/+ [CONFLICTED] short SQLGetData(void*, ushort, short, void*, int, int*);
+short SQLFreeConnect(void* ConnectionHandle);
+short SQLFreeEnv(void* EnvironmentHandle);
+short SQLFreeHandle(short HandleType, void* Handle);
+short SQLFreeStmt(void* StatementHandle, ushort Option);
+short SQLGetConnectAttr(void* ConnectionHandle, int Attribute, void* Value, int BufferLength, int* StringLengthPtr);
+short SQLGetConnectOption(void* ConnectionHandle, ushort Option, void* Value);
+short SQLGetCursorName(void* StatementHandle, ubyte* CursorName, short BufferLength, short* NameLengthPtr);
+/+ [CONFLICTED] short SQLGetData(void* StatementHandle, ushort ColumnNumber, short TargetType, void* TargetValue, int BufferLength, int* StrLen_or_IndPtr);
 +/
-short SQLGetDescField(void*, short, short, void*, int, int*);
-/+ [CONFLICTED] short SQLGetDescRec(void*, short, ubyte*, short, short*, short*, short*, int*, short*, short*, short*);
+short SQLGetDescField(void* DescriptorHandle, short RecNumber, short FieldIdentifier, void* Value, int BufferLength, int* StringLength);
+/+ [CONFLICTED] short SQLGetDescRec(void* DescriptorHandle, short RecNumber, ubyte* Name, short BufferLength, short* StringLengthPtr, short* TypePtr, short* SubTypePtr, int* LengthPtr, short* PrecisionPtr, short* ScalePtr, short* NullablePtr);
 +/
-short SQLGetDiagField(short, void*, short, short, void*, short, short*);
-short SQLGetDiagRec(short, void*, short, ubyte*, int*, ubyte*, short, short*);
-short SQLGetEnvAttr(void*, int, void*, int, int*);
-short SQLGetFunctions(void*, ushort, ushort*);
-short SQLGetInfo(void*, ushort, void*, short, short*);
-short SQLGetStmtAttr(void*, int, void*, int, int*);
-short SQLGetStmtOption(void*, ushort, void*);
-short SQLGetTypeInfo(void*, short);
-short SQLNumResultCols(void*, short*);
-short SQLParamData(void*, void**);
-short SQLPrepare(void*, ubyte*, int);
-/+ [CONFLICTED] short SQLPutData(void*, void*, int);
+short SQLGetDiagField(short HandleType, void* Handle, short RecNumber, short DiagIdentifier, void* DiagInfo, short BufferLength, short* StringLength);
+short SQLGetDiagRec(short HandleType, void* Handle, short RecNumber, ubyte* Sqlstate, int* NativeError, ubyte* MessageText, short BufferLength, short* TextLength);
+short SQLGetEnvAttr(void* EnvironmentHandle, int Attribute, void* Value, int BufferLength, int* StringLength);
+short SQLGetFunctions(void* ConnectionHandle, ushort FunctionId, ushort* Supported);
+short SQLGetInfo(void* ConnectionHandle, ushort InfoType, void* InfoValue, short BufferLength, short* StringLengthPtr);
+short SQLGetStmtAttr(void* StatementHandle, int Attribute, void* Value, int BufferLength, int* StringLength);
+short SQLGetStmtOption(void* StatementHandle, ushort Option, void* Value);
+short SQLGetTypeInfo(void* StatementHandle, short DataType);
+short SQLNumResultCols(void* StatementHandle, short* ColumnCount);
+short SQLParamData(void* StatementHandle, void** Value);
+short SQLPrepare(void* StatementHandle, ubyte* StatementText, int TextLength);
+/+ [CONFLICTED] short SQLPutData(void* StatementHandle, void* Data, int StrLen_or_Ind);
 +/
-/+ [CONFLICTED] short SQLRowCount(void*, int*);
+/+ [CONFLICTED] short SQLRowCount(void* StatementHandle, int* RowCount);
 +/
-short SQLSetConnectAttr(void*, int, void*, int);
-/+ [CONFLICTED] short SQLSetConnectOption(void*, ushort, uint);
+short SQLSetConnectAttr(void* ConnectionHandle, int Attribute, void* Value, int StringLength);
+/+ [CONFLICTED] short SQLSetConnectOption(void* ConnectionHandle, ushort Option, uint Value);
 +/
-short SQLSetCursorName(void*, ubyte*, short);
-short SQLSetDescField(void*, short, short, void*, int);
-/+ [CONFLICTED] short SQLSetDescRec(void*, short, short, short, int, short, short, void*, int*, int*);
+short SQLSetCursorName(void* StatementHandle, ubyte* CursorName, short NameLength);
+short SQLSetDescField(void* DescriptorHandle, short RecNumber, short FieldIdentifier, void* Value, int BufferLength);
+/+ [CONFLICTED] short SQLSetDescRec(void* DescriptorHandle, short RecNumber, short Type, short SubType, int Length, short Precision, short Scale, void* Data, int* StringLength, int* Indicator);
 +/
-short SQLSetEnvAttr(void*, int, void*, int);
-/+ [CONFLICTED] short SQLSetParam(void*, ushort, short, short, uint, short, void*, int*);
+short SQLSetEnvAttr(void* EnvironmentHandle, int Attribute, void* Value, int StringLength);
+/+ [CONFLICTED] short SQLSetParam(void* StatementHandle, ushort ParameterNumber, short ValueType, short ParameterType, uint LengthPrecision, short ParameterScale, void* ParameterValue, int* StrLen_or_Ind);
 +/
-short SQLSetStmtAttr(void*, int, void*, int);
-/+ [CONFLICTED] short SQLSetStmtOption(void*, ushort, uint);
+short SQLSetStmtAttr(void* StatementHandle, int Attribute, void* Value, int StringLength);
+/+ [CONFLICTED] short SQLSetStmtOption(void* StatementHandle, ushort Option, uint Value);
 +/
-short SQLSpecialColumns(void*, ushort, ubyte*, short, ubyte*, short, ubyte*, short, ushort, ushort);
-short SQLStatistics(void*, ubyte*, short, ubyte*, short, ubyte*, short, ushort, ushort);
-short SQLTables(void*, ubyte*, short, ubyte*, short, ubyte*, short, ubyte*, short);
-short SQLTransact(void*, void*, ushort);
-int bcp_batch(void*);
-short bcp_bind(void*, ubyte*, int, int, ubyte*, int, int, int);
-short bcp_colfmt(void*, int, ubyte, int, int, ubyte*, int, int);
-short bcp_collen(void*, int, int);
-short bcp_colptr(void*, ubyte*, int);
-short bcp_columns(void*, int);
-short bcp_control(void*, int, void*);
-int bcp_done(void*);
-short bcp_exec(void*, int*);
-short bcp_getcolfmt(void*, int, int, void*, int, int*);
-short bcp_initA(void*, const(char)*, const(char)*, const(char)*, int);
-short bcp_initW(void*, const(wchar)*, const(wchar)*, const(wchar)*, int);
-short bcp_moretext(void*, int, ubyte*);
-short bcp_readfmtA(void*, const(char)*);
-short bcp_readfmtW(void*, const(wchar)*);
-short bcp_sendrow(void*);
-short bcp_setcolfmt(void*, int, int, void*, int);
-short bcp_writefmtA(void*, const(char)*);
-short bcp_writefmtW(void*, const(wchar)*);
-PSTR dbprtypeA(int);
-PWSTR dbprtypeW(int);
-short SQLLinkedServers(void*);
-short SQLLinkedCatalogsA(void*, const(char)*, short);
-short SQLLinkedCatalogsW(void*, const(wchar)*, short);
-HANDLE SQLInitEnumServers(PWSTR, PWSTR);
-short SQLGetNextEnumeration(HANDLE, ubyte*, int*);
-short SQLCloseEnumServers(HANDLE);
-short SQLDriverConnect(void*, long, ubyte*, short, ubyte*, short, short*, ushort);
-short SQLBrowseConnect(void*, ubyte*, short, ubyte*, short, short*);
-short SQLBulkOperations(void*, short);
-/+ [CONFLICTED] short SQLColAttributes(void*, ushort, ushort, void*, short, short*, int*);
+short SQLSpecialColumns(void* StatementHandle, ushort IdentifierType, ubyte* CatalogName, short NameLength1, ubyte* SchemaName, short NameLength2, ubyte* TableName, short NameLength3, ushort Scope, ushort Nullable);
+short SQLStatistics(void* StatementHandle, ubyte* CatalogName, short NameLength1, ubyte* SchemaName, short NameLength2, ubyte* TableName, short NameLength3, ushort Unique, ushort Reserved);
+short SQLTables(void* StatementHandle, ubyte* CatalogName, short NameLength1, ubyte* SchemaName, short NameLength2, ubyte* TableName, short NameLength3, ubyte* TableType, short NameLength4);
+short SQLTransact(void* EnvironmentHandle, void* ConnectionHandle, ushort CompletionType);
+int bcp_batch(void* param0);
+short bcp_bind(void* param0, ubyte* param1, int param2, int param3, ubyte* param4, int param5, int param6, int param7);
+short bcp_colfmt(void* param0, int param1, ubyte param2, int param3, int param4, ubyte* param5, int param6, int param7);
+short bcp_collen(void* param0, int param1, int param2);
+short bcp_colptr(void* param0, ubyte* param1, int param2);
+short bcp_columns(void* param0, int param1);
+short bcp_control(void* param0, int param1, void* param2);
+int bcp_done(void* param0);
+short bcp_exec(void* param0, int* param1);
+short bcp_getcolfmt(void* param0, int param1, int param2, void* param3, int param4, int* param5);
+short bcp_initA(void* param0, const(char)* param1, const(char)* param2, const(char)* param3, int param4);
+short bcp_initW(void* param0, const(wchar)* param1, const(wchar)* param2, const(wchar)* param3, int param4);
+short bcp_moretext(void* param0, int param1, ubyte* param2);
+short bcp_readfmtA(void* param0, const(char)* param1);
+short bcp_readfmtW(void* param0, const(wchar)* param1);
+short bcp_sendrow(void* param0);
+short bcp_setcolfmt(void* param0, int param1, int param2, void* param3, int param4);
+short bcp_writefmtA(void* param0, const(char)* param1);
+short bcp_writefmtW(void* param0, const(wchar)* param1);
+PSTR dbprtypeA(int param0);
+PWSTR dbprtypeW(int param0);
+short SQLLinkedServers(void* param0);
+short SQLLinkedCatalogsA(void* param0, const(char)* param1, short param2);
+short SQLLinkedCatalogsW(void* param0, const(wchar)* param1, short param2);
+HANDLE SQLInitEnumServers(PWSTR pwchServerName, PWSTR pwchInstanceName);
+short SQLGetNextEnumeration(HANDLE hEnumHandle, ubyte* prgEnumData, int* piEnumLength);
+short SQLCloseEnumServers(HANDLE hEnumHandle);
+short SQLDriverConnect(void* hdbc, long hwnd, ubyte* szConnStrIn, short cchConnStrIn, ubyte* szConnStrOut, short cchConnStrOutMax, short* pcchConnStrOut, ushort fDriverCompletion);
+short SQLBrowseConnect(void* hdbc, ubyte* szConnStrIn, short cchConnStrIn, ubyte* szConnStrOut, short cchConnStrOutMax, short* pcchConnStrOut);
+short SQLBulkOperations(void* StatementHandle, short Operation);
+/+ [CONFLICTED] short SQLColAttributes(void* hstmt, ushort icol, ushort fDescType, void* rgbDesc, short cbDescMax, short* pcbDesc, int* pfDesc);
 +/
-short SQLColumnPrivileges(void*, ubyte*, short, ubyte*, short, ubyte*, short, ubyte*, short);
-/+ [CONFLICTED] short SQLDescribeParam(void*, ushort, short*, uint*, short*, short*);
+short SQLColumnPrivileges(void* hstmt, ubyte* szCatalogName, short cchCatalogName, ubyte* szSchemaName, short cchSchemaName, ubyte* szTableName, short cchTableName, ubyte* szColumnName, short cchColumnName);
+/+ [CONFLICTED] short SQLDescribeParam(void* hstmt, ushort ipar, short* pfSqlType, uint* pcbParamDef, short* pibScale, short* pfNullable);
 +/
-/+ [CONFLICTED] short SQLExtendedFetch(void*, ushort, int, uint*, ushort*);
+/+ [CONFLICTED] short SQLExtendedFetch(void* hstmt, ushort fFetchType, int irow, uint* pcrow, ushort* rgfRowStatus);
 +/
-short SQLForeignKeys(void*, ubyte*, short, ubyte*, short, ubyte*, short, ubyte*, short, ubyte*, short, ubyte*, short);
-short SQLMoreResults(void*);
-short SQLNativeSql(void*, ubyte*, int, ubyte*, int, int*);
-short SQLNumParams(void*, short*);
-/+ [CONFLICTED] short SQLParamOptions(void*, uint, uint*);
+short SQLForeignKeys(void* hstmt, ubyte* szPkCatalogName, short cchPkCatalogName, ubyte* szPkSchemaName, short cchPkSchemaName, ubyte* szPkTableName, short cchPkTableName, ubyte* szFkCatalogName, short cchFkCatalogName, ubyte* szFkSchemaName, short cchFkSchemaName, ubyte* szFkTableName, short cchFkTableName);
+short SQLMoreResults(void* hstmt);
+short SQLNativeSql(void* hdbc, ubyte* szSqlStrIn, int cchSqlStrIn, ubyte* szSqlStr, int cchSqlStrMax, int* pcbSqlStr);
+short SQLNumParams(void* hstmt, short* pcpar);
+/+ [CONFLICTED] short SQLParamOptions(void* hstmt, uint crow, uint* pirow);
 +/
-short SQLPrimaryKeys(void*, ubyte*, short, ubyte*, short, ubyte*, short);
-short SQLProcedureColumns(void*, ubyte*, short, ubyte*, short, ubyte*, short, ubyte*, short);
-short SQLProcedures(void*, ubyte*, short, ubyte*, short, ubyte*, short);
-/+ [CONFLICTED] short SQLSetPos(void*, ushort, ushort, ushort);
+short SQLPrimaryKeys(void* hstmt, ubyte* szCatalogName, short cchCatalogName, ubyte* szSchemaName, short cchSchemaName, ubyte* szTableName, short cchTableName);
+short SQLProcedureColumns(void* hstmt, ubyte* szCatalogName, short cchCatalogName, ubyte* szSchemaName, short cchSchemaName, ubyte* szProcName, short cchProcName, ubyte* szColumnName, short cchColumnName);
+short SQLProcedures(void* hstmt, ubyte* szCatalogName, short cchCatalogName, ubyte* szSchemaName, short cchSchemaName, ubyte* szProcName, short cchProcName);
+/+ [CONFLICTED] short SQLSetPos(void* hstmt, ushort irow, ushort fOption, ushort fLock);
 +/
-short SQLTablePrivileges(void*, ubyte*, short, ubyte*, short, ubyte*, short);
-short SQLDrivers(void*, ushort, ubyte*, short, short*, ubyte*, short, short*);
-/+ [CONFLICTED] short SQLBindParameter(void*, ushort, short, short, short, uint, short, void*, int, int*);
+short SQLTablePrivileges(void* hstmt, ubyte* szCatalogName, short cchCatalogName, ubyte* szSchemaName, short cchSchemaName, ubyte* szTableName, short cchTableName);
+short SQLDrivers(void* henv, ushort fDirection, ubyte* szDriverDesc, short cchDriverDescMax, short* pcchDriverDesc, ubyte* szDriverAttributes, short cchDrvrAttrMax, short* pcchDrvrAttr);
+/+ [CONFLICTED] short SQLBindParameter(void* hstmt, ushort ipar, short fParamType, short fCType, short fSqlType, uint cbColDef, short ibScale, void* rgbValue, int cbValueMax, int* pcbValue);
 +/
-short SQLAllocHandleStd(short, void*, void**);
-/+ [CONFLICTED] short SQLSetScrollOptions(void*, ushort, int, ushort);
+short SQLAllocHandleStd(short fHandleType, void* hInput, void** phOutput);
+/+ [CONFLICTED] short SQLSetScrollOptions(void* hstmt, ushort fConcurrency, int crowKeyset, ushort crowRowset);
 +/
-BOOL ODBCSetTryWaitValue(uint);
+BOOL ODBCSetTryWaitValue(uint dwValue);
 uint ODBCGetTryWaitValue();
-/+ [CONFLICTED] short SQLColAttributeW(void*, ushort, ushort, void*, short, short*, void*);
+/+ [CONFLICTED] short SQLColAttributeW(void* hstmt, ushort iCol, ushort iField, void* pCharAttr, short cbDescMax, short* pcbCharAttr, void* pNumAttr);
 +/
-/+ [CONFLICTED] short SQLColAttributesW(void*, ushort, ushort, void*, short, short*, int*);
+/+ [CONFLICTED] short SQLColAttributesW(void* hstmt, ushort icol, ushort fDescType, void* rgbDesc, short cbDescMax, short* pcbDesc, int* pfDesc);
 +/
-short SQLConnectW(void*, ushort*, short, ushort*, short, ushort*, short);
-/+ [CONFLICTED] short SQLDescribeColW(void*, ushort, ushort*, short, short*, short*, uint*, short*, short*);
+short SQLConnectW(void* hdbc, ushort* szDSN, short cchDSN, ushort* szUID, short cchUID, ushort* szAuthStr, short cchAuthStr);
+/+ [CONFLICTED] short SQLDescribeColW(void* hstmt, ushort icol, ushort* szColName, short cchColNameMax, short* pcchColName, short* pfSqlType, uint* pcbColDef, short* pibScale, short* pfNullable);
 +/
-short SQLErrorW(void*, void*, void*, ushort*, int*, ushort*, short, short*);
-short SQLExecDirectW(void*, ushort*, int);
-short SQLGetConnectAttrW(void*, int, void*, int, int*);
-short SQLGetCursorNameW(void*, ushort*, short, short*);
-short SQLSetDescFieldW(void*, short, short, void*, int);
-short SQLGetDescFieldW(void*, short, short, void*, int, int*);
-/+ [CONFLICTED] short SQLGetDescRecW(void*, short, ushort*, short, short*, short*, short*, int*, short*, short*, short*);
+short SQLErrorW(void* henv, void* hdbc, void* hstmt, ushort* wszSqlState, int* pfNativeError, ushort* wszErrorMsg, short cchErrorMsgMax, short* pcchErrorMsg);
+short SQLExecDirectW(void* hstmt, ushort* szSqlStr, int TextLength);
+short SQLGetConnectAttrW(void* hdbc, int fAttribute, void* rgbValue, int cbValueMax, int* pcbValue);
+short SQLGetCursorNameW(void* hstmt, ushort* szCursor, short cchCursorMax, short* pcchCursor);
+short SQLSetDescFieldW(void* DescriptorHandle, short RecNumber, short FieldIdentifier, void* Value, int BufferLength);
+short SQLGetDescFieldW(void* hdesc, short iRecord, short iField, void* rgbValue, int cbBufferLength, int* StringLength);
+/+ [CONFLICTED] short SQLGetDescRecW(void* hdesc, short iRecord, ushort* szName, short cchNameMax, short* pcchName, short* pfType, short* pfSubType, int* pLength, short* pPrecision, short* pScale, short* pNullable);
 +/
-short SQLGetDiagFieldW(short, void*, short, short, void*, short, short*);
-short SQLGetDiagRecW(short, void*, short, ushort*, int*, ushort*, short, short*);
-short SQLPrepareW(void*, ushort*, int);
-short SQLSetConnectAttrW(void*, int, void*, int);
-short SQLSetCursorNameW(void*, ushort*, short);
-short SQLColumnsW(void*, ushort*, short, ushort*, short, ushort*, short, ushort*, short);
-short SQLGetConnectOptionW(void*, ushort, void*);
-short SQLGetInfoW(void*, ushort, void*, short, short*);
-short SQLGetTypeInfoW(void*, short);
-/+ [CONFLICTED] short SQLSetConnectOptionW(void*, ushort, uint);
+short SQLGetDiagFieldW(short fHandleType, void* handle, short iRecord, short fDiagField, void* rgbDiagInfo, short cbBufferLength, short* pcbStringLength);
+short SQLGetDiagRecW(short fHandleType, void* handle, short iRecord, ushort* szSqlState, int* pfNativeError, ushort* szErrorMsg, short cchErrorMsgMax, short* pcchErrorMsg);
+short SQLPrepareW(void* hstmt, ushort* szSqlStr, int cchSqlStr);
+short SQLSetConnectAttrW(void* hdbc, int fAttribute, void* rgbValue, int cbValue);
+short SQLSetCursorNameW(void* hstmt, ushort* szCursor, short cchCursor);
+short SQLColumnsW(void* hstmt, ushort* szCatalogName, short cchCatalogName, ushort* szSchemaName, short cchSchemaName, ushort* szTableName, short cchTableName, ushort* szColumnName, short cchColumnName);
+short SQLGetConnectOptionW(void* hdbc, ushort fOption, void* pvParam);
+short SQLGetInfoW(void* hdbc, ushort fInfoType, void* rgbInfoValue, short cbInfoValueMax, short* pcbInfoValue);
+short SQLGetTypeInfoW(void* StatementHandle, short DataType);
+/+ [CONFLICTED] short SQLSetConnectOptionW(void* hdbc, ushort fOption, uint vParam);
 +/
-short SQLSpecialColumnsW(void*, ushort, ushort*, short, ushort*, short, ushort*, short, ushort, ushort);
-short SQLStatisticsW(void*, ushort*, short, ushort*, short, ushort*, short, ushort, ushort);
-short SQLTablesW(void*, ushort*, short, ushort*, short, ushort*, short, ushort*, short);
-short SQLDataSourcesW(void*, ushort, ushort*, short, short*, ushort*, short, short*);
-short SQLDriverConnectW(void*, long, ushort*, short, ushort*, short, short*, ushort);
-short SQLBrowseConnectW(void*, ushort*, short, ushort*, short, short*);
-short SQLColumnPrivilegesW(void*, ushort*, short, ushort*, short, ushort*, short, ushort*, short);
-short SQLGetStmtAttrW(void*, int, void*, int, int*);
-short SQLSetStmtAttrW(void*, int, void*, int);
-short SQLForeignKeysW(void*, ushort*, short, ushort*, short, ushort*, short, ushort*, short, ushort*, short, ushort*, short);
-short SQLNativeSqlW(void*, ushort*, int, ushort*, int, int*);
-short SQLPrimaryKeysW(void*, ushort*, short, ushort*, short, ushort*, short);
-short SQLProcedureColumnsW(void*, ushort*, short, ushort*, short, ushort*, short, ushort*, short);
-short SQLProceduresW(void*, ushort*, short, ushort*, short, ushort*, short);
-short SQLTablePrivilegesW(void*, ushort*, short, ushort*, short, ushort*, short);
-short SQLDriversW(void*, ushort, ushort*, short, short*, ushort*, short, short*);
-/+ [CONFLICTED] short SQLColAttributeA(void*, short, short, void*, short, short*, void*);
+short SQLSpecialColumnsW(void* hstmt, ushort fColType, ushort* szCatalogName, short cchCatalogName, ushort* szSchemaName, short cchSchemaName, ushort* szTableName, short cchTableName, ushort fScope, ushort fNullable);
+short SQLStatisticsW(void* hstmt, ushort* szCatalogName, short cchCatalogName, ushort* szSchemaName, short cchSchemaName, ushort* szTableName, short cchTableName, ushort fUnique, ushort fAccuracy);
+short SQLTablesW(void* hstmt, ushort* szCatalogName, short cchCatalogName, ushort* szSchemaName, short cchSchemaName, ushort* szTableName, short cchTableName, ushort* szTableType, short cchTableType);
+short SQLDataSourcesW(void* henv, ushort fDirection, ushort* szDSN, short cchDSNMax, short* pcchDSN, ushort* wszDescription, short cchDescriptionMax, short* pcchDescription);
+short SQLDriverConnectW(void* hdbc, long hwnd, ushort* szConnStrIn, short cchConnStrIn, ushort* szConnStrOut, short cchConnStrOutMax, short* pcchConnStrOut, ushort fDriverCompletion);
+short SQLBrowseConnectW(void* hdbc, ushort* szConnStrIn, short cchConnStrIn, ushort* szConnStrOut, short cchConnStrOutMax, short* pcchConnStrOut);
+short SQLColumnPrivilegesW(void* hstmt, ushort* szCatalogName, short cchCatalogName, ushort* szSchemaName, short cchSchemaName, ushort* szTableName, short cchTableName, ushort* szColumnName, short cchColumnName);
+short SQLGetStmtAttrW(void* hstmt, int fAttribute, void* rgbValue, int cbValueMax, int* pcbValue);
+short SQLSetStmtAttrW(void* hstmt, int fAttribute, void* rgbValue, int cbValueMax);
+short SQLForeignKeysW(void* hstmt, ushort* szPkCatalogName, short cchPkCatalogName, ushort* szPkSchemaName, short cchPkSchemaName, ushort* szPkTableName, short cchPkTableName, ushort* szFkCatalogName, short cchFkCatalogName, ushort* szFkSchemaName, short cchFkSchemaName, ushort* szFkTableName, short cchFkTableName);
+short SQLNativeSqlW(void* hdbc, ushort* szSqlStrIn, int cchSqlStrIn, ushort* szSqlStr, int cchSqlStrMax, int* pcchSqlStr);
+short SQLPrimaryKeysW(void* hstmt, ushort* szCatalogName, short cchCatalogName, ushort* szSchemaName, short cchSchemaName, ushort* szTableName, short cchTableName);
+short SQLProcedureColumnsW(void* hstmt, ushort* szCatalogName, short cchCatalogName, ushort* szSchemaName, short cchSchemaName, ushort* szProcName, short cchProcName, ushort* szColumnName, short cchColumnName);
+short SQLProceduresW(void* hstmt, ushort* szCatalogName, short cchCatalogName, ushort* szSchemaName, short cchSchemaName, ushort* szProcName, short cchProcName);
+short SQLTablePrivilegesW(void* hstmt, ushort* szCatalogName, short cchCatalogName, ushort* szSchemaName, short cchSchemaName, ushort* szTableName, short cchTableName);
+short SQLDriversW(void* henv, ushort fDirection, ushort* szDriverDesc, short cchDriverDescMax, short* pcchDriverDesc, ushort* szDriverAttributes, short cchDrvrAttrMax, short* pcchDrvrAttr);
+/+ [CONFLICTED] short SQLColAttributeA(void* hstmt, short iCol, short iField, void* pCharAttr, short cbCharAttrMax, short* pcbCharAttr, void* pNumAttr);
 +/
-/+ [CONFLICTED] short SQLColAttributesA(void*, ushort, ushort, void*, short, short*, int*);
+/+ [CONFLICTED] short SQLColAttributesA(void* hstmt, ushort icol, ushort fDescType, void* rgbDesc, short cbDescMax, short* pcbDesc, int* pfDesc);
 +/
-short SQLConnectA(void*, ubyte*, short, ubyte*, short, ubyte*, short);
-/+ [CONFLICTED] short SQLDescribeColA(void*, ushort, ubyte*, short, short*, short*, uint*, short*, short*);
+short SQLConnectA(void* hdbc, ubyte* szDSN, short cbDSN, ubyte* szUID, short cbUID, ubyte* szAuthStr, short cbAuthStr);
+/+ [CONFLICTED] short SQLDescribeColA(void* hstmt, ushort icol, ubyte* szColName, short cbColNameMax, short* pcbColName, short* pfSqlType, uint* pcbColDef, short* pibScale, short* pfNullable);
 +/
-short SQLErrorA(void*, void*, void*, ubyte*, int*, ubyte*, short, short*);
-short SQLExecDirectA(void*, ubyte*, int);
-short SQLGetConnectAttrA(void*, int, void*, int, int*);
-short SQLGetCursorNameA(void*, ubyte*, short, short*);
-short SQLGetDescFieldA(void*, short, short, void*, int, int*);
-/+ [CONFLICTED] short SQLGetDescRecA(void*, short, ubyte*, short, short*, short*, short*, int*, short*, short*, short*);
+short SQLErrorA(void* henv, void* hdbc, void* hstmt, ubyte* szSqlState, int* pfNativeError, ubyte* szErrorMsg, short cbErrorMsgMax, short* pcbErrorMsg);
+short SQLExecDirectA(void* hstmt, ubyte* szSqlStr, int cbSqlStr);
+short SQLGetConnectAttrA(void* hdbc, int fAttribute, void* rgbValue, int cbValueMax, int* pcbValue);
+short SQLGetCursorNameA(void* hstmt, ubyte* szCursor, short cbCursorMax, short* pcbCursor);
+short SQLGetDescFieldA(void* hdesc, short iRecord, short iField, void* rgbValue, int cbBufferLength, int* StringLength);
+/+ [CONFLICTED] short SQLGetDescRecA(void* hdesc, short iRecord, ubyte* szName, short cbNameMax, short* pcbName, short* pfType, short* pfSubType, int* pLength, short* pPrecision, short* pScale, short* pNullable);
 +/
-short SQLGetDiagFieldA(short, void*, short, short, void*, short, short*);
-short SQLGetDiagRecA(short, void*, short, ubyte*, int*, ubyte*, short, short*);
-short SQLGetStmtAttrA(void*, int, void*, int, int*);
-short SQLGetTypeInfoA(void*, short);
-short SQLPrepareA(void*, ubyte*, int);
-short SQLSetConnectAttrA(void*, int, void*, int);
-short SQLSetCursorNameA(void*, ubyte*, short);
-short SQLColumnsA(void*, ubyte*, short, ubyte*, short, ubyte*, short, ubyte*, short);
-short SQLGetConnectOptionA(void*, ushort, void*);
-short SQLGetInfoA(void*, ushort, void*, short, short*);
-/+ [CONFLICTED] short SQLSetConnectOptionA(void*, ushort, uint);
+short SQLGetDiagFieldA(short fHandleType, void* handle, short iRecord, short fDiagField, void* rgbDiagInfo, short cbDiagInfoMax, short* pcbDiagInfo);
+short SQLGetDiagRecA(short fHandleType, void* handle, short iRecord, ubyte* szSqlState, int* pfNativeError, ubyte* szErrorMsg, short cbErrorMsgMax, short* pcbErrorMsg);
+short SQLGetStmtAttrA(void* hstmt, int fAttribute, void* rgbValue, int cbValueMax, int* pcbValue);
+short SQLGetTypeInfoA(void* StatementHandle, short DataType);
+short SQLPrepareA(void* hstmt, ubyte* szSqlStr, int cbSqlStr);
+short SQLSetConnectAttrA(void* hdbc, int fAttribute, void* rgbValue, int cbValue);
+short SQLSetCursorNameA(void* hstmt, ubyte* szCursor, short cbCursor);
+short SQLColumnsA(void* hstmt, ubyte* szCatalogName, short cbCatalogName, ubyte* szSchemaName, short cbSchemaName, ubyte* szTableName, short cbTableName, ubyte* szColumnName, short cbColumnName);
+short SQLGetConnectOptionA(void* hdbc, ushort fOption, void* pvParam);
+short SQLGetInfoA(void* hdbc, ushort fInfoType, void* rgbInfoValue, short cbInfoValueMax, short* pcbInfoValue);
+/+ [CONFLICTED] short SQLSetConnectOptionA(void* hdbc, ushort fOption, uint vParam);
 +/
-short SQLSpecialColumnsA(void*, ushort, ubyte*, short, ubyte*, short, ubyte*, short, ushort, ushort);
-short SQLStatisticsA(void*, ubyte*, short, ubyte*, short, ubyte*, short, ushort, ushort);
-short SQLTablesA(void*, ubyte*, short, ubyte*, short, ubyte*, short, ubyte*, short);
-short SQLDataSourcesA(void*, ushort, ubyte*, short, short*, ubyte*, short, short*);
-short SQLDriverConnectA(void*, long, ubyte*, short, ubyte*, short, short*, ushort);
-short SQLBrowseConnectA(void*, ubyte*, short, ubyte*, short, short*);
-short SQLColumnPrivilegesA(void*, ubyte*, short, ubyte*, short, ubyte*, short, ubyte*, short);
-short SQLForeignKeysA(void*, ubyte*, short, ubyte*, short, ubyte*, short, ubyte*, short, ubyte*, short, ubyte*, short);
-short SQLNativeSqlA(void*, ubyte*, int, ubyte*, int, int*);
-short SQLPrimaryKeysA(void*, ubyte*, short, ubyte*, short, ubyte*, short);
-short SQLProcedureColumnsA(void*, ubyte*, short, ubyte*, short, ubyte*, short, ubyte*, short);
-short SQLProceduresA(void*, ubyte*, short, ubyte*, short, ubyte*, short);
-short SQLTablePrivilegesA(void*, ubyte*, short, ubyte*, short, ubyte*, short);
-short SQLDriversA(void*, ushort, ubyte*, short, short*, ubyte*, short, short*);
+short SQLSpecialColumnsA(void* hstmt, ushort fColType, ubyte* szCatalogName, short cbCatalogName, ubyte* szSchemaName, short cbSchemaName, ubyte* szTableName, short cbTableName, ushort fScope, ushort fNullable);
+short SQLStatisticsA(void* hstmt, ubyte* szCatalogName, short cbCatalogName, ubyte* szSchemaName, short cbSchemaName, ubyte* szTableName, short cbTableName, ushort fUnique, ushort fAccuracy);
+short SQLTablesA(void* hstmt, ubyte* szCatalogName, short cbCatalogName, ubyte* szSchemaName, short cbSchemaName, ubyte* szTableName, short cbTableName, ubyte* szTableType, short cbTableType);
+short SQLDataSourcesA(void* henv, ushort fDirection, ubyte* szDSN, short cbDSNMax, short* pcbDSN, ubyte* szDescription, short cbDescriptionMax, short* pcbDescription);
+short SQLDriverConnectA(void* hdbc, long hwnd, ubyte* szConnStrIn, short cbConnStrIn, ubyte* szConnStrOut, short cbConnStrOutMax, short* pcbConnStrOut, ushort fDriverCompletion);
+short SQLBrowseConnectA(void* hdbc, ubyte* szConnStrIn, short cbConnStrIn, ubyte* szConnStrOut, short cbConnStrOutMax, short* pcbConnStrOut);
+short SQLColumnPrivilegesA(void* hstmt, ubyte* szCatalogName, short cbCatalogName, ubyte* szSchemaName, short cbSchemaName, ubyte* szTableName, short cbTableName, ubyte* szColumnName, short cbColumnName);
+short SQLForeignKeysA(void* hstmt, ubyte* szPkCatalogName, short cbPkCatalogName, ubyte* szPkSchemaName, short cbPkSchemaName, ubyte* szPkTableName, short cbPkTableName, ubyte* szFkCatalogName, short cbFkCatalogName, ubyte* szFkSchemaName, short cbFkSchemaName, ubyte* szFkTableName, short cbFkTableName);
+short SQLNativeSqlA(void* hdbc, ubyte* szSqlStrIn, int cbSqlStrIn, ubyte* szSqlStr, int cbSqlStrMax, int* pcbSqlStr);
+short SQLPrimaryKeysA(void* hstmt, ubyte* szCatalogName, short cbCatalogName, ubyte* szSchemaName, short cbSchemaName, ubyte* szTableName, short cbTableName);
+short SQLProcedureColumnsA(void* hstmt, ubyte* szCatalogName, short cbCatalogName, ubyte* szSchemaName, short cbSchemaName, ubyte* szProcName, short cbProcName, ubyte* szColumnName, short cbColumnName);
+short SQLProceduresA(void* hstmt, ubyte* szCatalogName, short cbCatalogName, ubyte* szSchemaName, short cbSchemaName, ubyte* szProcName, short cbProcName);
+short SQLTablePrivilegesA(void* hstmt, ubyte* szCatalogName, short cbCatalogName, ubyte* szSchemaName, short cbSchemaName, ubyte* szTableName, short cbTableName);
+short SQLDriversA(void* henv, ushort fDirection, ubyte* szDriverDesc, short cbDriverDescMax, short* pcbDriverDesc, ubyte* szDriverAttributes, short cbDrvrAttrMax, short* pcbDrvrAttr);
 enum SI_TEMPORARY = 0x80000000;
 enum SUBSINFO_ALLFLAGS = 0x0000ef7f;
 enum RS_READY = 0x00000001;
@@ -3978,13 +3977,13 @@ struct DBCOST
 enum IID_IWordSink = GUID(0xcc907054, 0xc058, 0x101a, [0xb5, 0x54, 0x8, 0x0, 0x2b, 0x33, 0xb0, 0xe6]);
 interface IWordSink : IUnknown
 {
-    HRESULT PutWord(uint, const(wchar)*, uint, uint);
-    HRESULT PutAltWord(uint, const(wchar)*, uint, uint);
+    HRESULT PutWord(uint cwc, const(wchar)* pwcInBuf, uint cwcSrcLen, uint cwcSrcPos);
+    HRESULT PutAltWord(uint cwc, const(wchar)* pwcInBuf, uint cwcSrcLen, uint cwcSrcPos);
     HRESULT StartAltPhrase();
     HRESULT EndAltPhrase();
-    HRESULT PutBreak(WORDREP_BREAK_TYPE);
+    HRESULT PutBreak(WORDREP_BREAK_TYPE breakType);
 }
-alias PFNFILLTEXTBUFFER = HRESULT function(TEXT_SOURCE*);
+alias PFNFILLTEXTBUFFER = HRESULT function(TEXT_SOURCE* pTextSource);
 struct TEXT_SOURCE
 {
     PFNFILLTEXTBUFFER pfnFillTextBuffer;
@@ -3995,43 +3994,43 @@ struct TEXT_SOURCE
 enum IID_IWordBreaker = GUID(0xd53552c8, 0x77e3, 0x101a, [0xb5, 0x52, 0x8, 0x0, 0x2b, 0x33, 0xb0, 0xe6]);
 interface IWordBreaker : IUnknown
 {
-    HRESULT Init(BOOL, uint, BOOL*);
-    HRESULT BreakText(TEXT_SOURCE*, IWordSink, IPhraseSink);
-    HRESULT ComposePhrase(const(wchar)*, uint, const(wchar)*, uint, uint, PWSTR, uint*);
-    HRESULT GetLicenseToUse(const(ushort)**);
+    HRESULT Init(BOOL fQuery, uint ulMaxTokenSize, BOOL* pfLicense);
+    HRESULT BreakText(TEXT_SOURCE* pTextSource, IWordSink pWordSink, IPhraseSink pPhraseSink);
+    HRESULT ComposePhrase(const(wchar)* pwcNoun, uint cwcNoun, const(wchar)* pwcModifier, uint cwcModifier, uint ulAttachmentType, PWSTR pwcPhrase, uint* pcwcPhrase);
+    HRESULT GetLicenseToUse(const(ushort)** ppwcsLicense);
 }
 enum IID_IWordFormSink = GUID(0xfe77c330, 0x7f42, 0x11ce, [0xbe, 0x57, 0x0, 0xaa, 0x0, 0x51, 0xfe, 0x20]);
 interface IWordFormSink : IUnknown
 {
-    HRESULT PutAltWord(const(wchar)*, uint);
-    HRESULT PutWord(const(wchar)*, uint);
+    HRESULT PutAltWord(const(wchar)* pwcInBuf, uint cwc);
+    HRESULT PutWord(const(wchar)* pwcInBuf, uint cwc);
 }
 enum IID_IStemmer = GUID(0xefbaf140, 0x7f42, 0x11ce, [0xbe, 0x57, 0x0, 0xaa, 0x0, 0x51, 0xfe, 0x20]);
 interface IStemmer : IUnknown
 {
-    HRESULT Init(uint, BOOL*);
-    HRESULT GenerateWordForms(const(wchar)*, uint, IWordFormSink);
-    HRESULT GetLicenseToUse(const(ushort)**);
+    HRESULT Init(uint ulMaxTokenSize, BOOL* pfLicense);
+    HRESULT GenerateWordForms(const(wchar)* pwcInBuf, uint cwc, IWordFormSink pStemSink);
+    HRESULT GetLicenseToUse(const(ushort)** ppwcsLicense);
 }
 enum IID_ISimpleCommandCreator = GUID(0x5e341ab7, 0x2d0, 0x11d1, [0x90, 0xc, 0x0, 0xa0, 0xc9, 0x6, 0x37, 0x96]);
 interface ISimpleCommandCreator : IUnknown
 {
-    HRESULT CreateICommand(IUnknown*, IUnknown);
-    HRESULT VerifyCatalog(const(wchar)*, const(wchar)*);
-    HRESULT GetDefaultCatalog(PWSTR, uint, uint*);
+    HRESULT CreateICommand(IUnknown* ppIUnknown, IUnknown pOuterUnk);
+    HRESULT VerifyCatalog(const(wchar)* pwszMachine, const(wchar)* pwszCatalogName);
+    HRESULT GetDefaultCatalog(PWSTR pwszCatalogName, uint cwcIn, uint* pcwcOut);
 }
 enum IID_IColumnMapper = GUID(0xb63e37a, 0x9ccc, 0x11d0, [0xbc, 0xdb, 0x0, 0x80, 0x5f, 0xcc, 0xce, 0x4]);
 interface IColumnMapper : IUnknown
 {
-    HRESULT GetPropInfoFromName(const(wchar)*, DBID**, ushort*, uint*);
-    HRESULT GetPropInfoFromId(const(DBID)*, ushort**, ushort*, uint*);
-    HRESULT EnumPropInfo(uint, const(ushort)**, DBID**, ushort*, uint*);
+    HRESULT GetPropInfoFromName(const(wchar)* wcsPropName, DBID** ppPropId, ushort* pPropType, uint* puiWidth);
+    HRESULT GetPropInfoFromId(const(DBID)* pPropId, ushort** pwcsName, ushort* pPropType, uint* puiWidth);
+    HRESULT EnumPropInfo(uint iEntry, const(ushort)** pwcsName, DBID** ppPropId, ushort* pPropType, uint* puiWidth);
     HRESULT IsMapUpToDate();
 }
 enum IID_IColumnMapperCreator = GUID(0xb63e37b, 0x9ccc, 0x11d0, [0xbc, 0xdb, 0x0, 0x80, 0x5f, 0xcc, 0xce, 0x4]);
 interface IColumnMapperCreator : IUnknown
 {
-    HRESULT GetColumnMapper(const(wchar)*, const(wchar)*, IColumnMapper*);
+    HRESULT GetColumnMapper(const(wchar)* wcsMachineName, const(wchar)* wcsCatalogName, IColumnMapper* ppColumnMapper);
 }
 struct FILTERED_DATA_SOURCES
 {
@@ -4043,36 +4042,36 @@ struct FILTERED_DATA_SOURCES
 enum IID_ILoadFilter = GUID(0xc7310722, 0xac80, 0x11d1, [0x8d, 0xf3, 0x0, 0xc0, 0x4f, 0xb6, 0xef, 0x4f]);
 interface ILoadFilter : IUnknown
 {
-    HRESULT LoadIFilter(const(wchar)*, FILTERED_DATA_SOURCES*, IUnknown, BOOL, GUID*, int*, ushort**, IFilter*);
-    HRESULT LoadIFilterFromStorage(IStorage, IUnknown, const(wchar)*, BOOL, GUID*, int*, ushort**, IFilter*);
-    HRESULT LoadIFilterFromStream(IStream, FILTERED_DATA_SOURCES*, IUnknown, BOOL, GUID*, int*, ushort**, IFilter*);
+    HRESULT LoadIFilter(const(wchar)* pwcsPath, FILTERED_DATA_SOURCES* pFilteredSources, IUnknown pUnkOuter, BOOL fUseDefault, GUID* pFilterClsid, int* SearchDecSize, ushort** pwcsSearchDesc, IFilter* ppIFilt);
+    HRESULT LoadIFilterFromStorage(IStorage pStg, IUnknown pUnkOuter, const(wchar)* pwcsOverride, BOOL fUseDefault, GUID* pFilterClsid, int* SearchDecSize, ushort** pwcsSearchDesc, IFilter* ppIFilt);
+    HRESULT LoadIFilterFromStream(IStream pStm, FILTERED_DATA_SOURCES* pFilteredSources, IUnknown pUnkOuter, BOOL fUseDefault, GUID* pFilterClsid, int* SearchDecSize, ushort** pwcsSearchDesc, IFilter* ppIFilt);
 }
 enum IID_ILoadFilterWithPrivateComActivation = GUID(0x40bdbd34, 0x780b, 0x48d3, [0x9b, 0xb6, 0x12, 0xeb, 0xd4, 0xad, 0x2e, 0x75]);
 interface ILoadFilterWithPrivateComActivation : ILoadFilter
 {
-    HRESULT LoadIFilterWithPrivateComActivation(FILTERED_DATA_SOURCES*, BOOL, GUID*, BOOL*, IFilter*);
+    HRESULT LoadIFilterWithPrivateComActivation(FILTERED_DATA_SOURCES* filteredSources, BOOL useDefault, GUID* filterClsid, BOOL* isFilterPrivateComActivated, IFilter* filterObj);
 }
 enum IID_IRichChunk = GUID(0x4fdef69c, 0xdbc9, 0x454e, [0x99, 0x10, 0xb3, 0x4f, 0x3c, 0x64, 0xb5, 0x10]);
 interface IRichChunk : IUnknown
 {
-    HRESULT GetData(uint*, uint*, PWSTR*, PROPVARIANT*);
+    HRESULT GetData(uint* pFirstPos, uint* pLength, PWSTR* ppsz, PROPVARIANT* pValue);
 }
 enum IID_ICondition = GUID(0xfc988d4, 0xc935, 0x4b97, [0xa9, 0x73, 0x46, 0x28, 0x2e, 0xa1, 0x75, 0xc8]);
 interface ICondition : IPersistStream
 {
-    HRESULT GetConditionType(CONDITION_TYPE*);
-    HRESULT GetSubConditions(const(GUID)*, void**);
-    HRESULT GetComparisonInfo(PWSTR*, CONDITION_OPERATION*, PROPVARIANT*);
-    HRESULT GetValueType(PWSTR*);
-    HRESULT GetValueNormalization(PWSTR*);
-    HRESULT GetInputTerms(IRichChunk*, IRichChunk*, IRichChunk*);
-    HRESULT Clone(ICondition*);
+    HRESULT GetConditionType(CONDITION_TYPE* pNodeType);
+    HRESULT GetSubConditions(const(GUID)* riid, void** ppv);
+    HRESULT GetComparisonInfo(PWSTR* ppszPropertyName, CONDITION_OPERATION* pcop, PROPVARIANT* ppropvar);
+    HRESULT GetValueType(PWSTR* ppszValueTypeName);
+    HRESULT GetValueNormalization(PWSTR* ppszNormalization);
+    HRESULT GetInputTerms(IRichChunk* ppPropertyTerm, IRichChunk* ppOperationTerm, IRichChunk* ppValueTerm);
+    HRESULT Clone(ICondition* ppc);
 }
 enum IID_ICondition2 = GUID(0xdb8851d, 0x2e5b, 0x47eb, [0x92, 0x8, 0xd2, 0x8c, 0x32, 0x5a, 0x1, 0xd7]);
 interface ICondition2 : ICondition
 {
-    HRESULT GetLocale(PWSTR*);
-    HRESULT GetLeafConditionInfo(PROPERTYKEY*, CONDITION_OPERATION*, PROPVARIANT*);
+    HRESULT GetLocale(PWSTR* ppszLocaleName);
+    HRESULT GetLeafConditionInfo(PROPERTYKEY* ppropkey, CONDITION_OPERATION* pcop, PROPVARIANT* ppropvar);
 }
 struct DB_NUMERIC
 {
@@ -5160,26 +5159,26 @@ enum : int
 enum IID_IAccessor = GUID(0xc733a8c, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IAccessor : IUnknown
 {
-    HRESULT AddRefAccessor(HACCESSOR, uint*);
-    HRESULT CreateAccessor(uint, ulong, const(DBBINDING)*, ulong, HACCESSOR*, uint*);
-    HRESULT GetBindings(HACCESSOR, uint*, ulong*, DBBINDING**);
-    HRESULT ReleaseAccessor(HACCESSOR, uint*);
+    HRESULT AddRefAccessor(HACCESSOR hAccessor, uint* pcRefCount);
+    HRESULT CreateAccessor(uint dwAccessorFlags, ulong cBindings, const(DBBINDING)* rgBindings, ulong cbRowSize, HACCESSOR* phAccessor, uint* rgStatus);
+    HRESULT GetBindings(HACCESSOR hAccessor, uint* pdwAccessorFlags, ulong* pcBindings, DBBINDING** prgBindings);
+    HRESULT ReleaseAccessor(HACCESSOR hAccessor, uint* pcRefCount);
 }
 enum IID_IRowset = GUID(0xc733a7c, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowset : IUnknown
 {
-    HRESULT AddRefRows(ulong, const(ulong)*, uint*, uint*);
-    HRESULT GetData(ulong, HACCESSOR, void*);
-    HRESULT GetNextRows(ulong, long, long, ulong*, ulong**);
-    HRESULT ReleaseRows(ulong, const(ulong)*, uint*, uint*, uint*);
-    HRESULT RestartPosition(ulong);
+    HRESULT AddRefRows(ulong cRows, const(ulong)* rghRows, uint* rgRefCounts, uint* rgRowStatus);
+    HRESULT GetData(ulong hRow, HACCESSOR hAccessor, void* pData);
+    HRESULT GetNextRows(ulong hReserved, long lRowsOffset, long cRows, ulong* pcRowsObtained, ulong** prghRows);
+    HRESULT ReleaseRows(ulong cRows, const(ulong)* rghRows, uint* rgRowOptions, uint* rgRefCounts, uint* rgRowStatus);
+    HRESULT RestartPosition(ulong hReserved);
 }
 enum IID_IRowsetInfo = GUID(0xc733a55, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetInfo : IUnknown
 {
-    HRESULT GetProperties(const(uint), const(DBPROPIDSET)*, uint*, DBPROPSET**);
-    HRESULT GetReferencedRowset(ulong, const(GUID)*, IUnknown*);
-    HRESULT GetSpecification(const(GUID)*, IUnknown*);
+    HRESULT GetProperties(const(uint) cPropertyIDSets, const(DBPROPIDSET)* rgPropertyIDSets, uint* pcPropertySets, DBPROPSET** prgPropertySets);
+    HRESULT GetReferencedRowset(ulong iOrdinal, const(GUID)* riid, IUnknown* ppReferencedRowset);
+    HRESULT GetSpecification(const(GUID)* riid, IUnknown* ppSpecification);
 }
 alias DBCOMPAREENUM = int;
 enum : int
@@ -5194,33 +5193,33 @@ enum : int
 enum IID_IRowsetLocate = GUID(0xc733a7d, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetLocate : IRowset
 {
-    HRESULT Compare(ulong, ulong, const(ubyte)*, ulong, const(ubyte)*, uint*);
-    HRESULT GetRowsAt(ulong, ulong, ulong, const(ubyte)*, long, long, ulong*, ulong**);
-    HRESULT GetRowsByBookmark(ulong, ulong, const(ulong)*, const(ubyte)**, ulong*, uint*);
-    HRESULT Hash(ulong, ulong, const(ulong)*, const(ubyte)**, ulong*, uint*);
+    HRESULT Compare(ulong hReserved, ulong cbBookmark1, const(ubyte)* pBookmark1, ulong cbBookmark2, const(ubyte)* pBookmark2, uint* pComparison);
+    HRESULT GetRowsAt(ulong hReserved1, ulong hReserved2, ulong cbBookmark, const(ubyte)* pBookmark, long lRowsOffset, long cRows, ulong* pcRowsObtained, ulong** prghRows);
+    HRESULT GetRowsByBookmark(ulong hReserved, ulong cRows, const(ulong)* rgcbBookmarks, const(ubyte)** rgpBookmarks, ulong* rghRows, uint* rgRowStatus);
+    HRESULT Hash(ulong hReserved, ulong cBookmarks, const(ulong)* rgcbBookmarks, const(ubyte)** rgpBookmarks, ulong* rgHashedValues, uint* rgBookmarkStatus);
 }
 enum IID_IRowsetResynch = GUID(0xc733a84, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetResynch : IUnknown
 {
-    HRESULT GetVisibleData(ulong, HACCESSOR, void*);
-    HRESULT ResynchRows(ulong, const(ulong)*, ulong*, ulong**, uint**);
+    HRESULT GetVisibleData(ulong hRow, HACCESSOR hAccessor, void* pData);
+    HRESULT ResynchRows(ulong cRows, const(ulong)* rghRows, ulong* pcRowsResynched, ulong** prghRowsResynched, uint** prgRowStatus);
 }
 enum IID_IRowsetScroll = GUID(0xc733a7e, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetScroll : IRowsetLocate
 {
-    HRESULT GetApproximatePosition(ulong, ulong, const(ubyte)*, ulong*, ulong*);
-    HRESULT GetRowsAtRatio(ulong, ulong, ulong, ulong, long, ulong*, ulong**);
+    HRESULT GetApproximatePosition(ulong hReserved, ulong cbBookmark, const(ubyte)* pBookmark, ulong* pulPosition, ulong* pcRows);
+    HRESULT GetRowsAtRatio(ulong hReserved1, ulong hReserved2, ulong ulNumerator, ulong ulDenominator, long cRows, ulong* pcRowsObtained, ulong** prghRows);
 }
 enum IID_IChapteredRowset = GUID(0xc733a93, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IChapteredRowset : IUnknown
 {
-    HRESULT AddRefChapter(ulong, uint*);
-    HRESULT ReleaseChapter(ulong, uint*);
+    HRESULT AddRefChapter(ulong hChapter, uint* pcRefCount);
+    HRESULT ReleaseChapter(ulong hChapter, uint* pcRefCount);
 }
 enum IID_IRowsetFind = GUID(0xc733a9d, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetFind : IUnknown
 {
-    HRESULT FindNextRow(ulong, HACCESSOR, void*, uint, ulong, const(ubyte)*, long, long, ulong*, ulong**);
+    HRESULT FindNextRow(ulong hChapter, HACCESSOR hAccessor, void* pFindValue, uint CompareOp, ulong cbBookmark, const(ubyte)* pBookmark, long lRowsOffset, long cRows, ulong* pcRowsObtained, ulong** prghRows);
 }
 alias DBPOSITIONFLAGSENUM = int;
 enum : int
@@ -5235,58 +5234,58 @@ enum IID_IRowPosition = GUID(0xc733a94, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 
 interface IRowPosition : IUnknown
 {
     HRESULT ClearRowPosition();
-    HRESULT GetRowPosition(ulong*, ulong*, uint*);
-    HRESULT GetRowset(const(GUID)*, IUnknown*);
-    HRESULT Initialize(IUnknown);
-    HRESULT SetRowPosition(ulong, ulong, uint);
+    HRESULT GetRowPosition(ulong* phChapter, ulong* phRow, uint* pdwPositionFlags);
+    HRESULT GetRowset(const(GUID)* riid, IUnknown* ppRowset);
+    HRESULT Initialize(IUnknown pRowset);
+    HRESULT SetRowPosition(ulong hChapter, ulong hRow, uint dwPositionFlags);
 }
 enum IID_IRowPositionChange = GUID(0x997a571, 0x126e, 0x11d0, [0x9f, 0x8a, 0x0, 0xa0, 0xc9, 0xa0, 0x63, 0x1e]);
 interface IRowPositionChange : IUnknown
 {
-    HRESULT OnRowPositionChange(uint, uint, BOOL);
+    HRESULT OnRowPositionChange(uint eReason, uint ePhase, BOOL fCantDeny);
 }
 enum IID_IViewRowset = GUID(0xc733a97, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IViewRowset : IUnknown
 {
-    HRESULT GetSpecification(const(GUID)*, IUnknown*);
-    HRESULT OpenViewRowset(IUnknown, const(GUID)*, IUnknown*);
+    HRESULT GetSpecification(const(GUID)* riid, IUnknown* ppObject);
+    HRESULT OpenViewRowset(IUnknown pUnkOuter, const(GUID)* riid, IUnknown* ppRowset);
 }
 enum IID_IViewChapter = GUID(0xc733a98, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IViewChapter : IUnknown
 {
-    HRESULT GetSpecification(const(GUID)*, IUnknown*);
-    HRESULT OpenViewChapter(ulong, ulong*);
+    HRESULT GetSpecification(const(GUID)* riid, IUnknown* ppRowset);
+    HRESULT OpenViewChapter(ulong hSource, ulong* phViewChapter);
 }
 enum IID_IViewSort = GUID(0xc733a9a, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IViewSort : IUnknown
 {
-    HRESULT GetSortOrder(ulong*, ulong**, uint**);
-    HRESULT SetSortOrder(ulong, const(ulong)*, const(uint)*);
+    HRESULT GetSortOrder(ulong* pcValues, ulong** prgColumns, uint** prgOrders);
+    HRESULT SetSortOrder(ulong cValues, const(ulong)* rgColumns, const(uint)* rgOrders);
 }
 enum IID_IViewFilter = GUID(0xc733a9b, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IViewFilter : IUnknown
 {
-    HRESULT GetFilter(HACCESSOR, ulong*, uint**, void*);
-    HRESULT GetFilterBindings(ulong*, DBBINDING**);
-    HRESULT SetFilter(HACCESSOR, ulong, uint*, void*);
+    HRESULT GetFilter(HACCESSOR hAccessor, ulong* pcRows, uint** pCompareOps, void* pCriteriaData);
+    HRESULT GetFilterBindings(ulong* pcBindings, DBBINDING** prgBindings);
+    HRESULT SetFilter(HACCESSOR hAccessor, ulong cRows, uint* CompareOps, void* pCriteriaData);
 }
 enum IID_IRowsetView = GUID(0xc733a99, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetView : IUnknown
 {
-    HRESULT CreateView(IUnknown, const(GUID)*, IUnknown*);
-    HRESULT GetView(ulong, const(GUID)*, ulong*, IUnknown*);
+    HRESULT CreateView(IUnknown pUnkOuter, const(GUID)* riid, IUnknown* ppView);
+    HRESULT GetView(ulong hChapter, const(GUID)* riid, ulong* phChapterSource, IUnknown* ppView);
 }
 enum IID_IRowsetExactScroll = GUID(0xc733a7f, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetExactScroll : IRowsetScroll
 {
-    HRESULT GetExactPosition(ulong, ulong, const(ubyte)*, ulong*, ulong*);
+    HRESULT GetExactPosition(ulong hChapter, ulong cbBookmark, const(ubyte)* pBookmark, ulong* pulPosition, ulong* pcRows);
 }
 enum IID_IRowsetChange = GUID(0xc733a05, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetChange : IUnknown
 {
-    HRESULT DeleteRows(ulong, ulong, const(ulong)*, uint*);
-    HRESULT SetData(ulong, HACCESSOR, void*);
-    HRESULT InsertRow(ulong, HACCESSOR, void*, ulong*);
+    HRESULT DeleteRows(ulong hReserved, ulong cRows, const(ulong)* rghRows, uint* rgRowStatus);
+    HRESULT SetData(ulong hRow, HACCESSOR hAccessor, void* pData);
+    HRESULT InsertRow(ulong hReserved, HACCESSOR hAccessor, void* pData, ulong* phRow);
 }
 alias DBPENDINGSTATUSENUM = int;
 enum : int
@@ -5301,23 +5300,23 @@ enum : int
 enum IID_IRowsetUpdate = GUID(0xc733a6d, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetUpdate : IRowsetChange
 {
-    HRESULT GetOriginalData(ulong, HACCESSOR, void*);
-    HRESULT GetPendingRows(ulong, uint, ulong*, ulong**, uint**);
-    HRESULT GetRowStatus(ulong, ulong, const(ulong)*, uint*);
-    HRESULT Undo(ulong, ulong, const(ulong)*, ulong*, ulong**, uint**);
-    HRESULT Update(ulong, ulong, const(ulong)*, ulong*, ulong**, uint**);
+    HRESULT GetOriginalData(ulong hRow, HACCESSOR hAccessor, void* pData);
+    HRESULT GetPendingRows(ulong hReserved, uint dwRowStatus, ulong* pcPendingRows, ulong** prgPendingRows, uint** prgPendingStatus);
+    HRESULT GetRowStatus(ulong hReserved, ulong cRows, const(ulong)* rghRows, uint* rgPendingStatus);
+    HRESULT Undo(ulong hReserved, ulong cRows, const(ulong)* rghRows, ulong* pcRowsUndone, ulong** prgRowsUndone, uint** prgRowStatus);
+    HRESULT Update(ulong hReserved, ulong cRows, const(ulong)* rghRows, ulong* pcRows, ulong** prgRows, uint** prgRowStatus);
 }
 enum IID_IRowsetIdentity = GUID(0xc733a09, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetIdentity : IUnknown
 {
-    HRESULT IsSameRow(ulong, ulong);
+    HRESULT IsSameRow(ulong hThisRow, ulong hThatRow);
 }
 enum IID_IRowsetNotify = GUID(0xc733a83, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetNotify : IUnknown
 {
-    HRESULT OnFieldChange(IRowset, ulong, ulong, ulong*, uint, uint, BOOL);
-    HRESULT OnRowChange(IRowset, ulong, const(ulong)*, uint, uint, BOOL);
-    HRESULT OnRowsetChange(IRowset, uint, uint, BOOL);
+    HRESULT OnFieldChange(IRowset pRowset, ulong hRow, ulong cColumns, ulong* rgColumns, uint eReason, uint ePhase, BOOL fCantDeny);
+    HRESULT OnRowChange(IRowset pRowset, ulong cRows, const(ulong)* rghRows, uint eReason, uint ePhase, BOOL fCantDeny);
+    HRESULT OnRowsetChange(IRowset pRowset, uint eReason, uint ePhase, BOOL fCantDeny);
 }
 alias DBSEEKENUM = int;
 enum : int
@@ -5353,16 +5352,16 @@ enum : int
 enum IID_IRowsetIndex = GUID(0xc733a82, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetIndex : IUnknown
 {
-    HRESULT GetIndexInfo(ulong*, DBINDEXCOLUMNDESC**, uint*, DBPROPSET**);
-    HRESULT Seek(HACCESSOR, ulong, void*, uint);
-    HRESULT SetRange(HACCESSOR, ulong, void*, ulong, void*, uint);
+    HRESULT GetIndexInfo(ulong* pcKeyColumns, DBINDEXCOLUMNDESC** prgIndexColumnDesc, uint* pcIndexPropertySets, DBPROPSET** prgIndexPropertySets);
+    HRESULT Seek(HACCESSOR hAccessor, ulong cKeyValues, void* pData, uint dwSeekOptions);
+    HRESULT SetRange(HACCESSOR hAccessor, ulong cStartKeyColumns, void* pStartData, ulong cEndKeyColumns, void* pEndData, uint dwRangeOptions);
 }
 enum IID_ICommand = GUID(0xc733a63, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ICommand : IUnknown
 {
     HRESULT Cancel();
-    HRESULT Execute(IUnknown, const(GUID)*, DBPARAMS*, long*, IUnknown*);
-    HRESULT GetDBSession(const(GUID)*, IUnknown*);
+    HRESULT Execute(IUnknown pUnkOuter, const(GUID)* riid, DBPARAMS* pParams, long* pcRowsAffected, IUnknown* ppRowset);
+    HRESULT GetDBSession(const(GUID)* riid, IUnknown* ppSession);
 }
 alias DBRESULTFLAGENUM = int;
 enum : int
@@ -5375,7 +5374,7 @@ enum : int
 enum IID_IMultipleResults = GUID(0xc733a90, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IMultipleResults : IUnknown
 {
-    HRESULT GetResult(IUnknown, long, const(GUID)*, long*, IUnknown*);
+    HRESULT GetResult(IUnknown pUnkOuter, long lResultFlag, const(GUID)* riid, long* pcRowsAffected, IUnknown* ppRowset);
 }
 alias DBCONVERTFLAGSENUM = int;
 enum : int
@@ -5395,25 +5394,25 @@ enum : int
 enum IID_IConvertType = GUID(0xc733a88, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IConvertType : IUnknown
 {
-    HRESULT CanConvert(ushort, ushort, uint);
+    HRESULT CanConvert(ushort wFromType, ushort wToType, uint dwConvertFlags);
 }
 enum IID_ICommandPrepare = GUID(0xc733a26, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ICommandPrepare : IUnknown
 {
-    HRESULT Prepare(uint);
+    HRESULT Prepare(uint cExpectedRuns);
     HRESULT Unprepare();
 }
 enum IID_ICommandProperties = GUID(0xc733a79, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ICommandProperties : IUnknown
 {
-    HRESULT GetProperties(const(uint), const(DBPROPIDSET)*, uint*, DBPROPSET**);
-    HRESULT SetProperties(uint, DBPROPSET*);
+    HRESULT GetProperties(const(uint) cPropertyIDSets, const(DBPROPIDSET)* rgPropertyIDSets, uint* pcPropertySets, DBPROPSET** prgPropertySets);
+    HRESULT SetProperties(uint cPropertySets, DBPROPSET* rgPropertySets);
 }
 enum IID_ICommandText = GUID(0xc733a27, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ICommandText : ICommand
 {
-    HRESULT GetCommandText(GUID*, PWSTR*);
-    HRESULT SetCommandText(const(GUID)*, const(wchar)*);
+    HRESULT GetCommandText(GUID* pguidDialect, PWSTR* ppwszCommand);
+    HRESULT SetCommandText(const(GUID)* rguidDialect, const(wchar)* pwszCommand);
 }
 /+ [CONFLICTED] struct DBPARAMBINDINFO
 {
@@ -5429,31 +5428,31 @@ interface ICommandText : ICommand
 enum IID_ICommandWithParameters = GUID(0xc733a64, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ICommandWithParameters : IUnknown
 {
-    HRESULT GetParameterInfo(ulong*, DBPARAMINFO**, ushort**);
-    HRESULT MapParameterNames(ulong, const(wchar)**, long*);
-    HRESULT SetParameterInfo(ulong, const(ulong)*, const(DBPARAMBINDINFO)*);
+    HRESULT GetParameterInfo(ulong* pcParams, DBPARAMINFO** prgParamInfo, ushort** ppNamesBuffer);
+    HRESULT MapParameterNames(ulong cParamNames, const(wchar)** rgParamNames, long* rgParamOrdinals);
+    HRESULT SetParameterInfo(ulong cParams, const(ulong)* rgParamOrdinals, const(DBPARAMBINDINFO)* rgParamBindInfo);
 }
 enum IID_IColumnsRowset = GUID(0xc733a10, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IColumnsRowset : IUnknown
 {
-    HRESULT GetAvailableColumns(ulong*, DBID**);
-    HRESULT GetColumnsRowset(IUnknown, ulong, const(DBID)*, const(GUID)*, uint, DBPROPSET*, IUnknown*);
+    HRESULT GetAvailableColumns(ulong* pcOptColumns, DBID** prgOptColumns);
+    HRESULT GetColumnsRowset(IUnknown pUnkOuter, ulong cOptColumns, const(DBID)* rgOptColumns, const(GUID)* riid, uint cPropertySets, DBPROPSET* rgPropertySets, IUnknown* ppColRowset);
 }
 enum IID_IColumnsInfo = GUID(0xc733a11, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IColumnsInfo : IUnknown
 {
-    HRESULT GetColumnInfo(ulong*, DBCOLUMNINFO**, ushort**);
-    HRESULT MapColumnIDs(ulong, const(DBID)*, ulong*);
+    HRESULT GetColumnInfo(ulong* pcColumns, DBCOLUMNINFO** prgInfo, ushort** ppStringsBuffer);
+    HRESULT MapColumnIDs(ulong cColumnIDs, const(DBID)* rgColumnIDs, ulong* rgColumns);
 }
 enum IID_IDBCreateCommand = GUID(0xc733a1d, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IDBCreateCommand : IUnknown
 {
-    HRESULT CreateCommand(IUnknown, const(GUID)*, IUnknown*);
+    HRESULT CreateCommand(IUnknown pUnkOuter, const(GUID)* riid, IUnknown* ppCommand);
 }
 enum IID_IDBCreateSession = GUID(0xc733a5d, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IDBCreateSession : IUnknown
 {
-    HRESULT CreateSession(IUnknown, const(GUID)*, IUnknown*);
+    HRESULT CreateSession(IUnknown pUnkOuter, const(GUID)* riid, IUnknown* ppDBSession);
 }
 alias DBSOURCETYPEENUM = int;
 enum : int
@@ -5478,14 +5477,14 @@ enum : int
 enum IID_ISourcesRowset = GUID(0xc733a1e, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ISourcesRowset : IUnknown
 {
-    HRESULT GetSourcesRowset(IUnknown, const(GUID)*, uint, DBPROPSET*, IUnknown*);
+    HRESULT GetSourcesRowset(IUnknown pUnkOuter, const(GUID)* riid, uint cPropertySets, DBPROPSET* rgProperties, IUnknown* ppSourcesRowset);
 }
 enum IID_IDBProperties = GUID(0xc733a8a, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IDBProperties : IUnknown
 {
-    HRESULT GetProperties(uint, const(DBPROPIDSET)*, uint*, DBPROPSET**);
-    HRESULT GetPropertyInfo(uint, const(DBPROPIDSET)*, uint*, DBPROPINFOSET**, ushort**);
-    HRESULT SetProperties(uint, DBPROPSET*);
+    HRESULT GetProperties(uint cPropertyIDSets, const(DBPROPIDSET)* rgPropertyIDSets, uint* pcPropertySets, DBPROPSET** prgPropertySets);
+    HRESULT GetPropertyInfo(uint cPropertyIDSets, const(DBPROPIDSET)* rgPropertyIDSets, uint* pcPropertyInfoSets, DBPROPINFOSET** prgPropertyInfoSets, ushort** ppDescBuffer);
+    HRESULT SetProperties(uint cPropertySets, DBPROPSET* rgPropertySets);
 }
 enum IID_IDBInitialize = GUID(0xc733a8b, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IDBInitialize : IUnknown
@@ -5553,115 +5552,115 @@ enum : int
 enum IID_IDBInfo = GUID(0xc733a89, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IDBInfo : IUnknown
 {
-    HRESULT GetKeywords(PWSTR*);
-    HRESULT GetLiteralInfo(uint, const(uint)*, uint*, DBLITERALINFO**, ushort**);
+    HRESULT GetKeywords(PWSTR* ppwszKeywords);
+    HRESULT GetLiteralInfo(uint cLiterals, const(uint)* rgLiterals, uint* pcLiteralInfo, DBLITERALINFO** prgLiteralInfo, ushort** ppCharBuffer);
 }
 enum IID_IDBDataSourceAdmin = GUID(0xc733a7a, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IDBDataSourceAdmin : IUnknown
 {
-    HRESULT CreateDataSource(uint, DBPROPSET*, IUnknown, const(GUID)*, IUnknown*);
+    HRESULT CreateDataSource(uint cPropertySets, DBPROPSET* rgPropertySets, IUnknown pUnkOuter, const(GUID)* riid, IUnknown* ppDBSession);
     HRESULT DestroyDataSource();
-    HRESULT GetCreationProperties(uint, const(DBPROPIDSET)*, uint*, DBPROPINFOSET**, ushort**);
-    HRESULT ModifyDataSource(uint, DBPROPSET*);
+    HRESULT GetCreationProperties(uint cPropertyIDSets, const(DBPROPIDSET)* rgPropertyIDSets, uint* pcPropertyInfoSets, DBPROPINFOSET** prgPropertyInfoSets, ushort** ppDescBuffer);
+    HRESULT ModifyDataSource(uint cPropertySets, DBPROPSET* rgPropertySets);
 }
 enum IID_IDBAsynchNotify = GUID(0xc733a96, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IDBAsynchNotify : IUnknown
 {
-    HRESULT OnLowResource(ulong);
-    HRESULT OnProgress(ulong, uint, ulong, ulong, uint, PWSTR);
-    HRESULT OnStop(ulong, uint, HRESULT, PWSTR);
+    HRESULT OnLowResource(ulong dwReserved);
+    HRESULT OnProgress(ulong hChapter, uint eOperation, ulong ulProgress, ulong ulProgressMax, uint eAsynchPhase, PWSTR pwszStatusText);
+    HRESULT OnStop(ulong hChapter, uint eOperation, HRESULT hrStatus, PWSTR pwszStatusText);
 }
 enum IID_IDBAsynchStatus = GUID(0xc733a95, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IDBAsynchStatus : IUnknown
 {
-    HRESULT Abort(ulong, uint);
-    HRESULT GetStatus(ulong, uint, ulong*, ulong*, uint*, PWSTR*);
+    HRESULT Abort(ulong hChapter, uint eOperation);
+    HRESULT GetStatus(ulong hChapter, uint eOperation, ulong* pulProgress, ulong* pulProgressMax, uint* peAsynchPhase, PWSTR* ppwszStatusText);
 }
 enum IID_ISessionProperties = GUID(0xc733a85, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ISessionProperties : IUnknown
 {
-    HRESULT GetProperties(uint, const(DBPROPIDSET)*, uint*, DBPROPSET**);
-    HRESULT SetProperties(uint, DBPROPSET*);
+    HRESULT GetProperties(uint cPropertyIDSets, const(DBPROPIDSET)* rgPropertyIDSets, uint* pcPropertySets, DBPROPSET** prgPropertySets);
+    HRESULT SetProperties(uint cPropertySets, DBPROPSET* rgPropertySets);
 }
 enum IID_IIndexDefinition = GUID(0xc733a68, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IIndexDefinition : IUnknown
 {
-    HRESULT CreateIndex(DBID*, DBID*, ulong, const(DBINDEXCOLUMNDESC)*, uint, DBPROPSET*, DBID**);
-    HRESULT DropIndex(DBID*, DBID*);
+    HRESULT CreateIndex(DBID* pTableID, DBID* pIndexID, ulong cIndexColumnDescs, const(DBINDEXCOLUMNDESC)* rgIndexColumnDescs, uint cPropertySets, DBPROPSET* rgPropertySets, DBID** ppIndexID);
+    HRESULT DropIndex(DBID* pTableID, DBID* pIndexID);
 }
 enum IID_ITableDefinition = GUID(0xc733a86, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ITableDefinition : IUnknown
 {
-    HRESULT CreateTable(IUnknown, DBID*, ulong, const(DBCOLUMNDESC)*, const(GUID)*, uint, DBPROPSET*, DBID**, IUnknown*);
-    HRESULT DropTable(DBID*);
-    HRESULT AddColumn(DBID*, DBCOLUMNDESC*, DBID**);
-    HRESULT DropColumn(DBID*, DBID*);
+    HRESULT CreateTable(IUnknown pUnkOuter, DBID* pTableID, ulong cColumnDescs, const(DBCOLUMNDESC)* rgColumnDescs, const(GUID)* riid, uint cPropertySets, DBPROPSET* rgPropertySets, DBID** ppTableID, IUnknown* ppRowset);
+    HRESULT DropTable(DBID* pTableID);
+    HRESULT AddColumn(DBID* pTableID, DBCOLUMNDESC* pColumnDesc, DBID** ppColumnID);
+    HRESULT DropColumn(DBID* pTableID, DBID* pColumnID);
 }
 enum IID_IOpenRowset = GUID(0xc733a69, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IOpenRowset : IUnknown
 {
-    HRESULT OpenRowset(IUnknown, DBID*, DBID*, const(GUID)*, uint, DBPROPSET*, IUnknown*);
+    HRESULT OpenRowset(IUnknown pUnkOuter, DBID* pTableID, DBID* pIndexID, const(GUID)* riid, uint cPropertySets, DBPROPSET* rgPropertySets, IUnknown* ppRowset);
 }
 enum IID_IDBSchemaRowset = GUID(0xc733a7b, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IDBSchemaRowset : IUnknown
 {
-    HRESULT GetRowset(IUnknown, const(GUID)*, uint, const(VARIANT)*, const(GUID)*, uint, DBPROPSET*, IUnknown*);
-    HRESULT GetSchemas(uint*, GUID**, uint**);
+    HRESULT GetRowset(IUnknown pUnkOuter, const(GUID)* rguidSchema, uint cRestrictions, const(VARIANT)* rgRestrictions, const(GUID)* riid, uint cPropertySets, DBPROPSET* rgPropertySets, IUnknown* ppRowset);
+    HRESULT GetSchemas(uint* pcSchemas, GUID** prgSchemas, uint** prgRestrictionSupport);
 }
 enum IID_IMDDataset = GUID(0xa07cccd1, 0x8148, 0x11d0, [0x87, 0xbb, 0x0, 0xc0, 0x4f, 0xc3, 0x39, 0x42]);
 interface IMDDataset : IUnknown
 {
-    HRESULT FreeAxisInfo(ulong, MDAXISINFO*);
-    HRESULT GetAxisInfo(ulong*, MDAXISINFO**);
-    HRESULT GetAxisRowset(IUnknown, ulong, const(GUID)*, uint, DBPROPSET*, IUnknown*);
-    HRESULT GetCellData(HACCESSOR, ulong, ulong, void*);
-    HRESULT GetSpecification(const(GUID)*, IUnknown*);
+    HRESULT FreeAxisInfo(ulong cAxes, MDAXISINFO* rgAxisInfo);
+    HRESULT GetAxisInfo(ulong* pcAxes, MDAXISINFO** prgAxisInfo);
+    HRESULT GetAxisRowset(IUnknown pUnkOuter, ulong iAxis, const(GUID)* riid, uint cPropertySets, DBPROPSET* rgPropertySets, IUnknown* ppRowset);
+    HRESULT GetCellData(HACCESSOR hAccessor, ulong ulStartCell, ulong ulEndCell, void* pData);
+    HRESULT GetSpecification(const(GUID)* riid, IUnknown* ppSpecification);
 }
 enum IID_IMDFind = GUID(0xa07cccd2, 0x8148, 0x11d0, [0x87, 0xbb, 0x0, 0xc0, 0x4f, 0xc3, 0x39, 0x42]);
 interface IMDFind : IUnknown
 {
-    HRESULT FindCell(ulong, ulong, PWSTR*, ulong*);
-    HRESULT FindTuple(uint, ulong, ulong, PWSTR*, uint*);
+    HRESULT FindCell(ulong ulStartingOrdinal, ulong cMembers, PWSTR* rgpwszMember, ulong* pulCellOrdinal);
+    HRESULT FindTuple(uint ulAxisIdentifier, ulong ulStartingOrdinal, ulong cMembers, PWSTR* rgpwszMember, uint* pulTupleOrdinal);
 }
 enum IID_IMDRangeRowset = GUID(0xc733aa0, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IMDRangeRowset : IUnknown
 {
-    HRESULT GetRangeRowset(IUnknown, ulong, ulong, const(GUID)*, uint, DBPROPSET*, IUnknown*);
+    HRESULT GetRangeRowset(IUnknown pUnkOuter, ulong ulStartCell, ulong ulEndCell, const(GUID)* riid, uint cPropertySets, DBPROPSET* rgPropertySets, IUnknown* ppRowset);
 }
 enum IID_IAlterTable = GUID(0xc733aa5, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IAlterTable : IUnknown
 {
-    HRESULT AlterColumn(DBID*, DBID*, uint, DBCOLUMNDESC*);
-    HRESULT AlterTable(DBID*, DBID*, uint, DBPROPSET*);
+    HRESULT AlterColumn(DBID* pTableId, DBID* pColumnId, uint dwColumnDescFlags, DBCOLUMNDESC* pColumnDesc);
+    HRESULT AlterTable(DBID* pTableId, DBID* pNewTableId, uint cPropertySets, DBPROPSET* rgPropertySets);
 }
 enum IID_IAlterIndex = GUID(0xc733aa6, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IAlterIndex : IUnknown
 {
-    HRESULT AlterIndex(DBID*, DBID*, DBID*, uint, DBPROPSET*);
+    HRESULT AlterIndex(DBID* pTableId, DBID* pIndexId, DBID* pNewIndexId, uint cPropertySets, DBPROPSET* rgPropertySets);
 }
 enum IID_IRowsetChapterMember = GUID(0xc733aa8, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetChapterMember : IUnknown
 {
-    HRESULT IsRowInChapter(ulong, ulong);
+    HRESULT IsRowInChapter(ulong hChapter, ulong hRow);
 }
 enum IID_ICommandPersist = GUID(0xc733aa7, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ICommandPersist : IUnknown
 {
-    HRESULT DeleteCommand(DBID*);
-    HRESULT GetCurrentCommand(DBID**);
-    HRESULT LoadCommand(DBID*, uint);
-    HRESULT SaveCommand(DBID*, uint);
+    HRESULT DeleteCommand(DBID* pCommandID);
+    HRESULT GetCurrentCommand(DBID** ppCommandID);
+    HRESULT LoadCommand(DBID* pCommandID, uint dwFlags);
+    HRESULT SaveCommand(DBID* pCommandID, uint dwFlags);
 }
 enum IID_IRowsetRefresh = GUID(0xc733aa9, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetRefresh : IUnknown
 {
-    HRESULT RefreshVisibleData(ulong, ulong, const(ulong)*, BOOL, ulong*, ulong**, uint**);
-    HRESULT GetLastVisibleData(ulong, HACCESSOR, void*);
+    HRESULT RefreshVisibleData(ulong hChapter, ulong cRows, const(ulong)* rghRows, BOOL fOverWrite, ulong* pcRowsRefreshed, ulong** prghRowsRefreshed, uint** prgRowStatus);
+    HRESULT GetLastVisibleData(ulong hRow, HACCESSOR hAccessor, void* pData);
 }
 enum IID_IParentRowset = GUID(0xc733aaa, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IParentRowset : IUnknown
 {
-    HRESULT GetChildRowset(IUnknown, ulong, const(GUID)*, IUnknown*);
+    HRESULT GetChildRowset(IUnknown pUnkOuter, ulong iOrdinal, const(GUID)* riid, IUnknown* ppRowset);
 }
 /+ [CONFLICTED] struct ERRORINFO
 {
@@ -5676,73 +5675,73 @@ interface IParentRowset : IUnknown
 enum IID_IErrorRecords = GUID(0xc733a67, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IErrorRecords : IUnknown
 {
-    HRESULT AddErrorRecord(ERRORINFO*, uint, DISPPARAMS*, IUnknown, uint);
-    HRESULT GetBasicErrorInfo(uint, ERRORINFO*);
-    HRESULT GetCustomErrorObject(uint, const(GUID)*, IUnknown*);
-    HRESULT GetErrorInfo(uint, uint, IErrorInfo*);
-    HRESULT GetErrorParameters(uint, DISPPARAMS*);
-    HRESULT GetRecordCount(uint*);
+    HRESULT AddErrorRecord(ERRORINFO* pErrorInfo, uint dwLookupID, DISPPARAMS* pdispparams, IUnknown punkCustomError, uint dwDynamicErrorID);
+    HRESULT GetBasicErrorInfo(uint ulRecordNum, ERRORINFO* pErrorInfo);
+    HRESULT GetCustomErrorObject(uint ulRecordNum, const(GUID)* riid, IUnknown* ppObject);
+    HRESULT GetErrorInfo(uint ulRecordNum, uint lcid, IErrorInfo* ppErrorInfo);
+    HRESULT GetErrorParameters(uint ulRecordNum, DISPPARAMS* pdispparams);
+    HRESULT GetRecordCount(uint* pcRecords);
 }
 enum IID_IErrorLookup = GUID(0xc733a66, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IErrorLookup : IUnknown
 {
-    HRESULT GetErrorDescription(HRESULT, uint, DISPPARAMS*, uint, BSTR*, BSTR*);
-    HRESULT GetHelpInfo(HRESULT, uint, uint, BSTR*, uint*);
-    HRESULT ReleaseErrors(const(uint));
+    HRESULT GetErrorDescription(HRESULT hrError, uint dwLookupID, DISPPARAMS* pdispparams, uint lcid, BSTR* pbstrSource, BSTR* pbstrDescription);
+    HRESULT GetHelpInfo(HRESULT hrError, uint dwLookupID, uint lcid, BSTR* pbstrHelpFile, uint* pdwHelpContext);
+    HRESULT ReleaseErrors(const(uint) dwDynamicErrorID);
 }
 enum IID_ISQLErrorInfo = GUID(0xc733a74, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ISQLErrorInfo : IUnknown
 {
-    HRESULT GetSQLInfo(BSTR*, int*);
+    HRESULT GetSQLInfo(BSTR* pbstrSQLState, int* plNativeError);
 }
 enum IID_IGetDataSource = GUID(0xc733a75, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IGetDataSource : IUnknown
 {
-    HRESULT GetDataSource(const(GUID)*, IUnknown*);
+    HRESULT GetDataSource(const(GUID)* riid, IUnknown* ppDataSource);
 }
 enum IID_ITransactionLocal = GUID(0xc733a5f, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ITransactionLocal : ITransaction
 {
-    HRESULT GetOptionsObject(ITransactionOptions*);
-    HRESULT StartTransaction(int, uint, ITransactionOptions, uint*);
+    HRESULT GetOptionsObject(ITransactionOptions* ppOptions);
+    HRESULT StartTransaction(int isoLevel, uint isoFlags, ITransactionOptions pOtherOptions, uint* pulTransactionLevel);
 }
 enum IID_ITransactionJoin = GUID(0xc733a5e, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ITransactionJoin : IUnknown
 {
-    HRESULT GetOptionsObject(ITransactionOptions*);
-    HRESULT JoinTransaction(IUnknown, int, uint, ITransactionOptions);
+    HRESULT GetOptionsObject(ITransactionOptions* ppOptions);
+    HRESULT JoinTransaction(IUnknown punkTransactionCoord, int isoLevel, uint isoFlags, ITransactionOptions pOtherOptions);
 }
 enum IID_ITransactionObject = GUID(0xc733a60, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ITransactionObject : IUnknown
 {
-    HRESULT GetTransactionObject(uint, ITransaction*);
+    HRESULT GetTransactionObject(uint ulTransactionLevel, ITransaction* ppTransactionObject);
 }
 enum IID_ITrusteeAdmin = GUID(0xc733aa1, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ITrusteeAdmin : IUnknown
 {
-    HRESULT CompareTrustees(TRUSTEE_W*, TRUSTEE_W*);
-    HRESULT CreateTrustee(TRUSTEE_W*, uint, DBPROPSET*);
-    HRESULT DeleteTrustee(TRUSTEE_W*);
-    HRESULT SetTrusteeProperties(TRUSTEE_W*, uint, DBPROPSET*);
-    HRESULT GetTrusteeProperties(TRUSTEE_W*, const(uint), const(DBPROPIDSET)*, uint*, DBPROPSET**);
+    HRESULT CompareTrustees(TRUSTEE_W* pTrustee1, TRUSTEE_W* pTrustee2);
+    HRESULT CreateTrustee(TRUSTEE_W* pTrustee, uint cPropertySets, DBPROPSET* rgPropertySets);
+    HRESULT DeleteTrustee(TRUSTEE_W* pTrustee);
+    HRESULT SetTrusteeProperties(TRUSTEE_W* pTrustee, uint cPropertySets, DBPROPSET* rgPropertySets);
+    HRESULT GetTrusteeProperties(TRUSTEE_W* pTrustee, const(uint) cPropertyIDSets, const(DBPROPIDSET)* rgPropertyIDSets, uint* pcPropertySets, DBPROPSET** prgPropertySets);
 }
 enum IID_ITrusteeGroupAdmin = GUID(0xc733aa2, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ITrusteeGroupAdmin : IUnknown
 {
-    HRESULT AddMember(TRUSTEE_W*, TRUSTEE_W*);
-    HRESULT DeleteMember(TRUSTEE_W*, TRUSTEE_W*);
-    HRESULT IsMember(TRUSTEE_W*, TRUSTEE_W*, BOOL*);
-    HRESULT GetMembers(TRUSTEE_W*, uint*, TRUSTEE_W**);
-    HRESULT GetMemberships(TRUSTEE_W*, uint*, TRUSTEE_W**);
+    HRESULT AddMember(TRUSTEE_W* pMembershipTrustee, TRUSTEE_W* pMemberTrustee);
+    HRESULT DeleteMember(TRUSTEE_W* pMembershipTrustee, TRUSTEE_W* pMemberTrustee);
+    HRESULT IsMember(TRUSTEE_W* pMembershipTrustee, TRUSTEE_W* pMemberTrustee, BOOL* pfStatus);
+    HRESULT GetMembers(TRUSTEE_W* pMembershipTrustee, uint* pcMembers, TRUSTEE_W** prgMembers);
+    HRESULT GetMemberships(TRUSTEE_W* pTrustee, uint* pcMemberships, TRUSTEE_W** prgMemberships);
 }
 enum IID_IObjectAccessControl = GUID(0xc733aa3, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IObjectAccessControl : IUnknown
 {
-    HRESULT GetObjectAccessRights(SEC_OBJECT*, uint*, EXPLICIT_ACCESS_W**);
-    HRESULT GetObjectOwner(SEC_OBJECT*, TRUSTEE_W**);
-    HRESULT IsObjectAccessAllowed(SEC_OBJECT*, EXPLICIT_ACCESS_W*, BOOL*);
-    HRESULT SetObjectAccessRights(SEC_OBJECT*, uint, EXPLICIT_ACCESS_W*);
-    HRESULT SetObjectOwner(SEC_OBJECT*, TRUSTEE_W*);
+    HRESULT GetObjectAccessRights(SEC_OBJECT* pObject, uint* pcAccessEntries, EXPLICIT_ACCESS_W** prgAccessEntries);
+    HRESULT GetObjectOwner(SEC_OBJECT* pObject, TRUSTEE_W** ppOwner);
+    HRESULT IsObjectAccessAllowed(SEC_OBJECT* pObject, EXPLICIT_ACCESS_W* pAccessEntry, BOOL* pfResult);
+    HRESULT SetObjectAccessRights(SEC_OBJECT* pObject, uint cAccessEntries, EXPLICIT_ACCESS_W* prgAccessEntries);
+    HRESULT SetObjectOwner(SEC_OBJECT* pObject, TRUSTEE_W* pOwner);
 }
 alias ACCESS_MASKENUM = int;
 enum : int
@@ -5769,50 +5768,50 @@ enum : int
 enum IID_ISecurityInfo = GUID(0xc733aa4, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ISecurityInfo : IUnknown
 {
-    HRESULT GetCurrentTrustee(TRUSTEE_W**);
-    HRESULT GetObjectTypes(uint*, GUID**);
-    HRESULT GetPermissions(GUID, uint*);
+    HRESULT GetCurrentTrustee(TRUSTEE_W** ppTrustee);
+    HRESULT GetObjectTypes(uint* cObjectTypes, GUID** rgObjectTypes);
+    HRESULT GetPermissions(GUID ObjectType, uint* pPermissions);
 }
 enum IID_ITableCreation = GUID(0xc733abc, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ITableCreation : ITableDefinition
 {
-    HRESULT GetTableDefinition(DBID*, ulong*, DBCOLUMNDESC**, uint*, DBPROPSET**, uint*, DBCONSTRAINTDESC**, ushort**);
+    HRESULT GetTableDefinition(DBID* pTableID, ulong* pcColumnDescs, DBCOLUMNDESC** prgColumnDescs, uint* pcPropertySets, DBPROPSET** prgPropertySets, uint* pcConstraintDescs, DBCONSTRAINTDESC** prgConstraintDescs, ushort** ppwszStringBuffer);
 }
 enum IID_ITableDefinitionWithConstraints = GUID(0xc733aab, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ITableDefinitionWithConstraints : ITableCreation
 {
-    HRESULT AddConstraint(DBID*, DBCONSTRAINTDESC*);
-    HRESULT CreateTableWithConstraints(IUnknown, DBID*, ulong, DBCOLUMNDESC*, uint, DBCONSTRAINTDESC*, const(GUID)*, uint, DBPROPSET*, DBID**, IUnknown*);
-    HRESULT DropConstraint(DBID*, DBID*);
+    HRESULT AddConstraint(DBID* pTableID, DBCONSTRAINTDESC* pConstraintDesc);
+    HRESULT CreateTableWithConstraints(IUnknown pUnkOuter, DBID* pTableID, ulong cColumnDescs, DBCOLUMNDESC* rgColumnDescs, uint cConstraintDescs, DBCONSTRAINTDESC* rgConstraintDescs, const(GUID)* riid, uint cPropertySets, DBPROPSET* rgPropertySets, DBID** ppTableID, IUnknown* ppRowset);
+    HRESULT DropConstraint(DBID* pTableID, DBID* pConstraintID);
 }
 enum IID_IRow = GUID(0xc733ab4, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRow : IUnknown
 {
-    HRESULT GetColumns(ulong, DBCOLUMNACCESS*);
-    HRESULT GetSourceRowset(const(GUID)*, IUnknown*, ulong*);
-    HRESULT Open(IUnknown, DBID*, const(GUID)*, uint, const(GUID)*, IUnknown*);
+    HRESULT GetColumns(ulong cColumns, DBCOLUMNACCESS* rgColumns);
+    HRESULT GetSourceRowset(const(GUID)* riid, IUnknown* ppRowset, ulong* phRow);
+    HRESULT Open(IUnknown pUnkOuter, DBID* pColumnID, const(GUID)* rguidColumnType, uint dwBindFlags, const(GUID)* riid, IUnknown* ppUnk);
 }
 enum IID_IRowChange = GUID(0xc733ab5, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowChange : IUnknown
 {
-    HRESULT SetColumns(ulong, DBCOLUMNACCESS*);
+    HRESULT SetColumns(ulong cColumns, DBCOLUMNACCESS* rgColumns);
 }
 enum IID_IRowSchemaChange = GUID(0xc733aae, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowSchemaChange : IRowChange
 {
-    HRESULT DeleteColumns(ulong, const(DBID)*, uint*);
-    HRESULT AddColumns(ulong, const(DBCOLUMNINFO)*, DBCOLUMNACCESS*);
+    HRESULT DeleteColumns(ulong cColumns, const(DBID)* rgColumnIDs, uint* rgdwStatus);
+    HRESULT AddColumns(ulong cColumns, const(DBCOLUMNINFO)* rgNewColumnInfo, DBCOLUMNACCESS* rgColumns);
 }
 enum IID_IGetRow = GUID(0xc733aaf, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IGetRow : IUnknown
 {
-    HRESULT GetRowFromHROW(IUnknown, ulong, const(GUID)*, IUnknown*);
-    HRESULT GetURLFromHROW(ulong, PWSTR*);
+    HRESULT GetRowFromHROW(IUnknown pUnkOuter, ulong hRow, const(GUID)* riid, IUnknown* ppUnk);
+    HRESULT GetURLFromHROW(ulong hRow, PWSTR* ppwszURL);
 }
 enum IID_IBindResource = GUID(0xc733ab1, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IBindResource : IUnknown
 {
-    HRESULT Bind(IUnknown, const(wchar)*, uint, const(GUID)*, const(GUID)*, IAuthenticate, DBIMPLICITSESSION*, uint*, IUnknown*);
+    HRESULT Bind(IUnknown pUnkOuter, const(wchar)* pwszURL, uint dwBindURLFlags, const(GUID)* rguid, const(GUID)* riid, IAuthenticate pAuthenticate, DBIMPLICITSESSION* pImplSession, uint* pdwBindStatus, IUnknown* ppUnk);
 }
 alias DBCOPYFLAGSENUM = int;
 enum : int
@@ -5844,15 +5843,15 @@ enum : int
 enum IID_IScopedOperations = GUID(0xc733ab0, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IScopedOperations : IBindResource
 {
-    HRESULT Copy(ulong, PWSTR*, PWSTR*, uint, IAuthenticate, uint*, PWSTR*, ushort**);
-    HRESULT Move(ulong, PWSTR*, PWSTR*, uint, IAuthenticate, uint*, PWSTR*, ushort**);
-    HRESULT Delete(ulong, PWSTR*, uint, uint*);
-    HRESULT OpenRowset(IUnknown, DBID*, DBID*, const(GUID)*, uint, DBPROPSET*, IUnknown*);
+    HRESULT Copy(ulong cRows, PWSTR* rgpwszSourceURLs, PWSTR* rgpwszDestURLs, uint dwCopyFlags, IAuthenticate pAuthenticate, uint* rgdwStatus, PWSTR* rgpwszNewURLs, ushort** ppStringsBuffer);
+    HRESULT Move(ulong cRows, PWSTR* rgpwszSourceURLs, PWSTR* rgpwszDestURLs, uint dwMoveFlags, IAuthenticate pAuthenticate, uint* rgdwStatus, PWSTR* rgpwszNewURLs, ushort** ppStringsBuffer);
+    HRESULT Delete(ulong cRows, PWSTR* rgpwszURLs, uint dwDeleteFlags, uint* rgdwStatus);
+    HRESULT OpenRowset(IUnknown pUnkOuter, DBID* pTableID, DBID* pIndexID, const(GUID)* riid, uint cPropertySets, DBPROPSET* rgPropertySets, IUnknown* ppRowset);
 }
 enum IID_ICreateRow = GUID(0xc733ab2, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ICreateRow : IUnknown
 {
-    HRESULT CreateRow(IUnknown, const(wchar)*, uint, const(GUID)*, const(GUID)*, IAuthenticate, DBIMPLICITSESSION*, uint*, PWSTR*, IUnknown*);
+    HRESULT CreateRow(IUnknown pUnkOuter, const(wchar)* pwszURL, uint dwBindURLFlags, const(GUID)* rguid, const(GUID)* riid, IAuthenticate pAuthenticate, DBIMPLICITSESSION* pImplSession, uint* pdwBindStatus, PWSTR* ppwszNewURL, IUnknown* ppUnk);
 }
 enum IID_IDBBinderProperties = GUID(0xc733ab3, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IDBBinderProperties : IDBProperties
@@ -5862,41 +5861,41 @@ interface IDBBinderProperties : IDBProperties
 enum IID_IColumnsInfo2 = GUID(0xc733ab8, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IColumnsInfo2 : IColumnsInfo
 {
-    HRESULT GetRestrictedColumnInfo(ulong, const(DBID)*, uint, ulong*, DBID**, DBCOLUMNINFO**, ushort**);
+    HRESULT GetRestrictedColumnInfo(ulong cColumnIDMasks, const(DBID)* rgColumnIDMasks, uint dwFlags, ulong* pcColumns, DBID** prgColumnIDs, DBCOLUMNINFO** prgColumnInfo, ushort** ppStringsBuffer);
 }
 enum IID_IRegisterProvider = GUID(0xc733ab9, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRegisterProvider : IUnknown
 {
-    HRESULT GetURLMapping(const(wchar)*, ulong, GUID*);
-    HRESULT SetURLMapping(const(wchar)*, ulong, const(GUID)*);
-    HRESULT UnregisterProvider(const(wchar)*, ulong, const(GUID)*);
+    HRESULT GetURLMapping(const(wchar)* pwszURL, ulong dwReserved, GUID* pclsidProvider);
+    HRESULT SetURLMapping(const(wchar)* pwszURL, ulong dwReserved, const(GUID)* rclsidProvider);
+    HRESULT UnregisterProvider(const(wchar)* pwszURL, ulong dwReserved, const(GUID)* rclsidProvider);
 }
 enum IID_IGetSession = GUID(0xc733aba, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IGetSession : IUnknown
 {
-    HRESULT GetSession(const(GUID)*, IUnknown*);
+    HRESULT GetSession(const(GUID)* riid, IUnknown* ppSession);
 }
 enum IID_IGetSourceRow = GUID(0xc733abb, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IGetSourceRow : IUnknown
 {
-    HRESULT GetSourceRow(const(GUID)*, IUnknown*);
+    HRESULT GetSourceRow(const(GUID)* riid, IUnknown* ppRow);
 }
 enum IID_IRowsetCurrentIndex = GUID(0xc733abd, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetCurrentIndex : IRowsetIndex
 {
-    HRESULT GetIndex(DBID**);
-    HRESULT SetIndex(DBID*);
+    HRESULT GetIndex(DBID** ppIndexID);
+    HRESULT SetIndex(DBID* pIndexID);
 }
 enum IID_ICommandStream = GUID(0xc733abf, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ICommandStream : IUnknown
 {
-    HRESULT GetCommandStream(GUID*, GUID*, IUnknown*);
-    HRESULT SetCommandStream(const(GUID)*, const(GUID)*, IUnknown);
+    HRESULT GetCommandStream(GUID* piid, GUID* pguidDialect, IUnknown* ppCommandStream);
+    HRESULT SetCommandStream(const(GUID)* riid, const(GUID)* rguidDialect, IUnknown pCommandStream);
 }
 enum IID_IRowsetBookmark = GUID(0xc733ac2, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetBookmark : IUnknown
 {
-    HRESULT PositionOnBookmark(ulong, ulong, const(ubyte)*);
+    HRESULT PositionOnBookmark(ulong hChapter, ulong cbBookmark, const(ubyte)* pBookmark);
 }
 alias STRUCTURED_QUERY_SYNTAX = int;
 enum : int
@@ -5989,29 +5988,29 @@ enum : int
 enum IID_IQueryParser = GUID(0x2ebdee67, 0x3505, 0x43f8, [0x99, 0x46, 0xea, 0x44, 0xab, 0xc8, 0xe5, 0xb0]);
 interface IQueryParser : IUnknown
 {
-    HRESULT Parse(const(wchar)*, IEnumUnknown, IQuerySolution*);
-    HRESULT SetOption(STRUCTURED_QUERY_SINGLE_OPTION, const(PROPVARIANT)*);
-    HRESULT GetOption(STRUCTURED_QUERY_SINGLE_OPTION, PROPVARIANT*);
-    HRESULT SetMultiOption(STRUCTURED_QUERY_MULTIOPTION, const(wchar)*, const(PROPVARIANT)*);
-    HRESULT GetSchemaProvider(ISchemaProvider*);
-    HRESULT RestateToString(ICondition, BOOL, PWSTR*);
-    HRESULT ParsePropertyValue(const(wchar)*, const(wchar)*, IQuerySolution*);
-    HRESULT RestatePropertyValueToString(ICondition, BOOL, PWSTR*, PWSTR*);
+    HRESULT Parse(const(wchar)* pszInputString, IEnumUnknown pCustomProperties, IQuerySolution* ppSolution);
+    HRESULT SetOption(STRUCTURED_QUERY_SINGLE_OPTION option, const(PROPVARIANT)* pOptionValue);
+    HRESULT GetOption(STRUCTURED_QUERY_SINGLE_OPTION option, PROPVARIANT* pOptionValue);
+    HRESULT SetMultiOption(STRUCTURED_QUERY_MULTIOPTION option, const(wchar)* pszOptionKey, const(PROPVARIANT)* pOptionValue);
+    HRESULT GetSchemaProvider(ISchemaProvider* ppSchemaProvider);
+    HRESULT RestateToString(ICondition pCondition, BOOL fUseEnglish, PWSTR* ppszQueryString);
+    HRESULT ParsePropertyValue(const(wchar)* pszPropertyName, const(wchar)* pszInputString, IQuerySolution* ppSolution);
+    HRESULT RestatePropertyValueToString(ICondition pCondition, BOOL fUseEnglish, PWSTR* ppszPropertyName, PWSTR* ppszQueryString);
 }
 enum IID_IConditionFactory = GUID(0xa5efe073, 0xb16f, 0x474f, [0x9f, 0x3e, 0x9f, 0x8b, 0x49, 0x7a, 0x3e, 0x8]);
 interface IConditionFactory : IUnknown
 {
-    HRESULT MakeNot(ICondition, BOOL, ICondition*);
-    HRESULT MakeAndOr(CONDITION_TYPE, IEnumUnknown, BOOL, ICondition*);
-    HRESULT MakeLeaf(const(wchar)*, CONDITION_OPERATION, const(wchar)*, const(PROPVARIANT)*, IRichChunk, IRichChunk, IRichChunk, BOOL, ICondition*);
-    HRESULT Resolve(ICondition, STRUCTURED_QUERY_RESOLVE_OPTION, const(SYSTEMTIME)*, ICondition*);
+    HRESULT MakeNot(ICondition pcSub, BOOL fSimplify, ICondition* ppcResult);
+    HRESULT MakeAndOr(CONDITION_TYPE ct, IEnumUnknown peuSubs, BOOL fSimplify, ICondition* ppcResult);
+    HRESULT MakeLeaf(const(wchar)* pszPropertyName, CONDITION_OPERATION cop, const(wchar)* pszValueType, const(PROPVARIANT)* ppropvar, IRichChunk pPropertyNameTerm, IRichChunk pOperationTerm, IRichChunk pValueTerm, BOOL fExpand, ICondition* ppcResult);
+    HRESULT Resolve(ICondition pc, STRUCTURED_QUERY_RESOLVE_OPTION sqro, const(SYSTEMTIME)* pstReferenceTime, ICondition* ppcResolved);
 }
 enum IID_IQuerySolution = GUID(0xd6ebc66b, 0x8921, 0x4193, [0xaf, 0xdd, 0xa1, 0x78, 0x9f, 0xb7, 0xff, 0x57]);
 interface IQuerySolution : IConditionFactory
 {
-    HRESULT GetQuery(ICondition*, IEntity*);
-    HRESULT GetErrors(const(GUID)*, void**);
-    HRESULT GetLexicalData(PWSTR*, ITokenCollection*, uint*, IUnknown*);
+    HRESULT GetQuery(ICondition* ppQueryNode, IEntity* ppMainType);
+    HRESULT GetErrors(const(GUID)* riid, void** ppParseErrors);
+    HRESULT GetLexicalData(PWSTR* ppszInputString, ITokenCollection* ppTokens, uint* plcid, IUnknown* ppWordBreaker);
 }
 alias CONDITION_CREATION_OPTIONS = int;
 enum : int
@@ -6028,77 +6027,77 @@ enum : int
 enum IID_IConditionFactory2 = GUID(0x71d222e1, 0x432f, 0x429e, [0x8c, 0x13, 0xb6, 0xda, 0xfd, 0xe5, 0x7, 0x7a]);
 interface IConditionFactory2 : IConditionFactory
 {
-    HRESULT CreateTrueFalse(BOOL, CONDITION_CREATION_OPTIONS, const(GUID)*, void**);
-    HRESULT CreateNegation(ICondition, CONDITION_CREATION_OPTIONS, const(GUID)*, void**);
-    HRESULT CreateCompoundFromObjectArray(CONDITION_TYPE, IObjectArray, CONDITION_CREATION_OPTIONS, const(GUID)*, void**);
-    HRESULT CreateCompoundFromArray(CONDITION_TYPE, ICondition*, uint, CONDITION_CREATION_OPTIONS, const(GUID)*, void**);
-    HRESULT CreateStringLeaf(const(PROPERTYKEY)*, CONDITION_OPERATION, const(wchar)*, const(wchar)*, CONDITION_CREATION_OPTIONS, const(GUID)*, void**);
-    HRESULT CreateIntegerLeaf(const(PROPERTYKEY)*, CONDITION_OPERATION, int, CONDITION_CREATION_OPTIONS, const(GUID)*, void**);
-    HRESULT CreateBooleanLeaf(const(PROPERTYKEY)*, CONDITION_OPERATION, BOOL, CONDITION_CREATION_OPTIONS, const(GUID)*, void**);
-    HRESULT CreateLeaf(const(PROPERTYKEY)*, CONDITION_OPERATION, const(PROPVARIANT)*, const(wchar)*, const(wchar)*, IRichChunk, IRichChunk, IRichChunk, CONDITION_CREATION_OPTIONS, const(GUID)*, void**);
-    HRESULT ResolveCondition(ICondition, STRUCTURED_QUERY_RESOLVE_OPTION, const(SYSTEMTIME)*, const(GUID)*, void**);
+    HRESULT CreateTrueFalse(BOOL fVal, CONDITION_CREATION_OPTIONS cco, const(GUID)* riid, void** ppv);
+    HRESULT CreateNegation(ICondition pcSub, CONDITION_CREATION_OPTIONS cco, const(GUID)* riid, void** ppv);
+    HRESULT CreateCompoundFromObjectArray(CONDITION_TYPE ct, IObjectArray poaSubs, CONDITION_CREATION_OPTIONS cco, const(GUID)* riid, void** ppv);
+    HRESULT CreateCompoundFromArray(CONDITION_TYPE ct, ICondition* ppcondSubs, uint cSubs, CONDITION_CREATION_OPTIONS cco, const(GUID)* riid, void** ppv);
+    HRESULT CreateStringLeaf(const(PROPERTYKEY)* propkey, CONDITION_OPERATION cop, const(wchar)* pszValue, const(wchar)* pszLocaleName, CONDITION_CREATION_OPTIONS cco, const(GUID)* riid, void** ppv);
+    HRESULT CreateIntegerLeaf(const(PROPERTYKEY)* propkey, CONDITION_OPERATION cop, int lValue, CONDITION_CREATION_OPTIONS cco, const(GUID)* riid, void** ppv);
+    HRESULT CreateBooleanLeaf(const(PROPERTYKEY)* propkey, CONDITION_OPERATION cop, BOOL fValue, CONDITION_CREATION_OPTIONS cco, const(GUID)* riid, void** ppv);
+    HRESULT CreateLeaf(const(PROPERTYKEY)* propkey, CONDITION_OPERATION cop, const(PROPVARIANT)* propvar, const(wchar)* pszSemanticType, const(wchar)* pszLocaleName, IRichChunk pPropertyNameTerm, IRichChunk pOperationTerm, IRichChunk pValueTerm, CONDITION_CREATION_OPTIONS cco, const(GUID)* riid, void** ppv);
+    HRESULT ResolveCondition(ICondition pc, STRUCTURED_QUERY_RESOLVE_OPTION sqro, const(SYSTEMTIME)* pstReferenceTime, const(GUID)* riid, void** ppv);
 }
 enum IID_IConditionGenerator = GUID(0x92d2cc58, 0x4386, 0x45a3, [0xb9, 0x8c, 0x7e, 0xc, 0xe6, 0x4a, 0x41, 0x17]);
 interface IConditionGenerator : IUnknown
 {
-    HRESULT Initialize(ISchemaProvider);
-    HRESULT RecognizeNamedEntities(const(wchar)*, uint, ITokenCollection, INamedEntityCollector);
-    HRESULT GenerateForLeaf(IConditionFactory, const(wchar)*, CONDITION_OPERATION, const(wchar)*, const(wchar)*, const(wchar)*, IRichChunk, IRichChunk, IRichChunk, BOOL, BOOL*, ICondition*);
-    HRESULT DefaultPhrase(const(wchar)*, const(PROPVARIANT)*, BOOL, PWSTR*);
+    HRESULT Initialize(ISchemaProvider pSchemaProvider);
+    HRESULT RecognizeNamedEntities(const(wchar)* pszInputString, uint lcidUserLocale, ITokenCollection pTokenCollection, INamedEntityCollector pNamedEntities);
+    HRESULT GenerateForLeaf(IConditionFactory pConditionFactory, const(wchar)* pszPropertyName, CONDITION_OPERATION cop, const(wchar)* pszValueType, const(wchar)* pszValue, const(wchar)* pszValue2, IRichChunk pPropertyNameTerm, IRichChunk pOperationTerm, IRichChunk pValueTerm, BOOL automaticWildcard, BOOL* pNoStringQuery, ICondition* ppQueryExpression);
+    HRESULT DefaultPhrase(const(wchar)* pszValueType, const(PROPVARIANT)* ppropvar, BOOL fUseEnglish, PWSTR* ppszPhrase);
 }
 enum IID_IInterval = GUID(0x6bf0a714, 0x3c18, 0x430b, [0x8b, 0x5d, 0x83, 0xb1, 0xc2, 0x34, 0xd3, 0xdb]);
 interface IInterval : IUnknown
 {
-    HRESULT GetLimits(INTERVAL_LIMIT_KIND*, PROPVARIANT*, INTERVAL_LIMIT_KIND*, PROPVARIANT*);
+    HRESULT GetLimits(INTERVAL_LIMIT_KIND* pilkLower, PROPVARIANT* ppropvarLower, INTERVAL_LIMIT_KIND* pilkUpper, PROPVARIANT* ppropvarUpper);
 }
 enum IID_IMetaData = GUID(0x780102b0, 0xc43b, 0x4876, [0xbc, 0x7b, 0x5e, 0x9b, 0xa5, 0xc8, 0x87, 0x94]);
 interface IMetaData : IUnknown
 {
-    HRESULT GetData(PWSTR*, PWSTR*);
+    HRESULT GetData(PWSTR* ppszKey, PWSTR* ppszValue);
 }
 enum IID_IEntity = GUID(0x24264891, 0xe80b, 0x4fd3, [0xb7, 0xce, 0x4f, 0xf2, 0xfa, 0xe8, 0x93, 0x1f]);
 interface IEntity : IUnknown
 {
-    HRESULT Name(PWSTR*);
-    HRESULT Base(IEntity*);
-    HRESULT Relationships(const(GUID)*, void**);
-    HRESULT GetRelationship(const(wchar)*, IRelationship*);
-    HRESULT MetaData(const(GUID)*, void**);
-    HRESULT NamedEntities(const(GUID)*, void**);
-    HRESULT GetNamedEntity(const(wchar)*, INamedEntity*);
-    HRESULT DefaultPhrase(PWSTR*);
+    HRESULT Name(PWSTR* ppszName);
+    HRESULT Base(IEntity* pBaseEntity);
+    HRESULT Relationships(const(GUID)* riid, void** pRelationships);
+    HRESULT GetRelationship(const(wchar)* pszRelationName, IRelationship* pRelationship);
+    HRESULT MetaData(const(GUID)* riid, void** pMetaData);
+    HRESULT NamedEntities(const(GUID)* riid, void** pNamedEntities);
+    HRESULT GetNamedEntity(const(wchar)* pszValue, INamedEntity* ppNamedEntity);
+    HRESULT DefaultPhrase(PWSTR* ppszPhrase);
 }
 enum IID_IRelationship = GUID(0x2769280b, 0x5108, 0x498c, [0x9c, 0x7f, 0xa5, 0x12, 0x39, 0xb6, 0x31, 0x47]);
 interface IRelationship : IUnknown
 {
-    HRESULT Name(PWSTR*);
-    HRESULT IsReal(BOOL*);
-    HRESULT Destination(IEntity*);
-    HRESULT MetaData(const(GUID)*, void**);
-    HRESULT DefaultPhrase(PWSTR*);
+    HRESULT Name(PWSTR* ppszName);
+    HRESULT IsReal(BOOL* pIsReal);
+    HRESULT Destination(IEntity* pDestinationEntity);
+    HRESULT MetaData(const(GUID)* riid, void** pMetaData);
+    HRESULT DefaultPhrase(PWSTR* ppszPhrase);
 }
 enum IID_INamedEntity = GUID(0xabdbd0b1, 0x7d54, 0x49fb, [0xab, 0x5c, 0xbf, 0xf4, 0x13, 0x0, 0x4, 0xcd]);
 interface INamedEntity : IUnknown
 {
-    HRESULT GetValue(PWSTR*);
-    HRESULT DefaultPhrase(PWSTR*);
+    HRESULT GetValue(PWSTR* ppszValue);
+    HRESULT DefaultPhrase(PWSTR* ppszPhrase);
 }
 enum IID_ISchemaProvider = GUID(0x8cf89bcb, 0x394c, 0x49b2, [0xae, 0x28, 0xa5, 0x9d, 0xd4, 0xed, 0x7f, 0x68]);
 interface ISchemaProvider : IUnknown
 {
-    HRESULT Entities(const(GUID)*, void**);
-    HRESULT RootEntity(IEntity*);
-    HRESULT GetEntity(const(wchar)*, IEntity*);
-    HRESULT MetaData(const(GUID)*, void**);
-    HRESULT Localize(uint, ISchemaLocalizerSupport);
-    HRESULT SaveBinary(const(wchar)*);
-    HRESULT LookupAuthoredNamedEntity(IEntity, const(wchar)*, ITokenCollection, uint, uint*, PWSTR*);
+    HRESULT Entities(const(GUID)* riid, void** pEntities);
+    HRESULT RootEntity(IEntity* pRootEntity);
+    HRESULT GetEntity(const(wchar)* pszEntityName, IEntity* pEntity);
+    HRESULT MetaData(const(GUID)* riid, void** pMetaData);
+    HRESULT Localize(uint lcid, ISchemaLocalizerSupport pSchemaLocalizerSupport);
+    HRESULT SaveBinary(const(wchar)* pszSchemaBinaryPath);
+    HRESULT LookupAuthoredNamedEntity(IEntity pEntity, const(wchar)* pszInputString, ITokenCollection pTokenCollection, uint cTokensBegin, uint* pcTokensLength, PWSTR* ppszValue);
 }
 enum IID_ITokenCollection = GUID(0x22d8b4f2, 0xf577, 0x4adb, [0xa3, 0x35, 0xc2, 0xae, 0x88, 0x41, 0x6f, 0xab]);
 interface ITokenCollection : IUnknown
 {
-    HRESULT NumberOfTokens(uint*);
-    HRESULT GetToken(uint, uint*, uint*, PWSTR*);
+    HRESULT NumberOfTokens(uint* pCount);
+    HRESULT GetToken(uint i, uint* pBegin, uint* pLength, PWSTR* ppsz);
 }
 alias NAMED_ENTITY_CERTAINTY = int;
 enum : int
@@ -6111,19 +6110,19 @@ enum : int
 enum IID_INamedEntityCollector = GUID(0xaf2440f6, 0x8afc, 0x47d0, [0x9a, 0x7f, 0x39, 0x6a, 0xa, 0xcf, 0xb4, 0x3d]);
 interface INamedEntityCollector : IUnknown
 {
-    HRESULT Add(uint, uint, uint, uint, IEntity, const(wchar)*, NAMED_ENTITY_CERTAINTY);
+    HRESULT Add(uint beginSpan, uint endSpan, uint beginActual, uint endActual, IEntity pType, const(wchar)* pszValue, NAMED_ENTITY_CERTAINTY certainty);
 }
 enum IID_ISchemaLocalizerSupport = GUID(0xca3fdca2, 0xbfbe, 0x4eed, [0x90, 0xd7, 0xc, 0xae, 0xf0, 0xa1, 0xbd, 0xa1]);
 interface ISchemaLocalizerSupport : IUnknown
 {
-    HRESULT Localize(const(wchar)*, PWSTR*);
+    HRESULT Localize(const(wchar)* pszGlobalString, PWSTR* ppszLocalString);
 }
 enum IID_IQueryParserManager = GUID(0xa879e3c4, 0xaf77, 0x44fb, [0x8f, 0x37, 0xeb, 0xd1, 0x48, 0x7c, 0xf9, 0x20]);
 interface IQueryParserManager : IUnknown
 {
-    HRESULT CreateLoadedParser(const(wchar)*, ushort, const(GUID)*, void**);
-    HRESULT InitializeOptions(BOOL, BOOL, IQueryParser);
-    HRESULT SetOption(QUERY_PARSER_MANAGER_OPTION, const(PROPVARIANT)*);
+    HRESULT CreateLoadedParser(const(wchar)* pszCatalog, ushort langidForKeywords, const(GUID)* riid, void** ppQueryParser);
+    HRESULT InitializeOptions(BOOL fUnderstandNQS, BOOL fAutoWildCard, IQueryParser pQueryParser);
+    HRESULT SetOption(QUERY_PARSER_MANAGER_OPTION option, const(PROPVARIANT)* pOptionValue);
 }
 struct HITRANGE
 {
@@ -6161,51 +6160,51 @@ struct QueryParserManager
 enum IID_IUrlAccessor = GUID(0xb63e318, 0x9ccc, 0x11d0, [0xbc, 0xdb, 0x0, 0x80, 0x5f, 0xcc, 0xce, 0x4]);
 interface IUrlAccessor : IUnknown
 {
-    HRESULT AddRequestParameter(PROPSPEC*, PROPVARIANT*);
-    HRESULT GetDocFormat(PWSTR, uint, uint*);
-    HRESULT GetCLSID(GUID*);
-    HRESULT GetHost(PWSTR, uint, uint*);
+    HRESULT AddRequestParameter(PROPSPEC* pSpec, PROPVARIANT* pVar);
+    HRESULT GetDocFormat(PWSTR wszDocFormat, uint dwSize, uint* pdwLength);
+    HRESULT GetCLSID(GUID* pClsid);
+    HRESULT GetHost(PWSTR wszHost, uint dwSize, uint* pdwLength);
     HRESULT IsDirectory();
-    HRESULT GetSize(ulong*);
-    HRESULT GetLastModified(FILETIME*);
-    HRESULT GetFileName(PWSTR, uint, uint*);
-    HRESULT GetSecurityDescriptor(ubyte*, uint, uint*);
-    HRESULT GetRedirectedURL(PWSTR, uint, uint*);
-    HRESULT GetSecurityProvider(GUID*);
-    HRESULT BindToStream(IStream*);
-    HRESULT BindToFilter(IFilter*);
+    HRESULT GetSize(ulong* pllSize);
+    HRESULT GetLastModified(FILETIME* pftLastModified);
+    HRESULT GetFileName(PWSTR wszFileName, uint dwSize, uint* pdwLength);
+    HRESULT GetSecurityDescriptor(ubyte* pSD, uint dwSize, uint* pdwLength);
+    HRESULT GetRedirectedURL(PWSTR wszRedirectedURL, uint dwSize, uint* pdwLength);
+    HRESULT GetSecurityProvider(GUID* pSPClsid);
+    HRESULT BindToStream(IStream* ppStream);
+    HRESULT BindToFilter(IFilter* ppFilter);
 }
 enum IID_IUrlAccessor2 = GUID(0xc7310734, 0xac80, 0x11d1, [0x8d, 0xf3, 0x0, 0xc0, 0x4f, 0xb6, 0xef, 0x4f]);
 interface IUrlAccessor2 : IUrlAccessor
 {
-    HRESULT GetDisplayUrl(PWSTR, uint, uint*);
+    HRESULT GetDisplayUrl(PWSTR wszDocUrl, uint dwSize, uint* pdwLength);
     HRESULT IsDocument();
-    HRESULT GetCodePage(PWSTR, uint, uint*);
+    HRESULT GetCodePage(PWSTR wszCodePage, uint dwSize, uint* pdwLength);
 }
 enum IID_IUrlAccessor3 = GUID(0x6fbc7005, 0x455, 0x4874, [0xb8, 0xff, 0x74, 0x39, 0x45, 0x2, 0x41, 0xa3]);
 interface IUrlAccessor3 : IUrlAccessor2
 {
-    HRESULT GetImpersonationSidBlobs(const(wchar)*, uint*, BLOB**);
+    HRESULT GetImpersonationSidBlobs(const(wchar)* pcwszURL, uint* pcSidCount, BLOB** ppSidBlobs);
 }
 enum IID_IUrlAccessor4 = GUID(0x5cc51041, 0xc8d2, 0x41d7, [0xbc, 0xa3, 0x9e, 0x9e, 0x28, 0x62, 0x97, 0xdc]);
 interface IUrlAccessor4 : IUrlAccessor3
 {
-    HRESULT ShouldIndexItemContent(BOOL*);
-    HRESULT ShouldIndexProperty(const(PROPERTYKEY)*, BOOL*);
+    HRESULT ShouldIndexItemContent(BOOL* pfIndexContent);
+    HRESULT ShouldIndexProperty(const(PROPERTYKEY)* key, BOOL* pfIndexProperty);
 }
 enum IID_IOpLockStatus = GUID(0xc731065d, 0xac80, 0x11d1, [0x8d, 0xf3, 0x0, 0xc0, 0x4f, 0xb6, 0xef, 0x4f]);
 interface IOpLockStatus : IUnknown
 {
-    HRESULT IsOplockValid(BOOL*);
-    HRESULT IsOplockBroken(BOOL*);
-    HRESULT GetOplockEventHandle(HANDLE*);
+    HRESULT IsOplockValid(BOOL* pfIsOplockValid);
+    HRESULT IsOplockBroken(BOOL* pfIsOplockBroken);
+    HRESULT GetOplockEventHandle(HANDLE* phOplockEv);
 }
 enum IID_ISearchProtocolThreadContext = GUID(0xc73106e1, 0xac80, 0x11d1, [0x8d, 0xf3, 0x0, 0xc0, 0x4f, 0xb6, 0xef, 0x4f]);
 interface ISearchProtocolThreadContext : IUnknown
 {
     HRESULT ThreadInit();
     HRESULT ThreadShutdown();
-    HRESULT ThreadIdle(uint);
+    HRESULT ThreadIdle(uint dwTimeElaspedSinceLastCallInMS);
 }
 struct TIMEOUT_INFO
 {
@@ -6262,54 +6261,54 @@ struct ITEM_INFO
 enum IID_ISearchProtocol = GUID(0xc73106ba, 0xac80, 0x11d1, [0x8d, 0xf3, 0x0, 0xc0, 0x4f, 0xb6, 0xef, 0x4f]);
 interface ISearchProtocol : IUnknown
 {
-    HRESULT Init(TIMEOUT_INFO*, IProtocolHandlerSite, PROXY_INFO*);
-    HRESULT CreateAccessor(const(wchar)*, AUTHENTICATION_INFO*, INCREMENTAL_ACCESS_INFO*, ITEM_INFO*, IUrlAccessor*);
-    HRESULT CloseAccessor(IUrlAccessor);
+    HRESULT Init(TIMEOUT_INFO* pTimeoutInfo, IProtocolHandlerSite pProtocolHandlerSite, PROXY_INFO* pProxyInfo);
+    HRESULT CreateAccessor(const(wchar)* pcwszURL, AUTHENTICATION_INFO* pAuthenticationInfo, INCREMENTAL_ACCESS_INFO* pIncrementalAccessInfo, ITEM_INFO* pItemInfo, IUrlAccessor* ppAccessor);
+    HRESULT CloseAccessor(IUrlAccessor pAccessor);
     HRESULT ShutDown();
 }
 enum IID_ISearchProtocol2 = GUID(0x7789f0b2, 0xb5b2, 0x4722, [0x8b, 0x65, 0x5d, 0xbd, 0x15, 0x6, 0x97, 0xa9]);
 interface ISearchProtocol2 : ISearchProtocol
 {
-    HRESULT CreateAccessorEx(const(wchar)*, AUTHENTICATION_INFO*, INCREMENTAL_ACCESS_INFO*, ITEM_INFO*, const(BLOB)*, IUrlAccessor*);
+    HRESULT CreateAccessorEx(const(wchar)* pcwszURL, AUTHENTICATION_INFO* pAuthenticationInfo, INCREMENTAL_ACCESS_INFO* pIncrementalAccessInfo, ITEM_INFO* pItemInfo, const(BLOB)* pUserData, IUrlAccessor* ppAccessor);
 }
 enum IID_IProtocolHandlerSite = GUID(0xb63e385, 0x9ccc, 0x11d0, [0xbc, 0xdb, 0x0, 0x80, 0x5f, 0xcc, 0xce, 0x4]);
 interface IProtocolHandlerSite : IUnknown
 {
-    HRESULT GetFilter(GUID*, const(wchar)*, const(wchar)*, IFilter*);
+    HRESULT GetFilter(GUID* pclsidObj, const(wchar)* pcwszContentType, const(wchar)* pcwszExtension, IFilter* ppFilter);
 }
 enum IID_ISearchRoot = GUID(0x4c18ccf, 0x1f57, 0x4cbd, [0x88, 0xcc, 0x39, 0x0, 0xf5, 0x19, 0x5c, 0xe3]);
 interface ISearchRoot : IUnknown
 {
-    HRESULT put_Schedule(const(wchar)*);
-    HRESULT get_Schedule(PWSTR*);
-    HRESULT put_RootURL(const(wchar)*);
-    HRESULT get_RootURL(PWSTR*);
-    HRESULT put_IsHierarchical(BOOL);
-    HRESULT get_IsHierarchical(BOOL*);
-    HRESULT put_ProvidesNotifications(BOOL);
-    HRESULT get_ProvidesNotifications(BOOL*);
-    HRESULT put_UseNotificationsOnly(BOOL);
-    HRESULT get_UseNotificationsOnly(BOOL*);
-    HRESULT put_EnumerationDepth(uint);
-    HRESULT get_EnumerationDepth(uint*);
-    HRESULT put_HostDepth(uint);
-    HRESULT get_HostDepth(uint*);
-    HRESULT put_FollowDirectories(BOOL);
-    HRESULT get_FollowDirectories(BOOL*);
-    HRESULT put_AuthenticationType(AUTH_TYPE);
-    HRESULT get_AuthenticationType(AUTH_TYPE*);
-    HRESULT put_User(const(wchar)*);
-    HRESULT get_User(PWSTR*);
-    HRESULT put_Password(const(wchar)*);
-    HRESULT get_Password(PWSTR*);
+    HRESULT put_Schedule(const(wchar)* pszTaskArg);
+    HRESULT get_Schedule(PWSTR* ppszTaskArg);
+    HRESULT put_RootURL(const(wchar)* pszURL);
+    HRESULT get_RootURL(PWSTR* ppszURL);
+    HRESULT put_IsHierarchical(BOOL fIsHierarchical);
+    HRESULT get_IsHierarchical(BOOL* pfIsHierarchical);
+    HRESULT put_ProvidesNotifications(BOOL fProvidesNotifications);
+    HRESULT get_ProvidesNotifications(BOOL* pfProvidesNotifications);
+    HRESULT put_UseNotificationsOnly(BOOL fUseNotificationsOnly);
+    HRESULT get_UseNotificationsOnly(BOOL* pfUseNotificationsOnly);
+    HRESULT put_EnumerationDepth(uint dwDepth);
+    HRESULT get_EnumerationDepth(uint* pdwDepth);
+    HRESULT put_HostDepth(uint dwDepth);
+    HRESULT get_HostDepth(uint* pdwDepth);
+    HRESULT put_FollowDirectories(BOOL fFollowDirectories);
+    HRESULT get_FollowDirectories(BOOL* pfFollowDirectories);
+    HRESULT put_AuthenticationType(AUTH_TYPE authType);
+    HRESULT get_AuthenticationType(AUTH_TYPE* pAuthType);
+    HRESULT put_User(const(wchar)* pszUser);
+    HRESULT get_User(PWSTR* ppszUser);
+    HRESULT put_Password(const(wchar)* pszPassword);
+    HRESULT get_Password(PWSTR* ppszPassword);
 }
 enum IID_IEnumSearchRoots = GUID(0xab310581, 0xac80, 0x11d1, [0x8d, 0xf3, 0x0, 0xc0, 0x4f, 0xb6, 0xef, 0x52]);
 interface IEnumSearchRoots : IUnknown
 {
-    HRESULT Next(uint, ISearchRoot*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, ISearchRoot* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumSearchRoots*);
+    HRESULT Clone(IEnumSearchRoots* ppenum);
 }
 alias FOLLOW_FLAGS = int;
 enum : int
@@ -6321,18 +6320,18 @@ enum : int
 enum IID_ISearchScopeRule = GUID(0xab310581, 0xac80, 0x11d1, [0x8d, 0xf3, 0x0, 0xc0, 0x4f, 0xb6, 0xef, 0x53]);
 interface ISearchScopeRule : IUnknown
 {
-    HRESULT get_PatternOrURL(PWSTR*);
-    HRESULT get_IsIncluded(BOOL*);
-    HRESULT get_IsDefault(BOOL*);
-    HRESULT get_FollowFlags(uint*);
+    HRESULT get_PatternOrURL(PWSTR* ppszPatternOrURL);
+    HRESULT get_IsIncluded(BOOL* pfIsIncluded);
+    HRESULT get_IsDefault(BOOL* pfIsDefault);
+    HRESULT get_FollowFlags(uint* pFollowFlags);
 }
 enum IID_IEnumSearchScopeRules = GUID(0xab310581, 0xac80, 0x11d1, [0x8d, 0xf3, 0x0, 0xc0, 0x4f, 0xb6, 0xef, 0x54]);
 interface IEnumSearchScopeRules : IUnknown
 {
-    HRESULT Next(uint, ISearchScopeRule*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, ISearchScopeRule* pprgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumSearchScopeRules*);
+    HRESULT Clone(IEnumSearchScopeRules* ppenum);
 }
 alias CLUSION_REASON = int;
 enum : int
@@ -6346,27 +6345,27 @@ enum : int
 enum IID_ISearchCrawlScopeManager = GUID(0xab310581, 0xac80, 0x11d1, [0x8d, 0xf3, 0x0, 0xc0, 0x4f, 0xb6, 0xef, 0x55]);
 interface ISearchCrawlScopeManager : IUnknown
 {
-    HRESULT AddDefaultScopeRule(const(wchar)*, BOOL, uint);
-    HRESULT AddRoot(ISearchRoot);
-    HRESULT RemoveRoot(const(wchar)*);
-    HRESULT EnumerateRoots(IEnumSearchRoots*);
-    HRESULT AddHierarchicalScope(const(wchar)*, BOOL, BOOL, BOOL);
-    HRESULT AddUserScopeRule(const(wchar)*, BOOL, BOOL, uint);
-    HRESULT RemoveScopeRule(const(wchar)*);
-    HRESULT EnumerateScopeRules(IEnumSearchScopeRules*);
-    HRESULT HasParentScopeRule(const(wchar)*, BOOL*);
-    HRESULT HasChildScopeRule(const(wchar)*, BOOL*);
-    HRESULT IncludedInCrawlScope(const(wchar)*, BOOL*);
-    HRESULT IncludedInCrawlScopeEx(const(wchar)*, BOOL*, CLUSION_REASON*);
+    HRESULT AddDefaultScopeRule(const(wchar)* pszURL, BOOL fInclude, uint fFollowFlags);
+    HRESULT AddRoot(ISearchRoot pSearchRoot);
+    HRESULT RemoveRoot(const(wchar)* pszURL);
+    HRESULT EnumerateRoots(IEnumSearchRoots* ppSearchRoots);
+    HRESULT AddHierarchicalScope(const(wchar)* pszURL, BOOL fInclude, BOOL fDefault, BOOL fOverrideChildren);
+    HRESULT AddUserScopeRule(const(wchar)* pszURL, BOOL fInclude, BOOL fOverrideChildren, uint fFollowFlags);
+    HRESULT RemoveScopeRule(const(wchar)* pszRule);
+    HRESULT EnumerateScopeRules(IEnumSearchScopeRules* ppSearchScopeRules);
+    HRESULT HasParentScopeRule(const(wchar)* pszURL, BOOL* pfHasParentRule);
+    HRESULT HasChildScopeRule(const(wchar)* pszURL, BOOL* pfHasChildRule);
+    HRESULT IncludedInCrawlScope(const(wchar)* pszURL, BOOL* pfIsIncluded);
+    HRESULT IncludedInCrawlScopeEx(const(wchar)* pszURL, BOOL* pfIsIncluded, CLUSION_REASON* pReason);
     HRESULT RevertToDefaultScopes();
     HRESULT SaveAll();
-    HRESULT GetParentScopeVersionId(const(wchar)*, int*);
-    HRESULT RemoveDefaultScopeRule(const(wchar)*);
+    HRESULT GetParentScopeVersionId(const(wchar)* pszURL, int* plScopeId);
+    HRESULT RemoveDefaultScopeRule(const(wchar)* pszURL);
 }
 enum IID_ISearchCrawlScopeManager2 = GUID(0x6292f7ad, 0x4e19, 0x4717, [0xa5, 0x34, 0x8f, 0xc2, 0x2b, 0xcd, 0x5c, 0xcd]);
 interface ISearchCrawlScopeManager2 : ISearchCrawlScopeManager
 {
-    HRESULT GetVersion(int**, HANDLE*);
+    HRESULT GetVersion(int** plVersion, HANDLE* phFileMapping);
 }
 alias SEARCH_KIND_OF_CHANGE = int;
 enum : int
@@ -6398,9 +6397,9 @@ struct SEARCH_ITEM_CHANGE
 enum IID_ISearchItemsChangedSink = GUID(0xab310581, 0xac80, 0x11d1, [0x8d, 0xf3, 0x0, 0xc0, 0x4f, 0xb6, 0xef, 0x58]);
 interface ISearchItemsChangedSink : IUnknown
 {
-    HRESULT StartedMonitoringScope(const(wchar)*);
-    HRESULT StoppedMonitoringScope(const(wchar)*);
-    HRESULT OnItemsChanged(uint, SEARCH_ITEM_CHANGE*, uint*, HRESULT*);
+    HRESULT StartedMonitoringScope(const(wchar)* pszURL);
+    HRESULT StoppedMonitoringScope(const(wchar)* pszURL);
+    HRESULT OnItemsChanged(uint dwNumberOfChanges, SEARCH_ITEM_CHANGE* rgDataChangeEntries, uint* rgdwDocIds, HRESULT* rghrCompletionCodes);
 }
 struct SEARCH_ITEM_PERSISTENT_CHANGE
 {
@@ -6412,14 +6411,14 @@ struct SEARCH_ITEM_PERSISTENT_CHANGE
 enum IID_ISearchPersistentItemsChangedSink = GUID(0xa2ffdf9b, 0x4758, 0x4f84, [0xb7, 0x29, 0xdf, 0x81, 0xa1, 0xa0, 0x61, 0x2f]);
 interface ISearchPersistentItemsChangedSink : IUnknown
 {
-    HRESULT StartedMonitoringScope(const(wchar)*);
-    HRESULT StoppedMonitoringScope(const(wchar)*);
-    HRESULT OnItemsChanged(uint, SEARCH_ITEM_PERSISTENT_CHANGE*, HRESULT*);
+    HRESULT StartedMonitoringScope(const(wchar)* pszURL);
+    HRESULT StoppedMonitoringScope(const(wchar)* pszURL);
+    HRESULT OnItemsChanged(uint dwNumberOfChanges, SEARCH_ITEM_PERSISTENT_CHANGE* DataChangeEntries, HRESULT* hrCompletionCodes);
 }
 enum IID_ISearchViewChangedSink = GUID(0xab310581, 0xac80, 0x11d1, [0x8d, 0xf3, 0x0, 0xc0, 0x4f, 0xb6, 0xef, 0x65]);
 interface ISearchViewChangedSink : IUnknown
 {
-    HRESULT OnChange(int*, SEARCH_ITEM_CHANGE*, BOOL*);
+    HRESULT OnChange(int* pdwDocID, SEARCH_ITEM_CHANGE* pChange, BOOL* pfInView);
 }
 alias SEARCH_INDEXING_PHASE = int;
 enum : int
@@ -6437,8 +6436,8 @@ struct SEARCH_ITEM_INDEXING_STATUS
 enum IID_ISearchNotifyInlineSite = GUID(0xb5702e61, 0xe75c, 0x4b64, [0x82, 0xa1, 0x6c, 0xb4, 0xf8, 0x32, 0xfc, 0xcf]);
 interface ISearchNotifyInlineSite : IUnknown
 {
-    HRESULT OnItemIndexedStatusChange(SEARCH_INDEXING_PHASE, uint, SEARCH_ITEM_INDEXING_STATUS*);
-    HRESULT OnCatalogStatusChange(const(GUID)*, const(GUID)*, uint);
+    HRESULT OnItemIndexedStatusChange(SEARCH_INDEXING_PHASE sipStatus, uint dwNumEntries, SEARCH_ITEM_INDEXING_STATUS* rgItemStatusEntries);
+    HRESULT OnCatalogStatusChange(const(GUID)* guidCatalogResetSignature, const(GUID)* guidCheckPointSignature, uint dwLastCheckPointNumber);
 }
 alias CatalogStatus = int;
 enum : int
@@ -6471,32 +6470,32 @@ enum : int
 enum IID_ISearchCatalogManager = GUID(0xab310581, 0xac80, 0x11d1, [0x8d, 0xf3, 0x0, 0xc0, 0x4f, 0xb6, 0xef, 0x50]);
 interface ISearchCatalogManager : IUnknown
 {
-    HRESULT get_Name(PWSTR*);
-    HRESULT GetParameter(const(wchar)*, PROPVARIANT**);
-    HRESULT SetParameter(const(wchar)*, PROPVARIANT*);
-    HRESULT GetCatalogStatus(CatalogStatus*, CatalogPausedReason*);
+    HRESULT get_Name(PWSTR* pszName);
+    HRESULT GetParameter(const(wchar)* pszName, PROPVARIANT** ppValue);
+    HRESULT SetParameter(const(wchar)* pszName, PROPVARIANT* pValue);
+    HRESULT GetCatalogStatus(CatalogStatus* pStatus, CatalogPausedReason* pPausedReason);
     HRESULT Reset();
     HRESULT Reindex();
-    HRESULT ReindexMatchingURLs(const(wchar)*);
-    HRESULT ReindexSearchRoot(const(wchar)*);
-    HRESULT put_ConnectTimeout(uint);
-    HRESULT get_ConnectTimeout(uint*);
-    HRESULT put_DataTimeout(uint);
-    HRESULT get_DataTimeout(uint*);
-    HRESULT NumberOfItems(int*);
-    HRESULT NumberOfItemsToIndex(int*, int*, int*);
-    HRESULT URLBeingIndexed(PWSTR*);
-    HRESULT GetURLIndexingState(const(wchar)*, uint*);
-    HRESULT GetPersistentItemsChangedSink(ISearchPersistentItemsChangedSink*);
-    HRESULT RegisterViewForNotification(const(wchar)*, ISearchViewChangedSink, uint*);
-    HRESULT GetItemsChangedSink(ISearchNotifyInlineSite, const(GUID)*, void**, GUID*, GUID*, uint*);
-    HRESULT UnregisterViewForNotification(uint);
-    HRESULT SetExtensionClusion(const(wchar)*, BOOL);
-    HRESULT EnumerateExcludedExtensions(IEnumString*);
-    HRESULT GetQueryHelper(ISearchQueryHelper*);
-    HRESULT put_DiacriticSensitivity(BOOL);
-    HRESULT get_DiacriticSensitivity(BOOL*);
-    HRESULT GetCrawlScopeManager(ISearchCrawlScopeManager*);
+    HRESULT ReindexMatchingURLs(const(wchar)* pszPattern);
+    HRESULT ReindexSearchRoot(const(wchar)* pszRootURL);
+    HRESULT put_ConnectTimeout(uint dwConnectTimeout);
+    HRESULT get_ConnectTimeout(uint* pdwConnectTimeout);
+    HRESULT put_DataTimeout(uint dwDataTimeout);
+    HRESULT get_DataTimeout(uint* pdwDataTimeout);
+    HRESULT NumberOfItems(int* plCount);
+    HRESULT NumberOfItemsToIndex(int* plIncrementalCount, int* plNotificationQueue, int* plHighPriorityQueue);
+    HRESULT URLBeingIndexed(PWSTR* pszUrl);
+    HRESULT GetURLIndexingState(const(wchar)* pszURL, uint* pdwState);
+    HRESULT GetPersistentItemsChangedSink(ISearchPersistentItemsChangedSink* ppISearchPersistentItemsChangedSink);
+    HRESULT RegisterViewForNotification(const(wchar)* pszView, ISearchViewChangedSink pViewChangedSink, uint* pdwCookie);
+    HRESULT GetItemsChangedSink(ISearchNotifyInlineSite pISearchNotifyInlineSite, const(GUID)* riid, void** ppv, GUID* pGUIDCatalogResetSignature, GUID* pGUIDCheckPointSignature, uint* pdwLastCheckPointNumber);
+    HRESULT UnregisterViewForNotification(uint dwCookie);
+    HRESULT SetExtensionClusion(const(wchar)* pszExtension, BOOL fExclude);
+    HRESULT EnumerateExcludedExtensions(IEnumString* ppExtensions);
+    HRESULT GetQueryHelper(ISearchQueryHelper* ppSearchQueryHelper);
+    HRESULT put_DiacriticSensitivity(BOOL fDiacriticSensitive);
+    HRESULT get_DiacriticSensitivity(BOOL* pfDiacriticSensitive);
+    HRESULT GetCrawlScopeManager(ISearchCrawlScopeManager* ppCrawlScopeManager);
 }
 alias PRIORITIZE_FLAGS = int;
 enum : int
@@ -6508,7 +6507,7 @@ enum : int
 enum IID_ISearchCatalogManager2 = GUID(0x7ac3286d, 0x4d1d, 0x4817, [0x84, 0xfc, 0xc1, 0xc8, 0x5e, 0x3a, 0xf0, 0xd9]);
 interface ISearchCatalogManager2 : ISearchCatalogManager
 {
-    HRESULT PrioritizeMatchingURLs(const(wchar)*, PRIORITIZE_FLAGS);
+    HRESULT PrioritizeMatchingURLs(const(wchar)* pszPattern, PRIORITIZE_FLAGS dwPrioritizeFlags);
 }
 alias SEARCH_TERM_EXPANSION = int;
 enum : int
@@ -6534,27 +6533,27 @@ struct SEARCH_COLUMN_PROPERTIES
 enum IID_ISearchQueryHelper = GUID(0xab310581, 0xac80, 0x11d1, [0x8d, 0xf3, 0x0, 0xc0, 0x4f, 0xb6, 0xef, 0x63]);
 interface ISearchQueryHelper : IUnknown
 {
-    HRESULT get_ConnectionString(PWSTR*);
-    HRESULT put_QueryContentLocale(uint);
-    HRESULT get_QueryContentLocale(uint*);
-    HRESULT put_QueryKeywordLocale(uint);
-    HRESULT get_QueryKeywordLocale(uint*);
-    HRESULT put_QueryTermExpansion(SEARCH_TERM_EXPANSION);
-    HRESULT get_QueryTermExpansion(SEARCH_TERM_EXPANSION*);
-    HRESULT put_QuerySyntax(SEARCH_QUERY_SYNTAX);
-    HRESULT get_QuerySyntax(SEARCH_QUERY_SYNTAX*);
-    HRESULT put_QueryContentProperties(const(wchar)*);
-    HRESULT get_QueryContentProperties(PWSTR*);
-    HRESULT put_QuerySelectColumns(const(wchar)*);
-    HRESULT get_QuerySelectColumns(PWSTR*);
-    HRESULT put_QueryWhereRestrictions(const(wchar)*);
-    HRESULT get_QueryWhereRestrictions(PWSTR*);
-    HRESULT put_QuerySorting(const(wchar)*);
-    HRESULT get_QuerySorting(PWSTR*);
-    HRESULT GenerateSQLFromUserQuery(const(wchar)*, PWSTR*);
-    HRESULT WriteProperties(int, uint, PROPERTYKEY*, SEARCH_COLUMN_PROPERTIES*, FILETIME*);
-    HRESULT put_QueryMaxResults(int);
-    HRESULT get_QueryMaxResults(int*);
+    HRESULT get_ConnectionString(PWSTR* pszConnectionString);
+    HRESULT put_QueryContentLocale(uint lcid);
+    HRESULT get_QueryContentLocale(uint* plcid);
+    HRESULT put_QueryKeywordLocale(uint lcid);
+    HRESULT get_QueryKeywordLocale(uint* plcid);
+    HRESULT put_QueryTermExpansion(SEARCH_TERM_EXPANSION expandTerms);
+    HRESULT get_QueryTermExpansion(SEARCH_TERM_EXPANSION* pExpandTerms);
+    HRESULT put_QuerySyntax(SEARCH_QUERY_SYNTAX querySyntax);
+    HRESULT get_QuerySyntax(SEARCH_QUERY_SYNTAX* pQuerySyntax);
+    HRESULT put_QueryContentProperties(const(wchar)* pszContentProperties);
+    HRESULT get_QueryContentProperties(PWSTR* ppszContentProperties);
+    HRESULT put_QuerySelectColumns(const(wchar)* pszSelectColumns);
+    HRESULT get_QuerySelectColumns(PWSTR* ppszSelectColumns);
+    HRESULT put_QueryWhereRestrictions(const(wchar)* pszRestrictions);
+    HRESULT get_QueryWhereRestrictions(PWSTR* ppszRestrictions);
+    HRESULT put_QuerySorting(const(wchar)* pszSorting);
+    HRESULT get_QuerySorting(PWSTR* ppszSorting);
+    HRESULT GenerateSQLFromUserQuery(const(wchar)* pszQuery, PWSTR* ppszSQL);
+    HRESULT WriteProperties(int itemID, uint dwNumberOfColumns, PROPERTYKEY* pColumns, SEARCH_COLUMN_PROPERTIES* pValues, FILETIME* pftGatherModifiedTime);
+    HRESULT put_QueryMaxResults(int cMaxResults);
+    HRESULT get_QueryMaxResults(int* pcMaxResults);
 }
 alias PRIORITY_LEVEL = int;
 enum : int
@@ -6568,9 +6567,9 @@ enum : int
 enum IID_IRowsetPrioritization = GUID(0x42811652, 0x79d, 0x481b, [0x87, 0xa2, 0x9, 0xa6, 0x9e, 0xcc, 0x5f, 0x44]);
 interface IRowsetPrioritization : IUnknown
 {
-    HRESULT SetScopePriority(PRIORITY_LEVEL, uint);
-    HRESULT GetScopePriority(PRIORITY_LEVEL*, uint*);
-    HRESULT GetScopeStatistics(uint*, uint*, uint*);
+    HRESULT SetScopePriority(PRIORITY_LEVEL priority, uint scopeStatisticsEventFrequency);
+    HRESULT GetScopePriority(PRIORITY_LEVEL* priority, uint* scopeStatisticsEventFrequency);
+    HRESULT GetScopeStatistics(uint* indexedDocumentCount, uint* oustandingAddCount, uint* oustandingModifyCount);
 }
 alias ROWSETEVENT_ITEMSTATE = int;
 enum : int
@@ -6591,33 +6590,33 @@ enum : int
 enum IID_IRowsetEvents = GUID(0x1551aea5, 0x5d66, 0x4b11, [0x86, 0xf5, 0xd5, 0x63, 0x4c, 0xb2, 0x11, 0xb9]);
 interface IRowsetEvents : IUnknown
 {
-    HRESULT OnNewItem(const(PROPVARIANT)*, ROWSETEVENT_ITEMSTATE);
-    HRESULT OnChangedItem(const(PROPVARIANT)*, ROWSETEVENT_ITEMSTATE, ROWSETEVENT_ITEMSTATE);
-    HRESULT OnDeletedItem(const(PROPVARIANT)*, ROWSETEVENT_ITEMSTATE);
-    HRESULT OnRowsetEvent(ROWSETEVENT_TYPE, const(PROPVARIANT)*);
+    HRESULT OnNewItem(const(PROPVARIANT)* itemID, ROWSETEVENT_ITEMSTATE newItemState);
+    HRESULT OnChangedItem(const(PROPVARIANT)* itemID, ROWSETEVENT_ITEMSTATE rowsetItemState, ROWSETEVENT_ITEMSTATE changedItemState);
+    HRESULT OnDeletedItem(const(PROPVARIANT)* itemID, ROWSETEVENT_ITEMSTATE deletedItemState);
+    HRESULT OnRowsetEvent(ROWSETEVENT_TYPE eventType, const(PROPVARIANT)* eventData);
 }
 enum IID_ISearchManager = GUID(0xab310581, 0xac80, 0x11d1, [0x8d, 0xf3, 0x0, 0xc0, 0x4f, 0xb6, 0xef, 0x69]);
 interface ISearchManager : IUnknown
 {
-    HRESULT GetIndexerVersionStr(PWSTR*);
-    HRESULT GetIndexerVersion(uint*, uint*);
-    HRESULT GetParameter(const(wchar)*, PROPVARIANT**);
-    HRESULT SetParameter(const(wchar)*, const(PROPVARIANT)*);
-    HRESULT get_ProxyName(PWSTR*);
-    HRESULT get_BypassList(PWSTR*);
-    HRESULT SetProxy(PROXY_ACCESS, BOOL, uint, const(wchar)*, const(wchar)*);
-    HRESULT GetCatalog(const(wchar)*, ISearchCatalogManager*);
-    HRESULT get_UserAgent(PWSTR*);
-    HRESULT put_UserAgent(const(wchar)*);
-    HRESULT get_UseProxy(PROXY_ACCESS*);
-    HRESULT get_LocalBypass(BOOL*);
-    HRESULT get_PortNumber(uint*);
+    HRESULT GetIndexerVersionStr(PWSTR* ppszVersionString);
+    HRESULT GetIndexerVersion(uint* pdwMajor, uint* pdwMinor);
+    HRESULT GetParameter(const(wchar)* pszName, PROPVARIANT** ppValue);
+    HRESULT SetParameter(const(wchar)* pszName, const(PROPVARIANT)* pValue);
+    HRESULT get_ProxyName(PWSTR* ppszProxyName);
+    HRESULT get_BypassList(PWSTR* ppszBypassList);
+    HRESULT SetProxy(PROXY_ACCESS sUseProxy, BOOL fLocalByPassProxy, uint dwPortNumber, const(wchar)* pszProxyName, const(wchar)* pszByPassList);
+    HRESULT GetCatalog(const(wchar)* pszCatalog, ISearchCatalogManager* ppCatalogManager);
+    HRESULT get_UserAgent(PWSTR* ppszUserAgent);
+    HRESULT put_UserAgent(const(wchar)* pszUserAgent);
+    HRESULT get_UseProxy(PROXY_ACCESS* pUseProxy);
+    HRESULT get_LocalBypass(BOOL* pfLocalBypass);
+    HRESULT get_PortNumber(uint* pdwPortNumber);
 }
 enum IID_ISearchManager2 = GUID(0xdbab3f73, 0xdb19, 0x4a79, [0xbf, 0xc0, 0xa6, 0x1a, 0x93, 0x88, 0x6d, 0xdf]);
 interface ISearchManager2 : ISearchManager
 {
-    HRESULT CreateCatalog(const(wchar)*, ISearchCatalogManager*);
-    HRESULT DeleteCatalog(const(wchar)*);
+    HRESULT CreateCatalog(const(wchar)* pszCatalog, ISearchCatalogManager* ppCatalogManager);
+    HRESULT DeleteCatalog(const(wchar)* pszCatalog);
 }
 enum CLSID_CSearchLanguageSupport = GUID(0x6a68cc80, 0x4337, 0x4dbc, [0xbd, 0x27, 0xfb, 0xfb, 0x10, 0x53, 0x82, 0xb]);
 struct CSearchLanguageSupport
@@ -6626,11 +6625,11 @@ struct CSearchLanguageSupport
 enum IID_ISearchLanguageSupport = GUID(0x24c3cbaa, 0xebc1, 0x491a, [0x9e, 0xf1, 0x9f, 0x6d, 0x8d, 0xeb, 0x1b, 0x8f]);
 interface ISearchLanguageSupport : IUnknown
 {
-    HRESULT SetDiacriticSensitivity(BOOL);
-    HRESULT GetDiacriticSensitivity(BOOL*);
-    HRESULT LoadWordBreaker(uint, const(GUID)*, void**, uint*);
-    HRESULT LoadStemmer(uint, const(GUID)*, void**, uint*);
-    HRESULT IsPrefixNormalized(const(wchar)*, uint, const(wchar)*, uint, uint*);
+    HRESULT SetDiacriticSensitivity(BOOL fDiacriticSensitive);
+    HRESULT GetDiacriticSensitivity(BOOL* pfDiacriticSensitive);
+    HRESULT LoadWordBreaker(uint lcid, const(GUID)* riid, void** ppWordBreaker, uint* pLcidUsed);
+    HRESULT LoadStemmer(uint lcid, const(GUID)* riid, void** ppStemmer, uint* pLcidUsed);
+    HRESULT IsPrefixNormalized(const(wchar)* pwcsQueryToken, uint cwcQueryToken, const(wchar)* pwcsDocumentToken, uint cwcDocumentToken, uint* pulPrefixLength);
 }
 enum CLSID_CSearchManager = GUID(0x7d096c5f, 0xac08, 0x4f1f, [0xbe, 0xb7, 0x5c, 0x22, 0xc5, 0x17, 0xce, 0x39]);
 struct CSearchManager
@@ -6656,11 +6655,11 @@ struct ITEMPROP
 enum IID_IEnumItemProperties = GUID(0xf72c8d96, 0x6dbd, 0x11d1, [0xa1, 0xe8, 0x0, 0xc0, 0x4f, 0xc2, 0xfb, 0xe1]);
 interface IEnumItemProperties : IUnknown
 {
-    HRESULT Next(uint, ITEMPROP*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, ITEMPROP* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumItemProperties*);
-    HRESULT GetCount(uint*);
+    HRESULT Clone(IEnumItemProperties* ppenum);
+    HRESULT GetCount(uint* pnCount);
 }
 struct SUBSCRIPTIONITEMINFO
 {
@@ -6673,22 +6672,22 @@ struct SUBSCRIPTIONITEMINFO
 enum IID_ISubscriptionItem = GUID(0xa97559f8, 0x6c4a, 0x11d1, [0xa1, 0xe8, 0x0, 0xc0, 0x4f, 0xc2, 0xfb, 0xe1]);
 interface ISubscriptionItem : IUnknown
 {
-    HRESULT GetCookie(GUID*);
-    HRESULT GetSubscriptionItemInfo(SUBSCRIPTIONITEMINFO*);
-    HRESULT SetSubscriptionItemInfo(const(SUBSCRIPTIONITEMINFO)*);
-    HRESULT ReadProperties(uint, const(wchar)**, VARIANT*);
-    HRESULT WriteProperties(uint, const(wchar)**, const(VARIANT)*);
-    HRESULT EnumProperties(IEnumItemProperties*);
+    HRESULT GetCookie(GUID* pCookie);
+    HRESULT GetSubscriptionItemInfo(SUBSCRIPTIONITEMINFO* pSubscriptionItemInfo);
+    HRESULT SetSubscriptionItemInfo(const(SUBSCRIPTIONITEMINFO)* pSubscriptionItemInfo);
+    HRESULT ReadProperties(uint nCount, const(wchar)** rgwszName, VARIANT* rgValue);
+    HRESULT WriteProperties(uint nCount, const(wchar)** rgwszName, const(VARIANT)* rgValue);
+    HRESULT EnumProperties(IEnumItemProperties* ppEnumItemProperties);
     HRESULT NotifyChanged();
 }
 enum IID_IEnumSubscription = GUID(0xf72c8d97, 0x6dbd, 0x11d1, [0xa1, 0xe8, 0x0, 0xc0, 0x4f, 0xc2, 0xfb, 0xe1]);
 interface IEnumSubscription : IUnknown
 {
-    HRESULT Next(uint, GUID*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, GUID* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumSubscription*);
-    HRESULT GetCount(uint*);
+    HRESULT Clone(IEnumSubscription* ppenum);
+    HRESULT GetCount(uint* pnCount);
 }
 alias SUBSCRIPTIONTYPE = int;
 enum : int
@@ -6764,24 +6763,24 @@ struct SUBSCRIPTIONINFO
 enum IID_ISubscriptionMgr = GUID(0x85fb2c0, 0xdf8, 0x11d1, [0x8f, 0x4b, 0x0, 0xa0, 0xc9, 0x5, 0x41, 0x3f]);
 interface ISubscriptionMgr : IUnknown
 {
-    HRESULT DeleteSubscription(const(wchar)*, HWND);
-    HRESULT UpdateSubscription(const(wchar)*);
+    HRESULT DeleteSubscription(const(wchar)* pwszURL, HWND hwnd);
+    HRESULT UpdateSubscription(const(wchar)* pwszURL);
     HRESULT UpdateAll();
-    HRESULT IsSubscribed(const(wchar)*, BOOL*);
-    HRESULT GetSubscriptionInfo(const(wchar)*, SUBSCRIPTIONINFO*);
-    HRESULT GetDefaultInfo(SUBSCRIPTIONTYPE, SUBSCRIPTIONINFO*);
-    HRESULT ShowSubscriptionProperties(const(wchar)*, HWND);
-    HRESULT CreateSubscription(HWND, const(wchar)*, const(wchar)*, uint, SUBSCRIPTIONTYPE, SUBSCRIPTIONINFO*);
+    HRESULT IsSubscribed(const(wchar)* pwszURL, BOOL* pfSubscribed);
+    HRESULT GetSubscriptionInfo(const(wchar)* pwszURL, SUBSCRIPTIONINFO* pInfo);
+    HRESULT GetDefaultInfo(SUBSCRIPTIONTYPE subType, SUBSCRIPTIONINFO* pInfo);
+    HRESULT ShowSubscriptionProperties(const(wchar)* pwszURL, HWND hwnd);
+    HRESULT CreateSubscription(HWND hwnd, const(wchar)* pwszURL, const(wchar)* pwszFriendlyName, uint dwFlags, SUBSCRIPTIONTYPE subsType, SUBSCRIPTIONINFO* pInfo);
 }
 enum IID_ISubscriptionMgr2 = GUID(0x614bc270, 0xaedf, 0x11d1, [0xa1, 0xf9, 0x0, 0xc0, 0x4f, 0xc2, 0xfb, 0xe1]);
 interface ISubscriptionMgr2 : ISubscriptionMgr
 {
-    HRESULT GetItemFromURL(const(wchar)*, ISubscriptionItem*);
-    HRESULT GetItemFromCookie(const(GUID)*, ISubscriptionItem*);
-    HRESULT GetSubscriptionRunState(uint, const(GUID)*, uint*);
-    HRESULT EnumSubscriptions(uint, IEnumSubscription*);
-    HRESULT UpdateItems(uint, uint, const(GUID)*);
-    HRESULT AbortItems(uint, const(GUID)*);
+    HRESULT GetItemFromURL(const(wchar)* pwszURL, ISubscriptionItem* ppSubscriptionItem);
+    HRESULT GetItemFromCookie(const(GUID)* pSubscriptionCookie, ISubscriptionItem* ppSubscriptionItem);
+    HRESULT GetSubscriptionRunState(uint dwNumCookies, const(GUID)* pCookies, uint* pdwRunState);
+    HRESULT EnumSubscriptions(uint dwFlags, IEnumSubscription* ppEnumSubscriptions);
+    HRESULT UpdateItems(uint dwFlags, uint dwNumCookies, const(GUID)* pCookies);
+    HRESULT AbortItems(uint dwNumCookies, const(GUID)* pCookies);
     HRESULT AbortAll();
 }
 enum CLSID_SubscriptionMgr = GUID(0xabbe31d0, 0x6dae, 0x11d0, [0xbe, 0xca, 0x0, 0xc0, 0x4f, 0xd9, 0x40, 0xbe]);
@@ -6831,9 +6830,9 @@ enum : int
 enum IID_IDataConvert = GUID(0xc733a8d, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IDataConvert : IUnknown
 {
-    HRESULT DataConvert(ushort, ushort, ulong, ulong*, void*, void*, ulong, uint, uint*, ubyte, ubyte, uint);
-    HRESULT CanConvert(ushort, ushort);
-    HRESULT GetConversionSize(ushort, ushort, ulong*, ulong*, void*);
+    HRESULT DataConvert(ushort wSrcType, ushort wDstType, ulong cbSrcLength, ulong* pcbDstLength, void* pSrc, void* pDst, ulong cbDstMaxLength, uint dbsSrcStatus, uint* pdbsStatus, ubyte bPrecision, ubyte bScale, uint dwFlags);
+    HRESULT CanConvert(ushort wSrcType, ushort wDstType);
+    HRESULT GetConversionSize(ushort wSrcType, ushort wDstType, ulong* pcbSrcLength, ulong* pcbDstLength, void* pSrc);
 }
 alias DCINFOTYPEENUM = int;
 enum : int
@@ -6849,8 +6848,8 @@ struct DCINFO
 enum IID_IDCInfo = GUID(0xc733a9c, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IDCInfo : IUnknown
 {
-    HRESULT GetInfo(uint, uint*, DCINFO**);
-    HRESULT SetInfo(uint, DCINFO*);
+    HRESULT GetInfo(uint cInfo, uint* rgeInfoType, DCINFO** prgInfo);
+    HRESULT SetInfo(uint cInfo, DCINFO* rgInfo);
 }
 enum CLSID_MSDAORA = GUID(0xe8cc4cbe, 0xfdff, 0x11d0, [0xb8, 0x65, 0x0, 0xa0, 0xc9, 0x8, 0x1c, 0x1d]);
 struct MSDAORA
@@ -6871,18 +6870,18 @@ struct MSDAORA8_ERROR
 enum IID_DataSourceListener = GUID(0x7c0ffab2, 0xcd84, 0x11d0, [0x94, 0x9a, 0x0, 0xa0, 0xc9, 0x11, 0x10, 0xed]);
 interface DataSourceListener : IUnknown
 {
-    HRESULT dataMemberChanged(ushort*);
-    HRESULT dataMemberAdded(ushort*);
-    HRESULT dataMemberRemoved(ushort*);
+    HRESULT dataMemberChanged(ushort* bstrDM);
+    HRESULT dataMemberAdded(ushort* bstrDM);
+    HRESULT dataMemberRemoved(ushort* bstrDM);
 }
 enum IID_DataSource = GUID(0x7c0ffab3, 0xcd84, 0x11d0, [0x94, 0x9a, 0x0, 0xa0, 0xc9, 0x11, 0x10, 0xed]);
 interface DataSource : IUnknown
 {
-    HRESULT getDataMember(ushort*, const(GUID)*, IUnknown*);
-    HRESULT getDataMemberName(int, ushort**);
-    HRESULT getDataMemberCount(int*);
-    HRESULT addDataSourceListener(DataSourceListener);
-    HRESULT removeDataSourceListener(DataSourceListener);
+    HRESULT getDataMember(ushort* bstrDM, const(GUID)* riid, IUnknown* ppunk);
+    HRESULT getDataMemberName(int lIndex, ushort** pbstrDM);
+    HRESULT getDataMemberCount(int* plCount);
+    HRESULT addDataSourceListener(DataSourceListener pDSL);
+    HRESULT removeDataSourceListener(DataSourceListener pDSL);
 }
 alias OSPFORMAT = int;
 enum : int
@@ -6934,31 +6933,31 @@ enum : int
 enum IID_OLEDBSimpleProviderListener = GUID(0xe0e270c1, 0xc0be, 0x11d0, [0x8f, 0xe4, 0x0, 0xa0, 0xc9, 0xa, 0x63, 0x41]);
 interface OLEDBSimpleProviderListener : IUnknown
 {
-    HRESULT aboutToChangeCell(long, long);
-    HRESULT cellChanged(long, long);
-    HRESULT aboutToDeleteRows(long, long);
-    HRESULT deletedRows(long, long);
-    HRESULT aboutToInsertRows(long, long);
-    HRESULT insertedRows(long, long);
-    HRESULT rowsAvailable(long, long);
-    HRESULT transferComplete(OSPXFER);
+    HRESULT aboutToChangeCell(long iRow, long iColumn);
+    HRESULT cellChanged(long iRow, long iColumn);
+    HRESULT aboutToDeleteRows(long iRow, long cRows);
+    HRESULT deletedRows(long iRow, long cRows);
+    HRESULT aboutToInsertRows(long iRow, long cRows);
+    HRESULT insertedRows(long iRow, long cRows);
+    HRESULT rowsAvailable(long iRow, long cRows);
+    HRESULT transferComplete(OSPXFER xfer);
 }
 enum IID_OLEDBSimpleProvider = GUID(0xe0e270c0, 0xc0be, 0x11d0, [0x8f, 0xe4, 0x0, 0xa0, 0xc9, 0xa, 0x63, 0x41]);
 interface OLEDBSimpleProvider : IUnknown
 {
-    HRESULT getRowCount(long*);
-    HRESULT getColumnCount(long*);
-    HRESULT getRWStatus(long, long, OSPRW*);
-    HRESULT getVariant(long, long, OSPFORMAT, VARIANT*);
-    HRESULT setVariant(long, long, OSPFORMAT, VARIANT);
-    HRESULT getLocale(BSTR*);
-    HRESULT deleteRows(long, long, long*);
-    HRESULT insertRows(long, long, long*);
-    HRESULT find(long, long, VARIANT, OSPFIND, OSPCOMP, long*);
-    HRESULT addOLEDBSimpleProviderListener(OLEDBSimpleProviderListener);
-    HRESULT removeOLEDBSimpleProviderListener(OLEDBSimpleProviderListener);
-    HRESULT isAsync(BOOL*);
-    HRESULT getEstimatedRows(long*);
+    HRESULT getRowCount(long* pcRows);
+    HRESULT getColumnCount(long* pcColumns);
+    HRESULT getRWStatus(long iRow, long iColumn, OSPRW* prwStatus);
+    HRESULT getVariant(long iRow, long iColumn, OSPFORMAT format, VARIANT* pVar);
+    HRESULT setVariant(long iRow, long iColumn, OSPFORMAT format, VARIANT Var);
+    HRESULT getLocale(BSTR* pbstrLocale);
+    HRESULT deleteRows(long iRow, long cRows, long* pcRowsDeleted);
+    HRESULT insertRows(long iRow, long cRows, long* pcRowsInserted);
+    HRESULT find(long iRowStart, long iColumn, VARIANT val, OSPFIND findFlags, OSPCOMP compType, long* piRowFound);
+    HRESULT addOLEDBSimpleProviderListener(OLEDBSimpleProviderListener pospIListener);
+    HRESULT removeOLEDBSimpleProviderListener(OLEDBSimpleProviderListener pospIListener);
+    HRESULT isAsync(BOOL* pbAsynch);
+    HRESULT getEstimatedRows(long* piRows);
     HRESULT stopTransfer();
 }
 enum IID_DataSourceObject = GUID(0xae9a4e4, 0x18d4, 0x11d1, [0xb3, 0xb3, 0x0, 0xaa, 0x0, 0xc1, 0xa9, 0x24]);
@@ -6974,7 +6973,7 @@ enum : int
 enum IID_IService = GUID(0x6210e88, 0x1f5, 0x11d1, [0xb5, 0x12, 0x0, 0x80, 0xc7, 0x81, 0xc3, 0x84]);
 interface IService : IUnknown
 {
-    HRESULT InvokeService(IUnknown);
+    HRESULT InvokeService(IUnknown pUnkInner);
 }
 alias DBPROMPTOPTIONSENUM = int;
 enum : int
@@ -6990,26 +6989,26 @@ enum : int
 enum IID_IDBPromptInitialize = GUID(0x2206ccb0, 0x19c1, 0x11d1, [0x89, 0xe0, 0x0, 0xc0, 0x4f, 0xd7, 0xa8, 0x29]);
 interface IDBPromptInitialize : IUnknown
 {
-    HRESULT PromptDataSource(IUnknown, HWND, uint, uint, uint*, const(wchar)*, const(GUID)*, IUnknown*);
-    HRESULT PromptFileName(HWND, uint, const(wchar)*, const(wchar)*, PWSTR*);
+    HRESULT PromptDataSource(IUnknown pUnkOuter, HWND hWndParent, uint dwPromptOptions, uint cSourceTypeFilter, uint* rgSourceTypeFilter, const(wchar)* pwszszzProviderFilter, const(GUID)* riid, IUnknown* ppDataSource);
+    HRESULT PromptFileName(HWND hWndParent, uint dwPromptOptions, const(wchar)* pwszInitialDirectory, const(wchar)* pwszInitialFile, PWSTR* ppwszSelectedFile);
 }
 enum IID_IDataInitialize = GUID(0x2206ccb1, 0x19c1, 0x11d1, [0x89, 0xe0, 0x0, 0xc0, 0x4f, 0xd7, 0xa8, 0x29]);
 interface IDataInitialize : IUnknown
 {
-    HRESULT GetDataSource(IUnknown, uint, const(wchar)*, const(GUID)*, IUnknown*);
-    HRESULT GetInitializationString(IUnknown, ubyte, PWSTR*);
-    HRESULT CreateDBInstance(const(GUID)*, IUnknown, uint, PWSTR, const(GUID)*, IUnknown*);
-    HRESULT CreateDBInstanceEx(const(GUID)*, IUnknown, uint, PWSTR, COSERVERINFO*, uint, MULTI_QI*);
-    HRESULT LoadStringFromStorage(const(wchar)*, PWSTR*);
-    HRESULT WriteStringToStorage(const(wchar)*, const(wchar)*, uint);
+    HRESULT GetDataSource(IUnknown pUnkOuter, uint dwClsCtx, const(wchar)* pwszInitializationString, const(GUID)* riid, IUnknown* ppDataSource);
+    HRESULT GetInitializationString(IUnknown pDataSource, ubyte fIncludePassword, PWSTR* ppwszInitString);
+    HRESULT CreateDBInstance(const(GUID)* clsidProvider, IUnknown pUnkOuter, uint dwClsCtx, PWSTR pwszReserved, const(GUID)* riid, IUnknown* ppDataSource);
+    HRESULT CreateDBInstanceEx(const(GUID)* clsidProvider, IUnknown pUnkOuter, uint dwClsCtx, PWSTR pwszReserved, COSERVERINFO* pServerInfo, uint cmq, MULTI_QI* rgmqResults);
+    HRESULT LoadStringFromStorage(const(wchar)* pwszFileName, PWSTR* ppwszInitializationString);
+    HRESULT WriteStringToStorage(const(wchar)* pwszFileName, const(wchar)* pwszInitializationString, uint dwCreationDisposition);
 }
 enum IID_IDataSourceLocator = GUID(0x2206ccb2, 0x19c1, 0x11d1, [0x89, 0xe0, 0x0, 0xc0, 0x4f, 0xd7, 0xa8, 0x29]);
 interface IDataSourceLocator : IDispatch
 {
-    HRESULT get_hWnd(HWND*);
-    HRESULT put_hWnd(HWND);
-    HRESULT PromptNew(IDispatch*);
-    HRESULT PromptEdit(IDispatch*, VARIANT_BOOL*);
+    HRESULT get_hWnd(HWND* phwndParent);
+    HRESULT put_hWnd(HWND hwndParent);
+    HRESULT PromptNew(IDispatch* ppADOConnection);
+    HRESULT PromptEdit(IDispatch* ppADOConnection, VARIANT_BOOL* pbSuccess);
 }
 enum CLSID_DataLinks = GUID(0x2206cdb2, 0x19c1, 0x11d1, [0x89, 0xe0, 0x0, 0xc0, 0x4f, 0xd7, 0xa8, 0x29]);
 struct DataLinks
@@ -7037,8 +7036,8 @@ enum : int
 enum IID_IRowsetChangeExtInfo = GUID(0xc733a8f, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetChangeExtInfo : IUnknown
 {
-    HRESULT GetOriginalRow(ulong, ulong, ulong*);
-    HRESULT GetPendingColumns(ulong, ulong, uint, const(uint)*, uint*);
+    HRESULT GetOriginalRow(ulong hReserved, ulong hRow, ulong* phRowOriginal);
+    HRESULT GetPendingColumns(ulong hReserved, ulong hRow, uint cColumnOrdinals, const(uint)* rgiOrdinals, uint* rgColumnStatus);
 }
 struct KAGREQDIAG
 {
@@ -7055,12 +7054,12 @@ struct KAGGETDIAG
 enum IID_ISQLRequestDiagFields = GUID(0x228972f0, 0xb5ff, 0x11d0, [0x8a, 0x80, 0x0, 0xc0, 0x4f, 0xd6, 0x11, 0xcd]);
 interface ISQLRequestDiagFields : IUnknown
 {
-    HRESULT RequestDiagFields(uint, KAGREQDIAG*);
+    HRESULT RequestDiagFields(uint cDiagFields, KAGREQDIAG* rgDiagFields);
 }
 enum IID_ISQLGetDiagField = GUID(0x228972f1, 0xb5ff, 0x11d0, [0x8a, 0x80, 0x0, 0xc0, 0x4f, 0xd6, 0x11, 0xcd]);
 interface ISQLGetDiagField : IUnknown
 {
-    HRESULT GetDiagField(KAGGETDIAG*);
+    HRESULT GetDiagField(KAGGETDIAG* pDiagInfo);
 }
 alias MSDSDBINITPROPENUM = int;
 enum : int
@@ -7237,29 +7236,29 @@ enum : int
 enum IID_IRowsetNextRowset = GUID(0xc733a72, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetNextRowset : IUnknown
 {
-    HRESULT GetNextRowset(IUnknown, const(GUID)*, IUnknown*);
+    HRESULT GetNextRowset(IUnknown pUnkOuter, const(GUID)* riid, IUnknown* ppNextRowset);
 }
 enum IID_IRowsetNewRowAfter = GUID(0xc733a71, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetNewRowAfter : IUnknown
 {
-    HRESULT SetNewDataAfter(ulong, uint, const(ubyte)*, HACCESSOR, ubyte*, ulong*);
+    HRESULT SetNewDataAfter(ulong hChapter, uint cbbmPrevious, const(ubyte)* pbmPrevious, HACCESSOR hAccessor, ubyte* pData, ulong* phRow);
 }
 enum IID_IRowsetWithParameters = GUID(0xc733a6e, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetWithParameters : IUnknown
 {
-    HRESULT GetParameterInfo(ulong*, DBPARAMINFO**, ushort**);
-    HRESULT Requery(DBPARAMS*, uint*, ulong*);
+    HRESULT GetParameterInfo(ulong* pcParams, DBPARAMINFO** prgParamInfo, ushort** ppNamesBuffer);
+    HRESULT Requery(DBPARAMS* pParams, uint* pulErrorParam, ulong* phReserved);
 }
 enum IID_IRowsetAsynch = GUID(0xc733a0f, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetAsynch : IUnknown
 {
-    HRESULT RatioFinished(ulong*, ulong*, ulong*, BOOL*);
+    HRESULT RatioFinished(ulong* pulDenominator, ulong* pulNumerator, ulong* pcRows, BOOL* pfNewRows);
     HRESULT Stop();
 }
 enum IID_IRowsetKeys = GUID(0xc733a12, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetKeys : IUnknown
 {
-    HRESULT ListKeys(ulong*, ulong**);
+    HRESULT ListKeys(ulong* pcColumns, ulong** prgColumns);
 }
 enum IID_IRowsetWatchAll = GUID(0xc733a73, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetWatchAll : IUnknown
@@ -7279,7 +7278,7 @@ enum : int
 enum IID_IRowsetWatchNotify = GUID(0xc733a44, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetWatchNotify : IUnknown
 {
-    HRESULT OnChange(IRowset, uint);
+    HRESULT OnChange(IRowset pRowset, uint eChangeReason);
 }
 alias DBWATCHMODEENUM = int;
 enum : int
@@ -7311,26 +7310,26 @@ enum : int
 enum IID_IRowsetWatchRegion = GUID(0xc733a45, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetWatchRegion : IRowsetWatchAll
 {
-    HRESULT CreateWatchRegion(uint, ulong*);
-    HRESULT ChangeWatchMode(ulong, uint);
-    HRESULT DeleteWatchRegion(ulong);
-    HRESULT GetWatchRegionInfo(ulong, uint*, ulong*, ulong*, ubyte**, long*);
-    HRESULT Refresh(ulong*, DBROWWATCHCHANGE**);
-    HRESULT ShrinkWatchRegion(ulong, ulong, ulong, ubyte*, long);
+    HRESULT CreateWatchRegion(uint dwWatchMode, ulong* phRegion);
+    HRESULT ChangeWatchMode(ulong hRegion, uint dwWatchMode);
+    HRESULT DeleteWatchRegion(ulong hRegion);
+    HRESULT GetWatchRegionInfo(ulong hRegion, uint* pdwWatchMode, ulong* phChapter, ulong* pcbBookmark, ubyte** ppBookmark, long* pcRows);
+    HRESULT Refresh(ulong* pcChangesObtained, DBROWWATCHCHANGE** prgChanges);
+    HRESULT ShrinkWatchRegion(ulong hRegion, ulong hChapter, ulong cbBookmark, ubyte* pBookmark, long cRows);
 }
 enum IID_IRowsetCopyRows = GUID(0xc733a6b, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IRowsetCopyRows : IUnknown
 {
-    HRESULT CloseSource(ushort);
-    HRESULT CopyByHROWS(ushort, ulong, long, const(ulong)*, uint);
-    HRESULT CopyRows(ushort, ulong, long, uint, ulong*);
-    HRESULT DefineSource(const(IRowset), const(ulong), const(long)*, const(long)*, ushort*);
+    HRESULT CloseSource(ushort hSourceID);
+    HRESULT CopyByHROWS(ushort hSourceID, ulong hReserved, long cRows, const(ulong)* rghRows, uint bFlags);
+    HRESULT CopyRows(ushort hSourceID, ulong hReserved, long cRows, uint bFlags, ulong* pcRowsCopied);
+    HRESULT DefineSource(const(IRowset) pRowsetSource, const(ulong) cColIds, const(long)* rgSourceColumns, const(long)* rgTargetColumns, ushort* phSourceID);
 }
 enum IID_IReadData = GUID(0xc733a6a, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IReadData : IUnknown
 {
-    HRESULT ReadData(ulong, ulong, const(ubyte)*, long, HACCESSOR, long, ulong*, ubyte**, ulong*, ubyte**);
-    HRESULT ReleaseChapter(ulong);
+    HRESULT ReadData(ulong hChapter, ulong cbBookmark, const(ubyte)* pBookmark, long lRowsOffset, HACCESSOR hAccessor, long cRows, ulong* pcRowsObtained, ubyte** ppFixedData, ulong* pcbVariableTotal, ubyte** ppVariableData);
+    HRESULT ReleaseChapter(ulong hChapter);
 }
 alias DBRESOURCEKINDENUM = int;
 enum : int
@@ -7388,12 +7387,12 @@ enum : int
 enum IID_ICommandCost = GUID(0xc733a4e, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ICommandCost : IUnknown
 {
-    HRESULT GetAccumulatedCost(const(wchar)*, uint*, DBCOST**);
-    HRESULT GetCostEstimate(const(wchar)*, uint*, DBCOST*);
-    HRESULT GetCostGoals(const(wchar)*, uint*, DBCOST*);
-    HRESULT GetCostLimits(const(wchar)*, uint*, DBCOST*);
-    HRESULT SetCostGoals(const(wchar)*, uint, const(DBCOST)*);
-    HRESULT SetCostLimits(const(wchar)*, uint, DBCOST*, uint);
+    HRESULT GetAccumulatedCost(const(wchar)* pwszRowsetName, uint* pcCostLimits, DBCOST** prgCostLimits);
+    HRESULT GetCostEstimate(const(wchar)* pwszRowsetName, uint* pcCostEstimates, DBCOST* prgCostEstimates);
+    HRESULT GetCostGoals(const(wchar)* pwszRowsetName, uint* pcCostGoals, DBCOST* prgCostGoals);
+    HRESULT GetCostLimits(const(wchar)* pwszRowsetName, uint* pcCostLimits, DBCOST* prgCostLimits);
+    HRESULT SetCostGoals(const(wchar)* pwszRowsetName, uint cCostGoals, const(DBCOST)* rgCostGoals);
+    HRESULT SetCostLimits(const(wchar)* pwszRowsetName, uint cCostLimits, DBCOST* prgCostLimits, uint dwExecutionFlags);
 }
 enum IID_ICommandValidate = GUID(0xc733a18, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ICommandValidate : IUnknown
@@ -7404,19 +7403,19 @@ interface ICommandValidate : IUnknown
 enum IID_ITableRename = GUID(0xc733a77, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ITableRename : IUnknown
 {
-    HRESULT RenameColumn(DBID*, DBID*, DBID*);
-    HRESULT RenameTable(DBID*, DBID*, DBID*, DBID*);
+    HRESULT RenameColumn(DBID* pTableId, DBID* pOldColumnId, DBID* pNewColumnId);
+    HRESULT RenameTable(DBID* pOldTableId, DBID* pOldIndexId, DBID* pNewTableId, DBID* pNewIndexId);
 }
 enum IID_IDBSchemaCommand = GUID(0xc733a50, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IDBSchemaCommand : IUnknown
 {
-    HRESULT GetCommand(IUnknown, const(GUID)*, ICommand*);
-    HRESULT GetSchemas(uint*, GUID**);
+    HRESULT GetCommand(IUnknown pUnkOuter, const(GUID)* rguidSchema, ICommand* ppCommand);
+    HRESULT GetSchemas(uint* pcSchemas, GUID** prgSchemas);
 }
 enum IID_IProvideMoniker = GUID(0xc733a4d, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface IProvideMoniker : IUnknown
 {
-    HRESULT GetMoniker(IMoniker*);
+    HRESULT GetMoniker(IMoniker* ppIMoniker);
 }
 struct NOTRESTRICTION
 {
@@ -7513,15 +7512,15 @@ struct CATEGORIZATIONSET
 enum IID_ISearchQueryHits = GUID(0xed8ce7e0, 0x106c, 0x11ce, [0x84, 0xe2, 0x0, 0xaa, 0x0, 0x4b, 0x99, 0x86]);
 interface ISearchQueryHits : IUnknown
 {
-    int Init(IFilter, uint);
-    int NextHitMoniker(uint*, IMoniker**);
-    int NextHitOffset(uint*, FILTERREGION**);
+    int Init(IFilter pflt, uint ulFlags);
+    int NextHitMoniker(uint* pcMnk, IMoniker** papMnk);
+    int NextHitOffset(uint* pcRegion, FILTERREGION** paRegion);
 }
 enum IID_IRowsetQueryStatus = GUID(0xa7ac77ed, 0xf8d7, 0x11ce, [0xa7, 0x98, 0x0, 0x20, 0xf8, 0x0, 0x80, 0x24]);
 interface IRowsetQueryStatus : IUnknown
 {
-    HRESULT GetStatus(uint*);
-    HRESULT GetStatusEx(uint*, uint*, uint*, ulong*, ulong*, ulong, const(ubyte)*, ulong*, ulong*);
+    HRESULT GetStatus(uint* pdwStatus);
+    HRESULT GetStatusEx(uint* pdwStatus, uint* pcFilteredDocuments, uint* pcDocumentsToFilter, ulong* pdwRatioFinishedDenominator, ulong* pdwRatioFinishedNumerator, ulong cbBmk, const(ubyte)* pBmk, ulong* piRowBmk, ulong* pcRowsTotal);
 }
 struct ODBC_VS_ARGS
 {
@@ -7626,13 +7625,13 @@ struct SSVARIANT
 enum IID_IUMSInitialize = GUID(0x5cf4ca14, 0xef21, 0x11d0, [0x97, 0xe7, 0x0, 0xc0, 0x4f, 0xc2, 0xad, 0x98]);
 interface IUMSInitialize : IUnknown
 {
-    HRESULT Initialize(void*);
+    HRESULT Initialize(void* pUMS);
 }
 // [Not Found] IID_IUMS
 interface IUMS
 {
-    void SqlUmsSuspend(uint);
-    void SqlUmsYield(uint);
+    void SqlUmsSuspend(uint ticks);
+    void SqlUmsYield(uint ticks);
     void SqlUmsSwitchPremptive();
     void SqlUmsSwitchNonPremptive();
     BOOL SqlUmsFIsPremptive();
@@ -7650,13 +7649,13 @@ struct SSERRORINFO
 enum IID_ISQLServerErrorInfo = GUID(0x5cf4ca12, 0xef21, 0x11d0, [0x97, 0xe7, 0x0, 0xc0, 0x4f, 0xc2, 0xad, 0x98]);
 interface ISQLServerErrorInfo : IUnknown
 {
-    HRESULT GetErrorInfo(SSERRORINFO**, ushort**);
+    HRESULT GetErrorInfo(SSERRORINFO** ppErrorInfo, ushort** ppStringsBuffer);
 }
 enum IID_IRowsetFastLoad = GUID(0x5cf4ca13, 0xef21, 0x11d0, [0x97, 0xe7, 0x0, 0xc0, 0x4f, 0xc2, 0xad, 0x98]);
 interface IRowsetFastLoad : IUnknown
 {
-    HRESULT InsertRow(HACCESSOR, void*);
-    HRESULT Commit(BOOL);
+    HRESULT InsertRow(HACCESSOR hAccessor, void* pData);
+    HRESULT Commit(BOOL fDone);
 }
 alias LOCKMODEENUM = int;
 enum : int
@@ -7669,7 +7668,7 @@ enum : int
 enum IID_ISchemaLock = GUID(0x4c2389fb, 0x2511, 0x11d4, [0xb2, 0x58, 0x0, 0xc0, 0x4f, 0x79, 0x71, 0xce]);
 interface ISchemaLock : IUnknown
 {
-    HRESULT GetSchemaLock(DBID*, uint, HANDLE*, ulong*);
-    HRESULT ReleaseSchemaLock(HANDLE);
+    HRESULT GetSchemaLock(DBID* pTableID, uint lmMode, HANDLE* phLockHandle, ulong* pTableVersion);
+    HRESULT ReleaseSchemaLock(HANDLE hLockHandle);
 }
-alias SQL_ASYNC_NOTIFICATION_CALLBACK = short function(void*, BOOL);
+alias SQL_ASYNC_NOTIFICATION_CALLBACK = short function(void* pContext, BOOL fLast);

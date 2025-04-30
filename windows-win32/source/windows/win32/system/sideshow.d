@@ -1,10 +1,9 @@
 module windows.win32.system.sideshow;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, HRESULT, PWSTR, SYSTEMTIME;
+import windows.win32.foundation : BOOL, HRESULT, PROPERTYKEY, PWSTR, SYSTEMTIME;
 import windows.win32.system.com : IUnknown;
 import windows.win32.system.com.structuredstorage : PROPVARIANT;
-import windows.win32.ui.shell.propertiessystem : PROPERTYKEY;
 import windows.win32.ui.windowsandmessaging : HICON;
 
 version (Windows):
@@ -39,87 +38,87 @@ enum VERSION_1_WINDOWS_7 = 0x00000000;
 enum IID_ISideShowSession = GUID(0xe22331ee, 0x9e7d, 0x4922, [0x9f, 0xc2, 0xab, 0x7a, 0xa4, 0x1c, 0xe4, 0x91]);
 interface ISideShowSession : IUnknown
 {
-    HRESULT RegisterContent(GUID*, GUID*, ISideShowContentManager*);
-    HRESULT RegisterNotifications(GUID*, ISideShowNotificationManager*);
+    HRESULT RegisterContent(GUID* in_applicationId, GUID* in_endpointId, ISideShowContentManager* out_ppIContent);
+    HRESULT RegisterNotifications(GUID* in_applicationId, ISideShowNotificationManager* out_ppINotification);
 }
 enum IID_ISideShowNotificationManager = GUID(0x63cea909, 0xf2b9, 0x4302, [0xb5, 0xe1, 0xc6, 0x8e, 0x6d, 0x9a, 0xb8, 0x33]);
 interface ISideShowNotificationManager : IUnknown
 {
-    HRESULT Show(ISideShowNotification);
-    HRESULT Revoke(const(uint));
+    HRESULT Show(ISideShowNotification in_pINotification);
+    HRESULT Revoke(const(uint) in_notificationId);
     HRESULT RevokeAll();
 }
 enum IID_ISideShowNotification = GUID(0x3c93300, 0x8ab2, 0x41c5, [0x9b, 0x79, 0x46, 0x12, 0x7a, 0x30, 0xe1, 0x48]);
 interface ISideShowNotification : IUnknown
 {
-    HRESULT get_NotificationId(uint*);
-    HRESULT put_NotificationId(uint);
-    HRESULT get_Title(PWSTR*);
-    HRESULT put_Title(PWSTR);
-    HRESULT get_Message(PWSTR*);
-    HRESULT put_Message(PWSTR);
-    HRESULT get_Image(HICON*);
-    HRESULT put_Image(HICON);
-    HRESULT get_ExpirationTime(SYSTEMTIME*);
-    HRESULT put_ExpirationTime(SYSTEMTIME*);
+    HRESULT get_NotificationId(uint* out_pNotificationId);
+    HRESULT put_NotificationId(uint in_notificationId);
+    HRESULT get_Title(PWSTR* out_ppwszTitle);
+    HRESULT put_Title(PWSTR in_pwszTitle);
+    HRESULT get_Message(PWSTR* out_ppwszMessage);
+    HRESULT put_Message(PWSTR in_pwszMessage);
+    HRESULT get_Image(HICON* out_phIcon);
+    HRESULT put_Image(HICON in_hIcon);
+    HRESULT get_ExpirationTime(SYSTEMTIME* out_pTime);
+    HRESULT put_ExpirationTime(SYSTEMTIME* in_pTime);
 }
 enum IID_ISideShowContentManager = GUID(0xa5d5b66b, 0xeef9, 0x41db, [0x8d, 0x7e, 0xe1, 0x7c, 0x33, 0xab, 0x10, 0xb0]);
 interface ISideShowContentManager : IUnknown
 {
-    HRESULT Add(ISideShowContent);
-    HRESULT Remove(const(uint));
+    HRESULT Add(ISideShowContent in_pIContent);
+    HRESULT Remove(const(uint) in_contentId);
     HRESULT RemoveAll();
-    HRESULT SetEventSink(ISideShowEvents);
-    HRESULT GetDeviceCapabilities(ISideShowCapabilitiesCollection*);
+    HRESULT SetEventSink(ISideShowEvents in_pIEvents);
+    HRESULT GetDeviceCapabilities(ISideShowCapabilitiesCollection* out_ppCollection);
 }
 enum IID_ISideShowContent = GUID(0xc18552ed, 0x74ff, 0x4fec, [0xbe, 0x7, 0x4c, 0xfe, 0xd2, 0x9d, 0x48, 0x87]);
 interface ISideShowContent : IUnknown
 {
-    HRESULT GetContent(ISideShowCapabilities, uint*, ubyte**);
-    HRESULT get_ContentId(uint*);
-    HRESULT get_DifferentiateContent(BOOL*);
+    HRESULT GetContent(ISideShowCapabilities in_pICapabilities, uint* out_pdwSize, ubyte** out_ppbData);
+    HRESULT get_ContentId(uint* out_pcontentId);
+    HRESULT get_DifferentiateContent(BOOL* out_pfDifferentiateContent);
 }
 enum IID_ISideShowEvents = GUID(0x61feca4c, 0xdeb4, 0x4a7e, [0x8d, 0x75, 0x51, 0xf1, 0x13, 0x2d, 0x61, 0x5b]);
 interface ISideShowEvents : IUnknown
 {
-    HRESULT ContentMissing(const(uint), ISideShowContent*);
-    HRESULT ApplicationEvent(ISideShowCapabilities, const(uint), const(uint), const(ubyte)*);
-    HRESULT DeviceAdded(ISideShowCapabilities);
-    HRESULT DeviceRemoved(ISideShowCapabilities);
+    HRESULT ContentMissing(const(uint) in_contentId, ISideShowContent* out_ppIContent);
+    HRESULT ApplicationEvent(ISideShowCapabilities in_pICapabilities, const(uint) in_dwEventId, const(uint) in_dwEventSize, const(ubyte)* in_pbEventData);
+    HRESULT DeviceAdded(ISideShowCapabilities in_pIDevice);
+    HRESULT DeviceRemoved(ISideShowCapabilities in_pIDevice);
 }
 enum IID_ISideShowCapabilities = GUID(0x535e1379, 0xc09e, 0x4a54, [0xa5, 0x11, 0x59, 0x7b, 0xab, 0x3a, 0x72, 0xb8]);
 interface ISideShowCapabilities : IUnknown
 {
-    HRESULT GetCapability(const(PROPERTYKEY)*, PROPVARIANT*);
+    HRESULT GetCapability(const(PROPERTYKEY)* in_keyCapability, PROPVARIANT* inout_pValue);
 }
 enum IID_ISideShowCapabilitiesCollection = GUID(0x50305597, 0x5e0d, 0x4ff7, [0xb3, 0xaf, 0x33, 0xd0, 0xd9, 0xbd, 0x52, 0xdd]);
 interface ISideShowCapabilitiesCollection : IUnknown
 {
-    HRESULT GetCount(uint*);
-    HRESULT GetAt(uint, ISideShowCapabilities*);
+    HRESULT GetCount(uint* out_pdwCount);
+    HRESULT GetAt(uint in_dwIndex, ISideShowCapabilities* out_ppCapabilities);
 }
 enum IID_ISideShowBulkCapabilities = GUID(0x3a2b7fbc, 0x3ad5, 0x48bd, [0xbb, 0xf1, 0xe, 0x6c, 0xfb, 0xd1, 0x8, 0x7]);
 interface ISideShowBulkCapabilities : ISideShowCapabilities
 {
-    HRESULT GetCapabilities(ISideShowKeyCollection, ISideShowPropVariantCollection*);
+    HRESULT GetCapabilities(ISideShowKeyCollection in_keyCollection, ISideShowPropVariantCollection* inout_pValues);
 }
 enum IID_ISideShowKeyCollection = GUID(0x45473bc, 0xa37b, 0x4957, [0xb1, 0x44, 0x68, 0x10, 0x54, 0x11, 0xed, 0x8e]);
 interface ISideShowKeyCollection : IUnknown
 {
-    HRESULT Add(const(PROPERTYKEY)*);
+    HRESULT Add(const(PROPERTYKEY)* Key);
     HRESULT Clear();
-    HRESULT GetAt(const(uint), PROPERTYKEY*);
-    HRESULT GetCount(uint*);
-    HRESULT RemoveAt(const(uint));
+    HRESULT GetAt(const(uint) dwIndex, PROPERTYKEY* pKey);
+    HRESULT GetCount(uint* pcElems);
+    HRESULT RemoveAt(const(uint) dwIndex);
 }
 enum IID_ISideShowPropVariantCollection = GUID(0x2ea7a549, 0x7bff, 0x4aae, [0xba, 0xb0, 0x22, 0xd4, 0x31, 0x11, 0xde, 0x49]);
 interface ISideShowPropVariantCollection : IUnknown
 {
-    HRESULT Add(const(PROPVARIANT)*);
+    HRESULT Add(const(PROPVARIANT)* pValue);
     HRESULT Clear();
-    HRESULT GetAt(const(uint), PROPVARIANT*);
-    HRESULT GetCount(uint*);
-    HRESULT RemoveAt(const(uint));
+    HRESULT GetAt(const(uint) dwIndex, PROPVARIANT* pValue);
+    HRESULT GetCount(uint* pcElems);
+    HRESULT RemoveAt(const(uint) dwIndex);
 }
 enum CLSID_SideShowSession = GUID(0xe20543b9, 0xf785, 0x4ea2, [0x98, 0x1e, 0xc4, 0xff, 0xa7, 0x6b, 0xbc, 0x7c]);
 struct SideShowSession

@@ -17,16 +17,16 @@ enum : uint
     SAFER_TOKEN_WANT_FLAGS    = 0x00000008,
 }
 
-BOOL SaferGetPolicyInformation(uint, SAFER_POLICY_INFO_CLASS, uint, void*, uint*, void*);
-BOOL SaferSetPolicyInformation(uint, SAFER_POLICY_INFO_CLASS, uint, void*, void*);
-BOOL SaferCreateLevel(uint, uint, uint, SAFER_LEVEL_HANDLE*, void*);
-BOOL SaferCloseLevel(SAFER_LEVEL_HANDLE);
-BOOL SaferIdentifyLevel(uint, SAFER_CODE_PROPERTIES_V2*, SAFER_LEVEL_HANDLE*, void*);
-BOOL SaferComputeTokenFromLevel(SAFER_LEVEL_HANDLE, HANDLE, HANDLE*, SAFER_COMPUTE_TOKEN_FROM_LEVEL_FLAGS, void*);
-BOOL SaferGetLevelInformation(SAFER_LEVEL_HANDLE, SAFER_OBJECT_INFO_CLASS, void*, uint, uint*);
-BOOL SaferSetLevelInformation(SAFER_LEVEL_HANDLE, SAFER_OBJECT_INFO_CLASS, void*, uint);
-BOOL SaferRecordEventLogEntry(SAFER_LEVEL_HANDLE, const(wchar)*, void*);
-BOOL SaferiIsExecutableFileType(const(wchar)*, BOOLEAN);
+BOOL SaferGetPolicyInformation(uint dwScopeId, SAFER_POLICY_INFO_CLASS SaferPolicyInfoClass, uint InfoBufferSize, void* InfoBuffer, uint* InfoBufferRetSize, void* lpReserved);
+BOOL SaferSetPolicyInformation(uint dwScopeId, SAFER_POLICY_INFO_CLASS SaferPolicyInfoClass, uint InfoBufferSize, void* InfoBuffer, void* lpReserved);
+BOOL SaferCreateLevel(uint dwScopeId, uint dwLevelId, uint OpenFlags, SAFER_LEVEL_HANDLE* pLevelHandle, void* lpReserved);
+BOOL SaferCloseLevel(SAFER_LEVEL_HANDLE hLevelHandle);
+BOOL SaferIdentifyLevel(uint dwNumProperties, SAFER_CODE_PROPERTIES_V2* pCodeProperties, SAFER_LEVEL_HANDLE* pLevelHandle, void* lpReserved);
+BOOL SaferComputeTokenFromLevel(SAFER_LEVEL_HANDLE LevelHandle, HANDLE InAccessToken, HANDLE* OutAccessToken, SAFER_COMPUTE_TOKEN_FROM_LEVEL_FLAGS dwFlags, void* lpReserved);
+BOOL SaferGetLevelInformation(SAFER_LEVEL_HANDLE LevelHandle, SAFER_OBJECT_INFO_CLASS dwInfoType, void* lpQueryBuffer, uint dwInBufferSize, uint* lpdwOutBufferSize);
+BOOL SaferSetLevelInformation(SAFER_LEVEL_HANDLE LevelHandle, SAFER_OBJECT_INFO_CLASS dwInfoType, void* lpQueryBuffer, uint dwInBufferSize);
+BOOL SaferRecordEventLogEntry(SAFER_LEVEL_HANDLE hLevel, const(wchar)* szTargetPath, void* lpReserved);
+BOOL SaferiIsExecutableFileType(const(wchar)* szFullPathname, BOOLEAN bFromShellExecute);
 enum SAFER_SCOPEID_MACHINE = 0x00000001;
 enum SAFER_SCOPEID_USER = 0x00000002;
 enum SAFER_LEVELID_FULLYTRUSTED = 0x00040000;

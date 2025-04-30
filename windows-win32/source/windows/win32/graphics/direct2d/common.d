@@ -234,12 +234,12 @@ enum : int
 enum IID_ID2D1SimplifiedGeometrySink = GUID(0x2cd9069e, 0x12e2, 0x11dc, [0x9f, 0xed, 0x0, 0x11, 0x43, 0xa0, 0x55, 0xf9]);
 interface ID2D1SimplifiedGeometrySink : IUnknown
 {
-    void SetFillMode(D2D1_FILL_MODE);
-    void SetSegmentFlags(D2D1_PATH_SEGMENT);
-    void BeginFigure(D2D_POINT_2F, D2D1_FIGURE_BEGIN);
-    void AddLines(const(D2D_POINT_2F)*, uint);
-    void AddBeziers(const(D2D1_BEZIER_SEGMENT)*, uint);
-    void EndFigure(D2D1_FIGURE_END);
+    void SetFillMode(D2D1_FILL_MODE fillMode);
+    void SetSegmentFlags(D2D1_PATH_SEGMENT vertexFlags);
+    void BeginFigure(D2D_POINT_2F startPoint, D2D1_FIGURE_BEGIN figureBegin);
+    void AddLines(const(D2D_POINT_2F)* points, uint pointsCount);
+    void AddBeziers(const(D2D1_BEZIER_SEGMENT)* beziers, uint beziersCount);
+    void EndFigure(D2D1_FIGURE_END figureEnd);
     HRESULT Close();
 }
 alias D2D1_BORDER_MODE = int;

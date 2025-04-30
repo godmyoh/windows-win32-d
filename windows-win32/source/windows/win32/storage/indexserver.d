@@ -8,10 +8,10 @@ import windows.win32.system.com.structuredstorage : IStorage, PROPSPEC, PROPVARI
 version (Windows):
 extern (Windows):
 
-HRESULT LoadIFilter(const(wchar)*, IUnknown, void**);
-HRESULT LoadIFilterEx(const(wchar)*, uint, const(GUID)*, void**);
-HRESULT BindIFilterFromStorage(IStorage, IUnknown, void**);
-HRESULT BindIFilterFromStream(IStream, IUnknown, void**);
+HRESULT LoadIFilter(const(wchar)* pwcsPath, IUnknown pUnkOuter, void** ppIUnk);
+HRESULT LoadIFilterEx(const(wchar)* pwcsPath, uint dwFlags, const(GUID)* riid, void** ppIUnk);
+HRESULT BindIFilterFromStorage(IStorage pStg, IUnknown pUnkOuter, void** ppIUnk);
+HRESULT BindIFilterFromStream(IStream pStm, IUnknown pUnkOuter, void** ppIUnk);
 enum CI_VERSION_WDS30 = 0x00000102;
 enum CI_VERSION_WDS40 = 0x00000109;
 enum CI_VERSION_WIN70 = 0x00000700;
@@ -243,11 +243,11 @@ struct STAT_CHUNK
 enum IID_IFilter = GUID(0x89bcb740, 0x6119, 0x101a, [0xbc, 0xb7, 0x0, 0xdd, 0x1, 0x6, 0x55, 0xaf]);
 interface IFilter : IUnknown
 {
-    int Init(uint, uint, const(FULLPROPSPEC)*, uint*);
-    int GetChunk(STAT_CHUNK*);
-    int GetText(uint*, PWSTR);
-    int GetValue(PROPVARIANT**);
-    int BindRegion(FILTERREGION, const(GUID)*, void**);
+    int Init(uint grfFlags, uint cAttributes, const(FULLPROPSPEC)* aAttributes, uint* pFlags);
+    int GetChunk(STAT_CHUNK* pStat);
+    int GetText(uint* pcwcBuffer, PWSTR awcBuffer);
+    int GetValue(PROPVARIANT** ppPropValue);
+    int BindRegion(FILTERREGION origPos, const(GUID)* riid, void** ppunk);
 }
 struct DBID
 {
@@ -266,8 +266,8 @@ struct DBID
 enum IID_IPhraseSink = GUID(0xcc906ff0, 0xc058, 0x101a, [0xb5, 0x54, 0x8, 0x0, 0x2b, 0x33, 0xb0, 0xe6]);
 interface IPhraseSink : IUnknown
 {
-    HRESULT PutSmallPhrase(const(wchar)*, uint, const(wchar)*, uint, uint);
-    HRESULT PutPhrase(const(wchar)*, uint);
+    HRESULT PutSmallPhrase(const(wchar)* pwcNoun, uint cwcNoun, const(wchar)* pwcModifier, uint cwcModifier, uint ulAttachmentType);
+    HRESULT PutPhrase(const(wchar)* pwcPhrase, uint cwcPhrase);
 }
 alias WORDREP_BREAK_TYPE = int;
 enum : int

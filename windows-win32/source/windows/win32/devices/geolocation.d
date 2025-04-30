@@ -2,10 +2,9 @@ module windows.win32.devices.geolocation;
 
 import windows.win32.guid : GUID;
 import windows.win32.devices.sensors : LOCATION_DESIRED_ACCURACY;
-import windows.win32.foundation : BOOL, BSTR, CHAR, FILETIME, HRESULT, HWND, NTSTATUS, SYSTEMTIME;
+import windows.win32.foundation : BOOL, BSTR, CHAR, FILETIME, HRESULT, HWND, NTSTATUS, PROPERTYKEY, SYSTEMTIME;
 import windows.win32.system.com : IDispatch, IUnknown;
 import windows.win32.system.com.structuredstorage : PROPVARIANT;
-import windows.win32.ui.shell.propertiessystem : PROPERTYKEY;
 
 version (Windows):
 extern (Windows):
@@ -91,42 +90,42 @@ enum : int
 enum IID_ILocationReport = GUID(0xc8b7f7ee, 0x75d0, 0x4db9, [0xb6, 0x2d, 0x7a, 0xf, 0x36, 0x9c, 0xa4, 0x56]);
 interface ILocationReport : IUnknown
 {
-    HRESULT GetSensorID(GUID*);
-    HRESULT GetTimestamp(SYSTEMTIME*);
-    HRESULT GetValue(const(PROPERTYKEY)*, PROPVARIANT*);
+    HRESULT GetSensorID(GUID* pSensorID);
+    HRESULT GetTimestamp(SYSTEMTIME* pCreationTime);
+    HRESULT GetValue(const(PROPERTYKEY)* pKey, PROPVARIANT* pValue);
 }
 enum IID_ILatLongReport = GUID(0x7fed806d, 0xef8, 0x4f07, [0x80, 0xac, 0x36, 0xa0, 0xbe, 0xae, 0x31, 0x34]);
 interface ILatLongReport : ILocationReport
 {
-    HRESULT GetLatitude(double*);
-    HRESULT GetLongitude(double*);
-    HRESULT GetErrorRadius(double*);
-    HRESULT GetAltitude(double*);
-    HRESULT GetAltitudeError(double*);
+    HRESULT GetLatitude(double* pLatitude);
+    HRESULT GetLongitude(double* pLongitude);
+    HRESULT GetErrorRadius(double* pErrorRadius);
+    HRESULT GetAltitude(double* pAltitude);
+    HRESULT GetAltitudeError(double* pAltitudeError);
 }
 enum IID_ICivicAddressReport = GUID(0xc0b19f70, 0x4adf, 0x445d, [0x87, 0xf2, 0xca, 0xd8, 0xfd, 0x71, 0x17, 0x92]);
 interface ICivicAddressReport : ILocationReport
 {
-    HRESULT GetAddressLine1(BSTR*);
-    HRESULT GetAddressLine2(BSTR*);
-    HRESULT GetCity(BSTR*);
-    HRESULT GetStateProvince(BSTR*);
-    HRESULT GetPostalCode(BSTR*);
-    HRESULT GetCountryRegion(BSTR*);
-    HRESULT GetDetailLevel(uint*);
+    HRESULT GetAddressLine1(BSTR* pbstrAddress1);
+    HRESULT GetAddressLine2(BSTR* pbstrAddress2);
+    HRESULT GetCity(BSTR* pbstrCity);
+    HRESULT GetStateProvince(BSTR* pbstrStateProvince);
+    HRESULT GetPostalCode(BSTR* pbstrPostalCode);
+    HRESULT GetCountryRegion(BSTR* pbstrCountryRegion);
+    HRESULT GetDetailLevel(uint* pDetailLevel);
 }
 enum IID_ILocation = GUID(0xab2ece69, 0x56d9, 0x4f28, [0xb5, 0x25, 0xde, 0x1b, 0xe, 0xe4, 0x42, 0x37]);
 interface ILocation : IUnknown
 {
-    HRESULT RegisterForReport(ILocationEvents, const(GUID)*, uint);
-    HRESULT UnregisterForReport(const(GUID)*);
-    HRESULT GetReport(const(GUID)*, ILocationReport*);
-    HRESULT GetReportStatus(const(GUID)*, LOCATION_REPORT_STATUS*);
-    HRESULT GetReportInterval(const(GUID)*, uint*);
-    HRESULT SetReportInterval(const(GUID)*, uint);
-    HRESULT GetDesiredAccuracy(const(GUID)*, LOCATION_DESIRED_ACCURACY*);
-    HRESULT SetDesiredAccuracy(const(GUID)*, LOCATION_DESIRED_ACCURACY);
-    HRESULT RequestPermissions(HWND, GUID*, uint, BOOL);
+    HRESULT RegisterForReport(ILocationEvents pEvents, const(GUID)* reportType, uint dwRequestedReportInterval);
+    HRESULT UnregisterForReport(const(GUID)* reportType);
+    HRESULT GetReport(const(GUID)* reportType, ILocationReport* ppLocationReport);
+    HRESULT GetReportStatus(const(GUID)* reportType, LOCATION_REPORT_STATUS* pStatus);
+    HRESULT GetReportInterval(const(GUID)* reportType, uint* pMilliseconds);
+    HRESULT SetReportInterval(const(GUID)* reportType, uint millisecondsRequested);
+    HRESULT GetDesiredAccuracy(const(GUID)* reportType, LOCATION_DESIRED_ACCURACY* pDesiredAccuracy);
+    HRESULT SetDesiredAccuracy(const(GUID)* reportType, LOCATION_DESIRED_ACCURACY desiredAccuracy);
+    HRESULT RequestPermissions(HWND hParent, GUID* pReportTypes, uint count, BOOL fModal);
 }
 enum IID_ILocationPower = GUID(0x193e7729, 0xab6b, 0x4b12, [0x86, 0x17, 0x75, 0x96, 0xe1, 0xbb, 0x19, 0x1c]);
 interface ILocationPower : IUnknown
@@ -137,58 +136,58 @@ interface ILocationPower : IUnknown
 enum IID_IDefaultLocation = GUID(0xa65af77e, 0x969a, 0x4a2e, [0x8a, 0xca, 0x33, 0xbb, 0x7c, 0xbb, 0x12, 0x35]);
 interface IDefaultLocation : IUnknown
 {
-    HRESULT SetReport(const(GUID)*, ILocationReport);
-    HRESULT GetReport(const(GUID)*, ILocationReport*);
+    HRESULT SetReport(const(GUID)* reportType, ILocationReport pLocationReport);
+    HRESULT GetReport(const(GUID)* reportType, ILocationReport* ppLocationReport);
 }
 enum IID_ILocationEvents = GUID(0xcae02bbf, 0x798b, 0x4508, [0xa2, 0x7, 0x35, 0xa7, 0x90, 0x6d, 0xc7, 0x3d]);
 interface ILocationEvents : IUnknown
 {
-    HRESULT OnLocationChanged(const(GUID)*, ILocationReport);
-    HRESULT OnStatusChanged(const(GUID)*, LOCATION_REPORT_STATUS);
+    HRESULT OnLocationChanged(const(GUID)* reportType, ILocationReport pLocationReport);
+    HRESULT OnStatusChanged(const(GUID)* reportType, LOCATION_REPORT_STATUS newStatus);
 }
 enum IID_IDispLatLongReport = GUID(0x8ae32723, 0x389b, 0x4a11, [0x99, 0x57, 0x5b, 0xdd, 0x48, 0xfc, 0x96, 0x17]);
 interface IDispLatLongReport : IDispatch
 {
-    HRESULT get_Latitude(double*);
-    HRESULT get_Longitude(double*);
-    HRESULT get_ErrorRadius(double*);
-    HRESULT get_Altitude(double*);
-    HRESULT get_AltitudeError(double*);
-    HRESULT get_Timestamp(double*);
+    HRESULT get_Latitude(double* pVal);
+    HRESULT get_Longitude(double* pVal);
+    HRESULT get_ErrorRadius(double* pVal);
+    HRESULT get_Altitude(double* pVal);
+    HRESULT get_AltitudeError(double* pVal);
+    HRESULT get_Timestamp(double* pVal);
 }
 enum IID_IDispCivicAddressReport = GUID(0x16ff1a34, 0x9e30, 0x42c3, [0xb4, 0x4d, 0xe2, 0x25, 0x13, 0xb5, 0x76, 0x7a]);
 interface IDispCivicAddressReport : IDispatch
 {
-    HRESULT get_AddressLine1(BSTR*);
-    HRESULT get_AddressLine2(BSTR*);
-    HRESULT get_City(BSTR*);
-    HRESULT get_StateProvince(BSTR*);
-    HRESULT get_PostalCode(BSTR*);
-    HRESULT get_CountryRegion(BSTR*);
-    HRESULT get_DetailLevel(uint*);
-    HRESULT get_Timestamp(double*);
+    HRESULT get_AddressLine1(BSTR* pAddress1);
+    HRESULT get_AddressLine2(BSTR* pAddress2);
+    HRESULT get_City(BSTR* pCity);
+    HRESULT get_StateProvince(BSTR* pStateProvince);
+    HRESULT get_PostalCode(BSTR* pPostalCode);
+    HRESULT get_CountryRegion(BSTR* pCountryRegion);
+    HRESULT get_DetailLevel(uint* pDetailLevel);
+    HRESULT get_Timestamp(double* pVal);
 }
 enum IID_ILocationReportFactory = GUID(0x2daec322, 0x90b2, 0x47e4, [0xbb, 0x8, 0xd, 0xa8, 0x41, 0x93, 0x5a, 0x6b]);
 interface ILocationReportFactory : IDispatch
 {
-    HRESULT ListenForReports(uint);
+    HRESULT ListenForReports(uint requestedReportInterval);
     HRESULT StopListeningForReports();
-    HRESULT get_Status(uint*);
-    HRESULT get_ReportInterval(uint*);
-    HRESULT put_ReportInterval(uint);
-    HRESULT get_DesiredAccuracy(uint*);
-    HRESULT put_DesiredAccuracy(uint);
-    HRESULT RequestPermissions(uint*);
+    HRESULT get_Status(uint* pVal);
+    HRESULT get_ReportInterval(uint* pMilliseconds);
+    HRESULT put_ReportInterval(uint millisecondsRequested);
+    HRESULT get_DesiredAccuracy(uint* pDesiredAccuracy);
+    HRESULT put_DesiredAccuracy(uint desiredAccuracy);
+    HRESULT RequestPermissions(uint* hWnd);
 }
 enum IID_ILatLongReportFactory = GUID(0x3f0804cb, 0xb114, 0x447d, [0x83, 0xdd, 0x39, 0x1, 0x74, 0xeb, 0xb0, 0x82]);
 interface ILatLongReportFactory : ILocationReportFactory
 {
-    HRESULT get_LatLongReport(IDispLatLongReport*);
+    HRESULT get_LatLongReport(IDispLatLongReport* pVal);
 }
 enum IID_ICivicAddressReportFactory = GUID(0xbf773b93, 0xc64f, 0x4bee, [0xbe, 0xb2, 0x67, 0xc0, 0xb8, 0xdf, 0x66, 0xe0]);
 interface ICivicAddressReportFactory : ILocationReportFactory
 {
-    HRESULT get_CivicAddressReport(IDispCivicAddressReport*);
+    HRESULT get_CivicAddressReport(IDispCivicAddressReport* pVal);
 }
 enum CLSID_Location = GUID(0xe5b8e079, 0xee6d, 0x4e33, [0xa4, 0x38, 0xc8, 0x7f, 0x2e, 0x95, 0x92, 0x54]);
 struct Location

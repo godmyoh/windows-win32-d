@@ -10,7 +10,7 @@ import windows.win32.system.com : IUnknown;
 version (Windows):
 extern (Windows):
 
-alias PFN_PDF_CREATE_RENDERER = HRESULT function(IDXGIDevice, IPdfRendererNative*);
+alias PFN_PDF_CREATE_RENDERER = HRESULT function(IDXGIDevice param0, IPdfRendererNative* param1);
 struct PDF_RENDER_PARAMS
 {
     D2D_RECT_F SourceRect;
@@ -22,7 +22,7 @@ struct PDF_RENDER_PARAMS
 enum IID_IPdfRendererNative = GUID(0x7d9dcd91, 0xd277, 0x4947, [0x85, 0x27, 0x7, 0xa0, 0xda, 0xed, 0xa9, 0x4a]);
 interface IPdfRendererNative : IUnknown
 {
-    HRESULT RenderPageToSurface(IUnknown, IDXGISurface, POINT, PDF_RENDER_PARAMS*);
-    HRESULT RenderPageToDeviceContext(IUnknown, ID2D1DeviceContext, PDF_RENDER_PARAMS*);
+    HRESULT RenderPageToSurface(IUnknown pdfPage, IDXGISurface pSurface, POINT offset, PDF_RENDER_PARAMS* pRenderParams);
+    HRESULT RenderPageToDeviceContext(IUnknown pdfPage, ID2D1DeviceContext pD2DDeviceContext, PDF_RENDER_PARAMS* pRenderParams);
 }
-HRESULT PdfCreateRenderer(IDXGIDevice, IPdfRendererNative*);
+HRESULT PdfCreateRenderer(IDXGIDevice pDevice, IPdfRendererNative* ppRenderer);

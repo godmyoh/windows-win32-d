@@ -233,18 +233,18 @@ struct BG_FILE_PROGRESS
 enum IID_IBackgroundCopyFile = GUID(0x1b7bd23, 0xfb88, 0x4a77, [0x84, 0x90, 0x58, 0x91, 0xd3, 0xe4, 0x65, 0x3a]);
 interface IBackgroundCopyFile : IUnknown
 {
-    HRESULT GetRemoteName(PWSTR*);
-    HRESULT GetLocalName(PWSTR*);
-    HRESULT GetProgress(BG_FILE_PROGRESS*);
+    HRESULT GetRemoteName(PWSTR* pVal);
+    HRESULT GetLocalName(PWSTR* pVal);
+    HRESULT GetProgress(BG_FILE_PROGRESS* pVal);
 }
 enum IID_IEnumBackgroundCopyFiles = GUID(0xca51e165, 0xc365, 0x424c, [0x8d, 0x41, 0x24, 0xaa, 0xa4, 0xff, 0x3c, 0x40]);
 interface IEnumBackgroundCopyFiles : IUnknown
 {
-    HRESULT Next(uint, IBackgroundCopyFile*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IBackgroundCopyFile* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumBackgroundCopyFiles*);
-    HRESULT GetCount(uint*);
+    HRESULT Clone(IEnumBackgroundCopyFiles* ppenum);
+    HRESULT GetCount(uint* puCount);
 }
 alias BG_ERROR_CONTEXT = int;
 enum : int
@@ -263,11 +263,11 @@ enum : int
 enum IID_IBackgroundCopyError = GUID(0x19c613a0, 0xfcb8, 0x4f28, [0x81, 0xae, 0x89, 0x7c, 0x3d, 0x7, 0x8f, 0x81]);
 interface IBackgroundCopyError : IUnknown
 {
-    HRESULT GetError(BG_ERROR_CONTEXT*, HRESULT*);
-    HRESULT GetFile(IBackgroundCopyFile*);
-    HRESULT GetErrorDescription(uint, PWSTR*);
-    HRESULT GetErrorContextDescription(uint, PWSTR*);
-    HRESULT GetProtocol(PWSTR*);
+    HRESULT GetError(BG_ERROR_CONTEXT* pContext, HRESULT* pCode);
+    HRESULT GetFile(IBackgroundCopyFile* pVal);
+    HRESULT GetErrorDescription(uint LanguageId, PWSTR* pErrorDescription);
+    HRESULT GetErrorContextDescription(uint LanguageId, PWSTR* pContextDescription);
+    HRESULT GetProtocol(PWSTR* pProtocol);
 }
 struct BG_FILE_INFO
 {
@@ -330,72 +330,72 @@ enum : int
 enum IID_IBackgroundCopyJob = GUID(0x37668d37, 0x507e, 0x4160, [0x93, 0x16, 0x26, 0x30, 0x6d, 0x15, 0xb, 0x12]);
 interface IBackgroundCopyJob : IUnknown
 {
-    HRESULT AddFileSet(uint, BG_FILE_INFO*);
-    HRESULT AddFile(const(wchar)*, const(wchar)*);
-    HRESULT EnumFiles(IEnumBackgroundCopyFiles*);
+    HRESULT AddFileSet(uint cFileCount, BG_FILE_INFO* pFileSet);
+    HRESULT AddFile(const(wchar)* RemoteUrl, const(wchar)* LocalName);
+    HRESULT EnumFiles(IEnumBackgroundCopyFiles* pEnum);
     HRESULT Suspend();
     HRESULT Resume();
     HRESULT Cancel();
     HRESULT Complete();
-    HRESULT GetId(GUID*);
-    HRESULT GetType(BG_JOB_TYPE*);
-    HRESULT GetProgress(BG_JOB_PROGRESS*);
-    HRESULT GetTimes(BG_JOB_TIMES*);
-    HRESULT GetState(BG_JOB_STATE*);
-    HRESULT GetError(IBackgroundCopyError*);
-    HRESULT GetOwner(PWSTR*);
-    HRESULT SetDisplayName(const(wchar)*);
-    HRESULT GetDisplayName(PWSTR*);
-    HRESULT SetDescription(const(wchar)*);
-    HRESULT GetDescription(PWSTR*);
-    HRESULT SetPriority(BG_JOB_PRIORITY);
-    HRESULT GetPriority(BG_JOB_PRIORITY*);
-    HRESULT SetNotifyFlags(uint);
-    HRESULT GetNotifyFlags(uint*);
-    HRESULT SetNotifyInterface(IUnknown);
-    HRESULT GetNotifyInterface(IUnknown*);
-    HRESULT SetMinimumRetryDelay(uint);
-    HRESULT GetMinimumRetryDelay(uint*);
-    HRESULT SetNoProgressTimeout(uint);
-    HRESULT GetNoProgressTimeout(uint*);
-    HRESULT GetErrorCount(uint*);
-    HRESULT SetProxySettings(BG_JOB_PROXY_USAGE, const(wchar)*, const(wchar)*);
-    HRESULT GetProxySettings(BG_JOB_PROXY_USAGE*, PWSTR*, PWSTR*);
+    HRESULT GetId(GUID* pVal);
+    HRESULT GetType(BG_JOB_TYPE* pVal);
+    HRESULT GetProgress(BG_JOB_PROGRESS* pVal);
+    HRESULT GetTimes(BG_JOB_TIMES* pVal);
+    HRESULT GetState(BG_JOB_STATE* pVal);
+    HRESULT GetError(IBackgroundCopyError* ppError);
+    HRESULT GetOwner(PWSTR* pVal);
+    HRESULT SetDisplayName(const(wchar)* Val);
+    HRESULT GetDisplayName(PWSTR* pVal);
+    HRESULT SetDescription(const(wchar)* Val);
+    HRESULT GetDescription(PWSTR* pVal);
+    HRESULT SetPriority(BG_JOB_PRIORITY Val);
+    HRESULT GetPriority(BG_JOB_PRIORITY* pVal);
+    HRESULT SetNotifyFlags(uint Val);
+    HRESULT GetNotifyFlags(uint* pVal);
+    HRESULT SetNotifyInterface(IUnknown Val);
+    HRESULT GetNotifyInterface(IUnknown* pVal);
+    HRESULT SetMinimumRetryDelay(uint Seconds);
+    HRESULT GetMinimumRetryDelay(uint* Seconds);
+    HRESULT SetNoProgressTimeout(uint Seconds);
+    HRESULT GetNoProgressTimeout(uint* Seconds);
+    HRESULT GetErrorCount(uint* Errors);
+    HRESULT SetProxySettings(BG_JOB_PROXY_USAGE ProxyUsage, const(wchar)* ProxyList, const(wchar)* ProxyBypassList);
+    HRESULT GetProxySettings(BG_JOB_PROXY_USAGE* pProxyUsage, PWSTR* pProxyList, PWSTR* pProxyBypassList);
     HRESULT TakeOwnership();
 }
 enum IID_IEnumBackgroundCopyJobs = GUID(0x1af4f612, 0x3b71, 0x466f, [0x8f, 0x58, 0x7b, 0x6f, 0x73, 0xac, 0x57, 0xad]);
 interface IEnumBackgroundCopyJobs : IUnknown
 {
-    HRESULT Next(uint, IBackgroundCopyJob*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IBackgroundCopyJob* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumBackgroundCopyJobs*);
-    HRESULT GetCount(uint*);
+    HRESULT Clone(IEnumBackgroundCopyJobs* ppenum);
+    HRESULT GetCount(uint* puCount);
 }
 enum IID_IBackgroundCopyCallback = GUID(0x97ea99c7, 0x186, 0x4ad4, [0x8d, 0xf9, 0xc5, 0xb4, 0xe0, 0xed, 0x6b, 0x22]);
 interface IBackgroundCopyCallback : IUnknown
 {
-    HRESULT JobTransferred(IBackgroundCopyJob);
-    HRESULT JobError(IBackgroundCopyJob, IBackgroundCopyError);
-    HRESULT JobModification(IBackgroundCopyJob, uint);
+    HRESULT JobTransferred(IBackgroundCopyJob pJob);
+    HRESULT JobError(IBackgroundCopyJob pJob, IBackgroundCopyError pError);
+    HRESULT JobModification(IBackgroundCopyJob pJob, uint dwReserved);
 }
 enum IID_AsyncIBackgroundCopyCallback = GUID(0xca29d251, 0xb4bb, 0x4679, [0xa3, 0xd9, 0xae, 0x80, 0x6, 0x11, 0x9d, 0x54]);
 interface AsyncIBackgroundCopyCallback : IUnknown
 {
-    HRESULT Begin_JobTransferred(IBackgroundCopyJob);
+    HRESULT Begin_JobTransferred(IBackgroundCopyJob pJob);
     HRESULT Finish_JobTransferred();
-    HRESULT Begin_JobError(IBackgroundCopyJob, IBackgroundCopyError);
+    HRESULT Begin_JobError(IBackgroundCopyJob pJob, IBackgroundCopyError pError);
     HRESULT Finish_JobError();
-    HRESULT Begin_JobModification(IBackgroundCopyJob, uint);
+    HRESULT Begin_JobModification(IBackgroundCopyJob pJob, uint dwReserved);
     HRESULT Finish_JobModification();
 }
 enum IID_IBackgroundCopyManager = GUID(0x5ce34c0d, 0xdc9, 0x4c1f, [0x89, 0x7c, 0xda, 0xa1, 0xb7, 0x8c, 0xee, 0x7c]);
 interface IBackgroundCopyManager : IUnknown
 {
-    HRESULT CreateJob(const(wchar)*, BG_JOB_TYPE, GUID*, IBackgroundCopyJob*);
-    HRESULT GetJob(const(GUID)*, IBackgroundCopyJob*);
-    HRESULT EnumJobs(uint, IEnumBackgroundCopyJobs*);
-    HRESULT GetErrorDescription(HRESULT, uint, PWSTR*);
+    HRESULT CreateJob(const(wchar)* DisplayName, BG_JOB_TYPE Type, GUID* pJobId, IBackgroundCopyJob* ppJob);
+    HRESULT GetJob(const(GUID)* jobID, IBackgroundCopyJob* ppJob);
+    HRESULT EnumJobs(uint dwFlags, IEnumBackgroundCopyJobs* ppEnum);
+    HRESULT GetErrorDescription(HRESULT hResult, uint LanguageId, PWSTR* pErrorDescription);
 }
 enum CLSID_BackgroundCopyManager = GUID(0x4991d34b, 0x80a1, 0x4291, [0x83, 0xb6, 0x33, 0x28, 0x36, 0x6b, 0x90, 0x97]);
 struct BackgroundCopyManager
@@ -441,14 +441,14 @@ struct BG_AUTH_CREDENTIALS
 enum IID_IBackgroundCopyJob2 = GUID(0x54b50739, 0x686f, 0x45eb, [0x9d, 0xff, 0xd6, 0xa9, 0xa0, 0xfa, 0xa9, 0xaf]);
 interface IBackgroundCopyJob2 : IBackgroundCopyJob
 {
-    HRESULT SetNotifyCmdLine(const(wchar)*, const(wchar)*);
-    HRESULT GetNotifyCmdLine(PWSTR*, PWSTR*);
-    HRESULT GetReplyProgress(BG_JOB_REPLY_PROGRESS*);
-    HRESULT GetReplyData(ubyte**, ulong*);
-    HRESULT SetReplyFileName(const(wchar)*);
-    HRESULT GetReplyFileName(PWSTR*);
-    HRESULT SetCredentials(BG_AUTH_CREDENTIALS*);
-    HRESULT RemoveCredentials(BG_AUTH_TARGET, BG_AUTH_SCHEME);
+    HRESULT SetNotifyCmdLine(const(wchar)* Program, const(wchar)* Parameters);
+    HRESULT GetNotifyCmdLine(PWSTR* pProgram, PWSTR* pParameters);
+    HRESULT GetReplyProgress(BG_JOB_REPLY_PROGRESS* pProgress);
+    HRESULT GetReplyData(ubyte** ppBuffer, ulong* pLength);
+    HRESULT SetReplyFileName(const(wchar)* ReplyFileName);
+    HRESULT GetReplyFileName(PWSTR* pReplyFileName);
+    HRESULT SetCredentials(BG_AUTH_CREDENTIALS* credentials);
+    HRESULT RemoveCredentials(BG_AUTH_TARGET Target, BG_AUTH_SCHEME Scheme);
 }
 enum CLSID_BackgroundCopyManager1_5 = GUID(0xf087771f, 0xd74f, 0x4c1a, [0xbb, 0x8a, 0xe1, 0x6a, 0xca, 0x91, 0x24, 0xea]);
 struct BackgroundCopyManager1_5
@@ -462,16 +462,16 @@ struct BG_FILE_RANGE
 enum IID_IBackgroundCopyJob3 = GUID(0x443c8934, 0x90ff, 0x48ed, [0xbc, 0xde, 0x26, 0xf5, 0xc7, 0x45, 0x0, 0x42]);
 interface IBackgroundCopyJob3 : IBackgroundCopyJob2
 {
-    HRESULT ReplaceRemotePrefix(const(wchar)*, const(wchar)*);
-    HRESULT AddFileWithRanges(const(wchar)*, const(wchar)*, uint, BG_FILE_RANGE*);
-    HRESULT SetFileACLFlags(uint);
-    HRESULT GetFileACLFlags(uint*);
+    HRESULT ReplaceRemotePrefix(const(wchar)* OldPrefix, const(wchar)* NewPrefix);
+    HRESULT AddFileWithRanges(const(wchar)* RemoteUrl, const(wchar)* LocalName, uint RangeCount, BG_FILE_RANGE* Ranges);
+    HRESULT SetFileACLFlags(uint Flags);
+    HRESULT GetFileACLFlags(uint* Flags);
 }
 enum IID_IBackgroundCopyFile2 = GUID(0x83e81b93, 0x873, 0x474d, [0x8a, 0x8c, 0xf2, 0x1, 0x8b, 0x1a, 0x93, 0x9c]);
 interface IBackgroundCopyFile2 : IBackgroundCopyFile
 {
-    HRESULT GetFileRanges(uint*, BG_FILE_RANGE**);
-    HRESULT SetRemoteName(const(wchar)*);
+    HRESULT GetFileRanges(uint* RangeCount, BG_FILE_RANGE** Ranges);
+    HRESULT SetRemoteName(const(wchar)* Val);
 }
 enum CLSID_BackgroundCopyManager2_0 = GUID(0x6d18ad12, 0xbde3, 0x4393, [0xb3, 0x11, 0x9, 0x9c, 0x34, 0x6e, 0x6d, 0xf9]);
 struct BackgroundCopyManager2_0
@@ -493,14 +493,14 @@ enum : int
 enum IID_IBackgroundCopyJobHttpOptions = GUID(0xf1bd1079, 0x9f01, 0x4bdc, [0x80, 0x36, 0xf0, 0x9b, 0x70, 0x9, 0x50, 0x66]);
 interface IBackgroundCopyJobHttpOptions : IUnknown
 {
-    HRESULT SetClientCertificateByID(BG_CERT_STORE_LOCATION, const(wchar)*, ubyte*);
-    HRESULT SetClientCertificateByName(BG_CERT_STORE_LOCATION, const(wchar)*, const(wchar)*);
+    HRESULT SetClientCertificateByID(BG_CERT_STORE_LOCATION StoreLocation, const(wchar)* StoreName, ubyte* pCertHashBlob);
+    HRESULT SetClientCertificateByName(BG_CERT_STORE_LOCATION StoreLocation, const(wchar)* StoreName, const(wchar)* SubjectName);
     HRESULT RemoveClientCertificate();
-    HRESULT GetClientCertificate(BG_CERT_STORE_LOCATION*, PWSTR*, ubyte**, PWSTR*);
-    HRESULT SetCustomHeaders(const(wchar)*);
-    HRESULT GetCustomHeaders(PWSTR*);
-    HRESULT SetSecurityFlags(uint);
-    HRESULT GetSecurityFlags(uint*);
+    HRESULT GetClientCertificate(BG_CERT_STORE_LOCATION* pStoreLocation, PWSTR* pStoreName, ubyte** ppCertHashBlob, PWSTR* pSubjectName);
+    HRESULT SetCustomHeaders(const(wchar)* RequestHeaders);
+    HRESULT GetCustomHeaders(PWSTR* pRequestHeaders);
+    HRESULT SetSecurityFlags(uint Flags);
+    HRESULT GetSecurityFlags(uint* pFlags);
 }
 enum CLSID_BackgroundCopyManager2_5 = GUID(0x3ca98d6, 0xff5d, 0x49b8, [0xab, 0xc6, 0x3, 0xdd, 0x84, 0x12, 0x70, 0x20]);
 struct BackgroundCopyManager2_5
@@ -509,79 +509,79 @@ struct BackgroundCopyManager2_5
 enum IID_IBitsPeerCacheRecord = GUID(0x659cdeaf, 0x489e, 0x11d9, [0xa9, 0xcd, 0x0, 0xd, 0x56, 0x96, 0x52, 0x51]);
 interface IBitsPeerCacheRecord : IUnknown
 {
-    HRESULT GetId(GUID*);
-    HRESULT GetOriginUrl(PWSTR*);
-    HRESULT GetFileSize(ulong*);
-    HRESULT GetFileModificationTime(FILETIME*);
-    HRESULT GetLastAccessTime(FILETIME*);
+    HRESULT GetId(GUID* pVal);
+    HRESULT GetOriginUrl(PWSTR* pVal);
+    HRESULT GetFileSize(ulong* pVal);
+    HRESULT GetFileModificationTime(FILETIME* pVal);
+    HRESULT GetLastAccessTime(FILETIME* pVal);
     HRESULT IsFileValidated();
-    HRESULT GetFileRanges(uint*, BG_FILE_RANGE**);
+    HRESULT GetFileRanges(uint* pRangeCount, BG_FILE_RANGE** ppRanges);
 }
 enum IID_IEnumBitsPeerCacheRecords = GUID(0x659cdea4, 0x489e, 0x11d9, [0xa9, 0xcd, 0x0, 0xd, 0x56, 0x96, 0x52, 0x51]);
 interface IEnumBitsPeerCacheRecords : IUnknown
 {
-    HRESULT Next(uint, IBitsPeerCacheRecord*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IBitsPeerCacheRecord* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumBitsPeerCacheRecords*);
-    HRESULT GetCount(uint*);
+    HRESULT Clone(IEnumBitsPeerCacheRecords* ppenum);
+    HRESULT GetCount(uint* puCount);
 }
 enum IID_IBitsPeer = GUID(0x659cdea2, 0x489e, 0x11d9, [0xa9, 0xcd, 0x0, 0xd, 0x56, 0x96, 0x52, 0x51]);
 interface IBitsPeer : IUnknown
 {
-    HRESULT GetPeerName(PWSTR*);
-    HRESULT IsAuthenticated(BOOL*);
-    HRESULT IsAvailable(BOOL*);
+    HRESULT GetPeerName(PWSTR* pName);
+    HRESULT IsAuthenticated(BOOL* pAuth);
+    HRESULT IsAvailable(BOOL* pOnline);
 }
 enum IID_IEnumBitsPeers = GUID(0x659cdea5, 0x489e, 0x11d9, [0xa9, 0xcd, 0x0, 0xd, 0x56, 0x96, 0x52, 0x51]);
 interface IEnumBitsPeers : IUnknown
 {
-    HRESULT Next(uint, IBitsPeer*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IBitsPeer* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumBitsPeers*);
-    HRESULT GetCount(uint*);
+    HRESULT Clone(IEnumBitsPeers* ppenum);
+    HRESULT GetCount(uint* puCount);
 }
 enum IID_IBitsPeerCacheAdministration = GUID(0x659cdead, 0x489e, 0x11d9, [0xa9, 0xcd, 0x0, 0xd, 0x56, 0x96, 0x52, 0x51]);
 interface IBitsPeerCacheAdministration : IUnknown
 {
-    HRESULT GetMaximumCacheSize(uint*);
-    HRESULT SetMaximumCacheSize(uint);
-    HRESULT GetMaximumContentAge(uint*);
-    HRESULT SetMaximumContentAge(uint);
-    HRESULT GetConfigurationFlags(uint*);
-    HRESULT SetConfigurationFlags(uint);
-    HRESULT EnumRecords(IEnumBitsPeerCacheRecords*);
-    HRESULT GetRecord(const(GUID)*, IBitsPeerCacheRecord*);
+    HRESULT GetMaximumCacheSize(uint* pBytes);
+    HRESULT SetMaximumCacheSize(uint Bytes);
+    HRESULT GetMaximumContentAge(uint* pSeconds);
+    HRESULT SetMaximumContentAge(uint Seconds);
+    HRESULT GetConfigurationFlags(uint* pFlags);
+    HRESULT SetConfigurationFlags(uint Flags);
+    HRESULT EnumRecords(IEnumBitsPeerCacheRecords* ppEnum);
+    HRESULT GetRecord(const(GUID)* id, IBitsPeerCacheRecord* ppRecord);
     HRESULT ClearRecords();
-    HRESULT DeleteRecord(const(GUID)*);
-    HRESULT DeleteUrl(const(wchar)*);
-    HRESULT EnumPeers(IEnumBitsPeers*);
+    HRESULT DeleteRecord(const(GUID)* id);
+    HRESULT DeleteUrl(const(wchar)* url);
+    HRESULT EnumPeers(IEnumBitsPeers* ppEnum);
     HRESULT ClearPeers();
     HRESULT DiscoverPeers();
 }
 enum IID_IBackgroundCopyJob4 = GUID(0x659cdeae, 0x489e, 0x11d9, [0xa9, 0xcd, 0x0, 0xd, 0x56, 0x96, 0x52, 0x51]);
 interface IBackgroundCopyJob4 : IBackgroundCopyJob3
 {
-    HRESULT SetPeerCachingFlags(uint);
-    HRESULT GetPeerCachingFlags(uint*);
-    HRESULT GetOwnerIntegrityLevel(uint*);
-    HRESULT GetOwnerElevationState(BOOL*);
-    HRESULT SetMaximumDownloadTime(uint);
-    HRESULT GetMaximumDownloadTime(uint*);
+    HRESULT SetPeerCachingFlags(uint Flags);
+    HRESULT GetPeerCachingFlags(uint* pFlags);
+    HRESULT GetOwnerIntegrityLevel(uint* pLevel);
+    HRESULT GetOwnerElevationState(BOOL* pElevated);
+    HRESULT SetMaximumDownloadTime(uint Timeout);
+    HRESULT GetMaximumDownloadTime(uint* pTimeout);
 }
 enum IID_IBackgroundCopyFile3 = GUID(0x659cdeaa, 0x489e, 0x11d9, [0xa9, 0xcd, 0x0, 0xd, 0x56, 0x96, 0x52, 0x51]);
 interface IBackgroundCopyFile3 : IBackgroundCopyFile2
 {
-    HRESULT GetTemporaryName(PWSTR*);
-    HRESULT SetValidationState(BOOL);
-    HRESULT GetValidationState(BOOL*);
-    HRESULT IsDownloadedFromPeer(BOOL*);
+    HRESULT GetTemporaryName(PWSTR* pFilename);
+    HRESULT SetValidationState(BOOL state);
+    HRESULT GetValidationState(BOOL* pState);
+    HRESULT IsDownloadedFromPeer(BOOL* pVal);
 }
 enum IID_IBackgroundCopyCallback2 = GUID(0x659cdeac, 0x489e, 0x11d9, [0xa9, 0xcd, 0x0, 0xd, 0x56, 0x96, 0x52, 0x51]);
 interface IBackgroundCopyCallback2 : IBackgroundCopyCallback
 {
-    HRESULT FileTransferred(IBackgroundCopyJob, IBackgroundCopyFile);
+    HRESULT FileTransferred(IBackgroundCopyJob pJob, IBackgroundCopyFile pFile);
 }
 enum CLSID_BackgroundCopyManager3_0 = GUID(0x659cdea7, 0x489e, 0x11d9, [0xa9, 0xcd, 0x0, 0xd, 0x56, 0x96, 0x52, 0x51]);
 struct BackgroundCopyManager3_0
@@ -590,16 +590,16 @@ struct BackgroundCopyManager3_0
 enum IID_IBitsTokenOptions = GUID(0x9a2584c3, 0xf7d2, 0x457a, [0x9a, 0x5e, 0x22, 0xb6, 0x7b, 0xff, 0xc7, 0xd2]);
 interface IBitsTokenOptions : IUnknown
 {
-    HRESULT SetHelperTokenFlags(BG_TOKEN);
-    HRESULT GetHelperTokenFlags(BG_TOKEN*);
+    HRESULT SetHelperTokenFlags(BG_TOKEN UsageFlags);
+    HRESULT GetHelperTokenFlags(BG_TOKEN* pFlags);
     HRESULT SetHelperToken();
     HRESULT ClearHelperToken();
-    HRESULT GetHelperTokenSid(PWSTR*);
+    HRESULT GetHelperTokenSid(PWSTR* pSid);
 }
 enum IID_IBackgroundCopyFile4 = GUID(0xef7e0655, 0x7888, 0x4960, [0xb0, 0xe5, 0x73, 0x8, 0x46, 0xe0, 0x34, 0x92]);
 interface IBackgroundCopyFile4 : IBackgroundCopyFile3
 {
-    HRESULT GetPeerDownloadStats(ulong*, ulong*);
+    HRESULT GetPeerDownloadStats(ulong* pFromOrigin, ulong* pFromPeers);
 }
 enum CLSID_BackgroundCopyManager4_0 = GUID(0xbb6df56b, 0xcace, 0x11dc, [0x99, 0x92, 0x0, 0x19, 0xb9, 0x3a, 0x3a, 0x84]);
 struct BackgroundCopyManager4_0
@@ -649,14 +649,14 @@ union BITS_FILE_PROPERTY_VALUE
 enum IID_IBackgroundCopyJob5 = GUID(0xe847030c, 0xbbba, 0x4657, [0xaf, 0x6d, 0x48, 0x4a, 0xa4, 0x2b, 0xf1, 0xfe]);
 interface IBackgroundCopyJob5 : IBackgroundCopyJob4
 {
-    HRESULT SetProperty(BITS_JOB_PROPERTY_ID, BITS_JOB_PROPERTY_VALUE);
-    HRESULT GetProperty(BITS_JOB_PROPERTY_ID, BITS_JOB_PROPERTY_VALUE*);
+    HRESULT SetProperty(BITS_JOB_PROPERTY_ID PropertyId, BITS_JOB_PROPERTY_VALUE PropertyValue);
+    HRESULT GetProperty(BITS_JOB_PROPERTY_ID PropertyId, BITS_JOB_PROPERTY_VALUE* PropertyValue);
 }
 enum IID_IBackgroundCopyFile5 = GUID(0x85c1657f, 0xdafc, 0x40e8, [0x88, 0x34, 0xdf, 0x18, 0xea, 0x25, 0x71, 0x7e]);
 interface IBackgroundCopyFile5 : IBackgroundCopyFile4
 {
-    HRESULT SetProperty(BITS_FILE_PROPERTY_ID, BITS_FILE_PROPERTY_VALUE);
-    HRESULT GetProperty(BITS_FILE_PROPERTY_ID, BITS_FILE_PROPERTY_VALUE*);
+    HRESULT SetProperty(BITS_FILE_PROPERTY_ID PropertyId, BITS_FILE_PROPERTY_VALUE PropertyValue);
+    HRESULT GetProperty(BITS_FILE_PROPERTY_ID PropertyId, BITS_FILE_PROPERTY_VALUE* PropertyValue);
 }
 enum CLSID_BackgroundCopyManager5_0 = GUID(0x1ecca34c, 0xe88a, 0x44e3, [0x8d, 0x6a, 0x89, 0x21, 0xbd, 0xe9, 0xe4, 0x52]);
 struct BackgroundCopyManager5_0
@@ -665,14 +665,14 @@ struct BackgroundCopyManager5_0
 enum IID_IBackgroundCopyCallback3 = GUID(0x98c97bd2, 0xe32b, 0x4ad8, [0xa5, 0x28, 0x95, 0xfd, 0x8b, 0x16, 0xbd, 0x42]);
 interface IBackgroundCopyCallback3 : IBackgroundCopyCallback2
 {
-    HRESULT FileRangesTransferred(IBackgroundCopyJob, IBackgroundCopyFile, uint, const(BG_FILE_RANGE)*);
+    HRESULT FileRangesTransferred(IBackgroundCopyJob job, IBackgroundCopyFile file, uint rangeCount, const(BG_FILE_RANGE)* ranges);
 }
 enum IID_IBackgroundCopyFile6 = GUID(0xcf6784f7, 0xd677, 0x49fd, [0x93, 0x68, 0xcb, 0x47, 0xae, 0xe9, 0xd1, 0xad]);
 interface IBackgroundCopyFile6 : IBackgroundCopyFile5
 {
-    HRESULT UpdateDownloadPosition(ulong);
-    HRESULT RequestFileRanges(uint, const(BG_FILE_RANGE)*);
-    HRESULT GetFilledFileRanges(uint*, BG_FILE_RANGE**);
+    HRESULT UpdateDownloadPosition(ulong offset);
+    HRESULT RequestFileRanges(uint rangeCount, const(BG_FILE_RANGE)* ranges);
+    HRESULT GetFilledFileRanges(uint* rangeCount, BG_FILE_RANGE** ranges);
 }
 enum CLSID_BackgroundCopyManager10_1 = GUID(0x4bd3e4e1, 0x7bd4, 0x4a2b, [0x99, 0x64, 0x49, 0x64, 0x0, 0xde, 0x51, 0x93]);
 struct BackgroundCopyManager10_1
@@ -681,8 +681,8 @@ struct BackgroundCopyManager10_1
 enum IID_IBackgroundCopyJobHttpOptions2 = GUID(0xb591a192, 0xa405, 0x4fc3, [0x83, 0x23, 0x4c, 0x5c, 0x54, 0x25, 0x78, 0xfc]);
 interface IBackgroundCopyJobHttpOptions2 : IBackgroundCopyJobHttpOptions
 {
-    HRESULT SetHttpMethod(const(wchar)*);
-    HRESULT GetHttpMethod(PWSTR*);
+    HRESULT SetHttpMethod(const(wchar)* method);
+    HRESULT GetHttpMethod(PWSTR* method);
 }
 enum CLSID_BackgroundCopyManager10_2 = GUID(0x4575438f, 0xa6c8, 0x4976, [0xb0, 0xfe, 0x2f, 0x26, 0xb8, 0xd, 0x95, 0x9e]);
 struct BackgroundCopyManager10_2
@@ -691,12 +691,12 @@ struct BackgroundCopyManager10_2
 enum IID_IBackgroundCopyServerCertificateValidationCallback = GUID(0x4cec0d02, 0xdef7, 0x4158, [0x81, 0x3a, 0xc3, 0x2a, 0x46, 0x94, 0x5f, 0xf7]);
 interface IBackgroundCopyServerCertificateValidationCallback : IUnknown
 {
-    HRESULT ValidateServerCertificate(IBackgroundCopyJob, IBackgroundCopyFile, uint, const(ubyte)*, uint, uint, const(ubyte)*);
+    HRESULT ValidateServerCertificate(IBackgroundCopyJob job, IBackgroundCopyFile file, uint certLength, const(ubyte)* certData, uint certEncodingType, uint certStoreLength, const(ubyte)* certStoreData);
 }
 enum IID_IBackgroundCopyJobHttpOptions3 = GUID(0x8a9263d3, 0xfd4c, 0x4eda, [0x9b, 0x28, 0x30, 0x13, 0x2a, 0x4d, 0x4e, 0x3c]);
 interface IBackgroundCopyJobHttpOptions3 : IBackgroundCopyJobHttpOptions2
 {
-    HRESULT SetServerCertificateValidationInterface(IUnknown);
+    HRESULT SetServerCertificateValidationInterface(IUnknown certValidationCallback);
     HRESULT MakeCustomHeadersWriteOnly();
 }
 enum CLSID_BackgroundCopyManager10_3 = GUID(0x5fd42ad5, 0xc04e, 0x4d36, [0xad, 0xc7, 0xe0, 0x8f, 0xf1, 0x57, 0x37, 0xad]);
@@ -708,13 +708,13 @@ interface IBITSExtensionSetup : IDispatch
 {
     HRESULT EnableBITSUploads();
     HRESULT DisableBITSUploads();
-    HRESULT GetCleanupTaskName(BSTR*);
-    HRESULT GetCleanupTask(const(GUID)*, IUnknown*);
+    HRESULT GetCleanupTaskName(BSTR* pTaskName);
+    HRESULT GetCleanupTask(const(GUID)* riid, IUnknown* ppUnk);
 }
 enum IID_IBITSExtensionSetupFactory = GUID(0xd5d2d542, 0x5503, 0x4e64, [0x8b, 0x48, 0x72, 0xef, 0x91, 0xa3, 0x2e, 0xe1]);
 interface IBITSExtensionSetupFactory : IDispatch
 {
-    HRESULT GetObject(BSTR, IBITSExtensionSetup*);
+    HRESULT GetObject(BSTR Path, IBITSExtensionSetup* ppExtensionSetup);
 }
 enum CLSID_BITSExtensionSetupFactory = GUID(0xefbbab68, 0x7286, 0x4783, [0x94, 0xbf, 0x94, 0x61, 0xd8, 0xb7, 0xe7, 0xe9]);
 struct BITSExtensionSetupFactory
@@ -730,22 +730,22 @@ enum IID_IBackgroundCopyJob1 = GUID(0x59f5553c, 0x2031, 0x4629, [0xbb, 0x18, 0x2
 interface IBackgroundCopyJob1 : IUnknown
 {
     HRESULT CancelJob();
-    HRESULT GetProgress(uint, uint*);
-    HRESULT GetStatus(uint*, uint*, uint*, uint*);
-    HRESULT AddFiles(uint, FILESETINFO**);
-    HRESULT GetFile(uint, FILESETINFO*);
-    HRESULT GetFileCount(uint*);
+    HRESULT GetProgress(uint dwFlags, uint* pdwProgress);
+    HRESULT GetStatus(uint* pdwStatus, uint* pdwWin32Result, uint* pdwTransportResult, uint* pdwNumOfRetries);
+    HRESULT AddFiles(uint cFileCount, FILESETINFO** ppFileSet);
+    HRESULT GetFile(uint cFileIndex, FILESETINFO* pFileInfo);
+    HRESULT GetFileCount(uint* pdwFileCount);
     HRESULT SwitchToForeground();
-    HRESULT get_JobID(GUID*);
+    HRESULT get_JobID(GUID* pguidJobID);
 }
 enum IID_IEnumBackgroundCopyJobs1 = GUID(0x8baeba9d, 0x8f1c, 0x42c4, [0xb8, 0x2c, 0x9, 0xae, 0x79, 0x98, 0xd, 0x25]);
 interface IEnumBackgroundCopyJobs1 : IUnknown
 {
-    HRESULT Next(uint, GUID*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, GUID* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumBackgroundCopyJobs1*);
-    HRESULT GetCount(uint*);
+    HRESULT Clone(IEnumBackgroundCopyJobs1* ppenum);
+    HRESULT GetCount(uint* puCount);
 }
 alias GROUPPROP = int;
 enum : int
@@ -768,44 +768,44 @@ enum : int
 enum IID_IBackgroundCopyGroup = GUID(0x1ded80a7, 0x53ea, 0x424f, [0x8a, 0x4, 0x17, 0xfe, 0xa9, 0xad, 0xc4, 0xf5]);
 interface IBackgroundCopyGroup : IUnknown
 {
-    HRESULT GetProp(GROUPPROP, VARIANT*);
-    HRESULT SetProp(GROUPPROP, VARIANT*);
-    HRESULT GetProgress(uint, uint*);
-    HRESULT GetStatus(uint*, uint*);
-    HRESULT GetJob(GUID, IBackgroundCopyJob1*);
+    HRESULT GetProp(GROUPPROP propID, VARIANT* pvarVal);
+    HRESULT SetProp(GROUPPROP propID, VARIANT* pvarVal);
+    HRESULT GetProgress(uint dwFlags, uint* pdwProgress);
+    HRESULT GetStatus(uint* pdwStatus, uint* pdwJobIndex);
+    HRESULT GetJob(GUID jobID, IBackgroundCopyJob1* ppJob);
     HRESULT SuspendGroup();
     HRESULT ResumeGroup();
     HRESULT CancelGroup();
-    HRESULT get_Size(uint*);
-    HRESULT get_GroupID(GUID*);
-    HRESULT CreateJob(GUID, IBackgroundCopyJob1*);
-    HRESULT EnumJobs(uint, IEnumBackgroundCopyJobs1*);
+    HRESULT get_Size(uint* pdwSize);
+    HRESULT get_GroupID(GUID* pguidGroupID);
+    HRESULT CreateJob(GUID guidJobID, IBackgroundCopyJob1* ppJob);
+    HRESULT EnumJobs(uint dwFlags, IEnumBackgroundCopyJobs1* ppEnumJobs);
     HRESULT SwitchToForeground();
-    HRESULT QueryNewJobInterface(const(GUID)*, IUnknown*);
-    HRESULT SetNotificationPointer(const(GUID)*, IUnknown);
+    HRESULT QueryNewJobInterface(const(GUID)* iid, IUnknown* pUnk);
+    HRESULT SetNotificationPointer(const(GUID)* iid, IUnknown pUnk);
 }
 enum IID_IEnumBackgroundCopyGroups = GUID(0xd993e603, 0x4aa4, 0x47c5, [0x86, 0x65, 0xc2, 0xd, 0x39, 0xc2, 0xba, 0x4f]);
 interface IEnumBackgroundCopyGroups : IUnknown
 {
-    HRESULT Next(uint, GUID*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, GUID* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumBackgroundCopyGroups*);
-    HRESULT GetCount(uint*);
+    HRESULT Clone(IEnumBackgroundCopyGroups* ppenum);
+    HRESULT GetCount(uint* puCount);
 }
 enum IID_IBackgroundCopyCallback1 = GUID(0x84f6593, 0x3800, 0x4e08, [0x9b, 0x59, 0x99, 0xfa, 0x59, 0xad, 0xdf, 0x82]);
 interface IBackgroundCopyCallback1 : IUnknown
 {
-    HRESULT OnStatus(IBackgroundCopyGroup, IBackgroundCopyJob1, uint, uint, uint, uint, uint);
-    HRESULT OnProgress(uint, IBackgroundCopyGroup, IBackgroundCopyJob1, uint, uint);
-    HRESULT OnProgressEx(uint, IBackgroundCopyGroup, IBackgroundCopyJob1, uint, uint, uint, ubyte*);
+    HRESULT OnStatus(IBackgroundCopyGroup pGroup, IBackgroundCopyJob1 pJob, uint dwFileIndex, uint dwStatus, uint dwNumOfRetries, uint dwWin32Result, uint dwTransportResult);
+    HRESULT OnProgress(uint ProgressType, IBackgroundCopyGroup pGroup, IBackgroundCopyJob1 pJob, uint dwFileIndex, uint dwProgressValue);
+    HRESULT OnProgressEx(uint ProgressType, IBackgroundCopyGroup pGroup, IBackgroundCopyJob1 pJob, uint dwFileIndex, uint dwProgressValue, uint dwByteArraySize, ubyte* pByte);
 }
 enum IID_IBackgroundCopyQMgr = GUID(0x16f41c69, 0x9f5, 0x41d2, [0x8c, 0xd8, 0x3c, 0x8, 0xc4, 0x7b, 0xc8, 0xa8]);
 interface IBackgroundCopyQMgr : IUnknown
 {
-    HRESULT CreateGroup(GUID, IBackgroundCopyGroup*);
-    HRESULT GetGroup(GUID, IBackgroundCopyGroup*);
-    HRESULT EnumGroups(uint, IEnumBackgroundCopyGroups*);
+    HRESULT CreateGroup(GUID guidGroupID, IBackgroundCopyGroup* ppGroup);
+    HRESULT GetGroup(GUID groupID, IBackgroundCopyGroup* ppGroup);
+    HRESULT EnumGroups(uint dwFlags, IEnumBackgroundCopyGroups* ppEnumGroups);
 }
 enum CLSID_BackgroundCopyQMgr = GUID(0x69ad4aee, 0x51be, 0x439b, [0xa9, 0x2c, 0x86, 0xae, 0x49, 0xe, 0x8b, 0x30]);
 struct BackgroundCopyQMgr

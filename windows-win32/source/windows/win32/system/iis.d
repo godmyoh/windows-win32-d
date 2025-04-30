@@ -8,14 +8,14 @@ import windows.win32.system.com : IUnknown, SAFEARRAY;
 version (Windows):
 extern (Windows):
 
-alias PFN_IIS_GETSERVERVARIABLE = BOOL function(HCONN, PSTR, void*, uint*);
-alias PFN_IIS_WRITECLIENT = BOOL function(HCONN, void*, uint*, uint);
-alias PFN_IIS_READCLIENT = BOOL function(HCONN, void*, uint*);
-alias PFN_IIS_SERVERSUPPORTFUNCTION = BOOL function(HCONN, uint, void*, uint*, uint*);
-BOOL GetExtensionVersion(HSE_VERSION_INFO*);
-uint HttpExtensionProc(EXTENSION_CONTROL_BLOCK*);
-uint HttpFilterProc(HTTP_FILTER_CONTEXT*, uint, void*);
-BOOL GetFilterVersion(HTTP_FILTER_VERSION*);
+alias PFN_IIS_GETSERVERVARIABLE = BOOL function(HCONN param0, PSTR param1, void* param2, uint* param3);
+alias PFN_IIS_WRITECLIENT = BOOL function(HCONN param0, void* param1, uint* param2, uint param3);
+alias PFN_IIS_READCLIENT = BOOL function(HCONN param0, void* param1, uint* param2);
+alias PFN_IIS_SERVERSUPPORTFUNCTION = BOOL function(HCONN param0, uint param1, void* param2, uint* param3, uint* param4);
+BOOL GetExtensionVersion(HSE_VERSION_INFO* pVer);
+uint HttpExtensionProc(EXTENSION_CONTROL_BLOCK* pECB);
+uint HttpFilterProc(HTTP_FILTER_CONTEXT* pfc, uint NotificationType, void* pvNotification);
+BOOL GetFilterVersion(HTTP_FILTER_VERSION* pVer);
 enum IISADMIN_EXTENSIONS_REG_KEYA = "SOFTWARE\\Microsoft\\InetStp\\Extensions";
 enum IISADMIN_EXTENSIONS_REG_KEYW = "SOFTWARE\\Microsoft\\InetStp\\Extensions";
 enum IISADMIN_EXTENSIONS_REG_KEY = "SOFTWARE\\Microsoft\\InetStp\\Extensions";
@@ -956,40 +956,40 @@ struct CONFIGURATION_ENTRY
 enum IID_IFtpProviderConstruct = GUID(0x4d1a3f7b, 0x412d, 0x447c, [0xb1, 0x99, 0x64, 0xf9, 0x67, 0xe9, 0xa2, 0xda]);
 interface IFtpProviderConstruct : IUnknown
 {
-    HRESULT Construct(SAFEARRAY*);
+    HRESULT Construct(SAFEARRAY* configurationEntries);
 }
 enum IID_IFtpAuthenticationProvider = GUID(0x4659f95c, 0xd5a8, 0x4707, [0xb2, 0xfc, 0x6f, 0xd5, 0x79, 0x42, 0x46, 0xcf]);
 interface IFtpAuthenticationProvider : IUnknown
 {
-    HRESULT AuthenticateUser(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, PWSTR*, BOOL*);
+    HRESULT AuthenticateUser(const(wchar)* pszSessionId, const(wchar)* pszSiteName, const(wchar)* pszUserName, const(wchar)* pszPassword, PWSTR* ppszCanonicalUserName, BOOL* pfAuthenticated);
 }
 enum IID_AsyncIFtpAuthenticationProvider = GUID(0xc24efb65, 0x9f3e, 0x4996, [0x8f, 0xb1, 0xce, 0x16, 0x69, 0x16, 0xba, 0xb5]);
 interface AsyncIFtpAuthenticationProvider : IUnknown
 {
-    HRESULT Begin_AuthenticateUser(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*);
-    HRESULT Finish_AuthenticateUser(PWSTR*, BOOL*);
+    HRESULT Begin_AuthenticateUser(const(wchar)* pszSessionId, const(wchar)* pszSiteName, const(wchar)* pszUserName, const(wchar)* pszPassword);
+    HRESULT Finish_AuthenticateUser(PWSTR* ppszCanonicalUserName, BOOL* pfAuthenticated);
 }
 enum IID_IFtpRoleProvider = GUID(0x909c850d, 0x8ca0, 0x4674, [0x96, 0xb8, 0xcc, 0x29, 0x41, 0x53, 0x57, 0x25]);
 interface IFtpRoleProvider : IUnknown
 {
-    HRESULT IsUserInRole(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, BOOL*);
+    HRESULT IsUserInRole(const(wchar)* pszSessionId, const(wchar)* pszSiteName, const(wchar)* pszUserName, const(wchar)* pszRole, BOOL* pfIsInRole);
 }
 enum IID_AsyncIFtpRoleProvider = GUID(0x3e83bf99, 0x70ec, 0x41ca, [0x84, 0xb6, 0xac, 0xa7, 0xc7, 0xa6, 0x2c, 0xaf]);
 interface AsyncIFtpRoleProvider : IUnknown
 {
-    HRESULT Begin_IsUserInRole(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*);
-    HRESULT Finish_IsUserInRole(BOOL*);
+    HRESULT Begin_IsUserInRole(const(wchar)* pszSessionId, const(wchar)* pszSiteName, const(wchar)* pszUserName, const(wchar)* pszRole);
+    HRESULT Finish_IsUserInRole(BOOL* pfIsInRole);
 }
 enum IID_IFtpHomeDirectoryProvider = GUID(0x933b392, 0x18dd, 0x4097, [0x8b, 0x9c, 0x83, 0x32, 0x5c, 0x35, 0xd9, 0xa6]);
 interface IFtpHomeDirectoryProvider : IUnknown
 {
-    HRESULT GetUserHomeDirectoryData(const(wchar)*, const(wchar)*, const(wchar)*, PWSTR*);
+    HRESULT GetUserHomeDirectoryData(const(wchar)* pszSessionId, const(wchar)* pszSiteName, const(wchar)* pszUserName, PWSTR* ppszHomeDirectoryData);
 }
 enum IID_AsyncIFtpHomeDirectoryProvider = GUID(0x73f81638, 0x6295, 0x42bd, [0xa2, 0xbe, 0x4a, 0x65, 0x7f, 0x7c, 0x47, 0x9c]);
 interface AsyncIFtpHomeDirectoryProvider : IUnknown
 {
-    HRESULT Begin_GetUserHomeDirectoryData(const(wchar)*, const(wchar)*, const(wchar)*);
-    HRESULT Finish_GetUserHomeDirectoryData(PWSTR*);
+    HRESULT Begin_GetUserHomeDirectoryData(const(wchar)* pszSessionId, const(wchar)* pszSiteName, const(wchar)* pszUserName);
+    HRESULT Finish_GetUserHomeDirectoryData(PWSTR* ppszHomeDirectoryData);
 }
 enum CLSID_LOGGING_PARAMETERS = GUID(0x6c678262, 0xfc37, 0x406e, [0x84, 0xe8, 0xe9, 0xc6, 0xa5, 0x75, 0x7c, 0xdc]);
 struct LOGGING_PARAMETERS
@@ -1016,12 +1016,12 @@ struct LOGGING_PARAMETERS
 enum IID_IFtpLogProvider = GUID(0xa18a94cc, 0x8299, 0x4408, [0x81, 0x6c, 0x7c, 0x3b, 0xac, 0xa1, 0xa4, 0xe]);
 interface IFtpLogProvider : IUnknown
 {
-    HRESULT Log(const(LOGGING_PARAMETERS)*);
+    HRESULT Log(const(LOGGING_PARAMETERS)* pLoggingParameters);
 }
 enum IID_AsyncIFtpLogProvider = GUID(0xa0ae46, 0x2498, 0x48b2, [0x95, 0xe6, 0xdf, 0x67, 0x8e, 0xd7, 0xd4, 0x9f]);
 interface AsyncIFtpLogProvider : IUnknown
 {
-    HRESULT Begin_Log(const(LOGGING_PARAMETERS)*);
+    HRESULT Begin_Log(const(LOGGING_PARAMETERS)* pLoggingParameters);
     HRESULT Finish_Log();
 }
 alias FTP_ACCESS = int;
@@ -1036,13 +1036,13 @@ enum : int
 enum IID_IFtpAuthorizationProvider = GUID(0xa50ae7a1, 0xa35a, 0x42b4, [0xa4, 0xf3, 0xf4, 0xf7, 0x5, 0x7a, 0x5, 0xd1]);
 interface IFtpAuthorizationProvider : IUnknown
 {
-    HRESULT GetUserAccessPermission(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, FTP_ACCESS*);
+    HRESULT GetUserAccessPermission(const(wchar)* pszSessionId, const(wchar)* pszSiteName, const(wchar)* pszVirtualPath, const(wchar)* pszUserName, FTP_ACCESS* pFtpAccess);
 }
 enum IID_AsyncIFtpAuthorizationProvider = GUID(0x860dc339, 0x7e5, 0x4a5c, [0x9c, 0x61, 0x88, 0x20, 0xce, 0xa0, 0x12, 0xbc]);
 interface AsyncIFtpAuthorizationProvider : IUnknown
 {
-    HRESULT Begin_GetUserAccessPermission(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*);
-    HRESULT Finish_GetUserAccessPermission(FTP_ACCESS*);
+    HRESULT Begin_GetUserAccessPermission(const(wchar)* pszSessionId, const(wchar)* pszSiteName, const(wchar)* pszVirtualPath, const(wchar)* pszUserName);
+    HRESULT Finish_GetUserAccessPermission(FTP_ACCESS* pFtpAccess);
 }
 alias FTP_PROCESS_STATUS = int;
 enum : int
@@ -1073,13 +1073,13 @@ struct PRE_PROCESS_PARAMETERS
 enum IID_IFtpPreprocessProvider = GUID(0xa3c19b60, 0x5a28, 0x471a, [0x8f, 0x93, 0xab, 0x30, 0x41, 0x1c, 0xee, 0x82]);
 interface IFtpPreprocessProvider : IUnknown
 {
-    HRESULT HandlePreprocess(const(PRE_PROCESS_PARAMETERS)*, FTP_PROCESS_STATUS*);
+    HRESULT HandlePreprocess(const(PRE_PROCESS_PARAMETERS)* pPreProcessParameters, FTP_PROCESS_STATUS* pFtpProcessStatus);
 }
 enum IID_AsyncIFtpPreprocessProvider = GUID(0x6ff5fd8f, 0xfd8e, 0x48b1, [0xa3, 0xe0, 0xbf, 0x70, 0x73, 0xdb, 0x4d, 0xb5]);
 interface AsyncIFtpPreprocessProvider : IUnknown
 {
-    HRESULT Begin_HandlePreprocess(const(PRE_PROCESS_PARAMETERS)*);
-    HRESULT Finish_HandlePreprocess(FTP_PROCESS_STATUS*);
+    HRESULT Begin_HandlePreprocess(const(PRE_PROCESS_PARAMETERS)* pPreProcessParameters);
+    HRESULT Finish_HandlePreprocess(FTP_PROCESS_STATUS* pFtpProcessStatus);
 }
 enum CLSID_POST_PROCESS_PARAMETERS = GUID(0x53337595, 0x9165, 0x4a8b, [0xa2, 0x2, 0x7d, 0x5d, 0xbf, 0x7e, 0x4b, 0x8b]);
 struct POST_PROCESS_PARAMETERS
@@ -1108,13 +1108,13 @@ struct POST_PROCESS_PARAMETERS
 enum IID_IFtpPostprocessProvider = GUID(0x4522cbc6, 0x16cd, 0x49ad, [0x86, 0x53, 0x9a, 0x2c, 0x57, 0x9e, 0x42, 0x80]);
 interface IFtpPostprocessProvider : IUnknown
 {
-    HRESULT HandlePostprocess(const(POST_PROCESS_PARAMETERS)*, FTP_PROCESS_STATUS*);
+    HRESULT HandlePostprocess(const(POST_PROCESS_PARAMETERS)* pPostProcessParameters, FTP_PROCESS_STATUS* pFtpProcessStatus);
 }
 enum IID_AsyncIFtpPostprocessProvider = GUID(0xa16b2542, 0x9694, 0x4eb1, [0xa5, 0x64, 0x6c, 0x2e, 0x91, 0xfd, 0xc1, 0x33]);
 interface AsyncIFtpPostprocessProvider : IUnknown
 {
-    HRESULT Begin_HandlePostprocess(const(POST_PROCESS_PARAMETERS)*);
-    HRESULT Finish_HandlePostprocess(FTP_PROCESS_STATUS*);
+    HRESULT Begin_HandlePostprocess(const(POST_PROCESS_PARAMETERS)* pPostProcessParameters);
+    HRESULT Finish_HandlePostprocess(FTP_PROCESS_STATUS* pFtpProcessStatus);
 }
 enum CLSID_FtpProvider = GUID(0x70bdc667, 0x33b2, 0x45f0, [0xac, 0x52, 0xc3, 0xca, 0x46, 0xf7, 0xa6, 0x56]);
 struct FtpProvider
@@ -1124,7 +1124,7 @@ enum IID_IADMEXT = GUID(0x51dfe970, 0xf6f2, 0x11d0, [0xb9, 0xbd, 0x0, 0xa0, 0xc9
 interface IADMEXT : IUnknown
 {
     HRESULT Initialize();
-    HRESULT EnumDcomCLSIDs(GUID*, uint);
+    HRESULT EnumDcomCLSIDs(GUID* pclsidDcom, uint dwEnumIndex);
     HRESULT Terminate();
 }
 alias METADATATYPES = int;
@@ -1188,68 +1188,68 @@ struct MD_CHANGE_OBJECT_W
 enum IID_IMSAdminBaseW = GUID(0x70b51430, 0xb6ca, 0x11d0, [0xb9, 0xb9, 0x0, 0xa0, 0xc9, 0x22, 0xe7, 0x50]);
 interface IMSAdminBaseW : IUnknown
 {
-    HRESULT AddKey(uint, const(wchar)*);
-    HRESULT DeleteKey(uint, const(wchar)*);
-    HRESULT DeleteChildKeys(uint, const(wchar)*);
-    HRESULT EnumKeys(uint, const(wchar)*, PWSTR, uint);
-    HRESULT CopyKey(uint, const(wchar)*, uint, const(wchar)*, BOOL, BOOL);
-    HRESULT RenameKey(uint, const(wchar)*, const(wchar)*);
-    HRESULT SetData(uint, const(wchar)*, METADATA_RECORD*);
-    HRESULT GetData(uint, const(wchar)*, METADATA_RECORD*, uint*);
-    HRESULT DeleteData(uint, const(wchar)*, uint, uint);
-    HRESULT EnumData(uint, const(wchar)*, METADATA_RECORD*, uint, uint*);
-    HRESULT GetAllData(uint, const(wchar)*, uint, uint, uint, uint*, uint*, uint, ubyte*, uint*);
-    HRESULT DeleteAllData(uint, const(wchar)*, uint, uint);
-    HRESULT CopyData(uint, const(wchar)*, uint, const(wchar)*, uint, uint, uint, BOOL);
-    HRESULT GetDataPaths(uint, const(wchar)*, uint, uint, uint, PWSTR, uint*);
-    HRESULT OpenKey(uint, const(wchar)*, uint, uint, uint*);
-    HRESULT CloseKey(uint);
-    HRESULT ChangePermissions(uint, uint, uint);
+    HRESULT AddKey(uint hMDHandle, const(wchar)* pszMDPath);
+    HRESULT DeleteKey(uint hMDHandle, const(wchar)* pszMDPath);
+    HRESULT DeleteChildKeys(uint hMDHandle, const(wchar)* pszMDPath);
+    HRESULT EnumKeys(uint hMDHandle, const(wchar)* pszMDPath, PWSTR pszMDName, uint dwMDEnumObjectIndex);
+    HRESULT CopyKey(uint hMDSourceHandle, const(wchar)* pszMDSourcePath, uint hMDDestHandle, const(wchar)* pszMDDestPath, BOOL bMDOverwriteFlag, BOOL bMDCopyFlag);
+    HRESULT RenameKey(uint hMDHandle, const(wchar)* pszMDPath, const(wchar)* pszMDNewName);
+    HRESULT SetData(uint hMDHandle, const(wchar)* pszMDPath, METADATA_RECORD* pmdrMDData);
+    HRESULT GetData(uint hMDHandle, const(wchar)* pszMDPath, METADATA_RECORD* pmdrMDData, uint* pdwMDRequiredDataLen);
+    HRESULT DeleteData(uint hMDHandle, const(wchar)* pszMDPath, uint dwMDIdentifier, uint dwMDDataType);
+    HRESULT EnumData(uint hMDHandle, const(wchar)* pszMDPath, METADATA_RECORD* pmdrMDData, uint dwMDEnumDataIndex, uint* pdwMDRequiredDataLen);
+    HRESULT GetAllData(uint hMDHandle, const(wchar)* pszMDPath, uint dwMDAttributes, uint dwMDUserType, uint dwMDDataType, uint* pdwMDNumDataEntries, uint* pdwMDDataSetNumber, uint dwMDBufferSize, ubyte* pbMDBuffer, uint* pdwMDRequiredBufferSize);
+    HRESULT DeleteAllData(uint hMDHandle, const(wchar)* pszMDPath, uint dwMDUserType, uint dwMDDataType);
+    HRESULT CopyData(uint hMDSourceHandle, const(wchar)* pszMDSourcePath, uint hMDDestHandle, const(wchar)* pszMDDestPath, uint dwMDAttributes, uint dwMDUserType, uint dwMDDataType, BOOL bMDCopyFlag);
+    HRESULT GetDataPaths(uint hMDHandle, const(wchar)* pszMDPath, uint dwMDIdentifier, uint dwMDDataType, uint dwMDBufferSize, PWSTR pszBuffer, uint* pdwMDRequiredBufferSize);
+    HRESULT OpenKey(uint hMDHandle, const(wchar)* pszMDPath, uint dwMDAccessRequested, uint dwMDTimeOut, uint* phMDNewHandle);
+    HRESULT CloseKey(uint hMDHandle);
+    HRESULT ChangePermissions(uint hMDHandle, uint dwMDTimeOut, uint dwMDAccessRequested);
     HRESULT SaveData();
-    HRESULT GetHandleInfo(uint, METADATA_HANDLE_INFO*);
-    HRESULT GetSystemChangeNumber(uint*);
-    HRESULT GetDataSetNumber(uint, const(wchar)*, uint*);
-    HRESULT SetLastChangeTime(uint, const(wchar)*, FILETIME*, BOOL);
-    HRESULT GetLastChangeTime(uint, const(wchar)*, FILETIME*, BOOL);
+    HRESULT GetHandleInfo(uint hMDHandle, METADATA_HANDLE_INFO* pmdhiInfo);
+    HRESULT GetSystemChangeNumber(uint* pdwSystemChangeNumber);
+    HRESULT GetDataSetNumber(uint hMDHandle, const(wchar)* pszMDPath, uint* pdwMDDataSetNumber);
+    HRESULT SetLastChangeTime(uint hMDHandle, const(wchar)* pszMDPath, FILETIME* pftMDLastChangeTime, BOOL bLocalTime);
+    HRESULT GetLastChangeTime(uint hMDHandle, const(wchar)* pszMDPath, FILETIME* pftMDLastChangeTime, BOOL bLocalTime);
     HRESULT KeyExchangePhase1();
     HRESULT KeyExchangePhase2();
-    HRESULT Backup(const(wchar)*, uint, uint);
-    HRESULT Restore(const(wchar)*, uint, uint);
-    HRESULT EnumBackups(PWSTR, uint*, FILETIME*, uint);
-    HRESULT DeleteBackup(const(wchar)*, uint);
-    HRESULT UnmarshalInterface(IMSAdminBaseW*);
+    HRESULT Backup(const(wchar)* pszMDBackupLocation, uint dwMDVersion, uint dwMDFlags);
+    HRESULT Restore(const(wchar)* pszMDBackupLocation, uint dwMDVersion, uint dwMDFlags);
+    HRESULT EnumBackups(PWSTR pszMDBackupLocation, uint* pdwMDVersion, FILETIME* pftMDBackupTime, uint dwMDEnumIndex);
+    HRESULT DeleteBackup(const(wchar)* pszMDBackupLocation, uint dwMDVersion);
+    HRESULT UnmarshalInterface(IMSAdminBaseW* piadmbwInterface);
     HRESULT GetServerGuid();
 }
 enum IID_IMSAdminBase2W = GUID(0x8298d101, 0xf992, 0x43b7, [0x8e, 0xca, 0x50, 0x52, 0xd8, 0x85, 0xb9, 0x95]);
 interface IMSAdminBase2W : IMSAdminBaseW
 {
-    HRESULT BackupWithPasswd(const(wchar)*, uint, uint, const(wchar)*);
-    HRESULT RestoreWithPasswd(const(wchar)*, uint, uint, const(wchar)*);
-    HRESULT Export(const(wchar)*, const(wchar)*, const(wchar)*, uint);
-    HRESULT Import(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, uint);
-    HRESULT RestoreHistory(const(wchar)*, uint, uint, uint);
-    HRESULT EnumHistory(PWSTR, uint*, uint*, FILETIME*, uint);
+    HRESULT BackupWithPasswd(const(wchar)* pszMDBackupLocation, uint dwMDVersion, uint dwMDFlags, const(wchar)* pszPasswd);
+    HRESULT RestoreWithPasswd(const(wchar)* pszMDBackupLocation, uint dwMDVersion, uint dwMDFlags, const(wchar)* pszPasswd);
+    HRESULT Export(const(wchar)* pszPasswd, const(wchar)* pszFileName, const(wchar)* pszSourcePath, uint dwMDFlags);
+    HRESULT Import(const(wchar)* pszPasswd, const(wchar)* pszFileName, const(wchar)* pszSourcePath, const(wchar)* pszDestPath, uint dwMDFlags);
+    HRESULT RestoreHistory(const(wchar)* pszMDHistoryLocation, uint dwMDMajorVersion, uint dwMDMinorVersion, uint dwMDFlags);
+    HRESULT EnumHistory(PWSTR pszMDHistoryLocation, uint* pdwMDMajorVersion, uint* pdwMDMinorVersion, FILETIME* pftMDHistoryTime, uint dwMDEnumIndex);
 }
 enum IID_IMSAdminBase3W = GUID(0xf612954d, 0x3b0b, 0x4c56, [0x95, 0x63, 0x22, 0x7b, 0x7b, 0xe6, 0x24, 0xb4]);
 interface IMSAdminBase3W : IMSAdminBase2W
 {
-    HRESULT GetChildPaths(uint, const(wchar)*, uint, PWSTR, uint*);
+    HRESULT GetChildPaths(uint hMDHandle, const(wchar)* pszMDPath, uint cchMDBufferSize, PWSTR pszBuffer, uint* pcchMDRequiredBufferSize);
 }
 enum IID_IMSImpExpHelpW = GUID(0x29ff67ff, 0x8050, 0x480f, [0x9f, 0x30, 0xcc, 0x41, 0x63, 0x5f, 0x2f, 0x9d]);
 interface IMSImpExpHelpW : IUnknown
 {
-    HRESULT EnumeratePathsInFile(const(wchar)*, const(wchar)*, uint, PWSTR, uint*);
+    HRESULT EnumeratePathsInFile(const(wchar)* pszFileName, const(wchar)* pszKeyType, uint dwMDBufferSize, PWSTR pszBuffer, uint* pdwMDRequiredBufferSize);
 }
 enum IID_IMSAdminBaseSinkW = GUID(0xa9e69612, 0xb80d, 0x11d0, [0xb9, 0xb9, 0x0, 0xa0, 0xc9, 0x22, 0xe7, 0x50]);
 interface IMSAdminBaseSinkW : IUnknown
 {
-    HRESULT SinkNotify(uint, MD_CHANGE_OBJECT_W*);
+    HRESULT SinkNotify(uint dwMDNumElements, MD_CHANGE_OBJECT_W* pcoChangeList);
     HRESULT ShutdownNotify();
 }
 enum IID_AsyncIMSAdminBaseSinkW = GUID(0xa9e69613, 0xb80d, 0x11d0, [0xb9, 0xb9, 0x0, 0xa0, 0xc9, 0x22, 0xe7, 0x50]);
 interface AsyncIMSAdminBaseSinkW : IUnknown
 {
-    HRESULT Begin_SinkNotify(uint, MD_CHANGE_OBJECT_W*);
+    HRESULT Begin_SinkNotify(uint dwMDNumElements, MD_CHANGE_OBJECT_W* pcoChangeList);
     HRESULT Finish_SinkNotify();
     HRESULT Begin_ShutdownNotify();
     HRESULT Finish_ShutdownNotify();
@@ -1295,7 +1295,7 @@ struct HSE_UNICODE_URL_MAPEX_INFO
     uint cchMatchingPath;
     uint cchMatchingURL;
 }
-alias PFN_HSE_IO_COMPLETION = void function(EXTENSION_CONTROL_BLOCK*, void*, uint, uint);
+alias PFN_HSE_IO_COMPLETION = void function(EXTENSION_CONTROL_BLOCK* pECB, void* pContext, uint cbIO, uint dwError);
 struct HSE_TF_INFO
 {
     PFN_HSE_IO_COMPLETION pfnHseIO;
@@ -1380,7 +1380,7 @@ struct HSE_RESPONSE_VECTOR
     uint nElementCount;
     HSE_VECTOR_ELEMENT* lpElementArray;
 }
-alias PFN_HSE_CACHE_INVALIDATION_CALLBACK = HRESULT function(PWSTR);
+alias PFN_HSE_CACHE_INVALIDATION_CALLBACK = HRESULT function(PWSTR pszUrl);
 struct CERT_CONTEXT_EX
 {
     CERT_CONTEXT CertContext;
@@ -1394,10 +1394,10 @@ struct HSE_TRACE_INFO
     uint dwReserved1;
     uint dwReserved2;
 }
-alias PFN_HSE_GET_PROTOCOL_MANAGER_CUSTOM_INTERFACE_CALLBACK = HRESULT function(const(wchar)*, const(wchar)*, uint, void**);
-alias PFN_GETEXTENSIONVERSION = BOOL function(HSE_VERSION_INFO*);
-alias PFN_HTTPEXTENSIONPROC = uint function(EXTENSION_CONTROL_BLOCK*);
-alias PFN_TERMINATEEXTENSION = BOOL function(uint);
+alias PFN_HSE_GET_PROTOCOL_MANAGER_CUSTOM_INTERFACE_CALLBACK = HRESULT function(const(wchar)* pszProtocolManagerDll, const(wchar)* pszProtocolManagerDllInitFunction, uint dwCustomInterfaceId, void** ppCustomInterface);
+alias PFN_GETEXTENSIONVERSION = BOOL function(HSE_VERSION_INFO* pVer);
+alias PFN_HTTPEXTENSIONPROC = uint function(EXTENSION_CONTROL_BLOCK* pECB);
+alias PFN_TERMINATEEXTENSION = BOOL function(uint dwFlags);
 alias SF_REQ_TYPE = int;
 enum : int
 {
@@ -1567,6 +1567,6 @@ struct HTTP_TRACE_CONFIGURATION
     uint dwVerbosity;
     BOOL fProviderEnabled;
 }
-alias PFN_WEB_CORE_SET_METADATA_DLL_ENTRY = HRESULT function(const(wchar)*, const(wchar)*);
-alias PFN_WEB_CORE_ACTIVATE = HRESULT function(const(wchar)*, const(wchar)*, const(wchar)*);
-alias PFN_WEB_CORE_SHUTDOWN = HRESULT function(uint);
+alias PFN_WEB_CORE_SET_METADATA_DLL_ENTRY = HRESULT function(const(wchar)* pszMetadataType, const(wchar)* pszValue);
+alias PFN_WEB_CORE_ACTIVATE = HRESULT function(const(wchar)* pszAppHostConfigFile, const(wchar)* pszRootWebConfigFile, const(wchar)* pszInstanceName);
+alias PFN_WEB_CORE_SHUTDOWN = HRESULT function(uint fImmediate);

@@ -1,10 +1,10 @@
 module windows.win32.devices.functiondiscovery;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, HRESULT, PWSTR;
+import windows.win32.foundation : BOOL, HRESULT, PROPERTYKEY, PWSTR;
 import windows.win32.system.com : IServiceProvider, IUnknown, STGM;
 import windows.win32.system.com.structuredstorage : PROPVARIANT;
-import windows.win32.ui.shell.propertiessystem : IPropertyStore, PROPERTYKEY;
+import windows.win32.ui.shell.propertiessystem : IPropertyStore;
 
 version (Windows):
 extern (Windows):
@@ -433,141 +433,141 @@ enum : int
 enum IID_IFunctionDiscoveryNotification = GUID(0x5f6c1ba8, 0x5330, 0x422e, [0xa3, 0x68, 0x57, 0x2b, 0x24, 0x4d, 0x3f, 0x87]);
 interface IFunctionDiscoveryNotification : IUnknown
 {
-    HRESULT OnUpdate(QueryUpdateAction, ulong, IFunctionInstance);
-    HRESULT OnError(HRESULT, ulong, const(wchar)*);
-    HRESULT OnEvent(uint, ulong, const(wchar)*);
+    HRESULT OnUpdate(QueryUpdateAction enumQueryUpdateAction, ulong fdqcQueryContext, IFunctionInstance pIFunctionInstance);
+    HRESULT OnError(HRESULT hr, ulong fdqcQueryContext, const(wchar)* pszProvider);
+    HRESULT OnEvent(uint dwEventID, ulong fdqcQueryContext, const(wchar)* pszProvider);
 }
 enum IID_IFunctionDiscovery = GUID(0x4df99b70, 0xe148, 0x4432, [0xb0, 0x4, 0x4c, 0x9e, 0xeb, 0x53, 0x5a, 0x5e]);
 interface IFunctionDiscovery : IUnknown
 {
-    HRESULT GetInstanceCollection(const(wchar)*, const(wchar)*, BOOL, IFunctionInstanceCollection*);
-    HRESULT GetInstance(const(wchar)*, IFunctionInstance*);
-    HRESULT CreateInstanceCollectionQuery(const(wchar)*, const(wchar)*, BOOL, IFunctionDiscoveryNotification, ulong*, IFunctionInstanceCollectionQuery*);
-    HRESULT CreateInstanceQuery(const(wchar)*, IFunctionDiscoveryNotification, ulong*, IFunctionInstanceQuery*);
-    HRESULT AddInstance(SystemVisibilityFlags, const(wchar)*, const(wchar)*, const(wchar)*, IFunctionInstance*);
-    HRESULT RemoveInstance(SystemVisibilityFlags, const(wchar)*, const(wchar)*, const(wchar)*);
+    HRESULT GetInstanceCollection(const(wchar)* pszCategory, const(wchar)* pszSubCategory, BOOL fIncludeAllSubCategories, IFunctionInstanceCollection* ppIFunctionInstanceCollection);
+    HRESULT GetInstance(const(wchar)* pszFunctionInstanceIdentity, IFunctionInstance* ppIFunctionInstance);
+    HRESULT CreateInstanceCollectionQuery(const(wchar)* pszCategory, const(wchar)* pszSubCategory, BOOL fIncludeAllSubCategories, IFunctionDiscoveryNotification pIFunctionDiscoveryNotification, ulong* pfdqcQueryContext, IFunctionInstanceCollectionQuery* ppIFunctionInstanceCollectionQuery);
+    HRESULT CreateInstanceQuery(const(wchar)* pszFunctionInstanceIdentity, IFunctionDiscoveryNotification pIFunctionDiscoveryNotification, ulong* pfdqcQueryContext, IFunctionInstanceQuery* ppIFunctionInstanceQuery);
+    HRESULT AddInstance(SystemVisibilityFlags enumSystemVisibility, const(wchar)* pszCategory, const(wchar)* pszSubCategory, const(wchar)* pszCategoryIdentity, IFunctionInstance* ppIFunctionInstance);
+    HRESULT RemoveInstance(SystemVisibilityFlags enumSystemVisibility, const(wchar)* pszCategory, const(wchar)* pszSubCategory, const(wchar)* pszCategoryIdentity);
 }
 enum IID_IFunctionInstance = GUID(0x33591c10, 0xbed, 0x4f02, [0xb0, 0xab, 0x15, 0x30, 0xd5, 0x53, 0x3e, 0xe9]);
 interface IFunctionInstance : IServiceProvider
 {
-    HRESULT GetID(ushort**);
-    HRESULT GetProviderInstanceID(ushort**);
-    HRESULT OpenPropertyStore(STGM, IPropertyStore*);
-    HRESULT GetCategory(ushort**, ushort**);
+    HRESULT GetID(ushort** ppszCoMemIdentity);
+    HRESULT GetProviderInstanceID(ushort** ppszCoMemProviderInstanceIdentity);
+    HRESULT OpenPropertyStore(STGM dwStgAccess, IPropertyStore* ppIPropertyStore);
+    HRESULT GetCategory(ushort** ppszCoMemCategory, ushort** ppszCoMemSubCategory);
 }
 enum IID_IFunctionInstanceCollection = GUID(0xf0a3d895, 0x855c, 0x42a2, [0x94, 0x8d, 0x2f, 0x97, 0xd4, 0x50, 0xec, 0xb1]);
 interface IFunctionInstanceCollection : IUnknown
 {
-    HRESULT GetCount(uint*);
-    HRESULT Get(const(wchar)*, uint*, IFunctionInstance*);
-    HRESULT Item(uint, IFunctionInstance*);
-    HRESULT Add(IFunctionInstance);
-    HRESULT Remove(uint, IFunctionInstance*);
-    HRESULT Delete(uint);
+    HRESULT GetCount(uint* pdwCount);
+    HRESULT Get(const(wchar)* pszInstanceIdentity, uint* pdwIndex, IFunctionInstance* ppIFunctionInstance);
+    HRESULT Item(uint dwIndex, IFunctionInstance* ppIFunctionInstance);
+    HRESULT Add(IFunctionInstance pIFunctionInstance);
+    HRESULT Remove(uint dwIndex, IFunctionInstance* ppIFunctionInstance);
+    HRESULT Delete(uint dwIndex);
     HRESULT DeleteAll();
 }
 enum IID_IPropertyStoreCollection = GUID(0xd14d9c30, 0x12d2, 0x42d8, [0xbc, 0xe4, 0xc6, 0xc, 0x2b, 0xb2, 0x26, 0xfa]);
 interface IPropertyStoreCollection : IUnknown
 {
-    HRESULT GetCount(uint*);
-    HRESULT Get(const(wchar)*, uint*, IPropertyStore*);
-    HRESULT Item(uint, IPropertyStore*);
-    HRESULT Add(IPropertyStore);
-    HRESULT Remove(uint, IPropertyStore*);
-    HRESULT Delete(uint);
+    HRESULT GetCount(uint* pdwCount);
+    HRESULT Get(const(wchar)* pszInstanceIdentity, uint* pdwIndex, IPropertyStore* ppIPropertyStore);
+    HRESULT Item(uint dwIndex, IPropertyStore* ppIPropertyStore);
+    HRESULT Add(IPropertyStore pIPropertyStore);
+    HRESULT Remove(uint dwIndex, IPropertyStore* pIPropertyStore);
+    HRESULT Delete(uint dwIndex);
     HRESULT DeleteAll();
 }
 enum IID_IFunctionInstanceQuery = GUID(0x6242bc6b, 0x90ec, 0x4b37, [0xbb, 0x46, 0xe2, 0x29, 0xfd, 0x84, 0xed, 0x95]);
 interface IFunctionInstanceQuery : IUnknown
 {
-    HRESULT Execute(IFunctionInstance*);
+    HRESULT Execute(IFunctionInstance* ppIFunctionInstance);
 }
 enum IID_IFunctionInstanceCollectionQuery = GUID(0x57cc6fd2, 0xc09a, 0x4289, [0xbb, 0x72, 0x25, 0xf0, 0x41, 0x42, 0x5, 0x8e]);
 interface IFunctionInstanceCollectionQuery : IUnknown
 {
-    HRESULT AddQueryConstraint(const(wchar)*, const(wchar)*);
-    HRESULT AddPropertyConstraint(const(PROPERTYKEY)*, const(PROPVARIANT)*, PropertyConstraint);
-    HRESULT Execute(IFunctionInstanceCollection*);
+    HRESULT AddQueryConstraint(const(wchar)* pszConstraintName, const(wchar)* pszConstraintValue);
+    HRESULT AddPropertyConstraint(const(PROPERTYKEY)* Key, const(PROPVARIANT)* pv, PropertyConstraint enumPropertyConstraint);
+    HRESULT Execute(IFunctionInstanceCollection* ppIFunctionInstanceCollection);
 }
 enum IID_IFunctionDiscoveryProvider = GUID(0xdcde394f, 0x1478, 0x4813, [0xa4, 0x2, 0xf6, 0xfb, 0x10, 0x65, 0x72, 0x22]);
 interface IFunctionDiscoveryProvider : IUnknown
 {
-    HRESULT Initialize(IFunctionDiscoveryProviderFactory, IFunctionDiscoveryNotification, uint, uint*);
-    HRESULT Query(IFunctionDiscoveryProviderQuery, IFunctionInstanceCollection*);
+    HRESULT Initialize(IFunctionDiscoveryProviderFactory pIFunctionDiscoveryProviderFactory, IFunctionDiscoveryNotification pIFunctionDiscoveryNotification, uint lcidUserDefault, uint* pdwStgAccessCapabilities);
+    HRESULT Query(IFunctionDiscoveryProviderQuery pIFunctionDiscoveryProviderQuery, IFunctionInstanceCollection* ppIFunctionInstanceCollection);
     HRESULT EndQuery();
-    HRESULT InstancePropertyStoreValidateAccess(IFunctionInstance, long, const(uint));
-    HRESULT InstancePropertyStoreOpen(IFunctionInstance, long, const(uint), IPropertyStore*);
-    HRESULT InstancePropertyStoreFlush(IFunctionInstance, long);
-    HRESULT InstanceQueryService(IFunctionInstance, long, const(GUID)*, const(GUID)*, IUnknown*);
-    HRESULT InstanceReleased(IFunctionInstance, long);
+    HRESULT InstancePropertyStoreValidateAccess(IFunctionInstance pIFunctionInstance, long iProviderInstanceContext, const(uint) dwStgAccess);
+    HRESULT InstancePropertyStoreOpen(IFunctionInstance pIFunctionInstance, long iProviderInstanceContext, const(uint) dwStgAccess, IPropertyStore* ppIPropertyStore);
+    HRESULT InstancePropertyStoreFlush(IFunctionInstance pIFunctionInstance, long iProviderInstanceContext);
+    HRESULT InstanceQueryService(IFunctionInstance pIFunctionInstance, long iProviderInstanceContext, const(GUID)* guidService, const(GUID)* riid, IUnknown* ppIUnknown);
+    HRESULT InstanceReleased(IFunctionInstance pIFunctionInstance, long iProviderInstanceContext);
 }
 enum IID_IProviderProperties = GUID(0xcf986ea6, 0x3b5f, 0x4c5f, [0xb8, 0x8a, 0x2f, 0x8b, 0x20, 0xce, 0xef, 0x17]);
 interface IProviderProperties : IUnknown
 {
-    HRESULT GetCount(IFunctionInstance, long, uint*);
-    HRESULT GetAt(IFunctionInstance, long, uint, PROPERTYKEY*);
-    HRESULT GetValue(IFunctionInstance, long, const(PROPERTYKEY)*, PROPVARIANT*);
-    HRESULT SetValue(IFunctionInstance, long, const(PROPERTYKEY)*, const(PROPVARIANT)*);
+    HRESULT GetCount(IFunctionInstance pIFunctionInstance, long iProviderInstanceContext, uint* pdwCount);
+    HRESULT GetAt(IFunctionInstance pIFunctionInstance, long iProviderInstanceContext, uint dwIndex, PROPERTYKEY* pKey);
+    HRESULT GetValue(IFunctionInstance pIFunctionInstance, long iProviderInstanceContext, const(PROPERTYKEY)* Key, PROPVARIANT* ppropVar);
+    HRESULT SetValue(IFunctionInstance pIFunctionInstance, long iProviderInstanceContext, const(PROPERTYKEY)* Key, const(PROPVARIANT)* ppropVar);
 }
 enum IID_IProviderPublishing = GUID(0xcd1b9a04, 0x206c, 0x4a05, [0xa0, 0xc8, 0x16, 0x35, 0xa2, 0x1a, 0x2b, 0x7c]);
 interface IProviderPublishing : IUnknown
 {
-    HRESULT CreateInstance(SystemVisibilityFlags, const(wchar)*, const(wchar)*, IFunctionInstance*);
-    HRESULT RemoveInstance(SystemVisibilityFlags, const(wchar)*, const(wchar)*);
+    HRESULT CreateInstance(SystemVisibilityFlags enumVisibilityFlags, const(wchar)* pszSubCategory, const(wchar)* pszProviderInstanceIdentity, IFunctionInstance* ppIFunctionInstance);
+    HRESULT RemoveInstance(SystemVisibilityFlags enumVisibilityFlags, const(wchar)* pszSubCategory, const(wchar)* pszProviderInstanceIdentity);
 }
 enum IID_IFunctionDiscoveryProviderFactory = GUID(0x86443ff0, 0x1ad5, 0x4e68, [0xa4, 0x5a, 0x40, 0xc2, 0xc3, 0x29, 0xde, 0x3b]);
 interface IFunctionDiscoveryProviderFactory : IUnknown
 {
-    HRESULT CreatePropertyStore(IPropertyStore*);
-    HRESULT CreateInstance(const(wchar)*, const(wchar)*, long, IPropertyStore, IFunctionDiscoveryProvider, IFunctionInstance*);
-    HRESULT CreateFunctionInstanceCollection(IFunctionInstanceCollection*);
+    HRESULT CreatePropertyStore(IPropertyStore* ppIPropertyStore);
+    HRESULT CreateInstance(const(wchar)* pszSubCategory, const(wchar)* pszProviderInstanceIdentity, long iProviderInstanceContext, IPropertyStore pIPropertyStore, IFunctionDiscoveryProvider pIFunctionDiscoveryProvider, IFunctionInstance* ppIFunctionInstance);
+    HRESULT CreateFunctionInstanceCollection(IFunctionInstanceCollection* ppIFunctionInstanceCollection);
 }
 enum IID_IFunctionDiscoveryProviderQuery = GUID(0x6876ea98, 0xbaec, 0x46db, [0xbc, 0x20, 0x75, 0xa7, 0x6e, 0x26, 0x7a, 0x3a]);
 interface IFunctionDiscoveryProviderQuery : IUnknown
 {
-    HRESULT IsInstanceQuery(BOOL*, ushort**);
-    HRESULT IsSubcategoryQuery(BOOL*, ushort**);
-    HRESULT GetQueryConstraints(IProviderQueryConstraintCollection*);
-    HRESULT GetPropertyConstraints(IProviderPropertyConstraintCollection*);
+    HRESULT IsInstanceQuery(BOOL* pisInstanceQuery, ushort** ppszConstraintValue);
+    HRESULT IsSubcategoryQuery(BOOL* pisSubcategoryQuery, ushort** ppszConstraintValue);
+    HRESULT GetQueryConstraints(IProviderQueryConstraintCollection* ppIProviderQueryConstraints);
+    HRESULT GetPropertyConstraints(IProviderPropertyConstraintCollection* ppIProviderPropertyConstraints);
 }
 enum IID_IProviderQueryConstraintCollection = GUID(0x9c243e11, 0x3261, 0x4bcd, [0xb9, 0x22, 0x84, 0xa8, 0x73, 0xd4, 0x60, 0xae]);
 interface IProviderQueryConstraintCollection : IUnknown
 {
-    HRESULT GetCount(uint*);
-    HRESULT Get(const(wchar)*, ushort**);
-    HRESULT Item(uint, ushort**, ushort**);
-    HRESULT Next(ushort**, ushort**);
+    HRESULT GetCount(uint* pdwCount);
+    HRESULT Get(const(wchar)* pszConstraintName, ushort** ppszConstraintValue);
+    HRESULT Item(uint dwIndex, ushort** ppszConstraintName, ushort** ppszConstraintValue);
+    HRESULT Next(ushort** ppszConstraintName, ushort** ppszConstraintValue);
     HRESULT Skip();
     HRESULT Reset();
 }
 enum IID_IProviderPropertyConstraintCollection = GUID(0xf4fae42f, 0x5778, 0x4a13, [0x85, 0x40, 0xb5, 0xfd, 0x8c, 0x13, 0x98, 0xdd]);
 interface IProviderPropertyConstraintCollection : IUnknown
 {
-    HRESULT GetCount(uint*);
-    HRESULT Get(const(PROPERTYKEY)*, PROPVARIANT*, uint*);
-    HRESULT Item(uint, PROPERTYKEY*, PROPVARIANT*, uint*);
-    HRESULT Next(PROPERTYKEY*, PROPVARIANT*, uint*);
+    HRESULT GetCount(uint* pdwCount);
+    HRESULT Get(const(PROPERTYKEY)* Key, PROPVARIANT* pPropVar, uint* pdwPropertyConstraint);
+    HRESULT Item(uint dwIndex, PROPERTYKEY* pKey, PROPVARIANT* pPropVar, uint* pdwPropertyConstraint);
+    HRESULT Next(PROPERTYKEY* pKey, PROPVARIANT* pPropVar, uint* pdwPropertyConstraint);
     HRESULT Skip();
     HRESULT Reset();
 }
 enum IID_IFunctionDiscoveryServiceProvider = GUID(0x4c81ed02, 0x1b04, 0x43f2, [0xa4, 0x51, 0x69, 0x96, 0x6c, 0xbc, 0xd1, 0xc2]);
 interface IFunctionDiscoveryServiceProvider : IUnknown
 {
-    HRESULT Initialize(IFunctionInstance, const(GUID)*, void**);
+    HRESULT Initialize(IFunctionInstance pIFunctionInstance, const(GUID)* riid, void** ppv);
 }
 enum IID_IPNPXAssociation = GUID(0xbd7e521, 0x4da6, 0x42d5, [0x81, 0xba, 0x19, 0x81, 0xb6, 0xb9, 0x40, 0x75]);
 interface IPNPXAssociation : IUnknown
 {
-    HRESULT Associate(const(wchar)*);
-    HRESULT Unassociate(const(wchar)*);
-    HRESULT Delete(const(wchar)*);
+    HRESULT Associate(const(wchar)* pszSubcategory);
+    HRESULT Unassociate(const(wchar)* pszSubcategory);
+    HRESULT Delete(const(wchar)* pszSubcategory);
 }
 enum IID_IPNPXDeviceAssociation = GUID(0xeed366d0, 0x35b8, 0x4fc5, [0x8d, 0x20, 0x7e, 0x5b, 0xd3, 0x1f, 0x6d, 0xed]);
 interface IPNPXDeviceAssociation : IUnknown
 {
-    HRESULT Associate(const(wchar)*, IFunctionDiscoveryNotification);
-    HRESULT Unassociate(const(wchar)*, IFunctionDiscoveryNotification);
-    HRESULT Delete(const(wchar)*, IFunctionDiscoveryNotification);
+    HRESULT Associate(const(wchar)* pszSubCategory, IFunctionDiscoveryNotification pIFunctionDiscoveryNotification);
+    HRESULT Unassociate(const(wchar)* pszSubCategory, IFunctionDiscoveryNotification pIFunctionDiscoveryNotification);
+    HRESULT Delete(const(wchar)* pszSubcategory, IFunctionDiscoveryNotification pIFunctionDiscoveryNotification);
 }
 enum CLSID_PNPXAssociation = GUID(0xcee8ccc9, 0x4f6b, 0x4469, [0xa2, 0x35, 0x5a, 0x22, 0x86, 0x9e, 0xef, 0x3]);
 struct PNPXAssociation

@@ -5,7 +5,7 @@ import windows.win32.foundation : PSTR, PWSTR;
 version (Windows):
 extern (Windows):
 
-uint MAPIFreeBuffer(void*);
+uint MAPIFreeBuffer(void* pv);
 enum MAPI_OLE = 0x00000001;
 enum MAPI_OLE_STATIC = 0x00000002;
 enum MAPI_ORIG = 0x00000000;
@@ -135,16 +135,16 @@ struct MapiMessageW
     uint nFileCount;
     MapiFileDescW* lpFiles;
 }
-alias LPMAPILOGON = uint function(ulong, PSTR, PSTR, uint, uint, ulong*);
-alias LPMAPILOGOFF = uint function(ulong, ulong, uint, uint);
-alias LPMAPISENDMAIL = uint function(ulong, ulong, MapiMessage*, uint, uint);
-alias LPMAPISENDMAILW = uint function(ulong, ulong, MapiMessageW*, uint, uint);
-alias LPMAPISENDDOCUMENTS = uint function(ulong, PSTR, PSTR, PSTR, uint);
-alias LPMAPIFINDNEXT = uint function(ulong, ulong, PSTR, PSTR, uint, uint, PSTR);
-alias LPMAPIREADMAIL = uint function(ulong, ulong, PSTR, uint, uint, MapiMessage**);
-alias LPMAPISAVEMAIL = uint function(ulong, ulong, MapiMessage*, uint, uint, PSTR);
-alias LPMAPIDELETEMAIL = uint function(ulong, ulong, PSTR, uint, uint);
-alias LPMAPIFREEBUFFER = uint function(void*);
-alias LPMAPIADDRESS = uint function(ulong, ulong, PSTR, uint, PSTR, uint, MapiRecipDesc*, uint, uint, uint*, MapiRecipDesc**);
-alias LPMAPIDETAILS = uint function(ulong, ulong, MapiRecipDesc*, uint, uint);
-alias LPMAPIRESOLVENAME = uint function(ulong, ulong, PSTR, uint, uint, MapiRecipDesc**);
+alias LPMAPILOGON = uint function(ulong ulUIParam, PSTR lpszProfileName, PSTR lpszPassword, uint flFlags, uint ulReserved, ulong* lplhSession);
+alias LPMAPILOGOFF = uint function(ulong lhSession, ulong ulUIParam, uint flFlags, uint ulReserved);
+alias LPMAPISENDMAIL = uint function(ulong lhSession, ulong ulUIParam, MapiMessage* lpMessage, uint flFlags, uint ulReserved);
+alias LPMAPISENDMAILW = uint function(ulong lhSession, ulong ulUIParam, MapiMessageW* lpMessage, uint flFlags, uint ulReserved);
+alias LPMAPISENDDOCUMENTS = uint function(ulong ulUIParam, PSTR lpszDelimChar, PSTR lpszFilePaths, PSTR lpszFileNames, uint ulReserved);
+alias LPMAPIFINDNEXT = uint function(ulong lhSession, ulong ulUIParam, PSTR lpszMessageType, PSTR lpszSeedMessageID, uint flFlags, uint ulReserved, PSTR lpszMessageID);
+alias LPMAPIREADMAIL = uint function(ulong lhSession, ulong ulUIParam, PSTR lpszMessageID, uint flFlags, uint ulReserved, MapiMessage** lppMessage);
+alias LPMAPISAVEMAIL = uint function(ulong lhSession, ulong ulUIParam, MapiMessage* lpMessage, uint flFlags, uint ulReserved, PSTR lpszMessageID);
+alias LPMAPIDELETEMAIL = uint function(ulong lhSession, ulong ulUIParam, PSTR lpszMessageID, uint flFlags, uint ulReserved);
+alias LPMAPIFREEBUFFER = uint function(void* pv);
+alias LPMAPIADDRESS = uint function(ulong lhSession, ulong ulUIParam, PSTR lpszCaption, uint nEditFields, PSTR lpszLabels, uint nRecips, MapiRecipDesc* lpRecips, uint flFlags, uint ulReserved, uint* lpnNewRecips, MapiRecipDesc** lppNewRecips);
+alias LPMAPIDETAILS = uint function(ulong lhSession, ulong ulUIParam, MapiRecipDesc* lpRecip, uint flFlags, uint ulReserved);
+alias LPMAPIRESOLVENAME = uint function(ulong lhSession, ulong ulUIParam, PSTR lpszName, uint flFlags, uint ulReserved, MapiRecipDesc** lppRecip);

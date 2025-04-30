@@ -9,8 +9,8 @@ import windows.win32.system.com : IUnknown;
 version (Windows):
 extern (Windows):
 
-HRESULT Direct3DCreate9On12Ex(uint, D3D9ON12_ARGS*, uint, IDirect3D9Ex*);
-IDirect3D9 Direct3DCreate9On12(uint, D3D9ON12_ARGS*, uint);
+HRESULT Direct3DCreate9On12Ex(uint SDKVersion, D3D9ON12_ARGS* pOverrideList, uint NumOverrideEntries, IDirect3D9Ex* ppOutputInterface);
+IDirect3D9 Direct3DCreate9On12(uint SDKVersion, D3D9ON12_ARGS* pOverrideList, uint NumOverrideEntries);
 enum MAX_D3D9ON12_QUEUES = 0x00000002;
 struct D3D9ON12_ARGS
 {
@@ -20,12 +20,12 @@ struct D3D9ON12_ARGS
     uint NumQueues;
     uint NodeMask;
 }
-alias PFN_Direct3DCreate9On12Ex = HRESULT function(uint, D3D9ON12_ARGS*, uint, IDirect3D9Ex*);
-alias PFN_Direct3DCreate9On12 = IDirect3D9 function(uint, D3D9ON12_ARGS*, uint);
+alias PFN_Direct3DCreate9On12Ex = HRESULT function(uint SDKVersion, D3D9ON12_ARGS* pOverrideList, uint NumOverrideEntries, IDirect3D9Ex* ppOutputInterface);
+alias PFN_Direct3DCreate9On12 = IDirect3D9 function(uint SDKVersion, D3D9ON12_ARGS* pOverrideList, uint NumOverrideEntries);
 enum IID_IDirect3DDevice9On12 = GUID(0xe7fda234, 0xb589, 0x4049, [0x94, 0xd, 0x88, 0x78, 0x97, 0x75, 0x31, 0xc8]);
 interface IDirect3DDevice9On12 : IUnknown
 {
-    HRESULT GetD3D12Device(const(GUID)*, void**);
-    HRESULT UnwrapUnderlyingResource(IDirect3DResource9, ID3D12CommandQueue, const(GUID)*, void**);
-    HRESULT ReturnUnderlyingResource(IDirect3DResource9, uint, ulong*, ID3D12Fence*);
+    HRESULT GetD3D12Device(const(GUID)* riid, void** ppvDevice);
+    HRESULT UnwrapUnderlyingResource(IDirect3DResource9 pResource, ID3D12CommandQueue pCommandQueue, const(GUID)* riid, void** ppvResource12);
+    HRESULT ReturnUnderlyingResource(IDirect3DResource9 pResource, uint NumSync, ulong* pSignalValues, ID3D12Fence* ppFences);
 }

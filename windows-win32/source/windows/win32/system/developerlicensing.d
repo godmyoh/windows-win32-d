@@ -5,6 +5,6 @@ import windows.win32.foundation : FILETIME, HRESULT, HWND;
 version (Windows):
 extern (Windows):
 
-HRESULT CheckDeveloperLicense(FILETIME*);
-HRESULT AcquireDeveloperLicense(HWND, FILETIME*);
-HRESULT RemoveDeveloperLicense(HWND);
+HRESULT CheckDeveloperLicense(FILETIME* pExpiration);
+HRESULT AcquireDeveloperLicense(HWND hwndParent, FILETIME* pExpiration);
+HRESULT RemoveDeveloperLicense(HWND hwndParent);

@@ -9,16 +9,16 @@ import windows.win32.system.com : IUnknown;
 version (Windows):
 extern (Windows):
 
-HRESULT DirectSoundCreate(const(GUID)*, IDirectSound*, IUnknown);
-HRESULT DirectSoundEnumerateA(LPDSENUMCALLBACKA, void*);
-HRESULT DirectSoundEnumerateW(LPDSENUMCALLBACKW, void*);
-HRESULT DirectSoundCaptureCreate(const(GUID)*, IDirectSoundCapture*, IUnknown);
-HRESULT DirectSoundCaptureEnumerateA(LPDSENUMCALLBACKA, void*);
-HRESULT DirectSoundCaptureEnumerateW(LPDSENUMCALLBACKW, void*);
-HRESULT DirectSoundCreate8(const(GUID)*, IDirectSound8*, IUnknown);
-HRESULT DirectSoundCaptureCreate8(const(GUID)*, IDirectSoundCapture*, IUnknown);
-HRESULT DirectSoundFullDuplexCreate(const(GUID)*, const(GUID)*, DSCBUFFERDESC*, DSBUFFERDESC*, HWND, uint, IDirectSoundFullDuplex*, IDirectSoundCaptureBuffer8*, IDirectSoundBuffer8*, IUnknown);
-HRESULT GetDeviceID(const(GUID)*, GUID*);
+HRESULT DirectSoundCreate(const(GUID)* pcGuidDevice, IDirectSound* ppDS, IUnknown pUnkOuter);
+HRESULT DirectSoundEnumerateA(LPDSENUMCALLBACKA pDSEnumCallback, void* pContext);
+HRESULT DirectSoundEnumerateW(LPDSENUMCALLBACKW pDSEnumCallback, void* pContext);
+HRESULT DirectSoundCaptureCreate(const(GUID)* pcGuidDevice, IDirectSoundCapture* ppDSC, IUnknown pUnkOuter);
+HRESULT DirectSoundCaptureEnumerateA(LPDSENUMCALLBACKA pDSEnumCallback, void* pContext);
+HRESULT DirectSoundCaptureEnumerateW(LPDSENUMCALLBACKW pDSEnumCallback, void* pContext);
+HRESULT DirectSoundCreate8(const(GUID)* pcGuidDevice, IDirectSound8* ppDS8, IUnknown pUnkOuter);
+HRESULT DirectSoundCaptureCreate8(const(GUID)* pcGuidDevice, IDirectSoundCapture* ppDSC8, IUnknown pUnkOuter);
+HRESULT DirectSoundFullDuplexCreate(const(GUID)* pcGuidCaptureDevice, const(GUID)* pcGuidRenderDevice, DSCBUFFERDESC* pcDSCBufferDesc, DSBUFFERDESC* pcDSBufferDesc, HWND hWnd, uint dwLevel, IDirectSoundFullDuplex* ppDSFD, IDirectSoundCaptureBuffer8* ppDSCBuffer8, IDirectSoundBuffer8* ppDSBuffer8, IUnknown pUnkOuter);
+HRESULT GetDeviceID(const(GUID)* pGuidSrc, GUID* pGuidDest);
 enum DIRECTSOUND_VERSION = 0x00000700;
 enum _FACDS = 0x00000878;
 enum CLSID_DirectSound = GUID(0x47d4d946, 0x62e8, 0x11cf, [0x93, 0xbc, 0x44, 0x45, 0x53, 0x54, 0x0, 0x0]);
@@ -474,125 +474,125 @@ struct DSBPOSITIONNOTIFY
     uint dwOffset;
     HANDLE hEventNotify;
 }
-alias LPDSENUMCALLBACKA = BOOL function(GUID*, const(char)*, const(char)*, void*);
-alias LPDSENUMCALLBACKW = BOOL function(GUID*, const(wchar)*, const(wchar)*, void*);
+alias LPDSENUMCALLBACKA = BOOL function(GUID* param0, const(char)* param1, const(char)* param2, void* param3);
+alias LPDSENUMCALLBACKW = BOOL function(GUID* param0, const(wchar)* param1, const(wchar)* param2, void* param3);
 enum IID_IDirectSound = GUID(0x279afa83, 0x4981, 0x11ce, [0xa5, 0x21, 0x0, 0x20, 0xaf, 0xb, 0xe5, 0x60]);
 interface IDirectSound : IUnknown
 {
-    HRESULT CreateSoundBuffer(DSBUFFERDESC*, IDirectSoundBuffer*, IUnknown);
-    HRESULT GetCaps(DSCAPS*);
-    HRESULT DuplicateSoundBuffer(IDirectSoundBuffer, IDirectSoundBuffer*);
-    HRESULT SetCooperativeLevel(HWND, uint);
+    HRESULT CreateSoundBuffer(DSBUFFERDESC* pcDSBufferDesc, IDirectSoundBuffer* ppDSBuffer, IUnknown pUnkOuter);
+    HRESULT GetCaps(DSCAPS* pDSCaps);
+    HRESULT DuplicateSoundBuffer(IDirectSoundBuffer pDSBufferOriginal, IDirectSoundBuffer* ppDSBufferDuplicate);
+    HRESULT SetCooperativeLevel(HWND hwnd, uint dwLevel);
     HRESULT Compact();
-    HRESULT GetSpeakerConfig(uint*);
-    HRESULT SetSpeakerConfig(uint);
-    HRESULT Initialize(const(GUID)*);
+    HRESULT GetSpeakerConfig(uint* pdwSpeakerConfig);
+    HRESULT SetSpeakerConfig(uint dwSpeakerConfig);
+    HRESULT Initialize(const(GUID)* pcGuidDevice);
 }
 enum IID_IDirectSound8 = GUID(0xc50a7e93, 0xf395, 0x4834, [0x9e, 0xf6, 0x7f, 0xa9, 0x9d, 0xe5, 0x9, 0x66]);
 interface IDirectSound8 : IDirectSound
 {
-    HRESULT VerifyCertification(uint*);
+    HRESULT VerifyCertification(uint* pdwCertified);
 }
 enum IID_IDirectSoundBuffer = GUID(0x279afa85, 0x4981, 0x11ce, [0xa5, 0x21, 0x0, 0x20, 0xaf, 0xb, 0xe5, 0x60]);
 interface IDirectSoundBuffer : IUnknown
 {
-    HRESULT GetCaps(DSBCAPS*);
-    HRESULT GetCurrentPosition(uint*, uint*);
-    HRESULT GetFormat(WAVEFORMATEX*, uint, uint*);
-    HRESULT GetVolume(int*);
-    HRESULT GetPan(int*);
-    HRESULT GetFrequency(uint*);
-    HRESULT GetStatus(uint*);
-    HRESULT Initialize(IDirectSound, DSBUFFERDESC*);
-    HRESULT Lock(uint, uint, void**, uint*, void**, uint*, uint);
-    HRESULT Play(uint, uint, uint);
-    HRESULT SetCurrentPosition(uint);
-    HRESULT SetFormat(WAVEFORMATEX*);
-    HRESULT SetVolume(int);
-    HRESULT SetPan(int);
-    HRESULT SetFrequency(uint);
+    HRESULT GetCaps(DSBCAPS* pDSBufferCaps);
+    HRESULT GetCurrentPosition(uint* pdwCurrentPlayCursor, uint* pdwCurrentWriteCursor);
+    HRESULT GetFormat(WAVEFORMATEX* pwfxFormat, uint dwSizeAllocated, uint* pdwSizeWritten);
+    HRESULT GetVolume(int* plVolume);
+    HRESULT GetPan(int* plPan);
+    HRESULT GetFrequency(uint* pdwFrequency);
+    HRESULT GetStatus(uint* pdwStatus);
+    HRESULT Initialize(IDirectSound pDirectSound, DSBUFFERDESC* pcDSBufferDesc);
+    HRESULT Lock(uint dwOffset, uint dwBytes, void** ppvAudioPtr1, uint* pdwAudioBytes1, void** ppvAudioPtr2, uint* pdwAudioBytes2, uint dwFlags);
+    HRESULT Play(uint dwReserved1, uint dwPriority, uint dwFlags);
+    HRESULT SetCurrentPosition(uint dwNewPosition);
+    HRESULT SetFormat(WAVEFORMATEX* pcfxFormat);
+    HRESULT SetVolume(int lVolume);
+    HRESULT SetPan(int lPan);
+    HRESULT SetFrequency(uint dwFrequency);
     HRESULT Stop();
-    HRESULT Unlock(void*, uint, void*, uint);
+    HRESULT Unlock(void* pvAudioPtr1, uint dwAudioBytes1, void* pvAudioPtr2, uint dwAudioBytes2);
     HRESULT Restore();
 }
 enum IID_IDirectSoundBuffer8 = GUID(0x6825a449, 0x7524, 0x4d82, [0x92, 0xf, 0x50, 0xe3, 0x6a, 0xb3, 0xab, 0x1e]);
 interface IDirectSoundBuffer8 : IDirectSoundBuffer
 {
-    HRESULT SetFX(uint, DSEFFECTDESC*, uint*);
-    HRESULT AcquireResources(uint, uint, uint*);
-    HRESULT GetObjectInPath(const(GUID)*, uint, const(GUID)*, void**);
+    HRESULT SetFX(uint dwEffectsCount, DSEFFECTDESC* pDSFXDesc, uint* pdwResultCodes);
+    HRESULT AcquireResources(uint dwFlags, uint dwEffectsCount, uint* pdwResultCodes);
+    HRESULT GetObjectInPath(const(GUID)* rguidObject, uint dwIndex, const(GUID)* rguidInterface, void** ppObject);
 }
 enum IID_IDirectSound3DListener = GUID(0x279afa84, 0x4981, 0x11ce, [0xa5, 0x21, 0x0, 0x20, 0xaf, 0xb, 0xe5, 0x60]);
 interface IDirectSound3DListener : IUnknown
 {
-    HRESULT GetAllParameters(DS3DLISTENER*);
-    HRESULT GetDistanceFactor(float*);
-    HRESULT GetDopplerFactor(float*);
-    HRESULT GetOrientation(D3DVECTOR*, D3DVECTOR*);
-    HRESULT GetPosition(D3DVECTOR*);
-    HRESULT GetRolloffFactor(float*);
-    HRESULT GetVelocity(D3DVECTOR*);
-    HRESULT SetAllParameters(DS3DLISTENER*, uint);
-    HRESULT SetDistanceFactor(float, uint);
-    HRESULT SetDopplerFactor(float, uint);
-    HRESULT SetOrientation(float, float, float, float, float, float, uint);
-    HRESULT SetPosition(float, float, float, uint);
-    HRESULT SetRolloffFactor(float, uint);
-    HRESULT SetVelocity(float, float, float, uint);
+    HRESULT GetAllParameters(DS3DLISTENER* pListener);
+    HRESULT GetDistanceFactor(float* pflDistanceFactor);
+    HRESULT GetDopplerFactor(float* pflDopplerFactor);
+    HRESULT GetOrientation(D3DVECTOR* pvOrientFront, D3DVECTOR* pvOrientTop);
+    HRESULT GetPosition(D3DVECTOR* pvPosition);
+    HRESULT GetRolloffFactor(float* pflRolloffFactor);
+    HRESULT GetVelocity(D3DVECTOR* pvVelocity);
+    HRESULT SetAllParameters(DS3DLISTENER* pcListener, uint dwApply);
+    HRESULT SetDistanceFactor(float flDistanceFactor, uint dwApply);
+    HRESULT SetDopplerFactor(float flDopplerFactor, uint dwApply);
+    HRESULT SetOrientation(float xFront, float yFront, float zFront, float xTop, float yTop, float zTop, uint dwApply);
+    HRESULT SetPosition(float x, float y, float z, uint dwApply);
+    HRESULT SetRolloffFactor(float flRolloffFactor, uint dwApply);
+    HRESULT SetVelocity(float x, float y, float z, uint dwApply);
     HRESULT CommitDeferredSettings();
 }
 enum IID_IDirectSound3DBuffer = GUID(0x279afa86, 0x4981, 0x11ce, [0xa5, 0x21, 0x0, 0x20, 0xaf, 0xb, 0xe5, 0x60]);
 interface IDirectSound3DBuffer : IUnknown
 {
-    HRESULT GetAllParameters(DS3DBUFFER*);
-    HRESULT GetConeAngles(uint*, uint*);
-    HRESULT GetConeOrientation(D3DVECTOR*);
-    HRESULT GetConeOutsideVolume(int*);
-    HRESULT GetMaxDistance(float*);
-    HRESULT GetMinDistance(float*);
-    HRESULT GetMode(uint*);
-    HRESULT GetPosition(D3DVECTOR*);
-    HRESULT GetVelocity(D3DVECTOR*);
-    HRESULT SetAllParameters(DS3DBUFFER*, uint);
-    HRESULT SetConeAngles(uint, uint, uint);
-    HRESULT SetConeOrientation(float, float, float, uint);
-    HRESULT SetConeOutsideVolume(int, uint);
-    HRESULT SetMaxDistance(float, uint);
-    HRESULT SetMinDistance(float, uint);
-    HRESULT SetMode(uint, uint);
-    HRESULT SetPosition(float, float, float, uint);
-    HRESULT SetVelocity(float, float, float, uint);
+    HRESULT GetAllParameters(DS3DBUFFER* pDs3dBuffer);
+    HRESULT GetConeAngles(uint* pdwInsideConeAngle, uint* pdwOutsideConeAngle);
+    HRESULT GetConeOrientation(D3DVECTOR* pvOrientation);
+    HRESULT GetConeOutsideVolume(int* plConeOutsideVolume);
+    HRESULT GetMaxDistance(float* pflMaxDistance);
+    HRESULT GetMinDistance(float* pflMinDistance);
+    HRESULT GetMode(uint* pdwMode);
+    HRESULT GetPosition(D3DVECTOR* pvPosition);
+    HRESULT GetVelocity(D3DVECTOR* pvVelocity);
+    HRESULT SetAllParameters(DS3DBUFFER* pcDs3dBuffer, uint dwApply);
+    HRESULT SetConeAngles(uint dwInsideConeAngle, uint dwOutsideConeAngle, uint dwApply);
+    HRESULT SetConeOrientation(float x, float y, float z, uint dwApply);
+    HRESULT SetConeOutsideVolume(int lConeOutsideVolume, uint dwApply);
+    HRESULT SetMaxDistance(float flMaxDistance, uint dwApply);
+    HRESULT SetMinDistance(float flMinDistance, uint dwApply);
+    HRESULT SetMode(uint dwMode, uint dwApply);
+    HRESULT SetPosition(float x, float y, float z, uint dwApply);
+    HRESULT SetVelocity(float x, float y, float z, uint dwApply);
 }
 enum IID_IDirectSoundCapture = GUID(0xb0210781, 0x89cd, 0x11d0, [0xaf, 0x8, 0x0, 0xa0, 0xc9, 0x25, 0xcd, 0x16]);
 interface IDirectSoundCapture : IUnknown
 {
-    HRESULT CreateCaptureBuffer(DSCBUFFERDESC*, IDirectSoundCaptureBuffer*, IUnknown);
-    HRESULT GetCaps(DSCCAPS*);
-    HRESULT Initialize(const(GUID)*);
+    HRESULT CreateCaptureBuffer(DSCBUFFERDESC* pcDSCBufferDesc, IDirectSoundCaptureBuffer* ppDSCBuffer, IUnknown pUnkOuter);
+    HRESULT GetCaps(DSCCAPS* pDSCCaps);
+    HRESULT Initialize(const(GUID)* pcGuidDevice);
 }
 enum IID_IDirectSoundCaptureBuffer = GUID(0xb0210782, 0x89cd, 0x11d0, [0xaf, 0x8, 0x0, 0xa0, 0xc9, 0x25, 0xcd, 0x16]);
 interface IDirectSoundCaptureBuffer : IUnknown
 {
-    HRESULT GetCaps(DSCBCAPS*);
-    HRESULT GetCurrentPosition(uint*, uint*);
-    HRESULT GetFormat(WAVEFORMATEX*, uint, uint*);
-    HRESULT GetStatus(uint*);
-    HRESULT Initialize(IDirectSoundCapture, DSCBUFFERDESC*);
-    HRESULT Lock(uint, uint, void**, uint*, void**, uint*, uint);
-    HRESULT Start(uint);
+    HRESULT GetCaps(DSCBCAPS* pDSCBCaps);
+    HRESULT GetCurrentPosition(uint* pdwCapturePosition, uint* pdwReadPosition);
+    HRESULT GetFormat(WAVEFORMATEX* pwfxFormat, uint dwSizeAllocated, uint* pdwSizeWritten);
+    HRESULT GetStatus(uint* pdwStatus);
+    HRESULT Initialize(IDirectSoundCapture pDirectSoundCapture, DSCBUFFERDESC* pcDSCBufferDesc);
+    HRESULT Lock(uint dwOffset, uint dwBytes, void** ppvAudioPtr1, uint* pdwAudioBytes1, void** ppvAudioPtr2, uint* pdwAudioBytes2, uint dwFlags);
+    HRESULT Start(uint dwFlags);
     HRESULT Stop();
-    HRESULT Unlock(void*, uint, void*, uint);
+    HRESULT Unlock(void* pvAudioPtr1, uint dwAudioBytes1, void* pvAudioPtr2, uint dwAudioBytes2);
 }
 enum IID_IDirectSoundCaptureBuffer8 = GUID(0x990df4, 0xdbb, 0x4872, [0x83, 0x3e, 0x6d, 0x30, 0x3e, 0x80, 0xae, 0xb6]);
 interface IDirectSoundCaptureBuffer8 : IDirectSoundCaptureBuffer
 {
-    HRESULT GetObjectInPath(const(GUID)*, uint, const(GUID)*, void**);
-    HRESULT GetFXStatus(uint, uint*);
+    HRESULT GetObjectInPath(const(GUID)* rguidObject, uint dwIndex, const(GUID)* rguidInterface, void** ppObject);
+    HRESULT GetFXStatus(uint dwEffectsCount, uint* pdwFXStatus);
 }
 enum IID_IDirectSoundNotify = GUID(0xb0210783, 0x89cd, 0x11d0, [0xaf, 0x8, 0x0, 0xa0, 0xc9, 0x25, 0xcd, 0x16]);
 interface IDirectSoundNotify : IUnknown
 {
-    HRESULT SetNotificationPositions(uint, DSBPOSITIONNOTIFY*);
+    HRESULT SetNotificationPositions(uint dwPositionNotifies, DSBPOSITIONNOTIFY* pcPositionNotifies);
 }
 struct DSFXGargle
 {
@@ -602,8 +602,8 @@ struct DSFXGargle
 enum IID_IDirectSoundFXGargle = GUID(0xd616f352, 0xd622, 0x11ce, [0xaa, 0xc5, 0x0, 0x20, 0xaf, 0xb, 0x99, 0xa3]);
 interface IDirectSoundFXGargle : IUnknown
 {
-    HRESULT SetAllParameters(DSFXGargle*);
-    HRESULT GetAllParameters(DSFXGargle*);
+    HRESULT SetAllParameters(DSFXGargle* pcDsFxGargle);
+    HRESULT GetAllParameters(DSFXGargle* pDsFxGargle);
 }
 struct DSFXChorus
 {
@@ -618,8 +618,8 @@ struct DSFXChorus
 enum IID_IDirectSoundFXChorus = GUID(0x880842e3, 0x145f, 0x43e6, [0xa9, 0x34, 0xa7, 0x18, 0x6, 0xe5, 0x5, 0x47]);
 interface IDirectSoundFXChorus : IUnknown
 {
-    HRESULT SetAllParameters(DSFXChorus*);
-    HRESULT GetAllParameters(DSFXChorus*);
+    HRESULT SetAllParameters(DSFXChorus* pcDsFxChorus);
+    HRESULT GetAllParameters(DSFXChorus* pDsFxChorus);
 }
 struct DSFXFlanger
 {
@@ -634,8 +634,8 @@ struct DSFXFlanger
 enum IID_IDirectSoundFXFlanger = GUID(0x903e9878, 0x2c92, 0x4072, [0x9b, 0x2c, 0xea, 0x68, 0xf5, 0x39, 0x67, 0x83]);
 interface IDirectSoundFXFlanger : IUnknown
 {
-    HRESULT SetAllParameters(DSFXFlanger*);
-    HRESULT GetAllParameters(DSFXFlanger*);
+    HRESULT SetAllParameters(DSFXFlanger* pcDsFxFlanger);
+    HRESULT GetAllParameters(DSFXFlanger* pDsFxFlanger);
 }
 struct DSFXEcho
 {
@@ -648,8 +648,8 @@ struct DSFXEcho
 enum IID_IDirectSoundFXEcho = GUID(0x8bd28edf, 0x50db, 0x4e92, [0xa2, 0xbd, 0x44, 0x54, 0x88, 0xd1, 0xed, 0x42]);
 interface IDirectSoundFXEcho : IUnknown
 {
-    HRESULT SetAllParameters(DSFXEcho*);
-    HRESULT GetAllParameters(DSFXEcho*);
+    HRESULT SetAllParameters(DSFXEcho* pcDsFxEcho);
+    HRESULT GetAllParameters(DSFXEcho* pDsFxEcho);
 }
 struct DSFXDistortion
 {
@@ -662,8 +662,8 @@ struct DSFXDistortion
 enum IID_IDirectSoundFXDistortion = GUID(0x8ecf4326, 0x455f, 0x4d8b, [0xbd, 0xa9, 0x8d, 0x5d, 0x3e, 0x9e, 0x3e, 0xb]);
 interface IDirectSoundFXDistortion : IUnknown
 {
-    HRESULT SetAllParameters(DSFXDistortion*);
-    HRESULT GetAllParameters(DSFXDistortion*);
+    HRESULT SetAllParameters(DSFXDistortion* pcDsFxDistortion);
+    HRESULT GetAllParameters(DSFXDistortion* pDsFxDistortion);
 }
 struct DSFXCompressor
 {
@@ -677,8 +677,8 @@ struct DSFXCompressor
 enum IID_IDirectSoundFXCompressor = GUID(0x4bbd1154, 0x62f6, 0x4e2c, [0xa1, 0x5c, 0xd3, 0xb6, 0xc4, 0x17, 0xf7, 0xa0]);
 interface IDirectSoundFXCompressor : IUnknown
 {
-    HRESULT SetAllParameters(DSFXCompressor*);
-    HRESULT GetAllParameters(DSFXCompressor*);
+    HRESULT SetAllParameters(DSFXCompressor* pcDsFxCompressor);
+    HRESULT GetAllParameters(DSFXCompressor* pDsFxCompressor);
 }
 struct DSFXParamEq
 {
@@ -689,8 +689,8 @@ struct DSFXParamEq
 enum IID_IDirectSoundFXParamEq = GUID(0xc03ca9fe, 0xfe90, 0x4204, [0x80, 0x78, 0x82, 0x33, 0x4c, 0xd1, 0x77, 0xda]);
 interface IDirectSoundFXParamEq : IUnknown
 {
-    HRESULT SetAllParameters(DSFXParamEq*);
-    HRESULT GetAllParameters(DSFXParamEq*);
+    HRESULT SetAllParameters(DSFXParamEq* pcDsFxParamEq);
+    HRESULT GetAllParameters(DSFXParamEq* pDsFxParamEq);
 }
 struct DSFXI3DL2Reverb
 {
@@ -710,12 +710,12 @@ struct DSFXI3DL2Reverb
 enum IID_IDirectSoundFXI3DL2Reverb = GUID(0x4b166a6a, 0xd66, 0x43f3, [0x80, 0xe3, 0xee, 0x62, 0x80, 0xde, 0xe1, 0xa4]);
 interface IDirectSoundFXI3DL2Reverb : IUnknown
 {
-    HRESULT SetAllParameters(DSFXI3DL2Reverb*);
-    HRESULT GetAllParameters(DSFXI3DL2Reverb*);
-    HRESULT SetPreset(uint);
-    HRESULT GetPreset(uint*);
-    HRESULT SetQuality(int);
-    HRESULT GetQuality(int*);
+    HRESULT SetAllParameters(DSFXI3DL2Reverb* pcDsFxI3DL2Reverb);
+    HRESULT GetAllParameters(DSFXI3DL2Reverb* pDsFxI3DL2Reverb);
+    HRESULT SetPreset(uint dwPreset);
+    HRESULT GetPreset(uint* pdwPreset);
+    HRESULT SetQuality(int lQuality);
+    HRESULT GetQuality(int* plQuality);
 }
 struct DSFXWavesReverb
 {
@@ -727,8 +727,8 @@ struct DSFXWavesReverb
 enum IID_IDirectSoundFXWavesReverb = GUID(0x46858c3a, 0xdc6, 0x45e3, [0xb7, 0x60, 0xd4, 0xee, 0xf1, 0x6c, 0xb3, 0x25]);
 interface IDirectSoundFXWavesReverb : IUnknown
 {
-    HRESULT SetAllParameters(DSFXWavesReverb*);
-    HRESULT GetAllParameters(DSFXWavesReverb*);
+    HRESULT SetAllParameters(DSFXWavesReverb* pcDsFxWavesReverb);
+    HRESULT GetAllParameters(DSFXWavesReverb* pDsFxWavesReverb);
 }
 struct DSCFXAec
 {
@@ -739,9 +739,9 @@ struct DSCFXAec
 enum IID_IDirectSoundCaptureFXAec = GUID(0xad74143d, 0x903d, 0x4ab7, [0x80, 0x66, 0x28, 0xd3, 0x63, 0x3, 0x6d, 0x65]);
 interface IDirectSoundCaptureFXAec : IUnknown
 {
-    HRESULT SetAllParameters(DSCFXAec*);
-    HRESULT GetAllParameters(DSCFXAec*);
-    HRESULT GetStatus(uint*);
+    HRESULT SetAllParameters(DSCFXAec* pDscFxAec);
+    HRESULT GetAllParameters(DSCFXAec* pDscFxAec);
+    HRESULT GetStatus(uint* pdwStatus);
     HRESULT Reset();
 }
 struct DSCFXNoiseSuppress
@@ -751,12 +751,12 @@ struct DSCFXNoiseSuppress
 enum IID_IDirectSoundCaptureFXNoiseSuppress = GUID(0xed311e41, 0xfbae, 0x4175, [0x96, 0x25, 0xcd, 0x8, 0x54, 0xf6, 0x93, 0xca]);
 interface IDirectSoundCaptureFXNoiseSuppress : IUnknown
 {
-    HRESULT SetAllParameters(DSCFXNoiseSuppress*);
-    HRESULT GetAllParameters(DSCFXNoiseSuppress*);
+    HRESULT SetAllParameters(DSCFXNoiseSuppress* pcDscFxNoiseSuppress);
+    HRESULT GetAllParameters(DSCFXNoiseSuppress* pDscFxNoiseSuppress);
     HRESULT Reset();
 }
 enum IID_IDirectSoundFullDuplex = GUID(0xedcb4c7a, 0xdaab, 0x4216, [0xa4, 0x2e, 0x6c, 0x50, 0x59, 0x6d, 0xdc, 0x1d]);
 interface IDirectSoundFullDuplex : IUnknown
 {
-    HRESULT Initialize(const(GUID)*, const(GUID)*, DSCBUFFERDESC*, DSBUFFERDESC*, HWND, uint, IDirectSoundCaptureBuffer8*, IDirectSoundBuffer8*);
+    HRESULT Initialize(const(GUID)* pCaptureGuid, const(GUID)* pRenderGuid, DSCBUFFERDESC* lpDscBufferDesc, DSBUFFERDESC* lpDsBufferDesc, HWND hWnd, uint dwLevel, IDirectSoundCaptureBuffer8* lplpDirectSoundCaptureBuffer8, IDirectSoundBuffer8* lplpDirectSoundBuffer8);
 }

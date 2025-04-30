@@ -16,23 +16,23 @@ enum : uint
 
 BOOL MagInitialize();
 BOOL MagUninitialize();
-BOOL MagSetWindowSource(HWND, RECT);
-BOOL MagGetWindowSource(HWND, RECT*);
-BOOL MagSetWindowTransform(HWND, MAGTRANSFORM*);
-BOOL MagGetWindowTransform(HWND, MAGTRANSFORM*);
-BOOL MagSetWindowFilterList(HWND, MW_FILTERMODE, int, HWND*);
-int MagGetWindowFilterList(HWND, MW_FILTERMODE*, int, HWND*);
-BOOL MagSetImageScalingCallback(HWND, MagImageScalingCallback);
-MagImageScalingCallback MagGetImageScalingCallback(HWND);
-BOOL MagSetColorEffect(HWND, MAGCOLOREFFECT*);
-BOOL MagGetColorEffect(HWND, MAGCOLOREFFECT*);
-BOOL MagSetFullscreenTransform(float, int, int);
-BOOL MagGetFullscreenTransform(float*, int*, int*);
-BOOL MagSetFullscreenColorEffect(MAGCOLOREFFECT*);
-BOOL MagGetFullscreenColorEffect(MAGCOLOREFFECT*);
-BOOL MagSetInputTransform(BOOL, const(RECT)*, const(RECT)*);
-BOOL MagGetInputTransform(BOOL*, RECT*, RECT*);
-BOOL MagShowSystemCursor(BOOL);
+BOOL MagSetWindowSource(HWND hwnd, RECT rect);
+BOOL MagGetWindowSource(HWND hwnd, RECT* pRect);
+BOOL MagSetWindowTransform(HWND hwnd, MAGTRANSFORM* pTransform);
+BOOL MagGetWindowTransform(HWND hwnd, MAGTRANSFORM* pTransform);
+BOOL MagSetWindowFilterList(HWND hwnd, MW_FILTERMODE dwFilterMode, int count, HWND* pHWND);
+int MagGetWindowFilterList(HWND hwnd, MW_FILTERMODE* pdwFilterMode, int count, HWND* pHWND);
+BOOL MagSetImageScalingCallback(HWND hwnd, MagImageScalingCallback callback);
+MagImageScalingCallback MagGetImageScalingCallback(HWND hwnd);
+BOOL MagSetColorEffect(HWND hwnd, MAGCOLOREFFECT* pEffect);
+BOOL MagGetColorEffect(HWND hwnd, MAGCOLOREFFECT* pEffect);
+BOOL MagSetFullscreenTransform(float magLevel, int xOffset, int yOffset);
+BOOL MagGetFullscreenTransform(float* pMagLevel, int* pxOffset, int* pyOffset);
+BOOL MagSetFullscreenColorEffect(MAGCOLOREFFECT* pEffect);
+BOOL MagGetFullscreenColorEffect(MAGCOLOREFFECT* pEffect);
+BOOL MagSetInputTransform(BOOL fEnabled, const(RECT)* pRectSource, const(RECT)* pRectDest);
+BOOL MagGetInputTransform(BOOL* pfEnabled, RECT* pRectSource, RECT* pRectDest);
+BOOL MagShowSystemCursor(BOOL fShowCursor);
 enum WC_MAGNIFIERA = "Magnifier";
 enum WC_MAGNIFIERW = "Magnifier";
 enum WC_MAGNIFIER = "Magnifier";
@@ -56,4 +56,4 @@ struct MAGCOLOREFFECT
 {
     float[25] transform;
 }
-alias MagImageScalingCallback = BOOL function(HWND, void*, MAGIMAGEHEADER, void*, MAGIMAGEHEADER, RECT, RECT, HRGN);
+alias MagImageScalingCallback = BOOL function(HWND hwnd, void* srcdata, MAGIMAGEHEADER srcheader, void* destdata, MAGIMAGEHEADER destheader, RECT unclipped, RECT clipped, HRGN dirty);

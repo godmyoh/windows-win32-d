@@ -138,120 +138,120 @@ enum : int
 enum IID_IItemEnumerator = GUID(0x9f7d7bb7, 0x20b3, 0x11da, [0x81, 0xa5, 0x0, 0x30, 0xf1, 0x64, 0x2e, 0x3c]);
 interface IItemEnumerator : IUnknown
 {
-    HRESULT Current(VARIANT*);
-    HRESULT MoveNext(BOOL*);
+    HRESULT Current(VARIANT* Item);
+    HRESULT MoveNext(BOOL* ItemValid);
     HRESULT Reset();
 }
 enum IID_ISettingsIdentity = GUID(0x9f7d7bb6, 0x20b3, 0x11da, [0x81, 0xa5, 0x0, 0x30, 0xf1, 0x64, 0x2e, 0x3c]);
 interface ISettingsIdentity : IUnknown
 {
-    HRESULT GetAttribute(void*, const(wchar)*, BSTR*);
-    HRESULT SetAttribute(void*, const(wchar)*, const(wchar)*);
-    HRESULT GetFlags(uint*);
-    HRESULT SetFlags(uint);
+    HRESULT GetAttribute(void* Reserved, const(wchar)* Name, BSTR* Value);
+    HRESULT SetAttribute(void* Reserved, const(wchar)* Name, const(wchar)* Value);
+    HRESULT GetFlags(uint* Flags);
+    HRESULT SetFlags(uint Flags);
 }
 enum IID_ITargetInfo = GUID(0x9f7d7bb8, 0x20b3, 0x11da, [0x81, 0xa5, 0x0, 0x30, 0xf1, 0x64, 0x2e, 0x3c]);
 interface ITargetInfo : IUnknown
 {
-    HRESULT GetTargetMode(WcmTargetMode*);
-    HRESULT SetTargetMode(WcmTargetMode);
-    HRESULT GetTemporaryStoreLocation(BSTR*);
-    HRESULT SetTemporaryStoreLocation(const(wchar)*);
-    HRESULT GetTargetID(BSTR*);
-    HRESULT SetTargetID(GUID);
-    HRESULT GetTargetProcessorArchitecture(BSTR*);
-    HRESULT SetTargetProcessorArchitecture(const(wchar)*);
-    HRESULT GetProperty(BOOL, const(wchar)*, BSTR*);
-    HRESULT SetProperty(BOOL, const(wchar)*, const(wchar)*);
-    HRESULT GetEnumerator(IItemEnumerator*);
-    HRESULT ExpandTarget(BOOL, const(wchar)*, BSTR*);
-    HRESULT ExpandTargetPath(BOOL, const(wchar)*, BSTR*);
-    HRESULT SetModulePath(const(wchar)*, const(wchar)*);
-    HRESULT LoadModule(const(wchar)*, HMODULE*);
-    HRESULT SetWow64Context(const(wchar)*, ubyte*);
-    HRESULT TranslateWow64(const(wchar)*, const(wchar)*, BSTR*);
-    HRESULT SetSchemaHiveLocation(const(wchar)*);
-    HRESULT GetSchemaHiveLocation(BSTR*);
-    HRESULT SetSchemaHiveMountName(const(wchar)*);
-    HRESULT GetSchemaHiveMountName(BSTR*);
+    HRESULT GetTargetMode(WcmTargetMode* TargetMode);
+    HRESULT SetTargetMode(WcmTargetMode TargetMode);
+    HRESULT GetTemporaryStoreLocation(BSTR* TemporaryStoreLocation);
+    HRESULT SetTemporaryStoreLocation(const(wchar)* TemporaryStoreLocation);
+    HRESULT GetTargetID(BSTR* TargetID);
+    HRESULT SetTargetID(GUID TargetID);
+    HRESULT GetTargetProcessorArchitecture(BSTR* ProcessorArchitecture);
+    HRESULT SetTargetProcessorArchitecture(const(wchar)* ProcessorArchitecture);
+    HRESULT GetProperty(BOOL Offline, const(wchar)* Property, BSTR* Value);
+    HRESULT SetProperty(BOOL Offline, const(wchar)* Property, const(wchar)* Value);
+    HRESULT GetEnumerator(IItemEnumerator* Enumerator);
+    HRESULT ExpandTarget(BOOL Offline, const(wchar)* Location, BSTR* ExpandedLocation);
+    HRESULT ExpandTargetPath(BOOL Offline, const(wchar)* Location, BSTR* ExpandedLocation);
+    HRESULT SetModulePath(const(wchar)* Module, const(wchar)* Path);
+    HRESULT LoadModule(const(wchar)* Module, HMODULE* ModuleHandle);
+    HRESULT SetWow64Context(const(wchar)* InstallerModule, ubyte* Wow64Context);
+    HRESULT TranslateWow64(const(wchar)* ClientArchitecture, const(wchar)* Value, BSTR* TranslatedValue);
+    HRESULT SetSchemaHiveLocation(const(wchar)* pwzHiveDir);
+    HRESULT GetSchemaHiveLocation(BSTR* pHiveLocation);
+    HRESULT SetSchemaHiveMountName(const(wchar)* pwzMountName);
+    HRESULT GetSchemaHiveMountName(BSTR* pMountName);
 }
 enum IID_ISettingsEngine = GUID(0x9f7d7bb9, 0x20b3, 0x11da, [0x81, 0xa5, 0x0, 0x30, 0xf1, 0x64, 0x2e, 0x3c]);
 interface ISettingsEngine : IUnknown
 {
-    HRESULT GetNamespaces(WcmNamespaceEnumerationFlags, void*, IItemEnumerator*);
-    HRESULT GetNamespace(ISettingsIdentity, WcmNamespaceAccess, void*, ISettingsNamespace*);
-    HRESULT GetErrorDescription(int, BSTR*);
-    HRESULT CreateSettingsIdentity(ISettingsIdentity*);
-    HRESULT GetStoreStatus(void*, WcmUserStatus*);
-    HRESULT LoadStore(uint);
-    HRESULT UnloadStore(void*);
-    HRESULT RegisterNamespace(ISettingsIdentity, IStream, BOOL, VARIANT*);
-    HRESULT UnregisterNamespace(ISettingsIdentity, BOOL);
-    HRESULT CreateTargetInfo(ITargetInfo*);
-    HRESULT GetTargetInfo(ITargetInfo*);
-    HRESULT SetTargetInfo(ITargetInfo);
-    HRESULT CreateSettingsContext(uint, void*, ISettingsContext*);
-    HRESULT SetSettingsContext(ISettingsContext);
-    HRESULT ApplySettingsContext(ISettingsContext, PWSTR**, ulong*);
-    HRESULT GetSettingsContext(ISettingsContext*);
+    HRESULT GetNamespaces(WcmNamespaceEnumerationFlags Flags, void* Reserved, IItemEnumerator* Namespaces);
+    HRESULT GetNamespace(ISettingsIdentity SettingsID, WcmNamespaceAccess Access, void* Reserved, ISettingsNamespace* NamespaceItem);
+    HRESULT GetErrorDescription(int HResult, BSTR* Message);
+    HRESULT CreateSettingsIdentity(ISettingsIdentity* SettingsID);
+    HRESULT GetStoreStatus(void* Reserved, WcmUserStatus* Status);
+    HRESULT LoadStore(uint Flags);
+    HRESULT UnloadStore(void* Reserved);
+    HRESULT RegisterNamespace(ISettingsIdentity SettingsID, IStream Stream, BOOL PushSettings, VARIANT* Results);
+    HRESULT UnregisterNamespace(ISettingsIdentity SettingsID, BOOL RemoveSettings);
+    HRESULT CreateTargetInfo(ITargetInfo* Target);
+    HRESULT GetTargetInfo(ITargetInfo* Target);
+    HRESULT SetTargetInfo(ITargetInfo Target);
+    HRESULT CreateSettingsContext(uint Flags, void* Reserved, ISettingsContext* SettingsContext);
+    HRESULT SetSettingsContext(ISettingsContext SettingsContext);
+    HRESULT ApplySettingsContext(ISettingsContext SettingsContext, PWSTR** pppwzIdentities, ulong* pcIdentities);
+    HRESULT GetSettingsContext(ISettingsContext* SettingsContext);
 }
 enum IID_ISettingsItem = GUID(0x9f7d7bbb, 0x20b3, 0x11da, [0x81, 0xa5, 0x0, 0x30, 0xf1, 0x64, 0x2e, 0x3c]);
 interface ISettingsItem : IUnknown
 {
-    HRESULT GetName(BSTR*);
-    HRESULT GetValue(VARIANT*);
-    HRESULT SetValue(const(VARIANT)*);
-    HRESULT GetSettingType(WcmSettingType*);
-    HRESULT GetDataType(WcmDataType*);
-    HRESULT GetValueRaw(ubyte**, uint*);
-    HRESULT SetValueRaw(int, const(ubyte)*, uint);
-    HRESULT HasChild(BOOL*);
-    HRESULT Children(IItemEnumerator*);
-    HRESULT GetChild(const(wchar)*, ISettingsItem*);
-    HRESULT GetSettingByPath(const(wchar)*, ISettingsItem*);
-    HRESULT CreateSettingByPath(const(wchar)*, ISettingsItem*);
-    HRESULT RemoveSettingByPath(const(wchar)*);
-    HRESULT GetListKeyInformation(BSTR*, WcmDataType*);
-    HRESULT CreateListElement(const(VARIANT)*, ISettingsItem*);
-    HRESULT RemoveListElement(const(wchar)*);
-    HRESULT Attributes(IItemEnumerator*);
-    HRESULT GetAttribute(const(wchar)*, VARIANT*);
-    HRESULT GetPath(BSTR*);
-    HRESULT GetRestrictionFacets(WcmRestrictionFacets*);
-    HRESULT GetRestriction(WcmRestrictionFacets, VARIANT*);
-    HRESULT GetKeyValue(VARIANT*);
+    HRESULT GetName(BSTR* Name);
+    HRESULT GetValue(VARIANT* Value);
+    HRESULT SetValue(const(VARIANT)* Value);
+    HRESULT GetSettingType(WcmSettingType* Type);
+    HRESULT GetDataType(WcmDataType* Type);
+    HRESULT GetValueRaw(ubyte** Data, uint* DataSize);
+    HRESULT SetValueRaw(int DataType, const(ubyte)* Data, uint DataSize);
+    HRESULT HasChild(BOOL* ItemHasChild);
+    HRESULT Children(IItemEnumerator* Children);
+    HRESULT GetChild(const(wchar)* Name, ISettingsItem* Child);
+    HRESULT GetSettingByPath(const(wchar)* Path, ISettingsItem* Setting);
+    HRESULT CreateSettingByPath(const(wchar)* Path, ISettingsItem* Setting);
+    HRESULT RemoveSettingByPath(const(wchar)* Path);
+    HRESULT GetListKeyInformation(BSTR* KeyName, WcmDataType* DataType);
+    HRESULT CreateListElement(const(VARIANT)* KeyData, ISettingsItem* Child);
+    HRESULT RemoveListElement(const(wchar)* ElementName);
+    HRESULT Attributes(IItemEnumerator* Attributes);
+    HRESULT GetAttribute(const(wchar)* Name, VARIANT* Value);
+    HRESULT GetPath(BSTR* Path);
+    HRESULT GetRestrictionFacets(WcmRestrictionFacets* RestrictionFacets);
+    HRESULT GetRestriction(WcmRestrictionFacets RestrictionFacet, VARIANT* FacetData);
+    HRESULT GetKeyValue(VARIANT* Value);
 }
 enum IID_ISettingsNamespace = GUID(0x9f7d7bba, 0x20b3, 0x11da, [0x81, 0xa5, 0x0, 0x30, 0xf1, 0x64, 0x2e, 0x3c]);
 interface ISettingsNamespace : IUnknown
 {
-    HRESULT GetIdentity(ISettingsIdentity*);
-    HRESULT Settings(IItemEnumerator*);
-    HRESULT Save(BOOL, ISettingsResult*);
-    HRESULT GetSettingByPath(const(wchar)*, ISettingsItem*);
-    HRESULT CreateSettingByPath(const(wchar)*, ISettingsItem*);
-    HRESULT RemoveSettingByPath(const(wchar)*);
-    HRESULT GetAttribute(const(wchar)*, VARIANT*);
+    HRESULT GetIdentity(ISettingsIdentity* SettingsID);
+    HRESULT Settings(IItemEnumerator* Settings);
+    HRESULT Save(BOOL PushSettings, ISettingsResult* Result);
+    HRESULT GetSettingByPath(const(wchar)* Path, ISettingsItem* Setting);
+    HRESULT CreateSettingByPath(const(wchar)* Path, ISettingsItem* Setting);
+    HRESULT RemoveSettingByPath(const(wchar)* Path);
+    HRESULT GetAttribute(const(wchar)* Name, VARIANT* Value);
 }
 enum IID_ISettingsResult = GUID(0x9f7d7bbc, 0x20b3, 0x11da, [0x81, 0xa5, 0x0, 0x30, 0xf1, 0x64, 0x2e, 0x3c]);
 interface ISettingsResult : IUnknown
 {
-    HRESULT GetDescription(BSTR*);
-    HRESULT GetErrorCode(HRESULT*);
-    HRESULT GetContextDescription(BSTR*);
-    HRESULT GetLine(uint*);
-    HRESULT GetColumn(uint*);
-    HRESULT GetSource(BSTR*);
+    HRESULT GetDescription(BSTR* description);
+    HRESULT GetErrorCode(HRESULT* hrOut);
+    HRESULT GetContextDescription(BSTR* description);
+    HRESULT GetLine(uint* dwLine);
+    HRESULT GetColumn(uint* dwColumn);
+    HRESULT GetSource(BSTR* file);
 }
 enum IID_ISettingsContext = GUID(0x9f7d7bbd, 0x20b3, 0x11da, [0x81, 0xa5, 0x0, 0x30, 0xf1, 0x64, 0x2e, 0x3c]);
 interface ISettingsContext : IUnknown
 {
-    HRESULT Serialize(IStream, ITargetInfo);
-    HRESULT Deserialize(IStream, ITargetInfo, ISettingsResult**, ulong*);
-    HRESULT SetUserData(void*);
-    HRESULT GetUserData(void**);
-    HRESULT GetNamespaces(IItemEnumerator*);
-    HRESULT GetStoredSettings(ISettingsIdentity, IItemEnumerator*, IItemEnumerator*, IItemEnumerator*);
-    HRESULT RevertSetting(ISettingsIdentity, const(wchar)*);
+    HRESULT Serialize(IStream pStream, ITargetInfo pTarget);
+    HRESULT Deserialize(IStream pStream, ITargetInfo pTarget, ISettingsResult** pppResults, ulong* pcResultCount);
+    HRESULT SetUserData(void* pUserData);
+    HRESULT GetUserData(void** pUserData);
+    HRESULT GetNamespaces(IItemEnumerator* ppNamespaceIds);
+    HRESULT GetStoredSettings(ISettingsIdentity pIdentity, IItemEnumerator* ppAddedSettings, IItemEnumerator* ppModifiedSettings, IItemEnumerator* ppDeletedSettings);
+    HRESULT RevertSetting(ISettingsIdentity pIdentity, const(wchar)* pwzSetting);
 }
 enum CLSID_SettingsEngine = GUID(0x9f7d7bb5, 0x20b3, 0x11da, [0x81, 0xa5, 0x0, 0x30, 0xf1, 0x64, 0x2e, 0x3c]);
 struct SettingsEngine

@@ -12,7 +12,7 @@ enum : uint
     AVRF_ENUM_RESOURCES_FLAGS_SUSPEND             = 0x00000001,
 }
 
-uint VerifierEnumerateResource(HANDLE, VERIFIER_ENUM_RESOURCE_FLAGS, uint, AVRF_RESOURCE_ENUMERATE_CALLBACK, void*);
+uint VerifierEnumerateResource(HANDLE Process, VERIFIER_ENUM_RESOURCE_FLAGS Flags, uint ResourceType, AVRF_RESOURCE_ENUMERATE_CALLBACK ResourceCallback, void* EnumerationContext);
 enum AVRF_MAX_TRACES = 0x00000020;
 struct AVRF_BACKTRACE_INFORMATION
 {
@@ -81,6 +81,6 @@ enum : int
     AvrfResourceMax            = 0x00000002,
 }
 
-alias AVRF_RESOURCE_ENUMERATE_CALLBACK = uint function(void*, void*, uint*);
-alias AVRF_HEAPALLOCATION_ENUMERATE_CALLBACK = uint function(AVRF_HEAP_ALLOCATION*, void*, uint*);
-alias AVRF_HANDLEOPERATION_ENUMERATE_CALLBACK = uint function(AVRF_HANDLE_OPERATION*, void*, uint*);
+alias AVRF_RESOURCE_ENUMERATE_CALLBACK = uint function(void* ResourceDescription, void* EnumerationContext, uint* EnumerationLevel);
+alias AVRF_HEAPALLOCATION_ENUMERATE_CALLBACK = uint function(AVRF_HEAP_ALLOCATION* HeapAllocation, void* EnumerationContext, uint* EnumerationLevel);
+alias AVRF_HANDLEOPERATION_ENUMERATE_CALLBACK = uint function(AVRF_HANDLE_OPERATION* HandleOperation, void* EnumerationContext, uint* EnumerationLevel);

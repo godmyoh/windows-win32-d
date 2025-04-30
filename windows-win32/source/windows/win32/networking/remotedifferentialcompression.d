@@ -134,134 +134,134 @@ struct SimilarityFileId
 enum IID_IRdcGeneratorParameters = GUID(0x96236a71, 0x9dbc, 0x11da, [0x9e, 0x3f, 0x0, 0x11, 0x11, 0x4a, 0xe3, 0x11]);
 interface IRdcGeneratorParameters : IUnknown
 {
-    HRESULT GetGeneratorParametersType(GeneratorParametersType*);
-    HRESULT GetParametersVersion(uint*, uint*);
-    HRESULT GetSerializeSize(uint*);
-    HRESULT Serialize(uint, ubyte*, uint*);
+    HRESULT GetGeneratorParametersType(GeneratorParametersType* parametersType);
+    HRESULT GetParametersVersion(uint* currentVersion, uint* minimumCompatibleAppVersion);
+    HRESULT GetSerializeSize(uint* size);
+    HRESULT Serialize(uint size, ubyte* parametersBlob, uint* bytesWritten);
 }
 enum IID_IRdcGeneratorFilterMaxParameters = GUID(0x96236a72, 0x9dbc, 0x11da, [0x9e, 0x3f, 0x0, 0x11, 0x11, 0x4a, 0xe3, 0x11]);
 interface IRdcGeneratorFilterMaxParameters : IUnknown
 {
-    HRESULT GetHorizonSize(uint*);
-    HRESULT SetHorizonSize(uint);
-    HRESULT GetHashWindowSize(uint*);
-    HRESULT SetHashWindowSize(uint);
+    HRESULT GetHorizonSize(uint* horizonSize);
+    HRESULT SetHorizonSize(uint horizonSize);
+    HRESULT GetHashWindowSize(uint* hashWindowSize);
+    HRESULT SetHashWindowSize(uint hashWindowSize);
 }
 enum IID_IRdcGenerator = GUID(0x96236a73, 0x9dbc, 0x11da, [0x9e, 0x3f, 0x0, 0x11, 0x11, 0x4a, 0xe3, 0x11]);
 interface IRdcGenerator : IUnknown
 {
-    HRESULT GetGeneratorParameters(uint, IRdcGeneratorParameters*);
-    HRESULT Process(BOOL, BOOL*, RdcBufferPointer*, uint, RdcBufferPointer**, RDC_ErrorCode*);
+    HRESULT GetGeneratorParameters(uint level, IRdcGeneratorParameters* iGeneratorParameters);
+    HRESULT Process(BOOL endOfInput, BOOL* endOfOutput, RdcBufferPointer* inputBuffer, uint depth, RdcBufferPointer** outputBuffers, RDC_ErrorCode* rdc_ErrorCode);
 }
 enum IID_IRdcFileReader = GUID(0x96236a74, 0x9dbc, 0x11da, [0x9e, 0x3f, 0x0, 0x11, 0x11, 0x4a, 0xe3, 0x11]);
 interface IRdcFileReader : IUnknown
 {
-    HRESULT GetFileSize(ulong*);
-    HRESULT Read(ulong, uint, uint*, ubyte*, BOOL*);
-    HRESULT GetFilePosition(ulong*);
+    HRESULT GetFileSize(ulong* fileSize);
+    HRESULT Read(ulong offsetFileStart, uint bytesToRead, uint* bytesActuallyRead, ubyte* buffer, BOOL* eof);
+    HRESULT GetFilePosition(ulong* offsetFromStart);
 }
 enum IID_IRdcFileWriter = GUID(0x96236a75, 0x9dbc, 0x11da, [0x9e, 0x3f, 0x0, 0x11, 0x11, 0x4a, 0xe3, 0x11]);
 interface IRdcFileWriter : IRdcFileReader
 {
-    HRESULT Write(ulong, uint, ubyte*);
+    HRESULT Write(ulong offsetFileStart, uint bytesToWrite, ubyte* buffer);
     HRESULT Truncate();
     HRESULT DeleteOnClose();
 }
 enum IID_IRdcSignatureReader = GUID(0x96236a76, 0x9dbc, 0x11da, [0x9e, 0x3f, 0x0, 0x11, 0x11, 0x4a, 0xe3, 0x11]);
 interface IRdcSignatureReader : IUnknown
 {
-    HRESULT ReadHeader(RDC_ErrorCode*);
-    HRESULT ReadSignatures(RdcSignaturePointer*, BOOL*);
+    HRESULT ReadHeader(RDC_ErrorCode* rdc_ErrorCode);
+    HRESULT ReadSignatures(RdcSignaturePointer* rdcSignaturePointer, BOOL* endOfOutput);
 }
 enum IID_IRdcComparator = GUID(0x96236a77, 0x9dbc, 0x11da, [0x9e, 0x3f, 0x0, 0x11, 0x11, 0x4a, 0xe3, 0x11]);
 interface IRdcComparator : IUnknown
 {
-    HRESULT Process(BOOL, BOOL*, RdcBufferPointer*, RdcNeedPointer*, RDC_ErrorCode*);
+    HRESULT Process(BOOL endOfInput, BOOL* endOfOutput, RdcBufferPointer* inputBuffer, RdcNeedPointer* outputBuffer, RDC_ErrorCode* rdc_ErrorCode);
 }
 enum IID_IRdcLibrary = GUID(0x96236a78, 0x9dbc, 0x11da, [0x9e, 0x3f, 0x0, 0x11, 0x11, 0x4a, 0xe3, 0x11]);
 interface IRdcLibrary : IUnknown
 {
-    HRESULT ComputeDefaultRecursionDepth(ulong, uint*);
-    HRESULT CreateGeneratorParameters(GeneratorParametersType, uint, IRdcGeneratorParameters*);
-    HRESULT OpenGeneratorParameters(uint, const(ubyte)*, IRdcGeneratorParameters*);
-    HRESULT CreateGenerator(uint, IRdcGeneratorParameters*, IRdcGenerator*);
-    HRESULT CreateComparator(IRdcFileReader, uint, IRdcComparator*);
-    HRESULT CreateSignatureReader(IRdcFileReader, IRdcSignatureReader*);
-    HRESULT GetRDCVersion(uint*, uint*);
+    HRESULT ComputeDefaultRecursionDepth(ulong fileSize, uint* depth);
+    HRESULT CreateGeneratorParameters(GeneratorParametersType parametersType, uint level, IRdcGeneratorParameters* iGeneratorParameters);
+    HRESULT OpenGeneratorParameters(uint size, const(ubyte)* parametersBlob, IRdcGeneratorParameters* iGeneratorParameters);
+    HRESULT CreateGenerator(uint depth, IRdcGeneratorParameters* iGeneratorParametersArray, IRdcGenerator* iGenerator);
+    HRESULT CreateComparator(IRdcFileReader iSeedSignaturesFile, uint comparatorBufferSize, IRdcComparator* iComparator);
+    HRESULT CreateSignatureReader(IRdcFileReader iFileReader, IRdcSignatureReader* iSignatureReader);
+    HRESULT GetRDCVersion(uint* currentVersion, uint* minimumCompatibleAppVersion);
 }
 enum IID_ISimilarityReportProgress = GUID(0x96236a7a, 0x9dbc, 0x11da, [0x9e, 0x3f, 0x0, 0x11, 0x11, 0x4a, 0xe3, 0x11]);
 interface ISimilarityReportProgress : IUnknown
 {
-    HRESULT ReportProgress(uint);
+    HRESULT ReportProgress(uint percentCompleted);
 }
 enum IID_ISimilarityTableDumpState = GUID(0x96236a7b, 0x9dbc, 0x11da, [0x9e, 0x3f, 0x0, 0x11, 0x11, 0x4a, 0xe3, 0x11]);
 interface ISimilarityTableDumpState : IUnknown
 {
-    HRESULT GetNextData(uint, uint*, BOOL*, SimilarityDumpData*);
+    HRESULT GetNextData(uint resultsSize, uint* resultsUsed, BOOL* eof, SimilarityDumpData* results);
 }
 enum IID_ISimilarityTraitsMappedView = GUID(0x96236a7c, 0x9dbc, 0x11da, [0x9e, 0x3f, 0x0, 0x11, 0x11, 0x4a, 0xe3, 0x11]);
 interface ISimilarityTraitsMappedView : IUnknown
 {
     HRESULT Flush();
     HRESULT Unmap();
-    HRESULT Get(ulong, BOOL, uint, SimilarityMappedViewInfo*);
-    void GetView(const(ubyte)**, const(ubyte)**);
+    HRESULT Get(ulong index, BOOL dirty, uint numElements, SimilarityMappedViewInfo* viewInfo);
+    void GetView(const(ubyte)** mappedPageBegin, const(ubyte)** mappedPageEnd);
 }
 enum IID_ISimilarityTraitsMapping = GUID(0x96236a7d, 0x9dbc, 0x11da, [0x9e, 0x3f, 0x0, 0x11, 0x11, 0x4a, 0xe3, 0x11]);
 interface ISimilarityTraitsMapping : IUnknown
 {
     void CloseMapping();
-    HRESULT SetFileSize(ulong);
-    HRESULT GetFileSize(ulong*);
-    HRESULT OpenMapping(RdcMappingAccessMode, ulong, ulong, ulong*);
-    HRESULT ResizeMapping(RdcMappingAccessMode, ulong, ulong, ulong*);
-    void GetPageSize(uint*);
-    HRESULT CreateView(uint, RdcMappingAccessMode, ISimilarityTraitsMappedView*);
+    HRESULT SetFileSize(ulong fileSize);
+    HRESULT GetFileSize(ulong* fileSize);
+    HRESULT OpenMapping(RdcMappingAccessMode accessMode, ulong begin, ulong end, ulong* actualEnd);
+    HRESULT ResizeMapping(RdcMappingAccessMode accessMode, ulong begin, ulong end, ulong* actualEnd);
+    void GetPageSize(uint* pageSize);
+    HRESULT CreateView(uint minimumMappedPages, RdcMappingAccessMode accessMode, ISimilarityTraitsMappedView* mappedView);
 }
 enum IID_ISimilarityTraitsTable = GUID(0x96236a7e, 0x9dbc, 0x11da, [0x9e, 0x3f, 0x0, 0x11, 0x11, 0x4a, 0xe3, 0x11]);
 interface ISimilarityTraitsTable : IUnknown
 {
-    HRESULT CreateTable(PWSTR, BOOL, ubyte*, RdcCreatedTables*);
-    HRESULT CreateTableIndirect(ISimilarityTraitsMapping, BOOL, RdcCreatedTables*);
-    HRESULT CloseTable(BOOL);
-    HRESULT Append(SimilarityData*, uint);
-    HRESULT FindSimilarFileIndex(SimilarityData*, ushort, FindSimilarFileIndexResults*, uint, uint*);
-    HRESULT BeginDump(ISimilarityTableDumpState*);
-    HRESULT GetLastIndex(uint*);
+    HRESULT CreateTable(PWSTR path, BOOL truncate, ubyte* securityDescriptor, RdcCreatedTables* isNew);
+    HRESULT CreateTableIndirect(ISimilarityTraitsMapping mapping, BOOL truncate, RdcCreatedTables* isNew);
+    HRESULT CloseTable(BOOL isValid);
+    HRESULT Append(SimilarityData* data, uint fileIndex);
+    HRESULT FindSimilarFileIndex(SimilarityData* similarityData, ushort numberOfMatchesRequired, FindSimilarFileIndexResults* findSimilarFileIndexResults, uint resultsSize, uint* resultsUsed);
+    HRESULT BeginDump(ISimilarityTableDumpState* similarityTableDumpState);
+    HRESULT GetLastIndex(uint* fileIndex);
 }
 enum IID_ISimilarityFileIdTable = GUID(0x96236a7f, 0x9dbc, 0x11da, [0x9e, 0x3f, 0x0, 0x11, 0x11, 0x4a, 0xe3, 0x11]);
 interface ISimilarityFileIdTable : IUnknown
 {
-    HRESULT CreateTable(PWSTR, BOOL, ubyte*, uint, RdcCreatedTables*);
-    HRESULT CreateTableIndirect(IRdcFileWriter, BOOL, uint, RdcCreatedTables*);
-    HRESULT CloseTable(BOOL);
-    HRESULT Append(SimilarityFileId*, uint*);
-    HRESULT Lookup(uint, SimilarityFileId*);
-    HRESULT Invalidate(uint);
-    HRESULT GetRecordCount(uint*);
+    HRESULT CreateTable(PWSTR path, BOOL truncate, ubyte* securityDescriptor, uint recordSize, RdcCreatedTables* isNew);
+    HRESULT CreateTableIndirect(IRdcFileWriter fileIdFile, BOOL truncate, uint recordSize, RdcCreatedTables* isNew);
+    HRESULT CloseTable(BOOL isValid);
+    HRESULT Append(SimilarityFileId* similarityFileId, uint* similarityFileIndex);
+    HRESULT Lookup(uint similarityFileIndex, SimilarityFileId* similarityFileId);
+    HRESULT Invalidate(uint similarityFileIndex);
+    HRESULT GetRecordCount(uint* recordCount);
 }
 enum IID_IRdcSimilarityGenerator = GUID(0x96236a80, 0x9dbc, 0x11da, [0x9e, 0x3f, 0x0, 0x11, 0x11, 0x4a, 0xe3, 0x11]);
 interface IRdcSimilarityGenerator : IUnknown
 {
     HRESULT EnableSimilarity();
-    HRESULT Results(SimilarityData*);
+    HRESULT Results(SimilarityData* similarityData);
 }
 enum IID_IFindSimilarResults = GUID(0x96236a81, 0x9dbc, 0x11da, [0x9e, 0x3f, 0x0, 0x11, 0x11, 0x4a, 0xe3, 0x11]);
 interface IFindSimilarResults : IUnknown
 {
-    HRESULT GetSize(uint*);
-    HRESULT GetNextFileId(uint*, SimilarityFileId*);
+    HRESULT GetSize(uint* size);
+    HRESULT GetNextFileId(uint* numTraitsMatched, SimilarityFileId* similarityFileId);
 }
 enum IID_ISimilarity = GUID(0x96236a83, 0x9dbc, 0x11da, [0x9e, 0x3f, 0x0, 0x11, 0x11, 0x4a, 0xe3, 0x11]);
 interface ISimilarity : IUnknown
 {
-    HRESULT CreateTable(PWSTR, BOOL, ubyte*, uint, RdcCreatedTables*);
-    HRESULT CreateTableIndirect(ISimilarityTraitsMapping, IRdcFileWriter, BOOL, uint, RdcCreatedTables*);
-    HRESULT CloseTable(BOOL);
-    HRESULT Append(SimilarityFileId*, SimilarityData*);
-    HRESULT FindSimilarFileId(SimilarityData*, ushort, uint, IFindSimilarResults*);
-    HRESULT CopyAndSwap(ISimilarity, ISimilarityReportProgress);
-    HRESULT GetRecordCount(uint*);
+    HRESULT CreateTable(PWSTR path, BOOL truncate, ubyte* securityDescriptor, uint recordSize, RdcCreatedTables* isNew);
+    HRESULT CreateTableIndirect(ISimilarityTraitsMapping mapping, IRdcFileWriter fileIdFile, BOOL truncate, uint recordSize, RdcCreatedTables* isNew);
+    HRESULT CloseTable(BOOL isValid);
+    HRESULT Append(SimilarityFileId* similarityFileId, SimilarityData* similarityData);
+    HRESULT FindSimilarFileId(SimilarityData* similarityData, ushort numberOfMatchesRequired, uint resultsSize, IFindSimilarResults* findSimilarResults);
+    HRESULT CopyAndSwap(ISimilarity newSimilarityTables, ISimilarityReportProgress reportProgress);
+    HRESULT GetRecordCount(uint* recordCount);
 }
 enum CLSID_RdcLibrary = GUID(0x96236a85, 0x9dbc, 0x11da, [0x9e, 0x3f, 0x0, 0x11, 0x11, 0x4a, 0xe3, 0x11]);
 struct RdcLibrary

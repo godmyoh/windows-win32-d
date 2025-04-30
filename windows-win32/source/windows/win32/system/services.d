@@ -2,70 +2,70 @@ module windows.win32.system.services;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BOOLEAN, HANDLE, PSTR, PWSTR;
-import windows.win32.security : OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR, SC_HANDLE;
+import windows.win32.security : OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR;
 import windows.win32.system.registry : HKEY;
 
 version (Windows):
 extern (Windows):
 
-BOOL SetServiceBits(SERVICE_STATUS_HANDLE, uint, BOOL, BOOL);
-BOOL ChangeServiceConfigA(SC_HANDLE, ENUM_SERVICE_TYPE, SERVICE_START_TYPE, SERVICE_ERROR, const(char)*, const(char)*, uint*, const(char)*, const(char)*, const(char)*, const(char)*);
-BOOL ChangeServiceConfigW(SC_HANDLE, ENUM_SERVICE_TYPE, SERVICE_START_TYPE, SERVICE_ERROR, const(wchar)*, const(wchar)*, uint*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*);
-BOOL ChangeServiceConfig2A(SC_HANDLE, SERVICE_CONFIG, void*);
-BOOL ChangeServiceConfig2W(SC_HANDLE, SERVICE_CONFIG, void*);
-BOOL CloseServiceHandle(SC_HANDLE);
-BOOL ControlService(SC_HANDLE, uint, SERVICE_STATUS*);
-SC_HANDLE CreateServiceA(SC_HANDLE, const(char)*, const(char)*, uint, ENUM_SERVICE_TYPE, SERVICE_START_TYPE, SERVICE_ERROR, const(char)*, const(char)*, uint*, const(char)*, const(char)*, const(char)*);
-SC_HANDLE CreateServiceW(SC_HANDLE, const(wchar)*, const(wchar)*, uint, ENUM_SERVICE_TYPE, SERVICE_START_TYPE, SERVICE_ERROR, const(wchar)*, const(wchar)*, uint*, const(wchar)*, const(wchar)*, const(wchar)*);
-BOOL DeleteService(SC_HANDLE);
-BOOL EnumDependentServicesA(SC_HANDLE, ENUM_SERVICE_STATE, ENUM_SERVICE_STATUSA*, uint, uint*, uint*);
-BOOL EnumDependentServicesW(SC_HANDLE, ENUM_SERVICE_STATE, ENUM_SERVICE_STATUSW*, uint, uint*, uint*);
-BOOL EnumServicesStatusA(SC_HANDLE, ENUM_SERVICE_TYPE, ENUM_SERVICE_STATE, ENUM_SERVICE_STATUSA*, uint, uint*, uint*, uint*);
-BOOL EnumServicesStatusW(SC_HANDLE, ENUM_SERVICE_TYPE, ENUM_SERVICE_STATE, ENUM_SERVICE_STATUSW*, uint, uint*, uint*, uint*);
-BOOL EnumServicesStatusExA(SC_HANDLE, SC_ENUM_TYPE, ENUM_SERVICE_TYPE, ENUM_SERVICE_STATE, ubyte*, uint, uint*, uint*, uint*, const(char)*);
-BOOL EnumServicesStatusExW(SC_HANDLE, SC_ENUM_TYPE, ENUM_SERVICE_TYPE, ENUM_SERVICE_STATE, ubyte*, uint, uint*, uint*, uint*, const(wchar)*);
-BOOL GetServiceKeyNameA(SC_HANDLE, const(char)*, PSTR, uint*);
-BOOL GetServiceKeyNameW(SC_HANDLE, const(wchar)*, PWSTR, uint*);
-BOOL GetServiceDisplayNameA(SC_HANDLE, const(char)*, PSTR, uint*);
-BOOL GetServiceDisplayNameW(SC_HANDLE, const(wchar)*, PWSTR, uint*);
-void* LockServiceDatabase(SC_HANDLE);
-BOOL NotifyBootConfigStatus(BOOL);
-SC_HANDLE OpenSCManagerA(const(char)*, const(char)*, uint);
-SC_HANDLE OpenSCManagerW(const(wchar)*, const(wchar)*, uint);
-SC_HANDLE OpenServiceA(SC_HANDLE, const(char)*, uint);
-SC_HANDLE OpenServiceW(SC_HANDLE, const(wchar)*, uint);
-BOOL QueryServiceConfigA(SC_HANDLE, QUERY_SERVICE_CONFIGA*, uint, uint*);
-BOOL QueryServiceConfigW(SC_HANDLE, QUERY_SERVICE_CONFIGW*, uint, uint*);
-BOOL QueryServiceConfig2A(SC_HANDLE, SERVICE_CONFIG, ubyte*, uint, uint*);
-BOOL QueryServiceConfig2W(SC_HANDLE, SERVICE_CONFIG, ubyte*, uint, uint*);
-BOOL QueryServiceLockStatusA(SC_HANDLE, QUERY_SERVICE_LOCK_STATUSA*, uint, uint*);
-BOOL QueryServiceLockStatusW(SC_HANDLE, QUERY_SERVICE_LOCK_STATUSW*, uint, uint*);
-BOOL QueryServiceObjectSecurity(SC_HANDLE, uint, PSECURITY_DESCRIPTOR, uint, uint*);
-BOOL QueryServiceStatus(SC_HANDLE, SERVICE_STATUS*);
-BOOL QueryServiceStatusEx(SC_HANDLE, SC_STATUS_TYPE, ubyte*, uint, uint*);
-SERVICE_STATUS_HANDLE RegisterServiceCtrlHandlerA(const(char)*, LPHANDLER_FUNCTION);
-SERVICE_STATUS_HANDLE RegisterServiceCtrlHandlerW(const(wchar)*, LPHANDLER_FUNCTION);
-SERVICE_STATUS_HANDLE RegisterServiceCtrlHandlerExA(const(char)*, LPHANDLER_FUNCTION_EX, void*);
-SERVICE_STATUS_HANDLE RegisterServiceCtrlHandlerExW(const(wchar)*, LPHANDLER_FUNCTION_EX, void*);
-BOOL SetServiceObjectSecurity(SC_HANDLE, OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR);
-BOOL SetServiceStatus(SERVICE_STATUS_HANDLE, SERVICE_STATUS*);
-BOOL StartServiceCtrlDispatcherA(const(SERVICE_TABLE_ENTRYA)*);
-BOOL StartServiceCtrlDispatcherW(const(SERVICE_TABLE_ENTRYW)*);
-BOOL StartServiceA(SC_HANDLE, uint, const(char)**);
-BOOL StartServiceW(SC_HANDLE, uint, const(wchar)**);
-BOOL UnlockServiceDatabase(void*);
-uint NotifyServiceStatusChangeA(SC_HANDLE, SERVICE_NOTIFY, SERVICE_NOTIFY_2A*);
-uint NotifyServiceStatusChangeW(SC_HANDLE, SERVICE_NOTIFY, SERVICE_NOTIFY_2W*);
-BOOL ControlServiceExA(SC_HANDLE, uint, uint, void*);
-BOOL ControlServiceExW(SC_HANDLE, uint, uint, void*);
-BOOL QueryServiceDynamicInformation(SERVICE_STATUS_HANDLE, uint, void**);
-uint SubscribeServiceChangeNotifications(SC_HANDLE, SC_EVENT_TYPE, PSC_NOTIFICATION_CALLBACK, void*, PSC_NOTIFICATION_REGISTRATION*);
-void UnsubscribeServiceChangeNotifications(PSC_NOTIFICATION_REGISTRATION);
-uint WaitServiceState(SC_HANDLE, uint, uint, HANDLE);
-uint GetServiceRegistryStateKey(SERVICE_STATUS_HANDLE, SERVICE_REGISTRY_STATE_TYPE, uint, HKEY*);
-uint GetServiceDirectory(SERVICE_STATUS_HANDLE, SERVICE_DIRECTORY_TYPE, PWSTR, uint, uint*);
-uint GetSharedServiceRegistryStateKey(SC_HANDLE, SERVICE_SHARED_REGISTRY_STATE_TYPE, uint, HKEY*);
-uint GetSharedServiceDirectory(SC_HANDLE, SERVICE_SHARED_DIRECTORY_TYPE, PWSTR, uint, uint*);
+BOOL SetServiceBits(SERVICE_STATUS_HANDLE hServiceStatus, uint dwServiceBits, BOOL bSetBitsOn, BOOL bUpdateImmediately);
+BOOL ChangeServiceConfigA(SC_HANDLE hService, ENUM_SERVICE_TYPE dwServiceType, SERVICE_START_TYPE dwStartType, SERVICE_ERROR dwErrorControl, const(char)* lpBinaryPathName, const(char)* lpLoadOrderGroup, uint* lpdwTagId, const(char)* lpDependencies, const(char)* lpServiceStartName, const(char)* lpPassword, const(char)* lpDisplayName);
+BOOL ChangeServiceConfigW(SC_HANDLE hService, ENUM_SERVICE_TYPE dwServiceType, SERVICE_START_TYPE dwStartType, SERVICE_ERROR dwErrorControl, const(wchar)* lpBinaryPathName, const(wchar)* lpLoadOrderGroup, uint* lpdwTagId, const(wchar)* lpDependencies, const(wchar)* lpServiceStartName, const(wchar)* lpPassword, const(wchar)* lpDisplayName);
+BOOL ChangeServiceConfig2A(SC_HANDLE hService, SERVICE_CONFIG dwInfoLevel, void* lpInfo);
+BOOL ChangeServiceConfig2W(SC_HANDLE hService, SERVICE_CONFIG dwInfoLevel, void* lpInfo);
+BOOL CloseServiceHandle(SC_HANDLE hSCObject);
+BOOL ControlService(SC_HANDLE hService, uint dwControl, SERVICE_STATUS* lpServiceStatus);
+SC_HANDLE CreateServiceA(SC_HANDLE hSCManager, const(char)* lpServiceName, const(char)* lpDisplayName, uint dwDesiredAccess, ENUM_SERVICE_TYPE dwServiceType, SERVICE_START_TYPE dwStartType, SERVICE_ERROR dwErrorControl, const(char)* lpBinaryPathName, const(char)* lpLoadOrderGroup, uint* lpdwTagId, const(char)* lpDependencies, const(char)* lpServiceStartName, const(char)* lpPassword);
+SC_HANDLE CreateServiceW(SC_HANDLE hSCManager, const(wchar)* lpServiceName, const(wchar)* lpDisplayName, uint dwDesiredAccess, ENUM_SERVICE_TYPE dwServiceType, SERVICE_START_TYPE dwStartType, SERVICE_ERROR dwErrorControl, const(wchar)* lpBinaryPathName, const(wchar)* lpLoadOrderGroup, uint* lpdwTagId, const(wchar)* lpDependencies, const(wchar)* lpServiceStartName, const(wchar)* lpPassword);
+BOOL DeleteService(SC_HANDLE hService);
+BOOL EnumDependentServicesA(SC_HANDLE hService, ENUM_SERVICE_STATE dwServiceState, ENUM_SERVICE_STATUSA* lpServices, uint cbBufSize, uint* pcbBytesNeeded, uint* lpServicesReturned);
+BOOL EnumDependentServicesW(SC_HANDLE hService, ENUM_SERVICE_STATE dwServiceState, ENUM_SERVICE_STATUSW* lpServices, uint cbBufSize, uint* pcbBytesNeeded, uint* lpServicesReturned);
+BOOL EnumServicesStatusA(SC_HANDLE hSCManager, ENUM_SERVICE_TYPE dwServiceType, ENUM_SERVICE_STATE dwServiceState, ENUM_SERVICE_STATUSA* lpServices, uint cbBufSize, uint* pcbBytesNeeded, uint* lpServicesReturned, uint* lpResumeHandle);
+BOOL EnumServicesStatusW(SC_HANDLE hSCManager, ENUM_SERVICE_TYPE dwServiceType, ENUM_SERVICE_STATE dwServiceState, ENUM_SERVICE_STATUSW* lpServices, uint cbBufSize, uint* pcbBytesNeeded, uint* lpServicesReturned, uint* lpResumeHandle);
+BOOL EnumServicesStatusExA(SC_HANDLE hSCManager, SC_ENUM_TYPE InfoLevel, ENUM_SERVICE_TYPE dwServiceType, ENUM_SERVICE_STATE dwServiceState, ubyte* lpServices, uint cbBufSize, uint* pcbBytesNeeded, uint* lpServicesReturned, uint* lpResumeHandle, const(char)* pszGroupName);
+BOOL EnumServicesStatusExW(SC_HANDLE hSCManager, SC_ENUM_TYPE InfoLevel, ENUM_SERVICE_TYPE dwServiceType, ENUM_SERVICE_STATE dwServiceState, ubyte* lpServices, uint cbBufSize, uint* pcbBytesNeeded, uint* lpServicesReturned, uint* lpResumeHandle, const(wchar)* pszGroupName);
+BOOL GetServiceKeyNameA(SC_HANDLE hSCManager, const(char)* lpDisplayName, PSTR lpServiceName, uint* lpcchBuffer);
+BOOL GetServiceKeyNameW(SC_HANDLE hSCManager, const(wchar)* lpDisplayName, PWSTR lpServiceName, uint* lpcchBuffer);
+BOOL GetServiceDisplayNameA(SC_HANDLE hSCManager, const(char)* lpServiceName, PSTR lpDisplayName, uint* lpcchBuffer);
+BOOL GetServiceDisplayNameW(SC_HANDLE hSCManager, const(wchar)* lpServiceName, PWSTR lpDisplayName, uint* lpcchBuffer);
+void* LockServiceDatabase(SC_HANDLE hSCManager);
+BOOL NotifyBootConfigStatus(BOOL BootAcceptable);
+SC_HANDLE OpenSCManagerA(const(char)* lpMachineName, const(char)* lpDatabaseName, uint dwDesiredAccess);
+SC_HANDLE OpenSCManagerW(const(wchar)* lpMachineName, const(wchar)* lpDatabaseName, uint dwDesiredAccess);
+SC_HANDLE OpenServiceA(SC_HANDLE hSCManager, const(char)* lpServiceName, uint dwDesiredAccess);
+SC_HANDLE OpenServiceW(SC_HANDLE hSCManager, const(wchar)* lpServiceName, uint dwDesiredAccess);
+BOOL QueryServiceConfigA(SC_HANDLE hService, QUERY_SERVICE_CONFIGA* lpServiceConfig, uint cbBufSize, uint* pcbBytesNeeded);
+BOOL QueryServiceConfigW(SC_HANDLE hService, QUERY_SERVICE_CONFIGW* lpServiceConfig, uint cbBufSize, uint* pcbBytesNeeded);
+BOOL QueryServiceConfig2A(SC_HANDLE hService, SERVICE_CONFIG dwInfoLevel, ubyte* lpBuffer, uint cbBufSize, uint* pcbBytesNeeded);
+BOOL QueryServiceConfig2W(SC_HANDLE hService, SERVICE_CONFIG dwInfoLevel, ubyte* lpBuffer, uint cbBufSize, uint* pcbBytesNeeded);
+BOOL QueryServiceLockStatusA(SC_HANDLE hSCManager, QUERY_SERVICE_LOCK_STATUSA* lpLockStatus, uint cbBufSize, uint* pcbBytesNeeded);
+BOOL QueryServiceLockStatusW(SC_HANDLE hSCManager, QUERY_SERVICE_LOCK_STATUSW* lpLockStatus, uint cbBufSize, uint* pcbBytesNeeded);
+BOOL QueryServiceObjectSecurity(SC_HANDLE hService, uint dwSecurityInformation, PSECURITY_DESCRIPTOR lpSecurityDescriptor, uint cbBufSize, uint* pcbBytesNeeded);
+BOOL QueryServiceStatus(SC_HANDLE hService, SERVICE_STATUS* lpServiceStatus);
+BOOL QueryServiceStatusEx(SC_HANDLE hService, SC_STATUS_TYPE InfoLevel, ubyte* lpBuffer, uint cbBufSize, uint* pcbBytesNeeded);
+SERVICE_STATUS_HANDLE RegisterServiceCtrlHandlerA(const(char)* lpServiceName, LPHANDLER_FUNCTION lpHandlerProc);
+SERVICE_STATUS_HANDLE RegisterServiceCtrlHandlerW(const(wchar)* lpServiceName, LPHANDLER_FUNCTION lpHandlerProc);
+SERVICE_STATUS_HANDLE RegisterServiceCtrlHandlerExA(const(char)* lpServiceName, LPHANDLER_FUNCTION_EX lpHandlerProc, void* lpContext);
+SERVICE_STATUS_HANDLE RegisterServiceCtrlHandlerExW(const(wchar)* lpServiceName, LPHANDLER_FUNCTION_EX lpHandlerProc, void* lpContext);
+BOOL SetServiceObjectSecurity(SC_HANDLE hService, OBJECT_SECURITY_INFORMATION dwSecurityInformation, PSECURITY_DESCRIPTOR lpSecurityDescriptor);
+BOOL SetServiceStatus(SERVICE_STATUS_HANDLE hServiceStatus, SERVICE_STATUS* lpServiceStatus);
+BOOL StartServiceCtrlDispatcherA(const(SERVICE_TABLE_ENTRYA)* lpServiceStartTable);
+BOOL StartServiceCtrlDispatcherW(const(SERVICE_TABLE_ENTRYW)* lpServiceStartTable);
+BOOL StartServiceA(SC_HANDLE hService, uint dwNumServiceArgs, const(char)** lpServiceArgVectors);
+BOOL StartServiceW(SC_HANDLE hService, uint dwNumServiceArgs, const(wchar)** lpServiceArgVectors);
+BOOL UnlockServiceDatabase(void* ScLock);
+uint NotifyServiceStatusChangeA(SC_HANDLE hService, SERVICE_NOTIFY dwNotifyMask, SERVICE_NOTIFY_2A* pNotifyBuffer);
+uint NotifyServiceStatusChangeW(SC_HANDLE hService, SERVICE_NOTIFY dwNotifyMask, SERVICE_NOTIFY_2W* pNotifyBuffer);
+BOOL ControlServiceExA(SC_HANDLE hService, uint dwControl, uint dwInfoLevel, void* pControlParams);
+BOOL ControlServiceExW(SC_HANDLE hService, uint dwControl, uint dwInfoLevel, void* pControlParams);
+BOOL QueryServiceDynamicInformation(SERVICE_STATUS_HANDLE hServiceStatus, uint dwInfoLevel, void** ppDynamicInfo);
+uint SubscribeServiceChangeNotifications(SC_HANDLE hService, SC_EVENT_TYPE eEventType, PSC_NOTIFICATION_CALLBACK pCallback, void* pCallbackContext, PSC_NOTIFICATION_REGISTRATION* pSubscription);
+void UnsubscribeServiceChangeNotifications(PSC_NOTIFICATION_REGISTRATION pSubscription);
+uint WaitServiceState(SC_HANDLE hService, uint dwNotify, uint dwTimeout, HANDLE hCancelEvent);
+uint GetServiceRegistryStateKey(SERVICE_STATUS_HANDLE ServiceStatusHandle, SERVICE_REGISTRY_STATE_TYPE StateType, uint AccessMask, HKEY* ServiceStateKey);
+uint GetServiceDirectory(SERVICE_STATUS_HANDLE hServiceStatus, SERVICE_DIRECTORY_TYPE eDirectoryType, PWSTR lpPathBuffer, uint cchPathBufferLength, uint* lpcchRequiredBufferLength);
+uint GetSharedServiceRegistryStateKey(SC_HANDLE ServiceHandle, SERVICE_SHARED_REGISTRY_STATE_TYPE StateType, uint AccessMask, HKEY* ServiceStateKey);
+uint GetSharedServiceDirectory(SC_HANDLE ServiceHandle, SERVICE_SHARED_DIRECTORY_TYPE DirectoryType, PWSTR PathBuffer, uint PathBufferLength, uint* RequiredBufferLength);
 enum SERVICE_ALL_ACCESS = 0x000f01ff;
 enum SC_MANAGER_ALL_ACCESS = 0x000f003f;
 enum SERVICES_ACTIVE_DATABASEW = "ServicesActive";
@@ -317,7 +317,8 @@ enum : uint
     SERVICE_STOPPED          = 0x00000001,
 }
 
-alias SERVICE_STATUS_HANDLE = long;
+alias SC_HANDLE = void*;
+alias SERVICE_STATUS_HANDLE = void*;
 alias PSC_NOTIFICATION_REGISTRATION = long;
 struct SERVICE_TRIGGER_CUSTOM_STATE_ID
 {
@@ -526,10 +527,10 @@ struct QUERY_SERVICE_CONFIGW
     PWSTR lpServiceStartName;
     PWSTR lpDisplayName;
 }
-alias SERVICE_MAIN_FUNCTIONW = void function(uint, PWSTR*);
-alias SERVICE_MAIN_FUNCTIONA = void function(uint, byte**);
-alias LPSERVICE_MAIN_FUNCTIONW = void function(uint, PWSTR*);
-alias LPSERVICE_MAIN_FUNCTIONA = void function(uint, PSTR*);
+alias SERVICE_MAIN_FUNCTIONW = void function(uint dwNumServicesArgs, PWSTR* lpServiceArgVectors);
+alias SERVICE_MAIN_FUNCTIONA = void function(uint dwNumServicesArgs, byte** lpServiceArgVectors);
+alias LPSERVICE_MAIN_FUNCTIONW = void function(uint dwNumServicesArgs, PWSTR* lpServiceArgVectors);
+alias LPSERVICE_MAIN_FUNCTIONA = void function(uint dwNumServicesArgs, PSTR* lpServiceArgVectors);
 struct SERVICE_TABLE_ENTRYA
 {
     PSTR lpServiceName;
@@ -540,11 +541,11 @@ struct SERVICE_TABLE_ENTRYW
     PWSTR lpServiceName;
     LPSERVICE_MAIN_FUNCTIONW lpServiceProc;
 }
-alias HANDLER_FUNCTION = void function(uint);
-alias HANDLER_FUNCTION_EX = uint function(uint, uint, void*, void*);
-alias LPHANDLER_FUNCTION = void function(uint);
-alias LPHANDLER_FUNCTION_EX = uint function(uint, uint, void*, void*);
-alias PFN_SC_NOTIFY_CALLBACK = void function(void*);
+alias HANDLER_FUNCTION = void function(uint dwControl);
+alias HANDLER_FUNCTION_EX = uint function(uint dwControl, uint dwEventType, void* lpEventData, void* lpContext);
+alias LPHANDLER_FUNCTION = void function(uint dwControl);
+alias LPHANDLER_FUNCTION_EX = uint function(uint dwControl, uint dwEventType, void* lpEventData, void* lpContext);
+alias PFN_SC_NOTIFY_CALLBACK = void function(void* pParameter);
 struct SERVICE_NOTIFY_1
 {
     uint dwVersion;
@@ -597,7 +598,7 @@ enum : int
     SC_EVENT_STATUS_CHANGE   = 0x00000002,
 }
 
-alias PSC_NOTIFICATION_CALLBACK = void function(uint, void*);
+alias PSC_NOTIFICATION_CALLBACK = void function(uint dwNotify, void* pCallbackContext);
 alias SERVICE_REGISTRY_STATE_TYPE = int;
 enum : int
 {

@@ -1,10 +1,10 @@
 module windows.win32.media.audio.apo;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, HANDLE, HRESULT, LPARAM, PWSTR;
+import windows.win32.foundation : BOOL, HANDLE, HRESULT, LPARAM, PROPERTYKEY, PWSTR;
 import windows.win32.media.audio : AUDIO_SYSTEMEFFECTS_PROPERTYSTORE_TYPE, AUDIO_VOLUME_NOTIFICATION_DATA, IMMDevice, IMMDeviceCollection, WAVEFORMATEX;
 import windows.win32.system.com : IServiceProvider, IUnknown;
-import windows.win32.ui.shell.propertiessystem : IPropertyStore, PROPERTYKEY;
+import windows.win32.ui.shell.propertiessystem : IPropertyStore;
 
 version (Windows):
 extern (Windows):
@@ -88,10 +88,10 @@ struct UNCOMPRESSEDAUDIOFORMAT
 enum IID_IAudioMediaType = GUID(0x4e997f73, 0xb71f, 0x4798, [0x87, 0x3b, 0xed, 0x7d, 0xfc, 0xf1, 0x5b, 0x4d]);
 interface IAudioMediaType : IUnknown
 {
-    HRESULT IsCompressedFormat(BOOL*);
-    HRESULT IsEqual(IAudioMediaType, uint*);
+    HRESULT IsCompressedFormat(BOOL* pfCompressed);
+    HRESULT IsEqual(IAudioMediaType pIAudioType, uint* pdwFlags);
     WAVEFORMATEX* GetAudioFormat();
-    HRESULT GetUncompressedAudioFormat(UNCOMPRESSEDAUDIOFORMAT*);
+    HRESULT GetUncompressedAudioFormat(UNCOMPRESSEDAUDIOFORMAT* pUncompressedAudioFormat);
 }
 alias APO_BUFFER_FLAGS = int;
 enum : int
@@ -182,39 +182,39 @@ enum : int
 enum IID_IAudioProcessingObjectRT = GUID(0x9e1d6a6d, 0xddbc, 0x4e95, [0xa4, 0xc7, 0xad, 0x64, 0xba, 0x37, 0x84, 0x6c]);
 interface IAudioProcessingObjectRT : IUnknown
 {
-    void APOProcess(uint, APO_CONNECTION_PROPERTY**, uint, APO_CONNECTION_PROPERTY**);
-    uint CalcInputFrames(uint);
-    uint CalcOutputFrames(uint);
+    void APOProcess(uint u32NumInputConnections, APO_CONNECTION_PROPERTY** ppInputConnections, uint u32NumOutputConnections, APO_CONNECTION_PROPERTY** ppOutputConnections);
+    uint CalcInputFrames(uint u32OutputFrameCount);
+    uint CalcOutputFrames(uint u32InputFrameCount);
 }
 enum IID_IAudioProcessingObjectVBR = GUID(0x7ba1db8f, 0x78ad, 0x49cd, [0x95, 0x91, 0xf7, 0x9d, 0x80, 0xa1, 0x7c, 0x81]);
 interface IAudioProcessingObjectVBR : IUnknown
 {
-    HRESULT CalcMaxInputFrames(uint, uint*);
-    HRESULT CalcMaxOutputFrames(uint, uint*);
+    HRESULT CalcMaxInputFrames(uint u32MaxOutputFrameCount, uint* pu32InputFrameCount);
+    HRESULT CalcMaxOutputFrames(uint u32MaxInputFrameCount, uint* pu32OutputFrameCount);
 }
 enum IID_IAudioProcessingObjectConfiguration = GUID(0xe5ed805, 0xaba6, 0x49c3, [0x8f, 0x9a, 0x2b, 0x8c, 0x88, 0x9c, 0x4f, 0xa8]);
 interface IAudioProcessingObjectConfiguration : IUnknown
 {
-    HRESULT LockForProcess(uint, APO_CONNECTION_DESCRIPTOR**, uint, APO_CONNECTION_DESCRIPTOR**);
+    HRESULT LockForProcess(uint u32NumInputConnections, APO_CONNECTION_DESCRIPTOR** ppInputConnections, uint u32NumOutputConnections, APO_CONNECTION_DESCRIPTOR** ppOutputConnections);
     HRESULT UnlockForProcess();
 }
 enum IID_IAudioProcessingObject = GUID(0xfd7f2b29, 0x24d0, 0x4b5c, [0xb1, 0x77, 0x59, 0x2c, 0x39, 0xf9, 0xca, 0x10]);
 interface IAudioProcessingObject : IUnknown
 {
     HRESULT Reset();
-    HRESULT GetLatency(long*);
-    HRESULT GetRegistrationProperties(APO_REG_PROPERTIES**);
-    HRESULT Initialize(uint, ubyte*);
-    HRESULT IsInputFormatSupported(IAudioMediaType, IAudioMediaType, IAudioMediaType*);
-    HRESULT IsOutputFormatSupported(IAudioMediaType, IAudioMediaType, IAudioMediaType*);
-    HRESULT GetInputChannelCount(uint*);
+    HRESULT GetLatency(long* pTime);
+    HRESULT GetRegistrationProperties(APO_REG_PROPERTIES** ppRegProps);
+    HRESULT Initialize(uint cbDataSize, ubyte* pbyData);
+    HRESULT IsInputFormatSupported(IAudioMediaType pOppositeFormat, IAudioMediaType pRequestedInputFormat, IAudioMediaType* ppSupportedInputFormat);
+    HRESULT IsOutputFormatSupported(IAudioMediaType pOppositeFormat, IAudioMediaType pRequestedOutputFormat, IAudioMediaType* ppSupportedOutputFormat);
+    HRESULT GetInputChannelCount(uint* pu32ChannelCount);
 }
 enum IID_IAudioDeviceModulesClient = GUID(0x98f37dac, 0xd0b6, 0x49f5, [0x89, 0x6a, 0xaa, 0x4d, 0x16, 0x9a, 0x4c, 0x48]);
 interface IAudioDeviceModulesClient : IUnknown
 {
-    HRESULT SetAudioDeviceModulesManager(IUnknown);
+    HRESULT SetAudioDeviceModulesManager(IUnknown pAudioDeviceModulesManager);
 }
-alias FNAPONOTIFICATIONCALLBACK = HRESULT function(APO_REG_PROPERTIES*, void*);
+alias FNAPONOTIFICATIONCALLBACK = HRESULT function(APO_REG_PROPERTIES* pProperties, void* pvRefData);
 enum IID_IAudioSystemEffects = GUID(0x5fa00f27, 0xadd6, 0x499a, [0x8a, 0x9d, 0x6b, 0x98, 0x52, 0x1f, 0xa7, 0x5b]);
 interface IAudioSystemEffects : IUnknown
 {
@@ -222,26 +222,26 @@ interface IAudioSystemEffects : IUnknown
 enum IID_IAudioSystemEffects2 = GUID(0xbafe99d2, 0x7436, 0x44ce, [0x9e, 0xe, 0x4d, 0x89, 0xaf, 0xbf, 0xff, 0x56]);
 interface IAudioSystemEffects2 : IAudioSystemEffects
 {
-    HRESULT GetEffectsList(GUID**, uint*, HANDLE);
+    HRESULT GetEffectsList(GUID** ppEffectsIds, uint* pcEffects, HANDLE Event);
 }
 enum IID_IAudioSystemEffectsCustomFormats = GUID(0xb1176e34, 0xbb7f, 0x4f05, [0xbe, 0xbd, 0x1b, 0x18, 0xa5, 0x34, 0xe0, 0x97]);
 interface IAudioSystemEffectsCustomFormats : IUnknown
 {
-    HRESULT GetFormatCount(uint*);
-    HRESULT GetFormat(uint, IAudioMediaType*);
-    HRESULT GetFormatRepresentation(uint, PWSTR*);
+    HRESULT GetFormatCount(uint* pcFormats);
+    HRESULT GetFormat(uint nFormat, IAudioMediaType* ppFormat);
+    HRESULT GetFormatRepresentation(uint nFormat, PWSTR* ppwstrFormatRep);
 }
 enum IID_IApoAuxiliaryInputConfiguration = GUID(0x4ceb0aab, 0xfa19, 0x48ed, [0xa8, 0x57, 0x87, 0x77, 0x1a, 0xe1, 0xb7, 0x68]);
 interface IApoAuxiliaryInputConfiguration : IUnknown
 {
-    HRESULT AddAuxiliaryInput(uint, uint, ubyte*, APO_CONNECTION_DESCRIPTOR*);
-    HRESULT RemoveAuxiliaryInput(uint);
-    HRESULT IsInputFormatSupported(IAudioMediaType, IAudioMediaType*);
+    HRESULT AddAuxiliaryInput(uint dwInputId, uint cbDataSize, ubyte* pbyData, APO_CONNECTION_DESCRIPTOR* pInputConnection);
+    HRESULT RemoveAuxiliaryInput(uint dwInputId);
+    HRESULT IsInputFormatSupported(IAudioMediaType pRequestedInputFormat, IAudioMediaType* ppSupportedInputFormat);
 }
 enum IID_IApoAuxiliaryInputRT = GUID(0xf851809c, 0xc177, 0x49a0, [0xb1, 0xb2, 0xb6, 0x6f, 0x1, 0x79, 0x43, 0xab]);
 interface IApoAuxiliaryInputRT : IUnknown
 {
-    void AcceptInput(uint, const(APO_CONNECTION_PROPERTY)*);
+    void AcceptInput(uint dwInputId, const(APO_CONNECTION_PROPERTY)* pInputConnection);
 }
 enum IID_IApoAcousticEchoCancellation = GUID(0x25385759, 0x3236, 0x4101, [0xa9, 0x43, 0x25, 0x69, 0x3d, 0xfb, 0x5d, 0x2d]);
 interface IApoAcousticEchoCancellation : IUnknown
@@ -289,8 +289,8 @@ struct AUDIO_SYSTEMEFFECT
 enum IID_IAudioSystemEffects3 = GUID(0xc58b31cd, 0xfc6a, 0x4255, [0xbc, 0x1f, 0xad, 0x29, 0xbb, 0xa, 0x4a, 0x17]);
 interface IAudioSystemEffects3 : IAudioSystemEffects2
 {
-    HRESULT GetControllableSystemEffectsList(AUDIO_SYSTEMEFFECT**, uint*, HANDLE);
-    HRESULT SetAudioSystemEffectState(GUID, AUDIO_SYSTEMEFFECT_STATE);
+    HRESULT GetControllableSystemEffectsList(AUDIO_SYSTEMEFFECT** effects, uint* numEffects, HANDLE event);
+    HRESULT SetAudioSystemEffectState(GUID effectId, AUDIO_SYSTEMEFFECT_STATE state);
 }
 struct APOInitSystemEffects3
 {
@@ -306,7 +306,7 @@ struct APOInitSystemEffects3
 enum IID_IAudioProcessingObjectRTQueueService = GUID(0xacd65e2f, 0x955b, 0x4b57, [0xb9, 0xbf, 0xac, 0x29, 0x7b, 0xb7, 0x52, 0xc9]);
 interface IAudioProcessingObjectRTQueueService : IUnknown
 {
-    HRESULT GetRealTimeWorkQueue(uint*);
+    HRESULT GetRealTimeWorkQueue(uint* workQueueId);
 }
 alias APO_LOG_LEVEL = int;
 enum : int
@@ -322,7 +322,7 @@ enum : int
 enum IID_IAudioProcessingObjectLoggingService = GUID(0x698f0107, 0x1745, 0x4708, [0x95, 0xa5, 0xd8, 0x44, 0x78, 0xa6, 0x2a, 0x65]);
 interface IAudioProcessingObjectLoggingService : IUnknown
 {
-    void ApoLog(APO_LOG_LEVEL, const(wchar)*);
+    void ApoLog(APO_LOG_LEVEL level, const(wchar)* format);
 }
 alias APO_NOTIFICATION_TYPE = int;
 enum : int
@@ -436,11 +436,11 @@ struct APO_NOTIFICATION_DESCRIPTOR
 enum IID_IAudioProcessingObjectNotifications = GUID(0x56b0c76f, 0x2fd, 0x4b21, [0xa5, 0x2e, 0x9f, 0x82, 0x19, 0xfc, 0x86, 0xe4]);
 interface IAudioProcessingObjectNotifications : IUnknown
 {
-    HRESULT GetApoNotificationRegistrationInfo(APO_NOTIFICATION_DESCRIPTOR**, uint*);
-    void HandleNotification(APO_NOTIFICATION*);
+    HRESULT GetApoNotificationRegistrationInfo(APO_NOTIFICATION_DESCRIPTOR** apoNotifications, uint* count);
+    void HandleNotification(APO_NOTIFICATION* apoNotification);
 }
 enum IID_IAudioProcessingObjectNotifications2 = GUID(0xca2cfbde, 0xa9d6, 0x4eb0, [0xbc, 0x95, 0xc4, 0xd0, 0x26, 0xb3, 0x80, 0xf0]);
 interface IAudioProcessingObjectNotifications2 : IAudioProcessingObjectNotifications
 {
-    HRESULT GetApoNotificationRegistrationInfo2(APO_NOTIFICATION_TYPE, APO_NOTIFICATION_DESCRIPTOR**, uint*);
+    HRESULT GetApoNotificationRegistrationInfo2(APO_NOTIFICATION_TYPE maxApoNotificationTypeSupported, APO_NOTIFICATION_DESCRIPTOR** apoNotifications, uint* count);
 }

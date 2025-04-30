@@ -15,7 +15,7 @@ struct UAL_DATA_BLOB
     SOCKADDR_STORAGE Address;
     wchar[260] UserName;
 }
-HRESULT UalStart(UAL_DATA_BLOB*);
-HRESULT UalStop(UAL_DATA_BLOB*);
-HRESULT UalInstrument(UAL_DATA_BLOB*);
-HRESULT UalRegisterProduct(const(wchar)*, const(wchar)*, const(wchar)*);
+HRESULT UalStart(UAL_DATA_BLOB* Data);
+HRESULT UalStop(UAL_DATA_BLOB* Data);
+HRESULT UalInstrument(UAL_DATA_BLOB* Data);
+HRESULT UalRegisterProduct(const(wchar)* wszProductName, const(wchar)* wszRoleName, const(wchar)* wszGuid);

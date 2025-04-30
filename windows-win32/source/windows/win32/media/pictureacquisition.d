@@ -1,11 +1,11 @@
 module windows.win32.media.pictureacquisition;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, FILETIME, HRESULT, HWND, PWSTR, SIZE;
+import windows.win32.foundation : BOOL, BSTR, FILETIME, HRESULT, HWND, PROPERTYKEY, PWSTR, SIZE;
 import windows.win32.graphics.gdi : HBITMAP;
 import windows.win32.system.com : IEnumString, IStream, IUnknown;
 import windows.win32.system.com.structuredstorage : PROPVARIANT;
-import windows.win32.ui.shell.propertiessystem : IPropertyStore, PROPERTYKEY;
+import windows.win32.ui.shell.propertiessystem : IPropertyStore;
 import windows.win32.ui.windowsandmessaging : HICON;
 
 version (Windows):
@@ -52,15 +52,15 @@ enum PAPS_CLEANUP = 0x00000002;
 enum IID_IPhotoAcquireItem = GUID(0xf21c97, 0x28bf, 0x4c02, [0xb8, 0x42, 0x5e, 0x4e, 0x90, 0x13, 0x9a, 0x30]);
 interface IPhotoAcquireItem : IUnknown
 {
-    HRESULT GetItemName(BSTR*);
-    HRESULT GetThumbnail(SIZE, HBITMAP*);
-    HRESULT GetProperty(const(PROPERTYKEY)*, PROPVARIANT*);
-    HRESULT SetProperty(const(PROPERTYKEY)*, const(PROPVARIANT)*);
-    HRESULT GetStream(IStream*);
-    HRESULT CanDelete(BOOL*);
+    HRESULT GetItemName(BSTR* pbstrItemName);
+    HRESULT GetThumbnail(SIZE sizeThumbnail, HBITMAP* phbmpThumbnail);
+    HRESULT GetProperty(const(PROPERTYKEY)* key, PROPVARIANT* pv);
+    HRESULT SetProperty(const(PROPERTYKEY)* key, const(PROPVARIANT)* pv);
+    HRESULT GetStream(IStream* ppStream);
+    HRESULT CanDelete(BOOL* pfCanDelete);
     HRESULT Delete();
-    HRESULT GetSubItemCount(uint*);
-    HRESULT GetSubItemAt(uint, IPhotoAcquireItem*);
+    HRESULT GetSubItemCount(uint* pnCount);
+    HRESULT GetSubItemAt(uint nItemIndex, IPhotoAcquireItem* ppPhotoAcquireItem);
 }
 alias USER_INPUT_STRING_TYPE = int;
 enum : int
@@ -72,16 +72,16 @@ enum : int
 enum IID_IUserInputString = GUID(0xf243a1, 0x205b, 0x45ba, [0xae, 0x26, 0xab, 0xbc, 0x53, 0xaa, 0x7a, 0x6f]);
 interface IUserInputString : IUnknown
 {
-    HRESULT GetSubmitButtonText(BSTR*);
-    HRESULT GetPrompt(BSTR*);
-    HRESULT GetStringId(BSTR*);
-    HRESULT GetStringType(USER_INPUT_STRING_TYPE*);
-    HRESULT GetTooltipText(BSTR*);
-    HRESULT GetMaxLength(uint*);
-    HRESULT GetDefault(BSTR*);
-    HRESULT GetMruCount(uint*);
-    HRESULT GetMruEntryAt(uint, BSTR*);
-    HRESULT GetImage(uint, HBITMAP*, HICON*);
+    HRESULT GetSubmitButtonText(BSTR* pbstrSubmitButtonText);
+    HRESULT GetPrompt(BSTR* pbstrPromptTitle);
+    HRESULT GetStringId(BSTR* pbstrStringId);
+    HRESULT GetStringType(USER_INPUT_STRING_TYPE* pnStringType);
+    HRESULT GetTooltipText(BSTR* pbstrTooltipText);
+    HRESULT GetMaxLength(uint* pcchMaxLength);
+    HRESULT GetDefault(BSTR* pbstrDefault);
+    HRESULT GetMruCount(uint* pnMruCount);
+    HRESULT GetMruEntryAt(uint nIndex, BSTR* pbstrMruEntry);
+    HRESULT GetImage(uint nSize, HBITMAP* phBitmap, HICON* phIcon);
 }
 alias ERROR_ADVISE_MESSAGE_TYPE = int;
 enum : int
@@ -107,30 +107,30 @@ enum : int
 enum IID_IPhotoAcquireProgressCB = GUID(0xf2ce1e, 0x935e, 0x4248, [0x89, 0x2c, 0x13, 0xf, 0x32, 0xc4, 0x5c, 0xb4]);
 interface IPhotoAcquireProgressCB : IUnknown
 {
-    HRESULT Cancelled(BOOL*);
-    HRESULT StartEnumeration(IPhotoAcquireSource);
-    HRESULT FoundItem(IPhotoAcquireItem);
-    HRESULT EndEnumeration(HRESULT);
-    HRESULT StartTransfer(IPhotoAcquireSource);
-    HRESULT StartItemTransfer(uint, IPhotoAcquireItem);
-    HRESULT DirectoryCreated(const(wchar)*);
-    HRESULT UpdateTransferPercent(BOOL, uint);
-    HRESULT EndItemTransfer(uint, IPhotoAcquireItem, HRESULT);
-    HRESULT EndTransfer(HRESULT);
-    HRESULT StartDelete(IPhotoAcquireSource);
-    HRESULT StartItemDelete(uint, IPhotoAcquireItem);
-    HRESULT UpdateDeletePercent(uint);
-    HRESULT EndItemDelete(uint, IPhotoAcquireItem, HRESULT);
-    HRESULT EndDelete(HRESULT);
-    HRESULT EndSession(HRESULT);
-    HRESULT GetDeleteAfterAcquire(BOOL*);
-    HRESULT ErrorAdvise(HRESULT, const(wchar)*, ERROR_ADVISE_MESSAGE_TYPE, ERROR_ADVISE_RESULT*);
-    HRESULT GetUserInput(const(GUID)*, IUnknown, PROPVARIANT*, const(PROPVARIANT)*);
+    HRESULT Cancelled(BOOL* pfCancelled);
+    HRESULT StartEnumeration(IPhotoAcquireSource pPhotoAcquireSource);
+    HRESULT FoundItem(IPhotoAcquireItem pPhotoAcquireItem);
+    HRESULT EndEnumeration(HRESULT hr);
+    HRESULT StartTransfer(IPhotoAcquireSource pPhotoAcquireSource);
+    HRESULT StartItemTransfer(uint nItemIndex, IPhotoAcquireItem pPhotoAcquireItem);
+    HRESULT DirectoryCreated(const(wchar)* pszDirectory);
+    HRESULT UpdateTransferPercent(BOOL fOverall, uint nPercent);
+    HRESULT EndItemTransfer(uint nItemIndex, IPhotoAcquireItem pPhotoAcquireItem, HRESULT hr);
+    HRESULT EndTransfer(HRESULT hr);
+    HRESULT StartDelete(IPhotoAcquireSource pPhotoAcquireSource);
+    HRESULT StartItemDelete(uint nItemIndex, IPhotoAcquireItem pPhotoAcquireItem);
+    HRESULT UpdateDeletePercent(uint nPercent);
+    HRESULT EndItemDelete(uint nItemIndex, IPhotoAcquireItem pPhotoAcquireItem, HRESULT hr);
+    HRESULT EndDelete(HRESULT hr);
+    HRESULT EndSession(HRESULT hr);
+    HRESULT GetDeleteAfterAcquire(BOOL* pfDeleteAfterAcquire);
+    HRESULT ErrorAdvise(HRESULT hr, const(wchar)* pszErrorMessage, ERROR_ADVISE_MESSAGE_TYPE nMessageType, ERROR_ADVISE_RESULT* pnErrorAdviseResult);
+    HRESULT GetUserInput(const(GUID)* riidType, IUnknown pUnknown, PROPVARIANT* pPropVarResult, const(PROPVARIANT)* pPropVarDefault);
 }
 enum IID_IPhotoProgressActionCB = GUID(0xf242d0, 0xb206, 0x4e7d, [0xb4, 0xc1, 0x47, 0x55, 0xbc, 0xbb, 0x9c, 0x9f]);
 interface IPhotoProgressActionCB : IUnknown
 {
-    HRESULT DoAction(HWND);
+    HRESULT DoAction(HWND hWndParent);
 }
 alias PROGRESS_DIALOG_IMAGE_TYPE = int;
 enum : int
@@ -150,68 +150,68 @@ enum : int
 enum IID_IPhotoProgressDialog = GUID(0xf246f9, 0x750, 0x4f08, [0x93, 0x81, 0x2c, 0xd8, 0xe9, 0x6, 0xa4, 0xae]);
 interface IPhotoProgressDialog : IUnknown
 {
-    HRESULT Create(HWND);
-    HRESULT GetWindow(HWND*);
+    HRESULT Create(HWND hwndParent);
+    HRESULT GetWindow(HWND* phwndProgressDialog);
     HRESULT Destroy();
-    HRESULT SetTitle(const(wchar)*);
-    HRESULT ShowCheckbox(PROGRESS_DIALOG_CHECKBOX_ID, BOOL);
-    HRESULT SetCheckboxText(PROGRESS_DIALOG_CHECKBOX_ID, const(wchar)*);
-    HRESULT SetCheckboxCheck(PROGRESS_DIALOG_CHECKBOX_ID, BOOL);
-    HRESULT SetCheckboxTooltip(PROGRESS_DIALOG_CHECKBOX_ID, const(wchar)*);
-    HRESULT IsCheckboxChecked(PROGRESS_DIALOG_CHECKBOX_ID, BOOL*);
-    HRESULT SetCaption(const(wchar)*);
-    HRESULT SetImage(PROGRESS_DIALOG_IMAGE_TYPE, HICON, HBITMAP);
-    HRESULT SetPercentComplete(int);
-    HRESULT SetProgressText(const(wchar)*);
-    HRESULT SetActionLinkCallback(IPhotoProgressActionCB);
-    HRESULT SetActionLinkText(const(wchar)*);
-    HRESULT ShowActionLink(BOOL);
-    HRESULT IsCancelled(BOOL*);
-    HRESULT GetUserInput(const(GUID)*, IUnknown, PROPVARIANT*, const(PROPVARIANT)*);
+    HRESULT SetTitle(const(wchar)* pszTitle);
+    HRESULT ShowCheckbox(PROGRESS_DIALOG_CHECKBOX_ID nCheckboxId, BOOL fShow);
+    HRESULT SetCheckboxText(PROGRESS_DIALOG_CHECKBOX_ID nCheckboxId, const(wchar)* pszCheckboxText);
+    HRESULT SetCheckboxCheck(PROGRESS_DIALOG_CHECKBOX_ID nCheckboxId, BOOL fChecked);
+    HRESULT SetCheckboxTooltip(PROGRESS_DIALOG_CHECKBOX_ID nCheckboxId, const(wchar)* pszCheckboxTooltipText);
+    HRESULT IsCheckboxChecked(PROGRESS_DIALOG_CHECKBOX_ID nCheckboxId, BOOL* pfChecked);
+    HRESULT SetCaption(const(wchar)* pszTitle);
+    HRESULT SetImage(PROGRESS_DIALOG_IMAGE_TYPE nImageType, HICON hIcon, HBITMAP hBitmap);
+    HRESULT SetPercentComplete(int nPercent);
+    HRESULT SetProgressText(const(wchar)* pszProgressText);
+    HRESULT SetActionLinkCallback(IPhotoProgressActionCB pPhotoProgressActionCB);
+    HRESULT SetActionLinkText(const(wchar)* pszCaption);
+    HRESULT ShowActionLink(BOOL fShow);
+    HRESULT IsCancelled(BOOL* pfCancelled);
+    HRESULT GetUserInput(const(GUID)* riidType, IUnknown pUnknown, PROPVARIANT* pPropVarResult, const(PROPVARIANT)* pPropVarDefault);
 }
 enum IID_IPhotoAcquireSource = GUID(0xf2c703, 0x8613, 0x4282, [0xa5, 0x3b, 0x6e, 0xc5, 0x9c, 0x58, 0x83, 0xac]);
 interface IPhotoAcquireSource : IUnknown
 {
-    HRESULT GetFriendlyName(BSTR*);
-    HRESULT GetDeviceIcons(uint, HICON*, HICON*);
-    HRESULT InitializeItemList(BOOL, IPhotoAcquireProgressCB, uint*);
-    HRESULT GetItemCount(uint*);
-    HRESULT GetItemAt(uint, IPhotoAcquireItem*);
-    HRESULT GetPhotoAcquireSettings(IPhotoAcquireSettings*);
-    HRESULT GetDeviceId(BSTR*);
-    HRESULT BindToObject(const(GUID)*, void**);
+    HRESULT GetFriendlyName(BSTR* pbstrFriendlyName);
+    HRESULT GetDeviceIcons(uint nSize, HICON* phLargeIcon, HICON* phSmallIcon);
+    HRESULT InitializeItemList(BOOL fForceEnumeration, IPhotoAcquireProgressCB pPhotoAcquireProgressCB, uint* pnItemCount);
+    HRESULT GetItemCount(uint* pnItemCount);
+    HRESULT GetItemAt(uint nIndex, IPhotoAcquireItem* ppPhotoAcquireItem);
+    HRESULT GetPhotoAcquireSettings(IPhotoAcquireSettings* ppPhotoAcquireSettings);
+    HRESULT GetDeviceId(BSTR* pbstrDeviceId);
+    HRESULT BindToObject(const(GUID)* riid, void** ppv);
 }
 enum IID_IPhotoAcquire = GUID(0xf23353, 0xe31b, 0x4955, [0xa8, 0xad, 0xca, 0x5e, 0xbf, 0x31, 0xe2, 0xce]);
 interface IPhotoAcquire : IUnknown
 {
-    HRESULT CreatePhotoSource(const(wchar)*, IPhotoAcquireSource*);
-    HRESULT Acquire(IPhotoAcquireSource, BOOL, HWND, const(wchar)*, IPhotoAcquireProgressCB);
-    HRESULT EnumResults(IEnumString*);
+    HRESULT CreatePhotoSource(const(wchar)* pszDevice, IPhotoAcquireSource* ppPhotoAcquireSource);
+    HRESULT Acquire(IPhotoAcquireSource pPhotoAcquireSource, BOOL fShowProgress, HWND hWndParent, const(wchar)* pszApplicationName, IPhotoAcquireProgressCB pPhotoAcquireProgressCB);
+    HRESULT EnumResults(IEnumString* ppEnumFilePaths);
 }
 enum IID_IPhotoAcquireSettings = GUID(0xf2b868, 0xdd67, 0x487c, [0x95, 0x53, 0x4, 0x92, 0x40, 0x76, 0x7e, 0x91]);
 interface IPhotoAcquireSettings : IUnknown
 {
-    HRESULT InitializeFromRegistry(const(wchar)*);
-    HRESULT SetFlags(uint);
-    HRESULT SetOutputFilenameTemplate(const(wchar)*);
-    HRESULT SetSequencePaddingWidth(uint);
-    HRESULT SetSequenceZeroPadding(BOOL);
-    HRESULT SetGroupTag(const(wchar)*);
-    HRESULT SetAcquisitionTime(const(FILETIME)*);
-    HRESULT GetFlags(uint*);
-    HRESULT GetOutputFilenameTemplate(BSTR*);
-    HRESULT GetSequencePaddingWidth(uint*);
-    HRESULT GetSequenceZeroPadding(BOOL*);
-    HRESULT GetGroupTag(BSTR*);
-    HRESULT GetAcquisitionTime(FILETIME*);
+    HRESULT InitializeFromRegistry(const(wchar)* pszRegistryKey);
+    HRESULT SetFlags(uint dwPhotoAcquireFlags);
+    HRESULT SetOutputFilenameTemplate(const(wchar)* pszTemplate);
+    HRESULT SetSequencePaddingWidth(uint dwWidth);
+    HRESULT SetSequenceZeroPadding(BOOL fZeroPad);
+    HRESULT SetGroupTag(const(wchar)* pszGroupTag);
+    HRESULT SetAcquisitionTime(const(FILETIME)* pftAcquisitionTime);
+    HRESULT GetFlags(uint* pdwPhotoAcquireFlags);
+    HRESULT GetOutputFilenameTemplate(BSTR* pbstrTemplate);
+    HRESULT GetSequencePaddingWidth(uint* pdwWidth);
+    HRESULT GetSequenceZeroPadding(BOOL* pfZeroPad);
+    HRESULT GetGroupTag(BSTR* pbstrGroupTag);
+    HRESULT GetAcquisitionTime(FILETIME* pftAcquisitionTime);
 }
 enum IID_IPhotoAcquireOptionsDialog = GUID(0xf2b3ee, 0xbf64, 0x47ee, [0x89, 0xf4, 0x4d, 0xed, 0xd7, 0x96, 0x43, 0xf2]);
 interface IPhotoAcquireOptionsDialog : IUnknown
 {
-    HRESULT Initialize(const(wchar)*);
-    HRESULT Create(HWND, HWND*);
+    HRESULT Initialize(const(wchar)* pszRegistryRoot);
+    HRESULT Create(HWND hWndParent, HWND* phWndDialog);
     HRESULT Destroy();
-    HRESULT DoModal(HWND, long*);
+    HRESULT DoModal(HWND hWndParent, long* ppnReturnCode);
     HRESULT SaveData();
 }
 alias DEVICE_SELECTION_DEVICE_TYPE = int;
@@ -229,17 +229,17 @@ enum : int
 enum IID_IPhotoAcquireDeviceSelectionDialog = GUID(0xf28837, 0x55dd, 0x4f37, [0xaa, 0xf5, 0x68, 0x55, 0xa9, 0x64, 0x4, 0x67]);
 interface IPhotoAcquireDeviceSelectionDialog : IUnknown
 {
-    HRESULT SetTitle(const(wchar)*);
-    HRESULT SetSubmitButtonText(const(wchar)*);
-    HRESULT DoModal(HWND, uint, BSTR*, DEVICE_SELECTION_DEVICE_TYPE*);
+    HRESULT SetTitle(const(wchar)* pszTitle);
+    HRESULT SetSubmitButtonText(const(wchar)* pszSubmitButtonText);
+    HRESULT DoModal(HWND hWndParent, uint dwDeviceFlags, BSTR* pbstrDeviceId, DEVICE_SELECTION_DEVICE_TYPE* pnDeviceType);
 }
 enum IID_IPhotoAcquirePlugin = GUID(0xf2dceb, 0xecb8, 0x4f77, [0x8e, 0x47, 0xe7, 0xa9, 0x87, 0xc8, 0x3d, 0xd0]);
 interface IPhotoAcquirePlugin : IUnknown
 {
-    HRESULT Initialize(IPhotoAcquireSource, IPhotoAcquireProgressCB);
-    HRESULT ProcessItem(uint, IPhotoAcquireItem, IStream, const(wchar)*, IPropertyStore);
-    HRESULT TransferComplete(HRESULT);
-    HRESULT DisplayConfigureDialog(HWND);
+    HRESULT Initialize(IPhotoAcquireSource pPhotoAcquireSource, IPhotoAcquireProgressCB pPhotoAcquireProgressCB);
+    HRESULT ProcessItem(uint dwAcquireStage, IPhotoAcquireItem pPhotoAcquireItem, IStream pOriginalItemStream, const(wchar)* pszFinalFilename, IPropertyStore pPropertyStore);
+    HRESULT TransferComplete(HRESULT hr);
+    HRESULT DisplayConfigureDialog(HWND hWndParent);
 }
 enum CLSID_PhotoAcquire = GUID(0xf26e02, 0xe9f2, 0x4a9f, [0x9f, 0xdd, 0x5a, 0x96, 0x2f, 0xb2, 0x6a, 0x98]);
 struct PhotoAcquire

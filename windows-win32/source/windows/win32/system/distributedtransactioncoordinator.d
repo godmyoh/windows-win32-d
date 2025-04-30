@@ -7,10 +7,10 @@ import windows.win32.system.com : IMoniker, IUnknown;
 version (Windows):
 extern (Windows):
 
-HRESULT DtcGetTransactionManager(PSTR, PSTR, const(GUID)*, uint, ushort, void*, void**);
-HRESULT DtcGetTransactionManagerC(PSTR, PSTR, const(GUID)*, uint, ushort, void*, void**);
-HRESULT DtcGetTransactionManagerExA(PSTR, PSTR, const(GUID)*, uint, void*, void**);
-HRESULT DtcGetTransactionManagerExW(PWSTR, PWSTR, const(GUID)*, uint, void*, void**);
+HRESULT DtcGetTransactionManager(PSTR i_pszHost, PSTR i_pszTmName, const(GUID)* i_riid, uint i_dwReserved1, ushort i_wcbReserved2, void* i_pvReserved2, void** o_ppvObject);
+HRESULT DtcGetTransactionManagerC(PSTR i_pszHost, PSTR i_pszTmName, const(GUID)* i_riid, uint i_dwReserved1, ushort i_wcbReserved2, void* i_pvReserved2, void** o_ppvObject);
+HRESULT DtcGetTransactionManagerExA(PSTR i_pszHost, PSTR i_pszTmName, const(GUID)* i_riid, uint i_grfOptions, void* i_pvConfigParams, void** o_ppvObject);
+HRESULT DtcGetTransactionManagerExW(PWSTR i_pwszHost, PWSTR i_pwszTmName, const(GUID)* i_riid, uint i_grfOptions, void* i_pvConfigParams, void** o_ppvObject);
 enum DTCINSTALL_E_CLIENT_ALREADY_INSTALLED = 0x00000180;
 enum DTCINSTALL_E_SERVER_ALREADY_INSTALLED = 0x00000181;
 enum XA_SWITCH_F_DTC = 0x00000001;
@@ -95,10 +95,10 @@ enum : int
     DTC_STATUS_FAILED        = 0x00000009,
 }
 
-alias DTC_GET_TRANSACTION_MANAGER = HRESULT function(PSTR, PSTR, const(GUID)*, uint, ushort, void*, void**);
-alias DTC_GET_TRANSACTION_MANAGER_EX_A = HRESULT function(PSTR, PSTR, const(GUID)*, uint, void*, void**);
-alias DTC_GET_TRANSACTION_MANAGER_EX_W = HRESULT function(PWSTR, PWSTR, const(GUID)*, uint, void*, void**);
-alias DTC_INSTALL_CLIENT = HRESULT function(byte*, uint, uint);
+alias DTC_GET_TRANSACTION_MANAGER = HRESULT function(PSTR pszHost, PSTR pszTmName, const(GUID)* rid, uint dwReserved1, ushort wcbReserved2, void* pvReserved2, void** ppvObject);
+alias DTC_GET_TRANSACTION_MANAGER_EX_A = HRESULT function(PSTR i_pszHost, PSTR i_pszTmName, const(GUID)* i_riid, uint i_grfOptions, void* i_pvConfigParams, void** o_ppvObject);
+alias DTC_GET_TRANSACTION_MANAGER_EX_W = HRESULT function(PWSTR i_pwszHost, PWSTR i_pwszTmName, const(GUID)* i_riid, uint i_grfOptions, void* i_pvConfigParams, void** o_ppvObject);
+alias DTC_INSTALL_CLIENT = HRESULT function(byte* i_pszRemoteTmHostName, uint i_dwProtocol, uint i_dwOverwrite);
 struct BOID
 {
     ubyte[16] rgb;
@@ -229,141 +229,141 @@ struct XACTOPT
 enum IID_ITransaction = GUID(0xfb15084, 0xaf41, 0x11ce, [0xbd, 0x2b, 0x20, 0x4c, 0x4f, 0x4f, 0x50, 0x20]);
 interface ITransaction : IUnknown
 {
-    HRESULT Commit(BOOL, uint, uint);
-    HRESULT Abort(BOID*, BOOL, BOOL);
-    HRESULT GetTransactionInfo(XACTTRANSINFO*);
+    HRESULT Commit(BOOL fRetaining, uint grfTC, uint grfRM);
+    HRESULT Abort(BOID* pboidReason, BOOL fRetaining, BOOL fAsync);
+    HRESULT GetTransactionInfo(XACTTRANSINFO* pinfo);
 }
 enum IID_ITransactionCloner = GUID(0x2656950, 0x2152, 0x11d0, [0x94, 0x4c, 0x0, 0xa0, 0xc9, 0x5, 0x41, 0x6e]);
 interface ITransactionCloner : ITransaction
 {
-    HRESULT CloneWithCommitDisabled(ITransaction*);
+    HRESULT CloneWithCommitDisabled(ITransaction* ppITransaction);
 }
 enum IID_ITransaction2 = GUID(0x34021548, 0x65, 0x11d3, [0xba, 0xc1, 0x0, 0xc0, 0x4f, 0x79, 0x7b, 0xe2]);
 interface ITransaction2 : ITransactionCloner
 {
-    HRESULT GetTransactionInfo2(XACTTRANSINFO*);
+    HRESULT GetTransactionInfo2(XACTTRANSINFO* pinfo);
 }
 enum IID_ITransactionDispenser = GUID(0x3a6ad9e1, 0x23b9, 0x11cf, [0xad, 0x60, 0x0, 0xaa, 0x0, 0xa7, 0x4c, 0xcd]);
 interface ITransactionDispenser : IUnknown
 {
-    HRESULT GetOptionsObject(ITransactionOptions*);
-    HRESULT BeginTransaction(IUnknown, int, uint, ITransactionOptions, ITransaction*);
+    HRESULT GetOptionsObject(ITransactionOptions* ppOptions);
+    HRESULT BeginTransaction(IUnknown punkOuter, int isoLevel, uint isoFlags, ITransactionOptions pOptions, ITransaction* ppTransaction);
 }
 enum IID_ITransactionOptions = GUID(0x3a6ad9e0, 0x23b9, 0x11cf, [0xad, 0x60, 0x0, 0xaa, 0x0, 0xa7, 0x4c, 0xcd]);
 interface ITransactionOptions : IUnknown
 {
-    HRESULT SetOptions(XACTOPT*);
-    HRESULT GetOptions(XACTOPT*);
+    HRESULT SetOptions(XACTOPT* pOptions);
+    HRESULT GetOptions(XACTOPT* pOptions);
 }
 enum IID_ITransactionOutcomeEvents = GUID(0x3a6ad9e2, 0x23b9, 0x11cf, [0xad, 0x60, 0x0, 0xaa, 0x0, 0xa7, 0x4c, 0xcd]);
 interface ITransactionOutcomeEvents : IUnknown
 {
-    HRESULT Committed(BOOL, BOID*, HRESULT);
-    HRESULT Aborted(BOID*, BOOL, BOID*, HRESULT);
-    HRESULT HeuristicDecision(uint, BOID*, HRESULT);
+    HRESULT Committed(BOOL fRetaining, BOID* pNewUOW, HRESULT hr);
+    HRESULT Aborted(BOID* pboidReason, BOOL fRetaining, BOID* pNewUOW, HRESULT hr);
+    HRESULT HeuristicDecision(uint dwDecision, BOID* pboidReason, HRESULT hr);
     HRESULT Indoubt();
 }
 enum IID_ITmNodeName = GUID(0x30274f88, 0x6ee4, 0x474e, [0x9b, 0x95, 0x78, 0x7, 0xbc, 0x9e, 0xf8, 0xcf]);
 interface ITmNodeName : IUnknown
 {
-    HRESULT GetNodeNameSize(uint*);
-    HRESULT GetNodeName(uint, PWSTR);
+    HRESULT GetNodeNameSize(uint* pcbNodeNameSize);
+    HRESULT GetNodeName(uint cbNodeNameBufferSize, PWSTR pNodeNameBuffer);
 }
 enum IID_IKernelTransaction = GUID(0x79427a2b, 0xf895, 0x40e0, [0xbe, 0x79, 0xb5, 0x7d, 0xc8, 0x2e, 0xd2, 0x31]);
 interface IKernelTransaction : IUnknown
 {
-    HRESULT GetHandle(HANDLE*);
+    HRESULT GetHandle(HANDLE* pHandle);
 }
 enum IID_ITransactionResourceAsync = GUID(0x69e971f0, 0x23ce, 0x11cf, [0xad, 0x60, 0x0, 0xaa, 0x0, 0xa7, 0x4c, 0xcd]);
 interface ITransactionResourceAsync : IUnknown
 {
-    HRESULT PrepareRequest(BOOL, uint, BOOL, BOOL);
-    HRESULT CommitRequest(uint, BOID*);
-    HRESULT AbortRequest(BOID*, BOOL, BOID*);
+    HRESULT PrepareRequest(BOOL fRetaining, uint grfRM, BOOL fWantMoniker, BOOL fSinglePhase);
+    HRESULT CommitRequest(uint grfRM, BOID* pNewUOW);
+    HRESULT AbortRequest(BOID* pboidReason, BOOL fRetaining, BOID* pNewUOW);
     HRESULT TMDown();
 }
 enum IID_ITransactionLastResourceAsync = GUID(0xc82bd532, 0x5b30, 0x11d3, [0x8a, 0x91, 0x0, 0xc0, 0x4f, 0x79, 0xeb, 0x6d]);
 interface ITransactionLastResourceAsync : IUnknown
 {
-    HRESULT DelegateCommit(uint);
-    HRESULT ForgetRequest(BOID*);
+    HRESULT DelegateCommit(uint grfRM);
+    HRESULT ForgetRequest(BOID* pNewUOW);
 }
 enum IID_ITransactionResource = GUID(0xee5ff7b3, 0x4572, 0x11d0, [0x94, 0x52, 0x0, 0xa0, 0xc9, 0x5, 0x41, 0x6e]);
 interface ITransactionResource : IUnknown
 {
-    HRESULT PrepareRequest(BOOL, uint, BOOL, BOOL);
-    HRESULT CommitRequest(uint, BOID*);
-    HRESULT AbortRequest(BOID*, BOOL, BOID*);
+    HRESULT PrepareRequest(BOOL fRetaining, uint grfRM, BOOL fWantMoniker, BOOL fSinglePhase);
+    HRESULT CommitRequest(uint grfRM, BOID* pNewUOW);
+    HRESULT AbortRequest(BOID* pboidReason, BOOL fRetaining, BOID* pNewUOW);
     HRESULT TMDown();
 }
 enum IID_ITransactionEnlistmentAsync = GUID(0xfb15081, 0xaf41, 0x11ce, [0xbd, 0x2b, 0x20, 0x4c, 0x4f, 0x4f, 0x50, 0x20]);
 interface ITransactionEnlistmentAsync : IUnknown
 {
-    HRESULT PrepareRequestDone(HRESULT, IMoniker, BOID*);
-    HRESULT CommitRequestDone(HRESULT);
-    HRESULT AbortRequestDone(HRESULT);
+    HRESULT PrepareRequestDone(HRESULT hr, IMoniker pmk, BOID* pboidReason);
+    HRESULT CommitRequestDone(HRESULT hr);
+    HRESULT AbortRequestDone(HRESULT hr);
 }
 enum IID_ITransactionLastEnlistmentAsync = GUID(0xc82bd533, 0x5b30, 0x11d3, [0x8a, 0x91, 0x0, 0xc0, 0x4f, 0x79, 0xeb, 0x6d]);
 interface ITransactionLastEnlistmentAsync : IUnknown
 {
-    HRESULT TransactionOutcome(XACTSTAT, BOID*);
+    HRESULT TransactionOutcome(XACTSTAT XactStat, BOID* pboidReason);
 }
 enum IID_ITransactionExportFactory = GUID(0xe1cf9b53, 0x8745, 0x11ce, [0xa9, 0xba, 0x0, 0xaa, 0x0, 0x6c, 0x37, 0x6]);
 interface ITransactionExportFactory : IUnknown
 {
-    HRESULT GetRemoteClassId(GUID*);
-    HRESULT Create(uint, ubyte*, ITransactionExport*);
+    HRESULT GetRemoteClassId(GUID* pclsid);
+    HRESULT Create(uint cbWhereabouts, ubyte* rgbWhereabouts, ITransactionExport* ppExport);
 }
 enum IID_ITransactionImportWhereabouts = GUID(0x141fda4, 0x8fc0, 0x11ce, [0xbd, 0x18, 0x20, 0x4c, 0x4f, 0x4f, 0x50, 0x20]);
 interface ITransactionImportWhereabouts : IUnknown
 {
-    HRESULT GetWhereaboutsSize(uint*);
-    HRESULT GetWhereabouts(uint, ubyte*, uint*);
+    HRESULT GetWhereaboutsSize(uint* pcbWhereabouts);
+    HRESULT GetWhereabouts(uint cbWhereabouts, ubyte* rgbWhereabouts, uint* pcbUsed);
 }
 enum IID_ITransactionExport = GUID(0x141fda5, 0x8fc0, 0x11ce, [0xbd, 0x18, 0x20, 0x4c, 0x4f, 0x4f, 0x50, 0x20]);
 interface ITransactionExport : IUnknown
 {
-    HRESULT Export(IUnknown, uint*);
-    HRESULT GetTransactionCookie(IUnknown, uint, ubyte*, uint*);
+    HRESULT Export(IUnknown punkTransaction, uint* pcbTransactionCookie);
+    HRESULT GetTransactionCookie(IUnknown punkTransaction, uint cbTransactionCookie, ubyte* rgbTransactionCookie, uint* pcbUsed);
 }
 enum IID_ITransactionImport = GUID(0xe1cf9b5a, 0x8745, 0x11ce, [0xa9, 0xba, 0x0, 0xaa, 0x0, 0x6c, 0x37, 0x6]);
 interface ITransactionImport : IUnknown
 {
-    HRESULT Import(uint, ubyte*, const(GUID)*, void**);
+    HRESULT Import(uint cbTransactionCookie, ubyte* rgbTransactionCookie, const(GUID)* piid, void** ppvTransaction);
 }
 enum IID_ITipTransaction = GUID(0x17cf72d0, 0xbac5, 0x11d1, [0xb1, 0xbf, 0x0, 0xc0, 0x4f, 0xc2, 0xf3, 0xef]);
 interface ITipTransaction : IUnknown
 {
-    HRESULT Push(ubyte*, PSTR*);
-    HRESULT GetTransactionUrl(PSTR*);
+    HRESULT Push(ubyte* i_pszRemoteTmUrl, PSTR* o_ppszRemoteTxUrl);
+    HRESULT GetTransactionUrl(PSTR* o_ppszLocalTxUrl);
 }
 enum IID_ITipHelper = GUID(0x17cf72d1, 0xbac5, 0x11d1, [0xb1, 0xbf, 0x0, 0xc0, 0x4f, 0xc2, 0xf3, 0xef]);
 interface ITipHelper : IUnknown
 {
-    HRESULT Pull(ubyte*, ITransaction*);
-    HRESULT PullAsync(ubyte*, ITipPullSink, ITransaction*);
-    HRESULT GetLocalTmUrl(ubyte**);
+    HRESULT Pull(ubyte* i_pszTxUrl, ITransaction* o_ppITransaction);
+    HRESULT PullAsync(ubyte* i_pszTxUrl, ITipPullSink i_pTipPullSink, ITransaction* o_ppITransaction);
+    HRESULT GetLocalTmUrl(ubyte** o_ppszLocalTmUrl);
 }
 enum IID_ITipPullSink = GUID(0x17cf72d2, 0xbac5, 0x11d1, [0xb1, 0xbf, 0x0, 0xc0, 0x4f, 0xc2, 0xf3, 0xef]);
 interface ITipPullSink : IUnknown
 {
-    HRESULT PullComplete(HRESULT);
+    HRESULT PullComplete(HRESULT i_hrPull);
 }
 enum IID_IDtcNetworkAccessConfig = GUID(0x9797c15d, 0xa428, 0x4291, [0x87, 0xb6, 0x9, 0x95, 0x3, 0x1a, 0x67, 0x8d]);
 interface IDtcNetworkAccessConfig : IUnknown
 {
-    HRESULT GetAnyNetworkAccess(BOOL*);
-    HRESULT SetAnyNetworkAccess(BOOL);
-    HRESULT GetNetworkAdministrationAccess(BOOL*);
-    HRESULT SetNetworkAdministrationAccess(BOOL);
-    HRESULT GetNetworkTransactionAccess(BOOL*);
-    HRESULT SetNetworkTransactionAccess(BOOL);
-    HRESULT GetNetworkClientAccess(BOOL*);
-    HRESULT SetNetworkClientAccess(BOOL);
-    HRESULT GetNetworkTIPAccess(BOOL*);
-    HRESULT SetNetworkTIPAccess(BOOL);
-    HRESULT GetXAAccess(BOOL*);
-    HRESULT SetXAAccess(BOOL);
+    HRESULT GetAnyNetworkAccess(BOOL* pbAnyNetworkAccess);
+    HRESULT SetAnyNetworkAccess(BOOL bAnyNetworkAccess);
+    HRESULT GetNetworkAdministrationAccess(BOOL* pbNetworkAdministrationAccess);
+    HRESULT SetNetworkAdministrationAccess(BOOL bNetworkAdministrationAccess);
+    HRESULT GetNetworkTransactionAccess(BOOL* pbNetworkTransactionAccess);
+    HRESULT SetNetworkTransactionAccess(BOOL bNetworkTransactionAccess);
+    HRESULT GetNetworkClientAccess(BOOL* pbNetworkClientAccess);
+    HRESULT SetNetworkClientAccess(BOOL bNetworkClientAccess);
+    HRESULT GetNetworkTIPAccess(BOOL* pbNetworkTIPAccess);
+    HRESULT SetNetworkTIPAccess(BOOL bNetworkTIPAccess);
+    HRESULT GetXAAccess(BOOL* pbXAAccess);
+    HRESULT SetXAAccess(BOOL bXAAccess);
     HRESULT RestartDtcService();
 }
 alias AUTHENTICATION_LEVEL = int;
@@ -377,18 +377,18 @@ enum : int
 enum IID_IDtcNetworkAccessConfig2 = GUID(0xa7aa013b, 0xeb7d, 0x4f42, [0xb4, 0x1c, 0xb2, 0xde, 0xc0, 0x9a, 0xe0, 0x34]);
 interface IDtcNetworkAccessConfig2 : IDtcNetworkAccessConfig
 {
-    HRESULT GetNetworkInboundAccess(BOOL*);
-    HRESULT GetNetworkOutboundAccess(BOOL*);
-    HRESULT SetNetworkInboundAccess(BOOL);
-    HRESULT SetNetworkOutboundAccess(BOOL);
-    HRESULT GetAuthenticationLevel(AUTHENTICATION_LEVEL*);
-    HRESULT SetAuthenticationLevel(AUTHENTICATION_LEVEL);
+    HRESULT GetNetworkInboundAccess(BOOL* pbInbound);
+    HRESULT GetNetworkOutboundAccess(BOOL* pbOutbound);
+    HRESULT SetNetworkInboundAccess(BOOL bInbound);
+    HRESULT SetNetworkOutboundAccess(BOOL bOutbound);
+    HRESULT GetAuthenticationLevel(AUTHENTICATION_LEVEL* pAuthLevel);
+    HRESULT SetAuthenticationLevel(AUTHENTICATION_LEVEL AuthLevel);
 }
 enum IID_IDtcNetworkAccessConfig3 = GUID(0x76e4b4f3, 0x2ca5, 0x466b, [0x89, 0xd5, 0xfd, 0x21, 0x8e, 0xe7, 0x5b, 0x49]);
 interface IDtcNetworkAccessConfig3 : IDtcNetworkAccessConfig2
 {
-    HRESULT GetLUAccess(BOOL*);
-    HRESULT SetLUAccess(BOOL);
+    HRESULT GetLUAccess(BOOL* pbLUAccess);
+    HRESULT SetLUAccess(BOOL bLUAccess);
 }
 struct XID
 {
@@ -413,42 +413,42 @@ struct xa_switch_t
     long xa_forget_entry;
     long xa_complete_entry;
 }
-alias XA_OPEN_EPT = int function(PSTR, int, int);
-alias XA_CLOSE_EPT = int function(PSTR, int, int);
-alias XA_START_EPT = int function(XID*, int, int);
-alias XA_END_EPT = int function(XID*, int, int);
-alias XA_ROLLBACK_EPT = int function(XID*, int, int);
-alias XA_PREPARE_EPT = int function(XID*, int, int);
-alias XA_COMMIT_EPT = int function(XID*, int, int);
-alias XA_RECOVER_EPT = int function(XID*, int, int, int);
-alias XA_FORGET_EPT = int function(XID*, int, int);
-alias XA_COMPLETE_EPT = int function(int*, int*, int, int);
+alias XA_OPEN_EPT = int function(PSTR param0, int param1, int param2);
+alias XA_CLOSE_EPT = int function(PSTR param0, int param1, int param2);
+alias XA_START_EPT = int function(XID* param0, int param1, int param2);
+alias XA_END_EPT = int function(XID* param0, int param1, int param2);
+alias XA_ROLLBACK_EPT = int function(XID* param0, int param1, int param2);
+alias XA_PREPARE_EPT = int function(XID* param0, int param1, int param2);
+alias XA_COMMIT_EPT = int function(XID* param0, int param1, int param2);
+alias XA_RECOVER_EPT = int function(XID* param0, int param1, int param2, int param3);
+alias XA_FORGET_EPT = int function(XID* param0, int param1, int param2);
+alias XA_COMPLETE_EPT = int function(int* param0, int* param1, int param2, int param3);
 enum IID_IDtcToXaMapper = GUID(0x64ffabe0, 0x7ce9, 0x11d0, [0x8c, 0xe6, 0x0, 0xc0, 0x4f, 0xdc, 0x87, 0x7e]);
 interface IDtcToXaMapper : IUnknown
 {
-    HRESULT RequestNewResourceManager(PSTR, PSTR, uint*);
-    HRESULT TranslateTridToXid(uint*, uint, XID*);
-    HRESULT EnlistResourceManager(uint, uint*);
-    HRESULT ReleaseResourceManager(uint);
+    HRESULT RequestNewResourceManager(PSTR pszDSN, PSTR pszClientDllName, uint* pdwRMCookie);
+    HRESULT TranslateTridToXid(uint* pdwITransaction, uint dwRMCookie, XID* pXid);
+    HRESULT EnlistResourceManager(uint dwRMCookie, uint* pdwITransaction);
+    HRESULT ReleaseResourceManager(uint dwRMCookie);
 }
 enum IID_IDtcToXaHelperFactory = GUID(0xa9861610, 0x304a, 0x11d1, [0x98, 0x13, 0x0, 0xa0, 0xc9, 0x5, 0x41, 0x6e]);
 interface IDtcToXaHelperFactory : IUnknown
 {
-    HRESULT Create(PSTR, PSTR, GUID*, IDtcToXaHelper*);
+    HRESULT Create(PSTR pszDSN, PSTR pszClientDllName, GUID* pguidRm, IDtcToXaHelper* ppXaHelper);
 }
 enum IID_IDtcToXaHelper = GUID(0xa9861611, 0x304a, 0x11d1, [0x98, 0x13, 0x0, 0xa0, 0xc9, 0x5, 0x41, 0x6e]);
 interface IDtcToXaHelper : IUnknown
 {
-    HRESULT Close(BOOL);
-    HRESULT TranslateTridToXid(ITransaction, GUID*, XID*);
+    HRESULT Close(BOOL i_fDoRecovery);
+    HRESULT TranslateTridToXid(ITransaction pITransaction, GUID* pguidBqual, XID* pXid);
 }
 enum IID_IDtcToXaHelperSinglePipe = GUID(0x47ed4971, 0x53b3, 0x11d1, [0xbb, 0xb9, 0x0, 0xc0, 0x4f, 0xd6, 0x58, 0xf6]);
 interface IDtcToXaHelperSinglePipe : IUnknown
 {
-    HRESULT XARMCreate(PSTR, PSTR, uint*);
-    HRESULT ConvertTridToXID(uint*, uint, XID*);
-    HRESULT EnlistWithRM(uint, ITransaction, ITransactionResourceAsync, ITransactionEnlistmentAsync*);
-    void ReleaseRMCookie(uint, BOOL);
+    HRESULT XARMCreate(PSTR pszDSN, PSTR pszClientDll, uint* pdwRMCookie);
+    HRESULT ConvertTridToXID(uint* pdwITrans, uint dwRMCookie, XID* pxid);
+    HRESULT EnlistWithRM(uint dwRMCookie, ITransaction i_pITransaction, ITransactionResourceAsync i_pITransRes, ITransactionEnlistmentAsync* o_ppITransEnslitment);
+    void ReleaseRMCookie(uint i_dwRMCookie, BOOL i_fNormal);
 }
 alias APPLICATIONTYPE = int;
 enum : int
@@ -500,12 +500,12 @@ enum : int
 enum IID_IXATransLookup = GUID(0xf3b1f131, 0xeeda, 0x11ce, [0xae, 0xd4, 0x0, 0xaa, 0x0, 0x51, 0xe2, 0xc4]);
 interface IXATransLookup : IUnknown
 {
-    HRESULT Lookup(ITransaction*);
+    HRESULT Lookup(ITransaction* ppTransaction);
 }
 enum IID_IXATransLookup2 = GUID(0xbf193c85, 0xd1a, 0x4290, [0xb8, 0x8f, 0xd2, 0xcb, 0x88, 0x73, 0xd1, 0xe7]);
 interface IXATransLookup2 : IUnknown
 {
-    HRESULT Lookup(XID*, ITransaction*);
+    HRESULT Lookup(XID* pXID, ITransaction* ppTransaction);
 }
 enum IID_IResourceManagerSink = GUID(0xd563181, 0xdefb, 0x11ce, [0xae, 0xd1, 0x0, 0xaa, 0x0, 0x51, 0xe2, 0xc4]);
 interface IResourceManagerSink : IUnknown
@@ -515,76 +515,76 @@ interface IResourceManagerSink : IUnknown
 enum IID_IResourceManager = GUID(0x13741d21, 0x87eb, 0x11ce, [0x80, 0x81, 0x0, 0x80, 0xc7, 0x58, 0x52, 0x7e]);
 interface IResourceManager : IUnknown
 {
-    HRESULT Enlist(ITransaction, ITransactionResourceAsync, BOID*, int*, ITransactionEnlistmentAsync*);
-    HRESULT Reenlist(ubyte*, uint, uint, XACTSTAT*);
+    HRESULT Enlist(ITransaction pTransaction, ITransactionResourceAsync pRes, BOID* pUOW, int* pisoLevel, ITransactionEnlistmentAsync* ppEnlist);
+    HRESULT Reenlist(ubyte* pPrepInfo, uint cbPrepInfo, uint lTimeout, XACTSTAT* pXactStat);
     HRESULT ReenlistmentComplete();
-    HRESULT GetDistributedTransactionManager(const(GUID)*, void**);
+    HRESULT GetDistributedTransactionManager(const(GUID)* iid, void** ppvObject);
 }
 enum IID_ILastResourceManager = GUID(0x4d964ad4, 0x5b33, 0x11d3, [0x8a, 0x91, 0x0, 0xc0, 0x4f, 0x79, 0xeb, 0x6d]);
 interface ILastResourceManager : IUnknown
 {
-    HRESULT TransactionCommitted(ubyte*, uint);
+    HRESULT TransactionCommitted(ubyte* pPrepInfo, uint cbPrepInfo);
     HRESULT RecoveryDone();
 }
 enum IID_IResourceManager2 = GUID(0xd136c69a, 0xf749, 0x11d1, [0x8f, 0x47, 0x0, 0xc0, 0x4f, 0x8e, 0xe5, 0x7d]);
 interface IResourceManager2 : IResourceManager
 {
-    HRESULT Enlist2(ITransaction, ITransactionResourceAsync, BOID*, int*, XID*, ITransactionEnlistmentAsync*);
-    HRESULT Reenlist2(XID*, uint, XACTSTAT*);
+    HRESULT Enlist2(ITransaction pTransaction, ITransactionResourceAsync pResAsync, BOID* pUOW, int* pisoLevel, XID* pXid, ITransactionEnlistmentAsync* ppEnlist);
+    HRESULT Reenlist2(XID* pXid, uint dwTimeout, XACTSTAT* pXactStat);
 }
 enum IID_IResourceManagerRejoinable = GUID(0x6f6de620, 0xb5df, 0x4f3e, [0x9c, 0xfa, 0xc8, 0xae, 0xbd, 0x5, 0x17, 0x2b]);
 interface IResourceManagerRejoinable : IResourceManager2
 {
-    HRESULT Rejoin(ubyte*, uint, uint, XACTSTAT*);
+    HRESULT Rejoin(ubyte* pPrepInfo, uint cbPrepInfo, uint lTimeout, XACTSTAT* pXactStat);
 }
 enum IID_IXAConfig = GUID(0xc8a6e3a1, 0x9a8c, 0x11cf, [0xa3, 0x8, 0x0, 0xa0, 0xc9, 0x5, 0x41, 0x6e]);
 interface IXAConfig : IUnknown
 {
-    HRESULT Initialize(GUID);
+    HRESULT Initialize(GUID clsidHelperDll);
     HRESULT Terminate();
 }
 enum IID_IRMHelper = GUID(0xe793f6d1, 0xf53d, 0x11cf, [0xa6, 0xd, 0x0, 0xa0, 0xc9, 0x5, 0x41, 0x6e]);
 interface IRMHelper : IUnknown
 {
-    HRESULT RMCount(uint);
-    HRESULT RMInfo(xa_switch_t*, BOOL, PSTR, PSTR, GUID);
+    HRESULT RMCount(uint dwcTotalNumberOfRMs);
+    HRESULT RMInfo(xa_switch_t* pXa_Switch, BOOL fCDeclCallingConv, PSTR pszOpenString, PSTR pszCloseString, GUID guidRMRecovery);
 }
 enum IID_IXAObtainRMInfo = GUID(0xe793f6d2, 0xf53d, 0x11cf, [0xa6, 0xd, 0x0, 0xa0, 0xc9, 0x5, 0x41, 0x6e]);
 interface IXAObtainRMInfo : IUnknown
 {
-    HRESULT ObtainRMInfo(IRMHelper);
+    HRESULT ObtainRMInfo(IRMHelper pIRMHelper);
 }
 enum IID_IResourceManagerFactory = GUID(0x13741d20, 0x87eb, 0x11ce, [0x80, 0x81, 0x0, 0x80, 0xc7, 0x58, 0x52, 0x7e]);
 interface IResourceManagerFactory : IUnknown
 {
-    HRESULT Create(GUID*, PSTR, IResourceManagerSink, IResourceManager*);
+    HRESULT Create(GUID* pguidRM, PSTR pszRMName, IResourceManagerSink pIResMgrSink, IResourceManager* ppResMgr);
 }
 enum IID_IResourceManagerFactory2 = GUID(0x6b369c21, 0xfbd2, 0x11d1, [0x8f, 0x47, 0x0, 0xc0, 0x4f, 0x8e, 0xe5, 0x7d]);
 interface IResourceManagerFactory2 : IResourceManagerFactory
 {
-    HRESULT CreateEx(GUID*, PSTR, IResourceManagerSink, const(GUID)*, void**);
+    HRESULT CreateEx(GUID* pguidRM, PSTR pszRMName, IResourceManagerSink pIResMgrSink, const(GUID)* riidRequested, void** ppvResMgr);
 }
 enum IID_IPrepareInfo = GUID(0x80c7bfd0, 0x87ee, 0x11ce, [0x80, 0x81, 0x0, 0x80, 0xc7, 0x58, 0x52, 0x7e]);
 interface IPrepareInfo : IUnknown
 {
-    HRESULT GetPrepareInfoSize(uint*);
-    HRESULT GetPrepareInfo(ubyte*);
+    HRESULT GetPrepareInfoSize(uint* pcbPrepInfo);
+    HRESULT GetPrepareInfo(ubyte* pPrepInfo);
 }
 enum IID_IPrepareInfo2 = GUID(0x5fab2547, 0x9779, 0x11d1, [0xb8, 0x86, 0x0, 0xc0, 0x4f, 0xb9, 0x61, 0x8a]);
 interface IPrepareInfo2 : IUnknown
 {
-    HRESULT GetPrepareInfoSize(uint*);
-    HRESULT GetPrepareInfo(uint, ubyte*);
+    HRESULT GetPrepareInfoSize(uint* pcbPrepInfo);
+    HRESULT GetPrepareInfo(uint cbPrepareInfo, ubyte* pPrepInfo);
 }
 enum IID_IGetDispenser = GUID(0xc23cc370, 0x87ef, 0x11ce, [0x80, 0x81, 0x0, 0x80, 0xc7, 0x58, 0x52, 0x7e]);
 interface IGetDispenser : IUnknown
 {
-    HRESULT GetDispenser(const(GUID)*, void**);
+    HRESULT GetDispenser(const(GUID)* iid, void** ppvObject);
 }
 enum IID_ITransactionVoterBallotAsync2 = GUID(0x5433376c, 0x414d, 0x11d3, [0xb2, 0x6, 0x0, 0xc0, 0x4f, 0xc2, 0xf3, 0xef]);
 interface ITransactionVoterBallotAsync2 : IUnknown
 {
-    HRESULT VoteRequestDone(HRESULT, BOID*);
+    HRESULT VoteRequestDone(HRESULT hr, BOID* pboidReason);
 }
 enum IID_ITransactionVoterNotifyAsync2 = GUID(0x5433376b, 0x414d, 0x11d3, [0xb2, 0x6, 0x0, 0xc0, 0x4f, 0xc2, 0xf3, 0xef]);
 interface ITransactionVoterNotifyAsync2 : ITransactionOutcomeEvents
@@ -594,7 +594,7 @@ interface ITransactionVoterNotifyAsync2 : ITransactionOutcomeEvents
 enum IID_ITransactionVoterFactory2 = GUID(0x5433376a, 0x414d, 0x11d3, [0xb2, 0x6, 0x0, 0xc0, 0x4f, 0xc2, 0xf3, 0xef]);
 interface ITransactionVoterFactory2 : IUnknown
 {
-    HRESULT Create(ITransaction, ITransactionVoterNotifyAsync2, ITransactionVoterBallotAsync2*);
+    HRESULT Create(ITransaction pTransaction, ITransactionVoterNotifyAsync2 pVoterNotify, ITransactionVoterBallotAsync2* ppVoterBallot);
 }
 enum IID_ITransactionPhase0EnlistmentAsync = GUID(0x82dc88e1, 0xa954, 0x11d1, [0x8f, 0x88, 0x0, 0x60, 0x8, 0x95, 0xe7, 0xd5]);
 interface ITransactionPhase0EnlistmentAsync : IUnknown
@@ -603,45 +603,45 @@ interface ITransactionPhase0EnlistmentAsync : IUnknown
     HRESULT WaitForEnlistment();
     HRESULT Phase0Done();
     HRESULT Unenlist();
-    HRESULT GetTransaction(ITransaction*);
+    HRESULT GetTransaction(ITransaction* ppITransaction);
 }
 enum IID_ITransactionPhase0NotifyAsync = GUID(0xef081809, 0xc76, 0x11d2, [0x87, 0xa6, 0x0, 0xc0, 0x4f, 0x99, 0xf, 0x34]);
 interface ITransactionPhase0NotifyAsync : IUnknown
 {
-    HRESULT Phase0Request(BOOL);
-    HRESULT EnlistCompleted(HRESULT);
+    HRESULT Phase0Request(BOOL fAbortingHint);
+    HRESULT EnlistCompleted(HRESULT status);
 }
 enum IID_ITransactionPhase0Factory = GUID(0x82dc88e0, 0xa954, 0x11d1, [0x8f, 0x88, 0x0, 0x60, 0x8, 0x95, 0xe7, 0xd5]);
 interface ITransactionPhase0Factory : IUnknown
 {
-    HRESULT Create(ITransactionPhase0NotifyAsync, ITransactionPhase0EnlistmentAsync*);
+    HRESULT Create(ITransactionPhase0NotifyAsync pPhase0Notify, ITransactionPhase0EnlistmentAsync* ppPhase0Enlistment);
 }
 enum IID_ITransactionTransmitter = GUID(0x59313e01, 0xb36c, 0x11cf, [0xa5, 0x39, 0x0, 0xaa, 0x0, 0x68, 0x87, 0xc3]);
 interface ITransactionTransmitter : IUnknown
 {
-    HRESULT Set(ITransaction);
-    HRESULT GetPropagationTokenSize(uint*);
-    HRESULT MarshalPropagationToken(uint, ubyte*, uint*);
-    HRESULT UnmarshalReturnToken(uint, ubyte*);
+    HRESULT Set(ITransaction pTransaction);
+    HRESULT GetPropagationTokenSize(uint* pcbToken);
+    HRESULT MarshalPropagationToken(uint cbToken, ubyte* rgbToken, uint* pcbUsed);
+    HRESULT UnmarshalReturnToken(uint cbReturnToken, ubyte* rgbReturnToken);
     HRESULT Reset();
 }
 enum IID_ITransactionTransmitterFactory = GUID(0x59313e00, 0xb36c, 0x11cf, [0xa5, 0x39, 0x0, 0xaa, 0x0, 0x68, 0x87, 0xc3]);
 interface ITransactionTransmitterFactory : IUnknown
 {
-    HRESULT Create(ITransactionTransmitter*);
+    HRESULT Create(ITransactionTransmitter* ppTransmitter);
 }
 enum IID_ITransactionReceiver = GUID(0x59313e03, 0xb36c, 0x11cf, [0xa5, 0x39, 0x0, 0xaa, 0x0, 0x68, 0x87, 0xc3]);
 interface ITransactionReceiver : IUnknown
 {
-    HRESULT UnmarshalPropagationToken(uint, ubyte*, ITransaction*);
-    HRESULT GetReturnTokenSize(uint*);
-    HRESULT MarshalReturnToken(uint, ubyte*, uint*);
+    HRESULT UnmarshalPropagationToken(uint cbToken, ubyte* rgbToken, ITransaction* ppTransaction);
+    HRESULT GetReturnTokenSize(uint* pcbReturnToken);
+    HRESULT MarshalReturnToken(uint cbReturnToken, ubyte* rgbReturnToken, uint* pcbUsed);
     HRESULT Reset();
 }
 enum IID_ITransactionReceiverFactory = GUID(0x59313e02, 0xb36c, 0x11cf, [0xa5, 0x39, 0x0, 0xaa, 0x0, 0x68, 0x87, 0xc3]);
 interface ITransactionReceiverFactory : IUnknown
 {
-    HRESULT Create(ITransactionReceiver*);
+    HRESULT Create(ITransactionReceiver* ppReceiver);
 }
 struct PROXY_CONFIG_PARAMS
 {
@@ -650,8 +650,8 @@ struct PROXY_CONFIG_PARAMS
 enum IID_IDtcLuConfigure = GUID(0x4131e760, 0x1aea, 0x11d0, [0x94, 0x4b, 0x0, 0xa0, 0xc9, 0x5, 0x41, 0x6e]);
 interface IDtcLuConfigure : IUnknown
 {
-    HRESULT Add(ubyte*, uint);
-    HRESULT Delete(ubyte*, uint);
+    HRESULT Add(ubyte* pucLuPair, uint cbLuPair);
+    HRESULT Delete(ubyte* pucLuPair, uint cbLuPair);
 }
 enum IID_IDtcLuRecovery = GUID(0xac2b8ad2, 0xd6f0, 0x11d0, [0xb3, 0x86, 0x0, 0xa0, 0xc9, 0x8, 0x33, 0x65]);
 interface IDtcLuRecovery : IUnknown
@@ -660,7 +660,7 @@ interface IDtcLuRecovery : IUnknown
 enum IID_IDtcLuRecoveryFactory = GUID(0x4131e762, 0x1aea, 0x11d0, [0x94, 0x4b, 0x0, 0xa0, 0xc9, 0x5, 0x41, 0x6e]);
 interface IDtcLuRecoveryFactory : IUnknown
 {
-    HRESULT Create(ubyte*, uint, IDtcLuRecovery*);
+    HRESULT Create(ubyte* pucLuPair, uint cbLuPair, IDtcLuRecovery* ppRecovery);
 }
 alias DTCINITIATEDRECOVERYWORK = int;
 enum : int
@@ -737,51 +737,51 @@ enum : int
 enum IID_IDtcLuRecoveryInitiatedByDtcTransWork = GUID(0x4131e765, 0x1aea, 0x11d0, [0x94, 0x4b, 0x0, 0xa0, 0xc9, 0x5, 0x41, 0x6e]);
 interface IDtcLuRecoveryInitiatedByDtcTransWork : IUnknown
 {
-    HRESULT GetLogNameSizes(uint*, uint*);
-    HRESULT GetOurXln(DTCLUXLN*, ubyte*, ubyte*, uint*);
-    HRESULT HandleConfirmationFromOurXln(DTCLUXLNCONFIRMATION);
-    HRESULT HandleTheirXlnResponse(DTCLUXLN, ubyte*, uint, uint, DTCLUXLNCONFIRMATION*);
-    HRESULT HandleErrorFromOurXln(DTCLUXLNERROR);
-    HRESULT CheckForCompareStates(BOOL*);
-    HRESULT GetOurTransIdSize(uint*);
-    HRESULT GetOurCompareStates(ubyte*, DTCLUCOMPARESTATE*);
-    HRESULT HandleTheirCompareStatesResponse(DTCLUCOMPARESTATE, DTCLUCOMPARESTATESCONFIRMATION*);
-    HRESULT HandleErrorFromOurCompareStates(DTCLUCOMPARESTATESERROR);
+    HRESULT GetLogNameSizes(uint* pcbOurLogName, uint* pcbRemoteLogName);
+    HRESULT GetOurXln(DTCLUXLN* pXln, ubyte* pOurLogName, ubyte* pRemoteLogName, uint* pdwProtocol);
+    HRESULT HandleConfirmationFromOurXln(DTCLUXLNCONFIRMATION Confirmation);
+    HRESULT HandleTheirXlnResponse(DTCLUXLN Xln, ubyte* pRemoteLogName, uint cbRemoteLogName, uint dwProtocol, DTCLUXLNCONFIRMATION* pConfirmation);
+    HRESULT HandleErrorFromOurXln(DTCLUXLNERROR Error);
+    HRESULT CheckForCompareStates(BOOL* fCompareStates);
+    HRESULT GetOurTransIdSize(uint* pcbOurTransId);
+    HRESULT GetOurCompareStates(ubyte* pOurTransId, DTCLUCOMPARESTATE* pCompareState);
+    HRESULT HandleTheirCompareStatesResponse(DTCLUCOMPARESTATE CompareState, DTCLUCOMPARESTATESCONFIRMATION* pConfirmation);
+    HRESULT HandleErrorFromOurCompareStates(DTCLUCOMPARESTATESERROR Error);
     HRESULT ConversationLost();
-    HRESULT GetRecoverySeqNum(int*);
-    HRESULT ObsoleteRecoverySeqNum(int);
+    HRESULT GetRecoverySeqNum(int* plRecoverySeqNum);
+    HRESULT ObsoleteRecoverySeqNum(int lNewRecoverySeqNum);
 }
 enum IID_IDtcLuRecoveryInitiatedByDtcStatusWork = GUID(0x4131e766, 0x1aea, 0x11d0, [0x94, 0x4b, 0x0, 0xa0, 0xc9, 0x5, 0x41, 0x6e]);
 interface IDtcLuRecoveryInitiatedByDtcStatusWork : IUnknown
 {
-    HRESULT HandleCheckLuStatus(int);
+    HRESULT HandleCheckLuStatus(int lRecoverySeqNum);
 }
 enum IID_IDtcLuRecoveryInitiatedByDtc = GUID(0x4131e764, 0x1aea, 0x11d0, [0x94, 0x4b, 0x0, 0xa0, 0xc9, 0x5, 0x41, 0x6e]);
 interface IDtcLuRecoveryInitiatedByDtc : IUnknown
 {
-    HRESULT GetWork(DTCINITIATEDRECOVERYWORK*, void**);
+    HRESULT GetWork(DTCINITIATEDRECOVERYWORK* pWork, void** ppv);
 }
 enum IID_IDtcLuRecoveryInitiatedByLuWork = GUID(0xac2b8ad1, 0xd6f0, 0x11d0, [0xb3, 0x86, 0x0, 0xa0, 0xc9, 0x8, 0x33, 0x65]);
 interface IDtcLuRecoveryInitiatedByLuWork : IUnknown
 {
-    HRESULT HandleTheirXln(int, DTCLUXLN, ubyte*, uint, ubyte*, uint, uint, DTCLUXLNRESPONSE*);
-    HRESULT GetOurLogNameSize(uint*);
-    HRESULT GetOurXln(DTCLUXLN*, ubyte*, uint*);
-    HRESULT HandleConfirmationOfOurXln(DTCLUXLNCONFIRMATION);
-    HRESULT HandleTheirCompareStates(ubyte*, uint, DTCLUCOMPARESTATE, DTCLUCOMPARESTATESRESPONSE*, DTCLUCOMPARESTATE*);
-    HRESULT HandleConfirmationOfOurCompareStates(DTCLUCOMPARESTATESCONFIRMATION);
-    HRESULT HandleErrorFromOurCompareStates(DTCLUCOMPARESTATESERROR);
+    HRESULT HandleTheirXln(int lRecoverySeqNum, DTCLUXLN Xln, ubyte* pRemoteLogName, uint cbRemoteLogName, ubyte* pOurLogName, uint cbOurLogName, uint dwProtocol, DTCLUXLNRESPONSE* pResponse);
+    HRESULT GetOurLogNameSize(uint* pcbOurLogName);
+    HRESULT GetOurXln(DTCLUXLN* pXln, ubyte* pOurLogName, uint* pdwProtocol);
+    HRESULT HandleConfirmationOfOurXln(DTCLUXLNCONFIRMATION Confirmation);
+    HRESULT HandleTheirCompareStates(ubyte* pRemoteTransId, uint cbRemoteTransId, DTCLUCOMPARESTATE CompareState, DTCLUCOMPARESTATESRESPONSE* pResponse, DTCLUCOMPARESTATE* pCompareState);
+    HRESULT HandleConfirmationOfOurCompareStates(DTCLUCOMPARESTATESCONFIRMATION Confirmation);
+    HRESULT HandleErrorFromOurCompareStates(DTCLUCOMPARESTATESERROR Error);
     HRESULT ConversationLost();
 }
 enum IID_IDtcLuRecoveryInitiatedByLu = GUID(0x4131e768, 0x1aea, 0x11d0, [0x94, 0x4b, 0x0, 0xa0, 0xc9, 0x5, 0x41, 0x6e]);
 interface IDtcLuRecoveryInitiatedByLu : IUnknown
 {
-    HRESULT GetObjectToHandleWorkFromLu(IDtcLuRecoveryInitiatedByLuWork*);
+    HRESULT GetObjectToHandleWorkFromLu(IDtcLuRecoveryInitiatedByLuWork* ppWork);
 }
 enum IID_IDtcLuRmEnlistment = GUID(0x4131e769, 0x1aea, 0x11d0, [0x94, 0x4b, 0x0, 0xa0, 0xc9, 0x5, 0x41, 0x6e]);
 interface IDtcLuRmEnlistment : IUnknown
 {
-    HRESULT Unplug(BOOL);
+    HRESULT Unplug(BOOL fConversationLost);
     HRESULT BackedOut();
     HRESULT BackOut();
     HRESULT Committed();
@@ -804,12 +804,12 @@ interface IDtcLuRmEnlistmentSink : IUnknown
 enum IID_IDtcLuRmEnlistmentFactory = GUID(0x4131e771, 0x1aea, 0x11d0, [0x94, 0x4b, 0x0, 0xa0, 0xc9, 0x5, 0x41, 0x6e]);
 interface IDtcLuRmEnlistmentFactory : IUnknown
 {
-    HRESULT Create(ubyte*, uint, ITransaction, ubyte*, uint, IDtcLuRmEnlistmentSink, IDtcLuRmEnlistment*);
+    HRESULT Create(ubyte* pucLuPair, uint cbLuPair, ITransaction pITransaction, ubyte* pTransId, uint cbTransId, IDtcLuRmEnlistmentSink pRmEnlistmentSink, IDtcLuRmEnlistment* ppRmEnlistment);
 }
 enum IID_IDtcLuSubordinateDtc = GUID(0x4131e773, 0x1aea, 0x11d0, [0x94, 0x4b, 0x0, 0xa0, 0xc9, 0x5, 0x41, 0x6e]);
 interface IDtcLuSubordinateDtc : IUnknown
 {
-    HRESULT Unplug(BOOL);
+    HRESULT Unplug(BOOL fConversationLost);
     HRESULT BackedOut();
     HRESULT BackOut();
     HRESULT Committed();
@@ -832,5 +832,5 @@ interface IDtcLuSubordinateDtcSink : IUnknown
 enum IID_IDtcLuSubordinateDtcFactory = GUID(0x4131e775, 0x1aea, 0x11d0, [0x94, 0x4b, 0x0, 0xa0, 0xc9, 0x5, 0x41, 0x6e]);
 interface IDtcLuSubordinateDtcFactory : IUnknown
 {
-    HRESULT Create(ubyte*, uint, IUnknown, int, uint, ITransactionOptions, ITransaction*, ubyte*, uint, IDtcLuSubordinateDtcSink, IDtcLuSubordinateDtc*);
+    HRESULT Create(ubyte* pucLuPair, uint cbLuPair, IUnknown punkTransactionOuter, int isoLevel, uint isoFlags, ITransactionOptions pOptions, ITransaction* ppTransaction, ubyte* pTransId, uint cbTransId, IDtcLuSubordinateDtcSink pSubordinateDtcSink, IDtcLuSubordinateDtc* ppSubordinateDtc);
 }

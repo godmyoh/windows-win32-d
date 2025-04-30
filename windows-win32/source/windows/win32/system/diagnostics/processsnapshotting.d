@@ -7,16 +7,16 @@ import windows.win32.system.memory : MEMORY_BASIC_INFORMATION;
 version (Windows):
 extern (Windows):
 
-uint PssCaptureSnapshot(HANDLE, PSS_CAPTURE_FLAGS, uint, HPSS*);
-uint PssFreeSnapshot(HANDLE, HPSS);
-uint PssQuerySnapshot(HPSS, PSS_QUERY_INFORMATION_CLASS, void*, uint);
-uint PssWalkSnapshot(HPSS, PSS_WALK_INFORMATION_CLASS, HPSSWALK, void*, uint);
-uint PssDuplicateSnapshot(HANDLE, HPSS, HANDLE, HPSS*, PSS_DUPLICATE_FLAGS);
-uint PssWalkMarkerCreate(const(PSS_ALLOCATOR)*, HPSSWALK*);
-uint PssWalkMarkerFree(HPSSWALK);
-uint PssWalkMarkerGetPosition(HPSSWALK, ulong*);
-uint PssWalkMarkerSetPosition(HPSSWALK, ulong);
-uint PssWalkMarkerSeekToBeginning(HPSSWALK);
+uint PssCaptureSnapshot(HANDLE ProcessHandle, PSS_CAPTURE_FLAGS CaptureFlags, uint ThreadContextFlags, HPSS* SnapshotHandle);
+uint PssFreeSnapshot(HANDLE ProcessHandle, HPSS SnapshotHandle);
+uint PssQuerySnapshot(HPSS SnapshotHandle, PSS_QUERY_INFORMATION_CLASS InformationClass, void* Buffer, uint BufferLength);
+uint PssWalkSnapshot(HPSS SnapshotHandle, PSS_WALK_INFORMATION_CLASS InformationClass, HPSSWALK WalkMarkerHandle, void* Buffer, uint BufferLength);
+uint PssDuplicateSnapshot(HANDLE SourceProcessHandle, HPSS SnapshotHandle, HANDLE TargetProcessHandle, HPSS* TargetSnapshotHandle, PSS_DUPLICATE_FLAGS Flags);
+uint PssWalkMarkerCreate(const(PSS_ALLOCATOR)* Allocator, HPSSWALK* WalkMarkerHandle);
+uint PssWalkMarkerFree(HPSSWALK WalkMarkerHandle);
+uint PssWalkMarkerGetPosition(HPSSWALK WalkMarkerHandle, ulong* Position);
+uint PssWalkMarkerSetPosition(HPSSWALK WalkMarkerHandle, ulong Position);
+uint PssWalkMarkerSeekToBeginning(HPSSWALK WalkMarkerHandle);
 enum PSS_PERF_RESOLUTION = 0x000f4240;
 alias HPSS = void*;
 alias HPSSWALK = void*;

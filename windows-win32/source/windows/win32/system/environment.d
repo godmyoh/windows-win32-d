@@ -5,43 +5,43 @@ import windows.win32.foundation : BOOL, HANDLE, HRESULT, PSTR, PWSTR;
 version (Windows):
 extern (Windows):
 
-BOOL SetEnvironmentStringsW(PWSTR);
+BOOL SetEnvironmentStringsW(PWSTR NewEnvironment);
 PSTR GetCommandLineA();
 PWSTR GetCommandLineW();
 PSTR GetEnvironmentStrings();
 PWSTR GetEnvironmentStringsW();
-BOOL FreeEnvironmentStringsA(PSTR);
-BOOL FreeEnvironmentStringsW(PWSTR);
-uint GetEnvironmentVariableA(const(char)*, PSTR, uint);
-uint GetEnvironmentVariableW(const(wchar)*, PWSTR, uint);
-BOOL SetEnvironmentVariableA(const(char)*, const(char)*);
-BOOL SetEnvironmentVariableW(const(wchar)*, const(wchar)*);
-uint ExpandEnvironmentStringsA(const(char)*, PSTR, uint);
-uint ExpandEnvironmentStringsW(const(wchar)*, PWSTR, uint);
-BOOL SetCurrentDirectoryA(const(char)*);
-BOOL SetCurrentDirectoryW(const(wchar)*);
-uint GetCurrentDirectoryA(uint, PSTR);
-uint GetCurrentDirectoryW(uint, PWSTR);
-BOOL NeedCurrentDirectoryForExePathA(const(char)*);
-BOOL NeedCurrentDirectoryForExePathW(const(wchar)*);
-BOOL CreateEnvironmentBlock(void**, HANDLE, BOOL);
-BOOL DestroyEnvironmentBlock(void*);
-BOOL ExpandEnvironmentStringsForUserA(HANDLE, const(char)*, PSTR, uint);
-BOOL ExpandEnvironmentStringsForUserW(HANDLE, const(wchar)*, PWSTR, uint);
-BOOL IsEnclaveTypeSupported(uint);
-void* CreateEnclave(HANDLE, void*, ulong, ulong, uint, const(void)*, uint, uint*);
-BOOL LoadEnclaveData(HANDLE, void*, const(void)*, ulong, uint, const(void)*, uint, ulong*, uint*);
-BOOL InitializeEnclave(HANDLE, void*, const(void)*, uint, uint*);
-BOOL LoadEnclaveImageA(void*, const(char)*);
-BOOL LoadEnclaveImageW(void*, const(wchar)*);
-BOOL CallEnclave(long, void*, BOOL, void**);
-BOOL TerminateEnclave(void*, BOOL);
-BOOL DeleteEnclave(void*);
-HRESULT EnclaveGetAttestationReport(const(ubyte)*, void*, uint, uint*);
-HRESULT EnclaveVerifyAttestationReport(uint, const(void)*, uint);
-HRESULT EnclaveSealData(const(void)*, uint, ENCLAVE_SEALING_IDENTITY_POLICY, uint, void*, uint, uint*);
-HRESULT EnclaveUnsealData(const(void)*, uint, void*, uint, uint*, ENCLAVE_IDENTITY*, uint*);
-HRESULT EnclaveGetEnclaveInformation(uint, ENCLAVE_INFORMATION*);
+BOOL FreeEnvironmentStringsA(PSTR penv);
+BOOL FreeEnvironmentStringsW(PWSTR penv);
+uint GetEnvironmentVariableA(const(char)* lpName, PSTR lpBuffer, uint nSize);
+uint GetEnvironmentVariableW(const(wchar)* lpName, PWSTR lpBuffer, uint nSize);
+BOOL SetEnvironmentVariableA(const(char)* lpName, const(char)* lpValue);
+BOOL SetEnvironmentVariableW(const(wchar)* lpName, const(wchar)* lpValue);
+uint ExpandEnvironmentStringsA(const(char)* lpSrc, PSTR lpDst, uint nSize);
+uint ExpandEnvironmentStringsW(const(wchar)* lpSrc, PWSTR lpDst, uint nSize);
+BOOL SetCurrentDirectoryA(const(char)* lpPathName);
+BOOL SetCurrentDirectoryW(const(wchar)* lpPathName);
+uint GetCurrentDirectoryA(uint nBufferLength, PSTR lpBuffer);
+uint GetCurrentDirectoryW(uint nBufferLength, PWSTR lpBuffer);
+BOOL NeedCurrentDirectoryForExePathA(const(char)* ExeName);
+BOOL NeedCurrentDirectoryForExePathW(const(wchar)* ExeName);
+BOOL CreateEnvironmentBlock(void** lpEnvironment, HANDLE hToken, BOOL bInherit);
+BOOL DestroyEnvironmentBlock(void* lpEnvironment);
+BOOL ExpandEnvironmentStringsForUserA(HANDLE hToken, const(char)* lpSrc, PSTR lpDest, uint dwSize);
+BOOL ExpandEnvironmentStringsForUserW(HANDLE hToken, const(wchar)* lpSrc, PWSTR lpDest, uint dwSize);
+BOOL IsEnclaveTypeSupported(uint flEnclaveType);
+void* CreateEnclave(HANDLE hProcess, void* lpAddress, ulong dwSize, ulong dwInitialCommitment, uint flEnclaveType, const(void)* lpEnclaveInformation, uint dwInfoLength, uint* lpEnclaveError);
+BOOL LoadEnclaveData(HANDLE hProcess, void* lpAddress, const(void)* lpBuffer, ulong nSize, uint flProtect, const(void)* lpPageInformation, uint dwInfoLength, ulong* lpNumberOfBytesWritten, uint* lpEnclaveError);
+BOOL InitializeEnclave(HANDLE hProcess, void* lpAddress, const(void)* lpEnclaveInformation, uint dwInfoLength, uint* lpEnclaveError);
+BOOL LoadEnclaveImageA(void* lpEnclaveAddress, const(char)* lpImageName);
+BOOL LoadEnclaveImageW(void* lpEnclaveAddress, const(wchar)* lpImageName);
+BOOL CallEnclave(long lpRoutine, void* lpParameter, BOOL fWaitForThread, void** lpReturnValue);
+BOOL TerminateEnclave(void* lpAddress, BOOL fWait);
+BOOL DeleteEnclave(void* lpAddress);
+HRESULT EnclaveGetAttestationReport(const(ubyte)* EnclaveData, void* Report, uint BufferSize, uint* OutputSize);
+HRESULT EnclaveVerifyAttestationReport(uint EnclaveType, const(void)* Report, uint ReportSize);
+HRESULT EnclaveSealData(const(void)* DataToEncrypt, uint DataToEncryptSize, ENCLAVE_SEALING_IDENTITY_POLICY IdentityPolicy, uint RuntimePolicy, void* ProtectedBlob, uint BufferSize, uint* ProtectedBlobSize);
+HRESULT EnclaveUnsealData(const(void)* ProtectedBlob, uint ProtectedBlobSize, void* DecryptedData, uint BufferSize, uint* DecryptedDataSize, ENCLAVE_IDENTITY* SealingIdentity, uint* UnsealingFlags);
+HRESULT EnclaveGetEnclaveInformation(uint InformationSize, ENCLAVE_INFORMATION* EnclaveInformation);
 enum ENCLAVE_RUNTIME_POLICY_ALLOW_FULL_DEBUG = 0x00000001;
 enum ENCLAVE_RUNTIME_POLICY_ALLOW_DYNAMIC_DEBUG = 0x00000002;
 enum ENCLAVE_UNSEAL_FLAG_STALE_KEY = 0x00000001;
@@ -58,10 +58,10 @@ enum ENCLAVE_VBS_BASIC_KEY_FLAG_MEASUREMENT = 0x00000001;
 enum ENCLAVE_VBS_BASIC_KEY_FLAG_FAMILY_ID = 0x00000002;
 enum ENCLAVE_VBS_BASIC_KEY_FLAG_IMAGE_ID = 0x00000004;
 enum ENCLAVE_VBS_BASIC_KEY_FLAG_DEBUG_KEY = 0x00000008;
-alias VBS_BASIC_ENCLAVE_BASIC_CALL_RETURN_FROM_EXCEPTION = int function(VBS_BASIC_ENCLAVE_EXCEPTION_AMD64*);
-alias VBS_BASIC_ENCLAVE_BASIC_CALL_TERMINATE_THREAD = int function(VBS_BASIC_ENCLAVE_THREAD_DESCRIPTOR64*);
-alias VBS_BASIC_ENCLAVE_BASIC_CALL_INTERRUPT_THREAD = int function(VBS_BASIC_ENCLAVE_THREAD_DESCRIPTOR64*);
-alias VBS_BASIC_ENCLAVE_BASIC_CALL_CREATE_THREAD = int function(VBS_BASIC_ENCLAVE_THREAD_DESCRIPTOR64*);
+alias VBS_BASIC_ENCLAVE_BASIC_CALL_RETURN_FROM_EXCEPTION = int function(VBS_BASIC_ENCLAVE_EXCEPTION_AMD64* ExceptionRecord);
+alias VBS_BASIC_ENCLAVE_BASIC_CALL_TERMINATE_THREAD = int function(VBS_BASIC_ENCLAVE_THREAD_DESCRIPTOR64* ThreadDescriptor);
+alias VBS_BASIC_ENCLAVE_BASIC_CALL_INTERRUPT_THREAD = int function(VBS_BASIC_ENCLAVE_THREAD_DESCRIPTOR64* ThreadDescriptor);
+alias VBS_BASIC_ENCLAVE_BASIC_CALL_CREATE_THREAD = int function(VBS_BASIC_ENCLAVE_THREAD_DESCRIPTOR64* ThreadDescriptor);
 alias ENCLAVE_SEALING_IDENTITY_POLICY = int;
 enum : int
 {
@@ -160,19 +160,19 @@ struct VBS_BASIC_ENCLAVE_EXCEPTION_AMD64
     ulong ExceptionRFLAGS;
     ulong ExceptionRSP;
 }
-alias VBS_BASIC_ENCLAVE_BASIC_CALL_RETURN_FROM_ENCLAVE = void function(ulong);
-/+ [CONFLICTED] alias VBS_BASIC_ENCLAVE_BASIC_CALL_RETURN_FROM_EXCEPTION = int function(void*);
+alias VBS_BASIC_ENCLAVE_BASIC_CALL_RETURN_FROM_ENCLAVE = void function(ulong ReturnValue);
+/+ [CONFLICTED] alias VBS_BASIC_ENCLAVE_BASIC_CALL_RETURN_FROM_EXCEPTION = int function(void* ExceptionRecord);
 +/
-/+ [CONFLICTED] alias VBS_BASIC_ENCLAVE_BASIC_CALL_TERMINATE_THREAD = int function(VBS_BASIC_ENCLAVE_THREAD_DESCRIPTOR32*);
+/+ [CONFLICTED] alias VBS_BASIC_ENCLAVE_BASIC_CALL_TERMINATE_THREAD = int function(VBS_BASIC_ENCLAVE_THREAD_DESCRIPTOR32* ThreadDescriptor);
 +/
-/+ [CONFLICTED] alias VBS_BASIC_ENCLAVE_BASIC_CALL_INTERRUPT_THREAD = int function(VBS_BASIC_ENCLAVE_THREAD_DESCRIPTOR32*);
+/+ [CONFLICTED] alias VBS_BASIC_ENCLAVE_BASIC_CALL_INTERRUPT_THREAD = int function(VBS_BASIC_ENCLAVE_THREAD_DESCRIPTOR32* ThreadDescriptor);
 +/
-alias VBS_BASIC_ENCLAVE_BASIC_CALL_COMMIT_PAGES = int function(void*, ulong, void*, uint);
-alias VBS_BASIC_ENCLAVE_BASIC_CALL_DECOMMIT_PAGES = int function(void*, ulong);
-alias VBS_BASIC_ENCLAVE_BASIC_CALL_PROTECT_PAGES = int function(void*, ulong, uint);
-/+ [CONFLICTED] alias VBS_BASIC_ENCLAVE_BASIC_CALL_CREATE_THREAD = int function(VBS_BASIC_ENCLAVE_THREAD_DESCRIPTOR32*);
+alias VBS_BASIC_ENCLAVE_BASIC_CALL_COMMIT_PAGES = int function(void* EnclaveAddress, ulong NumberOfBytes, void* SourceAddress, uint PageProtection);
+alias VBS_BASIC_ENCLAVE_BASIC_CALL_DECOMMIT_PAGES = int function(void* EnclaveAddress, ulong NumberOfBytes);
+alias VBS_BASIC_ENCLAVE_BASIC_CALL_PROTECT_PAGES = int function(void* EnclaveAddress, ulong NumberOfytes, uint PageProtection);
+/+ [CONFLICTED] alias VBS_BASIC_ENCLAVE_BASIC_CALL_CREATE_THREAD = int function(VBS_BASIC_ENCLAVE_THREAD_DESCRIPTOR32* ThreadDescriptor);
 +/
-alias VBS_BASIC_ENCLAVE_BASIC_CALL_GET_ENCLAVE_INFORMATION = int function(ENCLAVE_INFORMATION*);
+alias VBS_BASIC_ENCLAVE_BASIC_CALL_GET_ENCLAVE_INFORMATION = int function(ENCLAVE_INFORMATION* EnclaveInfo);
 struct ENCLAVE_VBS_BASIC_KEY_REQUEST
 {
     uint RequestSize;
@@ -181,10 +181,10 @@ struct ENCLAVE_VBS_BASIC_KEY_REQUEST
     uint SystemKeyID;
     uint CurrentSystemKeyID;
 }
-alias VBS_BASIC_ENCLAVE_BASIC_CALL_GENERATE_KEY = int function(ENCLAVE_VBS_BASIC_KEY_REQUEST*, uint, ubyte*);
-alias VBS_BASIC_ENCLAVE_BASIC_CALL_GENERATE_REPORT = int function(const(ubyte)*, void*, uint, uint*);
-alias VBS_BASIC_ENCLAVE_BASIC_CALL_VERIFY_REPORT = int function(const(void)*, uint);
-alias VBS_BASIC_ENCLAVE_BASIC_CALL_GENERATE_RANDOM_DATA = int function(ubyte*, uint, ulong*);
+alias VBS_BASIC_ENCLAVE_BASIC_CALL_GENERATE_KEY = int function(ENCLAVE_VBS_BASIC_KEY_REQUEST* KeyRequest, uint RequestedKeySize, ubyte* ReturnedKey);
+alias VBS_BASIC_ENCLAVE_BASIC_CALL_GENERATE_REPORT = int function(const(ubyte)* EnclaveData, void* Report, uint BufferSize, uint* OutputSize);
+alias VBS_BASIC_ENCLAVE_BASIC_CALL_VERIFY_REPORT = int function(const(void)* Report, uint ReportSize);
+alias VBS_BASIC_ENCLAVE_BASIC_CALL_GENERATE_RANDOM_DATA = int function(ubyte* Buffer, uint NumberOfBytes, ulong* Generation);
 struct VBS_BASIC_ENCLAVE_SYSCALL_PAGE
 {
     VBS_BASIC_ENCLAVE_BASIC_CALL_RETURN_FROM_ENCLAVE ReturnFromEnclave;

@@ -20,26 +20,15 @@ struct SLIST_ENTRY
 {
     SLIST_ENTRY* Next;
 }
-void RtlInitializeSListHead(SLIST_HEADER*);
-SLIST_ENTRY* RtlFirstEntrySList(const(SLIST_HEADER)*);
-SLIST_ENTRY* RtlInterlockedPopEntrySList(SLIST_HEADER*);
-SLIST_ENTRY* RtlInterlockedPushEntrySList(SLIST_HEADER*, SLIST_ENTRY*);
-SLIST_ENTRY* RtlInterlockedPushListSListEx(SLIST_HEADER*, SLIST_ENTRY*, SLIST_ENTRY*, uint);
-SLIST_ENTRY* RtlInterlockedFlushSList(SLIST_HEADER*);
-ushort RtlQueryDepthSList(SLIST_HEADER*);
+void RtlInitializeSListHead(SLIST_HEADER* ListHead);
+SLIST_ENTRY* RtlFirstEntrySList(const(SLIST_HEADER)* ListHead);
+SLIST_ENTRY* RtlInterlockedPopEntrySList(SLIST_HEADER* ListHead);
+SLIST_ENTRY* RtlInterlockedPushEntrySList(SLIST_HEADER* ListHead, SLIST_ENTRY* ListEntry);
+SLIST_ENTRY* RtlInterlockedPushListSListEx(SLIST_HEADER* ListHead, SLIST_ENTRY* List, SLIST_ENTRY* ListEnd, uint Count);
+SLIST_ENTRY* RtlInterlockedFlushSList(SLIST_HEADER* ListHead);
+ushort RtlQueryDepthSList(SLIST_HEADER* ListHead);
 enum OBJ_HANDLE_TAGBITS = 0x00000003;
 enum RTL_BALANCED_NODE_RESERVED_PARENT_MASK = 0x00000003;
-enum OBJ_INHERIT = 0x00000002;
-enum OBJ_PERMANENT = 0x00000010;
-enum OBJ_EXCLUSIVE = 0x00000020;
-enum OBJ_CASE_INSENSITIVE = 0x00000040;
-enum OBJ_OPENIF = 0x00000080;
-enum OBJ_OPENLINK = 0x00000100;
-enum OBJ_KERNEL_HANDLE = 0x00000200;
-enum OBJ_FORCE_ACCESS_CHECK = 0x00000400;
-enum OBJ_IGNORE_IMPERSONATED_DEVICEMAP = 0x00000800;
-enum OBJ_DONT_REPARSE = 0x00001000;
-enum OBJ_VALID_ATTRIBUTES = 0x00001ff2;
 enum NULL64 = 0x00000000;
 enum MAXUCHAR = 0x000000ff;
 enum MAXUSHORT = 0x0000ffff;
@@ -168,7 +157,7 @@ struct OBJECTID
     GUID Lineage;
     uint Uniquifier;
 }
-alias EXCEPTION_ROUTINE = EXCEPTION_DISPOSITION function(EXCEPTION_RECORD*, void*, CONTEXT*, void*);
+alias EXCEPTION_ROUTINE = EXCEPTION_DISPOSITION function(EXCEPTION_RECORD* ExceptionRecord, void* EstablisherFrame, CONTEXT* ContextRecord, void* DispatcherContext);
 alias NT_PRODUCT_TYPE = int;
 enum : int
 {

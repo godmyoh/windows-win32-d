@@ -27,18 +27,18 @@ struct OVERLAPPED_ENTRY
     ulong Internal;
     uint dwNumberOfBytesTransferred;
 }
-alias LPOVERLAPPED_COMPLETION_ROUTINE = void function(uint, uint, OVERLAPPED*);
-HANDLE CreateIoCompletionPort(HANDLE, HANDLE, ulong, uint);
-BOOL GetQueuedCompletionStatus(HANDLE, uint*, ulong*, OVERLAPPED**, uint);
-BOOL GetQueuedCompletionStatusEx(HANDLE, OVERLAPPED_ENTRY*, uint, uint*, uint, BOOL);
-BOOL PostQueuedCompletionStatus(HANDLE, uint, ulong, OVERLAPPED*);
-BOOL DeviceIoControl(HANDLE, uint, void*, uint, void*, uint, uint*, OVERLAPPED*);
-BOOL GetOverlappedResult(HANDLE, OVERLAPPED*, uint*, BOOL);
-BOOL CancelIoEx(HANDLE, OVERLAPPED*);
-BOOL CancelIo(HANDLE);
-BOOL GetOverlappedResultEx(HANDLE, OVERLAPPED*, uint*, uint, BOOL);
-BOOL CancelSynchronousIo(HANDLE);
-BOOL BindIoCompletionCallback(HANDLE, LPOVERLAPPED_COMPLETION_ROUTINE, uint);
+alias LPOVERLAPPED_COMPLETION_ROUTINE = void function(uint dwErrorCode, uint dwNumberOfBytesTransfered, OVERLAPPED* lpOverlapped);
+HANDLE CreateIoCompletionPort(HANDLE FileHandle, HANDLE ExistingCompletionPort, ulong CompletionKey, uint NumberOfConcurrentThreads);
+BOOL GetQueuedCompletionStatus(HANDLE CompletionPort, uint* lpNumberOfBytesTransferred, ulong* lpCompletionKey, OVERLAPPED** lpOverlapped, uint dwMilliseconds);
+BOOL GetQueuedCompletionStatusEx(HANDLE CompletionPort, OVERLAPPED_ENTRY* lpCompletionPortEntries, uint ulCount, uint* ulNumEntriesRemoved, uint dwMilliseconds, BOOL fAlertable);
+BOOL PostQueuedCompletionStatus(HANDLE CompletionPort, uint dwNumberOfBytesTransferred, ulong dwCompletionKey, OVERLAPPED* lpOverlapped);
+BOOL DeviceIoControl(HANDLE hDevice, uint dwIoControlCode, void* lpInBuffer, uint nInBufferSize, void* lpOutBuffer, uint nOutBufferSize, uint* lpBytesReturned, OVERLAPPED* lpOverlapped);
+BOOL GetOverlappedResult(HANDLE hFile, OVERLAPPED* lpOverlapped, uint* lpNumberOfBytesTransferred, BOOL bWait);
+BOOL CancelIoEx(HANDLE hFile, OVERLAPPED* lpOverlapped);
+BOOL CancelIo(HANDLE hFile);
+BOOL GetOverlappedResultEx(HANDLE hFile, OVERLAPPED* lpOverlapped, uint* lpNumberOfBytesTransferred, uint dwMilliseconds, BOOL bAlertable);
+BOOL CancelSynchronousIo(HANDLE hThread);
+BOOL BindIoCompletionCallback(HANDLE FileHandle, LPOVERLAPPED_COMPLETION_ROUTINE Function, uint Flags);
 struct IO_STATUS_BLOCK
 {
     union
@@ -48,4 +48,4 @@ struct IO_STATUS_BLOCK
     }
     ulong Information;
 }
-alias PIO_APC_ROUTINE = void function(void*, IO_STATUS_BLOCK*, uint);
+alias PIO_APC_ROUTINE = void function(void* ApcContext, IO_STATUS_BLOCK* IoStatusBlock, uint Reserved);

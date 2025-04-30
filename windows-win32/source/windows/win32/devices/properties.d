@@ -1,7 +1,7 @@
 module windows.win32.devices.properties;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : PWSTR;
+import windows.win32.foundation : DEVPROPKEY, PWSTR;
 
 version (Windows):
 extern (Windows):
@@ -247,11 +247,6 @@ enum : uint
 }
 
 alias DEVPROP_BOOLEAN = ubyte;
-struct DEVPROPKEY
-{
-    GUID fmtid;
-    uint pid;
-}
 alias DEVPROPSTORE = int;
 enum : int
 {

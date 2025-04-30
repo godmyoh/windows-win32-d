@@ -1,8 +1,7 @@
 module windows.win32.system.power;
 
 import windows.win32.guid : GUID;
-import windows.win32.devices.properties : DEVPROPKEY;
-import windows.win32.foundation : BOOL, BOOLEAN, HANDLE, HRESULT, LPARAM, NTSTATUS, PWSTR, WIN32_ERROR;
+import windows.win32.foundation : BOOL, BOOLEAN, DEVPROPKEY, HANDLE, HRESULT, LPARAM, NTSTATUS, PWSTR, WIN32_ERROR;
 import windows.win32.system.registry : HKEY, REG_SAM_FLAGS;
 import windows.win32.system.threading : REASON_CONTEXT;
 import windows.win32.ui.windowsandmessaging : REGISTER_NOTIFICATION_FLAGS;
@@ -62,103 +61,127 @@ enum : uint
     POWER_USER_NOTIFY_SHUTDOWN    = 0x00000010,
 }
 
-NTSTATUS CallNtPowerInformation(POWER_INFORMATION_LEVEL, void*, uint, void*, uint);
-BOOLEAN GetPwrCapabilities(SYSTEM_POWER_CAPABILITIES*);
-POWER_PLATFORM_ROLE PowerDeterminePlatformRoleEx(POWER_PLATFORM_ROLE_VERSION);
-WIN32_ERROR PowerRegisterSuspendResumeNotification(REGISTER_NOTIFICATION_FLAGS, HANDLE, void**);
-WIN32_ERROR PowerUnregisterSuspendResumeNotification(HPOWERNOTIFY);
-WIN32_ERROR PowerReadACValue(HKEY, const(GUID)*, const(GUID)*, const(GUID)*, uint*, ubyte*, uint*);
-WIN32_ERROR PowerReadDCValue(HKEY, const(GUID)*, const(GUID)*, const(GUID)*, uint*, ubyte*, uint*);
-uint PowerWriteACValueIndex(HKEY, const(GUID)*, const(GUID)*, const(GUID)*, uint);
-uint PowerWriteDCValueIndex(HKEY, const(GUID)*, const(GUID)*, const(GUID)*, uint);
-WIN32_ERROR PowerGetActiveScheme(HKEY, GUID**);
-WIN32_ERROR PowerSetActiveScheme(HKEY, const(GUID)*);
-WIN32_ERROR PowerSettingRegisterNotification(const(GUID)*, REGISTER_NOTIFICATION_FLAGS, HANDLE, void**);
-WIN32_ERROR PowerSettingUnregisterNotification(HPOWERNOTIFY);
-HRESULT PowerRegisterForEffectivePowerModeNotifications(uint, EFFECTIVE_POWER_MODE_CALLBACK, void*, void**);
-HRESULT PowerUnregisterFromEffectivePowerModeNotifications(void*);
-BOOLEAN GetPwrDiskSpindownRange(uint*, uint*);
-BOOLEAN EnumPwrSchemes(PWRSCHEMESENUMPROC, LPARAM);
-BOOLEAN ReadGlobalPwrPolicy(GLOBAL_POWER_POLICY*);
-BOOLEAN ReadPwrScheme(uint, POWER_POLICY*);
-BOOLEAN WritePwrScheme(uint*, const(wchar)*, const(wchar)*, POWER_POLICY*);
-BOOLEAN WriteGlobalPwrPolicy(GLOBAL_POWER_POLICY*);
-BOOLEAN DeletePwrScheme(uint);
-BOOLEAN GetActivePwrScheme(uint*);
-BOOLEAN SetActivePwrScheme(uint, GLOBAL_POWER_POLICY*, POWER_POLICY*);
+alias DEVICE_POWER_CAPABILITIES = uint;
+enum : uint
+{
+    PDCAP_D0_SUPPORTED           = 0x00000001,
+    PDCAP_D1_SUPPORTED           = 0x00000002,
+    PDCAP_D2_SUPPORTED           = 0x00000004,
+    PDCAP_D3_SUPPORTED           = 0x00000008,
+    PDCAP_WAKE_FROM_D0_SUPPORTED = 0x00000010,
+    PDCAP_WAKE_FROM_D1_SUPPORTED = 0x00000020,
+    PDCAP_WAKE_FROM_D2_SUPPORTED = 0x00000040,
+    PDCAP_WAKE_FROM_D3_SUPPORTED = 0x00000080,
+    PDCAP_WARM_EJECT_SUPPORTED   = 0x00000100,
+    PDCAP_S0_SUPPORTED           = 0x00010000,
+    PDCAP_S1_SUPPORTED           = 0x00020000,
+    PDCAP_S2_SUPPORTED           = 0x00040000,
+    PDCAP_S3_SUPPORTED           = 0x00080000,
+    PDCAP_WAKE_FROM_S0_SUPPORTED = 0x00100000,
+    PDCAP_WAKE_FROM_S1_SUPPORTED = 0x00200000,
+    PDCAP_WAKE_FROM_S2_SUPPORTED = 0x00400000,
+    PDCAP_WAKE_FROM_S3_SUPPORTED = 0x00800000,
+    PDCAP_S4_SUPPORTED           = 0x01000000,
+    PDCAP_S5_SUPPORTED           = 0x02000000,
+}
+
+NTSTATUS CallNtPowerInformation(POWER_INFORMATION_LEVEL InformationLevel, void* InputBuffer, uint InputBufferLength, void* OutputBuffer, uint OutputBufferLength);
+BOOLEAN GetPwrCapabilities(SYSTEM_POWER_CAPABILITIES* lpspc);
+POWER_PLATFORM_ROLE PowerDeterminePlatformRoleEx(POWER_PLATFORM_ROLE_VERSION Version);
+WIN32_ERROR PowerRegisterSuspendResumeNotification(REGISTER_NOTIFICATION_FLAGS Flags, HANDLE Recipient, void** RegistrationHandle);
+WIN32_ERROR PowerUnregisterSuspendResumeNotification(HPOWERNOTIFY RegistrationHandle);
+WIN32_ERROR PowerReadACValue(HKEY RootPowerKey, const(GUID)* SchemeGuid, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, uint* Type, ubyte* Buffer, uint* BufferSize);
+WIN32_ERROR PowerReadDCValue(HKEY RootPowerKey, const(GUID)* SchemeGuid, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, uint* Type, ubyte* Buffer, uint* BufferSize);
+WIN32_ERROR PowerWriteACValueIndex(HKEY RootPowerKey, const(GUID)* SchemeGuid, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, uint AcValueIndex);
+uint PowerWriteDCValueIndex(HKEY RootPowerKey, const(GUID)* SchemeGuid, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, uint DcValueIndex);
+WIN32_ERROR PowerGetActiveScheme(HKEY UserRootPowerKey, GUID** ActivePolicyGuid);
+WIN32_ERROR PowerSetActiveScheme(HKEY UserRootPowerKey, const(GUID)* SchemeGuid);
+WIN32_ERROR PowerSettingRegisterNotification(const(GUID)* SettingGuid, REGISTER_NOTIFICATION_FLAGS Flags, HANDLE Recipient, void** RegistrationHandle);
+WIN32_ERROR PowerSettingUnregisterNotification(HPOWERNOTIFY RegistrationHandle);
+HRESULT PowerRegisterForEffectivePowerModeNotifications(uint Version, EFFECTIVE_POWER_MODE_CALLBACK Callback, void* Context, void** RegistrationHandle);
+HRESULT PowerUnregisterFromEffectivePowerModeNotifications(void* RegistrationHandle);
+BOOLEAN GetPwrDiskSpindownRange(uint* puiMax, uint* puiMin);
+BOOLEAN EnumPwrSchemes(PWRSCHEMESENUMPROC lpfn, LPARAM lParam);
+BOOLEAN ReadGlobalPwrPolicy(GLOBAL_POWER_POLICY* pGlobalPowerPolicy);
+BOOLEAN ReadPwrScheme(uint uiID, POWER_POLICY* pPowerPolicy);
+BOOLEAN WritePwrScheme(uint* puiID, const(wchar)* lpszSchemeName, const(wchar)* lpszDescription, POWER_POLICY* lpScheme);
+BOOLEAN WriteGlobalPwrPolicy(GLOBAL_POWER_POLICY* pGlobalPowerPolicy);
+BOOLEAN DeletePwrScheme(uint uiID);
+BOOLEAN GetActivePwrScheme(uint* puiID);
+BOOLEAN SetActivePwrScheme(uint uiID, GLOBAL_POWER_POLICY* pGlobalPowerPolicy, POWER_POLICY* pPowerPolicy);
 BOOLEAN IsPwrSuspendAllowed();
 BOOLEAN IsPwrHibernateAllowed();
 BOOLEAN IsPwrShutdownAllowed();
-BOOLEAN IsAdminOverrideActive(ADMINISTRATOR_POWER_POLICY*);
-BOOLEAN SetSuspendState(BOOLEAN, BOOLEAN, BOOLEAN);
-BOOLEAN GetCurrentPowerPolicies(GLOBAL_POWER_POLICY*, POWER_POLICY*);
+BOOLEAN IsAdminOverrideActive(ADMINISTRATOR_POWER_POLICY* papp);
+BOOLEAN SetSuspendState(BOOLEAN bHibernate, BOOLEAN bForce, BOOLEAN bWakeupEventsDisabled);
+BOOLEAN GetCurrentPowerPolicies(GLOBAL_POWER_POLICY* pGlobalPowerPolicy, POWER_POLICY* pPowerPolicy);
 BOOLEAN CanUserWritePwrScheme();
-BOOLEAN ReadProcessorPwrScheme(uint, MACHINE_PROCESSOR_POWER_POLICY*);
-BOOLEAN WriteProcessorPwrScheme(uint, MACHINE_PROCESSOR_POWER_POLICY*);
-BOOLEAN ValidatePowerPolicies(GLOBAL_POWER_POLICY*, POWER_POLICY*);
-BOOLEAN PowerIsSettingRangeDefined(const(GUID)*, const(GUID)*);
-WIN32_ERROR PowerSettingAccessCheckEx(POWER_DATA_ACCESSOR, const(GUID)*, REG_SAM_FLAGS);
-WIN32_ERROR PowerSettingAccessCheck(POWER_DATA_ACCESSOR, const(GUID)*);
-uint PowerReadACValueIndex(HKEY, const(GUID)*, const(GUID)*, const(GUID)*, uint*);
-uint PowerReadDCValueIndex(HKEY, const(GUID)*, const(GUID)*, const(GUID)*, uint*);
-WIN32_ERROR PowerReadFriendlyName(HKEY, const(GUID)*, const(GUID)*, const(GUID)*, ubyte*, uint*);
-WIN32_ERROR PowerReadDescription(HKEY, const(GUID)*, const(GUID)*, const(GUID)*, ubyte*, uint*);
-WIN32_ERROR PowerReadPossibleValue(HKEY, const(GUID)*, const(GUID)*, uint*, uint, ubyte*, uint*);
-WIN32_ERROR PowerReadPossibleFriendlyName(HKEY, const(GUID)*, const(GUID)*, uint, ubyte*, uint*);
-WIN32_ERROR PowerReadPossibleDescription(HKEY, const(GUID)*, const(GUID)*, uint, ubyte*, uint*);
-WIN32_ERROR PowerReadValueMin(HKEY, const(GUID)*, const(GUID)*, uint*);
-WIN32_ERROR PowerReadValueMax(HKEY, const(GUID)*, const(GUID)*, uint*);
-WIN32_ERROR PowerReadValueIncrement(HKEY, const(GUID)*, const(GUID)*, uint*);
-WIN32_ERROR PowerReadValueUnitsSpecifier(HKEY, const(GUID)*, const(GUID)*, ubyte*, uint*);
-uint PowerReadACDefaultIndex(HKEY, const(GUID)*, const(GUID)*, const(GUID)*, uint*);
-uint PowerReadDCDefaultIndex(HKEY, const(GUID)*, const(GUID)*, const(GUID)*, uint*);
-WIN32_ERROR PowerReadIconResourceSpecifier(HKEY, const(GUID)*, const(GUID)*, const(GUID)*, ubyte*, uint*);
-uint PowerReadSettingAttributes(const(GUID)*, const(GUID)*);
-WIN32_ERROR PowerWriteFriendlyName(HKEY, const(GUID)*, const(GUID)*, const(GUID)*, ubyte*, uint);
-WIN32_ERROR PowerWriteDescription(HKEY, const(GUID)*, const(GUID)*, const(GUID)*, ubyte*, uint);
-WIN32_ERROR PowerWritePossibleValue(HKEY, const(GUID)*, const(GUID)*, uint, uint, ubyte*, uint);
-WIN32_ERROR PowerWritePossibleFriendlyName(HKEY, const(GUID)*, const(GUID)*, uint, ubyte*, uint);
-WIN32_ERROR PowerWritePossibleDescription(HKEY, const(GUID)*, const(GUID)*, uint, ubyte*, uint);
-WIN32_ERROR PowerWriteValueMin(HKEY, const(GUID)*, const(GUID)*, uint);
-WIN32_ERROR PowerWriteValueMax(HKEY, const(GUID)*, const(GUID)*, uint);
-WIN32_ERROR PowerWriteValueIncrement(HKEY, const(GUID)*, const(GUID)*, uint);
-WIN32_ERROR PowerWriteValueUnitsSpecifier(HKEY, const(GUID)*, const(GUID)*, ubyte*, uint);
-uint PowerWriteACDefaultIndex(HKEY, const(GUID)*, const(GUID)*, const(GUID)*, uint);
-uint PowerWriteDCDefaultIndex(HKEY, const(GUID)*, const(GUID)*, const(GUID)*, uint);
-WIN32_ERROR PowerWriteIconResourceSpecifier(HKEY, const(GUID)*, const(GUID)*, const(GUID)*, ubyte*, uint);
-WIN32_ERROR PowerWriteSettingAttributes(const(GUID)*, const(GUID)*, uint);
-WIN32_ERROR PowerDuplicateScheme(HKEY, const(GUID)*, GUID**);
-WIN32_ERROR PowerImportPowerScheme(HKEY, const(wchar)*, GUID**);
-WIN32_ERROR PowerDeleteScheme(HKEY, const(GUID)*);
-WIN32_ERROR PowerRemovePowerSetting(const(GUID)*, const(GUID)*);
-WIN32_ERROR PowerCreateSetting(HKEY, const(GUID)*, const(GUID)*);
-WIN32_ERROR PowerCreatePossibleSetting(HKEY, const(GUID)*, const(GUID)*, uint);
-WIN32_ERROR PowerEnumerate(HKEY, const(GUID)*, const(GUID)*, POWER_DATA_ACCESSOR, uint, ubyte*, uint*);
-uint PowerOpenUserPowerKey(HKEY*, uint, BOOL);
-uint PowerOpenSystemPowerKey(HKEY*, uint, BOOL);
-WIN32_ERROR PowerCanRestoreIndividualDefaultPowerScheme(const(GUID)*);
-WIN32_ERROR PowerRestoreIndividualDefaultPowerScheme(const(GUID)*);
+BOOLEAN ReadProcessorPwrScheme(uint uiID, MACHINE_PROCESSOR_POWER_POLICY* pMachineProcessorPowerPolicy);
+BOOLEAN WriteProcessorPwrScheme(uint uiID, MACHINE_PROCESSOR_POWER_POLICY* pMachineProcessorPowerPolicy);
+BOOLEAN ValidatePowerPolicies(GLOBAL_POWER_POLICY* pGlobalPowerPolicy, POWER_POLICY* pPowerPolicy);
+BOOLEAN PowerIsSettingRangeDefined(const(GUID)* SubKeyGuid, const(GUID)* SettingGuid);
+WIN32_ERROR PowerSettingAccessCheckEx(POWER_DATA_ACCESSOR AccessFlags, const(GUID)* PowerGuid, REG_SAM_FLAGS AccessType);
+WIN32_ERROR PowerSettingAccessCheck(POWER_DATA_ACCESSOR AccessFlags, const(GUID)* PowerGuid);
+WIN32_ERROR PowerReadACValueIndex(HKEY RootPowerKey, const(GUID)* SchemeGuid, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, uint* AcValueIndex);
+uint PowerReadDCValueIndex(HKEY RootPowerKey, const(GUID)* SchemeGuid, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, uint* DcValueIndex);
+WIN32_ERROR PowerReadFriendlyName(HKEY RootPowerKey, const(GUID)* SchemeGuid, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, ubyte* Buffer, uint* BufferSize);
+WIN32_ERROR PowerReadDescription(HKEY RootPowerKey, const(GUID)* SchemeGuid, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, ubyte* Buffer, uint* BufferSize);
+WIN32_ERROR PowerReadPossibleValue(HKEY RootPowerKey, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, uint* Type, uint PossibleSettingIndex, ubyte* Buffer, uint* BufferSize);
+WIN32_ERROR PowerReadPossibleFriendlyName(HKEY RootPowerKey, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, uint PossibleSettingIndex, ubyte* Buffer, uint* BufferSize);
+WIN32_ERROR PowerReadPossibleDescription(HKEY RootPowerKey, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, uint PossibleSettingIndex, ubyte* Buffer, uint* BufferSize);
+WIN32_ERROR PowerReadValueMin(HKEY RootPowerKey, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, uint* ValueMinimum);
+WIN32_ERROR PowerReadValueMax(HKEY RootPowerKey, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, uint* ValueMaximum);
+WIN32_ERROR PowerReadValueIncrement(HKEY RootPowerKey, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, uint* ValueIncrement);
+WIN32_ERROR PowerReadValueUnitsSpecifier(HKEY RootPowerKey, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, ubyte* Buffer, uint* BufferSize);
+uint PowerReadACDefaultIndex(HKEY RootPowerKey, const(GUID)* SchemePersonalityGuid, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, uint* AcDefaultIndex);
+uint PowerReadDCDefaultIndex(HKEY RootPowerKey, const(GUID)* SchemePersonalityGuid, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, uint* DcDefaultIndex);
+WIN32_ERROR PowerReadIconResourceSpecifier(HKEY RootPowerKey, const(GUID)* SchemeGuid, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, ubyte* Buffer, uint* BufferSize);
+uint PowerReadSettingAttributes(const(GUID)* SubGroupGuid, const(GUID)* PowerSettingGuid);
+WIN32_ERROR PowerWriteFriendlyName(HKEY RootPowerKey, const(GUID)* SchemeGuid, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, ubyte* Buffer, uint BufferSize);
+WIN32_ERROR PowerWriteDescription(HKEY RootPowerKey, const(GUID)* SchemeGuid, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, ubyte* Buffer, uint BufferSize);
+WIN32_ERROR PowerWritePossibleValue(HKEY RootPowerKey, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, uint Type, uint PossibleSettingIndex, ubyte* Buffer, uint BufferSize);
+WIN32_ERROR PowerWritePossibleFriendlyName(HKEY RootPowerKey, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, uint PossibleSettingIndex, ubyte* Buffer, uint BufferSize);
+WIN32_ERROR PowerWritePossibleDescription(HKEY RootPowerKey, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, uint PossibleSettingIndex, ubyte* Buffer, uint BufferSize);
+WIN32_ERROR PowerWriteValueMin(HKEY RootPowerKey, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, uint ValueMinimum);
+WIN32_ERROR PowerWriteValueMax(HKEY RootPowerKey, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, uint ValueMaximum);
+WIN32_ERROR PowerWriteValueIncrement(HKEY RootPowerKey, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, uint ValueIncrement);
+WIN32_ERROR PowerWriteValueUnitsSpecifier(HKEY RootPowerKey, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, ubyte* Buffer, uint BufferSize);
+uint PowerWriteACDefaultIndex(HKEY RootSystemPowerKey, const(GUID)* SchemePersonalityGuid, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, uint DefaultAcIndex);
+uint PowerWriteDCDefaultIndex(HKEY RootSystemPowerKey, const(GUID)* SchemePersonalityGuid, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, uint DefaultDcIndex);
+WIN32_ERROR PowerWriteIconResourceSpecifier(HKEY RootPowerKey, const(GUID)* SchemeGuid, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, ubyte* Buffer, uint BufferSize);
+WIN32_ERROR PowerWriteSettingAttributes(const(GUID)* SubGroupGuid, const(GUID)* PowerSettingGuid, uint Attributes);
+WIN32_ERROR PowerDuplicateScheme(HKEY RootPowerKey, const(GUID)* SourceSchemeGuid, GUID** DestinationSchemeGuid);
+WIN32_ERROR PowerImportPowerScheme(HKEY RootPowerKey, const(wchar)* ImportFileNamePath, GUID** DestinationSchemeGuid);
+WIN32_ERROR PowerDeleteScheme(HKEY RootPowerKey, const(GUID)* SchemeGuid);
+WIN32_ERROR PowerRemovePowerSetting(const(GUID)* PowerSettingSubKeyGuid, const(GUID)* PowerSettingGuid);
+WIN32_ERROR PowerCreateSetting(HKEY RootSystemPowerKey, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid);
+WIN32_ERROR PowerCreatePossibleSetting(HKEY RootSystemPowerKey, const(GUID)* SubGroupOfPowerSettingsGuid, const(GUID)* PowerSettingGuid, uint PossibleSettingIndex);
+WIN32_ERROR PowerEnumerate(HKEY RootPowerKey, const(GUID)* SchemeGuid, const(GUID)* SubGroupOfPowerSettingsGuid, POWER_DATA_ACCESSOR AccessFlags, uint Index, ubyte* Buffer, uint* BufferSize);
+uint PowerOpenUserPowerKey(HKEY* phUserPowerKey, uint Access, BOOL OpenExisting);
+uint PowerOpenSystemPowerKey(HKEY* phSystemPowerKey, uint Access, BOOL OpenExisting);
+WIN32_ERROR PowerCanRestoreIndividualDefaultPowerScheme(const(GUID)* SchemeGuid);
+WIN32_ERROR PowerRestoreIndividualDefaultPowerScheme(const(GUID)* SchemeGuid);
 WIN32_ERROR PowerRestoreDefaultPowerSchemes();
 uint PowerReplaceDefaultPowerSchemes();
 POWER_PLATFORM_ROLE PowerDeterminePlatformRole();
-BOOLEAN DevicePowerEnumDevices(uint, uint, uint, ubyte*, uint*);
-uint DevicePowerSetDeviceState(const(wchar)*, uint, void*);
-BOOLEAN DevicePowerOpen(uint);
+BOOLEAN DevicePowerEnumDevices(uint QueryIndex, uint QueryInterpretationFlags, uint QueryFlags, ubyte* pReturnBuffer, uint* pBufferSize);
+uint DevicePowerSetDeviceState(const(wchar)* DeviceDescription, uint SetFlags, void* SetData);
+BOOLEAN DevicePowerOpen(uint DebugMask);
 BOOLEAN DevicePowerClose();
-WIN32_ERROR PowerReportThermalEvent(THERMAL_EVENT*);
-HPOWERNOTIFY RegisterPowerSettingNotification(HANDLE, const(GUID)*, REGISTER_NOTIFICATION_FLAGS);
-BOOL UnregisterPowerSettingNotification(HPOWERNOTIFY);
-HPOWERNOTIFY RegisterSuspendResumeNotification(HANDLE, REGISTER_NOTIFICATION_FLAGS);
-BOOL UnregisterSuspendResumeNotification(HPOWERNOTIFY);
-BOOL RequestWakeupLatency(LATENCY_TIME);
+WIN32_ERROR PowerReportThermalEvent(THERMAL_EVENT* Event);
+HPOWERNOTIFY RegisterPowerSettingNotification(HANDLE hRecipient, const(GUID)* PowerSettingGuid, REGISTER_NOTIFICATION_FLAGS Flags);
+BOOL UnregisterPowerSettingNotification(HPOWERNOTIFY Handle);
+HPOWERNOTIFY RegisterSuspendResumeNotification(HANDLE hRecipient, REGISTER_NOTIFICATION_FLAGS Flags);
+BOOL UnregisterSuspendResumeNotification(HPOWERNOTIFY Handle);
+BOOL RequestWakeupLatency(LATENCY_TIME latency);
 BOOL IsSystemResumeAutomatic();
-EXECUTION_STATE SetThreadExecutionState(EXECUTION_STATE);
-HANDLE PowerCreateRequest(REASON_CONTEXT*);
-BOOL PowerSetRequest(HANDLE, POWER_REQUEST_TYPE);
-BOOL PowerClearRequest(HANDLE, POWER_REQUEST_TYPE);
-BOOL GetDevicePowerState(HANDLE, BOOL*);
-BOOL SetSystemPowerState(BOOL, BOOL);
-BOOL GetSystemPowerStatus(SYSTEM_POWER_STATUS*);
+EXECUTION_STATE SetThreadExecutionState(EXECUTION_STATE esFlags);
+HANDLE PowerCreateRequest(REASON_CONTEXT* Context);
+BOOL PowerSetRequest(HANDLE PowerRequest, POWER_REQUEST_TYPE RequestType);
+BOOL PowerClearRequest(HANDLE PowerRequest, POWER_REQUEST_TYPE RequestType);
+BOOL GetDevicePowerState(HANDLE hDevice, BOOL* pfOn);
+BOOL SetSystemPowerState(BOOL fSuspend, BOOL fForce);
+BOOL GetSystemPowerStatus(SYSTEM_POWER_STATUS* lpSystemPowerStatus);
 enum PPM_FIRMWARE_ACPI1C2 = 0x00000001;
 enum PPM_FIRMWARE_ACPI1C3 = 0x00000002;
 enum PPM_FIRMWARE_ACPI1TSTATES = 0x00000004;
@@ -323,16 +346,6 @@ enum DEVICEPOWER_FILTER_WAKEPROGRAMMABLE = 0x04000000;
 enum DEVICEPOWER_FILTER_ON_NAME = 0x02000000;
 enum DEVICEPOWER_SET_WAKEENABLED = 0x00000001;
 enum DEVICEPOWER_CLEAR_WAKEENABLED = 0x00000002;
-enum PDCAP_S0_SUPPORTED = 0x00010000;
-enum PDCAP_S1_SUPPORTED = 0x00020000;
-enum PDCAP_S2_SUPPORTED = 0x00040000;
-enum PDCAP_S3_SUPPORTED = 0x00080000;
-enum PDCAP_WAKE_FROM_S0_SUPPORTED = 0x00100000;
-enum PDCAP_WAKE_FROM_S1_SUPPORTED = 0x00200000;
-enum PDCAP_WAKE_FROM_S2_SUPPORTED = 0x00400000;
-enum PDCAP_WAKE_FROM_S3_SUPPORTED = 0x00800000;
-enum PDCAP_S4_SUPPORTED = 0x01000000;
-enum PDCAP_S5_SUPPORTED = 0x02000000;
 enum THERMAL_EVENT_VERSION = 0x00000001;
 alias HPOWERNOTIFY = void*;
 alias EFFECTIVE_POWER_MODE = int;
@@ -347,7 +360,7 @@ enum : int
     EffectivePowerModeMixedReality    = 0x00000006,
 }
 
-alias EFFECTIVE_POWER_MODE_CALLBACK = void function(EFFECTIVE_POWER_MODE, void*);
+alias EFFECTIVE_POWER_MODE_CALLBACK = void function(EFFECTIVE_POWER_MODE Mode, void* Context);
 struct GLOBAL_MACHINE_POWER_POLICY
 {
     uint Revision;
@@ -425,8 +438,8 @@ struct POWER_POLICY
     USER_POWER_POLICY user;
     MACHINE_POWER_POLICY mach;
 }
-alias PWRSCHEMESENUMPROC_V1 = BOOLEAN function(uint, uint, byte*, uint, byte*, POWER_POLICY*, LPARAM);
-alias PWRSCHEMESENUMPROC = BOOLEAN function(uint, uint, PWSTR, uint, PWSTR, POWER_POLICY*, LPARAM);
+alias PWRSCHEMESENUMPROC_V1 = BOOLEAN function(uint Index, uint NameSize, byte* Name, uint DescriptionSize, byte* Description, POWER_POLICY* Policy, LPARAM Context);
+alias PWRSCHEMESENUMPROC = BOOLEAN function(uint Index, uint NameSize, PWSTR Name, uint DescriptionSize, PWSTR Description, POWER_POLICY* Policy, LPARAM Context);
 alias POWER_DATA_ACCESSOR = int;
 enum : int
 {
@@ -460,7 +473,7 @@ enum : int
     ACCESS_ACTIVE_OVERLAY_SCHEME                = 0x0000001b,
 }
 
-alias PDEVICE_NOTIFY_CALLBACK_ROUTINE = uint function(void*, uint, void*);
+alias PDEVICE_NOTIFY_CALLBACK_ROUTINE = uint function(void* Context, uint Type, void* Setting);
 struct DEVICE_NOTIFY_SUBSCRIBE_PARAMETERS
 {
     PDEVICE_NOTIFY_CALLBACK_ROUTINE Callback;

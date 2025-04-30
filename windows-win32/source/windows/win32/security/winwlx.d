@@ -163,33 +163,33 @@ struct WLX_DESKTOP
     HDESK hDesktop;
     PWSTR pszDesktopName;
 }
-alias PWLX_USE_CTRL_ALT_DEL = void function(HANDLE);
-alias PWLX_SET_CONTEXT_POINTER = void function(HANDLE, void*);
-alias PWLX_SAS_NOTIFY = void function(HANDLE, uint);
-alias PWLX_SET_TIMEOUT = BOOL function(HANDLE, uint);
-alias PWLX_ASSIGN_SHELL_PROTECTION = int function(HANDLE, HANDLE, HANDLE, HANDLE);
-alias PWLX_MESSAGE_BOX = int function(HANDLE, HWND, PWSTR, PWSTR, uint);
-alias PWLX_DIALOG_BOX = int function(HANDLE, HANDLE, PWSTR, HWND, DLGPROC);
-alias PWLX_DIALOG_BOX_INDIRECT = int function(HANDLE, HANDLE, DLGTEMPLATE*, HWND, DLGPROC);
-alias PWLX_DIALOG_BOX_PARAM = int function(HANDLE, HANDLE, PWSTR, HWND, DLGPROC, LPARAM);
-alias PWLX_DIALOG_BOX_INDIRECT_PARAM = int function(HANDLE, HANDLE, DLGTEMPLATE*, HWND, DLGPROC, LPARAM);
-alias PWLX_SWITCH_DESKTOP_TO_USER = int function(HANDLE);
-alias PWLX_SWITCH_DESKTOP_TO_WINLOGON = int function(HANDLE);
-alias PWLX_CHANGE_PASSWORD_NOTIFY = int function(HANDLE, WLX_MPR_NOTIFY_INFO*, uint);
-alias PWLX_GET_SOURCE_DESKTOP = BOOL function(HANDLE, WLX_DESKTOP**);
-alias PWLX_SET_RETURN_DESKTOP = BOOL function(HANDLE, WLX_DESKTOP*);
-alias PWLX_CREATE_USER_DESKTOP = BOOL function(HANDLE, HANDLE, uint, PWSTR, WLX_DESKTOP**);
-alias PWLX_CHANGE_PASSWORD_NOTIFY_EX = int function(HANDLE, WLX_MPR_NOTIFY_INFO*, uint, PWSTR, void*);
-alias PWLX_CLOSE_USER_DESKTOP = BOOL function(HANDLE, WLX_DESKTOP*, HANDLE);
-alias PWLX_SET_OPTION = BOOL function(HANDLE, uint, ulong, ulong*);
-alias PWLX_GET_OPTION = BOOL function(HANDLE, uint, ulong*);
-alias PWLX_WIN31_MIGRATE = void function(HANDLE);
-alias PWLX_QUERY_CLIENT_CREDENTIALS = BOOL function(WLX_CLIENT_CREDENTIALS_INFO_V1_0*);
-alias PWLX_QUERY_IC_CREDENTIALS = BOOL function(WLX_CLIENT_CREDENTIALS_INFO_V1_0*);
-alias PWLX_QUERY_TS_LOGON_CREDENTIALS = BOOL function(WLX_CLIENT_CREDENTIALS_INFO_V2_0*);
+alias PWLX_USE_CTRL_ALT_DEL = void function(HANDLE hWlx);
+alias PWLX_SET_CONTEXT_POINTER = void function(HANDLE hWlx, void* pWlxContext);
+alias PWLX_SAS_NOTIFY = void function(HANDLE hWlx, uint dwSasType);
+alias PWLX_SET_TIMEOUT = BOOL function(HANDLE hWlx, uint Timeout);
+alias PWLX_ASSIGN_SHELL_PROTECTION = int function(HANDLE hWlx, HANDLE hToken, HANDLE hProcess, HANDLE hThread);
+alias PWLX_MESSAGE_BOX = int function(HANDLE hWlx, HWND hwndOwner, PWSTR lpszText, PWSTR lpszTitle, uint fuStyle);
+alias PWLX_DIALOG_BOX = int function(HANDLE hWlx, HANDLE hInst, PWSTR lpszTemplate, HWND hwndOwner, DLGPROC dlgprc);
+alias PWLX_DIALOG_BOX_INDIRECT = int function(HANDLE hWlx, HANDLE hInst, DLGTEMPLATE* hDialogTemplate, HWND hwndOwner, DLGPROC dlgprc);
+alias PWLX_DIALOG_BOX_PARAM = int function(HANDLE hWlx, HANDLE hInst, PWSTR lpszTemplate, HWND hwndOwner, DLGPROC dlgprc, LPARAM dwInitParam);
+alias PWLX_DIALOG_BOX_INDIRECT_PARAM = int function(HANDLE hWlx, HANDLE hInst, DLGTEMPLATE* hDialogTemplate, HWND hwndOwner, DLGPROC dlgprc, LPARAM dwInitParam);
+alias PWLX_SWITCH_DESKTOP_TO_USER = int function(HANDLE hWlx);
+alias PWLX_SWITCH_DESKTOP_TO_WINLOGON = int function(HANDLE hWlx);
+alias PWLX_CHANGE_PASSWORD_NOTIFY = int function(HANDLE hWlx, WLX_MPR_NOTIFY_INFO* pMprInfo, uint dwChangeInfo);
+alias PWLX_GET_SOURCE_DESKTOP = BOOL function(HANDLE hWlx, WLX_DESKTOP** ppDesktop);
+alias PWLX_SET_RETURN_DESKTOP = BOOL function(HANDLE hWlx, WLX_DESKTOP* pDesktop);
+alias PWLX_CREATE_USER_DESKTOP = BOOL function(HANDLE hWlx, HANDLE hToken, uint Flags, PWSTR pszDesktopName, WLX_DESKTOP** ppDesktop);
+alias PWLX_CHANGE_PASSWORD_NOTIFY_EX = int function(HANDLE hWlx, WLX_MPR_NOTIFY_INFO* pMprInfo, uint dwChangeInfo, PWSTR ProviderName, void* Reserved);
+alias PWLX_CLOSE_USER_DESKTOP = BOOL function(HANDLE hWlx, WLX_DESKTOP* pDesktop, HANDLE hToken);
+alias PWLX_SET_OPTION = BOOL function(HANDLE hWlx, uint Option, ulong Value, ulong* OldValue);
+alias PWLX_GET_OPTION = BOOL function(HANDLE hWlx, uint Option, ulong* Value);
+alias PWLX_WIN31_MIGRATE = void function(HANDLE hWlx);
+alias PWLX_QUERY_CLIENT_CREDENTIALS = BOOL function(WLX_CLIENT_CREDENTIALS_INFO_V1_0* pCred);
+alias PWLX_QUERY_IC_CREDENTIALS = BOOL function(WLX_CLIENT_CREDENTIALS_INFO_V1_0* pCred);
+alias PWLX_QUERY_TS_LOGON_CREDENTIALS = BOOL function(WLX_CLIENT_CREDENTIALS_INFO_V2_0* pCred);
 alias PWLX_DISCONNECT = BOOL function();
-alias PWLX_QUERY_TERMINAL_SERVICES_DATA = uint function(HANDLE, WLX_TERMINAL_SERVICES_DATA*, PWSTR, PWSTR);
-alias PWLX_QUERY_CONSOLESWITCH_CREDENTIALS = uint function(WLX_CONSOLESWITCH_CREDENTIALS_INFO_V1_0*);
+alias PWLX_QUERY_TERMINAL_SERVICES_DATA = uint function(HANDLE hWlx, WLX_TERMINAL_SERVICES_DATA* pTSData, PWSTR UserName, PWSTR Domain);
+alias PWLX_QUERY_CONSOLESWITCH_CREDENTIALS = uint function(WLX_CONSOLESWITCH_CREDENTIALS_INFO_V1_0* pCred);
 struct WLX_DISPATCH_VERSION_1_0
 {
     PWLX_USE_CTRL_ALT_DEL WlxUseCtrlAltDel;
@@ -305,7 +305,7 @@ struct WLX_DISPATCH_VERSION_1_4
     PWLX_QUERY_CONSOLESWITCH_CREDENTIALS WlxQueryConsoleSwitchCredentials;
     PWLX_QUERY_TS_LOGON_CREDENTIALS WlxQueryTsLogonCredentials;
 }
-alias PFNMSGECALLBACK = uint function(BOOL, PWSTR);
+alias PFNMSGECALLBACK = uint function(BOOL bVerbose, PWSTR lpMessage);
 struct WLX_NOTIFICATION_INFO
 {
     uint Size;

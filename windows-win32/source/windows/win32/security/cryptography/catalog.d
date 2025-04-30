@@ -29,54 +29,61 @@ enum : uint
     CRYPTCAT_OPEN_FLAGS_MASK           = 0xffff0000,
 }
 
-HANDLE CryptCATOpen(PWSTR, CRYPTCAT_OPEN_FLAGS, ulong, CRYPTCAT_VERSION, uint);
-BOOL CryptCATClose(HANDLE);
-CRYPTCATSTORE* CryptCATStoreFromHandle(HANDLE);
-HANDLE CryptCATHandleFromStore(CRYPTCATSTORE*);
-BOOL CryptCATPersistStore(HANDLE);
-CRYPTCATATTRIBUTE* CryptCATGetCatAttrInfo(HANDLE, PWSTR);
-CRYPTCATATTRIBUTE* CryptCATPutCatAttrInfo(HANDLE, PWSTR, uint, uint, ubyte*);
-CRYPTCATATTRIBUTE* CryptCATEnumerateCatAttr(HANDLE, CRYPTCATATTRIBUTE*);
-CRYPTCATMEMBER* CryptCATGetMemberInfo(HANDLE, PWSTR);
-CRYPTCATMEMBER* CryptCATAllocSortedMemberInfo(HANDLE, PWSTR);
-void CryptCATFreeSortedMemberInfo(HANDLE, CRYPTCATMEMBER*);
-CRYPTCATATTRIBUTE* CryptCATGetAttrInfo(HANDLE, CRYPTCATMEMBER*, PWSTR);
-CRYPTCATMEMBER* CryptCATPutMemberInfo(HANDLE, PWSTR, PWSTR, GUID*, uint, uint, ubyte*);
-CRYPTCATATTRIBUTE* CryptCATPutAttrInfo(HANDLE, CRYPTCATMEMBER*, PWSTR, uint, uint, ubyte*);
-CRYPTCATMEMBER* CryptCATEnumerateMember(HANDLE, CRYPTCATMEMBER*);
-CRYPTCATATTRIBUTE* CryptCATEnumerateAttr(HANDLE, CRYPTCATMEMBER*, CRYPTCATATTRIBUTE*);
-CRYPTCATCDF* CryptCATCDFOpen(PWSTR, PFN_CDF_PARSE_ERROR_CALLBACK);
-BOOL CryptCATCDFClose(CRYPTCATCDF*);
-CRYPTCATATTRIBUTE* CryptCATCDFEnumCatAttributes(CRYPTCATCDF*, CRYPTCATATTRIBUTE*, PFN_CDF_PARSE_ERROR_CALLBACK);
-CRYPTCATMEMBER* CryptCATCDFEnumMembers(CRYPTCATCDF*, CRYPTCATMEMBER*, PFN_CDF_PARSE_ERROR_CALLBACK);
-CRYPTCATATTRIBUTE* CryptCATCDFEnumAttributes(CRYPTCATCDF*, CRYPTCATMEMBER*, CRYPTCATATTRIBUTE*, PFN_CDF_PARSE_ERROR_CALLBACK);
-BOOL IsCatalogFile(HANDLE, PWSTR);
-BOOL CryptCATAdminAcquireContext(long*, const(GUID)*, uint);
-BOOL CryptCATAdminAcquireContext2(long*, const(GUID)*, const(wchar)*, CERT_STRONG_SIGN_PARA*, uint);
-BOOL CryptCATAdminReleaseContext(long, uint);
-BOOL CryptCATAdminReleaseCatalogContext(long, long, uint);
-long CryptCATAdminEnumCatalogFromHash(long, ubyte*, uint, uint, long*);
-BOOL CryptCATAdminCalcHashFromFileHandle(HANDLE, uint*, ubyte*, uint);
-BOOL CryptCATAdminCalcHashFromFileHandle2(long, HANDLE, uint*, ubyte*, uint);
-long CryptCATAdminAddCatalog(long, PWSTR, PWSTR, uint);
-BOOL CryptCATAdminRemoveCatalog(long, const(wchar)*, uint);
-BOOL CryptCATCatalogInfoFromContext(long, CATALOG_INFO*, uint);
-BOOL CryptCATAdminResolveCatalogPath(long, PWSTR, CATALOG_INFO*, uint);
-BOOL CryptCATAdminPauseServiceForBackup(uint, BOOL);
+alias CRYPTCATATTRIBUTE_FLAGS = uint;
+enum : uint
+{
+    CRYPTCAT_ATTR_AUTHENTICATED        = 0x10000000,
+    CRYPTCAT_ATTR_UNAUTHENTICATED      = 0x20000000,
+    CRYPTCAT_ATTR_NAMEASCII            = 0x00000001,
+    CRYPTCAT_ATTR_NAMEOBJID            = 0x00000002,
+    CRYPTCAT_ATTR_DATAASCII            = 0x00010000,
+    CRYPTCAT_ATTR_DATABASE64           = 0x00020000,
+    CRYPTCAT_ATTR_DATAREPLACE          = 0x00040000,
+    CRYPTCAT_ATTR_NO_AUTO_COMPAT_ENTRY = 0x01000000,
+}
+
+HANDLE CryptCATOpen(PWSTR pwszFileName, CRYPTCAT_OPEN_FLAGS fdwOpenFlags, ulong hProv, CRYPTCAT_VERSION dwPublicVersion, uint dwEncodingType);
+BOOL CryptCATClose(HANDLE hCatalog);
+CRYPTCATSTORE* CryptCATStoreFromHandle(HANDLE hCatalog);
+HANDLE CryptCATHandleFromStore(CRYPTCATSTORE* pCatStore);
+BOOL CryptCATPersistStore(HANDLE hCatalog);
+CRYPTCATATTRIBUTE* CryptCATGetCatAttrInfo(HANDLE hCatalog, PWSTR pwszReferenceTag);
+CRYPTCATATTRIBUTE* CryptCATPutCatAttrInfo(HANDLE hCatalog, PWSTR pwszReferenceTag, uint dwAttrTypeAndAction, uint cbData, ubyte* pbData);
+CRYPTCATATTRIBUTE* CryptCATEnumerateCatAttr(HANDLE hCatalog, CRYPTCATATTRIBUTE* pPrevAttr);
+CRYPTCATMEMBER* CryptCATGetMemberInfo(HANDLE hCatalog, PWSTR pwszReferenceTag);
+CRYPTCATMEMBER* CryptCATAllocSortedMemberInfo(HANDLE hCatalog, PWSTR pwszReferenceTag);
+void CryptCATFreeSortedMemberInfo(HANDLE hCatalog, CRYPTCATMEMBER* pCatMember);
+CRYPTCATATTRIBUTE* CryptCATGetAttrInfo(HANDLE hCatalog, CRYPTCATMEMBER* pCatMember, PWSTR pwszReferenceTag);
+CRYPTCATMEMBER* CryptCATPutMemberInfo(HANDLE hCatalog, PWSTR pwszFileName, PWSTR pwszReferenceTag, GUID* pgSubjectType, uint dwCertVersion, uint cbSIPIndirectData, ubyte* pbSIPIndirectData);
+CRYPTCATATTRIBUTE* CryptCATPutAttrInfo(HANDLE hCatalog, CRYPTCATMEMBER* pCatMember, PWSTR pwszReferenceTag, uint dwAttrTypeAndAction, uint cbData, ubyte* pbData);
+CRYPTCATMEMBER* CryptCATEnumerateMember(HANDLE hCatalog, CRYPTCATMEMBER* pPrevMember);
+CRYPTCATATTRIBUTE* CryptCATEnumerateAttr(HANDLE hCatalog, CRYPTCATMEMBER* pCatMember, CRYPTCATATTRIBUTE* pPrevAttr);
+CRYPTCATCDF* CryptCATCDFOpen(PWSTR pwszFilePath, PFN_CDF_PARSE_ERROR_CALLBACK pfnParseError);
+BOOL CryptCATCDFClose(CRYPTCATCDF* pCDF);
+CRYPTCATATTRIBUTE* CryptCATCDFEnumCatAttributes(CRYPTCATCDF* pCDF, CRYPTCATATTRIBUTE* pPrevAttr, PFN_CDF_PARSE_ERROR_CALLBACK pfnParseError);
+CRYPTCATMEMBER* CryptCATCDFEnumMembers(CRYPTCATCDF* pCDF, CRYPTCATMEMBER* pPrevMember, PFN_CDF_PARSE_ERROR_CALLBACK pfnParseError);
+CRYPTCATATTRIBUTE* CryptCATCDFEnumAttributes(CRYPTCATCDF* pCDF, CRYPTCATMEMBER* pMember, CRYPTCATATTRIBUTE* pPrevAttr, PFN_CDF_PARSE_ERROR_CALLBACK pfnParseError);
+BOOL IsCatalogFile(HANDLE hFile, PWSTR pwszFileName);
+BOOL CryptCATAdminAcquireContext(long* phCatAdmin, const(GUID)* pgSubsystem, uint dwFlags);
+BOOL CryptCATAdminAcquireContext2(long* phCatAdmin, const(GUID)* pgSubsystem, const(wchar)* pwszHashAlgorithm, CERT_STRONG_SIGN_PARA* pStrongHashPolicy, uint dwFlags);
+BOOL CryptCATAdminReleaseContext(long hCatAdmin, uint dwFlags);
+BOOL CryptCATAdminReleaseCatalogContext(long hCatAdmin, long hCatInfo, uint dwFlags);
+long CryptCATAdminEnumCatalogFromHash(long hCatAdmin, ubyte* pbHash, uint cbHash, uint dwFlags, long* phPrevCatInfo);
+BOOL CryptCATAdminCalcHashFromFileHandle(HANDLE hFile, uint* pcbHash, ubyte* pbHash, uint dwFlags);
+BOOL CryptCATAdminCalcHashFromFileHandle2(long hCatAdmin, HANDLE hFile, uint* pcbHash, ubyte* pbHash, uint dwFlags);
+long CryptCATAdminAddCatalog(long hCatAdmin, PWSTR pwszCatalogFile, PWSTR pwszSelectBaseName, uint dwFlags);
+BOOL CryptCATAdminRemoveCatalog(long hCatAdmin, const(wchar)* pwszCatalogFile, uint dwFlags);
+BOOL CryptCATCatalogInfoFromContext(long hCatInfo, CATALOG_INFO* psCatInfo, uint dwFlags);
+BOOL CryptCATAdminResolveCatalogPath(long hCatAdmin, PWSTR pwszCatalogFile, CATALOG_INFO* psCatInfo, uint dwFlags);
+BOOL CryptCATAdminPauseServiceForBackup(uint dwFlags, BOOL fResume);
+PWSTR CryptCATCDFEnumMembersByCDFTagEx(CRYPTCATCDF* pCDF, PWSTR pwszPrevCDFTag, PFN_CDF_PARSE_ERROR_CALLBACK pfnParseError, CRYPTCATMEMBER** ppMember, BOOL fContinueOnError, void* pvReserved);
+CRYPTCATATTRIBUTE* CryptCATCDFEnumAttributesWithCDFTag(CRYPTCATCDF* pCDF, PWSTR pwszMemberTag, CRYPTCATMEMBER* pMember, CRYPTCATATTRIBUTE* pPrevAttr, PFN_CDF_PARSE_ERROR_CALLBACK pfnParseError);
 enum szOID_CATALOG_LIST = "1.3.6.1.4.1.311.12.1.1";
 enum szOID_CATALOG_LIST_MEMBER = "1.3.6.1.4.1.311.12.1.2";
 enum szOID_CATALOG_LIST_MEMBER2 = "1.3.6.1.4.1.311.12.1.3";
 enum CRYPTCAT_FILEEXT = "CAT";
 enum CRYPTCAT_MAX_MEMBERTAG = 0x00000040;
 enum CRYPTCAT_MEMBER_SORTED = 0x40000000;
-enum CRYPTCAT_ATTR_AUTHENTICATED = 0x10000000;
-enum CRYPTCAT_ATTR_UNAUTHENTICATED = 0x20000000;
-enum CRYPTCAT_ATTR_NAMEASCII = 0x00000001;
-enum CRYPTCAT_ATTR_NAMEOBJID = 0x00000002;
-enum CRYPTCAT_ATTR_DATAASCII = 0x00010000;
-enum CRYPTCAT_ATTR_DATABASE64 = 0x00020000;
-enum CRYPTCAT_ATTR_DATAREPLACE = 0x00040000;
-enum CRYPTCAT_ATTR_NO_AUTO_COMPAT_ENTRY = 0x01000000;
 enum CRYPTCAT_E_AREA_HEADER = 0x00000000;
 enum CRYPTCAT_E_AREA_MEMBER = 0x00010000;
 enum CRYPTCAT_E_AREA_ATTRIBUTE = 0x00020000;
@@ -122,7 +129,7 @@ struct CRYPTCATATTRIBUTE
 {
     uint cbStruct;
     PWSTR pwszReferenceTag;
-    uint dwAttrTypeAndAction;
+    CRYPTCATATTRIBUTE_FLAGS dwAttrTypeAndAction;
     uint cbValue;
     ubyte* pbValue;
     uint dwReserved;
@@ -142,7 +149,7 @@ struct CATALOG_INFO
     uint cbStruct;
     wchar[260] wszCatalogFile;
 }
-alias PFN_CDF_PARSE_ERROR_CALLBACK = void function(uint, uint, PWSTR);
+alias PFN_CDF_PARSE_ERROR_CALLBACK = void function(uint dwErrorArea, uint dwLocalError, PWSTR pwszLine);
 struct MS_ADDINFO_CATALOGMEMBER
 {
     uint cbStruct;

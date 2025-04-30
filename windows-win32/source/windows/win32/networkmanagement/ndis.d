@@ -6,6 +6,8 @@ import windows.win32.foundation : BOOLEAN, CHAR, HANDLE;
 version (Windows):
 extern (Windows):
 
+enum NET_IF_COMPARTMENT_ID_UNSPECIFIED = 0x00000000;
+enum NET_IF_COMPARTMENT_ID_PRIMARY = 0x00000001;
 enum IOCTL_NDIS_RESERVED5 = 0x00170034;
 enum IOCTL_NDIS_RESERVED6 = 0x00178038;
 enum NDIS_OBJECT_TYPE_DEFAULT = 0x00000080;
@@ -1866,6 +1868,7 @@ enum NIIF_NDIS_ISCSI_INTERFACE = 0x00000080;
 enum NIIF_NDIS_RESERVED4 = 0x00000100;
 enum IF_MAX_STRING_SIZE = 0x00000100;
 enum IF_MAX_PHYS_ADDRESS_LENGTH = 0x00000020;
+alias NET_IF_COMPARTMENT_ID = uint;
 alias NET_IF_OPER_STATUS = int;
 enum : int
 {
@@ -2037,7 +2040,7 @@ struct NDIS_INTERFACE_INFORMATION
     ulong ifHCOutUcastOctets;
     ulong ifHCOutMulticastOctets;
     ulong ifHCOutBroadcastOctets;
-    uint CompartmentId;
+    NET_IF_COMPARTMENT_ID CompartmentId;
     uint SupportedStatistics;
 }
 alias NDIS_REQUEST_TYPE = int;

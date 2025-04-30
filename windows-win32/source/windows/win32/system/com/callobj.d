@@ -77,61 +77,61 @@ struct CALLFRAME_MARSHALCONTEXT
 enum IID_ICallFrame = GUID(0xd573b4b0, 0x894e, 0x11d2, [0xb8, 0xb6, 0x0, 0xc0, 0x4f, 0xb9, 0x61, 0x8a]);
 interface ICallFrame : IUnknown
 {
-    HRESULT GetInfo(CALLFRAMEINFO*);
-    HRESULT GetIIDAndMethod(GUID*, uint*);
-    HRESULT GetNames(PWSTR*, PWSTR*);
+    HRESULT GetInfo(CALLFRAMEINFO* pInfo);
+    HRESULT GetIIDAndMethod(GUID* pIID, uint* piMethod);
+    HRESULT GetNames(PWSTR* pwszInterface, PWSTR* pwszMethod);
     void* GetStackLocation();
-    void SetStackLocation(void*);
-    void SetReturnValue(HRESULT);
+    void SetStackLocation(void* pvStack);
+    void SetReturnValue(HRESULT hr);
     HRESULT GetReturnValue();
-    HRESULT GetParamInfo(uint, CALLFRAMEPARAMINFO*);
-    HRESULT SetParam(uint, VARIANT*);
-    HRESULT GetParam(uint, VARIANT*);
-    HRESULT Copy(CALLFRAME_COPY, ICallFrameWalker, ICallFrame*);
-    HRESULT Free(ICallFrame, ICallFrameWalker, ICallFrameWalker, uint, ICallFrameWalker, uint);
-    HRESULT FreeParam(uint, uint, ICallFrameWalker, uint);
-    HRESULT WalkFrame(uint, ICallFrameWalker);
-    HRESULT GetMarshalSizeMax(CALLFRAME_MARSHALCONTEXT*, MSHLFLAGS, uint*);
-    HRESULT Marshal(CALLFRAME_MARSHALCONTEXT*, MSHLFLAGS, void*, uint, uint*, uint*, uint*);
-    HRESULT Unmarshal(void*, uint, uint, CALLFRAME_MARSHALCONTEXT*, uint*);
-    HRESULT ReleaseMarshalData(void*, uint, uint, uint, CALLFRAME_MARSHALCONTEXT*);
-    HRESULT Invoke(void*);
+    HRESULT GetParamInfo(uint iparam, CALLFRAMEPARAMINFO* pInfo);
+    HRESULT SetParam(uint iparam, VARIANT* pvar);
+    HRESULT GetParam(uint iparam, VARIANT* pvar);
+    HRESULT Copy(CALLFRAME_COPY copyControl, ICallFrameWalker pWalker, ICallFrame* ppFrame);
+    HRESULT Free(ICallFrame pframeArgsDest, ICallFrameWalker pWalkerDestFree, ICallFrameWalker pWalkerCopy, uint freeFlags, ICallFrameWalker pWalkerFree, uint nullFlags);
+    HRESULT FreeParam(uint iparam, uint freeFlags, ICallFrameWalker pWalkerFree, uint nullFlags);
+    HRESULT WalkFrame(uint walkWhat, ICallFrameWalker pWalker);
+    HRESULT GetMarshalSizeMax(CALLFRAME_MARSHALCONTEXT* pmshlContext, MSHLFLAGS mshlflags, uint* pcbBufferNeeded);
+    HRESULT Marshal(CALLFRAME_MARSHALCONTEXT* pmshlContext, MSHLFLAGS mshlflags, void* pBuffer, uint cbBuffer, uint* pcbBufferUsed, uint* pdataRep, uint* prpcFlags);
+    HRESULT Unmarshal(void* pBuffer, uint cbBuffer, uint dataRep, CALLFRAME_MARSHALCONTEXT* pcontext, uint* pcbUnmarshalled);
+    HRESULT ReleaseMarshalData(void* pBuffer, uint cbBuffer, uint ibFirstRelease, uint dataRep, CALLFRAME_MARSHALCONTEXT* pcontext);
+    HRESULT Invoke(void* pvReceiver);
 }
 enum IID_ICallIndirect = GUID(0xd573b4b1, 0x894e, 0x11d2, [0xb8, 0xb6, 0x0, 0xc0, 0x4f, 0xb9, 0x61, 0x8a]);
 interface ICallIndirect : IUnknown
 {
-    HRESULT CallIndirect(HRESULT*, uint, void*, uint*);
-    HRESULT GetMethodInfo(uint, CALLFRAMEINFO*, PWSTR*);
-    HRESULT GetStackSize(uint, uint*);
-    HRESULT GetIID(GUID*, BOOL*, uint*, PWSTR*);
+    HRESULT CallIndirect(HRESULT* phrReturn, uint iMethod, void* pvArgs, uint* cbArgs);
+    HRESULT GetMethodInfo(uint iMethod, CALLFRAMEINFO* pInfo, PWSTR* pwszMethod);
+    HRESULT GetStackSize(uint iMethod, uint* cbArgs);
+    HRESULT GetIID(GUID* piid, BOOL* pfDerivesFromIDispatch, uint* pcMethod, PWSTR* pwszInterface);
 }
 enum IID_ICallInterceptor = GUID(0x60c7ca75, 0x896d, 0x11d2, [0xb8, 0xb6, 0x0, 0xc0, 0x4f, 0xb9, 0x61, 0x8a]);
 interface ICallInterceptor : ICallIndirect
 {
-    HRESULT RegisterSink(ICallFrameEvents);
-    HRESULT GetRegisteredSink(ICallFrameEvents*);
+    HRESULT RegisterSink(ICallFrameEvents psink);
+    HRESULT GetRegisteredSink(ICallFrameEvents* ppsink);
 }
 enum IID_ICallFrameEvents = GUID(0xfd5e0843, 0xfc91, 0x11d0, [0x97, 0xd7, 0x0, 0xc0, 0x4f, 0xb9, 0x61, 0x8a]);
 interface ICallFrameEvents : IUnknown
 {
-    HRESULT OnCall(ICallFrame);
+    HRESULT OnCall(ICallFrame pFrame);
 }
 enum IID_ICallUnmarshal = GUID(0x5333b003, 0x2e42, 0x11d2, [0xb8, 0x9d, 0x0, 0xc0, 0x4f, 0xb9, 0x61, 0x8a]);
 interface ICallUnmarshal : IUnknown
 {
-    HRESULT Unmarshal(uint, void*, uint, BOOL, uint, CALLFRAME_MARSHALCONTEXT*, uint*, ICallFrame*);
-    HRESULT ReleaseMarshalData(uint, void*, uint, uint, uint, CALLFRAME_MARSHALCONTEXT*);
+    HRESULT Unmarshal(uint iMethod, void* pBuffer, uint cbBuffer, BOOL fForceBufferCopy, uint dataRep, CALLFRAME_MARSHALCONTEXT* pcontext, uint* pcbUnmarshalled, ICallFrame* ppFrame);
+    HRESULT ReleaseMarshalData(uint iMethod, void* pBuffer, uint cbBuffer, uint ibFirstRelease, uint dataRep, CALLFRAME_MARSHALCONTEXT* pcontext);
 }
 enum IID_ICallFrameWalker = GUID(0x8b23919, 0x392d, 0x11d2, [0xb8, 0xa4, 0x0, 0xc0, 0x4f, 0xb9, 0x61, 0x8a]);
 interface ICallFrameWalker : IUnknown
 {
-    HRESULT OnWalkInterface(const(GUID)*, void**, BOOL, BOOL);
+    HRESULT OnWalkInterface(const(GUID)* iid, void** ppvInterface, BOOL fIn, BOOL fOut);
 }
 enum IID_IInterfaceRelated = GUID(0xd1fb5a79, 0x7706, 0x11d1, [0xad, 0xba, 0x0, 0xc0, 0x4f, 0xc2, 0xad, 0xc0]);
 interface IInterfaceRelated : IUnknown
 {
-    HRESULT SetIID(const(GUID)*);
-    HRESULT GetIID(GUID*);
+    HRESULT SetIID(const(GUID)* iid);
+    HRESULT GetIID(GUID* piid);
 }
-HRESULT CoGetInterceptor(const(GUID)*, IUnknown, const(GUID)*, void**);
-HRESULT CoGetInterceptorFromTypeInfo(const(GUID)*, IUnknown, ITypeInfo, const(GUID)*, void**);
+HRESULT CoGetInterceptor(const(GUID)* iidIntercepted, IUnknown punkOuter, const(GUID)* iid, void** ppv);
+HRESULT CoGetInterceptorFromTypeInfo(const(GUID)* iidIntercepted, IUnknown punkOuter, ITypeInfo typeInfo, const(GUID)* iid, void** ppv);

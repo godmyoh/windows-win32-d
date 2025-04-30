@@ -37,28 +37,28 @@ enum REC_E_INEEDTODOTHEUPDATES = 0xffffffff80041004;
 enum IID_IEmptyVolumeCacheCallBack = GUID(0x6e793361, 0x73c6, 0x11d0, [0x84, 0x69, 0x0, 0xaa, 0x0, 0x44, 0x29, 0x1]);
 interface IEmptyVolumeCacheCallBack : IUnknown
 {
-    HRESULT ScanProgress(ulong, uint, const(wchar)*);
-    HRESULT PurgeProgress(ulong, ulong, uint, const(wchar)*);
+    HRESULT ScanProgress(ulong dwlSpaceUsed, uint dwFlags, const(wchar)* pcwszStatus);
+    HRESULT PurgeProgress(ulong dwlSpaceFreed, ulong dwlSpaceToFree, uint dwFlags, const(wchar)* pcwszStatus);
 }
 enum IID_IEmptyVolumeCache = GUID(0x8fce5227, 0x4da, 0x11d1, [0xa0, 0x4, 0x0, 0x80, 0x5f, 0x8a, 0xbe, 0x6]);
 interface IEmptyVolumeCache : IUnknown
 {
-    HRESULT Initialize(HKEY, const(wchar)*, PWSTR*, PWSTR*, EMPTY_VOLUME_CACHE_FLAGS*);
-    HRESULT GetSpaceUsed(ulong*, IEmptyVolumeCacheCallBack);
-    HRESULT Purge(ulong, IEmptyVolumeCacheCallBack);
-    HRESULT ShowProperties(HWND);
-    HRESULT Deactivate(EMPTY_VOLUME_CACHE_FLAGS*);
+    HRESULT Initialize(HKEY hkRegKey, const(wchar)* pcwszVolume, PWSTR* ppwszDisplayName, PWSTR* ppwszDescription, EMPTY_VOLUME_CACHE_FLAGS* pdwFlags);
+    HRESULT GetSpaceUsed(ulong* pdwlSpaceUsed, IEmptyVolumeCacheCallBack picb);
+    HRESULT Purge(ulong dwlSpaceToFree, IEmptyVolumeCacheCallBack picb);
+    HRESULT ShowProperties(HWND hwnd);
+    HRESULT Deactivate(EMPTY_VOLUME_CACHE_FLAGS* pdwFlags);
 }
 enum IID_IEmptyVolumeCache2 = GUID(0x2b7e3ba, 0x4db3, 0x11d2, [0xb2, 0xd9, 0x0, 0xc0, 0x4f, 0x8e, 0xec, 0x8c]);
 interface IEmptyVolumeCache2 : IEmptyVolumeCache
 {
-    HRESULT InitializeEx(HKEY, const(wchar)*, const(wchar)*, PWSTR*, PWSTR*, PWSTR*, EMPTY_VOLUME_CACHE_FLAGS*);
+    HRESULT InitializeEx(HKEY hkRegKey, const(wchar)* pcwszVolume, const(wchar)* pcwszKeyName, PWSTR* ppwszDisplayName, PWSTR* ppwszDescription, PWSTR* ppwszBtnText, EMPTY_VOLUME_CACHE_FLAGS* pdwFlags);
 }
 enum IID_IReconcileInitiator = GUID(0x99180161, 0xda16, 0x101a, [0x93, 0x5c, 0x44, 0x45, 0x53, 0x54, 0x0, 0x0]);
 interface IReconcileInitiator : IUnknown
 {
-    HRESULT SetAbortCallback(IUnknown);
-    HRESULT SetProgressFeedback(uint, uint);
+    HRESULT SetAbortCallback(IUnknown punkForAbort);
+    HRESULT SetProgressFeedback(uint ulProgress, uint ulProgressMax);
 }
 alias RECONCILEF = int;
 enum : int
@@ -76,27 +76,27 @@ enum : int
 enum IID_IReconcilableObject = GUID(0x99180162, 0xda16, 0x101a, [0x93, 0x5c, 0x44, 0x45, 0x53, 0x54, 0x0, 0x0]);
 interface IReconcilableObject : IUnknown
 {
-    HRESULT Reconcile(IReconcileInitiator, uint, HWND, HWND, uint, IMoniker*, int*, IStorage, void*);
-    HRESULT GetProgressFeedbackMaxEstimate(uint*);
+    HRESULT Reconcile(IReconcileInitiator pInitiator, uint dwFlags, HWND hwndOwner, HWND hwndProgressFeedback, uint ulcInput, IMoniker* rgpmkOtherInput, int* plOutIndex, IStorage pstgNewResidues, void* pvReserved);
+    HRESULT GetProgressFeedbackMaxEstimate(uint* pulProgressMax);
 }
 enum IID_IBriefcaseInitiator = GUID(0x99180164, 0xda16, 0x101a, [0x93, 0x5c, 0x44, 0x45, 0x53, 0x54, 0x0, 0x0]);
 interface IBriefcaseInitiator : IUnknown
 {
-    HRESULT IsMonikerInBriefcase(IMoniker);
+    HRESULT IsMonikerInBriefcase(IMoniker pmk);
 }
 enum IID_IActiveDesktopP = GUID(0x52502ee0, 0xec80, 0x11d0, [0x89, 0xab, 0x0, 0xc0, 0x4f, 0xc2, 0x97, 0x2d]);
 interface IActiveDesktopP : IUnknown
 {
-    HRESULT SetSafeMode(uint);
+    HRESULT SetSafeMode(uint dwFlags);
     HRESULT EnsureUpdateHTML();
-    HRESULT SetScheme(const(wchar)*, uint);
-    HRESULT GetScheme(PWSTR, uint*, uint);
+    HRESULT SetScheme(const(wchar)* pwszSchemeName, uint dwFlags);
+    HRESULT GetScheme(PWSTR pwszSchemeName, uint* pdwcchBuffer, uint dwFlags);
 }
 enum IID_IADesktopP2 = GUID(0xb22754e2, 0x4574, 0x11d1, [0x98, 0x88, 0x0, 0x60, 0x97, 0xde, 0xac, 0xf9]);
 interface IADesktopP2 : IUnknown
 {
     HRESULT ReReadWallpaper();
-    HRESULT GetADObjectFlags(uint*, uint);
+    HRESULT GetADObjectFlags(uint* pdwFlags, uint dwMask);
     HRESULT UpdateAllDesktopSubscriptions();
-    HRESULT MakeDynamicChanges(IOleObject);
+    HRESULT MakeDynamicChanges(IOleObject pOleObj);
 }

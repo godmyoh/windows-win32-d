@@ -2,10 +2,9 @@ module windows.win32.ui.input.ime;
 
 import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, BSTR, CHAR, HRESULT, HWND, LPARAM, LRESULT, POINT, PSTR, PWSTR, RECT, WPARAM;
-import windows.win32.globalization : HIMC, HIMCC;
 import windows.win32.graphics.gdi : HBITMAP, LOGFONTA, LOGFONTW;
 import windows.win32.system.com : IClassFactory, IUnknown, SAFEARRAY;
-import windows.win32.ui.textservices : HKL;
+import windows.win32.ui.input.keyboardandmouse : HKL;
 import windows.win32.ui.windowsandmessaging : HICON, MSG;
 
 version (Windows):
@@ -176,88 +175,88 @@ enum : uint
     IME_ITHOTKEY_RECONVERTSTRING      = 0x00000203,
 }
 
-HKL ImmInstallIMEA(const(char)*, const(char)*);
-HKL ImmInstallIMEW(const(wchar)*, const(wchar)*);
-HWND ImmGetDefaultIMEWnd(HWND);
-uint ImmGetDescriptionA(HKL, PSTR, uint);
-uint ImmGetDescriptionW(HKL, PWSTR, uint);
-uint ImmGetIMEFileNameA(HKL, PSTR, uint);
-uint ImmGetIMEFileNameW(HKL, PWSTR, uint);
-uint ImmGetProperty(HKL, uint);
-BOOL ImmIsIME(HKL);
-BOOL ImmSimulateHotKey(HWND, IME_HOTKEY_IDENTIFIER);
+HKL ImmInstallIMEA(const(char)* lpszIMEFileName, const(char)* lpszLayoutText);
+HKL ImmInstallIMEW(const(wchar)* lpszIMEFileName, const(wchar)* lpszLayoutText);
+HWND ImmGetDefaultIMEWnd(HWND param0);
+uint ImmGetDescriptionA(HKL param0, PSTR lpszDescription, uint uBufLen);
+uint ImmGetDescriptionW(HKL param0, PWSTR lpszDescription, uint uBufLen);
+uint ImmGetIMEFileNameA(HKL param0, PSTR lpszFileName, uint uBufLen);
+uint ImmGetIMEFileNameW(HKL param0, PWSTR lpszFileName, uint uBufLen);
+uint ImmGetProperty(HKL param0, uint param1);
+BOOL ImmIsIME(HKL param0);
+BOOL ImmSimulateHotKey(HWND param0, IME_HOTKEY_IDENTIFIER param1);
 HIMC ImmCreateContext();
-BOOL ImmDestroyContext(HIMC);
-HIMC ImmGetContext(HWND);
-BOOL ImmReleaseContext(HWND, HIMC);
-HIMC ImmAssociateContext(HWND, HIMC);
-BOOL ImmAssociateContextEx(HWND, HIMC, uint);
-int ImmGetCompositionStringA(HIMC, IME_COMPOSITION_STRING, void*, uint);
-int ImmGetCompositionStringW(HIMC, IME_COMPOSITION_STRING, void*, uint);
-BOOL ImmSetCompositionStringA(HIMC, SET_COMPOSITION_STRING_TYPE, void*, uint, void*, uint);
-BOOL ImmSetCompositionStringW(HIMC, SET_COMPOSITION_STRING_TYPE, void*, uint, void*, uint);
-uint ImmGetCandidateListCountA(HIMC, uint*);
-uint ImmGetCandidateListCountW(HIMC, uint*);
-uint ImmGetCandidateListA(HIMC, uint, CANDIDATELIST*, uint);
-uint ImmGetCandidateListW(HIMC, uint, CANDIDATELIST*, uint);
-uint ImmGetGuideLineA(HIMC, GET_GUIDE_LINE_TYPE, PSTR, uint);
-uint ImmGetGuideLineW(HIMC, GET_GUIDE_LINE_TYPE, PWSTR, uint);
-BOOL ImmGetConversionStatus(HIMC, IME_CONVERSION_MODE*, IME_SENTENCE_MODE*);
-BOOL ImmSetConversionStatus(HIMC, IME_CONVERSION_MODE, IME_SENTENCE_MODE);
-BOOL ImmGetOpenStatus(HIMC);
-BOOL ImmSetOpenStatus(HIMC, BOOL);
-BOOL ImmGetCompositionFontA(HIMC, LOGFONTA*);
-BOOL ImmGetCompositionFontW(HIMC, LOGFONTW*);
-BOOL ImmSetCompositionFontA(HIMC, LOGFONTA*);
-BOOL ImmSetCompositionFontW(HIMC, LOGFONTW*);
-BOOL ImmConfigureIMEA(HKL, HWND, uint, void*);
-BOOL ImmConfigureIMEW(HKL, HWND, uint, void*);
-LRESULT ImmEscapeA(HKL, HIMC, IME_ESCAPE, void*);
-LRESULT ImmEscapeW(HKL, HIMC, IME_ESCAPE, void*);
-uint ImmGetConversionListA(HKL, HIMC, const(char)*, CANDIDATELIST*, uint, GET_CONVERSION_LIST_FLAG);
-uint ImmGetConversionListW(HKL, HIMC, const(wchar)*, CANDIDATELIST*, uint, GET_CONVERSION_LIST_FLAG);
-BOOL ImmNotifyIME(HIMC, NOTIFY_IME_ACTION, NOTIFY_IME_INDEX, uint);
-BOOL ImmGetStatusWindowPos(HIMC, POINT*);
-BOOL ImmSetStatusWindowPos(HIMC, POINT*);
-BOOL ImmGetCompositionWindow(HIMC, COMPOSITIONFORM*);
-BOOL ImmSetCompositionWindow(HIMC, COMPOSITIONFORM*);
-BOOL ImmGetCandidateWindow(HIMC, uint, CANDIDATEFORM*);
-BOOL ImmSetCandidateWindow(HIMC, CANDIDATEFORM*);
-BOOL ImmIsUIMessageA(HWND, uint, WPARAM, LPARAM);
-BOOL ImmIsUIMessageW(HWND, uint, WPARAM, LPARAM);
-uint ImmGetVirtualKey(HWND);
-BOOL ImmRegisterWordA(HKL, const(char)*, uint, const(char)*);
-BOOL ImmRegisterWordW(HKL, const(wchar)*, uint, const(wchar)*);
-BOOL ImmUnregisterWordA(HKL, const(char)*, uint, const(char)*);
-BOOL ImmUnregisterWordW(HKL, const(wchar)*, uint, const(wchar)*);
-uint ImmGetRegisterWordStyleA(HKL, uint, STYLEBUFA*);
-uint ImmGetRegisterWordStyleW(HKL, uint, STYLEBUFW*);
-uint ImmEnumRegisterWordA(HKL, REGISTERWORDENUMPROCA, const(char)*, uint, const(char)*, void*);
-uint ImmEnumRegisterWordW(HKL, REGISTERWORDENUMPROCW, const(wchar)*, uint, const(wchar)*, void*);
-BOOL ImmDisableIME(uint);
-BOOL ImmEnumInputContext(uint, IMCENUMPROC, LPARAM);
-uint ImmGetImeMenuItemsA(HIMC, uint, uint, IMEMENUITEMINFOA*, IMEMENUITEMINFOA*, uint);
-uint ImmGetImeMenuItemsW(HIMC, uint, uint, IMEMENUITEMINFOW*, IMEMENUITEMINFOW*, uint);
-BOOL ImmDisableTextFrameService(uint);
+BOOL ImmDestroyContext(HIMC param0);
+HIMC ImmGetContext(HWND param0);
+BOOL ImmReleaseContext(HWND param0, HIMC param1);
+HIMC ImmAssociateContext(HWND param0, HIMC param1);
+BOOL ImmAssociateContextEx(HWND param0, HIMC param1, uint param2);
+int ImmGetCompositionStringA(HIMC param0, IME_COMPOSITION_STRING param1, void* lpBuf, uint dwBufLen);
+int ImmGetCompositionStringW(HIMC param0, IME_COMPOSITION_STRING param1, void* lpBuf, uint dwBufLen);
+BOOL ImmSetCompositionStringA(HIMC param0, SET_COMPOSITION_STRING_TYPE dwIndex, void* lpComp, uint dwCompLen, void* lpRead, uint dwReadLen);
+BOOL ImmSetCompositionStringW(HIMC param0, SET_COMPOSITION_STRING_TYPE dwIndex, void* lpComp, uint dwCompLen, void* lpRead, uint dwReadLen);
+uint ImmGetCandidateListCountA(HIMC param0, uint* lpdwListCount);
+uint ImmGetCandidateListCountW(HIMC param0, uint* lpdwListCount);
+uint ImmGetCandidateListA(HIMC param0, uint deIndex, CANDIDATELIST* lpCandList, uint dwBufLen);
+uint ImmGetCandidateListW(HIMC param0, uint deIndex, CANDIDATELIST* lpCandList, uint dwBufLen);
+uint ImmGetGuideLineA(HIMC param0, GET_GUIDE_LINE_TYPE dwIndex, PSTR lpBuf, uint dwBufLen);
+uint ImmGetGuideLineW(HIMC param0, GET_GUIDE_LINE_TYPE dwIndex, PWSTR lpBuf, uint dwBufLen);
+BOOL ImmGetConversionStatus(HIMC param0, IME_CONVERSION_MODE* lpfdwConversion, IME_SENTENCE_MODE* lpfdwSentence);
+BOOL ImmSetConversionStatus(HIMC param0, IME_CONVERSION_MODE param1, IME_SENTENCE_MODE param2);
+BOOL ImmGetOpenStatus(HIMC param0);
+BOOL ImmSetOpenStatus(HIMC param0, BOOL param1);
+BOOL ImmGetCompositionFontA(HIMC param0, LOGFONTA* lplf);
+BOOL ImmGetCompositionFontW(HIMC param0, LOGFONTW* lplf);
+BOOL ImmSetCompositionFontA(HIMC param0, LOGFONTA* lplf);
+BOOL ImmSetCompositionFontW(HIMC param0, LOGFONTW* lplf);
+BOOL ImmConfigureIMEA(HKL param0, HWND param1, uint param2, void* param3);
+BOOL ImmConfigureIMEW(HKL param0, HWND param1, uint param2, void* param3);
+LRESULT ImmEscapeA(HKL param0, HIMC param1, IME_ESCAPE param2, void* param3);
+LRESULT ImmEscapeW(HKL param0, HIMC param1, IME_ESCAPE param2, void* param3);
+uint ImmGetConversionListA(HKL param0, HIMC param1, const(char)* lpSrc, CANDIDATELIST* lpDst, uint dwBufLen, GET_CONVERSION_LIST_FLAG uFlag);
+uint ImmGetConversionListW(HKL param0, HIMC param1, const(wchar)* lpSrc, CANDIDATELIST* lpDst, uint dwBufLen, GET_CONVERSION_LIST_FLAG uFlag);
+BOOL ImmNotifyIME(HIMC param0, NOTIFY_IME_ACTION dwAction, NOTIFY_IME_INDEX dwIndex, uint dwValue);
+BOOL ImmGetStatusWindowPos(HIMC param0, POINT* lpptPos);
+BOOL ImmSetStatusWindowPos(HIMC param0, POINT* lpptPos);
+BOOL ImmGetCompositionWindow(HIMC param0, COMPOSITIONFORM* lpCompForm);
+BOOL ImmSetCompositionWindow(HIMC param0, COMPOSITIONFORM* lpCompForm);
+BOOL ImmGetCandidateWindow(HIMC param0, uint param1, CANDIDATEFORM* lpCandidate);
+BOOL ImmSetCandidateWindow(HIMC param0, CANDIDATEFORM* lpCandidate);
+BOOL ImmIsUIMessageA(HWND param0, uint param1, WPARAM param2, LPARAM param3);
+BOOL ImmIsUIMessageW(HWND param0, uint param1, WPARAM param2, LPARAM param3);
+uint ImmGetVirtualKey(HWND param0);
+BOOL ImmRegisterWordA(HKL param0, const(char)* lpszReading, uint param2, const(char)* lpszRegister);
+BOOL ImmRegisterWordW(HKL param0, const(wchar)* lpszReading, uint param2, const(wchar)* lpszRegister);
+BOOL ImmUnregisterWordA(HKL param0, const(char)* lpszReading, uint param2, const(char)* lpszUnregister);
+BOOL ImmUnregisterWordW(HKL param0, const(wchar)* lpszReading, uint param2, const(wchar)* lpszUnregister);
+uint ImmGetRegisterWordStyleA(HKL param0, uint nItem, STYLEBUFA* lpStyleBuf);
+uint ImmGetRegisterWordStyleW(HKL param0, uint nItem, STYLEBUFW* lpStyleBuf);
+uint ImmEnumRegisterWordA(HKL param0, REGISTERWORDENUMPROCA param1, const(char)* lpszReading, uint param3, const(char)* lpszRegister, void* param5);
+uint ImmEnumRegisterWordW(HKL param0, REGISTERWORDENUMPROCW param1, const(wchar)* lpszReading, uint param3, const(wchar)* lpszRegister, void* param5);
+BOOL ImmDisableIME(uint param0);
+BOOL ImmEnumInputContext(uint idThread, IMCENUMPROC lpfn, LPARAM lParam);
+uint ImmGetImeMenuItemsA(HIMC param0, uint param1, uint param2, IMEMENUITEMINFOA* lpImeParentMenu, IMEMENUITEMINFOA* lpImeMenu, uint dwSize);
+uint ImmGetImeMenuItemsW(HIMC param0, uint param1, uint param2, IMEMENUITEMINFOW* lpImeParentMenu, IMEMENUITEMINFOW* lpImeMenu, uint dwSize);
+BOOL ImmDisableTextFrameService(uint idThread);
 BOOL ImmDisableLegacyIME();
-BOOL ImmGetHotKey(uint, uint*, uint*, HKL*);
-BOOL ImmSetHotKey(uint, uint, uint, HKL);
-BOOL ImmGenerateMessage(HIMC);
-LRESULT ImmRequestMessageA(HIMC, WPARAM, LPARAM);
-LRESULT ImmRequestMessageW(HIMC, WPARAM, LPARAM);
-HWND ImmCreateSoftKeyboard(uint, HWND, int, int);
-BOOL ImmDestroySoftKeyboard(HWND);
-BOOL ImmShowSoftKeyboard(HWND, int);
-INPUTCONTEXT* ImmLockIMC(HIMC);
-BOOL ImmUnlockIMC(HIMC);
-uint ImmGetIMCLockCount(HIMC);
-HIMCC ImmCreateIMCC(uint);
-HIMCC ImmDestroyIMCC(HIMCC);
-void* ImmLockIMCC(HIMCC);
-BOOL ImmUnlockIMCC(HIMCC);
-uint ImmGetIMCCLockCount(HIMCC);
-HIMCC ImmReSizeIMCC(HIMCC, uint);
-uint ImmGetIMCCSize(HIMCC);
+BOOL ImmGetHotKey(uint param0, uint* lpuModifiers, uint* lpuVKey, HKL* phKL);
+BOOL ImmSetHotKey(uint param0, uint param1, uint param2, HKL param3);
+BOOL ImmGenerateMessage(HIMC param0);
+LRESULT ImmRequestMessageA(HIMC param0, WPARAM param1, LPARAM param2);
+LRESULT ImmRequestMessageW(HIMC param0, WPARAM param1, LPARAM param2);
+HWND ImmCreateSoftKeyboard(uint param0, HWND param1, int param2, int param3);
+BOOL ImmDestroySoftKeyboard(HWND param0);
+BOOL ImmShowSoftKeyboard(HWND param0, int param1);
+INPUTCONTEXT* ImmLockIMC(HIMC param0);
+BOOL ImmUnlockIMC(HIMC param0);
+uint ImmGetIMCLockCount(HIMC param0);
+HIMCC ImmCreateIMCC(uint param0);
+HIMCC ImmDestroyIMCC(HIMCC param0);
+void* ImmLockIMCC(HIMCC param0);
+BOOL ImmUnlockIMCC(HIMCC param0);
+uint ImmGetIMCCLockCount(HIMCC param0);
+HIMCC ImmReSizeIMCC(HIMCC param0, uint param1);
+uint ImmGetIMCCSize(HIMCC param0);
 enum CATID_MSIME_IImePadApplet_VER7 = GUID(0x4a0f8e31, 0xc3ee, 0x11d1, [0xaf, 0xef, 0x0, 0x80, 0x5f, 0xc, 0x8b, 0x6d]);
 enum CATID_MSIME_IImePadApplet_VER80 = GUID(0x56f7a792, 0xfef1, 0x11d3, [0x84, 0x63, 0x0, 0xc0, 0x4f, 0x7a, 0x6, 0xe5]);
 enum CATID_MSIME_IImePadApplet_VER81 = GUID(0x656520b0, 0xbb88, 0x11d4, [0x84, 0xc0, 0x0, 0xc0, 0x4f, 0x7a, 0x6, 0xe5]);
@@ -857,6 +856,8 @@ enum RECONVOPT_USECANCELNOTIFY = 0x00000001;
 enum GCSEX_CANCELRECONVERT = 0x10000000;
 enum CLSID_ImePlugInDictDictionaryList_CHS = GUID(0x7bf0129b, 0x5bef, 0x4de4, [0x9b, 0xb, 0x5e, 0xdb, 0x66, 0xac, 0x2f, 0xa6]);
 enum CLSID_ImePlugInDictDictionaryList_JPN = GUID(0x4fe2776b, 0xb0f9, 0x4396, [0xb5, 0xfc, 0xe9, 0xd4, 0xcf, 0x1e, 0xc1, 0x95]);
+alias HIMC = void*;
+alias HIMCC = void*;
 struct COMPOSITIONFORM
 {
     uint dwStyle;
@@ -943,9 +944,9 @@ struct IMECHARPOSITION
     uint cLineHeight;
     RECT rcDocument;
 }
-alias IMCENUMPROC = BOOL function(HIMC, LPARAM);
-alias REGISTERWORDENUMPROCA = int function(const(char)*, uint, const(char)*, void*);
-alias REGISTERWORDENUMPROCW = int function(const(wchar)*, uint, const(wchar)*, void*);
+alias IMCENUMPROC = BOOL function(HIMC param0, LPARAM param1);
+alias REGISTERWORDENUMPROCA = int function(const(char)* lpszReading, uint param1, const(char)* lpszString, void* param3);
+alias REGISTERWORDENUMPROCW = int function(const(wchar)* lpszReading, uint param1, const(wchar)* lpszString, void* param3);
 // [Not Found] IID_IFEClassFactory
 interface IFEClassFactory : IClassFactory
 {
@@ -961,10 +962,10 @@ struct IMEDLG
 enum IID_IFECommon = GUID(0x19f7151, 0xe6db, 0x11d0, [0x83, 0xc3, 0x0, 0xc0, 0x4f, 0xdd, 0xb8, 0x2e]);
 interface IFECommon : IUnknown
 {
-    HRESULT IsDefaultIME(const(char)*, int);
+    HRESULT IsDefaultIME(const(char)* szName, int cszName);
     HRESULT SetDefaultIME();
-    HRESULT InvokeWordRegDialog(IMEDLG*);
-    HRESULT InvokeDictToolDialog(IMEDLG*);
+    HRESULT InvokeWordRegDialog(IMEDLG* pimedlg);
+    HRESULT InvokeDictToolDialog(IMEDLG* pimedlg);
 }
 struct WDD
 {
@@ -1025,10 +1026,10 @@ interface IFELanguage : IUnknown
 {
     HRESULT Open();
     HRESULT Close();
-    HRESULT GetJMorphResult(uint, uint, int, const(wchar)*, uint*, MORRSLT**);
-    HRESULT GetConversionModeCaps(uint*);
-    HRESULT GetPhonetic(BSTR, int, int, BSTR*);
-    HRESULT GetConversion(BSTR, int, int, BSTR*);
+    HRESULT GetJMorphResult(uint dwRequest, uint dwCMode, int cwchInput, const(wchar)* pwchInput, uint* pfCInfo, MORRSLT** ppResult);
+    HRESULT GetConversionModeCaps(uint* pdwCaps);
+    HRESULT GetPhonetic(BSTR string, int start, int length, BSTR* phonetic);
+    HRESULT GetConversion(BSTR string, int start, int length, BSTR* result);
 }
 alias IMEREG = int;
 enum : int
@@ -1153,26 +1154,26 @@ struct IMEDP
     IMEWRD wrdModifiee;
     IMEREL relID;
 }
-alias PFNLOG = BOOL function(IMEDP*, HRESULT);
+alias PFNLOG = BOOL function(IMEDP* param0, HRESULT param1);
 enum IID_IFEDictionary = GUID(0x19f7153, 0xe6db, 0x11d0, [0x83, 0xc3, 0x0, 0xc0, 0x4f, 0xdd, 0xb8, 0x2e]);
 interface IFEDictionary : IUnknown
 {
-    HRESULT Open(PSTR, IMESHF*);
+    HRESULT Open(PSTR pchDictPath, IMESHF* pshf);
     HRESULT Close();
-    HRESULT GetHeader(PSTR, IMESHF*, IMEFMT*, uint*);
-    HRESULT DisplayProperty(HWND);
-    HRESULT GetPosTable(POSTBL**, int*);
-    HRESULT GetWords(const(wchar)*, const(wchar)*, const(wchar)*, uint, uint, uint, ubyte*, uint, uint*);
-    HRESULT NextWords(ubyte*, uint, uint*);
-    HRESULT Create(const(char)*, IMESHF*);
-    HRESULT SetHeader(IMESHF*);
-    HRESULT ExistWord(IMEWRD*);
-    HRESULT ExistDependency(IMEDP*);
-    HRESULT RegisterWord(IMEREG, IMEWRD*);
-    HRESULT RegisterDependency(IMEREG, IMEDP*);
-    HRESULT GetDependencies(const(wchar)*, const(wchar)*, uint, const(wchar)*, const(wchar)*, uint, IMEREL, uint, ubyte*, uint, uint*);
-    HRESULT NextDependencies(ubyte*, uint, uint*);
-    HRESULT ConvertFromOldMSIME(const(char)*, PFNLOG, IMEREG);
+    HRESULT GetHeader(PSTR pchDictPath, IMESHF* pshf, IMEFMT* pjfmt, uint* pulType);
+    HRESULT DisplayProperty(HWND hwnd);
+    HRESULT GetPosTable(POSTBL** prgPosTbl, int* pcPosTbl);
+    HRESULT GetWords(const(wchar)* pwchFirst, const(wchar)* pwchLast, const(wchar)* pwchDisplay, uint ulPos, uint ulSelect, uint ulWordSrc, ubyte* pchBuffer, uint cbBuffer, uint* pcWrd);
+    HRESULT NextWords(ubyte* pchBuffer, uint cbBuffer, uint* pcWrd);
+    HRESULT Create(const(char)* pchDictPath, IMESHF* pshf);
+    HRESULT SetHeader(IMESHF* pshf);
+    HRESULT ExistWord(IMEWRD* pwrd);
+    HRESULT ExistDependency(IMEDP* pdp);
+    HRESULT RegisterWord(IMEREG reg, IMEWRD* pwrd);
+    HRESULT RegisterDependency(IMEREG reg, IMEDP* pdp);
+    HRESULT GetDependencies(const(wchar)* pwchKakariReading, const(wchar)* pwchKakariDisplay, uint ulKakariPos, const(wchar)* pwchUkeReading, const(wchar)* pwchUkeDisplay, uint ulUkePos, IMEREL jrel, uint ulWordSrc, ubyte* pchBuffer, uint cbBuffer, uint* pcdp);
+    HRESULT NextDependencies(ubyte* pchBuffer, uint cbBuffer, uint* pcDp);
+    HRESULT ConvertFromOldMSIME(const(char)* pchDic, PFNLOG pfnLog, IMEREG reg);
     HRESULT ConvertFromUserToSys();
 }
 struct IMEKMSINIT
@@ -1241,9 +1242,9 @@ struct IMEKMSFUNCDESC
     uint dwControl;
     wchar[128] pwszDescription;
 }
-alias fpCreateIFECommonInstanceType = HRESULT function(void**);
-alias fpCreateIFELanguageInstanceType = HRESULT function(const(GUID)*, void**);
-alias fpCreateIFEDictionaryInstanceType = HRESULT function(void**);
+alias fpCreateIFECommonInstanceType = HRESULT function(void** ppvObj);
+alias fpCreateIFELanguageInstanceType = HRESULT function(const(GUID)* clsid, void** ppvObj);
+alias fpCreateIFEDictionaryInstanceType = HRESULT function(void** ppvObj);
 struct COMPOSITIONSTRING
 {
     uint dwSize;
@@ -1430,257 +1431,257 @@ struct APPLYCANDEXPARAM
 enum IID_IImeSpecifyApplets = GUID(0x5d8e643c, 0xc3a9, 0x11d1, [0xaf, 0xef, 0x0, 0x80, 0x5f, 0xc, 0x8b, 0x6d]);
 interface IImeSpecifyApplets : IUnknown
 {
-    HRESULT GetAppletIIDList(const(GUID)*, APPLETIDLIST*);
+    HRESULT GetAppletIIDList(const(GUID)* refiid, APPLETIDLIST* lpIIDList);
 }
 enum IID_IImePadApplet = GUID(0x5d8e643b, 0xc3a9, 0x11d1, [0xaf, 0xef, 0x0, 0x80, 0x5f, 0xc, 0x8b, 0x6d]);
 interface IImePadApplet : IUnknown
 {
-    HRESULT Initialize(IUnknown);
+    HRESULT Initialize(IUnknown lpIImePad);
     HRESULT Terminate();
-    HRESULT GetAppletConfig(IMEAPPLETCFG*);
-    HRESULT CreateUI(HWND, IMEAPPLETUI*);
-    HRESULT Notify(IUnknown, int, WPARAM, LPARAM);
+    HRESULT GetAppletConfig(IMEAPPLETCFG* lpAppletCfg);
+    HRESULT CreateUI(HWND hwndParent, IMEAPPLETUI* lpImeAppletUI);
+    HRESULT Notify(IUnknown lpImePad, int notify, WPARAM wParam, LPARAM lParam);
 }
 enum IID_IImePad = GUID(0x5d8e643a, 0xc3a9, 0x11d1, [0xaf, 0xef, 0x0, 0x80, 0x5f, 0xc, 0x8b, 0x6d]);
 interface IImePad : IUnknown
 {
-    HRESULT Request(IImePadApplet, int, WPARAM, LPARAM);
+    HRESULT Request(IImePadApplet pIImePadApplet, int reqId, WPARAM wParam, LPARAM lParam);
 }
 enum IID_IImePlugInDictDictionaryList = GUID(0x98752974, 0xb0a6, 0x489b, [0x8f, 0x6f, 0xbf, 0xf3, 0x76, 0x9c, 0x8e, 0xeb]);
 interface IImePlugInDictDictionaryList : IUnknown
 {
-    HRESULT GetDictionariesInUse(SAFEARRAY**, SAFEARRAY**, SAFEARRAY**);
-    HRESULT DeleteDictionary(BSTR);
+    HRESULT GetDictionariesInUse(SAFEARRAY** prgDictionaryGUID, SAFEARRAY** prgDateCreated, SAFEARRAY** prgfEncrypted);
+    HRESULT DeleteDictionary(BSTR bstrDictionaryGUID);
 }
 enum IID_IEnumRegisterWordA = GUID(0x8c03412, 0xf96b, 0x11d0, [0xa4, 0x75, 0x0, 0xaa, 0x0, 0x6b, 0xcc, 0x59]);
 interface IEnumRegisterWordA : IUnknown
 {
-    HRESULT Clone(IEnumRegisterWordA*);
-    HRESULT Next(uint, REGISTERWORDA*, uint*);
+    HRESULT Clone(IEnumRegisterWordA* ppEnum);
+    HRESULT Next(uint ulCount, REGISTERWORDA* rgRegisterWord, uint* pcFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
+    HRESULT Skip(uint ulCount);
 }
 enum IID_IEnumRegisterWordW = GUID(0x4955dd31, 0xb159, 0x11d0, [0x8f, 0xcf, 0x0, 0xaa, 0x0, 0x6b, 0xcc, 0x59]);
 interface IEnumRegisterWordW : IUnknown
 {
-    HRESULT Clone(IEnumRegisterWordW*);
-    HRESULT Next(uint, REGISTERWORDW*, uint*);
+    HRESULT Clone(IEnumRegisterWordW* ppEnum);
+    HRESULT Next(uint ulCount, REGISTERWORDW* rgRegisterWord, uint* pcFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
+    HRESULT Skip(uint ulCount);
 }
 enum IID_IEnumInputContext = GUID(0x9b5eab0, 0xf997, 0x11d1, [0x93, 0xd4, 0x0, 0x60, 0xb0, 0x67, 0xb8, 0x6e]);
 interface IEnumInputContext : IUnknown
 {
-    HRESULT Clone(IEnumInputContext*);
-    HRESULT Next(uint, HIMC*, uint*);
+    HRESULT Clone(IEnumInputContext* ppEnum);
+    HRESULT Next(uint ulCount, HIMC* rgInputContext, uint* pcFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
+    HRESULT Skip(uint ulCount);
 }
 enum IID_IActiveIMMRegistrar = GUID(0xb3458082, 0xbd00, 0x11d1, [0x93, 0x9b, 0x0, 0x60, 0xb0, 0x67, 0xb8, 0x6e]);
 interface IActiveIMMRegistrar : IUnknown
 {
-    HRESULT RegisterIME(const(GUID)*, ushort, const(wchar)*, const(wchar)*);
-    HRESULT UnregisterIME(const(GUID)*);
+    HRESULT RegisterIME(const(GUID)* rclsid, ushort lgid, const(wchar)* pszIconFile, const(wchar)* pszDesc);
+    HRESULT UnregisterIME(const(GUID)* rclsid);
 }
 enum IID_IActiveIMMMessagePumpOwner = GUID(0xb5cf2cfa, 0x8aeb, 0x11d1, [0x93, 0x64, 0x0, 0x60, 0xb0, 0x67, 0xb8, 0x6e]);
 interface IActiveIMMMessagePumpOwner : IUnknown
 {
     HRESULT Start();
     HRESULT End();
-    HRESULT OnTranslateMessage(const(MSG)*);
-    HRESULT Pause(uint*);
-    HRESULT Resume(uint);
+    HRESULT OnTranslateMessage(const(MSG)* pMsg);
+    HRESULT Pause(uint* pdwCookie);
+    HRESULT Resume(uint dwCookie);
 }
 enum IID_IActiveIMMApp = GUID(0x8c0e040, 0x62d1, 0x11d1, [0x93, 0x26, 0x0, 0x60, 0xb0, 0x67, 0xb8, 0x6e]);
 interface IActiveIMMApp : IUnknown
 {
-    HRESULT AssociateContext(HWND, HIMC, HIMC*);
-    HRESULT ConfigureIMEA(HKL, HWND, uint, REGISTERWORDA*);
-    HRESULT ConfigureIMEW(HKL, HWND, uint, REGISTERWORDW*);
-    HRESULT CreateContext(HIMC*);
-    HRESULT DestroyContext(HIMC);
-    HRESULT EnumRegisterWordA(HKL, PSTR, uint, PSTR, void*, IEnumRegisterWordA*);
-    HRESULT EnumRegisterWordW(HKL, PWSTR, uint, PWSTR, void*, IEnumRegisterWordW*);
-    HRESULT EscapeA(HKL, HIMC, uint, void*, LRESULT*);
-    HRESULT EscapeW(HKL, HIMC, uint, void*, LRESULT*);
-    HRESULT GetCandidateListA(HIMC, uint, uint, CANDIDATELIST*, uint*);
-    HRESULT GetCandidateListW(HIMC, uint, uint, CANDIDATELIST*, uint*);
-    HRESULT GetCandidateListCountA(HIMC, uint*, uint*);
-    HRESULT GetCandidateListCountW(HIMC, uint*, uint*);
-    HRESULT GetCandidateWindow(HIMC, uint, CANDIDATEFORM*);
-    HRESULT GetCompositionFontA(HIMC, LOGFONTA*);
-    HRESULT GetCompositionFontW(HIMC, LOGFONTW*);
-    HRESULT GetCompositionStringA(HIMC, uint, uint, int*, void*);
-    HRESULT GetCompositionStringW(HIMC, uint, uint, int*, void*);
-    HRESULT GetCompositionWindow(HIMC, COMPOSITIONFORM*);
-    HRESULT GetContext(HWND, HIMC*);
-    HRESULT GetConversionListA(HKL, HIMC, PSTR, uint, uint, CANDIDATELIST*, uint*);
-    HRESULT GetConversionListW(HKL, HIMC, PWSTR, uint, uint, CANDIDATELIST*, uint*);
-    HRESULT GetConversionStatus(HIMC, uint*, uint*);
-    HRESULT GetDefaultIMEWnd(HWND, HWND*);
-    HRESULT GetDescriptionA(HKL, uint, PSTR, uint*);
-    HRESULT GetDescriptionW(HKL, uint, PWSTR, uint*);
-    HRESULT GetGuideLineA(HIMC, uint, uint, PSTR, uint*);
-    HRESULT GetGuideLineW(HIMC, uint, uint, PWSTR, uint*);
-    HRESULT GetIMEFileNameA(HKL, uint, PSTR, uint*);
-    HRESULT GetIMEFileNameW(HKL, uint, PWSTR, uint*);
-    HRESULT GetOpenStatus(HIMC);
-    HRESULT GetProperty(HKL, uint, uint*);
-    HRESULT GetRegisterWordStyleA(HKL, uint, STYLEBUFA*, uint*);
-    HRESULT GetRegisterWordStyleW(HKL, uint, STYLEBUFW*, uint*);
-    HRESULT GetStatusWindowPos(HIMC, POINT*);
-    HRESULT GetVirtualKey(HWND, uint*);
-    HRESULT InstallIMEA(PSTR, PSTR, HKL*);
-    HRESULT InstallIMEW(PWSTR, PWSTR, HKL*);
-    HRESULT IsIME(HKL);
-    HRESULT IsUIMessageA(HWND, uint, WPARAM, LPARAM);
-    HRESULT IsUIMessageW(HWND, uint, WPARAM, LPARAM);
-    HRESULT NotifyIME(HIMC, uint, uint, uint);
-    HRESULT RegisterWordA(HKL, PSTR, uint, PSTR);
-    HRESULT RegisterWordW(HKL, PWSTR, uint, PWSTR);
-    HRESULT ReleaseContext(HWND, HIMC);
-    HRESULT SetCandidateWindow(HIMC, CANDIDATEFORM*);
-    HRESULT SetCompositionFontA(HIMC, LOGFONTA*);
-    HRESULT SetCompositionFontW(HIMC, LOGFONTW*);
-    HRESULT SetCompositionStringA(HIMC, uint, void*, uint, void*, uint);
-    HRESULT SetCompositionStringW(HIMC, uint, void*, uint, void*, uint);
-    HRESULT SetCompositionWindow(HIMC, COMPOSITIONFORM*);
-    HRESULT SetConversionStatus(HIMC, uint, uint);
-    HRESULT SetOpenStatus(HIMC, BOOL);
-    HRESULT SetStatusWindowPos(HIMC, POINT*);
-    HRESULT SimulateHotKey(HWND, uint);
-    HRESULT UnregisterWordA(HKL, PSTR, uint, PSTR);
-    HRESULT UnregisterWordW(HKL, PWSTR, uint, PWSTR);
-    HRESULT Activate(BOOL);
+    HRESULT AssociateContext(HWND hWnd, HIMC hIME, HIMC* phPrev);
+    HRESULT ConfigureIMEA(HKL hKL, HWND hWnd, uint dwMode, REGISTERWORDA* pData);
+    HRESULT ConfigureIMEW(HKL hKL, HWND hWnd, uint dwMode, REGISTERWORDW* pData);
+    HRESULT CreateContext(HIMC* phIMC);
+    HRESULT DestroyContext(HIMC hIME);
+    HRESULT EnumRegisterWordA(HKL hKL, PSTR szReading, uint dwStyle, PSTR szRegister, void* pData, IEnumRegisterWordA* pEnum);
+    HRESULT EnumRegisterWordW(HKL hKL, PWSTR szReading, uint dwStyle, PWSTR szRegister, void* pData, IEnumRegisterWordW* pEnum);
+    HRESULT EscapeA(HKL hKL, HIMC hIMC, uint uEscape, void* pData, LRESULT* plResult);
+    HRESULT EscapeW(HKL hKL, HIMC hIMC, uint uEscape, void* pData, LRESULT* plResult);
+    HRESULT GetCandidateListA(HIMC hIMC, uint dwIndex, uint uBufLen, CANDIDATELIST* pCandList, uint* puCopied);
+    HRESULT GetCandidateListW(HIMC hIMC, uint dwIndex, uint uBufLen, CANDIDATELIST* pCandList, uint* puCopied);
+    HRESULT GetCandidateListCountA(HIMC hIMC, uint* pdwListSize, uint* pdwBufLen);
+    HRESULT GetCandidateListCountW(HIMC hIMC, uint* pdwListSize, uint* pdwBufLen);
+    HRESULT GetCandidateWindow(HIMC hIMC, uint dwIndex, CANDIDATEFORM* pCandidate);
+    HRESULT GetCompositionFontA(HIMC hIMC, LOGFONTA* plf);
+    HRESULT GetCompositionFontW(HIMC hIMC, LOGFONTW* plf);
+    HRESULT GetCompositionStringA(HIMC hIMC, uint dwIndex, uint dwBufLen, int* plCopied, void* pBuf);
+    HRESULT GetCompositionStringW(HIMC hIMC, uint dwIndex, uint dwBufLen, int* plCopied, void* pBuf);
+    HRESULT GetCompositionWindow(HIMC hIMC, COMPOSITIONFORM* pCompForm);
+    HRESULT GetContext(HWND hWnd, HIMC* phIMC);
+    HRESULT GetConversionListA(HKL hKL, HIMC hIMC, PSTR pSrc, uint uBufLen, uint uFlag, CANDIDATELIST* pDst, uint* puCopied);
+    HRESULT GetConversionListW(HKL hKL, HIMC hIMC, PWSTR pSrc, uint uBufLen, uint uFlag, CANDIDATELIST* pDst, uint* puCopied);
+    HRESULT GetConversionStatus(HIMC hIMC, uint* pfdwConversion, uint* pfdwSentence);
+    HRESULT GetDefaultIMEWnd(HWND hWnd, HWND* phDefWnd);
+    HRESULT GetDescriptionA(HKL hKL, uint uBufLen, PSTR szDescription, uint* puCopied);
+    HRESULT GetDescriptionW(HKL hKL, uint uBufLen, PWSTR szDescription, uint* puCopied);
+    HRESULT GetGuideLineA(HIMC hIMC, uint dwIndex, uint dwBufLen, PSTR pBuf, uint* pdwResult);
+    HRESULT GetGuideLineW(HIMC hIMC, uint dwIndex, uint dwBufLen, PWSTR pBuf, uint* pdwResult);
+    HRESULT GetIMEFileNameA(HKL hKL, uint uBufLen, PSTR szFileName, uint* puCopied);
+    HRESULT GetIMEFileNameW(HKL hKL, uint uBufLen, PWSTR szFileName, uint* puCopied);
+    HRESULT GetOpenStatus(HIMC hIMC);
+    HRESULT GetProperty(HKL hKL, uint fdwIndex, uint* pdwProperty);
+    HRESULT GetRegisterWordStyleA(HKL hKL, uint nItem, STYLEBUFA* pStyleBuf, uint* puCopied);
+    HRESULT GetRegisterWordStyleW(HKL hKL, uint nItem, STYLEBUFW* pStyleBuf, uint* puCopied);
+    HRESULT GetStatusWindowPos(HIMC hIMC, POINT* pptPos);
+    HRESULT GetVirtualKey(HWND hWnd, uint* puVirtualKey);
+    HRESULT InstallIMEA(PSTR szIMEFileName, PSTR szLayoutText, HKL* phKL);
+    HRESULT InstallIMEW(PWSTR szIMEFileName, PWSTR szLayoutText, HKL* phKL);
+    HRESULT IsIME(HKL hKL);
+    HRESULT IsUIMessageA(HWND hWndIME, uint msg, WPARAM wParam, LPARAM lParam);
+    HRESULT IsUIMessageW(HWND hWndIME, uint msg, WPARAM wParam, LPARAM lParam);
+    HRESULT NotifyIME(HIMC hIMC, uint dwAction, uint dwIndex, uint dwValue);
+    HRESULT RegisterWordA(HKL hKL, PSTR szReading, uint dwStyle, PSTR szRegister);
+    HRESULT RegisterWordW(HKL hKL, PWSTR szReading, uint dwStyle, PWSTR szRegister);
+    HRESULT ReleaseContext(HWND hWnd, HIMC hIMC);
+    HRESULT SetCandidateWindow(HIMC hIMC, CANDIDATEFORM* pCandidate);
+    HRESULT SetCompositionFontA(HIMC hIMC, LOGFONTA* plf);
+    HRESULT SetCompositionFontW(HIMC hIMC, LOGFONTW* plf);
+    HRESULT SetCompositionStringA(HIMC hIMC, uint dwIndex, void* pComp, uint dwCompLen, void* pRead, uint dwReadLen);
+    HRESULT SetCompositionStringW(HIMC hIMC, uint dwIndex, void* pComp, uint dwCompLen, void* pRead, uint dwReadLen);
+    HRESULT SetCompositionWindow(HIMC hIMC, COMPOSITIONFORM* pCompForm);
+    HRESULT SetConversionStatus(HIMC hIMC, uint fdwConversion, uint fdwSentence);
+    HRESULT SetOpenStatus(HIMC hIMC, BOOL fOpen);
+    HRESULT SetStatusWindowPos(HIMC hIMC, POINT* pptPos);
+    HRESULT SimulateHotKey(HWND hWnd, uint dwHotKeyID);
+    HRESULT UnregisterWordA(HKL hKL, PSTR szReading, uint dwStyle, PSTR szUnregister);
+    HRESULT UnregisterWordW(HKL hKL, PWSTR szReading, uint dwStyle, PWSTR szUnregister);
+    HRESULT Activate(BOOL fRestoreLayout);
     HRESULT Deactivate();
-    HRESULT OnDefWindowProc(HWND, uint, WPARAM, LPARAM, LRESULT*);
-    HRESULT FilterClientWindows(ushort*, uint);
-    HRESULT GetCodePageA(HKL, uint*);
-    HRESULT GetLangId(HKL, ushort*);
-    HRESULT AssociateContextEx(HWND, HIMC, uint);
-    HRESULT DisableIME(uint);
-    HRESULT GetImeMenuItemsA(HIMC, uint, uint, IMEMENUITEMINFOA*, IMEMENUITEMINFOA*, uint, uint*);
-    HRESULT GetImeMenuItemsW(HIMC, uint, uint, IMEMENUITEMINFOW*, IMEMENUITEMINFOW*, uint, uint*);
-    HRESULT EnumInputContext(uint, IEnumInputContext*);
+    HRESULT OnDefWindowProc(HWND hWnd, uint Msg, WPARAM wParam, LPARAM lParam, LRESULT* plResult);
+    HRESULT FilterClientWindows(ushort* aaClassList, uint uSize);
+    HRESULT GetCodePageA(HKL hKL, uint* uCodePage);
+    HRESULT GetLangId(HKL hKL, ushort* plid);
+    HRESULT AssociateContextEx(HWND hWnd, HIMC hIMC, uint dwFlags);
+    HRESULT DisableIME(uint idThread);
+    HRESULT GetImeMenuItemsA(HIMC hIMC, uint dwFlags, uint dwType, IMEMENUITEMINFOA* pImeParentMenu, IMEMENUITEMINFOA* pImeMenu, uint dwSize, uint* pdwResult);
+    HRESULT GetImeMenuItemsW(HIMC hIMC, uint dwFlags, uint dwType, IMEMENUITEMINFOW* pImeParentMenu, IMEMENUITEMINFOW* pImeMenu, uint dwSize, uint* pdwResult);
+    HRESULT EnumInputContext(uint idThread, IEnumInputContext* ppEnum);
 }
 enum IID_IActiveIMMIME = GUID(0x8c03411, 0xf96b, 0x11d0, [0xa4, 0x75, 0x0, 0xaa, 0x0, 0x6b, 0xcc, 0x59]);
 interface IActiveIMMIME : IUnknown
 {
-    HRESULT AssociateContext(HWND, HIMC, HIMC*);
-    HRESULT ConfigureIMEA(HKL, HWND, uint, REGISTERWORDA*);
-    HRESULT ConfigureIMEW(HKL, HWND, uint, REGISTERWORDW*);
-    HRESULT CreateContext(HIMC*);
-    HRESULT DestroyContext(HIMC);
-    HRESULT EnumRegisterWordA(HKL, PSTR, uint, PSTR, void*, IEnumRegisterWordA*);
-    HRESULT EnumRegisterWordW(HKL, PWSTR, uint, PWSTR, void*, IEnumRegisterWordW*);
-    HRESULT EscapeA(HKL, HIMC, uint, void*, LRESULT*);
-    HRESULT EscapeW(HKL, HIMC, uint, void*, LRESULT*);
-    HRESULT GetCandidateListA(HIMC, uint, uint, CANDIDATELIST*, uint*);
-    HRESULT GetCandidateListW(HIMC, uint, uint, CANDIDATELIST*, uint*);
-    HRESULT GetCandidateListCountA(HIMC, uint*, uint*);
-    HRESULT GetCandidateListCountW(HIMC, uint*, uint*);
-    HRESULT GetCandidateWindow(HIMC, uint, CANDIDATEFORM*);
-    HRESULT GetCompositionFontA(HIMC, LOGFONTA*);
-    HRESULT GetCompositionFontW(HIMC, LOGFONTW*);
-    HRESULT GetCompositionStringA(HIMC, uint, uint, int*, void*);
-    HRESULT GetCompositionStringW(HIMC, uint, uint, int*, void*);
-    HRESULT GetCompositionWindow(HIMC, COMPOSITIONFORM*);
-    HRESULT GetContext(HWND, HIMC*);
-    HRESULT GetConversionListA(HKL, HIMC, PSTR, uint, uint, CANDIDATELIST*, uint*);
-    HRESULT GetConversionListW(HKL, HIMC, PWSTR, uint, uint, CANDIDATELIST*, uint*);
-    HRESULT GetConversionStatus(HIMC, uint*, uint*);
-    HRESULT GetDefaultIMEWnd(HWND, HWND*);
-    HRESULT GetDescriptionA(HKL, uint, PSTR, uint*);
-    HRESULT GetDescriptionW(HKL, uint, PWSTR, uint*);
-    HRESULT GetGuideLineA(HIMC, uint, uint, PSTR, uint*);
-    HRESULT GetGuideLineW(HIMC, uint, uint, PWSTR, uint*);
-    HRESULT GetIMEFileNameA(HKL, uint, PSTR, uint*);
-    HRESULT GetIMEFileNameW(HKL, uint, PWSTR, uint*);
-    HRESULT GetOpenStatus(HIMC);
-    HRESULT GetProperty(HKL, uint, uint*);
-    HRESULT GetRegisterWordStyleA(HKL, uint, STYLEBUFA*, uint*);
-    HRESULT GetRegisterWordStyleW(HKL, uint, STYLEBUFW*, uint*);
-    HRESULT GetStatusWindowPos(HIMC, POINT*);
-    HRESULT GetVirtualKey(HWND, uint*);
-    HRESULT InstallIMEA(PSTR, PSTR, HKL*);
-    HRESULT InstallIMEW(PWSTR, PWSTR, HKL*);
-    HRESULT IsIME(HKL);
-    HRESULT IsUIMessageA(HWND, uint, WPARAM, LPARAM);
-    HRESULT IsUIMessageW(HWND, uint, WPARAM, LPARAM);
-    HRESULT NotifyIME(HIMC, uint, uint, uint);
-    HRESULT RegisterWordA(HKL, PSTR, uint, PSTR);
-    HRESULT RegisterWordW(HKL, PWSTR, uint, PWSTR);
-    HRESULT ReleaseContext(HWND, HIMC);
-    HRESULT SetCandidateWindow(HIMC, CANDIDATEFORM*);
-    HRESULT SetCompositionFontA(HIMC, LOGFONTA*);
-    HRESULT SetCompositionFontW(HIMC, LOGFONTW*);
-    HRESULT SetCompositionStringA(HIMC, uint, void*, uint, void*, uint);
-    HRESULT SetCompositionStringW(HIMC, uint, void*, uint, void*, uint);
-    HRESULT SetCompositionWindow(HIMC, COMPOSITIONFORM*);
-    HRESULT SetConversionStatus(HIMC, uint, uint);
-    HRESULT SetOpenStatus(HIMC, BOOL);
-    HRESULT SetStatusWindowPos(HIMC, POINT*);
-    HRESULT SimulateHotKey(HWND, uint);
-    HRESULT UnregisterWordA(HKL, PSTR, uint, PSTR);
-    HRESULT UnregisterWordW(HKL, PWSTR, uint, PWSTR);
-    HRESULT GenerateMessage(HIMC);
-    HRESULT LockIMC(HIMC, INPUTCONTEXT**);
-    HRESULT UnlockIMC(HIMC);
-    HRESULT GetIMCLockCount(HIMC, uint*);
-    HRESULT CreateIMCC(uint, HIMCC*);
-    HRESULT DestroyIMCC(HIMCC);
-    HRESULT LockIMCC(HIMCC, void**);
-    HRESULT UnlockIMCC(HIMCC);
-    HRESULT ReSizeIMCC(HIMCC, uint, HIMCC*);
-    HRESULT GetIMCCSize(HIMCC, uint*);
-    HRESULT GetIMCCLockCount(HIMCC, uint*);
-    HRESULT GetHotKey(uint, uint*, uint*, HKL*);
-    HRESULT SetHotKey(uint, uint, uint, HKL);
-    HRESULT CreateSoftKeyboard(uint, HWND, int, int, HWND*);
-    HRESULT DestroySoftKeyboard(HWND);
-    HRESULT ShowSoftKeyboard(HWND, int);
-    HRESULT GetCodePageA(HKL, uint*);
-    HRESULT GetLangId(HKL, ushort*);
-    HRESULT KeybdEvent(ushort, ubyte, ubyte, uint, uint);
+    HRESULT AssociateContext(HWND hWnd, HIMC hIME, HIMC* phPrev);
+    HRESULT ConfigureIMEA(HKL hKL, HWND hWnd, uint dwMode, REGISTERWORDA* pData);
+    HRESULT ConfigureIMEW(HKL hKL, HWND hWnd, uint dwMode, REGISTERWORDW* pData);
+    HRESULT CreateContext(HIMC* phIMC);
+    HRESULT DestroyContext(HIMC hIME);
+    HRESULT EnumRegisterWordA(HKL hKL, PSTR szReading, uint dwStyle, PSTR szRegister, void* pData, IEnumRegisterWordA* pEnum);
+    HRESULT EnumRegisterWordW(HKL hKL, PWSTR szReading, uint dwStyle, PWSTR szRegister, void* pData, IEnumRegisterWordW* pEnum);
+    HRESULT EscapeA(HKL hKL, HIMC hIMC, uint uEscape, void* pData, LRESULT* plResult);
+    HRESULT EscapeW(HKL hKL, HIMC hIMC, uint uEscape, void* pData, LRESULT* plResult);
+    HRESULT GetCandidateListA(HIMC hIMC, uint dwIndex, uint uBufLen, CANDIDATELIST* pCandList, uint* puCopied);
+    HRESULT GetCandidateListW(HIMC hIMC, uint dwIndex, uint uBufLen, CANDIDATELIST* pCandList, uint* puCopied);
+    HRESULT GetCandidateListCountA(HIMC hIMC, uint* pdwListSize, uint* pdwBufLen);
+    HRESULT GetCandidateListCountW(HIMC hIMC, uint* pdwListSize, uint* pdwBufLen);
+    HRESULT GetCandidateWindow(HIMC hIMC, uint dwIndex, CANDIDATEFORM* pCandidate);
+    HRESULT GetCompositionFontA(HIMC hIMC, LOGFONTA* plf);
+    HRESULT GetCompositionFontW(HIMC hIMC, LOGFONTW* plf);
+    HRESULT GetCompositionStringA(HIMC hIMC, uint dwIndex, uint dwBufLen, int* plCopied, void* pBuf);
+    HRESULT GetCompositionStringW(HIMC hIMC, uint dwIndex, uint dwBufLen, int* plCopied, void* pBuf);
+    HRESULT GetCompositionWindow(HIMC hIMC, COMPOSITIONFORM* pCompForm);
+    HRESULT GetContext(HWND hWnd, HIMC* phIMC);
+    HRESULT GetConversionListA(HKL hKL, HIMC hIMC, PSTR pSrc, uint uBufLen, uint uFlag, CANDIDATELIST* pDst, uint* puCopied);
+    HRESULT GetConversionListW(HKL hKL, HIMC hIMC, PWSTR pSrc, uint uBufLen, uint uFlag, CANDIDATELIST* pDst, uint* puCopied);
+    HRESULT GetConversionStatus(HIMC hIMC, uint* pfdwConversion, uint* pfdwSentence);
+    HRESULT GetDefaultIMEWnd(HWND hWnd, HWND* phDefWnd);
+    HRESULT GetDescriptionA(HKL hKL, uint uBufLen, PSTR szDescription, uint* puCopied);
+    HRESULT GetDescriptionW(HKL hKL, uint uBufLen, PWSTR szDescription, uint* puCopied);
+    HRESULT GetGuideLineA(HIMC hIMC, uint dwIndex, uint dwBufLen, PSTR pBuf, uint* pdwResult);
+    HRESULT GetGuideLineW(HIMC hIMC, uint dwIndex, uint dwBufLen, PWSTR pBuf, uint* pdwResult);
+    HRESULT GetIMEFileNameA(HKL hKL, uint uBufLen, PSTR szFileName, uint* puCopied);
+    HRESULT GetIMEFileNameW(HKL hKL, uint uBufLen, PWSTR szFileName, uint* puCopied);
+    HRESULT GetOpenStatus(HIMC hIMC);
+    HRESULT GetProperty(HKL hKL, uint fdwIndex, uint* pdwProperty);
+    HRESULT GetRegisterWordStyleA(HKL hKL, uint nItem, STYLEBUFA* pStyleBuf, uint* puCopied);
+    HRESULT GetRegisterWordStyleW(HKL hKL, uint nItem, STYLEBUFW* pStyleBuf, uint* puCopied);
+    HRESULT GetStatusWindowPos(HIMC hIMC, POINT* pptPos);
+    HRESULT GetVirtualKey(HWND hWnd, uint* puVirtualKey);
+    HRESULT InstallIMEA(PSTR szIMEFileName, PSTR szLayoutText, HKL* phKL);
+    HRESULT InstallIMEW(PWSTR szIMEFileName, PWSTR szLayoutText, HKL* phKL);
+    HRESULT IsIME(HKL hKL);
+    HRESULT IsUIMessageA(HWND hWndIME, uint msg, WPARAM wParam, LPARAM lParam);
+    HRESULT IsUIMessageW(HWND hWndIME, uint msg, WPARAM wParam, LPARAM lParam);
+    HRESULT NotifyIME(HIMC hIMC, uint dwAction, uint dwIndex, uint dwValue);
+    HRESULT RegisterWordA(HKL hKL, PSTR szReading, uint dwStyle, PSTR szRegister);
+    HRESULT RegisterWordW(HKL hKL, PWSTR szReading, uint dwStyle, PWSTR szRegister);
+    HRESULT ReleaseContext(HWND hWnd, HIMC hIMC);
+    HRESULT SetCandidateWindow(HIMC hIMC, CANDIDATEFORM* pCandidate);
+    HRESULT SetCompositionFontA(HIMC hIMC, LOGFONTA* plf);
+    HRESULT SetCompositionFontW(HIMC hIMC, LOGFONTW* plf);
+    HRESULT SetCompositionStringA(HIMC hIMC, uint dwIndex, void* pComp, uint dwCompLen, void* pRead, uint dwReadLen);
+    HRESULT SetCompositionStringW(HIMC hIMC, uint dwIndex, void* pComp, uint dwCompLen, void* pRead, uint dwReadLen);
+    HRESULT SetCompositionWindow(HIMC hIMC, COMPOSITIONFORM* pCompForm);
+    HRESULT SetConversionStatus(HIMC hIMC, uint fdwConversion, uint fdwSentence);
+    HRESULT SetOpenStatus(HIMC hIMC, BOOL fOpen);
+    HRESULT SetStatusWindowPos(HIMC hIMC, POINT* pptPos);
+    HRESULT SimulateHotKey(HWND hWnd, uint dwHotKeyID);
+    HRESULT UnregisterWordA(HKL hKL, PSTR szReading, uint dwStyle, PSTR szUnregister);
+    HRESULT UnregisterWordW(HKL hKL, PWSTR szReading, uint dwStyle, PWSTR szUnregister);
+    HRESULT GenerateMessage(HIMC hIMC);
+    HRESULT LockIMC(HIMC hIMC, INPUTCONTEXT** ppIMC);
+    HRESULT UnlockIMC(HIMC hIMC);
+    HRESULT GetIMCLockCount(HIMC hIMC, uint* pdwLockCount);
+    HRESULT CreateIMCC(uint dwSize, HIMCC* phIMCC);
+    HRESULT DestroyIMCC(HIMCC hIMCC);
+    HRESULT LockIMCC(HIMCC hIMCC, void** ppv);
+    HRESULT UnlockIMCC(HIMCC hIMCC);
+    HRESULT ReSizeIMCC(HIMCC hIMCC, uint dwSize, HIMCC* phIMCC);
+    HRESULT GetIMCCSize(HIMCC hIMCC, uint* pdwSize);
+    HRESULT GetIMCCLockCount(HIMCC hIMCC, uint* pdwLockCount);
+    HRESULT GetHotKey(uint dwHotKeyID, uint* puModifiers, uint* puVKey, HKL* phKL);
+    HRESULT SetHotKey(uint dwHotKeyID, uint uModifiers, uint uVKey, HKL hKL);
+    HRESULT CreateSoftKeyboard(uint uType, HWND hOwner, int x, int y, HWND* phSoftKbdWnd);
+    HRESULT DestroySoftKeyboard(HWND hSoftKbdWnd);
+    HRESULT ShowSoftKeyboard(HWND hSoftKbdWnd, int nCmdShow);
+    HRESULT GetCodePageA(HKL hKL, uint* uCodePage);
+    HRESULT GetLangId(HKL hKL, ushort* plid);
+    HRESULT KeybdEvent(ushort lgidIME, ubyte bVk, ubyte bScan, uint dwFlags, uint dwExtraInfo);
     HRESULT LockModal();
     HRESULT UnlockModal();
-    HRESULT AssociateContextEx(HWND, HIMC, uint);
-    HRESULT DisableIME(uint);
-    HRESULT GetImeMenuItemsA(HIMC, uint, uint, IMEMENUITEMINFOA*, IMEMENUITEMINFOA*, uint, uint*);
-    HRESULT GetImeMenuItemsW(HIMC, uint, uint, IMEMENUITEMINFOW*, IMEMENUITEMINFOW*, uint, uint*);
-    HRESULT EnumInputContext(uint, IEnumInputContext*);
-    HRESULT RequestMessageA(HIMC, WPARAM, LPARAM, LRESULT*);
-    HRESULT RequestMessageW(HIMC, WPARAM, LPARAM, LRESULT*);
-    HRESULT SendIMCA(HWND, uint, WPARAM, LPARAM, LRESULT*);
-    HRESULT SendIMCW(HWND, uint, WPARAM, LPARAM, LRESULT*);
+    HRESULT AssociateContextEx(HWND hWnd, HIMC hIMC, uint dwFlags);
+    HRESULT DisableIME(uint idThread);
+    HRESULT GetImeMenuItemsA(HIMC hIMC, uint dwFlags, uint dwType, IMEMENUITEMINFOA* pImeParentMenu, IMEMENUITEMINFOA* pImeMenu, uint dwSize, uint* pdwResult);
+    HRESULT GetImeMenuItemsW(HIMC hIMC, uint dwFlags, uint dwType, IMEMENUITEMINFOW* pImeParentMenu, IMEMENUITEMINFOW* pImeMenu, uint dwSize, uint* pdwResult);
+    HRESULT EnumInputContext(uint idThread, IEnumInputContext* ppEnum);
+    HRESULT RequestMessageA(HIMC hIMC, WPARAM wParam, LPARAM lParam, LRESULT* plResult);
+    HRESULT RequestMessageW(HIMC hIMC, WPARAM wParam, LPARAM lParam, LRESULT* plResult);
+    HRESULT SendIMCA(HWND hWnd, uint uMsg, WPARAM wParam, LPARAM lParam, LRESULT* plResult);
+    HRESULT SendIMCW(HWND hWnd, uint uMsg, WPARAM wParam, LPARAM lParam, LRESULT* plResult);
     HRESULT IsSleeping();
 }
 enum IID_IActiveIME = GUID(0x6fe20962, 0xd077, 0x11d0, [0x8f, 0xe7, 0x0, 0xaa, 0x0, 0x6b, 0xcc, 0x59]);
 interface IActiveIME : IUnknown
 {
-    HRESULT Inquire(uint, IMEINFO*, PWSTR, uint*);
-    HRESULT ConversionList(HIMC, PWSTR, uint, uint, CANDIDATELIST*, uint*);
-    HRESULT Configure(HKL, HWND, uint, REGISTERWORDW*);
-    HRESULT Destroy(uint);
-    HRESULT Escape(HIMC, uint, void*, LRESULT*);
-    HRESULT SetActiveContext(HIMC, BOOL);
-    HRESULT ProcessKey(HIMC, uint, uint, ubyte*);
-    HRESULT Notify(HIMC, uint, uint, uint);
-    HRESULT Select(HIMC, BOOL);
-    HRESULT SetCompositionString(HIMC, uint, void*, uint, void*, uint);
-    HRESULT ToAsciiEx(uint, uint, ubyte*, uint, HIMC, uint*, uint*);
-    HRESULT RegisterWord(PWSTR, uint, PWSTR);
-    HRESULT UnregisterWord(PWSTR, uint, PWSTR);
-    HRESULT GetRegisterWordStyle(uint, STYLEBUFW*, uint*);
-    HRESULT EnumRegisterWord(PWSTR, uint, PWSTR, void*, IEnumRegisterWordW*);
-    HRESULT GetCodePageA(uint*);
-    HRESULT GetLangId(ushort*);
+    HRESULT Inquire(uint dwSystemInfoFlags, IMEINFO* pIMEInfo, PWSTR szWndClass, uint* pdwPrivate);
+    HRESULT ConversionList(HIMC hIMC, PWSTR szSource, uint uFlag, uint uBufLen, CANDIDATELIST* pDest, uint* puCopied);
+    HRESULT Configure(HKL hKL, HWND hWnd, uint dwMode, REGISTERWORDW* pRegisterWord);
+    HRESULT Destroy(uint uReserved);
+    HRESULT Escape(HIMC hIMC, uint uEscape, void* pData, LRESULT* plResult);
+    HRESULT SetActiveContext(HIMC hIMC, BOOL fFlag);
+    HRESULT ProcessKey(HIMC hIMC, uint uVirKey, uint lParam, ubyte* pbKeyState);
+    HRESULT Notify(HIMC hIMC, uint dwAction, uint dwIndex, uint dwValue);
+    HRESULT Select(HIMC hIMC, BOOL fSelect);
+    HRESULT SetCompositionString(HIMC hIMC, uint dwIndex, void* pComp, uint dwCompLen, void* pRead, uint dwReadLen);
+    HRESULT ToAsciiEx(uint uVirKey, uint uScanCode, ubyte* pbKeyState, uint fuState, HIMC hIMC, uint* pdwTransBuf, uint* puSize);
+    HRESULT RegisterWord(PWSTR szReading, uint dwStyle, PWSTR szString);
+    HRESULT UnregisterWord(PWSTR szReading, uint dwStyle, PWSTR szString);
+    HRESULT GetRegisterWordStyle(uint nItem, STYLEBUFW* pStyleBuf, uint* puBufSize);
+    HRESULT EnumRegisterWord(PWSTR szReading, uint dwStyle, PWSTR szRegister, void* pData, IEnumRegisterWordW* ppEnum);
+    HRESULT GetCodePageA(uint* uCodePage);
+    HRESULT GetLangId(ushort* plid);
 }
 enum IID_IActiveIME2 = GUID(0xe1c4bf0e, 0x2d53, 0x11d2, [0x93, 0xe1, 0x0, 0x60, 0xb0, 0x67, 0xb8, 0x6e]);
 interface IActiveIME2 : IActiveIME
 {
     HRESULT Sleep();
-    HRESULT Unsleep(BOOL);
+    HRESULT Unsleep(BOOL fDead);
 }
 enum CLSID_CActiveIMM = GUID(0x4955dd33, 0xb159, 0x11d0, [0x8f, 0xcf, 0x0, 0xaa, 0x0, 0x6b, 0xcc, 0x59]);
 struct CActiveIMM

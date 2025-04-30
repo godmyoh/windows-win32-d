@@ -10,15 +10,15 @@ import windows.win32.system.variant : VARIANT;
 version (Windows):
 extern (Windows):
 
-HRESULT SwDeviceCreate(const(wchar)*, const(wchar)*, const(SW_DEVICE_CREATE_INFO)*, uint, const(DEVPROPERTY)*, SW_DEVICE_CREATE_CALLBACK, void*, HSWDEVICE*);
-void SwDeviceClose(HSWDEVICE);
-HRESULT SwDeviceSetLifetime(HSWDEVICE, SW_DEVICE_LIFETIME);
-HRESULT SwDeviceGetLifetime(HSWDEVICE, SW_DEVICE_LIFETIME*);
-HRESULT SwDevicePropertySet(HSWDEVICE, uint, const(DEVPROPERTY)*);
-HRESULT SwDeviceInterfaceRegister(HSWDEVICE, const(GUID)*, const(wchar)*, uint, const(DEVPROPERTY)*, BOOL, PWSTR*);
-void SwMemFree(void*);
-HRESULT SwDeviceInterfaceSetState(HSWDEVICE, const(wchar)*, BOOL);
-HRESULT SwDeviceInterfacePropertySet(HSWDEVICE, const(wchar)*, uint, const(DEVPROPERTY)*);
+HRESULT SwDeviceCreate(const(wchar)* pszEnumeratorName, const(wchar)* pszParentDeviceInstance, const(SW_DEVICE_CREATE_INFO)* pCreateInfo, uint cPropertyCount, const(DEVPROPERTY)* pProperties, SW_DEVICE_CREATE_CALLBACK pCallback, void* pContext, HSWDEVICE* phSwDevice);
+void SwDeviceClose(HSWDEVICE hSwDevice);
+HRESULT SwDeviceSetLifetime(HSWDEVICE hSwDevice, SW_DEVICE_LIFETIME Lifetime);
+HRESULT SwDeviceGetLifetime(HSWDEVICE hSwDevice, SW_DEVICE_LIFETIME* pLifetime);
+HRESULT SwDevicePropertySet(HSWDEVICE hSwDevice, uint cPropertyCount, const(DEVPROPERTY)* pProperties);
+HRESULT SwDeviceInterfaceRegister(HSWDEVICE hSwDevice, const(GUID)* pInterfaceClassGuid, const(wchar)* pszReferenceString, uint cPropertyCount, const(DEVPROPERTY)* pProperties, BOOL fEnabled, PWSTR* ppszDeviceInterfaceId);
+void SwMemFree(void* pMem);
+HRESULT SwDeviceInterfaceSetState(HSWDEVICE hSwDevice, const(wchar)* pszDeviceInterfaceId, BOOL fEnabled);
+HRESULT SwDeviceInterfacePropertySet(HSWDEVICE hSwDevice, const(wchar)* pszDeviceInterfaceId, uint cPropertyCount, const(DEVPROPERTY)* pProperties);
 enum UPNP_E_ROOT_ELEMENT_EXPECTED = 0xffffffff80040200;
 enum UPNP_E_DEVICE_ELEMENT_EXPECTED = 0xffffffff80040201;
 enum UPNP_E_SERVICE_ELEMENT_EXPECTED = 0xffffffff80040202;
@@ -97,146 +97,146 @@ enum : int
     SWDeviceLifetimeMax           = 0x00000002,
 }
 
-alias SW_DEVICE_CREATE_CALLBACK = void function(HSWDEVICE, HRESULT, void*, const(wchar)*);
+alias SW_DEVICE_CREATE_CALLBACK = void function(HSWDEVICE hSwDevice, HRESULT CreateResult, void* pContext, const(wchar)* pszDeviceInstanceId);
 enum IID_IUPnPDeviceFinder = GUID(0xadda3d55, 0x6f72, 0x4319, [0xbf, 0xf9, 0x18, 0x60, 0xa, 0x53, 0x9b, 0x10]);
 interface IUPnPDeviceFinder : IDispatch
 {
-    HRESULT FindByType(BSTR, uint, IUPnPDevices*);
-    HRESULT CreateAsyncFind(BSTR, uint, IUnknown, int*);
-    HRESULT StartAsyncFind(int);
-    HRESULT CancelAsyncFind(int);
-    HRESULT FindByUDN(BSTR, IUPnPDevice*);
+    HRESULT FindByType(BSTR bstrTypeURI, uint dwFlags, IUPnPDevices* pDevices);
+    HRESULT CreateAsyncFind(BSTR bstrTypeURI, uint dwFlags, IUnknown punkDeviceFinderCallback, int* plFindData);
+    HRESULT StartAsyncFind(int lFindData);
+    HRESULT CancelAsyncFind(int lFindData);
+    HRESULT FindByUDN(BSTR bstrUDN, IUPnPDevice* pDevice);
 }
 enum IID_IUPnPAddressFamilyControl = GUID(0xe3bf6178, 0x694e, 0x459f, [0xa5, 0xa6, 0x19, 0x1e, 0xa0, 0xff, 0xa1, 0xc7]);
 interface IUPnPAddressFamilyControl : IUnknown
 {
-    HRESULT SetAddressFamily(int);
-    HRESULT GetAddressFamily(int*);
+    HRESULT SetAddressFamily(int dwFlags);
+    HRESULT GetAddressFamily(int* pdwFlags);
 }
 enum IID_IUPnPHttpHeaderControl = GUID(0x405af4f, 0x8b5c, 0x447c, [0x80, 0xf2, 0xb7, 0x59, 0x84, 0xa3, 0x1f, 0x3c]);
 interface IUPnPHttpHeaderControl : IUnknown
 {
-    HRESULT AddRequestHeaders(BSTR);
+    HRESULT AddRequestHeaders(BSTR bstrHttpHeaders);
 }
 enum IID_IUPnPDeviceFinderCallback = GUID(0x415a984a, 0x88b3, 0x49f3, [0x92, 0xaf, 0x5, 0x8, 0xbe, 0xdf, 0xd, 0x6c]);
 interface IUPnPDeviceFinderCallback : IUnknown
 {
-    HRESULT DeviceAdded(int, IUPnPDevice);
-    HRESULT DeviceRemoved(int, BSTR);
-    HRESULT SearchComplete(int);
+    HRESULT DeviceAdded(int lFindData, IUPnPDevice pDevice);
+    HRESULT DeviceRemoved(int lFindData, BSTR bstrUDN);
+    HRESULT SearchComplete(int lFindData);
 }
 enum IID_IUPnPServices = GUID(0x3f8c8e9e, 0x9a7a, 0x4dc8, [0xbc, 0x41, 0xff, 0x31, 0xfa, 0x37, 0x49, 0x56]);
 interface IUPnPServices : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(BSTR, IUPnPService*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* ppunk);
+    HRESULT get_Item(BSTR bstrServiceId, IUPnPService* ppService);
 }
 enum IID_IUPnPService = GUID(0xa295019c, 0xdc65, 0x47dd, [0x90, 0xdc, 0x7f, 0xe9, 0x18, 0xa1, 0xab, 0x44]);
 interface IUPnPService : IDispatch
 {
-    HRESULT QueryStateVariable(BSTR, VARIANT*);
-    HRESULT InvokeAction(BSTR, VARIANT, VARIANT*, VARIANT*);
-    HRESULT get_ServiceTypeIdentifier(BSTR*);
-    HRESULT AddCallback(IUnknown);
-    HRESULT get_Id(BSTR*);
-    HRESULT get_LastTransportStatus(int*);
+    HRESULT QueryStateVariable(BSTR bstrVariableName, VARIANT* pValue);
+    HRESULT InvokeAction(BSTR bstrActionName, VARIANT vInActionArgs, VARIANT* pvOutActionArgs, VARIANT* pvRetVal);
+    HRESULT get_ServiceTypeIdentifier(BSTR* pVal);
+    HRESULT AddCallback(IUnknown pUnkCallback);
+    HRESULT get_Id(BSTR* pbstrId);
+    HRESULT get_LastTransportStatus(int* plValue);
 }
 enum IID_IUPnPAsyncResult = GUID(0x4d65fd08, 0xd13e, 0x4274, [0x9c, 0x8b, 0xdd, 0x8d, 0x2, 0x8c, 0x86, 0x44]);
 interface IUPnPAsyncResult : IUnknown
 {
-    HRESULT AsyncOperationComplete(ulong);
+    HRESULT AsyncOperationComplete(ulong ullRequestID);
 }
 enum IID_IUPnPServiceAsync = GUID(0x98bdaf5, 0x5ec1, 0x49e7, [0xa2, 0x60, 0xb3, 0xa1, 0x1d, 0xd8, 0x68, 0xc]);
 interface IUPnPServiceAsync : IUnknown
 {
-    HRESULT BeginInvokeAction(BSTR, VARIANT, IUPnPAsyncResult, ulong*);
-    HRESULT EndInvokeAction(ulong, VARIANT*, VARIANT*);
-    HRESULT BeginQueryStateVariable(BSTR, IUPnPAsyncResult, ulong*);
-    HRESULT EndQueryStateVariable(ulong, VARIANT*);
-    HRESULT BeginSubscribeToEvents(IUnknown, IUPnPAsyncResult, ulong*);
-    HRESULT EndSubscribeToEvents(ulong);
-    HRESULT BeginSCPDDownload(IUPnPAsyncResult, ulong*);
-    HRESULT EndSCPDDownload(ulong, BSTR*);
-    HRESULT CancelAsyncOperation(ulong);
+    HRESULT BeginInvokeAction(BSTR bstrActionName, VARIANT vInActionArgs, IUPnPAsyncResult pAsyncResult, ulong* pullRequestID);
+    HRESULT EndInvokeAction(ulong ullRequestID, VARIANT* pvOutActionArgs, VARIANT* pvRetVal);
+    HRESULT BeginQueryStateVariable(BSTR bstrVariableName, IUPnPAsyncResult pAsyncResult, ulong* pullRequestID);
+    HRESULT EndQueryStateVariable(ulong ullRequestID, VARIANT* pValue);
+    HRESULT BeginSubscribeToEvents(IUnknown pUnkCallback, IUPnPAsyncResult pAsyncResult, ulong* pullRequestID);
+    HRESULT EndSubscribeToEvents(ulong ullRequestID);
+    HRESULT BeginSCPDDownload(IUPnPAsyncResult pAsyncResult, ulong* pullRequestID);
+    HRESULT EndSCPDDownload(ulong ullRequestID, BSTR* pbstrSCPDDoc);
+    HRESULT CancelAsyncOperation(ulong ullRequestID);
 }
 enum IID_IUPnPServiceCallback = GUID(0x31fadca9, 0xab73, 0x464b, [0xb6, 0x7d, 0x5c, 0x1d, 0xf, 0x83, 0xc8, 0xb8]);
 interface IUPnPServiceCallback : IUnknown
 {
-    HRESULT StateVariableChanged(IUPnPService, const(wchar)*, VARIANT);
-    HRESULT ServiceInstanceDied(IUPnPService);
+    HRESULT StateVariableChanged(IUPnPService pus, const(wchar)* pcwszStateVarName, VARIANT vaValue);
+    HRESULT ServiceInstanceDied(IUPnPService pus);
 }
 enum IID_IUPnPServiceEnumProperty = GUID(0x38873b37, 0x91bb, 0x49f4, [0xb2, 0x49, 0x2e, 0x8e, 0xfb, 0xb8, 0xa8, 0x16]);
 interface IUPnPServiceEnumProperty : IUnknown
 {
-    HRESULT SetServiceEnumProperty(uint);
+    HRESULT SetServiceEnumProperty(uint dwMask);
 }
 enum IID_IUPnPServiceDocumentAccess = GUID(0x21905529, 0xa5e, 0x4589, [0x82, 0x5d, 0x7e, 0x6d, 0x87, 0xea, 0x69, 0x98]);
 interface IUPnPServiceDocumentAccess : IUnknown
 {
-    HRESULT GetDocumentURL(BSTR*);
-    HRESULT GetDocument(BSTR*);
+    HRESULT GetDocumentURL(BSTR* pbstrDocUrl);
+    HRESULT GetDocument(BSTR* pbstrDoc);
 }
 enum IID_IUPnPDevices = GUID(0xfdbc0c73, 0xbda3, 0x4c66, [0xac, 0x4f, 0xf2, 0xd9, 0x6f, 0xda, 0xd6, 0x8c]);
 interface IUPnPDevices : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(BSTR, IUPnPDevice*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* ppunk);
+    HRESULT get_Item(BSTR bstrUDN, IUPnPDevice* ppDevice);
 }
 enum IID_IUPnPDevice = GUID(0x3d44d0d1, 0x98c9, 0x4889, [0xac, 0xd1, 0xf9, 0xd6, 0x74, 0xbf, 0x22, 0x21]);
 interface IUPnPDevice : IDispatch
 {
-    HRESULT get_IsRootDevice(VARIANT_BOOL*);
-    HRESULT get_RootDevice(IUPnPDevice*);
-    HRESULT get_ParentDevice(IUPnPDevice*);
-    HRESULT get_HasChildren(VARIANT_BOOL*);
-    HRESULT get_Children(IUPnPDevices*);
-    HRESULT get_UniqueDeviceName(BSTR*);
-    HRESULT get_FriendlyName(BSTR*);
-    HRESULT get_Type(BSTR*);
-    HRESULT get_PresentationURL(BSTR*);
-    HRESULT get_ManufacturerName(BSTR*);
-    HRESULT get_ManufacturerURL(BSTR*);
-    HRESULT get_ModelName(BSTR*);
-    HRESULT get_ModelNumber(BSTR*);
-    HRESULT get_Description(BSTR*);
-    HRESULT get_ModelURL(BSTR*);
-    HRESULT get_UPC(BSTR*);
-    HRESULT get_SerialNumber(BSTR*);
-    HRESULT IconURL(BSTR, int, int, int, BSTR*);
-    HRESULT get_Services(IUPnPServices*);
+    HRESULT get_IsRootDevice(VARIANT_BOOL* pvarb);
+    HRESULT get_RootDevice(IUPnPDevice* ppudRootDevice);
+    HRESULT get_ParentDevice(IUPnPDevice* ppudDeviceParent);
+    HRESULT get_HasChildren(VARIANT_BOOL* pvarb);
+    HRESULT get_Children(IUPnPDevices* ppudChildren);
+    HRESULT get_UniqueDeviceName(BSTR* pbstr);
+    HRESULT get_FriendlyName(BSTR* pbstr);
+    HRESULT get_Type(BSTR* pbstr);
+    HRESULT get_PresentationURL(BSTR* pbstr);
+    HRESULT get_ManufacturerName(BSTR* pbstr);
+    HRESULT get_ManufacturerURL(BSTR* pbstr);
+    HRESULT get_ModelName(BSTR* pbstr);
+    HRESULT get_ModelNumber(BSTR* pbstr);
+    HRESULT get_Description(BSTR* pbstr);
+    HRESULT get_ModelURL(BSTR* pbstr);
+    HRESULT get_UPC(BSTR* pbstr);
+    HRESULT get_SerialNumber(BSTR* pbstr);
+    HRESULT IconURL(BSTR bstrEncodingFormat, int lSizeX, int lSizeY, int lBitDepth, BSTR* pbstrIconURL);
+    HRESULT get_Services(IUPnPServices* ppusServices);
 }
 enum IID_IUPnPDeviceDocumentAccess = GUID(0xe7772804, 0x3287, 0x418e, [0x90, 0x72, 0xcf, 0x2b, 0x47, 0x23, 0x89, 0x81]);
 interface IUPnPDeviceDocumentAccess : IUnknown
 {
-    HRESULT GetDocumentURL(BSTR*);
+    HRESULT GetDocumentURL(BSTR* pbstrDocument);
 }
 enum IID_IUPnPDeviceDocumentAccessEx = GUID(0xc4bc4050, 0x6178, 0x4bd1, [0xa4, 0xb8, 0x63, 0x98, 0x32, 0x1f, 0x32, 0x47]);
 interface IUPnPDeviceDocumentAccessEx : IUnknown
 {
-    HRESULT GetDocument(BSTR*);
+    HRESULT GetDocument(BSTR* pbstrDocument);
 }
 enum IID_IUPnPDescriptionDocument = GUID(0x11d1c1b2, 0x7daa, 0x4c9e, [0x95, 0x95, 0x7f, 0x82, 0xed, 0x20, 0x6d, 0x1e]);
 interface IUPnPDescriptionDocument : IDispatch
 {
-    HRESULT get_ReadyState(int*);
-    HRESULT Load(BSTR);
-    HRESULT LoadAsync(BSTR, IUnknown);
-    HRESULT get_LoadResult(int*);
+    HRESULT get_ReadyState(int* plReadyState);
+    HRESULT Load(BSTR bstrUrl);
+    HRESULT LoadAsync(BSTR bstrUrl, IUnknown punkCallback);
+    HRESULT get_LoadResult(int* phrError);
     HRESULT Abort();
-    HRESULT RootDevice(IUPnPDevice*);
-    HRESULT DeviceByUDN(BSTR, IUPnPDevice*);
+    HRESULT RootDevice(IUPnPDevice* ppudRootDevice);
+    HRESULT DeviceByUDN(BSTR bstrUDN, IUPnPDevice* ppudDevice);
 }
 enum IID_IUPnPDeviceFinderAddCallbackWithInterface = GUID(0x983dfc0b, 0x1796, 0x44df, [0x89, 0x75, 0xca, 0x54, 0x5b, 0x62, 0xe, 0xe5]);
 interface IUPnPDeviceFinderAddCallbackWithInterface : IUnknown
 {
-    HRESULT DeviceAddedWithInterface(int, IUPnPDevice, GUID*);
+    HRESULT DeviceAddedWithInterface(int lFindData, IUPnPDevice pDevice, GUID* pguidInterface);
 }
 enum IID_IUPnPDescriptionDocumentCallback = GUID(0x77394c69, 0x5486, 0x40d6, [0x9b, 0xc3, 0x49, 0x91, 0x98, 0x3e, 0x2, 0xda]);
 interface IUPnPDescriptionDocumentCallback : IUnknown
 {
-    HRESULT LoadComplete(HRESULT);
+    HRESULT LoadComplete(HRESULT hrLoadResult);
 }
 enum CLSID_UPnPDeviceFinder = GUID(0xe2085f28, 0xfeb7, 0x404a, [0xb8, 0xe7, 0xe6, 0x59, 0xbd, 0xea, 0xaa, 0x2]);
 struct UPnPDeviceFinder
@@ -273,54 +273,54 @@ struct UPnPDescriptionDocumentEx
 enum IID_IUPnPEventSink = GUID(0x204810b4, 0x73b2, 0x11d4, [0xbf, 0x42, 0x0, 0xb0, 0xd0, 0x11, 0x8b, 0x56]);
 interface IUPnPEventSink : IUnknown
 {
-    HRESULT OnStateChanged(uint, int*);
-    HRESULT OnStateChangedSafe(VARIANT);
+    HRESULT OnStateChanged(uint cChanges, int* rgdispidChanges);
+    HRESULT OnStateChangedSafe(VARIANT varsadispidChanges);
 }
 enum IID_IUPnPEventSource = GUID(0x204810b5, 0x73b2, 0x11d4, [0xbf, 0x42, 0x0, 0xb0, 0xd0, 0x11, 0x8b, 0x56]);
 interface IUPnPEventSource : IUnknown
 {
-    HRESULT Advise(IUPnPEventSink);
-    HRESULT Unadvise(IUPnPEventSink);
+    HRESULT Advise(IUPnPEventSink pesSubscriber);
+    HRESULT Unadvise(IUPnPEventSink pesSubscriber);
 }
 enum IID_IUPnPRegistrar = GUID(0x204810b6, 0x73b2, 0x11d4, [0xbf, 0x42, 0x0, 0xb0, 0xd0, 0x11, 0x8b, 0x56]);
 interface IUPnPRegistrar : IUnknown
 {
-    HRESULT RegisterDevice(BSTR, BSTR, BSTR, BSTR, BSTR, int, BSTR*);
-    HRESULT RegisterRunningDevice(BSTR, IUnknown, BSTR, BSTR, int, BSTR*);
-    HRESULT RegisterDeviceProvider(BSTR, BSTR, BSTR, BSTR);
-    HRESULT GetUniqueDeviceName(BSTR, BSTR, BSTR*);
-    HRESULT UnregisterDevice(BSTR, BOOL);
-    HRESULT UnregisterDeviceProvider(BSTR);
+    HRESULT RegisterDevice(BSTR bstrXMLDesc, BSTR bstrProgIDDeviceControlClass, BSTR bstrInitString, BSTR bstrContainerId, BSTR bstrResourcePath, int nLifeTime, BSTR* pbstrDeviceIdentifier);
+    HRESULT RegisterRunningDevice(BSTR bstrXMLDesc, IUnknown punkDeviceControl, BSTR bstrInitString, BSTR bstrResourcePath, int nLifeTime, BSTR* pbstrDeviceIdentifier);
+    HRESULT RegisterDeviceProvider(BSTR bstrProviderName, BSTR bstrProgIDProviderClass, BSTR bstrInitString, BSTR bstrContainerId);
+    HRESULT GetUniqueDeviceName(BSTR bstrDeviceIdentifier, BSTR bstrTemplateUDN, BSTR* pbstrUDN);
+    HRESULT UnregisterDevice(BSTR bstrDeviceIdentifier, BOOL fPermanent);
+    HRESULT UnregisterDeviceProvider(BSTR bstrProviderName);
 }
 enum IID_IUPnPReregistrar = GUID(0x204810b7, 0x73b2, 0x11d4, [0xbf, 0x42, 0x0, 0xb0, 0xd0, 0x11, 0x8b, 0x56]);
 interface IUPnPReregistrar : IUnknown
 {
-    HRESULT ReregisterDevice(BSTR, BSTR, BSTR, BSTR, BSTR, BSTR, int);
-    HRESULT ReregisterRunningDevice(BSTR, BSTR, IUnknown, BSTR, BSTR, int);
+    HRESULT ReregisterDevice(BSTR bstrDeviceIdentifier, BSTR bstrXMLDesc, BSTR bstrProgIDDeviceControlClass, BSTR bstrInitString, BSTR bstrContainerId, BSTR bstrResourcePath, int nLifeTime);
+    HRESULT ReregisterRunningDevice(BSTR bstrDeviceIdentifier, BSTR bstrXMLDesc, IUnknown punkDeviceControl, BSTR bstrInitString, BSTR bstrResourcePath, int nLifeTime);
 }
 enum IID_IUPnPDeviceControl = GUID(0x204810ba, 0x73b2, 0x11d4, [0xbf, 0x42, 0x0, 0xb0, 0xd0, 0x11, 0x8b, 0x56]);
 interface IUPnPDeviceControl : IUnknown
 {
-    HRESULT Initialize(BSTR, BSTR, BSTR);
-    HRESULT GetServiceObject(BSTR, BSTR, IDispatch*);
+    HRESULT Initialize(BSTR bstrXMLDesc, BSTR bstrDeviceIdentifier, BSTR bstrInitString);
+    HRESULT GetServiceObject(BSTR bstrUDN, BSTR bstrServiceId, IDispatch* ppdispService);
 }
 enum IID_IUPnPDeviceControlHttpHeaders = GUID(0x204810bb, 0x73b2, 0x11d4, [0xbf, 0x42, 0x0, 0xb0, 0xd0, 0x11, 0x8b, 0x56]);
 interface IUPnPDeviceControlHttpHeaders : IUnknown
 {
-    HRESULT GetAdditionalResponseHeaders(BSTR*);
+    HRESULT GetAdditionalResponseHeaders(BSTR* bstrHttpResponseHeaders);
 }
 enum IID_IUPnPDeviceProvider = GUID(0x204810b8, 0x73b2, 0x11d4, [0xbf, 0x42, 0x0, 0xb0, 0xd0, 0x11, 0x8b, 0x56]);
 interface IUPnPDeviceProvider : IUnknown
 {
-    HRESULT Start(BSTR);
+    HRESULT Start(BSTR bstrInitString);
     HRESULT Stop();
 }
 enum IID_IUPnPRemoteEndpointInfo = GUID(0xc92eb863, 0x269, 0x4aff, [0x9c, 0x72, 0x75, 0x32, 0x1b, 0xba, 0x29, 0x52]);
 interface IUPnPRemoteEndpointInfo : IUnknown
 {
-    HRESULT GetDwordValue(BSTR, uint*);
-    HRESULT GetStringValue(BSTR, BSTR*);
-    HRESULT GetGuidValue(BSTR, GUID*);
+    HRESULT GetDwordValue(BSTR bstrValueName, uint* pdwValue);
+    HRESULT GetStringValue(BSTR bstrValueName, BSTR* pbstrValue);
+    HRESULT GetGuidValue(BSTR bstrValueName, GUID* pguidValue);
 }
 enum CLSID_UPnPRegistrar = GUID(0x204810b9, 0x73b2, 0x11d4, [0xbf, 0x42, 0x0, 0xb0, 0xd0, 0x11, 0x8b, 0x56]);
 struct UPnPRegistrar

@@ -5,17 +5,17 @@ import windows.win32.foundation : BOOL, FILETIME, PWSTR, WIN32_ERROR;
 version (Windows):
 extern (Windows):
 
-WIN32_ERROR RmStartSession(uint*, uint, PWSTR);
-WIN32_ERROR RmJoinSession(uint*, const(wchar)*);
-WIN32_ERROR RmEndSession(uint);
-WIN32_ERROR RmRegisterResources(uint, uint, const(wchar)**, uint, RM_UNIQUE_PROCESS*, uint, const(wchar)**);
-WIN32_ERROR RmGetList(uint, uint*, uint*, RM_PROCESS_INFO*, uint*);
-WIN32_ERROR RmShutdown(uint, uint, RM_WRITE_STATUS_CALLBACK);
-WIN32_ERROR RmRestart(uint, uint, RM_WRITE_STATUS_CALLBACK);
-WIN32_ERROR RmCancelCurrentTask(uint);
-WIN32_ERROR RmAddFilter(uint, const(wchar)*, RM_UNIQUE_PROCESS*, const(wchar)*, RM_FILTER_ACTION);
-WIN32_ERROR RmRemoveFilter(uint, const(wchar)*, RM_UNIQUE_PROCESS*, const(wchar)*);
-WIN32_ERROR RmGetFilterList(uint, ubyte*, uint, uint*);
+WIN32_ERROR RmStartSession(uint* pSessionHandle, uint dwSessionFlags, PWSTR strSessionKey);
+WIN32_ERROR RmJoinSession(uint* pSessionHandle, const(wchar)* strSessionKey);
+WIN32_ERROR RmEndSession(uint dwSessionHandle);
+WIN32_ERROR RmRegisterResources(uint dwSessionHandle, uint nFiles, const(wchar)** rgsFileNames, uint nApplications, RM_UNIQUE_PROCESS* rgApplications, uint nServices, const(wchar)** rgsServiceNames);
+WIN32_ERROR RmGetList(uint dwSessionHandle, uint* pnProcInfoNeeded, uint* pnProcInfo, RM_PROCESS_INFO* rgAffectedApps, uint* lpdwRebootReasons);
+WIN32_ERROR RmShutdown(uint dwSessionHandle, uint lActionFlags, RM_WRITE_STATUS_CALLBACK fnStatus);
+WIN32_ERROR RmRestart(uint dwSessionHandle, uint dwRestartFlags, RM_WRITE_STATUS_CALLBACK fnStatus);
+WIN32_ERROR RmCancelCurrentTask(uint dwSessionHandle);
+WIN32_ERROR RmAddFilter(uint dwSessionHandle, const(wchar)* strModuleName, RM_UNIQUE_PROCESS* pProcess, const(wchar)* strServiceShortName, RM_FILTER_ACTION FilterAction);
+WIN32_ERROR RmRemoveFilter(uint dwSessionHandle, const(wchar)* strModuleName, RM_UNIQUE_PROCESS* pProcess, const(wchar)* strServiceShortName);
+WIN32_ERROR RmGetFilterList(uint dwSessionHandle, ubyte* pbFilterBuf, uint cbFilterBuf, uint* cbFilterBufNeeded);
 enum CCH_RM_SESSION_KEY = 0x00000020;
 enum CCH_RM_MAX_APP_NAME = 0x000000ff;
 enum CCH_RM_MAX_SVC_NAME = 0x0000003f;
@@ -109,4 +109,4 @@ struct RM_FILTER_INFO
         PWSTR strServiceShortName;
     }
 }
-alias RM_WRITE_STATUS_CALLBACK = void function(uint);
+alias RM_WRITE_STATUS_CALLBACK = void function(uint nPercentComplete);

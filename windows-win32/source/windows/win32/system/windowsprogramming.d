@@ -24,219 +24,219 @@ enum : uint
     IF_ENTITY      = 0x00000200,
 }
 
-int uaw_lstrcmpW(ushort*, ushort*);
-int uaw_lstrcmpiW(ushort*, ushort*);
-int uaw_lstrlenW(ushort*);
-ushort* uaw_wcschr(ushort*, wchar);
-ushort* uaw_wcscpy(ushort*, ushort*);
-int uaw_wcsicmp(ushort*, ushort*);
-ulong uaw_wcslen(ushort*);
-ushort* uaw_wcsrchr(ushort*, wchar);
+int uaw_lstrcmpW(ushort* String1, ushort* String2);
+int uaw_lstrcmpiW(ushort* String1, ushort* String2);
+int uaw_lstrlenW(ushort* String);
+ushort* uaw_wcschr(ushort* String, wchar Character);
+ushort* uaw_wcscpy(ushort* Destination, ushort* Source);
+int uaw_wcsicmp(ushort* String1, ushort* String2);
+ulong uaw_wcslen(ushort* String);
+ushort* uaw_wcsrchr(ushort* String, wchar Character);
 ulong RtlGetReturnAddressHijackTarget();
-uint RtlRaiseCustomSystemEventTrigger(CUSTOM_SYSTEM_EVENT_TRIGGER_CONFIG*);
-BOOL IsApiSetImplemented(const(char)*);
-BOOL QueryThreadCycleTime(HANDLE, ulong*);
-BOOL QueryProcessCycleTime(HANDLE, ulong*);
-BOOL QueryIdleProcessorCycleTime(uint*, ulong*);
-BOOL QueryIdleProcessorCycleTimeEx(ushort, uint*, ulong*);
-void QueryInterruptTimePrecise(ulong*);
-void QueryUnbiasedInterruptTimePrecise(ulong*);
-void QueryInterruptTime(ulong*);
-BOOL QueryUnbiasedInterruptTime(ulong*);
-HRESULT QueryAuxiliaryCounterFrequency(ulong*);
-HRESULT ConvertAuxiliaryCounterToPerformanceCounter(ulong, ulong*, ulong*);
-HRESULT ConvertPerformanceCounterToAuxiliaryCounter(ulong, ulong*, ulong*);
-ulong GlobalCompact(uint);
-void GlobalFix(HGLOBAL);
-void GlobalUnfix(HGLOBAL);
-void* GlobalWire(HGLOBAL);
-BOOL GlobalUnWire(HGLOBAL);
-ulong LocalShrink(HLOCAL, uint);
-ulong LocalCompact(uint);
-BOOL SetEnvironmentStringsA(PSTR);
-uint SetHandleCount(uint);
-BOOL RequestDeviceWakeup(HANDLE);
-BOOL CancelDeviceWakeupRequest(HANDLE);
-BOOL SetMessageWaitingIndicator(HANDLE, uint);
-int MulDiv(int, int, int);
-BOOL GetSystemRegistryQuota(uint*, uint*);
-BOOL FileTimeToDosDateTime(const(FILETIME)*, ushort*, ushort*);
-BOOL DosDateTimeToFileTime(ushort, ushort, FILETIME*);
-int _lopen(const(char)*, int);
-int _lcreat(const(char)*, int);
-uint _lread(int, void*, uint);
-uint _lwrite(int, const(char)*, uint);
-int _hread(int, void*, int);
-int _hwrite(int, const(char)*, int);
-int _lclose(int);
-int _llseek(int, int, int);
-HANDLE OpenMutexA(uint, BOOL, const(char)*);
-HANDLE OpenSemaphoreA(uint, BOOL, const(char)*);
-uint GetFirmwareEnvironmentVariableA(const(char)*, const(char)*, void*, uint);
-uint GetFirmwareEnvironmentVariableW(const(wchar)*, const(wchar)*, void*, uint);
-uint GetFirmwareEnvironmentVariableExA(const(char)*, const(char)*, void*, uint, uint*);
-uint GetFirmwareEnvironmentVariableExW(const(wchar)*, const(wchar)*, void*, uint, uint*);
-BOOL SetFirmwareEnvironmentVariableA(const(char)*, const(char)*, void*, uint);
-BOOL SetFirmwareEnvironmentVariableW(const(wchar)*, const(wchar)*, void*, uint);
-BOOL SetFirmwareEnvironmentVariableExA(const(char)*, const(char)*, void*, uint, uint);
-BOOL SetFirmwareEnvironmentVariableExW(const(wchar)*, const(wchar)*, void*, uint, uint);
-BOOL IsNativeVhdBoot(BOOL*);
-uint GetProfileIntA(const(char)*, const(char)*, int);
-uint GetProfileIntW(const(wchar)*, const(wchar)*, int);
-uint GetProfileStringA(const(char)*, const(char)*, const(char)*, PSTR, uint);
-uint GetProfileStringW(const(wchar)*, const(wchar)*, const(wchar)*, PWSTR, uint);
-BOOL WriteProfileStringA(const(char)*, const(char)*, const(char)*);
-BOOL WriteProfileStringW(const(wchar)*, const(wchar)*, const(wchar)*);
-uint GetProfileSectionA(const(char)*, PSTR, uint);
-uint GetProfileSectionW(const(wchar)*, PWSTR, uint);
-BOOL WriteProfileSectionA(const(char)*, const(char)*);
-BOOL WriteProfileSectionW(const(wchar)*, const(wchar)*);
-uint GetPrivateProfileIntA(const(char)*, const(char)*, int, const(char)*);
-int GetPrivateProfileIntW(const(wchar)*, const(wchar)*, int, const(wchar)*);
-uint GetPrivateProfileStringA(const(char)*, const(char)*, const(char)*, PSTR, uint, const(char)*);
-uint GetPrivateProfileStringW(const(wchar)*, const(wchar)*, const(wchar)*, PWSTR, uint, const(wchar)*);
-BOOL WritePrivateProfileStringA(const(char)*, const(char)*, const(char)*, const(char)*);
-BOOL WritePrivateProfileStringW(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*);
-uint GetPrivateProfileSectionA(const(char)*, PSTR, uint, const(char)*);
-uint GetPrivateProfileSectionW(const(wchar)*, PWSTR, uint, const(wchar)*);
-BOOL WritePrivateProfileSectionA(const(char)*, const(char)*, const(char)*);
-BOOL WritePrivateProfileSectionW(const(wchar)*, const(wchar)*, const(wchar)*);
-uint GetPrivateProfileSectionNamesA(PSTR, uint, const(char)*);
-uint GetPrivateProfileSectionNamesW(PWSTR, uint, const(wchar)*);
-BOOL GetPrivateProfileStructA(const(char)*, const(char)*, void*, uint, const(char)*);
-BOOL GetPrivateProfileStructW(const(wchar)*, const(wchar)*, void*, uint, const(wchar)*);
-BOOL WritePrivateProfileStructA(const(char)*, const(char)*, void*, uint, const(char)*);
-BOOL WritePrivateProfileStructW(const(wchar)*, const(wchar)*, void*, uint, const(wchar)*);
-BOOL IsBadHugeReadPtr(const(void)*, ulong);
-BOOL IsBadHugeWritePtr(void*, ulong);
-BOOL GetComputerNameA(PSTR, uint*);
-BOOL GetComputerNameW(PWSTR, uint*);
-BOOL DnsHostnameToComputerNameA(const(char)*, PSTR, uint*);
-BOOL DnsHostnameToComputerNameW(const(wchar)*, PWSTR, uint*);
-BOOL GetUserNameA(PSTR, uint*);
-BOOL GetUserNameW(PWSTR, uint*);
-BOOL IsTokenUntrusted(HANDLE);
-BOOL GetCurrentHwProfileA(HW_PROFILE_INFOA*);
-BOOL GetCurrentHwProfileW(HW_PROFILE_INFOW*);
-BOOL ReplacePartitionUnit(PWSTR, PWSTR, uint);
+uint RtlRaiseCustomSystemEventTrigger(CUSTOM_SYSTEM_EVENT_TRIGGER_CONFIG* TriggerConfig);
+BOOL IsApiSetImplemented(const(char)* Contract);
+BOOL QueryThreadCycleTime(HANDLE ThreadHandle, ulong* CycleTime);
+BOOL QueryProcessCycleTime(HANDLE ProcessHandle, ulong* CycleTime);
+BOOL QueryIdleProcessorCycleTime(uint* BufferLength, ulong* ProcessorIdleCycleTime);
+BOOL QueryIdleProcessorCycleTimeEx(ushort Group, uint* BufferLength, ulong* ProcessorIdleCycleTime);
+void QueryInterruptTimePrecise(ulong* lpInterruptTimePrecise);
+void QueryUnbiasedInterruptTimePrecise(ulong* lpUnbiasedInterruptTimePrecise);
+void QueryInterruptTime(ulong* lpInterruptTime);
+BOOL QueryUnbiasedInterruptTime(ulong* UnbiasedTime);
+HRESULT QueryAuxiliaryCounterFrequency(ulong* lpAuxiliaryCounterFrequency);
+HRESULT ConvertAuxiliaryCounterToPerformanceCounter(ulong ullAuxiliaryCounterValue, ulong* lpPerformanceCounterValue, ulong* lpConversionError);
+HRESULT ConvertPerformanceCounterToAuxiliaryCounter(ulong ullPerformanceCounterValue, ulong* lpAuxiliaryCounterValue, ulong* lpConversionError);
+ulong GlobalCompact(uint dwMinFree);
+void GlobalFix(HGLOBAL hMem);
+void GlobalUnfix(HGLOBAL hMem);
+void* GlobalWire(HGLOBAL hMem);
+BOOL GlobalUnWire(HGLOBAL hMem);
+ulong LocalShrink(HLOCAL hMem, uint cbNewSize);
+ulong LocalCompact(uint uMinFree);
+BOOL SetEnvironmentStringsA(PSTR NewEnvironment);
+uint SetHandleCount(uint uNumber);
+BOOL RequestDeviceWakeup(HANDLE hDevice);
+BOOL CancelDeviceWakeupRequest(HANDLE hDevice);
+BOOL SetMessageWaitingIndicator(HANDLE hMsgIndicator, uint ulMsgCount);
+int MulDiv(int nNumber, int nNumerator, int nDenominator);
+BOOL GetSystemRegistryQuota(uint* pdwQuotaAllowed, uint* pdwQuotaUsed);
+BOOL FileTimeToDosDateTime(const(FILETIME)* lpFileTime, ushort* lpFatDate, ushort* lpFatTime);
+BOOL DosDateTimeToFileTime(ushort wFatDate, ushort wFatTime, FILETIME* lpFileTime);
+int _lopen(const(char)* lpPathName, int iReadWrite);
+int _lcreat(const(char)* lpPathName, int iAttribute);
+uint _lread(int hFile, void* lpBuffer, uint uBytes);
+uint _lwrite(int hFile, const(char)* lpBuffer, uint uBytes);
+int _hread(int hFile, void* lpBuffer, int lBytes);
+int _hwrite(int hFile, const(char)* lpBuffer, int lBytes);
+int _lclose(int hFile);
+int _llseek(int hFile, int lOffset, int iOrigin);
+HANDLE OpenMutexA(uint dwDesiredAccess, BOOL bInheritHandle, const(char)* lpName);
+HANDLE OpenSemaphoreA(uint dwDesiredAccess, BOOL bInheritHandle, const(char)* lpName);
+uint GetFirmwareEnvironmentVariableA(const(char)* lpName, const(char)* lpGuid, void* pBuffer, uint nSize);
+uint GetFirmwareEnvironmentVariableW(const(wchar)* lpName, const(wchar)* lpGuid, void* pBuffer, uint nSize);
+uint GetFirmwareEnvironmentVariableExA(const(char)* lpName, const(char)* lpGuid, void* pBuffer, uint nSize, uint* pdwAttribubutes);
+uint GetFirmwareEnvironmentVariableExW(const(wchar)* lpName, const(wchar)* lpGuid, void* pBuffer, uint nSize, uint* pdwAttribubutes);
+BOOL SetFirmwareEnvironmentVariableA(const(char)* lpName, const(char)* lpGuid, void* pValue, uint nSize);
+BOOL SetFirmwareEnvironmentVariableW(const(wchar)* lpName, const(wchar)* lpGuid, void* pValue, uint nSize);
+BOOL SetFirmwareEnvironmentVariableExA(const(char)* lpName, const(char)* lpGuid, void* pValue, uint nSize, uint dwAttributes);
+BOOL SetFirmwareEnvironmentVariableExW(const(wchar)* lpName, const(wchar)* lpGuid, void* pValue, uint nSize, uint dwAttributes);
+BOOL IsNativeVhdBoot(BOOL* NativeVhdBoot);
+uint GetProfileIntA(const(char)* lpAppName, const(char)* lpKeyName, int nDefault);
+uint GetProfileIntW(const(wchar)* lpAppName, const(wchar)* lpKeyName, int nDefault);
+uint GetProfileStringA(const(char)* lpAppName, const(char)* lpKeyName, const(char)* lpDefault, PSTR lpReturnedString, uint nSize);
+uint GetProfileStringW(const(wchar)* lpAppName, const(wchar)* lpKeyName, const(wchar)* lpDefault, PWSTR lpReturnedString, uint nSize);
+BOOL WriteProfileStringA(const(char)* lpAppName, const(char)* lpKeyName, const(char)* lpString);
+BOOL WriteProfileStringW(const(wchar)* lpAppName, const(wchar)* lpKeyName, const(wchar)* lpString);
+uint GetProfileSectionA(const(char)* lpAppName, PSTR lpReturnedString, uint nSize);
+uint GetProfileSectionW(const(wchar)* lpAppName, PWSTR lpReturnedString, uint nSize);
+BOOL WriteProfileSectionA(const(char)* lpAppName, const(char)* lpString);
+BOOL WriteProfileSectionW(const(wchar)* lpAppName, const(wchar)* lpString);
+uint GetPrivateProfileIntA(const(char)* lpAppName, const(char)* lpKeyName, int nDefault, const(char)* lpFileName);
+int GetPrivateProfileIntW(const(wchar)* lpAppName, const(wchar)* lpKeyName, int nDefault, const(wchar)* lpFileName);
+uint GetPrivateProfileStringA(const(char)* lpAppName, const(char)* lpKeyName, const(char)* lpDefault, PSTR lpReturnedString, uint nSize, const(char)* lpFileName);
+uint GetPrivateProfileStringW(const(wchar)* lpAppName, const(wchar)* lpKeyName, const(wchar)* lpDefault, PWSTR lpReturnedString, uint nSize, const(wchar)* lpFileName);
+BOOL WritePrivateProfileStringA(const(char)* lpAppName, const(char)* lpKeyName, const(char)* lpString, const(char)* lpFileName);
+BOOL WritePrivateProfileStringW(const(wchar)* lpAppName, const(wchar)* lpKeyName, const(wchar)* lpString, const(wchar)* lpFileName);
+uint GetPrivateProfileSectionA(const(char)* lpAppName, PSTR lpReturnedString, uint nSize, const(char)* lpFileName);
+uint GetPrivateProfileSectionW(const(wchar)* lpAppName, PWSTR lpReturnedString, uint nSize, const(wchar)* lpFileName);
+BOOL WritePrivateProfileSectionA(const(char)* lpAppName, const(char)* lpString, const(char)* lpFileName);
+BOOL WritePrivateProfileSectionW(const(wchar)* lpAppName, const(wchar)* lpString, const(wchar)* lpFileName);
+uint GetPrivateProfileSectionNamesA(PSTR lpszReturnBuffer, uint nSize, const(char)* lpFileName);
+uint GetPrivateProfileSectionNamesW(PWSTR lpszReturnBuffer, uint nSize, const(wchar)* lpFileName);
+BOOL GetPrivateProfileStructA(const(char)* lpszSection, const(char)* lpszKey, void* lpStruct, uint uSizeStruct, const(char)* szFile);
+BOOL GetPrivateProfileStructW(const(wchar)* lpszSection, const(wchar)* lpszKey, void* lpStruct, uint uSizeStruct, const(wchar)* szFile);
+BOOL WritePrivateProfileStructA(const(char)* lpszSection, const(char)* lpszKey, void* lpStruct, uint uSizeStruct, const(char)* szFile);
+BOOL WritePrivateProfileStructW(const(wchar)* lpszSection, const(wchar)* lpszKey, void* lpStruct, uint uSizeStruct, const(wchar)* szFile);
+BOOL IsBadHugeReadPtr(const(void)* lp, ulong ucb);
+BOOL IsBadHugeWritePtr(void* lp, ulong ucb);
+BOOL GetComputerNameA(PSTR lpBuffer, uint* nSize);
+BOOL GetComputerNameW(PWSTR lpBuffer, uint* nSize);
+BOOL DnsHostnameToComputerNameA(const(char)* Hostname, PSTR ComputerName, uint* nSize);
+BOOL DnsHostnameToComputerNameW(const(wchar)* Hostname, PWSTR ComputerName, uint* nSize);
+BOOL GetUserNameA(PSTR lpBuffer, uint* pcbBuffer);
+BOOL GetUserNameW(PWSTR lpBuffer, uint* pcbBuffer);
+BOOL IsTokenUntrusted(HANDLE TokenHandle);
+BOOL GetCurrentHwProfileA(HW_PROFILE_INFOA* lpHwProfileInfo);
+BOOL GetCurrentHwProfileW(HW_PROFILE_INFOW* lpHwProfileInfo);
+BOOL ReplacePartitionUnit(PWSTR TargetPartition, PWSTR SparePartition, uint Flags);
 ulong GetThreadEnabledXStateFeatures();
-BOOL EnableProcessOptionalXStateFeatures(ulong);
-uint RaiseCustomSystemEventTrigger(CUSTOM_SYSTEM_EVENT_TRIGGER_CONFIG*);
-BOOLEAN RtlIsNameLegalDOS8Dot3(UNICODE_STRING*, STRING*, BOOLEAN*);
-NTSTATUS RtlLocalTimeToSystemTime(long*, long*);
-BOOLEAN RtlTimeToSecondsSince1970(long*, uint*);
-void RtlFreeAnsiString(STRING*);
-void RtlFreeUnicodeString(UNICODE_STRING*);
-void RtlFreeOemString(STRING*);
-void RtlInitString(STRING*, byte*);
-NTSTATUS RtlInitStringEx(STRING*, byte*);
-void RtlInitAnsiString(STRING*, byte*);
-NTSTATUS RtlInitAnsiStringEx(STRING*, byte*);
-void RtlInitUnicodeString(UNICODE_STRING*, const(wchar)*);
-NTSTATUS RtlAnsiStringToUnicodeString(UNICODE_STRING*, STRING*, BOOLEAN);
-NTSTATUS RtlUnicodeStringToAnsiString(STRING*, UNICODE_STRING*, BOOLEAN);
-NTSTATUS RtlUnicodeStringToOemString(STRING*, UNICODE_STRING*, BOOLEAN);
-NTSTATUS RtlUnicodeToMultiByteSize(uint*, PWSTR, uint);
-NTSTATUS RtlCharToInteger(byte*, uint, uint*);
-uint RtlUniform(uint*);
-FEATURE_ENABLED_STATE GetFeatureEnabledState(uint, FEATURE_CHANGE_TIME);
-void RecordFeatureUsage(uint, uint, uint, const(char)*);
-void RecordFeatureError(uint, const(FEATURE_ERROR)*);
-void SubscribeFeatureStateChangeNotification(FEATURE_STATE_CHANGE_SUBSCRIPTION*, PFEATURE_STATE_CHANGE_CALLBACK, void*);
-void UnsubscribeFeatureStateChangeNotification(FEATURE_STATE_CHANGE_SUBSCRIPTION);
-uint GetFeatureVariant(uint, FEATURE_CHANGE_TIME, uint*, BOOL*);
+BOOL EnableProcessOptionalXStateFeatures(ulong Features);
+uint RaiseCustomSystemEventTrigger(CUSTOM_SYSTEM_EVENT_TRIGGER_CONFIG* CustomSystemEventTriggerConfig);
+BOOLEAN RtlIsNameLegalDOS8Dot3(UNICODE_STRING* Name, STRING* OemName, BOOLEAN* NameContainsSpaces);
+NTSTATUS RtlLocalTimeToSystemTime(long* LocalTime, long* SystemTime);
+BOOLEAN RtlTimeToSecondsSince1970(long* Time, uint* ElapsedSeconds);
+void RtlFreeAnsiString(STRING* AnsiString);
+void RtlFreeUnicodeString(UNICODE_STRING* UnicodeString);
+void RtlFreeOemString(STRING* OemString);
+void RtlInitString(STRING* DestinationString, byte* SourceString);
+NTSTATUS RtlInitStringEx(STRING* DestinationString, byte* SourceString);
+void RtlInitAnsiString(STRING* DestinationString, byte* SourceString);
+NTSTATUS RtlInitAnsiStringEx(STRING* DestinationString, byte* SourceString);
+void RtlInitUnicodeString(UNICODE_STRING* DestinationString, const(wchar)* SourceString);
+NTSTATUS RtlAnsiStringToUnicodeString(UNICODE_STRING* DestinationString, STRING* SourceString, BOOLEAN AllocateDestinationString);
+NTSTATUS RtlUnicodeStringToAnsiString(STRING* DestinationString, UNICODE_STRING* SourceString, BOOLEAN AllocateDestinationString);
+NTSTATUS RtlUnicodeStringToOemString(STRING* DestinationString, UNICODE_STRING* SourceString, BOOLEAN AllocateDestinationString);
+NTSTATUS RtlUnicodeToMultiByteSize(uint* BytesInMultiByteString, PWSTR UnicodeString, uint BytesInUnicodeString);
+NTSTATUS RtlCharToInteger(byte* String, uint Base, uint* Value);
+uint RtlUniform(uint* Seed);
+FEATURE_ENABLED_STATE GetFeatureEnabledState(uint featureId, FEATURE_CHANGE_TIME changeTime);
+void RecordFeatureUsage(uint featureId, uint kind, uint addend, const(char)* originName);
+void RecordFeatureError(uint featureId, const(FEATURE_ERROR)* error);
+void SubscribeFeatureStateChangeNotification(FEATURE_STATE_CHANGE_SUBSCRIPTION* subscription, PFEATURE_STATE_CHANGE_CALLBACK callback, void* context);
+void UnsubscribeFeatureStateChangeNotification(FEATURE_STATE_CHANGE_SUBSCRIPTION subscription);
+uint GetFeatureVariant(uint featureId, FEATURE_CHANGE_TIME changeTime, uint* payloadId, BOOL* hasNotification);
 HDC DCIOpenProvider();
-void DCICloseProvider(HDC);
-int DCICreatePrimary(HDC, DCISURFACEINFO**);
-int DCICreateOffscreen(HDC, uint, uint, uint, uint, uint, uint, uint, uint, DCIOFFSCREEN**);
-int DCICreateOverlay(HDC, void*, DCIOVERLAY**);
-int DCIEnum(HDC, RECT*, RECT*, void*, void*);
-int DCISetSrcDestClip(DCIOFFSCREEN*, RECT*, RECT*, RGNDATA*);
-HWINWATCH WinWatchOpen(HWND);
-void WinWatchClose(HWINWATCH);
-uint WinWatchGetClipList(HWINWATCH, RECT*, uint, RGNDATA*);
-BOOL WinWatchDidStatusChange(HWINWATCH);
-uint GetWindowRegionData(HWND, uint, RGNDATA*);
-uint GetDCRegionData(HDC, uint, RGNDATA*);
-BOOL WinWatchNotify(HWINWATCH, WINWATCHNOTIFYPROC, LPARAM);
-void DCIEndAccess(DCISURFACEINFO*);
-int DCIBeginAccess(DCISURFACEINFO*, int, int, int, int);
-void DCIDestroy(DCISURFACEINFO*);
-int DCIDraw(DCIOFFSCREEN*);
-int DCISetClipList(DCIOFFSCREEN*, RGNDATA*);
-int DCISetDestination(DCIOFFSCREEN*, RECT*, RECT*);
+void DCICloseProvider(HDC hdc);
+int DCICreatePrimary(HDC hdc, DCISURFACEINFO** lplpSurface);
+int DCICreateOffscreen(HDC hdc, uint dwCompression, uint dwRedMask, uint dwGreenMask, uint dwBlueMask, uint dwWidth, uint dwHeight, uint dwDCICaps, uint dwBitCount, DCIOFFSCREEN** lplpSurface);
+int DCICreateOverlay(HDC hdc, void* lpOffscreenSurf, DCIOVERLAY** lplpSurface);
+int DCIEnum(HDC hdc, RECT* lprDst, RECT* lprSrc, void* lpFnCallback, void* lpContext);
+int DCISetSrcDestClip(DCIOFFSCREEN* pdci, RECT* srcrc, RECT* destrc, RGNDATA* prd);
+HWINWATCH WinWatchOpen(HWND hwnd);
+void WinWatchClose(HWINWATCH hWW);
+uint WinWatchGetClipList(HWINWATCH hWW, RECT* prc, uint size, RGNDATA* prd);
+BOOL WinWatchDidStatusChange(HWINWATCH hWW);
+uint GetWindowRegionData(HWND hwnd, uint size, RGNDATA* prd);
+uint GetDCRegionData(HDC hdc, uint size, RGNDATA* prd);
+BOOL WinWatchNotify(HWINWATCH hWW, WINWATCHNOTIFYPROC NotifyCallback, LPARAM NotifyParam);
+void DCIEndAccess(DCISURFACEINFO* pdci);
+int DCIBeginAccess(DCISURFACEINFO* pdci, int x, int y, int dx, int dy);
+void DCIDestroy(DCISURFACEINFO* pdci);
+int DCIDraw(DCIOFFSCREEN* pdci);
+int DCISetClipList(DCIOFFSCREEN* pdci, RGNDATA* prd);
+int DCISetDestination(DCIOFFSCREEN* pdci, RECT* dst, RECT* src);
 uint GdiEntry13();
-HRESULT RunSetupCommandA(HWND, const(char)*, const(char)*, const(char)*, const(char)*, HANDLE*, uint, void*);
-HRESULT RunSetupCommandW(HWND, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, HANDLE*, uint, void*);
+HRESULT RunSetupCommandA(HWND hWnd, const(char)* szCmdName, const(char)* szInfSection, const(char)* szDir, const(char)* lpszTitle, HANDLE* phEXE, uint dwFlags, void* pvReserved);
+HRESULT RunSetupCommandW(HWND hWnd, const(wchar)* szCmdName, const(wchar)* szInfSection, const(wchar)* szDir, const(wchar)* lpszTitle, HANDLE* phEXE, uint dwFlags, void* pvReserved);
 uint NeedRebootInit();
-BOOL NeedReboot(uint);
-HRESULT RebootCheckOnInstallA(HWND, const(char)*, const(char)*, uint);
-HRESULT RebootCheckOnInstallW(HWND, const(wchar)*, const(wchar)*, uint);
-HRESULT TranslateInfStringA(const(char)*, const(char)*, const(char)*, const(char)*, PSTR, uint, uint*, void*);
-HRESULT TranslateInfStringW(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, PWSTR, uint, uint*, void*);
-HRESULT RegInstallA(HMODULE, const(char)*, const(STRTABLEA)*);
-HRESULT RegInstallW(HMODULE, const(wchar)*, const(STRTABLEW)*);
-HRESULT LaunchINFSectionExW(HWND, HINSTANCE, PWSTR, int);
-HRESULT ExecuteCabA(HWND, CABINFOA*, void*);
-HRESULT ExecuteCabW(HWND, CABINFOW*, void*);
-HRESULT AdvInstallFileA(HWND, const(char)*, const(char)*, const(char)*, const(char)*, uint, uint);
-HRESULT AdvInstallFileW(HWND, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, uint, uint);
-HRESULT RegSaveRestoreA(HWND, const(char)*, HKEY, const(char)*, const(char)*, const(char)*, uint);
-HRESULT RegSaveRestoreW(HWND, const(wchar)*, HKEY, const(wchar)*, const(wchar)*, const(wchar)*, uint);
-HRESULT RegSaveRestoreOnINFA(HWND, const(char)*, const(char)*, const(char)*, HKEY, HKEY, uint);
-HRESULT RegSaveRestoreOnINFW(HWND, const(wchar)*, const(wchar)*, const(wchar)*, HKEY, HKEY, uint);
-HRESULT RegRestoreAllA(HWND, const(char)*, HKEY);
-HRESULT RegRestoreAllW(HWND, const(wchar)*, HKEY);
-HRESULT FileSaveRestoreW(HWND, PWSTR, const(wchar)*, const(wchar)*, uint);
-HRESULT FileSaveRestoreOnINFA(HWND, const(char)*, const(char)*, const(char)*, const(char)*, const(char)*, uint);
-HRESULT FileSaveRestoreOnINFW(HWND, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, uint);
-HRESULT AddDelBackupEntryA(const(char)*, const(char)*, const(char)*, uint);
-HRESULT AddDelBackupEntryW(const(wchar)*, const(wchar)*, const(wchar)*, uint);
-HRESULT FileSaveMarkNotExistA(const(char)*, const(char)*, const(char)*);
-HRESULT FileSaveMarkNotExistW(const(wchar)*, const(wchar)*, const(wchar)*);
-HRESULT GetVersionFromFileA(const(char)*, uint*, uint*, BOOL);
-HRESULT GetVersionFromFileW(const(wchar)*, uint*, uint*, BOOL);
-HRESULT GetVersionFromFileExA(const(char)*, uint*, uint*, BOOL);
-HRESULT GetVersionFromFileExW(const(wchar)*, uint*, uint*, BOOL);
-BOOL IsNTAdmin(uint, uint*);
-HRESULT DelNodeA(const(char)*, uint);
-HRESULT DelNodeW(const(wchar)*, uint);
-HRESULT DelNodeRunDLL32W(HWND, HINSTANCE, PWSTR, int);
-HRESULT OpenINFEngineA(const(char)*, const(char)*, uint, void**, void*);
-HRESULT OpenINFEngineW(const(wchar)*, const(wchar)*, uint, void**, void*);
-HRESULT TranslateInfStringExA(void*, const(char)*, const(char)*, const(char)*, PSTR, uint, uint*, void*);
-HRESULT TranslateInfStringExW(void*, const(wchar)*, const(wchar)*, const(wchar)*, PWSTR, uint, uint*, void*);
-HRESULT CloseINFEngine(void*);
-HRESULT ExtractFilesA(const(char)*, const(char)*, uint, const(char)*, void*, uint);
-HRESULT ExtractFilesW(const(wchar)*, const(wchar)*, uint, const(wchar)*, void*, uint);
-int LaunchINFSectionW(HWND, HINSTANCE, PWSTR, int);
-HRESULT UserInstStubWrapperA(HWND, HINSTANCE, const(char)*, int);
-HRESULT UserInstStubWrapperW(HWND, HINSTANCE, const(wchar)*, int);
-HRESULT UserUnInstStubWrapperA(HWND, HINSTANCE, const(char)*, int);
-HRESULT UserUnInstStubWrapperW(HWND, HINSTANCE, const(wchar)*, int);
-HRESULT SetPerUserSecValuesA(PERUSERSECTIONA*);
-HRESULT SetPerUserSecValuesW(PERUSERSECTIONW*);
-LRESULT SendIMEMessageExA(HWND, LPARAM);
-LRESULT SendIMEMessageExW(HWND, LPARAM);
-BOOL IMPGetIMEA(HWND, IMEPROA*);
-BOOL IMPGetIMEW(HWND, IMEPROW*);
-BOOL IMPQueryIMEA(IMEPROA*);
-BOOL IMPQueryIMEW(IMEPROW*);
-BOOL IMPSetIMEA(HWND, IMEPROA*);
-BOOL IMPSetIMEW(HWND, IMEPROW*);
-uint WINNLSGetIMEHotkey(HWND);
-BOOL WINNLSEnableIME(HWND, BOOL);
-BOOL WINNLSGetEnableStatus(HWND);
-BOOL ApphelpCheckShellObject(const(GUID)*, BOOL, ulong*);
-HRESULT WldpGetLockdownPolicy(WLDP_HOST_INFORMATION*, uint*, uint);
-HRESULT WldpIsClassInApprovedList(const(GUID)*, WLDP_HOST_INFORMATION*, BOOL*, uint);
-HRESULT WldpSetDynamicCodeTrust(HANDLE);
-HRESULT WldpIsDynamicCodePolicyEnabled(BOOL*);
-HRESULT WldpQueryDynamicCodeTrust(HANDLE, void*, uint);
-HRESULT WldpQueryDeviceSecurityInformation(WLDP_DEVICE_SECURITY_INFORMATION*, uint, uint*);
-HRESULT WldpCanExecuteFile(const(GUID)*, WLDP_EXECUTION_EVALUATION_OPTIONS, HANDLE, const(wchar)*, WLDP_EXECUTION_POLICY*);
-HRESULT WldpCanExecuteBuffer(const(GUID)*, WLDP_EXECUTION_EVALUATION_OPTIONS, const(ubyte)*, uint, const(wchar)*, WLDP_EXECUTION_POLICY*);
-HRESULT WldpCanExecuteStream(const(GUID)*, WLDP_EXECUTION_EVALUATION_OPTIONS, IStream, const(wchar)*, WLDP_EXECUTION_POLICY*);
+BOOL NeedReboot(uint dwRebootCheck);
+HRESULT RebootCheckOnInstallA(HWND hwnd, const(char)* pszINF, const(char)* pszSec, uint dwReserved);
+HRESULT RebootCheckOnInstallW(HWND hwnd, const(wchar)* pszINF, const(wchar)* pszSec, uint dwReserved);
+HRESULT TranslateInfStringA(const(char)* pszInfFilename, const(char)* pszInstallSection, const(char)* pszTranslateSection, const(char)* pszTranslateKey, PSTR pszBuffer, uint cchBuffer, uint* pdwRequiredSize, void* pvReserved);
+HRESULT TranslateInfStringW(const(wchar)* pszInfFilename, const(wchar)* pszInstallSection, const(wchar)* pszTranslateSection, const(wchar)* pszTranslateKey, PWSTR pszBuffer, uint cchBuffer, uint* pdwRequiredSize, void* pvReserved);
+HRESULT RegInstallA(HMODULE hmod, const(char)* pszSection, const(STRTABLEA)* pstTable);
+HRESULT RegInstallW(HMODULE hmod, const(wchar)* pszSection, const(STRTABLEW)* pstTable);
+HRESULT LaunchINFSectionExW(HWND hwnd, HINSTANCE hInstance, PWSTR pszParms, int nShow);
+HRESULT ExecuteCabA(HWND hwnd, CABINFOA* pCab, void* pReserved);
+HRESULT ExecuteCabW(HWND hwnd, CABINFOW* pCab, void* pReserved);
+HRESULT AdvInstallFileA(HWND hwnd, const(char)* lpszSourceDir, const(char)* lpszSourceFile, const(char)* lpszDestDir, const(char)* lpszDestFile, uint dwFlags, uint dwReserved);
+HRESULT AdvInstallFileW(HWND hwnd, const(wchar)* lpszSourceDir, const(wchar)* lpszSourceFile, const(wchar)* lpszDestDir, const(wchar)* lpszDestFile, uint dwFlags, uint dwReserved);
+HRESULT RegSaveRestoreA(HWND hWnd, const(char)* pszTitleString, HKEY hkBckupKey, const(char)* pcszRootKey, const(char)* pcszSubKey, const(char)* pcszValueName, uint dwFlags);
+HRESULT RegSaveRestoreW(HWND hWnd, const(wchar)* pszTitleString, HKEY hkBckupKey, const(wchar)* pcszRootKey, const(wchar)* pcszSubKey, const(wchar)* pcszValueName, uint dwFlags);
+HRESULT RegSaveRestoreOnINFA(HWND hWnd, const(char)* pszTitle, const(char)* pszINF, const(char)* pszSection, HKEY hHKLMBackKey, HKEY hHKCUBackKey, uint dwFlags);
+HRESULT RegSaveRestoreOnINFW(HWND hWnd, const(wchar)* pszTitle, const(wchar)* pszINF, const(wchar)* pszSection, HKEY hHKLMBackKey, HKEY hHKCUBackKey, uint dwFlags);
+HRESULT RegRestoreAllA(HWND hWnd, const(char)* pszTitleString, HKEY hkBckupKey);
+HRESULT RegRestoreAllW(HWND hWnd, const(wchar)* pszTitleString, HKEY hkBckupKey);
+HRESULT FileSaveRestoreW(HWND hDlg, PWSTR lpFileList, const(wchar)* lpDir, const(wchar)* lpBaseName, uint dwFlags);
+HRESULT FileSaveRestoreOnINFA(HWND hWnd, const(char)* pszTitle, const(char)* pszINF, const(char)* pszSection, const(char)* pszBackupDir, const(char)* pszBaseBackupFile, uint dwFlags);
+HRESULT FileSaveRestoreOnINFW(HWND hWnd, const(wchar)* pszTitle, const(wchar)* pszINF, const(wchar)* pszSection, const(wchar)* pszBackupDir, const(wchar)* pszBaseBackupFile, uint dwFlags);
+HRESULT AddDelBackupEntryA(const(char)* lpcszFileList, const(char)* lpcszBackupDir, const(char)* lpcszBaseName, uint dwFlags);
+HRESULT AddDelBackupEntryW(const(wchar)* lpcszFileList, const(wchar)* lpcszBackupDir, const(wchar)* lpcszBaseName, uint dwFlags);
+HRESULT FileSaveMarkNotExistA(const(char)* lpFileList, const(char)* lpDir, const(char)* lpBaseName);
+HRESULT FileSaveMarkNotExistW(const(wchar)* lpFileList, const(wchar)* lpDir, const(wchar)* lpBaseName);
+HRESULT GetVersionFromFileA(const(char)* lpszFilename, uint* pdwMSVer, uint* pdwLSVer, BOOL bVersion);
+HRESULT GetVersionFromFileW(const(wchar)* lpszFilename, uint* pdwMSVer, uint* pdwLSVer, BOOL bVersion);
+HRESULT GetVersionFromFileExA(const(char)* lpszFilename, uint* pdwMSVer, uint* pdwLSVer, BOOL bVersion);
+HRESULT GetVersionFromFileExW(const(wchar)* lpszFilename, uint* pdwMSVer, uint* pdwLSVer, BOOL bVersion);
+BOOL IsNTAdmin(uint dwReserved, uint* lpdwReserved);
+HRESULT DelNodeA(const(char)* pszFileOrDirName, uint dwFlags);
+HRESULT DelNodeW(const(wchar)* pszFileOrDirName, uint dwFlags);
+HRESULT DelNodeRunDLL32W(HWND hwnd, HINSTANCE hInstance, PWSTR pszParms, int nShow);
+HRESULT OpenINFEngineA(const(char)* pszInfFilename, const(char)* pszInstallSection, uint dwFlags, void** phInf, void* pvReserved);
+HRESULT OpenINFEngineW(const(wchar)* pszInfFilename, const(wchar)* pszInstallSection, uint dwFlags, void** phInf, void* pvReserved);
+HRESULT TranslateInfStringExA(void* hInf, const(char)* pszInfFilename, const(char)* pszTranslateSection, const(char)* pszTranslateKey, PSTR pszBuffer, uint dwBufferSize, uint* pdwRequiredSize, void* pvReserved);
+HRESULT TranslateInfStringExW(void* hInf, const(wchar)* pszInfFilename, const(wchar)* pszTranslateSection, const(wchar)* pszTranslateKey, PWSTR pszBuffer, uint dwBufferSize, uint* pdwRequiredSize, void* pvReserved);
+HRESULT CloseINFEngine(void* hInf);
+HRESULT ExtractFilesA(const(char)* pszCabName, const(char)* pszExpandDir, uint dwFlags, const(char)* pszFileList, void* lpReserved, uint dwReserved);
+HRESULT ExtractFilesW(const(wchar)* pszCabName, const(wchar)* pszExpandDir, uint dwFlags, const(wchar)* pszFileList, void* lpReserved, uint dwReserved);
+int LaunchINFSectionW(HWND hwndOwner, HINSTANCE hInstance, PWSTR pszParams, int nShow);
+HRESULT UserInstStubWrapperA(HWND hwnd, HINSTANCE hInstance, const(char)* pszParms, int nShow);
+HRESULT UserInstStubWrapperW(HWND hwnd, HINSTANCE hInstance, const(wchar)* pszParms, int nShow);
+HRESULT UserUnInstStubWrapperA(HWND hwnd, HINSTANCE hInstance, const(char)* pszParms, int nShow);
+HRESULT UserUnInstStubWrapperW(HWND hwnd, HINSTANCE hInstance, const(wchar)* pszParms, int nShow);
+HRESULT SetPerUserSecValuesA(PERUSERSECTIONA* pPerUser);
+HRESULT SetPerUserSecValuesW(PERUSERSECTIONW* pPerUser);
+LRESULT SendIMEMessageExA(HWND param0, LPARAM param1);
+LRESULT SendIMEMessageExW(HWND param0, LPARAM param1);
+BOOL IMPGetIMEA(HWND param0, IMEPROA* param1);
+BOOL IMPGetIMEW(HWND param0, IMEPROW* param1);
+BOOL IMPQueryIMEA(IMEPROA* param0);
+BOOL IMPQueryIMEW(IMEPROW* param0);
+BOOL IMPSetIMEA(HWND param0, IMEPROA* param1);
+BOOL IMPSetIMEW(HWND param0, IMEPROW* param1);
+uint WINNLSGetIMEHotkey(HWND param0);
+BOOL WINNLSEnableIME(HWND param0, BOOL param1);
+BOOL WINNLSGetEnableStatus(HWND param0);
+BOOL ApphelpCheckShellObject(const(GUID)* ObjectCLSID, BOOL bShimIfNecessary, ulong* pullFlags);
+HRESULT WldpGetLockdownPolicy(WLDP_HOST_INFORMATION* hostInformation, uint* lockdownState, uint lockdownFlags);
+HRESULT WldpIsClassInApprovedList(const(GUID)* classID, WLDP_HOST_INFORMATION* hostInformation, BOOL* isApproved, uint optionalFlags);
+HRESULT WldpSetDynamicCodeTrust(HANDLE fileHandle);
+HRESULT WldpIsDynamicCodePolicyEnabled(BOOL* isEnabled);
+HRESULT WldpQueryDynamicCodeTrust(HANDLE fileHandle, void* baseImage, uint imageSize);
+HRESULT WldpQueryDeviceSecurityInformation(WLDP_DEVICE_SECURITY_INFORMATION* information, uint informationLength, uint* returnLength);
+HRESULT WldpCanExecuteFile(const(GUID)* host, WLDP_EXECUTION_EVALUATION_OPTIONS options, HANDLE fileHandle, const(wchar)* auditInfo, WLDP_EXECUTION_POLICY* result);
+HRESULT WldpCanExecuteBuffer(const(GUID)* host, WLDP_EXECUTION_EVALUATION_OPTIONS options, const(ubyte)* buffer, uint bufferSize, const(wchar)* auditInfo, WLDP_EXECUTION_POLICY* result);
+HRESULT WldpCanExecuteStream(const(GUID)* host, WLDP_EXECUTION_EVALUATION_OPTIONS options, IStream stream, const(wchar)* auditInfo, WLDP_EXECUTION_POLICY* result);
 enum WLDP_DLL = "WLDP.DLL";
 enum WLDP_GETLOCKDOWNPOLICY_FN = "WldpGetLockdownPolicy";
 enum WLDP_ISCLASSINAPPROVEDLIST_FN = "WldpIsClassInApprovedList";
@@ -344,29 +344,6 @@ enum DCI_CAN_STRETCHYN = 0x00008000;
 enum DCI_CANOVERLAY = 0x00010000;
 enum FILE_FLAG_OPEN_REQUIRING_OPLOCK = 0x00040000;
 enum FILE_FLAG_IGNORE_IMPERSONATED_DEVICEMAP = 0x00020000;
-enum PROGRESS_CONTINUE = 0x00000000;
-enum PROGRESS_CANCEL = 0x00000001;
-enum PROGRESS_STOP = 0x00000002;
-enum PROGRESS_QUIET = 0x00000003;
-enum COPY_FILE_FAIL_IF_EXISTS = 0x00000001;
-enum COPY_FILE_RESTARTABLE = 0x00000002;
-enum COPY_FILE_OPEN_SOURCE_FOR_WRITE = 0x00000004;
-enum COPY_FILE_ALLOW_DECRYPTED_DESTINATION = 0x00000008;
-enum COPY_FILE_COPY_SYMLINK = 0x00000800;
-enum COPY_FILE_NO_BUFFERING = 0x00001000;
-enum COPY_FILE_REQUEST_SECURITY_PRIVILEGES = 0x00002000;
-enum COPY_FILE_RESUME_FROM_PAUSE = 0x00004000;
-enum COPY_FILE_NO_OFFLOAD = 0x00040000;
-enum COPY_FILE_IGNORE_EDP_BLOCK = 0x00400000;
-enum COPY_FILE_IGNORE_SOURCE_ENCRYPTION = 0x00800000;
-enum COPY_FILE_DONT_REQUEST_DEST_WRITE_DAC = 0x02000000;
-enum COPY_FILE_REQUEST_COMPRESSED_TRAFFIC = 0x10000000;
-enum COPY_FILE_OPEN_AND_COPY_REPARSE_POINT = 0x00200000;
-enum COPY_FILE_DIRECTORY = 0x00000080;
-enum COPY_FILE_SKIP_ALTERNATE_STREAMS = 0x00008000;
-enum COPY_FILE_DISABLE_PRE_ALLOCATION = 0x04000000;
-enum COPY_FILE_ENABLE_LOW_FREE_SPACE_MODE = 0x08000000;
-enum COPY_FILE_ENABLE_SPARSE_COPY = 0x20000000;
 enum FAIL_FAST_GENERATE_EXCEPTION_ADDRESS = 0x00000001;
 enum FAIL_FAST_NO_HARD_ERROR_DLG = 0x00000002;
 enum SP_SERIALCOMM = 0x00000001;
@@ -589,12 +566,6 @@ enum GET_SYSTEM_WOW64_DIRECTORY_NAME_T_T = "GetSystemWow64DirectoryW";
 enum BASE_SEARCH_PATH_ENABLE_SAFE_SEARCHMODE = 0x00000001;
 enum BASE_SEARCH_PATH_DISABLE_SAFE_SEARCHMODE = 0x00010000;
 enum BASE_SEARCH_PATH_PERMANENT = 0x00008000;
-enum COPYFILE2_MESSAGE_COPY_OFFLOAD = 0x00000001;
-enum COPYFILE2_IO_CYCLE_SIZE_MIN = 0x00001000;
-enum COPYFILE2_IO_CYCLE_SIZE_MAX = 0x40000000;
-enum COPYFILE2_IO_RATE_MIN = 0x00000200;
-enum COPY_FILE2_V2_DONT_COPY_JUNCTIONS = 0x00000001;
-enum COPY_FILE2_V2_VALID_FLAGS = 0x00000001;
 enum EVENTLOG_FULL_INFO = 0x00000000;
 enum OPERATION_API_VERSION = 0x00000001;
 enum MAX_COMPUTERNAME_LENGTH = 0x0000000f;
@@ -853,8 +824,7 @@ enum WLDP_HOST_XML = GUID(0x5594be58, 0xc6bf, 0x4295, [0x82, 0xf4, 0xd4, 0x94, 0
 enum WLDP_HOST_MSI = GUID(0x624eb611, 0x6e7e, 0x4eec, [0x9b, 0xfe, 0xf0, 0xec, 0xdb, 0xfc, 0xf3, 0x90]);
 enum WLDP_HOST_OTHER = GUID(0x626cbec3, 0xe1fa, 0x4227, [0x98, 0x0, 0xed, 0x21, 0x2, 0x74, 0xcf, 0x7c]);
 alias HWINWATCH = void*;
-alias FEATURE_STATE_CHANGE_SUBSCRIPTION = long;
-alias FH_SERVICE_PIPE_HANDLE = long;
+alias FEATURE_STATE_CHANGE_SUBSCRIPTION = void*;
 struct TCP_REQUEST_QUERY_INFORMATION_EX32_XP
 {
     TDIObjectID ID;
@@ -914,7 +884,7 @@ struct CUSTOM_SYSTEM_EVENT_TRIGGER_CONFIG
     uint Size;
     const(wchar)* TriggerId;
 }
-alias PFIBER_CALLOUT_ROUTINE = void* function(void*);
+alias PFIBER_CALLOUT_ROUTINE = void* function(void* lpParameter);
 struct JIT_DEBUG_INFO
 {
     uint dwSize;
@@ -963,12 +933,8 @@ struct ACTIVATION_CONTEXT_BASIC_INFORMATION
     HANDLE hActCtx;
     uint dwFlags;
 }
-alias PQUERYACTCTXW_FUNC = BOOL function(uint, HANDLE, void*, uint, void*, ulong, ulong*);
-alias APPLICATION_RECOVERY_CALLBACK = uint function(void*);
-struct FILE_CASE_SENSITIVE_INFO
-{
-    uint Flags;
-}
+alias PQUERYACTCTXW_FUNC = BOOL function(uint dwFlags, HANDLE hActCtx, void* pvSubInstance, uint ulInfoClass, void* pvBuffer, ulong cbBuffer, ulong* pcbWrittenOrRequired);
+alias APPLICATION_RECOVERY_CALLBACK = uint function(void* pvParameter);
 struct CLIENT_ID
 {
     HANDLE UniqueProcess;
@@ -1108,7 +1074,7 @@ struct WINSTATIONINFORMATIONW
     uint LogonId;
     ubyte[1140] Reserved3;
 }
-alias PWINSTATIONQUERYINFORMATIONW = BOOLEAN function(HANDLE, uint, WINSTATIONINFOCLASS, void*, uint, uint*);
+alias PWINSTATIONQUERYINFORMATIONW = BOOLEAN function(HANDLE param0, uint param1, WINSTATIONINFOCLASS param2, void* param3, uint param4, uint* param5);
 alias CameraUIControlMode = int;
 enum : int
 {
@@ -1158,21 +1124,21 @@ interface ICameraUIControlEventCallback : IUnknown
 {
     void OnStartupComplete();
     void OnSuspendComplete();
-    void OnItemCaptured(const(wchar)*);
-    void OnItemDeleted(const(wchar)*);
+    void OnItemCaptured(const(wchar)* pszPath);
+    void OnItemDeleted(const(wchar)* pszPath);
     void OnClosed();
 }
 enum IID_ICameraUIControl = GUID(0xb8733adf, 0x3d68, 0x4b8f, [0xbb, 0x8, 0xe2, 0x8a, 0xb, 0xed, 0x3, 0x76]);
 interface ICameraUIControl : IUnknown
 {
-    HRESULT Show(IUnknown, CameraUIControlMode, CameraUIControlLinearSelectionMode, CameraUIControlCaptureMode, CameraUIControlPhotoFormat, CameraUIControlVideoFormat, BOOL, ICameraUIControlEventCallback);
+    HRESULT Show(IUnknown pWindow, CameraUIControlMode mode, CameraUIControlLinearSelectionMode selectionMode, CameraUIControlCaptureMode captureMode, CameraUIControlPhotoFormat photoFormat, CameraUIControlVideoFormat videoFormat, BOOL bHasCloseButton, ICameraUIControlEventCallback pEventCallback);
     HRESULT Close();
-    HRESULT Suspend(BOOL*);
+    HRESULT Suspend(BOOL* pbDeferralRequired);
     HRESULT Resume();
-    HRESULT GetCurrentViewType(CameraUIControlViewType*);
-    HRESULT GetActiveItem(BSTR*);
-    HRESULT GetSelectedItems(SAFEARRAY**);
-    HRESULT RemoveCapturedItem(const(wchar)*);
+    HRESULT GetCurrentViewType(CameraUIControlViewType* pViewType);
+    HRESULT GetActiveItem(BSTR* pbstrActiveItemPath);
+    HRESULT GetSelectedItems(SAFEARRAY** ppSelectedItemPaths);
+    HRESULT RemoveCapturedItem(const(wchar)* pszPath);
 }
 enum CLSID_CameraUIControl = GUID(0x16d5a2be, 0xb1c5, 0x47b3, [0x8e, 0xae, 0xcc, 0xbc, 0xf4, 0x52, 0xc7, 0xe8]);
 struct CameraUIControl
@@ -1181,39 +1147,39 @@ struct CameraUIControl
 enum IID_IEditionUpgradeHelper = GUID(0xd3e9e342, 0x5deb, 0x43b6, [0x84, 0x9e, 0x69, 0x13, 0xb8, 0x5d, 0x50, 0x3a]);
 interface IEditionUpgradeHelper : IUnknown
 {
-    HRESULT CanUpgrade(BOOL*);
-    HRESULT UpdateOperatingSystem(const(wchar)*);
+    HRESULT CanUpgrade(BOOL* isAllowed);
+    HRESULT UpdateOperatingSystem(const(wchar)* contentId);
     HRESULT ShowProductKeyUI();
-    HRESULT GetOsProductContentId(PWSTR*);
-    HRESULT GetGenuineLocalStatus(BOOL*);
+    HRESULT GetOsProductContentId(PWSTR* contentId);
+    HRESULT GetGenuineLocalStatus(BOOL* isGenuine);
 }
 enum IID_IWindowsLockModeHelper = GUID(0xf342d19e, 0xcc22, 0x4648, [0xbb, 0x5d, 0x3, 0xcc, 0xf7, 0x5b, 0x47, 0xc5]);
 interface IWindowsLockModeHelper : IUnknown
 {
-    HRESULT GetSMode(BOOL*);
+    HRESULT GetSMode(BOOL* isSmode);
 }
 enum IID_IEditionUpgradeBroker = GUID(0xff19cbcf, 0x9455, 0x4937, [0xb8, 0x72, 0x6b, 0x79, 0x29, 0xa4, 0x60, 0xaf]);
 interface IEditionUpgradeBroker : IUnknown
 {
-    HRESULT InitializeParentWindow(OLE_HANDLE);
-    HRESULT UpdateOperatingSystem(BSTR);
+    HRESULT InitializeParentWindow(OLE_HANDLE parentHandle);
+    HRESULT UpdateOperatingSystem(BSTR parameter);
     HRESULT ShowProductKeyUI();
     HRESULT CanUpgrade();
 }
 enum IID_IContainerActivationHelper = GUID(0xb524f93f, 0x80d5, 0x4ec7, [0xae, 0x9e, 0xd6, 0x6e, 0x93, 0xad, 0xe1, 0xfa]);
 interface IContainerActivationHelper : IUnknown
 {
-    HRESULT CanActivateClientVM(VARIANT_BOOL*);
+    HRESULT CanActivateClientVM(VARIANT_BOOL* isAllowed);
 }
 enum IID_IClipServiceNotificationHelper = GUID(0xc39948f0, 0x6142, 0x44fd, [0x98, 0xca, 0xe1, 0x68, 0x1a, 0x8d, 0x68, 0xb5]);
 interface IClipServiceNotificationHelper : IUnknown
 {
-    HRESULT ShowToast(BSTR, BSTR, BSTR, BSTR, BSTR);
+    HRESULT ShowToast(BSTR titleText, BSTR bodyText, BSTR packageName, BSTR appId, BSTR launchCommand);
 }
 enum IID_IFClipNotificationHelper = GUID(0x3d5e3d21, 0xbd41, 0x4c2a, [0xa6, 0x69, 0xb1, 0x7c, 0xe8, 0x7f, 0xb5, 0xb]);
 interface IFClipNotificationHelper : IUnknown
 {
-    HRESULT ShowSystemDialog(BSTR, BSTR);
+    HRESULT ShowSystemDialog(BSTR titleText, BSTR bodyText);
 }
 enum CLSID_EditionUpgradeHelper = GUID(0x1776df3, 0xb9af, 0x4e50, [0x9b, 0x1c, 0x56, 0xe9, 0x31, 0x16, 0xd7, 0x4]);
 struct EditionUpgradeHelper
@@ -1257,7 +1223,7 @@ struct FEATURE_ERROR
     const(char)* originCallerModule;
     const(char)* originName;
 }
-alias PFEATURE_STATE_CHANGE_CALLBACK = void function(void*);
+alias PFEATURE_STATE_CHANGE_CALLBACK = void function(void* context);
 struct DCICMD
 {
     uint dwCommand;
@@ -1297,7 +1263,7 @@ struct DCISURFACEINFO
     long EndAccess;
     long DestroySurface;
 }
-alias ENUM_CALLBACK = void function(DCISURFACEINFO*, void*);
+alias ENUM_CALLBACK = void function(DCISURFACEINFO* lpSurfaceInfo, void* lpContext);
 struct DCIENUMINPUT
 {
     DCICMD cmd;
@@ -1319,7 +1285,7 @@ struct DCIOVERLAY
     uint dwChromakeyValue;
     uint dwChromakeyMask;
 }
-alias WINWATCHNOTIFYPROC = void function(HWINWATCH, HWND, uint, LPARAM);
+alias WINWATCHNOTIFYPROC = void function(HWINWATCH hww, HWND hwnd, uint code, LPARAM lParam);
 struct STRENTRYA
 {
     PSTR pszName;
@@ -1340,7 +1306,7 @@ struct STRTABLEW
     uint cEntries;
     STRENTRYW* pse;
 }
-alias REGINSTALLA = HRESULT function(HMODULE, const(char)*, const(STRTABLEA)*);
+alias REGINSTALLA = HRESULT function(HMODULE hm, const(char)* pszSection, const(STRTABLEA)* pstTable);
 struct CABINFOA
 {
     PSTR pszCab;
@@ -1614,23 +1580,23 @@ enum : int
     WLDP_EXECUTION_EVALUATION_OPTION_EXECUTE_IN_INTERACTIVE_SESSION = 0x00000001,
 }
 
-alias PWLDP_SETDYNAMICCODETRUST_API = HRESULT function(HANDLE);
-alias PWLDP_ISDYNAMICCODEPOLICYENABLED_API = HRESULT function(BOOL*);
-alias PWLDP_QUERYDYNAMICODETRUST_API = HRESULT function(HANDLE, void*, uint);
-alias PWLDP_QUERYWINDOWSLOCKDOWNMODE_API = HRESULT function(WLDP_WINDOWS_LOCKDOWN_MODE*);
-alias PWLDP_QUERYDEVICESECURITYINFORMATION_API = HRESULT function(WLDP_DEVICE_SECURITY_INFORMATION*, uint, uint*);
-alias PWLDP_QUERYWINDOWSLOCKDOWNRESTRICTION_API = HRESULT function(WLDP_WINDOWS_LOCKDOWN_RESTRICTION*);
-alias PWLDP_SETWINDOWSLOCKDOWNRESTRICTION_API = HRESULT function(WLDP_WINDOWS_LOCKDOWN_RESTRICTION);
-alias PWLDP_ISAPPAPPROVEDBYPOLICY_API = HRESULT function(const(wchar)*, ulong);
-alias PWLDP_QUERYPOLICYSETTINGENABLED_API = HRESULT function(WLDP_POLICY_SETTING, BOOL*);
-alias PWLDP_QUERYPOLICYSETTINGENABLED2_API = HRESULT function(const(wchar)*, BOOL*);
-alias PWLDP_ISWCOSPRODUCTIONCONFIGURATION_API = HRESULT function(BOOL*);
+alias PWLDP_SETDYNAMICCODETRUST_API = HRESULT function(HANDLE hFileHandle);
+alias PWLDP_ISDYNAMICCODEPOLICYENABLED_API = HRESULT function(BOOL* pbEnabled);
+alias PWLDP_QUERYDYNAMICODETRUST_API = HRESULT function(HANDLE fileHandle, void* baseImage, uint imageSize);
+alias PWLDP_QUERYWINDOWSLOCKDOWNMODE_API = HRESULT function(WLDP_WINDOWS_LOCKDOWN_MODE* lockdownMode);
+alias PWLDP_QUERYDEVICESECURITYINFORMATION_API = HRESULT function(WLDP_DEVICE_SECURITY_INFORMATION* information, uint informationLength, uint* returnLength);
+alias PWLDP_QUERYWINDOWSLOCKDOWNRESTRICTION_API = HRESULT function(WLDP_WINDOWS_LOCKDOWN_RESTRICTION* LockdownRestriction);
+alias PWLDP_SETWINDOWSLOCKDOWNRESTRICTION_API = HRESULT function(WLDP_WINDOWS_LOCKDOWN_RESTRICTION LockdownRestriction);
+alias PWLDP_ISAPPAPPROVEDBYPOLICY_API = HRESULT function(const(wchar)* PackageFamilyName, ulong PackageVersion);
+alias PWLDP_QUERYPOLICYSETTINGENABLED_API = HRESULT function(WLDP_POLICY_SETTING Setting, BOOL* Enabled);
+alias PWLDP_QUERYPOLICYSETTINGENABLED2_API = HRESULT function(const(wchar)* Setting, BOOL* Enabled);
+alias PWLDP_ISWCOSPRODUCTIONCONFIGURATION_API = HRESULT function(BOOL* IsProductionConfiguration);
 alias PWLDP_RESETWCOSPRODUCTIONCONFIGURATION_API = HRESULT function();
-alias PWLDP_ISPRODUCTIONCONFIGURATION_API = HRESULT function(BOOL*);
+alias PWLDP_ISPRODUCTIONCONFIGURATION_API = HRESULT function(BOOL* IsProductionConfiguration);
 alias PWLDP_RESETPRODUCTIONCONFIGURATION_API = HRESULT function();
-alias PWLDP_CANEXECUTEFILE_API = HRESULT function(const(GUID)*, WLDP_EXECUTION_EVALUATION_OPTIONS, HANDLE, const(wchar)*, WLDP_EXECUTION_POLICY*);
-alias PWLDP_CANEXECUTEBUFFER_API = HRESULT function(const(GUID)*, WLDP_EXECUTION_EVALUATION_OPTIONS, const(ubyte)*, uint, const(wchar)*, WLDP_EXECUTION_POLICY*);
-alias PWLDP_CANEXECUTESTREAM_API = HRESULT function(const(GUID)*, WLDP_EXECUTION_EVALUATION_OPTIONS, IStream, const(wchar)*, WLDP_EXECUTION_POLICY*);
+alias PWLDP_CANEXECUTEFILE_API = HRESULT function(const(GUID)* host, WLDP_EXECUTION_EVALUATION_OPTIONS options, HANDLE fileHandle, const(wchar)* auditInfo, WLDP_EXECUTION_POLICY* result);
+alias PWLDP_CANEXECUTEBUFFER_API = HRESULT function(const(GUID)* host, WLDP_EXECUTION_EVALUATION_OPTIONS options, const(ubyte)* buffer, uint bufferSize, const(wchar)* auditInfo, WLDP_EXECUTION_POLICY* result);
+alias PWLDP_CANEXECUTESTREAM_API = HRESULT function(const(GUID)* host, WLDP_EXECUTION_EVALUATION_OPTIONS options, IStream stream, const(wchar)* auditInfo, WLDP_EXECUTION_POLICY* result);
 enum IID_IDefaultBrowserSyncSettings = GUID(0x7a27faad, 0x5ae6, 0x4255, [0x90, 0x30, 0xc5, 0x30, 0x93, 0x62, 0x92, 0xe3]);
 interface IDefaultBrowserSyncSettings : IUnknown
 {
@@ -1661,9 +1627,9 @@ struct DELAYLOAD_PROC_DESCRIPTOR
     uint LastError;
 }
 +/
-alias PDELAYLOAD_FAILURE_DLL_CALLBACK = void* function(uint, DELAYLOAD_INFO*);
+alias PDELAYLOAD_FAILURE_DLL_CALLBACK = void* function(uint NotificationReason, DELAYLOAD_INFO* DelayloadInfo);
 enum IID_IDeleteBrowsingHistory = GUID(0xcf38ed4b, 0x2be7, 0x4461, [0x8b, 0x5e, 0x9a, 0x46, 0x6d, 0xc8, 0x2a, 0xe3]);
 interface IDeleteBrowsingHistory : IUnknown
 {
-    HRESULT DeleteBrowsingHistory(uint);
+    HRESULT DeleteBrowsingHistory(uint dwFlags);
 }

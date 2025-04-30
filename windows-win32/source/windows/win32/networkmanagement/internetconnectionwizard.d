@@ -25,5 +25,5 @@ enum ICW_ALREADYRUN = 0x00000004;
 enum ICW_LAUNCHEDFULL = 0x00000100;
 enum ICW_LAUNCHEDMANUAL = 0x00000200;
 enum ICW_USEDEFAULTS = 0x00000001;
-alias PFNCHECKCONNECTIONWIZARD = uint function(uint, uint*);
-alias PFNSETSHELLNEXT = uint function(PSTR);
+alias PFNCHECKCONNECTIONWIZARD = uint function(uint param0, uint* param1);
+alias PFNSETSHELLNEXT = uint function(PSTR param0);

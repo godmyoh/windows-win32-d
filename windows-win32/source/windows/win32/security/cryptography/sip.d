@@ -8,18 +8,18 @@ import windows.win32.security.cryptography.catalog : MS_ADDINFO_CATALOGMEMBER;
 version (Windows):
 extern (Windows):
 
-BOOL CryptSIPGetSignedDataMsg(SIP_SUBJECTINFO*, CERT_QUERY_ENCODING_TYPE*, uint, uint*, ubyte*);
-BOOL CryptSIPPutSignedDataMsg(SIP_SUBJECTINFO*, CERT_QUERY_ENCODING_TYPE, uint*, uint, ubyte*);
-BOOL CryptSIPCreateIndirectData(SIP_SUBJECTINFO*, uint*, SIP_INDIRECT_DATA*);
-BOOL CryptSIPVerifyIndirectData(SIP_SUBJECTINFO*, SIP_INDIRECT_DATA*);
-BOOL CryptSIPRemoveSignedDataMsg(SIP_SUBJECTINFO*, uint);
-BOOL CryptSIPLoad(const(GUID)*, uint, SIP_DISPATCH_INFO*);
-BOOL CryptSIPRetrieveSubjectGuid(const(wchar)*, HANDLE, GUID*);
-BOOL CryptSIPRetrieveSubjectGuidForCatalogFile(const(wchar)*, HANDLE, GUID*);
-BOOL CryptSIPAddProvider(SIP_ADD_NEWPROVIDER*);
-BOOL CryptSIPRemoveProvider(GUID*);
-BOOL CryptSIPGetCaps(SIP_SUBJECTINFO*, SIP_CAP_SET_V3*);
-BOOL CryptSIPGetSealedDigest(SIP_SUBJECTINFO*, const(ubyte)*, uint, ubyte*, uint*);
+BOOL CryptSIPGetSignedDataMsg(SIP_SUBJECTINFO* pSubjectInfo, CERT_QUERY_ENCODING_TYPE* pdwEncodingType, uint dwIndex, uint* pcbSignedDataMsg, ubyte* pbSignedDataMsg);
+BOOL CryptSIPPutSignedDataMsg(SIP_SUBJECTINFO* pSubjectInfo, CERT_QUERY_ENCODING_TYPE dwEncodingType, uint* pdwIndex, uint cbSignedDataMsg, ubyte* pbSignedDataMsg);
+BOOL CryptSIPCreateIndirectData(SIP_SUBJECTINFO* pSubjectInfo, uint* pcbIndirectData, SIP_INDIRECT_DATA* pIndirectData);
+BOOL CryptSIPVerifyIndirectData(SIP_SUBJECTINFO* pSubjectInfo, SIP_INDIRECT_DATA* pIndirectData);
+BOOL CryptSIPRemoveSignedDataMsg(SIP_SUBJECTINFO* pSubjectInfo, uint dwIndex);
+BOOL CryptSIPLoad(const(GUID)* pgSubject, uint dwFlags, SIP_DISPATCH_INFO* pSipDispatch);
+BOOL CryptSIPRetrieveSubjectGuid(const(wchar)* FileName, HANDLE hFileIn, GUID* pgSubject);
+BOOL CryptSIPRetrieveSubjectGuidForCatalogFile(const(wchar)* FileName, HANDLE hFileIn, GUID* pgSubject);
+BOOL CryptSIPAddProvider(SIP_ADD_NEWPROVIDER* psNewProv);
+BOOL CryptSIPRemoveProvider(GUID* pgProv);
+BOOL CryptSIPGetCaps(SIP_SUBJECTINFO* pSubjInfo, SIP_CAP_SET_V3* pCaps);
+BOOL CryptSIPGetSealedDigest(SIP_SUBJECTINFO* pSubjectInfo, const(ubyte)* pSig, uint dwSig, ubyte* pbDigest, uint* pcbDigest);
 enum MSSIP_FLAGS_PROHIBIT_RESIZE_ON_CREATE = 0x00010000;
 enum MSSIP_FLAGS_USE_CATALOG = 0x00020000;
 enum MSSIP_FLAGS_MULTI_HASH = 0x00040000;
@@ -99,11 +99,11 @@ struct SIP_INDIRECT_DATA
     CRYPT_ALGORITHM_IDENTIFIER DigestAlgorithm;
     CRYPT_INTEGER_BLOB Digest;
 }
-alias pCryptSIPGetSignedDataMsg = BOOL function(SIP_SUBJECTINFO*, uint*, uint, uint*, ubyte*);
-alias pCryptSIPPutSignedDataMsg = BOOL function(SIP_SUBJECTINFO*, uint, uint*, uint, ubyte*);
-alias pCryptSIPCreateIndirectData = BOOL function(SIP_SUBJECTINFO*, uint*, SIP_INDIRECT_DATA*);
-alias pCryptSIPVerifyIndirectData = BOOL function(SIP_SUBJECTINFO*, SIP_INDIRECT_DATA*);
-alias pCryptSIPRemoveSignedDataMsg = BOOL function(SIP_SUBJECTINFO*, uint);
+alias pCryptSIPGetSignedDataMsg = BOOL function(SIP_SUBJECTINFO* pSubjectInfo, uint* pdwEncodingType, uint dwIndex, uint* pcbSignedDataMsg, ubyte* pbSignedDataMsg);
+alias pCryptSIPPutSignedDataMsg = BOOL function(SIP_SUBJECTINFO* pSubjectInfo, uint dwEncodingType, uint* pdwIndex, uint cbSignedDataMsg, ubyte* pbSignedDataMsg);
+alias pCryptSIPCreateIndirectData = BOOL function(SIP_SUBJECTINFO* pSubjectInfo, uint* pcbIndirectData, SIP_INDIRECT_DATA* pIndirectData);
+alias pCryptSIPVerifyIndirectData = BOOL function(SIP_SUBJECTINFO* pSubjectInfo, SIP_INDIRECT_DATA* pIndirectData);
+alias pCryptSIPRemoveSignedDataMsg = BOOL function(SIP_SUBJECTINFO* pSubjectInfo, uint dwIndex);
 struct SIP_DISPATCH_INFO
 {
     uint cbSize;
@@ -114,8 +114,8 @@ struct SIP_DISPATCH_INFO
     pCryptSIPVerifyIndirectData pfVerify;
     pCryptSIPRemoveSignedDataMsg pfRemove;
 }
-alias pfnIsFileSupported = BOOL function(HANDLE, GUID*);
-alias pfnIsFileSupportedName = BOOL function(PWSTR, GUID*);
+alias pfnIsFileSupported = BOOL function(HANDLE hFile, GUID* pgSubject);
+alias pfnIsFileSupportedName = BOOL function(PWSTR pwszFileName, GUID* pgSubject);
 struct SIP_ADD_NEWPROVIDER
 {
     uint cbStruct;
@@ -131,5 +131,5 @@ struct SIP_ADD_NEWPROVIDER
     PWSTR pwszIsFunctionNameFmt2;
     PWSTR pwszGetCapFuncName;
 }
-alias pCryptSIPGetCaps = BOOL function(SIP_SUBJECTINFO*, SIP_CAP_SET_V3*);
-alias pCryptSIPGetSealedDigest = BOOL function(SIP_SUBJECTINFO*, const(ubyte)*, uint, ubyte*, uint*);
+alias pCryptSIPGetCaps = BOOL function(SIP_SUBJECTINFO* pSubjInfo, SIP_CAP_SET_V3* pCaps);
+alias pCryptSIPGetSealedDigest = BOOL function(SIP_SUBJECTINFO* pSubjectInfo, const(ubyte)* pSig, uint dwSig, ubyte* pbDigest, uint* pcbDigest);

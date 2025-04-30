@@ -1,9 +1,8 @@
 module windows.win32.networkmanagement.windowsconnectnow;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : HRESULT, PWSTR;
+import windows.win32.foundation : HRESULT, PROPERTYKEY, PWSTR;
 import windows.win32.system.com : IUnknown;
-import windows.win32.ui.shell.propertiessystem : PROPERTYKEY;
 
 version (Windows):
 extern (Windows):
@@ -401,23 +400,23 @@ struct WCN_VENDOR_EXTENSION_SPEC
 enum IID_IWCNDevice = GUID(0xc100be9c, 0xd33a, 0x4a4b, [0xbf, 0x23, 0xbb, 0xef, 0x46, 0x63, 0xd0, 0x17]);
 interface IWCNDevice : IUnknown
 {
-    HRESULT SetPassword(WCN_PASSWORD_TYPE, uint, const(ubyte)*);
-    HRESULT Connect(IWCNConnectNotify);
-    HRESULT GetAttribute(WCN_ATTRIBUTE_TYPE, uint, ubyte*, uint*);
-    HRESULT GetIntegerAttribute(WCN_ATTRIBUTE_TYPE, uint*);
-    HRESULT GetStringAttribute(WCN_ATTRIBUTE_TYPE, uint, PWSTR);
-    HRESULT GetNetworkProfile(uint, PWSTR);
-    HRESULT SetNetworkProfile(const(wchar)*);
-    HRESULT GetVendorExtension(const(WCN_VENDOR_EXTENSION_SPEC)*, uint, ubyte*, uint*);
-    HRESULT SetVendorExtension(const(WCN_VENDOR_EXTENSION_SPEC)*, uint, const(ubyte)*);
+    HRESULT SetPassword(WCN_PASSWORD_TYPE Type, uint dwPasswordLength, const(ubyte)* pbPassword);
+    HRESULT Connect(IWCNConnectNotify pNotify);
+    HRESULT GetAttribute(WCN_ATTRIBUTE_TYPE AttributeType, uint dwMaxBufferSize, ubyte* pbBuffer, uint* pdwBufferUsed);
+    HRESULT GetIntegerAttribute(WCN_ATTRIBUTE_TYPE AttributeType, uint* puInteger);
+    HRESULT GetStringAttribute(WCN_ATTRIBUTE_TYPE AttributeType, uint cchMaxString, PWSTR wszString);
+    HRESULT GetNetworkProfile(uint cchMaxStringLength, PWSTR wszProfile);
+    HRESULT SetNetworkProfile(const(wchar)* pszProfileXml);
+    HRESULT GetVendorExtension(const(WCN_VENDOR_EXTENSION_SPEC)* pVendorExtSpec, uint dwMaxBufferSize, ubyte* pbBuffer, uint* pdwBufferUsed);
+    HRESULT SetVendorExtension(const(WCN_VENDOR_EXTENSION_SPEC)* pVendorExtSpec, uint cbBuffer, const(ubyte)* pbBuffer);
     HRESULT Unadvise();
-    HRESULT SetNFCPasswordParams(WCN_PASSWORD_TYPE, uint, uint, const(ubyte)*, uint, const(ubyte)*, uint, const(ubyte)*);
+    HRESULT SetNFCPasswordParams(WCN_PASSWORD_TYPE Type, uint dwOOBPasswordID, uint dwPasswordLength, const(ubyte)* pbPassword, uint dwRemotePublicKeyHashLength, const(ubyte)* pbRemotePublicKeyHash, uint dwDHKeyBlobLength, const(ubyte)* pbDHKeyBlob);
 }
 enum IID_IWCNConnectNotify = GUID(0xc100be9f, 0xd33a, 0x4a4b, [0xbf, 0x23, 0xbb, 0xef, 0x46, 0x63, 0xd0, 0x17]);
 interface IWCNConnectNotify : IUnknown
 {
     HRESULT ConnectSucceeded();
-    HRESULT ConnectFailed(HRESULT);
+    HRESULT ConnectFailed(HRESULT hrFailure);
 }
 enum CLSID_WCNDeviceObject = GUID(0xc100bea7, 0xd33a, 0x4a4b, [0xbf, 0x23, 0xbb, 0xef, 0x46, 0x63, 0xd0, 0x17]);
 struct WCNDeviceObject

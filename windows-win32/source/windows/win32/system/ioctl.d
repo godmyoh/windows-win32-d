@@ -1,8 +1,7 @@
 module windows.win32.system.ioctl;
 
 import windows.win32.guid : GUID;
-import windows.win32.devices.properties : DEVPROPKEY;
-import windows.win32.foundation : BOOLEAN, CHAR, HANDLE;
+import windows.win32.foundation : BOOLEAN, CHAR, DEVPROPKEY, HANDLE;
 import windows.win32.security : SID;
 import windows.win32.storage.filesystem : FILE_ID_128, STORAGE_BUS_TYPE;
 import windows.win32.storage.vhd : VIRTUAL_STORAGE_TYPE;
@@ -5958,7 +5957,7 @@ struct VOLUME_GET_GPT_ATTRIBUTES_INFORMATION
 {
     ulong GptAttributes;
 }
-alias PIO_IRP_EXT_PROCESS_TRACKED_OFFSET_CALLBACK = void function(IO_IRP_EXT_TRACK_OFFSET_HEADER*, IO_IRP_EXT_TRACK_OFFSET_HEADER*, long);
+alias PIO_IRP_EXT_PROCESS_TRACKED_OFFSET_CALLBACK = void function(IO_IRP_EXT_TRACK_OFFSET_HEADER* SourceContext, IO_IRP_EXT_TRACK_OFFSET_HEADER* TargetContext, long RelativeOffset);
 struct IO_IRP_EXT_TRACK_OFFSET_HEADER
 {
     ushort Validation;

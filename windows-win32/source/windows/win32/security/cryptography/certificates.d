@@ -10,32 +10,32 @@ import windows.win32.system.variant : VARIANT;
 version (Windows):
 extern (Windows):
 
-HRESULT CertSrvIsServerOnlineW(const(wchar)*, BOOL*);
-HRESULT CertSrvBackupGetDynamicFileListW(void*, PWSTR*, uint*);
-HRESULT CertSrvBackupPrepareW(const(wchar)*, uint, CSBACKUP_TYPE, void**);
-HRESULT CertSrvBackupGetDatabaseNamesW(void*, PWSTR*, uint*);
-HRESULT CertSrvBackupOpenFileW(void*, const(wchar)*, uint, long*);
-HRESULT CertSrvBackupRead(void*, void*, uint, uint*);
-HRESULT CertSrvBackupClose(void*);
-HRESULT CertSrvBackupGetBackupLogsW(void*, PWSTR*, uint*);
-HRESULT CertSrvBackupTruncateLogs(void*);
-HRESULT CertSrvBackupEnd(void*);
-void CertSrvBackupFree(void*);
-HRESULT CertSrvRestoreGetDatabaseLocationsW(void*, PWSTR*, uint*);
-HRESULT CertSrvRestorePrepareW(const(wchar)*, uint, void**);
-HRESULT CertSrvRestoreRegisterW(void*, const(wchar)*, const(wchar)*, CSEDB_RSTMAPW*, int, const(wchar)*, uint, uint);
-HRESULT CertSrvRestoreRegisterThroughFile(void*, const(wchar)*, const(wchar)*, CSEDB_RSTMAPW*, int, const(wchar)*, uint, uint);
-HRESULT CertSrvRestoreRegisterComplete(void*, HRESULT);
-HRESULT CertSrvRestoreEnd(void*);
-HRESULT CertSrvServerControlW(const(wchar)*, uint, uint*, ubyte**);
-NTSTATUS PstGetTrustAnchors(UNICODE_STRING*, uint, CERT_SELECT_CRITERIA*, SecPkgContext_IssuerListInfoEx**);
-NTSTATUS PstGetTrustAnchorsEx(UNICODE_STRING*, uint, CERT_SELECT_CRITERIA*, const(CERT_CONTEXT)*, SecPkgContext_IssuerListInfoEx**);
-NTSTATUS PstGetCertificateChain(const(CERT_CONTEXT)*, SecPkgContext_IssuerListInfoEx*, CERT_CHAIN_CONTEXT**);
-NTSTATUS PstGetCertificates(UNICODE_STRING*, uint, CERT_SELECT_CRITERIA*, BOOL, uint*, CERT_CHAIN_CONTEXT***);
-NTSTATUS PstAcquirePrivateKey(const(CERT_CONTEXT)*);
-NTSTATUS PstValidate(UNICODE_STRING*, BOOL, CERT_USAGE_MATCH*, HCERTSTORE*, const(CERT_CONTEXT)*, GUID*);
-NTSTATUS PstMapCertificate(const(CERT_CONTEXT)*, LSA_TOKEN_INFORMATION_TYPE*, void**);
-NTSTATUS PstGetUserNameForCertificate(const(CERT_CONTEXT)*, UNICODE_STRING*);
+HRESULT CertSrvIsServerOnlineW(const(wchar)* pwszServerName, BOOL* pfServerOnline);
+HRESULT CertSrvBackupGetDynamicFileListW(void* hbc, PWSTR* ppwszzFileList, uint* pcbSize);
+HRESULT CertSrvBackupPrepareW(const(wchar)* pwszServerName, uint grbitJet, CSBACKUP_TYPE dwBackupFlags, void** phbc);
+HRESULT CertSrvBackupGetDatabaseNamesW(void* hbc, PWSTR* ppwszzAttachmentInformation, uint* pcbSize);
+HRESULT CertSrvBackupOpenFileW(void* hbc, const(wchar)* pwszAttachmentName, uint cbReadHintSize, long* pliFileSize);
+HRESULT CertSrvBackupRead(void* hbc, void* pvBuffer, uint cbBuffer, uint* pcbRead);
+HRESULT CertSrvBackupClose(void* hbc);
+HRESULT CertSrvBackupGetBackupLogsW(void* hbc, PWSTR* ppwszzBackupLogFiles, uint* pcbSize);
+HRESULT CertSrvBackupTruncateLogs(void* hbc);
+HRESULT CertSrvBackupEnd(void* hbc);
+void CertSrvBackupFree(void* pv);
+HRESULT CertSrvRestoreGetDatabaseLocationsW(void* hbc, PWSTR* ppwszzDatabaseLocationList, uint* pcbSize);
+HRESULT CertSrvRestorePrepareW(const(wchar)* pwszServerName, uint dwRestoreFlags, void** phbc);
+HRESULT CertSrvRestoreRegisterW(void* hbc, const(wchar)* pwszCheckPointFilePath, const(wchar)* pwszLogPath, CSEDB_RSTMAPW* rgrstmap, int crstmap, const(wchar)* pwszBackupLogPath, uint genLow, uint genHigh);
+HRESULT CertSrvRestoreRegisterThroughFile(void* hbc, const(wchar)* pwszCheckPointFilePath, const(wchar)* pwszLogPath, CSEDB_RSTMAPW* rgrstmap, int crstmap, const(wchar)* pwszBackupLogPath, uint genLow, uint genHigh);
+HRESULT CertSrvRestoreRegisterComplete(void* hbc, HRESULT hrRestoreState);
+HRESULT CertSrvRestoreEnd(void* hbc);
+HRESULT CertSrvServerControlW(const(wchar)* pwszServerName, uint dwControlFlags, uint* pcbOut, ubyte** ppbOut);
+NTSTATUS PstGetTrustAnchors(UNICODE_STRING* pTargetName, uint cCriteria, CERT_SELECT_CRITERIA* rgpCriteria, SecPkgContext_IssuerListInfoEx** ppTrustedIssuers);
+NTSTATUS PstGetTrustAnchorsEx(UNICODE_STRING* pTargetName, uint cCriteria, CERT_SELECT_CRITERIA* rgpCriteria, const(CERT_CONTEXT)* pCertContext, SecPkgContext_IssuerListInfoEx** ppTrustedIssuers);
+NTSTATUS PstGetCertificateChain(const(CERT_CONTEXT)* pCert, SecPkgContext_IssuerListInfoEx* pTrustedIssuers, CERT_CHAIN_CONTEXT** ppCertChainContext);
+NTSTATUS PstGetCertificates(UNICODE_STRING* pTargetName, uint cCriteria, CERT_SELECT_CRITERIA* rgpCriteria, BOOL bIsClient, uint* pdwCertChainContextCount, CERT_CHAIN_CONTEXT*** ppCertChainContexts);
+NTSTATUS PstAcquirePrivateKey(const(CERT_CONTEXT)* pCert);
+NTSTATUS PstValidate(UNICODE_STRING* pTargetName, BOOL bIsClient, CERT_USAGE_MATCH* pRequestedIssuancePolicy, HCERTSTORE* phAdditionalCertStore, const(CERT_CONTEXT)* pCert, GUID* pProvGUID);
+NTSTATUS PstMapCertificate(const(CERT_CONTEXT)* pCert, LSA_TOKEN_INFORMATION_TYPE* pTokenInformationType, void** ppTokenInformation);
+NTSTATUS PstGetUserNameForCertificate(const(CERT_CONTEXT)* pCertContext, UNICODE_STRING* UserName);
 enum wszREGKEYNOSYSTEMCERTSVCPATH = "CurrentControlSet\\Services\\CertSvc";
 enum wszREGKEYCERTSVCPATH = "SYSTEM\\CurrentControlSet\\Services\\CertSvc";
 enum CA_DISP_INCOMPLETE = 0x00000000;
@@ -1231,167 +1231,167 @@ enum : int
 enum IID_IEnumCERTVIEWCOLUMN = GUID(0x9c735be2, 0x57a5, 0x11d1, [0x9b, 0xdb, 0x0, 0xc0, 0x4f, 0xb6, 0x83, 0xfa]);
 interface IEnumCERTVIEWCOLUMN : IDispatch
 {
-    HRESULT Next(int*);
-    HRESULT GetName(BSTR*);
-    HRESULT GetDisplayName(BSTR*);
-    HRESULT GetType(int*);
-    HRESULT IsIndexed(int*);
-    HRESULT GetMaxLength(int*);
-    HRESULT GetValue(ENUM_CERT_COLUMN_VALUE_FLAGS, VARIANT*);
-    HRESULT Skip(int);
+    HRESULT Next(int* pIndex);
+    HRESULT GetName(BSTR* pstrOut);
+    HRESULT GetDisplayName(BSTR* pstrOut);
+    HRESULT GetType(int* pType);
+    HRESULT IsIndexed(int* pIndexed);
+    HRESULT GetMaxLength(int* pMaxLength);
+    HRESULT GetValue(ENUM_CERT_COLUMN_VALUE_FLAGS Flags, VARIANT* pvarValue);
+    HRESULT Skip(int celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumCERTVIEWCOLUMN*);
+    HRESULT Clone(IEnumCERTVIEWCOLUMN* ppenum);
 }
 enum IID_IEnumCERTVIEWATTRIBUTE = GUID(0xe77db656, 0x7653, 0x11d1, [0x9b, 0xde, 0x0, 0xc0, 0x4f, 0xb6, 0x83, 0xfa]);
 interface IEnumCERTVIEWATTRIBUTE : IDispatch
 {
-    HRESULT Next(int*);
-    HRESULT GetName(BSTR*);
-    HRESULT GetValue(BSTR*);
-    HRESULT Skip(int);
+    HRESULT Next(int* pIndex);
+    HRESULT GetName(BSTR* pstrOut);
+    HRESULT GetValue(BSTR* pstrOut);
+    HRESULT Skip(int celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumCERTVIEWATTRIBUTE*);
+    HRESULT Clone(IEnumCERTVIEWATTRIBUTE* ppenum);
 }
 enum IID_IEnumCERTVIEWEXTENSION = GUID(0xe7dd1466, 0x7653, 0x11d1, [0x9b, 0xde, 0x0, 0xc0, 0x4f, 0xb6, 0x83, 0xfa]);
 interface IEnumCERTVIEWEXTENSION : IDispatch
 {
-    HRESULT Next(int*);
-    HRESULT GetName(BSTR*);
-    HRESULT GetFlags(int*);
-    HRESULT GetValue(CERT_PROPERTY_TYPE, ENUM_CERT_COLUMN_VALUE_FLAGS, VARIANT*);
-    HRESULT Skip(int);
+    HRESULT Next(int* pIndex);
+    HRESULT GetName(BSTR* pstrOut);
+    HRESULT GetFlags(int* pFlags);
+    HRESULT GetValue(CERT_PROPERTY_TYPE Type, ENUM_CERT_COLUMN_VALUE_FLAGS Flags, VARIANT* pvarValue);
+    HRESULT Skip(int celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumCERTVIEWEXTENSION*);
+    HRESULT Clone(IEnumCERTVIEWEXTENSION* ppenum);
 }
 enum IID_IEnumCERTVIEWROW = GUID(0xd1157f4c, 0x5af2, 0x11d1, [0x9b, 0xdc, 0x0, 0xc0, 0x4f, 0xb6, 0x83, 0xfa]);
 interface IEnumCERTVIEWROW : IDispatch
 {
-    HRESULT Next(int*);
-    HRESULT EnumCertViewColumn(IEnumCERTVIEWCOLUMN*);
-    HRESULT EnumCertViewAttribute(int, IEnumCERTVIEWATTRIBUTE*);
-    HRESULT EnumCertViewExtension(int, IEnumCERTVIEWEXTENSION*);
-    HRESULT Skip(int);
+    HRESULT Next(int* pIndex);
+    HRESULT EnumCertViewColumn(IEnumCERTVIEWCOLUMN* ppenum);
+    HRESULT EnumCertViewAttribute(int Flags, IEnumCERTVIEWATTRIBUTE* ppenum);
+    HRESULT EnumCertViewExtension(int Flags, IEnumCERTVIEWEXTENSION* ppenum);
+    HRESULT Skip(int celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumCERTVIEWROW*);
-    HRESULT GetMaxIndex(int*);
+    HRESULT Clone(IEnumCERTVIEWROW* ppenum);
+    HRESULT GetMaxIndex(int* pIndex);
 }
 enum IID_ICertView = GUID(0xc3fac344, 0x1e84, 0x11d1, [0x9b, 0xd6, 0x0, 0xc0, 0x4f, 0xb6, 0x83, 0xfa]);
 interface ICertView : IDispatch
 {
-    HRESULT OpenConnection(const(BSTR));
-    HRESULT EnumCertViewColumn(CVRC_COLUMN, IEnumCERTVIEWCOLUMN*);
-    HRESULT GetColumnCount(CVRC_COLUMN, int*);
-    HRESULT GetColumnIndex(CVRC_COLUMN, const(BSTR), int*);
-    HRESULT SetResultColumnCount(int);
-    HRESULT SetResultColumn(int);
-    HRESULT SetRestriction(CERT_VIEW_COLUMN_INDEX, CERT_VIEW_SEEK_OPERATOR_FLAGS, int, const(VARIANT)*);
-    HRESULT OpenView(IEnumCERTVIEWROW*);
+    HRESULT OpenConnection(const(BSTR) strConfig);
+    HRESULT EnumCertViewColumn(CVRC_COLUMN fResultColumn, IEnumCERTVIEWCOLUMN* ppenum);
+    HRESULT GetColumnCount(CVRC_COLUMN fResultColumn, int* pcColumn);
+    HRESULT GetColumnIndex(CVRC_COLUMN fResultColumn, const(BSTR) strColumnName, int* pColumnIndex);
+    HRESULT SetResultColumnCount(int cResultColumn);
+    HRESULT SetResultColumn(int ColumnIndex);
+    HRESULT SetRestriction(CERT_VIEW_COLUMN_INDEX ColumnIndex, CERT_VIEW_SEEK_OPERATOR_FLAGS SeekOperator, int SortOrder, const(VARIANT)* pvarValue);
+    HRESULT OpenView(IEnumCERTVIEWROW* ppenum);
 }
 enum IID_ICertView2 = GUID(0xd594b282, 0x8851, 0x4b61, [0x9c, 0x66, 0x3e, 0xda, 0xdf, 0x84, 0x88, 0x63]);
 interface ICertView2 : ICertView
 {
-    HRESULT SetTable(CVRC_TABLE);
+    HRESULT SetTable(CVRC_TABLE Table);
 }
 enum IID_ICertAdmin = GUID(0x34df6950, 0x7fb6, 0x11d0, [0x88, 0x17, 0x0, 0xa0, 0xc9, 0x3, 0xb8, 0x3c]);
 interface ICertAdmin : IDispatch
 {
-    HRESULT IsValidCertificate(const(BSTR), const(BSTR), int*);
-    HRESULT GetRevocationReason(int*);
-    HRESULT RevokeCertificate(const(BSTR), const(BSTR), int, double);
-    HRESULT SetRequestAttributes(const(BSTR), int, const(BSTR));
-    HRESULT SetCertificateExtension(const(BSTR), int, const(BSTR), CERT_PROPERTY_TYPE, int, const(VARIANT)*);
-    HRESULT DenyRequest(const(BSTR), int);
-    HRESULT ResubmitRequest(const(BSTR), int, int*);
-    HRESULT PublishCRL(const(BSTR), double);
-    HRESULT GetCRL(const(BSTR), int, BSTR*);
-    HRESULT ImportCertificate(const(BSTR), const(BSTR), CERT_IMPORT_FLAGS, int*);
+    HRESULT IsValidCertificate(const(BSTR) strConfig, const(BSTR) strSerialNumber, int* pDisposition);
+    HRESULT GetRevocationReason(int* pReason);
+    HRESULT RevokeCertificate(const(BSTR) strConfig, const(BSTR) strSerialNumber, int Reason, double Date);
+    HRESULT SetRequestAttributes(const(BSTR) strConfig, int RequestId, const(BSTR) strAttributes);
+    HRESULT SetCertificateExtension(const(BSTR) strConfig, int RequestId, const(BSTR) strExtensionName, CERT_PROPERTY_TYPE Type, int Flags, const(VARIANT)* pvarValue);
+    HRESULT DenyRequest(const(BSTR) strConfig, int RequestId);
+    HRESULT ResubmitRequest(const(BSTR) strConfig, int RequestId, int* pDisposition);
+    HRESULT PublishCRL(const(BSTR) strConfig, double Date);
+    HRESULT GetCRL(const(BSTR) strConfig, int Flags, BSTR* pstrCRL);
+    HRESULT ImportCertificate(const(BSTR) strConfig, const(BSTR) strCertificate, CERT_IMPORT_FLAGS Flags, int* pRequestId);
 }
 enum IID_ICertAdmin2 = GUID(0xf7c3ac41, 0xb8ce, 0x4fb4, [0xaa, 0x58, 0x3d, 0x1d, 0xc0, 0xe3, 0x6b, 0x39]);
 interface ICertAdmin2 : ICertAdmin
 {
-    HRESULT PublishCRLs(const(BSTR), double, int);
-    HRESULT GetCAProperty(const(BSTR), int, int, int, int, VARIANT*);
-    HRESULT SetCAProperty(const(BSTR), int, int, CERT_PROPERTY_TYPE, VARIANT*);
-    HRESULT GetCAPropertyFlags(const(BSTR), int, int*);
-    HRESULT GetCAPropertyDisplayName(const(BSTR), int, BSTR*);
-    HRESULT GetArchivedKey(const(BSTR), int, int, BSTR*);
-    HRESULT GetConfigEntry(const(BSTR), const(BSTR), const(BSTR), VARIANT*);
-    HRESULT SetConfigEntry(const(BSTR), const(BSTR), const(BSTR), VARIANT*);
-    HRESULT ImportKey(const(BSTR), int, const(BSTR), CERT_IMPORT_FLAGS, const(BSTR));
-    HRESULT GetMyRoles(const(BSTR), CERTADMIN_GET_ROLES_FLAGS*);
-    HRESULT DeleteRow(const(BSTR), CERT_DELETE_ROW_FLAGS, double, CVRC_TABLE, int, int*);
+    HRESULT PublishCRLs(const(BSTR) strConfig, double Date, int CRLFlags);
+    HRESULT GetCAProperty(const(BSTR) strConfig, int PropId, int PropIndex, int PropType, int Flags, VARIANT* pvarPropertyValue);
+    HRESULT SetCAProperty(const(BSTR) strConfig, int PropId, int PropIndex, CERT_PROPERTY_TYPE PropType, VARIANT* pvarPropertyValue);
+    HRESULT GetCAPropertyFlags(const(BSTR) strConfig, int PropId, int* pPropFlags);
+    HRESULT GetCAPropertyDisplayName(const(BSTR) strConfig, int PropId, BSTR* pstrDisplayName);
+    HRESULT GetArchivedKey(const(BSTR) strConfig, int RequestId, int Flags, BSTR* pstrArchivedKey);
+    HRESULT GetConfigEntry(const(BSTR) strConfig, const(BSTR) strNodePath, const(BSTR) strEntryName, VARIANT* pvarEntry);
+    HRESULT SetConfigEntry(const(BSTR) strConfig, const(BSTR) strNodePath, const(BSTR) strEntryName, VARIANT* pvarEntry);
+    HRESULT ImportKey(const(BSTR) strConfig, int RequestId, const(BSTR) strCertHash, CERT_IMPORT_FLAGS Flags, const(BSTR) strKey);
+    HRESULT GetMyRoles(const(BSTR) strConfig, CERTADMIN_GET_ROLES_FLAGS* pRoles);
+    HRESULT DeleteRow(const(BSTR) strConfig, CERT_DELETE_ROW_FLAGS Flags, double Date, CVRC_TABLE Table, int RowId, int* pcDeleted);
 }
 enum IID_IOCSPProperty = GUID(0x66fb7839, 0x5f04, 0x4c25, [0xad, 0x18, 0x9f, 0xf1, 0xa8, 0x37, 0x6e, 0xe0]);
 interface IOCSPProperty : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Value(VARIANT*);
-    HRESULT put_Value(VARIANT);
-    HRESULT get_Modified(VARIANT_BOOL*);
+    HRESULT get_Name(BSTR* pVal);
+    HRESULT get_Value(VARIANT* pVal);
+    HRESULT put_Value(VARIANT newVal);
+    HRESULT get_Modified(VARIANT_BOOL* pVal);
 }
 enum IID_IOCSPPropertyCollection = GUID(0x2597c18d, 0x54e6, 0x4b74, [0x9f, 0xa9, 0xa6, 0xbf, 0xda, 0x99, 0xcb, 0xbe]);
 interface IOCSPPropertyCollection : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(int, VARIANT*);
-    HRESULT get_Count(int*);
-    HRESULT get_ItemByName(const(BSTR), VARIANT*);
-    HRESULT CreateProperty(const(BSTR), const(VARIANT)*, IOCSPProperty*);
-    HRESULT DeleteProperty(const(BSTR));
-    HRESULT InitializeFromProperties(const(VARIANT)*);
-    HRESULT GetAllProperties(VARIANT*);
+    HRESULT get__NewEnum(IUnknown* ppVal);
+    HRESULT get_Item(int Index, VARIANT* pVal);
+    HRESULT get_Count(int* pVal);
+    HRESULT get_ItemByName(const(BSTR) bstrPropName, VARIANT* pVal);
+    HRESULT CreateProperty(const(BSTR) bstrPropName, const(VARIANT)* pVarPropValue, IOCSPProperty* ppVal);
+    HRESULT DeleteProperty(const(BSTR) bstrPropName);
+    HRESULT InitializeFromProperties(const(VARIANT)* pVarProperties);
+    HRESULT GetAllProperties(VARIANT* pVarProperties);
 }
 enum IID_IOCSPCAConfiguration = GUID(0xaec92b40, 0x3d46, 0x433f, [0x87, 0xd1, 0xb8, 0x4d, 0x5c, 0x1e, 0x79, 0xd]);
 interface IOCSPCAConfiguration : IDispatch
 {
-    HRESULT get_Identifier(BSTR*);
-    HRESULT get_CACertificate(VARIANT*);
-    HRESULT get_HashAlgorithm(BSTR*);
-    HRESULT put_HashAlgorithm(const(BSTR));
-    HRESULT get_SigningFlags(uint*);
-    HRESULT put_SigningFlags(uint);
-    HRESULT get_SigningCertificate(VARIANT*);
-    HRESULT put_SigningCertificate(VARIANT);
-    HRESULT get_ReminderDuration(uint*);
-    HRESULT put_ReminderDuration(uint);
-    HRESULT get_ErrorCode(uint*);
-    HRESULT get_CSPName(BSTR*);
-    HRESULT get_KeySpec(uint*);
-    HRESULT get_ProviderCLSID(BSTR*);
-    HRESULT put_ProviderCLSID(const(BSTR));
-    HRESULT get_ProviderProperties(VARIANT*);
-    HRESULT put_ProviderProperties(VARIANT);
-    HRESULT get_Modified(VARIANT_BOOL*);
-    HRESULT get_LocalRevocationInformation(VARIANT*);
-    HRESULT put_LocalRevocationInformation(VARIANT);
-    HRESULT get_SigningCertificateTemplate(BSTR*);
-    HRESULT put_SigningCertificateTemplate(const(BSTR));
-    HRESULT get_CAConfig(BSTR*);
-    HRESULT put_CAConfig(const(BSTR));
+    HRESULT get_Identifier(BSTR* pVal);
+    HRESULT get_CACertificate(VARIANT* pVal);
+    HRESULT get_HashAlgorithm(BSTR* pVal);
+    HRESULT put_HashAlgorithm(const(BSTR) newVal);
+    HRESULT get_SigningFlags(uint* pVal);
+    HRESULT put_SigningFlags(uint newVal);
+    HRESULT get_SigningCertificate(VARIANT* pVal);
+    HRESULT put_SigningCertificate(VARIANT newVal);
+    HRESULT get_ReminderDuration(uint* pVal);
+    HRESULT put_ReminderDuration(uint newVal);
+    HRESULT get_ErrorCode(uint* pVal);
+    HRESULT get_CSPName(BSTR* pVal);
+    HRESULT get_KeySpec(uint* pVal);
+    HRESULT get_ProviderCLSID(BSTR* pVal);
+    HRESULT put_ProviderCLSID(const(BSTR) newVal);
+    HRESULT get_ProviderProperties(VARIANT* pVal);
+    HRESULT put_ProviderProperties(VARIANT newVal);
+    HRESULT get_Modified(VARIANT_BOOL* pVal);
+    HRESULT get_LocalRevocationInformation(VARIANT* pVal);
+    HRESULT put_LocalRevocationInformation(VARIANT newVal);
+    HRESULT get_SigningCertificateTemplate(BSTR* pVal);
+    HRESULT put_SigningCertificateTemplate(const(BSTR) newVal);
+    HRESULT get_CAConfig(BSTR* pVal);
+    HRESULT put_CAConfig(const(BSTR) newVal);
 }
 enum IID_IOCSPCAConfigurationCollection = GUID(0x2bebea0b, 0x5ece, 0x4f28, [0xa9, 0x1c, 0x86, 0xb4, 0xbb, 0x20, 0xf0, 0xd3]);
 interface IOCSPCAConfigurationCollection : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(int, VARIANT*);
-    HRESULT get_Count(int*);
-    HRESULT get_ItemByName(const(BSTR), VARIANT*);
-    HRESULT CreateCAConfiguration(const(BSTR), VARIANT, IOCSPCAConfiguration*);
-    HRESULT DeleteCAConfiguration(const(BSTR));
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT get_Item(int Index, VARIANT* pVal);
+    HRESULT get_Count(int* pVal);
+    HRESULT get_ItemByName(const(BSTR) bstrIdentifier, VARIANT* pVal);
+    HRESULT CreateCAConfiguration(const(BSTR) bstrIdentifier, VARIANT varCACert, IOCSPCAConfiguration* ppVal);
+    HRESULT DeleteCAConfiguration(const(BSTR) bstrIdentifier);
 }
 enum IID_IOCSPAdmin = GUID(0x322e830d, 0x67db, 0x4fe9, [0x95, 0x77, 0x45, 0x96, 0xd9, 0xf0, 0x92, 0x94]);
 interface IOCSPAdmin : IDispatch
 {
-    HRESULT get_OCSPServiceProperties(IOCSPPropertyCollection*);
-    HRESULT get_OCSPCAConfigurationCollection(IOCSPCAConfigurationCollection*);
-    HRESULT GetConfiguration(const(BSTR), VARIANT_BOOL);
-    HRESULT SetConfiguration(const(BSTR), VARIANT_BOOL);
-    HRESULT GetMyRoles(const(BSTR), int*);
-    HRESULT Ping(const(BSTR));
-    HRESULT SetSecurity(const(BSTR), const(BSTR));
-    HRESULT GetSecurity(const(BSTR), BSTR*);
-    HRESULT GetSigningCertificates(const(BSTR), const(VARIANT)*, VARIANT*);
-    HRESULT GetHashAlgorithms(const(BSTR), const(BSTR), VARIANT*);
+    HRESULT get_OCSPServiceProperties(IOCSPPropertyCollection* ppVal);
+    HRESULT get_OCSPCAConfigurationCollection(IOCSPCAConfigurationCollection* pVal);
+    HRESULT GetConfiguration(const(BSTR) bstrServerName, VARIANT_BOOL bForce);
+    HRESULT SetConfiguration(const(BSTR) bstrServerName, VARIANT_BOOL bForce);
+    HRESULT GetMyRoles(const(BSTR) bstrServerName, int* pRoles);
+    HRESULT Ping(const(BSTR) bstrServerName);
+    HRESULT SetSecurity(const(BSTR) bstrServerName, const(BSTR) bstrVal);
+    HRESULT GetSecurity(const(BSTR) bstrServerName, BSTR* pVal);
+    HRESULT GetSigningCertificates(const(BSTR) bstrServerName, const(VARIANT)* pCACertVar, VARIANT* pVal);
+    HRESULT GetHashAlgorithms(const(BSTR) bstrServerName, const(BSTR) bstrCAId, VARIANT* pVal);
 }
 alias OCSPSigningFlag = int;
 enum : int
@@ -1435,95 +1435,95 @@ struct CSEDB_RSTMAPW
     PWSTR pwszDatabaseName;
     PWSTR pwszNewDatabaseName;
 }
-alias FNCERTSRVISSERVERONLINEW = HRESULT function(const(wchar)*, BOOL*);
-alias FNCERTSRVBACKUPGETDYNAMICFILELISTW = HRESULT function(void*, ushort**, uint*);
-alias FNCERTSRVBACKUPPREPAREW = HRESULT function(const(wchar)*, uint, uint, void**);
-alias FNCERTSRVBACKUPGETDATABASENAMESW = HRESULT function(void*, ushort**, uint*);
-alias FNCERTSRVBACKUPOPENFILEW = HRESULT function(void*, const(wchar)*, uint, long*);
-alias FNCERTSRVBACKUPREAD = HRESULT function(void*, void*, uint, uint*);
-alias FNCERTSRVBACKUPCLOSE = HRESULT function(void*);
-alias FNCERTSRVBACKUPGETBACKUPLOGSW = HRESULT function(void*, ushort**, uint*);
-alias FNCERTSRVBACKUPTRUNCATELOGS = HRESULT function(void*);
-alias FNCERTSRVBACKUPEND = HRESULT function(void*);
-alias FNCERTSRVBACKUPFREE = void function(void*);
-alias FNCERTSRVRESTOREGETDATABASELOCATIONSW = HRESULT function(void*, ushort**, uint*);
-alias FNCERTSRVRESTOREPREPAREW = HRESULT function(const(wchar)*, uint, void**);
-alias FNCERTSRVRESTOREREGISTERW = HRESULT function(void*, const(wchar)*, const(wchar)*, CSEDB_RSTMAPW*, int, const(wchar)*, uint, uint);
-alias FNCERTSRVRESTOREREGISTERCOMPLETE = HRESULT function(void*, HRESULT);
-alias FNCERTSRVRESTOREEND = HRESULT function(void*);
-alias FNCERTSRVSERVERCONTROLW = HRESULT function(const(wchar)*, uint, uint*, ubyte**);
+alias FNCERTSRVISSERVERONLINEW = HRESULT function(const(wchar)* pwszServerName, BOOL* pfServerOnline);
+alias FNCERTSRVBACKUPGETDYNAMICFILELISTW = HRESULT function(void* hbc, ushort** ppwszzFileList, uint* pcbSize);
+alias FNCERTSRVBACKUPPREPAREW = HRESULT function(const(wchar)* pwszServerName, uint grbitJet, uint dwBackupFlags, void** phbc);
+alias FNCERTSRVBACKUPGETDATABASENAMESW = HRESULT function(void* hbc, ushort** ppwszzAttachmentInformation, uint* pcbSize);
+alias FNCERTSRVBACKUPOPENFILEW = HRESULT function(void* hbc, const(wchar)* pwszAttachmentName, uint cbReadHintSize, long* pliFileSize);
+alias FNCERTSRVBACKUPREAD = HRESULT function(void* hbc, void* pvBuffer, uint cbBuffer, uint* pcbRead);
+alias FNCERTSRVBACKUPCLOSE = HRESULT function(void* hbc);
+alias FNCERTSRVBACKUPGETBACKUPLOGSW = HRESULT function(void* hbc, ushort** ppwszzBackupLogFiles, uint* pcbSize);
+alias FNCERTSRVBACKUPTRUNCATELOGS = HRESULT function(void* hbc);
+alias FNCERTSRVBACKUPEND = HRESULT function(void* hbc);
+alias FNCERTSRVBACKUPFREE = void function(void* pv);
+alias FNCERTSRVRESTOREGETDATABASELOCATIONSW = HRESULT function(void* hbc, ushort** ppwszzDatabaseLocationList, uint* pcbSize);
+alias FNCERTSRVRESTOREPREPAREW = HRESULT function(const(wchar)* pwszServerName, uint dwRestoreFlags, void** phbc);
+alias FNCERTSRVRESTOREREGISTERW = HRESULT function(void* hbc, const(wchar)* pwszCheckPointFilePath, const(wchar)* pwszLogPath, CSEDB_RSTMAPW* rgrstmap, int crstmap, const(wchar)* pwszBackupLogPath, uint genLow, uint genHigh);
+alias FNCERTSRVRESTOREREGISTERCOMPLETE = HRESULT function(void* hbc, HRESULT hrRestoreState);
+alias FNCERTSRVRESTOREEND = HRESULT function(void* hbc);
+alias FNCERTSRVSERVERCONTROLW = HRESULT function(const(wchar)* pwszServerName, uint dwControlFlags, uint* pcbOut, ubyte** ppbOut);
 enum IID_ICertServerPolicy = GUID(0xaa000922, 0xffbe, 0x11cf, [0x88, 0x0, 0x0, 0xa0, 0xc9, 0x3, 0xb8, 0x3c]);
 interface ICertServerPolicy : IDispatch
 {
-    HRESULT SetContext(int);
-    HRESULT GetRequestProperty(const(BSTR), int, VARIANT*);
-    HRESULT GetRequestAttribute(const(BSTR), BSTR*);
-    HRESULT GetCertificateProperty(const(BSTR), CERT_PROPERTY_TYPE, VARIANT*);
-    HRESULT SetCertificateProperty(const(BSTR), int, const(VARIANT)*);
-    HRESULT GetCertificateExtension(const(BSTR), CERT_PROPERTY_TYPE, VARIANT*);
-    HRESULT GetCertificateExtensionFlags(int*);
-    HRESULT SetCertificateExtension(const(BSTR), int, int, const(VARIANT)*);
-    HRESULT EnumerateExtensionsSetup(int);
-    HRESULT EnumerateExtensions(BSTR*);
+    HRESULT SetContext(int Context);
+    HRESULT GetRequestProperty(const(BSTR) strPropertyName, int PropertyType, VARIANT* pvarPropertyValue);
+    HRESULT GetRequestAttribute(const(BSTR) strAttributeName, BSTR* pstrAttributeValue);
+    HRESULT GetCertificateProperty(const(BSTR) strPropertyName, CERT_PROPERTY_TYPE PropertyType, VARIANT* pvarPropertyValue);
+    HRESULT SetCertificateProperty(const(BSTR) strPropertyName, int PropertyType, const(VARIANT)* pvarPropertyValue);
+    HRESULT GetCertificateExtension(const(BSTR) strExtensionName, CERT_PROPERTY_TYPE Type, VARIANT* pvarValue);
+    HRESULT GetCertificateExtensionFlags(int* pExtFlags);
+    HRESULT SetCertificateExtension(const(BSTR) strExtensionName, int Type, int ExtFlags, const(VARIANT)* pvarValue);
+    HRESULT EnumerateExtensionsSetup(int Flags);
+    HRESULT EnumerateExtensions(BSTR* pstrExtensionName);
     HRESULT EnumerateExtensionsClose();
-    HRESULT EnumerateAttributesSetup(int);
-    HRESULT EnumerateAttributes(BSTR*);
+    HRESULT EnumerateAttributesSetup(int Flags);
+    HRESULT EnumerateAttributes(BSTR* pstrAttributeName);
     HRESULT EnumerateAttributesClose();
 }
 enum IID_ICertServerExit = GUID(0x4ba9eb90, 0x732c, 0x11d0, [0x88, 0x16, 0x0, 0xa0, 0xc9, 0x3, 0xb8, 0x3c]);
 interface ICertServerExit : IDispatch
 {
-    HRESULT SetContext(int);
-    HRESULT GetRequestProperty(const(BSTR), int, VARIANT*);
-    HRESULT GetRequestAttribute(const(BSTR), BSTR*);
-    HRESULT GetCertificateProperty(const(BSTR), int, VARIANT*);
-    HRESULT GetCertificateExtension(const(BSTR), int, VARIANT*);
-    HRESULT GetCertificateExtensionFlags(int*);
-    HRESULT EnumerateExtensionsSetup(int);
-    HRESULT EnumerateExtensions(BSTR*);
+    HRESULT SetContext(int Context);
+    HRESULT GetRequestProperty(const(BSTR) strPropertyName, int PropertyType, VARIANT* pvarPropertyValue);
+    HRESULT GetRequestAttribute(const(BSTR) strAttributeName, BSTR* pstrAttributeValue);
+    HRESULT GetCertificateProperty(const(BSTR) strPropertyName, int PropertyType, VARIANT* pvarPropertyValue);
+    HRESULT GetCertificateExtension(const(BSTR) strExtensionName, int Type, VARIANT* pvarValue);
+    HRESULT GetCertificateExtensionFlags(int* pExtFlags);
+    HRESULT EnumerateExtensionsSetup(int Flags);
+    HRESULT EnumerateExtensions(BSTR* pstrExtensionName);
     HRESULT EnumerateExtensionsClose();
-    HRESULT EnumerateAttributesSetup(int);
-    HRESULT EnumerateAttributes(BSTR*);
+    HRESULT EnumerateAttributesSetup(int Flags);
+    HRESULT EnumerateAttributes(BSTR* pstrAttributeName);
     HRESULT EnumerateAttributesClose();
 }
 enum IID_ICertGetConfig = GUID(0xc7ea09c0, 0xce17, 0x11d0, [0x88, 0x33, 0x0, 0xa0, 0xc9, 0x3, 0xb8, 0x3c]);
 interface ICertGetConfig : IDispatch
 {
-    HRESULT GetConfig(CERT_GET_CONFIG_FLAGS, BSTR*);
+    HRESULT GetConfig(CERT_GET_CONFIG_FLAGS Flags, BSTR* pstrOut);
 }
 enum IID_ICertConfig = GUID(0x372fce34, 0x4324, 0x11d0, [0x88, 0x10, 0x0, 0xa0, 0xc9, 0x3, 0xb8, 0x3c]);
 interface ICertConfig : IDispatch
 {
-    HRESULT Reset(int, int*);
-    HRESULT Next(int*);
-    HRESULT GetField(const(BSTR), BSTR*);
-    HRESULT GetConfig(int, BSTR*);
+    HRESULT Reset(int Index, int* pCount);
+    HRESULT Next(int* pIndex);
+    HRESULT GetField(const(BSTR) strFieldName, BSTR* pstrOut);
+    HRESULT GetConfig(int Flags, BSTR* pstrOut);
 }
 enum IID_ICertConfig2 = GUID(0x7a18edde, 0x7e78, 0x4163, [0x8d, 0xed, 0x78, 0xe2, 0xc9, 0xce, 0xe9, 0x24]);
 interface ICertConfig2 : ICertConfig
 {
-    HRESULT SetSharedFolder(const(BSTR));
+    HRESULT SetSharedFolder(const(BSTR) strSharedFolder);
 }
 enum IID_ICertRequest = GUID(0x14e4840, 0x5523, 0x11d0, [0x88, 0x12, 0x0, 0xa0, 0xc9, 0x3, 0xb8, 0x3c]);
 interface ICertRequest : IDispatch
 {
-    HRESULT Submit(int, const(BSTR), const(BSTR), const(BSTR), int*);
-    HRESULT RetrievePending(int, const(BSTR), int*);
-    HRESULT GetLastStatus(int*);
-    HRESULT GetRequestId(int*);
-    HRESULT GetDispositionMessage(BSTR*);
-    HRESULT GetCACertificate(int, const(BSTR), int, BSTR*);
-    HRESULT GetCertificate(int, BSTR*);
+    HRESULT Submit(int Flags, const(BSTR) strRequest, const(BSTR) strAttributes, const(BSTR) strConfig, int* pDisposition);
+    HRESULT RetrievePending(int RequestId, const(BSTR) strConfig, int* pDisposition);
+    HRESULT GetLastStatus(int* pStatus);
+    HRESULT GetRequestId(int* pRequestId);
+    HRESULT GetDispositionMessage(BSTR* pstrDispositionMessage);
+    HRESULT GetCACertificate(int fExchangeCertificate, const(BSTR) strConfig, int Flags, BSTR* pstrCertificate);
+    HRESULT GetCertificate(int Flags, BSTR* pstrCertificate);
 }
 enum IID_ICertRequest2 = GUID(0xa4772988, 0x4a85, 0x4fa9, [0x82, 0x4e, 0xb5, 0xcf, 0x5c, 0x16, 0x40, 0x5a]);
 interface ICertRequest2 : ICertRequest
 {
-    HRESULT GetIssuedCertificate(const(BSTR), int, const(BSTR), CR_DISP*);
-    HRESULT GetErrorMessageText(int, int, BSTR*);
-    HRESULT GetCAProperty(const(BSTR), int, int, int, int, VARIANT*);
-    HRESULT GetCAPropertyFlags(const(BSTR), int, int*);
-    HRESULT GetCAPropertyDisplayName(const(BSTR), int, BSTR*);
-    HRESULT GetFullResponseProperty(FULL_RESPONSE_PROPERTY_ID, int, CERT_PROPERTY_TYPE, CERT_REQUEST_OUT_TYPE, VARIANT*);
+    HRESULT GetIssuedCertificate(const(BSTR) strConfig, int RequestId, const(BSTR) strSerialNumber, CR_DISP* pDisposition);
+    HRESULT GetErrorMessageText(int hrMessage, int Flags, BSTR* pstrErrorMessageText);
+    HRESULT GetCAProperty(const(BSTR) strConfig, int PropId, int PropIndex, int PropType, int Flags, VARIANT* pvarPropertyValue);
+    HRESULT GetCAPropertyFlags(const(BSTR) strConfig, int PropId, int* pPropFlags);
+    HRESULT GetCAPropertyDisplayName(const(BSTR) strConfig, int PropId, BSTR* pstrDisplayName);
+    HRESULT GetFullResponseProperty(FULL_RESPONSE_PROPERTY_ID PropId, int PropIndex, CERT_PROPERTY_TYPE PropType, CERT_REQUEST_OUT_TYPE Flags, VARIANT* pvarPropertyValue);
 }
 alias X509EnrollmentAuthFlags = int;
 enum : int
@@ -1538,10 +1538,10 @@ enum : int
 enum IID_ICertRequest3 = GUID(0xafc8f92b, 0x33a2, 0x4861, [0xbf, 0x36, 0x29, 0x33, 0xb7, 0xcd, 0x67, 0xb3]);
 interface ICertRequest3 : ICertRequest2
 {
-    HRESULT SetCredential(int, X509EnrollmentAuthFlags, BSTR, BSTR);
-    HRESULT GetRequestIdString(BSTR*);
-    HRESULT GetIssuedCertificate2(BSTR, BSTR, BSTR, CR_DISP*);
-    HRESULT GetRefreshPolicy(VARIANT_BOOL*);
+    HRESULT SetCredential(int hWnd, X509EnrollmentAuthFlags AuthType, BSTR strCredential, BSTR strPassword);
+    HRESULT GetRequestIdString(BSTR* pstrRequestId);
+    HRESULT GetIssuedCertificate2(BSTR strConfig, BSTR strRequestId, BSTR strSerialNumber, CR_DISP* pDisposition);
+    HRESULT GetRefreshPolicy(VARIANT_BOOL* pValue);
 }
 enum CLSID_CCertGetConfig = GUID(0xc6cc49b0, 0xce17, 0x11d0, [0x88, 0x33, 0x0, 0xa0, 0xc9, 0x3, 0xb8, 0x3c]);
 struct CCertGetConfig
@@ -1566,9 +1566,9 @@ struct CCertServerExit
 enum IID_ICertManageModule = GUID(0xe7d7ad42, 0xbd3d, 0x11d1, [0x9a, 0x4d, 0x0, 0xc0, 0x4f, 0xc2, 0x97, 0xeb]);
 interface ICertManageModule : IDispatch
 {
-    HRESULT GetProperty(const(BSTR), BSTR, BSTR, int, VARIANT*);
-    HRESULT SetProperty(const(BSTR), BSTR, BSTR, int, const(VARIANT)*);
-    HRESULT Configure(const(BSTR), BSTR, int);
+    HRESULT GetProperty(const(BSTR) strConfig, BSTR strStorageLocation, BSTR strPropertyName, int Flags, VARIANT* pvarProperty);
+    HRESULT SetProperty(const(BSTR) strConfig, BSTR strStorageLocation, BSTR strPropertyName, int Flags, const(VARIANT)* pvarProperty);
+    HRESULT Configure(const(BSTR) strConfig, BSTR strStorageLocation, int Flags);
 }
 struct CERTTRANSBLOB
 {
@@ -1586,15 +1586,15 @@ struct CERTVIEWRESTRICTION
 enum IID_ICertPolicy = GUID(0x38bb5a00, 0x7636, 0x11d0, [0xb4, 0x13, 0x0, 0xa0, 0xc9, 0x1b, 0xbf, 0x8c]);
 interface ICertPolicy : IDispatch
 {
-    HRESULT Initialize(const(BSTR));
-    HRESULT VerifyRequest(const(BSTR), int, int, int, int*);
-    HRESULT GetDescription(BSTR*);
+    HRESULT Initialize(const(BSTR) strConfig);
+    HRESULT VerifyRequest(const(BSTR) strConfig, int Context, int bNewRequest, int Flags, int* pDisposition);
+    HRESULT GetDescription(BSTR* pstrDescription);
     HRESULT ShutDown();
 }
 enum IID_ICertPolicy2 = GUID(0x3db4910e, 0x8001, 0x4bf1, [0xaa, 0x1b, 0xf4, 0x3a, 0x80, 0x83, 0x17, 0xa0]);
 interface ICertPolicy2 : ICertPolicy
 {
-    HRESULT GetManageModule(ICertManageModule*);
+    HRESULT GetManageModule(ICertManageModule* ppManageModule);
 }
 alias X509SCEPMessageType = int;
 enum : int
@@ -1634,9 +1634,9 @@ interface INDESPolicy : IUnknown
 {
     HRESULT Initialize();
     HRESULT Uninitialize();
-    HRESULT GenerateChallenge(const(wchar)*, const(wchar)*, PWSTR*);
-    HRESULT VerifyRequest(CERTTRANSBLOB*, CERTTRANSBLOB*, const(wchar)*, const(wchar)*, BOOL*);
-    HRESULT Notify(const(wchar)*, const(wchar)*, X509SCEPDisposition, int, CERTTRANSBLOB*);
+    HRESULT GenerateChallenge(const(wchar)* pwszTemplate, const(wchar)* pwszParams, PWSTR* ppwszResponse);
+    HRESULT VerifyRequest(CERTTRANSBLOB* pctbRequest, CERTTRANSBLOB* pctbSigningCertEncoded, const(wchar)* pwszTemplate, const(wchar)* pwszTransactionId, BOOL* pfVerified);
+    HRESULT Notify(const(wchar)* pwszChallenge, const(wchar)* pwszTransactionId, X509SCEPDisposition disposition, int lastHResult, CERTTRANSBLOB* pctbIssuedCertEncoded);
 }
 alias CERTENROLL_OBJECTID = int;
 enum : int
@@ -2166,38 +2166,38 @@ enum : int
 enum IID_IObjectId = GUID(0x728ab300, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IObjectId : IDispatch
 {
-    HRESULT InitializeFromName(CERTENROLL_OBJECTID);
-    HRESULT InitializeFromValue(BSTR);
-    HRESULT InitializeFromAlgorithmName(ObjectIdGroupId, ObjectIdPublicKeyFlags, AlgorithmFlags, BSTR);
-    HRESULT get_Name(CERTENROLL_OBJECTID*);
-    HRESULT get_FriendlyName(BSTR*);
-    HRESULT put_FriendlyName(BSTR);
-    HRESULT get_Value(BSTR*);
-    HRESULT GetAlgorithmName(ObjectIdGroupId, ObjectIdPublicKeyFlags, BSTR*);
+    HRESULT InitializeFromName(CERTENROLL_OBJECTID Name);
+    HRESULT InitializeFromValue(BSTR strValue);
+    HRESULT InitializeFromAlgorithmName(ObjectIdGroupId GroupId, ObjectIdPublicKeyFlags KeyFlags, AlgorithmFlags AlgFlags, BSTR strAlgorithmName);
+    HRESULT get_Name(CERTENROLL_OBJECTID* pValue);
+    HRESULT get_FriendlyName(BSTR* pValue);
+    HRESULT put_FriendlyName(BSTR Value);
+    HRESULT get_Value(BSTR* pValue);
+    HRESULT GetAlgorithmName(ObjectIdGroupId GroupId, ObjectIdPublicKeyFlags KeyFlags, BSTR* pstrAlgorithmName);
 }
 enum IID_IObjectIds = GUID(0x728ab301, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IObjectIds : IDispatch
 {
-    HRESULT get_ItemByIndex(int, IObjectId*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Add(IObjectId);
-    HRESULT Remove(int);
+    HRESULT get_ItemByIndex(int Index, IObjectId* pVal);
+    HRESULT get_Count(int* pVal);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT Add(IObjectId pVal);
+    HRESULT Remove(int Index);
     HRESULT Clear();
-    HRESULT AddRange(IObjectIds);
+    HRESULT AddRange(IObjectIds pValue);
 }
 enum IID_IBinaryConverter = GUID(0x728ab302, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IBinaryConverter : IDispatch
 {
-    HRESULT StringToString(BSTR, EncodingType, EncodingType, BSTR*);
-    HRESULT VariantByteArrayToString(VARIANT*, EncodingType, BSTR*);
-    HRESULT StringToVariantByteArray(BSTR, EncodingType, VARIANT*);
+    HRESULT StringToString(BSTR strEncodedIn, EncodingType EncodingIn, EncodingType Encoding, BSTR* pstrEncoded);
+    HRESULT VariantByteArrayToString(VARIANT* pvarByteArray, EncodingType Encoding, BSTR* pstrEncoded);
+    HRESULT StringToVariantByteArray(BSTR strEncoded, EncodingType Encoding, VARIANT* pvarByteArray);
 }
 enum IID_IBinaryConverter2 = GUID(0x8d7928b4, 0x4e17, 0x428d, [0x9a, 0x17, 0x72, 0x8d, 0xf0, 0xd, 0x1b, 0x2b]);
 interface IBinaryConverter2 : IBinaryConverter
 {
-    HRESULT StringArrayToVariantArray(VARIANT*, VARIANT*);
-    HRESULT VariantArrayToStringArray(VARIANT*, VARIANT*);
+    HRESULT StringArrayToVariantArray(VARIANT* pvarStringArray, VARIANT* pvarVariantArray);
+    HRESULT VariantArrayToStringArray(VARIANT* pvarVariantArray, VARIANT* pvarStringArray);
 }
 alias X500NameFlags = int;
 enum : int
@@ -2227,10 +2227,10 @@ enum : int
 enum IID_IX500DistinguishedName = GUID(0x728ab303, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX500DistinguishedName : IDispatch
 {
-    HRESULT Decode(BSTR, EncodingType, X500NameFlags);
-    HRESULT Encode(BSTR, X500NameFlags);
-    HRESULT get_Name(BSTR*);
-    HRESULT get_EncodedName(EncodingType, BSTR*);
+    HRESULT Decode(BSTR strEncodedName, EncodingType Encoding, X500NameFlags NameFlags);
+    HRESULT Encode(BSTR strName, X500NameFlags NameFlags);
+    HRESULT get_Name(BSTR* pValue);
+    HRESULT get_EncodedName(EncodingType Encoding, BSTR* pValue);
 }
 alias X509CertificateEnrollmentContext = int;
 enum : int
@@ -2270,18 +2270,18 @@ enum : int
 enum IID_IX509EnrollmentStatus = GUID(0x728ab304, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509EnrollmentStatus : IDispatch
 {
-    HRESULT AppendText(BSTR);
-    HRESULT get_Text(BSTR*);
-    HRESULT put_Text(BSTR);
-    HRESULT get_Selected(EnrollmentSelectionStatus*);
-    HRESULT put_Selected(EnrollmentSelectionStatus);
-    HRESULT get_Display(EnrollmentDisplayStatus*);
-    HRESULT put_Display(EnrollmentDisplayStatus);
-    HRESULT get_Status(EnrollmentEnrollStatus*);
-    HRESULT put_Status(EnrollmentEnrollStatus);
-    HRESULT get_Error(HRESULT*);
-    HRESULT put_Error(HRESULT);
-    HRESULT get_ErrorText(BSTR*);
+    HRESULT AppendText(BSTR strText);
+    HRESULT get_Text(BSTR* pValue);
+    HRESULT put_Text(BSTR Value);
+    HRESULT get_Selected(EnrollmentSelectionStatus* pValue);
+    HRESULT put_Selected(EnrollmentSelectionStatus Value);
+    HRESULT get_Display(EnrollmentDisplayStatus* pValue);
+    HRESULT put_Display(EnrollmentDisplayStatus Value);
+    HRESULT get_Status(EnrollmentEnrollStatus* pValue);
+    HRESULT put_Status(EnrollmentEnrollStatus Value);
+    HRESULT get_Error(HRESULT* pValue);
+    HRESULT put_Error(HRESULT Value);
+    HRESULT get_ErrorText(BSTR* pValue);
 }
 alias X509ProviderType = int;
 enum : int
@@ -2341,28 +2341,28 @@ enum : int
 enum IID_ICspAlgorithm = GUID(0x728ab305, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICspAlgorithm : IDispatch
 {
-    HRESULT GetAlgorithmOid(int, AlgorithmFlags, IObjectId*);
-    HRESULT get_DefaultLength(int*);
-    HRESULT get_IncrementLength(int*);
-    HRESULT get_LongName(BSTR*);
-    HRESULT get_Valid(VARIANT_BOOL*);
-    HRESULT get_MaxLength(int*);
-    HRESULT get_MinLength(int*);
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Type(AlgorithmType*);
-    HRESULT get_Operations(AlgorithmOperationFlags*);
+    HRESULT GetAlgorithmOid(int Length, AlgorithmFlags AlgFlags, IObjectId* ppValue);
+    HRESULT get_DefaultLength(int* pValue);
+    HRESULT get_IncrementLength(int* pValue);
+    HRESULT get_LongName(BSTR* pValue);
+    HRESULT get_Valid(VARIANT_BOOL* pValue);
+    HRESULT get_MaxLength(int* pValue);
+    HRESULT get_MinLength(int* pValue);
+    HRESULT get_Name(BSTR* pValue);
+    HRESULT get_Type(AlgorithmType* pValue);
+    HRESULT get_Operations(AlgorithmOperationFlags* pValue);
 }
 enum IID_ICspAlgorithms = GUID(0x728ab306, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICspAlgorithms : IDispatch
 {
-    HRESULT get_ItemByIndex(int, ICspAlgorithm*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Add(ICspAlgorithm);
-    HRESULT Remove(int);
+    HRESULT get_ItemByIndex(int Index, ICspAlgorithm* pVal);
+    HRESULT get_Count(int* pVal);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT Add(ICspAlgorithm pVal);
+    HRESULT Remove(int Index);
     HRESULT Clear();
-    HRESULT get_ItemByName(BSTR, ICspAlgorithm*);
-    HRESULT get_IndexByObjectId(IObjectId, int*);
+    HRESULT get_ItemByName(BSTR strName, ICspAlgorithm* ppValue);
+    HRESULT get_IndexByObjectId(IObjectId pObjectId, int* pIndex);
 }
 alias X509KeySpec = int;
 enum : int
@@ -2375,64 +2375,64 @@ enum : int
 enum IID_ICspInformation = GUID(0x728ab307, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICspInformation : IDispatch
 {
-    HRESULT InitializeFromName(BSTR);
-    HRESULT InitializeFromType(X509ProviderType, IObjectId, VARIANT_BOOL);
-    HRESULT get_CspAlgorithms(ICspAlgorithms*);
-    HRESULT get_HasHardwareRandomNumberGenerator(VARIANT_BOOL*);
-    HRESULT get_IsHardwareDevice(VARIANT_BOOL*);
-    HRESULT get_IsRemovable(VARIANT_BOOL*);
-    HRESULT get_IsSoftwareDevice(VARIANT_BOOL*);
-    HRESULT get_Valid(VARIANT_BOOL*);
-    HRESULT get_MaxKeyContainerNameLength(int*);
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Type(X509ProviderType*);
-    HRESULT get_Version(int*);
-    HRESULT get_KeySpec(X509KeySpec*);
-    HRESULT get_IsSmartCard(VARIANT_BOOL*);
-    HRESULT GetDefaultSecurityDescriptor(VARIANT_BOOL, BSTR*);
-    HRESULT get_LegacyCsp(VARIANT_BOOL*);
-    HRESULT GetCspStatusFromOperations(IObjectId, AlgorithmOperationFlags, ICspStatus*);
+    HRESULT InitializeFromName(BSTR strName);
+    HRESULT InitializeFromType(X509ProviderType Type, IObjectId pAlgorithm, VARIANT_BOOL MachineContext);
+    HRESULT get_CspAlgorithms(ICspAlgorithms* ppValue);
+    HRESULT get_HasHardwareRandomNumberGenerator(VARIANT_BOOL* pValue);
+    HRESULT get_IsHardwareDevice(VARIANT_BOOL* pValue);
+    HRESULT get_IsRemovable(VARIANT_BOOL* pValue);
+    HRESULT get_IsSoftwareDevice(VARIANT_BOOL* pValue);
+    HRESULT get_Valid(VARIANT_BOOL* pValue);
+    HRESULT get_MaxKeyContainerNameLength(int* pValue);
+    HRESULT get_Name(BSTR* pValue);
+    HRESULT get_Type(X509ProviderType* pValue);
+    HRESULT get_Version(int* pValue);
+    HRESULT get_KeySpec(X509KeySpec* pValue);
+    HRESULT get_IsSmartCard(VARIANT_BOOL* pValue);
+    HRESULT GetDefaultSecurityDescriptor(VARIANT_BOOL MachineContext, BSTR* pValue);
+    HRESULT get_LegacyCsp(VARIANT_BOOL* pValue);
+    HRESULT GetCspStatusFromOperations(IObjectId pAlgorithm, AlgorithmOperationFlags Operations, ICspStatus* ppValue);
 }
 enum IID_ICspInformations = GUID(0x728ab308, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICspInformations : IDispatch
 {
-    HRESULT get_ItemByIndex(int, ICspInformation*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Add(ICspInformation);
-    HRESULT Remove(int);
+    HRESULT get_ItemByIndex(int Index, ICspInformation* pVal);
+    HRESULT get_Count(int* pVal);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT Add(ICspInformation pVal);
+    HRESULT Remove(int Index);
     HRESULT Clear();
     HRESULT AddAvailableCsps();
-    HRESULT get_ItemByName(BSTR, ICspInformation*);
-    HRESULT GetCspStatusFromProviderName(BSTR, X509KeySpec, ICspStatus*);
-    HRESULT GetCspStatusesFromOperations(AlgorithmOperationFlags, ICspInformation, ICspStatuses*);
-    HRESULT GetEncryptionCspAlgorithms(ICspInformation, ICspAlgorithms*);
-    HRESULT GetHashAlgorithms(ICspInformation, IObjectIds*);
+    HRESULT get_ItemByName(BSTR strName, ICspInformation* ppCspInformation);
+    HRESULT GetCspStatusFromProviderName(BSTR strProviderName, X509KeySpec LegacyKeySpec, ICspStatus* ppValue);
+    HRESULT GetCspStatusesFromOperations(AlgorithmOperationFlags Operations, ICspInformation pCspInformation, ICspStatuses* ppValue);
+    HRESULT GetEncryptionCspAlgorithms(ICspInformation pCspInformation, ICspAlgorithms* ppValue);
+    HRESULT GetHashAlgorithms(ICspInformation pCspInformation, IObjectIds* ppValue);
 }
 enum IID_ICspStatus = GUID(0x728ab309, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICspStatus : IDispatch
 {
-    HRESULT Initialize(ICspInformation, ICspAlgorithm);
-    HRESULT get_Ordinal(int*);
-    HRESULT put_Ordinal(int);
-    HRESULT get_CspAlgorithm(ICspAlgorithm*);
-    HRESULT get_CspInformation(ICspInformation*);
-    HRESULT get_EnrollmentStatus(IX509EnrollmentStatus*);
-    HRESULT get_DisplayName(BSTR*);
+    HRESULT Initialize(ICspInformation pCsp, ICspAlgorithm pAlgorithm);
+    HRESULT get_Ordinal(int* pValue);
+    HRESULT put_Ordinal(int Value);
+    HRESULT get_CspAlgorithm(ICspAlgorithm* ppValue);
+    HRESULT get_CspInformation(ICspInformation* ppValue);
+    HRESULT get_EnrollmentStatus(IX509EnrollmentStatus* ppValue);
+    HRESULT get_DisplayName(BSTR* pValue);
 }
 enum IID_ICspStatuses = GUID(0x728ab30a, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICspStatuses : IDispatch
 {
-    HRESULT get_ItemByIndex(int, ICspStatus*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Add(ICspStatus);
-    HRESULT Remove(int);
+    HRESULT get_ItemByIndex(int Index, ICspStatus* pVal);
+    HRESULT get_Count(int* pVal);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT Add(ICspStatus pVal);
+    HRESULT Remove(int Index);
     HRESULT Clear();
-    HRESULT get_ItemByName(BSTR, BSTR, ICspStatus*);
-    HRESULT get_ItemByOrdinal(int, ICspStatus*);
-    HRESULT get_ItemByOperations(BSTR, BSTR, AlgorithmOperationFlags, ICspStatus*);
-    HRESULT get_ItemByProvider(ICspStatus, ICspStatus*);
+    HRESULT get_ItemByName(BSTR strCspName, BSTR strAlgorithmName, ICspStatus* ppValue);
+    HRESULT get_ItemByOrdinal(int Ordinal, ICspStatus* ppValue);
+    HRESULT get_ItemByOperations(BSTR strCspName, BSTR strAlgorithmName, AlgorithmOperationFlags Operations, ICspStatus* ppValue);
+    HRESULT get_ItemByProvider(ICspStatus pCspStatus, ICspStatus* ppValue);
 }
 alias KeyIdentifierHashAlgorithm = int;
 enum : int
@@ -2447,13 +2447,13 @@ enum : int
 enum IID_IX509PublicKey = GUID(0x728ab30b, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509PublicKey : IDispatch
 {
-    HRESULT Initialize(IObjectId, BSTR, BSTR, EncodingType);
-    HRESULT InitializeFromEncodedPublicKeyInfo(BSTR, EncodingType);
-    HRESULT get_Algorithm(IObjectId*);
-    HRESULT get_Length(int*);
-    HRESULT get_EncodedKey(EncodingType, BSTR*);
-    HRESULT get_EncodedParameters(EncodingType, BSTR*);
-    HRESULT ComputeKeyIdentifier(KeyIdentifierHashAlgorithm, EncodingType, BSTR*);
+    HRESULT Initialize(IObjectId pObjectId, BSTR strEncodedKey, BSTR strEncodedParameters, EncodingType Encoding);
+    HRESULT InitializeFromEncodedPublicKeyInfo(BSTR strEncodedPublicKeyInfo, EncodingType Encoding);
+    HRESULT get_Algorithm(IObjectId* ppValue);
+    HRESULT get_Length(int* pValue);
+    HRESULT get_EncodedKey(EncodingType Encoding, BSTR* pValue);
+    HRESULT get_EncodedParameters(EncodingType Encoding, BSTR* pValue);
+    HRESULT ComputeKeyIdentifier(KeyIdentifierHashAlgorithm Algorithm, EncodingType Encoding, BSTR* pValue);
 }
 alias X509PrivateKeyExportFlags = int;
 enum : int
@@ -2503,60 +2503,60 @@ interface IX509PrivateKey : IDispatch
     HRESULT Create();
     HRESULT Close();
     HRESULT Delete();
-    HRESULT Verify(X509PrivateKeyVerify);
-    HRESULT Import(BSTR, BSTR, EncodingType);
-    HRESULT Export(BSTR, EncodingType, BSTR*);
-    HRESULT ExportPublicKey(IX509PublicKey*);
-    HRESULT get_ContainerName(BSTR*);
-    HRESULT put_ContainerName(BSTR);
-    HRESULT get_ContainerNamePrefix(BSTR*);
-    HRESULT put_ContainerNamePrefix(BSTR);
-    HRESULT get_ReaderName(BSTR*);
-    HRESULT put_ReaderName(BSTR);
-    HRESULT get_CspInformations(ICspInformations*);
-    HRESULT put_CspInformations(ICspInformations);
-    HRESULT get_CspStatus(ICspStatus*);
-    HRESULT put_CspStatus(ICspStatus);
-    HRESULT get_ProviderName(BSTR*);
-    HRESULT put_ProviderName(BSTR);
-    HRESULT get_ProviderType(X509ProviderType*);
-    HRESULT put_ProviderType(X509ProviderType);
-    HRESULT get_LegacyCsp(VARIANT_BOOL*);
-    HRESULT put_LegacyCsp(VARIANT_BOOL);
-    HRESULT get_Algorithm(IObjectId*);
-    HRESULT put_Algorithm(IObjectId);
-    HRESULT get_KeySpec(X509KeySpec*);
-    HRESULT put_KeySpec(X509KeySpec);
-    HRESULT get_Length(int*);
-    HRESULT put_Length(int);
-    HRESULT get_ExportPolicy(X509PrivateKeyExportFlags*);
-    HRESULT put_ExportPolicy(X509PrivateKeyExportFlags);
-    HRESULT get_KeyUsage(X509PrivateKeyUsageFlags*);
-    HRESULT put_KeyUsage(X509PrivateKeyUsageFlags);
-    HRESULT get_KeyProtection(X509PrivateKeyProtection*);
-    HRESULT put_KeyProtection(X509PrivateKeyProtection);
-    HRESULT get_MachineContext(VARIANT_BOOL*);
-    HRESULT put_MachineContext(VARIANT_BOOL);
-    HRESULT get_SecurityDescriptor(BSTR*);
-    HRESULT put_SecurityDescriptor(BSTR);
-    HRESULT get_Certificate(EncodingType, BSTR*);
-    HRESULT put_Certificate(EncodingType, BSTR);
-    HRESULT get_UniqueContainerName(BSTR*);
-    HRESULT get_Opened(VARIANT_BOOL*);
-    HRESULT get_DefaultContainer(VARIANT_BOOL*);
-    HRESULT get_Existing(VARIANT_BOOL*);
-    HRESULT put_Existing(VARIANT_BOOL);
-    HRESULT get_Silent(VARIANT_BOOL*);
-    HRESULT put_Silent(VARIANT_BOOL);
-    HRESULT get_ParentWindow(int*);
-    HRESULT put_ParentWindow(int);
-    HRESULT get_UIContextMessage(BSTR*);
-    HRESULT put_UIContextMessage(BSTR);
-    HRESULT put_Pin(BSTR);
-    HRESULT get_FriendlyName(BSTR*);
-    HRESULT put_FriendlyName(BSTR);
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
+    HRESULT Verify(X509PrivateKeyVerify VerifyType);
+    HRESULT Import(BSTR strExportType, BSTR strEncodedKey, EncodingType Encoding);
+    HRESULT Export(BSTR strExportType, EncodingType Encoding, BSTR* pstrEncodedKey);
+    HRESULT ExportPublicKey(IX509PublicKey* ppPublicKey);
+    HRESULT get_ContainerName(BSTR* pValue);
+    HRESULT put_ContainerName(BSTR Value);
+    HRESULT get_ContainerNamePrefix(BSTR* pValue);
+    HRESULT put_ContainerNamePrefix(BSTR Value);
+    HRESULT get_ReaderName(BSTR* pValue);
+    HRESULT put_ReaderName(BSTR Value);
+    HRESULT get_CspInformations(ICspInformations* ppValue);
+    HRESULT put_CspInformations(ICspInformations pValue);
+    HRESULT get_CspStatus(ICspStatus* ppValue);
+    HRESULT put_CspStatus(ICspStatus pValue);
+    HRESULT get_ProviderName(BSTR* pValue);
+    HRESULT put_ProviderName(BSTR Value);
+    HRESULT get_ProviderType(X509ProviderType* pValue);
+    HRESULT put_ProviderType(X509ProviderType Value);
+    HRESULT get_LegacyCsp(VARIANT_BOOL* pValue);
+    HRESULT put_LegacyCsp(VARIANT_BOOL Value);
+    HRESULT get_Algorithm(IObjectId* ppValue);
+    HRESULT put_Algorithm(IObjectId pValue);
+    HRESULT get_KeySpec(X509KeySpec* pValue);
+    HRESULT put_KeySpec(X509KeySpec Value);
+    HRESULT get_Length(int* pValue);
+    HRESULT put_Length(int Value);
+    HRESULT get_ExportPolicy(X509PrivateKeyExportFlags* pValue);
+    HRESULT put_ExportPolicy(X509PrivateKeyExportFlags Value);
+    HRESULT get_KeyUsage(X509PrivateKeyUsageFlags* pValue);
+    HRESULT put_KeyUsage(X509PrivateKeyUsageFlags Value);
+    HRESULT get_KeyProtection(X509PrivateKeyProtection* pValue);
+    HRESULT put_KeyProtection(X509PrivateKeyProtection Value);
+    HRESULT get_MachineContext(VARIANT_BOOL* pValue);
+    HRESULT put_MachineContext(VARIANT_BOOL Value);
+    HRESULT get_SecurityDescriptor(BSTR* pValue);
+    HRESULT put_SecurityDescriptor(BSTR Value);
+    HRESULT get_Certificate(EncodingType Encoding, BSTR* pValue);
+    HRESULT put_Certificate(EncodingType Encoding, BSTR Value);
+    HRESULT get_UniqueContainerName(BSTR* pValue);
+    HRESULT get_Opened(VARIANT_BOOL* pValue);
+    HRESULT get_DefaultContainer(VARIANT_BOOL* pValue);
+    HRESULT get_Existing(VARIANT_BOOL* pValue);
+    HRESULT put_Existing(VARIANT_BOOL Value);
+    HRESULT get_Silent(VARIANT_BOOL* pValue);
+    HRESULT put_Silent(VARIANT_BOOL Value);
+    HRESULT get_ParentWindow(int* pValue);
+    HRESULT put_ParentWindow(int Value);
+    HRESULT get_UIContextMessage(BSTR* pValue);
+    HRESULT put_UIContextMessage(BSTR Value);
+    HRESULT put_Pin(BSTR Value);
+    HRESULT get_FriendlyName(BSTR* pValue);
+    HRESULT put_FriendlyName(BSTR Value);
+    HRESULT get_Description(BSTR* pValue);
+    HRESULT put_Description(BSTR Value);
 }
 alias X509HardwareKeyUsageFlags = int;
 enum : int
@@ -2581,52 +2581,52 @@ enum : int
 enum IID_IX509PrivateKey2 = GUID(0x728ab362, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509PrivateKey2 : IX509PrivateKey
 {
-    HRESULT get_HardwareKeyUsage(X509HardwareKeyUsageFlags*);
-    HRESULT put_HardwareKeyUsage(X509HardwareKeyUsageFlags);
-    HRESULT get_AlternateStorageLocation(BSTR*);
-    HRESULT put_AlternateStorageLocation(BSTR);
-    HRESULT get_AlgorithmName(BSTR*);
-    HRESULT put_AlgorithmName(BSTR);
-    HRESULT get_AlgorithmParameters(EncodingType, BSTR*);
-    HRESULT put_AlgorithmParameters(EncodingType, BSTR);
-    HRESULT get_ParametersExportType(X509KeyParametersExportType*);
-    HRESULT put_ParametersExportType(X509KeyParametersExportType);
+    HRESULT get_HardwareKeyUsage(X509HardwareKeyUsageFlags* pValue);
+    HRESULT put_HardwareKeyUsage(X509HardwareKeyUsageFlags Value);
+    HRESULT get_AlternateStorageLocation(BSTR* pValue);
+    HRESULT put_AlternateStorageLocation(BSTR Value);
+    HRESULT get_AlgorithmName(BSTR* pValue);
+    HRESULT put_AlgorithmName(BSTR Value);
+    HRESULT get_AlgorithmParameters(EncodingType Encoding, BSTR* pValue);
+    HRESULT put_AlgorithmParameters(EncodingType Encoding, BSTR Value);
+    HRESULT get_ParametersExportType(X509KeyParametersExportType* pValue);
+    HRESULT put_ParametersExportType(X509KeyParametersExportType Value);
 }
 enum IID_IX509EndorsementKey = GUID(0xb11cd855, 0xf4c4, 0x4fc6, [0xb7, 0x10, 0x44, 0x22, 0x23, 0x7f, 0x9, 0xe9]);
 interface IX509EndorsementKey : IDispatch
 {
-    HRESULT get_ProviderName(BSTR*);
-    HRESULT put_ProviderName(BSTR);
-    HRESULT get_Length(int*);
-    HRESULT get_Opened(VARIANT_BOOL*);
-    HRESULT AddCertificate(EncodingType, BSTR);
-    HRESULT RemoveCertificate(EncodingType, BSTR);
-    HRESULT GetCertificateByIndex(VARIANT_BOOL, int, EncodingType, BSTR*);
-    HRESULT GetCertificateCount(VARIANT_BOOL, int*);
-    HRESULT ExportPublicKey(IX509PublicKey*);
+    HRESULT get_ProviderName(BSTR* pValue);
+    HRESULT put_ProviderName(BSTR Value);
+    HRESULT get_Length(int* pValue);
+    HRESULT get_Opened(VARIANT_BOOL* pValue);
+    HRESULT AddCertificate(EncodingType Encoding, BSTR strCertificate);
+    HRESULT RemoveCertificate(EncodingType Encoding, BSTR strCertificate);
+    HRESULT GetCertificateByIndex(VARIANT_BOOL ManufacturerOnly, int dwIndex, EncodingType Encoding, BSTR* pValue);
+    HRESULT GetCertificateCount(VARIANT_BOOL ManufacturerOnly, int* pCount);
+    HRESULT ExportPublicKey(IX509PublicKey* ppPublicKey);
     HRESULT Open();
     HRESULT Close();
 }
 enum IID_IX509Extension = GUID(0x728ab30d, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509Extension : IDispatch
 {
-    HRESULT Initialize(IObjectId, EncodingType, BSTR);
-    HRESULT get_ObjectId(IObjectId*);
-    HRESULT get_RawData(EncodingType, BSTR*);
-    HRESULT get_Critical(VARIANT_BOOL*);
-    HRESULT put_Critical(VARIANT_BOOL);
+    HRESULT Initialize(IObjectId pObjectId, EncodingType Encoding, BSTR strEncodedData);
+    HRESULT get_ObjectId(IObjectId* ppValue);
+    HRESULT get_RawData(EncodingType Encoding, BSTR* pValue);
+    HRESULT get_Critical(VARIANT_BOOL* pValue);
+    HRESULT put_Critical(VARIANT_BOOL Value);
 }
 enum IID_IX509Extensions = GUID(0x728ab30e, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509Extensions : IDispatch
 {
-    HRESULT get_ItemByIndex(int, IX509Extension*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Add(IX509Extension);
-    HRESULT Remove(int);
+    HRESULT get_ItemByIndex(int Index, IX509Extension* pVal);
+    HRESULT get_Count(int* pVal);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT Add(IX509Extension pVal);
+    HRESULT Remove(int Index);
     HRESULT Clear();
-    HRESULT get_IndexByObjectId(IObjectId, int*);
-    HRESULT AddRange(IX509Extensions);
+    HRESULT get_IndexByObjectId(IObjectId pObjectId, int* pIndex);
+    HRESULT AddRange(IX509Extensions pValue);
 }
 alias X509KeyUsageFlags = int;
 enum : int
@@ -2647,32 +2647,32 @@ enum : int
 enum IID_IX509ExtensionKeyUsage = GUID(0x728ab30f, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509ExtensionKeyUsage : IX509Extension
 {
-    HRESULT InitializeEncode(X509KeyUsageFlags);
-    HRESULT InitializeDecode(EncodingType, BSTR);
-    HRESULT get_KeyUsage(X509KeyUsageFlags*);
+    HRESULT InitializeEncode(X509KeyUsageFlags UsageFlags);
+    HRESULT InitializeDecode(EncodingType Encoding, BSTR strEncodedData);
+    HRESULT get_KeyUsage(X509KeyUsageFlags* pValue);
 }
 enum IID_IX509ExtensionEnhancedKeyUsage = GUID(0x728ab310, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509ExtensionEnhancedKeyUsage : IX509Extension
 {
-    HRESULT InitializeEncode(IObjectIds);
-    HRESULT InitializeDecode(EncodingType, BSTR);
-    HRESULT get_EnhancedKeyUsage(IObjectIds*);
+    HRESULT InitializeEncode(IObjectIds pValue);
+    HRESULT InitializeDecode(EncodingType Encoding, BSTR strEncodedData);
+    HRESULT get_EnhancedKeyUsage(IObjectIds* ppValue);
 }
 enum IID_IX509ExtensionTemplateName = GUID(0x728ab311, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509ExtensionTemplateName : IX509Extension
 {
-    HRESULT InitializeEncode(BSTR);
-    HRESULT InitializeDecode(EncodingType, BSTR);
-    HRESULT get_TemplateName(BSTR*);
+    HRESULT InitializeEncode(BSTR strTemplateName);
+    HRESULT InitializeDecode(EncodingType Encoding, BSTR strEncodedData);
+    HRESULT get_TemplateName(BSTR* pValue);
 }
 enum IID_IX509ExtensionTemplate = GUID(0x728ab312, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509ExtensionTemplate : IX509Extension
 {
-    HRESULT InitializeEncode(IObjectId, int, int);
-    HRESULT InitializeDecode(EncodingType, BSTR);
-    HRESULT get_TemplateOid(IObjectId*);
-    HRESULT get_MajorVersion(int*);
-    HRESULT get_MinorVersion(int*);
+    HRESULT InitializeEncode(IObjectId pTemplateOid, int MajorVersion, int MinorVersion);
+    HRESULT InitializeDecode(EncodingType Encoding, BSTR strEncodedData);
+    HRESULT get_TemplateOid(IObjectId* ppValue);
+    HRESULT get_MajorVersion(int* pValue);
+    HRESULT get_MinorVersion(int* pValue);
 }
 alias AlternativeNameType = int;
 enum : int
@@ -2694,78 +2694,78 @@ enum : int
 enum IID_IAlternativeName = GUID(0x728ab313, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IAlternativeName : IDispatch
 {
-    HRESULT InitializeFromString(AlternativeNameType, BSTR);
-    HRESULT InitializeFromRawData(AlternativeNameType, EncodingType, BSTR);
-    HRESULT InitializeFromOtherName(IObjectId, EncodingType, BSTR, VARIANT_BOOL);
-    HRESULT get_Type(AlternativeNameType*);
-    HRESULT get_StrValue(BSTR*);
-    HRESULT get_ObjectId(IObjectId*);
-    HRESULT get_RawData(EncodingType, BSTR*);
+    HRESULT InitializeFromString(AlternativeNameType Type, BSTR strValue);
+    HRESULT InitializeFromRawData(AlternativeNameType Type, EncodingType Encoding, BSTR strRawData);
+    HRESULT InitializeFromOtherName(IObjectId pObjectId, EncodingType Encoding, BSTR strRawData, VARIANT_BOOL ToBeWrapped);
+    HRESULT get_Type(AlternativeNameType* pValue);
+    HRESULT get_StrValue(BSTR* pValue);
+    HRESULT get_ObjectId(IObjectId* ppValue);
+    HRESULT get_RawData(EncodingType Encoding, BSTR* pValue);
 }
 enum IID_IAlternativeNames = GUID(0x728ab314, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IAlternativeNames : IDispatch
 {
-    HRESULT get_ItemByIndex(int, IAlternativeName*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Add(IAlternativeName);
-    HRESULT Remove(int);
+    HRESULT get_ItemByIndex(int Index, IAlternativeName* pVal);
+    HRESULT get_Count(int* pVal);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT Add(IAlternativeName pVal);
+    HRESULT Remove(int Index);
     HRESULT Clear();
 }
 enum IID_IX509ExtensionAlternativeNames = GUID(0x728ab315, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509ExtensionAlternativeNames : IX509Extension
 {
-    HRESULT InitializeEncode(IAlternativeNames);
-    HRESULT InitializeDecode(EncodingType, BSTR);
-    HRESULT get_AlternativeNames(IAlternativeNames*);
+    HRESULT InitializeEncode(IAlternativeNames pValue);
+    HRESULT InitializeDecode(EncodingType Encoding, BSTR strEncodedData);
+    HRESULT get_AlternativeNames(IAlternativeNames* ppValue);
 }
 enum IID_IX509ExtensionBasicConstraints = GUID(0x728ab316, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509ExtensionBasicConstraints : IX509Extension
 {
-    HRESULT InitializeEncode(VARIANT_BOOL, int);
-    HRESULT InitializeDecode(EncodingType, BSTR);
-    HRESULT get_IsCA(VARIANT_BOOL*);
-    HRESULT get_PathLenConstraint(int*);
+    HRESULT InitializeEncode(VARIANT_BOOL IsCA, int PathLenConstraint);
+    HRESULT InitializeDecode(EncodingType Encoding, BSTR strEncodedData);
+    HRESULT get_IsCA(VARIANT_BOOL* pValue);
+    HRESULT get_PathLenConstraint(int* pValue);
 }
 enum IID_IX509ExtensionSubjectKeyIdentifier = GUID(0x728ab317, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509ExtensionSubjectKeyIdentifier : IX509Extension
 {
-    HRESULT InitializeEncode(EncodingType, BSTR);
-    HRESULT InitializeDecode(EncodingType, BSTR);
-    HRESULT get_SubjectKeyIdentifier(EncodingType, BSTR*);
+    HRESULT InitializeEncode(EncodingType Encoding, BSTR strKeyIdentifier);
+    HRESULT InitializeDecode(EncodingType Encoding, BSTR strEncodedData);
+    HRESULT get_SubjectKeyIdentifier(EncodingType Encoding, BSTR* pValue);
 }
 enum IID_IX509ExtensionAuthorityKeyIdentifier = GUID(0x728ab318, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509ExtensionAuthorityKeyIdentifier : IX509Extension
 {
-    HRESULT InitializeEncode(EncodingType, BSTR);
-    HRESULT InitializeDecode(EncodingType, BSTR);
-    HRESULT get_AuthorityKeyIdentifier(EncodingType, BSTR*);
+    HRESULT InitializeEncode(EncodingType Encoding, BSTR strKeyIdentifier);
+    HRESULT InitializeDecode(EncodingType Encoding, BSTR strEncodedData);
+    HRESULT get_AuthorityKeyIdentifier(EncodingType Encoding, BSTR* pValue);
 }
 enum IID_ISmimeCapability = GUID(0x728ab319, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ISmimeCapability : IDispatch
 {
-    HRESULT Initialize(IObjectId, int);
-    HRESULT get_ObjectId(IObjectId*);
-    HRESULT get_BitCount(int*);
+    HRESULT Initialize(IObjectId pObjectId, int BitCount);
+    HRESULT get_ObjectId(IObjectId* ppValue);
+    HRESULT get_BitCount(int* pValue);
 }
 enum IID_ISmimeCapabilities = GUID(0x728ab31a, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ISmimeCapabilities : IDispatch
 {
-    HRESULT get_ItemByIndex(int, ISmimeCapability*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Add(ISmimeCapability);
-    HRESULT Remove(int);
+    HRESULT get_ItemByIndex(int Index, ISmimeCapability* pVal);
+    HRESULT get_Count(int* pVal);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT Add(ISmimeCapability pVal);
+    HRESULT Remove(int Index);
     HRESULT Clear();
-    HRESULT AddFromCsp(ICspInformation);
-    HRESULT AddAvailableSmimeCapabilities(VARIANT_BOOL);
+    HRESULT AddFromCsp(ICspInformation pValue);
+    HRESULT AddAvailableSmimeCapabilities(VARIANT_BOOL MachineContext);
 }
 enum IID_IX509ExtensionSmimeCapabilities = GUID(0x728ab31b, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509ExtensionSmimeCapabilities : IX509Extension
 {
-    HRESULT InitializeEncode(ISmimeCapabilities);
-    HRESULT InitializeDecode(EncodingType, BSTR);
-    HRESULT get_SmimeCapabilities(ISmimeCapabilities*);
+    HRESULT InitializeEncode(ISmimeCapabilities pValue);
+    HRESULT InitializeDecode(EncodingType Encoding, BSTR strEncodedData);
+    HRESULT get_SmimeCapabilities(ISmimeCapabilities* ppValue);
 }
 alias PolicyQualifierType = int;
 enum : int
@@ -2779,76 +2779,76 @@ enum : int
 enum IID_IPolicyQualifier = GUID(0x728ab31c, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IPolicyQualifier : IDispatch
 {
-    HRESULT InitializeEncode(BSTR, PolicyQualifierType);
-    HRESULT get_ObjectId(IObjectId*);
-    HRESULT get_Qualifier(BSTR*);
-    HRESULT get_Type(PolicyQualifierType*);
-    HRESULT get_RawData(EncodingType, BSTR*);
+    HRESULT InitializeEncode(BSTR strQualifier, PolicyQualifierType Type);
+    HRESULT get_ObjectId(IObjectId* ppValue);
+    HRESULT get_Qualifier(BSTR* pValue);
+    HRESULT get_Type(PolicyQualifierType* pValue);
+    HRESULT get_RawData(EncodingType Encoding, BSTR* pValue);
 }
 enum IID_IPolicyQualifiers = GUID(0x728ab31d, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IPolicyQualifiers : IDispatch
 {
-    HRESULT get_ItemByIndex(int, IPolicyQualifier*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Add(IPolicyQualifier);
-    HRESULT Remove(int);
+    HRESULT get_ItemByIndex(int Index, IPolicyQualifier* pVal);
+    HRESULT get_Count(int* pVal);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT Add(IPolicyQualifier pVal);
+    HRESULT Remove(int Index);
     HRESULT Clear();
 }
 enum IID_ICertificatePolicy = GUID(0x728ab31e, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICertificatePolicy : IDispatch
 {
-    HRESULT Initialize(IObjectId);
-    HRESULT get_ObjectId(IObjectId*);
-    HRESULT get_PolicyQualifiers(IPolicyQualifiers*);
+    HRESULT Initialize(IObjectId pValue);
+    HRESULT get_ObjectId(IObjectId* ppValue);
+    HRESULT get_PolicyQualifiers(IPolicyQualifiers* ppValue);
 }
 enum IID_ICertificatePolicies = GUID(0x728ab31f, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICertificatePolicies : IDispatch
 {
-    HRESULT get_ItemByIndex(int, ICertificatePolicy*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Add(ICertificatePolicy);
-    HRESULT Remove(int);
+    HRESULT get_ItemByIndex(int Index, ICertificatePolicy* pVal);
+    HRESULT get_Count(int* pVal);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT Add(ICertificatePolicy pVal);
+    HRESULT Remove(int Index);
     HRESULT Clear();
 }
 enum IID_IX509ExtensionCertificatePolicies = GUID(0x728ab320, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509ExtensionCertificatePolicies : IX509Extension
 {
-    HRESULT InitializeEncode(ICertificatePolicies);
-    HRESULT InitializeDecode(EncodingType, BSTR);
-    HRESULT get_Policies(ICertificatePolicies*);
+    HRESULT InitializeEncode(ICertificatePolicies pValue);
+    HRESULT InitializeDecode(EncodingType Encoding, BSTR strEncodedData);
+    HRESULT get_Policies(ICertificatePolicies* ppValue);
 }
 enum IID_IX509ExtensionMSApplicationPolicies = GUID(0x728ab321, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509ExtensionMSApplicationPolicies : IX509Extension
 {
-    HRESULT InitializeEncode(ICertificatePolicies);
-    HRESULT InitializeDecode(EncodingType, BSTR);
-    HRESULT get_Policies(ICertificatePolicies*);
+    HRESULT InitializeEncode(ICertificatePolicies pValue);
+    HRESULT InitializeDecode(EncodingType Encoding, BSTR strEncodedData);
+    HRESULT get_Policies(ICertificatePolicies* ppValue);
 }
 enum IID_IX509Attribute = GUID(0x728ab322, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509Attribute : IDispatch
 {
-    HRESULT Initialize(IObjectId, EncodingType, BSTR);
-    HRESULT get_ObjectId(IObjectId*);
-    HRESULT get_RawData(EncodingType, BSTR*);
+    HRESULT Initialize(IObjectId pObjectId, EncodingType Encoding, BSTR strEncodedData);
+    HRESULT get_ObjectId(IObjectId* ppValue);
+    HRESULT get_RawData(EncodingType Encoding, BSTR* pValue);
 }
 enum IID_IX509Attributes = GUID(0x728ab323, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509Attributes : IDispatch
 {
-    HRESULT get_ItemByIndex(int, IX509Attribute*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Add(IX509Attribute);
-    HRESULT Remove(int);
+    HRESULT get_ItemByIndex(int Index, IX509Attribute* pVal);
+    HRESULT get_Count(int* pVal);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT Add(IX509Attribute pVal);
+    HRESULT Remove(int Index);
     HRESULT Clear();
 }
 enum IID_IX509AttributeExtensions = GUID(0x728ab324, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509AttributeExtensions : IX509Attribute
 {
-    HRESULT InitializeEncode(IX509Extensions);
-    HRESULT InitializeDecode(EncodingType, BSTR);
-    HRESULT get_X509Extensions(IX509Extensions*);
+    HRESULT InitializeEncode(IX509Extensions pExtensions);
+    HRESULT InitializeDecode(EncodingType Encoding, BSTR strEncodedData);
+    HRESULT get_X509Extensions(IX509Extensions* ppValue);
 }
 alias RequestClientInfoClientId = int;
 enum : int
@@ -2871,71 +2871,71 @@ enum : int
 enum IID_IX509AttributeClientId = GUID(0x728ab325, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509AttributeClientId : IX509Attribute
 {
-    HRESULT InitializeEncode(RequestClientInfoClientId, BSTR, BSTR, BSTR);
-    HRESULT InitializeDecode(EncodingType, BSTR);
-    HRESULT get_ClientId(RequestClientInfoClientId*);
-    HRESULT get_MachineDnsName(BSTR*);
-    HRESULT get_UserSamName(BSTR*);
-    HRESULT get_ProcessName(BSTR*);
+    HRESULT InitializeEncode(RequestClientInfoClientId ClientId, BSTR strMachineDnsName, BSTR strUserSamName, BSTR strProcessName);
+    HRESULT InitializeDecode(EncodingType Encoding, BSTR strEncodedData);
+    HRESULT get_ClientId(RequestClientInfoClientId* pValue);
+    HRESULT get_MachineDnsName(BSTR* pValue);
+    HRESULT get_UserSamName(BSTR* pValue);
+    HRESULT get_ProcessName(BSTR* pValue);
 }
 enum IID_IX509AttributeRenewalCertificate = GUID(0x728ab326, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509AttributeRenewalCertificate : IX509Attribute
 {
-    HRESULT InitializeEncode(EncodingType, BSTR);
-    HRESULT InitializeDecode(EncodingType, BSTR);
-    HRESULT get_RenewalCertificate(EncodingType, BSTR*);
+    HRESULT InitializeEncode(EncodingType Encoding, BSTR strCert);
+    HRESULT InitializeDecode(EncodingType Encoding, BSTR strEncodedData);
+    HRESULT get_RenewalCertificate(EncodingType Encoding, BSTR* pValue);
 }
 enum IID_IX509AttributeArchiveKey = GUID(0x728ab327, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509AttributeArchiveKey : IX509Attribute
 {
-    HRESULT InitializeEncode(IX509PrivateKey, EncodingType, BSTR, IObjectId, int);
-    HRESULT InitializeDecode(EncodingType, BSTR);
-    HRESULT get_EncryptedKeyBlob(EncodingType, BSTR*);
-    HRESULT get_EncryptionAlgorithm(IObjectId*);
-    HRESULT get_EncryptionStrength(int*);
+    HRESULT InitializeEncode(IX509PrivateKey pKey, EncodingType Encoding, BSTR strCAXCert, IObjectId pAlgorithm, int EncryptionStrength);
+    HRESULT InitializeDecode(EncodingType Encoding, BSTR strEncodedData);
+    HRESULT get_EncryptedKeyBlob(EncodingType Encoding, BSTR* pValue);
+    HRESULT get_EncryptionAlgorithm(IObjectId* ppValue);
+    HRESULT get_EncryptionStrength(int* pValue);
 }
 enum IID_IX509AttributeArchiveKeyHash = GUID(0x728ab328, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509AttributeArchiveKeyHash : IX509Attribute
 {
-    HRESULT InitializeEncodeFromEncryptedKeyBlob(EncodingType, BSTR);
-    HRESULT InitializeDecode(EncodingType, BSTR);
-    HRESULT get_EncryptedKeyHashBlob(EncodingType, BSTR*);
+    HRESULT InitializeEncodeFromEncryptedKeyBlob(EncodingType Encoding, BSTR strEncryptedKeyBlob);
+    HRESULT InitializeDecode(EncodingType Encoding, BSTR strEncodedData);
+    HRESULT get_EncryptedKeyHashBlob(EncodingType Encoding, BSTR* pValue);
 }
 enum IID_IX509AttributeOSVersion = GUID(0x728ab32a, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509AttributeOSVersion : IX509Attribute
 {
-    HRESULT InitializeEncode(BSTR);
-    HRESULT InitializeDecode(EncodingType, BSTR);
-    HRESULT get_OSVersion(BSTR*);
+    HRESULT InitializeEncode(BSTR strOSVersion);
+    HRESULT InitializeDecode(EncodingType Encoding, BSTR strEncodedData);
+    HRESULT get_OSVersion(BSTR* pValue);
 }
 enum IID_IX509AttributeCspProvider = GUID(0x728ab32b, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509AttributeCspProvider : IX509Attribute
 {
-    HRESULT InitializeEncode(X509KeySpec, BSTR, EncodingType, BSTR);
-    HRESULT InitializeDecode(EncodingType, BSTR);
-    HRESULT get_KeySpec(X509KeySpec*);
-    HRESULT get_ProviderName(BSTR*);
-    HRESULT get_Signature(EncodingType, BSTR*);
+    HRESULT InitializeEncode(X509KeySpec KeySpec, BSTR strProviderName, EncodingType Encoding, BSTR strSignature);
+    HRESULT InitializeDecode(EncodingType Encoding, BSTR strEncodedData);
+    HRESULT get_KeySpec(X509KeySpec* pValue);
+    HRESULT get_ProviderName(BSTR* pValue);
+    HRESULT get_Signature(EncodingType Encoding, BSTR* pValue);
 }
 enum IID_ICryptAttribute = GUID(0x728ab32c, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICryptAttribute : IDispatch
 {
-    HRESULT InitializeFromObjectId(IObjectId);
-    HRESULT InitializeFromValues(IX509Attributes);
-    HRESULT get_ObjectId(IObjectId*);
-    HRESULT get_Values(IX509Attributes*);
+    HRESULT InitializeFromObjectId(IObjectId pObjectId);
+    HRESULT InitializeFromValues(IX509Attributes pAttributes);
+    HRESULT get_ObjectId(IObjectId* ppValue);
+    HRESULT get_Values(IX509Attributes* ppValue);
 }
 enum IID_ICryptAttributes = GUID(0x728ab32d, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICryptAttributes : IDispatch
 {
-    HRESULT get_ItemByIndex(int, ICryptAttribute*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Add(ICryptAttribute);
-    HRESULT Remove(int);
+    HRESULT get_ItemByIndex(int Index, ICryptAttribute* pVal);
+    HRESULT get_Count(int* pVal);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT Add(ICryptAttribute pVal);
+    HRESULT Remove(int Index);
     HRESULT Clear();
-    HRESULT get_IndexByObjectId(IObjectId, int*);
-    HRESULT AddRange(ICryptAttributes);
+    HRESULT get_IndexByObjectId(IObjectId pObjectId, int* pIndex);
+    HRESULT AddRange(ICryptAttributes pValue);
 }
 alias CERTENROLL_PROPERTYID = int;
 enum : int
@@ -3045,97 +3045,97 @@ enum : int
 enum IID_ICertProperty = GUID(0x728ab32e, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICertProperty : IDispatch
 {
-    HRESULT InitializeFromCertificate(VARIANT_BOOL, EncodingType, BSTR);
-    HRESULT InitializeDecode(EncodingType, BSTR);
-    HRESULT get_PropertyId(CERTENROLL_PROPERTYID*);
-    HRESULT put_PropertyId(CERTENROLL_PROPERTYID);
-    HRESULT get_RawData(EncodingType, BSTR*);
-    HRESULT RemoveFromCertificate(VARIANT_BOOL, EncodingType, BSTR);
-    HRESULT SetValueOnCertificate(VARIANT_BOOL, EncodingType, BSTR);
+    HRESULT InitializeFromCertificate(VARIANT_BOOL MachineContext, EncodingType Encoding, BSTR strCertificate);
+    HRESULT InitializeDecode(EncodingType Encoding, BSTR strEncodedData);
+    HRESULT get_PropertyId(CERTENROLL_PROPERTYID* pValue);
+    HRESULT put_PropertyId(CERTENROLL_PROPERTYID Value);
+    HRESULT get_RawData(EncodingType Encoding, BSTR* pValue);
+    HRESULT RemoveFromCertificate(VARIANT_BOOL MachineContext, EncodingType Encoding, BSTR strCertificate);
+    HRESULT SetValueOnCertificate(VARIANT_BOOL MachineContext, EncodingType Encoding, BSTR strCertificate);
 }
 enum IID_ICertProperties = GUID(0x728ab32f, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICertProperties : IDispatch
 {
-    HRESULT get_ItemByIndex(int, ICertProperty*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Add(ICertProperty);
-    HRESULT Remove(int);
+    HRESULT get_ItemByIndex(int Index, ICertProperty* pVal);
+    HRESULT get_Count(int* pVal);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT Add(ICertProperty pVal);
+    HRESULT Remove(int Index);
     HRESULT Clear();
-    HRESULT InitializeFromCertificate(VARIANT_BOOL, EncodingType, BSTR);
+    HRESULT InitializeFromCertificate(VARIANT_BOOL MachineContext, EncodingType Encoding, BSTR strCertificate);
 }
 enum IID_ICertPropertyFriendlyName = GUID(0x728ab330, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICertPropertyFriendlyName : ICertProperty
 {
-    HRESULT Initialize(BSTR);
-    HRESULT get_FriendlyName(BSTR*);
+    HRESULT Initialize(BSTR strFriendlyName);
+    HRESULT get_FriendlyName(BSTR* pValue);
 }
 enum IID_ICertPropertyDescription = GUID(0x728ab331, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICertPropertyDescription : ICertProperty
 {
-    HRESULT Initialize(BSTR);
-    HRESULT get_Description(BSTR*);
+    HRESULT Initialize(BSTR strDescription);
+    HRESULT get_Description(BSTR* pValue);
 }
 enum IID_ICertPropertyAutoEnroll = GUID(0x728ab332, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICertPropertyAutoEnroll : ICertProperty
 {
-    HRESULT Initialize(BSTR);
-    HRESULT get_TemplateName(BSTR*);
+    HRESULT Initialize(BSTR strTemplateName);
+    HRESULT get_TemplateName(BSTR* pValue);
 }
 enum IID_ICertPropertyRequestOriginator = GUID(0x728ab333, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICertPropertyRequestOriginator : ICertProperty
 {
-    HRESULT Initialize(BSTR);
+    HRESULT Initialize(BSTR strRequestOriginator);
     HRESULT InitializeFromLocalRequestOriginator();
-    HRESULT get_RequestOriginator(BSTR*);
+    HRESULT get_RequestOriginator(BSTR* pValue);
 }
 enum IID_ICertPropertySHA1Hash = GUID(0x728ab334, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICertPropertySHA1Hash : ICertProperty
 {
-    HRESULT Initialize(EncodingType, BSTR);
-    HRESULT get_SHA1Hash(EncodingType, BSTR*);
+    HRESULT Initialize(EncodingType Encoding, BSTR strRenewalValue);
+    HRESULT get_SHA1Hash(EncodingType Encoding, BSTR* pValue);
 }
 enum IID_ICertPropertyKeyProvInfo = GUID(0x728ab336, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICertPropertyKeyProvInfo : ICertProperty
 {
-    HRESULT Initialize(IX509PrivateKey);
-    HRESULT get_PrivateKey(IX509PrivateKey*);
+    HRESULT Initialize(IX509PrivateKey pValue);
+    HRESULT get_PrivateKey(IX509PrivateKey* ppValue);
 }
 enum IID_ICertPropertyArchived = GUID(0x728ab337, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICertPropertyArchived : ICertProperty
 {
-    HRESULT Initialize(VARIANT_BOOL);
-    HRESULT get_Archived(VARIANT_BOOL*);
+    HRESULT Initialize(VARIANT_BOOL ArchivedValue);
+    HRESULT get_Archived(VARIANT_BOOL* pValue);
 }
 enum IID_ICertPropertyBackedUp = GUID(0x728ab338, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICertPropertyBackedUp : ICertProperty
 {
-    HRESULT InitializeFromCurrentTime(VARIANT_BOOL);
-    HRESULT Initialize(VARIANT_BOOL, double);
-    HRESULT get_BackedUpValue(VARIANT_BOOL*);
-    HRESULT get_BackedUpTime(double*);
+    HRESULT InitializeFromCurrentTime(VARIANT_BOOL BackedUpValue);
+    HRESULT Initialize(VARIANT_BOOL BackedUpValue, double Date);
+    HRESULT get_BackedUpValue(VARIANT_BOOL* pValue);
+    HRESULT get_BackedUpTime(double* pDate);
 }
 enum IID_ICertPropertyEnrollment = GUID(0x728ab339, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICertPropertyEnrollment : ICertProperty
 {
-    HRESULT Initialize(int, BSTR, BSTR, BSTR);
-    HRESULT get_RequestId(int*);
-    HRESULT get_CADnsName(BSTR*);
-    HRESULT get_CAName(BSTR*);
-    HRESULT get_FriendlyName(BSTR*);
+    HRESULT Initialize(int RequestId, BSTR strCADnsName, BSTR strCAName, BSTR strFriendlyName);
+    HRESULT get_RequestId(int* pValue);
+    HRESULT get_CADnsName(BSTR* pValue);
+    HRESULT get_CAName(BSTR* pValue);
+    HRESULT get_FriendlyName(BSTR* pValue);
 }
 enum IID_ICertPropertyRenewal = GUID(0x728ab33a, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICertPropertyRenewal : ICertProperty
 {
-    HRESULT Initialize(EncodingType, BSTR);
-    HRESULT InitializeFromCertificateHash(VARIANT_BOOL, EncodingType, BSTR);
-    HRESULT get_Renewal(EncodingType, BSTR*);
+    HRESULT Initialize(EncodingType Encoding, BSTR strRenewalValue);
+    HRESULT InitializeFromCertificateHash(VARIANT_BOOL MachineContext, EncodingType Encoding, BSTR strCertificate);
+    HRESULT get_Renewal(EncodingType Encoding, BSTR* pValue);
 }
 enum IID_ICertPropertyArchivedKeyHash = GUID(0x728ab33b, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICertPropertyArchivedKeyHash : ICertProperty
 {
-    HRESULT Initialize(EncodingType, BSTR);
-    HRESULT get_ArchivedKeyHash(EncodingType, BSTR*);
+    HRESULT Initialize(EncodingType Encoding, BSTR strArchivedKeyHashValue);
+    HRESULT get_ArchivedKeyHash(EncodingType Encoding, BSTR* pValue);
 }
 alias EnrollmentPolicyServerPropertyFlags = int;
 enum : int
@@ -3158,74 +3158,74 @@ enum : int
 enum IID_ICertPropertyEnrollmentPolicyServer = GUID(0x728ab34a, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICertPropertyEnrollmentPolicyServer : ICertProperty
 {
-    HRESULT Initialize(EnrollmentPolicyServerPropertyFlags, X509EnrollmentAuthFlags, X509EnrollmentAuthFlags, PolicyServerUrlFlags, BSTR, BSTR, BSTR, BSTR);
-    HRESULT GetPolicyServerUrl(BSTR*);
-    HRESULT GetPolicyServerId(BSTR*);
-    HRESULT GetEnrollmentServerUrl(BSTR*);
-    HRESULT GetRequestIdString(BSTR*);
-    HRESULT GetPropertyFlags(EnrollmentPolicyServerPropertyFlags*);
-    HRESULT GetUrlFlags(PolicyServerUrlFlags*);
-    HRESULT GetAuthentication(X509EnrollmentAuthFlags*);
-    HRESULT GetEnrollmentServerAuthentication(X509EnrollmentAuthFlags*);
+    HRESULT Initialize(EnrollmentPolicyServerPropertyFlags PropertyFlags, X509EnrollmentAuthFlags AuthFlags, X509EnrollmentAuthFlags EnrollmentServerAuthFlags, PolicyServerUrlFlags UrlFlags, BSTR strRequestId, BSTR strUrl, BSTR strId, BSTR strEnrollmentServerUrl);
+    HRESULT GetPolicyServerUrl(BSTR* pValue);
+    HRESULT GetPolicyServerId(BSTR* pValue);
+    HRESULT GetEnrollmentServerUrl(BSTR* pValue);
+    HRESULT GetRequestIdString(BSTR* pValue);
+    HRESULT GetPropertyFlags(EnrollmentPolicyServerPropertyFlags* pValue);
+    HRESULT GetUrlFlags(PolicyServerUrlFlags* pValue);
+    HRESULT GetAuthentication(X509EnrollmentAuthFlags* pValue);
+    HRESULT GetEnrollmentServerAuthentication(X509EnrollmentAuthFlags* pValue);
 }
 enum IID_IX509SignatureInformation = GUID(0x728ab33c, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509SignatureInformation : IDispatch
 {
-    HRESULT get_HashAlgorithm(IObjectId*);
-    HRESULT put_HashAlgorithm(IObjectId);
-    HRESULT get_PublicKeyAlgorithm(IObjectId*);
-    HRESULT put_PublicKeyAlgorithm(IObjectId);
-    HRESULT get_Parameters(EncodingType, BSTR*);
-    HRESULT put_Parameters(EncodingType, BSTR);
-    HRESULT get_AlternateSignatureAlgorithm(VARIANT_BOOL*);
-    HRESULT put_AlternateSignatureAlgorithm(VARIANT_BOOL);
-    HRESULT get_AlternateSignatureAlgorithmSet(VARIANT_BOOL*);
-    HRESULT get_NullSigned(VARIANT_BOOL*);
-    HRESULT put_NullSigned(VARIANT_BOOL);
-    HRESULT GetSignatureAlgorithm(VARIANT_BOOL, VARIANT_BOOL, IObjectId*);
+    HRESULT get_HashAlgorithm(IObjectId* ppValue);
+    HRESULT put_HashAlgorithm(IObjectId pValue);
+    HRESULT get_PublicKeyAlgorithm(IObjectId* ppValue);
+    HRESULT put_PublicKeyAlgorithm(IObjectId pValue);
+    HRESULT get_Parameters(EncodingType Encoding, BSTR* pValue);
+    HRESULT put_Parameters(EncodingType Encoding, BSTR Value);
+    HRESULT get_AlternateSignatureAlgorithm(VARIANT_BOOL* pValue);
+    HRESULT put_AlternateSignatureAlgorithm(VARIANT_BOOL Value);
+    HRESULT get_AlternateSignatureAlgorithmSet(VARIANT_BOOL* pValue);
+    HRESULT get_NullSigned(VARIANT_BOOL* pValue);
+    HRESULT put_NullSigned(VARIANT_BOOL Value);
+    HRESULT GetSignatureAlgorithm(VARIANT_BOOL Pkcs7Signature, VARIANT_BOOL SignatureKey, IObjectId* ppValue);
     HRESULT SetDefaultValues();
 }
 enum IID_ISignerCertificate = GUID(0x728ab33d, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ISignerCertificate : IDispatch
 {
-    HRESULT Initialize(VARIANT_BOOL, X509PrivateKeyVerify, EncodingType, BSTR);
-    HRESULT get_Certificate(EncodingType, BSTR*);
-    HRESULT get_PrivateKey(IX509PrivateKey*);
-    HRESULT get_Silent(VARIANT_BOOL*);
-    HRESULT put_Silent(VARIANT_BOOL);
-    HRESULT get_ParentWindow(int*);
-    HRESULT put_ParentWindow(int);
-    HRESULT get_UIContextMessage(BSTR*);
-    HRESULT put_UIContextMessage(BSTR);
-    HRESULT put_Pin(BSTR);
-    HRESULT get_SignatureInformation(IX509SignatureInformation*);
+    HRESULT Initialize(VARIANT_BOOL MachineContext, X509PrivateKeyVerify VerifyType, EncodingType Encoding, BSTR strCertificate);
+    HRESULT get_Certificate(EncodingType Encoding, BSTR* pValue);
+    HRESULT get_PrivateKey(IX509PrivateKey* ppValue);
+    HRESULT get_Silent(VARIANT_BOOL* pValue);
+    HRESULT put_Silent(VARIANT_BOOL Value);
+    HRESULT get_ParentWindow(int* pValue);
+    HRESULT put_ParentWindow(int Value);
+    HRESULT get_UIContextMessage(BSTR* pValue);
+    HRESULT put_UIContextMessage(BSTR Value);
+    HRESULT put_Pin(BSTR Value);
+    HRESULT get_SignatureInformation(IX509SignatureInformation* ppValue);
 }
 enum IID_ISignerCertificates = GUID(0x728ab33e, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ISignerCertificates : IDispatch
 {
-    HRESULT get_ItemByIndex(int, ISignerCertificate*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Add(ISignerCertificate);
-    HRESULT Remove(int);
+    HRESULT get_ItemByIndex(int Index, ISignerCertificate* pVal);
+    HRESULT get_Count(int* pVal);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT Add(ISignerCertificate pVal);
+    HRESULT Remove(int Index);
     HRESULT Clear();
-    HRESULT Find(ISignerCertificate, int*);
+    HRESULT Find(ISignerCertificate pSignerCert, int* piSignerCert);
 }
 enum IID_IX509NameValuePair = GUID(0x728ab33f, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509NameValuePair : IDispatch
 {
-    HRESULT Initialize(BSTR, BSTR);
-    HRESULT get_Value(BSTR*);
-    HRESULT get_Name(BSTR*);
+    HRESULT Initialize(BSTR strName, BSTR strValue);
+    HRESULT get_Value(BSTR* pValue);
+    HRESULT get_Name(BSTR* pValue);
 }
 enum IID_IX509NameValuePairs = GUID(0x728ab340, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509NameValuePairs : IDispatch
 {
-    HRESULT get_ItemByIndex(int, IX509NameValuePair*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Add(IX509NameValuePair);
-    HRESULT Remove(int);
+    HRESULT get_ItemByIndex(int Index, IX509NameValuePair* pVal);
+    HRESULT get_Count(int* pVal);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT Add(IX509NameValuePair pVal);
+    HRESULT Remove(int Index);
     HRESULT Clear();
 }
 alias EnrollmentTemplateProperty = int;
@@ -3267,19 +3267,19 @@ enum : int
 enum IID_IX509CertificateTemplate = GUID(0x54244a13, 0x555a, 0x4e22, [0x89, 0x6d, 0x1b, 0xe, 0x52, 0xf7, 0x64, 0x6]);
 interface IX509CertificateTemplate : IDispatch
 {
-    HRESULT get_Property(EnrollmentTemplateProperty, VARIANT*);
+    HRESULT get_Property(EnrollmentTemplateProperty property, VARIANT* pValue);
 }
 enum IID_IX509CertificateTemplates = GUID(0x13b79003, 0x2181, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509CertificateTemplates : IDispatch
 {
-    HRESULT get_ItemByIndex(int, IX509CertificateTemplate*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Add(IX509CertificateTemplate);
-    HRESULT Remove(int);
+    HRESULT get_ItemByIndex(int Index, IX509CertificateTemplate* pVal);
+    HRESULT get_Count(int* pVal);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT Add(IX509CertificateTemplate pVal);
+    HRESULT Remove(int Index);
     HRESULT Clear();
-    HRESULT get_ItemByName(BSTR, IX509CertificateTemplate*);
-    HRESULT get_ItemByOid(IObjectId, IX509CertificateTemplate*);
+    HRESULT get_ItemByName(BSTR bstrName, IX509CertificateTemplate* ppValue);
+    HRESULT get_ItemByOid(IObjectId pOid, IX509CertificateTemplate* ppValue);
 }
 alias CommitTemplateFlags = int;
 enum : int
@@ -3293,11 +3293,11 @@ enum : int
 enum IID_IX509CertificateTemplateWritable = GUID(0xf49466a7, 0x395a, 0x4e9e, [0xb6, 0xe7, 0x32, 0xb3, 0x31, 0x60, 0xd, 0xc0]);
 interface IX509CertificateTemplateWritable : IDispatch
 {
-    HRESULT Initialize(IX509CertificateTemplate);
-    HRESULT Commit(CommitTemplateFlags, BSTR);
-    HRESULT get_Property(EnrollmentTemplateProperty, VARIANT*);
-    HRESULT put_Property(EnrollmentTemplateProperty, VARIANT);
-    HRESULT get_Template(IX509CertificateTemplate*);
+    HRESULT Initialize(IX509CertificateTemplate pValue);
+    HRESULT Commit(CommitTemplateFlags commitFlags, BSTR strServerContext);
+    HRESULT get_Property(EnrollmentTemplateProperty property, VARIANT* pValue);
+    HRESULT put_Property(EnrollmentTemplateProperty property, VARIANT value);
+    HRESULT get_Template(IX509CertificateTemplate* ppValue);
 }
 alias EnrollmentCAProperty = int;
 enum : int
@@ -3319,19 +3319,19 @@ enum : int
 enum IID_ICertificationAuthority = GUID(0x835d1f61, 0x1e95, 0x4bc8, [0xb4, 0xd3, 0x97, 0x6c, 0x42, 0xb9, 0x68, 0xf7]);
 interface ICertificationAuthority : IDispatch
 {
-    HRESULT get_Property(EnrollmentCAProperty, VARIANT*);
+    HRESULT get_Property(EnrollmentCAProperty property, VARIANT* pValue);
 }
 enum IID_ICertificationAuthorities = GUID(0x13b79005, 0x2181, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface ICertificationAuthorities : IDispatch
 {
-    HRESULT get_ItemByIndex(int, ICertificationAuthority*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Add(ICertificationAuthority);
-    HRESULT Remove(int);
+    HRESULT get_ItemByIndex(int Index, ICertificationAuthority* pVal);
+    HRESULT get_Count(int* pVal);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT Add(ICertificationAuthority pVal);
+    HRESULT Remove(int Index);
     HRESULT Clear();
     HRESULT ComputeSiteCosts();
-    HRESULT get_ItemByName(BSTR, ICertificationAuthority*);
+    HRESULT get_ItemByName(BSTR strName, ICertificationAuthority* ppValue);
 }
 alias X509EnrollmentPolicyLoadOption = int;
 enum : int
@@ -3367,60 +3367,60 @@ enum : int
 enum IID_IX509EnrollmentPolicyServer = GUID(0x13b79026, 0x2181, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509EnrollmentPolicyServer : IDispatch
 {
-    HRESULT Initialize(BSTR, BSTR, X509EnrollmentAuthFlags, VARIANT_BOOL, X509CertificateEnrollmentContext);
-    HRESULT LoadPolicy(X509EnrollmentPolicyLoadOption);
-    HRESULT GetTemplates(IX509CertificateTemplates*);
-    HRESULT GetCAsForTemplate(IX509CertificateTemplate, ICertificationAuthorities*);
-    HRESULT GetCAs(ICertificationAuthorities*);
+    HRESULT Initialize(BSTR bstrPolicyServerUrl, BSTR bstrPolicyServerId, X509EnrollmentAuthFlags authFlags, VARIANT_BOOL fIsUnTrusted, X509CertificateEnrollmentContext context);
+    HRESULT LoadPolicy(X509EnrollmentPolicyLoadOption option);
+    HRESULT GetTemplates(IX509CertificateTemplates* pTemplates);
+    HRESULT GetCAsForTemplate(IX509CertificateTemplate pTemplate, ICertificationAuthorities* ppCAs);
+    HRESULT GetCAs(ICertificationAuthorities* ppCAs);
     HRESULT Validate();
-    HRESULT GetCustomOids(IObjectIds*);
-    HRESULT GetNextUpdateTime(double*);
-    HRESULT GetLastUpdateTime(double*);
-    HRESULT GetPolicyServerUrl(BSTR*);
-    HRESULT GetPolicyServerId(BSTR*);
-    HRESULT GetFriendlyName(BSTR*);
-    HRESULT GetIsDefaultCEP(VARIANT_BOOL*);
-    HRESULT GetUseClientId(VARIANT_BOOL*);
-    HRESULT GetAllowUnTrustedCA(VARIANT_BOOL*);
-    HRESULT GetCachePath(BSTR*);
-    HRESULT GetCacheDir(BSTR*);
-    HRESULT GetAuthFlags(X509EnrollmentAuthFlags*);
-    HRESULT SetCredential(int, X509EnrollmentAuthFlags, BSTR, BSTR);
-    HRESULT QueryChanges(VARIANT_BOOL*);
-    HRESULT InitializeImport(VARIANT);
-    HRESULT Export(X509EnrollmentPolicyExportFlags, VARIANT*);
-    HRESULT get_Cost(uint*);
-    HRESULT put_Cost(uint);
+    HRESULT GetCustomOids(IObjectIds* ppObjectIds);
+    HRESULT GetNextUpdateTime(double* pDate);
+    HRESULT GetLastUpdateTime(double* pDate);
+    HRESULT GetPolicyServerUrl(BSTR* pValue);
+    HRESULT GetPolicyServerId(BSTR* pValue);
+    HRESULT GetFriendlyName(BSTR* pValue);
+    HRESULT GetIsDefaultCEP(VARIANT_BOOL* pValue);
+    HRESULT GetUseClientId(VARIANT_BOOL* pValue);
+    HRESULT GetAllowUnTrustedCA(VARIANT_BOOL* pValue);
+    HRESULT GetCachePath(BSTR* pValue);
+    HRESULT GetCacheDir(BSTR* pValue);
+    HRESULT GetAuthFlags(X509EnrollmentAuthFlags* pValue);
+    HRESULT SetCredential(int hWndParent, X509EnrollmentAuthFlags flag, BSTR strCredential, BSTR strPassword);
+    HRESULT QueryChanges(VARIANT_BOOL* pValue);
+    HRESULT InitializeImport(VARIANT val);
+    HRESULT Export(X509EnrollmentPolicyExportFlags exportFlags, VARIANT* pVal);
+    HRESULT get_Cost(uint* pValue);
+    HRESULT put_Cost(uint value);
 }
 enum IID_IX509PolicyServerUrl = GUID(0x884e204a, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509PolicyServerUrl : IDispatch
 {
-    HRESULT Initialize(X509CertificateEnrollmentContext);
-    HRESULT get_Url(BSTR*);
-    HRESULT put_Url(BSTR);
-    HRESULT get_Default(VARIANT_BOOL*);
-    HRESULT put_Default(VARIANT_BOOL);
-    HRESULT get_Flags(PolicyServerUrlFlags*);
-    HRESULT put_Flags(PolicyServerUrlFlags);
-    HRESULT get_AuthFlags(X509EnrollmentAuthFlags*);
-    HRESULT put_AuthFlags(X509EnrollmentAuthFlags);
-    HRESULT get_Cost(uint*);
-    HRESULT put_Cost(uint);
-    HRESULT GetStringProperty(PolicyServerUrlPropertyID, BSTR*);
-    HRESULT SetStringProperty(PolicyServerUrlPropertyID, BSTR);
-    HRESULT UpdateRegistry(X509CertificateEnrollmentContext);
-    HRESULT RemoveFromRegistry(X509CertificateEnrollmentContext);
+    HRESULT Initialize(X509CertificateEnrollmentContext context);
+    HRESULT get_Url(BSTR* ppValue);
+    HRESULT put_Url(BSTR pValue);
+    HRESULT get_Default(VARIANT_BOOL* pValue);
+    HRESULT put_Default(VARIANT_BOOL value);
+    HRESULT get_Flags(PolicyServerUrlFlags* pValue);
+    HRESULT put_Flags(PolicyServerUrlFlags Flags);
+    HRESULT get_AuthFlags(X509EnrollmentAuthFlags* pValue);
+    HRESULT put_AuthFlags(X509EnrollmentAuthFlags Flags);
+    HRESULT get_Cost(uint* pValue);
+    HRESULT put_Cost(uint value);
+    HRESULT GetStringProperty(PolicyServerUrlPropertyID propertyId, BSTR* ppValue);
+    HRESULT SetStringProperty(PolicyServerUrlPropertyID propertyId, BSTR pValue);
+    HRESULT UpdateRegistry(X509CertificateEnrollmentContext context);
+    HRESULT RemoveFromRegistry(X509CertificateEnrollmentContext context);
 }
 enum IID_IX509PolicyServerListManager = GUID(0x884e204b, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509PolicyServerListManager : IDispatch
 {
-    HRESULT get_ItemByIndex(int, IX509PolicyServerUrl*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Add(IX509PolicyServerUrl);
-    HRESULT Remove(int);
+    HRESULT get_ItemByIndex(int Index, IX509PolicyServerUrl* pVal);
+    HRESULT get_Count(int* pVal);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT Add(IX509PolicyServerUrl pVal);
+    HRESULT Remove(int Index);
     HRESULT Clear();
-    HRESULT Initialize(X509CertificateEnrollmentContext, PolicyServerUrlFlags);
+    HRESULT Initialize(X509CertificateEnrollmentContext context, PolicyServerUrlFlags Flags);
 }
 alias X509RequestType = int;
 enum : int
@@ -3461,31 +3461,31 @@ enum : int
 enum IID_IX509CertificateRequest = GUID(0x728ab341, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509CertificateRequest : IDispatch
 {
-    HRESULT Initialize(X509CertificateEnrollmentContext);
+    HRESULT Initialize(X509CertificateEnrollmentContext Context);
     HRESULT Encode();
     HRESULT ResetForEncode();
-    HRESULT GetInnerRequest(InnerRequestLevel, IX509CertificateRequest*);
-    HRESULT get_Type(X509RequestType*);
-    HRESULT get_EnrollmentContext(X509CertificateEnrollmentContext*);
-    HRESULT get_Silent(VARIANT_BOOL*);
-    HRESULT put_Silent(VARIANT_BOOL);
-    HRESULT get_ParentWindow(int*);
-    HRESULT put_ParentWindow(int);
-    HRESULT get_UIContextMessage(BSTR*);
-    HRESULT put_UIContextMessage(BSTR);
-    HRESULT get_SuppressDefaults(VARIANT_BOOL*);
-    HRESULT put_SuppressDefaults(VARIANT_BOOL);
-    HRESULT get_RenewalCertificate(EncodingType, BSTR*);
-    HRESULT put_RenewalCertificate(EncodingType, BSTR);
-    HRESULT get_ClientId(RequestClientInfoClientId*);
-    HRESULT put_ClientId(RequestClientInfoClientId);
-    HRESULT get_CspInformations(ICspInformations*);
-    HRESULT put_CspInformations(ICspInformations);
-    HRESULT get_HashAlgorithm(IObjectId*);
-    HRESULT put_HashAlgorithm(IObjectId);
-    HRESULT get_AlternateSignatureAlgorithm(VARIANT_BOOL*);
-    HRESULT put_AlternateSignatureAlgorithm(VARIANT_BOOL);
-    HRESULT get_RawData(EncodingType, BSTR*);
+    HRESULT GetInnerRequest(InnerRequestLevel Level, IX509CertificateRequest* ppValue);
+    HRESULT get_Type(X509RequestType* pValue);
+    HRESULT get_EnrollmentContext(X509CertificateEnrollmentContext* pValue);
+    HRESULT get_Silent(VARIANT_BOOL* pValue);
+    HRESULT put_Silent(VARIANT_BOOL Value);
+    HRESULT get_ParentWindow(int* pValue);
+    HRESULT put_ParentWindow(int Value);
+    HRESULT get_UIContextMessage(BSTR* pValue);
+    HRESULT put_UIContextMessage(BSTR Value);
+    HRESULT get_SuppressDefaults(VARIANT_BOOL* pValue);
+    HRESULT put_SuppressDefaults(VARIANT_BOOL Value);
+    HRESULT get_RenewalCertificate(EncodingType Encoding, BSTR* pValue);
+    HRESULT put_RenewalCertificate(EncodingType Encoding, BSTR Value);
+    HRESULT get_ClientId(RequestClientInfoClientId* pValue);
+    HRESULT put_ClientId(RequestClientInfoClientId Value);
+    HRESULT get_CspInformations(ICspInformations* ppValue);
+    HRESULT put_CspInformations(ICspInformations pValue);
+    HRESULT get_HashAlgorithm(IObjectId* ppValue);
+    HRESULT put_HashAlgorithm(IObjectId pValue);
+    HRESULT get_AlternateSignatureAlgorithm(VARIANT_BOOL* pValue);
+    HRESULT put_AlternateSignatureAlgorithm(VARIANT_BOOL Value);
+    HRESULT get_RawData(EncodingType Encoding, BSTR* pValue);
 }
 alias Pkcs10AllowedSignatureTypes = int;
 enum : int
@@ -3497,58 +3497,58 @@ enum : int
 enum IID_IX509CertificateRequestPkcs10 = GUID(0x728ab342, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509CertificateRequestPkcs10 : IX509CertificateRequest
 {
-    HRESULT InitializeFromTemplateName(X509CertificateEnrollmentContext, BSTR);
-    HRESULT InitializeFromPrivateKey(X509CertificateEnrollmentContext, IX509PrivateKey, BSTR);
-    HRESULT InitializeFromPublicKey(X509CertificateEnrollmentContext, IX509PublicKey, BSTR);
-    HRESULT InitializeFromCertificate(X509CertificateEnrollmentContext, BSTR, EncodingType, X509RequestInheritOptions);
-    HRESULT InitializeDecode(BSTR, EncodingType);
-    HRESULT CheckSignature(Pkcs10AllowedSignatureTypes);
-    HRESULT IsSmartCard(VARIANT_BOOL*);
-    HRESULT get_TemplateObjectId(IObjectId*);
-    HRESULT get_PublicKey(IX509PublicKey*);
-    HRESULT get_PrivateKey(IX509PrivateKey*);
-    HRESULT get_NullSigned(VARIANT_BOOL*);
-    HRESULT get_ReuseKey(VARIANT_BOOL*);
-    HRESULT get_OldCertificate(EncodingType, BSTR*);
-    HRESULT get_Subject(IX500DistinguishedName*);
-    HRESULT put_Subject(IX500DistinguishedName);
-    HRESULT get_CspStatuses(ICspStatuses*);
-    HRESULT get_SmimeCapabilities(VARIANT_BOOL*);
-    HRESULT put_SmimeCapabilities(VARIANT_BOOL);
-    HRESULT get_SignatureInformation(IX509SignatureInformation*);
-    HRESULT get_KeyContainerNamePrefix(BSTR*);
-    HRESULT put_KeyContainerNamePrefix(BSTR);
-    HRESULT get_CryptAttributes(ICryptAttributes*);
-    HRESULT get_X509Extensions(IX509Extensions*);
-    HRESULT get_CriticalExtensions(IObjectIds*);
-    HRESULT get_SuppressOids(IObjectIds*);
-    HRESULT get_RawDataToBeSigned(EncodingType, BSTR*);
-    HRESULT get_Signature(EncodingType, BSTR*);
-    HRESULT GetCspStatuses(X509KeySpec, ICspStatuses*);
+    HRESULT InitializeFromTemplateName(X509CertificateEnrollmentContext Context, BSTR strTemplateName);
+    HRESULT InitializeFromPrivateKey(X509CertificateEnrollmentContext Context, IX509PrivateKey pPrivateKey, BSTR strTemplateName);
+    HRESULT InitializeFromPublicKey(X509CertificateEnrollmentContext Context, IX509PublicKey pPublicKey, BSTR strTemplateName);
+    HRESULT InitializeFromCertificate(X509CertificateEnrollmentContext Context, BSTR strCertificate, EncodingType Encoding, X509RequestInheritOptions InheritOptions);
+    HRESULT InitializeDecode(BSTR strEncodedData, EncodingType Encoding);
+    HRESULT CheckSignature(Pkcs10AllowedSignatureTypes AllowedSignatureTypes);
+    HRESULT IsSmartCard(VARIANT_BOOL* pValue);
+    HRESULT get_TemplateObjectId(IObjectId* ppValue);
+    HRESULT get_PublicKey(IX509PublicKey* ppValue);
+    HRESULT get_PrivateKey(IX509PrivateKey* ppValue);
+    HRESULT get_NullSigned(VARIANT_BOOL* pValue);
+    HRESULT get_ReuseKey(VARIANT_BOOL* pValue);
+    HRESULT get_OldCertificate(EncodingType Encoding, BSTR* pValue);
+    HRESULT get_Subject(IX500DistinguishedName* ppValue);
+    HRESULT put_Subject(IX500DistinguishedName pValue);
+    HRESULT get_CspStatuses(ICspStatuses* ppValue);
+    HRESULT get_SmimeCapabilities(VARIANT_BOOL* pValue);
+    HRESULT put_SmimeCapabilities(VARIANT_BOOL Value);
+    HRESULT get_SignatureInformation(IX509SignatureInformation* ppValue);
+    HRESULT get_KeyContainerNamePrefix(BSTR* pValue);
+    HRESULT put_KeyContainerNamePrefix(BSTR Value);
+    HRESULT get_CryptAttributes(ICryptAttributes* ppValue);
+    HRESULT get_X509Extensions(IX509Extensions* ppValue);
+    HRESULT get_CriticalExtensions(IObjectIds* ppValue);
+    HRESULT get_SuppressOids(IObjectIds* ppValue);
+    HRESULT get_RawDataToBeSigned(EncodingType Encoding, BSTR* pValue);
+    HRESULT get_Signature(EncodingType Encoding, BSTR* pValue);
+    HRESULT GetCspStatuses(X509KeySpec KeySpec, ICspStatuses* ppCspStatuses);
 }
 enum IID_IX509CertificateRequestPkcs10V2 = GUID(0x728ab35b, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509CertificateRequestPkcs10V2 : IX509CertificateRequestPkcs10
 {
-    HRESULT InitializeFromTemplate(X509CertificateEnrollmentContext, IX509EnrollmentPolicyServer, IX509CertificateTemplate);
-    HRESULT InitializeFromPrivateKeyTemplate(X509CertificateEnrollmentContext, IX509PrivateKey, IX509EnrollmentPolicyServer, IX509CertificateTemplate);
-    HRESULT InitializeFromPublicKeyTemplate(X509CertificateEnrollmentContext, IX509PublicKey, IX509EnrollmentPolicyServer, IX509CertificateTemplate);
-    HRESULT get_PolicyServer(IX509EnrollmentPolicyServer*);
-    HRESULT get_Template(IX509CertificateTemplate*);
+    HRESULT InitializeFromTemplate(X509CertificateEnrollmentContext context, IX509EnrollmentPolicyServer pPolicyServer, IX509CertificateTemplate pTemplate);
+    HRESULT InitializeFromPrivateKeyTemplate(X509CertificateEnrollmentContext Context, IX509PrivateKey pPrivateKey, IX509EnrollmentPolicyServer pPolicyServer, IX509CertificateTemplate pTemplate);
+    HRESULT InitializeFromPublicKeyTemplate(X509CertificateEnrollmentContext Context, IX509PublicKey pPublicKey, IX509EnrollmentPolicyServer pPolicyServer, IX509CertificateTemplate pTemplate);
+    HRESULT get_PolicyServer(IX509EnrollmentPolicyServer* ppPolicyServer);
+    HRESULT get_Template(IX509CertificateTemplate* ppTemplate);
 }
 enum IID_IX509CertificateRequestPkcs10V3 = GUID(0x54ea9942, 0x3d66, 0x4530, [0xb7, 0x6e, 0x7c, 0x91, 0x70, 0xd3, 0xec, 0x52]);
 interface IX509CertificateRequestPkcs10V3 : IX509CertificateRequestPkcs10V2
 {
-    HRESULT get_AttestPrivateKey(VARIANT_BOOL*);
-    HRESULT put_AttestPrivateKey(VARIANT_BOOL);
-    HRESULT get_AttestationEncryptionCertificate(EncodingType, BSTR*);
-    HRESULT put_AttestationEncryptionCertificate(EncodingType, BSTR);
-    HRESULT get_EncryptionAlgorithm(IObjectId*);
-    HRESULT put_EncryptionAlgorithm(IObjectId);
-    HRESULT get_EncryptionStrength(int*);
-    HRESULT put_EncryptionStrength(int);
-    HRESULT get_ChallengePassword(BSTR*);
-    HRESULT put_ChallengePassword(BSTR);
-    HRESULT get_NameValuePairs(IX509NameValuePairs*);
+    HRESULT get_AttestPrivateKey(VARIANT_BOOL* pValue);
+    HRESULT put_AttestPrivateKey(VARIANT_BOOL Value);
+    HRESULT get_AttestationEncryptionCertificate(EncodingType Encoding, BSTR* pValue);
+    HRESULT put_AttestationEncryptionCertificate(EncodingType Encoding, BSTR Value);
+    HRESULT get_EncryptionAlgorithm(IObjectId* ppValue);
+    HRESULT put_EncryptionAlgorithm(IObjectId pValue);
+    HRESULT get_EncryptionStrength(int* pValue);
+    HRESULT put_EncryptionStrength(int Value);
+    HRESULT get_ChallengePassword(BSTR* pValue);
+    HRESULT put_ChallengePassword(BSTR Value);
+    HRESULT get_NameValuePairs(IX509NameValuePairs* ppValue);
 }
 alias KeyAttestationClaimType = int;
 enum : int
@@ -3563,90 +3563,90 @@ enum : int
 enum IID_IX509CertificateRequestPkcs10V4 = GUID(0x728ab363, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509CertificateRequestPkcs10V4 : IX509CertificateRequestPkcs10V3
 {
-    HRESULT get_ClaimType(KeyAttestationClaimType*);
-    HRESULT put_ClaimType(KeyAttestationClaimType);
-    HRESULT get_AttestPrivateKeyPreferred(VARIANT_BOOL*);
-    HRESULT put_AttestPrivateKeyPreferred(VARIANT_BOOL);
+    HRESULT get_ClaimType(KeyAttestationClaimType* pValue);
+    HRESULT put_ClaimType(KeyAttestationClaimType Value);
+    HRESULT get_AttestPrivateKeyPreferred(VARIANT_BOOL* pValue);
+    HRESULT put_AttestPrivateKeyPreferred(VARIANT_BOOL Value);
 }
 enum IID_IX509CertificateRequestCertificate = GUID(0x728ab343, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509CertificateRequestCertificate : IX509CertificateRequestPkcs10
 {
-    HRESULT CheckPublicKeySignature(IX509PublicKey);
-    HRESULT get_Issuer(IX500DistinguishedName*);
-    HRESULT put_Issuer(IX500DistinguishedName);
-    HRESULT get_NotBefore(double*);
-    HRESULT put_NotBefore(double);
-    HRESULT get_NotAfter(double*);
-    HRESULT put_NotAfter(double);
-    HRESULT get_SerialNumber(EncodingType, BSTR*);
-    HRESULT put_SerialNumber(EncodingType, BSTR);
-    HRESULT get_SignerCertificate(ISignerCertificate*);
-    HRESULT put_SignerCertificate(ISignerCertificate);
+    HRESULT CheckPublicKeySignature(IX509PublicKey pPublicKey);
+    HRESULT get_Issuer(IX500DistinguishedName* ppValue);
+    HRESULT put_Issuer(IX500DistinguishedName pValue);
+    HRESULT get_NotBefore(double* pValue);
+    HRESULT put_NotBefore(double Value);
+    HRESULT get_NotAfter(double* pValue);
+    HRESULT put_NotAfter(double Value);
+    HRESULT get_SerialNumber(EncodingType Encoding, BSTR* pValue);
+    HRESULT put_SerialNumber(EncodingType Encoding, BSTR Value);
+    HRESULT get_SignerCertificate(ISignerCertificate* ppValue);
+    HRESULT put_SignerCertificate(ISignerCertificate pValue);
 }
 enum IID_IX509CertificateRequestCertificate2 = GUID(0x728ab35a, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509CertificateRequestCertificate2 : IX509CertificateRequestCertificate
 {
-    HRESULT InitializeFromTemplate(X509CertificateEnrollmentContext, IX509EnrollmentPolicyServer, IX509CertificateTemplate);
-    HRESULT InitializeFromPrivateKeyTemplate(X509CertificateEnrollmentContext, IX509PrivateKey, IX509EnrollmentPolicyServer, IX509CertificateTemplate);
-    HRESULT get_PolicyServer(IX509EnrollmentPolicyServer*);
-    HRESULT get_Template(IX509CertificateTemplate*);
+    HRESULT InitializeFromTemplate(X509CertificateEnrollmentContext context, IX509EnrollmentPolicyServer pPolicyServer, IX509CertificateTemplate pTemplate);
+    HRESULT InitializeFromPrivateKeyTemplate(X509CertificateEnrollmentContext Context, IX509PrivateKey pPrivateKey, IX509EnrollmentPolicyServer pPolicyServer, IX509CertificateTemplate pTemplate);
+    HRESULT get_PolicyServer(IX509EnrollmentPolicyServer* ppPolicyServer);
+    HRESULT get_Template(IX509CertificateTemplate* ppTemplate);
 }
 enum IID_IX509CertificateRequestPkcs7 = GUID(0x728ab344, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509CertificateRequestPkcs7 : IX509CertificateRequest
 {
-    HRESULT InitializeFromTemplateName(X509CertificateEnrollmentContext, BSTR);
-    HRESULT InitializeFromCertificate(X509CertificateEnrollmentContext, VARIANT_BOOL, BSTR, EncodingType, X509RequestInheritOptions);
-    HRESULT InitializeFromInnerRequest(IX509CertificateRequest);
-    HRESULT InitializeDecode(BSTR, EncodingType);
-    HRESULT get_RequesterName(BSTR*);
-    HRESULT put_RequesterName(BSTR);
-    HRESULT get_SignerCertificate(ISignerCertificate*);
-    HRESULT put_SignerCertificate(ISignerCertificate);
+    HRESULT InitializeFromTemplateName(X509CertificateEnrollmentContext Context, BSTR strTemplateName);
+    HRESULT InitializeFromCertificate(X509CertificateEnrollmentContext Context, VARIANT_BOOL RenewalRequest, BSTR strCertificate, EncodingType Encoding, X509RequestInheritOptions InheritOptions);
+    HRESULT InitializeFromInnerRequest(IX509CertificateRequest pInnerRequest);
+    HRESULT InitializeDecode(BSTR strEncodedData, EncodingType Encoding);
+    HRESULT get_RequesterName(BSTR* pValue);
+    HRESULT put_RequesterName(BSTR Value);
+    HRESULT get_SignerCertificate(ISignerCertificate* ppValue);
+    HRESULT put_SignerCertificate(ISignerCertificate pValue);
 }
 enum IID_IX509CertificateRequestPkcs7V2 = GUID(0x728ab35c, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509CertificateRequestPkcs7V2 : IX509CertificateRequestPkcs7
 {
-    HRESULT InitializeFromTemplate(X509CertificateEnrollmentContext, IX509EnrollmentPolicyServer, IX509CertificateTemplate);
-    HRESULT get_PolicyServer(IX509EnrollmentPolicyServer*);
-    HRESULT get_Template(IX509CertificateTemplate*);
-    HRESULT CheckCertificateSignature(VARIANT_BOOL);
+    HRESULT InitializeFromTemplate(X509CertificateEnrollmentContext context, IX509EnrollmentPolicyServer pPolicyServer, IX509CertificateTemplate pTemplate);
+    HRESULT get_PolicyServer(IX509EnrollmentPolicyServer* ppPolicyServer);
+    HRESULT get_Template(IX509CertificateTemplate* ppTemplate);
+    HRESULT CheckCertificateSignature(VARIANT_BOOL ValidateCertificateChain);
 }
 enum IID_IX509CertificateRequestCmc = GUID(0x728ab345, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509CertificateRequestCmc : IX509CertificateRequestPkcs7
 {
-    HRESULT InitializeFromInnerRequestTemplateName(IX509CertificateRequest, BSTR);
-    HRESULT get_TemplateObjectId(IObjectId*);
-    HRESULT get_NullSigned(VARIANT_BOOL*);
-    HRESULT get_CryptAttributes(ICryptAttributes*);
-    HRESULT get_NameValuePairs(IX509NameValuePairs*);
-    HRESULT get_X509Extensions(IX509Extensions*);
-    HRESULT get_CriticalExtensions(IObjectIds*);
-    HRESULT get_SuppressOids(IObjectIds*);
-    HRESULT get_TransactionId(int*);
-    HRESULT put_TransactionId(int);
-    HRESULT get_SenderNonce(EncodingType, BSTR*);
-    HRESULT put_SenderNonce(EncodingType, BSTR);
-    HRESULT get_SignatureInformation(IX509SignatureInformation*);
-    HRESULT get_ArchivePrivateKey(VARIANT_BOOL*);
-    HRESULT put_ArchivePrivateKey(VARIANT_BOOL);
-    HRESULT get_KeyArchivalCertificate(EncodingType, BSTR*);
-    HRESULT put_KeyArchivalCertificate(EncodingType, BSTR);
-    HRESULT get_EncryptionAlgorithm(IObjectId*);
-    HRESULT put_EncryptionAlgorithm(IObjectId);
-    HRESULT get_EncryptionStrength(int*);
-    HRESULT put_EncryptionStrength(int);
-    HRESULT get_EncryptedKeyHash(EncodingType, BSTR*);
-    HRESULT get_SignerCertificates(ISignerCertificates*);
+    HRESULT InitializeFromInnerRequestTemplateName(IX509CertificateRequest pInnerRequest, BSTR strTemplateName);
+    HRESULT get_TemplateObjectId(IObjectId* ppValue);
+    HRESULT get_NullSigned(VARIANT_BOOL* pValue);
+    HRESULT get_CryptAttributes(ICryptAttributes* ppValue);
+    HRESULT get_NameValuePairs(IX509NameValuePairs* ppValue);
+    HRESULT get_X509Extensions(IX509Extensions* ppValue);
+    HRESULT get_CriticalExtensions(IObjectIds* ppValue);
+    HRESULT get_SuppressOids(IObjectIds* ppValue);
+    HRESULT get_TransactionId(int* pValue);
+    HRESULT put_TransactionId(int Value);
+    HRESULT get_SenderNonce(EncodingType Encoding, BSTR* pValue);
+    HRESULT put_SenderNonce(EncodingType Encoding, BSTR Value);
+    HRESULT get_SignatureInformation(IX509SignatureInformation* ppValue);
+    HRESULT get_ArchivePrivateKey(VARIANT_BOOL* pValue);
+    HRESULT put_ArchivePrivateKey(VARIANT_BOOL Value);
+    HRESULT get_KeyArchivalCertificate(EncodingType Encoding, BSTR* pValue);
+    HRESULT put_KeyArchivalCertificate(EncodingType Encoding, BSTR Value);
+    HRESULT get_EncryptionAlgorithm(IObjectId* ppValue);
+    HRESULT put_EncryptionAlgorithm(IObjectId pValue);
+    HRESULT get_EncryptionStrength(int* pValue);
+    HRESULT put_EncryptionStrength(int Value);
+    HRESULT get_EncryptedKeyHash(EncodingType Encoding, BSTR* pValue);
+    HRESULT get_SignerCertificates(ISignerCertificates* ppValue);
 }
 enum IID_IX509CertificateRequestCmc2 = GUID(0x728ab35d, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509CertificateRequestCmc2 : IX509CertificateRequestCmc
 {
-    HRESULT InitializeFromTemplate(X509CertificateEnrollmentContext, IX509EnrollmentPolicyServer, IX509CertificateTemplate);
-    HRESULT InitializeFromInnerRequestTemplate(IX509CertificateRequest, IX509EnrollmentPolicyServer, IX509CertificateTemplate);
-    HRESULT get_PolicyServer(IX509EnrollmentPolicyServer*);
-    HRESULT get_Template(IX509CertificateTemplate*);
-    HRESULT CheckSignature(Pkcs10AllowedSignatureTypes);
-    HRESULT CheckCertificateSignature(ISignerCertificate, VARIANT_BOOL);
+    HRESULT InitializeFromTemplate(X509CertificateEnrollmentContext context, IX509EnrollmentPolicyServer pPolicyServer, IX509CertificateTemplate pTemplate);
+    HRESULT InitializeFromInnerRequestTemplate(IX509CertificateRequest pInnerRequest, IX509EnrollmentPolicyServer pPolicyServer, IX509CertificateTemplate pTemplate);
+    HRESULT get_PolicyServer(IX509EnrollmentPolicyServer* ppPolicyServer);
+    HRESULT get_Template(IX509CertificateTemplate* ppTemplate);
+    HRESULT CheckSignature(Pkcs10AllowedSignatureTypes AllowedSignatureTypes);
+    HRESULT CheckCertificateSignature(ISignerCertificate pSignerCertificate, VARIANT_BOOL ValidateCertificateChain);
 }
 alias InstallResponseRestrictionFlags = int;
 enum : int
@@ -3660,38 +3660,38 @@ enum : int
 enum IID_IX509Enrollment = GUID(0x728ab346, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509Enrollment : IDispatch
 {
-    HRESULT Initialize(X509CertificateEnrollmentContext);
-    HRESULT InitializeFromTemplateName(X509CertificateEnrollmentContext, BSTR);
-    HRESULT InitializeFromRequest(IX509CertificateRequest);
-    HRESULT CreateRequest(EncodingType, BSTR*);
+    HRESULT Initialize(X509CertificateEnrollmentContext Context);
+    HRESULT InitializeFromTemplateName(X509CertificateEnrollmentContext Context, BSTR strTemplateName);
+    HRESULT InitializeFromRequest(IX509CertificateRequest pRequest);
+    HRESULT CreateRequest(EncodingType Encoding, BSTR* pValue);
     HRESULT Enroll();
-    HRESULT InstallResponse(InstallResponseRestrictionFlags, BSTR, EncodingType, BSTR);
-    HRESULT CreatePFX(BSTR, PFXExportOptions, EncodingType, BSTR*);
-    HRESULT get_Request(IX509CertificateRequest*);
-    HRESULT get_Silent(VARIANT_BOOL*);
-    HRESULT put_Silent(VARIANT_BOOL);
-    HRESULT get_ParentWindow(int*);
-    HRESULT put_ParentWindow(int);
-    HRESULT get_NameValuePairs(IX509NameValuePairs*);
-    HRESULT get_EnrollmentContext(X509CertificateEnrollmentContext*);
-    HRESULT get_Status(IX509EnrollmentStatus*);
-    HRESULT get_Certificate(EncodingType, BSTR*);
-    HRESULT get_Response(EncodingType, BSTR*);
-    HRESULT get_CertificateFriendlyName(BSTR*);
-    HRESULT put_CertificateFriendlyName(BSTR);
-    HRESULT get_CertificateDescription(BSTR*);
-    HRESULT put_CertificateDescription(BSTR);
-    HRESULT get_RequestId(int*);
-    HRESULT get_CAConfigString(BSTR*);
+    HRESULT InstallResponse(InstallResponseRestrictionFlags Restrictions, BSTR strResponse, EncodingType Encoding, BSTR strPassword);
+    HRESULT CreatePFX(BSTR strPassword, PFXExportOptions ExportOptions, EncodingType Encoding, BSTR* pValue);
+    HRESULT get_Request(IX509CertificateRequest* pValue);
+    HRESULT get_Silent(VARIANT_BOOL* pValue);
+    HRESULT put_Silent(VARIANT_BOOL Value);
+    HRESULT get_ParentWindow(int* pValue);
+    HRESULT put_ParentWindow(int Value);
+    HRESULT get_NameValuePairs(IX509NameValuePairs* ppValue);
+    HRESULT get_EnrollmentContext(X509CertificateEnrollmentContext* pValue);
+    HRESULT get_Status(IX509EnrollmentStatus* ppValue);
+    HRESULT get_Certificate(EncodingType Encoding, BSTR* pValue);
+    HRESULT get_Response(EncodingType Encoding, BSTR* pValue);
+    HRESULT get_CertificateFriendlyName(BSTR* pValue);
+    HRESULT put_CertificateFriendlyName(BSTR strValue);
+    HRESULT get_CertificateDescription(BSTR* pValue);
+    HRESULT put_CertificateDescription(BSTR strValue);
+    HRESULT get_RequestId(int* pValue);
+    HRESULT get_CAConfigString(BSTR* pValue);
 }
 enum IID_IX509Enrollment2 = GUID(0x728ab350, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509Enrollment2 : IX509Enrollment
 {
-    HRESULT InitializeFromTemplate(X509CertificateEnrollmentContext, IX509EnrollmentPolicyServer, IX509CertificateTemplate);
-    HRESULT InstallResponse2(InstallResponseRestrictionFlags, BSTR, EncodingType, BSTR, BSTR, BSTR, PolicyServerUrlFlags, X509EnrollmentAuthFlags);
-    HRESULT get_PolicyServer(IX509EnrollmentPolicyServer*);
-    HRESULT get_Template(IX509CertificateTemplate*);
-    HRESULT get_RequestIdString(BSTR*);
+    HRESULT InitializeFromTemplate(X509CertificateEnrollmentContext context, IX509EnrollmentPolicyServer pPolicyServer, IX509CertificateTemplate pTemplate);
+    HRESULT InstallResponse2(InstallResponseRestrictionFlags Restrictions, BSTR strResponse, EncodingType Encoding, BSTR strPassword, BSTR strEnrollmentPolicyServerUrl, BSTR strEnrollmentPolicyServerID, PolicyServerUrlFlags EnrollmentPolicyServerFlags, X509EnrollmentAuthFlags authFlags);
+    HRESULT get_PolicyServer(IX509EnrollmentPolicyServer* ppPolicyServer);
+    HRESULT get_Template(IX509CertificateTemplate* ppTemplate);
+    HRESULT get_RequestIdString(BSTR* pValue);
 }
 alias WebEnrollmentFlags = int;
 enum : int
@@ -3702,20 +3702,20 @@ enum : int
 enum IID_IX509EnrollmentHelper = GUID(0x728ab351, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509EnrollmentHelper : IDispatch
 {
-    HRESULT AddPolicyServer(BSTR, BSTR, PolicyServerUrlFlags, X509EnrollmentAuthFlags, BSTR, BSTR);
-    HRESULT AddEnrollmentServer(BSTR, X509EnrollmentAuthFlags, BSTR, BSTR);
-    HRESULT Enroll(BSTR, BSTR, EncodingType, WebEnrollmentFlags, BSTR*);
-    HRESULT Initialize(X509CertificateEnrollmentContext);
+    HRESULT AddPolicyServer(BSTR strEnrollmentPolicyServerURI, BSTR strEnrollmentPolicyID, PolicyServerUrlFlags EnrollmentPolicyServerFlags, X509EnrollmentAuthFlags authFlags, BSTR strCredential, BSTR strPassword);
+    HRESULT AddEnrollmentServer(BSTR strEnrollmentServerURI, X509EnrollmentAuthFlags authFlags, BSTR strCredential, BSTR strPassword);
+    HRESULT Enroll(BSTR strEnrollmentPolicyServerURI, BSTR strTemplateName, EncodingType Encoding, WebEnrollmentFlags enrollFlags, BSTR* pstrCertificate);
+    HRESULT Initialize(X509CertificateEnrollmentContext Context);
 }
 enum IID_IX509EnrollmentWebClassFactory = GUID(0x728ab349, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509EnrollmentWebClassFactory : IDispatch
 {
-    HRESULT CreateObject(BSTR, IUnknown*);
+    HRESULT CreateObject(BSTR strProgID, IUnknown* ppIUnknown);
 }
 enum IID_IX509MachineEnrollmentFactory = GUID(0x728ab352, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509MachineEnrollmentFactory : IDispatch
 {
-    HRESULT CreateObject(BSTR, IX509EnrollmentHelper*);
+    HRESULT CreateObject(BSTR strProgID, IX509EnrollmentHelper* ppIHelper);
 }
 alias CRLRevocationReason = int;
 enum : int
@@ -3735,98 +3735,98 @@ enum : int
 enum IID_IX509CertificateRevocationListEntry = GUID(0x728ab35e, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509CertificateRevocationListEntry : IDispatch
 {
-    HRESULT Initialize(EncodingType, BSTR, double);
-    HRESULT get_SerialNumber(EncodingType, BSTR*);
-    HRESULT get_RevocationDate(double*);
-    HRESULT get_RevocationReason(CRLRevocationReason*);
-    HRESULT put_RevocationReason(CRLRevocationReason);
-    HRESULT get_X509Extensions(IX509Extensions*);
-    HRESULT get_CriticalExtensions(IObjectIds*);
+    HRESULT Initialize(EncodingType Encoding, BSTR SerialNumber, double RevocationDate);
+    HRESULT get_SerialNumber(EncodingType Encoding, BSTR* pValue);
+    HRESULT get_RevocationDate(double* pValue);
+    HRESULT get_RevocationReason(CRLRevocationReason* pValue);
+    HRESULT put_RevocationReason(CRLRevocationReason Value);
+    HRESULT get_X509Extensions(IX509Extensions* ppValue);
+    HRESULT get_CriticalExtensions(IObjectIds* ppValue);
 }
 enum IID_IX509CertificateRevocationListEntries = GUID(0x728ab35f, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509CertificateRevocationListEntries : IDispatch
 {
-    HRESULT get_ItemByIndex(int, IX509CertificateRevocationListEntry*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Add(IX509CertificateRevocationListEntry);
-    HRESULT Remove(int);
+    HRESULT get_ItemByIndex(int Index, IX509CertificateRevocationListEntry* pVal);
+    HRESULT get_Count(int* pVal);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT Add(IX509CertificateRevocationListEntry pVal);
+    HRESULT Remove(int Index);
     HRESULT Clear();
-    HRESULT get_IndexBySerialNumber(EncodingType, BSTR, int*);
-    HRESULT AddRange(IX509CertificateRevocationListEntries);
+    HRESULT get_IndexBySerialNumber(EncodingType Encoding, BSTR SerialNumber, int* pIndex);
+    HRESULT AddRange(IX509CertificateRevocationListEntries pValue);
 }
 enum IID_IX509CertificateRevocationList = GUID(0x728ab360, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509CertificateRevocationList : IDispatch
 {
     HRESULT Initialize();
-    HRESULT InitializeDecode(BSTR, EncodingType);
+    HRESULT InitializeDecode(BSTR strEncodedData, EncodingType Encoding);
     HRESULT Encode();
     HRESULT ResetForEncode();
-    HRESULT CheckPublicKeySignature(IX509PublicKey);
+    HRESULT CheckPublicKeySignature(IX509PublicKey pPublicKey);
     HRESULT CheckSignature();
-    HRESULT get_Issuer(IX500DistinguishedName*);
-    HRESULT put_Issuer(IX500DistinguishedName);
-    HRESULT get_ThisUpdate(double*);
-    HRESULT put_ThisUpdate(double);
-    HRESULT get_NextUpdate(double*);
-    HRESULT put_NextUpdate(double);
-    HRESULT get_X509CRLEntries(IX509CertificateRevocationListEntries*);
-    HRESULT get_X509Extensions(IX509Extensions*);
-    HRESULT get_CriticalExtensions(IObjectIds*);
-    HRESULT get_SignerCertificate(ISignerCertificate*);
-    HRESULT put_SignerCertificate(ISignerCertificate);
-    HRESULT get_CRLNumber(EncodingType, BSTR*);
-    HRESULT put_CRLNumber(EncodingType, BSTR);
-    HRESULT get_CAVersion(int*);
-    HRESULT put_CAVersion(int);
-    HRESULT get_BaseCRL(VARIANT_BOOL*);
-    HRESULT get_NullSigned(VARIANT_BOOL*);
-    HRESULT get_HashAlgorithm(IObjectId*);
-    HRESULT put_HashAlgorithm(IObjectId);
-    HRESULT get_AlternateSignatureAlgorithm(VARIANT_BOOL*);
-    HRESULT put_AlternateSignatureAlgorithm(VARIANT_BOOL);
-    HRESULT get_SignatureInformation(IX509SignatureInformation*);
-    HRESULT get_RawData(EncodingType, BSTR*);
-    HRESULT get_RawDataToBeSigned(EncodingType, BSTR*);
-    HRESULT get_Signature(EncodingType, BSTR*);
+    HRESULT get_Issuer(IX500DistinguishedName* ppValue);
+    HRESULT put_Issuer(IX500DistinguishedName pValue);
+    HRESULT get_ThisUpdate(double* pValue);
+    HRESULT put_ThisUpdate(double Value);
+    HRESULT get_NextUpdate(double* pValue);
+    HRESULT put_NextUpdate(double Value);
+    HRESULT get_X509CRLEntries(IX509CertificateRevocationListEntries* ppValue);
+    HRESULT get_X509Extensions(IX509Extensions* ppValue);
+    HRESULT get_CriticalExtensions(IObjectIds* ppValue);
+    HRESULT get_SignerCertificate(ISignerCertificate* ppValue);
+    HRESULT put_SignerCertificate(ISignerCertificate pValue);
+    HRESULT get_CRLNumber(EncodingType Encoding, BSTR* pValue);
+    HRESULT put_CRLNumber(EncodingType Encoding, BSTR Value);
+    HRESULT get_CAVersion(int* pValue);
+    HRESULT put_CAVersion(int pValue);
+    HRESULT get_BaseCRL(VARIANT_BOOL* pValue);
+    HRESULT get_NullSigned(VARIANT_BOOL* pValue);
+    HRESULT get_HashAlgorithm(IObjectId* ppValue);
+    HRESULT put_HashAlgorithm(IObjectId pValue);
+    HRESULT get_AlternateSignatureAlgorithm(VARIANT_BOOL* pValue);
+    HRESULT put_AlternateSignatureAlgorithm(VARIANT_BOOL Value);
+    HRESULT get_SignatureInformation(IX509SignatureInformation* ppValue);
+    HRESULT get_RawData(EncodingType Encoding, BSTR* pValue);
+    HRESULT get_RawDataToBeSigned(EncodingType Encoding, BSTR* pValue);
+    HRESULT get_Signature(EncodingType Encoding, BSTR* pValue);
 }
 enum IID_ICertificateAttestationChallenge = GUID(0x6f175a7c, 0x4a3a, 0x40ae, [0x9d, 0xba, 0x59, 0x2f, 0xd6, 0xbb, 0xf9, 0xb8]);
 interface ICertificateAttestationChallenge : IDispatch
 {
-    HRESULT Initialize(EncodingType, BSTR);
-    HRESULT DecryptChallenge(EncodingType, BSTR*);
-    HRESULT get_RequestID(BSTR*);
+    HRESULT Initialize(EncodingType Encoding, BSTR strPendingFullCmcResponseWithChallenge);
+    HRESULT DecryptChallenge(EncodingType Encoding, BSTR* pstrEnvelopedPkcs7ReencryptedToCA);
+    HRESULT get_RequestID(BSTR* pstrRequestID);
 }
 enum IID_ICertificateAttestationChallenge2 = GUID(0x4631334d, 0xe266, 0x47d6, [0xbd, 0x79, 0xbe, 0x53, 0xcb, 0x2e, 0x27, 0x53]);
 interface ICertificateAttestationChallenge2 : ICertificateAttestationChallenge
 {
-    HRESULT put_KeyContainerName(BSTR);
-    HRESULT put_KeyBlob(EncodingType, BSTR);
+    HRESULT put_KeyContainerName(BSTR Value);
+    HRESULT put_KeyBlob(EncodingType Encoding, BSTR Value);
 }
 enum IID_IX509SCEPEnrollment = GUID(0x728ab361, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509SCEPEnrollment : IDispatch
 {
-    HRESULT Initialize(IX509CertificateRequestPkcs10, BSTR, EncodingType, BSTR, EncodingType);
-    HRESULT InitializeForPending(X509CertificateEnrollmentContext);
-    HRESULT CreateRequestMessage(EncodingType, BSTR*);
-    HRESULT CreateRetrievePendingMessage(EncodingType, BSTR*);
-    HRESULT CreateRetrieveCertificateMessage(X509CertificateEnrollmentContext, BSTR, EncodingType, BSTR, EncodingType, EncodingType, BSTR*);
-    HRESULT ProcessResponseMessage(BSTR, EncodingType, X509SCEPDisposition*);
-    HRESULT put_ServerCapabilities(BSTR);
-    HRESULT get_FailInfo(X509SCEPFailInfo*);
-    HRESULT get_SignerCertificate(ISignerCertificate*);
-    HRESULT put_SignerCertificate(ISignerCertificate);
-    HRESULT get_OldCertificate(ISignerCertificate*);
-    HRESULT put_OldCertificate(ISignerCertificate);
-    HRESULT get_TransactionId(EncodingType, BSTR*);
-    HRESULT put_TransactionId(EncodingType, BSTR);
-    HRESULT get_Request(IX509CertificateRequestPkcs10*);
-    HRESULT get_CertificateFriendlyName(BSTR*);
-    HRESULT put_CertificateFriendlyName(BSTR);
-    HRESULT get_Status(IX509EnrollmentStatus*);
-    HRESULT get_Certificate(EncodingType, BSTR*);
-    HRESULT get_Silent(VARIANT_BOOL*);
-    HRESULT put_Silent(VARIANT_BOOL);
+    HRESULT Initialize(IX509CertificateRequestPkcs10 pRequest, BSTR strThumbprint, EncodingType ThumprintEncoding, BSTR strServerCertificates, EncodingType Encoding);
+    HRESULT InitializeForPending(X509CertificateEnrollmentContext Context);
+    HRESULT CreateRequestMessage(EncodingType Encoding, BSTR* pValue);
+    HRESULT CreateRetrievePendingMessage(EncodingType Encoding, BSTR* pValue);
+    HRESULT CreateRetrieveCertificateMessage(X509CertificateEnrollmentContext Context, BSTR strIssuer, EncodingType IssuerEncoding, BSTR strSerialNumber, EncodingType SerialNumberEncoding, EncodingType Encoding, BSTR* pValue);
+    HRESULT ProcessResponseMessage(BSTR strResponse, EncodingType Encoding, X509SCEPDisposition* pDisposition);
+    HRESULT put_ServerCapabilities(BSTR Value);
+    HRESULT get_FailInfo(X509SCEPFailInfo* pValue);
+    HRESULT get_SignerCertificate(ISignerCertificate* ppValue);
+    HRESULT put_SignerCertificate(ISignerCertificate pValue);
+    HRESULT get_OldCertificate(ISignerCertificate* ppValue);
+    HRESULT put_OldCertificate(ISignerCertificate pValue);
+    HRESULT get_TransactionId(EncodingType Encoding, BSTR* pValue);
+    HRESULT put_TransactionId(EncodingType Encoding, BSTR Value);
+    HRESULT get_Request(IX509CertificateRequestPkcs10* ppValue);
+    HRESULT get_CertificateFriendlyName(BSTR* pValue);
+    HRESULT put_CertificateFriendlyName(BSTR Value);
+    HRESULT get_Status(IX509EnrollmentStatus* ppValue);
+    HRESULT get_Certificate(EncodingType Encoding, BSTR* pValue);
+    HRESULT get_Silent(VARIANT_BOOL* pValue);
+    HRESULT put_Silent(VARIANT_BOOL Value);
     HRESULT DeleteRequest();
 }
 alias X509SCEPProcessMessageFlags = int;
@@ -3850,22 +3850,22 @@ enum : int
 enum IID_IX509SCEPEnrollment2 = GUID(0x728ab364, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509SCEPEnrollment2 : IX509SCEPEnrollment
 {
-    HRESULT CreateChallengeAnswerMessage(EncodingType, BSTR*);
-    HRESULT ProcessResponseMessage2(X509SCEPProcessMessageFlags, BSTR, EncodingType, X509SCEPDisposition*);
-    HRESULT get_ResultMessageText(BSTR*);
-    HRESULT get_DelayRetry(DelayRetryAction*);
-    HRESULT get_ActivityId(BSTR*);
-    HRESULT put_ActivityId(BSTR);
+    HRESULT CreateChallengeAnswerMessage(EncodingType Encoding, BSTR* pValue);
+    HRESULT ProcessResponseMessage2(X509SCEPProcessMessageFlags Flags, BSTR strResponse, EncodingType Encoding, X509SCEPDisposition* pDisposition);
+    HRESULT get_ResultMessageText(BSTR* pValue);
+    HRESULT get_DelayRetry(DelayRetryAction* pValue);
+    HRESULT get_ActivityId(BSTR* pValue);
+    HRESULT put_ActivityId(BSTR Value);
 }
 enum IID_IX509SCEPEnrollmentHelper = GUID(0x728ab365, 0x217d, 0x11da, [0xb2, 0xa4, 0x0, 0xe, 0x7b, 0xbb, 0x2b, 0x9]);
 interface IX509SCEPEnrollmentHelper : IDispatch
 {
-    HRESULT Initialize(BSTR, BSTR, IX509CertificateRequestPkcs10, BSTR);
-    HRESULT InitializeForPending(BSTR, BSTR, X509CertificateEnrollmentContext, BSTR);
-    HRESULT Enroll(X509SCEPProcessMessageFlags, X509SCEPDisposition*);
-    HRESULT FetchPending(X509SCEPProcessMessageFlags, X509SCEPDisposition*);
-    HRESULT get_X509SCEPEnrollment(IX509SCEPEnrollment*);
-    HRESULT get_ResultMessageText(BSTR*);
+    HRESULT Initialize(BSTR strServerUrl, BSTR strRequestHeaders, IX509CertificateRequestPkcs10 pRequest, BSTR strCACertificateThumbprint);
+    HRESULT InitializeForPending(BSTR strServerUrl, BSTR strRequestHeaders, X509CertificateEnrollmentContext Context, BSTR strTransactionId);
+    HRESULT Enroll(X509SCEPProcessMessageFlags ProcessFlags, X509SCEPDisposition* pDisposition);
+    HRESULT FetchPending(X509SCEPProcessMessageFlags ProcessFlags, X509SCEPDisposition* pDisposition);
+    HRESULT get_X509SCEPEnrollment(IX509SCEPEnrollment* ppValue);
+    HRESULT get_ResultMessageText(BSTR* pValue);
 }
 alias X509CertificateTemplateGeneralFlag = int;
 enum : int
@@ -4271,109 +4271,109 @@ enum : int
     ImportInstallChainAndRoot = 0x00000800,
 }
 
-alias FNIMPORTPFXTOPROVIDER = HRESULT function(HWND, const(ubyte)*, uint, ImportPFXFlags, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, uint*, CERT_CONTEXT***);
-alias FNIMPORTPFXTOPROVIDERFREEDATA = void function(uint, CERT_CONTEXT**);
+alias FNIMPORTPFXTOPROVIDER = HRESULT function(HWND hWndParent, const(ubyte)* pbPFX, uint cbPFX, ImportPFXFlags ImportFlags, const(wchar)* pwszPassword, const(wchar)* pwszProviderName, const(wchar)* pwszReaderName, const(wchar)* pwszContainerNamePrefix, const(wchar)* pwszPin, const(wchar)* pwszFriendlyName, uint* pcCertOut, CERT_CONTEXT*** prgpCertOut);
+alias FNIMPORTPFXTOPROVIDERFREEDATA = void function(uint cCert, CERT_CONTEXT** rgpCert);
 enum IID_ICertEncodeStringArray = GUID(0x12a88820, 0x7494, 0x11d0, [0x88, 0x16, 0x0, 0xa0, 0xc9, 0x3, 0xb8, 0x3c]);
 interface ICertEncodeStringArray : IDispatch
 {
-    HRESULT Decode(const(BSTR));
-    HRESULT GetStringType(int*);
-    HRESULT GetCount(int*);
-    HRESULT GetValue(int, BSTR*);
-    HRESULT Reset(int, CERT_RDN_ATTR_VALUE_TYPE);
-    HRESULT SetValue(int, const(BSTR));
-    HRESULT Encode(BSTR*);
+    HRESULT Decode(const(BSTR) strBinary);
+    HRESULT GetStringType(int* pStringType);
+    HRESULT GetCount(int* pCount);
+    HRESULT GetValue(int Index, BSTR* pstr);
+    HRESULT Reset(int Count, CERT_RDN_ATTR_VALUE_TYPE StringType);
+    HRESULT SetValue(int Index, const(BSTR) str);
+    HRESULT Encode(BSTR* pstrBinary);
 }
 enum IID_ICertEncodeStringArray2 = GUID(0x9c680d93, 0x9b7d, 0x4e95, [0x90, 0x18, 0x4f, 0xfe, 0x10, 0xba, 0x5a, 0xda]);
 interface ICertEncodeStringArray2 : ICertEncodeStringArray
 {
-    HRESULT DecodeBlob(const(BSTR), EncodingType);
-    HRESULT EncodeBlob(EncodingType, BSTR*);
+    HRESULT DecodeBlob(const(BSTR) strEncodedData, EncodingType Encoding);
+    HRESULT EncodeBlob(EncodingType Encoding, BSTR* pstrEncodedData);
 }
 enum IID_ICertEncodeLongArray = GUID(0x15e2f230, 0xa0a2, 0x11d0, [0x88, 0x21, 0x0, 0xa0, 0xc9, 0x3, 0xb8, 0x3c]);
 interface ICertEncodeLongArray : IDispatch
 {
-    HRESULT Decode(const(BSTR));
-    HRESULT GetCount(int*);
-    HRESULT GetValue(int, int*);
-    HRESULT Reset(int);
-    HRESULT SetValue(int, int);
-    HRESULT Encode(BSTR*);
+    HRESULT Decode(const(BSTR) strBinary);
+    HRESULT GetCount(int* pCount);
+    HRESULT GetValue(int Index, int* pValue);
+    HRESULT Reset(int Count);
+    HRESULT SetValue(int Index, int Value);
+    HRESULT Encode(BSTR* pstrBinary);
 }
 enum IID_ICertEncodeLongArray2 = GUID(0x4efde84a, 0xbd9b, 0x4fc2, [0xa1, 0x8, 0xc3, 0x47, 0xd4, 0x78, 0x84, 0xf]);
 interface ICertEncodeLongArray2 : ICertEncodeLongArray
 {
-    HRESULT DecodeBlob(const(BSTR), EncodingType);
-    HRESULT EncodeBlob(EncodingType, BSTR*);
+    HRESULT DecodeBlob(const(BSTR) strEncodedData, EncodingType Encoding);
+    HRESULT EncodeBlob(EncodingType Encoding, BSTR* pstrEncodedData);
 }
 enum IID_ICertEncodeDateArray = GUID(0x2f9469a0, 0xa470, 0x11d0, [0x88, 0x21, 0x0, 0xa0, 0xc9, 0x3, 0xb8, 0x3c]);
 interface ICertEncodeDateArray : IDispatch
 {
-    HRESULT Decode(const(BSTR));
-    HRESULT GetCount(int*);
-    HRESULT GetValue(int, double*);
-    HRESULT Reset(int);
-    HRESULT SetValue(int, double);
-    HRESULT Encode(BSTR*);
+    HRESULT Decode(const(BSTR) strBinary);
+    HRESULT GetCount(int* pCount);
+    HRESULT GetValue(int Index, double* pValue);
+    HRESULT Reset(int Count);
+    HRESULT SetValue(int Index, double Value);
+    HRESULT Encode(BSTR* pstrBinary);
 }
 enum IID_ICertEncodeDateArray2 = GUID(0x99a4edb5, 0x2b8e, 0x448d, [0xbf, 0x95, 0xbb, 0xa8, 0xd7, 0x78, 0x9d, 0xc8]);
 interface ICertEncodeDateArray2 : ICertEncodeDateArray
 {
-    HRESULT DecodeBlob(const(BSTR), EncodingType);
-    HRESULT EncodeBlob(EncodingType, BSTR*);
+    HRESULT DecodeBlob(const(BSTR) strEncodedData, EncodingType Encoding);
+    HRESULT EncodeBlob(EncodingType Encoding, BSTR* pstrEncodedData);
 }
 enum IID_ICertEncodeCRLDistInfo = GUID(0x1958640, 0xbbff, 0x11d0, [0x88, 0x25, 0x0, 0xa0, 0xc9, 0x3, 0xb8, 0x3c]);
 interface ICertEncodeCRLDistInfo : IDispatch
 {
-    HRESULT Decode(const(BSTR));
-    HRESULT GetDistPointCount(int*);
-    HRESULT GetNameCount(int, int*);
-    HRESULT GetNameChoice(int, int, int*);
-    HRESULT GetName(int, int, BSTR*);
-    HRESULT Reset(int);
-    HRESULT SetNameCount(int, int);
-    HRESULT SetNameEntry(int, int, CERT_ALT_NAME, const(BSTR));
-    HRESULT Encode(BSTR*);
+    HRESULT Decode(const(BSTR) strBinary);
+    HRESULT GetDistPointCount(int* pDistPointCount);
+    HRESULT GetNameCount(int DistPointIndex, int* pNameCount);
+    HRESULT GetNameChoice(int DistPointIndex, int NameIndex, int* pNameChoice);
+    HRESULT GetName(int DistPointIndex, int NameIndex, BSTR* pstrName);
+    HRESULT Reset(int DistPointCount);
+    HRESULT SetNameCount(int DistPointIndex, int NameCount);
+    HRESULT SetNameEntry(int DistPointIndex, int NameIndex, CERT_ALT_NAME NameChoice, const(BSTR) strName);
+    HRESULT Encode(BSTR* pstrBinary);
 }
 enum IID_ICertEncodeCRLDistInfo2 = GUID(0xb4275d4b, 0x3e30, 0x446f, [0xad, 0x36, 0x9, 0xd0, 0x31, 0x20, 0xb0, 0x78]);
 interface ICertEncodeCRLDistInfo2 : ICertEncodeCRLDistInfo
 {
-    HRESULT DecodeBlob(const(BSTR), EncodingType);
-    HRESULT EncodeBlob(EncodingType, BSTR*);
+    HRESULT DecodeBlob(const(BSTR) strEncodedData, EncodingType Encoding);
+    HRESULT EncodeBlob(EncodingType Encoding, BSTR* pstrEncodedData);
 }
 enum IID_ICertEncodeAltName = GUID(0x1c9a8c70, 0x1271, 0x11d1, [0x9b, 0xd4, 0x0, 0xc0, 0x4f, 0xb6, 0x83, 0xfa]);
 interface ICertEncodeAltName : IDispatch
 {
-    HRESULT Decode(const(BSTR));
-    HRESULT GetNameCount(int*);
-    HRESULT GetNameChoice(int, int*);
-    HRESULT GetName(int, BSTR*);
-    HRESULT Reset(int);
-    HRESULT SetNameEntry(int, CERT_ALT_NAME, const(BSTR));
-    HRESULT Encode(BSTR*);
+    HRESULT Decode(const(BSTR) strBinary);
+    HRESULT GetNameCount(int* pNameCount);
+    HRESULT GetNameChoice(int NameIndex, int* pNameChoice);
+    HRESULT GetName(int NameIndex, BSTR* pstrName);
+    HRESULT Reset(int NameCount);
+    HRESULT SetNameEntry(int NameIndex, CERT_ALT_NAME NameChoice, const(BSTR) strName);
+    HRESULT Encode(BSTR* pstrBinary);
 }
 enum IID_ICertEncodeAltName2 = GUID(0xf67fe177, 0x5ef1, 0x4535, [0xb4, 0xce, 0x29, 0xdf, 0x15, 0xe2, 0xe0, 0xc3]);
 interface ICertEncodeAltName2 : ICertEncodeAltName
 {
-    HRESULT DecodeBlob(const(BSTR), EncodingType);
-    HRESULT EncodeBlob(EncodingType, BSTR*);
-    HRESULT GetNameBlob(int, EncodingType, BSTR*);
-    HRESULT SetNameEntryBlob(int, int, const(BSTR), EncodingType);
+    HRESULT DecodeBlob(const(BSTR) strEncodedData, EncodingType Encoding);
+    HRESULT EncodeBlob(EncodingType Encoding, BSTR* pstrEncodedData);
+    HRESULT GetNameBlob(int NameIndex, EncodingType Encoding, BSTR* pstrName);
+    HRESULT SetNameEntryBlob(int NameIndex, int NameChoice, const(BSTR) strName, EncodingType Encoding);
 }
 enum IID_ICertEncodeBitString = GUID(0x6db525be, 0x1278, 0x11d1, [0x9b, 0xd4, 0x0, 0xc0, 0x4f, 0xb6, 0x83, 0xfa]);
 interface ICertEncodeBitString : IDispatch
 {
-    HRESULT Decode(const(BSTR));
-    HRESULT GetBitCount(int*);
-    HRESULT GetBitString(BSTR*);
-    HRESULT Encode(int, BSTR, BSTR*);
+    HRESULT Decode(const(BSTR) strBinary);
+    HRESULT GetBitCount(int* pBitCount);
+    HRESULT GetBitString(BSTR* pstrBitString);
+    HRESULT Encode(int BitCount, BSTR strBitString, BSTR* pstrBinary);
 }
 enum IID_ICertEncodeBitString2 = GUID(0xe070d6e7, 0x23ef, 0x4dd2, [0x82, 0x42, 0xeb, 0xd9, 0xc9, 0x28, 0xcb, 0x30]);
 interface ICertEncodeBitString2 : ICertEncodeBitString
 {
-    HRESULT DecodeBlob(const(BSTR), EncodingType);
-    HRESULT EncodeBlob(int, const(BSTR), EncodingType, EncodingType, BSTR*);
-    HRESULT GetBitStringBlob(EncodingType, BSTR*);
+    HRESULT DecodeBlob(const(BSTR) strEncodedData, EncodingType Encoding);
+    HRESULT EncodeBlob(int BitCount, const(BSTR) strBitString, EncodingType EncodingIn, EncodingType Encoding, BSTR* pstrEncodedData);
+    HRESULT GetBitStringBlob(EncodingType Encoding, BSTR* pstrBitString);
 }
 enum CLSID_CCertEncodeStringArray = GUID(0x19a76fe0, 0x7494, 0x11d0, [0x88, 0x16, 0x0, 0xa0, 0xc9, 0x3, 0xb8, 0x3c]);
 struct CCertEncodeStringArray
@@ -4402,14 +4402,14 @@ struct CCertEncodeBitString
 enum IID_ICertExit = GUID(0xe19ae1a0, 0x7364, 0x11d0, [0x88, 0x16, 0x0, 0xa0, 0xc9, 0x3, 0xb8, 0x3c]);
 interface ICertExit : IDispatch
 {
-    HRESULT Initialize(const(BSTR), CERT_EXIT_EVENT_MASK*);
-    HRESULT Notify(int, int);
-    HRESULT GetDescription(BSTR*);
+    HRESULT Initialize(const(BSTR) strConfig, CERT_EXIT_EVENT_MASK* pEventMask);
+    HRESULT Notify(int ExitEvent, int Context);
+    HRESULT GetDescription(BSTR* pstrDescription);
 }
 enum IID_ICertExit2 = GUID(0xabf484b, 0xd049, 0x464d, [0xa7, 0xed, 0x55, 0x2e, 0x75, 0x29, 0xb0, 0xff]);
 interface ICertExit2 : ICertExit
 {
-    HRESULT GetManageModule(ICertManageModule*);
+    HRESULT GetManageModule(ICertManageModule* ppManageModule);
 }
 alias ENUM_CATYPES = int;
 enum : int
@@ -4437,259 +4437,259 @@ struct CAINFO
 enum IID_ICEnroll = GUID(0x43f8f288, 0x7a20, 0x11d0, [0x8f, 0x6, 0x0, 0xc0, 0x4f, 0xc2, 0x95, 0xe1]);
 interface ICEnroll : IDispatch
 {
-    HRESULT createFilePKCS10(BSTR, BSTR, BSTR);
-    HRESULT acceptFilePKCS7(BSTR);
-    HRESULT createPKCS10(BSTR, BSTR, BSTR*);
-    HRESULT acceptPKCS7(BSTR);
-    HRESULT getCertFromPKCS7(BSTR, BSTR*);
-    HRESULT enumProviders(int, int, BSTR*);
-    HRESULT enumContainers(int, BSTR*);
-    HRESULT freeRequestInfo(BSTR);
-    HRESULT get_MyStoreName(BSTR*);
-    HRESULT put_MyStoreName(BSTR);
-    HRESULT get_MyStoreType(BSTR*);
-    HRESULT put_MyStoreType(BSTR);
-    HRESULT get_MyStoreFlags(int*);
-    HRESULT put_MyStoreFlags(int);
-    HRESULT get_CAStoreName(BSTR*);
-    HRESULT put_CAStoreName(BSTR);
-    HRESULT get_CAStoreType(BSTR*);
-    HRESULT put_CAStoreType(BSTR);
-    HRESULT get_CAStoreFlags(int*);
-    HRESULT put_CAStoreFlags(int);
-    HRESULT get_RootStoreName(BSTR*);
-    HRESULT put_RootStoreName(BSTR);
-    HRESULT get_RootStoreType(BSTR*);
-    HRESULT put_RootStoreType(BSTR);
-    HRESULT get_RootStoreFlags(int*);
-    HRESULT put_RootStoreFlags(int);
-    HRESULT get_RequestStoreName(BSTR*);
-    HRESULT put_RequestStoreName(BSTR);
-    HRESULT get_RequestStoreType(BSTR*);
-    HRESULT put_RequestStoreType(BSTR);
-    HRESULT get_RequestStoreFlags(int*);
-    HRESULT put_RequestStoreFlags(int);
-    HRESULT get_ContainerName(BSTR*);
-    HRESULT put_ContainerName(BSTR);
-    HRESULT get_ProviderName(BSTR*);
-    HRESULT put_ProviderName(BSTR);
-    HRESULT get_ProviderType(int*);
-    HRESULT put_ProviderType(int);
-    HRESULT get_KeySpec(int*);
-    HRESULT put_KeySpec(int);
-    HRESULT get_ProviderFlags(int*);
-    HRESULT put_ProviderFlags(int);
-    HRESULT get_UseExistingKeySet(BOOL*);
-    HRESULT put_UseExistingKeySet(BOOL);
-    HRESULT get_GenKeyFlags(int*);
-    HRESULT put_GenKeyFlags(int);
-    HRESULT get_DeleteRequestCert(BOOL*);
-    HRESULT put_DeleteRequestCert(BOOL);
-    HRESULT get_WriteCertToCSP(BOOL*);
-    HRESULT put_WriteCertToCSP(BOOL);
-    HRESULT get_SPCFileName(BSTR*);
-    HRESULT put_SPCFileName(BSTR);
-    HRESULT get_PVKFileName(BSTR*);
-    HRESULT put_PVKFileName(BSTR);
-    HRESULT get_HashAlgorithm(BSTR*);
-    HRESULT put_HashAlgorithm(BSTR);
+    HRESULT createFilePKCS10(BSTR DNName, BSTR Usage, BSTR wszPKCS10FileName);
+    HRESULT acceptFilePKCS7(BSTR wszPKCS7FileName);
+    HRESULT createPKCS10(BSTR DNName, BSTR Usage, BSTR* pPKCS10);
+    HRESULT acceptPKCS7(BSTR PKCS7);
+    HRESULT getCertFromPKCS7(BSTR wszPKCS7, BSTR* pbstrCert);
+    HRESULT enumProviders(int dwIndex, int dwFlags, BSTR* pbstrProvName);
+    HRESULT enumContainers(int dwIndex, BSTR* pbstr);
+    HRESULT freeRequestInfo(BSTR PKCS7OrPKCS10);
+    HRESULT get_MyStoreName(BSTR* pbstrName);
+    HRESULT put_MyStoreName(BSTR bstrName);
+    HRESULT get_MyStoreType(BSTR* pbstrType);
+    HRESULT put_MyStoreType(BSTR bstrType);
+    HRESULT get_MyStoreFlags(int* pdwFlags);
+    HRESULT put_MyStoreFlags(int dwFlags);
+    HRESULT get_CAStoreName(BSTR* pbstrName);
+    HRESULT put_CAStoreName(BSTR bstrName);
+    HRESULT get_CAStoreType(BSTR* pbstrType);
+    HRESULT put_CAStoreType(BSTR bstrType);
+    HRESULT get_CAStoreFlags(int* pdwFlags);
+    HRESULT put_CAStoreFlags(int dwFlags);
+    HRESULT get_RootStoreName(BSTR* pbstrName);
+    HRESULT put_RootStoreName(BSTR bstrName);
+    HRESULT get_RootStoreType(BSTR* pbstrType);
+    HRESULT put_RootStoreType(BSTR bstrType);
+    HRESULT get_RootStoreFlags(int* pdwFlags);
+    HRESULT put_RootStoreFlags(int dwFlags);
+    HRESULT get_RequestStoreName(BSTR* pbstrName);
+    HRESULT put_RequestStoreName(BSTR bstrName);
+    HRESULT get_RequestStoreType(BSTR* pbstrType);
+    HRESULT put_RequestStoreType(BSTR bstrType);
+    HRESULT get_RequestStoreFlags(int* pdwFlags);
+    HRESULT put_RequestStoreFlags(int dwFlags);
+    HRESULT get_ContainerName(BSTR* pbstrContainer);
+    HRESULT put_ContainerName(BSTR bstrContainer);
+    HRESULT get_ProviderName(BSTR* pbstrProvider);
+    HRESULT put_ProviderName(BSTR bstrProvider);
+    HRESULT get_ProviderType(int* pdwType);
+    HRESULT put_ProviderType(int dwType);
+    HRESULT get_KeySpec(int* pdw);
+    HRESULT put_KeySpec(int dw);
+    HRESULT get_ProviderFlags(int* pdwFlags);
+    HRESULT put_ProviderFlags(int dwFlags);
+    HRESULT get_UseExistingKeySet(BOOL* fUseExistingKeys);
+    HRESULT put_UseExistingKeySet(BOOL fUseExistingKeys);
+    HRESULT get_GenKeyFlags(int* pdwFlags);
+    HRESULT put_GenKeyFlags(int dwFlags);
+    HRESULT get_DeleteRequestCert(BOOL* fDelete);
+    HRESULT put_DeleteRequestCert(BOOL fDelete);
+    HRESULT get_WriteCertToCSP(BOOL* fBool);
+    HRESULT put_WriteCertToCSP(BOOL fBool);
+    HRESULT get_SPCFileName(BSTR* pbstr);
+    HRESULT put_SPCFileName(BSTR bstr);
+    HRESULT get_PVKFileName(BSTR* pbstr);
+    HRESULT put_PVKFileName(BSTR bstr);
+    HRESULT get_HashAlgorithm(BSTR* pbstr);
+    HRESULT put_HashAlgorithm(BSTR bstr);
 }
 enum IID_ICEnroll2 = GUID(0x704ca730, 0xc90b, 0x11d1, [0x9b, 0xec, 0x0, 0xc0, 0x4f, 0xc2, 0x95, 0xe1]);
 interface ICEnroll2 : ICEnroll
 {
-    HRESULT addCertTypeToRequest(BSTR);
-    HRESULT addNameValuePairToSignature(BSTR, BSTR);
-    HRESULT get_WriteCertToUserDS(BOOL*);
-    HRESULT put_WriteCertToUserDS(BOOL);
-    HRESULT get_EnableT61DNEncoding(BOOL*);
-    HRESULT put_EnableT61DNEncoding(BOOL);
+    HRESULT addCertTypeToRequest(BSTR CertType);
+    HRESULT addNameValuePairToSignature(BSTR Name, BSTR Value);
+    HRESULT get_WriteCertToUserDS(BOOL* fBool);
+    HRESULT put_WriteCertToUserDS(BOOL fBool);
+    HRESULT get_EnableT61DNEncoding(BOOL* fBool);
+    HRESULT put_EnableT61DNEncoding(BOOL fBool);
 }
 enum IID_ICEnroll3 = GUID(0xc28c2d95, 0xb7de, 0x11d2, [0xa4, 0x21, 0x0, 0xc0, 0x4f, 0x79, 0xfe, 0x8e]);
 interface ICEnroll3 : ICEnroll2
 {
-    HRESULT InstallPKCS7(BSTR);
+    HRESULT InstallPKCS7(BSTR PKCS7);
     HRESULT Reset();
-    HRESULT GetSupportedKeySpec(int*);
-    HRESULT GetKeyLen(BOOL, BOOL, int*);
-    HRESULT EnumAlgs(int, int, int*);
-    HRESULT GetAlgName(int, BSTR*);
-    HRESULT put_ReuseHardwareKeyIfUnableToGenNew(BOOL);
-    HRESULT get_ReuseHardwareKeyIfUnableToGenNew(BOOL*);
-    HRESULT put_HashAlgID(int);
-    HRESULT get_HashAlgID(int*);
-    HRESULT put_LimitExchangeKeyToEncipherment(BOOL);
-    HRESULT get_LimitExchangeKeyToEncipherment(BOOL*);
-    HRESULT put_EnableSMIMECapabilities(BOOL);
-    HRESULT get_EnableSMIMECapabilities(BOOL*);
+    HRESULT GetSupportedKeySpec(int* pdwKeySpec);
+    HRESULT GetKeyLen(BOOL fMin, BOOL fExchange, int* pdwKeySize);
+    HRESULT EnumAlgs(int dwIndex, int algClass, int* pdwAlgID);
+    HRESULT GetAlgName(int algID, BSTR* pbstr);
+    HRESULT put_ReuseHardwareKeyIfUnableToGenNew(BOOL fReuseHardwareKeyIfUnableToGenNew);
+    HRESULT get_ReuseHardwareKeyIfUnableToGenNew(BOOL* fReuseHardwareKeyIfUnableToGenNew);
+    HRESULT put_HashAlgID(int hashAlgID);
+    HRESULT get_HashAlgID(int* hashAlgID);
+    HRESULT put_LimitExchangeKeyToEncipherment(BOOL fLimitExchangeKeyToEncipherment);
+    HRESULT get_LimitExchangeKeyToEncipherment(BOOL* fLimitExchangeKeyToEncipherment);
+    HRESULT put_EnableSMIMECapabilities(BOOL fEnableSMIMECapabilities);
+    HRESULT get_EnableSMIMECapabilities(BOOL* fEnableSMIMECapabilities);
 }
 enum IID_ICEnroll4 = GUID(0xc1f1188a, 0x2eb5, 0x4a80, [0x84, 0x1b, 0x7e, 0x72, 0x9a, 0x35, 0x6d, 0x90]);
 interface ICEnroll4 : ICEnroll3
 {
-    HRESULT put_PrivateKeyArchiveCertificate(BSTR);
-    HRESULT get_PrivateKeyArchiveCertificate(BSTR*);
-    HRESULT put_ThumbPrint(BSTR);
-    HRESULT get_ThumbPrint(BSTR*);
-    HRESULT binaryToString(int, BSTR, BSTR*);
-    HRESULT stringToBinary(int, BSTR, BSTR*);
-    HRESULT addExtensionToRequest(int, BSTR, BSTR);
-    HRESULT addAttributeToRequest(int, BSTR, BSTR);
-    HRESULT addNameValuePairToRequest(int, BSTR, BSTR);
+    HRESULT put_PrivateKeyArchiveCertificate(BSTR bstrCert);
+    HRESULT get_PrivateKeyArchiveCertificate(BSTR* pbstrCert);
+    HRESULT put_ThumbPrint(BSTR bstrThumbPrint);
+    HRESULT get_ThumbPrint(BSTR* pbstrThumbPrint);
+    HRESULT binaryToString(int Flags, BSTR strBinary, BSTR* pstrEncoded);
+    HRESULT stringToBinary(int Flags, BSTR strEncoded, BSTR* pstrBinary);
+    HRESULT addExtensionToRequest(int Flags, BSTR strName, BSTR strValue);
+    HRESULT addAttributeToRequest(int Flags, BSTR strName, BSTR strValue);
+    HRESULT addNameValuePairToRequest(int Flags, BSTR strName, BSTR strValue);
     HRESULT resetExtensions();
     HRESULT resetAttributes();
-    HRESULT createRequest(CERT_CREATE_REQUEST_FLAGS, BSTR, BSTR, BSTR*);
-    HRESULT createFileRequest(CERT_CREATE_REQUEST_FLAGS, BSTR, BSTR, BSTR);
-    HRESULT acceptResponse(BSTR);
-    HRESULT acceptFileResponse(BSTR);
-    HRESULT getCertFromResponse(BSTR, BSTR*);
-    HRESULT getCertFromFileResponse(BSTR, BSTR*);
-    HRESULT createPFX(BSTR, BSTR*);
-    HRESULT createFilePFX(BSTR, BSTR);
-    HRESULT setPendingRequestInfo(int, BSTR, BSTR, BSTR);
-    HRESULT enumPendingRequest(int, PENDING_REQUEST_DESIRED_PROPERTY, VARIANT*);
-    HRESULT removePendingRequest(BSTR);
-    HRESULT GetKeyLenEx(XEKL_KEYSIZE, XEKL_KEYSPEC, int*);
-    HRESULT InstallPKCS7Ex(BSTR, int*);
-    HRESULT addCertTypeToRequestEx(ADDED_CERT_TYPE, BSTR, int, BOOL, int);
-    HRESULT getProviderType(BSTR, int*);
-    HRESULT put_SignerCertificate(BSTR);
-    HRESULT put_ClientId(int);
-    HRESULT get_ClientId(int*);
-    HRESULT addBlobPropertyToCertificate(int, int, BSTR);
+    HRESULT createRequest(CERT_CREATE_REQUEST_FLAGS Flags, BSTR strDNName, BSTR Usage, BSTR* pstrRequest);
+    HRESULT createFileRequest(CERT_CREATE_REQUEST_FLAGS Flags, BSTR strDNName, BSTR strUsage, BSTR strRequestFileName);
+    HRESULT acceptResponse(BSTR strResponse);
+    HRESULT acceptFileResponse(BSTR strResponseFileName);
+    HRESULT getCertFromResponse(BSTR strResponse, BSTR* pstrCert);
+    HRESULT getCertFromFileResponse(BSTR strResponseFileName, BSTR* pstrCert);
+    HRESULT createPFX(BSTR strPassword, BSTR* pstrPFX);
+    HRESULT createFilePFX(BSTR strPassword, BSTR strPFXFileName);
+    HRESULT setPendingRequestInfo(int lRequestID, BSTR strCADNS, BSTR strCAName, BSTR strFriendlyName);
+    HRESULT enumPendingRequest(int lIndex, PENDING_REQUEST_DESIRED_PROPERTY lDesiredProperty, VARIANT* pvarProperty);
+    HRESULT removePendingRequest(BSTR strThumbprint);
+    HRESULT GetKeyLenEx(XEKL_KEYSIZE lSizeSpec, XEKL_KEYSPEC lKeySpec, int* pdwKeySize);
+    HRESULT InstallPKCS7Ex(BSTR PKCS7, int* plCertInstalled);
+    HRESULT addCertTypeToRequestEx(ADDED_CERT_TYPE lType, BSTR bstrOIDOrName, int lMajorVersion, BOOL fMinorVersion, int lMinorVersion);
+    HRESULT getProviderType(BSTR strProvName, int* plProvType);
+    HRESULT put_SignerCertificate(BSTR bstrCert);
+    HRESULT put_ClientId(int lClientId);
+    HRESULT get_ClientId(int* plClientId);
+    HRESULT addBlobPropertyToCertificate(int lPropertyId, int lReserved, BSTR bstrProperty);
     HRESULT resetBlobProperties();
-    HRESULT put_IncludeSubjectKeyID(BOOL);
-    HRESULT get_IncludeSubjectKeyID(BOOL*);
+    HRESULT put_IncludeSubjectKeyID(BOOL fInclude);
+    HRESULT get_IncludeSubjectKeyID(BOOL* pfInclude);
 }
 enum IID_IEnroll = GUID(0xacaa7838, 0x4585, 0x11d1, [0xab, 0x57, 0x0, 0xc0, 0x4f, 0xc2, 0x95, 0xe1]);
 interface IEnroll : IUnknown
 {
-    HRESULT createFilePKCS10WStr(const(wchar)*, const(wchar)*, const(wchar)*);
-    HRESULT acceptFilePKCS7WStr(const(wchar)*);
-    HRESULT createPKCS10WStr(const(wchar)*, const(wchar)*, CRYPT_INTEGER_BLOB*);
-    HRESULT acceptPKCS7Blob(CRYPT_INTEGER_BLOB*);
-    CERT_CONTEXT* getCertContextFromPKCS7(CRYPT_INTEGER_BLOB*);
+    HRESULT createFilePKCS10WStr(const(wchar)* DNName, const(wchar)* Usage, const(wchar)* wszPKCS10FileName);
+    HRESULT acceptFilePKCS7WStr(const(wchar)* wszPKCS7FileName);
+    HRESULT createPKCS10WStr(const(wchar)* DNName, const(wchar)* Usage, CRYPT_INTEGER_BLOB* pPkcs10Blob);
+    HRESULT acceptPKCS7Blob(CRYPT_INTEGER_BLOB* pBlobPKCS7);
+    CERT_CONTEXT* getCertContextFromPKCS7(CRYPT_INTEGER_BLOB* pBlobPKCS7);
     HCERTSTORE getMyStore();
     HCERTSTORE getCAStore();
     HCERTSTORE getROOTHStore();
-    HRESULT enumProvidersWStr(int, int, PWSTR*);
-    HRESULT enumContainersWStr(int, PWSTR*);
-    HRESULT freeRequestInfoBlob(CRYPT_INTEGER_BLOB);
-    HRESULT get_MyStoreNameWStr(PWSTR*);
-    HRESULT put_MyStoreNameWStr(PWSTR);
-    HRESULT get_MyStoreTypeWStr(PWSTR*);
-    HRESULT put_MyStoreTypeWStr(PWSTR);
-    HRESULT get_MyStoreFlags(int*);
-    HRESULT put_MyStoreFlags(int);
-    HRESULT get_CAStoreNameWStr(PWSTR*);
-    HRESULT put_CAStoreNameWStr(PWSTR);
-    HRESULT get_CAStoreTypeWStr(PWSTR*);
-    HRESULT put_CAStoreTypeWStr(PWSTR);
-    HRESULT get_CAStoreFlags(int*);
-    HRESULT put_CAStoreFlags(int);
-    HRESULT get_RootStoreNameWStr(PWSTR*);
-    HRESULT put_RootStoreNameWStr(PWSTR);
-    HRESULT get_RootStoreTypeWStr(PWSTR*);
-    HRESULT put_RootStoreTypeWStr(PWSTR);
-    HRESULT get_RootStoreFlags(int*);
-    HRESULT put_RootStoreFlags(int);
-    HRESULT get_RequestStoreNameWStr(PWSTR*);
-    HRESULT put_RequestStoreNameWStr(PWSTR);
-    HRESULT get_RequestStoreTypeWStr(PWSTR*);
-    HRESULT put_RequestStoreTypeWStr(PWSTR);
-    HRESULT get_RequestStoreFlags(int*);
-    HRESULT put_RequestStoreFlags(int);
-    HRESULT get_ContainerNameWStr(PWSTR*);
-    HRESULT put_ContainerNameWStr(PWSTR);
-    HRESULT get_ProviderNameWStr(PWSTR*);
-    HRESULT put_ProviderNameWStr(PWSTR);
-    HRESULT get_ProviderType(int*);
-    HRESULT put_ProviderType(int);
-    HRESULT get_KeySpec(int*);
-    HRESULT put_KeySpec(int);
-    HRESULT get_ProviderFlags(int*);
-    HRESULT put_ProviderFlags(int);
-    HRESULT get_UseExistingKeySet(BOOL*);
-    HRESULT put_UseExistingKeySet(BOOL);
-    HRESULT get_GenKeyFlags(int*);
-    HRESULT put_GenKeyFlags(int);
-    HRESULT get_DeleteRequestCert(BOOL*);
-    HRESULT put_DeleteRequestCert(BOOL);
-    HRESULT get_WriteCertToUserDS(BOOL*);
-    HRESULT put_WriteCertToUserDS(BOOL);
-    HRESULT get_EnableT61DNEncoding(BOOL*);
-    HRESULT put_EnableT61DNEncoding(BOOL);
-    HRESULT get_WriteCertToCSP(BOOL*);
-    HRESULT put_WriteCertToCSP(BOOL);
-    HRESULT get_SPCFileNameWStr(PWSTR*);
-    HRESULT put_SPCFileNameWStr(PWSTR);
-    HRESULT get_PVKFileNameWStr(PWSTR*);
-    HRESULT put_PVKFileNameWStr(PWSTR);
-    HRESULT get_HashAlgorithmWStr(PWSTR*);
-    HRESULT put_HashAlgorithmWStr(PWSTR);
-    HRESULT get_RenewalCertificate(CERT_CONTEXT**);
-    HRESULT put_RenewalCertificate(const(CERT_CONTEXT)*);
-    HRESULT AddCertTypeToRequestWStr(PWSTR);
-    HRESULT AddNameValuePairToSignatureWStr(PWSTR, PWSTR);
-    HRESULT AddExtensionsToRequest(CERT_EXTENSIONS*);
-    HRESULT AddAuthenticatedAttributesToPKCS7Request(CRYPT_ATTRIBUTES*);
-    HRESULT CreatePKCS7RequestFromRequest(CRYPT_INTEGER_BLOB*, const(CERT_CONTEXT)*, CRYPT_INTEGER_BLOB*);
+    HRESULT enumProvidersWStr(int dwIndex, int dwFlags, PWSTR* pbstrProvName);
+    HRESULT enumContainersWStr(int dwIndex, PWSTR* pbstr);
+    HRESULT freeRequestInfoBlob(CRYPT_INTEGER_BLOB pkcs7OrPkcs10);
+    HRESULT get_MyStoreNameWStr(PWSTR* szwName);
+    HRESULT put_MyStoreNameWStr(PWSTR szwName);
+    HRESULT get_MyStoreTypeWStr(PWSTR* szwType);
+    HRESULT put_MyStoreTypeWStr(PWSTR szwType);
+    HRESULT get_MyStoreFlags(int* pdwFlags);
+    HRESULT put_MyStoreFlags(int dwFlags);
+    HRESULT get_CAStoreNameWStr(PWSTR* szwName);
+    HRESULT put_CAStoreNameWStr(PWSTR szwName);
+    HRESULT get_CAStoreTypeWStr(PWSTR* szwType);
+    HRESULT put_CAStoreTypeWStr(PWSTR szwType);
+    HRESULT get_CAStoreFlags(int* pdwFlags);
+    HRESULT put_CAStoreFlags(int dwFlags);
+    HRESULT get_RootStoreNameWStr(PWSTR* szwName);
+    HRESULT put_RootStoreNameWStr(PWSTR szwName);
+    HRESULT get_RootStoreTypeWStr(PWSTR* szwType);
+    HRESULT put_RootStoreTypeWStr(PWSTR szwType);
+    HRESULT get_RootStoreFlags(int* pdwFlags);
+    HRESULT put_RootStoreFlags(int dwFlags);
+    HRESULT get_RequestStoreNameWStr(PWSTR* szwName);
+    HRESULT put_RequestStoreNameWStr(PWSTR szwName);
+    HRESULT get_RequestStoreTypeWStr(PWSTR* szwType);
+    HRESULT put_RequestStoreTypeWStr(PWSTR szwType);
+    HRESULT get_RequestStoreFlags(int* pdwFlags);
+    HRESULT put_RequestStoreFlags(int dwFlags);
+    HRESULT get_ContainerNameWStr(PWSTR* szwContainer);
+    HRESULT put_ContainerNameWStr(PWSTR szwContainer);
+    HRESULT get_ProviderNameWStr(PWSTR* szwProvider);
+    HRESULT put_ProviderNameWStr(PWSTR szwProvider);
+    HRESULT get_ProviderType(int* pdwType);
+    HRESULT put_ProviderType(int dwType);
+    HRESULT get_KeySpec(int* pdw);
+    HRESULT put_KeySpec(int dw);
+    HRESULT get_ProviderFlags(int* pdwFlags);
+    HRESULT put_ProviderFlags(int dwFlags);
+    HRESULT get_UseExistingKeySet(BOOL* fUseExistingKeys);
+    HRESULT put_UseExistingKeySet(BOOL fUseExistingKeys);
+    HRESULT get_GenKeyFlags(int* pdwFlags);
+    HRESULT put_GenKeyFlags(int dwFlags);
+    HRESULT get_DeleteRequestCert(BOOL* fDelete);
+    HRESULT put_DeleteRequestCert(BOOL fDelete);
+    HRESULT get_WriteCertToUserDS(BOOL* fBool);
+    HRESULT put_WriteCertToUserDS(BOOL fBool);
+    HRESULT get_EnableT61DNEncoding(BOOL* fBool);
+    HRESULT put_EnableT61DNEncoding(BOOL fBool);
+    HRESULT get_WriteCertToCSP(BOOL* fBool);
+    HRESULT put_WriteCertToCSP(BOOL fBool);
+    HRESULT get_SPCFileNameWStr(PWSTR* szw);
+    HRESULT put_SPCFileNameWStr(PWSTR szw);
+    HRESULT get_PVKFileNameWStr(PWSTR* szw);
+    HRESULT put_PVKFileNameWStr(PWSTR szw);
+    HRESULT get_HashAlgorithmWStr(PWSTR* szw);
+    HRESULT put_HashAlgorithmWStr(PWSTR szw);
+    HRESULT get_RenewalCertificate(CERT_CONTEXT** ppCertContext);
+    HRESULT put_RenewalCertificate(const(CERT_CONTEXT)* pCertContext);
+    HRESULT AddCertTypeToRequestWStr(PWSTR szw);
+    HRESULT AddNameValuePairToSignatureWStr(PWSTR Name, PWSTR Value);
+    HRESULT AddExtensionsToRequest(CERT_EXTENSIONS* pCertExtensions);
+    HRESULT AddAuthenticatedAttributesToPKCS7Request(CRYPT_ATTRIBUTES* pAttributes);
+    HRESULT CreatePKCS7RequestFromRequest(CRYPT_INTEGER_BLOB* pRequest, const(CERT_CONTEXT)* pSigningCertContext, CRYPT_INTEGER_BLOB* pPkcs7Blob);
 }
 enum IID_IEnroll2 = GUID(0xc080e199, 0xb7df, 0x11d2, [0xa4, 0x21, 0x0, 0xc0, 0x4f, 0x79, 0xfe, 0x8e]);
 interface IEnroll2 : IEnroll
 {
-    HRESULT InstallPKCS7Blob(CRYPT_INTEGER_BLOB*);
+    HRESULT InstallPKCS7Blob(CRYPT_INTEGER_BLOB* pBlobPKCS7);
     HRESULT Reset();
-    HRESULT GetSupportedKeySpec(int*);
-    HRESULT GetKeyLen(BOOL, BOOL, int*);
-    HRESULT EnumAlgs(int, int, int*);
-    HRESULT GetAlgNameWStr(int, PWSTR*);
-    HRESULT put_ReuseHardwareKeyIfUnableToGenNew(BOOL);
-    HRESULT get_ReuseHardwareKeyIfUnableToGenNew(BOOL*);
-    HRESULT put_HashAlgID(int);
-    HRESULT get_HashAlgID(int*);
-    HRESULT SetHStoreMy(HCERTSTORE);
-    HRESULT SetHStoreCA(HCERTSTORE);
-    HRESULT SetHStoreROOT(HCERTSTORE);
-    HRESULT SetHStoreRequest(HCERTSTORE);
-    HRESULT put_LimitExchangeKeyToEncipherment(BOOL);
-    HRESULT get_LimitExchangeKeyToEncipherment(BOOL*);
-    HRESULT put_EnableSMIMECapabilities(BOOL);
-    HRESULT get_EnableSMIMECapabilities(BOOL*);
+    HRESULT GetSupportedKeySpec(int* pdwKeySpec);
+    HRESULT GetKeyLen(BOOL fMin, BOOL fExchange, int* pdwKeySize);
+    HRESULT EnumAlgs(int dwIndex, int algClass, int* pdwAlgID);
+    HRESULT GetAlgNameWStr(int algID, PWSTR* ppwsz);
+    HRESULT put_ReuseHardwareKeyIfUnableToGenNew(BOOL fReuseHardwareKeyIfUnableToGenNew);
+    HRESULT get_ReuseHardwareKeyIfUnableToGenNew(BOOL* fReuseHardwareKeyIfUnableToGenNew);
+    HRESULT put_HashAlgID(int hashAlgID);
+    HRESULT get_HashAlgID(int* hashAlgID);
+    HRESULT SetHStoreMy(HCERTSTORE hStore);
+    HRESULT SetHStoreCA(HCERTSTORE hStore);
+    HRESULT SetHStoreROOT(HCERTSTORE hStore);
+    HRESULT SetHStoreRequest(HCERTSTORE hStore);
+    HRESULT put_LimitExchangeKeyToEncipherment(BOOL fLimitExchangeKeyToEncipherment);
+    HRESULT get_LimitExchangeKeyToEncipherment(BOOL* fLimitExchangeKeyToEncipherment);
+    HRESULT put_EnableSMIMECapabilities(BOOL fEnableSMIMECapabilities);
+    HRESULT get_EnableSMIMECapabilities(BOOL* fEnableSMIMECapabilities);
 }
 enum IID_IEnroll4 = GUID(0xf8053fe5, 0x78f4, 0x448f, [0xa0, 0xdb, 0x41, 0xd6, 0x1b, 0x73, 0x44, 0x6b]);
 interface IEnroll4 : IEnroll2
 {
-    HRESULT put_ThumbPrintWStr(CRYPT_INTEGER_BLOB);
-    HRESULT get_ThumbPrintWStr(CRYPT_INTEGER_BLOB*);
-    HRESULT SetPrivateKeyArchiveCertificate(const(CERT_CONTEXT)*);
+    HRESULT put_ThumbPrintWStr(CRYPT_INTEGER_BLOB thumbPrintBlob);
+    HRESULT get_ThumbPrintWStr(CRYPT_INTEGER_BLOB* thumbPrintBlob);
+    HRESULT SetPrivateKeyArchiveCertificate(const(CERT_CONTEXT)* pPrivateKeyArchiveCert);
     CERT_CONTEXT* GetPrivateKeyArchiveCertificate();
-    HRESULT binaryBlobToString(int, CRYPT_INTEGER_BLOB*, PWSTR*);
-    HRESULT stringToBinaryBlob(int, const(wchar)*, CRYPT_INTEGER_BLOB*, int*, int*);
-    HRESULT addExtensionToRequestWStr(int, const(wchar)*, CRYPT_INTEGER_BLOB*);
-    HRESULT addAttributeToRequestWStr(int, const(wchar)*, CRYPT_INTEGER_BLOB*);
-    HRESULT addNameValuePairToRequestWStr(int, const(wchar)*, const(wchar)*);
+    HRESULT binaryBlobToString(int Flags, CRYPT_INTEGER_BLOB* pblobBinary, PWSTR* ppwszString);
+    HRESULT stringToBinaryBlob(int Flags, const(wchar)* pwszString, CRYPT_INTEGER_BLOB* pblobBinary, int* pdwSkip, int* pdwFlags);
+    HRESULT addExtensionToRequestWStr(int Flags, const(wchar)* pwszName, CRYPT_INTEGER_BLOB* pblobValue);
+    HRESULT addAttributeToRequestWStr(int Flags, const(wchar)* pwszName, CRYPT_INTEGER_BLOB* pblobValue);
+    HRESULT addNameValuePairToRequestWStr(int Flags, const(wchar)* pwszName, const(wchar)* pwszValue);
     HRESULT resetExtensions();
     HRESULT resetAttributes();
-    HRESULT createRequestWStr(CERT_CREATE_REQUEST_FLAGS, const(wchar)*, const(wchar)*, CRYPT_INTEGER_BLOB*);
-    HRESULT createFileRequestWStr(CERT_CREATE_REQUEST_FLAGS, const(wchar)*, const(wchar)*, const(wchar)*);
-    HRESULT acceptResponseBlob(CRYPT_INTEGER_BLOB*);
-    HRESULT acceptFileResponseWStr(const(wchar)*);
-    HRESULT getCertContextFromResponseBlob(CRYPT_INTEGER_BLOB*, CERT_CONTEXT**);
-    HRESULT getCertContextFromFileResponseWStr(const(wchar)*, CERT_CONTEXT**);
-    HRESULT createPFXWStr(const(wchar)*, CRYPT_INTEGER_BLOB*);
-    HRESULT createFilePFXWStr(const(wchar)*, const(wchar)*);
-    HRESULT setPendingRequestInfoWStr(int, const(wchar)*, const(wchar)*, const(wchar)*);
-    HRESULT enumPendingRequestWStr(int, PENDING_REQUEST_DESIRED_PROPERTY, void*);
-    HRESULT removePendingRequestWStr(CRYPT_INTEGER_BLOB);
-    HRESULT GetKeyLenEx(XEKL_KEYSIZE, XEKL_KEYSPEC, int*);
-    HRESULT InstallPKCS7BlobEx(CRYPT_INTEGER_BLOB*, int*);
-    HRESULT AddCertTypeToRequestWStrEx(ADDED_CERT_TYPE, const(wchar)*, int, BOOL, int);
-    HRESULT getProviderTypeWStr(const(wchar)*, int*);
-    HRESULT addBlobPropertyToCertificateWStr(int, int, CRYPT_INTEGER_BLOB*);
-    HRESULT SetSignerCertificate(const(CERT_CONTEXT)*);
-    HRESULT put_ClientId(int);
-    HRESULT get_ClientId(int*);
-    HRESULT put_IncludeSubjectKeyID(BOOL);
-    HRESULT get_IncludeSubjectKeyID(BOOL*);
+    HRESULT createRequestWStr(CERT_CREATE_REQUEST_FLAGS Flags, const(wchar)* pwszDNName, const(wchar)* pwszUsage, CRYPT_INTEGER_BLOB* pblobRequest);
+    HRESULT createFileRequestWStr(CERT_CREATE_REQUEST_FLAGS Flags, const(wchar)* pwszDNName, const(wchar)* pwszUsage, const(wchar)* pwszRequestFileName);
+    HRESULT acceptResponseBlob(CRYPT_INTEGER_BLOB* pblobResponse);
+    HRESULT acceptFileResponseWStr(const(wchar)* pwszResponseFileName);
+    HRESULT getCertContextFromResponseBlob(CRYPT_INTEGER_BLOB* pblobResponse, CERT_CONTEXT** ppCertContext);
+    HRESULT getCertContextFromFileResponseWStr(const(wchar)* pwszResponseFileName, CERT_CONTEXT** ppCertContext);
+    HRESULT createPFXWStr(const(wchar)* pwszPassword, CRYPT_INTEGER_BLOB* pblobPFX);
+    HRESULT createFilePFXWStr(const(wchar)* pwszPassword, const(wchar)* pwszPFXFileName);
+    HRESULT setPendingRequestInfoWStr(int lRequestID, const(wchar)* pwszCADNS, const(wchar)* pwszCAName, const(wchar)* pwszFriendlyName);
+    HRESULT enumPendingRequestWStr(int lIndex, PENDING_REQUEST_DESIRED_PROPERTY lDesiredProperty, void* ppProperty);
+    HRESULT removePendingRequestWStr(CRYPT_INTEGER_BLOB thumbPrintBlob);
+    HRESULT GetKeyLenEx(XEKL_KEYSIZE lSizeSpec, XEKL_KEYSPEC lKeySpec, int* pdwKeySize);
+    HRESULT InstallPKCS7BlobEx(CRYPT_INTEGER_BLOB* pBlobPKCS7, int* plCertInstalled);
+    HRESULT AddCertTypeToRequestWStrEx(ADDED_CERT_TYPE lType, const(wchar)* pwszOIDOrName, int lMajorVersion, BOOL fMinorVersion, int lMinorVersion);
+    HRESULT getProviderTypeWStr(const(wchar)* pwszProvName, int* plProvType);
+    HRESULT addBlobPropertyToCertificateWStr(int lPropertyId, int lReserved, CRYPT_INTEGER_BLOB* pBlobProperty);
+    HRESULT SetSignerCertificate(const(CERT_CONTEXT)* pSignerCert);
+    HRESULT put_ClientId(int lClientId);
+    HRESULT get_ClientId(int* plClientId);
+    HRESULT put_IncludeSubjectKeyID(BOOL fInclude);
+    HRESULT get_IncludeSubjectKeyID(BOOL* pfInclude);
 }
 enum CLSID_CEnroll2 = GUID(0x127698e4, 0xe730, 0x4e5c, [0xa2, 0xb1, 0x21, 0x49, 0xa, 0x70, 0xc8, 0xa1]);
 struct CEnroll2
@@ -4702,15 +4702,15 @@ struct CEnroll
 enum IID_ICertRequestD = GUID(0xd99e6e70, 0xfc88, 0x11d0, [0xb4, 0x98, 0x0, 0xa0, 0xc9, 0x3, 0x12, 0xf3]);
 interface ICertRequestD : IUnknown
 {
-    HRESULT Request(uint, const(wchar)*, uint*, uint*, const(wchar)*, const(CERTTRANSBLOB)*, CERTTRANSBLOB*, CERTTRANSBLOB*, CERTTRANSBLOB*);
-    HRESULT GetCACert(uint, const(wchar)*, CERTTRANSBLOB*);
-    HRESULT Ping(const(wchar)*);
+    HRESULT Request(uint dwFlags, const(wchar)* pwszAuthority, uint* pdwRequestId, uint* pdwDisposition, const(wchar)* pwszAttributes, const(CERTTRANSBLOB)* pctbRequest, CERTTRANSBLOB* pctbCertChain, CERTTRANSBLOB* pctbEncodedCert, CERTTRANSBLOB* pctbDispositionMessage);
+    HRESULT GetCACert(uint fchain, const(wchar)* pwszAuthority, CERTTRANSBLOB* pctbOut);
+    HRESULT Ping(const(wchar)* pwszAuthority);
 }
 enum IID_ICertRequestD2 = GUID(0x5422fd3a, 0xd4b8, 0x4cef, [0xa1, 0x2e, 0xe8, 0x7d, 0x4c, 0xa2, 0x2e, 0x90]);
 interface ICertRequestD2 : ICertRequestD
 {
-    HRESULT Request2(const(wchar)*, uint, const(wchar)*, uint*, uint*, const(wchar)*, const(CERTTRANSBLOB)*, CERTTRANSBLOB*, CERTTRANSBLOB*, CERTTRANSBLOB*);
-    HRESULT GetCAProperty(const(wchar)*, int, int, int, CERTTRANSBLOB*);
-    HRESULT GetCAPropertyInfo(const(wchar)*, int*, CERTTRANSBLOB*);
-    HRESULT Ping2(const(wchar)*);
+    HRESULT Request2(const(wchar)* pwszAuthority, uint dwFlags, const(wchar)* pwszSerialNumber, uint* pdwRequestId, uint* pdwDisposition, const(wchar)* pwszAttributes, const(CERTTRANSBLOB)* pctbRequest, CERTTRANSBLOB* pctbFullResponse, CERTTRANSBLOB* pctbEncodedCert, CERTTRANSBLOB* pctbDispositionMessage);
+    HRESULT GetCAProperty(const(wchar)* pwszAuthority, int PropId, int PropIndex, int PropType, CERTTRANSBLOB* pctbPropertyValue);
+    HRESULT GetCAPropertyInfo(const(wchar)* pwszAuthority, int* pcProperty, CERTTRANSBLOB* pctbPropInfo);
+    HRESULT Ping2(const(wchar)* pwszAuthority);
 }

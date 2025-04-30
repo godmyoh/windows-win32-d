@@ -1,16 +1,16 @@
 module windows.win32.devices.portabledevices;
 
 import windows.win32.guid : GUID;
-import windows.win32.devices.properties : DEVPROPKEY, DEVPROPTYPE;
-import windows.win32.foundation : BOOL, BSTR, HRESULT, PWSTR;
+import windows.win32.devices.properties : DEVPROPTYPE;
+import windows.win32.foundation : BOOL, BSTR, DEVPROPKEY, HRESULT, PROPERTYKEY, PWSTR;
 import windows.win32.system.com : IDispatch, IStream, IUnknown;
 import windows.win32.system.com.structuredstorage : PROPVARIANT;
-import windows.win32.ui.shell.propertiessystem : IPropertyStore, PROPERTYKEY;
+import windows.win32.ui.shell.propertiessystem : IPropertyStore;
 
 version (Windows):
 extern (Windows):
 
-HRESULT DMProcessConfigXMLFiltered(const(wchar)*, const(wchar)**, uint, BSTR*);
+HRESULT DMProcessConfigXMLFiltered(const(wchar)* pszXmlIn, const(wchar)** rgszAllowedCspNodes, uint dwNumAllowedCspNodes, BSTR* pbstrXmlOut);
 enum DEVPKEY_MTPBTH_IsConnected = DEVPROPKEY(GUID(3927062522, 22685, 17522, [132, 228, 10, 190, 54, 253, 98, 239]), 2);
 enum GUID_DEVINTERFACE_WPD = GUID(0x6ac27878, 0xa6fa, 0x4155, [0xba, 0x85, 0xf9, 0x8f, 0x49, 0x1d, 0x4f, 0x33]);
 enum GUID_DEVINTERFACE_WPD_PRIVATE = GUID(0xba0c718f, 0x4ded, 0x49b7, [0xbd, 0xd3, 0xfa, 0xbe, 0x28, 0x66, 0x12, 0x11]);
@@ -1529,83 +1529,83 @@ enum : int
 enum IID_IWpdSerializer = GUID(0xb32f4002, 0xbb27, 0x45ff, [0xaf, 0x4f, 0x6, 0x63, 0x1c, 0x1e, 0x8d, 0xad]);
 interface IWpdSerializer : IUnknown
 {
-    HRESULT GetIPortableDeviceValuesFromBuffer(ubyte*, uint, IPortableDeviceValues*);
-    HRESULT WriteIPortableDeviceValuesToBuffer(uint, IPortableDeviceValues, ubyte*, uint*);
-    HRESULT GetBufferFromIPortableDeviceValues(IPortableDeviceValues, ubyte**, uint*);
-    HRESULT GetSerializedSize(IPortableDeviceValues, uint*);
+    HRESULT GetIPortableDeviceValuesFromBuffer(ubyte* pBuffer, uint dwInputBufferLength, IPortableDeviceValues* ppParams);
+    HRESULT WriteIPortableDeviceValuesToBuffer(uint dwOutputBufferLength, IPortableDeviceValues pResults, ubyte* pBuffer, uint* pdwBytesWritten);
+    HRESULT GetBufferFromIPortableDeviceValues(IPortableDeviceValues pSource, ubyte** ppBuffer, uint* pdwBufferSize);
+    HRESULT GetSerializedSize(IPortableDeviceValues pSource, uint* pdwSize);
 }
 enum IID_IPortableDeviceValues = GUID(0x6848f6f2, 0x3155, 0x4f86, [0xb6, 0xf5, 0x26, 0x3e, 0xee, 0xab, 0x31, 0x43]);
 interface IPortableDeviceValues : IUnknown
 {
-    HRESULT GetCount(uint*);
-    HRESULT GetAt(const(uint), PROPERTYKEY*, PROPVARIANT*);
-    HRESULT SetValue(const(PROPERTYKEY)*, const(PROPVARIANT)*);
-    HRESULT GetValue(const(PROPERTYKEY)*, PROPVARIANT*);
-    HRESULT SetStringValue(const(PROPERTYKEY)*, const(wchar)*);
-    HRESULT GetStringValue(const(PROPERTYKEY)*, PWSTR*);
-    HRESULT SetUnsignedIntegerValue(const(PROPERTYKEY)*, const(uint));
-    HRESULT GetUnsignedIntegerValue(const(PROPERTYKEY)*, uint*);
-    HRESULT SetSignedIntegerValue(const(PROPERTYKEY)*, const(int));
-    HRESULT GetSignedIntegerValue(const(PROPERTYKEY)*, int*);
-    HRESULT SetUnsignedLargeIntegerValue(const(PROPERTYKEY)*, const(ulong));
-    HRESULT GetUnsignedLargeIntegerValue(const(PROPERTYKEY)*, ulong*);
-    HRESULT SetSignedLargeIntegerValue(const(PROPERTYKEY)*, const(long));
-    HRESULT GetSignedLargeIntegerValue(const(PROPERTYKEY)*, long*);
-    HRESULT SetFloatValue(const(PROPERTYKEY)*, const(float));
-    HRESULT GetFloatValue(const(PROPERTYKEY)*, float*);
-    HRESULT SetErrorValue(const(PROPERTYKEY)*, const(HRESULT));
-    HRESULT GetErrorValue(const(PROPERTYKEY)*, HRESULT*);
-    HRESULT SetKeyValue(const(PROPERTYKEY)*, const(PROPERTYKEY)*);
-    HRESULT GetKeyValue(const(PROPERTYKEY)*, PROPERTYKEY*);
-    HRESULT SetBoolValue(const(PROPERTYKEY)*, const(BOOL));
-    HRESULT GetBoolValue(const(PROPERTYKEY)*, BOOL*);
-    HRESULT SetIUnknownValue(const(PROPERTYKEY)*, IUnknown);
-    HRESULT GetIUnknownValue(const(PROPERTYKEY)*, IUnknown*);
-    HRESULT SetGuidValue(const(PROPERTYKEY)*, const(GUID)*);
-    HRESULT GetGuidValue(const(PROPERTYKEY)*, GUID*);
-    HRESULT SetBufferValue(const(PROPERTYKEY)*, ubyte*, uint);
-    HRESULT GetBufferValue(const(PROPERTYKEY)*, ubyte**, uint*);
-    HRESULT SetIPortableDeviceValuesValue(const(PROPERTYKEY)*, IPortableDeviceValues);
-    HRESULT GetIPortableDeviceValuesValue(const(PROPERTYKEY)*, IPortableDeviceValues*);
-    HRESULT SetIPortableDevicePropVariantCollectionValue(const(PROPERTYKEY)*, IPortableDevicePropVariantCollection);
-    HRESULT GetIPortableDevicePropVariantCollectionValue(const(PROPERTYKEY)*, IPortableDevicePropVariantCollection*);
-    HRESULT SetIPortableDeviceKeyCollectionValue(const(PROPERTYKEY)*, IPortableDeviceKeyCollection);
-    HRESULT GetIPortableDeviceKeyCollectionValue(const(PROPERTYKEY)*, IPortableDeviceKeyCollection*);
-    HRESULT SetIPortableDeviceValuesCollectionValue(const(PROPERTYKEY)*, IPortableDeviceValuesCollection);
-    HRESULT GetIPortableDeviceValuesCollectionValue(const(PROPERTYKEY)*, IPortableDeviceValuesCollection*);
-    HRESULT RemoveValue(const(PROPERTYKEY)*);
-    HRESULT CopyValuesFromPropertyStore(IPropertyStore);
-    HRESULT CopyValuesToPropertyStore(IPropertyStore);
+    HRESULT GetCount(uint* pcelt);
+    HRESULT GetAt(const(uint) index, PROPERTYKEY* pKey, PROPVARIANT* pValue);
+    HRESULT SetValue(const(PROPERTYKEY)* key, const(PROPVARIANT)* pValue);
+    HRESULT GetValue(const(PROPERTYKEY)* key, PROPVARIANT* pValue);
+    HRESULT SetStringValue(const(PROPERTYKEY)* key, const(wchar)* Value);
+    HRESULT GetStringValue(const(PROPERTYKEY)* key, PWSTR* pValue);
+    HRESULT SetUnsignedIntegerValue(const(PROPERTYKEY)* key, const(uint) Value);
+    HRESULT GetUnsignedIntegerValue(const(PROPERTYKEY)* key, uint* pValue);
+    HRESULT SetSignedIntegerValue(const(PROPERTYKEY)* key, const(int) Value);
+    HRESULT GetSignedIntegerValue(const(PROPERTYKEY)* key, int* pValue);
+    HRESULT SetUnsignedLargeIntegerValue(const(PROPERTYKEY)* key, const(ulong) Value);
+    HRESULT GetUnsignedLargeIntegerValue(const(PROPERTYKEY)* key, ulong* pValue);
+    HRESULT SetSignedLargeIntegerValue(const(PROPERTYKEY)* key, const(long) Value);
+    HRESULT GetSignedLargeIntegerValue(const(PROPERTYKEY)* key, long* pValue);
+    HRESULT SetFloatValue(const(PROPERTYKEY)* key, const(float) Value);
+    HRESULT GetFloatValue(const(PROPERTYKEY)* key, float* pValue);
+    HRESULT SetErrorValue(const(PROPERTYKEY)* key, const(HRESULT) Value);
+    HRESULT GetErrorValue(const(PROPERTYKEY)* key, HRESULT* pValue);
+    HRESULT SetKeyValue(const(PROPERTYKEY)* key, const(PROPERTYKEY)* Value);
+    HRESULT GetKeyValue(const(PROPERTYKEY)* key, PROPERTYKEY* pValue);
+    HRESULT SetBoolValue(const(PROPERTYKEY)* key, const(BOOL) Value);
+    HRESULT GetBoolValue(const(PROPERTYKEY)* key, BOOL* pValue);
+    HRESULT SetIUnknownValue(const(PROPERTYKEY)* key, IUnknown pValue);
+    HRESULT GetIUnknownValue(const(PROPERTYKEY)* key, IUnknown* ppValue);
+    HRESULT SetGuidValue(const(PROPERTYKEY)* key, const(GUID)* Value);
+    HRESULT GetGuidValue(const(PROPERTYKEY)* key, GUID* pValue);
+    HRESULT SetBufferValue(const(PROPERTYKEY)* key, ubyte* pValue, uint cbValue);
+    HRESULT GetBufferValue(const(PROPERTYKEY)* key, ubyte** ppValue, uint* pcbValue);
+    HRESULT SetIPortableDeviceValuesValue(const(PROPERTYKEY)* key, IPortableDeviceValues pValue);
+    HRESULT GetIPortableDeviceValuesValue(const(PROPERTYKEY)* key, IPortableDeviceValues* ppValue);
+    HRESULT SetIPortableDevicePropVariantCollectionValue(const(PROPERTYKEY)* key, IPortableDevicePropVariantCollection pValue);
+    HRESULT GetIPortableDevicePropVariantCollectionValue(const(PROPERTYKEY)* key, IPortableDevicePropVariantCollection* ppValue);
+    HRESULT SetIPortableDeviceKeyCollectionValue(const(PROPERTYKEY)* key, IPortableDeviceKeyCollection pValue);
+    HRESULT GetIPortableDeviceKeyCollectionValue(const(PROPERTYKEY)* key, IPortableDeviceKeyCollection* ppValue);
+    HRESULT SetIPortableDeviceValuesCollectionValue(const(PROPERTYKEY)* key, IPortableDeviceValuesCollection pValue);
+    HRESULT GetIPortableDeviceValuesCollectionValue(const(PROPERTYKEY)* key, IPortableDeviceValuesCollection* ppValue);
+    HRESULT RemoveValue(const(PROPERTYKEY)* key);
+    HRESULT CopyValuesFromPropertyStore(IPropertyStore pStore);
+    HRESULT CopyValuesToPropertyStore(IPropertyStore pStore);
     HRESULT Clear();
 }
 enum IID_IPortableDeviceKeyCollection = GUID(0xdada2357, 0xe0ad, 0x492e, [0x98, 0xdb, 0xdd, 0x61, 0xc5, 0x3b, 0xa3, 0x53]);
 interface IPortableDeviceKeyCollection : IUnknown
 {
-    HRESULT GetCount(uint*);
-    HRESULT GetAt(const(uint), PROPERTYKEY*);
-    HRESULT Add(const(PROPERTYKEY)*);
+    HRESULT GetCount(uint* pcElems);
+    HRESULT GetAt(const(uint) dwIndex, PROPERTYKEY* pKey);
+    HRESULT Add(const(PROPERTYKEY)* Key);
     HRESULT Clear();
-    HRESULT RemoveAt(const(uint));
+    HRESULT RemoveAt(const(uint) dwIndex);
 }
 enum IID_IPortableDevicePropVariantCollection = GUID(0x89b2e422, 0x4f1b, 0x4316, [0xbc, 0xef, 0xa4, 0x4a, 0xfe, 0xa8, 0x3e, 0xb3]);
 interface IPortableDevicePropVariantCollection : IUnknown
 {
-    HRESULT GetCount(uint*);
-    HRESULT GetAt(const(uint), PROPVARIANT*);
-    HRESULT Add(const(PROPVARIANT)*);
-    HRESULT GetType(ushort*);
-    HRESULT ChangeType(const(ushort));
+    HRESULT GetCount(uint* pcElems);
+    HRESULT GetAt(const(uint) dwIndex, PROPVARIANT* pValue);
+    HRESULT Add(const(PROPVARIANT)* pValue);
+    HRESULT GetType(ushort* pvt);
+    HRESULT ChangeType(const(ushort) vt);
     HRESULT Clear();
-    HRESULT RemoveAt(const(uint));
+    HRESULT RemoveAt(const(uint) dwIndex);
 }
 enum IID_IPortableDeviceValuesCollection = GUID(0x6e3f2d79, 0x4e07, 0x48c4, [0x82, 0x8, 0xd8, 0xc2, 0xe5, 0xaf, 0x4a, 0x99]);
 interface IPortableDeviceValuesCollection : IUnknown
 {
-    HRESULT GetCount(uint*);
-    HRESULT GetAt(const(uint), IPortableDeviceValues*);
-    HRESULT Add(IPortableDeviceValues);
+    HRESULT GetCount(uint* pcElems);
+    HRESULT GetAt(const(uint) dwIndex, IPortableDeviceValues* ppValues);
+    HRESULT Add(IPortableDeviceValues pValues);
     HRESULT Clear();
-    HRESULT RemoveAt(const(uint));
+    HRESULT RemoveAt(const(uint) dwIndex);
 }
 enum CLSID_WpdSerializer = GUID(0xb91a74b, 0xad7c, 0x4a9d, [0xb5, 0x63, 0x29, 0xee, 0xf9, 0x16, 0x71, 0x72]);
 struct WpdSerializer
@@ -1630,197 +1630,197 @@ struct PortableDeviceValuesCollection
 enum IID_IPortableDeviceManager = GUID(0xa1567595, 0x4c2f, 0x4574, [0xa6, 0xfa, 0xec, 0xef, 0x91, 0x7b, 0x9a, 0x40]);
 interface IPortableDeviceManager : IUnknown
 {
-    HRESULT GetDevices(PWSTR*, uint*);
+    HRESULT GetDevices(PWSTR* pPnPDeviceIDs, uint* pcPnPDeviceIDs);
     HRESULT RefreshDeviceList();
-    HRESULT GetDeviceFriendlyName(const(wchar)*, PWSTR, uint*);
-    HRESULT GetDeviceDescription(const(wchar)*, PWSTR, uint*);
-    HRESULT GetDeviceManufacturer(const(wchar)*, PWSTR, uint*);
-    HRESULT GetDeviceProperty(const(wchar)*, const(wchar)*, ubyte*, uint*, uint*);
-    HRESULT GetPrivateDevices(PWSTR*, uint*);
+    HRESULT GetDeviceFriendlyName(const(wchar)* pszPnPDeviceID, PWSTR pDeviceFriendlyName, uint* pcchDeviceFriendlyName);
+    HRESULT GetDeviceDescription(const(wchar)* pszPnPDeviceID, PWSTR pDeviceDescription, uint* pcchDeviceDescription);
+    HRESULT GetDeviceManufacturer(const(wchar)* pszPnPDeviceID, PWSTR pDeviceManufacturer, uint* pcchDeviceManufacturer);
+    HRESULT GetDeviceProperty(const(wchar)* pszPnPDeviceID, const(wchar)* pszDevicePropertyName, ubyte* pData, uint* pcbData, uint* pdwType);
+    HRESULT GetPrivateDevices(PWSTR* pPnPDeviceIDs, uint* pcPnPDeviceIDs);
 }
 enum IID_IPortableDevice = GUID(0x625e2df8, 0x6392, 0x4cf0, [0x9a, 0xd1, 0x3c, 0xfa, 0x5f, 0x17, 0x77, 0x5c]);
 interface IPortableDevice : IUnknown
 {
-    HRESULT Open(const(wchar)*, IPortableDeviceValues);
-    HRESULT SendCommand(const(uint), IPortableDeviceValues, IPortableDeviceValues*);
-    HRESULT Content(IPortableDeviceContent*);
-    HRESULT Capabilities(IPortableDeviceCapabilities*);
+    HRESULT Open(const(wchar)* pszPnPDeviceID, IPortableDeviceValues pClientInfo);
+    HRESULT SendCommand(const(uint) dwFlags, IPortableDeviceValues pParameters, IPortableDeviceValues* ppResults);
+    HRESULT Content(IPortableDeviceContent* ppContent);
+    HRESULT Capabilities(IPortableDeviceCapabilities* ppCapabilities);
     HRESULT Cancel();
     HRESULT Close();
-    HRESULT Advise(const(uint), IPortableDeviceEventCallback, IPortableDeviceValues, PWSTR*);
-    HRESULT Unadvise(const(wchar)*);
-    HRESULT GetPnPDeviceID(PWSTR*);
+    HRESULT Advise(const(uint) dwFlags, IPortableDeviceEventCallback pCallback, IPortableDeviceValues pParameters, PWSTR* ppszCookie);
+    HRESULT Unadvise(const(wchar)* pszCookie);
+    HRESULT GetPnPDeviceID(PWSTR* ppszPnPDeviceID);
 }
 enum IID_IPortableDeviceContent = GUID(0x6a96ed84, 0x7c73, 0x4480, [0x99, 0x38, 0xbf, 0x5a, 0xf4, 0x77, 0xd4, 0x26]);
 interface IPortableDeviceContent : IUnknown
 {
-    HRESULT EnumObjects(const(uint), const(wchar)*, IPortableDeviceValues, IEnumPortableDeviceObjectIDs*);
-    HRESULT Properties(IPortableDeviceProperties*);
-    HRESULT Transfer(IPortableDeviceResources*);
-    HRESULT CreateObjectWithPropertiesOnly(IPortableDeviceValues, PWSTR*);
-    HRESULT CreateObjectWithPropertiesAndData(IPortableDeviceValues, IStream*, uint*, PWSTR*);
-    HRESULT Delete(const(uint), IPortableDevicePropVariantCollection, IPortableDevicePropVariantCollection*);
-    HRESULT GetObjectIDsFromPersistentUniqueIDs(IPortableDevicePropVariantCollection, IPortableDevicePropVariantCollection*);
+    HRESULT EnumObjects(const(uint) dwFlags, const(wchar)* pszParentObjectID, IPortableDeviceValues pFilter, IEnumPortableDeviceObjectIDs* ppEnum);
+    HRESULT Properties(IPortableDeviceProperties* ppProperties);
+    HRESULT Transfer(IPortableDeviceResources* ppResources);
+    HRESULT CreateObjectWithPropertiesOnly(IPortableDeviceValues pValues, PWSTR* ppszObjectID);
+    HRESULT CreateObjectWithPropertiesAndData(IPortableDeviceValues pValues, IStream* ppData, uint* pdwOptimalWriteBufferSize, PWSTR* ppszCookie);
+    HRESULT Delete(const(uint) dwOptions, IPortableDevicePropVariantCollection pObjectIDs, IPortableDevicePropVariantCollection* ppResults);
+    HRESULT GetObjectIDsFromPersistentUniqueIDs(IPortableDevicePropVariantCollection pPersistentUniqueIDs, IPortableDevicePropVariantCollection* ppObjectIDs);
     HRESULT Cancel();
-    HRESULT Move(IPortableDevicePropVariantCollection, const(wchar)*, IPortableDevicePropVariantCollection*);
-    HRESULT Copy(IPortableDevicePropVariantCollection, const(wchar)*, IPortableDevicePropVariantCollection*);
+    HRESULT Move(IPortableDevicePropVariantCollection pObjectIDs, const(wchar)* pszDestinationFolderObjectID, IPortableDevicePropVariantCollection* ppResults);
+    HRESULT Copy(IPortableDevicePropVariantCollection pObjectIDs, const(wchar)* pszDestinationFolderObjectID, IPortableDevicePropVariantCollection* ppResults);
 }
 enum IID_IPortableDeviceContent2 = GUID(0x9b4add96, 0xf6bf, 0x4034, [0x87, 0x8, 0xec, 0xa7, 0x2b, 0xf1, 0x5, 0x54]);
 interface IPortableDeviceContent2 : IPortableDeviceContent
 {
-    HRESULT UpdateObjectWithPropertiesAndData(const(wchar)*, IPortableDeviceValues, IStream*, uint*);
+    HRESULT UpdateObjectWithPropertiesAndData(const(wchar)* pszObjectID, IPortableDeviceValues pProperties, IStream* ppData, uint* pdwOptimalWriteBufferSize);
 }
 enum IID_IEnumPortableDeviceObjectIDs = GUID(0x10ece955, 0xcf41, 0x4728, [0xbf, 0xa0, 0x41, 0xee, 0xdf, 0x1b, 0xbf, 0x19]);
 interface IEnumPortableDeviceObjectIDs : IUnknown
 {
-    HRESULT Next(uint, PWSTR*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint cObjects, PWSTR* pObjIDs, uint* pcFetched);
+    HRESULT Skip(uint cObjects);
     HRESULT Reset();
-    HRESULT Clone(IEnumPortableDeviceObjectIDs*);
+    HRESULT Clone(IEnumPortableDeviceObjectIDs* ppEnum);
     HRESULT Cancel();
 }
 enum IID_IPortableDeviceProperties = GUID(0x7f6d695c, 0x3df, 0x4439, [0xa8, 0x9, 0x59, 0x26, 0x6b, 0xee, 0xe3, 0xa6]);
 interface IPortableDeviceProperties : IUnknown
 {
-    HRESULT GetSupportedProperties(const(wchar)*, IPortableDeviceKeyCollection*);
-    HRESULT GetPropertyAttributes(const(wchar)*, const(PROPERTYKEY)*, IPortableDeviceValues*);
-    HRESULT GetValues(const(wchar)*, IPortableDeviceKeyCollection, IPortableDeviceValues*);
-    HRESULT SetValues(const(wchar)*, IPortableDeviceValues, IPortableDeviceValues*);
-    HRESULT Delete(const(wchar)*, IPortableDeviceKeyCollection);
+    HRESULT GetSupportedProperties(const(wchar)* pszObjectID, IPortableDeviceKeyCollection* ppKeys);
+    HRESULT GetPropertyAttributes(const(wchar)* pszObjectID, const(PROPERTYKEY)* Key, IPortableDeviceValues* ppAttributes);
+    HRESULT GetValues(const(wchar)* pszObjectID, IPortableDeviceKeyCollection pKeys, IPortableDeviceValues* ppValues);
+    HRESULT SetValues(const(wchar)* pszObjectID, IPortableDeviceValues pValues, IPortableDeviceValues* ppResults);
+    HRESULT Delete(const(wchar)* pszObjectID, IPortableDeviceKeyCollection pKeys);
     HRESULT Cancel();
 }
 enum IID_IPortableDeviceResources = GUID(0xfd8878ac, 0xd841, 0x4d17, [0x89, 0x1c, 0xe6, 0x82, 0x9c, 0xdb, 0x69, 0x34]);
 interface IPortableDeviceResources : IUnknown
 {
-    HRESULT GetSupportedResources(const(wchar)*, IPortableDeviceKeyCollection*);
-    HRESULT GetResourceAttributes(const(wchar)*, const(PROPERTYKEY)*, IPortableDeviceValues*);
-    HRESULT GetStream(const(wchar)*, const(PROPERTYKEY)*, const(uint), uint*, IStream*);
-    HRESULT Delete(const(wchar)*, IPortableDeviceKeyCollection);
+    HRESULT GetSupportedResources(const(wchar)* pszObjectID, IPortableDeviceKeyCollection* ppKeys);
+    HRESULT GetResourceAttributes(const(wchar)* pszObjectID, const(PROPERTYKEY)* Key, IPortableDeviceValues* ppResourceAttributes);
+    HRESULT GetStream(const(wchar)* pszObjectID, const(PROPERTYKEY)* Key, const(uint) dwMode, uint* pdwOptimalBufferSize, IStream* ppStream);
+    HRESULT Delete(const(wchar)* pszObjectID, IPortableDeviceKeyCollection pKeys);
     HRESULT Cancel();
-    HRESULT CreateResource(IPortableDeviceValues, IStream*, uint*, PWSTR*);
+    HRESULT CreateResource(IPortableDeviceValues pResourceAttributes, IStream* ppData, uint* pdwOptimalWriteBufferSize, PWSTR* ppszCookie);
 }
 enum IID_IPortableDeviceCapabilities = GUID(0x2c8c6dbf, 0xe3dc, 0x4061, [0xbe, 0xcc, 0x85, 0x42, 0xe8, 0x10, 0xd1, 0x26]);
 interface IPortableDeviceCapabilities : IUnknown
 {
-    HRESULT GetSupportedCommands(IPortableDeviceKeyCollection*);
-    HRESULT GetCommandOptions(const(PROPERTYKEY)*, IPortableDeviceValues*);
-    HRESULT GetFunctionalCategories(IPortableDevicePropVariantCollection*);
-    HRESULT GetFunctionalObjects(const(GUID)*, IPortableDevicePropVariantCollection*);
-    HRESULT GetSupportedContentTypes(const(GUID)*, IPortableDevicePropVariantCollection*);
-    HRESULT GetSupportedFormats(const(GUID)*, IPortableDevicePropVariantCollection*);
-    HRESULT GetSupportedFormatProperties(const(GUID)*, IPortableDeviceKeyCollection*);
-    HRESULT GetFixedPropertyAttributes(const(GUID)*, const(PROPERTYKEY)*, IPortableDeviceValues*);
+    HRESULT GetSupportedCommands(IPortableDeviceKeyCollection* ppCommands);
+    HRESULT GetCommandOptions(const(PROPERTYKEY)* Command, IPortableDeviceValues* ppOptions);
+    HRESULT GetFunctionalCategories(IPortableDevicePropVariantCollection* ppCategories);
+    HRESULT GetFunctionalObjects(const(GUID)* Category, IPortableDevicePropVariantCollection* ppObjectIDs);
+    HRESULT GetSupportedContentTypes(const(GUID)* Category, IPortableDevicePropVariantCollection* ppContentTypes);
+    HRESULT GetSupportedFormats(const(GUID)* ContentType, IPortableDevicePropVariantCollection* ppFormats);
+    HRESULT GetSupportedFormatProperties(const(GUID)* Format, IPortableDeviceKeyCollection* ppKeys);
+    HRESULT GetFixedPropertyAttributes(const(GUID)* Format, const(PROPERTYKEY)* Key, IPortableDeviceValues* ppAttributes);
     HRESULT Cancel();
-    HRESULT GetSupportedEvents(IPortableDevicePropVariantCollection*);
-    HRESULT GetEventOptions(const(GUID)*, IPortableDeviceValues*);
+    HRESULT GetSupportedEvents(IPortableDevicePropVariantCollection* ppEvents);
+    HRESULT GetEventOptions(const(GUID)* Event, IPortableDeviceValues* ppOptions);
 }
 enum IID_IPortableDeviceEventCallback = GUID(0xa8792a31, 0xf385, 0x493c, [0xa8, 0x93, 0x40, 0xf6, 0x4e, 0xb4, 0x5f, 0x6e]);
 interface IPortableDeviceEventCallback : IUnknown
 {
-    HRESULT OnEvent(IPortableDeviceValues);
+    HRESULT OnEvent(IPortableDeviceValues pEventParameters);
 }
 enum IID_IPortableDeviceDataStream = GUID(0x88e04db3, 0x1012, 0x4d64, [0x99, 0x96, 0xf7, 0x3, 0xa9, 0x50, 0xd3, 0xf4]);
 interface IPortableDeviceDataStream : IStream
 {
-    HRESULT GetObjectID(PWSTR*);
+    HRESULT GetObjectID(PWSTR* ppszObjectID);
     HRESULT Cancel();
 }
 enum IID_IPortableDeviceUnitsStream = GUID(0x5e98025f, 0xbfc4, 0x47a2, [0x9a, 0x5f, 0xbc, 0x90, 0xa, 0x50, 0x7c, 0x67]);
 interface IPortableDeviceUnitsStream : IUnknown
 {
-    HRESULT SeekInUnits(long, WPD_STREAM_UNITS, uint, ulong*);
+    HRESULT SeekInUnits(long dlibMove, WPD_STREAM_UNITS units, uint dwOrigin, ulong* plibNewPosition);
     HRESULT Cancel();
 }
 enum IID_IPortableDevicePropertiesBulk = GUID(0x482b05c0, 0x4056, 0x44ed, [0x9e, 0xf, 0x5e, 0x23, 0xb0, 0x9, 0xda, 0x93]);
 interface IPortableDevicePropertiesBulk : IUnknown
 {
-    HRESULT QueueGetValuesByObjectList(IPortableDevicePropVariantCollection, IPortableDeviceKeyCollection, IPortableDevicePropertiesBulkCallback, GUID*);
-    HRESULT QueueGetValuesByObjectFormat(const(GUID)*, const(wchar)*, const(uint), IPortableDeviceKeyCollection, IPortableDevicePropertiesBulkCallback, GUID*);
-    HRESULT QueueSetValuesByObjectList(IPortableDeviceValuesCollection, IPortableDevicePropertiesBulkCallback, GUID*);
-    HRESULT Start(const(GUID)*);
-    HRESULT Cancel(const(GUID)*);
+    HRESULT QueueGetValuesByObjectList(IPortableDevicePropVariantCollection pObjectIDs, IPortableDeviceKeyCollection pKeys, IPortableDevicePropertiesBulkCallback pCallback, GUID* pContext);
+    HRESULT QueueGetValuesByObjectFormat(const(GUID)* pguidObjectFormat, const(wchar)* pszParentObjectID, const(uint) dwDepth, IPortableDeviceKeyCollection pKeys, IPortableDevicePropertiesBulkCallback pCallback, GUID* pContext);
+    HRESULT QueueSetValuesByObjectList(IPortableDeviceValuesCollection pObjectValues, IPortableDevicePropertiesBulkCallback pCallback, GUID* pContext);
+    HRESULT Start(const(GUID)* pContext);
+    HRESULT Cancel(const(GUID)* pContext);
 }
 enum IID_IPortableDevicePropertiesBulkCallback = GUID(0x9deacb80, 0x11e8, 0x40e3, [0xa9, 0xf3, 0xf5, 0x57, 0x98, 0x6a, 0x78, 0x45]);
 interface IPortableDevicePropertiesBulkCallback : IUnknown
 {
-    HRESULT OnStart(const(GUID)*);
-    HRESULT OnProgress(const(GUID)*, IPortableDeviceValuesCollection);
-    HRESULT OnEnd(const(GUID)*, HRESULT);
+    HRESULT OnStart(const(GUID)* pContext);
+    HRESULT OnProgress(const(GUID)* pContext, IPortableDeviceValuesCollection pResults);
+    HRESULT OnEnd(const(GUID)* pContext, HRESULT hrStatus);
 }
 enum IID_IPortableDeviceServiceManager = GUID(0xa8abc4e9, 0xa84a, 0x47a9, [0x80, 0xb3, 0xc5, 0xd9, 0xb1, 0x72, 0xa9, 0x61]);
 interface IPortableDeviceServiceManager : IUnknown
 {
-    HRESULT GetDeviceServices(const(wchar)*, const(GUID)*, PWSTR*, uint*);
-    HRESULT GetDeviceForService(const(wchar)*, PWSTR*);
+    HRESULT GetDeviceServices(const(wchar)* pszPnPDeviceID, const(GUID)* guidServiceCategory, PWSTR* pServices, uint* pcServices);
+    HRESULT GetDeviceForService(const(wchar)* pszPnPServiceID, PWSTR* ppszPnPDeviceID);
 }
 enum IID_IPortableDeviceService = GUID(0xd3bd3a44, 0xd7b5, 0x40a9, [0x98, 0xb7, 0x2f, 0xa4, 0xd0, 0x1d, 0xec, 0x8]);
 interface IPortableDeviceService : IUnknown
 {
-    HRESULT Open(const(wchar)*, IPortableDeviceValues);
-    HRESULT Capabilities(IPortableDeviceServiceCapabilities*);
-    HRESULT Content(IPortableDeviceContent2*);
-    HRESULT Methods(IPortableDeviceServiceMethods*);
+    HRESULT Open(const(wchar)* pszPnPServiceID, IPortableDeviceValues pClientInfo);
+    HRESULT Capabilities(IPortableDeviceServiceCapabilities* ppCapabilities);
+    HRESULT Content(IPortableDeviceContent2* ppContent);
+    HRESULT Methods(IPortableDeviceServiceMethods* ppMethods);
     HRESULT Cancel();
     HRESULT Close();
-    HRESULT GetServiceObjectID(PWSTR*);
-    HRESULT GetPnPServiceID(PWSTR*);
-    HRESULT Advise(const(uint), IPortableDeviceEventCallback, IPortableDeviceValues, PWSTR*);
-    HRESULT Unadvise(const(wchar)*);
-    HRESULT SendCommand(const(uint), IPortableDeviceValues, IPortableDeviceValues*);
+    HRESULT GetServiceObjectID(PWSTR* ppszServiceObjectID);
+    HRESULT GetPnPServiceID(PWSTR* ppszPnPServiceID);
+    HRESULT Advise(const(uint) dwFlags, IPortableDeviceEventCallback pCallback, IPortableDeviceValues pParameters, PWSTR* ppszCookie);
+    HRESULT Unadvise(const(wchar)* pszCookie);
+    HRESULT SendCommand(const(uint) dwFlags, IPortableDeviceValues pParameters, IPortableDeviceValues* ppResults);
 }
 enum IID_IPortableDeviceServiceCapabilities = GUID(0x24dbd89d, 0x413e, 0x43e0, [0xbd, 0x5b, 0x19, 0x7f, 0x3c, 0x56, 0xc8, 0x86]);
 interface IPortableDeviceServiceCapabilities : IUnknown
 {
-    HRESULT GetSupportedMethods(IPortableDevicePropVariantCollection*);
-    HRESULT GetSupportedMethodsByFormat(const(GUID)*, IPortableDevicePropVariantCollection*);
-    HRESULT GetMethodAttributes(const(GUID)*, IPortableDeviceValues*);
-    HRESULT GetMethodParameterAttributes(const(GUID)*, const(PROPERTYKEY)*, IPortableDeviceValues*);
-    HRESULT GetSupportedFormats(IPortableDevicePropVariantCollection*);
-    HRESULT GetFormatAttributes(const(GUID)*, IPortableDeviceValues*);
-    HRESULT GetSupportedFormatProperties(const(GUID)*, IPortableDeviceKeyCollection*);
-    HRESULT GetFormatPropertyAttributes(const(GUID)*, const(PROPERTYKEY)*, IPortableDeviceValues*);
-    HRESULT GetSupportedEvents(IPortableDevicePropVariantCollection*);
-    HRESULT GetEventAttributes(const(GUID)*, IPortableDeviceValues*);
-    HRESULT GetEventParameterAttributes(const(GUID)*, const(PROPERTYKEY)*, IPortableDeviceValues*);
-    HRESULT GetInheritedServices(const(uint), IPortableDevicePropVariantCollection*);
-    HRESULT GetFormatRenderingProfiles(const(GUID)*, IPortableDeviceValuesCollection*);
-    HRESULT GetSupportedCommands(IPortableDeviceKeyCollection*);
-    HRESULT GetCommandOptions(const(PROPERTYKEY)*, IPortableDeviceValues*);
+    HRESULT GetSupportedMethods(IPortableDevicePropVariantCollection* ppMethods);
+    HRESULT GetSupportedMethodsByFormat(const(GUID)* Format, IPortableDevicePropVariantCollection* ppMethods);
+    HRESULT GetMethodAttributes(const(GUID)* Method, IPortableDeviceValues* ppAttributes);
+    HRESULT GetMethodParameterAttributes(const(GUID)* Method, const(PROPERTYKEY)* Parameter, IPortableDeviceValues* ppAttributes);
+    HRESULT GetSupportedFormats(IPortableDevicePropVariantCollection* ppFormats);
+    HRESULT GetFormatAttributes(const(GUID)* Format, IPortableDeviceValues* ppAttributes);
+    HRESULT GetSupportedFormatProperties(const(GUID)* Format, IPortableDeviceKeyCollection* ppKeys);
+    HRESULT GetFormatPropertyAttributes(const(GUID)* Format, const(PROPERTYKEY)* Property, IPortableDeviceValues* ppAttributes);
+    HRESULT GetSupportedEvents(IPortableDevicePropVariantCollection* ppEvents);
+    HRESULT GetEventAttributes(const(GUID)* Event, IPortableDeviceValues* ppAttributes);
+    HRESULT GetEventParameterAttributes(const(GUID)* Event, const(PROPERTYKEY)* Parameter, IPortableDeviceValues* ppAttributes);
+    HRESULT GetInheritedServices(const(uint) dwInheritanceType, IPortableDevicePropVariantCollection* ppServices);
+    HRESULT GetFormatRenderingProfiles(const(GUID)* Format, IPortableDeviceValuesCollection* ppRenderingProfiles);
+    HRESULT GetSupportedCommands(IPortableDeviceKeyCollection* ppCommands);
+    HRESULT GetCommandOptions(const(PROPERTYKEY)* Command, IPortableDeviceValues* ppOptions);
     HRESULT Cancel();
 }
 enum IID_IPortableDeviceServiceMethods = GUID(0xe20333c9, 0xfd34, 0x412d, [0xa3, 0x81, 0xcc, 0x6f, 0x2d, 0x82, 0xd, 0xf7]);
 interface IPortableDeviceServiceMethods : IUnknown
 {
-    HRESULT Invoke(const(GUID)*, IPortableDeviceValues, IPortableDeviceValues*);
-    HRESULT InvokeAsync(const(GUID)*, IPortableDeviceValues, IPortableDeviceServiceMethodCallback);
-    HRESULT Cancel(IPortableDeviceServiceMethodCallback);
+    HRESULT Invoke(const(GUID)* Method, IPortableDeviceValues pParameters, IPortableDeviceValues* ppResults);
+    HRESULT InvokeAsync(const(GUID)* Method, IPortableDeviceValues pParameters, IPortableDeviceServiceMethodCallback pCallback);
+    HRESULT Cancel(IPortableDeviceServiceMethodCallback pCallback);
 }
 enum IID_IPortableDeviceServiceMethodCallback = GUID(0xc424233c, 0xafce, 0x4828, [0xa7, 0x56, 0x7e, 0xd7, 0xa2, 0x35, 0x0, 0x83]);
 interface IPortableDeviceServiceMethodCallback : IUnknown
 {
-    HRESULT OnComplete(HRESULT, IPortableDeviceValues);
+    HRESULT OnComplete(HRESULT hrStatus, IPortableDeviceValues pResults);
 }
 enum IID_IPortableDeviceServiceActivation = GUID(0xe56b0534, 0xd9b9, 0x425c, [0x9b, 0x99, 0x75, 0xf9, 0x7c, 0xb3, 0xd7, 0xc8]);
 interface IPortableDeviceServiceActivation : IUnknown
 {
-    HRESULT OpenAsync(const(wchar)*, IPortableDeviceValues, IPortableDeviceServiceOpenCallback);
+    HRESULT OpenAsync(const(wchar)* pszPnPServiceID, IPortableDeviceValues pClientInfo, IPortableDeviceServiceOpenCallback pCallback);
     HRESULT CancelOpenAsync();
 }
 enum IID_IPortableDeviceServiceOpenCallback = GUID(0xbced49c8, 0x8efe, 0x41ed, [0x96, 0xb, 0x61, 0x31, 0x3a, 0xbd, 0x47, 0xa9]);
 interface IPortableDeviceServiceOpenCallback : IUnknown
 {
-    HRESULT OnComplete(HRESULT);
+    HRESULT OnComplete(HRESULT hrStatus);
 }
 enum IID_IPortableDeviceDispatchFactory = GUID(0x5e1eafc3, 0xe3d7, 0x4132, [0x96, 0xfa, 0x75, 0x9c, 0xf, 0x9d, 0x1e, 0xf]);
 interface IPortableDeviceDispatchFactory : IUnknown
 {
-    HRESULT GetDeviceDispatch(const(wchar)*, IDispatch*);
+    HRESULT GetDeviceDispatch(const(wchar)* pszPnPDeviceID, IDispatch* ppDeviceDispatch);
 }
 enum IID_IPortableDeviceWebControl = GUID(0x94fc7953, 0x5ca1, 0x483a, [0x8a, 0xee, 0xdf, 0x52, 0xe7, 0x74, 0x7d, 0x0]);
 interface IPortableDeviceWebControl : IDispatch
 {
-    HRESULT GetDeviceFromId(BSTR, IDispatch*);
-    HRESULT GetDeviceFromIdAsync(BSTR, IDispatch, IDispatch);
+    HRESULT GetDeviceFromId(BSTR deviceId, IDispatch* ppDevice);
+    HRESULT GetDeviceFromIdAsync(BSTR deviceId, IDispatch pCompletionHandler, IDispatch pErrorHandler);
 }
 enum CLSID_PortableDevice = GUID(0x728a21c5, 0x3d9e, 0x48d7, [0x98, 0x10, 0x86, 0x48, 0x48, 0xf0, 0xf4, 0x4]);
 struct PortableDevice
@@ -1853,25 +1853,25 @@ struct PortableDeviceWebControl
 enum IID_IEnumPortableDeviceConnectors = GUID(0xbfdef549, 0x9247, 0x454f, [0xbd, 0x82, 0x6, 0xfe, 0x80, 0x85, 0x3f, 0xaa]);
 interface IEnumPortableDeviceConnectors : IUnknown
 {
-    HRESULT Next(uint, IPortableDeviceConnector*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint cRequested, IPortableDeviceConnector* pConnectors, uint* pcFetched);
+    HRESULT Skip(uint cConnectors);
     HRESULT Reset();
-    HRESULT Clone(IEnumPortableDeviceConnectors*);
+    HRESULT Clone(IEnumPortableDeviceConnectors* ppEnum);
 }
 enum IID_IPortableDeviceConnector = GUID(0x625e2df8, 0x6392, 0x4cf0, [0x9a, 0xd1, 0x3c, 0xfa, 0x5f, 0x17, 0x77, 0x5c]);
 interface IPortableDeviceConnector : IUnknown
 {
-    HRESULT Connect(IConnectionRequestCallback);
-    HRESULT Disconnect(IConnectionRequestCallback);
-    HRESULT Cancel(IConnectionRequestCallback);
-    HRESULT GetProperty(const(DEVPROPKEY)*, DEVPROPTYPE*, ubyte**, uint*);
-    HRESULT SetProperty(const(DEVPROPKEY)*, DEVPROPTYPE, const(ubyte)*, uint);
-    HRESULT GetPnPID(PWSTR*);
+    HRESULT Connect(IConnectionRequestCallback pCallback);
+    HRESULT Disconnect(IConnectionRequestCallback pCallback);
+    HRESULT Cancel(IConnectionRequestCallback pCallback);
+    HRESULT GetProperty(const(DEVPROPKEY)* pPropertyKey, DEVPROPTYPE* pPropertyType, ubyte** ppData, uint* pcbData);
+    HRESULT SetProperty(const(DEVPROPKEY)* pPropertyKey, DEVPROPTYPE PropertyType, const(ubyte)* pData, uint cbData);
+    HRESULT GetPnPID(PWSTR* ppwszPnPID);
 }
 enum IID_IConnectionRequestCallback = GUID(0x272c9ae0, 0x7161, 0x4ae0, [0x91, 0xbd, 0x9f, 0x44, 0x8e, 0xe9, 0xc4, 0x27]);
 interface IConnectionRequestCallback : IUnknown
 {
-    HRESULT OnComplete(HRESULT);
+    HRESULT OnComplete(HRESULT hrStatus);
 }
 enum CLSID_EnumBthMtpConnectors = GUID(0xa1570149, 0xe645, 0x4f43, [0x8b, 0xd, 0x40, 0x9b, 0x6, 0x1d, 0xb2, 0xfc]);
 struct EnumBthMtpConnectors
@@ -1900,30 +1900,30 @@ enum : int
 enum IID_IMediaRadioManager = GUID(0x6cfdcab5, 0xfc47, 0x42a5, [0x92, 0x41, 0x7, 0x4b, 0x58, 0x83, 0xe, 0x73]);
 interface IMediaRadioManager : IUnknown
 {
-    HRESULT GetRadioInstances(IRadioInstanceCollection*);
-    HRESULT OnSystemRadioStateChange(SYSTEM_RADIO_STATE, uint);
+    HRESULT GetRadioInstances(IRadioInstanceCollection* ppCollection);
+    HRESULT OnSystemRadioStateChange(SYSTEM_RADIO_STATE sysRadioState, uint uTimeoutSec);
 }
 enum IID_IRadioInstanceCollection = GUID(0xe5791fae, 0x5665, 0x4e0c, [0x95, 0xbe, 0x5f, 0xde, 0x31, 0x64, 0x41, 0x85]);
 interface IRadioInstanceCollection : IUnknown
 {
-    HRESULT GetCount(uint*);
-    HRESULT GetAt(uint, IRadioInstance*);
+    HRESULT GetCount(uint* pcInstance);
+    HRESULT GetAt(uint uIndex, IRadioInstance* ppRadioInstance);
 }
 enum IID_IRadioInstance = GUID(0x70aa1c9e, 0xf2b4, 0x4c61, [0x86, 0xd3, 0x6b, 0x9f, 0xb7, 0x5f, 0xd1, 0xa2]);
 interface IRadioInstance : IUnknown
 {
-    HRESULT GetRadioManagerSignature(GUID*);
-    HRESULT GetInstanceSignature(BSTR*);
-    HRESULT GetFriendlyName(uint, BSTR*);
-    HRESULT GetRadioState(DEVICE_RADIO_STATE*);
-    HRESULT SetRadioState(DEVICE_RADIO_STATE, uint);
+    HRESULT GetRadioManagerSignature(GUID* pguidSignature);
+    HRESULT GetInstanceSignature(BSTR* pbstrId);
+    HRESULT GetFriendlyName(uint lcid, BSTR* pbstrName);
+    HRESULT GetRadioState(DEVICE_RADIO_STATE* pRadioState);
+    HRESULT SetRadioState(DEVICE_RADIO_STATE radioState, uint uTimeoutSec);
     BOOL IsMultiComm();
     BOOL IsAssociatingDevice();
 }
 enum IID_IMediaRadioManagerNotifySink = GUID(0x89d81f5f, 0xc147, 0x49ed, [0xa1, 0x1c, 0x77, 0xb2, 0xc, 0x31, 0xe7, 0xc9]);
 interface IMediaRadioManagerNotifySink : IUnknown
 {
-    HRESULT OnInstanceAdd(IRadioInstance);
-    HRESULT OnInstanceRemove(BSTR);
-    HRESULT OnInstanceRadioChange(BSTR, DEVICE_RADIO_STATE);
+    HRESULT OnInstanceAdd(IRadioInstance pRadioInstance);
+    HRESULT OnInstanceRemove(BSTR bstrRadioInstanceId);
+    HRESULT OnInstanceRadioChange(BSTR bstrRadioInstanceId, DEVICE_RADIO_STATE radioState);
 }

@@ -1,5 +1,6 @@
 module windows.win32.foundation;
 
+import windows.win32.guid : GUID;
 
 version (Windows):
 extern (Windows):
@@ -3447,28 +3448,44 @@ enum : uint
     GENERIC_ALL     = 0x10000000,
 }
 
-BSTR SysAllocString(const(wchar)*);
-int SysReAllocString(BSTR*, const(wchar)*);
-BSTR SysAllocStringLen(const(wchar)*, uint);
-int SysReAllocStringLen(BSTR*, const(wchar)*, uint);
-HRESULT SysAddRefString(BSTR);
-void SysReleaseString(BSTR);
-void SysFreeString(BSTR);
-uint SysStringLen(BSTR);
-uint SysStringByteLen(BSTR);
-BSTR SysAllocStringByteLen(const(char)*, uint);
-BOOL CloseHandle(HANDLE);
-BOOL DuplicateHandle(HANDLE, HANDLE, HANDLE, HANDLE*, uint, BOOL, DUPLICATE_HANDLE_OPTIONS);
-BOOL CompareObjectHandles(HANDLE, HANDLE);
-BOOL GetHandleInformation(HANDLE, uint*);
-BOOL SetHandleInformation(HANDLE, uint, HANDLE_FLAGS);
-BOOL FreeLibrary(HMODULE);
+alias OBJECT_ATTRIBUTE_FLAGS = uint;
+enum : uint
+{
+    OBJ_INHERIT                       = 0x00000002,
+    OBJ_PERMANENT                     = 0x00000010,
+    OBJ_EXCLUSIVE                     = 0x00000020,
+    OBJ_CASE_INSENSITIVE              = 0x00000040,
+    OBJ_OPENIF                        = 0x00000080,
+    OBJ_OPENLINK                      = 0x00000100,
+    OBJ_KERNEL_HANDLE                 = 0x00000200,
+    OBJ_FORCE_ACCESS_CHECK            = 0x00000400,
+    OBJ_IGNORE_IMPERSONATED_DEVICEMAP = 0x00000800,
+    OBJ_DONT_REPARSE                  = 0x00001000,
+    OBJ_VALID_ATTRIBUTES              = 0x00001ff2,
+}
+
+BSTR SysAllocString(const(wchar)* psz);
+int SysReAllocString(BSTR* pbstr, const(wchar)* psz);
+BSTR SysAllocStringLen(const(wchar)* strIn, uint ui);
+int SysReAllocStringLen(BSTR* pbstr, const(wchar)* psz, uint len);
+HRESULT SysAddRefString(BSTR bstrString);
+void SysReleaseString(BSTR bstrString);
+void SysFreeString(BSTR bstrString);
+uint SysStringLen(BSTR pbstr);
+uint SysStringByteLen(BSTR bstr);
+BSTR SysAllocStringByteLen(const(char)* psz, uint len);
+BOOL CloseHandle(HANDLE hObject);
+BOOL DuplicateHandle(HANDLE hSourceProcessHandle, HANDLE hSourceHandle, HANDLE hTargetProcessHandle, HANDLE* lpTargetHandle, uint dwDesiredAccess, BOOL bInheritHandle, DUPLICATE_HANDLE_OPTIONS dwOptions);
+BOOL CompareObjectHandles(HANDLE hFirstObjectHandle, HANDLE hSecondObjectHandle);
+BOOL GetHandleInformation(HANDLE hObject, uint* lpdwFlags);
+BOOL SetHandleInformation(HANDLE hObject, uint dwMask, HANDLE_FLAGS dwFlags);
+BOOL FreeLibrary(HMODULE hLibModule);
 WIN32_ERROR GetLastError();
-void SetLastError(WIN32_ERROR);
-void SetLastErrorEx(WIN32_ERROR, uint);
-HGLOBAL GlobalFree(HGLOBAL);
-HLOCAL LocalFree(HLOCAL);
-uint RtlNtStatusToDosError(NTSTATUS);
+void SetLastError(WIN32_ERROR dwErrCode);
+void SetLastErrorEx(WIN32_ERROR dwErrCode, uint dwType);
+HGLOBAL GlobalFree(HGLOBAL hMem);
+HLOCAL LocalFree(HLOCAL hMem);
+uint RtlNtStatusToDosError(NTSTATUS Status);
 enum TRUE = 0x00000001;
 enum FALSE = 0x00000000;
 enum VARIANT_TRUE = 0xffffffffffffffff;
@@ -10003,18 +10020,7 @@ enum IORING_E_CORRUPT = 0xffffffff80460007;
 enum IORING_E_COMPLETION_QUEUE_TOO_FULL = 0xffffffff80460008;
 enum RPC_X_ENUM_VALUE_TOO_LARGE = 0x000006f5;
 enum RPC_X_INVALID_PIPE_OPERATION = 0x00000727;
-enum RPC_S_SERVER_OUT_OF_MEMORY = 0xffffffffc0000205;
 enum RPC_X_SS_CONTEXT_MISMATCH = 0xffffffffc0030005;
-enum RPC_S_INVALID_ARG = 0xffffffffc000000d;
-enum RPC_S_OUT_OF_MEMORY = 0xffffffffc0000017;
-enum RPC_S_OUT_OF_THREADS = 0xffffffffc0000017;
-enum RPC_S_INVALID_LEVEL = 0xffffffffc000000d;
-enum RPC_S_BUFFER_TOO_SMALL = 0xffffffffc0000023;
-enum RPC_S_INVALID_SECURITY_DESC = 0xffffffffc0000079;
-enum RPC_S_ACCESS_DENIED = 0xffffffffc0000022;
-enum RPC_S_ASYNC_CALL_PENDING = 0x00000103;
-enum RPC_S_UNKNOWN_PRINCIPAL = 0xffffffffc0000073;
-enum RPC_S_NOT_ENOUGH_QUOTA = 0xffffffffc0000044;
 enum RPC_X_NO_MEMORY = 0xffffffffc0000017;
 enum RPC_X_INVALID_BOUND = 0xffffffffc0020023;
 enum RPC_X_INVALID_TAG = 0xffffffffc0020022;
@@ -10234,7 +10240,6 @@ alias HWND = void*;
 alias LPARAM = long;
 alias LRESULT = long;
 alias NTSTATUS = int;
-alias PSID = void*;
 alias PSTR = char*;
 alias PWSTR = wchar*;
 alias WPARAM = ulong;
@@ -10282,6 +10287,16 @@ struct DECIMAL
         }
         ulong Lo64;
     }
+}
+struct PROPERTYKEY
+{
+    GUID fmtid;
+    uint pid;
+}
+struct DEVPROPKEY
+{
+    GUID fmtid;
+    uint pid;
 }
 alias FARPROC = long function();
 alias NEARPROC = long function();
@@ -10345,4 +10360,4 @@ struct LUID
     uint LowPart;
     int HighPart;
 }
-alias PAPCFUNC = void function(ulong);
+alias PAPCFUNC = void function(ulong Parameter);

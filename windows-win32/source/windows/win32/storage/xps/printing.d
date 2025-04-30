@@ -8,8 +8,8 @@ import windows.win32.system.com : IDispatch, ISequentialStream, IStream, IUnknow
 version (Windows):
 extern (Windows):
 
-HRESULT StartXpsPrintJob(const(wchar)*, const(wchar)*, const(wchar)*, HANDLE, HANDLE, ubyte*, uint, IXpsPrintJob*, IXpsPrintJobStream*, IXpsPrintJobStream*);
-HRESULT StartXpsPrintJob1(const(wchar)*, const(wchar)*, const(wchar)*, HANDLE, HANDLE, IXpsPrintJob*, IXpsOMPackageTarget*);
+HRESULT StartXpsPrintJob(const(wchar)* printerName, const(wchar)* jobName, const(wchar)* outputFileName, HANDLE progressEvent, HANDLE completionEvent, ubyte* printablePagesOn, uint printablePagesOnCount, IXpsPrintJob* xpsPrintJob, IXpsPrintJobStream* documentStream, IXpsPrintJobStream* printTicketStream);
+HRESULT StartXpsPrintJob1(const(wchar)* printerName, const(wchar)* jobName, const(wchar)* outputFileName, HANDLE progressEvent, HANDLE completionEvent, IXpsPrintJob* xpsPrintJob, IXpsOMPackageTarget* printContentReceiver);
 enum ID_DOCUMENTPACKAGETARGET_MSXPS = GUID(0x9cae40a8, 0xded1, 0x41c9, [0xa9, 0xfd, 0xd7, 0x35, 0xef, 0x33, 0xae, 0xda]);
 enum ID_DOCUMENTPACKAGETARGET_OPENXPS = GUID(0x56bb72, 0x8c9c, 0x4612, [0xbd, 0xf, 0x93, 0x1, 0x2a, 0x87, 0x9, 0x9d]);
 enum ID_DOCUMENTPACKAGETARGET_OPENXPS_WITH_3D = GUID(0x63dbd720, 0x8b14, 0x4577, [0xb0, 0x74, 0x7b, 0xb1, 0x1b, 0x59, 0x6d, 0x28]);
@@ -40,20 +40,20 @@ enum IID_IXpsPrintJob = GUID(0x5ab89b06, 0x8194, 0x425f, [0xab, 0x3b, 0xd7, 0xa9
 interface IXpsPrintJob : IUnknown
 {
     HRESULT Cancel();
-    HRESULT GetJobStatus(XPS_JOB_STATUS*);
+    HRESULT GetJobStatus(XPS_JOB_STATUS* jobStatus);
 }
 enum IID_IPrintDocumentPackageTarget = GUID(0x1b8efec4, 0x3019, 0x4c27, [0x96, 0x4e, 0x36, 0x72, 0x2, 0x15, 0x69, 0x6]);
 interface IPrintDocumentPackageTarget : IUnknown
 {
-    HRESULT GetPackageTargetTypes(uint*, GUID**);
-    HRESULT GetPackageTarget(const(GUID)*, const(GUID)*, void**);
+    HRESULT GetPackageTargetTypes(uint* targetCount, GUID** targetTypes);
+    HRESULT GetPackageTarget(const(GUID)* guidTargetType, const(GUID)* riid, void** ppvTarget);
     HRESULT Cancel();
 }
 enum IID_IPrintDocumentPackageTarget2 = GUID(0xc560298a, 0x535c, 0x48f9, [0x86, 0x6a, 0x63, 0x25, 0x40, 0x66, 0xc, 0xb4]);
 interface IPrintDocumentPackageTarget2 : IUnknown
 {
-    HRESULT GetIsTargetIppPrinter(BOOL*);
-    HRESULT GetTargetIppPrintDevice(const(GUID)*, void**);
+    HRESULT GetIsTargetIppPrinter(BOOL* isIppPrinter);
+    HRESULT GetTargetIppPrintDevice(const(GUID)* riid, void** ppvTarget);
 }
 alias PrintDocumentPackageCompletion = int;
 enum : int
@@ -76,12 +76,12 @@ struct PrintDocumentPackageStatus
 enum IID_IPrintDocumentPackageStatusEvent = GUID(0xed90c8ad, 0x5c34, 0x4d05, [0xa1, 0xec, 0xe, 0x8a, 0x9b, 0x3a, 0xd7, 0xaf]);
 interface IPrintDocumentPackageStatusEvent : IDispatch
 {
-    HRESULT PackageStatusUpdated(PrintDocumentPackageStatus*);
+    HRESULT PackageStatusUpdated(PrintDocumentPackageStatus* packageStatus);
 }
 enum IID_IPrintDocumentPackageTargetFactory = GUID(0xd2959bf7, 0xb31b, 0x4a3d, [0x96, 0x0, 0x71, 0x2e, 0xb1, 0x33, 0x5b, 0xa4]);
 interface IPrintDocumentPackageTargetFactory : IUnknown
 {
-    HRESULT CreateDocumentPackageTargetForPrintJob(const(wchar)*, const(wchar)*, IStream, IStream, IPrintDocumentPackageTarget*);
+    HRESULT CreateDocumentPackageTargetForPrintJob(const(wchar)* printerName, const(wchar)* jobName, IStream jobOutputStream, IStream jobPrintTicketStream, IPrintDocumentPackageTarget* docPackageTarget);
 }
 enum CLSID_PrintDocumentPackageTarget = GUID(0x4842669e, 0x9947, 0x46ea, [0x8b, 0xa2, 0xd8, 0xcc, 0xe4, 0x32, 0xc2, 0xca]);
 struct PrintDocumentPackageTarget

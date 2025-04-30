@@ -7,17 +7,17 @@ import windows.win32.system.com : IUnknown;
 version (Windows):
 extern (Windows):
 
-HRESULT DMORegister(const(wchar)*, const(GUID)*, const(GUID)*, uint, uint, const(DMO_PARTIAL_MEDIATYPE)*, uint, const(DMO_PARTIAL_MEDIATYPE)*);
-HRESULT DMOUnregister(const(GUID)*, const(GUID)*);
-HRESULT DMOEnum(const(GUID)*, uint, uint, const(DMO_PARTIAL_MEDIATYPE)*, uint, const(DMO_PARTIAL_MEDIATYPE)*, IEnumDMO*);
-HRESULT DMOGetTypes(const(GUID)*, uint, uint*, DMO_PARTIAL_MEDIATYPE*, uint, uint*, DMO_PARTIAL_MEDIATYPE*);
-HRESULT DMOGetName(const(GUID)*, PWSTR);
-HRESULT MoInitMediaType(DMO_MEDIA_TYPE*, uint);
-HRESULT MoFreeMediaType(DMO_MEDIA_TYPE*);
-HRESULT MoCopyMediaType(DMO_MEDIA_TYPE*, const(DMO_MEDIA_TYPE)*);
-HRESULT MoCreateMediaType(DMO_MEDIA_TYPE**, uint);
-HRESULT MoDeleteMediaType(DMO_MEDIA_TYPE*);
-HRESULT MoDuplicateMediaType(DMO_MEDIA_TYPE**, const(DMO_MEDIA_TYPE)*);
+HRESULT DMORegister(const(wchar)* szName, const(GUID)* clsidDMO, const(GUID)* guidCategory, uint dwFlags, uint cInTypes, const(DMO_PARTIAL_MEDIATYPE)* pInTypes, uint cOutTypes, const(DMO_PARTIAL_MEDIATYPE)* pOutTypes);
+HRESULT DMOUnregister(const(GUID)* clsidDMO, const(GUID)* guidCategory);
+HRESULT DMOEnum(const(GUID)* guidCategory, uint dwFlags, uint cInTypes, const(DMO_PARTIAL_MEDIATYPE)* pInTypes, uint cOutTypes, const(DMO_PARTIAL_MEDIATYPE)* pOutTypes, IEnumDMO* ppEnum);
+HRESULT DMOGetTypes(const(GUID)* clsidDMO, uint ulInputTypesRequested, uint* pulInputTypesSupplied, DMO_PARTIAL_MEDIATYPE* pInputTypes, uint ulOutputTypesRequested, uint* pulOutputTypesSupplied, DMO_PARTIAL_MEDIATYPE* pOutputTypes);
+HRESULT DMOGetName(const(GUID)* clsidDMO, PWSTR szName);
+HRESULT MoInitMediaType(DMO_MEDIA_TYPE* pmt, uint cbFormat);
+HRESULT MoFreeMediaType(DMO_MEDIA_TYPE* pmt);
+HRESULT MoCopyMediaType(DMO_MEDIA_TYPE* pmtDest, const(DMO_MEDIA_TYPE)* pmtSrc);
+HRESULT MoCreateMediaType(DMO_MEDIA_TYPE** ppmt, uint cbFormat);
+HRESULT MoDeleteMediaType(DMO_MEDIA_TYPE* pmt);
+HRESULT MoDuplicateMediaType(DMO_MEDIA_TYPE** ppmtDest, const(DMO_MEDIA_TYPE)* pmtSrc);
 enum DMO_E_INVALIDSTREAMINDEX = 0xffffffff80040201;
 enum DMO_E_INVALIDTYPE = 0xffffffff80040202;
 enum DMO_E_TYPE_NOT_SET = 0xffffffff80040203;
@@ -106,9 +106,9 @@ enum : int
 enum IID_IMediaBuffer = GUID(0x59eff8b9, 0x938c, 0x4a26, [0x82, 0xf2, 0x95, 0xcb, 0x84, 0xcd, 0xc8, 0x37]);
 interface IMediaBuffer : IUnknown
 {
-    HRESULT SetLength(uint);
-    HRESULT GetMaxLength(uint*);
-    HRESULT GetBufferAndLength(ubyte**, uint*);
+    HRESULT SetLength(uint cbLength);
+    HRESULT GetMaxLength(uint* pcbMaxLength);
+    HRESULT GetBufferAndLength(ubyte** ppBuffer, uint* pcbLength);
 }
 struct DMO_OUTPUT_DATA_BUFFER
 {
@@ -120,35 +120,35 @@ struct DMO_OUTPUT_DATA_BUFFER
 enum IID_IMediaObject = GUID(0xd8ad0f58, 0x5494, 0x4102, [0x97, 0xc5, 0xec, 0x79, 0x8e, 0x59, 0xbc, 0xf4]);
 interface IMediaObject : IUnknown
 {
-    HRESULT GetStreamCount(uint*, uint*);
-    HRESULT GetInputStreamInfo(uint, uint*);
-    HRESULT GetOutputStreamInfo(uint, uint*);
-    HRESULT GetInputType(uint, uint, DMO_MEDIA_TYPE*);
-    HRESULT GetOutputType(uint, uint, DMO_MEDIA_TYPE*);
-    HRESULT SetInputType(uint, const(DMO_MEDIA_TYPE)*, uint);
-    HRESULT SetOutputType(uint, const(DMO_MEDIA_TYPE)*, uint);
-    HRESULT GetInputCurrentType(uint, DMO_MEDIA_TYPE*);
-    HRESULT GetOutputCurrentType(uint, DMO_MEDIA_TYPE*);
-    HRESULT GetInputSizeInfo(uint, uint*, uint*, uint*);
-    HRESULT GetOutputSizeInfo(uint, uint*, uint*);
-    HRESULT GetInputMaxLatency(uint, long*);
-    HRESULT SetInputMaxLatency(uint, long);
+    HRESULT GetStreamCount(uint* pcInputStreams, uint* pcOutputStreams);
+    HRESULT GetInputStreamInfo(uint dwInputStreamIndex, uint* pdwFlags);
+    HRESULT GetOutputStreamInfo(uint dwOutputStreamIndex, uint* pdwFlags);
+    HRESULT GetInputType(uint dwInputStreamIndex, uint dwTypeIndex, DMO_MEDIA_TYPE* pmt);
+    HRESULT GetOutputType(uint dwOutputStreamIndex, uint dwTypeIndex, DMO_MEDIA_TYPE* pmt);
+    HRESULT SetInputType(uint dwInputStreamIndex, const(DMO_MEDIA_TYPE)* pmt, uint dwFlags);
+    HRESULT SetOutputType(uint dwOutputStreamIndex, const(DMO_MEDIA_TYPE)* pmt, uint dwFlags);
+    HRESULT GetInputCurrentType(uint dwInputStreamIndex, DMO_MEDIA_TYPE* pmt);
+    HRESULT GetOutputCurrentType(uint dwOutputStreamIndex, DMO_MEDIA_TYPE* pmt);
+    HRESULT GetInputSizeInfo(uint dwInputStreamIndex, uint* pcbSize, uint* pcbMaxLookahead, uint* pcbAlignment);
+    HRESULT GetOutputSizeInfo(uint dwOutputStreamIndex, uint* pcbSize, uint* pcbAlignment);
+    HRESULT GetInputMaxLatency(uint dwInputStreamIndex, long* prtMaxLatency);
+    HRESULT SetInputMaxLatency(uint dwInputStreamIndex, long rtMaxLatency);
     HRESULT Flush();
-    HRESULT Discontinuity(uint);
+    HRESULT Discontinuity(uint dwInputStreamIndex);
     HRESULT AllocateStreamingResources();
     HRESULT FreeStreamingResources();
-    HRESULT GetInputStatus(uint, uint*);
-    HRESULT ProcessInput(uint, IMediaBuffer, uint, long, long);
-    HRESULT ProcessOutput(uint, uint, DMO_OUTPUT_DATA_BUFFER*, uint*);
-    HRESULT Lock(int);
+    HRESULT GetInputStatus(uint dwInputStreamIndex, uint* dwFlags);
+    HRESULT ProcessInput(uint dwInputStreamIndex, IMediaBuffer pBuffer, uint dwFlags, long rtTimestamp, long rtTimelength);
+    HRESULT ProcessOutput(uint dwFlags, uint cOutputBufferCount, DMO_OUTPUT_DATA_BUFFER* pOutputBuffers, uint* pdwStatus);
+    HRESULT Lock(int bLock);
 }
 enum IID_IEnumDMO = GUID(0x2c3cd98a, 0x2bfa, 0x4a53, [0x9c, 0x27, 0x52, 0x49, 0xba, 0x64, 0xba, 0xf]);
 interface IEnumDMO : IUnknown
 {
-    HRESULT Next(uint, GUID*, PWSTR*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint cItemsToFetch, GUID* pCLSID, PWSTR* Names, uint* pcItemsFetched);
+    HRESULT Skip(uint cItemsToSkip);
     HRESULT Reset();
-    HRESULT Clone(IEnumDMO*);
+    HRESULT Clone(IEnumDMO* ppEnum);
 }
 alias _DMO_INPLACE_PROCESS_FLAGS = int;
 enum : int
@@ -160,9 +160,9 @@ enum : int
 enum IID_IMediaObjectInPlace = GUID(0x651b9ad0, 0xfc7, 0x4aa9, [0x95, 0x38, 0xd8, 0x99, 0x31, 0x1, 0x7, 0x41]);
 interface IMediaObjectInPlace : IUnknown
 {
-    HRESULT Process(uint, ubyte*, long, uint);
-    HRESULT Clone(IMediaObjectInPlace*);
-    HRESULT GetLatency(long*);
+    HRESULT Process(uint ulSize, ubyte* pData, long refTimeStart, uint dwFlags);
+    HRESULT Clone(IMediaObjectInPlace* ppMediaObject);
+    HRESULT GetLatency(long* pLatencyTime);
 }
 alias _DMO_QUALITY_STATUS_FLAGS = int;
 enum : int
@@ -173,9 +173,9 @@ enum : int
 enum IID_IDMOQualityControl = GUID(0x65abea96, 0xcf36, 0x453f, [0xaf, 0x8a, 0x70, 0x5e, 0x98, 0xf1, 0x62, 0x60]);
 interface IDMOQualityControl : IUnknown
 {
-    HRESULT SetNow(long);
-    HRESULT SetStatus(uint);
-    HRESULT GetStatus(uint*);
+    HRESULT SetNow(long rtNow);
+    HRESULT SetStatus(uint dwFlags);
+    HRESULT GetStatus(uint* pdwFlags);
 }
 alias _DMO_VIDEO_OUTPUT_STREAM_FLAGS = int;
 enum : int
@@ -186,10 +186,10 @@ enum : int
 enum IID_IDMOVideoOutputOptimizations = GUID(0xbe8f4f4e, 0x5b16, 0x4d29, [0xb3, 0x50, 0x7f, 0x6b, 0x5d, 0x92, 0x98, 0xac]);
 interface IDMOVideoOutputOptimizations : IUnknown
 {
-    HRESULT QueryOperationModePreferences(uint, uint*);
-    HRESULT SetOperationMode(uint, uint);
-    HRESULT GetCurrentOperationMode(uint, uint*);
-    HRESULT GetCurrentSampleRequirements(uint, uint*);
+    HRESULT QueryOperationModePreferences(uint ulOutputStreamIndex, uint* pdwRequestedCapabilities);
+    HRESULT SetOperationMode(uint ulOutputStreamIndex, uint dwEnabledFeatures);
+    HRESULT GetCurrentOperationMode(uint ulOutputStreamIndex, uint* pdwEnabledFeatures);
+    HRESULT GetCurrentSampleRequirements(uint ulOutputStreamIndex, uint* pdwRequestedFeatures);
 }
 struct DMO_PARTIAL_MEDIATYPE
 {

@@ -8,11 +8,11 @@ import windows.win32.system.com : IUnknown;
 version (Windows):
 extern (Windows):
 
-HRESULT CreateFX(const(GUID)*, IUnknown*, const(void)*, uint);
-HRESULT XAudio2CreateWithVersionInfo(IXAudio2*, uint, uint, uint);
-HRESULT CreateAudioVolumeMeter(IUnknown*);
-HRESULT CreateAudioReverb(IUnknown*);
-HRESULT CreateHrtfApo(const(HrtfApoInit)*, IXAPO*);
+HRESULT CreateFX(const(GUID)* clsid, IUnknown* pEffect, const(void)* pInitDat, uint InitDataByteSize);
+HRESULT XAudio2CreateWithVersionInfo(IXAudio2* ppXAudio2, uint Flags, uint XAudio2Processor, uint ntddiVersion);
+HRESULT CreateAudioVolumeMeter(IUnknown* ppApo);
+HRESULT CreateAudioReverb(IUnknown* ppApo);
+HRESULT CreateHrtfApo(const(HrtfApoInit)* init, IXAPO* xApo);
 enum FXEQ_MIN_FRAMERATE = 0x000055f0;
 enum FXEQ_MAX_FRAMERATE = 0x0000bb80;
 enum FXEQ_MIN_FREQUENCY_CENTER = 20.000000;
@@ -274,22 +274,22 @@ struct XAPO_PROCESS_BUFFER_PARAMETERS
 enum IID_IXAPO = GUID(0xa410b984, 0x9839, 0x4819, [0xa0, 0xbe, 0x28, 0x56, 0xae, 0x6b, 0x3a, 0xdb]);
 interface IXAPO : IUnknown
 {
-    HRESULT GetRegistrationProperties(XAPO_REGISTRATION_PROPERTIES**);
-    HRESULT IsInputFormatSupported(const(WAVEFORMATEX)*, const(WAVEFORMATEX)*, WAVEFORMATEX**);
-    HRESULT IsOutputFormatSupported(const(WAVEFORMATEX)*, const(WAVEFORMATEX)*, WAVEFORMATEX**);
-    HRESULT Initialize(const(void)*, uint);
+    HRESULT GetRegistrationProperties(XAPO_REGISTRATION_PROPERTIES** ppRegistrationProperties);
+    HRESULT IsInputFormatSupported(const(WAVEFORMATEX)* pOutputFormat, const(WAVEFORMATEX)* pRequestedInputFormat, WAVEFORMATEX** ppSupportedInputFormat);
+    HRESULT IsOutputFormatSupported(const(WAVEFORMATEX)* pInputFormat, const(WAVEFORMATEX)* pRequestedOutputFormat, WAVEFORMATEX** ppSupportedOutputFormat);
+    HRESULT Initialize(const(void)* pData, uint DataByteSize);
     void Reset();
-    HRESULT LockForProcess(uint, const(XAPO_LOCKFORPROCESS_PARAMETERS)*, uint, const(XAPO_LOCKFORPROCESS_PARAMETERS)*);
+    HRESULT LockForProcess(uint InputLockedParameterCount, const(XAPO_LOCKFORPROCESS_PARAMETERS)* pInputLockedParameters, uint OutputLockedParameterCount, const(XAPO_LOCKFORPROCESS_PARAMETERS)* pOutputLockedParameters);
     void UnlockForProcess();
-    void Process(uint, const(XAPO_PROCESS_BUFFER_PARAMETERS)*, uint, XAPO_PROCESS_BUFFER_PARAMETERS*, BOOL);
-    uint CalcInputFrames(uint);
-    uint CalcOutputFrames(uint);
+    void Process(uint InputProcessParameterCount, const(XAPO_PROCESS_BUFFER_PARAMETERS)* pInputProcessParameters, uint OutputProcessParameterCount, XAPO_PROCESS_BUFFER_PARAMETERS* pOutputProcessParameters, BOOL IsEnabled);
+    uint CalcInputFrames(uint OutputFrameCount);
+    uint CalcOutputFrames(uint InputFrameCount);
 }
 enum IID_IXAPOParameters = GUID(0x26d95c66, 0x80f2, 0x499a, [0xad, 0x54, 0x5a, 0xe7, 0xf0, 0x1c, 0x6d, 0x98]);
 interface IXAPOParameters : IUnknown
 {
-    void SetParameters(const(void)*, uint);
-    void GetParameters(void*, uint);
+    void SetParameters(const(void)* pParameters, uint ParameterByteSize);
+    void GetParameters(void* pParameters, uint ParameterByteSize);
 }
 enum CLSID_FXEQ = GUID(0xf5e01117, 0xd6c4, 0x485a, [0xa3, 0xf5, 0x69, 0x51, 0x96, 0xf3, 0xdb, 0xfa]);
 struct FXEQ
@@ -455,59 +455,59 @@ struct XAUDIO2_DEBUG_CONFIGURATION
 enum IID_IXAudio2 = GUID(0x2b02e3cf, 0x2e0b, 0x4ec3, [0xbe, 0x45, 0x1b, 0x2a, 0x3f, 0xe7, 0x21, 0xd]);
 interface IXAudio2 : IUnknown
 {
-    HRESULT RegisterForCallbacks(IXAudio2EngineCallback);
-    void UnregisterForCallbacks(IXAudio2EngineCallback);
-    HRESULT CreateSourceVoice(IXAudio2SourceVoice*, const(WAVEFORMATEX)*, uint, float, IXAudio2VoiceCallback, const(XAUDIO2_VOICE_SENDS)*, const(XAUDIO2_EFFECT_CHAIN)*);
-    HRESULT CreateSubmixVoice(IXAudio2SubmixVoice*, uint, uint, uint, uint, const(XAUDIO2_VOICE_SENDS)*, const(XAUDIO2_EFFECT_CHAIN)*);
-    HRESULT CreateMasteringVoice(IXAudio2MasteringVoice*, uint, uint, uint, const(wchar)*, const(XAUDIO2_EFFECT_CHAIN)*, AUDIO_STREAM_CATEGORY);
+    HRESULT RegisterForCallbacks(IXAudio2EngineCallback pCallback);
+    void UnregisterForCallbacks(IXAudio2EngineCallback pCallback);
+    HRESULT CreateSourceVoice(IXAudio2SourceVoice* ppSourceVoice, const(WAVEFORMATEX)* pSourceFormat, uint Flags, float MaxFrequencyRatio, IXAudio2VoiceCallback pCallback, const(XAUDIO2_VOICE_SENDS)* pSendList, const(XAUDIO2_EFFECT_CHAIN)* pEffectChain);
+    HRESULT CreateSubmixVoice(IXAudio2SubmixVoice* ppSubmixVoice, uint InputChannels, uint InputSampleRate, uint Flags, uint ProcessingStage, const(XAUDIO2_VOICE_SENDS)* pSendList, const(XAUDIO2_EFFECT_CHAIN)* pEffectChain);
+    HRESULT CreateMasteringVoice(IXAudio2MasteringVoice* ppMasteringVoice, uint InputChannels, uint InputSampleRate, uint Flags, const(wchar)* szDeviceId, const(XAUDIO2_EFFECT_CHAIN)* pEffectChain, AUDIO_STREAM_CATEGORY StreamCategory);
     HRESULT StartEngine();
     void StopEngine();
-    HRESULT CommitChanges(uint);
-    void GetPerformanceData(XAUDIO2_PERFORMANCE_DATA*);
-    void SetDebugConfiguration(const(XAUDIO2_DEBUG_CONFIGURATION)*, void*);
+    HRESULT CommitChanges(uint OperationSet);
+    void GetPerformanceData(XAUDIO2_PERFORMANCE_DATA* pPerfData);
+    void SetDebugConfiguration(const(XAUDIO2_DEBUG_CONFIGURATION)* pDebugConfiguration, void* pReserved);
 }
 enum IID_IXAudio2Extension = GUID(0x84ac29bb, 0xd619, 0x44d2, [0xb1, 0x97, 0xe4, 0xac, 0xf7, 0xdf, 0x3e, 0xd6]);
 interface IXAudio2Extension : IUnknown
 {
-    void GetProcessingQuantum(uint*, uint*);
-    void GetProcessor(uint*);
+    void GetProcessingQuantum(uint* quantumNumerator, uint* quantumDenominator);
+    void GetProcessor(uint* processor);
 }
 // [Not Found] IID_IXAudio2Voice
 interface IXAudio2Voice
 {
-    void GetVoiceDetails(XAUDIO2_VOICE_DETAILS*);
-    HRESULT SetOutputVoices(const(XAUDIO2_VOICE_SENDS)*);
-    HRESULT SetEffectChain(const(XAUDIO2_EFFECT_CHAIN)*);
-    HRESULT EnableEffect(uint, uint);
-    HRESULT DisableEffect(uint, uint);
-    void GetEffectState(uint, BOOL*);
-    HRESULT SetEffectParameters(uint, const(void)*, uint, uint);
-    HRESULT GetEffectParameters(uint, void*, uint);
-    HRESULT SetFilterParameters(const(XAUDIO2_FILTER_PARAMETERS)*, uint);
-    void GetFilterParameters(XAUDIO2_FILTER_PARAMETERS*);
-    HRESULT SetOutputFilterParameters(IXAudio2Voice, const(XAUDIO2_FILTER_PARAMETERS)*, uint);
-    void GetOutputFilterParameters(IXAudio2Voice, XAUDIO2_FILTER_PARAMETERS*);
-    HRESULT SetVolume(float, uint);
-    void GetVolume(float*);
-    HRESULT SetChannelVolumes(uint, const(float)*, uint);
-    void GetChannelVolumes(uint, float*);
-    HRESULT SetOutputMatrix(IXAudio2Voice, uint, uint, const(float)*, uint);
-    void GetOutputMatrix(IXAudio2Voice, uint, uint, float*);
+    void GetVoiceDetails(XAUDIO2_VOICE_DETAILS* pVoiceDetails);
+    HRESULT SetOutputVoices(const(XAUDIO2_VOICE_SENDS)* pSendList);
+    HRESULT SetEffectChain(const(XAUDIO2_EFFECT_CHAIN)* pEffectChain);
+    HRESULT EnableEffect(uint EffectIndex, uint OperationSet);
+    HRESULT DisableEffect(uint EffectIndex, uint OperationSet);
+    void GetEffectState(uint EffectIndex, BOOL* pEnabled);
+    HRESULT SetEffectParameters(uint EffectIndex, const(void)* pParameters, uint ParametersByteSize, uint OperationSet);
+    HRESULT GetEffectParameters(uint EffectIndex, void* pParameters, uint ParametersByteSize);
+    HRESULT SetFilterParameters(const(XAUDIO2_FILTER_PARAMETERS)* pParameters, uint OperationSet);
+    void GetFilterParameters(XAUDIO2_FILTER_PARAMETERS* pParameters);
+    HRESULT SetOutputFilterParameters(IXAudio2Voice pDestinationVoice, const(XAUDIO2_FILTER_PARAMETERS)* pParameters, uint OperationSet);
+    void GetOutputFilterParameters(IXAudio2Voice pDestinationVoice, XAUDIO2_FILTER_PARAMETERS* pParameters);
+    HRESULT SetVolume(float Volume, uint OperationSet);
+    void GetVolume(float* pVolume);
+    HRESULT SetChannelVolumes(uint Channels, const(float)* pVolumes, uint OperationSet);
+    void GetChannelVolumes(uint Channels, float* pVolumes);
+    HRESULT SetOutputMatrix(IXAudio2Voice pDestinationVoice, uint SourceChannels, uint DestinationChannels, const(float)* pLevelMatrix, uint OperationSet);
+    void GetOutputMatrix(IXAudio2Voice pDestinationVoice, uint SourceChannels, uint DestinationChannels, float* pLevelMatrix);
     void DestroyVoice();
 }
 // [Not Found] IID_IXAudio2SourceVoice
 interface IXAudio2SourceVoice : IXAudio2Voice
 {
-    HRESULT Start(uint, uint);
-    HRESULT Stop(uint, uint);
-    HRESULT SubmitSourceBuffer(const(XAUDIO2_BUFFER)*, const(XAUDIO2_BUFFER_WMA)*);
+    HRESULT Start(uint Flags, uint OperationSet);
+    HRESULT Stop(uint Flags, uint OperationSet);
+    HRESULT SubmitSourceBuffer(const(XAUDIO2_BUFFER)* pBuffer, const(XAUDIO2_BUFFER_WMA)* pBufferWMA);
     HRESULT FlushSourceBuffers();
     HRESULT Discontinuity();
-    HRESULT ExitLoop(uint);
-    void GetState(XAUDIO2_VOICE_STATE*, uint);
-    HRESULT SetFrequencyRatio(float, uint);
-    void GetFrequencyRatio(float*);
-    HRESULT SetSourceSampleRate(uint);
+    HRESULT ExitLoop(uint OperationSet);
+    void GetState(XAUDIO2_VOICE_STATE* pVoiceState, uint Flags);
+    HRESULT SetFrequencyRatio(float Ratio, uint OperationSet);
+    void GetFrequencyRatio(float* pRatio);
+    HRESULT SetSourceSampleRate(uint NewSourceSampleRate);
 }
 // [Not Found] IID_IXAudio2SubmixVoice
 interface IXAudio2SubmixVoice : IXAudio2Voice
@@ -516,25 +516,25 @@ interface IXAudio2SubmixVoice : IXAudio2Voice
 // [Not Found] IID_IXAudio2MasteringVoice
 interface IXAudio2MasteringVoice : IXAudio2Voice
 {
-    HRESULT GetChannelMask(uint*);
+    HRESULT GetChannelMask(uint* pChannelmask);
 }
 // [Not Found] IID_IXAudio2EngineCallback
 interface IXAudio2EngineCallback
 {
     void OnProcessingPassStart();
     void OnProcessingPassEnd();
-    void OnCriticalError(HRESULT);
+    void OnCriticalError(HRESULT Error);
 }
 // [Not Found] IID_IXAudio2VoiceCallback
 interface IXAudio2VoiceCallback
 {
-    void OnVoiceProcessingPassStart(uint);
+    void OnVoiceProcessingPassStart(uint BytesRequired);
     void OnVoiceProcessingPassEnd();
     void OnStreamEnd();
-    void OnBufferStart(void*);
-    void OnBufferEnd(void*);
-    void OnLoopEnd(void*);
-    void OnVoiceError(void*, HRESULT);
+    void OnBufferStart(void* pBufferContext);
+    void OnBufferEnd(void* pBufferContext);
+    void OnLoopEnd(void* pBufferContext);
+    void OnVoiceError(void* pBufferContext, HRESULT Error);
 }
 enum CLSID_AudioVolumeMeter = GUID(0x4fc3b166, 0x972a, 0x40cf, [0xbc, 0x37, 0x7d, 0xb0, 0x3d, 0xb2, 0xfb, 0xa3]);
 struct AudioVolumeMeter
@@ -662,8 +662,8 @@ struct HrtfApoInit
 enum IID_IXAPOHrtfParameters = GUID(0x15b3cd66, 0xe9de, 0x4464, [0xb6, 0xe6, 0x2b, 0xc3, 0xcf, 0x63, 0xd4, 0x55]);
 interface IXAPOHrtfParameters : IUnknown
 {
-    HRESULT SetSourcePosition(const(HrtfPosition)*);
-    HRESULT SetSourceOrientation(const(HrtfOrientation)*);
-    HRESULT SetSourceGain(float);
-    HRESULT SetEnvironment(HrtfEnvironment);
+    HRESULT SetSourcePosition(const(HrtfPosition)* position);
+    HRESULT SetSourceOrientation(const(HrtfOrientation)* orientation);
+    HRESULT SetSourceGain(float gain);
+    HRESULT SetEnvironment(HrtfEnvironment environment);
 }

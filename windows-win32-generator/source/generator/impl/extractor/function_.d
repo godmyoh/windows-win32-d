@@ -20,6 +20,25 @@ class FunctionDeclExtractor
         TypeConverter typeConverter;
         const(KnownTypes) knownTypes;
         const(CustomAttributeResolver) customAttributeResolver;
+
+        enum string[string] keywordsMap =
+        [
+            "version": "version_",
+            "scope": "scope_",
+            "abstract": "abstract_",
+            "final": "final_",
+            "module": "module_",
+            "ref": "ref_",
+            "alias": "alias_",
+            "override": "override_",
+            "align": "align_",
+            "uint": "uint_",
+            "in": "in_",
+            "package": "package_",
+            "function": "function_",
+            "out": "out_",
+            "import": "import_",
+        ];
     }
 
     this(IDatabase db, TypeConverter typeConverter, const(KnownTypes) knownTypes, const(CustomAttributeResolver) customAttributeResolver)
@@ -60,7 +79,7 @@ class FunctionDeclExtractor
         foreach (pi, p; sig.paramSigs)
         {
             auto type = typeConverter.convert(p.typeSig, isConst(params[pi]));
-            paramNames[pi] = type.dlangType;
+            paramNames[pi] = type.dlangType ~ " " ~ replaceKeyword(params[pi].name);
             if (!type.cliType.namespace.empty)
                 decl.referencedTypes ~= type.cliType;
         }
@@ -81,5 +100,12 @@ class FunctionDeclExtractor
         }
 
         return false;
+    }
+
+    private constr replaceKeyword(constr name)
+    {
+        if (auto p = name in keywordsMap)
+            return *p;
+        return name;
     }
 }

@@ -30,14 +30,14 @@ enum : int
 enum IID_IDedupReadFileCallback = GUID(0x7bacc67a, 0x2f1d, 0x42d0, [0x89, 0x7e, 0x6f, 0xf6, 0x2d, 0xd5, 0x33, 0xbb]);
 interface IDedupReadFileCallback : IUnknown
 {
-    HRESULT ReadBackupFile(BSTR, long, uint, ubyte*, uint*, uint);
-    HRESULT OrderContainersRestore(uint, BSTR*, uint*, DEDUP_CONTAINER_EXTENT**);
-    HRESULT PreviewContainerRead(BSTR, uint, DDP_FILE_EXTENT*);
+    HRESULT ReadBackupFile(BSTR FileFullPath, long FileOffset, uint SizeToRead, ubyte* FileBuffer, uint* ReturnedSize, uint Flags);
+    HRESULT OrderContainersRestore(uint NumberOfContainers, BSTR* ContainerPaths, uint* ReadPlanEntries, DEDUP_CONTAINER_EXTENT** ReadPlan);
+    HRESULT PreviewContainerRead(BSTR FileFullPath, uint NumberOfReads, DDP_FILE_EXTENT* ReadOffsets);
 }
 enum IID_IDedupBackupSupport = GUID(0xc719d963, 0x2b2d, 0x415e, [0xac, 0xf7, 0x7e, 0xb7, 0xca, 0x59, 0x6f, 0xf4]);
 interface IDedupBackupSupport : IUnknown
 {
-    HRESULT RestoreFiles(uint, BSTR*, IDedupReadFileCallback, uint, HRESULT*);
+    HRESULT RestoreFiles(uint NumberOfFiles, BSTR* FileFullPaths, IDedupReadFileCallback Store, uint Flags, HRESULT* FileResults);
 }
 enum CLSID_DedupBackupSupport = GUID(0x73d6b2ad, 0x2984, 0x4715, [0xb2, 0xe3, 0x92, 0x4c, 0x14, 0x97, 0x44, 0xdd]);
 struct DedupBackupSupport
@@ -65,14 +65,14 @@ interface IDedupChunkLibrary : IUnknown
 {
     HRESULT InitializeForPushBuffers();
     HRESULT Uninitialize();
-    HRESULT SetParameter(uint, VARIANT);
-    HRESULT StartChunking(GUID, IUnknown*);
+    HRESULT SetParameter(uint dwParamType, VARIANT vParamValue);
+    HRESULT StartChunking(GUID iidIteratorInterfaceID, IUnknown* ppChunksEnum);
 }
 enum IID_IDedupIterateChunksHash32 = GUID(0x90b584d3, 0x72aa, 0x400f, [0x97, 0x67, 0xca, 0xd8, 0x66, 0xa5, 0xa2, 0xd8]);
 interface IDedupIterateChunksHash32 : IUnknown
 {
-    HRESULT PushBuffer(ubyte*, uint);
-    HRESULT Next(uint, DEDUP_CHUNK_INFO_HASH32*, uint*);
+    HRESULT PushBuffer(ubyte* pBuffer, uint ulBufferLength);
+    HRESULT Next(uint ulMaxChunks, DEDUP_CHUNK_INFO_HASH32* pArrChunks, uint* pulFetched);
     HRESULT Drain();
     HRESULT Reset();
 }
@@ -162,25 +162,25 @@ enum : int
 enum IID_IDedupDataPort = GUID(0x7963d734, 0x40a9, 0x4ea3, [0xbb, 0xf6, 0x5a, 0x89, 0xd2, 0x6f, 0x7a, 0xe8]);
 interface IDedupDataPort : IUnknown
 {
-    HRESULT GetStatus(DedupDataPortVolumeStatus*, uint*);
-    HRESULT LookupChunks(uint, DedupHash*, GUID*);
-    HRESULT InsertChunks(uint, DedupChunk*, uint, ubyte*, GUID*);
-    HRESULT InsertChunksWithStream(uint, DedupChunk*, uint, IStream, GUID*);
-    HRESULT CommitStreams(uint, DedupStream*, uint, DedupStreamEntry*, GUID*);
-    HRESULT CommitStreamsWithStream(uint, DedupStream*, uint, IStream, GUID*);
-    HRESULT GetStreams(uint, BSTR*, GUID*);
-    HRESULT GetStreamsResults(GUID, uint, uint, uint*, DedupStream**, uint*, DedupStreamEntry**, DedupDataPortRequestStatus*, HRESULT**);
-    HRESULT GetChunks(uint, DedupHash*, GUID*);
-    HRESULT GetChunksResults(GUID, uint, uint, uint*, DedupChunk**, uint*, ubyte**, DedupDataPortRequestStatus*, HRESULT**);
-    HRESULT GetRequestStatus(GUID, DedupDataPortRequestStatus*);
-    HRESULT GetRequestResults(GUID, uint, HRESULT*, uint*, DedupDataPortRequestStatus*, HRESULT**);
+    HRESULT GetStatus(DedupDataPortVolumeStatus* pStatus, uint* pDataHeadroomMb);
+    HRESULT LookupChunks(uint Count, DedupHash* pHashes, GUID* pRequestId);
+    HRESULT InsertChunks(uint ChunkCount, DedupChunk* pChunkMetadata, uint DataByteCount, ubyte* pChunkData, GUID* pRequestId);
+    HRESULT InsertChunksWithStream(uint ChunkCount, DedupChunk* pChunkMetadata, uint DataByteCount, IStream pChunkDataStream, GUID* pRequestId);
+    HRESULT CommitStreams(uint StreamCount, DedupStream* pStreams, uint EntryCount, DedupStreamEntry* pEntries, GUID* pRequestId);
+    HRESULT CommitStreamsWithStream(uint StreamCount, DedupStream* pStreams, uint EntryCount, IStream pEntriesStream, GUID* pRequestId);
+    HRESULT GetStreams(uint StreamCount, BSTR* pStreamPaths, GUID* pRequestId);
+    HRESULT GetStreamsResults(GUID RequestId, uint MaxWaitMs, uint StreamEntryIndex, uint* pStreamCount, DedupStream** ppStreams, uint* pEntryCount, DedupStreamEntry** ppEntries, DedupDataPortRequestStatus* pStatus, HRESULT** ppItemResults);
+    HRESULT GetChunks(uint Count, DedupHash* pHashes, GUID* pRequestId);
+    HRESULT GetChunksResults(GUID RequestId, uint MaxWaitMs, uint ChunkIndex, uint* pChunkCount, DedupChunk** ppChunkMetadata, uint* pDataByteCount, ubyte** ppChunkData, DedupDataPortRequestStatus* pStatus, HRESULT** ppItemResults);
+    HRESULT GetRequestStatus(GUID RequestId, DedupDataPortRequestStatus* pStatus);
+    HRESULT GetRequestResults(GUID RequestId, uint MaxWaitMs, HRESULT* pBatchResult, uint* pBatchCount, DedupDataPortRequestStatus* pStatus, HRESULT** ppItemResults);
 }
 enum IID_IDedupDataPortManager = GUID(0x44677452, 0xb90a, 0x445e, [0x81, 0x92, 0xcd, 0xcf, 0xe8, 0x15, 0x11, 0xfb]);
 interface IDedupDataPortManager : IUnknown
 {
-    HRESULT GetConfiguration(uint*, uint*, DedupChunkingAlgorithm*, DedupHashingAlgorithm*, DedupCompressionAlgorithm*);
-    HRESULT GetVolumeStatus(uint, BSTR, DedupDataPortVolumeStatus*);
-    HRESULT GetVolumeDataPort(uint, BSTR, IDedupDataPort*);
+    HRESULT GetConfiguration(uint* pMinChunkSize, uint* pMaxChunkSize, DedupChunkingAlgorithm* pChunkingAlgorithm, DedupHashingAlgorithm* pHashingAlgorithm, DedupCompressionAlgorithm* pCompressionAlgorithm);
+    HRESULT GetVolumeStatus(uint Options, BSTR Path, DedupDataPortVolumeStatus* pStatus);
+    HRESULT GetVolumeDataPort(uint Options, BSTR Path, IDedupDataPort* ppDataPort);
 }
 enum CLSID_DedupDataPort = GUID(0x8f107207, 0x1829, 0x48b2, [0xa6, 0x4b, 0xe6, 0x1f, 0x8e, 0xd, 0x9a, 0xcb]);
 struct DedupDataPort

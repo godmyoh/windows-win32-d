@@ -1,10 +1,10 @@
 module windows.win32.system.remotedesktop;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HANDLE_PTR, HRESULT, HWND, PSID, PSTR, PWSTR, RECT, VARIANT_BOOL;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HANDLE_PTR, HRESULT, HWND, PSTR, PWSTR, RECT, VARIANT_BOOL;
 import windows.win32.media.audio : WAVEFORMATEX;
 import windows.win32.media.audio.apo : APO_CONNECTION_PROPERTY;
-import windows.win32.security : OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR;
+import windows.win32.security : OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR, PSID;
 import windows.win32.system.com : IDispatch, IUnknown, SAFEARRAY;
 import windows.win32.system.com.structuredstorage : IPropertyBag;
 import windows.win32.system.variant : VARIANT;
@@ -14,70 +14,70 @@ import windows.win32.ui.windowsandmessaging : MESSAGEBOX_RESULT, MESSAGEBOX_STYL
 version (Windows):
 extern (Windows):
 
-BOOL WTSStopRemoteControlSession(uint);
-BOOL WTSStartRemoteControlSessionW(PWSTR, uint, ubyte, ushort);
-BOOL WTSStartRemoteControlSessionA(PSTR, uint, ubyte, ushort);
-BOOL WTSConnectSessionA(uint, uint, PSTR, BOOL);
-BOOL WTSConnectSessionW(uint, uint, PWSTR, BOOL);
-BOOL WTSEnumerateServersW(PWSTR, uint, uint, WTS_SERVER_INFOW**, uint*);
-BOOL WTSEnumerateServersA(PSTR, uint, uint, WTS_SERVER_INFOA**, uint*);
-HANDLE WTSOpenServerW(PWSTR);
-HANDLE WTSOpenServerA(PSTR);
-HANDLE WTSOpenServerExW(PWSTR);
-HANDLE WTSOpenServerExA(PSTR);
-void WTSCloseServer(HANDLE);
-BOOL WTSEnumerateSessionsW(HANDLE, uint, uint, WTS_SESSION_INFOW**, uint*);
-BOOL WTSEnumerateSessionsA(HANDLE, uint, uint, WTS_SESSION_INFOA**, uint*);
-BOOL WTSEnumerateSessionsExW(HANDLE, uint*, uint, WTS_SESSION_INFO_1W**, uint*);
-BOOL WTSEnumerateSessionsExA(HANDLE, uint*, uint, WTS_SESSION_INFO_1A**, uint*);
-BOOL WTSEnumerateProcessesW(HANDLE, uint, uint, WTS_PROCESS_INFOW**, uint*);
-BOOL WTSEnumerateProcessesA(HANDLE, uint, uint, WTS_PROCESS_INFOA**, uint*);
-BOOL WTSTerminateProcess(HANDLE, uint, uint);
-BOOL WTSQuerySessionInformationW(HANDLE, uint, WTS_INFO_CLASS, PWSTR*, uint*);
-BOOL WTSQuerySessionInformationA(HANDLE, uint, WTS_INFO_CLASS, PSTR*, uint*);
-BOOL WTSQueryUserConfigW(PWSTR, PWSTR, WTS_CONFIG_CLASS, PWSTR*, uint*);
-BOOL WTSQueryUserConfigA(PSTR, PSTR, WTS_CONFIG_CLASS, PSTR*, uint*);
-BOOL WTSSetUserConfigW(PWSTR, PWSTR, WTS_CONFIG_CLASS, PWSTR, uint);
-BOOL WTSSetUserConfigA(PSTR, PSTR, WTS_CONFIG_CLASS, PSTR, uint);
-BOOL WTSSendMessageW(HANDLE, uint, PWSTR, uint, PWSTR, uint, MESSAGEBOX_STYLE, uint, MESSAGEBOX_RESULT*, BOOL);
-BOOL WTSSendMessageA(HANDLE, uint, PSTR, uint, PSTR, uint, MESSAGEBOX_STYLE, uint, MESSAGEBOX_RESULT*, BOOL);
-BOOL WTSDisconnectSession(HANDLE, uint, BOOL);
-BOOL WTSLogoffSession(HANDLE, uint, BOOL);
-BOOL WTSShutdownSystem(HANDLE, uint);
-BOOL WTSWaitSystemEvent(HANDLE, uint, uint*);
-HANDLE WTSVirtualChannelOpen(HANDLE, uint, PSTR);
-HANDLE WTSVirtualChannelOpenEx(uint, PSTR, uint);
-BOOL WTSVirtualChannelClose(HANDLE);
-BOOL WTSVirtualChannelRead(HANDLE, uint, PSTR, uint, uint*);
-BOOL WTSVirtualChannelWrite(HANDLE, PSTR, uint, uint*);
-BOOL WTSVirtualChannelPurgeInput(HANDLE);
-BOOL WTSVirtualChannelPurgeOutput(HANDLE);
-BOOL WTSVirtualChannelQuery(HANDLE, WTS_VIRTUAL_CLASS, void**, uint*);
-void WTSFreeMemory(void*);
-BOOL WTSRegisterSessionNotification(HWND, uint);
-BOOL WTSUnRegisterSessionNotification(HWND);
-BOOL WTSRegisterSessionNotificationEx(HANDLE, HWND, uint);
-BOOL WTSUnRegisterSessionNotificationEx(HANDLE, HWND);
-BOOL WTSQueryUserToken(uint, HANDLE*);
-BOOL WTSFreeMemoryExW(WTS_TYPE_CLASS, void*, uint);
-BOOL WTSFreeMemoryExA(WTS_TYPE_CLASS, void*, uint);
-BOOL WTSEnumerateProcessesExW(HANDLE, uint*, uint, PWSTR*, uint*);
-BOOL WTSEnumerateProcessesExA(HANDLE, uint*, uint, PSTR*, uint*);
-BOOL WTSEnumerateListenersW(HANDLE, void*, uint, ushort**, uint*);
-BOOL WTSEnumerateListenersA(HANDLE, void*, uint, byte**, uint*);
-BOOL WTSQueryListenerConfigW(HANDLE, void*, uint, PWSTR, WTSLISTENERCONFIGW*);
-BOOL WTSQueryListenerConfigA(HANDLE, void*, uint, PSTR, WTSLISTENERCONFIGA*);
-BOOL WTSCreateListenerW(HANDLE, void*, uint, PWSTR, WTSLISTENERCONFIGW*, uint);
-BOOL WTSCreateListenerA(HANDLE, void*, uint, PSTR, WTSLISTENERCONFIGA*, uint);
-BOOL WTSSetListenerSecurityW(HANDLE, void*, uint, PWSTR, OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR);
-BOOL WTSSetListenerSecurityA(HANDLE, void*, uint, PSTR, OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR);
-BOOL WTSGetListenerSecurityW(HANDLE, void*, uint, PWSTR, OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR, uint, uint*);
-BOOL WTSGetListenerSecurityA(HANDLE, void*, uint, PSTR, OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR, uint, uint*);
-BOOL WTSEnableChildSessions(BOOL);
-BOOL WTSIsChildSessionsEnabled(BOOL*);
-BOOL WTSGetChildSessionId(uint*);
-HRESULT WTSSetRenderHint(ulong*, HWND, uint, uint, ubyte*);
-BOOL ProcessIdToSessionId(uint, uint*);
+BOOL WTSStopRemoteControlSession(uint LogonId);
+BOOL WTSStartRemoteControlSessionW(PWSTR pTargetServerName, uint TargetLogonId, ubyte HotkeyVk, ushort HotkeyModifiers);
+BOOL WTSStartRemoteControlSessionA(PSTR pTargetServerName, uint TargetLogonId, ubyte HotkeyVk, ushort HotkeyModifiers);
+BOOL WTSConnectSessionA(uint LogonId, uint TargetLogonId, PSTR pPassword, BOOL bWait);
+BOOL WTSConnectSessionW(uint LogonId, uint TargetLogonId, PWSTR pPassword, BOOL bWait);
+BOOL WTSEnumerateServersW(PWSTR pDomainName, uint Reserved, uint Version, WTS_SERVER_INFOW** ppServerInfo, uint* pCount);
+BOOL WTSEnumerateServersA(PSTR pDomainName, uint Reserved, uint Version, WTS_SERVER_INFOA** ppServerInfo, uint* pCount);
+HANDLE WTSOpenServerW(PWSTR pServerName);
+HANDLE WTSOpenServerA(PSTR pServerName);
+HANDLE WTSOpenServerExW(PWSTR pServerName);
+HANDLE WTSOpenServerExA(PSTR pServerName);
+void WTSCloseServer(HANDLE hServer);
+BOOL WTSEnumerateSessionsW(HANDLE hServer, uint Reserved, uint Version, WTS_SESSION_INFOW** ppSessionInfo, uint* pCount);
+BOOL WTSEnumerateSessionsA(HANDLE hServer, uint Reserved, uint Version, WTS_SESSION_INFOA** ppSessionInfo, uint* pCount);
+BOOL WTSEnumerateSessionsExW(HANDLE hServer, uint* pLevel, uint Filter, WTS_SESSION_INFO_1W** ppSessionInfo, uint* pCount);
+BOOL WTSEnumerateSessionsExA(HANDLE hServer, uint* pLevel, uint Filter, WTS_SESSION_INFO_1A** ppSessionInfo, uint* pCount);
+BOOL WTSEnumerateProcessesW(HANDLE hServer, uint Reserved, uint Version, WTS_PROCESS_INFOW** ppProcessInfo, uint* pCount);
+BOOL WTSEnumerateProcessesA(HANDLE hServer, uint Reserved, uint Version, WTS_PROCESS_INFOA** ppProcessInfo, uint* pCount);
+BOOL WTSTerminateProcess(HANDLE hServer, uint ProcessId, uint ExitCode);
+BOOL WTSQuerySessionInformationW(HANDLE hServer, uint SessionId, WTS_INFO_CLASS WTSInfoClass, PWSTR* ppBuffer, uint* pBytesReturned);
+BOOL WTSQuerySessionInformationA(HANDLE hServer, uint SessionId, WTS_INFO_CLASS WTSInfoClass, PSTR* ppBuffer, uint* pBytesReturned);
+BOOL WTSQueryUserConfigW(PWSTR pServerName, PWSTR pUserName, WTS_CONFIG_CLASS WTSConfigClass, PWSTR* ppBuffer, uint* pBytesReturned);
+BOOL WTSQueryUserConfigA(PSTR pServerName, PSTR pUserName, WTS_CONFIG_CLASS WTSConfigClass, PSTR* ppBuffer, uint* pBytesReturned);
+BOOL WTSSetUserConfigW(PWSTR pServerName, PWSTR pUserName, WTS_CONFIG_CLASS WTSConfigClass, PWSTR pBuffer, uint DataLength);
+BOOL WTSSetUserConfigA(PSTR pServerName, PSTR pUserName, WTS_CONFIG_CLASS WTSConfigClass, PSTR pBuffer, uint DataLength);
+BOOL WTSSendMessageW(HANDLE hServer, uint SessionId, PWSTR pTitle, uint TitleLength, PWSTR pMessage, uint MessageLength, MESSAGEBOX_STYLE Style, uint Timeout, MESSAGEBOX_RESULT* pResponse, BOOL bWait);
+BOOL WTSSendMessageA(HANDLE hServer, uint SessionId, PSTR pTitle, uint TitleLength, PSTR pMessage, uint MessageLength, MESSAGEBOX_STYLE Style, uint Timeout, MESSAGEBOX_RESULT* pResponse, BOOL bWait);
+BOOL WTSDisconnectSession(HANDLE hServer, uint SessionId, BOOL bWait);
+BOOL WTSLogoffSession(HANDLE hServer, uint SessionId, BOOL bWait);
+BOOL WTSShutdownSystem(HANDLE hServer, uint ShutdownFlag);
+BOOL WTSWaitSystemEvent(HANDLE hServer, uint EventMask, uint* pEventFlags);
+HANDLE WTSVirtualChannelOpen(HANDLE hServer, uint SessionId, PSTR pVirtualName);
+HANDLE WTSVirtualChannelOpenEx(uint SessionId, PSTR pVirtualName, uint flags);
+BOOL WTSVirtualChannelClose(HANDLE hChannelHandle);
+BOOL WTSVirtualChannelRead(HANDLE hChannelHandle, uint TimeOut, PSTR Buffer, uint BufferSize, uint* pBytesRead);
+BOOL WTSVirtualChannelWrite(HANDLE hChannelHandle, PSTR Buffer, uint Length, uint* pBytesWritten);
+BOOL WTSVirtualChannelPurgeInput(HANDLE hChannelHandle);
+BOOL WTSVirtualChannelPurgeOutput(HANDLE hChannelHandle);
+BOOL WTSVirtualChannelQuery(HANDLE hChannelHandle, WTS_VIRTUAL_CLASS param1, void** ppBuffer, uint* pBytesReturned);
+void WTSFreeMemory(void* pMemory);
+BOOL WTSRegisterSessionNotification(HWND hWnd, uint dwFlags);
+BOOL WTSUnRegisterSessionNotification(HWND hWnd);
+BOOL WTSRegisterSessionNotificationEx(HANDLE hServer, HWND hWnd, uint dwFlags);
+BOOL WTSUnRegisterSessionNotificationEx(HANDLE hServer, HWND hWnd);
+BOOL WTSQueryUserToken(uint SessionId, HANDLE* phToken);
+BOOL WTSFreeMemoryExW(WTS_TYPE_CLASS WTSTypeClass, void* pMemory, uint NumberOfEntries);
+BOOL WTSFreeMemoryExA(WTS_TYPE_CLASS WTSTypeClass, void* pMemory, uint NumberOfEntries);
+BOOL WTSEnumerateProcessesExW(HANDLE hServer, uint* pLevel, uint SessionId, PWSTR* ppProcessInfo, uint* pCount);
+BOOL WTSEnumerateProcessesExA(HANDLE hServer, uint* pLevel, uint SessionId, PSTR* ppProcessInfo, uint* pCount);
+BOOL WTSEnumerateListenersW(HANDLE hServer, void* pReserved, uint Reserved, ushort** pListeners, uint* pCount);
+BOOL WTSEnumerateListenersA(HANDLE hServer, void* pReserved, uint Reserved, byte** pListeners, uint* pCount);
+BOOL WTSQueryListenerConfigW(HANDLE hServer, void* pReserved, uint Reserved, PWSTR pListenerName, WTSLISTENERCONFIGW* pBuffer);
+BOOL WTSQueryListenerConfigA(HANDLE hServer, void* pReserved, uint Reserved, PSTR pListenerName, WTSLISTENERCONFIGA* pBuffer);
+BOOL WTSCreateListenerW(HANDLE hServer, void* pReserved, uint Reserved, PWSTR pListenerName, WTSLISTENERCONFIGW* pBuffer, uint flag);
+BOOL WTSCreateListenerA(HANDLE hServer, void* pReserved, uint Reserved, PSTR pListenerName, WTSLISTENERCONFIGA* pBuffer, uint flag);
+BOOL WTSSetListenerSecurityW(HANDLE hServer, void* pReserved, uint Reserved, PWSTR pListenerName, OBJECT_SECURITY_INFORMATION SecurityInformation, PSECURITY_DESCRIPTOR pSecurityDescriptor);
+BOOL WTSSetListenerSecurityA(HANDLE hServer, void* pReserved, uint Reserved, PSTR pListenerName, OBJECT_SECURITY_INFORMATION SecurityInformation, PSECURITY_DESCRIPTOR pSecurityDescriptor);
+BOOL WTSGetListenerSecurityW(HANDLE hServer, void* pReserved, uint Reserved, PWSTR pListenerName, OBJECT_SECURITY_INFORMATION SecurityInformation, PSECURITY_DESCRIPTOR pSecurityDescriptor, uint nLength, uint* lpnLengthNeeded);
+BOOL WTSGetListenerSecurityA(HANDLE hServer, void* pReserved, uint Reserved, PSTR pListenerName, OBJECT_SECURITY_INFORMATION SecurityInformation, PSECURITY_DESCRIPTOR pSecurityDescriptor, uint nLength, uint* lpnLengthNeeded);
+BOOL WTSEnableChildSessions(BOOL bEnable);
+BOOL WTSIsChildSessionsEnabled(BOOL* pbEnabled);
+BOOL WTSGetChildSessionId(uint* pSessionId);
+HRESULT WTSSetRenderHint(ulong* pRenderHintID, HWND hwndOwner, uint renderHintType, uint cbHintDataLength, ubyte* pHintData);
+BOOL ProcessIdToSessionId(uint dwProcessId, uint* pSessionId);
 uint WTSGetActiveConsoleSessionId();
 enum WTS_CURRENT_SERVER = 0x00000000;
 enum WTS_CURRENT_SERVER_HANDLE = 0x00000000;
@@ -372,16 +372,16 @@ struct AE_CURRENT_POSITION
 enum IID_IAudioEndpoint = GUID(0x30a99515, 0x1527, 0x4451, [0xaf, 0x9f, 0x0, 0xc5, 0xf0, 0x23, 0x4d, 0xaf]);
 interface IAudioEndpoint : IUnknown
 {
-    HRESULT GetFrameFormat(WAVEFORMATEX**);
-    HRESULT GetFramesPerPacket(uint*);
-    HRESULT GetLatency(long*);
-    HRESULT SetStreamFlags(uint);
-    HRESULT SetEventHandle(HANDLE);
+    HRESULT GetFrameFormat(WAVEFORMATEX** ppFormat);
+    HRESULT GetFramesPerPacket(uint* pFramesPerPacket);
+    HRESULT GetLatency(long* pLatency);
+    HRESULT SetStreamFlags(uint streamFlags);
+    HRESULT SetEventHandle(HANDLE eventHandle);
 }
 enum IID_IAudioEndpointRT = GUID(0xdfd2005f, 0xa6e5, 0x4d39, [0xa2, 0x65, 0x93, 0x9a, 0xda, 0x9f, 0xbb, 0x4d]);
 interface IAudioEndpointRT : IUnknown
 {
-    void GetCurrentPadding(long*, AE_CURRENT_POSITION*);
+    void GetCurrentPadding(long* pPadding, AE_CURRENT_POSITION* pAeCurrentPosition);
     void ProcessingComplete();
     HRESULT SetPinInactive();
     HRESULT SetPinActive();
@@ -389,24 +389,24 @@ interface IAudioEndpointRT : IUnknown
 enum IID_IAudioInputEndpointRT = GUID(0x8026ab61, 0x92b2, 0x43c1, [0xa1, 0xdf, 0x5c, 0x37, 0xeb, 0xd0, 0x8d, 0x82]);
 interface IAudioInputEndpointRT : IUnknown
 {
-    void GetInputDataPointer(APO_CONNECTION_PROPERTY*, AE_CURRENT_POSITION*);
-    void ReleaseInputDataPointer(uint, ulong);
+    void GetInputDataPointer(APO_CONNECTION_PROPERTY* pConnectionProperty, AE_CURRENT_POSITION* pAeTimeStamp);
+    void ReleaseInputDataPointer(uint u32FrameCount, ulong pDataPointer);
     void PulseEndpoint();
 }
 enum IID_IAudioOutputEndpointRT = GUID(0x8fa906e4, 0xc31c, 0x4e31, [0x93, 0x2e, 0x19, 0xa6, 0x63, 0x85, 0xe9, 0xaa]);
 interface IAudioOutputEndpointRT : IUnknown
 {
-    ulong GetOutputDataPointer(uint, AE_CURRENT_POSITION*);
-    void ReleaseOutputDataPointer(const(APO_CONNECTION_PROPERTY)*);
+    ulong GetOutputDataPointer(uint u32FrameCount, AE_CURRENT_POSITION* pAeTimeStamp);
+    void ReleaseOutputDataPointer(const(APO_CONNECTION_PROPERTY)* pConnectionProperty);
     void PulseEndpoint();
 }
 enum IID_IAudioDeviceEndpoint = GUID(0xd4952f5a, 0xa0b2, 0x4cc4, [0x8b, 0x82, 0x93, 0x58, 0x48, 0x8d, 0xd8, 0xac]);
 interface IAudioDeviceEndpoint : IUnknown
 {
-    HRESULT SetBuffer(long, uint);
-    HRESULT GetRTCaps(BOOL*);
-    HRESULT GetEventDrivenCapable(BOOL*);
-    HRESULT WriteExclusiveModeParametersToSharedMemory(ulong, long, long, uint, uint*, ulong*);
+    HRESULT SetBuffer(long MaxPeriod, uint u32LatencyCoefficient);
+    HRESULT GetRTCaps(BOOL* pbIsRTCapable);
+    HRESULT GetEventDrivenCapable(BOOL* pbisEventCapable);
+    HRESULT WriteExclusiveModeParametersToSharedMemory(ulong hTargetProcess, long hnsPeriod, long hnsBufferDuration, uint u32LatencyCoefficient, uint* pu32SharedMemorySize, ulong* phSharedMemory);
 }
 enum IID_IAudioEndpointControl = GUID(0xc684b72a, 0x6df4, 0x4774, [0xbd, 0xf9, 0x76, 0xb7, 0x75, 0x9, 0xb6, 0x53]);
 interface IAudioEndpointControl : IUnknown
@@ -422,36 +422,36 @@ struct TSUserExInterfaces
 enum IID_IADsTSUserEx = GUID(0xc4930e79, 0x2989, 0x4462, [0x8a, 0x60, 0x2f, 0xcf, 0x2f, 0x29, 0x55, 0xef]);
 interface IADsTSUserEx : IDispatch
 {
-    HRESULT get_TerminalServicesProfilePath(BSTR*);
-    HRESULT put_TerminalServicesProfilePath(BSTR);
-    HRESULT get_TerminalServicesHomeDirectory(BSTR*);
-    HRESULT put_TerminalServicesHomeDirectory(BSTR);
-    HRESULT get_TerminalServicesHomeDrive(BSTR*);
-    HRESULT put_TerminalServicesHomeDrive(BSTR);
-    HRESULT get_AllowLogon(int*);
-    HRESULT put_AllowLogon(int);
-    HRESULT get_EnableRemoteControl(int*);
-    HRESULT put_EnableRemoteControl(int);
-    HRESULT get_MaxDisconnectionTime(int*);
-    HRESULT put_MaxDisconnectionTime(int);
-    HRESULT get_MaxConnectionTime(int*);
-    HRESULT put_MaxConnectionTime(int);
-    HRESULT get_MaxIdleTime(int*);
-    HRESULT put_MaxIdleTime(int);
-    HRESULT get_ReconnectionAction(int*);
-    HRESULT put_ReconnectionAction(int);
-    HRESULT get_BrokenConnectionAction(int*);
-    HRESULT put_BrokenConnectionAction(int);
-    HRESULT get_ConnectClientDrivesAtLogon(int*);
-    HRESULT put_ConnectClientDrivesAtLogon(int);
-    HRESULT get_ConnectClientPrintersAtLogon(int*);
-    HRESULT put_ConnectClientPrintersAtLogon(int);
-    HRESULT get_DefaultToMainPrinter(int*);
-    HRESULT put_DefaultToMainPrinter(int);
-    HRESULT get_TerminalServicesWorkDirectory(BSTR*);
-    HRESULT put_TerminalServicesWorkDirectory(BSTR);
-    HRESULT get_TerminalServicesInitialProgram(BSTR*);
-    HRESULT put_TerminalServicesInitialProgram(BSTR);
+    HRESULT get_TerminalServicesProfilePath(BSTR* pVal);
+    HRESULT put_TerminalServicesProfilePath(BSTR pNewVal);
+    HRESULT get_TerminalServicesHomeDirectory(BSTR* pVal);
+    HRESULT put_TerminalServicesHomeDirectory(BSTR pNewVal);
+    HRESULT get_TerminalServicesHomeDrive(BSTR* pVal);
+    HRESULT put_TerminalServicesHomeDrive(BSTR pNewVal);
+    HRESULT get_AllowLogon(int* pVal);
+    HRESULT put_AllowLogon(int NewVal);
+    HRESULT get_EnableRemoteControl(int* pVal);
+    HRESULT put_EnableRemoteControl(int NewVal);
+    HRESULT get_MaxDisconnectionTime(int* pVal);
+    HRESULT put_MaxDisconnectionTime(int NewVal);
+    HRESULT get_MaxConnectionTime(int* pVal);
+    HRESULT put_MaxConnectionTime(int NewVal);
+    HRESULT get_MaxIdleTime(int* pVal);
+    HRESULT put_MaxIdleTime(int NewVal);
+    HRESULT get_ReconnectionAction(int* pNewVal);
+    HRESULT put_ReconnectionAction(int NewVal);
+    HRESULT get_BrokenConnectionAction(int* pNewVal);
+    HRESULT put_BrokenConnectionAction(int NewVal);
+    HRESULT get_ConnectClientDrivesAtLogon(int* pNewVal);
+    HRESULT put_ConnectClientDrivesAtLogon(int NewVal);
+    HRESULT get_ConnectClientPrintersAtLogon(int* pVal);
+    HRESULT put_ConnectClientPrintersAtLogon(int NewVal);
+    HRESULT get_DefaultToMainPrinter(int* pVal);
+    HRESULT put_DefaultToMainPrinter(int NewVal);
+    HRESULT get_TerminalServicesWorkDirectory(BSTR* pVal);
+    HRESULT put_TerminalServicesWorkDirectory(BSTR pNewVal);
+    HRESULT get_TerminalServicesInitialProgram(BSTR* pVal);
+    HRESULT put_TerminalServicesInitialProgram(BSTR pNewVal);
 }
 enum CLSID_ADsTSUserEx = GUID(0xe2e9cae6, 0x1e7b, 0x4b8e, [0xba, 0xbd, 0xe9, 0xbf, 0x62, 0x92, 0xac, 0x29]);
 struct ADsTSUserEx
@@ -529,39 +529,39 @@ enum : int
 enum IID_ITSGAuthorizeConnectionSink = GUID(0xc27ece33, 0x7781, 0x4318, [0x98, 0xef, 0x1c, 0xf2, 0xda, 0x7b, 0x70, 0x5]);
 interface ITSGAuthorizeConnectionSink : IUnknown
 {
-    HRESULT OnConnectionAuthorized(HRESULT, GUID, uint, ubyte*, uint, uint, SESSION_TIMEOUT_ACTION_TYPE, AATrustClassID, uint*);
+    HRESULT OnConnectionAuthorized(HRESULT hrIn, GUID mainSessionId, uint cbSoHResponse, ubyte* pbSoHResponse, uint idleTimeout, uint sessionTimeout, SESSION_TIMEOUT_ACTION_TYPE sessionTimeoutAction, AATrustClassID trustClass, uint* policyAttributes);
 }
 enum IID_ITSGAuthorizeResourceSink = GUID(0xfeddfcd4, 0xfa12, 0x4435, [0xae, 0x55, 0x7a, 0xd1, 0xa9, 0x77, 0x9a, 0xf7]);
 interface ITSGAuthorizeResourceSink : IUnknown
 {
-    HRESULT OnChannelAuthorized(HRESULT, GUID, int, BSTR*, uint, BSTR*, uint);
+    HRESULT OnChannelAuthorized(HRESULT hrIn, GUID mainSessionId, int subSessionId, BSTR* allowedResourceNames, uint numAllowedResourceNames, BSTR* failedResourceNames, uint numFailedResourceNames);
 }
 enum IID_ITSGPolicyEngine = GUID(0x8bc24f08, 0x6223, 0x42f4, [0xa5, 0xb4, 0x8e, 0x37, 0xcd, 0x13, 0x5b, 0xbd]);
 interface ITSGPolicyEngine : IUnknown
 {
-    HRESULT AuthorizeConnection(GUID, BSTR, AAAuthSchemes, BSTR, BSTR, ubyte*, uint, ubyte*, uint, HANDLE_PTR, ITSGAuthorizeConnectionSink);
-    HRESULT AuthorizeResource(GUID, int, BSTR, BSTR*, uint, BSTR*, uint, uint, BSTR, ubyte*, uint, ITSGAuthorizeResourceSink);
+    HRESULT AuthorizeConnection(GUID mainSessionId, BSTR username, AAAuthSchemes authType, BSTR clientMachineIP, BSTR clientMachineName, ubyte* sohData, uint numSOHBytes, ubyte* cookieData, uint numCookieBytes, HANDLE_PTR userToken, ITSGAuthorizeConnectionSink pSink);
+    HRESULT AuthorizeResource(GUID mainSessionId, int subSessionId, BSTR username, BSTR* resourceNames, uint numResources, BSTR* alternateResourceNames, uint numAlternateResourceName, uint portNumber, BSTR operation, ubyte* cookie, uint numBytesInCookie, ITSGAuthorizeResourceSink pSink);
     HRESULT Refresh();
-    HRESULT IsQuarantineEnabled(BOOL*);
+    HRESULT IsQuarantineEnabled(BOOL* quarantineEnabled);
 }
 enum IID_ITSGAccountingEngine = GUID(0x4ce2a0c9, 0xe874, 0x4f1a, [0x86, 0xf4, 0x6, 0xbb, 0xb9, 0x11, 0x53, 0x38]);
 interface ITSGAccountingEngine : IUnknown
 {
-    HRESULT DoAccounting(AAAccountingDataType, AAAccountingData);
+    HRESULT DoAccounting(AAAccountingDataType accountingDataType, AAAccountingData accountingData);
 }
 enum IID_ITSGAuthenticateUserSink = GUID(0x2c3e2e73, 0xa782, 0x47f9, [0x8d, 0xfb, 0x77, 0xee, 0x1e, 0xd2, 0x7a, 0x3]);
 interface ITSGAuthenticateUserSink : IUnknown
 {
-    HRESULT OnUserAuthenticated(BSTR, BSTR, ulong, HANDLE_PTR);
-    HRESULT OnUserAuthenticationFailed(ulong, HRESULT, HRESULT);
-    HRESULT ReauthenticateUser(ulong);
-    HRESULT DisconnectUser(ulong);
+    HRESULT OnUserAuthenticated(BSTR userName, BSTR userDomain, ulong context, HANDLE_PTR userToken);
+    HRESULT OnUserAuthenticationFailed(ulong context, HRESULT genericErrorCode, HRESULT specificErrorCode);
+    HRESULT ReauthenticateUser(ulong context);
+    HRESULT DisconnectUser(ulong context);
 }
 enum IID_ITSGAuthenticationEngine = GUID(0x9ee3e5bf, 0x4ab, 0x4691, [0x99, 0x8c, 0xd7, 0xf6, 0x22, 0x32, 0x1a, 0x56]);
 interface ITSGAuthenticationEngine : IUnknown
 {
-    HRESULT AuthenticateUser(GUID, ubyte*, uint, ulong, ITSGAuthenticateUserSink);
-    HRESULT CancelAuthentication(GUID, ulong);
+    HRESULT AuthenticateUser(GUID mainSessionId, ubyte* cookieData, uint numCookieBytes, ulong context, ITSGAuthenticateUserSink pSink);
+    HRESULT CancelAuthentication(GUID mainSessionId, ulong context);
 }
 alias WTS_CONNECTSTATE_CLASS = int;
 enum : int
@@ -1154,12 +1154,12 @@ enum : int
 enum IID_IWTSSBPlugin = GUID(0xdc44be78, 0xb18d, 0x4399, [0xb2, 0x10, 0x64, 0x1b, 0xf6, 0x7a, 0x0, 0x2c]);
 interface IWTSSBPlugin : IUnknown
 {
-    HRESULT Initialize(uint*);
-    HRESULT WTSSBX_MachineChangeNotification(WTSSBX_NOTIFICATION_TYPE, int, WTSSBX_MACHINE_INFO*);
-    HRESULT WTSSBX_SessionChangeNotification(WTSSBX_NOTIFICATION_TYPE, int, uint, WTSSBX_SESSION_INFO*);
-    HRESULT WTSSBX_GetMostSuitableServer(PWSTR, PWSTR, PWSTR, PWSTR, int*);
+    HRESULT Initialize(uint* PluginCapabilities);
+    HRESULT WTSSBX_MachineChangeNotification(WTSSBX_NOTIFICATION_TYPE NotificationType, int MachineId, WTSSBX_MACHINE_INFO* pMachineInfo);
+    HRESULT WTSSBX_SessionChangeNotification(WTSSBX_NOTIFICATION_TYPE NotificationType, int MachineId, uint NumOfSessions, WTSSBX_SESSION_INFO* SessionInfo);
+    HRESULT WTSSBX_GetMostSuitableServer(PWSTR UserName, PWSTR DomainName, PWSTR ApplicationType, PWSTR FarmName, int* pMachineId);
     HRESULT Terminated();
-    HRESULT WTSSBX_GetUserExternalSession(PWSTR, PWSTR, PWSTR, WTSSBX_IP_ADDRESS*, uint*, WTSSBX_MACHINE_CONNECT_INFO*);
+    HRESULT WTSSBX_GetUserExternalSession(PWSTR UserName, PWSTR DomainName, PWSTR ApplicationType, WTSSBX_IP_ADDRESS* RedirectorInternalIP, uint* pSessionId, WTSSBX_MACHINE_CONNECT_INFO* pMachineConnectInfo);
 }
 struct CHANNEL_DEF
 {
@@ -1172,12 +1172,12 @@ struct CHANNEL_PDU_HEADER
     uint length;
     uint flags;
 }
-alias PCHANNEL_INIT_EVENT_FN = void function(void*, uint, void*, uint);
-alias PCHANNEL_OPEN_EVENT_FN = void function(uint, uint, void*, uint, uint, uint);
-alias PVIRTUALCHANNELINIT = uint function(void**, CHANNEL_DEF*, int, uint, PCHANNEL_INIT_EVENT_FN);
-alias PVIRTUALCHANNELOPEN = uint function(void*, uint*, PSTR, PCHANNEL_OPEN_EVENT_FN);
-alias PVIRTUALCHANNELCLOSE = uint function(uint);
-alias PVIRTUALCHANNELWRITE = uint function(uint, void*, uint, void*);
+alias PCHANNEL_INIT_EVENT_FN = void function(void* pInitHandle, uint event, void* pData, uint dataLength);
+alias PCHANNEL_OPEN_EVENT_FN = void function(uint openHandle, uint event, void* pData, uint dataLength, uint totalLength, uint dataFlags);
+alias PVIRTUALCHANNELINIT = uint function(void** ppInitHandle, CHANNEL_DEF* pChannel, int channelCount, uint versionRequested, PCHANNEL_INIT_EVENT_FN pChannelInitEventProc);
+alias PVIRTUALCHANNELOPEN = uint function(void* pInitHandle, uint* pOpenHandle, PSTR pChannelName, PCHANNEL_OPEN_EVENT_FN pChannelOpenEventProc);
+alias PVIRTUALCHANNELCLOSE = uint function(uint openHandle);
+alias PVIRTUALCHANNELWRITE = uint function(uint openHandle, void* pData, uint dataLength, void* pUserData);
 struct CHANNEL_ENTRY_POINTS
 {
     uint cbSize;
@@ -1187,72 +1187,72 @@ struct CHANNEL_ENTRY_POINTS
     PVIRTUALCHANNELCLOSE pVirtualChannelClose;
     PVIRTUALCHANNELWRITE pVirtualChannelWrite;
 }
-alias PVIRTUALCHANNELENTRY = BOOL function(CHANNEL_ENTRY_POINTS*);
+alias PVIRTUALCHANNELENTRY = BOOL function(CHANNEL_ENTRY_POINTS* pEntryPoints);
 enum IID_IWorkspaceClientExt = GUID(0x12b952f4, 0x41ca, 0x4f21, [0xa8, 0x29, 0xa6, 0xd0, 0x7d, 0x9a, 0x16, 0xe5]);
 interface IWorkspaceClientExt : IUnknown
 {
-    HRESULT GetResourceId(BSTR*);
-    HRESULT GetResourceDisplayName(BSTR*);
+    HRESULT GetResourceId(BSTR* bstrWorkspaceId);
+    HRESULT GetResourceDisplayName(BSTR* bstrWorkspaceDisplayName);
     HRESULT IssueDisconnect();
 }
 enum IID_IWorkspace = GUID(0xb922bbb8, 0x4c55, 0x4fea, [0x84, 0x96, 0xbe, 0xb0, 0xb4, 0x42, 0x85, 0xe5]);
 interface IWorkspace : IUnknown
 {
-    HRESULT GetWorkspaceNames(SAFEARRAY**);
-    HRESULT StartRemoteApplication(BSTR, SAFEARRAY*);
-    HRESULT GetProcessId(uint*);
+    HRESULT GetWorkspaceNames(SAFEARRAY** psaWkspNames);
+    HRESULT StartRemoteApplication(BSTR bstrWorkspaceId, SAFEARRAY* psaParams);
+    HRESULT GetProcessId(uint* pulProcessId);
 }
 enum IID_IWorkspace2 = GUID(0x96d8d7cf, 0x783e, 0x4286, [0x83, 0x4c, 0xeb, 0xc0, 0xe9, 0x5f, 0x78, 0x3c]);
 interface IWorkspace2 : IWorkspace
 {
-    HRESULT StartRemoteApplicationEx(BSTR, BSTR, BSTR, VARIANT_BOOL, BSTR, SAFEARRAY*);
+    HRESULT StartRemoteApplicationEx(BSTR bstrWorkspaceId, BSTR bstrRequestingAppId, BSTR bstrRequestingAppFamilyName, VARIANT_BOOL bLaunchIntoImmersiveClient, BSTR bstrImmersiveClientActivationContext, SAFEARRAY* psaParams);
 }
 enum IID_IWorkspace3 = GUID(0x1becbe4a, 0xd654, 0x423b, [0xaf, 0xeb, 0xbe, 0x8d, 0x53, 0x2c, 0x13, 0xc6]);
 interface IWorkspace3 : IWorkspace2
 {
-    HRESULT GetClaimsToken2(BSTR, BSTR, uint, uint, RECT, BSTR*);
-    HRESULT SetClaimsToken(BSTR, ulong, BSTR);
+    HRESULT GetClaimsToken2(BSTR bstrClaimsHint, BSTR bstrUserHint, uint claimCookie, uint hwndCredUiParent, RECT rectCredUiParent, BSTR* pbstrAccessToken);
+    HRESULT SetClaimsToken(BSTR bstrAccessToken, ulong ullAccessTokenExpiration, BSTR bstrRefreshToken);
 }
 enum IID_IWorkspaceRegistration = GUID(0xb922bbb8, 0x4c55, 0x4fea, [0x84, 0x96, 0xbe, 0xb0, 0xb4, 0x42, 0x85, 0xe6]);
 interface IWorkspaceRegistration : IUnknown
 {
-    HRESULT AddResource(IWorkspaceClientExt, uint*);
-    HRESULT RemoveResource(uint);
+    HRESULT AddResource(IWorkspaceClientExt pUnk, uint* pdwCookie);
+    HRESULT RemoveResource(uint dwCookieConnection);
 }
 enum IID_IWorkspaceRegistration2 = GUID(0xcf59f654, 0x39bb, 0x44d8, [0x94, 0xd0, 0x46, 0x35, 0x72, 0x89, 0x57, 0xe9]);
 interface IWorkspaceRegistration2 : IWorkspaceRegistration
 {
-    HRESULT AddResourceEx(IWorkspaceClientExt, BSTR, uint*, GUID);
-    HRESULT RemoveResourceEx(uint, GUID);
+    HRESULT AddResourceEx(IWorkspaceClientExt pUnk, BSTR bstrEventLogUploadAddress, uint* pdwCookie, GUID correlationId);
+    HRESULT RemoveResourceEx(uint dwCookieConnection, GUID correlationId);
 }
 enum IID_IWorkspaceScriptable = GUID(0xefea49a2, 0xdda5, 0x429d, [0x8f, 0x42, 0xb2, 0x3b, 0x92, 0xc4, 0xc3, 0x47]);
 interface IWorkspaceScriptable : IDispatch
 {
-    HRESULT DisconnectWorkspace(BSTR);
-    HRESULT StartWorkspace(BSTR, BSTR, BSTR, BSTR, int, int);
-    HRESULT IsWorkspaceCredentialSpecified(BSTR, VARIANT_BOOL, VARIANT_BOOL*);
-    HRESULT IsWorkspaceSSOEnabled(VARIANT_BOOL*);
-    HRESULT ClearWorkspaceCredential(BSTR);
-    HRESULT OnAuthenticated(BSTR, BSTR);
-    HRESULT DisconnectWorkspaceByFriendlyName(BSTR);
+    HRESULT DisconnectWorkspace(BSTR bstrWorkspaceId);
+    HRESULT StartWorkspace(BSTR bstrWorkspaceId, BSTR bstrUserName, BSTR bstrPassword, BSTR bstrWorkspaceParams, int lTimeout, int lFlags);
+    HRESULT IsWorkspaceCredentialSpecified(BSTR bstrWorkspaceId, VARIANT_BOOL bCountUnauthenticatedCredentials, VARIANT_BOOL* pbCredExist);
+    HRESULT IsWorkspaceSSOEnabled(VARIANT_BOOL* pbSSOEnabled);
+    HRESULT ClearWorkspaceCredential(BSTR bstrWorkspaceId);
+    HRESULT OnAuthenticated(BSTR bstrWorkspaceId, BSTR bstrUserName);
+    HRESULT DisconnectWorkspaceByFriendlyName(BSTR bstrWorkspaceFriendlyName);
 }
 enum IID_IWorkspaceScriptable2 = GUID(0xefea49a2, 0xdda5, 0x429d, [0x8f, 0x42, 0xb3, 0x3b, 0xa2, 0xc4, 0xc3, 0x48]);
 interface IWorkspaceScriptable2 : IWorkspaceScriptable
 {
-    HRESULT StartWorkspaceEx(BSTR, BSTR, BSTR, BSTR, BSTR, BSTR, BSTR, int, int);
-    HRESULT ResourceDismissed(BSTR, BSTR);
+    HRESULT StartWorkspaceEx(BSTR bstrWorkspaceId, BSTR bstrWorkspaceFriendlyName, BSTR bstrRedirectorName, BSTR bstrUserName, BSTR bstrPassword, BSTR bstrAppContainer, BSTR bstrWorkspaceParams, int lTimeout, int lFlags);
+    HRESULT ResourceDismissed(BSTR bstrWorkspaceId, BSTR bstrWorkspaceFriendlyName);
 }
 enum IID_IWorkspaceScriptable3 = GUID(0x531e6512, 0x2cbf, 0x4bd2, [0x80, 0xa5, 0xd9, 0xa, 0x71, 0x63, 0x6a, 0x9a]);
 interface IWorkspaceScriptable3 : IWorkspaceScriptable2
 {
-    HRESULT StartWorkspaceEx2(BSTR, BSTR, BSTR, BSTR, BSTR, BSTR, BSTR, int, int, BSTR, GUID);
+    HRESULT StartWorkspaceEx2(BSTR bstrWorkspaceId, BSTR bstrWorkspaceFriendlyName, BSTR bstrRedirectorName, BSTR bstrUserName, BSTR bstrPassword, BSTR bstrAppContainer, BSTR bstrWorkspaceParams, int lTimeout, int lFlags, BSTR bstrEventLogUploadAddress, GUID correlationId);
 }
 enum IID_IWorkspaceReportMessage = GUID(0xa7c06739, 0x500f, 0x4e8c, [0x99, 0xa8, 0x2b, 0xd6, 0x95, 0x58, 0x99, 0xeb]);
 interface IWorkspaceReportMessage : IUnknown
 {
-    HRESULT RegisterErrorLogMessage(BSTR);
-    HRESULT IsErrorMessageRegistered(BSTR, uint, BSTR, uint, VARIANT_BOOL*);
-    HRESULT RegisterErrorEvent(BSTR, uint, BSTR, uint);
+    HRESULT RegisterErrorLogMessage(BSTR bstrMessage);
+    HRESULT IsErrorMessageRegistered(BSTR bstrWkspId, uint dwErrorType, BSTR bstrErrorMessageType, uint dwErrorCode, VARIANT_BOOL* pfErrorExist);
+    HRESULT RegisterErrorEvent(BSTR bstrWkspId, uint dwErrorType, BSTR bstrErrorMessageType, uint dwErrorCode);
 }
 enum IID__ITSWkspEvents = GUID(0xb922bbb8, 0x4c55, 0x4fea, [0x84, 0x96, 0xbe, 0xb0, 0xb4, 0x42, 0x85, 0xe9]);
 interface _ITSWkspEvents : IDispatch
@@ -1473,8 +1473,8 @@ enum : int
 enum IID_ITsSbPlugin = GUID(0x48cd7406, 0xcaab, 0x465f, [0xa5, 0xd6, 0xba, 0xa8, 0x63, 0xb9, 0xea, 0x4f]);
 interface ITsSbPlugin : IUnknown
 {
-    HRESULT Initialize(ITsSbProvider, ITsSbPluginNotifySink, ITsSbPluginPropertySet);
-    HRESULT Terminate(HRESULT);
+    HRESULT Initialize(ITsSbProvider pProvider, ITsSbPluginNotifySink pNotifySink, ITsSbPluginPropertySet pPropertySet);
+    HRESULT Terminate(HRESULT hr);
 }
 enum IID_ITsSbResourcePlugin = GUID(0xea8db42c, 0x98ed, 0x4535, [0xa8, 0x8b, 0x2a, 0x16, 0x4f, 0x35, 0x49, 0xf]);
 interface ITsSbResourcePlugin : ITsSbPlugin
@@ -1489,107 +1489,107 @@ interface ITsSbServiceNotification : IUnknown
 enum IID_ITsSbLoadBalancing = GUID(0x24329274, 0x9eb7, 0x11dc, [0xae, 0x98, 0xf2, 0xb4, 0x56, 0xd8, 0x95, 0x93]);
 interface ITsSbLoadBalancing : ITsSbPlugin
 {
-    HRESULT GetMostSuitableTarget(ITsSbClientConnection, ITsSbLoadBalancingNotifySink);
+    HRESULT GetMostSuitableTarget(ITsSbClientConnection pConnection, ITsSbLoadBalancingNotifySink pLBSink);
 }
 enum IID_ITsSbPlacement = GUID(0xdaadee5f, 0x6d32, 0x480e, [0x9e, 0x36, 0xdd, 0xab, 0x23, 0x29, 0xf0, 0x6d]);
 interface ITsSbPlacement : ITsSbPlugin
 {
-    HRESULT QueryEnvironmentForTarget(ITsSbClientConnection, ITsSbPlacementNotifySink);
+    HRESULT QueryEnvironmentForTarget(ITsSbClientConnection pConnection, ITsSbPlacementNotifySink pPlacementSink);
 }
 enum IID_ITsSbOrchestration = GUID(0x64fc1172, 0x9eb7, 0x11dc, [0x8b, 0x0, 0x3a, 0xba, 0x56, 0xd8, 0x95, 0x93]);
 interface ITsSbOrchestration : ITsSbPlugin
 {
-    HRESULT PrepareTargetForConnect(ITsSbClientConnection, ITsSbOrchestrationNotifySink);
+    HRESULT PrepareTargetForConnect(ITsSbClientConnection pConnection, ITsSbOrchestrationNotifySink pOrchestrationNotifySink);
 }
 enum IID_ITsSbEnvironment = GUID(0x8c87f7f7, 0xbf51, 0x4a5c, [0x87, 0xbf, 0x8e, 0x94, 0xfb, 0x6e, 0x22, 0x56]);
 interface ITsSbEnvironment : IUnknown
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_ServerWeight(uint*);
-    HRESULT get_EnvironmentPropertySet(ITsSbEnvironmentPropertySet*);
-    HRESULT put_EnvironmentPropertySet(ITsSbEnvironmentPropertySet);
+    HRESULT get_Name(BSTR* pVal);
+    HRESULT get_ServerWeight(uint* pVal);
+    HRESULT get_EnvironmentPropertySet(ITsSbEnvironmentPropertySet* ppPropertySet);
+    HRESULT put_EnvironmentPropertySet(ITsSbEnvironmentPropertySet pVal);
 }
 enum IID_ITsSbLoadBalanceResult = GUID(0x24fdb7ac, 0xfea6, 0x11dc, [0x96, 0x72, 0x9a, 0x89, 0x56, 0xd8, 0x95, 0x93]);
 interface ITsSbLoadBalanceResult : IUnknown
 {
-    HRESULT get_TargetName(BSTR*);
+    HRESULT get_TargetName(BSTR* pVal);
 }
 enum IID_ITsSbTarget = GUID(0x16616ecc, 0x272d, 0x411d, [0xb3, 0x24, 0x12, 0x68, 0x93, 0x3, 0x38, 0x56]);
 interface ITsSbTarget : IUnknown
 {
-    HRESULT get_TargetName(BSTR*);
-    HRESULT put_TargetName(BSTR);
-    HRESULT get_FarmName(BSTR*);
-    HRESULT put_FarmName(BSTR);
-    HRESULT get_TargetFQDN(BSTR*);
-    HRESULT put_TargetFQDN(BSTR);
-    HRESULT get_TargetNetbios(BSTR*);
-    HRESULT put_TargetNetbios(BSTR);
-    HRESULT get_IpAddresses(TSSD_ConnectionPoint*, uint*);
-    HRESULT put_IpAddresses(TSSD_ConnectionPoint*, uint);
-    HRESULT get_TargetState(TARGET_STATE*);
-    HRESULT put_TargetState(TARGET_STATE);
-    HRESULT get_TargetPropertySet(ITsSbTargetPropertySet*);
-    HRESULT put_TargetPropertySet(ITsSbTargetPropertySet);
-    HRESULT get_EnvironmentName(BSTR*);
-    HRESULT put_EnvironmentName(BSTR);
-    HRESULT get_NumSessions(uint*);
-    HRESULT get_NumPendingConnections(uint*);
-    HRESULT get_TargetLoad(uint*);
+    HRESULT get_TargetName(BSTR* pVal);
+    HRESULT put_TargetName(BSTR Val);
+    HRESULT get_FarmName(BSTR* pVal);
+    HRESULT put_FarmName(BSTR Val);
+    HRESULT get_TargetFQDN(BSTR* TargetFqdnName);
+    HRESULT put_TargetFQDN(BSTR Val);
+    HRESULT get_TargetNetbios(BSTR* TargetNetbiosName);
+    HRESULT put_TargetNetbios(BSTR Val);
+    HRESULT get_IpAddresses(TSSD_ConnectionPoint* SOCKADDR, uint* numAddresses);
+    HRESULT put_IpAddresses(TSSD_ConnectionPoint* SOCKADDR, uint numAddresses);
+    HRESULT get_TargetState(TARGET_STATE* pState);
+    HRESULT put_TargetState(TARGET_STATE State);
+    HRESULT get_TargetPropertySet(ITsSbTargetPropertySet* ppPropertySet);
+    HRESULT put_TargetPropertySet(ITsSbTargetPropertySet pVal);
+    HRESULT get_EnvironmentName(BSTR* pVal);
+    HRESULT put_EnvironmentName(BSTR Val);
+    HRESULT get_NumSessions(uint* pNumSessions);
+    HRESULT get_NumPendingConnections(uint* pNumPendingConnections);
+    HRESULT get_TargetLoad(uint* pTargetLoad);
 }
 enum IID_ITsSbSession = GUID(0xd453aac7, 0xb1d8, 0x4c5e, [0xba, 0x34, 0x9a, 0xfb, 0x4c, 0x8c, 0x55, 0x10]);
 interface ITsSbSession : IUnknown
 {
-    HRESULT get_SessionId(uint*);
-    HRESULT get_TargetName(BSTR*);
-    HRESULT put_TargetName(BSTR);
-    HRESULT get_Username(BSTR*);
-    HRESULT get_Domain(BSTR*);
-    HRESULT get_State(TSSESSION_STATE*);
-    HRESULT put_State(TSSESSION_STATE);
-    HRESULT get_CreateTime(FILETIME*);
-    HRESULT put_CreateTime(FILETIME);
-    HRESULT get_DisconnectTime(FILETIME*);
-    HRESULT put_DisconnectTime(FILETIME);
-    HRESULT get_InitialProgram(BSTR*);
-    HRESULT put_InitialProgram(BSTR);
-    HRESULT get_ClientDisplay(CLIENT_DISPLAY*);
-    HRESULT put_ClientDisplay(CLIENT_DISPLAY);
-    HRESULT get_ProtocolType(uint*);
-    HRESULT put_ProtocolType(uint);
+    HRESULT get_SessionId(uint* pVal);
+    HRESULT get_TargetName(BSTR* targetName);
+    HRESULT put_TargetName(BSTR targetName);
+    HRESULT get_Username(BSTR* userName);
+    HRESULT get_Domain(BSTR* domain);
+    HRESULT get_State(TSSESSION_STATE* pState);
+    HRESULT put_State(TSSESSION_STATE State);
+    HRESULT get_CreateTime(FILETIME* pTime);
+    HRESULT put_CreateTime(FILETIME Time);
+    HRESULT get_DisconnectTime(FILETIME* pTime);
+    HRESULT put_DisconnectTime(FILETIME Time);
+    HRESULT get_InitialProgram(BSTR* app);
+    HRESULT put_InitialProgram(BSTR Application);
+    HRESULT get_ClientDisplay(CLIENT_DISPLAY* pClientDisplay);
+    HRESULT put_ClientDisplay(CLIENT_DISPLAY pClientDisplay);
+    HRESULT get_ProtocolType(uint* pVal);
+    HRESULT put_ProtocolType(uint Val);
 }
 enum IID_ITsSbResourceNotification = GUID(0x65d3e85a, 0xc39b, 0x11dc, [0xb9, 0x2d, 0x3c, 0xd2, 0x55, 0xd8, 0x95, 0x93]);
 interface ITsSbResourceNotification : IUnknown
 {
-    HRESULT NotifySessionChange(TSSESSION_STATE, ITsSbSession);
-    HRESULT NotifyTargetChange(uint, ITsSbTarget);
-    HRESULT NotifyClientConnectionStateChange(CONNECTION_CHANGE_NOTIFICATION, ITsSbClientConnection);
+    HRESULT NotifySessionChange(TSSESSION_STATE changeType, ITsSbSession pSession);
+    HRESULT NotifyTargetChange(uint TargetChangeType, ITsSbTarget pTarget);
+    HRESULT NotifyClientConnectionStateChange(CONNECTION_CHANGE_NOTIFICATION ChangeType, ITsSbClientConnection pConnection);
 }
 enum IID_ITsSbResourceNotificationEx = GUID(0xa8a47fde, 0xca91, 0x44d2, [0xb8, 0x97, 0x3a, 0xa2, 0x8a, 0x43, 0xb2, 0xb7]);
 interface ITsSbResourceNotificationEx : IUnknown
 {
-    HRESULT NotifySessionChangeEx(BSTR, BSTR, BSTR, uint, TSSESSION_STATE);
-    HRESULT NotifyTargetChangeEx(BSTR, uint);
-    HRESULT NotifyClientConnectionStateChangeEx(BSTR, BSTR, BSTR, BSTR, BSTR, CONNECTION_CHANGE_NOTIFICATION);
+    HRESULT NotifySessionChangeEx(BSTR targetName, BSTR userName, BSTR domain, uint sessionId, TSSESSION_STATE sessionState);
+    HRESULT NotifyTargetChangeEx(BSTR targetName, uint targetChangeType);
+    HRESULT NotifyClientConnectionStateChangeEx(BSTR userName, BSTR domain, BSTR initialProgram, BSTR poolName, BSTR targetName, CONNECTION_CHANGE_NOTIFICATION connectionChangeType);
 }
 enum IID_ITsSbTaskInfo = GUID(0x523d1083, 0x89be, 0x48dd, [0x99, 0xea, 0x4, 0xe8, 0x2f, 0xfa, 0x72, 0x65]);
 interface ITsSbTaskInfo : IUnknown
 {
-    HRESULT get_TargetId(BSTR*);
-    HRESULT get_StartTime(FILETIME*);
-    HRESULT get_EndTime(FILETIME*);
-    HRESULT get_Deadline(FILETIME*);
-    HRESULT get_Identifier(BSTR*);
-    HRESULT get_Label(BSTR*);
-    HRESULT get_Context(SAFEARRAY**);
-    HRESULT get_Plugin(BSTR*);
-    HRESULT get_Status(RDV_TASK_STATUS*);
+    HRESULT get_TargetId(BSTR* pName);
+    HRESULT get_StartTime(FILETIME* pStartTime);
+    HRESULT get_EndTime(FILETIME* pEndTime);
+    HRESULT get_Deadline(FILETIME* pDeadline);
+    HRESULT get_Identifier(BSTR* pIdentifier);
+    HRESULT get_Label(BSTR* pLabel);
+    HRESULT get_Context(SAFEARRAY** pContext);
+    HRESULT get_Plugin(BSTR* pPlugin);
+    HRESULT get_Status(RDV_TASK_STATUS* pStatus);
 }
 enum IID_ITsSbTaskPlugin = GUID(0xfa22ef0f, 0x8705, 0x41be, [0x93, 0xbc, 0x44, 0xbd, 0xbc, 0xf1, 0xc9, 0xc4]);
 interface ITsSbTaskPlugin : ITsSbPlugin
 {
-    HRESULT InitializeTaskPlugin(ITsSbTaskPluginNotifySink);
-    HRESULT SetTaskQueue(BSTR, uint, ITsSbTaskInfo*);
+    HRESULT InitializeTaskPlugin(ITsSbTaskPluginNotifySink pITsSbTaskPluginNotifySink);
+    HRESULT SetTaskQueue(BSTR pszHostName, uint SbTaskInfoSize, ITsSbTaskInfo* pITsSbTaskInfo);
 }
 enum IID_ITsSbPropertySet = GUID(0x5c025171, 0xbb1e, 0x4baf, [0xa2, 0x12, 0x6d, 0x5e, 0x97, 0x74, 0xb3, 0x3b]);
 interface ITsSbPropertySet : IPropertyBag
@@ -1614,146 +1614,146 @@ interface ITsSbEnvironmentPropertySet : ITsSbPropertySet
 enum IID_ITsSbBaseNotifySink = GUID(0x808a6537, 0x1282, 0x4989, [0x9e, 0x9, 0xf4, 0x39, 0x38, 0xb7, 0x17, 0x22]);
 interface ITsSbBaseNotifySink : IUnknown
 {
-    HRESULT OnError(HRESULT);
-    HRESULT OnReportStatus(CLIENT_MESSAGE_TYPE, uint);
+    HRESULT OnError(HRESULT hrError);
+    HRESULT OnReportStatus(CLIENT_MESSAGE_TYPE messageType, uint messageID);
 }
 enum IID_ITsSbPluginNotifySink = GUID(0x44dfe30b, 0xc3be, 0x40f5, [0xbf, 0x82, 0x7a, 0x95, 0xbb, 0x79, 0x5a, 0xdf]);
 interface ITsSbPluginNotifySink : ITsSbBaseNotifySink
 {
-    HRESULT OnInitialized(HRESULT);
+    HRESULT OnInitialized(HRESULT hr);
     HRESULT OnTerminated();
 }
 enum IID_ITsSbLoadBalancingNotifySink = GUID(0x5f8a8297, 0x3244, 0x4e6a, [0x95, 0x8a, 0x27, 0xc8, 0x22, 0xc1, 0xe1, 0x41]);
 interface ITsSbLoadBalancingNotifySink : ITsSbBaseNotifySink
 {
-    HRESULT OnGetMostSuitableTarget(ITsSbLoadBalanceResult, BOOL);
+    HRESULT OnGetMostSuitableTarget(ITsSbLoadBalanceResult pLBResult, BOOL fIsNewConnection);
 }
 enum IID_ITsSbPlacementNotifySink = GUID(0x68a0c487, 0x2b4f, 0x46c2, [0x94, 0xa1, 0x6c, 0xe6, 0x85, 0x18, 0x36, 0x34]);
 interface ITsSbPlacementNotifySink : ITsSbBaseNotifySink
 {
-    HRESULT OnQueryEnvironmentCompleted(ITsSbEnvironment);
+    HRESULT OnQueryEnvironmentCompleted(ITsSbEnvironment pEnvironment);
 }
 enum IID_ITsSbOrchestrationNotifySink = GUID(0x36c37d61, 0x926b, 0x442f, [0xbc, 0xa5, 0x11, 0x8c, 0x6d, 0x50, 0xdc, 0xf2]);
 interface ITsSbOrchestrationNotifySink : ITsSbBaseNotifySink
 {
-    HRESULT OnReadyToConnect(ITsSbTarget);
+    HRESULT OnReadyToConnect(ITsSbTarget pTarget);
 }
 enum IID_ITsSbTaskPluginNotifySink = GUID(0x6aaf899e, 0xc2ec, 0x45ee, [0xaa, 0x37, 0x45, 0xe6, 0x8, 0x95, 0x26, 0x1a]);
 interface ITsSbTaskPluginNotifySink : ITsSbBaseNotifySink
 {
-    HRESULT OnSetTaskTime(BSTR, FILETIME, FILETIME, FILETIME, BSTR, BSTR, BSTR, uint, SAFEARRAY*);
-    HRESULT OnDeleteTaskTime(BSTR, BSTR);
-    HRESULT OnUpdateTaskStatus(BSTR, BSTR, RDV_TASK_STATUS);
-    HRESULT OnReportTasks(BSTR);
+    HRESULT OnSetTaskTime(BSTR szTargetName, FILETIME TaskStartTime, FILETIME TaskEndTime, FILETIME TaskDeadline, BSTR szTaskLabel, BSTR szTaskIdentifier, BSTR szTaskPlugin, uint dwTaskStatus, SAFEARRAY* saContext);
+    HRESULT OnDeleteTaskTime(BSTR szTargetName, BSTR szTaskIdentifier);
+    HRESULT OnUpdateTaskStatus(BSTR szTargetName, BSTR TaskIdentifier, RDV_TASK_STATUS TaskStatus);
+    HRESULT OnReportTasks(BSTR szHostName);
 }
 enum IID_ITsSbClientConnection = GUID(0x18857499, 0xad61, 0x4b1b, [0xb7, 0xdf, 0xcb, 0xcd, 0x41, 0xfb, 0x83, 0x38]);
 interface ITsSbClientConnection : IUnknown
 {
-    HRESULT get_UserName(BSTR*);
-    HRESULT get_Domain(BSTR*);
-    HRESULT get_InitialProgram(BSTR*);
-    HRESULT get_LoadBalanceResult(ITsSbLoadBalanceResult*);
-    HRESULT get_FarmName(BSTR*);
-    HRESULT PutContext(BSTR, VARIANT, VARIANT*);
-    HRESULT GetContext(BSTR, VARIANT*);
-    HRESULT get_Environment(ITsSbEnvironment*);
+    HRESULT get_UserName(BSTR* pVal);
+    HRESULT get_Domain(BSTR* pVal);
+    HRESULT get_InitialProgram(BSTR* pVal);
+    HRESULT get_LoadBalanceResult(ITsSbLoadBalanceResult* ppVal);
+    HRESULT get_FarmName(BSTR* pVal);
+    HRESULT PutContext(BSTR contextId, VARIANT context, VARIANT* existingContext);
+    HRESULT GetContext(BSTR contextId, VARIANT* context);
+    HRESULT get_Environment(ITsSbEnvironment* ppEnvironment);
     HRESULT get_ConnectionError();
-    HRESULT get_SamUserAccount(BSTR*);
-    HRESULT get_ClientConnectionPropertySet(ITsSbClientConnectionPropertySet*);
-    HRESULT get_IsFirstAssignment(BOOL*);
-    HRESULT get_RdFarmType(RD_FARM_TYPE*);
-    HRESULT get_UserSidString(byte**);
-    HRESULT GetDisconnectedSession(ITsSbSession*);
+    HRESULT get_SamUserAccount(BSTR* pVal);
+    HRESULT get_ClientConnectionPropertySet(ITsSbClientConnectionPropertySet* ppPropertySet);
+    HRESULT get_IsFirstAssignment(BOOL* ppVal);
+    HRESULT get_RdFarmType(RD_FARM_TYPE* pRdFarmType);
+    HRESULT get_UserSidString(byte** pszUserSidString);
+    HRESULT GetDisconnectedSession(ITsSbSession* ppSession);
 }
 enum IID_ITsSbProvider = GUID(0x87a4098f, 0x6d7b, 0x44dd, [0xbc, 0x17, 0x8c, 0xe4, 0x4e, 0x37, 0xd, 0x52]);
 interface ITsSbProvider : IUnknown
 {
-    HRESULT CreateTargetObject(BSTR, BSTR, ITsSbTarget*);
-    HRESULT CreateLoadBalanceResultObject(BSTR, ITsSbLoadBalanceResult*);
-    HRESULT CreateSessionObject(BSTR, BSTR, BSTR, uint, ITsSbSession*);
-    HRESULT CreatePluginPropertySet(ITsSbPluginPropertySet*);
-    HRESULT CreateTargetPropertySetObject(ITsSbTargetPropertySet*);
-    HRESULT CreateEnvironmentObject(BSTR, uint, ITsSbEnvironment*);
-    HRESULT GetResourcePluginStore(ITsSbResourcePluginStore*);
-    HRESULT GetFilterPluginStore(ITsSbFilterPluginStore*);
-    HRESULT RegisterForNotification(uint, BSTR, ITsSbResourceNotification);
-    HRESULT UnRegisterForNotification(uint, BSTR);
-    HRESULT GetInstanceOfGlobalStore(ITsSbGlobalStore*);
-    HRESULT CreateEnvironmentPropertySetObject(ITsSbEnvironmentPropertySet*);
+    HRESULT CreateTargetObject(BSTR TargetName, BSTR EnvironmentName, ITsSbTarget* ppTarget);
+    HRESULT CreateLoadBalanceResultObject(BSTR TargetName, ITsSbLoadBalanceResult* ppLBResult);
+    HRESULT CreateSessionObject(BSTR TargetName, BSTR UserName, BSTR Domain, uint SessionId, ITsSbSession* ppSession);
+    HRESULT CreatePluginPropertySet(ITsSbPluginPropertySet* ppPropertySet);
+    HRESULT CreateTargetPropertySetObject(ITsSbTargetPropertySet* ppPropertySet);
+    HRESULT CreateEnvironmentObject(BSTR Name, uint ServerWeight, ITsSbEnvironment* ppEnvironment);
+    HRESULT GetResourcePluginStore(ITsSbResourcePluginStore* ppStore);
+    HRESULT GetFilterPluginStore(ITsSbFilterPluginStore* ppStore);
+    HRESULT RegisterForNotification(uint notificationType, BSTR ResourceToMonitor, ITsSbResourceNotification pPluginNotification);
+    HRESULT UnRegisterForNotification(uint notificationType, BSTR ResourceToMonitor);
+    HRESULT GetInstanceOfGlobalStore(ITsSbGlobalStore* ppGlobalStore);
+    HRESULT CreateEnvironmentPropertySetObject(ITsSbEnvironmentPropertySet* ppPropertySet);
 }
 enum IID_ITsSbResourcePluginStore = GUID(0x5c38f65f, 0xbcf1, 0x4036, [0xa6, 0xbf, 0x9e, 0x3c, 0xcc, 0xae, 0xb, 0x63]);
 interface ITsSbResourcePluginStore : IUnknown
 {
-    HRESULT QueryTarget(BSTR, BSTR, ITsSbTarget*);
-    HRESULT QuerySessionBySessionId(uint, BSTR, ITsSbSession*);
-    HRESULT AddTargetToStore(ITsSbTarget);
-    HRESULT AddSessionToStore(ITsSbSession);
-    HRESULT AddEnvironmentToStore(ITsSbEnvironment);
-    HRESULT RemoveEnvironmentFromStore(BSTR, BOOL);
-    HRESULT EnumerateFarms(uint*, SAFEARRAY**);
-    HRESULT QueryEnvironment(BSTR, ITsSbEnvironment*);
-    HRESULT EnumerateEnvironments(uint*, ITsSbEnvironment**);
-    HRESULT SaveTarget(ITsSbTarget, BOOL);
-    HRESULT SaveEnvironment(ITsSbEnvironment, BOOL);
-    HRESULT SaveSession(ITsSbSession);
-    HRESULT SetTargetProperty(BSTR, BSTR, VARIANT*);
-    HRESULT SetEnvironmentProperty(BSTR, BSTR, VARIANT*);
-    HRESULT SetTargetState(BSTR, TARGET_STATE, TARGET_STATE*);
-    HRESULT SetSessionState(ITsSbSession);
-    HRESULT EnumerateTargets(BSTR, BSTR, TS_SB_SORT_BY, BSTR, uint*, ITsSbTarget**);
-    HRESULT EnumerateSessions(BSTR, BSTR, BSTR, BSTR, BSTR, TSSESSION_STATE*, uint*, ITsSbSession**);
-    HRESULT GetFarmProperty(BSTR, BSTR, VARIANT*);
-    HRESULT DeleteTarget(BSTR, BSTR);
-    HRESULT SetTargetPropertyWithVersionCheck(ITsSbTarget, BSTR, VARIANT*);
-    HRESULT SetEnvironmentPropertyWithVersionCheck(ITsSbEnvironment, BSTR, VARIANT*);
-    HRESULT AcquireTargetLock(BSTR, uint, IUnknown*);
-    HRESULT ReleaseTargetLock(IUnknown);
-    HRESULT TestAndSetServerState(BSTR, BSTR, TARGET_STATE, TARGET_STATE, TARGET_STATE*);
-    HRESULT SetServerWaitingToStart(BSTR, BSTR);
-    HRESULT GetServerState(BSTR, BSTR, TARGET_STATE*);
-    HRESULT SetServerDrainMode(BSTR, uint);
+    HRESULT QueryTarget(BSTR TargetName, BSTR FarmName, ITsSbTarget* ppTarget);
+    HRESULT QuerySessionBySessionId(uint dwSessionId, BSTR TargetName, ITsSbSession* ppSession);
+    HRESULT AddTargetToStore(ITsSbTarget pTarget);
+    HRESULT AddSessionToStore(ITsSbSession pSession);
+    HRESULT AddEnvironmentToStore(ITsSbEnvironment pEnvironment);
+    HRESULT RemoveEnvironmentFromStore(BSTR EnvironmentName, BOOL bIgnoreOwner);
+    HRESULT EnumerateFarms(uint* pdwCount, SAFEARRAY** pVal);
+    HRESULT QueryEnvironment(BSTR EnvironmentName, ITsSbEnvironment* ppEnvironment);
+    HRESULT EnumerateEnvironments(uint* pdwCount, ITsSbEnvironment** pVal);
+    HRESULT SaveTarget(ITsSbTarget pTarget, BOOL bForceWrite);
+    HRESULT SaveEnvironment(ITsSbEnvironment pEnvironment, BOOL bForceWrite);
+    HRESULT SaveSession(ITsSbSession pSession);
+    HRESULT SetTargetProperty(BSTR TargetName, BSTR PropertyName, VARIANT* pProperty);
+    HRESULT SetEnvironmentProperty(BSTR EnvironmentName, BSTR PropertyName, VARIANT* pProperty);
+    HRESULT SetTargetState(BSTR targetName, TARGET_STATE newState, TARGET_STATE* pOldState);
+    HRESULT SetSessionState(ITsSbSession sbSession);
+    HRESULT EnumerateTargets(BSTR FarmName, BSTR EnvName, TS_SB_SORT_BY sortByFieldId, BSTR sortyByPropName, uint* pdwCount, ITsSbTarget** pVal);
+    HRESULT EnumerateSessions(BSTR targetName, BSTR userName, BSTR userDomain, BSTR poolName, BSTR initialProgram, TSSESSION_STATE* pSessionState, uint* pdwCount, ITsSbSession** ppVal);
+    HRESULT GetFarmProperty(BSTR farmName, BSTR propertyName, VARIANT* pVarValue);
+    HRESULT DeleteTarget(BSTR targetName, BSTR hostName);
+    HRESULT SetTargetPropertyWithVersionCheck(ITsSbTarget pTarget, BSTR PropertyName, VARIANT* pProperty);
+    HRESULT SetEnvironmentPropertyWithVersionCheck(ITsSbEnvironment pEnvironment, BSTR PropertyName, VARIANT* pProperty);
+    HRESULT AcquireTargetLock(BSTR targetName, uint dwTimeout, IUnknown* ppContext);
+    HRESULT ReleaseTargetLock(IUnknown pContext);
+    HRESULT TestAndSetServerState(BSTR PoolName, BSTR ServerFQDN, TARGET_STATE NewState, TARGET_STATE TestState, TARGET_STATE* pInitState);
+    HRESULT SetServerWaitingToStart(BSTR PoolName, BSTR serverName);
+    HRESULT GetServerState(BSTR PoolName, BSTR ServerFQDN, TARGET_STATE* pState);
+    HRESULT SetServerDrainMode(BSTR ServerFQDN, uint DrainMode);
 }
 enum IID_ITsSbFilterPluginStore = GUID(0x85b44b0f, 0xed78, 0x413f, [0x97, 0x2, 0xfa, 0x6d, 0x3b, 0x5e, 0xe7, 0x55]);
 interface ITsSbFilterPluginStore : IUnknown
 {
-    HRESULT SaveProperties(ITsSbPropertySet);
-    HRESULT EnumerateProperties(ITsSbPropertySet*);
-    HRESULT DeleteProperties(BSTR);
+    HRESULT SaveProperties(ITsSbPropertySet pPropertySet);
+    HRESULT EnumerateProperties(ITsSbPropertySet* ppPropertySet);
+    HRESULT DeleteProperties(BSTR propertyName);
 }
 enum IID_ITsSbGlobalStore = GUID(0x9ab60f7b, 0xbd72, 0x4d9f, [0x8a, 0x3a, 0xa0, 0xea, 0x55, 0x74, 0xe6, 0x35]);
 interface ITsSbGlobalStore : IUnknown
 {
-    HRESULT QueryTarget(BSTR, BSTR, BSTR, ITsSbTarget*);
-    HRESULT QuerySessionBySessionId(BSTR, uint, BSTR, ITsSbSession*);
-    HRESULT EnumerateFarms(BSTR, uint*, SAFEARRAY**);
-    HRESULT EnumerateTargets(BSTR, BSTR, BSTR, uint*, ITsSbTarget**);
-    HRESULT EnumerateEnvironmentsByProvider(BSTR, uint*, ITsSbEnvironment**);
-    HRESULT EnumerateSessions(BSTR, BSTR, BSTR, BSTR, BSTR, BSTR, TSSESSION_STATE*, uint*, ITsSbSession**);
-    HRESULT GetFarmProperty(BSTR, BSTR, VARIANT*);
+    HRESULT QueryTarget(BSTR ProviderName, BSTR TargetName, BSTR FarmName, ITsSbTarget* ppTarget);
+    HRESULT QuerySessionBySessionId(BSTR ProviderName, uint dwSessionId, BSTR TargetName, ITsSbSession* ppSession);
+    HRESULT EnumerateFarms(BSTR ProviderName, uint* pdwCount, SAFEARRAY** pVal);
+    HRESULT EnumerateTargets(BSTR ProviderName, BSTR FarmName, BSTR EnvName, uint* pdwCount, ITsSbTarget** pVal);
+    HRESULT EnumerateEnvironmentsByProvider(BSTR ProviderName, uint* pdwCount, ITsSbEnvironment** ppVal);
+    HRESULT EnumerateSessions(BSTR ProviderName, BSTR targetName, BSTR userName, BSTR userDomain, BSTR poolName, BSTR initialProgram, TSSESSION_STATE* pSessionState, uint* pdwCount, ITsSbSession** ppVal);
+    HRESULT GetFarmProperty(BSTR farmName, BSTR propertyName, VARIANT* pVarValue);
 }
 enum IID_ITsSbProvisioningPluginNotifySink = GUID(0xaca87a8e, 0x818b, 0x4581, [0xa0, 0x32, 0x49, 0xc3, 0xdf, 0xb9, 0xc7, 0x1]);
 interface ITsSbProvisioningPluginNotifySink : IUnknown
 {
-    HRESULT OnJobCreated(VM_NOTIFY_INFO*);
-    HRESULT OnVirtualMachineStatusChanged(VM_NOTIFY_ENTRY*, VM_NOTIFY_STATUS, HRESULT, BSTR);
-    HRESULT OnJobCompleted(HRESULT, BSTR);
+    HRESULT OnJobCreated(VM_NOTIFY_INFO* pVmNotifyInfo);
+    HRESULT OnVirtualMachineStatusChanged(VM_NOTIFY_ENTRY* pVmNotifyEntry, VM_NOTIFY_STATUS VmNotifyStatus, HRESULT ErrorCode, BSTR ErrorDescr);
+    HRESULT OnJobCompleted(HRESULT ResultCode, BSTR ResultDescription);
     HRESULT OnJobCancelled();
-    HRESULT LockVirtualMachine(VM_NOTIFY_ENTRY*);
-    HRESULT OnVirtualMachineHostStatusChanged(BSTR, VM_HOST_NOTIFY_STATUS, HRESULT, BSTR);
+    HRESULT LockVirtualMachine(VM_NOTIFY_ENTRY* pVmNotifyEntry);
+    HRESULT OnVirtualMachineHostStatusChanged(BSTR VmHost, VM_HOST_NOTIFY_STATUS VmHostNotifyStatus, HRESULT ErrorCode, BSTR ErrorDescr);
 }
 enum IID_ITsSbProvisioning = GUID(0x2f6f0dbb, 0x9e4f, 0x462b, [0x9c, 0x3f, 0xfc, 0xcc, 0x3d, 0xcb, 0x62, 0x32]);
 interface ITsSbProvisioning : ITsSbPlugin
 {
-    HRESULT CreateVirtualMachines(BSTR, BSTR, ITsSbProvisioningPluginNotifySink);
-    HRESULT PatchVirtualMachines(BSTR, BSTR, ITsSbProvisioningPluginNotifySink, VM_PATCH_INFO*);
-    HRESULT DeleteVirtualMachines(BSTR, BSTR, ITsSbProvisioningPluginNotifySink);
-    HRESULT CancelJob(BSTR);
+    HRESULT CreateVirtualMachines(BSTR JobXmlString, BSTR JobGuid, ITsSbProvisioningPluginNotifySink pSink);
+    HRESULT PatchVirtualMachines(BSTR JobXmlString, BSTR JobGuid, ITsSbProvisioningPluginNotifySink pSink, VM_PATCH_INFO* pVMPatchInfo);
+    HRESULT DeleteVirtualMachines(BSTR JobXmlString, BSTR JobGuid, ITsSbProvisioningPluginNotifySink pSink);
+    HRESULT CancelJob(BSTR JobGuid);
 }
 enum IID_ITsSbGenericNotifySink = GUID(0x4c4c8c4f, 0x300b, 0x46ad, [0x91, 0x64, 0x84, 0x68, 0xa7, 0xe7, 0x56, 0x8c]);
 interface ITsSbGenericNotifySink : IUnknown
 {
-    HRESULT OnCompleted(HRESULT);
-    HRESULT GetWaitTimeout(FILETIME*);
+    HRESULT OnCompleted(HRESULT Status);
+    HRESULT GetWaitTimeout(FILETIME* pftTimeout);
 }
 struct pluginResource
 {
@@ -1772,12 +1772,12 @@ struct pluginResource
 enum IID_ItsPubPlugin = GUID(0x70c04b05, 0xf347, 0x412b, [0x82, 0x2f, 0x36, 0xc9, 0x9c, 0x54, 0xca, 0x45]);
 interface ItsPubPlugin : IUnknown
 {
-    HRESULT GetResourceList(const(wchar)*, int*, pluginResource**);
-    HRESULT GetResource(const(wchar)*, int, pluginResource*);
-    HRESULT GetCacheLastUpdateTime(ulong*);
-    HRESULT get_pluginName(BSTR*);
-    HRESULT get_pluginVersion(BSTR*);
-    HRESULT ResolveResource(uint*, PWSTR, PWSTR, PWSTR, PWSTR);
+    HRESULT GetResourceList(const(wchar)* userID, int* pceAppListSize, pluginResource** resourceList);
+    HRESULT GetResource(const(wchar)* alias_, int flags, pluginResource* resource);
+    HRESULT GetCacheLastUpdateTime(ulong* lastUpdateTime);
+    HRESULT get_pluginName(BSTR* pVal);
+    HRESULT get_pluginVersion(BSTR* pVal);
+    HRESULT ResolveResource(uint* resourceType, PWSTR resourceLocation, PWSTR endPointName, PWSTR userID, PWSTR alias_);
 }
 struct pluginResource2FileAssociation
 {
@@ -1812,59 +1812,59 @@ enum : int
 enum IID_ItsPubPlugin2 = GUID(0xfa4ce418, 0xaad7, 0x4ec6, [0xba, 0xd1, 0xa, 0x32, 0x1b, 0xa4, 0x65, 0xd5]);
 interface ItsPubPlugin2 : ItsPubPlugin
 {
-    HRESULT GetResource2List(const(wchar)*, int*, pluginResource2**);
-    HRESULT GetResource2(const(wchar)*, int, pluginResource2*);
-    HRESULT ResolvePersonalDesktop(const(wchar)*, const(wchar)*, TSPUB_PLUGIN_PD_RESOLUTION_TYPE, TSPUB_PLUGIN_PD_ASSIGNMENT_TYPE*, PWSTR);
-    HRESULT DeletePersonalDesktopAssignment(const(wchar)*, const(wchar)*, const(wchar)*);
+    HRESULT GetResource2List(const(wchar)* userID, int* pceAppListSize, pluginResource2** resourceList);
+    HRESULT GetResource2(const(wchar)* alias_, int flags, pluginResource2* resource);
+    HRESULT ResolvePersonalDesktop(const(wchar)* userId, const(wchar)* poolId, TSPUB_PLUGIN_PD_RESOLUTION_TYPE ePdResolutionType, TSPUB_PLUGIN_PD_ASSIGNMENT_TYPE* pPdAssignmentType, PWSTR endPointName);
+    HRESULT DeletePersonalDesktopAssignment(const(wchar)* userId, const(wchar)* poolId, const(wchar)* endpointName);
 }
 enum IID_IWorkspaceResTypeRegistry = GUID(0x1d428c79, 0x6e2e, 0x4351, [0xa3, 0x61, 0xc0, 0x40, 0x1a, 0x3, 0xa0, 0xba]);
 interface IWorkspaceResTypeRegistry : IDispatch
 {
-    HRESULT AddResourceType(VARIANT_BOOL, BSTR, BSTR);
-    HRESULT DeleteResourceType(VARIANT_BOOL, BSTR);
-    HRESULT GetRegisteredFileExtensions(VARIANT_BOOL, SAFEARRAY**);
-    HRESULT GetResourceTypeInfo(VARIANT_BOOL, BSTR, BSTR*);
-    HRESULT ModifyResourceType(VARIANT_BOOL, BSTR, BSTR);
+    HRESULT AddResourceType(VARIANT_BOOL fMachineWide, BSTR bstrFileExtension, BSTR bstrLauncher);
+    HRESULT DeleteResourceType(VARIANT_BOOL fMachineWide, BSTR bstrFileExtension);
+    HRESULT GetRegisteredFileExtensions(VARIANT_BOOL fMachineWide, SAFEARRAY** psaFileExtensions);
+    HRESULT GetResourceTypeInfo(VARIANT_BOOL fMachineWide, BSTR bstrFileExtension, BSTR* pbstrLauncher);
+    HRESULT ModifyResourceType(VARIANT_BOOL fMachineWide, BSTR bstrFileExtension, BSTR bstrLauncher);
 }
 enum IID_IWTSPlugin = GUID(0xa1230201, 0x1439, 0x4e62, [0xa4, 0x14, 0x19, 0xd, 0xa, 0xc3, 0xd4, 0xe]);
 interface IWTSPlugin : IUnknown
 {
-    HRESULT Initialize(IWTSVirtualChannelManager);
+    HRESULT Initialize(IWTSVirtualChannelManager pChannelMgr);
     HRESULT Connected();
-    HRESULT Disconnected(uint);
+    HRESULT Disconnected(uint dwDisconnectCode);
     HRESULT Terminated();
 }
 enum IID_IWTSListener = GUID(0xa1230206, 0x9a39, 0x4d58, [0x86, 0x74, 0xcd, 0xb4, 0xdf, 0xf4, 0xe7, 0x3b]);
 interface IWTSListener : IUnknown
 {
-    HRESULT GetConfiguration(IPropertyBag*);
+    HRESULT GetConfiguration(IPropertyBag* ppPropertyBag);
 }
 enum IID_IWTSListenerCallback = GUID(0xa1230203, 0xd6a7, 0x11d8, [0xb9, 0xfd, 0x0, 0xb, 0xdb, 0xd1, 0xf1, 0x98]);
 interface IWTSListenerCallback : IUnknown
 {
-    HRESULT OnNewChannelConnection(IWTSVirtualChannel, BSTR, BOOL*, IWTSVirtualChannelCallback*);
+    HRESULT OnNewChannelConnection(IWTSVirtualChannel pChannel, BSTR data, BOOL* pbAccept, IWTSVirtualChannelCallback* ppCallback);
 }
 enum IID_IWTSVirtualChannelCallback = GUID(0xa1230204, 0xd6a7, 0x11d8, [0xb9, 0xfd, 0x0, 0xb, 0xdb, 0xd1, 0xf1, 0x98]);
 interface IWTSVirtualChannelCallback : IUnknown
 {
-    HRESULT OnDataReceived(uint, ubyte*);
+    HRESULT OnDataReceived(uint cbSize, ubyte* pBuffer);
     HRESULT OnClose();
 }
 enum IID_IWTSVirtualChannelManager = GUID(0xa1230205, 0xd6a7, 0x11d8, [0xb9, 0xfd, 0x0, 0xb, 0xdb, 0xd1, 0xf1, 0x98]);
 interface IWTSVirtualChannelManager : IUnknown
 {
-    HRESULT CreateListener(const(char)*, uint, IWTSListenerCallback, IWTSListener*);
+    HRESULT CreateListener(const(char)* pszChannelName, uint uFlags, IWTSListenerCallback pListenerCallback, IWTSListener* ppListener);
 }
 enum IID_IWTSVirtualChannel = GUID(0xa1230207, 0xd6a7, 0x11d8, [0xb9, 0xfd, 0x0, 0xb, 0xdb, 0xd1, 0xf1, 0x98]);
 interface IWTSVirtualChannel : IUnknown
 {
-    HRESULT Write(uint, ubyte*, IUnknown);
+    HRESULT Write(uint cbSize, ubyte* pBuffer, IUnknown pReserved);
     HRESULT Close();
 }
 enum IID_IWTSPluginServiceProvider = GUID(0xd3e07363, 0x87c, 0x476c, [0x86, 0xa7, 0xdb, 0xb1, 0x5f, 0x46, 0xdd, 0xb4]);
 interface IWTSPluginServiceProvider : IUnknown
 {
-    HRESULT GetService(GUID, IUnknown*);
+    HRESULT GetService(GUID ServiceId, IUnknown* ppunkObject);
 }
 struct BITMAP_RENDERER_STATISTICS
 {
@@ -1874,35 +1874,35 @@ struct BITMAP_RENDERER_STATISTICS
 enum IID_IWTSBitmapRenderer = GUID(0x5b7acc97, 0xf3c9, 0x46f7, [0x8c, 0x5b, 0xfa, 0x68, 0x5d, 0x34, 0x41, 0xb1]);
 interface IWTSBitmapRenderer : IUnknown
 {
-    HRESULT Render(GUID, uint, uint, int, uint, ubyte*);
-    HRESULT GetRendererStatistics(BITMAP_RENDERER_STATISTICS*);
+    HRESULT Render(GUID imageFormat, uint dwWidth, uint dwHeight, int cbStride, uint cbImageBuffer, ubyte* pImageBuffer);
+    HRESULT GetRendererStatistics(BITMAP_RENDERER_STATISTICS* pStatistics);
     HRESULT RemoveMapping();
 }
 enum IID_IWTSBitmapRendererCallback = GUID(0xd782928e, 0xfe4e, 0x4e77, [0xae, 0x90, 0x9c, 0xd0, 0xb3, 0xe3, 0xb3, 0x53]);
 interface IWTSBitmapRendererCallback : IUnknown
 {
-    HRESULT OnTargetSizeChanged(RECT);
+    HRESULT OnTargetSizeChanged(RECT rcNewSize);
 }
 enum IID_IWTSBitmapRenderService = GUID(0xea326091, 0x5fe, 0x40c1, [0xb4, 0x9c, 0x3d, 0x2e, 0xf4, 0x62, 0x6a, 0xe]);
 interface IWTSBitmapRenderService : IUnknown
 {
-    HRESULT GetMappedRenderer(ulong, IWTSBitmapRendererCallback, IWTSBitmapRenderer*);
+    HRESULT GetMappedRenderer(ulong mappingId, IWTSBitmapRendererCallback pMappedRendererCallback, IWTSBitmapRenderer* ppMappedRenderer);
 }
 enum IID_IWRdsGraphicsChannelEvents = GUID(0x67f2368c, 0xd674, 0x4fae, [0x66, 0xa5, 0xd2, 0x6, 0x28, 0xa6, 0x40, 0xd2]);
 interface IWRdsGraphicsChannelEvents : IUnknown
 {
-    HRESULT OnDataReceived(uint, ubyte*);
+    HRESULT OnDataReceived(uint cbSize, ubyte* pBuffer);
     HRESULT OnClose();
-    HRESULT OnChannelOpened(HRESULT, IUnknown);
-    HRESULT OnDataSent(IUnknown, BOOL, ubyte*, uint);
-    HRESULT OnMetricsUpdate(uint, uint, ulong);
+    HRESULT OnChannelOpened(HRESULT OpenResult, IUnknown pOpenContext);
+    HRESULT OnDataSent(IUnknown pWriteContext, BOOL bCancelled, ubyte* pBuffer, uint cbBuffer);
+    HRESULT OnMetricsUpdate(uint bandwidth, uint RTT, ulong lastSentByteIndex);
 }
 enum IID_IWRdsGraphicsChannel = GUID(0x684b7a0b, 0xedff, 0x43ad, [0xd5, 0xa2, 0x4a, 0x8d, 0x53, 0x88, 0xf4, 0x1]);
 interface IWRdsGraphicsChannel : IUnknown
 {
-    HRESULT Write(uint, ubyte*, IUnknown);
+    HRESULT Write(uint cbSize, ubyte* pBuffer, IUnknown pContext);
     HRESULT Close();
-    HRESULT Open(IWRdsGraphicsChannelEvents, IUnknown);
+    HRESULT Open(IWRdsGraphicsChannelEvents pChannelEvents, IUnknown pOpenContext);
 }
 alias WRdsGraphicsChannelType = int;
 enum : int
@@ -1914,7 +1914,7 @@ enum : int
 enum IID_IWRdsGraphicsChannelManager = GUID(0xfd57159, 0xe83e, 0x476a, [0xa8, 0xb9, 0x4a, 0x79, 0x76, 0xe7, 0x1e, 0x18]);
 interface IWRdsGraphicsChannelManager : IUnknown
 {
-    HRESULT CreateChannel(const(ubyte)*, WRdsGraphicsChannelType, IWRdsGraphicsChannel*);
+    HRESULT CreateChannel(const(ubyte)* pszChannelName, WRdsGraphicsChannelType channelType, IWRdsGraphicsChannel* ppVirtualChannel);
 }
 struct RFX_GFX_RECT
 {
@@ -2437,209 +2437,209 @@ struct WRDS_SETTINGS
 enum IID_IWTSProtocolManager = GUID(0xf9eaf6cc, 0xed79, 0x4f01, [0x82, 0x1d, 0x1f, 0x88, 0x1b, 0x9f, 0x66, 0xcc]);
 interface IWTSProtocolManager : IUnknown
 {
-    HRESULT CreateListener(PWSTR, IWTSProtocolListener*);
-    HRESULT NotifyServiceStateChange(WTS_SERVICE_STATE*);
-    HRESULT NotifySessionOfServiceStart(WTS_SESSION_ID*);
-    HRESULT NotifySessionOfServiceStop(WTS_SESSION_ID*);
-    HRESULT NotifySessionStateChange(WTS_SESSION_ID*, uint);
+    HRESULT CreateListener(PWSTR wszListenerName, IWTSProtocolListener* pProtocolListener);
+    HRESULT NotifyServiceStateChange(WTS_SERVICE_STATE* pTSServiceStateChange);
+    HRESULT NotifySessionOfServiceStart(WTS_SESSION_ID* SessionId);
+    HRESULT NotifySessionOfServiceStop(WTS_SESSION_ID* SessionId);
+    HRESULT NotifySessionStateChange(WTS_SESSION_ID* SessionId, uint EventId);
 }
 enum IID_IWTSProtocolListener = GUID(0x23083765, 0x45f0, 0x4394, [0x8f, 0x69, 0x32, 0xb2, 0xbc, 0xe, 0xf4, 0xca]);
 interface IWTSProtocolListener : IUnknown
 {
-    HRESULT StartListen(IWTSProtocolListenerCallback);
+    HRESULT StartListen(IWTSProtocolListenerCallback pCallback);
     HRESULT StopListen();
 }
 enum IID_IWTSProtocolListenerCallback = GUID(0x23083765, 0x1a2d, 0x4de2, [0x97, 0xde, 0x4a, 0x35, 0xf2, 0x60, 0xf0, 0xb3]);
 interface IWTSProtocolListenerCallback : IUnknown
 {
-    HRESULT OnConnected(IWTSProtocolConnection, IWTSProtocolConnectionCallback*);
+    HRESULT OnConnected(IWTSProtocolConnection pConnection, IWTSProtocolConnectionCallback* pCallback);
 }
 enum IID_IWTSProtocolConnection = GUID(0x23083765, 0x9095, 0x4648, [0x98, 0xbf, 0xef, 0x81, 0xc9, 0x14, 0x3, 0x2d]);
 interface IWTSProtocolConnection : IUnknown
 {
-    HRESULT GetLogonErrorRedirector(IWTSProtocolLogonErrorRedirector*);
-    HRESULT SendPolicyData(WTS_POLICY_DATA*);
+    HRESULT GetLogonErrorRedirector(IWTSProtocolLogonErrorRedirector* ppLogonErrorRedir);
+    HRESULT SendPolicyData(WTS_POLICY_DATA* pPolicyData);
     HRESULT AcceptConnection();
-    HRESULT GetClientData(WTS_CLIENT_DATA*);
-    HRESULT GetUserCredentials(WTS_USER_CREDENTIAL*);
-    HRESULT GetLicenseConnection(IWTSProtocolLicenseConnection*);
-    HRESULT AuthenticateClientToSession(WTS_SESSION_ID*);
-    HRESULT NotifySessionId(WTS_SESSION_ID*);
-    HRESULT GetProtocolHandles(HANDLE_PTR*, HANDLE_PTR*, HANDLE_PTR*, HANDLE_PTR*);
-    HRESULT ConnectNotify(uint);
-    HRESULT IsUserAllowedToLogon(uint, HANDLE_PTR, PWSTR, PWSTR);
-    HRESULT SessionArbitrationEnumeration(HANDLE_PTR, BOOL, uint*, uint*);
-    HRESULT LogonNotify(HANDLE_PTR, PWSTR, PWSTR, WTS_SESSION_ID*);
-    HRESULT GetUserData(WTS_POLICY_DATA*, WTS_USER_DATA*);
+    HRESULT GetClientData(WTS_CLIENT_DATA* pClientData);
+    HRESULT GetUserCredentials(WTS_USER_CREDENTIAL* pUserCreds);
+    HRESULT GetLicenseConnection(IWTSProtocolLicenseConnection* ppLicenseConnection);
+    HRESULT AuthenticateClientToSession(WTS_SESSION_ID* SessionId);
+    HRESULT NotifySessionId(WTS_SESSION_ID* SessionId);
+    HRESULT GetProtocolHandles(HANDLE_PTR* pKeyboardHandle, HANDLE_PTR* pMouseHandle, HANDLE_PTR* pBeepHandle, HANDLE_PTR* pVideoHandle);
+    HRESULT ConnectNotify(uint SessionId);
+    HRESULT IsUserAllowedToLogon(uint SessionId, HANDLE_PTR UserToken, PWSTR pDomainName, PWSTR pUserName);
+    HRESULT SessionArbitrationEnumeration(HANDLE_PTR hUserToken, BOOL bSingleSessionPerUserEnabled, uint* pSessionIdArray, uint* pdwSessionIdentifierCount);
+    HRESULT LogonNotify(HANDLE_PTR hClientToken, PWSTR wszUserName, PWSTR wszDomainName, WTS_SESSION_ID* SessionId);
+    HRESULT GetUserData(WTS_POLICY_DATA* pPolicyData, WTS_USER_DATA* pClientData);
     HRESULT DisconnectNotify();
     HRESULT Close();
-    HRESULT GetProtocolStatus(WTS_PROTOCOL_STATUS*);
-    HRESULT GetLastInputTime(ulong*);
-    HRESULT SetErrorInfo(uint);
-    HRESULT SendBeep(uint, uint);
-    HRESULT CreateVirtualChannel(PSTR, BOOL, uint, ulong*);
-    HRESULT QueryProperty(GUID, uint, uint, WTS_PROPERTY_VALUE*, WTS_PROPERTY_VALUE*);
-    HRESULT GetShadowConnection(IWTSProtocolShadowConnection*);
+    HRESULT GetProtocolStatus(WTS_PROTOCOL_STATUS* pProtocolStatus);
+    HRESULT GetLastInputTime(ulong* pLastInputTime);
+    HRESULT SetErrorInfo(uint ulError);
+    HRESULT SendBeep(uint Frequency, uint Duration);
+    HRESULT CreateVirtualChannel(PSTR szEndpointName, BOOL bStatic, uint RequestedPriority, ulong* phChannel);
+    HRESULT QueryProperty(GUID QueryType, uint ulNumEntriesIn, uint ulNumEntriesOut, WTS_PROPERTY_VALUE* pPropertyEntriesIn, WTS_PROPERTY_VALUE* pPropertyEntriesOut);
+    HRESULT GetShadowConnection(IWTSProtocolShadowConnection* ppShadowConnection);
 }
 enum IID_IWTSProtocolConnectionCallback = GUID(0x23083765, 0x75eb, 0x41fe, [0xb4, 0xfb, 0xe0, 0x86, 0x24, 0x2a, 0xfa, 0xf]);
 interface IWTSProtocolConnectionCallback : IUnknown
 {
     HRESULT OnReady();
-    HRESULT BrokenConnection(uint, uint);
+    HRESULT BrokenConnection(uint Reason, uint Source);
     HRESULT StopScreenUpdates();
-    HRESULT RedrawWindow(WTS_SMALL_RECT*);
-    HRESULT DisplayIOCtl(WTS_DISPLAY_IOCTL*);
+    HRESULT RedrawWindow(WTS_SMALL_RECT* rect);
+    HRESULT DisplayIOCtl(WTS_DISPLAY_IOCTL* DisplayIOCtl);
 }
 enum IID_IWTSProtocolShadowConnection = GUID(0xee3b0c14, 0x37fb, 0x456b, [0xba, 0xb3, 0x6d, 0x6c, 0xd5, 0x1e, 0x13, 0xbf]);
 interface IWTSProtocolShadowConnection : IUnknown
 {
-    HRESULT Start(PWSTR, uint, ubyte, ushort, IWTSProtocolShadowCallback);
+    HRESULT Start(PWSTR pTargetServerName, uint TargetSessionId, ubyte HotKeyVk, ushort HotkeyModifiers, IWTSProtocolShadowCallback pShadowCallback);
     HRESULT Stop();
-    HRESULT DoTarget(ubyte*, uint, ubyte*, uint, ubyte*, uint, ubyte*, uint, PWSTR);
+    HRESULT DoTarget(ubyte* pParam1, uint Param1Size, ubyte* pParam2, uint Param2Size, ubyte* pParam3, uint Param3Size, ubyte* pParam4, uint Param4Size, PWSTR pClientName);
 }
 enum IID_IWTSProtocolShadowCallback = GUID(0x503a2504, 0xaae5, 0x4ab1, [0x93, 0xe0, 0x6d, 0x1c, 0x4b, 0xc6, 0xf7, 0x1a]);
 interface IWTSProtocolShadowCallback : IUnknown
 {
     HRESULT StopShadow();
-    HRESULT InvokeTargetShadow(PWSTR, uint, ubyte*, uint, ubyte*, uint, ubyte*, uint, ubyte*, uint, PWSTR);
+    HRESULT InvokeTargetShadow(PWSTR pTargetServerName, uint TargetSessionId, ubyte* pParam1, uint Param1Size, ubyte* pParam2, uint Param2Size, ubyte* pParam3, uint Param3Size, ubyte* pParam4, uint Param4Size, PWSTR pClientName);
 }
 enum IID_IWTSProtocolLicenseConnection = GUID(0x23083765, 0x178c, 0x4079, [0x8e, 0x4a, 0xfe, 0xa6, 0x49, 0x6a, 0x4d, 0x70]);
 interface IWTSProtocolLicenseConnection : IUnknown
 {
-    HRESULT RequestLicensingCapabilities(WTS_LICENSE_CAPABILITIES*, uint*);
-    HRESULT SendClientLicense(ubyte*, uint);
-    HRESULT RequestClientLicense(ubyte*, uint, ubyte*, uint*);
-    HRESULT ProtocolComplete(uint);
+    HRESULT RequestLicensingCapabilities(WTS_LICENSE_CAPABILITIES* ppLicenseCapabilities, uint* pcbLicenseCapabilities);
+    HRESULT SendClientLicense(ubyte* pClientLicense, uint cbClientLicense);
+    HRESULT RequestClientLicense(ubyte* Reserve1, uint Reserve2, ubyte* ppClientLicense, uint* pcbClientLicense);
+    HRESULT ProtocolComplete(uint ulComplete);
 }
 enum IID_IWTSProtocolLogonErrorRedirector = GUID(0xfd9b61a7, 0x2916, 0x4627, [0x8d, 0xee, 0x43, 0x28, 0x71, 0x1a, 0xd6, 0xcb]);
 interface IWTSProtocolLogonErrorRedirector : IUnknown
 {
     HRESULT OnBeginPainting();
-    HRESULT RedirectStatus(const(wchar)*, WTS_LOGON_ERROR_REDIRECTOR_RESPONSE*);
-    HRESULT RedirectMessage(const(wchar)*, const(wchar)*, uint, WTS_LOGON_ERROR_REDIRECTOR_RESPONSE*);
-    HRESULT RedirectLogonError(int, int, const(wchar)*, const(wchar)*, uint, WTS_LOGON_ERROR_REDIRECTOR_RESPONSE*);
+    HRESULT RedirectStatus(const(wchar)* pszMessage, WTS_LOGON_ERROR_REDIRECTOR_RESPONSE* pResponse);
+    HRESULT RedirectMessage(const(wchar)* pszCaption, const(wchar)* pszMessage, uint uType, WTS_LOGON_ERROR_REDIRECTOR_RESPONSE* pResponse);
+    HRESULT RedirectLogonError(int ntsStatus, int ntsSubstatus, const(wchar)* pszCaption, const(wchar)* pszMessage, uint uType, WTS_LOGON_ERROR_REDIRECTOR_RESPONSE* pResponse);
 }
 enum IID_IWRdsProtocolSettings = GUID(0x654a5a6a, 0x2550, 0x47eb, [0xb6, 0xf7, 0xeb, 0xd6, 0x37, 0x47, 0x52, 0x65]);
 interface IWRdsProtocolSettings : IUnknown
 {
-    HRESULT GetSettings(WRDS_SETTING_TYPE, WRDS_SETTING_LEVEL, WRDS_SETTINGS*);
-    HRESULT MergeSettings(WRDS_SETTINGS*, WRDS_CONNECTION_SETTING_LEVEL, WRDS_CONNECTION_SETTINGS*);
+    HRESULT GetSettings(WRDS_SETTING_TYPE WRdsSettingType, WRDS_SETTING_LEVEL WRdsSettingLevel, WRDS_SETTINGS* pWRdsSettings);
+    HRESULT MergeSettings(WRDS_SETTINGS* pWRdsSettings, WRDS_CONNECTION_SETTING_LEVEL WRdsConnectionSettingLevel, WRDS_CONNECTION_SETTINGS* pWRdsConnectionSettings);
 }
 enum IID_IWRdsProtocolManager = GUID(0xdc796967, 0x3abb, 0x40cd, [0xa4, 0x46, 0x10, 0x52, 0x76, 0xb5, 0x89, 0x50]);
 interface IWRdsProtocolManager : IUnknown
 {
-    HRESULT Initialize(IWRdsProtocolSettings, WRDS_SETTINGS*);
-    HRESULT CreateListener(PWSTR, IWRdsProtocolListener*);
-    HRESULT NotifyServiceStateChange(WTS_SERVICE_STATE*);
-    HRESULT NotifySessionOfServiceStart(WTS_SESSION_ID*);
-    HRESULT NotifySessionOfServiceStop(WTS_SESSION_ID*);
-    HRESULT NotifySessionStateChange(WTS_SESSION_ID*, uint);
-    HRESULT NotifySettingsChange(WRDS_SETTINGS*);
+    HRESULT Initialize(IWRdsProtocolSettings pIWRdsSettings, WRDS_SETTINGS* pWRdsSettings);
+    HRESULT CreateListener(PWSTR wszListenerName, IWRdsProtocolListener* pProtocolListener);
+    HRESULT NotifyServiceStateChange(WTS_SERVICE_STATE* pTSServiceStateChange);
+    HRESULT NotifySessionOfServiceStart(WTS_SESSION_ID* SessionId);
+    HRESULT NotifySessionOfServiceStop(WTS_SESSION_ID* SessionId);
+    HRESULT NotifySessionStateChange(WTS_SESSION_ID* SessionId, uint EventId);
+    HRESULT NotifySettingsChange(WRDS_SETTINGS* pWRdsSettings);
     HRESULT Uninitialize();
 }
 enum IID_IWRdsProtocolListener = GUID(0xfcbc131b, 0xc686, 0x451d, [0xa7, 0x73, 0xe2, 0x79, 0xe2, 0x30, 0xf5, 0x40]);
 interface IWRdsProtocolListener : IUnknown
 {
-    HRESULT GetSettings(WRDS_LISTENER_SETTING_LEVEL, WRDS_LISTENER_SETTINGS*);
-    HRESULT StartListen(IWRdsProtocolListenerCallback);
+    HRESULT GetSettings(WRDS_LISTENER_SETTING_LEVEL WRdsListenerSettingLevel, WRDS_LISTENER_SETTINGS* pWRdsListenerSettings);
+    HRESULT StartListen(IWRdsProtocolListenerCallback pCallback);
     HRESULT StopListen();
 }
 enum IID_IWRdsProtocolListenerCallback = GUID(0x3ab27e5b, 0x4449, 0x4dc1, [0xb7, 0x4a, 0x91, 0x62, 0x1d, 0x4f, 0xe9, 0x84]);
 interface IWRdsProtocolListenerCallback : IUnknown
 {
-    HRESULT OnConnected(IWRdsProtocolConnection, WRDS_CONNECTION_SETTINGS*, IWRdsProtocolConnectionCallback*);
+    HRESULT OnConnected(IWRdsProtocolConnection pConnection, WRDS_CONNECTION_SETTINGS* pWRdsConnectionSettings, IWRdsProtocolConnectionCallback* pCallback);
 }
 enum IID_IWRdsProtocolConnection = GUID(0x324ed94f, 0xfdaf, 0x4ff6, [0x81, 0xa8, 0x42, 0xab, 0xe7, 0x55, 0x83, 0xb]);
 interface IWRdsProtocolConnection : IUnknown
 {
-    HRESULT GetLogonErrorRedirector(IWRdsProtocolLogonErrorRedirector*);
+    HRESULT GetLogonErrorRedirector(IWRdsProtocolLogonErrorRedirector* ppLogonErrorRedir);
     HRESULT AcceptConnection();
-    HRESULT GetClientData(WTS_CLIENT_DATA*);
-    HRESULT GetClientMonitorData(uint*, uint*);
-    HRESULT GetUserCredentials(WTS_USER_CREDENTIAL*);
-    HRESULT GetLicenseConnection(IWRdsProtocolLicenseConnection*);
-    HRESULT AuthenticateClientToSession(WTS_SESSION_ID*);
-    HRESULT NotifySessionId(WTS_SESSION_ID*, HANDLE_PTR);
-    HRESULT GetInputHandles(HANDLE_PTR*, HANDLE_PTR*, HANDLE_PTR*);
-    HRESULT GetVideoHandle(HANDLE_PTR*);
-    HRESULT ConnectNotify(uint);
-    HRESULT IsUserAllowedToLogon(uint, HANDLE_PTR, PWSTR, PWSTR);
-    HRESULT SessionArbitrationEnumeration(HANDLE_PTR, BOOL, uint*, uint*);
-    HRESULT LogonNotify(HANDLE_PTR, PWSTR, PWSTR, WTS_SESSION_ID*, WRDS_CONNECTION_SETTINGS*);
-    HRESULT PreDisconnect(uint);
+    HRESULT GetClientData(WTS_CLIENT_DATA* pClientData);
+    HRESULT GetClientMonitorData(uint* pNumMonitors, uint* pPrimaryMonitor);
+    HRESULT GetUserCredentials(WTS_USER_CREDENTIAL* pUserCreds);
+    HRESULT GetLicenseConnection(IWRdsProtocolLicenseConnection* ppLicenseConnection);
+    HRESULT AuthenticateClientToSession(WTS_SESSION_ID* SessionId);
+    HRESULT NotifySessionId(WTS_SESSION_ID* SessionId, HANDLE_PTR SessionHandle);
+    HRESULT GetInputHandles(HANDLE_PTR* pKeyboardHandle, HANDLE_PTR* pMouseHandle, HANDLE_PTR* pBeepHandle);
+    HRESULT GetVideoHandle(HANDLE_PTR* pVideoHandle);
+    HRESULT ConnectNotify(uint SessionId);
+    HRESULT IsUserAllowedToLogon(uint SessionId, HANDLE_PTR UserToken, PWSTR pDomainName, PWSTR pUserName);
+    HRESULT SessionArbitrationEnumeration(HANDLE_PTR hUserToken, BOOL bSingleSessionPerUserEnabled, uint* pSessionIdArray, uint* pdwSessionIdentifierCount);
+    HRESULT LogonNotify(HANDLE_PTR hClientToken, PWSTR wszUserName, PWSTR wszDomainName, WTS_SESSION_ID* SessionId, WRDS_CONNECTION_SETTINGS* pWRdsConnectionSettings);
+    HRESULT PreDisconnect(uint DisconnectReason);
     HRESULT DisconnectNotify();
     HRESULT Close();
-    HRESULT GetProtocolStatus(WTS_PROTOCOL_STATUS*);
-    HRESULT GetLastInputTime(ulong*);
-    HRESULT SetErrorInfo(uint);
-    HRESULT CreateVirtualChannel(PSTR, BOOL, uint, ulong*);
-    HRESULT QueryProperty(GUID, uint, uint, WTS_PROPERTY_VALUE*, WTS_PROPERTY_VALUE*);
-    HRESULT GetShadowConnection(IWRdsProtocolShadowConnection*);
-    HRESULT NotifyCommandProcessCreated(uint);
+    HRESULT GetProtocolStatus(WTS_PROTOCOL_STATUS* pProtocolStatus);
+    HRESULT GetLastInputTime(ulong* pLastInputTime);
+    HRESULT SetErrorInfo(uint ulError);
+    HRESULT CreateVirtualChannel(PSTR szEndpointName, BOOL bStatic, uint RequestedPriority, ulong* phChannel);
+    HRESULT QueryProperty(GUID QueryType, uint ulNumEntriesIn, uint ulNumEntriesOut, WTS_PROPERTY_VALUE* pPropertyEntriesIn, WTS_PROPERTY_VALUE* pPropertyEntriesOut);
+    HRESULT GetShadowConnection(IWRdsProtocolShadowConnection* ppShadowConnection);
+    HRESULT NotifyCommandProcessCreated(uint SessionId);
 }
 enum IID_IWRdsProtocolConnectionCallback = GUID(0xf1d70332, 0xd070, 0x4ef1, [0xa0, 0x88, 0x78, 0x31, 0x35, 0x36, 0xc2, 0xd6]);
 interface IWRdsProtocolConnectionCallback : IUnknown
 {
     HRESULT OnReady();
-    HRESULT BrokenConnection(uint, uint);
+    HRESULT BrokenConnection(uint Reason, uint Source);
     HRESULT StopScreenUpdates();
-    HRESULT RedrawWindow(WTS_SMALL_RECT*);
-    HRESULT GetConnectionId(uint*);
+    HRESULT RedrawWindow(WTS_SMALL_RECT* rect);
+    HRESULT GetConnectionId(uint* pConnectionId);
 }
 enum IID_IWRdsProtocolShadowConnection = GUID(0x9ae85ce6, 0xcade, 0x4548, [0x8f, 0xeb, 0x99, 0x1, 0x65, 0x97, 0xf6, 0xa]);
 interface IWRdsProtocolShadowConnection : IUnknown
 {
-    HRESULT Start(PWSTR, uint, ubyte, ushort, IWRdsProtocolShadowCallback);
+    HRESULT Start(PWSTR pTargetServerName, uint TargetSessionId, ubyte HotKeyVk, ushort HotkeyModifiers, IWRdsProtocolShadowCallback pShadowCallback);
     HRESULT Stop();
-    HRESULT DoTarget(ubyte*, uint, ubyte*, uint, ubyte*, uint, ubyte*, uint, PWSTR);
+    HRESULT DoTarget(ubyte* pParam1, uint Param1Size, ubyte* pParam2, uint Param2Size, ubyte* pParam3, uint Param3Size, ubyte* pParam4, uint Param4Size, PWSTR pClientName);
 }
 enum IID_IWRdsProtocolShadowCallback = GUID(0xe0667ce0, 0x372, 0x40d6, [0xad, 0xb2, 0xa0, 0xf3, 0x32, 0x26, 0x74, 0xd6]);
 interface IWRdsProtocolShadowCallback : IUnknown
 {
     HRESULT StopShadow();
-    HRESULT InvokeTargetShadow(PWSTR, uint, ubyte*, uint, ubyte*, uint, ubyte*, uint, ubyte*, uint, PWSTR);
+    HRESULT InvokeTargetShadow(PWSTR pTargetServerName, uint TargetSessionId, ubyte* pParam1, uint Param1Size, ubyte* pParam2, uint Param2Size, ubyte* pParam3, uint Param3Size, ubyte* pParam4, uint Param4Size, PWSTR pClientName);
 }
 enum IID_IWRdsProtocolLicenseConnection = GUID(0x1d6a145f, 0xd095, 0x4424, [0x95, 0x7a, 0x40, 0x7f, 0xae, 0x82, 0x2d, 0x84]);
 interface IWRdsProtocolLicenseConnection : IUnknown
 {
-    HRESULT RequestLicensingCapabilities(WTS_LICENSE_CAPABILITIES*, uint*);
-    HRESULT SendClientLicense(ubyte*, uint);
-    HRESULT RequestClientLicense(ubyte*, uint, ubyte*, uint*);
-    HRESULT ProtocolComplete(uint);
+    HRESULT RequestLicensingCapabilities(WTS_LICENSE_CAPABILITIES* ppLicenseCapabilities, uint* pcbLicenseCapabilities);
+    HRESULT SendClientLicense(ubyte* pClientLicense, uint cbClientLicense);
+    HRESULT RequestClientLicense(ubyte* Reserve1, uint Reserve2, ubyte* ppClientLicense, uint* pcbClientLicense);
+    HRESULT ProtocolComplete(uint ulComplete);
 }
 enum IID_IWRdsProtocolLogonErrorRedirector = GUID(0x519fe83b, 0x142a, 0x4120, [0xa3, 0xd5, 0xa4, 0x5, 0xd3, 0x15, 0x28, 0x1a]);
 interface IWRdsProtocolLogonErrorRedirector : IUnknown
 {
     HRESULT OnBeginPainting();
-    HRESULT RedirectStatus(const(wchar)*, WTS_LOGON_ERROR_REDIRECTOR_RESPONSE*);
-    HRESULT RedirectMessage(const(wchar)*, const(wchar)*, uint, WTS_LOGON_ERROR_REDIRECTOR_RESPONSE*);
-    HRESULT RedirectLogonError(int, int, const(wchar)*, const(wchar)*, uint, WTS_LOGON_ERROR_REDIRECTOR_RESPONSE*);
+    HRESULT RedirectStatus(const(wchar)* pszMessage, WTS_LOGON_ERROR_REDIRECTOR_RESPONSE* pResponse);
+    HRESULT RedirectMessage(const(wchar)* pszCaption, const(wchar)* pszMessage, uint uType, WTS_LOGON_ERROR_REDIRECTOR_RESPONSE* pResponse);
+    HRESULT RedirectLogonError(int ntsStatus, int ntsSubstatus, const(wchar)* pszCaption, const(wchar)* pszMessage, uint uType, WTS_LOGON_ERROR_REDIRECTOR_RESPONSE* pResponse);
 }
 enum IID_IWRdsWddmIddProps = GUID(0x1382df4d, 0xa289, 0x43d1, [0xa1, 0x84, 0x14, 0x47, 0x26, 0xf9, 0xaf, 0x90]);
 interface IWRdsWddmIddProps : IUnknown
 {
-    HRESULT GetHardwareId(PWSTR, uint);
-    HRESULT OnDriverLoad(uint, HANDLE_PTR);
-    HRESULT OnDriverUnload(uint);
-    HRESULT EnableWddmIdd(BOOL);
+    HRESULT GetHardwareId(PWSTR pDisplayDriverHardwareId, uint Count);
+    HRESULT OnDriverLoad(uint SessionId, HANDLE_PTR DriverHandle);
+    HRESULT OnDriverUnload(uint SessionId);
+    HRESULT EnableWddmIdd(BOOL Enabled);
 }
 enum IID_IWRdsWddmIddProps1 = GUID(0x60f71b1a, 0x3682, 0x4bc7, [0x99, 0x7e, 0x4e, 0x4f, 0x2, 0xa0, 0x81, 0x48]);
 interface IWRdsWddmIddProps1 : IUnknown
 {
-    HRESULT GetHardwareId(PWSTR, uint);
-    HRESULT OnDriverLoad(uint, const(wchar)*);
-    HRESULT OnDriverUnload(uint);
+    HRESULT GetHardwareId(PWSTR pDisplayDriverHardwareId, uint Count);
+    HRESULT OnDriverLoad(uint SessionId, const(wchar)* DeviceInstance);
+    HRESULT OnDriverUnload(uint SessionId);
 }
 enum IID_IWRdsProtocolConnectionSettings = GUID(0x83fcf5d3, 0xf6f4, 0xea94, [0x9c, 0xd2, 0x32, 0xf2, 0x80, 0xe1, 0xe5, 0x10]);
 interface IWRdsProtocolConnectionSettings : IUnknown
 {
-    HRESULT SetConnectionSetting(GUID, WTS_PROPERTY_VALUE*);
-    HRESULT GetConnectionSetting(GUID, WTS_PROPERTY_VALUE*);
+    HRESULT SetConnectionSetting(GUID PropertyID, WTS_PROPERTY_VALUE* pPropertyEntriesIn);
+    HRESULT GetConnectionSetting(GUID PropertyID, WTS_PROPERTY_VALUE* pPropertyEntriesOut);
 }
 enum IID_IWRdsEnhancedFastReconnectArbitrator = GUID(0x5718ae9b, 0x47f2, 0x499f, [0xb6, 0x34, 0xd8, 0x17, 0x5b, 0xd5, 0x11, 0x31]);
 interface IWRdsEnhancedFastReconnectArbitrator : IUnknown
 {
-    HRESULT GetSessionForEnhancedFastReconnect(int*, uint, int*);
+    HRESULT GetSessionForEnhancedFastReconnect(int* pSessionIdArray, uint dwSessionCount, int* pResultSessionId);
 }
 alias PasswordEncodingType = int;
 enum : int
@@ -2652,10 +2652,10 @@ enum : int
 enum IID_IRemoteDesktopClientSettings = GUID(0x48a0f2a7, 0x2713, 0x431f, [0xbb, 0xac, 0x6f, 0x45, 0x58, 0xe7, 0xd6, 0x4d]);
 interface IRemoteDesktopClientSettings : IDispatch
 {
-    HRESULT ApplySettings(BSTR);
-    HRESULT RetrieveSettings(BSTR*);
-    HRESULT GetRdpProperty(BSTR, VARIANT*);
-    HRESULT SetRdpProperty(BSTR, VARIANT);
+    HRESULT ApplySettings(BSTR rdpFileContents);
+    HRESULT RetrieveSettings(BSTR* rdpFileContents);
+    HRESULT GetRdpProperty(BSTR propertyName, VARIANT* value);
+    HRESULT SetRdpProperty(BSTR propertyName, VARIANT value);
 }
 alias RemoteActionType = int;
 enum : int
@@ -2686,18 +2686,18 @@ interface IRemoteDesktopClientActions : IDispatch
 {
     HRESULT SuspendScreenUpdates();
     HRESULT ResumeScreenUpdates();
-    HRESULT ExecuteRemoteAction(RemoteActionType);
-    HRESULT GetSnapshot(SnapshotEncodingType, SnapshotFormatType, uint, uint, BSTR*);
+    HRESULT ExecuteRemoteAction(RemoteActionType remoteAction);
+    HRESULT GetSnapshot(SnapshotEncodingType snapshotEncoding, SnapshotFormatType snapshotFormat, uint snapshotWidth, uint snapshotHeight, BSTR* snapshotData);
 }
 enum IID_IRemoteDesktopClientTouchPointer = GUID(0x260ec22d, 0x8cbc, 0x44b5, [0x9e, 0x88, 0x2a, 0x37, 0xf6, 0xc9, 0x3a, 0xe9]);
 interface IRemoteDesktopClientTouchPointer : IDispatch
 {
-    HRESULT put_Enabled(VARIANT_BOOL);
-    HRESULT get_Enabled(VARIANT_BOOL*);
-    HRESULT put_EventsEnabled(VARIANT_BOOL);
-    HRESULT get_EventsEnabled(VARIANT_BOOL*);
-    HRESULT put_PointerSpeed(uint);
-    HRESULT get_PointerSpeed(uint*);
+    HRESULT put_Enabled(VARIANT_BOOL enabled);
+    HRESULT get_Enabled(VARIANT_BOOL* enabled);
+    HRESULT put_EventsEnabled(VARIANT_BOOL eventsEnabled);
+    HRESULT get_EventsEnabled(VARIANT_BOOL* eventsEnabled);
+    HRESULT put_PointerSpeed(uint pointerSpeed);
+    HRESULT get_PointerSpeed(uint* pointerSpeed);
 }
 alias KeyCombinationType = int;
 enum : int
@@ -2715,19 +2715,19 @@ interface IRemoteDesktopClient : IDispatch
 {
     HRESULT Connect();
     HRESULT Disconnect();
-    HRESULT Reconnect(uint, uint);
-    HRESULT get_Settings(IRemoteDesktopClientSettings*);
-    HRESULT get_Actions(IRemoteDesktopClientActions*);
-    HRESULT get_TouchPointer(IRemoteDesktopClientTouchPointer*);
-    HRESULT DeleteSavedCredentials(BSTR);
-    HRESULT UpdateSessionDisplaySettings(uint, uint);
-    HRESULT attachEvent(BSTR, IDispatch);
-    HRESULT detachEvent(BSTR, IDispatch);
+    HRESULT Reconnect(uint width, uint height);
+    HRESULT get_Settings(IRemoteDesktopClientSettings* settings);
+    HRESULT get_Actions(IRemoteDesktopClientActions* actions);
+    HRESULT get_TouchPointer(IRemoteDesktopClientTouchPointer* touchPointer);
+    HRESULT DeleteSavedCredentials(BSTR serverName);
+    HRESULT UpdateSessionDisplaySettings(uint width, uint height);
+    HRESULT attachEvent(BSTR eventName, IDispatch callback);
+    HRESULT detachEvent(BSTR eventName, IDispatch callback);
 }
 enum IID_IRemoteSystemAdditionalInfoProvider = GUID(0xeeaa3d5f, 0xec63, 0x4d27, [0xaf, 0x38, 0xe8, 0x6b, 0x1d, 0x72, 0x92, 0xcb]);
 interface IRemoteSystemAdditionalInfoProvider : IUnknown
 {
-    HRESULT GetAdditionalInfo(HSTRING*, const(GUID)*, void**);
+    HRESULT GetAdditionalInfo(HSTRING* deduplicationId, const(GUID)* riid, void** mapView);
 }
 struct WTSSESSION_NOTIFICATION
 {

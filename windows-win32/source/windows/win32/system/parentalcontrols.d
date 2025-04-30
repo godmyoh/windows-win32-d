@@ -125,9 +125,9 @@ enum : int
 enum IID_IWPCProviderConfig = GUID(0xbef54196, 0x2d02, 0x4a26, [0xb6, 0xe5, 0xd6, 0x5a, 0xf2, 0x95, 0xd0, 0xf1]);
 interface IWPCProviderConfig : IUnknown
 {
-    HRESULT GetUserSummary(BSTR, BSTR*);
-    HRESULT Configure(HWND, BSTR);
-    HRESULT RequestOverride(HWND, BSTR, uint);
+    HRESULT GetUserSummary(BSTR bstrSID, BSTR* pbstrUserSummary);
+    HRESULT Configure(HWND hWnd, BSTR bstrSID);
+    HRESULT RequestOverride(HWND hWnd, BSTR bstrPath, uint dwFlags);
 }
 alias WPCFLAG_RESTRICTION = int;
 enum : int
@@ -145,14 +145,14 @@ enum : int
 enum IID_IWPCSettings = GUID(0x8fdf6ca1, 0x189, 0x47e4, [0xb6, 0x70, 0x1a, 0x8a, 0x46, 0x36, 0xe3, 0x40]);
 interface IWPCSettings : IUnknown
 {
-    HRESULT IsLoggingRequired(BOOL*);
-    HRESULT GetLastSettingsChangeTime(SYSTEMTIME*);
-    HRESULT GetRestrictions(WPCFLAG_RESTRICTION*);
+    HRESULT IsLoggingRequired(BOOL* pfRequired);
+    HRESULT GetLastSettingsChangeTime(SYSTEMTIME* pTime);
+    HRESULT GetRestrictions(WPCFLAG_RESTRICTION* pdwRestrictions);
 }
 enum IID_IWPCGamesSettings = GUID(0x95e87780, 0xe158, 0x489e, [0xb4, 0x52, 0xbb, 0xb8, 0x50, 0x79, 0x7, 0x15]);
 interface IWPCGamesSettings : IWPCSettings
 {
-    HRESULT IsBlocked(GUID, uint*);
+    HRESULT IsBlocked(GUID guidAppID, uint* pdwReasons);
 }
 alias WPCFLAG_WEB_SETTING = int;
 enum : int
@@ -164,8 +164,8 @@ enum : int
 enum IID_IWPCWebSettings = GUID(0xffccbdb8, 0x992, 0x4c30, [0xb0, 0xf1, 0x1c, 0xbb, 0x9, 0xc2, 0x40, 0xaa]);
 interface IWPCWebSettings : IWPCSettings
 {
-    HRESULT GetSettings(WPCFLAG_WEB_SETTING*);
-    HRESULT RequestURLOverride(HWND, const(wchar)*, uint, const(wchar)**, BOOL*);
+    HRESULT GetSettings(WPCFLAG_WEB_SETTING* pdwSettings);
+    HRESULT RequestURLOverride(HWND hWnd, const(wchar)* pcszURL, uint cURLs, const(wchar)** ppcszSubURLs, BOOL* pfChanged);
 }
 alias WPCFLAG_VISIBILITY = int;
 enum : int
@@ -177,20 +177,20 @@ enum : int
 enum IID_IWindowsParentalControlsCore = GUID(0x4ff40a0f, 0x3f3b, 0x4d7c, [0xa4, 0x1b, 0x4f, 0x39, 0xd7, 0xb4, 0x4d, 0x5]);
 interface IWindowsParentalControlsCore : IUnknown
 {
-    HRESULT GetVisibility(WPCFLAG_VISIBILITY*);
-    HRESULT GetUserSettings(const(wchar)*, IWPCSettings*);
-    HRESULT GetWebSettings(const(wchar)*, IWPCWebSettings*);
-    HRESULT GetWebFilterInfo(GUID*, PWSTR*);
+    HRESULT GetVisibility(WPCFLAG_VISIBILITY* peVisibility);
+    HRESULT GetUserSettings(const(wchar)* pcszSID, IWPCSettings* ppSettings);
+    HRESULT GetWebSettings(const(wchar)* pcszSID, IWPCWebSettings* ppSettings);
+    HRESULT GetWebFilterInfo(GUID* pguidID, PWSTR* ppszName);
 }
 enum IID_IWindowsParentalControls = GUID(0x28b4d88b, 0xe072, 0x49e6, [0x80, 0x4d, 0x26, 0xed, 0xbe, 0x21, 0xa7, 0xb9]);
 interface IWindowsParentalControls : IWindowsParentalControlsCore
 {
-    HRESULT GetGamesSettings(const(wchar)*, IWPCGamesSettings*);
+    HRESULT GetGamesSettings(const(wchar)* pcszSID, IWPCGamesSettings* ppSettings);
 }
 enum IID_IWPCProviderSupport = GUID(0x41eba572, 0x23ed, 0x4779, [0xbe, 0xc1, 0x8d, 0xf9, 0x62, 0x6, 0xc4, 0x4c]);
 interface IWPCProviderSupport : IUnknown
 {
-    HRESULT GetCurrent(GUID*);
+    HRESULT GetCurrent(GUID* pguidProvider);
 }
 enum CLSID_WpcSettingsProvider = GUID(0x355dffaa, 0x3b9f, 0x435c, [0xb4, 0x28, 0x5d, 0x44, 0x29, 0xb, 0xc5, 0xf2]);
 struct WpcSettingsProvider

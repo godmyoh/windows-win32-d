@@ -55,62 +55,62 @@ enum : int
     WINHTTP_INTERNET_SCHEME_SOCKS = 0x00000004,
 }
 
-WINHTTP_STATUS_CALLBACK WinHttpSetStatusCallback(void*, WINHTTP_STATUS_CALLBACK, uint, ulong);
-BOOL WinHttpTimeFromSystemTime(const(SYSTEMTIME)*, PWSTR);
-BOOL WinHttpTimeToSystemTime(const(wchar)*, SYSTEMTIME*);
-BOOL WinHttpCrackUrl(const(wchar)*, uint, uint, URL_COMPONENTS*);
-BOOL WinHttpCreateUrl(URL_COMPONENTS*, WIN_HTTP_CREATE_URL_FLAGS, PWSTR, uint*);
+WINHTTP_STATUS_CALLBACK WinHttpSetStatusCallback(void* hInternet, WINHTTP_STATUS_CALLBACK lpfnInternetCallback, uint dwNotificationFlags, ulong dwReserved);
+BOOL WinHttpTimeFromSystemTime(const(SYSTEMTIME)* pst, PWSTR pwszTime);
+BOOL WinHttpTimeToSystemTime(const(wchar)* pwszTime, SYSTEMTIME* pst);
+BOOL WinHttpCrackUrl(const(wchar)* pwszUrl, uint dwUrlLength, uint dwFlags, URL_COMPONENTS* lpUrlComponents);
+BOOL WinHttpCreateUrl(URL_COMPONENTS* lpUrlComponents, WIN_HTTP_CREATE_URL_FLAGS dwFlags, PWSTR pwszUrl, uint* pdwUrlLength);
 BOOL WinHttpCheckPlatform();
-BOOL WinHttpGetDefaultProxyConfiguration(WINHTTP_PROXY_INFO*);
-BOOL WinHttpSetDefaultProxyConfiguration(WINHTTP_PROXY_INFO*);
-void* WinHttpOpen(const(wchar)*, WINHTTP_ACCESS_TYPE, const(wchar)*, const(wchar)*, uint);
-BOOL WinHttpCloseHandle(void*);
-void* WinHttpConnect(void*, const(wchar)*, ushort, uint);
-BOOL WinHttpReadData(void*, void*, uint, uint*);
-uint WinHttpReadDataEx(void*, void*, uint, uint*, ulong, uint, void*);
-BOOL WinHttpWriteData(void*, const(void)*, uint, uint*);
-BOOL WinHttpQueryDataAvailable(void*, uint*);
-BOOL WinHttpQueryOption(void*, uint, void*, uint*);
-BOOL WinHttpSetOption(void*, uint, void*, uint);
-BOOL WinHttpSetTimeouts(void*, int, int, int, int);
-void* WinHttpOpenRequest(void*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)**, WINHTTP_OPEN_REQUEST_FLAGS);
-BOOL WinHttpAddRequestHeaders(void*, const(wchar)*, uint, uint);
-uint WinHttpAddRequestHeadersEx(void*, uint, ulong, ulong, uint, WINHTTP_EXTENDED_HEADER*);
-BOOL WinHttpSendRequest(void*, const(wchar)*, uint, void*, uint, uint, ulong);
-BOOL WinHttpSetCredentials(void*, uint, uint, const(wchar)*, const(wchar)*, void*);
-BOOL WinHttpQueryAuthSchemes(void*, uint*, uint*, uint*);
-BOOL WinHttpReceiveResponse(void*, void*);
-BOOL WinHttpQueryHeaders(void*, uint, const(wchar)*, void*, uint*, uint*);
-uint WinHttpQueryHeadersEx(void*, uint, ulong, uint, uint*, WINHTTP_HEADER_NAME*, void*, uint*, WINHTTP_EXTENDED_HEADER**, uint*);
-uint WinHttpQueryConnectionGroup(void*, const(GUID)*, ulong, WINHTTP_QUERY_CONNECTION_GROUP_RESULT**);
-void WinHttpFreeQueryConnectionGroupResult(WINHTTP_QUERY_CONNECTION_GROUP_RESULT*);
-BOOL WinHttpDetectAutoProxyConfigUrl(uint, PWSTR*);
-BOOL WinHttpGetProxyForUrl(void*, const(wchar)*, WINHTTP_AUTOPROXY_OPTIONS*, WINHTTP_PROXY_INFO*);
-uint WinHttpCreateProxyResolver(void*, void**);
-uint WinHttpGetProxyForUrlEx(void*, const(wchar)*, WINHTTP_AUTOPROXY_OPTIONS*, ulong);
-uint WinHttpGetProxyForUrlEx2(void*, const(wchar)*, WINHTTP_AUTOPROXY_OPTIONS*, uint, ubyte*, ulong);
-uint WinHttpGetProxyResult(void*, WINHTTP_PROXY_RESULT*);
-uint WinHttpGetProxyResultEx(void*, WINHTTP_PROXY_RESULT_EX*);
-void WinHttpFreeProxyResult(WINHTTP_PROXY_RESULT*);
-void WinHttpFreeProxyResultEx(WINHTTP_PROXY_RESULT_EX*);
-uint WinHttpResetAutoProxy(void*, uint);
-BOOL WinHttpGetIEProxyConfigForCurrentUser(WINHTTP_CURRENT_USER_IE_PROXY_CONFIG*);
-uint WinHttpWriteProxySettings(void*, BOOL, WINHTTP_PROXY_SETTINGS*);
-uint WinHttpReadProxySettings(void*, const(wchar)*, BOOL, BOOL, uint*, BOOL*, WINHTTP_PROXY_SETTINGS*);
-void WinHttpFreeProxySettings(WINHTTP_PROXY_SETTINGS*);
-uint WinHttpGetProxySettingsVersion(void*, uint*);
-uint WinHttpSetProxySettingsPerUser(BOOL);
-void* WinHttpWebSocketCompleteUpgrade(void*, ulong);
-uint WinHttpWebSocketSend(void*, WINHTTP_WEB_SOCKET_BUFFER_TYPE, void*, uint);
-uint WinHttpWebSocketReceive(void*, void*, uint, uint*, WINHTTP_WEB_SOCKET_BUFFER_TYPE*);
-uint WinHttpWebSocketShutdown(void*, ushort, void*, uint);
-uint WinHttpWebSocketClose(void*, ushort, void*, uint);
-uint WinHttpWebSocketQueryCloseStatus(void*, ushort*, void*, uint, uint*);
-uint WinHttpRegisterProxyChangeNotification(ulong, WINHTTP_PROXY_CHANGE_CALLBACK, void*, void**);
-uint WinHttpUnregisterProxyChangeNotification(void*);
-uint WinHttpGetProxySettingsEx(void*, WINHTTP_PROXY_SETTINGS_TYPE, WINHTTP_PROXY_SETTINGS_PARAM*, ulong);
-uint WinHttpGetProxySettingsResultEx(void*, void*);
-uint WinHttpFreeProxySettingsEx(WINHTTP_PROXY_SETTINGS_TYPE, void*);
+BOOL WinHttpGetDefaultProxyConfiguration(WINHTTP_PROXY_INFO* pProxyInfo);
+BOOL WinHttpSetDefaultProxyConfiguration(WINHTTP_PROXY_INFO* pProxyInfo);
+void* WinHttpOpen(const(wchar)* pszAgentW, WINHTTP_ACCESS_TYPE dwAccessType, const(wchar)* pszProxyW, const(wchar)* pszProxyBypassW, uint dwFlags);
+BOOL WinHttpCloseHandle(void* hInternet);
+void* WinHttpConnect(void* hSession, const(wchar)* pswzServerName, ushort nServerPort, uint dwReserved);
+BOOL WinHttpReadData(void* hRequest, void* lpBuffer, uint dwNumberOfBytesToRead, uint* lpdwNumberOfBytesRead);
+uint WinHttpReadDataEx(void* hRequest, void* lpBuffer, uint dwNumberOfBytesToRead, uint* lpdwNumberOfBytesRead, ulong ullFlags, uint cbProperty, void* pvProperty);
+BOOL WinHttpWriteData(void* hRequest, const(void)* lpBuffer, uint dwNumberOfBytesToWrite, uint* lpdwNumberOfBytesWritten);
+BOOL WinHttpQueryDataAvailable(void* hRequest, uint* lpdwNumberOfBytesAvailable);
+BOOL WinHttpQueryOption(void* hInternet, uint dwOption, void* lpBuffer, uint* lpdwBufferLength);
+BOOL WinHttpSetOption(void* hInternet, uint dwOption, void* lpBuffer, uint dwBufferLength);
+BOOL WinHttpSetTimeouts(void* hInternet, int nResolveTimeout, int nConnectTimeout, int nSendTimeout, int nReceiveTimeout);
+void* WinHttpOpenRequest(void* hConnect, const(wchar)* pwszVerb, const(wchar)* pwszObjectName, const(wchar)* pwszVersion, const(wchar)* pwszReferrer, const(wchar)** ppwszAcceptTypes, WINHTTP_OPEN_REQUEST_FLAGS dwFlags);
+BOOL WinHttpAddRequestHeaders(void* hRequest, const(wchar)* lpszHeaders, uint dwHeadersLength, uint dwModifiers);
+uint WinHttpAddRequestHeadersEx(void* hRequest, uint dwModifiers, ulong ullFlags, ulong ullExtra, uint cHeaders, WINHTTP_EXTENDED_HEADER* pHeaders);
+BOOL WinHttpSendRequest(void* hRequest, const(wchar)* lpszHeaders, uint dwHeadersLength, void* lpOptional, uint dwOptionalLength, uint dwTotalLength, ulong dwContext);
+BOOL WinHttpSetCredentials(void* hRequest, uint AuthTargets, uint AuthScheme, const(wchar)* pwszUserName, const(wchar)* pwszPassword, void* pAuthParams);
+BOOL WinHttpQueryAuthSchemes(void* hRequest, uint* lpdwSupportedSchemes, uint* lpdwFirstScheme, uint* pdwAuthTarget);
+BOOL WinHttpReceiveResponse(void* hRequest, void* lpReserved);
+BOOL WinHttpQueryHeaders(void* hRequest, uint dwInfoLevel, const(wchar)* pwszName, void* lpBuffer, uint* lpdwBufferLength, uint* lpdwIndex);
+uint WinHttpQueryHeadersEx(void* hRequest, uint dwInfoLevel, ulong ullFlags, uint uiCodePage, uint* pdwIndex, WINHTTP_HEADER_NAME* pHeaderName, void* pBuffer, uint* pdwBufferLength, WINHTTP_EXTENDED_HEADER** ppHeaders, uint* pdwHeadersCount);
+uint WinHttpQueryConnectionGroup(void* hInternet, const(GUID)* pGuidConnection, ulong ullFlags, WINHTTP_QUERY_CONNECTION_GROUP_RESULT** ppResult);
+void WinHttpFreeQueryConnectionGroupResult(WINHTTP_QUERY_CONNECTION_GROUP_RESULT* pResult);
+BOOL WinHttpDetectAutoProxyConfigUrl(uint dwAutoDetectFlags, PWSTR* ppwstrAutoConfigUrl);
+BOOL WinHttpGetProxyForUrl(void* hSession, const(wchar)* lpcwszUrl, WINHTTP_AUTOPROXY_OPTIONS* pAutoProxyOptions, WINHTTP_PROXY_INFO* pProxyInfo);
+uint WinHttpCreateProxyResolver(void* hSession, void** phResolver);
+uint WinHttpGetProxyForUrlEx(void* hResolver, const(wchar)* pcwszUrl, WINHTTP_AUTOPROXY_OPTIONS* pAutoProxyOptions, ulong pContext);
+uint WinHttpGetProxyForUrlEx2(void* hResolver, const(wchar)* pcwszUrl, WINHTTP_AUTOPROXY_OPTIONS* pAutoProxyOptions, uint cbInterfaceSelectionContext, ubyte* pInterfaceSelectionContext, ulong pContext);
+uint WinHttpGetProxyResult(void* hResolver, WINHTTP_PROXY_RESULT* pProxyResult);
+uint WinHttpGetProxyResultEx(void* hResolver, WINHTTP_PROXY_RESULT_EX* pProxyResultEx);
+void WinHttpFreeProxyResult(WINHTTP_PROXY_RESULT* pProxyResult);
+void WinHttpFreeProxyResultEx(WINHTTP_PROXY_RESULT_EX* pProxyResultEx);
+uint WinHttpResetAutoProxy(void* hSession, uint dwFlags);
+BOOL WinHttpGetIEProxyConfigForCurrentUser(WINHTTP_CURRENT_USER_IE_PROXY_CONFIG* pProxyConfig);
+uint WinHttpWriteProxySettings(void* hSession, BOOL fForceUpdate, WINHTTP_PROXY_SETTINGS* pWinHttpProxySettings);
+uint WinHttpReadProxySettings(void* hSession, const(wchar)* pcwszConnectionName, BOOL fFallBackToDefaultSettings, BOOL fSetAutoDiscoverForDefaultSettings, uint* pdwSettingsVersion, BOOL* pfDefaultSettingsAreReturned, WINHTTP_PROXY_SETTINGS* pWinHttpProxySettings);
+void WinHttpFreeProxySettings(WINHTTP_PROXY_SETTINGS* pWinHttpProxySettings);
+uint WinHttpGetProxySettingsVersion(void* hSession, uint* pdwProxySettingsVersion);
+uint WinHttpSetProxySettingsPerUser(BOOL fProxySettingsPerUser);
+void* WinHttpWebSocketCompleteUpgrade(void* hRequest, ulong pContext);
+uint WinHttpWebSocketSend(void* hWebSocket, WINHTTP_WEB_SOCKET_BUFFER_TYPE eBufferType, void* pvBuffer, uint dwBufferLength);
+uint WinHttpWebSocketReceive(void* hWebSocket, void* pvBuffer, uint dwBufferLength, uint* pdwBytesRead, WINHTTP_WEB_SOCKET_BUFFER_TYPE* peBufferType);
+uint WinHttpWebSocketShutdown(void* hWebSocket, ushort usStatus, void* pvReason, uint dwReasonLength);
+uint WinHttpWebSocketClose(void* hWebSocket, ushort usStatus, void* pvReason, uint dwReasonLength);
+uint WinHttpWebSocketQueryCloseStatus(void* hWebSocket, ushort* pusStatus, void* pvReason, uint dwReasonLength, uint* pdwReasonLengthConsumed);
+uint WinHttpRegisterProxyChangeNotification(ulong ullFlags, WINHTTP_PROXY_CHANGE_CALLBACK pfnCallback, void* pvContext, void** hRegistration);
+uint WinHttpUnregisterProxyChangeNotification(void* hRegistration);
+uint WinHttpGetProxySettingsEx(void* hResolver, WINHTTP_PROXY_SETTINGS_TYPE ProxySettingsType, WINHTTP_PROXY_SETTINGS_PARAM* pProxySettingsParam, ulong pContext);
+uint WinHttpGetProxySettingsResultEx(void* hResolver, void* pProxySettingsEx);
+uint WinHttpFreeProxySettingsEx(WINHTTP_PROXY_SETTINGS_TYPE ProxySettingsType, void* pProxySettingsEx);
 enum HTTPREQUEST_PROXYSETTING_DEFAULT = 0x00000000;
 enum HTTPREQUEST_PROXYSETTING_PRECONFIG = 0x00000000;
 enum HTTPREQUEST_PROXYSETTING_DIRECT = 0x00000001;
@@ -999,7 +999,7 @@ struct WINHTTP_CREDS_EX
     uint dwPort;
     PSTR lpszUrl;
 }
-alias WINHTTP_STATUS_CALLBACK = void function(void*, ulong, uint, void*, uint);
+alias WINHTTP_STATUS_CALLBACK = void function(void* hInternet, ulong dwContext, uint dwInternetStatus, void* lpvStatusInformation, uint dwStatusInformationLength);
 struct WINHTTP_CURRENT_USER_IE_PROXY_CONFIG
 {
     BOOL fAutoDetect;
@@ -1053,7 +1053,7 @@ struct WINHTTP_WEB_SOCKET_STATUS
     uint dwBytesTransferred;
     WINHTTP_WEB_SOCKET_BUFFER_TYPE eBufferType;
 }
-alias WINHTTP_PROXY_CHANGE_CALLBACK = void function(ulong, void*);
+alias WINHTTP_PROXY_CHANGE_CALLBACK = void function(ulong ullFlags, void* pvContext);
 alias WINHTTP_PROXY_SETTINGS_TYPE = int;
 enum : int
 {
@@ -1141,33 +1141,33 @@ enum : int
 enum IID_IWinHttpRequest = GUID(0x16fe2ec, 0xb2c8, 0x45f8, [0xb2, 0x3b, 0x39, 0xe5, 0x3a, 0x75, 0x39, 0x6b]);
 interface IWinHttpRequest : IDispatch
 {
-    HRESULT SetProxy(int, VARIANT, VARIANT);
-    HRESULT SetCredentials(BSTR, BSTR, int);
-    HRESULT Open(BSTR, BSTR, VARIANT);
-    HRESULT SetRequestHeader(BSTR, BSTR);
-    HRESULT GetResponseHeader(BSTR, BSTR*);
-    HRESULT GetAllResponseHeaders(BSTR*);
-    HRESULT Send(VARIANT);
-    HRESULT get_Status(int*);
-    HRESULT get_StatusText(BSTR*);
-    HRESULT get_ResponseText(BSTR*);
-    HRESULT get_ResponseBody(VARIANT*);
-    HRESULT get_ResponseStream(VARIANT*);
-    HRESULT get_Option(WinHttpRequestOption, VARIANT*);
-    HRESULT put_Option(WinHttpRequestOption, VARIANT);
-    HRESULT WaitForResponse(VARIANT, VARIANT_BOOL*);
+    HRESULT SetProxy(int ProxySetting, VARIANT ProxyServer, VARIANT BypassList);
+    HRESULT SetCredentials(BSTR UserName, BSTR Password, int Flags);
+    HRESULT Open(BSTR Method, BSTR Url, VARIANT Async);
+    HRESULT SetRequestHeader(BSTR Header, BSTR Value);
+    HRESULT GetResponseHeader(BSTR Header, BSTR* Value);
+    HRESULT GetAllResponseHeaders(BSTR* Headers);
+    HRESULT Send(VARIANT Body);
+    HRESULT get_Status(int* Status);
+    HRESULT get_StatusText(BSTR* Status);
+    HRESULT get_ResponseText(BSTR* Body);
+    HRESULT get_ResponseBody(VARIANT* Body);
+    HRESULT get_ResponseStream(VARIANT* Body);
+    HRESULT get_Option(WinHttpRequestOption Option, VARIANT* Value);
+    HRESULT put_Option(WinHttpRequestOption Option, VARIANT Value);
+    HRESULT WaitForResponse(VARIANT Timeout, VARIANT_BOOL* Succeeded);
     HRESULT Abort();
-    HRESULT SetTimeouts(int, int, int, int);
-    HRESULT SetClientCertificate(BSTR);
-    HRESULT SetAutoLogonPolicy(WinHttpRequestAutoLogonPolicy);
+    HRESULT SetTimeouts(int ResolveTimeout, int ConnectTimeout, int SendTimeout, int ReceiveTimeout);
+    HRESULT SetClientCertificate(BSTR ClientCertificate);
+    HRESULT SetAutoLogonPolicy(WinHttpRequestAutoLogonPolicy AutoLogonPolicy);
 }
 enum IID_IWinHttpRequestEvents = GUID(0xf97f4e15, 0xb787, 0x4212, [0x80, 0xd1, 0xd3, 0x80, 0xcb, 0xbf, 0x98, 0x2e]);
 interface IWinHttpRequestEvents : IUnknown
 {
-    void OnResponseStart(int, BSTR);
-    void OnResponseDataAvailable(SAFEARRAY**);
+    void OnResponseStart(int Status, BSTR ContentType);
+    void OnResponseDataAvailable(SAFEARRAY** Data);
     void OnResponseFinished();
-    void OnError(int, BSTR);
+    void OnError(int ErrorNumber, BSTR ErrorDescription);
 }
 enum CLSID_WinHttpRequest = GUID(0x2087c2f4, 0x2cef, 0x4953, [0xa8, 0xab, 0x66, 0x77, 0x9b, 0x67, 0x4, 0x95]);
 struct WinHttpRequest

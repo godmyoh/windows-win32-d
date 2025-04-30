@@ -11,34 +11,34 @@ import windows.win32.ui.controls : NMHDR;
 version (Windows):
 extern (Windows):
 
-alias PfnRecoCallback = HRESULT function(uint, ubyte*, HRECOCONTEXT);
-HRESULT CreateRecognizer(GUID*, HRECOGNIZER*);
-HRESULT DestroyRecognizer(HRECOGNIZER);
-HRESULT GetRecoAttributes(HRECOGNIZER, RECO_ATTRS*);
-HRESULT CreateContext(HRECOGNIZER, HRECOCONTEXT*);
-HRESULT DestroyContext(HRECOCONTEXT);
-HRESULT GetResultPropertyList(HRECOGNIZER, uint*, GUID*);
-HRESULT GetUnicodeRanges(HRECOGNIZER, uint*, CHARACTER_RANGE*);
-HRESULT AddStroke(HRECOCONTEXT, const(PACKET_DESCRIPTION)*, uint, const(ubyte)*, const(XFORM)*);
-HRESULT GetBestResultString(HRECOCONTEXT, uint*, PWSTR);
-HRESULT SetGuide(HRECOCONTEXT, const(RECO_GUIDE)*, uint);
-HRESULT AdviseInkChange(HRECOCONTEXT, BOOL);
-HRESULT EndInkInput(HRECOCONTEXT);
-HRESULT Process(HRECOCONTEXT, BOOL*);
-HRESULT SetFactoid(HRECOCONTEXT, uint, const(wchar)*);
-HRESULT SetFlags(HRECOCONTEXT, uint);
-HRESULT GetLatticePtr(HRECOCONTEXT, RECO_LATTICE**);
-HRESULT SetTextContext(HRECOCONTEXT, uint, const(wchar)*, uint, const(wchar)*);
-HRESULT SetEnabledUnicodeRanges(HRECOCONTEXT, uint, CHARACTER_RANGE*);
-HRESULT IsStringSupported(HRECOCONTEXT, uint, const(wchar)*);
-HRESULT SetWordList(HRECOCONTEXT, HRECOWORDLIST);
-HRESULT GetRightSeparator(HRECOCONTEXT, uint*, PWSTR);
-HRESULT GetLeftSeparator(HRECOCONTEXT, uint*, PWSTR);
-HRESULT DestroyWordList(HRECOWORDLIST);
-HRESULT AddWordsToWordList(HRECOWORDLIST, PWSTR);
-HRESULT MakeWordList(HRECOGNIZER, PWSTR, HRECOWORDLIST*);
-HRESULT GetAllRecognizers(GUID**, uint*);
-HRESULT LoadCachedAttributes(GUID, RECO_ATTRS*);
+alias PfnRecoCallback = HRESULT function(uint param0, ubyte* param1, HRECOCONTEXT param2);
+HRESULT CreateRecognizer(GUID* pCLSID, HRECOGNIZER* phrec);
+HRESULT DestroyRecognizer(HRECOGNIZER hrec);
+HRESULT GetRecoAttributes(HRECOGNIZER hrec, RECO_ATTRS* pRecoAttrs);
+HRESULT CreateContext(HRECOGNIZER hrec, HRECOCONTEXT* phrc);
+HRESULT DestroyContext(HRECOCONTEXT hrc);
+HRESULT GetResultPropertyList(HRECOGNIZER hrec, uint* pPropertyCount, GUID* pPropertyGuid);
+HRESULT GetUnicodeRanges(HRECOGNIZER hrec, uint* pcRanges, CHARACTER_RANGE* pcr);
+HRESULT AddStroke(HRECOCONTEXT hrc, const(PACKET_DESCRIPTION)* pPacketDesc, uint cbPacket, const(ubyte)* pPacket, const(XFORM)* pXForm);
+HRESULT GetBestResultString(HRECOCONTEXT hrc, uint* pcSize, PWSTR pwcBestResult);
+HRESULT SetGuide(HRECOCONTEXT hrc, const(RECO_GUIDE)* pGuide, uint iIndex);
+HRESULT AdviseInkChange(HRECOCONTEXT hrc, BOOL bNewStroke);
+HRESULT EndInkInput(HRECOCONTEXT hrc);
+HRESULT Process(HRECOCONTEXT hrc, BOOL* pbPartialProcessing);
+HRESULT SetFactoid(HRECOCONTEXT hrc, uint cwcFactoid, const(wchar)* pwcFactoid);
+HRESULT SetFlags(HRECOCONTEXT hrc, uint dwFlags);
+HRESULT GetLatticePtr(HRECOCONTEXT hrc, RECO_LATTICE** ppLattice);
+HRESULT SetTextContext(HRECOCONTEXT hrc, uint cwcBefore, const(wchar)* pwcBefore, uint cwcAfter, const(wchar)* pwcAfter);
+HRESULT SetEnabledUnicodeRanges(HRECOCONTEXT hrc, uint cRanges, CHARACTER_RANGE* pcr);
+HRESULT IsStringSupported(HRECOCONTEXT hrc, uint wcString, const(wchar)* pwcString);
+HRESULT SetWordList(HRECOCONTEXT hrc, HRECOWORDLIST hwl);
+HRESULT GetRightSeparator(HRECOCONTEXT hrc, uint* pcSize, PWSTR pwcRightSeparator);
+HRESULT GetLeftSeparator(HRECOCONTEXT hrc, uint* pcSize, PWSTR pwcLeftSeparator);
+HRESULT DestroyWordList(HRECOWORDLIST hwl);
+HRESULT AddWordsToWordList(HRECOWORDLIST hwl, PWSTR pwcWords);
+HRESULT MakeWordList(HRECOGNIZER hrec, PWSTR pBuffer, HRECOWORDLIST* phwl);
+HRESULT GetAllRecognizers(GUID** recognizerClsids, uint* count);
+HRESULT LoadCachedAttributes(GUID clsid, RECO_ATTRS* pRecoAttributes);
 enum MICROSOFT_URL_EXPERIENCE_PROPERTY = "Microsoft TIP URL Experience";
 enum MICROSOFT_TIP_NO_INSERT_BUTTON_PROPERTY = "Microsoft TIP No Insert Option";
 enum MICROSOFT_TIP_COMBOBOXLIST_PROPERTY = "Microsoft TIP ComboBox List Window Identifier";
@@ -1362,225 +1362,225 @@ enum : int
 enum IID_IInkRectangle = GUID(0x9794ff82, 0x6071, 0x4717, [0x8a, 0x8b, 0x6a, 0xc7, 0xc6, 0x4a, 0x68, 0x6e]);
 interface IInkRectangle : IDispatch
 {
-    HRESULT get_Top(int*);
-    HRESULT put_Top(int);
-    HRESULT get_Left(int*);
-    HRESULT put_Left(int);
-    HRESULT get_Bottom(int*);
-    HRESULT put_Bottom(int);
-    HRESULT get_Right(int*);
-    HRESULT put_Right(int);
-    HRESULT get_Data(RECT*);
-    HRESULT put_Data(RECT);
-    HRESULT GetRectangle(int*, int*, int*, int*);
-    HRESULT SetRectangle(int, int, int, int);
+    HRESULT get_Top(int* Units);
+    HRESULT put_Top(int Units);
+    HRESULT get_Left(int* Units);
+    HRESULT put_Left(int Units);
+    HRESULT get_Bottom(int* Units);
+    HRESULT put_Bottom(int Units);
+    HRESULT get_Right(int* Units);
+    HRESULT put_Right(int Units);
+    HRESULT get_Data(RECT* Rect);
+    HRESULT put_Data(RECT Rect);
+    HRESULT GetRectangle(int* Top, int* Left, int* Bottom, int* Right);
+    HRESULT SetRectangle(int Top, int Left, int Bottom, int Right);
 }
 enum IID_IInkExtendedProperty = GUID(0xdb489209, 0xb7c3, 0x411d, [0x90, 0xf6, 0x15, 0x48, 0xcf, 0xff, 0x27, 0x1e]);
 interface IInkExtendedProperty : IDispatch
 {
-    HRESULT get_Guid(BSTR*);
-    HRESULT get_Data(VARIANT*);
-    HRESULT put_Data(VARIANT);
+    HRESULT get_Guid(BSTR* Guid);
+    HRESULT get_Data(VARIANT* Data);
+    HRESULT put_Data(VARIANT Data);
 }
 enum IID_IInkExtendedProperties = GUID(0x89f2a8be, 0x95a9, 0x4530, [0x8b, 0x8f, 0x88, 0xe9, 0x71, 0xe3, 0xe2, 0x5f]);
 interface IInkExtendedProperties : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Item(VARIANT, IInkExtendedProperty*);
-    HRESULT Add(BSTR, VARIANT, IInkExtendedProperty*);
-    HRESULT Remove(VARIANT);
+    HRESULT get_Count(int* Count);
+    HRESULT get__NewEnum(IUnknown* _NewEnum);
+    HRESULT Item(VARIANT Identifier, IInkExtendedProperty* Item);
+    HRESULT Add(BSTR Guid, VARIANT Data, IInkExtendedProperty* InkExtendedProperty);
+    HRESULT Remove(VARIANT Identifier);
     HRESULT Clear();
-    HRESULT DoesPropertyExist(BSTR, VARIANT_BOOL*);
+    HRESULT DoesPropertyExist(BSTR Guid, VARIANT_BOOL* DoesPropertyExist);
 }
 enum IID_IInkDrawingAttributes = GUID(0xbf519b75, 0xa15, 0x4623, [0xad, 0xc9, 0xc0, 0xd, 0x43, 0x6a, 0x80, 0x92]);
 interface IInkDrawingAttributes : IDispatch
 {
-    HRESULT get_Color(int*);
-    HRESULT put_Color(int);
-    HRESULT get_Width(float*);
-    HRESULT put_Width(float);
-    HRESULT get_Height(float*);
-    HRESULT put_Height(float);
-    HRESULT get_FitToCurve(VARIANT_BOOL*);
-    HRESULT put_FitToCurve(VARIANT_BOOL);
-    HRESULT get_IgnorePressure(VARIANT_BOOL*);
-    HRESULT put_IgnorePressure(VARIANT_BOOL);
-    HRESULT get_AntiAliased(VARIANT_BOOL*);
-    HRESULT put_AntiAliased(VARIANT_BOOL);
-    HRESULT get_Transparency(int*);
-    HRESULT put_Transparency(int);
-    HRESULT get_RasterOperation(InkRasterOperation*);
-    HRESULT put_RasterOperation(InkRasterOperation);
-    HRESULT get_PenTip(InkPenTip*);
-    HRESULT put_PenTip(InkPenTip);
-    HRESULT get_ExtendedProperties(IInkExtendedProperties*);
-    HRESULT Clone(IInkDrawingAttributes*);
+    HRESULT get_Color(int* CurrentColor);
+    HRESULT put_Color(int NewColor);
+    HRESULT get_Width(float* CurrentWidth);
+    HRESULT put_Width(float NewWidth);
+    HRESULT get_Height(float* CurrentHeight);
+    HRESULT put_Height(float NewHeight);
+    HRESULT get_FitToCurve(VARIANT_BOOL* Flag);
+    HRESULT put_FitToCurve(VARIANT_BOOL Flag);
+    HRESULT get_IgnorePressure(VARIANT_BOOL* Flag);
+    HRESULT put_IgnorePressure(VARIANT_BOOL Flag);
+    HRESULT get_AntiAliased(VARIANT_BOOL* Flag);
+    HRESULT put_AntiAliased(VARIANT_BOOL Flag);
+    HRESULT get_Transparency(int* CurrentTransparency);
+    HRESULT put_Transparency(int NewTransparency);
+    HRESULT get_RasterOperation(InkRasterOperation* CurrentRasterOperation);
+    HRESULT put_RasterOperation(InkRasterOperation NewRasterOperation);
+    HRESULT get_PenTip(InkPenTip* CurrentPenTip);
+    HRESULT put_PenTip(InkPenTip NewPenTip);
+    HRESULT get_ExtendedProperties(IInkExtendedProperties* Properties);
+    HRESULT Clone(IInkDrawingAttributes* DrawingAttributes);
 }
 enum IID_IInkTransform = GUID(0x615f1d43, 0x8703, 0x4565, [0x88, 0xe2, 0x82, 0x1, 0xd2, 0xec, 0xd7, 0xb7]);
 interface IInkTransform : IDispatch
 {
     HRESULT Reset();
-    HRESULT Translate(float, float);
-    HRESULT Rotate(float, float, float);
-    HRESULT Reflect(VARIANT_BOOL, VARIANT_BOOL);
-    HRESULT Shear(float, float);
-    HRESULT ScaleTransform(float, float);
-    HRESULT GetTransform(float*, float*, float*, float*, float*, float*);
-    HRESULT SetTransform(float, float, float, float, float, float);
-    HRESULT get_eM11(float*);
-    HRESULT put_eM11(float);
-    HRESULT get_eM12(float*);
-    HRESULT put_eM12(float);
-    HRESULT get_eM21(float*);
-    HRESULT put_eM21(float);
-    HRESULT get_eM22(float*);
-    HRESULT put_eM22(float);
-    HRESULT get_eDx(float*);
-    HRESULT put_eDx(float);
-    HRESULT get_eDy(float*);
-    HRESULT put_eDy(float);
-    HRESULT get_Data(XFORM*);
-    HRESULT put_Data(XFORM);
+    HRESULT Translate(float HorizontalComponent, float VerticalComponent);
+    HRESULT Rotate(float Degrees, float x, float y);
+    HRESULT Reflect(VARIANT_BOOL Horizontally, VARIANT_BOOL Vertically);
+    HRESULT Shear(float HorizontalComponent, float VerticalComponent);
+    HRESULT ScaleTransform(float HorizontalMultiplier, float VerticalMultiplier);
+    HRESULT GetTransform(float* eM11, float* eM12, float* eM21, float* eM22, float* eDx, float* eDy);
+    HRESULT SetTransform(float eM11, float eM12, float eM21, float eM22, float eDx, float eDy);
+    HRESULT get_eM11(float* Value);
+    HRESULT put_eM11(float Value);
+    HRESULT get_eM12(float* Value);
+    HRESULT put_eM12(float Value);
+    HRESULT get_eM21(float* Value);
+    HRESULT put_eM21(float Value);
+    HRESULT get_eM22(float* Value);
+    HRESULT put_eM22(float Value);
+    HRESULT get_eDx(float* Value);
+    HRESULT put_eDx(float Value);
+    HRESULT get_eDy(float* Value);
+    HRESULT put_eDy(float Value);
+    HRESULT get_Data(XFORM* XForm);
+    HRESULT put_Data(XFORM XForm);
 }
 enum IID_IInkGesture = GUID(0x3bdc0a97, 0x4e5, 0x4e26, [0xb8, 0x13, 0x18, 0xf0, 0x52, 0xd4, 0x1d, 0xef]);
 interface IInkGesture : IDispatch
 {
-    HRESULT get_Confidence(InkRecognitionConfidence*);
-    HRESULT get_Id(InkApplicationGesture*);
-    HRESULT GetHotPoint(int*, int*);
+    HRESULT get_Confidence(InkRecognitionConfidence* Confidence);
+    HRESULT get_Id(InkApplicationGesture* Id);
+    HRESULT GetHotPoint(int* X, int* Y);
 }
 enum IID_IInkCursor = GUID(0xad30c630, 0x40c5, 0x4350, [0x84, 0x5, 0x9c, 0x71, 0x1, 0x2f, 0xc5, 0x58]);
 interface IInkCursor : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Id(int*);
-    HRESULT get_Inverted(VARIANT_BOOL*);
-    HRESULT get_DrawingAttributes(IInkDrawingAttributes*);
-    HRESULT putref_DrawingAttributes(IInkDrawingAttributes);
-    HRESULT get_Tablet(IInkTablet*);
-    HRESULT get_Buttons(IInkCursorButtons*);
+    HRESULT get_Name(BSTR* Name);
+    HRESULT get_Id(int* Id);
+    HRESULT get_Inverted(VARIANT_BOOL* Status);
+    HRESULT get_DrawingAttributes(IInkDrawingAttributes* Attributes);
+    HRESULT putref_DrawingAttributes(IInkDrawingAttributes Attributes);
+    HRESULT get_Tablet(IInkTablet* Tablet);
+    HRESULT get_Buttons(IInkCursorButtons* Buttons);
 }
 enum IID_IInkCursors = GUID(0xa248c1ac, 0xc698, 0x4e06, [0x9e, 0x5c, 0xd5, 0x7f, 0x77, 0xc7, 0xe6, 0x47]);
 interface IInkCursors : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Item(int, IInkCursor*);
+    HRESULT get_Count(int* Count);
+    HRESULT get__NewEnum(IUnknown* _NewEnum);
+    HRESULT Item(int Index, IInkCursor* Cursor);
 }
 enum IID_IInkCursorButton = GUID(0x85ef9417, 0x1d59, 0x49b2, [0xa1, 0x3c, 0x70, 0x2c, 0x85, 0x43, 0x8, 0x94]);
 interface IInkCursorButton : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Id(BSTR*);
-    HRESULT get_State(InkCursorButtonState*);
+    HRESULT get_Name(BSTR* Name);
+    HRESULT get_Id(BSTR* Id);
+    HRESULT get_State(InkCursorButtonState* CurrentState);
 }
 enum IID_IInkCursorButtons = GUID(0x3671cc40, 0xb624, 0x4671, [0x9f, 0xa0, 0xdb, 0x11, 0x9d, 0x95, 0x2d, 0x54]);
 interface IInkCursorButtons : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Item(VARIANT, IInkCursorButton*);
+    HRESULT get_Count(int* Count);
+    HRESULT get__NewEnum(IUnknown* _NewEnum);
+    HRESULT Item(VARIANT Identifier, IInkCursorButton* Button);
 }
 enum IID_IInkTablet = GUID(0x2de25eaa, 0x6ef8, 0x42d5, [0xae, 0xe9, 0x18, 0x5b, 0xc8, 0x1b, 0x91, 0x2d]);
 interface IInkTablet : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_PlugAndPlayId(BSTR*);
-    HRESULT get_MaximumInputRectangle(IInkRectangle*);
-    HRESULT get_HardwareCapabilities(TabletHardwareCapabilities*);
-    HRESULT IsPacketPropertySupported(BSTR, VARIANT_BOOL*);
-    HRESULT GetPropertyMetrics(BSTR, int*, int*, TabletPropertyMetricUnit*, float*);
+    HRESULT get_Name(BSTR* Name);
+    HRESULT get_PlugAndPlayId(BSTR* Id);
+    HRESULT get_MaximumInputRectangle(IInkRectangle* Rectangle);
+    HRESULT get_HardwareCapabilities(TabletHardwareCapabilities* Capabilities);
+    HRESULT IsPacketPropertySupported(BSTR packetPropertyName, VARIANT_BOOL* Supported);
+    HRESULT GetPropertyMetrics(BSTR propertyName, int* Minimum, int* Maximum, TabletPropertyMetricUnit* Units, float* Resolution);
 }
 enum IID_IInkTablet2 = GUID(0x90c91ad2, 0xfa36, 0x49d6, [0x95, 0x16, 0xce, 0x8d, 0x57, 0xf, 0x6f, 0x85]);
 interface IInkTablet2 : IDispatch
 {
-    HRESULT get_DeviceKind(TabletDeviceKind*);
+    HRESULT get_DeviceKind(TabletDeviceKind* Kind);
 }
 enum IID_IInkTablet3 = GUID(0x7e313997, 0x1327, 0x41dd, [0x8c, 0xa9, 0x79, 0xf2, 0x4b, 0xe1, 0x72, 0x50]);
 interface IInkTablet3 : IDispatch
 {
-    HRESULT get_IsMultiTouch(VARIANT_BOOL*);
-    HRESULT get_MaximumCursors(uint*);
+    HRESULT get_IsMultiTouch(VARIANT_BOOL* pIsMultiTouch);
+    HRESULT get_MaximumCursors(uint* pMaximumCursors);
 }
 enum IID_IInkTablets = GUID(0x112086d9, 0x7779, 0x4535, [0xa6, 0x99, 0x86, 0x2b, 0x43, 0xac, 0x18, 0x63]);
 interface IInkTablets : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_DefaultTablet(IInkTablet*);
-    HRESULT Item(int, IInkTablet*);
-    HRESULT IsPacketPropertySupported(BSTR, VARIANT_BOOL*);
+    HRESULT get_Count(int* Count);
+    HRESULT get__NewEnum(IUnknown* _NewEnum);
+    HRESULT get_DefaultTablet(IInkTablet* DefaultTablet);
+    HRESULT Item(int Index, IInkTablet* Tablet);
+    HRESULT IsPacketPropertySupported(BSTR packetPropertyName, VARIANT_BOOL* Supported);
 }
 enum IID_IInkStrokeDisp = GUID(0x43242fea, 0x91d1, 0x4a72, [0x96, 0x3e, 0xfb, 0xb9, 0x18, 0x29, 0xcf, 0xa2]);
 interface IInkStrokeDisp : IDispatch
 {
-    HRESULT get_ID(int*);
-    HRESULT get_BezierPoints(VARIANT*);
-    HRESULT get_DrawingAttributes(IInkDrawingAttributes*);
-    HRESULT putref_DrawingAttributes(IInkDrawingAttributes);
-    HRESULT get_Ink(IInkDisp*);
-    HRESULT get_ExtendedProperties(IInkExtendedProperties*);
-    HRESULT get_PolylineCusps(VARIANT*);
-    HRESULT get_BezierCusps(VARIANT*);
-    HRESULT get_SelfIntersections(VARIANT*);
-    HRESULT get_PacketCount(int*);
-    HRESULT get_PacketSize(int*);
-    HRESULT get_PacketDescription(VARIANT*);
-    HRESULT get_Deleted(VARIANT_BOOL*);
-    HRESULT GetBoundingBox(InkBoundingBoxMode, IInkRectangle*);
-    HRESULT FindIntersections(IInkStrokes, VARIANT*);
-    HRESULT GetRectangleIntersections(IInkRectangle, VARIANT*);
-    HRESULT Clip(IInkRectangle);
-    HRESULT HitTestCircle(int, int, float, VARIANT_BOOL*);
-    HRESULT NearestPoint(int, int, float*, float*);
-    HRESULT Split(float, IInkStrokeDisp*);
-    HRESULT GetPacketDescriptionPropertyMetrics(BSTR, int*, int*, TabletPropertyMetricUnit*, float*);
-    HRESULT GetPoints(int, int, VARIANT*);
-    HRESULT SetPoints(VARIANT, int, int, int*);
-    HRESULT GetPacketData(int, int, VARIANT*);
-    HRESULT GetPacketValuesByProperty(BSTR, int, int, VARIANT*);
-    HRESULT SetPacketValuesByProperty(BSTR, VARIANT, int, int, int*);
-    HRESULT GetFlattenedBezierPoints(int, VARIANT*);
-    HRESULT Transform(IInkTransform, VARIANT_BOOL);
-    HRESULT ScaleToRectangle(IInkRectangle);
-    HRESULT Move(float, float);
-    HRESULT Rotate(float, float, float);
-    HRESULT Shear(float, float);
-    HRESULT ScaleTransform(float, float);
+    HRESULT get_ID(int* ID);
+    HRESULT get_BezierPoints(VARIANT* Points);
+    HRESULT get_DrawingAttributes(IInkDrawingAttributes* DrawAttrs);
+    HRESULT putref_DrawingAttributes(IInkDrawingAttributes DrawAttrs);
+    HRESULT get_Ink(IInkDisp* Ink);
+    HRESULT get_ExtendedProperties(IInkExtendedProperties* Properties);
+    HRESULT get_PolylineCusps(VARIANT* Cusps);
+    HRESULT get_BezierCusps(VARIANT* Cusps);
+    HRESULT get_SelfIntersections(VARIANT* Intersections);
+    HRESULT get_PacketCount(int* plCount);
+    HRESULT get_PacketSize(int* plSize);
+    HRESULT get_PacketDescription(VARIANT* PacketDescription);
+    HRESULT get_Deleted(VARIANT_BOOL* Deleted);
+    HRESULT GetBoundingBox(InkBoundingBoxMode BoundingBoxMode, IInkRectangle* Rectangle);
+    HRESULT FindIntersections(IInkStrokes Strokes, VARIANT* Intersections);
+    HRESULT GetRectangleIntersections(IInkRectangle Rectangle, VARIANT* Intersections);
+    HRESULT Clip(IInkRectangle Rectangle);
+    HRESULT HitTestCircle(int X, int Y, float Radius, VARIANT_BOOL* Intersects);
+    HRESULT NearestPoint(int X, int Y, float* Distance, float* Point);
+    HRESULT Split(float SplitAt, IInkStrokeDisp* NewStroke);
+    HRESULT GetPacketDescriptionPropertyMetrics(BSTR PropertyName, int* Minimum, int* Maximum, TabletPropertyMetricUnit* Units, float* Resolution);
+    HRESULT GetPoints(int Index, int Count, VARIANT* Points);
+    HRESULT SetPoints(VARIANT Points, int Index, int Count, int* NumberOfPointsSet);
+    HRESULT GetPacketData(int Index, int Count, VARIANT* PacketData);
+    HRESULT GetPacketValuesByProperty(BSTR PropertyName, int Index, int Count, VARIANT* PacketValues);
+    HRESULT SetPacketValuesByProperty(BSTR bstrPropertyName, VARIANT PacketValues, int Index, int Count, int* NumberOfPacketsSet);
+    HRESULT GetFlattenedBezierPoints(int FittingError, VARIANT* FlattenedBezierPoints);
+    HRESULT Transform(IInkTransform Transform, VARIANT_BOOL ApplyOnPenWidth);
+    HRESULT ScaleToRectangle(IInkRectangle Rectangle);
+    HRESULT Move(float HorizontalComponent, float VerticalComponent);
+    HRESULT Rotate(float Degrees, float x, float y);
+    HRESULT Shear(float HorizontalMultiplier, float VerticalMultiplier);
+    HRESULT ScaleTransform(float HorizontalMultiplier, float VerticalMultiplier);
 }
 enum IID_IInkStrokes = GUID(0xf1f4c9d8, 0x590a, 0x4963, [0xb3, 0xae, 0x19, 0x35, 0x67, 0x1b, 0xb6, 0xf3]);
 interface IInkStrokes : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Ink(IInkDisp*);
-    HRESULT get_RecognitionResult(IInkRecognitionResult*);
-    HRESULT ToString(BSTR*);
-    HRESULT Item(int, IInkStrokeDisp*);
-    HRESULT Add(IInkStrokeDisp);
-    HRESULT AddStrokes(IInkStrokes);
-    HRESULT Remove(IInkStrokeDisp);
-    HRESULT RemoveStrokes(IInkStrokes);
-    HRESULT ModifyDrawingAttributes(IInkDrawingAttributes);
-    HRESULT GetBoundingBox(InkBoundingBoxMode, IInkRectangle*);
-    HRESULT Transform(IInkTransform, VARIANT_BOOL);
-    HRESULT ScaleToRectangle(IInkRectangle);
-    HRESULT Move(float, float);
-    HRESULT Rotate(float, float, float);
-    HRESULT Shear(float, float);
-    HRESULT ScaleTransform(float, float);
-    HRESULT Clip(IInkRectangle);
+    HRESULT get_Count(int* Count);
+    HRESULT get__NewEnum(IUnknown* _NewEnum);
+    HRESULT get_Ink(IInkDisp* Ink);
+    HRESULT get_RecognitionResult(IInkRecognitionResult* RecognitionResult);
+    HRESULT ToString(BSTR* ToString);
+    HRESULT Item(int Index, IInkStrokeDisp* Stroke);
+    HRESULT Add(IInkStrokeDisp InkStroke);
+    HRESULT AddStrokes(IInkStrokes InkStrokes);
+    HRESULT Remove(IInkStrokeDisp InkStroke);
+    HRESULT RemoveStrokes(IInkStrokes InkStrokes);
+    HRESULT ModifyDrawingAttributes(IInkDrawingAttributes DrawAttrs);
+    HRESULT GetBoundingBox(InkBoundingBoxMode BoundingBoxMode, IInkRectangle* BoundingBox);
+    HRESULT Transform(IInkTransform Transform, VARIANT_BOOL ApplyOnPenWidth);
+    HRESULT ScaleToRectangle(IInkRectangle Rectangle);
+    HRESULT Move(float HorizontalComponent, float VerticalComponent);
+    HRESULT Rotate(float Degrees, float x, float y);
+    HRESULT Shear(float HorizontalMultiplier, float VerticalMultiplier);
+    HRESULT ScaleTransform(float HorizontalMultiplier, float VerticalMultiplier);
+    HRESULT Clip(IInkRectangle Rectangle);
     HRESULT RemoveRecognitionResult();
 }
 enum IID_IInkCustomStrokes = GUID(0x7e23a88f, 0xc30e, 0x420f, [0x9b, 0xdb, 0x28, 0x90, 0x25, 0x43, 0xf0, 0xc1]);
 interface IInkCustomStrokes : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Item(VARIANT, IInkStrokes*);
-    HRESULT Add(BSTR, IInkStrokes);
-    HRESULT Remove(VARIANT);
+    HRESULT get_Count(int* Count);
+    HRESULT get__NewEnum(IUnknown* _NewEnum);
+    HRESULT Item(VARIANT Identifier, IInkStrokes* Strokes);
+    HRESULT Add(BSTR Name, IInkStrokes Strokes);
+    HRESULT Remove(VARIANT Identifier);
     HRESULT Clear();
 }
 enum IID__IInkStrokesEvents = GUID(0xf33053ec, 0x5d25, 0x430a, [0x92, 0x8f, 0x76, 0xa6, 0x49, 0x1d, 0xde, 0x15]);
@@ -1590,31 +1590,31 @@ interface _IInkStrokesEvents : IDispatch
 enum IID_IInkDisp = GUID(0x9d398fa0, 0xc4e2, 0x4fcd, [0x99, 0x73, 0x97, 0x5c, 0xaa, 0xf4, 0x7e, 0xa6]);
 interface IInkDisp : IDispatch
 {
-    HRESULT get_Strokes(IInkStrokes*);
-    HRESULT get_ExtendedProperties(IInkExtendedProperties*);
-    HRESULT get_Dirty(VARIANT_BOOL*);
-    HRESULT put_Dirty(VARIANT_BOOL);
-    HRESULT get_CustomStrokes(IInkCustomStrokes*);
-    HRESULT GetBoundingBox(InkBoundingBoxMode, IInkRectangle*);
-    HRESULT DeleteStrokes(IInkStrokes);
-    HRESULT DeleteStroke(IInkStrokeDisp);
-    HRESULT ExtractStrokes(IInkStrokes, InkExtractFlags, IInkDisp*);
-    HRESULT ExtractWithRectangle(IInkRectangle, InkExtractFlags, IInkDisp*);
-    HRESULT Clip(IInkRectangle);
-    HRESULT Clone(IInkDisp*);
-    HRESULT HitTestCircle(int, int, float, IInkStrokes*);
-    HRESULT HitTestWithRectangle(IInkRectangle, float, IInkStrokes*);
-    HRESULT HitTestWithLasso(VARIANT, float, VARIANT*, IInkStrokes*);
-    HRESULT NearestPoint(int, int, float*, float*, IInkStrokeDisp*);
-    HRESULT CreateStrokes(VARIANT, IInkStrokes*);
-    HRESULT AddStrokesAtRectangle(IInkStrokes, IInkRectangle);
-    HRESULT Save(InkPersistenceFormat, InkPersistenceCompressionMode, VARIANT*);
-    HRESULT Load(VARIANT);
-    HRESULT CreateStroke(VARIANT, VARIANT, IInkStrokeDisp*);
-    HRESULT ClipboardCopyWithRectangle(IInkRectangle, InkClipboardFormats, InkClipboardModes, IDataObject*);
-    HRESULT ClipboardCopy(IInkStrokes, InkClipboardFormats, InkClipboardModes, IDataObject*);
-    HRESULT CanPaste(IDataObject, VARIANT_BOOL*);
-    HRESULT ClipboardPaste(int, int, IDataObject, IInkStrokes*);
+    HRESULT get_Strokes(IInkStrokes* Strokes);
+    HRESULT get_ExtendedProperties(IInkExtendedProperties* Properties);
+    HRESULT get_Dirty(VARIANT_BOOL* Dirty);
+    HRESULT put_Dirty(VARIANT_BOOL Dirty);
+    HRESULT get_CustomStrokes(IInkCustomStrokes* ppunkInkCustomStrokes);
+    HRESULT GetBoundingBox(InkBoundingBoxMode BoundingBoxMode, IInkRectangle* Rectangle);
+    HRESULT DeleteStrokes(IInkStrokes Strokes);
+    HRESULT DeleteStroke(IInkStrokeDisp Stroke);
+    HRESULT ExtractStrokes(IInkStrokes Strokes, InkExtractFlags ExtractFlags, IInkDisp* ExtractedInk);
+    HRESULT ExtractWithRectangle(IInkRectangle Rectangle, InkExtractFlags extractFlags, IInkDisp* ExtractedInk);
+    HRESULT Clip(IInkRectangle Rectangle);
+    HRESULT Clone(IInkDisp* NewInk);
+    HRESULT HitTestCircle(int X, int Y, float radius, IInkStrokes* Strokes);
+    HRESULT HitTestWithRectangle(IInkRectangle SelectionRectangle, float IntersectPercent, IInkStrokes* Strokes);
+    HRESULT HitTestWithLasso(VARIANT Points, float IntersectPercent, VARIANT* LassoPoints, IInkStrokes* Strokes);
+    HRESULT NearestPoint(int X, int Y, float* PointOnStroke, float* DistanceFromPacket, IInkStrokeDisp* Stroke);
+    HRESULT CreateStrokes(VARIANT StrokeIds, IInkStrokes* Strokes);
+    HRESULT AddStrokesAtRectangle(IInkStrokes SourceStrokes, IInkRectangle TargetRectangle);
+    HRESULT Save(InkPersistenceFormat PersistenceFormat, InkPersistenceCompressionMode CompressionMode, VARIANT* Data);
+    HRESULT Load(VARIANT Data);
+    HRESULT CreateStroke(VARIANT PacketData, VARIANT PacketDescription, IInkStrokeDisp* Stroke);
+    HRESULT ClipboardCopyWithRectangle(IInkRectangle Rectangle, InkClipboardFormats ClipboardFormats, InkClipboardModes ClipboardModes, IDataObject* DataObject);
+    HRESULT ClipboardCopy(IInkStrokes strokes, InkClipboardFormats ClipboardFormats, InkClipboardModes ClipboardModes, IDataObject* DataObject);
+    HRESULT CanPaste(IDataObject DataObject, VARIANT_BOOL* CanPaste);
+    HRESULT ClipboardPaste(int x, int y, IDataObject DataObject, IInkStrokes* Strokes);
 }
 enum IID__IInkEvents = GUID(0x427b1865, 0xca3f, 0x479a, [0x83, 0xa9, 0xf, 0x42, 0xf, 0x2a, 0x0, 0x73]);
 interface _IInkEvents : IDispatch
@@ -1623,65 +1623,65 @@ interface _IInkEvents : IDispatch
 enum IID_IInkRenderer = GUID(0xe6257a9c, 0xb511, 0x4f4c, [0xa8, 0xb0, 0xa7, 0xdb, 0xc9, 0x50, 0x6b, 0x83]);
 interface IInkRenderer : IDispatch
 {
-    HRESULT GetViewTransform(IInkTransform);
-    HRESULT SetViewTransform(IInkTransform);
-    HRESULT GetObjectTransform(IInkTransform);
-    HRESULT SetObjectTransform(IInkTransform);
-    HRESULT Draw(long, IInkStrokes);
-    HRESULT DrawStroke(long, IInkStrokeDisp, IInkDrawingAttributes);
-    HRESULT PixelToInkSpace(long, int*, int*);
-    HRESULT InkSpaceToPixel(long, int*, int*);
-    HRESULT PixelToInkSpaceFromPoints(long, VARIANT*);
-    HRESULT InkSpaceToPixelFromPoints(long, VARIANT*);
-    HRESULT Measure(IInkStrokes, IInkRectangle*);
-    HRESULT MeasureStroke(IInkStrokeDisp, IInkDrawingAttributes, IInkRectangle*);
-    HRESULT Move(float, float);
-    HRESULT Rotate(float, float, float);
-    HRESULT ScaleTransform(float, float, VARIANT_BOOL);
+    HRESULT GetViewTransform(IInkTransform ViewTransform);
+    HRESULT SetViewTransform(IInkTransform ViewTransform);
+    HRESULT GetObjectTransform(IInkTransform ObjectTransform);
+    HRESULT SetObjectTransform(IInkTransform ObjectTransform);
+    HRESULT Draw(long hDC, IInkStrokes Strokes);
+    HRESULT DrawStroke(long hDC, IInkStrokeDisp Stroke, IInkDrawingAttributes DrawingAttributes);
+    HRESULT PixelToInkSpace(long hDC, int* x, int* y);
+    HRESULT InkSpaceToPixel(long hdcDisplay, int* x, int* y);
+    HRESULT PixelToInkSpaceFromPoints(long hDC, VARIANT* Points);
+    HRESULT InkSpaceToPixelFromPoints(long hDC, VARIANT* Points);
+    HRESULT Measure(IInkStrokes Strokes, IInkRectangle* Rectangle);
+    HRESULT MeasureStroke(IInkStrokeDisp Stroke, IInkDrawingAttributes DrawingAttributes, IInkRectangle* Rectangle);
+    HRESULT Move(float HorizontalComponent, float VerticalComponent);
+    HRESULT Rotate(float Degrees, float x, float y);
+    HRESULT ScaleTransform(float HorizontalMultiplier, float VerticalMultiplier, VARIANT_BOOL ApplyOnPenWidth);
 }
 enum IID_IInkCollector = GUID(0xf0f060b5, 0x8b1f, 0x4a7c, [0x89, 0xec, 0x88, 0x6, 0x92, 0x58, 0x8a, 0x4f]);
 interface IInkCollector : IDispatch
 {
-    HRESULT get_hWnd(long*);
-    HRESULT put_hWnd(long);
-    HRESULT get_Enabled(VARIANT_BOOL*);
-    HRESULT put_Enabled(VARIANT_BOOL);
-    HRESULT get_DefaultDrawingAttributes(IInkDrawingAttributes*);
-    HRESULT putref_DefaultDrawingAttributes(IInkDrawingAttributes);
-    HRESULT get_Renderer(IInkRenderer*);
-    HRESULT putref_Renderer(IInkRenderer);
-    HRESULT get_Ink(IInkDisp*);
-    HRESULT putref_Ink(IInkDisp);
-    HRESULT get_AutoRedraw(VARIANT_BOOL*);
-    HRESULT put_AutoRedraw(VARIANT_BOOL);
-    HRESULT get_CollectingInk(VARIANT_BOOL*);
-    HRESULT get_CollectionMode(InkCollectionMode*);
-    HRESULT put_CollectionMode(InkCollectionMode);
-    HRESULT get_DynamicRendering(VARIANT_BOOL*);
-    HRESULT put_DynamicRendering(VARIANT_BOOL);
-    HRESULT get_DesiredPacketDescription(VARIANT*);
-    HRESULT put_DesiredPacketDescription(VARIANT);
-    HRESULT get_MouseIcon(IPictureDisp*);
-    HRESULT put_MouseIcon(IPictureDisp);
-    HRESULT putref_MouseIcon(IPictureDisp);
-    HRESULT get_MousePointer(InkMousePointer*);
-    HRESULT put_MousePointer(InkMousePointer);
-    HRESULT get_Cursors(IInkCursors*);
-    HRESULT get_MarginX(int*);
-    HRESULT put_MarginX(int);
-    HRESULT get_MarginY(int*);
-    HRESULT put_MarginY(int);
-    HRESULT get_Tablet(IInkTablet*);
-    HRESULT get_SupportHighContrastInk(VARIANT_BOOL*);
-    HRESULT put_SupportHighContrastInk(VARIANT_BOOL);
-    HRESULT SetGestureStatus(InkApplicationGesture, VARIANT_BOOL);
-    HRESULT GetGestureStatus(InkApplicationGesture, VARIANT_BOOL*);
-    HRESULT GetWindowInputRectangle(IInkRectangle*);
-    HRESULT SetWindowInputRectangle(IInkRectangle);
-    HRESULT SetAllTabletsMode(VARIANT_BOOL);
-    HRESULT SetSingleTabletIntegratedMode(IInkTablet);
-    HRESULT GetEventInterest(InkCollectorEventInterest, VARIANT_BOOL*);
-    HRESULT SetEventInterest(InkCollectorEventInterest, VARIANT_BOOL);
+    HRESULT get_hWnd(long* CurrentWindow);
+    HRESULT put_hWnd(long NewWindow);
+    HRESULT get_Enabled(VARIANT_BOOL* Collecting);
+    HRESULT put_Enabled(VARIANT_BOOL Collecting);
+    HRESULT get_DefaultDrawingAttributes(IInkDrawingAttributes* CurrentAttributes);
+    HRESULT putref_DefaultDrawingAttributes(IInkDrawingAttributes NewAttributes);
+    HRESULT get_Renderer(IInkRenderer* CurrentInkRenderer);
+    HRESULT putref_Renderer(IInkRenderer NewInkRenderer);
+    HRESULT get_Ink(IInkDisp* Ink);
+    HRESULT putref_Ink(IInkDisp NewInk);
+    HRESULT get_AutoRedraw(VARIANT_BOOL* AutoRedraw);
+    HRESULT put_AutoRedraw(VARIANT_BOOL AutoRedraw);
+    HRESULT get_CollectingInk(VARIANT_BOOL* Collecting);
+    HRESULT get_CollectionMode(InkCollectionMode* Mode);
+    HRESULT put_CollectionMode(InkCollectionMode Mode);
+    HRESULT get_DynamicRendering(VARIANT_BOOL* Enabled);
+    HRESULT put_DynamicRendering(VARIANT_BOOL Enabled);
+    HRESULT get_DesiredPacketDescription(VARIANT* PacketGuids);
+    HRESULT put_DesiredPacketDescription(VARIANT PacketGuids);
+    HRESULT get_MouseIcon(IPictureDisp* MouseIcon);
+    HRESULT put_MouseIcon(IPictureDisp MouseIcon);
+    HRESULT putref_MouseIcon(IPictureDisp MouseIcon);
+    HRESULT get_MousePointer(InkMousePointer* MousePointer);
+    HRESULT put_MousePointer(InkMousePointer MousePointer);
+    HRESULT get_Cursors(IInkCursors* Cursors);
+    HRESULT get_MarginX(int* MarginX);
+    HRESULT put_MarginX(int MarginX);
+    HRESULT get_MarginY(int* MarginY);
+    HRESULT put_MarginY(int MarginY);
+    HRESULT get_Tablet(IInkTablet* SingleTablet);
+    HRESULT get_SupportHighContrastInk(VARIANT_BOOL* Support);
+    HRESULT put_SupportHighContrastInk(VARIANT_BOOL Support);
+    HRESULT SetGestureStatus(InkApplicationGesture Gesture, VARIANT_BOOL Listen);
+    HRESULT GetGestureStatus(InkApplicationGesture Gesture, VARIANT_BOOL* Listening);
+    HRESULT GetWindowInputRectangle(IInkRectangle* WindowInputRectangle);
+    HRESULT SetWindowInputRectangle(IInkRectangle WindowInputRectangle);
+    HRESULT SetAllTabletsMode(VARIANT_BOOL UseMouseForInput);
+    HRESULT SetSingleTabletIntegratedMode(IInkTablet Tablet);
+    HRESULT GetEventInterest(InkCollectorEventInterest EventId, VARIANT_BOOL* Listen);
+    HRESULT SetEventInterest(InkCollectorEventInterest EventId, VARIANT_BOOL Listen);
 }
 enum IID__IInkCollectorEvents = GUID(0x11a583f2, 0x712d, 0x4fea, [0xab, 0xcf, 0xab, 0x4a, 0xf3, 0x8e, 0xa0, 0x6b]);
 interface _IInkCollectorEvents : IDispatch
@@ -1690,60 +1690,60 @@ interface _IInkCollectorEvents : IDispatch
 enum IID_IInkOverlay = GUID(0xb82a463b, 0xc1c5, 0x45a3, [0x99, 0x7c, 0xde, 0xab, 0x56, 0x51, 0xb6, 0x7a]);
 interface IInkOverlay : IDispatch
 {
-    HRESULT get_hWnd(long*);
-    HRESULT put_hWnd(long);
-    HRESULT get_Enabled(VARIANT_BOOL*);
-    HRESULT put_Enabled(VARIANT_BOOL);
-    HRESULT get_DefaultDrawingAttributes(IInkDrawingAttributes*);
-    HRESULT putref_DefaultDrawingAttributes(IInkDrawingAttributes);
-    HRESULT get_Renderer(IInkRenderer*);
-    HRESULT putref_Renderer(IInkRenderer);
-    HRESULT get_Ink(IInkDisp*);
-    HRESULT putref_Ink(IInkDisp);
-    HRESULT get_AutoRedraw(VARIANT_BOOL*);
-    HRESULT put_AutoRedraw(VARIANT_BOOL);
-    HRESULT get_CollectingInk(VARIANT_BOOL*);
-    HRESULT get_CollectionMode(InkCollectionMode*);
-    HRESULT put_CollectionMode(InkCollectionMode);
-    HRESULT get_DynamicRendering(VARIANT_BOOL*);
-    HRESULT put_DynamicRendering(VARIANT_BOOL);
-    HRESULT get_DesiredPacketDescription(VARIANT*);
-    HRESULT put_DesiredPacketDescription(VARIANT);
-    HRESULT get_MouseIcon(IPictureDisp*);
-    HRESULT put_MouseIcon(IPictureDisp);
-    HRESULT putref_MouseIcon(IPictureDisp);
-    HRESULT get_MousePointer(InkMousePointer*);
-    HRESULT put_MousePointer(InkMousePointer);
-    HRESULT get_EditingMode(InkOverlayEditingMode*);
-    HRESULT put_EditingMode(InkOverlayEditingMode);
-    HRESULT get_Selection(IInkStrokes*);
-    HRESULT put_Selection(IInkStrokes);
-    HRESULT get_EraserMode(InkOverlayEraserMode*);
-    HRESULT put_EraserMode(InkOverlayEraserMode);
-    HRESULT get_EraserWidth(int*);
-    HRESULT put_EraserWidth(int);
-    HRESULT get_AttachMode(InkOverlayAttachMode*);
-    HRESULT put_AttachMode(InkOverlayAttachMode);
-    HRESULT get_Cursors(IInkCursors*);
-    HRESULT get_MarginX(int*);
-    HRESULT put_MarginX(int);
-    HRESULT get_MarginY(int*);
-    HRESULT put_MarginY(int);
-    HRESULT get_Tablet(IInkTablet*);
-    HRESULT get_SupportHighContrastInk(VARIANT_BOOL*);
-    HRESULT put_SupportHighContrastInk(VARIANT_BOOL);
-    HRESULT get_SupportHighContrastSelectionUI(VARIANT_BOOL*);
-    HRESULT put_SupportHighContrastSelectionUI(VARIANT_BOOL);
-    HRESULT HitTestSelection(int, int, SelectionHitResult*);
-    HRESULT Draw(IInkRectangle);
-    HRESULT SetGestureStatus(InkApplicationGesture, VARIANT_BOOL);
-    HRESULT GetGestureStatus(InkApplicationGesture, VARIANT_BOOL*);
-    HRESULT GetWindowInputRectangle(IInkRectangle*);
-    HRESULT SetWindowInputRectangle(IInkRectangle);
-    HRESULT SetAllTabletsMode(VARIANT_BOOL);
-    HRESULT SetSingleTabletIntegratedMode(IInkTablet);
-    HRESULT GetEventInterest(InkCollectorEventInterest, VARIANT_BOOL*);
-    HRESULT SetEventInterest(InkCollectorEventInterest, VARIANT_BOOL);
+    HRESULT get_hWnd(long* CurrentWindow);
+    HRESULT put_hWnd(long NewWindow);
+    HRESULT get_Enabled(VARIANT_BOOL* Collecting);
+    HRESULT put_Enabled(VARIANT_BOOL Collecting);
+    HRESULT get_DefaultDrawingAttributes(IInkDrawingAttributes* CurrentAttributes);
+    HRESULT putref_DefaultDrawingAttributes(IInkDrawingAttributes NewAttributes);
+    HRESULT get_Renderer(IInkRenderer* CurrentInkRenderer);
+    HRESULT putref_Renderer(IInkRenderer NewInkRenderer);
+    HRESULT get_Ink(IInkDisp* Ink);
+    HRESULT putref_Ink(IInkDisp NewInk);
+    HRESULT get_AutoRedraw(VARIANT_BOOL* AutoRedraw);
+    HRESULT put_AutoRedraw(VARIANT_BOOL AutoRedraw);
+    HRESULT get_CollectingInk(VARIANT_BOOL* Collecting);
+    HRESULT get_CollectionMode(InkCollectionMode* Mode);
+    HRESULT put_CollectionMode(InkCollectionMode Mode);
+    HRESULT get_DynamicRendering(VARIANT_BOOL* Enabled);
+    HRESULT put_DynamicRendering(VARIANT_BOOL Enabled);
+    HRESULT get_DesiredPacketDescription(VARIANT* PacketGuids);
+    HRESULT put_DesiredPacketDescription(VARIANT PacketGuids);
+    HRESULT get_MouseIcon(IPictureDisp* MouseIcon);
+    HRESULT put_MouseIcon(IPictureDisp MouseIcon);
+    HRESULT putref_MouseIcon(IPictureDisp MouseIcon);
+    HRESULT get_MousePointer(InkMousePointer* MousePointer);
+    HRESULT put_MousePointer(InkMousePointer MousePointer);
+    HRESULT get_EditingMode(InkOverlayEditingMode* EditingMode);
+    HRESULT put_EditingMode(InkOverlayEditingMode EditingMode);
+    HRESULT get_Selection(IInkStrokes* Selection);
+    HRESULT put_Selection(IInkStrokes Selection);
+    HRESULT get_EraserMode(InkOverlayEraserMode* EraserMode);
+    HRESULT put_EraserMode(InkOverlayEraserMode EraserMode);
+    HRESULT get_EraserWidth(int* EraserWidth);
+    HRESULT put_EraserWidth(int newEraserWidth);
+    HRESULT get_AttachMode(InkOverlayAttachMode* AttachMode);
+    HRESULT put_AttachMode(InkOverlayAttachMode AttachMode);
+    HRESULT get_Cursors(IInkCursors* Cursors);
+    HRESULT get_MarginX(int* MarginX);
+    HRESULT put_MarginX(int MarginX);
+    HRESULT get_MarginY(int* MarginY);
+    HRESULT put_MarginY(int MarginY);
+    HRESULT get_Tablet(IInkTablet* SingleTablet);
+    HRESULT get_SupportHighContrastInk(VARIANT_BOOL* Support);
+    HRESULT put_SupportHighContrastInk(VARIANT_BOOL Support);
+    HRESULT get_SupportHighContrastSelectionUI(VARIANT_BOOL* Support);
+    HRESULT put_SupportHighContrastSelectionUI(VARIANT_BOOL Support);
+    HRESULT HitTestSelection(int x, int y, SelectionHitResult* SelArea);
+    HRESULT Draw(IInkRectangle Rect);
+    HRESULT SetGestureStatus(InkApplicationGesture Gesture, VARIANT_BOOL Listen);
+    HRESULT GetGestureStatus(InkApplicationGesture Gesture, VARIANT_BOOL* Listening);
+    HRESULT GetWindowInputRectangle(IInkRectangle* WindowInputRectangle);
+    HRESULT SetWindowInputRectangle(IInkRectangle WindowInputRectangle);
+    HRESULT SetAllTabletsMode(VARIANT_BOOL UseMouseForInput);
+    HRESULT SetSingleTabletIntegratedMode(IInkTablet Tablet);
+    HRESULT GetEventInterest(InkCollectorEventInterest EventId, VARIANT_BOOL* Listen);
+    HRESULT SetEventInterest(InkCollectorEventInterest EventId, VARIANT_BOOL Listen);
 }
 enum IID__IInkOverlayEvents = GUID(0x31179b69, 0xe563, 0x489e, [0xb1, 0x6f, 0x71, 0x2f, 0x1e, 0x8a, 0x6, 0x51]);
 interface _IInkOverlayEvents : IDispatch
@@ -1752,65 +1752,65 @@ interface _IInkOverlayEvents : IDispatch
 enum IID_IInkPicture = GUID(0xe85662e0, 0x379a, 0x40d7, [0x9b, 0x5c, 0x75, 0x7d, 0x23, 0x3f, 0x99, 0x23]);
 interface IInkPicture : IDispatch
 {
-    HRESULT get_hWnd(long*);
-    HRESULT get_DefaultDrawingAttributes(IInkDrawingAttributes*);
-    HRESULT putref_DefaultDrawingAttributes(IInkDrawingAttributes);
-    HRESULT get_Renderer(IInkRenderer*);
-    HRESULT putref_Renderer(IInkRenderer);
-    HRESULT get_Ink(IInkDisp*);
-    HRESULT putref_Ink(IInkDisp);
-    HRESULT get_AutoRedraw(VARIANT_BOOL*);
-    HRESULT put_AutoRedraw(VARIANT_BOOL);
-    HRESULT get_CollectingInk(VARIANT_BOOL*);
-    HRESULT get_CollectionMode(InkCollectionMode*);
-    HRESULT put_CollectionMode(InkCollectionMode);
-    HRESULT get_DynamicRendering(VARIANT_BOOL*);
-    HRESULT put_DynamicRendering(VARIANT_BOOL);
-    HRESULT get_DesiredPacketDescription(VARIANT*);
-    HRESULT put_DesiredPacketDescription(VARIANT);
-    HRESULT get_MouseIcon(IPictureDisp*);
-    HRESULT put_MouseIcon(IPictureDisp);
-    HRESULT putref_MouseIcon(IPictureDisp);
-    HRESULT get_MousePointer(InkMousePointer*);
-    HRESULT put_MousePointer(InkMousePointer);
-    HRESULT get_EditingMode(InkOverlayEditingMode*);
-    HRESULT put_EditingMode(InkOverlayEditingMode);
-    HRESULT get_Selection(IInkStrokes*);
-    HRESULT put_Selection(IInkStrokes);
-    HRESULT get_EraserMode(InkOverlayEraserMode*);
-    HRESULT put_EraserMode(InkOverlayEraserMode);
-    HRESULT get_EraserWidth(int*);
-    HRESULT put_EraserWidth(int);
-    HRESULT putref_Picture(IPictureDisp);
-    HRESULT put_Picture(IPictureDisp);
-    HRESULT get_Picture(IPictureDisp*);
-    HRESULT put_SizeMode(InkPictureSizeMode);
-    HRESULT get_SizeMode(InkPictureSizeMode*);
-    HRESULT put_BackColor(uint);
-    HRESULT get_BackColor(uint*);
-    HRESULT get_Cursors(IInkCursors*);
-    HRESULT get_MarginX(int*);
-    HRESULT put_MarginX(int);
-    HRESULT get_MarginY(int*);
-    HRESULT put_MarginY(int);
-    HRESULT get_Tablet(IInkTablet*);
-    HRESULT get_SupportHighContrastInk(VARIANT_BOOL*);
-    HRESULT put_SupportHighContrastInk(VARIANT_BOOL);
-    HRESULT get_SupportHighContrastSelectionUI(VARIANT_BOOL*);
-    HRESULT put_SupportHighContrastSelectionUI(VARIANT_BOOL);
-    HRESULT HitTestSelection(int, int, SelectionHitResult*);
-    HRESULT SetGestureStatus(InkApplicationGesture, VARIANT_BOOL);
-    HRESULT GetGestureStatus(InkApplicationGesture, VARIANT_BOOL*);
-    HRESULT GetWindowInputRectangle(IInkRectangle*);
-    HRESULT SetWindowInputRectangle(IInkRectangle);
-    HRESULT SetAllTabletsMode(VARIANT_BOOL);
-    HRESULT SetSingleTabletIntegratedMode(IInkTablet);
-    HRESULT GetEventInterest(InkCollectorEventInterest, VARIANT_BOOL*);
-    HRESULT SetEventInterest(InkCollectorEventInterest, VARIANT_BOOL);
-    HRESULT get_InkEnabled(VARIANT_BOOL*);
-    HRESULT put_InkEnabled(VARIANT_BOOL);
-    HRESULT get_Enabled(VARIANT_BOOL*);
-    HRESULT put_Enabled(VARIANT_BOOL);
+    HRESULT get_hWnd(long* CurrentWindow);
+    HRESULT get_DefaultDrawingAttributes(IInkDrawingAttributes* CurrentAttributes);
+    HRESULT putref_DefaultDrawingAttributes(IInkDrawingAttributes NewAttributes);
+    HRESULT get_Renderer(IInkRenderer* CurrentInkRenderer);
+    HRESULT putref_Renderer(IInkRenderer NewInkRenderer);
+    HRESULT get_Ink(IInkDisp* Ink);
+    HRESULT putref_Ink(IInkDisp NewInk);
+    HRESULT get_AutoRedraw(VARIANT_BOOL* AutoRedraw);
+    HRESULT put_AutoRedraw(VARIANT_BOOL AutoRedraw);
+    HRESULT get_CollectingInk(VARIANT_BOOL* Collecting);
+    HRESULT get_CollectionMode(InkCollectionMode* Mode);
+    HRESULT put_CollectionMode(InkCollectionMode Mode);
+    HRESULT get_DynamicRendering(VARIANT_BOOL* Enabled);
+    HRESULT put_DynamicRendering(VARIANT_BOOL Enabled);
+    HRESULT get_DesiredPacketDescription(VARIANT* PacketGuids);
+    HRESULT put_DesiredPacketDescription(VARIANT PacketGuids);
+    HRESULT get_MouseIcon(IPictureDisp* MouseIcon);
+    HRESULT put_MouseIcon(IPictureDisp MouseIcon);
+    HRESULT putref_MouseIcon(IPictureDisp MouseIcon);
+    HRESULT get_MousePointer(InkMousePointer* MousePointer);
+    HRESULT put_MousePointer(InkMousePointer MousePointer);
+    HRESULT get_EditingMode(InkOverlayEditingMode* EditingMode);
+    HRESULT put_EditingMode(InkOverlayEditingMode EditingMode);
+    HRESULT get_Selection(IInkStrokes* Selection);
+    HRESULT put_Selection(IInkStrokes Selection);
+    HRESULT get_EraserMode(InkOverlayEraserMode* EraserMode);
+    HRESULT put_EraserMode(InkOverlayEraserMode EraserMode);
+    HRESULT get_EraserWidth(int* EraserWidth);
+    HRESULT put_EraserWidth(int newEraserWidth);
+    HRESULT putref_Picture(IPictureDisp pPicture);
+    HRESULT put_Picture(IPictureDisp pPicture);
+    HRESULT get_Picture(IPictureDisp* ppPicture);
+    HRESULT put_SizeMode(InkPictureSizeMode smNewSizeMode);
+    HRESULT get_SizeMode(InkPictureSizeMode* smSizeMode);
+    HRESULT put_BackColor(uint newColor);
+    HRESULT get_BackColor(uint* pColor);
+    HRESULT get_Cursors(IInkCursors* Cursors);
+    HRESULT get_MarginX(int* MarginX);
+    HRESULT put_MarginX(int MarginX);
+    HRESULT get_MarginY(int* MarginY);
+    HRESULT put_MarginY(int MarginY);
+    HRESULT get_Tablet(IInkTablet* SingleTablet);
+    HRESULT get_SupportHighContrastInk(VARIANT_BOOL* Support);
+    HRESULT put_SupportHighContrastInk(VARIANT_BOOL Support);
+    HRESULT get_SupportHighContrastSelectionUI(VARIANT_BOOL* Support);
+    HRESULT put_SupportHighContrastSelectionUI(VARIANT_BOOL Support);
+    HRESULT HitTestSelection(int x, int y, SelectionHitResult* SelArea);
+    HRESULT SetGestureStatus(InkApplicationGesture Gesture, VARIANT_BOOL Listen);
+    HRESULT GetGestureStatus(InkApplicationGesture Gesture, VARIANT_BOOL* Listening);
+    HRESULT GetWindowInputRectangle(IInkRectangle* WindowInputRectangle);
+    HRESULT SetWindowInputRectangle(IInkRectangle WindowInputRectangle);
+    HRESULT SetAllTabletsMode(VARIANT_BOOL UseMouseForInput);
+    HRESULT SetSingleTabletIntegratedMode(IInkTablet Tablet);
+    HRESULT GetEventInterest(InkCollectorEventInterest EventId, VARIANT_BOOL* Listen);
+    HRESULT SetEventInterest(InkCollectorEventInterest EventId, VARIANT_BOOL Listen);
+    HRESULT get_InkEnabled(VARIANT_BOOL* Collecting);
+    HRESULT put_InkEnabled(VARIANT_BOOL Collecting);
+    HRESULT get_Enabled(VARIANT_BOOL* pbool);
+    HRESULT put_Enabled(VARIANT_BOOL vbool);
 }
 enum IID__IInkPictureEvents = GUID(0x60ff4fee, 0x22ff, 0x4484, [0xac, 0xc1, 0xd3, 0x8, 0xd9, 0xcd, 0x7e, 0xa3]);
 interface _IInkPictureEvents : IDispatch
@@ -1819,27 +1819,27 @@ interface _IInkPictureEvents : IDispatch
 enum IID_IInkRecognizer = GUID(0x782bf7cf, 0x34b, 0x4396, [0x8a, 0x32, 0x3a, 0x18, 0x33, 0xcf, 0x6b, 0x56]);
 interface IInkRecognizer : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Vendor(BSTR*);
-    HRESULT get_Capabilities(InkRecognizerCapabilities*);
-    HRESULT get_Languages(VARIANT*);
-    HRESULT get_SupportedProperties(VARIANT*);
-    HRESULT get_PreferredPacketDescription(VARIANT*);
-    HRESULT CreateRecognizerContext(IInkRecognizerContext*);
+    HRESULT get_Name(BSTR* Name);
+    HRESULT get_Vendor(BSTR* Vendor);
+    HRESULT get_Capabilities(InkRecognizerCapabilities* CapabilitiesFlags);
+    HRESULT get_Languages(VARIANT* Languages);
+    HRESULT get_SupportedProperties(VARIANT* SupportedProperties);
+    HRESULT get_PreferredPacketDescription(VARIANT* PreferredPacketDescription);
+    HRESULT CreateRecognizerContext(IInkRecognizerContext* Context);
 }
 enum IID_IInkRecognizer2 = GUID(0x6110118a, 0x3a75, 0x4ad6, [0xb2, 0xaa, 0x4, 0xb2, 0xb7, 0x2b, 0xbe, 0x65]);
 interface IInkRecognizer2 : IDispatch
 {
-    HRESULT get_Id(BSTR*);
-    HRESULT get_UnicodeRanges(VARIANT*);
+    HRESULT get_Id(BSTR* pbstrId);
+    HRESULT get_UnicodeRanges(VARIANT* UnicodeRanges);
 }
 enum IID_IInkRecognizers = GUID(0x9ccc4f12, 0xb0b7, 0x4a8b, [0xbf, 0x58, 0x4a, 0xec, 0xa4, 0xe8, 0xce, 0xfd]);
 interface IInkRecognizers : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT GetDefaultRecognizer(int, IInkRecognizer*);
-    HRESULT Item(int, IInkRecognizer*);
+    HRESULT get_Count(int* Count);
+    HRESULT get__NewEnum(IUnknown* _NewEnum);
+    HRESULT GetDefaultRecognizer(int lcid, IInkRecognizer* DefaultRecognizer);
+    HRESULT Item(int Index, IInkRecognizer* InkRecognizer);
 }
 enum IID__IInkRecognitionEvents = GUID(0x17bce92f, 0x2e21, 0x47fd, [0x9d, 0x33, 0x3c, 0x6a, 0xfb, 0xfd, 0x8c, 0x59]);
 interface _IInkRecognitionEvents : IDispatch
@@ -1848,102 +1848,102 @@ interface _IInkRecognitionEvents : IDispatch
 enum IID_IInkRecognizerContext = GUID(0xc68f52f9, 0x32a3, 0x4625, [0x90, 0x6c, 0x44, 0xfc, 0x23, 0xb4, 0x9, 0x58]);
 interface IInkRecognizerContext : IDispatch
 {
-    HRESULT get_Strokes(IInkStrokes*);
-    HRESULT putref_Strokes(IInkStrokes);
-    HRESULT get_CharacterAutoCompletionMode(InkRecognizerCharacterAutoCompletionMode*);
-    HRESULT put_CharacterAutoCompletionMode(InkRecognizerCharacterAutoCompletionMode);
-    HRESULT get_Factoid(BSTR*);
-    HRESULT put_Factoid(BSTR);
-    HRESULT get_Guide(IInkRecognizerGuide*);
-    HRESULT putref_Guide(IInkRecognizerGuide);
-    HRESULT get_PrefixText(BSTR*);
-    HRESULT put_PrefixText(BSTR);
-    HRESULT get_SuffixText(BSTR*);
-    HRESULT put_SuffixText(BSTR);
-    HRESULT get_RecognitionFlags(InkRecognitionModes*);
-    HRESULT put_RecognitionFlags(InkRecognitionModes);
-    HRESULT get_WordList(IInkWordList*);
-    HRESULT putref_WordList(IInkWordList);
-    HRESULT get_Recognizer(IInkRecognizer*);
-    HRESULT Recognize(InkRecognitionStatus*, IInkRecognitionResult*);
+    HRESULT get_Strokes(IInkStrokes* Strokes);
+    HRESULT putref_Strokes(IInkStrokes Strokes);
+    HRESULT get_CharacterAutoCompletionMode(InkRecognizerCharacterAutoCompletionMode* Mode);
+    HRESULT put_CharacterAutoCompletionMode(InkRecognizerCharacterAutoCompletionMode Mode);
+    HRESULT get_Factoid(BSTR* Factoid);
+    HRESULT put_Factoid(BSTR factoid);
+    HRESULT get_Guide(IInkRecognizerGuide* RecognizerGuide);
+    HRESULT putref_Guide(IInkRecognizerGuide RecognizerGuide);
+    HRESULT get_PrefixText(BSTR* Prefix);
+    HRESULT put_PrefixText(BSTR Prefix);
+    HRESULT get_SuffixText(BSTR* Suffix);
+    HRESULT put_SuffixText(BSTR Suffix);
+    HRESULT get_RecognitionFlags(InkRecognitionModes* Modes);
+    HRESULT put_RecognitionFlags(InkRecognitionModes Modes);
+    HRESULT get_WordList(IInkWordList* WordList);
+    HRESULT putref_WordList(IInkWordList WordList);
+    HRESULT get_Recognizer(IInkRecognizer* Recognizer);
+    HRESULT Recognize(InkRecognitionStatus* RecognitionStatus, IInkRecognitionResult* RecognitionResult);
     HRESULT StopBackgroundRecognition();
     HRESULT EndInkInput();
-    HRESULT BackgroundRecognize(VARIANT);
-    HRESULT BackgroundRecognizeWithAlternates(VARIANT);
-    HRESULT Clone(IInkRecognizerContext*);
-    HRESULT IsStringSupported(BSTR, VARIANT_BOOL*);
+    HRESULT BackgroundRecognize(VARIANT CustomData);
+    HRESULT BackgroundRecognizeWithAlternates(VARIANT CustomData);
+    HRESULT Clone(IInkRecognizerContext* RecoContext);
+    HRESULT IsStringSupported(BSTR String, VARIANT_BOOL* Supported);
 }
 enum IID_IInkRecognizerContext2 = GUID(0xd6f0e32f, 0x73d8, 0x408e, [0x8e, 0x9f, 0x5f, 0xea, 0x59, 0x2c, 0x36, 0x3f]);
 interface IInkRecognizerContext2 : IDispatch
 {
-    HRESULT get_EnabledUnicodeRanges(VARIANT*);
-    HRESULT put_EnabledUnicodeRanges(VARIANT);
+    HRESULT get_EnabledUnicodeRanges(VARIANT* UnicodeRanges);
+    HRESULT put_EnabledUnicodeRanges(VARIANT UnicodeRanges);
 }
 enum IID_IInkRecognitionResult = GUID(0x3bc129a8, 0x86cd, 0x45ad, [0xbd, 0xe8, 0xe0, 0xd3, 0x2d, 0x61, 0xc1, 0x6d]);
 interface IInkRecognitionResult : IDispatch
 {
-    HRESULT get_TopString(BSTR*);
-    HRESULT get_TopAlternate(IInkRecognitionAlternate*);
-    HRESULT get_TopConfidence(InkRecognitionConfidence*);
-    HRESULT get_Strokes(IInkStrokes*);
-    HRESULT AlternatesFromSelection(int, int, int, IInkRecognitionAlternates*);
-    HRESULT ModifyTopAlternate(IInkRecognitionAlternate);
+    HRESULT get_TopString(BSTR* TopString);
+    HRESULT get_TopAlternate(IInkRecognitionAlternate* TopAlternate);
+    HRESULT get_TopConfidence(InkRecognitionConfidence* TopConfidence);
+    HRESULT get_Strokes(IInkStrokes* Strokes);
+    HRESULT AlternatesFromSelection(int selectionStart, int selectionLength, int maximumAlternates, IInkRecognitionAlternates* AlternatesFromSelection);
+    HRESULT ModifyTopAlternate(IInkRecognitionAlternate Alternate);
     HRESULT SetResultOnStrokes();
 }
 enum IID_IInkRecognitionAlternate = GUID(0xb7e660ad, 0x77e4, 0x429b, [0xad, 0xda, 0x87, 0x37, 0x80, 0xd1, 0xfc, 0x4a]);
 interface IInkRecognitionAlternate : IDispatch
 {
-    HRESULT get_String(BSTR*);
-    HRESULT get_Confidence(InkRecognitionConfidence*);
-    HRESULT get_Baseline(VARIANT*);
-    HRESULT get_Midline(VARIANT*);
-    HRESULT get_Ascender(VARIANT*);
-    HRESULT get_Descender(VARIANT*);
-    HRESULT get_LineNumber(int*);
-    HRESULT get_Strokes(IInkStrokes*);
-    HRESULT get_LineAlternates(IInkRecognitionAlternates*);
-    HRESULT get_ConfidenceAlternates(IInkRecognitionAlternates*);
-    HRESULT GetStrokesFromStrokeRanges(IInkStrokes, IInkStrokes*);
-    HRESULT GetStrokesFromTextRange(int*, int*, IInkStrokes*);
-    HRESULT GetTextRangeFromStrokes(IInkStrokes, int*, int*);
-    HRESULT AlternatesWithConstantPropertyValues(BSTR, IInkRecognitionAlternates*);
-    HRESULT GetPropertyValue(BSTR, VARIANT*);
+    HRESULT get_String(BSTR* RecoString);
+    HRESULT get_Confidence(InkRecognitionConfidence* Confidence);
+    HRESULT get_Baseline(VARIANT* Baseline);
+    HRESULT get_Midline(VARIANT* Midline);
+    HRESULT get_Ascender(VARIANT* Ascender);
+    HRESULT get_Descender(VARIANT* Descender);
+    HRESULT get_LineNumber(int* LineNumber);
+    HRESULT get_Strokes(IInkStrokes* Strokes);
+    HRESULT get_LineAlternates(IInkRecognitionAlternates* LineAlternates);
+    HRESULT get_ConfidenceAlternates(IInkRecognitionAlternates* ConfidenceAlternates);
+    HRESULT GetStrokesFromStrokeRanges(IInkStrokes Strokes, IInkStrokes* GetStrokesFromStrokeRanges);
+    HRESULT GetStrokesFromTextRange(int* selectionStart, int* selectionLength, IInkStrokes* GetStrokesFromTextRange);
+    HRESULT GetTextRangeFromStrokes(IInkStrokes Strokes, int* selectionStart, int* selectionLength);
+    HRESULT AlternatesWithConstantPropertyValues(BSTR PropertyType, IInkRecognitionAlternates* AlternatesWithConstantPropertyValues);
+    HRESULT GetPropertyValue(BSTR PropertyType, VARIANT* PropertyValue);
 }
 enum IID_IInkRecognitionAlternates = GUID(0x286a167f, 0x9f19, 0x4c61, [0x9d, 0x53, 0x4f, 0x7, 0xbe, 0x62, 0x2b, 0x84]);
 interface IInkRecognitionAlternates : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Strokes(IInkStrokes*);
-    HRESULT Item(int, IInkRecognitionAlternate*);
+    HRESULT get_Count(int* Count);
+    HRESULT get__NewEnum(IUnknown* _NewEnum);
+    HRESULT get_Strokes(IInkStrokes* Strokes);
+    HRESULT Item(int Index, IInkRecognitionAlternate* InkRecoAlternate);
 }
 enum IID_IInkRecognizerGuide = GUID(0xd934be07, 0x7b84, 0x4208, [0x91, 0x36, 0x83, 0xc2, 0x9, 0x94, 0xe9, 0x5]);
 interface IInkRecognizerGuide : IDispatch
 {
-    HRESULT get_WritingBox(IInkRectangle*);
-    HRESULT put_WritingBox(IInkRectangle);
-    HRESULT get_DrawnBox(IInkRectangle*);
-    HRESULT put_DrawnBox(IInkRectangle);
-    HRESULT get_Rows(int*);
-    HRESULT put_Rows(int);
-    HRESULT get_Columns(int*);
-    HRESULT put_Columns(int);
-    HRESULT get_Midline(int*);
-    HRESULT put_Midline(int);
-    HRESULT get_GuideData(InkRecoGuide*);
-    HRESULT put_GuideData(InkRecoGuide);
+    HRESULT get_WritingBox(IInkRectangle* Rectangle);
+    HRESULT put_WritingBox(IInkRectangle Rectangle);
+    HRESULT get_DrawnBox(IInkRectangle* Rectangle);
+    HRESULT put_DrawnBox(IInkRectangle Rectangle);
+    HRESULT get_Rows(int* Units);
+    HRESULT put_Rows(int Units);
+    HRESULT get_Columns(int* Units);
+    HRESULT put_Columns(int Units);
+    HRESULT get_Midline(int* Units);
+    HRESULT put_Midline(int Units);
+    HRESULT get_GuideData(InkRecoGuide* pRecoGuide);
+    HRESULT put_GuideData(InkRecoGuide recoGuide);
 }
 enum IID_IInkWordList = GUID(0x76ba3491, 0xcb2f, 0x406b, [0x99, 0x61, 0xe, 0xc, 0x4c, 0xda, 0xae, 0xf2]);
 interface IInkWordList : IDispatch
 {
-    HRESULT AddWord(BSTR);
-    HRESULT RemoveWord(BSTR);
-    HRESULT Merge(IInkWordList);
+    HRESULT AddWord(BSTR NewWord);
+    HRESULT RemoveWord(BSTR RemoveWord);
+    HRESULT Merge(IInkWordList MergeWordList);
 }
 enum IID_IInkWordList2 = GUID(0x14542586, 0x11bf, 0x4f5f, [0xb6, 0xe7, 0x49, 0xd0, 0x74, 0x4a, 0xab, 0x6e]);
 interface IInkWordList2 : IDispatch
 {
-    HRESULT AddWords(BSTR);
+    HRESULT AddWords(BSTR NewWords);
 }
 enum CLSID_InkDisp = GUID(0x937c1a34, 0x151d, 0x4610, [0x9c, 0xa6, 0xa8, 0xcc, 0x9b, 0xdb, 0x5d, 0x83]);
 struct InkDisp
@@ -2008,11 +2008,11 @@ interface IInk : IDispatch
 enum IID_IInkLineInfo = GUID(0x9c1c5ad6, 0xf22f, 0x4de4, [0xb4, 0x53, 0xa2, 0xcc, 0x48, 0x2e, 0x7c, 0x33]);
 interface IInkLineInfo : IUnknown
 {
-    HRESULT SetFormat(INKMETRIC*);
-    HRESULT GetFormat(INKMETRIC*);
-    HRESULT GetInkExtent(INKMETRIC*, uint*);
-    HRESULT GetCandidate(uint, PWSTR, uint*, uint);
-    HRESULT SetCandidate(uint, PWSTR);
+    HRESULT SetFormat(INKMETRIC* pim);
+    HRESULT GetFormat(INKMETRIC* pim);
+    HRESULT GetInkExtent(INKMETRIC* pim, uint* pnWidth);
+    HRESULT GetCandidate(uint nCandidateNum, PWSTR pwcRecogWord, uint* pcwcRecogWord, uint dwFlags);
+    HRESULT SetCandidate(uint nCandidateNum, PWSTR strRecogWord);
     HRESULT Recognize();
 }
 enum IID_ISketchInk = GUID(0xb4563688, 0x98eb, 0x4646, [0xb2, 0x79, 0x44, 0xda, 0x14, 0xd4, 0x57, 0x48]);
@@ -2072,34 +2072,34 @@ enum : int
 enum IID_IInkDivider = GUID(0x5de00405, 0xf9a4, 0x4651, [0xb0, 0xc5, 0xc3, 0x17, 0xde, 0xfd, 0x58, 0xb9]);
 interface IInkDivider : IDispatch
 {
-    HRESULT get_Strokes(IInkStrokes*);
-    HRESULT putref_Strokes(IInkStrokes);
-    HRESULT get_RecognizerContext(IInkRecognizerContext*);
-    HRESULT putref_RecognizerContext(IInkRecognizerContext);
-    HRESULT get_LineHeight(int*);
-    HRESULT put_LineHeight(int);
-    HRESULT Divide(IInkDivisionResult*);
+    HRESULT get_Strokes(IInkStrokes* Strokes);
+    HRESULT putref_Strokes(IInkStrokes Strokes);
+    HRESULT get_RecognizerContext(IInkRecognizerContext* RecognizerContext);
+    HRESULT putref_RecognizerContext(IInkRecognizerContext RecognizerContext);
+    HRESULT get_LineHeight(int* LineHeight);
+    HRESULT put_LineHeight(int LineHeight);
+    HRESULT Divide(IInkDivisionResult* InkDivisionResult);
 }
 enum IID_IInkDivisionResult = GUID(0x2dbec0a7, 0x74c7, 0x4b38, [0x81, 0xeb, 0xaa, 0x8e, 0xf0, 0xc2, 0x49, 0x0]);
 interface IInkDivisionResult : IDispatch
 {
-    HRESULT get_Strokes(IInkStrokes*);
-    HRESULT ResultByType(InkDivisionType, IInkDivisionUnits*);
+    HRESULT get_Strokes(IInkStrokes* Strokes);
+    HRESULT ResultByType(InkDivisionType divisionType, IInkDivisionUnits* InkDivisionUnits);
 }
 enum IID_IInkDivisionUnit = GUID(0x85aee342, 0x48b0, 0x4244, [0x9d, 0xd5, 0x1e, 0xd4, 0x35, 0x41, 0xf, 0xab]);
 interface IInkDivisionUnit : IDispatch
 {
-    HRESULT get_Strokes(IInkStrokes*);
-    HRESULT get_DivisionType(InkDivisionType*);
-    HRESULT get_RecognizedString(BSTR*);
-    HRESULT get_RotationTransform(IInkTransform*);
+    HRESULT get_Strokes(IInkStrokes* Strokes);
+    HRESULT get_DivisionType(InkDivisionType* divisionType);
+    HRESULT get_RecognizedString(BSTR* RecoString);
+    HRESULT get_RotationTransform(IInkTransform* RotationTransform);
 }
 enum IID_IInkDivisionUnits = GUID(0x1bb5ddc2, 0x31cc, 0x4135, [0xab, 0x82, 0x2c, 0x66, 0xc9, 0xf0, 0xc, 0x41]);
 interface IInkDivisionUnits : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Item(int, IInkDivisionUnit*);
+    HRESULT get_Count(int* Count);
+    HRESULT get__NewEnum(IUnknown* _NewEnum);
+    HRESULT Item(int Index, IInkDivisionUnit* InkDivisionUnit);
 }
 enum CLSID_InkDivider = GUID(0x8854f6a0, 0x4683, 0x4ae7, [0x91, 0x91, 0x75, 0x2f, 0xe6, 0x46, 0x12, 0xc3]);
 struct InkDivider
@@ -2227,31 +2227,31 @@ enum : int
 enum IID_IPenInputPanel = GUID(0xfa7a4083, 0x5747, 0x4040, [0xa1, 0x82, 0xb, 0xe, 0x9f, 0xd4, 0xfa, 0xc7]);
 interface IPenInputPanel : IDispatch
 {
-    HRESULT get_Busy(VARIANT_BOOL*);
-    HRESULT get_Factoid(BSTR*);
-    HRESULT put_Factoid(BSTR);
-    HRESULT get_AttachedEditWindow(int*);
-    HRESULT put_AttachedEditWindow(int);
-    HRESULT get_CurrentPanel(PanelType*);
-    HRESULT put_CurrentPanel(PanelType);
-    HRESULT get_DefaultPanel(PanelType*);
-    HRESULT put_DefaultPanel(PanelType);
-    HRESULT get_Visible(VARIANT_BOOL*);
-    HRESULT put_Visible(VARIANT_BOOL);
-    HRESULT get_Top(int*);
-    HRESULT get_Left(int*);
-    HRESULT get_Width(int*);
-    HRESULT get_Height(int*);
-    HRESULT get_VerticalOffset(int*);
-    HRESULT put_VerticalOffset(int);
-    HRESULT get_HorizontalOffset(int*);
-    HRESULT put_HorizontalOffset(int);
-    HRESULT get_AutoShow(VARIANT_BOOL*);
-    HRESULT put_AutoShow(VARIANT_BOOL);
-    HRESULT MoveTo(int, int);
+    HRESULT get_Busy(VARIANT_BOOL* Busy);
+    HRESULT get_Factoid(BSTR* Factoid);
+    HRESULT put_Factoid(BSTR Factoid);
+    HRESULT get_AttachedEditWindow(int* AttachedEditWindow);
+    HRESULT put_AttachedEditWindow(int AttachedEditWindow);
+    HRESULT get_CurrentPanel(PanelType* CurrentPanel);
+    HRESULT put_CurrentPanel(PanelType CurrentPanel);
+    HRESULT get_DefaultPanel(PanelType* pDefaultPanel);
+    HRESULT put_DefaultPanel(PanelType DefaultPanel);
+    HRESULT get_Visible(VARIANT_BOOL* Visible);
+    HRESULT put_Visible(VARIANT_BOOL Visible);
+    HRESULT get_Top(int* Top);
+    HRESULT get_Left(int* Left);
+    HRESULT get_Width(int* Width);
+    HRESULT get_Height(int* Height);
+    HRESULT get_VerticalOffset(int* VerticalOffset);
+    HRESULT put_VerticalOffset(int VerticalOffset);
+    HRESULT get_HorizontalOffset(int* HorizontalOffset);
+    HRESULT put_HorizontalOffset(int HorizontalOffset);
+    HRESULT get_AutoShow(VARIANT_BOOL* pAutoShow);
+    HRESULT put_AutoShow(VARIANT_BOOL AutoShow);
+    HRESULT MoveTo(int Left, int Top);
     HRESULT CommitPendingInput();
     HRESULT Refresh();
-    HRESULT EnableTsf(VARIANT_BOOL);
+    HRESULT EnableTsf(VARIANT_BOOL Enable);
 }
 enum IID__IPenInputPanelEvents = GUID(0xb7e489da, 0x3719, 0x439f, [0x84, 0x8f, 0xe7, 0xac, 0xbd, 0x82, 0xf, 0x17]);
 interface _IPenInputPanelEvents : IDispatch
@@ -2260,8 +2260,8 @@ interface _IPenInputPanelEvents : IDispatch
 enum IID_IHandwrittenTextInsertion = GUID(0x56fdea97, 0xecd6, 0x43e7, [0xaa, 0x3a, 0x81, 0x6b, 0xe7, 0x78, 0x58, 0x60]);
 interface IHandwrittenTextInsertion : IUnknown
 {
-    HRESULT InsertRecognitionResultsArray(SAFEARRAY*, uint, BOOL);
-    HRESULT InsertInkRecognitionResult(IInkRecognitionResult, uint, BOOL);
+    HRESULT InsertRecognitionResultsArray(SAFEARRAY* psaAlternates, uint locale, BOOL fAlternateContainsAutoSpacingInformation);
+    HRESULT InsertInkRecognitionResult(IInkRecognitionResult pIInkRecoResult, uint locale, BOOL fAlternateContainsAutoSpacingInformation);
 }
 enum CLSID_HandwrittenTextInsertion = GUID(0x9f074ee2, 0xe6e9, 0x4d8a, [0xa0, 0x47, 0xeb, 0x5b, 0x5c, 0x3c, 0x55, 0xda]);
 struct HandwrittenTextInsertion
@@ -2274,60 +2274,60 @@ struct PenInputPanel
 enum IID_ITextInputPanelEventSink = GUID(0x27560408, 0x8e64, 0x4fe1, [0x80, 0x4e, 0x42, 0x12, 0x1, 0x58, 0x4b, 0x31]);
 interface ITextInputPanelEventSink : IUnknown
 {
-    HRESULT InPlaceStateChanging(InPlaceState, InPlaceState);
-    HRESULT InPlaceStateChanged(InPlaceState, InPlaceState);
-    HRESULT InPlaceSizeChanging(RECT, RECT);
-    HRESULT InPlaceSizeChanged(RECT, RECT);
-    HRESULT InputAreaChanging(PanelInputArea, PanelInputArea);
-    HRESULT InputAreaChanged(PanelInputArea, PanelInputArea);
-    HRESULT CorrectionModeChanging(CorrectionMode, CorrectionMode);
-    HRESULT CorrectionModeChanged(CorrectionMode, CorrectionMode);
-    HRESULT InPlaceVisibilityChanging(BOOL, BOOL);
-    HRESULT InPlaceVisibilityChanged(BOOL, BOOL);
-    HRESULT TextInserting(SAFEARRAY*);
-    HRESULT TextInserted(SAFEARRAY*);
+    HRESULT InPlaceStateChanging(InPlaceState oldInPlaceState, InPlaceState newInPlaceState);
+    HRESULT InPlaceStateChanged(InPlaceState oldInPlaceState, InPlaceState newInPlaceState);
+    HRESULT InPlaceSizeChanging(RECT oldBoundingRectangle, RECT newBoundingRectangle);
+    HRESULT InPlaceSizeChanged(RECT oldBoundingRectangle, RECT newBoundingRectangle);
+    HRESULT InputAreaChanging(PanelInputArea oldInputArea, PanelInputArea newInputArea);
+    HRESULT InputAreaChanged(PanelInputArea oldInputArea, PanelInputArea newInputArea);
+    HRESULT CorrectionModeChanging(CorrectionMode oldCorrectionMode, CorrectionMode newCorrectionMode);
+    HRESULT CorrectionModeChanged(CorrectionMode oldCorrectionMode, CorrectionMode newCorrectionMode);
+    HRESULT InPlaceVisibilityChanging(BOOL oldVisible, BOOL newVisible);
+    HRESULT InPlaceVisibilityChanged(BOOL oldVisible, BOOL newVisible);
+    HRESULT TextInserting(SAFEARRAY* Ink);
+    HRESULT TextInserted(SAFEARRAY* Ink);
 }
 enum IID_ITextInputPanel = GUID(0x6b6a65a5, 0x6af3, 0x46c2, [0xb6, 0xea, 0x56, 0xcd, 0x1f, 0x80, 0xdf, 0x71]);
 interface ITextInputPanel : IUnknown
 {
-    HRESULT get_AttachedEditWindow(HWND*);
-    HRESULT put_AttachedEditWindow(HWND);
-    HRESULT get_CurrentInteractionMode(InteractionMode*);
-    HRESULT get_DefaultInPlaceState(InPlaceState*);
-    HRESULT put_DefaultInPlaceState(InPlaceState);
-    HRESULT get_CurrentInPlaceState(InPlaceState*);
-    HRESULT get_DefaultInputArea(PanelInputArea*);
-    HRESULT put_DefaultInputArea(PanelInputArea);
-    HRESULT get_CurrentInputArea(PanelInputArea*);
-    HRESULT get_CurrentCorrectionMode(CorrectionMode*);
-    HRESULT get_PreferredInPlaceDirection(InPlaceDirection*);
-    HRESULT put_PreferredInPlaceDirection(InPlaceDirection);
-    HRESULT get_ExpandPostInsertionCorrection(BOOL*);
-    HRESULT put_ExpandPostInsertionCorrection(BOOL);
-    HRESULT get_InPlaceVisibleOnFocus(BOOL*);
-    HRESULT put_InPlaceVisibleOnFocus(BOOL);
-    HRESULT get_InPlaceBoundingRectangle(RECT*);
-    HRESULT get_PopUpCorrectionHeight(int*);
-    HRESULT get_PopDownCorrectionHeight(int*);
+    HRESULT get_AttachedEditWindow(HWND* AttachedEditWindow);
+    HRESULT put_AttachedEditWindow(HWND AttachedEditWindow);
+    HRESULT get_CurrentInteractionMode(InteractionMode* CurrentInteractionMode);
+    HRESULT get_DefaultInPlaceState(InPlaceState* State);
+    HRESULT put_DefaultInPlaceState(InPlaceState State);
+    HRESULT get_CurrentInPlaceState(InPlaceState* State);
+    HRESULT get_DefaultInputArea(PanelInputArea* Area);
+    HRESULT put_DefaultInputArea(PanelInputArea Area);
+    HRESULT get_CurrentInputArea(PanelInputArea* Area);
+    HRESULT get_CurrentCorrectionMode(CorrectionMode* Mode);
+    HRESULT get_PreferredInPlaceDirection(InPlaceDirection* Direction);
+    HRESULT put_PreferredInPlaceDirection(InPlaceDirection Direction);
+    HRESULT get_ExpandPostInsertionCorrection(BOOL* Expand);
+    HRESULT put_ExpandPostInsertionCorrection(BOOL Expand);
+    HRESULT get_InPlaceVisibleOnFocus(BOOL* Visible);
+    HRESULT put_InPlaceVisibleOnFocus(BOOL Visible);
+    HRESULT get_InPlaceBoundingRectangle(RECT* BoundingRectangle);
+    HRESULT get_PopUpCorrectionHeight(int* Height);
+    HRESULT get_PopDownCorrectionHeight(int* Height);
     HRESULT CommitPendingInput();
-    HRESULT SetInPlaceVisibility(BOOL);
-    HRESULT SetInPlacePosition(int, int, CorrectionPosition);
-    HRESULT SetInPlaceHoverTargetPosition(int, int);
-    HRESULT Advise(ITextInputPanelEventSink, uint);
-    HRESULT Unadvise(ITextInputPanelEventSink);
+    HRESULT SetInPlaceVisibility(BOOL Visible);
+    HRESULT SetInPlacePosition(int xPosition, int yPosition, CorrectionPosition position);
+    HRESULT SetInPlaceHoverTargetPosition(int xPosition, int yPosition);
+    HRESULT Advise(ITextInputPanelEventSink EventSink, uint EventMask);
+    HRESULT Unadvise(ITextInputPanelEventSink EventSink);
 }
 enum IID_IInputPanelWindowHandle = GUID(0x4af81847, 0xfdc4, 0x4fc3, [0xad, 0xb, 0x42, 0x24, 0x79, 0xc1, 0xb9, 0x35]);
 interface IInputPanelWindowHandle : IUnknown
 {
-    HRESULT get_AttachedEditWindow32(int*);
-    HRESULT put_AttachedEditWindow32(int);
-    HRESULT get_AttachedEditWindow64(long*);
-    HRESULT put_AttachedEditWindow64(long);
+    HRESULT get_AttachedEditWindow32(int* AttachedEditWindow);
+    HRESULT put_AttachedEditWindow32(int AttachedEditWindow);
+    HRESULT get_AttachedEditWindow64(long* AttachedEditWindow);
+    HRESULT put_AttachedEditWindow64(long AttachedEditWindow);
 }
 enum IID_ITextInputPanelRunInfo = GUID(0x9f424568, 0x1920, 0x48cc, [0x98, 0x11, 0xa9, 0x93, 0xcb, 0xf5, 0xad, 0xba]);
 interface ITextInputPanelRunInfo : IUnknown
 {
-    HRESULT IsTipRunning(BOOL*);
+    HRESULT IsTipRunning(BOOL* pfRunning);
 }
 enum CLSID_TextInputPanel = GUID(0xf9b189d7, 0x228b, 0x4f2b, [0x86, 0x50, 0xb9, 0x7f, 0x59, 0xe0, 0x2c, 0x8c]);
 struct TextInputPanel
@@ -2550,82 +2550,82 @@ enum : int
 enum IID_IInkEdit = GUID(0xf2127a19, 0xfbfb, 0x4aed, [0x84, 0x64, 0x3f, 0x36, 0xd7, 0x8c, 0xfe, 0xfb]);
 interface IInkEdit : IDispatch
 {
-    HRESULT get_Status(InkEditStatus*);
-    HRESULT get_UseMouseForInput(VARIANT_BOOL*);
-    HRESULT put_UseMouseForInput(VARIANT_BOOL);
-    HRESULT get_InkMode(InkMode*);
-    HRESULT put_InkMode(InkMode);
-    HRESULT get_InkInsertMode(InkInsertMode*);
-    HRESULT put_InkInsertMode(InkInsertMode);
-    HRESULT get_DrawingAttributes(IInkDrawingAttributes*);
-    HRESULT putref_DrawingAttributes(IInkDrawingAttributes);
-    HRESULT get_RecognitionTimeout(int*);
-    HRESULT put_RecognitionTimeout(int);
-    HRESULT get_Recognizer(IInkRecognizer*);
-    HRESULT putref_Recognizer(IInkRecognizer);
-    HRESULT get_Factoid(BSTR*);
-    HRESULT put_Factoid(BSTR);
-    HRESULT get_SelInks(VARIANT*);
-    HRESULT put_SelInks(VARIANT);
-    HRESULT get_SelInksDisplayMode(InkDisplayMode*);
-    HRESULT put_SelInksDisplayMode(InkDisplayMode);
+    HRESULT get_Status(InkEditStatus* pStatus);
+    HRESULT get_UseMouseForInput(VARIANT_BOOL* pVal);
+    HRESULT put_UseMouseForInput(VARIANT_BOOL newVal);
+    HRESULT get_InkMode(InkMode* pVal);
+    HRESULT put_InkMode(InkMode newVal);
+    HRESULT get_InkInsertMode(InkInsertMode* pVal);
+    HRESULT put_InkInsertMode(InkInsertMode newVal);
+    HRESULT get_DrawingAttributes(IInkDrawingAttributes* pVal);
+    HRESULT putref_DrawingAttributes(IInkDrawingAttributes newVal);
+    HRESULT get_RecognitionTimeout(int* pVal);
+    HRESULT put_RecognitionTimeout(int newVal);
+    HRESULT get_Recognizer(IInkRecognizer* pVal);
+    HRESULT putref_Recognizer(IInkRecognizer newVal);
+    HRESULT get_Factoid(BSTR* pVal);
+    HRESULT put_Factoid(BSTR newVal);
+    HRESULT get_SelInks(VARIANT* pSelInk);
+    HRESULT put_SelInks(VARIANT SelInk);
+    HRESULT get_SelInksDisplayMode(InkDisplayMode* pInkDisplayMode);
+    HRESULT put_SelInksDisplayMode(InkDisplayMode InkDisplayMode);
     HRESULT Recognize();
-    HRESULT GetGestureStatus(InkApplicationGesture, VARIANT_BOOL*);
-    HRESULT SetGestureStatus(InkApplicationGesture, VARIANT_BOOL);
-    HRESULT put_BackColor(uint);
-    HRESULT get_BackColor(uint*);
-    HRESULT get_Appearance(AppearanceConstants*);
-    HRESULT put_Appearance(AppearanceConstants);
-    HRESULT get_BorderStyle(BorderStyleConstants*);
-    HRESULT put_BorderStyle(BorderStyleConstants);
-    HRESULT get_Hwnd(OLE_HANDLE*);
-    HRESULT get_Font(IFontDisp*);
-    HRESULT putref_Font(IFontDisp);
-    HRESULT get_Text(BSTR*);
-    HRESULT put_Text(BSTR);
-    HRESULT get_MouseIcon(IPictureDisp*);
-    HRESULT put_MouseIcon(IPictureDisp);
-    HRESULT putref_MouseIcon(IPictureDisp);
-    HRESULT get_MousePointer(InkMousePointer*);
-    HRESULT put_MousePointer(InkMousePointer);
-    HRESULT get_Locked(VARIANT_BOOL*);
-    HRESULT put_Locked(VARIANT_BOOL);
-    HRESULT get_Enabled(VARIANT_BOOL*);
-    HRESULT put_Enabled(VARIANT_BOOL);
-    HRESULT get_MaxLength(int*);
-    HRESULT put_MaxLength(int);
-    HRESULT get_MultiLine(VARIANT_BOOL*);
-    HRESULT put_MultiLine(VARIANT_BOOL);
-    HRESULT get_ScrollBars(ScrollBarsConstants*);
-    HRESULT put_ScrollBars(ScrollBarsConstants);
-    HRESULT get_DisableNoScroll(VARIANT_BOOL*);
-    HRESULT put_DisableNoScroll(VARIANT_BOOL);
-    HRESULT get_SelAlignment(VARIANT*);
-    HRESULT put_SelAlignment(VARIANT);
-    HRESULT get_SelBold(VARIANT*);
-    HRESULT put_SelBold(VARIANT);
-    HRESULT get_SelItalic(VARIANT*);
-    HRESULT put_SelItalic(VARIANT);
-    HRESULT get_SelUnderline(VARIANT*);
-    HRESULT put_SelUnderline(VARIANT);
-    HRESULT get_SelColor(VARIANT*);
-    HRESULT put_SelColor(VARIANT);
-    HRESULT get_SelFontName(VARIANT*);
-    HRESULT put_SelFontName(VARIANT);
-    HRESULT get_SelFontSize(VARIANT*);
-    HRESULT put_SelFontSize(VARIANT);
-    HRESULT get_SelCharOffset(VARIANT*);
-    HRESULT put_SelCharOffset(VARIANT);
-    HRESULT get_TextRTF(BSTR*);
-    HRESULT put_TextRTF(BSTR);
-    HRESULT get_SelStart(int*);
-    HRESULT put_SelStart(int);
-    HRESULT get_SelLength(int*);
-    HRESULT put_SelLength(int);
-    HRESULT get_SelText(BSTR*);
-    HRESULT put_SelText(BSTR);
-    HRESULT get_SelRTF(BSTR*);
-    HRESULT put_SelRTF(BSTR);
+    HRESULT GetGestureStatus(InkApplicationGesture Gesture, VARIANT_BOOL* pListen);
+    HRESULT SetGestureStatus(InkApplicationGesture Gesture, VARIANT_BOOL Listen);
+    HRESULT put_BackColor(uint clr);
+    HRESULT get_BackColor(uint* pclr);
+    HRESULT get_Appearance(AppearanceConstants* pAppearance);
+    HRESULT put_Appearance(AppearanceConstants pAppearance);
+    HRESULT get_BorderStyle(BorderStyleConstants* pBorderStyle);
+    HRESULT put_BorderStyle(BorderStyleConstants pBorderStyle);
+    HRESULT get_Hwnd(OLE_HANDLE* pohHwnd);
+    HRESULT get_Font(IFontDisp* ppFont);
+    HRESULT putref_Font(IFontDisp ppFont);
+    HRESULT get_Text(BSTR* pbstrText);
+    HRESULT put_Text(BSTR pbstrText);
+    HRESULT get_MouseIcon(IPictureDisp* MouseIcon);
+    HRESULT put_MouseIcon(IPictureDisp MouseIcon);
+    HRESULT putref_MouseIcon(IPictureDisp MouseIcon);
+    HRESULT get_MousePointer(InkMousePointer* MousePointer);
+    HRESULT put_MousePointer(InkMousePointer MousePointer);
+    HRESULT get_Locked(VARIANT_BOOL* pVal);
+    HRESULT put_Locked(VARIANT_BOOL newVal);
+    HRESULT get_Enabled(VARIANT_BOOL* pVal);
+    HRESULT put_Enabled(VARIANT_BOOL newVal);
+    HRESULT get_MaxLength(int* plMaxLength);
+    HRESULT put_MaxLength(int lMaxLength);
+    HRESULT get_MultiLine(VARIANT_BOOL* pVal);
+    HRESULT put_MultiLine(VARIANT_BOOL newVal);
+    HRESULT get_ScrollBars(ScrollBarsConstants* pVal);
+    HRESULT put_ScrollBars(ScrollBarsConstants newVal);
+    HRESULT get_DisableNoScroll(VARIANT_BOOL* pVal);
+    HRESULT put_DisableNoScroll(VARIANT_BOOL newVal);
+    HRESULT get_SelAlignment(VARIANT* pvarSelAlignment);
+    HRESULT put_SelAlignment(VARIANT pvarSelAlignment);
+    HRESULT get_SelBold(VARIANT* pvarSelBold);
+    HRESULT put_SelBold(VARIANT pvarSelBold);
+    HRESULT get_SelItalic(VARIANT* pvarSelItalic);
+    HRESULT put_SelItalic(VARIANT pvarSelItalic);
+    HRESULT get_SelUnderline(VARIANT* pvarSelUnderline);
+    HRESULT put_SelUnderline(VARIANT pvarSelUnderline);
+    HRESULT get_SelColor(VARIANT* pvarSelColor);
+    HRESULT put_SelColor(VARIANT pvarSelColor);
+    HRESULT get_SelFontName(VARIANT* pvarSelFontName);
+    HRESULT put_SelFontName(VARIANT pvarSelFontName);
+    HRESULT get_SelFontSize(VARIANT* pvarSelFontSize);
+    HRESULT put_SelFontSize(VARIANT pvarSelFontSize);
+    HRESULT get_SelCharOffset(VARIANT* pvarSelCharOffset);
+    HRESULT put_SelCharOffset(VARIANT pvarSelCharOffset);
+    HRESULT get_TextRTF(BSTR* pbstrTextRTF);
+    HRESULT put_TextRTF(BSTR pbstrTextRTF);
+    HRESULT get_SelStart(int* plSelStart);
+    HRESULT put_SelStart(int plSelStart);
+    HRESULT get_SelLength(int* plSelLength);
+    HRESULT put_SelLength(int plSelLength);
+    HRESULT get_SelText(BSTR* pbstrSelText);
+    HRESULT put_SelText(BSTR pbstrSelText);
+    HRESULT get_SelRTF(BSTR* pbstrSelRTF);
+    HRESULT put_SelRTF(BSTR pbstrSelRTF);
     HRESULT Refresh();
 }
 enum IID__IInkEditEvents = GUID(0xe3b0b797, 0xa72e, 0x46db, [0xa0, 0xd7, 0x6c, 0x9e, 0xba, 0x8e, 0x9b, 0xbc]);
@@ -2674,21 +2674,21 @@ interface IMathInputControl : IDispatch
 {
     HRESULT Show();
     HRESULT Hide();
-    HRESULT IsVisible(VARIANT_BOOL*);
-    HRESULT GetPosition(int*, int*, int*, int*);
-    HRESULT SetPosition(int, int, int, int);
+    HRESULT IsVisible(VARIANT_BOOL* pvbShown);
+    HRESULT GetPosition(int* Left, int* Top, int* Right, int* Bottom);
+    HRESULT SetPosition(int Left, int Top, int Right, int Bottom);
     HRESULT Clear();
-    HRESULT SetCustomPaint(int, VARIANT_BOOL);
-    HRESULT SetCaptionText(BSTR);
-    HRESULT LoadInk(IInkDisp);
-    HRESULT SetOwnerWindow(long);
-    HRESULT EnableExtendedButtons(VARIANT_BOOL);
-    HRESULT GetPreviewHeight(int*);
-    HRESULT SetPreviewHeight(int);
-    HRESULT EnableAutoGrow(VARIANT_BOOL);
-    HRESULT AddFunctionName(BSTR);
-    HRESULT RemoveFunctionName(BSTR);
-    HRESULT GetHoverIcon(IPictureDisp*);
+    HRESULT SetCustomPaint(int Element, VARIANT_BOOL Paint);
+    HRESULT SetCaptionText(BSTR CaptionText);
+    HRESULT LoadInk(IInkDisp Ink);
+    HRESULT SetOwnerWindow(long OwnerWindow);
+    HRESULT EnableExtendedButtons(VARIANT_BOOL Extended);
+    HRESULT GetPreviewHeight(int* Height);
+    HRESULT SetPreviewHeight(int Height);
+    HRESULT EnableAutoGrow(VARIANT_BOOL AutoGrow);
+    HRESULT AddFunctionName(BSTR FunctionName);
+    HRESULT RemoveFunctionName(BSTR FunctionName);
+    HRESULT GetHoverIcon(IPictureDisp* HoverImage);
 }
 enum IID__IMathInputControlEvents = GUID(0x683336b5, 0xa47d, 0x4358, [0x96, 0xf9, 0x87, 0x5a, 0x47, 0x2a, 0xe7, 0xa]);
 interface _IMathInputControlEvents : IDispatch
@@ -2762,86 +2762,86 @@ struct DYNAMIC_RENDERER_CACHED_DATA
 enum IID_IRealTimeStylus = GUID(0xa8bb5d22, 0x3144, 0x4a7b, [0x93, 0xcd, 0xf3, 0x4a, 0x16, 0xbe, 0x51, 0x3a]);
 interface IRealTimeStylus : IUnknown
 {
-    HRESULT get_Enabled(BOOL*);
-    HRESULT put_Enabled(BOOL);
-    HRESULT get_HWND(HANDLE_PTR*);
-    HRESULT put_HWND(HANDLE_PTR);
-    HRESULT get_WindowInputRectangle(RECT*);
-    HRESULT put_WindowInputRectangle(const(RECT)*);
-    HRESULT AddStylusSyncPlugin(uint, IStylusSyncPlugin);
-    HRESULT RemoveStylusSyncPlugin(uint, IStylusSyncPlugin*);
+    HRESULT get_Enabled(BOOL* pfEnable);
+    HRESULT put_Enabled(BOOL fEnable);
+    HRESULT get_HWND(HANDLE_PTR* phwnd);
+    HRESULT put_HWND(HANDLE_PTR hwnd);
+    HRESULT get_WindowInputRectangle(RECT* prcWndInputRect);
+    HRESULT put_WindowInputRectangle(const(RECT)* prcWndInputRect);
+    HRESULT AddStylusSyncPlugin(uint iIndex, IStylusSyncPlugin piPlugin);
+    HRESULT RemoveStylusSyncPlugin(uint iIndex, IStylusSyncPlugin* ppiPlugin);
     HRESULT RemoveAllStylusSyncPlugins();
-    HRESULT GetStylusSyncPlugin(uint, IStylusSyncPlugin*);
-    HRESULT GetStylusSyncPluginCount(uint*);
-    HRESULT AddStylusAsyncPlugin(uint, IStylusAsyncPlugin);
-    HRESULT RemoveStylusAsyncPlugin(uint, IStylusAsyncPlugin*);
+    HRESULT GetStylusSyncPlugin(uint iIndex, IStylusSyncPlugin* ppiPlugin);
+    HRESULT GetStylusSyncPluginCount(uint* pcPlugins);
+    HRESULT AddStylusAsyncPlugin(uint iIndex, IStylusAsyncPlugin piPlugin);
+    HRESULT RemoveStylusAsyncPlugin(uint iIndex, IStylusAsyncPlugin* ppiPlugin);
     HRESULT RemoveAllStylusAsyncPlugins();
-    HRESULT GetStylusAsyncPlugin(uint, IStylusAsyncPlugin*);
-    HRESULT GetStylusAsyncPluginCount(uint*);
-    HRESULT get_ChildRealTimeStylusPlugin(IRealTimeStylus*);
-    HRESULT putref_ChildRealTimeStylusPlugin(IRealTimeStylus);
-    HRESULT AddCustomStylusDataToQueue(StylusQueue, const(GUID)*, uint, ubyte*);
+    HRESULT GetStylusAsyncPlugin(uint iIndex, IStylusAsyncPlugin* ppiPlugin);
+    HRESULT GetStylusAsyncPluginCount(uint* pcPlugins);
+    HRESULT get_ChildRealTimeStylusPlugin(IRealTimeStylus* ppiRTS);
+    HRESULT putref_ChildRealTimeStylusPlugin(IRealTimeStylus piRTS);
+    HRESULT AddCustomStylusDataToQueue(StylusQueue sq, const(GUID)* pGuidId, uint cbData, ubyte* pbData);
     HRESULT ClearStylusQueues();
-    HRESULT SetAllTabletsMode(BOOL);
-    HRESULT SetSingleTabletMode(IInkTablet);
-    HRESULT GetTablet(IInkTablet*);
-    HRESULT GetTabletContextIdFromTablet(IInkTablet, uint*);
-    HRESULT GetTabletFromTabletContextId(uint, IInkTablet*);
-    HRESULT GetAllTabletContextIds(uint*, uint**);
-    HRESULT GetStyluses(IInkCursors*);
-    HRESULT GetStylusForId(uint, IInkCursor*);
-    HRESULT SetDesiredPacketDescription(uint, const(GUID)*);
-    HRESULT GetDesiredPacketDescription(uint*, GUID**);
-    HRESULT GetPacketDescriptionData(uint, float*, float*, uint*, PACKET_PROPERTY**);
+    HRESULT SetAllTabletsMode(BOOL fUseMouseForInput);
+    HRESULT SetSingleTabletMode(IInkTablet piTablet);
+    HRESULT GetTablet(IInkTablet* ppiSingleTablet);
+    HRESULT GetTabletContextIdFromTablet(IInkTablet piTablet, uint* ptcid);
+    HRESULT GetTabletFromTabletContextId(uint tcid, IInkTablet* ppiTablet);
+    HRESULT GetAllTabletContextIds(uint* pcTcidCount, uint** ppTcids);
+    HRESULT GetStyluses(IInkCursors* ppiInkCursors);
+    HRESULT GetStylusForId(uint sid, IInkCursor* ppiInkCursor);
+    HRESULT SetDesiredPacketDescription(uint cProperties, const(GUID)* pPropertyGuids);
+    HRESULT GetDesiredPacketDescription(uint* pcProperties, GUID** ppPropertyGuids);
+    HRESULT GetPacketDescriptionData(uint tcid, float* pfInkToDeviceScaleX, float* pfInkToDeviceScaleY, uint* pcPacketProperties, PACKET_PROPERTY** ppPacketProperties);
 }
 enum IID_IRealTimeStylus2 = GUID(0xb5f2a6cd, 0x3179, 0x4a3e, [0xb9, 0xc4, 0xbb, 0x58, 0x65, 0x96, 0x2b, 0xe2]);
 interface IRealTimeStylus2 : IUnknown
 {
-    HRESULT get_FlicksEnabled(BOOL*);
-    HRESULT put_FlicksEnabled(BOOL);
+    HRESULT get_FlicksEnabled(BOOL* pfEnable);
+    HRESULT put_FlicksEnabled(BOOL fEnable);
 }
 enum IID_IRealTimeStylus3 = GUID(0xd70230a3, 0x6986, 0x4051, [0xb5, 0x7a, 0x1c, 0xf6, 0x9f, 0x4d, 0x9d, 0xb5]);
 interface IRealTimeStylus3 : IUnknown
 {
-    HRESULT get_MultiTouchEnabled(BOOL*);
-    HRESULT put_MultiTouchEnabled(BOOL);
+    HRESULT get_MultiTouchEnabled(BOOL* pfEnable);
+    HRESULT put_MultiTouchEnabled(BOOL fEnable);
 }
 enum IID_IRealTimeStylusSynchronization = GUID(0xaa87eab8, 0xab4a, 0x4cea, [0xb5, 0xcb, 0x46, 0xd8, 0x4c, 0x6a, 0x25, 0x9]);
 interface IRealTimeStylusSynchronization : IUnknown
 {
-    HRESULT AcquireLock(RealTimeStylusLockType);
-    HRESULT ReleaseLock(RealTimeStylusLockType);
+    HRESULT AcquireLock(RealTimeStylusLockType lock);
+    HRESULT ReleaseLock(RealTimeStylusLockType lock);
 }
 enum IID_IStrokeBuilder = GUID(0xa5fd4e2d, 0xc44b, 0x4092, [0x91, 0x77, 0x26, 0x9, 0x5, 0xeb, 0x67, 0x2b]);
 interface IStrokeBuilder : IUnknown
 {
-    HRESULT CreateStroke(uint, const(int)*, uint, const(PACKET_PROPERTY)*, float, float, IInkStrokeDisp*);
-    HRESULT BeginStroke(uint, uint, const(int)*, uint, PACKET_PROPERTY*, float, float, IInkStrokeDisp*);
-    HRESULT AppendPackets(uint, uint, uint, const(int)*);
-    HRESULT EndStroke(uint, uint, IInkStrokeDisp*, RECT*);
-    HRESULT get_Ink(IInkDisp*);
-    HRESULT putref_Ink(IInkDisp);
+    HRESULT CreateStroke(uint cPktBuffLength, const(int)* pPackets, uint cPacketProperties, const(PACKET_PROPERTY)* pPacketProperties, float fInkToDeviceScaleX, float fInkToDeviceScaleY, IInkStrokeDisp* ppIInkStroke);
+    HRESULT BeginStroke(uint tcid, uint sid, const(int)* pPacket, uint cPacketProperties, PACKET_PROPERTY* pPacketProperties, float fInkToDeviceScaleX, float fInkToDeviceScaleY, IInkStrokeDisp* ppIInkStroke);
+    HRESULT AppendPackets(uint tcid, uint sid, uint cPktBuffLength, const(int)* pPackets);
+    HRESULT EndStroke(uint tcid, uint sid, IInkStrokeDisp* ppIInkStroke, RECT* pDirtyRect);
+    HRESULT get_Ink(IInkDisp* ppiInkObj);
+    HRESULT putref_Ink(IInkDisp piInkObj);
 }
 enum IID_IStylusPlugin = GUID(0xa81436d8, 0x4757, 0x4fd1, [0xa1, 0x85, 0x13, 0x3f, 0x97, 0xc6, 0xc5, 0x45]);
 interface IStylusPlugin : IUnknown
 {
-    HRESULT RealTimeStylusEnabled(IRealTimeStylus, uint, const(uint)*);
-    HRESULT RealTimeStylusDisabled(IRealTimeStylus, uint, const(uint)*);
-    HRESULT StylusInRange(IRealTimeStylus, uint, uint);
-    HRESULT StylusOutOfRange(IRealTimeStylus, uint, uint);
-    HRESULT StylusDown(IRealTimeStylus, const(StylusInfo)*, uint, int*, int**);
-    HRESULT StylusUp(IRealTimeStylus, const(StylusInfo)*, uint, int*, int**);
-    HRESULT StylusButtonDown(IRealTimeStylus, uint, const(GUID)*, POINT*);
-    HRESULT StylusButtonUp(IRealTimeStylus, uint, const(GUID)*, POINT*);
-    HRESULT InAirPackets(IRealTimeStylus, const(StylusInfo)*, uint, uint, int*, uint*, int**);
-    HRESULT Packets(IRealTimeStylus, const(StylusInfo)*, uint, uint, int*, uint*, int**);
-    HRESULT CustomStylusDataAdded(IRealTimeStylus, const(GUID)*, uint, const(ubyte)*);
-    HRESULT SystemEvent(IRealTimeStylus, uint, uint, ushort, SYSTEM_EVENT_DATA);
-    HRESULT TabletAdded(IRealTimeStylus, IInkTablet);
-    HRESULT TabletRemoved(IRealTimeStylus, int);
-    HRESULT Error(IRealTimeStylus, IStylusPlugin, RealTimeStylusDataInterest, HRESULT, long*);
-    HRESULT UpdateMapping(IRealTimeStylus);
-    HRESULT DataInterest(RealTimeStylusDataInterest*);
+    HRESULT RealTimeStylusEnabled(IRealTimeStylus piRtsSrc, uint cTcidCount, const(uint)* pTcids);
+    HRESULT RealTimeStylusDisabled(IRealTimeStylus piRtsSrc, uint cTcidCount, const(uint)* pTcids);
+    HRESULT StylusInRange(IRealTimeStylus piRtsSrc, uint tcid, uint sid);
+    HRESULT StylusOutOfRange(IRealTimeStylus piRtsSrc, uint tcid, uint sid);
+    HRESULT StylusDown(IRealTimeStylus piRtsSrc, const(StylusInfo)* pStylusInfo, uint cPropCountPerPkt, int* pPacket, int** ppInOutPkt);
+    HRESULT StylusUp(IRealTimeStylus piRtsSrc, const(StylusInfo)* pStylusInfo, uint cPropCountPerPkt, int* pPacket, int** ppInOutPkt);
+    HRESULT StylusButtonDown(IRealTimeStylus piRtsSrc, uint sid, const(GUID)* pGuidStylusButton, POINT* pStylusPos);
+    HRESULT StylusButtonUp(IRealTimeStylus piRtsSrc, uint sid, const(GUID)* pGuidStylusButton, POINT* pStylusPos);
+    HRESULT InAirPackets(IRealTimeStylus piRtsSrc, const(StylusInfo)* pStylusInfo, uint cPktCount, uint cPktBuffLength, int* pPackets, uint* pcInOutPkts, int** ppInOutPkts);
+    HRESULT Packets(IRealTimeStylus piRtsSrc, const(StylusInfo)* pStylusInfo, uint cPktCount, uint cPktBuffLength, int* pPackets, uint* pcInOutPkts, int** ppInOutPkts);
+    HRESULT CustomStylusDataAdded(IRealTimeStylus piRtsSrc, const(GUID)* pGuidId, uint cbData, const(ubyte)* pbData);
+    HRESULT SystemEvent(IRealTimeStylus piRtsSrc, uint tcid, uint sid, ushort event, SYSTEM_EVENT_DATA eventdata);
+    HRESULT TabletAdded(IRealTimeStylus piRtsSrc, IInkTablet piTablet);
+    HRESULT TabletRemoved(IRealTimeStylus piRtsSrc, int iTabletIndex);
+    HRESULT Error(IRealTimeStylus piRtsSrc, IStylusPlugin piPlugin, RealTimeStylusDataInterest dataInterest, HRESULT hrErrorCode, long* lptrKey);
+    HRESULT UpdateMapping(IRealTimeStylus piRtsSrc);
+    HRESULT DataInterest(RealTimeStylusDataInterest* pDataInterest);
 }
 enum IID_IStylusSyncPlugin = GUID(0xa157b174, 0x482f, 0x4d71, [0xa3, 0xf6, 0x3a, 0x41, 0xdd, 0xd1, 0x1b, 0xe9]);
 interface IStylusSyncPlugin : IStylusPlugin
@@ -2854,30 +2854,30 @@ interface IStylusAsyncPlugin : IStylusPlugin
 enum IID_IDynamicRenderer = GUID(0xa079468e, 0x7165, 0x46f9, [0xb7, 0xaf, 0x98, 0xad, 0x1, 0xa9, 0x30, 0x9]);
 interface IDynamicRenderer : IUnknown
 {
-    HRESULT get_Enabled(BOOL*);
-    HRESULT put_Enabled(BOOL);
-    HRESULT get_HWND(HANDLE_PTR*);
-    HRESULT put_HWND(HANDLE_PTR);
-    HRESULT get_ClipRectangle(RECT*);
-    HRESULT put_ClipRectangle(const(RECT)*);
-    HRESULT get_ClipRegion(HANDLE_PTR*);
-    HRESULT put_ClipRegion(HANDLE_PTR);
-    HRESULT get_DrawingAttributes(IInkDrawingAttributes*);
-    HRESULT putref_DrawingAttributes(IInkDrawingAttributes);
-    HRESULT get_DataCacheEnabled(BOOL*);
-    HRESULT put_DataCacheEnabled(BOOL);
-    HRESULT ReleaseCachedData(uint);
+    HRESULT get_Enabled(BOOL* bEnabled);
+    HRESULT put_Enabled(BOOL bEnabled);
+    HRESULT get_HWND(HANDLE_PTR* hwnd);
+    HRESULT put_HWND(HANDLE_PTR hwnd);
+    HRESULT get_ClipRectangle(RECT* prcClipRect);
+    HRESULT put_ClipRectangle(const(RECT)* prcClipRect);
+    HRESULT get_ClipRegion(HANDLE_PTR* phClipRgn);
+    HRESULT put_ClipRegion(HANDLE_PTR hClipRgn);
+    HRESULT get_DrawingAttributes(IInkDrawingAttributes* ppiDA);
+    HRESULT putref_DrawingAttributes(IInkDrawingAttributes piDA);
+    HRESULT get_DataCacheEnabled(BOOL* pfCacheData);
+    HRESULT put_DataCacheEnabled(BOOL fCacheData);
+    HRESULT ReleaseCachedData(uint strokeId);
     HRESULT Refresh();
-    HRESULT Draw(HANDLE_PTR);
+    HRESULT Draw(HANDLE_PTR hDC);
 }
 enum IID_IGestureRecognizer = GUID(0xae9ef86b, 0x7054, 0x45e3, [0xae, 0x22, 0x31, 0x74, 0xdc, 0x88, 0x11, 0xb7]);
 interface IGestureRecognizer : IUnknown
 {
-    HRESULT get_Enabled(BOOL*);
-    HRESULT put_Enabled(BOOL);
-    HRESULT get_MaxStrokeCount(int*);
-    HRESULT put_MaxStrokeCount(int);
-    HRESULT EnableGestures(uint, const(int)*);
+    HRESULT get_Enabled(BOOL* pfEnabled);
+    HRESULT put_Enabled(BOOL fEnabled);
+    HRESULT get_MaxStrokeCount(int* pcStrokes);
+    HRESULT put_MaxStrokeCount(int cStrokes);
+    HRESULT EnableGestures(uint cGestures, const(int)* pGestures);
     HRESULT Reset();
 }
 enum CLSID_RealTimeStylus = GUID(0xe26b366d, 0xf998, 0x43ce, [0x83, 0x6f, 0xcb, 0x6d, 0x90, 0x44, 0x32, 0xb0]);
@@ -3009,17 +3009,17 @@ struct CHARACTER_RANGE
 enum IID_ITipAutoCompleteProvider = GUID(0x7c6cf46d, 0x8404, 0x46b9, [0xad, 0x33, 0xf5, 0xb6, 0x3, 0x6d, 0x40, 0x7]);
 interface ITipAutoCompleteProvider : IUnknown
 {
-    HRESULT UpdatePendingText(BSTR);
-    HRESULT Show(BOOL);
+    HRESULT UpdatePendingText(BSTR bstrPendingText);
+    HRESULT Show(BOOL fShow);
 }
 enum IID_ITipAutoCompleteClient = GUID(0x5e078e03, 0x8265, 0x4bbe, [0x94, 0x87, 0xd2, 0x42, 0xed, 0xbe, 0xf9, 0x10]);
 interface ITipAutoCompleteClient : IUnknown
 {
-    HRESULT AdviseProvider(HWND, ITipAutoCompleteProvider);
-    HRESULT UnadviseProvider(HWND, ITipAutoCompleteProvider);
+    HRESULT AdviseProvider(HWND hWndField, ITipAutoCompleteProvider pIProvider);
+    HRESULT UnadviseProvider(HWND hWndField, ITipAutoCompleteProvider pIProvider);
     HRESULT UserSelection();
-    HRESULT PreferredRects(RECT*, RECT*, RECT*, BOOL*);
-    HRESULT RequestShowUI(HWND, BOOL*);
+    HRESULT PreferredRects(RECT* prcACList, RECT* prcField, RECT* prcModifiedACList, BOOL* pfShownAboveTip);
+    HRESULT RequestShowUI(HWND hWndList, BOOL* pfAllowShowing);
 }
 enum CLSID_TipAutoCompleteClient = GUID(0x807c1e6c, 0x1d00, 0x453f, [0xb9, 0x20, 0xb6, 0x1b, 0xb7, 0xcd, 0xd9, 0x97]);
 struct TipAutoCompleteClient

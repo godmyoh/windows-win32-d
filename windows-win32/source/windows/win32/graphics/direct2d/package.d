@@ -4,7 +4,7 @@ import windows.win32.guid : GUID;
 import windows.win32.foundation : BOOL, HRESULT, HWND, POINT, PSTR, PWSTR, RECT;
 import windows.win32.graphics.direct2d.common : D2D1_ALPHA_MODE, D2D1_BEZIER_SEGMENT, D2D1_BLEND_MODE, D2D1_COLOR_F, D2D1_COMPOSITE_MODE, D2D1_FILL_MODE, D2D1_GRADIENT_STOP, D2D1_PIXEL_FORMAT, D2D_MATRIX_3X2_F, D2D_MATRIX_4X4_F, D2D_POINT_2F, D2D_POINT_2U, D2D_RECT_F, D2D_RECT_U, D2D_SIZE_F, D2D_SIZE_U, ID2D1SimplifiedGeometrySink;
 import windows.win32.graphics.direct3d : D3D_FEATURE_LEVEL;
-import windows.win32.graphics.directwrite : DWRITE_GLYPH_IMAGE_FORMATS, DWRITE_GLYPH_RUN, DWRITE_GLYPH_RUN_DESCRIPTION, DWRITE_MEASURING_MODE, IDWriteFontFace, IDWriteRenderingParams, IDWriteTextFormat, IDWriteTextLayout;
+import windows.win32.graphics.directwrite : DWRITE_GLYPH_IMAGE_FORMATS, DWRITE_GLYPH_RUN, DWRITE_GLYPH_RUN_DESCRIPTION, DWRITE_MEASURING_MODE, DWRITE_PAINT_FEATURE_LEVEL, IDWriteFontFace, IDWriteRenderingParams, IDWriteTextFormat, IDWriteTextLayout;
 import windows.win32.graphics.dxgi : IDXGIDevice, IDXGISurface;
 import windows.win32.graphics.dxgi.common : DXGI_COLOR_SPACE_TYPE, DXGI_FORMAT;
 import windows.win32.graphics.gdi : HDC;
@@ -15,19 +15,19 @@ import windows.win32.system.com : IStream, IUnknown;
 version (Windows):
 extern (Windows):
 
-HRESULT D2D1CreateFactory(D2D1_FACTORY_TYPE, const(GUID)*, const(D2D1_FACTORY_OPTIONS)*, void**);
-void D2D1MakeRotateMatrix(float, D2D_POINT_2F, D2D_MATRIX_3X2_F*);
-void D2D1MakeSkewMatrix(float, float, D2D_POINT_2F, D2D_MATRIX_3X2_F*);
-BOOL D2D1IsMatrixInvertible(const(D2D_MATRIX_3X2_F)*);
-BOOL D2D1InvertMatrix(D2D_MATRIX_3X2_F*);
-HRESULT D2D1CreateDevice(IDXGIDevice, const(D2D1_CREATION_PROPERTIES)*, ID2D1Device*);
-HRESULT D2D1CreateDeviceContext(IDXGISurface, const(D2D1_CREATION_PROPERTIES)*, ID2D1DeviceContext*);
-D2D1_COLOR_F D2D1ConvertColorSpace(D2D1_COLOR_SPACE, D2D1_COLOR_SPACE, const(D2D1_COLOR_F)*);
-void D2D1SinCos(float, float*, float*);
-float D2D1Tan(float);
-float D2D1Vec3Length(float, float, float);
-float D2D1ComputeMaximumScaleFactor(const(D2D_MATRIX_3X2_F)*);
-void D2D1GetGradientMeshInteriorPointsFromCoonsPatch(const(D2D_POINT_2F)*, const(D2D_POINT_2F)*, const(D2D_POINT_2F)*, const(D2D_POINT_2F)*, const(D2D_POINT_2F)*, const(D2D_POINT_2F)*, const(D2D_POINT_2F)*, const(D2D_POINT_2F)*, const(D2D_POINT_2F)*, const(D2D_POINT_2F)*, const(D2D_POINT_2F)*, const(D2D_POINT_2F)*, D2D_POINT_2F*, D2D_POINT_2F*, D2D_POINT_2F*, D2D_POINT_2F*);
+HRESULT D2D1CreateFactory(D2D1_FACTORY_TYPE factoryType, const(GUID)* riid, const(D2D1_FACTORY_OPTIONS)* pFactoryOptions, void** ppIFactory);
+void D2D1MakeRotateMatrix(float angle, D2D_POINT_2F center, D2D_MATRIX_3X2_F* matrix);
+void D2D1MakeSkewMatrix(float angleX, float angleY, D2D_POINT_2F center, D2D_MATRIX_3X2_F* matrix);
+BOOL D2D1IsMatrixInvertible(const(D2D_MATRIX_3X2_F)* matrix);
+BOOL D2D1InvertMatrix(D2D_MATRIX_3X2_F* matrix);
+HRESULT D2D1CreateDevice(IDXGIDevice dxgiDevice, const(D2D1_CREATION_PROPERTIES)* creationProperties, ID2D1Device* d2dDevice);
+HRESULT D2D1CreateDeviceContext(IDXGISurface dxgiSurface, const(D2D1_CREATION_PROPERTIES)* creationProperties, ID2D1DeviceContext* d2dDeviceContext);
+D2D1_COLOR_F D2D1ConvertColorSpace(D2D1_COLOR_SPACE sourceColorSpace, D2D1_COLOR_SPACE destinationColorSpace, const(D2D1_COLOR_F)* color);
+void D2D1SinCos(float angle, float* s, float* c);
+float D2D1Tan(float angle);
+float D2D1Vec3Length(float x, float y, float z);
+float D2D1ComputeMaximumScaleFactor(const(D2D_MATRIX_3X2_F)* matrix);
+void D2D1GetGradientMeshInteriorPointsFromCoonsPatch(const(D2D_POINT_2F)* pPoint0, const(D2D_POINT_2F)* pPoint1, const(D2D_POINT_2F)* pPoint2, const(D2D_POINT_2F)* pPoint3, const(D2D_POINT_2F)* pPoint4, const(D2D_POINT_2F)* pPoint5, const(D2D_POINT_2F)* pPoint6, const(D2D_POINT_2F)* pPoint7, const(D2D_POINT_2F)* pPoint8, const(D2D_POINT_2F)* pPoint9, const(D2D_POINT_2F)* pPoint10, const(D2D_POINT_2F)* pPoint11, D2D_POINT_2F* pTensorPoint11, D2D_POINT_2F* pTensorPoint12, D2D_POINT_2F* pTensorPoint21, D2D_POINT_2F* pTensorPoint22);
 enum D2D1_DEFAULT_FLATTENING_TOLERANCE = 0.250000;
 enum CLSID_D2D12DAffineTransform = GUID(0x6aa97485, 0x6354, 0x4cfc, [0x90, 0x8c, 0xe4, 0xa7, 0x4f, 0x62, 0xc9, 0x6c]);
 enum CLSID_D2D13DPerspectiveTransform = GUID(0xc2844d0b, 0x3d86, 0x46e7, [0x85, 0xba, 0x52, 0x6c, 0x92, 0x40, 0xf3, 0xfb]);
@@ -421,7 +421,7 @@ struct D2D1_FACTORY_OPTIONS
 enum IID_ID2D1Resource = GUID(0x2cd90691, 0x12e2, 0x11dc, [0x9f, 0xed, 0x0, 0x11, 0x43, 0xa0, 0x55, 0xf9]);
 interface ID2D1Resource : IUnknown
 {
-    void GetFactory(ID2D1Factory*);
+    void GetFactory(ID2D1Factory* factory);
 }
 enum IID_ID2D1Image = GUID(0x65019f75, 0x8da2, 0x497c, [0xb3, 0x2c, 0xdf, 0xa3, 0x4e, 0x48, 0xed, 0xe6]);
 interface ID2D1Image : ID2D1Resource
@@ -433,66 +433,66 @@ interface ID2D1Bitmap : ID2D1Image
     void GetSize(D2D_SIZE_F*); // ABI bug workaround
     void GetPixelSize(D2D_SIZE_U*); // ABI bug workaround
     void GetPixelFormat(D2D1_PIXEL_FORMAT*); // ABI bug workaround
-    void GetDpi(float*, float*);
-    HRESULT CopyFromBitmap(const(D2D_POINT_2U)*, ID2D1Bitmap, const(D2D_RECT_U)*);
-    HRESULT CopyFromRenderTarget(const(D2D_POINT_2U)*, ID2D1RenderTarget, const(D2D_RECT_U)*);
-    HRESULT CopyFromMemory(const(D2D_RECT_U)*, const(void)*, uint);
+    void GetDpi(float* dpiX, float* dpiY);
+    HRESULT CopyFromBitmap(const(D2D_POINT_2U)* destPoint, ID2D1Bitmap bitmap, const(D2D_RECT_U)* srcRect);
+    HRESULT CopyFromRenderTarget(const(D2D_POINT_2U)* destPoint, ID2D1RenderTarget renderTarget, const(D2D_RECT_U)* srcRect);
+    HRESULT CopyFromMemory(const(D2D_RECT_U)* dstRect, const(void)* srcData, uint pitch);
 }
 enum IID_ID2D1GradientStopCollection = GUID(0x2cd906a7, 0x12e2, 0x11dc, [0x9f, 0xed, 0x0, 0x11, 0x43, 0xa0, 0x55, 0xf9]);
 interface ID2D1GradientStopCollection : ID2D1Resource
 {
     uint GetGradientStopCount();
-    void GetGradientStops(D2D1_GRADIENT_STOP*, uint);
+    void GetGradientStops(D2D1_GRADIENT_STOP* gradientStops, uint gradientStopsCount);
     D2D1_GAMMA GetColorInterpolationGamma();
     D2D1_EXTEND_MODE GetExtendMode();
 }
 enum IID_ID2D1Brush = GUID(0x2cd906a8, 0x12e2, 0x11dc, [0x9f, 0xed, 0x0, 0x11, 0x43, 0xa0, 0x55, 0xf9]);
 interface ID2D1Brush : ID2D1Resource
 {
-    void SetOpacity(float);
-    void SetTransform(const(D2D_MATRIX_3X2_F)*);
+    void SetOpacity(float opacity);
+    void SetTransform(const(D2D_MATRIX_3X2_F)* transform);
     float GetOpacity();
-    void GetTransform(D2D_MATRIX_3X2_F*);
+    void GetTransform(D2D_MATRIX_3X2_F* transform);
 }
 enum IID_ID2D1BitmapBrush = GUID(0x2cd906aa, 0x12e2, 0x11dc, [0x9f, 0xed, 0x0, 0x11, 0x43, 0xa0, 0x55, 0xf9]);
 interface ID2D1BitmapBrush : ID2D1Brush
 {
-    void SetExtendModeX(D2D1_EXTEND_MODE);
-    void SetExtendModeY(D2D1_EXTEND_MODE);
-    void SetInterpolationMode(D2D1_BITMAP_INTERPOLATION_MODE);
-    void SetBitmap(ID2D1Bitmap);
+    void SetExtendModeX(D2D1_EXTEND_MODE extendModeX);
+    void SetExtendModeY(D2D1_EXTEND_MODE extendModeY);
+    void SetInterpolationMode(D2D1_BITMAP_INTERPOLATION_MODE interpolationMode);
+    void SetBitmap(ID2D1Bitmap bitmap);
     D2D1_EXTEND_MODE GetExtendModeX();
     D2D1_EXTEND_MODE GetExtendModeY();
     D2D1_BITMAP_INTERPOLATION_MODE GetInterpolationMode();
-    void GetBitmap(ID2D1Bitmap*);
+    void GetBitmap(ID2D1Bitmap* bitmap);
 }
 enum IID_ID2D1SolidColorBrush = GUID(0x2cd906a9, 0x12e2, 0x11dc, [0x9f, 0xed, 0x0, 0x11, 0x43, 0xa0, 0x55, 0xf9]);
 interface ID2D1SolidColorBrush : ID2D1Brush
 {
-    void SetColor(const(D2D1_COLOR_F)*);
+    void SetColor(const(D2D1_COLOR_F)* color);
     D2D1_COLOR_F GetColor();
 }
 enum IID_ID2D1LinearGradientBrush = GUID(0x2cd906ab, 0x12e2, 0x11dc, [0x9f, 0xed, 0x0, 0x11, 0x43, 0xa0, 0x55, 0xf9]);
 interface ID2D1LinearGradientBrush : ID2D1Brush
 {
-    void SetStartPoint(D2D_POINT_2F);
-    void SetEndPoint(D2D_POINT_2F);
+    void SetStartPoint(D2D_POINT_2F startPoint);
+    void SetEndPoint(D2D_POINT_2F endPoint);
     D2D_POINT_2F GetStartPoint();
     D2D_POINT_2F GetEndPoint();
-    void GetGradientStopCollection(ID2D1GradientStopCollection*);
+    void GetGradientStopCollection(ID2D1GradientStopCollection* gradientStopCollection);
 }
 enum IID_ID2D1RadialGradientBrush = GUID(0x2cd906ac, 0x12e2, 0x11dc, [0x9f, 0xed, 0x0, 0x11, 0x43, 0xa0, 0x55, 0xf9]);
 interface ID2D1RadialGradientBrush : ID2D1Brush
 {
-    void SetCenter(D2D_POINT_2F);
-    void SetGradientOriginOffset(D2D_POINT_2F);
-    void SetRadiusX(float);
-    void SetRadiusY(float);
+    void SetCenter(D2D_POINT_2F center);
+    void SetGradientOriginOffset(D2D_POINT_2F gradientOriginOffset);
+    void SetRadiusX(float radiusX);
+    void SetRadiusY(float radiusY);
     D2D_POINT_2F GetCenter();
     D2D_POINT_2F GetGradientOriginOffset();
     float GetRadiusX();
     float GetRadiusY();
-    void GetGradientStopCollection(ID2D1GradientStopCollection*);
+    void GetGradientStopCollection(ID2D1GradientStopCollection* gradientStopCollection);
 }
 enum IID_ID2D1StrokeStyle = GUID(0x2cd9069d, 0x12e2, 0x11dc, [0x9f, 0xed, 0x0, 0x11, 0x43, 0xa0, 0x55, 0xf9]);
 interface ID2D1StrokeStyle : ID2D1Resource
@@ -505,80 +505,80 @@ interface ID2D1StrokeStyle : ID2D1Resource
     float GetDashOffset();
     D2D1_DASH_STYLE GetDashStyle();
     uint GetDashesCount();
-    void GetDashes(float*, uint);
+    void GetDashes(float* dashes, uint dashesCount);
 }
 enum IID_ID2D1Geometry = GUID(0x2cd906a1, 0x12e2, 0x11dc, [0x9f, 0xed, 0x0, 0x11, 0x43, 0xa0, 0x55, 0xf9]);
 interface ID2D1Geometry : ID2D1Resource
 {
-    HRESULT GetBounds(const(D2D_MATRIX_3X2_F)*, D2D_RECT_F*);
-    HRESULT GetWidenedBounds(float, ID2D1StrokeStyle, const(D2D_MATRIX_3X2_F)*, float, D2D_RECT_F*);
-    HRESULT StrokeContainsPoint(D2D_POINT_2F, float, ID2D1StrokeStyle, const(D2D_MATRIX_3X2_F)*, float, BOOL*);
-    HRESULT FillContainsPoint(D2D_POINT_2F, const(D2D_MATRIX_3X2_F)*, float, BOOL*);
-    HRESULT CompareWithGeometry(ID2D1Geometry, const(D2D_MATRIX_3X2_F)*, float, D2D1_GEOMETRY_RELATION*);
-    HRESULT Simplify(D2D1_GEOMETRY_SIMPLIFICATION_OPTION, const(D2D_MATRIX_3X2_F)*, float, ID2D1SimplifiedGeometrySink);
-    HRESULT Tessellate(const(D2D_MATRIX_3X2_F)*, float, ID2D1TessellationSink);
-    HRESULT CombineWithGeometry(ID2D1Geometry, D2D1_COMBINE_MODE, const(D2D_MATRIX_3X2_F)*, float, ID2D1SimplifiedGeometrySink);
-    HRESULT Outline(const(D2D_MATRIX_3X2_F)*, float, ID2D1SimplifiedGeometrySink);
-    HRESULT ComputeArea(const(D2D_MATRIX_3X2_F)*, float, float*);
-    HRESULT ComputeLength(const(D2D_MATRIX_3X2_F)*, float, float*);
-    HRESULT ComputePointAtLength(float, const(D2D_MATRIX_3X2_F)*, float, D2D_POINT_2F*, D2D_POINT_2F*);
-    HRESULT Widen(float, ID2D1StrokeStyle, const(D2D_MATRIX_3X2_F)*, float, ID2D1SimplifiedGeometrySink);
+    HRESULT GetBounds(const(D2D_MATRIX_3X2_F)* worldTransform, D2D_RECT_F* bounds);
+    HRESULT GetWidenedBounds(float strokeWidth, ID2D1StrokeStyle strokeStyle, const(D2D_MATRIX_3X2_F)* worldTransform, float flatteningTolerance, D2D_RECT_F* bounds);
+    HRESULT StrokeContainsPoint(D2D_POINT_2F point, float strokeWidth, ID2D1StrokeStyle strokeStyle, const(D2D_MATRIX_3X2_F)* worldTransform, float flatteningTolerance, BOOL* contains);
+    HRESULT FillContainsPoint(D2D_POINT_2F point, const(D2D_MATRIX_3X2_F)* worldTransform, float flatteningTolerance, BOOL* contains);
+    HRESULT CompareWithGeometry(ID2D1Geometry inputGeometry, const(D2D_MATRIX_3X2_F)* inputGeometryTransform, float flatteningTolerance, D2D1_GEOMETRY_RELATION* relation);
+    HRESULT Simplify(D2D1_GEOMETRY_SIMPLIFICATION_OPTION simplificationOption, const(D2D_MATRIX_3X2_F)* worldTransform, float flatteningTolerance, ID2D1SimplifiedGeometrySink geometrySink);
+    HRESULT Tessellate(const(D2D_MATRIX_3X2_F)* worldTransform, float flatteningTolerance, ID2D1TessellationSink tessellationSink);
+    HRESULT CombineWithGeometry(ID2D1Geometry inputGeometry, D2D1_COMBINE_MODE combineMode, const(D2D_MATRIX_3X2_F)* inputGeometryTransform, float flatteningTolerance, ID2D1SimplifiedGeometrySink geometrySink);
+    HRESULT Outline(const(D2D_MATRIX_3X2_F)* worldTransform, float flatteningTolerance, ID2D1SimplifiedGeometrySink geometrySink);
+    HRESULT ComputeArea(const(D2D_MATRIX_3X2_F)* worldTransform, float flatteningTolerance, float* area);
+    HRESULT ComputeLength(const(D2D_MATRIX_3X2_F)* worldTransform, float flatteningTolerance, float* length);
+    HRESULT ComputePointAtLength(float length, const(D2D_MATRIX_3X2_F)* worldTransform, float flatteningTolerance, D2D_POINT_2F* point, D2D_POINT_2F* unitTangentVector);
+    HRESULT Widen(float strokeWidth, ID2D1StrokeStyle strokeStyle, const(D2D_MATRIX_3X2_F)* worldTransform, float flatteningTolerance, ID2D1SimplifiedGeometrySink geometrySink);
 }
 enum IID_ID2D1RectangleGeometry = GUID(0x2cd906a2, 0x12e2, 0x11dc, [0x9f, 0xed, 0x0, 0x11, 0x43, 0xa0, 0x55, 0xf9]);
 interface ID2D1RectangleGeometry : ID2D1Geometry
 {
-    void GetRect(D2D_RECT_F*);
+    void GetRect(D2D_RECT_F* rect);
 }
 enum IID_ID2D1RoundedRectangleGeometry = GUID(0x2cd906a3, 0x12e2, 0x11dc, [0x9f, 0xed, 0x0, 0x11, 0x43, 0xa0, 0x55, 0xf9]);
 interface ID2D1RoundedRectangleGeometry : ID2D1Geometry
 {
-    void GetRoundedRect(D2D1_ROUNDED_RECT*);
+    void GetRoundedRect(D2D1_ROUNDED_RECT* roundedRect);
 }
 enum IID_ID2D1EllipseGeometry = GUID(0x2cd906a4, 0x12e2, 0x11dc, [0x9f, 0xed, 0x0, 0x11, 0x43, 0xa0, 0x55, 0xf9]);
 interface ID2D1EllipseGeometry : ID2D1Geometry
 {
-    void GetEllipse(D2D1_ELLIPSE*);
+    void GetEllipse(D2D1_ELLIPSE* ellipse);
 }
 enum IID_ID2D1GeometryGroup = GUID(0x2cd906a6, 0x12e2, 0x11dc, [0x9f, 0xed, 0x0, 0x11, 0x43, 0xa0, 0x55, 0xf9]);
 interface ID2D1GeometryGroup : ID2D1Geometry
 {
     D2D1_FILL_MODE GetFillMode();
     uint GetSourceGeometryCount();
-    void GetSourceGeometries(ID2D1Geometry*, uint);
+    void GetSourceGeometries(ID2D1Geometry* geometries, uint geometriesCount);
 }
 enum IID_ID2D1TransformedGeometry = GUID(0x2cd906bb, 0x12e2, 0x11dc, [0x9f, 0xed, 0x0, 0x11, 0x43, 0xa0, 0x55, 0xf9]);
 interface ID2D1TransformedGeometry : ID2D1Geometry
 {
-    void GetSourceGeometry(ID2D1Geometry*);
-    void GetTransform(D2D_MATRIX_3X2_F*);
+    void GetSourceGeometry(ID2D1Geometry* sourceGeometry);
+    void GetTransform(D2D_MATRIX_3X2_F* transform);
 }
 enum IID_ID2D1GeometrySink = GUID(0x2cd9069f, 0x12e2, 0x11dc, [0x9f, 0xed, 0x0, 0x11, 0x43, 0xa0, 0x55, 0xf9]);
 interface ID2D1GeometrySink : ID2D1SimplifiedGeometrySink
 {
-    void AddLine(D2D_POINT_2F);
-    void AddBezier(const(D2D1_BEZIER_SEGMENT)*);
-    void AddQuadraticBezier(const(D2D1_QUADRATIC_BEZIER_SEGMENT)*);
-    void AddQuadraticBeziers(const(D2D1_QUADRATIC_BEZIER_SEGMENT)*, uint);
-    void AddArc(const(D2D1_ARC_SEGMENT)*);
+    void AddLine(D2D_POINT_2F point);
+    void AddBezier(const(D2D1_BEZIER_SEGMENT)* bezier);
+    void AddQuadraticBezier(const(D2D1_QUADRATIC_BEZIER_SEGMENT)* bezier);
+    void AddQuadraticBeziers(const(D2D1_QUADRATIC_BEZIER_SEGMENT)* beziers, uint beziersCount);
+    void AddArc(const(D2D1_ARC_SEGMENT)* arc);
 }
 enum IID_ID2D1TessellationSink = GUID(0x2cd906c1, 0x12e2, 0x11dc, [0x9f, 0xed, 0x0, 0x11, 0x43, 0xa0, 0x55, 0xf9]);
 interface ID2D1TessellationSink : IUnknown
 {
-    void AddTriangles(const(D2D1_TRIANGLE)*, uint);
+    void AddTriangles(const(D2D1_TRIANGLE)* triangles, uint trianglesCount);
     HRESULT Close();
 }
 enum IID_ID2D1PathGeometry = GUID(0x2cd906a5, 0x12e2, 0x11dc, [0x9f, 0xed, 0x0, 0x11, 0x43, 0xa0, 0x55, 0xf9]);
 interface ID2D1PathGeometry : ID2D1Geometry
 {
-    HRESULT Open(ID2D1GeometrySink*);
-    HRESULT Stream(ID2D1GeometrySink);
-    HRESULT GetSegmentCount(uint*);
-    HRESULT GetFigureCount(uint*);
+    HRESULT Open(ID2D1GeometrySink* geometrySink);
+    HRESULT Stream(ID2D1GeometrySink geometrySink);
+    HRESULT GetSegmentCount(uint* count);
+    HRESULT GetFigureCount(uint* count);
 }
 enum IID_ID2D1Mesh = GUID(0x2cd906c2, 0x12e2, 0x11dc, [0x9f, 0xed, 0x0, 0x11, 0x43, 0xa0, 0x55, 0xf9]);
 interface ID2D1Mesh : ID2D1Resource
 {
-    HRESULT Open(ID2D1TessellationSink*);
+    HRESULT Open(ID2D1TessellationSink* tessellationSink);
 }
 enum IID_ID2D1Layer = GUID(0x2cd9069b, 0x12e2, 0x11dc, [0x9f, 0xed, 0x0, 0x11, 0x43, 0xa0, 0x55, 0xf9]);
 interface ID2D1Layer : ID2D1Resource
@@ -588,108 +588,108 @@ interface ID2D1Layer : ID2D1Resource
 enum IID_ID2D1DrawingStateBlock = GUID(0x28506e39, 0xebf6, 0x46a1, [0xbb, 0x47, 0xfd, 0x85, 0x56, 0x5a, 0xb9, 0x57]);
 interface ID2D1DrawingStateBlock : ID2D1Resource
 {
-    void GetDescription(D2D1_DRAWING_STATE_DESCRIPTION*);
-    void SetDescription(const(D2D1_DRAWING_STATE_DESCRIPTION)*);
-    void SetTextRenderingParams(IDWriteRenderingParams);
-    void GetTextRenderingParams(IDWriteRenderingParams*);
+    void GetDescription(D2D1_DRAWING_STATE_DESCRIPTION* stateDescription);
+    void SetDescription(const(D2D1_DRAWING_STATE_DESCRIPTION)* stateDescription);
+    void SetTextRenderingParams(IDWriteRenderingParams textRenderingParams);
+    void GetTextRenderingParams(IDWriteRenderingParams* textRenderingParams);
 }
 enum IID_ID2D1RenderTarget = GUID(0x2cd90694, 0x12e2, 0x11dc, [0x9f, 0xed, 0x0, 0x11, 0x43, 0xa0, 0x55, 0xf9]);
 interface ID2D1RenderTarget : ID2D1Resource
 {
-    HRESULT CreateBitmap(D2D_SIZE_U, const(void)*, uint, const(D2D1_BITMAP_PROPERTIES)*, ID2D1Bitmap*);
-    HRESULT CreateBitmapFromWicBitmap(IWICBitmapSource, const(D2D1_BITMAP_PROPERTIES)*, ID2D1Bitmap*);
-    HRESULT CreateSharedBitmap(const(GUID)*, void*, const(D2D1_BITMAP_PROPERTIES)*, ID2D1Bitmap*);
-    HRESULT CreateBitmapBrush(ID2D1Bitmap, const(D2D1_BITMAP_BRUSH_PROPERTIES)*, const(D2D1_BRUSH_PROPERTIES)*, ID2D1BitmapBrush*);
-    HRESULT CreateSolidColorBrush(const(D2D1_COLOR_F)*, const(D2D1_BRUSH_PROPERTIES)*, ID2D1SolidColorBrush*);
-    HRESULT CreateGradientStopCollection(const(D2D1_GRADIENT_STOP)*, uint, D2D1_GAMMA, D2D1_EXTEND_MODE, ID2D1GradientStopCollection*);
-    HRESULT CreateLinearGradientBrush(const(D2D1_LINEAR_GRADIENT_BRUSH_PROPERTIES)*, const(D2D1_BRUSH_PROPERTIES)*, ID2D1GradientStopCollection, ID2D1LinearGradientBrush*);
-    HRESULT CreateRadialGradientBrush(const(D2D1_RADIAL_GRADIENT_BRUSH_PROPERTIES)*, const(D2D1_BRUSH_PROPERTIES)*, ID2D1GradientStopCollection, ID2D1RadialGradientBrush*);
-    HRESULT CreateCompatibleRenderTarget(const(D2D_SIZE_F)*, const(D2D_SIZE_U)*, const(D2D1_PIXEL_FORMAT)*, D2D1_COMPATIBLE_RENDER_TARGET_OPTIONS, ID2D1BitmapRenderTarget*);
-    HRESULT CreateLayer(const(D2D_SIZE_F)*, ID2D1Layer*);
-    HRESULT CreateMesh(ID2D1Mesh*);
-    void DrawLine(D2D_POINT_2F, D2D_POINT_2F, ID2D1Brush, float, ID2D1StrokeStyle);
-    void DrawRectangle(const(D2D_RECT_F)*, ID2D1Brush, float, ID2D1StrokeStyle);
-    void FillRectangle(const(D2D_RECT_F)*, ID2D1Brush);
-    void DrawRoundedRectangle(const(D2D1_ROUNDED_RECT)*, ID2D1Brush, float, ID2D1StrokeStyle);
-    void FillRoundedRectangle(const(D2D1_ROUNDED_RECT)*, ID2D1Brush);
-    void DrawEllipse(const(D2D1_ELLIPSE)*, ID2D1Brush, float, ID2D1StrokeStyle);
-    void FillEllipse(const(D2D1_ELLIPSE)*, ID2D1Brush);
-    void DrawGeometry(ID2D1Geometry, ID2D1Brush, float, ID2D1StrokeStyle);
-    void FillGeometry(ID2D1Geometry, ID2D1Brush, ID2D1Brush);
-    void FillMesh(ID2D1Mesh, ID2D1Brush);
-    void FillOpacityMask(ID2D1Bitmap, ID2D1Brush, D2D1_OPACITY_MASK_CONTENT, const(D2D_RECT_F)*, const(D2D_RECT_F)*);
-    void DrawBitmap(ID2D1Bitmap, const(D2D_RECT_F)*, float, D2D1_BITMAP_INTERPOLATION_MODE, const(D2D_RECT_F)*);
-    void DrawText(const(wchar)*, uint, IDWriteTextFormat, const(D2D_RECT_F)*, ID2D1Brush, D2D1_DRAW_TEXT_OPTIONS, DWRITE_MEASURING_MODE);
-    void DrawTextLayout(D2D_POINT_2F, IDWriteTextLayout, ID2D1Brush, D2D1_DRAW_TEXT_OPTIONS);
-    void DrawGlyphRun(D2D_POINT_2F, const(DWRITE_GLYPH_RUN)*, ID2D1Brush, DWRITE_MEASURING_MODE);
-    void SetTransform(const(D2D_MATRIX_3X2_F)*);
-    void GetTransform(D2D_MATRIX_3X2_F*);
-    void SetAntialiasMode(D2D1_ANTIALIAS_MODE);
+    HRESULT CreateBitmap(D2D_SIZE_U size, const(void)* srcData, uint pitch, const(D2D1_BITMAP_PROPERTIES)* bitmapProperties, ID2D1Bitmap* bitmap);
+    HRESULT CreateBitmapFromWicBitmap(IWICBitmapSource wicBitmapSource, const(D2D1_BITMAP_PROPERTIES)* bitmapProperties, ID2D1Bitmap* bitmap);
+    HRESULT CreateSharedBitmap(const(GUID)* riid, void* data, const(D2D1_BITMAP_PROPERTIES)* bitmapProperties, ID2D1Bitmap* bitmap);
+    HRESULT CreateBitmapBrush(ID2D1Bitmap bitmap, const(D2D1_BITMAP_BRUSH_PROPERTIES)* bitmapBrushProperties, const(D2D1_BRUSH_PROPERTIES)* brushProperties, ID2D1BitmapBrush* bitmapBrush);
+    HRESULT CreateSolidColorBrush(const(D2D1_COLOR_F)* color, const(D2D1_BRUSH_PROPERTIES)* brushProperties, ID2D1SolidColorBrush* solidColorBrush);
+    HRESULT CreateGradientStopCollection(const(D2D1_GRADIENT_STOP)* gradientStops, uint gradientStopsCount, D2D1_GAMMA colorInterpolationGamma, D2D1_EXTEND_MODE extendMode, ID2D1GradientStopCollection* gradientStopCollection);
+    HRESULT CreateLinearGradientBrush(const(D2D1_LINEAR_GRADIENT_BRUSH_PROPERTIES)* linearGradientBrushProperties, const(D2D1_BRUSH_PROPERTIES)* brushProperties, ID2D1GradientStopCollection gradientStopCollection, ID2D1LinearGradientBrush* linearGradientBrush);
+    HRESULT CreateRadialGradientBrush(const(D2D1_RADIAL_GRADIENT_BRUSH_PROPERTIES)* radialGradientBrushProperties, const(D2D1_BRUSH_PROPERTIES)* brushProperties, ID2D1GradientStopCollection gradientStopCollection, ID2D1RadialGradientBrush* radialGradientBrush);
+    HRESULT CreateCompatibleRenderTarget(const(D2D_SIZE_F)* desiredSize, const(D2D_SIZE_U)* desiredPixelSize, const(D2D1_PIXEL_FORMAT)* desiredFormat, D2D1_COMPATIBLE_RENDER_TARGET_OPTIONS options, ID2D1BitmapRenderTarget* bitmapRenderTarget);
+    HRESULT CreateLayer(const(D2D_SIZE_F)* size, ID2D1Layer* layer);
+    HRESULT CreateMesh(ID2D1Mesh* mesh);
+    void DrawLine(D2D_POINT_2F point0, D2D_POINT_2F point1, ID2D1Brush brush, float strokeWidth, ID2D1StrokeStyle strokeStyle);
+    void DrawRectangle(const(D2D_RECT_F)* rect, ID2D1Brush brush, float strokeWidth, ID2D1StrokeStyle strokeStyle);
+    void FillRectangle(const(D2D_RECT_F)* rect, ID2D1Brush brush);
+    void DrawRoundedRectangle(const(D2D1_ROUNDED_RECT)* roundedRect, ID2D1Brush brush, float strokeWidth, ID2D1StrokeStyle strokeStyle);
+    void FillRoundedRectangle(const(D2D1_ROUNDED_RECT)* roundedRect, ID2D1Brush brush);
+    void DrawEllipse(const(D2D1_ELLIPSE)* ellipse, ID2D1Brush brush, float strokeWidth, ID2D1StrokeStyle strokeStyle);
+    void FillEllipse(const(D2D1_ELLIPSE)* ellipse, ID2D1Brush brush);
+    void DrawGeometry(ID2D1Geometry geometry, ID2D1Brush brush, float strokeWidth, ID2D1StrokeStyle strokeStyle);
+    void FillGeometry(ID2D1Geometry geometry, ID2D1Brush brush, ID2D1Brush opacityBrush);
+    void FillMesh(ID2D1Mesh mesh, ID2D1Brush brush);
+    void FillOpacityMask(ID2D1Bitmap opacityMask, ID2D1Brush brush, D2D1_OPACITY_MASK_CONTENT content, const(D2D_RECT_F)* destinationRectangle, const(D2D_RECT_F)* sourceRectangle);
+    void DrawBitmap(ID2D1Bitmap bitmap, const(D2D_RECT_F)* destinationRectangle, float opacity, D2D1_BITMAP_INTERPOLATION_MODE interpolationMode, const(D2D_RECT_F)* sourceRectangle);
+    void DrawText(const(wchar)* string, uint stringLength, IDWriteTextFormat textFormat, const(D2D_RECT_F)* layoutRect, ID2D1Brush defaultFillBrush, D2D1_DRAW_TEXT_OPTIONS options, DWRITE_MEASURING_MODE measuringMode);
+    void DrawTextLayout(D2D_POINT_2F origin, IDWriteTextLayout textLayout, ID2D1Brush defaultFillBrush, D2D1_DRAW_TEXT_OPTIONS options);
+    void DrawGlyphRun(D2D_POINT_2F baselineOrigin, const(DWRITE_GLYPH_RUN)* glyphRun, ID2D1Brush foregroundBrush, DWRITE_MEASURING_MODE measuringMode);
+    void SetTransform(const(D2D_MATRIX_3X2_F)* transform);
+    void GetTransform(D2D_MATRIX_3X2_F* transform);
+    void SetAntialiasMode(D2D1_ANTIALIAS_MODE antialiasMode);
     D2D1_ANTIALIAS_MODE GetAntialiasMode();
-    void SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE);
+    void SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE textAntialiasMode);
     D2D1_TEXT_ANTIALIAS_MODE GetTextAntialiasMode();
-    void SetTextRenderingParams(IDWriteRenderingParams);
-    void GetTextRenderingParams(IDWriteRenderingParams*);
-    void SetTags(ulong, ulong);
-    void GetTags(ulong*, ulong*);
-    void PushLayer(const(D2D1_LAYER_PARAMETERS)*, ID2D1Layer);
+    void SetTextRenderingParams(IDWriteRenderingParams textRenderingParams);
+    void GetTextRenderingParams(IDWriteRenderingParams* textRenderingParams);
+    void SetTags(ulong tag1, ulong tag2);
+    void GetTags(ulong* tag1, ulong* tag2);
+    void PushLayer(const(D2D1_LAYER_PARAMETERS)* layerParameters, ID2D1Layer layer);
     void PopLayer();
-    HRESULT Flush(ulong*, ulong*);
-    void SaveDrawingState(ID2D1DrawingStateBlock);
-    void RestoreDrawingState(ID2D1DrawingStateBlock);
-    void PushAxisAlignedClip(const(D2D_RECT_F)*, D2D1_ANTIALIAS_MODE);
+    HRESULT Flush(ulong* tag1, ulong* tag2);
+    void SaveDrawingState(ID2D1DrawingStateBlock drawingStateBlock);
+    void RestoreDrawingState(ID2D1DrawingStateBlock drawingStateBlock);
+    void PushAxisAlignedClip(const(D2D_RECT_F)* clipRect, D2D1_ANTIALIAS_MODE antialiasMode);
     void PopAxisAlignedClip();
-    void Clear(const(D2D1_COLOR_F)*);
+    void Clear(const(D2D1_COLOR_F)* clearColor);
     void BeginDraw();
-    HRESULT EndDraw(ulong*, ulong*);
+    HRESULT EndDraw(ulong* tag1, ulong* tag2);
     void GetPixelFormat(D2D1_PIXEL_FORMAT*); // ABI bug workaround
-    void SetDpi(float, float);
-    void GetDpi(float*, float*);
+    void SetDpi(float dpiX, float dpiY);
+    void GetDpi(float* dpiX, float* dpiY);
     void GetSize(D2D_SIZE_F*); // ABI bug workaround
     void GetPixelSize(D2D_SIZE_U*); // ABI bug workaround
     uint GetMaximumBitmapSize();
-    BOOL IsSupported(const(D2D1_RENDER_TARGET_PROPERTIES)*);
+    BOOL IsSupported(const(D2D1_RENDER_TARGET_PROPERTIES)* renderTargetProperties);
 }
 enum IID_ID2D1BitmapRenderTarget = GUID(0x2cd90695, 0x12e2, 0x11dc, [0x9f, 0xed, 0x0, 0x11, 0x43, 0xa0, 0x55, 0xf9]);
 interface ID2D1BitmapRenderTarget : ID2D1RenderTarget
 {
-    HRESULT GetBitmap(ID2D1Bitmap*);
+    HRESULT GetBitmap(ID2D1Bitmap* bitmap);
 }
 enum IID_ID2D1HwndRenderTarget = GUID(0x2cd90698, 0x12e2, 0x11dc, [0x9f, 0xed, 0x0, 0x11, 0x43, 0xa0, 0x55, 0xf9]);
 interface ID2D1HwndRenderTarget : ID2D1RenderTarget
 {
     D2D1_WINDOW_STATE CheckWindowState();
-    HRESULT Resize(const(D2D_SIZE_U)*);
+    HRESULT Resize(const(D2D_SIZE_U)* pixelSize);
     HWND GetHwnd();
 }
 enum IID_ID2D1GdiInteropRenderTarget = GUID(0xe0db51c3, 0x6f77, 0x4bae, [0xb3, 0xd5, 0xe4, 0x75, 0x9, 0xb3, 0x58, 0x38]);
 interface ID2D1GdiInteropRenderTarget : IUnknown
 {
-    HRESULT GetDC(D2D1_DC_INITIALIZE_MODE, HDC*);
-    HRESULT ReleaseDC(const(RECT)*);
+    HRESULT GetDC(D2D1_DC_INITIALIZE_MODE mode, HDC* hdc);
+    HRESULT ReleaseDC(const(RECT)* update);
 }
 enum IID_ID2D1DCRenderTarget = GUID(0x1c51bc64, 0xde61, 0x46fd, [0x98, 0x99, 0x63, 0xa5, 0xd8, 0xf0, 0x39, 0x50]);
 interface ID2D1DCRenderTarget : ID2D1RenderTarget
 {
-    HRESULT BindDC(const(HDC), const(RECT)*);
+    HRESULT BindDC(const(HDC) hDC, const(RECT)* pSubRect);
 }
 enum IID_ID2D1Factory = GUID(0x6152247, 0x6f50, 0x465a, [0x92, 0x45, 0x11, 0x8b, 0xfd, 0x3b, 0x60, 0x7]);
 interface ID2D1Factory : IUnknown
 {
     HRESULT ReloadSystemMetrics();
-    void GetDesktopDpi(float*, float*);
-    HRESULT CreateRectangleGeometry(const(D2D_RECT_F)*, ID2D1RectangleGeometry*);
-    HRESULT CreateRoundedRectangleGeometry(const(D2D1_ROUNDED_RECT)*, ID2D1RoundedRectangleGeometry*);
-    HRESULT CreateEllipseGeometry(const(D2D1_ELLIPSE)*, ID2D1EllipseGeometry*);
-    HRESULT CreateGeometryGroup(D2D1_FILL_MODE, ID2D1Geometry*, uint, ID2D1GeometryGroup*);
-    HRESULT CreateTransformedGeometry(ID2D1Geometry, const(D2D_MATRIX_3X2_F)*, ID2D1TransformedGeometry*);
-    HRESULT CreatePathGeometry(ID2D1PathGeometry*);
-    HRESULT CreateStrokeStyle(const(D2D1_STROKE_STYLE_PROPERTIES)*, const(float)*, uint, ID2D1StrokeStyle*);
-    HRESULT CreateDrawingStateBlock(const(D2D1_DRAWING_STATE_DESCRIPTION)*, IDWriteRenderingParams, ID2D1DrawingStateBlock*);
-    HRESULT CreateWicBitmapRenderTarget(IWICBitmap, const(D2D1_RENDER_TARGET_PROPERTIES)*, ID2D1RenderTarget*);
-    HRESULT CreateHwndRenderTarget(const(D2D1_RENDER_TARGET_PROPERTIES)*, const(D2D1_HWND_RENDER_TARGET_PROPERTIES)*, ID2D1HwndRenderTarget*);
-    HRESULT CreateDxgiSurfaceRenderTarget(IDXGISurface, const(D2D1_RENDER_TARGET_PROPERTIES)*, ID2D1RenderTarget*);
-    HRESULT CreateDCRenderTarget(const(D2D1_RENDER_TARGET_PROPERTIES)*, ID2D1DCRenderTarget*);
+    void GetDesktopDpi(float* dpiX, float* dpiY);
+    HRESULT CreateRectangleGeometry(const(D2D_RECT_F)* rectangle, ID2D1RectangleGeometry* rectangleGeometry);
+    HRESULT CreateRoundedRectangleGeometry(const(D2D1_ROUNDED_RECT)* roundedRectangle, ID2D1RoundedRectangleGeometry* roundedRectangleGeometry);
+    HRESULT CreateEllipseGeometry(const(D2D1_ELLIPSE)* ellipse, ID2D1EllipseGeometry* ellipseGeometry);
+    HRESULT CreateGeometryGroup(D2D1_FILL_MODE fillMode, ID2D1Geometry* geometries, uint geometriesCount, ID2D1GeometryGroup* geometryGroup);
+    HRESULT CreateTransformedGeometry(ID2D1Geometry sourceGeometry, const(D2D_MATRIX_3X2_F)* transform, ID2D1TransformedGeometry* transformedGeometry);
+    HRESULT CreatePathGeometry(ID2D1PathGeometry* pathGeometry);
+    HRESULT CreateStrokeStyle(const(D2D1_STROKE_STYLE_PROPERTIES)* strokeStyleProperties, const(float)* dashes, uint dashesCount, ID2D1StrokeStyle* strokeStyle);
+    HRESULT CreateDrawingStateBlock(const(D2D1_DRAWING_STATE_DESCRIPTION)* drawingStateDescription, IDWriteRenderingParams textRenderingParams, ID2D1DrawingStateBlock* drawingStateBlock);
+    HRESULT CreateWicBitmapRenderTarget(IWICBitmap target, const(D2D1_RENDER_TARGET_PROPERTIES)* renderTargetProperties, ID2D1RenderTarget* renderTarget);
+    HRESULT CreateHwndRenderTarget(const(D2D1_RENDER_TARGET_PROPERTIES)* renderTargetProperties, const(D2D1_HWND_RENDER_TARGET_PROPERTIES)* hwndRenderTargetProperties, ID2D1HwndRenderTarget* hwndRenderTarget);
+    HRESULT CreateDxgiSurfaceRenderTarget(IDXGISurface dxgiSurface, const(D2D1_RENDER_TARGET_PROPERTIES)* renderTargetProperties, ID2D1RenderTarget* renderTarget);
+    HRESULT CreateDCRenderTarget(const(D2D1_RENDER_TARGET_PROPERTIES)* renderTargetProperties, ID2D1DCRenderTarget* dcRenderTarget);
 }
 alias D2D1_CHANNEL_SELECTOR = int;
 enum : int
@@ -1289,7 +1289,7 @@ enum : int
     D2D1_OPACITYMETADATA_PROP_INPUT_OPAQUE_RECT = 0x00000000,
 }
 
-alias PD2D1_EFFECT_FACTORY = HRESULT function(IUnknown*);
+alias PD2D1_EFFECT_FACTORY = HRESULT function(IUnknown* effectImpl);
 alias D2D1_PROPERTY_TYPE = int;
 enum : int
 {
@@ -1543,73 +1543,73 @@ struct D2D1_CREATION_PROPERTIES
 enum IID_ID2D1GdiMetafileSink = GUID(0x82237326, 0x8111, 0x4f7c, [0xbc, 0xf4, 0xb5, 0xc1, 0x17, 0x55, 0x64, 0xfe]);
 interface ID2D1GdiMetafileSink : IUnknown
 {
-    HRESULT ProcessRecord(uint, const(void)*, uint);
+    HRESULT ProcessRecord(uint recordType, const(void)* recordData, uint recordDataSize);
 }
 enum IID_ID2D1GdiMetafile = GUID(0x2f543dc3, 0xcfc1, 0x4211, [0x86, 0x4f, 0xcf, 0xd9, 0x1c, 0x6f, 0x33, 0x95]);
 interface ID2D1GdiMetafile : ID2D1Resource
 {
-    HRESULT Stream(ID2D1GdiMetafileSink);
-    HRESULT GetBounds(D2D_RECT_F*);
+    HRESULT Stream(ID2D1GdiMetafileSink sink);
+    HRESULT GetBounds(D2D_RECT_F* bounds);
 }
 enum IID_ID2D1CommandSink = GUID(0x54d7898a, 0xa061, 0x40a7, [0xbe, 0xc7, 0xe4, 0x65, 0xbc, 0xba, 0x2c, 0x4f]);
 interface ID2D1CommandSink : IUnknown
 {
     HRESULT BeginDraw();
     HRESULT EndDraw();
-    HRESULT SetAntialiasMode(D2D1_ANTIALIAS_MODE);
-    HRESULT SetTags(ulong, ulong);
-    HRESULT SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE);
-    HRESULT SetTextRenderingParams(IDWriteRenderingParams);
-    HRESULT SetTransform(const(D2D_MATRIX_3X2_F)*);
-    HRESULT SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND);
-    HRESULT SetUnitMode(D2D1_UNIT_MODE);
-    HRESULT Clear(const(D2D1_COLOR_F)*);
-    HRESULT DrawGlyphRun(D2D_POINT_2F, const(DWRITE_GLYPH_RUN)*, const(DWRITE_GLYPH_RUN_DESCRIPTION)*, ID2D1Brush, DWRITE_MEASURING_MODE);
-    HRESULT DrawLine(D2D_POINT_2F, D2D_POINT_2F, ID2D1Brush, float, ID2D1StrokeStyle);
-    HRESULT DrawGeometry(ID2D1Geometry, ID2D1Brush, float, ID2D1StrokeStyle);
-    HRESULT DrawRectangle(const(D2D_RECT_F)*, ID2D1Brush, float, ID2D1StrokeStyle);
-    HRESULT DrawBitmap(ID2D1Bitmap, const(D2D_RECT_F)*, float, D2D1_INTERPOLATION_MODE, const(D2D_RECT_F)*, const(D2D_MATRIX_4X4_F)*);
-    HRESULT DrawImage(ID2D1Image, const(D2D_POINT_2F)*, const(D2D_RECT_F)*, D2D1_INTERPOLATION_MODE, D2D1_COMPOSITE_MODE);
-    HRESULT DrawGdiMetafile(ID2D1GdiMetafile, const(D2D_POINT_2F)*);
-    HRESULT FillMesh(ID2D1Mesh, ID2D1Brush);
-    HRESULT FillOpacityMask(ID2D1Bitmap, ID2D1Brush, const(D2D_RECT_F)*, const(D2D_RECT_F)*);
-    HRESULT FillGeometry(ID2D1Geometry, ID2D1Brush, ID2D1Brush);
-    HRESULT FillRectangle(const(D2D_RECT_F)*, ID2D1Brush);
-    HRESULT PushAxisAlignedClip(const(D2D_RECT_F)*, D2D1_ANTIALIAS_MODE);
-    HRESULT PushLayer(const(D2D1_LAYER_PARAMETERS1)*, ID2D1Layer);
+    HRESULT SetAntialiasMode(D2D1_ANTIALIAS_MODE antialiasMode);
+    HRESULT SetTags(ulong tag1, ulong tag2);
+    HRESULT SetTextAntialiasMode(D2D1_TEXT_ANTIALIAS_MODE textAntialiasMode);
+    HRESULT SetTextRenderingParams(IDWriteRenderingParams textRenderingParams);
+    HRESULT SetTransform(const(D2D_MATRIX_3X2_F)* transform);
+    HRESULT SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND primitiveBlend);
+    HRESULT SetUnitMode(D2D1_UNIT_MODE unitMode);
+    HRESULT Clear(const(D2D1_COLOR_F)* color);
+    HRESULT DrawGlyphRun(D2D_POINT_2F baselineOrigin, const(DWRITE_GLYPH_RUN)* glyphRun, const(DWRITE_GLYPH_RUN_DESCRIPTION)* glyphRunDescription, ID2D1Brush foregroundBrush, DWRITE_MEASURING_MODE measuringMode);
+    HRESULT DrawLine(D2D_POINT_2F point0, D2D_POINT_2F point1, ID2D1Brush brush, float strokeWidth, ID2D1StrokeStyle strokeStyle);
+    HRESULT DrawGeometry(ID2D1Geometry geometry, ID2D1Brush brush, float strokeWidth, ID2D1StrokeStyle strokeStyle);
+    HRESULT DrawRectangle(const(D2D_RECT_F)* rect, ID2D1Brush brush, float strokeWidth, ID2D1StrokeStyle strokeStyle);
+    HRESULT DrawBitmap(ID2D1Bitmap bitmap, const(D2D_RECT_F)* destinationRectangle, float opacity, D2D1_INTERPOLATION_MODE interpolationMode, const(D2D_RECT_F)* sourceRectangle, const(D2D_MATRIX_4X4_F)* perspectiveTransform);
+    HRESULT DrawImage(ID2D1Image image, const(D2D_POINT_2F)* targetOffset, const(D2D_RECT_F)* imageRectangle, D2D1_INTERPOLATION_MODE interpolationMode, D2D1_COMPOSITE_MODE compositeMode);
+    HRESULT DrawGdiMetafile(ID2D1GdiMetafile gdiMetafile, const(D2D_POINT_2F)* targetOffset);
+    HRESULT FillMesh(ID2D1Mesh mesh, ID2D1Brush brush);
+    HRESULT FillOpacityMask(ID2D1Bitmap opacityMask, ID2D1Brush brush, const(D2D_RECT_F)* destinationRectangle, const(D2D_RECT_F)* sourceRectangle);
+    HRESULT FillGeometry(ID2D1Geometry geometry, ID2D1Brush brush, ID2D1Brush opacityBrush);
+    HRESULT FillRectangle(const(D2D_RECT_F)* rect, ID2D1Brush brush);
+    HRESULT PushAxisAlignedClip(const(D2D_RECT_F)* clipRect, D2D1_ANTIALIAS_MODE antialiasMode);
+    HRESULT PushLayer(const(D2D1_LAYER_PARAMETERS1)* layerParameters1, ID2D1Layer layer);
     HRESULT PopAxisAlignedClip();
     HRESULT PopLayer();
 }
 enum IID_ID2D1CommandList = GUID(0xb4f34a19, 0x2383, 0x4d76, [0x94, 0xf6, 0xec, 0x34, 0x36, 0x57, 0xc3, 0xdc]);
 interface ID2D1CommandList : ID2D1Image
 {
-    HRESULT Stream(ID2D1CommandSink);
+    HRESULT Stream(ID2D1CommandSink sink);
     HRESULT Close();
 }
 enum IID_ID2D1PrintControl = GUID(0x2c1d867d, 0xc290, 0x41c8, [0xae, 0x7e, 0x34, 0xa9, 0x87, 0x2, 0xe9, 0xa5]);
 interface ID2D1PrintControl : IUnknown
 {
-    HRESULT AddPage(ID2D1CommandList, D2D_SIZE_F, IStream, ulong*, ulong*);
+    HRESULT AddPage(ID2D1CommandList commandList, D2D_SIZE_F pageSize, IStream pagePrintTicketStream, ulong* tag1, ulong* tag2);
     HRESULT Close();
 }
 enum IID_ID2D1ImageBrush = GUID(0xfe9e984d, 0x3f95, 0x407c, [0xb5, 0xdb, 0xcb, 0x94, 0xd4, 0xe8, 0xf8, 0x7c]);
 interface ID2D1ImageBrush : ID2D1Brush
 {
-    void SetImage(ID2D1Image);
-    void SetExtendModeX(D2D1_EXTEND_MODE);
-    void SetExtendModeY(D2D1_EXTEND_MODE);
-    void SetInterpolationMode(D2D1_INTERPOLATION_MODE);
-    void SetSourceRectangle(const(D2D_RECT_F)*);
-    void GetImage(ID2D1Image*);
+    void SetImage(ID2D1Image image);
+    void SetExtendModeX(D2D1_EXTEND_MODE extendModeX);
+    void SetExtendModeY(D2D1_EXTEND_MODE extendModeY);
+    void SetInterpolationMode(D2D1_INTERPOLATION_MODE interpolationMode);
+    void SetSourceRectangle(const(D2D_RECT_F)* sourceRectangle);
+    void GetImage(ID2D1Image* image);
     D2D1_EXTEND_MODE GetExtendModeX();
     D2D1_EXTEND_MODE GetExtendModeY();
     D2D1_INTERPOLATION_MODE GetInterpolationMode();
-    void GetSourceRectangle(D2D_RECT_F*);
+    void GetSourceRectangle(D2D_RECT_F* sourceRectangle);
 }
 enum IID_ID2D1BitmapBrush1 = GUID(0x41343a53, 0xe41a, 0x49a2, [0x91, 0xcd, 0x21, 0x79, 0x3b, 0xbb, 0x62, 0xe5]);
 interface ID2D1BitmapBrush1 : ID2D1BitmapBrush
 {
-    void SetInterpolationMode1(D2D1_INTERPOLATION_MODE);
+    void SetInterpolationMode1(D2D1_INTERPOLATION_MODE interpolationMode);
     D2D1_INTERPOLATION_MODE GetInterpolationMode1();
 }
 enum IID_ID2D1StrokeStyle1 = GUID(0x10a72a66, 0xe91c, 0x43f4, [0x99, 0x3f, 0xdd, 0xf4, 0xb8, 0x2b, 0xb, 0x4a]);
@@ -1620,39 +1620,39 @@ interface ID2D1StrokeStyle1 : ID2D1StrokeStyle
 enum IID_ID2D1PathGeometry1 = GUID(0x62baa2d2, 0xab54, 0x41b7, [0xb8, 0x72, 0x78, 0x7e, 0x1, 0x6, 0xa4, 0x21]);
 interface ID2D1PathGeometry1 : ID2D1PathGeometry
 {
-    HRESULT ComputePointAndSegmentAtLength(float, uint, const(D2D_MATRIX_3X2_F)*, float, D2D1_POINT_DESCRIPTION*);
+    HRESULT ComputePointAndSegmentAtLength(float length, uint startSegment, const(D2D_MATRIX_3X2_F)* worldTransform, float flatteningTolerance, D2D1_POINT_DESCRIPTION* pointDescription);
 }
 enum IID_ID2D1Properties = GUID(0x483473d7, 0xcd46, 0x4f9d, [0x9d, 0x3a, 0x31, 0x12, 0xaa, 0x80, 0x15, 0x9d]);
 interface ID2D1Properties : IUnknown
 {
     uint GetPropertyCount();
-    HRESULT GetPropertyName(uint, PWSTR, uint);
-    uint GetPropertyNameLength(uint);
-    D2D1_PROPERTY_TYPE GetType(uint);
-    uint GetPropertyIndex(const(wchar)*);
-    HRESULT SetValueByName(const(wchar)*, D2D1_PROPERTY_TYPE, const(ubyte)*, uint);
-    HRESULT SetValue(uint, D2D1_PROPERTY_TYPE, const(ubyte)*, uint);
-    HRESULT GetValueByName(const(wchar)*, D2D1_PROPERTY_TYPE, ubyte*, uint);
-    HRESULT GetValue(uint, D2D1_PROPERTY_TYPE, ubyte*, uint);
-    uint GetValueSize(uint);
-    HRESULT GetSubProperties(uint, ID2D1Properties*);
+    HRESULT GetPropertyName(uint index, PWSTR name, uint nameCount);
+    uint GetPropertyNameLength(uint index);
+    D2D1_PROPERTY_TYPE GetType(uint index);
+    uint GetPropertyIndex(const(wchar)* name);
+    HRESULT SetValueByName(const(wchar)* name, D2D1_PROPERTY_TYPE type, const(ubyte)* data, uint dataSize);
+    HRESULT SetValue(uint index, D2D1_PROPERTY_TYPE type, const(ubyte)* data, uint dataSize);
+    HRESULT GetValueByName(const(wchar)* name, D2D1_PROPERTY_TYPE type, ubyte* data, uint dataSize);
+    HRESULT GetValue(uint index, D2D1_PROPERTY_TYPE type, ubyte* data, uint dataSize);
+    uint GetValueSize(uint index);
+    HRESULT GetSubProperties(uint index, ID2D1Properties* subProperties);
 }
 enum IID_ID2D1Effect = GUID(0x28211a43, 0x7d89, 0x476f, [0x81, 0x81, 0x2d, 0x61, 0x59, 0xb2, 0x20, 0xad]);
 interface ID2D1Effect : ID2D1Properties
 {
-    void SetInput(uint, ID2D1Image, BOOL);
-    HRESULT SetInputCount(uint);
-    void GetInput(uint, ID2D1Image*);
+    void SetInput(uint index, ID2D1Image input, BOOL invalidate);
+    HRESULT SetInputCount(uint inputCount);
+    void GetInput(uint index, ID2D1Image* input);
     uint GetInputCount();
-    void GetOutput(ID2D1Image*);
+    void GetOutput(ID2D1Image* outputImage);
 }
 enum IID_ID2D1Bitmap1 = GUID(0xa898a84c, 0x3873, 0x4588, [0xb0, 0x8b, 0xeb, 0xbf, 0x97, 0x8d, 0xf0, 0x41]);
 interface ID2D1Bitmap1 : ID2D1Bitmap
 {
-    void GetColorContext(ID2D1ColorContext*);
+    void GetColorContext(ID2D1ColorContext* colorContext);
     D2D1_BITMAP_OPTIONS GetOptions();
-    HRESULT GetSurface(IDXGISurface*);
-    HRESULT Map(D2D1_MAP_OPTIONS, D2D1_MAPPED_RECT*);
+    HRESULT GetSurface(IDXGISurface* dxgiSurface);
+    HRESULT Map(D2D1_MAP_OPTIONS options, D2D1_MAPPED_RECT* mappedRect);
     HRESULT Unmap();
 }
 enum IID_ID2D1ColorContext = GUID(0x1c4820bb, 0x5771, 0x4518, [0xa5, 0x81, 0x2f, 0xe4, 0xdd, 0xe, 0xc6, 0x57]);
@@ -1660,12 +1660,12 @@ interface ID2D1ColorContext : ID2D1Resource
 {
     D2D1_COLOR_SPACE GetColorSpace();
     uint GetProfileSize();
-    HRESULT GetProfile(ubyte*, uint);
+    HRESULT GetProfile(ubyte* profile, uint profileSize);
 }
 enum IID_ID2D1GradientStopCollection1 = GUID(0xae1572f4, 0x5dd0, 0x4777, [0x99, 0x8b, 0x92, 0x79, 0x47, 0x2a, 0xe6, 0x3b]);
 interface ID2D1GradientStopCollection1 : ID2D1GradientStopCollection
 {
-    void GetGradientStops1(D2D1_GRADIENT_STOP*, uint);
+    void GetGradientStops1(D2D1_GRADIENT_STOP* gradientStops, uint gradientStopsCount);
     D2D1_COLOR_SPACE GetPreInterpolationSpace();
     D2D1_COLOR_SPACE GetPostInterpolationSpace();
     D2D1_BUFFER_PRECISION GetBufferPrecision();
@@ -1674,70 +1674,70 @@ interface ID2D1GradientStopCollection1 : ID2D1GradientStopCollection
 enum IID_ID2D1DrawingStateBlock1 = GUID(0x689f1f85, 0xc72e, 0x4e33, [0x8f, 0x19, 0x85, 0x75, 0x4e, 0xfd, 0x5a, 0xce]);
 interface ID2D1DrawingStateBlock1 : ID2D1DrawingStateBlock
 {
-    void GetDescription(D2D1_DRAWING_STATE_DESCRIPTION1*);
-    void SetDescription(const(D2D1_DRAWING_STATE_DESCRIPTION1)*);
+    void GetDescription(D2D1_DRAWING_STATE_DESCRIPTION1* stateDescription);
+    void SetDescription(const(D2D1_DRAWING_STATE_DESCRIPTION1)* stateDescription);
 }
 enum IID_ID2D1DeviceContext = GUID(0xe8f7fe7a, 0x191c, 0x466d, [0xad, 0x95, 0x97, 0x56, 0x78, 0xbd, 0xa9, 0x98]);
 interface ID2D1DeviceContext : ID2D1RenderTarget
 {
-    HRESULT CreateBitmap(D2D_SIZE_U, const(void)*, uint, const(D2D1_BITMAP_PROPERTIES1)*, ID2D1Bitmap1*);
-    HRESULT CreateBitmapFromWicBitmap(IWICBitmapSource, const(D2D1_BITMAP_PROPERTIES1)*, ID2D1Bitmap1*);
-    HRESULT CreateColorContext(D2D1_COLOR_SPACE, const(ubyte)*, uint, ID2D1ColorContext*);
-    HRESULT CreateColorContextFromFilename(const(wchar)*, ID2D1ColorContext*);
-    HRESULT CreateColorContextFromWicColorContext(IWICColorContext, ID2D1ColorContext*);
-    HRESULT CreateBitmapFromDxgiSurface(IDXGISurface, const(D2D1_BITMAP_PROPERTIES1)*, ID2D1Bitmap1*);
-    HRESULT CreateEffect(const(GUID)*, ID2D1Effect*);
-    HRESULT CreateGradientStopCollection(const(D2D1_GRADIENT_STOP)*, uint, D2D1_COLOR_SPACE, D2D1_COLOR_SPACE, D2D1_BUFFER_PRECISION, D2D1_EXTEND_MODE, D2D1_COLOR_INTERPOLATION_MODE, ID2D1GradientStopCollection1*);
-    HRESULT CreateImageBrush(ID2D1Image, const(D2D1_IMAGE_BRUSH_PROPERTIES)*, const(D2D1_BRUSH_PROPERTIES)*, ID2D1ImageBrush*);
-    HRESULT CreateBitmapBrush(ID2D1Bitmap, const(D2D1_BITMAP_BRUSH_PROPERTIES1)*, const(D2D1_BRUSH_PROPERTIES)*, ID2D1BitmapBrush1*);
-    HRESULT CreateCommandList(ID2D1CommandList*);
-    BOOL IsDxgiFormatSupported(DXGI_FORMAT);
-    BOOL IsBufferPrecisionSupported(D2D1_BUFFER_PRECISION);
-    HRESULT GetImageLocalBounds(ID2D1Image, D2D_RECT_F*);
-    HRESULT GetImageWorldBounds(ID2D1Image, D2D_RECT_F*);
-    HRESULT GetGlyphRunWorldBounds(D2D_POINT_2F, const(DWRITE_GLYPH_RUN)*, DWRITE_MEASURING_MODE, D2D_RECT_F*);
-    void GetDevice(ID2D1Device*);
-    void SetTarget(ID2D1Image);
-    void GetTarget(ID2D1Image*);
-    void SetRenderingControls(const(D2D1_RENDERING_CONTROLS)*);
-    void GetRenderingControls(D2D1_RENDERING_CONTROLS*);
-    void SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND);
+    HRESULT CreateBitmap(D2D_SIZE_U size, const(void)* sourceData, uint pitch, const(D2D1_BITMAP_PROPERTIES1)* bitmapProperties, ID2D1Bitmap1* bitmap);
+    HRESULT CreateBitmapFromWicBitmap(IWICBitmapSource wicBitmapSource, const(D2D1_BITMAP_PROPERTIES1)* bitmapProperties, ID2D1Bitmap1* bitmap);
+    HRESULT CreateColorContext(D2D1_COLOR_SPACE space, const(ubyte)* profile, uint profileSize, ID2D1ColorContext* colorContext);
+    HRESULT CreateColorContextFromFilename(const(wchar)* filename, ID2D1ColorContext* colorContext);
+    HRESULT CreateColorContextFromWicColorContext(IWICColorContext wicColorContext, ID2D1ColorContext* colorContext);
+    HRESULT CreateBitmapFromDxgiSurface(IDXGISurface surface, const(D2D1_BITMAP_PROPERTIES1)* bitmapProperties, ID2D1Bitmap1* bitmap);
+    HRESULT CreateEffect(const(GUID)* effectId, ID2D1Effect* effect);
+    HRESULT CreateGradientStopCollection(const(D2D1_GRADIENT_STOP)* straightAlphaGradientStops, uint straightAlphaGradientStopsCount, D2D1_COLOR_SPACE preInterpolationSpace, D2D1_COLOR_SPACE postInterpolationSpace, D2D1_BUFFER_PRECISION bufferPrecision, D2D1_EXTEND_MODE extendMode, D2D1_COLOR_INTERPOLATION_MODE colorInterpolationMode, ID2D1GradientStopCollection1* gradientStopCollection1);
+    HRESULT CreateImageBrush(ID2D1Image image, const(D2D1_IMAGE_BRUSH_PROPERTIES)* imageBrushProperties, const(D2D1_BRUSH_PROPERTIES)* brushProperties, ID2D1ImageBrush* imageBrush);
+    HRESULT CreateBitmapBrush(ID2D1Bitmap bitmap, const(D2D1_BITMAP_BRUSH_PROPERTIES1)* bitmapBrushProperties, const(D2D1_BRUSH_PROPERTIES)* brushProperties, ID2D1BitmapBrush1* bitmapBrush);
+    HRESULT CreateCommandList(ID2D1CommandList* commandList);
+    BOOL IsDxgiFormatSupported(DXGI_FORMAT format);
+    BOOL IsBufferPrecisionSupported(D2D1_BUFFER_PRECISION bufferPrecision);
+    HRESULT GetImageLocalBounds(ID2D1Image image, D2D_RECT_F* localBounds);
+    HRESULT GetImageWorldBounds(ID2D1Image image, D2D_RECT_F* worldBounds);
+    HRESULT GetGlyphRunWorldBounds(D2D_POINT_2F baselineOrigin, const(DWRITE_GLYPH_RUN)* glyphRun, DWRITE_MEASURING_MODE measuringMode, D2D_RECT_F* bounds);
+    void GetDevice(ID2D1Device* device);
+    void SetTarget(ID2D1Image image);
+    void GetTarget(ID2D1Image* image);
+    void SetRenderingControls(const(D2D1_RENDERING_CONTROLS)* renderingControls);
+    void GetRenderingControls(D2D1_RENDERING_CONTROLS* renderingControls);
+    void SetPrimitiveBlend(D2D1_PRIMITIVE_BLEND primitiveBlend);
     D2D1_PRIMITIVE_BLEND GetPrimitiveBlend();
-    void SetUnitMode(D2D1_UNIT_MODE);
+    void SetUnitMode(D2D1_UNIT_MODE unitMode);
     D2D1_UNIT_MODE GetUnitMode();
-    void DrawGlyphRun(D2D_POINT_2F, const(DWRITE_GLYPH_RUN)*, const(DWRITE_GLYPH_RUN_DESCRIPTION)*, ID2D1Brush, DWRITE_MEASURING_MODE);
-    void DrawImage(ID2D1Image, const(D2D_POINT_2F)*, const(D2D_RECT_F)*, D2D1_INTERPOLATION_MODE, D2D1_COMPOSITE_MODE);
-    void DrawGdiMetafile(ID2D1GdiMetafile, const(D2D_POINT_2F)*);
-    void DrawBitmap(ID2D1Bitmap, const(D2D_RECT_F)*, float, D2D1_INTERPOLATION_MODE, const(D2D_RECT_F)*, const(D2D_MATRIX_4X4_F)*);
-    void PushLayer(const(D2D1_LAYER_PARAMETERS1)*, ID2D1Layer);
-    HRESULT InvalidateEffectInputRectangle(ID2D1Effect, uint, const(D2D_RECT_F)*);
-    HRESULT GetEffectInvalidRectangleCount(ID2D1Effect, uint*);
-    HRESULT GetEffectInvalidRectangles(ID2D1Effect, D2D_RECT_F*, uint);
-    HRESULT GetEffectRequiredInputRectangles(ID2D1Effect, const(D2D_RECT_F)*, const(D2D1_EFFECT_INPUT_DESCRIPTION)*, D2D_RECT_F*, uint);
-    void FillOpacityMask(ID2D1Bitmap, ID2D1Brush, const(D2D_RECT_F)*, const(D2D_RECT_F)*);
+    void DrawGlyphRun(D2D_POINT_2F baselineOrigin, const(DWRITE_GLYPH_RUN)* glyphRun, const(DWRITE_GLYPH_RUN_DESCRIPTION)* glyphRunDescription, ID2D1Brush foregroundBrush, DWRITE_MEASURING_MODE measuringMode);
+    void DrawImage(ID2D1Image image, const(D2D_POINT_2F)* targetOffset, const(D2D_RECT_F)* imageRectangle, D2D1_INTERPOLATION_MODE interpolationMode, D2D1_COMPOSITE_MODE compositeMode);
+    void DrawGdiMetafile(ID2D1GdiMetafile gdiMetafile, const(D2D_POINT_2F)* targetOffset);
+    void DrawBitmap(ID2D1Bitmap bitmap, const(D2D_RECT_F)* destinationRectangle, float opacity, D2D1_INTERPOLATION_MODE interpolationMode, const(D2D_RECT_F)* sourceRectangle, const(D2D_MATRIX_4X4_F)* perspectiveTransform);
+    void PushLayer(const(D2D1_LAYER_PARAMETERS1)* layerParameters, ID2D1Layer layer);
+    HRESULT InvalidateEffectInputRectangle(ID2D1Effect effect, uint input, const(D2D_RECT_F)* inputRectangle);
+    HRESULT GetEffectInvalidRectangleCount(ID2D1Effect effect, uint* rectangleCount);
+    HRESULT GetEffectInvalidRectangles(ID2D1Effect effect, D2D_RECT_F* rectangles, uint rectanglesCount);
+    HRESULT GetEffectRequiredInputRectangles(ID2D1Effect renderEffect, const(D2D_RECT_F)* renderImageRectangle, const(D2D1_EFFECT_INPUT_DESCRIPTION)* inputDescriptions, D2D_RECT_F* requiredInputRects, uint inputCount);
+    void FillOpacityMask(ID2D1Bitmap opacityMask, ID2D1Brush brush, const(D2D_RECT_F)* destinationRectangle, const(D2D_RECT_F)* sourceRectangle);
 }
 enum IID_ID2D1Device = GUID(0x47dd575d, 0xac05, 0x4cdd, [0x80, 0x49, 0x9b, 0x2, 0xcd, 0x16, 0xf4, 0x4c]);
 interface ID2D1Device : ID2D1Resource
 {
-    HRESULT CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS, ID2D1DeviceContext*);
-    HRESULT CreatePrintControl(IWICImagingFactory, IPrintDocumentPackageTarget, const(D2D1_PRINT_CONTROL_PROPERTIES)*, ID2D1PrintControl*);
-    void SetMaximumTextureMemory(ulong);
+    HRESULT CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS options, ID2D1DeviceContext* deviceContext);
+    HRESULT CreatePrintControl(IWICImagingFactory wicFactory, IPrintDocumentPackageTarget documentTarget, const(D2D1_PRINT_CONTROL_PROPERTIES)* printControlProperties, ID2D1PrintControl* printControl);
+    void SetMaximumTextureMemory(ulong maximumInBytes);
     ulong GetMaximumTextureMemory();
-    void ClearResources(uint);
+    void ClearResources(uint millisecondsSinceUse);
 }
 enum IID_ID2D1Factory1 = GUID(0xbb12d362, 0xdaee, 0x4b9a, [0xaa, 0x1d, 0x14, 0xba, 0x40, 0x1c, 0xfa, 0x1f]);
 interface ID2D1Factory1 : ID2D1Factory
 {
-    HRESULT CreateDevice(IDXGIDevice, ID2D1Device*);
-    HRESULT CreateStrokeStyle(const(D2D1_STROKE_STYLE_PROPERTIES1)*, const(float)*, uint, ID2D1StrokeStyle1*);
-    HRESULT CreatePathGeometry(ID2D1PathGeometry1*);
-    HRESULT CreateDrawingStateBlock(const(D2D1_DRAWING_STATE_DESCRIPTION1)*, IDWriteRenderingParams, ID2D1DrawingStateBlock1*);
-    HRESULT CreateGdiMetafile(IStream, ID2D1GdiMetafile*);
-    HRESULT RegisterEffectFromStream(const(GUID)*, IStream, const(D2D1_PROPERTY_BINDING)*, uint, const(PD2D1_EFFECT_FACTORY));
-    HRESULT RegisterEffectFromString(const(GUID)*, const(wchar)*, const(D2D1_PROPERTY_BINDING)*, uint, const(PD2D1_EFFECT_FACTORY));
-    HRESULT UnregisterEffect(const(GUID)*);
-    HRESULT GetRegisteredEffects(GUID*, uint, uint*, uint*);
-    HRESULT GetEffectProperties(const(GUID)*, ID2D1Properties*);
+    HRESULT CreateDevice(IDXGIDevice dxgiDevice, ID2D1Device* d2dDevice);
+    HRESULT CreateStrokeStyle(const(D2D1_STROKE_STYLE_PROPERTIES1)* strokeStyleProperties, const(float)* dashes, uint dashesCount, ID2D1StrokeStyle1* strokeStyle);
+    HRESULT CreatePathGeometry(ID2D1PathGeometry1* pathGeometry);
+    HRESULT CreateDrawingStateBlock(const(D2D1_DRAWING_STATE_DESCRIPTION1)* drawingStateDescription, IDWriteRenderingParams textRenderingParams, ID2D1DrawingStateBlock1* drawingStateBlock);
+    HRESULT CreateGdiMetafile(IStream metafileStream, ID2D1GdiMetafile* metafile);
+    HRESULT RegisterEffectFromStream(const(GUID)* classId, IStream propertyXml, const(D2D1_PROPERTY_BINDING)* bindings, uint bindingsCount, const(PD2D1_EFFECT_FACTORY) effectFactory);
+    HRESULT RegisterEffectFromString(const(GUID)* classId, const(wchar)* propertyXml, const(D2D1_PROPERTY_BINDING)* bindings, uint bindingsCount, const(PD2D1_EFFECT_FACTORY) effectFactory);
+    HRESULT UnregisterEffect(const(GUID)* classId);
+    HRESULT GetRegisteredEffects(GUID* effects, uint effectsCount, uint* effectsReturned, uint* effectsRegistered);
+    HRESULT GetEffectProperties(const(GUID)* effectId, ID2D1Properties* properties);
 }
 enum IID_ID2D1Multithread = GUID(0x31e6e7bc, 0xe0ff, 0x4d46, [0x8c, 0x64, 0xa0, 0xa8, 0xc4, 0x1c, 0x15, 0xd3]);
 interface ID2D1Multithread : IUnknown
@@ -1746,8 +1746,8 @@ interface ID2D1Multithread : IUnknown
     void Enter();
     void Leave();
 }
-alias PD2D1_PROPERTY_SET_FUNCTION = HRESULT function(IUnknown, const(ubyte)*, uint);
-alias PD2D1_PROPERTY_GET_FUNCTION = HRESULT function(const(IUnknown), ubyte*, uint, uint*);
+alias PD2D1_PROPERTY_SET_FUNCTION = HRESULT function(IUnknown effect, const(ubyte)* data, uint dataSize);
+alias PD2D1_PROPERTY_GET_FUNCTION = HRESULT function(const(IUnknown) effect, ubyte* data, uint dataSize, uint* actualSize);
 alias D2D1_CHANGE_TYPE = int;
 enum : int
 {
@@ -1906,37 +1906,37 @@ struct D2D1_FEATURE_DATA_D3D10_X_HARDWARE_OPTIONS
 enum IID_ID2D1VertexBuffer = GUID(0x9b8b1336, 0xa5, 0x4668, [0x92, 0xb7, 0xce, 0xd5, 0xd8, 0xbf, 0x9b, 0x7b]);
 interface ID2D1VertexBuffer : IUnknown
 {
-    HRESULT Map(ubyte**, uint);
+    HRESULT Map(ubyte** data, uint bufferSize);
     HRESULT Unmap();
 }
 enum IID_ID2D1ResourceTexture = GUID(0x688d15c3, 0x2b0, 0x438d, [0xb1, 0x3a, 0xd1, 0xb4, 0x4c, 0x32, 0xc3, 0x9a]);
 interface ID2D1ResourceTexture : IUnknown
 {
-    HRESULT Update(const(uint)*, const(uint)*, const(uint)*, uint, const(ubyte)*, uint);
+    HRESULT Update(const(uint)* minimumExtents, const(uint)* maximimumExtents, const(uint)* strides, uint dimensions, const(ubyte)* data, uint dataCount);
 }
 enum IID_ID2D1RenderInfo = GUID(0x519ae1bd, 0xd19a, 0x420d, [0xb8, 0x49, 0x36, 0x4f, 0x59, 0x47, 0x76, 0xb7]);
 interface ID2D1RenderInfo : IUnknown
 {
-    HRESULT SetInputDescription(uint, D2D1_INPUT_DESCRIPTION);
-    HRESULT SetOutputBuffer(D2D1_BUFFER_PRECISION, D2D1_CHANNEL_DEPTH);
-    void SetCached(BOOL);
-    void SetInstructionCountHint(uint);
+    HRESULT SetInputDescription(uint inputIndex, D2D1_INPUT_DESCRIPTION inputDescription);
+    HRESULT SetOutputBuffer(D2D1_BUFFER_PRECISION bufferPrecision, D2D1_CHANNEL_DEPTH channelDepth);
+    void SetCached(BOOL isCached);
+    void SetInstructionCountHint(uint instructionCount);
 }
 enum IID_ID2D1DrawInfo = GUID(0x693ce632, 0x7f2f, 0x45de, [0x93, 0xfe, 0x18, 0xd8, 0x8b, 0x37, 0xaa, 0x21]);
 interface ID2D1DrawInfo : ID2D1RenderInfo
 {
-    HRESULT SetPixelShaderConstantBuffer(const(ubyte)*, uint);
-    HRESULT SetResourceTexture(uint, ID2D1ResourceTexture);
-    HRESULT SetVertexShaderConstantBuffer(const(ubyte)*, uint);
-    HRESULT SetPixelShader(const(GUID)*, D2D1_PIXEL_OPTIONS);
-    HRESULT SetVertexProcessing(ID2D1VertexBuffer, D2D1_VERTEX_OPTIONS, const(D2D1_BLEND_DESCRIPTION)*, const(D2D1_VERTEX_RANGE)*, const(GUID)*);
+    HRESULT SetPixelShaderConstantBuffer(const(ubyte)* buffer, uint bufferCount);
+    HRESULT SetResourceTexture(uint textureIndex, ID2D1ResourceTexture resourceTexture);
+    HRESULT SetVertexShaderConstantBuffer(const(ubyte)* buffer, uint bufferCount);
+    HRESULT SetPixelShader(const(GUID)* shaderId, D2D1_PIXEL_OPTIONS pixelOptions);
+    HRESULT SetVertexProcessing(ID2D1VertexBuffer vertexBuffer, D2D1_VERTEX_OPTIONS vertexOptions, const(D2D1_BLEND_DESCRIPTION)* blendDescription, const(D2D1_VERTEX_RANGE)* vertexRange, const(GUID)* vertexShader);
 }
 enum IID_ID2D1ComputeInfo = GUID(0x5598b14b, 0x9fd7, 0x48b7, [0x9b, 0xdb, 0x8f, 0x9, 0x64, 0xeb, 0x38, 0xbc]);
 interface ID2D1ComputeInfo : ID2D1RenderInfo
 {
-    HRESULT SetComputeShaderConstantBuffer(const(ubyte)*, uint);
-    HRESULT SetComputeShader(const(GUID)*);
-    HRESULT SetResourceTexture(uint, ID2D1ResourceTexture);
+    HRESULT SetComputeShaderConstantBuffer(const(ubyte)* buffer, uint bufferCount);
+    HRESULT SetComputeShader(const(GUID)* shaderId);
+    HRESULT SetResourceTexture(uint textureIndex, ID2D1ResourceTexture resourceTexture);
 }
 enum IID_ID2D1TransformNode = GUID(0xb2efe1e7, 0x729f, 0x4102, [0x94, 0x9f, 0x50, 0x5f, 0xa2, 0x1b, 0xf6, 0x66]);
 interface ID2D1TransformNode : IUnknown
@@ -1947,107 +1947,107 @@ enum IID_ID2D1TransformGraph = GUID(0x13d29038, 0xc3e6, 0x4034, [0x90, 0x81, 0x1
 interface ID2D1TransformGraph : IUnknown
 {
     uint GetInputCount();
-    HRESULT SetSingleTransformNode(ID2D1TransformNode);
-    HRESULT AddNode(ID2D1TransformNode);
-    HRESULT RemoveNode(ID2D1TransformNode);
-    HRESULT SetOutputNode(ID2D1TransformNode);
-    HRESULT ConnectNode(ID2D1TransformNode, ID2D1TransformNode, uint);
-    HRESULT ConnectToEffectInput(uint, ID2D1TransformNode, uint);
+    HRESULT SetSingleTransformNode(ID2D1TransformNode node);
+    HRESULT AddNode(ID2D1TransformNode node);
+    HRESULT RemoveNode(ID2D1TransformNode node);
+    HRESULT SetOutputNode(ID2D1TransformNode node);
+    HRESULT ConnectNode(ID2D1TransformNode fromNode, ID2D1TransformNode toNode, uint toNodeInputIndex);
+    HRESULT ConnectToEffectInput(uint toEffectInputIndex, ID2D1TransformNode node, uint toNodeInputIndex);
     void Clear();
-    HRESULT SetPassthroughGraph(uint);
+    HRESULT SetPassthroughGraph(uint effectInputIndex);
 }
 enum IID_ID2D1Transform = GUID(0xef1a287d, 0x342a, 0x4f76, [0x8f, 0xdb, 0xda, 0xd, 0x6e, 0xa9, 0xf9, 0x2b]);
 interface ID2D1Transform : ID2D1TransformNode
 {
-    HRESULT MapOutputRectToInputRects(const(RECT)*, RECT*, uint);
-    HRESULT MapInputRectsToOutputRect(const(RECT)*, const(RECT)*, uint, RECT*, RECT*);
-    HRESULT MapInvalidRect(uint, RECT, RECT*);
+    HRESULT MapOutputRectToInputRects(const(RECT)* outputRect, RECT* inputRects, uint inputRectsCount);
+    HRESULT MapInputRectsToOutputRect(const(RECT)* inputRects, const(RECT)* inputOpaqueSubRects, uint inputRectCount, RECT* outputRect, RECT* outputOpaqueSubRect);
+    HRESULT MapInvalidRect(uint inputIndex, RECT invalidInputRect, RECT* invalidOutputRect);
 }
 enum IID_ID2D1DrawTransform = GUID(0x36bfdcb6, 0x9739, 0x435d, [0xa3, 0xd, 0xa6, 0x53, 0xbe, 0xff, 0x6a, 0x6f]);
 interface ID2D1DrawTransform : ID2D1Transform
 {
-    HRESULT SetDrawInfo(ID2D1DrawInfo);
+    HRESULT SetDrawInfo(ID2D1DrawInfo drawInfo);
 }
 enum IID_ID2D1ComputeTransform = GUID(0xd85573c, 0x1e3, 0x4f7d, [0xbf, 0xd9, 0xd, 0x60, 0x60, 0x8b, 0xf3, 0xc3]);
 interface ID2D1ComputeTransform : ID2D1Transform
 {
-    HRESULT SetComputeInfo(ID2D1ComputeInfo);
-    HRESULT CalculateThreadgroups(const(RECT)*, uint*, uint*, uint*);
+    HRESULT SetComputeInfo(ID2D1ComputeInfo computeInfo);
+    HRESULT CalculateThreadgroups(const(RECT)* outputRect, uint* dimensionX, uint* dimensionY, uint* dimensionZ);
 }
 enum IID_ID2D1AnalysisTransform = GUID(0x359dc30, 0x95e6, 0x4568, [0x90, 0x55, 0x27, 0x72, 0xd, 0x13, 0xe, 0x93]);
 interface ID2D1AnalysisTransform : IUnknown
 {
-    HRESULT ProcessAnalysisResults(const(ubyte)*, uint);
+    HRESULT ProcessAnalysisResults(const(ubyte)* analysisData, uint analysisDataCount);
 }
 enum IID_ID2D1SourceTransform = GUID(0xdb1800dd, 0xc34, 0x4cf9, [0xbe, 0x90, 0x31, 0xcc, 0xa, 0x56, 0x53, 0xe1]);
 interface ID2D1SourceTransform : ID2D1Transform
 {
-    HRESULT SetRenderInfo(ID2D1RenderInfo);
-    HRESULT Draw(ID2D1Bitmap1, const(RECT)*, D2D_POINT_2U);
+    HRESULT SetRenderInfo(ID2D1RenderInfo renderInfo);
+    HRESULT Draw(ID2D1Bitmap1 target, const(RECT)* drawRect, D2D_POINT_2U targetOrigin);
 }
 enum IID_ID2D1ConcreteTransform = GUID(0x1a799d8a, 0x69f7, 0x4e4c, [0x9f, 0xed, 0x43, 0x7c, 0xcc, 0x66, 0x84, 0xcc]);
 interface ID2D1ConcreteTransform : ID2D1TransformNode
 {
-    HRESULT SetOutputBuffer(D2D1_BUFFER_PRECISION, D2D1_CHANNEL_DEPTH);
-    void SetCached(BOOL);
+    HRESULT SetOutputBuffer(D2D1_BUFFER_PRECISION bufferPrecision, D2D1_CHANNEL_DEPTH channelDepth);
+    void SetCached(BOOL isCached);
 }
 enum IID_ID2D1BlendTransform = GUID(0x63ac0b32, 0xba44, 0x450f, [0x88, 0x6, 0x7f, 0x4c, 0xa1, 0xff, 0x2f, 0x1b]);
 interface ID2D1BlendTransform : ID2D1ConcreteTransform
 {
-    void SetDescription(const(D2D1_BLEND_DESCRIPTION)*);
-    void GetDescription(D2D1_BLEND_DESCRIPTION*);
+    void SetDescription(const(D2D1_BLEND_DESCRIPTION)* description);
+    void GetDescription(D2D1_BLEND_DESCRIPTION* description);
 }
 enum IID_ID2D1BorderTransform = GUID(0x4998735c, 0x3a19, 0x473c, [0x97, 0x81, 0x65, 0x68, 0x47, 0xe3, 0xa3, 0x47]);
 interface ID2D1BorderTransform : ID2D1ConcreteTransform
 {
-    void SetExtendModeX(D2D1_EXTEND_MODE);
-    void SetExtendModeY(D2D1_EXTEND_MODE);
+    void SetExtendModeX(D2D1_EXTEND_MODE extendMode);
+    void SetExtendModeY(D2D1_EXTEND_MODE extendMode);
     D2D1_EXTEND_MODE GetExtendModeX();
     D2D1_EXTEND_MODE GetExtendModeY();
 }
 enum IID_ID2D1OffsetTransform = GUID(0x3fe6adea, 0x7643, 0x4f53, [0xbd, 0x14, 0xa0, 0xce, 0x63, 0xf2, 0x40, 0x42]);
 interface ID2D1OffsetTransform : ID2D1TransformNode
 {
-    void SetOffset(POINT);
+    void SetOffset(POINT offset);
     POINT GetOffset();
 }
 enum IID_ID2D1BoundsAdjustmentTransform = GUID(0x90f732e2, 0x5092, 0x4606, [0xa8, 0x19, 0x86, 0x51, 0x97, 0xb, 0xac, 0xcd]);
 interface ID2D1BoundsAdjustmentTransform : ID2D1TransformNode
 {
-    void SetOutputBounds(const(RECT)*);
-    void GetOutputBounds(RECT*);
+    void SetOutputBounds(const(RECT)* outputBounds);
+    void GetOutputBounds(RECT* outputBounds);
 }
 enum IID_ID2D1EffectImpl = GUID(0xa248fd3f, 0x3e6c, 0x4e63, [0x9f, 0x3, 0x7f, 0x68, 0xec, 0xc9, 0x1d, 0xb9]);
 interface ID2D1EffectImpl : IUnknown
 {
-    HRESULT Initialize(ID2D1EffectContext, ID2D1TransformGraph);
-    HRESULT PrepareForRender(D2D1_CHANGE_TYPE);
-    HRESULT SetGraph(ID2D1TransformGraph);
+    HRESULT Initialize(ID2D1EffectContext effectContext, ID2D1TransformGraph transformGraph);
+    HRESULT PrepareForRender(D2D1_CHANGE_TYPE changeType);
+    HRESULT SetGraph(ID2D1TransformGraph transformGraph);
 }
 enum IID_ID2D1EffectContext = GUID(0x3d9f916b, 0x27dc, 0x4ad7, [0xb4, 0xf1, 0x64, 0x94, 0x53, 0x40, 0xf5, 0x63]);
 interface ID2D1EffectContext : IUnknown
 {
-    void GetDpi(float*, float*);
-    HRESULT CreateEffect(const(GUID)*, ID2D1Effect*);
-    HRESULT GetMaximumSupportedFeatureLevel(const(D3D_FEATURE_LEVEL)*, uint, D3D_FEATURE_LEVEL*);
-    HRESULT CreateTransformNodeFromEffect(ID2D1Effect, ID2D1TransformNode*);
-    HRESULT CreateBlendTransform(uint, const(D2D1_BLEND_DESCRIPTION)*, ID2D1BlendTransform*);
-    HRESULT CreateBorderTransform(D2D1_EXTEND_MODE, D2D1_EXTEND_MODE, ID2D1BorderTransform*);
-    HRESULT CreateOffsetTransform(POINT, ID2D1OffsetTransform*);
-    HRESULT CreateBoundsAdjustmentTransform(const(RECT)*, ID2D1BoundsAdjustmentTransform*);
-    HRESULT LoadPixelShader(const(GUID)*, const(ubyte)*, uint);
-    HRESULT LoadVertexShader(const(GUID)*, const(ubyte)*, uint);
-    HRESULT LoadComputeShader(const(GUID)*, const(ubyte)*, uint);
-    BOOL IsShaderLoaded(const(GUID)*);
-    HRESULT CreateResourceTexture(const(GUID)*, const(D2D1_RESOURCE_TEXTURE_PROPERTIES)*, const(ubyte)*, const(uint)*, uint, ID2D1ResourceTexture*);
-    HRESULT FindResourceTexture(const(GUID)*, ID2D1ResourceTexture*);
-    HRESULT CreateVertexBuffer(const(D2D1_VERTEX_BUFFER_PROPERTIES)*, const(GUID)*, const(D2D1_CUSTOM_VERTEX_BUFFER_PROPERTIES)*, ID2D1VertexBuffer*);
-    HRESULT FindVertexBuffer(const(GUID)*, ID2D1VertexBuffer*);
-    HRESULT CreateColorContext(D2D1_COLOR_SPACE, const(ubyte)*, uint, ID2D1ColorContext*);
-    HRESULT CreateColorContextFromFilename(const(wchar)*, ID2D1ColorContext*);
-    HRESULT CreateColorContextFromWicColorContext(IWICColorContext, ID2D1ColorContext*);
-    HRESULT CheckFeatureSupport(D2D1_FEATURE, void*, uint);
-    BOOL IsBufferPrecisionSupported(D2D1_BUFFER_PRECISION);
+    void GetDpi(float* dpiX, float* dpiY);
+    HRESULT CreateEffect(const(GUID)* effectId, ID2D1Effect* effect);
+    HRESULT GetMaximumSupportedFeatureLevel(const(D3D_FEATURE_LEVEL)* featureLevels, uint featureLevelsCount, D3D_FEATURE_LEVEL* maximumSupportedFeatureLevel);
+    HRESULT CreateTransformNodeFromEffect(ID2D1Effect effect, ID2D1TransformNode* transformNode);
+    HRESULT CreateBlendTransform(uint numInputs, const(D2D1_BLEND_DESCRIPTION)* blendDescription, ID2D1BlendTransform* transform);
+    HRESULT CreateBorderTransform(D2D1_EXTEND_MODE extendModeX, D2D1_EXTEND_MODE extendModeY, ID2D1BorderTransform* transform);
+    HRESULT CreateOffsetTransform(POINT offset, ID2D1OffsetTransform* transform);
+    HRESULT CreateBoundsAdjustmentTransform(const(RECT)* outputRectangle, ID2D1BoundsAdjustmentTransform* transform);
+    HRESULT LoadPixelShader(const(GUID)* shaderId, const(ubyte)* shaderBuffer, uint shaderBufferCount);
+    HRESULT LoadVertexShader(const(GUID)* resourceId, const(ubyte)* shaderBuffer, uint shaderBufferCount);
+    HRESULT LoadComputeShader(const(GUID)* resourceId, const(ubyte)* shaderBuffer, uint shaderBufferCount);
+    BOOL IsShaderLoaded(const(GUID)* shaderId);
+    HRESULT CreateResourceTexture(const(GUID)* resourceId, const(D2D1_RESOURCE_TEXTURE_PROPERTIES)* resourceTextureProperties, const(ubyte)* data, const(uint)* strides, uint dataSize, ID2D1ResourceTexture* resourceTexture);
+    HRESULT FindResourceTexture(const(GUID)* resourceId, ID2D1ResourceTexture* resourceTexture);
+    HRESULT CreateVertexBuffer(const(D2D1_VERTEX_BUFFER_PROPERTIES)* vertexBufferProperties, const(GUID)* resourceId, const(D2D1_CUSTOM_VERTEX_BUFFER_PROPERTIES)* customVertexBufferProperties, ID2D1VertexBuffer* buffer);
+    HRESULT FindVertexBuffer(const(GUID)* resourceId, ID2D1VertexBuffer* buffer);
+    HRESULT CreateColorContext(D2D1_COLOR_SPACE space, const(ubyte)* profile, uint profileSize, ID2D1ColorContext* colorContext);
+    HRESULT CreateColorContextFromFilename(const(wchar)* filename, ID2D1ColorContext* colorContext);
+    HRESULT CreateColorContextFromWicColorContext(IWICColorContext wicColorContext, ID2D1ColorContext* colorContext);
+    HRESULT CheckFeatureSupport(D2D1_FEATURE feature, void* featureSupportData, uint featureSupportDataSize);
+    BOOL IsBufferPrecisionSupported(D2D1_BUFFER_PRECISION bufferPrecision);
 }
 alias D2D1_YCBCR_PROP = int;
 enum : int
@@ -2284,26 +2284,26 @@ interface ID2D1GeometryRealization : ID2D1Resource
 enum IID_ID2D1DeviceContext1 = GUID(0xd37f57e4, 0x6908, 0x459f, [0xa1, 0x99, 0xe7, 0x2f, 0x24, 0xf7, 0x99, 0x87]);
 interface ID2D1DeviceContext1 : ID2D1DeviceContext
 {
-    HRESULT CreateFilledGeometryRealization(ID2D1Geometry, float, ID2D1GeometryRealization*);
-    HRESULT CreateStrokedGeometryRealization(ID2D1Geometry, float, float, ID2D1StrokeStyle, ID2D1GeometryRealization*);
-    void DrawGeometryRealization(ID2D1GeometryRealization, ID2D1Brush);
+    HRESULT CreateFilledGeometryRealization(ID2D1Geometry geometry, float flatteningTolerance, ID2D1GeometryRealization* geometryRealization);
+    HRESULT CreateStrokedGeometryRealization(ID2D1Geometry geometry, float flatteningTolerance, float strokeWidth, ID2D1StrokeStyle strokeStyle, ID2D1GeometryRealization* geometryRealization);
+    void DrawGeometryRealization(ID2D1GeometryRealization geometryRealization, ID2D1Brush brush);
 }
 enum IID_ID2D1Device1 = GUID(0xd21768e1, 0x23a4, 0x4823, [0xa1, 0x4b, 0x7c, 0x3e, 0xba, 0x85, 0xd6, 0x58]);
 interface ID2D1Device1 : ID2D1Device
 {
     D2D1_RENDERING_PRIORITY GetRenderingPriority();
-    void SetRenderingPriority(D2D1_RENDERING_PRIORITY);
-    HRESULT CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS, ID2D1DeviceContext1*);
+    void SetRenderingPriority(D2D1_RENDERING_PRIORITY renderingPriority);
+    HRESULT CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS options, ID2D1DeviceContext1* deviceContext1);
 }
 enum IID_ID2D1Factory2 = GUID(0x94f81a73, 0x9212, 0x4376, [0x9c, 0x58, 0xb1, 0x6a, 0x3a, 0xd, 0x39, 0x92]);
 interface ID2D1Factory2 : ID2D1Factory1
 {
-    HRESULT CreateDevice(IDXGIDevice, ID2D1Device1*);
+    HRESULT CreateDevice(IDXGIDevice dxgiDevice, ID2D1Device1* d2dDevice1);
 }
 enum IID_ID2D1CommandSink1 = GUID(0x9eb767fd, 0x4269, 0x4467, [0xb8, 0xc2, 0xeb, 0x30, 0xcb, 0x30, 0x57, 0x43]);
 interface ID2D1CommandSink1 : ID2D1CommandSink
 {
-    HRESULT SetPrimitiveBlend1(D2D1_PRIMITIVE_BLEND);
+    HRESULT SetPrimitiveBlend1(D2D1_PRIMITIVE_BLEND primitiveBlend);
 }
 alias D2D1_SVG_PAINT_TYPE = int;
 enum : int
@@ -2461,99 +2461,99 @@ struct D2D1_SVG_VIEWBOX
 enum IID_ID2D1SvgAttribute = GUID(0xc9cdb0dd, 0xf8c9, 0x4e70, [0xb7, 0xc2, 0x30, 0x1c, 0x80, 0x29, 0x2c, 0x5e]);
 interface ID2D1SvgAttribute : ID2D1Resource
 {
-    void GetElement(ID2D1SvgElement*);
-    HRESULT Clone(ID2D1SvgAttribute*);
+    void GetElement(ID2D1SvgElement* element);
+    HRESULT Clone(ID2D1SvgAttribute* attribute);
 }
 enum IID_ID2D1SvgPaint = GUID(0xd59bab0a, 0x68a2, 0x455b, [0xa5, 0xdc, 0x9e, 0xb2, 0x85, 0x4e, 0x24, 0x90]);
 interface ID2D1SvgPaint : ID2D1SvgAttribute
 {
-    HRESULT SetPaintType(D2D1_SVG_PAINT_TYPE);
+    HRESULT SetPaintType(D2D1_SVG_PAINT_TYPE paintType);
     D2D1_SVG_PAINT_TYPE GetPaintType();
-    HRESULT SetColor(const(D2D1_COLOR_F)*);
-    void GetColor(D2D1_COLOR_F*);
-    HRESULT SetId(const(wchar)*);
-    HRESULT GetId(PWSTR, uint);
+    HRESULT SetColor(const(D2D1_COLOR_F)* color);
+    void GetColor(D2D1_COLOR_F* color);
+    HRESULT SetId(const(wchar)* id);
+    HRESULT GetId(PWSTR id, uint idCount);
     uint GetIdLength();
 }
 enum IID_ID2D1SvgStrokeDashArray = GUID(0xf1c0ca52, 0x92a3, 0x4f00, [0xb4, 0xce, 0xf3, 0x56, 0x91, 0xef, 0xd9, 0xd9]);
 interface ID2D1SvgStrokeDashArray : ID2D1SvgAttribute
 {
-    HRESULT RemoveDashesAtEnd(uint);
-    HRESULT UpdateDashes(const(D2D1_SVG_LENGTH)*, uint, uint);
-    HRESULT UpdateDashes(const(float)*, uint, uint);
-    HRESULT GetDashes(D2D1_SVG_LENGTH*, uint, uint);
-    HRESULT GetDashes(float*, uint, uint);
+    HRESULT RemoveDashesAtEnd(uint dashesCount);
+    HRESULT UpdateDashes(const(D2D1_SVG_LENGTH)* dashes, uint dashesCount, uint startIndex);
+    HRESULT UpdateDashes(const(float)* dashes, uint dashesCount, uint startIndex);
+    HRESULT GetDashes(D2D1_SVG_LENGTH* dashes, uint dashesCount, uint startIndex);
+    HRESULT GetDashes(float* dashes, uint dashesCount, uint startIndex);
     uint GetDashesCount();
 }
 enum IID_ID2D1SvgPointCollection = GUID(0x9dbe4c0d, 0x3572, 0x4dd9, [0x98, 0x25, 0x55, 0x30, 0x81, 0x3b, 0xb7, 0x12]);
 interface ID2D1SvgPointCollection : ID2D1SvgAttribute
 {
-    HRESULT RemovePointsAtEnd(uint);
-    HRESULT UpdatePoints(const(D2D_POINT_2F)*, uint, uint);
-    HRESULT GetPoints(D2D_POINT_2F*, uint, uint);
+    HRESULT RemovePointsAtEnd(uint pointsCount);
+    HRESULT UpdatePoints(const(D2D_POINT_2F)* points, uint pointsCount, uint startIndex);
+    HRESULT GetPoints(D2D_POINT_2F* points, uint pointsCount, uint startIndex);
     uint GetPointsCount();
 }
 enum IID_ID2D1SvgPathData = GUID(0xc095e4f4, 0xbb98, 0x43d6, [0x97, 0x45, 0x4d, 0x1b, 0x84, 0xec, 0x98, 0x88]);
 interface ID2D1SvgPathData : ID2D1SvgAttribute
 {
-    HRESULT RemoveSegmentDataAtEnd(uint);
-    HRESULT UpdateSegmentData(const(float)*, uint, uint);
-    HRESULT GetSegmentData(float*, uint, uint);
+    HRESULT RemoveSegmentDataAtEnd(uint dataCount);
+    HRESULT UpdateSegmentData(const(float)* data, uint dataCount, uint startIndex);
+    HRESULT GetSegmentData(float* data, uint dataCount, uint startIndex);
     uint GetSegmentDataCount();
-    HRESULT RemoveCommandsAtEnd(uint);
-    HRESULT UpdateCommands(const(D2D1_SVG_PATH_COMMAND)*, uint, uint);
-    HRESULT GetCommands(D2D1_SVG_PATH_COMMAND*, uint, uint);
+    HRESULT RemoveCommandsAtEnd(uint commandsCount);
+    HRESULT UpdateCommands(const(D2D1_SVG_PATH_COMMAND)* commands, uint commandsCount, uint startIndex);
+    HRESULT GetCommands(D2D1_SVG_PATH_COMMAND* commands, uint commandsCount, uint startIndex);
     uint GetCommandsCount();
-    HRESULT CreatePathGeometry(D2D1_FILL_MODE, ID2D1PathGeometry1*);
+    HRESULT CreatePathGeometry(D2D1_FILL_MODE fillMode, ID2D1PathGeometry1* pathGeometry);
 }
 enum IID_ID2D1SvgElement = GUID(0xac7b67a6, 0x183e, 0x49c1, [0xa8, 0x23, 0xe, 0xbe, 0x40, 0xb0, 0xdb, 0x29]);
 interface ID2D1SvgElement : ID2D1Resource
 {
-    void GetDocument(ID2D1SvgDocument*);
-    HRESULT GetTagName(PWSTR, uint);
+    void GetDocument(ID2D1SvgDocument* document);
+    HRESULT GetTagName(PWSTR name, uint nameCount);
     uint GetTagNameLength();
     BOOL IsTextContent();
-    void GetParent(ID2D1SvgElement*);
+    void GetParent(ID2D1SvgElement* parent);
     BOOL HasChildren();
-    void GetFirstChild(ID2D1SvgElement*);
-    void GetLastChild(ID2D1SvgElement*);
-    HRESULT GetPreviousChild(ID2D1SvgElement, ID2D1SvgElement*);
-    HRESULT GetNextChild(ID2D1SvgElement, ID2D1SvgElement*);
-    HRESULT InsertChildBefore(ID2D1SvgElement, ID2D1SvgElement);
-    HRESULT AppendChild(ID2D1SvgElement);
-    HRESULT ReplaceChild(ID2D1SvgElement, ID2D1SvgElement);
-    HRESULT RemoveChild(ID2D1SvgElement);
-    HRESULT CreateChild(const(wchar)*, ID2D1SvgElement*);
-    BOOL IsAttributeSpecified(const(wchar)*, BOOL*);
+    void GetFirstChild(ID2D1SvgElement* child);
+    void GetLastChild(ID2D1SvgElement* child);
+    HRESULT GetPreviousChild(ID2D1SvgElement referenceChild, ID2D1SvgElement* previousChild);
+    HRESULT GetNextChild(ID2D1SvgElement referenceChild, ID2D1SvgElement* nextChild);
+    HRESULT InsertChildBefore(ID2D1SvgElement newChild, ID2D1SvgElement referenceChild);
+    HRESULT AppendChild(ID2D1SvgElement newChild);
+    HRESULT ReplaceChild(ID2D1SvgElement newChild, ID2D1SvgElement oldChild);
+    HRESULT RemoveChild(ID2D1SvgElement oldChild);
+    HRESULT CreateChild(const(wchar)* tagName, ID2D1SvgElement* newChild);
+    BOOL IsAttributeSpecified(const(wchar)* name, BOOL* inherited);
     uint GetSpecifiedAttributeCount();
-    HRESULT GetSpecifiedAttributeName(uint, PWSTR, uint, BOOL*);
-    HRESULT GetSpecifiedAttributeNameLength(uint, uint*, BOOL*);
-    HRESULT RemoveAttribute(const(wchar)*);
-    HRESULT SetTextValue(const(wchar)*, uint);
-    HRESULT GetTextValue(PWSTR, uint);
+    HRESULT GetSpecifiedAttributeName(uint index, PWSTR name, uint nameCount, BOOL* inherited);
+    HRESULT GetSpecifiedAttributeNameLength(uint index, uint* nameLength, BOOL* inherited);
+    HRESULT RemoveAttribute(const(wchar)* name);
+    HRESULT SetTextValue(const(wchar)* name, uint nameCount);
+    HRESULT GetTextValue(PWSTR name, uint nameCount);
     uint GetTextValueLength();
-    HRESULT SetAttributeValue(const(wchar)*, ID2D1SvgAttribute);
-    HRESULT SetAttributeValue(const(wchar)*, D2D1_SVG_ATTRIBUTE_POD_TYPE, const(void)*, uint);
-    HRESULT SetAttributeValue(const(wchar)*, D2D1_SVG_ATTRIBUTE_STRING_TYPE, const(wchar)*);
-    HRESULT GetAttributeValue(const(wchar)*, const(GUID)*, void**);
-    HRESULT GetAttributeValue(const(wchar)*, D2D1_SVG_ATTRIBUTE_POD_TYPE, void*, uint);
-    HRESULT GetAttributeValue(const(wchar)*, D2D1_SVG_ATTRIBUTE_STRING_TYPE, PWSTR, uint);
-    HRESULT GetAttributeValueLength(const(wchar)*, D2D1_SVG_ATTRIBUTE_STRING_TYPE, uint*);
+    HRESULT SetAttributeValue(const(wchar)* name, ID2D1SvgAttribute value);
+    HRESULT SetAttributeValue(const(wchar)* name, D2D1_SVG_ATTRIBUTE_POD_TYPE type, const(void)* value, uint valueSizeInBytes);
+    HRESULT SetAttributeValue(const(wchar)* name, D2D1_SVG_ATTRIBUTE_STRING_TYPE type, const(wchar)* value);
+    HRESULT GetAttributeValue(const(wchar)* name, const(GUID)* riid, void** value);
+    HRESULT GetAttributeValue(const(wchar)* name, D2D1_SVG_ATTRIBUTE_POD_TYPE type, void* value, uint valueSizeInBytes);
+    HRESULT GetAttributeValue(const(wchar)* name, D2D1_SVG_ATTRIBUTE_STRING_TYPE type, PWSTR value, uint valueCount);
+    HRESULT GetAttributeValueLength(const(wchar)* name, D2D1_SVG_ATTRIBUTE_STRING_TYPE type, uint* valueLength);
 }
 enum IID_ID2D1SvgDocument = GUID(0x86b88e4d, 0xafa4, 0x4d7b, [0x88, 0xe4, 0x68, 0xa5, 0x1c, 0x4a, 0xa, 0xec]);
 interface ID2D1SvgDocument : ID2D1Resource
 {
-    HRESULT SetViewportSize(D2D_SIZE_F);
+    HRESULT SetViewportSize(D2D_SIZE_F viewportSize);
     D2D_SIZE_F GetViewportSize();
-    HRESULT SetRoot(ID2D1SvgElement);
-    void GetRoot(ID2D1SvgElement*);
-    HRESULT FindElementById(const(wchar)*, ID2D1SvgElement*);
-    HRESULT Serialize(IStream, ID2D1SvgElement);
-    HRESULT Deserialize(IStream, ID2D1SvgElement*);
-    HRESULT CreatePaint(D2D1_SVG_PAINT_TYPE, const(D2D1_COLOR_F)*, const(wchar)*, ID2D1SvgPaint*);
-    HRESULT CreateStrokeDashArray(const(D2D1_SVG_LENGTH)*, uint, ID2D1SvgStrokeDashArray*);
-    HRESULT CreatePointCollection(const(D2D_POINT_2F)*, uint, ID2D1SvgPointCollection*);
-    HRESULT CreatePathData(const(float)*, uint, const(D2D1_SVG_PATH_COMMAND)*, uint, ID2D1SvgPathData*);
+    HRESULT SetRoot(ID2D1SvgElement root);
+    void GetRoot(ID2D1SvgElement* root);
+    HRESULT FindElementById(const(wchar)* id, ID2D1SvgElement* svgElement);
+    HRESULT Serialize(IStream outputXmlStream, ID2D1SvgElement subtree);
+    HRESULT Deserialize(IStream inputXmlStream, ID2D1SvgElement* subtree);
+    HRESULT CreatePaint(D2D1_SVG_PAINT_TYPE paintType, const(D2D1_COLOR_F)* color, const(wchar)* id, ID2D1SvgPaint* paint);
+    HRESULT CreateStrokeDashArray(const(D2D1_SVG_LENGTH)* dashes, uint dashesCount, ID2D1SvgStrokeDashArray* strokeDashArray);
+    HRESULT CreatePointCollection(const(D2D_POINT_2F)* points, uint pointsCount, ID2D1SvgPointCollection* pointCollection);
+    HRESULT CreatePathData(const(float)* segmentData, uint segmentDataCount, const(D2D1_SVG_PATH_COMMAND)* commands, uint commandsCount, ID2D1SvgPathData* pathData);
 }
 alias D2D1_INK_NIB_SHAPE = int;
 enum : int
@@ -2698,49 +2698,49 @@ enum : int
 enum IID_ID2D1InkStyle = GUID(0xbae8b344, 0x23fc, 0x4071, [0x8c, 0xb5, 0xd0, 0x5d, 0x6f, 0x7, 0x38, 0x48]);
 interface ID2D1InkStyle : ID2D1Resource
 {
-    void SetNibTransform(const(D2D_MATRIX_3X2_F)*);
-    void GetNibTransform(D2D_MATRIX_3X2_F*);
-    void SetNibShape(D2D1_INK_NIB_SHAPE);
+    void SetNibTransform(const(D2D_MATRIX_3X2_F)* transform);
+    void GetNibTransform(D2D_MATRIX_3X2_F* transform);
+    void SetNibShape(D2D1_INK_NIB_SHAPE nibShape);
     D2D1_INK_NIB_SHAPE GetNibShape();
 }
 enum IID_ID2D1Ink = GUID(0xb499923b, 0x7029, 0x478f, [0xa8, 0xb3, 0x43, 0x2c, 0x7c, 0x5f, 0x53, 0x12]);
 interface ID2D1Ink : ID2D1Resource
 {
-    void SetStartPoint(const(D2D1_INK_POINT)*);
+    void SetStartPoint(const(D2D1_INK_POINT)* startPoint);
     D2D1_INK_POINT GetStartPoint();
-    HRESULT AddSegments(const(D2D1_INK_BEZIER_SEGMENT)*, uint);
-    HRESULT RemoveSegmentsAtEnd(uint);
-    HRESULT SetSegments(uint, const(D2D1_INK_BEZIER_SEGMENT)*, uint);
-    HRESULT SetSegmentAtEnd(const(D2D1_INK_BEZIER_SEGMENT)*);
+    HRESULT AddSegments(const(D2D1_INK_BEZIER_SEGMENT)* segments, uint segmentsCount);
+    HRESULT RemoveSegmentsAtEnd(uint segmentsCount);
+    HRESULT SetSegments(uint startSegment, const(D2D1_INK_BEZIER_SEGMENT)* segments, uint segmentsCount);
+    HRESULT SetSegmentAtEnd(const(D2D1_INK_BEZIER_SEGMENT)* segment);
     uint GetSegmentCount();
-    HRESULT GetSegments(uint, D2D1_INK_BEZIER_SEGMENT*, uint);
-    HRESULT StreamAsGeometry(ID2D1InkStyle, const(D2D_MATRIX_3X2_F)*, float, ID2D1SimplifiedGeometrySink);
-    HRESULT GetBounds(ID2D1InkStyle, const(D2D_MATRIX_3X2_F)*, D2D_RECT_F*);
+    HRESULT GetSegments(uint startSegment, D2D1_INK_BEZIER_SEGMENT* segments, uint segmentsCount);
+    HRESULT StreamAsGeometry(ID2D1InkStyle inkStyle, const(D2D_MATRIX_3X2_F)* worldTransform, float flatteningTolerance, ID2D1SimplifiedGeometrySink geometrySink);
+    HRESULT GetBounds(ID2D1InkStyle inkStyle, const(D2D_MATRIX_3X2_F)* worldTransform, D2D_RECT_F* bounds);
 }
 enum IID_ID2D1GradientMesh = GUID(0xf292e401, 0xc050, 0x4cde, [0x83, 0xd7, 0x4, 0x96, 0x2d, 0x3b, 0x23, 0xc2]);
 interface ID2D1GradientMesh : ID2D1Resource
 {
     uint GetPatchCount();
-    HRESULT GetPatches(uint, D2D1_GRADIENT_MESH_PATCH*, uint);
+    HRESULT GetPatches(uint startIndex, D2D1_GRADIENT_MESH_PATCH* patches, uint patchesCount);
 }
 enum IID_ID2D1ImageSource = GUID(0xc9b664e5, 0x74a1, 0x4378, [0x9a, 0xc2, 0xee, 0xfc, 0x37, 0xa3, 0xf4, 0xd8]);
 interface ID2D1ImageSource : ID2D1Image
 {
     HRESULT OfferResources();
-    HRESULT TryReclaimResources(BOOL*);
+    HRESULT TryReclaimResources(BOOL* resourcesDiscarded);
 }
 enum IID_ID2D1ImageSourceFromWic = GUID(0x77395441, 0x1c8f, 0x4555, [0x86, 0x83, 0xf5, 0xd, 0xab, 0xf, 0xe7, 0x92]);
 interface ID2D1ImageSourceFromWic : ID2D1ImageSource
 {
-    HRESULT EnsureCached(const(D2D_RECT_U)*);
-    HRESULT TrimCache(const(D2D_RECT_U)*);
-    void GetSource(IWICBitmapSource*);
+    HRESULT EnsureCached(const(D2D_RECT_U)* rectangleToFill);
+    HRESULT TrimCache(const(D2D_RECT_U)* rectangleToPreserve);
+    void GetSource(IWICBitmapSource* wicBitmapSource);
 }
 enum IID_ID2D1TransformedImageSource = GUID(0x7f1f79e5, 0x2796, 0x416c, [0x8f, 0x55, 0x70, 0xf, 0x91, 0x14, 0x45, 0xe5]);
 interface ID2D1TransformedImageSource : ID2D1Image
 {
-    void GetSource(ID2D1ImageSource*);
-    void GetProperties(D2D1_TRANSFORMED_IMAGE_SOURCE_PROPERTIES*);
+    void GetSource(ID2D1ImageSource* imageSource);
+    void GetProperties(D2D1_TRANSFORMED_IMAGE_SOURCE_PROPERTIES* properties);
 }
 enum IID_ID2D1LookupTable3D = GUID(0x53dd9855, 0xa3b0, 0x4d5b, [0x82, 0xe1, 0x26, 0xe2, 0x5c, 0x5e, 0x57, 0x97]);
 interface ID2D1LookupTable3D : ID2D1Resource
@@ -2749,186 +2749,185 @@ interface ID2D1LookupTable3D : ID2D1Resource
 enum IID_ID2D1DeviceContext2 = GUID(0x394ea6a3, 0xc34, 0x4321, [0x95, 0xb, 0x6c, 0xa2, 0xf, 0xb, 0xe6, 0xc7]);
 interface ID2D1DeviceContext2 : ID2D1DeviceContext1
 {
-    HRESULT CreateInk(const(D2D1_INK_POINT)*, ID2D1Ink*);
-    HRESULT CreateInkStyle(const(D2D1_INK_STYLE_PROPERTIES)*, ID2D1InkStyle*);
-    HRESULT CreateGradientMesh(const(D2D1_GRADIENT_MESH_PATCH)*, uint, ID2D1GradientMesh*);
-    HRESULT CreateImageSourceFromWic(IWICBitmapSource, D2D1_IMAGE_SOURCE_LOADING_OPTIONS, D2D1_ALPHA_MODE, ID2D1ImageSourceFromWic*);
-    HRESULT CreateLookupTable3D(D2D1_BUFFER_PRECISION, const(uint)*, const(ubyte)*, uint, const(uint)*, ID2D1LookupTable3D*);
-    HRESULT CreateImageSourceFromDxgi(IDXGISurface*, uint, DXGI_COLOR_SPACE_TYPE, D2D1_IMAGE_SOURCE_FROM_DXGI_OPTIONS, ID2D1ImageSource*);
-    HRESULT GetGradientMeshWorldBounds(ID2D1GradientMesh, D2D_RECT_F*);
-    void DrawInk(ID2D1Ink, ID2D1Brush, ID2D1InkStyle);
-    void DrawGradientMesh(ID2D1GradientMesh);
-    void DrawGdiMetafile(ID2D1GdiMetafile, const(D2D_RECT_F)*, const(D2D_RECT_F)*);
-    HRESULT CreateTransformedImageSource(ID2D1ImageSource, const(D2D1_TRANSFORMED_IMAGE_SOURCE_PROPERTIES)*, ID2D1TransformedImageSource*);
+    HRESULT CreateInk(const(D2D1_INK_POINT)* startPoint, ID2D1Ink* ink);
+    HRESULT CreateInkStyle(const(D2D1_INK_STYLE_PROPERTIES)* inkStyleProperties, ID2D1InkStyle* inkStyle);
+    HRESULT CreateGradientMesh(const(D2D1_GRADIENT_MESH_PATCH)* patches, uint patchesCount, ID2D1GradientMesh* gradientMesh);
+    HRESULT CreateImageSourceFromWic(IWICBitmapSource wicBitmapSource, D2D1_IMAGE_SOURCE_LOADING_OPTIONS loadingOptions, D2D1_ALPHA_MODE alphaMode, ID2D1ImageSourceFromWic* imageSource);
+    HRESULT CreateLookupTable3D(D2D1_BUFFER_PRECISION precision, const(uint)* extents, const(ubyte)* data, uint dataCount, const(uint)* strides, ID2D1LookupTable3D* lookupTable);
+    HRESULT CreateImageSourceFromDxgi(IDXGISurface* surfaces, uint surfaceCount, DXGI_COLOR_SPACE_TYPE colorSpace, D2D1_IMAGE_SOURCE_FROM_DXGI_OPTIONS options, ID2D1ImageSource* imageSource);
+    HRESULT GetGradientMeshWorldBounds(ID2D1GradientMesh gradientMesh, D2D_RECT_F* pBounds);
+    void DrawInk(ID2D1Ink ink, ID2D1Brush brush, ID2D1InkStyle inkStyle);
+    void DrawGradientMesh(ID2D1GradientMesh gradientMesh);
+    void DrawGdiMetafile(ID2D1GdiMetafile gdiMetafile, const(D2D_RECT_F)* destinationRectangle, const(D2D_RECT_F)* sourceRectangle);
+    HRESULT CreateTransformedImageSource(ID2D1ImageSource imageSource, const(D2D1_TRANSFORMED_IMAGE_SOURCE_PROPERTIES)* properties, ID2D1TransformedImageSource* transformedImageSource);
 }
 enum IID_ID2D1Device2 = GUID(0xa44472e1, 0x8dfb, 0x4e60, [0x84, 0x92, 0x6e, 0x28, 0x61, 0xc9, 0xca, 0x8b]);
 interface ID2D1Device2 : ID2D1Device1
 {
-    HRESULT CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS, ID2D1DeviceContext2*);
-    void FlushDeviceContexts(ID2D1Bitmap);
-    HRESULT GetDxgiDevice(IDXGIDevice*);
+    HRESULT CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS options, ID2D1DeviceContext2* deviceContext2);
+    void FlushDeviceContexts(ID2D1Bitmap bitmap);
+    HRESULT GetDxgiDevice(IDXGIDevice* dxgiDevice);
 }
 enum IID_ID2D1Factory3 = GUID(0x869759f, 0x4f00, 0x413f, [0xb0, 0x3e, 0x2b, 0xda, 0x45, 0x40, 0x4d, 0xf]);
 interface ID2D1Factory3 : ID2D1Factory2
 {
-    HRESULT CreateDevice(IDXGIDevice, ID2D1Device2*);
+    HRESULT CreateDevice(IDXGIDevice dxgiDevice, ID2D1Device2* d2dDevice2);
 }
 enum IID_ID2D1CommandSink2 = GUID(0x3bab440e, 0x417e, 0x47df, [0xa2, 0xe2, 0xbc, 0xb, 0xe6, 0xa0, 0x9, 0x16]);
 interface ID2D1CommandSink2 : ID2D1CommandSink1
 {
-    HRESULT DrawInk(ID2D1Ink, ID2D1Brush, ID2D1InkStyle);
-    HRESULT DrawGradientMesh(ID2D1GradientMesh);
-    HRESULT DrawGdiMetafile(ID2D1GdiMetafile, const(D2D_RECT_F)*, const(D2D_RECT_F)*);
+    HRESULT DrawInk(ID2D1Ink ink, ID2D1Brush brush, ID2D1InkStyle inkStyle);
+    HRESULT DrawGradientMesh(ID2D1GradientMesh gradientMesh);
+    HRESULT DrawGdiMetafile(ID2D1GdiMetafile gdiMetafile, const(D2D_RECT_F)* destinationRectangle, const(D2D_RECT_F)* sourceRectangle);
 }
 enum IID_ID2D1GdiMetafile1 = GUID(0x2e69f9e8, 0xdd3f, 0x4bf9, [0x95, 0xba, 0xc0, 0x4f, 0x49, 0xd7, 0x88, 0xdf]);
 interface ID2D1GdiMetafile1 : ID2D1GdiMetafile
 {
-    HRESULT GetDpi(float*, float*);
-    HRESULT GetSourceBounds(D2D_RECT_F*);
+    HRESULT GetDpi(float* dpiX, float* dpiY);
+    HRESULT GetSourceBounds(D2D_RECT_F* bounds);
 }
 enum IID_ID2D1GdiMetafileSink1 = GUID(0xfd0ecb6b, 0x91e6, 0x411e, [0x86, 0x55, 0x39, 0x5e, 0x76, 0xf, 0x91, 0xb4]);
 interface ID2D1GdiMetafileSink1 : ID2D1GdiMetafileSink
 {
-    HRESULT ProcessRecord(uint, const(void)*, uint, uint);
+    HRESULT ProcessRecord(uint recordType, const(void)* recordData, uint recordDataSize, uint flags);
 }
 enum IID_ID2D1SpriteBatch = GUID(0x4dc583bf, 0x3a10, 0x438a, [0x87, 0x22, 0xe9, 0x76, 0x52, 0x24, 0xf1, 0xf1]);
 interface ID2D1SpriteBatch : ID2D1Resource
 {
-    HRESULT AddSprites(uint, const(D2D_RECT_F)*, const(D2D_RECT_U)*, const(D2D1_COLOR_F)*, const(D2D_MATRIX_3X2_F)*, uint, uint, uint, uint);
-    HRESULT SetSprites(uint, uint, const(D2D_RECT_F)*, const(D2D_RECT_U)*, const(D2D1_COLOR_F)*, const(D2D_MATRIX_3X2_F)*, uint, uint, uint, uint);
-    HRESULT GetSprites(uint, uint, D2D_RECT_F*, D2D_RECT_U*, D2D1_COLOR_F*, D2D_MATRIX_3X2_F*);
+    HRESULT AddSprites(uint spriteCount, const(D2D_RECT_F)* destinationRectangles, const(D2D_RECT_U)* sourceRectangles, const(D2D1_COLOR_F)* colors, const(D2D_MATRIX_3X2_F)* transforms, uint destinationRectanglesStride, uint sourceRectanglesStride, uint colorsStride, uint transformsStride);
+    HRESULT SetSprites(uint startIndex, uint spriteCount, const(D2D_RECT_F)* destinationRectangles, const(D2D_RECT_U)* sourceRectangles, const(D2D1_COLOR_F)* colors, const(D2D_MATRIX_3X2_F)* transforms, uint destinationRectanglesStride, uint sourceRectanglesStride, uint colorsStride, uint transformsStride);
+    HRESULT GetSprites(uint startIndex, uint spriteCount, D2D_RECT_F* destinationRectangles, D2D_RECT_U* sourceRectangles, D2D1_COLOR_F* colors, D2D_MATRIX_3X2_F* transforms);
     uint GetSpriteCount();
     void Clear();
 }
 enum IID_ID2D1DeviceContext3 = GUID(0x235a7496, 0x8351, 0x414c, [0xbc, 0xd4, 0x66, 0x72, 0xab, 0x2d, 0x8e, 0x0]);
 interface ID2D1DeviceContext3 : ID2D1DeviceContext2
 {
-    HRESULT CreateSpriteBatch(ID2D1SpriteBatch*);
-    void DrawSpriteBatch(ID2D1SpriteBatch, uint, uint, ID2D1Bitmap, D2D1_BITMAP_INTERPOLATION_MODE, D2D1_SPRITE_OPTIONS);
+    HRESULT CreateSpriteBatch(ID2D1SpriteBatch* spriteBatch);
+    void DrawSpriteBatch(ID2D1SpriteBatch spriteBatch, uint startIndex, uint spriteCount, ID2D1Bitmap bitmap, D2D1_BITMAP_INTERPOLATION_MODE interpolationMode, D2D1_SPRITE_OPTIONS spriteOptions);
 }
 enum IID_ID2D1Device3 = GUID(0x852f2087, 0x802c, 0x4037, [0xab, 0x60, 0xff, 0x2e, 0x7e, 0xe6, 0xfc, 0x1]);
 interface ID2D1Device3 : ID2D1Device2
 {
-    HRESULT CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS, ID2D1DeviceContext3*);
+    HRESULT CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS options, ID2D1DeviceContext3* deviceContext3);
 }
 enum IID_ID2D1Factory4 = GUID(0xbd4ec2d2, 0x662, 0x4bee, [0xba, 0x8e, 0x6f, 0x29, 0xf0, 0x32, 0xe0, 0x96]);
 interface ID2D1Factory4 : ID2D1Factory3
 {
-    HRESULT CreateDevice(IDXGIDevice, ID2D1Device3*);
+    HRESULT CreateDevice(IDXGIDevice dxgiDevice, ID2D1Device3* d2dDevice3);
 }
 enum IID_ID2D1CommandSink3 = GUID(0x18079135, 0x4cf3, 0x4868, [0xbc, 0x8e, 0x6, 0x6, 0x7e, 0x6d, 0x24, 0x2d]);
 interface ID2D1CommandSink3 : ID2D1CommandSink2
 {
-    HRESULT DrawSpriteBatch(ID2D1SpriteBatch, uint, uint, ID2D1Bitmap, D2D1_BITMAP_INTERPOLATION_MODE, D2D1_SPRITE_OPTIONS);
+    HRESULT DrawSpriteBatch(ID2D1SpriteBatch spriteBatch, uint startIndex, uint spriteCount, ID2D1Bitmap bitmap, D2D1_BITMAP_INTERPOLATION_MODE interpolationMode, D2D1_SPRITE_OPTIONS spriteOptions);
 }
 enum IID_ID2D1SvgGlyphStyle = GUID(0xaf671749, 0xd241, 0x4db8, [0x8e, 0x41, 0xdc, 0xc2, 0xe5, 0xc1, 0xa4, 0x38]);
 interface ID2D1SvgGlyphStyle : ID2D1Resource
 {
-    HRESULT SetFill(ID2D1Brush);
-    void GetFill(ID2D1Brush*);
-    HRESULT SetStroke(ID2D1Brush, float, const(float)*, uint, float);
+    HRESULT SetFill(ID2D1Brush brush);
+    void GetFill(ID2D1Brush* brush);
+    HRESULT SetStroke(ID2D1Brush brush, float strokeWidth, const(float)* dashes, uint dashesCount, float dashOffset);
     uint GetStrokeDashesCount();
-    void GetStroke(ID2D1Brush*, float*, float*, uint, float*);
+    void GetStroke(ID2D1Brush* brush, float* strokeWidth, float* dashes, uint dashesCount, float* dashOffset);
 }
 enum IID_ID2D1DeviceContext4 = GUID(0x8c427831, 0x3d90, 0x4476, [0xb6, 0x47, 0xc4, 0xfa, 0xe3, 0x49, 0xe4, 0xdb]);
 interface ID2D1DeviceContext4 : ID2D1DeviceContext3
 {
-    HRESULT CreateSvgGlyphStyle(ID2D1SvgGlyphStyle*);
-    void DrawText(const(wchar)*, uint, IDWriteTextFormat, const(D2D_RECT_F)*, ID2D1Brush, ID2D1SvgGlyphStyle, uint, D2D1_DRAW_TEXT_OPTIONS, DWRITE_MEASURING_MODE);
-    void DrawTextLayout(D2D_POINT_2F, IDWriteTextLayout, ID2D1Brush, ID2D1SvgGlyphStyle, uint, D2D1_DRAW_TEXT_OPTIONS);
-    void DrawColorBitmapGlyphRun(DWRITE_GLYPH_IMAGE_FORMATS, D2D_POINT_2F, const(DWRITE_GLYPH_RUN)*, DWRITE_MEASURING_MODE, D2D1_COLOR_BITMAP_GLYPH_SNAP_OPTION);
-    void DrawSvgGlyphRun(D2D_POINT_2F, const(DWRITE_GLYPH_RUN)*, ID2D1Brush, ID2D1SvgGlyphStyle, uint, DWRITE_MEASURING_MODE);
-    HRESULT GetColorBitmapGlyphImage(DWRITE_GLYPH_IMAGE_FORMATS, D2D_POINT_2F, IDWriteFontFace, float, ushort, BOOL, const(D2D_MATRIX_3X2_F)*, float, float, D2D_MATRIX_3X2_F*, ID2D1Image*);
-    HRESULT GetSvgGlyphImage(D2D_POINT_2F, IDWriteFontFace, float, ushort, BOOL, const(D2D_MATRIX_3X2_F)*, ID2D1Brush, ID2D1SvgGlyphStyle, uint, D2D_MATRIX_3X2_F*, ID2D1CommandList*);
+    HRESULT CreateSvgGlyphStyle(ID2D1SvgGlyphStyle* svgGlyphStyle);
+    void DrawText(const(wchar)* string, uint stringLength, IDWriteTextFormat textFormat, const(D2D_RECT_F)* layoutRect, ID2D1Brush defaultFillBrush, ID2D1SvgGlyphStyle svgGlyphStyle, uint colorPaletteIndex, D2D1_DRAW_TEXT_OPTIONS options, DWRITE_MEASURING_MODE measuringMode);
+    void DrawTextLayout(D2D_POINT_2F origin, IDWriteTextLayout textLayout, ID2D1Brush defaultFillBrush, ID2D1SvgGlyphStyle svgGlyphStyle, uint colorPaletteIndex, D2D1_DRAW_TEXT_OPTIONS options);
+    void DrawColorBitmapGlyphRun(DWRITE_GLYPH_IMAGE_FORMATS glyphImageFormat, D2D_POINT_2F baselineOrigin, const(DWRITE_GLYPH_RUN)* glyphRun, DWRITE_MEASURING_MODE measuringMode, D2D1_COLOR_BITMAP_GLYPH_SNAP_OPTION bitmapSnapOption);
+    void DrawSvgGlyphRun(D2D_POINT_2F baselineOrigin, const(DWRITE_GLYPH_RUN)* glyphRun, ID2D1Brush defaultFillBrush, ID2D1SvgGlyphStyle svgGlyphStyle, uint colorPaletteIndex, DWRITE_MEASURING_MODE measuringMode);
+    HRESULT GetColorBitmapGlyphImage(DWRITE_GLYPH_IMAGE_FORMATS glyphImageFormat, D2D_POINT_2F glyphOrigin, IDWriteFontFace fontFace, float fontEmSize, ushort glyphIndex, BOOL isSideways, const(D2D_MATRIX_3X2_F)* worldTransform, float dpiX, float dpiY, D2D_MATRIX_3X2_F* glyphTransform, ID2D1Image* glyphImage);
+    HRESULT GetSvgGlyphImage(D2D_POINT_2F glyphOrigin, IDWriteFontFace fontFace, float fontEmSize, ushort glyphIndex, BOOL isSideways, const(D2D_MATRIX_3X2_F)* worldTransform, ID2D1Brush defaultFillBrush, ID2D1SvgGlyphStyle svgGlyphStyle, uint colorPaletteIndex, D2D_MATRIX_3X2_F* glyphTransform, ID2D1CommandList* glyphImage);
 }
 enum IID_ID2D1Device4 = GUID(0xd7bdb159, 0x5683, 0x4a46, [0xbc, 0x9c, 0x72, 0xdc, 0x72, 0xb, 0x85, 0x8b]);
 interface ID2D1Device4 : ID2D1Device3
 {
-    HRESULT CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS, ID2D1DeviceContext4*);
-    void SetMaximumColorGlyphCacheMemory(ulong);
+    HRESULT CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS options, ID2D1DeviceContext4* deviceContext4);
+    void SetMaximumColorGlyphCacheMemory(ulong maximumInBytes);
     ulong GetMaximumColorGlyphCacheMemory();
 }
 enum IID_ID2D1Factory5 = GUID(0xc4349994, 0x838e, 0x4b0f, [0x8c, 0xab, 0x44, 0x99, 0x7d, 0x9e, 0xea, 0xcc]);
 interface ID2D1Factory5 : ID2D1Factory4
 {
-    HRESULT CreateDevice(IDXGIDevice, ID2D1Device4*);
+    HRESULT CreateDevice(IDXGIDevice dxgiDevice, ID2D1Device4* d2dDevice4);
 }
 enum IID_ID2D1CommandSink4 = GUID(0xc78a6519, 0x40d6, 0x4218, [0xb2, 0xde, 0xbe, 0xee, 0xb7, 0x44, 0xbb, 0x3e]);
 interface ID2D1CommandSink4 : ID2D1CommandSink3
 {
-    HRESULT SetPrimitiveBlend2(D2D1_PRIMITIVE_BLEND);
+    HRESULT SetPrimitiveBlend2(D2D1_PRIMITIVE_BLEND primitiveBlend);
 }
 enum IID_ID2D1ColorContext1 = GUID(0x1ab42875, 0xc57f, 0x4be9, [0xbd, 0x85, 0x9c, 0xd7, 0x8d, 0x6f, 0x55, 0xee]);
 interface ID2D1ColorContext1 : ID2D1ColorContext
 {
     D2D1_COLOR_CONTEXT_TYPE GetColorContextType();
     DXGI_COLOR_SPACE_TYPE GetDXGIColorSpace();
-    HRESULT GetSimpleColorProfile(D2D1_SIMPLE_COLOR_PROFILE*);
+    HRESULT GetSimpleColorProfile(D2D1_SIMPLE_COLOR_PROFILE* simpleProfile);
 }
 enum IID_ID2D1DeviceContext5 = GUID(0x7836d248, 0x68cc, 0x4df6, [0xb9, 0xe8, 0xde, 0x99, 0x1b, 0xf6, 0x2e, 0xb7]);
 interface ID2D1DeviceContext5 : ID2D1DeviceContext4
 {
-    HRESULT CreateSvgDocument(IStream, D2D_SIZE_F, ID2D1SvgDocument*);
-    void DrawSvgDocument(ID2D1SvgDocument);
-    HRESULT CreateColorContextFromDxgiColorSpace(DXGI_COLOR_SPACE_TYPE, ID2D1ColorContext1*);
-    HRESULT CreateColorContextFromSimpleColorProfile(const(D2D1_SIMPLE_COLOR_PROFILE)*, ID2D1ColorContext1*);
+    HRESULT CreateSvgDocument(IStream inputXmlStream, D2D_SIZE_F viewportSize, ID2D1SvgDocument* svgDocument);
+    void DrawSvgDocument(ID2D1SvgDocument svgDocument);
+    HRESULT CreateColorContextFromDxgiColorSpace(DXGI_COLOR_SPACE_TYPE colorSpace, ID2D1ColorContext1* colorContext);
+    HRESULT CreateColorContextFromSimpleColorProfile(const(D2D1_SIMPLE_COLOR_PROFILE)* simpleProfile, ID2D1ColorContext1* colorContext);
 }
 enum IID_ID2D1Device5 = GUID(0xd55ba0a4, 0x6405, 0x4694, [0xae, 0xf5, 0x8, 0xee, 0x1a, 0x43, 0x58, 0xb4]);
 interface ID2D1Device5 : ID2D1Device4
 {
-    HRESULT CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS, ID2D1DeviceContext5*);
+    HRESULT CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS options, ID2D1DeviceContext5* deviceContext5);
 }
 enum IID_ID2D1Factory6 = GUID(0xf9976f46, 0xf642, 0x44c1, [0x97, 0xca, 0xda, 0x32, 0xea, 0x2a, 0x26, 0x35]);
 interface ID2D1Factory6 : ID2D1Factory5
 {
-    HRESULT CreateDevice(IDXGIDevice, ID2D1Device5*);
+    HRESULT CreateDevice(IDXGIDevice dxgiDevice, ID2D1Device5* d2dDevice5);
 }
 enum IID_ID2D1CommandSink5 = GUID(0x7047dd26, 0xb1e7, 0x44a7, [0x95, 0x9a, 0x83, 0x49, 0xe2, 0x14, 0x4f, 0xa8]);
 interface ID2D1CommandSink5 : ID2D1CommandSink4
 {
-    HRESULT BlendImage(ID2D1Image, D2D1_BLEND_MODE, const(D2D_POINT_2F)*, const(D2D_RECT_F)*, D2D1_INTERPOLATION_MODE);
+    HRESULT BlendImage(ID2D1Image image, D2D1_BLEND_MODE blendMode, const(D2D_POINT_2F)* targetOffset, const(D2D_RECT_F)* imageRectangle, D2D1_INTERPOLATION_MODE interpolationMode);
 }
 enum IID_ID2D1DeviceContext6 = GUID(0x985f7e37, 0x4ed0, 0x4a19, [0x98, 0xa3, 0x15, 0xb0, 0xed, 0xfd, 0xe3, 0x6]);
 interface ID2D1DeviceContext6 : ID2D1DeviceContext5
 {
-    void BlendImage(ID2D1Image, D2D1_BLEND_MODE, const(D2D_POINT_2F)*, const(D2D_RECT_F)*, D2D1_INTERPOLATION_MODE);
+    void BlendImage(ID2D1Image image, D2D1_BLEND_MODE blendMode, const(D2D_POINT_2F)* targetOffset, const(D2D_RECT_F)* imageRectangle, D2D1_INTERPOLATION_MODE interpolationMode);
 }
 enum IID_ID2D1Device6 = GUID(0x7bfef914, 0x2d75, 0x4bad, [0xbe, 0x87, 0xe1, 0x8d, 0xdb, 0x7, 0x7b, 0x6d]);
 interface ID2D1Device6 : ID2D1Device5
 {
-    HRESULT CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS, ID2D1DeviceContext6*);
+    HRESULT CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS options, ID2D1DeviceContext6* deviceContext6);
 }
 enum IID_ID2D1Factory7 = GUID(0xbdc2bdd3, 0xb96c, 0x4de6, [0xbd, 0xf7, 0x99, 0xd4, 0x74, 0x54, 0x54, 0xde]);
 interface ID2D1Factory7 : ID2D1Factory6
 {
-    HRESULT CreateDevice(IDXGIDevice, ID2D1Device6*);
+    HRESULT CreateDevice(IDXGIDevice dxgiDevice, ID2D1Device6* d2dDevice6);
 }
-alias DWRITE_PAINT_FEATURE_LEVEL = int;
 enum IID_ID2D1DeviceContext7 = GUID(0xec891cf7, 0x9b69, 0x4851, [0x9d, 0xef, 0x4e, 0x9, 0x15, 0x77, 0x1e, 0x62]);
 interface ID2D1DeviceContext7 : ID2D1DeviceContext6
 {
     DWRITE_PAINT_FEATURE_LEVEL GetPaintFeatureLevel();
-    void DrawPaintGlyphRun(D2D_POINT_2F, const(DWRITE_GLYPH_RUN)*, ID2D1Brush, uint, DWRITE_MEASURING_MODE);
-    void DrawGlyphRunWithColorSupport(D2D_POINT_2F, const(DWRITE_GLYPH_RUN)*, const(DWRITE_GLYPH_RUN_DESCRIPTION)*, ID2D1Brush, ID2D1SvgGlyphStyle, uint, DWRITE_MEASURING_MODE, D2D1_COLOR_BITMAP_GLYPH_SNAP_OPTION);
+    void DrawPaintGlyphRun(D2D_POINT_2F baselineOrigin, const(DWRITE_GLYPH_RUN)* glyphRun, ID2D1Brush defaultFillBrush, uint colorPaletteIndex, DWRITE_MEASURING_MODE measuringMode);
+    void DrawGlyphRunWithColorSupport(D2D_POINT_2F baselineOrigin, const(DWRITE_GLYPH_RUN)* glyphRun, const(DWRITE_GLYPH_RUN_DESCRIPTION)* glyphRunDescription, ID2D1Brush foregroundBrush, ID2D1SvgGlyphStyle svgGlyphStyle, uint colorPaletteIndex, DWRITE_MEASURING_MODE measuringMode, D2D1_COLOR_BITMAP_GLYPH_SNAP_OPTION bitmapSnapOption);
 }
 enum IID_ID2D1Device7 = GUID(0xf07c8968, 0xdd4e, 0x4ba6, [0x9c, 0xbd, 0xeb, 0x6d, 0x37, 0x52, 0xdc, 0xbb]);
 interface ID2D1Device7 : ID2D1Device6
 {
-    HRESULT CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS, ID2D1DeviceContext7*);
+    HRESULT CreateDeviceContext(D2D1_DEVICE_CONTEXT_OPTIONS options, ID2D1DeviceContext7* deviceContext);
 }
 enum IID_ID2D1Factory8 = GUID(0x677c9311, 0xf36d, 0x4b1f, [0xae, 0x86, 0x86, 0xd1, 0x22, 0x3f, 0xfd, 0x3a]);
 interface ID2D1Factory8 : ID2D1Factory7
 {
-    HRESULT CreateDevice(IDXGIDevice, ID2D1Device7*);
+    HRESULT CreateDevice(IDXGIDevice dxgiDevice, ID2D1Device7* d2dDevice6);
 }
 enum IID_ID2D1EffectContext1 = GUID(0x84ab595a, 0xfc81, 0x4546, [0xba, 0xcd, 0xe8, 0xef, 0x4d, 0x8a, 0xbe, 0x7a]);
 interface ID2D1EffectContext1 : ID2D1EffectContext
 {
-    HRESULT CreateLookupTable3D(D2D1_BUFFER_PRECISION, const(uint)*, const(ubyte)*, uint, const(uint)*, ID2D1LookupTable3D*);
+    HRESULT CreateLookupTable3D(D2D1_BUFFER_PRECISION precision, const(uint)* extents, const(ubyte)* data, uint dataCount, const(uint)* strides, ID2D1LookupTable3D* lookupTable);
 }
 enum IID_ID2D1EffectContext2 = GUID(0x577ad2a0, 0x9fc7, 0x4dda, [0x8b, 0x18, 0xda, 0xb8, 0x10, 0x14, 0x0, 0x52]);
 interface ID2D1EffectContext2 : ID2D1EffectContext1
 {
-    HRESULT CreateColorContextFromDxgiColorSpace(DXGI_COLOR_SPACE_TYPE, ID2D1ColorContext1*);
-    HRESULT CreateColorContextFromSimpleColorProfile(const(D2D1_SIMPLE_COLOR_PROFILE)*, ID2D1ColorContext1*);
+    HRESULT CreateColorContextFromDxgiColorSpace(DXGI_COLOR_SPACE_TYPE colorSpace, ID2D1ColorContext1* colorContext);
+    HRESULT CreateColorContextFromSimpleColorProfile(const(D2D1_SIMPLE_COLOR_PROFILE)* simpleProfile, ID2D1ColorContext1* colorContext);
 }

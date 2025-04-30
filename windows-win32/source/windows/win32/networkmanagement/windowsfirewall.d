@@ -1,8 +1,8 @@
 module windows.win32.networkmanagement.windowsfirewall;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, HANDLE, HRESULT, HWND, PSID, PWSTR, VARIANT_BOOL;
-import windows.win32.security : SID, SID_AND_ATTRIBUTES;
+import windows.win32.foundation : BOOL, BSTR, HANDLE, HRESULT, HWND, PWSTR, VARIANT_BOOL;
+import windows.win32.security : PSID, SID, SID_AND_ATTRIBUTES;
 import windows.win32.system.com : IDispatch, IUnknown;
 import windows.win32.system.ole : IEnumVARIANT;
 import windows.win32.system.variant : VARIANT;
@@ -10,19 +10,19 @@ import windows.win32.system.variant : VARIANT;
 version (Windows):
 extern (Windows):
 
-void NcFreeNetconProperties(NETCON_PROPERTIES*);
-BOOL NcIsValidConnectionName(const(wchar)*);
-HRESULT NetworkIsolationSetupAppContainerBinaries(PSID, const(wchar)*, const(wchar)*, const(wchar)*, BOOL, const(wchar)**, uint);
-uint NetworkIsolationRegisterForAppContainerChanges(uint, PAC_CHANGES_CALLBACK_FN, void*, HANDLE*);
-uint NetworkIsolationUnregisterForAppContainerChanges(HANDLE);
-HRESULT NetworkIsolationEnumerateAppContainerRules(IEnumVARIANT*);
-uint NetworkIsolationFreeAppContainers(INET_FIREWALL_APP_CONTAINER*);
-uint NetworkIsolationEnumAppContainers(uint, uint*, INET_FIREWALL_APP_CONTAINER**);
-uint NetworkIsolationGetAppContainerConfig(uint*, SID_AND_ATTRIBUTES**);
-uint NetworkIsolationSetAppContainerConfig(uint, SID_AND_ATTRIBUTES*);
-uint NetworkIsolationDiagnoseConnectFailureAndGetInfo(const(wchar)*, NETISO_ERROR_TYPE*);
-uint NetworkIsolationGetEnterpriseIdAsync(const(wchar)*, uint, void*, PNETISO_EDP_ID_CALLBACK_FN, HANDLE*);
-uint NetworkIsolationGetEnterpriseIdClose(HANDLE, BOOL);
+void NcFreeNetconProperties(NETCON_PROPERTIES* pProps);
+BOOL NcIsValidConnectionName(const(wchar)* pszwName);
+HRESULT NetworkIsolationSetupAppContainerBinaries(PSID applicationContainerSid, const(wchar)* packageFullName, const(wchar)* packageFolder, const(wchar)* displayName, BOOL bBinariesFullyComputed, const(wchar)** binaries, uint binariesCount);
+uint NetworkIsolationRegisterForAppContainerChanges(uint flags, PAC_CHANGES_CALLBACK_FN callback, void* context, HANDLE* registrationObject);
+uint NetworkIsolationUnregisterForAppContainerChanges(HANDLE registrationObject);
+HRESULT NetworkIsolationEnumerateAppContainerRules(IEnumVARIANT* newEnum);
+uint NetworkIsolationFreeAppContainers(INET_FIREWALL_APP_CONTAINER* pPublicAppCs);
+uint NetworkIsolationEnumAppContainers(uint Flags, uint* pdwNumPublicAppCs, INET_FIREWALL_APP_CONTAINER** ppPublicAppCs);
+uint NetworkIsolationGetAppContainerConfig(uint* pdwNumPublicAppCs, SID_AND_ATTRIBUTES** appContainerSids);
+uint NetworkIsolationSetAppContainerConfig(uint dwNumPublicAppCs, SID_AND_ATTRIBUTES* appContainerSids);
+uint NetworkIsolationDiagnoseConnectFailureAndGetInfo(const(wchar)* wszServerName, NETISO_ERROR_TYPE* netIsoError);
+uint NetworkIsolationGetEnterpriseIdAsync(const(wchar)* wszServerName, uint dwFlags, void* context, PNETISO_EDP_ID_CALLBACK_FN callback, HANDLE* hOperation);
+uint NetworkIsolationGetEnterpriseIdClose(HANDLE hOperation, BOOL bWaitForOperation);
 enum NETCON_MAX_NAME_LEN = 0x00000100;
 enum S_OBJECT_NO_LONGER_VALID = 0x00000002;
 enum NETISO_GEID_FOR_WDAG = 0x00000001;
@@ -30,76 +30,76 @@ enum NETISO_GEID_FOR_NEUTRAL_AWARE = 0x00000002;
 enum IID_IUPnPNAT = GUID(0xb171c812, 0xcc76, 0x485a, [0x94, 0xd8, 0xb6, 0xb3, 0xa2, 0x79, 0x4e, 0x99]);
 interface IUPnPNAT : IDispatch
 {
-    HRESULT get_StaticPortMappingCollection(IStaticPortMappingCollection*);
-    HRESULT get_DynamicPortMappingCollection(IDynamicPortMappingCollection*);
-    HRESULT get_NATEventManager(INATEventManager*);
+    HRESULT get_StaticPortMappingCollection(IStaticPortMappingCollection* ppSPMs);
+    HRESULT get_DynamicPortMappingCollection(IDynamicPortMappingCollection* ppDPMs);
+    HRESULT get_NATEventManager(INATEventManager* ppNEM);
 }
 enum IID_INATEventManager = GUID(0x624bd588, 0x9060, 0x4109, [0xb0, 0xb0, 0x1a, 0xdb, 0xbc, 0xac, 0x32, 0xdf]);
 interface INATEventManager : IDispatch
 {
-    HRESULT put_ExternalIPAddressCallback(IUnknown);
-    HRESULT put_NumberOfEntriesCallback(IUnknown);
+    HRESULT put_ExternalIPAddressCallback(IUnknown pUnk);
+    HRESULT put_NumberOfEntriesCallback(IUnknown pUnk);
 }
 enum IID_INATExternalIPAddressCallback = GUID(0x9c416740, 0xa34e, 0x446f, [0xba, 0x6, 0xab, 0xd0, 0x4c, 0x31, 0x49, 0xae]);
 interface INATExternalIPAddressCallback : IUnknown
 {
-    HRESULT NewExternalIPAddress(BSTR);
+    HRESULT NewExternalIPAddress(BSTR bstrNewExternalIPAddress);
 }
 enum IID_INATNumberOfEntriesCallback = GUID(0xc83a0a74, 0x91ee, 0x41b6, [0xb6, 0x7a, 0x67, 0xe0, 0xf0, 0xb, 0xbd, 0x78]);
 interface INATNumberOfEntriesCallback : IUnknown
 {
-    HRESULT NewNumberOfEntries(int);
+    HRESULT NewNumberOfEntries(int lNewNumberOfEntries);
 }
 enum IID_IDynamicPortMappingCollection = GUID(0xb60de00f, 0x156e, 0x4e8d, [0x9e, 0xc1, 0x3a, 0x23, 0x42, 0xc1, 0x8, 0x99]);
 interface IDynamicPortMappingCollection : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(BSTR, int, BSTR, IDynamicPortMapping*);
-    HRESULT get_Count(int*);
-    HRESULT Remove(BSTR, int, BSTR);
-    HRESULT Add(BSTR, int, BSTR, int, BSTR, VARIANT_BOOL, BSTR, int, IDynamicPortMapping*);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT get_Item(BSTR bstrRemoteHost, int lExternalPort, BSTR bstrProtocol, IDynamicPortMapping* ppDPM);
+    HRESULT get_Count(int* pVal);
+    HRESULT Remove(BSTR bstrRemoteHost, int lExternalPort, BSTR bstrProtocol);
+    HRESULT Add(BSTR bstrRemoteHost, int lExternalPort, BSTR bstrProtocol, int lInternalPort, BSTR bstrInternalClient, VARIANT_BOOL bEnabled, BSTR bstrDescription, int lLeaseDuration, IDynamicPortMapping* ppDPM);
 }
 enum IID_IDynamicPortMapping = GUID(0x4fc80282, 0x23b6, 0x4378, [0x9a, 0x27, 0xcd, 0x8f, 0x17, 0xc9, 0x40, 0xc]);
 interface IDynamicPortMapping : IDispatch
 {
-    HRESULT get_ExternalIPAddress(BSTR*);
-    HRESULT get_RemoteHost(BSTR*);
-    HRESULT get_ExternalPort(int*);
-    HRESULT get_Protocol(BSTR*);
-    HRESULT get_InternalPort(int*);
-    HRESULT get_InternalClient(BSTR*);
-    HRESULT get_Enabled(VARIANT_BOOL*);
-    HRESULT get_Description(BSTR*);
-    HRESULT get_LeaseDuration(int*);
-    HRESULT RenewLease(int, int*);
-    HRESULT EditInternalClient(BSTR);
-    HRESULT Enable(VARIANT_BOOL);
-    HRESULT EditDescription(BSTR);
-    HRESULT EditInternalPort(int);
+    HRESULT get_ExternalIPAddress(BSTR* pVal);
+    HRESULT get_RemoteHost(BSTR* pVal);
+    HRESULT get_ExternalPort(int* pVal);
+    HRESULT get_Protocol(BSTR* pVal);
+    HRESULT get_InternalPort(int* pVal);
+    HRESULT get_InternalClient(BSTR* pVal);
+    HRESULT get_Enabled(VARIANT_BOOL* pVal);
+    HRESULT get_Description(BSTR* pVal);
+    HRESULT get_LeaseDuration(int* pVal);
+    HRESULT RenewLease(int lLeaseDurationDesired, int* pLeaseDurationReturned);
+    HRESULT EditInternalClient(BSTR bstrInternalClient);
+    HRESULT Enable(VARIANT_BOOL vb);
+    HRESULT EditDescription(BSTR bstrDescription);
+    HRESULT EditInternalPort(int lInternalPort);
 }
 enum IID_IStaticPortMappingCollection = GUID(0xcd1f3e77, 0x66d6, 0x4664, [0x82, 0xc7, 0x36, 0xdb, 0xb6, 0x41, 0xd0, 0xf1]);
 interface IStaticPortMappingCollection : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(int, BSTR, IStaticPortMapping*);
-    HRESULT get_Count(int*);
-    HRESULT Remove(int, BSTR);
-    HRESULT Add(int, BSTR, int, BSTR, VARIANT_BOOL, BSTR, IStaticPortMapping*);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT get_Item(int lExternalPort, BSTR bstrProtocol, IStaticPortMapping* ppSPM);
+    HRESULT get_Count(int* pVal);
+    HRESULT Remove(int lExternalPort, BSTR bstrProtocol);
+    HRESULT Add(int lExternalPort, BSTR bstrProtocol, int lInternalPort, BSTR bstrInternalClient, VARIANT_BOOL bEnabled, BSTR bstrDescription, IStaticPortMapping* ppSPM);
 }
 enum IID_IStaticPortMapping = GUID(0x6f10711f, 0x729b, 0x41e5, [0x93, 0xb8, 0xf2, 0x1d, 0xf, 0x81, 0x8d, 0xf1]);
 interface IStaticPortMapping : IDispatch
 {
-    HRESULT get_ExternalIPAddress(BSTR*);
-    HRESULT get_ExternalPort(int*);
-    HRESULT get_InternalPort(int*);
-    HRESULT get_Protocol(BSTR*);
-    HRESULT get_InternalClient(BSTR*);
-    HRESULT get_Enabled(VARIANT_BOOL*);
-    HRESULT get_Description(BSTR*);
-    HRESULT EditInternalClient(BSTR);
-    HRESULT Enable(VARIANT_BOOL);
-    HRESULT EditDescription(BSTR);
-    HRESULT EditInternalPort(int);
+    HRESULT get_ExternalIPAddress(BSTR* pVal);
+    HRESULT get_ExternalPort(int* pVal);
+    HRESULT get_InternalPort(int* pVal);
+    HRESULT get_Protocol(BSTR* pVal);
+    HRESULT get_InternalClient(BSTR* pVal);
+    HRESULT get_Enabled(VARIANT_BOOL* pVal);
+    HRESULT get_Description(BSTR* pVal);
+    HRESULT EditInternalClient(BSTR bstrInternalClient);
+    HRESULT Enable(VARIANT_BOOL vb);
+    HRESULT EditDescription(BSTR bstrDescription);
+    HRESULT EditInternalPort(int lInternalPort);
 }
 enum CLSID_UPnPNAT = GUID(0xae1e00aa, 0x3fd5, 0x403c, [0x8a, 0x27, 0x2b, 0xbd, 0xc3, 0xc, 0xd0, 0xe1]);
 struct UPnPNAT
@@ -108,10 +108,10 @@ struct UPnPNAT
 enum IID_IEnumNetConnection = GUID(0xc08956a0, 0x1cd3, 0x11d1, [0xb1, 0xc5, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface IEnumNetConnection : IUnknown
 {
-    HRESULT Next(uint, INetConnection*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, INetConnection* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumNetConnection*);
+    HRESULT Clone(IEnumNetConnection* ppenum);
 }
 alias NETCON_CHARACTERISTIC_FLAGS = int;
 enum : int
@@ -204,10 +204,10 @@ interface INetConnection : IUnknown
     HRESULT Connect();
     HRESULT Disconnect();
     HRESULT Delete();
-    HRESULT Duplicate(const(wchar)*, INetConnection*);
-    HRESULT GetProperties(NETCON_PROPERTIES**);
-    HRESULT GetUiObjectClassId(GUID*);
-    HRESULT Rename(const(wchar)*);
+    HRESULT Duplicate(const(wchar)* pszwDuplicateName, INetConnection* ppCon);
+    HRESULT GetProperties(NETCON_PROPERTIES** ppProps);
+    HRESULT GetUiObjectClassId(GUID* pclsid);
+    HRESULT Rename(const(wchar)* pszwNewName);
 }
 alias NETCONMGR_ENUM_FLAGS = int;
 enum : int
@@ -219,7 +219,7 @@ enum : int
 enum IID_INetConnectionManager = GUID(0xc08956a2, 0x1cd3, 0x11d1, [0xb1, 0xc5, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface INetConnectionManager : IUnknown
 {
-    HRESULT EnumConnections(NETCONMGR_ENUM_FLAGS, IEnumNetConnection*);
+    HRESULT EnumConnections(NETCONMGR_ENUM_FLAGS Flags, IEnumNetConnection* ppEnum);
 }
 alias NETCONUI_CONNECT_FLAGS = int;
 enum : int
@@ -232,77 +232,77 @@ enum : int
 enum IID_INetConnectionConnectUi = GUID(0xc08956a3, 0x1cd3, 0x11d1, [0xb1, 0xc5, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface INetConnectionConnectUi : IUnknown
 {
-    HRESULT SetConnection(INetConnection);
-    HRESULT Connect(HWND, uint);
-    HRESULT Disconnect(HWND, uint);
+    HRESULT SetConnection(INetConnection pCon);
+    HRESULT Connect(HWND hwndParent, uint dwFlags);
+    HRESULT Disconnect(HWND hwndParent, uint dwFlags);
 }
 enum IID_IEnumNetSharingPortMapping = GUID(0xc08956b0, 0x1cd3, 0x11d1, [0xb1, 0xc5, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface IEnumNetSharingPortMapping : IUnknown
 {
-    HRESULT Next(uint, VARIANT*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, VARIANT* rgVar, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumNetSharingPortMapping*);
+    HRESULT Clone(IEnumNetSharingPortMapping* ppenum);
 }
 enum IID_INetSharingPortMappingProps = GUID(0x24b7e9b5, 0xe38f, 0x4685, [0x85, 0x1b, 0x0, 0x89, 0x2c, 0xf5, 0xf9, 0x40]);
 interface INetSharingPortMappingProps : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_IPProtocol(ubyte*);
-    HRESULT get_ExternalPort(int*);
-    HRESULT get_InternalPort(int*);
-    HRESULT get_Options(int*);
-    HRESULT get_TargetName(BSTR*);
-    HRESULT get_TargetIPAddress(BSTR*);
-    HRESULT get_Enabled(VARIANT_BOOL*);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT get_IPProtocol(ubyte* pucIPProt);
+    HRESULT get_ExternalPort(int* pusPort);
+    HRESULT get_InternalPort(int* pusPort);
+    HRESULT get_Options(int* pdwOptions);
+    HRESULT get_TargetName(BSTR* pbstrTargetName);
+    HRESULT get_TargetIPAddress(BSTR* pbstrTargetIPAddress);
+    HRESULT get_Enabled(VARIANT_BOOL* pbool);
 }
 enum IID_INetSharingPortMapping = GUID(0xc08956b1, 0x1cd3, 0x11d1, [0xb1, 0xc5, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface INetSharingPortMapping : IDispatch
 {
     HRESULT Disable();
     HRESULT Enable();
-    HRESULT get_Properties(INetSharingPortMappingProps*);
+    HRESULT get_Properties(INetSharingPortMappingProps* ppNSPMP);
     HRESULT Delete();
 }
 enum IID_IEnumNetSharingEveryConnection = GUID(0xc08956b8, 0x1cd3, 0x11d1, [0xb1, 0xc5, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface IEnumNetSharingEveryConnection : IUnknown
 {
-    HRESULT Next(uint, VARIANT*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, VARIANT* rgVar, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumNetSharingEveryConnection*);
+    HRESULT Clone(IEnumNetSharingEveryConnection* ppenum);
 }
 enum IID_IEnumNetSharingPublicConnection = GUID(0xc08956b4, 0x1cd3, 0x11d1, [0xb1, 0xc5, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface IEnumNetSharingPublicConnection : IUnknown
 {
-    HRESULT Next(uint, VARIANT*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, VARIANT* rgVar, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumNetSharingPublicConnection*);
+    HRESULT Clone(IEnumNetSharingPublicConnection* ppenum);
 }
 enum IID_IEnumNetSharingPrivateConnection = GUID(0xc08956b5, 0x1cd3, 0x11d1, [0xb1, 0xc5, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface IEnumNetSharingPrivateConnection : IUnknown
 {
-    HRESULT Next(uint, VARIANT*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, VARIANT* rgVar, uint* pCeltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumNetSharingPrivateConnection*);
+    HRESULT Clone(IEnumNetSharingPrivateConnection* ppenum);
 }
 enum IID_INetSharingPortMappingCollection = GUID(0x2e4a2de, 0xda20, 0x4e34, [0x89, 0xc8, 0xac, 0x22, 0x27, 0x5a, 0x1, 0xb]);
 interface INetSharingPortMappingCollection : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Count(int*);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT get_Count(int* pVal);
 }
 enum IID_INetConnectionProps = GUID(0xf4277c95, 0xce5b, 0x463d, [0x81, 0x67, 0x56, 0x62, 0xd9, 0xbc, 0xaa, 0x72]);
 interface INetConnectionProps : IDispatch
 {
-    HRESULT get_Guid(BSTR*);
-    HRESULT get_Name(BSTR*);
-    HRESULT get_DeviceName(BSTR*);
-    HRESULT get_Status(NETCON_STATUS*);
-    HRESULT get_MediaType(NETCON_MEDIATYPE*);
-    HRESULT get_Characteristics(uint*);
+    HRESULT get_Guid(BSTR* pbstrGuid);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT get_DeviceName(BSTR* pbstrDeviceName);
+    HRESULT get_Status(NETCON_STATUS* pStatus);
+    HRESULT get_MediaType(NETCON_MEDIATYPE* pMediaType);
+    HRESULT get_Characteristics(uint* pdwFlags);
 }
 alias SHARINGCONNECTIONTYPE = int;
 enum : int
@@ -328,44 +328,44 @@ enum : int
 enum IID_INetSharingConfiguration = GUID(0xc08956b6, 0x1cd3, 0x11d1, [0xb1, 0xc5, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface INetSharingConfiguration : IDispatch
 {
-    HRESULT get_SharingEnabled(VARIANT_BOOL*);
-    HRESULT get_SharingConnectionType(SHARINGCONNECTIONTYPE*);
+    HRESULT get_SharingEnabled(VARIANT_BOOL* pbEnabled);
+    HRESULT get_SharingConnectionType(SHARINGCONNECTIONTYPE* pType);
     HRESULT DisableSharing();
-    HRESULT EnableSharing(SHARINGCONNECTIONTYPE);
-    HRESULT get_InternetFirewallEnabled(VARIANT_BOOL*);
+    HRESULT EnableSharing(SHARINGCONNECTIONTYPE Type);
+    HRESULT get_InternetFirewallEnabled(VARIANT_BOOL* pbEnabled);
     HRESULT DisableInternetFirewall();
     HRESULT EnableInternetFirewall();
-    HRESULT get_EnumPortMappings(SHARINGCONNECTION_ENUM_FLAGS, INetSharingPortMappingCollection*);
-    HRESULT AddPortMapping(BSTR, ubyte, ushort, ushort, uint, BSTR, ICS_TARGETTYPE, INetSharingPortMapping*);
-    HRESULT RemovePortMapping(INetSharingPortMapping);
+    HRESULT get_EnumPortMappings(SHARINGCONNECTION_ENUM_FLAGS Flags, INetSharingPortMappingCollection* ppColl);
+    HRESULT AddPortMapping(BSTR bstrName, ubyte ucIPProtocol, ushort usExternalPort, ushort usInternalPort, uint dwOptions, BSTR bstrTargetNameOrIPAddress, ICS_TARGETTYPE eTargetType, INetSharingPortMapping* ppMapping);
+    HRESULT RemovePortMapping(INetSharingPortMapping pMapping);
 }
 enum IID_INetSharingEveryConnectionCollection = GUID(0x33c4643c, 0x7811, 0x46fa, [0xa8, 0x9a, 0x76, 0x85, 0x97, 0xbd, 0x72, 0x23]);
 interface INetSharingEveryConnectionCollection : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Count(int*);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT get_Count(int* pVal);
 }
 enum IID_INetSharingPublicConnectionCollection = GUID(0x7d7a6355, 0xf372, 0x4971, [0xa1, 0x49, 0xbf, 0xc9, 0x27, 0xbe, 0x76, 0x2a]);
 interface INetSharingPublicConnectionCollection : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Count(int*);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT get_Count(int* pVal);
 }
 enum IID_INetSharingPrivateConnectionCollection = GUID(0x38ae69e0, 0x4409, 0x402a, [0xa2, 0xcb, 0xe9, 0x65, 0xc7, 0x27, 0xf8, 0x40]);
 interface INetSharingPrivateConnectionCollection : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Count(int*);
+    HRESULT get__NewEnum(IUnknown* pVal);
+    HRESULT get_Count(int* pVal);
 }
 enum IID_INetSharingManager = GUID(0xc08956b7, 0x1cd3, 0x11d1, [0xb1, 0xc5, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface INetSharingManager : IDispatch
 {
-    HRESULT get_SharingInstalled(VARIANT_BOOL*);
-    HRESULT get_EnumPublicConnections(SHARINGCONNECTION_ENUM_FLAGS, INetSharingPublicConnectionCollection*);
-    HRESULT get_EnumPrivateConnections(SHARINGCONNECTION_ENUM_FLAGS, INetSharingPrivateConnectionCollection*);
-    HRESULT get_INetSharingConfigurationForINetConnection(INetConnection, INetSharingConfiguration*);
-    HRESULT get_EnumEveryConnection(INetSharingEveryConnectionCollection*);
-    HRESULT get_NetConnectionProps(INetConnection, INetConnectionProps*);
+    HRESULT get_SharingInstalled(VARIANT_BOOL* pbInstalled);
+    HRESULT get_EnumPublicConnections(SHARINGCONNECTION_ENUM_FLAGS Flags, INetSharingPublicConnectionCollection* ppColl);
+    HRESULT get_EnumPrivateConnections(SHARINGCONNECTION_ENUM_FLAGS Flags, INetSharingPrivateConnectionCollection* ppColl);
+    HRESULT get_INetSharingConfigurationForINetConnection(INetConnection pNetConnection, INetSharingConfiguration* ppNetSharingConfiguration);
+    HRESULT get_EnumEveryConnection(INetSharingEveryConnectionCollection* ppColl);
+    HRESULT get_NetConnectionProps(INetConnection pNetConnection, INetConnectionProps* ppProps);
 }
 enum CLSID_NetSharingManager = GUID(0x5c63c1ad, 0x3956, 0x4ff8, [0x84, 0x86, 0x40, 0x3, 0x47, 0x58, 0x31, 0x5b]);
 struct NetSharingManager
@@ -547,7 +547,7 @@ struct INET_FIREWALL_APP_CONTAINER
     PWSTR workingDirectory;
     PWSTR packageFullName;
 }
-alias PAC_CHANGES_CALLBACK_FN = void function(void*, const(INET_FIREWALL_AC_CHANGE)*);
+alias PAC_CHANGES_CALLBACK_FN = void function(void* context, const(INET_FIREWALL_AC_CHANGE)* pChange);
 alias NETISO_ERROR_TYPE = int;
 enum : int
 {
@@ -558,7 +558,7 @@ enum : int
     NETISO_ERROR_TYPE_MAX                    = 0x00000004,
 }
 
-alias PNETISO_EDP_ID_CALLBACK_FN = void function(void*, const(wchar)*, uint);
+alias PNETISO_EDP_ID_CALLBACK_FN = void function(void* context, const(wchar)* wszEnterpriseId, uint dwErr);
 alias FW_DYNAMIC_KEYWORD_ORIGIN_TYPE = int;
 enum : int
 {
@@ -595,277 +595,277 @@ enum : int
     FW_DYNAMIC_KEYWORD_ADDRESS_ENUM_FLAGS_ALL              = 0x00000003,
 }
 
-alias PFN_FWADDDYNAMICKEYWORDADDRESS0 = uint function(const(FW_DYNAMIC_KEYWORD_ADDRESS0)*);
-alias PFN_FWDELETEDYNAMICKEYWORDADDRESS0 = uint function(GUID);
-alias PFN_FWENUMDYNAMICKEYWORDADDRESSESBYTYPE0 = uint function(uint, FW_DYNAMIC_KEYWORD_ADDRESS_DATA0**);
-alias PFN_FWENUMDYNAMICKEYWORDADDRESSBYID0 = uint function(GUID, FW_DYNAMIC_KEYWORD_ADDRESS_DATA0**);
-alias PFN_FWFREEDYNAMICKEYWORDADDRESSDATA0 = uint function(FW_DYNAMIC_KEYWORD_ADDRESS_DATA0*);
-alias PFN_FWUPDATEDYNAMICKEYWORDADDRESS0 = uint function(GUID, const(wchar)*, BOOL);
+alias PFN_FWADDDYNAMICKEYWORDADDRESS0 = uint function(const(FW_DYNAMIC_KEYWORD_ADDRESS0)* dynamicKeywordAddress);
+alias PFN_FWDELETEDYNAMICKEYWORDADDRESS0 = uint function(GUID dynamicKeywordAddressId);
+alias PFN_FWENUMDYNAMICKEYWORDADDRESSESBYTYPE0 = uint function(uint flags, FW_DYNAMIC_KEYWORD_ADDRESS_DATA0** dynamicKeywordAddressData);
+alias PFN_FWENUMDYNAMICKEYWORDADDRESSBYID0 = uint function(GUID dynamicKeywordAddressId, FW_DYNAMIC_KEYWORD_ADDRESS_DATA0** dynamicKeywordAddressData);
+alias PFN_FWFREEDYNAMICKEYWORDADDRESSDATA0 = uint function(FW_DYNAMIC_KEYWORD_ADDRESS_DATA0* dynamicKeywordAddressData);
+alias PFN_FWUPDATEDYNAMICKEYWORDADDRESS0 = uint function(GUID dynamicKeywordAddressId, const(wchar)* updatedAddresses, BOOL append);
 enum IID_INetFwRemoteAdminSettings = GUID(0xd4becddf, 0x6f73, 0x4a83, [0xb8, 0x32, 0x9c, 0x66, 0x87, 0x4c, 0xd2, 0xe]);
 interface INetFwRemoteAdminSettings : IDispatch
 {
-    HRESULT get_IpVersion(NET_FW_IP_VERSION*);
-    HRESULT put_IpVersion(NET_FW_IP_VERSION);
-    HRESULT get_Scope(NET_FW_SCOPE*);
-    HRESULT put_Scope(NET_FW_SCOPE);
-    HRESULT get_RemoteAddresses(BSTR*);
-    HRESULT put_RemoteAddresses(BSTR);
-    HRESULT get_Enabled(VARIANT_BOOL*);
-    HRESULT put_Enabled(VARIANT_BOOL);
+    HRESULT get_IpVersion(NET_FW_IP_VERSION* ipVersion);
+    HRESULT put_IpVersion(NET_FW_IP_VERSION ipVersion);
+    HRESULT get_Scope(NET_FW_SCOPE* scope_);
+    HRESULT put_Scope(NET_FW_SCOPE scope_);
+    HRESULT get_RemoteAddresses(BSTR* remoteAddrs);
+    HRESULT put_RemoteAddresses(BSTR remoteAddrs);
+    HRESULT get_Enabled(VARIANT_BOOL* enabled);
+    HRESULT put_Enabled(VARIANT_BOOL enabled);
 }
 enum IID_INetFwIcmpSettings = GUID(0xa6207b2e, 0x7cdd, 0x426a, [0x95, 0x1e, 0x5e, 0x1c, 0xbc, 0x5a, 0xfe, 0xad]);
 interface INetFwIcmpSettings : IDispatch
 {
-    HRESULT get_AllowOutboundDestinationUnreachable(VARIANT_BOOL*);
-    HRESULT put_AllowOutboundDestinationUnreachable(VARIANT_BOOL);
-    HRESULT get_AllowRedirect(VARIANT_BOOL*);
-    HRESULT put_AllowRedirect(VARIANT_BOOL);
-    HRESULT get_AllowInboundEchoRequest(VARIANT_BOOL*);
-    HRESULT put_AllowInboundEchoRequest(VARIANT_BOOL);
-    HRESULT get_AllowOutboundTimeExceeded(VARIANT_BOOL*);
-    HRESULT put_AllowOutboundTimeExceeded(VARIANT_BOOL);
-    HRESULT get_AllowOutboundParameterProblem(VARIANT_BOOL*);
-    HRESULT put_AllowOutboundParameterProblem(VARIANT_BOOL);
-    HRESULT get_AllowOutboundSourceQuench(VARIANT_BOOL*);
-    HRESULT put_AllowOutboundSourceQuench(VARIANT_BOOL);
-    HRESULT get_AllowInboundRouterRequest(VARIANT_BOOL*);
-    HRESULT put_AllowInboundRouterRequest(VARIANT_BOOL);
-    HRESULT get_AllowInboundTimestampRequest(VARIANT_BOOL*);
-    HRESULT put_AllowInboundTimestampRequest(VARIANT_BOOL);
-    HRESULT get_AllowInboundMaskRequest(VARIANT_BOOL*);
-    HRESULT put_AllowInboundMaskRequest(VARIANT_BOOL);
-    HRESULT get_AllowOutboundPacketTooBig(VARIANT_BOOL*);
-    HRESULT put_AllowOutboundPacketTooBig(VARIANT_BOOL);
+    HRESULT get_AllowOutboundDestinationUnreachable(VARIANT_BOOL* allow);
+    HRESULT put_AllowOutboundDestinationUnreachable(VARIANT_BOOL allow);
+    HRESULT get_AllowRedirect(VARIANT_BOOL* allow);
+    HRESULT put_AllowRedirect(VARIANT_BOOL allow);
+    HRESULT get_AllowInboundEchoRequest(VARIANT_BOOL* allow);
+    HRESULT put_AllowInboundEchoRequest(VARIANT_BOOL allow);
+    HRESULT get_AllowOutboundTimeExceeded(VARIANT_BOOL* allow);
+    HRESULT put_AllowOutboundTimeExceeded(VARIANT_BOOL allow);
+    HRESULT get_AllowOutboundParameterProblem(VARIANT_BOOL* allow);
+    HRESULT put_AllowOutboundParameterProblem(VARIANT_BOOL allow);
+    HRESULT get_AllowOutboundSourceQuench(VARIANT_BOOL* allow);
+    HRESULT put_AllowOutboundSourceQuench(VARIANT_BOOL allow);
+    HRESULT get_AllowInboundRouterRequest(VARIANT_BOOL* allow);
+    HRESULT put_AllowInboundRouterRequest(VARIANT_BOOL allow);
+    HRESULT get_AllowInboundTimestampRequest(VARIANT_BOOL* allow);
+    HRESULT put_AllowInboundTimestampRequest(VARIANT_BOOL allow);
+    HRESULT get_AllowInboundMaskRequest(VARIANT_BOOL* allow);
+    HRESULT put_AllowInboundMaskRequest(VARIANT_BOOL allow);
+    HRESULT get_AllowOutboundPacketTooBig(VARIANT_BOOL* allow);
+    HRESULT put_AllowOutboundPacketTooBig(VARIANT_BOOL allow);
 }
 enum IID_INetFwOpenPort = GUID(0xe0483ba0, 0x47ff, 0x4d9c, [0xa6, 0xd6, 0x77, 0x41, 0xd0, 0xb1, 0x95, 0xf7]);
 interface INetFwOpenPort : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT put_Name(BSTR);
-    HRESULT get_IpVersion(NET_FW_IP_VERSION*);
-    HRESULT put_IpVersion(NET_FW_IP_VERSION);
-    HRESULT get_Protocol(NET_FW_IP_PROTOCOL*);
-    HRESULT put_Protocol(NET_FW_IP_PROTOCOL);
-    HRESULT get_Port(int*);
-    HRESULT put_Port(int);
-    HRESULT get_Scope(NET_FW_SCOPE*);
-    HRESULT put_Scope(NET_FW_SCOPE);
-    HRESULT get_RemoteAddresses(BSTR*);
-    HRESULT put_RemoteAddresses(BSTR);
-    HRESULT get_Enabled(VARIANT_BOOL*);
-    HRESULT put_Enabled(VARIANT_BOOL);
-    HRESULT get_BuiltIn(VARIANT_BOOL*);
+    HRESULT get_Name(BSTR* name);
+    HRESULT put_Name(BSTR name);
+    HRESULT get_IpVersion(NET_FW_IP_VERSION* ipVersion);
+    HRESULT put_IpVersion(NET_FW_IP_VERSION ipVersion);
+    HRESULT get_Protocol(NET_FW_IP_PROTOCOL* ipProtocol);
+    HRESULT put_Protocol(NET_FW_IP_PROTOCOL ipProtocol);
+    HRESULT get_Port(int* portNumber);
+    HRESULT put_Port(int portNumber);
+    HRESULT get_Scope(NET_FW_SCOPE* scope_);
+    HRESULT put_Scope(NET_FW_SCOPE scope_);
+    HRESULT get_RemoteAddresses(BSTR* remoteAddrs);
+    HRESULT put_RemoteAddresses(BSTR remoteAddrs);
+    HRESULT get_Enabled(VARIANT_BOOL* enabled);
+    HRESULT put_Enabled(VARIANT_BOOL enabled);
+    HRESULT get_BuiltIn(VARIANT_BOOL* builtIn);
 }
 enum IID_INetFwOpenPorts = GUID(0xc0e9d7fa, 0xe07e, 0x430a, [0xb1, 0x9a, 0x9, 0xc, 0xe8, 0x2d, 0x92, 0xe2]);
 interface INetFwOpenPorts : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT Add(INetFwOpenPort);
-    HRESULT Remove(int, NET_FW_IP_PROTOCOL);
-    HRESULT Item(int, NET_FW_IP_PROTOCOL, INetFwOpenPort*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* count);
+    HRESULT Add(INetFwOpenPort port);
+    HRESULT Remove(int portNumber, NET_FW_IP_PROTOCOL ipProtocol);
+    HRESULT Item(int portNumber, NET_FW_IP_PROTOCOL ipProtocol, INetFwOpenPort* openPort);
+    HRESULT get__NewEnum(IUnknown* newEnum);
 }
 enum IID_INetFwService = GUID(0x79fd57c8, 0x908e, 0x4a36, [0x98, 0x88, 0xd5, 0xb3, 0xf0, 0xa4, 0x44, 0xcf]);
 interface INetFwService : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Type(NET_FW_SERVICE_TYPE*);
-    HRESULT get_Customized(VARIANT_BOOL*);
-    HRESULT get_IpVersion(NET_FW_IP_VERSION*);
-    HRESULT put_IpVersion(NET_FW_IP_VERSION);
-    HRESULT get_Scope(NET_FW_SCOPE*);
-    HRESULT put_Scope(NET_FW_SCOPE);
-    HRESULT get_RemoteAddresses(BSTR*);
-    HRESULT put_RemoteAddresses(BSTR);
-    HRESULT get_Enabled(VARIANT_BOOL*);
-    HRESULT put_Enabled(VARIANT_BOOL);
-    HRESULT get_GloballyOpenPorts(INetFwOpenPorts*);
+    HRESULT get_Name(BSTR* name);
+    HRESULT get_Type(NET_FW_SERVICE_TYPE* type);
+    HRESULT get_Customized(VARIANT_BOOL* customized);
+    HRESULT get_IpVersion(NET_FW_IP_VERSION* ipVersion);
+    HRESULT put_IpVersion(NET_FW_IP_VERSION ipVersion);
+    HRESULT get_Scope(NET_FW_SCOPE* scope_);
+    HRESULT put_Scope(NET_FW_SCOPE scope_);
+    HRESULT get_RemoteAddresses(BSTR* remoteAddrs);
+    HRESULT put_RemoteAddresses(BSTR remoteAddrs);
+    HRESULT get_Enabled(VARIANT_BOOL* enabled);
+    HRESULT put_Enabled(VARIANT_BOOL enabled);
+    HRESULT get_GloballyOpenPorts(INetFwOpenPorts* openPorts);
 }
 enum IID_INetFwServices = GUID(0x79649bb4, 0x903e, 0x421b, [0x94, 0xc9, 0x79, 0x84, 0x8e, 0x79, 0xf6, 0xee]);
 interface INetFwServices : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT Item(NET_FW_SERVICE_TYPE, INetFwService*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* count);
+    HRESULT Item(NET_FW_SERVICE_TYPE svcType, INetFwService* service);
+    HRESULT get__NewEnum(IUnknown* newEnum);
 }
 enum IID_INetFwAuthorizedApplication = GUID(0xb5e64ffa, 0xc2c5, 0x444e, [0xa3, 0x1, 0xfb, 0x5e, 0x0, 0x1, 0x80, 0x50]);
 interface INetFwAuthorizedApplication : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT put_Name(BSTR);
-    HRESULT get_ProcessImageFileName(BSTR*);
-    HRESULT put_ProcessImageFileName(BSTR);
-    HRESULT get_IpVersion(NET_FW_IP_VERSION*);
-    HRESULT put_IpVersion(NET_FW_IP_VERSION);
-    HRESULT get_Scope(NET_FW_SCOPE*);
-    HRESULT put_Scope(NET_FW_SCOPE);
-    HRESULT get_RemoteAddresses(BSTR*);
-    HRESULT put_RemoteAddresses(BSTR);
-    HRESULT get_Enabled(VARIANT_BOOL*);
-    HRESULT put_Enabled(VARIANT_BOOL);
+    HRESULT get_Name(BSTR* name);
+    HRESULT put_Name(BSTR name);
+    HRESULT get_ProcessImageFileName(BSTR* imageFileName);
+    HRESULT put_ProcessImageFileName(BSTR imageFileName);
+    HRESULT get_IpVersion(NET_FW_IP_VERSION* ipVersion);
+    HRESULT put_IpVersion(NET_FW_IP_VERSION ipVersion);
+    HRESULT get_Scope(NET_FW_SCOPE* scope_);
+    HRESULT put_Scope(NET_FW_SCOPE scope_);
+    HRESULT get_RemoteAddresses(BSTR* remoteAddrs);
+    HRESULT put_RemoteAddresses(BSTR remoteAddrs);
+    HRESULT get_Enabled(VARIANT_BOOL* enabled);
+    HRESULT put_Enabled(VARIANT_BOOL enabled);
 }
 enum IID_INetFwAuthorizedApplications = GUID(0x644efd52, 0xccf9, 0x486c, [0x97, 0xa2, 0x39, 0xf3, 0x52, 0x57, 0xb, 0x30]);
 interface INetFwAuthorizedApplications : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT Add(INetFwAuthorizedApplication);
-    HRESULT Remove(BSTR);
-    HRESULT Item(BSTR, INetFwAuthorizedApplication*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* count);
+    HRESULT Add(INetFwAuthorizedApplication app);
+    HRESULT Remove(BSTR imageFileName);
+    HRESULT Item(BSTR imageFileName, INetFwAuthorizedApplication* app);
+    HRESULT get__NewEnum(IUnknown* newEnum);
 }
 enum IID_INetFwRule = GUID(0xaf230d27, 0xbaba, 0x4e42, [0xac, 0xed, 0xf5, 0x24, 0xf2, 0x2c, 0xfc, 0xe2]);
 interface INetFwRule : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT put_Name(BSTR);
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
-    HRESULT get_ApplicationName(BSTR*);
-    HRESULT put_ApplicationName(BSTR);
-    HRESULT get_ServiceName(BSTR*);
-    HRESULT put_ServiceName(BSTR);
-    HRESULT get_Protocol(int*);
-    HRESULT put_Protocol(int);
-    HRESULT get_LocalPorts(BSTR*);
-    HRESULT put_LocalPorts(BSTR);
-    HRESULT get_RemotePorts(BSTR*);
-    HRESULT put_RemotePorts(BSTR);
-    HRESULT get_LocalAddresses(BSTR*);
-    HRESULT put_LocalAddresses(BSTR);
-    HRESULT get_RemoteAddresses(BSTR*);
-    HRESULT put_RemoteAddresses(BSTR);
-    HRESULT get_IcmpTypesAndCodes(BSTR*);
-    HRESULT put_IcmpTypesAndCodes(BSTR);
-    HRESULT get_Direction(NET_FW_RULE_DIRECTION*);
-    HRESULT put_Direction(NET_FW_RULE_DIRECTION);
-    HRESULT get_Interfaces(VARIANT*);
-    HRESULT put_Interfaces(VARIANT);
-    HRESULT get_InterfaceTypes(BSTR*);
-    HRESULT put_InterfaceTypes(BSTR);
-    HRESULT get_Enabled(VARIANT_BOOL*);
-    HRESULT put_Enabled(VARIANT_BOOL);
-    HRESULT get_Grouping(BSTR*);
-    HRESULT put_Grouping(BSTR);
-    HRESULT get_Profiles(int*);
-    HRESULT put_Profiles(int);
-    HRESULT get_EdgeTraversal(VARIANT_BOOL*);
-    HRESULT put_EdgeTraversal(VARIANT_BOOL);
-    HRESULT get_Action(NET_FW_ACTION*);
-    HRESULT put_Action(NET_FW_ACTION);
+    HRESULT get_Name(BSTR* name);
+    HRESULT put_Name(BSTR name);
+    HRESULT get_Description(BSTR* desc);
+    HRESULT put_Description(BSTR desc);
+    HRESULT get_ApplicationName(BSTR* imageFileName);
+    HRESULT put_ApplicationName(BSTR imageFileName);
+    HRESULT get_ServiceName(BSTR* serviceName);
+    HRESULT put_ServiceName(BSTR serviceName);
+    HRESULT get_Protocol(int* protocol);
+    HRESULT put_Protocol(int protocol);
+    HRESULT get_LocalPorts(BSTR* portNumbers);
+    HRESULT put_LocalPorts(BSTR portNumbers);
+    HRESULT get_RemotePorts(BSTR* portNumbers);
+    HRESULT put_RemotePorts(BSTR portNumbers);
+    HRESULT get_LocalAddresses(BSTR* localAddrs);
+    HRESULT put_LocalAddresses(BSTR localAddrs);
+    HRESULT get_RemoteAddresses(BSTR* remoteAddrs);
+    HRESULT put_RemoteAddresses(BSTR remoteAddrs);
+    HRESULT get_IcmpTypesAndCodes(BSTR* icmpTypesAndCodes);
+    HRESULT put_IcmpTypesAndCodes(BSTR icmpTypesAndCodes);
+    HRESULT get_Direction(NET_FW_RULE_DIRECTION* dir);
+    HRESULT put_Direction(NET_FW_RULE_DIRECTION dir);
+    HRESULT get_Interfaces(VARIANT* interfaces);
+    HRESULT put_Interfaces(VARIANT interfaces);
+    HRESULT get_InterfaceTypes(BSTR* interfaceTypes);
+    HRESULT put_InterfaceTypes(BSTR interfaceTypes);
+    HRESULT get_Enabled(VARIANT_BOOL* enabled);
+    HRESULT put_Enabled(VARIANT_BOOL enabled);
+    HRESULT get_Grouping(BSTR* context);
+    HRESULT put_Grouping(BSTR context);
+    HRESULT get_Profiles(int* profileTypesBitmask);
+    HRESULT put_Profiles(int profileTypesBitmask);
+    HRESULT get_EdgeTraversal(VARIANT_BOOL* enabled);
+    HRESULT put_EdgeTraversal(VARIANT_BOOL enabled);
+    HRESULT get_Action(NET_FW_ACTION* action);
+    HRESULT put_Action(NET_FW_ACTION action);
 }
 enum IID_INetFwRule2 = GUID(0x9c27c8da, 0x189b, 0x4dde, [0x89, 0xf7, 0x8b, 0x39, 0xa3, 0x16, 0x78, 0x2c]);
 interface INetFwRule2 : INetFwRule
 {
-    HRESULT get_EdgeTraversalOptions(int*);
-    HRESULT put_EdgeTraversalOptions(int);
+    HRESULT get_EdgeTraversalOptions(int* lOptions);
+    HRESULT put_EdgeTraversalOptions(int lOptions);
 }
 enum IID_INetFwRule3 = GUID(0xb21563ff, 0xd696, 0x4222, [0xab, 0x46, 0x4e, 0x89, 0xb7, 0x3a, 0xb3, 0x4a]);
 interface INetFwRule3 : INetFwRule2
 {
-    HRESULT get_LocalAppPackageId(BSTR*);
-    HRESULT put_LocalAppPackageId(BSTR);
-    HRESULT get_LocalUserOwner(BSTR*);
-    HRESULT put_LocalUserOwner(BSTR);
-    HRESULT get_LocalUserAuthorizedList(BSTR*);
-    HRESULT put_LocalUserAuthorizedList(BSTR);
-    HRESULT get_RemoteUserAuthorizedList(BSTR*);
-    HRESULT put_RemoteUserAuthorizedList(BSTR);
-    HRESULT get_RemoteMachineAuthorizedList(BSTR*);
-    HRESULT put_RemoteMachineAuthorizedList(BSTR);
-    HRESULT get_SecureFlags(int*);
-    HRESULT put_SecureFlags(int);
+    HRESULT get_LocalAppPackageId(BSTR* wszPackageId);
+    HRESULT put_LocalAppPackageId(BSTR wszPackageId);
+    HRESULT get_LocalUserOwner(BSTR* wszUserOwner);
+    HRESULT put_LocalUserOwner(BSTR wszUserOwner);
+    HRESULT get_LocalUserAuthorizedList(BSTR* wszUserAuthList);
+    HRESULT put_LocalUserAuthorizedList(BSTR wszUserAuthList);
+    HRESULT get_RemoteUserAuthorizedList(BSTR* wszUserAuthList);
+    HRESULT put_RemoteUserAuthorizedList(BSTR wszUserAuthList);
+    HRESULT get_RemoteMachineAuthorizedList(BSTR* wszUserAuthList);
+    HRESULT put_RemoteMachineAuthorizedList(BSTR wszUserAuthList);
+    HRESULT get_SecureFlags(int* lOptions);
+    HRESULT put_SecureFlags(int lOptions);
 }
 enum IID_INetFwRules = GUID(0x9c4c6277, 0x5027, 0x441e, [0xaf, 0xae, 0xca, 0x1f, 0x54, 0x2d, 0xa0, 0x9]);
 interface INetFwRules : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT Add(INetFwRule);
-    HRESULT Remove(BSTR);
-    HRESULT Item(BSTR, INetFwRule*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* count);
+    HRESULT Add(INetFwRule rule);
+    HRESULT Remove(BSTR name);
+    HRESULT Item(BSTR name, INetFwRule* rule);
+    HRESULT get__NewEnum(IUnknown* newEnum);
 }
 enum IID_INetFwServiceRestriction = GUID(0x8267bbe3, 0xf890, 0x491c, [0xb7, 0xb6, 0x2d, 0xb1, 0xef, 0xe, 0x5d, 0x2b]);
 interface INetFwServiceRestriction : IDispatch
 {
-    HRESULT RestrictService(BSTR, BSTR, VARIANT_BOOL, VARIANT_BOOL);
-    HRESULT ServiceRestricted(BSTR, BSTR, VARIANT_BOOL*);
-    HRESULT get_Rules(INetFwRules*);
+    HRESULT RestrictService(BSTR serviceName, BSTR appName, VARIANT_BOOL restrictService, VARIANT_BOOL serviceSidRestricted);
+    HRESULT ServiceRestricted(BSTR serviceName, BSTR appName, VARIANT_BOOL* serviceRestricted);
+    HRESULT get_Rules(INetFwRules* rules);
 }
 enum IID_INetFwProfile = GUID(0x174a0dda, 0xe9f9, 0x449d, [0x99, 0x3b, 0x21, 0xab, 0x66, 0x7c, 0xa4, 0x56]);
 interface INetFwProfile : IDispatch
 {
-    HRESULT get_Type(NET_FW_PROFILE_TYPE*);
-    HRESULT get_FirewallEnabled(VARIANT_BOOL*);
-    HRESULT put_FirewallEnabled(VARIANT_BOOL);
-    HRESULT get_ExceptionsNotAllowed(VARIANT_BOOL*);
-    HRESULT put_ExceptionsNotAllowed(VARIANT_BOOL);
-    HRESULT get_NotificationsDisabled(VARIANT_BOOL*);
-    HRESULT put_NotificationsDisabled(VARIANT_BOOL);
-    HRESULT get_UnicastResponsesToMulticastBroadcastDisabled(VARIANT_BOOL*);
-    HRESULT put_UnicastResponsesToMulticastBroadcastDisabled(VARIANT_BOOL);
-    HRESULT get_RemoteAdminSettings(INetFwRemoteAdminSettings*);
-    HRESULT get_IcmpSettings(INetFwIcmpSettings*);
-    HRESULT get_GloballyOpenPorts(INetFwOpenPorts*);
-    HRESULT get_Services(INetFwServices*);
-    HRESULT get_AuthorizedApplications(INetFwAuthorizedApplications*);
+    HRESULT get_Type(NET_FW_PROFILE_TYPE* type);
+    HRESULT get_FirewallEnabled(VARIANT_BOOL* enabled);
+    HRESULT put_FirewallEnabled(VARIANT_BOOL enabled);
+    HRESULT get_ExceptionsNotAllowed(VARIANT_BOOL* notAllowed);
+    HRESULT put_ExceptionsNotAllowed(VARIANT_BOOL notAllowed);
+    HRESULT get_NotificationsDisabled(VARIANT_BOOL* disabled);
+    HRESULT put_NotificationsDisabled(VARIANT_BOOL disabled);
+    HRESULT get_UnicastResponsesToMulticastBroadcastDisabled(VARIANT_BOOL* disabled);
+    HRESULT put_UnicastResponsesToMulticastBroadcastDisabled(VARIANT_BOOL disabled);
+    HRESULT get_RemoteAdminSettings(INetFwRemoteAdminSettings* remoteAdminSettings);
+    HRESULT get_IcmpSettings(INetFwIcmpSettings* icmpSettings);
+    HRESULT get_GloballyOpenPorts(INetFwOpenPorts* openPorts);
+    HRESULT get_Services(INetFwServices* services);
+    HRESULT get_AuthorizedApplications(INetFwAuthorizedApplications* apps);
 }
 enum IID_INetFwPolicy = GUID(0xd46d2478, 0x9ac9, 0x4008, [0x9d, 0xc7, 0x55, 0x63, 0xce, 0x55, 0x36, 0xcc]);
 interface INetFwPolicy : IDispatch
 {
-    HRESULT get_CurrentProfile(INetFwProfile*);
-    HRESULT GetProfileByType(NET_FW_PROFILE_TYPE, INetFwProfile*);
+    HRESULT get_CurrentProfile(INetFwProfile* profile);
+    HRESULT GetProfileByType(NET_FW_PROFILE_TYPE profileType, INetFwProfile* profile);
 }
 enum IID_INetFwPolicy2 = GUID(0x98325047, 0xc671, 0x4174, [0x8d, 0x81, 0xde, 0xfc, 0xd3, 0xf0, 0x31, 0x86]);
 interface INetFwPolicy2 : IDispatch
 {
-    HRESULT get_CurrentProfileTypes(int*);
-    HRESULT get_FirewallEnabled(NET_FW_PROFILE_TYPE2, VARIANT_BOOL*);
-    HRESULT put_FirewallEnabled(NET_FW_PROFILE_TYPE2, VARIANT_BOOL);
-    HRESULT get_ExcludedInterfaces(NET_FW_PROFILE_TYPE2, VARIANT*);
-    HRESULT put_ExcludedInterfaces(NET_FW_PROFILE_TYPE2, VARIANT);
-    HRESULT get_BlockAllInboundTraffic(NET_FW_PROFILE_TYPE2, VARIANT_BOOL*);
-    HRESULT put_BlockAllInboundTraffic(NET_FW_PROFILE_TYPE2, VARIANT_BOOL);
-    HRESULT get_NotificationsDisabled(NET_FW_PROFILE_TYPE2, VARIANT_BOOL*);
-    HRESULT put_NotificationsDisabled(NET_FW_PROFILE_TYPE2, VARIANT_BOOL);
-    HRESULT get_UnicastResponsesToMulticastBroadcastDisabled(NET_FW_PROFILE_TYPE2, VARIANT_BOOL*);
-    HRESULT put_UnicastResponsesToMulticastBroadcastDisabled(NET_FW_PROFILE_TYPE2, VARIANT_BOOL);
-    HRESULT get_Rules(INetFwRules*);
-    HRESULT get_ServiceRestriction(INetFwServiceRestriction*);
-    HRESULT EnableRuleGroup(int, BSTR, VARIANT_BOOL);
-    HRESULT IsRuleGroupEnabled(int, BSTR, VARIANT_BOOL*);
+    HRESULT get_CurrentProfileTypes(int* profileTypesBitmask);
+    HRESULT get_FirewallEnabled(NET_FW_PROFILE_TYPE2 profileType, VARIANT_BOOL* enabled);
+    HRESULT put_FirewallEnabled(NET_FW_PROFILE_TYPE2 profileType, VARIANT_BOOL enabled);
+    HRESULT get_ExcludedInterfaces(NET_FW_PROFILE_TYPE2 profileType, VARIANT* interfaces);
+    HRESULT put_ExcludedInterfaces(NET_FW_PROFILE_TYPE2 profileType, VARIANT interfaces);
+    HRESULT get_BlockAllInboundTraffic(NET_FW_PROFILE_TYPE2 profileType, VARIANT_BOOL* Block);
+    HRESULT put_BlockAllInboundTraffic(NET_FW_PROFILE_TYPE2 profileType, VARIANT_BOOL Block);
+    HRESULT get_NotificationsDisabled(NET_FW_PROFILE_TYPE2 profileType, VARIANT_BOOL* disabled);
+    HRESULT put_NotificationsDisabled(NET_FW_PROFILE_TYPE2 profileType, VARIANT_BOOL disabled);
+    HRESULT get_UnicastResponsesToMulticastBroadcastDisabled(NET_FW_PROFILE_TYPE2 profileType, VARIANT_BOOL* disabled);
+    HRESULT put_UnicastResponsesToMulticastBroadcastDisabled(NET_FW_PROFILE_TYPE2 profileType, VARIANT_BOOL disabled);
+    HRESULT get_Rules(INetFwRules* rules);
+    HRESULT get_ServiceRestriction(INetFwServiceRestriction* ServiceRestriction);
+    HRESULT EnableRuleGroup(int profileTypesBitmask, BSTR group, VARIANT_BOOL enable);
+    HRESULT IsRuleGroupEnabled(int profileTypesBitmask, BSTR group, VARIANT_BOOL* enabled);
     HRESULT RestoreLocalFirewallDefaults();
-    HRESULT get_DefaultInboundAction(NET_FW_PROFILE_TYPE2, NET_FW_ACTION*);
-    HRESULT put_DefaultInboundAction(NET_FW_PROFILE_TYPE2, NET_FW_ACTION);
-    HRESULT get_DefaultOutboundAction(NET_FW_PROFILE_TYPE2, NET_FW_ACTION*);
-    HRESULT put_DefaultOutboundAction(NET_FW_PROFILE_TYPE2, NET_FW_ACTION);
-    HRESULT get_IsRuleGroupCurrentlyEnabled(BSTR, VARIANT_BOOL*);
-    HRESULT get_LocalPolicyModifyState(NET_FW_MODIFY_STATE*);
+    HRESULT get_DefaultInboundAction(NET_FW_PROFILE_TYPE2 profileType, NET_FW_ACTION* action);
+    HRESULT put_DefaultInboundAction(NET_FW_PROFILE_TYPE2 profileType, NET_FW_ACTION action);
+    HRESULT get_DefaultOutboundAction(NET_FW_PROFILE_TYPE2 profileType, NET_FW_ACTION* action);
+    HRESULT put_DefaultOutboundAction(NET_FW_PROFILE_TYPE2 profileType, NET_FW_ACTION action);
+    HRESULT get_IsRuleGroupCurrentlyEnabled(BSTR group, VARIANT_BOOL* enabled);
+    HRESULT get_LocalPolicyModifyState(NET_FW_MODIFY_STATE* modifyState);
 }
 enum IID_INetFwMgr = GUID(0xf7898af5, 0xcac4, 0x4632, [0xa2, 0xec, 0xda, 0x6, 0xe5, 0x11, 0x1a, 0xf2]);
 interface INetFwMgr : IDispatch
 {
-    HRESULT get_LocalPolicy(INetFwPolicy*);
-    HRESULT get_CurrentProfileType(NET_FW_PROFILE_TYPE*);
+    HRESULT get_LocalPolicy(INetFwPolicy* localPolicy);
+    HRESULT get_CurrentProfileType(NET_FW_PROFILE_TYPE* profileType);
     HRESULT RestoreDefaults();
-    HRESULT IsPortAllowed(BSTR, NET_FW_IP_VERSION, int, BSTR, NET_FW_IP_PROTOCOL, VARIANT*, VARIANT*);
-    HRESULT IsIcmpTypeAllowed(NET_FW_IP_VERSION, BSTR, ubyte, VARIANT*, VARIANT*);
+    HRESULT IsPortAllowed(BSTR imageFileName, NET_FW_IP_VERSION ipVersion, int portNumber, BSTR localAddress, NET_FW_IP_PROTOCOL ipProtocol, VARIANT* allowed, VARIANT* restricted);
+    HRESULT IsIcmpTypeAllowed(NET_FW_IP_VERSION ipVersion, BSTR localAddress, ubyte type, VARIANT* allowed, VARIANT* restricted);
 }
 enum IID_INetFwProduct = GUID(0x71881699, 0x18f4, 0x458b, [0xb8, 0x92, 0x3f, 0xfc, 0xe5, 0xe0, 0x7f, 0x75]);
 interface INetFwProduct : IDispatch
 {
-    HRESULT get_RuleCategories(VARIANT*);
-    HRESULT put_RuleCategories(VARIANT);
-    HRESULT get_DisplayName(BSTR*);
-    HRESULT put_DisplayName(BSTR);
-    HRESULT get_PathToSignedProductExe(BSTR*);
+    HRESULT get_RuleCategories(VARIANT* ruleCategories);
+    HRESULT put_RuleCategories(VARIANT ruleCategories);
+    HRESULT get_DisplayName(BSTR* displayName);
+    HRESULT put_DisplayName(BSTR displayName);
+    HRESULT get_PathToSignedProductExe(BSTR* path);
 }
 enum IID_INetFwProducts = GUID(0x39eb36e0, 0x2097, 0x40bd, [0x8a, 0xf2, 0x63, 0xa1, 0x3b, 0x52, 0x53, 0x62]);
 interface INetFwProducts : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT Register(INetFwProduct, IUnknown*);
-    HRESULT Item(int, INetFwProduct*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* count);
+    HRESULT Register(INetFwProduct product, IUnknown* registration);
+    HRESULT Item(int index, INetFwProduct* product);
+    HRESULT get__NewEnum(IUnknown* newEnum);
 }
 enum CLSID_NetFwRule = GUID(0x2c5bc43e, 0x3369, 0x4c33, [0xab, 0xc, 0xbe, 0x94, 0x69, 0x67, 0x7a, 0xf4]);
 struct NetFwRule

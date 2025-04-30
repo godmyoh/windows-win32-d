@@ -1,9 +1,9 @@
 module windows.win32.networking.activedirectory;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, PSID, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL, WPARAM;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL, WPARAM;
 import windows.win32.networking.winsock : SOCKET_ADDRESS;
-import windows.win32.security : PSECURITY_DESCRIPTOR;
+import windows.win32.security : PSECURITY_DESCRIPTOR, PSID;
 import windows.win32.security.authentication.identity : LSA_FOREST_TRUST_INFORMATION;
 import windows.win32.system.com : DISPPARAMS, EXCEPINFO, IDataObject, IDispatch, IPersist, ITypeInfo, IUnknown;
 import windows.win32.system.com.structuredstorage : IPropertyBag;
@@ -17,164 +17,164 @@ import windows.win32.ui.windowsandmessaging : DLGPROC, HICON;
 version (Windows):
 extern (Windows):
 
-HRESULT ADsGetObject(const(wchar)*, const(GUID)*, void**);
-HRESULT ADsBuildEnumerator(IADsContainer, IEnumVARIANT*);
-HRESULT ADsFreeEnumerator(IEnumVARIANT);
-HRESULT ADsEnumerateNext(IEnumVARIANT, uint, VARIANT*, uint*);
-HRESULT ADsBuildVarArrayStr(PWSTR*, uint, VARIANT*);
-HRESULT ADsBuildVarArrayInt(uint*, uint, VARIANT*);
-HRESULT ADsOpenObject(const(wchar)*, const(wchar)*, const(wchar)*, ADS_AUTHENTICATION_ENUM, const(GUID)*, void**);
-HRESULT ADsGetLastError(uint*, PWSTR, uint, PWSTR, uint);
-void ADsSetLastError(uint, const(wchar)*, const(wchar)*);
-void* AllocADsMem(uint);
-BOOL FreeADsMem(void*);
-void* ReallocADsMem(void*, uint, uint);
-PWSTR AllocADsStr(const(wchar)*);
-BOOL FreeADsStr(PWSTR);
-BOOL ReallocADsStr(PWSTR*, PWSTR);
-HRESULT ADsEncodeBinaryData(ubyte*, uint, PWSTR*);
-HRESULT ADsDecodeBinaryData(const(wchar)*, ubyte**, uint*);
-HRESULT PropVariantToAdsType(VARIANT*, uint, ADSVALUE**, uint*);
-HRESULT AdsTypeToPropVariant(ADSVALUE*, uint, VARIANT*);
-void AdsFreeAdsValues(ADSVALUE*, uint);
-HRESULT BinarySDToSecurityDescriptor(PSECURITY_DESCRIPTOR, VARIANT*, const(wchar)*, const(wchar)*, const(wchar)*, uint);
-HRESULT SecurityDescriptorToBinarySD(VARIANT, PSECURITY_DESCRIPTOR*, uint*, const(wchar)*, const(wchar)*, const(wchar)*, uint);
-int DsBrowseForContainerW(DSBROWSEINFOW*);
-int DsBrowseForContainerA(DSBROWSEINFOA*);
-HICON DsGetIcon(uint, const(wchar)*, int, int);
-HRESULT DsGetFriendlyClassName(const(wchar)*, PWSTR, uint);
-HRESULT ADsPropCreateNotifyObj(IDataObject, PWSTR, HWND*);
-BOOL ADsPropGetInitInfo(HWND, ADSPROPINITPARAMS*);
-BOOL ADsPropSetHwndWithTitle(HWND, HWND, byte*);
-BOOL ADsPropSetHwnd(HWND, HWND);
-BOOL ADsPropCheckIfWritable(const(wchar)*, const(ADS_ATTR_INFO)*);
-BOOL ADsPropSendErrorMessage(HWND, ADSPROPERROR*);
-BOOL ADsPropShowErrorDialog(HWND, HWND);
-uint DsMakeSpnW(const(wchar)*, const(wchar)*, const(wchar)*, ushort, const(wchar)*, uint*, PWSTR);
-uint DsMakeSpnA(const(char)*, const(char)*, const(char)*, ushort, const(char)*, uint*, PSTR);
-uint DsCrackSpnA(const(char)*, uint*, PSTR, uint*, PSTR, uint*, PSTR, ushort*);
-uint DsCrackSpnW(const(wchar)*, uint*, PWSTR, uint*, PWSTR, uint*, PWSTR, ushort*);
-uint DsQuoteRdnValueW(uint, const(wchar)*, uint*, PWSTR);
-uint DsQuoteRdnValueA(uint, const(char)*, uint*, PSTR);
-uint DsUnquoteRdnValueW(uint, const(wchar)*, uint*, PWSTR);
-uint DsUnquoteRdnValueA(uint, const(char)*, uint*, PSTR);
-uint DsGetRdnW(PWSTR*, uint*, PWSTR*, uint*, PWSTR*, uint*);
-BOOL DsCrackUnquotedMangledRdnW(const(wchar)*, uint, GUID*, DS_MANGLE_FOR*);
-BOOL DsCrackUnquotedMangledRdnA(const(char)*, uint, GUID*, DS_MANGLE_FOR*);
-BOOL DsIsMangledRdnValueW(const(wchar)*, uint, DS_MANGLE_FOR);
-BOOL DsIsMangledRdnValueA(const(char)*, uint, DS_MANGLE_FOR);
-BOOL DsIsMangledDnA(const(char)*, DS_MANGLE_FOR);
-BOOL DsIsMangledDnW(const(wchar)*, DS_MANGLE_FOR);
-uint DsCrackSpn2A(const(char)*, uint, uint*, PSTR, uint*, PSTR, uint*, PSTR, ushort*);
-uint DsCrackSpn2W(const(wchar)*, uint, uint*, PWSTR, uint*, PWSTR, uint*, PWSTR, ushort*);
-uint DsCrackSpn3W(const(wchar)*, uint, uint*, PWSTR, uint*, PWSTR, ushort*, uint*, PWSTR, uint*, PWSTR);
-uint DsCrackSpn4W(const(wchar)*, uint, uint*, PWSTR, uint*, PWSTR, uint*, PWSTR, uint*, PWSTR, uint*, PWSTR);
-uint DsBindW(const(wchar)*, const(wchar)*, HANDLE*);
-uint DsBindA(const(char)*, const(char)*, HANDLE*);
-uint DsBindWithCredW(const(wchar)*, const(wchar)*, void*, HANDLE*);
-uint DsBindWithCredA(const(char)*, const(char)*, void*, HANDLE*);
-uint DsBindWithSpnW(const(wchar)*, const(wchar)*, void*, const(wchar)*, HANDLE*);
-uint DsBindWithSpnA(const(char)*, const(char)*, void*, const(char)*, HANDLE*);
-uint DsBindWithSpnExW(const(wchar)*, const(wchar)*, void*, const(wchar)*, uint, HANDLE*);
-uint DsBindWithSpnExA(const(char)*, const(char)*, void*, const(char)*, uint, HANDLE*);
-uint DsBindByInstanceW(const(wchar)*, const(wchar)*, GUID*, const(wchar)*, void*, const(wchar)*, uint, HANDLE*);
-uint DsBindByInstanceA(const(char)*, const(char)*, GUID*, const(char)*, void*, const(char)*, uint, HANDLE*);
-uint DsBindToISTGW(const(wchar)*, HANDLE*);
-uint DsBindToISTGA(const(char)*, HANDLE*);
-uint DsBindingSetTimeout(HANDLE, uint);
-uint DsUnBindW(HANDLE*);
-uint DsUnBindA(HANDLE*);
-uint DsMakePasswordCredentialsW(const(wchar)*, const(wchar)*, const(wchar)*, void**);
-uint DsMakePasswordCredentialsA(const(char)*, const(char)*, const(char)*, void**);
-void DsFreePasswordCredentials(void*);
-uint DsCrackNamesW(HANDLE, DS_NAME_FLAGS, DS_NAME_FORMAT, DS_NAME_FORMAT, uint, const(wchar)**, DS_NAME_RESULTW**);
-uint DsCrackNamesA(HANDLE, DS_NAME_FLAGS, DS_NAME_FORMAT, DS_NAME_FORMAT, uint, const(char)**, DS_NAME_RESULTA**);
-void DsFreeNameResultW(DS_NAME_RESULTW*);
-void DsFreeNameResultA(DS_NAME_RESULTA*);
-uint DsGetSpnA(DS_SPN_NAME_TYPE, const(char)*, const(char)*, ushort, ushort, const(char)**, const(ushort)*, uint*, PSTR**);
-uint DsGetSpnW(DS_SPN_NAME_TYPE, const(wchar)*, const(wchar)*, ushort, ushort, const(wchar)**, const(ushort)*, uint*, PWSTR**);
-void DsFreeSpnArrayA(uint, PSTR*);
-void DsFreeSpnArrayW(uint, PWSTR*);
-uint DsWriteAccountSpnA(HANDLE, DS_SPN_WRITE_OP, const(char)*, uint, const(char)**);
-uint DsWriteAccountSpnW(HANDLE, DS_SPN_WRITE_OP, const(wchar)*, uint, const(wchar)**);
-uint DsClientMakeSpnForTargetServerW(const(wchar)*, const(wchar)*, uint*, PWSTR);
-uint DsClientMakeSpnForTargetServerA(const(char)*, const(char)*, uint*, PSTR);
-uint DsServerRegisterSpnA(DS_SPN_WRITE_OP, const(char)*, const(char)*);
-uint DsServerRegisterSpnW(DS_SPN_WRITE_OP, const(wchar)*, const(wchar)*);
-uint DsReplicaSyncA(HANDLE, const(char)*, const(GUID)*, uint);
-uint DsReplicaSyncW(HANDLE, const(wchar)*, const(GUID)*, uint);
-uint DsReplicaAddA(HANDLE, const(char)*, const(char)*, const(char)*, const(char)*, const(SCHEDULE)*, uint);
-uint DsReplicaAddW(HANDLE, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(SCHEDULE)*, uint);
-uint DsReplicaDelA(HANDLE, const(char)*, const(char)*, uint);
-uint DsReplicaDelW(HANDLE, const(wchar)*, const(wchar)*, uint);
-uint DsReplicaModifyA(HANDLE, const(char)*, const(GUID)*, const(char)*, const(char)*, const(SCHEDULE)*, uint, uint, uint);
-uint DsReplicaModifyW(HANDLE, const(wchar)*, const(GUID)*, const(wchar)*, const(wchar)*, const(SCHEDULE)*, uint, uint, uint);
-uint DsReplicaUpdateRefsA(HANDLE, const(char)*, const(char)*, const(GUID)*, uint);
-uint DsReplicaUpdateRefsW(HANDLE, const(wchar)*, const(wchar)*, const(GUID)*, uint);
-uint DsReplicaSyncAllA(HANDLE, const(char)*, uint, long, void*, DS_REPSYNCALL_ERRINFOA***);
-uint DsReplicaSyncAllW(HANDLE, const(wchar)*, uint, long, void*, DS_REPSYNCALL_ERRINFOW***);
-uint DsRemoveDsServerW(HANDLE, PWSTR, PWSTR, BOOL*, BOOL);
-uint DsRemoveDsServerA(HANDLE, PSTR, PSTR, BOOL*, BOOL);
-uint DsRemoveDsDomainW(HANDLE, PWSTR);
-uint DsRemoveDsDomainA(HANDLE, PSTR);
-uint DsListSitesA(HANDLE, DS_NAME_RESULTA**);
-uint DsListSitesW(HANDLE, DS_NAME_RESULTW**);
-uint DsListServersInSiteA(HANDLE, const(char)*, DS_NAME_RESULTA**);
-uint DsListServersInSiteW(HANDLE, const(wchar)*, DS_NAME_RESULTW**);
-uint DsListDomainsInSiteA(HANDLE, const(char)*, DS_NAME_RESULTA**);
-uint DsListDomainsInSiteW(HANDLE, const(wchar)*, DS_NAME_RESULTW**);
-uint DsListServersForDomainInSiteA(HANDLE, const(char)*, const(char)*, DS_NAME_RESULTA**);
-uint DsListServersForDomainInSiteW(HANDLE, const(wchar)*, const(wchar)*, DS_NAME_RESULTW**);
-uint DsListInfoForServerA(HANDLE, const(char)*, DS_NAME_RESULTA**);
-uint DsListInfoForServerW(HANDLE, const(wchar)*, DS_NAME_RESULTW**);
-uint DsListRolesA(HANDLE, DS_NAME_RESULTA**);
-uint DsListRolesW(HANDLE, DS_NAME_RESULTW**);
-uint DsQuerySitesByCostW(HANDLE, PWSTR, PWSTR*, uint, uint, DS_SITE_COST_INFO**);
-uint DsQuerySitesByCostA(HANDLE, PSTR, PSTR*, uint, uint, DS_SITE_COST_INFO**);
-void DsQuerySitesFree(DS_SITE_COST_INFO*);
-uint DsMapSchemaGuidsA(HANDLE, uint, GUID*, DS_SCHEMA_GUID_MAPA**);
-void DsFreeSchemaGuidMapA(DS_SCHEMA_GUID_MAPA*);
-uint DsMapSchemaGuidsW(HANDLE, uint, GUID*, DS_SCHEMA_GUID_MAPW**);
-void DsFreeSchemaGuidMapW(DS_SCHEMA_GUID_MAPW*);
-uint DsGetDomainControllerInfoA(HANDLE, const(char)*, uint, uint*, void**);
-uint DsGetDomainControllerInfoW(HANDLE, const(wchar)*, uint, uint*, void**);
-void DsFreeDomainControllerInfoA(uint, uint, void*);
-void DsFreeDomainControllerInfoW(uint, uint, void*);
-uint DsReplicaConsistencyCheck(HANDLE, DS_KCC_TASKID, uint);
-uint DsReplicaVerifyObjectsW(HANDLE, const(wchar)*, const(GUID)*, uint);
-uint DsReplicaVerifyObjectsA(HANDLE, const(char)*, const(GUID)*, uint);
-uint DsReplicaGetInfoW(HANDLE, DS_REPL_INFO_TYPE, const(wchar)*, GUID*, void**);
-uint DsReplicaGetInfo2W(HANDLE, DS_REPL_INFO_TYPE, const(wchar)*, GUID*, const(wchar)*, const(wchar)*, uint, uint, void**);
-void DsReplicaFreeInfo(DS_REPL_INFO_TYPE, void*);
-uint DsAddSidHistoryW(HANDLE, uint, const(wchar)*, const(wchar)*, const(wchar)*, void*, const(wchar)*, const(wchar)*);
-uint DsAddSidHistoryA(HANDLE, uint, const(char)*, const(char)*, const(char)*, void*, const(char)*, const(char)*);
-uint DsInheritSecurityIdentityW(HANDLE, uint, const(wchar)*, const(wchar)*);
-uint DsInheritSecurityIdentityA(HANDLE, uint, const(char)*, const(char)*);
-uint DsRoleGetPrimaryDomainInformation(const(wchar)*, DSROLE_PRIMARY_DOMAIN_INFO_LEVEL, ubyte**);
-void DsRoleFreeMemory(void*);
-uint DsGetDcNameA(const(char)*, const(char)*, GUID*, const(char)*, uint, DOMAIN_CONTROLLER_INFOA**);
-uint DsGetDcNameW(const(wchar)*, const(wchar)*, GUID*, const(wchar)*, uint, DOMAIN_CONTROLLER_INFOW**);
-uint DsGetSiteNameA(const(char)*, PSTR*);
-uint DsGetSiteNameW(const(wchar)*, PWSTR*);
-uint DsValidateSubnetNameW(const(wchar)*);
-uint DsValidateSubnetNameA(const(char)*);
-uint DsAddressToSiteNamesW(const(wchar)*, uint, SOCKET_ADDRESS*, PWSTR**);
-uint DsAddressToSiteNamesA(const(char)*, uint, SOCKET_ADDRESS*, PSTR**);
-uint DsAddressToSiteNamesExW(const(wchar)*, uint, SOCKET_ADDRESS*, PWSTR**, PWSTR**);
-uint DsAddressToSiteNamesExA(const(char)*, uint, SOCKET_ADDRESS*, PSTR**, PSTR**);
-uint DsEnumerateDomainTrustsW(PWSTR, uint, DS_DOMAIN_TRUSTSW**, uint*);
-uint DsEnumerateDomainTrustsA(PSTR, uint, DS_DOMAIN_TRUSTSA**, uint*);
-uint DsGetForestTrustInformationW(const(wchar)*, const(wchar)*, uint, LSA_FOREST_TRUST_INFORMATION**);
-uint DsMergeForestTrustInformationW(const(wchar)*, LSA_FOREST_TRUST_INFORMATION*, LSA_FOREST_TRUST_INFORMATION*, LSA_FOREST_TRUST_INFORMATION**);
-uint DsGetDcSiteCoverageW(const(wchar)*, uint*, PWSTR**);
-uint DsGetDcSiteCoverageA(const(char)*, uint*, PSTR**);
-uint DsDeregisterDnsHostRecordsW(PWSTR, PWSTR, GUID*, GUID*, PWSTR);
-uint DsDeregisterDnsHostRecordsA(PSTR, PSTR, GUID*, GUID*, PSTR);
-uint DsGetDcOpenW(const(wchar)*, uint, const(wchar)*, GUID*, const(wchar)*, uint, HANDLE*);
-uint DsGetDcOpenA(const(char)*, uint, const(char)*, GUID*, const(char)*, uint, HANDLE*);
-uint DsGetDcNextW(HANDLE, uint*, SOCKET_ADDRESS**, PWSTR*);
-uint DsGetDcNextA(HANDLE, uint*, SOCKET_ADDRESS**, PSTR*);
-void DsGetDcCloseW(HANDLE);
+HRESULT ADsGetObject(const(wchar)* lpszPathName, const(GUID)* riid, void** ppObject);
+HRESULT ADsBuildEnumerator(IADsContainer pADsContainer, IEnumVARIANT* ppEnumVariant);
+HRESULT ADsFreeEnumerator(IEnumVARIANT pEnumVariant);
+HRESULT ADsEnumerateNext(IEnumVARIANT pEnumVariant, uint cElements, VARIANT* pvar, uint* pcElementsFetched);
+HRESULT ADsBuildVarArrayStr(PWSTR* lppPathNames, uint dwPathNames, VARIANT* pVar);
+HRESULT ADsBuildVarArrayInt(uint* lpdwObjectTypes, uint dwObjectTypes, VARIANT* pVar);
+HRESULT ADsOpenObject(const(wchar)* lpszPathName, const(wchar)* lpszUserName, const(wchar)* lpszPassword, ADS_AUTHENTICATION_ENUM dwReserved, const(GUID)* riid, void** ppObject);
+HRESULT ADsGetLastError(uint* lpError, PWSTR lpErrorBuf, uint dwErrorBufLen, PWSTR lpNameBuf, uint dwNameBufLen);
+void ADsSetLastError(uint dwErr, const(wchar)* pszError, const(wchar)* pszProvider);
+void* AllocADsMem(uint cb);
+BOOL FreeADsMem(void* pMem);
+void* ReallocADsMem(void* pOldMem, uint cbOld, uint cbNew);
+PWSTR AllocADsStr(const(wchar)* pStr);
+BOOL FreeADsStr(PWSTR pStr);
+BOOL ReallocADsStr(PWSTR* ppStr, PWSTR pStr);
+HRESULT ADsEncodeBinaryData(ubyte* pbSrcData, uint dwSrcLen, PWSTR* ppszDestData);
+HRESULT ADsDecodeBinaryData(const(wchar)* szSrcData, ubyte** ppbDestData, uint* pdwDestLen);
+HRESULT PropVariantToAdsType(VARIANT* pVariant, uint dwNumVariant, ADSVALUE** ppAdsValues, uint* pdwNumValues);
+HRESULT AdsTypeToPropVariant(ADSVALUE* pAdsValues, uint dwNumValues, VARIANT* pVariant);
+void AdsFreeAdsValues(ADSVALUE* pAdsValues, uint dwNumValues);
+HRESULT BinarySDToSecurityDescriptor(PSECURITY_DESCRIPTOR pSecurityDescriptor, VARIANT* pVarsec, const(wchar)* pszServerName, const(wchar)* userName, const(wchar)* passWord, uint dwFlags);
+HRESULT SecurityDescriptorToBinarySD(VARIANT vVarSecDes, PSECURITY_DESCRIPTOR* ppSecurityDescriptor, uint* pdwSDLength, const(wchar)* pszServerName, const(wchar)* userName, const(wchar)* passWord, uint dwFlags);
+int DsBrowseForContainerW(DSBROWSEINFOW* pInfo);
+int DsBrowseForContainerA(DSBROWSEINFOA* pInfo);
+HICON DsGetIcon(uint dwFlags, const(wchar)* pszObjectClass, int cxImage, int cyImage);
+HRESULT DsGetFriendlyClassName(const(wchar)* pszObjectClass, PWSTR pszBuffer, uint cchBuffer);
+HRESULT ADsPropCreateNotifyObj(IDataObject pAppThdDataObj, PWSTR pwzADsObjName, HWND* phNotifyObj);
+BOOL ADsPropGetInitInfo(HWND hNotifyObj, ADSPROPINITPARAMS* pInitParams);
+BOOL ADsPropSetHwndWithTitle(HWND hNotifyObj, HWND hPage, byte* ptzTitle);
+BOOL ADsPropSetHwnd(HWND hNotifyObj, HWND hPage);
+BOOL ADsPropCheckIfWritable(const(wchar)* pwzAttr, const(ADS_ATTR_INFO)* pWritableAttrs);
+BOOL ADsPropSendErrorMessage(HWND hNotifyObj, ADSPROPERROR* pError);
+BOOL ADsPropShowErrorDialog(HWND hNotifyObj, HWND hPage);
+uint DsMakeSpnW(const(wchar)* ServiceClass, const(wchar)* ServiceName, const(wchar)* InstanceName, ushort InstancePort, const(wchar)* Referrer, uint* pcSpnLength, PWSTR pszSpn);
+uint DsMakeSpnA(const(char)* ServiceClass, const(char)* ServiceName, const(char)* InstanceName, ushort InstancePort, const(char)* Referrer, uint* pcSpnLength, PSTR pszSpn);
+uint DsCrackSpnA(const(char)* pszSpn, uint* pcServiceClass, PSTR ServiceClass, uint* pcServiceName, PSTR ServiceName, uint* pcInstanceName, PSTR InstanceName, ushort* pInstancePort);
+uint DsCrackSpnW(const(wchar)* pszSpn, uint* pcServiceClass, PWSTR ServiceClass, uint* pcServiceName, PWSTR ServiceName, uint* pcInstanceName, PWSTR InstanceName, ushort* pInstancePort);
+uint DsQuoteRdnValueW(uint cUnquotedRdnValueLength, const(wchar)* psUnquotedRdnValue, uint* pcQuotedRdnValueLength, PWSTR psQuotedRdnValue);
+uint DsQuoteRdnValueA(uint cUnquotedRdnValueLength, const(char)* psUnquotedRdnValue, uint* pcQuotedRdnValueLength, PSTR psQuotedRdnValue);
+uint DsUnquoteRdnValueW(uint cQuotedRdnValueLength, const(wchar)* psQuotedRdnValue, uint* pcUnquotedRdnValueLength, PWSTR psUnquotedRdnValue);
+uint DsUnquoteRdnValueA(uint cQuotedRdnValueLength, const(char)* psQuotedRdnValue, uint* pcUnquotedRdnValueLength, PSTR psUnquotedRdnValue);
+uint DsGetRdnW(PWSTR* ppDN, uint* pcDN, PWSTR* ppKey, uint* pcKey, PWSTR* ppVal, uint* pcVal);
+BOOL DsCrackUnquotedMangledRdnW(const(wchar)* pszRDN, uint cchRDN, GUID* pGuid, DS_MANGLE_FOR* peDsMangleFor);
+BOOL DsCrackUnquotedMangledRdnA(const(char)* pszRDN, uint cchRDN, GUID* pGuid, DS_MANGLE_FOR* peDsMangleFor);
+BOOL DsIsMangledRdnValueW(const(wchar)* pszRdn, uint cRdn, DS_MANGLE_FOR eDsMangleForDesired);
+BOOL DsIsMangledRdnValueA(const(char)* pszRdn, uint cRdn, DS_MANGLE_FOR eDsMangleForDesired);
+BOOL DsIsMangledDnA(const(char)* pszDn, DS_MANGLE_FOR eDsMangleFor);
+BOOL DsIsMangledDnW(const(wchar)* pszDn, DS_MANGLE_FOR eDsMangleFor);
+uint DsCrackSpn2A(const(char)* pszSpn, uint cSpn, uint* pcServiceClass, PSTR ServiceClass, uint* pcServiceName, PSTR ServiceName, uint* pcInstanceName, PSTR InstanceName, ushort* pInstancePort);
+uint DsCrackSpn2W(const(wchar)* pszSpn, uint cSpn, uint* pcServiceClass, PWSTR ServiceClass, uint* pcServiceName, PWSTR ServiceName, uint* pcInstanceName, PWSTR InstanceName, ushort* pInstancePort);
+uint DsCrackSpn3W(const(wchar)* pszSpn, uint cSpn, uint* pcHostName, PWSTR HostName, uint* pcInstanceName, PWSTR InstanceName, ushort* pPortNumber, uint* pcDomainName, PWSTR DomainName, uint* pcRealmName, PWSTR RealmName);
+uint DsCrackSpn4W(const(wchar)* pszSpn, uint cSpn, uint* pcHostName, PWSTR HostName, uint* pcInstanceName, PWSTR InstanceName, uint* pcPortName, PWSTR PortName, uint* pcDomainName, PWSTR DomainName, uint* pcRealmName, PWSTR RealmName);
+uint DsBindW(const(wchar)* DomainControllerName, const(wchar)* DnsDomainName, HANDLE* phDS);
+uint DsBindA(const(char)* DomainControllerName, const(char)* DnsDomainName, HANDLE* phDS);
+uint DsBindWithCredW(const(wchar)* DomainControllerName, const(wchar)* DnsDomainName, void* AuthIdentity, HANDLE* phDS);
+uint DsBindWithCredA(const(char)* DomainControllerName, const(char)* DnsDomainName, void* AuthIdentity, HANDLE* phDS);
+uint DsBindWithSpnW(const(wchar)* DomainControllerName, const(wchar)* DnsDomainName, void* AuthIdentity, const(wchar)* ServicePrincipalName, HANDLE* phDS);
+uint DsBindWithSpnA(const(char)* DomainControllerName, const(char)* DnsDomainName, void* AuthIdentity, const(char)* ServicePrincipalName, HANDLE* phDS);
+uint DsBindWithSpnExW(const(wchar)* DomainControllerName, const(wchar)* DnsDomainName, void* AuthIdentity, const(wchar)* ServicePrincipalName, uint BindFlags, HANDLE* phDS);
+uint DsBindWithSpnExA(const(char)* DomainControllerName, const(char)* DnsDomainName, void* AuthIdentity, const(char)* ServicePrincipalName, uint BindFlags, HANDLE* phDS);
+uint DsBindByInstanceW(const(wchar)* ServerName, const(wchar)* Annotation, GUID* InstanceGuid, const(wchar)* DnsDomainName, void* AuthIdentity, const(wchar)* ServicePrincipalName, uint BindFlags, HANDLE* phDS);
+uint DsBindByInstanceA(const(char)* ServerName, const(char)* Annotation, GUID* InstanceGuid, const(char)* DnsDomainName, void* AuthIdentity, const(char)* ServicePrincipalName, uint BindFlags, HANDLE* phDS);
+uint DsBindToISTGW(const(wchar)* SiteName, HANDLE* phDS);
+uint DsBindToISTGA(const(char)* SiteName, HANDLE* phDS);
+uint DsBindingSetTimeout(HANDLE hDS, uint cTimeoutSecs);
+uint DsUnBindW(HANDLE* phDS);
+uint DsUnBindA(HANDLE* phDS);
+uint DsMakePasswordCredentialsW(const(wchar)* User, const(wchar)* Domain, const(wchar)* Password, void** pAuthIdentity);
+uint DsMakePasswordCredentialsA(const(char)* User, const(char)* Domain, const(char)* Password, void** pAuthIdentity);
+void DsFreePasswordCredentials(void* AuthIdentity);
+uint DsCrackNamesW(HANDLE hDS, DS_NAME_FLAGS flags, DS_NAME_FORMAT formatOffered, DS_NAME_FORMAT formatDesired, uint cNames, const(wchar)** rpNames, DS_NAME_RESULTW** ppResult);
+uint DsCrackNamesA(HANDLE hDS, DS_NAME_FLAGS flags, DS_NAME_FORMAT formatOffered, DS_NAME_FORMAT formatDesired, uint cNames, const(char)** rpNames, DS_NAME_RESULTA** ppResult);
+void DsFreeNameResultW(DS_NAME_RESULTW* pResult);
+void DsFreeNameResultA(DS_NAME_RESULTA* pResult);
+uint DsGetSpnA(DS_SPN_NAME_TYPE ServiceType, const(char)* ServiceClass, const(char)* ServiceName, ushort InstancePort, ushort cInstanceNames, const(char)** pInstanceNames, const(ushort)* pInstancePorts, uint* pcSpn, PSTR** prpszSpn);
+uint DsGetSpnW(DS_SPN_NAME_TYPE ServiceType, const(wchar)* ServiceClass, const(wchar)* ServiceName, ushort InstancePort, ushort cInstanceNames, const(wchar)** pInstanceNames, const(ushort)* pInstancePorts, uint* pcSpn, PWSTR** prpszSpn);
+void DsFreeSpnArrayA(uint cSpn, PSTR* rpszSpn);
+void DsFreeSpnArrayW(uint cSpn, PWSTR* rpszSpn);
+uint DsWriteAccountSpnA(HANDLE hDS, DS_SPN_WRITE_OP Operation, const(char)* pszAccount, uint cSpn, const(char)** rpszSpn);
+uint DsWriteAccountSpnW(HANDLE hDS, DS_SPN_WRITE_OP Operation, const(wchar)* pszAccount, uint cSpn, const(wchar)** rpszSpn);
+uint DsClientMakeSpnForTargetServerW(const(wchar)* ServiceClass, const(wchar)* ServiceName, uint* pcSpnLength, PWSTR pszSpn);
+uint DsClientMakeSpnForTargetServerA(const(char)* ServiceClass, const(char)* ServiceName, uint* pcSpnLength, PSTR pszSpn);
+uint DsServerRegisterSpnA(DS_SPN_WRITE_OP Operation, const(char)* ServiceClass, const(char)* UserObjectDN);
+uint DsServerRegisterSpnW(DS_SPN_WRITE_OP Operation, const(wchar)* ServiceClass, const(wchar)* UserObjectDN);
+uint DsReplicaSyncA(HANDLE hDS, const(char)* NameContext, const(GUID)* pUuidDsaSrc, uint Options);
+uint DsReplicaSyncW(HANDLE hDS, const(wchar)* NameContext, const(GUID)* pUuidDsaSrc, uint Options);
+uint DsReplicaAddA(HANDLE hDS, const(char)* NameContext, const(char)* SourceDsaDn, const(char)* TransportDn, const(char)* SourceDsaAddress, const(SCHEDULE)* pSchedule, uint Options);
+uint DsReplicaAddW(HANDLE hDS, const(wchar)* NameContext, const(wchar)* SourceDsaDn, const(wchar)* TransportDn, const(wchar)* SourceDsaAddress, const(SCHEDULE)* pSchedule, uint Options);
+uint DsReplicaDelA(HANDLE hDS, const(char)* NameContext, const(char)* DsaSrc, uint Options);
+uint DsReplicaDelW(HANDLE hDS, const(wchar)* NameContext, const(wchar)* DsaSrc, uint Options);
+uint DsReplicaModifyA(HANDLE hDS, const(char)* NameContext, const(GUID)* pUuidSourceDsa, const(char)* TransportDn, const(char)* SourceDsaAddress, const(SCHEDULE)* pSchedule, uint ReplicaFlags, uint ModifyFields, uint Options);
+uint DsReplicaModifyW(HANDLE hDS, const(wchar)* NameContext, const(GUID)* pUuidSourceDsa, const(wchar)* TransportDn, const(wchar)* SourceDsaAddress, const(SCHEDULE)* pSchedule, uint ReplicaFlags, uint ModifyFields, uint Options);
+uint DsReplicaUpdateRefsA(HANDLE hDS, const(char)* NameContext, const(char)* DsaDest, const(GUID)* pUuidDsaDest, uint Options);
+uint DsReplicaUpdateRefsW(HANDLE hDS, const(wchar)* NameContext, const(wchar)* DsaDest, const(GUID)* pUuidDsaDest, uint Options);
+uint DsReplicaSyncAllA(HANDLE hDS, const(char)* pszNameContext, uint ulFlags, long pFnCallBack, void* pCallbackData, DS_REPSYNCALL_ERRINFOA*** pErrors);
+uint DsReplicaSyncAllW(HANDLE hDS, const(wchar)* pszNameContext, uint ulFlags, long pFnCallBack, void* pCallbackData, DS_REPSYNCALL_ERRINFOW*** pErrors);
+uint DsRemoveDsServerW(HANDLE hDs, PWSTR ServerDN, PWSTR DomainDN, BOOL* fLastDcInDomain, BOOL fCommit);
+uint DsRemoveDsServerA(HANDLE hDs, PSTR ServerDN, PSTR DomainDN, BOOL* fLastDcInDomain, BOOL fCommit);
+uint DsRemoveDsDomainW(HANDLE hDs, PWSTR DomainDN);
+uint DsRemoveDsDomainA(HANDLE hDs, PSTR DomainDN);
+uint DsListSitesA(HANDLE hDs, DS_NAME_RESULTA** ppSites);
+uint DsListSitesW(HANDLE hDs, DS_NAME_RESULTW** ppSites);
+uint DsListServersInSiteA(HANDLE hDs, const(char)* site, DS_NAME_RESULTA** ppServers);
+uint DsListServersInSiteW(HANDLE hDs, const(wchar)* site, DS_NAME_RESULTW** ppServers);
+uint DsListDomainsInSiteA(HANDLE hDs, const(char)* site, DS_NAME_RESULTA** ppDomains);
+uint DsListDomainsInSiteW(HANDLE hDs, const(wchar)* site, DS_NAME_RESULTW** ppDomains);
+uint DsListServersForDomainInSiteA(HANDLE hDs, const(char)* domain, const(char)* site, DS_NAME_RESULTA** ppServers);
+uint DsListServersForDomainInSiteW(HANDLE hDs, const(wchar)* domain, const(wchar)* site, DS_NAME_RESULTW** ppServers);
+uint DsListInfoForServerA(HANDLE hDs, const(char)* server, DS_NAME_RESULTA** ppInfo);
+uint DsListInfoForServerW(HANDLE hDs, const(wchar)* server, DS_NAME_RESULTW** ppInfo);
+uint DsListRolesA(HANDLE hDs, DS_NAME_RESULTA** ppRoles);
+uint DsListRolesW(HANDLE hDs, DS_NAME_RESULTW** ppRoles);
+uint DsQuerySitesByCostW(HANDLE hDS, PWSTR pwszFromSite, PWSTR* rgwszToSites, uint cToSites, uint dwFlags, DS_SITE_COST_INFO** prgSiteInfo);
+uint DsQuerySitesByCostA(HANDLE hDS, PSTR pszFromSite, PSTR* rgszToSites, uint cToSites, uint dwFlags, DS_SITE_COST_INFO** prgSiteInfo);
+void DsQuerySitesFree(DS_SITE_COST_INFO* rgSiteInfo);
+uint DsMapSchemaGuidsA(HANDLE hDs, uint cGuids, GUID* rGuids, DS_SCHEMA_GUID_MAPA** ppGuidMap);
+void DsFreeSchemaGuidMapA(DS_SCHEMA_GUID_MAPA* pGuidMap);
+uint DsMapSchemaGuidsW(HANDLE hDs, uint cGuids, GUID* rGuids, DS_SCHEMA_GUID_MAPW** ppGuidMap);
+void DsFreeSchemaGuidMapW(DS_SCHEMA_GUID_MAPW* pGuidMap);
+uint DsGetDomainControllerInfoA(HANDLE hDs, const(char)* DomainName, uint InfoLevel, uint* pcOut, void** ppInfo);
+uint DsGetDomainControllerInfoW(HANDLE hDs, const(wchar)* DomainName, uint InfoLevel, uint* pcOut, void** ppInfo);
+void DsFreeDomainControllerInfoA(uint InfoLevel, uint cInfo, void* pInfo);
+void DsFreeDomainControllerInfoW(uint InfoLevel, uint cInfo, void* pInfo);
+uint DsReplicaConsistencyCheck(HANDLE hDS, DS_KCC_TASKID TaskID, uint dwFlags);
+uint DsReplicaVerifyObjectsW(HANDLE hDS, const(wchar)* NameContext, const(GUID)* pUuidDsaSrc, uint ulOptions);
+uint DsReplicaVerifyObjectsA(HANDLE hDS, const(char)* NameContext, const(GUID)* pUuidDsaSrc, uint ulOptions);
+uint DsReplicaGetInfoW(HANDLE hDS, DS_REPL_INFO_TYPE InfoType, const(wchar)* pszObject, GUID* puuidForSourceDsaObjGuid, void** ppInfo);
+uint DsReplicaGetInfo2W(HANDLE hDS, DS_REPL_INFO_TYPE InfoType, const(wchar)* pszObject, GUID* puuidForSourceDsaObjGuid, const(wchar)* pszAttributeName, const(wchar)* pszValue, uint dwFlags, uint dwEnumerationContext, void** ppInfo);
+void DsReplicaFreeInfo(DS_REPL_INFO_TYPE InfoType, void* pInfo);
+uint DsAddSidHistoryW(HANDLE hDS, uint Flags, const(wchar)* SrcDomain, const(wchar)* SrcPrincipal, const(wchar)* SrcDomainController, void* SrcDomainCreds, const(wchar)* DstDomain, const(wchar)* DstPrincipal);
+uint DsAddSidHistoryA(HANDLE hDS, uint Flags, const(char)* SrcDomain, const(char)* SrcPrincipal, const(char)* SrcDomainController, void* SrcDomainCreds, const(char)* DstDomain, const(char)* DstPrincipal);
+uint DsInheritSecurityIdentityW(HANDLE hDS, uint Flags, const(wchar)* SrcPrincipal, const(wchar)* DstPrincipal);
+uint DsInheritSecurityIdentityA(HANDLE hDS, uint Flags, const(char)* SrcPrincipal, const(char)* DstPrincipal);
+uint DsRoleGetPrimaryDomainInformation(const(wchar)* lpServer, DSROLE_PRIMARY_DOMAIN_INFO_LEVEL InfoLevel, ubyte** Buffer);
+void DsRoleFreeMemory(void* Buffer);
+uint DsGetDcNameA(const(char)* ComputerName, const(char)* DomainName, GUID* DomainGuid, const(char)* SiteName, uint Flags, DOMAIN_CONTROLLER_INFOA** DomainControllerInfo);
+uint DsGetDcNameW(const(wchar)* ComputerName, const(wchar)* DomainName, GUID* DomainGuid, const(wchar)* SiteName, uint Flags, DOMAIN_CONTROLLER_INFOW** DomainControllerInfo);
+uint DsGetSiteNameA(const(char)* ComputerName, PSTR* SiteName);
+uint DsGetSiteNameW(const(wchar)* ComputerName, PWSTR* SiteName);
+uint DsValidateSubnetNameW(const(wchar)* SubnetName);
+uint DsValidateSubnetNameA(const(char)* SubnetName);
+uint DsAddressToSiteNamesW(const(wchar)* ComputerName, uint EntryCount, SOCKET_ADDRESS* SocketAddresses, PWSTR** SiteNames);
+uint DsAddressToSiteNamesA(const(char)* ComputerName, uint EntryCount, SOCKET_ADDRESS* SocketAddresses, PSTR** SiteNames);
+uint DsAddressToSiteNamesExW(const(wchar)* ComputerName, uint EntryCount, SOCKET_ADDRESS* SocketAddresses, PWSTR** SiteNames, PWSTR** SubnetNames);
+uint DsAddressToSiteNamesExA(const(char)* ComputerName, uint EntryCount, SOCKET_ADDRESS* SocketAddresses, PSTR** SiteNames, PSTR** SubnetNames);
+uint DsEnumerateDomainTrustsW(PWSTR ServerName, uint Flags, DS_DOMAIN_TRUSTSW** Domains, uint* DomainCount);
+uint DsEnumerateDomainTrustsA(PSTR ServerName, uint Flags, DS_DOMAIN_TRUSTSA** Domains, uint* DomainCount);
+uint DsGetForestTrustInformationW(const(wchar)* ServerName, const(wchar)* TrustedDomainName, uint Flags, LSA_FOREST_TRUST_INFORMATION** ForestTrustInfo);
+uint DsMergeForestTrustInformationW(const(wchar)* DomainName, LSA_FOREST_TRUST_INFORMATION* NewForestTrustInfo, LSA_FOREST_TRUST_INFORMATION* OldForestTrustInfo, LSA_FOREST_TRUST_INFORMATION** MergedForestTrustInfo);
+uint DsGetDcSiteCoverageW(const(wchar)* ServerName, uint* EntryCount, PWSTR** SiteNames);
+uint DsGetDcSiteCoverageA(const(char)* ServerName, uint* EntryCount, PSTR** SiteNames);
+uint DsDeregisterDnsHostRecordsW(PWSTR ServerName, PWSTR DnsDomainName, GUID* DomainGuid, GUID* DsaGuid, PWSTR DnsHostName);
+uint DsDeregisterDnsHostRecordsA(PSTR ServerName, PSTR DnsDomainName, GUID* DomainGuid, GUID* DsaGuid, PSTR DnsHostName);
+uint DsGetDcOpenW(const(wchar)* DnsName, uint OptionFlags, const(wchar)* SiteName, GUID* DomainGuid, const(wchar)* DnsForestName, uint DcFlags, HANDLE* RetGetDcContext);
+uint DsGetDcOpenA(const(char)* DnsName, uint OptionFlags, const(char)* SiteName, GUID* DomainGuid, const(char)* DnsForestName, uint DcFlags, HANDLE* RetGetDcContext);
+uint DsGetDcNextW(HANDLE GetDcContextHandle, uint* SockAddressCount, SOCKET_ADDRESS** SockAddresses, PWSTR* DnsHostName);
+uint DsGetDcNextA(HANDLE GetDcContextHandle, uint* SockAddressCount, SOCKET_ADDRESS** SockAddresses, PSTR* DnsHostName);
+void DsGetDcCloseW(HANDLE GetDcContextHandle);
 enum WM_ADSPROP_NOTIFY_PAGEINIT = 0x0000084d;
 enum WM_ADSPROP_NOTIFY_PAGEHWND = 0x0000084e;
 enum WM_ADSPROP_NOTIFY_CHANGE = 0x0000084f;
@@ -881,9 +881,9 @@ struct CQFORM
     HICON hIcon;
     const(wchar)* pszTitle;
 }
-alias LPCQADDFORMSPROC = HRESULT function(LPARAM, CQFORM*);
-alias LPCQADDPAGESPROC = HRESULT function(LPARAM, const(GUID)*, CQPAGE*);
-alias LPCQPAGEPROC = HRESULT function(CQPAGE*, HWND, uint, WPARAM, LPARAM);
+alias LPCQADDFORMSPROC = HRESULT function(LPARAM lParam, CQFORM* pForm);
+alias LPCQADDPAGESPROC = HRESULT function(LPARAM lParam, const(GUID)* clsidForm, CQPAGE* pPage);
+alias LPCQPAGEPROC = HRESULT function(CQPAGE* pPage, HWND hwnd, uint uMsg, WPARAM wParam, LPARAM lParam);
 struct CQPAGE
 {
     uint cbStruct;
@@ -898,19 +898,19 @@ struct CQPAGE
 enum IID_IQueryForm = GUID(0x8cfcee30, 0x39bd, 0x11d0, [0xb8, 0xd1, 0x0, 0xa0, 0x24, 0xab, 0x2d, 0xbb]);
 interface IQueryForm : IUnknown
 {
-    HRESULT Initialize(HKEY);
-    HRESULT AddForms(LPCQADDFORMSPROC, LPARAM);
-    HRESULT AddPages(LPCQADDPAGESPROC, LPARAM);
+    HRESULT Initialize(HKEY hkForm);
+    HRESULT AddForms(LPCQADDFORMSPROC pAddFormsProc, LPARAM lParam);
+    HRESULT AddPages(LPCQADDPAGESPROC pAddPagesProc, LPARAM lParam);
 }
 enum IID_IPersistQuery = GUID(0x1a3114b8, 0xa62e, 0x11d0, [0xa6, 0xc5, 0x0, 0xa0, 0xc9, 0x6, 0xaf, 0x45]);
 interface IPersistQuery : IPersist
 {
-    HRESULT WriteString(const(wchar)*, const(wchar)*, const(wchar)*);
-    HRESULT ReadString(const(wchar)*, const(wchar)*, PWSTR, int);
-    HRESULT WriteInt(const(wchar)*, const(wchar)*, int);
-    HRESULT ReadInt(const(wchar)*, const(wchar)*, int*);
-    HRESULT WriteStruct(const(wchar)*, const(wchar)*, void*, uint);
-    HRESULT ReadStruct(const(wchar)*, const(wchar)*, void*, uint);
+    HRESULT WriteString(const(wchar)* pSection, const(wchar)* pValueName, const(wchar)* pValue);
+    HRESULT ReadString(const(wchar)* pSection, const(wchar)* pValueName, PWSTR pBuffer, int cchBuffer);
+    HRESULT WriteInt(const(wchar)* pSection, const(wchar)* pValueName, int value);
+    HRESULT ReadInt(const(wchar)* pSection, const(wchar)* pValueName, int* pValue);
+    HRESULT WriteStruct(const(wchar)* pSection, const(wchar)* pValueName, void* pStruct, uint cbStruct);
+    HRESULT ReadStruct(const(wchar)* pSection, const(wchar)* pValueName, void* pStruct, uint cbStruct);
     HRESULT Clear();
 }
 struct OPENQUERYWINDOW
@@ -930,7 +930,7 @@ struct OPENQUERYWINDOW
 enum IID_ICommonQuery = GUID(0xab50dec0, 0x6f1d, 0x11d0, [0xa1, 0xc4, 0x0, 0xaa, 0x0, 0xc1, 0x6e, 0x65]);
 interface ICommonQuery : IUnknown
 {
-    HRESULT OpenQueryWindow(HWND, OPENQUERYWINDOW*, IDataObject*);
+    HRESULT OpenQueryWindow(HWND hwndParent, OPENQUERYWINDOW* pQueryWnd, IDataObject* ppDataObject);
 }
 alias ADSTYPE = int;
 enum : int
@@ -1524,76 +1524,76 @@ enum : int
 enum IID_IADs = GUID(0xfd8256d0, 0xfd15, 0x11ce, [0xab, 0xc4, 0x2, 0x60, 0x8c, 0x9e, 0x75, 0x53]);
 interface IADs : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Class(BSTR*);
-    HRESULT get_GUID(BSTR*);
-    HRESULT get_ADsPath(BSTR*);
-    HRESULT get_Parent(BSTR*);
-    HRESULT get_Schema(BSTR*);
+    HRESULT get_Name(BSTR* retval);
+    HRESULT get_Class(BSTR* retval);
+    HRESULT get_GUID(BSTR* retval);
+    HRESULT get_ADsPath(BSTR* retval);
+    HRESULT get_Parent(BSTR* retval);
+    HRESULT get_Schema(BSTR* retval);
     HRESULT GetInfo();
     HRESULT SetInfo();
-    HRESULT Get(BSTR, VARIANT*);
-    HRESULT Put(BSTR, VARIANT);
-    HRESULT GetEx(BSTR, VARIANT*);
-    HRESULT PutEx(int, BSTR, VARIANT);
-    HRESULT GetInfoEx(VARIANT, int);
+    HRESULT Get(BSTR bstrName, VARIANT* pvProp);
+    HRESULT Put(BSTR bstrName, VARIANT vProp);
+    HRESULT GetEx(BSTR bstrName, VARIANT* pvProp);
+    HRESULT PutEx(int lnControlCode, BSTR bstrName, VARIANT vProp);
+    HRESULT GetInfoEx(VARIANT vProperties, int lnReserved);
 }
 enum IID_IADsContainer = GUID(0x1677d0, 0xfd16, 0x11ce, [0xab, 0xc4, 0x2, 0x60, 0x8c, 0x9e, 0x75, 0x53]);
 interface IADsContainer : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Filter(VARIANT*);
-    HRESULT put_Filter(VARIANT);
-    HRESULT get_Hints(VARIANT*);
-    HRESULT put_Hints(VARIANT);
-    HRESULT GetObject(BSTR, BSTR, IDispatch*);
-    HRESULT Create(BSTR, BSTR, IDispatch*);
-    HRESULT Delete(BSTR, BSTR);
-    HRESULT CopyHere(BSTR, BSTR, IDispatch*);
-    HRESULT MoveHere(BSTR, BSTR, IDispatch*);
+    HRESULT get_Count(int* retval);
+    HRESULT get__NewEnum(IUnknown* retval);
+    HRESULT get_Filter(VARIANT* pVar);
+    HRESULT put_Filter(VARIANT Var);
+    HRESULT get_Hints(VARIANT* pvFilter);
+    HRESULT put_Hints(VARIANT vHints);
+    HRESULT GetObject(BSTR ClassName, BSTR RelativeName, IDispatch* ppObject);
+    HRESULT Create(BSTR ClassName, BSTR RelativeName, IDispatch* ppObject);
+    HRESULT Delete(BSTR bstrClassName, BSTR bstrRelativeName);
+    HRESULT CopyHere(BSTR SourceName, BSTR NewName, IDispatch* ppObject);
+    HRESULT MoveHere(BSTR SourceName, BSTR NewName, IDispatch* ppObject);
 }
 enum IID_IADsCollection = GUID(0x72b945e0, 0x253b, 0x11cf, [0xa9, 0x88, 0x0, 0xaa, 0x0, 0x6b, 0xc1, 0x49]);
 interface IADsCollection : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Add(BSTR, VARIANT);
-    HRESULT Remove(BSTR);
-    HRESULT GetObject(BSTR, VARIANT*);
+    HRESULT get__NewEnum(IUnknown* ppEnumerator);
+    HRESULT Add(BSTR bstrName, VARIANT vItem);
+    HRESULT Remove(BSTR bstrItemToBeRemoved);
+    HRESULT GetObject(BSTR bstrName, VARIANT* pvItem);
 }
 enum IID_IADsMembers = GUID(0x451a0030, 0x72ec, 0x11cf, [0xb0, 0x3b, 0x0, 0xaa, 0x0, 0x6e, 0x9, 0x75]);
 interface IADsMembers : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Filter(VARIANT*);
-    HRESULT put_Filter(VARIANT);
+    HRESULT get_Count(int* plCount);
+    HRESULT get__NewEnum(IUnknown* ppEnumerator);
+    HRESULT get_Filter(VARIANT* pvFilter);
+    HRESULT put_Filter(VARIANT pvFilter);
 }
 enum IID_IADsPropertyList = GUID(0xc6f602b6, 0x8f69, 0x11d0, [0x85, 0x28, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 interface IADsPropertyList : IDispatch
 {
-    HRESULT get_PropertyCount(int*);
-    HRESULT Next(VARIANT*);
-    HRESULT Skip(int);
+    HRESULT get_PropertyCount(int* plCount);
+    HRESULT Next(VARIANT* pVariant);
+    HRESULT Skip(int cElements);
     HRESULT Reset();
-    HRESULT Item(VARIANT, VARIANT*);
-    HRESULT GetPropertyItem(BSTR, int, VARIANT*);
-    HRESULT PutPropertyItem(VARIANT);
-    HRESULT ResetPropertyItem(VARIANT);
+    HRESULT Item(VARIANT varIndex, VARIANT* pVariant);
+    HRESULT GetPropertyItem(BSTR bstrName, int lnADsType, VARIANT* pVariant);
+    HRESULT PutPropertyItem(VARIANT varData);
+    HRESULT ResetPropertyItem(VARIANT varEntry);
     HRESULT PurgePropertyList();
 }
 enum IID_IADsPropertyEntry = GUID(0x5792c8e, 0x941f, 0x11d0, [0x85, 0x29, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 interface IADsPropertyEntry : IDispatch
 {
     HRESULT Clear();
-    HRESULT get_Name(BSTR*);
-    HRESULT put_Name(BSTR);
-    HRESULT get_ADsType(int*);
-    HRESULT put_ADsType(int);
-    HRESULT get_ControlCode(int*);
-    HRESULT put_ControlCode(int);
-    HRESULT get_Values(VARIANT*);
-    HRESULT put_Values(VARIANT);
+    HRESULT get_Name(BSTR* retval);
+    HRESULT put_Name(BSTR bstrName);
+    HRESULT get_ADsType(int* retval);
+    HRESULT put_ADsType(int lnADsType);
+    HRESULT get_ControlCode(int* retval);
+    HRESULT put_ControlCode(int lnControlCode);
+    HRESULT get_Values(VARIANT* retval);
+    HRESULT put_Values(VARIANT vValues);
 }
 enum CLSID_PropertyEntry = GUID(0x72d3edc2, 0xa4c4, 0x11d0, [0x85, 0x33, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 struct PropertyEntry
@@ -1603,36 +1603,36 @@ enum IID_IADsPropertyValue = GUID(0x79fa9ad0, 0xa97c, 0x11d0, [0x85, 0x34, 0x0, 
 interface IADsPropertyValue : IDispatch
 {
     HRESULT Clear();
-    HRESULT get_ADsType(int*);
-    HRESULT put_ADsType(int);
-    HRESULT get_DNString(BSTR*);
-    HRESULT put_DNString(BSTR);
-    HRESULT get_CaseExactString(BSTR*);
-    HRESULT put_CaseExactString(BSTR);
-    HRESULT get_CaseIgnoreString(BSTR*);
-    HRESULT put_CaseIgnoreString(BSTR);
-    HRESULT get_PrintableString(BSTR*);
-    HRESULT put_PrintableString(BSTR);
-    HRESULT get_NumericString(BSTR*);
-    HRESULT put_NumericString(BSTR);
-    HRESULT get_Boolean(int*);
-    HRESULT put_Boolean(int);
-    HRESULT get_Integer(int*);
-    HRESULT put_Integer(int);
-    HRESULT get_OctetString(VARIANT*);
-    HRESULT put_OctetString(VARIANT);
-    HRESULT get_SecurityDescriptor(IDispatch*);
-    HRESULT put_SecurityDescriptor(IDispatch);
-    HRESULT get_LargeInteger(IDispatch*);
-    HRESULT put_LargeInteger(IDispatch);
-    HRESULT get_UTCTime(double*);
-    HRESULT put_UTCTime(double);
+    HRESULT get_ADsType(int* retval);
+    HRESULT put_ADsType(int lnADsType);
+    HRESULT get_DNString(BSTR* retval);
+    HRESULT put_DNString(BSTR bstrDNString);
+    HRESULT get_CaseExactString(BSTR* retval);
+    HRESULT put_CaseExactString(BSTR bstrCaseExactString);
+    HRESULT get_CaseIgnoreString(BSTR* retval);
+    HRESULT put_CaseIgnoreString(BSTR bstrCaseIgnoreString);
+    HRESULT get_PrintableString(BSTR* retval);
+    HRESULT put_PrintableString(BSTR bstrPrintableString);
+    HRESULT get_NumericString(BSTR* retval);
+    HRESULT put_NumericString(BSTR bstrNumericString);
+    HRESULT get_Boolean(int* retval);
+    HRESULT put_Boolean(int lnBoolean);
+    HRESULT get_Integer(int* retval);
+    HRESULT put_Integer(int lnInteger);
+    HRESULT get_OctetString(VARIANT* retval);
+    HRESULT put_OctetString(VARIANT vOctetString);
+    HRESULT get_SecurityDescriptor(IDispatch* retval);
+    HRESULT put_SecurityDescriptor(IDispatch pSecurityDescriptor);
+    HRESULT get_LargeInteger(IDispatch* retval);
+    HRESULT put_LargeInteger(IDispatch pLargeInteger);
+    HRESULT get_UTCTime(double* retval);
+    HRESULT put_UTCTime(double daUTCTime);
 }
 enum IID_IADsPropertyValue2 = GUID(0x306e831c, 0x5bc7, 0x11d1, [0xa3, 0xb8, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsPropertyValue2 : IDispatch
 {
-    HRESULT GetObjectProperty(int*, VARIANT*);
-    HRESULT PutObjectProperty(int, VARIANT);
+    HRESULT GetObjectProperty(int* lnADsType, VARIANT* pvProp);
+    HRESULT PutObjectProperty(int lnADsType, VARIANT vProp);
 }
 enum CLSID_PropertyValue = GUID(0x7b9e38b0, 0xa97c, 0x11d0, [0x85, 0x34, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 struct PropertyValue
@@ -1641,340 +1641,340 @@ struct PropertyValue
 enum IID_IPrivateDispatch = GUID(0x86ab4bbe, 0x65f6, 0x11d1, [0x8c, 0x13, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 interface IPrivateDispatch : IUnknown
 {
-    HRESULT ADSIInitializeDispatchManager(int);
-    HRESULT ADSIGetTypeInfoCount(uint*);
-    HRESULT ADSIGetTypeInfo(uint, uint, ITypeInfo*);
-    HRESULT ADSIGetIDsOfNames(const(GUID)*, ushort**, uint, uint, int*);
-    HRESULT ADSIInvoke(int, const(GUID)*, uint, ushort, DISPPARAMS*, VARIANT*, EXCEPINFO*, uint*);
+    HRESULT ADSIInitializeDispatchManager(int dwExtensionId);
+    HRESULT ADSIGetTypeInfoCount(uint* pctinfo);
+    HRESULT ADSIGetTypeInfo(uint itinfo, uint lcid, ITypeInfo* pptinfo);
+    HRESULT ADSIGetIDsOfNames(const(GUID)* riid, ushort** rgszNames, uint cNames, uint lcid, int* rgdispid);
+    HRESULT ADSIInvoke(int dispidMember, const(GUID)* riid, uint lcid, ushort wFlags, DISPPARAMS* pdispparams, VARIANT* pvarResult, EXCEPINFO* pexcepinfo, uint* puArgErr);
 }
 enum IID_IPrivateUnknown = GUID(0x89126bab, 0x6ead, 0x11d1, [0x8c, 0x18, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 interface IPrivateUnknown : IUnknown
 {
-    HRESULT ADSIInitializeObject(BSTR, BSTR, int);
+    HRESULT ADSIInitializeObject(BSTR lpszUserName, BSTR lpszPassword, int lnReserved);
     HRESULT ADSIReleaseObject();
 }
 enum IID_IADsExtension = GUID(0x3d35553c, 0xd2b0, 0x11d1, [0xb1, 0x7b, 0x0, 0x0, 0xf8, 0x75, 0x93, 0xa0]);
 interface IADsExtension : IUnknown
 {
-    HRESULT Operate(uint, VARIANT, VARIANT, VARIANT);
-    HRESULT PrivateGetIDsOfNames(const(GUID)*, ushort**, uint, uint, int*);
-    HRESULT PrivateInvoke(int, const(GUID)*, uint, ushort, DISPPARAMS*, VARIANT*, EXCEPINFO*, uint*);
+    HRESULT Operate(uint dwCode, VARIANT varData1, VARIANT varData2, VARIANT varData3);
+    HRESULT PrivateGetIDsOfNames(const(GUID)* riid, ushort** rgszNames, uint cNames, uint lcid, int* rgDispid);
+    HRESULT PrivateInvoke(int dispidMember, const(GUID)* riid, uint lcid, ushort wFlags, DISPPARAMS* pdispparams, VARIANT* pvarResult, EXCEPINFO* pexcepinfo, uint* puArgErr);
 }
 enum IID_IADsDeleteOps = GUID(0xb2bd0902, 0x8878, 0x11d1, [0x8c, 0x21, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 interface IADsDeleteOps : IDispatch
 {
-    HRESULT DeleteObject(int);
+    HRESULT DeleteObject(int lnFlags);
 }
 enum IID_IADsNamespaces = GUID(0x28b96ba0, 0xb330, 0x11cf, [0xa9, 0xad, 0x0, 0xaa, 0x0, 0x6b, 0xc1, 0x49]);
 interface IADsNamespaces : IADs
 {
-    HRESULT get_DefaultContainer(BSTR*);
-    HRESULT put_DefaultContainer(BSTR);
+    HRESULT get_DefaultContainer(BSTR* retval);
+    HRESULT put_DefaultContainer(BSTR bstrDefaultContainer);
 }
 enum IID_IADsClass = GUID(0xc8f93dd0, 0x4ae0, 0x11cf, [0x9e, 0x73, 0x0, 0xaa, 0x0, 0x4a, 0x56, 0x91]);
 interface IADsClass : IADs
 {
-    HRESULT get_PrimaryInterface(BSTR*);
-    HRESULT get_CLSID(BSTR*);
-    HRESULT put_CLSID(BSTR);
-    HRESULT get_OID(BSTR*);
-    HRESULT put_OID(BSTR);
-    HRESULT get_Abstract(VARIANT_BOOL*);
-    HRESULT put_Abstract(VARIANT_BOOL);
-    HRESULT get_Auxiliary(VARIANT_BOOL*);
-    HRESULT put_Auxiliary(VARIANT_BOOL);
-    HRESULT get_MandatoryProperties(VARIANT*);
-    HRESULT put_MandatoryProperties(VARIANT);
-    HRESULT get_OptionalProperties(VARIANT*);
-    HRESULT put_OptionalProperties(VARIANT);
-    HRESULT get_NamingProperties(VARIANT*);
-    HRESULT put_NamingProperties(VARIANT);
-    HRESULT get_DerivedFrom(VARIANT*);
-    HRESULT put_DerivedFrom(VARIANT);
-    HRESULT get_AuxDerivedFrom(VARIANT*);
-    HRESULT put_AuxDerivedFrom(VARIANT);
-    HRESULT get_PossibleSuperiors(VARIANT*);
-    HRESULT put_PossibleSuperiors(VARIANT);
-    HRESULT get_Containment(VARIANT*);
-    HRESULT put_Containment(VARIANT);
-    HRESULT get_Container(VARIANT_BOOL*);
-    HRESULT put_Container(VARIANT_BOOL);
-    HRESULT get_HelpFileName(BSTR*);
-    HRESULT put_HelpFileName(BSTR);
-    HRESULT get_HelpFileContext(int*);
-    HRESULT put_HelpFileContext(int);
-    HRESULT Qualifiers(IADsCollection*);
+    HRESULT get_PrimaryInterface(BSTR* retval);
+    HRESULT get_CLSID(BSTR* retval);
+    HRESULT put_CLSID(BSTR bstrCLSID);
+    HRESULT get_OID(BSTR* retval);
+    HRESULT put_OID(BSTR bstrOID);
+    HRESULT get_Abstract(VARIANT_BOOL* retval);
+    HRESULT put_Abstract(VARIANT_BOOL fAbstract);
+    HRESULT get_Auxiliary(VARIANT_BOOL* retval);
+    HRESULT put_Auxiliary(VARIANT_BOOL fAuxiliary);
+    HRESULT get_MandatoryProperties(VARIANT* retval);
+    HRESULT put_MandatoryProperties(VARIANT vMandatoryProperties);
+    HRESULT get_OptionalProperties(VARIANT* retval);
+    HRESULT put_OptionalProperties(VARIANT vOptionalProperties);
+    HRESULT get_NamingProperties(VARIANT* retval);
+    HRESULT put_NamingProperties(VARIANT vNamingProperties);
+    HRESULT get_DerivedFrom(VARIANT* retval);
+    HRESULT put_DerivedFrom(VARIANT vDerivedFrom);
+    HRESULT get_AuxDerivedFrom(VARIANT* retval);
+    HRESULT put_AuxDerivedFrom(VARIANT vAuxDerivedFrom);
+    HRESULT get_PossibleSuperiors(VARIANT* retval);
+    HRESULT put_PossibleSuperiors(VARIANT vPossibleSuperiors);
+    HRESULT get_Containment(VARIANT* retval);
+    HRESULT put_Containment(VARIANT vContainment);
+    HRESULT get_Container(VARIANT_BOOL* retval);
+    HRESULT put_Container(VARIANT_BOOL fContainer);
+    HRESULT get_HelpFileName(BSTR* retval);
+    HRESULT put_HelpFileName(BSTR bstrHelpFileName);
+    HRESULT get_HelpFileContext(int* retval);
+    HRESULT put_HelpFileContext(int lnHelpFileContext);
+    HRESULT Qualifiers(IADsCollection* ppQualifiers);
 }
 enum IID_IADsProperty = GUID(0xc8f93dd3, 0x4ae0, 0x11cf, [0x9e, 0x73, 0x0, 0xaa, 0x0, 0x4a, 0x56, 0x91]);
 interface IADsProperty : IADs
 {
-    HRESULT get_OID(BSTR*);
-    HRESULT put_OID(BSTR);
-    HRESULT get_Syntax(BSTR*);
-    HRESULT put_Syntax(BSTR);
-    HRESULT get_MaxRange(int*);
-    HRESULT put_MaxRange(int);
-    HRESULT get_MinRange(int*);
-    HRESULT put_MinRange(int);
-    HRESULT get_MultiValued(VARIANT_BOOL*);
-    HRESULT put_MultiValued(VARIANT_BOOL);
-    HRESULT Qualifiers(IADsCollection*);
+    HRESULT get_OID(BSTR* retval);
+    HRESULT put_OID(BSTR bstrOID);
+    HRESULT get_Syntax(BSTR* retval);
+    HRESULT put_Syntax(BSTR bstrSyntax);
+    HRESULT get_MaxRange(int* retval);
+    HRESULT put_MaxRange(int lnMaxRange);
+    HRESULT get_MinRange(int* retval);
+    HRESULT put_MinRange(int lnMinRange);
+    HRESULT get_MultiValued(VARIANT_BOOL* retval);
+    HRESULT put_MultiValued(VARIANT_BOOL fMultiValued);
+    HRESULT Qualifiers(IADsCollection* ppQualifiers);
 }
 enum IID_IADsSyntax = GUID(0xc8f93dd2, 0x4ae0, 0x11cf, [0x9e, 0x73, 0x0, 0xaa, 0x0, 0x4a, 0x56, 0x91]);
 interface IADsSyntax : IADs
 {
-    HRESULT get_OleAutoDataType(int*);
-    HRESULT put_OleAutoDataType(int);
+    HRESULT get_OleAutoDataType(int* retval);
+    HRESULT put_OleAutoDataType(int lnOleAutoDataType);
 }
 enum IID_IADsLocality = GUID(0xa05e03a2, 0xeffe, 0x11cf, [0x8a, 0xbc, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 interface IADsLocality : IADs
 {
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
-    HRESULT get_LocalityName(BSTR*);
-    HRESULT put_LocalityName(BSTR);
-    HRESULT get_PostalAddress(BSTR*);
-    HRESULT put_PostalAddress(BSTR);
-    HRESULT get_SeeAlso(VARIANT*);
-    HRESULT put_SeeAlso(VARIANT);
+    HRESULT get_Description(BSTR* retval);
+    HRESULT put_Description(BSTR bstrDescription);
+    HRESULT get_LocalityName(BSTR* retval);
+    HRESULT put_LocalityName(BSTR bstrLocalityName);
+    HRESULT get_PostalAddress(BSTR* retval);
+    HRESULT put_PostalAddress(BSTR bstrPostalAddress);
+    HRESULT get_SeeAlso(VARIANT* retval);
+    HRESULT put_SeeAlso(VARIANT vSeeAlso);
 }
 enum IID_IADsO = GUID(0xa1cd2dc6, 0xeffe, 0x11cf, [0x8a, 0xbc, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 interface IADsO : IADs
 {
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
-    HRESULT get_LocalityName(BSTR*);
-    HRESULT put_LocalityName(BSTR);
-    HRESULT get_PostalAddress(BSTR*);
-    HRESULT put_PostalAddress(BSTR);
-    HRESULT get_TelephoneNumber(BSTR*);
-    HRESULT put_TelephoneNumber(BSTR);
-    HRESULT get_FaxNumber(BSTR*);
-    HRESULT put_FaxNumber(BSTR);
-    HRESULT get_SeeAlso(VARIANT*);
-    HRESULT put_SeeAlso(VARIANT);
+    HRESULT get_Description(BSTR* retval);
+    HRESULT put_Description(BSTR bstrDescription);
+    HRESULT get_LocalityName(BSTR* retval);
+    HRESULT put_LocalityName(BSTR bstrLocalityName);
+    HRESULT get_PostalAddress(BSTR* retval);
+    HRESULT put_PostalAddress(BSTR bstrPostalAddress);
+    HRESULT get_TelephoneNumber(BSTR* retval);
+    HRESULT put_TelephoneNumber(BSTR bstrTelephoneNumber);
+    HRESULT get_FaxNumber(BSTR* retval);
+    HRESULT put_FaxNumber(BSTR bstrFaxNumber);
+    HRESULT get_SeeAlso(VARIANT* retval);
+    HRESULT put_SeeAlso(VARIANT vSeeAlso);
 }
 enum IID_IADsOU = GUID(0xa2f733b8, 0xeffe, 0x11cf, [0x8a, 0xbc, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 interface IADsOU : IADs
 {
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
-    HRESULT get_LocalityName(BSTR*);
-    HRESULT put_LocalityName(BSTR);
-    HRESULT get_PostalAddress(BSTR*);
-    HRESULT put_PostalAddress(BSTR);
-    HRESULT get_TelephoneNumber(BSTR*);
-    HRESULT put_TelephoneNumber(BSTR);
-    HRESULT get_FaxNumber(BSTR*);
-    HRESULT put_FaxNumber(BSTR);
-    HRESULT get_SeeAlso(VARIANT*);
-    HRESULT put_SeeAlso(VARIANT);
-    HRESULT get_BusinessCategory(BSTR*);
-    HRESULT put_BusinessCategory(BSTR);
+    HRESULT get_Description(BSTR* retval);
+    HRESULT put_Description(BSTR bstrDescription);
+    HRESULT get_LocalityName(BSTR* retval);
+    HRESULT put_LocalityName(BSTR bstrLocalityName);
+    HRESULT get_PostalAddress(BSTR* retval);
+    HRESULT put_PostalAddress(BSTR bstrPostalAddress);
+    HRESULT get_TelephoneNumber(BSTR* retval);
+    HRESULT put_TelephoneNumber(BSTR bstrTelephoneNumber);
+    HRESULT get_FaxNumber(BSTR* retval);
+    HRESULT put_FaxNumber(BSTR bstrFaxNumber);
+    HRESULT get_SeeAlso(VARIANT* retval);
+    HRESULT put_SeeAlso(VARIANT vSeeAlso);
+    HRESULT get_BusinessCategory(BSTR* retval);
+    HRESULT put_BusinessCategory(BSTR bstrBusinessCategory);
 }
 enum IID_IADsDomain = GUID(0xe4c220, 0xfd16, 0x11ce, [0xab, 0xc4, 0x2, 0x60, 0x8c, 0x9e, 0x75, 0x53]);
 interface IADsDomain : IADs
 {
-    HRESULT get_IsWorkgroup(VARIANT_BOOL*);
-    HRESULT get_MinPasswordLength(int*);
-    HRESULT put_MinPasswordLength(int);
-    HRESULT get_MinPasswordAge(int*);
-    HRESULT put_MinPasswordAge(int);
-    HRESULT get_MaxPasswordAge(int*);
-    HRESULT put_MaxPasswordAge(int);
-    HRESULT get_MaxBadPasswordsAllowed(int*);
-    HRESULT put_MaxBadPasswordsAllowed(int);
-    HRESULT get_PasswordHistoryLength(int*);
-    HRESULT put_PasswordHistoryLength(int);
-    HRESULT get_PasswordAttributes(int*);
-    HRESULT put_PasswordAttributes(int);
-    HRESULT get_AutoUnlockInterval(int*);
-    HRESULT put_AutoUnlockInterval(int);
-    HRESULT get_LockoutObservationInterval(int*);
-    HRESULT put_LockoutObservationInterval(int);
+    HRESULT get_IsWorkgroup(VARIANT_BOOL* retval);
+    HRESULT get_MinPasswordLength(int* retval);
+    HRESULT put_MinPasswordLength(int lnMinPasswordLength);
+    HRESULT get_MinPasswordAge(int* retval);
+    HRESULT put_MinPasswordAge(int lnMinPasswordAge);
+    HRESULT get_MaxPasswordAge(int* retval);
+    HRESULT put_MaxPasswordAge(int lnMaxPasswordAge);
+    HRESULT get_MaxBadPasswordsAllowed(int* retval);
+    HRESULT put_MaxBadPasswordsAllowed(int lnMaxBadPasswordsAllowed);
+    HRESULT get_PasswordHistoryLength(int* retval);
+    HRESULT put_PasswordHistoryLength(int lnPasswordHistoryLength);
+    HRESULT get_PasswordAttributes(int* retval);
+    HRESULT put_PasswordAttributes(int lnPasswordAttributes);
+    HRESULT get_AutoUnlockInterval(int* retval);
+    HRESULT put_AutoUnlockInterval(int lnAutoUnlockInterval);
+    HRESULT get_LockoutObservationInterval(int* retval);
+    HRESULT put_LockoutObservationInterval(int lnLockoutObservationInterval);
 }
 enum IID_IADsComputer = GUID(0xefe3cc70, 0x1d9f, 0x11cf, [0xb1, 0xf3, 0x2, 0x60, 0x8c, 0x9e, 0x75, 0x53]);
 interface IADsComputer : IADs
 {
-    HRESULT get_ComputerID(BSTR*);
-    HRESULT get_Site(BSTR*);
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
-    HRESULT get_Location(BSTR*);
-    HRESULT put_Location(BSTR);
-    HRESULT get_PrimaryUser(BSTR*);
-    HRESULT put_PrimaryUser(BSTR);
-    HRESULT get_Owner(BSTR*);
-    HRESULT put_Owner(BSTR);
-    HRESULT get_Division(BSTR*);
-    HRESULT put_Division(BSTR);
-    HRESULT get_Department(BSTR*);
-    HRESULT put_Department(BSTR);
-    HRESULT get_Role(BSTR*);
-    HRESULT put_Role(BSTR);
-    HRESULT get_OperatingSystem(BSTR*);
-    HRESULT put_OperatingSystem(BSTR);
-    HRESULT get_OperatingSystemVersion(BSTR*);
-    HRESULT put_OperatingSystemVersion(BSTR);
-    HRESULT get_Model(BSTR*);
-    HRESULT put_Model(BSTR);
-    HRESULT get_Processor(BSTR*);
-    HRESULT put_Processor(BSTR);
-    HRESULT get_ProcessorCount(BSTR*);
-    HRESULT put_ProcessorCount(BSTR);
-    HRESULT get_MemorySize(BSTR*);
-    HRESULT put_MemorySize(BSTR);
-    HRESULT get_StorageCapacity(BSTR*);
-    HRESULT put_StorageCapacity(BSTR);
-    HRESULT get_NetAddresses(VARIANT*);
-    HRESULT put_NetAddresses(VARIANT);
+    HRESULT get_ComputerID(BSTR* retval);
+    HRESULT get_Site(BSTR* retval);
+    HRESULT get_Description(BSTR* retval);
+    HRESULT put_Description(BSTR bstrDescription);
+    HRESULT get_Location(BSTR* retval);
+    HRESULT put_Location(BSTR bstrLocation);
+    HRESULT get_PrimaryUser(BSTR* retval);
+    HRESULT put_PrimaryUser(BSTR bstrPrimaryUser);
+    HRESULT get_Owner(BSTR* retval);
+    HRESULT put_Owner(BSTR bstrOwner);
+    HRESULT get_Division(BSTR* retval);
+    HRESULT put_Division(BSTR bstrDivision);
+    HRESULT get_Department(BSTR* retval);
+    HRESULT put_Department(BSTR bstrDepartment);
+    HRESULT get_Role(BSTR* retval);
+    HRESULT put_Role(BSTR bstrRole);
+    HRESULT get_OperatingSystem(BSTR* retval);
+    HRESULT put_OperatingSystem(BSTR bstrOperatingSystem);
+    HRESULT get_OperatingSystemVersion(BSTR* retval);
+    HRESULT put_OperatingSystemVersion(BSTR bstrOperatingSystemVersion);
+    HRESULT get_Model(BSTR* retval);
+    HRESULT put_Model(BSTR bstrModel);
+    HRESULT get_Processor(BSTR* retval);
+    HRESULT put_Processor(BSTR bstrProcessor);
+    HRESULT get_ProcessorCount(BSTR* retval);
+    HRESULT put_ProcessorCount(BSTR bstrProcessorCount);
+    HRESULT get_MemorySize(BSTR* retval);
+    HRESULT put_MemorySize(BSTR bstrMemorySize);
+    HRESULT get_StorageCapacity(BSTR* retval);
+    HRESULT put_StorageCapacity(BSTR bstrStorageCapacity);
+    HRESULT get_NetAddresses(VARIANT* retval);
+    HRESULT put_NetAddresses(VARIANT vNetAddresses);
 }
 enum IID_IADsComputerOperations = GUID(0xef497680, 0x1d9f, 0x11cf, [0xb1, 0xf3, 0x2, 0x60, 0x8c, 0x9e, 0x75, 0x53]);
 interface IADsComputerOperations : IADs
 {
-    HRESULT Status(IDispatch*);
-    HRESULT Shutdown(VARIANT_BOOL);
+    HRESULT Status(IDispatch* ppObject);
+    HRESULT Shutdown(VARIANT_BOOL bReboot);
 }
 enum IID_IADsGroup = GUID(0x27636b00, 0x410f, 0x11cf, [0xb1, 0xff, 0x2, 0x60, 0x8c, 0x9e, 0x75, 0x53]);
 interface IADsGroup : IADs
 {
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
-    HRESULT Members(IADsMembers*);
-    HRESULT IsMember(BSTR, VARIANT_BOOL*);
-    HRESULT Add(BSTR);
-    HRESULT Remove(BSTR);
+    HRESULT get_Description(BSTR* retval);
+    HRESULT put_Description(BSTR bstrDescription);
+    HRESULT Members(IADsMembers* ppMembers);
+    HRESULT IsMember(BSTR bstrMember, VARIANT_BOOL* bMember);
+    HRESULT Add(BSTR bstrNewItem);
+    HRESULT Remove(BSTR bstrItemToBeRemoved);
 }
 enum IID_IADsUser = GUID(0x3e37e320, 0x17e2, 0x11cf, [0xab, 0xc4, 0x2, 0x60, 0x8c, 0x9e, 0x75, 0x53]);
 interface IADsUser : IADs
 {
-    HRESULT get_BadLoginAddress(BSTR*);
-    HRESULT get_BadLoginCount(int*);
-    HRESULT get_LastLogin(double*);
-    HRESULT get_LastLogoff(double*);
-    HRESULT get_LastFailedLogin(double*);
-    HRESULT get_PasswordLastChanged(double*);
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
-    HRESULT get_Division(BSTR*);
-    HRESULT put_Division(BSTR);
-    HRESULT get_Department(BSTR*);
-    HRESULT put_Department(BSTR);
-    HRESULT get_EmployeeID(BSTR*);
-    HRESULT put_EmployeeID(BSTR);
-    HRESULT get_FullName(BSTR*);
-    HRESULT put_FullName(BSTR);
-    HRESULT get_FirstName(BSTR*);
-    HRESULT put_FirstName(BSTR);
-    HRESULT get_LastName(BSTR*);
-    HRESULT put_LastName(BSTR);
-    HRESULT get_OtherName(BSTR*);
-    HRESULT put_OtherName(BSTR);
-    HRESULT get_NamePrefix(BSTR*);
-    HRESULT put_NamePrefix(BSTR);
-    HRESULT get_NameSuffix(BSTR*);
-    HRESULT put_NameSuffix(BSTR);
-    HRESULT get_Title(BSTR*);
-    HRESULT put_Title(BSTR);
-    HRESULT get_Manager(BSTR*);
-    HRESULT put_Manager(BSTR);
-    HRESULT get_TelephoneHome(VARIANT*);
-    HRESULT put_TelephoneHome(VARIANT);
-    HRESULT get_TelephoneMobile(VARIANT*);
-    HRESULT put_TelephoneMobile(VARIANT);
-    HRESULT get_TelephoneNumber(VARIANT*);
-    HRESULT put_TelephoneNumber(VARIANT);
-    HRESULT get_TelephonePager(VARIANT*);
-    HRESULT put_TelephonePager(VARIANT);
-    HRESULT get_FaxNumber(VARIANT*);
-    HRESULT put_FaxNumber(VARIANT);
-    HRESULT get_OfficeLocations(VARIANT*);
-    HRESULT put_OfficeLocations(VARIANT);
-    HRESULT get_PostalAddresses(VARIANT*);
-    HRESULT put_PostalAddresses(VARIANT);
-    HRESULT get_PostalCodes(VARIANT*);
-    HRESULT put_PostalCodes(VARIANT);
-    HRESULT get_SeeAlso(VARIANT*);
-    HRESULT put_SeeAlso(VARIANT);
-    HRESULT get_AccountDisabled(VARIANT_BOOL*);
-    HRESULT put_AccountDisabled(VARIANT_BOOL);
-    HRESULT get_AccountExpirationDate(double*);
-    HRESULT put_AccountExpirationDate(double);
-    HRESULT get_GraceLoginsAllowed(int*);
-    HRESULT put_GraceLoginsAllowed(int);
-    HRESULT get_GraceLoginsRemaining(int*);
-    HRESULT put_GraceLoginsRemaining(int);
-    HRESULT get_IsAccountLocked(VARIANT_BOOL*);
-    HRESULT put_IsAccountLocked(VARIANT_BOOL);
-    HRESULT get_LoginHours(VARIANT*);
-    HRESULT put_LoginHours(VARIANT);
-    HRESULT get_LoginWorkstations(VARIANT*);
-    HRESULT put_LoginWorkstations(VARIANT);
-    HRESULT get_MaxLogins(int*);
-    HRESULT put_MaxLogins(int);
-    HRESULT get_MaxStorage(int*);
-    HRESULT put_MaxStorage(int);
-    HRESULT get_PasswordExpirationDate(double*);
-    HRESULT put_PasswordExpirationDate(double);
-    HRESULT get_PasswordMinimumLength(int*);
-    HRESULT put_PasswordMinimumLength(int);
-    HRESULT get_PasswordRequired(VARIANT_BOOL*);
-    HRESULT put_PasswordRequired(VARIANT_BOOL);
-    HRESULT get_RequireUniquePassword(VARIANT_BOOL*);
-    HRESULT put_RequireUniquePassword(VARIANT_BOOL);
-    HRESULT get_EmailAddress(BSTR*);
-    HRESULT put_EmailAddress(BSTR);
-    HRESULT get_HomeDirectory(BSTR*);
-    HRESULT put_HomeDirectory(BSTR);
-    HRESULT get_Languages(VARIANT*);
-    HRESULT put_Languages(VARIANT);
-    HRESULT get_Profile(BSTR*);
-    HRESULT put_Profile(BSTR);
-    HRESULT get_LoginScript(BSTR*);
-    HRESULT put_LoginScript(BSTR);
-    HRESULT get_Picture(VARIANT*);
-    HRESULT put_Picture(VARIANT);
-    HRESULT get_HomePage(BSTR*);
-    HRESULT put_HomePage(BSTR);
-    HRESULT Groups(IADsMembers*);
-    HRESULT SetPassword(BSTR);
-    HRESULT ChangePassword(BSTR, BSTR);
+    HRESULT get_BadLoginAddress(BSTR* retval);
+    HRESULT get_BadLoginCount(int* retval);
+    HRESULT get_LastLogin(double* retval);
+    HRESULT get_LastLogoff(double* retval);
+    HRESULT get_LastFailedLogin(double* retval);
+    HRESULT get_PasswordLastChanged(double* retval);
+    HRESULT get_Description(BSTR* retval);
+    HRESULT put_Description(BSTR bstrDescription);
+    HRESULT get_Division(BSTR* retval);
+    HRESULT put_Division(BSTR bstrDivision);
+    HRESULT get_Department(BSTR* retval);
+    HRESULT put_Department(BSTR bstrDepartment);
+    HRESULT get_EmployeeID(BSTR* retval);
+    HRESULT put_EmployeeID(BSTR bstrEmployeeID);
+    HRESULT get_FullName(BSTR* retval);
+    HRESULT put_FullName(BSTR bstrFullName);
+    HRESULT get_FirstName(BSTR* retval);
+    HRESULT put_FirstName(BSTR bstrFirstName);
+    HRESULT get_LastName(BSTR* retval);
+    HRESULT put_LastName(BSTR bstrLastName);
+    HRESULT get_OtherName(BSTR* retval);
+    HRESULT put_OtherName(BSTR bstrOtherName);
+    HRESULT get_NamePrefix(BSTR* retval);
+    HRESULT put_NamePrefix(BSTR bstrNamePrefix);
+    HRESULT get_NameSuffix(BSTR* retval);
+    HRESULT put_NameSuffix(BSTR bstrNameSuffix);
+    HRESULT get_Title(BSTR* retval);
+    HRESULT put_Title(BSTR bstrTitle);
+    HRESULT get_Manager(BSTR* retval);
+    HRESULT put_Manager(BSTR bstrManager);
+    HRESULT get_TelephoneHome(VARIANT* retval);
+    HRESULT put_TelephoneHome(VARIANT vTelephoneHome);
+    HRESULT get_TelephoneMobile(VARIANT* retval);
+    HRESULT put_TelephoneMobile(VARIANT vTelephoneMobile);
+    HRESULT get_TelephoneNumber(VARIANT* retval);
+    HRESULT put_TelephoneNumber(VARIANT vTelephoneNumber);
+    HRESULT get_TelephonePager(VARIANT* retval);
+    HRESULT put_TelephonePager(VARIANT vTelephonePager);
+    HRESULT get_FaxNumber(VARIANT* retval);
+    HRESULT put_FaxNumber(VARIANT vFaxNumber);
+    HRESULT get_OfficeLocations(VARIANT* retval);
+    HRESULT put_OfficeLocations(VARIANT vOfficeLocations);
+    HRESULT get_PostalAddresses(VARIANT* retval);
+    HRESULT put_PostalAddresses(VARIANT vPostalAddresses);
+    HRESULT get_PostalCodes(VARIANT* retval);
+    HRESULT put_PostalCodes(VARIANT vPostalCodes);
+    HRESULT get_SeeAlso(VARIANT* retval);
+    HRESULT put_SeeAlso(VARIANT vSeeAlso);
+    HRESULT get_AccountDisabled(VARIANT_BOOL* retval);
+    HRESULT put_AccountDisabled(VARIANT_BOOL fAccountDisabled);
+    HRESULT get_AccountExpirationDate(double* retval);
+    HRESULT put_AccountExpirationDate(double daAccountExpirationDate);
+    HRESULT get_GraceLoginsAllowed(int* retval);
+    HRESULT put_GraceLoginsAllowed(int lnGraceLoginsAllowed);
+    HRESULT get_GraceLoginsRemaining(int* retval);
+    HRESULT put_GraceLoginsRemaining(int lnGraceLoginsRemaining);
+    HRESULT get_IsAccountLocked(VARIANT_BOOL* retval);
+    HRESULT put_IsAccountLocked(VARIANT_BOOL fIsAccountLocked);
+    HRESULT get_LoginHours(VARIANT* retval);
+    HRESULT put_LoginHours(VARIANT vLoginHours);
+    HRESULT get_LoginWorkstations(VARIANT* retval);
+    HRESULT put_LoginWorkstations(VARIANT vLoginWorkstations);
+    HRESULT get_MaxLogins(int* retval);
+    HRESULT put_MaxLogins(int lnMaxLogins);
+    HRESULT get_MaxStorage(int* retval);
+    HRESULT put_MaxStorage(int lnMaxStorage);
+    HRESULT get_PasswordExpirationDate(double* retval);
+    HRESULT put_PasswordExpirationDate(double daPasswordExpirationDate);
+    HRESULT get_PasswordMinimumLength(int* retval);
+    HRESULT put_PasswordMinimumLength(int lnPasswordMinimumLength);
+    HRESULT get_PasswordRequired(VARIANT_BOOL* retval);
+    HRESULT put_PasswordRequired(VARIANT_BOOL fPasswordRequired);
+    HRESULT get_RequireUniquePassword(VARIANT_BOOL* retval);
+    HRESULT put_RequireUniquePassword(VARIANT_BOOL fRequireUniquePassword);
+    HRESULT get_EmailAddress(BSTR* retval);
+    HRESULT put_EmailAddress(BSTR bstrEmailAddress);
+    HRESULT get_HomeDirectory(BSTR* retval);
+    HRESULT put_HomeDirectory(BSTR bstrHomeDirectory);
+    HRESULT get_Languages(VARIANT* retval);
+    HRESULT put_Languages(VARIANT vLanguages);
+    HRESULT get_Profile(BSTR* retval);
+    HRESULT put_Profile(BSTR bstrProfile);
+    HRESULT get_LoginScript(BSTR* retval);
+    HRESULT put_LoginScript(BSTR bstrLoginScript);
+    HRESULT get_Picture(VARIANT* retval);
+    HRESULT put_Picture(VARIANT vPicture);
+    HRESULT get_HomePage(BSTR* retval);
+    HRESULT put_HomePage(BSTR bstrHomePage);
+    HRESULT Groups(IADsMembers* ppGroups);
+    HRESULT SetPassword(BSTR NewPassword);
+    HRESULT ChangePassword(BSTR bstrOldPassword, BSTR bstrNewPassword);
 }
 enum IID_IADsPrintQueue = GUID(0xb15160d0, 0x1226, 0x11cf, [0xa9, 0x85, 0x0, 0xaa, 0x0, 0x6b, 0xc1, 0x49]);
 interface IADsPrintQueue : IADs
 {
-    HRESULT get_PrinterPath(BSTR*);
-    HRESULT put_PrinterPath(BSTR);
-    HRESULT get_Model(BSTR*);
-    HRESULT put_Model(BSTR);
-    HRESULT get_Datatype(BSTR*);
-    HRESULT put_Datatype(BSTR);
-    HRESULT get_PrintProcessor(BSTR*);
-    HRESULT put_PrintProcessor(BSTR);
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
-    HRESULT get_Location(BSTR*);
-    HRESULT put_Location(BSTR);
-    HRESULT get_StartTime(double*);
-    HRESULT put_StartTime(double);
-    HRESULT get_UntilTime(double*);
-    HRESULT put_UntilTime(double);
-    HRESULT get_DefaultJobPriority(int*);
-    HRESULT put_DefaultJobPriority(int);
-    HRESULT get_Priority(int*);
-    HRESULT put_Priority(int);
-    HRESULT get_BannerPage(BSTR*);
-    HRESULT put_BannerPage(BSTR);
-    HRESULT get_PrintDevices(VARIANT*);
-    HRESULT put_PrintDevices(VARIANT);
-    HRESULT get_NetAddresses(VARIANT*);
-    HRESULT put_NetAddresses(VARIANT);
+    HRESULT get_PrinterPath(BSTR* retval);
+    HRESULT put_PrinterPath(BSTR bstrPrinterPath);
+    HRESULT get_Model(BSTR* retval);
+    HRESULT put_Model(BSTR bstrModel);
+    HRESULT get_Datatype(BSTR* retval);
+    HRESULT put_Datatype(BSTR bstrDatatype);
+    HRESULT get_PrintProcessor(BSTR* retval);
+    HRESULT put_PrintProcessor(BSTR bstrPrintProcessor);
+    HRESULT get_Description(BSTR* retval);
+    HRESULT put_Description(BSTR bstrDescription);
+    HRESULT get_Location(BSTR* retval);
+    HRESULT put_Location(BSTR bstrLocation);
+    HRESULT get_StartTime(double* retval);
+    HRESULT put_StartTime(double daStartTime);
+    HRESULT get_UntilTime(double* retval);
+    HRESULT put_UntilTime(double daUntilTime);
+    HRESULT get_DefaultJobPriority(int* retval);
+    HRESULT put_DefaultJobPriority(int lnDefaultJobPriority);
+    HRESULT get_Priority(int* retval);
+    HRESULT put_Priority(int lnPriority);
+    HRESULT get_BannerPage(BSTR* retval);
+    HRESULT put_BannerPage(BSTR bstrBannerPage);
+    HRESULT get_PrintDevices(VARIANT* retval);
+    HRESULT put_PrintDevices(VARIANT vPrintDevices);
+    HRESULT get_NetAddresses(VARIANT* retval);
+    HRESULT put_NetAddresses(VARIANT vNetAddresses);
 }
 enum IID_IADsPrintQueueOperations = GUID(0x124be5c0, 0x156e, 0x11cf, [0xa9, 0x86, 0x0, 0xaa, 0x0, 0x6b, 0xc1, 0x49]);
 interface IADsPrintQueueOperations : IADs
 {
-    HRESULT get_Status(int*);
-    HRESULT PrintJobs(IADsCollection*);
+    HRESULT get_Status(int* retval);
+    HRESULT PrintJobs(IADsCollection* pObject);
     HRESULT Pause();
     HRESULT Resume();
     HRESULT Purge();
@@ -1982,190 +1982,190 @@ interface IADsPrintQueueOperations : IADs
 enum IID_IADsPrintJob = GUID(0x32fb6780, 0x1ed0, 0x11cf, [0xa9, 0x88, 0x0, 0xaa, 0x0, 0x6b, 0xc1, 0x49]);
 interface IADsPrintJob : IADs
 {
-    HRESULT get_HostPrintQueue(BSTR*);
-    HRESULT get_User(BSTR*);
-    HRESULT get_UserPath(BSTR*);
-    HRESULT get_TimeSubmitted(double*);
-    HRESULT get_TotalPages(int*);
-    HRESULT get_Size(int*);
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
-    HRESULT get_Priority(int*);
-    HRESULT put_Priority(int);
-    HRESULT get_StartTime(double*);
-    HRESULT put_StartTime(double);
-    HRESULT get_UntilTime(double*);
-    HRESULT put_UntilTime(double);
-    HRESULT get_Notify(BSTR*);
-    HRESULT put_Notify(BSTR);
-    HRESULT get_NotifyPath(BSTR*);
-    HRESULT put_NotifyPath(BSTR);
+    HRESULT get_HostPrintQueue(BSTR* retval);
+    HRESULT get_User(BSTR* retval);
+    HRESULT get_UserPath(BSTR* retval);
+    HRESULT get_TimeSubmitted(double* retval);
+    HRESULT get_TotalPages(int* retval);
+    HRESULT get_Size(int* retval);
+    HRESULT get_Description(BSTR* retval);
+    HRESULT put_Description(BSTR bstrDescription);
+    HRESULT get_Priority(int* retval);
+    HRESULT put_Priority(int lnPriority);
+    HRESULT get_StartTime(double* retval);
+    HRESULT put_StartTime(double daStartTime);
+    HRESULT get_UntilTime(double* retval);
+    HRESULT put_UntilTime(double daUntilTime);
+    HRESULT get_Notify(BSTR* retval);
+    HRESULT put_Notify(BSTR bstrNotify);
+    HRESULT get_NotifyPath(BSTR* retval);
+    HRESULT put_NotifyPath(BSTR bstrNotifyPath);
 }
 enum IID_IADsPrintJobOperations = GUID(0x9a52db30, 0x1ecf, 0x11cf, [0xa9, 0x88, 0x0, 0xaa, 0x0, 0x6b, 0xc1, 0x49]);
 interface IADsPrintJobOperations : IADs
 {
-    HRESULT get_Status(int*);
-    HRESULT get_TimeElapsed(int*);
-    HRESULT get_PagesPrinted(int*);
-    HRESULT get_Position(int*);
-    HRESULT put_Position(int);
+    HRESULT get_Status(int* retval);
+    HRESULT get_TimeElapsed(int* retval);
+    HRESULT get_PagesPrinted(int* retval);
+    HRESULT get_Position(int* retval);
+    HRESULT put_Position(int lnPosition);
     HRESULT Pause();
     HRESULT Resume();
 }
 enum IID_IADsService = GUID(0x68af66e0, 0x31ca, 0x11cf, [0xa9, 0x8a, 0x0, 0xaa, 0x0, 0x6b, 0xc1, 0x49]);
 interface IADsService : IADs
 {
-    HRESULT get_HostComputer(BSTR*);
-    HRESULT put_HostComputer(BSTR);
-    HRESULT get_DisplayName(BSTR*);
-    HRESULT put_DisplayName(BSTR);
-    HRESULT get_Version(BSTR*);
-    HRESULT put_Version(BSTR);
-    HRESULT get_ServiceType(int*);
-    HRESULT put_ServiceType(int);
-    HRESULT get_StartType(int*);
-    HRESULT put_StartType(int);
-    HRESULT get_Path(BSTR*);
-    HRESULT put_Path(BSTR);
-    HRESULT get_StartupParameters(BSTR*);
-    HRESULT put_StartupParameters(BSTR);
-    HRESULT get_ErrorControl(int*);
-    HRESULT put_ErrorControl(int);
-    HRESULT get_LoadOrderGroup(BSTR*);
-    HRESULT put_LoadOrderGroup(BSTR);
-    HRESULT get_ServiceAccountName(BSTR*);
-    HRESULT put_ServiceAccountName(BSTR);
-    HRESULT get_ServiceAccountPath(BSTR*);
-    HRESULT put_ServiceAccountPath(BSTR);
-    HRESULT get_Dependencies(VARIANT*);
-    HRESULT put_Dependencies(VARIANT);
+    HRESULT get_HostComputer(BSTR* retval);
+    HRESULT put_HostComputer(BSTR bstrHostComputer);
+    HRESULT get_DisplayName(BSTR* retval);
+    HRESULT put_DisplayName(BSTR bstrDisplayName);
+    HRESULT get_Version(BSTR* retval);
+    HRESULT put_Version(BSTR bstrVersion);
+    HRESULT get_ServiceType(int* retval);
+    HRESULT put_ServiceType(int lnServiceType);
+    HRESULT get_StartType(int* retval);
+    HRESULT put_StartType(int lnStartType);
+    HRESULT get_Path(BSTR* retval);
+    HRESULT put_Path(BSTR bstrPath);
+    HRESULT get_StartupParameters(BSTR* retval);
+    HRESULT put_StartupParameters(BSTR bstrStartupParameters);
+    HRESULT get_ErrorControl(int* retval);
+    HRESULT put_ErrorControl(int lnErrorControl);
+    HRESULT get_LoadOrderGroup(BSTR* retval);
+    HRESULT put_LoadOrderGroup(BSTR bstrLoadOrderGroup);
+    HRESULT get_ServiceAccountName(BSTR* retval);
+    HRESULT put_ServiceAccountName(BSTR bstrServiceAccountName);
+    HRESULT get_ServiceAccountPath(BSTR* retval);
+    HRESULT put_ServiceAccountPath(BSTR bstrServiceAccountPath);
+    HRESULT get_Dependencies(VARIANT* retval);
+    HRESULT put_Dependencies(VARIANT vDependencies);
 }
 enum IID_IADsServiceOperations = GUID(0x5d7b33f0, 0x31ca, 0x11cf, [0xa9, 0x8a, 0x0, 0xaa, 0x0, 0x6b, 0xc1, 0x49]);
 interface IADsServiceOperations : IADs
 {
-    HRESULT get_Status(int*);
+    HRESULT get_Status(int* retval);
     HRESULT Start();
     HRESULT Stop();
     HRESULT Pause();
     HRESULT Continue();
-    HRESULT SetPassword(BSTR);
+    HRESULT SetPassword(BSTR bstrNewPassword);
 }
 enum IID_IADsFileService = GUID(0xa89d1900, 0x31ca, 0x11cf, [0xa9, 0x8a, 0x0, 0xaa, 0x0, 0x6b, 0xc1, 0x49]);
 interface IADsFileService : IADsService
 {
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
-    HRESULT get_MaxUserCount(int*);
-    HRESULT put_MaxUserCount(int);
+    HRESULT get_Description(BSTR* retval);
+    HRESULT put_Description(BSTR bstrDescription);
+    HRESULT get_MaxUserCount(int* retval);
+    HRESULT put_MaxUserCount(int lnMaxUserCount);
 }
 enum IID_IADsFileServiceOperations = GUID(0xa02ded10, 0x31ca, 0x11cf, [0xa9, 0x8a, 0x0, 0xaa, 0x0, 0x6b, 0xc1, 0x49]);
 interface IADsFileServiceOperations : IADsServiceOperations
 {
-    HRESULT Sessions(IADsCollection*);
-    HRESULT Resources(IADsCollection*);
+    HRESULT Sessions(IADsCollection* ppSessions);
+    HRESULT Resources(IADsCollection* ppResources);
 }
 enum IID_IADsFileShare = GUID(0xeb6dcaf0, 0x4b83, 0x11cf, [0xa9, 0x95, 0x0, 0xaa, 0x0, 0x6b, 0xc1, 0x49]);
 interface IADsFileShare : IADs
 {
-    HRESULT get_CurrentUserCount(int*);
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
-    HRESULT get_HostComputer(BSTR*);
-    HRESULT put_HostComputer(BSTR);
-    HRESULT get_Path(BSTR*);
-    HRESULT put_Path(BSTR);
-    HRESULT get_MaxUserCount(int*);
-    HRESULT put_MaxUserCount(int);
+    HRESULT get_CurrentUserCount(int* retval);
+    HRESULT get_Description(BSTR* retval);
+    HRESULT put_Description(BSTR bstrDescription);
+    HRESULT get_HostComputer(BSTR* retval);
+    HRESULT put_HostComputer(BSTR bstrHostComputer);
+    HRESULT get_Path(BSTR* retval);
+    HRESULT put_Path(BSTR bstrPath);
+    HRESULT get_MaxUserCount(int* retval);
+    HRESULT put_MaxUserCount(int lnMaxUserCount);
 }
 enum IID_IADsSession = GUID(0x398b7da0, 0x4aab, 0x11cf, [0xae, 0x2c, 0x0, 0xaa, 0x0, 0x6e, 0xbf, 0xb9]);
 interface IADsSession : IADs
 {
-    HRESULT get_User(BSTR*);
-    HRESULT get_UserPath(BSTR*);
-    HRESULT get_Computer(BSTR*);
-    HRESULT get_ComputerPath(BSTR*);
-    HRESULT get_ConnectTime(int*);
-    HRESULT get_IdleTime(int*);
+    HRESULT get_User(BSTR* retval);
+    HRESULT get_UserPath(BSTR* retval);
+    HRESULT get_Computer(BSTR* retval);
+    HRESULT get_ComputerPath(BSTR* retval);
+    HRESULT get_ConnectTime(int* retval);
+    HRESULT get_IdleTime(int* retval);
 }
 enum IID_IADsResource = GUID(0x34a05b20, 0x4aab, 0x11cf, [0xae, 0x2c, 0x0, 0xaa, 0x0, 0x6e, 0xbf, 0xb9]);
 interface IADsResource : IADs
 {
-    HRESULT get_User(BSTR*);
-    HRESULT get_UserPath(BSTR*);
-    HRESULT get_Path(BSTR*);
-    HRESULT get_LockCount(int*);
+    HRESULT get_User(BSTR* retval);
+    HRESULT get_UserPath(BSTR* retval);
+    HRESULT get_Path(BSTR* retval);
+    HRESULT get_LockCount(int* retval);
 }
 enum IID_IADsOpenDSObject = GUID(0xddf2891e, 0xf9c, 0x11d0, [0x8a, 0xd4, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 interface IADsOpenDSObject : IDispatch
 {
-    HRESULT OpenDSObject(BSTR, BSTR, BSTR, int, IDispatch*);
+    HRESULT OpenDSObject(BSTR lpszDNName, BSTR lpszUserName, BSTR lpszPassword, int lnReserved, IDispatch* ppOleDsObj);
 }
 enum IID_IDirectoryObject = GUID(0xe798de2c, 0x22e4, 0x11d0, [0x84, 0xfe, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 interface IDirectoryObject : IUnknown
 {
-    HRESULT GetObjectInformation(ADS_OBJECT_INFO**);
-    HRESULT GetObjectAttributes(PWSTR*, uint, ADS_ATTR_INFO**, uint*);
-    HRESULT SetObjectAttributes(ADS_ATTR_INFO*, uint, uint*);
-    HRESULT CreateDSObject(PWSTR, ADS_ATTR_INFO*, uint, IDispatch*);
-    HRESULT DeleteDSObject(PWSTR);
+    HRESULT GetObjectInformation(ADS_OBJECT_INFO** ppObjInfo);
+    HRESULT GetObjectAttributes(PWSTR* pAttributeNames, uint dwNumberAttributes, ADS_ATTR_INFO** ppAttributeEntries, uint* pdwNumAttributesReturned);
+    HRESULT SetObjectAttributes(ADS_ATTR_INFO* pAttributeEntries, uint dwNumAttributes, uint* pdwNumAttributesModified);
+    HRESULT CreateDSObject(PWSTR pszRDNName, ADS_ATTR_INFO* pAttributeEntries, uint dwNumAttributes, IDispatch* ppObject);
+    HRESULT DeleteDSObject(PWSTR pszRDNName);
 }
 enum IID_IDirectorySearch = GUID(0x109ba8ec, 0x92f0, 0x11d0, [0xa7, 0x90, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0xa8]);
 interface IDirectorySearch : IUnknown
 {
-    HRESULT SetSearchPreference(ADS_SEARCHPREF_INFO*, uint);
-    HRESULT ExecuteSearch(PWSTR, PWSTR*, uint, ADS_SEARCH_HANDLE*);
-    HRESULT AbandonSearch(ADS_SEARCH_HANDLE);
-    HRESULT GetFirstRow(ADS_SEARCH_HANDLE);
-    HRESULT GetNextRow(ADS_SEARCH_HANDLE);
-    HRESULT GetPreviousRow(ADS_SEARCH_HANDLE);
-    HRESULT GetNextColumnName(ADS_SEARCH_HANDLE, PWSTR*);
-    HRESULT GetColumn(ADS_SEARCH_HANDLE, PWSTR, ADS_SEARCH_COLUMN*);
-    HRESULT FreeColumn(ADS_SEARCH_COLUMN*);
-    HRESULT CloseSearchHandle(ADS_SEARCH_HANDLE);
+    HRESULT SetSearchPreference(ADS_SEARCHPREF_INFO* pSearchPrefs, uint dwNumPrefs);
+    HRESULT ExecuteSearch(PWSTR pszSearchFilter, PWSTR* pAttributeNames, uint dwNumberAttributes, ADS_SEARCH_HANDLE* phSearchResult);
+    HRESULT AbandonSearch(ADS_SEARCH_HANDLE phSearchResult);
+    HRESULT GetFirstRow(ADS_SEARCH_HANDLE hSearchResult);
+    HRESULT GetNextRow(ADS_SEARCH_HANDLE hSearchResult);
+    HRESULT GetPreviousRow(ADS_SEARCH_HANDLE hSearchResult);
+    HRESULT GetNextColumnName(ADS_SEARCH_HANDLE hSearchHandle, PWSTR* ppszColumnName);
+    HRESULT GetColumn(ADS_SEARCH_HANDLE hSearchResult, PWSTR szColumnName, ADS_SEARCH_COLUMN* pSearchColumn);
+    HRESULT FreeColumn(ADS_SEARCH_COLUMN* pSearchColumn);
+    HRESULT CloseSearchHandle(ADS_SEARCH_HANDLE hSearchResult);
 }
 enum IID_IDirectorySchemaMgmt = GUID(0x75db3b9c, 0xa4d8, 0x11d0, [0xa7, 0x9c, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0xa8]);
 interface IDirectorySchemaMgmt : IUnknown
 {
-    HRESULT EnumAttributes(PWSTR*, uint, ADS_ATTR_DEF**, uint*);
-    HRESULT CreateAttributeDefinition(PWSTR, ADS_ATTR_DEF*);
-    HRESULT WriteAttributeDefinition(PWSTR, ADS_ATTR_DEF*);
-    HRESULT DeleteAttributeDefinition(PWSTR);
-    HRESULT EnumClasses(PWSTR*, uint, ADS_CLASS_DEF**, uint*);
-    HRESULT WriteClassDefinition(PWSTR, ADS_CLASS_DEF*);
-    HRESULT CreateClassDefinition(PWSTR, ADS_CLASS_DEF*);
-    HRESULT DeleteClassDefinition(PWSTR);
+    HRESULT EnumAttributes(PWSTR* ppszAttrNames, uint dwNumAttributes, ADS_ATTR_DEF** ppAttrDefinition, uint* pdwNumAttributes);
+    HRESULT CreateAttributeDefinition(PWSTR pszAttributeName, ADS_ATTR_DEF* pAttributeDefinition);
+    HRESULT WriteAttributeDefinition(PWSTR pszAttributeName, ADS_ATTR_DEF* pAttributeDefinition);
+    HRESULT DeleteAttributeDefinition(PWSTR pszAttributeName);
+    HRESULT EnumClasses(PWSTR* ppszClassNames, uint dwNumClasses, ADS_CLASS_DEF** ppClassDefinition, uint* pdwNumClasses);
+    HRESULT WriteClassDefinition(PWSTR pszClassName, ADS_CLASS_DEF* pClassDefinition);
+    HRESULT CreateClassDefinition(PWSTR pszClassName, ADS_CLASS_DEF* pClassDefinition);
+    HRESULT DeleteClassDefinition(PWSTR pszClassName);
 }
 enum IID_IADsAggregatee = GUID(0x1346ce8c, 0x9039, 0x11d0, [0x85, 0x28, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 interface IADsAggregatee : IUnknown
 {
-    HRESULT ConnectAsAggregatee(IUnknown);
+    HRESULT ConnectAsAggregatee(IUnknown pOuterUnknown);
     HRESULT DisconnectAsAggregatee();
-    HRESULT RelinquishInterface(const(GUID)*);
-    HRESULT RestoreInterface(const(GUID)*);
+    HRESULT RelinquishInterface(const(GUID)* riid);
+    HRESULT RestoreInterface(const(GUID)* riid);
 }
 enum IID_IADsAggregator = GUID(0x52db5fb0, 0x941f, 0x11d0, [0x85, 0x29, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 interface IADsAggregator : IUnknown
 {
-    HRESULT ConnectAsAggregator(IUnknown);
+    HRESULT ConnectAsAggregator(IUnknown pAggregatee);
     HRESULT DisconnectAsAggregator();
 }
 enum IID_IADsAccessControlEntry = GUID(0xb4f3a14c, 0x9bdd, 0x11d0, [0x85, 0x2c, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 interface IADsAccessControlEntry : IDispatch
 {
-    HRESULT get_AccessMask(int*);
-    HRESULT put_AccessMask(int);
-    HRESULT get_AceType(int*);
-    HRESULT put_AceType(int);
-    HRESULT get_AceFlags(int*);
-    HRESULT put_AceFlags(int);
-    HRESULT get_Flags(int*);
-    HRESULT put_Flags(int);
-    HRESULT get_ObjectType(BSTR*);
-    HRESULT put_ObjectType(BSTR);
-    HRESULT get_InheritedObjectType(BSTR*);
-    HRESULT put_InheritedObjectType(BSTR);
-    HRESULT get_Trustee(BSTR*);
-    HRESULT put_Trustee(BSTR);
+    HRESULT get_AccessMask(int* retval);
+    HRESULT put_AccessMask(int lnAccessMask);
+    HRESULT get_AceType(int* retval);
+    HRESULT put_AceType(int lnAceType);
+    HRESULT get_AceFlags(int* retval);
+    HRESULT put_AceFlags(int lnAceFlags);
+    HRESULT get_Flags(int* retval);
+    HRESULT put_Flags(int lnFlags);
+    HRESULT get_ObjectType(BSTR* retval);
+    HRESULT put_ObjectType(BSTR bstrObjectType);
+    HRESULT get_InheritedObjectType(BSTR* retval);
+    HRESULT put_InheritedObjectType(BSTR bstrInheritedObjectType);
+    HRESULT get_Trustee(BSTR* retval);
+    HRESULT put_Trustee(BSTR bstrTrustee);
 }
 enum CLSID_AccessControlEntry = GUID(0xb75ac000, 0x9bdd, 0x11d0, [0x85, 0x2c, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 struct AccessControlEntry
@@ -2174,14 +2174,14 @@ struct AccessControlEntry
 enum IID_IADsAccessControlList = GUID(0xb7ee91cc, 0x9bdd, 0x11d0, [0x85, 0x2c, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 interface IADsAccessControlList : IDispatch
 {
-    HRESULT get_AclRevision(int*);
-    HRESULT put_AclRevision(int);
-    HRESULT get_AceCount(int*);
-    HRESULT put_AceCount(int);
-    HRESULT AddAce(IDispatch);
-    HRESULT RemoveAce(IDispatch);
-    HRESULT CopyAccessList(IDispatch*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_AclRevision(int* retval);
+    HRESULT put_AclRevision(int lnAclRevision);
+    HRESULT get_AceCount(int* retval);
+    HRESULT put_AceCount(int lnAceCount);
+    HRESULT AddAce(IDispatch pAccessControlEntry);
+    HRESULT RemoveAce(IDispatch pAccessControlEntry);
+    HRESULT CopyAccessList(IDispatch* ppAccessControlList);
+    HRESULT get__NewEnum(IUnknown* retval);
 }
 enum CLSID_AccessControlList = GUID(0xb85ea052, 0x9bdd, 0x11d0, [0x85, 0x2c, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 struct AccessControlList
@@ -2190,27 +2190,27 @@ struct AccessControlList
 enum IID_IADsSecurityDescriptor = GUID(0xb8c787ca, 0x9bdd, 0x11d0, [0x85, 0x2c, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 interface IADsSecurityDescriptor : IDispatch
 {
-    HRESULT get_Revision(int*);
-    HRESULT put_Revision(int);
-    HRESULT get_Control(int*);
-    HRESULT put_Control(int);
-    HRESULT get_Owner(BSTR*);
-    HRESULT put_Owner(BSTR);
-    HRESULT get_OwnerDefaulted(VARIANT_BOOL*);
-    HRESULT put_OwnerDefaulted(VARIANT_BOOL);
-    HRESULT get_Group(BSTR*);
-    HRESULT put_Group(BSTR);
-    HRESULT get_GroupDefaulted(VARIANT_BOOL*);
-    HRESULT put_GroupDefaulted(VARIANT_BOOL);
-    HRESULT get_DiscretionaryAcl(IDispatch*);
-    HRESULT put_DiscretionaryAcl(IDispatch);
-    HRESULT get_DaclDefaulted(VARIANT_BOOL*);
-    HRESULT put_DaclDefaulted(VARIANT_BOOL);
-    HRESULT get_SystemAcl(IDispatch*);
-    HRESULT put_SystemAcl(IDispatch);
-    HRESULT get_SaclDefaulted(VARIANT_BOOL*);
-    HRESULT put_SaclDefaulted(VARIANT_BOOL);
-    HRESULT CopySecurityDescriptor(IDispatch*);
+    HRESULT get_Revision(int* retval);
+    HRESULT put_Revision(int lnRevision);
+    HRESULT get_Control(int* retval);
+    HRESULT put_Control(int lnControl);
+    HRESULT get_Owner(BSTR* retval);
+    HRESULT put_Owner(BSTR bstrOwner);
+    HRESULT get_OwnerDefaulted(VARIANT_BOOL* retval);
+    HRESULT put_OwnerDefaulted(VARIANT_BOOL fOwnerDefaulted);
+    HRESULT get_Group(BSTR* retval);
+    HRESULT put_Group(BSTR bstrGroup);
+    HRESULT get_GroupDefaulted(VARIANT_BOOL* retval);
+    HRESULT put_GroupDefaulted(VARIANT_BOOL fGroupDefaulted);
+    HRESULT get_DiscretionaryAcl(IDispatch* retval);
+    HRESULT put_DiscretionaryAcl(IDispatch pDiscretionaryAcl);
+    HRESULT get_DaclDefaulted(VARIANT_BOOL* retval);
+    HRESULT put_DaclDefaulted(VARIANT_BOOL fDaclDefaulted);
+    HRESULT get_SystemAcl(IDispatch* retval);
+    HRESULT put_SystemAcl(IDispatch pSystemAcl);
+    HRESULT get_SaclDefaulted(VARIANT_BOOL* retval);
+    HRESULT put_SaclDefaulted(VARIANT_BOOL fSaclDefaulted);
+    HRESULT CopySecurityDescriptor(IDispatch* ppSecurityDescriptor);
 }
 enum CLSID_SecurityDescriptor = GUID(0xb958f73c, 0x9bdd, 0x11d0, [0x85, 0x2c, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 struct SecurityDescriptor
@@ -2219,10 +2219,10 @@ struct SecurityDescriptor
 enum IID_IADsLargeInteger = GUID(0x9068270b, 0x939, 0x11d1, [0x8b, 0xe1, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 interface IADsLargeInteger : IDispatch
 {
-    HRESULT get_HighPart(int*);
-    HRESULT put_HighPart(int);
-    HRESULT get_LowPart(int*);
-    HRESULT put_LowPart(int);
+    HRESULT get_HighPart(int* retval);
+    HRESULT put_HighPart(int lnHighPart);
+    HRESULT get_LowPart(int* retval);
+    HRESULT put_LowPart(int lnLowPart);
 }
 enum CLSID_LargeInteger = GUID(0x927971f5, 0x939, 0x11d1, [0x8b, 0xe1, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x3]);
 struct LargeInteger
@@ -2231,13 +2231,13 @@ struct LargeInteger
 enum IID_IADsNameTranslate = GUID(0xb1b272a3, 0x3625, 0x11d1, [0xa3, 0xa4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsNameTranslate : IDispatch
 {
-    HRESULT put_ChaseReferral(int);
-    HRESULT Init(int, BSTR);
-    HRESULT InitEx(int, BSTR, BSTR, BSTR, BSTR);
-    HRESULT Set(int, BSTR);
-    HRESULT Get(int, BSTR*);
-    HRESULT SetEx(int, VARIANT);
-    HRESULT GetEx(int, VARIANT*);
+    HRESULT put_ChaseReferral(int lnChaseReferral);
+    HRESULT Init(int lnSetType, BSTR bstrADsPath);
+    HRESULT InitEx(int lnSetType, BSTR bstrADsPath, BSTR bstrUserID, BSTR bstrDomain, BSTR bstrPassword);
+    HRESULT Set(int lnSetType, BSTR bstrADsPath);
+    HRESULT Get(int lnFormatType, BSTR* pbstrADsPath);
+    HRESULT SetEx(int lnFormatType, VARIANT pvar);
+    HRESULT GetEx(int lnFormatType, VARIANT* pvar);
 }
 enum CLSID_NameTranslate = GUID(0x274fae1f, 0x3626, 0x11d1, [0xa3, 0xa4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 struct NameTranslate
@@ -2246,8 +2246,8 @@ struct NameTranslate
 enum IID_IADsCaseIgnoreList = GUID(0x7b66b533, 0x4680, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsCaseIgnoreList : IDispatch
 {
-    HRESULT get_CaseIgnoreList(VARIANT*);
-    HRESULT put_CaseIgnoreList(VARIANT);
+    HRESULT get_CaseIgnoreList(VARIANT* retval);
+    HRESULT put_CaseIgnoreList(VARIANT vCaseIgnoreList);
 }
 enum CLSID_CaseIgnoreList = GUID(0x15f88a55, 0x4680, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 struct CaseIgnoreList
@@ -2256,10 +2256,10 @@ struct CaseIgnoreList
 enum IID_IADsFaxNumber = GUID(0xa910dea9, 0x4680, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsFaxNumber : IDispatch
 {
-    HRESULT get_TelephoneNumber(BSTR*);
-    HRESULT put_TelephoneNumber(BSTR);
-    HRESULT get_Parameters(VARIANT*);
-    HRESULT put_Parameters(VARIANT);
+    HRESULT get_TelephoneNumber(BSTR* retval);
+    HRESULT put_TelephoneNumber(BSTR bstrTelephoneNumber);
+    HRESULT get_Parameters(VARIANT* retval);
+    HRESULT put_Parameters(VARIANT vParameters);
 }
 enum CLSID_FaxNumber = GUID(0xa5062215, 0x4681, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 struct FaxNumber
@@ -2268,10 +2268,10 @@ struct FaxNumber
 enum IID_IADsNetAddress = GUID(0xb21a50a9, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsNetAddress : IDispatch
 {
-    HRESULT get_AddressType(int*);
-    HRESULT put_AddressType(int);
-    HRESULT get_Address(VARIANT*);
-    HRESULT put_Address(VARIANT);
+    HRESULT get_AddressType(int* retval);
+    HRESULT put_AddressType(int lnAddressType);
+    HRESULT get_Address(VARIANT* retval);
+    HRESULT put_Address(VARIANT vAddress);
 }
 enum CLSID_NetAddress = GUID(0xb0b71247, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 struct NetAddress
@@ -2280,8 +2280,8 @@ struct NetAddress
 enum IID_IADsOctetList = GUID(0x7b28b80f, 0x4680, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsOctetList : IDispatch
 {
-    HRESULT get_OctetList(VARIANT*);
-    HRESULT put_OctetList(VARIANT);
+    HRESULT get_OctetList(VARIANT* retval);
+    HRESULT put_OctetList(VARIANT vOctetList);
 }
 enum CLSID_OctetList = GUID(0x1241400f, 0x4680, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 struct OctetList
@@ -2290,10 +2290,10 @@ struct OctetList
 enum IID_IADsEmail = GUID(0x97af011a, 0x478e, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsEmail : IDispatch
 {
-    HRESULT get_Type(int*);
-    HRESULT put_Type(int);
-    HRESULT get_Address(BSTR*);
-    HRESULT put_Address(BSTR);
+    HRESULT get_Type(int* retval);
+    HRESULT put_Type(int lnType);
+    HRESULT get_Address(BSTR* retval);
+    HRESULT put_Address(BSTR bstrAddress);
 }
 enum CLSID_Email = GUID(0x8f92a857, 0x478e, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 struct Email
@@ -2302,12 +2302,12 @@ struct Email
 enum IID_IADsPath = GUID(0xb287fcd5, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsPath : IDispatch
 {
-    HRESULT get_Type(int*);
-    HRESULT put_Type(int);
-    HRESULT get_VolumeName(BSTR*);
-    HRESULT put_VolumeName(BSTR);
-    HRESULT get_Path(BSTR*);
-    HRESULT put_Path(BSTR);
+    HRESULT get_Type(int* retval);
+    HRESULT put_Type(int lnType);
+    HRESULT get_VolumeName(BSTR* retval);
+    HRESULT put_VolumeName(BSTR bstrVolumeName);
+    HRESULT get_Path(BSTR* retval);
+    HRESULT put_Path(BSTR bstrPath);
 }
 enum CLSID_Path = GUID(0xb2538919, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 struct Path
@@ -2316,16 +2316,16 @@ struct Path
 enum IID_IADsReplicaPointer = GUID(0xf60fb803, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsReplicaPointer : IDispatch
 {
-    HRESULT get_ServerName(BSTR*);
-    HRESULT put_ServerName(BSTR);
-    HRESULT get_ReplicaType(int*);
-    HRESULT put_ReplicaType(int);
-    HRESULT get_ReplicaNumber(int*);
-    HRESULT put_ReplicaNumber(int);
-    HRESULT get_Count(int*);
-    HRESULT put_Count(int);
-    HRESULT get_ReplicaAddressHints(VARIANT*);
-    HRESULT put_ReplicaAddressHints(VARIANT);
+    HRESULT get_ServerName(BSTR* retval);
+    HRESULT put_ServerName(BSTR bstrServerName);
+    HRESULT get_ReplicaType(int* retval);
+    HRESULT put_ReplicaType(int lnReplicaType);
+    HRESULT get_ReplicaNumber(int* retval);
+    HRESULT put_ReplicaNumber(int lnReplicaNumber);
+    HRESULT get_Count(int* retval);
+    HRESULT put_Count(int lnCount);
+    HRESULT get_ReplicaAddressHints(VARIANT* retval);
+    HRESULT put_ReplicaAddressHints(VARIANT vReplicaAddressHints);
 }
 enum CLSID_ReplicaPointer = GUID(0xf5d1badf, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 struct ReplicaPointer
@@ -2334,21 +2334,21 @@ struct ReplicaPointer
 enum IID_IADsAcl = GUID(0x8452d3ab, 0x869, 0x11d1, [0xa3, 0x77, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsAcl : IDispatch
 {
-    HRESULT get_ProtectedAttrName(BSTR*);
-    HRESULT put_ProtectedAttrName(BSTR);
-    HRESULT get_SubjectName(BSTR*);
-    HRESULT put_SubjectName(BSTR);
-    HRESULT get_Privileges(int*);
-    HRESULT put_Privileges(int);
-    HRESULT CopyAcl(IDispatch*);
+    HRESULT get_ProtectedAttrName(BSTR* retval);
+    HRESULT put_ProtectedAttrName(BSTR bstrProtectedAttrName);
+    HRESULT get_SubjectName(BSTR* retval);
+    HRESULT put_SubjectName(BSTR bstrSubjectName);
+    HRESULT get_Privileges(int* retval);
+    HRESULT put_Privileges(int lnPrivileges);
+    HRESULT CopyAcl(IDispatch* ppAcl);
 }
 enum IID_IADsTimestamp = GUID(0xb2f5a901, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsTimestamp : IDispatch
 {
-    HRESULT get_WholeSeconds(int*);
-    HRESULT put_WholeSeconds(int);
-    HRESULT get_EventID(int*);
-    HRESULT put_EventID(int);
+    HRESULT get_WholeSeconds(int* retval);
+    HRESULT put_WholeSeconds(int lnWholeSeconds);
+    HRESULT get_EventID(int* retval);
+    HRESULT put_EventID(int lnEventID);
 }
 enum CLSID_Timestamp = GUID(0xb2bed2eb, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 struct Timestamp
@@ -2357,8 +2357,8 @@ struct Timestamp
 enum IID_IADsPostalAddress = GUID(0x7adecf29, 0x4680, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsPostalAddress : IDispatch
 {
-    HRESULT get_PostalAddress(VARIANT*);
-    HRESULT put_PostalAddress(VARIANT);
+    HRESULT get_PostalAddress(VARIANT* retval);
+    HRESULT put_PostalAddress(VARIANT vPostalAddress);
 }
 enum CLSID_PostalAddress = GUID(0xa75afcd, 0x4680, 0x11d1, [0xa3, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 struct PostalAddress
@@ -2367,10 +2367,10 @@ struct PostalAddress
 enum IID_IADsBackLink = GUID(0xfd1302bd, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsBackLink : IDispatch
 {
-    HRESULT get_RemoteID(int*);
-    HRESULT put_RemoteID(int);
-    HRESULT get_ObjectName(BSTR*);
-    HRESULT put_ObjectName(BSTR);
+    HRESULT get_RemoteID(int* retval);
+    HRESULT put_RemoteID(int lnRemoteID);
+    HRESULT get_ObjectName(BSTR* retval);
+    HRESULT put_ObjectName(BSTR bstrObjectName);
 }
 enum CLSID_BackLink = GUID(0xfcbf906f, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 struct BackLink
@@ -2379,12 +2379,12 @@ struct BackLink
 enum IID_IADsTypedName = GUID(0xb371a349, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsTypedName : IDispatch
 {
-    HRESULT get_ObjectName(BSTR*);
-    HRESULT put_ObjectName(BSTR);
-    HRESULT get_Level(int*);
-    HRESULT put_Level(int);
-    HRESULT get_Interval(int*);
-    HRESULT put_Interval(int);
+    HRESULT get_ObjectName(BSTR* retval);
+    HRESULT put_ObjectName(BSTR bstrObjectName);
+    HRESULT get_Level(int* retval);
+    HRESULT put_Level(int lnLevel);
+    HRESULT get_Interval(int* retval);
+    HRESULT put_Interval(int lnInterval);
 }
 enum CLSID_TypedName = GUID(0xb33143cb, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 struct TypedName
@@ -2393,10 +2393,10 @@ struct TypedName
 enum IID_IADsHold = GUID(0xb3eb3b37, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsHold : IDispatch
 {
-    HRESULT get_ObjectName(BSTR*);
-    HRESULT put_ObjectName(BSTR);
-    HRESULT get_Amount(int*);
-    HRESULT put_Amount(int);
+    HRESULT get_ObjectName(BSTR* retval);
+    HRESULT put_ObjectName(BSTR bstrObjectName);
+    HRESULT get_Amount(int* retval);
+    HRESULT put_Amount(int lnAmount);
 }
 enum CLSID_Hold = GUID(0xb3ad3e13, 0x4080, 0x11d1, [0xa3, 0xac, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 struct Hold
@@ -2405,23 +2405,23 @@ struct Hold
 enum IID_IADsObjectOptions = GUID(0x46f14fda, 0x232b, 0x11d1, [0xa8, 0x8, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0xa8]);
 interface IADsObjectOptions : IDispatch
 {
-    HRESULT GetOption(int, VARIANT*);
-    HRESULT SetOption(int, VARIANT);
+    HRESULT GetOption(int lnOption, VARIANT* pvValue);
+    HRESULT SetOption(int lnOption, VARIANT vValue);
 }
 enum IID_IADsPathname = GUID(0xd592aed4, 0xf420, 0x11d0, [0xa3, 0x6e, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 interface IADsPathname : IDispatch
 {
-    HRESULT Set(BSTR, int);
-    HRESULT SetDisplayType(int);
-    HRESULT Retrieve(int, BSTR*);
-    HRESULT GetNumElements(int*);
-    HRESULT GetElement(int, BSTR*);
-    HRESULT AddLeafElement(BSTR);
+    HRESULT Set(BSTR bstrADsPath, int lnSetType);
+    HRESULT SetDisplayType(int lnDisplayType);
+    HRESULT Retrieve(int lnFormatType, BSTR* pbstrADsPath);
+    HRESULT GetNumElements(int* plnNumPathElements);
+    HRESULT GetElement(int lnElementIndex, BSTR* pbstrElement);
+    HRESULT AddLeafElement(BSTR bstrLeafElement);
     HRESULT RemoveLeafElement();
-    HRESULT CopyPath(IDispatch*);
-    HRESULT GetEscapedElement(int, BSTR, BSTR*);
-    HRESULT get_EscapedMode(int*);
-    HRESULT put_EscapedMode(int);
+    HRESULT CopyPath(IDispatch* ppAdsPath);
+    HRESULT GetEscapedElement(int lnReserved, BSTR bstrInStr, BSTR* pbstrOutStr);
+    HRESULT get_EscapedMode(int* retval);
+    HRESULT put_EscapedMode(int lnEscapedMode);
 }
 enum CLSID_Pathname = GUID(0x80d0d78, 0xf421, 0x11d0, [0xa3, 0x6e, 0x0, 0xc0, 0x4f, 0xb9, 0x50, 0xdc]);
 struct Pathname
@@ -2430,19 +2430,19 @@ struct Pathname
 enum IID_IADsADSystemInfo = GUID(0x5bb11929, 0xafd1, 0x11d2, [0x9c, 0xb9, 0x0, 0x0, 0xf8, 0x7a, 0x36, 0x9e]);
 interface IADsADSystemInfo : IDispatch
 {
-    HRESULT get_UserName(BSTR*);
-    HRESULT get_ComputerName(BSTR*);
-    HRESULT get_SiteName(BSTR*);
-    HRESULT get_DomainShortName(BSTR*);
-    HRESULT get_DomainDNSName(BSTR*);
-    HRESULT get_ForestDNSName(BSTR*);
-    HRESULT get_PDCRoleOwner(BSTR*);
-    HRESULT get_SchemaRoleOwner(BSTR*);
-    HRESULT get_IsNativeMode(VARIANT_BOOL*);
-    HRESULT GetAnyDCName(BSTR*);
-    HRESULT GetDCSiteName(BSTR, BSTR*);
+    HRESULT get_UserName(BSTR* retval);
+    HRESULT get_ComputerName(BSTR* retval);
+    HRESULT get_SiteName(BSTR* retval);
+    HRESULT get_DomainShortName(BSTR* retval);
+    HRESULT get_DomainDNSName(BSTR* retval);
+    HRESULT get_ForestDNSName(BSTR* retval);
+    HRESULT get_PDCRoleOwner(BSTR* retval);
+    HRESULT get_SchemaRoleOwner(BSTR* retval);
+    HRESULT get_IsNativeMode(VARIANT_BOOL* retval);
+    HRESULT GetAnyDCName(BSTR* pszDCName);
+    HRESULT GetDCSiteName(BSTR szServer, BSTR* pszSiteName);
     HRESULT RefreshSchemaCache();
-    HRESULT GetTrees(VARIANT*);
+    HRESULT GetTrees(VARIANT* pvTrees);
 }
 enum CLSID_ADSystemInfo = GUID(0x50b6327f, 0xafd1, 0x11d2, [0x9c, 0xb9, 0x0, 0x0, 0xf8, 0x7a, 0x36, 0x9e]);
 struct ADSystemInfo
@@ -2451,10 +2451,10 @@ struct ADSystemInfo
 enum IID_IADsWinNTSystemInfo = GUID(0x6c6d65dc, 0xafd1, 0x11d2, [0x9c, 0xb9, 0x0, 0x0, 0xf8, 0x7a, 0x36, 0x9e]);
 interface IADsWinNTSystemInfo : IDispatch
 {
-    HRESULT get_UserName(BSTR*);
-    HRESULT get_ComputerName(BSTR*);
-    HRESULT get_DomainName(BSTR*);
-    HRESULT get_PDC(BSTR*);
+    HRESULT get_UserName(BSTR* retval);
+    HRESULT get_ComputerName(BSTR* retval);
+    HRESULT get_DomainName(BSTR* retval);
+    HRESULT get_PDC(BSTR* retval);
 }
 enum CLSID_WinNTSystemInfo = GUID(0x66182ec4, 0xafd1, 0x11d2, [0x9c, 0xb9, 0x0, 0x0, 0xf8, 0x7a, 0x36, 0x9e]);
 struct WinNTSystemInfo
@@ -2463,10 +2463,10 @@ struct WinNTSystemInfo
 enum IID_IADsDNWithBinary = GUID(0x7e99c0a2, 0xf935, 0x11d2, [0xba, 0x96, 0x0, 0xc0, 0x4f, 0xb6, 0xd0, 0xd1]);
 interface IADsDNWithBinary : IDispatch
 {
-    HRESULT get_BinaryValue(VARIANT*);
-    HRESULT put_BinaryValue(VARIANT);
-    HRESULT get_DNString(BSTR*);
-    HRESULT put_DNString(BSTR);
+    HRESULT get_BinaryValue(VARIANT* retval);
+    HRESULT put_BinaryValue(VARIANT vBinaryValue);
+    HRESULT get_DNString(BSTR* retval);
+    HRESULT put_DNString(BSTR bstrDNString);
 }
 enum CLSID_DNWithBinary = GUID(0x7e99c0a3, 0xf935, 0x11d2, [0xba, 0x96, 0x0, 0xc0, 0x4f, 0xb6, 0xd0, 0xd1]);
 struct DNWithBinary
@@ -2475,10 +2475,10 @@ struct DNWithBinary
 enum IID_IADsDNWithString = GUID(0x370df02e, 0xf934, 0x11d2, [0xba, 0x96, 0x0, 0xc0, 0x4f, 0xb6, 0xd0, 0xd1]);
 interface IADsDNWithString : IDispatch
 {
-    HRESULT get_StringValue(BSTR*);
-    HRESULT put_StringValue(BSTR);
-    HRESULT get_DNString(BSTR*);
-    HRESULT put_DNString(BSTR);
+    HRESULT get_StringValue(BSTR* retval);
+    HRESULT put_StringValue(BSTR bstrStringValue);
+    HRESULT get_DNString(BSTR* retval);
+    HRESULT put_DNString(BSTR bstrDNString);
 }
 enum CLSID_DNWithString = GUID(0x334857cc, 0xf934, 0x11d2, [0xba, 0x96, 0x0, 0xc0, 0x4f, 0xb6, 0xd0, 0xd1]);
 struct DNWithString
@@ -2487,11 +2487,11 @@ struct DNWithString
 enum IID_IADsSecurityUtility = GUID(0xa63251b2, 0x5f21, 0x474b, [0xab, 0x52, 0x4a, 0x8e, 0xfa, 0xd1, 0x8, 0x95]);
 interface IADsSecurityUtility : IDispatch
 {
-    HRESULT GetSecurityDescriptor(VARIANT, int, int, VARIANT*);
-    HRESULT SetSecurityDescriptor(VARIANT, int, VARIANT, int);
-    HRESULT ConvertSecurityDescriptor(VARIANT, int, int, VARIANT*);
-    HRESULT get_SecurityMask(int*);
-    HRESULT put_SecurityMask(int);
+    HRESULT GetSecurityDescriptor(VARIANT varPath, int lPathFormat, int lFormat, VARIANT* pVariant);
+    HRESULT SetSecurityDescriptor(VARIANT varPath, int lPathFormat, VARIANT varData, int lDataFormat);
+    HRESULT ConvertSecurityDescriptor(VARIANT varSD, int lDataFormat, int lOutFormat, VARIANT* pResult);
+    HRESULT get_SecurityMask(int* retval);
+    HRESULT put_SecurityMask(int lnSecurityMask);
 }
 enum CLSID_ADsSecurityUtility = GUID(0xf270c64a, 0xffb8, 0x4ae4, [0x85, 0xfe, 0x3a, 0x75, 0xe5, 0x34, 0x79, 0x66]);
 struct ADsSecurityUtility
@@ -2545,13 +2545,13 @@ struct DOMAIN_TREE
 enum IID_IDsBrowseDomainTree = GUID(0x7cabcf1e, 0x78f5, 0x11d2, [0x96, 0xc, 0x0, 0xc0, 0x4f, 0xa3, 0x1a, 0x86]);
 interface IDsBrowseDomainTree : IUnknown
 {
-    HRESULT BrowseTo(HWND, PWSTR*, uint);
-    HRESULT GetDomains(DOMAIN_TREE**, uint);
-    HRESULT FreeDomains(DOMAIN_TREE**);
+    HRESULT BrowseTo(HWND hwndParent, PWSTR* ppszTargetPath, uint dwFlags);
+    HRESULT GetDomains(DOMAIN_TREE** ppDomainTree, uint dwFlags);
+    HRESULT FreeDomains(DOMAIN_TREE** ppDomainTree);
     HRESULT FlushCachedDomains();
-    HRESULT SetComputer(const(wchar)*, const(wchar)*, const(wchar)*);
+    HRESULT SetComputer(const(wchar)* pszComputerName, const(wchar)* pszUserName, const(wchar)* pszPassword);
 }
-alias LPDSENUMATTRIBUTES = HRESULT function(LPARAM, const(wchar)*, const(wchar)*, uint);
+alias LPDSENUMATTRIBUTES = HRESULT function(LPARAM lParam, const(wchar)* pszAttributeName, const(wchar)* pszDisplayName, uint dwFlags);
 struct DSCLASSCREATIONINFO
 {
     uint dwFlags;
@@ -2563,17 +2563,17 @@ struct DSCLASSCREATIONINFO
 enum IID_IDsDisplaySpecifier = GUID(0x1ab4a8c0, 0x6a0b, 0x11d2, [0xad, 0x49, 0x0, 0xc0, 0x4f, 0xa3, 0x1a, 0x86]);
 interface IDsDisplaySpecifier : IUnknown
 {
-    HRESULT SetServer(const(wchar)*, const(wchar)*, const(wchar)*, uint);
-    HRESULT SetLanguageID(ushort);
-    HRESULT GetDisplaySpecifier(const(wchar)*, const(GUID)*, void**);
-    HRESULT GetIconLocation(const(wchar)*, uint, PWSTR, int, int*);
-    HICON GetIcon(const(wchar)*, uint, int, int);
-    HRESULT GetFriendlyClassName(const(wchar)*, PWSTR, int);
-    HRESULT GetFriendlyAttributeName(const(wchar)*, const(wchar)*, PWSTR, uint);
-    BOOL IsClassContainer(const(wchar)*, const(wchar)*, uint);
-    HRESULT GetClassCreationInfo(const(wchar)*, DSCLASSCREATIONINFO**);
-    HRESULT EnumClassAttributes(const(wchar)*, LPDSENUMATTRIBUTES, LPARAM);
-    ADSTYPE GetAttributeADsType(const(wchar)*);
+    HRESULT SetServer(const(wchar)* pszServer, const(wchar)* pszUserName, const(wchar)* pszPassword, uint dwFlags);
+    HRESULT SetLanguageID(ushort langid);
+    HRESULT GetDisplaySpecifier(const(wchar)* pszObjectClass, const(GUID)* riid, void** ppv);
+    HRESULT GetIconLocation(const(wchar)* pszObjectClass, uint dwFlags, PWSTR pszBuffer, int cchBuffer, int* presid);
+    HICON GetIcon(const(wchar)* pszObjectClass, uint dwFlags, int cxIcon, int cyIcon);
+    HRESULT GetFriendlyClassName(const(wchar)* pszObjectClass, PWSTR pszBuffer, int cchBuffer);
+    HRESULT GetFriendlyAttributeName(const(wchar)* pszObjectClass, const(wchar)* pszAttributeName, PWSTR pszBuffer, uint cchBuffer);
+    BOOL IsClassContainer(const(wchar)* pszObjectClass, const(wchar)* pszADsPath, uint dwFlags);
+    HRESULT GetClassCreationInfo(const(wchar)* pszObjectClass, DSCLASSCREATIONINFO** ppdscci);
+    HRESULT EnumClassAttributes(const(wchar)* pszObjectClass, LPDSENUMATTRIBUTES pcbEnum, LPARAM lParam);
+    ADSTYPE GetAttributeADsType(const(wchar)* pszAttributeName);
 }
 struct DSBROWSEINFOW
 {
@@ -2684,13 +2684,13 @@ struct DS_SELECTION_LIST
 enum IID_IDsObjectPicker = GUID(0xc87e64e, 0x3b7a, 0x11d2, [0xb9, 0xe0, 0x0, 0xc0, 0x4f, 0xd8, 0xdb, 0xf7]);
 interface IDsObjectPicker : IUnknown
 {
-    HRESULT Initialize(DSOP_INIT_INFO*);
-    HRESULT InvokeDialog(HWND, IDataObject*);
+    HRESULT Initialize(DSOP_INIT_INFO* pInitInfo);
+    HRESULT InvokeDialog(HWND hwndParent, IDataObject* ppdoSelections);
 }
 enum IID_IDsObjectPickerCredentials = GUID(0xe2d3ec9b, 0xd041, 0x445a, [0x8f, 0x16, 0x47, 0x48, 0xde, 0x8f, 0xb1, 0xcf]);
 interface IDsObjectPickerCredentials : IDsObjectPicker
 {
-    HRESULT SetCredentials(const(wchar)*, const(wchar)*);
+    HRESULT SetCredentials(const(wchar)* szUserName, const(wchar)* szPassword);
 }
 struct DSQUERYINITPARAMS
 {
@@ -2730,19 +2730,19 @@ struct DSQUERYCLASSLIST
 enum IID_IDsAdminCreateObj = GUID(0x53554a38, 0xf902, 0x11d2, [0x82, 0xb9, 0x0, 0xc0, 0x4f, 0x68, 0x92, 0x8b]);
 interface IDsAdminCreateObj : IUnknown
 {
-    HRESULT Initialize(IADsContainer, IADs, const(wchar)*);
-    HRESULT CreateModal(HWND, IADs*);
+    HRESULT Initialize(IADsContainer pADsContainerObj, IADs pADsCopySource, const(wchar)* lpszClassName);
+    HRESULT CreateModal(HWND hwndParent, IADs* ppADsObj);
 }
 enum IID_IDsAdminNewObj = GUID(0xf2573587, 0xe6fc, 0x11d2, [0x82, 0xaf, 0x0, 0xc0, 0x4f, 0x68, 0x92, 0x8b]);
 interface IDsAdminNewObj : IUnknown
 {
-    HRESULT SetButtons(uint, BOOL);
-    HRESULT GetPageCounts(int*, int*);
+    HRESULT SetButtons(uint nCurrIndex, BOOL bValid);
+    HRESULT GetPageCounts(int* pnTotal, int* pnStartIndex);
 }
 enum IID_IDsAdminNewObjPrimarySite = GUID(0xbe2b487e, 0xf904, 0x11d2, [0x82, 0xb9, 0x0, 0xc0, 0x4f, 0x68, 0x92, 0x8b]);
 interface IDsAdminNewObjPrimarySite : IUnknown
 {
-    HRESULT CreateNew(const(wchar)*);
+    HRESULT CreateNew(const(wchar)* pszName);
     HRESULT Commit();
 }
 struct DSA_NEWOBJ_DISPINFO
@@ -2755,19 +2755,19 @@ struct DSA_NEWOBJ_DISPINFO
 enum IID_IDsAdminNewObjExt = GUID(0x6088eae2, 0xe7bf, 0x11d2, [0x82, 0xaf, 0x0, 0xc0, 0x4f, 0x68, 0x92, 0x8b]);
 interface IDsAdminNewObjExt : IUnknown
 {
-    HRESULT Initialize(IADsContainer, IADs, const(wchar)*, IDsAdminNewObj, DSA_NEWOBJ_DISPINFO*);
-    HRESULT AddPages(LPFNSVADDPROPSHEETPAGE, LPARAM);
-    HRESULT SetObject(IADs);
-    HRESULT WriteData(HWND, uint);
-    HRESULT OnError(HWND, HRESULT, uint);
-    HRESULT GetSummaryInfo(BSTR*);
+    HRESULT Initialize(IADsContainer pADsContainerObj, IADs pADsCopySource, const(wchar)* lpszClassName, IDsAdminNewObj pDsAdminNewObj, DSA_NEWOBJ_DISPINFO* pDispInfo);
+    HRESULT AddPages(LPFNSVADDPROPSHEETPAGE lpfnAddPage, LPARAM lParam);
+    HRESULT SetObject(IADs pADsObj);
+    HRESULT WriteData(HWND hWnd, uint uContext);
+    HRESULT OnError(HWND hWnd, HRESULT hr, uint uContext);
+    HRESULT GetSummaryInfo(BSTR* pBstrText);
 }
 enum IID_IDsAdminNotifyHandler = GUID(0xe4a2b8b3, 0x5a18, 0x11d2, [0x97, 0xc1, 0x0, 0xa0, 0xc9, 0xa0, 0x6d, 0x2d]);
 interface IDsAdminNotifyHandler : IUnknown
 {
-    HRESULT Initialize(IDataObject, uint*);
-    HRESULT Begin(uint, IDataObject, IDataObject, uint*, BSTR*);
-    HRESULT Notify(uint, uint);
+    HRESULT Initialize(IDataObject pExtraInfo, uint* puEventFlags);
+    HRESULT Begin(uint uEvent, IDataObject pArg1, IDataObject pArg2, uint* puFlags, BSTR* pBstr);
+    HRESULT Notify(uint nItem, uint uFlags);
     HRESULT End();
 }
 struct ADSPROPINITPARAMS

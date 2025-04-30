@@ -100,24 +100,24 @@ enum : uint
     WTD_UICONTEXT_INSTALL = 0x00000001,
 }
 
-int WinVerifyTrust(HWND, GUID*, void*);
-int WinVerifyTrustEx(HWND, GUID*, WINTRUST_DATA*);
-void WintrustGetRegPolicyFlags(WINTRUST_POLICY_FLAGS*);
-BOOL WintrustSetRegPolicyFlags(WINTRUST_POLICY_FLAGS);
-BOOL WintrustAddActionID(GUID*, uint, CRYPT_REGISTER_ACTIONID*);
-BOOL WintrustRemoveActionID(GUID*);
-BOOL WintrustLoadFunctionPointers(GUID*, CRYPT_PROVIDER_FUNCTIONS*);
-BOOL WintrustAddDefaultForUsage(const(char)*, CRYPT_PROVIDER_REGDEFUSAGE*);
-BOOL WintrustGetDefaultForUsage(WINTRUST_GET_DEFAULT_FOR_USAGE_ACTION, const(char)*, CRYPT_PROVIDER_DEFUSAGE*);
-CRYPT_PROVIDER_SGNR* WTHelperGetProvSignerFromChain(CRYPT_PROVIDER_DATA*, uint, BOOL, uint);
-CRYPT_PROVIDER_CERT* WTHelperGetProvCertFromChain(CRYPT_PROVIDER_SGNR*, uint);
-CRYPT_PROVIDER_DATA* WTHelperProvDataFromStateData(HANDLE);
-CRYPT_PROVIDER_PRIVDATA* WTHelperGetProvPrivateDataFromChain(CRYPT_PROVIDER_DATA*, GUID*);
-BOOL WTHelperCertIsSelfSigned(uint, CERT_INFO*);
-HRESULT WTHelperCertCheckValidSignature(CRYPT_PROVIDER_DATA*);
-BOOL OpenPersonalTrustDBDialogEx(HWND, uint, void**);
-BOOL OpenPersonalTrustDBDialog(HWND);
-void WintrustSetDefaultIncludePEPageHashes(BOOL);
+int WinVerifyTrust(HWND hwnd, GUID* pgActionID, void* pWVTData);
+int WinVerifyTrustEx(HWND hwnd, GUID* pgActionID, WINTRUST_DATA* pWinTrustData);
+void WintrustGetRegPolicyFlags(WINTRUST_POLICY_FLAGS* pdwPolicyFlags);
+BOOL WintrustSetRegPolicyFlags(WINTRUST_POLICY_FLAGS dwPolicyFlags);
+BOOL WintrustAddActionID(GUID* pgActionID, uint fdwFlags, CRYPT_REGISTER_ACTIONID* psProvInfo);
+BOOL WintrustRemoveActionID(GUID* pgActionID);
+BOOL WintrustLoadFunctionPointers(GUID* pgActionID, CRYPT_PROVIDER_FUNCTIONS* pPfns);
+BOOL WintrustAddDefaultForUsage(const(char)* pszUsageOID, CRYPT_PROVIDER_REGDEFUSAGE* psDefUsage);
+BOOL WintrustGetDefaultForUsage(WINTRUST_GET_DEFAULT_FOR_USAGE_ACTION dwAction, const(char)* pszUsageOID, CRYPT_PROVIDER_DEFUSAGE* psUsage);
+CRYPT_PROVIDER_SGNR* WTHelperGetProvSignerFromChain(CRYPT_PROVIDER_DATA* pProvData, uint idxSigner, BOOL fCounterSigner, uint idxCounterSigner);
+CRYPT_PROVIDER_CERT* WTHelperGetProvCertFromChain(CRYPT_PROVIDER_SGNR* pSgnr, uint idxCert);
+CRYPT_PROVIDER_DATA* WTHelperProvDataFromStateData(HANDLE hStateData);
+CRYPT_PROVIDER_PRIVDATA* WTHelperGetProvPrivateDataFromChain(CRYPT_PROVIDER_DATA* pProvData, GUID* pgProviderID);
+BOOL WTHelperCertIsSelfSigned(uint dwEncoding, CERT_INFO* pCert);
+HRESULT WTHelperCertCheckValidSignature(CRYPT_PROVIDER_DATA* pProvData);
+BOOL OpenPersonalTrustDBDialogEx(HWND hwndParent, uint dwFlags, void** pvReserved);
+BOOL OpenPersonalTrustDBDialog(HWND hwndParent);
+void WintrustSetDefaultIncludePEPageHashes(BOOL fIncludePEPageHashes);
 enum WINTRUST_CONFIG_REGPATH = "Software\\Microsoft\\Cryptography\\Wintrust\\Config";
 enum WINTRUST_MAX_HEADER_BYTES_TO_MAP_VALUE_NAME = "MaxHeaderBytesToMap";
 enum WINTRUST_MAX_HEADER_BYTES_TO_MAP_DEFAULT = 0x00a00000;
@@ -378,20 +378,20 @@ struct WINTRUST_CERT_INFO
     uint dwFlags;
     FILETIME* psftVerifyAsOf;
 }
-alias PFN_CPD_MEM_ALLOC = void* function(uint);
-alias PFN_CPD_MEM_FREE = void function(void*);
-alias PFN_CPD_ADD_STORE = BOOL function(CRYPT_PROVIDER_DATA*, HCERTSTORE);
-alias PFN_CPD_ADD_SGNR = BOOL function(CRYPT_PROVIDER_DATA*, BOOL, uint, CRYPT_PROVIDER_SGNR*);
-alias PFN_CPD_ADD_CERT = BOOL function(CRYPT_PROVIDER_DATA*, uint, BOOL, uint, const(CERT_CONTEXT)*);
-alias PFN_CPD_ADD_PRIVDATA = BOOL function(CRYPT_PROVIDER_DATA*, CRYPT_PROVIDER_PRIVDATA*);
-alias PFN_PROVIDER_INIT_CALL = HRESULT function(CRYPT_PROVIDER_DATA*);
-alias PFN_PROVIDER_OBJTRUST_CALL = HRESULT function(CRYPT_PROVIDER_DATA*);
-alias PFN_PROVIDER_SIGTRUST_CALL = HRESULT function(CRYPT_PROVIDER_DATA*);
-alias PFN_PROVIDER_CERTTRUST_CALL = HRESULT function(CRYPT_PROVIDER_DATA*);
-alias PFN_PROVIDER_FINALPOLICY_CALL = HRESULT function(CRYPT_PROVIDER_DATA*);
-alias PFN_PROVIDER_TESTFINALPOLICY_CALL = HRESULT function(CRYPT_PROVIDER_DATA*);
-alias PFN_PROVIDER_CLEANUP_CALL = HRESULT function(CRYPT_PROVIDER_DATA*);
-alias PFN_PROVIDER_CERTCHKPOLICY_CALL = BOOL function(CRYPT_PROVIDER_DATA*, uint, BOOL, uint);
+alias PFN_CPD_MEM_ALLOC = void* function(uint cbSize);
+alias PFN_CPD_MEM_FREE = void function(void* pvMem2Free);
+alias PFN_CPD_ADD_STORE = BOOL function(CRYPT_PROVIDER_DATA* pProvData, HCERTSTORE hStore2Add);
+alias PFN_CPD_ADD_SGNR = BOOL function(CRYPT_PROVIDER_DATA* pProvData, BOOL fCounterSigner, uint idxSigner, CRYPT_PROVIDER_SGNR* pSgnr2Add);
+alias PFN_CPD_ADD_CERT = BOOL function(CRYPT_PROVIDER_DATA* pProvData, uint idxSigner, BOOL fCounterSigner, uint idxCounterSigner, const(CERT_CONTEXT)* pCert2Add);
+alias PFN_CPD_ADD_PRIVDATA = BOOL function(CRYPT_PROVIDER_DATA* pProvData, CRYPT_PROVIDER_PRIVDATA* pPrivData2Add);
+alias PFN_PROVIDER_INIT_CALL = HRESULT function(CRYPT_PROVIDER_DATA* pProvData);
+alias PFN_PROVIDER_OBJTRUST_CALL = HRESULT function(CRYPT_PROVIDER_DATA* pProvData);
+alias PFN_PROVIDER_SIGTRUST_CALL = HRESULT function(CRYPT_PROVIDER_DATA* pProvData);
+alias PFN_PROVIDER_CERTTRUST_CALL = HRESULT function(CRYPT_PROVIDER_DATA* pProvData);
+alias PFN_PROVIDER_FINALPOLICY_CALL = HRESULT function(CRYPT_PROVIDER_DATA* pProvData);
+alias PFN_PROVIDER_TESTFINALPOLICY_CALL = HRESULT function(CRYPT_PROVIDER_DATA* pProvData);
+alias PFN_PROVIDER_CLEANUP_CALL = HRESULT function(CRYPT_PROVIDER_DATA* pProvData);
+alias PFN_PROVIDER_CERTCHKPOLICY_CALL = BOOL function(CRYPT_PROVIDER_DATA* pProvData, uint idxSigner, BOOL fCounterSignerChain, uint idxCounterSigner);
 struct CRYPT_PROVIDER_DATA
 {
     uint cbStruct;
@@ -465,7 +465,7 @@ struct CRYPT_PROVIDER_FUNCTIONS
     CRYPT_PROVUI_FUNCS* psUIpfns;
     PFN_PROVIDER_CLEANUP_CALL pfnCleanupPolicy;
 }
-alias PFN_PROVUI_CALL = BOOL function(HWND, CRYPT_PROVIDER_DATA*);
+alias PFN_PROVUI_CALL = BOOL function(HWND hWndSecurityDialog, CRYPT_PROVIDER_DATA* pProvData);
 struct CRYPT_PROVUI_FUNCS
 {
     uint cbStruct;
@@ -553,8 +553,8 @@ struct CRYPT_REGISTER_ACTIONID
     CRYPT_TRUST_REG_ENTRY sTestPolicyProvider;
     CRYPT_TRUST_REG_ENTRY sCleanupProvider;
 }
-alias PFN_ALLOCANDFILLDEFUSAGE = BOOL function(const(char)*, CRYPT_PROVIDER_DEFUSAGE*);
-alias PFN_FREEDEFUSAGE = BOOL function(const(char)*, CRYPT_PROVIDER_DEFUSAGE*);
+alias PFN_ALLOCANDFILLDEFUSAGE = BOOL function(const(char)* pszUsageOID, CRYPT_PROVIDER_DEFUSAGE* psDefUsage);
+alias PFN_FREEDEFUSAGE = BOOL function(const(char)* pszUsageOID, CRYPT_PROVIDER_DEFUSAGE* psDefUsage);
 struct CRYPT_PROVIDER_REGDEFUSAGE
 {
     uint cbStruct;
@@ -719,7 +719,7 @@ struct WTD_GENERIC_CHAIN_POLICY_SIGNER_INFO
     uint cCounterSigner;
     WTD_GENERIC_CHAIN_POLICY_SIGNER_INFO** rgpCounterSigner;
 }
-alias PFN_WTD_GENERIC_CHAIN_POLICY_CALLBACK = HRESULT function(CRYPT_PROVIDER_DATA*, uint, uint, uint, WTD_GENERIC_CHAIN_POLICY_SIGNER_INFO**, void*);
+alias PFN_WTD_GENERIC_CHAIN_POLICY_CALLBACK = HRESULT function(CRYPT_PROVIDER_DATA* pProvData, uint dwStepError, uint dwRegPolicySettings, uint cSigner, WTD_GENERIC_CHAIN_POLICY_SIGNER_INFO** rgpSigner, void* pvPolicyArg);
 struct WTD_GENERIC_CHAIN_POLICY_CREATE_INFO
 {
     union

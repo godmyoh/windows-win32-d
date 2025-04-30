@@ -9,22 +9,22 @@ import windows.win32.system.com : IUnknown;
 version (Windows):
 extern (Windows):
 
-HRESULT NdfCreateIncident(const(wchar)*, uint, HELPER_ATTRIBUTE*, void**);
-HRESULT NdfCreateWinSockIncident(SOCKET, const(wchar)*, ushort, const(wchar)*, SID*, void**);
-HRESULT NdfCreateWebIncident(const(wchar)*, void**);
-HRESULT NdfCreateWebIncidentEx(const(wchar)*, BOOL, PWSTR, void**);
-HRESULT NdfCreateSharingIncident(const(wchar)*, void**);
-HRESULT NdfCreateDNSIncident(const(wchar)*, ushort, void**);
-HRESULT NdfCreateConnectivityIncident(void**);
-HRESULT NdfCreateNetConnectionIncident(void**, GUID);
-HRESULT NdfCreatePnrpIncident(const(wchar)*, const(wchar)*, BOOL, const(wchar)*, void**);
-HRESULT NdfCreateGroupingIncident(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, SOCKET_ADDRESS_LIST*, const(wchar)*, void**);
-HRESULT NdfExecuteDiagnosis(void*, HWND);
-HRESULT NdfCloseIncident(void*);
-HRESULT NdfDiagnoseIncident(void*, uint*, RootCauseInfo**, uint, uint);
-HRESULT NdfRepairIncident(void*, RepairInfoEx*, uint);
-HRESULT NdfCancelIncident(void*);
-HRESULT NdfGetTraceFile(void*, const(wchar)**);
+HRESULT NdfCreateIncident(const(wchar)* helperClassName, uint celt, HELPER_ATTRIBUTE* attributes, void** handle);
+HRESULT NdfCreateWinSockIncident(SOCKET sock, const(wchar)* host, ushort port, const(wchar)* appId, SID* userId, void** handle);
+HRESULT NdfCreateWebIncident(const(wchar)* url, void** handle);
+HRESULT NdfCreateWebIncidentEx(const(wchar)* url, BOOL useWinHTTP, PWSTR moduleName, void** handle);
+HRESULT NdfCreateSharingIncident(const(wchar)* UNCPath, void** handle);
+HRESULT NdfCreateDNSIncident(const(wchar)* hostname, ushort queryType, void** handle);
+HRESULT NdfCreateConnectivityIncident(void** handle);
+HRESULT NdfCreateNetConnectionIncident(void** handle, GUID id);
+HRESULT NdfCreatePnrpIncident(const(wchar)* cloudname, const(wchar)* peername, BOOL diagnosePublish, const(wchar)* appId, void** handle);
+HRESULT NdfCreateGroupingIncident(const(wchar)* CloudName, const(wchar)* GroupName, const(wchar)* Identity, const(wchar)* Invitation, SOCKET_ADDRESS_LIST* Addresses, const(wchar)* appId, void** handle);
+HRESULT NdfExecuteDiagnosis(void* handle, HWND hwnd);
+HRESULT NdfCloseIncident(void* handle);
+HRESULT NdfDiagnoseIncident(void* Handle, uint* RootCauseCount, RootCauseInfo** RootCauses, uint dwWait, uint dwFlags);
+HRESULT NdfRepairIncident(void* Handle, RepairInfoEx* RepairEx, uint dwWait);
+HRESULT NdfCancelIncident(void* Handle);
+HRESULT NdfGetTraceFile(void* Handle, const(wchar)** TraceFileLocation);
 enum NDF_ERROR_START = 0x0000f900;
 enum NDF_E_LENGTH_EXCEEDED = 0xffffffff8008f900;
 enum NDF_E_NOHELPERCLASS = 0xffffffff8008f901;
@@ -238,22 +238,22 @@ struct DiagnosticsInfo
 enum IID_INetDiagHelper = GUID(0xc0b35746, 0xebf5, 0x11d8, [0xbb, 0xe9, 0x50, 0x50, 0x54, 0x50, 0x30, 0x30]);
 interface INetDiagHelper : IUnknown
 {
-    HRESULT Initialize(uint, HELPER_ATTRIBUTE*);
-    HRESULT GetDiagnosticsInfo(DiagnosticsInfo**);
-    HRESULT GetKeyAttributes(uint*, HELPER_ATTRIBUTE**);
-    HRESULT LowHealth(const(wchar)*, PWSTR*, int*, DIAGNOSIS_STATUS*);
-    HRESULT HighUtilization(const(wchar)*, PWSTR*, int*, DIAGNOSIS_STATUS*);
-    HRESULT GetLowerHypotheses(uint*, HYPOTHESIS**);
-    HRESULT GetDownStreamHypotheses(uint*, HYPOTHESIS**);
-    HRESULT GetHigherHypotheses(uint*, HYPOTHESIS**);
-    HRESULT GetUpStreamHypotheses(uint*, HYPOTHESIS**);
-    HRESULT Repair(RepairInfo*, int*, REPAIR_STATUS*);
-    HRESULT Validate(PROBLEM_TYPE, int*, REPAIR_STATUS*);
-    HRESULT GetRepairInfo(PROBLEM_TYPE, uint*, RepairInfo**);
-    HRESULT GetLifeTime(LIFE_TIME*);
-    HRESULT SetLifeTime(LIFE_TIME);
-    HRESULT GetCacheTime(FILETIME*);
-    HRESULT GetAttributes(uint*, HELPER_ATTRIBUTE**);
+    HRESULT Initialize(uint celt, HELPER_ATTRIBUTE* rgAttributes);
+    HRESULT GetDiagnosticsInfo(DiagnosticsInfo** ppInfo);
+    HRESULT GetKeyAttributes(uint* pcelt, HELPER_ATTRIBUTE** pprgAttributes);
+    HRESULT LowHealth(const(wchar)* pwszInstanceDescription, PWSTR* ppwszDescription, int* pDeferredTime, DIAGNOSIS_STATUS* pStatus);
+    HRESULT HighUtilization(const(wchar)* pwszInstanceDescription, PWSTR* ppwszDescription, int* pDeferredTime, DIAGNOSIS_STATUS* pStatus);
+    HRESULT GetLowerHypotheses(uint* pcelt, HYPOTHESIS** pprgHypotheses);
+    HRESULT GetDownStreamHypotheses(uint* pcelt, HYPOTHESIS** pprgHypotheses);
+    HRESULT GetHigherHypotheses(uint* pcelt, HYPOTHESIS** pprgHypotheses);
+    HRESULT GetUpStreamHypotheses(uint* pcelt, HYPOTHESIS** pprgHypotheses);
+    HRESULT Repair(RepairInfo* pInfo, int* pDeferredTime, REPAIR_STATUS* pStatus);
+    HRESULT Validate(PROBLEM_TYPE problem, int* pDeferredTime, REPAIR_STATUS* pStatus);
+    HRESULT GetRepairInfo(PROBLEM_TYPE problem, uint* pcelt, RepairInfo** ppInfo);
+    HRESULT GetLifeTime(LIFE_TIME* pLifeTime);
+    HRESULT SetLifeTime(LIFE_TIME lifeTime);
+    HRESULT GetCacheTime(FILETIME* pCacheTime);
+    HRESULT GetAttributes(uint* pcelt, HELPER_ATTRIBUTE** pprgAttributes);
     HRESULT Cancel();
     HRESULT Cleanup();
 }
@@ -265,22 +265,22 @@ struct HypothesisResult
 enum IID_INetDiagHelperUtilFactory = GUID(0x104613fb, 0xbc57, 0x4178, [0x95, 0xba, 0x88, 0x80, 0x96, 0x98, 0x35, 0x4a]);
 interface INetDiagHelperUtilFactory : IUnknown
 {
-    HRESULT CreateUtilityInstance(const(GUID)*, void**);
+    HRESULT CreateUtilityInstance(const(GUID)* riid, void** ppvObject);
 }
 enum IID_INetDiagHelperEx = GUID(0x972dab4d, 0xe4e3, 0x4fc6, [0xae, 0x54, 0x5f, 0x65, 0xcc, 0xde, 0x4a, 0x15]);
 interface INetDiagHelperEx : IUnknown
 {
-    HRESULT ReconfirmLowHealth(uint, HypothesisResult*, PWSTR*, DIAGNOSIS_STATUS*);
-    HRESULT SetUtilities(INetDiagHelperUtilFactory);
+    HRESULT ReconfirmLowHealth(uint celt, HypothesisResult* pResults, PWSTR* ppwszUpdatedDescription, DIAGNOSIS_STATUS* pUpdatedStatus);
+    HRESULT SetUtilities(INetDiagHelperUtilFactory pUtilities);
     HRESULT ReproduceFailure();
 }
 enum IID_INetDiagHelperInfo = GUID(0xc0b35747, 0xebf5, 0x11d8, [0xbb, 0xe9, 0x50, 0x50, 0x54, 0x50, 0x30, 0x30]);
 interface INetDiagHelperInfo : IUnknown
 {
-    HRESULT GetAttributeInfo(uint*, HelperAttributeInfo**);
+    HRESULT GetAttributeInfo(uint* pcelt, HelperAttributeInfo** pprgAttributeInfos);
 }
 enum IID_INetDiagExtensibleHelper = GUID(0xc0b35748, 0xebf5, 0x11d8, [0xbb, 0xe9, 0x50, 0x50, 0x54, 0x50, 0x30, 0x30]);
 interface INetDiagExtensibleHelper : IUnknown
 {
-    HRESULT ResolveAttributes(uint, HELPER_ATTRIBUTE*, uint*, HELPER_ATTRIBUTE**);
+    HRESULT ResolveAttributes(uint celt, HELPER_ATTRIBUTE* rgKeyAttributes, uint* pcelt, HELPER_ATTRIBUTE** prgMatchValues);
 }

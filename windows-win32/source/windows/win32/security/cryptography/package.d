@@ -1,8 +1,8 @@
 module windows.win32.security.cryptography;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BSTR, CHAR, FILETIME, HANDLE, HMODULE, HRESULT, HWND, NTSTATUS, PSID, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL;
-import windows.win32.security : NCRYPT_DESCRIPTOR_HANDLE, NCRYPT_STREAM_HANDLE, OBJECT_SECURITY_INFORMATION;
+import windows.win32.foundation : BOOL, BSTR, CHAR, FILETIME, HANDLE, HMODULE, HRESULT, HWND, NTSTATUS, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL;
+import windows.win32.security : NCRYPT_DESCRIPTOR_HANDLE, NCRYPT_STREAM_HANDLE, OBJECT_SECURITY_INFORMATION, PSID;
 import windows.win32.system.com : IDispatch, IUnknown;
 import windows.win32.system.registry : HKEY, REG_VALUE_TYPE;
 import windows.win32.system.variant : VARIANT;
@@ -10,1328 +10,475 @@ import windows.win32.system.variant : VARIANT;
 version (Windows):
 extern (Windows):
 
-alias BCRYPT_OPERATION = uint;
-enum : uint
-{
-    BCRYPT_CIPHER_OPERATION                = 0x00000001,
-    BCRYPT_HASH_OPERATION                  = 0x00000002,
-    BCRYPT_ASYMMETRIC_ENCRYPTION_OPERATION = 0x00000004,
-    BCRYPT_SECRET_AGREEMENT_OPERATION      = 0x00000008,
-    BCRYPT_SIGNATURE_OPERATION             = 0x00000010,
-    BCRYPT_RNG_OPERATION                   = 0x00000020,
-}
-
-alias NCRYPT_OPERATION = uint;
-enum : uint
-{
-    NCRYPT_CIPHER_OPERATION                = 0x00000001,
-    NCRYPT_HASH_OPERATION                  = 0x00000002,
-    NCRYPT_ASYMMETRIC_ENCRYPTION_OPERATION = 0x00000004,
-    NCRYPT_SECRET_AGREEMENT_OPERATION      = 0x00000008,
-    NCRYPT_SIGNATURE_OPERATION             = 0x00000010,
-}
-
-alias CERT_FIND_FLAGS = uint;
-enum : uint
-{
-    CERT_FIND_ANY                         = 0x00000000,
-    CERT_FIND_CERT_ID                     = 0x00100000,
-    CERT_FIND_CTL_USAGE                   = 0x000a0000,
-    CERT_FIND_ENHKEY_USAGE                = 0x000a0000,
-    CERT_FIND_EXISTING                    = 0x000d0000,
-    CERT_FIND_HASH                        = 0x00010000,
-    CERT_FIND_HAS_PRIVATE_KEY             = 0x00150000,
-    CERT_FIND_ISSUER_ATTR                 = 0x00030004,
-    CERT_FIND_ISSUER_NAME                 = 0x00020004,
-    CERT_FIND_ISSUER_OF                   = 0x000c0000,
-    CERT_FIND_ISSUER_STR                  = 0x00080004,
-    CERT_FIND_KEY_IDENTIFIER              = 0x000f0000,
-    CERT_FIND_KEY_SPEC                    = 0x00090000,
-    CERT_FIND_MD5_HASH                    = 0x00040000,
-    CERT_FIND_PROPERTY                    = 0x00050000,
-    CERT_FIND_PUBLIC_KEY                  = 0x00060000,
-    CERT_FIND_SHA1_HASH                   = 0x00010000,
-    CERT_FIND_SIGNATURE_HASH              = 0x000e0000,
-    CERT_FIND_SUBJECT_ATTR                = 0x00030007,
-    CERT_FIND_SUBJECT_CERT                = 0x000b0000,
-    CERT_FIND_SUBJECT_NAME                = 0x00020007,
-    CERT_FIND_SUBJECT_STR                 = 0x00080007,
-    CERT_FIND_CROSS_CERT_DIST_POINTS      = 0x00110000,
-    CERT_FIND_PUBKEY_MD5_HASH             = 0x00120000,
-    CERT_FIND_SUBJECT_STR_A               = 0x00070007,
-    CERT_FIND_SUBJECT_STR_W               = 0x00080007,
-    CERT_FIND_ISSUER_STR_A                = 0x00070004,
-    CERT_FIND_ISSUER_STR_W                = 0x00080004,
-    CERT_FIND_SUBJECT_INFO_ACCESS         = 0x00130000,
-    CERT_FIND_HASH_STR                    = 0x00140000,
-    CERT_FIND_OPTIONAL_ENHKEY_USAGE_FLAG  = 0x00000001,
-    CERT_FIND_EXT_ONLY_ENHKEY_USAGE_FLAG  = 0x00000002,
-    CERT_FIND_PROP_ONLY_ENHKEY_USAGE_FLAG = 0x00000004,
-    CERT_FIND_NO_ENHKEY_USAGE_FLAG        = 0x00000008,
-    CERT_FIND_OR_ENHKEY_USAGE_FLAG        = 0x00000010,
-    CERT_FIND_VALID_ENHKEY_USAGE_FLAG     = 0x00000020,
-    CERT_FIND_OPTIONAL_CTL_USAGE_FLAG     = 0x00000001,
-    CERT_FIND_EXT_ONLY_CTL_USAGE_FLAG     = 0x00000002,
-    CERT_FIND_PROP_ONLY_CTL_USAGE_FLAG    = 0x00000004,
-    CERT_FIND_NO_CTL_USAGE_FLAG           = 0x00000008,
-    CERT_FIND_OR_CTL_USAGE_FLAG           = 0x00000010,
-    CERT_FIND_VALID_CTL_USAGE_FLAG        = 0x00000020,
-}
-
-alias CERT_QUERY_OBJECT_TYPE = uint;
-enum : uint
-{
-    CERT_QUERY_OBJECT_FILE = 0x00000001,
-    CERT_QUERY_OBJECT_BLOB = 0x00000002,
-}
-
-alias CERT_QUERY_CONTENT_TYPE = uint;
-enum : uint
-{
-    CERT_QUERY_CONTENT_CERT               = 0x00000001,
-    CERT_QUERY_CONTENT_CTL                = 0x00000002,
-    CERT_QUERY_CONTENT_CRL                = 0x00000003,
-    CERT_QUERY_CONTENT_SERIALIZED_STORE   = 0x00000004,
-    CERT_QUERY_CONTENT_SERIALIZED_CERT    = 0x00000005,
-    CERT_QUERY_CONTENT_SERIALIZED_CTL     = 0x00000006,
-    CERT_QUERY_CONTENT_SERIALIZED_CRL     = 0x00000007,
-    CERT_QUERY_CONTENT_PKCS7_SIGNED       = 0x00000008,
-    CERT_QUERY_CONTENT_PKCS7_UNSIGNED     = 0x00000009,
-    CERT_QUERY_CONTENT_PKCS7_SIGNED_EMBED = 0x0000000a,
-    CERT_QUERY_CONTENT_PKCS10             = 0x0000000b,
-    CERT_QUERY_CONTENT_PFX                = 0x0000000c,
-    CERT_QUERY_CONTENT_CERT_PAIR          = 0x0000000d,
-    CERT_QUERY_CONTENT_PFX_AND_LOAD       = 0x0000000e,
-}
-
-alias CERT_QUERY_CONTENT_TYPE_FLAGS = uint;
-enum : uint
-{
-    CERT_QUERY_CONTENT_FLAG_CERT               = 0x00000002,
-    CERT_QUERY_CONTENT_FLAG_CTL                = 0x00000004,
-    CERT_QUERY_CONTENT_FLAG_CRL                = 0x00000008,
-    CERT_QUERY_CONTENT_FLAG_SERIALIZED_STORE   = 0x00000010,
-    CERT_QUERY_CONTENT_FLAG_SERIALIZED_CERT    = 0x00000020,
-    CERT_QUERY_CONTENT_FLAG_SERIALIZED_CTL     = 0x00000040,
-    CERT_QUERY_CONTENT_FLAG_SERIALIZED_CRL     = 0x00000080,
-    CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED       = 0x00000100,
-    CERT_QUERY_CONTENT_FLAG_PKCS7_UNSIGNED     = 0x00000200,
-    CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED_EMBED = 0x00000400,
-    CERT_QUERY_CONTENT_FLAG_PKCS10             = 0x00000800,
-    CERT_QUERY_CONTENT_FLAG_PFX                = 0x00001000,
-    CERT_QUERY_CONTENT_FLAG_CERT_PAIR          = 0x00002000,
-    CERT_QUERY_CONTENT_FLAG_PFX_AND_LOAD       = 0x00004000,
-    CERT_QUERY_CONTENT_FLAG_ALL                = 0x00003ffe,
-    CERT_QUERY_CONTENT_FLAG_ALL_ISSUER_CERT    = 0x00000332,
-}
-
-alias CERT_QUERY_FORMAT_TYPE = uint;
-enum : uint
-{
-    CERT_QUERY_FORMAT_BINARY                = 0x00000001,
-    CERT_QUERY_FORMAT_BASE64_ENCODED        = 0x00000002,
-    CERT_QUERY_FORMAT_ASN_ASCII_HEX_ENCODED = 0x00000003,
-}
-
-alias CERT_QUERY_FORMAT_TYPE_FLAGS = uint;
-enum : uint
-{
-    CERT_QUERY_FORMAT_FLAG_BINARY                = 0x00000002,
-    CERT_QUERY_FORMAT_FLAG_BASE64_ENCODED        = 0x00000004,
-    CERT_QUERY_FORMAT_FLAG_ASN_ASCII_HEX_ENCODED = 0x00000008,
-    CERT_QUERY_FORMAT_FLAG_ALL                   = 0x0000000e,
-}
-
-alias CERT_QUERY_ENCODING_TYPE = uint;
-enum : uint
-{
-    X509_ASN_ENCODING   = 0x00000001,
-    PKCS_7_ASN_ENCODING = 0x00010000,
-}
-
-alias CERT_RDN_ATTR_VALUE_TYPE = int;
-enum : int
-{
-    CERT_RDN_ANY_TYPE         = 0x00000000,
-    CERT_RDN_NUMERIC_STRING   = 0x00000003,
-    CERT_RDN_PRINTABLE_STRING = 0x00000004,
-    CERT_RDN_T61_STRING       = 0x00000005,
-    CERT_RDN_VIDEOTEX_STRING  = 0x00000006,
-    CERT_RDN_IA5_STRING       = 0x00000007,
-    CERT_RDN_GRAPHIC_STRING   = 0x00000008,
-    CERT_RDN_ISO646_STRING    = 0x00000009,
-    CERT_RDN_GENERAL_STRING   = 0x0000000a,
-    CERT_RDN_INT4_STRING      = 0x0000000b,
-    CERT_RDN_UNICODE_STRING   = 0x0000000c,
-    CERT_RDN_BMP_STRING       = 0x0000000c,
-    CERT_RDN_ENCODED_BLOB     = 0x00000001,
-    CERT_RDN_OCTET_STRING     = 0x00000002,
-    CERT_RDN_TELETEX_STRING   = 0x00000005,
-    CERT_RDN_UNIVERSAL_STRING = 0x0000000b,
-    CERT_RDN_UTF8_STRING      = 0x0000000d,
-    CERT_RDN_VISIBLE_STRING   = 0x00000009,
-}
-
-alias CERT_STRING_TYPE = uint;
-enum : uint
-{
-    CERT_SIMPLE_NAME_STR = 0x00000001,
-    CERT_OID_NAME_STR    = 0x00000002,
-    CERT_X500_NAME_STR   = 0x00000003,
-}
-
-alias BCRYPT_TABLE = uint;
-enum : uint
-{
-    CRYPT_LOCAL  = 0x00000001,
-    CRYPT_DOMAIN = 0x00000002,
-}
-
-alias CERT_KEY_SPEC = uint;
-enum : uint
-{
-    AT_KEYEXCHANGE       = 0x00000001,
-    AT_SIGNATURE         = 0x00000002,
-    CERT_NCRYPT_KEY_SPEC = 0xffffffff,
-}
-
-alias BCRYPT_INTERFACE = uint;
-enum : uint
-{
-    BCRYPT_ASYMMETRIC_ENCRYPTION_INTERFACE = 0x00000003,
-    BCRYPT_CIPHER_INTERFACE                = 0x00000001,
-    BCRYPT_HASH_INTERFACE                  = 0x00000002,
-    BCRYPT_RNG_INTERFACE                   = 0x00000006,
-    BCRYPT_SECRET_AGREEMENT_INTERFACE      = 0x00000004,
-    BCRYPT_SIGNATURE_INTERFACE             = 0x00000005,
-    NCRYPT_KEY_STORAGE_INTERFACE           = 0x00010001,
-    NCRYPT_SCHANNEL_INTERFACE              = 0x00010002,
-    NCRYPT_SCHANNEL_SIGNATURE_INTERFACE    = 0x00010003,
-}
-
-alias BCRYPT_FLAGS = uint;
-enum : uint
-{
-    BCRYPT_BLOCK_PADDING = 0x00000001,
-    BCRYPT_PAD_NONE      = 0x00000001,
-    BCRYPT_PAD_OAEP      = 0x00000004,
-    BCRYPT_PAD_PKCS1     = 0x00000002,
-    BCRYPT_PAD_PSS       = 0x00000008,
-}
-
-alias NCRYPT_FLAGS = uint;
-enum : uint
-{
-    NCRYPT_SILENT_FLAG                    = 0x00000040,
-    NCRYPT_NO_PADDING_FLAG                = 0x00000001,
-    NCRYPT_PAD_OAEP_FLAG                  = 0x00000004,
-    NCRYPT_PAD_PKCS1_FLAG                 = 0x00000002,
-    NCRYPT_REGISTER_NOTIFY_FLAG           = 0x00000001,
-    NCRYPT_UNREGISTER_NOTIFY_FLAG         = 0x00000002,
-    NCRYPT_MACHINE_KEY_FLAG               = 0x00000020,
-    NCRYPT_UNPROTECT_NO_DECRYPT           = 0x00000001,
-    NCRYPT_OVERWRITE_KEY_FLAG             = 0x00000080,
-    NCRYPT_NO_KEY_VALIDATION              = 0x00000008,
-    NCRYPT_WRITE_KEY_TO_LEGACY_STORE_FLAG = 0x00000200,
-    NCRYPT_PAD_PSS_FLAG                   = 0x00000008,
-    NCRYPT_PERSIST_FLAG                   = 0x80000000,
-    NCRYPT_PERSIST_ONLY_FLAG              = 0x40000000,
-}
-
-alias CRYPT_STRING = uint;
-enum : uint
-{
-    CRYPT_STRING_BASE64HEADER        = 0x00000000,
-    CRYPT_STRING_BASE64              = 0x00000001,
-    CRYPT_STRING_BINARY              = 0x00000002,
-    CRYPT_STRING_BASE64REQUESTHEADER = 0x00000003,
-    CRYPT_STRING_HEX                 = 0x00000004,
-    CRYPT_STRING_HEXASCII            = 0x00000005,
-    CRYPT_STRING_BASE64X509CRLHEADER = 0x00000009,
-    CRYPT_STRING_HEXADDR             = 0x0000000a,
-    CRYPT_STRING_HEXASCIIADDR        = 0x0000000b,
-    CRYPT_STRING_HEXRAW              = 0x0000000c,
-    CRYPT_STRING_STRICT              = 0x20000000,
-    CRYPT_STRING_BASE64_ANY          = 0x00000006,
-    CRYPT_STRING_ANY                 = 0x00000007,
-    CRYPT_STRING_HEX_ANY             = 0x00000008,
-}
-
-alias CRYPT_IMPORT_PUBLIC_KEY_FLAGS = uint;
-enum : uint
-{
-    CRYPT_OID_INFO_PUBKEY_SIGN_KEY_FLAG    = 0x80000000,
-    CRYPT_OID_INFO_PUBKEY_ENCRYPT_KEY_FLAG = 0x40000000,
-}
-
-alias CRYPT_XML_FLAGS = uint;
-enum : uint
-{
-    CRYPT_XML_FLAG_DISABLE_EXTENSIONS = 0x10000000,
-    CRYPT_XML_FLAG_NO_SERIALIZE       = 0x80000000,
-    CRYPT_XML_SIGN_ADD_KEYVALUE       = 0x00000001,
-}
-
-alias CRYPT_ENCODE_OBJECT_FLAGS = uint;
-enum : uint
-{
-    CRYPT_ENCODE_ALLOC_FLAG                            = 0x00008000,
-    CRYPT_ENCODE_ENABLE_PUNYCODE_FLAG                  = 0x00020000,
-    CRYPT_UNICODE_NAME_ENCODE_DISABLE_CHECK_TYPE_FLAG  = 0x40000000,
-    CRYPT_UNICODE_NAME_ENCODE_ENABLE_T61_UNICODE_FLAG  = 0x80000000,
-    CRYPT_UNICODE_NAME_ENCODE_ENABLE_UTF8_UNICODE_FLAG = 0x20000000,
-}
-
-alias CRYPT_OBJECT_LOCATOR_RELEASE_REASON = uint;
-enum : uint
-{
-    CRYPT_OBJECT_LOCATOR_RELEASE_SYSTEM_SHUTDOWN = 0x00000001,
-    CRYPT_OBJECT_LOCATOR_RELEASE_SERVICE_STOP    = 0x00000002,
-    CRYPT_OBJECT_LOCATOR_RELEASE_PROCESS_EXIT    = 0x00000003,
-    CRYPT_OBJECT_LOCATOR_RELEASE_DLL_UNLOAD      = 0x00000004,
-}
-
-alias CRYPT_ACQUIRE_FLAGS = uint;
-enum : uint
-{
-    CRYPT_ACQUIRE_CACHE_FLAG             = 0x00000001,
-    CRYPT_ACQUIRE_USE_PROV_INFO_FLAG     = 0x00000002,
-    CRYPT_ACQUIRE_COMPARE_KEY_FLAG       = 0x00000004,
-    CRYPT_ACQUIRE_NO_HEALING             = 0x00000008,
-    CRYPT_ACQUIRE_SILENT_FLAG            = 0x00000040,
-    CRYPT_ACQUIRE_WINDOW_HANDLE_FLAG     = 0x00000080,
-    CRYPT_ACQUIRE_NCRYPT_KEY_FLAGS_MASK  = 0x00070000,
-    CRYPT_ACQUIRE_ALLOW_NCRYPT_KEY_FLAG  = 0x00010000,
-    CRYPT_ACQUIRE_PREFER_NCRYPT_KEY_FLAG = 0x00020000,
-    CRYPT_ACQUIRE_ONLY_NCRYPT_KEY_FLAG   = 0x00040000,
-}
-
-alias CRYPT_GET_URL_FLAGS = uint;
-enum : uint
-{
-    CRYPT_GET_URL_FROM_PROPERTY         = 0x00000001,
-    CRYPT_GET_URL_FROM_EXTENSION        = 0x00000002,
-    CRYPT_GET_URL_FROM_UNAUTH_ATTRIBUTE = 0x00000004,
-    CRYPT_GET_URL_FROM_AUTH_ATTRIBUTE   = 0x00000008,
-}
-
-alias CERT_STORE_SAVE_AS = uint;
-enum : uint
-{
-    CERT_STORE_SAVE_AS_PKCS7 = 0x00000002,
-    CERT_STORE_SAVE_AS_STORE = 0x00000001,
-}
-
-alias BCRYPT_QUERY_PROVIDER_MODE = uint;
-enum : uint
-{
-    CRYPT_ANY = 0x00000004,
-    CRYPT_UM  = 0x00000001,
-    CRYPT_KM  = 0x00000002,
-    CRYPT_MM  = 0x00000003,
-}
-
-alias CERT_FIND_CHAIN_IN_STORE_FLAGS = uint;
-enum : uint
-{
-    CERT_CHAIN_FIND_BY_ISSUER_COMPARE_KEY_FLAG    = 0x00000001,
-    CERT_CHAIN_FIND_BY_ISSUER_COMPLEX_CHAIN_FLAG  = 0x00000002,
-    CERT_CHAIN_FIND_BY_ISSUER_CACHE_ONLY_FLAG     = 0x00008000,
-    CERT_CHAIN_FIND_BY_ISSUER_CACHE_ONLY_URL_FLAG = 0x00000004,
-    CERT_CHAIN_FIND_BY_ISSUER_LOCAL_MACHINE_FLAG  = 0x00000008,
-    CERT_CHAIN_FIND_BY_ISSUER_NO_KEY_FLAG         = 0x00004000,
-}
-
-alias CERT_CONTROL_STORE_FLAGS = uint;
-enum : uint
-{
-    CERT_STORE_CTRL_COMMIT_FORCE_FLAG             = 0x00000001,
-    CERT_STORE_CTRL_COMMIT_CLEAR_FLAG             = 0x00000002,
-    CERT_STORE_CTRL_INHIBIT_DUPLICATE_HANDLE_FLAG = 0x00000001,
-}
-
-alias BCRYPT_OPEN_ALGORITHM_PROVIDER_FLAGS = uint;
-enum : uint
-{
-    BCRYPT_ALG_HANDLE_HMAC_FLAG = 0x00000008,
-    BCRYPT_PROV_DISPATCH        = 0x00000001,
-    BCRYPT_HASH_REUSABLE_FLAG   = 0x00000020,
-}
-
-alias CERT_STORE_SAVE_TO = uint;
-enum : uint
-{
-    CERT_STORE_SAVE_TO_FILE       = 0x00000001,
-    CERT_STORE_SAVE_TO_FILENAME   = 0x00000004,
-    CERT_STORE_SAVE_TO_FILENAME_A = 0x00000003,
-    CERT_STORE_SAVE_TO_FILENAME_W = 0x00000004,
-    CERT_STORE_SAVE_TO_MEMORY     = 0x00000002,
-}
-
-alias CRYPT_SET_PROV_PARAM_ID = uint;
-enum : uint
-{
-    PP_CLIENT_HWND            = 0x00000001,
-    PP_DELETEKEY              = 0x00000018,
-    PP_KEYEXCHANGE_ALG        = 0x0000000e,
-    PP_KEYEXCHANGE_PIN        = 0x00000020,
-    PP_KEYEXCHANGE_KEYSIZE    = 0x0000000c,
-    PP_KEYSET_SEC_DESCR       = 0x00000008,
-    PP_PIN_PROMPT_STRING      = 0x0000002c,
-    PP_ROOT_CERTSTORE         = 0x0000002e,
-    PP_SIGNATURE_ALG          = 0x0000000f,
-    PP_SIGNATURE_PIN          = 0x00000021,
-    PP_SIGNATURE_KEYSIZE      = 0x0000000d,
-    PP_UI_PROMPT              = 0x00000015,
-    PP_USE_HARDWARE_RNG       = 0x00000026,
-    PP_USER_CERTSTORE         = 0x0000002a,
-    PP_SECURE_KEYEXCHANGE_PIN = 0x0000002f,
-    PP_SECURE_SIGNATURE_PIN   = 0x00000030,
-    PP_SMARTCARD_READER       = 0x0000002b,
-}
-
-alias CRYPT_KEY_PARAM_ID = uint;
-enum : uint
-{
-    KP_ALGID         = 0x00000007,
-    KP_CERTIFICATE   = 0x0000001a,
-    KP_PERMISSIONS   = 0x00000006,
-    KP_SALT          = 0x00000002,
-    KP_SALT_EX       = 0x0000000a,
-    KP_BLOCKLEN      = 0x00000008,
-    KP_GET_USE_COUNT = 0x0000002a,
-    KP_KEYLEN        = 0x00000009,
-}
-
-alias CRYPT_KEY_FLAGS = uint;
-enum : uint
-{
-    CRYPT_EXPORTABLE                   = 0x00000001,
-    CRYPT_USER_PROTECTED               = 0x00000002,
-    CRYPT_ARCHIVABLE                   = 0x00004000,
-    CRYPT_CREATE_IV                    = 0x00000200,
-    CRYPT_CREATE_SALT                  = 0x00000004,
-    CRYPT_DATA_KEY                     = 0x00000800,
-    CRYPT_FORCE_KEY_PROTECTION_HIGH    = 0x00008000,
-    CRYPT_KEK                          = 0x00000400,
-    CRYPT_INITIATOR                    = 0x00000040,
-    CRYPT_NO_SALT                      = 0x00000010,
-    CRYPT_ONLINE                       = 0x00000080,
-    CRYPT_PREGEN                       = 0x00000040,
-    CRYPT_RECIPIENT                    = 0x00000010,
-    CRYPT_SF                           = 0x00000100,
-    CRYPT_SGCKEY                       = 0x00002000,
-    CRYPT_VOLATILE                     = 0x00001000,
-    CRYPT_MACHINE_KEYSET               = 0x00000020,
-    CRYPT_USER_KEYSET                  = 0x00001000,
-    PKCS12_PREFER_CNG_KSP              = 0x00000100,
-    PKCS12_ALWAYS_CNG_KSP              = 0x00000200,
-    PKCS12_ALLOW_OVERWRITE_KEY         = 0x00004000,
-    PKCS12_NO_PERSIST_KEY              = 0x00008000,
-    PKCS12_INCLUDE_EXTENDED_PROPERTIES = 0x00000010,
-    CRYPT_OAEP                         = 0x00000040,
-    CRYPT_BLOB_VER3                    = 0x00000080,
-    CRYPT_DESTROYKEY                   = 0x00000004,
-    CRYPT_SSL2_FALLBACK                = 0x00000002,
-    CRYPT_Y_ONLY                       = 0x00000001,
-    CRYPT_IPSEC_HMAC_KEY               = 0x00000100,
-    CERT_SET_KEY_PROV_HANDLE_PROP_ID   = 0x00000001,
-    CERT_SET_KEY_CONTEXT_PROP_ID       = 0x00000001,
-}
-
-alias CRYPT_MSG_TYPE = uint;
-enum : uint
-{
-    CMSG_DATA                 = 0x00000001,
-    CMSG_SIGNED               = 0x00000002,
-    CMSG_ENVELOPED            = 0x00000003,
-    CMSG_SIGNED_AND_ENVELOPED = 0x00000004,
-    CMSG_HASHED               = 0x00000005,
-}
-
-alias CERT_OPEN_STORE_FLAGS = uint;
-enum : uint
-{
-    CERT_STORE_BACKUP_RESTORE_FLAG              = 0x00000800,
-    CERT_STORE_CREATE_NEW_FLAG                  = 0x00002000,
-    CERT_STORE_DEFER_CLOSE_UNTIL_LAST_FREE_FLAG = 0x00000004,
-    CERT_STORE_DELETE_FLAG                      = 0x00000010,
-    CERT_STORE_ENUM_ARCHIVED_FLAG               = 0x00000200,
-    CERT_STORE_MAXIMUM_ALLOWED_FLAG             = 0x00001000,
-    CERT_STORE_NO_CRYPT_RELEASE_FLAG            = 0x00000001,
-    CERT_STORE_OPEN_EXISTING_FLAG               = 0x00004000,
-    CERT_STORE_READONLY_FLAG                    = 0x00008000,
-    CERT_STORE_SET_LOCALIZED_NAME_FLAG          = 0x00000002,
-    CERT_STORE_SHARE_CONTEXT_FLAG               = 0x00000080,
-    CERT_STORE_UPDATE_KEYID_FLAG                = 0x00000400,
-}
-
-alias CRYPT_DEFAULT_CONTEXT_FLAGS = uint;
-enum : uint
-{
-    CRYPT_DEFAULT_CONTEXT_AUTO_RELEASE_FLAG = 0x00000001,
-    CRYPT_DEFAULT_CONTEXT_PROCESS_FLAG      = 0x00000002,
-}
-
-alias CRYPT_VERIFY_CERT_FLAGS = uint;
-enum : uint
-{
-    CRYPT_VERIFY_CERT_SIGN_DISABLE_MD2_MD4_FLAG          = 0x00000001,
-    CRYPT_VERIFY_CERT_SIGN_SET_STRONG_PROPERTIES_FLAG    = 0x00000002,
-    CRYPT_VERIFY_CERT_SIGN_RETURN_STRONG_PROPERTIES_FLAG = 0x00000004,
-}
-
-alias CRYPT_SET_HASH_PARAM = uint;
-enum : uint
-{
-    HP_HMAC_INFO = 0x00000005,
-    HP_HASHVAL   = 0x00000002,
-}
-
-alias CERT_SYSTEM_STORE_FLAGS = uint;
-enum : uint
-{
-    CERT_SYSTEM_STORE_LOCATION_MASK = 0x00ff0000,
-    CERT_SYSTEM_STORE_RELOCATE_FLAG = 0x80000000,
-}
-
-alias CERT_CREATE_SELFSIGN_FLAGS = uint;
-enum : uint
-{
-    CERT_CREATE_SELFSIGN_NO_KEY_INFO = 0x00000002,
-    CERT_CREATE_SELFSIGN_NO_SIGN     = 0x00000001,
-}
-
-alias CRYPT_DEFAULT_CONTEXT_TYPE = uint;
-enum : uint
-{
-    CRYPT_DEFAULT_CONTEXT_CERT_SIGN_OID       = 0x00000001,
-    CRYPT_DEFAULT_CONTEXT_MULTI_CERT_SIGN_OID = 0x00000002,
-}
-
-alias BCRYPT_RESOLVE_PROVIDERS_FLAGS = uint;
-enum : uint
-{
-    CRYPT_ALL_FUNCTIONS = 0x00000001,
-    CRYPT_ALL_PROVIDERS = 0x00000002,
-}
-
-alias CERT_FIND_TYPE = uint;
-enum : uint
-{
-    CTL_FIND_ANY             = 0x00000000,
-    CTL_FIND_SHA1_HASH       = 0x00000001,
-    CTL_FIND_MD5_HASH        = 0x00000002,
-    CTL_FIND_USAGE           = 0x00000003,
-    CTL_FIND_SAME_USAGE_FLAG = 0x00000001,
-    CTL_FIND_EXISTING        = 0x00000005,
-    CTL_FIND_SUBJECT         = 0x00000004,
-}
-
-alias CRYPT_FIND_FLAGS = uint;
-enum : uint
-{
-    CRYPT_FIND_USER_KEYSET_FLAG    = 0x00000001,
-    CRYPT_FIND_MACHINE_KEYSET_FLAG = 0x00000002,
-    CRYPT_FIND_SILENT_KEYSET_FLAG  = 0x00000040,
-}
-
-alias CRYPT_IMAGE_REF_FLAGS = uint;
-enum : uint
-{
-    CRYPT_MIN_DEPENDENCIES = 0x00000001,
-    CRYPT_PROCESS_ISOLATE  = 0x00010000,
-}
-
-alias CERT_REVOCATION_STATUS_REASON = uint;
-enum : uint
-{
-    CRL_REASON_UNSPECIFIED            = 0x00000000,
-    CRL_REASON_KEY_COMPROMISE         = 0x00000001,
-    CRL_REASON_CA_COMPROMISE          = 0x00000002,
-    CRL_REASON_AFFILIATION_CHANGED    = 0x00000003,
-    CRL_REASON_SUPERSEDED             = 0x00000004,
-    CRL_REASON_CESSATION_OF_OPERATION = 0x00000005,
-    CRL_REASON_CERTIFICATE_HOLD       = 0x00000006,
-    CRL_REASON_REMOVE_FROM_CRL        = 0x00000008,
-}
-
-alias CERT_ROOT_PROGRAM_FLAGS = uint;
-enum : uint
-{
-    CERT_ROOT_PROGRAM_FLAG_LSC          = 0x00000040,
-    CERT_ROOT_PROGRAM_FLAG_ORG          = 0x00000080,
-    CERT_ROOT_PROGRAM_FLAG_SUBJECT_LOGO = 0x00000020,
-}
-
-alias CRYPT_XML_KEY_VALUE_TYPE = uint;
-enum : uint
-{
-    CRYPT_XML_KEY_VALUE_TYPE_DSA    = 0x00000001,
-    CRYPT_XML_KEY_VALUE_TYPE_RSA    = 0x00000002,
-    CRYPT_XML_KEY_VALUE_TYPE_ECDSA  = 0x00000003,
-    CRYPT_XML_KEY_VALUE_TYPE_CUSTOM = 0x00000004,
-}
-
-alias CERT_LOGOTYPE_CHOICE = uint;
-enum : uint
-{
-    CERT_LOGOTYPE_NO_IMAGE_RESOLUTION_CHOICE         = 0x00000000,
-    CERT_LOGOTYPE_BITS_IMAGE_RESOLUTION_CHOICE       = 0x00000001,
-    CERT_LOGOTYPE_TABLE_SIZE_IMAGE_RESOLUTION_CHOICE = 0x00000002,
-}
-
-alias CMSG_KEY_AGREE_OPTION = uint;
-enum : uint
-{
-    CMSG_KEY_AGREE_EPHEMERAL_KEY_CHOICE = 0x00000001,
-    CMSG_KEY_AGREE_STATIC_KEY_CHOICE    = 0x00000002,
-}
-
-alias CERT_LOGOTYPE_OPTION = uint;
-enum : uint
-{
-    CERT_LOGOTYPE_DIRECT_INFO_CHOICE   = 0x00000001,
-    CERT_LOGOTYPE_INDIRECT_INFO_CHOICE = 0x00000002,
-}
-
-alias CERT_STORE_PROV_FLAGS = uint;
-enum : uint
-{
-    CERT_STORE_PROV_EXTERNAL_FLAG        = 0x00000001,
-    CERT_STORE_PROV_DELETED_FLAG         = 0x00000002,
-    CERT_STORE_PROV_NO_PERSIST_FLAG      = 0x00000004,
-    CERT_STORE_PROV_SYSTEM_STORE_FLAG    = 0x00000008,
-    CERT_STORE_PROV_LM_SYSTEM_STORE_FLAG = 0x00000010,
-}
-
-alias CMSG_KEY_AGREE_ORIGINATOR = uint;
-enum : uint
-{
-    CMSG_KEY_AGREE_ORIGINATOR_CERT       = 0x00000001,
-    CMSG_KEY_AGREE_ORIGINATOR_PUBLIC_KEY = 0x00000002,
-}
-
-alias CRYPT_CONTEXT_CONFIG_FLAGS = uint;
-enum : uint
-{
-    CRYPT_EXCLUSIVE = 0x00000001,
-    CRYPT_OVERRIDE  = 0x00010000,
-}
-
-alias BCRYPT_DSA_MAGIC = uint;
-enum : uint
-{
-    BCRYPT_DSA_PUBLIC_MAGIC  = 0x42505344,
-    BCRYPT_DSA_PRIVATE_MAGIC = 0x56505344,
-}
-
-alias CRYPT_XML_X509DATA_TYPE = uint;
-enum : uint
-{
-    CRYPT_XML_X509DATA_TYPE_ISSUER_SERIAL = 0x00000001,
-    CRYPT_XML_X509DATA_TYPE_SKI           = 0x00000002,
-    CRYPT_XML_X509DATA_TYPE_SUBJECT_NAME  = 0x00000003,
-    CRYPT_XML_X509DATA_TYPE_CERTIFICATE   = 0x00000004,
-    CRYPT_XML_X509DATA_TYPE_CRL           = 0x00000005,
-    CRYPT_XML_X509DATA_TYPE_CUSTOM        = 0x00000006,
-}
-
-alias CERT_BIOMETRIC_DATA_TYPE = uint;
-enum : uint
-{
-    CERT_BIOMETRIC_PREDEFINED_DATA_CHOICE = 0x00000001,
-    CERT_BIOMETRIC_OID_DATA_CHOICE        = 0x00000002,
-}
-
-alias CERT_CHAIN_POLICY_FLAGS = uint;
-enum : uint
-{
-    CERT_CHAIN_POLICY_IGNORE_NOT_TIME_VALID_FLAG             = 0x00000001,
-    CERT_CHAIN_POLICY_IGNORE_CTL_NOT_TIME_VALID_FLAG         = 0x00000002,
-    CERT_CHAIN_POLICY_IGNORE_NOT_TIME_NESTED_FLAG            = 0x00000004,
-    CERT_CHAIN_POLICY_IGNORE_ALL_NOT_TIME_VALID_FLAGS        = 0x00000007,
-    CERT_CHAIN_POLICY_IGNORE_INVALID_BASIC_CONSTRAINTS_FLAG  = 0x00000008,
-    CERT_CHAIN_POLICY_ALLOW_UNKNOWN_CA_FLAG                  = 0x00000010,
-    CERT_CHAIN_POLICY_IGNORE_WRONG_USAGE_FLAG                = 0x00000020,
-    CERT_CHAIN_POLICY_IGNORE_INVALID_NAME_FLAG               = 0x00000040,
-    CERT_CHAIN_POLICY_IGNORE_INVALID_POLICY_FLAG             = 0x00000080,
-    CERT_CHAIN_POLICY_IGNORE_END_REV_UNKNOWN_FLAG            = 0x00000100,
-    CERT_CHAIN_POLICY_IGNORE_CTL_SIGNER_REV_UNKNOWN_FLAG     = 0x00000200,
-    CERT_CHAIN_POLICY_IGNORE_CA_REV_UNKNOWN_FLAG             = 0x00000400,
-    CERT_CHAIN_POLICY_IGNORE_ROOT_REV_UNKNOWN_FLAG           = 0x00000800,
-    CERT_CHAIN_POLICY_IGNORE_ALL_REV_UNKNOWN_FLAGS           = 0x00000f00,
-    CERT_CHAIN_POLICY_ALLOW_TESTROOT_FLAG                    = 0x00008000,
-    CERT_CHAIN_POLICY_TRUST_TESTROOT_FLAG                    = 0x00004000,
-    CERT_CHAIN_POLICY_IGNORE_NOT_SUPPORTED_CRITICAL_EXT_FLAG = 0x00002000,
-    CERT_CHAIN_POLICY_IGNORE_PEER_TRUST_FLAG                 = 0x00001000,
-}
-
-alias CERT_STRONG_SIGN_FLAGS = uint;
-enum : uint
-{
-    CERT_STRONG_SIGN_ENABLE_CRL_CHECK  = 0x00000001,
-    CERT_STRONG_SIGN_ENABLE_OCSP_CHECK = 0x00000002,
-}
-
-alias CERT_LOGOTYPE_IMAGE_INFO_TYPE = uint;
-enum : uint
-{
-    CERT_LOGOTYPE_GRAY_SCALE_IMAGE_INFO_CHOICE = 0x00000001,
-    CERT_LOGOTYPE_COLOR_IMAGE_INFO_CHOICE      = 0x00000002,
-}
-
-alias CRYPT_XML_STATUS_INFO_STATUS = uint;
-enum : uint
-{
-    CRYPT_XML_STATUS_INTERNAL_REFERENCE = 0x00000001,
-    CRYPT_XML_STATUS_KEY_AVAILABLE      = 0x00000002,
-    CRYPT_XML_STATUS_DIGESTING          = 0x00000004,
-    CRYPT_XML_STATUS_DIGEST_VALID       = 0x00000008,
-    CRYPT_XML_STATUS_SIGNATURE_VALID    = 0x00010000,
-    CRYPT_XML_STATUS_OPENED_TO_ENCODE   = 0x80000000,
-}
-
-alias CRYPT_XML_TRANSFORM_FLAGS = uint;
-enum : uint
-{
-    CRYPT_XML_TRANSFORM_ON_STREAM        = 0x00000001,
-    CRYPT_XML_TRANSFORM_ON_NODESET       = 0x00000002,
-    CRYPT_XML_TRANSFORM_URI_QUERY_STRING = 0x00000003,
-}
-
-alias CRYPT_XML_GROUP_ID = uint;
-enum : uint
-{
-    CRYPT_XML_GROUP_ID_HASH = 0x00000001,
-    CRYPT_XML_GROUP_ID_SIGN = 0x00000002,
-}
-
-alias CERT_SELECT_CRITERIA_TYPE = uint;
-enum : uint
-{
-    CERT_SELECT_BY_ENHKEY_USAGE      = 0x00000001,
-    CERT_SELECT_BY_KEY_USAGE         = 0x00000002,
-    CERT_SELECT_BY_POLICY_OID        = 0x00000003,
-    CERT_SELECT_BY_PROV_NAME         = 0x00000004,
-    CERT_SELECT_BY_EXTENSION         = 0x00000005,
-    CERT_SELECT_BY_SUBJECT_HOST_NAME = 0x00000006,
-    CERT_SELECT_BY_ISSUER_ATTR       = 0x00000007,
-    CERT_SELECT_BY_SUBJECT_ATTR      = 0x00000008,
-    CERT_SELECT_BY_ISSUER_NAME       = 0x00000009,
-    CERT_SELECT_BY_PUBLIC_KEY        = 0x0000000a,
-    CERT_SELECT_BY_TLS_SIGNATURES    = 0x0000000b,
-}
-
-alias BCRYPT_RSAKEY_BLOB_MAGIC = uint;
-enum : uint
-{
-    BCRYPT_RSAPUBLIC_MAGIC      = 0x31415352,
-    BCRYPT_RSAPRIVATE_MAGIC     = 0x32415352,
-    BCRYPT_RSAFULLPRIVATE_MAGIC = 0x33415352,
-}
-
-alias CRYPT_XML_KEYINFO_TYPE = uint;
-enum : uint
-{
-    CRYPT_XML_KEYINFO_TYPE_KEYNAME   = 0x00000001,
-    CRYPT_XML_KEYINFO_TYPE_KEYVALUE  = 0x00000002,
-    CRYPT_XML_KEYINFO_TYPE_RETRIEVAL = 0x00000003,
-    CRYPT_XML_KEYINFO_TYPE_X509DATA  = 0x00000004,
-    CRYPT_XML_KEYINFO_TYPE_CUSTOM    = 0x00000005,
-}
-
-alias CRYPT_TIMESTAMP_VERSION = uint;
-enum : uint
-{
-    TIMESTAMP_VERSION = 0x00000001,
-}
-
-alias CERT_ID_OPTION = uint;
-enum : uint
-{
-    CERT_ID_ISSUER_SERIAL_NUMBER = 0x00000001,
-    CERT_ID_KEY_IDENTIFIER       = 0x00000002,
-    CERT_ID_SHA1_HASH            = 0x00000003,
-}
-
-alias HTTPSPOLICY_CALLBACK_DATA_AUTH_TYPE = uint;
-enum : uint
-{
-    AUTHTYPE_CLIENT = 0x00000001,
-    AUTHTYPE_SERVER = 0x00000002,
-}
-
-alias BCRYPT_DH_KEY_BLOB_MAGIC = uint;
-enum : uint
-{
-    BCRYPT_DH_PUBLIC_MAGIC  = 0x42504844,
-    BCRYPT_DH_PRIVATE_MAGIC = 0x56504844,
-}
-
-alias CRYPT_XML_STATUS_ERROR_STATUS = uint;
-enum : uint
-{
-    CRYPT_XML_STATUS_ERROR_NOT_RESOLVED            = 0x00000001,
-    CRYPT_XML_STATUS_ERROR_DIGEST_INVALID          = 0x00000002,
-    CRYPT_XML_STATUS_ERROR_NOT_SUPPORTED_ALGORITHM = 0x00000005,
-    CRYPT_XML_STATUS_ERROR_NOT_SUPPORTED_TRANSFORM = 0x00000008,
-    CRYPT_XML_STATUS_ERROR_SIGNATURE_INVALID       = 0x00010000,
-    CRYPT_XML_STATUS_ERROR_KEYINFO_NOT_PARSED      = 0x00020000,
-}
-
-alias CRYPT_TIMESTAMP_RESPONSE_STATUS = uint;
-enum : uint
-{
-    TIMESTAMP_STATUS_GRANTED            = 0x00000000,
-    TIMESTAMP_STATUS_GRANTED_WITH_MODS  = 0x00000001,
-    TIMESTAMP_STATUS_REJECTED           = 0x00000002,
-    TIMESTAMP_STATUS_WAITING            = 0x00000003,
-    TIMESTAMP_STATUS_REVOCATION_WARNING = 0x00000004,
-    TIMESTAMP_STATUS_REVOKED            = 0x00000005,
-}
-
-alias NCRYPT_ALGORITHM_NAME_CLASS = uint;
-enum : uint
-{
-    NCRYPT_ASYMMETRIC_ENCRYPTION_INTERFACE = 0x00000003,
-    NCRYPT_SECRET_AGREEMENT_INTERFACE      = 0x00000004,
-    NCRYPT_SIGNATURE_INTERFACE             = 0x00000005,
-}
-
-alias BCRYPTGENRANDOM_FLAGS = uint;
-enum : uint
-{
-    BCRYPT_RNG_USE_ENTROPY_IN_BUFFER = 0x00000001,
-    BCRYPT_USE_SYSTEM_PREFERRED_RNG  = 0x00000002,
-}
-
-alias SIGNER_SIGN_FLAGS = uint;
-enum : uint
-{
-    SIG_APPEND                        = 0x00001000,
-    SPC_INC_PE_RESOURCES_FLAG         = 0x00000080,
-    SPC_INC_PE_DEBUG_INFO_FLAG        = 0x00000040,
-    SPC_INC_PE_IMPORT_ADDR_TABLE_FLAG = 0x00000020,
-    SPC_EXC_PE_PAGE_HASHES_FLAG       = 0x00000010,
-    SPC_INC_PE_PAGE_HASHES_FLAG       = 0x00000100,
-    SPC_DIGEST_GENERATE_FLAG          = 0x00000200,
-    SPC_DIGEST_SIGN_FLAG              = 0x00000400,
-    SPC_DIGEST_SIGN_EX_FLAG           = 0x00004000,
-}
-
-alias SIGNER_TIMESTAMP_FLAGS = uint;
-enum : uint
-{
-    SIGNER_TIMESTAMP_AUTHENTICODE = 0x00000001,
-    SIGNER_TIMESTAMP_RFC3161      = 0x00000002,
-}
-
-alias SIGNER_SUBJECT_CHOICE = uint;
-enum : uint
-{
-    SIGNER_SUBJECT_FILE = 0x00000001,
-    SIGNER_SUBJECT_BLOB = 0x00000002,
-}
-
-alias SIGNER_SIGNATURE_ATTRIBUTE_CHOICE = uint;
-enum : uint
-{
-    SIGNER_NO_ATTR       = 0x00000000,
-    SIGNER_AUTHCODE_ATTR = 0x00000001,
-}
-
-alias SIGNER_PRIVATE_KEY_CHOICE = uint;
-enum : uint
-{
-    PVK_TYPE_FILE_NAME    = 0x00000001,
-    PVK_TYPE_KEYCONTAINER = 0x00000002,
-}
-
-alias SIGNER_CERT_POLICY = uint;
-enum : uint
-{
-    SIGNER_CERT_POLICY_STORE         = 0x00000001,
-    SIGNER_CERT_POLICY_CHAIN         = 0x00000002,
-    SIGNER_CERT_POLICY_SPC           = 0x00000004,
-    SIGNER_CERT_POLICY_CHAIN_NO_ROOT = 0x00000008,
-}
-
-alias SIGNER_CERT_CHOICE = uint;
-enum : uint
-{
-    SIGNER_CERT_SPC_FILE  = 0x00000001,
-    SIGNER_CERT_STORE     = 0x00000002,
-    SIGNER_CERT_SPC_CHAIN = 0x00000003,
-}
-
-alias ALG_ID = uint;
-enum : uint
-{
-    CALG_MD2                     = 0x00008001,
-    CALG_MD4                     = 0x00008002,
-    CALG_MD5                     = 0x00008003,
-    CALG_SHA                     = 0x00008004,
-    CALG_SHA1                    = 0x00008004,
-    CALG_MAC                     = 0x00008005,
-    CALG_RSA_SIGN                = 0x00002400,
-    CALG_DSS_SIGN                = 0x00002200,
-    CALG_NO_SIGN                 = 0x00002000,
-    CALG_RSA_KEYX                = 0x0000a400,
-    CALG_DES                     = 0x00006601,
-    CALG_3DES_112                = 0x00006609,
-    CALG_3DES                    = 0x00006603,
-    CALG_DESX                    = 0x00006604,
-    CALG_RC2                     = 0x00006602,
-    CALG_RC4                     = 0x00006801,
-    CALG_SEAL                    = 0x00006802,
-    CALG_DH_SF                   = 0x0000aa01,
-    CALG_DH_EPHEM                = 0x0000aa02,
-    CALG_AGREEDKEY_ANY           = 0x0000aa03,
-    CALG_KEA_KEYX                = 0x0000aa04,
-    CALG_HUGHES_MD5              = 0x0000a003,
-    CALG_SKIPJACK                = 0x0000660a,
-    CALG_TEK                     = 0x0000660b,
-    CALG_CYLINK_MEK              = 0x0000660c,
-    CALG_SSL3_SHAMD5             = 0x00008008,
-    CALG_SSL3_MASTER             = 0x00004c01,
-    CALG_SCHANNEL_MASTER_HASH    = 0x00004c02,
-    CALG_SCHANNEL_MAC_KEY        = 0x00004c03,
-    CALG_SCHANNEL_ENC_KEY        = 0x00004c07,
-    CALG_PCT1_MASTER             = 0x00004c04,
-    CALG_SSL2_MASTER             = 0x00004c05,
-    CALG_TLS1_MASTER             = 0x00004c06,
-    CALG_RC5                     = 0x0000660d,
-    CALG_HMAC                    = 0x00008009,
-    CALG_TLS1PRF                 = 0x0000800a,
-    CALG_HASH_REPLACE_OWF        = 0x0000800b,
-    CALG_AES_128                 = 0x0000660e,
-    CALG_AES_192                 = 0x0000660f,
-    CALG_AES_256                 = 0x00006610,
-    CALG_AES                     = 0x00006611,
-    CALG_SHA_256                 = 0x0000800c,
-    CALG_SHA_384                 = 0x0000800d,
-    CALG_SHA_512                 = 0x0000800e,
-    CALG_ECDH                    = 0x0000aa05,
-    CALG_ECDH_EPHEM              = 0x0000ae06,
-    CALG_ECMQV                   = 0x0000a001,
-    CALG_ECDSA                   = 0x00002203,
-    CALG_NULLCIPHER              = 0x00006000,
-    CALG_THIRDPARTY_KEY_EXCHANGE = 0x0000b000,
-    CALG_THIRDPARTY_SIGNATURE    = 0x00003000,
-    CALG_THIRDPARTY_CIPHER       = 0x00007000,
-    CALG_THIRDPARTY_HASH         = 0x00009000,
-}
-
-BOOL SystemPrng(ubyte*, ulong);
-BOOL ProcessPrng(ubyte*, ulong);
-BOOL CryptAcquireContextA(ulong*, const(char)*, const(char)*, uint, uint);
-BOOL CryptAcquireContextW(ulong*, const(wchar)*, const(wchar)*, uint, uint);
-BOOL CryptReleaseContext(ulong, uint);
-BOOL CryptGenKey(ulong, ALG_ID, CRYPT_KEY_FLAGS, ulong*);
-BOOL CryptDeriveKey(ulong, ALG_ID, ulong, uint, ulong*);
-BOOL CryptDestroyKey(ulong);
-BOOL CryptSetKeyParam(ulong, CRYPT_KEY_PARAM_ID, const(ubyte)*, uint);
-BOOL CryptGetKeyParam(ulong, CRYPT_KEY_PARAM_ID, ubyte*, uint*, uint);
-BOOL CryptSetHashParam(ulong, CRYPT_SET_HASH_PARAM, const(ubyte)*, uint);
-BOOL CryptGetHashParam(ulong, uint, ubyte*, uint*, uint);
-BOOL CryptSetProvParam(ulong, CRYPT_SET_PROV_PARAM_ID, const(ubyte)*, uint);
-BOOL CryptGetProvParam(ulong, uint, ubyte*, uint*, uint);
-BOOL CryptGenRandom(ulong, uint, ubyte*);
-BOOL CryptGetUserKey(ulong, uint, ulong*);
-BOOL CryptExportKey(ulong, ulong, uint, CRYPT_KEY_FLAGS, ubyte*, uint*);
-BOOL CryptImportKey(ulong, const(ubyte)*, uint, ulong, CRYPT_KEY_FLAGS, ulong*);
-BOOL CryptEncrypt(ulong, ulong, BOOL, uint, ubyte*, uint*, uint);
-BOOL CryptDecrypt(ulong, ulong, BOOL, uint, ubyte*, uint*);
-BOOL CryptCreateHash(ulong, ALG_ID, ulong, uint, ulong*);
-BOOL CryptHashData(ulong, const(ubyte)*, uint, uint);
-BOOL CryptHashSessionKey(ulong, ulong, uint);
-BOOL CryptDestroyHash(ulong);
-BOOL CryptSignHashA(ulong, uint, const(char)*, uint, ubyte*, uint*);
-BOOL CryptSignHashW(ulong, uint, const(wchar)*, uint, ubyte*, uint*);
-BOOL CryptVerifySignatureA(ulong, const(ubyte)*, uint, ulong, const(char)*, uint);
-BOOL CryptVerifySignatureW(ulong, const(ubyte)*, uint, ulong, const(wchar)*, uint);
-BOOL CryptSetProviderA(const(char)*, uint);
-BOOL CryptSetProviderW(const(wchar)*, uint);
-BOOL CryptSetProviderExA(const(char)*, uint, uint*, uint);
-BOOL CryptSetProviderExW(const(wchar)*, uint, uint*, uint);
-BOOL CryptGetDefaultProviderA(uint, uint*, uint, PSTR, uint*);
-BOOL CryptGetDefaultProviderW(uint, uint*, uint, PWSTR, uint*);
-BOOL CryptEnumProviderTypesA(uint, uint*, uint, uint*, PSTR, uint*);
-BOOL CryptEnumProviderTypesW(uint, uint*, uint, uint*, PWSTR, uint*);
-BOOL CryptEnumProvidersA(uint, uint*, uint, uint*, PSTR, uint*);
-BOOL CryptEnumProvidersW(uint, uint*, uint, uint*, PWSTR, uint*);
-BOOL CryptContextAddRef(ulong, uint*, uint);
-BOOL CryptDuplicateKey(ulong, uint*, uint, ulong*);
-BOOL CryptDuplicateHash(ulong, uint*, uint, ulong*);
-NTSTATUS BCryptOpenAlgorithmProvider(BCRYPT_ALG_HANDLE*, const(wchar)*, const(wchar)*, BCRYPT_OPEN_ALGORITHM_PROVIDER_FLAGS);
-NTSTATUS BCryptEnumAlgorithms(BCRYPT_OPERATION, uint*, BCRYPT_ALGORITHM_IDENTIFIER**, uint);
-NTSTATUS BCryptEnumProviders(const(wchar)*, uint*, BCRYPT_PROVIDER_NAME**, uint);
-NTSTATUS BCryptGetProperty(BCRYPT_HANDLE, const(wchar)*, ubyte*, uint, uint*, uint);
-NTSTATUS BCryptSetProperty(BCRYPT_HANDLE, const(wchar)*, ubyte*, uint, uint);
-NTSTATUS BCryptCloseAlgorithmProvider(BCRYPT_ALG_HANDLE, uint);
-void BCryptFreeBuffer(void*);
-NTSTATUS BCryptGenerateSymmetricKey(BCRYPT_ALG_HANDLE, BCRYPT_KEY_HANDLE*, ubyte*, uint, ubyte*, uint, uint);
-NTSTATUS BCryptGenerateKeyPair(BCRYPT_ALG_HANDLE, BCRYPT_KEY_HANDLE*, uint, uint);
-NTSTATUS BCryptEncrypt(BCRYPT_KEY_HANDLE, ubyte*, uint, void*, ubyte*, uint, ubyte*, uint, uint*, BCRYPT_FLAGS);
-NTSTATUS BCryptDecrypt(BCRYPT_KEY_HANDLE, ubyte*, uint, void*, ubyte*, uint, ubyte*, uint, uint*, BCRYPT_FLAGS);
-NTSTATUS BCryptExportKey(BCRYPT_KEY_HANDLE, BCRYPT_KEY_HANDLE, const(wchar)*, ubyte*, uint, uint*, uint);
-NTSTATUS BCryptImportKey(BCRYPT_ALG_HANDLE, BCRYPT_KEY_HANDLE, const(wchar)*, BCRYPT_KEY_HANDLE*, ubyte*, uint, ubyte*, uint, uint);
-NTSTATUS BCryptImportKeyPair(BCRYPT_ALG_HANDLE, BCRYPT_KEY_HANDLE, const(wchar)*, BCRYPT_KEY_HANDLE*, ubyte*, uint, uint);
-NTSTATUS BCryptDuplicateKey(BCRYPT_KEY_HANDLE, BCRYPT_KEY_HANDLE*, ubyte*, uint, uint);
-NTSTATUS BCryptFinalizeKeyPair(BCRYPT_KEY_HANDLE, uint);
-NTSTATUS BCryptDestroyKey(BCRYPT_KEY_HANDLE);
-NTSTATUS BCryptDestroySecret(BCRYPT_SECRET_HANDLE);
-NTSTATUS BCryptSignHash(BCRYPT_KEY_HANDLE, void*, ubyte*, uint, ubyte*, uint, uint*, BCRYPT_FLAGS);
-NTSTATUS BCryptVerifySignature(BCRYPT_KEY_HANDLE, void*, ubyte*, uint, ubyte*, uint, BCRYPT_FLAGS);
-NTSTATUS BCryptSecretAgreement(BCRYPT_KEY_HANDLE, BCRYPT_KEY_HANDLE, BCRYPT_SECRET_HANDLE*, uint);
-NTSTATUS BCryptDeriveKey(BCRYPT_SECRET_HANDLE, const(wchar)*, BCryptBufferDesc*, ubyte*, uint, uint*, uint);
-NTSTATUS BCryptKeyDerivation(BCRYPT_KEY_HANDLE, BCryptBufferDesc*, ubyte*, uint, uint*, uint);
-NTSTATUS BCryptCreateHash(BCRYPT_ALG_HANDLE, BCRYPT_HASH_HANDLE*, ubyte*, uint, ubyte*, uint, uint);
-NTSTATUS BCryptHashData(BCRYPT_HASH_HANDLE, ubyte*, uint, uint);
-NTSTATUS BCryptFinishHash(BCRYPT_HASH_HANDLE, ubyte*, uint, uint);
-NTSTATUS BCryptCreateMultiHash(BCRYPT_ALG_HANDLE, BCRYPT_HASH_HANDLE*, uint, ubyte*, uint, ubyte*, uint, uint);
-NTSTATUS BCryptProcessMultiOperations(BCRYPT_HANDLE, BCRYPT_MULTI_OPERATION_TYPE, void*, uint, uint);
-NTSTATUS BCryptDuplicateHash(BCRYPT_HASH_HANDLE, BCRYPT_HASH_HANDLE*, ubyte*, uint, uint);
-NTSTATUS BCryptDestroyHash(BCRYPT_HASH_HANDLE);
-NTSTATUS BCryptHash(BCRYPT_ALG_HANDLE, ubyte*, uint, ubyte*, uint, ubyte*, uint);
-NTSTATUS BCryptGenRandom(BCRYPT_ALG_HANDLE, ubyte*, uint, BCRYPTGENRANDOM_FLAGS);
-NTSTATUS BCryptDeriveKeyCapi(BCRYPT_HASH_HANDLE, BCRYPT_ALG_HANDLE, ubyte*, uint, uint);
-NTSTATUS BCryptDeriveKeyPBKDF2(BCRYPT_ALG_HANDLE, ubyte*, uint, ubyte*, uint, ulong, ubyte*, uint, uint);
-NTSTATUS BCryptQueryProviderRegistration(const(wchar)*, BCRYPT_QUERY_PROVIDER_MODE, BCRYPT_INTERFACE, uint*, CRYPT_PROVIDER_REG**);
-NTSTATUS BCryptEnumRegisteredProviders(uint*, CRYPT_PROVIDERS**);
-NTSTATUS BCryptCreateContext(BCRYPT_TABLE, const(wchar)*, CRYPT_CONTEXT_CONFIG*);
-NTSTATUS BCryptDeleteContext(BCRYPT_TABLE, const(wchar)*);
-NTSTATUS BCryptEnumContexts(BCRYPT_TABLE, uint*, CRYPT_CONTEXTS**);
-NTSTATUS BCryptConfigureContext(BCRYPT_TABLE, const(wchar)*, CRYPT_CONTEXT_CONFIG*);
-NTSTATUS BCryptQueryContextConfiguration(BCRYPT_TABLE, const(wchar)*, uint*, CRYPT_CONTEXT_CONFIG**);
-NTSTATUS BCryptAddContextFunction(BCRYPT_TABLE, const(wchar)*, BCRYPT_INTERFACE, const(wchar)*, uint);
-NTSTATUS BCryptRemoveContextFunction(BCRYPT_TABLE, const(wchar)*, BCRYPT_INTERFACE, const(wchar)*);
-NTSTATUS BCryptEnumContextFunctions(BCRYPT_TABLE, const(wchar)*, BCRYPT_INTERFACE, uint*, CRYPT_CONTEXT_FUNCTIONS**);
-NTSTATUS BCryptConfigureContextFunction(BCRYPT_TABLE, const(wchar)*, BCRYPT_INTERFACE, const(wchar)*, CRYPT_CONTEXT_FUNCTION_CONFIG*);
-NTSTATUS BCryptQueryContextFunctionConfiguration(BCRYPT_TABLE, const(wchar)*, BCRYPT_INTERFACE, const(wchar)*, uint*, CRYPT_CONTEXT_FUNCTION_CONFIG**);
-NTSTATUS BCryptEnumContextFunctionProviders(BCRYPT_TABLE, const(wchar)*, BCRYPT_INTERFACE, const(wchar)*, uint*, CRYPT_CONTEXT_FUNCTION_PROVIDERS**);
-NTSTATUS BCryptSetContextFunctionProperty(BCRYPT_TABLE, const(wchar)*, BCRYPT_INTERFACE, const(wchar)*, const(wchar)*, uint, ubyte*);
-NTSTATUS BCryptQueryContextFunctionProperty(BCRYPT_TABLE, const(wchar)*, BCRYPT_INTERFACE, const(wchar)*, const(wchar)*, uint*, ubyte**);
-NTSTATUS BCryptRegisterConfigChangeNotify(HANDLE*);
-NTSTATUS BCryptUnregisterConfigChangeNotify(HANDLE);
-NTSTATUS BCryptResolveProviders(const(wchar)*, uint, const(wchar)*, const(wchar)*, BCRYPT_QUERY_PROVIDER_MODE, BCRYPT_RESOLVE_PROVIDERS_FLAGS, uint*, CRYPT_PROVIDER_REFS**);
-NTSTATUS BCryptGetFipsAlgorithmMode(ubyte*);
-HRESULT NCryptOpenStorageProvider(NCRYPT_PROV_HANDLE*, const(wchar)*, uint);
-HRESULT NCryptEnumAlgorithms(NCRYPT_PROV_HANDLE, NCRYPT_OPERATION, uint*, NCryptAlgorithmName**, uint);
-HRESULT NCryptIsAlgSupported(NCRYPT_PROV_HANDLE, const(wchar)*, uint);
-HRESULT NCryptEnumKeys(NCRYPT_PROV_HANDLE, const(wchar)*, NCryptKeyName**, void**, NCRYPT_FLAGS);
-HRESULT NCryptEnumStorageProviders(uint*, NCryptProviderName**, uint);
-HRESULT NCryptFreeBuffer(void*);
-HRESULT NCryptOpenKey(NCRYPT_PROV_HANDLE, NCRYPT_KEY_HANDLE*, const(wchar)*, CERT_KEY_SPEC, NCRYPT_FLAGS);
-HRESULT NCryptCreatePersistedKey(NCRYPT_PROV_HANDLE, NCRYPT_KEY_HANDLE*, const(wchar)*, const(wchar)*, CERT_KEY_SPEC, NCRYPT_FLAGS);
-HRESULT NCryptGetProperty(NCRYPT_HANDLE, const(wchar)*, ubyte*, uint, uint*, OBJECT_SECURITY_INFORMATION);
-HRESULT NCryptSetProperty(NCRYPT_HANDLE, const(wchar)*, ubyte*, uint, NCRYPT_FLAGS);
-HRESULT NCryptFinalizeKey(NCRYPT_KEY_HANDLE, NCRYPT_FLAGS);
-HRESULT NCryptEncrypt(NCRYPT_KEY_HANDLE, ubyte*, uint, void*, ubyte*, uint, uint*, NCRYPT_FLAGS);
-HRESULT NCryptDecrypt(NCRYPT_KEY_HANDLE, ubyte*, uint, void*, ubyte*, uint, uint*, NCRYPT_FLAGS);
-HRESULT NCryptImportKey(NCRYPT_PROV_HANDLE, NCRYPT_KEY_HANDLE, const(wchar)*, BCryptBufferDesc*, NCRYPT_KEY_HANDLE*, ubyte*, uint, NCRYPT_FLAGS);
-HRESULT NCryptExportKey(NCRYPT_KEY_HANDLE, NCRYPT_KEY_HANDLE, const(wchar)*, BCryptBufferDesc*, ubyte*, uint, uint*, NCRYPT_FLAGS);
-HRESULT NCryptSignHash(NCRYPT_KEY_HANDLE, void*, ubyte*, uint, ubyte*, uint, uint*, NCRYPT_FLAGS);
-HRESULT NCryptVerifySignature(NCRYPT_KEY_HANDLE, void*, ubyte*, uint, ubyte*, uint, NCRYPT_FLAGS);
-HRESULT NCryptDeleteKey(NCRYPT_KEY_HANDLE, uint);
-HRESULT NCryptFreeObject(NCRYPT_HANDLE);
-BOOL NCryptIsKeyHandle(NCRYPT_KEY_HANDLE);
-HRESULT NCryptTranslateHandle(NCRYPT_PROV_HANDLE*, NCRYPT_KEY_HANDLE*, ulong, ulong, CERT_KEY_SPEC, uint);
-HRESULT NCryptNotifyChangeKey(NCRYPT_PROV_HANDLE, HANDLE*, NCRYPT_FLAGS);
-HRESULT NCryptSecretAgreement(NCRYPT_KEY_HANDLE, NCRYPT_KEY_HANDLE, NCRYPT_SECRET_HANDLE*, NCRYPT_FLAGS);
-HRESULT NCryptDeriveKey(NCRYPT_SECRET_HANDLE, const(wchar)*, BCryptBufferDesc*, ubyte*, uint, uint*, uint);
-HRESULT NCryptKeyDerivation(NCRYPT_KEY_HANDLE, BCryptBufferDesc*, ubyte*, uint, uint*, uint);
-HRESULT NCryptCreateClaim(NCRYPT_KEY_HANDLE, NCRYPT_KEY_HANDLE, uint, BCryptBufferDesc*, ubyte*, uint, uint*, uint);
-HRESULT NCryptVerifyClaim(NCRYPT_KEY_HANDLE, NCRYPT_KEY_HANDLE, uint, BCryptBufferDesc*, ubyte*, uint, BCryptBufferDesc*, uint);
-BOOL CryptFormatObject(CERT_QUERY_ENCODING_TYPE, uint, uint, void*, const(char)*, const(ubyte)*, uint, void*, uint*);
-BOOL CryptEncodeObjectEx(CERT_QUERY_ENCODING_TYPE, const(char)*, const(void)*, CRYPT_ENCODE_OBJECT_FLAGS, CRYPT_ENCODE_PARA*, void*, uint*);
-BOOL CryptEncodeObject(CERT_QUERY_ENCODING_TYPE, const(char)*, const(void)*, ubyte*, uint*);
-BOOL CryptDecodeObjectEx(CERT_QUERY_ENCODING_TYPE, const(char)*, const(ubyte)*, uint, uint, CRYPT_DECODE_PARA*, void*, uint*);
-BOOL CryptDecodeObject(CERT_QUERY_ENCODING_TYPE, const(char)*, const(ubyte)*, uint, uint, void*, uint*);
-BOOL CryptInstallOIDFunctionAddress(HMODULE, uint, const(char)*, uint, const(CRYPT_OID_FUNC_ENTRY)*, uint);
-void* CryptInitOIDFunctionSet(const(char)*, uint);
-BOOL CryptGetOIDFunctionAddress(void*, uint, const(char)*, uint, void**, void**);
-BOOL CryptGetDefaultOIDDllList(void*, uint, PWSTR, uint*);
-BOOL CryptGetDefaultOIDFunctionAddress(void*, uint, const(wchar)*, uint, void**, void**);
-BOOL CryptFreeOIDFunctionAddress(void*, uint);
-BOOL CryptRegisterOIDFunction(uint, const(char)*, const(char)*, const(wchar)*, const(char)*);
-BOOL CryptUnregisterOIDFunction(uint, const(char)*, const(char)*);
-BOOL CryptRegisterDefaultOIDFunction(uint, const(char)*, uint, const(wchar)*);
-BOOL CryptUnregisterDefaultOIDFunction(uint, const(char)*, const(wchar)*);
-BOOL CryptSetOIDFunctionValue(uint, const(char)*, const(char)*, const(wchar)*, REG_VALUE_TYPE, const(ubyte)*, uint);
-BOOL CryptGetOIDFunctionValue(uint, const(char)*, const(char)*, const(wchar)*, uint*, ubyte*, uint*);
-BOOL CryptEnumOIDFunction(uint, const(char)*, const(char)*, uint, void*, PFN_CRYPT_ENUM_OID_FUNC);
-CRYPT_OID_INFO* CryptFindOIDInfo(uint, void*, uint);
-BOOL CryptRegisterOIDInfo(CRYPT_OID_INFO*, uint);
-BOOL CryptUnregisterOIDInfo(CRYPT_OID_INFO*);
-BOOL CryptEnumOIDInfo(uint, uint, void*, PFN_CRYPT_ENUM_OID_INFO);
-PWSTR CryptFindLocalizedName(const(wchar)*);
-void* CryptMsgOpenToEncode(uint, uint, CRYPT_MSG_TYPE, const(void)*, PSTR, CMSG_STREAM_INFO*);
-uint CryptMsgCalculateEncodedLength(uint, uint, uint, const(void)*, PSTR, uint);
-void* CryptMsgOpenToDecode(uint, uint, uint, HCRYPTPROV_LEGACY, CERT_INFO*, CMSG_STREAM_INFO*);
-void* CryptMsgDuplicate(void*);
-BOOL CryptMsgClose(void*);
-BOOL CryptMsgUpdate(void*, const(ubyte)*, uint, BOOL);
-BOOL CryptMsgGetParam(void*, uint, uint, void*, uint*);
-BOOL CryptMsgControl(void*, uint, uint, const(void)*);
-BOOL CryptMsgVerifyCountersignatureEncoded(HCRYPTPROV_LEGACY, uint, ubyte*, uint, ubyte*, uint, CERT_INFO*);
-BOOL CryptMsgVerifyCountersignatureEncodedEx(HCRYPTPROV_LEGACY, uint, ubyte*, uint, ubyte*, uint, uint, void*, uint, void*);
-BOOL CryptMsgCountersign(void*, uint, uint, CMSG_SIGNER_ENCODE_INFO*);
-BOOL CryptMsgCountersignEncoded(uint, ubyte*, uint, uint, CMSG_SIGNER_ENCODE_INFO*, ubyte*, uint*);
-HCERTSTORE CertOpenStore(const(char)*, CERT_QUERY_ENCODING_TYPE, HCRYPTPROV_LEGACY, CERT_OPEN_STORE_FLAGS, const(void)*);
-HCERTSTORE CertDuplicateStore(HCERTSTORE);
-BOOL CertSaveStore(HCERTSTORE, CERT_QUERY_ENCODING_TYPE, CERT_STORE_SAVE_AS, CERT_STORE_SAVE_TO, void*, uint);
-BOOL CertCloseStore(HCERTSTORE, uint);
-CERT_CONTEXT* CertGetSubjectCertificateFromStore(HCERTSTORE, CERT_QUERY_ENCODING_TYPE, CERT_INFO*);
-CERT_CONTEXT* CertEnumCertificatesInStore(HCERTSTORE, const(CERT_CONTEXT)*);
-CERT_CONTEXT* CertFindCertificateInStore(HCERTSTORE, CERT_QUERY_ENCODING_TYPE, uint, CERT_FIND_FLAGS, const(void)*, const(CERT_CONTEXT)*);
-CERT_CONTEXT* CertGetIssuerCertificateFromStore(HCERTSTORE, const(CERT_CONTEXT)*, const(CERT_CONTEXT)*, uint*);
-BOOL CertVerifySubjectCertificateContext(const(CERT_CONTEXT)*, const(CERT_CONTEXT)*, uint*);
-CERT_CONTEXT* CertDuplicateCertificateContext(const(CERT_CONTEXT)*);
-CERT_CONTEXT* CertCreateCertificateContext(CERT_QUERY_ENCODING_TYPE, const(ubyte)*, uint);
-BOOL CertFreeCertificateContext(const(CERT_CONTEXT)*);
-BOOL CertSetCertificateContextProperty(const(CERT_CONTEXT)*, uint, uint, const(void)*);
-BOOL CertGetCertificateContextProperty(const(CERT_CONTEXT)*, uint, void*, uint*);
-uint CertEnumCertificateContextProperties(const(CERT_CONTEXT)*, uint);
-BOOL CertCreateCTLEntryFromCertificateContextProperties(const(CERT_CONTEXT)*, uint, CRYPT_ATTRIBUTE*, uint, void*, CTL_ENTRY*, uint*);
-BOOL CertSetCertificateContextPropertiesFromCTLEntry(const(CERT_CONTEXT)*, CTL_ENTRY*, uint);
-CRL_CONTEXT* CertGetCRLFromStore(HCERTSTORE, const(CERT_CONTEXT)*, CRL_CONTEXT*, uint*);
-CRL_CONTEXT* CertEnumCRLsInStore(HCERTSTORE, CRL_CONTEXT*);
-CRL_CONTEXT* CertFindCRLInStore(HCERTSTORE, CERT_QUERY_ENCODING_TYPE, uint, uint, const(void)*, CRL_CONTEXT*);
-CRL_CONTEXT* CertDuplicateCRLContext(CRL_CONTEXT*);
-CRL_CONTEXT* CertCreateCRLContext(CERT_QUERY_ENCODING_TYPE, const(ubyte)*, uint);
-BOOL CertFreeCRLContext(CRL_CONTEXT*);
-BOOL CertSetCRLContextProperty(CRL_CONTEXT*, uint, uint, const(void)*);
-BOOL CertGetCRLContextProperty(CRL_CONTEXT*, uint, void*, uint*);
-uint CertEnumCRLContextProperties(CRL_CONTEXT*, uint);
-BOOL CertFindCertificateInCRL(const(CERT_CONTEXT)*, CRL_CONTEXT*, uint, void*, CRL_ENTRY**);
-BOOL CertIsValidCRLForCertificate(const(CERT_CONTEXT)*, CRL_CONTEXT*, uint, void*);
-BOOL CertAddEncodedCertificateToStore(HCERTSTORE, CERT_QUERY_ENCODING_TYPE, const(ubyte)*, uint, uint, CERT_CONTEXT**);
-BOOL CertAddCertificateContextToStore(HCERTSTORE, const(CERT_CONTEXT)*, uint, CERT_CONTEXT**);
-BOOL CertAddSerializedElementToStore(HCERTSTORE, const(ubyte)*, uint, uint, uint, uint, uint*, const(void)**);
-BOOL CertDeleteCertificateFromStore(const(CERT_CONTEXT)*);
-BOOL CertAddEncodedCRLToStore(HCERTSTORE, CERT_QUERY_ENCODING_TYPE, const(ubyte)*, uint, uint, CRL_CONTEXT**);
-BOOL CertAddCRLContextToStore(HCERTSTORE, CRL_CONTEXT*, uint, CRL_CONTEXT**);
-BOOL CertDeleteCRLFromStore(CRL_CONTEXT*);
-BOOL CertSerializeCertificateStoreElement(const(CERT_CONTEXT)*, uint, ubyte*, uint*);
-BOOL CertSerializeCRLStoreElement(CRL_CONTEXT*, uint, ubyte*, uint*);
-CTL_CONTEXT* CertDuplicateCTLContext(CTL_CONTEXT*);
-CTL_CONTEXT* CertCreateCTLContext(uint, const(ubyte)*, uint);
-BOOL CertFreeCTLContext(CTL_CONTEXT*);
-BOOL CertSetCTLContextProperty(CTL_CONTEXT*, uint, uint, const(void)*);
-BOOL CertGetCTLContextProperty(CTL_CONTEXT*, uint, void*, uint*);
-uint CertEnumCTLContextProperties(CTL_CONTEXT*, uint);
-CTL_CONTEXT* CertEnumCTLsInStore(HCERTSTORE, CTL_CONTEXT*);
-CTL_ENTRY* CertFindSubjectInCTL(uint, uint, void*, CTL_CONTEXT*, uint);
-CTL_CONTEXT* CertFindCTLInStore(HCERTSTORE, uint, uint, CERT_FIND_TYPE, const(void)*, CTL_CONTEXT*);
-BOOL CertAddEncodedCTLToStore(HCERTSTORE, CERT_QUERY_ENCODING_TYPE, const(ubyte)*, uint, uint, CTL_CONTEXT**);
-BOOL CertAddCTLContextToStore(HCERTSTORE, CTL_CONTEXT*, uint, CTL_CONTEXT**);
-BOOL CertSerializeCTLStoreElement(CTL_CONTEXT*, uint, ubyte*, uint*);
-BOOL CertDeleteCTLFromStore(CTL_CONTEXT*);
-BOOL CertAddCertificateLinkToStore(HCERTSTORE, const(CERT_CONTEXT)*, uint, CERT_CONTEXT**);
-BOOL CertAddCRLLinkToStore(HCERTSTORE, CRL_CONTEXT*, uint, CRL_CONTEXT**);
-BOOL CertAddCTLLinkToStore(HCERTSTORE, CTL_CONTEXT*, uint, CTL_CONTEXT**);
-BOOL CertAddStoreToCollection(HCERTSTORE, HCERTSTORE, uint, uint);
-void CertRemoveStoreFromCollection(HCERTSTORE, HCERTSTORE);
-BOOL CertControlStore(HCERTSTORE, CERT_CONTROL_STORE_FLAGS, uint, const(void)*);
-BOOL CertSetStoreProperty(HCERTSTORE, uint, uint, const(void)*);
-BOOL CertGetStoreProperty(HCERTSTORE, uint, void*, uint*);
-void* CertCreateContext(uint, uint, const(ubyte)*, uint, uint, CERT_CREATE_CONTEXT_PARA*);
-BOOL CertRegisterSystemStore(const(void)*, uint, CERT_SYSTEM_STORE_INFO*, void*);
-BOOL CertRegisterPhysicalStore(const(void)*, uint, const(wchar)*, CERT_PHYSICAL_STORE_INFO*, void*);
-BOOL CertUnregisterSystemStore(const(void)*, uint);
-BOOL CertUnregisterPhysicalStore(const(void)*, uint, const(wchar)*);
-BOOL CertEnumSystemStoreLocation(uint, void*, PFN_CERT_ENUM_SYSTEM_STORE_LOCATION);
-BOOL CertEnumSystemStore(uint, void*, void*, PFN_CERT_ENUM_SYSTEM_STORE);
-BOOL CertEnumPhysicalStore(const(void)*, uint, void*, PFN_CERT_ENUM_PHYSICAL_STORE);
-BOOL CertGetEnhancedKeyUsage(const(CERT_CONTEXT)*, uint, CTL_USAGE*, uint*);
-BOOL CertSetEnhancedKeyUsage(const(CERT_CONTEXT)*, CTL_USAGE*);
-BOOL CertAddEnhancedKeyUsageIdentifier(const(CERT_CONTEXT)*, const(char)*);
-BOOL CertRemoveEnhancedKeyUsageIdentifier(const(CERT_CONTEXT)*, const(char)*);
-BOOL CertGetValidUsages(uint, CERT_CONTEXT**, int*, PSTR*, uint*);
-BOOL CryptMsgGetAndVerifySigner(void*, uint, HCERTSTORE*, uint, CERT_CONTEXT**, uint*);
-BOOL CryptMsgSignCTL(uint, ubyte*, uint, CMSG_SIGNED_ENCODE_INFO*, uint, ubyte*, uint*);
-BOOL CryptMsgEncodeAndSignCTL(uint, CTL_INFO*, CMSG_SIGNED_ENCODE_INFO*, uint, ubyte*, uint*);
-BOOL CertFindSubjectInSortedCTL(CRYPT_INTEGER_BLOB*, CTL_CONTEXT*, uint, void*, CRYPT_INTEGER_BLOB*);
-BOOL CertEnumSubjectInSortedCTL(CTL_CONTEXT*, void**, CRYPT_INTEGER_BLOB*, CRYPT_INTEGER_BLOB*);
-BOOL CertVerifyCTLUsage(uint, uint, void*, CTL_USAGE*, uint, CTL_VERIFY_USAGE_PARA*, CTL_VERIFY_USAGE_STATUS*);
-BOOL CertVerifyRevocation(uint, uint, uint, void**, uint, CERT_REVOCATION_PARA*, CERT_REVOCATION_STATUS*);
-BOOL CertCompareIntegerBlob(CRYPT_INTEGER_BLOB*, CRYPT_INTEGER_BLOB*);
-BOOL CertCompareCertificate(CERT_QUERY_ENCODING_TYPE, CERT_INFO*, CERT_INFO*);
-BOOL CertCompareCertificateName(CERT_QUERY_ENCODING_TYPE, CRYPT_INTEGER_BLOB*, CRYPT_INTEGER_BLOB*);
-BOOL CertIsRDNAttrsInCertificateName(CERT_QUERY_ENCODING_TYPE, uint, CRYPT_INTEGER_BLOB*, CERT_RDN*);
-BOOL CertComparePublicKeyInfo(CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*, CERT_PUBLIC_KEY_INFO*);
-uint CertGetPublicKeyLength(CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*);
-BOOL CryptVerifyCertificateSignature(HCRYPTPROV_LEGACY, CERT_QUERY_ENCODING_TYPE, const(ubyte)*, uint, CERT_PUBLIC_KEY_INFO*);
-BOOL CryptVerifyCertificateSignatureEx(HCRYPTPROV_LEGACY, CERT_QUERY_ENCODING_TYPE, uint, void*, uint, void*, CRYPT_VERIFY_CERT_FLAGS, void*);
-BOOL CertIsStrongHashToSign(CERT_STRONG_SIGN_PARA*, const(wchar)*, const(CERT_CONTEXT)*);
-BOOL CryptHashToBeSigned(HCRYPTPROV_LEGACY, CERT_QUERY_ENCODING_TYPE, const(ubyte)*, uint, ubyte*, uint*);
-BOOL CryptHashCertificate(HCRYPTPROV_LEGACY, ALG_ID, uint, const(ubyte)*, uint, ubyte*, uint*);
-BOOL CryptHashCertificate2(const(wchar)*, uint, void*, const(ubyte)*, uint, ubyte*, uint*);
-BOOL CryptSignCertificate(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE, uint, CERT_QUERY_ENCODING_TYPE, const(ubyte)*, uint, CRYPT_ALGORITHM_IDENTIFIER*, const(void)*, ubyte*, uint*);
-BOOL CryptSignAndEncodeCertificate(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE, CERT_KEY_SPEC, CERT_QUERY_ENCODING_TYPE, const(char)*, const(void)*, CRYPT_ALGORITHM_IDENTIFIER*, const(void)*, ubyte*, uint*);
-int CertVerifyTimeValidity(FILETIME*, CERT_INFO*);
-int CertVerifyCRLTimeValidity(FILETIME*, CRL_INFO*);
-BOOL CertVerifyValidityNesting(CERT_INFO*, CERT_INFO*);
-BOOL CertVerifyCRLRevocation(CERT_QUERY_ENCODING_TYPE, CERT_INFO*, uint, CRL_INFO**);
-PSTR CertAlgIdToOID(uint);
-uint CertOIDToAlgId(const(char)*);
-CERT_EXTENSION* CertFindExtension(const(char)*, uint, CERT_EXTENSION*);
-CRYPT_ATTRIBUTE* CertFindAttribute(const(char)*, uint, CRYPT_ATTRIBUTE*);
-CERT_RDN_ATTR* CertFindRDNAttr(const(char)*, CERT_NAME_INFO*);
-BOOL CertGetIntendedKeyUsage(CERT_QUERY_ENCODING_TYPE, CERT_INFO*, ubyte*, uint);
-BOOL CryptInstallDefaultContext(ulong, CRYPT_DEFAULT_CONTEXT_TYPE, const(void)*, CRYPT_DEFAULT_CONTEXT_FLAGS, void*, void**);
-BOOL CryptUninstallDefaultContext(void*, uint, void*);
-BOOL CryptExportPublicKeyInfo(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE, uint, CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*, uint*);
-BOOL CryptExportPublicKeyInfoEx(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE, uint, CERT_QUERY_ENCODING_TYPE, PSTR, uint, void*, CERT_PUBLIC_KEY_INFO*, uint*);
-BOOL CryptExportPublicKeyInfoFromBCryptKeyHandle(BCRYPT_KEY_HANDLE, CERT_QUERY_ENCODING_TYPE, PSTR, uint, void*, CERT_PUBLIC_KEY_INFO*, uint*);
-BOOL CryptImportPublicKeyInfo(ulong, CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*, ulong*);
-BOOL CryptImportPublicKeyInfoEx(ulong, CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*, ALG_ID, uint, void*, ulong*);
-BOOL CryptImportPublicKeyInfoEx2(CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*, CRYPT_IMPORT_PUBLIC_KEY_FLAGS, void*, BCRYPT_KEY_HANDLE*);
-BOOL CryptAcquireCertificatePrivateKey(const(CERT_CONTEXT)*, CRYPT_ACQUIRE_FLAGS, void*, HCRYPTPROV_OR_NCRYPT_KEY_HANDLE*, CERT_KEY_SPEC*, BOOL*);
-BOOL CryptFindCertificateKeyProvInfo(const(CERT_CONTEXT)*, CRYPT_FIND_FLAGS, void*);
-BOOL CryptImportPKCS8(CRYPT_PKCS8_IMPORT_PARAMS, CRYPT_KEY_FLAGS, ulong*, void*);
-BOOL CryptExportPKCS8(ulong, uint, PSTR, uint, void*, ubyte*, uint*);
-BOOL CryptHashPublicKeyInfo(HCRYPTPROV_LEGACY, ALG_ID, uint, CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*, ubyte*, uint*);
-uint CertRDNValueToStrA(uint, CRYPT_INTEGER_BLOB*, PSTR, uint);
-uint CertRDNValueToStrW(uint, CRYPT_INTEGER_BLOB*, PWSTR, uint);
-uint CertNameToStrA(CERT_QUERY_ENCODING_TYPE, CRYPT_INTEGER_BLOB*, CERT_STRING_TYPE, PSTR, uint);
-uint CertNameToStrW(CERT_QUERY_ENCODING_TYPE, CRYPT_INTEGER_BLOB*, CERT_STRING_TYPE, PWSTR, uint);
-BOOL CertStrToNameA(CERT_QUERY_ENCODING_TYPE, const(char)*, CERT_STRING_TYPE, void*, ubyte*, uint*, const(char)**);
-BOOL CertStrToNameW(CERT_QUERY_ENCODING_TYPE, const(wchar)*, CERT_STRING_TYPE, void*, ubyte*, uint*, const(wchar)**);
-uint CertGetNameStringA(const(CERT_CONTEXT)*, uint, uint, void*, PSTR, uint);
-uint CertGetNameStringW(const(CERT_CONTEXT)*, uint, uint, void*, PWSTR, uint);
-BOOL CryptSignMessage(CRYPT_SIGN_MESSAGE_PARA*, BOOL, uint, const(ubyte)**, uint*, ubyte*, uint*);
-BOOL CryptVerifyMessageSignature(CRYPT_VERIFY_MESSAGE_PARA*, uint, const(ubyte)*, uint, ubyte*, uint*, CERT_CONTEXT**);
-int CryptGetMessageSignerCount(uint, const(ubyte)*, uint);
-HCERTSTORE CryptGetMessageCertificates(uint, HCRYPTPROV_LEGACY, uint, const(ubyte)*, uint);
-BOOL CryptVerifyDetachedMessageSignature(CRYPT_VERIFY_MESSAGE_PARA*, uint, const(ubyte)*, uint, uint, const(ubyte)**, uint*, CERT_CONTEXT**);
-BOOL CryptEncryptMessage(CRYPT_ENCRYPT_MESSAGE_PARA*, uint, CERT_CONTEXT**, const(ubyte)*, uint, ubyte*, uint*);
-BOOL CryptDecryptMessage(CRYPT_DECRYPT_MESSAGE_PARA*, const(ubyte)*, uint, ubyte*, uint*, CERT_CONTEXT**);
-BOOL CryptSignAndEncryptMessage(CRYPT_SIGN_MESSAGE_PARA*, CRYPT_ENCRYPT_MESSAGE_PARA*, uint, CERT_CONTEXT**, const(ubyte)*, uint, ubyte*, uint*);
-BOOL CryptDecryptAndVerifyMessageSignature(CRYPT_DECRYPT_MESSAGE_PARA*, CRYPT_VERIFY_MESSAGE_PARA*, uint, const(ubyte)*, uint, ubyte*, uint*, CERT_CONTEXT**, CERT_CONTEXT**);
-BOOL CryptDecodeMessage(uint, CRYPT_DECRYPT_MESSAGE_PARA*, CRYPT_VERIFY_MESSAGE_PARA*, uint, const(ubyte)*, uint, uint, uint*, uint*, ubyte*, uint*, CERT_CONTEXT**, CERT_CONTEXT**);
-BOOL CryptHashMessage(CRYPT_HASH_MESSAGE_PARA*, BOOL, uint, const(ubyte)**, uint*, ubyte*, uint*, ubyte*, uint*);
-BOOL CryptVerifyMessageHash(CRYPT_HASH_MESSAGE_PARA*, ubyte*, uint, ubyte*, uint*, ubyte*, uint*);
-BOOL CryptVerifyDetachedMessageHash(CRYPT_HASH_MESSAGE_PARA*, ubyte*, uint, uint, const(ubyte)**, uint*, ubyte*, uint*);
-BOOL CryptSignMessageWithKey(CRYPT_KEY_SIGN_MESSAGE_PARA*, const(ubyte)*, uint, ubyte*, uint*);
-BOOL CryptVerifyMessageSignatureWithKey(CRYPT_KEY_VERIFY_MESSAGE_PARA*, CERT_PUBLIC_KEY_INFO*, const(ubyte)*, uint, ubyte*, uint*);
-HCERTSTORE CertOpenSystemStoreA(HCRYPTPROV_LEGACY, const(char)*);
-HCERTSTORE CertOpenSystemStoreW(HCRYPTPROV_LEGACY, const(wchar)*);
-BOOL CertAddEncodedCertificateToSystemStoreA(const(char)*, const(ubyte)*, uint);
-BOOL CertAddEncodedCertificateToSystemStoreW(const(wchar)*, const(ubyte)*, uint);
-HRESULT FindCertsByIssuer(CERT_CHAIN*, uint*, uint*, ubyte*, uint, const(wchar)*, uint);
-BOOL CryptQueryObject(CERT_QUERY_OBJECT_TYPE, const(void)*, CERT_QUERY_CONTENT_TYPE_FLAGS, CERT_QUERY_FORMAT_TYPE_FLAGS, uint, CERT_QUERY_ENCODING_TYPE*, CERT_QUERY_CONTENT_TYPE*, CERT_QUERY_FORMAT_TYPE*, HCERTSTORE*, void**, const(void)**);
-void* CryptMemAlloc(uint);
-void* CryptMemRealloc(void*, uint);
-void CryptMemFree(void*);
-BOOL CryptCreateAsyncHandle(uint, HCRYPTASYNC*);
-BOOL CryptSetAsyncParam(HCRYPTASYNC, PSTR, void*, PFN_CRYPT_ASYNC_PARAM_FREE_FUNC);
-BOOL CryptGetAsyncParam(HCRYPTASYNC, PSTR, void**, PFN_CRYPT_ASYNC_PARAM_FREE_FUNC*);
-BOOL CryptCloseAsyncHandle(HCRYPTASYNC);
-BOOL CryptRetrieveObjectByUrlA(const(char)*, const(char)*, uint, uint, void**, HCRYPTASYNC, CRYPT_CREDENTIALS*, void*, CRYPT_RETRIEVE_AUX_INFO*);
-BOOL CryptRetrieveObjectByUrlW(const(wchar)*, const(char)*, uint, uint, void**, HCRYPTASYNC, CRYPT_CREDENTIALS*, void*, CRYPT_RETRIEVE_AUX_INFO*);
-BOOL CryptInstallCancelRetrieval(PFN_CRYPT_CANCEL_RETRIEVAL, const(void)*, uint, void*);
-BOOL CryptUninstallCancelRetrieval(uint, void*);
-BOOL CryptGetObjectUrl(const(char)*, void*, CRYPT_GET_URL_FLAGS, CRYPT_URL_ARRAY*, uint*, CRYPT_URL_INFO*, uint*, void*);
-CERT_CONTEXT* CertCreateSelfSignCertificate(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE, CRYPT_INTEGER_BLOB*, CERT_CREATE_SELFSIGN_FLAGS, CRYPT_KEY_PROV_INFO*, CRYPT_ALGORITHM_IDENTIFIER*, SYSTEMTIME*, SYSTEMTIME*, CERT_EXTENSIONS*);
-BOOL CryptGetKeyIdentifierProperty(const(CRYPT_INTEGER_BLOB)*, uint, uint, const(wchar)*, void*, void*, uint*);
-BOOL CryptSetKeyIdentifierProperty(const(CRYPT_INTEGER_BLOB)*, uint, uint, const(wchar)*, void*, const(void)*);
-BOOL CryptEnumKeyIdentifierProperties(const(CRYPT_INTEGER_BLOB)*, uint, uint, const(wchar)*, void*, void*, PFN_CRYPT_ENUM_KEYID_PROP);
-BOOL CryptCreateKeyIdentifierFromCSP(CERT_QUERY_ENCODING_TYPE, const(char)*, const(PUBLICKEYSTRUC)*, uint, uint, void*, ubyte*, uint*);
-BOOL CertCreateCertificateChainEngine(CERT_CHAIN_ENGINE_CONFIG*, HCERTCHAINENGINE*);
-void CertFreeCertificateChainEngine(HCERTCHAINENGINE);
-BOOL CertResyncCertificateChainEngine(HCERTCHAINENGINE);
-BOOL CertGetCertificateChain(HCERTCHAINENGINE, const(CERT_CONTEXT)*, FILETIME*, HCERTSTORE, CERT_CHAIN_PARA*, uint, void*, CERT_CHAIN_CONTEXT**);
-void CertFreeCertificateChain(CERT_CHAIN_CONTEXT*);
-CERT_CHAIN_CONTEXT* CertDuplicateCertificateChain(CERT_CHAIN_CONTEXT*);
-CERT_CHAIN_CONTEXT* CertFindChainInStore(HCERTSTORE, CERT_QUERY_ENCODING_TYPE, CERT_FIND_CHAIN_IN_STORE_FLAGS, uint, const(void)*, CERT_CHAIN_CONTEXT*);
-BOOL CertVerifyCertificateChainPolicy(const(char)*, CERT_CHAIN_CONTEXT*, CERT_CHAIN_POLICY_PARA*, CERT_CHAIN_POLICY_STATUS*);
-BOOL CryptStringToBinaryA(const(char)*, uint, CRYPT_STRING, ubyte*, uint*, uint*, uint*);
-BOOL CryptStringToBinaryW(const(wchar)*, uint, CRYPT_STRING, ubyte*, uint*, uint*, uint*);
-BOOL CryptBinaryToStringA(const(ubyte)*, uint, CRYPT_STRING, PSTR, uint*);
-BOOL CryptBinaryToStringW(const(ubyte)*, uint, CRYPT_STRING, PWSTR, uint*);
-HCERTSTORE PFXImportCertStore(CRYPT_INTEGER_BLOB*, const(wchar)*, CRYPT_KEY_FLAGS);
-BOOL PFXIsPFXBlob(CRYPT_INTEGER_BLOB*);
-BOOL PFXVerifyPassword(CRYPT_INTEGER_BLOB*, const(wchar)*, uint);
-BOOL PFXExportCertStoreEx(HCERTSTORE, CRYPT_INTEGER_BLOB*, const(wchar)*, void*, uint);
-BOOL PFXExportCertStore(HCERTSTORE, CRYPT_INTEGER_BLOB*, const(wchar)*, uint);
-void* CertOpenServerOcspResponse(CERT_CHAIN_CONTEXT*, uint, CERT_SERVER_OCSP_RESPONSE_OPEN_PARA*);
-void CertAddRefServerOcspResponse(void*);
-void CertCloseServerOcspResponse(void*, uint);
-CERT_SERVER_OCSP_RESPONSE_CONTEXT* CertGetServerOcspResponseContext(void*, uint, void*);
-void CertAddRefServerOcspResponseContext(CERT_SERVER_OCSP_RESPONSE_CONTEXT*);
-void CertFreeServerOcspResponseContext(CERT_SERVER_OCSP_RESPONSE_CONTEXT*);
-BOOL CertRetrieveLogoOrBiometricInfo(const(CERT_CONTEXT)*, const(char)*, uint, uint, uint, void*, ubyte**, uint*, PWSTR*);
-BOOL CertSelectCertificateChains(const(GUID)*, uint, CERT_SELECT_CHAIN_PARA*, uint, CERT_SELECT_CRITERIA*, HCERTSTORE, uint*, CERT_CHAIN_CONTEXT***);
-void CertFreeCertificateChainList(CERT_CHAIN_CONTEXT**);
-BOOL CryptRetrieveTimeStamp(const(wchar)*, uint, uint, const(char)*, const(CRYPT_TIMESTAMP_PARA)*, const(ubyte)*, uint, CRYPT_TIMESTAMP_CONTEXT**, CERT_CONTEXT**, HCERTSTORE*);
-BOOL CryptVerifyTimeStampSignature(const(ubyte)*, uint, const(ubyte)*, uint, HCERTSTORE, CRYPT_TIMESTAMP_CONTEXT**, CERT_CONTEXT**, HCERTSTORE*);
-BOOL CertIsWeakHash(uint, const(wchar)*, uint, CERT_CHAIN_CONTEXT*, FILETIME*, const(wchar)*);
-BOOL CryptProtectData(CRYPT_INTEGER_BLOB*, const(wchar)*, CRYPT_INTEGER_BLOB*, void*, CRYPTPROTECT_PROMPTSTRUCT*, uint, CRYPT_INTEGER_BLOB*);
-BOOL CryptUnprotectData(CRYPT_INTEGER_BLOB*, PWSTR*, CRYPT_INTEGER_BLOB*, void*, CRYPTPROTECT_PROMPTSTRUCT*, uint, CRYPT_INTEGER_BLOB*);
-BOOL CryptUpdateProtectedState(PSID, const(wchar)*, uint, uint*, uint*);
-BOOL CryptProtectMemory(void*, uint, uint);
-BOOL CryptUnprotectMemory(void*, uint, uint);
-HRESULT NCryptRegisterProtectionDescriptorName(const(wchar)*, const(wchar)*, uint);
-HRESULT NCryptQueryProtectionDescriptorName(const(wchar)*, PWSTR, ulong*, uint);
-HRESULT NCryptCreateProtectionDescriptor(const(wchar)*, uint, NCRYPT_DESCRIPTOR_HANDLE*);
-HRESULT NCryptCloseProtectionDescriptor(NCRYPT_DESCRIPTOR_HANDLE);
-HRESULT NCryptGetProtectionDescriptorInfo(NCRYPT_DESCRIPTOR_HANDLE, const(NCRYPT_ALLOC_PARA)*, uint, void**);
-HRESULT NCryptProtectSecret(NCRYPT_DESCRIPTOR_HANDLE, uint, const(ubyte)*, uint, const(NCRYPT_ALLOC_PARA)*, HWND, ubyte**, uint*);
-HRESULT NCryptUnprotectSecret(NCRYPT_DESCRIPTOR_HANDLE*, NCRYPT_FLAGS, const(ubyte)*, uint, const(NCRYPT_ALLOC_PARA)*, HWND, ubyte**, uint*);
-HRESULT NCryptStreamOpenToProtect(NCRYPT_DESCRIPTOR_HANDLE, uint, HWND, NCRYPT_PROTECT_STREAM_INFO*, NCRYPT_STREAM_HANDLE*);
-HRESULT NCryptStreamOpenToUnprotect(NCRYPT_PROTECT_STREAM_INFO*, uint, HWND, NCRYPT_STREAM_HANDLE*);
-HRESULT NCryptStreamOpenToUnprotectEx(NCRYPT_PROTECT_STREAM_INFO_EX*, uint, HWND, NCRYPT_STREAM_HANDLE*);
-HRESULT NCryptStreamUpdate(NCRYPT_STREAM_HANDLE, const(ubyte)*, ulong, BOOL);
-HRESULT NCryptStreamClose(NCRYPT_STREAM_HANDLE);
+BOOL SystemPrng(ubyte* pbRandomData, ulong cbRandomData);
+BOOL ProcessPrng(ubyte* pbData, ulong cbData);
+BOOL CryptAcquireContextA(ulong* phProv, const(char)* szContainer, const(char)* szProvider, uint dwProvType, uint dwFlags);
+BOOL CryptAcquireContextW(ulong* phProv, const(wchar)* szContainer, const(wchar)* szProvider, uint dwProvType, uint dwFlags);
+BOOL CryptReleaseContext(ulong hProv, uint dwFlags);
+BOOL CryptGenKey(ulong hProv, ALG_ID Algid, CRYPT_KEY_FLAGS dwFlags, ulong* phKey);
+BOOL CryptDeriveKey(ulong hProv, ALG_ID Algid, ulong hBaseData, uint dwFlags, ulong* phKey);
+BOOL CryptDestroyKey(ulong hKey);
+BOOL CryptSetKeyParam(ulong hKey, CRYPT_KEY_PARAM_ID dwParam, const(ubyte)* pbData, uint dwFlags);
+BOOL CryptGetKeyParam(ulong hKey, CRYPT_KEY_PARAM_ID dwParam, ubyte* pbData, uint* pdwDataLen, uint dwFlags);
+BOOL CryptSetHashParam(ulong hHash, CRYPT_SET_HASH_PARAM dwParam, const(ubyte)* pbData, uint dwFlags);
+BOOL CryptGetHashParam(ulong hHash, uint dwParam, ubyte* pbData, uint* pdwDataLen, uint dwFlags);
+BOOL CryptSetProvParam(ulong hProv, CRYPT_SET_PROV_PARAM_ID dwParam, const(ubyte)* pbData, uint dwFlags);
+BOOL CryptGetProvParam(ulong hProv, uint dwParam, ubyte* pbData, uint* pdwDataLen, uint dwFlags);
+BOOL CryptGenRandom(ulong hProv, uint dwLen, ubyte* pbBuffer);
+BOOL CryptGetUserKey(ulong hProv, uint dwKeySpec, ulong* phUserKey);
+BOOL CryptExportKey(ulong hKey, ulong hExpKey, uint dwBlobType, CRYPT_KEY_FLAGS dwFlags, ubyte* pbData, uint* pdwDataLen);
+BOOL CryptImportKey(ulong hProv, const(ubyte)* pbData, uint dwDataLen, ulong hPubKey, CRYPT_KEY_FLAGS dwFlags, ulong* phKey);
+BOOL CryptEncrypt(ulong hKey, ulong hHash, BOOL Final, uint dwFlags, ubyte* pbData, uint* pdwDataLen, uint dwBufLen);
+BOOL CryptDecrypt(ulong hKey, ulong hHash, BOOL Final, uint dwFlags, ubyte* pbData, uint* pdwDataLen);
+BOOL CryptCreateHash(ulong hProv, ALG_ID Algid, ulong hKey, uint dwFlags, ulong* phHash);
+BOOL CryptHashData(ulong hHash, const(ubyte)* pbData, uint dwDataLen, uint dwFlags);
+BOOL CryptHashSessionKey(ulong hHash, ulong hKey, uint dwFlags);
+BOOL CryptDestroyHash(ulong hHash);
+BOOL CryptSignHashA(ulong hHash, uint dwKeySpec, const(char)* szDescription, uint dwFlags, ubyte* pbSignature, uint* pdwSigLen);
+BOOL CryptSignHashW(ulong hHash, uint dwKeySpec, const(wchar)* szDescription, uint dwFlags, ubyte* pbSignature, uint* pdwSigLen);
+BOOL CryptVerifySignatureA(ulong hHash, const(ubyte)* pbSignature, uint dwSigLen, ulong hPubKey, const(char)* szDescription, uint dwFlags);
+BOOL CryptVerifySignatureW(ulong hHash, const(ubyte)* pbSignature, uint dwSigLen, ulong hPubKey, const(wchar)* szDescription, uint dwFlags);
+BOOL CryptSetProviderA(const(char)* pszProvName, uint dwProvType);
+BOOL CryptSetProviderW(const(wchar)* pszProvName, uint dwProvType);
+BOOL CryptSetProviderExA(const(char)* pszProvName, uint dwProvType, uint* pdwReserved, uint dwFlags);
+BOOL CryptSetProviderExW(const(wchar)* pszProvName, uint dwProvType, uint* pdwReserved, uint dwFlags);
+BOOL CryptGetDefaultProviderA(uint dwProvType, uint* pdwReserved, uint dwFlags, PSTR pszProvName, uint* pcbProvName);
+BOOL CryptGetDefaultProviderW(uint dwProvType, uint* pdwReserved, uint dwFlags, PWSTR pszProvName, uint* pcbProvName);
+BOOL CryptEnumProviderTypesA(uint dwIndex, uint* pdwReserved, uint dwFlags, uint* pdwProvType, PSTR szTypeName, uint* pcbTypeName);
+BOOL CryptEnumProviderTypesW(uint dwIndex, uint* pdwReserved, uint dwFlags, uint* pdwProvType, PWSTR szTypeName, uint* pcbTypeName);
+BOOL CryptEnumProvidersA(uint dwIndex, uint* pdwReserved, uint dwFlags, uint* pdwProvType, PSTR szProvName, uint* pcbProvName);
+BOOL CryptEnumProvidersW(uint dwIndex, uint* pdwReserved, uint dwFlags, uint* pdwProvType, PWSTR szProvName, uint* pcbProvName);
+BOOL CryptContextAddRef(ulong hProv, uint* pdwReserved, uint dwFlags);
+BOOL CryptDuplicateKey(ulong hKey, uint* pdwReserved, uint dwFlags, ulong* phKey);
+BOOL CryptDuplicateHash(ulong hHash, uint* pdwReserved, uint dwFlags, ulong* phHash);
+NTSTATUS BCryptOpenAlgorithmProvider(BCRYPT_ALG_HANDLE* phAlgorithm, const(wchar)* pszAlgId, const(wchar)* pszImplementation, BCRYPT_OPEN_ALGORITHM_PROVIDER_FLAGS dwFlags);
+NTSTATUS BCryptEnumAlgorithms(BCRYPT_OPERATION dwAlgOperations, uint* pAlgCount, BCRYPT_ALGORITHM_IDENTIFIER** ppAlgList, uint dwFlags);
+NTSTATUS BCryptEnumProviders(const(wchar)* pszAlgId, uint* pImplCount, BCRYPT_PROVIDER_NAME** ppImplList, uint dwFlags);
+NTSTATUS BCryptGetProperty(BCRYPT_HANDLE hObject, const(wchar)* pszProperty, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+NTSTATUS BCryptSetProperty(BCRYPT_HANDLE hObject, const(wchar)* pszProperty, ubyte* pbInput, uint cbInput, uint dwFlags);
+NTSTATUS BCryptCloseAlgorithmProvider(BCRYPT_ALG_HANDLE hAlgorithm, uint dwFlags);
+void BCryptFreeBuffer(void* pvBuffer);
+NTSTATUS BCryptGenerateSymmetricKey(BCRYPT_ALG_HANDLE hAlgorithm, BCRYPT_KEY_HANDLE* phKey, ubyte* pbKeyObject, uint cbKeyObject, ubyte* pbSecret, uint cbSecret, uint dwFlags);
+NTSTATUS BCryptGenerateKeyPair(BCRYPT_ALG_HANDLE hAlgorithm, BCRYPT_KEY_HANDLE* phKey, uint dwLength, uint dwFlags);
+NTSTATUS BCryptEncrypt(BCRYPT_KEY_HANDLE hKey, ubyte* pbInput, uint cbInput, void* pPaddingInfo, ubyte* pbIV, uint cbIV, ubyte* pbOutput, uint cbOutput, uint* pcbResult, BCRYPT_FLAGS dwFlags);
+NTSTATUS BCryptDecrypt(BCRYPT_KEY_HANDLE hKey, ubyte* pbInput, uint cbInput, void* pPaddingInfo, ubyte* pbIV, uint cbIV, ubyte* pbOutput, uint cbOutput, uint* pcbResult, BCRYPT_FLAGS dwFlags);
+NTSTATUS BCryptExportKey(BCRYPT_KEY_HANDLE hKey, BCRYPT_KEY_HANDLE hExportKey, const(wchar)* pszBlobType, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+NTSTATUS BCryptImportKey(BCRYPT_ALG_HANDLE hAlgorithm, BCRYPT_KEY_HANDLE hImportKey, const(wchar)* pszBlobType, BCRYPT_KEY_HANDLE* phKey, ubyte* pbKeyObject, uint cbKeyObject, ubyte* pbInput, uint cbInput, uint dwFlags);
+NTSTATUS BCryptImportKeyPair(BCRYPT_ALG_HANDLE hAlgorithm, BCRYPT_KEY_HANDLE hImportKey, const(wchar)* pszBlobType, BCRYPT_KEY_HANDLE* phKey, ubyte* pbInput, uint cbInput, uint dwFlags);
+NTSTATUS BCryptDuplicateKey(BCRYPT_KEY_HANDLE hKey, BCRYPT_KEY_HANDLE* phNewKey, ubyte* pbKeyObject, uint cbKeyObject, uint dwFlags);
+NTSTATUS BCryptFinalizeKeyPair(BCRYPT_KEY_HANDLE hKey, uint dwFlags);
+NTSTATUS BCryptDestroyKey(BCRYPT_KEY_HANDLE hKey);
+NTSTATUS BCryptDestroySecret(BCRYPT_SECRET_HANDLE hSecret);
+NTSTATUS BCryptSignHash(BCRYPT_KEY_HANDLE hKey, void* pPaddingInfo, ubyte* pbInput, uint cbInput, ubyte* pbOutput, uint cbOutput, uint* pcbResult, BCRYPT_FLAGS dwFlags);
+NTSTATUS BCryptVerifySignature(BCRYPT_KEY_HANDLE hKey, void* pPaddingInfo, ubyte* pbHash, uint cbHash, ubyte* pbSignature, uint cbSignature, BCRYPT_FLAGS dwFlags);
+NTSTATUS BCryptSecretAgreement(BCRYPT_KEY_HANDLE hPrivKey, BCRYPT_KEY_HANDLE hPubKey, BCRYPT_SECRET_HANDLE* phAgreedSecret, uint dwFlags);
+NTSTATUS BCryptDeriveKey(BCRYPT_SECRET_HANDLE hSharedSecret, const(wchar)* pwszKDF, BCryptBufferDesc* pParameterList, ubyte* pbDerivedKey, uint cbDerivedKey, uint* pcbResult, uint dwFlags);
+NTSTATUS BCryptKeyDerivation(BCRYPT_KEY_HANDLE hKey, BCryptBufferDesc* pParameterList, ubyte* pbDerivedKey, uint cbDerivedKey, uint* pcbResult, uint dwFlags);
+NTSTATUS BCryptCreateHash(BCRYPT_ALG_HANDLE hAlgorithm, BCRYPT_HASH_HANDLE* phHash, ubyte* pbHashObject, uint cbHashObject, ubyte* pbSecret, uint cbSecret, uint dwFlags);
+NTSTATUS BCryptHashData(BCRYPT_HASH_HANDLE hHash, ubyte* pbInput, uint cbInput, uint dwFlags);
+NTSTATUS BCryptFinishHash(BCRYPT_HASH_HANDLE hHash, ubyte* pbOutput, uint cbOutput, uint dwFlags);
+NTSTATUS BCryptCreateMultiHash(BCRYPT_ALG_HANDLE hAlgorithm, BCRYPT_HASH_HANDLE* phHash, uint nHashes, ubyte* pbHashObject, uint cbHashObject, ubyte* pbSecret, uint cbSecret, uint dwFlags);
+NTSTATUS BCryptProcessMultiOperations(BCRYPT_HANDLE hObject, BCRYPT_MULTI_OPERATION_TYPE operationType, void* pOperations, uint cbOperations, uint dwFlags);
+NTSTATUS BCryptDuplicateHash(BCRYPT_HASH_HANDLE hHash, BCRYPT_HASH_HANDLE* phNewHash, ubyte* pbHashObject, uint cbHashObject, uint dwFlags);
+NTSTATUS BCryptDestroyHash(BCRYPT_HASH_HANDLE hHash);
+NTSTATUS BCryptHash(BCRYPT_ALG_HANDLE hAlgorithm, ubyte* pbSecret, uint cbSecret, ubyte* pbInput, uint cbInput, ubyte* pbOutput, uint cbOutput);
+NTSTATUS BCryptGenRandom(BCRYPT_ALG_HANDLE hAlgorithm, ubyte* pbBuffer, uint cbBuffer, BCRYPTGENRANDOM_FLAGS dwFlags);
+NTSTATUS BCryptDeriveKeyCapi(BCRYPT_HASH_HANDLE hHash, BCRYPT_ALG_HANDLE hTargetAlg, ubyte* pbDerivedKey, uint cbDerivedKey, uint dwFlags);
+NTSTATUS BCryptDeriveKeyPBKDF2(BCRYPT_ALG_HANDLE hPrf, ubyte* pbPassword, uint cbPassword, ubyte* pbSalt, uint cbSalt, ulong cIterations, ubyte* pbDerivedKey, uint cbDerivedKey, uint dwFlags);
+NTSTATUS BCryptQueryProviderRegistration(const(wchar)* pszProvider, BCRYPT_QUERY_PROVIDER_MODE dwMode, BCRYPT_INTERFACE dwInterface, uint* pcbBuffer, CRYPT_PROVIDER_REG** ppBuffer);
+NTSTATUS BCryptEnumRegisteredProviders(uint* pcbBuffer, CRYPT_PROVIDERS** ppBuffer);
+NTSTATUS BCryptCreateContext(BCRYPT_TABLE dwTable, const(wchar)* pszContext, CRYPT_CONTEXT_CONFIG* pConfig);
+NTSTATUS BCryptDeleteContext(BCRYPT_TABLE dwTable, const(wchar)* pszContext);
+NTSTATUS BCryptEnumContexts(BCRYPT_TABLE dwTable, uint* pcbBuffer, CRYPT_CONTEXTS** ppBuffer);
+NTSTATUS BCryptConfigureContext(BCRYPT_TABLE dwTable, const(wchar)* pszContext, CRYPT_CONTEXT_CONFIG* pConfig);
+NTSTATUS BCryptQueryContextConfiguration(BCRYPT_TABLE dwTable, const(wchar)* pszContext, uint* pcbBuffer, CRYPT_CONTEXT_CONFIG** ppBuffer);
+NTSTATUS BCryptAddContextFunction(BCRYPT_TABLE dwTable, const(wchar)* pszContext, BCRYPT_INTERFACE dwInterface, const(wchar)* pszFunction, uint dwPosition);
+NTSTATUS BCryptRemoveContextFunction(BCRYPT_TABLE dwTable, const(wchar)* pszContext, BCRYPT_INTERFACE dwInterface, const(wchar)* pszFunction);
+NTSTATUS BCryptEnumContextFunctions(BCRYPT_TABLE dwTable, const(wchar)* pszContext, BCRYPT_INTERFACE dwInterface, uint* pcbBuffer, CRYPT_CONTEXT_FUNCTIONS** ppBuffer);
+NTSTATUS BCryptConfigureContextFunction(BCRYPT_TABLE dwTable, const(wchar)* pszContext, BCRYPT_INTERFACE dwInterface, const(wchar)* pszFunction, CRYPT_CONTEXT_FUNCTION_CONFIG* pConfig);
+NTSTATUS BCryptQueryContextFunctionConfiguration(BCRYPT_TABLE dwTable, const(wchar)* pszContext, BCRYPT_INTERFACE dwInterface, const(wchar)* pszFunction, uint* pcbBuffer, CRYPT_CONTEXT_FUNCTION_CONFIG** ppBuffer);
+NTSTATUS BCryptEnumContextFunctionProviders(BCRYPT_TABLE dwTable, const(wchar)* pszContext, BCRYPT_INTERFACE dwInterface, const(wchar)* pszFunction, uint* pcbBuffer, CRYPT_CONTEXT_FUNCTION_PROVIDERS** ppBuffer);
+NTSTATUS BCryptSetContextFunctionProperty(BCRYPT_TABLE dwTable, const(wchar)* pszContext, BCRYPT_INTERFACE dwInterface, const(wchar)* pszFunction, const(wchar)* pszProperty, uint cbValue, ubyte* pbValue);
+NTSTATUS BCryptQueryContextFunctionProperty(BCRYPT_TABLE dwTable, const(wchar)* pszContext, BCRYPT_INTERFACE dwInterface, const(wchar)* pszFunction, const(wchar)* pszProperty, uint* pcbValue, ubyte** ppbValue);
+NTSTATUS BCryptRegisterConfigChangeNotify(HANDLE* phEvent);
+NTSTATUS BCryptUnregisterConfigChangeNotify(HANDLE hEvent);
+NTSTATUS BCryptResolveProviders(const(wchar)* pszContext, uint dwInterface, const(wchar)* pszFunction, const(wchar)* pszProvider, BCRYPT_QUERY_PROVIDER_MODE dwMode, BCRYPT_RESOLVE_PROVIDERS_FLAGS dwFlags, uint* pcbBuffer, CRYPT_PROVIDER_REFS** ppBuffer);
+NTSTATUS BCryptGetFipsAlgorithmMode(ubyte* pfEnabled);
+HRESULT NCryptOpenStorageProvider(NCRYPT_PROV_HANDLE* phProvider, const(wchar)* pszProviderName, uint dwFlags);
+HRESULT NCryptEnumAlgorithms(NCRYPT_PROV_HANDLE hProvider, NCRYPT_OPERATION dwAlgOperations, uint* pdwAlgCount, NCryptAlgorithmName** ppAlgList, uint dwFlags);
+HRESULT NCryptIsAlgSupported(NCRYPT_PROV_HANDLE hProvider, const(wchar)* pszAlgId, uint dwFlags);
+HRESULT NCryptEnumKeys(NCRYPT_PROV_HANDLE hProvider, const(wchar)* pszScope, NCryptKeyName** ppKeyName, void** ppEnumState, NCRYPT_FLAGS dwFlags);
+HRESULT NCryptEnumStorageProviders(uint* pdwProviderCount, NCryptProviderName** ppProviderList, uint dwFlags);
+HRESULT NCryptFreeBuffer(void* pvInput);
+HRESULT NCryptOpenKey(NCRYPT_PROV_HANDLE hProvider, NCRYPT_KEY_HANDLE* phKey, const(wchar)* pszKeyName, CERT_KEY_SPEC dwLegacyKeySpec, NCRYPT_FLAGS dwFlags);
+HRESULT NCryptCreatePersistedKey(NCRYPT_PROV_HANDLE hProvider, NCRYPT_KEY_HANDLE* phKey, const(wchar)* pszAlgId, const(wchar)* pszKeyName, CERT_KEY_SPEC dwLegacyKeySpec, NCRYPT_FLAGS dwFlags);
+HRESULT NCryptGetProperty(NCRYPT_HANDLE hObject, const(wchar)* pszProperty, ubyte* pbOutput, uint cbOutput, uint* pcbResult, OBJECT_SECURITY_INFORMATION dwFlags);
+HRESULT NCryptSetProperty(NCRYPT_HANDLE hObject, const(wchar)* pszProperty, ubyte* pbInput, uint cbInput, NCRYPT_FLAGS dwFlags);
+HRESULT NCryptFinalizeKey(NCRYPT_KEY_HANDLE hKey, NCRYPT_FLAGS dwFlags);
+HRESULT NCryptEncrypt(NCRYPT_KEY_HANDLE hKey, ubyte* pbInput, uint cbInput, void* pPaddingInfo, ubyte* pbOutput, uint cbOutput, uint* pcbResult, NCRYPT_FLAGS dwFlags);
+HRESULT NCryptDecrypt(NCRYPT_KEY_HANDLE hKey, ubyte* pbInput, uint cbInput, void* pPaddingInfo, ubyte* pbOutput, uint cbOutput, uint* pcbResult, NCRYPT_FLAGS dwFlags);
+HRESULT NCryptImportKey(NCRYPT_PROV_HANDLE hProvider, NCRYPT_KEY_HANDLE hImportKey, const(wchar)* pszBlobType, BCryptBufferDesc* pParameterList, NCRYPT_KEY_HANDLE* phKey, ubyte* pbData, uint cbData, NCRYPT_FLAGS dwFlags);
+HRESULT NCryptExportKey(NCRYPT_KEY_HANDLE hKey, NCRYPT_KEY_HANDLE hExportKey, const(wchar)* pszBlobType, BCryptBufferDesc* pParameterList, ubyte* pbOutput, uint cbOutput, uint* pcbResult, NCRYPT_FLAGS dwFlags);
+HRESULT NCryptSignHash(NCRYPT_KEY_HANDLE hKey, void* pPaddingInfo, ubyte* pbHashValue, uint cbHashValue, ubyte* pbSignature, uint cbSignature, uint* pcbResult, NCRYPT_FLAGS dwFlags);
+HRESULT NCryptVerifySignature(NCRYPT_KEY_HANDLE hKey, void* pPaddingInfo, ubyte* pbHashValue, uint cbHashValue, ubyte* pbSignature, uint cbSignature, NCRYPT_FLAGS dwFlags);
+HRESULT NCryptDeleteKey(NCRYPT_KEY_HANDLE hKey, uint dwFlags);
+HRESULT NCryptFreeObject(NCRYPT_HANDLE hObject);
+BOOL NCryptIsKeyHandle(NCRYPT_KEY_HANDLE hKey);
+HRESULT NCryptTranslateHandle(NCRYPT_PROV_HANDLE* phProvider, NCRYPT_KEY_HANDLE* phKey, ulong hLegacyProv, ulong hLegacyKey, CERT_KEY_SPEC dwLegacyKeySpec, uint dwFlags);
+HRESULT NCryptNotifyChangeKey(NCRYPT_PROV_HANDLE hProvider, HANDLE* phEvent, NCRYPT_FLAGS dwFlags);
+HRESULT NCryptSecretAgreement(NCRYPT_KEY_HANDLE hPrivKey, NCRYPT_KEY_HANDLE hPubKey, NCRYPT_SECRET_HANDLE* phAgreedSecret, NCRYPT_FLAGS dwFlags);
+HRESULT NCryptDeriveKey(NCRYPT_SECRET_HANDLE hSharedSecret, const(wchar)* pwszKDF, BCryptBufferDesc* pParameterList, ubyte* pbDerivedKey, uint cbDerivedKey, uint* pcbResult, uint dwFlags);
+HRESULT NCryptKeyDerivation(NCRYPT_KEY_HANDLE hKey, BCryptBufferDesc* pParameterList, ubyte* pbDerivedKey, uint cbDerivedKey, uint* pcbResult, uint dwFlags);
+HRESULT NCryptCreateClaim(NCRYPT_KEY_HANDLE hSubjectKey, NCRYPT_KEY_HANDLE hAuthorityKey, uint dwClaimType, BCryptBufferDesc* pParameterList, ubyte* pbClaimBlob, uint cbClaimBlob, uint* pcbResult, uint dwFlags);
+HRESULT NCryptVerifyClaim(NCRYPT_KEY_HANDLE hSubjectKey, NCRYPT_KEY_HANDLE hAuthorityKey, uint dwClaimType, BCryptBufferDesc* pParameterList, ubyte* pbClaimBlob, uint cbClaimBlob, BCryptBufferDesc* pOutput, uint dwFlags);
+BOOL CryptFormatObject(CERT_QUERY_ENCODING_TYPE dwCertEncodingType, uint dwFormatType, uint dwFormatStrType, void* pFormatStruct, const(char)* lpszStructType, const(ubyte)* pbEncoded, uint cbEncoded, void* pbFormat, uint* pcbFormat);
+BOOL CryptEncodeObjectEx(CERT_QUERY_ENCODING_TYPE dwCertEncodingType, const(char)* lpszStructType, const(void)* pvStructInfo, CRYPT_ENCODE_OBJECT_FLAGS dwFlags, CRYPT_ENCODE_PARA* pEncodePara, void* pvEncoded, uint* pcbEncoded);
+BOOL CryptEncodeObject(CERT_QUERY_ENCODING_TYPE dwCertEncodingType, const(char)* lpszStructType, const(void)* pvStructInfo, ubyte* pbEncoded, uint* pcbEncoded);
+BOOL CryptDecodeObjectEx(CERT_QUERY_ENCODING_TYPE dwCertEncodingType, const(char)* lpszStructType, const(ubyte)* pbEncoded, uint cbEncoded, uint dwFlags, CRYPT_DECODE_PARA* pDecodePara, void* pvStructInfo, uint* pcbStructInfo);
+BOOL CryptDecodeObject(CERT_QUERY_ENCODING_TYPE dwCertEncodingType, const(char)* lpszStructType, const(ubyte)* pbEncoded, uint cbEncoded, uint dwFlags, void* pvStructInfo, uint* pcbStructInfo);
+BOOL CryptInstallOIDFunctionAddress(HMODULE hModule, uint dwEncodingType, const(char)* pszFuncName, uint cFuncEntry, const(CRYPT_OID_FUNC_ENTRY)* rgFuncEntry, uint dwFlags);
+void* CryptInitOIDFunctionSet(const(char)* pszFuncName, uint dwFlags);
+BOOL CryptGetOIDFunctionAddress(void* hFuncSet, uint dwEncodingType, const(char)* pszOID, uint dwFlags, void** ppvFuncAddr, void** phFuncAddr);
+BOOL CryptGetDefaultOIDDllList(void* hFuncSet, uint dwEncodingType, PWSTR pwszDllList, uint* pcchDllList);
+BOOL CryptGetDefaultOIDFunctionAddress(void* hFuncSet, uint dwEncodingType, const(wchar)* pwszDll, uint dwFlags, void** ppvFuncAddr, void** phFuncAddr);
+BOOL CryptFreeOIDFunctionAddress(void* hFuncAddr, uint dwFlags);
+BOOL CryptRegisterOIDFunction(uint dwEncodingType, const(char)* pszFuncName, const(char)* pszOID, const(wchar)* pwszDll, const(char)* pszOverrideFuncName);
+BOOL CryptUnregisterOIDFunction(uint dwEncodingType, const(char)* pszFuncName, const(char)* pszOID);
+BOOL CryptRegisterDefaultOIDFunction(uint dwEncodingType, const(char)* pszFuncName, uint dwIndex, const(wchar)* pwszDll);
+BOOL CryptUnregisterDefaultOIDFunction(uint dwEncodingType, const(char)* pszFuncName, const(wchar)* pwszDll);
+BOOL CryptSetOIDFunctionValue(uint dwEncodingType, const(char)* pszFuncName, const(char)* pszOID, const(wchar)* pwszValueName, REG_VALUE_TYPE dwValueType, const(ubyte)* pbValueData, uint cbValueData);
+BOOL CryptGetOIDFunctionValue(uint dwEncodingType, const(char)* pszFuncName, const(char)* pszOID, const(wchar)* pwszValueName, uint* pdwValueType, ubyte* pbValueData, uint* pcbValueData);
+BOOL CryptEnumOIDFunction(uint dwEncodingType, const(char)* pszFuncName, const(char)* pszOID, uint dwFlags, void* pvArg, PFN_CRYPT_ENUM_OID_FUNC pfnEnumOIDFunc);
+CRYPT_OID_INFO* CryptFindOIDInfo(uint dwKeyType, void* pvKey, uint dwGroupId);
+BOOL CryptRegisterOIDInfo(CRYPT_OID_INFO* pInfo, uint dwFlags);
+BOOL CryptUnregisterOIDInfo(CRYPT_OID_INFO* pInfo);
+BOOL CryptEnumOIDInfo(uint dwGroupId, uint dwFlags, void* pvArg, PFN_CRYPT_ENUM_OID_INFO pfnEnumOIDInfo);
+PWSTR CryptFindLocalizedName(const(wchar)* pwszCryptName);
+void* CryptMsgOpenToEncode(uint dwMsgEncodingType, uint dwFlags, CRYPT_MSG_TYPE dwMsgType, const(void)* pvMsgEncodeInfo, PSTR pszInnerContentObjID, CMSG_STREAM_INFO* pStreamInfo);
+uint CryptMsgCalculateEncodedLength(uint dwMsgEncodingType, uint dwFlags, uint dwMsgType, const(void)* pvMsgEncodeInfo, PSTR pszInnerContentObjID, uint cbData);
+void* CryptMsgOpenToDecode(uint dwMsgEncodingType, uint dwFlags, uint dwMsgType, HCRYPTPROV_LEGACY hCryptProv, CERT_INFO* pRecipientInfo, CMSG_STREAM_INFO* pStreamInfo);
+void* CryptMsgDuplicate(void* hCryptMsg);
+BOOL CryptMsgClose(void* hCryptMsg);
+BOOL CryptMsgUpdate(void* hCryptMsg, const(ubyte)* pbData, uint cbData, BOOL fFinal);
+BOOL CryptMsgGetParam(void* hCryptMsg, uint dwParamType, uint dwIndex, void* pvData, uint* pcbData);
+BOOL CryptMsgControl(void* hCryptMsg, uint dwFlags, uint dwCtrlType, const(void)* pvCtrlPara);
+BOOL CryptMsgVerifyCountersignatureEncoded(HCRYPTPROV_LEGACY hCryptProv, uint dwEncodingType, ubyte* pbSignerInfo, uint cbSignerInfo, ubyte* pbSignerInfoCountersignature, uint cbSignerInfoCountersignature, CERT_INFO* pciCountersigner);
+BOOL CryptMsgVerifyCountersignatureEncodedEx(HCRYPTPROV_LEGACY hCryptProv, uint dwEncodingType, ubyte* pbSignerInfo, uint cbSignerInfo, ubyte* pbSignerInfoCountersignature, uint cbSignerInfoCountersignature, uint dwSignerType, void* pvSigner, uint dwFlags, void* pvExtra);
+BOOL CryptMsgCountersign(void* hCryptMsg, uint dwIndex, uint cCountersigners, CMSG_SIGNER_ENCODE_INFO* rgCountersigners);
+BOOL CryptMsgCountersignEncoded(uint dwEncodingType, ubyte* pbSignerInfo, uint cbSignerInfo, uint cCountersigners, CMSG_SIGNER_ENCODE_INFO* rgCountersigners, ubyte* pbCountersignature, uint* pcbCountersignature);
+HCERTSTORE CertOpenStore(const(char)* lpszStoreProvider, CERT_QUERY_ENCODING_TYPE dwEncodingType, HCRYPTPROV_LEGACY hCryptProv, CERT_OPEN_STORE_FLAGS dwFlags, const(void)* pvPara);
+HCERTSTORE CertDuplicateStore(HCERTSTORE hCertStore);
+BOOL CertSaveStore(HCERTSTORE hCertStore, CERT_QUERY_ENCODING_TYPE dwEncodingType, CERT_STORE_SAVE_AS dwSaveAs, CERT_STORE_SAVE_TO dwSaveTo, void* pvSaveToPara, uint dwFlags);
+BOOL CertCloseStore(HCERTSTORE hCertStore, uint dwFlags);
+CERT_CONTEXT* CertGetSubjectCertificateFromStore(HCERTSTORE hCertStore, CERT_QUERY_ENCODING_TYPE dwCertEncodingType, CERT_INFO* pCertId);
+CERT_CONTEXT* CertEnumCertificatesInStore(HCERTSTORE hCertStore, const(CERT_CONTEXT)* pPrevCertContext);
+CERT_CONTEXT* CertFindCertificateInStore(HCERTSTORE hCertStore, CERT_QUERY_ENCODING_TYPE dwCertEncodingType, uint dwFindFlags, CERT_FIND_FLAGS dwFindType, const(void)* pvFindPara, const(CERT_CONTEXT)* pPrevCertContext);
+CERT_CONTEXT* CertGetIssuerCertificateFromStore(HCERTSTORE hCertStore, const(CERT_CONTEXT)* pSubjectContext, const(CERT_CONTEXT)* pPrevIssuerContext, uint* pdwFlags);
+BOOL CertVerifySubjectCertificateContext(const(CERT_CONTEXT)* pSubject, const(CERT_CONTEXT)* pIssuer, uint* pdwFlags);
+CERT_CONTEXT* CertDuplicateCertificateContext(const(CERT_CONTEXT)* pCertContext);
+CERT_CONTEXT* CertCreateCertificateContext(CERT_QUERY_ENCODING_TYPE dwCertEncodingType, const(ubyte)* pbCertEncoded, uint cbCertEncoded);
+BOOL CertFreeCertificateContext(const(CERT_CONTEXT)* pCertContext);
+BOOL CertSetCertificateContextProperty(const(CERT_CONTEXT)* pCertContext, uint dwPropId, uint dwFlags, const(void)* pvData);
+BOOL CertGetCertificateContextProperty(const(CERT_CONTEXT)* pCertContext, uint dwPropId, void* pvData, uint* pcbData);
+uint CertEnumCertificateContextProperties(const(CERT_CONTEXT)* pCertContext, uint dwPropId);
+BOOL CertCreateCTLEntryFromCertificateContextProperties(const(CERT_CONTEXT)* pCertContext, uint cOptAttr, CRYPT_ATTRIBUTE* rgOptAttr, uint dwFlags, void* pvReserved, CTL_ENTRY* pCtlEntry, uint* pcbCtlEntry);
+BOOL CertSetCertificateContextPropertiesFromCTLEntry(const(CERT_CONTEXT)* pCertContext, CTL_ENTRY* pCtlEntry, uint dwFlags);
+CRL_CONTEXT* CertGetCRLFromStore(HCERTSTORE hCertStore, const(CERT_CONTEXT)* pIssuerContext, CRL_CONTEXT* pPrevCrlContext, uint* pdwFlags);
+CRL_CONTEXT* CertEnumCRLsInStore(HCERTSTORE hCertStore, CRL_CONTEXT* pPrevCrlContext);
+CRL_CONTEXT* CertFindCRLInStore(HCERTSTORE hCertStore, CERT_QUERY_ENCODING_TYPE dwCertEncodingType, uint dwFindFlags, uint dwFindType, const(void)* pvFindPara, CRL_CONTEXT* pPrevCrlContext);
+CRL_CONTEXT* CertDuplicateCRLContext(CRL_CONTEXT* pCrlContext);
+CRL_CONTEXT* CertCreateCRLContext(CERT_QUERY_ENCODING_TYPE dwCertEncodingType, const(ubyte)* pbCrlEncoded, uint cbCrlEncoded);
+BOOL CertFreeCRLContext(CRL_CONTEXT* pCrlContext);
+BOOL CertSetCRLContextProperty(CRL_CONTEXT* pCrlContext, uint dwPropId, uint dwFlags, const(void)* pvData);
+BOOL CertGetCRLContextProperty(CRL_CONTEXT* pCrlContext, uint dwPropId, void* pvData, uint* pcbData);
+uint CertEnumCRLContextProperties(CRL_CONTEXT* pCrlContext, uint dwPropId);
+BOOL CertFindCertificateInCRL(const(CERT_CONTEXT)* pCert, CRL_CONTEXT* pCrlContext, uint dwFlags, void* pvReserved, CRL_ENTRY** ppCrlEntry);
+BOOL CertIsValidCRLForCertificate(const(CERT_CONTEXT)* pCert, CRL_CONTEXT* pCrl, uint dwFlags, void* pvReserved);
+BOOL CertAddEncodedCertificateToStore(HCERTSTORE hCertStore, CERT_QUERY_ENCODING_TYPE dwCertEncodingType, const(ubyte)* pbCertEncoded, uint cbCertEncoded, uint dwAddDisposition, CERT_CONTEXT** ppCertContext);
+BOOL CertAddCertificateContextToStore(HCERTSTORE hCertStore, const(CERT_CONTEXT)* pCertContext, uint dwAddDisposition, CERT_CONTEXT** ppStoreContext);
+BOOL CertAddSerializedElementToStore(HCERTSTORE hCertStore, const(ubyte)* pbElement, uint cbElement, uint dwAddDisposition, uint dwFlags, uint dwContextTypeFlags, uint* pdwContextType, const(void)** ppvContext);
+BOOL CertDeleteCertificateFromStore(const(CERT_CONTEXT)* pCertContext);
+BOOL CertAddEncodedCRLToStore(HCERTSTORE hCertStore, CERT_QUERY_ENCODING_TYPE dwCertEncodingType, const(ubyte)* pbCrlEncoded, uint cbCrlEncoded, uint dwAddDisposition, CRL_CONTEXT** ppCrlContext);
+BOOL CertAddCRLContextToStore(HCERTSTORE hCertStore, CRL_CONTEXT* pCrlContext, uint dwAddDisposition, CRL_CONTEXT** ppStoreContext);
+BOOL CertDeleteCRLFromStore(CRL_CONTEXT* pCrlContext);
+BOOL CertSerializeCertificateStoreElement(const(CERT_CONTEXT)* pCertContext, uint dwFlags, ubyte* pbElement, uint* pcbElement);
+BOOL CertSerializeCRLStoreElement(CRL_CONTEXT* pCrlContext, uint dwFlags, ubyte* pbElement, uint* pcbElement);
+CTL_CONTEXT* CertDuplicateCTLContext(CTL_CONTEXT* pCtlContext);
+CTL_CONTEXT* CertCreateCTLContext(uint dwMsgAndCertEncodingType, const(ubyte)* pbCtlEncoded, uint cbCtlEncoded);
+BOOL CertFreeCTLContext(CTL_CONTEXT* pCtlContext);
+BOOL CertSetCTLContextProperty(CTL_CONTEXT* pCtlContext, uint dwPropId, uint dwFlags, const(void)* pvData);
+BOOL CertGetCTLContextProperty(CTL_CONTEXT* pCtlContext, uint dwPropId, void* pvData, uint* pcbData);
+uint CertEnumCTLContextProperties(CTL_CONTEXT* pCtlContext, uint dwPropId);
+CTL_CONTEXT* CertEnumCTLsInStore(HCERTSTORE hCertStore, CTL_CONTEXT* pPrevCtlContext);
+CTL_ENTRY* CertFindSubjectInCTL(uint dwEncodingType, uint dwSubjectType, void* pvSubject, CTL_CONTEXT* pCtlContext, uint dwFlags);
+CTL_CONTEXT* CertFindCTLInStore(HCERTSTORE hCertStore, uint dwMsgAndCertEncodingType, uint dwFindFlags, CERT_FIND_TYPE dwFindType, const(void)* pvFindPara, CTL_CONTEXT* pPrevCtlContext);
+BOOL CertAddEncodedCTLToStore(HCERTSTORE hCertStore, CERT_QUERY_ENCODING_TYPE dwMsgAndCertEncodingType, const(ubyte)* pbCtlEncoded, uint cbCtlEncoded, uint dwAddDisposition, CTL_CONTEXT** ppCtlContext);
+BOOL CertAddCTLContextToStore(HCERTSTORE hCertStore, CTL_CONTEXT* pCtlContext, uint dwAddDisposition, CTL_CONTEXT** ppStoreContext);
+BOOL CertSerializeCTLStoreElement(CTL_CONTEXT* pCtlContext, uint dwFlags, ubyte* pbElement, uint* pcbElement);
+BOOL CertDeleteCTLFromStore(CTL_CONTEXT* pCtlContext);
+BOOL CertAddCertificateLinkToStore(HCERTSTORE hCertStore, const(CERT_CONTEXT)* pCertContext, uint dwAddDisposition, CERT_CONTEXT** ppStoreContext);
+BOOL CertAddCRLLinkToStore(HCERTSTORE hCertStore, CRL_CONTEXT* pCrlContext, uint dwAddDisposition, CRL_CONTEXT** ppStoreContext);
+BOOL CertAddCTLLinkToStore(HCERTSTORE hCertStore, CTL_CONTEXT* pCtlContext, uint dwAddDisposition, CTL_CONTEXT** ppStoreContext);
+BOOL CertAddStoreToCollection(HCERTSTORE hCollectionStore, HCERTSTORE hSiblingStore, uint dwUpdateFlags, uint dwPriority);
+void CertRemoveStoreFromCollection(HCERTSTORE hCollectionStore, HCERTSTORE hSiblingStore);
+BOOL CertControlStore(HCERTSTORE hCertStore, CERT_CONTROL_STORE_FLAGS dwFlags, uint dwCtrlType, const(void)* pvCtrlPara);
+BOOL CertSetStoreProperty(HCERTSTORE hCertStore, uint dwPropId, uint dwFlags, const(void)* pvData);
+BOOL CertGetStoreProperty(HCERTSTORE hCertStore, uint dwPropId, void* pvData, uint* pcbData);
+void* CertCreateContext(uint dwContextType, uint dwEncodingType, const(ubyte)* pbEncoded, uint cbEncoded, uint dwFlags, CERT_CREATE_CONTEXT_PARA* pCreatePara);
+BOOL CertRegisterSystemStore(const(void)* pvSystemStore, uint dwFlags, CERT_SYSTEM_STORE_INFO* pStoreInfo, void* pvReserved);
+BOOL CertRegisterPhysicalStore(const(void)* pvSystemStore, uint dwFlags, const(wchar)* pwszStoreName, CERT_PHYSICAL_STORE_INFO* pStoreInfo, void* pvReserved);
+BOOL CertUnregisterSystemStore(const(void)* pvSystemStore, uint dwFlags);
+BOOL CertUnregisterPhysicalStore(const(void)* pvSystemStore, uint dwFlags, const(wchar)* pwszStoreName);
+BOOL CertEnumSystemStoreLocation(uint dwFlags, void* pvArg, PFN_CERT_ENUM_SYSTEM_STORE_LOCATION pfnEnum);
+BOOL CertEnumSystemStore(uint dwFlags, void* pvSystemStoreLocationPara, void* pvArg, PFN_CERT_ENUM_SYSTEM_STORE pfnEnum);
+BOOL CertEnumPhysicalStore(const(void)* pvSystemStore, uint dwFlags, void* pvArg, PFN_CERT_ENUM_PHYSICAL_STORE pfnEnum);
+BOOL CertGetEnhancedKeyUsage(const(CERT_CONTEXT)* pCertContext, uint dwFlags, CTL_USAGE* pUsage, uint* pcbUsage);
+BOOL CertSetEnhancedKeyUsage(const(CERT_CONTEXT)* pCertContext, CTL_USAGE* pUsage);
+BOOL CertAddEnhancedKeyUsageIdentifier(const(CERT_CONTEXT)* pCertContext, const(char)* pszUsageIdentifier);
+BOOL CertRemoveEnhancedKeyUsageIdentifier(const(CERT_CONTEXT)* pCertContext, const(char)* pszUsageIdentifier);
+BOOL CertGetValidUsages(uint cCerts, CERT_CONTEXT** rghCerts, int* cNumOIDs, PSTR* rghOIDs, uint* pcbOIDs);
+BOOL CryptMsgGetAndVerifySigner(void* hCryptMsg, uint cSignerStore, HCERTSTORE* rghSignerStore, uint dwFlags, CERT_CONTEXT** ppSigner, uint* pdwSignerIndex);
+BOOL CryptMsgSignCTL(uint dwMsgEncodingType, ubyte* pbCtlContent, uint cbCtlContent, CMSG_SIGNED_ENCODE_INFO* pSignInfo, uint dwFlags, ubyte* pbEncoded, uint* pcbEncoded);
+BOOL CryptMsgEncodeAndSignCTL(uint dwMsgEncodingType, CTL_INFO* pCtlInfo, CMSG_SIGNED_ENCODE_INFO* pSignInfo, uint dwFlags, ubyte* pbEncoded, uint* pcbEncoded);
+BOOL CertFindSubjectInSortedCTL(CRYPT_INTEGER_BLOB* pSubjectIdentifier, CTL_CONTEXT* pCtlContext, uint dwFlags, void* pvReserved, CRYPT_INTEGER_BLOB* pEncodedAttributes);
+BOOL CertEnumSubjectInSortedCTL(CTL_CONTEXT* pCtlContext, void** ppvNextSubject, CRYPT_INTEGER_BLOB* pSubjectIdentifier, CRYPT_INTEGER_BLOB* pEncodedAttributes);
+BOOL CertVerifyCTLUsage(uint dwEncodingType, uint dwSubjectType, void* pvSubject, CTL_USAGE* pSubjectUsage, uint dwFlags, CTL_VERIFY_USAGE_PARA* pVerifyUsagePara, CTL_VERIFY_USAGE_STATUS* pVerifyUsageStatus);
+BOOL CertVerifyRevocation(uint dwEncodingType, uint dwRevType, uint cContext, void** rgpvContext, uint dwFlags, CERT_REVOCATION_PARA* pRevPara, CERT_REVOCATION_STATUS* pRevStatus);
+BOOL CertCompareIntegerBlob(CRYPT_INTEGER_BLOB* pInt1, CRYPT_INTEGER_BLOB* pInt2);
+BOOL CertCompareCertificate(CERT_QUERY_ENCODING_TYPE dwCertEncodingType, CERT_INFO* pCertId1, CERT_INFO* pCertId2);
+BOOL CertCompareCertificateName(CERT_QUERY_ENCODING_TYPE dwCertEncodingType, CRYPT_INTEGER_BLOB* pCertName1, CRYPT_INTEGER_BLOB* pCertName2);
+BOOL CertIsRDNAttrsInCertificateName(CERT_QUERY_ENCODING_TYPE dwCertEncodingType, uint dwFlags, CRYPT_INTEGER_BLOB* pCertName, CERT_RDN* pRDN);
+BOOL CertComparePublicKeyInfo(CERT_QUERY_ENCODING_TYPE dwCertEncodingType, CERT_PUBLIC_KEY_INFO* pPublicKey1, CERT_PUBLIC_KEY_INFO* pPublicKey2);
+uint CertGetPublicKeyLength(CERT_QUERY_ENCODING_TYPE dwCertEncodingType, CERT_PUBLIC_KEY_INFO* pPublicKey);
+BOOL CryptVerifyCertificateSignature(HCRYPTPROV_LEGACY hCryptProv, CERT_QUERY_ENCODING_TYPE dwCertEncodingType, const(ubyte)* pbEncoded, uint cbEncoded, CERT_PUBLIC_KEY_INFO* pPublicKey);
+BOOL CryptVerifyCertificateSignatureEx(HCRYPTPROV_LEGACY hCryptProv, CERT_QUERY_ENCODING_TYPE dwCertEncodingType, uint dwSubjectType, void* pvSubject, uint dwIssuerType, void* pvIssuer, CRYPT_VERIFY_CERT_FLAGS dwFlags, void* pvExtra);
+BOOL CertIsStrongHashToSign(CERT_STRONG_SIGN_PARA* pStrongSignPara, const(wchar)* pwszCNGHashAlgid, const(CERT_CONTEXT)* pSigningCert);
+BOOL CryptHashToBeSigned(HCRYPTPROV_LEGACY hCryptProv, CERT_QUERY_ENCODING_TYPE dwCertEncodingType, const(ubyte)* pbEncoded, uint cbEncoded, ubyte* pbComputedHash, uint* pcbComputedHash);
+BOOL CryptHashCertificate(HCRYPTPROV_LEGACY hCryptProv, ALG_ID Algid, uint dwFlags, const(ubyte)* pbEncoded, uint cbEncoded, ubyte* pbComputedHash, uint* pcbComputedHash);
+BOOL CryptHashCertificate2(const(wchar)* pwszCNGHashAlgid, uint dwFlags, void* pvReserved, const(ubyte)* pbEncoded, uint cbEncoded, ubyte* pbComputedHash, uint* pcbComputedHash);
+BOOL CryptSignCertificate(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE hCryptProvOrNCryptKey, uint dwKeySpec, CERT_QUERY_ENCODING_TYPE dwCertEncodingType, const(ubyte)* pbEncodedToBeSigned, uint cbEncodedToBeSigned, CRYPT_ALGORITHM_IDENTIFIER* pSignatureAlgorithm, const(void)* pvHashAuxInfo, ubyte* pbSignature, uint* pcbSignature);
+BOOL CryptSignAndEncodeCertificate(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE hCryptProvOrNCryptKey, CERT_KEY_SPEC dwKeySpec, CERT_QUERY_ENCODING_TYPE dwCertEncodingType, const(char)* lpszStructType, const(void)* pvStructInfo, CRYPT_ALGORITHM_IDENTIFIER* pSignatureAlgorithm, const(void)* pvHashAuxInfo, ubyte* pbEncoded, uint* pcbEncoded);
+int CertVerifyTimeValidity(FILETIME* pTimeToVerify, CERT_INFO* pCertInfo);
+int CertVerifyCRLTimeValidity(FILETIME* pTimeToVerify, CRL_INFO* pCrlInfo);
+BOOL CertVerifyValidityNesting(CERT_INFO* pSubjectInfo, CERT_INFO* pIssuerInfo);
+BOOL CertVerifyCRLRevocation(CERT_QUERY_ENCODING_TYPE dwCertEncodingType, CERT_INFO* pCertId, uint cCrlInfo, CRL_INFO** rgpCrlInfo);
+PSTR CertAlgIdToOID(uint dwAlgId);
+uint CertOIDToAlgId(const(char)* pszObjId);
+CERT_EXTENSION* CertFindExtension(const(char)* pszObjId, uint cExtensions, CERT_EXTENSION* rgExtensions);
+CRYPT_ATTRIBUTE* CertFindAttribute(const(char)* pszObjId, uint cAttr, CRYPT_ATTRIBUTE* rgAttr);
+CERT_RDN_ATTR* CertFindRDNAttr(const(char)* pszObjId, CERT_NAME_INFO* pName);
+BOOL CertGetIntendedKeyUsage(CERT_QUERY_ENCODING_TYPE dwCertEncodingType, CERT_INFO* pCertInfo, ubyte* pbKeyUsage, uint cbKeyUsage);
+BOOL CryptInstallDefaultContext(ulong hCryptProv, CRYPT_DEFAULT_CONTEXT_TYPE dwDefaultType, const(void)* pvDefaultPara, CRYPT_DEFAULT_CONTEXT_FLAGS dwFlags, void* pvReserved, void** phDefaultContext);
+BOOL CryptUninstallDefaultContext(void* hDefaultContext, uint dwFlags, void* pvReserved);
+BOOL CryptExportPublicKeyInfo(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE hCryptProvOrNCryptKey, uint dwKeySpec, CERT_QUERY_ENCODING_TYPE dwCertEncodingType, CERT_PUBLIC_KEY_INFO* pInfo, uint* pcbInfo);
+BOOL CryptExportPublicKeyInfoEx(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE hCryptProvOrNCryptKey, uint dwKeySpec, CERT_QUERY_ENCODING_TYPE dwCertEncodingType, PSTR pszPublicKeyObjId, uint dwFlags, void* pvAuxInfo, CERT_PUBLIC_KEY_INFO* pInfo, uint* pcbInfo);
+BOOL CryptExportPublicKeyInfoFromBCryptKeyHandle(BCRYPT_KEY_HANDLE hBCryptKey, CERT_QUERY_ENCODING_TYPE dwCertEncodingType, PSTR pszPublicKeyObjId, uint dwFlags, void* pvAuxInfo, CERT_PUBLIC_KEY_INFO* pInfo, uint* pcbInfo);
+BOOL CryptImportPublicKeyInfo(ulong hCryptProv, CERT_QUERY_ENCODING_TYPE dwCertEncodingType, CERT_PUBLIC_KEY_INFO* pInfo, ulong* phKey);
+BOOL CryptImportPublicKeyInfoEx(ulong hCryptProv, CERT_QUERY_ENCODING_TYPE dwCertEncodingType, CERT_PUBLIC_KEY_INFO* pInfo, ALG_ID aiKeyAlg, uint dwFlags, void* pvAuxInfo, ulong* phKey);
+BOOL CryptImportPublicKeyInfoEx2(CERT_QUERY_ENCODING_TYPE dwCertEncodingType, CERT_PUBLIC_KEY_INFO* pInfo, CRYPT_IMPORT_PUBLIC_KEY_FLAGS dwFlags, void* pvAuxInfo, BCRYPT_KEY_HANDLE* phKey);
+BOOL CryptAcquireCertificatePrivateKey(const(CERT_CONTEXT)* pCert, CRYPT_ACQUIRE_FLAGS dwFlags, void* pvParameters, HCRYPTPROV_OR_NCRYPT_KEY_HANDLE* phCryptProvOrNCryptKey, CERT_KEY_SPEC* pdwKeySpec, BOOL* pfCallerFreeProvOrNCryptKey);
+BOOL CryptFindCertificateKeyProvInfo(const(CERT_CONTEXT)* pCert, CRYPT_FIND_FLAGS dwFlags, void* pvReserved);
+BOOL CryptImportPKCS8(CRYPT_PKCS8_IMPORT_PARAMS sPrivateKeyAndParams, CRYPT_KEY_FLAGS dwFlags, ulong* phCryptProv, void* pvAuxInfo);
+BOOL CryptExportPKCS8(ulong hCryptProv, uint dwKeySpec, PSTR pszPrivateKeyObjId, uint dwFlags, void* pvAuxInfo, ubyte* pbPrivateKeyBlob, uint* pcbPrivateKeyBlob);
+BOOL CryptHashPublicKeyInfo(HCRYPTPROV_LEGACY hCryptProv, ALG_ID Algid, uint dwFlags, CERT_QUERY_ENCODING_TYPE dwCertEncodingType, CERT_PUBLIC_KEY_INFO* pInfo, ubyte* pbComputedHash, uint* pcbComputedHash);
+uint CertRDNValueToStrA(uint dwValueType, CRYPT_INTEGER_BLOB* pValue, PSTR psz, uint csz);
+uint CertRDNValueToStrW(uint dwValueType, CRYPT_INTEGER_BLOB* pValue, PWSTR psz, uint csz);
+uint CertNameToStrA(CERT_QUERY_ENCODING_TYPE dwCertEncodingType, CRYPT_INTEGER_BLOB* pName, CERT_STRING_TYPE dwStrType, PSTR psz, uint csz);
+uint CertNameToStrW(CERT_QUERY_ENCODING_TYPE dwCertEncodingType, CRYPT_INTEGER_BLOB* pName, CERT_STRING_TYPE dwStrType, PWSTR psz, uint csz);
+BOOL CertStrToNameA(CERT_QUERY_ENCODING_TYPE dwCertEncodingType, const(char)* pszX500, CERT_STRING_TYPE dwStrType, void* pvReserved, ubyte* pbEncoded, uint* pcbEncoded, const(char)** ppszError);
+BOOL CertStrToNameW(CERT_QUERY_ENCODING_TYPE dwCertEncodingType, const(wchar)* pszX500, CERT_STRING_TYPE dwStrType, void* pvReserved, ubyte* pbEncoded, uint* pcbEncoded, const(wchar)** ppszError);
+uint CertGetNameStringA(const(CERT_CONTEXT)* pCertContext, uint dwType, uint dwFlags, void* pvTypePara, PSTR pszNameString, uint cchNameString);
+uint CertGetNameStringW(const(CERT_CONTEXT)* pCertContext, uint dwType, uint dwFlags, void* pvTypePara, PWSTR pszNameString, uint cchNameString);
+BOOL CryptSignMessage(CRYPT_SIGN_MESSAGE_PARA* pSignPara, BOOL fDetachedSignature, uint cToBeSigned, const(ubyte)** rgpbToBeSigned, uint* rgcbToBeSigned, ubyte* pbSignedBlob, uint* pcbSignedBlob);
+BOOL CryptVerifyMessageSignature(CRYPT_VERIFY_MESSAGE_PARA* pVerifyPara, uint dwSignerIndex, const(ubyte)* pbSignedBlob, uint cbSignedBlob, ubyte* pbDecoded, uint* pcbDecoded, CERT_CONTEXT** ppSignerCert);
+int CryptGetMessageSignerCount(uint dwMsgEncodingType, const(ubyte)* pbSignedBlob, uint cbSignedBlob);
+HCERTSTORE CryptGetMessageCertificates(uint dwMsgAndCertEncodingType, HCRYPTPROV_LEGACY hCryptProv, uint dwFlags, const(ubyte)* pbSignedBlob, uint cbSignedBlob);
+BOOL CryptVerifyDetachedMessageSignature(CRYPT_VERIFY_MESSAGE_PARA* pVerifyPara, uint dwSignerIndex, const(ubyte)* pbDetachedSignBlob, uint cbDetachedSignBlob, uint cToBeSigned, const(ubyte)** rgpbToBeSigned, uint* rgcbToBeSigned, CERT_CONTEXT** ppSignerCert);
+BOOL CryptEncryptMessage(CRYPT_ENCRYPT_MESSAGE_PARA* pEncryptPara, uint cRecipientCert, CERT_CONTEXT** rgpRecipientCert, const(ubyte)* pbToBeEncrypted, uint cbToBeEncrypted, ubyte* pbEncryptedBlob, uint* pcbEncryptedBlob);
+BOOL CryptDecryptMessage(CRYPT_DECRYPT_MESSAGE_PARA* pDecryptPara, const(ubyte)* pbEncryptedBlob, uint cbEncryptedBlob, ubyte* pbDecrypted, uint* pcbDecrypted, CERT_CONTEXT** ppXchgCert);
+BOOL CryptSignAndEncryptMessage(CRYPT_SIGN_MESSAGE_PARA* pSignPara, CRYPT_ENCRYPT_MESSAGE_PARA* pEncryptPara, uint cRecipientCert, CERT_CONTEXT** rgpRecipientCert, const(ubyte)* pbToBeSignedAndEncrypted, uint cbToBeSignedAndEncrypted, ubyte* pbSignedAndEncryptedBlob, uint* pcbSignedAndEncryptedBlob);
+BOOL CryptDecryptAndVerifyMessageSignature(CRYPT_DECRYPT_MESSAGE_PARA* pDecryptPara, CRYPT_VERIFY_MESSAGE_PARA* pVerifyPara, uint dwSignerIndex, const(ubyte)* pbEncryptedBlob, uint cbEncryptedBlob, ubyte* pbDecrypted, uint* pcbDecrypted, CERT_CONTEXT** ppXchgCert, CERT_CONTEXT** ppSignerCert);
+BOOL CryptDecodeMessage(uint dwMsgTypeFlags, CRYPT_DECRYPT_MESSAGE_PARA* pDecryptPara, CRYPT_VERIFY_MESSAGE_PARA* pVerifyPara, uint dwSignerIndex, const(ubyte)* pbEncodedBlob, uint cbEncodedBlob, uint dwPrevInnerContentType, uint* pdwMsgType, uint* pdwInnerContentType, ubyte* pbDecoded, uint* pcbDecoded, CERT_CONTEXT** ppXchgCert, CERT_CONTEXT** ppSignerCert);
+BOOL CryptHashMessage(CRYPT_HASH_MESSAGE_PARA* pHashPara, BOOL fDetachedHash, uint cToBeHashed, const(ubyte)** rgpbToBeHashed, uint* rgcbToBeHashed, ubyte* pbHashedBlob, uint* pcbHashedBlob, ubyte* pbComputedHash, uint* pcbComputedHash);
+BOOL CryptVerifyMessageHash(CRYPT_HASH_MESSAGE_PARA* pHashPara, ubyte* pbHashedBlob, uint cbHashedBlob, ubyte* pbToBeHashed, uint* pcbToBeHashed, ubyte* pbComputedHash, uint* pcbComputedHash);
+BOOL CryptVerifyDetachedMessageHash(CRYPT_HASH_MESSAGE_PARA* pHashPara, ubyte* pbDetachedHashBlob, uint cbDetachedHashBlob, uint cToBeHashed, const(ubyte)** rgpbToBeHashed, uint* rgcbToBeHashed, ubyte* pbComputedHash, uint* pcbComputedHash);
+BOOL CryptSignMessageWithKey(CRYPT_KEY_SIGN_MESSAGE_PARA* pSignPara, const(ubyte)* pbToBeSigned, uint cbToBeSigned, ubyte* pbSignedBlob, uint* pcbSignedBlob);
+BOOL CryptVerifyMessageSignatureWithKey(CRYPT_KEY_VERIFY_MESSAGE_PARA* pVerifyPara, CERT_PUBLIC_KEY_INFO* pPublicKeyInfo, const(ubyte)* pbSignedBlob, uint cbSignedBlob, ubyte* pbDecoded, uint* pcbDecoded);
+HCERTSTORE CertOpenSystemStoreA(HCRYPTPROV_LEGACY hProv, const(char)* szSubsystemProtocol);
+HCERTSTORE CertOpenSystemStoreW(HCRYPTPROV_LEGACY hProv, const(wchar)* szSubsystemProtocol);
+BOOL CertAddEncodedCertificateToSystemStoreA(const(char)* szCertStoreName, const(ubyte)* pbCertEncoded, uint cbCertEncoded);
+BOOL CertAddEncodedCertificateToSystemStoreW(const(wchar)* szCertStoreName, const(ubyte)* pbCertEncoded, uint cbCertEncoded);
+HRESULT FindCertsByIssuer(CERT_CHAIN* pCertChains, uint* pcbCertChains, uint* pcCertChains, ubyte* pbEncodedIssuerName, uint cbEncodedIssuerName, const(wchar)* pwszPurpose, uint dwKeySpec);
+BOOL CryptQueryObject(CERT_QUERY_OBJECT_TYPE dwObjectType, const(void)* pvObject, CERT_QUERY_CONTENT_TYPE_FLAGS dwExpectedContentTypeFlags, CERT_QUERY_FORMAT_TYPE_FLAGS dwExpectedFormatTypeFlags, uint dwFlags, CERT_QUERY_ENCODING_TYPE* pdwMsgAndCertEncodingType, CERT_QUERY_CONTENT_TYPE* pdwContentType, CERT_QUERY_FORMAT_TYPE* pdwFormatType, HCERTSTORE* phCertStore, void** phMsg, const(void)** ppvContext);
+void* CryptMemAlloc(uint cbSize);
+void* CryptMemRealloc(void* pv, uint cbSize);
+void CryptMemFree(void* pv);
+BOOL CryptCreateAsyncHandle(uint dwFlags, HCRYPTASYNC* phAsync);
+BOOL CryptSetAsyncParam(HCRYPTASYNC hAsync, PSTR pszParamOid, void* pvParam, PFN_CRYPT_ASYNC_PARAM_FREE_FUNC pfnFree);
+BOOL CryptGetAsyncParam(HCRYPTASYNC hAsync, PSTR pszParamOid, void** ppvParam, PFN_CRYPT_ASYNC_PARAM_FREE_FUNC* ppfnFree);
+BOOL CryptCloseAsyncHandle(HCRYPTASYNC hAsync);
+BOOL CryptRetrieveObjectByUrlA(const(char)* pszUrl, const(char)* pszObjectOid, uint dwRetrievalFlags, uint dwTimeout, void** ppvObject, HCRYPTASYNC hAsyncRetrieve, CRYPT_CREDENTIALS* pCredentials, void* pvVerify, CRYPT_RETRIEVE_AUX_INFO* pAuxInfo);
+BOOL CryptRetrieveObjectByUrlW(const(wchar)* pszUrl, const(char)* pszObjectOid, uint dwRetrievalFlags, uint dwTimeout, void** ppvObject, HCRYPTASYNC hAsyncRetrieve, CRYPT_CREDENTIALS* pCredentials, void* pvVerify, CRYPT_RETRIEVE_AUX_INFO* pAuxInfo);
+BOOL CryptInstallCancelRetrieval(PFN_CRYPT_CANCEL_RETRIEVAL pfnCancel, const(void)* pvArg, uint dwFlags, void* pvReserved);
+BOOL CryptUninstallCancelRetrieval(uint dwFlags, void* pvReserved);
+BOOL CryptGetObjectUrl(const(char)* pszUrlOid, void* pvPara, CRYPT_GET_URL_FLAGS dwFlags, CRYPT_URL_ARRAY* pUrlArray, uint* pcbUrlArray, CRYPT_URL_INFO* pUrlInfo, uint* pcbUrlInfo, void* pvReserved);
+CERT_CONTEXT* CertCreateSelfSignCertificate(HCRYPTPROV_OR_NCRYPT_KEY_HANDLE hCryptProvOrNCryptKey, CRYPT_INTEGER_BLOB* pSubjectIssuerBlob, CERT_CREATE_SELFSIGN_FLAGS dwFlags, CRYPT_KEY_PROV_INFO* pKeyProvInfo, CRYPT_ALGORITHM_IDENTIFIER* pSignatureAlgorithm, SYSTEMTIME* pStartTime, SYSTEMTIME* pEndTime, CERT_EXTENSIONS* pExtensions);
+BOOL CryptGetKeyIdentifierProperty(const(CRYPT_INTEGER_BLOB)* pKeyIdentifier, uint dwPropId, uint dwFlags, const(wchar)* pwszComputerName, void* pvReserved, void* pvData, uint* pcbData);
+BOOL CryptSetKeyIdentifierProperty(const(CRYPT_INTEGER_BLOB)* pKeyIdentifier, uint dwPropId, uint dwFlags, const(wchar)* pwszComputerName, void* pvReserved, const(void)* pvData);
+BOOL CryptEnumKeyIdentifierProperties(const(CRYPT_INTEGER_BLOB)* pKeyIdentifier, uint dwPropId, uint dwFlags, const(wchar)* pwszComputerName, void* pvReserved, void* pvArg, PFN_CRYPT_ENUM_KEYID_PROP pfnEnum);
+BOOL CryptCreateKeyIdentifierFromCSP(CERT_QUERY_ENCODING_TYPE dwCertEncodingType, const(char)* pszPubKeyOID, const(PUBLICKEYSTRUC)* pPubKeyStruc, uint cbPubKeyStruc, uint dwFlags, void* pvReserved, ubyte* pbHash, uint* pcbHash);
+BOOL CertCreateCertificateChainEngine(CERT_CHAIN_ENGINE_CONFIG* pConfig, HCERTCHAINENGINE* phChainEngine);
+void CertFreeCertificateChainEngine(HCERTCHAINENGINE hChainEngine);
+BOOL CertResyncCertificateChainEngine(HCERTCHAINENGINE hChainEngine);
+BOOL CertGetCertificateChain(HCERTCHAINENGINE hChainEngine, const(CERT_CONTEXT)* pCertContext, FILETIME* pTime, HCERTSTORE hAdditionalStore, CERT_CHAIN_PARA* pChainPara, uint dwFlags, void* pvReserved, CERT_CHAIN_CONTEXT** ppChainContext);
+void CertFreeCertificateChain(CERT_CHAIN_CONTEXT* pChainContext);
+CERT_CHAIN_CONTEXT* CertDuplicateCertificateChain(CERT_CHAIN_CONTEXT* pChainContext);
+CERT_CHAIN_CONTEXT* CertFindChainInStore(HCERTSTORE hCertStore, CERT_QUERY_ENCODING_TYPE dwCertEncodingType, CERT_FIND_CHAIN_IN_STORE_FLAGS dwFindFlags, uint dwFindType, const(void)* pvFindPara, CERT_CHAIN_CONTEXT* pPrevChainContext);
+BOOL CertVerifyCertificateChainPolicy(const(char)* pszPolicyOID, CERT_CHAIN_CONTEXT* pChainContext, CERT_CHAIN_POLICY_PARA* pPolicyPara, CERT_CHAIN_POLICY_STATUS* pPolicyStatus);
+BOOL CryptStringToBinaryA(const(char)* pszString, uint cchString, CRYPT_STRING dwFlags, ubyte* pbBinary, uint* pcbBinary, uint* pdwSkip, uint* pdwFlags);
+BOOL CryptStringToBinaryW(const(wchar)* pszString, uint cchString, CRYPT_STRING dwFlags, ubyte* pbBinary, uint* pcbBinary, uint* pdwSkip, uint* pdwFlags);
+BOOL CryptBinaryToStringA(const(ubyte)* pbBinary, uint cbBinary, CRYPT_STRING dwFlags, PSTR pszString, uint* pcchString);
+BOOL CryptBinaryToStringW(const(ubyte)* pbBinary, uint cbBinary, CRYPT_STRING dwFlags, PWSTR pszString, uint* pcchString);
+HCERTSTORE PFXImportCertStore(CRYPT_INTEGER_BLOB* pPFX, const(wchar)* szPassword, CRYPT_KEY_FLAGS dwFlags);
+BOOL PFXIsPFXBlob(CRYPT_INTEGER_BLOB* pPFX);
+BOOL PFXVerifyPassword(CRYPT_INTEGER_BLOB* pPFX, const(wchar)* szPassword, uint dwFlags);
+BOOL PFXExportCertStoreEx(HCERTSTORE hStore, CRYPT_INTEGER_BLOB* pPFX, const(wchar)* szPassword, void* pvPara, uint dwFlags);
+BOOL PFXExportCertStore(HCERTSTORE hStore, CRYPT_INTEGER_BLOB* pPFX, const(wchar)* szPassword, uint dwFlags);
+void* CertOpenServerOcspResponse(CERT_CHAIN_CONTEXT* pChainContext, uint dwFlags, CERT_SERVER_OCSP_RESPONSE_OPEN_PARA* pOpenPara);
+void CertAddRefServerOcspResponse(void* hServerOcspResponse);
+void CertCloseServerOcspResponse(void* hServerOcspResponse, uint dwFlags);
+CERT_SERVER_OCSP_RESPONSE_CONTEXT* CertGetServerOcspResponseContext(void* hServerOcspResponse, uint dwFlags, void* pvReserved);
+void CertAddRefServerOcspResponseContext(CERT_SERVER_OCSP_RESPONSE_CONTEXT* pServerOcspResponseContext);
+void CertFreeServerOcspResponseContext(CERT_SERVER_OCSP_RESPONSE_CONTEXT* pServerOcspResponseContext);
+BOOL CertRetrieveLogoOrBiometricInfo(const(CERT_CONTEXT)* pCertContext, const(char)* lpszLogoOrBiometricType, uint dwRetrievalFlags, uint dwTimeout, uint dwFlags, void* pvReserved, ubyte** ppbData, uint* pcbData, PWSTR* ppwszMimeType);
+BOOL CertSelectCertificateChains(const(GUID)* pSelectionContext, uint dwFlags, CERT_SELECT_CHAIN_PARA* pChainParameters, uint cCriteria, CERT_SELECT_CRITERIA* rgpCriteria, HCERTSTORE hStore, uint* pcSelection, CERT_CHAIN_CONTEXT*** pprgpSelection);
+void CertFreeCertificateChainList(CERT_CHAIN_CONTEXT** prgpSelection);
+BOOL CryptRetrieveTimeStamp(const(wchar)* wszUrl, uint dwRetrievalFlags, uint dwTimeout, const(char)* pszHashId, const(CRYPT_TIMESTAMP_PARA)* pPara, const(ubyte)* pbData, uint cbData, CRYPT_TIMESTAMP_CONTEXT** ppTsContext, CERT_CONTEXT** ppTsSigner, HCERTSTORE* phStore);
+BOOL CryptVerifyTimeStampSignature(const(ubyte)* pbTSContentInfo, uint cbTSContentInfo, const(ubyte)* pbData, uint cbData, HCERTSTORE hAdditionalStore, CRYPT_TIMESTAMP_CONTEXT** ppTsContext, CERT_CONTEXT** ppTsSigner, HCERTSTORE* phStore);
+BOOL CertIsWeakHash(uint dwHashUseType, const(wchar)* pwszCNGHashAlgid, uint dwChainFlags, CERT_CHAIN_CONTEXT* pSignerChainContext, FILETIME* pTimeStamp, const(wchar)* pwszFileName);
+BOOL CryptProtectData(CRYPT_INTEGER_BLOB* pDataIn, const(wchar)* szDataDescr, CRYPT_INTEGER_BLOB* pOptionalEntropy, void* pvReserved, CRYPTPROTECT_PROMPTSTRUCT* pPromptStruct, uint dwFlags, CRYPT_INTEGER_BLOB* pDataOut);
+BOOL CryptUnprotectData(CRYPT_INTEGER_BLOB* pDataIn, PWSTR* ppszDataDescr, CRYPT_INTEGER_BLOB* pOptionalEntropy, void* pvReserved, CRYPTPROTECT_PROMPTSTRUCT* pPromptStruct, uint dwFlags, CRYPT_INTEGER_BLOB* pDataOut);
+BOOL CryptUpdateProtectedState(PSID pOldSid, const(wchar)* pwszOldPassword, uint dwFlags, uint* pdwSuccessCount, uint* pdwFailureCount);
+BOOL CryptProtectMemory(void* pDataIn, uint cbDataIn, uint dwFlags);
+BOOL CryptUnprotectMemory(void* pDataIn, uint cbDataIn, uint dwFlags);
+HRESULT NCryptRegisterProtectionDescriptorName(const(wchar)* pwszName, const(wchar)* pwszDescriptorString, uint dwFlags);
+HRESULT NCryptQueryProtectionDescriptorName(const(wchar)* pwszName, PWSTR pwszDescriptorString, ulong* pcDescriptorString, uint dwFlags);
+HRESULT NCryptCreateProtectionDescriptor(const(wchar)* pwszDescriptorString, uint dwFlags, NCRYPT_DESCRIPTOR_HANDLE* phDescriptor);
+HRESULT NCryptCloseProtectionDescriptor(NCRYPT_DESCRIPTOR_HANDLE hDescriptor);
+HRESULT NCryptGetProtectionDescriptorInfo(NCRYPT_DESCRIPTOR_HANDLE hDescriptor, const(NCRYPT_ALLOC_PARA)* pMemPara, uint dwInfoType, void** ppvInfo);
+HRESULT NCryptProtectSecret(NCRYPT_DESCRIPTOR_HANDLE hDescriptor, uint dwFlags, const(ubyte)* pbData, uint cbData, const(NCRYPT_ALLOC_PARA)* pMemPara, HWND hWnd, ubyte** ppbProtectedBlob, uint* pcbProtectedBlob);
+HRESULT NCryptUnprotectSecret(NCRYPT_DESCRIPTOR_HANDLE* phDescriptor, NCRYPT_FLAGS dwFlags, const(ubyte)* pbProtectedBlob, uint cbProtectedBlob, const(NCRYPT_ALLOC_PARA)* pMemPara, HWND hWnd, ubyte** ppbData, uint* pcbData);
+HRESULT NCryptStreamOpenToProtect(NCRYPT_DESCRIPTOR_HANDLE hDescriptor, uint dwFlags, HWND hWnd, NCRYPT_PROTECT_STREAM_INFO* pStreamInfo, NCRYPT_STREAM_HANDLE* phStream);
+HRESULT NCryptStreamOpenToUnprotect(NCRYPT_PROTECT_STREAM_INFO* pStreamInfo, uint dwFlags, HWND hWnd, NCRYPT_STREAM_HANDLE* phStream);
+HRESULT NCryptStreamOpenToUnprotectEx(NCRYPT_PROTECT_STREAM_INFO_EX* pStreamInfo, uint dwFlags, HWND hWnd, NCRYPT_STREAM_HANDLE* phStream);
+HRESULT NCryptStreamUpdate(NCRYPT_STREAM_HANDLE hStream, const(ubyte)* pbData, ulong cbData, BOOL fFinal);
+HRESULT NCryptStreamClose(NCRYPT_STREAM_HANDLE hStream);
 HRESULT SignError();
-HRESULT SignerFreeSignerContext(SIGNER_CONTEXT*);
-HRESULT SignerSign(SIGNER_SUBJECT_INFO*, SIGNER_CERT*, SIGNER_SIGNATURE_INFO*, SIGNER_PROVIDER_INFO*, const(wchar)*, CRYPT_ATTRIBUTES*, void*);
-HRESULT SignerSignEx(SIGNER_SIGN_FLAGS, SIGNER_SUBJECT_INFO*, SIGNER_CERT*, SIGNER_SIGNATURE_INFO*, SIGNER_PROVIDER_INFO*, const(wchar)*, CRYPT_ATTRIBUTES*, void*, SIGNER_CONTEXT**);
-HRESULT SignerSignEx2(SIGNER_SIGN_FLAGS, SIGNER_SUBJECT_INFO*, SIGNER_CERT*, SIGNER_SIGNATURE_INFO*, SIGNER_PROVIDER_INFO*, SIGNER_TIMESTAMP_FLAGS, const(char)*, const(wchar)*, CRYPT_ATTRIBUTES*, void*, SIGNER_CONTEXT**, CERT_STRONG_SIGN_PARA*, void*);
-HRESULT SignerSignEx3(SIGNER_SIGN_FLAGS, SIGNER_SUBJECT_INFO*, SIGNER_CERT*, SIGNER_SIGNATURE_INFO*, SIGNER_PROVIDER_INFO*, SIGNER_TIMESTAMP_FLAGS, const(char)*, const(wchar)*, CRYPT_ATTRIBUTES*, void*, SIGNER_CONTEXT**, CERT_STRONG_SIGN_PARA*, SIGNER_DIGEST_SIGN_INFO*, void*);
-HRESULT SignerTimeStamp(SIGNER_SUBJECT_INFO*, const(wchar)*, CRYPT_ATTRIBUTES*, void*);
-HRESULT SignerTimeStampEx(uint, SIGNER_SUBJECT_INFO*, const(wchar)*, CRYPT_ATTRIBUTES*, void*, SIGNER_CONTEXT**);
-HRESULT SignerTimeStampEx2(SIGNER_TIMESTAMP_FLAGS, SIGNER_SUBJECT_INFO*, const(wchar)*, ALG_ID, CRYPT_ATTRIBUTES*, void*, SIGNER_CONTEXT**);
-HRESULT SignerTimeStampEx3(SIGNER_TIMESTAMP_FLAGS, uint, SIGNER_SUBJECT_INFO*, const(wchar)*, const(wchar)*, CRYPT_ATTRIBUTES*, void*, SIGNER_CONTEXT**, CERT_STRONG_SIGN_PARA*, void*);
-HRESULT CryptXmlClose(void*);
-HRESULT CryptXmlGetTransforms(const(CRYPT_XML_TRANSFORM_CHAIN_CONFIG)**);
-HRESULT CryptXmlOpenToEncode(const(CRYPT_XML_TRANSFORM_CHAIN_CONFIG)*, CRYPT_XML_FLAGS, const(wchar)*, const(CRYPT_XML_PROPERTY)*, uint, const(CRYPT_XML_BLOB)*, void**);
-HRESULT CryptXmlOpenToDecode(const(CRYPT_XML_TRANSFORM_CHAIN_CONFIG)*, CRYPT_XML_FLAGS, const(CRYPT_XML_PROPERTY)*, uint, const(CRYPT_XML_BLOB)*, void**);
-HRESULT CryptXmlAddObject(void*, uint, const(CRYPT_XML_PROPERTY)*, uint, const(CRYPT_XML_BLOB)*, const(CRYPT_XML_OBJECT)**);
-HRESULT CryptXmlCreateReference(void*, uint, const(wchar)*, const(wchar)*, const(wchar)*, const(CRYPT_XML_ALGORITHM)*, uint, const(CRYPT_XML_ALGORITHM)*, void**);
-HRESULT CryptXmlDigestReference(void*, uint, CRYPT_XML_DATA_PROVIDER*);
-HRESULT CryptXmlSetHMACSecret(void*, const(ubyte)*, uint);
-HRESULT CryptXmlSign(void*, HCRYPTPROV_OR_NCRYPT_KEY_HANDLE, CERT_KEY_SPEC, CRYPT_XML_FLAGS, CRYPT_XML_KEYINFO_SPEC, const(void)*, const(CRYPT_XML_ALGORITHM)*, const(CRYPT_XML_ALGORITHM)*);
-HRESULT CryptXmlImportPublicKey(CRYPT_XML_FLAGS, const(CRYPT_XML_KEY_VALUE)*, BCRYPT_KEY_HANDLE*);
-HRESULT CryptXmlVerifySignature(void*, BCRYPT_KEY_HANDLE, CRYPT_XML_FLAGS);
-HRESULT CryptXmlGetDocContext(void*, const(CRYPT_XML_DOC_CTXT)**);
-HRESULT CryptXmlGetSignature(void*, const(CRYPT_XML_SIGNATURE)**);
-HRESULT CryptXmlGetReference(void*, const(CRYPT_XML_REFERENCE)**);
-HRESULT CryptXmlGetStatus(void*, CRYPT_XML_STATUS*);
-HRESULT CryptXmlEncode(void*, CRYPT_XML_CHARSET, const(CRYPT_XML_PROPERTY)*, uint, void*, PFN_CRYPT_XML_WRITE_CALLBACK);
-HRESULT CryptXmlGetAlgorithmInfo(const(CRYPT_XML_ALGORITHM)*, CRYPT_XML_FLAGS, CRYPT_XML_ALGORITHM_INFO**);
-CRYPT_XML_ALGORITHM_INFO* CryptXmlFindAlgorithmInfo(uint, const(void)*, uint, uint);
-HRESULT CryptXmlEnumAlgorithmInfo(uint, uint, void*, PFN_CRYPT_XML_ENUM_ALG_INFO);
-HRESULT GetToken(uint, POLICY_ELEMENT*, GENERIC_XML_TOKEN**, INFORMATIONCARD_CRYPTO_HANDLE**);
+HRESULT SignerFreeSignerContext(SIGNER_CONTEXT* pSignerContext);
+HRESULT SignerSign(SIGNER_SUBJECT_INFO* pSubjectInfo, SIGNER_CERT* pSignerCert, SIGNER_SIGNATURE_INFO* pSignatureInfo, SIGNER_PROVIDER_INFO* pProviderInfo, const(wchar)* pwszHttpTimeStamp, CRYPT_ATTRIBUTES* psRequest, void* pSipData);
+HRESULT SignerSignEx(SIGNER_SIGN_FLAGS dwFlags, SIGNER_SUBJECT_INFO* pSubjectInfo, SIGNER_CERT* pSignerCert, SIGNER_SIGNATURE_INFO* pSignatureInfo, SIGNER_PROVIDER_INFO* pProviderInfo, const(wchar)* pwszHttpTimeStamp, CRYPT_ATTRIBUTES* psRequest, void* pSipData, SIGNER_CONTEXT** ppSignerContext);
+HRESULT SignerSignEx2(SIGNER_SIGN_FLAGS dwFlags, SIGNER_SUBJECT_INFO* pSubjectInfo, SIGNER_CERT* pSignerCert, SIGNER_SIGNATURE_INFO* pSignatureInfo, SIGNER_PROVIDER_INFO* pProviderInfo, SIGNER_TIMESTAMP_FLAGS dwTimestampFlags, const(char)* pszTimestampAlgorithmOid, const(wchar)* pwszHttpTimeStamp, CRYPT_ATTRIBUTES* psRequest, void* pSipData, SIGNER_CONTEXT** ppSignerContext, CERT_STRONG_SIGN_PARA* pCryptoPolicy, void* pReserved);
+HRESULT SignerSignEx3(SIGNER_SIGN_FLAGS dwFlags, SIGNER_SUBJECT_INFO* pSubjectInfo, SIGNER_CERT* pSignerCert, SIGNER_SIGNATURE_INFO* pSignatureInfo, SIGNER_PROVIDER_INFO* pProviderInfo, SIGNER_TIMESTAMP_FLAGS dwTimestampFlags, const(char)* pszTimestampAlgorithmOid, const(wchar)* pwszHttpTimeStamp, CRYPT_ATTRIBUTES* psRequest, void* pSipData, SIGNER_CONTEXT** ppSignerContext, CERT_STRONG_SIGN_PARA* pCryptoPolicy, SIGNER_DIGEST_SIGN_INFO* pDigestSignInfo, void* pReserved);
+HRESULT SignerTimeStamp(SIGNER_SUBJECT_INFO* pSubjectInfo, const(wchar)* pwszHttpTimeStamp, CRYPT_ATTRIBUTES* psRequest, void* pSipData);
+HRESULT SignerTimeStampEx(uint dwFlags, SIGNER_SUBJECT_INFO* pSubjectInfo, const(wchar)* pwszHttpTimeStamp, CRYPT_ATTRIBUTES* psRequest, void* pSipData, SIGNER_CONTEXT** ppSignerContext);
+HRESULT SignerTimeStampEx2(SIGNER_TIMESTAMP_FLAGS dwFlags, SIGNER_SUBJECT_INFO* pSubjectInfo, const(wchar)* pwszHttpTimeStamp, ALG_ID dwAlgId, CRYPT_ATTRIBUTES* psRequest, void* pSipData, SIGNER_CONTEXT** ppSignerContext);
+HRESULT SignerTimeStampEx3(SIGNER_TIMESTAMP_FLAGS dwFlags, uint dwIndex, SIGNER_SUBJECT_INFO* pSubjectInfo, const(wchar)* pwszHttpTimeStamp, const(wchar)* pszAlgorithmOid, CRYPT_ATTRIBUTES* psRequest, void* pSipData, SIGNER_CONTEXT** ppSignerContext, CERT_STRONG_SIGN_PARA* pCryptoPolicy, void* pReserved);
+HRESULT CryptXmlClose(void* hCryptXml);
+HRESULT CryptXmlGetTransforms(const(CRYPT_XML_TRANSFORM_CHAIN_CONFIG)** ppConfig);
+HRESULT CryptXmlOpenToEncode(const(CRYPT_XML_TRANSFORM_CHAIN_CONFIG)* pConfig, CRYPT_XML_FLAGS dwFlags, const(wchar)* wszId, const(CRYPT_XML_PROPERTY)* rgProperty, uint cProperty, const(CRYPT_XML_BLOB)* pEncoded, void** phSignature);
+HRESULT CryptXmlOpenToDecode(const(CRYPT_XML_TRANSFORM_CHAIN_CONFIG)* pConfig, CRYPT_XML_FLAGS dwFlags, const(CRYPT_XML_PROPERTY)* rgProperty, uint cProperty, const(CRYPT_XML_BLOB)* pEncoded, void** phCryptXml);
+HRESULT CryptXmlAddObject(void* hSignatureOrObject, uint dwFlags, const(CRYPT_XML_PROPERTY)* rgProperty, uint cProperty, const(CRYPT_XML_BLOB)* pEncoded, const(CRYPT_XML_OBJECT)** ppObject);
+HRESULT CryptXmlCreateReference(void* hCryptXml, uint dwFlags, const(wchar)* wszId, const(wchar)* wszURI, const(wchar)* wszType, const(CRYPT_XML_ALGORITHM)* pDigestMethod, uint cTransform, const(CRYPT_XML_ALGORITHM)* rgTransform, void** phReference);
+HRESULT CryptXmlDigestReference(void* hReference, uint dwFlags, CRYPT_XML_DATA_PROVIDER* pDataProviderIn);
+HRESULT CryptXmlSetHMACSecret(void* hSignature, const(ubyte)* pbSecret, uint cbSecret);
+HRESULT CryptXmlSign(void* hSignature, HCRYPTPROV_OR_NCRYPT_KEY_HANDLE hKey, CERT_KEY_SPEC dwKeySpec, CRYPT_XML_FLAGS dwFlags, CRYPT_XML_KEYINFO_SPEC dwKeyInfoSpec, const(void)* pvKeyInfoSpec, const(CRYPT_XML_ALGORITHM)* pSignatureMethod, const(CRYPT_XML_ALGORITHM)* pCanonicalization);
+HRESULT CryptXmlImportPublicKey(CRYPT_XML_FLAGS dwFlags, const(CRYPT_XML_KEY_VALUE)* pKeyValue, BCRYPT_KEY_HANDLE* phKey);
+HRESULT CryptXmlVerifySignature(void* hSignature, BCRYPT_KEY_HANDLE hKey, CRYPT_XML_FLAGS dwFlags);
+HRESULT CryptXmlGetDocContext(void* hCryptXml, const(CRYPT_XML_DOC_CTXT)** ppStruct);
+HRESULT CryptXmlGetSignature(void* hCryptXml, const(CRYPT_XML_SIGNATURE)** ppStruct);
+HRESULT CryptXmlGetReference(void* hCryptXml, const(CRYPT_XML_REFERENCE)** ppStruct);
+HRESULT CryptXmlGetStatus(void* hCryptXml, CRYPT_XML_STATUS* pStatus);
+HRESULT CryptXmlEncode(void* hCryptXml, CRYPT_XML_CHARSET dwCharset, const(CRYPT_XML_PROPERTY)* rgProperty, uint cProperty, void* pvCallbackState, PFN_CRYPT_XML_WRITE_CALLBACK pfnWrite);
+HRESULT CryptXmlGetAlgorithmInfo(const(CRYPT_XML_ALGORITHM)* pXmlAlgorithm, CRYPT_XML_FLAGS dwFlags, CRYPT_XML_ALGORITHM_INFO** ppAlgInfo);
+CRYPT_XML_ALGORITHM_INFO* CryptXmlFindAlgorithmInfo(uint dwFindByType, const(void)* pvFindBy, uint dwGroupId, uint dwFlags);
+HRESULT CryptXmlEnumAlgorithmInfo(uint dwGroupId, uint dwFlags, void* pvArg, PFN_CRYPT_XML_ENUM_ALG_INFO pfnEnumAlgInfo);
+HRESULT GetToken(uint cPolicyChain, POLICY_ELEMENT* pPolicyChain, GENERIC_XML_TOKEN** securityToken, INFORMATIONCARD_CRYPTO_HANDLE** phProofTokenCrypto);
 HRESULT ManageCardSpace();
-HRESULT ImportInformationCard(const(wchar)*);
-HRESULT Encrypt(INFORMATIONCARD_CRYPTO_HANDLE*, BOOL, uint, ubyte*, uint*, ubyte**);
-HRESULT Decrypt(INFORMATIONCARD_CRYPTO_HANDLE*, BOOL, uint, ubyte*, uint*, ubyte**);
-HRESULT SignHash(INFORMATIONCARD_CRYPTO_HANDLE*, uint, ubyte*, const(wchar)*, uint*, ubyte**);
-HRESULT VerifyHash(INFORMATIONCARD_CRYPTO_HANDLE*, uint, ubyte*, const(wchar)*, uint, ubyte*, BOOL*);
-HRESULT GetCryptoTransform(INFORMATIONCARD_CRYPTO_HANDLE*, uint, PaddingMode, uint, Direction, uint, ubyte*, INFORMATIONCARD_CRYPTO_HANDLE**);
-HRESULT GetKeyedHash(INFORMATIONCARD_CRYPTO_HANDLE*, INFORMATIONCARD_CRYPTO_HANDLE**);
-HRESULT TransformBlock(INFORMATIONCARD_CRYPTO_HANDLE*, uint, ubyte*, uint*, ubyte**);
-HRESULT TransformFinalBlock(INFORMATIONCARD_CRYPTO_HANDLE*, uint, ubyte*, uint*, ubyte**);
-HRESULT HashCore(INFORMATIONCARD_CRYPTO_HANDLE*, uint, ubyte*);
-HRESULT HashFinal(INFORMATIONCARD_CRYPTO_HANDLE*, uint, ubyte*, uint*, ubyte**);
-BOOL FreeToken(GENERIC_XML_TOKEN*);
-HRESULT CloseCryptoHandle(INFORMATIONCARD_CRYPTO_HANDLE*);
-HRESULT GenerateDerivedKey(INFORMATIONCARD_CRYPTO_HANDLE*, uint, ubyte*, uint, ubyte*, uint, uint, const(wchar)*, uint*, ubyte**);
-HRESULT GetBrowserToken(uint, void*, uint*, ubyte**);
+HRESULT ImportInformationCard(const(wchar)* fileName);
+HRESULT Encrypt(INFORMATIONCARD_CRYPTO_HANDLE* hCrypto, BOOL fOAEP, uint cbInData, ubyte* pInData, uint* pcbOutData, ubyte** ppOutData);
+HRESULT Decrypt(INFORMATIONCARD_CRYPTO_HANDLE* hCrypto, BOOL fOAEP, uint cbInData, ubyte* pInData, uint* pcbOutData, ubyte** ppOutData);
+HRESULT SignHash(INFORMATIONCARD_CRYPTO_HANDLE* hCrypto, uint cbHash, ubyte* pHash, const(wchar)* hashAlgOid, uint* pcbSig, ubyte** ppSig);
+HRESULT VerifyHash(INFORMATIONCARD_CRYPTO_HANDLE* hCrypto, uint cbHash, ubyte* pHash, const(wchar)* hashAlgOid, uint cbSig, ubyte* pSig, BOOL* pfVerified);
+HRESULT GetCryptoTransform(INFORMATIONCARD_CRYPTO_HANDLE* hSymmetricCrypto, uint mode, PaddingMode padding, uint feedbackSize, Direction direction, uint cbIV, ubyte* pIV, INFORMATIONCARD_CRYPTO_HANDLE** pphTransform);
+HRESULT GetKeyedHash(INFORMATIONCARD_CRYPTO_HANDLE* hSymmetricCrypto, INFORMATIONCARD_CRYPTO_HANDLE** pphHash);
+HRESULT TransformBlock(INFORMATIONCARD_CRYPTO_HANDLE* hCrypto, uint cbInData, ubyte* pInData, uint* pcbOutData, ubyte** ppOutData);
+HRESULT TransformFinalBlock(INFORMATIONCARD_CRYPTO_HANDLE* hCrypto, uint cbInData, ubyte* pInData, uint* pcbOutData, ubyte** ppOutData);
+HRESULT HashCore(INFORMATIONCARD_CRYPTO_HANDLE* hCrypto, uint cbInData, ubyte* pInData);
+HRESULT HashFinal(INFORMATIONCARD_CRYPTO_HANDLE* hCrypto, uint cbInData, ubyte* pInData, uint* pcbOutData, ubyte** ppOutData);
+BOOL FreeToken(GENERIC_XML_TOKEN* pAllocMemory);
+HRESULT CloseCryptoHandle(INFORMATIONCARD_CRYPTO_HANDLE* hCrypto);
+HRESULT GenerateDerivedKey(INFORMATIONCARD_CRYPTO_HANDLE* hCrypto, uint cbLabel, ubyte* pLabel, uint cbNonce, ubyte* pNonce, uint derivedKeyLength, uint offset, const(wchar)* algId, uint* pcbKey, ubyte** ppKey);
+HRESULT GetBrowserToken(uint dwParamType, void* pParam, uint* pcbToken, ubyte** ppToken);
+NTSTATUS GetCipherInterface(const(wchar)* pszProviderName, const(wchar)* pszAlgId, BCRYPT_CIPHER_FUNCTION_TABLE** ppFunctionTable, uint dwFlags);
+NTSTATUS GetHashInterface(const(wchar)* pszProviderName, const(wchar)* pszAlgId, BCRYPT_HASH_FUNCTION_TABLE** ppFunctionTable, uint dwFlags);
+NTSTATUS GetAsymmetricEncryptionInterface(const(wchar)* pszProviderName, const(wchar)* pszAlgId, BCRYPT_ASYMMETRIC_ENCRYPTION_FUNCTION_TABLE** ppFunctionTable, uint dwFlags);
+NTSTATUS GetSecretAgreementInterface(const(wchar)* pszProviderName, const(wchar)* pszAlgId, BCRYPT_SECRET_AGREEMENT_FUNCTION_TABLE** ppFunctionTable, uint dwFlags);
+NTSTATUS GetSignatureInterface(const(wchar)* pszProviderName, const(wchar)* pszAlgId, BCRYPT_SIGNATURE_FUNCTION_TABLE** ppFunctionTable, uint dwFlags);
+NTSTATUS GetRngInterface(const(wchar)* pszProviderName, BCRYPT_RNG_FUNCTION_TABLE** ppFunctionTable, uint dwFlags);
+NTSTATUS GetKeyDerivationInterface(const(wchar)* pszProviderName, const(wchar)* pszAlgId, BCRYPT_KEY_DERIVATION_FUNCTION_TABLE** ppFunctionTable, uint dwFlags);
+NTSTATUS BCryptRegisterProvider(const(wchar)* pszProvider, uint dwFlags, CRYPT_PROVIDER_REG* pReg);
+NTSTATUS BCryptUnregisterProvider(const(wchar)* pszProvider);
+NTSTATUS BCryptAddContextFunctionProvider(uint dwTable, const(wchar)* pszContext, uint dwInterface, const(wchar)* pszFunction, const(wchar)* pszProvider, uint dwPosition);
+NTSTATUS BCryptRemoveContextFunctionProvider(uint dwTable, const(wchar)* pszContext, uint dwInterface, const(wchar)* pszFunction, const(wchar)* pszProvider);
+NTSTATUS GetKeyStorageInterface(const(wchar)* pszProviderName, NCRYPT_KEY_STORAGE_FUNCTION_TABLE** ppFunctionTable, uint dwFlags);
+HRESULT SslChangeNotify(HANDLE hEvent, uint dwFlags);
+HRESULT SslComputeClientAuthHash(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hMasterKey, NCRYPT_HASH_HANDLE hHandshakeHash, const(wchar)* pszAlgId, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+HRESULT SslComputeEapKeyBlock(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hMasterKey, ubyte* pbRandoms, uint cbRandoms, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+HRESULT SslComputeFinishedHash(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hMasterKey, NCRYPT_HASH_HANDLE hHandshakeHash, ubyte* pbOutput, uint cbOutput, uint dwFlags);
+HRESULT SslCreateEphemeralKey(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE* phEphemeralKey, uint dwProtocol, uint dwCipherSuite, uint dwKeyType, uint dwKeyBitLen, ubyte* pbParams, uint cbParams, uint dwFlags);
+HRESULT SslCreateHandshakeHash(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_HASH_HANDLE* phHandshakeHash, uint dwProtocol, uint dwCipherSuite, uint dwFlags);
+HRESULT SslDecryptPacket(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hKey, ubyte* pbInput, uint cbInput, ubyte* pbOutput, uint cbOutput, uint* pcbResult, ulong SequenceNumber, uint dwFlags);
+HRESULT SslEncryptPacket(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hKey, ubyte* pbInput, uint cbInput, ubyte* pbOutput, uint cbOutput, uint* pcbResult, ulong SequenceNumber, uint dwContentType, uint dwFlags);
+HRESULT SslEnumCipherSuites(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hPrivateKey, NCRYPT_SSL_CIPHER_SUITE** ppCipherSuite, void** ppEnumState, uint dwFlags);
+HRESULT SslEnumCipherSuitesEx(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hPrivateKey, NCRYPT_SSL_CIPHER_SUITE_EX** ppCipherSuite, void** ppEnumState, uint dwFlags);
+HRESULT SslEnumEccCurves(NCRYPT_PROV_HANDLE hSslProvider, uint* pEccCurveCount, NCRYPT_SSL_ECC_CURVE** ppEccCurve, uint dwFlags);
+HRESULT SslEnumProtocolProviders(uint* pdwProviderCount, NCryptProviderName** ppProviderList, uint dwFlags);
+HRESULT SslExportKey(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hKey, const(wchar)* pszBlobType, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+HRESULT SslFreeBuffer(void* pvInput);
+HRESULT SslFreeObject(NCRYPT_HANDLE hObject, uint dwFlags);
+HRESULT SslGenerateMasterKey(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hPrivateKey, NCRYPT_KEY_HANDLE hPublicKey, NCRYPT_KEY_HANDLE* phMasterKey, uint dwProtocol, uint dwCipherSuite, BCryptBufferDesc* pParameterList, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+HRESULT SslGenerateSessionKeys(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hMasterKey, NCRYPT_KEY_HANDLE* phReadKey, NCRYPT_KEY_HANDLE* phWriteKey, BCryptBufferDesc* pParameterList, uint dwFlags);
+HRESULT SslGetKeyProperty(NCRYPT_KEY_HANDLE hKey, const(wchar)* pszProperty, ubyte** ppbOutput, uint* pcbOutput, uint dwFlags);
+HRESULT SslGetProviderProperty(NCRYPT_PROV_HANDLE hSslProvider, const(wchar)* pszProperty, ubyte** ppbOutput, uint* pcbOutput, void** ppEnumState, uint dwFlags);
+HRESULT SslHashHandshake(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_HASH_HANDLE hHandshakeHash, ubyte* pbInput, uint cbInput, uint dwFlags);
+HRESULT SslImportKey(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE* phKey, const(wchar)* pszBlobType, ubyte* pbKeyBlob, uint cbKeyBlob, uint dwFlags);
+HRESULT SslImportMasterKey(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hPrivateKey, NCRYPT_KEY_HANDLE* phMasterKey, uint dwProtocol, uint dwCipherSuite, BCryptBufferDesc* pParameterList, ubyte* pbEncryptedKey, uint cbEncryptedKey, uint dwFlags);
+HRESULT SslLookupCipherSuiteInfo(NCRYPT_PROV_HANDLE hSslProvider, uint dwProtocol, uint dwCipherSuite, uint dwKeyType, NCRYPT_SSL_CIPHER_SUITE* pCipherSuite, uint dwFlags);
+HRESULT SslOpenPrivateKey(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE* phPrivateKey, const(CERT_CONTEXT)* pCertContext, uint dwFlags);
+HRESULT SslOpenProvider(NCRYPT_PROV_HANDLE* phSslProvider, const(wchar)* pszProviderName, uint dwFlags);
+HRESULT SslSignHash(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hPrivateKey, ubyte* pbHashValue, uint cbHashValue, ubyte* pbSignature, uint cbSignature, uint* pcbResult, uint dwFlags);
+HRESULT SslVerifySignature(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hPublicKey, ubyte* pbHashValue, uint cbHashValue, ubyte* pbSignature, uint cbSignature, uint dwFlags);
+HRESULT SslLookupCipherLengths(NCRYPT_PROV_HANDLE hSslProvider, uint dwProtocol, uint dwCipherSuite, uint dwKeyType, NCRYPT_SSL_CIPHER_LENGTHS* pCipherLengths, uint cbCipherLengths, uint dwFlags);
+HRESULT SslCreateClientAuthHash(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_HASH_HANDLE* phHandshakeHash, uint dwProtocol, uint dwCipherSuite, const(wchar)* pszHashAlgId, uint dwFlags);
+HRESULT SslGetCipherSuitePRFHashAlgorithm(NCRYPT_PROV_HANDLE hSslProvider, uint dwProtocol, uint dwCipherSuite, uint dwKeyType, PWSTR szPRFHash, uint dwFlags);
+HRESULT SslComputeSessionHash(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_HASH_HANDLE hHandshakeHash, uint dwProtocol, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+HRESULT SslGeneratePreMasterKey(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hPublicKey, NCRYPT_KEY_HANDLE* phPreMasterKey, uint dwProtocol, uint dwCipherSuite, BCryptBufferDesc* pParameterList, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+HRESULT SslExportKeyingMaterial(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hMasterKey, PSTR sLabel, ubyte* pbRandoms, uint cbRandoms, ubyte* pbContextValue, ushort cbContextValue, ubyte* pbOutput, uint cbOutput, uint dwFlags);
+HRESULT SslExtractEarlyKey(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hPreSharedKey, NCRYPT_KEY_HANDLE* phEarlyKey, uint dwProtocol, uint dwCipherSuite, BCryptBufferDesc* pParameterList, uint dwFlags);
+HRESULT SslExtractHandshakeKey(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hPrivateKey, NCRYPT_KEY_HANDLE hPublicKey, NCRYPT_KEY_HANDLE hEarlyKey, NCRYPT_KEY_HANDLE* phHandshakeKey, BCryptBufferDesc* pParameterList, uint dwFlags);
+HRESULT SslExtractMasterKey(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hHandshakeKey, NCRYPT_KEY_HANDLE* phMasterKey, BCryptBufferDesc* pParameterList, uint dwFlags);
+HRESULT SslExpandTrafficKeys(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hBaseKey, NCRYPT_HASH_HANDLE hHashValue, NCRYPT_KEY_HANDLE* phClientTrafficKey, NCRYPT_KEY_HANDLE* phServerTrafficKey, BCryptBufferDesc* pParameterList, uint dwFlags);
+HRESULT SslExpandWriteKey(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hBaseTrafficKey, NCRYPT_KEY_HANDLE* phWriteKey, BCryptBufferDesc* pParameterList, uint dwFlags);
+HRESULT SslExpandExporterMasterKey(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hBaseKey, NCRYPT_HASH_HANDLE hHashValue, NCRYPT_KEY_HANDLE* phExporterMasterKey, BCryptBufferDesc* pParameterList, uint dwFlags);
+HRESULT SslExpandResumptionMasterKey(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hMasterKey, NCRYPT_HASH_HANDLE hHashValue, NCRYPT_KEY_HANDLE* phResumptionMasterKey, BCryptBufferDesc* pParameterList, uint dwFlags);
+HRESULT SslDuplicateTranscriptHash(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_HASH_HANDLE hTranscriptHash, NCRYPT_HASH_HANDLE* phTranscriptHash, uint dwFlags);
+HRESULT SslExpandBinderKey(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hEarlyKey, NCRYPT_KEY_HANDLE* phBinderKey, BCryptBufferDesc* pParameterList, uint dwFlags);
+HRESULT SslExpandPreSharedKey(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hResumptionMasterKey, ubyte* pbTicketNonce, uint cbTicketNonce, NCRYPT_KEY_HANDLE* phPreSharedKey, BCryptBufferDesc* pParameterList, uint dwFlags);
+NTSTATUS GetSChannelInterface(const(wchar)* pszProviderName, NCRYPT_SSL_FUNCTION_TABLE** ppFunctionTable, uint dwFlags);
+HRESULT SslIncrementProviderReferenceCount(NCRYPT_PROV_HANDLE hSslProvider);
+HRESULT SslDecrementProviderReferenceCount(NCRYPT_PROV_HANDLE hSslProvider);
+enum CERT_SYSTEM_STORE_CURRENT_USER = 0x00010000;
+enum CERT_SYSTEM_STORE_LOCAL_MACHINE = 0x00020000;
 enum CERT_COMPARE_SHIFT = 0x00000010;
 enum BCRYPT_OBJECT_ALIGNMENT = 0x00000010;
 enum BCRYPT_KDF_HASH = "HASH";
@@ -4029,7 +3176,6 @@ enum CERT_CHAIN_OPT_IN_WEAK_SIGNATURE = 0x00010000;
 enum CERT_CHAIN_ENABLE_DISALLOWED_CA = 0x00020000;
 enum REVOCATION_OID_CRL_REVOCATION = 0x00000001;
 enum CERT_CHAIN_FIND_BY_ISSUER = 0x00000001;
-enum CERT_CHAIN_POLICY_IGNORE_WEAK_SIGNATURE_FLAG = 0x08000000;
 enum CRYPT_OID_VERIFY_CERTIFICATE_CHAIN_POLICY_FUNC = "CertDllVerifyCertificateChainPolicy";
 enum CERT_CHAIN_POLICY_BASE = 0x00000001;
 enum CERT_CHAIN_POLICY_AUTHENTICODE = 0x00000002;
@@ -4043,11 +3189,6 @@ enum CERT_CHAIN_POLICY_SSL_F12 = 0x00000009;
 enum CERT_CHAIN_POLICY_SSL_HPKP_HEADER = 0x0000000a;
 enum CERT_CHAIN_POLICY_THIRD_PARTY_ROOT = 0x0000000b;
 enum CERT_CHAIN_POLICY_SSL_KEY_PIN = 0x0000000c;
-enum BASIC_CONSTRAINTS_CERT_CHAIN_POLICY_CA_FLAG = 0x80000000;
-enum BASIC_CONSTRAINTS_CERT_CHAIN_POLICY_END_ENTITY_FLAG = 0x40000000;
-enum MICROSOFT_ROOT_CERT_CHAIN_POLICY_ENABLE_TEST_ROOT_FLAG = 0x00010000;
-enum MICROSOFT_ROOT_CERT_CHAIN_POLICY_CHECK_APPLICATION_ROOT_FLAG = 0x00020000;
-enum MICROSOFT_ROOT_CERT_CHAIN_POLICY_DISABLE_FLIGHT_ROOT_FLAG = 0x00040000;
 enum SSL_F12_ERROR_TEXT_LENGTH = 0x00000100;
 enum CERT_CHAIN_POLICY_SSL_F12_SUCCESS_LEVEL = 0x00000000;
 enum CERT_CHAIN_POLICY_SSL_F12_WARNING_LEVEL = 0x00000001;
@@ -4184,6 +3325,1183 @@ enum AUDIT_STORE_IMPORT = 0x40050203;
 enum AUDIT_STORE_EXPORT = 0x40050204;
 enum AUDIT_STORE_DELETE = 0x40050205;
 enum AUDIT_SERVICE_IDLE_STOP = 0x40050206;
+enum BCRYPT_ECC_PARAMETER_HEADER_V1 = 0x00000001;
+enum BCRYPT_COPY_AFTER_PADDING_CHECK_FAILURE_FLAG = 0x00000100;
+enum MS_SCHANNEL_PROVIDER = "Microsoft SSL Protocol Provider";
+enum NCRYPT_SSL_CLIENT_FLAG = 0x00000001;
+enum NCRYPT_SSL_SERVER_FLAG = 0x00000002;
+enum SSL2_PROTOCOL_VERSION = 0x00000002;
+enum SSL3_PROTOCOL_VERSION = 0x00000300;
+enum TLS1_PROTOCOL_VERSION = 0x00000301;
+enum TLS1_0_PROTOCOL_VERSION = 0x00000301;
+enum TLS1_1_PROTOCOL_VERSION = 0x00000302;
+enum TLS1_2_PROTOCOL_VERSION = 0x00000303;
+enum TLS1_3_PROTOCOL_VERSION = 0x00000304;
+enum DTLS1_0_PROTOCOL_VERSION = 0x0000feff;
+enum DTLS1_2_PROTOCOL_VERSION = 0x0000fefd;
+enum TLS_RSA_WITH_NULL_MD5 = 0x00000001;
+enum TLS_RSA_WITH_NULL_SHA = 0x00000002;
+enum TLS_RSA_EXPORT_WITH_RC4_40_MD5 = 0x00000003;
+enum TLS_RSA_WITH_RC4_128_MD5 = 0x00000004;
+enum TLS_RSA_WITH_RC4_128_SHA = 0x00000005;
+enum TLS_RSA_WITH_DES_CBC_SHA = 0x00000009;
+enum TLS_RSA_WITH_3DES_EDE_CBC_SHA = 0x0000000a;
+enum TLS_DHE_DSS_WITH_DES_CBC_SHA = 0x00000012;
+enum TLS_DHE_DSS_WITH_3DES_EDE_CBC_SHA = 0x00000013;
+enum TLS_DHE_RSA_WITH_3DES_EDE_CBC_SHA = 0x00000016;
+enum TLS_RSA_WITH_AES_128_CBC_SHA = 0x0000002f;
+enum TLS_DHE_DSS_WITH_AES_128_CBC_SHA = 0x00000032;
+enum TLS_DHE_RSA_WITH_AES_128_CBC_SHA = 0x00000033;
+enum TLS_RSA_WITH_AES_256_CBC_SHA = 0x00000035;
+enum TLS_DHE_DSS_WITH_AES_256_CBC_SHA = 0x00000038;
+enum TLS_DHE_RSA_WITH_AES_256_CBC_SHA = 0x00000039;
+enum TLS_RSA_EXPORT1024_WITH_DES_CBC_SHA = 0x00000062;
+enum TLS_DHE_DSS_EXPORT1024_WITH_DES_CBC_SHA = 0x00000063;
+enum TLS_RSA_EXPORT1024_WITH_RC4_56_SHA = 0x00000064;
+enum TLS_RSA_WITH_NULL_SHA256 = 0x0000003b;
+enum TLS_RSA_WITH_AES_128_CBC_SHA256 = 0x0000003c;
+enum TLS_RSA_WITH_AES_256_CBC_SHA256 = 0x0000003d;
+enum TLS_DHE_DSS_WITH_AES_128_CBC_SHA256 = 0x00000040;
+enum TLS_DHE_DSS_WITH_AES_256_CBC_SHA256 = 0x0000006a;
+enum TLS_RSA_WITH_AES_128_GCM_SHA256 = 0x0000009c;
+enum TLS_RSA_WITH_AES_256_GCM_SHA384 = 0x0000009d;
+enum TLS_DHE_RSA_WITH_AES_128_GCM_SHA256 = 0x0000009e;
+enum TLS_DHE_RSA_WITH_AES_256_GCM_SHA384 = 0x0000009f;
+enum TLS_PSK_WITH_AES_128_GCM_SHA256 = 0x000000a8;
+enum TLS_PSK_WITH_AES_256_GCM_SHA384 = 0x000000a9;
+enum TLS_PSK_WITH_AES_128_CBC_SHA256 = 0x000000ae;
+enum TLS_PSK_WITH_AES_256_CBC_SHA384 = 0x000000af;
+enum TLS_PSK_WITH_NULL_SHA256 = 0x000000b0;
+enum TLS_PSK_WITH_NULL_SHA384 = 0x000000b1;
+enum TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA = 0x0000c009;
+enum TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA = 0x0000c013;
+enum TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA = 0x0000c00a;
+enum TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA = 0x0000c014;
+enum TLS_ECDHE_ECDSA_WITH_AES_128_CBC_SHA256 = 0x0000c023;
+enum TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA384 = 0x0000c024;
+enum TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256 = 0x0000c02b;
+enum TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384 = 0x0000c02c;
+enum TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256 = 0x0000c027;
+enum TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384 = 0x0000c028;
+enum TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256 = 0x0000c02f;
+enum TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384 = 0x0000c030;
+enum TLS_AES_128_GCM_SHA256 = 0x00001301;
+enum TLS_AES_256_GCM_SHA384 = 0x00001302;
+enum SSL_CK_RC4_128_WITH_MD5 = 0x00010080;
+enum SSL_CK_RC4_128_EXPORT40_WITH_MD5 = 0x00020080;
+enum SSL_CK_RC2_128_CBC_WITH_MD5 = 0x00030080;
+enum SSL_CK_RC2_128_CBC_EXPORT40_WITH_MD5 = 0x00040080;
+enum SSL_CK_IDEA_128_CBC_WITH_MD5 = 0x00050080;
+enum SSL_CK_DES_64_CBC_WITH_MD5 = 0x00060040;
+enum SSL_CK_DES_192_EDE3_CBC_WITH_MD5 = 0x000700c0;
+enum TLS_ECC_P256_CURVE_KEY_TYPE = 0x00000017;
+enum TLS_ECC_P384_CURVE_KEY_TYPE = 0x00000018;
+enum TLS_ECC_P521_CURVE_KEY_TYPE = 0x00000019;
+enum SSL_ECDSA_ALGORITHM = "ECDSA";
+enum TLS_PSK_EXCHANGE = "PSK";
+enum TLS_RSA_PSK_EXCHANGE = "RSA_PSK";
+enum NCRYPT_SSL_MAX_NAME_SIZE = 0x00000040;
+enum NCRYPT_SSL_CIPHER_SUITE_EX_VERSION = 0x00000001;
+enum NCRYPT_SSL_CIPHER_LENGTHS_BLOCK_PADDING = 0x00000001;
+enum MSCRYPT_ECC_MAX_OID_LENGTH = 0x000000ff;
+enum MSCRYPT_ECC_MAX_CURVE_NAME_LENGTH = 0x000000ff;
+enum NCRYPT_SSL_EAP_PRF_FIELD = 0x000000ff;
+enum NCRYPT_SSL_EAP_ID = 0x00000000;
+enum NCRYPT_SSL_EAP_TTLSV0_ID = 0x00000001;
+enum NCRYPT_SSL_EAP_TTLSV0_CHLNG_ID = 0x00000002;
+enum NCRYPT_SSL_EAP_FAST_ID = 0x00000003;
+enum SSL_KEY_TYPE_PROPERTY = "KEYTYPE";
+enum NCRYPT_SSL_SIGN_INCLUDE_HASHOID = 0x00000001;
+enum NCRYPT_SSL_SIGN_USE_PSS_PADDING = 0x00000002;
+enum NCRYPT_SSL_EXTERNAL_PSK_FLAG = 0x00000001;
+enum NCRYPT_SSL_RESUMPTION_PSK_FLAG = 0x00000002;
+enum CRYPT_PROVIDER_IOCTL__GET_SCHANNEL_INTERFACE = 0x003f401c;
+enum CRYPT_PROVSTRUC_VERSION_V3 = 0x00000003;
+enum CRYPT_MAX_PROVIDER_ID = 0x000003e7;
+enum CRYPT_SIG_RESOURCE_VERSION = 0x00000100;
+enum CRYPT_EXTERNAL_SIGNATURE_LENGTH = 0x00000088;
+enum CRYPT_SIG_RESOURCE_NUMBER = 0x0000029a;
+enum CRYPT_SIG_RESOURCE = "#666";
+enum CRYPT_MAC_RESOURCE_NUMBER = 0x0000029b;
+enum CRYPT_MAC_RESOURCE = "#667";
+enum CUR_OFFLOAD_VERSION = 0x00000001;
+enum ROLE_PIN_ALWAYS = 0x00000003;
+enum ROLE_PUK = 0x00000004;
+enum CP_PIV_CARD_CAPABILITY_CONTAINER = "PIV CCC";
+enum CP_PIV_CARD_HOLDER_UNIQUE_IDENTIFIER = "PIV CHUID";
+enum CP_PIV_CARD_HOLDER_UNSIGNED_UNIQUE_IDENTIFIER = "PIV UCHUID";
+enum CP_PIV_FINGERPRINT = "PIV Fingerprint";
+enum CP_PIV_SECURITY_OBJECT = "PIV Security Object";
+enum CP_PIV_FACIAL_IMAGE = "PIV Facial Image";
+enum CP_PIV_PRINTED_INFORMATION = "PIV Printed Information";
+enum CP_PIV_GENERATE_KEY = "PIV Generate Key";
+enum CP_CARD_PIV = "PIV Card";
+enum CP_PIV_CERTIFICATE = "PIV Certificate";
+enum CP_PIV_PUBLIC_KEY = "PIV Public Key";
+enum CP_PIV_KEY_HISTORY_OBJECT = "PIV Key History Object";
+enum CLMD_PIV_CERT_DATA_CURRENT_VERSION = 0x00000000;
+enum CLMD_PIV_GENERATE_ASYMMETRIC_KEY_CURRENT_VERSION = 0x00000000;
+enum CLMD_PIV_PUBLIC_KEY_DATA_CURRENT_VERSION = 0x00000000;
+enum CLMD_FILE_TAG_PIV_AUTH_CERT = 0x005fc105;
+enum CLMD_FILE_TAG_SIG_CERT = 0x005fc10a;
+enum CLMD_FILE_TAG_KEY_MGMT_CERT = 0x005fc10b;
+enum CLMD_FILE_TAG_CARD_AUTH_CERT = 0x005fc101;
+enum CLMD_FILE_TAG_CHUID = 0x005fc102;
+enum CLMD_FILE_TAG_CARD_CAPABILITY_CONTAINER = 0x005fc107;
+enum CLMD_FILE_TAG_UNSIGNED_CHUID = 0x005fc104;
+enum CLMD_FILE_TAG_FINGERPRINT = 0x005fc103;
+enum CLMD_FILE_TAG_SECURITY_OBJECT = 0x005fc106;
+enum CLMD_FILE_TAG_FACIAL_IMAGE = 0x005fc108;
+enum CLMD_FILE_TAG_PRINTED_INFORMATION = 0x005fc109;
+enum CLMD_FILE_TAG_KEY_HISTORY = 0x005fc10c;
+enum CLMD_FILE_TAG_FIRST_RETIRED_KEY_MGMT_KEY = 0x005fc10d;
+enum CLMD_FILE_TAG_LAST_RETIRED_KEY_MGMT_KEY = 0x005fc120;
+enum SCARD_PROVIDER_CARD_MODULE = 0x80000001;
+enum CARD_DATA_VALUE_UNKNOWN = 0xffffffff;
+enum szBASE_CSP_DIR = "mscp";
+enum szINTERMEDIATE_CERTS_DIR = "mscerts";
+enum szCACHE_FILE = "cardcf";
+enum szCARD_IDENTIFIER_FILE = "cardid";
+enum szCONTAINER_MAP_FILE = "cmapfile";
+enum szROOT_STORE_FILE = "msroots";
+enum szUSER_SIGNATURE_CERT_PREFIX = "ksc";
+enum szUSER_KEYEXCHANGE_CERT_PREFIX = "kxc";
+enum szUSER_SIGNATURE_PRIVATE_KEY_PREFIX = "kss";
+enum szUSER_SIGNATURE_PUBLIC_KEY_PREFIX = "ksp";
+enum szUSER_KEYEXCHANGE_PRIVATE_KEY_PREFIX = "kxs";
+enum szUSER_KEYEXCHANGE_PUBLIC_KEY_PREFIX = "kxp";
+enum wszCARD_USER_EVERYONE = "anonymous";
+enum wszCARD_USER_USER = "user";
+enum wszCARD_USER_ADMIN = "admin";
+enum AT_ECDSA_P256 = 0x00000003;
+enum AT_ECDSA_P384 = 0x00000004;
+enum AT_ECDSA_P521 = 0x00000005;
+enum AT_ECDHE_P256 = 0x00000006;
+enum AT_ECDHE_P384 = 0x00000007;
+enum AT_ECDHE_P521 = 0x00000008;
+enum CARD_CACHE_FILE_CURRENT_VERSION = 0x00000001;
+enum MAX_CONTAINER_NAME_LEN = 0x00000027;
+enum CONTAINER_MAP_VALID_CONTAINER = 0x00000001;
+enum CONTAINER_MAP_DEFAULT_CONTAINER = 0x00000002;
+enum CARD_CAPABILITIES_CURRENT_VERSION = 0x00000001;
+enum MAX_PINS = 0x00000008;
+enum ROLE_EVERYONE = 0x00000000;
+enum ROLE_USER = 0x00000001;
+enum ROLE_ADMIN = 0x00000002;
+enum PIN_SET_NONE = 0x00000000;
+enum PIN_SET_ALL_ROLES = 0x000000ff;
+enum PIN_CHANGE_FLAG_UNBLOCK = 0x00000001;
+enum PIN_CHANGE_FLAG_CHANGEPIN = 0x00000002;
+enum CP_CACHE_MODE_GLOBAL_CACHE = 0x00000001;
+enum CP_CACHE_MODE_SESSION_ONLY = 0x00000002;
+enum CP_CACHE_MODE_NO_CACHE = 0x00000003;
+enum CARD_AUTHENTICATE_GENERATE_SESSION_PIN = 0x10000000;
+enum CARD_AUTHENTICATE_SESSION_PIN = 0x20000000;
+enum CARD_PIN_STRENGTH_PLAINTEXT = 0x00000001;
+enum CARD_PIN_STRENGTH_SESSION_PIN = 0x00000002;
+enum CARD_PIN_SILENT_CONTEXT = 0x00000040;
+enum PIN_CACHE_POLICY_CURRENT_VERSION = 0x00000006;
+enum PIN_INFO_CURRENT_VERSION = 0x00000006;
+enum PIN_INFO_REQUIRE_SECURE_ENTRY = 0x00000001;
+enum CARD_CREATE_CONTAINER_KEY_GEN = 0x00000001;
+enum CARD_CREATE_CONTAINER_KEY_IMPORT = 0x00000002;
+enum CONTAINER_INFO_CURRENT_VERSION = 0x00000001;
+enum CARD_AUTHENTICATE_PIN_CHALLENGE_RESPONSE = 0x00000001;
+enum CARD_AUTHENTICATE_PIN_PIN = 0x00000002;
+enum CARD_FILE_INFO_CURRENT_VERSION = 0x00000001;
+enum CARD_FREE_SPACE_INFO_CURRENT_VERSION = 0x00000001;
+enum CARD_KEY_SIZES_CURRENT_VERSION = 0x00000001;
+enum CARD_RSA_KEY_DECRYPT_INFO_VERSION_ONE = 0x00000001;
+enum CARD_RSA_KEY_DECRYPT_INFO_VERSION_TWO = 0x00000002;
+enum CARD_RSA_KEY_DECRYPT_INFO_CURRENT_VERSION = 0x00000002;
+enum CARD_PADDING_INFO_PRESENT = 0x40000000;
+enum CARD_BUFFER_SIZE_ONLY = 0x20000000;
+enum CARD_PADDING_NONE = 0x00000001;
+enum CARD_PADDING_PKCS1 = 0x00000002;
+enum CARD_PADDING_PSS = 0x00000004;
+enum CARD_PADDING_OAEP = 0x00000008;
+enum CARD_SIGNING_INFO_BASIC_VERSION = 0x00000001;
+enum CARD_SIGNING_INFO_CURRENT_VERSION = 0x00000002;
+enum CARD_DH_AGREEMENT_INFO_VERSION = 0x00000002;
+enum CARD_DERIVE_KEY_VERSION = 0x00000001;
+enum CARD_DERIVE_KEY_VERSION_TWO = 0x00000002;
+enum CARD_DERIVE_KEY_CURRENT_VERSION = 0x00000002;
+enum CARD_RETURN_KEY_HANDLE = 0x01000000;
+enum CCP_CONTAINER_INFO = "Container Info";
+enum CCP_PIN_IDENTIFIER = "PIN Identifier";
+enum CCP_ASSOCIATED_ECDH_KEY = "Associated ECDH Key";
+enum CP_CARD_FREE_SPACE = "Free Space";
+enum CP_CARD_CAPABILITIES = "Capabilities";
+enum CP_CARD_KEYSIZES = "Key Sizes";
+enum CP_CARD_READ_ONLY = "Read Only Mode";
+enum CP_CARD_CACHE_MODE = "Cache Mode";
+enum CP_SUPPORTS_WIN_X509_ENROLLMENT = "Supports Windows x.509 Enrollment";
+enum CP_CARD_GUID = "Card Identifier";
+enum CP_CARD_SERIAL_NO = "Card Serial Number";
+enum CP_CARD_PIN_INFO = "PIN Information";
+enum CP_CARD_LIST_PINS = "PIN List";
+enum CP_CARD_AUTHENTICATED_STATE = "Authenticated State";
+enum CP_CARD_PIN_STRENGTH_VERIFY = "PIN Strength Verify";
+enum CP_CARD_PIN_STRENGTH_CHANGE = "PIN Strength Change";
+enum CP_CARD_PIN_STRENGTH_UNBLOCK = "PIN Strength Unblock";
+enum CP_PARENT_WINDOW = "Parent Window";
+enum CP_PIN_CONTEXT_STRING = "PIN Context String";
+enum CARD_SECURE_KEY_INJECTION_NO_CARD_MODE = 0x00000001;
+enum CARD_KEY_IMPORT_PLAIN_TEXT = 0x00000001;
+enum CARD_KEY_IMPORT_RSA_KEYEST = 0x00000002;
+enum CARD_KEY_IMPORT_ECC_KEYEST = 0x00000004;
+enum CARD_KEY_IMPORT_SHARED_SYMMETRIC = 0x00000008;
+enum CARD_CIPHER_OPERATION = 0x00000001;
+enum CARD_ASYMMETRIC_OPERATION = 0x00000002;
+enum CARD_3DES_112_ALGORITHM = "3DES_112";
+enum CARD_3DES_ALGORITHM = "3DES";
+enum CARD_AES_ALGORITHM = "AES";
+enum CARD_CHAIN_MODE_CBC = "ChainingModeCBC";
+enum CARD_IMPORT_KEYPAIR_VERSION_SEVEN = 0x00000007;
+enum CARD_IMPORT_KEYPAIR_CURRENT_VERSION = 0x00000007;
+enum CARD_CHANGE_AUTHENTICATOR_VERSION_SEVEN = 0x00000007;
+enum CARD_CHANGE_AUTHENTICATOR_CURRENT_VERSION = 0x00000007;
+enum CARD_CHANGE_AUTHENTICATOR_RESPONSE_VERSION_SEVEN = 0x00000007;
+enum CARD_CHANGE_AUTHENTICATOR_RESPONSE_CURRENT_VERSION = 0x00000007;
+enum CARD_AUTHENTICATE_VERSION_SEVEN = 0x00000007;
+enum CARD_AUTHENTICATE_CURRENT_VERSION = 0x00000007;
+enum CARD_AUTHENTICATE_RESPONSE_VERSION_SEVEN = 0x00000007;
+enum CARD_AUTHENTICATE_RESPONSE_CURRENT_VERSION = 0x00000007;
+enum CP_KEY_IMPORT_SUPPORT = "Key Import Support";
+enum CP_ENUM_ALGORITHMS = "Algorithms";
+enum CP_PADDING_SCHEMES = "Padding Schemes";
+enum CP_CHAINING_MODES = "Chaining Modes";
+enum CSF_IMPORT_KEYPAIR = "Import Key Pair";
+enum CSF_CHANGE_AUTHENTICATOR = "Change Authenticator";
+enum CSF_AUTHENTICATE = "Authenticate";
+enum CKP_CHAINING_MODE = "ChainingMode";
+enum CKP_INITIALIZATION_VECTOR = "IV";
+enum CKP_BLOCK_LENGTH = "BlockLength";
+enum CARD_DATA_VERSION_SEVEN = 0x00000007;
+enum CARD_DATA_VERSION_SIX = 0x00000006;
+enum CARD_DATA_VERSION_FIVE = 0x00000005;
+enum CARD_DATA_VERSION_FOUR = 0x00000004;
+enum CARD_DATA_CURRENT_VERSION = 0x00000007;
+alias BCRYPT_OPERATION = uint;
+enum : uint
+{
+    BCRYPT_CIPHER_OPERATION                = 0x00000001,
+    BCRYPT_HASH_OPERATION                  = 0x00000002,
+    BCRYPT_ASYMMETRIC_ENCRYPTION_OPERATION = 0x00000004,
+    BCRYPT_SECRET_AGREEMENT_OPERATION      = 0x00000008,
+    BCRYPT_SIGNATURE_OPERATION             = 0x00000010,
+    BCRYPT_RNG_OPERATION                   = 0x00000020,
+}
+
+alias NCRYPT_OPERATION = uint;
+enum : uint
+{
+    NCRYPT_CIPHER_OPERATION                = 0x00000001,
+    NCRYPT_HASH_OPERATION                  = 0x00000002,
+    NCRYPT_ASYMMETRIC_ENCRYPTION_OPERATION = 0x00000004,
+    NCRYPT_SECRET_AGREEMENT_OPERATION      = 0x00000008,
+    NCRYPT_SIGNATURE_OPERATION             = 0x00000010,
+}
+
+alias CERT_FIND_FLAGS = uint;
+enum : uint
+{
+    CERT_FIND_ANY                         = 0x00000000,
+    CERT_FIND_CERT_ID                     = 0x00100000,
+    CERT_FIND_CTL_USAGE                   = 0x000a0000,
+    CERT_FIND_ENHKEY_USAGE                = 0x000a0000,
+    CERT_FIND_EXISTING                    = 0x000d0000,
+    CERT_FIND_HASH                        = 0x00010000,
+    CERT_FIND_HAS_PRIVATE_KEY             = 0x00150000,
+    CERT_FIND_ISSUER_ATTR                 = 0x00030004,
+    CERT_FIND_ISSUER_NAME                 = 0x00020004,
+    CERT_FIND_ISSUER_OF                   = 0x000c0000,
+    CERT_FIND_ISSUER_STR                  = 0x00080004,
+    CERT_FIND_KEY_IDENTIFIER              = 0x000f0000,
+    CERT_FIND_KEY_SPEC                    = 0x00090000,
+    CERT_FIND_MD5_HASH                    = 0x00040000,
+    CERT_FIND_PROPERTY                    = 0x00050000,
+    CERT_FIND_PUBLIC_KEY                  = 0x00060000,
+    CERT_FIND_SHA1_HASH                   = 0x00010000,
+    CERT_FIND_SIGNATURE_HASH              = 0x000e0000,
+    CERT_FIND_SUBJECT_ATTR                = 0x00030007,
+    CERT_FIND_SUBJECT_CERT                = 0x000b0000,
+    CERT_FIND_SUBJECT_NAME                = 0x00020007,
+    CERT_FIND_SUBJECT_STR                 = 0x00080007,
+    CERT_FIND_CROSS_CERT_DIST_POINTS      = 0x00110000,
+    CERT_FIND_PUBKEY_MD5_HASH             = 0x00120000,
+    CERT_FIND_SUBJECT_STR_A               = 0x00070007,
+    CERT_FIND_SUBJECT_STR_W               = 0x00080007,
+    CERT_FIND_ISSUER_STR_A                = 0x00070004,
+    CERT_FIND_ISSUER_STR_W                = 0x00080004,
+    CERT_FIND_SUBJECT_INFO_ACCESS         = 0x00130000,
+    CERT_FIND_HASH_STR                    = 0x00140000,
+    CERT_FIND_OPTIONAL_ENHKEY_USAGE_FLAG  = 0x00000001,
+    CERT_FIND_EXT_ONLY_ENHKEY_USAGE_FLAG  = 0x00000002,
+    CERT_FIND_PROP_ONLY_ENHKEY_USAGE_FLAG = 0x00000004,
+    CERT_FIND_NO_ENHKEY_USAGE_FLAG        = 0x00000008,
+    CERT_FIND_OR_ENHKEY_USAGE_FLAG        = 0x00000010,
+    CERT_FIND_VALID_ENHKEY_USAGE_FLAG     = 0x00000020,
+    CERT_FIND_OPTIONAL_CTL_USAGE_FLAG     = 0x00000001,
+    CERT_FIND_EXT_ONLY_CTL_USAGE_FLAG     = 0x00000002,
+    CERT_FIND_PROP_ONLY_CTL_USAGE_FLAG    = 0x00000004,
+    CERT_FIND_NO_CTL_USAGE_FLAG           = 0x00000008,
+    CERT_FIND_OR_CTL_USAGE_FLAG           = 0x00000010,
+    CERT_FIND_VALID_CTL_USAGE_FLAG        = 0x00000020,
+}
+
+alias CERT_QUERY_OBJECT_TYPE = uint;
+enum : uint
+{
+    CERT_QUERY_OBJECT_FILE = 0x00000001,
+    CERT_QUERY_OBJECT_BLOB = 0x00000002,
+}
+
+alias CERT_QUERY_CONTENT_TYPE = uint;
+enum : uint
+{
+    CERT_QUERY_CONTENT_CERT               = 0x00000001,
+    CERT_QUERY_CONTENT_CTL                = 0x00000002,
+    CERT_QUERY_CONTENT_CRL                = 0x00000003,
+    CERT_QUERY_CONTENT_SERIALIZED_STORE   = 0x00000004,
+    CERT_QUERY_CONTENT_SERIALIZED_CERT    = 0x00000005,
+    CERT_QUERY_CONTENT_SERIALIZED_CTL     = 0x00000006,
+    CERT_QUERY_CONTENT_SERIALIZED_CRL     = 0x00000007,
+    CERT_QUERY_CONTENT_PKCS7_SIGNED       = 0x00000008,
+    CERT_QUERY_CONTENT_PKCS7_UNSIGNED     = 0x00000009,
+    CERT_QUERY_CONTENT_PKCS7_SIGNED_EMBED = 0x0000000a,
+    CERT_QUERY_CONTENT_PKCS10             = 0x0000000b,
+    CERT_QUERY_CONTENT_PFX                = 0x0000000c,
+    CERT_QUERY_CONTENT_CERT_PAIR          = 0x0000000d,
+    CERT_QUERY_CONTENT_PFX_AND_LOAD       = 0x0000000e,
+}
+
+alias CERT_QUERY_CONTENT_TYPE_FLAGS = uint;
+enum : uint
+{
+    CERT_QUERY_CONTENT_FLAG_CERT               = 0x00000002,
+    CERT_QUERY_CONTENT_FLAG_CTL                = 0x00000004,
+    CERT_QUERY_CONTENT_FLAG_CRL                = 0x00000008,
+    CERT_QUERY_CONTENT_FLAG_SERIALIZED_STORE   = 0x00000010,
+    CERT_QUERY_CONTENT_FLAG_SERIALIZED_CERT    = 0x00000020,
+    CERT_QUERY_CONTENT_FLAG_SERIALIZED_CTL     = 0x00000040,
+    CERT_QUERY_CONTENT_FLAG_SERIALIZED_CRL     = 0x00000080,
+    CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED       = 0x00000100,
+    CERT_QUERY_CONTENT_FLAG_PKCS7_UNSIGNED     = 0x00000200,
+    CERT_QUERY_CONTENT_FLAG_PKCS7_SIGNED_EMBED = 0x00000400,
+    CERT_QUERY_CONTENT_FLAG_PKCS10             = 0x00000800,
+    CERT_QUERY_CONTENT_FLAG_PFX                = 0x00001000,
+    CERT_QUERY_CONTENT_FLAG_CERT_PAIR          = 0x00002000,
+    CERT_QUERY_CONTENT_FLAG_PFX_AND_LOAD       = 0x00004000,
+    CERT_QUERY_CONTENT_FLAG_ALL                = 0x00003ffe,
+    CERT_QUERY_CONTENT_FLAG_ALL_ISSUER_CERT    = 0x00000332,
+}
+
+alias CERT_QUERY_FORMAT_TYPE = uint;
+enum : uint
+{
+    CERT_QUERY_FORMAT_BINARY                = 0x00000001,
+    CERT_QUERY_FORMAT_BASE64_ENCODED        = 0x00000002,
+    CERT_QUERY_FORMAT_ASN_ASCII_HEX_ENCODED = 0x00000003,
+}
+
+alias CERT_QUERY_FORMAT_TYPE_FLAGS = uint;
+enum : uint
+{
+    CERT_QUERY_FORMAT_FLAG_BINARY                = 0x00000002,
+    CERT_QUERY_FORMAT_FLAG_BASE64_ENCODED        = 0x00000004,
+    CERT_QUERY_FORMAT_FLAG_ASN_ASCII_HEX_ENCODED = 0x00000008,
+    CERT_QUERY_FORMAT_FLAG_ALL                   = 0x0000000e,
+}
+
+alias CERT_QUERY_ENCODING_TYPE = uint;
+enum : uint
+{
+    X509_ASN_ENCODING   = 0x00000001,
+    PKCS_7_ASN_ENCODING = 0x00010000,
+}
+
+alias CERT_RDN_ATTR_VALUE_TYPE = int;
+enum : int
+{
+    CERT_RDN_ANY_TYPE         = 0x00000000,
+    CERT_RDN_NUMERIC_STRING   = 0x00000003,
+    CERT_RDN_PRINTABLE_STRING = 0x00000004,
+    CERT_RDN_T61_STRING       = 0x00000005,
+    CERT_RDN_VIDEOTEX_STRING  = 0x00000006,
+    CERT_RDN_IA5_STRING       = 0x00000007,
+    CERT_RDN_GRAPHIC_STRING   = 0x00000008,
+    CERT_RDN_ISO646_STRING    = 0x00000009,
+    CERT_RDN_GENERAL_STRING   = 0x0000000a,
+    CERT_RDN_INT4_STRING      = 0x0000000b,
+    CERT_RDN_UNICODE_STRING   = 0x0000000c,
+    CERT_RDN_BMP_STRING       = 0x0000000c,
+    CERT_RDN_ENCODED_BLOB     = 0x00000001,
+    CERT_RDN_OCTET_STRING     = 0x00000002,
+    CERT_RDN_TELETEX_STRING   = 0x00000005,
+    CERT_RDN_UNIVERSAL_STRING = 0x0000000b,
+    CERT_RDN_UTF8_STRING      = 0x0000000d,
+    CERT_RDN_VISIBLE_STRING   = 0x00000009,
+}
+
+alias CERT_STRING_TYPE = uint;
+enum : uint
+{
+    CERT_SIMPLE_NAME_STR = 0x00000001,
+    CERT_OID_NAME_STR    = 0x00000002,
+    CERT_X500_NAME_STR   = 0x00000003,
+}
+
+alias BCRYPT_TABLE = uint;
+enum : uint
+{
+    CRYPT_LOCAL  = 0x00000001,
+    CRYPT_DOMAIN = 0x00000002,
+}
+
+alias CERT_KEY_SPEC = uint;
+enum : uint
+{
+    AT_KEYEXCHANGE       = 0x00000001,
+    AT_SIGNATURE         = 0x00000002,
+    CERT_NCRYPT_KEY_SPEC = 0xffffffff,
+}
+
+alias BCRYPT_INTERFACE = uint;
+enum : uint
+{
+    BCRYPT_ASYMMETRIC_ENCRYPTION_INTERFACE = 0x00000003,
+    BCRYPT_CIPHER_INTERFACE                = 0x00000001,
+    BCRYPT_HASH_INTERFACE                  = 0x00000002,
+    BCRYPT_RNG_INTERFACE                   = 0x00000006,
+    BCRYPT_SECRET_AGREEMENT_INTERFACE      = 0x00000004,
+    BCRYPT_SIGNATURE_INTERFACE             = 0x00000005,
+    NCRYPT_KEY_STORAGE_INTERFACE           = 0x00010001,
+    NCRYPT_SCHANNEL_INTERFACE              = 0x00010002,
+    NCRYPT_SCHANNEL_SIGNATURE_INTERFACE    = 0x00010003,
+}
+
+alias BCRYPT_FLAGS = uint;
+enum : uint
+{
+    BCRYPT_BLOCK_PADDING = 0x00000001,
+    BCRYPT_PAD_NONE      = 0x00000001,
+    BCRYPT_PAD_OAEP      = 0x00000004,
+    BCRYPT_PAD_PKCS1     = 0x00000002,
+    BCRYPT_PAD_PSS       = 0x00000008,
+}
+
+alias NCRYPT_FLAGS = uint;
+enum : uint
+{
+    NCRYPT_SILENT_FLAG                    = 0x00000040,
+    NCRYPT_NO_PADDING_FLAG                = 0x00000001,
+    NCRYPT_PAD_OAEP_FLAG                  = 0x00000004,
+    NCRYPT_PAD_PKCS1_FLAG                 = 0x00000002,
+    NCRYPT_REGISTER_NOTIFY_FLAG           = 0x00000001,
+    NCRYPT_UNREGISTER_NOTIFY_FLAG         = 0x00000002,
+    NCRYPT_MACHINE_KEY_FLAG               = 0x00000020,
+    NCRYPT_UNPROTECT_NO_DECRYPT           = 0x00000001,
+    NCRYPT_OVERWRITE_KEY_FLAG             = 0x00000080,
+    NCRYPT_NO_KEY_VALIDATION              = 0x00000008,
+    NCRYPT_WRITE_KEY_TO_LEGACY_STORE_FLAG = 0x00000200,
+    NCRYPT_PAD_PSS_FLAG                   = 0x00000008,
+    NCRYPT_PERSIST_FLAG                   = 0x80000000,
+    NCRYPT_PERSIST_ONLY_FLAG              = 0x40000000,
+}
+
+alias CRYPT_STRING = uint;
+enum : uint
+{
+    CRYPT_STRING_BASE64HEADER        = 0x00000000,
+    CRYPT_STRING_BASE64              = 0x00000001,
+    CRYPT_STRING_BINARY              = 0x00000002,
+    CRYPT_STRING_BASE64REQUESTHEADER = 0x00000003,
+    CRYPT_STRING_HEX                 = 0x00000004,
+    CRYPT_STRING_HEXASCII            = 0x00000005,
+    CRYPT_STRING_BASE64X509CRLHEADER = 0x00000009,
+    CRYPT_STRING_HEXADDR             = 0x0000000a,
+    CRYPT_STRING_HEXASCIIADDR        = 0x0000000b,
+    CRYPT_STRING_HEXRAW              = 0x0000000c,
+    CRYPT_STRING_STRICT              = 0x20000000,
+    CRYPT_STRING_BASE64_ANY          = 0x00000006,
+    CRYPT_STRING_ANY                 = 0x00000007,
+    CRYPT_STRING_HEX_ANY             = 0x00000008,
+}
+
+alias CRYPT_IMPORT_PUBLIC_KEY_FLAGS = uint;
+enum : uint
+{
+    CRYPT_OID_INFO_PUBKEY_SIGN_KEY_FLAG    = 0x80000000,
+    CRYPT_OID_INFO_PUBKEY_ENCRYPT_KEY_FLAG = 0x40000000,
+}
+
+alias CRYPT_XML_FLAGS = uint;
+enum : uint
+{
+    CRYPT_XML_FLAG_DISABLE_EXTENSIONS = 0x10000000,
+    CRYPT_XML_FLAG_NO_SERIALIZE       = 0x80000000,
+    CRYPT_XML_SIGN_ADD_KEYVALUE       = 0x00000001,
+}
+
+alias CRYPT_ENCODE_OBJECT_FLAGS = uint;
+enum : uint
+{
+    CRYPT_ENCODE_ALLOC_FLAG                            = 0x00008000,
+    CRYPT_ENCODE_ENABLE_PUNYCODE_FLAG                  = 0x00020000,
+    CRYPT_UNICODE_NAME_ENCODE_DISABLE_CHECK_TYPE_FLAG  = 0x40000000,
+    CRYPT_UNICODE_NAME_ENCODE_ENABLE_T61_UNICODE_FLAG  = 0x80000000,
+    CRYPT_UNICODE_NAME_ENCODE_ENABLE_UTF8_UNICODE_FLAG = 0x20000000,
+}
+
+alias CRYPT_OBJECT_LOCATOR_RELEASE_REASON = uint;
+enum : uint
+{
+    CRYPT_OBJECT_LOCATOR_RELEASE_SYSTEM_SHUTDOWN = 0x00000001,
+    CRYPT_OBJECT_LOCATOR_RELEASE_SERVICE_STOP    = 0x00000002,
+    CRYPT_OBJECT_LOCATOR_RELEASE_PROCESS_EXIT    = 0x00000003,
+    CRYPT_OBJECT_LOCATOR_RELEASE_DLL_UNLOAD      = 0x00000004,
+}
+
+alias CRYPT_ACQUIRE_FLAGS = uint;
+enum : uint
+{
+    CRYPT_ACQUIRE_CACHE_FLAG             = 0x00000001,
+    CRYPT_ACQUIRE_USE_PROV_INFO_FLAG     = 0x00000002,
+    CRYPT_ACQUIRE_COMPARE_KEY_FLAG       = 0x00000004,
+    CRYPT_ACQUIRE_NO_HEALING             = 0x00000008,
+    CRYPT_ACQUIRE_SILENT_FLAG            = 0x00000040,
+    CRYPT_ACQUIRE_WINDOW_HANDLE_FLAG     = 0x00000080,
+    CRYPT_ACQUIRE_NCRYPT_KEY_FLAGS_MASK  = 0x00070000,
+    CRYPT_ACQUIRE_ALLOW_NCRYPT_KEY_FLAG  = 0x00010000,
+    CRYPT_ACQUIRE_PREFER_NCRYPT_KEY_FLAG = 0x00020000,
+    CRYPT_ACQUIRE_ONLY_NCRYPT_KEY_FLAG   = 0x00040000,
+}
+
+alias CRYPT_GET_URL_FLAGS = uint;
+enum : uint
+{
+    CRYPT_GET_URL_FROM_PROPERTY         = 0x00000001,
+    CRYPT_GET_URL_FROM_EXTENSION        = 0x00000002,
+    CRYPT_GET_URL_FROM_UNAUTH_ATTRIBUTE = 0x00000004,
+    CRYPT_GET_URL_FROM_AUTH_ATTRIBUTE   = 0x00000008,
+}
+
+alias CERT_STORE_SAVE_AS = uint;
+enum : uint
+{
+    CERT_STORE_SAVE_AS_PKCS7 = 0x00000002,
+    CERT_STORE_SAVE_AS_STORE = 0x00000001,
+}
+
+alias BCRYPT_QUERY_PROVIDER_MODE = uint;
+enum : uint
+{
+    CRYPT_ANY = 0x00000004,
+    CRYPT_UM  = 0x00000001,
+    CRYPT_KM  = 0x00000002,
+    CRYPT_MM  = 0x00000003,
+}
+
+alias CERT_FIND_CHAIN_IN_STORE_FLAGS = uint;
+enum : uint
+{
+    CERT_CHAIN_FIND_BY_ISSUER_COMPARE_KEY_FLAG    = 0x00000001,
+    CERT_CHAIN_FIND_BY_ISSUER_COMPLEX_CHAIN_FLAG  = 0x00000002,
+    CERT_CHAIN_FIND_BY_ISSUER_CACHE_ONLY_FLAG     = 0x00008000,
+    CERT_CHAIN_FIND_BY_ISSUER_CACHE_ONLY_URL_FLAG = 0x00000004,
+    CERT_CHAIN_FIND_BY_ISSUER_LOCAL_MACHINE_FLAG  = 0x00000008,
+    CERT_CHAIN_FIND_BY_ISSUER_NO_KEY_FLAG         = 0x00004000,
+}
+
+alias CERT_CONTROL_STORE_FLAGS = uint;
+enum : uint
+{
+    CERT_STORE_CTRL_COMMIT_FORCE_FLAG             = 0x00000001,
+    CERT_STORE_CTRL_COMMIT_CLEAR_FLAG             = 0x00000002,
+    CERT_STORE_CTRL_INHIBIT_DUPLICATE_HANDLE_FLAG = 0x00000001,
+}
+
+alias BCRYPT_OPEN_ALGORITHM_PROVIDER_FLAGS = uint;
+enum : uint
+{
+    BCRYPT_ALG_HANDLE_HMAC_FLAG = 0x00000008,
+    BCRYPT_PROV_DISPATCH        = 0x00000001,
+    BCRYPT_HASH_REUSABLE_FLAG   = 0x00000020,
+}
+
+alias CERT_STORE_SAVE_TO = uint;
+enum : uint
+{
+    CERT_STORE_SAVE_TO_FILE       = 0x00000001,
+    CERT_STORE_SAVE_TO_FILENAME   = 0x00000004,
+    CERT_STORE_SAVE_TO_FILENAME_A = 0x00000003,
+    CERT_STORE_SAVE_TO_FILENAME_W = 0x00000004,
+    CERT_STORE_SAVE_TO_MEMORY     = 0x00000002,
+}
+
+alias CRYPT_SET_PROV_PARAM_ID = uint;
+enum : uint
+{
+    PP_CLIENT_HWND            = 0x00000001,
+    PP_DELETEKEY              = 0x00000018,
+    PP_KEYEXCHANGE_ALG        = 0x0000000e,
+    PP_KEYEXCHANGE_PIN        = 0x00000020,
+    PP_KEYEXCHANGE_KEYSIZE    = 0x0000000c,
+    PP_KEYSET_SEC_DESCR       = 0x00000008,
+    PP_PIN_PROMPT_STRING      = 0x0000002c,
+    PP_ROOT_CERTSTORE         = 0x0000002e,
+    PP_SIGNATURE_ALG          = 0x0000000f,
+    PP_SIGNATURE_PIN          = 0x00000021,
+    PP_SIGNATURE_KEYSIZE      = 0x0000000d,
+    PP_UI_PROMPT              = 0x00000015,
+    PP_USE_HARDWARE_RNG       = 0x00000026,
+    PP_USER_CERTSTORE         = 0x0000002a,
+    PP_SECURE_KEYEXCHANGE_PIN = 0x0000002f,
+    PP_SECURE_SIGNATURE_PIN   = 0x00000030,
+    PP_SMARTCARD_READER       = 0x0000002b,
+}
+
+alias CRYPT_KEY_PARAM_ID = uint;
+enum : uint
+{
+    KP_ALGID         = 0x00000007,
+    KP_CERTIFICATE   = 0x0000001a,
+    KP_PERMISSIONS   = 0x00000006,
+    KP_SALT          = 0x00000002,
+    KP_SALT_EX       = 0x0000000a,
+    KP_BLOCKLEN      = 0x00000008,
+    KP_GET_USE_COUNT = 0x0000002a,
+    KP_KEYLEN        = 0x00000009,
+}
+
+alias CRYPT_KEY_FLAGS = uint;
+enum : uint
+{
+    CRYPT_EXPORTABLE                   = 0x00000001,
+    CRYPT_USER_PROTECTED               = 0x00000002,
+    CRYPT_ARCHIVABLE                   = 0x00004000,
+    CRYPT_CREATE_IV                    = 0x00000200,
+    CRYPT_CREATE_SALT                  = 0x00000004,
+    CRYPT_DATA_KEY                     = 0x00000800,
+    CRYPT_FORCE_KEY_PROTECTION_HIGH    = 0x00008000,
+    CRYPT_KEK                          = 0x00000400,
+    CRYPT_INITIATOR                    = 0x00000040,
+    CRYPT_NO_SALT                      = 0x00000010,
+    CRYPT_ONLINE                       = 0x00000080,
+    CRYPT_PREGEN                       = 0x00000040,
+    CRYPT_RECIPIENT                    = 0x00000010,
+    CRYPT_SF                           = 0x00000100,
+    CRYPT_SGCKEY                       = 0x00002000,
+    CRYPT_VOLATILE                     = 0x00001000,
+    CRYPT_MACHINE_KEYSET               = 0x00000020,
+    CRYPT_USER_KEYSET                  = 0x00001000,
+    PKCS12_PREFER_CNG_KSP              = 0x00000100,
+    PKCS12_ALWAYS_CNG_KSP              = 0x00000200,
+    PKCS12_ALLOW_OVERWRITE_KEY         = 0x00004000,
+    PKCS12_NO_PERSIST_KEY              = 0x00008000,
+    PKCS12_INCLUDE_EXTENDED_PROPERTIES = 0x00000010,
+    CRYPT_OAEP                         = 0x00000040,
+    CRYPT_BLOB_VER3                    = 0x00000080,
+    CRYPT_DESTROYKEY                   = 0x00000004,
+    CRYPT_SSL2_FALLBACK                = 0x00000002,
+    CRYPT_Y_ONLY                       = 0x00000001,
+    CRYPT_IPSEC_HMAC_KEY               = 0x00000100,
+    CERT_SET_KEY_PROV_HANDLE_PROP_ID   = 0x00000001,
+    CERT_SET_KEY_CONTEXT_PROP_ID       = 0x00000001,
+}
+
+alias CRYPT_MSG_TYPE = uint;
+enum : uint
+{
+    CMSG_DATA                 = 0x00000001,
+    CMSG_SIGNED               = 0x00000002,
+    CMSG_ENVELOPED            = 0x00000003,
+    CMSG_SIGNED_AND_ENVELOPED = 0x00000004,
+    CMSG_HASHED               = 0x00000005,
+}
+
+alias CERT_OPEN_STORE_FLAGS = uint;
+enum : uint
+{
+    CERT_STORE_BACKUP_RESTORE_FLAG              = 0x00000800,
+    CERT_STORE_CREATE_NEW_FLAG                  = 0x00002000,
+    CERT_STORE_DEFER_CLOSE_UNTIL_LAST_FREE_FLAG = 0x00000004,
+    CERT_STORE_DELETE_FLAG                      = 0x00000010,
+    CERT_STORE_ENUM_ARCHIVED_FLAG               = 0x00000200,
+    CERT_STORE_MAXIMUM_ALLOWED_FLAG             = 0x00001000,
+    CERT_STORE_NO_CRYPT_RELEASE_FLAG            = 0x00000001,
+    CERT_STORE_OPEN_EXISTING_FLAG               = 0x00004000,
+    CERT_STORE_READONLY_FLAG                    = 0x00008000,
+    CERT_STORE_SET_LOCALIZED_NAME_FLAG          = 0x00000002,
+    CERT_STORE_SHARE_CONTEXT_FLAG               = 0x00000080,
+    CERT_STORE_UPDATE_KEYID_FLAG                = 0x00000400,
+}
+
+alias CRYPT_DEFAULT_CONTEXT_FLAGS = uint;
+enum : uint
+{
+    CRYPT_DEFAULT_CONTEXT_AUTO_RELEASE_FLAG = 0x00000001,
+    CRYPT_DEFAULT_CONTEXT_PROCESS_FLAG      = 0x00000002,
+}
+
+alias CRYPT_VERIFY_CERT_FLAGS = uint;
+enum : uint
+{
+    CRYPT_VERIFY_CERT_SIGN_DISABLE_MD2_MD4_FLAG          = 0x00000001,
+    CRYPT_VERIFY_CERT_SIGN_SET_STRONG_PROPERTIES_FLAG    = 0x00000002,
+    CRYPT_VERIFY_CERT_SIGN_RETURN_STRONG_PROPERTIES_FLAG = 0x00000004,
+}
+
+alias CRYPT_SET_HASH_PARAM = uint;
+enum : uint
+{
+    HP_HMAC_INFO = 0x00000005,
+    HP_HASHVAL   = 0x00000002,
+}
+
+alias CERT_SYSTEM_STORE_FLAGS = uint;
+enum : uint
+{
+    CERT_SYSTEM_STORE_LOCATION_MASK = 0x00ff0000,
+    CERT_SYSTEM_STORE_RELOCATE_FLAG = 0x80000000,
+}
+
+alias CERT_CREATE_SELFSIGN_FLAGS = uint;
+enum : uint
+{
+    CERT_CREATE_SELFSIGN_NO_KEY_INFO = 0x00000002,
+    CERT_CREATE_SELFSIGN_NO_SIGN     = 0x00000001,
+}
+
+alias CRYPT_DEFAULT_CONTEXT_TYPE = uint;
+enum : uint
+{
+    CRYPT_DEFAULT_CONTEXT_CERT_SIGN_OID       = 0x00000001,
+    CRYPT_DEFAULT_CONTEXT_MULTI_CERT_SIGN_OID = 0x00000002,
+}
+
+alias BCRYPT_RESOLVE_PROVIDERS_FLAGS = uint;
+enum : uint
+{
+    CRYPT_ALL_FUNCTIONS = 0x00000001,
+    CRYPT_ALL_PROVIDERS = 0x00000002,
+}
+
+alias CERT_FIND_TYPE = uint;
+enum : uint
+{
+    CTL_FIND_ANY             = 0x00000000,
+    CTL_FIND_SHA1_HASH       = 0x00000001,
+    CTL_FIND_MD5_HASH        = 0x00000002,
+    CTL_FIND_USAGE           = 0x00000003,
+    CTL_FIND_SAME_USAGE_FLAG = 0x00000001,
+    CTL_FIND_EXISTING        = 0x00000005,
+    CTL_FIND_SUBJECT         = 0x00000004,
+}
+
+alias CRYPT_FIND_FLAGS = uint;
+enum : uint
+{
+    CRYPT_FIND_USER_KEYSET_FLAG    = 0x00000001,
+    CRYPT_FIND_MACHINE_KEYSET_FLAG = 0x00000002,
+    CRYPT_FIND_SILENT_KEYSET_FLAG  = 0x00000040,
+}
+
+alias CRYPT_IMAGE_REF_FLAGS = uint;
+enum : uint
+{
+    CRYPT_MIN_DEPENDENCIES = 0x00000001,
+    CRYPT_PROCESS_ISOLATE  = 0x00010000,
+}
+
+alias CERT_REVOCATION_STATUS_REASON = uint;
+enum : uint
+{
+    CRL_REASON_UNSPECIFIED            = 0x00000000,
+    CRL_REASON_KEY_COMPROMISE         = 0x00000001,
+    CRL_REASON_CA_COMPROMISE          = 0x00000002,
+    CRL_REASON_AFFILIATION_CHANGED    = 0x00000003,
+    CRL_REASON_SUPERSEDED             = 0x00000004,
+    CRL_REASON_CESSATION_OF_OPERATION = 0x00000005,
+    CRL_REASON_CERTIFICATE_HOLD       = 0x00000006,
+    CRL_REASON_REMOVE_FROM_CRL        = 0x00000008,
+}
+
+alias CERT_ROOT_PROGRAM_FLAGS = uint;
+enum : uint
+{
+    CERT_ROOT_PROGRAM_FLAG_LSC          = 0x00000040,
+    CERT_ROOT_PROGRAM_FLAG_ORG          = 0x00000080,
+    CERT_ROOT_PROGRAM_FLAG_SUBJECT_LOGO = 0x00000020,
+}
+
+alias CRYPT_XML_KEY_VALUE_TYPE = uint;
+enum : uint
+{
+    CRYPT_XML_KEY_VALUE_TYPE_DSA    = 0x00000001,
+    CRYPT_XML_KEY_VALUE_TYPE_RSA    = 0x00000002,
+    CRYPT_XML_KEY_VALUE_TYPE_ECDSA  = 0x00000003,
+    CRYPT_XML_KEY_VALUE_TYPE_CUSTOM = 0x00000004,
+}
+
+alias CERT_LOGOTYPE_CHOICE = uint;
+enum : uint
+{
+    CERT_LOGOTYPE_NO_IMAGE_RESOLUTION_CHOICE         = 0x00000000,
+    CERT_LOGOTYPE_BITS_IMAGE_RESOLUTION_CHOICE       = 0x00000001,
+    CERT_LOGOTYPE_TABLE_SIZE_IMAGE_RESOLUTION_CHOICE = 0x00000002,
+}
+
+alias CMSG_KEY_AGREE_OPTION = uint;
+enum : uint
+{
+    CMSG_KEY_AGREE_EPHEMERAL_KEY_CHOICE = 0x00000001,
+    CMSG_KEY_AGREE_STATIC_KEY_CHOICE    = 0x00000002,
+}
+
+alias CERT_LOGOTYPE_OPTION = uint;
+enum : uint
+{
+    CERT_LOGOTYPE_DIRECT_INFO_CHOICE   = 0x00000001,
+    CERT_LOGOTYPE_INDIRECT_INFO_CHOICE = 0x00000002,
+}
+
+alias CERT_STORE_PROV_FLAGS = uint;
+enum : uint
+{
+    CERT_STORE_PROV_EXTERNAL_FLAG        = 0x00000001,
+    CERT_STORE_PROV_DELETED_FLAG         = 0x00000002,
+    CERT_STORE_PROV_NO_PERSIST_FLAG      = 0x00000004,
+    CERT_STORE_PROV_SYSTEM_STORE_FLAG    = 0x00000008,
+    CERT_STORE_PROV_LM_SYSTEM_STORE_FLAG = 0x00000010,
+}
+
+alias CMSG_KEY_AGREE_ORIGINATOR = uint;
+enum : uint
+{
+    CMSG_KEY_AGREE_ORIGINATOR_CERT       = 0x00000001,
+    CMSG_KEY_AGREE_ORIGINATOR_PUBLIC_KEY = 0x00000002,
+}
+
+alias CRYPT_CONTEXT_CONFIG_FLAGS = uint;
+enum : uint
+{
+    CRYPT_EXCLUSIVE = 0x00000001,
+    CRYPT_OVERRIDE  = 0x00010000,
+}
+
+alias BCRYPT_DSA_MAGIC = uint;
+enum : uint
+{
+    BCRYPT_DSA_PUBLIC_MAGIC  = 0x42505344,
+    BCRYPT_DSA_PRIVATE_MAGIC = 0x56505344,
+}
+
+alias CRYPT_XML_X509DATA_TYPE = uint;
+enum : uint
+{
+    CRYPT_XML_X509DATA_TYPE_ISSUER_SERIAL = 0x00000001,
+    CRYPT_XML_X509DATA_TYPE_SKI           = 0x00000002,
+    CRYPT_XML_X509DATA_TYPE_SUBJECT_NAME  = 0x00000003,
+    CRYPT_XML_X509DATA_TYPE_CERTIFICATE   = 0x00000004,
+    CRYPT_XML_X509DATA_TYPE_CRL           = 0x00000005,
+    CRYPT_XML_X509DATA_TYPE_CUSTOM        = 0x00000006,
+}
+
+alias CERT_BIOMETRIC_DATA_TYPE = uint;
+enum : uint
+{
+    CERT_BIOMETRIC_PREDEFINED_DATA_CHOICE = 0x00000001,
+    CERT_BIOMETRIC_OID_DATA_CHOICE        = 0x00000002,
+}
+
+alias CERT_CHAIN_POLICY_FLAGS = uint;
+enum : uint
+{
+    CERT_CHAIN_POLICY_IGNORE_NOT_TIME_VALID_FLAG                 = 0x00000001,
+    CERT_CHAIN_POLICY_IGNORE_CTL_NOT_TIME_VALID_FLAG             = 0x00000002,
+    CERT_CHAIN_POLICY_IGNORE_NOT_TIME_NESTED_FLAG                = 0x00000004,
+    CERT_CHAIN_POLICY_IGNORE_INVALID_BASIC_CONSTRAINTS_FLAG      = 0x00000008,
+    CERT_CHAIN_POLICY_IGNORE_ALL_NOT_TIME_VALID_FLAGS            = 0x00000007,
+    CERT_CHAIN_POLICY_ALLOW_UNKNOWN_CA_FLAG                      = 0x00000010,
+    CERT_CHAIN_POLICY_IGNORE_WRONG_USAGE_FLAG                    = 0x00000020,
+    CERT_CHAIN_POLICY_IGNORE_INVALID_NAME_FLAG                   = 0x00000040,
+    CERT_CHAIN_POLICY_IGNORE_INVALID_POLICY_FLAG                 = 0x00000080,
+    CERT_CHAIN_POLICY_IGNORE_END_REV_UNKNOWN_FLAG                = 0x00000100,
+    CERT_CHAIN_POLICY_IGNORE_CTL_SIGNER_REV_UNKNOWN_FLAG         = 0x00000200,
+    CERT_CHAIN_POLICY_IGNORE_CA_REV_UNKNOWN_FLAG                 = 0x00000400,
+    CERT_CHAIN_POLICY_IGNORE_ROOT_REV_UNKNOWN_FLAG               = 0x00000800,
+    CERT_CHAIN_POLICY_IGNORE_ALL_REV_UNKNOWN_FLAGS               = 0x00000f00,
+    CERT_CHAIN_POLICY_ALLOW_TESTROOT_FLAG                        = 0x00008000,
+    CERT_CHAIN_POLICY_TRUST_TESTROOT_FLAG                        = 0x00004000,
+    CERT_CHAIN_POLICY_IGNORE_NOT_SUPPORTED_CRITICAL_EXT_FLAG     = 0x00002000,
+    CERT_CHAIN_POLICY_IGNORE_PEER_TRUST_FLAG                     = 0x00001000,
+    CERT_CHAIN_POLICY_IGNORE_WEAK_SIGNATURE_FLAG                 = 0x08000000,
+    BASIC_CONSTRAINTS_CERT_CHAIN_POLICY_CA_FLAG                  = 0x80000000,
+    BASIC_CONSTRAINTS_CERT_CHAIN_POLICY_END_ENTITY_FLAG          = 0x40000000,
+    MICROSOFT_ROOT_CERT_CHAIN_POLICY_ENABLE_TEST_ROOT_FLAG       = 0x00010000,
+    MICROSOFT_ROOT_CERT_CHAIN_POLICY_CHECK_APPLICATION_ROOT_FLAG = 0x00020000,
+    MICROSOFT_ROOT_CERT_CHAIN_POLICY_DISABLE_FLIGHT_ROOT_FLAG    = 0x00040000,
+}
+
+alias CERT_STRONG_SIGN_FLAGS = uint;
+enum : uint
+{
+    CERT_STRONG_SIGN_ENABLE_CRL_CHECK  = 0x00000001,
+    CERT_STRONG_SIGN_ENABLE_OCSP_CHECK = 0x00000002,
+}
+
+alias CERT_LOGOTYPE_IMAGE_INFO_TYPE = uint;
+enum : uint
+{
+    CERT_LOGOTYPE_GRAY_SCALE_IMAGE_INFO_CHOICE = 0x00000001,
+    CERT_LOGOTYPE_COLOR_IMAGE_INFO_CHOICE      = 0x00000002,
+}
+
+alias CRYPT_XML_STATUS_INFO_STATUS = uint;
+enum : uint
+{
+    CRYPT_XML_STATUS_INTERNAL_REFERENCE = 0x00000001,
+    CRYPT_XML_STATUS_KEY_AVAILABLE      = 0x00000002,
+    CRYPT_XML_STATUS_DIGESTING          = 0x00000004,
+    CRYPT_XML_STATUS_DIGEST_VALID       = 0x00000008,
+    CRYPT_XML_STATUS_SIGNATURE_VALID    = 0x00010000,
+    CRYPT_XML_STATUS_OPENED_TO_ENCODE   = 0x80000000,
+}
+
+alias CRYPT_XML_TRANSFORM_FLAGS = uint;
+enum : uint
+{
+    CRYPT_XML_TRANSFORM_ON_STREAM        = 0x00000001,
+    CRYPT_XML_TRANSFORM_ON_NODESET       = 0x00000002,
+    CRYPT_XML_TRANSFORM_URI_QUERY_STRING = 0x00000003,
+}
+
+alias CRYPT_XML_GROUP_ID = uint;
+enum : uint
+{
+    CRYPT_XML_GROUP_ID_HASH = 0x00000001,
+    CRYPT_XML_GROUP_ID_SIGN = 0x00000002,
+}
+
+alias CERT_SELECT_CRITERIA_TYPE = uint;
+enum : uint
+{
+    CERT_SELECT_BY_ENHKEY_USAGE      = 0x00000001,
+    CERT_SELECT_BY_KEY_USAGE         = 0x00000002,
+    CERT_SELECT_BY_POLICY_OID        = 0x00000003,
+    CERT_SELECT_BY_PROV_NAME         = 0x00000004,
+    CERT_SELECT_BY_EXTENSION         = 0x00000005,
+    CERT_SELECT_BY_SUBJECT_HOST_NAME = 0x00000006,
+    CERT_SELECT_BY_ISSUER_ATTR       = 0x00000007,
+    CERT_SELECT_BY_SUBJECT_ATTR      = 0x00000008,
+    CERT_SELECT_BY_ISSUER_NAME       = 0x00000009,
+    CERT_SELECT_BY_PUBLIC_KEY        = 0x0000000a,
+    CERT_SELECT_BY_TLS_SIGNATURES    = 0x0000000b,
+}
+
+alias BCRYPT_RSAKEY_BLOB_MAGIC = uint;
+enum : uint
+{
+    BCRYPT_RSAPUBLIC_MAGIC      = 0x31415352,
+    BCRYPT_RSAPRIVATE_MAGIC     = 0x32415352,
+    BCRYPT_RSAFULLPRIVATE_MAGIC = 0x33415352,
+}
+
+alias CRYPT_XML_KEYINFO_TYPE = uint;
+enum : uint
+{
+    CRYPT_XML_KEYINFO_TYPE_KEYNAME   = 0x00000001,
+    CRYPT_XML_KEYINFO_TYPE_KEYVALUE  = 0x00000002,
+    CRYPT_XML_KEYINFO_TYPE_RETRIEVAL = 0x00000003,
+    CRYPT_XML_KEYINFO_TYPE_X509DATA  = 0x00000004,
+    CRYPT_XML_KEYINFO_TYPE_CUSTOM    = 0x00000005,
+}
+
+alias CRYPT_TIMESTAMP_VERSION = uint;
+enum : uint
+{
+    TIMESTAMP_VERSION = 0x00000001,
+}
+
+alias CERT_ID_OPTION = uint;
+enum : uint
+{
+    CERT_ID_ISSUER_SERIAL_NUMBER = 0x00000001,
+    CERT_ID_KEY_IDENTIFIER       = 0x00000002,
+    CERT_ID_SHA1_HASH            = 0x00000003,
+}
+
+alias HTTPSPOLICY_CALLBACK_DATA_AUTH_TYPE = uint;
+enum : uint
+{
+    AUTHTYPE_CLIENT = 0x00000001,
+    AUTHTYPE_SERVER = 0x00000002,
+}
+
+alias BCRYPT_DH_KEY_BLOB_MAGIC = uint;
+enum : uint
+{
+    BCRYPT_DH_PUBLIC_MAGIC  = 0x42504844,
+    BCRYPT_DH_PRIVATE_MAGIC = 0x56504844,
+}
+
+alias CRYPT_XML_STATUS_ERROR_STATUS = uint;
+enum : uint
+{
+    CRYPT_XML_STATUS_ERROR_NOT_RESOLVED            = 0x00000001,
+    CRYPT_XML_STATUS_ERROR_DIGEST_INVALID          = 0x00000002,
+    CRYPT_XML_STATUS_ERROR_NOT_SUPPORTED_ALGORITHM = 0x00000005,
+    CRYPT_XML_STATUS_ERROR_NOT_SUPPORTED_TRANSFORM = 0x00000008,
+    CRYPT_XML_STATUS_ERROR_SIGNATURE_INVALID       = 0x00010000,
+    CRYPT_XML_STATUS_ERROR_KEYINFO_NOT_PARSED      = 0x00020000,
+}
+
+alias CRYPT_TIMESTAMP_RESPONSE_STATUS = uint;
+enum : uint
+{
+    TIMESTAMP_STATUS_GRANTED            = 0x00000000,
+    TIMESTAMP_STATUS_GRANTED_WITH_MODS  = 0x00000001,
+    TIMESTAMP_STATUS_REJECTED           = 0x00000002,
+    TIMESTAMP_STATUS_WAITING            = 0x00000003,
+    TIMESTAMP_STATUS_REVOCATION_WARNING = 0x00000004,
+    TIMESTAMP_STATUS_REVOKED            = 0x00000005,
+}
+
+alias NCRYPT_ALGORITHM_NAME_CLASS = uint;
+enum : uint
+{
+    NCRYPT_ASYMMETRIC_ENCRYPTION_INTERFACE = 0x00000003,
+    NCRYPT_SECRET_AGREEMENT_INTERFACE      = 0x00000004,
+    NCRYPT_SIGNATURE_INTERFACE             = 0x00000005,
+}
+
+alias BCRYPTGENRANDOM_FLAGS = uint;
+enum : uint
+{
+    BCRYPT_RNG_USE_ENTROPY_IN_BUFFER = 0x00000001,
+    BCRYPT_USE_SYSTEM_PREFERRED_RNG  = 0x00000002,
+}
+
+alias SIGNER_SIGN_FLAGS = uint;
+enum : uint
+{
+    SIG_APPEND                        = 0x00001000,
+    SPC_INC_PE_RESOURCES_FLAG         = 0x00000080,
+    SPC_INC_PE_DEBUG_INFO_FLAG        = 0x00000040,
+    SPC_INC_PE_IMPORT_ADDR_TABLE_FLAG = 0x00000020,
+    SPC_EXC_PE_PAGE_HASHES_FLAG       = 0x00000010,
+    SPC_INC_PE_PAGE_HASHES_FLAG       = 0x00000100,
+    SPC_DIGEST_GENERATE_FLAG          = 0x00000200,
+    SPC_DIGEST_SIGN_FLAG              = 0x00000400,
+    SPC_DIGEST_SIGN_EX_FLAG           = 0x00004000,
+}
+
+alias SIGNER_TIMESTAMP_FLAGS = uint;
+enum : uint
+{
+    SIGNER_TIMESTAMP_AUTHENTICODE = 0x00000001,
+    SIGNER_TIMESTAMP_RFC3161      = 0x00000002,
+}
+
+alias SIGNER_SUBJECT_CHOICE = uint;
+enum : uint
+{
+    SIGNER_SUBJECT_FILE = 0x00000001,
+    SIGNER_SUBJECT_BLOB = 0x00000002,
+}
+
+alias SIGNER_SIGNATURE_ATTRIBUTE_CHOICE = uint;
+enum : uint
+{
+    SIGNER_NO_ATTR       = 0x00000000,
+    SIGNER_AUTHCODE_ATTR = 0x00000001,
+}
+
+alias SIGNER_PRIVATE_KEY_CHOICE = uint;
+enum : uint
+{
+    PVK_TYPE_FILE_NAME    = 0x00000001,
+    PVK_TYPE_KEYCONTAINER = 0x00000002,
+}
+
+alias SIGNER_CERT_POLICY = uint;
+enum : uint
+{
+    SIGNER_CERT_POLICY_STORE         = 0x00000001,
+    SIGNER_CERT_POLICY_CHAIN         = 0x00000002,
+    SIGNER_CERT_POLICY_SPC           = 0x00000004,
+    SIGNER_CERT_POLICY_CHAIN_NO_ROOT = 0x00000008,
+}
+
+alias SIGNER_CERT_CHOICE = uint;
+enum : uint
+{
+    SIGNER_CERT_SPC_FILE  = 0x00000001,
+    SIGNER_CERT_STORE     = 0x00000002,
+    SIGNER_CERT_SPC_CHAIN = 0x00000003,
+}
+
+alias ALG_ID = uint;
+enum : uint
+{
+    CALG_MD2                     = 0x00008001,
+    CALG_MD4                     = 0x00008002,
+    CALG_MD5                     = 0x00008003,
+    CALG_SHA                     = 0x00008004,
+    CALG_SHA1                    = 0x00008004,
+    CALG_MAC                     = 0x00008005,
+    CALG_RSA_SIGN                = 0x00002400,
+    CALG_DSS_SIGN                = 0x00002200,
+    CALG_NO_SIGN                 = 0x00002000,
+    CALG_RSA_KEYX                = 0x0000a400,
+    CALG_DES                     = 0x00006601,
+    CALG_3DES_112                = 0x00006609,
+    CALG_3DES                    = 0x00006603,
+    CALG_DESX                    = 0x00006604,
+    CALG_RC2                     = 0x00006602,
+    CALG_RC4                     = 0x00006801,
+    CALG_SEAL                    = 0x00006802,
+    CALG_DH_SF                   = 0x0000aa01,
+    CALG_DH_EPHEM                = 0x0000aa02,
+    CALG_AGREEDKEY_ANY           = 0x0000aa03,
+    CALG_KEA_KEYX                = 0x0000aa04,
+    CALG_HUGHES_MD5              = 0x0000a003,
+    CALG_SKIPJACK                = 0x0000660a,
+    CALG_TEK                     = 0x0000660b,
+    CALG_CYLINK_MEK              = 0x0000660c,
+    CALG_SSL3_SHAMD5             = 0x00008008,
+    CALG_SSL3_MASTER             = 0x00004c01,
+    CALG_SCHANNEL_MASTER_HASH    = 0x00004c02,
+    CALG_SCHANNEL_MAC_KEY        = 0x00004c03,
+    CALG_SCHANNEL_ENC_KEY        = 0x00004c07,
+    CALG_PCT1_MASTER             = 0x00004c04,
+    CALG_SSL2_MASTER             = 0x00004c05,
+    CALG_TLS1_MASTER             = 0x00004c06,
+    CALG_RC5                     = 0x0000660d,
+    CALG_HMAC                    = 0x00008009,
+    CALG_TLS1PRF                 = 0x0000800a,
+    CALG_HASH_REPLACE_OWF        = 0x0000800b,
+    CALG_AES_128                 = 0x0000660e,
+    CALG_AES_192                 = 0x0000660f,
+    CALG_AES_256                 = 0x00006610,
+    CALG_AES                     = 0x00006611,
+    CALG_SHA_256                 = 0x0000800c,
+    CALG_SHA_384                 = 0x0000800d,
+    CALG_SHA_512                 = 0x0000800e,
+    CALG_ECDH                    = 0x0000aa05,
+    CALG_ECDH_EPHEM              = 0x0000ae06,
+    CALG_ECMQV                   = 0x0000a001,
+    CALG_ECDSA                   = 0x00002203,
+    CALG_NULLCIPHER              = 0x00006000,
+    CALG_THIRDPARTY_KEY_EXCHANGE = 0x0000b000,
+    CALG_THIRDPARTY_SIGNATURE    = 0x00003000,
+    CALG_THIRDPARTY_CIPHER       = 0x00007000,
+    CALG_THIRDPARTY_HASH         = 0x00009000,
+}
+
+alias SslGetCipherSuitePRFHashAlgorithmFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, uint dwProtocol, uint dwCipherSuite, uint dwKeyType, PWSTR szPRFHash, uint dwFlags);
 alias HCRYPTASYNC = void*;
 alias HCERTCHAINENGINE = void*;
 alias BCRYPT_ALG_HANDLE = void*;
@@ -4640,8 +4958,8 @@ struct CRYPT_PROVIDER_REFS
     uint cProviders;
     CRYPT_PROVIDER_REF** rgpProviders;
 }
-alias PFN_NCRYPT_ALLOC = void* function(ulong);
-alias PFN_NCRYPT_FREE = void function(void*);
+alias PFN_NCRYPT_ALLOC = void* function(ulong cbSize);
+alias PFN_NCRYPT_FREE = void function(void* pv);
 struct NCRYPT_ALLOC_PARA
 {
     uint cbSize;
@@ -4890,9 +5208,9 @@ struct CRYPT_ENCRYPTED_PRIVATE_KEY_INFO
     CRYPT_ALGORITHM_IDENTIFIER EncryptionAlgorithm;
     CRYPT_INTEGER_BLOB EncryptedPrivateKey;
 }
-alias PCRYPT_DECRYPT_PRIVATE_KEY_FUNC = BOOL function(CRYPT_ALGORITHM_IDENTIFIER, CRYPT_INTEGER_BLOB, ubyte*, uint*, void*);
-alias PCRYPT_ENCRYPT_PRIVATE_KEY_FUNC = BOOL function(CRYPT_ALGORITHM_IDENTIFIER*, CRYPT_INTEGER_BLOB*, ubyte*, uint*, void*);
-alias PCRYPT_RESOLVE_HCRYPTPROV_FUNC = BOOL function(CRYPT_PRIVATE_KEY_INFO*, ulong*, void*);
+alias PCRYPT_DECRYPT_PRIVATE_KEY_FUNC = BOOL function(CRYPT_ALGORITHM_IDENTIFIER Algorithm, CRYPT_INTEGER_BLOB EncryptedPrivateKey, ubyte* pbClearTextKey, uint* pcbClearTextKey, void* pVoidDecryptFunc);
+alias PCRYPT_ENCRYPT_PRIVATE_KEY_FUNC = BOOL function(CRYPT_ALGORITHM_IDENTIFIER* pAlgorithm, CRYPT_INTEGER_BLOB* pClearTextPrivateKey, ubyte* pbEncryptedKey, uint* pcbEncryptedKey, void* pVoidEncryptFunc);
+alias PCRYPT_RESOLVE_HCRYPTPROV_FUNC = BOOL function(CRYPT_PRIVATE_KEY_INFO* pPrivateKeyInfo, ulong* phCryptProv, void* pVoidResolveFunc);
 struct CRYPT_PKCS8_IMPORT_PARAMS
 {
     CRYPT_INTEGER_BLOB PrivateKey;
@@ -5018,8 +5336,8 @@ struct CRYPT_CSP_PROVIDER
     PWSTR pwszProviderName;
     CRYPT_BIT_BLOB Signature;
 }
-alias PFN_CRYPT_ALLOC = void* function(ulong);
-alias PFN_CRYPT_FREE = void function(void*);
+alias PFN_CRYPT_ALLOC = void* function(ulong cbSize);
+alias PFN_CRYPT_FREE = void function(void* pv);
 struct CRYPT_ENCODE_PARA
 {
     uint cbSize;
@@ -5615,7 +5933,7 @@ struct CRYPT_OID_FUNC_ENTRY
     const(char)* pszOID;
     void* pvFuncAddr;
 }
-alias PFN_CRYPT_ENUM_OID_FUNC = BOOL function(uint, const(char)*, const(char)*, uint, const(uint)*, const(wchar)**, const(ubyte)**, const(uint)*, void*);
+alias PFN_CRYPT_ENUM_OID_FUNC = BOOL function(uint dwEncodingType, const(char)* pszFuncName, const(char)* pszOID, uint cValue, const(uint)* rgdwValueType, const(wchar)** rgpwszValueName, const(ubyte)** rgpbValueData, const(uint)* rgcbValueData, void* pvArg);
 struct CRYPT_OID_INFO
 {
     uint cbSize;
@@ -5630,7 +5948,7 @@ struct CRYPT_OID_INFO
     }
     CRYPT_INTEGER_BLOB ExtraInfo;
 }
-alias PFN_CRYPT_ENUM_OID_INFO = BOOL function(CRYPT_OID_INFO*, void*);
+alias PFN_CRYPT_ENUM_OID_INFO = BOOL function(CRYPT_OID_INFO* pInfo, void* pvArg);
 struct CERT_STRONG_SIGN_SERIALIZED_INFO
 {
     CERT_STRONG_SIGN_FLAGS dwFlags;
@@ -5795,7 +6113,7 @@ struct CMSG_ENCRYPTED_ENCODE_INFO
     CRYPT_ALGORITHM_IDENTIFIER ContentEncryptionAlgorithm;
     void* pvEncryptionAuxInfo;
 }
-alias PFN_CMSG_STREAM_OUTPUT = BOOL function(const(void)*, ubyte*, uint, BOOL);
+alias PFN_CMSG_STREAM_OUTPUT = BOOL function(const(void)* pvArg, ubyte* pbData, uint cbData, BOOL fFinal);
 struct CMSG_STREAM_INFO
 {
     uint cbContent;
@@ -5940,11 +6258,11 @@ struct CMSG_CTRL_DEL_SIGNER_UNAUTH_ATTR_PARA
     uint dwSignerIndex;
     uint dwUnauthAttrIndex;
 }
-alias PFN_CMSG_ALLOC = void* function(ulong);
-alias PFN_CMSG_FREE = void function(void*);
-alias PFN_CMSG_GEN_ENCRYPT_KEY = BOOL function(ulong*, CRYPT_ALGORITHM_IDENTIFIER*, void*, CERT_PUBLIC_KEY_INFO*, PFN_CMSG_ALLOC, ulong*, ubyte**, uint*);
-alias PFN_CMSG_EXPORT_ENCRYPT_KEY = BOOL function(ulong, ulong, CERT_PUBLIC_KEY_INFO*, ubyte*, uint*);
-alias PFN_CMSG_IMPORT_ENCRYPT_KEY = BOOL function(ulong, uint, CRYPT_ALGORITHM_IDENTIFIER*, CRYPT_ALGORITHM_IDENTIFIER*, ubyte*, uint, ulong*);
+alias PFN_CMSG_ALLOC = void* function(ulong cb);
+alias PFN_CMSG_FREE = void function(void* pv);
+alias PFN_CMSG_GEN_ENCRYPT_KEY = BOOL function(ulong* phCryptProv, CRYPT_ALGORITHM_IDENTIFIER* paiEncrypt, void* pvEncryptAuxInfo, CERT_PUBLIC_KEY_INFO* pPublicKeyInfo, PFN_CMSG_ALLOC pfnAlloc, ulong* phEncryptKey, ubyte** ppbEncryptParameters, uint* pcbEncryptParameters);
+alias PFN_CMSG_EXPORT_ENCRYPT_KEY = BOOL function(ulong hCryptProv, ulong hEncryptKey, CERT_PUBLIC_KEY_INFO* pPublicKeyInfo, ubyte* pbData, uint* pcbData);
+alias PFN_CMSG_IMPORT_ENCRYPT_KEY = BOOL function(ulong hCryptProv, uint dwKeySpec, CRYPT_ALGORITHM_IDENTIFIER* paiEncrypt, CRYPT_ALGORITHM_IDENTIFIER* paiPubKey, ubyte* pbEncodedKey, uint cbEncodedKey, ulong* phEncryptKey);
 struct CMSG_CONTENT_ENCRYPT_INFO
 {
     uint cbSize;
@@ -5967,7 +6285,7 @@ struct CMSG_CONTENT_ENCRYPT_INFO
     ubyte* pbContentEncryptKey;
     uint cbContentEncryptKey;
 }
-alias PFN_CMSG_GEN_CONTENT_ENCRYPT_KEY = BOOL function(CMSG_CONTENT_ENCRYPT_INFO*, uint, void*);
+alias PFN_CMSG_GEN_CONTENT_ENCRYPT_KEY = BOOL function(CMSG_CONTENT_ENCRYPT_INFO* pContentEncryptInfo, uint dwFlags, void* pvReserved);
 struct CMSG_KEY_TRANS_ENCRYPT_INFO
 {
     uint cbSize;
@@ -5976,7 +6294,7 @@ struct CMSG_KEY_TRANS_ENCRYPT_INFO
     CRYPT_INTEGER_BLOB EncryptedKey;
     uint dwFlags;
 }
-alias PFN_CMSG_EXPORT_KEY_TRANS = BOOL function(CMSG_CONTENT_ENCRYPT_INFO*, CMSG_KEY_TRANS_RECIPIENT_ENCODE_INFO*, CMSG_KEY_TRANS_ENCRYPT_INFO*, uint, void*);
+alias PFN_CMSG_EXPORT_KEY_TRANS = BOOL function(CMSG_CONTENT_ENCRYPT_INFO* pContentEncryptInfo, CMSG_KEY_TRANS_RECIPIENT_ENCODE_INFO* pKeyTransEncodeInfo, CMSG_KEY_TRANS_ENCRYPT_INFO* pKeyTransEncryptInfo, uint dwFlags, void* pvReserved);
 struct CMSG_KEY_AGREE_KEY_ENCRYPT_INFO
 {
     uint cbSize;
@@ -5998,7 +6316,7 @@ struct CMSG_KEY_AGREE_ENCRYPT_INFO
     CMSG_KEY_AGREE_KEY_ENCRYPT_INFO** rgpKeyAgreeKeyEncryptInfo;
     uint dwFlags;
 }
-alias PFN_CMSG_EXPORT_KEY_AGREE = BOOL function(CMSG_CONTENT_ENCRYPT_INFO*, CMSG_KEY_AGREE_RECIPIENT_ENCODE_INFO*, CMSG_KEY_AGREE_ENCRYPT_INFO*, uint, void*);
+alias PFN_CMSG_EXPORT_KEY_AGREE = BOOL function(CMSG_CONTENT_ENCRYPT_INFO* pContentEncryptInfo, CMSG_KEY_AGREE_RECIPIENT_ENCODE_INFO* pKeyAgreeEncodeInfo, CMSG_KEY_AGREE_ENCRYPT_INFO* pKeyAgreeEncryptInfo, uint dwFlags, void* pvReserved);
 struct CMSG_MAIL_LIST_ENCRYPT_INFO
 {
     uint cbSize;
@@ -6007,10 +6325,10 @@ struct CMSG_MAIL_LIST_ENCRYPT_INFO
     CRYPT_INTEGER_BLOB EncryptedKey;
     uint dwFlags;
 }
-alias PFN_CMSG_EXPORT_MAIL_LIST = BOOL function(CMSG_CONTENT_ENCRYPT_INFO*, CMSG_MAIL_LIST_RECIPIENT_ENCODE_INFO*, CMSG_MAIL_LIST_ENCRYPT_INFO*, uint, void*);
-alias PFN_CMSG_IMPORT_KEY_TRANS = BOOL function(CRYPT_ALGORITHM_IDENTIFIER*, CMSG_CTRL_KEY_TRANS_DECRYPT_PARA*, uint, void*, ulong*);
-alias PFN_CMSG_IMPORT_KEY_AGREE = BOOL function(CRYPT_ALGORITHM_IDENTIFIER*, CMSG_CTRL_KEY_AGREE_DECRYPT_PARA*, uint, void*, ulong*);
-alias PFN_CMSG_IMPORT_MAIL_LIST = BOOL function(CRYPT_ALGORITHM_IDENTIFIER*, CMSG_CTRL_MAIL_LIST_DECRYPT_PARA*, uint, void*, ulong*);
+alias PFN_CMSG_EXPORT_MAIL_LIST = BOOL function(CMSG_CONTENT_ENCRYPT_INFO* pContentEncryptInfo, CMSG_MAIL_LIST_RECIPIENT_ENCODE_INFO* pMailListEncodeInfo, CMSG_MAIL_LIST_ENCRYPT_INFO* pMailListEncryptInfo, uint dwFlags, void* pvReserved);
+alias PFN_CMSG_IMPORT_KEY_TRANS = BOOL function(CRYPT_ALGORITHM_IDENTIFIER* pContentEncryptionAlgorithm, CMSG_CTRL_KEY_TRANS_DECRYPT_PARA* pKeyTransDecryptPara, uint dwFlags, void* pvReserved, ulong* phContentEncryptKey);
+alias PFN_CMSG_IMPORT_KEY_AGREE = BOOL function(CRYPT_ALGORITHM_IDENTIFIER* pContentEncryptionAlgorithm, CMSG_CTRL_KEY_AGREE_DECRYPT_PARA* pKeyAgreeDecryptPara, uint dwFlags, void* pvReserved, ulong* phContentEncryptKey);
+alias PFN_CMSG_IMPORT_MAIL_LIST = BOOL function(CRYPT_ALGORITHM_IDENTIFIER* pContentEncryptionAlgorithm, CMSG_CTRL_MAIL_LIST_DECRYPT_PARA* pMailListDecryptPara, uint dwFlags, void* pvReserved, ulong* phContentEncryptKey);
 struct CMSG_CNG_CONTENT_DECRYPT_INFO
 {
     uint cbSize;
@@ -6023,9 +6341,9 @@ struct CMSG_CNG_CONTENT_DECRYPT_INFO
     BCRYPT_KEY_HANDLE hCNGContentEncryptKey;
     ubyte* pbCNGContentEncryptKeyObject;
 }
-alias PFN_CMSG_CNG_IMPORT_KEY_TRANS = BOOL function(CMSG_CNG_CONTENT_DECRYPT_INFO*, CMSG_CTRL_KEY_TRANS_DECRYPT_PARA*, uint, void*);
-alias PFN_CMSG_CNG_IMPORT_KEY_AGREE = BOOL function(CMSG_CNG_CONTENT_DECRYPT_INFO*, CMSG_CTRL_KEY_AGREE_DECRYPT_PARA*, uint, void*);
-alias PFN_CMSG_CNG_IMPORT_CONTENT_ENCRYPT_KEY = BOOL function(CMSG_CNG_CONTENT_DECRYPT_INFO*, uint, void*);
+alias PFN_CMSG_CNG_IMPORT_KEY_TRANS = BOOL function(CMSG_CNG_CONTENT_DECRYPT_INFO* pCNGContentDecryptInfo, CMSG_CTRL_KEY_TRANS_DECRYPT_PARA* pKeyTransDecryptPara, uint dwFlags, void* pvReserved);
+alias PFN_CMSG_CNG_IMPORT_KEY_AGREE = BOOL function(CMSG_CNG_CONTENT_DECRYPT_INFO* pCNGContentDecryptInfo, CMSG_CTRL_KEY_AGREE_DECRYPT_PARA* pKeyAgreeDecryptPara, uint dwFlags, void* pvReserved);
+alias PFN_CMSG_CNG_IMPORT_CONTENT_ENCRYPT_KEY = BOOL function(CMSG_CNG_CONTENT_DECRYPT_INFO* pCNGContentDecryptInfo, uint dwFlags, void* pvReserved);
 struct CERT_CONTEXT
 {
     CERT_QUERY_ENCODING_TYPE dwCertEncodingType;
@@ -6142,21 +6460,21 @@ struct CERT_STORE_PROV_INFO
     CERT_STORE_PROV_FLAGS dwStoreProvFlags;
     void* hStoreProvFuncAddr2;
 }
-alias PFN_CERT_DLL_OPEN_STORE_PROV_FUNC = BOOL function(const(char)*, CERT_QUERY_ENCODING_TYPE, HCRYPTPROV_LEGACY, CERT_OPEN_STORE_FLAGS, const(void)*, HCERTSTORE, CERT_STORE_PROV_INFO*);
-alias PFN_CERT_STORE_PROV_CLOSE = void function(HCERTSTOREPROV, uint);
-alias PFN_CERT_STORE_PROV_READ_CERT = BOOL function(HCERTSTOREPROV, const(CERT_CONTEXT)*, uint, CERT_CONTEXT**);
-alias PFN_CERT_STORE_PROV_WRITE_CERT = BOOL function(HCERTSTOREPROV, const(CERT_CONTEXT)*, uint);
-alias PFN_CERT_STORE_PROV_DELETE_CERT = BOOL function(HCERTSTOREPROV, const(CERT_CONTEXT)*, uint);
-alias PFN_CERT_STORE_PROV_SET_CERT_PROPERTY = BOOL function(HCERTSTOREPROV, const(CERT_CONTEXT)*, uint, uint, const(void)*);
-alias PFN_CERT_STORE_PROV_READ_CRL = BOOL function(HCERTSTOREPROV, CRL_CONTEXT*, uint, CRL_CONTEXT**);
-alias PFN_CERT_STORE_PROV_WRITE_CRL = BOOL function(HCERTSTOREPROV, CRL_CONTEXT*, uint);
-alias PFN_CERT_STORE_PROV_DELETE_CRL = BOOL function(HCERTSTOREPROV, CRL_CONTEXT*, uint);
-alias PFN_CERT_STORE_PROV_SET_CRL_PROPERTY = BOOL function(HCERTSTOREPROV, CRL_CONTEXT*, uint, uint, const(void)*);
-alias PFN_CERT_STORE_PROV_READ_CTL = BOOL function(HCERTSTOREPROV, CTL_CONTEXT*, uint, CTL_CONTEXT**);
-alias PFN_CERT_STORE_PROV_WRITE_CTL = BOOL function(HCERTSTOREPROV, CTL_CONTEXT*, uint);
-alias PFN_CERT_STORE_PROV_DELETE_CTL = BOOL function(HCERTSTOREPROV, CTL_CONTEXT*, uint);
-alias PFN_CERT_STORE_PROV_SET_CTL_PROPERTY = BOOL function(HCERTSTOREPROV, CTL_CONTEXT*, uint, uint, const(void)*);
-alias PFN_CERT_STORE_PROV_CONTROL = BOOL function(HCERTSTOREPROV, uint, uint, const(void)*);
+alias PFN_CERT_DLL_OPEN_STORE_PROV_FUNC = BOOL function(const(char)* lpszStoreProvider, CERT_QUERY_ENCODING_TYPE dwEncodingType, HCRYPTPROV_LEGACY hCryptProv, CERT_OPEN_STORE_FLAGS dwFlags, const(void)* pvPara, HCERTSTORE hCertStore, CERT_STORE_PROV_INFO* pStoreProvInfo);
+alias PFN_CERT_STORE_PROV_CLOSE = void function(HCERTSTOREPROV hStoreProv, uint dwFlags);
+alias PFN_CERT_STORE_PROV_READ_CERT = BOOL function(HCERTSTOREPROV hStoreProv, const(CERT_CONTEXT)* pStoreCertContext, uint dwFlags, CERT_CONTEXT** ppProvCertContext);
+alias PFN_CERT_STORE_PROV_WRITE_CERT = BOOL function(HCERTSTOREPROV hStoreProv, const(CERT_CONTEXT)* pCertContext, uint dwFlags);
+alias PFN_CERT_STORE_PROV_DELETE_CERT = BOOL function(HCERTSTOREPROV hStoreProv, const(CERT_CONTEXT)* pCertContext, uint dwFlags);
+alias PFN_CERT_STORE_PROV_SET_CERT_PROPERTY = BOOL function(HCERTSTOREPROV hStoreProv, const(CERT_CONTEXT)* pCertContext, uint dwPropId, uint dwFlags, const(void)* pvData);
+alias PFN_CERT_STORE_PROV_READ_CRL = BOOL function(HCERTSTOREPROV hStoreProv, CRL_CONTEXT* pStoreCrlContext, uint dwFlags, CRL_CONTEXT** ppProvCrlContext);
+alias PFN_CERT_STORE_PROV_WRITE_CRL = BOOL function(HCERTSTOREPROV hStoreProv, CRL_CONTEXT* pCrlContext, uint dwFlags);
+alias PFN_CERT_STORE_PROV_DELETE_CRL = BOOL function(HCERTSTOREPROV hStoreProv, CRL_CONTEXT* pCrlContext, uint dwFlags);
+alias PFN_CERT_STORE_PROV_SET_CRL_PROPERTY = BOOL function(HCERTSTOREPROV hStoreProv, CRL_CONTEXT* pCrlContext, uint dwPropId, uint dwFlags, const(void)* pvData);
+alias PFN_CERT_STORE_PROV_READ_CTL = BOOL function(HCERTSTOREPROV hStoreProv, CTL_CONTEXT* pStoreCtlContext, uint dwFlags, CTL_CONTEXT** ppProvCtlContext);
+alias PFN_CERT_STORE_PROV_WRITE_CTL = BOOL function(HCERTSTOREPROV hStoreProv, CTL_CONTEXT* pCtlContext, uint dwFlags);
+alias PFN_CERT_STORE_PROV_DELETE_CTL = BOOL function(HCERTSTOREPROV hStoreProv, CTL_CONTEXT* pCtlContext, uint dwFlags);
+alias PFN_CERT_STORE_PROV_SET_CTL_PROPERTY = BOOL function(HCERTSTOREPROV hStoreProv, CTL_CONTEXT* pCtlContext, uint dwPropId, uint dwFlags, const(void)* pvData);
+alias PFN_CERT_STORE_PROV_CONTROL = BOOL function(HCERTSTOREPROV hStoreProv, uint dwFlags, uint dwCtrlType, const(void)* pvCtrlPara);
 struct CERT_STORE_PROV_FIND_INFO
 {
     uint cbSize;
@@ -6165,15 +6483,15 @@ struct CERT_STORE_PROV_FIND_INFO
     uint dwFindType;
     const(void)* pvFindPara;
 }
-alias PFN_CERT_STORE_PROV_FIND_CERT = BOOL function(HCERTSTOREPROV, CERT_STORE_PROV_FIND_INFO*, const(CERT_CONTEXT)*, uint, void**, CERT_CONTEXT**);
-alias PFN_CERT_STORE_PROV_FREE_FIND_CERT = BOOL function(HCERTSTOREPROV, const(CERT_CONTEXT)*, void*, uint);
-alias PFN_CERT_STORE_PROV_GET_CERT_PROPERTY = BOOL function(HCERTSTOREPROV, const(CERT_CONTEXT)*, uint, uint, void*, uint*);
-alias PFN_CERT_STORE_PROV_FIND_CRL = BOOL function(HCERTSTOREPROV, CERT_STORE_PROV_FIND_INFO*, CRL_CONTEXT*, uint, void**, CRL_CONTEXT**);
-alias PFN_CERT_STORE_PROV_FREE_FIND_CRL = BOOL function(HCERTSTOREPROV, CRL_CONTEXT*, void*, uint);
-alias PFN_CERT_STORE_PROV_GET_CRL_PROPERTY = BOOL function(HCERTSTOREPROV, CRL_CONTEXT*, uint, uint, void*, uint*);
-alias PFN_CERT_STORE_PROV_FIND_CTL = BOOL function(HCERTSTOREPROV, CERT_STORE_PROV_FIND_INFO*, CTL_CONTEXT*, uint, void**, CTL_CONTEXT**);
-alias PFN_CERT_STORE_PROV_FREE_FIND_CTL = BOOL function(HCERTSTOREPROV, CTL_CONTEXT*, void*, uint);
-alias PFN_CERT_STORE_PROV_GET_CTL_PROPERTY = BOOL function(HCERTSTOREPROV, CTL_CONTEXT*, uint, uint, void*, uint*);
+alias PFN_CERT_STORE_PROV_FIND_CERT = BOOL function(HCERTSTOREPROV hStoreProv, CERT_STORE_PROV_FIND_INFO* pFindInfo, const(CERT_CONTEXT)* pPrevCertContext, uint dwFlags, void** ppvStoreProvFindInfo, CERT_CONTEXT** ppProvCertContext);
+alias PFN_CERT_STORE_PROV_FREE_FIND_CERT = BOOL function(HCERTSTOREPROV hStoreProv, const(CERT_CONTEXT)* pCertContext, void* pvStoreProvFindInfo, uint dwFlags);
+alias PFN_CERT_STORE_PROV_GET_CERT_PROPERTY = BOOL function(HCERTSTOREPROV hStoreProv, const(CERT_CONTEXT)* pCertContext, uint dwPropId, uint dwFlags, void* pvData, uint* pcbData);
+alias PFN_CERT_STORE_PROV_FIND_CRL = BOOL function(HCERTSTOREPROV hStoreProv, CERT_STORE_PROV_FIND_INFO* pFindInfo, CRL_CONTEXT* pPrevCrlContext, uint dwFlags, void** ppvStoreProvFindInfo, CRL_CONTEXT** ppProvCrlContext);
+alias PFN_CERT_STORE_PROV_FREE_FIND_CRL = BOOL function(HCERTSTOREPROV hStoreProv, CRL_CONTEXT* pCrlContext, void* pvStoreProvFindInfo, uint dwFlags);
+alias PFN_CERT_STORE_PROV_GET_CRL_PROPERTY = BOOL function(HCERTSTOREPROV hStoreProv, CRL_CONTEXT* pCrlContext, uint dwPropId, uint dwFlags, void* pvData, uint* pcbData);
+alias PFN_CERT_STORE_PROV_FIND_CTL = BOOL function(HCERTSTOREPROV hStoreProv, CERT_STORE_PROV_FIND_INFO* pFindInfo, CTL_CONTEXT* pPrevCtlContext, uint dwFlags, void** ppvStoreProvFindInfo, CTL_CONTEXT** ppProvCtlContext);
+alias PFN_CERT_STORE_PROV_FREE_FIND_CTL = BOOL function(HCERTSTOREPROV hStoreProv, CTL_CONTEXT* pCtlContext, void* pvStoreProvFindInfo, uint dwFlags);
+alias PFN_CERT_STORE_PROV_GET_CTL_PROPERTY = BOOL function(HCERTSTOREPROV hStoreProv, CTL_CONTEXT* pCtlContext, uint dwPropId, uint dwFlags, void* pvData, uint* pcbData);
 struct CRL_FIND_ISSUED_FOR_PARA
 {
     const(CERT_CONTEXT)* pSubjectCert;
@@ -6198,7 +6516,7 @@ struct CTL_FIND_SUBJECT_PARA
     uint dwSubjectType;
     void* pvSubject;
 }
-alias PFN_CERT_CREATE_CONTEXT_SORT_FUNC = BOOL function(uint, uint, uint, void*);
+alias PFN_CERT_CREATE_CONTEXT_SORT_FUNC = BOOL function(uint cbTotalEncoded, uint cbRemainEncoded, uint cEntry, void* pvSort);
 struct CERT_CREATE_CONTEXT_PARA
 {
     uint cbSize;
@@ -6221,9 +6539,9 @@ struct CERT_PHYSICAL_STORE_INFO
     uint dwFlags;
     uint dwPriority;
 }
-alias PFN_CERT_ENUM_SYSTEM_STORE_LOCATION = BOOL function(const(wchar)*, uint, void*, void*);
-alias PFN_CERT_ENUM_SYSTEM_STORE = BOOL function(const(void)*, CERT_SYSTEM_STORE_FLAGS, CERT_SYSTEM_STORE_INFO*, void*, void*);
-alias PFN_CERT_ENUM_PHYSICAL_STORE = BOOL function(const(void)*, uint, const(wchar)*, CERT_PHYSICAL_STORE_INFO*, void*, void*);
+alias PFN_CERT_ENUM_SYSTEM_STORE_LOCATION = BOOL function(const(wchar)* pwszStoreLocation, uint dwFlags, void* pvReserved, void* pvArg);
+alias PFN_CERT_ENUM_SYSTEM_STORE = BOOL function(const(void)* pvSystemStore, CERT_SYSTEM_STORE_FLAGS dwFlags, CERT_SYSTEM_STORE_INFO* pStoreInfo, void* pvReserved, void* pvArg);
+alias PFN_CERT_ENUM_PHYSICAL_STORE = BOOL function(const(void)* pvSystemStore, uint dwFlags, const(wchar)* pwszStoreName, CERT_PHYSICAL_STORE_INFO* pStoreInfo, void* pvReserved, void* pvArg);
 struct CTL_VERIFY_USAGE_PARA
 {
     uint cbSize;
@@ -6280,20 +6598,20 @@ struct CRYPT_VERIFY_CERT_SIGN_WEAK_HASH_INFO
     const(wchar)** rgpwszCNGHashAlgid;
     uint dwWeakIndex;
 }
-alias PFN_CRYPT_EXTRACT_ENCODED_SIGNATURE_PARAMETERS_FUNC = BOOL function(CERT_QUERY_ENCODING_TYPE, CRYPT_ALGORITHM_IDENTIFIER*, void**, PWSTR*);
-alias PFN_CRYPT_SIGN_AND_ENCODE_HASH_FUNC = BOOL function(NCRYPT_KEY_HANDLE, CERT_QUERY_ENCODING_TYPE, CRYPT_ALGORITHM_IDENTIFIER*, void*, const(wchar)*, const(wchar)*, ubyte*, uint, ubyte*, uint*);
-alias PFN_CRYPT_VERIFY_ENCODED_SIGNATURE_FUNC = BOOL function(CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*, CRYPT_ALGORITHM_IDENTIFIER*, void*, const(wchar)*, const(wchar)*, ubyte*, uint, ubyte*, uint);
+alias PFN_CRYPT_EXTRACT_ENCODED_SIGNATURE_PARAMETERS_FUNC = BOOL function(CERT_QUERY_ENCODING_TYPE dwCertEncodingType, CRYPT_ALGORITHM_IDENTIFIER* pSignatureAlgorithm, void** ppvDecodedSignPara, PWSTR* ppwszCNGHashAlgid);
+alias PFN_CRYPT_SIGN_AND_ENCODE_HASH_FUNC = BOOL function(NCRYPT_KEY_HANDLE hKey, CERT_QUERY_ENCODING_TYPE dwCertEncodingType, CRYPT_ALGORITHM_IDENTIFIER* pSignatureAlgorithm, void* pvDecodedSignPara, const(wchar)* pwszCNGPubKeyAlgid, const(wchar)* pwszCNGHashAlgid, ubyte* pbComputedHash, uint cbComputedHash, ubyte* pbSignature, uint* pcbSignature);
+alias PFN_CRYPT_VERIFY_ENCODED_SIGNATURE_FUNC = BOOL function(CERT_QUERY_ENCODING_TYPE dwCertEncodingType, CERT_PUBLIC_KEY_INFO* pPubKeyInfo, CRYPT_ALGORITHM_IDENTIFIER* pSignatureAlgorithm, void* pvDecodedSignPara, const(wchar)* pwszCNGPubKeyAlgid, const(wchar)* pwszCNGHashAlgid, ubyte* pbComputedHash, uint cbComputedHash, ubyte* pbSignature, uint cbSignature);
 struct CRYPT_DEFAULT_CONTEXT_MULTI_OID_PARA
 {
     uint cOID;
     PSTR* rgpszOID;
 }
-alias PFN_CRYPT_EXPORT_PUBLIC_KEY_INFO_EX2_FUNC = BOOL function(NCRYPT_KEY_HANDLE, CERT_QUERY_ENCODING_TYPE, PSTR, uint, void*, CERT_PUBLIC_KEY_INFO*, uint*);
-alias PFN_CRYPT_EXPORT_PUBLIC_KEY_INFO_FROM_BCRYPT_HANDLE_FUNC = BOOL function(BCRYPT_KEY_HANDLE, CERT_QUERY_ENCODING_TYPE, PSTR, uint, void*, CERT_PUBLIC_KEY_INFO*, uint*);
-alias PFN_IMPORT_PUBLIC_KEY_INFO_EX2_FUNC = BOOL function(CERT_QUERY_ENCODING_TYPE, CERT_PUBLIC_KEY_INFO*, uint, void*, BCRYPT_KEY_HANDLE*);
-alias PFN_IMPORT_PRIV_KEY_FUNC = BOOL function(ulong, CRYPT_PRIVATE_KEY_INFO*, uint, void*);
-alias PFN_EXPORT_PRIV_KEY_FUNC = BOOL function(ulong, uint, PSTR, uint, void*, CRYPT_PRIVATE_KEY_INFO*, uint*);
-alias PFN_CRYPT_GET_SIGNER_CERTIFICATE = CERT_CONTEXT* function(void*, CERT_QUERY_ENCODING_TYPE, CERT_INFO*, HCERTSTORE);
+alias PFN_CRYPT_EXPORT_PUBLIC_KEY_INFO_EX2_FUNC = BOOL function(NCRYPT_KEY_HANDLE hNCryptKey, CERT_QUERY_ENCODING_TYPE dwCertEncodingType, PSTR pszPublicKeyObjId, uint dwFlags, void* pvAuxInfo, CERT_PUBLIC_KEY_INFO* pInfo, uint* pcbInfo);
+alias PFN_CRYPT_EXPORT_PUBLIC_KEY_INFO_FROM_BCRYPT_HANDLE_FUNC = BOOL function(BCRYPT_KEY_HANDLE hBCryptKey, CERT_QUERY_ENCODING_TYPE dwCertEncodingType, PSTR pszPublicKeyObjId, uint dwFlags, void* pvAuxInfo, CERT_PUBLIC_KEY_INFO* pInfo, uint* pcbInfo);
+alias PFN_IMPORT_PUBLIC_KEY_INFO_EX2_FUNC = BOOL function(CERT_QUERY_ENCODING_TYPE dwCertEncodingType, CERT_PUBLIC_KEY_INFO* pInfo, uint dwFlags, void* pvAuxInfo, BCRYPT_KEY_HANDLE* phKey);
+alias PFN_IMPORT_PRIV_KEY_FUNC = BOOL function(ulong hCryptProv, CRYPT_PRIVATE_KEY_INFO* pPrivateKeyInfo, uint dwFlags, void* pvAuxInfo);
+alias PFN_EXPORT_PRIV_KEY_FUNC = BOOL function(ulong hCryptProv, uint dwKeySpec, PSTR pszPrivateKeyObjId, uint dwFlags, void* pvAuxInfo, CRYPT_PRIVATE_KEY_INFO* pPrivateKeyInfo, uint* pcbPrivateKeyInfo);
+alias PFN_CRYPT_GET_SIGNER_CERTIFICATE = CERT_CONTEXT* function(void* pvGetArg, CERT_QUERY_ENCODING_TYPE dwCertEncodingType, CERT_INFO* pSignerId, HCERTSTORE hMsgCertStore);
 struct CRYPT_SIGN_MESSAGE_PARA
 {
     uint cbSize;
@@ -6371,7 +6689,7 @@ struct CERT_CHAIN
     CRYPT_INTEGER_BLOB* certs;
     CRYPT_KEY_PROV_INFO keyLocatorInfo;
 }
-alias PFN_CRYPT_ASYNC_PARAM_FREE_FUNC = void function(PSTR, void*);
+alias PFN_CRYPT_ASYNC_PARAM_FREE_FUNC = void function(PSTR pszParamOid, void* pvParam);
 struct CRYPT_BLOB_ARRAY
 {
     uint cBlob;
@@ -6395,7 +6713,7 @@ struct CRYPT_PASSWORD_CREDENTIALSW
     PWSTR pszUsername;
     PWSTR pszPassword;
 }
-alias PFN_FREE_ENCODED_OBJECT_FUNC = void function(const(char)*, CRYPT_BLOB_ARRAY*, void*);
+alias PFN_FREE_ENCODED_OBJECT_FUNC = void function(const(char)* pszObjectOid, CRYPT_BLOB_ARRAY* pObject, void* pvFreeContext);
 struct CRYPTNET_URL_CACHE_PRE_FETCH_INFO
 {
     uint cbSize;
@@ -6437,14 +6755,14 @@ struct CRYPT_RETRIEVE_AUX_INFO
     PWSTR* ppwszErrorResponseHeaders;
     CRYPT_INTEGER_BLOB** ppErrorContentBlob;
 }
-alias PFN_CRYPT_CANCEL_RETRIEVAL = BOOL function(uint, void*);
-alias PFN_CRYPT_ASYNC_RETRIEVAL_COMPLETION_FUNC = void function(void*, uint, const(char)*, PSTR, void*);
+alias PFN_CRYPT_CANCEL_RETRIEVAL = BOOL function(uint dwFlags, void* pvArg);
+alias PFN_CRYPT_ASYNC_RETRIEVAL_COMPLETION_FUNC = void function(void* pvCompletion, uint dwCompletionCode, const(char)* pszUrl, PSTR pszObjectOid, void* pvObject);
 struct CRYPT_ASYNC_RETRIEVAL_COMPLETION
 {
     PFN_CRYPT_ASYNC_RETRIEVAL_COMPLETION_FUNC pfnCompletion;
     void* pvCompletion;
 }
-alias PFN_CANCEL_ASYNC_RETRIEVAL_FUNC = BOOL function(HCRYPTASYNC);
+alias PFN_CANCEL_ASYNC_RETRIEVAL_FUNC = BOOL function(HCRYPTASYNC hAsyncRetrieve);
 struct CRYPT_URL_ARRAY
 {
     uint cUrl;
@@ -6472,7 +6790,7 @@ struct CRYPT_GET_TIME_VALID_OBJECT_EXTRA_INFO
     CERT_REVOCATION_CHAIN_PARA* pChainPara;
     CRYPT_INTEGER_BLOB* pDeltaCrlIndicator;
 }
-alias PFN_CRYPT_ENUM_KEYID_PROP = BOOL function(const(CRYPT_INTEGER_BLOB)*, uint, void*, void*, uint, uint*, void**, uint*);
+alias PFN_CRYPT_ENUM_KEYID_PROP = BOOL function(const(CRYPT_INTEGER_BLOB)* pKeyIdentifier, uint dwFlags, void* pvReserved, void* pvArg, uint cProp, uint* rgdwPropId, void** rgpvData, uint* rgcbData);
 struct CERT_CHAIN_ENGINE_CONFIG
 {
     uint cbSize;
@@ -6557,6 +6875,13 @@ struct CERT_CHAIN_PARA
 {
     uint cbSize;
     CERT_USAGE_MATCH RequestedUsage;
+    CERT_USAGE_MATCH RequestedIssuancePolicy;
+    uint dwUrlRetrievalTimeout;
+    BOOL fCheckRevocationFreshnessTime;
+    uint dwRevocationFreshnessTime;
+    FILETIME* pftCacheResync;
+    CERT_STRONG_SIGN_PARA* pStrongSignPara;
+    uint dwStrongSignFlags;
 }
 struct CERT_REVOCATION_CHAIN_PARA
 {
@@ -6575,7 +6900,7 @@ struct CRL_REVOCATION_INFO
     CRL_CONTEXT* pCrlContext;
     CERT_CHAIN_CONTEXT* pCrlIssuerChain;
 }
-alias PFN_CERT_CHAIN_FIND_BY_ISSUER_CALLBACK = BOOL function(const(CERT_CONTEXT)*, void*);
+alias PFN_CERT_CHAIN_FIND_BY_ISSUER_CALLBACK = BOOL function(const(CERT_CONTEXT)* pCert, void* pvFindArg);
 struct CERT_CHAIN_FIND_BY_ISSUER_PARA
 {
     uint cbSize;
@@ -6684,7 +7009,7 @@ struct CERT_SERVER_OCSP_RESPONSE_CONTEXT
     ubyte* pbEncodedOcspResponse;
     uint cbEncodedOcspResponse;
 }
-alias PFN_CERT_SERVER_OCSP_RESPONSE_UPDATE_CALLBACK = void function(CERT_CHAIN_CONTEXT*, CERT_SERVER_OCSP_RESPONSE_CONTEXT*, CRL_CONTEXT*, CRL_CONTEXT*, void*, uint);
+alias PFN_CERT_SERVER_OCSP_RESPONSE_UPDATE_CALLBACK = void function(CERT_CHAIN_CONTEXT* pChainContext, CERT_SERVER_OCSP_RESPONSE_CONTEXT* pServerOcspResponseContext, CRL_CONTEXT* pNewCrlContext, CRL_CONTEXT* pPrevCrlContext, void* pvArg, uint dwWriteOcspFileError);
 struct CERT_SERVER_OCSP_RESPONSE_OPEN_PARA
 {
     uint cbSize;
@@ -6762,12 +7087,12 @@ struct CRYPT_TIMESTAMP_PARA
     uint cExtension;
     CERT_EXTENSION* rgExtension;
 }
-alias PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_FLUSH = BOOL function(void*, CRYPT_INTEGER_BLOB**, uint);
-alias PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_GET = BOOL function(void*, CRYPT_INTEGER_BLOB*, uint, CRYPT_INTEGER_BLOB*, ubyte**, uint*, const(wchar)**, CRYPT_INTEGER_BLOB**);
-alias PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_RELEASE = void function(CRYPT_OBJECT_LOCATOR_RELEASE_REASON, void*);
-alias PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_FREE_PASSWORD = void function(void*, const(wchar)*);
-alias PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_FREE = void function(void*, ubyte*);
-alias PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_FREE_IDENTIFIER = void function(void*, CRYPT_INTEGER_BLOB*);
+alias PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_FLUSH = BOOL function(void* pContext, CRYPT_INTEGER_BLOB** rgIdentifierOrNameList, uint dwIdentifierOrNameListCount);
+alias PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_GET = BOOL function(void* pPluginContext, CRYPT_INTEGER_BLOB* pIdentifier, uint dwNameType, CRYPT_INTEGER_BLOB* pNameBlob, ubyte** ppbContent, uint* pcbContent, const(wchar)** ppwszPassword, CRYPT_INTEGER_BLOB** ppIdentifier);
+alias PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_RELEASE = void function(CRYPT_OBJECT_LOCATOR_RELEASE_REASON dwReason, void* pPluginContext);
+alias PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_FREE_PASSWORD = void function(void* pPluginContext, const(wchar)* pwszPassword);
+alias PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_FREE = void function(void* pPluginContext, ubyte* pbData);
+alias PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_FREE_IDENTIFIER = void function(void* pPluginContext, CRYPT_INTEGER_BLOB* pIdentifier);
 struct CRYPT_OBJECT_LOCATOR_PROVIDER_TABLE
 {
     uint cbSize;
@@ -6777,8 +7102,8 @@ struct CRYPT_OBJECT_LOCATOR_PROVIDER_TABLE
     PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_FREE pfnFree;
     PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_FREE_IDENTIFIER pfnFreeIdentifier;
 }
-alias PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_INITIALIZE = BOOL function(PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_FLUSH, void*, uint*, CRYPT_OBJECT_LOCATOR_PROVIDER_TABLE**, void**);
-alias PFN_CERT_IS_WEAK_HASH = BOOL function(uint, const(wchar)*, uint, CERT_CHAIN_CONTEXT*, FILETIME*, const(wchar)*);
+alias PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_INITIALIZE = BOOL function(PFN_CRYPT_OBJECT_LOCATOR_PROVIDER_FLUSH pfnFlush, void* pContext, uint* pdwExpectedObjectCount, CRYPT_OBJECT_LOCATOR_PROVIDER_TABLE** ppFuncTable, void** ppPluginContext);
+alias PFN_CERT_IS_WEAK_HASH = BOOL function(uint dwHashUseType, const(wchar)* pwszCNGHashAlgid, uint dwChainFlags, CERT_CHAIN_CONTEXT* pSignerChainContext, FILETIME* pTimeStamp, const(wchar)* pwszFileName);
 struct CRYPTPROTECT_PROMPTSTRUCT
 {
     uint cbSize;
@@ -6786,22 +7111,22 @@ struct CRYPTPROTECT_PROMPTSTRUCT
     HWND hwndApp;
     const(wchar)* szPrompt;
 }
-alias PFNCryptStreamOutputCallback = HRESULT function(void*, const(ubyte)*, ulong, BOOL);
+alias PFNCryptStreamOutputCallback = HRESULT function(void* pvCallbackCtxt, const(ubyte)* pbData, ulong cbData, BOOL fFinal);
 struct NCRYPT_PROTECT_STREAM_INFO
 {
     PFNCryptStreamOutputCallback pfnStreamOutput;
     void* pvCallbackCtxt;
 }
-alias PFNCryptStreamOutputCallbackEx = HRESULT function(void*, const(ubyte)*, ulong, NCRYPT_DESCRIPTOR_HANDLE, BOOL);
+alias PFNCryptStreamOutputCallbackEx = HRESULT function(void* pvCallbackCtxt, const(ubyte)* pbData, ulong cbData, NCRYPT_DESCRIPTOR_HANDLE hDescriptor, BOOL fFinal);
 struct NCRYPT_PROTECT_STREAM_INFO_EX
 {
     PFNCryptStreamOutputCallbackEx pfnStreamOutput;
     void* pvCallbackCtxt;
 }
-alias PFN_AUTHENTICODE_DIGEST_SIGN = HRESULT function(const(CERT_CONTEXT)*, CRYPT_INTEGER_BLOB*, ALG_ID, ubyte*, uint, CRYPT_INTEGER_BLOB*);
-alias PFN_AUTHENTICODE_DIGEST_SIGN_EX = HRESULT function(CRYPT_INTEGER_BLOB*, ALG_ID, ubyte*, uint, CRYPT_INTEGER_BLOB*, CERT_CONTEXT**, HCERTSTORE);
-alias PFN_AUTHENTICODE_DIGEST_SIGN_EX_WITHFILEHANDLE = HRESULT function(CRYPT_INTEGER_BLOB*, ALG_ID, ubyte*, uint, HANDLE, CRYPT_INTEGER_BLOB*, CERT_CONTEXT**, HCERTSTORE);
-alias PFN_AUTHENTICODE_DIGEST_SIGN_WITHFILEHANDLE = HRESULT function(const(CERT_CONTEXT)*, CRYPT_INTEGER_BLOB*, ALG_ID, ubyte*, uint, HANDLE, CRYPT_INTEGER_BLOB*);
+alias PFN_AUTHENTICODE_DIGEST_SIGN = HRESULT function(const(CERT_CONTEXT)* pSigningCert, CRYPT_INTEGER_BLOB* pMetadataBlob, ALG_ID digestAlgId, ubyte* pbToBeSignedDigest, uint cbToBeSignedDigest, CRYPT_INTEGER_BLOB* pSignedDigest);
+alias PFN_AUTHENTICODE_DIGEST_SIGN_EX = HRESULT function(CRYPT_INTEGER_BLOB* pMetadataBlob, ALG_ID digestAlgId, ubyte* pbToBeSignedDigest, uint cbToBeSignedDigest, CRYPT_INTEGER_BLOB* pSignedDigest, CERT_CONTEXT** ppSignerCert, HCERTSTORE hCertChainStore);
+alias PFN_AUTHENTICODE_DIGEST_SIGN_EX_WITHFILEHANDLE = HRESULT function(CRYPT_INTEGER_BLOB* pMetadataBlob, ALG_ID digestAlgId, ubyte* pbToBeSignedDigest, uint cbToBeSignedDigest, HANDLE hFile, CRYPT_INTEGER_BLOB* pSignedDigest, CERT_CONTEXT** ppSignerCert, HCERTSTORE hCertChainStore);
+alias PFN_AUTHENTICODE_DIGEST_SIGN_WITHFILEHANDLE = HRESULT function(const(CERT_CONTEXT)* pSigningCert, CRYPT_INTEGER_BLOB* pMetadataBlob, ALG_ID digestAlgId, ubyte* pbToBeSignedDigest, uint cbToBeSignedDigest, HANDLE hFile, CRYPT_INTEGER_BLOB* pSignedDigest);
 struct SIGNER_ATTR_AUTHCODE
 {
     uint cbSize;
@@ -6957,9 +7282,9 @@ struct CRYPT_XML_PROPERTY
     const(void)* pvValue;
     uint cbValue;
 }
-alias PFN_CRYPT_XML_WRITE_CALLBACK = HRESULT function(void*, const(ubyte)*, uint);
-alias PFN_CRYPT_XML_DATA_PROVIDER_READ = HRESULT function(void*, ubyte*, uint, uint*);
-alias PFN_CRYPT_XML_DATA_PROVIDER_CLOSE = HRESULT function(void*);
+alias PFN_CRYPT_XML_WRITE_CALLBACK = HRESULT function(void* pvCallbackState, const(ubyte)* pbData, uint cbData);
+alias PFN_CRYPT_XML_DATA_PROVIDER_READ = HRESULT function(void* pvCallbackState, ubyte* pbData, uint cbData, uint* pcbRead);
+alias PFN_CRYPT_XML_DATA_PROVIDER_CLOSE = HRESULT function(void* pvCallbackState);
 struct CRYPT_XML_DATA_PROVIDER
 {
     void* pvCallbackState;
@@ -6967,7 +7292,7 @@ struct CRYPT_XML_DATA_PROVIDER
     PFN_CRYPT_XML_DATA_PROVIDER_READ pfnRead;
     PFN_CRYPT_XML_DATA_PROVIDER_CLOSE pfnClose;
 }
-alias PFN_CRYPT_XML_CREATE_TRANSFORM = HRESULT function(const(CRYPT_XML_ALGORITHM)*, CRYPT_XML_DATA_PROVIDER*, CRYPT_XML_DATA_PROVIDER*);
+alias PFN_CRYPT_XML_CREATE_TRANSFORM = HRESULT function(const(CRYPT_XML_ALGORITHM)* pTransform, CRYPT_XML_DATA_PROVIDER* pProviderIn, CRYPT_XML_DATA_PROVIDER* pProviderOut);
 struct CRYPT_XML_STATUS
 {
     uint cbSize;
@@ -7158,16 +7483,16 @@ struct CRYPT_XML_ALGORITHM_INFO
     void* pvPaddingInfo;
     void* pvExtraInfo;
 }
-alias PFN_CRYPT_XML_ENUM_ALG_INFO = BOOL function(const(CRYPT_XML_ALGORITHM_INFO)*, void*);
-alias CryptXmlDllGetInterface = HRESULT function(uint, const(CRYPT_XML_ALGORITHM_INFO)*, CRYPT_XML_CRYPTOGRAPHIC_INTERFACE*);
-alias CryptXmlDllEncodeAlgorithm = HRESULT function(const(CRYPT_XML_ALGORITHM_INFO)*, CRYPT_XML_CHARSET, void*, PFN_CRYPT_XML_WRITE_CALLBACK);
-alias CryptXmlDllCreateDigest = HRESULT function(const(CRYPT_XML_ALGORITHM)*, uint*, void**);
-alias CryptXmlDllDigestData = HRESULT function(void*, const(ubyte)*, uint);
-alias CryptXmlDllFinalizeDigest = HRESULT function(void*, ubyte*, uint);
-alias CryptXmlDllCloseDigest = HRESULT function(void*);
-alias CryptXmlDllSignData = HRESULT function(const(CRYPT_XML_ALGORITHM)*, HCRYPTPROV_OR_NCRYPT_KEY_HANDLE, uint, const(ubyte)*, uint, ubyte*, uint, uint*);
-alias CryptXmlDllVerifySignature = HRESULT function(const(CRYPT_XML_ALGORITHM)*, BCRYPT_KEY_HANDLE, const(ubyte)*, uint, const(ubyte)*, uint);
-alias CryptXmlDllGetAlgorithmInfo = HRESULT function(const(CRYPT_XML_ALGORITHM)*, CRYPT_XML_ALGORITHM_INFO**);
+alias PFN_CRYPT_XML_ENUM_ALG_INFO = BOOL function(const(CRYPT_XML_ALGORITHM_INFO)* pInfo, void* pvArg);
+alias CryptXmlDllGetInterface = HRESULT function(uint dwFlags, const(CRYPT_XML_ALGORITHM_INFO)* pMethod, CRYPT_XML_CRYPTOGRAPHIC_INTERFACE* pInterface);
+alias CryptXmlDllEncodeAlgorithm = HRESULT function(const(CRYPT_XML_ALGORITHM_INFO)* pAlgInfo, CRYPT_XML_CHARSET dwCharset, void* pvCallbackState, PFN_CRYPT_XML_WRITE_CALLBACK pfnWrite);
+alias CryptXmlDllCreateDigest = HRESULT function(const(CRYPT_XML_ALGORITHM)* pDigestMethod, uint* pcbSize, void** phDigest);
+alias CryptXmlDllDigestData = HRESULT function(void* hDigest, const(ubyte)* pbData, uint cbData);
+alias CryptXmlDllFinalizeDigest = HRESULT function(void* hDigest, ubyte* pbDigest, uint cbDigest);
+alias CryptXmlDllCloseDigest = HRESULT function(void* hDigest);
+alias CryptXmlDllSignData = HRESULT function(const(CRYPT_XML_ALGORITHM)* pSignatureMethod, HCRYPTPROV_OR_NCRYPT_KEY_HANDLE hCryptProvOrNCryptKey, uint dwKeySpec, const(ubyte)* pbInput, uint cbInput, ubyte* pbOutput, uint cbOutput, uint* pcbResult);
+alias CryptXmlDllVerifySignature = HRESULT function(const(CRYPT_XML_ALGORITHM)* pSignatureMethod, BCRYPT_KEY_HANDLE hKey, const(ubyte)* pbInput, uint cbInput, const(ubyte)* pbSignature, uint cbSignature);
+alias CryptXmlDllGetAlgorithmInfo = HRESULT function(const(CRYPT_XML_ALGORITHM)* pXmlAlgorithm, CRYPT_XML_ALGORITHM_INFO** ppAlgInfo);
 struct CRYPT_XML_CRYPTOGRAPHIC_INTERFACE
 {
     uint cbSize;
@@ -7180,8 +7505,8 @@ struct CRYPT_XML_CRYPTOGRAPHIC_INTERFACE
     CryptXmlDllVerifySignature fpCryptXmlVerifySignature;
     CryptXmlDllGetAlgorithmInfo fpCryptXmlGetAlgorithmInfo;
 }
-alias CryptXmlDllEncodeKeyValue = HRESULT function(NCRYPT_KEY_HANDLE, CRYPT_XML_CHARSET, void*, PFN_CRYPT_XML_WRITE_CALLBACK);
-alias CryptXmlDllCreateKey = HRESULT function(const(CRYPT_XML_BLOB)*, BCRYPT_KEY_HANDLE*);
+alias CryptXmlDllEncodeKeyValue = HRESULT function(NCRYPT_KEY_HANDLE hKey, CRYPT_XML_CHARSET dwCharset, void* pvCallbackState, PFN_CRYPT_XML_WRITE_CALLBACK pfnWrite);
+alias CryptXmlDllCreateKey = HRESULT function(const(CRYPT_XML_BLOB)* pEncoded, BCRYPT_KEY_HANDLE* phKey);
 alias HandleType = int;
 enum : int
 {
@@ -7302,26 +7627,26 @@ struct RECIPIENTPOLICY2
 enum IID_ICertSrvSetupKeyInformation = GUID(0x6ba73778, 0x36da, 0x4c39, [0x8a, 0x85, 0xbc, 0xfa, 0x7d, 0x0, 0x7, 0x93]);
 interface ICertSrvSetupKeyInformation : IDispatch
 {
-    HRESULT get_ProviderName(BSTR*);
-    HRESULT put_ProviderName(const(BSTR));
-    HRESULT get_Length(int*);
-    HRESULT put_Length(int);
-    HRESULT get_Existing(VARIANT_BOOL*);
-    HRESULT put_Existing(VARIANT_BOOL);
-    HRESULT get_ContainerName(BSTR*);
-    HRESULT put_ContainerName(const(BSTR));
-    HRESULT get_HashAlgorithm(BSTR*);
-    HRESULT put_HashAlgorithm(const(BSTR));
-    HRESULT get_ExistingCACertificate(VARIANT*);
-    HRESULT put_ExistingCACertificate(VARIANT);
+    HRESULT get_ProviderName(BSTR* pVal);
+    HRESULT put_ProviderName(const(BSTR) bstrVal);
+    HRESULT get_Length(int* pVal);
+    HRESULT put_Length(int lVal);
+    HRESULT get_Existing(VARIANT_BOOL* pVal);
+    HRESULT put_Existing(VARIANT_BOOL bVal);
+    HRESULT get_ContainerName(BSTR* pVal);
+    HRESULT put_ContainerName(const(BSTR) bstrVal);
+    HRESULT get_HashAlgorithm(BSTR* pVal);
+    HRESULT put_HashAlgorithm(const(BSTR) bstrVal);
+    HRESULT get_ExistingCACertificate(VARIANT* pVal);
+    HRESULT put_ExistingCACertificate(VARIANT varVal);
 }
 enum IID_ICertSrvSetupKeyInformationCollection = GUID(0xe65c8b00, 0xe58f, 0x41f9, [0xa9, 0xec, 0xa2, 0x8d, 0x74, 0x27, 0xc8, 0x44]);
 interface ICertSrvSetupKeyInformationCollection : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(int, VARIANT*);
-    HRESULT get_Count(int*);
-    HRESULT Add(ICertSrvSetupKeyInformation);
+    HRESULT get__NewEnum(IUnknown* ppVal);
+    HRESULT get_Item(int Index, VARIANT* pVal);
+    HRESULT get_Count(int* pVal);
+    HRESULT Add(ICertSrvSetupKeyInformation pIKeyInformation);
 }
 alias CASetupProperty = int;
 enum : int
@@ -7349,25 +7674,25 @@ enum : int
 enum IID_ICertSrvSetup = GUID(0xb760a1bb, 0x4784, 0x44c0, [0x8f, 0x12, 0x55, 0x5f, 0x7, 0x80, 0xff, 0x25]);
 interface ICertSrvSetup : IDispatch
 {
-    HRESULT get_CAErrorId(int*);
-    HRESULT get_CAErrorString(BSTR*);
-    HRESULT InitializeDefaults(VARIANT_BOOL, VARIANT_BOOL);
-    HRESULT GetCASetupProperty(CASetupProperty, VARIANT*);
-    HRESULT SetCASetupProperty(CASetupProperty, VARIANT*);
-    HRESULT IsPropertyEditable(CASetupProperty, VARIANT_BOOL*);
-    HRESULT GetSupportedCATypes(VARIANT*);
-    HRESULT GetProviderNameList(VARIANT*);
-    HRESULT GetKeyLengthList(const(BSTR), VARIANT*);
-    HRESULT GetHashAlgorithmList(const(BSTR), VARIANT*);
-    HRESULT GetPrivateKeyContainerList(const(BSTR), VARIANT*);
-    HRESULT GetExistingCACertificates(ICertSrvSetupKeyInformationCollection*);
-    HRESULT CAImportPFX(const(BSTR), const(BSTR), VARIANT_BOOL, ICertSrvSetupKeyInformation*);
-    HRESULT SetCADistinguishedName(const(BSTR), VARIANT_BOOL, VARIANT_BOOL, VARIANT_BOOL);
-    HRESULT SetDatabaseInformation(const(BSTR), const(BSTR), const(BSTR), VARIANT_BOOL);
-    HRESULT SetParentCAInformation(const(BSTR));
-    HRESULT SetWebCAInformation(const(BSTR));
+    HRESULT get_CAErrorId(int* pVal);
+    HRESULT get_CAErrorString(BSTR* pVal);
+    HRESULT InitializeDefaults(VARIANT_BOOL bServer, VARIANT_BOOL bClient);
+    HRESULT GetCASetupProperty(CASetupProperty propertyId, VARIANT* pPropertyValue);
+    HRESULT SetCASetupProperty(CASetupProperty propertyId, VARIANT* pPropertyValue);
+    HRESULT IsPropertyEditable(CASetupProperty propertyId, VARIANT_BOOL* pbEditable);
+    HRESULT GetSupportedCATypes(VARIANT* pCATypes);
+    HRESULT GetProviderNameList(VARIANT* pVal);
+    HRESULT GetKeyLengthList(const(BSTR) bstrProviderName, VARIANT* pVal);
+    HRESULT GetHashAlgorithmList(const(BSTR) bstrProviderName, VARIANT* pVal);
+    HRESULT GetPrivateKeyContainerList(const(BSTR) bstrProviderName, VARIANT* pVal);
+    HRESULT GetExistingCACertificates(ICertSrvSetupKeyInformationCollection* ppVal);
+    HRESULT CAImportPFX(const(BSTR) bstrFileName, const(BSTR) bstrPasswd, VARIANT_BOOL bOverwriteExistingKey, ICertSrvSetupKeyInformation* ppVal);
+    HRESULT SetCADistinguishedName(const(BSTR) bstrCADN, VARIANT_BOOL bIgnoreUnicode, VARIANT_BOOL bOverwriteExistingKey, VARIANT_BOOL bOverwriteExistingCAInDS);
+    HRESULT SetDatabaseInformation(const(BSTR) bstrDBDirectory, const(BSTR) bstrLogDirectory, const(BSTR) bstrSharedFolder, VARIANT_BOOL bForceOverwrite);
+    HRESULT SetParentCAInformation(const(BSTR) bstrCAConfiguration);
+    HRESULT SetWebCAInformation(const(BSTR) bstrCAConfiguration);
     HRESULT Install();
-    HRESULT PreUnInstall(VARIANT_BOOL);
+    HRESULT PreUnInstall(VARIANT_BOOL bClientOnly);
     HRESULT PostUnInstall();
 }
 alias MSCEPSetupProperty = int;
@@ -7392,15 +7717,15 @@ enum : int
 enum IID_IMSCEPSetup = GUID(0x4f7761bb, 0x9f3b, 0x4592, [0x9e, 0xe0, 0x9a, 0x73, 0x25, 0x9c, 0x31, 0x3e]);
 interface IMSCEPSetup : IDispatch
 {
-    HRESULT get_MSCEPErrorId(int*);
-    HRESULT get_MSCEPErrorString(BSTR*);
+    HRESULT get_MSCEPErrorId(int* pVal);
+    HRESULT get_MSCEPErrorString(BSTR* pVal);
     HRESULT InitializeDefaults();
-    HRESULT GetMSCEPSetupProperty(MSCEPSetupProperty, VARIANT*);
-    HRESULT SetMSCEPSetupProperty(MSCEPSetupProperty, VARIANT*);
-    HRESULT SetAccountInformation(const(BSTR), const(BSTR));
-    HRESULT IsMSCEPStoreEmpty(VARIANT_BOOL*);
-    HRESULT GetProviderNameList(VARIANT_BOOL, VARIANT*);
-    HRESULT GetKeyLengthList(VARIANT_BOOL, const(BSTR), VARIANT*);
+    HRESULT GetMSCEPSetupProperty(MSCEPSetupProperty propertyId, VARIANT* pVal);
+    HRESULT SetMSCEPSetupProperty(MSCEPSetupProperty propertyId, VARIANT* pPropertyValue);
+    HRESULT SetAccountInformation(const(BSTR) bstrUserName, const(BSTR) bstrPassword);
+    HRESULT IsMSCEPStoreEmpty(VARIANT_BOOL* pbEmpty);
+    HRESULT GetProviderNameList(VARIANT_BOOL bExchange, VARIANT* pVal);
+    HRESULT GetKeyLengthList(VARIANT_BOOL bExchange, const(BSTR) bstrProviderName, VARIANT* pVal);
     HRESULT Install();
     HRESULT PreUnInstall();
     HRESULT PostUnInstall();
@@ -7420,13 +7745,13 @@ enum : int
 enum IID_ICertificateEnrollmentServerSetup = GUID(0x70027fdb, 0x9dd9, 0x4921, [0x89, 0x44, 0xb3, 0x5c, 0xb3, 0x1b, 0xd2, 0xec]);
 interface ICertificateEnrollmentServerSetup : IDispatch
 {
-    HRESULT get_ErrorString(BSTR*);
+    HRESULT get_ErrorString(BSTR* pVal);
     HRESULT InitializeInstallDefaults();
-    HRESULT GetProperty(CESSetupProperty, VARIANT*);
-    HRESULT SetProperty(CESSetupProperty, VARIANT*);
-    HRESULT SetApplicationPoolCredentials(const(BSTR), const(BSTR));
+    HRESULT GetProperty(CESSetupProperty propertyId, VARIANT* pPropertyValue);
+    HRESULT SetProperty(CESSetupProperty propertyId, VARIANT* pPropertyValue);
+    HRESULT SetApplicationPoolCredentials(const(BSTR) bstrUsername, const(BSTR) bstrPassword);
     HRESULT Install();
-    HRESULT UnInstall(VARIANT*, VARIANT*);
+    HRESULT UnInstall(VARIANT* pCAConfig, VARIANT* pAuthentication);
 }
 alias CEPSetupProperty = int;
 enum : int
@@ -7440,12 +7765,12 @@ enum : int
 enum IID_ICertificateEnrollmentPolicyServerSetup = GUID(0x859252cc, 0x238c, 0x4a88, [0xb8, 0xfd, 0xa3, 0x7e, 0x7d, 0x4, 0xe6, 0x8b]);
 interface ICertificateEnrollmentPolicyServerSetup : IDispatch
 {
-    HRESULT get_ErrorString(BSTR*);
+    HRESULT get_ErrorString(BSTR* pVal);
     HRESULT InitializeInstallDefaults();
-    HRESULT GetProperty(CEPSetupProperty, VARIANT*);
-    HRESULT SetProperty(CEPSetupProperty, VARIANT*);
+    HRESULT GetProperty(CEPSetupProperty propertyId, VARIANT* pPropertyValue);
+    HRESULT SetProperty(CEPSetupProperty propertyId, VARIANT* pPropertyValue);
     HRESULT Install();
-    HRESULT UnInstall(VARIANT*);
+    HRESULT UnInstall(VARIANT* pAuthKeyBasedRenewal);
 }
 enum CLSID_CCertSrvSetupKeyInformation = GUID(0x38373906, 0x5433, 0x4633, [0xb0, 0xfb, 0x29, 0xb7, 0xe7, 0x82, 0x62, 0xe1]);
 struct CCertSrvSetupKeyInformation
@@ -7466,4 +7791,755 @@ struct CCertificateEnrollmentServerSetup
 enum CLSID_CCertificateEnrollmentPolicyServerSetup = GUID(0xafe2fa32, 0x41b1, 0x459d, [0xa5, 0xde, 0x49, 0xad, 0xd8, 0xa7, 0x21, 0x82]);
 struct CCertificateEnrollmentPolicyServerSetup
 {
+}
+struct BCRYPT_ECC_PARAMETER_HEADER
+{
+    uint dwVersion;
+    ECC_CURVE_TYPE_ENUM dwCurveType;
+    ECC_CURVE_ALG_ID_ENUM dwCurveGenerationAlgId;
+    uint cbFieldLength;
+    uint cbSubgroupOrder;
+    uint cbCofactor;
+    uint cbSeed;
+}
+alias BCryptOpenAlgorithmProviderFn = NTSTATUS function(BCRYPT_ALG_HANDLE* phAlgorithm, const(wchar)* pszAlgId, uint dwFlags);
+alias BCryptGetPropertyFn = NTSTATUS function(BCRYPT_HANDLE hObject, const(wchar)* pszProperty, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+alias BCryptSetPropertyFn = NTSTATUS function(BCRYPT_HANDLE hObject, const(wchar)* pszProperty, ubyte* pbInput, uint cbInput, uint dwFlags);
+alias BCryptCloseAlgorithmProviderFn = NTSTATUS function(BCRYPT_ALG_HANDLE hAlgorithm, uint dwFlags);
+alias BCryptFreeBufferFn = void function(void* pvBuffer);
+alias BCryptGenerateSymmetricKeyFn = NTSTATUS function(BCRYPT_ALG_HANDLE hAlgorithm, BCRYPT_KEY_HANDLE* phKey, ubyte* pbKeyObject, uint cbKeyObject, ubyte* pbSecret, uint cbSecret, uint dwFlags);
+alias BCryptGenerateKeyPairFn = NTSTATUS function(BCRYPT_ALG_HANDLE hAlgorithm, BCRYPT_KEY_HANDLE* phKey, uint dwLength, uint dwFlags);
+alias BCryptEncryptFn = NTSTATUS function(BCRYPT_KEY_HANDLE hKey, ubyte* pbInput, uint cbInput, void* pPaddingInfo, ubyte* pbIV, uint cbIV, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+alias BCryptDecryptFn = NTSTATUS function(BCRYPT_KEY_HANDLE hKey, ubyte* pbInput, uint cbInput, void* pPaddingInfo, ubyte* pbIV, uint cbIV, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+alias BCryptExportKeyFn = NTSTATUS function(BCRYPT_KEY_HANDLE hKey, BCRYPT_KEY_HANDLE hExportKey, const(wchar)* pszBlobType, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+alias BCryptImportKeyFn = NTSTATUS function(BCRYPT_ALG_HANDLE hAlgorithm, BCRYPT_KEY_HANDLE hImportKey, const(wchar)* pszBlobType, BCRYPT_KEY_HANDLE* phKey, ubyte* pbKeyObject, uint cbKeyObject, ubyte* pbInput, uint cbInput, uint dwFlags);
+alias BCryptImportKeyPairFn = NTSTATUS function(BCRYPT_ALG_HANDLE hAlgorithm, BCRYPT_KEY_HANDLE hImportKey, const(wchar)* pszBlobType, BCRYPT_KEY_HANDLE* phKey, ubyte* pbInput, uint cbInput, uint dwFlags);
+alias BCryptDuplicateKeyFn = NTSTATUS function(BCRYPT_KEY_HANDLE hKey, BCRYPT_KEY_HANDLE* phNewKey, ubyte* pbKeyObject, uint cbKeyObject, uint dwFlags);
+alias BCryptFinalizeKeyPairFn = NTSTATUS function(BCRYPT_KEY_HANDLE hKey, uint dwFlags);
+alias BCryptDestroyKeyFn = NTSTATUS function(BCRYPT_KEY_HANDLE hKey);
+alias BCryptDestroySecretFn = NTSTATUS function(BCRYPT_SECRET_HANDLE hSecret);
+alias BCryptSignHashFn = NTSTATUS function(BCRYPT_KEY_HANDLE hKey, void* pPaddingInfo, ubyte* pbInput, uint cbInput, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+alias BCryptVerifySignatureFn = NTSTATUS function(BCRYPT_KEY_HANDLE hKey, void* pPaddingInfo, ubyte* pbHash, uint cbHash, ubyte* pbSignature, uint cbSignature, uint dwFlags);
+alias BCryptSecretAgreementFn = NTSTATUS function(BCRYPT_KEY_HANDLE hPrivKey, BCRYPT_KEY_HANDLE hPubKey, BCRYPT_SECRET_HANDLE* phAgreedSecret, uint dwFlags);
+alias BCryptDeriveKeyFn = NTSTATUS function(BCRYPT_SECRET_HANDLE hSharedSecret, const(wchar)* pwszKDF, BCryptBufferDesc* pParameterList, ubyte* pbDerivedKey, uint cbDerivedKey, uint* pcbResult, uint dwFlags);
+alias BCryptKeyDerivationFn = NTSTATUS function(BCRYPT_KEY_HANDLE hKey, BCryptBufferDesc* pParameterList, ubyte* pbDerivedKey, uint cbDerivedKey, uint* pcbResult, uint dwFlags);
+alias BCryptCreateHashFn = NTSTATUS function(BCRYPT_ALG_HANDLE hAlgorithm, BCRYPT_HASH_HANDLE* phHash, ubyte* pbHashObject, uint cbHashObject, ubyte* pbSecret, uint cbSecret, uint dwFlags);
+alias BCryptHashDataFn = NTSTATUS function(BCRYPT_HASH_HANDLE hHash, ubyte* pbInput, uint cbInput, uint dwFlags);
+alias BCryptFinishHashFn = NTSTATUS function(BCRYPT_HASH_HANDLE hHash, ubyte* pbOutput, uint cbOutput, uint dwFlags);
+alias BCryptCreateMultiHashFn = NTSTATUS function(BCRYPT_ALG_HANDLE hAlgorithm, BCRYPT_HASH_HANDLE* phHash, uint nHashes, ubyte* pbHashObject, uint cbHashObject, ubyte* pbSecret, uint cbSecret, uint dwFlags);
+alias BCryptProcessMultiOperationsFn = NTSTATUS function(BCRYPT_HANDLE hObject, BCRYPT_MULTI_OPERATION_TYPE operationType, void* pOperations, uint cbOperations, uint dwFlags);
+alias BCryptDuplicateHashFn = NTSTATUS function(BCRYPT_HASH_HANDLE hHash, BCRYPT_HASH_HANDLE* phNewHash, ubyte* pbHashObject, uint cbHashObject, uint dwFlags);
+alias BCryptDestroyHashFn = NTSTATUS function(BCRYPT_HASH_HANDLE hHash);
+alias BCryptGenRandomFn = NTSTATUS function(BCRYPT_ALG_HANDLE hAlgorithm, ubyte* pbBuffer, uint cbBuffer, uint dwFlags);
+alias BCryptDeriveKeyCapiFn = NTSTATUS function(BCRYPT_HASH_HANDLE hHash, BCRYPT_ALG_HANDLE hTargetAlg, ubyte* pbDerivedKey, uint cbDerivedKey, uint dwFlags);
+alias BCryptDeriveKeyPBKDF2Fn = NTSTATUS function(BCRYPT_ALG_HANDLE hPrf, ubyte* pbPassword, uint cbPassword, ubyte* pbSalt, uint cbSalt, ulong cIterations, ubyte* pbDerivedKey, uint cbDerivedKey, uint dwFlags);
+struct BCRYPT_CIPHER_FUNCTION_TABLE
+{
+    BCRYPT_INTERFACE_VERSION Version;
+    BCryptOpenAlgorithmProviderFn OpenAlgorithmProvider;
+    BCryptGetPropertyFn GetProperty;
+    BCryptSetPropertyFn SetProperty;
+    BCryptCloseAlgorithmProviderFn CloseAlgorithmProvider;
+    BCryptGenerateSymmetricKeyFn GenerateKey;
+    BCryptEncryptFn Encrypt;
+    BCryptDecryptFn Decrypt;
+    BCryptImportKeyFn ImportKey;
+    BCryptExportKeyFn ExportKey;
+    BCryptDuplicateKeyFn DuplicateKey;
+    BCryptDestroyKeyFn DestroyKey;
+}
+alias GetCipherInterfaceFn = NTSTATUS function(const(wchar)* pszProviderName, const(wchar)* pszAlgId, BCRYPT_CIPHER_FUNCTION_TABLE** ppFunctionTable, uint dwFlags);
+struct BCRYPT_HASH_FUNCTION_TABLE
+{
+    BCRYPT_INTERFACE_VERSION Version;
+    BCryptOpenAlgorithmProviderFn OpenAlgorithmProvider;
+    BCryptGetPropertyFn GetProperty;
+    BCryptSetPropertyFn SetProperty;
+    BCryptCloseAlgorithmProviderFn CloseAlgorithmProvider;
+    BCryptCreateHashFn CreateHash;
+    BCryptHashDataFn HashData;
+    BCryptFinishHashFn FinishHash;
+    BCryptDuplicateHashFn DuplicateHash;
+    BCryptDestroyHashFn DestroyHash;
+    BCryptCreateMultiHashFn CreateMultiHash;
+    BCryptProcessMultiOperationsFn ProcessMultiOperations;
+}
+alias GetHashInterfaceFn = NTSTATUS function(const(wchar)* pszProviderName, const(wchar)* pszAlgId, BCRYPT_HASH_FUNCTION_TABLE** ppFunctionTable, uint dwFlags);
+struct BCRYPT_ASYMMETRIC_ENCRYPTION_FUNCTION_TABLE
+{
+    BCRYPT_INTERFACE_VERSION Version;
+    BCryptOpenAlgorithmProviderFn OpenAlgorithmProvider;
+    BCryptGetPropertyFn GetProperty;
+    BCryptSetPropertyFn SetProperty;
+    BCryptCloseAlgorithmProviderFn CloseAlgorithmProvider;
+    BCryptGenerateKeyPairFn GenerateKeyPair;
+    BCryptFinalizeKeyPairFn FinalizeKeyPair;
+    BCryptEncryptFn Encrypt;
+    BCryptDecryptFn Decrypt;
+    BCryptImportKeyPairFn ImportKeyPair;
+    BCryptExportKeyFn ExportKey;
+    BCryptDestroyKeyFn DestroyKey;
+    BCryptSignHashFn SignHash;
+    BCryptVerifySignatureFn VerifySignature;
+}
+alias GetAsymmetricEncryptionInterfaceFn = NTSTATUS function(const(wchar)* pszProviderName, const(wchar)* pszAlgId, BCRYPT_ASYMMETRIC_ENCRYPTION_FUNCTION_TABLE** ppFunctionTable, uint dwFlags);
+struct BCRYPT_SECRET_AGREEMENT_FUNCTION_TABLE
+{
+    BCRYPT_INTERFACE_VERSION Version;
+    BCryptOpenAlgorithmProviderFn OpenAlgorithmProvider;
+    BCryptGetPropertyFn GetProperty;
+    BCryptSetPropertyFn SetProperty;
+    BCryptCloseAlgorithmProviderFn CloseAlgorithmProvider;
+    BCryptSecretAgreementFn SecretAgreement;
+    BCryptDeriveKeyFn DeriveKey;
+    BCryptDestroySecretFn DestroySecret;
+    BCryptGenerateKeyPairFn GenerateKeyPair;
+    BCryptFinalizeKeyPairFn FinalizeKeyPair;
+    BCryptImportKeyPairFn ImportKeyPair;
+    BCryptExportKeyFn ExportKey;
+    BCryptDestroyKeyFn DestroyKey;
+}
+alias GetSecretAgreementInterfaceFn = NTSTATUS function(const(wchar)* pszProviderName, const(wchar)* pszAlgId, BCRYPT_SECRET_AGREEMENT_FUNCTION_TABLE** ppFunctionTable, uint dwFlags);
+struct BCRYPT_SIGNATURE_FUNCTION_TABLE
+{
+    BCRYPT_INTERFACE_VERSION Version;
+    BCryptOpenAlgorithmProviderFn OpenAlgorithmProvider;
+    BCryptGetPropertyFn GetProperty;
+    BCryptSetPropertyFn SetProperty;
+    BCryptCloseAlgorithmProviderFn CloseAlgorithmProvider;
+    BCryptGenerateKeyPairFn GenerateKeyPair;
+    BCryptFinalizeKeyPairFn FinalizeKeyPair;
+    BCryptSignHashFn SignHash;
+    BCryptVerifySignatureFn VerifySignature;
+    BCryptImportKeyPairFn ImportKeyPair;
+    BCryptExportKeyFn ExportKey;
+    BCryptDestroyKeyFn DestroyKey;
+}
+alias GetSignatureInterfaceFn = NTSTATUS function(const(wchar)* pszProviderName, const(wchar)* pszAlgId, BCRYPT_SIGNATURE_FUNCTION_TABLE** ppFunctionTable, uint dwFlags);
+struct BCRYPT_RNG_FUNCTION_TABLE
+{
+    BCRYPT_INTERFACE_VERSION Version;
+    BCryptOpenAlgorithmProviderFn OpenAlgorithmProvider;
+    BCryptGetPropertyFn GetProperty;
+    BCryptSetPropertyFn SetProperty;
+    BCryptCloseAlgorithmProviderFn CloseAlgorithmProvider;
+    BCryptGenRandomFn GenRandom;
+}
+alias GetRngInterfaceFn = NTSTATUS function(const(wchar)* pszProviderName, BCRYPT_RNG_FUNCTION_TABLE** ppFunctionTable, uint dwFlags);
+struct BCRYPT_KEY_DERIVATION_FUNCTION_TABLE
+{
+    BCRYPT_INTERFACE_VERSION Version;
+    BCryptOpenAlgorithmProviderFn OpenAlgorithmProvider;
+    BCryptGetPropertyFn GetProperty;
+    BCryptSetPropertyFn SetProperty;
+    BCryptCloseAlgorithmProviderFn CloseAlgorithmProvider;
+    BCryptGenerateSymmetricKeyFn GenerateKey;
+    BCryptDestroyKeyFn DestroyKey;
+    BCryptKeyDerivationFn KeyDerivation;
+    BCryptExportKeyFn ExportKey;
+    BCryptImportKeyFn ImportKey;
+    BCryptDuplicateKeyFn DuplicateKey;
+}
+alias GetKeyDerivationInterfaceFn = NTSTATUS function(const(wchar)* pszProviderName, const(wchar)* pszAlgId, BCRYPT_KEY_DERIVATION_FUNCTION_TABLE** ppFunctionTable, uint dwFlags);
+alias NCryptOpenStorageProviderFn = HRESULT function(NCRYPT_PROV_HANDLE* phProvider, const(wchar)* pszProviderName, uint dwFlags);
+alias NCryptEnumAlgorithmsFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, uint dwAlgClass, uint* pdwAlgCount, NCryptAlgorithmName** ppAlgList, uint dwFlags);
+alias NCryptIsAlgSupportedFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, const(wchar)* pszAlgId, uint dwFlags);
+alias NCryptEnumKeysFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, const(wchar)* pszScope, NCryptKeyName** ppKeyName, void** ppEnumState, uint dwFlags);
+alias NCryptEnumStorageProvidersFn = HRESULT function(uint* pdwProviderCount, NCryptProviderName** ppProviderList, uint dwFlags);
+alias NCryptFreeBufferFn = HRESULT function(void* pvInput);
+alias NCryptOpenKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, NCRYPT_KEY_HANDLE* phKey, const(wchar)* pszKeyName, uint dwLegacyKeySpec, uint dwFlags);
+alias NCryptCreatePersistedKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, NCRYPT_KEY_HANDLE* phKey, const(wchar)* pszAlgId, const(wchar)* pszKeyName, uint dwLegacyKeySpec, uint dwFlags);
+struct NCRYPT_UI_POLICY_BLOB
+{
+    uint dwVersion;
+    uint dwFlags;
+    uint cbCreationTitle;
+    uint cbFriendlyName;
+    uint cbDescription;
+}
+alias NCryptGetProviderPropertyFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, const(wchar)* pszProperty, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+alias NCryptGetKeyPropertyFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, NCRYPT_KEY_HANDLE hKey, const(wchar)* pszProperty, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+alias NCryptSetProviderPropertyFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, const(wchar)* pszProperty, ubyte* pbInput, uint cbInput, uint dwFlags);
+alias NCryptSetKeyPropertyFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, NCRYPT_KEY_HANDLE hKey, const(wchar)* pszProperty, ubyte* pbInput, uint cbInput, uint dwFlags);
+alias NCryptFinalizeKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, NCRYPT_KEY_HANDLE hKey, uint dwFlags);
+alias NCryptEncryptFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, NCRYPT_KEY_HANDLE hKey, ubyte* pbInput, uint cbInput, void* pPaddingInfo, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+alias NCryptDecryptFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, NCRYPT_KEY_HANDLE hKey, ubyte* pbInput, uint cbInput, void* pPaddingInfo, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+alias NCryptImportKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, NCRYPT_KEY_HANDLE hImportKey, const(wchar)* pszBlobType, BCryptBufferDesc* pParameterList, NCRYPT_KEY_HANDLE* phKey, ubyte* pbData, uint cbData, uint dwFlags);
+alias NCryptExportKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, NCRYPT_KEY_HANDLE hKey, NCRYPT_KEY_HANDLE hExportKey, const(wchar)* pszBlobType, BCryptBufferDesc* pParameterList, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+alias NCryptSignHashFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, NCRYPT_KEY_HANDLE hKey, void* pPaddingInfo, ubyte* pbHashValue, uint cbHashValue, ubyte* pbSignature, uint cbSignature, uint* pcbResult, uint dwFlags);
+alias NCryptVerifySignatureFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, NCRYPT_KEY_HANDLE hKey, void* pPaddingInfo, ubyte* pbHashValue, uint cbHashValue, ubyte* pbSignature, uint cbSignature, uint dwFlags);
+alias NCryptDeleteKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, NCRYPT_KEY_HANDLE hKey, uint dwFlags);
+alias NCryptFreeProviderFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider);
+alias NCryptFreeKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, NCRYPT_KEY_HANDLE hKey);
+alias NCryptFreeSecretFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, NCRYPT_SECRET_HANDLE hSharedSecret);
+alias NCryptPromptUserFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, NCRYPT_KEY_HANDLE hKey, const(wchar)* pszOperation, uint dwFlags);
+alias NCryptNotifyChangeKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, HANDLE* phEvent, uint dwFlags);
+alias NCryptSecretAgreementFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, NCRYPT_KEY_HANDLE hPrivKey, NCRYPT_KEY_HANDLE hPubKey, NCRYPT_SECRET_HANDLE* phAgreedSecret, uint dwFlags);
+alias NCryptDeriveKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, NCRYPT_SECRET_HANDLE hSharedSecret, const(wchar)* pwszKDF, BCryptBufferDesc* pParameterList, ubyte* pbDerivedKey, uint cbDerivedKey, uint* pcbResult, uint dwFlags);
+alias NCryptKeyDerivationFn = HRESULT function(NCRYPT_PROV_HANDLE hProvider, NCRYPT_KEY_HANDLE hKey, BCryptBufferDesc* pParameterList, ubyte* pbDerivedKey, uint cbDerivedKey, uint* pcbResult, uint dwFlags);
+alias NCryptCreateClaimFn = HRESULT function(NCRYPT_PROV_HANDLE hProv, NCRYPT_KEY_HANDLE hSubjectKey, NCRYPT_KEY_HANDLE hAuthorityKey, uint dwClaimType, BCryptBufferDesc* pParameterList, ubyte* pbClaimBlob, uint cbClaimBlob, uint* pcbResult, uint dwFlags);
+alias NCryptVerifyClaimFn = HRESULT function(NCRYPT_PROV_HANDLE hProv, NCRYPT_KEY_HANDLE hSubjectKey, NCRYPT_KEY_HANDLE hAuthorityKey, uint dwClaimType, BCryptBufferDesc* pParameterList, ubyte* pbClaimBlob, uint cbClaimBlob, BCryptBufferDesc* pOutput, uint dwFlags);
+struct NCRYPT_KEY_STORAGE_FUNCTION_TABLE
+{
+    BCRYPT_INTERFACE_VERSION Version;
+    NCryptOpenStorageProviderFn OpenProvider;
+    NCryptOpenKeyFn OpenKey;
+    NCryptCreatePersistedKeyFn CreatePersistedKey;
+    NCryptGetProviderPropertyFn GetProviderProperty;
+    NCryptGetKeyPropertyFn GetKeyProperty;
+    NCryptSetProviderPropertyFn SetProviderProperty;
+    NCryptSetKeyPropertyFn SetKeyProperty;
+    NCryptFinalizeKeyFn FinalizeKey;
+    NCryptDeleteKeyFn DeleteKey;
+    NCryptFreeProviderFn FreeProvider;
+    NCryptFreeKeyFn FreeKey;
+    NCryptFreeBufferFn FreeBuffer;
+    NCryptEncryptFn Encrypt;
+    NCryptDecryptFn Decrypt;
+    NCryptIsAlgSupportedFn IsAlgSupported;
+    NCryptEnumAlgorithmsFn EnumAlgorithms;
+    NCryptEnumKeysFn EnumKeys;
+    NCryptImportKeyFn ImportKey;
+    NCryptExportKeyFn ExportKey;
+    NCryptSignHashFn SignHash;
+    NCryptVerifySignatureFn VerifySignature;
+    NCryptPromptUserFn PromptUser;
+    NCryptNotifyChangeKeyFn NotifyChangeKey;
+    NCryptSecretAgreementFn SecretAgreement;
+    NCryptDeriveKeyFn DeriveKey;
+    NCryptFreeSecretFn FreeSecret;
+    NCryptKeyDerivationFn KeyDerivation;
+    NCryptCreateClaimFn CreateClaim;
+    NCryptVerifyClaimFn VerifyClaim;
+}
+alias GetKeyStorageInterfaceFn = NTSTATUS function(const(wchar)* pszProviderName, NCRYPT_KEY_STORAGE_FUNCTION_TABLE** ppFunctionTable, uint dwFlags);
+struct NCRYPT_SSL_CIPHER_SUITE
+{
+    uint dwProtocol;
+    uint dwCipherSuite;
+    uint dwBaseCipherSuite;
+    wchar[64] szCipherSuite;
+    wchar[64] szCipher;
+    uint dwCipherLen;
+    uint dwCipherBlockLen;
+    wchar[64] szHash;
+    uint dwHashLen;
+    wchar[64] szExchange;
+    uint dwMinExchangeLen;
+    uint dwMaxExchangeLen;
+    wchar[64] szCertificate;
+    uint dwKeyType;
+}
+struct NCRYPT_SSL_CIPHER_SUITE_EX
+{
+    uint dwVersion;
+    uint dwProtocol;
+    uint dwCipherSuite;
+    uint dwBaseCipherSuite;
+    wchar[64] szCipherSuite;
+    wchar[64] szCipher;
+    uint dwCipherLen;
+    uint dwCipherBlockLen;
+    wchar[64] szHash;
+    uint dwHashLen;
+    wchar[64] szExchange;
+    uint dwMinExchangeLen;
+    uint dwMaxExchangeLen;
+    wchar[64] szCertificate;
+    uint dwKeyType;
+    wchar[64] szCipherMode;
+}
+struct NCRYPT_SSL_CIPHER_LENGTHS
+{
+    uint cbLength;
+    uint dwHeaderLen;
+    uint dwFixedTrailerLen;
+    uint dwMaxVariableTrailerLen;
+    uint dwFlags;
+}
+struct NCRYPT_SSL_ECC_CURVE
+{
+    wchar[255] szCurveName;
+    CHAR[255] szOID;
+    uint dwPublicKeyLength;
+    uint dwCurveType;
+    uint dwFlags;
+}
+alias SslComputeClientAuthHashFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hMasterKey, NCRYPT_HASH_HANDLE hHandshakeHash, const(wchar)* pszAlgId, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+alias SslComputeEapKeyBlockFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hMasterKey, ubyte* pbRandoms, uint cbRandoms, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+alias SslComputeFinishedHashFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hMasterKey, NCRYPT_HASH_HANDLE hHandshakeHash, ubyte* pbOutput, uint cbOutput, uint dwFlags);
+alias SslCreateEphemeralKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE* phEphemeralKey, uint dwProtocol, uint dwCipherSuite, uint dwKeyType, uint dwKeyBitLen, ubyte* pbParams, uint cbParams, uint dwFlags);
+alias SslCreateHandshakeHashFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_HASH_HANDLE* phHandshakeHash, uint dwProtocol, uint dwCipherSuite, uint dwFlags);
+alias SslDecryptPacketFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hKey, ubyte* pbInput, uint cbInput, ubyte* pbOutput, uint cbOutput, uint* pcbResult, ulong SequenceNumber, uint dwFlags);
+alias SslEncryptPacketFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hKey, ubyte* pbInput, uint cbInput, ubyte* pbOutput, uint cbOutput, uint* pcbResult, ulong SequenceNumber, uint dwContentType, uint dwFlags);
+alias SslEnumCipherSuitesFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hPrivateKey, NCRYPT_SSL_CIPHER_SUITE** ppCipherSuite, void** ppEnumState, uint dwFlags);
+alias SslEnumCipherSuitesExFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hPrivateKey, NCRYPT_SSL_CIPHER_SUITE_EX** ppCipherSuite, void** ppEnumState, uint dwFlags);
+alias SslEnumEccCurvesFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, uint* pEccCurveCount, NCRYPT_SSL_ECC_CURVE** ppEccCurve, uint dwFlags);
+alias SslExportKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hKey, const(wchar)* pszBlobType, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+alias SslFreeBufferFn = HRESULT function(void* pvInput);
+alias SslFreeObjectFn = HRESULT function(NCRYPT_HANDLE hObject, uint dwFlags);
+alias SslGenerateMasterKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hPrivateKey, NCRYPT_KEY_HANDLE hPublicKey, NCRYPT_KEY_HANDLE* phMasterKey, uint dwProtocol, uint dwCipherSuite, BCryptBufferDesc* pParameterList, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+alias SslGenerateSessionKeysFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hMasterKey, NCRYPT_KEY_HANDLE* phReadKey, NCRYPT_KEY_HANDLE* phWriteKey, BCryptBufferDesc* pParameterList, uint dwFlags);
+alias SslGetKeyPropertyFn = HRESULT function(NCRYPT_KEY_HANDLE hKey, const(wchar)* pszProperty, ubyte** ppbOutput, uint* pcbOutput, uint dwFlags);
+alias SslGetProviderPropertyFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, const(wchar)* pszProperty, ubyte** ppbOutput, uint* pcbOutput, void** ppEnumState, uint dwFlags);
+alias SslHashHandshakeFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_HASH_HANDLE hHandshakeHash, ubyte* pbInput, uint cbInput, uint dwFlags);
+alias SslImportKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE* phKey, const(wchar)* pszBlobType, ubyte* pbKeyBlob, uint cbKeyBlob, uint dwFlags);
+alias SslImportMasterKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hPrivateKey, NCRYPT_KEY_HANDLE* phMasterKey, uint dwProtocol, uint dwCipherSuite, BCryptBufferDesc* pParameterList, ubyte* pbEncryptedKey, uint cbEncryptedKey, uint dwFlags);
+alias SslLookupCipherSuiteInfoFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, uint dwProtocol, uint dwCipherSuite, uint dwKeyType, NCRYPT_SSL_CIPHER_SUITE* pCipherSuite, uint dwFlags);
+alias SslOpenPrivateKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE* phPrivateKey, const(CERT_CONTEXT)* pCertContext, uint dwFlags);
+alias SslOpenProviderFn = HRESULT function(NCRYPT_PROV_HANDLE* phSslProvider, const(wchar)* pszProviderName, uint dwFlags);
+alias SslSignHashFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hPrivateKey, ubyte* pbHashValue, uint cbHashValue, ubyte* pbSignature, uint cbSignature, uint* pcbResult, uint dwFlags);
+alias SslVerifySignatureFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hPublicKey, ubyte* pbHashValue, uint cbHashValue, ubyte* pbSignature, uint cbSignature, uint dwFlags);
+alias SslLookupCipherLengthsFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, uint dwProtocol, uint dwCipherSuite, uint dwKeyType, NCRYPT_SSL_CIPHER_LENGTHS* pCipherLengths, uint cbCipherLengths, uint dwFlags);
+alias SslCreateClientAuthHashFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_HASH_HANDLE* phHandshakeHash, uint dwProtocol, uint dwCipherSuite, const(wchar)* pszHashAlgId, uint dwFlags);
+alias SslComputeSessionHashFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_HASH_HANDLE hHandshakeHash, uint dwProtocol, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+alias SslGeneratePreMasterKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hPublicKey, NCRYPT_KEY_HANDLE* phPreMasterKey, uint dwProtocol, uint dwCipherSuite, BCryptBufferDesc* pParameterList, ubyte* pbOutput, uint cbOutput, uint* pcbResult, uint dwFlags);
+alias SslExportKeyingMaterialFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hMasterKey, PSTR sLabel, ubyte* pbRandoms, uint cbRandoms, ubyte* pbContextValue, ushort cbContextValue, ubyte* pbOutput, uint cbOutput, uint dwFlags);
+alias SslExtractEarlyKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hPreSharedKey, NCRYPT_KEY_HANDLE* phEarlyKey, uint dwProtocol, uint dwCipherSuite, BCryptBufferDesc* pParameterList, uint dwFlags);
+alias SslExtractHandshakeKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hPrivateKey, NCRYPT_KEY_HANDLE hPublicKey, NCRYPT_KEY_HANDLE hEarlyKey, NCRYPT_KEY_HANDLE* phHandshakeKey, BCryptBufferDesc* pParameterList, uint dwFlags);
+alias SslExtractMasterKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hHandshakeKey, NCRYPT_KEY_HANDLE* phMasterKey, BCryptBufferDesc* pParameterList, uint dwFlags);
+alias SslExpandTrafficKeysFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hBaseKey, NCRYPT_HASH_HANDLE hHashValue, NCRYPT_KEY_HANDLE* phClientTrafficKey, NCRYPT_KEY_HANDLE* phServerTrafficKey, BCryptBufferDesc* pParameterList, uint dwFlags);
+alias SslExpandWriteKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hBaseTrafficKey, NCRYPT_KEY_HANDLE* phWriteKey, BCryptBufferDesc* pParameterList, uint dwFlags);
+alias SslExpandExporterMasterKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hBaseKey, NCRYPT_HASH_HANDLE hHashValue, NCRYPT_KEY_HANDLE* phExporterMasterKey, BCryptBufferDesc* pParameterList, uint dwFlags);
+alias SslExpandResumptionMasterKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hMasterKey, NCRYPT_HASH_HANDLE hHashValue, NCRYPT_KEY_HANDLE* phResumptionMasterKey, BCryptBufferDesc* pParameterList, uint dwFlags);
+alias SslDuplicateTranscriptHashFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_HASH_HANDLE hTranscriptHash, NCRYPT_HASH_HANDLE* phDuplicateTranscriptHash, uint dwFlags);
+alias SslExpandBinderKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hEarlyKey, NCRYPT_KEY_HANDLE* phBinderKey, BCryptBufferDesc* pParameterList, uint dwFlags);
+alias SslExpandPreSharedKeyFn = HRESULT function(NCRYPT_PROV_HANDLE hSslProvider, NCRYPT_KEY_HANDLE hResumptionMasterKey, ubyte* pbTicketNonce, uint cbTicketNonce, NCRYPT_KEY_HANDLE* phPreSharedKey, BCryptBufferDesc* pParameterList, uint dwFlags);
+struct NCRYPT_SSL_FUNCTION_TABLE
+{
+    BCRYPT_INTERFACE_VERSION Version;
+    SslComputeClientAuthHashFn ComputeClientAuthHash;
+    SslComputeEapKeyBlockFn ComputeEapKeyBlock;
+    SslComputeFinishedHashFn ComputeFinishedHash;
+    SslCreateEphemeralKeyFn CreateEphemeralKey;
+    SslCreateHandshakeHashFn CreateHandshakeHash;
+    SslDecryptPacketFn DecryptPacket;
+    SslEncryptPacketFn EncryptPacket;
+    SslEnumCipherSuitesFn EnumCipherSuites;
+    SslExportKeyFn ExportKey;
+    SslFreeBufferFn FreeBuffer;
+    SslFreeObjectFn FreeObject;
+    SslGenerateMasterKeyFn GenerateMasterKey;
+    SslGenerateSessionKeysFn GenerateSessionKeys;
+    SslGetKeyPropertyFn GetKeyProperty;
+    SslGetProviderPropertyFn GetProviderProperty;
+    SslHashHandshakeFn HashHandshake;
+    SslImportMasterKeyFn ImportMasterKey;
+    SslImportKeyFn ImportKey;
+    SslLookupCipherSuiteInfoFn LookupCipherSuiteInfo;
+    SslOpenPrivateKeyFn OpenPrivateKey;
+    SslOpenProviderFn OpenProvider;
+    SslSignHashFn SignHash;
+    SslVerifySignatureFn VerifySignature;
+    SslLookupCipherLengthsFn LookupCipherLengths;
+    SslCreateClientAuthHashFn CreateClientAuthHash;
+    SslGetCipherSuitePRFHashAlgorithmFn GetCipherSuitePRFHashAlgorithm;
+    SslComputeSessionHashFn ComputeSessionHash;
+    SslGeneratePreMasterKeyFn GeneratePreMasterKey;
+    SslEnumEccCurvesFn EnumEccCurves;
+    SslExportKeyingMaterialFn ExportKeyingMaterial;
+    SslExtractEarlyKeyFn ExtractEarlyKey;
+    SslExtractHandshakeKeyFn ExtractHandshakeKey;
+    SslExtractMasterKeyFn ExtractMasterKey;
+    SslExpandTrafficKeysFn ExpandTrafficKeys;
+    SslExpandWriteKeyFn ExpandWriteKey;
+    SslExpandExporterMasterKeyFn ExpandExporterMasterKey;
+    SslEnumCipherSuitesExFn EnumCipherSuitesEx;
+    SslExpandResumptionMasterKeyFn ExpandResumptionMasterKey;
+    SslDuplicateTranscriptHashFn DuplicateTranscriptHash;
+    SslExpandBinderKeyFn ExpandBinderKey;
+    SslExpandPreSharedKeyFn ExpandPreSharedKey;
+}
+alias GetSChannelInterfaceFn = NTSTATUS function(const(wchar)* pszProviderName, NCRYPT_SSL_FUNCTION_TABLE** ppFunctionTable, uint dwFlags);
+alias SslInitializeInterfaceFn = HRESULT function(const(wchar)* pszProviderName, NCRYPT_SSL_FUNCTION_TABLE* pFunctionTable, uint dwFlags);
+struct OFFLOAD_PRIVATE_KEY
+{
+    uint dwVersion;
+    uint cbPrime1;
+    uint cbPrime2;
+    ubyte* pbPrime1;
+    ubyte* pbPrime2;
+}
+alias PFN_OFFLOAD_MOD_EXPO = BOOL function(ubyte* pbBase, ubyte* pbExponent, uint cbExponent, ubyte* pbModulus, uint cbModulus, ubyte* pbResult, void* pvOffloadPrivateKey, uint dwFlags);
+alias CRYPT_VERIFY_IMAGE_A = BOOL function(const(char)* szImage, const(ubyte)* pbSigData);
+alias CRYPT_VERIFY_IMAGE_W = BOOL function(const(wchar)* szImage, const(ubyte)* pbSigData);
+alias CRYPT_RETURN_HWND = void function(HWND* phWnd);
+struct VTableProvStruc
+{
+    uint Version;
+    CRYPT_VERIFY_IMAGE_A FuncVerifyImage;
+    CRYPT_RETURN_HWND FuncReturnhWnd;
+    uint dwProvType;
+    ubyte* pbContextInfo;
+    uint cbContextInfo;
+    PSTR pszProvName;
+}
+struct VTableProvStrucW
+{
+    uint Version;
+    CRYPT_VERIFY_IMAGE_W FuncVerifyImage;
+    CRYPT_RETURN_HWND FuncReturnhWnd;
+    uint dwProvType;
+    ubyte* pbContextInfo;
+    uint cbContextInfo;
+    PWSTR pszProvName;
+}
+struct InFileSignatureResource
+{
+    uint dwVersion;
+    uint dwCrcOffset;
+    ubyte[88] rgbSignature;
+}
+struct CARD_CACHE_FILE_FORMAT
+{
+    ubyte bVersion;
+    ubyte bPinsFreshness;
+    ushort wContainersFreshness;
+    ushort wFilesFreshness;
+}
+struct CONTAINER_MAP_RECORD
+{
+    wchar[40] wszGuid;
+    ubyte bFlags;
+    ubyte bReserved;
+    ushort wSigKeySizeBits;
+    ushort wKeyExchangeKeySizeBits;
+}
+alias CARD_DIRECTORY_ACCESS_CONDITION = int;
+enum : int
+{
+    InvalidDirAc           = 0x00000000,
+    UserCreateDeleteDirAc  = 0x00000001,
+    AdminCreateDeleteDirAc = 0x00000002,
+}
+
+alias CARD_FILE_ACCESS_CONDITION = int;
+enum : int
+{
+    InvalidAc                = 0x00000000,
+    EveryoneReadUserWriteAc  = 0x00000001,
+    UserWriteExecuteAc       = 0x00000002,
+    EveryoneReadAdminWriteAc = 0x00000003,
+    UnknownAc                = 0x00000004,
+    UserReadWriteAc          = 0x00000005,
+    AdminReadWriteAc         = 0x00000006,
+}
+
+alias PFN_CARD_ACQUIRE_CONTEXT = uint function(CARD_DATA* pCardData, uint dwFlags);
+alias PFN_CARD_DELETE_CONTEXT = uint function(CARD_DATA* pCardData);
+struct CARD_CAPABILITIES
+{
+    uint dwVersion;
+    BOOL fCertificateCompression;
+    BOOL fKeyGen;
+}
+alias PFN_CARD_QUERY_CAPABILITIES = uint function(CARD_DATA* pCardData, CARD_CAPABILITIES* pCardCapabilities);
+alias SECRET_TYPE = int;
+enum : int
+{
+    AlphaNumericPinType      = 0x00000000,
+    ExternalPinType          = 0x00000001,
+    ChallengeResponsePinType = 0x00000002,
+    EmptyPinType             = 0x00000003,
+}
+
+alias SECRET_PURPOSE = int;
+enum : int
+{
+    AuthenticationPin   = 0x00000000,
+    DigitalSignaturePin = 0x00000001,
+    EncryptionPin       = 0x00000002,
+    NonRepudiationPin   = 0x00000003,
+    AdministratorPin    = 0x00000004,
+    PrimaryCardPin      = 0x00000005,
+    UnblockOnlyPin      = 0x00000006,
+}
+
+alias PIN_CACHE_POLICY_TYPE = int;
+enum : int
+{
+    PinCacheNormal       = 0x00000000,
+    PinCacheTimed        = 0x00000001,
+    PinCacheNone         = 0x00000002,
+    PinCacheAlwaysPrompt = 0x00000003,
+}
+
+struct PIN_CACHE_POLICY
+{
+    uint dwVersion;
+    PIN_CACHE_POLICY_TYPE PinCachePolicyType;
+    uint dwPinCachePolicyInfo;
+}
+struct PIN_INFO
+{
+    uint dwVersion;
+    SECRET_TYPE PinType;
+    SECRET_PURPOSE PinPurpose;
+    uint dwChangePermission;
+    uint dwUnblockPermission;
+    PIN_CACHE_POLICY PinCachePolicy;
+    uint dwFlags;
+}
+alias PFN_CARD_GET_CHALLENGE_EX = uint function(CARD_DATA* pCardData, uint PinId, ubyte** ppbChallengeData, uint* pcbChallengeData, uint dwFlags);
+alias PFN_CARD_AUTHENTICATE_EX = uint function(CARD_DATA* pCardData, uint PinId, uint dwFlags, ubyte* pbPinData, uint cbPinData, ubyte** ppbSessionPin, uint* pcbSessionPin, uint* pcAttemptsRemaining);
+alias PFN_CARD_CHANGE_AUTHENTICATOR_EX = uint function(CARD_DATA* pCardData, uint dwFlags, uint dwAuthenticatingPinId, ubyte* pbAuthenticatingPinData, uint cbAuthenticatingPinData, uint dwTargetPinId, ubyte* pbTargetData, uint cbTargetData, uint cRetryCount, uint* pcAttemptsRemaining);
+alias PFN_CARD_DEAUTHENTICATE_EX = uint function(CARD_DATA* pCardData, uint PinId, uint dwFlags);
+alias PFN_CARD_DELETE_CONTAINER = uint function(CARD_DATA* pCardData, ubyte bContainerIndex, uint dwReserved);
+alias PFN_CARD_CREATE_CONTAINER = uint function(CARD_DATA* pCardData, ubyte bContainerIndex, uint dwFlags, uint dwKeySpec, uint dwKeySize, ubyte* pbKeyData);
+alias PFN_CARD_CREATE_CONTAINER_EX = uint function(CARD_DATA* pCardData, ubyte bContainerIndex, uint dwFlags, uint dwKeySpec, uint dwKeySize, ubyte* pbKeyData, uint PinId);
+struct CONTAINER_INFO
+{
+    uint dwVersion;
+    uint dwReserved;
+    uint cbSigPublicKey;
+    ubyte* pbSigPublicKey;
+    uint cbKeyExPublicKey;
+    ubyte* pbKeyExPublicKey;
+}
+alias PFN_CARD_GET_CONTAINER_INFO = uint function(CARD_DATA* pCardData, ubyte bContainerIndex, uint dwFlags, CONTAINER_INFO* pContainerInfo);
+alias PFN_CARD_AUTHENTICATE_PIN = uint function(CARD_DATA* pCardData, PWSTR pwszUserId, ubyte* pbPin, uint cbPin, uint* pcAttemptsRemaining);
+alias PFN_CARD_GET_CHALLENGE = uint function(CARD_DATA* pCardData, ubyte** ppbChallengeData, uint* pcbChallengeData);
+alias PFN_CARD_AUTHENTICATE_CHALLENGE = uint function(CARD_DATA* pCardData, ubyte* pbResponseData, uint cbResponseData, uint* pcAttemptsRemaining);
+alias PFN_CARD_UNBLOCK_PIN = uint function(CARD_DATA* pCardData, PWSTR pwszUserId, ubyte* pbAuthenticationData, uint cbAuthenticationData, ubyte* pbNewPinData, uint cbNewPinData, uint cRetryCount, uint dwFlags);
+alias PFN_CARD_CHANGE_AUTHENTICATOR = uint function(CARD_DATA* pCardData, PWSTR pwszUserId, ubyte* pbCurrentAuthenticator, uint cbCurrentAuthenticator, ubyte* pbNewAuthenticator, uint cbNewAuthenticator, uint cRetryCount, uint dwFlags, uint* pcAttemptsRemaining);
+alias PFN_CARD_DEAUTHENTICATE = uint function(CARD_DATA* pCardData, PWSTR pwszUserId, uint dwFlags);
+alias PFN_CARD_CREATE_DIRECTORY = uint function(CARD_DATA* pCardData, PSTR pszDirectoryName, CARD_DIRECTORY_ACCESS_CONDITION AccessCondition);
+alias PFN_CARD_DELETE_DIRECTORY = uint function(CARD_DATA* pCardData, PSTR pszDirectoryName);
+alias PFN_CARD_CREATE_FILE = uint function(CARD_DATA* pCardData, PSTR pszDirectoryName, PSTR pszFileName, uint cbInitialCreationSize, CARD_FILE_ACCESS_CONDITION AccessCondition);
+alias PFN_CARD_READ_FILE = uint function(CARD_DATA* pCardData, PSTR pszDirectoryName, PSTR pszFileName, uint dwFlags, ubyte** ppbData, uint* pcbData);
+alias PFN_CARD_WRITE_FILE = uint function(CARD_DATA* pCardData, PSTR pszDirectoryName, PSTR pszFileName, uint dwFlags, ubyte* pbData, uint cbData);
+alias PFN_CARD_DELETE_FILE = uint function(CARD_DATA* pCardData, PSTR pszDirectoryName, PSTR pszFileName, uint dwFlags);
+alias PFN_CARD_ENUM_FILES = uint function(CARD_DATA* pCardData, PSTR pszDirectoryName, PSTR* pmszFileNames, uint* pdwcbFileName, uint dwFlags);
+struct CARD_FILE_INFO
+{
+    uint dwVersion;
+    uint cbFileSize;
+    CARD_FILE_ACCESS_CONDITION AccessCondition;
+}
+alias PFN_CARD_GET_FILE_INFO = uint function(CARD_DATA* pCardData, PSTR pszDirectoryName, PSTR pszFileName, CARD_FILE_INFO* pCardFileInfo);
+struct CARD_FREE_SPACE_INFO
+{
+    uint dwVersion;
+    uint dwBytesAvailable;
+    uint dwKeyContainersAvailable;
+    uint dwMaxKeyContainers;
+}
+alias PFN_CARD_QUERY_FREE_SPACE = uint function(CARD_DATA* pCardData, uint dwFlags, CARD_FREE_SPACE_INFO* pCardFreeSpaceInfo);
+struct CARD_KEY_SIZES
+{
+    uint dwVersion;
+    uint dwMinimumBitlen;
+    uint dwDefaultBitlen;
+    uint dwMaximumBitlen;
+    uint dwIncrementalBitlen;
+}
+alias PFN_CARD_QUERY_KEY_SIZES = uint function(CARD_DATA* pCardData, uint dwKeySpec, uint dwFlags, CARD_KEY_SIZES* pKeySizes);
+struct CARD_RSA_DECRYPT_INFO
+{
+    uint dwVersion;
+    ubyte bContainerIndex;
+    uint dwKeySpec;
+    ubyte* pbData;
+    uint cbData;
+    void* pPaddingInfo;
+    uint dwPaddingType;
+}
+alias PFN_CARD_RSA_DECRYPT = uint function(CARD_DATA* pCardData, CARD_RSA_DECRYPT_INFO* pInfo);
+struct CARD_SIGNING_INFO
+{
+    uint dwVersion;
+    ubyte bContainerIndex;
+    uint dwKeySpec;
+    uint dwSigningFlags;
+    ALG_ID aiHashAlg;
+    ubyte* pbData;
+    uint cbData;
+    ubyte* pbSignedData;
+    uint cbSignedData;
+    void* pPaddingInfo;
+    uint dwPaddingType;
+}
+alias PFN_CARD_SIGN_DATA = uint function(CARD_DATA* pCardData, CARD_SIGNING_INFO* pInfo);
+struct CARD_DH_AGREEMENT_INFO
+{
+    uint dwVersion;
+    ubyte bContainerIndex;
+    uint dwFlags;
+    uint dwPublicKey;
+    ubyte* pbPublicKey;
+    ubyte* pbReserved;
+    uint cbReserved;
+    ubyte bSecretAgreementIndex;
+}
+alias PFN_CARD_CONSTRUCT_DH_AGREEMENT = uint function(CARD_DATA* pCardData, CARD_DH_AGREEMENT_INFO* pAgreementInfo);
+struct CARD_DERIVE_KEY
+{
+    uint dwVersion;
+    uint dwFlags;
+    PWSTR pwszKDF;
+    ubyte bSecretAgreementIndex;
+    void* pParameterList;
+    ubyte* pbDerivedKey;
+    uint cbDerivedKey;
+    PWSTR pwszAlgId;
+    uint dwKeyLen;
+    ulong hKey;
+}
+alias PFN_CARD_DERIVE_KEY = uint function(CARD_DATA* pCardData, CARD_DERIVE_KEY* pAgreementInfo);
+alias PFN_CARD_DESTROY_DH_AGREEMENT = uint function(CARD_DATA* pCardData, ubyte bSecretAgreementIndex, uint dwFlags);
+alias PFN_CSP_GET_DH_AGREEMENT = uint function(CARD_DATA* pCardData, void* hSecretAgreement, ubyte* pbSecretAgreementIndex, uint dwFlags);
+alias PFN_CSP_ALLOC = void* function(ulong Size);
+alias PFN_CSP_REALLOC = void* function(void* Address, ulong Size);
+alias PFN_CSP_FREE = void function(void* Address);
+alias PFN_CSP_CACHE_ADD_FILE = uint function(void* pvCacheContext, PWSTR wszTag, uint dwFlags, ubyte* pbData, uint cbData);
+alias PFN_CSP_CACHE_LOOKUP_FILE = uint function(void* pvCacheContext, PWSTR wszTag, uint dwFlags, ubyte** ppbData, uint* pcbData);
+alias PFN_CSP_CACHE_DELETE_FILE = uint function(void* pvCacheContext, PWSTR wszTag, uint dwFlags);
+alias PFN_CSP_PAD_DATA = uint function(CARD_SIGNING_INFO* pSigningInfo, uint cbMaxWidth, uint* pcbPaddedBuffer, ubyte** ppbPaddedBuffer);
+alias PFN_CSP_UNPAD_DATA = uint function(CARD_RSA_DECRYPT_INFO* pRSADecryptInfo, uint* pcbUnpaddedData, ubyte** ppbUnpaddedData);
+alias PFN_CARD_GET_CONTAINER_PROPERTY = uint function(CARD_DATA* pCardData, ubyte bContainerIndex, const(wchar)* wszProperty, ubyte* pbData, uint cbData, uint* pdwDataLen, uint dwFlags);
+alias PFN_CARD_SET_CONTAINER_PROPERTY = uint function(CARD_DATA* pCardData, ubyte bContainerIndex, const(wchar)* wszProperty, ubyte* pbData, uint cbDataLen, uint dwFlags);
+alias PFN_CARD_GET_PROPERTY = uint function(CARD_DATA* pCardData, const(wchar)* wszProperty, ubyte* pbData, uint cbData, uint* pdwDataLen, uint dwFlags);
+alias PFN_CARD_SET_PROPERTY = uint function(CARD_DATA* pCardData, const(wchar)* wszProperty, ubyte* pbData, uint cbDataLen, uint dwFlags);
+struct CARD_ENCRYPTED_DATA
+{
+    ubyte* pbEncryptedData;
+    uint cbEncryptedData;
+}
+struct CARD_IMPORT_KEYPAIR
+{
+    uint dwVersion;
+    ubyte bContainerIndex;
+    uint PinId;
+    uint dwKeySpec;
+    uint dwKeySize;
+    uint cbInput;
+    ubyte[1] pbInput;
+}
+struct CARD_CHANGE_AUTHENTICATOR
+{
+    uint dwVersion;
+    uint dwFlags;
+    uint dwAuthenticatingPinId;
+    uint cbAuthenticatingPinData;
+    uint dwTargetPinId;
+    uint cbTargetData;
+    uint cRetryCount;
+    ubyte[1] pbData;
+}
+struct CARD_CHANGE_AUTHENTICATOR_RESPONSE
+{
+    uint dwVersion;
+    uint cAttemptsRemaining;
+}
+struct CARD_AUTHENTICATE
+{
+    uint dwVersion;
+    uint dwFlags;
+    uint PinId;
+    uint cbPinData;
+    ubyte[1] pbPinData;
+}
+struct CARD_AUTHENTICATE_RESPONSE
+{
+    uint dwVersion;
+    uint cbSessionPin;
+    uint cAttemptsRemaining;
+    ubyte[1] pbSessionPin;
+}
+alias PFN_MD_IMPORT_SESSION_KEY = uint function(CARD_DATA* pCardData, const(wchar)* pwszBlobType, const(wchar)* pwszAlgId, ulong* phKey, ubyte* pbInput, uint cbInput);
+alias PFN_MD_ENCRYPT_DATA = uint function(CARD_DATA* pCardData, ulong hKey, const(wchar)* pwszSecureFunction, ubyte* pbInput, uint cbInput, uint dwFlags, CARD_ENCRYPTED_DATA** ppEncryptedData, uint* pcEncryptedData);
+alias PFN_CARD_GET_SHARED_KEY_HANDLE = uint function(CARD_DATA* pCardData, ubyte* pbInput, uint cbInput, ubyte** ppbOutput, uint* pcbOutput, ulong* phKey);
+alias PFN_CARD_DESTROY_KEY = uint function(CARD_DATA* pCardData, ulong hKey);
+alias PFN_CARD_GET_ALGORITHM_PROPERTY = uint function(CARD_DATA* pCardData, const(wchar)* pwszAlgId, const(wchar)* pwszProperty, ubyte* pbData, uint cbData, uint* pdwDataLen, uint dwFlags);
+alias PFN_CARD_GET_KEY_PROPERTY = uint function(CARD_DATA* pCardData, ulong hKey, const(wchar)* pwszProperty, ubyte* pbData, uint cbData, uint* pdwDataLen, uint dwFlags);
+alias PFN_CARD_SET_KEY_PROPERTY = uint function(CARD_DATA* pCardData, ulong hKey, const(wchar)* pwszProperty, ubyte* pbInput, uint cbInput, uint dwFlags);
+alias PFN_CARD_IMPORT_SESSION_KEY = uint function(CARD_DATA* pCardData, ubyte bContainerIndex, void* pPaddingInfo, const(wchar)* pwszBlobType, const(wchar)* pwszAlgId, ulong* phKey, ubyte* pbInput, uint cbInput, uint dwFlags);
+alias PFN_CARD_PROCESS_ENCRYPTED_DATA = uint function(CARD_DATA* pCardData, ulong hKey, const(wchar)* pwszSecureFunction, CARD_ENCRYPTED_DATA* pEncryptedData, uint cEncryptedData, ubyte* pbOutput, uint cbOutput, uint* pdwOutputLen, uint dwFlags);
+struct CARD_DATA
+{
+    uint dwVersion;
+    ubyte* pbAtr;
+    uint cbAtr;
+    PWSTR pwszCardName;
+    PFN_CSP_ALLOC pfnCspAlloc;
+    PFN_CSP_REALLOC pfnCspReAlloc;
+    PFN_CSP_FREE pfnCspFree;
+    PFN_CSP_CACHE_ADD_FILE pfnCspCacheAddFile;
+    PFN_CSP_CACHE_LOOKUP_FILE pfnCspCacheLookupFile;
+    PFN_CSP_CACHE_DELETE_FILE pfnCspCacheDeleteFile;
+    void* pvCacheContext;
+    PFN_CSP_PAD_DATA pfnCspPadData;
+    ulong hSCardCtx;
+    ulong hScard;
+    void* pvVendorSpecific;
+    PFN_CARD_DELETE_CONTEXT pfnCardDeleteContext;
+    PFN_CARD_QUERY_CAPABILITIES pfnCardQueryCapabilities;
+    PFN_CARD_DELETE_CONTAINER pfnCardDeleteContainer;
+    PFN_CARD_CREATE_CONTAINER pfnCardCreateContainer;
+    PFN_CARD_GET_CONTAINER_INFO pfnCardGetContainerInfo;
+    PFN_CARD_AUTHENTICATE_PIN pfnCardAuthenticatePin;
+    PFN_CARD_GET_CHALLENGE pfnCardGetChallenge;
+    PFN_CARD_AUTHENTICATE_CHALLENGE pfnCardAuthenticateChallenge;
+    PFN_CARD_UNBLOCK_PIN pfnCardUnblockPin;
+    PFN_CARD_CHANGE_AUTHENTICATOR pfnCardChangeAuthenticator;
+    PFN_CARD_DEAUTHENTICATE pfnCardDeauthenticate;
+    PFN_CARD_CREATE_DIRECTORY pfnCardCreateDirectory;
+    PFN_CARD_DELETE_DIRECTORY pfnCardDeleteDirectory;
+    void* pvUnused3;
+    void* pvUnused4;
+    PFN_CARD_CREATE_FILE pfnCardCreateFile;
+    PFN_CARD_READ_FILE pfnCardReadFile;
+    PFN_CARD_WRITE_FILE pfnCardWriteFile;
+    PFN_CARD_DELETE_FILE pfnCardDeleteFile;
+    PFN_CARD_ENUM_FILES pfnCardEnumFiles;
+    PFN_CARD_GET_FILE_INFO pfnCardGetFileInfo;
+    PFN_CARD_QUERY_FREE_SPACE pfnCardQueryFreeSpace;
+    PFN_CARD_QUERY_KEY_SIZES pfnCardQueryKeySizes;
+    PFN_CARD_SIGN_DATA pfnCardSignData;
+    PFN_CARD_RSA_DECRYPT pfnCardRSADecrypt;
+    PFN_CARD_CONSTRUCT_DH_AGREEMENT pfnCardConstructDHAgreement;
+    PFN_CARD_DERIVE_KEY pfnCardDeriveKey;
+    PFN_CARD_DESTROY_DH_AGREEMENT pfnCardDestroyDHAgreement;
+    PFN_CSP_GET_DH_AGREEMENT pfnCspGetDHAgreement;
+    PFN_CARD_GET_CHALLENGE_EX pfnCardGetChallengeEx;
+    PFN_CARD_AUTHENTICATE_EX pfnCardAuthenticateEx;
+    PFN_CARD_CHANGE_AUTHENTICATOR_EX pfnCardChangeAuthenticatorEx;
+    PFN_CARD_DEAUTHENTICATE_EX pfnCardDeauthenticateEx;
+    PFN_CARD_GET_CONTAINER_PROPERTY pfnCardGetContainerProperty;
+    PFN_CARD_SET_CONTAINER_PROPERTY pfnCardSetContainerProperty;
+    PFN_CARD_GET_PROPERTY pfnCardGetProperty;
+    PFN_CARD_SET_PROPERTY pfnCardSetProperty;
+    PFN_CSP_UNPAD_DATA pfnCspUnpadData;
+    PFN_MD_IMPORT_SESSION_KEY pfnMDImportSessionKey;
+    PFN_MD_ENCRYPT_DATA pfnMDEncryptData;
+    PFN_CARD_IMPORT_SESSION_KEY pfnCardImportSessionKey;
+    PFN_CARD_GET_SHARED_KEY_HANDLE pfnCardGetSharedKeyHandle;
+    PFN_CARD_GET_ALGORITHM_PROPERTY pfnCardGetAlgorithmProperty;
+    PFN_CARD_GET_KEY_PROPERTY pfnCardGetKeyProperty;
+    PFN_CARD_SET_KEY_PROPERTY pfnCardSetKeyProperty;
+    PFN_CARD_DESTROY_KEY pfnCardDestroyKey;
+    PFN_CARD_PROCESS_ENCRYPTED_DATA pfnCardProcessEncryptedData;
+    PFN_CARD_CREATE_CONTAINER_EX pfnCardCreateContainerEx;
+}
+struct CLMD_PIV_CERT_DATA
+{
+    uint dwVersion;
+    uint dwCertTag;
+    ubyte* pbCert;
+    uint cbCert;
+}
+struct CLMD_PIV_GENERATE_ASYMMETRIC_KEY
+{
+    uint dwVersion;
+    ubyte bAlgorithmId;
+    ubyte bKeyId;
+    ubyte* pbKey;
+    uint cbKey;
+}
+struct CLMD_PIV_PUBLIC_KEY_DATA
+{
+    uint dwVersion;
+    ubyte bKeyId;
+    ubyte* pbPublicKey;
+    uint cbPublicKey;
 }

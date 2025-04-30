@@ -12,258 +12,258 @@ import windows.win32.ui.windowsandmessaging : HICON;
 version (Windows):
 extern (Windows):
 
-int lineAccept(uint, const(char)*, uint);
-int lineAddProvider(const(char)*, HWND, uint*);
-int lineAddProviderA(const(char)*, HWND, uint*);
-int lineAddProviderW(const(wchar)*, HWND, uint*);
-int lineAddToConference(uint, uint);
-int lineAgentSpecific(uint, uint, uint, void*, uint);
-int lineAnswer(uint, const(char)*, uint);
-int lineBlindTransfer(uint, const(char)*, uint);
-int lineBlindTransferA(uint, const(char)*, uint);
-int lineBlindTransferW(uint, const(wchar)*, uint);
-int lineClose(uint);
-int lineCompleteCall(uint, uint*, uint, uint);
-int lineCompleteTransfer(uint, uint, uint*, uint);
-int lineConfigDialog(uint, HWND, const(char)*);
-int lineConfigDialogA(uint, HWND, const(char)*);
-int lineConfigDialogW(uint, HWND, const(wchar)*);
-int lineConfigDialogEdit(uint, HWND, const(char)*, const(void)*, uint, VARSTRING*);
-int lineConfigDialogEditA(uint, HWND, const(char)*, const(void)*, uint, VARSTRING*);
-int lineConfigDialogEditW(uint, HWND, const(wchar)*, const(void)*, uint, VARSTRING*);
-int lineConfigProvider(HWND, uint);
-int lineCreateAgentW(uint, const(wchar)*, const(wchar)*, uint*);
-int lineCreateAgentA(uint, const(char)*, const(char)*, uint*);
-int lineCreateAgentSessionW(uint, uint, const(wchar)*, uint, GUID*, uint*);
-int lineCreateAgentSessionA(uint, uint, const(char)*, uint, GUID*, uint*);
-int lineDeallocateCall(uint);
-int lineDevSpecific(uint, uint, uint, void*, uint);
-int lineDevSpecificFeature(uint, uint, void*, uint);
-int lineDial(uint, const(char)*, uint);
-int lineDialA(uint, const(char)*, uint);
-int lineDialW(uint, const(wchar)*, uint);
-int lineDrop(uint, const(char)*, uint);
-int lineForward(uint, uint, uint, const(LINEFORWARDLIST)*, uint, uint*, const(LINECALLPARAMS)*);
-int lineForwardA(uint, uint, uint, const(LINEFORWARDLIST)*, uint, uint*, const(LINECALLPARAMS)*);
-int lineForwardW(uint, uint, uint, const(LINEFORWARDLIST)*, uint, uint*, const(LINECALLPARAMS)*);
-int lineGatherDigits(uint, uint, PSTR, uint, const(char)*, uint, uint);
-int lineGatherDigitsA(uint, uint, PSTR, uint, const(char)*, uint, uint);
-int lineGatherDigitsW(uint, uint, PWSTR, uint, const(wchar)*, uint, uint);
-int lineGenerateDigits(uint, uint, const(char)*, uint);
-int lineGenerateDigitsA(uint, uint, const(char)*, uint);
-int lineGenerateDigitsW(uint, uint, const(wchar)*, uint);
-int lineGenerateTone(uint, uint, uint, uint, const(LINEGENERATETONE)*);
-int lineGetAddressCaps(uint, uint, uint, uint, uint, LINEADDRESSCAPS*);
-int lineGetAddressCapsA(uint, uint, uint, uint, uint, LINEADDRESSCAPS*);
-int lineGetAddressCapsW(uint, uint, uint, uint, uint, LINEADDRESSCAPS*);
-int lineGetAddressID(uint, uint*, uint, const(char)*, uint);
-int lineGetAddressIDA(uint, uint*, uint, const(char)*, uint);
-int lineGetAddressIDW(uint, uint*, uint, const(wchar)*, uint);
-int lineGetAddressStatus(uint, uint, LINEADDRESSSTATUS*);
-int lineGetAddressStatusA(uint, uint, LINEADDRESSSTATUS*);
-int lineGetAddressStatusW(uint, uint, LINEADDRESSSTATUS*);
-int lineGetAgentActivityListA(uint, uint, LINEAGENTACTIVITYLIST*);
-int lineGetAgentActivityListW(uint, uint, LINEAGENTACTIVITYLIST*);
-int lineGetAgentCapsA(uint, uint, uint, uint, LINEAGENTCAPS*);
-int lineGetAgentCapsW(uint, uint, uint, uint, LINEAGENTCAPS*);
-int lineGetAgentGroupListA(uint, uint, LINEAGENTGROUPLIST*);
-int lineGetAgentGroupListW(uint, uint, LINEAGENTGROUPLIST*);
-int lineGetAgentInfo(uint, uint, LINEAGENTINFO*);
-int lineGetAgentSessionInfo(uint, uint, LINEAGENTSESSIONINFO*);
-int lineGetAgentSessionList(uint, uint, LINEAGENTSESSIONLIST*);
-int lineGetAgentStatusA(uint, uint, LINEAGENTSTATUS*);
-int lineGetAgentStatusW(uint, uint, LINEAGENTSTATUS*);
-int lineGetAppPriority(const(char)*, uint, LINEEXTENSIONID*, uint, VARSTRING*, uint*);
-int lineGetAppPriorityA(const(char)*, uint, LINEEXTENSIONID*, uint, VARSTRING*, uint*);
-int lineGetAppPriorityW(const(wchar)*, uint, LINEEXTENSIONID*, uint, VARSTRING*, uint*);
-int lineGetCallInfo(uint, LINECALLINFO*);
-int lineGetCallInfoA(uint, LINECALLINFO*);
-int lineGetCallInfoW(uint, LINECALLINFO*);
-int lineGetCallStatus(uint, LINECALLSTATUS*);
-int lineGetConfRelatedCalls(uint, LINECALLLIST*);
-int lineGetCountry(uint, uint, LINECOUNTRYLIST*);
-int lineGetCountryA(uint, uint, LINECOUNTRYLIST*);
-int lineGetCountryW(uint, uint, LINECOUNTRYLIST*);
-int lineGetDevCaps(uint, uint, uint, uint, LINEDEVCAPS*);
-int lineGetDevCapsA(uint, uint, uint, uint, LINEDEVCAPS*);
-int lineGetDevCapsW(uint, uint, uint, uint, LINEDEVCAPS*);
-int lineGetDevConfig(uint, VARSTRING*, const(char)*);
-int lineGetDevConfigA(uint, VARSTRING*, const(char)*);
-int lineGetDevConfigW(uint, VARSTRING*, const(wchar)*);
-int lineGetGroupListA(uint, LINEAGENTGROUPLIST*);
-int lineGetGroupListW(uint, LINEAGENTGROUPLIST*);
-int lineGetIcon(uint, const(char)*, HICON*);
-int lineGetIconA(uint, const(char)*, HICON*);
-int lineGetIconW(uint, const(wchar)*, HICON*);
-int lineGetID(uint, uint, uint, uint, VARSTRING*, const(char)*);
-int lineGetIDA(uint, uint, uint, uint, VARSTRING*, const(char)*);
-int lineGetIDW(uint, uint, uint, uint, VARSTRING*, const(wchar)*);
-int lineGetLineDevStatus(uint, LINEDEVSTATUS*);
-int lineGetLineDevStatusA(uint, LINEDEVSTATUS*);
-int lineGetLineDevStatusW(uint, LINEDEVSTATUS*);
-int lineGetMessage(uint, LINEMESSAGE*, uint);
-int lineGetNewCalls(uint, uint, uint, LINECALLLIST*);
-int lineGetNumRings(uint, uint, uint*);
-int lineGetProviderList(uint, LINEPROVIDERLIST*);
-int lineGetProviderListA(uint, LINEPROVIDERLIST*);
-int lineGetProviderListW(uint, LINEPROVIDERLIST*);
-int lineGetProxyStatus(uint, uint, uint, LINEPROXYREQUESTLIST*);
-int lineGetQueueInfo(uint, uint, LINEQUEUEINFO*);
-int lineGetQueueListA(uint, GUID*, LINEQUEUELIST*);
-int lineGetQueueListW(uint, GUID*, LINEQUEUELIST*);
-int lineGetRequest(uint, uint, void*);
-int lineGetRequestA(uint, uint, void*);
-int lineGetRequestW(uint, uint, void*);
-int lineGetStatusMessages(uint, uint*, uint*);
-int lineGetTranslateCaps(uint, uint, LINETRANSLATECAPS*);
-int lineGetTranslateCapsA(uint, uint, LINETRANSLATECAPS*);
-int lineGetTranslateCapsW(uint, uint, LINETRANSLATECAPS*);
-int lineHandoff(uint, const(char)*, uint);
-int lineHandoffA(uint, const(char)*, uint);
-int lineHandoffW(uint, const(wchar)*, uint);
-int lineHold(uint);
-int lineInitialize(uint*, HINSTANCE, LINECALLBACK, const(char)*, uint*);
-int lineInitializeExA(uint*, HINSTANCE, LINECALLBACK, const(char)*, uint*, uint*, LINEINITIALIZEEXPARAMS*);
-int lineInitializeExW(uint*, HINSTANCE, LINECALLBACK, const(wchar)*, uint*, uint*, LINEINITIALIZEEXPARAMS*);
-int lineMakeCall(uint, uint*, const(char)*, uint, const(LINECALLPARAMS)*);
-int lineMakeCallA(uint, uint*, const(char)*, uint, const(LINECALLPARAMS)*);
-int lineMakeCallW(uint, uint*, const(wchar)*, uint, const(LINECALLPARAMS)*);
-int lineMonitorDigits(uint, uint);
-int lineMonitorMedia(uint, uint);
-int lineMonitorTones(uint, const(LINEMONITORTONE)*, uint);
-int lineNegotiateAPIVersion(uint, uint, uint, uint, uint*, LINEEXTENSIONID*);
-int lineNegotiateExtVersion(uint, uint, uint, uint, uint, uint*);
-int lineOpen(uint, uint, uint*, uint, uint, ulong, uint, uint, const(LINECALLPARAMS)*);
-int lineOpenA(uint, uint, uint*, uint, uint, ulong, uint, uint, const(LINECALLPARAMS)*);
-int lineOpenW(uint, uint, uint*, uint, uint, ulong, uint, uint, const(LINECALLPARAMS)*);
-int linePark(uint, uint, const(char)*, VARSTRING*);
-int lineParkA(uint, uint, const(char)*, VARSTRING*);
-int lineParkW(uint, uint, const(wchar)*, VARSTRING*);
-int linePickup(uint, uint, uint*, const(char)*, const(char)*);
-int linePickupA(uint, uint, uint*, const(char)*, const(char)*);
-int linePickupW(uint, uint, uint*, const(wchar)*, const(wchar)*);
-int linePrepareAddToConference(uint, uint*, const(LINECALLPARAMS)*);
-int linePrepareAddToConferenceA(uint, uint*, const(LINECALLPARAMS)*);
-int linePrepareAddToConferenceW(uint, uint*, const(LINECALLPARAMS)*);
-int lineProxyMessage(uint, uint, uint, uint, uint, uint);
-int lineProxyResponse(uint, LINEPROXYREQUEST*, uint);
-int lineRedirect(uint, const(char)*, uint);
-int lineRedirectA(uint, const(char)*, uint);
-int lineRedirectW(uint, const(wchar)*, uint);
-int lineRegisterRequestRecipient(uint, uint, uint, uint);
-int lineReleaseUserUserInfo(uint);
-int lineRemoveFromConference(uint);
-int lineRemoveProvider(uint, HWND);
-int lineSecureCall(uint);
-int lineSendUserUserInfo(uint, const(char)*, uint);
-int lineSetAgentActivity(uint, uint, uint);
-int lineSetAgentGroup(uint, uint, LINEAGENTGROUPLIST*);
-int lineSetAgentMeasurementPeriod(uint, uint, uint);
-int lineSetAgentSessionState(uint, uint, uint, uint);
-int lineSetAgentStateEx(uint, uint, uint, uint);
-int lineSetAgentState(uint, uint, uint, uint);
-int lineSetAppPriority(const(char)*, uint, LINEEXTENSIONID*, uint, const(char)*, uint);
-int lineSetAppPriorityA(const(char)*, uint, LINEEXTENSIONID*, uint, const(char)*, uint);
-int lineSetAppPriorityW(const(wchar)*, uint, LINEEXTENSIONID*, uint, const(wchar)*, uint);
-int lineSetAppSpecific(uint, uint);
-int lineSetCallData(uint, void*, uint);
-int lineSetCallParams(uint, uint, uint, uint, const(LINEDIALPARAMS)*);
-int lineSetCallPrivilege(uint, uint);
-int lineSetCallQualityOfService(uint, void*, uint, void*, uint);
-int lineSetCallTreatment(uint, uint);
-int lineSetCurrentLocation(uint, uint);
-int lineSetDevConfig(uint, const(void)*, uint, const(char)*);
-int lineSetDevConfigA(uint, const(void)*, uint, const(char)*);
-int lineSetDevConfigW(uint, const(void)*, uint, const(wchar)*);
-int lineSetLineDevStatus(uint, uint, uint);
-int lineSetMediaControl(uint, uint, uint, uint, const(LINEMEDIACONTROLDIGIT)*, uint, const(LINEMEDIACONTROLMEDIA)*, uint, const(LINEMEDIACONTROLTONE)*, uint, const(LINEMEDIACONTROLCALLSTATE)*, uint);
-int lineSetMediaMode(uint, uint);
-int lineSetQueueMeasurementPeriod(uint, uint, uint);
-int lineSetNumRings(uint, uint, uint);
-int lineSetStatusMessages(uint, uint, uint);
-int lineSetTerminal(uint, uint, uint, uint, uint, uint, uint);
-int lineSetTollList(uint, uint, const(char)*, uint);
-int lineSetTollListA(uint, uint, const(char)*, uint);
-int lineSetTollListW(uint, uint, const(wchar)*, uint);
-int lineSetupConference(uint, uint, uint*, uint*, uint, const(LINECALLPARAMS)*);
-int lineSetupConferenceA(uint, uint, uint*, uint*, uint, const(LINECALLPARAMS)*);
-int lineSetupConferenceW(uint, uint, uint*, uint*, uint, const(LINECALLPARAMS)*);
-int lineSetupTransfer(uint, uint*, const(LINECALLPARAMS)*);
-int lineSetupTransferA(uint, uint*, const(LINECALLPARAMS)*);
-int lineSetupTransferW(uint, uint*, const(LINECALLPARAMS)*);
-int lineShutdown(uint);
-int lineSwapHold(uint, uint);
-int lineTranslateAddress(uint, uint, uint, const(char)*, uint, uint, LINETRANSLATEOUTPUT*);
-int lineTranslateAddressA(uint, uint, uint, const(char)*, uint, uint, LINETRANSLATEOUTPUT*);
-int lineTranslateAddressW(uint, uint, uint, const(wchar)*, uint, uint, LINETRANSLATEOUTPUT*);
-int lineTranslateDialog(uint, uint, uint, HWND, const(char)*);
-int lineTranslateDialogA(uint, uint, uint, HWND, const(char)*);
-int lineTranslateDialogW(uint, uint, uint, HWND, const(wchar)*);
-int lineUncompleteCall(uint, uint);
-int lineUnhold(uint);
-int lineUnpark(uint, uint, uint*, const(char)*);
-int lineUnparkA(uint, uint, uint*, const(char)*);
-int lineUnparkW(uint, uint, uint*, const(wchar)*);
-int phoneClose(uint);
-int phoneConfigDialog(uint, HWND, const(char)*);
-int phoneConfigDialogA(uint, HWND, const(char)*);
-int phoneConfigDialogW(uint, HWND, const(wchar)*);
-int phoneDevSpecific(uint, void*, uint);
-int phoneGetButtonInfo(uint, uint, PHONEBUTTONINFO*);
-int phoneGetButtonInfoA(uint, uint, PHONEBUTTONINFO*);
-int phoneGetButtonInfoW(uint, uint, PHONEBUTTONINFO*);
-int phoneGetData(uint, uint, void*, uint);
-int phoneGetDevCaps(uint, uint, uint, uint, PHONECAPS*);
-int phoneGetDevCapsA(uint, uint, uint, uint, PHONECAPS*);
-int phoneGetDevCapsW(uint, uint, uint, uint, PHONECAPS*);
-int phoneGetDisplay(uint, VARSTRING*);
-int phoneGetGain(uint, uint, uint*);
-int phoneGetHookSwitch(uint, uint*);
-int phoneGetIcon(uint, const(char)*, HICON*);
-int phoneGetIconA(uint, const(char)*, HICON*);
-int phoneGetIconW(uint, const(wchar)*, HICON*);
-int phoneGetID(uint, VARSTRING*, const(char)*);
-int phoneGetIDA(uint, VARSTRING*, const(char)*);
-int phoneGetIDW(uint, VARSTRING*, const(wchar)*);
-int phoneGetLamp(uint, uint, uint*);
-int phoneGetMessage(uint, PHONEMESSAGE*, uint);
-int phoneGetRing(uint, uint*, uint*);
-int phoneGetStatus(uint, PHONESTATUS*);
-int phoneGetStatusA(uint, PHONESTATUS*);
-int phoneGetStatusW(uint, PHONESTATUS*);
-int phoneGetStatusMessages(uint, uint*, uint*, uint*);
-int phoneGetVolume(uint, uint, uint*);
-int phoneInitialize(uint*, HINSTANCE, PHONECALLBACK, const(char)*, uint*);
-int phoneInitializeExA(uint*, HINSTANCE, PHONECALLBACK, const(char)*, uint*, uint*, PHONEINITIALIZEEXPARAMS*);
-int phoneInitializeExW(uint*, HINSTANCE, PHONECALLBACK, const(wchar)*, uint*, uint*, PHONEINITIALIZEEXPARAMS*);
-int phoneNegotiateAPIVersion(uint, uint, uint, uint, uint*, PHONEEXTENSIONID*);
-int phoneNegotiateExtVersion(uint, uint, uint, uint, uint, uint*);
-int phoneOpen(uint, uint, uint*, uint, uint, ulong, uint);
-int phoneSetButtonInfo(uint, uint, const(PHONEBUTTONINFO)*);
-int phoneSetButtonInfoA(uint, uint, const(PHONEBUTTONINFO)*);
-int phoneSetButtonInfoW(uint, uint, const(PHONEBUTTONINFO)*);
-int phoneSetData(uint, uint, const(void)*, uint);
-int phoneSetDisplay(uint, uint, uint, const(char)*, uint);
-int phoneSetGain(uint, uint, uint);
-int phoneSetHookSwitch(uint, uint, uint);
-int phoneSetLamp(uint, uint, uint);
-int phoneSetRing(uint, uint, uint);
-int phoneSetStatusMessages(uint, uint, uint, uint);
-int phoneSetVolume(uint, uint, uint);
-int phoneShutdown(uint);
-int tapiGetLocationInfo(PSTR, PSTR);
-int tapiGetLocationInfoA(PSTR, PSTR);
-int tapiGetLocationInfoW(PWSTR, PWSTR);
-int tapiRequestDrop(HWND, WPARAM);
-int tapiRequestMakeCall(const(char)*, const(char)*, const(char)*, const(char)*);
-int tapiRequestMakeCallA(const(char)*, const(char)*, const(char)*, const(char)*);
-int tapiRequestMakeCallW(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*);
-int tapiRequestMediaCall(HWND, WPARAM, const(char)*, const(char)*, uint, uint, const(char)*, const(char)*, const(char)*, const(char)*);
-int tapiRequestMediaCallA(HWND, WPARAM, const(char)*, const(char)*, uint, uint, const(char)*, const(char)*, const(char)*, const(char)*);
-int tapiRequestMediaCallW(HWND, WPARAM, const(wchar)*, const(wchar)*, uint, uint, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*);
-HRESULT OpenTnefStream(void*, IStream, byte*, uint, IMessage, ushort, ITnef*);
-HRESULT OpenTnefStreamEx(void*, IStream, byte*, uint, IMessage, ushort, IAddrBook, ITnef*);
-HRESULT GetTnefStreamCodepage(IStream, uint*, uint*);
+int lineAccept(uint hCall, const(char)* lpsUserUserInfo, uint dwSize);
+int lineAddProvider(const(char)* lpszProviderFilename, HWND hwndOwner, uint* lpdwPermanentProviderID);
+int lineAddProviderA(const(char)* lpszProviderFilename, HWND hwndOwner, uint* lpdwPermanentProviderID);
+int lineAddProviderW(const(wchar)* lpszProviderFilename, HWND hwndOwner, uint* lpdwPermanentProviderID);
+int lineAddToConference(uint hConfCall, uint hConsultCall);
+int lineAgentSpecific(uint hLine, uint dwAddressID, uint dwAgentExtensionIDIndex, void* lpParams, uint dwSize);
+int lineAnswer(uint hCall, const(char)* lpsUserUserInfo, uint dwSize);
+int lineBlindTransfer(uint hCall, const(char)* lpszDestAddress, uint dwCountryCode);
+int lineBlindTransferA(uint hCall, const(char)* lpszDestAddress, uint dwCountryCode);
+int lineBlindTransferW(uint hCall, const(wchar)* lpszDestAddressW, uint dwCountryCode);
+int lineClose(uint hLine);
+int lineCompleteCall(uint hCall, uint* lpdwCompletionID, uint dwCompletionMode, uint dwMessageID);
+int lineCompleteTransfer(uint hCall, uint hConsultCall, uint* lphConfCall, uint dwTransferMode);
+int lineConfigDialog(uint dwDeviceID, HWND hwndOwner, const(char)* lpszDeviceClass);
+int lineConfigDialogA(uint dwDeviceID, HWND hwndOwner, const(char)* lpszDeviceClass);
+int lineConfigDialogW(uint dwDeviceID, HWND hwndOwner, const(wchar)* lpszDeviceClass);
+int lineConfigDialogEdit(uint dwDeviceID, HWND hwndOwner, const(char)* lpszDeviceClass, const(void)* lpDeviceConfigIn, uint dwSize, VARSTRING* lpDeviceConfigOut);
+int lineConfigDialogEditA(uint dwDeviceID, HWND hwndOwner, const(char)* lpszDeviceClass, const(void)* lpDeviceConfigIn, uint dwSize, VARSTRING* lpDeviceConfigOut);
+int lineConfigDialogEditW(uint dwDeviceID, HWND hwndOwner, const(wchar)* lpszDeviceClass, const(void)* lpDeviceConfigIn, uint dwSize, VARSTRING* lpDeviceConfigOut);
+int lineConfigProvider(HWND hwndOwner, uint dwPermanentProviderID);
+int lineCreateAgentW(uint hLine, const(wchar)* lpszAgentID, const(wchar)* lpszAgentPIN, uint* lphAgent);
+int lineCreateAgentA(uint hLine, const(char)* lpszAgentID, const(char)* lpszAgentPIN, uint* lphAgent);
+int lineCreateAgentSessionW(uint hLine, uint hAgent, const(wchar)* lpszAgentPIN, uint dwWorkingAddressID, GUID* lpGroupID, uint* lphAgentSession);
+int lineCreateAgentSessionA(uint hLine, uint hAgent, const(char)* lpszAgentPIN, uint dwWorkingAddressID, GUID* lpGroupID, uint* lphAgentSession);
+int lineDeallocateCall(uint hCall);
+int lineDevSpecific(uint hLine, uint dwAddressID, uint hCall, void* lpParams, uint dwSize);
+int lineDevSpecificFeature(uint hLine, uint dwFeature, void* lpParams, uint dwSize);
+int lineDial(uint hCall, const(char)* lpszDestAddress, uint dwCountryCode);
+int lineDialA(uint hCall, const(char)* lpszDestAddress, uint dwCountryCode);
+int lineDialW(uint hCall, const(wchar)* lpszDestAddress, uint dwCountryCode);
+int lineDrop(uint hCall, const(char)* lpsUserUserInfo, uint dwSize);
+int lineForward(uint hLine, uint bAllAddresses, uint dwAddressID, const(LINEFORWARDLIST)* lpForwardList, uint dwNumRingsNoAnswer, uint* lphConsultCall, const(LINECALLPARAMS)* lpCallParams);
+int lineForwardA(uint hLine, uint bAllAddresses, uint dwAddressID, const(LINEFORWARDLIST)* lpForwardList, uint dwNumRingsNoAnswer, uint* lphConsultCall, const(LINECALLPARAMS)* lpCallParams);
+int lineForwardW(uint hLine, uint bAllAddresses, uint dwAddressID, const(LINEFORWARDLIST)* lpForwardList, uint dwNumRingsNoAnswer, uint* lphConsultCall, const(LINECALLPARAMS)* lpCallParams);
+int lineGatherDigits(uint hCall, uint dwDigitModes, PSTR lpsDigits, uint dwNumDigits, const(char)* lpszTerminationDigits, uint dwFirstDigitTimeout, uint dwInterDigitTimeout);
+int lineGatherDigitsA(uint hCall, uint dwDigitModes, PSTR lpsDigits, uint dwNumDigits, const(char)* lpszTerminationDigits, uint dwFirstDigitTimeout, uint dwInterDigitTimeout);
+int lineGatherDigitsW(uint hCall, uint dwDigitModes, PWSTR lpsDigits, uint dwNumDigits, const(wchar)* lpszTerminationDigits, uint dwFirstDigitTimeout, uint dwInterDigitTimeout);
+int lineGenerateDigits(uint hCall, uint dwDigitMode, const(char)* lpszDigits, uint dwDuration);
+int lineGenerateDigitsA(uint hCall, uint dwDigitMode, const(char)* lpszDigits, uint dwDuration);
+int lineGenerateDigitsW(uint hCall, uint dwDigitMode, const(wchar)* lpszDigits, uint dwDuration);
+int lineGenerateTone(uint hCall, uint dwToneMode, uint dwDuration, uint dwNumTones, const(LINEGENERATETONE)* lpTones);
+int lineGetAddressCaps(uint hLineApp, uint dwDeviceID, uint dwAddressID, uint dwAPIVersion, uint dwExtVersion, LINEADDRESSCAPS* lpAddressCaps);
+int lineGetAddressCapsA(uint hLineApp, uint dwDeviceID, uint dwAddressID, uint dwAPIVersion, uint dwExtVersion, LINEADDRESSCAPS* lpAddressCaps);
+int lineGetAddressCapsW(uint hLineApp, uint dwDeviceID, uint dwAddressID, uint dwAPIVersion, uint dwExtVersion, LINEADDRESSCAPS* lpAddressCaps);
+int lineGetAddressID(uint hLine, uint* lpdwAddressID, uint dwAddressMode, const(char)* lpsAddress, uint dwSize);
+int lineGetAddressIDA(uint hLine, uint* lpdwAddressID, uint dwAddressMode, const(char)* lpsAddress, uint dwSize);
+int lineGetAddressIDW(uint hLine, uint* lpdwAddressID, uint dwAddressMode, const(wchar)* lpsAddress, uint dwSize);
+int lineGetAddressStatus(uint hLine, uint dwAddressID, LINEADDRESSSTATUS* lpAddressStatus);
+int lineGetAddressStatusA(uint hLine, uint dwAddressID, LINEADDRESSSTATUS* lpAddressStatus);
+int lineGetAddressStatusW(uint hLine, uint dwAddressID, LINEADDRESSSTATUS* lpAddressStatus);
+int lineGetAgentActivityListA(uint hLine, uint dwAddressID, LINEAGENTACTIVITYLIST* lpAgentActivityList);
+int lineGetAgentActivityListW(uint hLine, uint dwAddressID, LINEAGENTACTIVITYLIST* lpAgentActivityList);
+int lineGetAgentCapsA(uint hLineApp, uint dwDeviceID, uint dwAddressID, uint dwAppAPIVersion, LINEAGENTCAPS* lpAgentCaps);
+int lineGetAgentCapsW(uint hLineApp, uint dwDeviceID, uint dwAddressID, uint dwAppAPIVersion, LINEAGENTCAPS* lpAgentCaps);
+int lineGetAgentGroupListA(uint hLine, uint dwAddressID, LINEAGENTGROUPLIST* lpAgentGroupList);
+int lineGetAgentGroupListW(uint hLine, uint dwAddressID, LINEAGENTGROUPLIST* lpAgentGroupList);
+int lineGetAgentInfo(uint hLine, uint hAgent, LINEAGENTINFO* lpAgentInfo);
+int lineGetAgentSessionInfo(uint hLine, uint hAgentSession, LINEAGENTSESSIONINFO* lpAgentSessionInfo);
+int lineGetAgentSessionList(uint hLine, uint hAgent, LINEAGENTSESSIONLIST* lpAgentSessionList);
+int lineGetAgentStatusA(uint hLine, uint dwAddressID, LINEAGENTSTATUS* lpAgentStatus);
+int lineGetAgentStatusW(uint hLine, uint dwAddressID, LINEAGENTSTATUS* lpAgentStatus);
+int lineGetAppPriority(const(char)* lpszAppFilename, uint dwMediaMode, LINEEXTENSIONID* lpExtensionID, uint dwRequestMode, VARSTRING* lpExtensionName, uint* lpdwPriority);
+int lineGetAppPriorityA(const(char)* lpszAppFilename, uint dwMediaMode, LINEEXTENSIONID* lpExtensionID, uint dwRequestMode, VARSTRING* lpExtensionName, uint* lpdwPriority);
+int lineGetAppPriorityW(const(wchar)* lpszAppFilename, uint dwMediaMode, LINEEXTENSIONID* lpExtensionID, uint dwRequestMode, VARSTRING* lpExtensionName, uint* lpdwPriority);
+int lineGetCallInfo(uint hCall, LINECALLINFO* lpCallInfo);
+int lineGetCallInfoA(uint hCall, LINECALLINFO* lpCallInfo);
+int lineGetCallInfoW(uint hCall, LINECALLINFO* lpCallInfo);
+int lineGetCallStatus(uint hCall, LINECALLSTATUS* lpCallStatus);
+int lineGetConfRelatedCalls(uint hCall, LINECALLLIST* lpCallList);
+int lineGetCountry(uint dwCountryID, uint dwAPIVersion, LINECOUNTRYLIST* lpLineCountryList);
+int lineGetCountryA(uint dwCountryID, uint dwAPIVersion, LINECOUNTRYLIST* lpLineCountryList);
+int lineGetCountryW(uint dwCountryID, uint dwAPIVersion, LINECOUNTRYLIST* lpLineCountryList);
+int lineGetDevCaps(uint hLineApp, uint dwDeviceID, uint dwAPIVersion, uint dwExtVersion, LINEDEVCAPS* lpLineDevCaps);
+int lineGetDevCapsA(uint hLineApp, uint dwDeviceID, uint dwAPIVersion, uint dwExtVersion, LINEDEVCAPS* lpLineDevCaps);
+int lineGetDevCapsW(uint hLineApp, uint dwDeviceID, uint dwAPIVersion, uint dwExtVersion, LINEDEVCAPS* lpLineDevCaps);
+int lineGetDevConfig(uint dwDeviceID, VARSTRING* lpDeviceConfig, const(char)* lpszDeviceClass);
+int lineGetDevConfigA(uint dwDeviceID, VARSTRING* lpDeviceConfig, const(char)* lpszDeviceClass);
+int lineGetDevConfigW(uint dwDeviceID, VARSTRING* lpDeviceConfig, const(wchar)* lpszDeviceClass);
+int lineGetGroupListA(uint hLine, LINEAGENTGROUPLIST* lpGroupList);
+int lineGetGroupListW(uint hLine, LINEAGENTGROUPLIST* lpGroupList);
+int lineGetIcon(uint dwDeviceID, const(char)* lpszDeviceClass, HICON* lphIcon);
+int lineGetIconA(uint dwDeviceID, const(char)* lpszDeviceClass, HICON* lphIcon);
+int lineGetIconW(uint dwDeviceID, const(wchar)* lpszDeviceClass, HICON* lphIcon);
+int lineGetID(uint hLine, uint dwAddressID, uint hCall, uint dwSelect, VARSTRING* lpDeviceID, const(char)* lpszDeviceClass);
+int lineGetIDA(uint hLine, uint dwAddressID, uint hCall, uint dwSelect, VARSTRING* lpDeviceID, const(char)* lpszDeviceClass);
+int lineGetIDW(uint hLine, uint dwAddressID, uint hCall, uint dwSelect, VARSTRING* lpDeviceID, const(wchar)* lpszDeviceClass);
+int lineGetLineDevStatus(uint hLine, LINEDEVSTATUS* lpLineDevStatus);
+int lineGetLineDevStatusA(uint hLine, LINEDEVSTATUS* lpLineDevStatus);
+int lineGetLineDevStatusW(uint hLine, LINEDEVSTATUS* lpLineDevStatus);
+int lineGetMessage(uint hLineApp, LINEMESSAGE* lpMessage, uint dwTimeout);
+int lineGetNewCalls(uint hLine, uint dwAddressID, uint dwSelect, LINECALLLIST* lpCallList);
+int lineGetNumRings(uint hLine, uint dwAddressID, uint* lpdwNumRings);
+int lineGetProviderList(uint dwAPIVersion, LINEPROVIDERLIST* lpProviderList);
+int lineGetProviderListA(uint dwAPIVersion, LINEPROVIDERLIST* lpProviderList);
+int lineGetProviderListW(uint dwAPIVersion, LINEPROVIDERLIST* lpProviderList);
+int lineGetProxyStatus(uint hLineApp, uint dwDeviceID, uint dwAppAPIVersion, LINEPROXYREQUESTLIST* lpLineProxyReqestList);
+int lineGetQueueInfo(uint hLine, uint dwQueueID, LINEQUEUEINFO* lpLineQueueInfo);
+int lineGetQueueListA(uint hLine, GUID* lpGroupID, LINEQUEUELIST* lpQueueList);
+int lineGetQueueListW(uint hLine, GUID* lpGroupID, LINEQUEUELIST* lpQueueList);
+int lineGetRequest(uint hLineApp, uint dwRequestMode, void* lpRequestBuffer);
+int lineGetRequestA(uint hLineApp, uint dwRequestMode, void* lpRequestBuffer);
+int lineGetRequestW(uint hLineApp, uint dwRequestMode, void* lpRequestBuffer);
+int lineGetStatusMessages(uint hLine, uint* lpdwLineStates, uint* lpdwAddressStates);
+int lineGetTranslateCaps(uint hLineApp, uint dwAPIVersion, LINETRANSLATECAPS* lpTranslateCaps);
+int lineGetTranslateCapsA(uint hLineApp, uint dwAPIVersion, LINETRANSLATECAPS* lpTranslateCaps);
+int lineGetTranslateCapsW(uint hLineApp, uint dwAPIVersion, LINETRANSLATECAPS* lpTranslateCaps);
+int lineHandoff(uint hCall, const(char)* lpszFileName, uint dwMediaMode);
+int lineHandoffA(uint hCall, const(char)* lpszFileName, uint dwMediaMode);
+int lineHandoffW(uint hCall, const(wchar)* lpszFileName, uint dwMediaMode);
+int lineHold(uint hCall);
+int lineInitialize(uint* lphLineApp, HINSTANCE hInstance, LINECALLBACK lpfnCallback, const(char)* lpszAppName, uint* lpdwNumDevs);
+int lineInitializeExA(uint* lphLineApp, HINSTANCE hInstance, LINECALLBACK lpfnCallback, const(char)* lpszFriendlyAppName, uint* lpdwNumDevs, uint* lpdwAPIVersion, LINEINITIALIZEEXPARAMS* lpLineInitializeExParams);
+int lineInitializeExW(uint* lphLineApp, HINSTANCE hInstance, LINECALLBACK lpfnCallback, const(wchar)* lpszFriendlyAppName, uint* lpdwNumDevs, uint* lpdwAPIVersion, LINEINITIALIZEEXPARAMS* lpLineInitializeExParams);
+int lineMakeCall(uint hLine, uint* lphCall, const(char)* lpszDestAddress, uint dwCountryCode, const(LINECALLPARAMS)* lpCallParams);
+int lineMakeCallA(uint hLine, uint* lphCall, const(char)* lpszDestAddress, uint dwCountryCode, const(LINECALLPARAMS)* lpCallParams);
+int lineMakeCallW(uint hLine, uint* lphCall, const(wchar)* lpszDestAddress, uint dwCountryCode, const(LINECALLPARAMS)* lpCallParams);
+int lineMonitorDigits(uint hCall, uint dwDigitModes);
+int lineMonitorMedia(uint hCall, uint dwMediaModes);
+int lineMonitorTones(uint hCall, const(LINEMONITORTONE)* lpToneList, uint dwNumEntries);
+int lineNegotiateAPIVersion(uint hLineApp, uint dwDeviceID, uint dwAPILowVersion, uint dwAPIHighVersion, uint* lpdwAPIVersion, LINEEXTENSIONID* lpExtensionID);
+int lineNegotiateExtVersion(uint hLineApp, uint dwDeviceID, uint dwAPIVersion, uint dwExtLowVersion, uint dwExtHighVersion, uint* lpdwExtVersion);
+int lineOpen(uint hLineApp, uint dwDeviceID, uint* lphLine, uint dwAPIVersion, uint dwExtVersion, ulong dwCallbackInstance, uint dwPrivileges, uint dwMediaModes, const(LINECALLPARAMS)* lpCallParams);
+int lineOpenA(uint hLineApp, uint dwDeviceID, uint* lphLine, uint dwAPIVersion, uint dwExtVersion, ulong dwCallbackInstance, uint dwPrivileges, uint dwMediaModes, const(LINECALLPARAMS)* lpCallParams);
+int lineOpenW(uint hLineApp, uint dwDeviceID, uint* lphLine, uint dwAPIVersion, uint dwExtVersion, ulong dwCallbackInstance, uint dwPrivileges, uint dwMediaModes, const(LINECALLPARAMS)* lpCallParams);
+int linePark(uint hCall, uint dwParkMode, const(char)* lpszDirAddress, VARSTRING* lpNonDirAddress);
+int lineParkA(uint hCall, uint dwParkMode, const(char)* lpszDirAddress, VARSTRING* lpNonDirAddress);
+int lineParkW(uint hCall, uint dwParkMode, const(wchar)* lpszDirAddress, VARSTRING* lpNonDirAddress);
+int linePickup(uint hLine, uint dwAddressID, uint* lphCall, const(char)* lpszDestAddress, const(char)* lpszGroupID);
+int linePickupA(uint hLine, uint dwAddressID, uint* lphCall, const(char)* lpszDestAddress, const(char)* lpszGroupID);
+int linePickupW(uint hLine, uint dwAddressID, uint* lphCall, const(wchar)* lpszDestAddress, const(wchar)* lpszGroupID);
+int linePrepareAddToConference(uint hConfCall, uint* lphConsultCall, const(LINECALLPARAMS)* lpCallParams);
+int linePrepareAddToConferenceA(uint hConfCall, uint* lphConsultCall, const(LINECALLPARAMS)* lpCallParams);
+int linePrepareAddToConferenceW(uint hConfCall, uint* lphConsultCall, const(LINECALLPARAMS)* lpCallParams);
+int lineProxyMessage(uint hLine, uint hCall, uint dwMsg, uint dwParam1, uint dwParam2, uint dwParam3);
+int lineProxyResponse(uint hLine, LINEPROXYREQUEST* lpProxyRequest, uint dwResult);
+int lineRedirect(uint hCall, const(char)* lpszDestAddress, uint dwCountryCode);
+int lineRedirectA(uint hCall, const(char)* lpszDestAddress, uint dwCountryCode);
+int lineRedirectW(uint hCall, const(wchar)* lpszDestAddress, uint dwCountryCode);
+int lineRegisterRequestRecipient(uint hLineApp, uint dwRegistrationInstance, uint dwRequestMode, uint bEnable);
+int lineReleaseUserUserInfo(uint hCall);
+int lineRemoveFromConference(uint hCall);
+int lineRemoveProvider(uint dwPermanentProviderID, HWND hwndOwner);
+int lineSecureCall(uint hCall);
+int lineSendUserUserInfo(uint hCall, const(char)* lpsUserUserInfo, uint dwSize);
+int lineSetAgentActivity(uint hLine, uint dwAddressID, uint dwActivityID);
+int lineSetAgentGroup(uint hLine, uint dwAddressID, LINEAGENTGROUPLIST* lpAgentGroupList);
+int lineSetAgentMeasurementPeriod(uint hLine, uint hAgent, uint dwMeasurementPeriod);
+int lineSetAgentSessionState(uint hLine, uint hAgentSession, uint dwAgentSessionState, uint dwNextAgentSessionState);
+int lineSetAgentStateEx(uint hLine, uint hAgent, uint dwAgentState, uint dwNextAgentState);
+int lineSetAgentState(uint hLine, uint dwAddressID, uint dwAgentState, uint dwNextAgentState);
+int lineSetAppPriority(const(char)* lpszAppFilename, uint dwMediaMode, LINEEXTENSIONID* lpExtensionID, uint dwRequestMode, const(char)* lpszExtensionName, uint dwPriority);
+int lineSetAppPriorityA(const(char)* lpszAppFilename, uint dwMediaMode, LINEEXTENSIONID* lpExtensionID, uint dwRequestMode, const(char)* lpszExtensionName, uint dwPriority);
+int lineSetAppPriorityW(const(wchar)* lpszAppFilename, uint dwMediaMode, LINEEXTENSIONID* lpExtensionID, uint dwRequestMode, const(wchar)* lpszExtensionName, uint dwPriority);
+int lineSetAppSpecific(uint hCall, uint dwAppSpecific);
+int lineSetCallData(uint hCall, void* lpCallData, uint dwSize);
+int lineSetCallParams(uint hCall, uint dwBearerMode, uint dwMinRate, uint dwMaxRate, const(LINEDIALPARAMS)* lpDialParams);
+int lineSetCallPrivilege(uint hCall, uint dwCallPrivilege);
+int lineSetCallQualityOfService(uint hCall, void* lpSendingFlowspec, uint dwSendingFlowspecSize, void* lpReceivingFlowspec, uint dwReceivingFlowspecSize);
+int lineSetCallTreatment(uint hCall, uint dwTreatment);
+int lineSetCurrentLocation(uint hLineApp, uint dwLocation);
+int lineSetDevConfig(uint dwDeviceID, const(void)* lpDeviceConfig, uint dwSize, const(char)* lpszDeviceClass);
+int lineSetDevConfigA(uint dwDeviceID, const(void)* lpDeviceConfig, uint dwSize, const(char)* lpszDeviceClass);
+int lineSetDevConfigW(uint dwDeviceID, const(void)* lpDeviceConfig, uint dwSize, const(wchar)* lpszDeviceClass);
+int lineSetLineDevStatus(uint hLine, uint dwStatusToChange, uint fStatus);
+int lineSetMediaControl(uint hLine, uint dwAddressID, uint hCall, uint dwSelect, const(LINEMEDIACONTROLDIGIT)* lpDigitList, uint dwDigitNumEntries, const(LINEMEDIACONTROLMEDIA)* lpMediaList, uint dwMediaNumEntries, const(LINEMEDIACONTROLTONE)* lpToneList, uint dwToneNumEntries, const(LINEMEDIACONTROLCALLSTATE)* lpCallStateList, uint dwCallStateNumEntries);
+int lineSetMediaMode(uint hCall, uint dwMediaModes);
+int lineSetQueueMeasurementPeriod(uint hLine, uint dwQueueID, uint dwMeasurementPeriod);
+int lineSetNumRings(uint hLine, uint dwAddressID, uint dwNumRings);
+int lineSetStatusMessages(uint hLine, uint dwLineStates, uint dwAddressStates);
+int lineSetTerminal(uint hLine, uint dwAddressID, uint hCall, uint dwSelect, uint dwTerminalModes, uint dwTerminalID, uint bEnable);
+int lineSetTollList(uint hLineApp, uint dwDeviceID, const(char)* lpszAddressIn, uint dwTollListOption);
+int lineSetTollListA(uint hLineApp, uint dwDeviceID, const(char)* lpszAddressIn, uint dwTollListOption);
+int lineSetTollListW(uint hLineApp, uint dwDeviceID, const(wchar)* lpszAddressInW, uint dwTollListOption);
+int lineSetupConference(uint hCall, uint hLine, uint* lphConfCall, uint* lphConsultCall, uint dwNumParties, const(LINECALLPARAMS)* lpCallParams);
+int lineSetupConferenceA(uint hCall, uint hLine, uint* lphConfCall, uint* lphConsultCall, uint dwNumParties, const(LINECALLPARAMS)* lpCallParams);
+int lineSetupConferenceW(uint hCall, uint hLine, uint* lphConfCall, uint* lphConsultCall, uint dwNumParties, const(LINECALLPARAMS)* lpCallParams);
+int lineSetupTransfer(uint hCall, uint* lphConsultCall, const(LINECALLPARAMS)* lpCallParams);
+int lineSetupTransferA(uint hCall, uint* lphConsultCall, const(LINECALLPARAMS)* lpCallParams);
+int lineSetupTransferW(uint hCall, uint* lphConsultCall, const(LINECALLPARAMS)* lpCallParams);
+int lineShutdown(uint hLineApp);
+int lineSwapHold(uint hActiveCall, uint hHeldCall);
+int lineTranslateAddress(uint hLineApp, uint dwDeviceID, uint dwAPIVersion, const(char)* lpszAddressIn, uint dwCard, uint dwTranslateOptions, LINETRANSLATEOUTPUT* lpTranslateOutput);
+int lineTranslateAddressA(uint hLineApp, uint dwDeviceID, uint dwAPIVersion, const(char)* lpszAddressIn, uint dwCard, uint dwTranslateOptions, LINETRANSLATEOUTPUT* lpTranslateOutput);
+int lineTranslateAddressW(uint hLineApp, uint dwDeviceID, uint dwAPIVersion, const(wchar)* lpszAddressIn, uint dwCard, uint dwTranslateOptions, LINETRANSLATEOUTPUT* lpTranslateOutput);
+int lineTranslateDialog(uint hLineApp, uint dwDeviceID, uint dwAPIVersion, HWND hwndOwner, const(char)* lpszAddressIn);
+int lineTranslateDialogA(uint hLineApp, uint dwDeviceID, uint dwAPIVersion, HWND hwndOwner, const(char)* lpszAddressIn);
+int lineTranslateDialogW(uint hLineApp, uint dwDeviceID, uint dwAPIVersion, HWND hwndOwner, const(wchar)* lpszAddressIn);
+int lineUncompleteCall(uint hLine, uint dwCompletionID);
+int lineUnhold(uint hCall);
+int lineUnpark(uint hLine, uint dwAddressID, uint* lphCall, const(char)* lpszDestAddress);
+int lineUnparkA(uint hLine, uint dwAddressID, uint* lphCall, const(char)* lpszDestAddress);
+int lineUnparkW(uint hLine, uint dwAddressID, uint* lphCall, const(wchar)* lpszDestAddress);
+int phoneClose(uint hPhone);
+int phoneConfigDialog(uint dwDeviceID, HWND hwndOwner, const(char)* lpszDeviceClass);
+int phoneConfigDialogA(uint dwDeviceID, HWND hwndOwner, const(char)* lpszDeviceClass);
+int phoneConfigDialogW(uint dwDeviceID, HWND hwndOwner, const(wchar)* lpszDeviceClass);
+int phoneDevSpecific(uint hPhone, void* lpParams, uint dwSize);
+int phoneGetButtonInfo(uint hPhone, uint dwButtonLampID, PHONEBUTTONINFO* lpButtonInfo);
+int phoneGetButtonInfoA(uint hPhone, uint dwButtonLampID, PHONEBUTTONINFO* lpButtonInfo);
+int phoneGetButtonInfoW(uint hPhone, uint dwButtonLampID, PHONEBUTTONINFO* lpButtonInfo);
+int phoneGetData(uint hPhone, uint dwDataID, void* lpData, uint dwSize);
+int phoneGetDevCaps(uint hPhoneApp, uint dwDeviceID, uint dwAPIVersion, uint dwExtVersion, PHONECAPS* lpPhoneCaps);
+int phoneGetDevCapsA(uint hPhoneApp, uint dwDeviceID, uint dwAPIVersion, uint dwExtVersion, PHONECAPS* lpPhoneCaps);
+int phoneGetDevCapsW(uint hPhoneApp, uint dwDeviceID, uint dwAPIVersion, uint dwExtVersion, PHONECAPS* lpPhoneCaps);
+int phoneGetDisplay(uint hPhone, VARSTRING* lpDisplay);
+int phoneGetGain(uint hPhone, uint dwHookSwitchDev, uint* lpdwGain);
+int phoneGetHookSwitch(uint hPhone, uint* lpdwHookSwitchDevs);
+int phoneGetIcon(uint dwDeviceID, const(char)* lpszDeviceClass, HICON* lphIcon);
+int phoneGetIconA(uint dwDeviceID, const(char)* lpszDeviceClass, HICON* lphIcon);
+int phoneGetIconW(uint dwDeviceID, const(wchar)* lpszDeviceClass, HICON* lphIcon);
+int phoneGetID(uint hPhone, VARSTRING* lpDeviceID, const(char)* lpszDeviceClass);
+int phoneGetIDA(uint hPhone, VARSTRING* lpDeviceID, const(char)* lpszDeviceClass);
+int phoneGetIDW(uint hPhone, VARSTRING* lpDeviceID, const(wchar)* lpszDeviceClass);
+int phoneGetLamp(uint hPhone, uint dwButtonLampID, uint* lpdwLampMode);
+int phoneGetMessage(uint hPhoneApp, PHONEMESSAGE* lpMessage, uint dwTimeout);
+int phoneGetRing(uint hPhone, uint* lpdwRingMode, uint* lpdwVolume);
+int phoneGetStatus(uint hPhone, PHONESTATUS* lpPhoneStatus);
+int phoneGetStatusA(uint hPhone, PHONESTATUS* lpPhoneStatus);
+int phoneGetStatusW(uint hPhone, PHONESTATUS* lpPhoneStatus);
+int phoneGetStatusMessages(uint hPhone, uint* lpdwPhoneStates, uint* lpdwButtonModes, uint* lpdwButtonStates);
+int phoneGetVolume(uint hPhone, uint dwHookSwitchDev, uint* lpdwVolume);
+int phoneInitialize(uint* lphPhoneApp, HINSTANCE hInstance, PHONECALLBACK lpfnCallback, const(char)* lpszAppName, uint* lpdwNumDevs);
+int phoneInitializeExA(uint* lphPhoneApp, HINSTANCE hInstance, PHONECALLBACK lpfnCallback, const(char)* lpszFriendlyAppName, uint* lpdwNumDevs, uint* lpdwAPIVersion, PHONEINITIALIZEEXPARAMS* lpPhoneInitializeExParams);
+int phoneInitializeExW(uint* lphPhoneApp, HINSTANCE hInstance, PHONECALLBACK lpfnCallback, const(wchar)* lpszFriendlyAppName, uint* lpdwNumDevs, uint* lpdwAPIVersion, PHONEINITIALIZEEXPARAMS* lpPhoneInitializeExParams);
+int phoneNegotiateAPIVersion(uint hPhoneApp, uint dwDeviceID, uint dwAPILowVersion, uint dwAPIHighVersion, uint* lpdwAPIVersion, PHONEEXTENSIONID* lpExtensionID);
+int phoneNegotiateExtVersion(uint hPhoneApp, uint dwDeviceID, uint dwAPIVersion, uint dwExtLowVersion, uint dwExtHighVersion, uint* lpdwExtVersion);
+int phoneOpen(uint hPhoneApp, uint dwDeviceID, uint* lphPhone, uint dwAPIVersion, uint dwExtVersion, ulong dwCallbackInstance, uint dwPrivilege);
+int phoneSetButtonInfo(uint hPhone, uint dwButtonLampID, const(PHONEBUTTONINFO)* lpButtonInfo);
+int phoneSetButtonInfoA(uint hPhone, uint dwButtonLampID, const(PHONEBUTTONINFO)* lpButtonInfo);
+int phoneSetButtonInfoW(uint hPhone, uint dwButtonLampID, const(PHONEBUTTONINFO)* lpButtonInfo);
+int phoneSetData(uint hPhone, uint dwDataID, const(void)* lpData, uint dwSize);
+int phoneSetDisplay(uint hPhone, uint dwRow, uint dwColumn, const(char)* lpsDisplay, uint dwSize);
+int phoneSetGain(uint hPhone, uint dwHookSwitchDev, uint dwGain);
+int phoneSetHookSwitch(uint hPhone, uint dwHookSwitchDevs, uint dwHookSwitchMode);
+int phoneSetLamp(uint hPhone, uint dwButtonLampID, uint dwLampMode);
+int phoneSetRing(uint hPhone, uint dwRingMode, uint dwVolume);
+int phoneSetStatusMessages(uint hPhone, uint dwPhoneStates, uint dwButtonModes, uint dwButtonStates);
+int phoneSetVolume(uint hPhone, uint dwHookSwitchDev, uint dwVolume);
+int phoneShutdown(uint hPhoneApp);
+int tapiGetLocationInfo(PSTR lpszCountryCode, PSTR lpszCityCode);
+int tapiGetLocationInfoA(PSTR lpszCountryCode, PSTR lpszCityCode);
+int tapiGetLocationInfoW(PWSTR lpszCountryCodeW, PWSTR lpszCityCodeW);
+int tapiRequestDrop(HWND hwnd, WPARAM wRequestID);
+int tapiRequestMakeCall(const(char)* lpszDestAddress, const(char)* lpszAppName, const(char)* lpszCalledParty, const(char)* lpszComment);
+int tapiRequestMakeCallA(const(char)* lpszDestAddress, const(char)* lpszAppName, const(char)* lpszCalledParty, const(char)* lpszComment);
+int tapiRequestMakeCallW(const(wchar)* lpszDestAddress, const(wchar)* lpszAppName, const(wchar)* lpszCalledParty, const(wchar)* lpszComment);
+int tapiRequestMediaCall(HWND hwnd, WPARAM wRequestID, const(char)* lpszDeviceClass, const(char)* lpDeviceID, uint dwSize, uint dwSecure, const(char)* lpszDestAddress, const(char)* lpszAppName, const(char)* lpszCalledParty, const(char)* lpszComment);
+int tapiRequestMediaCallA(HWND hwnd, WPARAM wRequestID, const(char)* lpszDeviceClass, const(char)* lpDeviceID, uint dwSize, uint dwSecure, const(char)* lpszDestAddress, const(char)* lpszAppName, const(char)* lpszCalledParty, const(char)* lpszComment);
+int tapiRequestMediaCallW(HWND hwnd, WPARAM wRequestID, const(wchar)* lpszDeviceClass, const(wchar)* lpDeviceID, uint dwSize, uint dwSecure, const(wchar)* lpszDestAddress, const(wchar)* lpszAppName, const(wchar)* lpszCalledParty, const(wchar)* lpszComment);
+HRESULT OpenTnefStream(void* lpvSupport, IStream lpStream, byte* lpszStreamName, uint ulFlags, IMessage lpMessage, ushort wKeyVal, ITnef* lppTNEF);
+HRESULT OpenTnefStreamEx(void* lpvSupport, IStream lpStream, byte* lpszStreamName, uint ulFlags, IMessage lpMessage, ushort wKeyVal, IAddrBook lpAdressBook, ITnef* lppTNEF);
+HRESULT GetTnefStreamCodepage(IStream lpStream, uint* lpulCodepage, uint* lpulSubCodepage);
 enum TAPI_CURRENT_VERSION = 0x00020002;
 enum LINE_ADDRESSSTATE = 0x00000000;
 enum LINE_CALLINFO = 0x00000001;
@@ -1401,8 +1401,8 @@ alias HTAPICALL = void*;
 alias HTAPILINE = void*;
 alias HTAPIPHONE = void*;
 alias HPROVIDER = void*;
-alias LINECALLBACK = void function(uint, uint, ulong, ulong, ulong, ulong);
-alias PHONECALLBACK = void function(uint, uint, ulong, ulong, ulong, ulong);
+alias LINECALLBACK = void function(uint hDevice, uint dwMessage, ulong dwInstance, ulong dwParam1, ulong dwParam2, ulong dwParam3);
+alias PHONECALLBACK = void function(uint hDevice, uint dwMessage, ulong dwInstance, ulong dwParam1, ulong dwParam2, ulong dwParam3);
 struct LINEADDRESSCAPS
 {
     align (1):
@@ -2484,10 +2484,10 @@ struct VARSTRING
     uint dwStringSize;
     uint dwStringOffset;
 }
-alias ASYNC_COMPLETION = void function(uint, int);
-alias LINEEVENT = void function(HTAPILINE, HTAPICALL, uint, ulong, ulong, ulong);
-alias PHONEEVENT = void function(HTAPIPHONE, uint, ulong, ulong, ulong);
-alias TUISPIDLLCALLBACK = int function(ulong, uint, void*, uint);
+alias ASYNC_COMPLETION = void function(uint dwRequestID, int lResult);
+alias LINEEVENT = void function(HTAPILINE htLine, HTAPICALL htCall, uint dwMsg, ulong dwParam1, ulong dwParam2, ulong dwParam3);
+alias PHONEEVENT = void function(HTAPIPHONE htPhone, uint dwMsg, ulong dwParam1, ulong dwParam2, ulong dwParam3);
+alias TUISPIDLLCALLBACK = int function(ulong dwObjectID, uint dwObjectType, void* lpParams, uint dwSize);
 struct TUISPICREATEDIALOGINSTANCEPARAMS
 {
     uint dwRequestID;
@@ -3102,251 +3102,251 @@ interface ITTAPI : IDispatch
 {
     HRESULT Initialize();
     HRESULT Shutdown();
-    HRESULT get_Addresses(VARIANT*);
-    HRESULT EnumerateAddresses(IEnumAddress*);
-    HRESULT RegisterCallNotifications(ITAddress, VARIANT_BOOL, VARIANT_BOOL, int, int, int*);
-    HRESULT UnregisterNotifications(int);
-    HRESULT get_CallHubs(VARIANT*);
-    HRESULT EnumerateCallHubs(IEnumCallHub*);
-    HRESULT SetCallHubTracking(VARIANT, VARIANT_BOOL);
-    HRESULT EnumeratePrivateTAPIObjects(IEnumUnknown*);
-    HRESULT get_PrivateTAPIObjects(VARIANT*);
-    HRESULT RegisterRequestRecipient(int, int, VARIANT_BOOL);
-    HRESULT SetAssistedTelephonyPriority(BSTR, VARIANT_BOOL);
-    HRESULT SetApplicationPriority(BSTR, int, VARIANT_BOOL);
-    HRESULT put_EventFilter(int);
-    HRESULT get_EventFilter(int*);
+    HRESULT get_Addresses(VARIANT* pVariant);
+    HRESULT EnumerateAddresses(IEnumAddress* ppEnumAddress);
+    HRESULT RegisterCallNotifications(ITAddress pAddress, VARIANT_BOOL fMonitor, VARIANT_BOOL fOwner, int lMediaTypes, int lCallbackInstance, int* plRegister);
+    HRESULT UnregisterNotifications(int lRegister);
+    HRESULT get_CallHubs(VARIANT* pVariant);
+    HRESULT EnumerateCallHubs(IEnumCallHub* ppEnumCallHub);
+    HRESULT SetCallHubTracking(VARIANT pAddresses, VARIANT_BOOL bTracking);
+    HRESULT EnumeratePrivateTAPIObjects(IEnumUnknown* ppEnumUnknown);
+    HRESULT get_PrivateTAPIObjects(VARIANT* pVariant);
+    HRESULT RegisterRequestRecipient(int lRegistrationInstance, int lRequestMode, VARIANT_BOOL fEnable);
+    HRESULT SetAssistedTelephonyPriority(BSTR pAppFilename, VARIANT_BOOL fPriority);
+    HRESULT SetApplicationPriority(BSTR pAppFilename, int lMediaType, VARIANT_BOOL fPriority);
+    HRESULT put_EventFilter(int lFilterMask);
+    HRESULT get_EventFilter(int* plFilterMask);
 }
 enum IID_ITTAPI2 = GUID(0x54fbdc8c, 0xd90f, 0x4dad, [0x96, 0x95, 0xb3, 0x73, 0x9, 0x7f, 0x9, 0x4b]);
 interface ITTAPI2 : ITTAPI
 {
-    HRESULT get_Phones(VARIANT*);
-    HRESULT EnumeratePhones(IEnumPhone*);
-    HRESULT CreateEmptyCollectionObject(ITCollection2*);
+    HRESULT get_Phones(VARIANT* pPhones);
+    HRESULT EnumeratePhones(IEnumPhone* ppEnumPhone);
+    HRESULT CreateEmptyCollectionObject(ITCollection2* ppCollection);
 }
 enum IID_ITMediaSupport = GUID(0xb1efc384, 0x9355, 0x11d0, [0x83, 0x5c, 0x0, 0xaa, 0x0, 0x3c, 0xca, 0xbd]);
 interface ITMediaSupport : IDispatch
 {
-    HRESULT get_MediaTypes(int*);
-    HRESULT QueryMediaType(int, VARIANT_BOOL*);
+    HRESULT get_MediaTypes(int* plMediaTypes);
+    HRESULT QueryMediaType(int lMediaType, VARIANT_BOOL* pfSupport);
 }
 enum IID_ITPluggableTerminalClassInfo = GUID(0x41757f4a, 0xcf09, 0x4b34, [0xbc, 0x96, 0xa, 0x79, 0xd2, 0x39, 0x0, 0x76]);
 interface ITPluggableTerminalClassInfo : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Company(BSTR*);
-    HRESULT get_Version(BSTR*);
-    HRESULT get_TerminalClass(BSTR*);
-    HRESULT get_CLSID(BSTR*);
-    HRESULT get_Direction(TERMINAL_DIRECTION*);
-    HRESULT get_MediaTypes(int*);
+    HRESULT get_Name(BSTR* pName);
+    HRESULT get_Company(BSTR* pCompany);
+    HRESULT get_Version(BSTR* pVersion);
+    HRESULT get_TerminalClass(BSTR* pTerminalClass);
+    HRESULT get_CLSID(BSTR* pCLSID);
+    HRESULT get_Direction(TERMINAL_DIRECTION* pDirection);
+    HRESULT get_MediaTypes(int* pMediaTypes);
 }
 enum IID_ITPluggableTerminalSuperclassInfo = GUID(0x6d54e42c, 0x4625, 0x4359, [0xa6, 0xf7, 0x63, 0x19, 0x99, 0x10, 0x7e, 0x5]);
 interface ITPluggableTerminalSuperclassInfo : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_CLSID(BSTR*);
+    HRESULT get_Name(BSTR* pName);
+    HRESULT get_CLSID(BSTR* pCLSID);
 }
 enum IID_ITTerminalSupport = GUID(0xb1efc385, 0x9355, 0x11d0, [0x83, 0x5c, 0x0, 0xaa, 0x0, 0x3c, 0xca, 0xbd]);
 interface ITTerminalSupport : IDispatch
 {
-    HRESULT get_StaticTerminals(VARIANT*);
-    HRESULT EnumerateStaticTerminals(IEnumTerminal*);
-    HRESULT get_DynamicTerminalClasses(VARIANT*);
-    HRESULT EnumerateDynamicTerminalClasses(IEnumTerminalClass*);
-    HRESULT CreateTerminal(BSTR, int, TERMINAL_DIRECTION, ITTerminal*);
-    HRESULT GetDefaultStaticTerminal(int, TERMINAL_DIRECTION, ITTerminal*);
+    HRESULT get_StaticTerminals(VARIANT* pVariant);
+    HRESULT EnumerateStaticTerminals(IEnumTerminal* ppTerminalEnumerator);
+    HRESULT get_DynamicTerminalClasses(VARIANT* pVariant);
+    HRESULT EnumerateDynamicTerminalClasses(IEnumTerminalClass* ppTerminalClassEnumerator);
+    HRESULT CreateTerminal(BSTR pTerminalClass, int lMediaType, TERMINAL_DIRECTION Direction, ITTerminal* ppTerminal);
+    HRESULT GetDefaultStaticTerminal(int lMediaType, TERMINAL_DIRECTION Direction, ITTerminal* ppTerminal);
 }
 enum IID_ITTerminalSupport2 = GUID(0xf3eb39bc, 0x1b1f, 0x4e99, [0xa0, 0xc0, 0x56, 0x30, 0x5c, 0x4d, 0xd5, 0x91]);
 interface ITTerminalSupport2 : ITTerminalSupport
 {
-    HRESULT get_PluggableSuperclasses(VARIANT*);
-    HRESULT EnumeratePluggableSuperclasses(IEnumPluggableSuperclassInfo*);
-    HRESULT get_PluggableTerminalClasses(BSTR, int, VARIANT*);
-    HRESULT EnumeratePluggableTerminalClasses(GUID, int, IEnumPluggableTerminalClassInfo*);
+    HRESULT get_PluggableSuperclasses(VARIANT* pVariant);
+    HRESULT EnumeratePluggableSuperclasses(IEnumPluggableSuperclassInfo* ppSuperclassEnumerator);
+    HRESULT get_PluggableTerminalClasses(BSTR bstrTerminalSuperclass, int lMediaType, VARIANT* pVariant);
+    HRESULT EnumeratePluggableTerminalClasses(GUID iidTerminalSuperclass, int lMediaType, IEnumPluggableTerminalClassInfo* ppClassEnumerator);
 }
 enum IID_ITAddress = GUID(0xb1efc386, 0x9355, 0x11d0, [0x83, 0x5c, 0x0, 0xaa, 0x0, 0x3c, 0xca, 0xbd]);
 interface ITAddress : IDispatch
 {
-    HRESULT get_State(ADDRESS_STATE*);
-    HRESULT get_AddressName(BSTR*);
-    HRESULT get_ServiceProviderName(BSTR*);
-    HRESULT get_TAPIObject(ITTAPI*);
-    HRESULT CreateCall(BSTR, int, int, ITBasicCallControl*);
-    HRESULT get_Calls(VARIANT*);
-    HRESULT EnumerateCalls(IEnumCall*);
-    HRESULT get_DialableAddress(BSTR*);
-    HRESULT CreateForwardInfoObject(ITForwardInformation*);
-    HRESULT Forward(ITForwardInformation, ITBasicCallControl);
-    HRESULT get_CurrentForwardInfo(ITForwardInformation*);
-    HRESULT put_MessageWaiting(VARIANT_BOOL);
-    HRESULT get_MessageWaiting(VARIANT_BOOL*);
-    HRESULT put_DoNotDisturb(VARIANT_BOOL);
-    HRESULT get_DoNotDisturb(VARIANT_BOOL*);
+    HRESULT get_State(ADDRESS_STATE* pAddressState);
+    HRESULT get_AddressName(BSTR* ppName);
+    HRESULT get_ServiceProviderName(BSTR* ppName);
+    HRESULT get_TAPIObject(ITTAPI* ppTapiObject);
+    HRESULT CreateCall(BSTR pDestAddress, int lAddressType, int lMediaTypes, ITBasicCallControl* ppCall);
+    HRESULT get_Calls(VARIANT* pVariant);
+    HRESULT EnumerateCalls(IEnumCall* ppCallEnum);
+    HRESULT get_DialableAddress(BSTR* pDialableAddress);
+    HRESULT CreateForwardInfoObject(ITForwardInformation* ppForwardInfo);
+    HRESULT Forward(ITForwardInformation pForwardInfo, ITBasicCallControl pCall);
+    HRESULT get_CurrentForwardInfo(ITForwardInformation* ppForwardInfo);
+    HRESULT put_MessageWaiting(VARIANT_BOOL fMessageWaiting);
+    HRESULT get_MessageWaiting(VARIANT_BOOL* pfMessageWaiting);
+    HRESULT put_DoNotDisturb(VARIANT_BOOL fDoNotDisturb);
+    HRESULT get_DoNotDisturb(VARIANT_BOOL* pfDoNotDisturb);
 }
 enum IID_ITAddress2 = GUID(0xb0ae5d9b, 0xbe51, 0x46c9, [0xb0, 0xf7, 0xdf, 0xa8, 0xa2, 0x2a, 0x8b, 0xc4]);
 interface ITAddress2 : ITAddress
 {
-    HRESULT get_Phones(VARIANT*);
-    HRESULT EnumeratePhones(IEnumPhone*);
-    HRESULT GetPhoneFromTerminal(ITTerminal, ITPhone*);
-    HRESULT get_PreferredPhones(VARIANT*);
-    HRESULT EnumeratePreferredPhones(IEnumPhone*);
-    HRESULT get_EventFilter(TAPI_EVENT, int, VARIANT_BOOL*);
-    HRESULT put_EventFilter(TAPI_EVENT, int, VARIANT_BOOL);
-    HRESULT DeviceSpecific(ITCallInfo, ubyte*, uint);
-    HRESULT DeviceSpecificVariant(ITCallInfo, VARIANT);
-    HRESULT NegotiateExtVersion(int, int, int*);
+    HRESULT get_Phones(VARIANT* pPhones);
+    HRESULT EnumeratePhones(IEnumPhone* ppEnumPhone);
+    HRESULT GetPhoneFromTerminal(ITTerminal pTerminal, ITPhone* ppPhone);
+    HRESULT get_PreferredPhones(VARIANT* pPhones);
+    HRESULT EnumeratePreferredPhones(IEnumPhone* ppEnumPhone);
+    HRESULT get_EventFilter(TAPI_EVENT TapiEvent, int lSubEvent, VARIANT_BOOL* pEnable);
+    HRESULT put_EventFilter(TAPI_EVENT TapiEvent, int lSubEvent, VARIANT_BOOL bEnable);
+    HRESULT DeviceSpecific(ITCallInfo pCall, ubyte* pParams, uint dwSize);
+    HRESULT DeviceSpecificVariant(ITCallInfo pCall, VARIANT varDevSpecificByteArray);
+    HRESULT NegotiateExtVersion(int lLowVersion, int lHighVersion, int* plExtVersion);
 }
 enum IID_ITAddressCapabilities = GUID(0x8df232f5, 0x821b, 0x11d1, [0xbb, 0x5c, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface ITAddressCapabilities : IDispatch
 {
-    HRESULT get_AddressCapability(ADDRESS_CAPABILITY, int*);
-    HRESULT get_AddressCapabilityString(ADDRESS_CAPABILITY_STRING, BSTR*);
-    HRESULT get_CallTreatments(VARIANT*);
-    HRESULT EnumerateCallTreatments(IEnumBstr*);
-    HRESULT get_CompletionMessages(VARIANT*);
-    HRESULT EnumerateCompletionMessages(IEnumBstr*);
-    HRESULT get_DeviceClasses(VARIANT*);
-    HRESULT EnumerateDeviceClasses(IEnumBstr*);
+    HRESULT get_AddressCapability(ADDRESS_CAPABILITY AddressCap, int* plCapability);
+    HRESULT get_AddressCapabilityString(ADDRESS_CAPABILITY_STRING AddressCapString, BSTR* ppCapabilityString);
+    HRESULT get_CallTreatments(VARIANT* pVariant);
+    HRESULT EnumerateCallTreatments(IEnumBstr* ppEnumCallTreatment);
+    HRESULT get_CompletionMessages(VARIANT* pVariant);
+    HRESULT EnumerateCompletionMessages(IEnumBstr* ppEnumCompletionMessage);
+    HRESULT get_DeviceClasses(VARIANT* pVariant);
+    HRESULT EnumerateDeviceClasses(IEnumBstr* ppEnumDeviceClass);
 }
 enum IID_ITPhone = GUID(0x9d48db4, 0x10cc, 0x4388, [0x9d, 0xe7, 0xa8, 0x46, 0x56, 0x18, 0x97, 0x5a]);
 interface ITPhone : IDispatch
 {
-    HRESULT Open(PHONE_PRIVILEGE);
+    HRESULT Open(PHONE_PRIVILEGE Privilege);
     HRESULT Close();
-    HRESULT get_Addresses(VARIANT*);
-    HRESULT EnumerateAddresses(IEnumAddress*);
-    HRESULT get_PhoneCapsLong(PHONECAPS_LONG, int*);
-    HRESULT get_PhoneCapsString(PHONECAPS_STRING, BSTR*);
-    HRESULT get_Terminals(ITAddress, VARIANT*);
-    HRESULT EnumerateTerminals(ITAddress, IEnumTerminal*);
-    HRESULT get_ButtonMode(int, PHONE_BUTTON_MODE*);
-    HRESULT put_ButtonMode(int, PHONE_BUTTON_MODE);
-    HRESULT get_ButtonFunction(int, PHONE_BUTTON_FUNCTION*);
-    HRESULT put_ButtonFunction(int, PHONE_BUTTON_FUNCTION);
-    HRESULT get_ButtonText(int, BSTR*);
-    HRESULT put_ButtonText(int, BSTR);
-    HRESULT get_ButtonState(int, PHONE_BUTTON_STATE*);
-    HRESULT get_HookSwitchState(PHONE_HOOK_SWITCH_DEVICE, PHONE_HOOK_SWITCH_STATE*);
-    HRESULT put_HookSwitchState(PHONE_HOOK_SWITCH_DEVICE, PHONE_HOOK_SWITCH_STATE);
-    HRESULT put_RingMode(int);
-    HRESULT get_RingMode(int*);
-    HRESULT put_RingVolume(int);
-    HRESULT get_RingVolume(int*);
-    HRESULT get_Privilege(PHONE_PRIVILEGE*);
-    HRESULT GetPhoneCapsBuffer(PHONECAPS_BUFFER, uint*, ubyte**);
-    HRESULT get_PhoneCapsBuffer(PHONECAPS_BUFFER, VARIANT*);
-    HRESULT get_LampMode(int, PHONE_LAMP_MODE*);
-    HRESULT put_LampMode(int, PHONE_LAMP_MODE);
-    HRESULT get_Display(BSTR*);
-    HRESULT SetDisplay(int, int, BSTR);
-    HRESULT get_PreferredAddresses(VARIANT*);
-    HRESULT EnumeratePreferredAddresses(IEnumAddress*);
-    HRESULT DeviceSpecific(ubyte*, uint);
-    HRESULT DeviceSpecificVariant(VARIANT);
-    HRESULT NegotiateExtVersion(int, int, int*);
+    HRESULT get_Addresses(VARIANT* pAddresses);
+    HRESULT EnumerateAddresses(IEnumAddress* ppEnumAddress);
+    HRESULT get_PhoneCapsLong(PHONECAPS_LONG pclCap, int* plCapability);
+    HRESULT get_PhoneCapsString(PHONECAPS_STRING pcsCap, BSTR* ppCapability);
+    HRESULT get_Terminals(ITAddress pAddress, VARIANT* pTerminals);
+    HRESULT EnumerateTerminals(ITAddress pAddress, IEnumTerminal* ppEnumTerminal);
+    HRESULT get_ButtonMode(int lButtonID, PHONE_BUTTON_MODE* pButtonMode);
+    HRESULT put_ButtonMode(int lButtonID, PHONE_BUTTON_MODE ButtonMode);
+    HRESULT get_ButtonFunction(int lButtonID, PHONE_BUTTON_FUNCTION* pButtonFunction);
+    HRESULT put_ButtonFunction(int lButtonID, PHONE_BUTTON_FUNCTION ButtonFunction);
+    HRESULT get_ButtonText(int lButtonID, BSTR* ppButtonText);
+    HRESULT put_ButtonText(int lButtonID, BSTR bstrButtonText);
+    HRESULT get_ButtonState(int lButtonID, PHONE_BUTTON_STATE* pButtonState);
+    HRESULT get_HookSwitchState(PHONE_HOOK_SWITCH_DEVICE HookSwitchDevice, PHONE_HOOK_SWITCH_STATE* pHookSwitchState);
+    HRESULT put_HookSwitchState(PHONE_HOOK_SWITCH_DEVICE HookSwitchDevice, PHONE_HOOK_SWITCH_STATE HookSwitchState);
+    HRESULT put_RingMode(int lRingMode);
+    HRESULT get_RingMode(int* plRingMode);
+    HRESULT put_RingVolume(int lRingVolume);
+    HRESULT get_RingVolume(int* plRingVolume);
+    HRESULT get_Privilege(PHONE_PRIVILEGE* pPrivilege);
+    HRESULT GetPhoneCapsBuffer(PHONECAPS_BUFFER pcbCaps, uint* pdwSize, ubyte** ppPhoneCapsBuffer);
+    HRESULT get_PhoneCapsBuffer(PHONECAPS_BUFFER pcbCaps, VARIANT* pVarBuffer);
+    HRESULT get_LampMode(int lLampID, PHONE_LAMP_MODE* pLampMode);
+    HRESULT put_LampMode(int lLampID, PHONE_LAMP_MODE LampMode);
+    HRESULT get_Display(BSTR* pbstrDisplay);
+    HRESULT SetDisplay(int lRow, int lColumn, BSTR bstrDisplay);
+    HRESULT get_PreferredAddresses(VARIANT* pAddresses);
+    HRESULT EnumeratePreferredAddresses(IEnumAddress* ppEnumAddress);
+    HRESULT DeviceSpecific(ubyte* pParams, uint dwSize);
+    HRESULT DeviceSpecificVariant(VARIANT varDevSpecificByteArray);
+    HRESULT NegotiateExtVersion(int lLowVersion, int lHighVersion, int* plExtVersion);
 }
 enum IID_ITAutomatedPhoneControl = GUID(0x1ee1af0e, 0x6159, 0x4a61, [0xb7, 0x9b, 0x6a, 0x4b, 0xa3, 0xfc, 0x9d, 0xfc]);
 interface ITAutomatedPhoneControl : IDispatch
 {
-    HRESULT StartTone(PHONE_TONE, int);
+    HRESULT StartTone(PHONE_TONE Tone, int lDuration);
     HRESULT StopTone();
-    HRESULT get_Tone(PHONE_TONE*);
-    HRESULT StartRinger(int, int);
+    HRESULT get_Tone(PHONE_TONE* pTone);
+    HRESULT StartRinger(int lRingMode, int lDuration);
     HRESULT StopRinger();
-    HRESULT get_Ringer(VARIANT_BOOL*);
-    HRESULT put_PhoneHandlingEnabled(VARIANT_BOOL);
-    HRESULT get_PhoneHandlingEnabled(VARIANT_BOOL*);
-    HRESULT put_AutoEndOfNumberTimeout(int);
-    HRESULT get_AutoEndOfNumberTimeout(int*);
-    HRESULT put_AutoDialtone(VARIANT_BOOL);
-    HRESULT get_AutoDialtone(VARIANT_BOOL*);
-    HRESULT put_AutoStopTonesOnOnHook(VARIANT_BOOL);
-    HRESULT get_AutoStopTonesOnOnHook(VARIANT_BOOL*);
-    HRESULT put_AutoStopRingOnOffHook(VARIANT_BOOL);
-    HRESULT get_AutoStopRingOnOffHook(VARIANT_BOOL*);
-    HRESULT put_AutoKeypadTones(VARIANT_BOOL);
-    HRESULT get_AutoKeypadTones(VARIANT_BOOL*);
-    HRESULT put_AutoKeypadTonesMinimumDuration(int);
-    HRESULT get_AutoKeypadTonesMinimumDuration(int*);
-    HRESULT put_AutoVolumeControl(VARIANT_BOOL);
-    HRESULT get_AutoVolumeControl(VARIANT_BOOL*);
-    HRESULT put_AutoVolumeControlStep(int);
-    HRESULT get_AutoVolumeControlStep(int*);
-    HRESULT put_AutoVolumeControlRepeatDelay(int);
-    HRESULT get_AutoVolumeControlRepeatDelay(int*);
-    HRESULT put_AutoVolumeControlRepeatPeriod(int);
-    HRESULT get_AutoVolumeControlRepeatPeriod(int*);
-    HRESULT SelectCall(ITCallInfo, VARIANT_BOOL);
-    HRESULT UnselectCall(ITCallInfo);
-    HRESULT EnumerateSelectedCalls(IEnumCall*);
-    HRESULT get_SelectedCalls(VARIANT*);
+    HRESULT get_Ringer(VARIANT_BOOL* pfRinging);
+    HRESULT put_PhoneHandlingEnabled(VARIANT_BOOL fEnabled);
+    HRESULT get_PhoneHandlingEnabled(VARIANT_BOOL* pfEnabled);
+    HRESULT put_AutoEndOfNumberTimeout(int lTimeout);
+    HRESULT get_AutoEndOfNumberTimeout(int* plTimeout);
+    HRESULT put_AutoDialtone(VARIANT_BOOL fEnabled);
+    HRESULT get_AutoDialtone(VARIANT_BOOL* pfEnabled);
+    HRESULT put_AutoStopTonesOnOnHook(VARIANT_BOOL fEnabled);
+    HRESULT get_AutoStopTonesOnOnHook(VARIANT_BOOL* pfEnabled);
+    HRESULT put_AutoStopRingOnOffHook(VARIANT_BOOL fEnabled);
+    HRESULT get_AutoStopRingOnOffHook(VARIANT_BOOL* pfEnabled);
+    HRESULT put_AutoKeypadTones(VARIANT_BOOL fEnabled);
+    HRESULT get_AutoKeypadTones(VARIANT_BOOL* pfEnabled);
+    HRESULT put_AutoKeypadTonesMinimumDuration(int lDuration);
+    HRESULT get_AutoKeypadTonesMinimumDuration(int* plDuration);
+    HRESULT put_AutoVolumeControl(VARIANT_BOOL fEnabled);
+    HRESULT get_AutoVolumeControl(VARIANT_BOOL* fEnabled);
+    HRESULT put_AutoVolumeControlStep(int lStepSize);
+    HRESULT get_AutoVolumeControlStep(int* plStepSize);
+    HRESULT put_AutoVolumeControlRepeatDelay(int lDelay);
+    HRESULT get_AutoVolumeControlRepeatDelay(int* plDelay);
+    HRESULT put_AutoVolumeControlRepeatPeriod(int lPeriod);
+    HRESULT get_AutoVolumeControlRepeatPeriod(int* plPeriod);
+    HRESULT SelectCall(ITCallInfo pCall, VARIANT_BOOL fSelectDefaultTerminals);
+    HRESULT UnselectCall(ITCallInfo pCall);
+    HRESULT EnumerateSelectedCalls(IEnumCall* ppCallEnum);
+    HRESULT get_SelectedCalls(VARIANT* pVariant);
 }
 enum IID_ITBasicCallControl = GUID(0xb1efc389, 0x9355, 0x11d0, [0x83, 0x5c, 0x0, 0xaa, 0x0, 0x3c, 0xca, 0xbd]);
 interface ITBasicCallControl : IDispatch
 {
-    HRESULT Connect(VARIANT_BOOL);
+    HRESULT Connect(VARIANT_BOOL fSync);
     HRESULT Answer();
-    HRESULT Disconnect(DISCONNECT_CODE);
-    HRESULT Hold(VARIANT_BOOL);
-    HRESULT HandoffDirect(BSTR);
-    HRESULT HandoffIndirect(int);
-    HRESULT Conference(ITBasicCallControl, VARIANT_BOOL);
-    HRESULT Transfer(ITBasicCallControl, VARIANT_BOOL);
-    HRESULT BlindTransfer(BSTR);
-    HRESULT SwapHold(ITBasicCallControl);
-    HRESULT ParkDirect(BSTR);
-    HRESULT ParkIndirect(BSTR*);
+    HRESULT Disconnect(DISCONNECT_CODE code);
+    HRESULT Hold(VARIANT_BOOL fHold);
+    HRESULT HandoffDirect(BSTR pApplicationName);
+    HRESULT HandoffIndirect(int lMediaType);
+    HRESULT Conference(ITBasicCallControl pCall, VARIANT_BOOL fSync);
+    HRESULT Transfer(ITBasicCallControl pCall, VARIANT_BOOL fSync);
+    HRESULT BlindTransfer(BSTR pDestAddress);
+    HRESULT SwapHold(ITBasicCallControl pCall);
+    HRESULT ParkDirect(BSTR pParkAddress);
+    HRESULT ParkIndirect(BSTR* ppNonDirAddress);
     HRESULT Unpark();
-    HRESULT SetQOS(int, QOS_SERVICE_LEVEL);
-    HRESULT Pickup(BSTR);
-    HRESULT Dial(BSTR);
-    HRESULT Finish(FINISH_MODE);
+    HRESULT SetQOS(int lMediaType, QOS_SERVICE_LEVEL ServiceLevel);
+    HRESULT Pickup(BSTR pGroupID);
+    HRESULT Dial(BSTR pDestAddress);
+    HRESULT Finish(FINISH_MODE finishMode);
     HRESULT RemoveFromConference();
 }
 enum IID_ITCallInfo = GUID(0x350f85d1, 0x1227, 0x11d3, [0x83, 0xd4, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface ITCallInfo : IDispatch
 {
-    HRESULT get_Address(ITAddress*);
-    HRESULT get_CallState(CALL_STATE*);
-    HRESULT get_Privilege(CALL_PRIVILEGE*);
-    HRESULT get_CallHub(ITCallHub*);
-    HRESULT get_CallInfoLong(CALLINFO_LONG, int*);
-    HRESULT put_CallInfoLong(CALLINFO_LONG, int);
-    HRESULT get_CallInfoString(CALLINFO_STRING, BSTR*);
-    HRESULT put_CallInfoString(CALLINFO_STRING, BSTR);
-    HRESULT get_CallInfoBuffer(CALLINFO_BUFFER, VARIANT*);
-    HRESULT put_CallInfoBuffer(CALLINFO_BUFFER, VARIANT);
-    HRESULT GetCallInfoBuffer(CALLINFO_BUFFER, uint*, ubyte**);
-    HRESULT SetCallInfoBuffer(CALLINFO_BUFFER, uint, ubyte*);
+    HRESULT get_Address(ITAddress* ppAddress);
+    HRESULT get_CallState(CALL_STATE* pCallState);
+    HRESULT get_Privilege(CALL_PRIVILEGE* pPrivilege);
+    HRESULT get_CallHub(ITCallHub* ppCallHub);
+    HRESULT get_CallInfoLong(CALLINFO_LONG CallInfoLong, int* plCallInfoLongVal);
+    HRESULT put_CallInfoLong(CALLINFO_LONG CallInfoLong, int lCallInfoLongVal);
+    HRESULT get_CallInfoString(CALLINFO_STRING CallInfoString, BSTR* ppCallInfoString);
+    HRESULT put_CallInfoString(CALLINFO_STRING CallInfoString, BSTR pCallInfoString);
+    HRESULT get_CallInfoBuffer(CALLINFO_BUFFER CallInfoBuffer, VARIANT* ppCallInfoBuffer);
+    HRESULT put_CallInfoBuffer(CALLINFO_BUFFER CallInfoBuffer, VARIANT pCallInfoBuffer);
+    HRESULT GetCallInfoBuffer(CALLINFO_BUFFER CallInfoBuffer, uint* pdwSize, ubyte** ppCallInfoBuffer);
+    HRESULT SetCallInfoBuffer(CALLINFO_BUFFER CallInfoBuffer, uint dwSize, ubyte* pCallInfoBuffer);
     HRESULT ReleaseUserUserInfo();
 }
 enum IID_ITCallInfo2 = GUID(0x94d70ca6, 0x7ab0, 0x4daa, [0x81, 0xca, 0xb8, 0xf8, 0x64, 0x3f, 0xae, 0xc1]);
 interface ITCallInfo2 : ITCallInfo
 {
-    HRESULT get_EventFilter(TAPI_EVENT, int, VARIANT_BOOL*);
-    HRESULT put_EventFilter(TAPI_EVENT, int, VARIANT_BOOL);
+    HRESULT get_EventFilter(TAPI_EVENT TapiEvent, int lSubEvent, VARIANT_BOOL* pEnable);
+    HRESULT put_EventFilter(TAPI_EVENT TapiEvent, int lSubEvent, VARIANT_BOOL bEnable);
 }
 enum IID_ITTerminal = GUID(0xb1efc38a, 0x9355, 0x11d0, [0x83, 0x5c, 0x0, 0xaa, 0x0, 0x3c, 0xca, 0xbd]);
 interface ITTerminal : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_State(TERMINAL_STATE*);
-    HRESULT get_TerminalType(TERMINAL_TYPE*);
-    HRESULT get_TerminalClass(BSTR*);
-    HRESULT get_MediaType(int*);
-    HRESULT get_Direction(TERMINAL_DIRECTION*);
+    HRESULT get_Name(BSTR* ppName);
+    HRESULT get_State(TERMINAL_STATE* pTerminalState);
+    HRESULT get_TerminalType(TERMINAL_TYPE* pType);
+    HRESULT get_TerminalClass(BSTR* ppTerminalClass);
+    HRESULT get_MediaType(int* plMediaType);
+    HRESULT get_Direction(TERMINAL_DIRECTION* pDirection);
 }
 enum IID_ITMultiTrackTerminal = GUID(0xfe040091, 0xade8, 0x4072, [0x95, 0xc9, 0xbf, 0x7d, 0xe8, 0xc5, 0x4b, 0x44]);
 interface ITMultiTrackTerminal : IDispatch
 {
-    HRESULT get_TrackTerminals(VARIANT*);
-    HRESULT EnumerateTrackTerminals(IEnumTerminal*);
-    HRESULT CreateTrackTerminal(int, TERMINAL_DIRECTION, ITTerminal*);
-    HRESULT get_MediaTypesInUse(int*);
-    HRESULT get_DirectionsInUse(TERMINAL_DIRECTION*);
-    HRESULT RemoveTrackTerminal(ITTerminal);
+    HRESULT get_TrackTerminals(VARIANT* pVariant);
+    HRESULT EnumerateTrackTerminals(IEnumTerminal* ppEnumTerminal);
+    HRESULT CreateTrackTerminal(int MediaType, TERMINAL_DIRECTION TerminalDirection, ITTerminal* ppTerminal);
+    HRESULT get_MediaTypesInUse(int* plMediaTypesInUse);
+    HRESULT get_DirectionsInUse(TERMINAL_DIRECTION* plDirectionsInUsed);
+    HRESULT RemoveTrackTerminal(ITTerminal pTrackTerminalToRemove);
 }
 alias TERMINAL_MEDIA_STATE = int;
 enum : int
@@ -3369,24 +3369,24 @@ enum : int
 enum IID_ITFileTrack = GUID(0x31ca6ea9, 0xc08a, 0x4bea, [0x88, 0x11, 0x8e, 0x9c, 0x1b, 0xa3, 0xea, 0x3a]);
 interface ITFileTrack : IDispatch
 {
-    HRESULT get_Format(AM_MEDIA_TYPE**);
-    HRESULT put_Format(const(AM_MEDIA_TYPE)*);
-    HRESULT get_ControllingTerminal(ITTerminal*);
-    HRESULT get_AudioFormatForScripting(ITScriptableAudioFormat*);
-    HRESULT put_AudioFormatForScripting(ITScriptableAudioFormat);
-    HRESULT get_EmptyAudioFormatForScripting(ITScriptableAudioFormat*);
+    HRESULT get_Format(AM_MEDIA_TYPE** ppmt);
+    HRESULT put_Format(const(AM_MEDIA_TYPE)* pmt);
+    HRESULT get_ControllingTerminal(ITTerminal* ppControllingTerminal);
+    HRESULT get_AudioFormatForScripting(ITScriptableAudioFormat* ppAudioFormat);
+    HRESULT put_AudioFormatForScripting(ITScriptableAudioFormat pAudioFormat);
+    HRESULT get_EmptyAudioFormatForScripting(ITScriptableAudioFormat* ppAudioFormat);
 }
 enum IID_ITMediaPlayback = GUID(0x627e8ae6, 0xae4c, 0x4a69, [0xbb, 0x63, 0x2a, 0xd6, 0x25, 0x40, 0x4b, 0x77]);
 interface ITMediaPlayback : IDispatch
 {
-    HRESULT put_PlayList(VARIANT);
-    HRESULT get_PlayList(VARIANT*);
+    HRESULT put_PlayList(VARIANT PlayListVariant);
+    HRESULT get_PlayList(VARIANT* pPlayListVariant);
 }
 enum IID_ITMediaRecord = GUID(0xf5dd4592, 0x5476, 0x4cc1, [0x9d, 0x4d, 0xfa, 0xd3, 0xee, 0xfe, 0x7d, 0xb2]);
 interface ITMediaRecord : IDispatch
 {
-    HRESULT put_FileName(BSTR);
-    HRESULT get_FileName(BSTR*);
+    HRESULT put_FileName(BSTR bstrFileName);
+    HRESULT get_FileName(BSTR* pbstrFileName);
 }
 enum IID_ITMediaControl = GUID(0xc445dde8, 0x5199, 0x4bc7, [0x98, 0x7, 0x5f, 0xfb, 0x92, 0xe4, 0x2e, 0x9]);
 interface ITMediaControl : IDispatch
@@ -3394,485 +3394,485 @@ interface ITMediaControl : IDispatch
     HRESULT Start();
     HRESULT Stop();
     HRESULT Pause();
-    HRESULT get_MediaState(TERMINAL_MEDIA_STATE*);
+    HRESULT get_MediaState(TERMINAL_MEDIA_STATE* pTerminalMediaState);
 }
 enum IID_ITBasicAudioTerminal = GUID(0xb1efc38d, 0x9355, 0x11d0, [0x83, 0x5c, 0x0, 0xaa, 0x0, 0x3c, 0xca, 0xbd]);
 interface ITBasicAudioTerminal : IDispatch
 {
-    HRESULT put_Volume(int);
-    HRESULT get_Volume(int*);
-    HRESULT put_Balance(int);
-    HRESULT get_Balance(int*);
+    HRESULT put_Volume(int lVolume);
+    HRESULT get_Volume(int* plVolume);
+    HRESULT put_Balance(int lBalance);
+    HRESULT get_Balance(int* plBalance);
 }
 enum IID_ITStaticAudioTerminal = GUID(0xa86b7871, 0xd14c, 0x48e6, [0x92, 0x2e, 0xa8, 0xd1, 0x5f, 0x98, 0x48, 0x0]);
 interface ITStaticAudioTerminal : IDispatch
 {
-    HRESULT get_WaveId(int*);
+    HRESULT get_WaveId(int* plWaveId);
 }
 enum IID_ITCallHub = GUID(0xa3c1544e, 0x5b92, 0x11d1, [0x8f, 0x4e, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface ITCallHub : IDispatch
 {
     HRESULT Clear();
-    HRESULT EnumerateCalls(IEnumCall*);
-    HRESULT get_Calls(VARIANT*);
-    HRESULT get_NumCalls(int*);
-    HRESULT get_State(CALLHUB_STATE*);
+    HRESULT EnumerateCalls(IEnumCall* ppEnumCall);
+    HRESULT get_Calls(VARIANT* pCalls);
+    HRESULT get_NumCalls(int* plCalls);
+    HRESULT get_State(CALLHUB_STATE* pState);
 }
 enum IID_ITLegacyAddressMediaControl = GUID(0xab493640, 0x4c0b, 0x11d2, [0xa0, 0x46, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface ITLegacyAddressMediaControl : IUnknown
 {
-    HRESULT GetID(BSTR, uint*, ubyte**);
-    HRESULT GetDevConfig(BSTR, uint*, ubyte**);
-    HRESULT SetDevConfig(BSTR, uint, ubyte*);
+    HRESULT GetID(BSTR pDeviceClass, uint* pdwSize, ubyte** ppDeviceID);
+    HRESULT GetDevConfig(BSTR pDeviceClass, uint* pdwSize, ubyte** ppDeviceConfig);
+    HRESULT SetDevConfig(BSTR pDeviceClass, uint dwSize, ubyte* pDeviceConfig);
 }
 enum IID_ITPrivateEvent = GUID(0xe269cd0, 0x10d4, 0x4121, [0x9c, 0x22, 0x9c, 0x85, 0xd6, 0x25, 0x65, 0xd]);
 interface ITPrivateEvent : IDispatch
 {
-    HRESULT get_Address(ITAddress*);
-    HRESULT get_Call(ITCallInfo*);
-    HRESULT get_CallHub(ITCallHub*);
-    HRESULT get_EventCode(int*);
-    HRESULT get_EventInterface(IDispatch*);
+    HRESULT get_Address(ITAddress* ppAddress);
+    HRESULT get_Call(ITCallInfo* ppCallInfo);
+    HRESULT get_CallHub(ITCallHub* ppCallHub);
+    HRESULT get_EventCode(int* plEventCode);
+    HRESULT get_EventInterface(IDispatch* pEventInterface);
 }
 enum IID_ITLegacyAddressMediaControl2 = GUID(0xb0ee512b, 0xa531, 0x409e, [0x9d, 0xd9, 0x40, 0x99, 0xfe, 0x86, 0xc7, 0x38]);
 interface ITLegacyAddressMediaControl2 : ITLegacyAddressMediaControl
 {
-    HRESULT ConfigDialog(HWND, BSTR);
-    HRESULT ConfigDialogEdit(HWND, BSTR, uint, ubyte*, uint*, ubyte**);
+    HRESULT ConfigDialog(HWND hwndOwner, BSTR pDeviceClass);
+    HRESULT ConfigDialogEdit(HWND hwndOwner, BSTR pDeviceClass, uint dwSizeIn, ubyte* pDeviceConfigIn, uint* pdwSizeOut, ubyte** ppDeviceConfigOut);
 }
 enum IID_ITLegacyCallMediaControl = GUID(0xd624582f, 0xcc23, 0x4436, [0xb8, 0xa5, 0x47, 0xc6, 0x25, 0xc8, 0x4, 0x5d]);
 interface ITLegacyCallMediaControl : IDispatch
 {
-    HRESULT DetectDigits(int);
-    HRESULT GenerateDigits(BSTR, int);
-    HRESULT GetID(BSTR, uint*, ubyte**);
-    HRESULT SetMediaType(int);
-    HRESULT MonitorMedia(int);
+    HRESULT DetectDigits(int DigitMode);
+    HRESULT GenerateDigits(BSTR pDigits, int DigitMode);
+    HRESULT GetID(BSTR pDeviceClass, uint* pdwSize, ubyte** ppDeviceID);
+    HRESULT SetMediaType(int lMediaType);
+    HRESULT MonitorMedia(int lMediaType);
 }
 enum IID_ITLegacyCallMediaControl2 = GUID(0x57ca332d, 0x7bc2, 0x44f1, [0xa6, 0xc, 0x93, 0x6f, 0xe8, 0xd7, 0xce, 0x73]);
 interface ITLegacyCallMediaControl2 : ITLegacyCallMediaControl
 {
-    HRESULT GenerateDigits2(BSTR, int, int);
-    HRESULT GatherDigits(int, int, BSTR, int, int);
-    HRESULT DetectTones(TAPI_DETECTTONE*, int);
-    HRESULT DetectTonesByCollection(ITCollection2);
-    HRESULT GenerateTone(TAPI_TONEMODE, int);
-    HRESULT GenerateCustomTones(TAPI_CUSTOMTONE*, int, int);
-    HRESULT GenerateCustomTonesByCollection(ITCollection2, int);
-    HRESULT CreateDetectToneObject(ITDetectTone*);
-    HRESULT CreateCustomToneObject(ITCustomTone*);
-    HRESULT GetIDAsVariant(BSTR, VARIANT*);
+    HRESULT GenerateDigits2(BSTR pDigits, int DigitMode, int lDuration);
+    HRESULT GatherDigits(int DigitMode, int lNumDigits, BSTR pTerminationDigits, int lFirstDigitTimeout, int lInterDigitTimeout);
+    HRESULT DetectTones(TAPI_DETECTTONE* pToneList, int lNumTones);
+    HRESULT DetectTonesByCollection(ITCollection2 pDetectToneCollection);
+    HRESULT GenerateTone(TAPI_TONEMODE ToneMode, int lDuration);
+    HRESULT GenerateCustomTones(TAPI_CUSTOMTONE* pToneList, int lNumTones, int lDuration);
+    HRESULT GenerateCustomTonesByCollection(ITCollection2 pCustomToneCollection, int lDuration);
+    HRESULT CreateDetectToneObject(ITDetectTone* ppDetectTone);
+    HRESULT CreateCustomToneObject(ITCustomTone* ppCustomTone);
+    HRESULT GetIDAsVariant(BSTR bstrDeviceClass, VARIANT* pVarDeviceID);
 }
 enum IID_ITDetectTone = GUID(0x961f79bd, 0x3097, 0x49df, [0xa1, 0xd6, 0x90, 0x9b, 0x77, 0xe8, 0x9c, 0xa0]);
 interface ITDetectTone : IDispatch
 {
-    HRESULT get_AppSpecific(int*);
-    HRESULT put_AppSpecific(int);
-    HRESULT get_Duration(int*);
-    HRESULT put_Duration(int);
-    HRESULT get_Frequency(int, int*);
-    HRESULT put_Frequency(int, int);
+    HRESULT get_AppSpecific(int* plAppSpecific);
+    HRESULT put_AppSpecific(int lAppSpecific);
+    HRESULT get_Duration(int* plDuration);
+    HRESULT put_Duration(int lDuration);
+    HRESULT get_Frequency(int Index, int* plFrequency);
+    HRESULT put_Frequency(int Index, int lFrequency);
 }
 enum IID_ITCustomTone = GUID(0x357ad764, 0xb3c6, 0x4b2a, [0x8f, 0xa5, 0x7, 0x22, 0x82, 0x7a, 0x92, 0x54]);
 interface ITCustomTone : IDispatch
 {
-    HRESULT get_Frequency(int*);
-    HRESULT put_Frequency(int);
-    HRESULT get_CadenceOn(int*);
-    HRESULT put_CadenceOn(int);
-    HRESULT get_CadenceOff(int*);
-    HRESULT put_CadenceOff(int);
-    HRESULT get_Volume(int*);
-    HRESULT put_Volume(int);
+    HRESULT get_Frequency(int* plFrequency);
+    HRESULT put_Frequency(int lFrequency);
+    HRESULT get_CadenceOn(int* plCadenceOn);
+    HRESULT put_CadenceOn(int CadenceOn);
+    HRESULT get_CadenceOff(int* plCadenceOff);
+    HRESULT put_CadenceOff(int lCadenceOff);
+    HRESULT get_Volume(int* plVolume);
+    HRESULT put_Volume(int lVolume);
 }
 enum IID_IEnumPhone = GUID(0xf15b7669, 0x4780, 0x4595, [0x8c, 0x89, 0xfb, 0x36, 0x9c, 0x8c, 0xf7, 0xaa]);
 interface IEnumPhone : IUnknown
 {
-    HRESULT Next(uint, ITPhone*, uint*);
+    HRESULT Next(uint celt, ITPhone* ppElements, uint* pceltFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
-    HRESULT Clone(IEnumPhone*);
+    HRESULT Skip(uint celt);
+    HRESULT Clone(IEnumPhone* ppEnum);
 }
 enum IID_IEnumTerminal = GUID(0xae269cf4, 0x935e, 0x11d0, [0x83, 0x5c, 0x0, 0xaa, 0x0, 0x3c, 0xca, 0xbd]);
 interface IEnumTerminal : IUnknown
 {
-    HRESULT Next(uint, ITTerminal*, uint*);
+    HRESULT Next(uint celt, ITTerminal* ppElements, uint* pceltFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
-    HRESULT Clone(IEnumTerminal*);
+    HRESULT Skip(uint celt);
+    HRESULT Clone(IEnumTerminal* ppEnum);
 }
 enum IID_IEnumTerminalClass = GUID(0xae269cf5, 0x935e, 0x11d0, [0x83, 0x5c, 0x0, 0xaa, 0x0, 0x3c, 0xca, 0xbd]);
 interface IEnumTerminalClass : IUnknown
 {
-    HRESULT Next(uint, GUID*, uint*);
+    HRESULT Next(uint celt, GUID* pElements, uint* pceltFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
-    HRESULT Clone(IEnumTerminalClass*);
+    HRESULT Skip(uint celt);
+    HRESULT Clone(IEnumTerminalClass* ppEnum);
 }
 enum IID_IEnumCall = GUID(0xae269cf6, 0x935e, 0x11d0, [0x83, 0x5c, 0x0, 0xaa, 0x0, 0x3c, 0xca, 0xbd]);
 interface IEnumCall : IUnknown
 {
-    HRESULT Next(uint, ITCallInfo*, uint*);
+    HRESULT Next(uint celt, ITCallInfo* ppElements, uint* pceltFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
-    HRESULT Clone(IEnumCall*);
+    HRESULT Skip(uint celt);
+    HRESULT Clone(IEnumCall* ppEnum);
 }
 enum IID_IEnumAddress = GUID(0x1666fca1, 0x9363, 0x11d0, [0x83, 0x5c, 0x0, 0xaa, 0x0, 0x3c, 0xca, 0xbd]);
 interface IEnumAddress : IUnknown
 {
-    HRESULT Next(uint, ITAddress*, uint*);
+    HRESULT Next(uint celt, ITAddress* ppElements, uint* pceltFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
-    HRESULT Clone(IEnumAddress*);
+    HRESULT Skip(uint celt);
+    HRESULT Clone(IEnumAddress* ppEnum);
 }
 enum IID_IEnumCallHub = GUID(0xa3c15450, 0x5b92, 0x11d1, [0x8f, 0x4e, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface IEnumCallHub : IUnknown
 {
-    HRESULT Next(uint, ITCallHub*, uint*);
+    HRESULT Next(uint celt, ITCallHub* ppElements, uint* pceltFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
-    HRESULT Clone(IEnumCallHub*);
+    HRESULT Skip(uint celt);
+    HRESULT Clone(IEnumCallHub* ppEnum);
 }
 enum IID_IEnumBstr = GUID(0x35372049, 0xbc6, 0x11d2, [0xa0, 0x33, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface IEnumBstr : IUnknown
 {
-    HRESULT Next(uint, BSTR*, uint*);
+    HRESULT Next(uint celt, BSTR* ppStrings, uint* pceltFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
-    HRESULT Clone(IEnumBstr*);
+    HRESULT Skip(uint celt);
+    HRESULT Clone(IEnumBstr* ppEnum);
 }
 enum IID_IEnumPluggableTerminalClassInfo = GUID(0x4567450c, 0xdbee, 0x4e3f, [0xaa, 0xf5, 0x37, 0xbf, 0x9e, 0xbf, 0x5e, 0x29]);
 interface IEnumPluggableTerminalClassInfo : IUnknown
 {
-    HRESULT Next(uint, ITPluggableTerminalClassInfo*, uint*);
+    HRESULT Next(uint celt, ITPluggableTerminalClassInfo* ppElements, uint* pceltFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
-    HRESULT Clone(IEnumPluggableTerminalClassInfo*);
+    HRESULT Skip(uint celt);
+    HRESULT Clone(IEnumPluggableTerminalClassInfo* ppEnum);
 }
 enum IID_IEnumPluggableSuperclassInfo = GUID(0xe9586a80, 0x89e6, 0x4cff, [0x93, 0x1d, 0x47, 0x8d, 0x57, 0x51, 0xf4, 0xc0]);
 interface IEnumPluggableSuperclassInfo : IUnknown
 {
-    HRESULT Next(uint, ITPluggableTerminalSuperclassInfo*, uint*);
+    HRESULT Next(uint celt, ITPluggableTerminalSuperclassInfo* ppElements, uint* pceltFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
-    HRESULT Clone(IEnumPluggableSuperclassInfo*);
+    HRESULT Skip(uint celt);
+    HRESULT Clone(IEnumPluggableSuperclassInfo* ppEnum);
 }
 enum IID_ITPhoneEvent = GUID(0x8f942dd8, 0x64ed, 0x4aaf, [0xa7, 0x7d, 0xb2, 0x3d, 0xb0, 0x83, 0x7e, 0xad]);
 interface ITPhoneEvent : IDispatch
 {
-    HRESULT get_Phone(ITPhone*);
-    HRESULT get_Event(PHONE_EVENT*);
-    HRESULT get_ButtonState(PHONE_BUTTON_STATE*);
-    HRESULT get_HookSwitchState(PHONE_HOOK_SWITCH_STATE*);
-    HRESULT get_HookSwitchDevice(PHONE_HOOK_SWITCH_DEVICE*);
-    HRESULT get_RingMode(int*);
-    HRESULT get_ButtonLampId(int*);
-    HRESULT get_NumberGathered(BSTR*);
-    HRESULT get_Call(ITCallInfo*);
+    HRESULT get_Phone(ITPhone* ppPhone);
+    HRESULT get_Event(PHONE_EVENT* pEvent);
+    HRESULT get_ButtonState(PHONE_BUTTON_STATE* pState);
+    HRESULT get_HookSwitchState(PHONE_HOOK_SWITCH_STATE* pState);
+    HRESULT get_HookSwitchDevice(PHONE_HOOK_SWITCH_DEVICE* pDevice);
+    HRESULT get_RingMode(int* plRingMode);
+    HRESULT get_ButtonLampId(int* plButtonLampId);
+    HRESULT get_NumberGathered(BSTR* ppNumber);
+    HRESULT get_Call(ITCallInfo* ppCallInfo);
 }
 enum IID_ITCallStateEvent = GUID(0x62f47097, 0x95c9, 0x11d0, [0x83, 0x5d, 0x0, 0xaa, 0x0, 0x3c, 0xca, 0xbd]);
 interface ITCallStateEvent : IDispatch
 {
-    HRESULT get_Call(ITCallInfo*);
-    HRESULT get_State(CALL_STATE*);
-    HRESULT get_Cause(CALL_STATE_EVENT_CAUSE*);
-    HRESULT get_CallbackInstance(int*);
+    HRESULT get_Call(ITCallInfo* ppCallInfo);
+    HRESULT get_State(CALL_STATE* pCallState);
+    HRESULT get_Cause(CALL_STATE_EVENT_CAUSE* pCEC);
+    HRESULT get_CallbackInstance(int* plCallbackInstance);
 }
 enum IID_ITPhoneDeviceSpecificEvent = GUID(0x63ffb2a6, 0x872b, 0x4cd3, [0xa5, 0x1, 0x32, 0x6e, 0x8f, 0xb4, 0xa, 0xf7]);
 interface ITPhoneDeviceSpecificEvent : IDispatch
 {
-    HRESULT get_Phone(ITPhone*);
-    HRESULT get_lParam1(int*);
-    HRESULT get_lParam2(int*);
-    HRESULT get_lParam3(int*);
+    HRESULT get_Phone(ITPhone* ppPhone);
+    HRESULT get_lParam1(int* pParam1);
+    HRESULT get_lParam2(int* pParam2);
+    HRESULT get_lParam3(int* pParam3);
 }
 enum IID_ITCallMediaEvent = GUID(0xff36b87f, 0xec3a, 0x11d0, [0x8e, 0xe4, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface ITCallMediaEvent : IDispatch
 {
-    HRESULT get_Call(ITCallInfo*);
-    HRESULT get_Event(CALL_MEDIA_EVENT*);
-    HRESULT get_Error(HRESULT*);
-    HRESULT get_Terminal(ITTerminal*);
-    HRESULT get_Stream(ITStream*);
-    HRESULT get_Cause(CALL_MEDIA_EVENT_CAUSE*);
+    HRESULT get_Call(ITCallInfo* ppCallInfo);
+    HRESULT get_Event(CALL_MEDIA_EVENT* pCallMediaEvent);
+    HRESULT get_Error(HRESULT* phrError);
+    HRESULT get_Terminal(ITTerminal* ppTerminal);
+    HRESULT get_Stream(ITStream* ppStream);
+    HRESULT get_Cause(CALL_MEDIA_EVENT_CAUSE* pCause);
 }
 enum IID_ITDigitDetectionEvent = GUID(0x80d3bfac, 0x57d9, 0x11d2, [0xa0, 0x4a, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface ITDigitDetectionEvent : IDispatch
 {
-    HRESULT get_Call(ITCallInfo*);
-    HRESULT get_Digit(ubyte*);
-    HRESULT get_DigitMode(int*);
-    HRESULT get_TickCount(int*);
-    HRESULT get_CallbackInstance(int*);
+    HRESULT get_Call(ITCallInfo* ppCallInfo);
+    HRESULT get_Digit(ubyte* pucDigit);
+    HRESULT get_DigitMode(int* pDigitMode);
+    HRESULT get_TickCount(int* plTickCount);
+    HRESULT get_CallbackInstance(int* plCallbackInstance);
 }
 enum IID_ITDigitGenerationEvent = GUID(0x80d3bfad, 0x57d9, 0x11d2, [0xa0, 0x4a, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface ITDigitGenerationEvent : IDispatch
 {
-    HRESULT get_Call(ITCallInfo*);
-    HRESULT get_GenerationTermination(int*);
-    HRESULT get_TickCount(int*);
-    HRESULT get_CallbackInstance(int*);
+    HRESULT get_Call(ITCallInfo* ppCallInfo);
+    HRESULT get_GenerationTermination(int* plGenerationTermination);
+    HRESULT get_TickCount(int* plTickCount);
+    HRESULT get_CallbackInstance(int* plCallbackInstance);
 }
 enum IID_ITDigitsGatheredEvent = GUID(0xe52ec4c1, 0xcba3, 0x441a, [0x9e, 0x6a, 0x93, 0xcb, 0x90, 0x9e, 0x97, 0x24]);
 interface ITDigitsGatheredEvent : IDispatch
 {
-    HRESULT get_Call(ITCallInfo*);
-    HRESULT get_Digits(BSTR*);
-    HRESULT get_GatherTermination(TAPI_GATHERTERM*);
-    HRESULT get_TickCount(int*);
-    HRESULT get_CallbackInstance(int*);
+    HRESULT get_Call(ITCallInfo* ppCallInfo);
+    HRESULT get_Digits(BSTR* ppDigits);
+    HRESULT get_GatherTermination(TAPI_GATHERTERM* pGatherTermination);
+    HRESULT get_TickCount(int* plTickCount);
+    HRESULT get_CallbackInstance(int* plCallbackInstance);
 }
 enum IID_ITToneDetectionEvent = GUID(0x407e0faf, 0xd047, 0x4753, [0xb0, 0xc6, 0x8e, 0x6, 0x3, 0x73, 0xfe, 0xcd]);
 interface ITToneDetectionEvent : IDispatch
 {
-    HRESULT get_Call(ITCallInfo*);
-    HRESULT get_AppSpecific(int*);
-    HRESULT get_TickCount(int*);
-    HRESULT get_CallbackInstance(int*);
+    HRESULT get_Call(ITCallInfo* ppCallInfo);
+    HRESULT get_AppSpecific(int* plAppSpecific);
+    HRESULT get_TickCount(int* plTickCount);
+    HRESULT get_CallbackInstance(int* plCallbackInstance);
 }
 enum IID_ITTAPIObjectEvent = GUID(0xf4854d48, 0x937a, 0x11d1, [0xbb, 0x58, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface ITTAPIObjectEvent : IDispatch
 {
-    HRESULT get_TAPIObject(ITTAPI*);
-    HRESULT get_Event(TAPIOBJECT_EVENT*);
-    HRESULT get_Address(ITAddress*);
-    HRESULT get_CallbackInstance(int*);
+    HRESULT get_TAPIObject(ITTAPI* ppTAPIObject);
+    HRESULT get_Event(TAPIOBJECT_EVENT* pEvent);
+    HRESULT get_Address(ITAddress* ppAddress);
+    HRESULT get_CallbackInstance(int* plCallbackInstance);
 }
 enum IID_ITTAPIObjectEvent2 = GUID(0x359dda6e, 0x68ce, 0x4383, [0xbf, 0xb, 0x16, 0x91, 0x33, 0xc4, 0x1b, 0x46]);
 interface ITTAPIObjectEvent2 : ITTAPIObjectEvent
 {
-    HRESULT get_Phone(ITPhone*);
+    HRESULT get_Phone(ITPhone* ppPhone);
 }
 enum IID_ITTAPIEventNotification = GUID(0xeddb9426, 0x3b91, 0x11d1, [0x8f, 0x30, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface ITTAPIEventNotification : IUnknown
 {
-    HRESULT Event(TAPI_EVENT, IDispatch);
+    HRESULT Event(TAPI_EVENT TapiEvent, IDispatch pEvent);
 }
 enum IID_ITCallHubEvent = GUID(0xa3c15451, 0x5b92, 0x11d1, [0x8f, 0x4e, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface ITCallHubEvent : IDispatch
 {
-    HRESULT get_Event(CALLHUB_EVENT*);
-    HRESULT get_CallHub(ITCallHub*);
-    HRESULT get_Call(ITCallInfo*);
+    HRESULT get_Event(CALLHUB_EVENT* pEvent);
+    HRESULT get_CallHub(ITCallHub* ppCallHub);
+    HRESULT get_Call(ITCallInfo* ppCall);
 }
 enum IID_ITAddressEvent = GUID(0x831ce2d1, 0x83b5, 0x11d1, [0xbb, 0x5c, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface ITAddressEvent : IDispatch
 {
-    HRESULT get_Address(ITAddress*);
-    HRESULT get_Event(ADDRESS_EVENT*);
-    HRESULT get_Terminal(ITTerminal*);
+    HRESULT get_Address(ITAddress* ppAddress);
+    HRESULT get_Event(ADDRESS_EVENT* pEvent);
+    HRESULT get_Terminal(ITTerminal* ppTerminal);
 }
 enum IID_ITAddressDeviceSpecificEvent = GUID(0x3acb216b, 0x40bd, 0x487a, [0x86, 0x72, 0x5c, 0xe7, 0x7b, 0xd7, 0xe3, 0xa3]);
 interface ITAddressDeviceSpecificEvent : IDispatch
 {
-    HRESULT get_Address(ITAddress*);
-    HRESULT get_Call(ITCallInfo*);
-    HRESULT get_lParam1(int*);
-    HRESULT get_lParam2(int*);
-    HRESULT get_lParam3(int*);
+    HRESULT get_Address(ITAddress* ppAddress);
+    HRESULT get_Call(ITCallInfo* ppCall);
+    HRESULT get_lParam1(int* pParam1);
+    HRESULT get_lParam2(int* pParam2);
+    HRESULT get_lParam3(int* pParam3);
 }
 enum IID_ITFileTerminalEvent = GUID(0xe4a7fbac, 0x8c17, 0x4427, [0x9f, 0x55, 0x9f, 0x58, 0x9a, 0xc8, 0xaf, 0x0]);
 interface ITFileTerminalEvent : IDispatch
 {
-    HRESULT get_Terminal(ITTerminal*);
-    HRESULT get_Track(ITFileTrack*);
-    HRESULT get_Call(ITCallInfo*);
-    HRESULT get_State(TERMINAL_MEDIA_STATE*);
-    HRESULT get_Cause(FT_STATE_EVENT_CAUSE*);
-    HRESULT get_Error(HRESULT*);
+    HRESULT get_Terminal(ITTerminal* ppTerminal);
+    HRESULT get_Track(ITFileTrack* ppTrackTerminal);
+    HRESULT get_Call(ITCallInfo* ppCall);
+    HRESULT get_State(TERMINAL_MEDIA_STATE* pState);
+    HRESULT get_Cause(FT_STATE_EVENT_CAUSE* pCause);
+    HRESULT get_Error(HRESULT* phrErrorCode);
 }
 enum IID_ITTTSTerminalEvent = GUID(0xd964788f, 0x95a5, 0x461d, [0xab, 0xc, 0xb9, 0x90, 0xa, 0x6c, 0x27, 0x13]);
 interface ITTTSTerminalEvent : IDispatch
 {
-    HRESULT get_Terminal(ITTerminal*);
-    HRESULT get_Call(ITCallInfo*);
-    HRESULT get_Error(HRESULT*);
+    HRESULT get_Terminal(ITTerminal* ppTerminal);
+    HRESULT get_Call(ITCallInfo* ppCall);
+    HRESULT get_Error(HRESULT* phrErrorCode);
 }
 enum IID_ITASRTerminalEvent = GUID(0xee016a02, 0x4fa9, 0x467c, [0x93, 0x3f, 0x5a, 0x15, 0xb1, 0x23, 0x77, 0xd7]);
 interface ITASRTerminalEvent : IDispatch
 {
-    HRESULT get_Terminal(ITTerminal*);
-    HRESULT get_Call(ITCallInfo*);
-    HRESULT get_Error(HRESULT*);
+    HRESULT get_Terminal(ITTerminal* ppTerminal);
+    HRESULT get_Call(ITCallInfo* ppCall);
+    HRESULT get_Error(HRESULT* phrErrorCode);
 }
 enum IID_ITToneTerminalEvent = GUID(0xe6f56009, 0x611f, 0x4945, [0xbb, 0xd2, 0x2d, 0xc, 0xe5, 0x61, 0x20, 0x56]);
 interface ITToneTerminalEvent : IDispatch
 {
-    HRESULT get_Terminal(ITTerminal*);
-    HRESULT get_Call(ITCallInfo*);
-    HRESULT get_Error(HRESULT*);
+    HRESULT get_Terminal(ITTerminal* ppTerminal);
+    HRESULT get_Call(ITCallInfo* ppCall);
+    HRESULT get_Error(HRESULT* phrErrorCode);
 }
 enum IID_ITQOSEvent = GUID(0xcfa3357c, 0xad77, 0x11d1, [0xbb, 0x68, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface ITQOSEvent : IDispatch
 {
-    HRESULT get_Call(ITCallInfo*);
-    HRESULT get_Event(QOS_EVENT*);
-    HRESULT get_MediaType(int*);
+    HRESULT get_Call(ITCallInfo* ppCall);
+    HRESULT get_Event(QOS_EVENT* pQosEvent);
+    HRESULT get_MediaType(int* plMediaType);
 }
 enum IID_ITCallInfoChangeEvent = GUID(0x5d4b65f9, 0xe51c, 0x11d1, [0xa0, 0x2f, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface ITCallInfoChangeEvent : IDispatch
 {
-    HRESULT get_Call(ITCallInfo*);
-    HRESULT get_Cause(CALLINFOCHANGE_CAUSE*);
-    HRESULT get_CallbackInstance(int*);
+    HRESULT get_Call(ITCallInfo* ppCall);
+    HRESULT get_Cause(CALLINFOCHANGE_CAUSE* pCIC);
+    HRESULT get_CallbackInstance(int* plCallbackInstance);
 }
 enum IID_ITRequest = GUID(0xac48ffdf, 0xf8c4, 0x11d1, [0xa0, 0x30, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface ITRequest : IDispatch
 {
-    HRESULT MakeCall(BSTR, BSTR, BSTR, BSTR);
+    HRESULT MakeCall(BSTR pDestAddress, BSTR pAppName, BSTR pCalledParty, BSTR pComment);
 }
 enum IID_ITRequestEvent = GUID(0xac48ffde, 0xf8c4, 0x11d1, [0xa0, 0x30, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface ITRequestEvent : IDispatch
 {
-    HRESULT get_RegistrationInstance(int*);
-    HRESULT get_RequestMode(int*);
-    HRESULT get_DestAddress(BSTR*);
-    HRESULT get_AppName(BSTR*);
-    HRESULT get_CalledParty(BSTR*);
-    HRESULT get_Comment(BSTR*);
+    HRESULT get_RegistrationInstance(int* plRegistrationInstance);
+    HRESULT get_RequestMode(int* plRequestMode);
+    HRESULT get_DestAddress(BSTR* ppDestAddress);
+    HRESULT get_AppName(BSTR* ppAppName);
+    HRESULT get_CalledParty(BSTR* ppCalledParty);
+    HRESULT get_Comment(BSTR* ppComment);
 }
 enum IID_ITCollection = GUID(0x5ec5acf2, 0x9c02, 0x11d0, [0x83, 0x62, 0x0, 0xaa, 0x0, 0x3c, 0xca, 0xbd]);
 interface ITCollection : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get_Item(int, VARIANT*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT get_Count(int* lCount);
+    HRESULT get_Item(int Index, VARIANT* pVariant);
+    HRESULT get__NewEnum(IUnknown* ppNewEnum);
 }
 enum IID_ITCollection2 = GUID(0xe6dddda5, 0xa6d3, 0x48ff, [0x87, 0x37, 0xd3, 0x2f, 0xc4, 0xd9, 0x54, 0x77]);
 interface ITCollection2 : ITCollection
 {
-    HRESULT Add(int, VARIANT*);
-    HRESULT Remove(int);
+    HRESULT Add(int Index, VARIANT* pVariant);
+    HRESULT Remove(int Index);
 }
 enum IID_ITForwardInformation = GUID(0x449f659e, 0x88a3, 0x11d1, [0xbb, 0x5d, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface ITForwardInformation : IDispatch
 {
-    HRESULT put_NumRingsNoAnswer(int);
-    HRESULT get_NumRingsNoAnswer(int*);
-    HRESULT SetForwardType(int, BSTR, BSTR);
-    HRESULT get_ForwardTypeDestination(int, BSTR*);
-    HRESULT get_ForwardTypeCaller(int, BSTR*);
-    HRESULT GetForwardType(int, BSTR*, BSTR*);
+    HRESULT put_NumRingsNoAnswer(int lNumRings);
+    HRESULT get_NumRingsNoAnswer(int* plNumRings);
+    HRESULT SetForwardType(int ForwardType, BSTR pDestAddress, BSTR pCallerAddress);
+    HRESULT get_ForwardTypeDestination(int ForwardType, BSTR* ppDestAddress);
+    HRESULT get_ForwardTypeCaller(int Forwardtype, BSTR* ppCallerAddress);
+    HRESULT GetForwardType(int ForwardType, BSTR* ppDestinationAddress, BSTR* ppCallerAddress);
     HRESULT Clear();
 }
 enum IID_ITForwardInformation2 = GUID(0x5229b4ed, 0xb260, 0x4382, [0x8e, 0x1a, 0x5d, 0xf3, 0xa8, 0xa4, 0xcc, 0xc0]);
 interface ITForwardInformation2 : ITForwardInformation
 {
-    HRESULT SetForwardType2(int, BSTR, int, BSTR, int);
-    HRESULT GetForwardType2(int, BSTR*, int*, BSTR*, int*);
-    HRESULT get_ForwardTypeDestinationAddressType(int, int*);
-    HRESULT get_ForwardTypeCallerAddressType(int, int*);
+    HRESULT SetForwardType2(int ForwardType, BSTR pDestAddress, int DestAddressType, BSTR pCallerAddress, int CallerAddressType);
+    HRESULT GetForwardType2(int ForwardType, BSTR* ppDestinationAddress, int* pDestAddressType, BSTR* ppCallerAddress, int* pCallerAddressType);
+    HRESULT get_ForwardTypeDestinationAddressType(int ForwardType, int* pDestAddressType);
+    HRESULT get_ForwardTypeCallerAddressType(int Forwardtype, int* pCallerAddressType);
 }
 enum IID_ITAddressTranslation = GUID(0xc4d8f03, 0x8ddb, 0x11d1, [0xa0, 0x9e, 0x0, 0x80, 0x5f, 0xc1, 0x47, 0xd3]);
 interface ITAddressTranslation : IDispatch
 {
-    HRESULT TranslateAddress(BSTR, int, int, ITAddressTranslationInfo*);
-    HRESULT TranslateDialog(long, BSTR);
-    HRESULT EnumerateLocations(IEnumLocation*);
-    HRESULT get_Locations(VARIANT*);
-    HRESULT EnumerateCallingCards(IEnumCallingCard*);
-    HRESULT get_CallingCards(VARIANT*);
+    HRESULT TranslateAddress(BSTR pAddressToTranslate, int lCard, int lTranslateOptions, ITAddressTranslationInfo* ppTranslated);
+    HRESULT TranslateDialog(long hwndOwner, BSTR pAddressIn);
+    HRESULT EnumerateLocations(IEnumLocation* ppEnumLocation);
+    HRESULT get_Locations(VARIANT* pVariant);
+    HRESULT EnumerateCallingCards(IEnumCallingCard* ppEnumCallingCard);
+    HRESULT get_CallingCards(VARIANT* pVariant);
 }
 enum IID_ITAddressTranslationInfo = GUID(0xafc15945, 0x8d40, 0x11d1, [0xa0, 0x9e, 0x0, 0x80, 0x5f, 0xc1, 0x47, 0xd3]);
 interface ITAddressTranslationInfo : IDispatch
 {
-    HRESULT get_DialableString(BSTR*);
-    HRESULT get_DisplayableString(BSTR*);
-    HRESULT get_CurrentCountryCode(int*);
-    HRESULT get_DestinationCountryCode(int*);
-    HRESULT get_TranslationResults(int*);
+    HRESULT get_DialableString(BSTR* ppDialableString);
+    HRESULT get_DisplayableString(BSTR* ppDisplayableString);
+    HRESULT get_CurrentCountryCode(int* CountryCode);
+    HRESULT get_DestinationCountryCode(int* CountryCode);
+    HRESULT get_TranslationResults(int* plResults);
 }
 enum IID_ITLocationInfo = GUID(0xc4d8eff, 0x8ddb, 0x11d1, [0xa0, 0x9e, 0x0, 0x80, 0x5f, 0xc1, 0x47, 0xd3]);
 interface ITLocationInfo : IDispatch
 {
-    HRESULT get_PermanentLocationID(int*);
-    HRESULT get_CountryCode(int*);
-    HRESULT get_CountryID(int*);
-    HRESULT get_Options(int*);
-    HRESULT get_PreferredCardID(int*);
-    HRESULT get_LocationName(BSTR*);
-    HRESULT get_CityCode(BSTR*);
-    HRESULT get_LocalAccessCode(BSTR*);
-    HRESULT get_LongDistanceAccessCode(BSTR*);
-    HRESULT get_TollPrefixList(BSTR*);
-    HRESULT get_CancelCallWaitingCode(BSTR*);
+    HRESULT get_PermanentLocationID(int* plLocationID);
+    HRESULT get_CountryCode(int* plCountryCode);
+    HRESULT get_CountryID(int* plCountryID);
+    HRESULT get_Options(int* plOptions);
+    HRESULT get_PreferredCardID(int* plCardID);
+    HRESULT get_LocationName(BSTR* ppLocationName);
+    HRESULT get_CityCode(BSTR* ppCode);
+    HRESULT get_LocalAccessCode(BSTR* ppCode);
+    HRESULT get_LongDistanceAccessCode(BSTR* ppCode);
+    HRESULT get_TollPrefixList(BSTR* ppTollList);
+    HRESULT get_CancelCallWaitingCode(BSTR* ppCode);
 }
 enum IID_IEnumLocation = GUID(0xc4d8f01, 0x8ddb, 0x11d1, [0xa0, 0x9e, 0x0, 0x80, 0x5f, 0xc1, 0x47, 0xd3]);
 interface IEnumLocation : IUnknown
 {
-    HRESULT Next(uint, ITLocationInfo*, uint*);
+    HRESULT Next(uint celt, ITLocationInfo* ppElements, uint* pceltFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
-    HRESULT Clone(IEnumLocation*);
+    HRESULT Skip(uint celt);
+    HRESULT Clone(IEnumLocation* ppEnum);
 }
 enum IID_ITCallingCard = GUID(0xc4d8f00, 0x8ddb, 0x11d1, [0xa0, 0x9e, 0x0, 0x80, 0x5f, 0xc1, 0x47, 0xd3]);
 interface ITCallingCard : IDispatch
 {
-    HRESULT get_PermanentCardID(int*);
-    HRESULT get_NumberOfDigits(int*);
-    HRESULT get_Options(int*);
-    HRESULT get_CardName(BSTR*);
-    HRESULT get_SameAreaDialingRule(BSTR*);
-    HRESULT get_LongDistanceDialingRule(BSTR*);
-    HRESULT get_InternationalDialingRule(BSTR*);
+    HRESULT get_PermanentCardID(int* plCardID);
+    HRESULT get_NumberOfDigits(int* plDigits);
+    HRESULT get_Options(int* plOptions);
+    HRESULT get_CardName(BSTR* ppCardName);
+    HRESULT get_SameAreaDialingRule(BSTR* ppRule);
+    HRESULT get_LongDistanceDialingRule(BSTR* ppRule);
+    HRESULT get_InternationalDialingRule(BSTR* ppRule);
 }
 enum IID_IEnumCallingCard = GUID(0xc4d8f02, 0x8ddb, 0x11d1, [0xa0, 0x9e, 0x0, 0x80, 0x5f, 0xc1, 0x47, 0xd3]);
 interface IEnumCallingCard : IUnknown
 {
-    HRESULT Next(uint, ITCallingCard*, uint*);
+    HRESULT Next(uint celt, ITCallingCard* ppElements, uint* pceltFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
-    HRESULT Clone(IEnumCallingCard*);
+    HRESULT Skip(uint celt);
+    HRESULT Clone(IEnumCallingCard* ppEnum);
 }
 enum IID_ITCallNotificationEvent = GUID(0x895801df, 0x3dd6, 0x11d1, [0x8f, 0x30, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface ITCallNotificationEvent : IDispatch
 {
-    HRESULT get_Call(ITCallInfo*);
-    HRESULT get_Event(CALL_NOTIFICATION_EVENT*);
-    HRESULT get_CallbackInstance(int*);
+    HRESULT get_Call(ITCallInfo* ppCall);
+    HRESULT get_Event(CALL_NOTIFICATION_EVENT* pCallNotificationEvent);
+    HRESULT get_CallbackInstance(int* plCallbackInstance);
 }
 enum IID_ITDispatchMapper = GUID(0xe9225295, 0xc759, 0x11d1, [0xa0, 0x2b, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface ITDispatchMapper : IDispatch
 {
-    HRESULT QueryDispatchInterface(BSTR, IDispatch, IDispatch*);
+    HRESULT QueryDispatchInterface(BSTR pIID, IDispatch pInterfaceToMap, IDispatch* ppReturnedInterface);
 }
 enum IID_ITStreamControl = GUID(0xee3bd604, 0x3868, 0x11d2, [0xa0, 0x45, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface ITStreamControl : IDispatch
 {
-    HRESULT CreateStream(int, TERMINAL_DIRECTION, ITStream*);
-    HRESULT RemoveStream(ITStream);
-    HRESULT EnumerateStreams(IEnumStream*);
-    HRESULT get_Streams(VARIANT*);
+    HRESULT CreateStream(int lMediaType, TERMINAL_DIRECTION td, ITStream* ppStream);
+    HRESULT RemoveStream(ITStream pStream);
+    HRESULT EnumerateStreams(IEnumStream* ppEnumStream);
+    HRESULT get_Streams(VARIANT* pVariant);
 }
 enum IID_ITStream = GUID(0xee3bd605, 0x3868, 0x11d2, [0xa0, 0x45, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface ITStream : IDispatch
 {
-    HRESULT get_MediaType(int*);
-    HRESULT get_Direction(TERMINAL_DIRECTION*);
-    HRESULT get_Name(BSTR*);
+    HRESULT get_MediaType(int* plMediaType);
+    HRESULT get_Direction(TERMINAL_DIRECTION* pTD);
+    HRESULT get_Name(BSTR* ppName);
     HRESULT StartStream();
     HRESULT PauseStream();
     HRESULT StopStream();
-    HRESULT SelectTerminal(ITTerminal);
-    HRESULT UnselectTerminal(ITTerminal);
-    HRESULT EnumerateTerminals(IEnumTerminal*);
-    HRESULT get_Terminals(VARIANT*);
+    HRESULT SelectTerminal(ITTerminal pTerminal);
+    HRESULT UnselectTerminal(ITTerminal pTerminal);
+    HRESULT EnumerateTerminals(IEnumTerminal* ppEnumTerminal);
+    HRESULT get_Terminals(VARIANT* pTerminals);
 }
 enum IID_IEnumStream = GUID(0xee3bd606, 0x3868, 0x11d2, [0xa0, 0x45, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface IEnumStream : IUnknown
 {
-    HRESULT Next(uint, ITStream*, uint*);
+    HRESULT Next(uint celt, ITStream* ppElements, uint* pceltFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
-    HRESULT Clone(IEnumStream*);
+    HRESULT Skip(uint celt);
+    HRESULT Clone(IEnumStream* ppEnum);
 }
 enum IID_ITSubStreamControl = GUID(0xee3bd607, 0x3868, 0x11d2, [0xa0, 0x45, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface ITSubStreamControl : IDispatch
 {
-    HRESULT CreateSubStream(ITSubStream*);
-    HRESULT RemoveSubStream(ITSubStream);
-    HRESULT EnumerateSubStreams(IEnumSubStream*);
-    HRESULT get_SubStreams(VARIANT*);
+    HRESULT CreateSubStream(ITSubStream* ppSubStream);
+    HRESULT RemoveSubStream(ITSubStream pSubStream);
+    HRESULT EnumerateSubStreams(IEnumSubStream* ppEnumSubStream);
+    HRESULT get_SubStreams(VARIANT* pVariant);
 }
 enum IID_ITSubStream = GUID(0xee3bd608, 0x3868, 0x11d2, [0xa0, 0x45, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface ITSubStream : IDispatch
@@ -3880,47 +3880,47 @@ interface ITSubStream : IDispatch
     HRESULT StartSubStream();
     HRESULT PauseSubStream();
     HRESULT StopSubStream();
-    HRESULT SelectTerminal(ITTerminal);
-    HRESULT UnselectTerminal(ITTerminal);
-    HRESULT EnumerateTerminals(IEnumTerminal*);
-    HRESULT get_Terminals(VARIANT*);
-    HRESULT get_Stream(ITStream*);
+    HRESULT SelectTerminal(ITTerminal pTerminal);
+    HRESULT UnselectTerminal(ITTerminal pTerminal);
+    HRESULT EnumerateTerminals(IEnumTerminal* ppEnumTerminal);
+    HRESULT get_Terminals(VARIANT* pTerminals);
+    HRESULT get_Stream(ITStream* ppITStream);
 }
 enum IID_IEnumSubStream = GUID(0xee3bd609, 0x3868, 0x11d2, [0xa0, 0x45, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface IEnumSubStream : IUnknown
 {
-    HRESULT Next(uint, ITSubStream*, uint*);
+    HRESULT Next(uint celt, ITSubStream* ppElements, uint* pceltFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
-    HRESULT Clone(IEnumSubStream*);
+    HRESULT Skip(uint celt);
+    HRESULT Clone(IEnumSubStream* ppEnum);
 }
 enum IID_ITLegacyWaveSupport = GUID(0x207823ea, 0xe252, 0x11d2, [0xb7, 0x7e, 0x0, 0x80, 0xc7, 0x13, 0x53, 0x81]);
 interface ITLegacyWaveSupport : IDispatch
 {
-    HRESULT IsFullDuplex(FULLDUPLEX_SUPPORT*);
+    HRESULT IsFullDuplex(FULLDUPLEX_SUPPORT* pSupport);
 }
 enum IID_ITBasicCallControl2 = GUID(0x161a4a56, 0x1e99, 0x4b3f, [0xa4, 0x6a, 0x16, 0x8f, 0x38, 0xa5, 0xee, 0x4c]);
 interface ITBasicCallControl2 : ITBasicCallControl
 {
-    HRESULT RequestTerminal(BSTR, int, TERMINAL_DIRECTION, ITTerminal*);
-    HRESULT SelectTerminalOnCall(ITTerminal);
-    HRESULT UnselectTerminalOnCall(ITTerminal);
+    HRESULT RequestTerminal(BSTR bstrTerminalClassGUID, int lMediaType, TERMINAL_DIRECTION Direction, ITTerminal* ppTerminal);
+    HRESULT SelectTerminalOnCall(ITTerminal pTerminal);
+    HRESULT UnselectTerminalOnCall(ITTerminal pTerminal);
 }
 enum IID_ITScriptableAudioFormat = GUID(0xb87658bd, 0x3c59, 0x4f64, [0xbe, 0x74, 0xae, 0xde, 0x3e, 0x86, 0xa8, 0x1e]);
 interface ITScriptableAudioFormat : IDispatch
 {
-    HRESULT get_Channels(int*);
-    HRESULT put_Channels(const(int));
-    HRESULT get_SamplesPerSec(int*);
-    HRESULT put_SamplesPerSec(const(int));
-    HRESULT get_AvgBytesPerSec(int*);
-    HRESULT put_AvgBytesPerSec(const(int));
-    HRESULT get_BlockAlign(int*);
-    HRESULT put_BlockAlign(const(int));
-    HRESULT get_BitsPerSample(int*);
-    HRESULT put_BitsPerSample(const(int));
-    HRESULT get_FormatTag(int*);
-    HRESULT put_FormatTag(const(int));
+    HRESULT get_Channels(int* pVal);
+    HRESULT put_Channels(const(int) nNewVal);
+    HRESULT get_SamplesPerSec(int* pVal);
+    HRESULT put_SamplesPerSec(const(int) nNewVal);
+    HRESULT get_AvgBytesPerSec(int* pVal);
+    HRESULT put_AvgBytesPerSec(const(int) nNewVal);
+    HRESULT get_BlockAlign(int* pVal);
+    HRESULT put_BlockAlign(const(int) nNewVal);
+    HRESULT get_BitsPerSample(int* pVal);
+    HRESULT put_BitsPerSample(const(int) nNewVal);
+    HRESULT get_FormatTag(int* pVal);
+    HRESULT put_FormatTag(const(int) nNewVal);
 }
 alias AGENT_EVENT = int;
 enum : int
@@ -3989,170 +3989,170 @@ enum : int
 enum IID_ITAgent = GUID(0x5770ece5, 0x4b27, 0x11d1, [0xbf, 0x80, 0x0, 0x80, 0x5f, 0xc1, 0x47, 0xd3]);
 interface ITAgent : IDispatch
 {
-    HRESULT EnumerateAgentSessions(IEnumAgentSession*);
-    HRESULT CreateSession(ITACDGroup, ITAddress, ITAgentSession*);
-    HRESULT CreateSessionWithPIN(ITACDGroup, ITAddress, BSTR, ITAgentSession*);
-    HRESULT get_ID(BSTR*);
-    HRESULT get_User(BSTR*);
-    HRESULT put_State(AGENT_STATE);
-    HRESULT get_State(AGENT_STATE*);
-    HRESULT put_MeasurementPeriod(int);
-    HRESULT get_MeasurementPeriod(int*);
-    HRESULT get_OverallCallRate(CY*);
-    HRESULT get_NumberOfACDCalls(int*);
-    HRESULT get_NumberOfIncomingCalls(int*);
-    HRESULT get_NumberOfOutgoingCalls(int*);
-    HRESULT get_TotalACDTalkTime(int*);
-    HRESULT get_TotalACDCallTime(int*);
-    HRESULT get_TotalWrapUpTime(int*);
-    HRESULT get_AgentSessions(VARIANT*);
+    HRESULT EnumerateAgentSessions(IEnumAgentSession* ppEnumAgentSession);
+    HRESULT CreateSession(ITACDGroup pACDGroup, ITAddress pAddress, ITAgentSession* ppAgentSession);
+    HRESULT CreateSessionWithPIN(ITACDGroup pACDGroup, ITAddress pAddress, BSTR pPIN, ITAgentSession* ppAgentSession);
+    HRESULT get_ID(BSTR* ppID);
+    HRESULT get_User(BSTR* ppUser);
+    HRESULT put_State(AGENT_STATE AgentState);
+    HRESULT get_State(AGENT_STATE* pAgentState);
+    HRESULT put_MeasurementPeriod(int lPeriod);
+    HRESULT get_MeasurementPeriod(int* plPeriod);
+    HRESULT get_OverallCallRate(CY* pcyCallrate);
+    HRESULT get_NumberOfACDCalls(int* plCalls);
+    HRESULT get_NumberOfIncomingCalls(int* plCalls);
+    HRESULT get_NumberOfOutgoingCalls(int* plCalls);
+    HRESULT get_TotalACDTalkTime(int* plTalkTime);
+    HRESULT get_TotalACDCallTime(int* plCallTime);
+    HRESULT get_TotalWrapUpTime(int* plWrapUpTime);
+    HRESULT get_AgentSessions(VARIANT* pVariant);
 }
 enum IID_ITAgentSession = GUID(0x5afc3147, 0x4bcc, 0x11d1, [0xbf, 0x80, 0x0, 0x80, 0x5f, 0xc1, 0x47, 0xd3]);
 interface ITAgentSession : IDispatch
 {
-    HRESULT get_Agent(ITAgent*);
-    HRESULT get_Address(ITAddress*);
-    HRESULT get_ACDGroup(ITACDGroup*);
-    HRESULT put_State(AGENT_SESSION_STATE);
-    HRESULT get_State(AGENT_SESSION_STATE*);
-    HRESULT get_SessionStartTime(double*);
-    HRESULT get_SessionDuration(int*);
-    HRESULT get_NumberOfCalls(int*);
-    HRESULT get_TotalTalkTime(int*);
-    HRESULT get_AverageTalkTime(int*);
-    HRESULT get_TotalCallTime(int*);
-    HRESULT get_AverageCallTime(int*);
-    HRESULT get_TotalWrapUpTime(int*);
-    HRESULT get_AverageWrapUpTime(int*);
-    HRESULT get_ACDCallRate(CY*);
-    HRESULT get_LongestTimeToAnswer(int*);
-    HRESULT get_AverageTimeToAnswer(int*);
+    HRESULT get_Agent(ITAgent* ppAgent);
+    HRESULT get_Address(ITAddress* ppAddress);
+    HRESULT get_ACDGroup(ITACDGroup* ppACDGroup);
+    HRESULT put_State(AGENT_SESSION_STATE SessionState);
+    HRESULT get_State(AGENT_SESSION_STATE* pSessionState);
+    HRESULT get_SessionStartTime(double* pdateSessionStart);
+    HRESULT get_SessionDuration(int* plDuration);
+    HRESULT get_NumberOfCalls(int* plCalls);
+    HRESULT get_TotalTalkTime(int* plTalkTime);
+    HRESULT get_AverageTalkTime(int* plTalkTime);
+    HRESULT get_TotalCallTime(int* plCallTime);
+    HRESULT get_AverageCallTime(int* plCallTime);
+    HRESULT get_TotalWrapUpTime(int* plWrapUpTime);
+    HRESULT get_AverageWrapUpTime(int* plWrapUpTime);
+    HRESULT get_ACDCallRate(CY* pcyCallrate);
+    HRESULT get_LongestTimeToAnswer(int* plAnswerTime);
+    HRESULT get_AverageTimeToAnswer(int* plAnswerTime);
 }
 enum IID_ITACDGroup = GUID(0x5afc3148, 0x4bcc, 0x11d1, [0xbf, 0x80, 0x0, 0x80, 0x5f, 0xc1, 0x47, 0xd3]);
 interface ITACDGroup : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT EnumerateQueues(IEnumQueue*);
-    HRESULT get_Queues(VARIANT*);
+    HRESULT get_Name(BSTR* ppName);
+    HRESULT EnumerateQueues(IEnumQueue* ppEnumQueue);
+    HRESULT get_Queues(VARIANT* pVariant);
 }
 enum IID_ITQueue = GUID(0x5afc3149, 0x4bcc, 0x11d1, [0xbf, 0x80, 0x0, 0x80, 0x5f, 0xc1, 0x47, 0xd3]);
 interface ITQueue : IDispatch
 {
-    HRESULT put_MeasurementPeriod(int);
-    HRESULT get_MeasurementPeriod(int*);
-    HRESULT get_TotalCallsQueued(int*);
-    HRESULT get_CurrentCallsQueued(int*);
-    HRESULT get_TotalCallsAbandoned(int*);
-    HRESULT get_TotalCallsFlowedIn(int*);
-    HRESULT get_TotalCallsFlowedOut(int*);
-    HRESULT get_LongestEverWaitTime(int*);
-    HRESULT get_CurrentLongestWaitTime(int*);
-    HRESULT get_AverageWaitTime(int*);
-    HRESULT get_FinalDisposition(int*);
-    HRESULT get_Name(BSTR*);
+    HRESULT put_MeasurementPeriod(int lPeriod);
+    HRESULT get_MeasurementPeriod(int* plPeriod);
+    HRESULT get_TotalCallsQueued(int* plCalls);
+    HRESULT get_CurrentCallsQueued(int* plCalls);
+    HRESULT get_TotalCallsAbandoned(int* plCalls);
+    HRESULT get_TotalCallsFlowedIn(int* plCalls);
+    HRESULT get_TotalCallsFlowedOut(int* plCalls);
+    HRESULT get_LongestEverWaitTime(int* plWaitTime);
+    HRESULT get_CurrentLongestWaitTime(int* plWaitTime);
+    HRESULT get_AverageWaitTime(int* plWaitTime);
+    HRESULT get_FinalDisposition(int* plCalls);
+    HRESULT get_Name(BSTR* ppName);
 }
 enum IID_ITAgentEvent = GUID(0x5afc314a, 0x4bcc, 0x11d1, [0xbf, 0x80, 0x0, 0x80, 0x5f, 0xc1, 0x47, 0xd3]);
 interface ITAgentEvent : IDispatch
 {
-    HRESULT get_Agent(ITAgent*);
-    HRESULT get_Event(AGENT_EVENT*);
+    HRESULT get_Agent(ITAgent* ppAgent);
+    HRESULT get_Event(AGENT_EVENT* pEvent);
 }
 enum IID_ITAgentSessionEvent = GUID(0x5afc314b, 0x4bcc, 0x11d1, [0xbf, 0x80, 0x0, 0x80, 0x5f, 0xc1, 0x47, 0xd3]);
 interface ITAgentSessionEvent : IDispatch
 {
-    HRESULT get_Session(ITAgentSession*);
-    HRESULT get_Event(AGENT_SESSION_EVENT*);
+    HRESULT get_Session(ITAgentSession* ppSession);
+    HRESULT get_Event(AGENT_SESSION_EVENT* pEvent);
 }
 enum IID_ITACDGroupEvent = GUID(0x297f3032, 0xbd11, 0x11d1, [0xa0, 0xa7, 0x0, 0x80, 0x5f, 0xc1, 0x47, 0xd3]);
 interface ITACDGroupEvent : IDispatch
 {
-    HRESULT get_Group(ITACDGroup*);
-    HRESULT get_Event(ACDGROUP_EVENT*);
+    HRESULT get_Group(ITACDGroup* ppGroup);
+    HRESULT get_Event(ACDGROUP_EVENT* pEvent);
 }
 enum IID_ITQueueEvent = GUID(0x297f3033, 0xbd11, 0x11d1, [0xa0, 0xa7, 0x0, 0x80, 0x5f, 0xc1, 0x47, 0xd3]);
 interface ITQueueEvent : IDispatch
 {
-    HRESULT get_Queue(ITQueue*);
-    HRESULT get_Event(ACDQUEUE_EVENT*);
+    HRESULT get_Queue(ITQueue* ppQueue);
+    HRESULT get_Event(ACDQUEUE_EVENT* pEvent);
 }
 enum IID_ITAgentHandlerEvent = GUID(0x297f3034, 0xbd11, 0x11d1, [0xa0, 0xa7, 0x0, 0x80, 0x5f, 0xc1, 0x47, 0xd3]);
 interface ITAgentHandlerEvent : IDispatch
 {
-    HRESULT get_AgentHandler(ITAgentHandler*);
-    HRESULT get_Event(AGENTHANDLER_EVENT*);
+    HRESULT get_AgentHandler(ITAgentHandler* ppAgentHandler);
+    HRESULT get_Event(AGENTHANDLER_EVENT* pEvent);
 }
 enum IID_ITTAPICallCenter = GUID(0x5afc3154, 0x4bcc, 0x11d1, [0xbf, 0x80, 0x0, 0x80, 0x5f, 0xc1, 0x47, 0xd3]);
 interface ITTAPICallCenter : IDispatch
 {
-    HRESULT EnumerateAgentHandlers(IEnumAgentHandler*);
-    HRESULT get_AgentHandlers(VARIANT*);
+    HRESULT EnumerateAgentHandlers(IEnumAgentHandler* ppEnumHandler);
+    HRESULT get_AgentHandlers(VARIANT* pVariant);
 }
 enum IID_ITAgentHandler = GUID(0x587e8c22, 0x9802, 0x11d1, [0xa0, 0xa4, 0x0, 0x80, 0x5f, 0xc1, 0x47, 0xd3]);
 interface ITAgentHandler : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT CreateAgent(ITAgent*);
-    HRESULT CreateAgentWithID(BSTR, BSTR, ITAgent*);
-    HRESULT EnumerateACDGroups(IEnumACDGroup*);
-    HRESULT EnumerateUsableAddresses(IEnumAddress*);
-    HRESULT get_ACDGroups(VARIANT*);
-    HRESULT get_UsableAddresses(VARIANT*);
+    HRESULT get_Name(BSTR* ppName);
+    HRESULT CreateAgent(ITAgent* ppAgent);
+    HRESULT CreateAgentWithID(BSTR pID, BSTR pPIN, ITAgent* ppAgent);
+    HRESULT EnumerateACDGroups(IEnumACDGroup* ppEnumACDGroup);
+    HRESULT EnumerateUsableAddresses(IEnumAddress* ppEnumAddress);
+    HRESULT get_ACDGroups(VARIANT* pVariant);
+    HRESULT get_UsableAddresses(VARIANT* pVariant);
 }
 enum IID_IEnumAgent = GUID(0x5afc314d, 0x4bcc, 0x11d1, [0xbf, 0x80, 0x0, 0x80, 0x5f, 0xc1, 0x47, 0xd3]);
 interface IEnumAgent : IUnknown
 {
-    HRESULT Next(uint, ITAgent*, uint*);
+    HRESULT Next(uint celt, ITAgent* ppElements, uint* pceltFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
-    HRESULT Clone(IEnumAgent*);
+    HRESULT Skip(uint celt);
+    HRESULT Clone(IEnumAgent* ppEnum);
 }
 enum IID_IEnumAgentSession = GUID(0x5afc314e, 0x4bcc, 0x11d1, [0xbf, 0x80, 0x0, 0x80, 0x5f, 0xc1, 0x47, 0xd3]);
 interface IEnumAgentSession : IUnknown
 {
-    HRESULT Next(uint, ITAgentSession*, uint*);
+    HRESULT Next(uint celt, ITAgentSession* ppElements, uint* pceltFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
-    HRESULT Clone(IEnumAgentSession*);
+    HRESULT Skip(uint celt);
+    HRESULT Clone(IEnumAgentSession* ppEnum);
 }
 enum IID_IEnumQueue = GUID(0x5afc3158, 0x4bcc, 0x11d1, [0xbf, 0x80, 0x0, 0x80, 0x5f, 0xc1, 0x47, 0xd3]);
 interface IEnumQueue : IUnknown
 {
-    HRESULT Next(uint, ITQueue*, uint*);
+    HRESULT Next(uint celt, ITQueue* ppElements, uint* pceltFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
-    HRESULT Clone(IEnumQueue*);
+    HRESULT Skip(uint celt);
+    HRESULT Clone(IEnumQueue* ppEnum);
 }
 enum IID_IEnumACDGroup = GUID(0x5afc3157, 0x4bcc, 0x11d1, [0xbf, 0x80, 0x0, 0x80, 0x5f, 0xc1, 0x47, 0xd3]);
 interface IEnumACDGroup : IUnknown
 {
-    HRESULT Next(uint, ITACDGroup*, uint*);
+    HRESULT Next(uint celt, ITACDGroup* ppElements, uint* pceltFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
-    HRESULT Clone(IEnumACDGroup*);
+    HRESULT Skip(uint celt);
+    HRESULT Clone(IEnumACDGroup* ppEnum);
 }
 enum IID_IEnumAgentHandler = GUID(0x587e8c28, 0x9802, 0x11d1, [0xa0, 0xa4, 0x0, 0x80, 0x5f, 0xc1, 0x47, 0xd3]);
 interface IEnumAgentHandler : IUnknown
 {
-    HRESULT Next(uint, ITAgentHandler*, uint*);
+    HRESULT Next(uint celt, ITAgentHandler* ppElements, uint* pceltFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
-    HRESULT Clone(IEnumAgentHandler*);
+    HRESULT Skip(uint celt);
+    HRESULT Clone(IEnumAgentHandler* ppEnum);
 }
 enum IID_ITAMMediaFormat = GUID(0x364eb00, 0x4a77, 0x11d1, [0xa6, 0x71, 0x0, 0x60, 0x97, 0xc9, 0xa2, 0xe8]);
 interface ITAMMediaFormat : IUnknown
 {
-    HRESULT get_MediaFormat(AM_MEDIA_TYPE**);
-    HRESULT put_MediaFormat(const(AM_MEDIA_TYPE)*);
+    HRESULT get_MediaFormat(AM_MEDIA_TYPE** ppmt);
+    HRESULT put_MediaFormat(const(AM_MEDIA_TYPE)* pmt);
 }
 enum IID_ITAllocatorProperties = GUID(0xc1bc3c90, 0xbcfe, 0x11d1, [0x97, 0x45, 0x0, 0xc0, 0x4f, 0xd9, 0x1a, 0xc0]);
 interface ITAllocatorProperties : IUnknown
 {
-    HRESULT SetAllocatorProperties(ALLOCATOR_PROPERTIES*);
-    HRESULT GetAllocatorProperties(ALLOCATOR_PROPERTIES*);
-    HRESULT SetAllocateBuffers(BOOL);
-    HRESULT GetAllocateBuffers(BOOL*);
-    HRESULT SetBufferSize(uint);
-    HRESULT GetBufferSize(uint*);
+    HRESULT SetAllocatorProperties(ALLOCATOR_PROPERTIES* pAllocProperties);
+    HRESULT GetAllocatorProperties(ALLOCATOR_PROPERTIES* pAllocProperties);
+    HRESULT SetAllocateBuffers(BOOL bAllocBuffers);
+    HRESULT GetAllocateBuffers(BOOL* pbAllocBuffers);
+    HRESULT SetBufferSize(uint BufferSize);
+    HRESULT GetBufferSize(uint* pBufferSize);
 }
 alias MSP_ADDRESS_EVENT = int;
 enum : int
@@ -4256,23 +4256,23 @@ struct MSP_EVENT_INFO
 enum IID_ITPluggableTerminalEventSink = GUID(0x6e0887be, 0xba1a, 0x492e, [0xbd, 0x10, 0x40, 0x20, 0xec, 0x5e, 0x33, 0xe0]);
 interface ITPluggableTerminalEventSink : IUnknown
 {
-    HRESULT FireEvent(const(MSP_EVENT_INFO)*);
+    HRESULT FireEvent(const(MSP_EVENT_INFO)* pMspEventInfo);
 }
 enum IID_ITPluggableTerminalEventSinkRegistration = GUID(0xf7115709, 0xa216, 0x4957, [0xa7, 0x59, 0x6, 0xa, 0xb3, 0x2a, 0x90, 0xd1]);
 interface ITPluggableTerminalEventSinkRegistration : IUnknown
 {
-    HRESULT RegisterSink(ITPluggableTerminalEventSink);
+    HRESULT RegisterSink(ITPluggableTerminalEventSink pEventSink);
     HRESULT UnregisterSink();
 }
 enum IID_ITMSPAddress = GUID(0xee3bd600, 0x3868, 0x11d2, [0xa0, 0x45, 0x0, 0xc0, 0x4f, 0xb6, 0x80, 0x9f]);
 interface ITMSPAddress : IUnknown
 {
-    HRESULT Initialize(int*);
+    HRESULT Initialize(int* hEvent);
     HRESULT Shutdown();
-    HRESULT CreateMSPCall(int*, uint, uint, IUnknown, IUnknown*);
-    HRESULT ShutdownMSPCall(IUnknown);
-    HRESULT ReceiveTSPData(IUnknown, ubyte*, uint);
-    HRESULT GetEvent(uint*, ubyte*);
+    HRESULT CreateMSPCall(int* hCall, uint dwReserved, uint dwMediaType, IUnknown pOuterUnknown, IUnknown* ppStreamControl);
+    HRESULT ShutdownMSPCall(IUnknown pStreamControl);
+    HRESULT ReceiveTSPData(IUnknown pMSPCall, ubyte* pBuffer, uint dwSize);
+    HRESULT GetEvent(uint* pdwSize, ubyte* pEventBuffer);
 }
 enum IID_ITTAPIDispatchEventNotification = GUID(0x9f34325b, 0x7e62, 0x11d2, [0x94, 0x57, 0x0, 0xc0, 0x4f, 0x8e, 0xc8, 0x88]);
 interface ITTAPIDispatchEventNotification : IDispatch
@@ -4316,94 +4316,94 @@ enum : int
 enum IID_ITDirectoryObjectConference = GUID(0xf1029e5d, 0xcb5b, 0x11d0, [0x8d, 0x59, 0x0, 0xc0, 0x4f, 0xd9, 0x1a, 0xc0]);
 interface ITDirectoryObjectConference : IDispatch
 {
-    HRESULT get_Protocol(BSTR*);
-    HRESULT get_Originator(BSTR*);
-    HRESULT put_Originator(BSTR);
-    HRESULT get_AdvertisingScope(RND_ADVERTISING_SCOPE*);
-    HRESULT put_AdvertisingScope(RND_ADVERTISING_SCOPE);
-    HRESULT get_Url(BSTR*);
-    HRESULT put_Url(BSTR);
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
-    HRESULT get_IsEncrypted(VARIANT_BOOL*);
-    HRESULT put_IsEncrypted(VARIANT_BOOL);
-    HRESULT get_StartTime(double*);
-    HRESULT put_StartTime(double);
-    HRESULT get_StopTime(double*);
-    HRESULT put_StopTime(double);
+    HRESULT get_Protocol(BSTR* ppProtocol);
+    HRESULT get_Originator(BSTR* ppOriginator);
+    HRESULT put_Originator(BSTR pOriginator);
+    HRESULT get_AdvertisingScope(RND_ADVERTISING_SCOPE* pAdvertisingScope);
+    HRESULT put_AdvertisingScope(RND_ADVERTISING_SCOPE AdvertisingScope);
+    HRESULT get_Url(BSTR* ppUrl);
+    HRESULT put_Url(BSTR pUrl);
+    HRESULT get_Description(BSTR* ppDescription);
+    HRESULT put_Description(BSTR pDescription);
+    HRESULT get_IsEncrypted(VARIANT_BOOL* pfEncrypted);
+    HRESULT put_IsEncrypted(VARIANT_BOOL fEncrypted);
+    HRESULT get_StartTime(double* pDate);
+    HRESULT put_StartTime(double Date);
+    HRESULT get_StopTime(double* pDate);
+    HRESULT put_StopTime(double Date);
 }
 enum IID_ITDirectoryObjectUser = GUID(0x34621d6f, 0x6cff, 0x11d1, [0xaf, 0xf7, 0x0, 0xc0, 0x4f, 0xc3, 0x1f, 0xee]);
 interface ITDirectoryObjectUser : IDispatch
 {
-    HRESULT get_IPPhonePrimary(BSTR*);
-    HRESULT put_IPPhonePrimary(BSTR);
+    HRESULT get_IPPhonePrimary(BSTR* ppName);
+    HRESULT put_IPPhonePrimary(BSTR pName);
 }
 enum IID_IEnumDialableAddrs = GUID(0x34621d70, 0x6cff, 0x11d1, [0xaf, 0xf7, 0x0, 0xc0, 0x4f, 0xc3, 0x1f, 0xee]);
 interface IEnumDialableAddrs : IUnknown
 {
-    HRESULT Next(uint, BSTR*, uint*);
+    HRESULT Next(uint celt, BSTR* ppElements, uint* pcFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
-    HRESULT Clone(IEnumDialableAddrs*);
+    HRESULT Skip(uint celt);
+    HRESULT Clone(IEnumDialableAddrs* ppEnum);
 }
 enum IID_ITDirectoryObject = GUID(0x34621d6e, 0x6cff, 0x11d1, [0xaf, 0xf7, 0x0, 0xc0, 0x4f, 0xc3, 0x1f, 0xee]);
 interface ITDirectoryObject : IDispatch
 {
-    HRESULT get_ObjectType(DIRECTORY_OBJECT_TYPE*);
-    HRESULT get_Name(BSTR*);
-    HRESULT put_Name(BSTR);
-    HRESULT get_DialableAddrs(int, VARIANT*);
-    HRESULT EnumerateDialableAddrs(uint, IEnumDialableAddrs*);
-    HRESULT get_SecurityDescriptor(IDispatch*);
-    HRESULT put_SecurityDescriptor(IDispatch);
+    HRESULT get_ObjectType(DIRECTORY_OBJECT_TYPE* pObjectType);
+    HRESULT get_Name(BSTR* ppName);
+    HRESULT put_Name(BSTR pName);
+    HRESULT get_DialableAddrs(int dwAddressType, VARIANT* pVariant);
+    HRESULT EnumerateDialableAddrs(uint dwAddressType, IEnumDialableAddrs* ppEnumDialableAddrs);
+    HRESULT get_SecurityDescriptor(IDispatch* ppSecDes);
+    HRESULT put_SecurityDescriptor(IDispatch pSecDes);
 }
 enum IID_IEnumDirectoryObject = GUID(0x6c9b64a, 0x306d, 0x11d1, [0x97, 0x74, 0x0, 0xc0, 0x4f, 0xd9, 0x1a, 0xc0]);
 interface IEnumDirectoryObject : IUnknown
 {
-    HRESULT Next(uint, ITDirectoryObject*, uint*);
+    HRESULT Next(uint celt, ITDirectoryObject* pVal, uint* pcFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
-    HRESULT Clone(IEnumDirectoryObject*);
+    HRESULT Skip(uint celt);
+    HRESULT Clone(IEnumDirectoryObject* ppEnum);
 }
 enum IID_ITILSConfig = GUID(0x34621d72, 0x6cff, 0x11d1, [0xaf, 0xf7, 0x0, 0xc0, 0x4f, 0xc3, 0x1f, 0xee]);
 interface ITILSConfig : IDispatch
 {
-    HRESULT get_Port(int*);
-    HRESULT put_Port(int);
+    HRESULT get_Port(int* pPort);
+    HRESULT put_Port(int Port);
 }
 enum IID_ITDirectory = GUID(0x34621d6c, 0x6cff, 0x11d1, [0xaf, 0xf7, 0x0, 0xc0, 0x4f, 0xc3, 0x1f, 0xee]);
 interface ITDirectory : IDispatch
 {
-    HRESULT get_DirectoryType(DIRECTORY_TYPE*);
-    HRESULT get_DisplayName(BSTR*);
-    HRESULT get_IsDynamic(VARIANT_BOOL*);
-    HRESULT get_DefaultObjectTTL(int*);
-    HRESULT put_DefaultObjectTTL(int);
-    HRESULT EnableAutoRefresh(VARIANT_BOOL);
-    HRESULT Connect(VARIANT_BOOL);
-    HRESULT Bind(BSTR, BSTR, BSTR, int);
-    HRESULT AddDirectoryObject(ITDirectoryObject);
-    HRESULT ModifyDirectoryObject(ITDirectoryObject);
-    HRESULT RefreshDirectoryObject(ITDirectoryObject);
-    HRESULT DeleteDirectoryObject(ITDirectoryObject);
-    HRESULT get_DirectoryObjects(DIRECTORY_OBJECT_TYPE, BSTR, VARIANT*);
-    HRESULT EnumerateDirectoryObjects(DIRECTORY_OBJECT_TYPE, BSTR, IEnumDirectoryObject*);
+    HRESULT get_DirectoryType(DIRECTORY_TYPE* pDirectoryType);
+    HRESULT get_DisplayName(BSTR* pName);
+    HRESULT get_IsDynamic(VARIANT_BOOL* pfDynamic);
+    HRESULT get_DefaultObjectTTL(int* pTTL);
+    HRESULT put_DefaultObjectTTL(int TTL);
+    HRESULT EnableAutoRefresh(VARIANT_BOOL fEnable);
+    HRESULT Connect(VARIANT_BOOL fSecure);
+    HRESULT Bind(BSTR pDomainName, BSTR pUserName, BSTR pPassword, int lFlags);
+    HRESULT AddDirectoryObject(ITDirectoryObject pDirectoryObject);
+    HRESULT ModifyDirectoryObject(ITDirectoryObject pDirectoryObject);
+    HRESULT RefreshDirectoryObject(ITDirectoryObject pDirectoryObject);
+    HRESULT DeleteDirectoryObject(ITDirectoryObject pDirectoryObject);
+    HRESULT get_DirectoryObjects(DIRECTORY_OBJECT_TYPE DirectoryObjectType, BSTR pName, VARIANT* pVariant);
+    HRESULT EnumerateDirectoryObjects(DIRECTORY_OBJECT_TYPE DirectoryObjectType, BSTR pName, IEnumDirectoryObject* ppEnumObject);
 }
 enum IID_IEnumDirectory = GUID(0x34621d6d, 0x6cff, 0x11d1, [0xaf, 0xf7, 0x0, 0xc0, 0x4f, 0xc3, 0x1f, 0xee]);
 interface IEnumDirectory : IUnknown
 {
-    HRESULT Next(uint, ITDirectory*, uint*);
+    HRESULT Next(uint celt, ITDirectory* ppElements, uint* pcFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
-    HRESULT Clone(IEnumDirectory*);
+    HRESULT Skip(uint celt);
+    HRESULT Clone(IEnumDirectory* ppEnum);
 }
 enum IID_ITRendezvous = GUID(0x34621d6b, 0x6cff, 0x11d1, [0xaf, 0xf7, 0x0, 0xc0, 0x4f, 0xc3, 0x1f, 0xee]);
 interface ITRendezvous : IDispatch
 {
-    HRESULT get_DefaultDirectories(VARIANT*);
-    HRESULT EnumerateDefaultDirectories(IEnumDirectory*);
-    HRESULT CreateDirectory(DIRECTORY_TYPE, BSTR, ITDirectory*);
-    HRESULT CreateDirectoryObject(DIRECTORY_OBJECT_TYPE, BSTR, ITDirectoryObject*);
+    HRESULT get_DefaultDirectories(VARIANT* pVariant);
+    HRESULT EnumerateDefaultDirectories(IEnumDirectory* ppEnumDirectory);
+    HRESULT CreateDirectory(DIRECTORY_TYPE DirectoryType, BSTR pName, ITDirectory* ppDir);
+    HRESULT CreateDirectoryObject(DIRECTORY_OBJECT_TYPE DirectoryObjectType, BSTR pName, ITDirectoryObject* ppDirectoryObject);
 }
 enum CLSID_Rendezvous = GUID(0xf1029e5b, 0xcb5b, 0x11d0, [0x8d, 0x59, 0x0, 0xc0, 0x4f, 0xd9, 0x1a, 0xc0]);
 struct Rendezvous
@@ -4412,44 +4412,44 @@ struct Rendezvous
 enum IID_IMcastScope = GUID(0xdf0daef4, 0xa289, 0x11d1, [0x86, 0x97, 0x0, 0x60, 0x8, 0xb0, 0xe5, 0xd2]);
 interface IMcastScope : IDispatch
 {
-    HRESULT get_ScopeID(int*);
-    HRESULT get_ServerID(int*);
-    HRESULT get_InterfaceID(int*);
-    HRESULT get_ScopeDescription(BSTR*);
-    HRESULT get_TTL(int*);
+    HRESULT get_ScopeID(int* pID);
+    HRESULT get_ServerID(int* pID);
+    HRESULT get_InterfaceID(int* pID);
+    HRESULT get_ScopeDescription(BSTR* ppDescription);
+    HRESULT get_TTL(int* pTTL);
 }
 enum IID_IMcastLeaseInfo = GUID(0xdf0daefd, 0xa289, 0x11d1, [0x86, 0x97, 0x0, 0x60, 0x8, 0xb0, 0xe5, 0xd2]);
 interface IMcastLeaseInfo : IDispatch
 {
-    HRESULT get_RequestID(BSTR*);
-    HRESULT get_LeaseStartTime(double*);
-    HRESULT put_LeaseStartTime(double);
-    HRESULT get_LeaseStopTime(double*);
-    HRESULT put_LeaseStopTime(double);
-    HRESULT get_AddressCount(int*);
-    HRESULT get_ServerAddress(BSTR*);
-    HRESULT get_TTL(int*);
-    HRESULT get_Addresses(VARIANT*);
-    HRESULT EnumerateAddresses(IEnumBstr*);
+    HRESULT get_RequestID(BSTR* ppRequestID);
+    HRESULT get_LeaseStartTime(double* pTime);
+    HRESULT put_LeaseStartTime(double time);
+    HRESULT get_LeaseStopTime(double* pTime);
+    HRESULT put_LeaseStopTime(double time);
+    HRESULT get_AddressCount(int* pCount);
+    HRESULT get_ServerAddress(BSTR* ppAddress);
+    HRESULT get_TTL(int* pTTL);
+    HRESULT get_Addresses(VARIANT* pVariant);
+    HRESULT EnumerateAddresses(IEnumBstr* ppEnumAddresses);
 }
 enum IID_IEnumMcastScope = GUID(0xdf0daf09, 0xa289, 0x11d1, [0x86, 0x97, 0x0, 0x60, 0x8, 0xb0, 0xe5, 0xd2]);
 interface IEnumMcastScope : IUnknown
 {
-    HRESULT Next(uint, IMcastScope*, uint*);
+    HRESULT Next(uint celt, IMcastScope* ppScopes, uint* pceltFetched);
     HRESULT Reset();
-    HRESULT Skip(uint);
-    HRESULT Clone(IEnumMcastScope*);
+    HRESULT Skip(uint celt);
+    HRESULT Clone(IEnumMcastScope* ppEnum);
 }
 enum IID_IMcastAddressAllocation = GUID(0xdf0daef1, 0xa289, 0x11d1, [0x86, 0x97, 0x0, 0x60, 0x8, 0xb0, 0xe5, 0xd2]);
 interface IMcastAddressAllocation : IDispatch
 {
-    HRESULT get_Scopes(VARIANT*);
-    HRESULT EnumerateScopes(IEnumMcastScope*);
-    HRESULT RequestAddress(IMcastScope, double, double, int, IMcastLeaseInfo*);
-    HRESULT RenewAddress(int, IMcastLeaseInfo, IMcastLeaseInfo*);
-    HRESULT ReleaseAddress(IMcastLeaseInfo);
-    HRESULT CreateLeaseInfo(double, double, uint, PWSTR*, PWSTR, PWSTR, IMcastLeaseInfo*);
-    HRESULT CreateLeaseInfoFromVariant(double, double, VARIANT, BSTR, BSTR, IMcastLeaseInfo*);
+    HRESULT get_Scopes(VARIANT* pVariant);
+    HRESULT EnumerateScopes(IEnumMcastScope* ppEnumMcastScope);
+    HRESULT RequestAddress(IMcastScope pScope, double LeaseStartTime, double LeaseStopTime, int NumAddresses, IMcastLeaseInfo* ppLeaseResponse);
+    HRESULT RenewAddress(int lReserved, IMcastLeaseInfo pRenewRequest, IMcastLeaseInfo* ppRenewResponse);
+    HRESULT ReleaseAddress(IMcastLeaseInfo pReleaseRequest);
+    HRESULT CreateLeaseInfo(double LeaseStartTime, double LeaseStopTime, uint dwNumAddresses, PWSTR* ppAddresses, PWSTR pRequestID, PWSTR pServerAddress, IMcastLeaseInfo* ppReleaseRequest);
+    HRESULT CreateLeaseInfoFromVariant(double LeaseStartTime, double LeaseStopTime, VARIANT vAddresses, BSTR pRequestID, BSTR pServerAddress, IMcastLeaseInfo* ppReleaseRequest);
 }
 enum CLSID_McastAddressAllocation = GUID(0xdf0daef2, 0xa289, 0x11d1, [0x86, 0x97, 0x0, 0x60, 0x8, 0xb0, 0xe5, 0xd2]);
 struct McastAddressAllocation
@@ -4470,17 +4470,17 @@ struct STnefProblemArray
 // [Not Found] IID_ITnef
 interface ITnef : IUnknown
 {
-    HRESULT AddProps(uint, uint, void*, SPropTagArray*);
-    HRESULT ExtractProps(uint, SPropTagArray*, STnefProblemArray**);
-    HRESULT Finish(uint, ushort*, STnefProblemArray**);
-    HRESULT OpenTaggedBody(IMessage, uint, IStream*);
-    HRESULT SetProps(uint, uint, uint, SPropValue*);
-    HRESULT EncodeRecips(uint, IMAPITable);
-    HRESULT FinishComponent(uint, uint, SPropTagArray*, SPropValue*, SPropTagArray*, STnefProblemArray**);
+    HRESULT AddProps(uint ulFlags, uint ulElemID, void* lpvData, SPropTagArray* lpPropList);
+    HRESULT ExtractProps(uint ulFlags, SPropTagArray* lpPropList, STnefProblemArray** lpProblems);
+    HRESULT Finish(uint ulFlags, ushort* lpKey, STnefProblemArray** lpProblems);
+    HRESULT OpenTaggedBody(IMessage lpMessage, uint ulFlags, IStream* lppStream);
+    HRESULT SetProps(uint ulFlags, uint ulElemID, uint cValues, SPropValue* lpProps);
+    HRESULT EncodeRecips(uint ulFlags, IMAPITable lpRecipientTable);
+    HRESULT FinishComponent(uint ulFlags, uint ulComponentID, SPropTagArray* lpCustomPropList, SPropValue* lpCustomProps, SPropTagArray* lpPropList, STnefProblemArray** lpProblems);
 }
-alias LPOPENTNEFSTREAM = HRESULT function(void*, IStream, byte*, uint, IMessage, ushort, ITnef*);
-alias LPOPENTNEFSTREAMEX = HRESULT function(void*, IStream, byte*, uint, IMessage, ushort, IAddrBook, ITnef*);
-alias LPGETTNEFSTREAMCODEPAGE = HRESULT function(IStream, uint*, uint*);
+alias LPOPENTNEFSTREAM = HRESULT function(void* lpvSupport, IStream lpStream, byte* lpszStreamName, uint ulFlags, IMessage lpMessage, ushort wKeyVal, ITnef* lppTNEF);
+alias LPOPENTNEFSTREAMEX = HRESULT function(void* lpvSupport, IStream lpStream, byte* lpszStreamName, uint ulFlags, IMessage lpMessage, ushort wKeyVal, IAddrBook lpAdressBook, ITnef* lppTNEF);
+alias LPGETTNEFSTREAMCODEPAGE = HRESULT function(IStream lpStream, uint* lpulCodepage, uint* lpulSubCodepage);
 struct RENDDATA
 {
     align (1):

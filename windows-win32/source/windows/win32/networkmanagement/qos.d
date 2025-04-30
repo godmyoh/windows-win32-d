@@ -9,37 +9,37 @@ import windows.win32.system.io : OVERLAPPED;
 version (Windows):
 extern (Windows):
 
-BOOL QOSCreateHandle(QOS_VERSION*, HANDLE*);
-BOOL QOSCloseHandle(HANDLE);
-BOOL QOSStartTrackingClient(HANDLE, SOCKADDR*, uint);
-BOOL QOSStopTrackingClient(HANDLE, SOCKADDR*, uint);
-BOOL QOSEnumerateFlows(HANDLE, uint*, void*);
-BOOL QOSAddSocketToFlow(HANDLE, SOCKET, SOCKADDR*, QOS_TRAFFIC_TYPE, uint, uint*);
-BOOL QOSRemoveSocketFromFlow(HANDLE, SOCKET, uint, uint);
-BOOL QOSSetFlow(HANDLE, uint, QOS_SET_FLOW, uint, void*, uint, OVERLAPPED*);
-BOOL QOSQueryFlow(HANDLE, uint, QOS_QUERY_FLOW, uint*, void*, uint, OVERLAPPED*);
-BOOL QOSNotifyFlow(HANDLE, uint, QOS_NOTIFY_FLOW, uint*, void*, uint, OVERLAPPED*);
-BOOL QOSCancel(HANDLE, OVERLAPPED*);
-uint TcRegisterClient(uint, HANDLE, TCI_CLIENT_FUNC_LIST*, HANDLE*);
-uint TcEnumerateInterfaces(HANDLE, uint*, TC_IFC_DESCRIPTOR*);
-uint TcOpenInterfaceA(PSTR, HANDLE, HANDLE, HANDLE*);
-uint TcOpenInterfaceW(PWSTR, HANDLE, HANDLE, HANDLE*);
-uint TcCloseInterface(HANDLE);
-uint TcQueryInterface(HANDLE, GUID*, BOOLEAN, uint*, void*);
-uint TcSetInterface(HANDLE, GUID*, uint, void*);
-uint TcQueryFlowA(PSTR, GUID*, uint*, void*);
-uint TcQueryFlowW(PWSTR, GUID*, uint*, void*);
-uint TcSetFlowA(PSTR, GUID*, uint, void*);
-uint TcSetFlowW(PWSTR, GUID*, uint, void*);
-uint TcAddFlow(HANDLE, HANDLE, uint, TC_GEN_FLOW*, HANDLE*);
-uint TcGetFlowNameA(HANDLE, uint, PSTR);
-uint TcGetFlowNameW(HANDLE, uint, PWSTR);
-uint TcModifyFlow(HANDLE, TC_GEN_FLOW*);
-uint TcAddFilter(HANDLE, TC_GEN_FILTER*, HANDLE*);
-uint TcDeregisterClient(HANDLE);
-uint TcDeleteFlow(HANDLE);
-uint TcDeleteFilter(HANDLE);
-uint TcEnumerateFlows(HANDLE, HANDLE*, uint*, uint*, ENUMERATION_BUFFER*);
+BOOL QOSCreateHandle(QOS_VERSION* Version, HANDLE* QOSHandle);
+BOOL QOSCloseHandle(HANDLE QOSHandle);
+BOOL QOSStartTrackingClient(HANDLE QOSHandle, SOCKADDR* DestAddr, uint Flags);
+BOOL QOSStopTrackingClient(HANDLE QOSHandle, SOCKADDR* DestAddr, uint Flags);
+BOOL QOSEnumerateFlows(HANDLE QOSHandle, uint* Size, void* Buffer);
+BOOL QOSAddSocketToFlow(HANDLE QOSHandle, SOCKET Socket, SOCKADDR* DestAddr, QOS_TRAFFIC_TYPE TrafficType, uint Flags, uint* FlowId);
+BOOL QOSRemoveSocketFromFlow(HANDLE QOSHandle, SOCKET Socket, uint FlowId, uint Flags);
+BOOL QOSSetFlow(HANDLE QOSHandle, uint FlowId, QOS_SET_FLOW Operation, uint Size, void* Buffer, uint Flags, OVERLAPPED* Overlapped);
+BOOL QOSQueryFlow(HANDLE QOSHandle, uint FlowId, QOS_QUERY_FLOW Operation, uint* Size, void* Buffer, uint Flags, OVERLAPPED* Overlapped);
+BOOL QOSNotifyFlow(HANDLE QOSHandle, uint FlowId, QOS_NOTIFY_FLOW Operation, uint* Size, void* Buffer, uint Flags, OVERLAPPED* Overlapped);
+BOOL QOSCancel(HANDLE QOSHandle, OVERLAPPED* Overlapped);
+uint TcRegisterClient(uint TciVersion, HANDLE ClRegCtx, TCI_CLIENT_FUNC_LIST* ClientHandlerList, HANDLE* pClientHandle);
+uint TcEnumerateInterfaces(HANDLE ClientHandle, uint* pBufferSize, TC_IFC_DESCRIPTOR* InterfaceBuffer);
+uint TcOpenInterfaceA(PSTR pInterfaceName, HANDLE ClientHandle, HANDLE ClIfcCtx, HANDLE* pIfcHandle);
+uint TcOpenInterfaceW(PWSTR pInterfaceName, HANDLE ClientHandle, HANDLE ClIfcCtx, HANDLE* pIfcHandle);
+uint TcCloseInterface(HANDLE IfcHandle);
+uint TcQueryInterface(HANDLE IfcHandle, GUID* pGuidParam, BOOLEAN NotifyChange, uint* pBufferSize, void* Buffer);
+uint TcSetInterface(HANDLE IfcHandle, GUID* pGuidParam, uint BufferSize, void* Buffer);
+uint TcQueryFlowA(PSTR pFlowName, GUID* pGuidParam, uint* pBufferSize, void* Buffer);
+uint TcQueryFlowW(PWSTR pFlowName, GUID* pGuidParam, uint* pBufferSize, void* Buffer);
+uint TcSetFlowA(PSTR pFlowName, GUID* pGuidParam, uint BufferSize, void* Buffer);
+uint TcSetFlowW(PWSTR pFlowName, GUID* pGuidParam, uint BufferSize, void* Buffer);
+uint TcAddFlow(HANDLE IfcHandle, HANDLE ClFlowCtx, uint Flags, TC_GEN_FLOW* pGenericFlow, HANDLE* pFlowHandle);
+uint TcGetFlowNameA(HANDLE FlowHandle, uint StrSize, PSTR pFlowName);
+uint TcGetFlowNameW(HANDLE FlowHandle, uint StrSize, PWSTR pFlowName);
+uint TcModifyFlow(HANDLE FlowHandle, TC_GEN_FLOW* pGenericFlow);
+uint TcAddFilter(HANDLE FlowHandle, TC_GEN_FILTER* pGenericFilter, HANDLE* pFilterHandle);
+uint TcDeregisterClient(HANDLE ClientHandle);
+uint TcDeleteFlow(HANDLE FlowHandle);
+uint TcDeleteFilter(HANDLE FilterHandle);
+uint TcEnumerateFlows(HANDLE IfcHandle, HANDLE* pEnumHandle, uint* pFlowCount, uint* pBufSize, ENUMERATION_BUFFER* Buffer);
 enum QOS_MAX_OBJECT_STRING_LENGTH = 0x00000100;
 enum QOS_TRAFFIC_GENERAL_ID_BASE = 0x00000fa0;
 enum SERVICETYPE_NOTRAFFIC = 0x00000000;
@@ -568,8 +568,8 @@ enum GUAR_ADSPARM_Ctot = 0x00000085;
 enum GUAR_ADSPARM_Dtot = 0x00000086;
 enum GUAR_ADSPARM_Csum = 0x00000087;
 enum GUAR_ADSPARM_Dsum = 0x00000088;
-alias LPM_HANDLE = long;
-alias RHANDLE = long;
+alias LPM_HANDLE = void*;
+alias RHANDLE = void*;
 struct QOS_OBJECT_HDR
 {
     uint ObjectType;
@@ -861,16 +861,16 @@ struct RSVP_MSG_OBJS
     ERROR_SPEC* pErrorSpec;
     ADSPEC* pAdspec;
 }
-alias PALLOCMEM = void* function(uint);
-alias PFREEMEM = void function(void*);
+alias PALLOCMEM = void* function(uint Size);
+alias PFREEMEM = void function(void* pv);
 struct POLICY_DECISION
 {
     uint lpvResult;
     ushort wPolicyErrCode;
     ushort wPolicyErrValue;
 }
-alias CBADMITRESULT = uint* function(LPM_HANDLE, RHANDLE, uint, int, int, POLICY_DECISION*);
-alias CBGETRSVPOBJECTS = uint* function(LPM_HANDLE, RHANDLE, int, int, RsvpObjHdr**);
+alias CBADMITRESULT = uint* function(LPM_HANDLE LpmHandle, RHANDLE RequestHandle, uint ulPcmActionFlags, int LpmError, int PolicyDecisionsCount, POLICY_DECISION* pPolicyDecisions);
+alias CBGETRSVPOBJECTS = uint* function(LPM_HANDLE LpmHandle, RHANDLE RequestHandle, int LpmError, int RsvpObjectsCount, RsvpObjHdr** ppRsvpObjects);
 struct LPM_INIT_INFO
 {
     uint PcmVersionNumber;
@@ -1001,10 +1001,10 @@ struct QOS_TCP_TRAFFIC
 {
     QOS_OBJECT_HDR ObjectHdr;
 }
-alias TCI_NOTIFY_HANDLER = void function(HANDLE, HANDLE, uint, HANDLE, uint, void*);
-alias TCI_ADD_FLOW_COMPLETE_HANDLER = void function(HANDLE, uint);
-alias TCI_MOD_FLOW_COMPLETE_HANDLER = void function(HANDLE, uint);
-alias TCI_DEL_FLOW_COMPLETE_HANDLER = void function(HANDLE, uint);
+alias TCI_NOTIFY_HANDLER = void function(HANDLE ClRegCtx, HANDLE ClIfcCtx, uint Event, HANDLE SubCode, uint BufSize, void* Buffer);
+alias TCI_ADD_FLOW_COMPLETE_HANDLER = void function(HANDLE ClFlowCtx, uint Status);
+alias TCI_MOD_FLOW_COMPLETE_HANDLER = void function(HANDLE ClFlowCtx, uint Status);
+alias TCI_DEL_FLOW_COMPLETE_HANDLER = void function(HANDLE ClFlowCtx, uint Status);
 struct TCI_CLIENT_FUNC_LIST
 {
     TCI_NOTIFY_HANDLER ClNotifyHandler;

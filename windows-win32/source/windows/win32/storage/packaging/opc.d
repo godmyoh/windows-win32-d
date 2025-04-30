@@ -114,16 +114,16 @@ enum OPC_E_ZIP_REQUIRES_64_BIT = 0xffffffff80511010;
 enum IID_IOpcUri = GUID(0xbc9c1b9b, 0xd62c, 0x49eb, [0xae, 0xf0, 0x3b, 0x4e, 0xb, 0x28, 0xeb, 0xed]);
 interface IOpcUri : IUri
 {
-    HRESULT GetRelationshipsPartUri(IOpcPartUri*);
-    HRESULT GetRelativeUri(IOpcPartUri, IUri*);
-    HRESULT CombinePartUri(IUri, IOpcPartUri*);
+    HRESULT GetRelationshipsPartUri(IOpcPartUri* relationshipPartUri);
+    HRESULT GetRelativeUri(IOpcPartUri targetPartUri, IUri* relativeUri);
+    HRESULT CombinePartUri(IUri relativeUri, IOpcPartUri* combinedUri);
 }
 enum IID_IOpcPartUri = GUID(0x7d3babe7, 0x88b2, 0x46ba, [0x85, 0xcb, 0x42, 0x3, 0xcb, 0x1, 0x6c, 0x87]);
 interface IOpcPartUri : IOpcUri
 {
-    HRESULT ComparePartUri(IOpcPartUri, int*);
-    HRESULT GetSourceUri(IOpcUri*);
-    HRESULT IsRelationshipsPartUri(BOOL*);
+    HRESULT ComparePartUri(IOpcPartUri partUri, int* comparisonResult);
+    HRESULT GetSourceUri(IOpcUri* sourceUri);
+    HRESULT IsRelationshipsPartUri(BOOL* isRelationshipUri);
 }
 alias OPC_URI_TARGET_MODE = int;
 enum : int
@@ -215,264 +215,264 @@ enum : int
 enum IID_IOpcPackage = GUID(0x42195949, 0x3b79, 0x4fc8, [0x89, 0xc6, 0xfc, 0x7f, 0xb9, 0x79, 0xee, 0x70]);
 interface IOpcPackage : IUnknown
 {
-    HRESULT GetPartSet(IOpcPartSet*);
-    HRESULT GetRelationshipSet(IOpcRelationshipSet*);
+    HRESULT GetPartSet(IOpcPartSet* partSet);
+    HRESULT GetRelationshipSet(IOpcRelationshipSet* relationshipSet);
 }
 enum IID_IOpcPart = GUID(0x42195949, 0x3b79, 0x4fc8, [0x89, 0xc6, 0xfc, 0x7f, 0xb9, 0x79, 0xee, 0x71]);
 interface IOpcPart : IUnknown
 {
-    HRESULT GetRelationshipSet(IOpcRelationshipSet*);
-    HRESULT GetContentStream(IStream*);
-    HRESULT GetName(IOpcPartUri*);
-    HRESULT GetContentType(PWSTR*);
-    HRESULT GetCompressionOptions(OPC_COMPRESSION_OPTIONS*);
+    HRESULT GetRelationshipSet(IOpcRelationshipSet* relationshipSet);
+    HRESULT GetContentStream(IStream* stream);
+    HRESULT GetName(IOpcPartUri* name);
+    HRESULT GetContentType(PWSTR* contentType);
+    HRESULT GetCompressionOptions(OPC_COMPRESSION_OPTIONS* compressionOptions);
 }
 enum IID_IOpcRelationship = GUID(0x42195949, 0x3b79, 0x4fc8, [0x89, 0xc6, 0xfc, 0x7f, 0xb9, 0x79, 0xee, 0x72]);
 interface IOpcRelationship : IUnknown
 {
-    HRESULT GetId(PWSTR*);
-    HRESULT GetRelationshipType(PWSTR*);
-    HRESULT GetSourceUri(IOpcUri*);
-    HRESULT GetTargetUri(IUri*);
-    HRESULT GetTargetMode(OPC_URI_TARGET_MODE*);
+    HRESULT GetId(PWSTR* relationshipIdentifier);
+    HRESULT GetRelationshipType(PWSTR* relationshipType);
+    HRESULT GetSourceUri(IOpcUri* sourceUri);
+    HRESULT GetTargetUri(IUri* targetUri);
+    HRESULT GetTargetMode(OPC_URI_TARGET_MODE* targetMode);
 }
 enum IID_IOpcPartSet = GUID(0x42195949, 0x3b79, 0x4fc8, [0x89, 0xc6, 0xfc, 0x7f, 0xb9, 0x79, 0xee, 0x73]);
 interface IOpcPartSet : IUnknown
 {
-    HRESULT GetPart(IOpcPartUri, IOpcPart*);
-    HRESULT CreatePart(IOpcPartUri, const(wchar)*, OPC_COMPRESSION_OPTIONS, IOpcPart*);
-    HRESULT DeletePart(IOpcPartUri);
-    HRESULT PartExists(IOpcPartUri, BOOL*);
-    HRESULT GetEnumerator(IOpcPartEnumerator*);
+    HRESULT GetPart(IOpcPartUri name, IOpcPart* part);
+    HRESULT CreatePart(IOpcPartUri name, const(wchar)* contentType, OPC_COMPRESSION_OPTIONS compressionOptions, IOpcPart* part);
+    HRESULT DeletePart(IOpcPartUri name);
+    HRESULT PartExists(IOpcPartUri name, BOOL* partExists);
+    HRESULT GetEnumerator(IOpcPartEnumerator* partEnumerator);
 }
 enum IID_IOpcRelationshipSet = GUID(0x42195949, 0x3b79, 0x4fc8, [0x89, 0xc6, 0xfc, 0x7f, 0xb9, 0x79, 0xee, 0x74]);
 interface IOpcRelationshipSet : IUnknown
 {
-    HRESULT GetRelationship(const(wchar)*, IOpcRelationship*);
-    HRESULT CreateRelationship(const(wchar)*, const(wchar)*, IUri, OPC_URI_TARGET_MODE, IOpcRelationship*);
-    HRESULT DeleteRelationship(const(wchar)*);
-    HRESULT RelationshipExists(const(wchar)*, BOOL*);
-    HRESULT GetEnumerator(IOpcRelationshipEnumerator*);
-    HRESULT GetEnumeratorForType(const(wchar)*, IOpcRelationshipEnumerator*);
-    HRESULT GetRelationshipsContentStream(IStream*);
+    HRESULT GetRelationship(const(wchar)* relationshipIdentifier, IOpcRelationship* relationship);
+    HRESULT CreateRelationship(const(wchar)* relationshipIdentifier, const(wchar)* relationshipType, IUri targetUri, OPC_URI_TARGET_MODE targetMode, IOpcRelationship* relationship);
+    HRESULT DeleteRelationship(const(wchar)* relationshipIdentifier);
+    HRESULT RelationshipExists(const(wchar)* relationshipIdentifier, BOOL* relationshipExists);
+    HRESULT GetEnumerator(IOpcRelationshipEnumerator* relationshipEnumerator);
+    HRESULT GetEnumeratorForType(const(wchar)* relationshipType, IOpcRelationshipEnumerator* relationshipEnumerator);
+    HRESULT GetRelationshipsContentStream(IStream* contents);
 }
 enum IID_IOpcPartEnumerator = GUID(0x42195949, 0x3b79, 0x4fc8, [0x89, 0xc6, 0xfc, 0x7f, 0xb9, 0x79, 0xee, 0x75]);
 interface IOpcPartEnumerator : IUnknown
 {
-    HRESULT MoveNext(BOOL*);
-    HRESULT MovePrevious(BOOL*);
-    HRESULT GetCurrent(IOpcPart*);
-    HRESULT Clone(IOpcPartEnumerator*);
+    HRESULT MoveNext(BOOL* hasNext);
+    HRESULT MovePrevious(BOOL* hasPrevious);
+    HRESULT GetCurrent(IOpcPart* part);
+    HRESULT Clone(IOpcPartEnumerator* copy);
 }
 enum IID_IOpcRelationshipEnumerator = GUID(0x42195949, 0x3b79, 0x4fc8, [0x89, 0xc6, 0xfc, 0x7f, 0xb9, 0x79, 0xee, 0x76]);
 interface IOpcRelationshipEnumerator : IUnknown
 {
-    HRESULT MoveNext(BOOL*);
-    HRESULT MovePrevious(BOOL*);
-    HRESULT GetCurrent(IOpcRelationship*);
-    HRESULT Clone(IOpcRelationshipEnumerator*);
+    HRESULT MoveNext(BOOL* hasNext);
+    HRESULT MovePrevious(BOOL* hasPrevious);
+    HRESULT GetCurrent(IOpcRelationship* relationship);
+    HRESULT Clone(IOpcRelationshipEnumerator* copy);
 }
 enum IID_IOpcSignaturePartReference = GUID(0xe24231ca, 0x59f4, 0x484e, [0xb6, 0x4b, 0x36, 0xee, 0xda, 0x36, 0x7, 0x2c]);
 interface IOpcSignaturePartReference : IUnknown
 {
-    HRESULT GetPartName(IOpcPartUri*);
-    HRESULT GetContentType(PWSTR*);
-    HRESULT GetDigestMethod(PWSTR*);
-    HRESULT GetDigestValue(ubyte**, uint*);
-    HRESULT GetTransformMethod(OPC_CANONICALIZATION_METHOD*);
+    HRESULT GetPartName(IOpcPartUri* partName);
+    HRESULT GetContentType(PWSTR* contentType);
+    HRESULT GetDigestMethod(PWSTR* digestMethod);
+    HRESULT GetDigestValue(ubyte** digestValue, uint* count);
+    HRESULT GetTransformMethod(OPC_CANONICALIZATION_METHOD* transformMethod);
 }
 enum IID_IOpcSignatureRelationshipReference = GUID(0x57babac6, 0x9d4a, 0x4e50, [0x8b, 0x86, 0xe5, 0xd4, 0x5, 0x1e, 0xae, 0x7c]);
 interface IOpcSignatureRelationshipReference : IUnknown
 {
-    HRESULT GetSourceUri(IOpcUri*);
-    HRESULT GetDigestMethod(PWSTR*);
-    HRESULT GetDigestValue(ubyte**, uint*);
-    HRESULT GetTransformMethod(OPC_CANONICALIZATION_METHOD*);
-    HRESULT GetRelationshipSigningOption(OPC_RELATIONSHIPS_SIGNING_OPTION*);
-    HRESULT GetRelationshipSelectorEnumerator(IOpcRelationshipSelectorEnumerator*);
+    HRESULT GetSourceUri(IOpcUri* sourceUri);
+    HRESULT GetDigestMethod(PWSTR* digestMethod);
+    HRESULT GetDigestValue(ubyte** digestValue, uint* count);
+    HRESULT GetTransformMethod(OPC_CANONICALIZATION_METHOD* transformMethod);
+    HRESULT GetRelationshipSigningOption(OPC_RELATIONSHIPS_SIGNING_OPTION* relationshipSigningOption);
+    HRESULT GetRelationshipSelectorEnumerator(IOpcRelationshipSelectorEnumerator* selectorEnumerator);
 }
 enum IID_IOpcRelationshipSelector = GUID(0xf8f26c7f, 0xb28f, 0x4899, [0x84, 0xc8, 0x5d, 0x56, 0x39, 0xed, 0xe7, 0x5f]);
 interface IOpcRelationshipSelector : IUnknown
 {
-    HRESULT GetSelectorType(OPC_RELATIONSHIP_SELECTOR*);
-    HRESULT GetSelectionCriterion(PWSTR*);
+    HRESULT GetSelectorType(OPC_RELATIONSHIP_SELECTOR* selector);
+    HRESULT GetSelectionCriterion(PWSTR* selectionCriterion);
 }
 enum IID_IOpcSignatureReference = GUID(0x1b47005e, 0x3011, 0x4edc, [0xbe, 0x6f, 0xf, 0x65, 0xe5, 0xab, 0x3, 0x42]);
 interface IOpcSignatureReference : IUnknown
 {
-    HRESULT GetId(PWSTR*);
-    HRESULT GetUri(IUri*);
-    HRESULT GetType(PWSTR*);
-    HRESULT GetTransformMethod(OPC_CANONICALIZATION_METHOD*);
-    HRESULT GetDigestMethod(PWSTR*);
-    HRESULT GetDigestValue(ubyte**, uint*);
+    HRESULT GetId(PWSTR* referenceId);
+    HRESULT GetUri(IUri* referenceUri);
+    HRESULT GetType(PWSTR* type);
+    HRESULT GetTransformMethod(OPC_CANONICALIZATION_METHOD* transformMethod);
+    HRESULT GetDigestMethod(PWSTR* digestMethod);
+    HRESULT GetDigestValue(ubyte** digestValue, uint* count);
 }
 enum IID_IOpcSignatureCustomObject = GUID(0x5d77a19e, 0x62c1, 0x44e7, [0xbe, 0xcd, 0x45, 0xda, 0x5a, 0xe5, 0x1a, 0x56]);
 interface IOpcSignatureCustomObject : IUnknown
 {
-    HRESULT GetXml(ubyte**, uint*);
+    HRESULT GetXml(ubyte** xmlMarkup, uint* count);
 }
 enum IID_IOpcDigitalSignature = GUID(0x52ab21dd, 0x1cd0, 0x4949, [0xbc, 0x80, 0xc, 0x12, 0x32, 0xd0, 0xc, 0xb4]);
 interface IOpcDigitalSignature : IUnknown
 {
-    HRESULT GetNamespaces(PWSTR**, PWSTR**, uint*);
-    HRESULT GetSignatureId(PWSTR*);
-    HRESULT GetSignaturePartName(IOpcPartUri*);
-    HRESULT GetSignatureMethod(PWSTR*);
-    HRESULT GetCanonicalizationMethod(OPC_CANONICALIZATION_METHOD*);
-    HRESULT GetSignatureValue(ubyte**, uint*);
-    HRESULT GetSignaturePartReferenceEnumerator(IOpcSignaturePartReferenceEnumerator*);
-    HRESULT GetSignatureRelationshipReferenceEnumerator(IOpcSignatureRelationshipReferenceEnumerator*);
-    HRESULT GetSigningTime(PWSTR*);
-    HRESULT GetTimeFormat(OPC_SIGNATURE_TIME_FORMAT*);
-    HRESULT GetPackageObjectReference(IOpcSignatureReference*);
-    HRESULT GetCertificateEnumerator(IOpcCertificateEnumerator*);
-    HRESULT GetCustomReferenceEnumerator(IOpcSignatureReferenceEnumerator*);
-    HRESULT GetCustomObjectEnumerator(IOpcSignatureCustomObjectEnumerator*);
-    HRESULT GetSignatureXml(ubyte**, uint*);
+    HRESULT GetNamespaces(PWSTR** prefixes, PWSTR** namespaces, uint* count);
+    HRESULT GetSignatureId(PWSTR* signatureId);
+    HRESULT GetSignaturePartName(IOpcPartUri* signaturePartName);
+    HRESULT GetSignatureMethod(PWSTR* signatureMethod);
+    HRESULT GetCanonicalizationMethod(OPC_CANONICALIZATION_METHOD* canonicalizationMethod);
+    HRESULT GetSignatureValue(ubyte** signatureValue, uint* count);
+    HRESULT GetSignaturePartReferenceEnumerator(IOpcSignaturePartReferenceEnumerator* partReferenceEnumerator);
+    HRESULT GetSignatureRelationshipReferenceEnumerator(IOpcSignatureRelationshipReferenceEnumerator* relationshipReferenceEnumerator);
+    HRESULT GetSigningTime(PWSTR* signingTime);
+    HRESULT GetTimeFormat(OPC_SIGNATURE_TIME_FORMAT* timeFormat);
+    HRESULT GetPackageObjectReference(IOpcSignatureReference* packageObjectReference);
+    HRESULT GetCertificateEnumerator(IOpcCertificateEnumerator* certificateEnumerator);
+    HRESULT GetCustomReferenceEnumerator(IOpcSignatureReferenceEnumerator* customReferenceEnumerator);
+    HRESULT GetCustomObjectEnumerator(IOpcSignatureCustomObjectEnumerator* customObjectEnumerator);
+    HRESULT GetSignatureXml(ubyte** signatureXml, uint* count);
 }
 enum IID_IOpcSigningOptions = GUID(0x50d2d6a5, 0x7aeb, 0x46c0, [0xb2, 0x41, 0x43, 0xab, 0xe, 0x9b, 0x40, 0x7e]);
 interface IOpcSigningOptions : IUnknown
 {
-    HRESULT GetSignatureId(PWSTR*);
-    HRESULT SetSignatureId(const(wchar)*);
-    HRESULT GetSignatureMethod(PWSTR*);
-    HRESULT SetSignatureMethod(const(wchar)*);
-    HRESULT GetDefaultDigestMethod(PWSTR*);
-    HRESULT SetDefaultDigestMethod(const(wchar)*);
-    HRESULT GetCertificateEmbeddingOption(OPC_CERTIFICATE_EMBEDDING_OPTION*);
-    HRESULT SetCertificateEmbeddingOption(OPC_CERTIFICATE_EMBEDDING_OPTION);
-    HRESULT GetTimeFormat(OPC_SIGNATURE_TIME_FORMAT*);
-    HRESULT SetTimeFormat(OPC_SIGNATURE_TIME_FORMAT);
-    HRESULT GetSignaturePartReferenceSet(IOpcSignaturePartReferenceSet*);
-    HRESULT GetSignatureRelationshipReferenceSet(IOpcSignatureRelationshipReferenceSet*);
-    HRESULT GetCustomObjectSet(IOpcSignatureCustomObjectSet*);
-    HRESULT GetCustomReferenceSet(IOpcSignatureReferenceSet*);
-    HRESULT GetCertificateSet(IOpcCertificateSet*);
-    HRESULT GetSignaturePartName(IOpcPartUri*);
-    HRESULT SetSignaturePartName(IOpcPartUri);
+    HRESULT GetSignatureId(PWSTR* signatureId);
+    HRESULT SetSignatureId(const(wchar)* signatureId);
+    HRESULT GetSignatureMethod(PWSTR* signatureMethod);
+    HRESULT SetSignatureMethod(const(wchar)* signatureMethod);
+    HRESULT GetDefaultDigestMethod(PWSTR* digestMethod);
+    HRESULT SetDefaultDigestMethod(const(wchar)* digestMethod);
+    HRESULT GetCertificateEmbeddingOption(OPC_CERTIFICATE_EMBEDDING_OPTION* embeddingOption);
+    HRESULT SetCertificateEmbeddingOption(OPC_CERTIFICATE_EMBEDDING_OPTION embeddingOption);
+    HRESULT GetTimeFormat(OPC_SIGNATURE_TIME_FORMAT* timeFormat);
+    HRESULT SetTimeFormat(OPC_SIGNATURE_TIME_FORMAT timeFormat);
+    HRESULT GetSignaturePartReferenceSet(IOpcSignaturePartReferenceSet* partReferenceSet);
+    HRESULT GetSignatureRelationshipReferenceSet(IOpcSignatureRelationshipReferenceSet* relationshipReferenceSet);
+    HRESULT GetCustomObjectSet(IOpcSignatureCustomObjectSet* customObjectSet);
+    HRESULT GetCustomReferenceSet(IOpcSignatureReferenceSet* customReferenceSet);
+    HRESULT GetCertificateSet(IOpcCertificateSet* certificateSet);
+    HRESULT GetSignaturePartName(IOpcPartUri* signaturePartName);
+    HRESULT SetSignaturePartName(IOpcPartUri signaturePartName);
 }
 enum IID_IOpcDigitalSignatureManager = GUID(0xd5e62a0b, 0x696d, 0x462f, [0x94, 0xdf, 0x72, 0xe3, 0x3c, 0xef, 0x26, 0x59]);
 interface IOpcDigitalSignatureManager : IUnknown
 {
-    HRESULT GetSignatureOriginPartName(IOpcPartUri*);
-    HRESULT SetSignatureOriginPartName(IOpcPartUri);
-    HRESULT GetSignatureEnumerator(IOpcDigitalSignatureEnumerator*);
-    HRESULT RemoveSignature(IOpcPartUri);
-    HRESULT CreateSigningOptions(IOpcSigningOptions*);
-    HRESULT Validate(IOpcDigitalSignature, const(CERT_CONTEXT)*, OPC_SIGNATURE_VALIDATION_RESULT*);
-    HRESULT Sign(const(CERT_CONTEXT)*, IOpcSigningOptions, IOpcDigitalSignature*);
-    HRESULT ReplaceSignatureXml(IOpcPartUri, const(ubyte)*, uint, IOpcDigitalSignature*);
+    HRESULT GetSignatureOriginPartName(IOpcPartUri* signatureOriginPartName);
+    HRESULT SetSignatureOriginPartName(IOpcPartUri signatureOriginPartName);
+    HRESULT GetSignatureEnumerator(IOpcDigitalSignatureEnumerator* signatureEnumerator);
+    HRESULT RemoveSignature(IOpcPartUri signaturePartName);
+    HRESULT CreateSigningOptions(IOpcSigningOptions* signingOptions);
+    HRESULT Validate(IOpcDigitalSignature signature, const(CERT_CONTEXT)* certificate, OPC_SIGNATURE_VALIDATION_RESULT* validationResult);
+    HRESULT Sign(const(CERT_CONTEXT)* certificate, IOpcSigningOptions signingOptions, IOpcDigitalSignature* digitalSignature);
+    HRESULT ReplaceSignatureXml(IOpcPartUri signaturePartName, const(ubyte)* newSignatureXml, uint count, IOpcDigitalSignature* digitalSignature);
 }
 enum IID_IOpcSignaturePartReferenceEnumerator = GUID(0x80eb1561, 0x8c77, 0x49cf, [0x82, 0x66, 0x45, 0x9b, 0x35, 0x6e, 0xe9, 0x9a]);
 interface IOpcSignaturePartReferenceEnumerator : IUnknown
 {
-    HRESULT MoveNext(BOOL*);
-    HRESULT MovePrevious(BOOL*);
-    HRESULT GetCurrent(IOpcSignaturePartReference*);
-    HRESULT Clone(IOpcSignaturePartReferenceEnumerator*);
+    HRESULT MoveNext(BOOL* hasNext);
+    HRESULT MovePrevious(BOOL* hasPrevious);
+    HRESULT GetCurrent(IOpcSignaturePartReference* partReference);
+    HRESULT Clone(IOpcSignaturePartReferenceEnumerator* copy);
 }
 enum IID_IOpcSignatureRelationshipReferenceEnumerator = GUID(0x773ba3e4, 0xf021, 0x48e4, [0xaa, 0x4, 0x98, 0x16, 0xdb, 0x5d, 0x34, 0x95]);
 interface IOpcSignatureRelationshipReferenceEnumerator : IUnknown
 {
-    HRESULT MoveNext(BOOL*);
-    HRESULT MovePrevious(BOOL*);
-    HRESULT GetCurrent(IOpcSignatureRelationshipReference*);
-    HRESULT Clone(IOpcSignatureRelationshipReferenceEnumerator*);
+    HRESULT MoveNext(BOOL* hasNext);
+    HRESULT MovePrevious(BOOL* hasPrevious);
+    HRESULT GetCurrent(IOpcSignatureRelationshipReference* relationshipReference);
+    HRESULT Clone(IOpcSignatureRelationshipReferenceEnumerator* copy);
 }
 enum IID_IOpcRelationshipSelectorEnumerator = GUID(0x5e50a181, 0xa91b, 0x48ac, [0x88, 0xd2, 0xbc, 0xa3, 0xd8, 0xf8, 0xc0, 0xb1]);
 interface IOpcRelationshipSelectorEnumerator : IUnknown
 {
-    HRESULT MoveNext(BOOL*);
-    HRESULT MovePrevious(BOOL*);
-    HRESULT GetCurrent(IOpcRelationshipSelector*);
-    HRESULT Clone(IOpcRelationshipSelectorEnumerator*);
+    HRESULT MoveNext(BOOL* hasNext);
+    HRESULT MovePrevious(BOOL* hasPrevious);
+    HRESULT GetCurrent(IOpcRelationshipSelector* relationshipSelector);
+    HRESULT Clone(IOpcRelationshipSelectorEnumerator* copy);
 }
 enum IID_IOpcSignatureReferenceEnumerator = GUID(0xcfa59a45, 0x28b1, 0x4868, [0x96, 0x9e, 0xfa, 0x80, 0x97, 0xfd, 0xc1, 0x2a]);
 interface IOpcSignatureReferenceEnumerator : IUnknown
 {
-    HRESULT MoveNext(BOOL*);
-    HRESULT MovePrevious(BOOL*);
-    HRESULT GetCurrent(IOpcSignatureReference*);
-    HRESULT Clone(IOpcSignatureReferenceEnumerator*);
+    HRESULT MoveNext(BOOL* hasNext);
+    HRESULT MovePrevious(BOOL* hasPrevious);
+    HRESULT GetCurrent(IOpcSignatureReference* reference);
+    HRESULT Clone(IOpcSignatureReferenceEnumerator* copy);
 }
 enum IID_IOpcSignatureCustomObjectEnumerator = GUID(0x5ee4fe1d, 0xe1b0, 0x4683, [0x80, 0x79, 0x7e, 0xa0, 0xfc, 0xf8, 0xb, 0x4c]);
 interface IOpcSignatureCustomObjectEnumerator : IUnknown
 {
-    HRESULT MoveNext(BOOL*);
-    HRESULT MovePrevious(BOOL*);
-    HRESULT GetCurrent(IOpcSignatureCustomObject*);
-    HRESULT Clone(IOpcSignatureCustomObjectEnumerator*);
+    HRESULT MoveNext(BOOL* hasNext);
+    HRESULT MovePrevious(BOOL* hasPrevious);
+    HRESULT GetCurrent(IOpcSignatureCustomObject* customObject);
+    HRESULT Clone(IOpcSignatureCustomObjectEnumerator* copy);
 }
 enum IID_IOpcCertificateEnumerator = GUID(0x85131937, 0x8f24, 0x421f, [0xb4, 0x39, 0x59, 0xab, 0x24, 0xd1, 0x40, 0xb8]);
 interface IOpcCertificateEnumerator : IUnknown
 {
-    HRESULT MoveNext(BOOL*);
-    HRESULT MovePrevious(BOOL*);
-    HRESULT GetCurrent(const(CERT_CONTEXT)**);
-    HRESULT Clone(IOpcCertificateEnumerator*);
+    HRESULT MoveNext(BOOL* hasNext);
+    HRESULT MovePrevious(BOOL* hasPrevious);
+    HRESULT GetCurrent(const(CERT_CONTEXT)** certificate);
+    HRESULT Clone(IOpcCertificateEnumerator* copy);
 }
 enum IID_IOpcDigitalSignatureEnumerator = GUID(0x967b6882, 0xba3, 0x4358, [0xb9, 0xe7, 0xb6, 0x4c, 0x75, 0x6, 0x3c, 0x5e]);
 interface IOpcDigitalSignatureEnumerator : IUnknown
 {
-    HRESULT MoveNext(BOOL*);
-    HRESULT MovePrevious(BOOL*);
-    HRESULT GetCurrent(IOpcDigitalSignature*);
-    HRESULT Clone(IOpcDigitalSignatureEnumerator*);
+    HRESULT MoveNext(BOOL* hasNext);
+    HRESULT MovePrevious(BOOL* hasPrevious);
+    HRESULT GetCurrent(IOpcDigitalSignature* digitalSignature);
+    HRESULT Clone(IOpcDigitalSignatureEnumerator* copy);
 }
 enum IID_IOpcSignaturePartReferenceSet = GUID(0x6c9fe28c, 0xecd9, 0x4b22, [0x9d, 0x36, 0x7f, 0xdd, 0xe6, 0x70, 0xfe, 0xc0]);
 interface IOpcSignaturePartReferenceSet : IUnknown
 {
-    HRESULT Create(IOpcPartUri, const(wchar)*, OPC_CANONICALIZATION_METHOD, IOpcSignaturePartReference*);
-    HRESULT Delete(IOpcSignaturePartReference);
-    HRESULT GetEnumerator(IOpcSignaturePartReferenceEnumerator*);
+    HRESULT Create(IOpcPartUri partUri, const(wchar)* digestMethod, OPC_CANONICALIZATION_METHOD transformMethod, IOpcSignaturePartReference* partReference);
+    HRESULT Delete(IOpcSignaturePartReference partReference);
+    HRESULT GetEnumerator(IOpcSignaturePartReferenceEnumerator* partReferenceEnumerator);
 }
 enum IID_IOpcSignatureRelationshipReferenceSet = GUID(0x9f863ca5, 0x3631, 0x404c, [0x82, 0x8d, 0x80, 0x7e, 0x7, 0x15, 0x6, 0x9b]);
 interface IOpcSignatureRelationshipReferenceSet : IUnknown
 {
-    HRESULT Create(IOpcUri, const(wchar)*, OPC_RELATIONSHIPS_SIGNING_OPTION, IOpcRelationshipSelectorSet, OPC_CANONICALIZATION_METHOD, IOpcSignatureRelationshipReference*);
-    HRESULT CreateRelationshipSelectorSet(IOpcRelationshipSelectorSet*);
-    HRESULT Delete(IOpcSignatureRelationshipReference);
-    HRESULT GetEnumerator(IOpcSignatureRelationshipReferenceEnumerator*);
+    HRESULT Create(IOpcUri sourceUri, const(wchar)* digestMethod, OPC_RELATIONSHIPS_SIGNING_OPTION relationshipSigningOption, IOpcRelationshipSelectorSet selectorSet, OPC_CANONICALIZATION_METHOD transformMethod, IOpcSignatureRelationshipReference* relationshipReference);
+    HRESULT CreateRelationshipSelectorSet(IOpcRelationshipSelectorSet* selectorSet);
+    HRESULT Delete(IOpcSignatureRelationshipReference relationshipReference);
+    HRESULT GetEnumerator(IOpcSignatureRelationshipReferenceEnumerator* relationshipReferenceEnumerator);
 }
 enum IID_IOpcRelationshipSelectorSet = GUID(0x6e34c269, 0xa4d3, 0x47c0, [0xb5, 0xc4, 0x87, 0xff, 0x2b, 0x3b, 0x61, 0x36]);
 interface IOpcRelationshipSelectorSet : IUnknown
 {
-    HRESULT Create(OPC_RELATIONSHIP_SELECTOR, const(wchar)*, IOpcRelationshipSelector*);
-    HRESULT Delete(IOpcRelationshipSelector);
-    HRESULT GetEnumerator(IOpcRelationshipSelectorEnumerator*);
+    HRESULT Create(OPC_RELATIONSHIP_SELECTOR selector, const(wchar)* selectionCriterion, IOpcRelationshipSelector* relationshipSelector);
+    HRESULT Delete(IOpcRelationshipSelector relationshipSelector);
+    HRESULT GetEnumerator(IOpcRelationshipSelectorEnumerator* relationshipSelectorEnumerator);
 }
 enum IID_IOpcSignatureReferenceSet = GUID(0xf3b02d31, 0xab12, 0x42dd, [0x9e, 0x2f, 0x2b, 0x16, 0x76, 0x1c, 0x3c, 0x1e]);
 interface IOpcSignatureReferenceSet : IUnknown
 {
-    HRESULT Create(IUri, const(wchar)*, const(wchar)*, const(wchar)*, OPC_CANONICALIZATION_METHOD, IOpcSignatureReference*);
-    HRESULT Delete(IOpcSignatureReference);
-    HRESULT GetEnumerator(IOpcSignatureReferenceEnumerator*);
+    HRESULT Create(IUri referenceUri, const(wchar)* referenceId, const(wchar)* type, const(wchar)* digestMethod, OPC_CANONICALIZATION_METHOD transformMethod, IOpcSignatureReference* reference);
+    HRESULT Delete(IOpcSignatureReference reference);
+    HRESULT GetEnumerator(IOpcSignatureReferenceEnumerator* referenceEnumerator);
 }
 enum IID_IOpcSignatureCustomObjectSet = GUID(0x8f792ac5, 0x7947, 0x4e11, [0xbc, 0x3d, 0x26, 0x59, 0xff, 0x4, 0x6a, 0xe1]);
 interface IOpcSignatureCustomObjectSet : IUnknown
 {
-    HRESULT Create(const(ubyte)*, uint, IOpcSignatureCustomObject*);
-    HRESULT Delete(IOpcSignatureCustomObject);
-    HRESULT GetEnumerator(IOpcSignatureCustomObjectEnumerator*);
+    HRESULT Create(const(ubyte)* xmlMarkup, uint count, IOpcSignatureCustomObject* customObject);
+    HRESULT Delete(IOpcSignatureCustomObject customObject);
+    HRESULT GetEnumerator(IOpcSignatureCustomObjectEnumerator* customObjectEnumerator);
 }
 enum IID_IOpcCertificateSet = GUID(0x56ea4325, 0x8e2d, 0x4167, [0xb1, 0xa4, 0xe4, 0x86, 0xd2, 0x4c, 0x8f, 0xa7]);
 interface IOpcCertificateSet : IUnknown
 {
-    HRESULT Add(const(CERT_CONTEXT)*);
-    HRESULT Remove(const(CERT_CONTEXT)*);
-    HRESULT GetEnumerator(IOpcCertificateEnumerator*);
+    HRESULT Add(const(CERT_CONTEXT)* certificate);
+    HRESULT Remove(const(CERT_CONTEXT)* certificate);
+    HRESULT GetEnumerator(IOpcCertificateEnumerator* certificateEnumerator);
 }
 enum IID_IOpcFactory = GUID(0x6d0b4446, 0xcd73, 0x4ab3, [0x94, 0xf4, 0x8c, 0xcd, 0xf6, 0x11, 0x61, 0x54]);
 interface IOpcFactory : IUnknown
 {
-    HRESULT CreatePackageRootUri(IOpcUri*);
-    HRESULT CreatePartUri(const(wchar)*, IOpcPartUri*);
-    HRESULT CreateStreamOnFile(const(wchar)*, OPC_STREAM_IO_MODE, SECURITY_ATTRIBUTES*, uint, IStream*);
-    HRESULT CreatePackage(IOpcPackage*);
-    HRESULT ReadPackageFromStream(IStream, OPC_READ_FLAGS, IOpcPackage*);
-    HRESULT WritePackageToStream(IOpcPackage, OPC_WRITE_FLAGS, IStream);
-    HRESULT CreateDigitalSignatureManager(IOpcPackage, IOpcDigitalSignatureManager*);
+    HRESULT CreatePackageRootUri(IOpcUri* rootUri);
+    HRESULT CreatePartUri(const(wchar)* pwzUri, IOpcPartUri* partUri);
+    HRESULT CreateStreamOnFile(const(wchar)* filename, OPC_STREAM_IO_MODE ioMode, SECURITY_ATTRIBUTES* securityAttributes, uint dwFlagsAndAttributes, IStream* stream);
+    HRESULT CreatePackage(IOpcPackage* package_);
+    HRESULT ReadPackageFromStream(IStream stream, OPC_READ_FLAGS flags, IOpcPackage* package_);
+    HRESULT WritePackageToStream(IOpcPackage package_, OPC_WRITE_FLAGS flags, IStream stream);
+    HRESULT CreateDigitalSignatureManager(IOpcPackage package_, IOpcDigitalSignatureManager* signatureManager);
 }
 enum CLSID_OpcFactory = GUID(0x6b2d6ba0, 0x9f3e, 0x4f27, [0x92, 0xb, 0x31, 0x3c, 0xc4, 0x26, 0xa3, 0x9e]);
 struct OpcFactory

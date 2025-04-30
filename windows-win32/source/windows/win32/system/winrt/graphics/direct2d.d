@@ -27,17 +27,17 @@ enum : int
 enum IID_IGraphicsEffectD2D1Interop = GUID(0x2fc57384, 0xa068, 0x44d7, [0xa3, 0x31, 0x30, 0x98, 0x2f, 0xcf, 0x71, 0x77]);
 /+ [UNSUPPORTED] interface IGraphicsEffectD2D1Interop : IUnknown
 {
-    HRESULT GetEffectId(GUID*);
-    HRESULT GetNamedPropertyMapping(const(wchar)*, uint*, GRAPHICS_EFFECT_PROPERTY_MAPPING*);
-    HRESULT GetPropertyCount(uint*);
-    HRESULT GetProperty(uint, IPropertyValue*);
-    HRESULT GetSource(uint, IGraphicsEffectSource*);
-    HRESULT GetSourceCount(uint*);
+    HRESULT GetEffectId(GUID* id);
+    HRESULT GetNamedPropertyMapping(const(wchar)* name, uint* index, GRAPHICS_EFFECT_PROPERTY_MAPPING* mapping);
+    HRESULT GetPropertyCount(uint* count);
+    HRESULT GetProperty(uint index, IPropertyValue* value);
+    HRESULT GetSource(uint index, IGraphicsEffectSource* source);
+    HRESULT GetSourceCount(uint* count);
 }
 +/
 enum IID_IGeometrySource2DInterop = GUID(0x657af73, 0x53fd, 0x47cf, [0x84, 0xff, 0xc8, 0x49, 0x2d, 0x2a, 0x80, 0xa3]);
 interface IGeometrySource2DInterop : IUnknown
 {
-    HRESULT GetGeometry(ID2D1Geometry*);
-    HRESULT TryGetGeometryUsingFactory(ID2D1Factory, ID2D1Geometry*);
+    HRESULT GetGeometry(ID2D1Geometry* value);
+    HRESULT TryGetGeometryUsingFactory(ID2D1Factory factory, ID2D1Geometry* value);
 }

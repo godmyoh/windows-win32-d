@@ -5,17 +5,17 @@ import windows.win32.foundation : BOOL, HANDLE, PWSTR;
 version (Windows):
 extern (Windows):
 
-uint DavAddConnection(HANDLE*, const(wchar)*, const(wchar)*, const(wchar)*, ubyte*, uint);
-uint DavDeleteConnection(HANDLE);
-uint DavGetUNCFromHTTPPath(const(wchar)*, PWSTR, uint*);
-uint DavGetHTTPFromUNCPath(const(wchar)*, PWSTR, uint*);
-uint DavGetTheLockOwnerOfTheFile(const(wchar)*, PWSTR, uint*);
-uint DavGetExtendedError(HANDLE, uint*, PWSTR, uint*);
-uint DavFlushFile(HANDLE);
-uint DavInvalidateCache(const(wchar)*);
-uint DavCancelConnectionsToServer(PWSTR, BOOL);
-uint DavRegisterAuthCallback(PFNDAVAUTHCALLBACK, uint);
-void DavUnregisterAuthCallback(uint);
+uint DavAddConnection(HANDLE* ConnectionHandle, const(wchar)* RemoteName, const(wchar)* UserName, const(wchar)* Password, ubyte* ClientCert, uint CertSize);
+uint DavDeleteConnection(HANDLE ConnectionHandle);
+uint DavGetUNCFromHTTPPath(const(wchar)* Url, PWSTR UncPath, uint* lpSize);
+uint DavGetHTTPFromUNCPath(const(wchar)* UncPath, PWSTR Url, uint* lpSize);
+uint DavGetTheLockOwnerOfTheFile(const(wchar)* FileName, PWSTR LockOwnerName, uint* LockOwnerNameLengthInBytes);
+uint DavGetExtendedError(HANDLE hFile, uint* ExtError, PWSTR ExtErrorString, uint* cChSize);
+uint DavFlushFile(HANDLE hFile);
+uint DavInvalidateCache(const(wchar)* URLName);
+uint DavCancelConnectionsToServer(PWSTR lpName, BOOL fForce);
+uint DavRegisterAuthCallback(PFNDAVAUTHCALLBACK CallBack, uint Version);
+void DavUnregisterAuthCallback(uint hCallback);
 enum DAV_AUTHN_SCHEME_BASIC = 0x00000001;
 enum DAV_AUTHN_SCHEME_NTLM = 0x00000002;
 enum DAV_AUTHN_SCHEME_PASSPORT = 0x00000004;
@@ -51,5 +51,5 @@ enum : int
     CancelRequest   = 0x00000002,
 }
 
-alias PFNDAVAUTHCALLBACK_FREECRED = uint function(void*);
-alias PFNDAVAUTHCALLBACK = uint function(PWSTR, PWSTR, uint, uint, DAV_CALLBACK_CRED*, AUTHNEXTSTEP*, PFNDAVAUTHCALLBACK_FREECRED*);
+alias PFNDAVAUTHCALLBACK_FREECRED = uint function(void* pbuffer);
+alias PFNDAVAUTHCALLBACK = uint function(PWSTR lpwzServerName, PWSTR lpwzRemoteName, uint dwAuthScheme, uint dwFlags, DAV_CALLBACK_CRED* pCallbackCred, AUTHNEXTSTEP* NextStep, PFNDAVAUTHCALLBACK_FREECRED* pFreeCred);

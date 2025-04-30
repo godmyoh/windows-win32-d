@@ -13,117 +13,118 @@ version (Windows):
 extern (Windows):
 
 uint CoBuildVersion();
-HRESULT CoInitialize(void*);
-HRESULT CoRegisterMallocSpy(IMallocSpy);
+HRESULT CoInitialize(void* pvReserved);
+HRESULT CoRegisterMallocSpy(IMallocSpy pMallocSpy);
 HRESULT CoRevokeMallocSpy();
-HRESULT CoRegisterInitializeSpy(IInitializeSpy, ulong*);
-HRESULT CoRevokeInitializeSpy(ulong);
-HRESULT CoGetSystemSecurityPermissions(COMSD, PSECURITY_DESCRIPTOR*);
-HINSTANCE CoLoadLibrary(PWSTR, BOOL);
-void CoFreeLibrary(HINSTANCE);
+HRESULT CoRegisterInitializeSpy(IInitializeSpy pSpy, ulong* puliCookie);
+HRESULT CoRevokeInitializeSpy(ulong uliCookie);
+HRESULT CoGetSystemSecurityPermissions(COMSD comSDType, PSECURITY_DESCRIPTOR* ppSD);
+HINSTANCE CoLoadLibrary(PWSTR lpszLibName, BOOL bAutoFree);
+void CoFreeLibrary(HINSTANCE hInst);
 void CoFreeAllLibraries();
-HRESULT CoAllowSetForegroundWindow(IUnknown, void*);
-HRESULT DcomChannelSetHResult(void*, uint*, HRESULT);
-BOOL CoIsOle1Class(const(GUID)*);
-HRESULT CLSIDFromProgIDEx(const(wchar)*, GUID*);
-BOOL CoFileTimeToDosDateTime(FILETIME*, ushort*, ushort*);
-BOOL CoDosDateTimeToFileTime(ushort, ushort, FILETIME*);
-HRESULT CoFileTimeNow(FILETIME*);
-HRESULT CoRegisterChannelHook(const(GUID)*, IChannelHook);
-HRESULT CoTreatAsClass(const(GUID)*, const(GUID)*);
-HRESULT CreateDataAdviseHolder(IDataAdviseHolder*);
-HRESULT CreateDataCache(IUnknown, const(GUID)*, const(GUID)*, void**);
-HRESULT CoInstall(IBindCtx, uint, uCLSSPEC*, QUERYCONTEXT*, PWSTR);
-HRESULT BindMoniker(IMoniker, uint, const(GUID)*, void**);
-HRESULT CoGetObject(const(wchar)*, BIND_OPTS*, const(GUID)*, void**);
-HRESULT MkParseDisplayName(IBindCtx, const(wchar)*, uint*, IMoniker*);
-HRESULT MonikerRelativePathTo(IMoniker, IMoniker, IMoniker*, BOOL);
-HRESULT MonikerCommonPrefixWith(IMoniker, IMoniker, IMoniker*);
-HRESULT CreateBindCtx(uint, IBindCtx*);
-HRESULT CreateGenericComposite(IMoniker, IMoniker, IMoniker*);
-HRESULT GetClassFile(const(wchar)*, GUID*);
-HRESULT CreateClassMoniker(const(GUID)*, IMoniker*);
-HRESULT CreateFileMoniker(const(wchar)*, IMoniker*);
-HRESULT CreateItemMoniker(const(wchar)*, const(wchar)*, IMoniker*);
-HRESULT CreateAntiMoniker(IMoniker*);
-HRESULT CreatePointerMoniker(IUnknown, IMoniker*);
-HRESULT CreateObjrefMoniker(IUnknown, IMoniker*);
-HRESULT GetRunningObjectTable(uint, IRunningObjectTable*);
-HRESULT CreateStdProgressIndicator(HWND, const(wchar)*, IBindStatusCallback, IBindStatusCallback*);
-HRESULT CoGetMalloc(uint, IMalloc*);
+HRESULT CoAllowSetForegroundWindow(IUnknown pUnk, void* lpvReserved);
+HRESULT DcomChannelSetHResult(void* pvReserved, uint* pulReserved, HRESULT appsHR);
+BOOL CoIsOle1Class(const(GUID)* rclsid);
+HRESULT CLSIDFromProgIDEx(const(wchar)* lpszProgID, GUID* lpclsid);
+BOOL CoFileTimeToDosDateTime(FILETIME* lpFileTime, ushort* lpDosDate, ushort* lpDosTime);
+BOOL CoDosDateTimeToFileTime(ushort nDosDate, ushort nDosTime, FILETIME* lpFileTime);
+HRESULT CoFileTimeNow(FILETIME* lpFileTime);
+HRESULT CoRegisterChannelHook(const(GUID)* ExtensionUuid, IChannelHook pChannelHook);
+HRESULT CoTreatAsClass(const(GUID)* clsidOld, const(GUID)* clsidNew);
+HRESULT CreateDataAdviseHolder(IDataAdviseHolder* ppDAHolder);
+HRESULT CreateDataCache(IUnknown pUnkOuter, const(GUID)* rclsid, const(GUID)* iid, void** ppv);
+HRESULT CoInstall(IBindCtx pbc, uint dwFlags, uCLSSPEC* pClassSpec, QUERYCONTEXT* pQuery, PWSTR pszCodeBase);
+HRESULT BindMoniker(IMoniker pmk, uint grfOpt, const(GUID)* iidResult, void** ppvResult);
+HRESULT CoGetObject(const(wchar)* pszName, BIND_OPTS* pBindOptions, const(GUID)* riid, void** ppv);
+HRESULT MkParseDisplayName(IBindCtx pbc, const(wchar)* szUserName, uint* pchEaten, IMoniker* ppmk);
+HRESULT MonikerRelativePathTo(IMoniker pmkSrc, IMoniker pmkDest, IMoniker* ppmkRelPath, BOOL dwReserved);
+HRESULT MonikerCommonPrefixWith(IMoniker pmkThis, IMoniker pmkOther, IMoniker* ppmkCommon);
+HRESULT CreateBindCtx(uint reserved, IBindCtx* ppbc);
+HRESULT CreateGenericComposite(IMoniker pmkFirst, IMoniker pmkRest, IMoniker* ppmkComposite);
+HRESULT GetClassFile(const(wchar)* szFilename, GUID* pclsid);
+HRESULT CreateClassMoniker(const(GUID)* rclsid, IMoniker* ppmk);
+HRESULT CreateFileMoniker(const(wchar)* lpszPathName, IMoniker* ppmk);
+HRESULT CreateItemMoniker(const(wchar)* lpszDelim, const(wchar)* lpszItem, IMoniker* ppmk);
+HRESULT CreateAntiMoniker(IMoniker* ppmk);
+HRESULT CreatePointerMoniker(IUnknown punk, IMoniker* ppmk);
+HRESULT CreateObjrefMoniker(IUnknown punk, IMoniker* ppmk);
+HRESULT GetRunningObjectTable(uint reserved, IRunningObjectTable* pprot);
+HRESULT CreateStdProgressIndicator(HWND hwndParent, const(wchar)* pszTitle, IBindStatusCallback pIbscCaller, IBindStatusCallback* ppIbsc);
+HRESULT CoGetMalloc(uint dwMemContext, IMalloc* ppMalloc);
 void CoUninitialize();
 uint CoGetCurrentProcess();
-HRESULT CoInitializeEx(void*, uint);
-HRESULT CoGetCallerTID(uint*);
-HRESULT CoGetCurrentLogicalThreadId(GUID*);
-HRESULT CoGetContextToken(ulong*);
-HRESULT CoGetApartmentType(APTTYPE*, APTTYPEQUALIFIER*);
-HRESULT CoIncrementMTAUsage(CO_MTA_USAGE_COOKIE*);
-HRESULT CoDecrementMTAUsage(CO_MTA_USAGE_COOKIE);
-HRESULT CoAllowUnmarshalerCLSID(const(GUID)*);
-HRESULT CoGetObjectContext(const(GUID)*, void**);
-HRESULT CoGetClassObject(const(GUID)*, uint, void*, const(GUID)*, void**);
-HRESULT CoRegisterClassObject(const(GUID)*, IUnknown, CLSCTX, uint, uint*);
-HRESULT CoRevokeClassObject(uint);
+HRESULT CoInitializeEx(void* pvReserved, uint dwCoInit);
+HRESULT CoGetCallerTID(uint* lpdwTID);
+HRESULT CoGetCurrentLogicalThreadId(GUID* pguid);
+HRESULT CoGetContextToken(ulong* pToken);
+HRESULT CoGetApartmentType(APTTYPE* pAptType, APTTYPEQUALIFIER* pAptQualifier);
+HRESULT CoIncrementMTAUsage(CO_MTA_USAGE_COOKIE* pCookie);
+HRESULT CoDecrementMTAUsage(CO_MTA_USAGE_COOKIE Cookie);
+HRESULT CoAllowUnmarshalerCLSID(const(GUID)* clsid);
+HRESULT CoGetObjectContext(const(GUID)* riid, void** ppv);
+HRESULT CoGetClassObject(const(GUID)* rclsid, uint dwClsContext, void* pvReserved, const(GUID)* riid, void** ppv);
+HRESULT CoRegisterClassObject(const(GUID)* rclsid, IUnknown pUnk, CLSCTX dwClsContext, uint flags, uint* lpdwRegister);
+HRESULT CoRevokeClassObject(uint dwRegister);
 HRESULT CoResumeClassObjects();
 HRESULT CoSuspendClassObjects();
 uint CoAddRefServerProcess();
 uint CoReleaseServerProcess();
-HRESULT CoGetPSClsid(const(GUID)*, GUID*);
-HRESULT CoRegisterPSClsid(const(GUID)*, const(GUID)*);
-HRESULT CoRegisterSurrogate(ISurrogate);
-HRESULT CoDisconnectObject(IUnknown, uint);
-HRESULT CoLockObjectExternal(IUnknown, BOOL, BOOL);
-BOOL CoIsHandlerConnected(IUnknown);
-HRESULT CoCreateFreeThreadedMarshaler(IUnknown, IUnknown*);
+HRESULT CoGetPSClsid(const(GUID)* riid, GUID* pClsid);
+HRESULT CoRegisterPSClsid(const(GUID)* riid, const(GUID)* rclsid);
+HRESULT CoRegisterSurrogate(ISurrogate pSurrogate);
+HRESULT CoDisconnectObject(IUnknown pUnk, uint dwReserved);
+HRESULT CoLockObjectExternal(IUnknown pUnk, BOOL fLock, BOOL fLastUnlockReleases);
+BOOL CoIsHandlerConnected(IUnknown pUnk);
+HRESULT CoCreateFreeThreadedMarshaler(IUnknown punkOuter, IUnknown* ppunkMarshal);
 void CoFreeUnusedLibraries();
-void CoFreeUnusedLibrariesEx(uint, uint);
-HRESULT CoDisconnectContext(uint);
-HRESULT CoInitializeSecurity(PSECURITY_DESCRIPTOR, int, SOLE_AUTHENTICATION_SERVICE*, void*, RPC_C_AUTHN_LEVEL, RPC_C_IMP_LEVEL, void*, uint, void*);
-HRESULT CoGetCallContext(const(GUID)*, void**);
-HRESULT CoQueryProxyBlanket(IUnknown, uint*, uint*, PWSTR*, uint*, uint*, void**, uint*);
-HRESULT CoSetProxyBlanket(IUnknown, uint, uint, PWSTR, RPC_C_AUTHN_LEVEL, RPC_C_IMP_LEVEL, void*, uint);
-HRESULT CoCopyProxy(IUnknown, IUnknown*);
-HRESULT CoQueryClientBlanket(uint*, uint*, PWSTR*, uint*, uint*, void**, uint*);
+void CoFreeUnusedLibrariesEx(uint dwUnloadDelay, uint dwReserved);
+HRESULT CoDisconnectContext(uint dwTimeout);
+HRESULT CoInitializeSecurity(PSECURITY_DESCRIPTOR pSecDesc, int cAuthSvc, SOLE_AUTHENTICATION_SERVICE* asAuthSvc, void* pReserved1, RPC_C_AUTHN_LEVEL dwAuthnLevel, RPC_C_IMP_LEVEL dwImpLevel, void* pAuthList, uint dwCapabilities, void* pReserved3);
+HRESULT CoGetCallContext(const(GUID)* riid, void** ppInterface);
+HRESULT CoQueryProxyBlanket(IUnknown pProxy, uint* pwAuthnSvc, uint* pAuthzSvc, PWSTR* pServerPrincName, uint* pAuthnLevel, uint* pImpLevel, void** pAuthInfo, uint* pCapabilites);
+HRESULT CoSetProxyBlanket(IUnknown pProxy, uint dwAuthnSvc, uint dwAuthzSvc, PWSTR pServerPrincName, RPC_C_AUTHN_LEVEL dwAuthnLevel, RPC_C_IMP_LEVEL dwImpLevel, void* pAuthInfo, uint dwCapabilities);
+HRESULT CoCopyProxy(IUnknown pProxy, IUnknown* ppCopy);
+HRESULT CoQueryClientBlanket(uint* pAuthnSvc, uint* pAuthzSvc, PWSTR* pServerPrincName, uint* pAuthnLevel, uint* pImpLevel, void** pPrivs, uint* pCapabilities);
 HRESULT CoImpersonateClient();
 HRESULT CoRevertToSelf();
-HRESULT CoQueryAuthenticationServices(uint*, SOLE_AUTHENTICATION_SERVICE**);
-HRESULT CoSwitchCallContext(IUnknown, IUnknown*);
-HRESULT CoCreateInstance(const(GUID)*, IUnknown, CLSCTX, const(GUID)*, void**);
-HRESULT CoCreateInstanceEx(const(GUID)*, IUnknown, CLSCTX, COSERVERINFO*, uint, MULTI_QI*);
-HRESULT CoCreateInstanceFromApp(const(GUID)*, IUnknown, CLSCTX, void*, uint, MULTI_QI*);
-HRESULT CoRegisterActivationFilter(IActivationFilter);
-HRESULT CoGetCancelObject(uint, const(GUID)*, void**);
-HRESULT CoSetCancelObject(IUnknown);
-HRESULT CoCancelCall(uint, uint);
+HRESULT CoQueryAuthenticationServices(uint* pcAuthSvc, SOLE_AUTHENTICATION_SERVICE** asAuthSvc);
+HRESULT CoSwitchCallContext(IUnknown pNewObject, IUnknown* ppOldObject);
+HRESULT CoCreateInstance(const(GUID)* rclsid, IUnknown pUnkOuter, CLSCTX dwClsContext, const(GUID)* riid, void** ppv);
+HRESULT CoCreateInstanceEx(const(GUID)* Clsid, IUnknown punkOuter, CLSCTX dwClsCtx, COSERVERINFO* pServerInfo, uint dwCount, MULTI_QI* pResults);
+HRESULT CoCreateInstanceFromApp(const(GUID)* Clsid, IUnknown punkOuter, CLSCTX dwClsCtx, void* reserved, uint dwCount, MULTI_QI* pResults);
+HRESULT CoRegisterActivationFilter(IActivationFilter pActivationFilter);
+HRESULT CoGetCancelObject(uint dwThreadId, const(GUID)* iid, void** ppUnk);
+HRESULT CoSetCancelObject(IUnknown pUnk);
+HRESULT CoCancelCall(uint dwThreadId, uint ulTimeout);
 HRESULT CoTestCancel();
-HRESULT CoEnableCallCancellation(void*);
-HRESULT CoDisableCallCancellation(void*);
-HRESULT StringFromCLSID(const(GUID)*, PWSTR*);
-HRESULT CLSIDFromString(const(wchar)*, GUID*);
-HRESULT StringFromIID(const(GUID)*, PWSTR*);
-HRESULT IIDFromString(const(wchar)*, GUID*);
-HRESULT ProgIDFromCLSID(const(GUID)*, PWSTR*);
-HRESULT CLSIDFromProgID(const(wchar)*, GUID*);
-int StringFromGUID2(const(GUID)*, PWSTR, int);
-HRESULT CoCreateGuid(GUID*);
-HRESULT CoWaitForMultipleHandles(uint, uint, uint, HANDLE*, uint*);
-HRESULT CoWaitForMultipleObjects(uint, uint, uint, const(HANDLE)*, uint*);
-HRESULT CoGetTreatAsClass(const(GUID)*, GUID*);
-HRESULT CoInvalidateRemoteMachineBindings(PWSTR);
-void* CoTaskMemAlloc(ulong);
-void* CoTaskMemRealloc(void*, ulong);
-void CoTaskMemFree(void*);
-HRESULT CoRegisterDeviceCatalog(const(wchar)*, CO_DEVICE_CATALOG_COOKIE*);
-HRESULT CoRevokeDeviceCatalog(CO_DEVICE_CATALOG_COOKIE);
-HRESULT CreateUri(const(wchar)*, URI_CREATE_FLAGS, ulong, IUri*);
-HRESULT CreateUriWithFragment(const(wchar)*, const(wchar)*, uint, ulong, IUri*);
-HRESULT CreateUriFromMultiByteString(const(char)*, uint, uint, uint, ulong, IUri*);
-HRESULT CreateIUriBuilder(IUri, uint, ulong, IUriBuilder*);
-HRESULT SetErrorInfo(uint, IErrorInfo);
-HRESULT GetErrorInfo(uint, IErrorInfo*);
+HRESULT CoEnableCallCancellation(void* pReserved);
+HRESULT CoDisableCallCancellation(void* pReserved);
+HRESULT StringFromCLSID(const(GUID)* rclsid, PWSTR* lplpsz);
+HRESULT CLSIDFromString(const(wchar)* lpsz, GUID* pclsid);
+HRESULT StringFromIID(const(GUID)* rclsid, PWSTR* lplpsz);
+HRESULT IIDFromString(const(wchar)* lpsz, GUID* lpiid);
+HRESULT ProgIDFromCLSID(const(GUID)* clsid, PWSTR* lplpszProgID);
+HRESULT CLSIDFromProgID(const(wchar)* lpszProgID, GUID* lpclsid);
+int StringFromGUID2(const(GUID)* rguid, PWSTR lpsz, int cchMax);
+HRESULT CoCreateGuid(GUID* pguid);
+HRESULT CoWaitForMultipleHandles(uint dwFlags, uint dwTimeout, uint cHandles, HANDLE* pHandles, uint* lpdwindex);
+HRESULT CoWaitForMultipleObjects(uint dwFlags, uint dwTimeout, uint cHandles, const(HANDLE)* pHandles, uint* lpdwindex);
+HRESULT CoGetTreatAsClass(const(GUID)* clsidOld, GUID* pClsidNew);
+HRESULT CoInvalidateRemoteMachineBindings(PWSTR pszMachineName);
+void* CoTaskMemAlloc(ulong cb);
+void* CoTaskMemRealloc(void* pv, ulong cb);
+void CoTaskMemFree(void* pv);
+HRESULT CoRegisterDeviceCatalog(const(wchar)* deviceInstanceId, CO_DEVICE_CATALOG_COOKIE* cookie);
+HRESULT CoRevokeDeviceCatalog(CO_DEVICE_CATALOG_COOKIE cookie);
+HRESULT CreateUri(const(wchar)* pwzURI, URI_CREATE_FLAGS dwFlags, ulong dwReserved, IUri* ppURI);
+HRESULT CreateUriWithFragment(const(wchar)* pwzURI, const(wchar)* pwzFragment, uint dwFlags, ulong dwReserved, IUri* ppURI);
+HRESULT CreateUriFromMultiByteString(const(char)* pszANSIInputUri, uint dwEncodingFlags, uint dwCodePage, uint dwCreateFlags, ulong dwReserved, IUri* ppUri);
+HRESULT CreateIUriBuilder(IUri pIUri, uint dwFlags, ulong dwReserved, IUriBuilder* ppIUriBuilder);
+HRESULT SetErrorInfo(uint dwReserved, IErrorInfo perrinfo);
+HRESULT GetErrorInfo(uint dwReserved, IErrorInfo* pperrinfo);
 enum COLE_DEFAULT_PRINCIPAL = 0xffffffffffffffff;
 enum COLE_DEFAULT_AUTHINFO = 0xffffffffffffffff;
+enum CLSID_GlobalOptions = GUID(0x34b, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 enum MARSHALINTERFACE_MIN = 0x000001f4;
 enum ASYNC_MODE_COMPATIBILITY = 0x00000001;
 enum ASYNC_MODE_DEFAULT = 0x00000000;
@@ -163,7 +164,7 @@ enum DCOMSCM_PING_USE_MID_AUTHNSERVICE = 0x00000010;
 enum DCOMSCM_PING_DISALLOW_UNSECURE_CALL = 0x00000020;
 enum MAXLSN = 0x7fffffffffffffff;
 enum DMUS_ERRBASE = 0x00001000;
-alias LPEXCEPFINO_DEFERRED_FILLIN = HRESULT function(EXCEPINFO*);
+alias LPEXCEPFINO_DEFERRED_FILLIN = HRESULT function(EXCEPINFO* pExcepInfo);
 alias URI_CREATE_FLAGS = uint;
 enum : uint
 {
@@ -295,9 +296,9 @@ enum : uint
     DVASPECT_TRANSPARENT = 0x00000020,
 }
 
-alias CO_MTA_USAGE_COOKIE = long;
-alias CO_DEVICE_CATALOG_COOKIE = long;
-alias MachineGlobalObjectTableRegistrationToken = long;
+alias CO_MTA_USAGE_COOKIE = void*;
+alias CO_DEVICE_CATALOG_COOKIE = void*;
+alias MachineGlobalObjectTableRegistrationToken = void*;
 alias STGC = int;
 enum : int
 {
@@ -535,15 +536,15 @@ struct BLOB
 enum IID_IUnknown = GUID(0x0, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IUnknown
 {
-    HRESULT QueryInterface(const(GUID)*, void**);
+    HRESULT QueryInterface(const(GUID)* riid, void** ppvObject);
     uint AddRef();
     uint Release();
 }
 enum IID_AsyncIUnknown = GUID(0xe0000, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface AsyncIUnknown : IUnknown
 {
-    HRESULT Begin_QueryInterface(const(GUID)*);
-    HRESULT Finish_QueryInterface(void**);
+    HRESULT Begin_QueryInterface(const(GUID)* riid);
+    HRESULT Finish_QueryInterface(void** ppvObject);
     HRESULT Begin_AddRef();
     uint Finish_AddRef();
     HRESULT Begin_Release();
@@ -552,8 +553,8 @@ interface AsyncIUnknown : IUnknown
 enum IID_IClassFactory = GUID(0x1, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IClassFactory : IUnknown
 {
-    HRESULT CreateInstance(IUnknown, const(GUID)*, void**);
-    HRESULT LockServer(BOOL);
+    HRESULT CreateInstance(IUnknown pUnkOuter, const(GUID)* riid, void** ppvObject);
+    HRESULT LockServer(BOOL fLock);
 }
 struct COSERVERINFO
 {
@@ -573,22 +574,22 @@ interface IAgileObject : IUnknown
 enum IID_IActivationFilter = GUID(0x17, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IActivationFilter : IUnknown
 {
-    HRESULT HandleActivation(uint, const(GUID)*, GUID*);
+    HRESULT HandleActivation(uint dwActivationType, const(GUID)* rclsid, GUID* pReplacementClsId);
 }
 enum IID_IMalloc = GUID(0x2, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IMalloc : IUnknown
 {
-    void* Alloc(ulong);
-    void* Realloc(void*, ulong);
-    void Free(void*);
-    ulong GetSize(void*);
-    int DidAlloc(void*);
+    void* Alloc(ulong cb);
+    void* Realloc(void* pv, ulong cb);
+    void Free(void* pv);
+    ulong GetSize(void* pv);
+    int DidAlloc(void* pv);
     void HeapMinimize();
 }
 enum IID_IStdMarshalInfo = GUID(0x18, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IStdMarshalInfo : IUnknown
 {
-    HRESULT GetClassForHandler(uint, void*, GUID*);
+    HRESULT GetClassForHandler(uint dwDestContext, void* pvDestContext, GUID* pClsid);
 }
 alias EXTCONN = int;
 enum : int
@@ -601,8 +602,8 @@ enum : int
 enum IID_IExternalConnection = GUID(0x19, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IExternalConnection : IUnknown
 {
-    uint AddConnection(uint, uint);
-    uint ReleaseConnection(uint, uint, BOOL);
+    uint AddConnection(uint extconn, uint reserved);
+    uint ReleaseConnection(uint extconn, uint reserved, BOOL fLastReleaseCloses);
 }
 struct MULTI_QI
 {
@@ -613,40 +614,40 @@ struct MULTI_QI
 enum IID_IMultiQI = GUID(0x20, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IMultiQI : IUnknown
 {
-    HRESULT QueryMultipleInterfaces(uint, MULTI_QI*);
+    HRESULT QueryMultipleInterfaces(uint cMQIs, MULTI_QI* pMQIs);
 }
 enum IID_AsyncIMultiQI = GUID(0xe0020, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface AsyncIMultiQI : IUnknown
 {
-    HRESULT Begin_QueryMultipleInterfaces(uint, MULTI_QI*);
-    HRESULT Finish_QueryMultipleInterfaces(MULTI_QI*);
+    HRESULT Begin_QueryMultipleInterfaces(uint cMQIs, MULTI_QI* pMQIs);
+    HRESULT Finish_QueryMultipleInterfaces(MULTI_QI* pMQIs);
 }
 enum IID_IInternalUnknown = GUID(0x21, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IInternalUnknown : IUnknown
 {
-    HRESULT QueryInternalInterface(const(GUID)*, void**);
+    HRESULT QueryInternalInterface(const(GUID)* riid, void** ppv);
 }
 enum IID_IEnumUnknown = GUID(0x100, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IEnumUnknown : IUnknown
 {
-    HRESULT Next(uint, IUnknown*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IUnknown* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumUnknown*);
+    HRESULT Clone(IEnumUnknown* ppenum);
 }
 enum IID_IEnumString = GUID(0x101, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IEnumString : IUnknown
 {
-    HRESULT Next(uint, PWSTR*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, PWSTR* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumString*);
+    HRESULT Clone(IEnumString* ppenum);
 }
 enum IID_ISequentialStream = GUID(0xc733a30, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ISequentialStream : IUnknown
 {
-    HRESULT Read(void*, uint, uint*);
-    HRESULT Write(const(void)*, uint, uint*);
+    HRESULT Read(void* pv, uint cb, uint* pcbRead);
+    HRESULT Write(const(void)* pv, uint cb, uint* pcbWritten);
 }
 struct STATSTG
 {
@@ -690,15 +691,15 @@ enum : int
 enum IID_IStream = GUID(0xc, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IStream : ISequentialStream
 {
-    HRESULT Seek(long, STREAM_SEEK, ulong*);
-    HRESULT SetSize(ulong);
-    HRESULT CopyTo(IStream, ulong, ulong*, ulong*);
-    HRESULT Commit(uint);
+    HRESULT Seek(long dlibMove, STREAM_SEEK dwOrigin, ulong* plibNewPosition);
+    HRESULT SetSize(ulong libNewSize);
+    HRESULT CopyTo(IStream pstm, ulong cb, ulong* pcbRead, ulong* pcbWritten);
+    HRESULT Commit(uint grfCommitFlags);
     HRESULT Revert();
-    HRESULT LockRegion(ulong, ulong, uint);
-    HRESULT UnlockRegion(ulong, ulong, uint);
-    HRESULT Stat(STATSTG*, uint);
-    HRESULT Clone(IStream*);
+    HRESULT LockRegion(ulong libOffset, ulong cb, uint dwLockType);
+    HRESULT UnlockRegion(ulong libOffset, ulong cb, uint dwLockType);
+    HRESULT Stat(STATSTG* pstatstg, uint grfStatFlag);
+    HRESULT Clone(IStream* ppstm);
 }
 struct RPCOLEMESSAGE
 {
@@ -713,62 +714,62 @@ struct RPCOLEMESSAGE
 enum IID_IRpcChannelBuffer = GUID(0xd5f56b60, 0x593b, 0x101a, [0xb5, 0x69, 0x8, 0x0, 0x2b, 0x2d, 0xbf, 0x7a]);
 interface IRpcChannelBuffer : IUnknown
 {
-    HRESULT GetBuffer(RPCOLEMESSAGE*, const(GUID)*);
-    HRESULT SendReceive(RPCOLEMESSAGE*, uint*);
-    HRESULT FreeBuffer(RPCOLEMESSAGE*);
-    HRESULT GetDestCtx(uint*, void**);
+    HRESULT GetBuffer(RPCOLEMESSAGE* pMessage, const(GUID)* riid);
+    HRESULT SendReceive(RPCOLEMESSAGE* pMessage, uint* pStatus);
+    HRESULT FreeBuffer(RPCOLEMESSAGE* pMessage);
+    HRESULT GetDestCtx(uint* pdwDestContext, void** ppvDestContext);
     HRESULT IsConnected();
 }
 enum IID_IRpcChannelBuffer2 = GUID(0x594f31d0, 0x7f19, 0x11d0, [0xb1, 0x94, 0x0, 0xa0, 0xc9, 0xd, 0xc8, 0xbf]);
 interface IRpcChannelBuffer2 : IRpcChannelBuffer
 {
-    HRESULT GetProtocolVersion(uint*);
+    HRESULT GetProtocolVersion(uint* pdwVersion);
 }
 enum IID_IAsyncRpcChannelBuffer = GUID(0xa5029fb6, 0x3c34, 0x11d1, [0x9c, 0x99, 0x0, 0xc0, 0x4f, 0xb9, 0x98, 0xaa]);
 interface IAsyncRpcChannelBuffer : IRpcChannelBuffer2
 {
-    HRESULT Send(RPCOLEMESSAGE*, ISynchronize, uint*);
-    HRESULT Receive(RPCOLEMESSAGE*, uint*);
-    HRESULT GetDestCtxEx(RPCOLEMESSAGE*, uint*, void**);
+    HRESULT Send(RPCOLEMESSAGE* pMsg, ISynchronize pSync, uint* pulStatus);
+    HRESULT Receive(RPCOLEMESSAGE* pMsg, uint* pulStatus);
+    HRESULT GetDestCtxEx(RPCOLEMESSAGE* pMsg, uint* pdwDestContext, void** ppvDestContext);
 }
 enum IID_IRpcChannelBuffer3 = GUID(0x25b15600, 0x115, 0x11d0, [0xbf, 0xd, 0x0, 0xaa, 0x0, 0xb8, 0xdf, 0xd2]);
 interface IRpcChannelBuffer3 : IRpcChannelBuffer2
 {
-    HRESULT Send(RPCOLEMESSAGE*, uint*);
-    HRESULT Receive(RPCOLEMESSAGE*, uint, uint*);
-    HRESULT Cancel(RPCOLEMESSAGE*);
-    HRESULT GetCallContext(RPCOLEMESSAGE*, const(GUID)*, void**);
-    HRESULT GetDestCtxEx(RPCOLEMESSAGE*, uint*, void**);
-    HRESULT GetState(RPCOLEMESSAGE*, uint*);
-    HRESULT RegisterAsync(RPCOLEMESSAGE*, IAsyncManager);
+    HRESULT Send(RPCOLEMESSAGE* pMsg, uint* pulStatus);
+    HRESULT Receive(RPCOLEMESSAGE* pMsg, uint ulSize, uint* pulStatus);
+    HRESULT Cancel(RPCOLEMESSAGE* pMsg);
+    HRESULT GetCallContext(RPCOLEMESSAGE* pMsg, const(GUID)* riid, void** pInterface);
+    HRESULT GetDestCtxEx(RPCOLEMESSAGE* pMsg, uint* pdwDestContext, void** ppvDestContext);
+    HRESULT GetState(RPCOLEMESSAGE* pMsg, uint* pState);
+    HRESULT RegisterAsync(RPCOLEMESSAGE* pMsg, IAsyncManager pAsyncMgr);
 }
 enum IID_IRpcSyntaxNegotiate = GUID(0x58a08519, 0x24c8, 0x4935, [0xb4, 0x82, 0x3f, 0xd8, 0x23, 0x33, 0x3a, 0x4f]);
 interface IRpcSyntaxNegotiate : IUnknown
 {
-    HRESULT NegotiateSyntax(RPCOLEMESSAGE*);
+    HRESULT NegotiateSyntax(RPCOLEMESSAGE* pMsg);
 }
 enum IID_IRpcProxyBuffer = GUID(0xd5f56a34, 0x593b, 0x101a, [0xb5, 0x69, 0x8, 0x0, 0x2b, 0x2d, 0xbf, 0x7a]);
 interface IRpcProxyBuffer : IUnknown
 {
-    HRESULT Connect(IRpcChannelBuffer);
+    HRESULT Connect(IRpcChannelBuffer pRpcChannelBuffer);
     void Disconnect();
 }
 enum IID_IRpcStubBuffer = GUID(0xd5f56afc, 0x593b, 0x101a, [0xb5, 0x69, 0x8, 0x0, 0x2b, 0x2d, 0xbf, 0x7a]);
 interface IRpcStubBuffer : IUnknown
 {
-    HRESULT Connect(IUnknown);
+    HRESULT Connect(IUnknown pUnkServer);
     void Disconnect();
-    HRESULT Invoke(RPCOLEMESSAGE*, IRpcChannelBuffer);
-    IRpcStubBuffer IsIIDSupported(const(GUID)*);
+    HRESULT Invoke(RPCOLEMESSAGE* _prpcmsg, IRpcChannelBuffer _pRpcChannelBuffer);
+    IRpcStubBuffer IsIIDSupported(const(GUID)* riid);
     uint CountRefs();
-    HRESULT DebugServerQueryInterface(void**);
-    void DebugServerRelease(void*);
+    HRESULT DebugServerQueryInterface(void** ppv);
+    void DebugServerRelease(void* pv);
 }
 enum IID_IPSFactoryBuffer = GUID(0xd5f569d0, 0x593b, 0x101a, [0xb5, 0x69, 0x8, 0x0, 0x2b, 0x2d, 0xbf, 0x7a]);
 interface IPSFactoryBuffer : IUnknown
 {
-    HRESULT CreateProxy(IUnknown, const(GUID)*, IRpcProxyBuffer*, void**);
-    HRESULT CreateStub(const(GUID)*, IUnknown, IRpcStubBuffer*);
+    HRESULT CreateProxy(IUnknown pUnkOuter, const(GUID)* riid, IRpcProxyBuffer* ppProxy, void** ppv);
+    HRESULT CreateStub(const(GUID)* riid, IUnknown pUnkServer, IRpcStubBuffer* ppStub);
 }
 struct SChannelHookCallInfo
 {
@@ -782,12 +783,12 @@ struct SChannelHookCallInfo
 enum IID_IChannelHook = GUID(0x1008c4a0, 0x7613, 0x11cf, [0x9a, 0xf1, 0x0, 0x20, 0xaf, 0x6e, 0x72, 0xf4]);
 interface IChannelHook : IUnknown
 {
-    void ClientGetSize(const(GUID)*, const(GUID)*, uint*);
-    void ClientFillBuffer(const(GUID)*, const(GUID)*, uint*, void*);
-    void ClientNotify(const(GUID)*, const(GUID)*, uint, void*, uint, HRESULT);
-    void ServerNotify(const(GUID)*, const(GUID)*, uint, void*, uint);
-    void ServerGetSize(const(GUID)*, const(GUID)*, HRESULT, uint*);
-    void ServerFillBuffer(const(GUID)*, const(GUID)*, uint*, void*, HRESULT);
+    void ClientGetSize(const(GUID)* uExtent, const(GUID)* riid, uint* pDataSize);
+    void ClientFillBuffer(const(GUID)* uExtent, const(GUID)* riid, uint* pDataSize, void* pDataBuffer);
+    void ClientNotify(const(GUID)* uExtent, const(GUID)* riid, uint cbDataSize, void* pDataBuffer, uint lDataRep, HRESULT hrFault);
+    void ServerNotify(const(GUID)* uExtent, const(GUID)* riid, uint cbDataSize, void* pDataBuffer, uint lDataRep);
+    void ServerGetSize(const(GUID)* uExtent, const(GUID)* riid, HRESULT hrFault, uint* pDataSize);
+    void ServerFillBuffer(const(GUID)* uExtent, const(GUID)* riid, uint* pDataSize, void* pDataBuffer, HRESULT hrFault);
 }
 struct SOLE_AUTHENTICATION_SERVICE
 {
@@ -831,14 +832,14 @@ struct SOLE_AUTHENTICATION_LIST
 enum IID_IClientSecurity = GUID(0x13d, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IClientSecurity : IUnknown
 {
-    HRESULT QueryBlanket(IUnknown, uint*, uint*, ushort**, RPC_C_AUTHN_LEVEL*, RPC_C_IMP_LEVEL*, void**, uint*);
-    HRESULT SetBlanket(IUnknown, uint, uint, PWSTR, RPC_C_AUTHN_LEVEL, RPC_C_IMP_LEVEL, void*, uint);
-    HRESULT CopyProxy(IUnknown, IUnknown*);
+    HRESULT QueryBlanket(IUnknown pProxy, uint* pAuthnSvc, uint* pAuthzSvc, ushort** pServerPrincName, RPC_C_AUTHN_LEVEL* pAuthnLevel, RPC_C_IMP_LEVEL* pImpLevel, void** pAuthInfo, uint* pCapabilites);
+    HRESULT SetBlanket(IUnknown pProxy, uint dwAuthnSvc, uint dwAuthzSvc, PWSTR pServerPrincName, RPC_C_AUTHN_LEVEL dwAuthnLevel, RPC_C_IMP_LEVEL dwImpLevel, void* pAuthInfo, uint dwCapabilities);
+    HRESULT CopyProxy(IUnknown pProxy, IUnknown* ppCopy);
 }
 enum IID_IServerSecurity = GUID(0x13e, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IServerSecurity : IUnknown
 {
-    HRESULT QueryBlanket(uint*, uint*, ushort**, uint*, uint*, void**, uint*);
+    HRESULT QueryBlanket(uint* pAuthnSvc, uint* pAuthzSvc, ushort** pServerPrincName, uint* pAuthnLevel, uint* pImpLevel, void** pPrivs, uint* pCapabilities);
     HRESULT ImpersonateClient();
     HRESULT RevertToSelf();
     BOOL IsImpersonating();
@@ -865,8 +866,8 @@ enum : int
 enum IID_IRpcOptions = GUID(0x144, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IRpcOptions : IUnknown
 {
-    HRESULT Set(IUnknown, RPCOPT_PROPERTIES, ulong);
-    HRESULT Query(IUnknown, RPCOPT_PROPERTIES, ulong*);
+    HRESULT Set(IUnknown pPrx, RPCOPT_PROPERTIES dwProperty, ulong dwValue);
+    HRESULT Query(IUnknown pPrx, RPCOPT_PROPERTIES dwProperty, ulong* pdwValue);
 }
 alias GLOBALOPT_PROPERTIES = int;
 enum : int
@@ -924,44 +925,44 @@ enum : int
 enum IID_IGlobalOptions = GUID(0x15b, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IGlobalOptions : IUnknown
 {
-    HRESULT Set(GLOBALOPT_PROPERTIES, ulong);
-    HRESULT Query(GLOBALOPT_PROPERTIES, ulong*);
+    HRESULT Set(GLOBALOPT_PROPERTIES dwProperty, ulong dwValue);
+    HRESULT Query(GLOBALOPT_PROPERTIES dwProperty, ulong* pdwValue);
 }
 enum IID_ISurrogate = GUID(0x22, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ISurrogate : IUnknown
 {
-    HRESULT LoadDllServer(const(GUID)*);
+    HRESULT LoadDllServer(const(GUID)* Clsid);
     HRESULT FreeSurrogate();
 }
 enum IID_IGlobalInterfaceTable = GUID(0x146, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IGlobalInterfaceTable : IUnknown
 {
-    HRESULT RegisterInterfaceInGlobal(IUnknown, const(GUID)*, uint*);
-    HRESULT RevokeInterfaceFromGlobal(uint);
-    HRESULT GetInterfaceFromGlobal(uint, const(GUID)*, void**);
+    HRESULT RegisterInterfaceInGlobal(IUnknown pUnk, const(GUID)* riid, uint* pdwCookie);
+    HRESULT RevokeInterfaceFromGlobal(uint dwCookie);
+    HRESULT GetInterfaceFromGlobal(uint dwCookie, const(GUID)* riid, void** ppv);
 }
 enum IID_ISynchronize = GUID(0x30, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ISynchronize : IUnknown
 {
-    HRESULT Wait(uint, uint);
+    HRESULT Wait(uint dwFlags, uint dwMilliseconds);
     HRESULT Signal();
     HRESULT Reset();
 }
 enum IID_ISynchronizeHandle = GUID(0x31, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ISynchronizeHandle : IUnknown
 {
-    HRESULT GetHandle(HANDLE*);
+    HRESULT GetHandle(HANDLE* ph);
 }
 enum IID_ISynchronizeEvent = GUID(0x32, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ISynchronizeEvent : ISynchronizeHandle
 {
-    HRESULT SetEventHandle(HANDLE*);
+    HRESULT SetEventHandle(HANDLE* ph);
 }
 enum IID_ISynchronizeContainer = GUID(0x33, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ISynchronizeContainer : IUnknown
 {
-    HRESULT AddSynchronize(ISynchronize);
-    HRESULT WaitMultiple(uint, uint, ISynchronize*);
+    HRESULT AddSynchronize(ISynchronize pSync);
+    HRESULT WaitMultiple(uint dwFlags, uint dwTimeOut, ISynchronize* ppSync);
 }
 enum IID_ISynchronizeMutex = GUID(0x25, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ISynchronizeMutex : ISynchronize
@@ -971,7 +972,7 @@ interface ISynchronizeMutex : ISynchronize
 enum IID_ICancelMethodCalls = GUID(0x29, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ICancelMethodCalls : IUnknown
 {
-    HRESULT Cancel(uint);
+    HRESULT Cancel(uint ulSeconds);
     HRESULT TestCancel();
 }
 alias DCOM_CALL_STATE = int;
@@ -985,31 +986,31 @@ enum : int
 enum IID_IAsyncManager = GUID(0x2a, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IAsyncManager : IUnknown
 {
-    HRESULT CompleteCall(HRESULT);
-    HRESULT GetCallContext(const(GUID)*, void**);
-    HRESULT GetState(uint*);
+    HRESULT CompleteCall(HRESULT Result);
+    HRESULT GetCallContext(const(GUID)* riid, void** pInterface);
+    HRESULT GetState(uint* pulStateFlags);
 }
 enum IID_ICallFactory = GUID(0x1c733a30, 0x2a1c, 0x11ce, [0xad, 0xe5, 0x0, 0xaa, 0x0, 0x44, 0x77, 0x3d]);
 interface ICallFactory : IUnknown
 {
-    HRESULT CreateCall(const(GUID)*, IUnknown, const(GUID)*, IUnknown*);
+    HRESULT CreateCall(const(GUID)* riid, IUnknown pCtrlUnk, const(GUID)* riid2, IUnknown* ppv);
 }
 enum IID_IRpcHelper = GUID(0x149, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IRpcHelper : IUnknown
 {
-    HRESULT GetDCOMProtocolVersion(uint*);
-    HRESULT GetIIDFromOBJREF(void*, GUID**);
+    HRESULT GetDCOMProtocolVersion(uint* pComVersion);
+    HRESULT GetIIDFromOBJREF(void* pObjRef, GUID** piid);
 }
 enum IID_IReleaseMarshalBuffers = GUID(0xeb0cb9e8, 0x7996, 0x11d2, [0x87, 0x2e, 0x0, 0x0, 0xf8, 0x8, 0x8, 0x59]);
 interface IReleaseMarshalBuffers : IUnknown
 {
-    HRESULT ReleaseMarshalBuffer(RPCOLEMESSAGE*, uint, IUnknown);
+    HRESULT ReleaseMarshalBuffer(RPCOLEMESSAGE* pMsg, uint dwFlags, IUnknown pChnl);
 }
 enum IID_IWaitMultiple = GUID(0x2b, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IWaitMultiple : IUnknown
 {
-    HRESULT WaitMultiple(uint, ISynchronize*);
-    HRESULT AddSynchronize(ISynchronize);
+    HRESULT WaitMultiple(uint timeout, ISynchronize* pSync);
+    HRESULT AddSynchronize(ISynchronize pSync);
 }
 enum IID_IAddrTrackingControl = GUID(0x147, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IAddrTrackingControl : IUnknown
@@ -1020,49 +1021,49 @@ interface IAddrTrackingControl : IUnknown
 enum IID_IAddrExclusionControl = GUID(0x148, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IAddrExclusionControl : IUnknown
 {
-    HRESULT GetCurrentAddrExclusionList(const(GUID)*, void**);
-    HRESULT UpdateAddrExclusionList(IUnknown);
+    HRESULT GetCurrentAddrExclusionList(const(GUID)* riid, void** ppEnumerator);
+    HRESULT UpdateAddrExclusionList(IUnknown pEnumerator);
 }
 enum IID_IPipeByte = GUID(0xdb2f3aca, 0x2f86, 0x11d1, [0x8e, 0x4, 0x0, 0xc0, 0x4f, 0xb9, 0x98, 0x9a]);
 interface IPipeByte : IUnknown
 {
-    HRESULT Pull(ubyte*, uint, uint*);
-    HRESULT Push(ubyte*, uint);
+    HRESULT Pull(ubyte* buf, uint cRequest, uint* pcReturned);
+    HRESULT Push(ubyte* buf, uint cSent);
 }
 enum IID_AsyncIPipeByte = GUID(0xdb2f3acb, 0x2f86, 0x11d1, [0x8e, 0x4, 0x0, 0xc0, 0x4f, 0xb9, 0x98, 0x9a]);
 interface AsyncIPipeByte : IUnknown
 {
-    HRESULT Begin_Pull(uint);
-    HRESULT Finish_Pull(ubyte*, uint*);
-    HRESULT Begin_Push(ubyte*, uint);
+    HRESULT Begin_Pull(uint cRequest);
+    HRESULT Finish_Pull(ubyte* buf, uint* pcReturned);
+    HRESULT Begin_Push(ubyte* buf, uint cSent);
     HRESULT Finish_Push();
 }
 enum IID_IPipeLong = GUID(0xdb2f3acc, 0x2f86, 0x11d1, [0x8e, 0x4, 0x0, 0xc0, 0x4f, 0xb9, 0x98, 0x9a]);
 interface IPipeLong : IUnknown
 {
-    HRESULT Pull(int*, uint, uint*);
-    HRESULT Push(int*, uint);
+    HRESULT Pull(int* buf, uint cRequest, uint* pcReturned);
+    HRESULT Push(int* buf, uint cSent);
 }
 enum IID_AsyncIPipeLong = GUID(0xdb2f3acd, 0x2f86, 0x11d1, [0x8e, 0x4, 0x0, 0xc0, 0x4f, 0xb9, 0x98, 0x9a]);
 interface AsyncIPipeLong : IUnknown
 {
-    HRESULT Begin_Pull(uint);
-    HRESULT Finish_Pull(int*, uint*);
-    HRESULT Begin_Push(int*, uint);
+    HRESULT Begin_Pull(uint cRequest);
+    HRESULT Finish_Pull(int* buf, uint* pcReturned);
+    HRESULT Begin_Push(int* buf, uint cSent);
     HRESULT Finish_Push();
 }
 enum IID_IPipeDouble = GUID(0xdb2f3ace, 0x2f86, 0x11d1, [0x8e, 0x4, 0x0, 0xc0, 0x4f, 0xb9, 0x98, 0x9a]);
 interface IPipeDouble : IUnknown
 {
-    HRESULT Pull(double*, uint, uint*);
-    HRESULT Push(double*, uint);
+    HRESULT Pull(double* buf, uint cRequest, uint* pcReturned);
+    HRESULT Push(double* buf, uint cSent);
 }
 enum IID_AsyncIPipeDouble = GUID(0xdb2f3acf, 0x2f86, 0x11d1, [0x8e, 0x4, 0x0, 0xc0, 0x4f, 0xb9, 0x98, 0x9a]);
 interface AsyncIPipeDouble : IUnknown
 {
-    HRESULT Begin_Pull(uint);
-    HRESULT Finish_Pull(double*, uint*);
-    HRESULT Begin_Push(double*, uint);
+    HRESULT Begin_Pull(uint cRequest);
+    HRESULT Finish_Pull(double* buf, uint* pcReturned);
+    HRESULT Begin_Push(double* buf, uint cSent);
     HRESULT Finish_Push();
 }
 struct ContextProperty
@@ -1074,19 +1075,19 @@ struct ContextProperty
 enum IID_IEnumContextProps = GUID(0x1c1, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IEnumContextProps : IUnknown
 {
-    HRESULT Next(uint, ContextProperty*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, ContextProperty* pContextProperties, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumContextProps*);
-    HRESULT Count(uint*);
+    HRESULT Clone(IEnumContextProps* ppEnumContextProps);
+    HRESULT Count(uint* pcelt);
 }
 enum IID_IContext = GUID(0x1c0, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IContext : IUnknown
 {
-    HRESULT SetProperty(const(GUID)*, uint, IUnknown);
-    HRESULT RemoveProperty(const(GUID)*);
-    HRESULT GetProperty(const(GUID)*, uint*, IUnknown*);
-    HRESULT EnumContextProps(IEnumContextProps*);
+    HRESULT SetProperty(const(GUID)* rpolicyId, uint flags, IUnknown pUnk);
+    HRESULT RemoveProperty(const(GUID)* rPolicyId);
+    HRESULT GetProperty(const(GUID)* rGuid, uint* pFlags, IUnknown* ppUnk);
+    HRESULT EnumContextProps(IEnumContextProps* ppEnumContextProps);
 }
 alias APTTYPEQUALIFIER = int;
 enum : int
@@ -1121,15 +1122,15 @@ enum : int
 enum IID_IComThreadingInfo = GUID(0x1ce, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IComThreadingInfo : IUnknown
 {
-    HRESULT GetCurrentApartmentType(APTTYPE*);
-    HRESULT GetCurrentThreadType(THDTYPE*);
-    HRESULT GetCurrentLogicalThreadId(GUID*);
-    HRESULT SetCurrentLogicalThreadId(const(GUID)*);
+    HRESULT GetCurrentApartmentType(APTTYPE* pAptType);
+    HRESULT GetCurrentThreadType(THDTYPE* pThreadType);
+    HRESULT GetCurrentLogicalThreadId(GUID* pguidLogicalThreadId);
+    HRESULT SetCurrentLogicalThreadId(const(GUID)* rguid);
 }
 enum IID_IProcessInitControl = GUID(0x72380d55, 0x8d2b, 0x43a3, [0x85, 0x13, 0x2b, 0x6e, 0xf3, 0x14, 0x34, 0xe9]);
 interface IProcessInitControl : IUnknown
 {
-    HRESULT ResetInitializerTimeout(uint);
+    HRESULT ResetInitializerTimeout(uint dwSecondsRemaining);
 }
 enum IID_IFastRundown = GUID(0x40, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IFastRundown : IUnknown
@@ -1162,9 +1163,9 @@ enum : int
 enum IID_IMachineGlobalObjectTable = GUID(0x26d709ac, 0xf70b, 0x4421, [0xa9, 0x6f, 0xd2, 0x87, 0x8f, 0xaf, 0xb0, 0xd]);
 interface IMachineGlobalObjectTable : IUnknown
 {
-    HRESULT RegisterObject(const(GUID)*, const(wchar)*, IUnknown, MachineGlobalObjectTableRegistrationToken*);
-    HRESULT GetObject(const(GUID)*, const(wchar)*, const(GUID)*, void**);
-    HRESULT RevokeObject(MachineGlobalObjectTableRegistrationToken);
+    HRESULT RegisterObject(const(GUID)* clsid, const(wchar)* identifier, IUnknown object, MachineGlobalObjectTableRegistrationToken* token);
+    HRESULT GetObject(const(GUID)* clsid, const(wchar)* identifier, const(GUID)* riid, void** ppv);
+    HRESULT RevokeObject(MachineGlobalObjectTableRegistrationToken token);
 }
 enum IID_ISupportAllowLowerTrustActivation = GUID(0xe9956ef2, 0x3828, 0x4b4b, [0x8f, 0xa9, 0x7d, 0xb6, 0x1d, 0xee, 0x49, 0x54]);
 interface ISupportAllowLowerTrustActivation : IUnknown
@@ -1173,16 +1174,16 @@ interface ISupportAllowLowerTrustActivation : IUnknown
 enum IID_IMallocSpy = GUID(0x1d, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IMallocSpy : IUnknown
 {
-    ulong PreAlloc(ulong);
-    void* PostAlloc(void*);
-    void* PreFree(void*, BOOL);
-    void PostFree(BOOL);
-    ulong PreRealloc(void*, ulong, void**, BOOL);
-    void* PostRealloc(void*, BOOL);
-    void* PreGetSize(void*, BOOL);
-    ulong PostGetSize(ulong, BOOL);
-    void* PreDidAlloc(void*, BOOL);
-    int PostDidAlloc(void*, BOOL, int);
+    ulong PreAlloc(ulong cbRequest);
+    void* PostAlloc(void* pActual);
+    void* PreFree(void* pRequest, BOOL fSpyed);
+    void PostFree(BOOL fSpyed);
+    ulong PreRealloc(void* pRequest, ulong cbRequest, void** ppNewRequest, BOOL fSpyed);
+    void* PostRealloc(void* pActual, BOOL fSpyed);
+    void* PreGetSize(void* pRequest, BOOL fSpyed);
+    ulong PostGetSize(ulong cbActual, BOOL fSpyed);
+    void* PreDidAlloc(void* pRequest, BOOL fSpyed);
+    int PostDidAlloc(void* pRequest, BOOL fSpyed, int fActual);
     void PreHeapMinimize();
     void PostHeapMinimize();
 }
@@ -1216,57 +1217,57 @@ enum : int
 enum IID_IBindCtx = GUID(0xe, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IBindCtx : IUnknown
 {
-    HRESULT RegisterObjectBound(IUnknown);
-    HRESULT RevokeObjectBound(IUnknown);
+    HRESULT RegisterObjectBound(IUnknown punk);
+    HRESULT RevokeObjectBound(IUnknown punk);
     HRESULT ReleaseBoundObjects();
-    HRESULT SetBindOptions(BIND_OPTS*);
-    HRESULT GetBindOptions(BIND_OPTS*);
-    HRESULT GetRunningObjectTable(IRunningObjectTable*);
-    HRESULT RegisterObjectParam(PWSTR, IUnknown);
-    HRESULT GetObjectParam(PWSTR, IUnknown*);
-    HRESULT EnumObjectParam(IEnumString*);
-    HRESULT RevokeObjectParam(PWSTR);
+    HRESULT SetBindOptions(BIND_OPTS* pbindopts);
+    HRESULT GetBindOptions(BIND_OPTS* pbindopts);
+    HRESULT GetRunningObjectTable(IRunningObjectTable* pprot);
+    HRESULT RegisterObjectParam(PWSTR pszKey, IUnknown punk);
+    HRESULT GetObjectParam(PWSTR pszKey, IUnknown* ppunk);
+    HRESULT EnumObjectParam(IEnumString* ppenum);
+    HRESULT RevokeObjectParam(PWSTR pszKey);
 }
 enum IID_IEnumMoniker = GUID(0x102, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IEnumMoniker : IUnknown
 {
-    HRESULT Next(uint, IMoniker*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IMoniker* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumMoniker*);
+    HRESULT Clone(IEnumMoniker* ppenum);
 }
 enum IID_IRunnableObject = GUID(0x126, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IRunnableObject : IUnknown
 {
-    HRESULT GetRunningClass(GUID*);
-    HRESULT Run(IBindCtx);
+    HRESULT GetRunningClass(GUID* lpClsid);
+    HRESULT Run(IBindCtx pbc);
     BOOL IsRunning();
-    HRESULT LockRunning(BOOL, BOOL);
-    HRESULT SetContainedObject(BOOL);
+    HRESULT LockRunning(BOOL fLock, BOOL fLastUnlockCloses);
+    HRESULT SetContainedObject(BOOL fContained);
 }
 enum IID_IRunningObjectTable = GUID(0x10, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IRunningObjectTable : IUnknown
 {
-    HRESULT Register(ROT_FLAGS, IUnknown, IMoniker, uint*);
-    HRESULT Revoke(uint);
-    HRESULT IsRunning(IMoniker);
-    HRESULT GetObject(IMoniker, IUnknown*);
-    HRESULT NoteChangeTime(uint, FILETIME*);
-    HRESULT GetTimeOfLastChange(IMoniker, FILETIME*);
-    HRESULT EnumRunning(IEnumMoniker*);
+    HRESULT Register(ROT_FLAGS grfFlags, IUnknown punkObject, IMoniker pmkObjectName, uint* pdwRegister);
+    HRESULT Revoke(uint dwRegister);
+    HRESULT IsRunning(IMoniker pmkObjectName);
+    HRESULT GetObject(IMoniker pmkObjectName, IUnknown* ppunkObject);
+    HRESULT NoteChangeTime(uint dwRegister, FILETIME* pfiletime);
+    HRESULT GetTimeOfLastChange(IMoniker pmkObjectName, FILETIME* pfiletime);
+    HRESULT EnumRunning(IEnumMoniker* ppenumMoniker);
 }
 enum IID_IPersist = GUID(0x10c, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IPersist : IUnknown
 {
-    HRESULT GetClassID(GUID*);
+    HRESULT GetClassID(GUID* pClassID);
 }
 enum IID_IPersistStream = GUID(0x109, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IPersistStream : IPersist
 {
     HRESULT IsDirty();
-    HRESULT Load(IStream);
-    HRESULT Save(IStream, BOOL);
-    HRESULT GetSizeMax(ulong*);
+    HRESULT Load(IStream pStm);
+    HRESULT Save(IStream pStm, BOOL fClearDirty);
+    HRESULT GetSizeMax(ulong* pcbSize);
 }
 alias MKSYS = int;
 enum : int
@@ -1295,35 +1296,35 @@ enum : int
 enum IID_IMoniker = GUID(0xf, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IMoniker : IPersistStream
 {
-    HRESULT BindToObject(IBindCtx, IMoniker, const(GUID)*, void**);
-    HRESULT BindToStorage(IBindCtx, IMoniker, const(GUID)*, void**);
-    HRESULT Reduce(IBindCtx, uint, IMoniker*, IMoniker*);
-    HRESULT ComposeWith(IMoniker, BOOL, IMoniker*);
-    HRESULT Enum(BOOL, IEnumMoniker*);
-    HRESULT IsEqual(IMoniker);
-    HRESULT Hash(uint*);
-    HRESULT IsRunning(IBindCtx, IMoniker, IMoniker);
-    HRESULT GetTimeOfLastChange(IBindCtx, IMoniker, FILETIME*);
-    HRESULT Inverse(IMoniker*);
-    HRESULT CommonPrefixWith(IMoniker, IMoniker*);
-    HRESULT RelativePathTo(IMoniker, IMoniker*);
-    HRESULT GetDisplayName(IBindCtx, IMoniker, PWSTR*);
-    HRESULT ParseDisplayName(IBindCtx, IMoniker, PWSTR, uint*, IMoniker*);
-    HRESULT IsSystemMoniker(uint*);
+    HRESULT BindToObject(IBindCtx pbc, IMoniker pmkToLeft, const(GUID)* riidResult, void** ppvResult);
+    HRESULT BindToStorage(IBindCtx pbc, IMoniker pmkToLeft, const(GUID)* riid, void** ppvObj);
+    HRESULT Reduce(IBindCtx pbc, uint dwReduceHowFar, IMoniker* ppmkToLeft, IMoniker* ppmkReduced);
+    HRESULT ComposeWith(IMoniker pmkRight, BOOL fOnlyIfNotGeneric, IMoniker* ppmkComposite);
+    HRESULT Enum(BOOL fForward, IEnumMoniker* ppenumMoniker);
+    HRESULT IsEqual(IMoniker pmkOtherMoniker);
+    HRESULT Hash(uint* pdwHash);
+    HRESULT IsRunning(IBindCtx pbc, IMoniker pmkToLeft, IMoniker pmkNewlyRunning);
+    HRESULT GetTimeOfLastChange(IBindCtx pbc, IMoniker pmkToLeft, FILETIME* pFileTime);
+    HRESULT Inverse(IMoniker* ppmk);
+    HRESULT CommonPrefixWith(IMoniker pmkOther, IMoniker* ppmkPrefix);
+    HRESULT RelativePathTo(IMoniker pmkOther, IMoniker* ppmkRelPath);
+    HRESULT GetDisplayName(IBindCtx pbc, IMoniker pmkToLeft, PWSTR* ppszDisplayName);
+    HRESULT ParseDisplayName(IBindCtx pbc, IMoniker pmkToLeft, PWSTR pszDisplayName, uint* pchEaten, IMoniker* ppmkOut);
+    HRESULT IsSystemMoniker(uint* pdwMksys);
 }
 enum IID_IROTData = GUID(0xf29f6bc0, 0x5021, 0x11ce, [0xaa, 0x15, 0x0, 0x0, 0x69, 0x1, 0x29, 0x3f]);
 interface IROTData : IUnknown
 {
-    HRESULT GetComparisonData(ubyte*, uint, uint*);
+    HRESULT GetComparisonData(ubyte* pbData, uint cbMax, uint* pcbData);
 }
 enum IID_IPersistFile = GUID(0x10b, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IPersistFile : IPersist
 {
     HRESULT IsDirty();
-    HRESULT Load(const(wchar)*, STGM);
-    HRESULT Save(const(wchar)*, BOOL);
-    HRESULT SaveCompleted(const(wchar)*);
-    HRESULT GetCurFile(PWSTR*);
+    HRESULT Load(const(wchar)* pszFileName, STGM dwMode);
+    HRESULT Save(const(wchar)* pszFileName, BOOL fRemember);
+    HRESULT SaveCompleted(const(wchar)* pszFileName);
+    HRESULT GetCurFile(PWSTR* ppszFileName);
 }
 struct DVTARGETDEVICE
 {
@@ -1345,10 +1346,10 @@ struct FORMATETC
 enum IID_IEnumFORMATETC = GUID(0x103, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IEnumFORMATETC : IUnknown
 {
-    HRESULT Next(uint, FORMATETC*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, FORMATETC* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumFORMATETC*);
+    HRESULT Clone(IEnumFORMATETC* ppenum);
 }
 alias ADVF = int;
 enum : int
@@ -1372,10 +1373,10 @@ struct STATDATA
 enum IID_IEnumSTATDATA = GUID(0x105, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IEnumSTATDATA : IUnknown
 {
-    HRESULT Next(uint, STATDATA*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, STATDATA* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumSTATDATA*);
+    HRESULT Clone(IEnumSTATDATA* ppenum);
 }
 alias TYMED = int;
 enum : int
@@ -1457,20 +1458,20 @@ struct FLAG_STGMEDIUM
 enum IID_IAdviseSink = GUID(0x10f, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IAdviseSink : IUnknown
 {
-    void OnDataChange(FORMATETC*, STGMEDIUM*);
-    void OnViewChange(uint, int);
-    void OnRename(IMoniker);
+    void OnDataChange(FORMATETC* pFormatetc, STGMEDIUM* pStgmed);
+    void OnViewChange(uint dwAspect, int lindex);
+    void OnRename(IMoniker pmk);
     void OnSave();
     void OnClose();
 }
 enum IID_AsyncIAdviseSink = GUID(0x150, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface AsyncIAdviseSink : IUnknown
 {
-    void Begin_OnDataChange(FORMATETC*, STGMEDIUM*);
+    void Begin_OnDataChange(FORMATETC* pFormatetc, STGMEDIUM* pStgmed);
     void Finish_OnDataChange();
-    void Begin_OnViewChange(uint, int);
+    void Begin_OnViewChange(uint dwAspect, int lindex);
     void Finish_OnViewChange();
-    void Begin_OnRename(IMoniker);
+    void Begin_OnRename(IMoniker pmk);
     void Finish_OnRename();
     void Begin_OnSave();
     void Finish_OnSave();
@@ -1480,12 +1481,12 @@ interface AsyncIAdviseSink : IUnknown
 enum IID_IAdviseSink2 = GUID(0x125, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IAdviseSink2 : IAdviseSink
 {
-    void OnLinkSrcChange(IMoniker);
+    void OnLinkSrcChange(IMoniker pmk);
 }
 enum IID_AsyncIAdviseSink2 = GUID(0x151, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface AsyncIAdviseSink2 : AsyncIAdviseSink
 {
-    void Begin_OnLinkSrcChange(IMoniker);
+    void Begin_OnLinkSrcChange(IMoniker pmk);
     void Finish_OnLinkSrcChange();
 }
 alias DATADIR = int;
@@ -1498,23 +1499,23 @@ enum : int
 enum IID_IDataObject = GUID(0x10e, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IDataObject : IUnknown
 {
-    HRESULT GetData(FORMATETC*, STGMEDIUM*);
-    HRESULT GetDataHere(FORMATETC*, STGMEDIUM*);
-    HRESULT QueryGetData(FORMATETC*);
-    HRESULT GetCanonicalFormatEtc(FORMATETC*, FORMATETC*);
-    HRESULT SetData(FORMATETC*, STGMEDIUM*, BOOL);
-    HRESULT EnumFormatEtc(uint, IEnumFORMATETC*);
-    HRESULT DAdvise(FORMATETC*, uint, IAdviseSink, uint*);
-    HRESULT DUnadvise(uint);
-    HRESULT EnumDAdvise(IEnumSTATDATA*);
+    HRESULT GetData(FORMATETC* pformatetcIn, STGMEDIUM* pmedium);
+    HRESULT GetDataHere(FORMATETC* pformatetc, STGMEDIUM* pmedium);
+    HRESULT QueryGetData(FORMATETC* pformatetc);
+    HRESULT GetCanonicalFormatEtc(FORMATETC* pformatectIn, FORMATETC* pformatetcOut);
+    HRESULT SetData(FORMATETC* pformatetc, STGMEDIUM* pmedium, BOOL fRelease);
+    HRESULT EnumFormatEtc(uint dwDirection, IEnumFORMATETC* ppenumFormatEtc);
+    HRESULT DAdvise(FORMATETC* pformatetc, uint advf, IAdviseSink pAdvSink, uint* pdwConnection);
+    HRESULT DUnadvise(uint dwConnection);
+    HRESULT EnumDAdvise(IEnumSTATDATA* ppenumAdvise);
 }
 enum IID_IDataAdviseHolder = GUID(0x110, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IDataAdviseHolder : IUnknown
 {
-    HRESULT Advise(IDataObject, FORMATETC*, uint, IAdviseSink, uint*);
-    HRESULT Unadvise(uint);
-    HRESULT EnumAdvise(IEnumSTATDATA*);
-    HRESULT SendOnDataChange(IDataObject, uint, uint);
+    HRESULT Advise(IDataObject pDataObject, FORMATETC* pFetc, uint advf, IAdviseSink pAdvise, uint* pdwConnection);
+    HRESULT Unadvise(uint dwConnection);
+    HRESULT EnumAdvise(IEnumSTATDATA* ppenumAdvise);
+    HRESULT SendOnDataChange(IDataObject pDataObject, uint dwReserved, uint advf);
 }
 alias CALLTYPE = int;
 enum : int
@@ -1558,12 +1559,12 @@ struct INTERFACEINFO
 enum IID_IClassActivator = GUID(0x140, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IClassActivator : IUnknown
 {
-    HRESULT GetClassObject(const(GUID)*, uint, uint, const(GUID)*, void**);
+    HRESULT GetClassObject(const(GUID)* rclsid, uint dwClassContext, uint locale, const(GUID)* riid, void** ppv);
 }
 enum IID_IProgressNotify = GUID(0xa9d758a0, 0x4617, 0x11cf, [0x95, 0xfc, 0x0, 0xaa, 0x0, 0x68, 0xd, 0xb4]);
 interface IProgressNotify : IUnknown
 {
-    HRESULT OnProgress(uint, uint, BOOL, BOOL);
+    HRESULT OnProgress(uint dwProgressCurrent, uint dwProgressMaximum, BOOL fAccurate, BOOL fOwner);
 }
 struct StorageLayout
 {
@@ -1575,29 +1576,29 @@ struct StorageLayout
 enum IID_IBlockingLock = GUID(0x30f3d47a, 0x6447, 0x11d1, [0x8e, 0x3c, 0x0, 0xc0, 0x4f, 0xb9, 0x38, 0x6d]);
 interface IBlockingLock : IUnknown
 {
-    HRESULT Lock(uint);
+    HRESULT Lock(uint dwTimeout);
     HRESULT Unlock();
 }
 enum IID_ITimeAndNoticeControl = GUID(0xbc0bf6ae, 0x8878, 0x11d1, [0x83, 0xe9, 0x0, 0xc0, 0x4f, 0xc2, 0xc6, 0xd4]);
 interface ITimeAndNoticeControl : IUnknown
 {
-    HRESULT SuppressChanges(uint, uint);
+    HRESULT SuppressChanges(uint res1, uint res2);
 }
 enum IID_IOplockStorage = GUID(0x8d19c834, 0x8879, 0x11d1, [0x83, 0xe9, 0x0, 0xc0, 0x4f, 0xc2, 0xc6, 0xd4]);
 interface IOplockStorage : IUnknown
 {
-    HRESULT CreateStorageEx(const(wchar)*, uint, uint, uint, const(GUID)*, void**);
-    HRESULT OpenStorageEx(const(wchar)*, uint, uint, uint, const(GUID)*, void**);
+    HRESULT CreateStorageEx(const(wchar)* pwcsName, uint grfMode, uint stgfmt, uint grfAttrs, const(GUID)* riid, void** ppstgOpen);
+    HRESULT OpenStorageEx(const(wchar)* pwcsName, uint grfMode, uint stgfmt, uint grfAttrs, const(GUID)* riid, void** ppstgOpen);
 }
 enum IID_IUrlMon = GUID(0x26, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IUrlMon : IUnknown
 {
-    HRESULT AsyncGetClassBits(const(GUID)*, const(wchar)*, const(wchar)*, uint, uint, const(wchar)*, IBindCtx, uint, const(GUID)*, uint);
+    HRESULT AsyncGetClassBits(const(GUID)* rclsid, const(wchar)* pszTYPE, const(wchar)* pszExt, uint dwFileVersionMS, uint dwFileVersionLS, const(wchar)* pszCodeBase, IBindCtx pbc, uint dwClassContext, const(GUID)* riid, uint flags);
 }
 enum IID_IForegroundTransfer = GUID(0x145, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IForegroundTransfer : IUnknown
 {
-    HRESULT AllowForegroundTransfer(void*);
+    HRESULT AllowForegroundTransfer(void* lpvReserved);
 }
 alias ApplicationType = int;
 enum : int
@@ -1622,19 +1623,19 @@ interface IProcessLock : IUnknown
 enum IID_ISurrogateService = GUID(0x1d4, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ISurrogateService : IUnknown
 {
-    HRESULT Init(const(GUID)*, IProcessLock, BOOL*);
-    HRESULT ApplicationLaunch(const(GUID)*, ApplicationType);
-    HRESULT ApplicationFree(const(GUID)*);
-    HRESULT CatalogRefresh(uint);
-    HRESULT ProcessShutdown(ShutdownType);
+    HRESULT Init(const(GUID)* rguidProcessID, IProcessLock pProcessLock, BOOL* pfApplicationAware);
+    HRESULT ApplicationLaunch(const(GUID)* rguidApplID, ApplicationType appType);
+    HRESULT ApplicationFree(const(GUID)* rguidApplID);
+    HRESULT CatalogRefresh(uint ulReserved);
+    HRESULT ProcessShutdown(ShutdownType shutdownType);
 }
 enum IID_IInitializeSpy = GUID(0x34, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IInitializeSpy : IUnknown
 {
-    HRESULT PreInitialize(uint, uint);
-    HRESULT PostInitialize(HRESULT, uint, uint);
-    HRESULT PreUninitialize(uint);
-    HRESULT PostUninitialize(uint);
+    HRESULT PreInitialize(uint dwCoInit, uint dwCurThreadAptRefs);
+    HRESULT PostInitialize(HRESULT hrCoInit, uint dwCoInit, uint dwNewThreadAptRefs);
+    HRESULT PreUninitialize(uint dwCurThreadAptRefs);
+    HRESULT PostUninitialize(uint dwNewThreadAptRefs);
 }
 alias COINIT = int;
 enum : int
@@ -1657,7 +1658,7 @@ enum : int
 enum IID_IServiceProvider = GUID(0x6d5140c1, 0x7436, 0x11ce, [0x80, 0x34, 0x0, 0xaa, 0x0, 0x60, 0x9, 0xfa]);
 interface IServiceProvider : IUnknown
 {
-    HRESULT QueryService(const(GUID)*, const(GUID)*, void**);
+    HRESULT QueryService(const(GUID)* guidService, const(GUID)* riid, void** ppvObject);
 }
 alias COWAIT_FLAGS = int;
 enum : int
@@ -1678,15 +1679,15 @@ enum : int
     CWMO_DISPATCH_WINDOW_MESSAGES = 0x00000002,
 }
 
-alias LPFNGETCLASSOBJECT = HRESULT function(const(GUID)*, const(GUID)*, void**);
+alias LPFNGETCLASSOBJECT = HRESULT function(const(GUID)* param0, const(GUID)* param1, void** param2);
 alias LPFNCANUNLOADNOW = HRESULT function();
 enum IID_IEnumGUID = GUID(0x2e000, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IEnumGUID : IUnknown
 {
-    HRESULT Next(uint, GUID*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, GUID* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumGUID*);
+    HRESULT Clone(IEnumGUID* ppenum);
 }
 struct CATEGORYINFO
 {
@@ -1697,30 +1698,30 @@ struct CATEGORYINFO
 enum IID_IEnumCATEGORYINFO = GUID(0x2e011, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IEnumCATEGORYINFO : IUnknown
 {
-    HRESULT Next(uint, CATEGORYINFO*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, CATEGORYINFO* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumCATEGORYINFO*);
+    HRESULT Clone(IEnumCATEGORYINFO* ppenum);
 }
 enum IID_ICatRegister = GUID(0x2e012, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ICatRegister : IUnknown
 {
-    HRESULT RegisterCategories(uint, CATEGORYINFO*);
-    HRESULT UnRegisterCategories(uint, GUID*);
-    HRESULT RegisterClassImplCategories(const(GUID)*, uint, GUID*);
-    HRESULT UnRegisterClassImplCategories(const(GUID)*, uint, GUID*);
-    HRESULT RegisterClassReqCategories(const(GUID)*, uint, GUID*);
-    HRESULT UnRegisterClassReqCategories(const(GUID)*, uint, GUID*);
+    HRESULT RegisterCategories(uint cCategories, CATEGORYINFO* rgCategoryInfo);
+    HRESULT UnRegisterCategories(uint cCategories, GUID* rgcatid);
+    HRESULT RegisterClassImplCategories(const(GUID)* rclsid, uint cCategories, GUID* rgcatid);
+    HRESULT UnRegisterClassImplCategories(const(GUID)* rclsid, uint cCategories, GUID* rgcatid);
+    HRESULT RegisterClassReqCategories(const(GUID)* rclsid, uint cCategories, GUID* rgcatid);
+    HRESULT UnRegisterClassReqCategories(const(GUID)* rclsid, uint cCategories, GUID* rgcatid);
 }
 enum IID_ICatInformation = GUID(0x2e013, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ICatInformation : IUnknown
 {
-    HRESULT EnumCategories(uint, IEnumCATEGORYINFO*);
-    HRESULT GetCategoryDesc(GUID*, uint, PWSTR*);
-    HRESULT EnumClassesOfCategories(uint, const(GUID)*, uint, const(GUID)*, IEnumGUID*);
-    HRESULT IsClassOfCategories(const(GUID)*, uint, const(GUID)*, uint, const(GUID)*);
-    HRESULT EnumImplCategoriesOfClass(const(GUID)*, IEnumGUID*);
-    HRESULT EnumReqCategoriesOfClass(const(GUID)*, IEnumGUID*);
+    HRESULT EnumCategories(uint lcid, IEnumCATEGORYINFO* ppenumCategoryInfo);
+    HRESULT GetCategoryDesc(GUID* rcatid, uint lcid, PWSTR* pszDesc);
+    HRESULT EnumClassesOfCategories(uint cImplemented, const(GUID)* rgcatidImpl, uint cRequired, const(GUID)* rgcatidReq, IEnumGUID* ppenumClsid);
+    HRESULT IsClassOfCategories(const(GUID)* rclsid, uint cImplemented, const(GUID)* rgcatidImpl, uint cRequired, const(GUID)* rgcatidReq);
+    HRESULT EnumImplCategoriesOfClass(const(GUID)* rclsid, IEnumGUID* ppenumCatid);
+    HRESULT EnumReqCategoriesOfClass(const(GUID)* rclsid, IEnumGUID* ppenumCatid);
 }
 struct ComCallData
 {
@@ -1728,11 +1729,11 @@ struct ComCallData
     uint dwReserved;
     void* pUserDefined;
 }
-alias PFNCONTEXTCALL = HRESULT function(ComCallData*);
+alias PFNCONTEXTCALL = HRESULT function(ComCallData* pParam);
 enum IID_IContextCallback = GUID(0x1da, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IContextCallback : IUnknown
 {
-    HRESULT ContextCallback(PFNCONTEXTCALL, ComCallData*, const(GUID)*, int, IUnknown);
+    HRESULT ContextCallback(PFNCONTEXTCALL pfnCallback, ComCallData* pParam, const(GUID)* riid, int iMethod, IUnknown pUnk);
 }
 enum IID_IBinding = GUID(0x79eac9c0, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IBinding : IUnknown
@@ -1740,9 +1741,9 @@ interface IBinding : IUnknown
     HRESULT Abort();
     HRESULT Suspend();
     HRESULT Resume();
-    HRESULT SetPriority(int);
-    HRESULT GetPriority(int*);
-    HRESULT GetBindResult(GUID*, uint*, PWSTR*, uint*);
+    HRESULT SetPriority(int nPriority);
+    HRESULT GetPriority(int* pnPriority);
+    HRESULT GetBindResult(GUID* pclsidProtocol, uint* pdwResult, PWSTR* pszResult, uint* pdwReserved);
 }
 alias BINDINFOF = int;
 enum : int
@@ -1771,24 +1772,24 @@ struct BINDINFO
 enum IID_IBindStatusCallback = GUID(0x79eac9c1, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IBindStatusCallback : IUnknown
 {
-    HRESULT OnStartBinding(uint, IBinding);
-    HRESULT GetPriority(int*);
-    HRESULT OnLowResource(uint);
-    HRESULT OnProgress(uint, uint, uint, const(wchar)*);
-    HRESULT OnStopBinding(HRESULT, const(wchar)*);
-    HRESULT GetBindInfo(uint*, BINDINFO*);
-    HRESULT OnDataAvailable(uint, uint, FORMATETC*, STGMEDIUM*);
-    HRESULT OnObjectAvailable(const(GUID)*, IUnknown);
+    HRESULT OnStartBinding(uint dwReserved, IBinding pib);
+    HRESULT GetPriority(int* pnPriority);
+    HRESULT OnLowResource(uint reserved);
+    HRESULT OnProgress(uint ulProgress, uint ulProgressMax, uint ulStatusCode, const(wchar)* szStatusText);
+    HRESULT OnStopBinding(HRESULT hresult, const(wchar)* szError);
+    HRESULT GetBindInfo(uint* grfBINDF, BINDINFO* pbindinfo);
+    HRESULT OnDataAvailable(uint grfBSCF, uint dwSize, FORMATETC* pformatetc, STGMEDIUM* pstgmed);
+    HRESULT OnObjectAvailable(const(GUID)* riid, IUnknown punk);
 }
 enum IID_IBindStatusCallbackEx = GUID(0xaaa74ef9, 0x8ee7, 0x4659, [0x88, 0xd9, 0xf8, 0xc5, 0x4, 0xda, 0x73, 0xcc]);
 interface IBindStatusCallbackEx : IBindStatusCallback
 {
-    HRESULT GetBindInfoEx(uint*, BINDINFO*, uint*, uint*);
+    HRESULT GetBindInfoEx(uint* grfBINDF, BINDINFO* pbindinfo, uint* grfBINDF2, uint* pdwReserved);
 }
 enum IID_IAuthenticate = GUID(0x79eac9d0, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IAuthenticate : IUnknown
 {
-    HRESULT Authenticate(HWND*, PWSTR*, PWSTR*);
+    HRESULT Authenticate(HWND* phwnd, PWSTR* pszUsername, PWSTR* pszPassword);
 }
 struct AUTHENTICATEINFO
 {
@@ -1798,7 +1799,7 @@ struct AUTHENTICATEINFO
 enum IID_IAuthenticateEx = GUID(0x2ad1edaf, 0xd83d, 0x48b5, [0x9a, 0xdf, 0x3, 0xdb, 0xe1, 0x9f, 0x53, 0xbd]);
 interface IAuthenticateEx : IAuthenticate
 {
-    HRESULT AuthenticateEx(HWND*, PWSTR*, PWSTR*, AUTHENTICATEINFO*);
+    HRESULT AuthenticateEx(HWND* phwnd, PWSTR* pszUsername, PWSTR* pszPassword, AUTHENTICATEINFO* pauthinfo);
 }
 alias Uri_PROPERTY = int;
 enum : int
@@ -1831,65 +1832,65 @@ enum : int
 enum IID_IUri = GUID(0xa39ee748, 0x6a27, 0x4817, [0xa6, 0xf2, 0x13, 0x91, 0x4b, 0xef, 0x58, 0x90]);
 interface IUri : IUnknown
 {
-    HRESULT GetPropertyBSTR(Uri_PROPERTY, BSTR*, uint);
-    HRESULT GetPropertyLength(Uri_PROPERTY, uint*, uint);
-    HRESULT GetPropertyDWORD(Uri_PROPERTY, uint*, uint);
-    HRESULT HasProperty(Uri_PROPERTY, BOOL*);
-    HRESULT GetAbsoluteUri(BSTR*);
-    HRESULT GetAuthority(BSTR*);
-    HRESULT GetDisplayUri(BSTR*);
-    HRESULT GetDomain(BSTR*);
-    HRESULT GetExtension(BSTR*);
-    HRESULT GetFragment(BSTR*);
-    HRESULT GetHost(BSTR*);
-    HRESULT GetPassword(BSTR*);
-    HRESULT GetPath(BSTR*);
-    HRESULT GetPathAndQuery(BSTR*);
-    HRESULT GetQuery(BSTR*);
-    HRESULT GetRawUri(BSTR*);
-    HRESULT GetSchemeName(BSTR*);
-    HRESULT GetUserInfo(BSTR*);
-    HRESULT GetUserName(BSTR*);
-    HRESULT GetHostType(uint*);
-    HRESULT GetPort(uint*);
-    HRESULT GetScheme(uint*);
-    HRESULT GetZone(uint*);
-    HRESULT GetProperties(uint*);
-    HRESULT IsEqual(IUri, BOOL*);
+    HRESULT GetPropertyBSTR(Uri_PROPERTY uriProp, BSTR* pbstrProperty, uint dwFlags);
+    HRESULT GetPropertyLength(Uri_PROPERTY uriProp, uint* pcchProperty, uint dwFlags);
+    HRESULT GetPropertyDWORD(Uri_PROPERTY uriProp, uint* pdwProperty, uint dwFlags);
+    HRESULT HasProperty(Uri_PROPERTY uriProp, BOOL* pfHasProperty);
+    HRESULT GetAbsoluteUri(BSTR* pbstrAbsoluteUri);
+    HRESULT GetAuthority(BSTR* pbstrAuthority);
+    HRESULT GetDisplayUri(BSTR* pbstrDisplayString);
+    HRESULT GetDomain(BSTR* pbstrDomain);
+    HRESULT GetExtension(BSTR* pbstrExtension);
+    HRESULT GetFragment(BSTR* pbstrFragment);
+    HRESULT GetHost(BSTR* pbstrHost);
+    HRESULT GetPassword(BSTR* pbstrPassword);
+    HRESULT GetPath(BSTR* pbstrPath);
+    HRESULT GetPathAndQuery(BSTR* pbstrPathAndQuery);
+    HRESULT GetQuery(BSTR* pbstrQuery);
+    HRESULT GetRawUri(BSTR* pbstrRawUri);
+    HRESULT GetSchemeName(BSTR* pbstrSchemeName);
+    HRESULT GetUserInfo(BSTR* pbstrUserInfo);
+    HRESULT GetUserName(BSTR* pbstrUserName);
+    HRESULT GetHostType(uint* pdwHostType);
+    HRESULT GetPort(uint* pdwPort);
+    HRESULT GetScheme(uint* pdwScheme);
+    HRESULT GetZone(uint* pdwZone);
+    HRESULT GetProperties(uint* pdwFlags);
+    HRESULT IsEqual(IUri pUri, BOOL* pfEqual);
 }
 enum IID_IUriBuilder = GUID(0x4221b2e1, 0x8955, 0x46c0, [0xbd, 0x5b, 0xde, 0x98, 0x97, 0x56, 0x5d, 0xe7]);
 interface IUriBuilder : IUnknown
 {
-    HRESULT CreateUriSimple(uint, ulong, IUri*);
-    HRESULT CreateUri(uint, uint, ulong, IUri*);
-    HRESULT CreateUriWithFlags(uint, uint, uint, ulong, IUri*);
-    HRESULT GetIUri(IUri*);
-    HRESULT SetIUri(IUri);
-    HRESULT GetFragment(uint*, const(wchar)**);
-    HRESULT GetHost(uint*, const(wchar)**);
-    HRESULT GetPassword(uint*, const(wchar)**);
-    HRESULT GetPath(uint*, const(wchar)**);
-    HRESULT GetPort(BOOL*, uint*);
-    HRESULT GetQuery(uint*, const(wchar)**);
-    HRESULT GetSchemeName(uint*, const(wchar)**);
-    HRESULT GetUserName(uint*, const(wchar)**);
-    HRESULT SetFragment(const(wchar)*);
-    HRESULT SetHost(const(wchar)*);
-    HRESULT SetPassword(const(wchar)*);
-    HRESULT SetPath(const(wchar)*);
-    HRESULT SetPort(BOOL, uint);
-    HRESULT SetQuery(const(wchar)*);
-    HRESULT SetSchemeName(const(wchar)*);
-    HRESULT SetUserName(const(wchar)*);
-    HRESULT RemoveProperties(uint);
-    HRESULT HasBeenModified(BOOL*);
+    HRESULT CreateUriSimple(uint dwAllowEncodingPropertyMask, ulong dwReserved, IUri* ppIUri);
+    HRESULT CreateUri(uint dwCreateFlags, uint dwAllowEncodingPropertyMask, ulong dwReserved, IUri* ppIUri);
+    HRESULT CreateUriWithFlags(uint dwCreateFlags, uint dwUriBuilderFlags, uint dwAllowEncodingPropertyMask, ulong dwReserved, IUri* ppIUri);
+    HRESULT GetIUri(IUri* ppIUri);
+    HRESULT SetIUri(IUri pIUri);
+    HRESULT GetFragment(uint* pcchFragment, const(wchar)** ppwzFragment);
+    HRESULT GetHost(uint* pcchHost, const(wchar)** ppwzHost);
+    HRESULT GetPassword(uint* pcchPassword, const(wchar)** ppwzPassword);
+    HRESULT GetPath(uint* pcchPath, const(wchar)** ppwzPath);
+    HRESULT GetPort(BOOL* pfHasPort, uint* pdwPort);
+    HRESULT GetQuery(uint* pcchQuery, const(wchar)** ppwzQuery);
+    HRESULT GetSchemeName(uint* pcchSchemeName, const(wchar)** ppwzSchemeName);
+    HRESULT GetUserName(uint* pcchUserName, const(wchar)** ppwzUserName);
+    HRESULT SetFragment(const(wchar)* pwzNewValue);
+    HRESULT SetHost(const(wchar)* pwzNewValue);
+    HRESULT SetPassword(const(wchar)* pwzNewValue);
+    HRESULT SetPath(const(wchar)* pwzNewValue);
+    HRESULT SetPort(BOOL fHasPort, uint dwNewValue);
+    HRESULT SetQuery(const(wchar)* pwzNewValue);
+    HRESULT SetSchemeName(const(wchar)* pwzNewValue);
+    HRESULT SetUserName(const(wchar)* pwzNewValue);
+    HRESULT RemoveProperties(uint dwPropertyMask);
+    HRESULT HasBeenModified(BOOL* pfModified);
 }
 enum IID_IBindHost = GUID(0xfc4801a1, 0x2ba9, 0x11cf, [0xa2, 0x29, 0x0, 0xaa, 0x0, 0x3d, 0x73, 0x52]);
 interface IBindHost : IUnknown
 {
-    HRESULT CreateMoniker(PWSTR, IBindCtx, IMoniker*, uint);
-    HRESULT MonikerBindToStorage(IMoniker, IBindCtx, IBindStatusCallback, const(GUID)*, void**);
-    HRESULT MonikerBindToObject(IMoniker, IBindCtx, IBindStatusCallback, const(GUID)*, void**);
+    HRESULT CreateMoniker(PWSTR szName, IBindCtx pBC, IMoniker* ppmk, uint dwReserved);
+    HRESULT MonikerBindToStorage(IMoniker pMk, IBindCtx pBC, IBindStatusCallback pBSC, const(GUID)* riid, void** ppvObj);
+    HRESULT MonikerBindToObject(IMoniker pMk, IBindCtx pBC, IBindStatusCallback pBSC, const(GUID)* riid, void** ppvObj);
 }
 struct SAFEARRAYBOUND
 {
@@ -2104,10 +2105,10 @@ struct CUSTDATA
 enum IID_IDispatch = GUID(0x20400, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IDispatch : IUnknown
 {
-    HRESULT GetTypeInfoCount(uint*);
-    HRESULT GetTypeInfo(uint, uint, ITypeInfo*);
-    HRESULT GetIDsOfNames(const(GUID)*, PWSTR*, uint, uint, int*);
-    HRESULT Invoke(int, const(GUID)*, uint, DISPATCH_FLAGS, DISPPARAMS*, VARIANT*, EXCEPINFO*, uint*);
+    HRESULT GetTypeInfoCount(uint* pctinfo);
+    HRESULT GetTypeInfo(uint iTInfo, uint lcid, ITypeInfo* ppTInfo);
+    HRESULT GetIDsOfNames(const(GUID)* riid, PWSTR* rgszNames, uint cNames, uint lcid, int* rgDispId);
+    HRESULT Invoke(int dispIdMember, const(GUID)* riid, uint lcid, DISPATCH_FLAGS wFlags, DISPPARAMS* pDispParams, VARIANT* pVarResult, EXCEPINFO* pExcepInfo, uint* puArgErr);
 }
 alias DESCKIND = int;
 enum : int
@@ -2129,50 +2130,50 @@ union BINDPTR
 enum IID_ITypeComp = GUID(0x20403, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ITypeComp : IUnknown
 {
-    HRESULT Bind(PWSTR, uint, ushort, ITypeInfo*, DESCKIND*, BINDPTR*);
-    HRESULT BindType(PWSTR, uint, ITypeInfo*, ITypeComp*);
+    HRESULT Bind(PWSTR szName, uint lHashVal, ushort wFlags, ITypeInfo* ppTInfo, DESCKIND* pDescKind, BINDPTR* pBindPtr);
+    HRESULT BindType(PWSTR szName, uint lHashVal, ITypeInfo* ppTInfo, ITypeComp* ppTComp);
 }
 enum IID_ITypeInfo = GUID(0x20401, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ITypeInfo : IUnknown
 {
-    HRESULT GetTypeAttr(TYPEATTR**);
-    HRESULT GetTypeComp(ITypeComp*);
-    HRESULT GetFuncDesc(uint, FUNCDESC**);
-    HRESULT GetVarDesc(uint, VARDESC**);
-    HRESULT GetNames(int, BSTR*, uint, uint*);
-    HRESULT GetRefTypeOfImplType(uint, uint*);
-    HRESULT GetImplTypeFlags(uint, IMPLTYPEFLAGS*);
-    HRESULT GetIDsOfNames(PWSTR*, uint, int*);
-    HRESULT Invoke(void*, int, DISPATCH_FLAGS, DISPPARAMS*, VARIANT*, EXCEPINFO*, uint*);
-    HRESULT GetDocumentation(int, BSTR*, BSTR*, uint*, BSTR*);
-    HRESULT GetDllEntry(int, INVOKEKIND, BSTR*, BSTR*, ushort*);
-    HRESULT GetRefTypeInfo(uint, ITypeInfo*);
-    HRESULT AddressOfMember(int, INVOKEKIND, void**);
-    HRESULT CreateInstance(IUnknown, const(GUID)*, void**);
-    HRESULT GetMops(int, BSTR*);
-    HRESULT GetContainingTypeLib(ITypeLib*, uint*);
-    void ReleaseTypeAttr(TYPEATTR*);
-    void ReleaseFuncDesc(FUNCDESC*);
-    void ReleaseVarDesc(VARDESC*);
+    HRESULT GetTypeAttr(TYPEATTR** ppTypeAttr);
+    HRESULT GetTypeComp(ITypeComp* ppTComp);
+    HRESULT GetFuncDesc(uint index, FUNCDESC** ppFuncDesc);
+    HRESULT GetVarDesc(uint index, VARDESC** ppVarDesc);
+    HRESULT GetNames(int memid, BSTR* rgBstrNames, uint cMaxNames, uint* pcNames);
+    HRESULT GetRefTypeOfImplType(uint index, uint* pRefType);
+    HRESULT GetImplTypeFlags(uint index, IMPLTYPEFLAGS* pImplTypeFlags);
+    HRESULT GetIDsOfNames(PWSTR* rgszNames, uint cNames, int* pMemId);
+    HRESULT Invoke(void* pvInstance, int memid, DISPATCH_FLAGS wFlags, DISPPARAMS* pDispParams, VARIANT* pVarResult, EXCEPINFO* pExcepInfo, uint* puArgErr);
+    HRESULT GetDocumentation(int memid, BSTR* pBstrName, BSTR* pBstrDocString, uint* pdwHelpContext, BSTR* pBstrHelpFile);
+    HRESULT GetDllEntry(int memid, INVOKEKIND invKind, BSTR* pBstrDllName, BSTR* pBstrName, ushort* pwOrdinal);
+    HRESULT GetRefTypeInfo(uint hRefType, ITypeInfo* ppTInfo);
+    HRESULT AddressOfMember(int memid, INVOKEKIND invKind, void** ppv);
+    HRESULT CreateInstance(IUnknown pUnkOuter, const(GUID)* riid, void** ppvObj);
+    HRESULT GetMops(int memid, BSTR* pBstrMops);
+    HRESULT GetContainingTypeLib(ITypeLib* ppTLib, uint* pIndex);
+    void ReleaseTypeAttr(TYPEATTR* pTypeAttr);
+    void ReleaseFuncDesc(FUNCDESC* pFuncDesc);
+    void ReleaseVarDesc(VARDESC* pVarDesc);
 }
 enum IID_ITypeInfo2 = GUID(0x20412, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ITypeInfo2 : ITypeInfo
 {
-    HRESULT GetTypeKind(TYPEKIND*);
-    HRESULT GetTypeFlags(uint*);
-    HRESULT GetFuncIndexOfMemId(int, INVOKEKIND, uint*);
-    HRESULT GetVarIndexOfMemId(int, uint*);
-    HRESULT GetCustData(const(GUID)*, VARIANT*);
-    HRESULT GetFuncCustData(uint, const(GUID)*, VARIANT*);
-    HRESULT GetParamCustData(uint, uint, const(GUID)*, VARIANT*);
-    HRESULT GetVarCustData(uint, const(GUID)*, VARIANT*);
-    HRESULT GetImplTypeCustData(uint, const(GUID)*, VARIANT*);
-    HRESULT GetDocumentation2(int, uint, BSTR*, uint*, BSTR*);
-    HRESULT GetAllCustData(CUSTDATA*);
-    HRESULT GetAllFuncCustData(uint, CUSTDATA*);
-    HRESULT GetAllParamCustData(uint, uint, CUSTDATA*);
-    HRESULT GetAllVarCustData(uint, CUSTDATA*);
-    HRESULT GetAllImplTypeCustData(uint, CUSTDATA*);
+    HRESULT GetTypeKind(TYPEKIND* pTypeKind);
+    HRESULT GetTypeFlags(uint* pTypeFlags);
+    HRESULT GetFuncIndexOfMemId(int memid, INVOKEKIND invKind, uint* pFuncIndex);
+    HRESULT GetVarIndexOfMemId(int memid, uint* pVarIndex);
+    HRESULT GetCustData(const(GUID)* guid, VARIANT* pVarVal);
+    HRESULT GetFuncCustData(uint index, const(GUID)* guid, VARIANT* pVarVal);
+    HRESULT GetParamCustData(uint indexFunc, uint indexParam, const(GUID)* guid, VARIANT* pVarVal);
+    HRESULT GetVarCustData(uint index, const(GUID)* guid, VARIANT* pVarVal);
+    HRESULT GetImplTypeCustData(uint index, const(GUID)* guid, VARIANT* pVarVal);
+    HRESULT GetDocumentation2(int memid, uint lcid, BSTR* pbstrHelpString, uint* pdwHelpStringContext, BSTR* pbstrHelpStringDll);
+    HRESULT GetAllCustData(CUSTDATA* pCustData);
+    HRESULT GetAllFuncCustData(uint index, CUSTDATA* pCustData);
+    HRESULT GetAllParamCustData(uint indexFunc, uint indexParam, CUSTDATA* pCustData);
+    HRESULT GetAllVarCustData(uint index, CUSTDATA* pCustData);
+    HRESULT GetAllImplTypeCustData(uint index, CUSTDATA* pCustData);
 }
 alias SYSKIND = int;
 enum : int
@@ -2196,59 +2197,59 @@ enum IID_ITypeLib = GUID(0x20402, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
 interface ITypeLib : IUnknown
 {
     uint GetTypeInfoCount();
-    HRESULT GetTypeInfo(uint, ITypeInfo*);
-    HRESULT GetTypeInfoType(uint, TYPEKIND*);
-    HRESULT GetTypeInfoOfGuid(const(GUID)*, ITypeInfo*);
-    HRESULT GetLibAttr(TLIBATTR**);
-    HRESULT GetTypeComp(ITypeComp*);
-    HRESULT GetDocumentation(int, BSTR*, BSTR*, uint*, BSTR*);
-    HRESULT IsName(PWSTR, uint, BOOL*);
-    HRESULT FindName(PWSTR, uint, ITypeInfo*, int*, ushort*);
-    void ReleaseTLibAttr(TLIBATTR*);
+    HRESULT GetTypeInfo(uint index, ITypeInfo* ppTInfo);
+    HRESULT GetTypeInfoType(uint index, TYPEKIND* pTKind);
+    HRESULT GetTypeInfoOfGuid(const(GUID)* guid, ITypeInfo* ppTinfo);
+    HRESULT GetLibAttr(TLIBATTR** ppTLibAttr);
+    HRESULT GetTypeComp(ITypeComp* ppTComp);
+    HRESULT GetDocumentation(int index, BSTR* pBstrName, BSTR* pBstrDocString, uint* pdwHelpContext, BSTR* pBstrHelpFile);
+    HRESULT IsName(PWSTR szNameBuf, uint lHashVal, BOOL* pfName);
+    HRESULT FindName(PWSTR szNameBuf, uint lHashVal, ITypeInfo* ppTInfo, int* rgMemId, ushort* pcFound);
+    void ReleaseTLibAttr(TLIBATTR* pTLibAttr);
 }
 enum IID_ITypeLib2 = GUID(0x20411, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ITypeLib2 : ITypeLib
 {
-    HRESULT GetCustData(const(GUID)*, VARIANT*);
-    HRESULT GetLibStatistics(uint*, uint*);
-    HRESULT GetDocumentation2(int, uint, BSTR*, uint*, BSTR*);
-    HRESULT GetAllCustData(CUSTDATA*);
+    HRESULT GetCustData(const(GUID)* guid, VARIANT* pVarVal);
+    HRESULT GetLibStatistics(uint* pcUniqueNames, uint* pcchUniqueNames);
+    HRESULT GetDocumentation2(int index, uint lcid, BSTR* pbstrHelpString, uint* pdwHelpStringContext, BSTR* pbstrHelpStringDll);
+    HRESULT GetAllCustData(CUSTDATA* pCustData);
 }
 enum IID_IErrorInfo = GUID(0x1cf2b120, 0x547d, 0x101b, [0x8e, 0x65, 0x8, 0x0, 0x2b, 0x2b, 0xd1, 0x19]);
 interface IErrorInfo : IUnknown
 {
-    HRESULT GetGUID(GUID*);
-    HRESULT GetSource(BSTR*);
-    HRESULT GetDescription(BSTR*);
-    HRESULT GetHelpFile(BSTR*);
-    HRESULT GetHelpContext(uint*);
+    HRESULT GetGUID(GUID* pGUID);
+    HRESULT GetSource(BSTR* pBstrSource);
+    HRESULT GetDescription(BSTR* pBstrDescription);
+    HRESULT GetHelpFile(BSTR* pBstrHelpFile);
+    HRESULT GetHelpContext(uint* pdwHelpContext);
 }
 enum IID_ISupportErrorInfo = GUID(0xdf0b3d60, 0x548f, 0x101b, [0x8e, 0x65, 0x8, 0x0, 0x2b, 0x2b, 0xd1, 0x19]);
 interface ISupportErrorInfo : IUnknown
 {
-    HRESULT InterfaceSupportsErrorInfo(const(GUID)*);
+    HRESULT InterfaceSupportsErrorInfo(const(GUID)* riid);
 }
 enum IID_IErrorLog = GUID(0x3127ca40, 0x446e, 0x11ce, [0x81, 0x35, 0x0, 0xaa, 0x0, 0x4b, 0xb8, 0x51]);
 interface IErrorLog : IUnknown
 {
-    HRESULT AddError(const(wchar)*, EXCEPINFO*);
+    HRESULT AddError(const(wchar)* pszPropName, EXCEPINFO* pExcepInfo);
 }
 enum IID_ITypeLibRegistrationReader = GUID(0xed6a8a2a, 0xb160, 0x4e77, [0x8f, 0x73, 0xaa, 0x74, 0x35, 0xcd, 0x5c, 0x27]);
 interface ITypeLibRegistrationReader : IUnknown
 {
-    HRESULT EnumTypeLibRegistrations(IEnumUnknown*);
+    HRESULT EnumTypeLibRegistrations(IEnumUnknown* ppEnumUnknown);
 }
 enum IID_ITypeLibRegistration = GUID(0x76a3e735, 0x2df, 0x4a12, [0x98, 0xeb, 0x4, 0x3a, 0xd3, 0x60, 0xa, 0xf3]);
 interface ITypeLibRegistration : IUnknown
 {
-    HRESULT GetGuid(GUID*);
-    HRESULT GetVersion(BSTR*);
-    HRESULT GetLcid(uint*);
-    HRESULT GetWin32Path(BSTR*);
-    HRESULT GetWin64Path(BSTR*);
-    HRESULT GetDisplayName(BSTR*);
-    HRESULT GetFlags(uint*);
-    HRESULT GetHelpDir(BSTR*);
+    HRESULT GetGuid(GUID* pGuid);
+    HRESULT GetVersion(BSTR* pVersion);
+    HRESULT GetLcid(uint* pLcid);
+    HRESULT GetWin32Path(BSTR* pWin32Path);
+    HRESULT GetWin64Path(BSTR* pWin64Path);
+    HRESULT GetDisplayName(BSTR* pDisplayName);
+    HRESULT GetFlags(uint* pFlags);
+    HRESULT GetHelpDir(BSTR* pHelpDir);
 }
 struct CONNECTDATA
 {
@@ -2258,49 +2259,49 @@ struct CONNECTDATA
 enum IID_IEnumConnections = GUID(0xb196b287, 0xbab4, 0x101a, [0xb6, 0x9c, 0x0, 0xaa, 0x0, 0x34, 0x1d, 0x7]);
 interface IEnumConnections : IUnknown
 {
-    HRESULT Next(uint, CONNECTDATA*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint cConnections, CONNECTDATA* rgcd, uint* pcFetched);
+    HRESULT Skip(uint cConnections);
     HRESULT Reset();
-    HRESULT Clone(IEnumConnections*);
+    HRESULT Clone(IEnumConnections* ppEnum);
 }
 enum IID_IConnectionPoint = GUID(0xb196b286, 0xbab4, 0x101a, [0xb6, 0x9c, 0x0, 0xaa, 0x0, 0x34, 0x1d, 0x7]);
 interface IConnectionPoint : IUnknown
 {
-    HRESULT GetConnectionInterface(GUID*);
-    HRESULT GetConnectionPointContainer(IConnectionPointContainer*);
-    HRESULT Advise(IUnknown, uint*);
-    HRESULT Unadvise(uint);
-    HRESULT EnumConnections(IEnumConnections*);
+    HRESULT GetConnectionInterface(GUID* pIID);
+    HRESULT GetConnectionPointContainer(IConnectionPointContainer* ppCPC);
+    HRESULT Advise(IUnknown pUnkSink, uint* pdwCookie);
+    HRESULT Unadvise(uint dwCookie);
+    HRESULT EnumConnections(IEnumConnections* ppEnum);
 }
 enum IID_IEnumConnectionPoints = GUID(0xb196b285, 0xbab4, 0x101a, [0xb6, 0x9c, 0x0, 0xaa, 0x0, 0x34, 0x1d, 0x7]);
 interface IEnumConnectionPoints : IUnknown
 {
-    HRESULT Next(uint, IConnectionPoint*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint cConnections, IConnectionPoint* ppCP, uint* pcFetched);
+    HRESULT Skip(uint cConnections);
     HRESULT Reset();
-    HRESULT Clone(IEnumConnectionPoints*);
+    HRESULT Clone(IEnumConnectionPoints* ppEnum);
 }
 enum IID_IConnectionPointContainer = GUID(0xb196b284, 0xbab4, 0x101a, [0xb6, 0x9c, 0x0, 0xaa, 0x0, 0x34, 0x1d, 0x7]);
 interface IConnectionPointContainer : IUnknown
 {
-    HRESULT EnumConnectionPoints(IEnumConnectionPoints*);
-    HRESULT FindConnectionPoint(const(GUID)*, IConnectionPoint*);
+    HRESULT EnumConnectionPoints(IEnumConnectionPoints* ppEnum);
+    HRESULT FindConnectionPoint(const(GUID)* riid, IConnectionPoint* ppCP);
 }
 enum IID_IPersistMemory = GUID(0xbd1ae5e0, 0xa6ae, 0x11ce, [0xbd, 0x37, 0x50, 0x42, 0x0, 0xc1, 0x0, 0x0]);
 interface IPersistMemory : IPersist
 {
     HRESULT IsDirty();
-    HRESULT Load(void*, uint);
-    HRESULT Save(void*, BOOL, uint);
-    HRESULT GetSizeMax(uint*);
+    HRESULT Load(void* pMem, uint cbSize);
+    HRESULT Save(void* pMem, BOOL fClearDirty, uint cbSize);
+    HRESULT GetSizeMax(uint* pCbSize);
     HRESULT InitNew();
 }
 enum IID_IPersistStreamInit = GUID(0x7fd52380, 0x4e07, 0x101b, [0xae, 0x2d, 0x8, 0x0, 0x2b, 0x2e, 0xc7, 0x13]);
 interface IPersistStreamInit : IPersist
 {
     HRESULT IsDirty();
-    HRESULT Load(IStream);
-    HRESULT Save(IStream, BOOL);
-    HRESULT GetSizeMax(ulong*);
+    HRESULT Load(IStream pStm);
+    HRESULT Save(IStream pStm, BOOL fClearDirty);
+    HRESULT GetSizeMax(ulong* pCbSize);
     HRESULT InitNew();
 }

@@ -8,62 +8,62 @@ import windows.win32.system.com.structuredstorage : IStorage;
 version (Windows):
 extern (Windows):
 
-int CreateTable(GUID*, LPALLOCATEBUFFER, LPALLOCATEMORE, LPFREEBUFFER, void*, uint, uint, SPropTagArray*, ITableData*);
-int CreateIProp(GUID*, LPALLOCATEBUFFER, LPALLOCATEMORE, LPFREEBUFFER, void*, IPropData*);
-int MAPIInitIdle(void*);
+int CreateTable(GUID* lpInterface, LPALLOCATEBUFFER lpAllocateBuffer, LPALLOCATEMORE lpAllocateMore, LPFREEBUFFER lpFreeBuffer, void* lpvReserved, uint ulTableType, uint ulPropTagIndexColumn, SPropTagArray* lpSPropTagArrayColumns, ITableData* lppTableData);
+int CreateIProp(GUID* lpInterface, LPALLOCATEBUFFER lpAllocateBuffer, LPALLOCATEMORE lpAllocateMore, LPFREEBUFFER lpFreeBuffer, void* lpvReserved, IPropData* lppPropData);
+int MAPIInitIdle(void* lpvReserved);
 void MAPIDeinitIdle();
-void* FtgRegisterIdleRoutine(PFNIDLE, void*, short, uint, ushort);
-void DeregisterIdleRoutine(void*);
-void EnableIdleRoutine(void*, BOOL);
-void ChangeIdleRoutine(void*, PFNIDLE, void*, short, uint, ushort, ushort);
+void* FtgRegisterIdleRoutine(PFNIDLE lpfnIdle, void* lpvIdleParam, short priIdle, uint csecIdle, ushort iroIdle);
+void DeregisterIdleRoutine(void* ftg);
+void EnableIdleRoutine(void* ftg, BOOL fEnable);
+void ChangeIdleRoutine(void* ftg, PFNIDLE lpfnIdle, void* lpvIdleParam, short priIdle, uint csecIdle, ushort iroIdle, ushort ircIdle);
 IMalloc MAPIGetDefaultMalloc();
-HRESULT OpenStreamOnFile(LPALLOCATEBUFFER, LPFREEBUFFER, uint, byte*, byte*, IStream*);
-int PropCopyMore(SPropValue*, SPropValue*, LPALLOCATEMORE, void*);
-uint UlPropSize(SPropValue*);
-BOOL FEqualNames(MAPINAMEID*, MAPINAMEID*);
-BOOL FPropContainsProp(SPropValue*, SPropValue*, uint);
-BOOL FPropCompareProp(SPropValue*, uint, SPropValue*);
-int LPropCompareProp(SPropValue*, SPropValue*);
-HRESULT HrAddColumns(IMAPITable, SPropTagArray*, LPALLOCATEBUFFER, LPFREEBUFFER);
-HRESULT HrAddColumnsEx(IMAPITable, SPropTagArray*, LPALLOCATEBUFFER, LPFREEBUFFER, long);
-HRESULT HrAllocAdviseSink(LPNOTIFCALLBACK, void*, IMAPIAdviseSink*);
-HRESULT HrThisThreadAdviseSink(IMAPIAdviseSink, IMAPIAdviseSink*);
-HRESULT HrDispatchNotifications(uint);
-HRESULT BuildDisplayTable(LPALLOCATEBUFFER, LPALLOCATEMORE, LPFREEBUFFER, IMalloc, HINSTANCE, uint, DTPAGE*, uint, IMAPITable*, ITableData*);
-int ScCountNotifications(int, NOTIFICATION*, uint*);
-int ScCopyNotifications(int, NOTIFICATION*, void*, uint*);
-int ScRelocNotifications(int, NOTIFICATION*, void*, void*, uint*);
-int ScCountProps(int, SPropValue*, uint*);
-SPropValue* LpValFindProp(uint, uint, SPropValue*);
-int ScCopyProps(int, SPropValue*, void*, uint*);
-int ScRelocProps(int, SPropValue*, void*, void*, uint*);
-int ScDupPropset(int, SPropValue*, LPALLOCATEBUFFER, SPropValue**);
-uint UlAddRef(void*);
-uint UlRelease(void*);
-HRESULT HrGetOneProp(IMAPIProp, uint, SPropValue**);
-HRESULT HrSetOneProp(IMAPIProp, SPropValue*);
-BOOL FPropExists(IMAPIProp, uint);
-SPropValue* PpropFindProp(SPropValue*, uint, uint);
-void FreePadrlist(ADRLIST*);
-void FreeProws(SRowSet*);
-HRESULT HrQueryAllRows(IMAPITable, SPropTagArray*, SRestriction*, SSortOrderSet*, int, SRowSet**);
-byte* SzFindCh(byte*, ushort);
-byte* SzFindLastCh(byte*, ushort);
-byte* SzFindSz(byte*, byte*);
-uint UFromSz(byte*);
-int ScUNCFromLocalPath(PSTR, PSTR, uint);
-int ScLocalPathFromUNC(PSTR, PSTR, uint);
-FILETIME FtAddFt(FILETIME, FILETIME);
-FILETIME FtMulDwDw(uint, uint);
-FILETIME FtMulDw(uint, FILETIME);
-FILETIME FtSubFt(FILETIME, FILETIME);
-FILETIME FtNegFt(FILETIME);
-int ScCreateConversationIndex(uint, ubyte*, uint*, ubyte**);
-HRESULT WrapStoreEntryID(uint, byte*, uint, ENTRYID*, uint*, ENTRYID**);
-HRESULT RTFSync(IMessage, uint, BOOL*);
-HRESULT WrapCompressedRTFStream(IStream, uint, IStream*);
-HRESULT HrIStorageFromStream(IUnknown, GUID*, uint, IStorage*);
-int ScInitMapiUtil(uint);
+HRESULT OpenStreamOnFile(LPALLOCATEBUFFER lpAllocateBuffer, LPFREEBUFFER lpFreeBuffer, uint ulFlags, byte* lpszFileName, byte* lpszPrefix, IStream* lppStream);
+int PropCopyMore(SPropValue* lpSPropValueDest, SPropValue* lpSPropValueSrc, LPALLOCATEMORE lpfAllocMore, void* lpvObject);
+uint UlPropSize(SPropValue* lpSPropValue);
+BOOL FEqualNames(MAPINAMEID* lpName1, MAPINAMEID* lpName2);
+BOOL FPropContainsProp(SPropValue* lpSPropValueDst, SPropValue* lpSPropValueSrc, uint ulFuzzyLevel);
+BOOL FPropCompareProp(SPropValue* lpSPropValue1, uint ulRelOp, SPropValue* lpSPropValue2);
+int LPropCompareProp(SPropValue* lpSPropValueA, SPropValue* lpSPropValueB);
+HRESULT HrAddColumns(IMAPITable lptbl, SPropTagArray* lpproptagColumnsNew, LPALLOCATEBUFFER lpAllocateBuffer, LPFREEBUFFER lpFreeBuffer);
+HRESULT HrAddColumnsEx(IMAPITable lptbl, SPropTagArray* lpproptagColumnsNew, LPALLOCATEBUFFER lpAllocateBuffer, LPFREEBUFFER lpFreeBuffer, long lpfnFilterColumns);
+HRESULT HrAllocAdviseSink(LPNOTIFCALLBACK lpfnCallback, void* lpvContext, IMAPIAdviseSink* lppAdviseSink);
+HRESULT HrThisThreadAdviseSink(IMAPIAdviseSink lpAdviseSink, IMAPIAdviseSink* lppAdviseSink);
+HRESULT HrDispatchNotifications(uint ulFlags);
+HRESULT BuildDisplayTable(LPALLOCATEBUFFER lpAllocateBuffer, LPALLOCATEMORE lpAllocateMore, LPFREEBUFFER lpFreeBuffer, IMalloc lpMalloc, HINSTANCE hInstance, uint cPages, DTPAGE* lpPage, uint ulFlags, IMAPITable* lppTable, ITableData* lppTblData);
+int ScCountNotifications(int cNotifications, NOTIFICATION* lpNotifications, uint* lpcb);
+int ScCopyNotifications(int cNotification, NOTIFICATION* lpNotifications, void* lpvDst, uint* lpcb);
+int ScRelocNotifications(int cNotification, NOTIFICATION* lpNotifications, void* lpvBaseOld, void* lpvBaseNew, uint* lpcb);
+int ScCountProps(int cValues, SPropValue* lpPropArray, uint* lpcb);
+SPropValue* LpValFindProp(uint ulPropTag, uint cValues, SPropValue* lpPropArray);
+int ScCopyProps(int cValues, SPropValue* lpPropArray, void* lpvDst, uint* lpcb);
+int ScRelocProps(int cValues, SPropValue* lpPropArray, void* lpvBaseOld, void* lpvBaseNew, uint* lpcb);
+int ScDupPropset(int cValues, SPropValue* lpPropArray, LPALLOCATEBUFFER lpAllocateBuffer, SPropValue** lppPropArray);
+uint UlAddRef(void* lpunk);
+uint UlRelease(void* lpunk);
+HRESULT HrGetOneProp(IMAPIProp lpMapiProp, uint ulPropTag, SPropValue** lppProp);
+HRESULT HrSetOneProp(IMAPIProp lpMapiProp, SPropValue* lpProp);
+BOOL FPropExists(IMAPIProp lpMapiProp, uint ulPropTag);
+SPropValue* PpropFindProp(SPropValue* lpPropArray, uint cValues, uint ulPropTag);
+void FreePadrlist(ADRLIST* lpAdrlist);
+void FreeProws(SRowSet* lpRows);
+HRESULT HrQueryAllRows(IMAPITable lpTable, SPropTagArray* lpPropTags, SRestriction* lpRestriction, SSortOrderSet* lpSortOrderSet, int crowsMax, SRowSet** lppRows);
+byte* SzFindCh(byte* lpsz, ushort ch);
+byte* SzFindLastCh(byte* lpsz, ushort ch);
+byte* SzFindSz(byte* lpsz, byte* lpszKey);
+uint UFromSz(byte* lpsz);
+int ScUNCFromLocalPath(PSTR lpszLocal, PSTR lpszUNC, uint cchUNC);
+int ScLocalPathFromUNC(PSTR lpszUNC, PSTR lpszLocal, uint cchLocal);
+FILETIME FtAddFt(FILETIME ftAddend1, FILETIME ftAddend2);
+FILETIME FtMulDwDw(uint ftMultiplicand, uint ftMultiplier);
+FILETIME FtMulDw(uint ftMultiplier, FILETIME ftMultiplicand);
+FILETIME FtSubFt(FILETIME ftMinuend, FILETIME ftSubtrahend);
+FILETIME FtNegFt(FILETIME ft);
+int ScCreateConversationIndex(uint cbParent, ubyte* lpbParent, uint* lpcbConvIndex, ubyte** lppbConvIndex);
+HRESULT WrapStoreEntryID(uint ulFlags, byte* lpszDLLName, uint cbOrigEntry, ENTRYID* lpOrigEntry, uint* lpcbWrappedEntry, ENTRYID** lppWrappedEntry);
+HRESULT RTFSync(IMessage lpMessage, uint ulFlags, BOOL* lpfMessageUpdated);
+HRESULT WrapCompressedRTFStream(IStream lpCompressedRTFStream, uint ulFlags, IStream* lpUncompressedRTFStream);
+HRESULT HrIStorageFromStream(IUnknown lpUnkIn, GUID* lpInterface, uint ulFlags, IStorage* lppStorageOut);
+int ScInitMapiUtil(uint ulFlags);
 void DeinitMapiUtil();
 enum PROP_ID_SECURE_MIN = 0x000067f0;
 enum PROP_ID_SECURE_MAX = 0x000067ff;
@@ -455,9 +455,9 @@ struct SRowSet
     uint cRows;
     SRow[1] aRow;
 }
-alias LPALLOCATEBUFFER = int function(uint, void**);
-alias LPALLOCATEMORE = int function(uint, void*, void**);
-alias LPFREEBUFFER = uint function(void*);
+alias LPALLOCATEBUFFER = int function(uint cbSize, void** lppBuffer);
+alias LPALLOCATEMORE = int function(uint cbSize, void* lpObject, void** lppBuffer);
+alias LPFREEBUFFER = uint function(void* lpBuffer);
 struct MAPIERROR
 {
     uint ulVersion;
@@ -536,17 +536,17 @@ struct NOTIFICATION
 // [Not Found] IID_IMAPIAdviseSink
 interface IMAPIAdviseSink : IUnknown
 {
-    uint OnNotify(uint, NOTIFICATION*);
+    uint OnNotify(uint cNotif, NOTIFICATION* lpNotifications);
 }
-alias LPNOTIFCALLBACK = int function(void*, uint, NOTIFICATION*);
+alias LPNOTIFCALLBACK = int function(void* lpvContext, uint cNotification, NOTIFICATION* lpNotifications);
 // [Not Found] IID_IMAPIProgress
 interface IMAPIProgress : IUnknown
 {
-    HRESULT Progress(uint, uint, uint);
-    HRESULT GetFlags(uint*);
-    HRESULT GetMax(uint*);
-    HRESULT GetMin(uint*);
-    HRESULT SetLimits(uint*, uint*, uint*);
+    HRESULT Progress(uint ulValue, uint ulCount, uint ulTotal);
+    HRESULT GetFlags(uint* lpulFlags);
+    HRESULT GetMax(uint* lpulMax);
+    HRESULT GetMin(uint* lpulMin);
+    HRESULT SetLimits(uint* lpulMin, uint* lpulMax, uint* lpulFlags);
 }
 struct MAPINAMEID
 {
@@ -561,17 +561,17 @@ struct MAPINAMEID
 // [Not Found] IID_IMAPIProp
 interface IMAPIProp : IUnknown
 {
-    HRESULT GetLastError(HRESULT, uint, MAPIERROR**);
-    HRESULT SaveChanges(uint);
-    HRESULT GetProps(SPropTagArray*, uint, uint*, SPropValue**);
-    HRESULT GetPropList(uint, SPropTagArray**);
-    HRESULT OpenProperty(uint, GUID*, uint, uint, IUnknown*);
-    HRESULT SetProps(uint, SPropValue*, SPropProblemArray**);
-    HRESULT DeleteProps(SPropTagArray*, SPropProblemArray**);
-    HRESULT CopyTo(uint, GUID*, SPropTagArray*, ulong, IMAPIProgress, GUID*, void*, uint, SPropProblemArray**);
-    HRESULT CopyProps(SPropTagArray*, ulong, IMAPIProgress, GUID*, void*, uint, SPropProblemArray**);
-    HRESULT GetNamesFromIDs(SPropTagArray**, GUID*, uint, uint*, MAPINAMEID***);
-    HRESULT GetIDsFromNames(uint, MAPINAMEID**, uint, SPropTagArray**);
+    HRESULT GetLastError(HRESULT hResult, uint ulFlags, MAPIERROR** lppMAPIError);
+    HRESULT SaveChanges(uint ulFlags);
+    HRESULT GetProps(SPropTagArray* lpPropTagArray, uint ulFlags, uint* lpcValues, SPropValue** lppPropArray);
+    HRESULT GetPropList(uint ulFlags, SPropTagArray** lppPropTagArray);
+    HRESULT OpenProperty(uint ulPropTag, GUID* lpiid, uint ulInterfaceOptions, uint ulFlags, IUnknown* lppUnk);
+    HRESULT SetProps(uint cValues, SPropValue* lpPropArray, SPropProblemArray** lppProblems);
+    HRESULT DeleteProps(SPropTagArray* lpPropTagArray, SPropProblemArray** lppProblems);
+    HRESULT CopyTo(uint ciidExclude, GUID* rgiidExclude, SPropTagArray* lpExcludeProps, ulong ulUIParam, IMAPIProgress lpProgress, GUID* lpInterface, void* lpDestObj, uint ulFlags, SPropProblemArray** lppProblems);
+    HRESULT CopyProps(SPropTagArray* lpIncludeProps, ulong ulUIParam, IMAPIProgress lpProgress, GUID* lpInterface, void* lpDestObj, uint ulFlags, SPropProblemArray** lppProblems);
+    HRESULT GetNamesFromIDs(SPropTagArray** lppPropTags, GUID* lpPropSetGuid, uint ulFlags, uint* lpcPropNames, MAPINAMEID*** lpppPropNames);
+    HRESULT GetIDsFromNames(uint cPropNames, MAPINAMEID** lppPropNames, uint ulFlags, SPropTagArray** lppPropTags);
 }
 struct SSortOrder
 {
@@ -668,29 +668,29 @@ struct SRestriction
 // [Not Found] IID_IMAPITable
 interface IMAPITable : IUnknown
 {
-    HRESULT GetLastError(HRESULT, uint, MAPIERROR**);
-    HRESULT Advise(uint, IMAPIAdviseSink, uint*);
-    HRESULT Unadvise(uint);
-    HRESULT GetStatus(uint*, uint*);
-    HRESULT SetColumns(SPropTagArray*, uint);
-    HRESULT QueryColumns(uint, SPropTagArray**);
-    HRESULT GetRowCount(uint, uint*);
-    HRESULT SeekRow(uint, int, int*);
-    HRESULT SeekRowApprox(uint, uint);
-    HRESULT QueryPosition(uint*, uint*, uint*);
-    HRESULT FindRow(SRestriction*, uint, uint);
-    HRESULT Restrict(SRestriction*, uint);
-    HRESULT CreateBookmark(uint*);
-    HRESULT FreeBookmark(uint);
-    HRESULT SortTable(SSortOrderSet*, uint);
-    HRESULT QuerySortOrder(SSortOrderSet**);
-    HRESULT QueryRows(int, uint, SRowSet**);
+    HRESULT GetLastError(HRESULT hResult, uint ulFlags, MAPIERROR** lppMAPIError);
+    HRESULT Advise(uint ulEventMask, IMAPIAdviseSink lpAdviseSink, uint* lpulConnection);
+    HRESULT Unadvise(uint ulConnection);
+    HRESULT GetStatus(uint* lpulTableStatus, uint* lpulTableType);
+    HRESULT SetColumns(SPropTagArray* lpPropTagArray, uint ulFlags);
+    HRESULT QueryColumns(uint ulFlags, SPropTagArray** lpPropTagArray);
+    HRESULT GetRowCount(uint ulFlags, uint* lpulCount);
+    HRESULT SeekRow(uint bkOrigin, int lRowCount, int* lplRowsSought);
+    HRESULT SeekRowApprox(uint ulNumerator, uint ulDenominator);
+    HRESULT QueryPosition(uint* lpulRow, uint* lpulNumerator, uint* lpulDenominator);
+    HRESULT FindRow(SRestriction* lpRestriction, uint bkOrigin, uint ulFlags);
+    HRESULT Restrict(SRestriction* lpRestriction, uint ulFlags);
+    HRESULT CreateBookmark(uint* lpbkPosition);
+    HRESULT FreeBookmark(uint bkPosition);
+    HRESULT SortTable(SSortOrderSet* lpSortCriteria, uint ulFlags);
+    HRESULT QuerySortOrder(SSortOrderSet** lppSortCriteria);
+    HRESULT QueryRows(int lRowCount, uint ulFlags, SRowSet** lppRows);
     HRESULT Abort();
-    HRESULT ExpandRow(uint, ubyte*, uint, uint, SRowSet**, uint*);
-    HRESULT CollapseRow(uint, ubyte*, uint, uint*);
-    HRESULT WaitForCompletion(uint, uint, uint*);
-    HRESULT GetCollapseState(uint, uint, ubyte*, uint*, ubyte**);
-    HRESULT SetCollapseState(uint, uint, ubyte*, uint*);
+    HRESULT ExpandRow(uint cbInstanceKey, ubyte* pbInstanceKey, uint ulRowCount, uint ulFlags, SRowSet** lppRows, uint* lpulMoreRows);
+    HRESULT CollapseRow(uint cbInstanceKey, ubyte* pbInstanceKey, uint ulFlags, uint* lpulRowCount);
+    HRESULT WaitForCompletion(uint ulFlags, uint ulTimeout, uint* lpulTableStatus);
+    HRESULT GetCollapseState(uint ulFlags, uint cbInstanceKey, ubyte* lpbInstanceKey, uint* lpcbCollapseState, ubyte** lppbCollapseState);
+    HRESULT SetCollapseState(uint ulFlags, uint cbCollapseState, ubyte* pbCollapseState, uint* lpbkLocation);
 }
 // [Not Found] IID_IProfSect
 interface IProfSect : IMAPIProp
@@ -699,19 +699,19 @@ interface IProfSect : IMAPIProp
 // [Not Found] IID_IMAPIStatus
 interface IMAPIStatus : IMAPIProp
 {
-    HRESULT ValidateState(ulong, uint);
-    HRESULT SettingsDialog(ulong, uint);
-    HRESULT ChangePassword(byte*, byte*, uint);
-    HRESULT FlushQueues(ulong, uint, ENTRYID*, uint);
+    HRESULT ValidateState(ulong ulUIParam, uint ulFlags);
+    HRESULT SettingsDialog(ulong ulUIParam, uint ulFlags);
+    HRESULT ChangePassword(byte* lpOldPass, byte* lpNewPass, uint ulFlags);
+    HRESULT FlushQueues(ulong ulUIParam, uint cbTargetTransport, ENTRYID* lpTargetTransport, uint ulFlags);
 }
 // [Not Found] IID_IMAPIContainer
 interface IMAPIContainer : IMAPIProp
 {
-    HRESULT GetContentsTable(uint, IMAPITable*);
-    HRESULT GetHierarchyTable(uint, IMAPITable*);
-    HRESULT OpenEntry(uint, ENTRYID*, GUID*, uint, uint*, IUnknown*);
-    HRESULT SetSearchCriteria(SRestriction*, SBinaryArray*, uint);
-    HRESULT GetSearchCriteria(uint, SRestriction**, SBinaryArray**, uint*);
+    HRESULT GetContentsTable(uint ulFlags, IMAPITable* lppTable);
+    HRESULT GetHierarchyTable(uint ulFlags, IMAPITable* lppTable);
+    HRESULT OpenEntry(uint cbEntryID, ENTRYID* lpEntryID, GUID* lpInterface, uint ulFlags, uint* lpulObjType, IUnknown* lppUnk);
+    HRESULT SetSearchCriteria(SRestriction* lpRestriction, SBinaryArray* lpContainerList, uint ulSearchFlags);
+    HRESULT GetSearchCriteria(uint ulFlags, SRestriction** lppRestriction, SBinaryArray** lppContainerList, uint* lpulSearchState);
 }
 struct FlagList
 {
@@ -721,10 +721,10 @@ struct FlagList
 // [Not Found] IID_IABContainer
 interface IABContainer : IMAPIContainer
 {
-    HRESULT CreateEntry(uint, ENTRYID*, uint, IMAPIProp*);
-    HRESULT CopyEntries(SBinaryArray*, ulong, IMAPIProgress, uint);
-    HRESULT DeleteEntries(SBinaryArray*, uint);
-    HRESULT ResolveNames(SPropTagArray*, uint, ADRLIST*, FlagList*);
+    HRESULT CreateEntry(uint cbEntryID, ENTRYID* lpEntryID, uint ulCreateFlags, IMAPIProp* lppMAPIPropEntry);
+    HRESULT CopyEntries(SBinaryArray* lpEntries, ulong ulUIParam, IMAPIProgress lpProgress, uint ulFlags);
+    HRESULT DeleteEntries(SBinaryArray* lpEntries, uint ulFlags);
+    HRESULT ResolveNames(SPropTagArray* lpPropTagArray, uint ulFlags, ADRLIST* lpAdrList, FlagList* lpFlagList);
 }
 // [Not Found] IID_IMailUser
 interface IMailUser : IMAPIProp
@@ -733,62 +733,62 @@ interface IMailUser : IMAPIProp
 // [Not Found] IID_IDistList
 interface IDistList : IMAPIContainer
 {
-    HRESULT CreateEntry(uint, ENTRYID*, uint, IMAPIProp*);
-    HRESULT CopyEntries(SBinaryArray*, ulong, IMAPIProgress, uint);
-    HRESULT DeleteEntries(SBinaryArray*, uint);
-    HRESULT ResolveNames(SPropTagArray*, uint, ADRLIST*, FlagList*);
+    HRESULT CreateEntry(uint cbEntryID, ENTRYID* lpEntryID, uint ulCreateFlags, IMAPIProp* lppMAPIPropEntry);
+    HRESULT CopyEntries(SBinaryArray* lpEntries, ulong ulUIParam, IMAPIProgress lpProgress, uint ulFlags);
+    HRESULT DeleteEntries(SBinaryArray* lpEntries, uint ulFlags);
+    HRESULT ResolveNames(SPropTagArray* lpPropTagArray, uint ulFlags, ADRLIST* lpAdrList, FlagList* lpFlagList);
 }
 // [Not Found] IID_IMAPIFolder
 interface IMAPIFolder : IMAPIContainer
 {
-    HRESULT CreateMessage(GUID*, uint, IMessage*);
-    HRESULT CopyMessages(SBinaryArray*, GUID*, void*, ulong, IMAPIProgress, uint);
-    HRESULT DeleteMessages(SBinaryArray*, ulong, IMAPIProgress, uint);
-    HRESULT CreateFolder(uint, byte*, byte*, GUID*, uint, IMAPIFolder*);
-    HRESULT CopyFolder(uint, ENTRYID*, GUID*, void*, byte*, ulong, IMAPIProgress, uint);
-    HRESULT DeleteFolder(uint, ENTRYID*, ulong, IMAPIProgress, uint);
-    HRESULT SetReadFlags(SBinaryArray*, ulong, IMAPIProgress, uint);
-    HRESULT GetMessageStatus(uint, ENTRYID*, uint, uint*);
-    HRESULT SetMessageStatus(uint, ENTRYID*, uint, uint, uint*);
-    HRESULT SaveContentsSort(SSortOrderSet*, uint);
-    HRESULT EmptyFolder(ulong, IMAPIProgress, uint);
+    HRESULT CreateMessage(GUID* lpInterface, uint ulFlags, IMessage* lppMessage);
+    HRESULT CopyMessages(SBinaryArray* lpMsgList, GUID* lpInterface, void* lpDestFolder, ulong ulUIParam, IMAPIProgress lpProgress, uint ulFlags);
+    HRESULT DeleteMessages(SBinaryArray* lpMsgList, ulong ulUIParam, IMAPIProgress lpProgress, uint ulFlags);
+    HRESULT CreateFolder(uint ulFolderType, byte* lpszFolderName, byte* lpszFolderComment, GUID* lpInterface, uint ulFlags, IMAPIFolder* lppFolder);
+    HRESULT CopyFolder(uint cbEntryID, ENTRYID* lpEntryID, GUID* lpInterface, void* lpDestFolder, byte* lpszNewFolderName, ulong ulUIParam, IMAPIProgress lpProgress, uint ulFlags);
+    HRESULT DeleteFolder(uint cbEntryID, ENTRYID* lpEntryID, ulong ulUIParam, IMAPIProgress lpProgress, uint ulFlags);
+    HRESULT SetReadFlags(SBinaryArray* lpMsgList, ulong ulUIParam, IMAPIProgress lpProgress, uint ulFlags);
+    HRESULT GetMessageStatus(uint cbEntryID, ENTRYID* lpEntryID, uint ulFlags, uint* lpulMessageStatus);
+    HRESULT SetMessageStatus(uint cbEntryID, ENTRYID* lpEntryID, uint ulNewStatus, uint ulNewStatusMask, uint* lpulOldStatus);
+    HRESULT SaveContentsSort(SSortOrderSet* lpSortCriteria, uint ulFlags);
+    HRESULT EmptyFolder(ulong ulUIParam, IMAPIProgress lpProgress, uint ulFlags);
 }
 // [Not Found] IID_IMsgStore
 interface IMsgStore : IMAPIProp
 {
-    HRESULT Advise(uint, ENTRYID*, uint, IMAPIAdviseSink, uint*);
-    HRESULT Unadvise(uint);
-    HRESULT CompareEntryIDs(uint, ENTRYID*, uint, ENTRYID*, uint, uint*);
-    HRESULT OpenEntry(uint, ENTRYID*, GUID*, uint, uint*, IUnknown*);
-    HRESULT SetReceiveFolder(byte*, uint, uint, ENTRYID*);
-    HRESULT GetReceiveFolder(byte*, uint, uint*, ENTRYID**, byte**);
-    HRESULT GetReceiveFolderTable(uint, IMAPITable*);
-    HRESULT StoreLogoff(uint*);
-    HRESULT AbortSubmit(uint, ENTRYID*, uint);
-    HRESULT GetOutgoingQueue(uint, IMAPITable*);
-    HRESULT SetLockState(IMessage, uint);
-    HRESULT FinishedMsg(uint, uint, ENTRYID*);
-    HRESULT NotifyNewMail(NOTIFICATION*);
+    HRESULT Advise(uint cbEntryID, ENTRYID* lpEntryID, uint ulEventMask, IMAPIAdviseSink lpAdviseSink, uint* lpulConnection);
+    HRESULT Unadvise(uint ulConnection);
+    HRESULT CompareEntryIDs(uint cbEntryID1, ENTRYID* lpEntryID1, uint cbEntryID2, ENTRYID* lpEntryID2, uint ulFlags, uint* lpulResult);
+    HRESULT OpenEntry(uint cbEntryID, ENTRYID* lpEntryID, GUID* lpInterface, uint ulFlags, uint* lpulObjType, IUnknown* ppUnk);
+    HRESULT SetReceiveFolder(byte* lpszMessageClass, uint ulFlags, uint cbEntryID, ENTRYID* lpEntryID);
+    HRESULT GetReceiveFolder(byte* lpszMessageClass, uint ulFlags, uint* lpcbEntryID, ENTRYID** lppEntryID, byte** lppszExplicitClass);
+    HRESULT GetReceiveFolderTable(uint ulFlags, IMAPITable* lppTable);
+    HRESULT StoreLogoff(uint* lpulFlags);
+    HRESULT AbortSubmit(uint cbEntryID, ENTRYID* lpEntryID, uint ulFlags);
+    HRESULT GetOutgoingQueue(uint ulFlags, IMAPITable* lppTable);
+    HRESULT SetLockState(IMessage lpMessage, uint ulLockState);
+    HRESULT FinishedMsg(uint ulFlags, uint cbEntryID, ENTRYID* lpEntryID);
+    HRESULT NotifyNewMail(NOTIFICATION* lpNotification);
 }
 // [Not Found] IID_IMessage
 interface IMessage : IMAPIProp
 {
-    HRESULT GetAttachmentTable(uint, IMAPITable*);
-    HRESULT OpenAttach(uint, GUID*, uint, IAttach*);
-    HRESULT CreateAttach(GUID*, uint, uint*, IAttach*);
-    HRESULT DeleteAttach(uint, ulong, IMAPIProgress, uint);
-    HRESULT GetRecipientTable(uint, IMAPITable*);
-    HRESULT ModifyRecipients(uint, ADRLIST*);
-    HRESULT SubmitMessage(uint);
-    HRESULT SetReadFlag(uint);
+    HRESULT GetAttachmentTable(uint ulFlags, IMAPITable* lppTable);
+    HRESULT OpenAttach(uint ulAttachmentNum, GUID* lpInterface, uint ulFlags, IAttach* lppAttach);
+    HRESULT CreateAttach(GUID* lpInterface, uint ulFlags, uint* lpulAttachmentNum, IAttach* lppAttach);
+    HRESULT DeleteAttach(uint ulAttachmentNum, ulong ulUIParam, IMAPIProgress lpProgress, uint ulFlags);
+    HRESULT GetRecipientTable(uint ulFlags, IMAPITable* lppTable);
+    HRESULT ModifyRecipients(uint ulFlags, ADRLIST* lpMods);
+    HRESULT SubmitMessage(uint ulFlags);
+    HRESULT SetReadFlag(uint ulFlags);
 }
 // [Not Found] IID_IAttach
 interface IAttach : IMAPIProp
 {
 }
-alias LPFNABSDI = BOOL function(ulong, void*);
-alias LPFNDISMISS = void function(ulong, void*);
-alias LPFNBUTTON = int function(ulong, void*, uint, ENTRYID*, uint);
+alias LPFNABSDI = BOOL function(ulong ulUIParam, void* lpvmsg);
+alias LPFNDISMISS = void function(ulong ulUIParam, void* lpvContext);
+alias LPFNBUTTON = int function(ulong ulUIParam, void* lpvContext, uint cbEntryID, ENTRYID* lpSelection, uint ulFlags);
 struct ADRPARM
 {
     uint cbABContEntryID;
@@ -813,9 +813,9 @@ struct ADRPARM
 // [Not Found] IID_IMAPIControl
 interface IMAPIControl : IUnknown
 {
-    HRESULT GetLastError(HRESULT, uint, MAPIERROR**);
-    HRESULT Activate(uint, ulong);
-    HRESULT GetState(uint, uint*);
+    HRESULT GetLastError(HRESULT hResult, uint ulFlags, MAPIERROR** lppMAPIError);
+    HRESULT Activate(uint ulFlags, ulong ulUIParam);
+    HRESULT GetState(uint ulFlags, uint* lpulState);
 }
 struct DTBLLABEL
 {
@@ -895,11 +895,11 @@ struct DTBLMVDDLBX
 // [Not Found] IID_IProviderAdmin
 interface IProviderAdmin : IUnknown
 {
-    HRESULT GetLastError(HRESULT, uint, MAPIERROR**);
-    HRESULT GetProviderTable(uint, IMAPITable*);
-    HRESULT CreateProvider(byte*, uint, SPropValue*, ulong, uint, MAPIUID*);
-    HRESULT DeleteProvider(MAPIUID*);
-    HRESULT OpenProfileSection(MAPIUID*, GUID*, uint, IProfSect*);
+    HRESULT GetLastError(HRESULT hResult, uint ulFlags, MAPIERROR** lppMAPIError);
+    HRESULT GetProviderTable(uint ulFlags, IMAPITable* lppTable);
+    HRESULT CreateProvider(byte* lpszProvider, uint cValues, SPropValue* lpProps, ulong ulUIParam, uint ulFlags, MAPIUID* lpUID);
+    HRESULT DeleteProvider(MAPIUID* lpUID);
+    HRESULT OpenProfileSection(MAPIUID* lpUID, GUID* lpInterface, uint ulFlags, IProfSect* lppProfSect);
 }
 alias Gender = int;
 enum : int
@@ -909,30 +909,30 @@ enum : int
     genderMale        = 0x00000002,
 }
 
-alias CALLERRELEASE = void function(uint, ITableData, IMAPITable);
+alias CALLERRELEASE = void function(uint ulCallerData, ITableData lpTblData, IMAPITable lpVue);
 // [Not Found] IID_ITableData
 interface ITableData : IUnknown
 {
-    HRESULT HrGetView(SSortOrderSet*, CALLERRELEASE*, uint, IMAPITable*);
-    HRESULT HrModifyRow(SRow*);
-    HRESULT HrDeleteRow(SPropValue*);
-    HRESULT HrQueryRow(SPropValue*, SRow**, uint*);
-    HRESULT HrEnumRow(uint, SRow**);
-    HRESULT HrNotify(uint, uint, SPropValue*);
-    HRESULT HrInsertRow(uint, SRow*);
-    HRESULT HrModifyRows(uint, SRowSet*);
-    HRESULT HrDeleteRows(uint, SRowSet*, uint*);
+    HRESULT HrGetView(SSortOrderSet* lpSSortOrderSet, CALLERRELEASE* lpfCallerRelease, uint ulCallerData, IMAPITable* lppMAPITable);
+    HRESULT HrModifyRow(SRow* param0);
+    HRESULT HrDeleteRow(SPropValue* lpSPropValue);
+    HRESULT HrQueryRow(SPropValue* lpsPropValue, SRow** lppSRow, uint* lpuliRow);
+    HRESULT HrEnumRow(uint ulRowNumber, SRow** lppSRow);
+    HRESULT HrNotify(uint ulFlags, uint cValues, SPropValue* lpSPropValue);
+    HRESULT HrInsertRow(uint uliRow, SRow* lpSRow);
+    HRESULT HrModifyRows(uint ulFlags, SRowSet* lpSRowSet);
+    HRESULT HrDeleteRows(uint ulFlags, SRowSet* lprowsetToDelete, uint* cRowsDeleted);
 }
 // [Not Found] IID_IPropData
 interface IPropData : IMAPIProp
 {
-    HRESULT HrSetObjAccess(uint);
-    HRESULT HrSetPropAccess(SPropTagArray*, uint*);
-    HRESULT HrGetPropAccess(SPropTagArray**, uint**);
-    HRESULT HrAddObjProps(SPropTagArray*, SPropProblemArray**);
+    HRESULT HrSetObjAccess(uint ulAccess);
+    HRESULT HrSetPropAccess(SPropTagArray* lpPropTagArray, uint* rgulAccess);
+    HRESULT HrGetPropAccess(SPropTagArray** lppPropTagArray, uint** lprgulAccess);
+    HRESULT HrAddObjProps(SPropTagArray* lppPropTagArray, SPropProblemArray** lprgulAccess);
 }
-alias PFNIDLE = BOOL function(void*);
-alias LPOPENSTREAMONFILE = HRESULT function(LPALLOCATEBUFFER, LPFREEBUFFER, uint, byte*, byte*, IStream*);
+alias PFNIDLE = BOOL function(void* param0);
+alias LPOPENSTREAMONFILE = HRESULT function(LPALLOCATEBUFFER lpAllocateBuffer, LPFREEBUFFER lpFreeBuffer, uint ulFlags, byte* lpszFileName, byte* lpszPrefix, IStream* lppStream);
 struct DTCTL
 {
     uint ulCtlType;
@@ -969,46 +969,46 @@ struct DTPAGE
     }
     DTCTL* lpctl;
 }
-alias LPDISPATCHNOTIFICATIONS = HRESULT function(uint);
-alias LPCREATECONVERSATIONINDEX = int function(uint, ubyte*, uint*, ubyte**);
+alias LPDISPATCHNOTIFICATIONS = HRESULT function(uint ulFlags);
+alias LPCREATECONVERSATIONINDEX = int function(uint cbParent, ubyte* lpbParent, uint* lpcbConvIndex, ubyte** lppbConvIndex);
 // [Not Found] IID_IAddrBook
 interface IAddrBook : IMAPIProp
 {
-    HRESULT OpenEntry(uint, ENTRYID*, GUID*, uint, uint*, IUnknown*);
-    HRESULT CompareEntryIDs(uint, ENTRYID*, uint, ENTRYID*, uint, uint*);
-    HRESULT Advise(uint, ENTRYID*, uint, IMAPIAdviseSink, uint*);
-    HRESULT Unadvise(uint);
-    HRESULT CreateOneOff(byte*, byte*, byte*, uint, uint*, ENTRYID**);
-    HRESULT NewEntry(uint, uint, uint, ENTRYID*, uint, ENTRYID*, uint*, ENTRYID**);
-    HRESULT ResolveName(ulong, uint, byte*, ADRLIST*);
-    HRESULT Address(uint*, ADRPARM*, ADRLIST**);
-    HRESULT Details(ulong*, LPFNDISMISS, void*, uint, ENTRYID*, LPFNBUTTON, void*, byte*, uint);
-    HRESULT RecipOptions(uint, uint, ADRENTRY*);
-    HRESULT QueryDefaultRecipOpt(byte*, uint, uint*, SPropValue**);
-    HRESULT GetPAB(uint*, ENTRYID**);
-    HRESULT SetPAB(uint, ENTRYID*);
-    HRESULT GetDefaultDir(uint*, ENTRYID**);
-    HRESULT SetDefaultDir(uint, ENTRYID*);
-    HRESULT GetSearchPath(uint, SRowSet**);
-    HRESULT SetSearchPath(uint, SRowSet*);
-    HRESULT PrepareRecips(uint, SPropTagArray*, ADRLIST*);
+    HRESULT OpenEntry(uint cbEntryID, ENTRYID* lpEntryID, GUID* lpInterface, uint ulFlags, uint* lpulObjType, IUnknown* lppUnk);
+    HRESULT CompareEntryIDs(uint cbEntryID1, ENTRYID* lpEntryID1, uint cbEntryID2, ENTRYID* lpEntryID2, uint ulFlags, uint* lpulResult);
+    HRESULT Advise(uint cbEntryID, ENTRYID* lpEntryID, uint ulEventMask, IMAPIAdviseSink lpAdviseSink, uint* lpulConnection);
+    HRESULT Unadvise(uint ulConnection);
+    HRESULT CreateOneOff(byte* lpszName, byte* lpszAdrType, byte* lpszAddress, uint ulFlags, uint* lpcbEntryID, ENTRYID** lppEntryID);
+    HRESULT NewEntry(uint ulUIParam, uint ulFlags, uint cbEIDContainer, ENTRYID* lpEIDContainer, uint cbEIDNewEntryTpl, ENTRYID* lpEIDNewEntryTpl, uint* lpcbEIDNewEntry, ENTRYID** lppEIDNewEntry);
+    HRESULT ResolveName(ulong ulUIParam, uint ulFlags, byte* lpszNewEntryTitle, ADRLIST* lpAdrList);
+    HRESULT Address(uint* lpulUIParam, ADRPARM* lpAdrParms, ADRLIST** lppAdrList);
+    HRESULT Details(ulong* lpulUIParam, LPFNDISMISS lpfnDismiss, void* lpvDismissContext, uint cbEntryID, ENTRYID* lpEntryID, LPFNBUTTON lpfButtonCallback, void* lpvButtonContext, byte* lpszButtonText, uint ulFlags);
+    HRESULT RecipOptions(uint ulUIParam, uint ulFlags, ADRENTRY* lpRecip);
+    HRESULT QueryDefaultRecipOpt(byte* lpszAdrType, uint ulFlags, uint* lpcValues, SPropValue** lppOptions);
+    HRESULT GetPAB(uint* lpcbEntryID, ENTRYID** lppEntryID);
+    HRESULT SetPAB(uint cbEntryID, ENTRYID* lpEntryID);
+    HRESULT GetDefaultDir(uint* lpcbEntryID, ENTRYID** lppEntryID);
+    HRESULT SetDefaultDir(uint cbEntryID, ENTRYID* lpEntryID);
+    HRESULT GetSearchPath(uint ulFlags, SRowSet** lppSearchPath);
+    HRESULT SetSearchPath(uint ulFlags, SRowSet* lpSearchPath);
+    HRESULT PrepareRecips(uint ulFlags, SPropTagArray* lpPropTagArray, ADRLIST* lpRecipList);
 }
 // [Not Found] IID_IWABObject
 interface IWABObject : IUnknown
 {
-    HRESULT GetLastError(HRESULT, uint, MAPIERROR**);
-    HRESULT AllocateBuffer(uint, void**);
-    HRESULT AllocateMore(uint, void*, void**);
-    HRESULT FreeBuffer(void*);
-    HRESULT Backup(PSTR);
-    HRESULT Import(PSTR);
-    HRESULT Find(IAddrBook, HWND);
-    HRESULT VCardDisplay(IAddrBook, HWND, PSTR);
-    HRESULT LDAPUrl(IAddrBook, HWND, uint, PSTR, IMailUser*);
-    HRESULT VCardCreate(IAddrBook, uint, PSTR, IMailUser);
-    HRESULT VCardRetrieve(IAddrBook, uint, PSTR, IMailUser*);
-    HRESULT GetMe(IAddrBook, uint, uint*, SBinary*, HWND);
-    HRESULT SetMe(IAddrBook, uint, SBinary, HWND);
+    HRESULT GetLastError(HRESULT hResult, uint ulFlags, MAPIERROR** lppMAPIError);
+    HRESULT AllocateBuffer(uint cbSize, void** lppBuffer);
+    HRESULT AllocateMore(uint cbSize, void* lpObject, void** lppBuffer);
+    HRESULT FreeBuffer(void* lpBuffer);
+    HRESULT Backup(PSTR lpFileName);
+    HRESULT Import(PSTR lpWIP);
+    HRESULT Find(IAddrBook lpIAB, HWND hWnd);
+    HRESULT VCardDisplay(IAddrBook lpIAB, HWND hWnd, PSTR lpszFileName);
+    HRESULT LDAPUrl(IAddrBook lpIAB, HWND hWnd, uint ulFlags, PSTR lpszURL, IMailUser* lppMailUser);
+    HRESULT VCardCreate(IAddrBook lpIAB, uint ulFlags, PSTR lpszVCard, IMailUser lpMailUser);
+    HRESULT VCardRetrieve(IAddrBook lpIAB, uint ulFlags, PSTR lpszVCard, IMailUser* lppMailUser);
+    HRESULT GetMe(IAddrBook lpIAB, uint ulFlags, uint* lpdwAction, SBinary* lpsbEID, HWND hwnd);
+    HRESULT SetMe(IAddrBook lpIAB, uint ulFlags, SBinary sbEID, HWND hwnd);
 }
 struct WAB_PARAM
 {
@@ -1018,8 +1018,8 @@ struct WAB_PARAM
     uint ulFlags;
     GUID guidPSExt;
 }
-alias LPWABOPEN = HRESULT function(IAddrBook*, IWABObject*, WAB_PARAM*, uint);
-alias LPWABOPENEX = HRESULT function(IAddrBook*, IWABObject*, WAB_PARAM*, uint, LPALLOCATEBUFFER, LPALLOCATEMORE, LPFREEBUFFER);
+alias LPWABOPEN = HRESULT function(IAddrBook* lppAdrBook, IWABObject* lppWABObject, WAB_PARAM* lpWP, uint Reserved2);
+alias LPWABOPENEX = HRESULT function(IAddrBook* lppAdrBook, IWABObject* lppWABObject, WAB_PARAM* lpWP, uint Reserved, LPALLOCATEBUFFER fnAllocateBuffer, LPALLOCATEMORE fnAllocateMore, LPFREEBUFFER fnFreeBuffer);
 struct WABIMPORTPARAM
 {
     uint cbSize;
@@ -1043,11 +1043,11 @@ struct WABEXTDISPLAY
 enum IID_IWABExtInit = GUID(0xea22ebf0, 0x87a4, 0x11d1, [0x9a, 0xcf, 0x0, 0xa0, 0xc9, 0x1f, 0x9c, 0x8b]);
 interface IWABExtInit : IUnknown
 {
-    HRESULT Initialize(WABEXTDISPLAY*);
+    HRESULT Initialize(WABEXTDISPLAY* lpWABExtDisplay);
 }
-alias LPWABALLOCATEBUFFER = int function(IWABObject, uint, void**);
-alias LPWABALLOCATEMORE = int function(IWABObject, uint, void*, void**);
-alias LPWABFREEBUFFER = uint function(IWABObject, void*);
+alias LPWABALLOCATEBUFFER = int function(IWABObject lpWABObject, uint cbSize, void** lppBuffer);
+alias LPWABALLOCATEMORE = int function(IWABObject lpWABObject, uint cbSize, void* lpObject, void** lppBuffer);
+alias LPWABFREEBUFFER = uint function(IWABObject lpWABObject, void* lpBuffer);
 struct NOTIFKEY
 {
     uint cb;

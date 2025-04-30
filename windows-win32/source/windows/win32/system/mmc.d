@@ -116,14 +116,14 @@ struct MMC_SNAPIN_PROPERTY
 enum IID_ISnapinProperties = GUID(0xf7889da9, 0x4a02, 0x4837, [0xbf, 0x89, 0x1a, 0x6f, 0x2a, 0x2, 0x10, 0x10]);
 interface ISnapinProperties : IUnknown
 {
-    HRESULT Initialize(Properties);
-    HRESULT QueryPropertyNames(ISnapinPropertiesCallback);
-    HRESULT PropertiesChanged(int, MMC_SNAPIN_PROPERTY*);
+    HRESULT Initialize(Properties pProperties);
+    HRESULT QueryPropertyNames(ISnapinPropertiesCallback pCallback);
+    HRESULT PropertiesChanged(int cProperties, MMC_SNAPIN_PROPERTY* pProperties);
 }
 enum IID_ISnapinPropertiesCallback = GUID(0xa50fa2e5, 0x7e61, 0x45eb, [0xa8, 0xd4, 0x9a, 0x7, 0xb3, 0xe8, 0x51, 0xa8]);
 interface ISnapinPropertiesCallback : IUnknown
 {
-    HRESULT AddPropertyName(const(wchar)*, uint);
+    HRESULT AddPropertyName(const(wchar)* pszPropName, uint dwFlags);
 }
 alias _DocumentMode = int;
 enum : int
@@ -168,32 +168,32 @@ interface _Application : IDispatch
 {
     void Help();
     void Quit();
-    HRESULT get_Document(Document*);
-    HRESULT Load(BSTR);
-    HRESULT get_Frame(Frame*);
-    HRESULT get_Visible(BOOL*);
+    HRESULT get_Document(Document* Document);
+    HRESULT Load(BSTR Filename);
+    HRESULT get_Frame(Frame* Frame);
+    HRESULT get_Visible(BOOL* Visible);
     HRESULT Show();
     HRESULT Hide();
-    HRESULT get_UserControl(BOOL*);
-    HRESULT put_UserControl(BOOL);
-    HRESULT get_VersionMajor(int*);
-    HRESULT get_VersionMinor(int*);
+    HRESULT get_UserControl(BOOL* UserControl);
+    HRESULT put_UserControl(BOOL UserControl);
+    HRESULT get_VersionMajor(int* VersionMajor);
+    HRESULT get_VersionMinor(int* VersionMinor);
 }
 enum IID__AppEvents = GUID(0xde46cbdd, 0x53f5, 0x4635, [0xaf, 0x54, 0x4f, 0xe7, 0x1e, 0x92, 0x3d, 0x3f]);
 interface _AppEvents : IDispatch
 {
-    HRESULT OnQuit(_Application);
-    HRESULT OnDocumentOpen(Document, BOOL);
-    HRESULT OnDocumentClose(Document);
-    HRESULT OnSnapInAdded(Document, SnapIn);
-    HRESULT OnSnapInRemoved(Document, SnapIn);
-    HRESULT OnNewView(View);
-    HRESULT OnViewClose(View);
-    HRESULT OnViewChange(View, Node);
-    HRESULT OnSelectionChange(View, Nodes);
-    HRESULT OnContextMenuExecuted(MenuItem);
+    HRESULT OnQuit(_Application Application);
+    HRESULT OnDocumentOpen(Document Document, BOOL New);
+    HRESULT OnDocumentClose(Document Document);
+    HRESULT OnSnapInAdded(Document Document, SnapIn SnapIn);
+    HRESULT OnSnapInRemoved(Document Document, SnapIn SnapIn);
+    HRESULT OnNewView(View View);
+    HRESULT OnViewClose(View View);
+    HRESULT OnViewChange(View View, Node NewOwnerNode);
+    HRESULT OnSelectionChange(View View, Nodes NewNodes);
+    HRESULT OnContextMenuExecuted(MenuItem MenuItem);
     HRESULT OnToolbarButtonClicked();
-    HRESULT OnListUpdated(View);
+    HRESULT OnListUpdated(View View);
 }
 enum IID_AppEvents = GUID(0xfc7a4252, 0x78ac, 0x4532, [0x8c, 0x5a, 0x56, 0x3c, 0xfe, 0x13, 0x88, 0x63]);
 interface AppEvents : IDispatch
@@ -206,7 +206,7 @@ struct Application
 enum IID__EventConnector = GUID(0xc0bccd30, 0xde44, 0x4528, [0x84, 0x3, 0xa0, 0x5a, 0x6a, 0x1c, 0xc8, 0xea]);
 interface _EventConnector : IDispatch
 {
-    HRESULT ConnectTo(_Application);
+    HRESULT ConnectTo(_Application Application);
     HRESULT Disconnect();
 }
 enum CLSID_AppEventsDHTMLConnector = GUID(0xade6444b, 0xc91f, 0x4e37, [0x92, 0xa4, 0x5b, 0xb4, 0x30, 0xa3, 0x33, 0x40]);
@@ -219,97 +219,97 @@ interface Frame : IDispatch
     HRESULT Maximize();
     HRESULT Minimize();
     HRESULT Restore();
-    HRESULT get_Top(int*);
-    HRESULT put_Top(int);
-    HRESULT get_Bottom(int*);
-    HRESULT put_Bottom(int);
-    HRESULT get_Left(int*);
-    HRESULT put_Left(int);
-    HRESULT get_Right(int*);
-    HRESULT put_Right(int);
+    HRESULT get_Top(int* Top);
+    HRESULT put_Top(int top);
+    HRESULT get_Bottom(int* Bottom);
+    HRESULT put_Bottom(int bottom);
+    HRESULT get_Left(int* Left);
+    HRESULT put_Left(int left);
+    HRESULT get_Right(int* Right);
+    HRESULT put_Right(int right);
 }
 enum IID_Node = GUID(0xf81ed800, 0x7839, 0x4447, [0x94, 0x5d, 0x8e, 0x15, 0xda, 0x59, 0xca, 0x55]);
 interface Node : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Property(BSTR, BSTR*);
-    HRESULT get_Bookmark(BSTR*);
-    HRESULT IsScopeNode(BOOL*);
-    HRESULT get_Nodetype(BSTR*);
+    HRESULT get_Name(BSTR* Name);
+    HRESULT get_Property(BSTR PropertyName, BSTR* PropertyValue);
+    HRESULT get_Bookmark(BSTR* Bookmark);
+    HRESULT IsScopeNode(BOOL* IsScopeNode);
+    HRESULT get_Nodetype(BSTR* Nodetype);
 }
 enum IID_ScopeNamespace = GUID(0xebbb48dc, 0x1a3b, 0x4d86, [0xb7, 0x86, 0xc2, 0x1b, 0x28, 0x38, 0x90, 0x12]);
 interface ScopeNamespace : IDispatch
 {
-    HRESULT GetParent(Node, Node*);
-    HRESULT GetChild(Node, Node*);
-    HRESULT GetNext(Node, Node*);
-    HRESULT GetRoot(Node*);
-    HRESULT Expand(Node);
+    HRESULT GetParent(Node Node, Node* Parent);
+    HRESULT GetChild(Node Node, Node* Child);
+    HRESULT GetNext(Node Node, Node* Next);
+    HRESULT GetRoot(Node* Root);
+    HRESULT Expand(Node Node);
 }
 enum IID_Document = GUID(0x225120d6, 0x1e0f, 0x40a3, [0x93, 0xfe, 0x10, 0x79, 0xe6, 0xa8, 0x1, 0x7b]);
 interface Document : IDispatch
 {
     HRESULT Save();
-    HRESULT SaveAs(BSTR);
-    HRESULT Close(BOOL);
-    HRESULT get_Views(Views*);
-    HRESULT get_SnapIns(SnapIns*);
-    HRESULT get_ActiveView(View*);
-    HRESULT get_Name(BSTR*);
-    HRESULT put_Name(BSTR);
-    HRESULT get_Location(BSTR*);
-    HRESULT get_IsSaved(BOOL*);
-    HRESULT get_Mode(_DocumentMode*);
-    HRESULT put_Mode(_DocumentMode);
-    HRESULT get_RootNode(Node*);
-    HRESULT get_ScopeNamespace(ScopeNamespace*);
-    HRESULT CreateProperties(Properties*);
-    HRESULT get_Application(_Application*);
+    HRESULT SaveAs(BSTR Filename);
+    HRESULT Close(BOOL SaveChanges);
+    HRESULT get_Views(Views* Views);
+    HRESULT get_SnapIns(SnapIns* SnapIns);
+    HRESULT get_ActiveView(View* View);
+    HRESULT get_Name(BSTR* Name);
+    HRESULT put_Name(BSTR Name);
+    HRESULT get_Location(BSTR* Location);
+    HRESULT get_IsSaved(BOOL* IsSaved);
+    HRESULT get_Mode(_DocumentMode* Mode);
+    HRESULT put_Mode(_DocumentMode Mode);
+    HRESULT get_RootNode(Node* Node);
+    HRESULT get_ScopeNamespace(ScopeNamespace* ScopeNamespace);
+    HRESULT CreateProperties(Properties* Properties);
+    HRESULT get_Application(_Application* Application);
 }
 enum IID_SnapIn = GUID(0x3be910f6, 0x3459, 0x49c6, [0xa1, 0xbb, 0x41, 0xe6, 0xbe, 0x9d, 0xf3, 0xea]);
 interface SnapIn : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Vendor(BSTR*);
-    HRESULT get_Version(BSTR*);
-    HRESULT get_Extensions(Extensions*);
-    HRESULT get_SnapinCLSID(BSTR*);
-    HRESULT get_Properties(Properties*);
-    HRESULT EnableAllExtensions(BOOL);
+    HRESULT get_Name(BSTR* Name);
+    HRESULT get_Vendor(BSTR* Vendor);
+    HRESULT get_Version(BSTR* Version);
+    HRESULT get_Extensions(Extensions* Extensions);
+    HRESULT get_SnapinCLSID(BSTR* SnapinCLSID);
+    HRESULT get_Properties(Properties* Properties);
+    HRESULT EnableAllExtensions(BOOL Enable);
 }
 enum IID_SnapIns = GUID(0x2ef3de1d, 0xb12a, 0x49d1, [0x92, 0xc5, 0xb, 0x0, 0x79, 0x87, 0x68, 0xf1]);
 interface SnapIns : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Item(int, SnapIn*);
-    HRESULT get_Count(int*);
-    HRESULT Add(BSTR, VARIANT, VARIANT, SnapIn*);
-    HRESULT Remove(SnapIn);
+    HRESULT get__NewEnum(IUnknown* retval);
+    HRESULT Item(int Index, SnapIn* SnapIn);
+    HRESULT get_Count(int* Count);
+    HRESULT Add(BSTR SnapinNameOrCLSID, VARIANT ParentSnapin, VARIANT Properties, SnapIn* SnapIn);
+    HRESULT Remove(SnapIn SnapIn);
 }
 enum IID_Extension = GUID(0xad4d6ca6, 0x912f, 0x409b, [0xa2, 0x6e, 0x7f, 0xd2, 0x34, 0xae, 0xf5, 0x42]);
 interface Extension : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Vendor(BSTR*);
-    HRESULT get_Version(BSTR*);
-    HRESULT get_Extensions(Extensions*);
-    HRESULT get_SnapinCLSID(BSTR*);
-    HRESULT EnableAllExtensions(BOOL);
-    HRESULT Enable(BOOL);
+    HRESULT get_Name(BSTR* Name);
+    HRESULT get_Vendor(BSTR* Vendor);
+    HRESULT get_Version(BSTR* Version);
+    HRESULT get_Extensions(Extensions* Extensions);
+    HRESULT get_SnapinCLSID(BSTR* SnapinCLSID);
+    HRESULT EnableAllExtensions(BOOL Enable);
+    HRESULT Enable(BOOL Enable);
 }
 enum IID_Extensions = GUID(0x82dbea43, 0x8ca4, 0x44bc, [0xa2, 0xca, 0xd1, 0x87, 0x41, 0x5, 0x9e, 0xc8]);
 interface Extensions : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Item(int, Extension*);
-    HRESULT get_Count(int*);
+    HRESULT get__NewEnum(IUnknown* retval);
+    HRESULT Item(int Index, Extension* Extension);
+    HRESULT get_Count(int* Count);
 }
 enum IID_Columns = GUID(0x383d4d97, 0xfc44, 0x478b, [0xb1, 0x39, 0x63, 0x23, 0xdc, 0x48, 0x61, 0x1c]);
 interface Columns : IDispatch
 {
-    HRESULT Item(int, Column*);
-    HRESULT get_Count(int*);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT Item(int Index, Column* Column);
+    HRESULT get_Count(int* Count);
+    HRESULT get__NewEnum(IUnknown* retval);
 }
 alias _ColumnSortOrder = int;
 enum : int
@@ -321,108 +321,108 @@ enum : int
 enum IID_Column = GUID(0xfd1c5f63, 0x2b16, 0x4d06, [0x9a, 0xb3, 0xf4, 0x53, 0x50, 0xb9, 0x40, 0xab]);
 interface Column : IDispatch
 {
-    HRESULT Name(BSTR*);
-    HRESULT get_Width(int*);
-    HRESULT put_Width(int);
-    HRESULT get_DisplayPosition(int*);
-    HRESULT put_DisplayPosition(int);
-    HRESULT get_Hidden(BOOL*);
-    HRESULT put_Hidden(BOOL);
-    HRESULT SetAsSortColumn(_ColumnSortOrder);
-    HRESULT IsSortColumn(BOOL*);
+    HRESULT Name(BSTR* Name);
+    HRESULT get_Width(int* Width);
+    HRESULT put_Width(int Width);
+    HRESULT get_DisplayPosition(int* DisplayPosition);
+    HRESULT put_DisplayPosition(int Index);
+    HRESULT get_Hidden(BOOL* Hidden);
+    HRESULT put_Hidden(BOOL Hidden);
+    HRESULT SetAsSortColumn(_ColumnSortOrder SortOrder);
+    HRESULT IsSortColumn(BOOL* IsSortColumn);
 }
 enum IID_Views = GUID(0xd6b8c29d, 0xa1ff, 0x4d72, [0xaa, 0xb0, 0xe3, 0x81, 0xe9, 0xb9, 0x33, 0x8d]);
 interface Views : IDispatch
 {
-    HRESULT Item(int, View*);
-    HRESULT get_Count(int*);
-    HRESULT Add(Node, _ViewOptions);
-    HRESULT get__NewEnum(IUnknown*);
+    HRESULT Item(int Index, View* View);
+    HRESULT get_Count(int* Count);
+    HRESULT Add(Node Node, _ViewOptions viewOptions);
+    HRESULT get__NewEnum(IUnknown* retval);
 }
 enum IID_View = GUID(0x6efc2da2, 0xb38c, 0x457e, [0x9a, 0xbb, 0xed, 0x2d, 0x18, 0x9b, 0x8c, 0x38]);
 interface View : IDispatch
 {
-    HRESULT get_ActiveScopeNode(Node*);
-    HRESULT put_ActiveScopeNode(Node);
-    HRESULT get_Selection(Nodes*);
-    HRESULT get_ListItems(Nodes*);
-    HRESULT SnapinScopeObject(VARIANT, IDispatch*);
-    HRESULT SnapinSelectionObject(IDispatch*);
-    HRESULT Is(View, VARIANT_BOOL*);
-    HRESULT get_Document(Document*);
+    HRESULT get_ActiveScopeNode(Node* Node);
+    HRESULT put_ActiveScopeNode(Node Node);
+    HRESULT get_Selection(Nodes* Nodes);
+    HRESULT get_ListItems(Nodes* Nodes);
+    HRESULT SnapinScopeObject(VARIANT ScopeNode, IDispatch* ScopeNodeObject);
+    HRESULT SnapinSelectionObject(IDispatch* SelectionObject);
+    HRESULT Is(View View, VARIANT_BOOL* TheSame);
+    HRESULT get_Document(Document* Document);
     HRESULT SelectAll();
-    HRESULT Select(Node);
-    HRESULT Deselect(Node);
-    HRESULT IsSelected(Node, BOOL*);
-    HRESULT DisplayScopeNodePropertySheet(VARIANT);
+    HRESULT Select(Node Node);
+    HRESULT Deselect(Node Node);
+    HRESULT IsSelected(Node Node, BOOL* IsSelected);
+    HRESULT DisplayScopeNodePropertySheet(VARIANT ScopeNode);
     HRESULT DisplaySelectionPropertySheet();
-    HRESULT CopyScopeNode(VARIANT);
+    HRESULT CopyScopeNode(VARIANT ScopeNode);
     HRESULT CopySelection();
-    HRESULT DeleteScopeNode(VARIANT);
+    HRESULT DeleteScopeNode(VARIANT ScopeNode);
     HRESULT DeleteSelection();
-    HRESULT RenameScopeNode(BSTR, VARIANT);
-    HRESULT RenameSelectedItem(BSTR);
-    HRESULT get_ScopeNodeContextMenu(VARIANT, ContextMenu*);
-    HRESULT get_SelectionContextMenu(ContextMenu*);
-    HRESULT RefreshScopeNode(VARIANT);
+    HRESULT RenameScopeNode(BSTR NewName, VARIANT ScopeNode);
+    HRESULT RenameSelectedItem(BSTR NewName);
+    HRESULT get_ScopeNodeContextMenu(VARIANT ScopeNode, ContextMenu* ContextMenu);
+    HRESULT get_SelectionContextMenu(ContextMenu* ContextMenu);
+    HRESULT RefreshScopeNode(VARIANT ScopeNode);
     HRESULT RefreshSelection();
-    HRESULT ExecuteSelectionMenuItem(BSTR);
-    HRESULT ExecuteScopeNodeMenuItem(BSTR, VARIANT);
-    HRESULT ExecuteShellCommand(BSTR, BSTR, BSTR, BSTR);
-    HRESULT get_Frame(Frame*);
+    HRESULT ExecuteSelectionMenuItem(BSTR MenuItemPath);
+    HRESULT ExecuteScopeNodeMenuItem(BSTR MenuItemPath, VARIANT ScopeNode);
+    HRESULT ExecuteShellCommand(BSTR Command, BSTR Directory, BSTR Parameters, BSTR WindowState);
+    HRESULT get_Frame(Frame* Frame);
     HRESULT Close();
-    HRESULT get_ScopeTreeVisible(BOOL*);
-    HRESULT put_ScopeTreeVisible(BOOL);
+    HRESULT get_ScopeTreeVisible(BOOL* Visible);
+    HRESULT put_ScopeTreeVisible(BOOL Visible);
     HRESULT Back();
     HRESULT Forward();
-    HRESULT put_StatusBarText(BSTR);
-    HRESULT get_Memento(BSTR*);
-    HRESULT ViewMemento(BSTR);
-    HRESULT get_Columns(Columns*);
-    HRESULT get_CellContents(Node, int, BSTR*);
-    HRESULT ExportList(BSTR, _ExportListOptions);
-    HRESULT get_ListViewMode(_ListViewMode*);
-    HRESULT put_ListViewMode(_ListViewMode);
-    HRESULT get_ControlObject(IDispatch*);
+    HRESULT put_StatusBarText(BSTR StatusBarText);
+    HRESULT get_Memento(BSTR* Memento);
+    HRESULT ViewMemento(BSTR Memento);
+    HRESULT get_Columns(Columns* Columns);
+    HRESULT get_CellContents(Node Node, int Column, BSTR* CellContents);
+    HRESULT ExportList(BSTR File, _ExportListOptions exportoptions);
+    HRESULT get_ListViewMode(_ListViewMode* Mode);
+    HRESULT put_ListViewMode(_ListViewMode mode);
+    HRESULT get_ControlObject(IDispatch* Control);
 }
 enum IID_Nodes = GUID(0x313b01df, 0xb22f, 0x4d42, [0xb1, 0xb8, 0x48, 0x3c, 0xdc, 0xf5, 0x1d, 0x35]);
 interface Nodes : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Item(int, Node*);
-    HRESULT get_Count(int*);
+    HRESULT get__NewEnum(IUnknown* retval);
+    HRESULT Item(int Index, Node* Node);
+    HRESULT get_Count(int* Count);
 }
 enum IID_ContextMenu = GUID(0xdab39ce0, 0x25e6, 0x4e07, [0x83, 0x62, 0xba, 0x9c, 0x95, 0x70, 0x65, 0x45]);
 interface ContextMenu : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(VARIANT, MenuItem*);
-    HRESULT get_Count(int*);
+    HRESULT get__NewEnum(IUnknown* retval);
+    HRESULT get_Item(VARIANT IndexOrPath, MenuItem* MenuItem);
+    HRESULT get_Count(int* Count);
 }
 enum IID_MenuItem = GUID(0x178fad1, 0xb361, 0x4b27, [0x96, 0xad, 0x67, 0xc5, 0x7e, 0xbf, 0x2e, 0x1d]);
 interface MenuItem : IDispatch
 {
-    HRESULT get_DisplayName(BSTR*);
-    HRESULT get_LanguageIndependentName(BSTR*);
-    HRESULT get_Path(BSTR*);
-    HRESULT get_LanguageIndependentPath(BSTR*);
+    HRESULT get_DisplayName(BSTR* DisplayName);
+    HRESULT get_LanguageIndependentName(BSTR* LanguageIndependentName);
+    HRESULT get_Path(BSTR* Path);
+    HRESULT get_LanguageIndependentPath(BSTR* LanguageIndependentPath);
     HRESULT Execute();
-    HRESULT get_Enabled(BOOL*);
+    HRESULT get_Enabled(BOOL* Enabled);
 }
 enum IID_Properties = GUID(0x2886abc2, 0xa425, 0x42b2, [0x91, 0xc6, 0xe2, 0x5c, 0xe, 0x4, 0x58, 0x1c]);
 interface Properties : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Item(BSTR, Property*);
-    HRESULT get_Count(int*);
-    HRESULT Remove(BSTR);
+    HRESULT get__NewEnum(IUnknown* retval);
+    HRESULT Item(BSTR Name, Property* Property);
+    HRESULT get_Count(int* Count);
+    HRESULT Remove(BSTR Name);
 }
 enum IID_Property = GUID(0x4600c3a5, 0xe301, 0x41d8, [0xb6, 0xd0, 0xef, 0x2e, 0x42, 0x12, 0xe0, 0xca]);
 interface Property : IDispatch
 {
-    HRESULT get_Value(VARIANT*);
-    HRESULT put_Value(VARIANT);
-    HRESULT get_Name(BSTR*);
+    HRESULT get_Value(VARIANT* Value);
+    HRESULT put_Value(VARIANT Value);
+    HRESULT get_Name(BSTR* Name);
 }
 alias MMC_RESULT_VIEW_STYLE = int;
 enum : int
@@ -657,61 +657,61 @@ struct SColumnSetID
 enum IID_IComponentData = GUID(0x955ab28a, 0x5218, 0x11d0, [0xa9, 0x85, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x65]);
 interface IComponentData : IUnknown
 {
-    HRESULT Initialize(IUnknown);
-    HRESULT CreateComponent(IComponent*);
-    HRESULT Notify(IDataObject, MMC_NOTIFY_TYPE, LPARAM, LPARAM);
+    HRESULT Initialize(IUnknown pUnknown);
+    HRESULT CreateComponent(IComponent* ppComponent);
+    HRESULT Notify(IDataObject lpDataObject, MMC_NOTIFY_TYPE event, LPARAM arg, LPARAM param3);
     HRESULT Destroy();
-    HRESULT QueryDataObject(long, DATA_OBJECT_TYPES, IDataObject*);
-    HRESULT GetDisplayInfo(SCOPEDATAITEM*);
-    HRESULT CompareObjects(IDataObject, IDataObject);
+    HRESULT QueryDataObject(long cookie, DATA_OBJECT_TYPES type, IDataObject* ppDataObject);
+    HRESULT GetDisplayInfo(SCOPEDATAITEM* pScopeDataItem);
+    HRESULT CompareObjects(IDataObject lpDataObjectA, IDataObject lpDataObjectB);
 }
 enum IID_IComponent = GUID(0x43136eb2, 0xd36c, 0x11cf, [0xad, 0xbc, 0x0, 0xaa, 0x0, 0xa8, 0x0, 0x33]);
 interface IComponent : IUnknown
 {
-    HRESULT Initialize(IConsole);
-    HRESULT Notify(IDataObject, MMC_NOTIFY_TYPE, LPARAM, LPARAM);
-    HRESULT Destroy(long);
-    HRESULT QueryDataObject(long, DATA_OBJECT_TYPES, IDataObject*);
-    HRESULT GetResultViewType(long, PWSTR*, int*);
-    HRESULT GetDisplayInfo(RESULTDATAITEM*);
-    HRESULT CompareObjects(IDataObject, IDataObject);
+    HRESULT Initialize(IConsole lpConsole);
+    HRESULT Notify(IDataObject lpDataObject, MMC_NOTIFY_TYPE event, LPARAM arg, LPARAM param3);
+    HRESULT Destroy(long cookie);
+    HRESULT QueryDataObject(long cookie, DATA_OBJECT_TYPES type, IDataObject* ppDataObject);
+    HRESULT GetResultViewType(long cookie, PWSTR* ppViewType, int* pViewOptions);
+    HRESULT GetDisplayInfo(RESULTDATAITEM* pResultDataItem);
+    HRESULT CompareObjects(IDataObject lpDataObjectA, IDataObject lpDataObjectB);
 }
 enum IID_IResultDataCompare = GUID(0xe8315a52, 0x7a1a, 0x11d0, [0xa2, 0xd2, 0x0, 0xc0, 0x4f, 0xd9, 0x9, 0xdd]);
 interface IResultDataCompare : IUnknown
 {
-    HRESULT Compare(LPARAM, long, long, int*);
+    HRESULT Compare(LPARAM lUserParam, long cookieA, long cookieB, int* pnResult);
 }
 enum IID_IResultOwnerData = GUID(0x9cb396d8, 0xea83, 0x11d0, [0xae, 0xf1, 0x0, 0xc0, 0x4f, 0xb6, 0xdd, 0x2c]);
 interface IResultOwnerData : IUnknown
 {
-    HRESULT FindItem(RESULTFINDINFO*, int*);
-    HRESULT CacheHint(int, int);
-    HRESULT SortItems(int, uint, LPARAM);
+    HRESULT FindItem(RESULTFINDINFO* pFindInfo, int* pnFoundIndex);
+    HRESULT CacheHint(int nStartIndex, int nEndIndex);
+    HRESULT SortItems(int nColumn, uint dwSortOptions, LPARAM lUserParam);
 }
 enum IID_IConsole = GUID(0x43136eb1, 0xd36c, 0x11cf, [0xad, 0xbc, 0x0, 0xaa, 0x0, 0xa8, 0x0, 0x33]);
 interface IConsole : IUnknown
 {
-    HRESULT SetHeader(IHeaderCtrl);
-    HRESULT SetToolbar(IToolbar);
-    HRESULT QueryResultView(IUnknown*);
-    HRESULT QueryScopeImageList(IImageList*);
-    HRESULT QueryResultImageList(IImageList*);
-    HRESULT UpdateAllViews(IDataObject, LPARAM, long);
-    HRESULT MessageBox(const(wchar)*, const(wchar)*, uint, int*);
-    HRESULT QueryConsoleVerb(IConsoleVerb*);
-    HRESULT SelectScopeItem(long);
-    HRESULT GetMainWindow(HWND*);
-    HRESULT NewWindow(long, uint);
+    HRESULT SetHeader(IHeaderCtrl pHeader);
+    HRESULT SetToolbar(IToolbar pToolbar);
+    HRESULT QueryResultView(IUnknown* pUnknown);
+    HRESULT QueryScopeImageList(IImageList* ppImageList);
+    HRESULT QueryResultImageList(IImageList* ppImageList);
+    HRESULT UpdateAllViews(IDataObject lpDataObject, LPARAM data, long hint);
+    HRESULT MessageBox(const(wchar)* lpszText, const(wchar)* lpszTitle, uint fuStyle, int* piRetval);
+    HRESULT QueryConsoleVerb(IConsoleVerb* ppConsoleVerb);
+    HRESULT SelectScopeItem(long hScopeItem);
+    HRESULT GetMainWindow(HWND* phwnd);
+    HRESULT NewWindow(long hScopeItem, uint lOptions);
 }
 enum IID_IHeaderCtrl = GUID(0x43136eb3, 0xd36c, 0x11cf, [0xad, 0xbc, 0x0, 0xaa, 0x0, 0xa8, 0x0, 0x33]);
 interface IHeaderCtrl : IUnknown
 {
-    HRESULT InsertColumn(int, const(wchar)*, int, int);
-    HRESULT DeleteColumn(int);
-    HRESULT SetColumnText(int, const(wchar)*);
-    HRESULT GetColumnText(int, PWSTR*);
-    HRESULT SetColumnWidth(int, int);
-    HRESULT GetColumnWidth(int, int*);
+    HRESULT InsertColumn(int nCol, const(wchar)* title, int nFormat, int nWidth);
+    HRESULT DeleteColumn(int nCol);
+    HRESULT SetColumnText(int nCol, const(wchar)* title);
+    HRESULT GetColumnText(int nCol, PWSTR* pText);
+    HRESULT SetColumnWidth(int nCol, int nWidth);
+    HRESULT GetColumnWidth(int nCol, int* pWidth);
 }
 alias CCM_INSERTIONPOINTID = int;
 enum : int
@@ -761,153 +761,153 @@ enum : int
 enum IID_IContextMenuCallback = GUID(0x43136eb7, 0xd36c, 0x11cf, [0xad, 0xbc, 0x0, 0xaa, 0x0, 0xa8, 0x0, 0x33]);
 interface IContextMenuCallback : IUnknown
 {
-    HRESULT AddItem(CONTEXTMENUITEM*);
+    HRESULT AddItem(CONTEXTMENUITEM* pItem);
 }
 enum IID_IContextMenuProvider = GUID(0x43136eb6, 0xd36c, 0x11cf, [0xad, 0xbc, 0x0, 0xaa, 0x0, 0xa8, 0x0, 0x33]);
 interface IContextMenuProvider : IContextMenuCallback
 {
     HRESULT EmptyMenuList();
-    HRESULT AddPrimaryExtensionItems(IUnknown, IDataObject);
-    HRESULT AddThirdPartyExtensionItems(IDataObject);
-    HRESULT ShowContextMenu(HWND, int, int, int*);
+    HRESULT AddPrimaryExtensionItems(IUnknown piExtension, IDataObject piDataObject);
+    HRESULT AddThirdPartyExtensionItems(IDataObject piDataObject);
+    HRESULT ShowContextMenu(HWND hwndParent, int xPos, int yPos, int* plSelected);
 }
 enum IID_IExtendContextMenu = GUID(0x4f3b7a4f, 0xcfac, 0x11cf, [0xb8, 0xe3, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0xb0]);
 interface IExtendContextMenu : IUnknown
 {
-    HRESULT AddMenuItems(IDataObject, IContextMenuCallback, int*);
-    HRESULT Command(int, IDataObject);
+    HRESULT AddMenuItems(IDataObject piDataObject, IContextMenuCallback piCallback, int* pInsertionAllowed);
+    HRESULT Command(int lCommandID, IDataObject piDataObject);
 }
 enum IID_IImageList = GUID(0x43136eb8, 0xd36c, 0x11cf, [0xad, 0xbc, 0x0, 0xaa, 0x0, 0xa8, 0x0, 0x33]);
 interface IImageList : IUnknown
 {
-    HRESULT ImageListSetIcon(long*, int);
-    HRESULT ImageListSetStrip(long*, long*, int, COLORREF);
+    HRESULT ImageListSetIcon(long* pIcon, int nLoc);
+    HRESULT ImageListSetStrip(long* pBMapSm, long* pBMapLg, int nStartLoc, COLORREF cMask);
 }
 enum IID_IResultData = GUID(0x31da5fa0, 0xe0eb, 0x11cf, [0x9f, 0x21, 0x0, 0xaa, 0x0, 0x3c, 0xa9, 0xf6]);
 interface IResultData : IUnknown
 {
-    HRESULT InsertItem(RESULTDATAITEM*);
-    HRESULT DeleteItem(long, int);
-    HRESULT FindItemByLParam(LPARAM, long*);
+    HRESULT InsertItem(RESULTDATAITEM* item);
+    HRESULT DeleteItem(long itemID, int nCol);
+    HRESULT FindItemByLParam(LPARAM lParam, long* pItemID);
     HRESULT DeleteAllRsltItems();
-    HRESULT SetItem(RESULTDATAITEM*);
-    HRESULT GetItem(RESULTDATAITEM*);
-    HRESULT GetNextItem(RESULTDATAITEM*);
-    HRESULT ModifyItemState(int, long, uint, uint);
-    HRESULT ModifyViewStyle(MMC_RESULT_VIEW_STYLE, MMC_RESULT_VIEW_STYLE);
-    HRESULT SetViewMode(int);
-    HRESULT GetViewMode(int*);
-    HRESULT UpdateItem(long);
-    HRESULT Sort(int, uint, LPARAM);
-    HRESULT SetDescBarText(PWSTR);
-    HRESULT SetItemCount(int, uint);
+    HRESULT SetItem(RESULTDATAITEM* item);
+    HRESULT GetItem(RESULTDATAITEM* item);
+    HRESULT GetNextItem(RESULTDATAITEM* item);
+    HRESULT ModifyItemState(int nIndex, long itemID, uint uAdd, uint uRemove);
+    HRESULT ModifyViewStyle(MMC_RESULT_VIEW_STYLE add, MMC_RESULT_VIEW_STYLE remove);
+    HRESULT SetViewMode(int lViewMode);
+    HRESULT GetViewMode(int* lViewMode);
+    HRESULT UpdateItem(long itemID);
+    HRESULT Sort(int nColumn, uint dwSortOptions, LPARAM lUserParam);
+    HRESULT SetDescBarText(PWSTR DescText);
+    HRESULT SetItemCount(int nItemCount, uint dwOptions);
 }
 enum IID_IConsoleNameSpace = GUID(0xbedeb620, 0xf24d, 0x11cf, [0x8a, 0xfc, 0x0, 0xaa, 0x0, 0x3c, 0xa9, 0xf6]);
 interface IConsoleNameSpace : IUnknown
 {
-    HRESULT InsertItem(SCOPEDATAITEM*);
-    HRESULT DeleteItem(long, int);
-    HRESULT SetItem(SCOPEDATAITEM*);
-    HRESULT GetItem(SCOPEDATAITEM*);
-    HRESULT GetChildItem(long, long*, long*);
-    HRESULT GetNextItem(long, long*, long*);
-    HRESULT GetParentItem(long, long*, long*);
+    HRESULT InsertItem(SCOPEDATAITEM* item);
+    HRESULT DeleteItem(long hItem, int fDeleteThis);
+    HRESULT SetItem(SCOPEDATAITEM* item);
+    HRESULT GetItem(SCOPEDATAITEM* item);
+    HRESULT GetChildItem(long item, long* pItemChild, long* pCookie);
+    HRESULT GetNextItem(long item, long* pItemNext, long* pCookie);
+    HRESULT GetParentItem(long item, long* pItemParent, long* pCookie);
 }
 enum IID_IConsoleNameSpace2 = GUID(0x255f18cc, 0x65db, 0x11d1, [0xa7, 0xdc, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x65]);
 interface IConsoleNameSpace2 : IConsoleNameSpace
 {
-    HRESULT Expand(long);
-    HRESULT AddExtension(long, GUID*);
+    HRESULT Expand(long hItem);
+    HRESULT AddExtension(long hItem, GUID* lpClsid);
 }
 enum IID_IPropertySheetCallback = GUID(0x85de64dd, 0xef21, 0x11cf, [0xa2, 0x85, 0x0, 0xc0, 0x4f, 0xd8, 0xdb, 0xe6]);
 interface IPropertySheetCallback : IUnknown
 {
-    HRESULT AddPage(HPROPSHEETPAGE);
-    HRESULT RemovePage(HPROPSHEETPAGE);
+    HRESULT AddPage(HPROPSHEETPAGE hPage);
+    HRESULT RemovePage(HPROPSHEETPAGE hPage);
 }
 enum IID_IPropertySheetProvider = GUID(0x85de64de, 0xef21, 0x11cf, [0xa2, 0x85, 0x0, 0xc0, 0x4f, 0xd8, 0xdb, 0xe6]);
 interface IPropertySheetProvider : IUnknown
 {
-    HRESULT CreatePropertySheet(const(wchar)*, ubyte, long, IDataObject, uint);
-    HRESULT FindPropertySheet(long, IComponent, IDataObject);
-    HRESULT AddPrimaryPages(IUnknown, BOOL, HWND, BOOL);
+    HRESULT CreatePropertySheet(const(wchar)* title, ubyte type, long cookie, IDataObject pIDataObjectm, uint dwOptions);
+    HRESULT FindPropertySheet(long hItem, IComponent lpComponent, IDataObject lpDataObject);
+    HRESULT AddPrimaryPages(IUnknown lpUnknown, BOOL bCreateHandle, HWND hNotifyWindow, BOOL bScopePane);
     HRESULT AddExtensionPages();
-    HRESULT Show(long, int);
+    HRESULT Show(long window, int page);
 }
 enum IID_IExtendPropertySheet = GUID(0x85de64dc, 0xef21, 0x11cf, [0xa2, 0x85, 0x0, 0xc0, 0x4f, 0xd8, 0xdb, 0xe6]);
 interface IExtendPropertySheet : IUnknown
 {
-    HRESULT CreatePropertyPages(IPropertySheetCallback, long, IDataObject);
-    HRESULT QueryPagesFor(IDataObject);
+    HRESULT CreatePropertyPages(IPropertySheetCallback lpProvider, long handle, IDataObject lpIDataObject);
+    HRESULT QueryPagesFor(IDataObject lpDataObject);
 }
 enum IID_IControlbar = GUID(0x69fb811e, 0x6c1c, 0x11d0, [0xa2, 0xcb, 0x0, 0xc0, 0x4f, 0xd9, 0x9, 0xdd]);
 interface IControlbar : IUnknown
 {
-    HRESULT Create(MMC_CONTROL_TYPE, IExtendControlbar, IUnknown*);
-    HRESULT Attach(MMC_CONTROL_TYPE, IUnknown);
-    HRESULT Detach(IUnknown);
+    HRESULT Create(MMC_CONTROL_TYPE nType, IExtendControlbar pExtendControlbar, IUnknown* ppUnknown);
+    HRESULT Attach(MMC_CONTROL_TYPE nType, IUnknown lpUnknown);
+    HRESULT Detach(IUnknown lpUnknown);
 }
 enum IID_IExtendControlbar = GUID(0x49506520, 0x6f40, 0x11d0, [0xa9, 0x8b, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x65]);
 interface IExtendControlbar : IUnknown
 {
-    HRESULT SetControlbar(IControlbar);
-    HRESULT ControlbarNotify(MMC_NOTIFY_TYPE, LPARAM, LPARAM);
+    HRESULT SetControlbar(IControlbar pControlbar);
+    HRESULT ControlbarNotify(MMC_NOTIFY_TYPE event, LPARAM arg, LPARAM param2);
 }
 enum IID_IToolbar = GUID(0x43136eb9, 0xd36c, 0x11cf, [0xad, 0xbc, 0x0, 0xaa, 0x0, 0xa8, 0x0, 0x33]);
 interface IToolbar : IUnknown
 {
-    HRESULT AddBitmap(int, HBITMAP, int, int, COLORREF);
-    HRESULT AddButtons(int, MMCBUTTON*);
-    HRESULT InsertButton(int, MMCBUTTON*);
-    HRESULT DeleteButton(int);
-    HRESULT GetButtonState(int, MMC_BUTTON_STATE, BOOL*);
-    HRESULT SetButtonState(int, MMC_BUTTON_STATE, BOOL);
+    HRESULT AddBitmap(int nImages, HBITMAP hbmp, int cxSize, int cySize, COLORREF crMask);
+    HRESULT AddButtons(int nButtons, MMCBUTTON* lpButtons);
+    HRESULT InsertButton(int nIndex, MMCBUTTON* lpButton);
+    HRESULT DeleteButton(int nIndex);
+    HRESULT GetButtonState(int idCommand, MMC_BUTTON_STATE nState, BOOL* pState);
+    HRESULT SetButtonState(int idCommand, MMC_BUTTON_STATE nState, BOOL bState);
 }
 enum IID_IConsoleVerb = GUID(0xe49f7a60, 0x74af, 0x11d0, [0xa2, 0x86, 0x0, 0xc0, 0x4f, 0xd8, 0xfe, 0x93]);
 interface IConsoleVerb : IUnknown
 {
-    HRESULT GetVerbState(MMC_CONSOLE_VERB, MMC_BUTTON_STATE, BOOL*);
-    HRESULT SetVerbState(MMC_CONSOLE_VERB, MMC_BUTTON_STATE, BOOL);
-    HRESULT SetDefaultVerb(MMC_CONSOLE_VERB);
-    HRESULT GetDefaultVerb(MMC_CONSOLE_VERB*);
+    HRESULT GetVerbState(MMC_CONSOLE_VERB eCmdID, MMC_BUTTON_STATE nState, BOOL* pState);
+    HRESULT SetVerbState(MMC_CONSOLE_VERB eCmdID, MMC_BUTTON_STATE nState, BOOL bState);
+    HRESULT SetDefaultVerb(MMC_CONSOLE_VERB eCmdID);
+    HRESULT GetDefaultVerb(MMC_CONSOLE_VERB* peCmdID);
 }
 enum IID_ISnapinAbout = GUID(0x1245208c, 0xa151, 0x11d0, [0xa7, 0xd7, 0x0, 0xc0, 0x4f, 0xd9, 0x9, 0xdd]);
 interface ISnapinAbout : IUnknown
 {
-    HRESULT GetSnapinDescription(PWSTR*);
-    HRESULT GetProvider(PWSTR*);
-    HRESULT GetSnapinVersion(PWSTR*);
-    HRESULT GetSnapinImage(HICON*);
-    HRESULT GetStaticFolderImage(HBITMAP*, HBITMAP*, HBITMAP*, COLORREF*);
+    HRESULT GetSnapinDescription(PWSTR* lpDescription);
+    HRESULT GetProvider(PWSTR* lpName);
+    HRESULT GetSnapinVersion(PWSTR* lpVersion);
+    HRESULT GetSnapinImage(HICON* hAppIcon);
+    HRESULT GetStaticFolderImage(HBITMAP* hSmallImage, HBITMAP* hSmallImageOpen, HBITMAP* hLargeImage, COLORREF* cMask);
 }
 enum IID_IMenuButton = GUID(0x951ed750, 0xd080, 0x11d0, [0xb1, 0x97, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
 interface IMenuButton : IUnknown
 {
-    HRESULT AddButton(int, PWSTR, PWSTR);
-    HRESULT SetButton(int, PWSTR, PWSTR);
-    HRESULT SetButtonState(int, MMC_BUTTON_STATE, BOOL);
+    HRESULT AddButton(int idCommand, PWSTR lpButtonText, PWSTR lpTooltipText);
+    HRESULT SetButton(int idCommand, PWSTR lpButtonText, PWSTR lpTooltipText);
+    HRESULT SetButtonState(int idCommand, MMC_BUTTON_STATE nState, BOOL bState);
 }
 enum IID_ISnapinHelp = GUID(0xa6b15ace, 0xdf59, 0x11d0, [0xa7, 0xdd, 0x0, 0xc0, 0x4f, 0xd9, 0x9, 0xdd]);
 interface ISnapinHelp : IUnknown
 {
-    HRESULT GetHelpTopic(PWSTR*);
+    HRESULT GetHelpTopic(PWSTR* lpCompiledHelpFile);
 }
 enum IID_IExtendPropertySheet2 = GUID(0xb7a87232, 0x4a51, 0x11d1, [0xa7, 0xea, 0x0, 0xc0, 0x4f, 0xd9, 0x9, 0xdd]);
 interface IExtendPropertySheet2 : IExtendPropertySheet
 {
-    HRESULT GetWatermarks(IDataObject, HBITMAP*, HBITMAP*, HPALETTE*, BOOL*);
+    HRESULT GetWatermarks(IDataObject lpIDataObject, HBITMAP* lphWatermark, HBITMAP* lphHeader, HPALETTE* lphPalette, BOOL* bStretch);
 }
 enum IID_IHeaderCtrl2 = GUID(0x9757abb8, 0x1b32, 0x11d1, [0xa7, 0xce, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x65]);
 interface IHeaderCtrl2 : IHeaderCtrl
 {
-    HRESULT SetChangeTimeOut(uint);
-    HRESULT SetColumnFilter(uint, uint, MMC_FILTERDATA*);
-    HRESULT GetColumnFilter(uint, uint*, MMC_FILTERDATA*);
+    HRESULT SetChangeTimeOut(uint uTimeout);
+    HRESULT SetColumnFilter(uint nColumn, uint dwType, MMC_FILTERDATA* pFilterData);
+    HRESULT GetColumnFilter(uint nColumn, uint* pdwType, MMC_FILTERDATA* pFilterData);
 }
 enum IID_ISnapinHelp2 = GUID(0x4861a010, 0x20f9, 0x11d2, [0xa5, 0x10, 0x0, 0xc0, 0x4f, 0xb6, 0xdd, 0x2c]);
 interface ISnapinHelp2 : ISnapinHelp
 {
-    HRESULT GetLinkedTopics(PWSTR*);
+    HRESULT GetLinkedTopics(PWSTR* lpCompiledHelpFiles);
 }
 alias MMC_TASK_DISPLAY_TYPE = int;
 enum : int
@@ -970,50 +970,50 @@ struct MMC_LISTPAD_INFO
 enum IID_IEnumTASK = GUID(0x338698b1, 0x5a02, 0x11d1, [0x9f, 0xec, 0x0, 0x60, 0x8, 0x32, 0xdb, 0x4a]);
 interface IEnumTASK : IUnknown
 {
-    HRESULT Next(uint, MMC_TASK*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, MMC_TASK* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumTASK*);
+    HRESULT Clone(IEnumTASK* ppenum);
 }
 enum IID_IExtendTaskPad = GUID(0x8dee6511, 0x554d, 0x11d1, [0x9f, 0xea, 0x0, 0x60, 0x8, 0x32, 0xdb, 0x4a]);
 interface IExtendTaskPad : IUnknown
 {
-    HRESULT TaskNotify(IDataObject, VARIANT*, VARIANT*);
-    HRESULT EnumTasks(IDataObject, PWSTR, IEnumTASK*);
-    HRESULT GetTitle(PWSTR, PWSTR*);
-    HRESULT GetDescriptiveText(PWSTR, PWSTR*);
-    HRESULT GetBackground(PWSTR, MMC_TASK_DISPLAY_OBJECT*);
-    HRESULT GetListPadInfo(PWSTR, MMC_LISTPAD_INFO*);
+    HRESULT TaskNotify(IDataObject pdo, VARIANT* arg, VARIANT* param2);
+    HRESULT EnumTasks(IDataObject pdo, PWSTR szTaskGroup, IEnumTASK* ppEnumTASK);
+    HRESULT GetTitle(PWSTR pszGroup, PWSTR* pszTitle);
+    HRESULT GetDescriptiveText(PWSTR pszGroup, PWSTR* pszDescriptiveText);
+    HRESULT GetBackground(PWSTR pszGroup, MMC_TASK_DISPLAY_OBJECT* pTDO);
+    HRESULT GetListPadInfo(PWSTR pszGroup, MMC_LISTPAD_INFO* lpListPadInfo);
 }
 enum IID_IConsole2 = GUID(0x103d842a, 0xaa63, 0x11d1, [0xa7, 0xe1, 0x0, 0xc0, 0x4f, 0xd8, 0xd5, 0x65]);
 interface IConsole2 : IConsole
 {
-    HRESULT Expand(long, BOOL);
+    HRESULT Expand(long hItem, BOOL bExpand);
     HRESULT IsTaskpadViewPreferred();
-    HRESULT SetStatusText(PWSTR);
+    HRESULT SetStatusText(PWSTR pszStatusText);
 }
 enum IID_IDisplayHelp = GUID(0xcc593830, 0xb926, 0x11d1, [0x80, 0x63, 0x0, 0x0, 0xf8, 0x75, 0xa9, 0xce]);
 interface IDisplayHelp : IUnknown
 {
-    HRESULT ShowTopic(PWSTR);
+    HRESULT ShowTopic(PWSTR pszHelpTopic);
 }
 enum IID_IRequiredExtensions = GUID(0x72782d7a, 0xa4a0, 0x11d1, [0xaf, 0xf, 0x0, 0xc0, 0x4f, 0xb6, 0xdd, 0x2c]);
 interface IRequiredExtensions : IUnknown
 {
     HRESULT EnableAllExtensions();
-    HRESULT GetFirstExtension(GUID*);
-    HRESULT GetNextExtension(GUID*);
+    HRESULT GetFirstExtension(GUID* pExtCLSID);
+    HRESULT GetNextExtension(GUID* pExtCLSID);
 }
 enum IID_IStringTable = GUID(0xde40b7a4, 0xf65, 0x11d2, [0x8e, 0x25, 0x0, 0xc0, 0x4f, 0x8e, 0xcd, 0x78]);
 interface IStringTable : IUnknown
 {
-    HRESULT AddString(const(wchar)*, uint*);
-    HRESULT GetString(uint, uint, PWSTR, uint*);
-    HRESULT GetStringLength(uint, uint*);
-    HRESULT DeleteString(uint);
+    HRESULT AddString(const(wchar)* pszAdd, uint* pStringID);
+    HRESULT GetString(uint StringID, uint cchBuffer, PWSTR lpBuffer, uint* pcchOut);
+    HRESULT GetStringLength(uint StringID, uint* pcchString);
+    HRESULT DeleteString(uint StringID);
     HRESULT DeleteAllStrings();
-    HRESULT FindString(const(wchar)*, uint*);
-    HRESULT Enumerate(IEnumString*);
+    HRESULT FindString(const(wchar)* pszFind, uint* pStringID);
+    HRESULT Enumerate(IEnumString* ppEnum);
 }
 struct MMC_COLUMN_DATA
 {
@@ -1043,10 +1043,10 @@ struct MMC_SORT_SET_DATA
 enum IID_IColumnData = GUID(0x547c1354, 0x24d, 0x11d3, [0xa7, 0x7, 0x0, 0xc0, 0x4f, 0x8e, 0xf4, 0xcb]);
 interface IColumnData : IUnknown
 {
-    HRESULT SetColumnConfigData(SColumnSetID*, MMC_COLUMN_SET_DATA*);
-    HRESULT GetColumnConfigData(SColumnSetID*, MMC_COLUMN_SET_DATA**);
-    HRESULT SetColumnSortData(SColumnSetID*, MMC_SORT_SET_DATA*);
-    HRESULT GetColumnSortData(SColumnSetID*, MMC_SORT_SET_DATA**);
+    HRESULT SetColumnConfigData(SColumnSetID* pColID, MMC_COLUMN_SET_DATA* pColSetData);
+    HRESULT GetColumnConfigData(SColumnSetID* pColID, MMC_COLUMN_SET_DATA** ppColSetData);
+    HRESULT SetColumnSortData(SColumnSetID* pColID, MMC_SORT_SET_DATA* pColSortData);
+    HRESULT GetColumnSortData(SColumnSetID* pColID, MMC_SORT_SET_DATA** ppColSortData);
 }
 alias IconIdentifier = int;
 enum : int
@@ -1063,9 +1063,9 @@ enum : int
 enum IID_IMessageView = GUID(0x80f94174, 0xfccc, 0x11d2, [0xb9, 0x91, 0x0, 0xc0, 0x4f, 0x8e, 0xcd, 0x78]);
 interface IMessageView : IUnknown
 {
-    HRESULT SetTitleText(const(wchar)*);
-    HRESULT SetBodyText(const(wchar)*);
-    HRESULT SetIcon(IconIdentifier);
+    HRESULT SetTitleText(const(wchar)* pszTitleText);
+    HRESULT SetBodyText(const(wchar)* pszBodyText);
+    HRESULT SetIcon(IconIdentifier id);
     HRESULT Clear();
 }
 struct RDITEMHDR
@@ -1086,7 +1086,7 @@ struct RDCOMPARE
 enum IID_IResultDataCompareEx = GUID(0x96933476, 0x251, 0x11d3, [0xae, 0xb0, 0x0, 0xc0, 0x4f, 0x8e, 0xcd, 0x78]);
 interface IResultDataCompareEx : IUnknown
 {
-    HRESULT Compare(RDCOMPARE*, int*);
+    HRESULT Compare(RDCOMPARE* prdc, int* pnResult);
 }
 alias MMC_VIEW_TYPE = int;
 enum : int
@@ -1137,24 +1137,24 @@ struct MMC_EXT_VIEW_DATA
 enum IID_IComponentData2 = GUID(0xcca0f2d2, 0x82de, 0x41b5, [0xbf, 0x47, 0x3b, 0x20, 0x76, 0x27, 0x3d, 0x5c]);
 interface IComponentData2 : IComponentData
 {
-    HRESULT QueryDispatch(long, DATA_OBJECT_TYPES, IDispatch*);
+    HRESULT QueryDispatch(long cookie, DATA_OBJECT_TYPES type, IDispatch* ppDispatch);
 }
 enum IID_IComponent2 = GUID(0x79a2d615, 0x4a10, 0x4ed4, [0x8c, 0x65, 0x86, 0x33, 0xf9, 0x33, 0x50, 0x95]);
 interface IComponent2 : IComponent
 {
-    HRESULT QueryDispatch(long, DATA_OBJECT_TYPES, IDispatch*);
-    HRESULT GetResultViewType2(long, RESULT_VIEW_TYPE_INFO*);
-    HRESULT RestoreResultView(long, RESULT_VIEW_TYPE_INFO*);
+    HRESULT QueryDispatch(long cookie, DATA_OBJECT_TYPES type, IDispatch* ppDispatch);
+    HRESULT GetResultViewType2(long cookie, RESULT_VIEW_TYPE_INFO* pResultViewType);
+    HRESULT RestoreResultView(long cookie, RESULT_VIEW_TYPE_INFO* pResultViewType);
 }
 enum IID_IContextMenuCallback2 = GUID(0xe178bc0e, 0x2ed0, 0x4b5e, [0x80, 0x97, 0x42, 0xc9, 0x8, 0x7e, 0x8b, 0x33]);
 interface IContextMenuCallback2 : IUnknown
 {
-    HRESULT AddItem(CONTEXTMENUITEM2*);
+    HRESULT AddItem(CONTEXTMENUITEM2* pItem);
 }
 enum IID_IMMCVersionInfo = GUID(0xa8d2c5fe, 0xcdcb, 0x4b9d, [0xbd, 0xe5, 0xa2, 0x73, 0x43, 0xff, 0x54, 0xbc]);
 interface IMMCVersionInfo : IUnknown
 {
-    HRESULT GetMMCVersion(int*, int*);
+    HRESULT GetMMCVersion(int* pVersionMajor, int* pVersionMinor);
 }
 enum CLSID_MMCVersionInfo = GUID(0xd6fedb1d, 0xcf21, 0x4bd9, [0xaf, 0x3b, 0xc5, 0x46, 0x8e, 0x9c, 0x66, 0x84]);
 struct MMCVersionInfo
@@ -1167,36 +1167,36 @@ struct ConsolePower
 enum IID_IExtendView = GUID(0x89995cee, 0xd2ed, 0x4c0e, [0xae, 0x5e, 0xdf, 0x7e, 0x76, 0xf3, 0xfa, 0x53]);
 interface IExtendView : IUnknown
 {
-    HRESULT GetViews(IDataObject, IViewExtensionCallback);
+    HRESULT GetViews(IDataObject pDataObject, IViewExtensionCallback pViewExtensionCallback);
 }
 enum IID_IViewExtensionCallback = GUID(0x34dd928a, 0x7599, 0x41e5, [0x9f, 0x5e, 0xd6, 0xbc, 0x30, 0x62, 0xc2, 0xda]);
 interface IViewExtensionCallback : IUnknown
 {
-    HRESULT AddView(MMC_EXT_VIEW_DATA*);
+    HRESULT AddView(MMC_EXT_VIEW_DATA* pExtViewData);
 }
 enum IID_IConsolePower = GUID(0x1cfbdd0e, 0x62ca, 0x49ce, [0xa3, 0xaf, 0xdb, 0xb2, 0xde, 0x61, 0xb0, 0x68]);
 interface IConsolePower : IUnknown
 {
-    HRESULT SetExecutionState(uint, uint);
-    HRESULT ResetIdleTimer(uint);
+    HRESULT SetExecutionState(uint dwAdd, uint dwRemove);
+    HRESULT ResetIdleTimer(uint dwFlags);
 }
 enum IID_IConsolePowerSink = GUID(0x3333759f, 0xfe4f, 0x4975, [0xb1, 0x43, 0xfe, 0xc0, 0xa5, 0xdd, 0x6d, 0x65]);
 interface IConsolePowerSink : IUnknown
 {
-    HRESULT OnPowerBroadcast(uint, LPARAM, LRESULT*);
+    HRESULT OnPowerBroadcast(uint nEvent, LPARAM lParam, LRESULT* plReturn);
 }
 enum IID_INodeProperties = GUID(0x15bc4d24, 0xa522, 0x4406, [0xaa, 0x55, 0x7, 0x49, 0x53, 0x7a, 0x68, 0x65]);
 interface INodeProperties : IUnknown
 {
-    HRESULT GetProperty(IDataObject, BSTR, BSTR*);
+    HRESULT GetProperty(IDataObject pDataObject, BSTR szPropertyName, BSTR* pbstrProperty);
 }
 enum IID_IConsole3 = GUID(0x4f85efdb, 0xd0e1, 0x498c, [0x8d, 0x4a, 0xd0, 0x10, 0xdf, 0xdd, 0x40, 0x4f]);
 interface IConsole3 : IConsole2
 {
-    HRESULT RenameScopeItem(long);
+    HRESULT RenameScopeItem(long hScopeItem);
 }
 enum IID_IResultData2 = GUID(0xf36e0eb, 0xa7f1, 0x4a81, [0xbe, 0x5a, 0x92, 0x47, 0xf7, 0xde, 0x4b, 0x1b]);
 interface IResultData2 : IResultData
 {
-    HRESULT RenameResultItem(long);
+    HRESULT RenameResultItem(long itemID);
 }

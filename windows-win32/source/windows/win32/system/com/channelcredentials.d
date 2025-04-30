@@ -11,14 +11,14 @@ extern (Windows):
 enum IID_IChannelCredentials = GUID(0x181b448c, 0xc17c, 0x4b17, [0xac, 0x6d, 0x6, 0x69, 0x9b, 0x93, 0x19, 0x8f]);
 interface IChannelCredentials : IDispatch
 {
-    HRESULT SetWindowsCredential(BSTR, BSTR, BSTR, int, BOOL);
-    HRESULT SetUserNameCredential(BSTR, BSTR);
-    HRESULT SetClientCertificateFromStore(BSTR, BSTR, BSTR, VARIANT);
-    HRESULT SetClientCertificateFromStoreByName(BSTR, BSTR, BSTR);
-    HRESULT SetClientCertificateFromFile(BSTR, BSTR, BSTR);
-    HRESULT SetDefaultServiceCertificateFromStore(BSTR, BSTR, BSTR, VARIANT);
-    HRESULT SetDefaultServiceCertificateFromStoreByName(BSTR, BSTR, BSTR);
-    HRESULT SetDefaultServiceCertificateFromFile(BSTR, BSTR, BSTR);
-    HRESULT SetServiceCertificateAuthentication(BSTR, BSTR, BSTR);
-    HRESULT SetIssuedToken(BSTR, BSTR, BSTR);
+    HRESULT SetWindowsCredential(BSTR domain, BSTR username, BSTR password, int impersonationLevel, BOOL allowNtlm);
+    HRESULT SetUserNameCredential(BSTR username, BSTR password);
+    HRESULT SetClientCertificateFromStore(BSTR storeLocation, BSTR storeName, BSTR findYype, VARIANT findValue);
+    HRESULT SetClientCertificateFromStoreByName(BSTR subjectName, BSTR storeLocation, BSTR storeName);
+    HRESULT SetClientCertificateFromFile(BSTR filename, BSTR password, BSTR keystorageFlags);
+    HRESULT SetDefaultServiceCertificateFromStore(BSTR storeLocation, BSTR storeName, BSTR findType, VARIANT findValue);
+    HRESULT SetDefaultServiceCertificateFromStoreByName(BSTR subjectName, BSTR storeLocation, BSTR storeName);
+    HRESULT SetDefaultServiceCertificateFromFile(BSTR filename, BSTR password, BSTR keystorageFlags);
+    HRESULT SetServiceCertificateAuthentication(BSTR storeLocation, BSTR revocationMode, BSTR certificateValidationMode);
+    HRESULT SetIssuedToken(BSTR localIssuerAddres, BSTR localIssuerBindingType, BSTR localIssuerBinding);
 }

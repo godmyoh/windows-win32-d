@@ -1,7 +1,8 @@
 module windows.win32.system.eventlog;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, FILETIME, HANDLE, PSID, PSTR, PWSTR, SYSTEMTIME;
+import windows.win32.foundation : BOOL, FILETIME, HANDLE, PSTR, PWSTR, SYSTEMTIME;
+import windows.win32.security : PSID;
 
 version (Windows):
 extern (Windows):
@@ -24,61 +25,61 @@ enum : uint
     EVENTLOG_SEQUENTIAL_READ = 0x00000001,
 }
 
-EVT_HANDLE EvtOpenSession(EVT_LOGIN_CLASS, void*, uint, uint);
-BOOL EvtClose(EVT_HANDLE);
-BOOL EvtCancel(EVT_HANDLE);
-uint EvtGetExtendedStatus(uint, PWSTR, uint*);
-EVT_HANDLE EvtQuery(EVT_HANDLE, const(wchar)*, const(wchar)*, uint);
-BOOL EvtNext(EVT_HANDLE, uint, long*, uint, uint, uint*);
-BOOL EvtSeek(EVT_HANDLE, long, EVT_HANDLE, uint, uint);
-EVT_HANDLE EvtSubscribe(EVT_HANDLE, HANDLE, const(wchar)*, const(wchar)*, EVT_HANDLE, void*, EVT_SUBSCRIBE_CALLBACK, uint);
-EVT_HANDLE EvtCreateRenderContext(uint, const(wchar)**, uint);
-BOOL EvtRender(EVT_HANDLE, EVT_HANDLE, uint, uint, void*, uint*, uint*);
-BOOL EvtFormatMessage(EVT_HANDLE, EVT_HANDLE, uint, uint, EVT_VARIANT*, uint, uint, PWSTR, uint*);
-EVT_HANDLE EvtOpenLog(EVT_HANDLE, const(wchar)*, uint);
-BOOL EvtGetLogInfo(EVT_HANDLE, EVT_LOG_PROPERTY_ID, uint, EVT_VARIANT*, uint*);
-BOOL EvtClearLog(EVT_HANDLE, const(wchar)*, const(wchar)*, uint);
-BOOL EvtExportLog(EVT_HANDLE, const(wchar)*, const(wchar)*, const(wchar)*, uint);
-BOOL EvtArchiveExportedLog(EVT_HANDLE, const(wchar)*, uint, uint);
-EVT_HANDLE EvtOpenChannelEnum(EVT_HANDLE, uint);
-BOOL EvtNextChannelPath(EVT_HANDLE, uint, PWSTR, uint*);
-EVT_HANDLE EvtOpenChannelConfig(EVT_HANDLE, const(wchar)*, uint);
-BOOL EvtSaveChannelConfig(EVT_HANDLE, uint);
-BOOL EvtSetChannelConfigProperty(EVT_HANDLE, EVT_CHANNEL_CONFIG_PROPERTY_ID, uint, EVT_VARIANT*);
-BOOL EvtGetChannelConfigProperty(EVT_HANDLE, EVT_CHANNEL_CONFIG_PROPERTY_ID, uint, uint, EVT_VARIANT*, uint*);
-EVT_HANDLE EvtOpenPublisherEnum(EVT_HANDLE, uint);
-BOOL EvtNextPublisherId(EVT_HANDLE, uint, PWSTR, uint*);
-EVT_HANDLE EvtOpenPublisherMetadata(EVT_HANDLE, const(wchar)*, const(wchar)*, uint, uint);
-BOOL EvtGetPublisherMetadataProperty(EVT_HANDLE, EVT_PUBLISHER_METADATA_PROPERTY_ID, uint, uint, EVT_VARIANT*, uint*);
-EVT_HANDLE EvtOpenEventMetadataEnum(EVT_HANDLE, uint);
-EVT_HANDLE EvtNextEventMetadata(EVT_HANDLE, uint);
-BOOL EvtGetEventMetadataProperty(EVT_HANDLE, EVT_EVENT_METADATA_PROPERTY_ID, uint, uint, EVT_VARIANT*, uint*);
-BOOL EvtGetObjectArraySize(long, uint*);
-BOOL EvtGetObjectArrayProperty(long, uint, uint, uint, uint, EVT_VARIANT*, uint*);
-BOOL EvtGetQueryInfo(EVT_HANDLE, EVT_QUERY_PROPERTY_ID, uint, EVT_VARIANT*, uint*);
-EVT_HANDLE EvtCreateBookmark(const(wchar)*);
-BOOL EvtUpdateBookmark(EVT_HANDLE, EVT_HANDLE);
-BOOL EvtGetEventInfo(EVT_HANDLE, EVT_EVENT_PROPERTY_ID, uint, EVT_VARIANT*, uint*);
-BOOL ClearEventLogA(HANDLE, const(char)*);
-BOOL ClearEventLogW(HANDLE, const(wchar)*);
-BOOL BackupEventLogA(HANDLE, const(char)*);
-BOOL BackupEventLogW(HANDLE, const(wchar)*);
-BOOL CloseEventLog(HANDLE);
-BOOL DeregisterEventSource(HANDLE);
-BOOL NotifyChangeEventLog(HANDLE, HANDLE);
-BOOL GetNumberOfEventLogRecords(HANDLE, uint*);
-BOOL GetOldestEventLogRecord(HANDLE, uint*);
-HANDLE OpenEventLogA(const(char)*, const(char)*);
-HANDLE OpenEventLogW(const(wchar)*, const(wchar)*);
-HANDLE RegisterEventSourceA(const(char)*, const(char)*);
-HANDLE RegisterEventSourceW(const(wchar)*, const(wchar)*);
-HANDLE OpenBackupEventLogA(const(char)*, const(char)*);
-HANDLE OpenBackupEventLogW(const(wchar)*, const(wchar)*);
-BOOL ReadEventLogA(HANDLE, READ_EVENT_LOG_READ_FLAGS, uint, void*, uint, uint*, uint*);
-BOOL ReadEventLogW(HANDLE, READ_EVENT_LOG_READ_FLAGS, uint, void*, uint, uint*, uint*);
-BOOL ReportEventA(HANDLE, REPORT_EVENT_TYPE, ushort, uint, PSID, ushort, uint, const(char)**, void*);
-BOOL ReportEventW(HANDLE, REPORT_EVENT_TYPE, ushort, uint, PSID, ushort, uint, const(wchar)**, void*);
-BOOL GetEventLogInformation(HANDLE, uint, void*, uint, uint*);
+EVT_HANDLE EvtOpenSession(EVT_LOGIN_CLASS LoginClass, void* Login, uint Timeout, uint Flags);
+BOOL EvtClose(EVT_HANDLE Object);
+BOOL EvtCancel(EVT_HANDLE Object);
+uint EvtGetExtendedStatus(uint BufferSize, PWSTR Buffer, uint* BufferUsed);
+EVT_HANDLE EvtQuery(EVT_HANDLE Session, const(wchar)* Path, const(wchar)* Query, uint Flags);
+BOOL EvtNext(EVT_HANDLE ResultSet, uint EventsSize, long* Events, uint Timeout, uint Flags, uint* Returned);
+BOOL EvtSeek(EVT_HANDLE ResultSet, long Position, EVT_HANDLE Bookmark, uint Timeout, uint Flags);
+EVT_HANDLE EvtSubscribe(EVT_HANDLE Session, HANDLE SignalEvent, const(wchar)* ChannelPath, const(wchar)* Query, EVT_HANDLE Bookmark, void* Context, EVT_SUBSCRIBE_CALLBACK Callback, uint Flags);
+EVT_HANDLE EvtCreateRenderContext(uint ValuePathsCount, const(wchar)** ValuePaths, uint Flags);
+BOOL EvtRender(EVT_HANDLE Context, EVT_HANDLE Fragment, uint Flags, uint BufferSize, void* Buffer, uint* BufferUsed, uint* PropertyCount);
+BOOL EvtFormatMessage(EVT_HANDLE PublisherMetadata, EVT_HANDLE Event, uint MessageId, uint ValueCount, EVT_VARIANT* Values, uint Flags, uint BufferSize, PWSTR Buffer, uint* BufferUsed);
+EVT_HANDLE EvtOpenLog(EVT_HANDLE Session, const(wchar)* Path, uint Flags);
+BOOL EvtGetLogInfo(EVT_HANDLE Log, EVT_LOG_PROPERTY_ID PropertyId, uint PropertyValueBufferSize, EVT_VARIANT* PropertyValueBuffer, uint* PropertyValueBufferUsed);
+BOOL EvtClearLog(EVT_HANDLE Session, const(wchar)* ChannelPath, const(wchar)* TargetFilePath, uint Flags);
+BOOL EvtExportLog(EVT_HANDLE Session, const(wchar)* Path, const(wchar)* Query, const(wchar)* TargetFilePath, uint Flags);
+BOOL EvtArchiveExportedLog(EVT_HANDLE Session, const(wchar)* LogFilePath, uint Locale, uint Flags);
+EVT_HANDLE EvtOpenChannelEnum(EVT_HANDLE Session, uint Flags);
+BOOL EvtNextChannelPath(EVT_HANDLE ChannelEnum, uint ChannelPathBufferSize, PWSTR ChannelPathBuffer, uint* ChannelPathBufferUsed);
+EVT_HANDLE EvtOpenChannelConfig(EVT_HANDLE Session, const(wchar)* ChannelPath, uint Flags);
+BOOL EvtSaveChannelConfig(EVT_HANDLE ChannelConfig, uint Flags);
+BOOL EvtSetChannelConfigProperty(EVT_HANDLE ChannelConfig, EVT_CHANNEL_CONFIG_PROPERTY_ID PropertyId, uint Flags, EVT_VARIANT* PropertyValue);
+BOOL EvtGetChannelConfigProperty(EVT_HANDLE ChannelConfig, EVT_CHANNEL_CONFIG_PROPERTY_ID PropertyId, uint Flags, uint PropertyValueBufferSize, EVT_VARIANT* PropertyValueBuffer, uint* PropertyValueBufferUsed);
+EVT_HANDLE EvtOpenPublisherEnum(EVT_HANDLE Session, uint Flags);
+BOOL EvtNextPublisherId(EVT_HANDLE PublisherEnum, uint PublisherIdBufferSize, PWSTR PublisherIdBuffer, uint* PublisherIdBufferUsed);
+EVT_HANDLE EvtOpenPublisherMetadata(EVT_HANDLE Session, const(wchar)* PublisherId, const(wchar)* LogFilePath, uint Locale, uint Flags);
+BOOL EvtGetPublisherMetadataProperty(EVT_HANDLE PublisherMetadata, EVT_PUBLISHER_METADATA_PROPERTY_ID PropertyId, uint Flags, uint PublisherMetadataPropertyBufferSize, EVT_VARIANT* PublisherMetadataPropertyBuffer, uint* PublisherMetadataPropertyBufferUsed);
+EVT_HANDLE EvtOpenEventMetadataEnum(EVT_HANDLE PublisherMetadata, uint Flags);
+EVT_HANDLE EvtNextEventMetadata(EVT_HANDLE EventMetadataEnum, uint Flags);
+BOOL EvtGetEventMetadataProperty(EVT_HANDLE EventMetadata, EVT_EVENT_METADATA_PROPERTY_ID PropertyId, uint Flags, uint EventMetadataPropertyBufferSize, EVT_VARIANT* EventMetadataPropertyBuffer, uint* EventMetadataPropertyBufferUsed);
+BOOL EvtGetObjectArraySize(long ObjectArray, uint* ObjectArraySize);
+BOOL EvtGetObjectArrayProperty(long ObjectArray, uint PropertyId, uint ArrayIndex, uint Flags, uint PropertyValueBufferSize, EVT_VARIANT* PropertyValueBuffer, uint* PropertyValueBufferUsed);
+BOOL EvtGetQueryInfo(EVT_HANDLE QueryOrSubscription, EVT_QUERY_PROPERTY_ID PropertyId, uint PropertyValueBufferSize, EVT_VARIANT* PropertyValueBuffer, uint* PropertyValueBufferUsed);
+EVT_HANDLE EvtCreateBookmark(const(wchar)* BookmarkXml);
+BOOL EvtUpdateBookmark(EVT_HANDLE Bookmark, EVT_HANDLE Event);
+BOOL EvtGetEventInfo(EVT_HANDLE Event, EVT_EVENT_PROPERTY_ID PropertyId, uint PropertyValueBufferSize, EVT_VARIANT* PropertyValueBuffer, uint* PropertyValueBufferUsed);
+BOOL ClearEventLogA(HANDLE hEventLog, const(char)* lpBackupFileName);
+BOOL ClearEventLogW(HANDLE hEventLog, const(wchar)* lpBackupFileName);
+BOOL BackupEventLogA(HANDLE hEventLog, const(char)* lpBackupFileName);
+BOOL BackupEventLogW(HANDLE hEventLog, const(wchar)* lpBackupFileName);
+BOOL CloseEventLog(HANDLE hEventLog);
+BOOL DeregisterEventSource(HANDLE hEventLog);
+BOOL NotifyChangeEventLog(HANDLE hEventLog, HANDLE hEvent);
+BOOL GetNumberOfEventLogRecords(HANDLE hEventLog, uint* NumberOfRecords);
+BOOL GetOldestEventLogRecord(HANDLE hEventLog, uint* OldestRecord);
+HANDLE OpenEventLogA(const(char)* lpUNCServerName, const(char)* lpSourceName);
+HANDLE OpenEventLogW(const(wchar)* lpUNCServerName, const(wchar)* lpSourceName);
+HANDLE RegisterEventSourceA(const(char)* lpUNCServerName, const(char)* lpSourceName);
+HANDLE RegisterEventSourceW(const(wchar)* lpUNCServerName, const(wchar)* lpSourceName);
+HANDLE OpenBackupEventLogA(const(char)* lpUNCServerName, const(char)* lpFileName);
+HANDLE OpenBackupEventLogW(const(wchar)* lpUNCServerName, const(wchar)* lpFileName);
+BOOL ReadEventLogA(HANDLE hEventLog, READ_EVENT_LOG_READ_FLAGS dwReadFlags, uint dwRecordOffset, void* lpBuffer, uint nNumberOfBytesToRead, uint* pnBytesRead, uint* pnMinNumberOfBytesNeeded);
+BOOL ReadEventLogW(HANDLE hEventLog, READ_EVENT_LOG_READ_FLAGS dwReadFlags, uint dwRecordOffset, void* lpBuffer, uint nNumberOfBytesToRead, uint* pnBytesRead, uint* pnMinNumberOfBytesNeeded);
+BOOL ReportEventA(HANDLE hEventLog, REPORT_EVENT_TYPE wType, ushort wCategory, uint dwEventID, PSID lpUserSid, ushort wNumStrings, uint dwDataSize, const(char)** lpStrings, void* lpRawData);
+BOOL ReportEventW(HANDLE hEventLog, REPORT_EVENT_TYPE wType, ushort wCategory, uint dwEventID, PSID lpUserSid, ushort wNumStrings, uint dwDataSize, const(wchar)** lpStrings, void* lpRawData);
+BOOL GetEventLogInformation(HANDLE hEventLog, uint dwInfoLevel, void* lpBuffer, uint cbBufSize, uint* pcbBytesNeeded);
 enum EVT_VARIANT_TYPE_MASK = 0x0000007f;
 enum EVT_VARIANT_TYPE_ARRAY = 0x00000080;
 enum EVT_READ_ACCESS = 0x00000001;
@@ -225,7 +226,7 @@ enum : int
     EvtSubscribeActionDeliver = 0x00000001,
 }
 
-alias EVT_SUBSCRIBE_CALLBACK = uint function(EVT_SUBSCRIBE_NOTIFY_ACTION, void*, EVT_HANDLE);
+alias EVT_SUBSCRIBE_CALLBACK = uint function(EVT_SUBSCRIBE_NOTIFY_ACTION Action, void* UserContext, EVT_HANDLE Event);
 alias EVT_SYSTEM_PROPERTY_ID = int;
 enum : int
 {

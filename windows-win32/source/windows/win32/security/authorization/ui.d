@@ -1,8 +1,8 @@
 module windows.win32.security.authorization.ui;
 
 import windows.win32.guid : GUID;
-import windows.win32.foundation : BOOL, BOOLEAN, HINSTANCE, HRESULT, HWND, PSID, PWSTR;
-import windows.win32.security : ACE_FLAGS, ACL, OBJECT_SECURITY_INFORMATION, OBJECT_TYPE_LIST, PSECURITY_DESCRIPTOR, TOKEN_GROUPS;
+import windows.win32.foundation : BOOL, BOOLEAN, HINSTANCE, HRESULT, HWND, PWSTR;
+import windows.win32.security : ACE_FLAGS, ACL, OBJECT_SECURITY_INFORMATION, OBJECT_TYPE_LIST, PSECURITY_DESCRIPTOR, PSID, TOKEN_GROUPS;
 import windows.win32.security.authorization : AUTHZ_SECURITY_ATTRIBUTES_INFORMATION, AUTHZ_SECURITY_ATTRIBUTE_OPERATION, AUTHZ_SID_OPERATION, INHERITED_FROMA;
 import windows.win32.system.com : IDataObject, IUnknown;
 import windows.win32.ui.controls : HPROPSHEETPAGE, PSPCB_MESSAGE;
@@ -37,9 +37,9 @@ enum : uint
     SI_VIEW_ONLY                       = 0x00400000,
 }
 
-HPROPSHEETPAGE CreateSecurityPage(ISecurityInformation);
-BOOL EditSecurity(HWND, ISecurityInformation);
-HRESULT EditSecurityAdvanced(HWND, ISecurityInformation, SI_PAGE_TYPE);
+HPROPSHEETPAGE CreateSecurityPage(ISecurityInformation psi);
+BOOL EditSecurity(HWND hwndOwner, ISecurityInformation psi);
+HRESULT EditSecurityAdvanced(HWND hwndOwner, ISecurityInformation psi, SI_PAGE_TYPE uSIPage);
 enum SI_EDIT_PERMS = 0x00000000;
 enum SI_EDIT_OWNER = 0x00000001;
 enum SI_CONTAINER = 0x00000004;
@@ -117,19 +117,19 @@ enum : int
 enum IID_ISecurityInformation = GUID(0x965fc360, 0x16ff, 0x11d0, [0x91, 0xcb, 0x0, 0xaa, 0x0, 0xbb, 0xb7, 0x23]);
 interface ISecurityInformation : IUnknown
 {
-    HRESULT GetObjectInformation(SI_OBJECT_INFO*);
-    HRESULT GetSecurity(OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR*, BOOL);
-    HRESULT SetSecurity(OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR);
-    HRESULT GetAccessRights(const(GUID)*, SECURITY_INFO_PAGE_FLAGS, SI_ACCESS**, uint*, uint*);
-    HRESULT MapGeneric(const(GUID)*, ubyte*, uint*);
-    HRESULT GetInheritTypes(SI_INHERIT_TYPE**, uint*);
-    HRESULT PropertySheetPageCallback(HWND, PSPCB_MESSAGE, SI_PAGE_TYPE);
+    HRESULT GetObjectInformation(SI_OBJECT_INFO* pObjectInfo);
+    HRESULT GetSecurity(OBJECT_SECURITY_INFORMATION RequestedInformation, PSECURITY_DESCRIPTOR* ppSecurityDescriptor, BOOL fDefault);
+    HRESULT SetSecurity(OBJECT_SECURITY_INFORMATION SecurityInformation, PSECURITY_DESCRIPTOR pSecurityDescriptor);
+    HRESULT GetAccessRights(const(GUID)* pguidObjectType, SECURITY_INFO_PAGE_FLAGS dwFlags, SI_ACCESS** ppAccess, uint* pcAccesses, uint* piDefaultAccess);
+    HRESULT MapGeneric(const(GUID)* pguidObjectType, ubyte* pAceFlags, uint* pMask);
+    HRESULT GetInheritTypes(SI_INHERIT_TYPE** ppInheritTypes, uint* pcInheritTypes);
+    HRESULT PropertySheetPageCallback(HWND hwnd, PSPCB_MESSAGE uMsg, SI_PAGE_TYPE uPage);
 }
 enum IID_ISecurityInformation2 = GUID(0xc3ccfdb4, 0x6f88, 0x11d2, [0xa3, 0xce, 0x0, 0xc0, 0x4f, 0xb1, 0x78, 0x2a]);
 interface ISecurityInformation2 : IUnknown
 {
-    BOOL IsDaclCanonical(ACL*);
-    HRESULT LookupSids(uint, PSID*, IDataObject*);
+    BOOL IsDaclCanonical(ACL* pDacl);
+    HRESULT LookupSids(uint cSids, PSID* rgpSids, IDataObject* ppdo);
 }
 struct SID_INFO
 {
@@ -146,18 +146,18 @@ struct SID_INFO_LIST
 enum IID_IEffectivePermission = GUID(0x3853dc76, 0x9f35, 0x407c, [0x88, 0xa1, 0xd1, 0x93, 0x44, 0x36, 0x5f, 0xbc]);
 interface IEffectivePermission : IUnknown
 {
-    HRESULT GetEffectivePermission(const(GUID)*, PSID, const(wchar)*, PSECURITY_DESCRIPTOR, OBJECT_TYPE_LIST**, uint*, uint**, uint*);
+    HRESULT GetEffectivePermission(const(GUID)* pguidObjectType, PSID pUserSid, const(wchar)* pszServerName, PSECURITY_DESCRIPTOR pSD, OBJECT_TYPE_LIST** ppObjectTypeList, uint* pcObjectTypeListLength, uint** ppGrantedAccessList, uint* pcGrantedAccessListLength);
 }
 enum IID_ISecurityObjectTypeInfo = GUID(0xfc3066eb, 0x79ef, 0x444b, [0x91, 0x11, 0xd1, 0x8a, 0x75, 0xeb, 0xf2, 0xfa]);
 interface ISecurityObjectTypeInfo : IUnknown
 {
-    HRESULT GetInheritSource(uint, ACL*, INHERITED_FROMA**);
+    HRESULT GetInheritSource(uint si, ACL* pACL, INHERITED_FROMA** ppInheritArray);
 }
 enum IID_ISecurityInformation3 = GUID(0xe2cdc9cc, 0x31bd, 0x4f8f, [0x8c, 0x8b, 0xb6, 0x41, 0xaf, 0x51, 0x6a, 0x1a]);
 interface ISecurityInformation3 : IUnknown
 {
-    HRESULT GetFullResourceName(PWSTR*);
-    HRESULT OpenElevatedEditor(HWND, SI_PAGE_TYPE);
+    HRESULT GetFullResourceName(PWSTR* ppszResourceName);
+    HRESULT OpenElevatedEditor(HWND hWnd, SI_PAGE_TYPE uPage);
 }
 struct SECURITY_OBJECT
 {
@@ -179,10 +179,10 @@ struct EFFPERM_RESULT_LIST
 enum IID_ISecurityInformation4 = GUID(0xea961070, 0xcd14, 0x4621, [0xac, 0xe4, 0xf6, 0x3c, 0x3, 0xe5, 0x83, 0xe4]);
 interface ISecurityInformation4 : IUnknown
 {
-    HRESULT GetSecondarySecurity(SECURITY_OBJECT**, uint*);
+    HRESULT GetSecondarySecurity(SECURITY_OBJECT** pSecurityObjects, uint* pSecurityObjectCount);
 }
 enum IID_IEffectivePermission2 = GUID(0x941fabca, 0xdd47, 0x4fca, [0x90, 0xbb, 0xb0, 0xe1, 0x2, 0x55, 0xf2, 0xd]);
 interface IEffectivePermission2 : IUnknown
 {
-    HRESULT ComputeEffectivePermissionWithSecondarySecurity(PSID, PSID, const(wchar)*, SECURITY_OBJECT*, uint, TOKEN_GROUPS*, AUTHZ_SID_OPERATION*, TOKEN_GROUPS*, AUTHZ_SID_OPERATION*, AUTHZ_SECURITY_ATTRIBUTES_INFORMATION*, AUTHZ_SECURITY_ATTRIBUTE_OPERATION*, AUTHZ_SECURITY_ATTRIBUTES_INFORMATION*, AUTHZ_SECURITY_ATTRIBUTE_OPERATION*, EFFPERM_RESULT_LIST*);
+    HRESULT ComputeEffectivePermissionWithSecondarySecurity(PSID pSid, PSID pDeviceSid, const(wchar)* pszServerName, SECURITY_OBJECT* pSecurityObjects, uint dwSecurityObjectCount, TOKEN_GROUPS* pUserGroups, AUTHZ_SID_OPERATION* pAuthzUserGroupsOperations, TOKEN_GROUPS* pDeviceGroups, AUTHZ_SID_OPERATION* pAuthzDeviceGroupsOperations, AUTHZ_SECURITY_ATTRIBUTES_INFORMATION* pAuthzUserClaims, AUTHZ_SECURITY_ATTRIBUTE_OPERATION* pAuthzUserClaimsOperations, AUTHZ_SECURITY_ATTRIBUTES_INFORMATION* pAuthzDeviceClaims, AUTHZ_SECURITY_ATTRIBUTE_OPERATION* pAuthzDeviceClaimsOperations, EFFPERM_RESULT_LIST* pEffpermResultLists);
 }

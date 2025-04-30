@@ -113,70 +113,70 @@ enum : uint
     DNS_QUERY_RAW_OPTION_BEST_EFFORT_PARSE = 0x00000001,
 }
 
-int DnsQueryConfig(DNS_CONFIG_TYPE, uint, const(wchar)*, void*, void*, uint*);
-DNS_RECORDA* DnsRecordCopyEx(DNS_RECORDA*, DNS_CHARSET, DNS_CHARSET);
-DNS_RECORDA* DnsRecordSetCopyEx(DNS_RECORDA*, DNS_CHARSET, DNS_CHARSET);
-BOOL DnsRecordCompare(DNS_RECORDA*, DNS_RECORDA*);
-BOOL DnsRecordSetCompare(DNS_RECORDA*, DNS_RECORDA*, DNS_RECORDA**, DNS_RECORDA**);
-DNS_RECORDA* DnsRecordSetDetach(DNS_RECORDA*);
-void DnsFree(void*, DNS_FREE_TYPE);
-WIN32_ERROR DnsQuery_A(const(char)*, DNS_TYPE, DNS_QUERY_OPTIONS, void*, DNS_RECORDA**, void**);
-WIN32_ERROR DnsQuery_UTF8(const(char)*, DNS_TYPE, DNS_QUERY_OPTIONS, void*, DNS_RECORDA**, void**);
-WIN32_ERROR DnsQuery_W(const(wchar)*, DNS_TYPE, DNS_QUERY_OPTIONS, void*, DNS_RECORDA**, void**);
-void DnsFreeCustomServers(uint*, DNS_CUSTOM_SERVER**);
-uint DnsGetApplicationSettings(uint*, DNS_CUSTOM_SERVER**, DNS_APPLICATION_SETTINGS*);
-uint DnsSetApplicationSettings(uint, const(DNS_CUSTOM_SERVER)*, const(DNS_APPLICATION_SETTINGS)*);
-int DnsQueryEx(DNS_QUERY_REQUEST*, DNS_QUERY_RESULT*, DNS_QUERY_CANCEL*);
-int DnsCancelQuery(DNS_QUERY_CANCEL*);
-void DnsQueryRawResultFree(DNS_QUERY_RAW_RESULT*);
-int DnsQueryRaw(DNS_QUERY_RAW_REQUEST*, DNS_QUERY_RAW_CANCEL*);
-int DnsCancelQueryRaw(DNS_QUERY_RAW_CANCEL*);
-int DnsAcquireContextHandle_W(uint, void*, HANDLE*);
-int DnsAcquireContextHandle_A(uint, void*, HANDLE*);
-void DnsReleaseContextHandle(HANDLE);
-int DnsModifyRecordsInSet_W(DNS_RECORDA*, DNS_RECORDA*, uint, HANDLE, void*, void*);
-int DnsModifyRecordsInSet_A(DNS_RECORDA*, DNS_RECORDA*, uint, HANDLE, void*, void*);
-int DnsModifyRecordsInSet_UTF8(DNS_RECORDA*, DNS_RECORDA*, uint, HANDLE, void*, void*);
-int DnsReplaceRecordSetW(DNS_RECORDA*, uint, HANDLE, void*, void*);
-int DnsReplaceRecordSetA(DNS_RECORDA*, uint, HANDLE, void*, void*);
-int DnsReplaceRecordSetUTF8(DNS_RECORDA*, uint, HANDLE, void*, void*);
-int DnsValidateName_W(const(wchar)*, DNS_NAME_FORMAT);
-int DnsValidateName_A(const(char)*, DNS_NAME_FORMAT);
-int DnsValidateName_UTF8(const(char)*, DNS_NAME_FORMAT);
-BOOL DnsNameCompare_A(const(char)*, const(char)*);
-BOOL DnsNameCompare_W(const(wchar)*, const(wchar)*);
-BOOL DnsWriteQuestionToBuffer_W(DNS_MESSAGE_BUFFER*, uint*, const(wchar)*, ushort, ushort, BOOL);
-BOOL DnsWriteQuestionToBuffer_UTF8(DNS_MESSAGE_BUFFER*, uint*, const(char)*, ushort, ushort, BOOL);
-int DnsExtractRecordsFromMessage_W(DNS_MESSAGE_BUFFER*, ushort, DNS_RECORDA**);
-int DnsExtractRecordsFromMessage_UTF8(DNS_MESSAGE_BUFFER*, ushort, DNS_RECORDA**);
-uint DnsGetProxyInformation(const(wchar)*, DNS_PROXY_INFORMATION*, DNS_PROXY_INFORMATION*, DNS_PROXY_COMPLETION_ROUTINE, void*);
-void DnsFreeProxyName(PWSTR);
-uint DnsConnectionGetProxyInfoForHostUrl(const(wchar)*, ubyte*, uint, uint, DNS_CONNECTION_PROXY_INFO_EX*);
-uint DnsConnectionGetProxyInfoForHostUrlEx(const(wchar)*, ubyte*, uint, uint, const(wchar)*, DNS_CONNECTION_PROXY_INFO_EX*);
-void DnsConnectionFreeProxyInfoEx(DNS_CONNECTION_PROXY_INFO_EX*);
-uint DnsConnectionGetProxyInfo(const(wchar)*, DNS_CONNECTION_PROXY_TYPE, DNS_CONNECTION_PROXY_INFO*);
-void DnsConnectionFreeProxyInfo(DNS_CONNECTION_PROXY_INFO*);
-uint DnsConnectionSetProxyInfo(const(wchar)*, DNS_CONNECTION_PROXY_TYPE, const(DNS_CONNECTION_PROXY_INFO)*);
-uint DnsConnectionDeleteProxyInfo(const(wchar)*, DNS_CONNECTION_PROXY_TYPE);
-uint DnsConnectionGetProxyList(const(wchar)*, DNS_CONNECTION_PROXY_LIST*);
-void DnsConnectionFreeProxyList(DNS_CONNECTION_PROXY_LIST*);
-uint DnsConnectionGetNameList(DNS_CONNECTION_NAME_LIST*);
-void DnsConnectionFreeNameList(DNS_CONNECTION_NAME_LIST*);
-uint DnsConnectionUpdateIfIndexTable(DNS_CONNECTION_IFINDEX_LIST*);
-uint DnsConnectionSetPolicyEntries(DNS_CONNECTION_POLICY_TAG, DNS_CONNECTION_POLICY_ENTRY_LIST*);
-uint DnsConnectionDeletePolicyEntries(DNS_CONNECTION_POLICY_TAG);
-DNS_SERVICE_INSTANCE* DnsServiceConstructInstance(const(wchar)*, const(wchar)*, uint*, IP6_ADDRESS*, ushort, ushort, ushort, uint, const(wchar)**, const(wchar)**);
-DNS_SERVICE_INSTANCE* DnsServiceCopyInstance(DNS_SERVICE_INSTANCE*);
-void DnsServiceFreeInstance(DNS_SERVICE_INSTANCE*);
-int DnsServiceBrowse(DNS_SERVICE_BROWSE_REQUEST*, DNS_SERVICE_CANCEL*);
-int DnsServiceBrowseCancel(DNS_SERVICE_CANCEL*);
-int DnsServiceResolve(DNS_SERVICE_RESOLVE_REQUEST*, DNS_SERVICE_CANCEL*);
-int DnsServiceResolveCancel(DNS_SERVICE_CANCEL*);
-uint DnsServiceRegister(DNS_SERVICE_REGISTER_REQUEST*, DNS_SERVICE_CANCEL*);
-uint DnsServiceDeRegister(DNS_SERVICE_REGISTER_REQUEST*, DNS_SERVICE_CANCEL*);
-uint DnsServiceRegisterCancel(DNS_SERVICE_CANCEL*);
-int DnsStartMulticastQuery(MDNS_QUERY_REQUEST*, MDNS_QUERY_HANDLE*);
-int DnsStopMulticastQuery(MDNS_QUERY_HANDLE*);
+int DnsQueryConfig(DNS_CONFIG_TYPE Config, uint Flag, const(wchar)* pwsAdapterName, void* pReserved, void* pBuffer, uint* pBufLen);
+DNS_RECORDA* DnsRecordCopyEx(DNS_RECORDA* pRecord, DNS_CHARSET CharSetIn, DNS_CHARSET CharSetOut);
+DNS_RECORDA* DnsRecordSetCopyEx(DNS_RECORDA* pRecordSet, DNS_CHARSET CharSetIn, DNS_CHARSET CharSetOut);
+BOOL DnsRecordCompare(DNS_RECORDA* pRecord1, DNS_RECORDA* pRecord2);
+BOOL DnsRecordSetCompare(DNS_RECORDA* pRR1, DNS_RECORDA* pRR2, DNS_RECORDA** ppDiff1, DNS_RECORDA** ppDiff2);
+DNS_RECORDA* DnsRecordSetDetach(DNS_RECORDA* pRecordList);
+void DnsFree(void* pData, DNS_FREE_TYPE FreeType);
+WIN32_ERROR DnsQuery_A(const(char)* pszName, DNS_TYPE wType, DNS_QUERY_OPTIONS Options, void* pExtra, DNS_RECORDA** ppQueryResults, void** pReserved);
+WIN32_ERROR DnsQuery_UTF8(const(char)* pszName, DNS_TYPE wType, DNS_QUERY_OPTIONS Options, void* pExtra, DNS_RECORDA** ppQueryResults, void** pReserved);
+WIN32_ERROR DnsQuery_W(const(wchar)* pszName, DNS_TYPE wType, DNS_QUERY_OPTIONS Options, void* pExtra, DNS_RECORDA** ppQueryResults, void** pReserved);
+void DnsFreeCustomServers(uint* pcServers, DNS_CUSTOM_SERVER** ppServers);
+uint DnsGetApplicationSettings(uint* pcServers, DNS_CUSTOM_SERVER** ppDefaultServers, DNS_APPLICATION_SETTINGS* pSettings);
+uint DnsSetApplicationSettings(uint cServers, const(DNS_CUSTOM_SERVER)* pServers, const(DNS_APPLICATION_SETTINGS)* pSettings);
+int DnsQueryEx(DNS_QUERY_REQUEST* pQueryRequest, DNS_QUERY_RESULT* pQueryResults, DNS_QUERY_CANCEL* pCancelHandle);
+int DnsCancelQuery(DNS_QUERY_CANCEL* pCancelHandle);
+void DnsQueryRawResultFree(DNS_QUERY_RAW_RESULT* queryResults);
+int DnsQueryRaw(DNS_QUERY_RAW_REQUEST* queryRequest, DNS_QUERY_RAW_CANCEL* cancelHandle);
+int DnsCancelQueryRaw(DNS_QUERY_RAW_CANCEL* cancelHandle);
+int DnsAcquireContextHandle_W(uint CredentialFlags, void* Credentials, HANDLE* pContext);
+int DnsAcquireContextHandle_A(uint CredentialFlags, void* Credentials, HANDLE* pContext);
+void DnsReleaseContextHandle(HANDLE hContext);
+int DnsModifyRecordsInSet_W(DNS_RECORDA* pAddRecords, DNS_RECORDA* pDeleteRecords, uint Options, HANDLE hCredentials, void* pExtraList, void* pReserved);
+int DnsModifyRecordsInSet_A(DNS_RECORDA* pAddRecords, DNS_RECORDA* pDeleteRecords, uint Options, HANDLE hCredentials, void* pExtraList, void* pReserved);
+int DnsModifyRecordsInSet_UTF8(DNS_RECORDA* pAddRecords, DNS_RECORDA* pDeleteRecords, uint Options, HANDLE hCredentials, void* pExtraList, void* pReserved);
+int DnsReplaceRecordSetW(DNS_RECORDA* pReplaceSet, uint Options, HANDLE hContext, void* pExtraInfo, void* pReserved);
+int DnsReplaceRecordSetA(DNS_RECORDA* pReplaceSet, uint Options, HANDLE hContext, void* pExtraInfo, void* pReserved);
+int DnsReplaceRecordSetUTF8(DNS_RECORDA* pReplaceSet, uint Options, HANDLE hContext, void* pExtraInfo, void* pReserved);
+int DnsValidateName_W(const(wchar)* pszName, DNS_NAME_FORMAT Format);
+int DnsValidateName_A(const(char)* pszName, DNS_NAME_FORMAT Format);
+int DnsValidateName_UTF8(const(char)* pszName, DNS_NAME_FORMAT Format);
+BOOL DnsNameCompare_A(const(char)* pName1, const(char)* pName2);
+BOOL DnsNameCompare_W(const(wchar)* pName1, const(wchar)* pName2);
+BOOL DnsWriteQuestionToBuffer_W(DNS_MESSAGE_BUFFER* pDnsBuffer, uint* pdwBufferSize, const(wchar)* pszName, ushort wType, ushort Xid, BOOL fRecursionDesired);
+BOOL DnsWriteQuestionToBuffer_UTF8(DNS_MESSAGE_BUFFER* pDnsBuffer, uint* pdwBufferSize, const(char)* pszName, ushort wType, ushort Xid, BOOL fRecursionDesired);
+int DnsExtractRecordsFromMessage_W(DNS_MESSAGE_BUFFER* pDnsBuffer, ushort wMessageLength, DNS_RECORDA** ppRecord);
+int DnsExtractRecordsFromMessage_UTF8(DNS_MESSAGE_BUFFER* pDnsBuffer, ushort wMessageLength, DNS_RECORDA** ppRecord);
+uint DnsGetProxyInformation(const(wchar)* hostName, DNS_PROXY_INFORMATION* proxyInformation, DNS_PROXY_INFORMATION* defaultProxyInformation, DNS_PROXY_COMPLETION_ROUTINE completionRoutine, void* completionContext);
+void DnsFreeProxyName(PWSTR proxyName);
+uint DnsConnectionGetProxyInfoForHostUrl(const(wchar)* pwszHostUrl, ubyte* pSelectionContext, uint dwSelectionContextLength, uint dwExplicitInterfaceIndex, DNS_CONNECTION_PROXY_INFO_EX* pProxyInfoEx);
+uint DnsConnectionGetProxyInfoForHostUrlEx(const(wchar)* pwszHostUrl, ubyte* pSelectionContext, uint dwSelectionContextLength, uint dwExplicitInterfaceIndex, const(wchar)* pwszConnectionName, DNS_CONNECTION_PROXY_INFO_EX* pProxyInfoEx);
+void DnsConnectionFreeProxyInfoEx(DNS_CONNECTION_PROXY_INFO_EX* pProxyInfoEx);
+uint DnsConnectionGetProxyInfo(const(wchar)* pwszConnectionName, DNS_CONNECTION_PROXY_TYPE Type, DNS_CONNECTION_PROXY_INFO* pProxyInfo);
+void DnsConnectionFreeProxyInfo(DNS_CONNECTION_PROXY_INFO* pProxyInfo);
+uint DnsConnectionSetProxyInfo(const(wchar)* pwszConnectionName, DNS_CONNECTION_PROXY_TYPE Type, const(DNS_CONNECTION_PROXY_INFO)* pProxyInfo);
+uint DnsConnectionDeleteProxyInfo(const(wchar)* pwszConnectionName, DNS_CONNECTION_PROXY_TYPE Type);
+uint DnsConnectionGetProxyList(const(wchar)* pwszConnectionName, DNS_CONNECTION_PROXY_LIST* pProxyList);
+void DnsConnectionFreeProxyList(DNS_CONNECTION_PROXY_LIST* pProxyList);
+uint DnsConnectionGetNameList(DNS_CONNECTION_NAME_LIST* pNameList);
+void DnsConnectionFreeNameList(DNS_CONNECTION_NAME_LIST* pNameList);
+uint DnsConnectionUpdateIfIndexTable(DNS_CONNECTION_IFINDEX_LIST* pConnectionIfIndexEntries);
+uint DnsConnectionSetPolicyEntries(DNS_CONNECTION_POLICY_TAG PolicyEntryTag, DNS_CONNECTION_POLICY_ENTRY_LIST* pPolicyEntryList);
+uint DnsConnectionDeletePolicyEntries(DNS_CONNECTION_POLICY_TAG PolicyEntryTag);
+DNS_SERVICE_INSTANCE* DnsServiceConstructInstance(const(wchar)* pServiceName, const(wchar)* pHostName, uint* pIp4, IP6_ADDRESS* pIp6, ushort wPort, ushort wPriority, ushort wWeight, uint dwPropertiesCount, const(wchar)** keys, const(wchar)** values);
+DNS_SERVICE_INSTANCE* DnsServiceCopyInstance(DNS_SERVICE_INSTANCE* pOrig);
+void DnsServiceFreeInstance(DNS_SERVICE_INSTANCE* pInstance);
+int DnsServiceBrowse(DNS_SERVICE_BROWSE_REQUEST* pRequest, DNS_SERVICE_CANCEL* pCancel);
+int DnsServiceBrowseCancel(DNS_SERVICE_CANCEL* pCancelHandle);
+int DnsServiceResolve(DNS_SERVICE_RESOLVE_REQUEST* pRequest, DNS_SERVICE_CANCEL* pCancel);
+int DnsServiceResolveCancel(DNS_SERVICE_CANCEL* pCancelHandle);
+uint DnsServiceRegister(DNS_SERVICE_REGISTER_REQUEST* pRequest, DNS_SERVICE_CANCEL* pCancel);
+uint DnsServiceDeRegister(DNS_SERVICE_REGISTER_REQUEST* pRequest, DNS_SERVICE_CANCEL* pCancel);
+uint DnsServiceRegisterCancel(DNS_SERVICE_CANCEL* pCancelHandle);
+int DnsStartMulticastQuery(MDNS_QUERY_REQUEST* pQueryRequest, MDNS_QUERY_HANDLE* pHandle);
+int DnsStopMulticastQuery(MDNS_QUERY_HANDLE* pHandle);
 enum SIZEOF_IP4_ADDRESS = 0x00000004;
 enum IP4_ADDRESS_STRING_LENGTH = 0x00000010;
 enum IP4_ADDRESS_STRING_BUFFER_LENGTH = 0x00000010;
@@ -1169,7 +1169,7 @@ struct DNS_RRSET
     DNS_RECORDA* pFirstRR;
     DNS_RECORDA* pLastRR;
 }
-alias DNS_PROXY_COMPLETION_ROUTINE = void function(void*, int);
+alias DNS_PROXY_COMPLETION_ROUTINE = void function(void* completionContext, int status);
 alias DNS_PROXY_INFORMATION_TYPE = int;
 enum : int
 {
@@ -1210,7 +1210,7 @@ struct DNS_QUERY_RESULT
     DNS_RECORDA* pQueryRecords;
     void* Reserved;
 }
-alias PDNS_QUERY_COMPLETION_ROUTINE = void function(void*, DNS_QUERY_RESULT*);
+alias PDNS_QUERY_COMPLETION_ROUTINE = void function(void* pQueryContext, DNS_QUERY_RESULT* pQueryResults);
 struct DNS_CUSTOM_SERVER
 {
     uint dwServerType;
@@ -1275,7 +1275,7 @@ struct DNS_QUERY_RAW_RESULT
         CHAR[32] maxSa;
     }
 }
-alias DNS_QUERY_RAW_COMPLETION_ROUTINE = void function(void*, DNS_QUERY_RAW_RESULT*);
+alias DNS_QUERY_RAW_COMPLETION_ROUTINE = void function(void* queryContext, DNS_QUERY_RAW_RESULT* queryResults);
 struct DNS_QUERY_RAW_REQUEST
 {
     uint version_;
@@ -1439,7 +1439,7 @@ struct DNS_SERVICE_CANCEL
 {
     void* reserved;
 }
-alias PDNS_SERVICE_BROWSE_CALLBACK = void function(uint, void*, DNS_RECORDW*);
+alias PDNS_SERVICE_BROWSE_CALLBACK = void function(uint Status, void* pQueryContext, DNS_RECORDW* pDnsRecord);
 struct DNS_SERVICE_BROWSE_REQUEST
 {
     uint Version;
@@ -1452,7 +1452,7 @@ struct DNS_SERVICE_BROWSE_REQUEST
     }
     void* pQueryContext;
 }
-alias PDNS_SERVICE_RESOLVE_COMPLETE = void function(uint, void*, DNS_SERVICE_INSTANCE*);
+alias PDNS_SERVICE_RESOLVE_COMPLETE = void function(uint Status, void* pQueryContext, DNS_SERVICE_INSTANCE* pInstance);
 struct DNS_SERVICE_RESOLVE_REQUEST
 {
     uint Version;
@@ -1461,7 +1461,7 @@ struct DNS_SERVICE_RESOLVE_REQUEST
     PDNS_SERVICE_RESOLVE_COMPLETE pResolveCompletionCallback;
     void* pQueryContext;
 }
-alias PDNS_SERVICE_REGISTER_COMPLETE = void function(uint, void*, DNS_SERVICE_INSTANCE*);
+alias PDNS_SERVICE_REGISTER_COMPLETE = void function(uint Status, void* pQueryContext, DNS_SERVICE_INSTANCE* pInstance);
 struct DNS_SERVICE_REGISTER_REQUEST
 {
     uint Version;
@@ -1480,7 +1480,7 @@ struct MDNS_QUERY_HANDLE
     void* pWnfCallbackParams;
     uint[2] stateNameData;
 }
-alias PMDNS_QUERY_CALLBACK = void function(void*, MDNS_QUERY_HANDLE*, DNS_QUERY_RESULT*);
+alias PMDNS_QUERY_CALLBACK = void function(void* pQueryContext, MDNS_QUERY_HANDLE* pQueryHandle, DNS_QUERY_RESULT* pQueryResults);
 struct MDNS_QUERY_REQUEST
 {
     uint Version;

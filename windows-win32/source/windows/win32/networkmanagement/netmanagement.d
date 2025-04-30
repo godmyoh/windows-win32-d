@@ -2,8 +2,8 @@ module windows.win32.networkmanagement.netmanagement;
 
 import windows.win32.guid : GUID;
 import windows.win32.data.xml.msxml : IXMLDOMNodeList;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HRESULT, HWND, NTSTATUS, PSID, PSTR, PWSTR;
-import windows.win32.security : SID_NAME_USE;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, FILETIME, HANDLE, HRESULT, HWND, NTSTATUS, PSTR, PWSTR;
+import windows.win32.security : PSID, SID_NAME_USE;
 import windows.win32.security.cryptography : CERT_CONTEXT;
 import windows.win32.system.com : IUnknown;
 import windows.win32.system.registry : HKEY;
@@ -184,181 +184,181 @@ enum : uint
     UAS_ROLE_PRIMARY    = 0x00000003,
 }
 
-uint NetUserAdd(const(wchar)*, uint, ubyte*, uint*);
-uint NetUserEnum(const(wchar)*, uint, NET_USER_ENUM_FILTER_FLAGS, ubyte**, uint, uint*, uint*, uint*);
-uint NetUserGetInfo(const(wchar)*, const(wchar)*, uint, ubyte**);
-uint NetUserSetInfo(const(wchar)*, const(wchar)*, uint, ubyte*, uint*);
-uint NetUserDel(const(wchar)*, const(wchar)*);
-uint NetUserGetGroups(const(wchar)*, const(wchar)*, uint, ubyte**, uint, uint*, uint*);
-uint NetUserSetGroups(const(wchar)*, const(wchar)*, uint, ubyte*, uint);
-uint NetUserGetLocalGroups(const(wchar)*, const(wchar)*, uint, uint, ubyte**, uint, uint*, uint*);
-uint NetUserModalsGet(const(wchar)*, uint, ubyte**);
-uint NetUserModalsSet(const(wchar)*, uint, ubyte*, uint*);
-uint NetUserChangePassword(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*);
-uint NetGroupAdd(const(wchar)*, uint, ubyte*, uint*);
-uint NetGroupAddUser(const(wchar)*, const(wchar)*, const(wchar)*);
-uint NetGroupEnum(const(wchar)*, uint, ubyte**, uint, uint*, uint*, ulong*);
-uint NetGroupGetInfo(const(wchar)*, const(wchar)*, uint, ubyte**);
-uint NetGroupSetInfo(const(wchar)*, const(wchar)*, uint, ubyte*, uint*);
-uint NetGroupDel(const(wchar)*, const(wchar)*);
-uint NetGroupDelUser(const(wchar)*, const(wchar)*, const(wchar)*);
-uint NetGroupGetUsers(const(wchar)*, const(wchar)*, uint, ubyte**, uint, uint*, uint*, ulong*);
-uint NetGroupSetUsers(const(wchar)*, const(wchar)*, uint, ubyte*, uint);
-uint NetLocalGroupAdd(const(wchar)*, uint, ubyte*, uint*);
-uint NetLocalGroupAddMember(const(wchar)*, const(wchar)*, PSID);
-uint NetLocalGroupEnum(const(wchar)*, uint, ubyte**, uint, uint*, uint*, ulong*);
-uint NetLocalGroupGetInfo(const(wchar)*, const(wchar)*, uint, ubyte**);
-uint NetLocalGroupSetInfo(const(wchar)*, const(wchar)*, uint, ubyte*, uint*);
-uint NetLocalGroupDel(const(wchar)*, const(wchar)*);
-uint NetLocalGroupDelMember(const(wchar)*, const(wchar)*, PSID);
-uint NetLocalGroupGetMembers(const(wchar)*, const(wchar)*, uint, ubyte**, uint, uint*, uint*, ulong*);
-uint NetLocalGroupSetMembers(const(wchar)*, const(wchar)*, uint, ubyte*, uint);
-uint NetLocalGroupAddMembers(const(wchar)*, const(wchar)*, uint, ubyte*, uint);
-uint NetLocalGroupDelMembers(const(wchar)*, const(wchar)*, uint, ubyte*, uint);
-uint NetQueryDisplayInformation(const(wchar)*, uint, uint, uint, uint, uint*, void**);
-uint NetGetDisplayInformationIndex(const(wchar)*, uint, const(wchar)*, uint*);
-uint NetAccessAdd(const(wchar)*, uint, ubyte*, uint*);
-uint NetAccessEnum(const(wchar)*, const(wchar)*, uint, uint, ubyte**, uint, uint*, uint*, uint*);
-uint NetAccessGetInfo(const(wchar)*, const(wchar)*, uint, ubyte**);
-uint NetAccessSetInfo(const(wchar)*, const(wchar)*, uint, ubyte*, uint*);
-uint NetAccessDel(const(wchar)*, const(wchar)*);
-uint NetAccessGetUserPerms(const(wchar)*, const(wchar)*, const(wchar)*, uint*);
-uint NetValidatePasswordPolicy(const(wchar)*, void*, NET_VALIDATE_PASSWORD_TYPE, void*, void**);
-uint NetValidatePasswordPolicyFree(void**);
-uint NetGetDCName(const(wchar)*, const(wchar)*, ubyte**);
-uint NetGetAnyDCName(const(wchar)*, const(wchar)*, ubyte**);
-uint I_NetLogonControl2(const(wchar)*, uint, uint, ubyte*, ubyte**);
-NTSTATUS NetAddServiceAccount(PWSTR, PWSTR, PWSTR, uint);
-NTSTATUS NetRemoveServiceAccount(PWSTR, PWSTR, uint);
-NTSTATUS NetEnumerateServiceAccounts(PWSTR, uint, uint*, ushort***);
-NTSTATUS NetIsServiceAccount(PWSTR, PWSTR, BOOL*);
-NTSTATUS NetQueryServiceAccount(PWSTR, PWSTR, uint, ubyte**);
-uint NetAlertRaise(const(wchar)*, void*, uint);
-uint NetAlertRaiseEx(const(wchar)*, void*, uint, const(wchar)*);
-uint NetMessageNameAdd(const(wchar)*, const(wchar)*);
-uint NetMessageNameEnum(const(wchar)*, uint, ubyte**, uint, uint*, uint*, uint*);
-uint NetMessageNameGetInfo(const(wchar)*, const(wchar)*, uint, ubyte**);
-uint NetMessageNameDel(const(wchar)*, const(wchar)*);
-uint NetMessageBufferSend(const(wchar)*, const(wchar)*, const(wchar)*, ubyte*, uint);
-uint NetRemoteTOD(const(wchar)*, ubyte**);
-uint NetRemoteComputerSupports(const(wchar)*, NET_REMOTE_COMPUTER_SUPPORTS_OPTIONS, uint*);
-uint NetReplGetInfo(const(wchar)*, uint, ubyte**);
-uint NetReplSetInfo(const(wchar)*, uint, const(ubyte)*, uint*);
-uint NetReplExportDirAdd(const(wchar)*, uint, const(ubyte)*, uint*);
-uint NetReplExportDirDel(const(wchar)*, const(wchar)*);
-uint NetReplExportDirEnum(const(wchar)*, uint, ubyte**, uint, uint*, uint*, uint*);
-uint NetReplExportDirGetInfo(const(wchar)*, const(wchar)*, uint, ubyte**);
-uint NetReplExportDirSetInfo(const(wchar)*, const(wchar)*, uint, const(ubyte)*, uint*);
-uint NetReplExportDirLock(const(wchar)*, const(wchar)*);
-uint NetReplExportDirUnlock(const(wchar)*, const(wchar)*, uint);
-uint NetReplImportDirAdd(const(wchar)*, uint, const(ubyte)*, uint*);
-uint NetReplImportDirDel(const(wchar)*, const(wchar)*);
-uint NetReplImportDirEnum(const(wchar)*, uint, ubyte**, uint, uint*, uint*, uint*);
-uint NetReplImportDirGetInfo(const(wchar)*, const(wchar)*, uint, ubyte**);
-uint NetReplImportDirLock(const(wchar)*, const(wchar)*);
-uint NetReplImportDirUnlock(const(wchar)*, const(wchar)*, uint);
-uint NetServerEnum(const(wchar)*, uint, ubyte**, uint, uint*, uint*, NET_SERVER_TYPE, const(wchar)*, uint*);
-uint NetServerGetInfo(PWSTR, uint, ubyte**);
-uint NetServerSetInfo(PWSTR, uint, ubyte*, uint*);
-uint NetServerDiskEnum(PWSTR, uint, ubyte**, uint, uint*, uint*, uint*);
-uint NetServerComputerNameAdd(PWSTR, PWSTR, PWSTR);
-uint NetServerComputerNameDel(PWSTR, PWSTR);
-uint NetServerTransportAdd(PWSTR, uint, ubyte*);
-uint NetServerTransportAddEx(PWSTR, uint, ubyte*);
-uint NetServerTransportDel(PWSTR, uint, ubyte*);
-uint NetServerTransportEnum(PWSTR, uint, ubyte**, uint, uint*, uint*, uint*);
-uint NetServiceControl(const(wchar)*, const(wchar)*, uint, uint, ubyte**);
-uint NetServiceEnum(const(wchar)*, uint, ubyte**, uint, uint*, uint*, uint*);
-uint NetServiceGetInfo(const(wchar)*, const(wchar)*, uint, ubyte**);
-uint NetServiceInstall(const(wchar)*, const(wchar)*, uint, const(wchar)**, ubyte**);
-uint NetUseAdd(byte*, uint, ubyte*, uint*);
-uint NetUseDel(PWSTR, PWSTR, FORCE_LEVEL_FLAGS);
-uint NetUseEnum(PWSTR, uint, ubyte**, uint, uint*, uint*, uint*);
-uint NetUseGetInfo(PWSTR, PWSTR, uint, ubyte**);
-uint NetWkstaGetInfo(PWSTR, uint, ubyte**);
-uint NetWkstaSetInfo(PWSTR, uint, ubyte*, uint*);
-uint NetWkstaUserGetInfo(PWSTR, uint, ubyte**);
-uint NetWkstaUserSetInfo(PWSTR, uint, ubyte*, uint*);
-uint NetWkstaUserEnum(PWSTR, uint, ubyte**, uint, uint*, uint*, uint*);
-uint NetWkstaTransportAdd(byte*, uint, ubyte*, uint*);
-uint NetWkstaTransportDel(PWSTR, PWSTR, FORCE_LEVEL_FLAGS);
-uint NetWkstaTransportEnum(byte*, uint, ubyte**, uint, uint*, uint*, uint*);
-uint NetApiBufferAllocate(uint, void**);
-uint NetApiBufferFree(void*);
-uint NetApiBufferReallocate(void*, uint, void**);
-uint NetApiBufferSize(void*, uint*);
-uint NetErrorLogClear(const(wchar)*, const(wchar)*, ubyte*);
-uint NetErrorLogRead(const(wchar)*, PWSTR, HLOG*, uint, uint*, uint, uint, ubyte**, uint, uint*, uint*);
-uint NetErrorLogWrite(ubyte*, uint, const(wchar)*, ubyte*, uint, ubyte*, uint, ubyte*);
-uint NetConfigGet(const(wchar)*, const(wchar)*, const(wchar)*, ubyte**);
-uint NetConfigGetAll(const(wchar)*, const(wchar)*, ubyte**);
-uint NetConfigSet(const(wchar)*, const(wchar)*, const(wchar)*, uint, uint, ubyte*, uint);
-uint NetAuditClear(const(wchar)*, const(wchar)*, const(wchar)*);
-uint NetAuditRead(const(wchar)*, const(wchar)*, HLOG*, uint, uint*, uint, uint, ubyte**, uint, uint*, uint*);
-uint NetAuditWrite(uint, ubyte*, uint, const(wchar)*, ubyte*);
-uint NetJoinDomain(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, NET_JOIN_DOMAIN_JOIN_OPTIONS);
-uint NetUnjoinDomain(const(wchar)*, const(wchar)*, const(wchar)*, uint);
-uint NetRenameMachineInDomain(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, uint);
-uint NetValidateName(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, NETSETUP_NAME_TYPE);
-uint NetGetJoinableOUs(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, uint*, PWSTR**);
-uint NetAddAlternateComputerName(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, uint);
-uint NetRemoveAlternateComputerName(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, uint);
-uint NetSetPrimaryComputerName(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, uint);
-uint NetEnumerateComputerNames(const(wchar)*, NET_COMPUTER_NAME_TYPE, uint, uint*, PWSTR**);
-uint NetProvisionComputerAccount(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, NETSETUP_PROVISION, ubyte**, uint*, PWSTR*);
-uint NetRequestOfflineDomainJoin(ubyte*, uint, NET_REQUEST_PROVISION_OPTIONS, const(wchar)*);
-uint NetCreateProvisioningPackage(NETSETUP_PROVISIONING_PARAMS*, ubyte**, uint*, PWSTR*);
-uint NetRequestProvisioningPackageInstall(ubyte*, uint, NET_REQUEST_PROVISION_OPTIONS, const(wchar)*, void*);
-HRESULT NetGetAadJoinInformation(const(wchar)*, DSREG_JOIN_INFO**);
-void NetFreeAadJoinInformation(DSREG_JOIN_INFO*);
-uint NetGetJoinInformation(const(wchar)*, PWSTR*, NETSETUP_JOIN_STATUS*);
-HRESULT GetNetScheduleAccountInformation(const(wchar)*, uint, PWSTR);
-HRESULT SetNetScheduleAccountInformation(const(wchar)*, const(wchar)*, const(wchar)*);
-uint NetScheduleJobAdd(const(wchar)*, ubyte*, uint*);
-uint NetScheduleJobDel(const(wchar)*, uint, uint);
-uint NetScheduleJobEnum(const(wchar)*, ubyte**, uint, uint*, uint*, uint*);
-uint NetScheduleJobGetInfo(const(wchar)*, uint, ubyte**);
-uint TraceRegisterExA(const(char)*, uint);
-uint TraceDeregisterA(uint);
-uint TraceDeregisterExA(uint, uint);
-uint TraceGetConsoleA(uint, HANDLE*);
-uint TracePrintfA(uint, const(char)*);
-uint TracePrintfExA(uint, uint, const(char)*);
-uint TraceVprintfExA(uint, uint, const(char)*, byte*);
-uint TracePutsExA(uint, uint, const(char)*);
-uint TraceDumpExA(uint, uint, ubyte*, uint, uint, BOOL, const(char)*);
-uint TraceRegisterExW(const(wchar)*, uint);
-uint TraceDeregisterW(uint);
-uint TraceDeregisterExW(uint, uint);
-uint TraceGetConsoleW(uint, HANDLE*);
-uint TracePrintfW(uint, const(wchar)*);
-uint TracePrintfExW(uint, uint, const(wchar)*);
-uint TraceVprintfExW(uint, uint, const(wchar)*, byte*);
-uint TracePutsExW(uint, uint, const(wchar)*);
-uint TraceDumpExW(uint, uint, ubyte*, uint, uint, BOOL, const(wchar)*);
-void LogErrorA(uint, uint, PSTR*, uint);
-void LogEventA(uint, uint, uint, PSTR*);
-void LogErrorW(uint, uint, PWSTR*, uint);
-void LogEventW(uint, uint, uint, PWSTR*);
-HANDLE RouterLogRegisterA(const(char)*);
-void RouterLogDeregisterA(HANDLE);
-void RouterLogEventA(HANDLE, uint, uint, uint, PSTR*, uint);
-void RouterLogEventDataA(HANDLE, uint, uint, uint, PSTR*, uint, ubyte*);
-void RouterLogEventStringA(HANDLE, uint, uint, uint, PSTR*, uint, uint);
-void RouterLogEventExA(HANDLE, uint, uint, uint, const(char)*);
-void RouterLogEventValistExA(HANDLE, uint, uint, uint, const(char)*, byte*);
-uint RouterGetErrorStringA(uint, PSTR*);
-HANDLE RouterLogRegisterW(const(wchar)*);
-void RouterLogDeregisterW(HANDLE);
-void RouterLogEventW(HANDLE, uint, uint, uint, PWSTR*, uint);
-void RouterLogEventDataW(HANDLE, uint, uint, uint, PWSTR*, uint, ubyte*);
-void RouterLogEventStringW(HANDLE, uint, uint, uint, PWSTR*, uint, uint);
-void RouterLogEventExW(HANDLE, uint, uint, uint, const(wchar)*);
-void RouterLogEventValistExW(HANDLE, uint, uint, uint, const(wchar)*, byte*);
-uint RouterGetErrorStringW(uint, PWSTR*);
-void RouterAssert(PSTR, PSTR, uint, PSTR);
-uint MprSetupProtocolEnum(uint, ubyte**, uint*);
-uint MprSetupProtocolFree(void*);
+uint NetUserAdd(const(wchar)* servername, uint level, ubyte* buf, uint* parm_err);
+uint NetUserEnum(const(wchar)* servername, uint level, NET_USER_ENUM_FILTER_FLAGS filter, ubyte** bufptr, uint prefmaxlen, uint* entriesread, uint* totalentries, uint* resume_handle);
+uint NetUserGetInfo(const(wchar)* servername, const(wchar)* username, uint level, ubyte** bufptr);
+uint NetUserSetInfo(const(wchar)* servername, const(wchar)* username, uint level, ubyte* buf, uint* parm_err);
+uint NetUserDel(const(wchar)* servername, const(wchar)* username);
+uint NetUserGetGroups(const(wchar)* servername, const(wchar)* username, uint level, ubyte** bufptr, uint prefmaxlen, uint* entriesread, uint* totalentries);
+uint NetUserSetGroups(const(wchar)* servername, const(wchar)* username, uint level, ubyte* buf, uint num_entries);
+uint NetUserGetLocalGroups(const(wchar)* servername, const(wchar)* username, uint level, uint flags, ubyte** bufptr, uint prefmaxlen, uint* entriesread, uint* totalentries);
+uint NetUserModalsGet(const(wchar)* servername, uint level, ubyte** bufptr);
+uint NetUserModalsSet(const(wchar)* servername, uint level, ubyte* buf, uint* parm_err);
+uint NetUserChangePassword(const(wchar)* domainname, const(wchar)* username, const(wchar)* oldpassword, const(wchar)* newpassword);
+uint NetGroupAdd(const(wchar)* servername, uint level, ubyte* buf, uint* parm_err);
+uint NetGroupAddUser(const(wchar)* servername, const(wchar)* GroupName, const(wchar)* username);
+uint NetGroupEnum(const(wchar)* servername, uint level, ubyte** bufptr, uint prefmaxlen, uint* entriesread, uint* totalentries, ulong* resume_handle);
+uint NetGroupGetInfo(const(wchar)* servername, const(wchar)* groupname, uint level, ubyte** bufptr);
+uint NetGroupSetInfo(const(wchar)* servername, const(wchar)* groupname, uint level, ubyte* buf, uint* parm_err);
+uint NetGroupDel(const(wchar)* servername, const(wchar)* groupname);
+uint NetGroupDelUser(const(wchar)* servername, const(wchar)* GroupName, const(wchar)* Username);
+uint NetGroupGetUsers(const(wchar)* servername, const(wchar)* groupname, uint level, ubyte** bufptr, uint prefmaxlen, uint* entriesread, uint* totalentries, ulong* ResumeHandle);
+uint NetGroupSetUsers(const(wchar)* servername, const(wchar)* groupname, uint level, ubyte* buf, uint totalentries);
+uint NetLocalGroupAdd(const(wchar)* servername, uint level, ubyte* buf, uint* parm_err);
+uint NetLocalGroupAddMember(const(wchar)* servername, const(wchar)* groupname, PSID membersid);
+uint NetLocalGroupEnum(const(wchar)* servername, uint level, ubyte** bufptr, uint prefmaxlen, uint* entriesread, uint* totalentries, ulong* resumehandle);
+uint NetLocalGroupGetInfo(const(wchar)* servername, const(wchar)* groupname, uint level, ubyte** bufptr);
+uint NetLocalGroupSetInfo(const(wchar)* servername, const(wchar)* groupname, uint level, ubyte* buf, uint* parm_err);
+uint NetLocalGroupDel(const(wchar)* servername, const(wchar)* groupname);
+uint NetLocalGroupDelMember(const(wchar)* servername, const(wchar)* groupname, PSID membersid);
+uint NetLocalGroupGetMembers(const(wchar)* servername, const(wchar)* localgroupname, uint level, ubyte** bufptr, uint prefmaxlen, uint* entriesread, uint* totalentries, ulong* resumehandle);
+uint NetLocalGroupSetMembers(const(wchar)* servername, const(wchar)* groupname, uint level, ubyte* buf, uint totalentries);
+uint NetLocalGroupAddMembers(const(wchar)* servername, const(wchar)* groupname, uint level, ubyte* buf, uint totalentries);
+uint NetLocalGroupDelMembers(const(wchar)* servername, const(wchar)* groupname, uint level, ubyte* buf, uint totalentries);
+uint NetQueryDisplayInformation(const(wchar)* ServerName, uint Level, uint Index, uint EntriesRequested, uint PreferredMaximumLength, uint* ReturnedEntryCount, void** SortedBuffer);
+uint NetGetDisplayInformationIndex(const(wchar)* ServerName, uint Level, const(wchar)* Prefix, uint* Index);
+uint NetAccessAdd(const(wchar)* servername, uint level, ubyte* buf, uint* parm_err);
+uint NetAccessEnum(const(wchar)* servername, const(wchar)* BasePath, uint Recursive, uint level, ubyte** bufptr, uint prefmaxlen, uint* entriesread, uint* totalentries, uint* resume_handle);
+uint NetAccessGetInfo(const(wchar)* servername, const(wchar)* resource, uint level, ubyte** bufptr);
+uint NetAccessSetInfo(const(wchar)* servername, const(wchar)* resource, uint level, ubyte* buf, uint* parm_err);
+uint NetAccessDel(const(wchar)* servername, const(wchar)* resource);
+uint NetAccessGetUserPerms(const(wchar)* servername, const(wchar)* UGname, const(wchar)* resource, uint* Perms);
+uint NetValidatePasswordPolicy(const(wchar)* ServerName, void* Qualifier, NET_VALIDATE_PASSWORD_TYPE ValidationType, void* InputArg, void** OutputArg);
+uint NetValidatePasswordPolicyFree(void** OutputArg);
+uint NetGetDCName(const(wchar)* ServerName, const(wchar)* DomainName, ubyte** Buffer);
+uint NetGetAnyDCName(const(wchar)* ServerName, const(wchar)* DomainName, ubyte** Buffer);
+uint I_NetLogonControl2(const(wchar)* ServerName, uint FunctionCode, uint QueryLevel, ubyte* Data, ubyte** Buffer);
+NTSTATUS NetAddServiceAccount(PWSTR ServerName, PWSTR AccountName, PWSTR Password, uint Flags);
+NTSTATUS NetRemoveServiceAccount(PWSTR ServerName, PWSTR AccountName, uint Flags);
+NTSTATUS NetEnumerateServiceAccounts(PWSTR ServerName, uint Flags, uint* AccountsCount, ushort*** Accounts);
+NTSTATUS NetIsServiceAccount(PWSTR ServerName, PWSTR AccountName, BOOL* IsService);
+NTSTATUS NetQueryServiceAccount(PWSTR ServerName, PWSTR AccountName, uint InfoLevel, ubyte** Buffer);
+uint NetAlertRaise(const(wchar)* AlertType, void* Buffer, uint BufferSize);
+uint NetAlertRaiseEx(const(wchar)* AlertType, void* VariableInfo, uint VariableInfoSize, const(wchar)* ServiceName);
+uint NetMessageNameAdd(const(wchar)* servername, const(wchar)* msgname);
+uint NetMessageNameEnum(const(wchar)* servername, uint level, ubyte** bufptr, uint prefmaxlen, uint* entriesread, uint* totalentries, uint* resume_handle);
+uint NetMessageNameGetInfo(const(wchar)* servername, const(wchar)* msgname, uint level, ubyte** bufptr);
+uint NetMessageNameDel(const(wchar)* servername, const(wchar)* msgname);
+uint NetMessageBufferSend(const(wchar)* servername, const(wchar)* msgname, const(wchar)* fromname, ubyte* buf, uint buflen);
+uint NetRemoteTOD(const(wchar)* UncServerName, ubyte** BufferPtr);
+uint NetRemoteComputerSupports(const(wchar)* UncServerName, NET_REMOTE_COMPUTER_SUPPORTS_OPTIONS OptionsWanted, uint* OptionsSupported);
+uint NetReplGetInfo(const(wchar)* servername, uint level, ubyte** bufptr);
+uint NetReplSetInfo(const(wchar)* servername, uint level, const(ubyte)* buf, uint* parm_err);
+uint NetReplExportDirAdd(const(wchar)* servername, uint level, const(ubyte)* buf, uint* parm_err);
+uint NetReplExportDirDel(const(wchar)* servername, const(wchar)* dirname);
+uint NetReplExportDirEnum(const(wchar)* servername, uint level, ubyte** bufptr, uint prefmaxlen, uint* entriesread, uint* totalentries, uint* resumehandle);
+uint NetReplExportDirGetInfo(const(wchar)* servername, const(wchar)* dirname, uint level, ubyte** bufptr);
+uint NetReplExportDirSetInfo(const(wchar)* servername, const(wchar)* dirname, uint level, const(ubyte)* buf, uint* parm_err);
+uint NetReplExportDirLock(const(wchar)* servername, const(wchar)* dirname);
+uint NetReplExportDirUnlock(const(wchar)* servername, const(wchar)* dirname, uint unlockforce);
+uint NetReplImportDirAdd(const(wchar)* servername, uint level, const(ubyte)* buf, uint* parm_err);
+uint NetReplImportDirDel(const(wchar)* servername, const(wchar)* dirname);
+uint NetReplImportDirEnum(const(wchar)* servername, uint level, ubyte** bufptr, uint prefmaxlen, uint* entriesread, uint* totalentries, uint* resumehandle);
+uint NetReplImportDirGetInfo(const(wchar)* servername, const(wchar)* dirname, uint level, ubyte** bufptr);
+uint NetReplImportDirLock(const(wchar)* servername, const(wchar)* dirname);
+uint NetReplImportDirUnlock(const(wchar)* servername, const(wchar)* dirname, uint unlockforce);
+uint NetServerEnum(const(wchar)* servername, uint level, ubyte** bufptr, uint prefmaxlen, uint* entriesread, uint* totalentries, NET_SERVER_TYPE servertype, const(wchar)* domain, uint* resume_handle);
+uint NetServerGetInfo(PWSTR servername, uint level, ubyte** bufptr);
+uint NetServerSetInfo(PWSTR servername, uint level, ubyte* buf, uint* ParmError);
+uint NetServerDiskEnum(PWSTR servername, uint level, ubyte** bufptr, uint prefmaxlen, uint* entriesread, uint* totalentries, uint* resume_handle);
+uint NetServerComputerNameAdd(PWSTR ServerName, PWSTR EmulatedDomainName, PWSTR EmulatedServerName);
+uint NetServerComputerNameDel(PWSTR ServerName, PWSTR EmulatedServerName);
+uint NetServerTransportAdd(PWSTR servername, uint level, ubyte* bufptr);
+uint NetServerTransportAddEx(PWSTR servername, uint level, ubyte* bufptr);
+uint NetServerTransportDel(PWSTR servername, uint level, ubyte* bufptr);
+uint NetServerTransportEnum(PWSTR servername, uint level, ubyte** bufptr, uint prefmaxlen, uint* entriesread, uint* totalentries, uint* resume_handle);
+uint NetServiceControl(const(wchar)* servername, const(wchar)* service, uint opcode, uint arg, ubyte** bufptr);
+uint NetServiceEnum(const(wchar)* servername, uint level, ubyte** bufptr, uint prefmaxlen, uint* entriesread, uint* totalentries, uint* resume_handle);
+uint NetServiceGetInfo(const(wchar)* servername, const(wchar)* service, uint level, ubyte** bufptr);
+uint NetServiceInstall(const(wchar)* servername, const(wchar)* service, uint argc, const(wchar)** argv, ubyte** bufptr);
+uint NetUseAdd(byte* servername, uint LevelFlags, ubyte* buf, uint* parm_err);
+uint NetUseDel(PWSTR UncServerName, PWSTR UseName, FORCE_LEVEL_FLAGS ForceLevelFlags);
+uint NetUseEnum(PWSTR UncServerName, uint LevelFlags, ubyte** BufPtr, uint PreferedMaximumSize, uint* EntriesRead, uint* TotalEntries, uint* ResumeHandle);
+uint NetUseGetInfo(PWSTR UncServerName, PWSTR UseName, uint LevelFlags, ubyte** bufptr);
+uint NetWkstaGetInfo(PWSTR servername, uint level, ubyte** bufptr);
+uint NetWkstaSetInfo(PWSTR servername, uint level, ubyte* buffer, uint* parm_err);
+uint NetWkstaUserGetInfo(PWSTR reserved, uint level, ubyte** bufptr);
+uint NetWkstaUserSetInfo(PWSTR reserved, uint level, ubyte* buf, uint* parm_err);
+uint NetWkstaUserEnum(PWSTR servername, uint level, ubyte** bufptr, uint prefmaxlen, uint* entriesread, uint* totalentries, uint* resumehandle);
+uint NetWkstaTransportAdd(byte* servername, uint level, ubyte* buf, uint* parm_err);
+uint NetWkstaTransportDel(PWSTR servername, PWSTR transportname, FORCE_LEVEL_FLAGS ucond);
+uint NetWkstaTransportEnum(byte* servername, uint level, ubyte** bufptr, uint prefmaxlen, uint* entriesread, uint* totalentries, uint* resume_handle);
+uint NetApiBufferAllocate(uint ByteCount, void** Buffer);
+uint NetApiBufferFree(void* Buffer);
+uint NetApiBufferReallocate(void* OldBuffer, uint NewByteCount, void** NewBuffer);
+uint NetApiBufferSize(void* Buffer, uint* ByteCount);
+uint NetErrorLogClear(const(wchar)* UncServerName, const(wchar)* BackupFile, ubyte* Reserved);
+uint NetErrorLogRead(const(wchar)* UncServerName, PWSTR Reserved1, HLOG* ErrorLogHandle, uint Offset, uint* Reserved2, uint Reserved3, uint OffsetFlag, ubyte** BufPtr, uint PrefMaxSize, uint* BytesRead, uint* TotalAvailable);
+uint NetErrorLogWrite(ubyte* Reserved1, uint Code, const(wchar)* Component, ubyte* Buffer, uint NumBytes, ubyte* MsgBuf, uint StrCount, ubyte* Reserved2);
+uint NetConfigGet(const(wchar)* server, const(wchar)* component, const(wchar)* parameter, ubyte** bufptr);
+uint NetConfigGetAll(const(wchar)* server, const(wchar)* component, ubyte** bufptr);
+uint NetConfigSet(const(wchar)* server, const(wchar)* reserved1, const(wchar)* component, uint level, uint reserved2, ubyte* buf, uint reserved3);
+uint NetAuditClear(const(wchar)* server, const(wchar)* backupfile, const(wchar)* service);
+uint NetAuditRead(const(wchar)* server, const(wchar)* service, HLOG* auditloghandle, uint offset, uint* reserved1, uint reserved2, uint offsetflag, ubyte** bufptr, uint prefmaxlen, uint* bytesread, uint* totalavailable);
+uint NetAuditWrite(uint type, ubyte* buf, uint numbytes, const(wchar)* service, ubyte* reserved);
+uint NetJoinDomain(const(wchar)* lpServer, const(wchar)* lpDomain, const(wchar)* lpMachineAccountOU, const(wchar)* lpAccount, const(wchar)* lpPassword, NET_JOIN_DOMAIN_JOIN_OPTIONS fJoinOptions);
+uint NetUnjoinDomain(const(wchar)* lpServer, const(wchar)* lpAccount, const(wchar)* lpPassword, uint fUnjoinOptions);
+uint NetRenameMachineInDomain(const(wchar)* lpServer, const(wchar)* lpNewMachineName, const(wchar)* lpAccount, const(wchar)* lpPassword, uint fRenameOptions);
+uint NetValidateName(const(wchar)* lpServer, const(wchar)* lpName, const(wchar)* lpAccount, const(wchar)* lpPassword, NETSETUP_NAME_TYPE NameType);
+uint NetGetJoinableOUs(const(wchar)* lpServer, const(wchar)* lpDomain, const(wchar)* lpAccount, const(wchar)* lpPassword, uint* OUCount, PWSTR** OUs);
+uint NetAddAlternateComputerName(const(wchar)* Server, const(wchar)* AlternateName, const(wchar)* DomainAccount, const(wchar)* DomainAccountPassword, uint Reserved);
+uint NetRemoveAlternateComputerName(const(wchar)* Server, const(wchar)* AlternateName, const(wchar)* DomainAccount, const(wchar)* DomainAccountPassword, uint Reserved);
+uint NetSetPrimaryComputerName(const(wchar)* Server, const(wchar)* PrimaryName, const(wchar)* DomainAccount, const(wchar)* DomainAccountPassword, uint Reserved);
+uint NetEnumerateComputerNames(const(wchar)* Server, NET_COMPUTER_NAME_TYPE NameType, uint Reserved, uint* EntryCount, PWSTR** ComputerNames);
+uint NetProvisionComputerAccount(const(wchar)* lpDomain, const(wchar)* lpMachineName, const(wchar)* lpMachineAccountOU, const(wchar)* lpDcName, NETSETUP_PROVISION dwOptions, ubyte** pProvisionBinData, uint* pdwProvisionBinDataSize, PWSTR* pProvisionTextData);
+uint NetRequestOfflineDomainJoin(ubyte* pProvisionBinData, uint cbProvisionBinDataSize, NET_REQUEST_PROVISION_OPTIONS dwOptions, const(wchar)* lpWindowsPath);
+uint NetCreateProvisioningPackage(NETSETUP_PROVISIONING_PARAMS* pProvisioningParams, ubyte** ppPackageBinData, uint* pdwPackageBinDataSize, PWSTR* ppPackageTextData);
+uint NetRequestProvisioningPackageInstall(ubyte* pPackageBinData, uint dwPackageBinDataSize, NET_REQUEST_PROVISION_OPTIONS dwProvisionOptions, const(wchar)* lpWindowsPath, void* pvReserved);
+HRESULT NetGetAadJoinInformation(const(wchar)* pcszTenantId, DSREG_JOIN_INFO** ppJoinInfo);
+void NetFreeAadJoinInformation(DSREG_JOIN_INFO* pJoinInfo);
+uint NetGetJoinInformation(const(wchar)* lpServer, PWSTR* lpNameBuffer, NETSETUP_JOIN_STATUS* BufferType);
+HRESULT GetNetScheduleAccountInformation(const(wchar)* pwszServerName, uint ccAccount, PWSTR wszAccount);
+HRESULT SetNetScheduleAccountInformation(const(wchar)* pwszServerName, const(wchar)* pwszAccount, const(wchar)* pwszPassword);
+uint NetScheduleJobAdd(const(wchar)* Servername, ubyte* Buffer, uint* JobId);
+uint NetScheduleJobDel(const(wchar)* Servername, uint MinJobId, uint MaxJobId);
+uint NetScheduleJobEnum(const(wchar)* Servername, ubyte** PointerToBuffer, uint PrefferedMaximumLength, uint* EntriesRead, uint* TotalEntries, uint* ResumeHandle);
+uint NetScheduleJobGetInfo(const(wchar)* Servername, uint JobId, ubyte** PointerToBuffer);
+uint TraceRegisterExA(const(char)* lpszCallerName, uint dwFlags);
+uint TraceDeregisterA(uint dwTraceID);
+uint TraceDeregisterExA(uint dwTraceID, uint dwFlags);
+uint TraceGetConsoleA(uint dwTraceID, HANDLE* lphConsole);
+uint TracePrintfA(uint dwTraceID, const(char)* lpszFormat);
+uint TracePrintfExA(uint dwTraceID, uint dwFlags, const(char)* lpszFormat);
+uint TraceVprintfExA(uint dwTraceID, uint dwFlags, const(char)* lpszFormat, byte* arglist);
+uint TracePutsExA(uint dwTraceID, uint dwFlags, const(char)* lpszString);
+uint TraceDumpExA(uint dwTraceID, uint dwFlags, ubyte* lpbBytes, uint dwByteCount, uint dwGroupSize, BOOL bAddressPrefix, const(char)* lpszPrefix);
+uint TraceRegisterExW(const(wchar)* lpszCallerName, uint dwFlags);
+uint TraceDeregisterW(uint dwTraceID);
+uint TraceDeregisterExW(uint dwTraceID, uint dwFlags);
+uint TraceGetConsoleW(uint dwTraceID, HANDLE* lphConsole);
+uint TracePrintfW(uint dwTraceID, const(wchar)* lpszFormat);
+uint TracePrintfExW(uint dwTraceID, uint dwFlags, const(wchar)* lpszFormat);
+uint TraceVprintfExW(uint dwTraceID, uint dwFlags, const(wchar)* lpszFormat, byte* arglist);
+uint TracePutsExW(uint dwTraceID, uint dwFlags, const(wchar)* lpszString);
+uint TraceDumpExW(uint dwTraceID, uint dwFlags, ubyte* lpbBytes, uint dwByteCount, uint dwGroupSize, BOOL bAddressPrefix, const(wchar)* lpszPrefix);
+void LogErrorA(uint dwMessageId, uint cNumberOfSubStrings, PSTR* plpwsSubStrings, uint dwErrorCode);
+void LogEventA(uint wEventType, uint dwMessageId, uint cNumberOfSubStrings, PSTR* plpwsSubStrings);
+void LogErrorW(uint dwMessageId, uint cNumberOfSubStrings, PWSTR* plpwsSubStrings, uint dwErrorCode);
+void LogEventW(uint wEventType, uint dwMessageId, uint cNumberOfSubStrings, PWSTR* plpwsSubStrings);
+HANDLE RouterLogRegisterA(const(char)* lpszSource);
+void RouterLogDeregisterA(HANDLE hLogHandle);
+void RouterLogEventA(HANDLE hLogHandle, uint dwEventType, uint dwMessageId, uint dwSubStringCount, PSTR* plpszSubStringArray, uint dwErrorCode);
+void RouterLogEventDataA(HANDLE hLogHandle, uint dwEventType, uint dwMessageId, uint dwSubStringCount, PSTR* plpszSubStringArray, uint dwDataBytes, ubyte* lpDataBytes);
+void RouterLogEventStringA(HANDLE hLogHandle, uint dwEventType, uint dwMessageId, uint dwSubStringCount, PSTR* plpszSubStringArray, uint dwErrorCode, uint dwErrorIndex);
+void RouterLogEventExA(HANDLE hLogHandle, uint dwEventType, uint dwErrorCode, uint dwMessageId, const(char)* ptszFormat);
+void RouterLogEventValistExA(HANDLE hLogHandle, uint dwEventType, uint dwErrorCode, uint dwMessageId, const(char)* ptszFormat, byte* arglist);
+uint RouterGetErrorStringA(uint dwErrorCode, PSTR* lplpszErrorString);
+HANDLE RouterLogRegisterW(const(wchar)* lpszSource);
+void RouterLogDeregisterW(HANDLE hLogHandle);
+void RouterLogEventW(HANDLE hLogHandle, uint dwEventType, uint dwMessageId, uint dwSubStringCount, PWSTR* plpszSubStringArray, uint dwErrorCode);
+void RouterLogEventDataW(HANDLE hLogHandle, uint dwEventType, uint dwMessageId, uint dwSubStringCount, PWSTR* plpszSubStringArray, uint dwDataBytes, ubyte* lpDataBytes);
+void RouterLogEventStringW(HANDLE hLogHandle, uint dwEventType, uint dwMessageId, uint dwSubStringCount, PWSTR* plpszSubStringArray, uint dwErrorCode, uint dwErrorIndex);
+void RouterLogEventExW(HANDLE hLogHandle, uint dwEventType, uint dwErrorCode, uint dwMessageId, const(wchar)* ptszFormat);
+void RouterLogEventValistExW(HANDLE hLogHandle, uint dwEventType, uint dwErrorCode, uint dwMessageId, const(wchar)* ptszFormat, byte* arglist);
+uint RouterGetErrorStringW(uint dwErrorCode, PWSTR* lplpwszErrorString);
+void RouterAssert(PSTR pszFailedAssertion, PSTR pszFileName, uint dwLineNumber, PSTR pszMessage);
+uint MprSetupProtocolEnum(uint dwTransportId, ubyte** lplpBuffer, uint* lpdwEntriesRead);
+uint MprSetupProtocolFree(void* lpBuffer);
 enum NERR_BASE = 0x00000834;
 enum NERR_PasswordExpired = 0x000008c2;
 enum CNLEN = 0x0000000f;
@@ -4498,69 +4498,69 @@ struct HARDWARE_ADDRESS
 enum IID_IEnumNetCfgBindingInterface = GUID(0xc0e8ae90, 0x306e, 0x11d1, [0xaa, 0xcf, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface IEnumNetCfgBindingInterface : IUnknown
 {
-    HRESULT Next(uint, INetCfgBindingInterface*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, INetCfgBindingInterface* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumNetCfgBindingInterface*);
+    HRESULT Clone(IEnumNetCfgBindingInterface* ppenum);
 }
 enum IID_IEnumNetCfgBindingPath = GUID(0xc0e8ae91, 0x306e, 0x11d1, [0xaa, 0xcf, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface IEnumNetCfgBindingPath : IUnknown
 {
-    HRESULT Next(uint, INetCfgBindingPath*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, INetCfgBindingPath* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumNetCfgBindingPath*);
+    HRESULT Clone(IEnumNetCfgBindingPath* ppenum);
 }
 enum IID_IEnumNetCfgComponent = GUID(0xc0e8ae92, 0x306e, 0x11d1, [0xaa, 0xcf, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface IEnumNetCfgComponent : IUnknown
 {
-    HRESULT Next(uint, INetCfgComponent*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, INetCfgComponent* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumNetCfgComponent*);
+    HRESULT Clone(IEnumNetCfgComponent* ppenum);
 }
 enum IID_INetCfg = GUID(0xc0e8ae93, 0x306e, 0x11d1, [0xaa, 0xcf, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface INetCfg : IUnknown
 {
-    HRESULT Initialize(void*);
+    HRESULT Initialize(void* pvReserved);
     HRESULT Uninitialize();
     HRESULT Apply();
     HRESULT Cancel();
-    HRESULT EnumComponents(const(GUID)*, IEnumNetCfgComponent*);
-    HRESULT FindComponent(const(wchar)*, INetCfgComponent*);
-    HRESULT QueryNetCfgClass(const(GUID)*, const(GUID)*, void**);
+    HRESULT EnumComponents(const(GUID)* pguidClass, IEnumNetCfgComponent* ppenumComponent);
+    HRESULT FindComponent(const(wchar)* pszwInfId, INetCfgComponent* pComponent);
+    HRESULT QueryNetCfgClass(const(GUID)* pguidClass, const(GUID)* riid, void** ppvObject);
 }
 enum IID_INetCfgLock = GUID(0xc0e8ae9f, 0x306e, 0x11d1, [0xaa, 0xcf, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface INetCfgLock : IUnknown
 {
-    HRESULT AcquireWriteLock(uint, const(wchar)*, PWSTR*);
+    HRESULT AcquireWriteLock(uint cmsTimeout, const(wchar)* pszwClientDescription, PWSTR* ppszwClientDescription);
     HRESULT ReleaseWriteLock();
-    HRESULT IsWriteLocked(PWSTR*);
+    HRESULT IsWriteLocked(PWSTR* ppszwClientDescription);
 }
 enum IID_INetCfgBindingInterface = GUID(0xc0e8ae94, 0x306e, 0x11d1, [0xaa, 0xcf, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface INetCfgBindingInterface : IUnknown
 {
-    HRESULT GetName(PWSTR*);
-    HRESULT GetUpperComponent(INetCfgComponent*);
-    HRESULT GetLowerComponent(INetCfgComponent*);
+    HRESULT GetName(PWSTR* ppszwInterfaceName);
+    HRESULT GetUpperComponent(INetCfgComponent* ppnccItem);
+    HRESULT GetLowerComponent(INetCfgComponent* ppnccItem);
 }
 enum IID_INetCfgBindingPath = GUID(0xc0e8ae96, 0x306e, 0x11d1, [0xaa, 0xcf, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface INetCfgBindingPath : IUnknown
 {
-    HRESULT IsSamePathAs(INetCfgBindingPath);
-    HRESULT IsSubPathOf(INetCfgBindingPath);
+    HRESULT IsSamePathAs(INetCfgBindingPath pPath);
+    HRESULT IsSubPathOf(INetCfgBindingPath pPath);
     HRESULT IsEnabled();
-    HRESULT Enable(BOOL);
-    HRESULT GetPathToken(PWSTR*);
-    HRESULT GetOwner(INetCfgComponent*);
-    HRESULT GetDepth(uint*);
-    HRESULT EnumBindingInterfaces(IEnumNetCfgBindingInterface*);
+    HRESULT Enable(BOOL fEnable);
+    HRESULT GetPathToken(PWSTR* ppszwPathToken);
+    HRESULT GetOwner(INetCfgComponent* ppComponent);
+    HRESULT GetDepth(uint* pcInterfaces);
+    HRESULT EnumBindingInterfaces(IEnumNetCfgBindingInterface* ppenumInterface);
 }
 enum IID_INetCfgClass = GUID(0xc0e8ae97, 0x306e, 0x11d1, [0xaa, 0xcf, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface INetCfgClass : IUnknown
 {
-    HRESULT FindComponent(const(wchar)*, INetCfgComponent*);
-    HRESULT EnumComponents(IEnumNetCfgComponent*);
+    HRESULT FindComponent(const(wchar)* pszwInfId, INetCfgComponent* ppnccItem);
+    HRESULT EnumComponents(IEnumNetCfgComponent* ppenumComponent);
 }
 alias OBO_TOKEN_TYPE = int;
 enum : int
@@ -4582,14 +4582,14 @@ struct OBO_TOKEN
 enum IID_INetCfgClassSetup = GUID(0xc0e8ae9d, 0x306e, 0x11d1, [0xaa, 0xcf, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface INetCfgClassSetup : IUnknown
 {
-    HRESULT SelectAndInstall(HWND, OBO_TOKEN*, INetCfgComponent*);
-    HRESULT Install(const(wchar)*, OBO_TOKEN*, uint, uint, const(wchar)*, const(wchar)*, INetCfgComponent*);
-    HRESULT DeInstall(INetCfgComponent, OBO_TOKEN*, PWSTR*);
+    HRESULT SelectAndInstall(HWND hwndParent, OBO_TOKEN* pOboToken, INetCfgComponent* ppnccItem);
+    HRESULT Install(const(wchar)* pszwInfId, OBO_TOKEN* pOboToken, uint dwSetupFlags, uint dwUpgradeFromBuildNo, const(wchar)* pszwAnswerFile, const(wchar)* pszwAnswerSections, INetCfgComponent* ppnccItem);
+    HRESULT DeInstall(INetCfgComponent pComponent, OBO_TOKEN* pOboToken, PWSTR* pmszwRefs);
 }
 enum IID_INetCfgClassSetup2 = GUID(0xc0e8aea0, 0x306e, 0x11d1, [0xaa, 0xcf, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface INetCfgClassSetup2 : INetCfgClassSetup
 {
-    HRESULT UpdateNonEnumeratedComponent(INetCfgComponent, uint, uint);
+    HRESULT UpdateNonEnumeratedComponent(INetCfgComponent pIComp, uint dwSetupFlags, uint dwUpgradeFromBuildNo);
 }
 alias COMPONENT_CHARACTERISTICS = int;
 enum : int
@@ -4621,18 +4621,18 @@ enum : int
 enum IID_INetCfgComponent = GUID(0xc0e8ae99, 0x306e, 0x11d1, [0xaa, 0xcf, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface INetCfgComponent : IUnknown
 {
-    HRESULT GetDisplayName(PWSTR*);
-    HRESULT SetDisplayName(const(wchar)*);
-    HRESULT GetHelpText(PWSTR*);
-    HRESULT GetId(PWSTR*);
-    HRESULT GetCharacteristics(uint*);
-    HRESULT GetInstanceGuid(GUID*);
-    HRESULT GetPnpDevNodeId(PWSTR*);
-    HRESULT GetClassGuid(GUID*);
-    HRESULT GetBindName(PWSTR*);
-    HRESULT GetDeviceStatus(uint*);
-    HRESULT OpenParamKey(HKEY*);
-    HRESULT RaisePropertyUi(HWND, uint, IUnknown);
+    HRESULT GetDisplayName(PWSTR* ppszwDisplayName);
+    HRESULT SetDisplayName(const(wchar)* pszwDisplayName);
+    HRESULT GetHelpText(PWSTR* pszwHelpText);
+    HRESULT GetId(PWSTR* ppszwId);
+    HRESULT GetCharacteristics(uint* pdwCharacteristics);
+    HRESULT GetInstanceGuid(GUID* pGuid);
+    HRESULT GetPnpDevNodeId(PWSTR* ppszwDevNodeId);
+    HRESULT GetClassGuid(GUID* pGuid);
+    HRESULT GetBindName(PWSTR* ppszwBindName);
+    HRESULT GetDeviceStatus(uint* pulStatus);
+    HRESULT OpenParamKey(HKEY* phkey);
+    HRESULT RaisePropertyUi(HWND hwndParent, uint dwFlags, IUnknown punkContext);
 }
 alias SUPPORTS_BINDING_INTERFACE_FLAGS = int;
 enum : int
@@ -4651,22 +4651,22 @@ enum : int
 enum IID_INetCfgComponentBindings = GUID(0xc0e8ae9e, 0x306e, 0x11d1, [0xaa, 0xcf, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface INetCfgComponentBindings : IUnknown
 {
-    HRESULT BindTo(INetCfgComponent);
-    HRESULT UnbindFrom(INetCfgComponent);
-    HRESULT SupportsBindingInterface(uint, const(wchar)*);
-    HRESULT IsBoundTo(INetCfgComponent);
-    HRESULT IsBindableTo(INetCfgComponent);
-    HRESULT EnumBindingPaths(uint, IEnumNetCfgBindingPath*);
-    HRESULT MoveBefore(INetCfgBindingPath, INetCfgBindingPath);
-    HRESULT MoveAfter(INetCfgBindingPath, INetCfgBindingPath);
+    HRESULT BindTo(INetCfgComponent pnccItem);
+    HRESULT UnbindFrom(INetCfgComponent pnccItem);
+    HRESULT SupportsBindingInterface(uint dwFlags, const(wchar)* pszwInterfaceName);
+    HRESULT IsBoundTo(INetCfgComponent pnccItem);
+    HRESULT IsBindableTo(INetCfgComponent pnccItem);
+    HRESULT EnumBindingPaths(uint dwFlags, IEnumNetCfgBindingPath* ppIEnum);
+    HRESULT MoveBefore(INetCfgBindingPath pncbItemSrc, INetCfgBindingPath pncbItemDest);
+    HRESULT MoveAfter(INetCfgBindingPath pncbItemSrc, INetCfgBindingPath pncbItemDest);
 }
 enum IID_INetCfgSysPrep = GUID(0xc0e8ae98, 0x306e, 0x11d1, [0xaa, 0xcf, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface INetCfgSysPrep : IUnknown
 {
-    HRESULT HrSetupSetFirstDword(const(wchar)*, const(wchar)*, uint);
-    HRESULT HrSetupSetFirstString(const(wchar)*, const(wchar)*, const(wchar)*);
-    HRESULT HrSetupSetFirstStringAsBool(const(wchar)*, const(wchar)*, BOOL);
-    HRESULT HrSetupSetFirstMultiSzField(const(wchar)*, const(wchar)*, const(wchar)*);
+    HRESULT HrSetupSetFirstDword(const(wchar)* pwszSection, const(wchar)* pwszKey, uint dwValue);
+    HRESULT HrSetupSetFirstString(const(wchar)* pwszSection, const(wchar)* pwszKey, const(wchar)* pwszValue);
+    HRESULT HrSetupSetFirstStringAsBool(const(wchar)* pwszSection, const(wchar)* pwszKey, BOOL fValue);
+    HRESULT HrSetupSetFirstMultiSzField(const(wchar)* pwszSection, const(wchar)* pwszKey, const(wchar)* pmszValue);
 }
 alias NCPNP_RECONFIG_LAYER = int;
 enum : int
@@ -4678,14 +4678,14 @@ enum : int
 enum IID_INetCfgPnpReconfigCallback = GUID(0x8d84bd35, 0xe227, 0x11d2, [0xb7, 0x0, 0x0, 0xa0, 0xc9, 0x8a, 0x6a, 0x85]);
 interface INetCfgPnpReconfigCallback : IUnknown
 {
-    HRESULT SendPnpReconfig(NCPNP_RECONFIG_LAYER, const(wchar)*, const(wchar)*, void*, uint);
+    HRESULT SendPnpReconfig(NCPNP_RECONFIG_LAYER Layer, const(wchar)* pszwUpper, const(wchar)* pszwLower, void* pvData, uint dwSizeOfData);
 }
 enum IID_INetCfgComponentControl = GUID(0x932238df, 0xbea1, 0x11d0, [0x92, 0x98, 0x0, 0xc0, 0x4f, 0xc9, 0x9d, 0xcf]);
 interface INetCfgComponentControl : IUnknown
 {
-    HRESULT Initialize(INetCfgComponent, INetCfg, BOOL);
+    HRESULT Initialize(INetCfgComponent pIComp, INetCfg pINetCfg, BOOL fInstalling);
     HRESULT ApplyRegistryChanges();
-    HRESULT ApplyPnpChanges(INetCfgPnpReconfigCallback);
+    HRESULT ApplyPnpChanges(INetCfgPnpReconfigCallback pICallback);
     HRESULT CancelChanges();
 }
 alias NETWORK_INSTALL_TIME = int;
@@ -4709,9 +4709,9 @@ enum : int
 enum IID_INetCfgComponentSetup = GUID(0x932238e3, 0xbea1, 0x11d0, [0x92, 0x98, 0x0, 0xc0, 0x4f, 0xc9, 0x9d, 0xcf]);
 interface INetCfgComponentSetup : IUnknown
 {
-    HRESULT Install(uint);
-    HRESULT Upgrade(uint, uint);
-    HRESULT ReadAnswerFile(const(wchar)*, const(wchar)*);
+    HRESULT Install(uint dwSetupFlags);
+    HRESULT Upgrade(uint dwSetupFlags, uint dwUpgradeFomBuildNo);
+    HRESULT ReadAnswerFile(const(wchar)* pszwAnswerFile, const(wchar)* pszwAnswerSections);
     HRESULT Removing();
 }
 alias DEFAULT_PAGES = int;
@@ -4723,10 +4723,10 @@ enum : int
 enum IID_INetCfgComponentPropertyUi = GUID(0x932238e0, 0xbea1, 0x11d0, [0x92, 0x98, 0x0, 0xc0, 0x4f, 0xc9, 0x9d, 0xcf]);
 interface INetCfgComponentPropertyUi : IUnknown
 {
-    HRESULT QueryPropertyUi(IUnknown);
-    HRESULT SetContext(IUnknown);
-    HRESULT MergePropPages(uint*, ubyte**, uint*, HWND, const(wchar)**);
-    HRESULT ValidateProperties(HWND);
+    HRESULT QueryPropertyUi(IUnknown pUnkReserved);
+    HRESULT SetContext(IUnknown pUnkReserved);
+    HRESULT MergePropPages(uint* pdwDefPages, ubyte** pahpspPrivate, uint* pcPages, HWND hwndParent, const(wchar)** pszStartPage);
+    HRESULT ValidateProperties(HWND hwndSheet);
     HRESULT ApplyProperties();
     HRESULT CancelProperties();
 }
@@ -4749,28 +4749,28 @@ enum : int
 enum IID_INetCfgComponentNotifyBinding = GUID(0x932238e1, 0xbea1, 0x11d0, [0x92, 0x98, 0x0, 0xc0, 0x4f, 0xc9, 0x9d, 0xcf]);
 interface INetCfgComponentNotifyBinding : IUnknown
 {
-    HRESULT QueryBindingPath(uint, INetCfgBindingPath);
-    HRESULT NotifyBindingPath(uint, INetCfgBindingPath);
+    HRESULT QueryBindingPath(uint dwChangeFlag, INetCfgBindingPath pIPath);
+    HRESULT NotifyBindingPath(uint dwChangeFlag, INetCfgBindingPath pIPath);
 }
 enum IID_INetCfgComponentNotifyGlobal = GUID(0x932238e2, 0xbea1, 0x11d0, [0x92, 0x98, 0x0, 0xc0, 0x4f, 0xc9, 0x9d, 0xcf]);
 interface INetCfgComponentNotifyGlobal : IUnknown
 {
-    HRESULT GetSupportedNotifications(uint*);
-    HRESULT SysQueryBindingPath(uint, INetCfgBindingPath);
-    HRESULT SysNotifyBindingPath(uint, INetCfgBindingPath);
-    HRESULT SysNotifyComponent(uint, INetCfgComponent);
+    HRESULT GetSupportedNotifications(uint* dwNotifications);
+    HRESULT SysQueryBindingPath(uint dwChangeFlag, INetCfgBindingPath pIPath);
+    HRESULT SysNotifyBindingPath(uint dwChangeFlag, INetCfgBindingPath pIPath);
+    HRESULT SysNotifyComponent(uint dwChangeFlag, INetCfgComponent pIComp);
 }
 enum IID_INetCfgComponentUpperEdge = GUID(0x932238e4, 0xbea1, 0x11d0, [0x92, 0x98, 0x0, 0xc0, 0x4f, 0xc9, 0x9d, 0xcf]);
 interface INetCfgComponentUpperEdge : IUnknown
 {
-    HRESULT GetInterfaceIdsForAdapter(INetCfgComponent, uint*, GUID**);
-    HRESULT AddInterfacesToAdapter(INetCfgComponent, uint);
-    HRESULT RemoveInterfacesFromAdapter(INetCfgComponent, uint, const(GUID)*);
+    HRESULT GetInterfaceIdsForAdapter(INetCfgComponent pAdapter, uint* pdwNumInterfaces, GUID** ppguidInterfaceIds);
+    HRESULT AddInterfacesToAdapter(INetCfgComponent pAdapter, uint dwNumInterfaces);
+    HRESULT RemoveInterfacesFromAdapter(INetCfgComponent pAdapter, uint dwNumInterfaces, const(GUID)* pguidInterfaceIds);
 }
 enum IID_INetLanConnectionUiInfo = GUID(0xc08956a6, 0x1cd3, 0x11d1, [0xb1, 0xc5, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface INetLanConnectionUiInfo : IUnknown
 {
-    HRESULT GetDeviceGuid(GUID*);
+    HRESULT GetDeviceGuid(GUID* pguid);
 }
 alias RASCON_UIINFO_FLAGS = int;
 enum : int
@@ -4814,24 +4814,24 @@ struct RASCON_IPUI
 enum IID_INetRasConnectionIpUiInfo = GUID(0xfaedcf58, 0x31fe, 0x11d1, [0xaa, 0xd2, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface INetRasConnectionIpUiInfo : IUnknown
 {
-    HRESULT GetUiInfo(RASCON_IPUI*);
+    HRESULT GetUiInfo(RASCON_IPUI* pInfo);
 }
 enum IID_INetCfgComponentSysPrep = GUID(0xc0e8ae9a, 0x306e, 0x11d1, [0xaa, 0xcf, 0x0, 0x80, 0x5f, 0xc1, 0x27, 0xe]);
 interface INetCfgComponentSysPrep : IUnknown
 {
-    HRESULT SaveAdapterParameters(INetCfgSysPrep, const(wchar)*, GUID*);
-    HRESULT RestoreAdapterParameters(const(wchar)*, const(wchar)*, GUID*);
+    HRESULT SaveAdapterParameters(INetCfgSysPrep pncsp, const(wchar)* pszwAnswerSections, GUID* pAdapterInstanceGuid);
+    HRESULT RestoreAdapterParameters(const(wchar)* pszwAnswerFile, const(wchar)* pszwAnswerSection, GUID* pAdapterInstanceGuid);
 }
 enum IID_IProvisioningDomain = GUID(0xc96fbd50, 0x24dd, 0x11d8, [0x89, 0xfb, 0x0, 0x90, 0x4b, 0x2e, 0xa9, 0xc6]);
 interface IProvisioningDomain : IUnknown
 {
-    HRESULT Add(const(wchar)*);
-    HRESULT Query(const(wchar)*, const(wchar)*, const(wchar)*, IXMLDOMNodeList*);
+    HRESULT Add(const(wchar)* pszwPathToFolder);
+    HRESULT Query(const(wchar)* pszwDomain, const(wchar)* pszwLanguage, const(wchar)* pszwXPathQuery, IXMLDOMNodeList* Nodes);
 }
 enum IID_IProvisioningProfileWireless = GUID(0xc96fbd51, 0x24dd, 0x11d8, [0x89, 0xfb, 0x0, 0x90, 0x4b, 0x2e, 0xa9, 0xc6]);
 interface IProvisioningProfileWireless : IUnknown
 {
-    HRESULT CreateProfile(BSTR, BSTR, GUID*, uint*);
+    HRESULT CreateProfile(BSTR bstrXMLWirelessConfigProfile, BSTR bstrXMLConnectionConfigProfile, GUID* pAdapterInstanceGuid, uint* pulStatus);
 }
 enum CLSID_NetProvisioning = GUID(0x2aa2b5fe, 0xb846, 0x4d07, [0x81, 0xc, 0xb2, 0x1e, 0xe4, 0x53, 0x20, 0xe3]);
 struct NetProvisioning
@@ -4851,7 +4851,7 @@ struct RTR_INFO_BLOCK_HEADER
     uint TocEntriesCount;
     RTR_TOC_ENTRY[1] TocEntry;
 }
-alias WORKERFUNCTION = void function(void*);
+alias WORKERFUNCTION = void function(void* param0);
 struct MPR_PROTOCOL_0
 {
     uint dwProtocolId;

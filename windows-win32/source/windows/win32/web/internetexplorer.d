@@ -19,63 +19,63 @@ import windows.win32.web.mshtml : IHTMLDocument2, IHTMLElement, IHTMLWindow2, VI
 version (Windows):
 extern (Windows):
 
-HRESULT IEAssociateThreadWithTab(uint, uint);
-HRESULT IEDisassociateThreadWithTab(uint, uint);
+HRESULT IEAssociateThreadWithTab(uint dwTabThreadID, uint dwAssociatedThreadID);
+HRESULT IEDisassociateThreadWithTab(uint dwTabThreadID, uint dwAssociatedThreadID);
 BOOL IEIsInPrivateBrowsing();
 BOOL IEInPrivateFilteringEnabled();
 BOOL IETrackingProtectionEnabled();
-HRESULT IESaveFile(HANDLE, const(wchar)*);
-HRESULT IECancelSaveFile(HANDLE);
-HRESULT IEShowSaveFileDialog(HWND, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, uint, uint, PWSTR*, HANDLE*);
-HRESULT IEShowOpenFileDialog(HWND, PWSTR, uint, const(wchar)*, const(wchar)*, const(wchar)*, uint, uint, HANDLE*);
-HRESULT IEGetWriteableLowHKCU(HKEY*);
-HRESULT IEGetWriteableFolderPath(const(GUID)*, PWSTR*);
-HRESULT IEIsProtectedModeProcess(BOOL*);
-HRESULT IEIsProtectedModeURL(const(wchar)*);
-HRESULT IELaunchURL(const(wchar)*, PROCESS_INFORMATION*, void*);
+HRESULT IESaveFile(HANDLE hState, const(wchar)* lpwstrSourceFile);
+HRESULT IECancelSaveFile(HANDLE hState);
+HRESULT IEShowSaveFileDialog(HWND hwnd, const(wchar)* lpwstrInitialFileName, const(wchar)* lpwstrInitialDir, const(wchar)* lpwstrFilter, const(wchar)* lpwstrDefExt, uint dwFilterIndex, uint dwFlags, PWSTR* lppwstrDestinationFilePath, HANDLE* phState);
+HRESULT IEShowOpenFileDialog(HWND hwnd, PWSTR lpwstrFileName, uint cchMaxFileName, const(wchar)* lpwstrInitialDir, const(wchar)* lpwstrFilter, const(wchar)* lpwstrDefExt, uint dwFilterIndex, uint dwFlags, HANDLE* phFile);
+HRESULT IEGetWriteableLowHKCU(HKEY* pHKey);
+HRESULT IEGetWriteableFolderPath(const(GUID)* clsidFolderID, PWSTR* lppwstrPath);
+HRESULT IEIsProtectedModeProcess(BOOL* pbResult);
+HRESULT IEIsProtectedModeURL(const(wchar)* lpwstrUrl);
+HRESULT IELaunchURL(const(wchar)* lpwstrUrl, PROCESS_INFORMATION* lpProcInfo, void* lpInfo);
 HRESULT IERefreshElevationPolicy();
-HRESULT IEGetProtectedModeCookie(const(wchar)*, const(wchar)*, PWSTR, uint*, uint);
-HRESULT IESetProtectedModeCookie(const(wchar)*, const(wchar)*, const(wchar)*, uint);
-HRESULT IERegisterWritableRegistryKey(GUID, const(wchar)*, BOOL);
-HRESULT IERegisterWritableRegistryValue(GUID, const(wchar)*, const(wchar)*, uint, const(ubyte)*, uint);
-HRESULT IEUnregisterWritableRegistry(GUID);
-HRESULT IERegCreateKeyEx(const(wchar)*, uint, PWSTR, uint, uint, SECURITY_ATTRIBUTES*, HKEY*, uint*);
-HRESULT IERegSetValueEx(const(wchar)*, const(wchar)*, uint, uint, const(ubyte)*, uint);
-HANDLE IECreateFile(const(wchar)*, uint, uint, SECURITY_ATTRIBUTES*, uint, uint, HANDLE);
-BOOL IEDeleteFile(const(wchar)*);
-BOOL IERemoveDirectory(const(wchar)*);
-BOOL IEMoveFileEx(const(wchar)*, const(wchar)*, uint);
-BOOL IECreateDirectory(const(wchar)*, SECURITY_ATTRIBUTES*);
-BOOL IEGetFileAttributesEx(const(wchar)*, GET_FILEEX_INFO_LEVELS, void*);
-HANDLE IEFindFirstFile(const(wchar)*, WIN32_FIND_DATAA*);
-HRESULT RatingEnable(HWND, const(char)*, BOOL);
-HRESULT RatingEnableW(HWND, const(wchar)*, BOOL);
-HRESULT RatingCheckUserAccess(const(char)*, const(char)*, const(char)*, ubyte*, uint, void**);
-HRESULT RatingCheckUserAccessW(const(wchar)*, const(wchar)*, const(wchar)*, ubyte*, uint, void**);
-HRESULT RatingAccessDeniedDialog(HWND, const(char)*, const(char)*, void*);
-HRESULT RatingAccessDeniedDialogW(HWND, const(wchar)*, const(wchar)*, void*);
-HRESULT RatingAccessDeniedDialog2(HWND, const(char)*, void*);
-HRESULT RatingAccessDeniedDialog2W(HWND, const(wchar)*, void*);
-HRESULT RatingFreeDetails(void*);
-HRESULT RatingObtainCancel(HANDLE);
-HRESULT RatingObtainQuery(const(char)*, uint, long, HANDLE*);
-HRESULT RatingObtainQueryW(const(wchar)*, uint, long, HANDLE*);
-HRESULT RatingSetupUI(HWND, const(char)*);
-HRESULT RatingSetupUIW(HWND, const(wchar)*);
-HRESULT RatingAddToApprovedSites(HWND, uint, ubyte*, const(wchar)*, BOOL, BOOL, BOOL);
-HRESULT RatingClickedOnPRFInternal(HWND, HINSTANCE, PSTR, int);
-HRESULT RatingClickedOnRATInternal(HWND, HINSTANCE, PSTR, int);
+HRESULT IEGetProtectedModeCookie(const(wchar)* lpszURL, const(wchar)* lpszCookieName, PWSTR lpszCookieData, uint* pcchCookieData, uint dwFlags);
+HRESULT IESetProtectedModeCookie(const(wchar)* lpszURL, const(wchar)* lpszCookieName, const(wchar)* lpszCookieData, uint dwFlags);
+HRESULT IERegisterWritableRegistryKey(GUID guid, const(wchar)* lpSubkey, BOOL fSubkeyAllowed);
+HRESULT IERegisterWritableRegistryValue(GUID guid, const(wchar)* lpPath, const(wchar)* lpValueName, uint dwType, const(ubyte)* lpData, uint cbMaxData);
+HRESULT IEUnregisterWritableRegistry(GUID guid);
+HRESULT IERegCreateKeyEx(const(wchar)* lpSubKey, uint Reserved, PWSTR lpClass, uint dwOptions, uint samDesired, SECURITY_ATTRIBUTES* lpSecurityAttributes, HKEY* phkResult, uint* lpdwDisposition);
+HRESULT IERegSetValueEx(const(wchar)* lpSubKey, const(wchar)* lpValueName, uint Reserved, uint dwType, const(ubyte)* lpData, uint cbData);
+HANDLE IECreateFile(const(wchar)* lpFileName, uint dwDesiredAccess, uint dwShareMode, SECURITY_ATTRIBUTES* lpSecurityAttributes, uint dwCreationDisposition, uint dwFlagsAndAttributes, HANDLE hTemplateFile);
+BOOL IEDeleteFile(const(wchar)* lpFileName);
+BOOL IERemoveDirectory(const(wchar)* lpPathName);
+BOOL IEMoveFileEx(const(wchar)* lpExistingFileName, const(wchar)* lpNewFileName, uint dwFlags);
+BOOL IECreateDirectory(const(wchar)* lpPathName, SECURITY_ATTRIBUTES* lpSecurityAttributes);
+BOOL IEGetFileAttributesEx(const(wchar)* lpFileName, GET_FILEEX_INFO_LEVELS fInfoLevelId, void* lpFileInformation);
+HANDLE IEFindFirstFile(const(wchar)* lpFileName, WIN32_FIND_DATAA* lpFindFileData);
+HRESULT RatingEnable(HWND hwndParent, const(char)* pszUsername, BOOL fEnable);
+HRESULT RatingEnableW(HWND hwndParent, const(wchar)* pszUsername, BOOL fEnable);
+HRESULT RatingCheckUserAccess(const(char)* pszUsername, const(char)* pszURL, const(char)* pszRatingInfo, ubyte* pData, uint cbData, void** ppRatingDetails);
+HRESULT RatingCheckUserAccessW(const(wchar)* pszUsername, const(wchar)* pszURL, const(wchar)* pszRatingInfo, ubyte* pData, uint cbData, void** ppRatingDetails);
+HRESULT RatingAccessDeniedDialog(HWND hDlg, const(char)* pszUsername, const(char)* pszContentDescription, void* pRatingDetails);
+HRESULT RatingAccessDeniedDialogW(HWND hDlg, const(wchar)* pszUsername, const(wchar)* pszContentDescription, void* pRatingDetails);
+HRESULT RatingAccessDeniedDialog2(HWND hDlg, const(char)* pszUsername, void* pRatingDetails);
+HRESULT RatingAccessDeniedDialog2W(HWND hDlg, const(wchar)* pszUsername, void* pRatingDetails);
+HRESULT RatingFreeDetails(void* pRatingDetails);
+HRESULT RatingObtainCancel(HANDLE hRatingObtainQuery);
+HRESULT RatingObtainQuery(const(char)* pszTargetUrl, uint dwUserData, long fCallback, HANDLE* phRatingObtainQuery);
+HRESULT RatingObtainQueryW(const(wchar)* pszTargetUrl, uint dwUserData, long fCallback, HANDLE* phRatingObtainQuery);
+HRESULT RatingSetupUI(HWND hDlg, const(char)* pszUsername);
+HRESULT RatingSetupUIW(HWND hDlg, const(wchar)* pszUsername);
+HRESULT RatingAddToApprovedSites(HWND hDlg, uint cbPasswordBlob, ubyte* pbPasswordBlob, const(wchar)* lpszUrl, BOOL fAlwaysNever, BOOL fSitePage, BOOL fApprovedSitesEnforced);
+HRESULT RatingClickedOnPRFInternal(HWND hWndOwner, HINSTANCE param1, PSTR lpszFileName, int nShow);
+HRESULT RatingClickedOnRATInternal(HWND hWndOwner, HINSTANCE param1, PSTR lpszFileName, int nShow);
 HRESULT RatingEnabledQuery();
 HRESULT RatingInit();
-HRESULT CreateMIMEMap(IMapMIMEToCLSID*);
-HRESULT DecodeImage(IStream, IMapMIMEToCLSID, IUnknown);
-HRESULT SniffStream(IStream, uint*, IStream*);
-HRESULT GetMaxMIMEIDBytes(uint*);
-HRESULT IdentifyMIMEType(const(ubyte)*, uint, uint*);
-HRESULT ComputeInvCMAP(const(RGBQUAD)*, uint, ubyte*, uint);
-HRESULT DitherTo8(ubyte*, int, ubyte*, int, const(GUID)*, RGBQUAD*, RGBQUAD*, ubyte*, int, int, int, int, int, int);
-HRESULT CreateDDrawSurfaceOnDIB(HBITMAP, IDirectDrawSurface*);
-HRESULT DecodeImageEx(IStream, IMapMIMEToCLSID, IUnknown, const(wchar)*);
+HRESULT CreateMIMEMap(IMapMIMEToCLSID* ppMap);
+HRESULT DecodeImage(IStream pStream, IMapMIMEToCLSID pMap, IUnknown pEventSink);
+HRESULT SniffStream(IStream pInStream, uint* pnFormat, IStream* ppOutStream);
+HRESULT GetMaxMIMEIDBytes(uint* pnMaxBytes);
+HRESULT IdentifyMIMEType(const(ubyte)* pbBytes, uint nBytes, uint* pnFormat);
+HRESULT ComputeInvCMAP(const(RGBQUAD)* pRGBColors, uint nColors, ubyte* pInvTable, uint cbTable);
+HRESULT DitherTo8(ubyte* pDestBits, int nDestPitch, ubyte* pSrcBits, int nSrcPitch, const(GUID)* bfidSrc, RGBQUAD* prgbDestColors, RGBQUAD* prgbSrcColors, ubyte* pbDestInvMap, int x, int y, int cx, int cy, int lDestTrans, int lSrcTrans);
+HRESULT CreateDDrawSurfaceOnDIB(HBITMAP hbmDib, IDirectDrawSurface* ppSurface);
+HRESULT DecodeImageEx(IStream pStream, IMapMIMEToCLSID pMap, IUnknown pEventSink, const(wchar)* pszMIMETypeParam);
 enum DISPID_AMBIENT_OFFLINEIFNOTCONNECTED = 0xffffffffffffea83;
 enum DISPID_AMBIENT_SILENT = 0xffffffffffffea82;
 enum DISPID_BEFORENAVIGATE = 0x00000064;
@@ -528,21 +528,21 @@ enum TIMERMODE_VISIBILITYAWARE = 0x00000001;
 enum IID_IDocObjectService = GUID(0x3050f801, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IDocObjectService : IUnknown
 {
-    HRESULT FireBeforeNavigate2(IDispatch, const(wchar)*, uint, const(wchar)*, ubyte*, uint, const(wchar)*, BOOL, BOOL*);
-    HRESULT FireNavigateComplete2(IHTMLWindow2, uint);
+    HRESULT FireBeforeNavigate2(IDispatch pDispatch, const(wchar)* lpszUrl, uint dwFlags, const(wchar)* lpszFrameName, ubyte* pPostData, uint cbPostData, const(wchar)* lpszHeaders, BOOL fPlayNavSound, BOOL* pfCancel);
+    HRESULT FireNavigateComplete2(IHTMLWindow2 pHTMLWindow2, uint dwFlags);
     HRESULT FireDownloadBegin();
     HRESULT FireDownloadComplete();
-    HRESULT FireDocumentComplete(IHTMLWindow2, uint);
-    HRESULT UpdateDesktopComponent(IHTMLWindow2);
-    HRESULT GetPendingUrl(BSTR*);
-    HRESULT ActiveElementChanged(IHTMLElement);
-    HRESULT GetUrlSearchComponent(BSTR*);
-    HRESULT IsErrorUrl(const(wchar)*, BOOL*);
+    HRESULT FireDocumentComplete(IHTMLWindow2 pHTMLWindow, uint dwFlags);
+    HRESULT UpdateDesktopComponent(IHTMLWindow2 pHTMLWindow);
+    HRESULT GetPendingUrl(BSTR* pbstrPendingUrl);
+    HRESULT ActiveElementChanged(IHTMLElement pHTMLElement);
+    HRESULT GetUrlSearchComponent(BSTR* pbstrSearch);
+    HRESULT IsErrorUrl(const(wchar)* lpszUrl, BOOL* pfIsError);
 }
 enum IID_IDownloadManager = GUID(0x988934a4, 0x64b, 0x11d3, [0xbb, 0x80, 0x0, 0x10, 0x4b, 0x35, 0xe7, 0xf9]);
 interface IDownloadManager : IUnknown
 {
-    HRESULT Download(IMoniker, IBindCtx, uint, int, BINDINFO*, const(wchar)*, const(wchar)*, uint);
+    HRESULT Download(IMoniker pmk, IBindCtx pbc, uint dwBindVerb, int grfBINDF, BINDINFO* pBindInfo, const(wchar)* pszHeaders, const(wchar)* pszRedir, uint uiCP);
 }
 alias ExtensionValidationContexts = int;
 enum : int
@@ -563,14 +563,14 @@ enum : int
 enum IID_IExtensionValidation = GUID(0x7d33f73d, 0x8525, 0x4e0f, [0x87, 0xdb, 0x83, 0x2, 0x88, 0xba, 0xff, 0x44]);
 interface IExtensionValidation : IUnknown
 {
-    HRESULT Validate(const(GUID)*, PWSTR, uint, uint, IHTMLDocument2, IHTMLDocument2, IHTMLElement, ExtensionValidationContexts, ExtensionValidationResults*);
-    HRESULT DisplayName(PWSTR*);
+    HRESULT Validate(const(GUID)* extensionGuid, PWSTR extensionModulePath, uint extensionFileVersionMS, uint extensionFileVersionLS, IHTMLDocument2 htmlDocumentTop, IHTMLDocument2 htmlDocumentSubframe, IHTMLElement htmlElement, ExtensionValidationContexts contexts, ExtensionValidationResults* results);
+    HRESULT DisplayName(PWSTR* displayName);
 }
 enum IID_IHomePageSetting = GUID(0xfdfc244f, 0x18fa, 0x4ff2, [0xb0, 0x8e, 0x1d, 0x61, 0x8f, 0x3f, 0xfb, 0xe4]);
 interface IHomePageSetting : IUnknown
 {
-    HRESULT SetHomePage(HWND, const(wchar)*, const(wchar)*);
-    HRESULT IsHomePage(const(wchar)*, BOOL*);
+    HRESULT SetHomePage(HWND hwnd, const(wchar)* homePageUri, const(wchar)* brandingMessage);
+    HRESULT IsHomePage(const(wchar)* uri, BOOL* isDefault);
     HRESULT SetHomePageToBrowserDefault();
 }
 enum CLSID_HomePageSetting = GUID(0x374cede0, 0x873a, 0x4c4f, [0xbc, 0x86, 0xbc, 0xc8, 0xcf, 0x51, 0x16, 0xa3]);
@@ -580,13 +580,13 @@ struct HomePageSetting
 enum IID_ITargetNotify = GUID(0x863a99a0, 0x21bc, 0x11d0, [0x82, 0xb4, 0x0, 0xa0, 0xc9, 0xc, 0x29, 0xc5]);
 interface ITargetNotify : IUnknown
 {
-    HRESULT OnCreate(IUnknown, uint);
-    HRESULT OnReuse(IUnknown);
+    HRESULT OnCreate(IUnknown pUnkDestination, uint cbCookie);
+    HRESULT OnReuse(IUnknown pUnkDestination);
 }
 enum IID_ITargetNotify2 = GUID(0x3050f6b1, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface ITargetNotify2 : ITargetNotify
 {
-    HRESULT GetOptionString(BSTR*);
+    HRESULT GetOptionString(BSTR* pbstrOptions);
 }
 alias FINDFRAME_FLAGS = int;
 enum : int
@@ -611,24 +611,24 @@ enum : int
 enum IID_ITargetFrame2 = GUID(0x86d52e11, 0x94a8, 0x11d0, [0x82, 0xaf, 0x0, 0xc0, 0x4f, 0xd5, 0xae, 0x38]);
 interface ITargetFrame2 : IUnknown
 {
-    HRESULT SetFrameName(const(wchar)*);
-    HRESULT GetFrameName(PWSTR*);
-    HRESULT GetParentFrame(IUnknown*);
-    HRESULT SetFrameSrc(const(wchar)*);
-    HRESULT GetFrameSrc(PWSTR*);
-    HRESULT GetFramesContainer(IOleContainer*);
-    HRESULT SetFrameOptions(uint);
-    HRESULT GetFrameOptions(uint*);
-    HRESULT SetFrameMargins(uint, uint);
-    HRESULT GetFrameMargins(uint*, uint*);
-    HRESULT FindFrame(const(wchar)*, uint, IUnknown*);
-    HRESULT GetTargetAlias(const(wchar)*, PWSTR*);
+    HRESULT SetFrameName(const(wchar)* pszFrameName);
+    HRESULT GetFrameName(PWSTR* ppszFrameName);
+    HRESULT GetParentFrame(IUnknown* ppunkParent);
+    HRESULT SetFrameSrc(const(wchar)* pszFrameSrc);
+    HRESULT GetFrameSrc(PWSTR* ppszFrameSrc);
+    HRESULT GetFramesContainer(IOleContainer* ppContainer);
+    HRESULT SetFrameOptions(uint dwFlags);
+    HRESULT GetFrameOptions(uint* pdwFlags);
+    HRESULT SetFrameMargins(uint dwWidth, uint dwHeight);
+    HRESULT GetFrameMargins(uint* pdwWidth, uint* pdwHeight);
+    HRESULT FindFrame(const(wchar)* pszTargetName, uint dwFlags, IUnknown* ppunkTargetFrame);
+    HRESULT GetTargetAlias(const(wchar)* pszTargetName, PWSTR* ppszTargetAlias);
 }
 enum IID_ITargetContainer = GUID(0x7847ec01, 0x2bec, 0x11d0, [0x82, 0xb4, 0x0, 0xa0, 0xc9, 0xc, 0x29, 0xc5]);
 interface ITargetContainer : IUnknown
 {
-    HRESULT GetFrameUrl(PWSTR*);
-    HRESULT GetFramesContainer(IOleContainer*);
+    HRESULT GetFrameUrl(PWSTR* ppszFrameSrc);
+    HRESULT GetFramesContainer(IOleContainer* ppContainer);
 }
 alias NAVIGATEFRAME_FLAGS = int;
 enum : int
@@ -653,81 +653,81 @@ struct NAVIGATEDATA
 enum IID_ITargetFrame = GUID(0xd5f78c80, 0x5252, 0x11cf, [0x90, 0xfa, 0x0, 0xaa, 0x0, 0x42, 0x10, 0x6e]);
 interface ITargetFrame : IUnknown
 {
-    HRESULT SetFrameName(const(wchar)*);
-    HRESULT GetFrameName(PWSTR*);
-    HRESULT GetParentFrame(IUnknown*);
-    HRESULT FindFrame(const(wchar)*, IUnknown, uint, IUnknown*);
-    HRESULT SetFrameSrc(const(wchar)*);
-    HRESULT GetFrameSrc(PWSTR*);
-    HRESULT GetFramesContainer(IOleContainer*);
-    HRESULT SetFrameOptions(uint);
-    HRESULT GetFrameOptions(uint*);
-    HRESULT SetFrameMargins(uint, uint);
-    HRESULT GetFrameMargins(uint*, uint*);
-    HRESULT RemoteNavigate(uint, uint*);
-    HRESULT OnChildFrameActivate(IUnknown);
-    HRESULT OnChildFrameDeactivate(IUnknown);
+    HRESULT SetFrameName(const(wchar)* pszFrameName);
+    HRESULT GetFrameName(PWSTR* ppszFrameName);
+    HRESULT GetParentFrame(IUnknown* ppunkParent);
+    HRESULT FindFrame(const(wchar)* pszTargetName, IUnknown ppunkContextFrame, uint dwFlags, IUnknown* ppunkTargetFrame);
+    HRESULT SetFrameSrc(const(wchar)* pszFrameSrc);
+    HRESULT GetFrameSrc(PWSTR* ppszFrameSrc);
+    HRESULT GetFramesContainer(IOleContainer* ppContainer);
+    HRESULT SetFrameOptions(uint dwFlags);
+    HRESULT GetFrameOptions(uint* pdwFlags);
+    HRESULT SetFrameMargins(uint dwWidth, uint dwHeight);
+    HRESULT GetFrameMargins(uint* pdwWidth, uint* pdwHeight);
+    HRESULT RemoteNavigate(uint cLength, uint* pulData);
+    HRESULT OnChildFrameActivate(IUnknown pUnkChildFrame);
+    HRESULT OnChildFrameDeactivate(IUnknown pUnkChildFrame);
 }
 enum IID_ITargetEmbedding = GUID(0x548793c0, 0x9e74, 0x11cf, [0x96, 0x55, 0x0, 0xa0, 0xc9, 0x3, 0x49, 0x23]);
 interface ITargetEmbedding : IUnknown
 {
-    HRESULT GetTargetFrame(ITargetFrame*);
+    HRESULT GetTargetFrame(ITargetFrame* ppTargetFrame);
 }
 enum IID_ITargetFramePriv = GUID(0x9216e421, 0x2bf5, 0x11d0, [0x82, 0xb4, 0x0, 0xa0, 0xc9, 0xc, 0x29, 0xc5]);
 interface ITargetFramePriv : IUnknown
 {
-    HRESULT FindFrameDownwards(const(wchar)*, uint, IUnknown*);
-    HRESULT FindFrameInContext(const(wchar)*, IUnknown, uint, IUnknown*);
-    HRESULT OnChildFrameActivate(IUnknown);
-    HRESULT OnChildFrameDeactivate(IUnknown);
-    HRESULT NavigateHack(uint, IBindCtx, IBindStatusCallback, const(wchar)*, const(wchar)*, const(wchar)*);
-    HRESULT FindBrowserByIndex(uint, IUnknown*);
+    HRESULT FindFrameDownwards(const(wchar)* pszTargetName, uint dwFlags, IUnknown* ppunkTargetFrame);
+    HRESULT FindFrameInContext(const(wchar)* pszTargetName, IUnknown punkContextFrame, uint dwFlags, IUnknown* ppunkTargetFrame);
+    HRESULT OnChildFrameActivate(IUnknown pUnkChildFrame);
+    HRESULT OnChildFrameDeactivate(IUnknown pUnkChildFrame);
+    HRESULT NavigateHack(uint grfHLNF, IBindCtx pbc, IBindStatusCallback pibsc, const(wchar)* pszTargetName, const(wchar)* pszUrl, const(wchar)* pszLocation);
+    HRESULT FindBrowserByIndex(uint dwID, IUnknown* ppunkBrowser);
 }
 enum IID_ITargetFramePriv2 = GUID(0xb2c867e6, 0x69d6, 0x46f2, [0xa6, 0x11, 0xde, 0xd9, 0xa4, 0xbd, 0x7f, 0xef]);
 interface ITargetFramePriv2 : ITargetFramePriv
 {
-    HRESULT AggregatedNavigation2(uint, IBindCtx, IBindStatusCallback, const(wchar)*, IUri, const(wchar)*);
+    HRESULT AggregatedNavigation2(uint grfHLNF, IBindCtx pbc, IBindStatusCallback pibsc, const(wchar)* pszTargetName, IUri pUri, const(wchar)* pszLocation);
 }
 enum IID_ISurfacePresenterFlipBuffer = GUID(0xe43f4a08, 0x8bbc, 0x4665, [0xac, 0x92, 0xc5, 0x5c, 0xe6, 0x1f, 0xd7, 0xe7]);
 interface ISurfacePresenterFlipBuffer : IUnknown
 {
-    HRESULT BeginDraw(const(GUID)*, void**);
+    HRESULT BeginDraw(const(GUID)* riid, void** ppBuffer);
     HRESULT EndDraw();
 }
 enum IID_ISurfacePresenterFlip = GUID(0x30510848, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface ISurfacePresenterFlip : IUnknown
 {
     HRESULT Present();
-    HRESULT GetBuffer(uint, const(GUID)*, void**);
+    HRESULT GetBuffer(uint backBufferIndex, const(GUID)* riid, void** ppBuffer);
 }
 enum IID_ISurfacePresenterFlip2 = GUID(0x30510865, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface ISurfacePresenterFlip2 : IUnknown
 {
-    HRESULT SetRotation(DXGI_MODE_ROTATION);
+    HRESULT SetRotation(DXGI_MODE_ROTATION dxgiRotation);
 }
 enum IID_IViewObjectPresentFlipSite = GUID(0x30510846, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IViewObjectPresentFlipSite : IUnknown
 {
-    HRESULT CreateSurfacePresenterFlip(IUnknown, uint, uint, uint, DXGI_FORMAT, VIEW_OBJECT_ALPHA_MODE, ISurfacePresenterFlip*);
-    HRESULT GetDeviceLuid(LUID*);
+    HRESULT CreateSurfacePresenterFlip(IUnknown pDevice, uint width, uint height, uint backBufferCount, DXGI_FORMAT format, VIEW_OBJECT_ALPHA_MODE mode, ISurfacePresenterFlip* ppSPFlip);
+    HRESULT GetDeviceLuid(LUID* pLuid);
     HRESULT EnterFullScreen();
     HRESULT ExitFullScreen();
-    HRESULT IsFullScreen(BOOL*);
-    HRESULT GetBoundingRect(RECT*);
-    HRESULT GetMetrics(POINT*, SIZE*, float*, float*);
-    HRESULT GetFullScreenSize(SIZE*);
+    HRESULT IsFullScreen(BOOL* pfFullScreen);
+    HRESULT GetBoundingRect(RECT* pRect);
+    HRESULT GetMetrics(POINT* pPos, SIZE* pSize, float* pScaleX, float* pScaleY);
+    HRESULT GetFullScreenSize(SIZE* pSize);
 }
 enum IID_IViewObjectPresentFlipSite2 = GUID(0xaad0cbf1, 0xe7fd, 0x4f12, [0x89, 0x2, 0xc7, 0x81, 0x32, 0xa8, 0xe0, 0x1d]);
 interface IViewObjectPresentFlipSite2 : IUnknown
 {
-    HRESULT GetRotationForCurrentOutput(DXGI_MODE_ROTATION*);
+    HRESULT GetRotationForCurrentOutput(DXGI_MODE_ROTATION* pDxgiRotation);
 }
 enum IID_IViewObjectPresentFlip = GUID(0x30510847, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IViewObjectPresentFlip : IUnknown
 {
-    HRESULT NotifyRender(BOOL);
-    HRESULT RenderObjectToBitmap(IUnknown);
-    HRESULT RenderObjectToSharedBuffer(ISurfacePresenterFlipBuffer);
+    HRESULT NotifyRender(BOOL fRecreatePresenter);
+    HRESULT RenderObjectToBitmap(IUnknown pBitmap);
+    HRESULT RenderObjectToSharedBuffer(ISurfacePresenterFlipBuffer pBuffer);
 }
 enum IID_IViewObjectPresentFlip2 = GUID(0x30510856, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IViewObjectPresentFlip2 : IUnknown
@@ -737,24 +737,24 @@ interface IViewObjectPresentFlip2 : IUnknown
 enum IID_IActiveXUIHandlerSite2 = GUID(0x7e3707b2, 0xd087, 0x4542, [0xac, 0x1f, 0xa0, 0xd2, 0xfc, 0xd0, 0x80, 0xfd]);
 interface IActiveXUIHandlerSite2 : IUnknown
 {
-    HRESULT AddSuspensionExemption(ulong*);
-    HRESULT RemoveSuspensionExemption(ulong);
+    HRESULT AddSuspensionExemption(ulong* pullCookie);
+    HRESULT RemoveSuspensionExemption(ulong ullCookie);
 }
 enum IID_ICaretPositionProvider = GUID(0x58da43a2, 0x108e, 0x4d5b, [0x9f, 0x75, 0xe5, 0xf7, 0x4f, 0x93, 0xff, 0xf5]);
 interface ICaretPositionProvider : IUnknown
 {
-    HRESULT GetCaretPosition(POINT*, float*);
+    HRESULT GetCaretPosition(POINT* pptCaret, float* pflHeight);
 }
 enum IID_ITridentTouchInput = GUID(0x30510850, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface ITridentTouchInput : IUnknown
 {
-    HRESULT OnPointerMessage(uint, WPARAM, LPARAM, BOOL*);
+    HRESULT OnPointerMessage(uint msg, WPARAM wParam, LPARAM lParam, BOOL* pfAllowManipulations);
 }
 enum IID_ITridentTouchInputSite = GUID(0x30510849, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface ITridentTouchInputSite : IUnknown
 {
-    HRESULT SetManipulationMode(styleMsTouchAction);
-    HRESULT ZoomToPoint(int, int);
+    HRESULT SetManipulationMode(styleMsTouchAction msTouchAction);
+    HRESULT ZoomToPoint(int x, int y);
 }
 alias MEDIA_ACTIVITY_NOTIFY_TYPE = int;
 enum : int
@@ -767,31 +767,31 @@ enum : int
 enum IID_IMediaActivityNotifySite = GUID(0x8165cfef, 0x179d, 0x46c2, [0xbc, 0x71, 0x3f, 0xa7, 0x26, 0xdc, 0x1f, 0x8d]);
 interface IMediaActivityNotifySite : IUnknown
 {
-    HRESULT OnMediaActivityStarted(MEDIA_ACTIVITY_NOTIFY_TYPE);
-    HRESULT OnMediaActivityStopped(MEDIA_ACTIVITY_NOTIFY_TYPE);
+    HRESULT OnMediaActivityStarted(MEDIA_ACTIVITY_NOTIFY_TYPE mediaActivityType);
+    HRESULT OnMediaActivityStopped(MEDIA_ACTIVITY_NOTIFY_TYPE mediaActivityType);
 }
 enum IID_IAudioSessionSite = GUID(0xd7d8b684, 0xd02d, 0x4517, [0xb6, 0xb7, 0x19, 0xe3, 0xdf, 0xe2, 0x9c, 0x45]);
 interface IAudioSessionSite : IUnknown
 {
-    HRESULT GetAudioSessionGuid(GUID*);
-    HRESULT OnAudioStreamCreated(const(wchar)*);
-    HRESULT OnAudioStreamDestroyed(const(wchar)*);
+    HRESULT GetAudioSessionGuid(GUID* audioSessionGuid);
+    HRESULT OnAudioStreamCreated(const(wchar)* endpointID);
+    HRESULT OnAudioStreamDestroyed(const(wchar)* endpointID);
 }
 enum IID_IPrintTaskRequestHandler = GUID(0x191cd340, 0xcf36, 0x44ff, [0xbd, 0x53, 0xd1, 0xb7, 0x1, 0x79, 0x9d, 0x9b]);
 interface IPrintTaskRequestHandler : IUnknown
 {
-    HRESULT HandlePrintTaskRequest(IInspectable);
+    HRESULT HandlePrintTaskRequest(IInspectable pPrintTaskRequest);
 }
 enum IID_IPrintTaskRequestFactory = GUID(0xbb516745, 0x8c34, 0x4f8b, [0x96, 0x5, 0x68, 0x4d, 0xcb, 0x14, 0x4b, 0xe5]);
 interface IPrintTaskRequestFactory : IUnknown
 {
-    HRESULT CreatePrintTaskRequest(IPrintTaskRequestHandler);
+    HRESULT CreatePrintTaskRequest(IPrintTaskRequestHandler pPrintTaskRequestHandler);
 }
 enum IID_IScrollableContextMenu = GUID(0x30510854, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IScrollableContextMenu : IUnknown
 {
-    HRESULT AddItem(const(wchar)*, uint);
-    HRESULT ShowModal(int, int, uint*);
+    HRESULT AddItem(const(wchar)* itemText, uint cmdID);
+    HRESULT ShowModal(int x, int y, uint* cmdID);
 }
 alias SCROLLABLECONTEXTMENU_PLACEMENT = int;
 enum : int
@@ -807,18 +807,18 @@ enum IID_IScrollableContextMenu2 = GUID(0xf77e9056, 0x8674, 0x4936, [0x92, 0x4c,
 interface IScrollableContextMenu2 : IScrollableContextMenu
 {
     HRESULT AddSeparator();
-    HRESULT SetPlacement(SCROLLABLECONTEXTMENU_PLACEMENT);
+    HRESULT SetPlacement(SCROLLABLECONTEXTMENU_PLACEMENT scmp);
 }
 enum IID_IActiveXUIHandlerSite = GUID(0x30510853, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IActiveXUIHandlerSite : IUnknown
 {
-    HRESULT CreateScrollableContextMenu(IScrollableContextMenu*);
-    HRESULT PickFileAndGetResult(IUnknown, BOOL, IUnknown*);
+    HRESULT CreateScrollableContextMenu(IScrollableContextMenu* scrollableContextMenu);
+    HRESULT PickFileAndGetResult(IUnknown filePicker, BOOL allowMultipleSelections, IUnknown* result);
 }
 enum IID_IActiveXUIHandlerSite3 = GUID(0x7904009a, 0x1238, 0x47f4, [0x90, 0x1c, 0x87, 0x13, 0x75, 0xc3, 0x46, 0x8]);
 interface IActiveXUIHandlerSite3 : IUnknown
 {
-    HRESULT MessageBoxW(HWND, const(wchar)*, const(wchar)*, uint, int*);
+    HRESULT MessageBoxW(HWND hwnd, const(wchar)* text, const(wchar)* caption, uint type, int* result);
 }
 alias INTERNETEXPLORERCONFIGURATION = int;
 enum : int
@@ -831,21 +831,21 @@ enum : int
 enum IID_IEnumManagerFrames = GUID(0x3caa826a, 0x9b1f, 0x4a79, [0xbc, 0x81, 0xf0, 0x43, 0xd, 0xed, 0x16, 0x48]);
 interface IEnumManagerFrames : IUnknown
 {
-    HRESULT Next(uint, HWND**, uint*);
-    HRESULT Count(uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, HWND** ppWindows, uint* pceltFetched);
+    HRESULT Count(uint* pcelt);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumManagerFrames*);
+    HRESULT Clone(IEnumManagerFrames* ppEnum);
 }
 enum IID_IInternetExplorerManager = GUID(0xacc84351, 0x4ff, 0x44f9, [0xb2, 0x3f, 0x65, 0x5e, 0xd1, 0x68, 0xc6, 0xd5]);
 interface IInternetExplorerManager : IUnknown
 {
-    HRESULT CreateObject(uint, const(wchar)*, const(GUID)*, void**);
+    HRESULT CreateObject(uint dwConfig, const(wchar)* pszURL, const(GUID)* riid, void** ppv);
 }
 enum IID_IInternetExplorerManager2 = GUID(0xdfbb5136, 0x9259, 0x4895, [0xb4, 0xa7, 0xc1, 0x93, 0x44, 0x29, 0x91, 0x9a]);
 interface IInternetExplorerManager2 : IUnknown
 {
-    HRESULT EnumFrameWindows(IEnumManagerFrames*);
+    HRESULT EnumFrameWindows(IEnumManagerFrames* ppEnum);
 }
 enum CLSID_InternetExplorerManager = GUID(0xdf4fcc34, 0x67a, 0x4e0a, [0x83, 0x52, 0x4a, 0x1a, 0x50, 0x95, 0x34, 0x6e]);
 struct InternetExplorerManager
@@ -869,14 +869,14 @@ struct IELAUNCHURLINFO
 enum IID_IIEWebDriverSite = GUID(0xffb84444, 0x453d, 0x4fbc, [0x9f, 0x9d, 0x8d, 0xb5, 0xc4, 0x71, 0xec, 0x75]);
 interface IIEWebDriverSite : IDispatch
 {
-    HRESULT WindowOperation(uint, uint);
-    HRESULT DetachWebdriver(IUnknown);
-    HRESULT GetCapabilityValue(IUnknown, PWSTR, VARIANT*);
+    HRESULT WindowOperation(uint operationCode, uint hWnd);
+    HRESULT DetachWebdriver(IUnknown pUnkWD);
+    HRESULT GetCapabilityValue(IUnknown pUnkWD, PWSTR capName, VARIANT* capValue);
 }
 enum IID_IIEWebDriverManager = GUID(0xbd1dc630, 0x6590, 0x4ca2, [0xa2, 0x93, 0x6b, 0xc7, 0x2b, 0x24, 0x38, 0xd8]);
 interface IIEWebDriverManager : IDispatch
 {
-    HRESULT ExecuteCommand(PWSTR, PWSTR*);
+    HRESULT ExecuteCommand(PWSTR command, PWSTR* response);
 }
 enum CLSID_IEWebDriverManager = GUID(0x90314af2, 0x5250, 0x47b3, [0x89, 0xd8, 0x62, 0x95, 0xfc, 0x23, 0xbc, 0x22]);
 struct IEWebDriverManager
@@ -890,21 +890,21 @@ enum IID_IHomePage = GUID(0x766bf2af, 0xd650, 0x11d1, [0x98, 0x11, 0x0, 0xc0, 0x
 interface IHomePage : IDispatch
 {
     HRESULT navigateHomePage();
-    HRESULT setHomePage(BSTR);
-    HRESULT isHomePage(BSTR, VARIANT_BOOL*);
+    HRESULT setHomePage(BSTR bstrURL);
+    HRESULT isHomePage(BSTR bstrURL, VARIANT_BOOL* p);
 }
 enum IID_IIntelliForms = GUID(0x9b9f68e6, 0x1aaa, 0x11d2, [0xbc, 0xa5, 0x0, 0xc0, 0x4f, 0xd9, 0x29, 0xdb]);
 interface IIntelliForms : IDispatch
 {
-    HRESULT get_enabled(VARIANT_BOOL*);
-    HRESULT put_enabled(VARIANT_BOOL);
+    HRESULT get_enabled(VARIANT_BOOL* pVal);
+    HRESULT put_enabled(VARIANT_BOOL bVal);
 }
 enum IID_Iwfolders = GUID(0xbae31f98, 0x1b81, 0x11d2, [0xa9, 0x7a, 0x0, 0xc0, 0x4f, 0x8e, 0xcb, 0x2]);
 interface Iwfolders : IDispatch
 {
-    HRESULT navigate(BSTR, BSTR*);
-    HRESULT navigateFrame(BSTR, BSTR, BSTR*);
-    HRESULT navigateNoSite(BSTR, BSTR, uint, IUnknown);
+    HRESULT navigate(BSTR bstrUrl, BSTR* pbstrRetVal);
+    HRESULT navigateFrame(BSTR bstrUrl, BSTR bstrTargetFrame, BSTR* pbstrRetVal);
+    HRESULT navigateNoSite(BSTR bstrUrl, BSTR bstrTargetFrame, uint dwhwnd, IUnknown pwb);
 }
 enum IID_IAnchorClick = GUID(0x13d5413b, 0x33b9, 0x11d2, [0x95, 0xa7, 0x0, 0xc0, 0x4f, 0x8e, 0xcb, 0x2]);
 interface IAnchorClick : IDispatch
@@ -914,49 +914,49 @@ interface IAnchorClick : IDispatch
 enum IID_IHTMLUserDataOM = GUID(0x3050f48f, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLUserDataOM : IDispatch
 {
-    HRESULT get_XMLDocument(IDispatch*);
-    HRESULT save(BSTR);
-    HRESULT load(BSTR);
-    HRESULT getAttribute(BSTR, VARIANT*);
-    HRESULT setAttribute(BSTR, VARIANT);
-    HRESULT removeAttribute(BSTR);
-    HRESULT put_expires(BSTR);
-    HRESULT get_expires(BSTR*);
+    HRESULT get_XMLDocument(IDispatch* p);
+    HRESULT save(BSTR strName);
+    HRESULT load(BSTR strName);
+    HRESULT getAttribute(BSTR name, VARIANT* pValue);
+    HRESULT setAttribute(BSTR name, VARIANT value);
+    HRESULT removeAttribute(BSTR name);
+    HRESULT put_expires(BSTR bstr);
+    HRESULT get_expires(BSTR* pbstr);
 }
 enum IID_IHTMLPersistDataOM = GUID(0x3050f4c0, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLPersistDataOM : IDispatch
 {
-    HRESULT get_XMLDocument(IDispatch*);
-    HRESULT getAttribute(BSTR, VARIANT*);
-    HRESULT setAttribute(BSTR, VARIANT);
-    HRESULT removeAttribute(BSTR);
+    HRESULT get_XMLDocument(IDispatch* p);
+    HRESULT getAttribute(BSTR name, VARIANT* pValue);
+    HRESULT setAttribute(BSTR name, VARIANT value);
+    HRESULT removeAttribute(BSTR name);
 }
 enum IID_IHTMLPersistData = GUID(0x3050f4c5, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHTMLPersistData : IUnknown
 {
-    HRESULT save(IUnknown, int, VARIANT_BOOL*);
-    HRESULT load(IUnknown, int, VARIANT_BOOL*);
-    HRESULT queryType(int, VARIANT_BOOL*);
+    HRESULT save(IUnknown pUnk, int lType, VARIANT_BOOL* fContinueBroacast);
+    HRESULT load(IUnknown pUnk, int lType, VARIANT_BOOL* fDoDefault);
+    HRESULT queryType(int lType, VARIANT_BOOL* pfSupportsType);
 }
 enum IID_IDownloadBehavior = GUID(0x3050f5bd, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IDownloadBehavior : IDispatch
 {
-    HRESULT startDownload(BSTR, IDispatch);
+    HRESULT startDownload(BSTR bstrUrl, IDispatch pdispCallback);
 }
 enum IID_ILayoutRect = GUID(0x3050f665, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface ILayoutRect : IDispatch
 {
-    HRESULT put_nextRect(BSTR);
-    HRESULT get_nextRect(BSTR*);
-    HRESULT put_contentSrc(VARIANT);
-    HRESULT get_contentSrc(VARIANT*);
-    HRESULT put_honorPageBreaks(VARIANT_BOOL);
-    HRESULT get_honorPageBreaks(VARIANT_BOOL*);
-    HRESULT put_honorPageRules(VARIANT_BOOL);
-    HRESULT get_honorPageRules(VARIANT_BOOL*);
-    HRESULT put_nextRectElement(IDispatch);
-    HRESULT get_nextRectElement(IDispatch*);
-    HRESULT get_contentDocument(IDispatch*);
+    HRESULT put_nextRect(BSTR bstrElementId);
+    HRESULT get_nextRect(BSTR* pbstrElementId);
+    HRESULT put_contentSrc(VARIANT varContentSrc);
+    HRESULT get_contentSrc(VARIANT* pvarContentSrc);
+    HRESULT put_honorPageBreaks(VARIANT_BOOL v);
+    HRESULT get_honorPageBreaks(VARIANT_BOOL* p);
+    HRESULT put_honorPageRules(VARIANT_BOOL v);
+    HRESULT get_honorPageRules(VARIANT_BOOL* p);
+    HRESULT put_nextRectElement(IDispatch pElem);
+    HRESULT get_nextRectElement(IDispatch* ppElem);
+    HRESULT get_contentDocument(IDispatch* pDoc);
 }
 enum IID_IDeviceRect = GUID(0x3050f6d5, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IDeviceRect : IDispatch
@@ -965,34 +965,34 @@ interface IDeviceRect : IDispatch
 enum IID_IHeaderFooter = GUID(0x3050f6ce, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHeaderFooter : IDispatch
 {
-    HRESULT get_htmlHead(BSTR*);
-    HRESULT get_htmlFoot(BSTR*);
-    HRESULT put_textHead(BSTR);
-    HRESULT get_textHead(BSTR*);
-    HRESULT put_textFoot(BSTR);
-    HRESULT get_textFoot(BSTR*);
-    HRESULT put_page(uint);
-    HRESULT get_page(uint*);
-    HRESULT put_pageTotal(uint);
-    HRESULT get_pageTotal(uint*);
-    HRESULT put_URL(BSTR);
-    HRESULT get_URL(BSTR*);
-    HRESULT put_title(BSTR);
-    HRESULT get_title(BSTR*);
-    HRESULT put_dateShort(BSTR);
-    HRESULT get_dateShort(BSTR*);
-    HRESULT put_dateLong(BSTR);
-    HRESULT get_dateLong(BSTR*);
-    HRESULT put_timeShort(BSTR);
-    HRESULT get_timeShort(BSTR*);
-    HRESULT put_timeLong(BSTR);
-    HRESULT get_timeLong(BSTR*);
+    HRESULT get_htmlHead(BSTR* p);
+    HRESULT get_htmlFoot(BSTR* p);
+    HRESULT put_textHead(BSTR v);
+    HRESULT get_textHead(BSTR* p);
+    HRESULT put_textFoot(BSTR v);
+    HRESULT get_textFoot(BSTR* p);
+    HRESULT put_page(uint v);
+    HRESULT get_page(uint* p);
+    HRESULT put_pageTotal(uint v);
+    HRESULT get_pageTotal(uint* p);
+    HRESULT put_URL(BSTR v);
+    HRESULT get_URL(BSTR* p);
+    HRESULT put_title(BSTR v);
+    HRESULT get_title(BSTR* p);
+    HRESULT put_dateShort(BSTR v);
+    HRESULT get_dateShort(BSTR* p);
+    HRESULT put_dateLong(BSTR v);
+    HRESULT get_dateLong(BSTR* p);
+    HRESULT put_timeShort(BSTR v);
+    HRESULT get_timeShort(BSTR* p);
+    HRESULT put_timeLong(BSTR v);
+    HRESULT get_timeLong(BSTR* p);
 }
 enum IID_IHeaderFooter2 = GUID(0x305104a5, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface IHeaderFooter2 : IHeaderFooter
 {
-    HRESULT put_font(BSTR);
-    HRESULT get_font(BSTR*);
+    HRESULT put_font(BSTR v);
+    HRESULT get_font(BSTR* p);
 }
 enum CLSID_PeerFactory = GUID(0x3050f4cf, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 struct PeerFactory
@@ -1072,29 +1072,29 @@ enum : int
 enum IID_IOpenServiceActivityInput = GUID(0x75cb4db9, 0x6da0, 0x4da3, [0x83, 0xce, 0x42, 0x2b, 0x6a, 0x43, 0x33, 0x46]);
 interface IOpenServiceActivityInput : IUnknown
 {
-    HRESULT GetVariable(const(wchar)*, const(wchar)*, BSTR*);
-    HRESULT HasVariable(const(wchar)*, const(wchar)*, BOOL*);
-    HRESULT GetType(OpenServiceActivityContentType*);
+    HRESULT GetVariable(const(wchar)* pwzVariableName, const(wchar)* pwzVariableType, BSTR* pbstrVariableContent);
+    HRESULT HasVariable(const(wchar)* pwzVariableName, const(wchar)* pwzVariableType, BOOL* pfHasVariable);
+    HRESULT GetType(OpenServiceActivityContentType* pType);
 }
 enum IID_IOpenServiceActivityOutputContext = GUID(0xe289deab, 0xf709, 0x49a9, [0xb9, 0x9e, 0x28, 0x23, 0x64, 0x7, 0x45, 0x71]);
 interface IOpenServiceActivityOutputContext : IUnknown
 {
-    HRESULT Navigate(const(wchar)*, const(wchar)*, const(wchar)*, IStream);
-    HRESULT CanNavigate(const(wchar)*, const(wchar)*, const(wchar)*, IStream, BOOL*);
+    HRESULT Navigate(const(wchar)* pwzUri, const(wchar)* pwzMethod, const(wchar)* pwzHeaders, IStream pPostData);
+    HRESULT CanNavigate(const(wchar)* pwzUri, const(wchar)* pwzMethod, const(wchar)* pwzHeaders, IStream pPostData, BOOL* pfCanNavigate);
 }
 enum IID_IOpenService = GUID(0xc2952ed1, 0x6a89, 0x4606, [0x92, 0x5f, 0x1e, 0xd8, 0xb4, 0xbe, 0x6, 0x30]);
 interface IOpenService : IUnknown
 {
-    HRESULT IsDefault(BOOL*);
-    HRESULT SetDefault(BOOL, HWND);
-    HRESULT GetID(BSTR*);
+    HRESULT IsDefault(BOOL* pfIsDefault);
+    HRESULT SetDefault(BOOL fDefault, HWND hwnd);
+    HRESULT GetID(BSTR* pbstrID);
 }
 enum IID_IOpenServiceManager = GUID(0x5664125f, 0x4e10, 0x4e90, [0x98, 0xe4, 0xe4, 0x51, 0x3d, 0x95, 0x5a, 0x14]);
 interface IOpenServiceManager : IUnknown
 {
-    HRESULT InstallService(const(wchar)*, IOpenService*);
-    HRESULT UninstallService(IOpenService);
-    HRESULT GetServiceByID(const(wchar)*, IOpenService*);
+    HRESULT InstallService(const(wchar)* pwzServiceUrl, IOpenService* ppService);
+    HRESULT UninstallService(IOpenService pService);
+    HRESULT GetServiceByID(const(wchar)* pwzID, IOpenService* ppService);
 }
 enum CLSID_OpenServiceManager = GUID(0x98870b6, 0x39ea, 0x480b, [0xb8, 0xb5, 0xdd, 0x1, 0x67, 0xc4, 0xdb, 0x59]);
 struct OpenServiceManager
@@ -1107,65 +1107,65 @@ struct OpenServiceActivityManager
 enum IID_IOpenServiceActivity = GUID(0x13645c88, 0x221a, 0x4905, [0x8e, 0xd1, 0x4f, 0x51, 0x12, 0xcf, 0xc1, 0x8]);
 interface IOpenServiceActivity : IOpenService
 {
-    HRESULT Execute(IOpenServiceActivityInput, IOpenServiceActivityOutputContext);
-    HRESULT CanExecute(IOpenServiceActivityInput, IOpenServiceActivityOutputContext, BOOL*);
-    HRESULT CanExecuteType(OpenServiceActivityContentType, BOOL*);
-    HRESULT Preview(IOpenServiceActivityInput, IOpenServiceActivityOutputContext);
-    HRESULT CanPreview(IOpenServiceActivityInput, IOpenServiceActivityOutputContext, BOOL*);
-    HRESULT CanPreviewType(OpenServiceActivityContentType, BOOL*);
-    HRESULT GetStatusText(IOpenServiceActivityInput, BSTR*);
-    HRESULT GetHomepageUrl(BSTR*);
-    HRESULT GetDisplayName(BSTR*);
-    HRESULT GetDescription(BSTR*);
-    HRESULT GetCategoryName(BSTR*);
-    HRESULT GetIconPath(BSTR*);
-    HRESULT GetIcon(BOOL, HICON*);
-    HRESULT GetDescriptionFilePath(BSTR*);
-    HRESULT GetDownloadUrl(BSTR*);
-    HRESULT GetInstallUrl(BSTR*);
-    HRESULT IsEnabled(BOOL*);
-    HRESULT SetEnabled(BOOL);
+    HRESULT Execute(IOpenServiceActivityInput pInput, IOpenServiceActivityOutputContext pOutput);
+    HRESULT CanExecute(IOpenServiceActivityInput pInput, IOpenServiceActivityOutputContext pOutput, BOOL* pfCanExecute);
+    HRESULT CanExecuteType(OpenServiceActivityContentType type, BOOL* pfCanExecute);
+    HRESULT Preview(IOpenServiceActivityInput pInput, IOpenServiceActivityOutputContext pOutput);
+    HRESULT CanPreview(IOpenServiceActivityInput pInput, IOpenServiceActivityOutputContext pOutput, BOOL* pfCanPreview);
+    HRESULT CanPreviewType(OpenServiceActivityContentType type, BOOL* pfCanPreview);
+    HRESULT GetStatusText(IOpenServiceActivityInput pInput, BSTR* pbstrStatusText);
+    HRESULT GetHomepageUrl(BSTR* pbstrHomepageUrl);
+    HRESULT GetDisplayName(BSTR* pbstrDisplayName);
+    HRESULT GetDescription(BSTR* pbstrDescription);
+    HRESULT GetCategoryName(BSTR* pbstrCategoryName);
+    HRESULT GetIconPath(BSTR* pbstrIconPath);
+    HRESULT GetIcon(BOOL fSmallIcon, HICON* phIcon);
+    HRESULT GetDescriptionFilePath(BSTR* pbstrXmlPath);
+    HRESULT GetDownloadUrl(BSTR* pbstrXmlUri);
+    HRESULT GetInstallUrl(BSTR* pbstrInstallUri);
+    HRESULT IsEnabled(BOOL* pfIsEnabled);
+    HRESULT SetEnabled(BOOL fEnable);
 }
 enum IID_IEnumOpenServiceActivity = GUID(0xa436d7d2, 0x17c3, 0x4ef4, [0xa1, 0xe8, 0x5c, 0x86, 0xfa, 0xff, 0x26, 0xc0]);
 interface IEnumOpenServiceActivity : IUnknown
 {
-    HRESULT Next(uint, IOpenServiceActivity*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IOpenServiceActivity* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumOpenServiceActivity*);
+    HRESULT Clone(IEnumOpenServiceActivity* ppenum);
 }
 enum IID_IOpenServiceActivityCategory = GUID(0x850af9d6, 0x7309, 0x40b5, [0xbd, 0xb8, 0x78, 0x6c, 0x10, 0x6b, 0x21, 0x53]);
 interface IOpenServiceActivityCategory : IUnknown
 {
-    HRESULT HasDefaultActivity(BOOL*);
-    HRESULT GetDefaultActivity(IOpenServiceActivity*);
-    HRESULT SetDefaultActivity(IOpenServiceActivity, HWND);
-    HRESULT GetName(BSTR*);
-    HRESULT GetActivityEnumerator(IOpenServiceActivityInput, IOpenServiceActivityOutputContext, IEnumOpenServiceActivity*);
+    HRESULT HasDefaultActivity(BOOL* pfHasDefaultActivity);
+    HRESULT GetDefaultActivity(IOpenServiceActivity* ppDefaultActivity);
+    HRESULT SetDefaultActivity(IOpenServiceActivity pActivity, HWND hwnd);
+    HRESULT GetName(BSTR* pbstrName);
+    HRESULT GetActivityEnumerator(IOpenServiceActivityInput pInput, IOpenServiceActivityOutputContext pOutput, IEnumOpenServiceActivity* ppEnumActivity);
 }
 enum IID_IEnumOpenServiceActivityCategory = GUID(0x33627a56, 0x8c9a, 0x4430, [0x8f, 0xd1, 0xb5, 0xf5, 0xc7, 0x71, 0xaf, 0xb6]);
 interface IEnumOpenServiceActivityCategory : IUnknown
 {
-    HRESULT Next(uint, IOpenServiceActivityCategory*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IOpenServiceActivityCategory* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumOpenServiceActivityCategory*);
+    HRESULT Clone(IEnumOpenServiceActivityCategory* ppenum);
 }
 enum IID_IOpenServiceActivityManager = GUID(0x8a2d0a9d, 0xe920, 0x4bdc, [0xa2, 0x91, 0xd3, 0xf, 0x65, 0xb, 0xc4, 0xf1]);
 interface IOpenServiceActivityManager : IUnknown
 {
-    HRESULT GetCategoryEnumerator(OpenServiceActivityContentType, IEnumOpenServiceActivityCategory*);
-    HRESULT GetActivityByID(const(wchar)*, IOpenServiceActivity*);
-    HRESULT GetActivityByHomepageAndCategory(const(wchar)*, const(wchar)*, IOpenServiceActivity*);
-    HRESULT GetVersionCookie(uint*);
+    HRESULT GetCategoryEnumerator(OpenServiceActivityContentType eType, IEnumOpenServiceActivityCategory* ppEnum);
+    HRESULT GetActivityByID(const(wchar)* pwzActivityID, IOpenServiceActivity* ppActivity);
+    HRESULT GetActivityByHomepageAndCategory(const(wchar)* pwzHomepage, const(wchar)* pwzCategory, IOpenServiceActivity* ppActivity);
+    HRESULT GetVersionCookie(uint* pdwVersionCookie);
 }
 enum IID_IPersistHistory = GUID(0x91a565c1, 0xe38f, 0x11d0, [0x94, 0xbf, 0x0, 0xa0, 0xc9, 0x5, 0x5c, 0xbf]);
 interface IPersistHistory : IPersist
 {
-    HRESULT LoadHistory(IStream, IBindCtx);
-    HRESULT SaveHistory(IStream);
-    HRESULT SetPositionCookie(uint);
-    HRESULT GetPositionCookie(uint*);
+    HRESULT LoadHistory(IStream pStream, IBindCtx pbc);
+    HRESULT SaveHistory(IStream pStream);
+    HRESULT SetPositionCookie(uint dwPositioncookie);
+    HRESULT GetPositionCookie(uint* pdwPositioncookie);
 }
 alias ADDURL_FLAG = int;
 enum : int
@@ -1189,25 +1189,25 @@ struct STATURL
 enum IID_IEnumSTATURL = GUID(0x3c374a42, 0xbae4, 0x11cf, [0xbf, 0x7d, 0x0, 0xaa, 0x0, 0x69, 0x46, 0xee]);
 interface IEnumSTATURL : IUnknown
 {
-    HRESULT Next(uint, STATURL*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, STATURL* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumSTATURL*);
-    HRESULT SetFilter(const(wchar)*, uint);
+    HRESULT Clone(IEnumSTATURL* ppenum);
+    HRESULT SetFilter(const(wchar)* poszFilter, uint dwFlags);
 }
 enum IID_IUrlHistoryStg = GUID(0x3c374a41, 0xbae4, 0x11cf, [0xbf, 0x7d, 0x0, 0xaa, 0x0, 0x69, 0x46, 0xee]);
 interface IUrlHistoryStg : IUnknown
 {
-    HRESULT AddUrl(const(wchar)*, const(wchar)*, uint);
-    HRESULT DeleteUrl(const(wchar)*, uint);
-    HRESULT QueryUrl(const(wchar)*, uint, STATURL*);
-    HRESULT BindToObject(const(wchar)*, const(GUID)*, void**);
-    HRESULT EnumUrls(IEnumSTATURL*);
+    HRESULT AddUrl(const(wchar)* pocsUrl, const(wchar)* pocsTitle, uint dwFlags);
+    HRESULT DeleteUrl(const(wchar)* pocsUrl, uint dwFlags);
+    HRESULT QueryUrl(const(wchar)* pocsUrl, uint dwFlags, STATURL* lpSTATURL);
+    HRESULT BindToObject(const(wchar)* pocsUrl, const(GUID)* riid, void** ppvOut);
+    HRESULT EnumUrls(IEnumSTATURL* ppEnum);
 }
 enum IID_IUrlHistoryStg2 = GUID(0xafa0dc11, 0xc313, 0x11d0, [0x83, 0x1a, 0x0, 0xc0, 0x4f, 0xd5, 0xae, 0x38]);
 interface IUrlHistoryStg2 : IUrlHistoryStg
 {
-    HRESULT AddUrlAndNotify(const(wchar)*, const(wchar)*, uint, BOOL, IOleCommandTarget, IUnknown);
+    HRESULT AddUrlAndNotify(const(wchar)* pocsUrl, const(wchar)* pocsTitle, uint dwFlags, BOOL fWriteHistory, IOleCommandTarget poctNotify, IUnknown punkISFolder);
     HRESULT ClearHistory();
 }
 enum IID_IUrlHistoryNotify = GUID(0xbc40bec1, 0xc493, 0x11d0, [0x83, 0x1b, 0x0, 0xc0, 0x4f, 0xd5, 0xae, 0x38]);
@@ -1217,7 +1217,7 @@ interface IUrlHistoryNotify : IOleCommandTarget
 enum IID_IWebBrowserEventsService = GUID(0x54a8f188, 0x9ebd, 0x4795, [0xad, 0x16, 0x9b, 0x49, 0x45, 0x11, 0x96, 0x36]);
 interface IWebBrowserEventsService : IUnknown
 {
-    HRESULT FireBeforeNavigate2Event(VARIANT_BOOL*);
+    HRESULT FireBeforeNavigate2Event(VARIANT_BOOL* pfCancel);
     HRESULT FireNavigateComplete2Event();
     HRESULT FireDownloadBeginEvent();
     HRESULT FireDownloadCompleteEvent();
@@ -1226,73 +1226,73 @@ interface IWebBrowserEventsService : IUnknown
 enum IID_IWebBrowserEventsUrlService = GUID(0x87cc5d04, 0xeafa, 0x4833, [0x98, 0x20, 0x8f, 0x98, 0x65, 0x30, 0xcc, 0x0]);
 interface IWebBrowserEventsUrlService : IUnknown
 {
-    HRESULT GetUrlForEvents(BSTR*);
+    HRESULT GetUrlForEvents(BSTR* pUrl);
 }
 enum IID_ITimerService = GUID(0x3050f35f, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface ITimerService : IUnknown
 {
-    HRESULT CreateTimer(ITimer, ITimer*);
-    HRESULT GetNamedTimer(const(GUID)*, ITimer*);
-    HRESULT SetNamedTimerReference(const(GUID)*, ITimer);
+    HRESULT CreateTimer(ITimer pReferenceTimer, ITimer* ppNewTimer);
+    HRESULT GetNamedTimer(const(GUID)* rguidName, ITimer* ppTimer);
+    HRESULT SetNamedTimerReference(const(GUID)* rguidName, ITimer pReferenceTimer);
 }
 enum IID_ITimer = GUID(0x3050f360, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface ITimer : IUnknown
 {
-    HRESULT Advise(VARIANT, VARIANT, VARIANT, uint, ITimerSink, uint*);
-    HRESULT Unadvise(uint);
-    HRESULT Freeze(BOOL);
-    HRESULT GetTime(VARIANT*);
+    HRESULT Advise(VARIANT vtimeMin, VARIANT vtimeMax, VARIANT vtimeInterval, uint dwFlags, ITimerSink pTimerSink, uint* pdwCookie);
+    HRESULT Unadvise(uint dwCookie);
+    HRESULT Freeze(BOOL fFreeze);
+    HRESULT GetTime(VARIANT* pvtime);
 }
 enum IID_ITimerEx = GUID(0x30510414, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface ITimerEx : ITimer
 {
-    HRESULT SetMode(uint);
+    HRESULT SetMode(uint dwMode);
 }
 enum IID_ITimerSink = GUID(0x3050f361, 0x98b5, 0x11cf, [0xbb, 0x82, 0x0, 0xaa, 0x0, 0xbd, 0xce, 0xb]);
 interface ITimerSink : IUnknown
 {
-    HRESULT OnTimer(VARIANT);
+    HRESULT OnTimer(VARIANT vtimeAdvise);
 }
 enum IID_IMapMIMEToCLSID = GUID(0xd9e89500, 0x30fa, 0x11d0, [0xb7, 0x24, 0x0, 0xaa, 0x0, 0x6c, 0x1a, 0x1]);
 interface IMapMIMEToCLSID : IUnknown
 {
-    HRESULT EnableDefaultMappings(BOOL);
-    HRESULT MapMIMEToCLSID(const(wchar)*, GUID*);
-    HRESULT SetMapping(const(wchar)*, uint, const(GUID)*);
+    HRESULT EnableDefaultMappings(BOOL bEnable);
+    HRESULT MapMIMEToCLSID(const(wchar)* pszMIMEType, GUID* pCLSID);
+    HRESULT SetMapping(const(wchar)* pszMIMEType, uint dwMapMode, const(GUID)* clsid);
 }
 enum IID_IImageDecodeFilter = GUID(0xa3ccedf3, 0x2de2, 0x11d0, [0x86, 0xf4, 0x0, 0xa0, 0xc9, 0x13, 0xf7, 0x50]);
 interface IImageDecodeFilter : IUnknown
 {
-    HRESULT Initialize(IImageDecodeEventSink);
-    HRESULT Process(IStream);
-    HRESULT Terminate(HRESULT);
+    HRESULT Initialize(IImageDecodeEventSink pEventSink);
+    HRESULT Process(IStream pStream);
+    HRESULT Terminate(HRESULT hrStatus);
 }
 enum IID_IImageDecodeEventSink = GUID(0xbaa342a0, 0x2ded, 0x11d0, [0x86, 0xf4, 0x0, 0xa0, 0xc9, 0x13, 0xf7, 0x50]);
 interface IImageDecodeEventSink : IUnknown
 {
-    HRESULT GetSurface(int, int, const(GUID)*, uint, uint, IUnknown*);
-    HRESULT OnBeginDecode(uint*, uint*, GUID**);
+    HRESULT GetSurface(int nWidth, int nHeight, const(GUID)* bfid, uint nPasses, uint dwHints, IUnknown* ppSurface);
+    HRESULT OnBeginDecode(uint* pdwEvents, uint* pnFormats, GUID** ppFormats);
     HRESULT OnBitsComplete();
-    HRESULT OnDecodeComplete(HRESULT);
+    HRESULT OnDecodeComplete(HRESULT hrStatus);
     HRESULT OnPalette();
-    HRESULT OnProgress(RECT*, BOOL);
+    HRESULT OnProgress(RECT* pBounds, BOOL bComplete);
 }
 enum IID_IImageDecodeEventSink2 = GUID(0x8ebd8a57, 0x8a96, 0x48c9, [0x84, 0xa6, 0x96, 0x2e, 0x2d, 0xb9, 0xc9, 0x31]);
 interface IImageDecodeEventSink2 : IImageDecodeEventSink
 {
-    HRESULT IsAlphaPremultRequired(BOOL*);
+    HRESULT IsAlphaPremultRequired(BOOL* pfPremultAlpha);
 }
 enum IID_ISniffStream = GUID(0x4ef17940, 0x30e0, 0x11d0, [0xb7, 0x24, 0x0, 0xaa, 0x0, 0x6c, 0x1a, 0x1]);
 interface ISniffStream : IUnknown
 {
-    HRESULT Init(IStream);
-    HRESULT Peek(void*, uint, uint*);
+    HRESULT Init(IStream pStream);
+    HRESULT Peek(void* pBuffer, uint nBytes, uint* pnBytesRead);
 }
 enum IID_IDithererImpl = GUID(0x7c48e840, 0x3910, 0x11d0, [0x86, 0xfc, 0x0, 0xa0, 0xc9, 0x13, 0xf7, 0x50]);
 interface IDithererImpl : IUnknown
 {
-    HRESULT SetDestColorTable(uint, const(RGBQUAD)*);
-    HRESULT SetEventSink(IImageDecodeEventSink);
+    HRESULT SetDestColorTable(uint nColors, const(RGBQUAD)* prgbColors);
+    HRESULT SetEventSink(IImageDecodeEventSink pEventSink);
 }
 enum CLSID_CoDitherToRGB8 = GUID(0xa860ce50, 0x3910, 0x11d0, [0x86, 0xfc, 0x0, 0xa0, 0xc9, 0x13, 0xf7, 0x50]);
 struct CoDitherToRGB8

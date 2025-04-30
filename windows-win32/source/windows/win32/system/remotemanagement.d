@@ -8,39 +8,39 @@ import windows.win32.system.variant : VARIANT;
 version (Windows):
 extern (Windows):
 
-uint WSManInitialize(uint, WSMAN_API_HANDLE*);
-uint WSManDeinitialize(WSMAN_API_HANDLE, uint);
-uint WSManGetErrorMessage(WSMAN_API_HANDLE, uint, const(wchar)*, uint, uint, PWSTR, uint*);
-uint WSManCreateSession(WSMAN_API_HANDLE, const(wchar)*, uint, WSMAN_AUTHENTICATION_CREDENTIALS*, WSMAN_PROXY_INFO*, WSMAN_SESSION_HANDLE*);
-uint WSManCloseSession(WSMAN_SESSION_HANDLE, uint);
-uint WSManSetSessionOption(WSMAN_SESSION_HANDLE, WSManSessionOption, WSMAN_DATA*);
-uint WSManGetSessionOptionAsDword(WSMAN_SESSION_HANDLE, WSManSessionOption, uint*);
-uint WSManGetSessionOptionAsString(WSMAN_SESSION_HANDLE, WSManSessionOption, uint, PWSTR, uint*);
-uint WSManCloseOperation(WSMAN_OPERATION_HANDLE, uint);
-void WSManCreateShell(WSMAN_SESSION_HANDLE, uint, const(wchar)*, WSMAN_SHELL_STARTUP_INFO_V11*, WSMAN_OPTION_SET*, WSMAN_DATA*, WSMAN_SHELL_ASYNC*, WSMAN_SHELL_HANDLE*);
-void WSManRunShellCommand(WSMAN_SHELL_HANDLE, uint, const(wchar)*, WSMAN_COMMAND_ARG_SET*, WSMAN_OPTION_SET*, WSMAN_SHELL_ASYNC*, WSMAN_COMMAND_HANDLE*);
-void WSManSignalShell(WSMAN_SHELL_HANDLE, WSMAN_COMMAND_HANDLE, uint, const(wchar)*, WSMAN_SHELL_ASYNC*, WSMAN_OPERATION_HANDLE*);
-void WSManReceiveShellOutput(WSMAN_SHELL_HANDLE, WSMAN_COMMAND_HANDLE, uint, WSMAN_STREAM_ID_SET*, WSMAN_SHELL_ASYNC*, WSMAN_OPERATION_HANDLE*);
-void WSManSendShellInput(WSMAN_SHELL_HANDLE, WSMAN_COMMAND_HANDLE, uint, const(wchar)*, WSMAN_DATA*, BOOL, WSMAN_SHELL_ASYNC*, WSMAN_OPERATION_HANDLE*);
-void WSManCloseCommand(WSMAN_COMMAND_HANDLE, uint, WSMAN_SHELL_ASYNC*);
-void WSManCloseShell(WSMAN_SHELL_HANDLE, uint, WSMAN_SHELL_ASYNC*);
-void WSManCreateShellEx(WSMAN_SESSION_HANDLE, uint, const(wchar)*, const(wchar)*, WSMAN_SHELL_STARTUP_INFO_V11*, WSMAN_OPTION_SET*, WSMAN_DATA*, WSMAN_SHELL_ASYNC*, WSMAN_SHELL_HANDLE*);
-void WSManRunShellCommandEx(WSMAN_SHELL_HANDLE, uint, const(wchar)*, const(wchar)*, WSMAN_COMMAND_ARG_SET*, WSMAN_OPTION_SET*, WSMAN_SHELL_ASYNC*, WSMAN_COMMAND_HANDLE*);
-void WSManDisconnectShell(WSMAN_SHELL_HANDLE, uint, WSMAN_SHELL_DISCONNECT_INFO*, WSMAN_SHELL_ASYNC*);
-void WSManReconnectShell(WSMAN_SHELL_HANDLE, uint, WSMAN_SHELL_ASYNC*);
-void WSManReconnectShellCommand(WSMAN_COMMAND_HANDLE, uint, WSMAN_SHELL_ASYNC*);
-void WSManConnectShell(WSMAN_SESSION_HANDLE, uint, const(wchar)*, const(wchar)*, WSMAN_OPTION_SET*, WSMAN_DATA*, WSMAN_SHELL_ASYNC*, WSMAN_SHELL_HANDLE*);
-void WSManConnectShellCommand(WSMAN_SHELL_HANDLE, uint, const(wchar)*, WSMAN_OPTION_SET*, WSMAN_DATA*, WSMAN_SHELL_ASYNC*, WSMAN_COMMAND_HANDLE*);
-uint WSManPluginReportContext(WSMAN_PLUGIN_REQUEST*, uint, void*);
-uint WSManPluginReceiveResult(WSMAN_PLUGIN_REQUEST*, uint, const(wchar)*, WSMAN_DATA*, const(wchar)*, uint);
-uint WSManPluginOperationComplete(WSMAN_PLUGIN_REQUEST*, uint, uint, const(wchar)*);
-uint WSManPluginGetOperationParameters(WSMAN_PLUGIN_REQUEST*, uint, WSMAN_DATA*);
-uint WSManPluginGetConfiguration(void*, uint, WSMAN_DATA*);
-uint WSManPluginReportCompletion(void*, uint);
-uint WSManPluginFreeRequestDetails(WSMAN_PLUGIN_REQUEST*);
-uint WSManPluginAuthzUserComplete(WSMAN_SENDER_DETAILS*, uint, void*, HANDLE, BOOL, uint, const(wchar)*);
-uint WSManPluginAuthzOperationComplete(WSMAN_SENDER_DETAILS*, uint, void*, uint, const(wchar)*);
-uint WSManPluginAuthzQueryQuotaComplete(WSMAN_SENDER_DETAILS*, uint, WSMAN_AUTHZ_QUOTA*, uint, const(wchar)*);
+uint WSManInitialize(uint flags, WSMAN_API_HANDLE* apiHandle);
+uint WSManDeinitialize(WSMAN_API_HANDLE apiHandle, uint flags);
+uint WSManGetErrorMessage(WSMAN_API_HANDLE apiHandle, uint flags, const(wchar)* languageCode, uint errorCode, uint messageLength, PWSTR message, uint* messageLengthUsed);
+uint WSManCreateSession(WSMAN_API_HANDLE apiHandle, const(wchar)* connection, uint flags, WSMAN_AUTHENTICATION_CREDENTIALS* serverAuthenticationCredentials, WSMAN_PROXY_INFO* proxyInfo, WSMAN_SESSION_HANDLE* session);
+uint WSManCloseSession(WSMAN_SESSION_HANDLE session, uint flags);
+uint WSManSetSessionOption(WSMAN_SESSION_HANDLE session, WSManSessionOption option, WSMAN_DATA* data);
+uint WSManGetSessionOptionAsDword(WSMAN_SESSION_HANDLE session, WSManSessionOption option, uint* value);
+uint WSManGetSessionOptionAsString(WSMAN_SESSION_HANDLE session, WSManSessionOption option, uint stringLength, PWSTR string, uint* stringLengthUsed);
+uint WSManCloseOperation(WSMAN_OPERATION_HANDLE operationHandle, uint flags);
+void WSManCreateShell(WSMAN_SESSION_HANDLE session, uint flags, const(wchar)* resourceUri, WSMAN_SHELL_STARTUP_INFO_V11* startupInfo, WSMAN_OPTION_SET* options, WSMAN_DATA* createXml, WSMAN_SHELL_ASYNC* async, WSMAN_SHELL_HANDLE* shell);
+void WSManRunShellCommand(WSMAN_SHELL_HANDLE shell, uint flags, const(wchar)* commandLine, WSMAN_COMMAND_ARG_SET* args, WSMAN_OPTION_SET* options, WSMAN_SHELL_ASYNC* async, WSMAN_COMMAND_HANDLE* command);
+void WSManSignalShell(WSMAN_SHELL_HANDLE shell, WSMAN_COMMAND_HANDLE command, uint flags, const(wchar)* code, WSMAN_SHELL_ASYNC* async, WSMAN_OPERATION_HANDLE* signalOperation);
+void WSManReceiveShellOutput(WSMAN_SHELL_HANDLE shell, WSMAN_COMMAND_HANDLE command, uint flags, WSMAN_STREAM_ID_SET* desiredStreamSet, WSMAN_SHELL_ASYNC* async, WSMAN_OPERATION_HANDLE* receiveOperation);
+void WSManSendShellInput(WSMAN_SHELL_HANDLE shell, WSMAN_COMMAND_HANDLE command, uint flags, const(wchar)* streamId, WSMAN_DATA* streamData, BOOL endOfStream, WSMAN_SHELL_ASYNC* async, WSMAN_OPERATION_HANDLE* sendOperation);
+void WSManCloseCommand(WSMAN_COMMAND_HANDLE commandHandle, uint flags, WSMAN_SHELL_ASYNC* async);
+void WSManCloseShell(WSMAN_SHELL_HANDLE shellHandle, uint flags, WSMAN_SHELL_ASYNC* async);
+void WSManCreateShellEx(WSMAN_SESSION_HANDLE session, uint flags, const(wchar)* resourceUri, const(wchar)* shellId, WSMAN_SHELL_STARTUP_INFO_V11* startupInfo, WSMAN_OPTION_SET* options, WSMAN_DATA* createXml, WSMAN_SHELL_ASYNC* async, WSMAN_SHELL_HANDLE* shell);
+void WSManRunShellCommandEx(WSMAN_SHELL_HANDLE shell, uint flags, const(wchar)* commandId, const(wchar)* commandLine, WSMAN_COMMAND_ARG_SET* args, WSMAN_OPTION_SET* options, WSMAN_SHELL_ASYNC* async, WSMAN_COMMAND_HANDLE* command);
+void WSManDisconnectShell(WSMAN_SHELL_HANDLE shell, uint flags, WSMAN_SHELL_DISCONNECT_INFO* disconnectInfo, WSMAN_SHELL_ASYNC* async);
+void WSManReconnectShell(WSMAN_SHELL_HANDLE shell, uint flags, WSMAN_SHELL_ASYNC* async);
+void WSManReconnectShellCommand(WSMAN_COMMAND_HANDLE commandHandle, uint flags, WSMAN_SHELL_ASYNC* async);
+void WSManConnectShell(WSMAN_SESSION_HANDLE session, uint flags, const(wchar)* resourceUri, const(wchar)* shellID, WSMAN_OPTION_SET* options, WSMAN_DATA* connectXml, WSMAN_SHELL_ASYNC* async, WSMAN_SHELL_HANDLE* shell);
+void WSManConnectShellCommand(WSMAN_SHELL_HANDLE shell, uint flags, const(wchar)* commandID, WSMAN_OPTION_SET* options, WSMAN_DATA* connectXml, WSMAN_SHELL_ASYNC* async, WSMAN_COMMAND_HANDLE* command);
+uint WSManPluginReportContext(WSMAN_PLUGIN_REQUEST* requestDetails, uint flags, void* context);
+uint WSManPluginReceiveResult(WSMAN_PLUGIN_REQUEST* requestDetails, uint flags, const(wchar)* stream, WSMAN_DATA* streamResult, const(wchar)* commandState, uint exitCode);
+uint WSManPluginOperationComplete(WSMAN_PLUGIN_REQUEST* requestDetails, uint flags, uint errorCode, const(wchar)* extendedInformation);
+uint WSManPluginGetOperationParameters(WSMAN_PLUGIN_REQUEST* requestDetails, uint flags, WSMAN_DATA* data);
+uint WSManPluginGetConfiguration(void* pluginContext, uint flags, WSMAN_DATA* data);
+uint WSManPluginReportCompletion(void* pluginContext, uint flags);
+uint WSManPluginFreeRequestDetails(WSMAN_PLUGIN_REQUEST* requestDetails);
+uint WSManPluginAuthzUserComplete(WSMAN_SENDER_DETAILS* senderDetails, uint flags, void* userAuthorizationContext, HANDLE impersonationToken, BOOL userIsAdministrator, uint errorCode, const(wchar)* extendedErrorInformation);
+uint WSManPluginAuthzOperationComplete(WSMAN_SENDER_DETAILS* senderDetails, uint flags, void* userAuthorizationContext, uint errorCode, const(wchar)* extendedErrorInformation);
+uint WSManPluginAuthzQueryQuotaComplete(WSMAN_SENDER_DETAILS* senderDetails, uint flags, WSMAN_AUTHZ_QUOTA* quota, uint errorCode, const(wchar)* extendedErrorInformation);
 enum WSMAN_FLAG_REQUESTED_API_VERSION_1_0 = 0x00000000;
 enum WSMAN_FLAG_REQUESTED_API_VERSION_1_1 = 0x00000001;
 enum WSMAN_OPERATION_INFOV1 = 0x00000000;
@@ -835,7 +835,7 @@ union WSMAN_RESPONSE_DATA
     WSMAN_CONNECT_DATA connectData;
     WSMAN_CREATE_SHELL_DATA createData;
 }
-alias WSMAN_SHELL_COMPLETION_FUNCTION = void function(void*, uint, WSMAN_ERROR*, WSMAN_SHELL_HANDLE, WSMAN_COMMAND_HANDLE, WSMAN_OPERATION_HANDLE, WSMAN_RESPONSE_DATA*);
+alias WSMAN_SHELL_COMPLETION_FUNCTION = void function(void* operationContext, uint flags, WSMAN_ERROR* error, WSMAN_SHELL_HANDLE shell, WSMAN_COMMAND_HANDLE command, WSMAN_OPERATION_HANDLE operationHandle, WSMAN_RESPONSE_DATA* data);
 struct WSMAN_SHELL_ASYNC
 {
     void* operationContext;
@@ -871,16 +871,16 @@ struct WSMAN_PLUGIN_REQUEST
     HANDLE shutdownNotificationHandle;
     const(wchar)* dataLocale;
 }
-alias WSMAN_PLUGIN_RELEASE_SHELL_CONTEXT = void function(void*);
-alias WSMAN_PLUGIN_RELEASE_COMMAND_CONTEXT = void function(void*, void*);
-alias WSMAN_PLUGIN_STARTUP = uint function(uint, const(wchar)*, const(wchar)*, void**);
-alias WSMAN_PLUGIN_SHUTDOWN = uint function(void*, uint, uint);
-alias WSMAN_PLUGIN_SHELL = void function(void*, WSMAN_PLUGIN_REQUEST*, uint, WSMAN_SHELL_STARTUP_INFO_V11*, WSMAN_DATA*);
-alias WSMAN_PLUGIN_COMMAND = void function(WSMAN_PLUGIN_REQUEST*, uint, void*, const(wchar)*, WSMAN_COMMAND_ARG_SET*);
-alias WSMAN_PLUGIN_SEND = void function(WSMAN_PLUGIN_REQUEST*, uint, void*, void*, const(wchar)*, WSMAN_DATA*);
-alias WSMAN_PLUGIN_RECEIVE = void function(WSMAN_PLUGIN_REQUEST*, uint, void*, void*, WSMAN_STREAM_ID_SET*);
-alias WSMAN_PLUGIN_SIGNAL = void function(WSMAN_PLUGIN_REQUEST*, uint, void*, void*, const(wchar)*);
-alias WSMAN_PLUGIN_CONNECT = void function(WSMAN_PLUGIN_REQUEST*, uint, void*, void*, WSMAN_DATA*);
+alias WSMAN_PLUGIN_RELEASE_SHELL_CONTEXT = void function(void* shellContext);
+alias WSMAN_PLUGIN_RELEASE_COMMAND_CONTEXT = void function(void* shellContext, void* commandContext);
+alias WSMAN_PLUGIN_STARTUP = uint function(uint flags, const(wchar)* applicationIdentification, const(wchar)* extraInfo, void** pluginContext);
+alias WSMAN_PLUGIN_SHUTDOWN = uint function(void* pluginContext, uint flags, uint reason);
+alias WSMAN_PLUGIN_SHELL = void function(void* pluginContext, WSMAN_PLUGIN_REQUEST* requestDetails, uint flags, WSMAN_SHELL_STARTUP_INFO_V11* startupInfo, WSMAN_DATA* inboundShellInformation);
+alias WSMAN_PLUGIN_COMMAND = void function(WSMAN_PLUGIN_REQUEST* requestDetails, uint flags, void* shellContext, const(wchar)* commandLine, WSMAN_COMMAND_ARG_SET* arguments);
+alias WSMAN_PLUGIN_SEND = void function(WSMAN_PLUGIN_REQUEST* requestDetails, uint flags, void* shellContext, void* commandContext, const(wchar)* stream, WSMAN_DATA* inboundData);
+alias WSMAN_PLUGIN_RECEIVE = void function(WSMAN_PLUGIN_REQUEST* requestDetails, uint flags, void* shellContext, void* commandContext, WSMAN_STREAM_ID_SET* streamSet);
+alias WSMAN_PLUGIN_SIGNAL = void function(WSMAN_PLUGIN_REQUEST* requestDetails, uint flags, void* shellContext, void* commandContext, const(wchar)* code);
+alias WSMAN_PLUGIN_CONNECT = void function(WSMAN_PLUGIN_REQUEST* requestDetails, uint flags, void* shellContext, void* commandContext, WSMAN_DATA* inboundConnectInformation);
 struct WSMAN_AUTHZ_QUOTA
 {
     uint maxAllowedConcurrentShells;
@@ -888,10 +888,10 @@ struct WSMAN_AUTHZ_QUOTA
     uint timeslotSize;
     uint maxAllowedOperationsPerTimeslot;
 }
-alias WSMAN_PLUGIN_AUTHORIZE_USER = void function(void*, WSMAN_SENDER_DETAILS*, uint);
-alias WSMAN_PLUGIN_AUTHORIZE_OPERATION = void function(void*, WSMAN_SENDER_DETAILS*, uint, uint, const(wchar)*, const(wchar)*);
-alias WSMAN_PLUGIN_AUTHORIZE_QUERY_QUOTA = void function(void*, WSMAN_SENDER_DETAILS*, uint);
-alias WSMAN_PLUGIN_AUTHORIZE_RELEASE_CONTEXT = void function(void*);
+alias WSMAN_PLUGIN_AUTHORIZE_USER = void function(void* pluginContext, WSMAN_SENDER_DETAILS* senderDetails, uint flags);
+alias WSMAN_PLUGIN_AUTHORIZE_OPERATION = void function(void* pluginContext, WSMAN_SENDER_DETAILS* senderDetails, uint flags, uint operation, const(wchar)* action, const(wchar)* resourceUri);
+alias WSMAN_PLUGIN_AUTHORIZE_QUERY_QUOTA = void function(void* pluginContext, WSMAN_SENDER_DETAILS* senderDetails, uint flags);
+alias WSMAN_PLUGIN_AUTHORIZE_RELEASE_CONTEXT = void function(void* userAuthorizationContext);
 alias WSManSessionFlags = int;
 enum : int
 {
@@ -948,115 +948,115 @@ enum : int
 enum IID_IWSMan = GUID(0x190d8637, 0x5cd3, 0x496d, [0xad, 0x24, 0x69, 0x63, 0x6b, 0xb5, 0xa3, 0xb5]);
 interface IWSMan : IDispatch
 {
-    HRESULT CreateSession(BSTR, int, IDispatch, IDispatch*);
-    HRESULT CreateConnectionOptions(IDispatch*);
-    HRESULT get_CommandLine(BSTR*);
-    HRESULT get_Error(BSTR*);
+    HRESULT CreateSession(BSTR connection, int flags, IDispatch connectionOptions, IDispatch* session);
+    HRESULT CreateConnectionOptions(IDispatch* connectionOptions);
+    HRESULT get_CommandLine(BSTR* value);
+    HRESULT get_Error(BSTR* value);
 }
 enum IID_IWSManEx = GUID(0x2d53bdaa, 0x798e, 0x49e6, [0xa1, 0xaa, 0x74, 0xd0, 0x12, 0x56, 0xf4, 0x11]);
 interface IWSManEx : IWSMan
 {
-    HRESULT CreateResourceLocator(BSTR, IDispatch*);
-    HRESULT SessionFlagUTF8(int*);
-    HRESULT SessionFlagCredUsernamePassword(int*);
-    HRESULT SessionFlagSkipCACheck(int*);
-    HRESULT SessionFlagSkipCNCheck(int*);
-    HRESULT SessionFlagUseDigest(int*);
-    HRESULT SessionFlagUseNegotiate(int*);
-    HRESULT SessionFlagUseBasic(int*);
-    HRESULT SessionFlagUseKerberos(int*);
-    HRESULT SessionFlagNoEncryption(int*);
-    HRESULT SessionFlagEnableSPNServerPort(int*);
-    HRESULT SessionFlagUseNoAuthentication(int*);
-    HRESULT EnumerationFlagNonXmlText(int*);
-    HRESULT EnumerationFlagReturnEPR(int*);
-    HRESULT EnumerationFlagReturnObjectAndEPR(int*);
-    HRESULT GetErrorMessage(uint, BSTR*);
-    HRESULT EnumerationFlagHierarchyDeep(int*);
-    HRESULT EnumerationFlagHierarchyShallow(int*);
-    HRESULT EnumerationFlagHierarchyDeepBasePropsOnly(int*);
-    HRESULT EnumerationFlagReturnObject(int*);
+    HRESULT CreateResourceLocator(BSTR strResourceLocator, IDispatch* newResourceLocator);
+    HRESULT SessionFlagUTF8(int* flags);
+    HRESULT SessionFlagCredUsernamePassword(int* flags);
+    HRESULT SessionFlagSkipCACheck(int* flags);
+    HRESULT SessionFlagSkipCNCheck(int* flags);
+    HRESULT SessionFlagUseDigest(int* flags);
+    HRESULT SessionFlagUseNegotiate(int* flags);
+    HRESULT SessionFlagUseBasic(int* flags);
+    HRESULT SessionFlagUseKerberos(int* flags);
+    HRESULT SessionFlagNoEncryption(int* flags);
+    HRESULT SessionFlagEnableSPNServerPort(int* flags);
+    HRESULT SessionFlagUseNoAuthentication(int* flags);
+    HRESULT EnumerationFlagNonXmlText(int* flags);
+    HRESULT EnumerationFlagReturnEPR(int* flags);
+    HRESULT EnumerationFlagReturnObjectAndEPR(int* flags);
+    HRESULT GetErrorMessage(uint errorNumber, BSTR* errorMessage);
+    HRESULT EnumerationFlagHierarchyDeep(int* flags);
+    HRESULT EnumerationFlagHierarchyShallow(int* flags);
+    HRESULT EnumerationFlagHierarchyDeepBasePropsOnly(int* flags);
+    HRESULT EnumerationFlagReturnObject(int* flags);
 }
 enum IID_IWSManEx2 = GUID(0x1d1b5ae0, 0x42d9, 0x4021, [0x82, 0x61, 0x39, 0x87, 0x61, 0x95, 0x12, 0xe9]);
 interface IWSManEx2 : IWSManEx
 {
-    HRESULT SessionFlagUseClientCertificate(int*);
+    HRESULT SessionFlagUseClientCertificate(int* flags);
 }
 enum IID_IWSManEx3 = GUID(0x6400e966, 0x11d, 0x4eac, [0x84, 0x74, 0x4, 0x9e, 0x8, 0x48, 0xaf, 0xad]);
 interface IWSManEx3 : IWSManEx2
 {
-    HRESULT SessionFlagUTF16(int*);
-    HRESULT SessionFlagUseCredSsp(int*);
-    HRESULT EnumerationFlagAssociationInstance(int*);
-    HRESULT EnumerationFlagAssociatedInstance(int*);
-    HRESULT SessionFlagSkipRevocationCheck(int*);
-    HRESULT SessionFlagAllowNegotiateImplicitCredentials(int*);
-    HRESULT SessionFlagUseSsl(int*);
+    HRESULT SessionFlagUTF16(int* flags);
+    HRESULT SessionFlagUseCredSsp(int* flags);
+    HRESULT EnumerationFlagAssociationInstance(int* flags);
+    HRESULT EnumerationFlagAssociatedInstance(int* flags);
+    HRESULT SessionFlagSkipRevocationCheck(int* flags);
+    HRESULT SessionFlagAllowNegotiateImplicitCredentials(int* flags);
+    HRESULT SessionFlagUseSsl(int* flags);
 }
 enum IID_IWSManConnectionOptions = GUID(0xf704e861, 0x9e52, 0x464f, [0xb7, 0x86, 0xda, 0x5e, 0xb2, 0x32, 0xf, 0xdd]);
 interface IWSManConnectionOptions : IDispatch
 {
-    HRESULT get_UserName(BSTR*);
-    HRESULT put_UserName(BSTR);
-    HRESULT put_Password(BSTR);
+    HRESULT get_UserName(BSTR* name);
+    HRESULT put_UserName(BSTR name);
+    HRESULT put_Password(BSTR password);
 }
 enum IID_IWSManConnectionOptionsEx = GUID(0xef43edf7, 0x2a48, 0x4d93, [0x95, 0x26, 0x8b, 0xd6, 0xab, 0x6d, 0x4a, 0x6b]);
 interface IWSManConnectionOptionsEx : IWSManConnectionOptions
 {
-    HRESULT get_CertificateThumbprint(BSTR*);
-    HRESULT put_CertificateThumbprint(BSTR);
+    HRESULT get_CertificateThumbprint(BSTR* thumbprint);
+    HRESULT put_CertificateThumbprint(BSTR thumbprint);
 }
 enum IID_IWSManConnectionOptionsEx2 = GUID(0xf500c9ec, 0x24ee, 0x48ab, [0xb3, 0x8d, 0xfc, 0x9a, 0x16, 0x4c, 0x65, 0x8e]);
 interface IWSManConnectionOptionsEx2 : IWSManConnectionOptionsEx
 {
-    HRESULT SetProxy(int, int, BSTR, BSTR);
-    HRESULT ProxyIEConfig(int*);
-    HRESULT ProxyWinHttpConfig(int*);
-    HRESULT ProxyAutoDetect(int*);
-    HRESULT ProxyNoProxyServer(int*);
-    HRESULT ProxyAuthenticationUseNegotiate(int*);
-    HRESULT ProxyAuthenticationUseBasic(int*);
-    HRESULT ProxyAuthenticationUseDigest(int*);
+    HRESULT SetProxy(int accessType, int authenticationMechanism, BSTR userName, BSTR password);
+    HRESULT ProxyIEConfig(int* value);
+    HRESULT ProxyWinHttpConfig(int* value);
+    HRESULT ProxyAutoDetect(int* value);
+    HRESULT ProxyNoProxyServer(int* value);
+    HRESULT ProxyAuthenticationUseNegotiate(int* value);
+    HRESULT ProxyAuthenticationUseBasic(int* value);
+    HRESULT ProxyAuthenticationUseDigest(int* value);
 }
 enum IID_IWSManSession = GUID(0xfc84fc58, 0x1286, 0x40c4, [0x9d, 0xa0, 0xc8, 0xef, 0x6e, 0xc2, 0x41, 0xe0]);
 interface IWSManSession : IDispatch
 {
-    HRESULT Get(VARIANT, int, BSTR*);
-    HRESULT Put(VARIANT, BSTR, int, BSTR*);
-    HRESULT Create(VARIANT, BSTR, int, BSTR*);
-    HRESULT Delete(VARIANT, int);
-    HRESULT Invoke(BSTR, VARIANT, BSTR, int, BSTR*);
-    HRESULT Enumerate(VARIANT, BSTR, BSTR, int, IDispatch*);
-    HRESULT Identify(int, BSTR*);
-    HRESULT get_Error(BSTR*);
-    HRESULT get_BatchItems(int*);
-    HRESULT put_BatchItems(int);
-    HRESULT get_Timeout(int*);
-    HRESULT put_Timeout(int);
+    HRESULT Get(VARIANT resourceUri, int flags, BSTR* resource);
+    HRESULT Put(VARIANT resourceUri, BSTR resource, int flags, BSTR* resultResource);
+    HRESULT Create(VARIANT resourceUri, BSTR resource, int flags, BSTR* newUri);
+    HRESULT Delete(VARIANT resourceUri, int flags);
+    HRESULT Invoke(BSTR actionUri, VARIANT resourceUri, BSTR parameters, int flags, BSTR* result);
+    HRESULT Enumerate(VARIANT resourceUri, BSTR filter, BSTR dialect, int flags, IDispatch* resultSet);
+    HRESULT Identify(int flags, BSTR* result);
+    HRESULT get_Error(BSTR* value);
+    HRESULT get_BatchItems(int* value);
+    HRESULT put_BatchItems(int value);
+    HRESULT get_Timeout(int* value);
+    HRESULT put_Timeout(int value);
 }
 enum IID_IWSManEnumerator = GUID(0xf3457ca9, 0xabb9, 0x4fa5, [0xb8, 0x50, 0x90, 0xe8, 0xca, 0x30, 0xe, 0x7f]);
 interface IWSManEnumerator : IDispatch
 {
-    HRESULT ReadItem(BSTR*);
-    HRESULT get_AtEndOfStream(VARIANT_BOOL*);
-    HRESULT get_Error(BSTR*);
+    HRESULT ReadItem(BSTR* resource);
+    HRESULT get_AtEndOfStream(VARIANT_BOOL* eos);
+    HRESULT get_Error(BSTR* value);
 }
 enum IID_IWSManResourceLocator = GUID(0xa7a1ba28, 0xde41, 0x466a, [0xad, 0xa, 0xc4, 0x5, 0x9e, 0xad, 0x74, 0x28]);
 interface IWSManResourceLocator : IDispatch
 {
-    HRESULT put_ResourceURI(BSTR);
-    HRESULT get_ResourceURI(BSTR*);
-    HRESULT AddSelector(BSTR, VARIANT);
+    HRESULT put_ResourceURI(BSTR uri);
+    HRESULT get_ResourceURI(BSTR* uri);
+    HRESULT AddSelector(BSTR resourceSelName, VARIANT selValue);
     HRESULT ClearSelectors();
-    HRESULT get_FragmentPath(BSTR*);
-    HRESULT put_FragmentPath(BSTR);
-    HRESULT get_FragmentDialect(BSTR*);
-    HRESULT put_FragmentDialect(BSTR);
-    HRESULT AddOption(BSTR, VARIANT, BOOL);
-    HRESULT put_MustUnderstandOptions(BOOL);
-    HRESULT get_MustUnderstandOptions(BOOL*);
+    HRESULT get_FragmentPath(BSTR* text);
+    HRESULT put_FragmentPath(BSTR text);
+    HRESULT get_FragmentDialect(BSTR* text);
+    HRESULT put_FragmentDialect(BSTR text);
+    HRESULT AddOption(BSTR OptionName, VARIANT OptionValue, BOOL mustComply);
+    HRESULT put_MustUnderstandOptions(BOOL mustUnderstand);
+    HRESULT get_MustUnderstandOptions(BOOL* mustUnderstand);
     HRESULT ClearOptions();
-    HRESULT get_Error(BSTR*);
+    HRESULT get_Error(BSTR* value);
 }
 enum IID_IWSManResourceLocatorInternal = GUID(0xeffaead7, 0x7ec8, 0x4716, [0xb9, 0xbe, 0xf2, 0xe7, 0xe9, 0xfb, 0x4a, 0xdb]);
 interface IWSManResourceLocatorInternal : IUnknown
@@ -1069,7 +1069,7 @@ struct WSMan
 enum IID_IWSManInternal = GUID(0x4ae2b1d, 0x9954, 0x4d99, [0x94, 0xa9, 0xa9, 0x61, 0xe7, 0x2c, 0x3a, 0x13]);
 interface IWSManInternal : IDispatch
 {
-    HRESULT ConfigSDDL(IDispatch, VARIANT, int, BSTR*);
+    HRESULT ConfigSDDL(IDispatch session, VARIANT resourceUri, int flags, BSTR* resource);
 }
 enum CLSID_WSManInternal = GUID(0x7de087a5, 0x5dcb, 0x4df7, [0xbb, 0x12, 0x9, 0x24, 0xad, 0x8f, 0xbd, 0x9a]);
 struct WSManInternal

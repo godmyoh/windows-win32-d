@@ -604,47 +604,47 @@ enum : int
 enum IID_IXMLDOMImplementation = GUID(0x2933bf8f, 0x7b36, 0x11d2, [0xb2, 0xe, 0x0, 0xc0, 0x4f, 0x98, 0x3e, 0x60]);
 interface IXMLDOMImplementation : IDispatch
 {
-    HRESULT hasFeature(BSTR, BSTR, VARIANT_BOOL*);
+    HRESULT hasFeature(BSTR feature, BSTR version_, VARIANT_BOOL* hasFeature);
 }
 enum IID_IXMLDOMNode = GUID(0x2933bf80, 0x7b36, 0x11d2, [0xb2, 0xe, 0x0, 0xc0, 0x4f, 0x98, 0x3e, 0x60]);
 interface IXMLDOMNode : IDispatch
 {
-    HRESULT get_nodeName(BSTR*);
-    HRESULT get_nodeValue(VARIANT*);
-    HRESULT put_nodeValue(VARIANT);
-    HRESULT get_nodeType(DOMNodeType*);
-    HRESULT get_parentNode(IXMLDOMNode*);
-    HRESULT get_childNodes(IXMLDOMNodeList*);
-    HRESULT get_firstChild(IXMLDOMNode*);
-    HRESULT get_lastChild(IXMLDOMNode*);
-    HRESULT get_previousSibling(IXMLDOMNode*);
-    HRESULT get_nextSibling(IXMLDOMNode*);
-    HRESULT get_attributes(IXMLDOMNamedNodeMap*);
-    HRESULT insertBefore(IXMLDOMNode, VARIANT, IXMLDOMNode*);
-    HRESULT replaceChild(IXMLDOMNode, IXMLDOMNode, IXMLDOMNode*);
-    HRESULT removeChild(IXMLDOMNode, IXMLDOMNode*);
-    HRESULT appendChild(IXMLDOMNode, IXMLDOMNode*);
-    HRESULT hasChildNodes(VARIANT_BOOL*);
-    HRESULT get_ownerDocument(IXMLDOMDocument*);
-    HRESULT cloneNode(VARIANT_BOOL, IXMLDOMNode*);
-    HRESULT get_nodeTypeString(BSTR*);
-    HRESULT get_text(BSTR*);
-    HRESULT put_text(BSTR);
-    HRESULT get_specified(VARIANT_BOOL*);
-    HRESULT get_definition(IXMLDOMNode*);
-    HRESULT get_nodeTypedValue(VARIANT*);
-    HRESULT put_nodeTypedValue(VARIANT);
-    HRESULT get_dataType(VARIANT*);
-    HRESULT put_dataType(BSTR);
-    HRESULT get_xml(BSTR*);
-    HRESULT transformNode(IXMLDOMNode, BSTR*);
-    HRESULT selectNodes(BSTR, IXMLDOMNodeList*);
-    HRESULT selectSingleNode(BSTR, IXMLDOMNode*);
-    HRESULT get_parsed(VARIANT_BOOL*);
-    HRESULT get_namespaceURI(BSTR*);
-    HRESULT get_prefix(BSTR*);
-    HRESULT get_baseName(BSTR*);
-    HRESULT transformNodeToObject(IXMLDOMNode, VARIANT);
+    HRESULT get_nodeName(BSTR* name);
+    HRESULT get_nodeValue(VARIANT* value);
+    HRESULT put_nodeValue(VARIANT value);
+    HRESULT get_nodeType(DOMNodeType* type);
+    HRESULT get_parentNode(IXMLDOMNode* parent);
+    HRESULT get_childNodes(IXMLDOMNodeList* childList);
+    HRESULT get_firstChild(IXMLDOMNode* firstChild);
+    HRESULT get_lastChild(IXMLDOMNode* lastChild);
+    HRESULT get_previousSibling(IXMLDOMNode* previousSibling);
+    HRESULT get_nextSibling(IXMLDOMNode* nextSibling);
+    HRESULT get_attributes(IXMLDOMNamedNodeMap* attributeMap);
+    HRESULT insertBefore(IXMLDOMNode newChild, VARIANT refChild, IXMLDOMNode* outNewChild);
+    HRESULT replaceChild(IXMLDOMNode newChild, IXMLDOMNode oldChild, IXMLDOMNode* outOldChild);
+    HRESULT removeChild(IXMLDOMNode childNode, IXMLDOMNode* oldChild);
+    HRESULT appendChild(IXMLDOMNode newChild, IXMLDOMNode* outNewChild);
+    HRESULT hasChildNodes(VARIANT_BOOL* hasChild);
+    HRESULT get_ownerDocument(IXMLDOMDocument* XMLDOMDocument);
+    HRESULT cloneNode(VARIANT_BOOL deep, IXMLDOMNode* cloneRoot);
+    HRESULT get_nodeTypeString(BSTR* nodeType);
+    HRESULT get_text(BSTR* text);
+    HRESULT put_text(BSTR text);
+    HRESULT get_specified(VARIANT_BOOL* isSpecified);
+    HRESULT get_definition(IXMLDOMNode* definitionNode);
+    HRESULT get_nodeTypedValue(VARIANT* typedValue);
+    HRESULT put_nodeTypedValue(VARIANT typedValue);
+    HRESULT get_dataType(VARIANT* dataTypeName);
+    HRESULT put_dataType(BSTR dataTypeName);
+    HRESULT get_xml(BSTR* xmlString);
+    HRESULT transformNode(IXMLDOMNode stylesheet, BSTR* xmlString);
+    HRESULT selectNodes(BSTR queryString, IXMLDOMNodeList* resultList);
+    HRESULT selectSingleNode(BSTR queryString, IXMLDOMNode* resultNode);
+    HRESULT get_parsed(VARIANT_BOOL* isParsed);
+    HRESULT get_namespaceURI(BSTR* namespaceURI);
+    HRESULT get_prefix(BSTR* prefixString);
+    HRESULT get_baseName(BSTR* nameString);
+    HRESULT transformNodeToObject(IXMLDOMNode stylesheet, VARIANT outputObject);
 }
 enum IID_IXMLDOMDocumentFragment = GUID(0x3efaa413, 0x272f, 0x11d2, [0x83, 0x6f, 0x0, 0x0, 0xf8, 0x7a, 0x77, 0x82]);
 interface IXMLDOMDocumentFragment : IXMLDOMNode
@@ -653,99 +653,99 @@ interface IXMLDOMDocumentFragment : IXMLDOMNode
 enum IID_IXMLDOMDocument = GUID(0x2933bf81, 0x7b36, 0x11d2, [0xb2, 0xe, 0x0, 0xc0, 0x4f, 0x98, 0x3e, 0x60]);
 interface IXMLDOMDocument : IXMLDOMNode
 {
-    HRESULT get_doctype(IXMLDOMDocumentType*);
-    HRESULT get_implementation(IXMLDOMImplementation*);
-    HRESULT get_documentElement(IXMLDOMElement*);
-    HRESULT putref_documentElement(IXMLDOMElement);
-    HRESULT createElement(BSTR, IXMLDOMElement*);
-    HRESULT createDocumentFragment(IXMLDOMDocumentFragment*);
-    HRESULT createTextNode(BSTR, IXMLDOMText*);
-    HRESULT createComment(BSTR, IXMLDOMComment*);
-    HRESULT createCDATASection(BSTR, IXMLDOMCDATASection*);
-    HRESULT createProcessingInstruction(BSTR, BSTR, IXMLDOMProcessingInstruction*);
-    HRESULT createAttribute(BSTR, IXMLDOMAttribute*);
-    HRESULT createEntityReference(BSTR, IXMLDOMEntityReference*);
-    HRESULT getElementsByTagName(BSTR, IXMLDOMNodeList*);
-    HRESULT createNode(VARIANT, BSTR, BSTR, IXMLDOMNode*);
-    HRESULT nodeFromID(BSTR, IXMLDOMNode*);
-    HRESULT load(VARIANT, VARIANT_BOOL*);
-    HRESULT get_readyState(int*);
-    HRESULT get_parseError(IXMLDOMParseError*);
-    HRESULT get_url(BSTR*);
-    HRESULT get_async(VARIANT_BOOL*);
-    HRESULT put_async(VARIANT_BOOL);
+    HRESULT get_doctype(IXMLDOMDocumentType* documentType);
+    HRESULT get_implementation(IXMLDOMImplementation* impl);
+    HRESULT get_documentElement(IXMLDOMElement* DOMElement);
+    HRESULT putref_documentElement(IXMLDOMElement DOMElement);
+    HRESULT createElement(BSTR tagName, IXMLDOMElement* element);
+    HRESULT createDocumentFragment(IXMLDOMDocumentFragment* docFrag);
+    HRESULT createTextNode(BSTR data, IXMLDOMText* text);
+    HRESULT createComment(BSTR data, IXMLDOMComment* comment);
+    HRESULT createCDATASection(BSTR data, IXMLDOMCDATASection* cdata);
+    HRESULT createProcessingInstruction(BSTR target, BSTR data, IXMLDOMProcessingInstruction* pi);
+    HRESULT createAttribute(BSTR name, IXMLDOMAttribute* attribute);
+    HRESULT createEntityReference(BSTR name, IXMLDOMEntityReference* entityRef);
+    HRESULT getElementsByTagName(BSTR tagName, IXMLDOMNodeList* resultList);
+    HRESULT createNode(VARIANT Type, BSTR name, BSTR namespaceURI, IXMLDOMNode* node);
+    HRESULT nodeFromID(BSTR idString, IXMLDOMNode* node);
+    HRESULT load(VARIANT xmlSource, VARIANT_BOOL* isSuccessful);
+    HRESULT get_readyState(int* value);
+    HRESULT get_parseError(IXMLDOMParseError* errorObj);
+    HRESULT get_url(BSTR* urlString);
+    HRESULT get_async(VARIANT_BOOL* isAsync);
+    HRESULT put_async(VARIANT_BOOL isAsync);
     HRESULT abort();
-    HRESULT loadXML(BSTR, VARIANT_BOOL*);
-    HRESULT save(VARIANT);
-    HRESULT get_validateOnParse(VARIANT_BOOL*);
-    HRESULT put_validateOnParse(VARIANT_BOOL);
-    HRESULT get_resolveExternals(VARIANT_BOOL*);
-    HRESULT put_resolveExternals(VARIANT_BOOL);
-    HRESULT get_preserveWhiteSpace(VARIANT_BOOL*);
-    HRESULT put_preserveWhiteSpace(VARIANT_BOOL);
-    HRESULT put_onreadystatechange(VARIANT);
-    HRESULT put_ondataavailable(VARIANT);
-    HRESULT put_ontransformnode(VARIANT);
+    HRESULT loadXML(BSTR bstrXML, VARIANT_BOOL* isSuccessful);
+    HRESULT save(VARIANT destination);
+    HRESULT get_validateOnParse(VARIANT_BOOL* isValidating);
+    HRESULT put_validateOnParse(VARIANT_BOOL isValidating);
+    HRESULT get_resolveExternals(VARIANT_BOOL* isResolving);
+    HRESULT put_resolveExternals(VARIANT_BOOL isResolving);
+    HRESULT get_preserveWhiteSpace(VARIANT_BOOL* isPreserving);
+    HRESULT put_preserveWhiteSpace(VARIANT_BOOL isPreserving);
+    HRESULT put_onreadystatechange(VARIANT readystatechangeSink);
+    HRESULT put_ondataavailable(VARIANT ondataavailableSink);
+    HRESULT put_ontransformnode(VARIANT ontransformnodeSink);
 }
 enum IID_IXMLDOMNodeList = GUID(0x2933bf82, 0x7b36, 0x11d2, [0xb2, 0xe, 0x0, 0xc0, 0x4f, 0x98, 0x3e, 0x60]);
 interface IXMLDOMNodeList : IDispatch
 {
-    HRESULT get_item(int, IXMLDOMNode*);
-    HRESULT get_length(int*);
-    HRESULT nextNode(IXMLDOMNode*);
+    HRESULT get_item(int index, IXMLDOMNode* listItem);
+    HRESULT get_length(int* listLength);
+    HRESULT nextNode(IXMLDOMNode* nextItem);
     HRESULT reset();
-    HRESULT get__newEnum(IUnknown*);
+    HRESULT get__newEnum(IUnknown* ppUnk);
 }
 enum IID_IXMLDOMNamedNodeMap = GUID(0x2933bf83, 0x7b36, 0x11d2, [0xb2, 0xe, 0x0, 0xc0, 0x4f, 0x98, 0x3e, 0x60]);
 interface IXMLDOMNamedNodeMap : IDispatch
 {
-    HRESULT getNamedItem(BSTR, IXMLDOMNode*);
-    HRESULT setNamedItem(IXMLDOMNode, IXMLDOMNode*);
-    HRESULT removeNamedItem(BSTR, IXMLDOMNode*);
-    HRESULT get_item(int, IXMLDOMNode*);
-    HRESULT get_length(int*);
-    HRESULT getQualifiedItem(BSTR, BSTR, IXMLDOMNode*);
-    HRESULT removeQualifiedItem(BSTR, BSTR, IXMLDOMNode*);
-    HRESULT nextNode(IXMLDOMNode*);
+    HRESULT getNamedItem(BSTR name, IXMLDOMNode* namedItem);
+    HRESULT setNamedItem(IXMLDOMNode newItem, IXMLDOMNode* nameItem);
+    HRESULT removeNamedItem(BSTR name, IXMLDOMNode* namedItem);
+    HRESULT get_item(int index, IXMLDOMNode* listItem);
+    HRESULT get_length(int* listLength);
+    HRESULT getQualifiedItem(BSTR baseName, BSTR namespaceURI, IXMLDOMNode* qualifiedItem);
+    HRESULT removeQualifiedItem(BSTR baseName, BSTR namespaceURI, IXMLDOMNode* qualifiedItem);
+    HRESULT nextNode(IXMLDOMNode* nextItem);
     HRESULT reset();
-    HRESULT get__newEnum(IUnknown*);
+    HRESULT get__newEnum(IUnknown* ppUnk);
 }
 enum IID_IXMLDOMCharacterData = GUID(0x2933bf84, 0x7b36, 0x11d2, [0xb2, 0xe, 0x0, 0xc0, 0x4f, 0x98, 0x3e, 0x60]);
 interface IXMLDOMCharacterData : IXMLDOMNode
 {
-    HRESULT get_data(BSTR*);
-    HRESULT put_data(BSTR);
-    HRESULT get_length(int*);
-    HRESULT substringData(int, int, BSTR*);
-    HRESULT appendData(BSTR);
-    HRESULT insertData(int, BSTR);
-    HRESULT deleteData(int, int);
-    HRESULT replaceData(int, int, BSTR);
+    HRESULT get_data(BSTR* data);
+    HRESULT put_data(BSTR data);
+    HRESULT get_length(int* dataLength);
+    HRESULT substringData(int offset, int count, BSTR* data);
+    HRESULT appendData(BSTR data);
+    HRESULT insertData(int offset, BSTR data);
+    HRESULT deleteData(int offset, int count);
+    HRESULT replaceData(int offset, int count, BSTR data);
 }
 enum IID_IXMLDOMAttribute = GUID(0x2933bf85, 0x7b36, 0x11d2, [0xb2, 0xe, 0x0, 0xc0, 0x4f, 0x98, 0x3e, 0x60]);
 interface IXMLDOMAttribute : IXMLDOMNode
 {
-    HRESULT get_name(BSTR*);
-    HRESULT get_value(VARIANT*);
-    HRESULT put_value(VARIANT);
+    HRESULT get_name(BSTR* attributeName);
+    HRESULT get_value(VARIANT* attributeValue);
+    HRESULT put_value(VARIANT attributeValue);
 }
 enum IID_IXMLDOMElement = GUID(0x2933bf86, 0x7b36, 0x11d2, [0xb2, 0xe, 0x0, 0xc0, 0x4f, 0x98, 0x3e, 0x60]);
 interface IXMLDOMElement : IXMLDOMNode
 {
-    HRESULT get_tagName(BSTR*);
-    HRESULT getAttribute(BSTR, VARIANT*);
-    HRESULT setAttribute(BSTR, VARIANT);
-    HRESULT removeAttribute(BSTR);
-    HRESULT getAttributeNode(BSTR, IXMLDOMAttribute*);
-    HRESULT setAttributeNode(IXMLDOMAttribute, IXMLDOMAttribute*);
-    HRESULT removeAttributeNode(IXMLDOMAttribute, IXMLDOMAttribute*);
-    HRESULT getElementsByTagName(BSTR, IXMLDOMNodeList*);
+    HRESULT get_tagName(BSTR* tagName);
+    HRESULT getAttribute(BSTR name, VARIANT* value);
+    HRESULT setAttribute(BSTR name, VARIANT value);
+    HRESULT removeAttribute(BSTR name);
+    HRESULT getAttributeNode(BSTR name, IXMLDOMAttribute* attributeNode);
+    HRESULT setAttributeNode(IXMLDOMAttribute DOMAttribute, IXMLDOMAttribute* attributeNode);
+    HRESULT removeAttributeNode(IXMLDOMAttribute DOMAttribute, IXMLDOMAttribute* attributeNode);
+    HRESULT getElementsByTagName(BSTR tagName, IXMLDOMNodeList* resultList);
     HRESULT normalize();
 }
 enum IID_IXMLDOMText = GUID(0x2933bf87, 0x7b36, 0x11d2, [0xb2, 0xe, 0x0, 0xc0, 0x4f, 0x98, 0x3e, 0x60]);
 interface IXMLDOMText : IXMLDOMCharacterData
 {
-    HRESULT splitText(int, IXMLDOMText*);
+    HRESULT splitText(int offset, IXMLDOMText* rightHandTextNode);
 }
 enum IID_IXMLDOMComment = GUID(0x2933bf88, 0x7b36, 0x11d2, [0xb2, 0xe, 0x0, 0xc0, 0x4f, 0x98, 0x3e, 0x60]);
 interface IXMLDOMComment : IXMLDOMCharacterData
@@ -754,9 +754,9 @@ interface IXMLDOMComment : IXMLDOMCharacterData
 enum IID_IXMLDOMProcessingInstruction = GUID(0x2933bf89, 0x7b36, 0x11d2, [0xb2, 0xe, 0x0, 0xc0, 0x4f, 0x98, 0x3e, 0x60]);
 interface IXMLDOMProcessingInstruction : IXMLDOMNode
 {
-    HRESULT get_target(BSTR*);
-    HRESULT get_data(BSTR*);
-    HRESULT put_data(BSTR);
+    HRESULT get_target(BSTR* name);
+    HRESULT get_data(BSTR* value);
+    HRESULT put_data(BSTR value);
 }
 enum IID_IXMLDOMCDATASection = GUID(0x2933bf8a, 0x7b36, 0x11d2, [0xb2, 0xe, 0x0, 0xc0, 0x4f, 0x98, 0x3e, 0x60]);
 interface IXMLDOMCDATASection : IXMLDOMText
@@ -765,22 +765,22 @@ interface IXMLDOMCDATASection : IXMLDOMText
 enum IID_IXMLDOMDocumentType = GUID(0x2933bf8b, 0x7b36, 0x11d2, [0xb2, 0xe, 0x0, 0xc0, 0x4f, 0x98, 0x3e, 0x60]);
 interface IXMLDOMDocumentType : IXMLDOMNode
 {
-    HRESULT get_name(BSTR*);
-    HRESULT get_entities(IXMLDOMNamedNodeMap*);
-    HRESULT get_notations(IXMLDOMNamedNodeMap*);
+    HRESULT get_name(BSTR* rootName);
+    HRESULT get_entities(IXMLDOMNamedNodeMap* entityMap);
+    HRESULT get_notations(IXMLDOMNamedNodeMap* notationMap);
 }
 enum IID_IXMLDOMNotation = GUID(0x2933bf8c, 0x7b36, 0x11d2, [0xb2, 0xe, 0x0, 0xc0, 0x4f, 0x98, 0x3e, 0x60]);
 interface IXMLDOMNotation : IXMLDOMNode
 {
-    HRESULT get_publicId(VARIANT*);
-    HRESULT get_systemId(VARIANT*);
+    HRESULT get_publicId(VARIANT* publicID);
+    HRESULT get_systemId(VARIANT* systemID);
 }
 enum IID_IXMLDOMEntity = GUID(0x2933bf8d, 0x7b36, 0x11d2, [0xb2, 0xe, 0x0, 0xc0, 0x4f, 0x98, 0x3e, 0x60]);
 interface IXMLDOMEntity : IXMLDOMNode
 {
-    HRESULT get_publicId(VARIANT*);
-    HRESULT get_systemId(VARIANT*);
-    HRESULT get_notationName(BSTR*);
+    HRESULT get_publicId(VARIANT* publicID);
+    HRESULT get_systemId(VARIANT* systemID);
+    HRESULT get_notationName(BSTR* name);
 }
 enum IID_IXMLDOMEntityReference = GUID(0x2933bf8e, 0x7b36, 0x11d2, [0xb2, 0xe, 0x0, 0xc0, 0x4f, 0x98, 0x3e, 0x60]);
 interface IXMLDOMEntityReference : IXMLDOMNode
@@ -789,26 +789,26 @@ interface IXMLDOMEntityReference : IXMLDOMNode
 enum IID_IXMLDOMParseError = GUID(0x3efaa426, 0x272f, 0x11d2, [0x83, 0x6f, 0x0, 0x0, 0xf8, 0x7a, 0x77, 0x82]);
 interface IXMLDOMParseError : IDispatch
 {
-    HRESULT get_errorCode(int*);
-    HRESULT get_url(BSTR*);
-    HRESULT get_reason(BSTR*);
-    HRESULT get_srcText(BSTR*);
-    HRESULT get_line(int*);
-    HRESULT get_linepos(int*);
-    HRESULT get_filepos(int*);
+    HRESULT get_errorCode(int* errorCode);
+    HRESULT get_url(BSTR* urlString);
+    HRESULT get_reason(BSTR* reasonString);
+    HRESULT get_srcText(BSTR* sourceString);
+    HRESULT get_line(int* lineNumber);
+    HRESULT get_linepos(int* linePosition);
+    HRESULT get_filepos(int* filePosition);
 }
 enum IID_IXTLRuntime = GUID(0x3efaa425, 0x272f, 0x11d2, [0x83, 0x6f, 0x0, 0x0, 0xf8, 0x7a, 0x77, 0x82]);
 interface IXTLRuntime : IXMLDOMNode
 {
-    HRESULT uniqueID(IXMLDOMNode, int*);
-    HRESULT depth(IXMLDOMNode, int*);
-    HRESULT childNumber(IXMLDOMNode, int*);
-    HRESULT ancestorChildNumber(BSTR, IXMLDOMNode, int*);
-    HRESULT absoluteChildNumber(IXMLDOMNode, int*);
-    HRESULT formatIndex(int, BSTR, BSTR*);
-    HRESULT formatNumber(double, BSTR, BSTR*);
-    HRESULT formatDate(VARIANT, BSTR, VARIANT, BSTR*);
-    HRESULT formatTime(VARIANT, BSTR, VARIANT, BSTR*);
+    HRESULT uniqueID(IXMLDOMNode pNode, int* pID);
+    HRESULT depth(IXMLDOMNode pNode, int* pDepth);
+    HRESULT childNumber(IXMLDOMNode pNode, int* pNumber);
+    HRESULT ancestorChildNumber(BSTR bstrNodeName, IXMLDOMNode pNode, int* pNumber);
+    HRESULT absoluteChildNumber(IXMLDOMNode pNode, int* pNumber);
+    HRESULT formatIndex(int lIndex, BSTR bstrFormat, BSTR* pbstrFormattedString);
+    HRESULT formatNumber(double dblNumber, BSTR bstrFormat, BSTR* pbstrFormattedString);
+    HRESULT formatDate(VARIANT varDate, BSTR bstrFormat, VARIANT varDestLocale, BSTR* pbstrFormattedString);
+    HRESULT formatTime(VARIANT varTime, BSTR bstrFormat, VARIANT varDestLocale, BSTR* pbstrFormattedString);
 }
 enum IID_XMLDOMDocumentEvents = GUID(0x3efaa427, 0x272f, 0x11d2, [0x83, 0x6f, 0x0, 0x0, 0xf8, 0x7a, 0x77, 0x82]);
 interface XMLDOMDocumentEvents : IDispatch
@@ -829,11 +829,11 @@ struct XMLHTTPRequest
 enum IID_IXMLDSOControl = GUID(0x310afa62, 0x575, 0x11d2, [0x9c, 0xa9, 0x0, 0x60, 0xb0, 0xec, 0x3d, 0x39]);
 interface IXMLDSOControl : IDispatch
 {
-    HRESULT get_XMLDocument(IXMLDOMDocument*);
-    HRESULT put_XMLDocument(IXMLDOMDocument);
-    HRESULT get_JavaDSOCompatible(BOOL*);
-    HRESULT put_JavaDSOCompatible(BOOL);
-    HRESULT get_readyState(int*);
+    HRESULT get_XMLDocument(IXMLDOMDocument* ppDoc);
+    HRESULT put_XMLDocument(IXMLDOMDocument ppDoc);
+    HRESULT get_JavaDSOCompatible(BOOL* fJavaDSOCompatible);
+    HRESULT put_JavaDSOCompatible(BOOL fJavaDSOCompatible);
+    HRESULT get_readyState(int* state);
 }
 enum CLSID_XMLDSOControl = GUID(0x550dda30, 0x541, 0x11d2, [0x9c, 0xa9, 0x0, 0x60, 0xb0, 0xec, 0x3d, 0x39]);
 struct XMLDSOControl
@@ -842,92 +842,92 @@ struct XMLDSOControl
 enum IID_IXMLElementCollection = GUID(0x65725580, 0x9b5d, 0x11d0, [0x9b, 0xfe, 0x0, 0xc0, 0x4f, 0xc9, 0x9c, 0x8e]);
 interface IXMLElementCollection : IDispatch
 {
-    HRESULT put_length(int);
-    HRESULT get_length(int*);
-    HRESULT get__newEnum(IUnknown*);
-    HRESULT item(VARIANT, VARIANT, IDispatch*);
+    HRESULT put_length(int v);
+    HRESULT get_length(int* p);
+    HRESULT get__newEnum(IUnknown* ppUnk);
+    HRESULT item(VARIANT var1, VARIANT var2, IDispatch* ppDisp);
 }
 enum IID_IXMLDocument = GUID(0xf52e2b61, 0x18a1, 0x11d1, [0xb1, 0x5, 0x0, 0x80, 0x5f, 0x49, 0x91, 0x6b]);
 interface IXMLDocument : IDispatch
 {
-    HRESULT get_root(IXMLElement*);
-    HRESULT get_fileSize(BSTR*);
-    HRESULT get_fileModifiedDate(BSTR*);
-    HRESULT get_fileUpdatedDate(BSTR*);
-    HRESULT get_URL(BSTR*);
-    HRESULT put_URL(BSTR);
-    HRESULT get_mimeType(BSTR*);
-    HRESULT get_readyState(int*);
-    HRESULT get_charset(BSTR*);
-    HRESULT put_charset(BSTR);
-    HRESULT get_version(BSTR*);
-    HRESULT get_doctype(BSTR*);
-    HRESULT get_dtdURL(BSTR*);
-    HRESULT createElement(VARIANT, VARIANT, IXMLElement*);
+    HRESULT get_root(IXMLElement* p);
+    HRESULT get_fileSize(BSTR* p);
+    HRESULT get_fileModifiedDate(BSTR* p);
+    HRESULT get_fileUpdatedDate(BSTR* p);
+    HRESULT get_URL(BSTR* p);
+    HRESULT put_URL(BSTR p);
+    HRESULT get_mimeType(BSTR* p);
+    HRESULT get_readyState(int* pl);
+    HRESULT get_charset(BSTR* p);
+    HRESULT put_charset(BSTR p);
+    HRESULT get_version(BSTR* p);
+    HRESULT get_doctype(BSTR* p);
+    HRESULT get_dtdURL(BSTR* p);
+    HRESULT createElement(VARIANT vType, VARIANT var1, IXMLElement* ppElem);
 }
 enum IID_IXMLDocument2 = GUID(0x2b8de2fe, 0x8d2d, 0x11d1, [0xb2, 0xfc, 0x0, 0xc0, 0x4f, 0xd9, 0x15, 0xa9]);
 interface IXMLDocument2 : IDispatch
 {
-    HRESULT get_root(IXMLElement2*);
-    HRESULT get_fileSize(BSTR*);
-    HRESULT get_fileModifiedDate(BSTR*);
-    HRESULT get_fileUpdatedDate(BSTR*);
-    HRESULT get_URL(BSTR*);
-    HRESULT put_URL(BSTR);
-    HRESULT get_mimeType(BSTR*);
-    HRESULT get_readyState(int*);
-    HRESULT get_charset(BSTR*);
-    HRESULT put_charset(BSTR);
-    HRESULT get_version(BSTR*);
-    HRESULT get_doctype(BSTR*);
-    HRESULT get_dtdURL(BSTR*);
-    HRESULT createElement(VARIANT, VARIANT, IXMLElement2*);
-    HRESULT get_async(VARIANT_BOOL*);
-    HRESULT put_async(VARIANT_BOOL);
+    HRESULT get_root(IXMLElement2* p);
+    HRESULT get_fileSize(BSTR* p);
+    HRESULT get_fileModifiedDate(BSTR* p);
+    HRESULT get_fileUpdatedDate(BSTR* p);
+    HRESULT get_URL(BSTR* p);
+    HRESULT put_URL(BSTR p);
+    HRESULT get_mimeType(BSTR* p);
+    HRESULT get_readyState(int* pl);
+    HRESULT get_charset(BSTR* p);
+    HRESULT put_charset(BSTR p);
+    HRESULT get_version(BSTR* p);
+    HRESULT get_doctype(BSTR* p);
+    HRESULT get_dtdURL(BSTR* p);
+    HRESULT createElement(VARIANT vType, VARIANT var1, IXMLElement2* ppElem);
+    HRESULT get_async(VARIANT_BOOL* pf);
+    HRESULT put_async(VARIANT_BOOL f);
 }
 enum IID_IXMLElement = GUID(0x3f7f31ac, 0xe15f, 0x11d0, [0x9c, 0x25, 0x0, 0xc0, 0x4f, 0xc9, 0x9c, 0x8e]);
 interface IXMLElement : IDispatch
 {
-    HRESULT get_tagName(BSTR*);
-    HRESULT put_tagName(BSTR);
-    HRESULT get_parent(IXMLElement*);
-    HRESULT setAttribute(BSTR, VARIANT);
-    HRESULT getAttribute(BSTR, VARIANT*);
-    HRESULT removeAttribute(BSTR);
-    HRESULT get_children(IXMLElementCollection*);
-    HRESULT get_type(int*);
-    HRESULT get_text(BSTR*);
-    HRESULT put_text(BSTR);
-    HRESULT addChild(IXMLElement, int, int);
-    HRESULT removeChild(IXMLElement);
+    HRESULT get_tagName(BSTR* p);
+    HRESULT put_tagName(BSTR p);
+    HRESULT get_parent(IXMLElement* ppParent);
+    HRESULT setAttribute(BSTR strPropertyName, VARIANT PropertyValue);
+    HRESULT getAttribute(BSTR strPropertyName, VARIANT* PropertyValue);
+    HRESULT removeAttribute(BSTR strPropertyName);
+    HRESULT get_children(IXMLElementCollection* pp);
+    HRESULT get_type(int* plType);
+    HRESULT get_text(BSTR* p);
+    HRESULT put_text(BSTR p);
+    HRESULT addChild(IXMLElement pChildElem, int lIndex, int lReserved);
+    HRESULT removeChild(IXMLElement pChildElem);
 }
 enum IID_IXMLElement2 = GUID(0x2b8de2ff, 0x8d2d, 0x11d1, [0xb2, 0xfc, 0x0, 0xc0, 0x4f, 0xd9, 0x15, 0xa9]);
 interface IXMLElement2 : IDispatch
 {
-    HRESULT get_tagName(BSTR*);
-    HRESULT put_tagName(BSTR);
-    HRESULT get_parent(IXMLElement2*);
-    HRESULT setAttribute(BSTR, VARIANT);
-    HRESULT getAttribute(BSTR, VARIANT*);
-    HRESULT removeAttribute(BSTR);
-    HRESULT get_children(IXMLElementCollection*);
-    HRESULT get_type(int*);
-    HRESULT get_text(BSTR*);
-    HRESULT put_text(BSTR);
-    HRESULT addChild(IXMLElement2, int, int);
-    HRESULT removeChild(IXMLElement2);
-    HRESULT get_attributes(IXMLElementCollection*);
+    HRESULT get_tagName(BSTR* p);
+    HRESULT put_tagName(BSTR p);
+    HRESULT get_parent(IXMLElement2* ppParent);
+    HRESULT setAttribute(BSTR strPropertyName, VARIANT PropertyValue);
+    HRESULT getAttribute(BSTR strPropertyName, VARIANT* PropertyValue);
+    HRESULT removeAttribute(BSTR strPropertyName);
+    HRESULT get_children(IXMLElementCollection* pp);
+    HRESULT get_type(int* plType);
+    HRESULT get_text(BSTR* p);
+    HRESULT put_text(BSTR p);
+    HRESULT addChild(IXMLElement2 pChildElem, int lIndex, int lReserved);
+    HRESULT removeChild(IXMLElement2 pChildElem);
+    HRESULT get_attributes(IXMLElementCollection* pp);
 }
 enum IID_IXMLAttribute = GUID(0xd4d4a0fc, 0x3b73, 0x11d1, [0xb2, 0xb4, 0x0, 0xc0, 0x4f, 0xb9, 0x25, 0x96]);
 interface IXMLAttribute : IDispatch
 {
-    HRESULT get_name(BSTR*);
-    HRESULT get_value(BSTR*);
+    HRESULT get_name(BSTR* n);
+    HRESULT get_value(BSTR* v);
 }
 enum IID_IXMLError = GUID(0x948c5ad3, 0xc58d, 0x11d0, [0x9c, 0xb, 0x0, 0xc0, 0x4f, 0xc9, 0x9c, 0x8e]);
 interface IXMLError : IUnknown
 {
-    HRESULT GetErrorInfo(XML_ERROR*);
+    HRESULT GetErrorInfo(XML_ERROR* pErrorReturn);
 }
 enum CLSID_XMLDocument = GUID(0xcfc399af, 0xd876, 0x11d0, [0x9c, 0x10, 0x0, 0xc0, 0x4f, 0xc9, 0x9c, 0x8e]);
 struct XMLDocument
@@ -936,104 +936,104 @@ struct XMLDocument
 enum IID_IXMLDOMDocument2 = GUID(0x2933bf95, 0x7b36, 0x11d2, [0xb2, 0xe, 0x0, 0xc0, 0x4f, 0x98, 0x3e, 0x60]);
 interface IXMLDOMDocument2 : IXMLDOMDocument
 {
-    HRESULT get_namespaces(IXMLDOMSchemaCollection*);
-    HRESULT get_schemas(VARIANT*);
-    HRESULT putref_schemas(VARIANT);
-    HRESULT validate(IXMLDOMParseError*);
-    HRESULT setProperty(BSTR, VARIANT);
-    HRESULT getProperty(BSTR, VARIANT*);
+    HRESULT get_namespaces(IXMLDOMSchemaCollection* namespaceCollection);
+    HRESULT get_schemas(VARIANT* otherCollection);
+    HRESULT putref_schemas(VARIANT otherCollection);
+    HRESULT validate(IXMLDOMParseError* errorObj);
+    HRESULT setProperty(BSTR name, VARIANT value);
+    HRESULT getProperty(BSTR name, VARIANT* value);
 }
 enum IID_IXMLDOMDocument3 = GUID(0x2933bf96, 0x7b36, 0x11d2, [0xb2, 0xe, 0x0, 0xc0, 0x4f, 0x98, 0x3e, 0x60]);
 interface IXMLDOMDocument3 : IXMLDOMDocument2
 {
-    HRESULT validateNode(IXMLDOMNode, IXMLDOMParseError*);
-    HRESULT importNode(IXMLDOMNode, VARIANT_BOOL, IXMLDOMNode*);
+    HRESULT validateNode(IXMLDOMNode node, IXMLDOMParseError* errorObj);
+    HRESULT importNode(IXMLDOMNode node, VARIANT_BOOL deep, IXMLDOMNode* clone);
 }
 enum IID_IXMLDOMSchemaCollection = GUID(0x373984c8, 0xb845, 0x449b, [0x91, 0xe7, 0x45, 0xac, 0x83, 0x3, 0x6a, 0xde]);
 interface IXMLDOMSchemaCollection : IDispatch
 {
-    HRESULT add(BSTR, VARIANT);
-    HRESULT get(BSTR, IXMLDOMNode*);
-    HRESULT remove(BSTR);
-    HRESULT get_length(int*);
-    HRESULT get_namespaceURI(int, BSTR*);
-    HRESULT addCollection(IXMLDOMSchemaCollection);
-    HRESULT get__newEnum(IUnknown*);
+    HRESULT add(BSTR namespaceURI, VARIANT var);
+    HRESULT get(BSTR namespaceURI, IXMLDOMNode* schemaNode);
+    HRESULT remove(BSTR namespaceURI);
+    HRESULT get_length(int* length);
+    HRESULT get_namespaceURI(int index, BSTR* length);
+    HRESULT addCollection(IXMLDOMSchemaCollection otherCollection);
+    HRESULT get__newEnum(IUnknown* ppUnk);
 }
 enum IID_IXMLDOMSelection = GUID(0xaa634fc7, 0x5888, 0x44a7, [0xa2, 0x57, 0x3a, 0x47, 0x15, 0xd, 0x3a, 0xe]);
 interface IXMLDOMSelection : IXMLDOMNodeList
 {
-    HRESULT get_expr(BSTR*);
-    HRESULT put_expr(BSTR);
-    HRESULT get_context(IXMLDOMNode*);
-    HRESULT putref_context(IXMLDOMNode);
-    HRESULT peekNode(IXMLDOMNode*);
-    HRESULT matches(IXMLDOMNode, IXMLDOMNode*);
-    HRESULT removeNext(IXMLDOMNode*);
+    HRESULT get_expr(BSTR* expression);
+    HRESULT put_expr(BSTR expression);
+    HRESULT get_context(IXMLDOMNode* ppNode);
+    HRESULT putref_context(IXMLDOMNode pNode);
+    HRESULT peekNode(IXMLDOMNode* ppNode);
+    HRESULT matches(IXMLDOMNode pNode, IXMLDOMNode* ppNode);
+    HRESULT removeNext(IXMLDOMNode* ppNode);
     HRESULT removeAll();
-    HRESULT clone(IXMLDOMSelection*);
-    HRESULT getProperty(BSTR, VARIANT*);
-    HRESULT setProperty(BSTR, VARIANT);
+    HRESULT clone(IXMLDOMSelection* ppNode);
+    HRESULT getProperty(BSTR name, VARIANT* value);
+    HRESULT setProperty(BSTR name, VARIANT value);
 }
 enum IID_IXMLDOMParseError2 = GUID(0x3efaa428, 0x272f, 0x11d2, [0x83, 0x6f, 0x0, 0x0, 0xf8, 0x7a, 0x77, 0x82]);
 interface IXMLDOMParseError2 : IXMLDOMParseError
 {
-    HRESULT get_errorXPath(BSTR*);
-    HRESULT get_allErrors(IXMLDOMParseErrorCollection*);
-    HRESULT errorParameters(int, BSTR*);
-    HRESULT get_errorParametersCount(int*);
+    HRESULT get_errorXPath(BSTR* xpathexpr);
+    HRESULT get_allErrors(IXMLDOMParseErrorCollection* allErrors);
+    HRESULT errorParameters(int index, BSTR* param1);
+    HRESULT get_errorParametersCount(int* count);
 }
 enum IID_IXMLDOMParseErrorCollection = GUID(0x3efaa429, 0x272f, 0x11d2, [0x83, 0x6f, 0x0, 0x0, 0xf8, 0x7a, 0x77, 0x82]);
 interface IXMLDOMParseErrorCollection : IDispatch
 {
-    HRESULT get_item(int, IXMLDOMParseError2*);
-    HRESULT get_length(int*);
-    HRESULT get_next(IXMLDOMParseError2*);
+    HRESULT get_item(int index, IXMLDOMParseError2* error);
+    HRESULT get_length(int* length);
+    HRESULT get_next(IXMLDOMParseError2* error);
     HRESULT reset();
-    HRESULT get__newEnum(IUnknown*);
+    HRESULT get__newEnum(IUnknown* ppunk);
 }
 enum IID_IXSLProcessor = GUID(0x2933bf92, 0x7b36, 0x11d2, [0xb2, 0xe, 0x0, 0xc0, 0x4f, 0x98, 0x3e, 0x60]);
 interface IXSLProcessor : IDispatch
 {
-    HRESULT put_input(VARIANT);
-    HRESULT get_input(VARIANT*);
-    HRESULT get_ownerTemplate(IXSLTemplate*);
-    HRESULT setStartMode(BSTR, BSTR);
-    HRESULT get_startMode(BSTR*);
-    HRESULT get_startModeURI(BSTR*);
-    HRESULT put_output(VARIANT);
-    HRESULT get_output(VARIANT*);
-    HRESULT transform(VARIANT_BOOL*);
+    HRESULT put_input(VARIANT var);
+    HRESULT get_input(VARIANT* pVar);
+    HRESULT get_ownerTemplate(IXSLTemplate* ppTemplate);
+    HRESULT setStartMode(BSTR mode, BSTR namespaceURI);
+    HRESULT get_startMode(BSTR* mode);
+    HRESULT get_startModeURI(BSTR* namespaceURI);
+    HRESULT put_output(VARIANT output);
+    HRESULT get_output(VARIANT* pOutput);
+    HRESULT transform(VARIANT_BOOL* pDone);
     HRESULT reset();
-    HRESULT get_readyState(int*);
-    HRESULT addParameter(BSTR, VARIANT, BSTR);
-    HRESULT addObject(IDispatch, BSTR);
-    HRESULT get_stylesheet(IXMLDOMNode*);
+    HRESULT get_readyState(int* pReadyState);
+    HRESULT addParameter(BSTR baseName, VARIANT parameter, BSTR namespaceURI);
+    HRESULT addObject(IDispatch obj, BSTR namespaceURI);
+    HRESULT get_stylesheet(IXMLDOMNode* stylesheet);
 }
 enum IID_IXSLTemplate = GUID(0x2933bf93, 0x7b36, 0x11d2, [0xb2, 0xe, 0x0, 0xc0, 0x4f, 0x98, 0x3e, 0x60]);
 interface IXSLTemplate : IDispatch
 {
-    HRESULT putref_stylesheet(IXMLDOMNode);
-    HRESULT get_stylesheet(IXMLDOMNode*);
-    HRESULT createProcessor(IXSLProcessor*);
+    HRESULT putref_stylesheet(IXMLDOMNode stylesheet);
+    HRESULT get_stylesheet(IXMLDOMNode* stylesheet);
+    HRESULT createProcessor(IXSLProcessor* ppProcessor);
 }
 enum IID_IXMLHTTPRequest = GUID(0xed8c108d, 0x4349, 0x11d2, [0x91, 0xa4, 0x0, 0xc0, 0x4f, 0x79, 0x69, 0xe8]);
 interface IXMLHTTPRequest : IDispatch
 {
-    HRESULT open(BSTR, BSTR, VARIANT, VARIANT, VARIANT);
-    HRESULT setRequestHeader(BSTR, BSTR);
-    HRESULT getResponseHeader(BSTR, BSTR*);
-    HRESULT getAllResponseHeaders(BSTR*);
-    HRESULT send(VARIANT);
+    HRESULT open(BSTR bstrMethod, BSTR bstrUrl, VARIANT varAsync, VARIANT bstrUser, VARIANT bstrPassword);
+    HRESULT setRequestHeader(BSTR bstrHeader, BSTR bstrValue);
+    HRESULT getResponseHeader(BSTR bstrHeader, BSTR* pbstrValue);
+    HRESULT getAllResponseHeaders(BSTR* pbstrHeaders);
+    HRESULT send(VARIANT varBody);
     HRESULT abort();
-    HRESULT get_status(int*);
-    HRESULT get_statusText(BSTR*);
-    HRESULT get_responseXML(IDispatch*);
-    HRESULT get_responseText(BSTR*);
-    HRESULT get_responseBody(VARIANT*);
-    HRESULT get_responseStream(VARIANT*);
-    HRESULT get_readyState(int*);
-    HRESULT put_onreadystatechange(IDispatch);
+    HRESULT get_status(int* plStatus);
+    HRESULT get_statusText(BSTR* pbstrStatus);
+    HRESULT get_responseXML(IDispatch* ppBody);
+    HRESULT get_responseText(BSTR* pbstrBody);
+    HRESULT get_responseBody(VARIANT* pvarBody);
+    HRESULT get_responseStream(VARIANT* pvarBody);
+    HRESULT get_readyState(int* plState);
+    HRESULT put_onreadystatechange(IDispatch pReadyStateSink);
 }
 alias SERVERXMLHTTP_OPTION = int;
 enum : int
@@ -1067,261 +1067,261 @@ enum : int
 enum IID_IServerXMLHTTPRequest = GUID(0x2e9196bf, 0x13ba, 0x4dd4, [0x91, 0xca, 0x6c, 0x57, 0x1f, 0x28, 0x14, 0x95]);
 interface IServerXMLHTTPRequest : IXMLHTTPRequest
 {
-    HRESULT setTimeouts(int, int, int, int);
-    HRESULT waitForResponse(VARIANT, VARIANT_BOOL*);
-    HRESULT getOption(SERVERXMLHTTP_OPTION, VARIANT*);
-    HRESULT setOption(SERVERXMLHTTP_OPTION, VARIANT);
+    HRESULT setTimeouts(int resolveTimeout, int connectTimeout, int sendTimeout, int receiveTimeout);
+    HRESULT waitForResponse(VARIANT timeoutInSeconds, VARIANT_BOOL* isSuccessful);
+    HRESULT getOption(SERVERXMLHTTP_OPTION option, VARIANT* value);
+    HRESULT setOption(SERVERXMLHTTP_OPTION option, VARIANT value);
 }
 enum IID_IServerXMLHTTPRequest2 = GUID(0x2e01311b, 0xc322, 0x4b0a, [0xbd, 0x77, 0xb9, 0xc, 0xfd, 0xc8, 0xdc, 0xe7]);
 interface IServerXMLHTTPRequest2 : IServerXMLHTTPRequest
 {
-    HRESULT setProxy(SXH_PROXY_SETTING, VARIANT, VARIANT);
-    HRESULT setProxyCredentials(BSTR, BSTR);
+    HRESULT setProxy(SXH_PROXY_SETTING proxySetting, VARIANT varProxyServer, VARIANT varBypassList);
+    HRESULT setProxyCredentials(BSTR bstrUserName, BSTR bstrPassword);
 }
 enum IID_ISAXXMLReader = GUID(0xa4f96ed0, 0xf829, 0x476e, [0x81, 0xc0, 0xcd, 0xc7, 0xbd, 0x2a, 0x8, 0x2]);
 interface ISAXXMLReader : IUnknown
 {
-    HRESULT getFeature(const(wchar)*, VARIANT_BOOL*);
-    HRESULT putFeature(const(wchar)*, VARIANT_BOOL);
-    HRESULT getProperty(const(wchar)*, VARIANT*);
-    HRESULT putProperty(const(wchar)*, VARIANT);
-    HRESULT getEntityResolver(ISAXEntityResolver*);
-    HRESULT putEntityResolver(ISAXEntityResolver);
-    HRESULT getContentHandler(ISAXContentHandler*);
-    HRESULT putContentHandler(ISAXContentHandler);
-    HRESULT getDTDHandler(ISAXDTDHandler*);
-    HRESULT putDTDHandler(ISAXDTDHandler);
-    HRESULT getErrorHandler(ISAXErrorHandler*);
-    HRESULT putErrorHandler(ISAXErrorHandler);
-    HRESULT getBaseURL(const(ushort)**);
-    HRESULT putBaseURL(const(wchar)*);
-    HRESULT getSecureBaseURL(const(ushort)**);
-    HRESULT putSecureBaseURL(const(wchar)*);
-    HRESULT parse(VARIANT);
-    HRESULT parseURL(const(wchar)*);
+    HRESULT getFeature(const(wchar)* pwchName, VARIANT_BOOL* pvfValue);
+    HRESULT putFeature(const(wchar)* pwchName, VARIANT_BOOL vfValue);
+    HRESULT getProperty(const(wchar)* pwchName, VARIANT* pvarValue);
+    HRESULT putProperty(const(wchar)* pwchName, VARIANT varValue);
+    HRESULT getEntityResolver(ISAXEntityResolver* ppResolver);
+    HRESULT putEntityResolver(ISAXEntityResolver pResolver);
+    HRESULT getContentHandler(ISAXContentHandler* ppHandler);
+    HRESULT putContentHandler(ISAXContentHandler pHandler);
+    HRESULT getDTDHandler(ISAXDTDHandler* ppHandler);
+    HRESULT putDTDHandler(ISAXDTDHandler pHandler);
+    HRESULT getErrorHandler(ISAXErrorHandler* ppHandler);
+    HRESULT putErrorHandler(ISAXErrorHandler pHandler);
+    HRESULT getBaseURL(const(ushort)** ppwchBaseUrl);
+    HRESULT putBaseURL(const(wchar)* pwchBaseUrl);
+    HRESULT getSecureBaseURL(const(ushort)** ppwchSecureBaseUrl);
+    HRESULT putSecureBaseURL(const(wchar)* pwchSecureBaseUrl);
+    HRESULT parse(VARIANT varInput);
+    HRESULT parseURL(const(wchar)* pwchUrl);
 }
 enum IID_ISAXXMLFilter = GUID(0x70409222, 0xca09, 0x4475, [0xac, 0xb8, 0x40, 0x31, 0x2f, 0xe8, 0xd1, 0x45]);
 interface ISAXXMLFilter : ISAXXMLReader
 {
-    HRESULT getParent(ISAXXMLReader*);
-    HRESULT putParent(ISAXXMLReader);
+    HRESULT getParent(ISAXXMLReader* ppReader);
+    HRESULT putParent(ISAXXMLReader pReader);
 }
 enum IID_ISAXLocator = GUID(0x9b7e472a, 0xde4, 0x4640, [0xbf, 0xf3, 0x84, 0xd3, 0x8a, 0x5, 0x1c, 0x31]);
 interface ISAXLocator : IUnknown
 {
-    HRESULT getColumnNumber(int*);
-    HRESULT getLineNumber(int*);
-    HRESULT getPublicId(const(ushort)**);
-    HRESULT getSystemId(const(ushort)**);
+    HRESULT getColumnNumber(int* pnColumn);
+    HRESULT getLineNumber(int* pnLine);
+    HRESULT getPublicId(const(ushort)** ppwchPublicId);
+    HRESULT getSystemId(const(ushort)** ppwchSystemId);
 }
 enum IID_ISAXEntityResolver = GUID(0x99bca7bd, 0xe8c4, 0x4d5f, [0xa0, 0xcf, 0x6d, 0x90, 0x79, 0x1, 0xff, 0x7]);
 interface ISAXEntityResolver : IUnknown
 {
-    HRESULT resolveEntity(const(wchar)*, const(wchar)*, VARIANT*);
+    HRESULT resolveEntity(const(wchar)* pwchPublicId, const(wchar)* pwchSystemId, VARIANT* pvarInput);
 }
 enum IID_ISAXContentHandler = GUID(0x1545cdfa, 0x9e4e, 0x4497, [0xa8, 0xa4, 0x2b, 0xf7, 0xd0, 0x11, 0x2c, 0x44]);
 interface ISAXContentHandler : IUnknown
 {
-    HRESULT putDocumentLocator(ISAXLocator);
+    HRESULT putDocumentLocator(ISAXLocator pLocator);
     HRESULT startDocument();
     HRESULT endDocument();
-    HRESULT startPrefixMapping(const(wchar)*, int, const(wchar)*, int);
-    HRESULT endPrefixMapping(const(wchar)*, int);
-    HRESULT startElement(const(wchar)*, int, const(wchar)*, int, const(wchar)*, int, ISAXAttributes);
-    HRESULT endElement(const(wchar)*, int, const(wchar)*, int, const(wchar)*, int);
-    HRESULT characters(const(wchar)*, int);
-    HRESULT ignorableWhitespace(const(wchar)*, int);
-    HRESULT processingInstruction(const(wchar)*, int, const(wchar)*, int);
-    HRESULT skippedEntity(const(wchar)*, int);
+    HRESULT startPrefixMapping(const(wchar)* pwchPrefix, int cchPrefix, const(wchar)* pwchUri, int cchUri);
+    HRESULT endPrefixMapping(const(wchar)* pwchPrefix, int cchPrefix);
+    HRESULT startElement(const(wchar)* pwchNamespaceUri, int cchNamespaceUri, const(wchar)* pwchLocalName, int cchLocalName, const(wchar)* pwchQName, int cchQName, ISAXAttributes pAttributes);
+    HRESULT endElement(const(wchar)* pwchNamespaceUri, int cchNamespaceUri, const(wchar)* pwchLocalName, int cchLocalName, const(wchar)* pwchQName, int cchQName);
+    HRESULT characters(const(wchar)* pwchChars, int cchChars);
+    HRESULT ignorableWhitespace(const(wchar)* pwchChars, int cchChars);
+    HRESULT processingInstruction(const(wchar)* pwchTarget, int cchTarget, const(wchar)* pwchData, int cchData);
+    HRESULT skippedEntity(const(wchar)* pwchName, int cchName);
 }
 enum IID_ISAXDTDHandler = GUID(0xe15c1baf, 0xafb3, 0x4d60, [0x8c, 0x36, 0x19, 0xa8, 0xc4, 0x5d, 0xef, 0xed]);
 interface ISAXDTDHandler : IUnknown
 {
-    HRESULT notationDecl(const(wchar)*, int, const(wchar)*, int, const(wchar)*, int);
-    HRESULT unparsedEntityDecl(const(wchar)*, int, const(wchar)*, int, const(wchar)*, int, const(wchar)*, int);
+    HRESULT notationDecl(const(wchar)* pwchName, int cchName, const(wchar)* pwchPublicId, int cchPublicId, const(wchar)* pwchSystemId, int cchSystemId);
+    HRESULT unparsedEntityDecl(const(wchar)* pwchName, int cchName, const(wchar)* pwchPublicId, int cchPublicId, const(wchar)* pwchSystemId, int cchSystemId, const(wchar)* pwchNotationName, int cchNotationName);
 }
 enum IID_ISAXErrorHandler = GUID(0xa60511c4, 0xccf5, 0x479e, [0x98, 0xa3, 0xdc, 0x8d, 0xc5, 0x45, 0xb7, 0xd0]);
 interface ISAXErrorHandler : IUnknown
 {
-    HRESULT error(ISAXLocator, const(wchar)*, HRESULT);
-    HRESULT fatalError(ISAXLocator, const(wchar)*, HRESULT);
-    HRESULT ignorableWarning(ISAXLocator, const(wchar)*, HRESULT);
+    HRESULT error(ISAXLocator pLocator, const(wchar)* pwchErrorMessage, HRESULT hrErrorCode);
+    HRESULT fatalError(ISAXLocator pLocator, const(wchar)* pwchErrorMessage, HRESULT hrErrorCode);
+    HRESULT ignorableWarning(ISAXLocator pLocator, const(wchar)* pwchErrorMessage, HRESULT hrErrorCode);
 }
 enum IID_ISAXLexicalHandler = GUID(0x7f85d5f5, 0x47a8, 0x4497, [0xbd, 0xa5, 0x84, 0xba, 0x4, 0x81, 0x9e, 0xa6]);
 interface ISAXLexicalHandler : IUnknown
 {
-    HRESULT startDTD(const(wchar)*, int, const(wchar)*, int, const(wchar)*, int);
+    HRESULT startDTD(const(wchar)* pwchName, int cchName, const(wchar)* pwchPublicId, int cchPublicId, const(wchar)* pwchSystemId, int cchSystemId);
     HRESULT endDTD();
-    HRESULT startEntity(const(wchar)*, int);
-    HRESULT endEntity(const(wchar)*, int);
+    HRESULT startEntity(const(wchar)* pwchName, int cchName);
+    HRESULT endEntity(const(wchar)* pwchName, int cchName);
     HRESULT startCDATA();
     HRESULT endCDATA();
-    HRESULT comment(const(wchar)*, int);
+    HRESULT comment(const(wchar)* pwchChars, int cchChars);
 }
 enum IID_ISAXDeclHandler = GUID(0x862629ac, 0x771a, 0x47b2, [0x83, 0x37, 0x4e, 0x68, 0x43, 0xc1, 0xbe, 0x90]);
 interface ISAXDeclHandler : IUnknown
 {
-    HRESULT elementDecl(const(wchar)*, int, const(wchar)*, int);
-    HRESULT attributeDecl(const(wchar)*, int, const(wchar)*, int, const(wchar)*, int, const(wchar)*, int, const(wchar)*, int);
-    HRESULT internalEntityDecl(const(wchar)*, int, const(wchar)*, int);
-    HRESULT externalEntityDecl(const(wchar)*, int, const(wchar)*, int, const(wchar)*, int);
+    HRESULT elementDecl(const(wchar)* pwchName, int cchName, const(wchar)* pwchModel, int cchModel);
+    HRESULT attributeDecl(const(wchar)* pwchElementName, int cchElementName, const(wchar)* pwchAttributeName, int cchAttributeName, const(wchar)* pwchType, int cchType, const(wchar)* pwchValueDefault, int cchValueDefault, const(wchar)* pwchValue, int cchValue);
+    HRESULT internalEntityDecl(const(wchar)* pwchName, int cchName, const(wchar)* pwchValue, int cchValue);
+    HRESULT externalEntityDecl(const(wchar)* pwchName, int cchName, const(wchar)* pwchPublicId, int cchPublicId, const(wchar)* pwchSystemId, int cchSystemId);
 }
 enum IID_ISAXAttributes = GUID(0xf078abe1, 0x45d2, 0x4832, [0x91, 0xea, 0x44, 0x66, 0xce, 0x2f, 0x25, 0xc9]);
 interface ISAXAttributes : IUnknown
 {
-    HRESULT getLength(int*);
-    HRESULT getURI(int, const(ushort)**, int*);
-    HRESULT getLocalName(int, const(ushort)**, int*);
-    HRESULT getQName(int, const(ushort)**, int*);
-    HRESULT getName(int, const(ushort)**, int*, const(ushort)**, int*, const(ushort)**, int*);
-    HRESULT getIndexFromName(const(wchar)*, int, const(wchar)*, int, int*);
-    HRESULT getIndexFromQName(const(wchar)*, int, int*);
-    HRESULT getType(int, const(ushort)**, int*);
-    HRESULT getTypeFromName(const(wchar)*, int, const(wchar)*, int, const(ushort)**, int*);
-    HRESULT getTypeFromQName(const(wchar)*, int, const(ushort)**, int*);
-    HRESULT getValue(int, const(ushort)**, int*);
-    HRESULT getValueFromName(const(wchar)*, int, const(wchar)*, int, const(ushort)**, int*);
-    HRESULT getValueFromQName(const(wchar)*, int, const(ushort)**, int*);
+    HRESULT getLength(int* pnLength);
+    HRESULT getURI(int nIndex, const(ushort)** ppwchUri, int* pcchUri);
+    HRESULT getLocalName(int nIndex, const(ushort)** ppwchLocalName, int* pcchLocalName);
+    HRESULT getQName(int nIndex, const(ushort)** ppwchQName, int* pcchQName);
+    HRESULT getName(int nIndex, const(ushort)** ppwchUri, int* pcchUri, const(ushort)** ppwchLocalName, int* pcchLocalName, const(ushort)** ppwchQName, int* pcchQName);
+    HRESULT getIndexFromName(const(wchar)* pwchUri, int cchUri, const(wchar)* pwchLocalName, int cchLocalName, int* pnIndex);
+    HRESULT getIndexFromQName(const(wchar)* pwchQName, int cchQName, int* pnIndex);
+    HRESULT getType(int nIndex, const(ushort)** ppwchType, int* pcchType);
+    HRESULT getTypeFromName(const(wchar)* pwchUri, int cchUri, const(wchar)* pwchLocalName, int cchLocalName, const(ushort)** ppwchType, int* pcchType);
+    HRESULT getTypeFromQName(const(wchar)* pwchQName, int cchQName, const(ushort)** ppwchType, int* pcchType);
+    HRESULT getValue(int nIndex, const(ushort)** ppwchValue, int* pcchValue);
+    HRESULT getValueFromName(const(wchar)* pwchUri, int cchUri, const(wchar)* pwchLocalName, int cchLocalName, const(ushort)** ppwchValue, int* pcchValue);
+    HRESULT getValueFromQName(const(wchar)* pwchQName, int cchQName, const(ushort)** ppwchValue, int* pcchValue);
 }
 enum IID_IVBSAXXMLReader = GUID(0x8c033caa, 0x6cd6, 0x4f73, [0xb7, 0x28, 0x45, 0x31, 0xaf, 0x74, 0x94, 0x5f]);
 interface IVBSAXXMLReader : IDispatch
 {
-    HRESULT getFeature(BSTR, VARIANT_BOOL*);
-    HRESULT putFeature(BSTR, VARIANT_BOOL);
-    HRESULT getProperty(BSTR, VARIANT*);
-    HRESULT putProperty(BSTR, VARIANT);
-    HRESULT get_entityResolver(IVBSAXEntityResolver*);
-    HRESULT putref_entityResolver(IVBSAXEntityResolver);
-    HRESULT get_contentHandler(IVBSAXContentHandler*);
-    HRESULT putref_contentHandler(IVBSAXContentHandler);
-    HRESULT get_dtdHandler(IVBSAXDTDHandler*);
-    HRESULT putref_dtdHandler(IVBSAXDTDHandler);
-    HRESULT get_errorHandler(IVBSAXErrorHandler*);
-    HRESULT putref_errorHandler(IVBSAXErrorHandler);
-    HRESULT get_baseURL(BSTR*);
-    HRESULT put_baseURL(BSTR);
-    HRESULT get_secureBaseURL(BSTR*);
-    HRESULT put_secureBaseURL(BSTR);
-    HRESULT parse(VARIANT);
-    HRESULT parseURL(BSTR);
+    HRESULT getFeature(BSTR strName, VARIANT_BOOL* fValue);
+    HRESULT putFeature(BSTR strName, VARIANT_BOOL fValue);
+    HRESULT getProperty(BSTR strName, VARIANT* varValue);
+    HRESULT putProperty(BSTR strName, VARIANT varValue);
+    HRESULT get_entityResolver(IVBSAXEntityResolver* oResolver);
+    HRESULT putref_entityResolver(IVBSAXEntityResolver oResolver);
+    HRESULT get_contentHandler(IVBSAXContentHandler* oHandler);
+    HRESULT putref_contentHandler(IVBSAXContentHandler oHandler);
+    HRESULT get_dtdHandler(IVBSAXDTDHandler* oHandler);
+    HRESULT putref_dtdHandler(IVBSAXDTDHandler oHandler);
+    HRESULT get_errorHandler(IVBSAXErrorHandler* oHandler);
+    HRESULT putref_errorHandler(IVBSAXErrorHandler oHandler);
+    HRESULT get_baseURL(BSTR* strBaseURL);
+    HRESULT put_baseURL(BSTR strBaseURL);
+    HRESULT get_secureBaseURL(BSTR* strSecureBaseURL);
+    HRESULT put_secureBaseURL(BSTR strSecureBaseURL);
+    HRESULT parse(VARIANT varInput);
+    HRESULT parseURL(BSTR strURL);
 }
 enum IID_IVBSAXXMLFilter = GUID(0x1299eb1b, 0x5b88, 0x433e, [0x82, 0xde, 0x82, 0xca, 0x75, 0xad, 0x4e, 0x4]);
 interface IVBSAXXMLFilter : IDispatch
 {
-    HRESULT get_parent(IVBSAXXMLReader*);
-    HRESULT putref_parent(IVBSAXXMLReader);
+    HRESULT get_parent(IVBSAXXMLReader* oReader);
+    HRESULT putref_parent(IVBSAXXMLReader oReader);
 }
 enum IID_IVBSAXLocator = GUID(0x796e7ac5, 0x5aa2, 0x4eff, [0xac, 0xad, 0x3f, 0xaa, 0xf0, 0x1a, 0x32, 0x88]);
 interface IVBSAXLocator : IDispatch
 {
-    HRESULT get_columnNumber(int*);
-    HRESULT get_lineNumber(int*);
-    HRESULT get_publicId(BSTR*);
-    HRESULT get_systemId(BSTR*);
+    HRESULT get_columnNumber(int* nColumn);
+    HRESULT get_lineNumber(int* nLine);
+    HRESULT get_publicId(BSTR* strPublicId);
+    HRESULT get_systemId(BSTR* strSystemId);
 }
 enum IID_IVBSAXEntityResolver = GUID(0xc05d096, 0xf45b, 0x4aca, [0xad, 0x1a, 0xaa, 0xb, 0xc2, 0x55, 0x18, 0xdc]);
 interface IVBSAXEntityResolver : IDispatch
 {
-    HRESULT resolveEntity(BSTR*, BSTR*, VARIANT*);
+    HRESULT resolveEntity(BSTR* strPublicId, BSTR* strSystemId, VARIANT* varInput);
 }
 enum IID_IVBSAXContentHandler = GUID(0x2ed7290a, 0x4dd5, 0x4b46, [0xbb, 0x26, 0x4e, 0x41, 0x55, 0xe7, 0x7f, 0xaa]);
 interface IVBSAXContentHandler : IDispatch
 {
-    HRESULT putref_documentLocator(IVBSAXLocator);
+    HRESULT putref_documentLocator(IVBSAXLocator oLocator);
     HRESULT startDocument();
     HRESULT endDocument();
-    HRESULT startPrefixMapping(BSTR*, BSTR*);
-    HRESULT endPrefixMapping(BSTR*);
-    HRESULT startElement(BSTR*, BSTR*, BSTR*, IVBSAXAttributes);
-    HRESULT endElement(BSTR*, BSTR*, BSTR*);
-    HRESULT characters(BSTR*);
-    HRESULT ignorableWhitespace(BSTR*);
-    HRESULT processingInstruction(BSTR*, BSTR*);
-    HRESULT skippedEntity(BSTR*);
+    HRESULT startPrefixMapping(BSTR* strPrefix, BSTR* strURI);
+    HRESULT endPrefixMapping(BSTR* strPrefix);
+    HRESULT startElement(BSTR* strNamespaceURI, BSTR* strLocalName, BSTR* strQName, IVBSAXAttributes oAttributes);
+    HRESULT endElement(BSTR* strNamespaceURI, BSTR* strLocalName, BSTR* strQName);
+    HRESULT characters(BSTR* strChars);
+    HRESULT ignorableWhitespace(BSTR* strChars);
+    HRESULT processingInstruction(BSTR* strTarget, BSTR* strData);
+    HRESULT skippedEntity(BSTR* strName);
 }
 enum IID_IVBSAXDTDHandler = GUID(0x24fb3297, 0x302d, 0x4620, [0xba, 0x39, 0x3a, 0x73, 0x2d, 0x85, 0x5, 0x58]);
 interface IVBSAXDTDHandler : IDispatch
 {
-    HRESULT notationDecl(BSTR*, BSTR*, BSTR*);
-    HRESULT unparsedEntityDecl(BSTR*, BSTR*, BSTR*, BSTR*);
+    HRESULT notationDecl(BSTR* strName, BSTR* strPublicId, BSTR* strSystemId);
+    HRESULT unparsedEntityDecl(BSTR* strName, BSTR* strPublicId, BSTR* strSystemId, BSTR* strNotationName);
 }
 enum IID_IVBSAXErrorHandler = GUID(0xd963d3fe, 0x173c, 0x4862, [0x90, 0x95, 0xb9, 0x2f, 0x66, 0x99, 0x5f, 0x52]);
 interface IVBSAXErrorHandler : IDispatch
 {
-    HRESULT error(IVBSAXLocator, BSTR*, int);
-    HRESULT fatalError(IVBSAXLocator, BSTR*, int);
-    HRESULT ignorableWarning(IVBSAXLocator, BSTR*, int);
+    HRESULT error(IVBSAXLocator oLocator, BSTR* strErrorMessage, int nErrorCode);
+    HRESULT fatalError(IVBSAXLocator oLocator, BSTR* strErrorMessage, int nErrorCode);
+    HRESULT ignorableWarning(IVBSAXLocator oLocator, BSTR* strErrorMessage, int nErrorCode);
 }
 enum IID_IVBSAXLexicalHandler = GUID(0x32aac35, 0x8c0e, 0x4d9d, [0x97, 0x9f, 0xe3, 0xb7, 0x2, 0x93, 0x55, 0x76]);
 interface IVBSAXLexicalHandler : IDispatch
 {
-    HRESULT startDTD(BSTR*, BSTR*, BSTR*);
+    HRESULT startDTD(BSTR* strName, BSTR* strPublicId, BSTR* strSystemId);
     HRESULT endDTD();
-    HRESULT startEntity(BSTR*);
-    HRESULT endEntity(BSTR*);
+    HRESULT startEntity(BSTR* strName);
+    HRESULT endEntity(BSTR* strName);
     HRESULT startCDATA();
     HRESULT endCDATA();
-    HRESULT comment(BSTR*);
+    HRESULT comment(BSTR* strChars);
 }
 enum IID_IVBSAXDeclHandler = GUID(0xe8917260, 0x7579, 0x4be1, [0xb5, 0xdd, 0x7a, 0xfb, 0xfa, 0x6f, 0x7, 0x7b]);
 interface IVBSAXDeclHandler : IDispatch
 {
-    HRESULT elementDecl(BSTR*, BSTR*);
-    HRESULT attributeDecl(BSTR*, BSTR*, BSTR*, BSTR*, BSTR*);
-    HRESULT internalEntityDecl(BSTR*, BSTR*);
-    HRESULT externalEntityDecl(BSTR*, BSTR*, BSTR*);
+    HRESULT elementDecl(BSTR* strName, BSTR* strModel);
+    HRESULT attributeDecl(BSTR* strElementName, BSTR* strAttributeName, BSTR* strType, BSTR* strValueDefault, BSTR* strValue);
+    HRESULT internalEntityDecl(BSTR* strName, BSTR* strValue);
+    HRESULT externalEntityDecl(BSTR* strName, BSTR* strPublicId, BSTR* strSystemId);
 }
 enum IID_IVBSAXAttributes = GUID(0x10dc0586, 0x132b, 0x4cac, [0x8b, 0xb3, 0xdb, 0x0, 0xac, 0x8b, 0x7e, 0xe0]);
 interface IVBSAXAttributes : IDispatch
 {
-    HRESULT get_length(int*);
-    HRESULT getURI(int, BSTR*);
-    HRESULT getLocalName(int, BSTR*);
-    HRESULT getQName(int, BSTR*);
-    HRESULT getIndexFromName(BSTR, BSTR, int*);
-    HRESULT getIndexFromQName(BSTR, int*);
-    HRESULT getType(int, BSTR*);
-    HRESULT getTypeFromName(BSTR, BSTR, BSTR*);
-    HRESULT getTypeFromQName(BSTR, BSTR*);
-    HRESULT getValue(int, BSTR*);
-    HRESULT getValueFromName(BSTR, BSTR, BSTR*);
-    HRESULT getValueFromQName(BSTR, BSTR*);
+    HRESULT get_length(int* nLength);
+    HRESULT getURI(int nIndex, BSTR* strURI);
+    HRESULT getLocalName(int nIndex, BSTR* strLocalName);
+    HRESULT getQName(int nIndex, BSTR* strQName);
+    HRESULT getIndexFromName(BSTR strURI, BSTR strLocalName, int* nIndex);
+    HRESULT getIndexFromQName(BSTR strQName, int* nIndex);
+    HRESULT getType(int nIndex, BSTR* strType);
+    HRESULT getTypeFromName(BSTR strURI, BSTR strLocalName, BSTR* strType);
+    HRESULT getTypeFromQName(BSTR strQName, BSTR* strType);
+    HRESULT getValue(int nIndex, BSTR* strValue);
+    HRESULT getValueFromName(BSTR strURI, BSTR strLocalName, BSTR* strValue);
+    HRESULT getValueFromQName(BSTR strQName, BSTR* strValue);
 }
 enum IID_IMXWriter = GUID(0x4d7ff4ba, 0x1565, 0x4ea8, [0x94, 0xe1, 0x6e, 0x72, 0x4a, 0x46, 0xf9, 0x8d]);
 interface IMXWriter : IDispatch
 {
-    HRESULT put_output(VARIANT);
-    HRESULT get_output(VARIANT*);
-    HRESULT put_encoding(BSTR);
-    HRESULT get_encoding(BSTR*);
-    HRESULT put_byteOrderMark(VARIANT_BOOL);
-    HRESULT get_byteOrderMark(VARIANT_BOOL*);
-    HRESULT put_indent(VARIANT_BOOL);
-    HRESULT get_indent(VARIANT_BOOL*);
-    HRESULT put_standalone(VARIANT_BOOL);
-    HRESULT get_standalone(VARIANT_BOOL*);
-    HRESULT put_omitXMLDeclaration(VARIANT_BOOL);
-    HRESULT get_omitXMLDeclaration(VARIANT_BOOL*);
-    HRESULT put_version(BSTR);
-    HRESULT get_version(BSTR*);
-    HRESULT put_disableOutputEscaping(VARIANT_BOOL);
-    HRESULT get_disableOutputEscaping(VARIANT_BOOL*);
+    HRESULT put_output(VARIANT varDestination);
+    HRESULT get_output(VARIANT* varDestination);
+    HRESULT put_encoding(BSTR strEncoding);
+    HRESULT get_encoding(BSTR* strEncoding);
+    HRESULT put_byteOrderMark(VARIANT_BOOL fWriteByteOrderMark);
+    HRESULT get_byteOrderMark(VARIANT_BOOL* fWriteByteOrderMark);
+    HRESULT put_indent(VARIANT_BOOL fIndentMode);
+    HRESULT get_indent(VARIANT_BOOL* fIndentMode);
+    HRESULT put_standalone(VARIANT_BOOL fValue);
+    HRESULT get_standalone(VARIANT_BOOL* fValue);
+    HRESULT put_omitXMLDeclaration(VARIANT_BOOL fValue);
+    HRESULT get_omitXMLDeclaration(VARIANT_BOOL* fValue);
+    HRESULT put_version(BSTR strVersion);
+    HRESULT get_version(BSTR* strVersion);
+    HRESULT put_disableOutputEscaping(VARIANT_BOOL fValue);
+    HRESULT get_disableOutputEscaping(VARIANT_BOOL* fValue);
     HRESULT flush();
 }
 enum IID_IMXAttributes = GUID(0xf10d27cc, 0x3ec0, 0x415c, [0x8e, 0xd8, 0x77, 0xab, 0x1c, 0x5e, 0x72, 0x62]);
 interface IMXAttributes : IDispatch
 {
-    HRESULT addAttribute(BSTR, BSTR, BSTR, BSTR, BSTR);
-    HRESULT addAttributeFromIndex(VARIANT, int);
+    HRESULT addAttribute(BSTR strURI, BSTR strLocalName, BSTR strQName, BSTR strType, BSTR strValue);
+    HRESULT addAttributeFromIndex(VARIANT varAtts, int nIndex);
     HRESULT clear();
-    HRESULT removeAttribute(int);
-    HRESULT setAttribute(int, BSTR, BSTR, BSTR, BSTR, BSTR);
-    HRESULT setAttributes(VARIANT);
-    HRESULT setLocalName(int, BSTR);
-    HRESULT setQName(int, BSTR);
-    HRESULT setType(int, BSTR);
-    HRESULT setURI(int, BSTR);
-    HRESULT setValue(int, BSTR);
+    HRESULT removeAttribute(int nIndex);
+    HRESULT setAttribute(int nIndex, BSTR strURI, BSTR strLocalName, BSTR strQName, BSTR strType, BSTR strValue);
+    HRESULT setAttributes(VARIANT varAtts);
+    HRESULT setLocalName(int nIndex, BSTR strLocalName);
+    HRESULT setQName(int nIndex, BSTR strQName);
+    HRESULT setType(int nIndex, BSTR strType);
+    HRESULT setURI(int nIndex, BSTR strURI);
+    HRESULT setValue(int nIndex, BSTR strValue);
 }
 enum IID_IMXReaderControl = GUID(0x808f4e35, 0x8d5a, 0x4fbe, [0x84, 0x66, 0x33, 0xa4, 0x12, 0x79, 0xed, 0x30]);
 interface IMXReaderControl : IDispatch
@@ -1333,59 +1333,59 @@ interface IMXReaderControl : IDispatch
 enum IID_IMXSchemaDeclHandler = GUID(0xfa4bb38c, 0xfaf9, 0x4cca, [0x93, 0x2, 0xd1, 0xdd, 0xf, 0xe5, 0x20, 0xdb]);
 interface IMXSchemaDeclHandler : IDispatch
 {
-    HRESULT schemaElementDecl(ISchemaElement);
+    HRESULT schemaElementDecl(ISchemaElement oSchemaElement);
 }
 enum IID_IMXNamespacePrefixes = GUID(0xc90352f4, 0x643c, 0x4fbc, [0xbb, 0x23, 0xe9, 0x96, 0xeb, 0x2d, 0x51, 0xfd]);
 interface IMXNamespacePrefixes : IDispatch
 {
-    HRESULT get_item(int, BSTR*);
-    HRESULT get_length(int*);
-    HRESULT get__newEnum(IUnknown*);
+    HRESULT get_item(int index, BSTR* prefix);
+    HRESULT get_length(int* length);
+    HRESULT get__newEnum(IUnknown* ppUnk);
 }
 enum IID_IVBMXNamespaceManager = GUID(0xc90352f5, 0x643c, 0x4fbc, [0xbb, 0x23, 0xe9, 0x96, 0xeb, 0x2d, 0x51, 0xfd]);
 interface IVBMXNamespaceManager : IDispatch
 {
-    HRESULT put_allowOverride(VARIANT_BOOL);
-    HRESULT get_allowOverride(VARIANT_BOOL*);
+    HRESULT put_allowOverride(VARIANT_BOOL fOverride);
+    HRESULT get_allowOverride(VARIANT_BOOL* fOverride);
     HRESULT reset();
     HRESULT pushContext();
-    HRESULT pushNodeContext(IXMLDOMNode, VARIANT_BOOL);
+    HRESULT pushNodeContext(IXMLDOMNode contextNode, VARIANT_BOOL fDeep);
     HRESULT popContext();
-    HRESULT declarePrefix(BSTR, BSTR);
-    HRESULT getDeclaredPrefixes(IMXNamespacePrefixes*);
-    HRESULT getPrefixes(BSTR, IMXNamespacePrefixes*);
-    HRESULT getURI(BSTR, VARIANT*);
-    HRESULT getURIFromNode(BSTR, IXMLDOMNode, VARIANT*);
+    HRESULT declarePrefix(BSTR prefix, BSTR namespaceURI);
+    HRESULT getDeclaredPrefixes(IMXNamespacePrefixes* prefixes);
+    HRESULT getPrefixes(BSTR namespaceURI, IMXNamespacePrefixes* prefixes);
+    HRESULT getURI(BSTR prefix, VARIANT* uri);
+    HRESULT getURIFromNode(BSTR strPrefix, IXMLDOMNode contextNode, VARIANT* uri);
 }
 enum IID_IMXNamespaceManager = GUID(0xc90352f6, 0x643c, 0x4fbc, [0xbb, 0x23, 0xe9, 0x96, 0xeb, 0x2d, 0x51, 0xfd]);
 interface IMXNamespaceManager : IUnknown
 {
-    HRESULT putAllowOverride(VARIANT_BOOL);
-    HRESULT getAllowOverride(VARIANT_BOOL*);
+    HRESULT putAllowOverride(VARIANT_BOOL fOverride);
+    HRESULT getAllowOverride(VARIANT_BOOL* fOverride);
     HRESULT reset();
     HRESULT pushContext();
-    HRESULT pushNodeContext(IXMLDOMNode, VARIANT_BOOL);
+    HRESULT pushNodeContext(IXMLDOMNode contextNode, VARIANT_BOOL fDeep);
     HRESULT popContext();
-    HRESULT declarePrefix(const(wchar)*, const(wchar)*);
-    HRESULT getDeclaredPrefix(int, PWSTR, int*);
-    HRESULT getPrefix(const(wchar)*, int, PWSTR, int*);
-    HRESULT getURI(const(wchar)*, IXMLDOMNode, PWSTR, int*);
+    HRESULT declarePrefix(const(wchar)* prefix, const(wchar)* namespaceURI);
+    HRESULT getDeclaredPrefix(int nIndex, PWSTR pwchPrefix, int* pcchPrefix);
+    HRESULT getPrefix(const(wchar)* pwszNamespaceURI, int nIndex, PWSTR pwchPrefix, int* pcchPrefix);
+    HRESULT getURI(const(wchar)* pwchPrefix, IXMLDOMNode pContextNode, PWSTR pwchUri, int* pcchUri);
 }
 enum IID_IMXXMLFilter = GUID(0xc90352f7, 0x643c, 0x4fbc, [0xbb, 0x23, 0xe9, 0x96, 0xeb, 0x2d, 0x51, 0xfd]);
 interface IMXXMLFilter : IDispatch
 {
-    HRESULT getFeature(BSTR, VARIANT_BOOL*);
-    HRESULT putFeature(BSTR, VARIANT_BOOL);
-    HRESULT getProperty(BSTR, VARIANT*);
-    HRESULT putProperty(BSTR, VARIANT);
-    HRESULT get_entityResolver(IUnknown*);
-    HRESULT putref_entityResolver(IUnknown);
-    HRESULT get_contentHandler(IUnknown*);
-    HRESULT putref_contentHandler(IUnknown);
-    HRESULT get_dtdHandler(IUnknown*);
-    HRESULT putref_dtdHandler(IUnknown);
-    HRESULT get_errorHandler(IUnknown*);
-    HRESULT putref_errorHandler(IUnknown);
+    HRESULT getFeature(BSTR strName, VARIANT_BOOL* fValue);
+    HRESULT putFeature(BSTR strName, VARIANT_BOOL fValue);
+    HRESULT getProperty(BSTR strName, VARIANT* varValue);
+    HRESULT putProperty(BSTR strName, VARIANT varValue);
+    HRESULT get_entityResolver(IUnknown* oResolver);
+    HRESULT putref_entityResolver(IUnknown oResolver);
+    HRESULT get_contentHandler(IUnknown* oHandler);
+    HRESULT putref_contentHandler(IUnknown oHandler);
+    HRESULT get_dtdHandler(IUnknown* oHandler);
+    HRESULT putref_dtdHandler(IUnknown oHandler);
+    HRESULT get_errorHandler(IUnknown* oHandler);
+    HRESULT putref_errorHandler(IUnknown oHandler);
 }
 alias SOMITEMTYPE = int;
 enum : int
@@ -1526,142 +1526,142 @@ enum IID_IXMLDOMSchemaCollection2 = GUID(0x50ea08b0, 0xdd1b, 0x4664, [0x9a, 0x50
 interface IXMLDOMSchemaCollection2 : IXMLDOMSchemaCollection
 {
     HRESULT validate();
-    HRESULT put_validateOnLoad(VARIANT_BOOL);
-    HRESULT get_validateOnLoad(VARIANT_BOOL*);
-    HRESULT getSchema(BSTR, ISchema*);
-    HRESULT getDeclaration(IXMLDOMNode, ISchemaItem*);
+    HRESULT put_validateOnLoad(VARIANT_BOOL validateOnLoad);
+    HRESULT get_validateOnLoad(VARIANT_BOOL* validateOnLoad);
+    HRESULT getSchema(BSTR namespaceURI, ISchema* schema);
+    HRESULT getDeclaration(IXMLDOMNode node, ISchemaItem* item);
 }
 enum IID_ISchemaStringCollection = GUID(0x50ea08b1, 0xdd1b, 0x4664, [0x9a, 0x50, 0xc2, 0xf4, 0xf, 0x4b, 0xd7, 0x9a]);
 interface ISchemaStringCollection : IDispatch
 {
-    HRESULT get_item(int, BSTR*);
-    HRESULT get_length(int*);
-    HRESULT get__newEnum(IUnknown*);
+    HRESULT get_item(int index, BSTR* bstr);
+    HRESULT get_length(int* length);
+    HRESULT get__newEnum(IUnknown* ppunk);
 }
 enum IID_ISchemaItemCollection = GUID(0x50ea08b2, 0xdd1b, 0x4664, [0x9a, 0x50, 0xc2, 0xf4, 0xf, 0x4b, 0xd7, 0x9a]);
 interface ISchemaItemCollection : IDispatch
 {
-    HRESULT get_item(int, ISchemaItem*);
-    HRESULT itemByName(BSTR, ISchemaItem*);
-    HRESULT itemByQName(BSTR, BSTR, ISchemaItem*);
-    HRESULT get_length(int*);
-    HRESULT get__newEnum(IUnknown*);
+    HRESULT get_item(int index, ISchemaItem* item);
+    HRESULT itemByName(BSTR name, ISchemaItem* item);
+    HRESULT itemByQName(BSTR name, BSTR namespaceURI, ISchemaItem* item);
+    HRESULT get_length(int* length);
+    HRESULT get__newEnum(IUnknown* ppunk);
 }
 enum IID_ISchemaItem = GUID(0x50ea08b3, 0xdd1b, 0x4664, [0x9a, 0x50, 0xc2, 0xf4, 0xf, 0x4b, 0xd7, 0x9a]);
 interface ISchemaItem : IDispatch
 {
-    HRESULT get_name(BSTR*);
-    HRESULT get_namespaceURI(BSTR*);
-    HRESULT get_schema(ISchema*);
-    HRESULT get_id(BSTR*);
-    HRESULT get_itemType(SOMITEMTYPE*);
-    HRESULT get_unhandledAttributes(IVBSAXAttributes*);
-    HRESULT writeAnnotation(IUnknown, VARIANT_BOOL*);
+    HRESULT get_name(BSTR* name);
+    HRESULT get_namespaceURI(BSTR* namespaceURI);
+    HRESULT get_schema(ISchema* schema);
+    HRESULT get_id(BSTR* id);
+    HRESULT get_itemType(SOMITEMTYPE* itemType);
+    HRESULT get_unhandledAttributes(IVBSAXAttributes* attributes);
+    HRESULT writeAnnotation(IUnknown annotationSink, VARIANT_BOOL* isWritten);
 }
 enum IID_ISchema = GUID(0x50ea08b4, 0xdd1b, 0x4664, [0x9a, 0x50, 0xc2, 0xf4, 0xf, 0x4b, 0xd7, 0x9a]);
 interface ISchema : ISchemaItem
 {
-    HRESULT get_targetNamespace(BSTR*);
-    HRESULT get_version(BSTR*);
-    HRESULT get_types(ISchemaItemCollection*);
-    HRESULT get_elements(ISchemaItemCollection*);
-    HRESULT get_attributes(ISchemaItemCollection*);
-    HRESULT get_attributeGroups(ISchemaItemCollection*);
-    HRESULT get_modelGroups(ISchemaItemCollection*);
-    HRESULT get_notations(ISchemaItemCollection*);
-    HRESULT get_schemaLocations(ISchemaStringCollection*);
+    HRESULT get_targetNamespace(BSTR* targetNamespace);
+    HRESULT get_version(BSTR* version_);
+    HRESULT get_types(ISchemaItemCollection* types);
+    HRESULT get_elements(ISchemaItemCollection* elements);
+    HRESULT get_attributes(ISchemaItemCollection* attributes);
+    HRESULT get_attributeGroups(ISchemaItemCollection* attributeGroups);
+    HRESULT get_modelGroups(ISchemaItemCollection* modelGroups);
+    HRESULT get_notations(ISchemaItemCollection* notations);
+    HRESULT get_schemaLocations(ISchemaStringCollection* schemaLocations);
 }
 enum IID_ISchemaParticle = GUID(0x50ea08b5, 0xdd1b, 0x4664, [0x9a, 0x50, 0xc2, 0xf4, 0xf, 0x4b, 0xd7, 0x9a]);
 interface ISchemaParticle : ISchemaItem
 {
-    HRESULT get_minOccurs(VARIANT*);
-    HRESULT get_maxOccurs(VARIANT*);
+    HRESULT get_minOccurs(VARIANT* minOccurs);
+    HRESULT get_maxOccurs(VARIANT* maxOccurs);
 }
 enum IID_ISchemaAttribute = GUID(0x50ea08b6, 0xdd1b, 0x4664, [0x9a, 0x50, 0xc2, 0xf4, 0xf, 0x4b, 0xd7, 0x9a]);
 interface ISchemaAttribute : ISchemaItem
 {
-    HRESULT get_type(ISchemaType*);
-    HRESULT get_scope(ISchemaComplexType*);
-    HRESULT get_defaultValue(BSTR*);
-    HRESULT get_fixedValue(BSTR*);
-    HRESULT get_use(SCHEMAUSE*);
-    HRESULT get_isReference(VARIANT_BOOL*);
+    HRESULT get_type(ISchemaType* type);
+    HRESULT get_scope(ISchemaComplexType* scope_);
+    HRESULT get_defaultValue(BSTR* defaultValue);
+    HRESULT get_fixedValue(BSTR* fixedValue);
+    HRESULT get_use(SCHEMAUSE* use);
+    HRESULT get_isReference(VARIANT_BOOL* reference);
 }
 enum IID_ISchemaElement = GUID(0x50ea08b7, 0xdd1b, 0x4664, [0x9a, 0x50, 0xc2, 0xf4, 0xf, 0x4b, 0xd7, 0x9a]);
 interface ISchemaElement : ISchemaParticle
 {
-    HRESULT get_type(ISchemaType*);
-    HRESULT get_scope(ISchemaComplexType*);
-    HRESULT get_defaultValue(BSTR*);
-    HRESULT get_fixedValue(BSTR*);
-    HRESULT get_isNillable(VARIANT_BOOL*);
-    HRESULT get_identityConstraints(ISchemaItemCollection*);
-    HRESULT get_substitutionGroup(ISchemaElement*);
-    HRESULT get_substitutionGroupExclusions(SCHEMADERIVATIONMETHOD*);
-    HRESULT get_disallowedSubstitutions(SCHEMADERIVATIONMETHOD*);
-    HRESULT get_isAbstract(VARIANT_BOOL*);
-    HRESULT get_isReference(VARIANT_BOOL*);
+    HRESULT get_type(ISchemaType* type);
+    HRESULT get_scope(ISchemaComplexType* scope_);
+    HRESULT get_defaultValue(BSTR* defaultValue);
+    HRESULT get_fixedValue(BSTR* fixedValue);
+    HRESULT get_isNillable(VARIANT_BOOL* nillable);
+    HRESULT get_identityConstraints(ISchemaItemCollection* constraints);
+    HRESULT get_substitutionGroup(ISchemaElement* element);
+    HRESULT get_substitutionGroupExclusions(SCHEMADERIVATIONMETHOD* exclusions);
+    HRESULT get_disallowedSubstitutions(SCHEMADERIVATIONMETHOD* disallowed);
+    HRESULT get_isAbstract(VARIANT_BOOL* abstract_);
+    HRESULT get_isReference(VARIANT_BOOL* reference);
 }
 enum IID_ISchemaType = GUID(0x50ea08b8, 0xdd1b, 0x4664, [0x9a, 0x50, 0xc2, 0xf4, 0xf, 0x4b, 0xd7, 0x9a]);
 interface ISchemaType : ISchemaItem
 {
-    HRESULT get_baseTypes(ISchemaItemCollection*);
-    HRESULT get_final(SCHEMADERIVATIONMETHOD*);
-    HRESULT get_variety(SCHEMATYPEVARIETY*);
-    HRESULT get_derivedBy(SCHEMADERIVATIONMETHOD*);
-    HRESULT isValid(BSTR, VARIANT_BOOL*);
-    HRESULT get_minExclusive(BSTR*);
-    HRESULT get_minInclusive(BSTR*);
-    HRESULT get_maxExclusive(BSTR*);
-    HRESULT get_maxInclusive(BSTR*);
-    HRESULT get_totalDigits(VARIANT*);
-    HRESULT get_fractionDigits(VARIANT*);
-    HRESULT get_length(VARIANT*);
-    HRESULT get_minLength(VARIANT*);
-    HRESULT get_maxLength(VARIANT*);
-    HRESULT get_enumeration(ISchemaStringCollection*);
-    HRESULT get_whitespace(SCHEMAWHITESPACE*);
-    HRESULT get_patterns(ISchemaStringCollection*);
+    HRESULT get_baseTypes(ISchemaItemCollection* baseTypes);
+    HRESULT get_final(SCHEMADERIVATIONMETHOD* final_);
+    HRESULT get_variety(SCHEMATYPEVARIETY* variety);
+    HRESULT get_derivedBy(SCHEMADERIVATIONMETHOD* derivedBy);
+    HRESULT isValid(BSTR data, VARIANT_BOOL* valid);
+    HRESULT get_minExclusive(BSTR* minExclusive);
+    HRESULT get_minInclusive(BSTR* minInclusive);
+    HRESULT get_maxExclusive(BSTR* maxExclusive);
+    HRESULT get_maxInclusive(BSTR* maxInclusive);
+    HRESULT get_totalDigits(VARIANT* totalDigits);
+    HRESULT get_fractionDigits(VARIANT* fractionDigits);
+    HRESULT get_length(VARIANT* length);
+    HRESULT get_minLength(VARIANT* minLength);
+    HRESULT get_maxLength(VARIANT* maxLength);
+    HRESULT get_enumeration(ISchemaStringCollection* enumeration);
+    HRESULT get_whitespace(SCHEMAWHITESPACE* whitespace);
+    HRESULT get_patterns(ISchemaStringCollection* patterns);
 }
 enum IID_ISchemaComplexType = GUID(0x50ea08b9, 0xdd1b, 0x4664, [0x9a, 0x50, 0xc2, 0xf4, 0xf, 0x4b, 0xd7, 0x9a]);
 interface ISchemaComplexType : ISchemaType
 {
-    HRESULT get_isAbstract(VARIANT_BOOL*);
-    HRESULT get_anyAttribute(ISchemaAny*);
-    HRESULT get_attributes(ISchemaItemCollection*);
-    HRESULT get_contentType(SCHEMACONTENTTYPE*);
-    HRESULT get_contentModel(ISchemaModelGroup*);
-    HRESULT get_prohibitedSubstitutions(SCHEMADERIVATIONMETHOD*);
+    HRESULT get_isAbstract(VARIANT_BOOL* abstract_);
+    HRESULT get_anyAttribute(ISchemaAny* anyAttribute);
+    HRESULT get_attributes(ISchemaItemCollection* attributes);
+    HRESULT get_contentType(SCHEMACONTENTTYPE* contentType);
+    HRESULT get_contentModel(ISchemaModelGroup* contentModel);
+    HRESULT get_prohibitedSubstitutions(SCHEMADERIVATIONMETHOD* prohibited);
 }
 enum IID_ISchemaAttributeGroup = GUID(0x50ea08ba, 0xdd1b, 0x4664, [0x9a, 0x50, 0xc2, 0xf4, 0xf, 0x4b, 0xd7, 0x9a]);
 interface ISchemaAttributeGroup : ISchemaItem
 {
-    HRESULT get_anyAttribute(ISchemaAny*);
-    HRESULT get_attributes(ISchemaItemCollection*);
+    HRESULT get_anyAttribute(ISchemaAny* anyAttribute);
+    HRESULT get_attributes(ISchemaItemCollection* attributes);
 }
 enum IID_ISchemaModelGroup = GUID(0x50ea08bb, 0xdd1b, 0x4664, [0x9a, 0x50, 0xc2, 0xf4, 0xf, 0x4b, 0xd7, 0x9a]);
 interface ISchemaModelGroup : ISchemaParticle
 {
-    HRESULT get_particles(ISchemaItemCollection*);
+    HRESULT get_particles(ISchemaItemCollection* particles);
 }
 enum IID_ISchemaAny = GUID(0x50ea08bc, 0xdd1b, 0x4664, [0x9a, 0x50, 0xc2, 0xf4, 0xf, 0x4b, 0xd7, 0x9a]);
 interface ISchemaAny : ISchemaParticle
 {
-    HRESULT get_namespaces(ISchemaStringCollection*);
-    HRESULT get_processContents(SCHEMAPROCESSCONTENTS*);
+    HRESULT get_namespaces(ISchemaStringCollection* namespaces);
+    HRESULT get_processContents(SCHEMAPROCESSCONTENTS* processContents);
 }
 enum IID_ISchemaIdentityConstraint = GUID(0x50ea08bd, 0xdd1b, 0x4664, [0x9a, 0x50, 0xc2, 0xf4, 0xf, 0x4b, 0xd7, 0x9a]);
 interface ISchemaIdentityConstraint : ISchemaItem
 {
-    HRESULT get_selector(BSTR*);
-    HRESULT get_fields(ISchemaStringCollection*);
-    HRESULT get_referencedKey(ISchemaIdentityConstraint*);
+    HRESULT get_selector(BSTR* selector);
+    HRESULT get_fields(ISchemaStringCollection* fields);
+    HRESULT get_referencedKey(ISchemaIdentityConstraint* key);
 }
 enum IID_ISchemaNotation = GUID(0x50ea08be, 0xdd1b, 0x4664, [0x9a, 0x50, 0xc2, 0xf4, 0xf, 0x4b, 0xd7, 0x9a]);
 interface ISchemaNotation : ISchemaItem
 {
-    HRESULT get_systemIdentifier(BSTR*);
-    HRESULT get_publicIdentifier(BSTR*);
+    HRESULT get_systemIdentifier(BSTR* uri);
+    HRESULT get_publicIdentifier(BSTR* uri);
 }
 struct __msxml6_ReferenceRemainingTypes__
 {
@@ -1829,25 +1829,25 @@ struct XHR_COOKIE
 enum IID_IXMLHTTPRequest2Callback = GUID(0xa44a9299, 0xe321, 0x40de, [0x88, 0x66, 0x34, 0x1b, 0x41, 0x66, 0x91, 0x62]);
 interface IXMLHTTPRequest2Callback : IUnknown
 {
-    HRESULT OnRedirect(IXMLHTTPRequest2, const(wchar)*);
-    HRESULT OnHeadersAvailable(IXMLHTTPRequest2, uint, const(wchar)*);
-    HRESULT OnDataAvailable(IXMLHTTPRequest2, ISequentialStream);
-    HRESULT OnResponseReceived(IXMLHTTPRequest2, ISequentialStream);
-    HRESULT OnError(IXMLHTTPRequest2, HRESULT);
+    HRESULT OnRedirect(IXMLHTTPRequest2 pXHR, const(wchar)* pwszRedirectUrl);
+    HRESULT OnHeadersAvailable(IXMLHTTPRequest2 pXHR, uint dwStatus, const(wchar)* pwszStatus);
+    HRESULT OnDataAvailable(IXMLHTTPRequest2 pXHR, ISequentialStream pResponseStream);
+    HRESULT OnResponseReceived(IXMLHTTPRequest2 pXHR, ISequentialStream pResponseStream);
+    HRESULT OnError(IXMLHTTPRequest2 pXHR, HRESULT hrError);
 }
 enum IID_IXMLHTTPRequest2 = GUID(0xe5d37dc0, 0x552a, 0x4d52, [0x9c, 0xc0, 0xa1, 0x4d, 0x54, 0x6f, 0xbd, 0x4]);
 interface IXMLHTTPRequest2 : IUnknown
 {
-    HRESULT Open(const(wchar)*, const(wchar)*, IXMLHTTPRequest2Callback, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*);
-    HRESULT Send(ISequentialStream, ulong);
+    HRESULT Open(const(wchar)* pwszMethod, const(wchar)* pwszUrl, IXMLHTTPRequest2Callback pStatusCallback, const(wchar)* pwszUserName, const(wchar)* pwszPassword, const(wchar)* pwszProxyUserName, const(wchar)* pwszProxyPassword);
+    HRESULT Send(ISequentialStream pBody, ulong cbBody);
     HRESULT Abort();
-    HRESULT SetCookie(const(XHR_COOKIE)*, uint*);
-    HRESULT SetCustomResponseStream(ISequentialStream);
-    HRESULT SetProperty(XHR_PROPERTY, ulong);
-    HRESULT SetRequestHeader(const(wchar)*, const(wchar)*);
-    HRESULT GetAllResponseHeaders(ushort**);
-    HRESULT GetCookie(const(wchar)*, const(wchar)*, uint, uint*, XHR_COOKIE**);
-    HRESULT GetResponseHeader(const(wchar)*, ushort**);
+    HRESULT SetCookie(const(XHR_COOKIE)* pCookie, uint* pdwCookieState);
+    HRESULT SetCustomResponseStream(ISequentialStream pSequentialStream);
+    HRESULT SetProperty(XHR_PROPERTY eProperty, ulong ullValue);
+    HRESULT SetRequestHeader(const(wchar)* pwszHeader, const(wchar)* pwszValue);
+    HRESULT GetAllResponseHeaders(ushort** ppwszHeaders);
+    HRESULT GetCookie(const(wchar)* pwszUrl, const(wchar)* pwszName, uint dwFlags, uint* pcCookies, XHR_COOKIE** ppCookies);
+    HRESULT GetResponseHeader(const(wchar)* pwszHeader, ushort** ppwszValue);
 }
 struct XHR_CERT
 {
@@ -1857,11 +1857,11 @@ struct XHR_CERT
 enum IID_IXMLHTTPRequest3Callback = GUID(0xb9e57830, 0x8c6c, 0x4a6f, [0x9c, 0x13, 0x47, 0x77, 0x2b, 0xb0, 0x47, 0xbb]);
 interface IXMLHTTPRequest3Callback : IXMLHTTPRequest2Callback
 {
-    HRESULT OnServerCertificateReceived(IXMLHTTPRequest3, uint, uint, const(XHR_CERT)*);
-    HRESULT OnClientCertificateRequested(IXMLHTTPRequest3, uint, const(ushort)**);
+    HRESULT OnServerCertificateReceived(IXMLHTTPRequest3 pXHR, uint dwCertificateErrors, uint cServerCertificateChain, const(XHR_CERT)* rgServerCertificateChain);
+    HRESULT OnClientCertificateRequested(IXMLHTTPRequest3 pXHR, uint cIssuerList, const(ushort)** rgpwszIssuerList);
 }
 enum IID_IXMLHTTPRequest3 = GUID(0xa1c9feee, 0x617, 0x4f23, [0x9d, 0x58, 0x89, 0x61, 0xea, 0x43, 0x56, 0x7c]);
 interface IXMLHTTPRequest3 : IXMLHTTPRequest2
 {
-    HRESULT SetClientCertificate(uint, const(ubyte)*, const(wchar)*);
+    HRESULT SetClientCertificate(uint cbClientCertificateHash, const(ubyte)* pbClientCertificateHash, const(wchar)* pwszPin);
 }

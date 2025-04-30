@@ -527,228 +527,228 @@ enum : int
 enum IID_IWMDMMetaData = GUID(0xec3b0663, 0x951, 0x460a, [0x9a, 0x80, 0xd, 0xce, 0xed, 0x3c, 0x4, 0x3c]);
 interface IWMDMMetaData : IUnknown
 {
-    HRESULT AddItem(WMDM_TAG_DATATYPE, const(wchar)*, ubyte*, uint);
-    HRESULT QueryByName(const(wchar)*, WMDM_TAG_DATATYPE*, ubyte**, uint*);
-    HRESULT QueryByIndex(uint, ushort**, WMDM_TAG_DATATYPE*, ubyte**, uint*);
-    HRESULT GetItemCount(uint*);
+    HRESULT AddItem(WMDM_TAG_DATATYPE Type, const(wchar)* pwszTagName, ubyte* pValue, uint iLength);
+    HRESULT QueryByName(const(wchar)* pwszTagName, WMDM_TAG_DATATYPE* pType, ubyte** pValue, uint* pcbLength);
+    HRESULT QueryByIndex(uint iIndex, ushort** ppwszName, WMDM_TAG_DATATYPE* pType, ubyte** ppValue, uint* pcbLength);
+    HRESULT GetItemCount(uint* iCount);
 }
 enum IID_IWMDeviceManager = GUID(0x1dcb3a00, 0x33ed, 0x11d3, [0x84, 0x70, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface IWMDeviceManager : IUnknown
 {
-    HRESULT GetRevision(uint*);
-    HRESULT GetDeviceCount(uint*);
-    HRESULT EnumDevices(IWMDMEnumDevice*);
+    HRESULT GetRevision(uint* pdwRevision);
+    HRESULT GetDeviceCount(uint* pdwCount);
+    HRESULT EnumDevices(IWMDMEnumDevice* ppEnumDevice);
 }
 enum IID_IWMDeviceManager2 = GUID(0x923e5249, 0x8731, 0x4c5b, [0x9b, 0x1c, 0xb8, 0xb6, 0xb, 0x6e, 0x46, 0xaf]);
 interface IWMDeviceManager2 : IWMDeviceManager
 {
-    HRESULT GetDeviceFromCanonicalName(const(wchar)*, IWMDMDevice*);
-    HRESULT EnumDevices2(IWMDMEnumDevice*);
+    HRESULT GetDeviceFromCanonicalName(const(wchar)* pwszCanonicalName, IWMDMDevice* ppDevice);
+    HRESULT EnumDevices2(IWMDMEnumDevice* ppEnumDevice);
     HRESULT Reinitialize();
 }
 enum IID_IWMDeviceManager3 = GUID(0xaf185c41, 0x100d, 0x46ed, [0xbe, 0x2e, 0x9c, 0xe8, 0xc4, 0x45, 0x94, 0xef]);
 interface IWMDeviceManager3 : IWMDeviceManager2
 {
-    HRESULT SetDeviceEnumPreference(uint);
+    HRESULT SetDeviceEnumPreference(uint dwEnumPref);
 }
 enum IID_IWMDMStorageGlobals = GUID(0x1dcb3a07, 0x33ed, 0x11d3, [0x84, 0x70, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface IWMDMStorageGlobals : IUnknown
 {
-    HRESULT GetCapabilities(uint*);
-    HRESULT GetSerialNumber(WMDMID*, ubyte*);
-    HRESULT GetTotalSize(uint*, uint*);
-    HRESULT GetTotalFree(uint*, uint*);
-    HRESULT GetTotalBad(uint*, uint*);
-    HRESULT GetStatus(uint*);
-    HRESULT Initialize(uint, IWMDMProgress);
+    HRESULT GetCapabilities(uint* pdwCapabilities);
+    HRESULT GetSerialNumber(WMDMID* pSerialNum, ubyte* abMac);
+    HRESULT GetTotalSize(uint* pdwTotalSizeLow, uint* pdwTotalSizeHigh);
+    HRESULT GetTotalFree(uint* pdwFreeLow, uint* pdwFreeHigh);
+    HRESULT GetTotalBad(uint* pdwBadLow, uint* pdwBadHigh);
+    HRESULT GetStatus(uint* pdwStatus);
+    HRESULT Initialize(uint fuMode, IWMDMProgress pProgress);
 }
 enum IID_IWMDMStorage = GUID(0x1dcb3a06, 0x33ed, 0x11d3, [0x84, 0x70, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface IWMDMStorage : IUnknown
 {
-    HRESULT SetAttributes(uint, WAVEFORMATEX*);
-    HRESULT GetStorageGlobals(IWMDMStorageGlobals*);
-    HRESULT GetAttributes(uint*, WAVEFORMATEX*);
-    HRESULT GetName(PWSTR, uint);
-    HRESULT GetDate(WMDMDATETIME*);
-    HRESULT GetSize(uint*, uint*);
-    HRESULT GetRights(WMDMRIGHTS**, uint*, ubyte*);
-    HRESULT EnumStorage(IWMDMEnumStorage*);
-    HRESULT SendOpaqueCommand(OPAQUECOMMAND*);
+    HRESULT SetAttributes(uint dwAttributes, WAVEFORMATEX* pFormat);
+    HRESULT GetStorageGlobals(IWMDMStorageGlobals* ppStorageGlobals);
+    HRESULT GetAttributes(uint* pdwAttributes, WAVEFORMATEX* pFormat);
+    HRESULT GetName(PWSTR pwszName, uint nMaxChars);
+    HRESULT GetDate(WMDMDATETIME* pDateTimeUTC);
+    HRESULT GetSize(uint* pdwSizeLow, uint* pdwSizeHigh);
+    HRESULT GetRights(WMDMRIGHTS** ppRights, uint* pnRightsCount, ubyte* abMac);
+    HRESULT EnumStorage(IWMDMEnumStorage* pEnumStorage);
+    HRESULT SendOpaqueCommand(OPAQUECOMMAND* pCommand);
 }
 enum IID_IWMDMStorage2 = GUID(0x1ed5a144, 0x5cd5, 0x4683, [0x9e, 0xff, 0x72, 0xcb, 0xdb, 0x2d, 0x95, 0x33]);
 interface IWMDMStorage2 : IWMDMStorage
 {
-    HRESULT GetStorage(const(wchar)*, IWMDMStorage*);
-    HRESULT SetAttributes2(uint, uint, WAVEFORMATEX*, VIDEOINFOHEADER*);
-    HRESULT GetAttributes2(uint*, uint*, WAVEFORMATEX*, VIDEOINFOHEADER*);
+    HRESULT GetStorage(const(wchar)* pszStorageName, IWMDMStorage* ppStorage);
+    HRESULT SetAttributes2(uint dwAttributes, uint dwAttributesEx, WAVEFORMATEX* pFormat, VIDEOINFOHEADER* pVideoFormat);
+    HRESULT GetAttributes2(uint* pdwAttributes, uint* pdwAttributesEx, WAVEFORMATEX* pAudioFormat, VIDEOINFOHEADER* pVideoFormat);
 }
 enum IID_IWMDMStorage3 = GUID(0x97717eea, 0x926a, 0x464e, [0x96, 0xa4, 0x24, 0x7b, 0x2, 0x16, 0x2, 0x6e]);
 interface IWMDMStorage3 : IWMDMStorage2
 {
-    HRESULT GetMetadata(IWMDMMetaData*);
-    HRESULT SetMetadata(IWMDMMetaData);
-    HRESULT CreateEmptyMetadataObject(IWMDMMetaData*);
-    HRESULT SetEnumPreference(WMDM_STORAGE_ENUM_MODE*, uint, WMDMMetadataView*);
+    HRESULT GetMetadata(IWMDMMetaData* ppMetadata);
+    HRESULT SetMetadata(IWMDMMetaData pMetadata);
+    HRESULT CreateEmptyMetadataObject(IWMDMMetaData* ppMetadata);
+    HRESULT SetEnumPreference(WMDM_STORAGE_ENUM_MODE* pMode, uint nViews, WMDMMetadataView* pViews);
 }
 enum IID_IWMDMStorage4 = GUID(0xc225bac5, 0xa03a, 0x40b8, [0x9a, 0x23, 0x91, 0xcf, 0x47, 0x8c, 0x64, 0xa6]);
 interface IWMDMStorage4 : IWMDMStorage3
 {
-    HRESULT SetReferences(uint, IWMDMStorage*);
-    HRESULT GetReferences(uint*, IWMDMStorage**);
-    HRESULT GetRightsWithProgress(IWMDMProgress3, WMDMRIGHTS**, uint*);
-    HRESULT GetSpecifiedMetadata(uint, const(wchar)**, IWMDMMetaData*);
-    HRESULT FindStorage(WMDM_FIND_SCOPE, const(wchar)*, IWMDMStorage*);
-    HRESULT GetParent(IWMDMStorage*);
+    HRESULT SetReferences(uint dwRefs, IWMDMStorage* ppIWMDMStorage);
+    HRESULT GetReferences(uint* pdwRefs, IWMDMStorage** pppIWMDMStorage);
+    HRESULT GetRightsWithProgress(IWMDMProgress3 pIProgressCallback, WMDMRIGHTS** ppRights, uint* pnRightsCount);
+    HRESULT GetSpecifiedMetadata(uint cProperties, const(wchar)** ppwszPropNames, IWMDMMetaData* ppMetadata);
+    HRESULT FindStorage(WMDM_FIND_SCOPE findScope, const(wchar)* pwszUniqueID, IWMDMStorage* ppStorage);
+    HRESULT GetParent(IWMDMStorage* ppStorage);
 }
 enum IID_IWMDMOperation = GUID(0x1dcb3a0b, 0x33ed, 0x11d3, [0x84, 0x70, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface IWMDMOperation : IUnknown
 {
     HRESULT BeginRead();
     HRESULT BeginWrite();
-    HRESULT GetObjectName(PWSTR, uint);
-    HRESULT SetObjectName(PWSTR, uint);
-    HRESULT GetObjectAttributes(uint*, WAVEFORMATEX*);
-    HRESULT SetObjectAttributes(uint, WAVEFORMATEX*);
-    HRESULT GetObjectTotalSize(uint*, uint*);
-    HRESULT SetObjectTotalSize(uint, uint);
-    HRESULT TransferObjectData(ubyte*, uint*, ubyte*);
-    HRESULT End(HRESULT*, IUnknown);
+    HRESULT GetObjectName(PWSTR pwszName, uint nMaxChars);
+    HRESULT SetObjectName(PWSTR pwszName, uint nMaxChars);
+    HRESULT GetObjectAttributes(uint* pdwAttributes, WAVEFORMATEX* pFormat);
+    HRESULT SetObjectAttributes(uint dwAttributes, WAVEFORMATEX* pFormat);
+    HRESULT GetObjectTotalSize(uint* pdwSize, uint* pdwSizeHigh);
+    HRESULT SetObjectTotalSize(uint dwSize, uint dwSizeHigh);
+    HRESULT TransferObjectData(ubyte* pData, uint* pdwSize, ubyte* abMac);
+    HRESULT End(HRESULT* phCompletionCode, IUnknown pNewObject);
 }
 enum IID_IWMDMOperation2 = GUID(0x33445b48, 0x7df7, 0x425c, [0xad, 0x8f, 0xf, 0xc6, 0xd8, 0x2f, 0x9f, 0x75]);
 interface IWMDMOperation2 : IWMDMOperation
 {
-    HRESULT SetObjectAttributes2(uint, uint, WAVEFORMATEX*, VIDEOINFOHEADER*);
-    HRESULT GetObjectAttributes2(uint*, uint*, WAVEFORMATEX*, VIDEOINFOHEADER*);
+    HRESULT SetObjectAttributes2(uint dwAttributes, uint dwAttributesEx, WAVEFORMATEX* pFormat, VIDEOINFOHEADER* pVideoFormat);
+    HRESULT GetObjectAttributes2(uint* pdwAttributes, uint* pdwAttributesEx, WAVEFORMATEX* pAudioFormat, VIDEOINFOHEADER* pVideoFormat);
 }
 enum IID_IWMDMOperation3 = GUID(0xd1f9b46a, 0x9ca8, 0x46d8, [0x9d, 0xf, 0x1e, 0xc9, 0xba, 0xe5, 0x49, 0x19]);
 interface IWMDMOperation3 : IWMDMOperation
 {
-    HRESULT TransferObjectDataOnClearChannel(ubyte*, uint*);
+    HRESULT TransferObjectDataOnClearChannel(ubyte* pData, uint* pdwSize);
 }
 enum IID_IWMDMProgress = GUID(0x1dcb3a0c, 0x33ed, 0x11d3, [0x84, 0x70, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface IWMDMProgress : IUnknown
 {
-    HRESULT Begin(uint);
-    HRESULT Progress(uint);
+    HRESULT Begin(uint dwEstimatedTicks);
+    HRESULT Progress(uint dwTranspiredTicks);
     HRESULT End();
 }
 enum IID_IWMDMProgress2 = GUID(0x3a43f550, 0xb383, 0x4e92, [0xb0, 0x4a, 0xe6, 0xbb, 0xc6, 0x60, 0xfe, 0xfc]);
 interface IWMDMProgress2 : IWMDMProgress
 {
-    HRESULT End2(HRESULT);
+    HRESULT End2(HRESULT hrCompletionCode);
 }
 enum IID_IWMDMProgress3 = GUID(0x21de01cb, 0x3bb4, 0x4929, [0xb2, 0x1a, 0x17, 0xaf, 0x3f, 0x80, 0xf6, 0x58]);
 interface IWMDMProgress3 : IWMDMProgress2
 {
-    HRESULT Begin3(GUID, uint, OPAQUECOMMAND*);
-    HRESULT Progress3(GUID, uint, OPAQUECOMMAND*);
-    HRESULT End3(GUID, HRESULT, OPAQUECOMMAND*);
+    HRESULT Begin3(GUID EventId, uint dwEstimatedTicks, OPAQUECOMMAND* pContext);
+    HRESULT Progress3(GUID EventId, uint dwTranspiredTicks, OPAQUECOMMAND* pContext);
+    HRESULT End3(GUID EventId, HRESULT hrCompletionCode, OPAQUECOMMAND* pContext);
 }
 enum IID_IWMDMDevice = GUID(0x1dcb3a02, 0x33ed, 0x11d3, [0x84, 0x70, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface IWMDMDevice : IUnknown
 {
-    HRESULT GetName(PWSTR, uint);
-    HRESULT GetManufacturer(PWSTR, uint);
-    HRESULT GetVersion(uint*);
-    HRESULT GetType(uint*);
-    HRESULT GetSerialNumber(WMDMID*, ubyte*);
-    HRESULT GetPowerSource(uint*, uint*);
-    HRESULT GetStatus(uint*);
-    HRESULT GetDeviceIcon(uint*);
-    HRESULT EnumStorage(IWMDMEnumStorage*);
-    HRESULT GetFormatSupport(WAVEFORMATEX**, uint*, PWSTR**, uint*);
-    HRESULT SendOpaqueCommand(OPAQUECOMMAND*);
+    HRESULT GetName(PWSTR pwszName, uint nMaxChars);
+    HRESULT GetManufacturer(PWSTR pwszName, uint nMaxChars);
+    HRESULT GetVersion(uint* pdwVersion);
+    HRESULT GetType(uint* pdwType);
+    HRESULT GetSerialNumber(WMDMID* pSerialNumber, ubyte* abMac);
+    HRESULT GetPowerSource(uint* pdwPowerSource, uint* pdwPercentRemaining);
+    HRESULT GetStatus(uint* pdwStatus);
+    HRESULT GetDeviceIcon(uint* hIcon);
+    HRESULT EnumStorage(IWMDMEnumStorage* ppEnumStorage);
+    HRESULT GetFormatSupport(WAVEFORMATEX** ppFormatEx, uint* pnFormatCount, PWSTR** pppwszMimeType, uint* pnMimeTypeCount);
+    HRESULT SendOpaqueCommand(OPAQUECOMMAND* pCommand);
 }
 enum IID_IWMDMDevice2 = GUID(0xe34f3d37, 0x9d67, 0x4fc1, [0x92, 0x52, 0x62, 0xd2, 0x8b, 0x2f, 0x8b, 0x55]);
 interface IWMDMDevice2 : IWMDMDevice
 {
-    HRESULT GetStorage(const(wchar)*, IWMDMStorage*);
-    HRESULT GetFormatSupport2(uint, WAVEFORMATEX**, uint*, VIDEOINFOHEADER**, uint*, WMFILECAPABILITIES**, uint*);
-    HRESULT GetSpecifyPropertyPages(ISpecifyPropertyPages*, IUnknown**, uint*);
-    HRESULT GetCanonicalName(PWSTR, uint);
+    HRESULT GetStorage(const(wchar)* pszStorageName, IWMDMStorage* ppStorage);
+    HRESULT GetFormatSupport2(uint dwFlags, WAVEFORMATEX** ppAudioFormatEx, uint* pnAudioFormatCount, VIDEOINFOHEADER** ppVideoFormatEx, uint* pnVideoFormatCount, WMFILECAPABILITIES** ppFileType, uint* pnFileTypeCount);
+    HRESULT GetSpecifyPropertyPages(ISpecifyPropertyPages* ppSpecifyPropPages, IUnknown** pppUnknowns, uint* pcUnks);
+    HRESULT GetCanonicalName(PWSTR pwszPnPName, uint nMaxChars);
 }
 enum IID_IWMDMDevice3 = GUID(0x6c03e4fe, 0x5db, 0x4dda, [0x9e, 0x3c, 0x6, 0x23, 0x3a, 0x6d, 0x5d, 0x65]);
 interface IWMDMDevice3 : IWMDMDevice2
 {
-    HRESULT GetProperty(const(wchar)*, PROPVARIANT*);
-    HRESULT SetProperty(const(wchar)*, const(PROPVARIANT)*);
-    HRESULT GetFormatCapability(WMDM_FORMATCODE, WMDM_FORMAT_CAPABILITY*);
-    HRESULT DeviceIoControl(uint, ubyte*, uint, ubyte*, uint*);
-    HRESULT FindStorage(WMDM_FIND_SCOPE, const(wchar)*, IWMDMStorage*);
+    HRESULT GetProperty(const(wchar)* pwszPropName, PROPVARIANT* pValue);
+    HRESULT SetProperty(const(wchar)* pwszPropName, const(PROPVARIANT)* pValue);
+    HRESULT GetFormatCapability(WMDM_FORMATCODE format, WMDM_FORMAT_CAPABILITY* pFormatSupport);
+    HRESULT DeviceIoControl(uint dwIoControlCode, ubyte* lpInBuffer, uint nInBufferSize, ubyte* lpOutBuffer, uint* pnOutBufferSize);
+    HRESULT FindStorage(WMDM_FIND_SCOPE findScope, const(wchar)* pwszUniqueID, IWMDMStorage* ppStorage);
 }
 enum IID_IWMDMDeviceSession = GUID(0x82af0a65, 0x9d96, 0x412c, [0x83, 0xe5, 0x3c, 0x43, 0xe4, 0xb0, 0x6c, 0xc7]);
 interface IWMDMDeviceSession : IUnknown
 {
-    HRESULT BeginSession(WMDM_SESSION_TYPE, ubyte*, uint);
-    HRESULT EndSession(WMDM_SESSION_TYPE, ubyte*, uint);
+    HRESULT BeginSession(WMDM_SESSION_TYPE type, ubyte* pCtx, uint dwSizeCtx);
+    HRESULT EndSession(WMDM_SESSION_TYPE type, ubyte* pCtx, uint dwSizeCtx);
 }
 enum IID_IWMDMEnumDevice = GUID(0x1dcb3a01, 0x33ed, 0x11d3, [0x84, 0x70, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface IWMDMEnumDevice : IUnknown
 {
-    HRESULT Next(uint, IWMDMDevice*, uint*);
-    HRESULT Skip(uint, uint*);
+    HRESULT Next(uint celt, IWMDMDevice* ppDevice, uint* pceltFetched);
+    HRESULT Skip(uint celt, uint* pceltFetched);
     HRESULT Reset();
-    HRESULT Clone(IWMDMEnumDevice*);
+    HRESULT Clone(IWMDMEnumDevice* ppEnumDevice);
 }
 enum IID_IWMDMDeviceControl = GUID(0x1dcb3a04, 0x33ed, 0x11d3, [0x84, 0x70, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface IWMDMDeviceControl : IUnknown
 {
-    HRESULT GetStatus(uint*);
-    HRESULT GetCapabilities(uint*);
+    HRESULT GetStatus(uint* pdwStatus);
+    HRESULT GetCapabilities(uint* pdwCapabilitiesMask);
     HRESULT Play();
-    HRESULT Record(WAVEFORMATEX*);
+    HRESULT Record(WAVEFORMATEX* pFormat);
     HRESULT Pause();
     HRESULT Resume();
     HRESULT Stop();
-    HRESULT Seek(uint, int);
+    HRESULT Seek(uint fuMode, int nOffset);
 }
 enum IID_IWMDMEnumStorage = GUID(0x1dcb3a05, 0x33ed, 0x11d3, [0x84, 0x70, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface IWMDMEnumStorage : IUnknown
 {
-    HRESULT Next(uint, IWMDMStorage*, uint*);
-    HRESULT Skip(uint, uint*);
+    HRESULT Next(uint celt, IWMDMStorage* ppStorage, uint* pceltFetched);
+    HRESULT Skip(uint celt, uint* pceltFetched);
     HRESULT Reset();
-    HRESULT Clone(IWMDMEnumStorage*);
+    HRESULT Clone(IWMDMEnumStorage* ppEnumStorage);
 }
 enum IID_IWMDMStorageControl = GUID(0x1dcb3a08, 0x33ed, 0x11d3, [0x84, 0x70, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface IWMDMStorageControl : IUnknown
 {
-    HRESULT Insert(uint, PWSTR, IWMDMOperation, IWMDMProgress, IWMDMStorage*);
-    HRESULT Delete(uint, IWMDMProgress);
-    HRESULT Rename(uint, PWSTR, IWMDMProgress);
-    HRESULT Read(uint, PWSTR, IWMDMProgress, IWMDMOperation);
-    HRESULT Move(uint, IWMDMStorage, IWMDMProgress);
+    HRESULT Insert(uint fuMode, PWSTR pwszFile, IWMDMOperation pOperation, IWMDMProgress pProgress, IWMDMStorage* ppNewObject);
+    HRESULT Delete(uint fuMode, IWMDMProgress pProgress);
+    HRESULT Rename(uint fuMode, PWSTR pwszNewName, IWMDMProgress pProgress);
+    HRESULT Read(uint fuMode, PWSTR pwszFile, IWMDMProgress pProgress, IWMDMOperation pOperation);
+    HRESULT Move(uint fuMode, IWMDMStorage pTargetObject, IWMDMProgress pProgress);
 }
 enum IID_IWMDMStorageControl2 = GUID(0x972c2e88, 0xbd6c, 0x4125, [0x8e, 0x9, 0x84, 0xf8, 0x37, 0xe6, 0x37, 0xb6]);
 interface IWMDMStorageControl2 : IWMDMStorageControl
 {
-    HRESULT Insert2(uint, PWSTR, PWSTR, IWMDMOperation, IWMDMProgress, IUnknown, IWMDMStorage*);
+    HRESULT Insert2(uint fuMode, PWSTR pwszFileSource, PWSTR pwszFileDest, IWMDMOperation pOperation, IWMDMProgress pProgress, IUnknown pUnknown, IWMDMStorage* ppNewObject);
 }
 enum IID_IWMDMStorageControl3 = GUID(0xb3266365, 0xd4f3, 0x4696, [0x8d, 0x53, 0xbd, 0x27, 0xec, 0x60, 0x99, 0x3a]);
 interface IWMDMStorageControl3 : IWMDMStorageControl2
 {
-    HRESULT Insert3(uint, uint, PWSTR, PWSTR, IWMDMOperation, IWMDMProgress, IWMDMMetaData, IUnknown, IWMDMStorage*);
+    HRESULT Insert3(uint fuMode, uint fuType, PWSTR pwszFileSource, PWSTR pwszFileDest, IWMDMOperation pOperation, IWMDMProgress pProgress, IWMDMMetaData pMetaData, IUnknown pUnknown, IWMDMStorage* ppNewObject);
 }
 enum IID_IWMDMObjectInfo = GUID(0x1dcb3a09, 0x33ed, 0x11d3, [0x84, 0x70, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface IWMDMObjectInfo : IUnknown
 {
-    HRESULT GetPlayLength(uint*);
-    HRESULT SetPlayLength(uint);
-    HRESULT GetPlayOffset(uint*);
-    HRESULT SetPlayOffset(uint);
-    HRESULT GetTotalLength(uint*);
-    HRESULT GetLastPlayPosition(uint*);
-    HRESULT GetLongestPlayPosition(uint*);
+    HRESULT GetPlayLength(uint* pdwLength);
+    HRESULT SetPlayLength(uint dwLength);
+    HRESULT GetPlayOffset(uint* pdwOffset);
+    HRESULT SetPlayOffset(uint dwOffset);
+    HRESULT GetTotalLength(uint* pdwLength);
+    HRESULT GetLastPlayPosition(uint* pdwLastPos);
+    HRESULT GetLongestPlayPosition(uint* pdwLongestPos);
 }
 enum IID_IWMDMRevoked = GUID(0xebeccedb, 0x88ee, 0x4e55, [0xb6, 0xa4, 0x8d, 0x9f, 0x7, 0xd6, 0x96, 0xaa]);
 interface IWMDMRevoked : IUnknown
 {
-    HRESULT GetRevocationURL(PWSTR*, uint*, uint*);
+    HRESULT GetRevocationURL(PWSTR* ppwszRevocationURL, uint* pdwBufferLen, uint* pdwRevokedBitFlag);
 }
 enum IID_IWMDMNotification = GUID(0x3f5e95c0, 0xf43, 0x4ed4, [0x93, 0xd2, 0xc8, 0x9a, 0x45, 0xd5, 0x9b, 0x81]);
 interface IWMDMNotification : IUnknown
 {
-    HRESULT WMDMMessage(uint, const(wchar)*);
+    HRESULT WMDMMessage(uint dwMessageType, const(wchar)* pwszCanonicalName);
 }
 union WMDMDetermineMaxPropStringLen
 {
@@ -838,229 +838,229 @@ union WMDMDetermineMaxPropStringLen
 enum IID_IMDServiceProvider = GUID(0x1dcb3a10, 0x33ed, 0x11d3, [0x84, 0x70, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface IMDServiceProvider : IUnknown
 {
-    HRESULT GetDeviceCount(uint*);
-    HRESULT EnumDevices(IMDSPEnumDevice*);
+    HRESULT GetDeviceCount(uint* pdwCount);
+    HRESULT EnumDevices(IMDSPEnumDevice* ppEnumDevice);
 }
 enum IID_IMDServiceProvider2 = GUID(0xb2fa24b7, 0xcda3, 0x4694, [0x98, 0x62, 0x41, 0x3a, 0xe1, 0xa3, 0x48, 0x19]);
 interface IMDServiceProvider2 : IMDServiceProvider
 {
-    HRESULT CreateDevice(const(wchar)*, uint*, IMDSPDevice**);
+    HRESULT CreateDevice(const(wchar)* pwszDevicePath, uint* pdwCount, IMDSPDevice** pppDeviceArray);
 }
 enum IID_IMDServiceProvider3 = GUID(0x4ed13ef3, 0xa971, 0x4d19, [0x9f, 0x51, 0xe, 0x18, 0x26, 0xb2, 0xda, 0x57]);
 interface IMDServiceProvider3 : IMDServiceProvider2
 {
-    HRESULT SetDeviceEnumPreference(uint);
+    HRESULT SetDeviceEnumPreference(uint dwEnumPref);
 }
 enum IID_IMDSPEnumDevice = GUID(0x1dcb3a11, 0x33ed, 0x11d3, [0x84, 0x70, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface IMDSPEnumDevice : IUnknown
 {
-    HRESULT Next(uint, IMDSPDevice*, uint*);
-    HRESULT Skip(uint, uint*);
+    HRESULT Next(uint celt, IMDSPDevice* ppDevice, uint* pceltFetched);
+    HRESULT Skip(uint celt, uint* pceltFetched);
     HRESULT Reset();
-    HRESULT Clone(IMDSPEnumDevice*);
+    HRESULT Clone(IMDSPEnumDevice* ppEnumDevice);
 }
 enum IID_IMDSPDevice = GUID(0x1dcb3a12, 0x33ed, 0x11d3, [0x84, 0x70, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface IMDSPDevice : IUnknown
 {
-    HRESULT GetName(PWSTR, uint);
-    HRESULT GetManufacturer(PWSTR, uint);
-    HRESULT GetVersion(uint*);
-    HRESULT GetType(uint*);
-    HRESULT GetSerialNumber(WMDMID*, ubyte*);
-    HRESULT GetPowerSource(uint*, uint*);
-    HRESULT GetStatus(uint*);
-    HRESULT GetDeviceIcon(uint*);
-    HRESULT EnumStorage(IMDSPEnumStorage*);
-    HRESULT GetFormatSupport(WAVEFORMATEX**, uint*, PWSTR**, uint*);
-    HRESULT SendOpaqueCommand(OPAQUECOMMAND*);
+    HRESULT GetName(PWSTR pwszName, uint nMaxChars);
+    HRESULT GetManufacturer(PWSTR pwszName, uint nMaxChars);
+    HRESULT GetVersion(uint* pdwVersion);
+    HRESULT GetType(uint* pdwType);
+    HRESULT GetSerialNumber(WMDMID* pSerialNumber, ubyte* abMac);
+    HRESULT GetPowerSource(uint* pdwPowerSource, uint* pdwPercentRemaining);
+    HRESULT GetStatus(uint* pdwStatus);
+    HRESULT GetDeviceIcon(uint* hIcon);
+    HRESULT EnumStorage(IMDSPEnumStorage* ppEnumStorage);
+    HRESULT GetFormatSupport(WAVEFORMATEX** pFormatEx, uint* pnFormatCount, PWSTR** pppwszMimeType, uint* pnMimeTypeCount);
+    HRESULT SendOpaqueCommand(OPAQUECOMMAND* pCommand);
 }
 enum IID_IMDSPDevice2 = GUID(0x420d16ad, 0xc97d, 0x4e00, [0x82, 0xaa, 0x0, 0xe9, 0xf4, 0x33, 0x5d, 0xdd]);
 interface IMDSPDevice2 : IMDSPDevice
 {
-    HRESULT GetStorage(const(wchar)*, IMDSPStorage*);
-    HRESULT GetFormatSupport2(uint, WAVEFORMATEX**, uint*, VIDEOINFOHEADER**, uint*, WMFILECAPABILITIES**, uint*);
-    HRESULT GetSpecifyPropertyPages(ISpecifyPropertyPages*, IUnknown**, uint*);
-    HRESULT GetCanonicalName(PWSTR, uint);
+    HRESULT GetStorage(const(wchar)* pszStorageName, IMDSPStorage* ppStorage);
+    HRESULT GetFormatSupport2(uint dwFlags, WAVEFORMATEX** ppAudioFormatEx, uint* pnAudioFormatCount, VIDEOINFOHEADER** ppVideoFormatEx, uint* pnVideoFormatCount, WMFILECAPABILITIES** ppFileType, uint* pnFileTypeCount);
+    HRESULT GetSpecifyPropertyPages(ISpecifyPropertyPages* ppSpecifyPropPages, IUnknown** pppUnknowns, uint* pcUnks);
+    HRESULT GetCanonicalName(PWSTR pwszPnPName, uint nMaxChars);
 }
 enum IID_IMDSPDevice3 = GUID(0x1a839845, 0xfc55, 0x487c, [0x97, 0x6f, 0xee, 0x38, 0xac, 0xe, 0x8c, 0x4e]);
 interface IMDSPDevice3 : IMDSPDevice2
 {
-    HRESULT GetProperty(const(wchar)*, PROPVARIANT*);
-    HRESULT SetProperty(const(wchar)*, const(PROPVARIANT)*);
-    HRESULT GetFormatCapability(WMDM_FORMATCODE, WMDM_FORMAT_CAPABILITY*);
-    HRESULT DeviceIoControl(uint, ubyte*, uint, ubyte*, uint*);
-    HRESULT FindStorage(WMDM_FIND_SCOPE, const(wchar)*, IMDSPStorage*);
+    HRESULT GetProperty(const(wchar)* pwszPropName, PROPVARIANT* pValue);
+    HRESULT SetProperty(const(wchar)* pwszPropName, const(PROPVARIANT)* pValue);
+    HRESULT GetFormatCapability(WMDM_FORMATCODE format, WMDM_FORMAT_CAPABILITY* pFormatSupport);
+    HRESULT DeviceIoControl(uint dwIoControlCode, ubyte* lpInBuffer, uint nInBufferSize, ubyte* lpOutBuffer, uint* pnOutBufferSize);
+    HRESULT FindStorage(WMDM_FIND_SCOPE findScope, const(wchar)* pwszUniqueID, IMDSPStorage* ppStorage);
 }
 enum IID_IMDSPDeviceControl = GUID(0x1dcb3a14, 0x33ed, 0x11d3, [0x84, 0x70, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface IMDSPDeviceControl : IUnknown
 {
-    HRESULT GetDCStatus(uint*);
-    HRESULT GetCapabilities(uint*);
+    HRESULT GetDCStatus(uint* pdwStatus);
+    HRESULT GetCapabilities(uint* pdwCapabilitiesMask);
     HRESULT Play();
-    HRESULT Record(WAVEFORMATEX*);
+    HRESULT Record(WAVEFORMATEX* pFormat);
     HRESULT Pause();
     HRESULT Resume();
     HRESULT Stop();
-    HRESULT Seek(uint, int);
+    HRESULT Seek(uint fuMode, int nOffset);
 }
 enum IID_IMDSPEnumStorage = GUID(0x1dcb3a15, 0x33ed, 0x11d3, [0x84, 0x70, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface IMDSPEnumStorage : IUnknown
 {
-    HRESULT Next(uint, IMDSPStorage*, uint*);
-    HRESULT Skip(uint, uint*);
+    HRESULT Next(uint celt, IMDSPStorage* ppStorage, uint* pceltFetched);
+    HRESULT Skip(uint celt, uint* pceltFetched);
     HRESULT Reset();
-    HRESULT Clone(IMDSPEnumStorage*);
+    HRESULT Clone(IMDSPEnumStorage* ppEnumStorage);
 }
 enum IID_IMDSPStorage = GUID(0x1dcb3a16, 0x33ed, 0x11d3, [0x84, 0x70, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface IMDSPStorage : IUnknown
 {
-    HRESULT SetAttributes(uint, WAVEFORMATEX*);
-    HRESULT GetStorageGlobals(IMDSPStorageGlobals*);
-    HRESULT GetAttributes(uint*, WAVEFORMATEX*);
-    HRESULT GetName(PWSTR, uint);
-    HRESULT GetDate(WMDMDATETIME*);
-    HRESULT GetSize(uint*, uint*);
-    HRESULT GetRights(WMDMRIGHTS**, uint*, ubyte*);
-    HRESULT CreateStorage(uint, WAVEFORMATEX*, PWSTR, IMDSPStorage*);
-    HRESULT EnumStorage(IMDSPEnumStorage*);
-    HRESULT SendOpaqueCommand(OPAQUECOMMAND*);
+    HRESULT SetAttributes(uint dwAttributes, WAVEFORMATEX* pFormat);
+    HRESULT GetStorageGlobals(IMDSPStorageGlobals* ppStorageGlobals);
+    HRESULT GetAttributes(uint* pdwAttributes, WAVEFORMATEX* pFormat);
+    HRESULT GetName(PWSTR pwszName, uint nMaxChars);
+    HRESULT GetDate(WMDMDATETIME* pDateTimeUTC);
+    HRESULT GetSize(uint* pdwSizeLow, uint* pdwSizeHigh);
+    HRESULT GetRights(WMDMRIGHTS** ppRights, uint* pnRightsCount, ubyte* abMac);
+    HRESULT CreateStorage(uint dwAttributes, WAVEFORMATEX* pFormat, PWSTR pwszName, IMDSPStorage* ppNewStorage);
+    HRESULT EnumStorage(IMDSPEnumStorage* ppEnumStorage);
+    HRESULT SendOpaqueCommand(OPAQUECOMMAND* pCommand);
 }
 enum IID_IMDSPStorage2 = GUID(0xa5e07a5, 0x6454, 0x4451, [0x9c, 0x36, 0x1c, 0x6a, 0xe7, 0xe2, 0xb1, 0xd6]);
 interface IMDSPStorage2 : IMDSPStorage
 {
-    HRESULT GetStorage(const(wchar)*, IMDSPStorage*);
-    HRESULT CreateStorage2(uint, uint, WAVEFORMATEX*, VIDEOINFOHEADER*, PWSTR, ulong, IMDSPStorage*);
-    HRESULT SetAttributes2(uint, uint, WAVEFORMATEX*, VIDEOINFOHEADER*);
-    HRESULT GetAttributes2(uint*, uint*, WAVEFORMATEX*, VIDEOINFOHEADER*);
+    HRESULT GetStorage(const(wchar)* pszStorageName, IMDSPStorage* ppStorage);
+    HRESULT CreateStorage2(uint dwAttributes, uint dwAttributesEx, WAVEFORMATEX* pAudioFormat, VIDEOINFOHEADER* pVideoFormat, PWSTR pwszName, ulong qwFileSize, IMDSPStorage* ppNewStorage);
+    HRESULT SetAttributes2(uint dwAttributes, uint dwAttributesEx, WAVEFORMATEX* pAudioFormat, VIDEOINFOHEADER* pVideoFormat);
+    HRESULT GetAttributes2(uint* pdwAttributes, uint* pdwAttributesEx, WAVEFORMATEX* pAudioFormat, VIDEOINFOHEADER* pVideoFormat);
 }
 enum IID_IMDSPStorage3 = GUID(0x6c669867, 0x97ed, 0x4a67, [0x97, 0x6, 0x1c, 0x55, 0x29, 0xd2, 0xa4, 0x14]);
 interface IMDSPStorage3 : IMDSPStorage2
 {
-    HRESULT GetMetadata(IWMDMMetaData);
-    HRESULT SetMetadata(IWMDMMetaData);
+    HRESULT GetMetadata(IWMDMMetaData pMetadata);
+    HRESULT SetMetadata(IWMDMMetaData pMetadata);
 }
 enum IID_IMDSPStorage4 = GUID(0x3133b2c4, 0x515c, 0x481b, [0xb1, 0xce, 0x39, 0x32, 0x7e, 0xcb, 0x4f, 0x74]);
 interface IMDSPStorage4 : IMDSPStorage3
 {
-    HRESULT SetReferences(uint, IMDSPStorage*);
-    HRESULT GetReferences(uint*, IMDSPStorage**);
-    HRESULT CreateStorageWithMetadata(uint, const(wchar)*, IWMDMMetaData, ulong, IMDSPStorage*);
-    HRESULT GetSpecifiedMetadata(uint, const(wchar)**, IWMDMMetaData);
-    HRESULT FindStorage(WMDM_FIND_SCOPE, const(wchar)*, IMDSPStorage*);
-    HRESULT GetParent(IMDSPStorage*);
+    HRESULT SetReferences(uint dwRefs, IMDSPStorage* ppISPStorage);
+    HRESULT GetReferences(uint* pdwRefs, IMDSPStorage** pppISPStorage);
+    HRESULT CreateStorageWithMetadata(uint dwAttributes, const(wchar)* pwszName, IWMDMMetaData pMetadata, ulong qwFileSize, IMDSPStorage* ppNewStorage);
+    HRESULT GetSpecifiedMetadata(uint cProperties, const(wchar)** ppwszPropNames, IWMDMMetaData pMetadata);
+    HRESULT FindStorage(WMDM_FIND_SCOPE findScope, const(wchar)* pwszUniqueID, IMDSPStorage* ppStorage);
+    HRESULT GetParent(IMDSPStorage* ppStorage);
 }
 enum IID_IMDSPStorageGlobals = GUID(0x1dcb3a17, 0x33ed, 0x11d3, [0x84, 0x70, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface IMDSPStorageGlobals : IUnknown
 {
-    HRESULT GetCapabilities(uint*);
-    HRESULT GetSerialNumber(WMDMID*, ubyte*);
-    HRESULT GetTotalSize(uint*, uint*);
-    HRESULT GetTotalFree(uint*, uint*);
-    HRESULT GetTotalBad(uint*, uint*);
-    HRESULT GetStatus(uint*);
-    HRESULT Initialize(uint, IWMDMProgress);
-    HRESULT GetDevice(IMDSPDevice*);
-    HRESULT GetRootStorage(IMDSPStorage*);
+    HRESULT GetCapabilities(uint* pdwCapabilities);
+    HRESULT GetSerialNumber(WMDMID* pSerialNum, ubyte* abMac);
+    HRESULT GetTotalSize(uint* pdwTotalSizeLow, uint* pdwTotalSizeHigh);
+    HRESULT GetTotalFree(uint* pdwFreeLow, uint* pdwFreeHigh);
+    HRESULT GetTotalBad(uint* pdwBadLow, uint* pdwBadHigh);
+    HRESULT GetStatus(uint* pdwStatus);
+    HRESULT Initialize(uint fuMode, IWMDMProgress pProgress);
+    HRESULT GetDevice(IMDSPDevice* ppDevice);
+    HRESULT GetRootStorage(IMDSPStorage* ppRoot);
 }
 enum IID_IMDSPObjectInfo = GUID(0x1dcb3a19, 0x33ed, 0x11d3, [0x84, 0x70, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface IMDSPObjectInfo : IUnknown
 {
-    HRESULT GetPlayLength(uint*);
-    HRESULT SetPlayLength(uint);
-    HRESULT GetPlayOffset(uint*);
-    HRESULT SetPlayOffset(uint);
-    HRESULT GetTotalLength(uint*);
-    HRESULT GetLastPlayPosition(uint*);
-    HRESULT GetLongestPlayPosition(uint*);
+    HRESULT GetPlayLength(uint* pdwLength);
+    HRESULT SetPlayLength(uint dwLength);
+    HRESULT GetPlayOffset(uint* pdwOffset);
+    HRESULT SetPlayOffset(uint dwOffset);
+    HRESULT GetTotalLength(uint* pdwLength);
+    HRESULT GetLastPlayPosition(uint* pdwLastPos);
+    HRESULT GetLongestPlayPosition(uint* pdwLongestPos);
 }
 enum IID_IMDSPObject = GUID(0x1dcb3a18, 0x33ed, 0x11d3, [0x84, 0x70, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface IMDSPObject : IUnknown
 {
-    HRESULT Open(uint);
-    HRESULT Read(ubyte*, uint*, ubyte*);
-    HRESULT Write(ubyte*, uint*, ubyte*);
-    HRESULT Delete(uint, IWMDMProgress);
-    HRESULT Seek(uint, uint);
-    HRESULT Rename(PWSTR, IWMDMProgress);
-    HRESULT Move(uint, IWMDMProgress, IMDSPStorage);
+    HRESULT Open(uint fuMode);
+    HRESULT Read(ubyte* pData, uint* pdwSize, ubyte* abMac);
+    HRESULT Write(ubyte* pData, uint* pdwSize, ubyte* abMac);
+    HRESULT Delete(uint fuMode, IWMDMProgress pProgress);
+    HRESULT Seek(uint fuFlags, uint dwOffset);
+    HRESULT Rename(PWSTR pwszNewName, IWMDMProgress pProgress);
+    HRESULT Move(uint fuMode, IWMDMProgress pProgress, IMDSPStorage pTarget);
     HRESULT Close();
 }
 enum IID_IMDSPObject2 = GUID(0x3f34cd3e, 0x5907, 0x4341, [0x9a, 0xf9, 0x97, 0xf4, 0x18, 0x7c, 0x3a, 0xa5]);
 interface IMDSPObject2 : IMDSPObject
 {
-    HRESULT ReadOnClearChannel(ubyte*, uint*);
-    HRESULT WriteOnClearChannel(ubyte*, uint*);
+    HRESULT ReadOnClearChannel(ubyte* pData, uint* pdwSize);
+    HRESULT WriteOnClearChannel(ubyte* pData, uint* pdwSize);
 }
 enum IID_IMDSPDirectTransfer = GUID(0xc2fe57a8, 0x9304, 0x478c, [0x9e, 0xe4, 0x47, 0xe3, 0x97, 0xb9, 0x12, 0xd7]);
 interface IMDSPDirectTransfer : IUnknown
 {
-    HRESULT TransferToDevice(const(wchar)*, IWMDMOperation, uint, PWSTR, IWMDMMetaData, IWMDMProgress, IMDSPStorage*);
+    HRESULT TransferToDevice(const(wchar)* pwszSourceFilePath, IWMDMOperation pSourceOperation, uint fuFlags, PWSTR pwszDestinationName, IWMDMMetaData pSourceMetaData, IWMDMProgress pTransferProgress, IMDSPStorage* ppNewObject);
 }
 enum IID_IMDSPRevoked = GUID(0xa4e8f2d4, 0x3f31, 0x464d, [0xb5, 0x3d, 0x4f, 0xc3, 0x35, 0x99, 0x81, 0x84]);
 interface IMDSPRevoked : IUnknown
 {
-    HRESULT GetRevocationURL(PWSTR*, uint*);
+    HRESULT GetRevocationURL(PWSTR* ppwszRevocationURL, uint* pdwBufferLen);
 }
 enum IID_ISCPSecureAuthenticate = GUID(0x1dcb3a0f, 0x33ed, 0x11d3, [0x84, 0x70, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface ISCPSecureAuthenticate : IUnknown
 {
-    HRESULT GetSecureQuery(ISCPSecureQuery*);
+    HRESULT GetSecureQuery(ISCPSecureQuery* ppSecureQuery);
 }
 enum IID_ISCPSecureAuthenticate2 = GUID(0xb580cfae, 0x1672, 0x47e2, [0xac, 0xaa, 0x44, 0xbb, 0xec, 0xbc, 0xae, 0x5b]);
 interface ISCPSecureAuthenticate2 : ISCPSecureAuthenticate
 {
-    HRESULT GetSCPSession(ISCPSession*);
+    HRESULT GetSCPSession(ISCPSession* ppSCPSession);
 }
 enum IID_ISCPSecureQuery = GUID(0x1dcb3a0d, 0x33ed, 0x11d3, [0x84, 0x70, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface ISCPSecureQuery : IUnknown
 {
-    HRESULT GetDataDemands(uint*, uint*, uint*, uint*, ubyte*);
-    HRESULT ExamineData(uint, PWSTR, ubyte*, uint, ubyte*);
-    HRESULT MakeDecision(uint, ubyte*, uint, uint, ubyte*, uint, IMDSPStorageGlobals, ISCPSecureExchange*, ubyte*);
-    HRESULT GetRights(ubyte*, uint, ubyte*, uint, IMDSPStorageGlobals, WMDMRIGHTS**, uint*, ubyte*);
+    HRESULT GetDataDemands(uint* pfuFlags, uint* pdwMinRightsData, uint* pdwMinExamineData, uint* pdwMinDecideData, ubyte* abMac);
+    HRESULT ExamineData(uint fuFlags, PWSTR pwszExtension, ubyte* pData, uint dwSize, ubyte* abMac);
+    HRESULT MakeDecision(uint fuFlags, ubyte* pData, uint dwSize, uint dwAppSec, ubyte* pbSPSessionKey, uint dwSessionKeyLen, IMDSPStorageGlobals pStorageGlobals, ISCPSecureExchange* ppExchange, ubyte* abMac);
+    HRESULT GetRights(ubyte* pData, uint dwSize, ubyte* pbSPSessionKey, uint dwSessionKeyLen, IMDSPStorageGlobals pStgGlobals, WMDMRIGHTS** ppRights, uint* pnRightsCount, ubyte* abMac);
 }
 enum IID_ISCPSecureQuery2 = GUID(0xebe17e25, 0x4fd7, 0x4632, [0xaf, 0x46, 0x6d, 0x93, 0xd4, 0xfc, 0xc7, 0x2e]);
 interface ISCPSecureQuery2 : ISCPSecureQuery
 {
-    HRESULT MakeDecision2(uint, ubyte*, uint, uint, ubyte*, uint, IMDSPStorageGlobals, ubyte*, uint, ubyte*, uint, PWSTR*, uint*, uint*, ulong*, IUnknown, ISCPSecureExchange*, ubyte*);
+    HRESULT MakeDecision2(uint fuFlags, ubyte* pData, uint dwSize, uint dwAppSec, ubyte* pbSPSessionKey, uint dwSessionKeyLen, IMDSPStorageGlobals pStorageGlobals, ubyte* pAppCertApp, uint dwAppCertAppLen, ubyte* pAppCertSP, uint dwAppCertSPLen, PWSTR* pszRevocationURL, uint* pdwRevocationURLLen, uint* pdwRevocationBitFlag, ulong* pqwFileSize, IUnknown pUnknown, ISCPSecureExchange* ppExchange, ubyte* abMac);
 }
 enum IID_ISCPSecureExchange = GUID(0x1dcb3a0e, 0x33ed, 0x11d3, [0x84, 0x70, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface ISCPSecureExchange : IUnknown
 {
-    HRESULT TransferContainerData(ubyte*, uint, uint*, ubyte*);
-    HRESULT ObjectData(ubyte*, uint*, ubyte*);
+    HRESULT TransferContainerData(ubyte* pData, uint dwSize, uint* pfuReadyFlags, ubyte* abMac);
+    HRESULT ObjectData(ubyte* pData, uint* pdwSize, ubyte* abMac);
     HRESULT TransferComplete();
 }
 enum IID_ISCPSecureExchange2 = GUID(0x6c62fc7b, 0x2690, 0x483f, [0x9d, 0x44, 0xa, 0x20, 0xcb, 0x35, 0x57, 0x7c]);
 interface ISCPSecureExchange2 : ISCPSecureExchange
 {
-    HRESULT TransferContainerData2(ubyte*, uint, IWMDMProgress3, uint*, ubyte*);
+    HRESULT TransferContainerData2(ubyte* pData, uint dwSize, IWMDMProgress3 pProgressCallback, uint* pfuReadyFlags, ubyte* abMac);
 }
 enum IID_ISCPSecureExchange3 = GUID(0xab4e77e4, 0x8908, 0x4b17, [0xbd, 0x2a, 0xb1, 0xdb, 0xe6, 0xdd, 0x69, 0xe1]);
 interface ISCPSecureExchange3 : ISCPSecureExchange2
 {
-    HRESULT TransferContainerDataOnClearChannel(IMDSPDevice, ubyte*, uint, IWMDMProgress3, uint*);
-    HRESULT GetObjectDataOnClearChannel(IMDSPDevice, ubyte*, uint*);
-    HRESULT TransferCompleteForDevice(IMDSPDevice);
+    HRESULT TransferContainerDataOnClearChannel(IMDSPDevice pDevice, ubyte* pData, uint dwSize, IWMDMProgress3 pProgressCallback, uint* pfuReadyFlags);
+    HRESULT GetObjectDataOnClearChannel(IMDSPDevice pDevice, ubyte* pData, uint* pdwSize);
+    HRESULT TransferCompleteForDevice(IMDSPDevice pDevice);
 }
 enum IID_ISCPSession = GUID(0x88a3e6ed, 0xeee4, 0x4619, [0xbb, 0xb3, 0xfd, 0x4f, 0xb6, 0x27, 0x15, 0xd1]);
 interface ISCPSession : IUnknown
 {
-    HRESULT BeginSession(IMDSPDevice, ubyte*, uint);
-    HRESULT EndSession(ubyte*, uint);
-    HRESULT GetSecureQuery(ISCPSecureQuery*);
+    HRESULT BeginSession(IMDSPDevice pIDevice, ubyte* pCtx, uint dwSizeCtx);
+    HRESULT EndSession(ubyte* pCtx, uint dwSizeCtx);
+    HRESULT GetSecureQuery(ISCPSecureQuery* ppSecureQuery);
 }
 enum IID_ISCPSecureQuery3 = GUID(0xb7edd1a2, 0x4dab, 0x484b, [0xb3, 0xc5, 0xad, 0x39, 0xb8, 0xb4, 0xc0, 0xb1]);
 interface ISCPSecureQuery3 : ISCPSecureQuery2
 {
-    HRESULT GetRightsOnClearChannel(ubyte*, uint, ubyte*, uint, IMDSPStorageGlobals, IWMDMProgress3, WMDMRIGHTS**, uint*);
-    HRESULT MakeDecisionOnClearChannel(uint, ubyte*, uint, uint, ubyte*, uint, IMDSPStorageGlobals, IWMDMProgress3, ubyte*, uint, ubyte*, uint, PWSTR*, uint*, uint*, ulong*, IUnknown, ISCPSecureExchange*);
+    HRESULT GetRightsOnClearChannel(ubyte* pData, uint dwSize, ubyte* pbSPSessionKey, uint dwSessionKeyLen, IMDSPStorageGlobals pStgGlobals, IWMDMProgress3 pProgressCallback, WMDMRIGHTS** ppRights, uint* pnRightsCount);
+    HRESULT MakeDecisionOnClearChannel(uint fuFlags, ubyte* pData, uint dwSize, uint dwAppSec, ubyte* pbSPSessionKey, uint dwSessionKeyLen, IMDSPStorageGlobals pStorageGlobals, IWMDMProgress3 pProgressCallback, ubyte* pAppCertApp, uint dwAppCertAppLen, ubyte* pAppCertSP, uint dwAppCertSPLen, PWSTR* pszRevocationURL, uint* pdwRevocationURLLen, uint* pdwRevocationBitFlag, ulong* pqwFileSize, IUnknown pUnknown, ISCPSecureExchange* ppExchange);
 }
 enum IID_IComponentAuthenticate = GUID(0xa9889c00, 0x6d2b, 0x11d3, [0x84, 0x96, 0x0, 0xc0, 0x4f, 0x79, 0xdb, 0xc0]);
 interface IComponentAuthenticate : IUnknown
 {
-    HRESULT SACAuth(uint, uint, ubyte*, uint, ubyte**, uint*);
-    HRESULT SACGetProtocols(uint**, uint*);
+    HRESULT SACAuth(uint dwProtocolID, uint dwPass, ubyte* pbDataIn, uint dwDataInLen, ubyte** ppbDataOut, uint* pdwDataOutLen);
+    HRESULT SACGetProtocols(uint** ppdwProtocols, uint* pdwProtocolCount);
 }
 enum CLSID_MediaDevMgrClassFactory = GUID(0x50040c1d, 0xbdbf, 0x4924, [0xb8, 0x73, 0xf1, 0x4d, 0x6c, 0x5b, 0xfd, 0x66]);
 struct MediaDevMgrClassFactory
@@ -1093,15 +1093,15 @@ struct WMDMStorageEnum
 enum IID_IWMDMLogger = GUID(0x110a3200, 0x5a79, 0x11d3, [0x8d, 0x78, 0x44, 0x45, 0x53, 0x54, 0x0, 0x0]);
 interface IWMDMLogger : IUnknown
 {
-    HRESULT IsEnabled(BOOL*);
-    HRESULT Enable(BOOL);
-    HRESULT GetLogFileName(PSTR, uint);
-    HRESULT SetLogFileName(PSTR);
-    HRESULT LogString(uint, PSTR, PSTR);
-    HRESULT LogDword(uint, PSTR, PSTR, uint);
+    HRESULT IsEnabled(BOOL* pfEnabled);
+    HRESULT Enable(BOOL fEnable);
+    HRESULT GetLogFileName(PSTR pszFilename, uint nMaxChars);
+    HRESULT SetLogFileName(PSTR pszFilename);
+    HRESULT LogString(uint dwFlags, PSTR pszSrcName, PSTR pszLog);
+    HRESULT LogDword(uint dwFlags, PSTR pszSrcName, PSTR pszLogFormat, uint dwLog);
     HRESULT Reset();
-    HRESULT GetSizeParams(uint*, uint*);
-    HRESULT SetSizeParams(uint, uint);
+    HRESULT GetSizeParams(uint* pdwMaxSize, uint* pdwShrinkToSize);
+    HRESULT SetSizeParams(uint dwMaxSize, uint dwShrinkToSize);
 }
 enum CLSID_WMDMLogger = GUID(0x110a3202, 0x5a79, 0x11d3, [0x8d, 0x78, 0x44, 0x45, 0x53, 0x54, 0x0, 0x0]);
 struct WMDMLogger

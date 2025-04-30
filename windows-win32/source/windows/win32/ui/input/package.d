@@ -175,13 +175,13 @@ struct INPUT_MESSAGE_SOURCE
     INPUT_MESSAGE_DEVICE_TYPE deviceType;
     INPUT_MESSAGE_ORIGIN_ID originId;
 }
-uint GetRawInputData(HRAWINPUT, RAW_INPUT_DATA_COMMAND_FLAGS, void*, uint*, uint);
-uint GetRawInputDeviceInfoA(HANDLE, RAW_INPUT_DEVICE_INFO_COMMAND, void*, uint*);
-uint GetRawInputDeviceInfoW(HANDLE, RAW_INPUT_DEVICE_INFO_COMMAND, void*, uint*);
-uint GetRawInputBuffer(RAWINPUT*, uint*, uint);
-BOOL RegisterRawInputDevices(RAWINPUTDEVICE*, uint, uint);
-uint GetRegisteredRawInputDevices(RAWINPUTDEVICE*, uint*, uint);
-uint GetRawInputDeviceList(RAWINPUTDEVICELIST*, uint*, uint);
-LRESULT DefRawInputProc(RAWINPUT**, int, uint);
-BOOL GetCurrentInputMessageSource(INPUT_MESSAGE_SOURCE*);
-BOOL GetCIMSSM(INPUT_MESSAGE_SOURCE*);
+uint GetRawInputData(HRAWINPUT hRawInput, RAW_INPUT_DATA_COMMAND_FLAGS uiCommand, void* pData, uint* pcbSize, uint cbSizeHeader);
+uint GetRawInputDeviceInfoA(HANDLE hDevice, RAW_INPUT_DEVICE_INFO_COMMAND uiCommand, void* pData, uint* pcbSize);
+uint GetRawInputDeviceInfoW(HANDLE hDevice, RAW_INPUT_DEVICE_INFO_COMMAND uiCommand, void* pData, uint* pcbSize);
+uint GetRawInputBuffer(RAWINPUT* pData, uint* pcbSize, uint cbSizeHeader);
+BOOL RegisterRawInputDevices(RAWINPUTDEVICE* pRawInputDevices, uint uiNumDevices, uint cbSize);
+uint GetRegisteredRawInputDevices(RAWINPUTDEVICE* pRawInputDevices, uint* puiNumDevices, uint cbSize);
+uint GetRawInputDeviceList(RAWINPUTDEVICELIST* pRawInputDeviceList, uint* puiNumDevices, uint cbSize);
+LRESULT DefRawInputProc(RAWINPUT** paRawInput, int nInput, uint cbSizeHeader);
+BOOL GetCurrentInputMessageSource(INPUT_MESSAGE_SOURCE* inputMessageSource);
+BOOL GetCIMSSM(INPUT_MESSAGE_SOURCE* inputMessageSource);

@@ -101,20 +101,20 @@ enum : uint
     EWX_SYSTEM_INITIATED      = 0x10000000,
 }
 
-BOOL InitiateSystemShutdownA(PSTR, PSTR, uint, BOOL, BOOL);
-BOOL InitiateSystemShutdownW(PWSTR, PWSTR, uint, BOOL, BOOL);
-BOOL AbortSystemShutdownA(PSTR);
-BOOL AbortSystemShutdownW(PWSTR);
-BOOL InitiateSystemShutdownExA(PSTR, PSTR, uint, BOOL, BOOL, SHUTDOWN_REASON);
-BOOL InitiateSystemShutdownExW(PWSTR, PWSTR, uint, BOOL, BOOL, SHUTDOWN_REASON);
-uint InitiateShutdownA(PSTR, PSTR, uint, SHUTDOWN_FLAGS, SHUTDOWN_REASON);
-uint InitiateShutdownW(PWSTR, PWSTR, uint, SHUTDOWN_FLAGS, SHUTDOWN_REASON);
-uint CheckForHiberboot(BOOLEAN*, BOOLEAN);
-BOOL ExitWindowsEx(EXIT_WINDOWS_FLAGS, SHUTDOWN_REASON);
+BOOL InitiateSystemShutdownA(PSTR lpMachineName, PSTR lpMessage, uint dwTimeout, BOOL bForceAppsClosed, BOOL bRebootAfterShutdown);
+BOOL InitiateSystemShutdownW(PWSTR lpMachineName, PWSTR lpMessage, uint dwTimeout, BOOL bForceAppsClosed, BOOL bRebootAfterShutdown);
+BOOL AbortSystemShutdownA(PSTR lpMachineName);
+BOOL AbortSystemShutdownW(PWSTR lpMachineName);
+BOOL InitiateSystemShutdownExA(PSTR lpMachineName, PSTR lpMessage, uint dwTimeout, BOOL bForceAppsClosed, BOOL bRebootAfterShutdown, SHUTDOWN_REASON dwReason);
+BOOL InitiateSystemShutdownExW(PWSTR lpMachineName, PWSTR lpMessage, uint dwTimeout, BOOL bForceAppsClosed, BOOL bRebootAfterShutdown, SHUTDOWN_REASON dwReason);
+uint InitiateShutdownA(PSTR lpMachineName, PSTR lpMessage, uint dwGracePeriod, SHUTDOWN_FLAGS dwShutdownFlags, SHUTDOWN_REASON dwReason);
+uint InitiateShutdownW(PWSTR lpMachineName, PWSTR lpMessage, uint dwGracePeriod, SHUTDOWN_FLAGS dwShutdownFlags, SHUTDOWN_REASON dwReason);
+uint CheckForHiberboot(BOOLEAN* pHiberboot, BOOLEAN bClearFlag);
+BOOL ExitWindowsEx(EXIT_WINDOWS_FLAGS uFlags, SHUTDOWN_REASON dwReason);
 BOOL LockWorkStation();
-BOOL ShutdownBlockReasonCreate(HWND, const(wchar)*);
-BOOL ShutdownBlockReasonQuery(HWND, PWSTR, uint*);
-BOOL ShutdownBlockReasonDestroy(HWND);
+BOOL ShutdownBlockReasonCreate(HWND hWnd, const(wchar)* pwszReason);
+BOOL ShutdownBlockReasonQuery(HWND hWnd, PWSTR pwszBuff, uint* pcchBuff);
+BOOL ShutdownBlockReasonDestroy(HWND hWnd);
 enum MAX_REASON_NAME_LEN = 0x00000040;
 enum MAX_REASON_DESC_LEN = 0x00000100;
 enum MAX_REASON_BUGID_LEN = 0x00000020;

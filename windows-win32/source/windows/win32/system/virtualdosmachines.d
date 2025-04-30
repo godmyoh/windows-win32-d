@@ -149,9 +149,9 @@ struct VDMLDT_ENTRY
         }
     }
 }
-alias VDMGETTHREADSELECTORENTRYPROC = BOOL function(HANDLE, HANDLE, uint, VDMLDT_ENTRY*);
-alias VDMGETCONTEXTPROC = BOOL function(HANDLE, HANDLE, VDMCONTEXT*);
-alias VDMSETCONTEXTPROC = BOOL function(HANDLE, HANDLE, VDMCONTEXT*);
+alias VDMGETTHREADSELECTORENTRYPROC = BOOL function(HANDLE param0, HANDLE param1, uint param2, VDMLDT_ENTRY* param3);
+alias VDMGETCONTEXTPROC = BOOL function(HANDLE param0, HANDLE param1, VDMCONTEXT* param2);
+alias VDMSETCONTEXTPROC = BOOL function(HANDLE param0, HANDLE param1, VDMCONTEXT* param2);
 struct VDMCONTEXT_WITHOUT_XSAVE
 {
     uint ContextFlags;
@@ -238,35 +238,35 @@ struct GLOBALENTRY
     uint dwNext;
     uint dwNextAlt;
 }
-alias DEBUGEVENTPROC = uint function(DEBUG_EVENT*, void*);
-alias PROCESSENUMPROC = BOOL function(uint, uint, LPARAM);
-alias TASKENUMPROC = BOOL function(uint, ushort, ushort, LPARAM);
-alias TASKENUMPROCEX = BOOL function(uint, ushort, ushort, byte*, byte*, LPARAM);
-alias VDMPROCESSEXCEPTIONPROC = BOOL function(DEBUG_EVENT*);
-/+ [CONFLICTED] alias VDMGETTHREADSELECTORENTRYPROC = BOOL function(HANDLE, HANDLE, uint, LDT_ENTRY*);
+alias DEBUGEVENTPROC = uint function(DEBUG_EVENT* param0, void* param1);
+alias PROCESSENUMPROC = BOOL function(uint dwProcessId, uint dwAttributes, LPARAM lpUserDefined);
+alias TASKENUMPROC = BOOL function(uint dwThreadId, ushort hMod16, ushort hTask16, LPARAM lpUserDefined);
+alias TASKENUMPROCEX = BOOL function(uint dwThreadId, ushort hMod16, ushort hTask16, byte* pszModName, byte* pszFileName, LPARAM lpUserDefined);
+alias VDMPROCESSEXCEPTIONPROC = BOOL function(DEBUG_EVENT* param0);
+/+ [CONFLICTED] alias VDMGETTHREADSELECTORENTRYPROC = BOOL function(HANDLE param0, HANDLE param1, uint param2, LDT_ENTRY* param3);
 +/
-alias VDMGETPOINTERPROC = uint function(HANDLE, HANDLE, ushort, uint, BOOL);
-/+ [CONFLICTED] alias VDMGETCONTEXTPROC = BOOL function(HANDLE, HANDLE, CONTEXT*);
+alias VDMGETPOINTERPROC = uint function(HANDLE param0, HANDLE param1, ushort param2, uint param3, BOOL param4);
+/+ [CONFLICTED] alias VDMGETCONTEXTPROC = BOOL function(HANDLE param0, HANDLE param1, CONTEXT* param2);
 +/
-/+ [CONFLICTED] alias VDMSETCONTEXTPROC = BOOL function(HANDLE, HANDLE, CONTEXT*);
+/+ [CONFLICTED] alias VDMSETCONTEXTPROC = BOOL function(HANDLE param0, HANDLE param1, CONTEXT* param2);
 +/
 alias VDMKILLWOWPROC = BOOL function();
 alias VDMDETECTWOWPROC = BOOL function();
-alias VDMBREAKTHREADPROC = BOOL function(HANDLE);
-alias VDMGETSELECTORMODULEPROC = BOOL function(HANDLE, HANDLE, ushort, uint*, PSTR, uint, PSTR, uint);
-alias VDMGETMODULESELECTORPROC = BOOL function(HANDLE, HANDLE, uint, PSTR, ushort*);
-alias VDMMODULEFIRSTPROC = BOOL function(HANDLE, HANDLE, MODULEENTRY*, DEBUGEVENTPROC, void*);
-alias VDMMODULENEXTPROC = BOOL function(HANDLE, HANDLE, MODULEENTRY*, DEBUGEVENTPROC, void*);
-alias VDMGLOBALFIRSTPROC = BOOL function(HANDLE, HANDLE, GLOBALENTRY*, ushort, DEBUGEVENTPROC, void*);
-alias VDMGLOBALNEXTPROC = BOOL function(HANDLE, HANDLE, GLOBALENTRY*, ushort, DEBUGEVENTPROC, void*);
-alias VDMENUMPROCESSWOWPROC = int function(PROCESSENUMPROC, LPARAM);
-alias VDMENUMTASKWOWPROC = int function(uint, TASKENUMPROC, LPARAM);
-alias VDMENUMTASKWOWEXPROC = int function(uint, TASKENUMPROCEX, LPARAM);
-alias VDMTERMINATETASKINWOWPROC = BOOL function(uint, ushort);
-alias VDMSTARTTASKINWOWPROC = BOOL function(uint, PSTR, ushort);
-alias VDMGETDBGFLAGSPROC = uint function(HANDLE);
-alias VDMSETDBGFLAGSPROC = BOOL function(HANDLE, uint);
-alias VDMISMODULELOADEDPROC = BOOL function(PSTR);
-alias VDMGETSEGMENTINFOPROC = BOOL function(ushort, uint, BOOL, VDM_SEGINFO);
-alias VDMGETSYMBOLPROC = BOOL function(PSTR, ushort, uint, BOOL, BOOL, PSTR, uint*);
-alias VDMGETADDREXPRESSIONPROC = BOOL function(PSTR, PSTR, ushort*, uint*, ushort*);
+alias VDMBREAKTHREADPROC = BOOL function(HANDLE param0);
+alias VDMGETSELECTORMODULEPROC = BOOL function(HANDLE param0, HANDLE param1, ushort param2, uint* param3, PSTR param4, uint param5, PSTR param6, uint param7);
+alias VDMGETMODULESELECTORPROC = BOOL function(HANDLE param0, HANDLE param1, uint param2, PSTR param3, ushort* param4);
+alias VDMMODULEFIRSTPROC = BOOL function(HANDLE param0, HANDLE param1, MODULEENTRY* param2, DEBUGEVENTPROC param3, void* param4);
+alias VDMMODULENEXTPROC = BOOL function(HANDLE param0, HANDLE param1, MODULEENTRY* param2, DEBUGEVENTPROC param3, void* param4);
+alias VDMGLOBALFIRSTPROC = BOOL function(HANDLE param0, HANDLE param1, GLOBALENTRY* param2, ushort param3, DEBUGEVENTPROC param4, void* param5);
+alias VDMGLOBALNEXTPROC = BOOL function(HANDLE param0, HANDLE param1, GLOBALENTRY* param2, ushort param3, DEBUGEVENTPROC param4, void* param5);
+alias VDMENUMPROCESSWOWPROC = int function(PROCESSENUMPROC param0, LPARAM param1);
+alias VDMENUMTASKWOWPROC = int function(uint param0, TASKENUMPROC param1, LPARAM param2);
+alias VDMENUMTASKWOWEXPROC = int function(uint param0, TASKENUMPROCEX param1, LPARAM param2);
+alias VDMTERMINATETASKINWOWPROC = BOOL function(uint param0, ushort param1);
+alias VDMSTARTTASKINWOWPROC = BOOL function(uint param0, PSTR param1, ushort param2);
+alias VDMGETDBGFLAGSPROC = uint function(HANDLE param0);
+alias VDMSETDBGFLAGSPROC = BOOL function(HANDLE param0, uint param1);
+alias VDMISMODULELOADEDPROC = BOOL function(PSTR param0);
+alias VDMGETSEGMENTINFOPROC = BOOL function(ushort param0, uint param1, BOOL param2, VDM_SEGINFO param3);
+alias VDMGETSYMBOLPROC = BOOL function(PSTR param0, ushort param1, uint param2, BOOL param3, BOOL param4, PSTR param5, uint* param6);
+alias VDMGETADDREXPRESSIONPROC = BOOL function(PSTR param0, PSTR param1, ushort* param2, uint* param3, ushort* param4);

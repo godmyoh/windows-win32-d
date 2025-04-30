@@ -33,40 +33,40 @@ enum : uint
     MQSEC_QUEUE_GENERIC_EXECUTE    = 0x00000000,
 }
 
-HRESULT MQCreateQueue(PSECURITY_DESCRIPTOR, MQQUEUEPROPS*, PWSTR, uint*);
-HRESULT MQDeleteQueue(const(wchar)*);
-HRESULT MQLocateBegin(const(wchar)*, MQRESTRICTION*, MQCOLUMNSET*, MQSORTSET*, HANDLE*);
-HRESULT MQLocateNext(HANDLE, uint*, PROPVARIANT*);
-HRESULT MQLocateEnd(HANDLE);
-HRESULT MQOpenQueue(const(wchar)*, uint, uint, long*);
-HRESULT MQSendMessage(long, MQMSGPROPS*, ITransaction);
-HRESULT MQReceiveMessage(long, uint, uint, MQMSGPROPS*, OVERLAPPED*, PMQRECEIVECALLBACK, HANDLE, ITransaction);
-HRESULT MQReceiveMessageByLookupId(long, ulong, uint, MQMSGPROPS*, OVERLAPPED*, PMQRECEIVECALLBACK, ITransaction);
-HRESULT MQCreateCursor(long, HANDLE*);
-HRESULT MQCloseCursor(HANDLE);
-HRESULT MQCloseQueue(long);
-HRESULT MQSetQueueProperties(const(wchar)*, MQQUEUEPROPS*);
-HRESULT MQGetQueueProperties(const(wchar)*, MQQUEUEPROPS*);
-HRESULT MQGetQueueSecurity(const(wchar)*, uint, PSECURITY_DESCRIPTOR, uint, uint*);
-HRESULT MQSetQueueSecurity(const(wchar)*, OBJECT_SECURITY_INFORMATION, PSECURITY_DESCRIPTOR);
-HRESULT MQPathNameToFormatName(const(wchar)*, PWSTR, uint*);
-HRESULT MQHandleToFormatName(long, PWSTR, uint*);
-HRESULT MQInstanceToFormatName(GUID*, PWSTR, uint*);
-HRESULT MQADsPathToFormatName(const(wchar)*, PWSTR, uint*);
-void MQFreeMemory(void*);
-HRESULT MQGetMachineProperties(const(wchar)*, const(GUID)*, MQQMPROPS*);
-HRESULT MQGetSecurityContext(void*, uint, HANDLE*);
-HRESULT MQGetSecurityContextEx(void*, uint, HANDLE*);
-void MQFreeSecurityContext(HANDLE);
-HRESULT MQRegisterCertificate(uint, void*, uint);
-HRESULT MQBeginTransaction(ITransaction*);
-HRESULT MQGetOverlappedResult(OVERLAPPED*);
-HRESULT MQGetPrivateComputerInformation(const(wchar)*, MQPRIVATEPROPS*);
-HRESULT MQPurgeQueue(long);
-HRESULT MQMgmtGetInfo(const(wchar)*, const(wchar)*, MQMGMTPROPS*);
-HRESULT MQMgmtAction(const(wchar)*, const(wchar)*, const(wchar)*);
-HRESULT MQMarkMessageRejected(HANDLE, ulong);
-HRESULT MQMoveMessage(long, long, ulong, ITransaction);
+HRESULT MQCreateQueue(PSECURITY_DESCRIPTOR pSecurityDescriptor, MQQUEUEPROPS* pQueueProps, PWSTR lpwcsFormatName, uint* lpdwFormatNameLength);
+HRESULT MQDeleteQueue(const(wchar)* lpwcsFormatName);
+HRESULT MQLocateBegin(const(wchar)* lpwcsContext, MQRESTRICTION* pRestriction, MQCOLUMNSET* pColumns, MQSORTSET* pSort, HANDLE* phEnum);
+HRESULT MQLocateNext(HANDLE hEnum, uint* pcProps, PROPVARIANT* aPropVar);
+HRESULT MQLocateEnd(HANDLE hEnum);
+HRESULT MQOpenQueue(const(wchar)* lpwcsFormatName, uint dwAccess, uint dwShareMode, long* phQueue);
+HRESULT MQSendMessage(long hDestinationQueue, MQMSGPROPS* pMessageProps, ITransaction pTransaction);
+HRESULT MQReceiveMessage(long hSource, uint dwTimeout, uint dwAction, MQMSGPROPS* pMessageProps, OVERLAPPED* lpOverlapped, PMQRECEIVECALLBACK fnReceiveCallback, HANDLE hCursor, ITransaction pTransaction);
+HRESULT MQReceiveMessageByLookupId(long hSource, ulong ullLookupId, uint dwLookupAction, MQMSGPROPS* pMessageProps, OVERLAPPED* lpOverlapped, PMQRECEIVECALLBACK fnReceiveCallback, ITransaction pTransaction);
+HRESULT MQCreateCursor(long hQueue, HANDLE* phCursor);
+HRESULT MQCloseCursor(HANDLE hCursor);
+HRESULT MQCloseQueue(long hQueue);
+HRESULT MQSetQueueProperties(const(wchar)* lpwcsFormatName, MQQUEUEPROPS* pQueueProps);
+HRESULT MQGetQueueProperties(const(wchar)* lpwcsFormatName, MQQUEUEPROPS* pQueueProps);
+HRESULT MQGetQueueSecurity(const(wchar)* lpwcsFormatName, uint RequestedInformation, PSECURITY_DESCRIPTOR pSecurityDescriptor, uint nLength, uint* lpnLengthNeeded);
+HRESULT MQSetQueueSecurity(const(wchar)* lpwcsFormatName, OBJECT_SECURITY_INFORMATION SecurityInformation, PSECURITY_DESCRIPTOR pSecurityDescriptor);
+HRESULT MQPathNameToFormatName(const(wchar)* lpwcsPathName, PWSTR lpwcsFormatName, uint* lpdwFormatNameLength);
+HRESULT MQHandleToFormatName(long hQueue, PWSTR lpwcsFormatName, uint* lpdwFormatNameLength);
+HRESULT MQInstanceToFormatName(GUID* pGuid, PWSTR lpwcsFormatName, uint* lpdwFormatNameLength);
+HRESULT MQADsPathToFormatName(const(wchar)* lpwcsADsPath, PWSTR lpwcsFormatName, uint* lpdwFormatNameLength);
+void MQFreeMemory(void* pvMemory);
+HRESULT MQGetMachineProperties(const(wchar)* lpwcsMachineName, const(GUID)* pguidMachineId, MQQMPROPS* pQMProps);
+HRESULT MQGetSecurityContext(void* lpCertBuffer, uint dwCertBufferLength, HANDLE* phSecurityContext);
+HRESULT MQGetSecurityContextEx(void* lpCertBuffer, uint dwCertBufferLength, HANDLE* phSecurityContext);
+void MQFreeSecurityContext(HANDLE hSecurityContext);
+HRESULT MQRegisterCertificate(uint dwFlags, void* lpCertBuffer, uint dwCertBufferLength);
+HRESULT MQBeginTransaction(ITransaction* ppTransaction);
+HRESULT MQGetOverlappedResult(OVERLAPPED* lpOverlapped);
+HRESULT MQGetPrivateComputerInformation(const(wchar)* lpwcsComputerName, MQPRIVATEPROPS* pPrivateProps);
+HRESULT MQPurgeQueue(long hQueue);
+HRESULT MQMgmtGetInfo(const(wchar)* pComputerName, const(wchar)* pObjectName, MQMGMTPROPS* pMgmtProps);
+HRESULT MQMgmtAction(const(wchar)* pComputerName, const(wchar)* pObjectName, const(wchar)* pAction);
+HRESULT MQMarkMessageRejected(HANDLE hQueue, ulong ullLookupId);
+HRESULT MQMoveMessage(long hSourceQueue, long hDestinationQueue, ulong ullLookupId, ITransaction pTransaction);
 enum PRLT = 0x00000000;
 enum PRLE = 0x00000001;
 enum PRGT = 0x00000002;
@@ -721,358 +721,358 @@ enum : int
 enum IID_IMSMQQuery = GUID(0xd7d6e072, 0xdccd, 0x11d0, [0xaa, 0x4b, 0x0, 0x60, 0x97, 0xd, 0xeb, 0xae]);
 interface IMSMQQuery : IDispatch
 {
-    HRESULT LookupQueue(VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQQueueInfos*);
+    HRESULT LookupQueue(VARIANT* QueueGuid, VARIANT* ServiceTypeGuid, VARIANT* Label, VARIANT* CreateTime, VARIANT* ModifyTime, VARIANT* RelServiceType, VARIANT* RelLabel, VARIANT* RelCreateTime, VARIANT* RelModifyTime, IMSMQQueueInfos* ppqinfos);
 }
 enum IID_IMSMQQueueInfo = GUID(0xd7d6e07b, 0xdccd, 0x11d0, [0xaa, 0x4b, 0x0, 0x60, 0x97, 0xd, 0xeb, 0xae]);
 interface IMSMQQueueInfo : IDispatch
 {
-    HRESULT get_QueueGuid(BSTR*);
-    HRESULT get_ServiceTypeGuid(BSTR*);
-    HRESULT put_ServiceTypeGuid(BSTR);
-    HRESULT get_Label(BSTR*);
-    HRESULT put_Label(BSTR);
-    HRESULT get_PathName(BSTR*);
-    HRESULT put_PathName(BSTR);
-    HRESULT get_FormatName(BSTR*);
-    HRESULT put_FormatName(BSTR);
-    HRESULT get_IsTransactional(short*);
-    HRESULT get_PrivLevel(int*);
-    HRESULT put_PrivLevel(int);
-    HRESULT get_Journal(int*);
-    HRESULT put_Journal(int);
-    HRESULT get_Quota(int*);
-    HRESULT put_Quota(int);
-    HRESULT get_BasePriority(int*);
-    HRESULT put_BasePriority(int);
-    HRESULT get_CreateTime(VARIANT*);
-    HRESULT get_ModifyTime(VARIANT*);
-    HRESULT get_Authenticate(int*);
-    HRESULT put_Authenticate(int);
-    HRESULT get_JournalQuota(int*);
-    HRESULT put_JournalQuota(int);
-    HRESULT get_IsWorldReadable(short*);
-    HRESULT Create(VARIANT*, VARIANT*);
+    HRESULT get_QueueGuid(BSTR* pbstrGuidQueue);
+    HRESULT get_ServiceTypeGuid(BSTR* pbstrGuidServiceType);
+    HRESULT put_ServiceTypeGuid(BSTR bstrGuidServiceType);
+    HRESULT get_Label(BSTR* pbstrLabel);
+    HRESULT put_Label(BSTR bstrLabel);
+    HRESULT get_PathName(BSTR* pbstrPathName);
+    HRESULT put_PathName(BSTR bstrPathName);
+    HRESULT get_FormatName(BSTR* pbstrFormatName);
+    HRESULT put_FormatName(BSTR bstrFormatName);
+    HRESULT get_IsTransactional(short* pisTransactional);
+    HRESULT get_PrivLevel(int* plPrivLevel);
+    HRESULT put_PrivLevel(int lPrivLevel);
+    HRESULT get_Journal(int* plJournal);
+    HRESULT put_Journal(int lJournal);
+    HRESULT get_Quota(int* plQuota);
+    HRESULT put_Quota(int lQuota);
+    HRESULT get_BasePriority(int* plBasePriority);
+    HRESULT put_BasePriority(int lBasePriority);
+    HRESULT get_CreateTime(VARIANT* pvarCreateTime);
+    HRESULT get_ModifyTime(VARIANT* pvarModifyTime);
+    HRESULT get_Authenticate(int* plAuthenticate);
+    HRESULT put_Authenticate(int lAuthenticate);
+    HRESULT get_JournalQuota(int* plJournalQuota);
+    HRESULT put_JournalQuota(int lJournalQuota);
+    HRESULT get_IsWorldReadable(short* pisWorldReadable);
+    HRESULT Create(VARIANT* IsTransactional, VARIANT* IsWorldReadable);
     HRESULT Delete();
-    HRESULT Open(int, int, IMSMQQueue*);
+    HRESULT Open(int Access, int ShareMode, IMSMQQueue* ppq);
     HRESULT Refresh();
     HRESULT Update();
 }
 enum IID_IMSMQQueueInfo2 = GUID(0xfd174a80, 0x89cf, 0x11d2, [0xb0, 0xf2, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQQueueInfo2 : IDispatch
 {
-    HRESULT get_QueueGuid(BSTR*);
-    HRESULT get_ServiceTypeGuid(BSTR*);
-    HRESULT put_ServiceTypeGuid(BSTR);
-    HRESULT get_Label(BSTR*);
-    HRESULT put_Label(BSTR);
-    HRESULT get_PathName(BSTR*);
-    HRESULT put_PathName(BSTR);
-    HRESULT get_FormatName(BSTR*);
-    HRESULT put_FormatName(BSTR);
-    HRESULT get_IsTransactional(short*);
-    HRESULT get_PrivLevel(int*);
-    HRESULT put_PrivLevel(int);
-    HRESULT get_Journal(int*);
-    HRESULT put_Journal(int);
-    HRESULT get_Quota(int*);
-    HRESULT put_Quota(int);
-    HRESULT get_BasePriority(int*);
-    HRESULT put_BasePriority(int);
-    HRESULT get_CreateTime(VARIANT*);
-    HRESULT get_ModifyTime(VARIANT*);
-    HRESULT get_Authenticate(int*);
-    HRESULT put_Authenticate(int);
-    HRESULT get_JournalQuota(int*);
-    HRESULT put_JournalQuota(int);
-    HRESULT get_IsWorldReadable(short*);
-    HRESULT Create(VARIANT*, VARIANT*);
+    HRESULT get_QueueGuid(BSTR* pbstrGuidQueue);
+    HRESULT get_ServiceTypeGuid(BSTR* pbstrGuidServiceType);
+    HRESULT put_ServiceTypeGuid(BSTR bstrGuidServiceType);
+    HRESULT get_Label(BSTR* pbstrLabel);
+    HRESULT put_Label(BSTR bstrLabel);
+    HRESULT get_PathName(BSTR* pbstrPathName);
+    HRESULT put_PathName(BSTR bstrPathName);
+    HRESULT get_FormatName(BSTR* pbstrFormatName);
+    HRESULT put_FormatName(BSTR bstrFormatName);
+    HRESULT get_IsTransactional(short* pisTransactional);
+    HRESULT get_PrivLevel(int* plPrivLevel);
+    HRESULT put_PrivLevel(int lPrivLevel);
+    HRESULT get_Journal(int* plJournal);
+    HRESULT put_Journal(int lJournal);
+    HRESULT get_Quota(int* plQuota);
+    HRESULT put_Quota(int lQuota);
+    HRESULT get_BasePriority(int* plBasePriority);
+    HRESULT put_BasePriority(int lBasePriority);
+    HRESULT get_CreateTime(VARIANT* pvarCreateTime);
+    HRESULT get_ModifyTime(VARIANT* pvarModifyTime);
+    HRESULT get_Authenticate(int* plAuthenticate);
+    HRESULT put_Authenticate(int lAuthenticate);
+    HRESULT get_JournalQuota(int* plJournalQuota);
+    HRESULT put_JournalQuota(int lJournalQuota);
+    HRESULT get_IsWorldReadable(short* pisWorldReadable);
+    HRESULT Create(VARIANT* IsTransactional, VARIANT* IsWorldReadable);
     HRESULT Delete();
-    HRESULT Open(int, int, IMSMQQueue2*);
+    HRESULT Open(int Access, int ShareMode, IMSMQQueue2* ppq);
     HRESULT Refresh();
     HRESULT Update();
-    HRESULT get_PathNameDNS(BSTR*);
-    HRESULT get_Properties(IDispatch*);
-    HRESULT get_Security(VARIANT*);
-    HRESULT put_Security(VARIANT);
+    HRESULT get_PathNameDNS(BSTR* pbstrPathNameDNS);
+    HRESULT get_Properties(IDispatch* ppcolProperties);
+    HRESULT get_Security(VARIANT* pvarSecurity);
+    HRESULT put_Security(VARIANT varSecurity);
 }
 enum IID_IMSMQQueueInfo3 = GUID(0xeba96b1d, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQQueueInfo3 : IDispatch
 {
-    HRESULT get_QueueGuid(BSTR*);
-    HRESULT get_ServiceTypeGuid(BSTR*);
-    HRESULT put_ServiceTypeGuid(BSTR);
-    HRESULT get_Label(BSTR*);
-    HRESULT put_Label(BSTR);
-    HRESULT get_PathName(BSTR*);
-    HRESULT put_PathName(BSTR);
-    HRESULT get_FormatName(BSTR*);
-    HRESULT put_FormatName(BSTR);
-    HRESULT get_IsTransactional(short*);
-    HRESULT get_PrivLevel(int*);
-    HRESULT put_PrivLevel(int);
-    HRESULT get_Journal(int*);
-    HRESULT put_Journal(int);
-    HRESULT get_Quota(int*);
-    HRESULT put_Quota(int);
-    HRESULT get_BasePriority(int*);
-    HRESULT put_BasePriority(int);
-    HRESULT get_CreateTime(VARIANT*);
-    HRESULT get_ModifyTime(VARIANT*);
-    HRESULT get_Authenticate(int*);
-    HRESULT put_Authenticate(int);
-    HRESULT get_JournalQuota(int*);
-    HRESULT put_JournalQuota(int);
-    HRESULT get_IsWorldReadable(short*);
-    HRESULT Create(VARIANT*, VARIANT*);
+    HRESULT get_QueueGuid(BSTR* pbstrGuidQueue);
+    HRESULT get_ServiceTypeGuid(BSTR* pbstrGuidServiceType);
+    HRESULT put_ServiceTypeGuid(BSTR bstrGuidServiceType);
+    HRESULT get_Label(BSTR* pbstrLabel);
+    HRESULT put_Label(BSTR bstrLabel);
+    HRESULT get_PathName(BSTR* pbstrPathName);
+    HRESULT put_PathName(BSTR bstrPathName);
+    HRESULT get_FormatName(BSTR* pbstrFormatName);
+    HRESULT put_FormatName(BSTR bstrFormatName);
+    HRESULT get_IsTransactional(short* pisTransactional);
+    HRESULT get_PrivLevel(int* plPrivLevel);
+    HRESULT put_PrivLevel(int lPrivLevel);
+    HRESULT get_Journal(int* plJournal);
+    HRESULT put_Journal(int lJournal);
+    HRESULT get_Quota(int* plQuota);
+    HRESULT put_Quota(int lQuota);
+    HRESULT get_BasePriority(int* plBasePriority);
+    HRESULT put_BasePriority(int lBasePriority);
+    HRESULT get_CreateTime(VARIANT* pvarCreateTime);
+    HRESULT get_ModifyTime(VARIANT* pvarModifyTime);
+    HRESULT get_Authenticate(int* plAuthenticate);
+    HRESULT put_Authenticate(int lAuthenticate);
+    HRESULT get_JournalQuota(int* plJournalQuota);
+    HRESULT put_JournalQuota(int lJournalQuota);
+    HRESULT get_IsWorldReadable(short* pisWorldReadable);
+    HRESULT Create(VARIANT* IsTransactional, VARIANT* IsWorldReadable);
     HRESULT Delete();
-    HRESULT Open(int, int, IMSMQQueue3*);
+    HRESULT Open(int Access, int ShareMode, IMSMQQueue3* ppq);
     HRESULT Refresh();
     HRESULT Update();
-    HRESULT get_PathNameDNS(BSTR*);
-    HRESULT get_Properties(IDispatch*);
-    HRESULT get_Security(VARIANT*);
-    HRESULT put_Security(VARIANT);
-    HRESULT get_IsTransactional2(VARIANT_BOOL*);
-    HRESULT get_IsWorldReadable2(VARIANT_BOOL*);
-    HRESULT get_MulticastAddress(BSTR*);
-    HRESULT put_MulticastAddress(BSTR);
-    HRESULT get_ADsPath(BSTR*);
+    HRESULT get_PathNameDNS(BSTR* pbstrPathNameDNS);
+    HRESULT get_Properties(IDispatch* ppcolProperties);
+    HRESULT get_Security(VARIANT* pvarSecurity);
+    HRESULT put_Security(VARIANT varSecurity);
+    HRESULT get_IsTransactional2(VARIANT_BOOL* pisTransactional);
+    HRESULT get_IsWorldReadable2(VARIANT_BOOL* pisWorldReadable);
+    HRESULT get_MulticastAddress(BSTR* pbstrMulticastAddress);
+    HRESULT put_MulticastAddress(BSTR bstrMulticastAddress);
+    HRESULT get_ADsPath(BSTR* pbstrADsPath);
 }
 enum IID_IMSMQQueueInfo4 = GUID(0xeba96b21, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQQueueInfo4 : IDispatch
 {
-    HRESULT get_QueueGuid(BSTR*);
-    HRESULT get_ServiceTypeGuid(BSTR*);
-    HRESULT put_ServiceTypeGuid(BSTR);
-    HRESULT get_Label(BSTR*);
-    HRESULT put_Label(BSTR);
-    HRESULT get_PathName(BSTR*);
-    HRESULT put_PathName(BSTR);
-    HRESULT get_FormatName(BSTR*);
-    HRESULT put_FormatName(BSTR);
-    HRESULT get_IsTransactional(short*);
-    HRESULT get_PrivLevel(int*);
-    HRESULT put_PrivLevel(int);
-    HRESULT get_Journal(int*);
-    HRESULT put_Journal(int);
-    HRESULT get_Quota(int*);
-    HRESULT put_Quota(int);
-    HRESULT get_BasePriority(int*);
-    HRESULT put_BasePriority(int);
-    HRESULT get_CreateTime(VARIANT*);
-    HRESULT get_ModifyTime(VARIANT*);
-    HRESULT get_Authenticate(int*);
-    HRESULT put_Authenticate(int);
-    HRESULT get_JournalQuota(int*);
-    HRESULT put_JournalQuota(int);
-    HRESULT get_IsWorldReadable(short*);
-    HRESULT Create(VARIANT*, VARIANT*);
+    HRESULT get_QueueGuid(BSTR* pbstrGuidQueue);
+    HRESULT get_ServiceTypeGuid(BSTR* pbstrGuidServiceType);
+    HRESULT put_ServiceTypeGuid(BSTR bstrGuidServiceType);
+    HRESULT get_Label(BSTR* pbstrLabel);
+    HRESULT put_Label(BSTR bstrLabel);
+    HRESULT get_PathName(BSTR* pbstrPathName);
+    HRESULT put_PathName(BSTR bstrPathName);
+    HRESULT get_FormatName(BSTR* pbstrFormatName);
+    HRESULT put_FormatName(BSTR bstrFormatName);
+    HRESULT get_IsTransactional(short* pisTransactional);
+    HRESULT get_PrivLevel(int* plPrivLevel);
+    HRESULT put_PrivLevel(int lPrivLevel);
+    HRESULT get_Journal(int* plJournal);
+    HRESULT put_Journal(int lJournal);
+    HRESULT get_Quota(int* plQuota);
+    HRESULT put_Quota(int lQuota);
+    HRESULT get_BasePriority(int* plBasePriority);
+    HRESULT put_BasePriority(int lBasePriority);
+    HRESULT get_CreateTime(VARIANT* pvarCreateTime);
+    HRESULT get_ModifyTime(VARIANT* pvarModifyTime);
+    HRESULT get_Authenticate(int* plAuthenticate);
+    HRESULT put_Authenticate(int lAuthenticate);
+    HRESULT get_JournalQuota(int* plJournalQuota);
+    HRESULT put_JournalQuota(int lJournalQuota);
+    HRESULT get_IsWorldReadable(short* pisWorldReadable);
+    HRESULT Create(VARIANT* IsTransactional, VARIANT* IsWorldReadable);
     HRESULT Delete();
-    HRESULT Open(int, int, IMSMQQueue4*);
+    HRESULT Open(int Access, int ShareMode, IMSMQQueue4* ppq);
     HRESULT Refresh();
     HRESULT Update();
-    HRESULT get_PathNameDNS(BSTR*);
-    HRESULT get_Properties(IDispatch*);
-    HRESULT get_Security(VARIANT*);
-    HRESULT put_Security(VARIANT);
-    HRESULT get_IsTransactional2(VARIANT_BOOL*);
-    HRESULT get_IsWorldReadable2(VARIANT_BOOL*);
-    HRESULT get_MulticastAddress(BSTR*);
-    HRESULT put_MulticastAddress(BSTR);
-    HRESULT get_ADsPath(BSTR*);
+    HRESULT get_PathNameDNS(BSTR* pbstrPathNameDNS);
+    HRESULT get_Properties(IDispatch* ppcolProperties);
+    HRESULT get_Security(VARIANT* pvarSecurity);
+    HRESULT put_Security(VARIANT varSecurity);
+    HRESULT get_IsTransactional2(VARIANT_BOOL* pisTransactional);
+    HRESULT get_IsWorldReadable2(VARIANT_BOOL* pisWorldReadable);
+    HRESULT get_MulticastAddress(BSTR* pbstrMulticastAddress);
+    HRESULT put_MulticastAddress(BSTR bstrMulticastAddress);
+    HRESULT get_ADsPath(BSTR* pbstrADsPath);
 }
 enum IID_IMSMQQueue = GUID(0xd7d6e076, 0xdccd, 0x11d0, [0xaa, 0x4b, 0x0, 0x60, 0x97, 0xd, 0xeb, 0xae]);
 interface IMSMQQueue : IDispatch
 {
-    HRESULT get_Access(int*);
-    HRESULT get_ShareMode(int*);
-    HRESULT get_QueueInfo(IMSMQQueueInfo*);
-    HRESULT get_Handle(int*);
-    HRESULT get_IsOpen(short*);
+    HRESULT get_Access(int* plAccess);
+    HRESULT get_ShareMode(int* plShareMode);
+    HRESULT get_QueueInfo(IMSMQQueueInfo* ppqinfo);
+    HRESULT get_Handle(int* plHandle);
+    HRESULT get_IsOpen(short* pisOpen);
     HRESULT Close();
-    HRESULT Receive(VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage*);
-    HRESULT Peek(VARIANT*, VARIANT*, VARIANT*, IMSMQMessage*);
-    HRESULT EnableNotification(IMSMQEvent, VARIANT*, VARIANT*);
+    HRESULT Receive(VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, IMSMQMessage* ppmsg);
+    HRESULT Peek(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, IMSMQMessage* ppmsg);
+    HRESULT EnableNotification(IMSMQEvent Event, VARIANT* Cursor, VARIANT* ReceiveTimeout);
     HRESULT Reset();
-    HRESULT ReceiveCurrent(VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage*);
-    HRESULT PeekNext(VARIANT*, VARIANT*, VARIANT*, IMSMQMessage*);
-    HRESULT PeekCurrent(VARIANT*, VARIANT*, VARIANT*, IMSMQMessage*);
+    HRESULT ReceiveCurrent(VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, IMSMQMessage* ppmsg);
+    HRESULT PeekNext(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, IMSMQMessage* ppmsg);
+    HRESULT PeekCurrent(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, IMSMQMessage* ppmsg);
 }
 enum IID_IMSMQQueue2 = GUID(0xef0574e0, 0x6d8, 0x11d3, [0xb1, 0x0, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQQueue2 : IDispatch
 {
-    HRESULT get_Access(int*);
-    HRESULT get_ShareMode(int*);
-    HRESULT get_QueueInfo(IMSMQQueueInfo2*);
-    HRESULT get_Handle(int*);
-    HRESULT get_IsOpen(short*);
+    HRESULT get_Access(int* plAccess);
+    HRESULT get_ShareMode(int* plShareMode);
+    HRESULT get_QueueInfo(IMSMQQueueInfo2* ppqinfo);
+    HRESULT get_Handle(int* plHandle);
+    HRESULT get_IsOpen(short* pisOpen);
     HRESULT Close();
-    HRESULT Receive_v1(VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage*);
-    HRESULT Peek_v1(VARIANT*, VARIANT*, VARIANT*, IMSMQMessage*);
-    HRESULT EnableNotification(IMSMQEvent2, VARIANT*, VARIANT*);
+    HRESULT Receive_v1(VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, IMSMQMessage* ppmsg);
+    HRESULT Peek_v1(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, IMSMQMessage* ppmsg);
+    HRESULT EnableNotification(IMSMQEvent2 Event, VARIANT* Cursor, VARIANT* ReceiveTimeout);
     HRESULT Reset();
-    HRESULT ReceiveCurrent_v1(VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage*);
-    HRESULT PeekNext_v1(VARIANT*, VARIANT*, VARIANT*, IMSMQMessage*);
-    HRESULT PeekCurrent_v1(VARIANT*, VARIANT*, VARIANT*, IMSMQMessage*);
-    HRESULT Receive(VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage2*);
-    HRESULT Peek(VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage2*);
-    HRESULT ReceiveCurrent(VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage2*);
-    HRESULT PeekNext(VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage2*);
-    HRESULT PeekCurrent(VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage2*);
-    HRESULT get_Properties(IDispatch*);
+    HRESULT ReceiveCurrent_v1(VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, IMSMQMessage* ppmsg);
+    HRESULT PeekNext_v1(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, IMSMQMessage* ppmsg);
+    HRESULT PeekCurrent_v1(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, IMSMQMessage* ppmsg);
+    HRESULT Receive(VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, VARIANT* WantConnectorType, IMSMQMessage2* ppmsg);
+    HRESULT Peek(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, VARIANT* WantConnectorType, IMSMQMessage2* ppmsg);
+    HRESULT ReceiveCurrent(VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, VARIANT* WantConnectorType, IMSMQMessage2* ppmsg);
+    HRESULT PeekNext(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, VARIANT* WantConnectorType, IMSMQMessage2* ppmsg);
+    HRESULT PeekCurrent(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, VARIANT* WantConnectorType, IMSMQMessage2* ppmsg);
+    HRESULT get_Properties(IDispatch* ppcolProperties);
 }
 enum IID_IMSMQQueue3 = GUID(0xeba96b1b, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQQueue3 : IDispatch
 {
-    HRESULT get_Access(int*);
-    HRESULT get_ShareMode(int*);
-    HRESULT get_QueueInfo(IMSMQQueueInfo3*);
-    HRESULT get_Handle(int*);
-    HRESULT get_IsOpen(short*);
+    HRESULT get_Access(int* plAccess);
+    HRESULT get_ShareMode(int* plShareMode);
+    HRESULT get_QueueInfo(IMSMQQueueInfo3* ppqinfo);
+    HRESULT get_Handle(int* plHandle);
+    HRESULT get_IsOpen(short* pisOpen);
     HRESULT Close();
-    HRESULT Receive_v1(VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage*);
-    HRESULT Peek_v1(VARIANT*, VARIANT*, VARIANT*, IMSMQMessage*);
-    HRESULT EnableNotification(IMSMQEvent3, VARIANT*, VARIANT*);
+    HRESULT Receive_v1(VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, IMSMQMessage* ppmsg);
+    HRESULT Peek_v1(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, IMSMQMessage* ppmsg);
+    HRESULT EnableNotification(IMSMQEvent3 Event, VARIANT* Cursor, VARIANT* ReceiveTimeout);
     HRESULT Reset();
-    HRESULT ReceiveCurrent_v1(VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage*);
-    HRESULT PeekNext_v1(VARIANT*, VARIANT*, VARIANT*, IMSMQMessage*);
-    HRESULT PeekCurrent_v1(VARIANT*, VARIANT*, VARIANT*, IMSMQMessage*);
-    HRESULT Receive(VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage3*);
-    HRESULT Peek(VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage3*);
-    HRESULT ReceiveCurrent(VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage3*);
-    HRESULT PeekNext(VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage3*);
-    HRESULT PeekCurrent(VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage3*);
-    HRESULT get_Properties(IDispatch*);
-    HRESULT get_Handle2(VARIANT*);
-    HRESULT ReceiveByLookupId(VARIANT, VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage3*);
-    HRESULT ReceiveNextByLookupId(VARIANT, VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage3*);
-    HRESULT ReceivePreviousByLookupId(VARIANT, VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage3*);
-    HRESULT ReceiveFirstByLookupId(VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage3*);
-    HRESULT ReceiveLastByLookupId(VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage3*);
-    HRESULT PeekByLookupId(VARIANT, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage3*);
-    HRESULT PeekNextByLookupId(VARIANT, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage3*);
-    HRESULT PeekPreviousByLookupId(VARIANT, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage3*);
-    HRESULT PeekFirstByLookupId(VARIANT*, VARIANT*, VARIANT*, IMSMQMessage3*);
-    HRESULT PeekLastByLookupId(VARIANT*, VARIANT*, VARIANT*, IMSMQMessage3*);
+    HRESULT ReceiveCurrent_v1(VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, IMSMQMessage* ppmsg);
+    HRESULT PeekNext_v1(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, IMSMQMessage* ppmsg);
+    HRESULT PeekCurrent_v1(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, IMSMQMessage* ppmsg);
+    HRESULT Receive(VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, VARIANT* WantConnectorType, IMSMQMessage3* ppmsg);
+    HRESULT Peek(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, VARIANT* WantConnectorType, IMSMQMessage3* ppmsg);
+    HRESULT ReceiveCurrent(VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, VARIANT* WantConnectorType, IMSMQMessage3* ppmsg);
+    HRESULT PeekNext(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, VARIANT* WantConnectorType, IMSMQMessage3* ppmsg);
+    HRESULT PeekCurrent(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, VARIANT* WantConnectorType, IMSMQMessage3* ppmsg);
+    HRESULT get_Properties(IDispatch* ppcolProperties);
+    HRESULT get_Handle2(VARIANT* pvarHandle);
+    HRESULT ReceiveByLookupId(VARIANT LookupId, VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* WantConnectorType, IMSMQMessage3* ppmsg);
+    HRESULT ReceiveNextByLookupId(VARIANT LookupId, VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* WantConnectorType, IMSMQMessage3* ppmsg);
+    HRESULT ReceivePreviousByLookupId(VARIANT LookupId, VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* WantConnectorType, IMSMQMessage3* ppmsg);
+    HRESULT ReceiveFirstByLookupId(VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* WantConnectorType, IMSMQMessage3* ppmsg);
+    HRESULT ReceiveLastByLookupId(VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* WantConnectorType, IMSMQMessage3* ppmsg);
+    HRESULT PeekByLookupId(VARIANT LookupId, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* WantConnectorType, IMSMQMessage3* ppmsg);
+    HRESULT PeekNextByLookupId(VARIANT LookupId, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* WantConnectorType, IMSMQMessage3* ppmsg);
+    HRESULT PeekPreviousByLookupId(VARIANT LookupId, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* WantConnectorType, IMSMQMessage3* ppmsg);
+    HRESULT PeekFirstByLookupId(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* WantConnectorType, IMSMQMessage3* ppmsg);
+    HRESULT PeekLastByLookupId(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* WantConnectorType, IMSMQMessage3* ppmsg);
     HRESULT Purge();
-    HRESULT get_IsOpen2(VARIANT_BOOL*);
+    HRESULT get_IsOpen2(VARIANT_BOOL* pisOpen);
 }
 enum IID_IMSMQQueue4 = GUID(0xeba96b20, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQQueue4 : IDispatch
 {
-    HRESULT get_Access(int*);
-    HRESULT get_ShareMode(int*);
-    HRESULT get_QueueInfo(IMSMQQueueInfo4*);
-    HRESULT get_Handle(int*);
-    HRESULT get_IsOpen(short*);
+    HRESULT get_Access(int* plAccess);
+    HRESULT get_ShareMode(int* plShareMode);
+    HRESULT get_QueueInfo(IMSMQQueueInfo4* ppqinfo);
+    HRESULT get_Handle(int* plHandle);
+    HRESULT get_IsOpen(short* pisOpen);
     HRESULT Close();
-    HRESULT Receive_v1(VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage*);
-    HRESULT Peek_v1(VARIANT*, VARIANT*, VARIANT*, IMSMQMessage*);
-    HRESULT EnableNotification(IMSMQEvent3, VARIANT*, VARIANT*);
+    HRESULT Receive_v1(VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, IMSMQMessage* ppmsg);
+    HRESULT Peek_v1(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, IMSMQMessage* ppmsg);
+    HRESULT EnableNotification(IMSMQEvent3 Event, VARIANT* Cursor, VARIANT* ReceiveTimeout);
     HRESULT Reset();
-    HRESULT ReceiveCurrent_v1(VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage*);
-    HRESULT PeekNext_v1(VARIANT*, VARIANT*, VARIANT*, IMSMQMessage*);
-    HRESULT PeekCurrent_v1(VARIANT*, VARIANT*, VARIANT*, IMSMQMessage*);
-    HRESULT Receive(VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage4*);
-    HRESULT Peek(VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage4*);
-    HRESULT ReceiveCurrent(VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage4*);
-    HRESULT PeekNext(VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage4*);
-    HRESULT PeekCurrent(VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage4*);
-    HRESULT get_Properties(IDispatch*);
-    HRESULT get_Handle2(VARIANT*);
-    HRESULT ReceiveByLookupId(VARIANT, VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage4*);
-    HRESULT ReceiveNextByLookupId(VARIANT, VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage4*);
-    HRESULT ReceivePreviousByLookupId(VARIANT, VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage4*);
-    HRESULT ReceiveFirstByLookupId(VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage4*);
-    HRESULT ReceiveLastByLookupId(VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage4*);
-    HRESULT PeekByLookupId(VARIANT, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage4*);
-    HRESULT PeekNextByLookupId(VARIANT, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage4*);
-    HRESULT PeekPreviousByLookupId(VARIANT, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage4*);
-    HRESULT PeekFirstByLookupId(VARIANT*, VARIANT*, VARIANT*, IMSMQMessage4*);
-    HRESULT PeekLastByLookupId(VARIANT*, VARIANT*, VARIANT*, IMSMQMessage4*);
+    HRESULT ReceiveCurrent_v1(VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, IMSMQMessage* ppmsg);
+    HRESULT PeekNext_v1(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, IMSMQMessage* ppmsg);
+    HRESULT PeekCurrent_v1(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, IMSMQMessage* ppmsg);
+    HRESULT Receive(VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, VARIANT* WantConnectorType, IMSMQMessage4* ppmsg);
+    HRESULT Peek(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, VARIANT* WantConnectorType, IMSMQMessage4* ppmsg);
+    HRESULT ReceiveCurrent(VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, VARIANT* WantConnectorType, IMSMQMessage4* ppmsg);
+    HRESULT PeekNext(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, VARIANT* WantConnectorType, IMSMQMessage4* ppmsg);
+    HRESULT PeekCurrent(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* ReceiveTimeout, VARIANT* WantConnectorType, IMSMQMessage4* ppmsg);
+    HRESULT get_Properties(IDispatch* ppcolProperties);
+    HRESULT get_Handle2(VARIANT* pvarHandle);
+    HRESULT ReceiveByLookupId(VARIANT LookupId, VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* WantConnectorType, IMSMQMessage4* ppmsg);
+    HRESULT ReceiveNextByLookupId(VARIANT LookupId, VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* WantConnectorType, IMSMQMessage4* ppmsg);
+    HRESULT ReceivePreviousByLookupId(VARIANT LookupId, VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* WantConnectorType, IMSMQMessage4* ppmsg);
+    HRESULT ReceiveFirstByLookupId(VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* WantConnectorType, IMSMQMessage4* ppmsg);
+    HRESULT ReceiveLastByLookupId(VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* WantConnectorType, IMSMQMessage4* ppmsg);
+    HRESULT PeekByLookupId(VARIANT LookupId, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* WantConnectorType, IMSMQMessage4* ppmsg);
+    HRESULT PeekNextByLookupId(VARIANT LookupId, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* WantConnectorType, IMSMQMessage4* ppmsg);
+    HRESULT PeekPreviousByLookupId(VARIANT LookupId, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* WantConnectorType, IMSMQMessage4* ppmsg);
+    HRESULT PeekFirstByLookupId(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* WantConnectorType, IMSMQMessage4* ppmsg);
+    HRESULT PeekLastByLookupId(VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* WantConnectorType, IMSMQMessage4* ppmsg);
     HRESULT Purge();
-    HRESULT get_IsOpen2(VARIANT_BOOL*);
-    HRESULT ReceiveByLookupIdAllowPeek(VARIANT, VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQMessage4*);
+    HRESULT get_IsOpen2(VARIANT_BOOL* pisOpen);
+    HRESULT ReceiveByLookupIdAllowPeek(VARIANT LookupId, VARIANT* Transaction, VARIANT* WantDestinationQueue, VARIANT* WantBody, VARIANT* WantConnectorType, IMSMQMessage4* ppmsg);
 }
 enum IID_IMSMQMessage = GUID(0xd7d6e074, 0xdccd, 0x11d0, [0xaa, 0x4b, 0x0, 0x60, 0x97, 0xd, 0xeb, 0xae]);
 interface IMSMQMessage : IDispatch
 {
-    HRESULT get_Class(int*);
-    HRESULT get_PrivLevel(int*);
-    HRESULT put_PrivLevel(int);
-    HRESULT get_AuthLevel(int*);
-    HRESULT put_AuthLevel(int);
-    HRESULT get_IsAuthenticated(short*);
-    HRESULT get_Delivery(int*);
-    HRESULT put_Delivery(int);
-    HRESULT get_Trace(int*);
-    HRESULT put_Trace(int);
-    HRESULT get_Priority(int*);
-    HRESULT put_Priority(int);
-    HRESULT get_Journal(int*);
-    HRESULT put_Journal(int);
-    HRESULT get_ResponseQueueInfo(IMSMQQueueInfo*);
-    HRESULT putref_ResponseQueueInfo(IMSMQQueueInfo);
-    HRESULT get_AppSpecific(int*);
-    HRESULT put_AppSpecific(int);
-    HRESULT get_SourceMachineGuid(BSTR*);
-    HRESULT get_BodyLength(int*);
-    HRESULT get_Body(VARIANT*);
-    HRESULT put_Body(VARIANT);
-    HRESULT get_AdminQueueInfo(IMSMQQueueInfo*);
-    HRESULT putref_AdminQueueInfo(IMSMQQueueInfo);
-    HRESULT get_Id(VARIANT*);
-    HRESULT get_CorrelationId(VARIANT*);
-    HRESULT put_CorrelationId(VARIANT);
-    HRESULT get_Ack(int*);
-    HRESULT put_Ack(int);
-    HRESULT get_Label(BSTR*);
-    HRESULT put_Label(BSTR);
-    HRESULT get_MaxTimeToReachQueue(int*);
-    HRESULT put_MaxTimeToReachQueue(int);
-    HRESULT get_MaxTimeToReceive(int*);
-    HRESULT put_MaxTimeToReceive(int);
-    HRESULT get_HashAlgorithm(int*);
-    HRESULT put_HashAlgorithm(int);
-    HRESULT get_EncryptAlgorithm(int*);
-    HRESULT put_EncryptAlgorithm(int);
-    HRESULT get_SentTime(VARIANT*);
-    HRESULT get_ArrivedTime(VARIANT*);
-    HRESULT get_DestinationQueueInfo(IMSMQQueueInfo*);
-    HRESULT get_SenderCertificate(VARIANT*);
-    HRESULT put_SenderCertificate(VARIANT);
-    HRESULT get_SenderId(VARIANT*);
-    HRESULT get_SenderIdType(int*);
-    HRESULT put_SenderIdType(int);
-    HRESULT Send(IMSMQQueue, VARIANT*);
+    HRESULT get_Class(int* plClass);
+    HRESULT get_PrivLevel(int* plPrivLevel);
+    HRESULT put_PrivLevel(int lPrivLevel);
+    HRESULT get_AuthLevel(int* plAuthLevel);
+    HRESULT put_AuthLevel(int lAuthLevel);
+    HRESULT get_IsAuthenticated(short* pisAuthenticated);
+    HRESULT get_Delivery(int* plDelivery);
+    HRESULT put_Delivery(int lDelivery);
+    HRESULT get_Trace(int* plTrace);
+    HRESULT put_Trace(int lTrace);
+    HRESULT get_Priority(int* plPriority);
+    HRESULT put_Priority(int lPriority);
+    HRESULT get_Journal(int* plJournal);
+    HRESULT put_Journal(int lJournal);
+    HRESULT get_ResponseQueueInfo(IMSMQQueueInfo* ppqinfoResponse);
+    HRESULT putref_ResponseQueueInfo(IMSMQQueueInfo pqinfoResponse);
+    HRESULT get_AppSpecific(int* plAppSpecific);
+    HRESULT put_AppSpecific(int lAppSpecific);
+    HRESULT get_SourceMachineGuid(BSTR* pbstrGuidSrcMachine);
+    HRESULT get_BodyLength(int* pcbBody);
+    HRESULT get_Body(VARIANT* pvarBody);
+    HRESULT put_Body(VARIANT varBody);
+    HRESULT get_AdminQueueInfo(IMSMQQueueInfo* ppqinfoAdmin);
+    HRESULT putref_AdminQueueInfo(IMSMQQueueInfo pqinfoAdmin);
+    HRESULT get_Id(VARIANT* pvarMsgId);
+    HRESULT get_CorrelationId(VARIANT* pvarMsgId);
+    HRESULT put_CorrelationId(VARIANT varMsgId);
+    HRESULT get_Ack(int* plAck);
+    HRESULT put_Ack(int lAck);
+    HRESULT get_Label(BSTR* pbstrLabel);
+    HRESULT put_Label(BSTR bstrLabel);
+    HRESULT get_MaxTimeToReachQueue(int* plMaxTimeToReachQueue);
+    HRESULT put_MaxTimeToReachQueue(int lMaxTimeToReachQueue);
+    HRESULT get_MaxTimeToReceive(int* plMaxTimeToReceive);
+    HRESULT put_MaxTimeToReceive(int lMaxTimeToReceive);
+    HRESULT get_HashAlgorithm(int* plHashAlg);
+    HRESULT put_HashAlgorithm(int lHashAlg);
+    HRESULT get_EncryptAlgorithm(int* plEncryptAlg);
+    HRESULT put_EncryptAlgorithm(int lEncryptAlg);
+    HRESULT get_SentTime(VARIANT* pvarSentTime);
+    HRESULT get_ArrivedTime(VARIANT* plArrivedTime);
+    HRESULT get_DestinationQueueInfo(IMSMQQueueInfo* ppqinfoDest);
+    HRESULT get_SenderCertificate(VARIANT* pvarSenderCert);
+    HRESULT put_SenderCertificate(VARIANT varSenderCert);
+    HRESULT get_SenderId(VARIANT* pvarSenderId);
+    HRESULT get_SenderIdType(int* plSenderIdType);
+    HRESULT put_SenderIdType(int lSenderIdType);
+    HRESULT Send(IMSMQQueue DestinationQueue, VARIANT* Transaction);
     HRESULT AttachCurrentSecurityContext();
 }
 enum IID_IMSMQQueueInfos = GUID(0xd7d6e07d, 0xdccd, 0x11d0, [0xaa, 0x4b, 0x0, 0x60, 0x97, 0xd, 0xeb, 0xae]);
 interface IMSMQQueueInfos : IDispatch
 {
     HRESULT Reset();
-    HRESULT Next(IMSMQQueueInfo*);
+    HRESULT Next(IMSMQQueueInfo* ppqinfoNext);
 }
 enum IID_IMSMQQueueInfos2 = GUID(0xeba96b0f, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQQueueInfos2 : IDispatch
 {
     HRESULT Reset();
-    HRESULT Next(IMSMQQueueInfo2*);
-    HRESULT get_Properties(IDispatch*);
+    HRESULT Next(IMSMQQueueInfo2* ppqinfoNext);
+    HRESULT get_Properties(IDispatch* ppcolProperties);
 }
 enum IID_IMSMQQueueInfos3 = GUID(0xeba96b1e, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQQueueInfos3 : IDispatch
 {
     HRESULT Reset();
-    HRESULT Next(IMSMQQueueInfo3*);
-    HRESULT get_Properties(IDispatch*);
+    HRESULT Next(IMSMQQueueInfo3* ppqinfoNext);
+    HRESULT get_Properties(IDispatch* ppcolProperties);
 }
 enum IID_IMSMQQueueInfos4 = GUID(0xeba96b22, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQQueueInfos4 : IDispatch
 {
     HRESULT Reset();
-    HRESULT Next(IMSMQQueueInfo4*);
-    HRESULT get_Properties(IDispatch*);
+    HRESULT Next(IMSMQQueueInfo4* ppqinfoNext);
+    HRESULT get_Properties(IDispatch* ppcolProperties);
 }
 enum IID_IMSMQEvent = GUID(0xd7d6e077, 0xdccd, 0x11d0, [0xaa, 0x4b, 0x0, 0x60, 0x97, 0xd, 0xeb, 0xae]);
 interface IMSMQEvent : IDispatch
@@ -1081,7 +1081,7 @@ interface IMSMQEvent : IDispatch
 enum IID_IMSMQEvent2 = GUID(0xeba96b12, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQEvent2 : IMSMQEvent
 {
-    HRESULT get_Properties(IDispatch*);
+    HRESULT get_Properties(IDispatch* ppcolProperties);
 }
 enum IID_IMSMQEvent3 = GUID(0xeba96b1c, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQEvent3 : IMSMQEvent2
@@ -1090,39 +1090,39 @@ interface IMSMQEvent3 : IMSMQEvent2
 enum IID_IMSMQTransaction = GUID(0xd7d6e07f, 0xdccd, 0x11d0, [0xaa, 0x4b, 0x0, 0x60, 0x97, 0xd, 0xeb, 0xae]);
 interface IMSMQTransaction : IDispatch
 {
-    HRESULT get_Transaction(int*);
-    HRESULT Commit(VARIANT*, VARIANT*, VARIANT*);
-    HRESULT Abort(VARIANT*, VARIANT*);
+    HRESULT get_Transaction(int* plTransaction);
+    HRESULT Commit(VARIANT* fRetaining, VARIANT* grfTC, VARIANT* grfRM);
+    HRESULT Abort(VARIANT* fRetaining, VARIANT* fAsync);
 }
 enum IID_IMSMQCoordinatedTransactionDispenser = GUID(0xd7d6e081, 0xdccd, 0x11d0, [0xaa, 0x4b, 0x0, 0x60, 0x97, 0xd, 0xeb, 0xae]);
 interface IMSMQCoordinatedTransactionDispenser : IDispatch
 {
-    HRESULT BeginTransaction(IMSMQTransaction*);
+    HRESULT BeginTransaction(IMSMQTransaction* ptransaction);
 }
 enum IID_IMSMQTransactionDispenser = GUID(0xd7d6e083, 0xdccd, 0x11d0, [0xaa, 0x4b, 0x0, 0x60, 0x97, 0xd, 0xeb, 0xae]);
 interface IMSMQTransactionDispenser : IDispatch
 {
-    HRESULT BeginTransaction(IMSMQTransaction*);
+    HRESULT BeginTransaction(IMSMQTransaction* ptransaction);
 }
 enum IID_IMSMQQuery2 = GUID(0xeba96b0e, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQQuery2 : IDispatch
 {
-    HRESULT LookupQueue(VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQQueueInfos2*);
-    HRESULT get_Properties(IDispatch*);
+    HRESULT LookupQueue(VARIANT* QueueGuid, VARIANT* ServiceTypeGuid, VARIANT* Label, VARIANT* CreateTime, VARIANT* ModifyTime, VARIANT* RelServiceType, VARIANT* RelLabel, VARIANT* RelCreateTime, VARIANT* RelModifyTime, IMSMQQueueInfos2* ppqinfos);
+    HRESULT get_Properties(IDispatch* ppcolProperties);
 }
 enum IID_IMSMQQuery3 = GUID(0xeba96b19, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQQuery3 : IDispatch
 {
-    HRESULT LookupQueue_v2(VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQQueueInfos3*);
-    HRESULT get_Properties(IDispatch*);
-    HRESULT LookupQueue(VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQQueueInfos3*);
+    HRESULT LookupQueue_v2(VARIANT* QueueGuid, VARIANT* ServiceTypeGuid, VARIANT* Label, VARIANT* CreateTime, VARIANT* ModifyTime, VARIANT* RelServiceType, VARIANT* RelLabel, VARIANT* RelCreateTime, VARIANT* RelModifyTime, IMSMQQueueInfos3* ppqinfos);
+    HRESULT get_Properties(IDispatch* ppcolProperties);
+    HRESULT LookupQueue(VARIANT* QueueGuid, VARIANT* ServiceTypeGuid, VARIANT* Label, VARIANT* CreateTime, VARIANT* ModifyTime, VARIANT* RelServiceType, VARIANT* RelLabel, VARIANT* RelCreateTime, VARIANT* RelModifyTime, VARIANT* MulticastAddress, VARIANT* RelMulticastAddress, IMSMQQueueInfos3* ppqinfos);
 }
 enum IID_IMSMQQuery4 = GUID(0xeba96b24, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQQuery4 : IDispatch
 {
-    HRESULT LookupQueue_v2(VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQQueueInfos4*);
-    HRESULT get_Properties(IDispatch*);
-    HRESULT LookupQueue(VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*, IMSMQQueueInfos4*);
+    HRESULT LookupQueue_v2(VARIANT* QueueGuid, VARIANT* ServiceTypeGuid, VARIANT* Label, VARIANT* CreateTime, VARIANT* ModifyTime, VARIANT* RelServiceType, VARIANT* RelLabel, VARIANT* RelCreateTime, VARIANT* RelModifyTime, IMSMQQueueInfos4* ppqinfos);
+    HRESULT get_Properties(IDispatch* ppcolProperties);
+    HRESULT LookupQueue(VARIANT* QueueGuid, VARIANT* ServiceTypeGuid, VARIANT* Label, VARIANT* CreateTime, VARIANT* ModifyTime, VARIANT* RelServiceType, VARIANT* RelLabel, VARIANT* RelCreateTime, VARIANT* RelModifyTime, VARIANT* MulticastAddress, VARIANT* RelMulticastAddress, IMSMQQueueInfos4* ppqinfos);
 }
 enum CLSID_MSMQQuery = GUID(0xd7d6e073, 0xdccd, 0x11d0, [0xaa, 0x4b, 0x0, 0x60, 0x97, 0xd, 0xeb, 0xae]);
 struct MSMQQuery
@@ -1131,271 +1131,271 @@ struct MSMQQuery
 enum IID_IMSMQMessage2 = GUID(0xd9933be0, 0xa567, 0x11d2, [0xb0, 0xf3, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQMessage2 : IDispatch
 {
-    HRESULT get_Class(int*);
-    HRESULT get_PrivLevel(int*);
-    HRESULT put_PrivLevel(int);
-    HRESULT get_AuthLevel(int*);
-    HRESULT put_AuthLevel(int);
-    HRESULT get_IsAuthenticated(short*);
-    HRESULT get_Delivery(int*);
-    HRESULT put_Delivery(int);
-    HRESULT get_Trace(int*);
-    HRESULT put_Trace(int);
-    HRESULT get_Priority(int*);
-    HRESULT put_Priority(int);
-    HRESULT get_Journal(int*);
-    HRESULT put_Journal(int);
-    HRESULT get_ResponseQueueInfo_v1(IMSMQQueueInfo*);
-    HRESULT putref_ResponseQueueInfo_v1(IMSMQQueueInfo);
-    HRESULT get_AppSpecific(int*);
-    HRESULT put_AppSpecific(int);
-    HRESULT get_SourceMachineGuid(BSTR*);
-    HRESULT get_BodyLength(int*);
-    HRESULT get_Body(VARIANT*);
-    HRESULT put_Body(VARIANT);
-    HRESULT get_AdminQueueInfo_v1(IMSMQQueueInfo*);
-    HRESULT putref_AdminQueueInfo_v1(IMSMQQueueInfo);
-    HRESULT get_Id(VARIANT*);
-    HRESULT get_CorrelationId(VARIANT*);
-    HRESULT put_CorrelationId(VARIANT);
-    HRESULT get_Ack(int*);
-    HRESULT put_Ack(int);
-    HRESULT get_Label(BSTR*);
-    HRESULT put_Label(BSTR);
-    HRESULT get_MaxTimeToReachQueue(int*);
-    HRESULT put_MaxTimeToReachQueue(int);
-    HRESULT get_MaxTimeToReceive(int*);
-    HRESULT put_MaxTimeToReceive(int);
-    HRESULT get_HashAlgorithm(int*);
-    HRESULT put_HashAlgorithm(int);
-    HRESULT get_EncryptAlgorithm(int*);
-    HRESULT put_EncryptAlgorithm(int);
-    HRESULT get_SentTime(VARIANT*);
-    HRESULT get_ArrivedTime(VARIANT*);
-    HRESULT get_DestinationQueueInfo(IMSMQQueueInfo2*);
-    HRESULT get_SenderCertificate(VARIANT*);
-    HRESULT put_SenderCertificate(VARIANT);
-    HRESULT get_SenderId(VARIANT*);
-    HRESULT get_SenderIdType(int*);
-    HRESULT put_SenderIdType(int);
-    HRESULT Send(IMSMQQueue2, VARIANT*);
+    HRESULT get_Class(int* plClass);
+    HRESULT get_PrivLevel(int* plPrivLevel);
+    HRESULT put_PrivLevel(int lPrivLevel);
+    HRESULT get_AuthLevel(int* plAuthLevel);
+    HRESULT put_AuthLevel(int lAuthLevel);
+    HRESULT get_IsAuthenticated(short* pisAuthenticated);
+    HRESULT get_Delivery(int* plDelivery);
+    HRESULT put_Delivery(int lDelivery);
+    HRESULT get_Trace(int* plTrace);
+    HRESULT put_Trace(int lTrace);
+    HRESULT get_Priority(int* plPriority);
+    HRESULT put_Priority(int lPriority);
+    HRESULT get_Journal(int* plJournal);
+    HRESULT put_Journal(int lJournal);
+    HRESULT get_ResponseQueueInfo_v1(IMSMQQueueInfo* ppqinfoResponse);
+    HRESULT putref_ResponseQueueInfo_v1(IMSMQQueueInfo pqinfoResponse);
+    HRESULT get_AppSpecific(int* plAppSpecific);
+    HRESULT put_AppSpecific(int lAppSpecific);
+    HRESULT get_SourceMachineGuid(BSTR* pbstrGuidSrcMachine);
+    HRESULT get_BodyLength(int* pcbBody);
+    HRESULT get_Body(VARIANT* pvarBody);
+    HRESULT put_Body(VARIANT varBody);
+    HRESULT get_AdminQueueInfo_v1(IMSMQQueueInfo* ppqinfoAdmin);
+    HRESULT putref_AdminQueueInfo_v1(IMSMQQueueInfo pqinfoAdmin);
+    HRESULT get_Id(VARIANT* pvarMsgId);
+    HRESULT get_CorrelationId(VARIANT* pvarMsgId);
+    HRESULT put_CorrelationId(VARIANT varMsgId);
+    HRESULT get_Ack(int* plAck);
+    HRESULT put_Ack(int lAck);
+    HRESULT get_Label(BSTR* pbstrLabel);
+    HRESULT put_Label(BSTR bstrLabel);
+    HRESULT get_MaxTimeToReachQueue(int* plMaxTimeToReachQueue);
+    HRESULT put_MaxTimeToReachQueue(int lMaxTimeToReachQueue);
+    HRESULT get_MaxTimeToReceive(int* plMaxTimeToReceive);
+    HRESULT put_MaxTimeToReceive(int lMaxTimeToReceive);
+    HRESULT get_HashAlgorithm(int* plHashAlg);
+    HRESULT put_HashAlgorithm(int lHashAlg);
+    HRESULT get_EncryptAlgorithm(int* plEncryptAlg);
+    HRESULT put_EncryptAlgorithm(int lEncryptAlg);
+    HRESULT get_SentTime(VARIANT* pvarSentTime);
+    HRESULT get_ArrivedTime(VARIANT* plArrivedTime);
+    HRESULT get_DestinationQueueInfo(IMSMQQueueInfo2* ppqinfoDest);
+    HRESULT get_SenderCertificate(VARIANT* pvarSenderCert);
+    HRESULT put_SenderCertificate(VARIANT varSenderCert);
+    HRESULT get_SenderId(VARIANT* pvarSenderId);
+    HRESULT get_SenderIdType(int* plSenderIdType);
+    HRESULT put_SenderIdType(int lSenderIdType);
+    HRESULT Send(IMSMQQueue2 DestinationQueue, VARIANT* Transaction);
     HRESULT AttachCurrentSecurityContext();
-    HRESULT get_SenderVersion(int*);
-    HRESULT get_Extension(VARIANT*);
-    HRESULT put_Extension(VARIANT);
-    HRESULT get_ConnectorTypeGuid(BSTR*);
-    HRESULT put_ConnectorTypeGuid(BSTR);
-    HRESULT get_TransactionStatusQueueInfo(IMSMQQueueInfo2*);
-    HRESULT get_DestinationSymmetricKey(VARIANT*);
-    HRESULT put_DestinationSymmetricKey(VARIANT);
-    HRESULT get_Signature(VARIANT*);
-    HRESULT put_Signature(VARIANT);
-    HRESULT get_AuthenticationProviderType(int*);
-    HRESULT put_AuthenticationProviderType(int);
-    HRESULT get_AuthenticationProviderName(BSTR*);
-    HRESULT put_AuthenticationProviderName(BSTR);
-    HRESULT put_SenderId(VARIANT);
-    HRESULT get_MsgClass(int*);
-    HRESULT put_MsgClass(int);
-    HRESULT get_Properties(IDispatch*);
-    HRESULT get_TransactionId(VARIANT*);
-    HRESULT get_IsFirstInTransaction(short*);
-    HRESULT get_IsLastInTransaction(short*);
-    HRESULT get_ResponseQueueInfo(IMSMQQueueInfo2*);
-    HRESULT putref_ResponseQueueInfo(IMSMQQueueInfo2);
-    HRESULT get_AdminQueueInfo(IMSMQQueueInfo2*);
-    HRESULT putref_AdminQueueInfo(IMSMQQueueInfo2);
-    HRESULT get_ReceivedAuthenticationLevel(short*);
+    HRESULT get_SenderVersion(int* plSenderVersion);
+    HRESULT get_Extension(VARIANT* pvarExtension);
+    HRESULT put_Extension(VARIANT varExtension);
+    HRESULT get_ConnectorTypeGuid(BSTR* pbstrGuidConnectorType);
+    HRESULT put_ConnectorTypeGuid(BSTR bstrGuidConnectorType);
+    HRESULT get_TransactionStatusQueueInfo(IMSMQQueueInfo2* ppqinfoXactStatus);
+    HRESULT get_DestinationSymmetricKey(VARIANT* pvarDestSymmKey);
+    HRESULT put_DestinationSymmetricKey(VARIANT varDestSymmKey);
+    HRESULT get_Signature(VARIANT* pvarSignature);
+    HRESULT put_Signature(VARIANT varSignature);
+    HRESULT get_AuthenticationProviderType(int* plAuthProvType);
+    HRESULT put_AuthenticationProviderType(int lAuthProvType);
+    HRESULT get_AuthenticationProviderName(BSTR* pbstrAuthProvName);
+    HRESULT put_AuthenticationProviderName(BSTR bstrAuthProvName);
+    HRESULT put_SenderId(VARIANT varSenderId);
+    HRESULT get_MsgClass(int* plMsgClass);
+    HRESULT put_MsgClass(int lMsgClass);
+    HRESULT get_Properties(IDispatch* ppcolProperties);
+    HRESULT get_TransactionId(VARIANT* pvarXactId);
+    HRESULT get_IsFirstInTransaction(short* pisFirstInXact);
+    HRESULT get_IsLastInTransaction(short* pisLastInXact);
+    HRESULT get_ResponseQueueInfo(IMSMQQueueInfo2* ppqinfoResponse);
+    HRESULT putref_ResponseQueueInfo(IMSMQQueueInfo2 pqinfoResponse);
+    HRESULT get_AdminQueueInfo(IMSMQQueueInfo2* ppqinfoAdmin);
+    HRESULT putref_AdminQueueInfo(IMSMQQueueInfo2 pqinfoAdmin);
+    HRESULT get_ReceivedAuthenticationLevel(short* psReceivedAuthenticationLevel);
 }
 enum IID_IMSMQMessage3 = GUID(0xeba96b1a, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQMessage3 : IDispatch
 {
-    HRESULT get_Class(int*);
-    HRESULT get_PrivLevel(int*);
-    HRESULT put_PrivLevel(int);
-    HRESULT get_AuthLevel(int*);
-    HRESULT put_AuthLevel(int);
-    HRESULT get_IsAuthenticated(short*);
-    HRESULT get_Delivery(int*);
-    HRESULT put_Delivery(int);
-    HRESULT get_Trace(int*);
-    HRESULT put_Trace(int);
-    HRESULT get_Priority(int*);
-    HRESULT put_Priority(int);
-    HRESULT get_Journal(int*);
-    HRESULT put_Journal(int);
-    HRESULT get_ResponseQueueInfo_v1(IMSMQQueueInfo*);
-    HRESULT putref_ResponseQueueInfo_v1(IMSMQQueueInfo);
-    HRESULT get_AppSpecific(int*);
-    HRESULT put_AppSpecific(int);
-    HRESULT get_SourceMachineGuid(BSTR*);
-    HRESULT get_BodyLength(int*);
-    HRESULT get_Body(VARIANT*);
-    HRESULT put_Body(VARIANT);
-    HRESULT get_AdminQueueInfo_v1(IMSMQQueueInfo*);
-    HRESULT putref_AdminQueueInfo_v1(IMSMQQueueInfo);
-    HRESULT get_Id(VARIANT*);
-    HRESULT get_CorrelationId(VARIANT*);
-    HRESULT put_CorrelationId(VARIANT);
-    HRESULT get_Ack(int*);
-    HRESULT put_Ack(int);
-    HRESULT get_Label(BSTR*);
-    HRESULT put_Label(BSTR);
-    HRESULT get_MaxTimeToReachQueue(int*);
-    HRESULT put_MaxTimeToReachQueue(int);
-    HRESULT get_MaxTimeToReceive(int*);
-    HRESULT put_MaxTimeToReceive(int);
-    HRESULT get_HashAlgorithm(int*);
-    HRESULT put_HashAlgorithm(int);
-    HRESULT get_EncryptAlgorithm(int*);
-    HRESULT put_EncryptAlgorithm(int);
-    HRESULT get_SentTime(VARIANT*);
-    HRESULT get_ArrivedTime(VARIANT*);
-    HRESULT get_DestinationQueueInfo(IMSMQQueueInfo3*);
-    HRESULT get_SenderCertificate(VARIANT*);
-    HRESULT put_SenderCertificate(VARIANT);
-    HRESULT get_SenderId(VARIANT*);
-    HRESULT get_SenderIdType(int*);
-    HRESULT put_SenderIdType(int);
-    HRESULT Send(IDispatch, VARIANT*);
+    HRESULT get_Class(int* plClass);
+    HRESULT get_PrivLevel(int* plPrivLevel);
+    HRESULT put_PrivLevel(int lPrivLevel);
+    HRESULT get_AuthLevel(int* plAuthLevel);
+    HRESULT put_AuthLevel(int lAuthLevel);
+    HRESULT get_IsAuthenticated(short* pisAuthenticated);
+    HRESULT get_Delivery(int* plDelivery);
+    HRESULT put_Delivery(int lDelivery);
+    HRESULT get_Trace(int* plTrace);
+    HRESULT put_Trace(int lTrace);
+    HRESULT get_Priority(int* plPriority);
+    HRESULT put_Priority(int lPriority);
+    HRESULT get_Journal(int* plJournal);
+    HRESULT put_Journal(int lJournal);
+    HRESULT get_ResponseQueueInfo_v1(IMSMQQueueInfo* ppqinfoResponse);
+    HRESULT putref_ResponseQueueInfo_v1(IMSMQQueueInfo pqinfoResponse);
+    HRESULT get_AppSpecific(int* plAppSpecific);
+    HRESULT put_AppSpecific(int lAppSpecific);
+    HRESULT get_SourceMachineGuid(BSTR* pbstrGuidSrcMachine);
+    HRESULT get_BodyLength(int* pcbBody);
+    HRESULT get_Body(VARIANT* pvarBody);
+    HRESULT put_Body(VARIANT varBody);
+    HRESULT get_AdminQueueInfo_v1(IMSMQQueueInfo* ppqinfoAdmin);
+    HRESULT putref_AdminQueueInfo_v1(IMSMQQueueInfo pqinfoAdmin);
+    HRESULT get_Id(VARIANT* pvarMsgId);
+    HRESULT get_CorrelationId(VARIANT* pvarMsgId);
+    HRESULT put_CorrelationId(VARIANT varMsgId);
+    HRESULT get_Ack(int* plAck);
+    HRESULT put_Ack(int lAck);
+    HRESULT get_Label(BSTR* pbstrLabel);
+    HRESULT put_Label(BSTR bstrLabel);
+    HRESULT get_MaxTimeToReachQueue(int* plMaxTimeToReachQueue);
+    HRESULT put_MaxTimeToReachQueue(int lMaxTimeToReachQueue);
+    HRESULT get_MaxTimeToReceive(int* plMaxTimeToReceive);
+    HRESULT put_MaxTimeToReceive(int lMaxTimeToReceive);
+    HRESULT get_HashAlgorithm(int* plHashAlg);
+    HRESULT put_HashAlgorithm(int lHashAlg);
+    HRESULT get_EncryptAlgorithm(int* plEncryptAlg);
+    HRESULT put_EncryptAlgorithm(int lEncryptAlg);
+    HRESULT get_SentTime(VARIANT* pvarSentTime);
+    HRESULT get_ArrivedTime(VARIANT* plArrivedTime);
+    HRESULT get_DestinationQueueInfo(IMSMQQueueInfo3* ppqinfoDest);
+    HRESULT get_SenderCertificate(VARIANT* pvarSenderCert);
+    HRESULT put_SenderCertificate(VARIANT varSenderCert);
+    HRESULT get_SenderId(VARIANT* pvarSenderId);
+    HRESULT get_SenderIdType(int* plSenderIdType);
+    HRESULT put_SenderIdType(int lSenderIdType);
+    HRESULT Send(IDispatch DestinationQueue, VARIANT* Transaction);
     HRESULT AttachCurrentSecurityContext();
-    HRESULT get_SenderVersion(int*);
-    HRESULT get_Extension(VARIANT*);
-    HRESULT put_Extension(VARIANT);
-    HRESULT get_ConnectorTypeGuid(BSTR*);
-    HRESULT put_ConnectorTypeGuid(BSTR);
-    HRESULT get_TransactionStatusQueueInfo(IMSMQQueueInfo3*);
-    HRESULT get_DestinationSymmetricKey(VARIANT*);
-    HRESULT put_DestinationSymmetricKey(VARIANT);
-    HRESULT get_Signature(VARIANT*);
-    HRESULT put_Signature(VARIANT);
-    HRESULT get_AuthenticationProviderType(int*);
-    HRESULT put_AuthenticationProviderType(int);
-    HRESULT get_AuthenticationProviderName(BSTR*);
-    HRESULT put_AuthenticationProviderName(BSTR);
-    HRESULT put_SenderId(VARIANT);
-    HRESULT get_MsgClass(int*);
-    HRESULT put_MsgClass(int);
-    HRESULT get_Properties(IDispatch*);
-    HRESULT get_TransactionId(VARIANT*);
-    HRESULT get_IsFirstInTransaction(short*);
-    HRESULT get_IsLastInTransaction(short*);
-    HRESULT get_ResponseQueueInfo_v2(IMSMQQueueInfo2*);
-    HRESULT putref_ResponseQueueInfo_v2(IMSMQQueueInfo2);
-    HRESULT get_AdminQueueInfo_v2(IMSMQQueueInfo2*);
-    HRESULT putref_AdminQueueInfo_v2(IMSMQQueueInfo2);
-    HRESULT get_ReceivedAuthenticationLevel(short*);
-    HRESULT get_ResponseQueueInfo(IMSMQQueueInfo3*);
-    HRESULT putref_ResponseQueueInfo(IMSMQQueueInfo3);
-    HRESULT get_AdminQueueInfo(IMSMQQueueInfo3*);
-    HRESULT putref_AdminQueueInfo(IMSMQQueueInfo3);
-    HRESULT get_ResponseDestination(IDispatch*);
-    HRESULT putref_ResponseDestination(IDispatch);
-    HRESULT get_Destination(IDispatch*);
-    HRESULT get_LookupId(VARIANT*);
-    HRESULT get_IsAuthenticated2(VARIANT_BOOL*);
-    HRESULT get_IsFirstInTransaction2(VARIANT_BOOL*);
-    HRESULT get_IsLastInTransaction2(VARIANT_BOOL*);
+    HRESULT get_SenderVersion(int* plSenderVersion);
+    HRESULT get_Extension(VARIANT* pvarExtension);
+    HRESULT put_Extension(VARIANT varExtension);
+    HRESULT get_ConnectorTypeGuid(BSTR* pbstrGuidConnectorType);
+    HRESULT put_ConnectorTypeGuid(BSTR bstrGuidConnectorType);
+    HRESULT get_TransactionStatusQueueInfo(IMSMQQueueInfo3* ppqinfoXactStatus);
+    HRESULT get_DestinationSymmetricKey(VARIANT* pvarDestSymmKey);
+    HRESULT put_DestinationSymmetricKey(VARIANT varDestSymmKey);
+    HRESULT get_Signature(VARIANT* pvarSignature);
+    HRESULT put_Signature(VARIANT varSignature);
+    HRESULT get_AuthenticationProviderType(int* plAuthProvType);
+    HRESULT put_AuthenticationProviderType(int lAuthProvType);
+    HRESULT get_AuthenticationProviderName(BSTR* pbstrAuthProvName);
+    HRESULT put_AuthenticationProviderName(BSTR bstrAuthProvName);
+    HRESULT put_SenderId(VARIANT varSenderId);
+    HRESULT get_MsgClass(int* plMsgClass);
+    HRESULT put_MsgClass(int lMsgClass);
+    HRESULT get_Properties(IDispatch* ppcolProperties);
+    HRESULT get_TransactionId(VARIANT* pvarXactId);
+    HRESULT get_IsFirstInTransaction(short* pisFirstInXact);
+    HRESULT get_IsLastInTransaction(short* pisLastInXact);
+    HRESULT get_ResponseQueueInfo_v2(IMSMQQueueInfo2* ppqinfoResponse);
+    HRESULT putref_ResponseQueueInfo_v2(IMSMQQueueInfo2 pqinfoResponse);
+    HRESULT get_AdminQueueInfo_v2(IMSMQQueueInfo2* ppqinfoAdmin);
+    HRESULT putref_AdminQueueInfo_v2(IMSMQQueueInfo2 pqinfoAdmin);
+    HRESULT get_ReceivedAuthenticationLevel(short* psReceivedAuthenticationLevel);
+    HRESULT get_ResponseQueueInfo(IMSMQQueueInfo3* ppqinfoResponse);
+    HRESULT putref_ResponseQueueInfo(IMSMQQueueInfo3 pqinfoResponse);
+    HRESULT get_AdminQueueInfo(IMSMQQueueInfo3* ppqinfoAdmin);
+    HRESULT putref_AdminQueueInfo(IMSMQQueueInfo3 pqinfoAdmin);
+    HRESULT get_ResponseDestination(IDispatch* ppdestResponse);
+    HRESULT putref_ResponseDestination(IDispatch pdestResponse);
+    HRESULT get_Destination(IDispatch* ppdestDestination);
+    HRESULT get_LookupId(VARIANT* pvarLookupId);
+    HRESULT get_IsAuthenticated2(VARIANT_BOOL* pisAuthenticated);
+    HRESULT get_IsFirstInTransaction2(VARIANT_BOOL* pisFirstInXact);
+    HRESULT get_IsLastInTransaction2(VARIANT_BOOL* pisLastInXact);
     HRESULT AttachCurrentSecurityContext2();
-    HRESULT get_SoapEnvelope(BSTR*);
-    HRESULT get_CompoundMessage(VARIANT*);
-    HRESULT put_SoapHeader(BSTR);
-    HRESULT put_SoapBody(BSTR);
+    HRESULT get_SoapEnvelope(BSTR* pbstrSoapEnvelope);
+    HRESULT get_CompoundMessage(VARIANT* pvarCompoundMessage);
+    HRESULT put_SoapHeader(BSTR bstrSoapHeader);
+    HRESULT put_SoapBody(BSTR bstrSoapBody);
 }
 enum IID_IMSMQMessage4 = GUID(0xeba96b23, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQMessage4 : IDispatch
 {
-    HRESULT get_Class(int*);
-    HRESULT get_PrivLevel(int*);
-    HRESULT put_PrivLevel(int);
-    HRESULT get_AuthLevel(int*);
-    HRESULT put_AuthLevel(int);
-    HRESULT get_IsAuthenticated(short*);
-    HRESULT get_Delivery(int*);
-    HRESULT put_Delivery(int);
-    HRESULT get_Trace(int*);
-    HRESULT put_Trace(int);
-    HRESULT get_Priority(int*);
-    HRESULT put_Priority(int);
-    HRESULT get_Journal(int*);
-    HRESULT put_Journal(int);
-    HRESULT get_ResponseQueueInfo_v1(IMSMQQueueInfo*);
-    HRESULT putref_ResponseQueueInfo_v1(IMSMQQueueInfo);
-    HRESULT get_AppSpecific(int*);
-    HRESULT put_AppSpecific(int);
-    HRESULT get_SourceMachineGuid(BSTR*);
-    HRESULT get_BodyLength(int*);
-    HRESULT get_Body(VARIANT*);
-    HRESULT put_Body(VARIANT);
-    HRESULT get_AdminQueueInfo_v1(IMSMQQueueInfo*);
-    HRESULT putref_AdminQueueInfo_v1(IMSMQQueueInfo);
-    HRESULT get_Id(VARIANT*);
-    HRESULT get_CorrelationId(VARIANT*);
-    HRESULT put_CorrelationId(VARIANT);
-    HRESULT get_Ack(int*);
-    HRESULT put_Ack(int);
-    HRESULT get_Label(BSTR*);
-    HRESULT put_Label(BSTR);
-    HRESULT get_MaxTimeToReachQueue(int*);
-    HRESULT put_MaxTimeToReachQueue(int);
-    HRESULT get_MaxTimeToReceive(int*);
-    HRESULT put_MaxTimeToReceive(int);
-    HRESULT get_HashAlgorithm(int*);
-    HRESULT put_HashAlgorithm(int);
-    HRESULT get_EncryptAlgorithm(int*);
-    HRESULT put_EncryptAlgorithm(int);
-    HRESULT get_SentTime(VARIANT*);
-    HRESULT get_ArrivedTime(VARIANT*);
-    HRESULT get_DestinationQueueInfo(IMSMQQueueInfo4*);
-    HRESULT get_SenderCertificate(VARIANT*);
-    HRESULT put_SenderCertificate(VARIANT);
-    HRESULT get_SenderId(VARIANT*);
-    HRESULT get_SenderIdType(int*);
-    HRESULT put_SenderIdType(int);
-    HRESULT Send(IDispatch, VARIANT*);
+    HRESULT get_Class(int* plClass);
+    HRESULT get_PrivLevel(int* plPrivLevel);
+    HRESULT put_PrivLevel(int lPrivLevel);
+    HRESULT get_AuthLevel(int* plAuthLevel);
+    HRESULT put_AuthLevel(int lAuthLevel);
+    HRESULT get_IsAuthenticated(short* pisAuthenticated);
+    HRESULT get_Delivery(int* plDelivery);
+    HRESULT put_Delivery(int lDelivery);
+    HRESULT get_Trace(int* plTrace);
+    HRESULT put_Trace(int lTrace);
+    HRESULT get_Priority(int* plPriority);
+    HRESULT put_Priority(int lPriority);
+    HRESULT get_Journal(int* plJournal);
+    HRESULT put_Journal(int lJournal);
+    HRESULT get_ResponseQueueInfo_v1(IMSMQQueueInfo* ppqinfoResponse);
+    HRESULT putref_ResponseQueueInfo_v1(IMSMQQueueInfo pqinfoResponse);
+    HRESULT get_AppSpecific(int* plAppSpecific);
+    HRESULT put_AppSpecific(int lAppSpecific);
+    HRESULT get_SourceMachineGuid(BSTR* pbstrGuidSrcMachine);
+    HRESULT get_BodyLength(int* pcbBody);
+    HRESULT get_Body(VARIANT* pvarBody);
+    HRESULT put_Body(VARIANT varBody);
+    HRESULT get_AdminQueueInfo_v1(IMSMQQueueInfo* ppqinfoAdmin);
+    HRESULT putref_AdminQueueInfo_v1(IMSMQQueueInfo pqinfoAdmin);
+    HRESULT get_Id(VARIANT* pvarMsgId);
+    HRESULT get_CorrelationId(VARIANT* pvarMsgId);
+    HRESULT put_CorrelationId(VARIANT varMsgId);
+    HRESULT get_Ack(int* plAck);
+    HRESULT put_Ack(int lAck);
+    HRESULT get_Label(BSTR* pbstrLabel);
+    HRESULT put_Label(BSTR bstrLabel);
+    HRESULT get_MaxTimeToReachQueue(int* plMaxTimeToReachQueue);
+    HRESULT put_MaxTimeToReachQueue(int lMaxTimeToReachQueue);
+    HRESULT get_MaxTimeToReceive(int* plMaxTimeToReceive);
+    HRESULT put_MaxTimeToReceive(int lMaxTimeToReceive);
+    HRESULT get_HashAlgorithm(int* plHashAlg);
+    HRESULT put_HashAlgorithm(int lHashAlg);
+    HRESULT get_EncryptAlgorithm(int* plEncryptAlg);
+    HRESULT put_EncryptAlgorithm(int lEncryptAlg);
+    HRESULT get_SentTime(VARIANT* pvarSentTime);
+    HRESULT get_ArrivedTime(VARIANT* plArrivedTime);
+    HRESULT get_DestinationQueueInfo(IMSMQQueueInfo4* ppqinfoDest);
+    HRESULT get_SenderCertificate(VARIANT* pvarSenderCert);
+    HRESULT put_SenderCertificate(VARIANT varSenderCert);
+    HRESULT get_SenderId(VARIANT* pvarSenderId);
+    HRESULT get_SenderIdType(int* plSenderIdType);
+    HRESULT put_SenderIdType(int lSenderIdType);
+    HRESULT Send(IDispatch DestinationQueue, VARIANT* Transaction);
     HRESULT AttachCurrentSecurityContext();
-    HRESULT get_SenderVersion(int*);
-    HRESULT get_Extension(VARIANT*);
-    HRESULT put_Extension(VARIANT);
-    HRESULT get_ConnectorTypeGuid(BSTR*);
-    HRESULT put_ConnectorTypeGuid(BSTR);
-    HRESULT get_TransactionStatusQueueInfo(IMSMQQueueInfo4*);
-    HRESULT get_DestinationSymmetricKey(VARIANT*);
-    HRESULT put_DestinationSymmetricKey(VARIANT);
-    HRESULT get_Signature(VARIANT*);
-    HRESULT put_Signature(VARIANT);
-    HRESULT get_AuthenticationProviderType(int*);
-    HRESULT put_AuthenticationProviderType(int);
-    HRESULT get_AuthenticationProviderName(BSTR*);
-    HRESULT put_AuthenticationProviderName(BSTR);
-    HRESULT put_SenderId(VARIANT);
-    HRESULT get_MsgClass(int*);
-    HRESULT put_MsgClass(int);
-    HRESULT get_Properties(IDispatch*);
-    HRESULT get_TransactionId(VARIANT*);
-    HRESULT get_IsFirstInTransaction(short*);
-    HRESULT get_IsLastInTransaction(short*);
-    HRESULT get_ResponseQueueInfo_v2(IMSMQQueueInfo2*);
-    HRESULT putref_ResponseQueueInfo_v2(IMSMQQueueInfo2);
-    HRESULT get_AdminQueueInfo_v2(IMSMQQueueInfo2*);
-    HRESULT putref_AdminQueueInfo_v2(IMSMQQueueInfo2);
-    HRESULT get_ReceivedAuthenticationLevel(short*);
-    HRESULT get_ResponseQueueInfo(IMSMQQueueInfo4*);
-    HRESULT putref_ResponseQueueInfo(IMSMQQueueInfo4);
-    HRESULT get_AdminQueueInfo(IMSMQQueueInfo4*);
-    HRESULT putref_AdminQueueInfo(IMSMQQueueInfo4);
-    HRESULT get_ResponseDestination(IDispatch*);
-    HRESULT putref_ResponseDestination(IDispatch);
-    HRESULT get_Destination(IDispatch*);
-    HRESULT get_LookupId(VARIANT*);
-    HRESULT get_IsAuthenticated2(VARIANT_BOOL*);
-    HRESULT get_IsFirstInTransaction2(VARIANT_BOOL*);
-    HRESULT get_IsLastInTransaction2(VARIANT_BOOL*);
+    HRESULT get_SenderVersion(int* plSenderVersion);
+    HRESULT get_Extension(VARIANT* pvarExtension);
+    HRESULT put_Extension(VARIANT varExtension);
+    HRESULT get_ConnectorTypeGuid(BSTR* pbstrGuidConnectorType);
+    HRESULT put_ConnectorTypeGuid(BSTR bstrGuidConnectorType);
+    HRESULT get_TransactionStatusQueueInfo(IMSMQQueueInfo4* ppqinfoXactStatus);
+    HRESULT get_DestinationSymmetricKey(VARIANT* pvarDestSymmKey);
+    HRESULT put_DestinationSymmetricKey(VARIANT varDestSymmKey);
+    HRESULT get_Signature(VARIANT* pvarSignature);
+    HRESULT put_Signature(VARIANT varSignature);
+    HRESULT get_AuthenticationProviderType(int* plAuthProvType);
+    HRESULT put_AuthenticationProviderType(int lAuthProvType);
+    HRESULT get_AuthenticationProviderName(BSTR* pbstrAuthProvName);
+    HRESULT put_AuthenticationProviderName(BSTR bstrAuthProvName);
+    HRESULT put_SenderId(VARIANT varSenderId);
+    HRESULT get_MsgClass(int* plMsgClass);
+    HRESULT put_MsgClass(int lMsgClass);
+    HRESULT get_Properties(IDispatch* ppcolProperties);
+    HRESULT get_TransactionId(VARIANT* pvarXactId);
+    HRESULT get_IsFirstInTransaction(short* pisFirstInXact);
+    HRESULT get_IsLastInTransaction(short* pisLastInXact);
+    HRESULT get_ResponseQueueInfo_v2(IMSMQQueueInfo2* ppqinfoResponse);
+    HRESULT putref_ResponseQueueInfo_v2(IMSMQQueueInfo2 pqinfoResponse);
+    HRESULT get_AdminQueueInfo_v2(IMSMQQueueInfo2* ppqinfoAdmin);
+    HRESULT putref_AdminQueueInfo_v2(IMSMQQueueInfo2 pqinfoAdmin);
+    HRESULT get_ReceivedAuthenticationLevel(short* psReceivedAuthenticationLevel);
+    HRESULT get_ResponseQueueInfo(IMSMQQueueInfo4* ppqinfoResponse);
+    HRESULT putref_ResponseQueueInfo(IMSMQQueueInfo4 pqinfoResponse);
+    HRESULT get_AdminQueueInfo(IMSMQQueueInfo4* ppqinfoAdmin);
+    HRESULT putref_AdminQueueInfo(IMSMQQueueInfo4 pqinfoAdmin);
+    HRESULT get_ResponseDestination(IDispatch* ppdestResponse);
+    HRESULT putref_ResponseDestination(IDispatch pdestResponse);
+    HRESULT get_Destination(IDispatch* ppdestDestination);
+    HRESULT get_LookupId(VARIANT* pvarLookupId);
+    HRESULT get_IsAuthenticated2(VARIANT_BOOL* pisAuthenticated);
+    HRESULT get_IsFirstInTransaction2(VARIANT_BOOL* pisFirstInXact);
+    HRESULT get_IsLastInTransaction2(VARIANT_BOOL* pisLastInXact);
     HRESULT AttachCurrentSecurityContext2();
-    HRESULT get_SoapEnvelope(BSTR*);
-    HRESULT get_CompoundMessage(VARIANT*);
-    HRESULT put_SoapHeader(BSTR);
-    HRESULT put_SoapBody(BSTR);
+    HRESULT get_SoapEnvelope(BSTR* pbstrSoapEnvelope);
+    HRESULT get_CompoundMessage(VARIANT* pvarCompoundMessage);
+    HRESULT put_SoapHeader(BSTR bstrSoapHeader);
+    HRESULT put_SoapBody(BSTR bstrSoapBody);
 }
 enum CLSID_MSMQMessage = GUID(0xd7d6e075, 0xdccd, 0x11d0, [0xaa, 0x4b, 0x0, 0x60, 0x97, 0xd, 0xeb, 0xae]);
 struct MSMQMessage
@@ -1408,9 +1408,9 @@ struct MSMQQueue
 enum IID_IMSMQPrivateEvent = GUID(0xd7ab3341, 0xc9d3, 0x11d1, [0xbb, 0x47, 0x0, 0x80, 0xc7, 0xc5, 0xa2, 0xc0]);
 interface IMSMQPrivateEvent : IDispatch
 {
-    HRESULT get_Hwnd(int*);
-    HRESULT FireArrivedEvent(IMSMQQueue, int);
-    HRESULT FireArrivedErrorEvent(IMSMQQueue, HRESULT, int);
+    HRESULT get_Hwnd(int* phwnd);
+    HRESULT FireArrivedEvent(IMSMQQueue pq, int msgcursor);
+    HRESULT FireArrivedErrorEvent(IMSMQQueue pq, HRESULT hrStatus, int msgcursor);
 }
 enum IID__DMSMQEventEvents = GUID(0xd7d6e078, 0xdccd, 0x11d0, [0xaa, 0x4b, 0x0, 0x60, 0x97, 0xd, 0xeb, 0xae]);
 interface _DMSMQEventEvents : IDispatch
@@ -1431,13 +1431,13 @@ struct MSMQQueueInfos
 enum IID_IMSMQTransaction2 = GUID(0x2ce0c5b0, 0x6e67, 0x11d2, [0xb0, 0xe6, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQTransaction2 : IMSMQTransaction
 {
-    HRESULT InitNew(VARIANT);
-    HRESULT get_Properties(IDispatch*);
+    HRESULT InitNew(VARIANT varTransaction);
+    HRESULT get_Properties(IDispatch* ppcolProperties);
 }
 enum IID_IMSMQTransaction3 = GUID(0xeba96b13, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQTransaction3 : IMSMQTransaction2
 {
-    HRESULT get_ITransaction(VARIANT*);
+    HRESULT get_ITransaction(VARIANT* pvarITransaction);
 }
 enum CLSID_MSMQTransaction = GUID(0xd7d6e080, 0xdccd, 0x11d0, [0xaa, 0x4b, 0x0, 0x60, 0x97, 0xd, 0xeb, 0xae]);
 struct MSMQTransaction
@@ -1446,14 +1446,14 @@ struct MSMQTransaction
 enum IID_IMSMQCoordinatedTransactionDispenser2 = GUID(0xeba96b10, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQCoordinatedTransactionDispenser2 : IDispatch
 {
-    HRESULT BeginTransaction(IMSMQTransaction2*);
-    HRESULT get_Properties(IDispatch*);
+    HRESULT BeginTransaction(IMSMQTransaction2* ptransaction);
+    HRESULT get_Properties(IDispatch* ppcolProperties);
 }
 enum IID_IMSMQCoordinatedTransactionDispenser3 = GUID(0xeba96b14, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQCoordinatedTransactionDispenser3 : IDispatch
 {
-    HRESULT BeginTransaction(IMSMQTransaction3*);
-    HRESULT get_Properties(IDispatch*);
+    HRESULT BeginTransaction(IMSMQTransaction3* ptransaction);
+    HRESULT get_Properties(IDispatch* ppcolProperties);
 }
 enum CLSID_MSMQCoordinatedTransactionDispenser = GUID(0xd7d6e082, 0xdccd, 0x11d0, [0xaa, 0x4b, 0x0, 0x60, 0x97, 0xd, 0xeb, 0xae]);
 struct MSMQCoordinatedTransactionDispenser
@@ -1462,14 +1462,14 @@ struct MSMQCoordinatedTransactionDispenser
 enum IID_IMSMQTransactionDispenser2 = GUID(0xeba96b11, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQTransactionDispenser2 : IDispatch
 {
-    HRESULT BeginTransaction(IMSMQTransaction2*);
-    HRESULT get_Properties(IDispatch*);
+    HRESULT BeginTransaction(IMSMQTransaction2* ptransaction);
+    HRESULT get_Properties(IDispatch* ppcolProperties);
 }
 enum IID_IMSMQTransactionDispenser3 = GUID(0xeba96b15, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQTransactionDispenser3 : IDispatch
 {
-    HRESULT BeginTransaction(IMSMQTransaction3*);
-    HRESULT get_Properties(IDispatch*);
+    HRESULT BeginTransaction(IMSMQTransaction3* ptransaction);
+    HRESULT get_Properties(IDispatch* ppcolProperties);
 }
 enum CLSID_MSMQTransactionDispenser = GUID(0xd7d6e084, 0xdccd, 0x11d0, [0xaa, 0x4b, 0x0, 0x60, 0x97, 0xd, 0xeb, 0xae]);
 struct MSMQTransactionDispenser
@@ -1478,29 +1478,29 @@ struct MSMQTransactionDispenser
 enum IID_IMSMQApplication = GUID(0xd7d6e085, 0xdccd, 0x11d0, [0xaa, 0x4b, 0x0, 0x60, 0x97, 0xd, 0xeb, 0xae]);
 interface IMSMQApplication : IDispatch
 {
-    HRESULT MachineIdOfMachineName(BSTR, BSTR*);
+    HRESULT MachineIdOfMachineName(BSTR MachineName, BSTR* pbstrGuid);
 }
 enum IID_IMSMQApplication2 = GUID(0x12a30900, 0x7300, 0x11d2, [0xb0, 0xe6, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQApplication2 : IMSMQApplication
 {
-    HRESULT RegisterCertificate(VARIANT*, VARIANT*);
-    HRESULT MachineNameOfMachineId(BSTR, BSTR*);
-    HRESULT get_MSMQVersionMajor(short*);
-    HRESULT get_MSMQVersionMinor(short*);
-    HRESULT get_MSMQVersionBuild(short*);
-    HRESULT get_IsDsEnabled(VARIANT_BOOL*);
-    HRESULT get_Properties(IDispatch*);
+    HRESULT RegisterCertificate(VARIANT* Flags, VARIANT* ExternalCertificate);
+    HRESULT MachineNameOfMachineId(BSTR bstrGuid, BSTR* pbstrMachineName);
+    HRESULT get_MSMQVersionMajor(short* psMSMQVersionMajor);
+    HRESULT get_MSMQVersionMinor(short* psMSMQVersionMinor);
+    HRESULT get_MSMQVersionBuild(short* psMSMQVersionBuild);
+    HRESULT get_IsDsEnabled(VARIANT_BOOL* pfIsDsEnabled);
+    HRESULT get_Properties(IDispatch* ppcolProperties);
 }
 enum IID_IMSMQApplication3 = GUID(0xeba96b1f, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQApplication3 : IMSMQApplication2
 {
-    HRESULT get_ActiveQueues(VARIANT*);
-    HRESULT get_PrivateQueues(VARIANT*);
-    HRESULT get_DirectoryServiceServer(BSTR*);
-    HRESULT get_IsConnected(VARIANT_BOOL*);
-    HRESULT get_BytesInAllQueues(VARIANT*);
-    HRESULT put_Machine(BSTR);
-    HRESULT get_Machine(BSTR*);
+    HRESULT get_ActiveQueues(VARIANT* pvActiveQueues);
+    HRESULT get_PrivateQueues(VARIANT* pvPrivateQueues);
+    HRESULT get_DirectoryServiceServer(BSTR* pbstrDirectoryServiceServer);
+    HRESULT get_IsConnected(VARIANT_BOOL* pfIsConnected);
+    HRESULT get_BytesInAllQueues(VARIANT* pvBytesInAllQueues);
+    HRESULT put_Machine(BSTR bstrMachine);
+    HRESULT get_Machine(BSTR* pbstrMachine);
     HRESULT Connect();
     HRESULT Disconnect();
     HRESULT Tidy();
@@ -1514,24 +1514,24 @@ interface IMSMQDestination : IDispatch
 {
     HRESULT Open();
     HRESULT Close();
-    HRESULT get_IsOpen(VARIANT_BOOL*);
-    HRESULT get_IADs(IDispatch*);
-    HRESULT putref_IADs(IDispatch);
-    HRESULT get_ADsPath(BSTR*);
-    HRESULT put_ADsPath(BSTR);
-    HRESULT get_PathName(BSTR*);
-    HRESULT put_PathName(BSTR);
-    HRESULT get_FormatName(BSTR*);
-    HRESULT put_FormatName(BSTR);
-    HRESULT get_Destinations(IDispatch*);
-    HRESULT putref_Destinations(IDispatch);
-    HRESULT get_Properties(IDispatch*);
+    HRESULT get_IsOpen(VARIANT_BOOL* pfIsOpen);
+    HRESULT get_IADs(IDispatch* ppIADs);
+    HRESULT putref_IADs(IDispatch pIADs);
+    HRESULT get_ADsPath(BSTR* pbstrADsPath);
+    HRESULT put_ADsPath(BSTR bstrADsPath);
+    HRESULT get_PathName(BSTR* pbstrPathName);
+    HRESULT put_PathName(BSTR bstrPathName);
+    HRESULT get_FormatName(BSTR* pbstrFormatName);
+    HRESULT put_FormatName(BSTR bstrFormatName);
+    HRESULT get_Destinations(IDispatch* ppDestinations);
+    HRESULT putref_Destinations(IDispatch pDestinations);
+    HRESULT get_Properties(IDispatch* ppcolProperties);
 }
 enum IID_IMSMQPrivateDestination = GUID(0xeba96b17, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 interface IMSMQPrivateDestination : IDispatch
 {
-    HRESULT get_Handle(VARIANT*);
-    HRESULT put_Handle(VARIANT);
+    HRESULT get_Handle(VARIANT* pvarHandle);
+    HRESULT put_Handle(VARIANT varHandle);
 }
 enum CLSID_MSMQDestination = GUID(0xeba96b18, 0x2168, 0x11d3, [0x89, 0x8c, 0x0, 0xe0, 0x2c, 0x7, 0x4f, 0x6b]);
 struct MSMQDestination
@@ -1540,9 +1540,9 @@ struct MSMQDestination
 enum IID_IMSMQCollection = GUID(0x188ac2f, 0xecb3, 0x4173, [0x97, 0x79, 0x63, 0x5c, 0xa2, 0x3, 0x9c, 0x72]);
 interface IMSMQCollection : IDispatch
 {
-    HRESULT Item(VARIANT*, VARIANT*);
-    HRESULT get_Count(int*);
-    HRESULT _NewEnum(IUnknown*);
+    HRESULT Item(VARIANT* Index, VARIANT* pvarRet);
+    HRESULT get_Count(int* pCount);
+    HRESULT _NewEnum(IUnknown* ppunk);
 }
 enum CLSID_MSMQCollection = GUID(0xf72b9031, 0x2f0c, 0x43e8, [0x92, 0x4e, 0xe6, 0x5, 0x2c, 0xdc, 0x49, 0x3f]);
 struct MSMQCollection
@@ -1551,15 +1551,15 @@ struct MSMQCollection
 enum IID_IMSMQManagement = GUID(0xbe5f0241, 0xe489, 0x4957, [0x8c, 0xc4, 0xa4, 0x52, 0xfc, 0xf3, 0xe2, 0x3e]);
 interface IMSMQManagement : IDispatch
 {
-    HRESULT Init(VARIANT*, VARIANT*, VARIANT*);
-    HRESULT get_FormatName(BSTR*);
-    HRESULT get_Machine(BSTR*);
-    HRESULT get_MessageCount(int*);
-    HRESULT get_ForeignStatus(int*);
-    HRESULT get_QueueType(int*);
-    HRESULT get_IsLocal(VARIANT_BOOL*);
-    HRESULT get_TransactionalStatus(int*);
-    HRESULT get_BytesInQueue(VARIANT*);
+    HRESULT Init(VARIANT* Machine, VARIANT* Pathname, VARIANT* FormatName);
+    HRESULT get_FormatName(BSTR* pbstrFormatName);
+    HRESULT get_Machine(BSTR* pbstrMachine);
+    HRESULT get_MessageCount(int* plMessageCount);
+    HRESULT get_ForeignStatus(int* plForeignStatus);
+    HRESULT get_QueueType(int* plQueueType);
+    HRESULT get_IsLocal(VARIANT_BOOL* pfIsLocal);
+    HRESULT get_TransactionalStatus(int* plTransactionalStatus);
+    HRESULT get_BytesInQueue(VARIANT* pvBytesInQueue);
 }
 enum CLSID_MSMQManagement = GUID(0x39ce96fe, 0xf4c5, 0x4484, [0xa1, 0x43, 0x4c, 0x2d, 0x5d, 0x32, 0x42, 0x29]);
 struct MSMQManagement
@@ -1568,9 +1568,9 @@ struct MSMQManagement
 enum IID_IMSMQOutgoingQueueManagement = GUID(0x64c478fb, 0xf9b0, 0x4695, [0x8a, 0x7f, 0x43, 0x9a, 0xc9, 0x43, 0x26, 0xd3]);
 interface IMSMQOutgoingQueueManagement : IMSMQManagement
 {
-    HRESULT get_State(int*);
-    HRESULT get_NextHops(VARIANT*);
-    HRESULT EodGetSendInfo(IMSMQCollection*);
+    HRESULT get_State(int* plState);
+    HRESULT get_NextHops(VARIANT* pvNextHops);
+    HRESULT EodGetSendInfo(IMSMQCollection* ppCollection);
     HRESULT Resume();
     HRESULT Pause();
     HRESULT EodResend();
@@ -1582,9 +1582,9 @@ struct MSMQOutgoingQueueManagement
 enum IID_IMSMQQueueManagement = GUID(0x7fbe7759, 0x5760, 0x444d, [0xb8, 0xa5, 0x5e, 0x7a, 0xb9, 0xa8, 0x4c, 0xce]);
 interface IMSMQQueueManagement : IMSMQManagement
 {
-    HRESULT get_JournalMessageCount(int*);
-    HRESULT get_BytesInJournal(VARIANT*);
-    HRESULT EodGetReceiveInfo(VARIANT*);
+    HRESULT get_JournalMessageCount(int* plJournalMessageCount);
+    HRESULT get_BytesInJournal(VARIANT* pvBytesInJournal);
+    HRESULT EodGetReceiveInfo(VARIANT* pvCollection);
 }
 enum CLSID_MSMQQueueManagement = GUID(0x33b6d07e, 0xf27d, 0x42fa, [0xb2, 0xd7, 0xbf, 0x82, 0xe1, 0x1e, 0x93, 0x74]);
 struct MSMQQueueManagement
@@ -1679,4 +1679,4 @@ enum : int
     MQCONN_OUT_OF_MEMORY             = 0x8000000d,
 }
 
-alias PMQRECEIVECALLBACK = void function(HRESULT, long, uint, uint, MQMSGPROPS*, OVERLAPPED*, HANDLE);
+alias PMQRECEIVECALLBACK = void function(HRESULT hrStatus, long hSource, uint dwTimeout, uint dwAction, MQMSGPROPS* pMessageProps, OVERLAPPED* lpOverlapped, HANDLE hCursor);

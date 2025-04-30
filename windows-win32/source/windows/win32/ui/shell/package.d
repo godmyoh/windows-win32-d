@@ -2,7 +2,7 @@ module windows.win32.ui.shell;
 
 import windows.win32.guid : GUID;
 import windows.win32.data.xml.msxml : IXMLDOMDocument;
-import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, COLORREF, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, LRESULT, NTSTATUS, POINT, POINTL, PSTR, PWSTR, RECT, RECTL, SHANDLE_PTR, SIZE, SYSTEMTIME, VARIANT_BOOL, WIN32_ERROR, WPARAM;
+import windows.win32.foundation : BOOL, BOOLEAN, BSTR, CHAR, COLORREF, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, LPARAM, LRESULT, NTSTATUS, POINT, POINTL, PROPERTYKEY, PSTR, PWSTR, RECT, RECTL, SHANDLE_PTR, SIZE, SYSTEMTIME, VARIANT_BOOL, WIN32_ERROR, WPARAM;
 import windows.win32.graphics.directcomposition : IDCompositionAnimation;
 import windows.win32.graphics.gdi : HBITMAP, HDC, HMONITOR, HPALETTE, LOGFONTW;
 import windows.win32.graphics.gdiplus : InterpolationMode;
@@ -22,706 +22,706 @@ import windows.win32.system.systemservices : SFGAO_FLAGS;
 import windows.win32.system.threading : LPTHREAD_START_ROUTINE, PROCESS_INFORMATION, STARTUPINFOW;
 import windows.win32.system.variant : VARENUM, VARIANT;
 import windows.win32.ui.controls : HIMAGELIST, HPROPSHEETPAGE, LPFNSVADDPROPSHEETPAGE, NMHDR, TBBUTTON;
-import windows.win32.ui.shell.common : COMDLG_FILTERSPEC, DEVICE_SCALE_FACTOR, IObjectArray, ITEMIDLIST, PERCEIVED, SHELLDETAILS, SHITEMID, STRRET;
-import windows.win32.ui.shell.propertiessystem : GETPROPERTYSTOREFLAGS, IPropertyChangeArray, IPropertyDescriptionList, IPropertyStore, PDOPSTATUS, PROPERTYKEY;
+import windows.win32.ui.shell.common : COMDLG_FILTERSPEC, DEVICE_SCALE_FACTOR, IObjectArray, ITEMIDLIST, PERCEIVED, SHCOLSTATE, SHELLDETAILS, SHITEMID, STRRET;
+import windows.win32.ui.shell.propertiessystem : GETPROPERTYSTOREFLAGS, IPropertyChangeArray, IPropertyDescriptionList, IPropertyStore, PDOPSTATUS;
 import windows.win32.ui.windowsandmessaging : CREATESTRUCTW, HACCEL, HDWP, HICON, HMENU, MESSAGEBOX_STYLE, MSG, SHOW_WINDOW_CMD;
 
 version (Windows):
 extern (Windows):
 
-BOOL FileIconInit(BOOL);
-BOOL LoadUserProfileA(HANDLE, PROFILEINFOA*);
-BOOL LoadUserProfileW(HANDLE, PROFILEINFOW*);
-BOOL UnloadUserProfile(HANDLE, HANDLE);
-BOOL GetProfilesDirectoryA(PSTR, uint*);
-BOOL GetProfilesDirectoryW(PWSTR, uint*);
-BOOL GetProfileType(uint*);
-BOOL DeleteProfileA(const(char)*, const(char)*, const(char)*);
-BOOL DeleteProfileW(const(wchar)*, const(wchar)*, const(wchar)*);
-HRESULT CreateProfile(const(wchar)*, const(wchar)*, PWSTR, uint);
-BOOL GetDefaultUserProfileDirectoryA(PSTR, uint*);
-BOOL GetDefaultUserProfileDirectoryW(PWSTR, uint*);
-BOOL GetAllUsersProfileDirectoryA(PSTR, uint*);
-BOOL GetAllUsersProfileDirectoryW(PWSTR, uint*);
-BOOL GetUserProfileDirectoryA(HANDLE, PSTR, uint*);
-BOOL GetUserProfileDirectoryW(HANDLE, PWSTR, uint*);
-HRESULT InitPropVariantFromStrRet(STRRET*, ITEMIDLIST*, PROPVARIANT*);
-HRESULT PropVariantToStrRet(const(PROPVARIANT)*, STRRET*);
-HRESULT InitVariantFromStrRet(STRRET*, ITEMIDLIST*, VARIANT*);
-HRESULT VariantToStrRet(const(VARIANT)*, STRRET*);
-BOOL SetWindowSubclass(HWND, SUBCLASSPROC, ulong, ulong);
-BOOL GetWindowSubclass(HWND, SUBCLASSPROC, ulong, ulong*);
-BOOL RemoveWindowSubclass(HWND, SUBCLASSPROC, ulong);
-LRESULT DefSubclassProc(HWND, uint, WPARAM, LPARAM);
-BOOL SetWindowContextHelpId(HWND, uint);
-uint GetWindowContextHelpId(HWND);
-BOOL SetMenuContextHelpId(HMENU, uint);
-uint GetMenuContextHelpId(HMENU);
-BOOL WinHelpA(HWND, const(char)*, uint, ulong);
-BOOL WinHelpW(HWND, const(wchar)*, uint, ulong);
-ITEMIDLIST* SHSimpleIDListFromPath(const(wchar)*);
-HRESULT SHCreateItemFromIDList(ITEMIDLIST*, const(GUID)*, void**);
-HRESULT SHCreateItemFromParsingName(const(wchar)*, IBindCtx, const(GUID)*, void**);
-HRESULT SHCreateItemWithParent(ITEMIDLIST*, IShellFolder, ITEMIDLIST*, const(GUID)*, void**);
-HRESULT SHCreateItemFromRelativeName(IShellItem, const(wchar)*, IBindCtx, const(GUID)*, void**);
-HRESULT SHCreateItemInKnownFolder(const(GUID)*, uint, const(wchar)*, const(GUID)*, void**);
-HRESULT SHGetIDListFromObject(IUnknown, ITEMIDLIST**);
-HRESULT SHGetItemFromObject(IUnknown, const(GUID)*, void**);
-HRESULT SHGetNameFromIDList(ITEMIDLIST*, SIGDN, PWSTR*);
-HRESULT SHGetItemFromDataObject(IDataObject, DATAOBJ_GET_ITEM_FLAGS, const(GUID)*, void**);
-HRESULT SHCreateShellItemArray(ITEMIDLIST*, IShellFolder, uint, ITEMIDLIST**, IShellItemArray*);
-HRESULT SHCreateShellItemArrayFromDataObject(IDataObject, const(GUID)*, void**);
-HRESULT SHCreateShellItemArrayFromIDLists(uint, ITEMIDLIST**, IShellItemArray*);
-HRESULT SHCreateShellItemArrayFromShellItem(IShellItem, const(GUID)*, void**);
-HRESULT SHCreateAssociationRegistration(const(GUID)*, void**);
-HRESULT SHCreateDefaultExtractIcon(const(GUID)*, void**);
-HRESULT SetCurrentProcessExplicitAppUserModelID(const(wchar)*);
-HRESULT GetCurrentProcessExplicitAppUserModelID(PWSTR*);
-HRESULT SHGetTemporaryPropertyForItem(IShellItem, const(PROPERTYKEY)*, PROPVARIANT*);
-HRESULT SHSetTemporaryPropertyForItem(IShellItem, const(PROPERTYKEY)*, const(PROPVARIANT)*);
-HRESULT SHShowManageLibraryUI(IShellItem, HWND, const(wchar)*, const(wchar)*, LIBRARYMANAGEDIALOGOPTIONS);
-HRESULT SHResolveLibrary(IShellItem);
-HRESULT SHAssocEnumHandlers(const(wchar)*, ASSOC_FILTER, IEnumAssocHandlers*);
-HRESULT SHAssocEnumHandlersForProtocolByApplication(const(wchar)*, const(GUID)*, void**);
-uint HMONITOR_UserSize(uint*, uint, HMONITOR*);
-ubyte* HMONITOR_UserMarshal(uint*, ubyte*, HMONITOR*);
-ubyte* HMONITOR_UserUnmarshal(uint*, ubyte*, HMONITOR*);
-void HMONITOR_UserFree(uint*, HMONITOR*);
-uint HMONITOR_UserSize64(uint*, uint, HMONITOR*);
-ubyte* HMONITOR_UserMarshal64(uint*, ubyte*, HMONITOR*);
-ubyte* HMONITOR_UserUnmarshal64(uint*, ubyte*, HMONITOR*);
-void HMONITOR_UserFree64(uint*, HMONITOR*);
-HRESULT SHCreateDefaultPropertiesOp(IShellItem, IFileOperation*);
-HRESULT SHSetDefaultProperties(HWND, IShellItem, uint, IFileOperationProgressSink);
-HRESULT SHGetMalloc(IMalloc*);
-void* SHAlloc(ulong);
-void SHFree(void*);
-int SHGetIconOverlayIndexA(const(char)*, int);
-int SHGetIconOverlayIndexW(const(wchar)*, int);
-ITEMIDLIST* ILClone(ITEMIDLIST*);
-ITEMIDLIST* ILCloneFirst(ITEMIDLIST*);
-ITEMIDLIST* ILCombine(ITEMIDLIST*, ITEMIDLIST*);
-void ILFree(ITEMIDLIST*);
-ITEMIDLIST* ILGetNext(ITEMIDLIST*);
-uint ILGetSize(ITEMIDLIST*);
-ITEMIDLIST* ILFindChild(ITEMIDLIST*, ITEMIDLIST*);
-ITEMIDLIST* ILFindLastID(ITEMIDLIST*);
-BOOL ILRemoveLastID(ITEMIDLIST*);
-BOOL ILIsEqual(ITEMIDLIST*, ITEMIDLIST*);
-BOOL ILIsParent(ITEMIDLIST*, ITEMIDLIST*, BOOL);
-HRESULT ILSaveToStream(IStream, ITEMIDLIST*);
-HRESULT ILLoadFromStreamEx(IStream, ITEMIDLIST**);
-ITEMIDLIST* ILCreateFromPathA(const(char)*);
-ITEMIDLIST* ILCreateFromPathW(const(wchar)*);
-HRESULT SHILCreateFromPath(const(wchar)*, ITEMIDLIST**, uint*);
-ITEMIDLIST* ILAppendID(ITEMIDLIST*, SHITEMID*, BOOL);
-BOOL SHGetPathFromIDListEx(ITEMIDLIST*, PWSTR, uint, GPFIDL_FLAGS);
-BOOL SHGetPathFromIDListA(ITEMIDLIST*, PSTR);
-BOOL SHGetPathFromIDListW(ITEMIDLIST*, PWSTR);
-int SHCreateDirectory(HWND, const(wchar)*);
-int SHCreateDirectoryExA(HWND, const(char)*, const(SECURITY_ATTRIBUTES)*);
-int SHCreateDirectoryExW(HWND, const(wchar)*, const(SECURITY_ATTRIBUTES)*);
-HRESULT SHOpenFolderAndSelectItems(ITEMIDLIST*, uint, ITEMIDLIST**, uint);
-HRESULT SHCreateShellItem(ITEMIDLIST*, IShellFolder, ITEMIDLIST*, IShellItem*);
-HRESULT SHGetSpecialFolderLocation(HWND, int, ITEMIDLIST**);
-ITEMIDLIST* SHCloneSpecialIDList(HWND, int, BOOL);
-BOOL SHGetSpecialFolderPathA(HWND, PSTR, int, BOOL);
-BOOL SHGetSpecialFolderPathW(HWND, PWSTR, int, BOOL);
+BOOL FileIconInit(BOOL fRestoreCache);
+BOOL LoadUserProfileA(HANDLE hToken, PROFILEINFOA* lpProfileInfo);
+BOOL LoadUserProfileW(HANDLE hToken, PROFILEINFOW* lpProfileInfo);
+BOOL UnloadUserProfile(HANDLE hToken, HANDLE hProfile);
+BOOL GetProfilesDirectoryA(PSTR lpProfileDir, uint* lpcchSize);
+BOOL GetProfilesDirectoryW(PWSTR lpProfileDir, uint* lpcchSize);
+BOOL GetProfileType(uint* dwFlags);
+BOOL DeleteProfileA(const(char)* lpSidString, const(char)* lpProfilePath, const(char)* lpComputerName);
+BOOL DeleteProfileW(const(wchar)* lpSidString, const(wchar)* lpProfilePath, const(wchar)* lpComputerName);
+HRESULT CreateProfile(const(wchar)* pszUserSid, const(wchar)* pszUserName, PWSTR pszProfilePath, uint cchProfilePath);
+BOOL GetDefaultUserProfileDirectoryA(PSTR lpProfileDir, uint* lpcchSize);
+BOOL GetDefaultUserProfileDirectoryW(PWSTR lpProfileDir, uint* lpcchSize);
+BOOL GetAllUsersProfileDirectoryA(PSTR lpProfileDir, uint* lpcchSize);
+BOOL GetAllUsersProfileDirectoryW(PWSTR lpProfileDir, uint* lpcchSize);
+BOOL GetUserProfileDirectoryA(HANDLE hToken, PSTR lpProfileDir, uint* lpcchSize);
+BOOL GetUserProfileDirectoryW(HANDLE hToken, PWSTR lpProfileDir, uint* lpcchSize);
+HRESULT InitPropVariantFromStrRet(STRRET* pstrret, ITEMIDLIST* pidl, PROPVARIANT* ppropvar);
+HRESULT PropVariantToStrRet(const(PROPVARIANT)* propvar, STRRET* pstrret);
+HRESULT InitVariantFromStrRet(STRRET* pstrret, ITEMIDLIST* pidl, VARIANT* pvar);
+HRESULT VariantToStrRet(const(VARIANT)* varIn, STRRET* pstrret);
+BOOL SetWindowSubclass(HWND hWnd, SUBCLASSPROC pfnSubclass, ulong uIdSubclass, ulong dwRefData);
+BOOL GetWindowSubclass(HWND hWnd, SUBCLASSPROC pfnSubclass, ulong uIdSubclass, ulong* pdwRefData);
+BOOL RemoveWindowSubclass(HWND hWnd, SUBCLASSPROC pfnSubclass, ulong uIdSubclass);
+LRESULT DefSubclassProc(HWND hWnd, uint uMsg, WPARAM wParam, LPARAM lParam);
+BOOL SetWindowContextHelpId(HWND param0, uint param1);
+uint GetWindowContextHelpId(HWND param0);
+BOOL SetMenuContextHelpId(HMENU param0, uint param1);
+uint GetMenuContextHelpId(HMENU param0);
+BOOL WinHelpA(HWND hWndMain, const(char)* lpszHelp, uint uCommand, ulong dwData);
+BOOL WinHelpW(HWND hWndMain, const(wchar)* lpszHelp, uint uCommand, ulong dwData);
+ITEMIDLIST* SHSimpleIDListFromPath(const(wchar)* pszPath);
+HRESULT SHCreateItemFromIDList(ITEMIDLIST* pidl, const(GUID)* riid, void** ppv);
+HRESULT SHCreateItemFromParsingName(const(wchar)* pszPath, IBindCtx pbc, const(GUID)* riid, void** ppv);
+HRESULT SHCreateItemWithParent(ITEMIDLIST* pidlParent, IShellFolder psfParent, ITEMIDLIST* pidl, const(GUID)* riid, void** ppvItem);
+HRESULT SHCreateItemFromRelativeName(IShellItem psiParent, const(wchar)* pszName, IBindCtx pbc, const(GUID)* riid, void** ppv);
+HRESULT SHCreateItemInKnownFolder(const(GUID)* kfid, uint dwKFFlags, const(wchar)* pszItem, const(GUID)* riid, void** ppv);
+HRESULT SHGetIDListFromObject(IUnknown punk, ITEMIDLIST** ppidl);
+HRESULT SHGetItemFromObject(IUnknown punk, const(GUID)* riid, void** ppv);
+HRESULT SHGetNameFromIDList(ITEMIDLIST* pidl, SIGDN sigdnName, PWSTR* ppszName);
+HRESULT SHGetItemFromDataObject(IDataObject pdtobj, DATAOBJ_GET_ITEM_FLAGS dwFlags, const(GUID)* riid, void** ppv);
+HRESULT SHCreateShellItemArray(ITEMIDLIST* pidlParent, IShellFolder psf, uint cidl, ITEMIDLIST** ppidl, IShellItemArray* ppsiItemArray);
+HRESULT SHCreateShellItemArrayFromDataObject(IDataObject pdo, const(GUID)* riid, void** ppv);
+HRESULT SHCreateShellItemArrayFromIDLists(uint cidl, ITEMIDLIST** rgpidl, IShellItemArray* ppsiItemArray);
+HRESULT SHCreateShellItemArrayFromShellItem(IShellItem psi, const(GUID)* riid, void** ppv);
+HRESULT SHCreateAssociationRegistration(const(GUID)* riid, void** ppv);
+HRESULT SHCreateDefaultExtractIcon(const(GUID)* riid, void** ppv);
+HRESULT SetCurrentProcessExplicitAppUserModelID(const(wchar)* AppID);
+HRESULT GetCurrentProcessExplicitAppUserModelID(PWSTR* AppID);
+HRESULT SHGetTemporaryPropertyForItem(IShellItem psi, const(PROPERTYKEY)* propkey, PROPVARIANT* ppropvar);
+HRESULT SHSetTemporaryPropertyForItem(IShellItem psi, const(PROPERTYKEY)* propkey, const(PROPVARIANT)* propvar);
+HRESULT SHShowManageLibraryUI(IShellItem psiLibrary, HWND hwndOwner, const(wchar)* pszTitle, const(wchar)* pszInstruction, LIBRARYMANAGEDIALOGOPTIONS lmdOptions);
+HRESULT SHResolveLibrary(IShellItem psiLibrary);
+HRESULT SHAssocEnumHandlers(const(wchar)* pszExtra, ASSOC_FILTER afFilter, IEnumAssocHandlers* ppEnumHandler);
+HRESULT SHAssocEnumHandlersForProtocolByApplication(const(wchar)* protocol, const(GUID)* riid, void** enumHandlers);
+uint HMONITOR_UserSize(uint* param0, uint param1, HMONITOR* param2);
+ubyte* HMONITOR_UserMarshal(uint* param0, ubyte* param1, HMONITOR* param2);
+ubyte* HMONITOR_UserUnmarshal(uint* param0, ubyte* param1, HMONITOR* param2);
+void HMONITOR_UserFree(uint* param0, HMONITOR* param1);
+uint HMONITOR_UserSize64(uint* param0, uint param1, HMONITOR* param2);
+ubyte* HMONITOR_UserMarshal64(uint* param0, ubyte* param1, HMONITOR* param2);
+ubyte* HMONITOR_UserUnmarshal64(uint* param0, ubyte* param1, HMONITOR* param2);
+void HMONITOR_UserFree64(uint* param0, HMONITOR* param1);
+HRESULT SHCreateDefaultPropertiesOp(IShellItem psi, IFileOperation* ppFileOp);
+HRESULT SHSetDefaultProperties(HWND hwnd, IShellItem psi, uint dwFileOpFlags, IFileOperationProgressSink pfops);
+HRESULT SHGetMalloc(IMalloc* ppMalloc);
+void* SHAlloc(ulong cb);
+void SHFree(void* pv);
+int SHGetIconOverlayIndexA(const(char)* pszIconPath, int iIconIndex);
+int SHGetIconOverlayIndexW(const(wchar)* pszIconPath, int iIconIndex);
+ITEMIDLIST* ILClone(ITEMIDLIST* pidl);
+ITEMIDLIST* ILCloneFirst(ITEMIDLIST* pidl);
+ITEMIDLIST* ILCombine(ITEMIDLIST* pidl1, ITEMIDLIST* pidl2);
+void ILFree(ITEMIDLIST* pidl);
+ITEMIDLIST* ILGetNext(ITEMIDLIST* pidl);
+uint ILGetSize(ITEMIDLIST* pidl);
+ITEMIDLIST* ILFindChild(ITEMIDLIST* pidlParent, ITEMIDLIST* pidlChild);
+ITEMIDLIST* ILFindLastID(ITEMIDLIST* pidl);
+BOOL ILRemoveLastID(ITEMIDLIST* pidl);
+BOOL ILIsEqual(ITEMIDLIST* pidl1, ITEMIDLIST* pidl2);
+BOOL ILIsParent(ITEMIDLIST* pidl1, ITEMIDLIST* pidl2, BOOL fImmediate);
+HRESULT ILSaveToStream(IStream pstm, ITEMIDLIST* pidl);
+HRESULT ILLoadFromStreamEx(IStream pstm, ITEMIDLIST** pidl);
+ITEMIDLIST* ILCreateFromPathA(const(char)* pszPath);
+ITEMIDLIST* ILCreateFromPathW(const(wchar)* pszPath);
+HRESULT SHILCreateFromPath(const(wchar)* pszPath, ITEMIDLIST** ppidl, uint* rgfInOut);
+ITEMIDLIST* ILAppendID(ITEMIDLIST* pidl, SHITEMID* pmkid, BOOL fAppend);
+BOOL SHGetPathFromIDListEx(ITEMIDLIST* pidl, PWSTR pszPath, uint cchPath, GPFIDL_FLAGS uOpts);
+BOOL SHGetPathFromIDListA(ITEMIDLIST* pidl, PSTR pszPath);
+BOOL SHGetPathFromIDListW(ITEMIDLIST* pidl, PWSTR pszPath);
+int SHCreateDirectory(HWND hwnd, const(wchar)* pszPath);
+int SHCreateDirectoryExA(HWND hwnd, const(char)* pszPath, const(SECURITY_ATTRIBUTES)* psa);
+int SHCreateDirectoryExW(HWND hwnd, const(wchar)* pszPath, const(SECURITY_ATTRIBUTES)* psa);
+HRESULT SHOpenFolderAndSelectItems(ITEMIDLIST* pidlFolder, uint cidl, ITEMIDLIST** apidl, uint dwFlags);
+HRESULT SHCreateShellItem(ITEMIDLIST* pidlParent, IShellFolder psfParent, ITEMIDLIST* pidl, IShellItem* ppsi);
+HRESULT SHGetSpecialFolderLocation(HWND hwnd, int csidl, ITEMIDLIST** ppidl);
+ITEMIDLIST* SHCloneSpecialIDList(HWND hwnd, int csidl, BOOL fCreate);
+BOOL SHGetSpecialFolderPathA(HWND hwnd, PSTR pszPath, int csidl, BOOL fCreate);
+BOOL SHGetSpecialFolderPathW(HWND hwnd, PWSTR pszPath, int csidl, BOOL fCreate);
 void SHFlushSFCache();
-HRESULT SHGetFolderPathA(HWND, int, HANDLE, uint, PSTR);
-HRESULT SHGetFolderPathW(HWND, int, HANDLE, uint, PWSTR);
-HRESULT SHGetFolderLocation(HWND, int, HANDLE, uint, ITEMIDLIST**);
-HRESULT SHSetFolderPathA(int, HANDLE, uint, const(char)*);
-HRESULT SHSetFolderPathW(int, HANDLE, uint, const(wchar)*);
-HRESULT SHGetFolderPathAndSubDirA(HWND, int, HANDLE, uint, const(char)*, PSTR);
-HRESULT SHGetFolderPathAndSubDirW(HWND, int, HANDLE, uint, const(wchar)*, PWSTR);
-HRESULT SHGetKnownFolderIDList(const(GUID)*, uint, HANDLE, ITEMIDLIST**);
-HRESULT SHSetKnownFolderPath(const(GUID)*, uint, HANDLE, const(wchar)*);
-HRESULT SHGetKnownFolderPath(const(GUID)*, uint, HANDLE, PWSTR*);
-HRESULT SHGetKnownFolderItem(const(GUID)*, KNOWN_FOLDER_FLAG, HANDLE, const(GUID)*, void**);
-HRESULT SHGetSetFolderCustomSettings(SHFOLDERCUSTOMSETTINGS*, const(wchar)*, uint);
-ITEMIDLIST* SHBrowseForFolderA(BROWSEINFOA*);
-ITEMIDLIST* SHBrowseForFolderW(BROWSEINFOW*);
-HRESULT SHLoadInProc(const(GUID)*);
-HRESULT SHGetDesktopFolder(IShellFolder*);
-void SHChangeNotify(int, SHCNF_FLAGS, const(void)*, const(void)*);
-void SHAddToRecentDocs(uint, const(void)*);
-int SHHandleUpdateImage(ITEMIDLIST*);
-void SHUpdateImageA(const(char)*, int, uint, int);
-void SHUpdateImageW(const(wchar)*, int, uint, int);
-uint SHChangeNotifyRegister(HWND, SHCNRF_SOURCE, int, uint, int, const(SHChangeNotifyEntry)*);
-BOOL SHChangeNotifyDeregister(uint);
-HANDLE SHChangeNotification_Lock(HANDLE, uint, ITEMIDLIST***, int*);
-BOOL SHChangeNotification_Unlock(HANDLE);
-HRESULT SHGetRealIDL(IShellFolder, ITEMIDLIST*, ITEMIDLIST**);
-HRESULT SHGetInstanceExplorer(IUnknown*);
-HRESULT SHGetDataFromIDListA(IShellFolder, ITEMIDLIST*, SHGDFIL_FORMAT, void*, int);
-HRESULT SHGetDataFromIDListW(IShellFolder, ITEMIDLIST*, SHGDFIL_FORMAT, void*, int);
-int RestartDialog(HWND, const(wchar)*, uint);
-int RestartDialogEx(HWND, const(wchar)*, uint, uint);
-HRESULT SHCoCreateInstance(const(wchar)*, const(GUID)*, IUnknown, const(GUID)*, void**);
-HRESULT SHCreateDataObject(ITEMIDLIST*, uint, ITEMIDLIST**, IDataObject, const(GUID)*, void**);
-HRESULT CIDLData_CreateFromIDArray(ITEMIDLIST*, uint, ITEMIDLIST**, IDataObject*);
-HRESULT SHCreateStdEnumFmtEtc(uint, const(FORMATETC)*, IEnumFORMATETC*);
-HRESULT SHDoDragDrop(HWND, IDataObject, IDropSource, DROPEFFECT, DROPEFFECT*);
-BOOL DAD_SetDragImage(HIMAGELIST, POINT*);
-BOOL DAD_DragEnterEx(HWND, const(POINT));
-BOOL DAD_DragEnterEx2(HWND, const(POINT), IDataObject);
-BOOL DAD_ShowDragImage(BOOL);
-BOOL DAD_DragMove(POINT);
+HRESULT SHGetFolderPathA(HWND hwnd, int csidl, HANDLE hToken, uint dwFlags, PSTR pszPath);
+HRESULT SHGetFolderPathW(HWND hwnd, int csidl, HANDLE hToken, uint dwFlags, PWSTR pszPath);
+HRESULT SHGetFolderLocation(HWND hwnd, int csidl, HANDLE hToken, uint dwFlags, ITEMIDLIST** ppidl);
+HRESULT SHSetFolderPathA(int csidl, HANDLE hToken, uint dwFlags, const(char)* pszPath);
+HRESULT SHSetFolderPathW(int csidl, HANDLE hToken, uint dwFlags, const(wchar)* pszPath);
+HRESULT SHGetFolderPathAndSubDirA(HWND hwnd, int csidl, HANDLE hToken, uint dwFlags, const(char)* pszSubDir, PSTR pszPath);
+HRESULT SHGetFolderPathAndSubDirW(HWND hwnd, int csidl, HANDLE hToken, uint dwFlags, const(wchar)* pszSubDir, PWSTR pszPath);
+HRESULT SHGetKnownFolderIDList(const(GUID)* rfid, uint dwFlags, HANDLE hToken, ITEMIDLIST** ppidl);
+HRESULT SHSetKnownFolderPath(const(GUID)* rfid, uint dwFlags, HANDLE hToken, const(wchar)* pszPath);
+HRESULT SHGetKnownFolderPath(const(GUID)* rfid, uint dwFlags, HANDLE hToken, PWSTR* ppszPath);
+HRESULT SHGetKnownFolderItem(const(GUID)* rfid, KNOWN_FOLDER_FLAG flags, HANDLE hToken, const(GUID)* riid, void** ppv);
+HRESULT SHGetSetFolderCustomSettings(SHFOLDERCUSTOMSETTINGS* pfcs, const(wchar)* pszPath, uint dwReadWrite);
+ITEMIDLIST* SHBrowseForFolderA(BROWSEINFOA* lpbi);
+ITEMIDLIST* SHBrowseForFolderW(BROWSEINFOW* lpbi);
+HRESULT SHLoadInProc(const(GUID)* rclsid);
+HRESULT SHGetDesktopFolder(IShellFolder* ppshf);
+void SHChangeNotify(int wEventId, SHCNF_FLAGS uFlags, const(void)* dwItem1, const(void)* dwItem2);
+void SHAddToRecentDocs(uint uFlags, const(void)* pv);
+int SHHandleUpdateImage(ITEMIDLIST* pidlExtra);
+void SHUpdateImageA(const(char)* pszHashItem, int iIndex, uint uFlags, int iImageIndex);
+void SHUpdateImageW(const(wchar)* pszHashItem, int iIndex, uint uFlags, int iImageIndex);
+uint SHChangeNotifyRegister(HWND hwnd, SHCNRF_SOURCE fSources, int fEvents, uint wMsg, int cEntries, const(SHChangeNotifyEntry)* pshcne);
+BOOL SHChangeNotifyDeregister(uint ulID);
+HANDLE SHChangeNotification_Lock(HANDLE hChange, uint dwProcId, ITEMIDLIST*** pppidl, int* plEvent);
+BOOL SHChangeNotification_Unlock(HANDLE hLock);
+HRESULT SHGetRealIDL(IShellFolder psf, ITEMIDLIST* pidlSimple, ITEMIDLIST** ppidlReal);
+HRESULT SHGetInstanceExplorer(IUnknown* ppunk);
+HRESULT SHGetDataFromIDListA(IShellFolder psf, ITEMIDLIST* pidl, SHGDFIL_FORMAT nFormat, void* pv, int cb);
+HRESULT SHGetDataFromIDListW(IShellFolder psf, ITEMIDLIST* pidl, SHGDFIL_FORMAT nFormat, void* pv, int cb);
+int RestartDialog(HWND hwnd, const(wchar)* pszPrompt, uint dwReturn);
+int RestartDialogEx(HWND hwnd, const(wchar)* pszPrompt, uint dwReturn, uint dwReasonCode);
+HRESULT SHCoCreateInstance(const(wchar)* pszCLSID, const(GUID)* pclsid, IUnknown pUnkOuter, const(GUID)* riid, void** ppv);
+HRESULT SHCreateDataObject(ITEMIDLIST* pidlFolder, uint cidl, ITEMIDLIST** apidl, IDataObject pdtInner, const(GUID)* riid, void** ppv);
+HRESULT CIDLData_CreateFromIDArray(ITEMIDLIST* pidlFolder, uint cidl, ITEMIDLIST** apidl, IDataObject* ppdtobj);
+HRESULT SHCreateStdEnumFmtEtc(uint cfmt, const(FORMATETC)* afmt, IEnumFORMATETC* ppenumFormatEtc);
+HRESULT SHDoDragDrop(HWND hwnd, IDataObject pdata, IDropSource pdsrc, DROPEFFECT dwEffect, DROPEFFECT* pdwEffect);
+BOOL DAD_SetDragImage(HIMAGELIST him, POINT* pptOffset);
+BOOL DAD_DragEnterEx(HWND hwndTarget, const(POINT) ptStart);
+BOOL DAD_DragEnterEx2(HWND hwndTarget, const(POINT) ptStart, IDataObject pdtObject);
+BOOL DAD_ShowDragImage(BOOL fShow);
+BOOL DAD_DragMove(POINT pt);
 BOOL DAD_DragLeave();
-BOOL DAD_AutoScroll(HWND, AUTO_SCROLL_DATA*, const(POINT)*);
-BOOL ReadCabinetState(CABINETSTATE*, int);
-BOOL WriteCabinetState(CABINETSTATE*);
-BOOL PathMakeUniqueName(PWSTR, uint, const(wchar)*, const(wchar)*, const(wchar)*);
-BOOL PathIsExe(const(wchar)*);
-int PathCleanupSpec(const(wchar)*, PWSTR);
-int PathResolve(PWSTR, ushort**, uint);
-BOOL GetFileNameFromBrowse(HWND, PWSTR, uint, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*);
-int DriveType(int);
-int RealDriveType(int, BOOL);
-int IsNetDrive(int);
-uint Shell_MergeMenus(HMENU, HMENU, uint, uint, uint, MM_FLAGS);
-BOOL SHObjectProperties(HWND, uint, const(wchar)*, const(wchar)*);
-uint SHFormatDrive(HWND, uint, SHFMT_ID, uint);
-void SHDestroyPropSheetExtArray(HPSXA);
-uint SHAddFromPropSheetExtArray(HPSXA, LPFNSVADDPROPSHEETPAGE, LPARAM);
-uint SHReplaceFromPropSheetExtArray(HPSXA, uint, LPFNSVADDPROPSHEETPAGE, LPARAM);
-IStream OpenRegStream(HKEY, const(wchar)*, const(wchar)*, uint);
-BOOL SHFindFiles(ITEMIDLIST*, ITEMIDLIST*);
-void PathGetShortPath(PWSTR);
-BOOL PathYetAnotherMakeUniqueName(PWSTR, const(wchar)*, const(wchar)*, const(wchar)*);
-BOOL Win32DeleteFile(const(wchar)*);
-uint SHRestricted(RESTRICTIONS);
-BOOL SignalFileOpen(ITEMIDLIST*);
-HRESULT AssocGetDetailsOfPropKey(IShellFolder, ITEMIDLIST*, const(PROPERTYKEY)*, VARIANT*, BOOL*);
-HRESULT SHStartNetConnectionDialogW(HWND, const(wchar)*, uint);
-HRESULT SHDefExtractIconA(const(char)*, int, uint, HICON*, HICON*, uint);
-HRESULT SHDefExtractIconW(const(wchar)*, int, uint, HICON*, HICON*, uint);
-HRESULT SHOpenWithDialog(HWND, const(OPENASINFO)*);
-BOOL Shell_GetImageLists(HIMAGELIST*, HIMAGELIST*);
-int Shell_GetCachedImageIndex(const(wchar)*, int, uint);
-int Shell_GetCachedImageIndexA(const(char)*, int, uint);
-int Shell_GetCachedImageIndexW(const(wchar)*, int, uint);
-BOOL SHValidateUNC(HWND, PWSTR, uint);
-void SHSetInstanceExplorer(IUnknown);
+BOOL DAD_AutoScroll(HWND hwnd, AUTO_SCROLL_DATA* pad, const(POINT)* pptNow);
+BOOL ReadCabinetState(CABINETSTATE* pcs, int cLength);
+BOOL WriteCabinetState(CABINETSTATE* pcs);
+BOOL PathMakeUniqueName(PWSTR pszUniqueName, uint cchMax, const(wchar)* pszTemplate, const(wchar)* pszLongPlate, const(wchar)* pszDir);
+BOOL PathIsExe(const(wchar)* pszPath);
+int PathCleanupSpec(const(wchar)* pszDir, PWSTR pszSpec);
+int PathResolve(PWSTR pszPath, ushort** dirs, uint fFlags);
+BOOL GetFileNameFromBrowse(HWND hwnd, PWSTR pszFilePath, uint cchFilePath, const(wchar)* pszWorkingDir, const(wchar)* pszDefExt, const(wchar)* pszFilters, const(wchar)* pszTitle);
+int DriveType(int iDrive);
+int RealDriveType(int iDrive, BOOL fOKToHitNet);
+int IsNetDrive(int iDrive);
+uint Shell_MergeMenus(HMENU hmDst, HMENU hmSrc, uint uInsert, uint uIDAdjust, uint uIDAdjustMax, MM_FLAGS uFlags);
+BOOL SHObjectProperties(HWND hwnd, uint shopObjectType, const(wchar)* pszObjectName, const(wchar)* pszPropertyPage);
+uint SHFormatDrive(HWND hwnd, uint drive, SHFMT_ID fmtID, uint options);
+void SHDestroyPropSheetExtArray(HPSXA hpsxa);
+uint SHAddFromPropSheetExtArray(HPSXA hpsxa, LPFNSVADDPROPSHEETPAGE lpfnAddPage, LPARAM lParam);
+uint SHReplaceFromPropSheetExtArray(HPSXA hpsxa, uint uPageID, LPFNSVADDPROPSHEETPAGE lpfnReplaceWith, LPARAM lParam);
+IStream OpenRegStream(HKEY hkey, const(wchar)* pszSubkey, const(wchar)* pszValue, uint grfMode);
+BOOL SHFindFiles(ITEMIDLIST* pidlFolder, ITEMIDLIST* pidlSaveFile);
+void PathGetShortPath(PWSTR pszLongPath);
+BOOL PathYetAnotherMakeUniqueName(PWSTR pszUniqueName, const(wchar)* pszPath, const(wchar)* pszShort, const(wchar)* pszFileSpec);
+BOOL Win32DeleteFile(const(wchar)* pszPath);
+uint SHRestricted(RESTRICTIONS rest);
+BOOL SignalFileOpen(ITEMIDLIST* pidl);
+HRESULT AssocGetDetailsOfPropKey(IShellFolder psf, ITEMIDLIST* pidl, const(PROPERTYKEY)* pkey, VARIANT* pv, BOOL* pfFoundPropKey);
+HRESULT SHStartNetConnectionDialogW(HWND hwnd, const(wchar)* pszRemoteName, uint dwType);
+HRESULT SHDefExtractIconA(const(char)* pszIconFile, int iIndex, uint uFlags, HICON* phiconLarge, HICON* phiconSmall, uint nIconSize);
+HRESULT SHDefExtractIconW(const(wchar)* pszIconFile, int iIndex, uint uFlags, HICON* phiconLarge, HICON* phiconSmall, uint nIconSize);
+HRESULT SHOpenWithDialog(HWND hwndParent, const(OPENASINFO)* poainfo);
+BOOL Shell_GetImageLists(HIMAGELIST* phiml, HIMAGELIST* phimlSmall);
+int Shell_GetCachedImageIndex(const(wchar)* pwszIconPath, int iIconIndex, uint uIconFlags);
+int Shell_GetCachedImageIndexA(const(char)* pszIconPath, int iIconIndex, uint uIconFlags);
+int Shell_GetCachedImageIndexW(const(wchar)* pszIconPath, int iIconIndex, uint uIconFlags);
+BOOL SHValidateUNC(HWND hwndOwner, PWSTR pszFile, uint fConnect);
+void SHSetInstanceExplorer(IUnknown punk);
 BOOL IsUserAnAdmin();
-LRESULT SHShellFolderView_Message(HWND, uint, LPARAM);
-HRESULT SHCreateShellFolderView(const(SFV_CREATE)*, IShellView*);
-HRESULT CDefFolderMenu_Create2(ITEMIDLIST*, HWND, uint, ITEMIDLIST**, IShellFolder, LPFNDFMCALLBACK, uint, const(HKEY)*, IContextMenu*);
-HRESULT SHCreateDefaultContextMenu(const(DEFCONTEXTMENU)*, const(GUID)*, void**);
-IContextMenu SHFind_InitMenuPopup(HMENU, HWND, uint, uint);
-HRESULT SHCreateShellFolderViewEx(CSFV*, IShellView*);
-void SHGetSetSettings(SHELLSTATEA*, SSF_MASK, BOOL);
-void SHGetSettings(SHELLFLAGSTATE*, uint);
-HRESULT SHBindToParent(ITEMIDLIST*, const(GUID)*, void**, ITEMIDLIST**);
-HRESULT SHBindToFolderIDListParent(IShellFolder, ITEMIDLIST*, const(GUID)*, void**, ITEMIDLIST**);
-HRESULT SHBindToFolderIDListParentEx(IShellFolder, ITEMIDLIST*, IBindCtx, const(GUID)*, void**, ITEMIDLIST**);
-HRESULT SHBindToObject(IShellFolder, ITEMIDLIST*, IBindCtx, const(GUID)*, void**);
-HRESULT SHParseDisplayName(const(wchar)*, IBindCtx, ITEMIDLIST**, uint, uint*);
-HRESULT SHPathPrepareForWriteA(HWND, IUnknown, const(char)*, uint);
-HRESULT SHPathPrepareForWriteW(HWND, IUnknown, const(wchar)*, uint);
-HRESULT SHCreateFileExtractIconW(const(wchar)*, uint, const(GUID)*, void**);
-HRESULT SHLimitInputEdit(HWND, IShellFolder);
-HRESULT SHGetAttributesFromDataObject(IDataObject, uint, uint*, uint*);
-int SHMapPIDLToSystemImageListIndex(IShellFolder, ITEMIDLIST*, int*);
-HRESULT SHCLSIDFromString(const(wchar)*, GUID*);
-int PickIconDlg(HWND, PWSTR, uint, int*);
-HRESULT StgMakeUniqueName(IStorage, const(wchar)*, uint, const(GUID)*, void**);
-void SHChangeNotifyRegisterThread(SCNRT_STATUS);
-void PathQualify(PWSTR);
-BOOL PathIsSlowA(const(char)*, uint);
-BOOL PathIsSlowW(const(wchar)*, uint);
-HPSXA SHCreatePropSheetExtArray(HKEY, const(wchar)*, uint);
-BOOL SHOpenPropSheetW(const(wchar)*, HKEY*, uint, const(GUID)*, IDataObject, IShellBrowser, const(wchar)*);
-uint SoftwareUpdateMessageBox(HWND, const(wchar)*, uint, SOFTDISTINFO*);
-HRESULT SHMultiFileProperties(IDataObject, uint);
-HRESULT SHCreateQueryCancelAutoPlayMoniker(IMoniker*);
-BOOL ImportPrivacySettings(const(wchar)*, BOOL*, BOOL*);
-DEVICE_SCALE_FACTOR GetScaleFactorForDevice(DISPLAY_DEVICE_TYPE);
-HRESULT RegisterScaleChangeNotifications(DISPLAY_DEVICE_TYPE, HWND, uint, uint*);
-HRESULT RevokeScaleChangeNotifications(DISPLAY_DEVICE_TYPE, uint);
-HRESULT GetScaleFactorForMonitor(HMONITOR, DEVICE_SCALE_FACTOR*);
-HRESULT RegisterScaleChangeEvent(HANDLE, ulong*);
-HRESULT UnregisterScaleChangeEvent(ulong);
-uint GetDpiForShellUIComponent(SHELL_UI_COMPONENT);
-PWSTR* CommandLineToArgvW(const(wchar)*, int*);
-uint DragQueryFileA(HDROP, uint, PSTR, uint);
-uint DragQueryFileW(HDROP, uint, PWSTR, uint);
-BOOL DragQueryPoint(HDROP, POINT*);
-void DragFinish(HDROP);
-void DragAcceptFiles(HWND, BOOL);
-HINSTANCE ShellExecuteA(HWND, const(char)*, const(char)*, const(char)*, const(char)*, SHOW_WINDOW_CMD);
-HINSTANCE ShellExecuteW(HWND, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, SHOW_WINDOW_CMD);
-HINSTANCE FindExecutableA(const(char)*, const(char)*, PSTR);
-HINSTANCE FindExecutableW(const(wchar)*, const(wchar)*, PWSTR);
-int ShellAboutA(HWND, const(char)*, const(char)*, HICON);
-int ShellAboutW(HWND, const(wchar)*, const(wchar)*, HICON);
-HICON DuplicateIcon(HINSTANCE, HICON);
-HICON ExtractAssociatedIconA(HINSTANCE, PSTR, ushort*);
-HICON ExtractAssociatedIconW(HINSTANCE, PWSTR, ushort*);
-HICON ExtractAssociatedIconExA(HINSTANCE, PSTR, ushort*, ushort*);
-HICON ExtractAssociatedIconExW(HINSTANCE, PWSTR, ushort*, ushort*);
-HICON ExtractIconA(HINSTANCE, const(char)*, uint);
-HICON ExtractIconW(HINSTANCE, const(wchar)*, uint);
-ulong SHAppBarMessage(uint, APPBARDATA*);
-uint DoEnvironmentSubstA(PSTR, uint);
-uint DoEnvironmentSubstW(PWSTR, uint);
-uint ExtractIconExA(const(char)*, int, HICON*, HICON*, uint);
-uint ExtractIconExW(const(wchar)*, int, HICON*, HICON*, uint);
-int SHFileOperationA(SHFILEOPSTRUCTA*);
-int SHFileOperationW(SHFILEOPSTRUCTW*);
-void SHFreeNameMappings(HANDLE);
-BOOL ShellExecuteExA(SHELLEXECUTEINFOA*);
-BOOL ShellExecuteExW(SHELLEXECUTEINFOW*);
-BOOL SHCreateProcessAsUserW(SHCREATEPROCESSINFOW*);
-HRESULT SHEvaluateSystemCommandTemplate(const(wchar)*, PWSTR*, PWSTR*, PWSTR*);
-HRESULT AssocCreateForClasses(const(ASSOCIATIONELEMENT)*, uint, const(GUID)*, void**);
-HRESULT SHQueryRecycleBinA(const(char)*, SHQUERYRBINFO*);
-HRESULT SHQueryRecycleBinW(const(wchar)*, SHQUERYRBINFO*);
-HRESULT SHEmptyRecycleBinA(HWND, const(char)*, uint);
-HRESULT SHEmptyRecycleBinW(HWND, const(wchar)*, uint);
-HRESULT SHQueryUserNotificationState(QUERY_USER_NOTIFICATION_STATE*);
-BOOL Shell_NotifyIconA(NOTIFY_ICON_MESSAGE, NOTIFYICONDATAA*);
-BOOL Shell_NotifyIconW(NOTIFY_ICON_MESSAGE, NOTIFYICONDATAW*);
-HRESULT Shell_NotifyIconGetRect(const(NOTIFYICONIDENTIFIER)*, RECT*);
-ulong SHGetFileInfoA(const(char)*, FILE_FLAGS_AND_ATTRIBUTES, SHFILEINFOA*, uint, SHGFI_FLAGS);
-ulong SHGetFileInfoW(const(wchar)*, FILE_FLAGS_AND_ATTRIBUTES, SHFILEINFOW*, uint, SHGFI_FLAGS);
-HRESULT SHGetStockIconInfo(SHSTOCKICONID, SHGSI_FLAGS, SHSTOCKICONINFO*);
-BOOL SHGetDiskFreeSpaceExA(const(char)*, ulong*, ulong*, ulong*);
-BOOL SHGetDiskFreeSpaceExW(const(wchar)*, ulong*, ulong*, ulong*);
-BOOL SHGetNewLinkInfoA(const(char)*, const(char)*, PSTR, BOOL*, uint);
-BOOL SHGetNewLinkInfoW(const(wchar)*, const(wchar)*, PWSTR, BOOL*, uint);
-BOOL SHInvokePrinterCommandA(HWND, uint, const(char)*, const(char)*, BOOL);
-BOOL SHInvokePrinterCommandW(HWND, uint, const(wchar)*, const(wchar)*, BOOL);
+LRESULT SHShellFolderView_Message(HWND hwndMain, uint uMsg, LPARAM lParam);
+HRESULT SHCreateShellFolderView(const(SFV_CREATE)* pcsfv, IShellView* ppsv);
+HRESULT CDefFolderMenu_Create2(ITEMIDLIST* pidlFolder, HWND hwnd, uint cidl, ITEMIDLIST** apidl, IShellFolder psf, LPFNDFMCALLBACK pfn, uint nKeys, const(HKEY)* ahkeys, IContextMenu* ppcm);
+HRESULT SHCreateDefaultContextMenu(const(DEFCONTEXTMENU)* pdcm, const(GUID)* riid, void** ppv);
+IContextMenu SHFind_InitMenuPopup(HMENU hmenu, HWND hwndOwner, uint idCmdFirst, uint idCmdLast);
+HRESULT SHCreateShellFolderViewEx(CSFV* pcsfv, IShellView* ppsv);
+void SHGetSetSettings(SHELLSTATEA* lpss, SSF_MASK dwMask, BOOL bSet);
+void SHGetSettings(SHELLFLAGSTATE* psfs, uint dwMask);
+HRESULT SHBindToParent(ITEMIDLIST* pidl, const(GUID)* riid, void** ppv, ITEMIDLIST** ppidlLast);
+HRESULT SHBindToFolderIDListParent(IShellFolder psfRoot, ITEMIDLIST* pidl, const(GUID)* riid, void** ppv, ITEMIDLIST** ppidlLast);
+HRESULT SHBindToFolderIDListParentEx(IShellFolder psfRoot, ITEMIDLIST* pidl, IBindCtx ppbc, const(GUID)* riid, void** ppv, ITEMIDLIST** ppidlLast);
+HRESULT SHBindToObject(IShellFolder psf, ITEMIDLIST* pidl, IBindCtx pbc, const(GUID)* riid, void** ppv);
+HRESULT SHParseDisplayName(const(wchar)* pszName, IBindCtx pbc, ITEMIDLIST** ppidl, uint sfgaoIn, uint* psfgaoOut);
+HRESULT SHPathPrepareForWriteA(HWND hwnd, IUnknown punkEnableModless, const(char)* pszPath, uint dwFlags);
+HRESULT SHPathPrepareForWriteW(HWND hwnd, IUnknown punkEnableModless, const(wchar)* pszPath, uint dwFlags);
+HRESULT SHCreateFileExtractIconW(const(wchar)* pszFile, uint dwFileAttributes, const(GUID)* riid, void** ppv);
+HRESULT SHLimitInputEdit(HWND hwndEdit, IShellFolder psf);
+HRESULT SHGetAttributesFromDataObject(IDataObject pdo, uint dwAttributeMask, uint* pdwAttributes, uint* pcItems);
+int SHMapPIDLToSystemImageListIndex(IShellFolder pshf, ITEMIDLIST* pidl, int* piIndexSel);
+HRESULT SHCLSIDFromString(const(wchar)* psz, GUID* pclsid);
+int PickIconDlg(HWND hwnd, PWSTR pszIconPath, uint cchIconPath, int* piIconIndex);
+HRESULT StgMakeUniqueName(IStorage pstgParent, const(wchar)* pszFileSpec, uint grfMode, const(GUID)* riid, void** ppv);
+void SHChangeNotifyRegisterThread(SCNRT_STATUS status);
+void PathQualify(PWSTR psz);
+BOOL PathIsSlowA(const(char)* pszFile, uint dwAttr);
+BOOL PathIsSlowW(const(wchar)* pszFile, uint dwAttr);
+HPSXA SHCreatePropSheetExtArray(HKEY hKey, const(wchar)* pszSubKey, uint max_iface);
+BOOL SHOpenPropSheetW(const(wchar)* pszCaption, HKEY* ahkeys, uint ckeys, const(GUID)* pclsidDefault, IDataObject pdtobj, IShellBrowser psb, const(wchar)* pStartPage);
+uint SoftwareUpdateMessageBox(HWND hWnd, const(wchar)* pszDistUnit, uint dwFlags, SOFTDISTINFO* psdi);
+HRESULT SHMultiFileProperties(IDataObject pdtobj, uint dwFlags);
+HRESULT SHCreateQueryCancelAutoPlayMoniker(IMoniker* ppmoniker);
+BOOL ImportPrivacySettings(const(wchar)* pszFilename, BOOL* pfParsePrivacyPreferences, BOOL* pfParsePerSiteRules);
+DEVICE_SCALE_FACTOR GetScaleFactorForDevice(DISPLAY_DEVICE_TYPE deviceType);
+HRESULT RegisterScaleChangeNotifications(DISPLAY_DEVICE_TYPE displayDevice, HWND hwndNotify, uint uMsgNotify, uint* pdwCookie);
+HRESULT RevokeScaleChangeNotifications(DISPLAY_DEVICE_TYPE displayDevice, uint dwCookie);
+HRESULT GetScaleFactorForMonitor(HMONITOR hMon, DEVICE_SCALE_FACTOR* pScale);
+HRESULT RegisterScaleChangeEvent(HANDLE hEvent, ulong* pdwCookie);
+HRESULT UnregisterScaleChangeEvent(ulong dwCookie);
+uint GetDpiForShellUIComponent(SHELL_UI_COMPONENT param0);
+PWSTR* CommandLineToArgvW(const(wchar)* lpCmdLine, int* pNumArgs);
+uint DragQueryFileA(HDROP hDrop, uint iFile, PSTR lpszFile, uint cch);
+uint DragQueryFileW(HDROP hDrop, uint iFile, PWSTR lpszFile, uint cch);
+BOOL DragQueryPoint(HDROP hDrop, POINT* ppt);
+void DragFinish(HDROP hDrop);
+void DragAcceptFiles(HWND hWnd, BOOL fAccept);
+HINSTANCE ShellExecuteA(HWND hwnd, const(char)* lpOperation, const(char)* lpFile, const(char)* lpParameters, const(char)* lpDirectory, SHOW_WINDOW_CMD nShowCmd);
+HINSTANCE ShellExecuteW(HWND hwnd, const(wchar)* lpOperation, const(wchar)* lpFile, const(wchar)* lpParameters, const(wchar)* lpDirectory, SHOW_WINDOW_CMD nShowCmd);
+HINSTANCE FindExecutableA(const(char)* lpFile, const(char)* lpDirectory, PSTR lpResult);
+HINSTANCE FindExecutableW(const(wchar)* lpFile, const(wchar)* lpDirectory, PWSTR lpResult);
+int ShellAboutA(HWND hWnd, const(char)* szApp, const(char)* szOtherStuff, HICON hIcon);
+int ShellAboutW(HWND hWnd, const(wchar)* szApp, const(wchar)* szOtherStuff, HICON hIcon);
+HICON DuplicateIcon(HINSTANCE hInst, HICON hIcon);
+HICON ExtractAssociatedIconA(HINSTANCE hInst, PSTR pszIconPath, ushort* piIcon);
+HICON ExtractAssociatedIconW(HINSTANCE hInst, PWSTR pszIconPath, ushort* piIcon);
+HICON ExtractAssociatedIconExA(HINSTANCE hInst, PSTR pszIconPath, ushort* piIconIndex, ushort* piIconId);
+HICON ExtractAssociatedIconExW(HINSTANCE hInst, PWSTR pszIconPath, ushort* piIconIndex, ushort* piIconId);
+HICON ExtractIconA(HINSTANCE hInst, const(char)* pszExeFileName, uint nIconIndex);
+HICON ExtractIconW(HINSTANCE hInst, const(wchar)* pszExeFileName, uint nIconIndex);
+ulong SHAppBarMessage(uint dwMessage, APPBARDATA* pData);
+uint DoEnvironmentSubstA(PSTR pszSrc, uint cchSrc);
+uint DoEnvironmentSubstW(PWSTR pszSrc, uint cchSrc);
+uint ExtractIconExA(const(char)* lpszFile, int nIconIndex, HICON* phiconLarge, HICON* phiconSmall, uint nIcons);
+uint ExtractIconExW(const(wchar)* lpszFile, int nIconIndex, HICON* phiconLarge, HICON* phiconSmall, uint nIcons);
+int SHFileOperationA(SHFILEOPSTRUCTA* lpFileOp);
+int SHFileOperationW(SHFILEOPSTRUCTW* lpFileOp);
+void SHFreeNameMappings(HANDLE hNameMappings);
+BOOL ShellExecuteExA(SHELLEXECUTEINFOA* pExecInfo);
+BOOL ShellExecuteExW(SHELLEXECUTEINFOW* pExecInfo);
+BOOL SHCreateProcessAsUserW(SHCREATEPROCESSINFOW* pscpi);
+HRESULT SHEvaluateSystemCommandTemplate(const(wchar)* pszCmdTemplate, PWSTR* ppszApplication, PWSTR* ppszCommandLine, PWSTR* ppszParameters);
+HRESULT AssocCreateForClasses(const(ASSOCIATIONELEMENT)* rgClasses, uint cClasses, const(GUID)* riid, void** ppv);
+HRESULT SHQueryRecycleBinA(const(char)* pszRootPath, SHQUERYRBINFO* pSHQueryRBInfo);
+HRESULT SHQueryRecycleBinW(const(wchar)* pszRootPath, SHQUERYRBINFO* pSHQueryRBInfo);
+HRESULT SHEmptyRecycleBinA(HWND hwnd, const(char)* pszRootPath, uint dwFlags);
+HRESULT SHEmptyRecycleBinW(HWND hwnd, const(wchar)* pszRootPath, uint dwFlags);
+HRESULT SHQueryUserNotificationState(QUERY_USER_NOTIFICATION_STATE* pquns);
+BOOL Shell_NotifyIconA(NOTIFY_ICON_MESSAGE dwMessage, NOTIFYICONDATAA* lpData);
+BOOL Shell_NotifyIconW(NOTIFY_ICON_MESSAGE dwMessage, NOTIFYICONDATAW* lpData);
+HRESULT Shell_NotifyIconGetRect(const(NOTIFYICONIDENTIFIER)* identifier, RECT* iconLocation);
+ulong SHGetFileInfoA(const(char)* pszPath, FILE_FLAGS_AND_ATTRIBUTES dwFileAttributes, SHFILEINFOA* psfi, uint cbFileInfo, SHGFI_FLAGS uFlags);
+ulong SHGetFileInfoW(const(wchar)* pszPath, FILE_FLAGS_AND_ATTRIBUTES dwFileAttributes, SHFILEINFOW* psfi, uint cbFileInfo, SHGFI_FLAGS uFlags);
+HRESULT SHGetStockIconInfo(SHSTOCKICONID siid, SHGSI_FLAGS uFlags, SHSTOCKICONINFO* psii);
+BOOL SHGetDiskFreeSpaceExA(const(char)* pszDirectoryName, ulong* pulFreeBytesAvailableToCaller, ulong* pulTotalNumberOfBytes, ulong* pulTotalNumberOfFreeBytes);
+BOOL SHGetDiskFreeSpaceExW(const(wchar)* pszDirectoryName, ulong* pulFreeBytesAvailableToCaller, ulong* pulTotalNumberOfBytes, ulong* pulTotalNumberOfFreeBytes);
+BOOL SHGetNewLinkInfoA(const(char)* pszLinkTo, const(char)* pszDir, PSTR pszName, BOOL* pfMustCopy, uint uFlags);
+BOOL SHGetNewLinkInfoW(const(wchar)* pszLinkTo, const(wchar)* pszDir, PWSTR pszName, BOOL* pfMustCopy, uint uFlags);
+BOOL SHInvokePrinterCommandA(HWND hwnd, uint uAction, const(char)* lpBuf1, const(char)* lpBuf2, BOOL fModal);
+BOOL SHInvokePrinterCommandW(HWND hwnd, uint uAction, const(wchar)* lpBuf1, const(wchar)* lpBuf2, BOOL fModal);
 HRESULT SHLoadNonloadedIconOverlayIdentifiers();
-HRESULT SHIsFileAvailableOffline(const(wchar)*, uint*);
-HRESULT SHSetLocalizedName(const(wchar)*, const(wchar)*, int);
-HRESULT SHRemoveLocalizedName(const(wchar)*);
-HRESULT SHGetLocalizedName(const(wchar)*, PWSTR, uint, int*);
-int ShellMessageBoxA(HINSTANCE, HWND, const(char)*, const(char)*, MESSAGEBOX_STYLE);
-int ShellMessageBoxW(HINSTANCE, HWND, const(wchar)*, const(wchar)*, MESSAGEBOX_STYLE);
-BOOL IsLFNDriveA(const(char)*);
-BOOL IsLFNDriveW(const(wchar)*);
-HRESULT SHEnumerateUnreadMailAccountsW(HKEY, uint, PWSTR, int);
-HRESULT SHGetUnreadMailCountW(HKEY, const(wchar)*, uint*, FILETIME*, PWSTR, int);
-HRESULT SHSetUnreadMailCountW(const(wchar)*, uint, const(wchar)*);
-BOOL SHTestTokenMembership(HANDLE, uint);
-HRESULT SHGetImageList(int, const(GUID)*, void**);
+HRESULT SHIsFileAvailableOffline(const(wchar)* pwszPath, uint* pdwStatus);
+HRESULT SHSetLocalizedName(const(wchar)* pszPath, const(wchar)* pszResModule, int idsRes);
+HRESULT SHRemoveLocalizedName(const(wchar)* pszPath);
+HRESULT SHGetLocalizedName(const(wchar)* pszPath, PWSTR pszResModule, uint cch, int* pidsRes);
+int ShellMessageBoxA(HINSTANCE hAppInst, HWND hWnd, const(char)* lpcText, const(char)* lpcTitle, MESSAGEBOX_STYLE fuStyle);
+int ShellMessageBoxW(HINSTANCE hAppInst, HWND hWnd, const(wchar)* lpcText, const(wchar)* lpcTitle, MESSAGEBOX_STYLE fuStyle);
+BOOL IsLFNDriveA(const(char)* pszPath);
+BOOL IsLFNDriveW(const(wchar)* pszPath);
+HRESULT SHEnumerateUnreadMailAccountsW(HKEY hKeyUser, uint dwIndex, PWSTR pszMailAddress, int cchMailAddress);
+HRESULT SHGetUnreadMailCountW(HKEY hKeyUser, const(wchar)* pszMailAddress, uint* pdwCount, FILETIME* pFileTime, PWSTR pszShellExecuteCommand, int cchShellExecuteCommand);
+HRESULT SHSetUnreadMailCountW(const(wchar)* pszMailAddress, uint dwCount, const(wchar)* pszShellExecuteCommand);
+BOOL SHTestTokenMembership(HANDLE hToken, uint ulRID);
+HRESULT SHGetImageList(int iImageList, const(GUID)* riid, void** ppvObj);
 BOOL InitNetworkAddressControl();
-HRESULT SHGetDriveMedia(const(wchar)*, uint*);
-PSTR StrChrA(const(char)*, ushort);
-PWSTR StrChrW(const(wchar)*, wchar);
-PSTR StrChrIA(const(char)*, ushort);
-PWSTR StrChrIW(const(wchar)*, wchar);
-PWSTR StrChrNW(const(wchar)*, wchar, uint);
-PWSTR StrChrNIW(const(wchar)*, wchar, uint);
-int StrCmpNA(const(char)*, const(char)*, int);
-int StrCmpNW(const(wchar)*, const(wchar)*, int);
-int StrCmpNIA(const(char)*, const(char)*, int);
-int StrCmpNIW(const(wchar)*, const(wchar)*, int);
-int StrCSpnA(const(char)*, const(char)*);
-int StrCSpnW(const(wchar)*, const(wchar)*);
-int StrCSpnIA(const(char)*, const(char)*);
-int StrCSpnIW(const(wchar)*, const(wchar)*);
-PSTR StrDupA(const(char)*);
-PWSTR StrDupW(const(wchar)*);
-HRESULT StrFormatByteSizeEx(ulong, SFBS_FLAGS, PWSTR, uint);
-PSTR StrFormatByteSizeA(uint, PSTR, uint);
-PSTR StrFormatByteSize64A(long, PSTR, uint);
-PWSTR StrFormatByteSizeW(long, PWSTR, uint);
-PWSTR StrFormatKBSizeW(long, PWSTR, uint);
-PSTR StrFormatKBSizeA(long, PSTR, uint);
-int StrFromTimeIntervalA(PSTR, uint, uint, int);
-int StrFromTimeIntervalW(PWSTR, uint, uint, int);
-BOOL StrIsIntlEqualA(BOOL, const(char)*, const(char)*, int);
-BOOL StrIsIntlEqualW(BOOL, const(wchar)*, const(wchar)*, int);
-PSTR StrNCatA(PSTR, const(char)*, int);
-PWSTR StrNCatW(PWSTR, const(wchar)*, int);
-PSTR StrPBrkA(const(char)*, const(char)*);
-PWSTR StrPBrkW(const(wchar)*, const(wchar)*);
-PSTR StrRChrA(const(char)*, const(char)*, ushort);
-PWSTR StrRChrW(const(wchar)*, const(wchar)*, wchar);
-PSTR StrRChrIA(const(char)*, const(char)*, ushort);
-PWSTR StrRChrIW(const(wchar)*, const(wchar)*, wchar);
-PSTR StrRStrIA(const(char)*, const(char)*, const(char)*);
-PWSTR StrRStrIW(const(wchar)*, const(wchar)*, const(wchar)*);
-int StrSpnA(const(char)*, const(char)*);
-int StrSpnW(const(wchar)*, const(wchar)*);
-PSTR StrStrA(const(char)*, const(char)*);
-PWSTR StrStrW(const(wchar)*, const(wchar)*);
-PSTR StrStrIA(const(char)*, const(char)*);
-PWSTR StrStrIW(const(wchar)*, const(wchar)*);
-PWSTR StrStrNW(const(wchar)*, const(wchar)*, uint);
-PWSTR StrStrNIW(const(wchar)*, const(wchar)*, uint);
-int StrToIntA(const(char)*);
-int StrToIntW(const(wchar)*);
-BOOL StrToIntExA(const(char)*, int, int*);
-BOOL StrToIntExW(const(wchar)*, int, int*);
-BOOL StrToInt64ExA(const(char)*, int, long*);
-BOOL StrToInt64ExW(const(wchar)*, int, long*);
-BOOL StrTrimA(PSTR, const(char)*);
-BOOL StrTrimW(PWSTR, const(wchar)*);
-PWSTR StrCatW(PWSTR, const(wchar)*);
-int StrCmpW(const(wchar)*, const(wchar)*);
-int StrCmpIW(const(wchar)*, const(wchar)*);
-PWSTR StrCpyW(PWSTR, const(wchar)*);
-PWSTR StrCpyNW(PWSTR, const(wchar)*, int);
-PWSTR StrCatBuffW(PWSTR, const(wchar)*, int);
-PSTR StrCatBuffA(PSTR, const(char)*, int);
-BOOL ChrCmpIA(ushort, ushort);
-BOOL ChrCmpIW(wchar, wchar);
-int wvnsprintfA(PSTR, int, const(char)*, byte*);
-int wvnsprintfW(PWSTR, int, const(wchar)*, byte*);
-int wnsprintfA(PSTR, int, const(char)*);
-int wnsprintfW(PWSTR, int, const(wchar)*);
-HRESULT StrRetToStrA(STRRET*, ITEMIDLIST*, PSTR*);
-HRESULT StrRetToStrW(STRRET*, ITEMIDLIST*, PWSTR*);
-HRESULT StrRetToBufA(STRRET*, ITEMIDLIST*, PSTR, uint);
-HRESULT StrRetToBufW(STRRET*, ITEMIDLIST*, PWSTR, uint);
-HRESULT SHStrDupA(const(char)*, PWSTR*);
-HRESULT SHStrDupW(const(wchar)*, PWSTR*);
-int StrCmpLogicalW(const(wchar)*, const(wchar)*);
-uint StrCatChainW(PWSTR, uint, uint, const(wchar)*);
-HRESULT StrRetToBSTR(STRRET*, ITEMIDLIST*, BSTR*);
-HRESULT SHLoadIndirectString(const(wchar)*, PWSTR, uint, void**);
-BOOL IsCharSpaceA(CHAR);
-BOOL IsCharSpaceW(wchar);
-int StrCmpCA(const(char)*, const(char)*);
-int StrCmpCW(const(wchar)*, const(wchar)*);
-int StrCmpICA(const(char)*, const(char)*);
-int StrCmpICW(const(wchar)*, const(wchar)*);
-int StrCmpNCA(const(char)*, const(char)*, int);
-int StrCmpNCW(const(wchar)*, const(wchar)*, int);
-int StrCmpNICA(const(char)*, const(char)*, int);
-int StrCmpNICW(const(wchar)*, const(wchar)*, int);
-BOOL IntlStrEqWorkerA(BOOL, const(char)*, const(char)*, int);
-BOOL IntlStrEqWorkerW(BOOL, const(wchar)*, const(wchar)*, int);
-PSTR PathAddBackslashA(PSTR);
-PWSTR PathAddBackslashW(PWSTR);
-BOOL PathAddExtensionA(PSTR, const(char)*);
-BOOL PathAddExtensionW(PWSTR, const(wchar)*);
-BOOL PathAppendA(PSTR, const(char)*);
-BOOL PathAppendW(PWSTR, const(wchar)*);
-PSTR PathBuildRootA(PSTR, int);
-PWSTR PathBuildRootW(PWSTR, int);
-BOOL PathCanonicalizeA(PSTR, const(char)*);
-BOOL PathCanonicalizeW(PWSTR, const(wchar)*);
-PSTR PathCombineA(PSTR, const(char)*, const(char)*);
-PWSTR PathCombineW(PWSTR, const(wchar)*, const(wchar)*);
-BOOL PathCompactPathA(HDC, PSTR, uint);
-BOOL PathCompactPathW(HDC, PWSTR, uint);
-BOOL PathCompactPathExA(PSTR, const(char)*, uint, uint);
-BOOL PathCompactPathExW(PWSTR, const(wchar)*, uint, uint);
-int PathCommonPrefixA(const(char)*, const(char)*, PSTR);
-int PathCommonPrefixW(const(wchar)*, const(wchar)*, PWSTR);
-BOOL PathFileExistsA(const(char)*);
-BOOL PathFileExistsW(const(wchar)*);
-PSTR PathFindExtensionA(const(char)*);
-PWSTR PathFindExtensionW(const(wchar)*);
-PSTR PathFindFileNameA(const(char)*);
-PWSTR PathFindFileNameW(const(wchar)*);
-PSTR PathFindNextComponentA(const(char)*);
-PWSTR PathFindNextComponentW(const(wchar)*);
-BOOL PathFindOnPathA(PSTR, byte**);
-BOOL PathFindOnPathW(PWSTR, ushort**);
-PSTR PathFindSuffixArrayA(const(char)*, const(char)**, int);
-PWSTR PathFindSuffixArrayW(const(wchar)*, const(wchar)**, int);
-PSTR PathGetArgsA(const(char)*);
-PWSTR PathGetArgsW(const(wchar)*);
-BOOL PathIsLFNFileSpecA(const(char)*);
-BOOL PathIsLFNFileSpecW(const(wchar)*);
-uint PathGetCharTypeA(ubyte);
-uint PathGetCharTypeW(wchar);
-int PathGetDriveNumberA(const(char)*);
-int PathGetDriveNumberW(const(wchar)*);
-BOOL PathIsDirectoryA(const(char)*);
-BOOL PathIsDirectoryW(const(wchar)*);
-BOOL PathIsDirectoryEmptyA(const(char)*);
-BOOL PathIsDirectoryEmptyW(const(wchar)*);
-BOOL PathIsFileSpecA(const(char)*);
-BOOL PathIsFileSpecW(const(wchar)*);
-BOOL PathIsPrefixA(const(char)*, const(char)*);
-BOOL PathIsPrefixW(const(wchar)*, const(wchar)*);
-BOOL PathIsRelativeA(const(char)*);
-BOOL PathIsRelativeW(const(wchar)*);
-BOOL PathIsRootA(const(char)*);
-BOOL PathIsRootW(const(wchar)*);
-BOOL PathIsSameRootA(const(char)*, const(char)*);
-BOOL PathIsSameRootW(const(wchar)*, const(wchar)*);
-BOOL PathIsUNCA(const(char)*);
-BOOL PathIsUNCW(const(wchar)*);
-BOOL PathIsNetworkPathA(const(char)*);
-BOOL PathIsNetworkPathW(const(wchar)*);
-BOOL PathIsUNCServerA(const(char)*);
-BOOL PathIsUNCServerW(const(wchar)*);
-BOOL PathIsUNCServerShareA(const(char)*);
-BOOL PathIsUNCServerShareW(const(wchar)*);
-BOOL PathIsContentTypeA(const(char)*, const(char)*);
-BOOL PathIsContentTypeW(const(wchar)*, const(wchar)*);
-BOOL PathIsURLA(const(char)*);
-BOOL PathIsURLW(const(wchar)*);
-BOOL PathMakePrettyA(PSTR);
-BOOL PathMakePrettyW(PWSTR);
-BOOL PathMatchSpecA(const(char)*, const(char)*);
-BOOL PathMatchSpecW(const(wchar)*, const(wchar)*);
-HRESULT PathMatchSpecExA(const(char)*, const(char)*, uint);
-HRESULT PathMatchSpecExW(const(wchar)*, const(wchar)*, uint);
-int PathParseIconLocationA(PSTR);
-int PathParseIconLocationW(PWSTR);
-BOOL PathQuoteSpacesA(PSTR);
-BOOL PathQuoteSpacesW(PWSTR);
-BOOL PathRelativePathToA(PSTR, const(char)*, uint, const(char)*, uint);
-BOOL PathRelativePathToW(PWSTR, const(wchar)*, uint, const(wchar)*, uint);
-void PathRemoveArgsA(PSTR);
-void PathRemoveArgsW(PWSTR);
-PSTR PathRemoveBackslashA(PSTR);
-PWSTR PathRemoveBackslashW(PWSTR);
-void PathRemoveBlanksA(PSTR);
-void PathRemoveBlanksW(PWSTR);
-void PathRemoveExtensionA(PSTR);
-void PathRemoveExtensionW(PWSTR);
-BOOL PathRemoveFileSpecA(PSTR);
-BOOL PathRemoveFileSpecW(PWSTR);
-BOOL PathRenameExtensionA(PSTR, const(char)*);
-BOOL PathRenameExtensionW(PWSTR, const(wchar)*);
-BOOL PathSearchAndQualifyA(const(char)*, PSTR, uint);
-BOOL PathSearchAndQualifyW(const(wchar)*, PWSTR, uint);
-void PathSetDlgItemPathA(HWND, int, const(char)*);
-void PathSetDlgItemPathW(HWND, int, const(wchar)*);
-PSTR PathSkipRootA(const(char)*);
-PWSTR PathSkipRootW(const(wchar)*);
-void PathStripPathA(PSTR);
-void PathStripPathW(PWSTR);
-BOOL PathStripToRootA(PSTR);
-BOOL PathStripToRootW(PWSTR);
-BOOL PathUnquoteSpacesA(PSTR);
-BOOL PathUnquoteSpacesW(PWSTR);
-BOOL PathMakeSystemFolderA(const(char)*);
-BOOL PathMakeSystemFolderW(const(wchar)*);
-BOOL PathUnmakeSystemFolderA(const(char)*);
-BOOL PathUnmakeSystemFolderW(const(wchar)*);
-BOOL PathIsSystemFolderA(const(char)*, uint);
-BOOL PathIsSystemFolderW(const(wchar)*, uint);
-void PathUndecorateA(PSTR);
-void PathUndecorateW(PWSTR);
-BOOL PathUnExpandEnvStringsA(const(char)*, PSTR, uint);
-BOOL PathUnExpandEnvStringsW(const(wchar)*, PWSTR, uint);
-int UrlCompareA(const(char)*, const(char)*, BOOL);
-int UrlCompareW(const(wchar)*, const(wchar)*, BOOL);
-HRESULT UrlCombineA(const(char)*, const(char)*, PSTR, uint*, uint);
-HRESULT UrlCombineW(const(wchar)*, const(wchar)*, PWSTR, uint*, uint);
-HRESULT UrlCanonicalizeA(const(char)*, PSTR, uint*, uint);
-HRESULT UrlCanonicalizeW(const(wchar)*, PWSTR, uint*, uint);
-BOOL UrlIsOpaqueA(const(char)*);
-BOOL UrlIsOpaqueW(const(wchar)*);
-BOOL UrlIsNoHistoryA(const(char)*);
-BOOL UrlIsNoHistoryW(const(wchar)*);
-BOOL UrlIsA(const(char)*, URLIS);
-BOOL UrlIsW(const(wchar)*, URLIS);
-PSTR UrlGetLocationA(const(char)*);
-PWSTR UrlGetLocationW(const(wchar)*);
-HRESULT UrlUnescapeA(PSTR, PSTR, uint*, uint);
-HRESULT UrlUnescapeW(PWSTR, PWSTR, uint*, uint);
-HRESULT UrlEscapeA(const(char)*, PSTR, uint*, uint);
-HRESULT UrlEscapeW(const(wchar)*, PWSTR, uint*, uint);
-HRESULT UrlCreateFromPathA(const(char)*, PSTR, uint*, uint);
-HRESULT UrlCreateFromPathW(const(wchar)*, PWSTR, uint*, uint);
-HRESULT PathCreateFromUrlA(const(char)*, PSTR, uint*, uint);
-HRESULT PathCreateFromUrlW(const(wchar)*, PWSTR, uint*, uint);
-HRESULT PathCreateFromUrlAlloc(const(wchar)*, PWSTR*, uint);
-HRESULT UrlHashA(const(char)*, ubyte*, uint);
-HRESULT UrlHashW(const(wchar)*, ubyte*, uint);
-HRESULT UrlGetPartW(const(wchar)*, PWSTR, uint*, uint, uint);
-HRESULT UrlGetPartA(const(char)*, PSTR, uint*, uint, uint);
-HRESULT UrlApplySchemeA(const(char)*, PSTR, uint*, uint);
-HRESULT UrlApplySchemeW(const(wchar)*, PWSTR, uint*, uint);
-HRESULT HashData(ubyte*, uint, ubyte*, uint);
-HRESULT UrlFixupW(const(wchar)*, PWSTR, uint);
-HRESULT ParseURLA(const(char)*, PARSEDURLA*);
-HRESULT ParseURLW(const(wchar)*, PARSEDURLW*);
-WIN32_ERROR SHDeleteEmptyKeyA(HKEY, const(char)*);
-WIN32_ERROR SHDeleteEmptyKeyW(HKEY, const(wchar)*);
-WIN32_ERROR SHDeleteKeyA(HKEY, const(char)*);
-WIN32_ERROR SHDeleteKeyW(HKEY, const(wchar)*);
-HKEY SHRegDuplicateHKey(HKEY);
-WIN32_ERROR SHDeleteValueA(HKEY, const(char)*, const(char)*);
-WIN32_ERROR SHDeleteValueW(HKEY, const(wchar)*, const(wchar)*);
-WIN32_ERROR SHGetValueA(HKEY, const(char)*, const(char)*, uint*, void*, uint*);
-WIN32_ERROR SHGetValueW(HKEY, const(wchar)*, const(wchar)*, uint*, void*, uint*);
-int SHSetValueA(HKEY, const(char)*, const(char)*, uint, const(void)*, uint);
-int SHSetValueW(HKEY, const(wchar)*, const(wchar)*, uint, const(void)*, uint);
-WIN32_ERROR SHRegGetValueA(HKEY, const(char)*, const(char)*, int, uint*, void*, uint*);
-WIN32_ERROR SHRegGetValueW(HKEY, const(wchar)*, const(wchar)*, int, uint*, void*, uint*);
-WIN32_ERROR SHRegGetValueFromHKCUHKLM(const(wchar)*, const(wchar)*, int, uint*, void*, uint*);
-WIN32_ERROR SHQueryValueExA(HKEY, const(char)*, uint*, uint*, void*, uint*);
-WIN32_ERROR SHQueryValueExW(HKEY, const(wchar)*, uint*, uint*, void*, uint*);
-WIN32_ERROR SHEnumKeyExA(HKEY, uint, PSTR, uint*);
-WIN32_ERROR SHEnumKeyExW(HKEY, uint, PWSTR, uint*);
-WIN32_ERROR SHEnumValueA(HKEY, uint, PSTR, uint*, uint*, void*, uint*);
-WIN32_ERROR SHEnumValueW(HKEY, uint, PWSTR, uint*, uint*, void*, uint*);
-WIN32_ERROR SHQueryInfoKeyA(HKEY, uint*, uint*, uint*, uint*);
-WIN32_ERROR SHQueryInfoKeyW(HKEY, uint*, uint*, uint*, uint*);
-WIN32_ERROR SHCopyKeyA(HKEY, const(char)*, HKEY, uint);
-WIN32_ERROR SHCopyKeyW(HKEY, const(wchar)*, HKEY, uint);
-WIN32_ERROR SHRegGetPathA(HKEY, const(char)*, const(char)*, PSTR, uint);
-WIN32_ERROR SHRegGetPathW(HKEY, const(wchar)*, const(wchar)*, PWSTR, uint);
-WIN32_ERROR SHRegSetPathA(HKEY, const(char)*, const(char)*, const(char)*, uint);
-WIN32_ERROR SHRegSetPathW(HKEY, const(wchar)*, const(wchar)*, const(wchar)*, uint);
-WIN32_ERROR SHRegCreateUSKeyA(const(char)*, uint, long, long*, uint);
-WIN32_ERROR SHRegCreateUSKeyW(const(wchar)*, uint, long, long*, uint);
-WIN32_ERROR SHRegOpenUSKeyA(const(char)*, uint, long, long*, BOOL);
-WIN32_ERROR SHRegOpenUSKeyW(const(wchar)*, uint, long, long*, BOOL);
-WIN32_ERROR SHRegQueryUSValueA(long, const(char)*, uint*, void*, uint*, BOOL, void*, uint);
-WIN32_ERROR SHRegQueryUSValueW(long, const(wchar)*, uint*, void*, uint*, BOOL, void*, uint);
-WIN32_ERROR SHRegWriteUSValueA(long, const(char)*, uint, const(void)*, uint, uint);
-WIN32_ERROR SHRegWriteUSValueW(long, const(wchar)*, uint, const(void)*, uint, uint);
-WIN32_ERROR SHRegDeleteUSValueA(long, const(char)*, SHREGDEL_FLAGS);
-WIN32_ERROR SHRegDeleteUSValueW(long, const(wchar)*, SHREGDEL_FLAGS);
-WIN32_ERROR SHRegDeleteEmptyUSKeyW(long, const(wchar)*, SHREGDEL_FLAGS);
-WIN32_ERROR SHRegDeleteEmptyUSKeyA(long, const(char)*, SHREGDEL_FLAGS);
-WIN32_ERROR SHRegEnumUSKeyA(long, uint, PSTR, uint*, SHREGENUM_FLAGS);
-WIN32_ERROR SHRegEnumUSKeyW(long, uint, PWSTR, uint*, SHREGENUM_FLAGS);
-WIN32_ERROR SHRegEnumUSValueA(long, uint, PSTR, uint*, uint*, void*, uint*, SHREGENUM_FLAGS);
-WIN32_ERROR SHRegEnumUSValueW(long, uint, PWSTR, uint*, uint*, void*, uint*, SHREGENUM_FLAGS);
-WIN32_ERROR SHRegQueryInfoUSKeyA(long, uint*, uint*, uint*, uint*, SHREGENUM_FLAGS);
-WIN32_ERROR SHRegQueryInfoUSKeyW(long, uint*, uint*, uint*, uint*, SHREGENUM_FLAGS);
-WIN32_ERROR SHRegCloseUSKey(long);
-WIN32_ERROR SHRegGetUSValueA(const(char)*, const(char)*, uint*, void*, uint*, BOOL, void*, uint);
-WIN32_ERROR SHRegGetUSValueW(const(wchar)*, const(wchar)*, uint*, void*, uint*, BOOL, void*, uint);
-WIN32_ERROR SHRegSetUSValueA(const(char)*, const(char)*, uint, const(void)*, uint, uint);
-WIN32_ERROR SHRegSetUSValueW(const(wchar)*, const(wchar)*, uint, const(void)*, uint, uint);
-int SHRegGetIntW(HKEY, const(wchar)*, int);
-BOOL SHRegGetBoolUSValueA(const(char)*, const(char)*, BOOL, BOOL);
-BOOL SHRegGetBoolUSValueW(const(wchar)*, const(wchar)*, BOOL, BOOL);
-HRESULT AssocCreate(GUID, const(GUID)*, void**);
-HRESULT AssocQueryStringA(ASSOCF, ASSOCSTR, const(char)*, const(char)*, PSTR, uint*);
-HRESULT AssocQueryStringW(ASSOCF, ASSOCSTR, const(wchar)*, const(wchar)*, PWSTR, uint*);
-HRESULT AssocQueryStringByKeyA(ASSOCF, ASSOCSTR, HKEY, const(char)*, PSTR, uint*);
-HRESULT AssocQueryStringByKeyW(ASSOCF, ASSOCSTR, HKEY, const(wchar)*, PWSTR, uint*);
-HRESULT AssocQueryKeyA(ASSOCF, ASSOCKEY, const(char)*, const(char)*, HKEY*);
-HRESULT AssocQueryKeyW(ASSOCF, ASSOCKEY, const(wchar)*, const(wchar)*, HKEY*);
-BOOL AssocIsDangerous(const(wchar)*);
-HRESULT AssocGetPerceivedType(const(wchar)*, PERCEIVED*, uint*, PWSTR*);
-IStream SHOpenRegStreamA(HKEY, const(char)*, const(char)*, uint);
-IStream SHOpenRegStreamW(HKEY, const(wchar)*, const(wchar)*, uint);
-IStream SHOpenRegStream2A(HKEY, const(char)*, const(char)*, uint);
-IStream SHOpenRegStream2W(HKEY, const(wchar)*, const(wchar)*, uint);
-HRESULT SHCreateStreamOnFileA(const(char)*, uint, IStream*);
-HRESULT SHCreateStreamOnFileW(const(wchar)*, uint, IStream*);
-HRESULT SHCreateStreamOnFileEx(const(wchar)*, uint, uint, BOOL, IStream, IStream*);
-IStream SHCreateMemStream(const(ubyte)*, uint);
-HRESULT GetAcceptLanguagesA(PSTR, uint*);
-HRESULT GetAcceptLanguagesW(PWSTR, uint*);
-void IUnknown_Set(IUnknown*, IUnknown);
-void IUnknown_AtomicRelease(void**);
-HRESULT IUnknown_GetWindow(IUnknown, HWND*);
-HRESULT IUnknown_SetSite(IUnknown, IUnknown);
-HRESULT IUnknown_GetSite(IUnknown, const(GUID)*, void**);
-HRESULT IUnknown_QueryService(IUnknown, const(GUID)*, const(GUID)*, void**);
-HRESULT IStream_Read(IStream, void*, uint);
-HRESULT IStream_Write(IStream, const(void)*, uint);
-HRESULT IStream_Reset(IStream);
-HRESULT IStream_Size(IStream, ulong*);
-HRESULT ConnectToConnectionPoint(IUnknown, const(GUID)*, BOOL, IUnknown, uint*, IConnectionPoint*);
-HRESULT IStream_ReadPidl(IStream, ITEMIDLIST**);
-HRESULT IStream_WritePidl(IStream, ITEMIDLIST*);
-HRESULT IStream_ReadStr(IStream, PWSTR*);
-HRESULT IStream_WriteStr(IStream, const(wchar)*);
-HRESULT IStream_Copy(IStream, IStream, uint);
-HRESULT SHGetViewStatePropertyBag(ITEMIDLIST*, const(wchar)*, uint, const(GUID)*, void**);
-int SHFormatDateTimeA(const(FILETIME)*, uint*, PSTR, uint);
-int SHFormatDateTimeW(const(FILETIME)*, uint*, PWSTR, uint);
-int SHAnsiToUnicode(const(char)*, PWSTR, int);
-int SHAnsiToAnsi(const(char)*, PSTR, int);
-int SHUnicodeToAnsi(const(wchar)*, PSTR, int);
-int SHUnicodeToUnicode(const(wchar)*, PWSTR, int);
-int SHMessageBoxCheckA(HWND, const(char)*, const(char)*, uint, int, const(char)*);
-int SHMessageBoxCheckW(HWND, const(wchar)*, const(wchar)*, uint, int, const(wchar)*);
-LRESULT SHSendMessageBroadcastA(uint, WPARAM, LPARAM);
-LRESULT SHSendMessageBroadcastW(uint, WPARAM, LPARAM);
-CHAR SHStripMneumonicA(PSTR);
-wchar SHStripMneumonicW(PWSTR);
-BOOL IsOS(OS);
-int SHGlobalCounterGetValue(const(SHGLOBALCOUNTER));
-int SHGlobalCounterIncrement(const(SHGLOBALCOUNTER));
-int SHGlobalCounterDecrement(const(SHGLOBALCOUNTER));
-HANDLE SHAllocShared(const(void)*, uint, uint);
-BOOL SHFreeShared(HANDLE, uint);
-void* SHLockShared(HANDLE, uint);
-BOOL SHUnlockShared(void*);
+HRESULT SHGetDriveMedia(const(wchar)* pszDrive, uint* pdwMediaContent);
+PSTR StrChrA(const(char)* pszStart, ushort wMatch);
+PWSTR StrChrW(const(wchar)* pszStart, wchar wMatch);
+PSTR StrChrIA(const(char)* pszStart, ushort wMatch);
+PWSTR StrChrIW(const(wchar)* pszStart, wchar wMatch);
+PWSTR StrChrNW(const(wchar)* pszStart, wchar wMatch, uint cchMax);
+PWSTR StrChrNIW(const(wchar)* pszStart, wchar wMatch, uint cchMax);
+int StrCmpNA(const(char)* psz1, const(char)* psz2, int nChar);
+int StrCmpNW(const(wchar)* psz1, const(wchar)* psz2, int nChar);
+int StrCmpNIA(const(char)* psz1, const(char)* psz2, int nChar);
+int StrCmpNIW(const(wchar)* psz1, const(wchar)* psz2, int nChar);
+int StrCSpnA(const(char)* pszStr, const(char)* pszSet);
+int StrCSpnW(const(wchar)* pszStr, const(wchar)* pszSet);
+int StrCSpnIA(const(char)* pszStr, const(char)* pszSet);
+int StrCSpnIW(const(wchar)* pszStr, const(wchar)* pszSet);
+PSTR StrDupA(const(char)* pszSrch);
+PWSTR StrDupW(const(wchar)* pszSrch);
+HRESULT StrFormatByteSizeEx(ulong ull, SFBS_FLAGS flags, PWSTR pszBuf, uint cchBuf);
+PSTR StrFormatByteSizeA(uint dw, PSTR pszBuf, uint cchBuf);
+PSTR StrFormatByteSize64A(long qdw, PSTR pszBuf, uint cchBuf);
+PWSTR StrFormatByteSizeW(long qdw, PWSTR pszBuf, uint cchBuf);
+PWSTR StrFormatKBSizeW(long qdw, PWSTR pszBuf, uint cchBuf);
+PSTR StrFormatKBSizeA(long qdw, PSTR pszBuf, uint cchBuf);
+int StrFromTimeIntervalA(PSTR pszOut, uint cchMax, uint dwTimeMS, int digits);
+int StrFromTimeIntervalW(PWSTR pszOut, uint cchMax, uint dwTimeMS, int digits);
+BOOL StrIsIntlEqualA(BOOL fCaseSens, const(char)* pszString1, const(char)* pszString2, int nChar);
+BOOL StrIsIntlEqualW(BOOL fCaseSens, const(wchar)* pszString1, const(wchar)* pszString2, int nChar);
+PSTR StrNCatA(PSTR psz1, const(char)* psz2, int cchMax);
+PWSTR StrNCatW(PWSTR psz1, const(wchar)* psz2, int cchMax);
+PSTR StrPBrkA(const(char)* psz, const(char)* pszSet);
+PWSTR StrPBrkW(const(wchar)* psz, const(wchar)* pszSet);
+PSTR StrRChrA(const(char)* pszStart, const(char)* pszEnd, ushort wMatch);
+PWSTR StrRChrW(const(wchar)* pszStart, const(wchar)* pszEnd, wchar wMatch);
+PSTR StrRChrIA(const(char)* pszStart, const(char)* pszEnd, ushort wMatch);
+PWSTR StrRChrIW(const(wchar)* pszStart, const(wchar)* pszEnd, wchar wMatch);
+PSTR StrRStrIA(const(char)* pszSource, const(char)* pszLast, const(char)* pszSrch);
+PWSTR StrRStrIW(const(wchar)* pszSource, const(wchar)* pszLast, const(wchar)* pszSrch);
+int StrSpnA(const(char)* psz, const(char)* pszSet);
+int StrSpnW(const(wchar)* psz, const(wchar)* pszSet);
+PSTR StrStrA(const(char)* pszFirst, const(char)* pszSrch);
+PWSTR StrStrW(const(wchar)* pszFirst, const(wchar)* pszSrch);
+PSTR StrStrIA(const(char)* pszFirst, const(char)* pszSrch);
+PWSTR StrStrIW(const(wchar)* pszFirst, const(wchar)* pszSrch);
+PWSTR StrStrNW(const(wchar)* pszFirst, const(wchar)* pszSrch, uint cchMax);
+PWSTR StrStrNIW(const(wchar)* pszFirst, const(wchar)* pszSrch, uint cchMax);
+int StrToIntA(const(char)* pszSrc);
+int StrToIntW(const(wchar)* pszSrc);
+BOOL StrToIntExA(const(char)* pszString, int dwFlags, int* piRet);
+BOOL StrToIntExW(const(wchar)* pszString, int dwFlags, int* piRet);
+BOOL StrToInt64ExA(const(char)* pszString, int dwFlags, long* pllRet);
+BOOL StrToInt64ExW(const(wchar)* pszString, int dwFlags, long* pllRet);
+BOOL StrTrimA(PSTR psz, const(char)* pszTrimChars);
+BOOL StrTrimW(PWSTR psz, const(wchar)* pszTrimChars);
+PWSTR StrCatW(PWSTR psz1, const(wchar)* psz2);
+int StrCmpW(const(wchar)* psz1, const(wchar)* psz2);
+int StrCmpIW(const(wchar)* psz1, const(wchar)* psz2);
+PWSTR StrCpyW(PWSTR psz1, const(wchar)* psz2);
+PWSTR StrCpyNW(PWSTR pszDst, const(wchar)* pszSrc, int cchMax);
+PWSTR StrCatBuffW(PWSTR pszDest, const(wchar)* pszSrc, int cchDestBuffSize);
+PSTR StrCatBuffA(PSTR pszDest, const(char)* pszSrc, int cchDestBuffSize);
+BOOL ChrCmpIA(ushort w1, ushort w2);
+BOOL ChrCmpIW(wchar w1, wchar w2);
+int wvnsprintfA(PSTR pszDest, int cchDest, const(char)* pszFmt, byte* arglist);
+int wvnsprintfW(PWSTR pszDest, int cchDest, const(wchar)* pszFmt, byte* arglist);
+int wnsprintfA(PSTR pszDest, int cchDest, const(char)* pszFmt);
+int wnsprintfW(PWSTR pszDest, int cchDest, const(wchar)* pszFmt);
+HRESULT StrRetToStrA(STRRET* pstr, ITEMIDLIST* pidl, PSTR* ppsz);
+HRESULT StrRetToStrW(STRRET* pstr, ITEMIDLIST* pidl, PWSTR* ppsz);
+HRESULT StrRetToBufA(STRRET* pstr, ITEMIDLIST* pidl, PSTR pszBuf, uint cchBuf);
+HRESULT StrRetToBufW(STRRET* pstr, ITEMIDLIST* pidl, PWSTR pszBuf, uint cchBuf);
+HRESULT SHStrDupA(const(char)* psz, PWSTR* ppwsz);
+HRESULT SHStrDupW(const(wchar)* psz, PWSTR* ppwsz);
+int StrCmpLogicalW(const(wchar)* psz1, const(wchar)* psz2);
+uint StrCatChainW(PWSTR pszDst, uint cchDst, uint ichAt, const(wchar)* pszSrc);
+HRESULT StrRetToBSTR(STRRET* pstr, ITEMIDLIST* pidl, BSTR* pbstr);
+HRESULT SHLoadIndirectString(const(wchar)* pszSource, PWSTR pszOutBuf, uint cchOutBuf, void** ppvReserved);
+BOOL IsCharSpaceA(CHAR wch);
+BOOL IsCharSpaceW(wchar wch);
+int StrCmpCA(const(char)* pszStr1, const(char)* pszStr2);
+int StrCmpCW(const(wchar)* pszStr1, const(wchar)* pszStr2);
+int StrCmpICA(const(char)* pszStr1, const(char)* pszStr2);
+int StrCmpICW(const(wchar)* pszStr1, const(wchar)* pszStr2);
+int StrCmpNCA(const(char)* pszStr1, const(char)* pszStr2, int nChar);
+int StrCmpNCW(const(wchar)* pszStr1, const(wchar)* pszStr2, int nChar);
+int StrCmpNICA(const(char)* pszStr1, const(char)* pszStr2, int nChar);
+int StrCmpNICW(const(wchar)* pszStr1, const(wchar)* pszStr2, int nChar);
+BOOL IntlStrEqWorkerA(BOOL fCaseSens, const(char)* lpString1, const(char)* lpString2, int nChar);
+BOOL IntlStrEqWorkerW(BOOL fCaseSens, const(wchar)* lpString1, const(wchar)* lpString2, int nChar);
+PSTR PathAddBackslashA(PSTR pszPath);
+PWSTR PathAddBackslashW(PWSTR pszPath);
+BOOL PathAddExtensionA(PSTR pszPath, const(char)* pszExt);
+BOOL PathAddExtensionW(PWSTR pszPath, const(wchar)* pszExt);
+BOOL PathAppendA(PSTR pszPath, const(char)* pszMore);
+BOOL PathAppendW(PWSTR pszPath, const(wchar)* pszMore);
+PSTR PathBuildRootA(PSTR pszRoot, int iDrive);
+PWSTR PathBuildRootW(PWSTR pszRoot, int iDrive);
+BOOL PathCanonicalizeA(PSTR pszBuf, const(char)* pszPath);
+BOOL PathCanonicalizeW(PWSTR pszBuf, const(wchar)* pszPath);
+PSTR PathCombineA(PSTR pszDest, const(char)* pszDir, const(char)* pszFile);
+PWSTR PathCombineW(PWSTR pszDest, const(wchar)* pszDir, const(wchar)* pszFile);
+BOOL PathCompactPathA(HDC hDC, PSTR pszPath, uint dx);
+BOOL PathCompactPathW(HDC hDC, PWSTR pszPath, uint dx);
+BOOL PathCompactPathExA(PSTR pszOut, const(char)* pszSrc, uint cchMax, uint dwFlags);
+BOOL PathCompactPathExW(PWSTR pszOut, const(wchar)* pszSrc, uint cchMax, uint dwFlags);
+int PathCommonPrefixA(const(char)* pszFile1, const(char)* pszFile2, PSTR achPath);
+int PathCommonPrefixW(const(wchar)* pszFile1, const(wchar)* pszFile2, PWSTR achPath);
+BOOL PathFileExistsA(const(char)* pszPath);
+BOOL PathFileExistsW(const(wchar)* pszPath);
+PSTR PathFindExtensionA(const(char)* pszPath);
+PWSTR PathFindExtensionW(const(wchar)* pszPath);
+PSTR PathFindFileNameA(const(char)* pszPath);
+PWSTR PathFindFileNameW(const(wchar)* pszPath);
+PSTR PathFindNextComponentA(const(char)* pszPath);
+PWSTR PathFindNextComponentW(const(wchar)* pszPath);
+BOOL PathFindOnPathA(PSTR pszPath, byte** ppszOtherDirs);
+BOOL PathFindOnPathW(PWSTR pszPath, ushort** ppszOtherDirs);
+PSTR PathFindSuffixArrayA(const(char)* pszPath, const(char)** apszSuffix, int iArraySize);
+PWSTR PathFindSuffixArrayW(const(wchar)* pszPath, const(wchar)** apszSuffix, int iArraySize);
+PSTR PathGetArgsA(const(char)* pszPath);
+PWSTR PathGetArgsW(const(wchar)* pszPath);
+BOOL PathIsLFNFileSpecA(const(char)* pszName);
+BOOL PathIsLFNFileSpecW(const(wchar)* pszName);
+uint PathGetCharTypeA(ubyte ch);
+uint PathGetCharTypeW(wchar ch);
+int PathGetDriveNumberA(const(char)* pszPath);
+int PathGetDriveNumberW(const(wchar)* pszPath);
+BOOL PathIsDirectoryA(const(char)* pszPath);
+BOOL PathIsDirectoryW(const(wchar)* pszPath);
+BOOL PathIsDirectoryEmptyA(const(char)* pszPath);
+BOOL PathIsDirectoryEmptyW(const(wchar)* pszPath);
+BOOL PathIsFileSpecA(const(char)* pszPath);
+BOOL PathIsFileSpecW(const(wchar)* pszPath);
+BOOL PathIsPrefixA(const(char)* pszPrefix, const(char)* pszPath);
+BOOL PathIsPrefixW(const(wchar)* pszPrefix, const(wchar)* pszPath);
+BOOL PathIsRelativeA(const(char)* pszPath);
+BOOL PathIsRelativeW(const(wchar)* pszPath);
+BOOL PathIsRootA(const(char)* pszPath);
+BOOL PathIsRootW(const(wchar)* pszPath);
+BOOL PathIsSameRootA(const(char)* pszPath1, const(char)* pszPath2);
+BOOL PathIsSameRootW(const(wchar)* pszPath1, const(wchar)* pszPath2);
+BOOL PathIsUNCA(const(char)* pszPath);
+BOOL PathIsUNCW(const(wchar)* pszPath);
+BOOL PathIsNetworkPathA(const(char)* pszPath);
+BOOL PathIsNetworkPathW(const(wchar)* pszPath);
+BOOL PathIsUNCServerA(const(char)* pszPath);
+BOOL PathIsUNCServerW(const(wchar)* pszPath);
+BOOL PathIsUNCServerShareA(const(char)* pszPath);
+BOOL PathIsUNCServerShareW(const(wchar)* pszPath);
+BOOL PathIsContentTypeA(const(char)* pszPath, const(char)* pszContentType);
+BOOL PathIsContentTypeW(const(wchar)* pszPath, const(wchar)* pszContentType);
+BOOL PathIsURLA(const(char)* pszPath);
+BOOL PathIsURLW(const(wchar)* pszPath);
+BOOL PathMakePrettyA(PSTR pszPath);
+BOOL PathMakePrettyW(PWSTR pszPath);
+BOOL PathMatchSpecA(const(char)* pszFile, const(char)* pszSpec);
+BOOL PathMatchSpecW(const(wchar)* pszFile, const(wchar)* pszSpec);
+HRESULT PathMatchSpecExA(const(char)* pszFile, const(char)* pszSpec, uint dwFlags);
+HRESULT PathMatchSpecExW(const(wchar)* pszFile, const(wchar)* pszSpec, uint dwFlags);
+int PathParseIconLocationA(PSTR pszIconFile);
+int PathParseIconLocationW(PWSTR pszIconFile);
+BOOL PathQuoteSpacesA(PSTR lpsz);
+BOOL PathQuoteSpacesW(PWSTR lpsz);
+BOOL PathRelativePathToA(PSTR pszPath, const(char)* pszFrom, uint dwAttrFrom, const(char)* pszTo, uint dwAttrTo);
+BOOL PathRelativePathToW(PWSTR pszPath, const(wchar)* pszFrom, uint dwAttrFrom, const(wchar)* pszTo, uint dwAttrTo);
+void PathRemoveArgsA(PSTR pszPath);
+void PathRemoveArgsW(PWSTR pszPath);
+PSTR PathRemoveBackslashA(PSTR pszPath);
+PWSTR PathRemoveBackslashW(PWSTR pszPath);
+void PathRemoveBlanksA(PSTR pszPath);
+void PathRemoveBlanksW(PWSTR pszPath);
+void PathRemoveExtensionA(PSTR pszPath);
+void PathRemoveExtensionW(PWSTR pszPath);
+BOOL PathRemoveFileSpecA(PSTR pszPath);
+BOOL PathRemoveFileSpecW(PWSTR pszPath);
+BOOL PathRenameExtensionA(PSTR pszPath, const(char)* pszExt);
+BOOL PathRenameExtensionW(PWSTR pszPath, const(wchar)* pszExt);
+BOOL PathSearchAndQualifyA(const(char)* pszPath, PSTR pszBuf, uint cchBuf);
+BOOL PathSearchAndQualifyW(const(wchar)* pszPath, PWSTR pszBuf, uint cchBuf);
+void PathSetDlgItemPathA(HWND hDlg, int id, const(char)* pszPath);
+void PathSetDlgItemPathW(HWND hDlg, int id, const(wchar)* pszPath);
+PSTR PathSkipRootA(const(char)* pszPath);
+PWSTR PathSkipRootW(const(wchar)* pszPath);
+void PathStripPathA(PSTR pszPath);
+void PathStripPathW(PWSTR pszPath);
+BOOL PathStripToRootA(PSTR pszPath);
+BOOL PathStripToRootW(PWSTR pszPath);
+BOOL PathUnquoteSpacesA(PSTR lpsz);
+BOOL PathUnquoteSpacesW(PWSTR lpsz);
+BOOL PathMakeSystemFolderA(const(char)* pszPath);
+BOOL PathMakeSystemFolderW(const(wchar)* pszPath);
+BOOL PathUnmakeSystemFolderA(const(char)* pszPath);
+BOOL PathUnmakeSystemFolderW(const(wchar)* pszPath);
+BOOL PathIsSystemFolderA(const(char)* pszPath, uint dwAttrb);
+BOOL PathIsSystemFolderW(const(wchar)* pszPath, uint dwAttrb);
+void PathUndecorateA(PSTR pszPath);
+void PathUndecorateW(PWSTR pszPath);
+BOOL PathUnExpandEnvStringsA(const(char)* pszPath, PSTR pszBuf, uint cchBuf);
+BOOL PathUnExpandEnvStringsW(const(wchar)* pszPath, PWSTR pszBuf, uint cchBuf);
+int UrlCompareA(const(char)* psz1, const(char)* psz2, BOOL fIgnoreSlash);
+int UrlCompareW(const(wchar)* psz1, const(wchar)* psz2, BOOL fIgnoreSlash);
+HRESULT UrlCombineA(const(char)* pszBase, const(char)* pszRelative, PSTR pszCombined, uint* pcchCombined, uint dwFlags);
+HRESULT UrlCombineW(const(wchar)* pszBase, const(wchar)* pszRelative, PWSTR pszCombined, uint* pcchCombined, uint dwFlags);
+HRESULT UrlCanonicalizeA(const(char)* pszUrl, PSTR pszCanonicalized, uint* pcchCanonicalized, uint dwFlags);
+HRESULT UrlCanonicalizeW(const(wchar)* pszUrl, PWSTR pszCanonicalized, uint* pcchCanonicalized, uint dwFlags);
+BOOL UrlIsOpaqueA(const(char)* pszURL);
+BOOL UrlIsOpaqueW(const(wchar)* pszURL);
+BOOL UrlIsNoHistoryA(const(char)* pszURL);
+BOOL UrlIsNoHistoryW(const(wchar)* pszURL);
+BOOL UrlIsA(const(char)* pszUrl, URLIS UrlIs);
+BOOL UrlIsW(const(wchar)* pszUrl, URLIS UrlIs);
+PSTR UrlGetLocationA(const(char)* pszURL);
+PWSTR UrlGetLocationW(const(wchar)* pszURL);
+HRESULT UrlUnescapeA(PSTR pszUrl, PSTR pszUnescaped, uint* pcchUnescaped, uint dwFlags);
+HRESULT UrlUnescapeW(PWSTR pszUrl, PWSTR pszUnescaped, uint* pcchUnescaped, uint dwFlags);
+HRESULT UrlEscapeA(const(char)* pszUrl, PSTR pszEscaped, uint* pcchEscaped, uint dwFlags);
+HRESULT UrlEscapeW(const(wchar)* pszUrl, PWSTR pszEscaped, uint* pcchEscaped, uint dwFlags);
+HRESULT UrlCreateFromPathA(const(char)* pszPath, PSTR pszUrl, uint* pcchUrl, uint dwFlags);
+HRESULT UrlCreateFromPathW(const(wchar)* pszPath, PWSTR pszUrl, uint* pcchUrl, uint dwFlags);
+HRESULT PathCreateFromUrlA(const(char)* pszUrl, PSTR pszPath, uint* pcchPath, uint dwFlags);
+HRESULT PathCreateFromUrlW(const(wchar)* pszUrl, PWSTR pszPath, uint* pcchPath, uint dwFlags);
+HRESULT PathCreateFromUrlAlloc(const(wchar)* pszIn, PWSTR* ppszOut, uint dwFlags);
+HRESULT UrlHashA(const(char)* pszUrl, ubyte* pbHash, uint cbHash);
+HRESULT UrlHashW(const(wchar)* pszUrl, ubyte* pbHash, uint cbHash);
+HRESULT UrlGetPartW(const(wchar)* pszIn, PWSTR pszOut, uint* pcchOut, uint dwPart, uint dwFlags);
+HRESULT UrlGetPartA(const(char)* pszIn, PSTR pszOut, uint* pcchOut, uint dwPart, uint dwFlags);
+HRESULT UrlApplySchemeA(const(char)* pszIn, PSTR pszOut, uint* pcchOut, uint dwFlags);
+HRESULT UrlApplySchemeW(const(wchar)* pszIn, PWSTR pszOut, uint* pcchOut, uint dwFlags);
+HRESULT HashData(ubyte* pbData, uint cbData, ubyte* pbHash, uint cbHash);
+HRESULT UrlFixupW(const(wchar)* pcszUrl, PWSTR pszTranslatedUrl, uint cchMax);
+HRESULT ParseURLA(const(char)* pcszURL, PARSEDURLA* ppu);
+HRESULT ParseURLW(const(wchar)* pcszURL, PARSEDURLW* ppu);
+WIN32_ERROR SHDeleteEmptyKeyA(HKEY hkey, const(char)* pszSubKey);
+WIN32_ERROR SHDeleteEmptyKeyW(HKEY hkey, const(wchar)* pszSubKey);
+WIN32_ERROR SHDeleteKeyA(HKEY hkey, const(char)* pszSubKey);
+WIN32_ERROR SHDeleteKeyW(HKEY hkey, const(wchar)* pszSubKey);
+HKEY SHRegDuplicateHKey(HKEY hkey);
+WIN32_ERROR SHDeleteValueA(HKEY hkey, const(char)* pszSubKey, const(char)* pszValue);
+WIN32_ERROR SHDeleteValueW(HKEY hkey, const(wchar)* pszSubKey, const(wchar)* pszValue);
+WIN32_ERROR SHGetValueA(HKEY hkey, const(char)* pszSubKey, const(char)* pszValue, uint* pdwType, void* pvData, uint* pcbData);
+WIN32_ERROR SHGetValueW(HKEY hkey, const(wchar)* pszSubKey, const(wchar)* pszValue, uint* pdwType, void* pvData, uint* pcbData);
+int SHSetValueA(HKEY hkey, const(char)* pszSubKey, const(char)* pszValue, uint dwType, const(void)* pvData, uint cbData);
+int SHSetValueW(HKEY hkey, const(wchar)* pszSubKey, const(wchar)* pszValue, uint dwType, const(void)* pvData, uint cbData);
+WIN32_ERROR SHRegGetValueA(HKEY hkey, const(char)* pszSubKey, const(char)* pszValue, int srrfFlags, uint* pdwType, void* pvData, uint* pcbData);
+WIN32_ERROR SHRegGetValueW(HKEY hkey, const(wchar)* pszSubKey, const(wchar)* pszValue, int srrfFlags, uint* pdwType, void* pvData, uint* pcbData);
+WIN32_ERROR SHRegGetValueFromHKCUHKLM(const(wchar)* pwszKey, const(wchar)* pwszValue, int srrfFlags, uint* pdwType, void* pvData, uint* pcbData);
+WIN32_ERROR SHQueryValueExA(HKEY hkey, const(char)* pszValue, uint* pdwReserved, uint* pdwType, void* pvData, uint* pcbData);
+WIN32_ERROR SHQueryValueExW(HKEY hkey, const(wchar)* pszValue, uint* pdwReserved, uint* pdwType, void* pvData, uint* pcbData);
+WIN32_ERROR SHEnumKeyExA(HKEY hkey, uint dwIndex, PSTR pszName, uint* pcchName);
+WIN32_ERROR SHEnumKeyExW(HKEY hkey, uint dwIndex, PWSTR pszName, uint* pcchName);
+WIN32_ERROR SHEnumValueA(HKEY hkey, uint dwIndex, PSTR pszValueName, uint* pcchValueName, uint* pdwType, void* pvData, uint* pcbData);
+WIN32_ERROR SHEnumValueW(HKEY hkey, uint dwIndex, PWSTR pszValueName, uint* pcchValueName, uint* pdwType, void* pvData, uint* pcbData);
+WIN32_ERROR SHQueryInfoKeyA(HKEY hkey, uint* pcSubKeys, uint* pcchMaxSubKeyLen, uint* pcValues, uint* pcchMaxValueNameLen);
+WIN32_ERROR SHQueryInfoKeyW(HKEY hkey, uint* pcSubKeys, uint* pcchMaxSubKeyLen, uint* pcValues, uint* pcchMaxValueNameLen);
+WIN32_ERROR SHCopyKeyA(HKEY hkeySrc, const(char)* pszSrcSubKey, HKEY hkeyDest, uint fReserved);
+WIN32_ERROR SHCopyKeyW(HKEY hkeySrc, const(wchar)* pszSrcSubKey, HKEY hkeyDest, uint fReserved);
+WIN32_ERROR SHRegGetPathA(HKEY hKey, const(char)* pcszSubKey, const(char)* pcszValue, PSTR pszPath, uint dwFlags);
+WIN32_ERROR SHRegGetPathW(HKEY hKey, const(wchar)* pcszSubKey, const(wchar)* pcszValue, PWSTR pszPath, uint dwFlags);
+WIN32_ERROR SHRegSetPathA(HKEY hKey, const(char)* pcszSubKey, const(char)* pcszValue, const(char)* pcszPath, uint dwFlags);
+WIN32_ERROR SHRegSetPathW(HKEY hKey, const(wchar)* pcszSubKey, const(wchar)* pcszValue, const(wchar)* pcszPath, uint dwFlags);
+WIN32_ERROR SHRegCreateUSKeyA(const(char)* pszPath, uint samDesired, long hRelativeUSKey, long* phNewUSKey, uint dwFlags);
+WIN32_ERROR SHRegCreateUSKeyW(const(wchar)* pwzPath, uint samDesired, long hRelativeUSKey, long* phNewUSKey, uint dwFlags);
+WIN32_ERROR SHRegOpenUSKeyA(const(char)* pszPath, uint samDesired, long hRelativeUSKey, long* phNewUSKey, BOOL fIgnoreHKCU);
+WIN32_ERROR SHRegOpenUSKeyW(const(wchar)* pwzPath, uint samDesired, long hRelativeUSKey, long* phNewUSKey, BOOL fIgnoreHKCU);
+WIN32_ERROR SHRegQueryUSValueA(long hUSKey, const(char)* pszValue, uint* pdwType, void* pvData, uint* pcbData, BOOL fIgnoreHKCU, void* pvDefaultData, uint dwDefaultDataSize);
+WIN32_ERROR SHRegQueryUSValueW(long hUSKey, const(wchar)* pszValue, uint* pdwType, void* pvData, uint* pcbData, BOOL fIgnoreHKCU, void* pvDefaultData, uint dwDefaultDataSize);
+WIN32_ERROR SHRegWriteUSValueA(long hUSKey, const(char)* pszValue, uint dwType, const(void)* pvData, uint cbData, uint dwFlags);
+WIN32_ERROR SHRegWriteUSValueW(long hUSKey, const(wchar)* pwzValue, uint dwType, const(void)* pvData, uint cbData, uint dwFlags);
+WIN32_ERROR SHRegDeleteUSValueA(long hUSKey, const(char)* pszValue, SHREGDEL_FLAGS delRegFlags);
+WIN32_ERROR SHRegDeleteUSValueW(long hUSKey, const(wchar)* pwzValue, SHREGDEL_FLAGS delRegFlags);
+WIN32_ERROR SHRegDeleteEmptyUSKeyW(long hUSKey, const(wchar)* pwzSubKey, SHREGDEL_FLAGS delRegFlags);
+WIN32_ERROR SHRegDeleteEmptyUSKeyA(long hUSKey, const(char)* pszSubKey, SHREGDEL_FLAGS delRegFlags);
+WIN32_ERROR SHRegEnumUSKeyA(long hUSKey, uint dwIndex, PSTR pszName, uint* pcchName, SHREGENUM_FLAGS enumRegFlags);
+WIN32_ERROR SHRegEnumUSKeyW(long hUSKey, uint dwIndex, PWSTR pwzName, uint* pcchName, SHREGENUM_FLAGS enumRegFlags);
+WIN32_ERROR SHRegEnumUSValueA(long hUSkey, uint dwIndex, PSTR pszValueName, uint* pcchValueName, uint* pdwType, void* pvData, uint* pcbData, SHREGENUM_FLAGS enumRegFlags);
+WIN32_ERROR SHRegEnumUSValueW(long hUSkey, uint dwIndex, PWSTR pszValueName, uint* pcchValueName, uint* pdwType, void* pvData, uint* pcbData, SHREGENUM_FLAGS enumRegFlags);
+WIN32_ERROR SHRegQueryInfoUSKeyA(long hUSKey, uint* pcSubKeys, uint* pcchMaxSubKeyLen, uint* pcValues, uint* pcchMaxValueNameLen, SHREGENUM_FLAGS enumRegFlags);
+WIN32_ERROR SHRegQueryInfoUSKeyW(long hUSKey, uint* pcSubKeys, uint* pcchMaxSubKeyLen, uint* pcValues, uint* pcchMaxValueNameLen, SHREGENUM_FLAGS enumRegFlags);
+WIN32_ERROR SHRegCloseUSKey(long hUSKey);
+WIN32_ERROR SHRegGetUSValueA(const(char)* pszSubKey, const(char)* pszValue, uint* pdwType, void* pvData, uint* pcbData, BOOL fIgnoreHKCU, void* pvDefaultData, uint dwDefaultDataSize);
+WIN32_ERROR SHRegGetUSValueW(const(wchar)* pszSubKey, const(wchar)* pszValue, uint* pdwType, void* pvData, uint* pcbData, BOOL fIgnoreHKCU, void* pvDefaultData, uint dwDefaultDataSize);
+WIN32_ERROR SHRegSetUSValueA(const(char)* pszSubKey, const(char)* pszValue, uint dwType, const(void)* pvData, uint cbData, uint dwFlags);
+WIN32_ERROR SHRegSetUSValueW(const(wchar)* pwzSubKey, const(wchar)* pwzValue, uint dwType, const(void)* pvData, uint cbData, uint dwFlags);
+int SHRegGetIntW(HKEY hk, const(wchar)* pwzKey, int iDefault);
+BOOL SHRegGetBoolUSValueA(const(char)* pszSubKey, const(char)* pszValue, BOOL fIgnoreHKCU, BOOL fDefault);
+BOOL SHRegGetBoolUSValueW(const(wchar)* pszSubKey, const(wchar)* pszValue, BOOL fIgnoreHKCU, BOOL fDefault);
+HRESULT AssocCreate(GUID clsid, const(GUID)* riid, void** ppv);
+HRESULT AssocQueryStringA(ASSOCF flags, ASSOCSTR str, const(char)* pszAssoc, const(char)* pszExtra, PSTR pszOut, uint* pcchOut);
+HRESULT AssocQueryStringW(ASSOCF flags, ASSOCSTR str, const(wchar)* pszAssoc, const(wchar)* pszExtra, PWSTR pszOut, uint* pcchOut);
+HRESULT AssocQueryStringByKeyA(ASSOCF flags, ASSOCSTR str, HKEY hkAssoc, const(char)* pszExtra, PSTR pszOut, uint* pcchOut);
+HRESULT AssocQueryStringByKeyW(ASSOCF flags, ASSOCSTR str, HKEY hkAssoc, const(wchar)* pszExtra, PWSTR pszOut, uint* pcchOut);
+HRESULT AssocQueryKeyA(ASSOCF flags, ASSOCKEY key, const(char)* pszAssoc, const(char)* pszExtra, HKEY* phkeyOut);
+HRESULT AssocQueryKeyW(ASSOCF flags, ASSOCKEY key, const(wchar)* pszAssoc, const(wchar)* pszExtra, HKEY* phkeyOut);
+BOOL AssocIsDangerous(const(wchar)* pszAssoc);
+HRESULT AssocGetPerceivedType(const(wchar)* pszExt, PERCEIVED* ptype, uint* pflag, PWSTR* ppszType);
+IStream SHOpenRegStreamA(HKEY hkey, const(char)* pszSubkey, const(char)* pszValue, uint grfMode);
+IStream SHOpenRegStreamW(HKEY hkey, const(wchar)* pszSubkey, const(wchar)* pszValue, uint grfMode);
+IStream SHOpenRegStream2A(HKEY hkey, const(char)* pszSubkey, const(char)* pszValue, uint grfMode);
+IStream SHOpenRegStream2W(HKEY hkey, const(wchar)* pszSubkey, const(wchar)* pszValue, uint grfMode);
+HRESULT SHCreateStreamOnFileA(const(char)* pszFile, uint grfMode, IStream* ppstm);
+HRESULT SHCreateStreamOnFileW(const(wchar)* pszFile, uint grfMode, IStream* ppstm);
+HRESULT SHCreateStreamOnFileEx(const(wchar)* pszFile, uint grfMode, uint dwAttributes, BOOL fCreate, IStream pstmTemplate, IStream* ppstm);
+IStream SHCreateMemStream(const(ubyte)* pInit, uint cbInit);
+HRESULT GetAcceptLanguagesA(PSTR pszLanguages, uint* pcchLanguages);
+HRESULT GetAcceptLanguagesW(PWSTR pszLanguages, uint* pcchLanguages);
+void IUnknown_Set(IUnknown* ppunk, IUnknown punk);
+void IUnknown_AtomicRelease(void** ppunk);
+HRESULT IUnknown_GetWindow(IUnknown punk, HWND* phwnd);
+HRESULT IUnknown_SetSite(IUnknown punk, IUnknown punkSite);
+HRESULT IUnknown_GetSite(IUnknown punk, const(GUID)* riid, void** ppv);
+HRESULT IUnknown_QueryService(IUnknown punk, const(GUID)* guidService, const(GUID)* riid, void** ppvOut);
+HRESULT IStream_Read(IStream pstm, void* pv, uint cb);
+HRESULT IStream_Write(IStream pstm, const(void)* pv, uint cb);
+HRESULT IStream_Reset(IStream pstm);
+HRESULT IStream_Size(IStream pstm, ulong* pui);
+HRESULT ConnectToConnectionPoint(IUnknown punk, const(GUID)* riidEvent, BOOL fConnect, IUnknown punkTarget, uint* pdwCookie, IConnectionPoint* ppcpOut);
+HRESULT IStream_ReadPidl(IStream pstm, ITEMIDLIST** ppidlOut);
+HRESULT IStream_WritePidl(IStream pstm, ITEMIDLIST* pidlWrite);
+HRESULT IStream_ReadStr(IStream pstm, PWSTR* ppsz);
+HRESULT IStream_WriteStr(IStream pstm, const(wchar)* psz);
+HRESULT IStream_Copy(IStream pstmFrom, IStream pstmTo, uint cb);
+HRESULT SHGetViewStatePropertyBag(ITEMIDLIST* pidl, const(wchar)* pszBagName, uint dwFlags, const(GUID)* riid, void** ppv);
+int SHFormatDateTimeA(const(FILETIME)* pft, uint* pdwFlags, PSTR pszBuf, uint cchBuf);
+int SHFormatDateTimeW(const(FILETIME)* pft, uint* pdwFlags, PWSTR pszBuf, uint cchBuf);
+int SHAnsiToUnicode(const(char)* pszSrc, PWSTR pwszDst, int cwchBuf);
+int SHAnsiToAnsi(const(char)* pszSrc, PSTR pszDst, int cchBuf);
+int SHUnicodeToAnsi(const(wchar)* pwszSrc, PSTR pszDst, int cchBuf);
+int SHUnicodeToUnicode(const(wchar)* pwzSrc, PWSTR pwzDst, int cwchBuf);
+int SHMessageBoxCheckA(HWND hwnd, const(char)* pszText, const(char)* pszCaption, uint uType, int iDefault, const(char)* pszRegVal);
+int SHMessageBoxCheckW(HWND hwnd, const(wchar)* pszText, const(wchar)* pszCaption, uint uType, int iDefault, const(wchar)* pszRegVal);
+LRESULT SHSendMessageBroadcastA(uint uMsg, WPARAM wParam, LPARAM lParam);
+LRESULT SHSendMessageBroadcastW(uint uMsg, WPARAM wParam, LPARAM lParam);
+CHAR SHStripMneumonicA(PSTR pszMenu);
+wchar SHStripMneumonicW(PWSTR pszMenu);
+BOOL IsOS(OS dwOS);
+int SHGlobalCounterGetValue(const(SHGLOBALCOUNTER) id);
+int SHGlobalCounterIncrement(const(SHGLOBALCOUNTER) id);
+int SHGlobalCounterDecrement(const(SHGLOBALCOUNTER) id);
+HANDLE SHAllocShared(const(void)* pvData, uint dwSize, uint dwProcessId);
+BOOL SHFreeShared(HANDLE hData, uint dwProcessId);
+void* SHLockShared(HANDLE hData, uint dwProcessId);
+BOOL SHUnlockShared(void* pvData);
 uint WhichPlatform();
-HRESULT QISearch(void*, QITAB*, const(GUID)*, void**);
-BOOL SHIsLowMemoryMachine(uint);
-int GetMenuPosFromID(HMENU, uint);
-HRESULT SHGetInverseCMAP(ubyte*, uint);
-HRESULT SHAutoComplete(HWND, SHELL_AUTOCOMPLETE_FLAGS);
-HRESULT SHCreateThreadRef(int*, IUnknown*);
-HRESULT SHSetThreadRef(IUnknown);
-HRESULT SHGetThreadRef(IUnknown*);
-BOOL SHSkipJunction(IBindCtx, const(GUID)*);
-BOOL SHCreateThread(LPTHREAD_START_ROUTINE, void*, uint, LPTHREAD_START_ROUTINE);
-BOOL SHCreateThreadWithHandle(LPTHREAD_START_ROUTINE, void*, uint, LPTHREAD_START_ROUTINE, HANDLE*);
+HRESULT QISearch(void* that, QITAB* pqit, const(GUID)* riid, void** ppv);
+BOOL SHIsLowMemoryMachine(uint dwType);
+int GetMenuPosFromID(HMENU hmenu, uint id);
+HRESULT SHGetInverseCMAP(ubyte* pbMap, uint cbMap);
+HRESULT SHAutoComplete(HWND hwndEdit, SHELL_AUTOCOMPLETE_FLAGS dwFlags);
+HRESULT SHCreateThreadRef(int* pcRef, IUnknown* ppunk);
+HRESULT SHSetThreadRef(IUnknown punk);
+HRESULT SHGetThreadRef(IUnknown* ppunk);
+BOOL SHSkipJunction(IBindCtx pbc, const(GUID)* pclsid);
+BOOL SHCreateThread(LPTHREAD_START_ROUTINE pfnThreadProc, void* pData, uint flags, LPTHREAD_START_ROUTINE pfnCallback);
+BOOL SHCreateThreadWithHandle(LPTHREAD_START_ROUTINE pfnThreadProc, void* pData, uint flags, LPTHREAD_START_ROUTINE pfnCallback, HANDLE* pHandle);
 HRESULT SHReleaseThreadRef();
-HPALETTE SHCreateShellPalette(HDC);
-void ColorRGBToHLS(COLORREF, ushort*, ushort*, ushort*);
-COLORREF ColorHLSToRGB(ushort, ushort, ushort);
-COLORREF ColorAdjustLuma(COLORREF, int, BOOL);
+HPALETTE SHCreateShellPalette(HDC hdc);
+void ColorRGBToHLS(COLORREF clrRGB, ushort* pwHue, ushort* pwLuminance, ushort* pwSaturation);
+COLORREF ColorHLSToRGB(ushort wHue, ushort wLuminance, ushort wSaturation);
+COLORREF ColorAdjustLuma(COLORREF clrRGB, int n, BOOL fScale);
 BOOL IsInternetESCEnabled();
-HRESULT HlinkCreateFromMoniker(IMoniker, const(wchar)*, const(wchar)*, IHlinkSite, uint, IUnknown, const(GUID)*, void**);
-HRESULT HlinkCreateFromString(const(wchar)*, const(wchar)*, const(wchar)*, IHlinkSite, uint, IUnknown, const(GUID)*, void**);
-HRESULT HlinkCreateFromData(IDataObject, IHlinkSite, uint, IUnknown, const(GUID)*, void**);
-HRESULT HlinkQueryCreateFromData(IDataObject);
-HRESULT HlinkClone(IHlink, const(GUID)*, IHlinkSite, uint, void**);
-HRESULT HlinkCreateBrowseContext(IUnknown, const(GUID)*, void**);
-HRESULT HlinkNavigateToStringReference(const(wchar)*, const(wchar)*, IHlinkSite, uint, IHlinkFrame, uint, IBindCtx, IBindStatusCallback, IHlinkBrowseContext);
-HRESULT HlinkNavigate(IHlink, IHlinkFrame, uint, IBindCtx, IBindStatusCallback, IHlinkBrowseContext);
-HRESULT HlinkOnNavigate(IHlinkFrame, IHlinkBrowseContext, uint, IMoniker, const(wchar)*, const(wchar)*, uint*);
-HRESULT HlinkUpdateStackItem(IHlinkFrame, IHlinkBrowseContext, uint, IMoniker, const(wchar)*, const(wchar)*);
-HRESULT HlinkOnRenameDocument(uint, IHlinkBrowseContext, IMoniker, IMoniker);
-HRESULT HlinkResolveMonikerForData(IMoniker, uint, IBindCtx, uint, FORMATETC*, IBindStatusCallback, IMoniker);
-HRESULT HlinkResolveStringForData(const(wchar)*, uint, IBindCtx, uint, FORMATETC*, IBindStatusCallback, IMoniker);
-HRESULT HlinkParseDisplayName(IBindCtx, const(wchar)*, BOOL, uint*, IMoniker*);
-HRESULT HlinkCreateExtensionServices(const(wchar)*, HWND, const(wchar)*, const(wchar)*, IUnknown, const(GUID)*, void**);
-HRESULT HlinkPreprocessMoniker(IBindCtx, IMoniker, IMoniker*);
-HRESULT OleSaveToStreamEx(IUnknown, IStream, BOOL);
-HRESULT HlinkSetSpecialReference(uint, const(wchar)*);
-HRESULT HlinkGetSpecialReference(uint, PWSTR*);
-HRESULT HlinkCreateShortcut(uint, IHlink, const(wchar)*, const(wchar)*, PWSTR*, uint);
-HRESULT HlinkCreateShortcutFromMoniker(uint, IMoniker, const(wchar)*, const(wchar)*, const(wchar)*, PWSTR*, uint);
-HRESULT HlinkCreateShortcutFromString(uint, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, PWSTR*, uint);
-HRESULT HlinkResolveShortcut(const(wchar)*, IHlinkSite, uint, IUnknown, const(GUID)*, void**);
-HRESULT HlinkResolveShortcutToMoniker(const(wchar)*, IMoniker*, PWSTR*);
-HRESULT HlinkResolveShortcutToString(const(wchar)*, PWSTR*, PWSTR*);
-HRESULT HlinkIsShortcut(const(wchar)*);
-HRESULT HlinkGetValueFromParams(const(wchar)*, const(wchar)*, PWSTR*);
-HRESULT HlinkTranslateURL(const(wchar)*, uint, PWSTR*);
-BOOL PathIsUNCEx(const(wchar)*, const(wchar)**);
-BOOL PathCchIsRoot(const(wchar)*);
-HRESULT PathCchAddBackslashEx(PWSTR, ulong, PWSTR*, ulong*);
-HRESULT PathCchAddBackslash(PWSTR, ulong);
-HRESULT PathCchRemoveBackslashEx(PWSTR, ulong, PWSTR*, ulong*);
-HRESULT PathCchRemoveBackslash(PWSTR, ulong);
-HRESULT PathCchSkipRoot(const(wchar)*, const(wchar)**);
-HRESULT PathCchStripToRoot(PWSTR, ulong);
-HRESULT PathCchRemoveFileSpec(PWSTR, ulong);
-HRESULT PathCchFindExtension(const(wchar)*, ulong, const(wchar)**);
-HRESULT PathCchAddExtension(PWSTR, ulong, const(wchar)*);
-HRESULT PathCchRenameExtension(PWSTR, ulong, const(wchar)*);
-HRESULT PathCchRemoveExtension(PWSTR, ulong);
-HRESULT PathCchCanonicalizeEx(PWSTR, ulong, const(wchar)*, PATHCCH_OPTIONS);
-HRESULT PathCchCanonicalize(PWSTR, ulong, const(wchar)*);
-HRESULT PathCchCombineEx(PWSTR, ulong, const(wchar)*, const(wchar)*, PATHCCH_OPTIONS);
-HRESULT PathCchCombine(PWSTR, ulong, const(wchar)*, const(wchar)*);
-HRESULT PathCchAppendEx(PWSTR, ulong, const(wchar)*, PATHCCH_OPTIONS);
-HRESULT PathCchAppend(PWSTR, ulong, const(wchar)*);
-HRESULT PathCchStripPrefix(PWSTR, ulong);
-HRESULT PathAllocCombine(const(wchar)*, const(wchar)*, PATHCCH_OPTIONS, PWSTR*);
-HRESULT PathAllocCanonicalize(const(wchar)*, PATHCCH_OPTIONS, PWSTR*);
-uint RegisterAppStateChangeNotification(PAPPSTATE_CHANGE_ROUTINE, void*, PAPPSTATE_REGISTRATION*);
-void UnregisterAppStateChangeNotification(PAPPSTATE_REGISTRATION);
-uint RegisterAppConstrainedChangeNotification(PAPPCONSTRAIN_CHANGE_ROUTINE, void*, PAPPCONSTRAIN_REGISTRATION*);
-void UnregisterAppConstrainedChangeNotification(PAPPCONSTRAIN_REGISTRATION);
+HRESULT HlinkCreateFromMoniker(IMoniker pimkTrgt, const(wchar)* pwzLocation, const(wchar)* pwzFriendlyName, IHlinkSite pihlsite, uint dwSiteData, IUnknown piunkOuter, const(GUID)* riid, void** ppvObj);
+HRESULT HlinkCreateFromString(const(wchar)* pwzTarget, const(wchar)* pwzLocation, const(wchar)* pwzFriendlyName, IHlinkSite pihlsite, uint dwSiteData, IUnknown piunkOuter, const(GUID)* riid, void** ppvObj);
+HRESULT HlinkCreateFromData(IDataObject piDataObj, IHlinkSite pihlsite, uint dwSiteData, IUnknown piunkOuter, const(GUID)* riid, void** ppvObj);
+HRESULT HlinkQueryCreateFromData(IDataObject piDataObj);
+HRESULT HlinkClone(IHlink pihl, const(GUID)* riid, IHlinkSite pihlsiteForClone, uint dwSiteData, void** ppvObj);
+HRESULT HlinkCreateBrowseContext(IUnknown piunkOuter, const(GUID)* riid, void** ppvObj);
+HRESULT HlinkNavigateToStringReference(const(wchar)* pwzTarget, const(wchar)* pwzLocation, IHlinkSite pihlsite, uint dwSiteData, IHlinkFrame pihlframe, uint grfHLNF, IBindCtx pibc, IBindStatusCallback pibsc, IHlinkBrowseContext pihlbc);
+HRESULT HlinkNavigate(IHlink pihl, IHlinkFrame pihlframe, uint grfHLNF, IBindCtx pbc, IBindStatusCallback pibsc, IHlinkBrowseContext pihlbc);
+HRESULT HlinkOnNavigate(IHlinkFrame pihlframe, IHlinkBrowseContext pihlbc, uint grfHLNF, IMoniker pimkTarget, const(wchar)* pwzLocation, const(wchar)* pwzFriendlyName, uint* puHLID);
+HRESULT HlinkUpdateStackItem(IHlinkFrame pihlframe, IHlinkBrowseContext pihlbc, uint uHLID, IMoniker pimkTrgt, const(wchar)* pwzLocation, const(wchar)* pwzFriendlyName);
+HRESULT HlinkOnRenameDocument(uint dwReserved, IHlinkBrowseContext pihlbc, IMoniker pimkOld, IMoniker pimkNew);
+HRESULT HlinkResolveMonikerForData(IMoniker pimkReference, uint reserved, IBindCtx pibc, uint cFmtetc, FORMATETC* rgFmtetc, IBindStatusCallback pibsc, IMoniker pimkBase);
+HRESULT HlinkResolveStringForData(const(wchar)* pwzReference, uint reserved, IBindCtx pibc, uint cFmtetc, FORMATETC* rgFmtetc, IBindStatusCallback pibsc, IMoniker pimkBase);
+HRESULT HlinkParseDisplayName(IBindCtx pibc, const(wchar)* pwzDisplayName, BOOL fNoForceAbs, uint* pcchEaten, IMoniker* ppimk);
+HRESULT HlinkCreateExtensionServices(const(wchar)* pwzAdditionalHeaders, HWND phwnd, const(wchar)* pszUsername, const(wchar)* pszPassword, IUnknown piunkOuter, const(GUID)* riid, void** ppvObj);
+HRESULT HlinkPreprocessMoniker(IBindCtx pibc, IMoniker pimkIn, IMoniker* ppimkOut);
+HRESULT OleSaveToStreamEx(IUnknown piunk, IStream pistm, BOOL fClearDirty);
+HRESULT HlinkSetSpecialReference(uint uReference, const(wchar)* pwzReference);
+HRESULT HlinkGetSpecialReference(uint uReference, PWSTR* ppwzReference);
+HRESULT HlinkCreateShortcut(uint grfHLSHORTCUTF, IHlink pihl, const(wchar)* pwzDir, const(wchar)* pwzFileName, PWSTR* ppwzShortcutFile, uint dwReserved);
+HRESULT HlinkCreateShortcutFromMoniker(uint grfHLSHORTCUTF, IMoniker pimkTarget, const(wchar)* pwzLocation, const(wchar)* pwzDir, const(wchar)* pwzFileName, PWSTR* ppwzShortcutFile, uint dwReserved);
+HRESULT HlinkCreateShortcutFromString(uint grfHLSHORTCUTF, const(wchar)* pwzTarget, const(wchar)* pwzLocation, const(wchar)* pwzDir, const(wchar)* pwzFileName, PWSTR* ppwzShortcutFile, uint dwReserved);
+HRESULT HlinkResolveShortcut(const(wchar)* pwzShortcutFileName, IHlinkSite pihlsite, uint dwSiteData, IUnknown piunkOuter, const(GUID)* riid, void** ppvObj);
+HRESULT HlinkResolveShortcutToMoniker(const(wchar)* pwzShortcutFileName, IMoniker* ppimkTarget, PWSTR* ppwzLocation);
+HRESULT HlinkResolveShortcutToString(const(wchar)* pwzShortcutFileName, PWSTR* ppwzTarget, PWSTR* ppwzLocation);
+HRESULT HlinkIsShortcut(const(wchar)* pwzFileName);
+HRESULT HlinkGetValueFromParams(const(wchar)* pwzParams, const(wchar)* pwzName, PWSTR* ppwzValue);
+HRESULT HlinkTranslateURL(const(wchar)* pwzURL, uint grfFlags, PWSTR* ppwzTranslatedURL);
+BOOL PathIsUNCEx(const(wchar)* pszPath, const(wchar)** ppszServer);
+BOOL PathCchIsRoot(const(wchar)* pszPath);
+HRESULT PathCchAddBackslashEx(PWSTR pszPath, ulong cchPath, PWSTR* ppszEnd, ulong* pcchRemaining);
+HRESULT PathCchAddBackslash(PWSTR pszPath, ulong cchPath);
+HRESULT PathCchRemoveBackslashEx(PWSTR pszPath, ulong cchPath, PWSTR* ppszEnd, ulong* pcchRemaining);
+HRESULT PathCchRemoveBackslash(PWSTR pszPath, ulong cchPath);
+HRESULT PathCchSkipRoot(const(wchar)* pszPath, const(wchar)** ppszRootEnd);
+HRESULT PathCchStripToRoot(PWSTR pszPath, ulong cchPath);
+HRESULT PathCchRemoveFileSpec(PWSTR pszPath, ulong cchPath);
+HRESULT PathCchFindExtension(const(wchar)* pszPath, ulong cchPath, const(wchar)** ppszExt);
+HRESULT PathCchAddExtension(PWSTR pszPath, ulong cchPath, const(wchar)* pszExt);
+HRESULT PathCchRenameExtension(PWSTR pszPath, ulong cchPath, const(wchar)* pszExt);
+HRESULT PathCchRemoveExtension(PWSTR pszPath, ulong cchPath);
+HRESULT PathCchCanonicalizeEx(PWSTR pszPathOut, ulong cchPathOut, const(wchar)* pszPathIn, PATHCCH_OPTIONS dwFlags);
+HRESULT PathCchCanonicalize(PWSTR pszPathOut, ulong cchPathOut, const(wchar)* pszPathIn);
+HRESULT PathCchCombineEx(PWSTR pszPathOut, ulong cchPathOut, const(wchar)* pszPathIn, const(wchar)* pszMore, PATHCCH_OPTIONS dwFlags);
+HRESULT PathCchCombine(PWSTR pszPathOut, ulong cchPathOut, const(wchar)* pszPathIn, const(wchar)* pszMore);
+HRESULT PathCchAppendEx(PWSTR pszPath, ulong cchPath, const(wchar)* pszMore, PATHCCH_OPTIONS dwFlags);
+HRESULT PathCchAppend(PWSTR pszPath, ulong cchPath, const(wchar)* pszMore);
+HRESULT PathCchStripPrefix(PWSTR pszPath, ulong cchPath);
+HRESULT PathAllocCombine(const(wchar)* pszPathIn, const(wchar)* pszMore, PATHCCH_OPTIONS dwFlags, PWSTR* ppszPathOut);
+HRESULT PathAllocCanonicalize(const(wchar)* pszPathIn, PATHCCH_OPTIONS dwFlags, PWSTR* ppszPathOut);
+uint RegisterAppStateChangeNotification(PAPPSTATE_CHANGE_ROUTINE Routine, void* Context, PAPPSTATE_REGISTRATION* Registration);
+void UnregisterAppStateChangeNotification(PAPPSTATE_REGISTRATION Registration);
+uint RegisterAppConstrainedChangeNotification(PAPPCONSTRAIN_CHANGE_ROUTINE Routine, void* Context, PAPPCONSTRAIN_REGISTRATION* Registration);
+void UnregisterAppConstrainedChangeNotification(PAPPCONSTRAIN_REGISTRATION Registration);
 enum HLINK_E_FIRST = 0xffffffff80040100;
 enum HLINK_S_FIRST = 0x00040100;
 enum WM_CPL_LAUNCH = 0x000007e8;
@@ -2900,7 +2900,7 @@ alias PAPPSTATE_REGISTRATION = long;
 enum IID_INotifyReplica = GUID(0x99180163, 0xda16, 0x101a, [0x93, 0x5c, 0x44, 0x45, 0x53, 0x54, 0x0, 0x0]);
 interface INotifyReplica : IUnknown
 {
-    HRESULT YouAreAReplica(uint, IMoniker*);
+    HRESULT YouAreAReplica(uint ulcOtherReplicas, IMoniker* rgpmkOtherReplicas);
 }
 struct APPCATEGORYINFO
 {
@@ -3137,7 +3137,7 @@ struct OPEN_PRINTER_PROPS_INFOW
     uint dwFlags;
     BOOL bModal;
 }
-alias SUBCLASSPROC = LRESULT function(HWND, uint, WPARAM, LPARAM, ulong, ulong);
+alias SUBCLASSPROC = LRESULT function(HWND hWnd, uint uMsg, WPARAM wParam, LPARAM lParam, ulong uIdSubclass, ulong dwRefData);
 struct HELPINFO
 {
     uint cbSize;
@@ -3231,41 +3231,41 @@ struct CMINVOKECOMMANDINFOEX_REMOTE
 enum IID_IContextMenu = GUID(0x214e4, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IContextMenu : IUnknown
 {
-    HRESULT QueryContextMenu(HMENU, uint, uint, uint, uint);
-    HRESULT InvokeCommand(CMINVOKECOMMANDINFO*);
-    HRESULT GetCommandString(ulong, uint, uint*, PSTR, uint);
+    HRESULT QueryContextMenu(HMENU hmenu, uint indexMenu, uint idCmdFirst, uint idCmdLast, uint uFlags);
+    HRESULT InvokeCommand(CMINVOKECOMMANDINFO* pici);
+    HRESULT GetCommandString(ulong idCmd, uint uType, uint* pReserved, PSTR pszName, uint cchMax);
 }
 enum IID_IContextMenu2 = GUID(0x214f4, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IContextMenu2 : IContextMenu
 {
-    HRESULT HandleMenuMsg(uint, WPARAM, LPARAM);
+    HRESULT HandleMenuMsg(uint uMsg, WPARAM wParam, LPARAM lParam);
 }
 enum IID_IContextMenu3 = GUID(0xbcfce0a0, 0xec17, 0x11d0, [0x8d, 0x10, 0x0, 0xa0, 0xc9, 0xf, 0x27, 0x19]);
 interface IContextMenu3 : IContextMenu2
 {
-    HRESULT HandleMenuMsg2(uint, WPARAM, LPARAM, LRESULT*);
+    HRESULT HandleMenuMsg2(uint uMsg, WPARAM wParam, LPARAM lParam, LRESULT* plResult);
 }
 enum IID_IExecuteCommand = GUID(0x7f9185b0, 0xcb92, 0x43c5, [0x80, 0xa9, 0x92, 0x27, 0x7a, 0x4f, 0x7b, 0x54]);
 interface IExecuteCommand : IUnknown
 {
-    HRESULT SetKeyState(uint);
-    HRESULT SetParameters(const(wchar)*);
-    HRESULT SetPosition(POINT);
-    HRESULT SetShowWindow(int);
-    HRESULT SetNoShowUI(BOOL);
-    HRESULT SetDirectory(const(wchar)*);
+    HRESULT SetKeyState(uint grfKeyState);
+    HRESULT SetParameters(const(wchar)* pszParameters);
+    HRESULT SetPosition(POINT pt);
+    HRESULT SetShowWindow(int nShow);
+    HRESULT SetNoShowUI(BOOL fNoShowUI);
+    HRESULT SetDirectory(const(wchar)* pszDirectory);
     HRESULT Execute();
 }
 enum IID_IPersistFolder = GUID(0x214ea, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IPersistFolder : IPersist
 {
-    HRESULT Initialize(ITEMIDLIST*);
+    HRESULT Initialize(ITEMIDLIST* pidl);
 }
 enum IID_IRunnableTask = GUID(0x85788d00, 0x6807, 0x11d0, [0xb8, 0x10, 0x0, 0xc0, 0x4f, 0xd7, 0x6, 0xec]);
 interface IRunnableTask : IUnknown
 {
     HRESULT Run();
-    HRESULT Kill(BOOL);
+    HRESULT Kill(BOOL bWait);
     HRESULT Suspend();
     HRESULT Resume();
     uint IsRunning();
@@ -3273,15 +3273,15 @@ interface IRunnableTask : IUnknown
 enum IID_IShellTaskScheduler = GUID(0x6ccb7be0, 0x6807, 0x11d0, [0xb8, 0x10, 0x0, 0xc0, 0x4f, 0xd7, 0x6, 0xec]);
 interface IShellTaskScheduler : IUnknown
 {
-    HRESULT AddTask(IRunnableTask, const(GUID)*, ulong, uint);
-    HRESULT RemoveTasks(const(GUID)*, ulong, BOOL);
-    uint CountTasks(const(GUID)*);
-    HRESULT Status(uint, uint);
+    HRESULT AddTask(IRunnableTask prt, const(GUID)* rtoid, ulong lParam, uint dwPriority);
+    HRESULT RemoveTasks(const(GUID)* rtoid, ulong lParam, BOOL bWaitIfRunning);
+    uint CountTasks(const(GUID)* rtoid);
+    HRESULT Status(uint dwReleaseStatus, uint dwThreadTimeout);
 }
 enum IID_IPersistFolder2 = GUID(0x1ac3d9f0, 0x175c, 0x11d1, [0x95, 0xbe, 0x0, 0x60, 0x97, 0x97, 0xea, 0x4f]);
 interface IPersistFolder2 : IPersistFolder
 {
-    HRESULT GetCurFolder(ITEMIDLIST**);
+    HRESULT GetCurFolder(ITEMIDLIST** ppidl);
 }
 struct PERSIST_FOLDER_TARGET_INFO
 {
@@ -3294,30 +3294,30 @@ struct PERSIST_FOLDER_TARGET_INFO
 enum IID_IPersistFolder3 = GUID(0xcef04fdf, 0xfe72, 0x11d2, [0x87, 0xa5, 0x0, 0xc0, 0x4f, 0x68, 0x37, 0xcf]);
 interface IPersistFolder3 : IPersistFolder2
 {
-    HRESULT InitializeEx(IBindCtx, ITEMIDLIST*, const(PERSIST_FOLDER_TARGET_INFO)*);
-    HRESULT GetFolderTargetInfo(PERSIST_FOLDER_TARGET_INFO*);
+    HRESULT InitializeEx(IBindCtx pbc, ITEMIDLIST* pidlRoot, const(PERSIST_FOLDER_TARGET_INFO)* ppfti);
+    HRESULT GetFolderTargetInfo(PERSIST_FOLDER_TARGET_INFO* ppfti);
 }
 enum IID_IPersistIDList = GUID(0x1079acfc, 0x29bd, 0x11d3, [0x8e, 0xd, 0x0, 0xc0, 0x4f, 0x68, 0x37, 0xd5]);
 interface IPersistIDList : IPersist
 {
-    HRESULT SetIDList(ITEMIDLIST*);
-    HRESULT GetIDList(ITEMIDLIST**);
+    HRESULT SetIDList(ITEMIDLIST* pidl);
+    HRESULT GetIDList(ITEMIDLIST** ppidl);
 }
 enum IID_IEnumIDList = GUID(0x214f2, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IEnumIDList : IUnknown
 {
-    HRESULT Next(uint, ITEMIDLIST**, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, ITEMIDLIST** rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumIDList*);
+    HRESULT Clone(IEnumIDList* ppenum);
 }
 enum IID_IEnumFullIDList = GUID(0xd0191542, 0x7954, 0x4908, [0xbc, 0x6, 0xb2, 0x36, 0xb, 0xbe, 0x45, 0xba]);
 interface IEnumFullIDList : IUnknown
 {
-    HRESULT Next(uint, ITEMIDLIST**, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, ITEMIDLIST** rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumFullIDList*);
+    HRESULT Clone(IEnumFullIDList* ppenum);
 }
 alias SHGDNF = uint;
 enum : uint
@@ -3366,8 +3366,8 @@ enum : int
 enum IID_IFileSyncMergeHandler = GUID(0xd97b5aac, 0xc792, 0x433c, [0x97, 0x5d, 0x35, 0xc4, 0xea, 0xdc, 0x7a, 0x9d]);
 interface IFileSyncMergeHandler : IUnknown
 {
-    HRESULT Merge(const(wchar)*, const(wchar)*, MERGE_UPDATE_STATUS*);
-    HRESULT ShowResolveConflictUIAsync(const(wchar)*, HMONITOR);
+    HRESULT Merge(const(wchar)* localFilePath, const(wchar)* serverFilePath, MERGE_UPDATE_STATUS* updateStatus);
+    HRESULT ShowResolveConflictUIAsync(const(wchar)* localFilePath, HMONITOR monitorToDisplayOn);
 }
 alias FOLDER_ENUM_MODE = int;
 enum : int
@@ -3379,28 +3379,28 @@ enum : int
 enum IID_IObjectWithFolderEnumMode = GUID(0x6a9d9026, 0xe6e, 0x464c, [0xb0, 0x0, 0x42, 0xec, 0xc0, 0x7d, 0xe6, 0x73]);
 interface IObjectWithFolderEnumMode : IUnknown
 {
-    HRESULT SetMode(FOLDER_ENUM_MODE);
-    HRESULT GetMode(FOLDER_ENUM_MODE*);
+    HRESULT SetMode(FOLDER_ENUM_MODE feMode);
+    HRESULT GetMode(FOLDER_ENUM_MODE* pfeMode);
 }
 enum IID_IParseAndCreateItem = GUID(0x67efed0e, 0xe827, 0x4408, [0xb4, 0x93, 0x78, 0xf3, 0x98, 0x2b, 0x68, 0x5c]);
 interface IParseAndCreateItem : IUnknown
 {
-    HRESULT SetItem(IShellItem);
-    HRESULT GetItem(const(GUID)*, void**);
+    HRESULT SetItem(IShellItem psi);
+    HRESULT GetItem(const(GUID)* riid, void** ppv);
 }
 enum IID_IShellFolder = GUID(0x214e6, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IShellFolder : IUnknown
 {
-    HRESULT ParseDisplayName(HWND, IBindCtx, PWSTR, uint*, ITEMIDLIST**, uint*);
-    HRESULT EnumObjects(HWND, uint, IEnumIDList*);
-    HRESULT BindToObject(ITEMIDLIST*, IBindCtx, const(GUID)*, void**);
-    HRESULT BindToStorage(ITEMIDLIST*, IBindCtx, const(GUID)*, void**);
-    HRESULT CompareIDs(LPARAM, ITEMIDLIST*, ITEMIDLIST*);
-    HRESULT CreateViewObject(HWND, const(GUID)*, void**);
-    HRESULT GetAttributesOf(uint, ITEMIDLIST**, uint*);
-    HRESULT GetUIObjectOf(HWND, uint, ITEMIDLIST**, const(GUID)*, uint*, void**);
-    HRESULT GetDisplayNameOf(ITEMIDLIST*, SHGDNF, STRRET*);
-    HRESULT SetNameOf(HWND, ITEMIDLIST*, const(wchar)*, SHGDNF, ITEMIDLIST**);
+    HRESULT ParseDisplayName(HWND hwnd, IBindCtx pbc, PWSTR pszDisplayName, uint* pchEaten, ITEMIDLIST** ppidl, uint* pdwAttributes);
+    HRESULT EnumObjects(HWND hwnd, uint grfFlags, IEnumIDList* ppenumIDList);
+    HRESULT BindToObject(ITEMIDLIST* pidl, IBindCtx pbc, const(GUID)* riid, void** ppv);
+    HRESULT BindToStorage(ITEMIDLIST* pidl, IBindCtx pbc, const(GUID)* riid, void** ppv);
+    HRESULT CompareIDs(LPARAM lParam, ITEMIDLIST* pidl1, ITEMIDLIST* pidl2);
+    HRESULT CreateViewObject(HWND hwndOwner, const(GUID)* riid, void** ppv);
+    HRESULT GetAttributesOf(uint cidl, ITEMIDLIST** apidl, uint* rgfInOut);
+    HRESULT GetUIObjectOf(HWND hwndOwner, uint cidl, ITEMIDLIST** apidl, const(GUID)* riid, uint* rgfReserved, void** ppv);
+    HRESULT GetDisplayNameOf(ITEMIDLIST* pidl, SHGDNF uFlags, STRRET* pName);
+    HRESULT SetNameOf(HWND hwnd, ITEMIDLIST* pidl, const(wchar)* pszName, SHGDNF uFlags, ITEMIDLIST** ppidlOut);
 }
 struct EXTRASEARCH
 {
@@ -3411,21 +3411,21 @@ struct EXTRASEARCH
 enum IID_IEnumExtraSearch = GUID(0xe700be1, 0x9db6, 0x11d1, [0xa1, 0xce, 0x0, 0xc0, 0x4f, 0xd7, 0x5d, 0x13]);
 interface IEnumExtraSearch : IUnknown
 {
-    HRESULT Next(uint, EXTRASEARCH*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, EXTRASEARCH* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumExtraSearch*);
+    HRESULT Clone(IEnumExtraSearch* ppenum);
 }
 enum IID_IShellFolder2 = GUID(0x93f2f68c, 0x1d1b, 0x11d3, [0xa3, 0xe, 0x0, 0xc0, 0x4f, 0x79, 0xab, 0xd1]);
 interface IShellFolder2 : IShellFolder
 {
-    HRESULT GetDefaultSearchGUID(GUID*);
-    HRESULT EnumSearches(IEnumExtraSearch*);
-    HRESULT GetDefaultColumn(uint, uint*, uint*);
-    HRESULT GetDefaultColumnState(uint, uint*);
-    HRESULT GetDetailsEx(ITEMIDLIST*, const(PROPERTYKEY)*, VARIANT*);
-    HRESULT GetDetailsOf(ITEMIDLIST*, uint, SHELLDETAILS*);
-    HRESULT MapColumnToSCID(uint, PROPERTYKEY*);
+    HRESULT GetDefaultSearchGUID(GUID* pguid);
+    HRESULT EnumSearches(IEnumExtraSearch* ppenum);
+    HRESULT GetDefaultColumn(uint dwRes, uint* pSort, uint* pDisplay);
+    HRESULT GetDefaultColumnState(uint iColumn, SHCOLSTATE* pcsFlags);
+    HRESULT GetDetailsEx(ITEMIDLIST* pidl, const(PROPERTYKEY)* pscid, VARIANT* pv);
+    HRESULT GetDetailsOf(ITEMIDLIST* pidl, uint iColumn, SHELLDETAILS* psd);
+    HRESULT MapColumnToSCID(uint iColumn, PROPERTYKEY* pscid);
 }
 alias FOLDERFLAGS = int;
 enum : int
@@ -3540,17 +3540,17 @@ enum : int
 enum IID_IShellView = GUID(0x214e3, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IShellView : IOleWindow
 {
-    HRESULT TranslateAccelerator(MSG*);
-    HRESULT EnableModeless(BOOL);
-    HRESULT UIActivate(uint);
+    HRESULT TranslateAccelerator(MSG* pmsg);
+    HRESULT EnableModeless(BOOL fEnable);
+    HRESULT UIActivate(uint uState);
     HRESULT Refresh();
-    HRESULT CreateViewWindow(IShellView, FOLDERSETTINGS*, IShellBrowser, RECT*, HWND*);
+    HRESULT CreateViewWindow(IShellView psvPrevious, FOLDERSETTINGS* pfs, IShellBrowser psb, RECT* prcView, HWND* phWnd);
     HRESULT DestroyViewWindow();
-    HRESULT GetCurrentInfo(FOLDERSETTINGS*);
-    HRESULT AddPropertySheetPages(uint, LPFNSVADDPROPSHEETPAGE, LPARAM);
+    HRESULT GetCurrentInfo(FOLDERSETTINGS* pfs);
+    HRESULT AddPropertySheetPages(uint dwReserved, LPFNSVADDPROPSHEETPAGE pfn, LPARAM lparam);
     HRESULT SaveViewState();
-    HRESULT SelectItem(ITEMIDLIST*, uint);
-    HRESULT GetItemObject(uint, const(GUID)*, void**);
+    HRESULT SelectItem(ITEMIDLIST* pidlItem, uint uFlags);
+    HRESULT GetItemObject(uint uItem, const(GUID)* riid, void** ppv);
 }
 struct SV2CVW2_PARAMS
 {
@@ -3565,28 +3565,28 @@ struct SV2CVW2_PARAMS
 enum IID_IShellView2 = GUID(0x88e39e80, 0x3578, 0x11cf, [0xae, 0x69, 0x8, 0x0, 0x2b, 0x2e, 0x12, 0x62]);
 interface IShellView2 : IShellView
 {
-    HRESULT GetView(GUID*, uint);
-    HRESULT CreateViewWindow2(SV2CVW2_PARAMS*);
-    HRESULT HandleRename(ITEMIDLIST*);
-    HRESULT SelectAndPositionItem(ITEMIDLIST*, uint, POINT*);
+    HRESULT GetView(GUID* pvid, uint uView);
+    HRESULT CreateViewWindow2(SV2CVW2_PARAMS* lpParams);
+    HRESULT HandleRename(ITEMIDLIST* pidlNew);
+    HRESULT SelectAndPositionItem(ITEMIDLIST* pidlItem, uint uFlags, POINT* ppt);
 }
 enum IID_IFolderView = GUID(0xcde725b0, 0xccc9, 0x4519, [0x91, 0x7e, 0x32, 0x5d, 0x72, 0xfa, 0xb4, 0xce]);
 interface IFolderView : IUnknown
 {
-    HRESULT GetCurrentViewMode(uint*);
-    HRESULT SetCurrentViewMode(uint);
-    HRESULT GetFolder(const(GUID)*, void**);
-    HRESULT Item(int, ITEMIDLIST**);
-    HRESULT ItemCount(uint, int*);
-    HRESULT Items(uint, const(GUID)*, void**);
-    HRESULT GetSelectionMarkedItem(int*);
-    HRESULT GetFocusedItem(int*);
-    HRESULT GetItemPosition(ITEMIDLIST*, POINT*);
-    HRESULT GetSpacing(POINT*);
-    HRESULT GetDefaultSpacing(POINT*);
+    HRESULT GetCurrentViewMode(uint* pViewMode);
+    HRESULT SetCurrentViewMode(uint ViewMode);
+    HRESULT GetFolder(const(GUID)* riid, void** ppv);
+    HRESULT Item(int iItemIndex, ITEMIDLIST** ppidl);
+    HRESULT ItemCount(uint uFlags, int* pcItems);
+    HRESULT Items(uint uFlags, const(GUID)* riid, void** ppv);
+    HRESULT GetSelectionMarkedItem(int* piItem);
+    HRESULT GetFocusedItem(int* piItem);
+    HRESULT GetItemPosition(ITEMIDLIST* pidl, POINT* ppt);
+    HRESULT GetSpacing(POINT* ppt);
+    HRESULT GetDefaultSpacing(POINT* ppt);
     HRESULT GetAutoArrange();
-    HRESULT SelectItem(int, uint);
-    HRESULT SelectAndPositionItems(uint, ITEMIDLIST**, POINT*, uint);
+    HRESULT SelectItem(int iItem, uint dwFlags);
+    HRESULT SelectAndPositionItems(uint cidl, ITEMIDLIST** apidl, POINT* apt, uint dwFlags);
 }
 alias SORTDIRECTION = int;
 enum : int
@@ -3609,75 +3609,75 @@ enum : int
 enum IID_IFolderView2 = GUID(0x1af3a467, 0x214f, 0x4298, [0x90, 0x8e, 0x6, 0xb0, 0x3e, 0xb, 0x39, 0xf9]);
 interface IFolderView2 : IFolderView
 {
-    HRESULT SetGroupBy(const(PROPERTYKEY)*, BOOL);
-    HRESULT GetGroupBy(PROPERTYKEY*, BOOL*);
-    HRESULT SetViewProperty(ITEMIDLIST*, const(PROPERTYKEY)*, const(PROPVARIANT)*);
-    HRESULT GetViewProperty(ITEMIDLIST*, const(PROPERTYKEY)*, PROPVARIANT*);
-    HRESULT SetTileViewProperties(ITEMIDLIST*, const(wchar)*);
-    HRESULT SetExtendedTileViewProperties(ITEMIDLIST*, const(wchar)*);
-    HRESULT SetText(FVTEXTTYPE, const(wchar)*);
-    HRESULT SetCurrentFolderFlags(uint, uint);
-    HRESULT GetCurrentFolderFlags(uint*);
-    HRESULT GetSortColumnCount(int*);
-    HRESULT SetSortColumns(const(SORTCOLUMN)*, int);
-    HRESULT GetSortColumns(SORTCOLUMN*, int);
-    HRESULT GetItem(int, const(GUID)*, void**);
-    HRESULT GetVisibleItem(int, BOOL, int*);
-    HRESULT GetSelectedItem(int, int*);
-    HRESULT GetSelection(BOOL, IShellItemArray*);
-    HRESULT GetSelectionState(ITEMIDLIST*, uint*);
-    HRESULT InvokeVerbOnSelection(const(char)*);
-    HRESULT SetViewModeAndIconSize(FOLDERVIEWMODE, int);
-    HRESULT GetViewModeAndIconSize(FOLDERVIEWMODE*, int*);
-    HRESULT SetGroupSubsetCount(uint);
-    HRESULT GetGroupSubsetCount(uint*);
-    HRESULT SetRedraw(BOOL);
+    HRESULT SetGroupBy(const(PROPERTYKEY)* key, BOOL fAscending);
+    HRESULT GetGroupBy(PROPERTYKEY* pkey, BOOL* pfAscending);
+    HRESULT SetViewProperty(ITEMIDLIST* pidl, const(PROPERTYKEY)* propkey, const(PROPVARIANT)* propvar);
+    HRESULT GetViewProperty(ITEMIDLIST* pidl, const(PROPERTYKEY)* propkey, PROPVARIANT* ppropvar);
+    HRESULT SetTileViewProperties(ITEMIDLIST* pidl, const(wchar)* pszPropList);
+    HRESULT SetExtendedTileViewProperties(ITEMIDLIST* pidl, const(wchar)* pszPropList);
+    HRESULT SetText(FVTEXTTYPE iType, const(wchar)* pwszText);
+    HRESULT SetCurrentFolderFlags(uint dwMask, uint dwFlags);
+    HRESULT GetCurrentFolderFlags(uint* pdwFlags);
+    HRESULT GetSortColumnCount(int* pcColumns);
+    HRESULT SetSortColumns(const(SORTCOLUMN)* rgSortColumns, int cColumns);
+    HRESULT GetSortColumns(SORTCOLUMN* rgSortColumns, int cColumns);
+    HRESULT GetItem(int iItem, const(GUID)* riid, void** ppv);
+    HRESULT GetVisibleItem(int iStart, BOOL fPrevious, int* piItem);
+    HRESULT GetSelectedItem(int iStart, int* piItem);
+    HRESULT GetSelection(BOOL fNoneImpliesFolder, IShellItemArray* ppsia);
+    HRESULT GetSelectionState(ITEMIDLIST* pidl, uint* pdwFlags);
+    HRESULT InvokeVerbOnSelection(const(char)* pszVerb);
+    HRESULT SetViewModeAndIconSize(FOLDERVIEWMODE uViewMode, int iImageSize);
+    HRESULT GetViewModeAndIconSize(FOLDERVIEWMODE* puViewMode, int* piImageSize);
+    HRESULT SetGroupSubsetCount(uint cVisibleRows);
+    HRESULT GetGroupSubsetCount(uint* pcVisibleRows);
+    HRESULT SetRedraw(BOOL fRedrawOn);
     HRESULT IsMoveInSameFolder();
     HRESULT DoRename();
 }
 enum IID_IFolderViewSettings = GUID(0xae8c987d, 0x8797, 0x4ed3, [0xbe, 0x72, 0x2a, 0x47, 0xdd, 0x93, 0x8d, 0xb0]);
 interface IFolderViewSettings : IUnknown
 {
-    HRESULT GetColumnPropertyList(const(GUID)*, void**);
-    HRESULT GetGroupByProperty(PROPERTYKEY*, BOOL*);
-    HRESULT GetViewMode(FOLDERLOGICALVIEWMODE*);
-    HRESULT GetIconSize(uint*);
-    HRESULT GetFolderFlags(FOLDERFLAGS*, FOLDERFLAGS*);
-    HRESULT GetSortColumns(SORTCOLUMN*, uint, uint*);
-    HRESULT GetGroupSubsetCount(uint*);
+    HRESULT GetColumnPropertyList(const(GUID)* riid, void** ppv);
+    HRESULT GetGroupByProperty(PROPERTYKEY* pkey, BOOL* pfGroupAscending);
+    HRESULT GetViewMode(FOLDERLOGICALVIEWMODE* plvm);
+    HRESULT GetIconSize(uint* puIconSize);
+    HRESULT GetFolderFlags(FOLDERFLAGS* pfolderMask, FOLDERFLAGS* pfolderFlags);
+    HRESULT GetSortColumns(SORTCOLUMN* rgSortColumns, uint cColumnsIn, uint* pcColumnsOut);
+    HRESULT GetGroupSubsetCount(uint* pcVisibleRows);
 }
 enum IID_IInitializeNetworkFolder = GUID(0x6e0f9881, 0x42a8, 0x4f2a, [0x97, 0xf8, 0x8a, 0xf4, 0xe0, 0x26, 0xd9, 0x2d]);
 interface IInitializeNetworkFolder : IUnknown
 {
-    HRESULT Initialize(ITEMIDLIST*, ITEMIDLIST*, uint, const(wchar)*, const(wchar)*);
+    HRESULT Initialize(ITEMIDLIST* pidl, ITEMIDLIST* pidlTarget, uint uDisplayType, const(wchar)* pszResName, const(wchar)* pszProvider);
 }
 enum IID_INetworkFolderInternal = GUID(0xceb38218, 0xc971, 0x47bb, [0xa7, 0x3, 0xf0, 0xbc, 0x99, 0xcc, 0xdb, 0x81]);
 interface INetworkFolderInternal : IUnknown
 {
-    HRESULT GetResourceDisplayType(uint*);
-    HRESULT GetIDList(ITEMIDLIST**);
-    HRESULT GetProvider(uint, ITEMIDLIST**, uint, PWSTR);
+    HRESULT GetResourceDisplayType(uint* displayType);
+    HRESULT GetIDList(ITEMIDLIST** idList);
+    HRESULT GetProvider(uint itemIdCount, ITEMIDLIST** itemIds, uint providerMaxLength, PWSTR provider);
 }
 enum IID_IPreviewHandlerVisuals = GUID(0x196bf9a5, 0xb346, 0x4ef0, [0xaa, 0x1e, 0x5d, 0xcd, 0xb7, 0x67, 0x68, 0xb1]);
 interface IPreviewHandlerVisuals : IUnknown
 {
-    HRESULT SetBackgroundColor(COLORREF);
-    HRESULT SetFont(const(LOGFONTW)*);
-    HRESULT SetTextColor(COLORREF);
+    HRESULT SetBackgroundColor(COLORREF color);
+    HRESULT SetFont(const(LOGFONTW)* plf);
+    HRESULT SetTextColor(COLORREF color);
 }
 enum IID_ICommDlgBrowser = GUID(0x214f1, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ICommDlgBrowser : IUnknown
 {
-    HRESULT OnDefaultCommand(IShellView);
-    HRESULT OnStateChange(IShellView, uint);
-    HRESULT IncludeObject(IShellView, ITEMIDLIST*);
+    HRESULT OnDefaultCommand(IShellView ppshv);
+    HRESULT OnStateChange(IShellView ppshv, uint uChange);
+    HRESULT IncludeObject(IShellView ppshv, ITEMIDLIST* pidl);
 }
 enum IID_ICommDlgBrowser2 = GUID(0x10339516, 0x2894, 0x11d2, [0x90, 0x39, 0x0, 0xc0, 0x4f, 0x8e, 0xeb, 0x3e]);
 interface ICommDlgBrowser2 : ICommDlgBrowser
 {
-    HRESULT Notify(IShellView, uint);
-    HRESULT GetDefaultMenuText(IShellView, PWSTR, int);
-    HRESULT GetViewFlags(uint*);
+    HRESULT Notify(IShellView ppshv, uint dwNotifyType);
+    HRESULT GetDefaultMenuText(IShellView ppshv, PWSTR pszText, int cchMax);
+    HRESULT GetViewFlags(uint* pdwFlags);
 }
 alias CM_MASK = int;
 enum : int
@@ -3726,72 +3726,72 @@ struct CM_COLUMNINFO
 enum IID_IColumnManager = GUID(0xd8ec27bb, 0x3f3b, 0x4042, [0xb1, 0xa, 0x4a, 0xcf, 0xd9, 0x24, 0xd4, 0x53]);
 interface IColumnManager : IUnknown
 {
-    HRESULT SetColumnInfo(const(PROPERTYKEY)*, const(CM_COLUMNINFO)*);
-    HRESULT GetColumnInfo(const(PROPERTYKEY)*, CM_COLUMNINFO*);
-    HRESULT GetColumnCount(CM_ENUM_FLAGS, uint*);
-    HRESULT GetColumns(CM_ENUM_FLAGS, PROPERTYKEY*, uint);
-    HRESULT SetColumns(const(PROPERTYKEY)*, uint);
+    HRESULT SetColumnInfo(const(PROPERTYKEY)* propkey, const(CM_COLUMNINFO)* pcmci);
+    HRESULT GetColumnInfo(const(PROPERTYKEY)* propkey, CM_COLUMNINFO* pcmci);
+    HRESULT GetColumnCount(CM_ENUM_FLAGS dwFlags, uint* puCount);
+    HRESULT GetColumns(CM_ENUM_FLAGS dwFlags, PROPERTYKEY* rgkeyOrder, uint cColumns);
+    HRESULT SetColumns(const(PROPERTYKEY)* rgkeyOrder, uint cVisible);
 }
 enum IID_IFolderFilterSite = GUID(0xc0a651f5, 0xb48b, 0x11d2, [0xb5, 0xed, 0x0, 0x60, 0x97, 0xc6, 0x86, 0xf6]);
 interface IFolderFilterSite : IUnknown
 {
-    HRESULT SetFilter(IUnknown);
+    HRESULT SetFilter(IUnknown punk);
 }
 enum IID_IFolderFilter = GUID(0x9cc22886, 0xdc8e, 0x11d2, [0xb1, 0xd0, 0x0, 0xc0, 0x4f, 0x8e, 0xeb, 0x3e]);
 interface IFolderFilter : IUnknown
 {
-    HRESULT ShouldShow(IShellFolder, ITEMIDLIST*, ITEMIDLIST*);
-    HRESULT GetEnumFlags(IShellFolder, ITEMIDLIST*, HWND*, uint*);
+    HRESULT ShouldShow(IShellFolder psf, ITEMIDLIST* pidlFolder, ITEMIDLIST* pidlItem);
+    HRESULT GetEnumFlags(IShellFolder psf, ITEMIDLIST* pidlFolder, HWND* phwnd, uint* pgrfFlags);
 }
 enum IID_IInputObjectSite = GUID(0xf1db8392, 0x7331, 0x11d0, [0x8c, 0x99, 0x0, 0xa0, 0xc9, 0x2d, 0xbf, 0xe8]);
 interface IInputObjectSite : IUnknown
 {
-    HRESULT OnFocusChangeIS(IUnknown, BOOL);
+    HRESULT OnFocusChangeIS(IUnknown punkObj, BOOL fSetFocus);
 }
 enum IID_IInputObject = GUID(0x68284faa, 0x6a48, 0x11d0, [0x8c, 0x78, 0x0, 0xc0, 0x4f, 0xd9, 0x18, 0xb4]);
 interface IInputObject : IUnknown
 {
-    HRESULT UIActivateIO(BOOL, MSG*);
+    HRESULT UIActivateIO(BOOL fActivate, MSG* pMsg);
     HRESULT HasFocusIO();
-    HRESULT TranslateAcceleratorIO(MSG*);
+    HRESULT TranslateAcceleratorIO(MSG* pMsg);
 }
 enum IID_IInputObject2 = GUID(0x6915c085, 0x510b, 0x44cd, [0x94, 0xaf, 0x28, 0xdf, 0xa5, 0x6c, 0xf9, 0x2b]);
 interface IInputObject2 : IInputObject
 {
-    HRESULT TranslateAcceleratorGlobal(MSG*);
+    HRESULT TranslateAcceleratorGlobal(MSG* pMsg);
 }
 enum IID_IShellIcon = GUID(0x214e5, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IShellIcon : IUnknown
 {
-    HRESULT GetIconOf(ITEMIDLIST*, uint, int*);
+    HRESULT GetIconOf(ITEMIDLIST* pidl, uint flags, int* pIconIndex);
 }
 enum IID_IShellBrowser = GUID(0x214e2, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IShellBrowser : IOleWindow
 {
-    HRESULT InsertMenusSB(HMENU, OLEMENUGROUPWIDTHS*);
-    HRESULT SetMenuSB(HMENU, long, HWND);
-    HRESULT RemoveMenusSB(HMENU);
-    HRESULT SetStatusTextSB(const(wchar)*);
-    HRESULT EnableModelessSB(BOOL);
-    HRESULT TranslateAcceleratorSB(MSG*, ushort);
-    HRESULT BrowseObject(ITEMIDLIST*, uint);
-    HRESULT GetViewStateStream(uint, IStream*);
-    HRESULT GetControlWindow(uint, HWND*);
-    HRESULT SendControlMsg(uint, uint, WPARAM, LPARAM, LRESULT*);
-    HRESULT QueryActiveShellView(IShellView*);
-    HRESULT OnViewWindowActive(IShellView);
-    HRESULT SetToolbarItems(TBBUTTON*, uint, uint);
+    HRESULT InsertMenusSB(HMENU hmenuShared, OLEMENUGROUPWIDTHS* lpMenuWidths);
+    HRESULT SetMenuSB(HMENU hmenuShared, long holemenuRes, HWND hwndActiveObject);
+    HRESULT RemoveMenusSB(HMENU hmenuShared);
+    HRESULT SetStatusTextSB(const(wchar)* pszStatusText);
+    HRESULT EnableModelessSB(BOOL fEnable);
+    HRESULT TranslateAcceleratorSB(MSG* pmsg, ushort wID);
+    HRESULT BrowseObject(ITEMIDLIST* pidl, uint wFlags);
+    HRESULT GetViewStateStream(uint grfMode, IStream* ppStrm);
+    HRESULT GetControlWindow(uint id, HWND* phwnd);
+    HRESULT SendControlMsg(uint id, uint uMsg, WPARAM wParam, LPARAM lParam, LRESULT* pret);
+    HRESULT QueryActiveShellView(IShellView* ppshv);
+    HRESULT OnViewWindowActive(IShellView pshv);
+    HRESULT SetToolbarItems(TBBUTTON* lpButtons, uint nButtons, uint uFlags);
 }
 enum IID_IProfferService = GUID(0xcb728b20, 0xf786, 0x11ce, [0x92, 0xad, 0x0, 0xaa, 0x0, 0xa7, 0x4c, 0xd0]);
 interface IProfferService : IUnknown
 {
-    HRESULT ProfferService(const(GUID)*, IServiceProvider, uint*);
-    HRESULT RevokeService(uint);
+    HRESULT ProfferService(const(GUID)* serviceId, IServiceProvider serviceProvider, uint* cookie);
+    HRESULT RevokeService(uint cookie);
 }
 enum IID_IGetServiceIds = GUID(0x4a073526, 0x6103, 0x4e21, [0xb7, 0xbc, 0xf5, 0x19, 0xd1, 0x52, 0x4e, 0x5d]);
 interface IGetServiceIds : IUnknown
 {
-    HRESULT GetServiceIds(uint*, GUID**);
+    HRESULT GetServiceIds(uint* serviceIdCount, GUID** serviceIds);
 }
 alias SIGDN = int;
 enum : int
@@ -3820,11 +3820,11 @@ enum : int
 enum IID_IShellItem = GUID(0x43826d1e, 0xe718, 0x42ee, [0xbc, 0x55, 0xa1, 0xe2, 0x61, 0xc3, 0x7b, 0xfe]);
 interface IShellItem : IUnknown
 {
-    HRESULT BindToHandler(IBindCtx, const(GUID)*, const(GUID)*, void**);
-    HRESULT GetParent(IShellItem*);
-    HRESULT GetDisplayName(SIGDN, PWSTR*);
-    HRESULT GetAttributes(SFGAO_FLAGS, SFGAO_FLAGS*);
-    HRESULT Compare(IShellItem, uint, int*);
+    HRESULT BindToHandler(IBindCtx pbc, const(GUID)* bhid, const(GUID)* riid, void** ppv);
+    HRESULT GetParent(IShellItem* ppsi);
+    HRESULT GetDisplayName(SIGDN sigdnName, PWSTR* ppszName);
+    HRESULT GetAttributes(SFGAO_FLAGS sfgaoMask, SFGAO_FLAGS* psfgaoAttribs);
+    HRESULT Compare(IShellItem psi, uint hint, int* piOrder);
 }
 alias DATAOBJ_GET_ITEM_FLAGS = int;
 enum : int
@@ -3839,19 +3839,19 @@ enum : int
 enum IID_IShellItem2 = GUID(0x7e9fb0d3, 0x919f, 0x4307, [0xab, 0x2e, 0x9b, 0x18, 0x60, 0x31, 0xc, 0x93]);
 interface IShellItem2 : IShellItem
 {
-    HRESULT GetPropertyStore(GETPROPERTYSTOREFLAGS, const(GUID)*, void**);
-    HRESULT GetPropertyStoreWithCreateObject(GETPROPERTYSTOREFLAGS, IUnknown, const(GUID)*, void**);
-    HRESULT GetPropertyStoreForKeys(const(PROPERTYKEY)*, uint, GETPROPERTYSTOREFLAGS, const(GUID)*, void**);
-    HRESULT GetPropertyDescriptionList(const(PROPERTYKEY)*, const(GUID)*, void**);
-    HRESULT Update(IBindCtx);
-    HRESULT GetProperty(const(PROPERTYKEY)*, PROPVARIANT*);
-    HRESULT GetCLSID(const(PROPERTYKEY)*, GUID*);
-    HRESULT GetFileTime(const(PROPERTYKEY)*, FILETIME*);
-    HRESULT GetInt32(const(PROPERTYKEY)*, int*);
-    HRESULT GetString(const(PROPERTYKEY)*, PWSTR*);
-    HRESULT GetUInt32(const(PROPERTYKEY)*, uint*);
-    HRESULT GetUInt64(const(PROPERTYKEY)*, ulong*);
-    HRESULT GetBool(const(PROPERTYKEY)*, BOOL*);
+    HRESULT GetPropertyStore(GETPROPERTYSTOREFLAGS flags, const(GUID)* riid, void** ppv);
+    HRESULT GetPropertyStoreWithCreateObject(GETPROPERTYSTOREFLAGS flags, IUnknown punkCreateObject, const(GUID)* riid, void** ppv);
+    HRESULT GetPropertyStoreForKeys(const(PROPERTYKEY)* rgKeys, uint cKeys, GETPROPERTYSTOREFLAGS flags, const(GUID)* riid, void** ppv);
+    HRESULT GetPropertyDescriptionList(const(PROPERTYKEY)* keyType, const(GUID)* riid, void** ppv);
+    HRESULT Update(IBindCtx pbc);
+    HRESULT GetProperty(const(PROPERTYKEY)* key, PROPVARIANT* ppropvar);
+    HRESULT GetCLSID(const(PROPERTYKEY)* key, GUID* pclsid);
+    HRESULT GetFileTime(const(PROPERTYKEY)* key, FILETIME* pft);
+    HRESULT GetInt32(const(PROPERTYKEY)* key, int* pi);
+    HRESULT GetString(const(PROPERTYKEY)* key, PWSTR* ppsz);
+    HRESULT GetUInt32(const(PROPERTYKEY)* key, uint* pui);
+    HRESULT GetUInt64(const(PROPERTYKEY)* key, ulong* pull);
+    HRESULT GetBool(const(PROPERTYKEY)* key, BOOL* pf);
 }
 alias SIIGBF = int;
 enum : int
@@ -3871,15 +3871,15 @@ enum : int
 enum IID_IShellItemImageFactory = GUID(0xbcc18b79, 0xba16, 0x442f, [0x80, 0xc4, 0x8a, 0x59, 0xc3, 0xc, 0x46, 0x3b]);
 interface IShellItemImageFactory : IUnknown
 {
-    HRESULT GetImage(SIZE, SIIGBF, HBITMAP*);
+    HRESULT GetImage(SIZE size, SIIGBF flags, HBITMAP* phbm);
 }
 enum IID_IEnumShellItems = GUID(0x70629033, 0xe363, 0x4a28, [0xa5, 0x67, 0xd, 0xb7, 0x80, 0x6, 0xe6, 0xd7]);
 interface IEnumShellItems : IUnknown
 {
-    HRESULT Next(uint, IShellItem*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IShellItem* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumShellItems*);
+    HRESULT Clone(IEnumShellItems* ppenum);
 }
 alias STGOP = int;
 enum : int
@@ -3924,30 +3924,30 @@ enum : int
 enum IID_ITransferAdviseSink = GUID(0xd594d0d8, 0x8da7, 0x457b, [0xb3, 0xb4, 0xce, 0x5d, 0xba, 0xac, 0xb, 0x88]);
 interface ITransferAdviseSink : IUnknown
 {
-    HRESULT UpdateProgress(ulong, ulong, int, int, int, int);
-    HRESULT UpdateTransferState(uint);
-    HRESULT ConfirmOverwrite(IShellItem, IShellItem, const(wchar)*);
-    HRESULT ConfirmEncryptionLoss(IShellItem);
-    HRESULT FileFailure(IShellItem, const(wchar)*, HRESULT, PWSTR, uint);
-    HRESULT SubStreamFailure(IShellItem, const(wchar)*, HRESULT);
-    HRESULT PropertyFailure(IShellItem, const(PROPERTYKEY)*, HRESULT);
+    HRESULT UpdateProgress(ulong ullSizeCurrent, ulong ullSizeTotal, int nFilesCurrent, int nFilesTotal, int nFoldersCurrent, int nFoldersTotal);
+    HRESULT UpdateTransferState(uint ts);
+    HRESULT ConfirmOverwrite(IShellItem psiSource, IShellItem psiDestParent, const(wchar)* pszName);
+    HRESULT ConfirmEncryptionLoss(IShellItem psiSource);
+    HRESULT FileFailure(IShellItem psi, const(wchar)* pszItem, HRESULT hrError, PWSTR pszRename, uint cchRename);
+    HRESULT SubStreamFailure(IShellItem psi, const(wchar)* pszStreamName, HRESULT hrError);
+    HRESULT PropertyFailure(IShellItem psi, const(PROPERTYKEY)* pkey, HRESULT hrError);
 }
 enum IID_ITransferSource = GUID(0xadb003, 0xbde9, 0x45c6, [0x8e, 0x29, 0xd0, 0x9f, 0x93, 0x53, 0xe1, 0x8]);
 interface ITransferSource : IUnknown
 {
-    HRESULT Advise(ITransferAdviseSink, uint*);
-    HRESULT Unadvise(uint);
-    HRESULT SetProperties(IPropertyChangeArray);
-    HRESULT OpenItem(IShellItem, uint, const(GUID)*, void**);
-    HRESULT MoveItem(IShellItem, IShellItem, const(wchar)*, uint, IShellItem*);
-    HRESULT RecycleItem(IShellItem, IShellItem, uint, IShellItem*);
-    HRESULT RemoveItem(IShellItem, uint);
-    HRESULT RenameItem(IShellItem, const(wchar)*, uint, IShellItem*);
-    HRESULT LinkItem(IShellItem, IShellItem, const(wchar)*, uint, IShellItem*);
-    HRESULT ApplyPropertiesToItem(IShellItem, IShellItem*);
-    HRESULT GetDefaultDestinationName(IShellItem, IShellItem, PWSTR*);
-    HRESULT EnterFolder(IShellItem);
-    HRESULT LeaveFolder(IShellItem);
+    HRESULT Advise(ITransferAdviseSink psink, uint* pdwCookie);
+    HRESULT Unadvise(uint dwCookie);
+    HRESULT SetProperties(IPropertyChangeArray pproparray);
+    HRESULT OpenItem(IShellItem psi, uint flags, const(GUID)* riid, void** ppv);
+    HRESULT MoveItem(IShellItem psi, IShellItem psiParentDst, const(wchar)* pszNameDst, uint flags, IShellItem* ppsiNew);
+    HRESULT RecycleItem(IShellItem psiSource, IShellItem psiParentDest, uint flags, IShellItem* ppsiNewDest);
+    HRESULT RemoveItem(IShellItem psiSource, uint flags);
+    HRESULT RenameItem(IShellItem psiSource, const(wchar)* pszNewName, uint flags, IShellItem* ppsiNewDest);
+    HRESULT LinkItem(IShellItem psiSource, IShellItem psiParentDest, const(wchar)* pszNewName, uint flags, IShellItem* ppsiNewDest);
+    HRESULT ApplyPropertiesToItem(IShellItem psiSource, IShellItem* ppsiNew);
+    HRESULT GetDefaultDestinationName(IShellItem psiSource, IShellItem psiParentDest, PWSTR* ppszDestinationName);
+    HRESULT EnterFolder(IShellItem psiChildFolderDest);
+    HRESULT LeaveFolder(IShellItem psiChildFolderDest);
 }
 struct SHELL_ITEM_RESOURCE
 {
@@ -3957,48 +3957,48 @@ struct SHELL_ITEM_RESOURCE
 enum IID_IEnumResources = GUID(0x2dd81fe3, 0xa83c, 0x4da9, [0xa3, 0x30, 0x47, 0x24, 0x9d, 0x34, 0x5b, 0xa1]);
 interface IEnumResources : IUnknown
 {
-    HRESULT Next(uint, SHELL_ITEM_RESOURCE*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, SHELL_ITEM_RESOURCE* psir, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumResources*);
+    HRESULT Clone(IEnumResources* ppenumr);
 }
 enum IID_IShellItemResources = GUID(0xff5693be, 0x2ce0, 0x4d48, [0xb5, 0xc5, 0x40, 0x81, 0x7d, 0x1a, 0xcd, 0xb9]);
 interface IShellItemResources : IUnknown
 {
-    HRESULT GetAttributes(uint*);
-    HRESULT GetSize(ulong*);
-    HRESULT GetTimes(FILETIME*, FILETIME*, FILETIME*);
-    HRESULT SetTimes(const(FILETIME)*, const(FILETIME)*, const(FILETIME)*);
-    HRESULT GetResourceDescription(const(SHELL_ITEM_RESOURCE)*, PWSTR*);
-    HRESULT EnumResources(IEnumResources*);
-    HRESULT SupportsResource(const(SHELL_ITEM_RESOURCE)*);
-    HRESULT OpenResource(const(SHELL_ITEM_RESOURCE)*, const(GUID)*, void**);
-    HRESULT CreateResource(const(SHELL_ITEM_RESOURCE)*, const(GUID)*, void**);
+    HRESULT GetAttributes(uint* pdwAttributes);
+    HRESULT GetSize(ulong* pullSize);
+    HRESULT GetTimes(FILETIME* pftCreation, FILETIME* pftWrite, FILETIME* pftAccess);
+    HRESULT SetTimes(const(FILETIME)* pftCreation, const(FILETIME)* pftWrite, const(FILETIME)* pftAccess);
+    HRESULT GetResourceDescription(const(SHELL_ITEM_RESOURCE)* pcsir, PWSTR* ppszDescription);
+    HRESULT EnumResources(IEnumResources* ppenumr);
+    HRESULT SupportsResource(const(SHELL_ITEM_RESOURCE)* pcsir);
+    HRESULT OpenResource(const(SHELL_ITEM_RESOURCE)* pcsir, const(GUID)* riid, void** ppv);
+    HRESULT CreateResource(const(SHELL_ITEM_RESOURCE)* pcsir, const(GUID)* riid, void** ppv);
     HRESULT MarkForDelete();
 }
 enum IID_ITransferDestination = GUID(0x48addd32, 0x3ca5, 0x4124, [0xab, 0xe3, 0xb5, 0xa7, 0x25, 0x31, 0xb2, 0x7]);
 interface ITransferDestination : IUnknown
 {
-    HRESULT Advise(ITransferAdviseSink, uint*);
-    HRESULT Unadvise(uint);
-    HRESULT CreateItem(const(wchar)*, uint, ulong, uint, const(GUID)*, void**, const(GUID)*, void**);
+    HRESULT Advise(ITransferAdviseSink psink, uint* pdwCookie);
+    HRESULT Unadvise(uint dwCookie);
+    HRESULT CreateItem(const(wchar)* pszName, uint dwAttributes, ulong ullSize, uint flags, const(GUID)* riidItem, void** ppvItem, const(GUID)* riidResources, void** ppvResources);
 }
 enum IID_IFileOperationProgressSink = GUID(0x4b0f1a7, 0x9490, 0x44bc, [0x96, 0xe1, 0x42, 0x96, 0xa3, 0x12, 0x52, 0xe2]);
 interface IFileOperationProgressSink : IUnknown
 {
     HRESULT StartOperations();
-    HRESULT FinishOperations(HRESULT);
-    HRESULT PreRenameItem(uint, IShellItem, const(wchar)*);
-    HRESULT PostRenameItem(uint, IShellItem, const(wchar)*, HRESULT, IShellItem);
-    HRESULT PreMoveItem(uint, IShellItem, IShellItem, const(wchar)*);
-    HRESULT PostMoveItem(uint, IShellItem, IShellItem, const(wchar)*, HRESULT, IShellItem);
-    HRESULT PreCopyItem(uint, IShellItem, IShellItem, const(wchar)*);
-    HRESULT PostCopyItem(uint, IShellItem, IShellItem, const(wchar)*, HRESULT, IShellItem);
-    HRESULT PreDeleteItem(uint, IShellItem);
-    HRESULT PostDeleteItem(uint, IShellItem, HRESULT, IShellItem);
-    HRESULT PreNewItem(uint, IShellItem, const(wchar)*);
-    HRESULT PostNewItem(uint, IShellItem, const(wchar)*, const(wchar)*, uint, HRESULT, IShellItem);
-    HRESULT UpdateProgress(uint, uint);
+    HRESULT FinishOperations(HRESULT hrResult);
+    HRESULT PreRenameItem(uint dwFlags, IShellItem psiItem, const(wchar)* pszNewName);
+    HRESULT PostRenameItem(uint dwFlags, IShellItem psiItem, const(wchar)* pszNewName, HRESULT hrRename, IShellItem psiNewlyCreated);
+    HRESULT PreMoveItem(uint dwFlags, IShellItem psiItem, IShellItem psiDestinationFolder, const(wchar)* pszNewName);
+    HRESULT PostMoveItem(uint dwFlags, IShellItem psiItem, IShellItem psiDestinationFolder, const(wchar)* pszNewName, HRESULT hrMove, IShellItem psiNewlyCreated);
+    HRESULT PreCopyItem(uint dwFlags, IShellItem psiItem, IShellItem psiDestinationFolder, const(wchar)* pszNewName);
+    HRESULT PostCopyItem(uint dwFlags, IShellItem psiItem, IShellItem psiDestinationFolder, const(wchar)* pszNewName, HRESULT hrCopy, IShellItem psiNewlyCreated);
+    HRESULT PreDeleteItem(uint dwFlags, IShellItem psiItem);
+    HRESULT PostDeleteItem(uint dwFlags, IShellItem psiItem, HRESULT hrDelete, IShellItem psiNewlyCreated);
+    HRESULT PreNewItem(uint dwFlags, IShellItem psiDestinationFolder, const(wchar)* pszNewName);
+    HRESULT PostNewItem(uint dwFlags, IShellItem psiDestinationFolder, const(wchar)* pszNewName, const(wchar)* pszTemplateName, uint dwFileAttributes, HRESULT hrNew, IShellItem psiNewItem);
+    HRESULT UpdateProgress(uint iWorkTotal, uint iWorkSoFar);
     HRESULT ResetTimer();
     HRESULT PauseTimer();
     HRESULT ResumeTimer();
@@ -4016,24 +4016,24 @@ enum : int
 enum IID_IShellItemArray = GUID(0xb63ea76d, 0x1f85, 0x456f, [0xa1, 0x9c, 0x48, 0x15, 0x9e, 0xfa, 0x85, 0x8b]);
 interface IShellItemArray : IUnknown
 {
-    HRESULT BindToHandler(IBindCtx, const(GUID)*, const(GUID)*, void**);
-    HRESULT GetPropertyStore(GETPROPERTYSTOREFLAGS, const(GUID)*, void**);
-    HRESULT GetPropertyDescriptionList(const(PROPERTYKEY)*, const(GUID)*, void**);
-    HRESULT GetAttributes(SIATTRIBFLAGS, SFGAO_FLAGS, SFGAO_FLAGS*);
-    HRESULT GetCount(uint*);
-    HRESULT GetItemAt(uint, IShellItem*);
-    HRESULT EnumItems(IEnumShellItems*);
+    HRESULT BindToHandler(IBindCtx pbc, const(GUID)* bhid, const(GUID)* riid, void** ppvOut);
+    HRESULT GetPropertyStore(GETPROPERTYSTOREFLAGS flags, const(GUID)* riid, void** ppv);
+    HRESULT GetPropertyDescriptionList(const(PROPERTYKEY)* keyType, const(GUID)* riid, void** ppv);
+    HRESULT GetAttributes(SIATTRIBFLAGS AttribFlags, SFGAO_FLAGS sfgaoMask, SFGAO_FLAGS* psfgaoAttribs);
+    HRESULT GetCount(uint* pdwNumItems);
+    HRESULT GetItemAt(uint dwIndex, IShellItem* ppsi);
+    HRESULT EnumItems(IEnumShellItems* ppenumShellItems);
 }
 enum IID_IInitializeWithItem = GUID(0x7f73be3f, 0xfb79, 0x493c, [0xa6, 0xc7, 0x7e, 0xe1, 0x4e, 0x24, 0x58, 0x41]);
 interface IInitializeWithItem : IUnknown
 {
-    HRESULT Initialize(IShellItem, uint);
+    HRESULT Initialize(IShellItem psi, uint grfMode);
 }
 enum IID_IObjectWithSelection = GUID(0x1c9cd5bb, 0x98e9, 0x4491, [0xa6, 0xf, 0x31, 0xaa, 0xcc, 0x72, 0xb8, 0x3c]);
 interface IObjectWithSelection : IUnknown
 {
-    HRESULT SetSelection(IShellItemArray);
-    HRESULT GetSelection(const(GUID)*, void**);
+    HRESULT SetSelection(IShellItemArray psia);
+    HRESULT GetSelection(const(GUID)* riid, void** ppv);
 }
 enum IID_IObjectWithBackReferences = GUID(0x321a6a6a, 0xd61f, 0x4bf3, [0x97, 0xae, 0x14, 0xbe, 0x29, 0x86, 0xbb, 0x36]);
 interface IObjectWithBackReferences : IUnknown
@@ -4043,12 +4043,12 @@ interface IObjectWithBackReferences : IUnknown
 enum IID_ICategoryProvider = GUID(0x9af64809, 0x5864, 0x4c26, [0xa7, 0x20, 0xc1, 0xf7, 0x8c, 0x8, 0x6e, 0xe3]);
 interface ICategoryProvider : IUnknown
 {
-    HRESULT CanCategorizeOnSCID(const(PROPERTYKEY)*);
-    HRESULT GetDefaultCategory(GUID*, PROPERTYKEY*);
-    HRESULT GetCategoryForSCID(const(PROPERTYKEY)*, GUID*);
-    HRESULT EnumCategories(IEnumGUID*);
-    HRESULT GetCategoryName(const(GUID)*, PWSTR, uint);
-    HRESULT CreateCategory(const(GUID)*, const(GUID)*, void**);
+    HRESULT CanCategorizeOnSCID(const(PROPERTYKEY)* pscid);
+    HRESULT GetDefaultCategory(GUID* pguid, PROPERTYKEY* pscid);
+    HRESULT GetCategoryForSCID(const(PROPERTYKEY)* pscid, GUID* pguid);
+    HRESULT EnumCategories(IEnumGUID* penum);
+    HRESULT GetCategoryName(const(GUID)* pguid, PWSTR pszName, uint cch);
+    HRESULT CreateCategory(const(GUID)* pguid, const(GUID)* riid, void** ppv);
 }
 alias CATEGORYINFO_FLAGS = int;
 enum : int
@@ -4080,10 +4080,10 @@ struct CATEGORY_INFO
 enum IID_ICategorizer = GUID(0xa3b14589, 0x9174, 0x49a8, [0x89, 0xa3, 0x6, 0xa1, 0xae, 0x2b, 0x9b, 0xa7]);
 interface ICategorizer : IUnknown
 {
-    HRESULT GetDescription(PWSTR, uint);
-    HRESULT GetCategory(uint, ITEMIDLIST**, uint*);
-    HRESULT GetCategoryInfo(uint, CATEGORY_INFO*);
-    HRESULT CompareCategory(CATSORT_FLAGS, uint, uint);
+    HRESULT GetDescription(PWSTR pszDesc, uint cch);
+    HRESULT GetCategory(uint cidl, ITEMIDLIST** apidl, uint* rgCategoryIds);
+    HRESULT GetCategoryInfo(uint dwCategoryId, CATEGORY_INFO* pci);
+    HRESULT CompareCategory(CATSORT_FLAGS csfFlags, uint dwCategoryId1, uint dwCategoryId2);
 }
 struct SHDRAGIMAGE
 {
@@ -4095,17 +4095,17 @@ struct SHDRAGIMAGE
 enum IID_IDropTargetHelper = GUID(0x4657278b, 0x411b, 0x11d2, [0x83, 0x9a, 0x0, 0xc0, 0x4f, 0xd9, 0x18, 0xd0]);
 interface IDropTargetHelper : IUnknown
 {
-    HRESULT DragEnter(HWND, IDataObject, POINT*, DROPEFFECT);
+    HRESULT DragEnter(HWND hwndTarget, IDataObject pDataObject, POINT* ppt, DROPEFFECT dwEffect);
     HRESULT DragLeave();
-    HRESULT DragOver(POINT*, DROPEFFECT);
-    HRESULT Drop(IDataObject, POINT*, DROPEFFECT);
-    HRESULT Show(BOOL);
+    HRESULT DragOver(POINT* ppt, DROPEFFECT dwEffect);
+    HRESULT Drop(IDataObject pDataObject, POINT* ppt, DROPEFFECT dwEffect);
+    HRESULT Show(BOOL fShow);
 }
 enum IID_IDragSourceHelper = GUID(0xde5bf786, 0x477a, 0x11d2, [0x83, 0x9d, 0x0, 0xc0, 0x4f, 0xd9, 0x18, 0xd0]);
 interface IDragSourceHelper : IUnknown
 {
-    HRESULT InitializeFromBitmap(SHDRAGIMAGE*, IDataObject);
-    HRESULT InitializeFromWindow(HWND, POINT*, IDataObject);
+    HRESULT InitializeFromBitmap(SHDRAGIMAGE* pshdi, IDataObject pDataObject);
+    HRESULT InitializeFromWindow(HWND hwnd, POINT* ppt, IDataObject pDataObject);
 }
 alias SLR_FLAGS = int;
 enum : int
@@ -4139,60 +4139,60 @@ enum : int
 enum IID_IShellLinkA = GUID(0x214ee, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IShellLinkA : IUnknown
 {
-    HRESULT GetPath(PSTR, int, WIN32_FIND_DATAA*, uint);
-    HRESULT GetIDList(ITEMIDLIST**);
-    HRESULT SetIDList(ITEMIDLIST*);
-    HRESULT GetDescription(PSTR, int);
-    HRESULT SetDescription(const(char)*);
-    HRESULT GetWorkingDirectory(PSTR, int);
-    HRESULT SetWorkingDirectory(const(char)*);
-    HRESULT GetArguments(PSTR, int);
-    HRESULT SetArguments(const(char)*);
-    HRESULT GetHotkey(ushort*);
-    HRESULT SetHotkey(ushort);
-    HRESULT GetShowCmd(SHOW_WINDOW_CMD*);
-    HRESULT SetShowCmd(SHOW_WINDOW_CMD);
-    HRESULT GetIconLocation(PSTR, int, int*);
-    HRESULT SetIconLocation(const(char)*, int);
-    HRESULT SetRelativePath(const(char)*, uint);
-    HRESULT Resolve(HWND, uint);
-    HRESULT SetPath(const(char)*);
+    HRESULT GetPath(PSTR pszFile, int cch, WIN32_FIND_DATAA* pfd, uint fFlags);
+    HRESULT GetIDList(ITEMIDLIST** ppidl);
+    HRESULT SetIDList(ITEMIDLIST* pidl);
+    HRESULT GetDescription(PSTR pszName, int cch);
+    HRESULT SetDescription(const(char)* pszName);
+    HRESULT GetWorkingDirectory(PSTR pszDir, int cch);
+    HRESULT SetWorkingDirectory(const(char)* pszDir);
+    HRESULT GetArguments(PSTR pszArgs, int cch);
+    HRESULT SetArguments(const(char)* pszArgs);
+    HRESULT GetHotkey(ushort* pwHotkey);
+    HRESULT SetHotkey(ushort wHotkey);
+    HRESULT GetShowCmd(SHOW_WINDOW_CMD* piShowCmd);
+    HRESULT SetShowCmd(SHOW_WINDOW_CMD iShowCmd);
+    HRESULT GetIconLocation(PSTR pszIconPath, int cch, int* piIcon);
+    HRESULT SetIconLocation(const(char)* pszIconPath, int iIcon);
+    HRESULT SetRelativePath(const(char)* pszPathRel, uint dwReserved);
+    HRESULT Resolve(HWND hwnd, uint fFlags);
+    HRESULT SetPath(const(char)* pszFile);
 }
 enum IID_IShellLinkW = GUID(0x214f9, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IShellLinkW : IUnknown
 {
-    HRESULT GetPath(PWSTR, int, WIN32_FIND_DATAW*, uint);
-    HRESULT GetIDList(ITEMIDLIST**);
-    HRESULT SetIDList(ITEMIDLIST*);
-    HRESULT GetDescription(PWSTR, int);
-    HRESULT SetDescription(const(wchar)*);
-    HRESULT GetWorkingDirectory(PWSTR, int);
-    HRESULT SetWorkingDirectory(const(wchar)*);
-    HRESULT GetArguments(PWSTR, int);
-    HRESULT SetArguments(const(wchar)*);
-    HRESULT GetHotkey(ushort*);
-    HRESULT SetHotkey(ushort);
-    HRESULT GetShowCmd(SHOW_WINDOW_CMD*);
-    HRESULT SetShowCmd(SHOW_WINDOW_CMD);
-    HRESULT GetIconLocation(PWSTR, int, int*);
-    HRESULT SetIconLocation(const(wchar)*, int);
-    HRESULT SetRelativePath(const(wchar)*, uint);
-    HRESULT Resolve(HWND, uint);
-    HRESULT SetPath(const(wchar)*);
+    HRESULT GetPath(PWSTR pszFile, int cch, WIN32_FIND_DATAW* pfd, uint fFlags);
+    HRESULT GetIDList(ITEMIDLIST** ppidl);
+    HRESULT SetIDList(ITEMIDLIST* pidl);
+    HRESULT GetDescription(PWSTR pszName, int cch);
+    HRESULT SetDescription(const(wchar)* pszName);
+    HRESULT GetWorkingDirectory(PWSTR pszDir, int cch);
+    HRESULT SetWorkingDirectory(const(wchar)* pszDir);
+    HRESULT GetArguments(PWSTR pszArgs, int cch);
+    HRESULT SetArguments(const(wchar)* pszArgs);
+    HRESULT GetHotkey(ushort* pwHotkey);
+    HRESULT SetHotkey(ushort wHotkey);
+    HRESULT GetShowCmd(SHOW_WINDOW_CMD* piShowCmd);
+    HRESULT SetShowCmd(SHOW_WINDOW_CMD iShowCmd);
+    HRESULT GetIconLocation(PWSTR pszIconPath, int cch, int* piIcon);
+    HRESULT SetIconLocation(const(wchar)* pszIconPath, int iIcon);
+    HRESULT SetRelativePath(const(wchar)* pszPathRel, uint dwReserved);
+    HRESULT Resolve(HWND hwnd, uint fFlags);
+    HRESULT SetPath(const(wchar)* pszFile);
 }
 enum IID_IShellLinkDataList = GUID(0x45e2b4ae, 0xb1c3, 0x11d0, [0xb9, 0x2f, 0x0, 0xa0, 0xc9, 0x3, 0x12, 0xe1]);
 interface IShellLinkDataList : IUnknown
 {
-    HRESULT AddDataBlock(void*);
-    HRESULT CopyDataBlock(uint, void**);
-    HRESULT RemoveDataBlock(uint);
-    HRESULT GetFlags(uint*);
-    HRESULT SetFlags(uint);
+    HRESULT AddDataBlock(void* pDataBlock);
+    HRESULT CopyDataBlock(uint dwSig, void** ppDataBlock);
+    HRESULT RemoveDataBlock(uint dwSig);
+    HRESULT GetFlags(uint* pdwFlags);
+    HRESULT SetFlags(uint dwFlags);
 }
 enum IID_IResolveShellLink = GUID(0x5cd52983, 0x9449, 0x11d2, [0x96, 0x3a, 0x0, 0xc0, 0x4f, 0x79, 0xad, 0xf0]);
 interface IResolveShellLink : IUnknown
 {
-    HRESULT ResolveShellLink(IUnknown, HWND, uint);
+    HRESULT ResolveShellLink(IUnknown punkLink, HWND hwnd, uint fFlags);
 }
 alias _SPINITF = int;
 enum : int
@@ -4205,7 +4205,7 @@ enum : int
 enum IID_IActionProgressDialog = GUID(0x49ff1172, 0xeadc, 0x446d, [0x92, 0x85, 0x15, 0x64, 0x53, 0xa6, 0x43, 0x1c]);
 interface IActionProgressDialog : IUnknown
 {
-    HRESULT Initialize(uint, const(wchar)*, const(wchar)*);
+    HRESULT Initialize(uint flags, const(wchar)* pszTitle, const(wchar)* pszCancel);
     HRESULT Stop();
 }
 alias _SPBEGINF = int;
@@ -4247,17 +4247,17 @@ enum : int
 enum IID_IActionProgress = GUID(0x49ff1173, 0xeadc, 0x446d, [0x92, 0x85, 0x15, 0x64, 0x53, 0xa6, 0x43, 0x1c]);
 interface IActionProgress : IUnknown
 {
-    HRESULT Begin(SPACTION, uint);
-    HRESULT UpdateProgress(ulong, ulong);
-    HRESULT UpdateText(SPTEXT, const(wchar)*, BOOL);
-    HRESULT QueryCancel(BOOL*);
+    HRESULT Begin(SPACTION action, uint flags);
+    HRESULT UpdateProgress(ulong ulCompleted, ulong ulTotal);
+    HRESULT UpdateText(SPTEXT sptext, const(wchar)* pszText, BOOL fMayCompact);
+    HRESULT QueryCancel(BOOL* pfCancelled);
     HRESULT ResetCancel();
     HRESULT End();
 }
 enum IID_IShellExtInit = GUID(0x214e8, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IShellExtInit : IUnknown
 {
-    HRESULT Initialize(ITEMIDLIST*, IDataObject, HKEY);
+    HRESULT Initialize(ITEMIDLIST* pidlFolder, IDataObject pdtobj, HKEY hkeyProgID);
 }
 alias _EXPPS = int;
 enum : int
@@ -4268,13 +4268,13 @@ enum : int
 enum IID_IShellPropSheetExt = GUID(0x214e9, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IShellPropSheetExt : IUnknown
 {
-    HRESULT AddPages(LPFNSVADDPROPSHEETPAGE, LPARAM);
-    HRESULT ReplacePage(uint, LPFNSVADDPROPSHEETPAGE, LPARAM);
+    HRESULT AddPages(LPFNSVADDPROPSHEETPAGE pfnAddPage, LPARAM lParam);
+    HRESULT ReplacePage(uint uPageID, LPFNSVADDPROPSHEETPAGE pfnReplaceWith, LPARAM lParam);
 }
 enum IID_IRemoteComputer = GUID(0x214fe, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IRemoteComputer : IUnknown
 {
-    HRESULT Initialize(const(wchar)*, BOOL);
+    HRESULT Initialize(const(wchar)* pszMachine, BOOL bEnumerating);
 }
 enum IID_IQueryContinue = GUID(0x7307055c, 0xb24a, 0x486b, [0x9f, 0x25, 0x16, 0x3e, 0x59, 0x7a, 0x28, 0xa9]);
 interface IQueryContinue : IUnknown
@@ -4284,67 +4284,67 @@ interface IQueryContinue : IUnknown
 enum IID_IObjectWithCancelEvent = GUID(0xf279b885, 0xae9, 0x4b85, [0xac, 0x6, 0xdd, 0xec, 0xf9, 0x40, 0x89, 0x41]);
 interface IObjectWithCancelEvent : IUnknown
 {
-    HRESULT GetCancelEvent(HANDLE*);
+    HRESULT GetCancelEvent(HANDLE* phEvent);
 }
 enum IID_IUserNotification = GUID(0xba9711ba, 0x5893, 0x4787, [0xa7, 0xe1, 0x41, 0x27, 0x71, 0x51, 0x55, 0xb]);
 interface IUserNotification : IUnknown
 {
-    HRESULT SetBalloonInfo(const(wchar)*, const(wchar)*, uint);
-    HRESULT SetBalloonRetry(uint, uint, uint);
-    HRESULT SetIconInfo(HICON, const(wchar)*);
-    HRESULT Show(IQueryContinue, uint);
-    HRESULT PlaySound(const(wchar)*);
+    HRESULT SetBalloonInfo(const(wchar)* pszTitle, const(wchar)* pszText, uint dwInfoFlags);
+    HRESULT SetBalloonRetry(uint dwShowTime, uint dwInterval, uint cRetryCount);
+    HRESULT SetIconInfo(HICON hIcon, const(wchar)* pszToolTip);
+    HRESULT Show(IQueryContinue pqc, uint dwContinuePollInterval);
+    HRESULT PlaySound(const(wchar)* pszSoundName);
 }
 enum IID_IItemNameLimits = GUID(0x1df0d7f1, 0xb267, 0x4d28, [0x8b, 0x10, 0x12, 0xe2, 0x32, 0x2, 0xa5, 0xc4]);
 interface IItemNameLimits : IUnknown
 {
-    HRESULT GetValidCharacters(PWSTR*, PWSTR*);
-    HRESULT GetMaxLength(const(wchar)*, int*);
+    HRESULT GetValidCharacters(PWSTR* ppwszValidChars, PWSTR* ppwszInvalidChars);
+    HRESULT GetMaxLength(const(wchar)* pszName, int* piMaxNameLen);
 }
 enum IID_ISearchFolderItemFactory = GUID(0xa0ffbc28, 0x5482, 0x4366, [0xbe, 0x27, 0x3e, 0x81, 0xe7, 0x8e, 0x6, 0xc2]);
 interface ISearchFolderItemFactory : IUnknown
 {
-    HRESULT SetDisplayName(const(wchar)*);
-    HRESULT SetFolderTypeID(GUID);
-    HRESULT SetFolderLogicalViewMode(FOLDERLOGICALVIEWMODE);
-    HRESULT SetIconSize(int);
-    HRESULT SetVisibleColumns(uint, const(PROPERTYKEY)*);
-    HRESULT SetSortColumns(uint, SORTCOLUMN*);
-    HRESULT SetGroupColumn(const(PROPERTYKEY)*);
-    HRESULT SetStacks(uint, PROPERTYKEY*);
-    HRESULT SetScope(IShellItemArray);
-    HRESULT SetCondition(ICondition);
-    HRESULT GetShellItem(const(GUID)*, void**);
-    HRESULT GetIDList(ITEMIDLIST**);
+    HRESULT SetDisplayName(const(wchar)* pszDisplayName);
+    HRESULT SetFolderTypeID(GUID ftid);
+    HRESULT SetFolderLogicalViewMode(FOLDERLOGICALVIEWMODE flvm);
+    HRESULT SetIconSize(int iIconSize);
+    HRESULT SetVisibleColumns(uint cVisibleColumns, const(PROPERTYKEY)* rgKey);
+    HRESULT SetSortColumns(uint cSortColumns, SORTCOLUMN* rgSortColumns);
+    HRESULT SetGroupColumn(const(PROPERTYKEY)* keyGroup);
+    HRESULT SetStacks(uint cStackKeys, PROPERTYKEY* rgStackKeys);
+    HRESULT SetScope(IShellItemArray psiaScope);
+    HRESULT SetCondition(ICondition pCondition);
+    HRESULT GetShellItem(const(GUID)* riid, void** ppv);
+    HRESULT GetIDList(ITEMIDLIST** ppidl);
 }
 enum IID_IExtractImage = GUID(0xbb2e617c, 0x920, 0x11d1, [0x9a, 0xb, 0x0, 0xc0, 0x4f, 0xc2, 0xd6, 0xc1]);
 interface IExtractImage : IUnknown
 {
-    HRESULT GetLocation(PWSTR, uint, uint*, const(SIZE)*, uint, uint*);
-    HRESULT Extract(HBITMAP*);
+    HRESULT GetLocation(PWSTR pszPathBuffer, uint cch, uint* pdwPriority, const(SIZE)* prgSize, uint dwRecClrDepth, uint* pdwFlags);
+    HRESULT Extract(HBITMAP* phBmpThumbnail);
 }
 enum IID_IExtractImage2 = GUID(0x953bb1ee, 0x93b4, 0x11d1, [0x98, 0xa3, 0x0, 0xc0, 0x4f, 0xb6, 0x87, 0xda]);
 interface IExtractImage2 : IExtractImage
 {
-    HRESULT GetDateStamp(FILETIME*);
+    HRESULT GetDateStamp(FILETIME* pDateStamp);
 }
 enum IID_IThumbnailHandlerFactory = GUID(0xe35b4b2e, 0xda, 0x4bc1, [0x9f, 0x13, 0x38, 0xbc, 0x11, 0xf5, 0xd4, 0x17]);
 interface IThumbnailHandlerFactory : IUnknown
 {
-    HRESULT GetThumbnailHandler(ITEMIDLIST*, IBindCtx, const(GUID)*, void**);
+    HRESULT GetThumbnailHandler(ITEMIDLIST* pidlChild, IBindCtx pbc, const(GUID)* riid, void** ppv);
 }
 enum IID_IParentAndItem = GUID(0xb3a4b685, 0xb685, 0x4805, [0x99, 0xd9, 0x5d, 0xea, 0xd2, 0x87, 0x32, 0x36]);
 interface IParentAndItem : IUnknown
 {
-    HRESULT SetParentAndItem(ITEMIDLIST*, IShellFolder, ITEMIDLIST*);
-    HRESULT GetParentAndItem(ITEMIDLIST**, IShellFolder*, ITEMIDLIST**);
+    HRESULT SetParentAndItem(ITEMIDLIST* pidlParent, IShellFolder psf, ITEMIDLIST* pidlChild);
+    HRESULT GetParentAndItem(ITEMIDLIST** ppidlParent, IShellFolder* ppsf, ITEMIDLIST** ppidlChild);
 }
 enum IID_IDockingWindow = GUID(0x12dd920, 0x7b26, 0x11d0, [0x8c, 0xa9, 0x0, 0xa0, 0xc9, 0x2d, 0xbf, 0xe8]);
 interface IDockingWindow : IOleWindow
 {
-    HRESULT ShowDW(BOOL);
-    HRESULT CloseDW(uint);
-    HRESULT ResizeBorderDW(RECT*, IUnknown, BOOL);
+    HRESULT ShowDW(BOOL fShow);
+    HRESULT CloseDW(uint dwReserved);
+    HRESULT ResizeBorderDW(RECT* prcBorder, IUnknown punkToolbarSite, BOOL fReserved);
 }
 struct DESKBANDINFO
 {
@@ -4373,26 +4373,26 @@ enum : int
 enum IID_IDeskBand = GUID(0xeb0fe172, 0x1a3a, 0x11d0, [0x89, 0xb3, 0x0, 0xa0, 0xc9, 0xa, 0x90, 0xac]);
 interface IDeskBand : IDockingWindow
 {
-    HRESULT GetBandInfo(uint, uint, DESKBANDINFO*);
+    HRESULT GetBandInfo(uint dwBandID, uint dwViewMode, DESKBANDINFO* pdbi);
 }
 enum IID_IDeskBandInfo = GUID(0x77e425fc, 0xcbf9, 0x4307, [0xba, 0x6a, 0xbb, 0x57, 0x27, 0x74, 0x56, 0x61]);
 interface IDeskBandInfo : IUnknown
 {
-    HRESULT GetDefaultBandWidth(uint, uint, int*);
+    HRESULT GetDefaultBandWidth(uint dwBandID, uint dwViewMode, int* pnWidth);
 }
 enum IID_ITaskbarList = GUID(0x56fdf342, 0xfd6d, 0x11d0, [0x95, 0x8a, 0x0, 0x60, 0x97, 0xc9, 0xa0, 0x90]);
 interface ITaskbarList : IUnknown
 {
     HRESULT HrInit();
-    HRESULT AddTab(HWND);
-    HRESULT DeleteTab(HWND);
-    HRESULT ActivateTab(HWND);
-    HRESULT SetActiveAlt(HWND);
+    HRESULT AddTab(HWND hwnd);
+    HRESULT DeleteTab(HWND hwnd);
+    HRESULT ActivateTab(HWND hwnd);
+    HRESULT SetActiveAlt(HWND hwnd);
 }
 enum IID_ITaskbarList2 = GUID(0x602d4995, 0xb13a, 0x429b, [0xa6, 0x6e, 0x19, 0x35, 0xe4, 0x4f, 0x43, 0x17]);
 interface ITaskbarList2 : ITaskbarList
 {
-    HRESULT MarkFullscreenWindow(HWND, BOOL);
+    HRESULT MarkFullscreenWindow(HWND hwnd, BOOL fFullscreen);
 }
 alias THUMBBUTTONFLAGS = int;
 enum : int
@@ -4436,18 +4436,18 @@ enum : int
 enum IID_ITaskbarList3 = GUID(0xea1afb91, 0x9e28, 0x4b86, [0x90, 0xe9, 0x9e, 0x9f, 0x8a, 0x5e, 0xef, 0xaf]);
 interface ITaskbarList3 : ITaskbarList2
 {
-    HRESULT SetProgressValue(HWND, ulong, ulong);
-    HRESULT SetProgressState(HWND, TBPFLAG);
-    HRESULT RegisterTab(HWND, HWND);
-    HRESULT UnregisterTab(HWND);
-    HRESULT SetTabOrder(HWND, HWND);
-    HRESULT SetTabActive(HWND, HWND, uint);
-    HRESULT ThumbBarAddButtons(HWND, uint, THUMBBUTTON*);
-    HRESULT ThumbBarUpdateButtons(HWND, uint, THUMBBUTTON*);
-    HRESULT ThumbBarSetImageList(HWND, HIMAGELIST);
-    HRESULT SetOverlayIcon(HWND, HICON, const(wchar)*);
-    HRESULT SetThumbnailTooltip(HWND, const(wchar)*);
-    HRESULT SetThumbnailClip(HWND, RECT*);
+    HRESULT SetProgressValue(HWND hwnd, ulong ullCompleted, ulong ullTotal);
+    HRESULT SetProgressState(HWND hwnd, TBPFLAG tbpFlags);
+    HRESULT RegisterTab(HWND hwndTab, HWND hwndMDI);
+    HRESULT UnregisterTab(HWND hwndTab);
+    HRESULT SetTabOrder(HWND hwndTab, HWND hwndInsertBefore);
+    HRESULT SetTabActive(HWND hwndTab, HWND hwndMDI, uint dwReserved);
+    HRESULT ThumbBarAddButtons(HWND hwnd, uint cButtons, THUMBBUTTON* pButton);
+    HRESULT ThumbBarUpdateButtons(HWND hwnd, uint cButtons, THUMBBUTTON* pButton);
+    HRESULT ThumbBarSetImageList(HWND hwnd, HIMAGELIST himl);
+    HRESULT SetOverlayIcon(HWND hwnd, HICON hIcon, const(wchar)* pszDescription);
+    HRESULT SetThumbnailTooltip(HWND hwnd, const(wchar)* pszTip);
+    HRESULT SetThumbnailClip(HWND hwnd, RECT* prcClip);
 }
 alias STPFLAG = int;
 enum : int
@@ -4462,15 +4462,15 @@ enum : int
 enum IID_ITaskbarList4 = GUID(0xc43dc798, 0x95d1, 0x4bea, [0x90, 0x30, 0xbb, 0x99, 0xe2, 0x98, 0x3a, 0x1a]);
 interface ITaskbarList4 : ITaskbarList3
 {
-    HRESULT SetTabProperties(HWND, STPFLAG);
+    HRESULT SetTabProperties(HWND hwndTab, STPFLAG stpFlags);
 }
 enum IID_IExplorerBrowserEvents = GUID(0x361bbdc7, 0xe6ee, 0x4e13, [0xbe, 0x58, 0x58, 0xe2, 0x24, 0xc, 0x81, 0xf]);
 interface IExplorerBrowserEvents : IUnknown
 {
-    HRESULT OnNavigationPending(ITEMIDLIST*);
-    HRESULT OnViewCreated(IShellView);
-    HRESULT OnNavigationComplete(ITEMIDLIST*);
-    HRESULT OnNavigationFailed(ITEMIDLIST*);
+    HRESULT OnNavigationPending(ITEMIDLIST* pidlFolder);
+    HRESULT OnViewCreated(IShellView psv);
+    HRESULT OnNavigationComplete(ITEMIDLIST* pidlFolder);
+    HRESULT OnNavigationFailed(ITEMIDLIST* pidlFolder);
 }
 alias EXPLORER_BROWSER_OPTIONS = int;
 enum : int
@@ -4497,29 +4497,29 @@ enum : int
 enum IID_IExplorerBrowser = GUID(0xdfd3b6b5, 0xc10c, 0x4be9, [0x85, 0xf6, 0xa6, 0x69, 0x69, 0xf4, 0x2, 0xf6]);
 interface IExplorerBrowser : IUnknown
 {
-    HRESULT Initialize(HWND, const(RECT)*, const(FOLDERSETTINGS)*);
+    HRESULT Initialize(HWND hwndParent, const(RECT)* prc, const(FOLDERSETTINGS)* pfs);
     HRESULT Destroy();
-    HRESULT SetRect(HDWP*, RECT);
-    HRESULT SetPropertyBag(const(wchar)*);
-    HRESULT SetEmptyText(const(wchar)*);
-    HRESULT SetFolderSettings(const(FOLDERSETTINGS)*);
-    HRESULT Advise(IExplorerBrowserEvents, uint*);
-    HRESULT Unadvise(uint);
-    HRESULT SetOptions(EXPLORER_BROWSER_OPTIONS);
-    HRESULT GetOptions(EXPLORER_BROWSER_OPTIONS*);
-    HRESULT BrowseToIDList(ITEMIDLIST*, uint);
-    HRESULT BrowseToObject(IUnknown, uint);
-    HRESULT FillFromObject(IUnknown, EXPLORER_BROWSER_FILL_FLAGS);
+    HRESULT SetRect(HDWP* phdwp, RECT rcBrowser);
+    HRESULT SetPropertyBag(const(wchar)* pszPropertyBag);
+    HRESULT SetEmptyText(const(wchar)* pszEmptyText);
+    HRESULT SetFolderSettings(const(FOLDERSETTINGS)* pfs);
+    HRESULT Advise(IExplorerBrowserEvents psbe, uint* pdwCookie);
+    HRESULT Unadvise(uint dwCookie);
+    HRESULT SetOptions(EXPLORER_BROWSER_OPTIONS dwFlag);
+    HRESULT GetOptions(EXPLORER_BROWSER_OPTIONS* pdwFlag);
+    HRESULT BrowseToIDList(ITEMIDLIST* pidl, uint uFlags);
+    HRESULT BrowseToObject(IUnknown punk, uint uFlags);
+    HRESULT FillFromObject(IUnknown punk, EXPLORER_BROWSER_FILL_FLAGS dwFlags);
     HRESULT RemoveAll();
-    HRESULT GetCurrentView(const(GUID)*, void**);
+    HRESULT GetCurrentView(const(GUID)* riid, void** ppv);
 }
 enum IID_IEnumObjects = GUID(0x2c1c7e2e, 0x2d0e, 0x4059, [0x83, 0x1e, 0x1e, 0x6f, 0x82, 0x33, 0x5c, 0x2e]);
 interface IEnumObjects : IUnknown
 {
-    HRESULT Next(uint, const(GUID)*, void**, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, const(GUID)* riid, void** rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumObjects*);
+    HRESULT Clone(IEnumObjects* ppenum);
 }
 alias _OPPROGDLGF = int;
 enum : int
@@ -4547,47 +4547,47 @@ enum : int
 enum IID_IOperationsProgressDialog = GUID(0xc9fb851, 0xe5c9, 0x43eb, [0xa3, 0x70, 0xf0, 0x67, 0x7b, 0x13, 0x87, 0x4c]);
 interface IOperationsProgressDialog : IUnknown
 {
-    HRESULT StartProgressDialog(HWND, uint);
+    HRESULT StartProgressDialog(HWND hwndOwner, uint flags);
     HRESULT StopProgressDialog();
-    HRESULT SetOperation(SPACTION);
-    HRESULT SetMode(uint);
-    HRESULT UpdateProgress(ulong, ulong, ulong, ulong, ulong, ulong);
-    HRESULT UpdateLocations(IShellItem, IShellItem, IShellItem);
+    HRESULT SetOperation(SPACTION action);
+    HRESULT SetMode(uint mode);
+    HRESULT UpdateProgress(ulong ullPointsCurrent, ulong ullPointsTotal, ulong ullSizeCurrent, ulong ullSizeTotal, ulong ullItemsCurrent, ulong ullItemsTotal);
+    HRESULT UpdateLocations(IShellItem psiSource, IShellItem psiTarget, IShellItem psiItem);
     HRESULT ResetTimer();
     HRESULT PauseTimer();
     HRESULT ResumeTimer();
-    HRESULT GetMilliseconds(ulong*, ulong*);
-    HRESULT GetOperationStatus(PDOPSTATUS*);
+    HRESULT GetMilliseconds(ulong* pullElapsed, ulong* pullRemaining);
+    HRESULT GetOperationStatus(PDOPSTATUS* popstatus);
 }
 enum IID_IIOCancelInformation = GUID(0xf5b0bf81, 0x8cb5, 0x4b1b, [0x94, 0x49, 0x1a, 0x15, 0x9e, 0xc, 0x73, 0x3c]);
 interface IIOCancelInformation : IUnknown
 {
-    HRESULT SetCancelInformation(uint, uint);
-    HRESULT GetCancelInformation(uint*, uint*);
+    HRESULT SetCancelInformation(uint dwThreadID, uint uMsgCancel);
+    HRESULT GetCancelInformation(uint* pdwThreadID, uint* puMsgCancel);
 }
 enum IID_IFileOperation = GUID(0x947aab5f, 0xa5c, 0x4c13, [0xb4, 0xd6, 0x4b, 0xf7, 0x83, 0x6f, 0xc9, 0xf8]);
 interface IFileOperation : IUnknown
 {
-    HRESULT Advise(IFileOperationProgressSink, uint*);
-    HRESULT Unadvise(uint);
-    HRESULT SetOperationFlags(FILEOPERATION_FLAGS);
-    HRESULT SetProgressMessage(const(wchar)*);
-    HRESULT SetProgressDialog(IOperationsProgressDialog);
-    HRESULT SetProperties(IPropertyChangeArray);
-    HRESULT SetOwnerWindow(HWND);
-    HRESULT ApplyPropertiesToItem(IShellItem);
-    HRESULT ApplyPropertiesToItems(IUnknown);
-    HRESULT RenameItem(IShellItem, const(wchar)*, IFileOperationProgressSink);
-    HRESULT RenameItems(IUnknown, const(wchar)*);
-    HRESULT MoveItem(IShellItem, IShellItem, const(wchar)*, IFileOperationProgressSink);
-    HRESULT MoveItems(IUnknown, IShellItem);
-    HRESULT CopyItem(IShellItem, IShellItem, const(wchar)*, IFileOperationProgressSink);
-    HRESULT CopyItems(IUnknown, IShellItem);
-    HRESULT DeleteItem(IShellItem, IFileOperationProgressSink);
-    HRESULT DeleteItems(IUnknown);
-    HRESULT NewItem(IShellItem, uint, const(wchar)*, const(wchar)*, IFileOperationProgressSink);
+    HRESULT Advise(IFileOperationProgressSink pfops, uint* pdwCookie);
+    HRESULT Unadvise(uint dwCookie);
+    HRESULT SetOperationFlags(FILEOPERATION_FLAGS dwOperationFlags);
+    HRESULT SetProgressMessage(const(wchar)* pszMessage);
+    HRESULT SetProgressDialog(IOperationsProgressDialog popd);
+    HRESULT SetProperties(IPropertyChangeArray pproparray);
+    HRESULT SetOwnerWindow(HWND hwndOwner);
+    HRESULT ApplyPropertiesToItem(IShellItem psiItem);
+    HRESULT ApplyPropertiesToItems(IUnknown punkItems);
+    HRESULT RenameItem(IShellItem psiItem, const(wchar)* pszNewName, IFileOperationProgressSink pfopsItem);
+    HRESULT RenameItems(IUnknown pUnkItems, const(wchar)* pszNewName);
+    HRESULT MoveItem(IShellItem psiItem, IShellItem psiDestinationFolder, const(wchar)* pszNewName, IFileOperationProgressSink pfopsItem);
+    HRESULT MoveItems(IUnknown punkItems, IShellItem psiDestinationFolder);
+    HRESULT CopyItem(IShellItem psiItem, IShellItem psiDestinationFolder, const(wchar)* pszCopyName, IFileOperationProgressSink pfopsItem);
+    HRESULT CopyItems(IUnknown punkItems, IShellItem psiDestinationFolder);
+    HRESULT DeleteItem(IShellItem psiItem, IFileOperationProgressSink pfopsItem);
+    HRESULT DeleteItems(IUnknown punkItems);
+    HRESULT NewItem(IShellItem psiDestinationFolder, uint dwFileAttributes, const(wchar)* pszName, const(wchar)* pszTemplateName, IFileOperationProgressSink pfopsItem);
     HRESULT PerformOperations();
-    HRESULT GetAnyOperationsAborted(BOOL*);
+    HRESULT GetAnyOperationsAborted(BOOL* pfAnyOperationsAborted);
 }
 alias FILE_OPERATION_FLAGS2 = int;
 enum : int
@@ -4599,25 +4599,25 @@ enum : int
 enum IID_IFileOperation2 = GUID(0xcd8f23c1, 0x8f61, 0x4916, [0x90, 0x9d, 0x55, 0xbd, 0xd0, 0x91, 0x87, 0x53]);
 interface IFileOperation2 : IFileOperation
 {
-    HRESULT SetOperationFlags2(FILE_OPERATION_FLAGS2);
+    HRESULT SetOperationFlags2(FILE_OPERATION_FLAGS2 operationFlags2);
 }
 enum IID_IObjectProvider = GUID(0xa6087428, 0x3be3, 0x4d73, [0xb3, 0x8, 0x7c, 0x4, 0xa5, 0x40, 0xbf, 0x1a]);
 interface IObjectProvider : IUnknown
 {
-    HRESULT QueryObject(const(GUID)*, const(GUID)*, void**);
+    HRESULT QueryObject(const(GUID)* guidObject, const(GUID)* riid, void** ppvOut);
 }
 enum IID_INamespaceWalkCB = GUID(0xd92995f8, 0xcf5e, 0x4a76, [0xbf, 0x59, 0xea, 0xd3, 0x9e, 0xa2, 0xb9, 0x7e]);
 interface INamespaceWalkCB : IUnknown
 {
-    HRESULT FoundItem(IShellFolder, ITEMIDLIST*);
-    HRESULT EnterFolder(IShellFolder, ITEMIDLIST*);
-    HRESULT LeaveFolder(IShellFolder, ITEMIDLIST*);
-    HRESULT InitializeProgressDialog(PWSTR*, PWSTR*);
+    HRESULT FoundItem(IShellFolder psf, ITEMIDLIST* pidl);
+    HRESULT EnterFolder(IShellFolder psf, ITEMIDLIST* pidl);
+    HRESULT LeaveFolder(IShellFolder psf, ITEMIDLIST* pidl);
+    HRESULT InitializeProgressDialog(PWSTR* ppszTitle, PWSTR* ppszCancel);
 }
 enum IID_INamespaceWalkCB2 = GUID(0x7ac7492b, 0xc38e, 0x438a, [0x87, 0xdb, 0x68, 0x73, 0x78, 0x44, 0xff, 0x70]);
 interface INamespaceWalkCB2 : INamespaceWalkCB
 {
-    HRESULT WalkComplete(HRESULT);
+    HRESULT WalkComplete(HRESULT hr);
 }
 alias NAMESPACEWALKFLAG = int;
 enum : int
@@ -4644,8 +4644,8 @@ enum : int
 enum IID_INamespaceWalk = GUID(0x57ced8a7, 0x3f4a, 0x432c, [0x93, 0x50, 0x30, 0xf2, 0x44, 0x83, 0xf7, 0x4f]);
 interface INamespaceWalk : IUnknown
 {
-    HRESULT Walk(IUnknown, uint, int, INamespaceWalkCB);
-    HRESULT GetIDArrayResult(uint*, ITEMIDLIST***);
+    HRESULT Walk(IUnknown punkToWalk, uint dwFlags, int cDepth, INamespaceWalkCB pnswcb);
+    HRESULT GetIDArrayResult(uint* pcItems, ITEMIDLIST*** prgpidl);
 }
 struct BANDSITEINFO
 {
@@ -4663,24 +4663,24 @@ enum : int
 enum IID_IBandSite = GUID(0x4cf504b0, 0xde96, 0x11d0, [0x8b, 0x3f, 0x0, 0xa0, 0xc9, 0x11, 0xe8, 0xe5]);
 interface IBandSite : IUnknown
 {
-    HRESULT AddBand(IUnknown);
-    HRESULT EnumBands(uint, uint*);
-    HRESULT QueryBand(uint, IDeskBand*, uint*, PWSTR, int);
-    HRESULT SetBandState(uint, uint, uint);
-    HRESULT RemoveBand(uint);
-    HRESULT GetBandObject(uint, const(GUID)*, void**);
-    HRESULT SetBandSiteInfo(const(BANDSITEINFO)*);
-    HRESULT GetBandSiteInfo(BANDSITEINFO*);
+    HRESULT AddBand(IUnknown punk);
+    HRESULT EnumBands(uint uBand, uint* pdwBandID);
+    HRESULT QueryBand(uint dwBandID, IDeskBand* ppstb, uint* pdwState, PWSTR pszName, int cchName);
+    HRESULT SetBandState(uint dwBandID, uint dwMask, uint dwState);
+    HRESULT RemoveBand(uint dwBandID);
+    HRESULT GetBandObject(uint dwBandID, const(GUID)* riid, void** ppv);
+    HRESULT SetBandSiteInfo(const(BANDSITEINFO)* pbsinfo);
+    HRESULT GetBandSiteInfo(BANDSITEINFO* pbsinfo);
 }
 enum IID_IModalWindow = GUID(0xb4db1657, 0x70d7, 0x485e, [0x8e, 0x3e, 0x6f, 0xcb, 0x5a, 0x5c, 0x18, 0x2]);
 interface IModalWindow : IUnknown
 {
-    HRESULT Show(HWND);
+    HRESULT Show(HWND hwndOwner);
 }
 enum IID_IContextMenuSite = GUID(0x811aebe, 0xb87, 0x4c54, [0x9e, 0x72, 0x54, 0x8c, 0xf6, 0x49, 0x1, 0x6b]);
 interface IContextMenuSite : IUnknown
 {
-    HRESULT DoContextMenuPopup(IUnknown, uint, POINT);
+    HRESULT DoContextMenuPopup(IUnknown punkContextMenu, uint fFlags, POINT pt);
 }
 alias MENUBANDHANDLERCID = int;
 enum : int
@@ -4691,21 +4691,21 @@ enum : int
 enum IID_IMenuBand = GUID(0x568804cd, 0xcbd7, 0x11d0, [0x98, 0x16, 0x0, 0xc0, 0x4f, 0xd9, 0x19, 0x72]);
 interface IMenuBand : IUnknown
 {
-    HRESULT IsMenuMessage(MSG*);
-    HRESULT TranslateMenuMessage(MSG*, LRESULT*);
+    HRESULT IsMenuMessage(MSG* pmsg);
+    HRESULT TranslateMenuMessage(MSG* pmsg, LRESULT* plRet);
 }
 enum IID_IRegTreeItem = GUID(0xa9521922, 0x812, 0x4d44, [0x9e, 0xc3, 0x7f, 0xd3, 0x8c, 0x72, 0x6f, 0x3d]);
 interface IRegTreeItem : IUnknown
 {
-    HRESULT GetCheckState(BOOL*);
-    HRESULT SetCheckState(BOOL);
+    HRESULT GetCheckState(BOOL* pbCheck);
+    HRESULT SetCheckState(BOOL bCheck);
 }
 enum IID_IDeskBar = GUID(0xeb0fe173, 0x1a3a, 0x11d0, [0x89, 0xb3, 0x0, 0xa0, 0xc9, 0xa, 0x90, 0xac]);
 interface IDeskBar : IOleWindow
 {
-    HRESULT SetClient(IUnknown);
-    HRESULT GetClient(IUnknown*);
-    HRESULT OnPosRectChangeDB(RECT*);
+    HRESULT SetClient(IUnknown punkClient);
+    HRESULT GetClient(IUnknown* ppunkClient);
+    HRESULT OnPosRectChangeDB(RECT* prc);
 }
 alias MENUPOPUPSELECT = int;
 enum : int
@@ -4740,9 +4740,9 @@ enum : int
 enum IID_IMenuPopup = GUID(0xd1e7afeb, 0x6a2e, 0x11d0, [0x8c, 0x78, 0x0, 0xc0, 0x4f, 0xd9, 0x18, 0xb4]);
 interface IMenuPopup : IDeskBar
 {
-    HRESULT Popup(POINTL*, RECTL*, int);
-    HRESULT OnSelect(uint);
-    HRESULT SetSubMenu(IMenuPopup, BOOL);
+    HRESULT Popup(POINTL* ppt, RECTL* prcExclude, int dwFlags);
+    HRESULT OnSelect(uint dwSelectType);
+    HRESULT SetSubMenu(IMenuPopup pmp, BOOL fSet);
 }
 alias FILE_USAGE_TYPE = int;
 enum : int
@@ -4755,10 +4755,10 @@ enum : int
 enum IID_IFileIsInUse = GUID(0x64a1cbf0, 0x3a1a, 0x4461, [0x91, 0x58, 0x37, 0x69, 0x69, 0x69, 0x39, 0x50]);
 interface IFileIsInUse : IUnknown
 {
-    HRESULT GetAppName(PWSTR*);
-    HRESULT GetUsage(FILE_USAGE_TYPE*);
-    HRESULT GetCapabilities(uint*);
-    HRESULT GetSwitchToHWND(HWND*);
+    HRESULT GetAppName(PWSTR* ppszName);
+    HRESULT GetUsage(FILE_USAGE_TYPE* pfut);
+    HRESULT GetCapabilities(uint* pdwCapFlags);
+    HRESULT GetSwitchToHWND(HWND* phwnd);
     HRESULT CloseFile();
 }
 alias FDE_OVERWRITE_RESPONSE = int;
@@ -4787,13 +4787,13 @@ enum : int
 enum IID_IFileDialogEvents = GUID(0x973510db, 0x7d7f, 0x452b, [0x89, 0x75, 0x74, 0xa8, 0x58, 0x28, 0xd3, 0x54]);
 interface IFileDialogEvents : IUnknown
 {
-    HRESULT OnFileOk(IFileDialog);
-    HRESULT OnFolderChanging(IFileDialog, IShellItem);
-    HRESULT OnFolderChange(IFileDialog);
-    HRESULT OnSelectionChange(IFileDialog);
-    HRESULT OnShareViolation(IFileDialog, IShellItem, FDE_SHAREVIOLATION_RESPONSE*);
-    HRESULT OnTypeChange(IFileDialog);
-    HRESULT OnOverwrite(IFileDialog, IShellItem, FDE_OVERWRITE_RESPONSE*);
+    HRESULT OnFileOk(IFileDialog pfd);
+    HRESULT OnFolderChanging(IFileDialog pfd, IShellItem psiFolder);
+    HRESULT OnFolderChange(IFileDialog pfd);
+    HRESULT OnSelectionChange(IFileDialog pfd);
+    HRESULT OnShareViolation(IFileDialog pfd, IShellItem psi, FDE_SHAREVIOLATION_RESPONSE* pResponse);
+    HRESULT OnTypeChange(IFileDialog pfd);
+    HRESULT OnOverwrite(IFileDialog pfd, IShellItem psi, FDE_OVERWRITE_RESPONSE* pResponse);
 }
 alias FILEOPENDIALOGOPTIONS = uint;
 enum : uint
@@ -4826,44 +4826,44 @@ enum : uint
 enum IID_IFileDialog = GUID(0x42f85136, 0xdb7e, 0x439c, [0x85, 0xf1, 0xe4, 0x7, 0x5d, 0x13, 0x5f, 0xc8]);
 interface IFileDialog : IModalWindow
 {
-    HRESULT SetFileTypes(uint, const(COMDLG_FILTERSPEC)*);
-    HRESULT SetFileTypeIndex(uint);
-    HRESULT GetFileTypeIndex(uint*);
-    HRESULT Advise(IFileDialogEvents, uint*);
-    HRESULT Unadvise(uint);
-    HRESULT SetOptions(FILEOPENDIALOGOPTIONS);
-    HRESULT GetOptions(FILEOPENDIALOGOPTIONS*);
-    HRESULT SetDefaultFolder(IShellItem);
-    HRESULT SetFolder(IShellItem);
-    HRESULT GetFolder(IShellItem*);
-    HRESULT GetCurrentSelection(IShellItem*);
-    HRESULT SetFileName(const(wchar)*);
-    HRESULT GetFileName(PWSTR*);
-    HRESULT SetTitle(const(wchar)*);
-    HRESULT SetOkButtonLabel(const(wchar)*);
-    HRESULT SetFileNameLabel(const(wchar)*);
-    HRESULT GetResult(IShellItem*);
-    HRESULT AddPlace(IShellItem, FDAP);
-    HRESULT SetDefaultExtension(const(wchar)*);
-    HRESULT Close(HRESULT);
-    HRESULT SetClientGuid(const(GUID)*);
+    HRESULT SetFileTypes(uint cFileTypes, const(COMDLG_FILTERSPEC)* rgFilterSpec);
+    HRESULT SetFileTypeIndex(uint iFileType);
+    HRESULT GetFileTypeIndex(uint* piFileType);
+    HRESULT Advise(IFileDialogEvents pfde, uint* pdwCookie);
+    HRESULT Unadvise(uint dwCookie);
+    HRESULT SetOptions(FILEOPENDIALOGOPTIONS fos);
+    HRESULT GetOptions(FILEOPENDIALOGOPTIONS* pfos);
+    HRESULT SetDefaultFolder(IShellItem psi);
+    HRESULT SetFolder(IShellItem psi);
+    HRESULT GetFolder(IShellItem* ppsi);
+    HRESULT GetCurrentSelection(IShellItem* ppsi);
+    HRESULT SetFileName(const(wchar)* pszName);
+    HRESULT GetFileName(PWSTR* pszName);
+    HRESULT SetTitle(const(wchar)* pszTitle);
+    HRESULT SetOkButtonLabel(const(wchar)* pszText);
+    HRESULT SetFileNameLabel(const(wchar)* pszLabel);
+    HRESULT GetResult(IShellItem* ppsi);
+    HRESULT AddPlace(IShellItem psi, FDAP fdap);
+    HRESULT SetDefaultExtension(const(wchar)* pszDefaultExtension);
+    HRESULT Close(HRESULT hr);
+    HRESULT SetClientGuid(const(GUID)* guid);
     HRESULT ClearClientData();
-    HRESULT SetFilter(IShellItemFilter);
+    HRESULT SetFilter(IShellItemFilter pFilter);
 }
 enum IID_IFileSaveDialog = GUID(0x84bccd23, 0x5fde, 0x4cdb, [0xae, 0xa4, 0xaf, 0x64, 0xb8, 0x3d, 0x78, 0xab]);
 interface IFileSaveDialog : IFileDialog
 {
-    HRESULT SetSaveAsItem(IShellItem);
-    HRESULT SetProperties(IPropertyStore);
-    HRESULT SetCollectedProperties(IPropertyDescriptionList, BOOL);
-    HRESULT GetProperties(IPropertyStore*);
-    HRESULT ApplyProperties(IShellItem, IPropertyStore, HWND, IFileOperationProgressSink);
+    HRESULT SetSaveAsItem(IShellItem psi);
+    HRESULT SetProperties(IPropertyStore pStore);
+    HRESULT SetCollectedProperties(IPropertyDescriptionList pList, BOOL fAppendDefault);
+    HRESULT GetProperties(IPropertyStore* ppStore);
+    HRESULT ApplyProperties(IShellItem psi, IPropertyStore pStore, HWND hwnd, IFileOperationProgressSink pSink);
 }
 enum IID_IFileOpenDialog = GUID(0xd57c7288, 0xd4ad, 0x4768, [0xbe, 0x2, 0x9d, 0x96, 0x95, 0x32, 0xd9, 0x60]);
 interface IFileOpenDialog : IFileDialog
 {
-    HRESULT GetResults(IShellItemArray*);
-    HRESULT GetSelectedItems(IShellItemArray*);
+    HRESULT GetResults(IShellItemArray* ppenum);
+    HRESULT GetSelectedItems(IShellItemArray* ppsai);
 }
 alias CDCONTROLSTATEF = int;
 enum : int
@@ -4877,33 +4877,33 @@ enum : int
 enum IID_IFileDialogCustomize = GUID(0xe6fdd21a, 0x163f, 0x4975, [0x9c, 0x8c, 0xa6, 0x9f, 0x1b, 0xa3, 0x70, 0x34]);
 interface IFileDialogCustomize : IUnknown
 {
-    HRESULT EnableOpenDropDown(uint);
-    HRESULT AddMenu(uint, const(wchar)*);
-    HRESULT AddPushButton(uint, const(wchar)*);
-    HRESULT AddComboBox(uint);
-    HRESULT AddRadioButtonList(uint);
-    HRESULT AddCheckButton(uint, const(wchar)*, BOOL);
-    HRESULT AddEditBox(uint, const(wchar)*);
-    HRESULT AddSeparator(uint);
-    HRESULT AddText(uint, const(wchar)*);
-    HRESULT SetControlLabel(uint, const(wchar)*);
-    HRESULT GetControlState(uint, CDCONTROLSTATEF*);
-    HRESULT SetControlState(uint, CDCONTROLSTATEF);
-    HRESULT GetEditBoxText(uint, ushort**);
-    HRESULT SetEditBoxText(uint, const(wchar)*);
-    HRESULT GetCheckButtonState(uint, BOOL*);
-    HRESULT SetCheckButtonState(uint, BOOL);
-    HRESULT AddControlItem(uint, uint, const(wchar)*);
-    HRESULT RemoveControlItem(uint, uint);
-    HRESULT RemoveAllControlItems(uint);
-    HRESULT GetControlItemState(uint, uint, CDCONTROLSTATEF*);
-    HRESULT SetControlItemState(uint, uint, CDCONTROLSTATEF);
-    HRESULT GetSelectedControlItem(uint, uint*);
-    HRESULT SetSelectedControlItem(uint, uint);
-    HRESULT StartVisualGroup(uint, const(wchar)*);
+    HRESULT EnableOpenDropDown(uint dwIDCtl);
+    HRESULT AddMenu(uint dwIDCtl, const(wchar)* pszLabel);
+    HRESULT AddPushButton(uint dwIDCtl, const(wchar)* pszLabel);
+    HRESULT AddComboBox(uint dwIDCtl);
+    HRESULT AddRadioButtonList(uint dwIDCtl);
+    HRESULT AddCheckButton(uint dwIDCtl, const(wchar)* pszLabel, BOOL bChecked);
+    HRESULT AddEditBox(uint dwIDCtl, const(wchar)* pszText);
+    HRESULT AddSeparator(uint dwIDCtl);
+    HRESULT AddText(uint dwIDCtl, const(wchar)* pszText);
+    HRESULT SetControlLabel(uint dwIDCtl, const(wchar)* pszLabel);
+    HRESULT GetControlState(uint dwIDCtl, CDCONTROLSTATEF* pdwState);
+    HRESULT SetControlState(uint dwIDCtl, CDCONTROLSTATEF dwState);
+    HRESULT GetEditBoxText(uint dwIDCtl, ushort** ppszText);
+    HRESULT SetEditBoxText(uint dwIDCtl, const(wchar)* pszText);
+    HRESULT GetCheckButtonState(uint dwIDCtl, BOOL* pbChecked);
+    HRESULT SetCheckButtonState(uint dwIDCtl, BOOL bChecked);
+    HRESULT AddControlItem(uint dwIDCtl, uint dwIDItem, const(wchar)* pszLabel);
+    HRESULT RemoveControlItem(uint dwIDCtl, uint dwIDItem);
+    HRESULT RemoveAllControlItems(uint dwIDCtl);
+    HRESULT GetControlItemState(uint dwIDCtl, uint dwIDItem, CDCONTROLSTATEF* pdwState);
+    HRESULT SetControlItemState(uint dwIDCtl, uint dwIDItem, CDCONTROLSTATEF dwState);
+    HRESULT GetSelectedControlItem(uint dwIDCtl, uint* pdwIDItem);
+    HRESULT SetSelectedControlItem(uint dwIDCtl, uint dwIDItem);
+    HRESULT StartVisualGroup(uint dwIDCtl, const(wchar)* pszLabel);
     HRESULT EndVisualGroup();
-    HRESULT MakeProminent(uint);
-    HRESULT SetControlItemText(uint, uint, const(wchar)*);
+    HRESULT MakeProminent(uint dwIDCtl);
+    HRESULT SetControlItemText(uint dwIDCtl, uint dwIDItem, const(wchar)* pszLabel);
 }
 alias ASSOCIATIONLEVEL = int;
 enum : int
@@ -4925,11 +4925,11 @@ enum : int
 enum IID_IApplicationAssociationRegistration = GUID(0x4e530b0a, 0xe611, 0x4c77, [0xa3, 0xac, 0x90, 0x31, 0xd0, 0x22, 0x28, 0x1b]);
 interface IApplicationAssociationRegistration : IUnknown
 {
-    HRESULT QueryCurrentDefault(const(wchar)*, ASSOCIATIONTYPE, ASSOCIATIONLEVEL, PWSTR*);
-    HRESULT QueryAppIsDefault(const(wchar)*, ASSOCIATIONTYPE, ASSOCIATIONLEVEL, const(wchar)*, BOOL*);
-    HRESULT QueryAppIsDefaultAll(ASSOCIATIONLEVEL, const(wchar)*, BOOL*);
-    HRESULT SetAppAsDefault(const(wchar)*, const(wchar)*, ASSOCIATIONTYPE);
-    HRESULT SetAppAsDefaultAll(const(wchar)*);
+    HRESULT QueryCurrentDefault(const(wchar)* pszQuery, ASSOCIATIONTYPE atQueryType, ASSOCIATIONLEVEL alQueryLevel, PWSTR* ppszAssociation);
+    HRESULT QueryAppIsDefault(const(wchar)* pszQuery, ASSOCIATIONTYPE atQueryType, ASSOCIATIONLEVEL alQueryLevel, const(wchar)* pszAppRegistryName, BOOL* pfDefault);
+    HRESULT QueryAppIsDefaultAll(ASSOCIATIONLEVEL alQueryLevel, const(wchar)* pszAppRegistryName, BOOL* pfDefault);
+    HRESULT SetAppAsDefault(const(wchar)* pszAppRegistryName, const(wchar)* pszSet, ASSOCIATIONTYPE atSetType);
+    HRESULT SetAppAsDefaultAll(const(wchar)* pszAppRegistryName);
     HRESULT ClearUserAssociations();
 }
 struct DELEGATEITEMID
@@ -4943,7 +4943,7 @@ struct DELEGATEITEMID
 enum IID_IDelegateFolder = GUID(0xadd8ba80, 0x2b, 0x11d0, [0x8f, 0xf, 0x0, 0xc0, 0x4f, 0xd7, 0xd0, 0x62]);
 interface IDelegateFolder : IUnknown
 {
-    HRESULT SetItemAlloc(IMalloc);
+    HRESULT SetItemAlloc(IMalloc pmalloc);
 }
 alias _BROWSERFRAMEOPTIONS = int;
 enum : int
@@ -4973,7 +4973,7 @@ enum : int
 enum IID_IBrowserFrameOptions = GUID(0x10df43c8, 0x1dbe, 0x11d3, [0x8b, 0x34, 0x0, 0x60, 0x97, 0xdf, 0x5b, 0xd4]);
 interface IBrowserFrameOptions : IUnknown
 {
-    HRESULT GetFrameOptions(uint, uint*);
+    HRESULT GetFrameOptions(uint dwMask, uint* pdwOptions);
 }
 alias NWMF = int;
 enum : int
@@ -4997,7 +4997,7 @@ enum : int
 enum IID_INewWindowManager = GUID(0xd2bc4c84, 0x3f72, 0x4a52, [0xa6, 0x4, 0x7b, 0xcb, 0xf3, 0x98, 0x2c, 0xbb]);
 interface INewWindowManager : IUnknown
 {
-    HRESULT EvaluateNewWindow(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, BOOL, uint, uint);
+    HRESULT EvaluateNewWindow(const(wchar)* pszUrl, const(wchar)* pszName, const(wchar)* pszUrlContext, const(wchar)* pszFeatures, BOOL fReplace, uint dwFlags, uint dwUserActionTime);
 }
 alias ATTACHMENT_PROMPT = int;
 enum : int
@@ -5019,17 +5019,17 @@ enum : int
 enum IID_IAttachmentExecute = GUID(0x73db1241, 0x1e85, 0x4581, [0x8e, 0x4f, 0xa8, 0x1e, 0x1d, 0xf, 0x8c, 0x57]);
 interface IAttachmentExecute : IUnknown
 {
-    HRESULT SetClientTitle(const(wchar)*);
-    HRESULT SetClientGuid(const(GUID)*);
-    HRESULT SetLocalPath(const(wchar)*);
-    HRESULT SetFileName(const(wchar)*);
-    HRESULT SetSource(const(wchar)*);
-    HRESULT SetReferrer(const(wchar)*);
+    HRESULT SetClientTitle(const(wchar)* pszTitle);
+    HRESULT SetClientGuid(const(GUID)* guid);
+    HRESULT SetLocalPath(const(wchar)* pszLocalPath);
+    HRESULT SetFileName(const(wchar)* pszFileName);
+    HRESULT SetSource(const(wchar)* pszSource);
+    HRESULT SetReferrer(const(wchar)* pszReferrer);
     HRESULT CheckPolicy();
-    HRESULT Prompt(HWND, ATTACHMENT_PROMPT, ATTACHMENT_ACTION*);
+    HRESULT Prompt(HWND hwnd, ATTACHMENT_PROMPT prompt, ATTACHMENT_ACTION* paction);
     HRESULT Save();
-    HRESULT Execute(HWND, const(wchar)*, HANDLE*);
-    HRESULT SaveWithUI(HWND);
+    HRESULT Execute(HWND hwnd, const(wchar)* pszVerb, HANDLE* phProcess);
+    HRESULT SaveWithUI(HWND hwnd);
     HRESULT ClearClientState();
 }
 struct SMDATA
@@ -5096,20 +5096,20 @@ enum : int
 enum IID_IShellMenuCallback = GUID(0x4ca300a1, 0x9b8d, 0x11d1, [0x8b, 0x22, 0x0, 0xc0, 0x4f, 0xd9, 0x18, 0xd0]);
 interface IShellMenuCallback : IUnknown
 {
-    HRESULT CallbackSM(SMDATA*, uint, WPARAM, LPARAM);
+    HRESULT CallbackSM(SMDATA* psmd, uint uMsg, WPARAM wParam, LPARAM lParam);
 }
 enum IID_IShellMenu = GUID(0xee1f7637, 0xe138, 0x11d1, [0x83, 0x79, 0x0, 0xc0, 0x4f, 0xd9, 0x18, 0xd0]);
 interface IShellMenu : IUnknown
 {
-    HRESULT Initialize(IShellMenuCallback, uint, uint, uint);
-    HRESULT GetMenuInfo(IShellMenuCallback*, uint*, uint*, uint*);
-    HRESULT SetShellFolder(IShellFolder, ITEMIDLIST*, HKEY, uint);
-    HRESULT GetShellFolder(uint*, ITEMIDLIST**, const(GUID)*, void**);
-    HRESULT SetMenu(HMENU, HWND, uint);
-    HRESULT GetMenu(HMENU*, HWND*, uint*);
-    HRESULT InvalidateItem(SMDATA*, uint);
-    HRESULT GetState(SMDATA*);
-    HRESULT SetMenuToolbar(IUnknown, uint);
+    HRESULT Initialize(IShellMenuCallback psmc, uint uId, uint uIdAncestor, uint dwFlags);
+    HRESULT GetMenuInfo(IShellMenuCallback* ppsmc, uint* puId, uint* puIdAncestor, uint* pdwFlags);
+    HRESULT SetShellFolder(IShellFolder psf, ITEMIDLIST* pidlFolder, HKEY hKey, uint dwFlags);
+    HRESULT GetShellFolder(uint* pdwFlags, ITEMIDLIST** ppidl, const(GUID)* riid, void** ppv);
+    HRESULT SetMenu(HMENU hmenu, HWND hwnd, uint dwFlags);
+    HRESULT GetMenu(HMENU* phmenu, HWND* phwnd, uint* pdwFlags);
+    HRESULT InvalidateItem(SMDATA* psmd, uint dwFlags);
+    HRESULT GetState(SMDATA* psmd);
+    HRESULT SetMenuToolbar(IUnknown punk, uint dwFlags);
 }
 alias KF_CATEGORY = int;
 enum : int
@@ -5177,15 +5177,15 @@ struct KNOWNFOLDER_DEFINITION
 enum IID_IKnownFolder = GUID(0x3aa7af7e, 0x9b36, 0x420c, [0xa8, 0xe3, 0xf7, 0x7d, 0x46, 0x74, 0xa4, 0x88]);
 interface IKnownFolder : IUnknown
 {
-    HRESULT GetId(GUID*);
-    HRESULT GetCategory(KF_CATEGORY*);
-    HRESULT GetShellItem(uint, const(GUID)*, void**);
-    HRESULT GetPath(uint, PWSTR*);
-    HRESULT SetPath(uint, const(wchar)*);
-    HRESULT GetIDList(uint, ITEMIDLIST**);
-    HRESULT GetFolderType(GUID*);
-    HRESULT GetRedirectionCapabilities(uint*);
-    HRESULT GetFolderDefinition(KNOWNFOLDER_DEFINITION*);
+    HRESULT GetId(GUID* pkfid);
+    HRESULT GetCategory(KF_CATEGORY* pCategory);
+    HRESULT GetShellItem(uint dwFlags, const(GUID)* riid, void** ppv);
+    HRESULT GetPath(uint dwFlags, PWSTR* ppszPath);
+    HRESULT SetPath(uint dwFlags, const(wchar)* pszPath);
+    HRESULT GetIDList(uint dwFlags, ITEMIDLIST** ppidl);
+    HRESULT GetFolderType(GUID* pftid);
+    HRESULT GetRedirectionCapabilities(uint* pCapabilities);
+    HRESULT GetFolderDefinition(KNOWNFOLDER_DEFINITION* pKFD);
 }
 alias FFFP_MODE = int;
 enum : int
@@ -5197,16 +5197,16 @@ enum : int
 enum IID_IKnownFolderManager = GUID(0x8be2d872, 0x86aa, 0x4d47, [0xb7, 0x76, 0x32, 0xcc, 0xa4, 0xc, 0x70, 0x18]);
 interface IKnownFolderManager : IUnknown
 {
-    HRESULT FolderIdFromCsidl(int, GUID*);
-    HRESULT FolderIdToCsidl(const(GUID)*, int*);
-    HRESULT GetFolderIds(GUID**, uint*);
-    HRESULT GetFolder(const(GUID)*, IKnownFolder*);
-    HRESULT GetFolderByName(const(wchar)*, IKnownFolder*);
-    HRESULT RegisterFolder(const(GUID)*, const(KNOWNFOLDER_DEFINITION)*);
-    HRESULT UnregisterFolder(const(GUID)*);
-    HRESULT FindFolderFromPath(const(wchar)*, FFFP_MODE, IKnownFolder*);
-    HRESULT FindFolderFromIDList(ITEMIDLIST*, IKnownFolder*);
-    HRESULT Redirect(const(GUID)*, HWND, uint, const(wchar)*, uint, const(GUID)*, PWSTR*);
+    HRESULT FolderIdFromCsidl(int nCsidl, GUID* pfid);
+    HRESULT FolderIdToCsidl(const(GUID)* rfid, int* pnCsidl);
+    HRESULT GetFolderIds(GUID** ppKFId, uint* pCount);
+    HRESULT GetFolder(const(GUID)* rfid, IKnownFolder* ppkf);
+    HRESULT GetFolderByName(const(wchar)* pszCanonicalName, IKnownFolder* ppkf);
+    HRESULT RegisterFolder(const(GUID)* rfid, const(KNOWNFOLDER_DEFINITION)* pKFD);
+    HRESULT UnregisterFolder(const(GUID)* rfid);
+    HRESULT FindFolderFromPath(const(wchar)* pszPath, FFFP_MODE mode, IKnownFolder* ppkf);
+    HRESULT FindFolderFromIDList(ITEMIDLIST* pidl, IKnownFolder* ppkf);
+    HRESULT Redirect(const(GUID)* rfid, HWND hwnd, uint flags, const(wchar)* pszTargetPath, uint cFolders, const(GUID)* pExclusion, PWSTR* ppszError);
 }
 alias SHARE_ROLE = int;
 enum : int
@@ -5230,10 +5230,10 @@ enum : int
 enum IID_ISharingConfigurationManager = GUID(0xb4cd448a, 0x9c86, 0x4466, [0x92, 0x1, 0x2e, 0x62, 0x10, 0x5b, 0x87, 0xae]);
 interface ISharingConfigurationManager : IUnknown
 {
-    HRESULT CreateShare(DEF_SHARE_ID, SHARE_ROLE);
-    HRESULT DeleteShare(DEF_SHARE_ID);
-    HRESULT ShareExists(DEF_SHARE_ID);
-    HRESULT GetSharePermissions(DEF_SHARE_ID, SHARE_ROLE*);
+    HRESULT CreateShare(DEF_SHARE_ID dsid, SHARE_ROLE role);
+    HRESULT DeleteShare(DEF_SHARE_ID dsid);
+    HRESULT ShareExists(DEF_SHARE_ID dsid);
+    HRESULT GetSharePermissions(DEF_SHARE_ID dsid, SHARE_ROLE* pRole);
     HRESULT SharePrinters();
     HRESULT StopSharingPrinters();
     HRESULT ArePrintersShared();
@@ -5241,8 +5241,8 @@ interface ISharingConfigurationManager : IUnknown
 enum IID_IRelatedItem = GUID(0xa73ce67a, 0x8ab1, 0x44f1, [0x8d, 0x43, 0xd2, 0xfc, 0xbf, 0x6b, 0x1c, 0xd0]);
 interface IRelatedItem : IUnknown
 {
-    HRESULT GetItemIDList(ITEMIDLIST**);
-    HRESULT GetItem(IShellItem*);
+    HRESULT GetItemIDList(ITEMIDLIST** ppidl);
+    HRESULT GetItem(IShellItem* ppsi);
 }
 enum IID_IIdentityName = GUID(0x7d903fca, 0xd6f9, 0x4810, [0x83, 0x32, 0x94, 0x6c, 0x1, 0x77, 0xe2, 0x47]);
 interface IIdentityName : IRelatedItem
@@ -5275,34 +5275,34 @@ interface IPreviewItem : IRelatedItem
 enum IID_IDestinationStreamFactory = GUID(0x8a87781b, 0x39a7, 0x4a1f, [0xaa, 0xb3, 0xa3, 0x9b, 0x9c, 0x34, 0xa7, 0xd9]);
 interface IDestinationStreamFactory : IUnknown
 {
-    HRESULT GetDestinationStream(IStream*);
+    HRESULT GetDestinationStream(IStream* ppstm);
 }
 enum IID_ICreateProcessInputs = GUID(0xf6ef6140, 0xe26f, 0x4d82, [0xba, 0xc4, 0xe9, 0xba, 0x5f, 0xd2, 0x39, 0xa8]);
 interface ICreateProcessInputs : IUnknown
 {
-    HRESULT GetCreateFlags(uint*);
-    HRESULT SetCreateFlags(uint);
-    HRESULT AddCreateFlags(uint);
-    HRESULT SetHotKey(ushort);
-    HRESULT AddStartupFlags(uint);
-    HRESULT SetTitle(const(wchar)*);
-    HRESULT SetEnvironmentVariable(const(wchar)*, const(wchar)*);
+    HRESULT GetCreateFlags(uint* pdwCreationFlags);
+    HRESULT SetCreateFlags(uint dwCreationFlags);
+    HRESULT AddCreateFlags(uint dwCreationFlags);
+    HRESULT SetHotKey(ushort wHotKey);
+    HRESULT AddStartupFlags(uint dwStartupInfoFlags);
+    HRESULT SetTitle(const(wchar)* pszTitle);
+    HRESULT SetEnvironmentVariable(const(wchar)* pszName, const(wchar)* pszValue);
 }
 enum IID_ICreatingProcess = GUID(0xc2b937a9, 0x3110, 0x4398, [0x8a, 0x56, 0xf3, 0x4c, 0x63, 0x42, 0xd2, 0x44]);
 interface ICreatingProcess : IUnknown
 {
-    HRESULT OnCreating(ICreateProcessInputs);
+    HRESULT OnCreating(ICreateProcessInputs pcpi);
 }
 enum IID_ILaunchUIContext = GUID(0x1791e8f6, 0x21c7, 0x4340, [0x88, 0x2a, 0xa6, 0xa9, 0x3e, 0x3f, 0xd7, 0x3b]);
 interface ILaunchUIContext : IUnknown
 {
-    HRESULT SetAssociatedWindow(HWND);
-    HRESULT SetTabGroupingPreference(uint);
+    HRESULT SetAssociatedWindow(HWND value);
+    HRESULT SetTabGroupingPreference(uint value);
 }
 enum IID_ILaunchUIContextProvider = GUID(0xd12c4c8, 0xa3d9, 0x4e24, [0x94, 0xc1, 0xe, 0x20, 0xc5, 0xa9, 0x56, 0xc4]);
 interface ILaunchUIContextProvider : IUnknown
 {
-    HRESULT UpdateContext(ILaunchUIContext);
+    HRESULT UpdateContext(ILaunchUIContext context);
 }
 alias _NMCII_FLAGS = int;
 enum : int
@@ -5322,19 +5322,19 @@ enum : int
 enum IID_INewMenuClient = GUID(0xdcb07fdc, 0x3bb5, 0x451c, [0x90, 0xbe, 0x96, 0x66, 0x44, 0xfe, 0xd7, 0xb0]);
 interface INewMenuClient : IUnknown
 {
-    HRESULT IncludeItems(int*);
-    HRESULT SelectAndEditItem(ITEMIDLIST*, int);
+    HRESULT IncludeItems(int* pflags);
+    HRESULT SelectAndEditItem(ITEMIDLIST* pidlItem, int flags);
 }
 enum IID_IInitializeWithBindCtx = GUID(0x71c0d2bc, 0x726d, 0x45cc, [0xa6, 0xc0, 0x2e, 0x31, 0xc1, 0xdb, 0x21, 0x59]);
 interface IInitializeWithBindCtx : IUnknown
 {
-    HRESULT Initialize(IBindCtx);
+    HRESULT Initialize(IBindCtx pbc);
 }
 enum IID_IShellItemFilter = GUID(0x2659b475, 0xeeb8, 0x48b7, [0x8f, 0x7, 0xb3, 0x78, 0x81, 0xf, 0x48, 0xcf]);
 interface IShellItemFilter : IUnknown
 {
-    HRESULT IncludeItem(IShellItem);
-    HRESULT GetEnumFlagsForItem(IShellItem, uint*);
+    HRESULT IncludeItem(IShellItem psi);
+    HRESULT GetEnumFlagsForItem(IShellItem psi, uint* pgrfFlags);
 }
 alias _NSTCSTYLE = int;
 enum : int
@@ -5406,24 +5406,24 @@ enum : int
 enum IID_INameSpaceTreeControl = GUID(0x28212a3, 0xb627, 0x47e9, [0x88, 0x56, 0xc1, 0x42, 0x65, 0x55, 0x4e, 0x4f]);
 interface INameSpaceTreeControl : IUnknown
 {
-    HRESULT Initialize(HWND, RECT*, uint);
-    HRESULT TreeAdvise(IUnknown, uint*);
-    HRESULT TreeUnadvise(uint);
-    HRESULT AppendRoot(IShellItem, uint, uint, IShellItemFilter);
-    HRESULT InsertRoot(int, IShellItem, uint, uint, IShellItemFilter);
-    HRESULT RemoveRoot(IShellItem);
+    HRESULT Initialize(HWND hwndParent, RECT* prc, uint nsctsFlags);
+    HRESULT TreeAdvise(IUnknown punk, uint* pdwCookie);
+    HRESULT TreeUnadvise(uint dwCookie);
+    HRESULT AppendRoot(IShellItem psiRoot, uint grfEnumFlags, uint grfRootStyle, IShellItemFilter pif);
+    HRESULT InsertRoot(int iIndex, IShellItem psiRoot, uint grfEnumFlags, uint grfRootStyle, IShellItemFilter pif);
+    HRESULT RemoveRoot(IShellItem psiRoot);
     HRESULT RemoveAllRoots();
-    HRESULT GetRootItems(IShellItemArray*);
-    HRESULT SetItemState(IShellItem, uint, uint);
-    HRESULT GetItemState(IShellItem, uint, uint*);
-    HRESULT GetSelectedItems(IShellItemArray*);
-    HRESULT GetItemCustomState(IShellItem, int*);
-    HRESULT SetItemCustomState(IShellItem, int);
-    HRESULT EnsureItemVisible(IShellItem);
-    HRESULT SetTheme(const(wchar)*);
-    HRESULT GetNextItem(IShellItem, NSTCGNI, IShellItem*);
-    HRESULT HitTest(POINT*, IShellItem*);
-    HRESULT GetItemRect(IShellItem, RECT*);
+    HRESULT GetRootItems(IShellItemArray* ppsiaRootItems);
+    HRESULT SetItemState(IShellItem psi, uint nstcisMask, uint nstcisFlags);
+    HRESULT GetItemState(IShellItem psi, uint nstcisMask, uint* pnstcisFlags);
+    HRESULT GetSelectedItems(IShellItemArray* psiaItems);
+    HRESULT GetItemCustomState(IShellItem psi, int* piStateNumber);
+    HRESULT SetItemCustomState(IShellItem psi, int iStateNumber);
+    HRESULT EnsureItemVisible(IShellItem psi);
+    HRESULT SetTheme(const(wchar)* pszTheme);
+    HRESULT GetNextItem(IShellItem psi, NSTCGNI nstcgi, IShellItem* ppsiNext);
+    HRESULT HitTest(POINT* ppt, IShellItem* ppsiOut);
+    HRESULT GetItemRect(IShellItem psi, RECT* prect);
     HRESULT CollapseAll();
 }
 alias NSTCFOLDERCAPABILITIES = int;
@@ -5437,18 +5437,18 @@ enum : int
 enum IID_INameSpaceTreeControlFolderCapabilities = GUID(0xe9701183, 0xe6b3, 0x4ff2, [0x85, 0x68, 0x81, 0x36, 0x15, 0xfe, 0xc7, 0xbe]);
 interface INameSpaceTreeControlFolderCapabilities : IUnknown
 {
-    HRESULT GetFolderCapabilities(NSTCFOLDERCAPABILITIES, NSTCFOLDERCAPABILITIES*);
+    HRESULT GetFolderCapabilities(NSTCFOLDERCAPABILITIES nfcMask, NSTCFOLDERCAPABILITIES* pnfcValue);
 }
 enum IID_IPreviewHandler = GUID(0x8895b1c6, 0xb41f, 0x4c1c, [0xa5, 0x62, 0xd, 0x56, 0x42, 0x50, 0x83, 0x6f]);
 interface IPreviewHandler : IUnknown
 {
-    HRESULT SetWindow(HWND, const(RECT)*);
-    HRESULT SetRect(const(RECT)*);
+    HRESULT SetWindow(HWND hwnd, const(RECT)* prc);
+    HRESULT SetRect(const(RECT)* prc);
     HRESULT DoPreview();
     HRESULT Unload();
     HRESULT SetFocus();
-    HRESULT QueryFocus(HWND*);
-    HRESULT TranslateAccelerator(MSG*);
+    HRESULT QueryFocus(HWND* phwnd);
+    HRESULT TranslateAccelerator(MSG* pmsg);
 }
 struct PREVIEWHANDLERFRAMEINFO
 {
@@ -5458,8 +5458,8 @@ struct PREVIEWHANDLERFRAMEINFO
 enum IID_IPreviewHandlerFrame = GUID(0xfec87aaf, 0x35f9, 0x447a, [0xad, 0xb7, 0x20, 0x23, 0x44, 0x91, 0x40, 0x1a]);
 interface IPreviewHandlerFrame : IUnknown
 {
-    HRESULT GetWindowContext(PREVIEWHANDLERFRAMEINFO*);
-    HRESULT TranslateAccelerator(MSG*);
+    HRESULT GetWindowContext(PREVIEWHANDLERFRAMEINFO* pinfo);
+    HRESULT TranslateAccelerator(MSG* pmsg);
 }
 alias _EXPLORERPANESTATE = int;
 enum : int
@@ -5475,22 +5475,22 @@ enum : int
 enum IID_IExplorerPaneVisibility = GUID(0xe07010ec, 0xbc17, 0x44c0, [0x97, 0xb0, 0x46, 0xc7, 0xc9, 0x5b, 0x9e, 0xdc]);
 interface IExplorerPaneVisibility : IUnknown
 {
-    HRESULT GetPaneState(const(GUID)*, uint*);
+    HRESULT GetPaneState(const(GUID)* ep, uint* peps);
 }
 enum IID_IContextMenuCB = GUID(0x3409e930, 0x5a39, 0x11d1, [0x83, 0xfa, 0x0, 0xa0, 0xc9, 0xd, 0xc8, 0x49]);
 interface IContextMenuCB : IUnknown
 {
-    HRESULT CallBack(IShellFolder, HWND, IDataObject, uint, WPARAM, LPARAM);
+    HRESULT CallBack(IShellFolder psf, HWND hwndOwner, IDataObject pdtobj, uint uMsg, WPARAM wParam, LPARAM lParam);
 }
 enum IID_IDefaultExtractIconInit = GUID(0x41ded17d, 0xd6b3, 0x4261, [0x99, 0x7d, 0x88, 0xc6, 0xe, 0x4b, 0x1d, 0x58]);
 interface IDefaultExtractIconInit : IUnknown
 {
-    HRESULT SetFlags(uint);
-    HRESULT SetKey(HKEY);
-    HRESULT SetNormalIcon(const(wchar)*, int);
-    HRESULT SetOpenIcon(const(wchar)*, int);
-    HRESULT SetShortcutIcon(const(wchar)*, int);
-    HRESULT SetDefaultIcon(const(wchar)*, int);
+    HRESULT SetFlags(uint uFlags);
+    HRESULT SetKey(HKEY hkey);
+    HRESULT SetNormalIcon(const(wchar)* pszFile, int iIcon);
+    HRESULT SetOpenIcon(const(wchar)* pszFile, int iIcon);
+    HRESULT SetShortcutIcon(const(wchar)* pszFile, int iIcon);
+    HRESULT SetDefaultIcon(const(wchar)* pszFile, int iIcon);
 }
 alias _EXPCMDSTATE = int;
 enum : int
@@ -5522,38 +5522,38 @@ enum : int
 enum IID_IExplorerCommand = GUID(0xa08ce4d0, 0xfa25, 0x44ab, [0xb5, 0x7c, 0xc7, 0xb1, 0xc3, 0x23, 0xe0, 0xb9]);
 interface IExplorerCommand : IUnknown
 {
-    HRESULT GetTitle(IShellItemArray, PWSTR*);
-    HRESULT GetIcon(IShellItemArray, PWSTR*);
-    HRESULT GetToolTip(IShellItemArray, PWSTR*);
-    HRESULT GetCanonicalName(GUID*);
-    HRESULT GetState(IShellItemArray, BOOL, uint*);
-    HRESULT Invoke(IShellItemArray, IBindCtx);
-    HRESULT GetFlags(uint*);
-    HRESULT EnumSubCommands(IEnumExplorerCommand*);
+    HRESULT GetTitle(IShellItemArray psiItemArray, PWSTR* ppszName);
+    HRESULT GetIcon(IShellItemArray psiItemArray, PWSTR* ppszIcon);
+    HRESULT GetToolTip(IShellItemArray psiItemArray, PWSTR* ppszInfotip);
+    HRESULT GetCanonicalName(GUID* pguidCommandName);
+    HRESULT GetState(IShellItemArray psiItemArray, BOOL fOkToBeSlow, uint* pCmdState);
+    HRESULT Invoke(IShellItemArray psiItemArray, IBindCtx pbc);
+    HRESULT GetFlags(uint* pFlags);
+    HRESULT EnumSubCommands(IEnumExplorerCommand* ppEnum);
 }
 enum IID_IExplorerCommandState = GUID(0xbddacb60, 0x7657, 0x47ae, [0x84, 0x45, 0xd2, 0x3e, 0x1a, 0xcf, 0x82, 0xae]);
 interface IExplorerCommandState : IUnknown
 {
-    HRESULT GetState(IShellItemArray, BOOL, uint*);
+    HRESULT GetState(IShellItemArray psiItemArray, BOOL fOkToBeSlow, uint* pCmdState);
 }
 enum IID_IInitializeCommand = GUID(0x85075acf, 0x231f, 0x40ea, [0x96, 0x10, 0xd2, 0x6b, 0x7b, 0x58, 0xf6, 0x38]);
 interface IInitializeCommand : IUnknown
 {
-    HRESULT Initialize(const(wchar)*, IPropertyBag);
+    HRESULT Initialize(const(wchar)* pszCommandName, IPropertyBag ppb);
 }
 enum IID_IEnumExplorerCommand = GUID(0xa88826f8, 0x186f, 0x4987, [0xaa, 0xde, 0xea, 0xc, 0xef, 0x8f, 0xbf, 0xe8]);
 interface IEnumExplorerCommand : IUnknown
 {
-    HRESULT Next(uint, IExplorerCommand*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, IExplorerCommand* pUICommand, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumExplorerCommand*);
+    HRESULT Clone(IEnumExplorerCommand* ppenum);
 }
 enum IID_IExplorerCommandProvider = GUID(0x64961751, 0x835, 0x43c0, [0x8f, 0xfe, 0xd5, 0x76, 0x86, 0x53, 0xe, 0x64]);
 interface IExplorerCommandProvider : IUnknown
 {
-    HRESULT GetCommands(IUnknown, const(GUID)*, void**);
-    HRESULT GetCommand(const(GUID)*, const(GUID)*, void**);
+    HRESULT GetCommands(IUnknown punkSite, const(GUID)* riid, void** ppv);
+    HRESULT GetCommand(const(GUID)* rguidCommandId, const(GUID)* riid, void** ppv);
 }
 alias CPVIEW = int;
 enum : int
@@ -5567,23 +5567,23 @@ enum : int
 enum IID_IOpenControlPanel = GUID(0xd11ad862, 0x66de, 0x4df4, [0xbf, 0x6c, 0x1f, 0x56, 0x21, 0x99, 0x6a, 0xf1]);
 interface IOpenControlPanel : IUnknown
 {
-    HRESULT Open(const(wchar)*, const(wchar)*, IUnknown);
-    HRESULT GetPath(const(wchar)*, PWSTR, uint);
-    HRESULT GetCurrentView(CPVIEW*);
+    HRESULT Open(const(wchar)* pszName, const(wchar)* pszPage, IUnknown punkSite);
+    HRESULT GetPath(const(wchar)* pszName, PWSTR pszPath, uint cchPath);
+    HRESULT GetCurrentView(CPVIEW* pView);
 }
 enum IID_IFileSystemBindData = GUID(0x1e18d10, 0x4d8b, 0x11d2, [0x85, 0x5d, 0x0, 0x60, 0x8, 0x5, 0x93, 0x67]);
 interface IFileSystemBindData : IUnknown
 {
-    HRESULT SetFindData(const(WIN32_FIND_DATAW)*);
-    HRESULT GetFindData(WIN32_FIND_DATAW*);
+    HRESULT SetFindData(const(WIN32_FIND_DATAW)* pfd);
+    HRESULT GetFindData(WIN32_FIND_DATAW* pfd);
 }
 enum IID_IFileSystemBindData2 = GUID(0x3acf075f, 0x71db, 0x4afa, [0x81, 0xf0, 0x3f, 0xc4, 0xfd, 0xf2, 0xa5, 0xb8]);
 interface IFileSystemBindData2 : IFileSystemBindData
 {
-    HRESULT SetFileID(long);
-    HRESULT GetFileID(long*);
-    HRESULT SetJunctionCLSID(const(GUID)*);
-    HRESULT GetJunctionCLSID(GUID*);
+    HRESULT SetFileID(long liFileID);
+    HRESULT GetFileID(long* pliFileID);
+    HRESULT SetJunctionCLSID(const(GUID)* clsid);
+    HRESULT GetJunctionCLSID(GUID* pclsid);
 }
 alias KNOWNDESTCATEGORY = int;
 enum : int
@@ -5595,21 +5595,21 @@ enum : int
 enum IID_ICustomDestinationList = GUID(0x6332debf, 0x87b5, 0x4670, [0x90, 0xc0, 0x5e, 0x57, 0xb4, 0x8, 0xa4, 0x9e]);
 interface ICustomDestinationList : IUnknown
 {
-    HRESULT SetAppID(const(wchar)*);
-    HRESULT BeginList(uint*, const(GUID)*, void**);
-    HRESULT AppendCategory(const(wchar)*, IObjectArray);
-    HRESULT AppendKnownCategory(KNOWNDESTCATEGORY);
-    HRESULT AddUserTasks(IObjectArray);
+    HRESULT SetAppID(const(wchar)* pszAppID);
+    HRESULT BeginList(uint* pcMinSlots, const(GUID)* riid, void** ppv);
+    HRESULT AppendCategory(const(wchar)* pszCategory, IObjectArray poa);
+    HRESULT AppendKnownCategory(KNOWNDESTCATEGORY category);
+    HRESULT AddUserTasks(IObjectArray poa);
     HRESULT CommitList();
-    HRESULT GetRemovedDestinations(const(GUID)*, void**);
-    HRESULT DeleteList(const(wchar)*);
+    HRESULT GetRemovedDestinations(const(GUID)* riid, void** ppv);
+    HRESULT DeleteList(const(wchar)* pszAppID);
     HRESULT AbortList();
 }
 enum IID_IApplicationDestinations = GUID(0x12337d35, 0x94c6, 0x48a0, [0xbc, 0xe7, 0x6a, 0x9c, 0x69, 0xd4, 0xd6, 0x0]);
 interface IApplicationDestinations : IUnknown
 {
-    HRESULT SetAppID(const(wchar)*);
-    HRESULT RemoveDestination(IUnknown);
+    HRESULT SetAppID(const(wchar)* pszAppID);
+    HRESULT RemoveDestination(IUnknown punk);
     HRESULT RemoveAllDestinations();
 }
 alias APPDOCLISTTYPE = int;
@@ -5622,25 +5622,25 @@ enum : int
 enum IID_IApplicationDocumentLists = GUID(0x3c594f9f, 0x9f30, 0x47a1, [0x97, 0x9a, 0xc9, 0xe8, 0x3d, 0x3d, 0xa, 0x6]);
 interface IApplicationDocumentLists : IUnknown
 {
-    HRESULT SetAppID(const(wchar)*);
-    HRESULT GetList(APPDOCLISTTYPE, uint, const(GUID)*, void**);
+    HRESULT SetAppID(const(wchar)* pszAppID);
+    HRESULT GetList(APPDOCLISTTYPE listtype, uint cItemsDesired, const(GUID)* riid, void** ppv);
 }
 enum IID_IObjectWithAppUserModelID = GUID(0x36db0196, 0x9665, 0x46d1, [0x9b, 0xa7, 0xd3, 0x70, 0x9e, 0xec, 0xf9, 0xed]);
 interface IObjectWithAppUserModelID : IUnknown
 {
-    HRESULT SetAppID(const(wchar)*);
-    HRESULT GetAppID(PWSTR*);
+    HRESULT SetAppID(const(wchar)* pszAppID);
+    HRESULT GetAppID(PWSTR* ppszAppID);
 }
 enum IID_IObjectWithProgID = GUID(0x71e806fb, 0x8dee, 0x46fc, [0xbf, 0x8c, 0x77, 0x48, 0xa8, 0xa1, 0xae, 0x13]);
 interface IObjectWithProgID : IUnknown
 {
-    HRESULT SetProgID(const(wchar)*);
-    HRESULT GetProgID(PWSTR*);
+    HRESULT SetProgID(const(wchar)* pszProgID);
+    HRESULT GetProgID(PWSTR* ppszProgID);
 }
 enum IID_IUpdateIDList = GUID(0x6589b6d2, 0x5f8d, 0x4b9e, [0xb7, 0xe0, 0x23, 0xcd, 0xd9, 0x71, 0x7d, 0x8c]);
 interface IUpdateIDList : IUnknown
 {
-    HRESULT Update(IBindCtx, ITEMIDLIST*, ITEMIDLIST**);
+    HRESULT Update(IBindCtx pbc, ITEMIDLIST* pidlIn, ITEMIDLIST** ppidlOut);
 }
 alias DESKTOP_SLIDESHOW_OPTIONS = int;
 enum : int
@@ -5677,22 +5677,22 @@ enum : int
 enum IID_IDesktopWallpaper = GUID(0xb92b56a9, 0x8b55, 0x4e14, [0x9a, 0x89, 0x1, 0x99, 0xbb, 0xb6, 0xf9, 0x3b]);
 interface IDesktopWallpaper : IUnknown
 {
-    HRESULT SetWallpaper(const(wchar)*, const(wchar)*);
-    HRESULT GetWallpaper(const(wchar)*, PWSTR*);
-    HRESULT GetMonitorDevicePathAt(uint, PWSTR*);
-    HRESULT GetMonitorDevicePathCount(uint*);
-    HRESULT GetMonitorRECT(const(wchar)*, RECT*);
-    HRESULT SetBackgroundColor(COLORREF);
-    HRESULT GetBackgroundColor(COLORREF*);
-    HRESULT SetPosition(DESKTOP_WALLPAPER_POSITION);
-    HRESULT GetPosition(DESKTOP_WALLPAPER_POSITION*);
-    HRESULT SetSlideshow(IShellItemArray);
-    HRESULT GetSlideshow(IShellItemArray*);
-    HRESULT SetSlideshowOptions(DESKTOP_SLIDESHOW_OPTIONS, uint);
-    HRESULT GetSlideshowOptions(DESKTOP_SLIDESHOW_OPTIONS*, uint*);
-    HRESULT AdvanceSlideshow(const(wchar)*, DESKTOP_SLIDESHOW_DIRECTION);
-    HRESULT GetStatus(DESKTOP_SLIDESHOW_STATE*);
-    HRESULT Enable(BOOL);
+    HRESULT SetWallpaper(const(wchar)* monitorID, const(wchar)* wallpaper);
+    HRESULT GetWallpaper(const(wchar)* monitorID, PWSTR* wallpaper);
+    HRESULT GetMonitorDevicePathAt(uint monitorIndex, PWSTR* monitorID);
+    HRESULT GetMonitorDevicePathCount(uint* count);
+    HRESULT GetMonitorRECT(const(wchar)* monitorID, RECT* displayRect);
+    HRESULT SetBackgroundColor(COLORREF color);
+    HRESULT GetBackgroundColor(COLORREF* color);
+    HRESULT SetPosition(DESKTOP_WALLPAPER_POSITION position);
+    HRESULT GetPosition(DESKTOP_WALLPAPER_POSITION* position);
+    HRESULT SetSlideshow(IShellItemArray items);
+    HRESULT GetSlideshow(IShellItemArray* items);
+    HRESULT SetSlideshowOptions(DESKTOP_SLIDESHOW_OPTIONS options, uint slideshowTick);
+    HRESULT GetSlideshowOptions(DESKTOP_SLIDESHOW_OPTIONS* options, uint* slideshowTick);
+    HRESULT AdvanceSlideshow(const(wchar)* monitorID, DESKTOP_SLIDESHOW_DIRECTION direction);
+    HRESULT GetStatus(DESKTOP_SLIDESHOW_STATE* state);
+    HRESULT Enable(BOOL enable);
 }
 alias HOMEGROUPSHARINGCHOICES = int;
 enum : int
@@ -5708,18 +5708,18 @@ enum : int
 enum IID_IHomeGroup = GUID(0x7a3bd1d9, 0x35a9, 0x4fb3, [0xa4, 0x67, 0xf4, 0x8c, 0xac, 0x35, 0xe2, 0xd0]);
 interface IHomeGroup : IUnknown
 {
-    HRESULT IsMember(BOOL*);
-    HRESULT ShowSharingWizard(HWND, HOMEGROUPSHARINGCHOICES*);
+    HRESULT IsMember(BOOL* member);
+    HRESULT ShowSharingWizard(HWND owner, HOMEGROUPSHARINGCHOICES* sharingchoices);
 }
 enum IID_IInitializeWithPropertyStore = GUID(0xc3e12eb5, 0x7d8d, 0x44f8, [0xb6, 0xdd, 0xe, 0x77, 0xb3, 0x4d, 0x6d, 0xe4]);
 interface IInitializeWithPropertyStore : IUnknown
 {
-    HRESULT Initialize(IPropertyStore);
+    HRESULT Initialize(IPropertyStore pps);
 }
 enum IID_IOpenSearchSource = GUID(0xf0ee7333, 0xe6fc, 0x479b, [0x9f, 0x25, 0xa8, 0x60, 0xc2, 0x34, 0xa3, 0x8e]);
 interface IOpenSearchSource : IUnknown
 {
-    HRESULT GetResults(HWND, const(wchar)*, uint, uint, const(GUID)*, void**);
+    HRESULT GetResults(HWND hwnd, const(wchar)* pszQuery, uint dwStartIndex, uint dwCount, const(GUID)* riid, void** ppv);
 }
 alias LIBRARYFOLDERFILTER = int;
 enum : int
@@ -5756,23 +5756,23 @@ enum : int
 enum IID_IShellLibrary = GUID(0x11a66efa, 0x382e, 0x451a, [0x92, 0x34, 0x1e, 0xe, 0x12, 0xef, 0x30, 0x85]);
 interface IShellLibrary : IUnknown
 {
-    HRESULT LoadLibraryFromItem(IShellItem, uint);
-    HRESULT LoadLibraryFromKnownFolder(const(GUID)*, uint);
-    HRESULT AddFolder(IShellItem);
-    HRESULT RemoveFolder(IShellItem);
-    HRESULT GetFolders(LIBRARYFOLDERFILTER, const(GUID)*, void**);
-    HRESULT ResolveFolder(IShellItem, uint, const(GUID)*, void**);
-    HRESULT GetDefaultSaveFolder(DEFAULTSAVEFOLDERTYPE, const(GUID)*, void**);
-    HRESULT SetDefaultSaveFolder(DEFAULTSAVEFOLDERTYPE, IShellItem);
-    HRESULT GetOptions(LIBRARYOPTIONFLAGS*);
-    HRESULT SetOptions(LIBRARYOPTIONFLAGS, LIBRARYOPTIONFLAGS);
-    HRESULT GetFolderType(GUID*);
-    HRESULT SetFolderType(const(GUID)*);
-    HRESULT GetIcon(PWSTR*);
-    HRESULT SetIcon(const(wchar)*);
+    HRESULT LoadLibraryFromItem(IShellItem psiLibrary, uint grfMode);
+    HRESULT LoadLibraryFromKnownFolder(const(GUID)* kfidLibrary, uint grfMode);
+    HRESULT AddFolder(IShellItem psiLocation);
+    HRESULT RemoveFolder(IShellItem psiLocation);
+    HRESULT GetFolders(LIBRARYFOLDERFILTER lff, const(GUID)* riid, void** ppv);
+    HRESULT ResolveFolder(IShellItem psiFolderToResolve, uint dwTimeout, const(GUID)* riid, void** ppv);
+    HRESULT GetDefaultSaveFolder(DEFAULTSAVEFOLDERTYPE dsft, const(GUID)* riid, void** ppv);
+    HRESULT SetDefaultSaveFolder(DEFAULTSAVEFOLDERTYPE dsft, IShellItem psi);
+    HRESULT GetOptions(LIBRARYOPTIONFLAGS* plofOptions);
+    HRESULT SetOptions(LIBRARYOPTIONFLAGS lofMask, LIBRARYOPTIONFLAGS lofOptions);
+    HRESULT GetFolderType(GUID* pftid);
+    HRESULT SetFolderType(const(GUID)* ftid);
+    HRESULT GetIcon(PWSTR* ppszIcon);
+    HRESULT SetIcon(const(wchar)* pszIcon);
     HRESULT Commit();
-    HRESULT Save(IShellItem, const(wchar)*, LIBRARYSAVEFLAGS, IShellItem*);
-    HRESULT SaveInKnownFolder(const(GUID)*, const(wchar)*, LIBRARYSAVEFLAGS, IShellItem*);
+    HRESULT Save(IShellItem psiFolderToSaveIn, const(wchar)* pszLibraryName, LIBRARYSAVEFLAGS lsf, IShellItem* ppsiSavedTo);
+    HRESULT SaveInKnownFolder(const(GUID)* kfidToSaveIn, const(wchar)* pszLibraryName, LIBRARYSAVEFLAGS lsf, IShellItem* ppsiSavedTo);
 }
 alias DEFAULT_FOLDER_MENU_RESTRICTIONS = int;
 enum : int
@@ -5793,10 +5793,10 @@ enum : int
 enum IID_IDefaultFolderMenuInitialize = GUID(0x7690aa79, 0xf8fc, 0x4615, [0xa3, 0x27, 0x36, 0xf7, 0xd1, 0x8f, 0x5d, 0x91]);
 interface IDefaultFolderMenuInitialize : IUnknown
 {
-    HRESULT Initialize(HWND, IContextMenuCB, ITEMIDLIST*, IShellFolder, uint, ITEMIDLIST**, IUnknown, uint, const(HKEY)*);
-    HRESULT SetMenuRestrictions(DEFAULT_FOLDER_MENU_RESTRICTIONS);
-    HRESULT GetMenuRestrictions(DEFAULT_FOLDER_MENU_RESTRICTIONS, DEFAULT_FOLDER_MENU_RESTRICTIONS*);
-    HRESULT SetHandlerClsid(const(GUID)*);
+    HRESULT Initialize(HWND hwnd, IContextMenuCB pcmcb, ITEMIDLIST* pidlFolder, IShellFolder psf, uint cidl, ITEMIDLIST** apidl, IUnknown punkAssociation, uint cKeys, const(HKEY)* aKeys);
+    HRESULT SetMenuRestrictions(DEFAULT_FOLDER_MENU_RESTRICTIONS dfmrValues);
+    HRESULT GetMenuRestrictions(DEFAULT_FOLDER_MENU_RESTRICTIONS dfmrMask, DEFAULT_FOLDER_MENU_RESTRICTIONS* pdfmrValues);
+    HRESULT SetHandlerClsid(const(GUID)* rclsid);
 }
 alias ACTIVATEOPTIONS = int;
 enum : int
@@ -5811,16 +5811,16 @@ enum : int
 enum IID_IApplicationActivationManager = GUID(0x2e941141, 0x7f97, 0x4756, [0xba, 0x1d, 0x9d, 0xec, 0xde, 0x89, 0x4a, 0x3d]);
 interface IApplicationActivationManager : IUnknown
 {
-    HRESULT ActivateApplication(const(wchar)*, const(wchar)*, ACTIVATEOPTIONS, uint*);
-    HRESULT ActivateForFile(const(wchar)*, IShellItemArray, const(wchar)*, uint*);
-    HRESULT ActivateForProtocol(const(wchar)*, IShellItemArray, uint*);
+    HRESULT ActivateApplication(const(wchar)* appUserModelId, const(wchar)* arguments, ACTIVATEOPTIONS options, uint* processId);
+    HRESULT ActivateForFile(const(wchar)* appUserModelId, IShellItemArray itemArray, const(wchar)* verb, uint* processId);
+    HRESULT ActivateForProtocol(const(wchar)* appUserModelId, IShellItemArray itemArray, uint* processId);
 }
 enum IID_IVirtualDesktopManager = GUID(0xa5cd92ff, 0x29be, 0x454c, [0x8d, 0x4, 0xd8, 0x28, 0x79, 0xfb, 0x3f, 0x1b]);
 interface IVirtualDesktopManager : IUnknown
 {
-    HRESULT IsWindowOnCurrentVirtualDesktop(HWND, BOOL*);
-    HRESULT GetWindowDesktopId(HWND, GUID*);
-    HRESULT MoveWindowToDesktop(HWND, const(GUID)*);
+    HRESULT IsWindowOnCurrentVirtualDesktop(HWND topLevelWindow, BOOL* onCurrentDesktop);
+    HRESULT GetWindowDesktopId(HWND topLevelWindow, GUID* desktopId);
+    HRESULT MoveWindowToDesktop(HWND topLevelWindow, const(GUID)* desktopId);
 }
 enum CLSID_DesktopWallpaper = GUID(0xc2cf3110, 0x460e, 0x4fc1, [0xb9, 0xd0, 0x8a, 0x1c, 0xc, 0x9c, 0xc4, 0xbd]);
 struct DesktopWallpaper
@@ -6019,18 +6019,18 @@ enum : int
 enum IID_IAssocHandler = GUID(0xf04061ac, 0x1659, 0x4a3f, [0xa9, 0x54, 0x77, 0x5a, 0xa5, 0x7f, 0xc0, 0x83]);
 interface IAssocHandler : IUnknown
 {
-    HRESULT GetName(PWSTR*);
-    HRESULT GetUIName(PWSTR*);
-    HRESULT GetIconLocation(PWSTR*, int*);
+    HRESULT GetName(PWSTR* ppsz);
+    HRESULT GetUIName(PWSTR* ppsz);
+    HRESULT GetIconLocation(PWSTR* ppszPath, int* pIndex);
     HRESULT IsRecommended();
-    HRESULT MakeDefault(const(wchar)*);
-    HRESULT Invoke(IDataObject);
-    HRESULT CreateInvoker(IDataObject, IAssocHandlerInvoker*);
+    HRESULT MakeDefault(const(wchar)* pszDescription);
+    HRESULT Invoke(IDataObject pdo);
+    HRESULT CreateInvoker(IDataObject pdo, IAssocHandlerInvoker* ppInvoker);
 }
 enum IID_IEnumAssocHandlers = GUID(0x973810ae, 0x9599, 0x4b88, [0x9e, 0x4d, 0x6e, 0xe9, 0x8c, 0x95, 0x52, 0xda]);
 interface IEnumAssocHandlers : IUnknown
 {
-    HRESULT Next(uint, IAssocHandler*, uint*);
+    HRESULT Next(uint celt, IAssocHandler* rgelt, uint* pceltFetched);
 }
 alias ASSOC_FILTER = int;
 enum : int
@@ -6042,28 +6042,28 @@ enum : int
 enum IID_IDataObjectProvider = GUID(0x3d25f6d6, 0x4b2a, 0x433c, [0x91, 0x84, 0x7c, 0x33, 0xad, 0x35, 0xd0, 0x1]);
 interface IDataObjectProvider : IUnknown
 {
-    HRESULT GetDataObject(IDataObject*);
-    HRESULT SetDataObject(IDataObject);
+    HRESULT GetDataObject(IDataObject* dataObject);
+    HRESULT SetDataObject(IDataObject dataObject);
 }
 enum IID_IDataTransferManagerInterop = GUID(0x3a3dcd6c, 0x3eab, 0x43dc, [0xbc, 0xde, 0x45, 0x67, 0x1c, 0xe8, 0x0, 0xc8]);
 interface IDataTransferManagerInterop : IUnknown
 {
-    HRESULT GetForWindow(HWND, const(GUID)*, void**);
-    HRESULT ShowShareUIForWindow(HWND);
+    HRESULT GetForWindow(HWND appWindow, const(GUID)* riid, void** dataTransferManager);
+    HRESULT ShowShareUIForWindow(HWND appWindow);
 }
 enum IID_IFrameworkInputPaneHandler = GUID(0x226c537b, 0x1e76, 0x4d9e, [0xa7, 0x60, 0x33, 0xdb, 0x29, 0x92, 0x2f, 0x18]);
 interface IFrameworkInputPaneHandler : IUnknown
 {
-    HRESULT Showing(RECT*, BOOL);
-    HRESULT Hiding(BOOL);
+    HRESULT Showing(RECT* prcInputPaneScreenLocation, BOOL fEnsureFocusedElementInView);
+    HRESULT Hiding(BOOL fEnsureFocusedElementInView);
 }
 enum IID_IFrameworkInputPane = GUID(0x5752238b, 0x24f0, 0x495a, [0x82, 0xf1, 0x2f, 0xd5, 0x93, 0x5, 0x67, 0x96]);
 interface IFrameworkInputPane : IUnknown
 {
-    HRESULT Advise(IUnknown, IFrameworkInputPaneHandler, uint*);
-    HRESULT AdviseWithHWND(HWND, IFrameworkInputPaneHandler, uint*);
-    HRESULT Unadvise(uint);
-    HRESULT Location(RECT*);
+    HRESULT Advise(IUnknown pWindow, IFrameworkInputPaneHandler pHandler, uint* pdwCookie);
+    HRESULT AdviseWithHWND(HWND hwnd, IFrameworkInputPaneHandler pHandler, uint* pdwCookie);
+    HRESULT Unadvise(uint dwCookie);
+    HRESULT Location(RECT* prcInputPaneScreenLocation);
 }
 alias MONITOR_APP_VISIBILITY = int;
 enum : int
@@ -6076,16 +6076,16 @@ enum : int
 enum IID_IAppVisibilityEvents = GUID(0x6584ce6b, 0x7d82, 0x49c2, [0x89, 0xc9, 0xc6, 0xbc, 0x2, 0xba, 0x8c, 0x38]);
 interface IAppVisibilityEvents : IUnknown
 {
-    HRESULT AppVisibilityOnMonitorChanged(HMONITOR, MONITOR_APP_VISIBILITY, MONITOR_APP_VISIBILITY);
-    HRESULT LauncherVisibilityChange(BOOL);
+    HRESULT AppVisibilityOnMonitorChanged(HMONITOR hMonitor, MONITOR_APP_VISIBILITY previousMode, MONITOR_APP_VISIBILITY currentMode);
+    HRESULT LauncherVisibilityChange(BOOL currentVisibleState);
 }
 enum IID_IAppVisibility = GUID(0x2246ea2d, 0xcaea, 0x4444, [0xa3, 0xc4, 0x6d, 0xe8, 0x27, 0xe4, 0x43, 0x13]);
 interface IAppVisibility : IUnknown
 {
-    HRESULT GetAppVisibilityOnMonitor(HMONITOR, MONITOR_APP_VISIBILITY*);
-    HRESULT IsLauncherVisible(BOOL*);
-    HRESULT Advise(IAppVisibilityEvents, uint*);
-    HRESULT Unadvise(uint);
+    HRESULT GetAppVisibilityOnMonitor(HMONITOR hMonitor, MONITOR_APP_VISIBILITY* pMode);
+    HRESULT IsLauncherVisible(BOOL* pfVisible);
+    HRESULT Advise(IAppVisibilityEvents pCallback, uint* pdwCookie);
+    HRESULT Unadvise(uint dwCookie);
 }
 alias PACKAGE_EXECUTION_STATE = int;
 enum : int
@@ -6100,38 +6100,38 @@ enum : int
 enum IID_IPackageExecutionStateChangeNotification = GUID(0x1bb12a62, 0x2ad8, 0x432b, [0x8c, 0xcf, 0xc, 0x2c, 0x52, 0xaf, 0xcd, 0x5b]);
 interface IPackageExecutionStateChangeNotification : IUnknown
 {
-    HRESULT OnStateChanged(const(wchar)*, PACKAGE_EXECUTION_STATE);
+    HRESULT OnStateChanged(const(wchar)* pszPackageFullName, PACKAGE_EXECUTION_STATE pesNewState);
 }
 enum IID_IPackageDebugSettings = GUID(0xf27c3930, 0x8029, 0x4ad1, [0x94, 0xe3, 0x3d, 0xba, 0x41, 0x78, 0x10, 0xc1]);
 interface IPackageDebugSettings : IUnknown
 {
-    HRESULT EnableDebugging(const(wchar)*, const(wchar)*, PWSTR);
-    HRESULT DisableDebugging(const(wchar)*);
-    HRESULT Suspend(const(wchar)*);
-    HRESULT Resume(const(wchar)*);
-    HRESULT TerminateAllProcesses(const(wchar)*);
-    HRESULT SetTargetSessionId(uint);
-    HRESULT EnumerateBackgroundTasks(const(wchar)*, uint*, GUID**, const(wchar)***);
-    HRESULT ActivateBackgroundTask(const(GUID)*);
-    HRESULT StartServicing(const(wchar)*);
-    HRESULT StopServicing(const(wchar)*);
-    HRESULT StartSessionRedirection(const(wchar)*, uint);
-    HRESULT StopSessionRedirection(const(wchar)*);
-    HRESULT GetPackageExecutionState(const(wchar)*, PACKAGE_EXECUTION_STATE*);
-    HRESULT RegisterForPackageStateChanges(const(wchar)*, IPackageExecutionStateChangeNotification, uint*);
-    HRESULT UnregisterForPackageStateChanges(uint);
+    HRESULT EnableDebugging(const(wchar)* packageFullName, const(wchar)* debuggerCommandLine, PWSTR environment);
+    HRESULT DisableDebugging(const(wchar)* packageFullName);
+    HRESULT Suspend(const(wchar)* packageFullName);
+    HRESULT Resume(const(wchar)* packageFullName);
+    HRESULT TerminateAllProcesses(const(wchar)* packageFullName);
+    HRESULT SetTargetSessionId(uint sessionId);
+    HRESULT EnumerateBackgroundTasks(const(wchar)* packageFullName, uint* taskCount, GUID** taskIds, const(wchar)*** taskNames);
+    HRESULT ActivateBackgroundTask(const(GUID)* taskId);
+    HRESULT StartServicing(const(wchar)* packageFullName);
+    HRESULT StopServicing(const(wchar)* packageFullName);
+    HRESULT StartSessionRedirection(const(wchar)* packageFullName, uint sessionId);
+    HRESULT StopSessionRedirection(const(wchar)* packageFullName);
+    HRESULT GetPackageExecutionState(const(wchar)* packageFullName, PACKAGE_EXECUTION_STATE* packageExecutionState);
+    HRESULT RegisterForPackageStateChanges(const(wchar)* packageFullName, IPackageExecutionStateChangeNotification pPackageExecutionStateChangeNotification, uint* pdwCookie);
+    HRESULT UnregisterForPackageStateChanges(uint dwCookie);
 }
 enum IID_IPackageDebugSettings2 = GUID(0x6e3194bb, 0xab82, 0x4d22, [0x93, 0xf5, 0xfa, 0xbd, 0xa4, 0xe, 0x7b, 0x16]);
 interface IPackageDebugSettings2 : IPackageDebugSettings
 {
-    HRESULT EnumerateApps(const(wchar)*, uint*, PWSTR**, PWSTR**);
+    HRESULT EnumerateApps(const(wchar)* packageFullName, uint* appCount, PWSTR** appUserModelIds, PWSTR** appDisplayNames);
 }
 enum IID_ISuspensionDependencyManager = GUID(0x52b83a42, 0x2543, 0x416a, [0x81, 0xd9, 0xc0, 0xde, 0x79, 0x69, 0xc8, 0xb3]);
 interface ISuspensionDependencyManager : IUnknown
 {
-    HRESULT RegisterAsChild(HANDLE);
-    HRESULT GroupChildWithParent(HANDLE);
-    HRESULT UngroupChildFromParent(HANDLE);
+    HRESULT RegisterAsChild(HANDLE processHandle);
+    HRESULT GroupChildWithParent(HANDLE childProcessHandle);
+    HRESULT UngroupChildFromParent(HANDLE childProcessHandle);
 }
 alias AHE_TYPE = int;
 enum : int
@@ -6143,7 +6143,7 @@ enum : int
 enum IID_IExecuteCommandApplicationHostEnvironment = GUID(0x18b21aa9, 0xe184, 0x4ff0, [0x9f, 0x5e, 0xf8, 0x82, 0xd0, 0x37, 0x71, 0xb3]);
 interface IExecuteCommandApplicationHostEnvironment : IUnknown
 {
-    HRESULT GetValue(AHE_TYPE*);
+    HRESULT GetValue(AHE_TYPE* pahe);
 }
 alias EC_HOST_UI_MODE = int;
 enum : int
@@ -6156,7 +6156,7 @@ enum : int
 enum IID_IExecuteCommandHost = GUID(0x4b6832a2, 0x5f04, 0x4c9d, [0xb8, 0x9d, 0x72, 0x7a, 0x15, 0xd1, 0x3, 0xe7]);
 interface IExecuteCommandHost : IUnknown
 {
-    HRESULT GetUIMode(EC_HOST_UI_MODE*);
+    HRESULT GetUIMode(EC_HOST_UI_MODE* pUIMode);
 }
 alias APPLICATION_VIEW_STATE = int;
 enum : int
@@ -6178,12 +6178,12 @@ enum : int
 enum IID_IApplicationDesignModeSettings = GUID(0x2a3dee9a, 0xe31d, 0x46d6, [0x85, 0x8, 0xbc, 0xc5, 0x97, 0xdb, 0x35, 0x57]);
 interface IApplicationDesignModeSettings : IUnknown
 {
-    HRESULT SetNativeDisplaySize(SIZE);
-    HRESULT SetScaleFactor(DEVICE_SCALE_FACTOR);
-    HRESULT SetApplicationViewState(APPLICATION_VIEW_STATE);
-    HRESULT ComputeApplicationSize(SIZE*);
-    HRESULT IsApplicationViewStateSupported(APPLICATION_VIEW_STATE, SIZE, DEVICE_SCALE_FACTOR, BOOL*);
-    HRESULT TriggerEdgeGesture(EDGE_GESTURE_KIND);
+    HRESULT SetNativeDisplaySize(SIZE nativeDisplaySizePixels);
+    HRESULT SetScaleFactor(DEVICE_SCALE_FACTOR scaleFactor);
+    HRESULT SetApplicationViewState(APPLICATION_VIEW_STATE viewState);
+    HRESULT ComputeApplicationSize(SIZE* applicationSizePixels);
+    HRESULT IsApplicationViewStateSupported(APPLICATION_VIEW_STATE viewState, SIZE nativeDisplaySizePixels, DEVICE_SCALE_FACTOR scaleFactor, BOOL* supported);
+    HRESULT TriggerEdgeGesture(EDGE_GESTURE_KIND edgeGestureKind);
 }
 alias NATIVE_DISPLAY_ORIENTATION = int;
 enum : int
@@ -6218,18 +6218,18 @@ enum : int
 enum IID_IApplicationDesignModeSettings2 = GUID(0x490514e1, 0x675a, 0x4d6e, [0xa5, 0x8d, 0xe5, 0x49, 0x1, 0xb4, 0xca, 0x2f]);
 interface IApplicationDesignModeSettings2 : IApplicationDesignModeSettings
 {
-    HRESULT SetNativeDisplayOrientation(NATIVE_DISPLAY_ORIENTATION);
-    HRESULT SetApplicationViewOrientation(APPLICATION_VIEW_ORIENTATION);
-    HRESULT SetAdjacentDisplayEdges(ADJACENT_DISPLAY_EDGES);
-    HRESULT SetIsOnLockScreen(BOOL);
-    HRESULT SetApplicationViewMinWidth(APPLICATION_VIEW_MIN_WIDTH);
-    HRESULT GetApplicationSizeBounds(SIZE*, SIZE*);
-    HRESULT GetApplicationViewOrientation(SIZE, APPLICATION_VIEW_ORIENTATION*);
+    HRESULT SetNativeDisplayOrientation(NATIVE_DISPLAY_ORIENTATION nativeDisplayOrientation);
+    HRESULT SetApplicationViewOrientation(APPLICATION_VIEW_ORIENTATION viewOrientation);
+    HRESULT SetAdjacentDisplayEdges(ADJACENT_DISPLAY_EDGES adjacentDisplayEdges);
+    HRESULT SetIsOnLockScreen(BOOL isOnLockScreen);
+    HRESULT SetApplicationViewMinWidth(APPLICATION_VIEW_MIN_WIDTH viewMinWidth);
+    HRESULT GetApplicationSizeBounds(SIZE* minApplicationSizePixels, SIZE* maxApplicationSizePixels);
+    HRESULT GetApplicationViewOrientation(SIZE applicationSizePixels, APPLICATION_VIEW_ORIENTATION* viewOrientation);
 }
 enum IID_ILaunchTargetMonitor = GUID(0x266fbc7e, 0x490d, 0x46ed, [0xa9, 0x6b, 0x22, 0x74, 0xdb, 0x25, 0x20, 0x3]);
 interface ILaunchTargetMonitor : IUnknown
 {
-    HRESULT GetMonitor(HMONITOR*);
+    HRESULT GetMonitor(HMONITOR* monitor);
 }
 alias APPLICATION_VIEW_SIZE_PREFERENCE = int;
 enum : int
@@ -6246,50 +6246,50 @@ enum : int
 enum IID_ILaunchSourceViewSizePreference = GUID(0xe5aa01f7, 0x1fb8, 0x4830, [0x87, 0x20, 0x4e, 0x67, 0x34, 0xcb, 0xd5, 0xf3]);
 interface ILaunchSourceViewSizePreference : IUnknown
 {
-    HRESULT GetSourceViewToPosition(HWND*);
-    HRESULT GetSourceViewSizePreference(APPLICATION_VIEW_SIZE_PREFERENCE*);
+    HRESULT GetSourceViewToPosition(HWND* hwnd);
+    HRESULT GetSourceViewSizePreference(APPLICATION_VIEW_SIZE_PREFERENCE* sourceSizeAfterLaunch);
 }
 enum IID_ILaunchTargetViewSizePreference = GUID(0x2f0666c6, 0x12f7, 0x4360, [0xb5, 0x11, 0xa3, 0x94, 0xa0, 0x55, 0x37, 0x25]);
 interface ILaunchTargetViewSizePreference : IUnknown
 {
-    HRESULT GetTargetViewSizePreference(APPLICATION_VIEW_SIZE_PREFERENCE*);
+    HRESULT GetTargetViewSizePreference(APPLICATION_VIEW_SIZE_PREFERENCE* targetSizeOnLaunch);
 }
 enum IID_ILaunchSourceAppUserModelId = GUID(0x989191ac, 0x28ff, 0x4cf0, [0x95, 0x84, 0xe0, 0xd0, 0x78, 0xbc, 0x23, 0x96]);
 interface ILaunchSourceAppUserModelId : IUnknown
 {
-    HRESULT GetAppUserModelId(PWSTR*);
+    HRESULT GetAppUserModelId(PWSTR* launchingApp);
 }
 enum IID_IInitializeWithWindow = GUID(0x3e68d4bd, 0x7135, 0x4d10, [0x80, 0x18, 0x9f, 0xb6, 0xd9, 0xf3, 0x3f, 0xa1]);
 interface IInitializeWithWindow : IUnknown
 {
-    HRESULT Initialize(HWND);
+    HRESULT Initialize(HWND hwnd);
 }
 enum IID_IHandlerInfo = GUID(0x997706ef, 0xf880, 0x453b, [0x81, 0x18, 0x39, 0xe1, 0xa2, 0xd2, 0x65, 0x5a]);
 interface IHandlerInfo : IUnknown
 {
-    HRESULT GetApplicationDisplayName(PWSTR*);
-    HRESULT GetApplicationPublisher(PWSTR*);
-    HRESULT GetApplicationIconReference(PWSTR*);
+    HRESULT GetApplicationDisplayName(PWSTR* value);
+    HRESULT GetApplicationPublisher(PWSTR* value);
+    HRESULT GetApplicationIconReference(PWSTR* value);
 }
 enum IID_IHandlerInfo2 = GUID(0x31cca04c, 0x4d3, 0x4ea9, [0x90, 0xde, 0x97, 0xb1, 0x5e, 0x87, 0xa5, 0x32]);
 interface IHandlerInfo2 : IHandlerInfo
 {
-    HRESULT GetApplicationId(PWSTR*);
+    HRESULT GetApplicationId(PWSTR* value);
 }
 enum IID_IHandlerActivationHost = GUID(0x35094a87, 0x8bb1, 0x4237, [0x96, 0xc6, 0xc4, 0x17, 0xee, 0xbd, 0xb0, 0x78]);
 interface IHandlerActivationHost : IUnknown
 {
-    HRESULT BeforeCoCreateInstance(const(GUID)*, IShellItemArray, IHandlerInfo);
-    HRESULT BeforeCreateProcess(const(wchar)*, const(wchar)*, IHandlerInfo);
+    HRESULT BeforeCoCreateInstance(const(GUID)* clsidHandler, IShellItemArray itemsBeingActivated, IHandlerInfo handlerInfo);
+    HRESULT BeforeCreateProcess(const(wchar)* applicationPath, const(wchar)* commandLine, IHandlerInfo handlerInfo);
 }
 enum IID_IAppActivationUIInfo = GUID(0xabad189d, 0x9fa3, 0x4278, [0xb3, 0xca, 0x8c, 0xa4, 0x48, 0xa8, 0x8d, 0xcb]);
 interface IAppActivationUIInfo : IUnknown
 {
-    HRESULT GetMonitor(HMONITOR*);
-    HRESULT GetInvokePoint(POINT*);
-    HRESULT GetShowCommand(int*);
-    HRESULT GetShowUI(BOOL*);
-    HRESULT GetKeyState(uint*);
+    HRESULT GetMonitor(HMONITOR* value);
+    HRESULT GetInvokePoint(POINT* value);
+    HRESULT GetShowCommand(int* value);
+    HRESULT GetShowUI(BOOL* value);
+    HRESULT GetKeyState(uint* value);
 }
 alias FLYOUT_PLACEMENT = int;
 enum : int
@@ -6304,14 +6304,14 @@ enum : int
 enum IID_IContactManagerInterop = GUID(0x99eacba7, 0xe073, 0x43b6, [0xa8, 0x96, 0x55, 0xaf, 0xe4, 0x8a, 0x8, 0x33]);
 interface IContactManagerInterop : IUnknown
 {
-    HRESULT ShowContactCardForWindow(HWND, IUnknown, const(RECT)*, FLYOUT_PLACEMENT);
+    HRESULT ShowContactCardForWindow(HWND appWindow, IUnknown contact, const(RECT)* selection, FLYOUT_PLACEMENT preferredPlacement);
 }
 enum IID_IShellIconOverlayIdentifier = GUID(0xc6c4200, 0xc589, 0x11d0, [0x99, 0x9a, 0x0, 0xc0, 0x4f, 0xd6, 0x55, 0xe1]);
 interface IShellIconOverlayIdentifier : IUnknown
 {
-    HRESULT IsMemberOf(const(wchar)*, uint);
-    HRESULT GetOverlayInfo(PWSTR, int, int*, uint*);
-    HRESULT GetPriority(int*);
+    HRESULT IsMemberOf(const(wchar)* pwszPath, uint dwAttrib);
+    HRESULT GetOverlayInfo(PWSTR pwszIconFile, int cchMax, int* pIndex, uint* pdwFlags);
+    HRESULT GetPriority(int* pPriority);
 }
 alias BANNER_NOTIFICATION_EVENT = int;
 enum : int
@@ -6333,7 +6333,7 @@ struct BANNER_NOTIFICATION
 enum IID_IBannerNotificationHandler = GUID(0x8d7b2ba7, 0xdb05, 0x46a8, [0x82, 0x3c, 0xd2, 0xb6, 0xde, 0x8, 0xee, 0x91]);
 interface IBannerNotificationHandler : IUnknown
 {
-    HRESULT OnBannerEvent(const(BANNER_NOTIFICATION)*);
+    HRESULT OnBannerEvent(const(BANNER_NOTIFICATION)* notification);
 }
 alias SORT_ORDER_TYPE = int;
 enum : int
@@ -6345,25 +6345,25 @@ enum : int
 enum IID_ISortColumnArray = GUID(0x6dfc60fb, 0xf2e9, 0x459b, [0xbe, 0xb5, 0x28, 0x8f, 0x1a, 0x7c, 0x7d, 0x54]);
 interface ISortColumnArray : IUnknown
 {
-    HRESULT GetCount(uint*);
-    HRESULT GetAt(uint, SORTCOLUMN*);
-    HRESULT GetSortType(SORT_ORDER_TYPE*);
+    HRESULT GetCount(uint* columnCount);
+    HRESULT GetAt(uint index, SORTCOLUMN* sortcolumn);
+    HRESULT GetSortType(SORT_ORDER_TYPE* type);
 }
 enum IID_IPropertyKeyStore = GUID(0x75bd59aa, 0xf23b, 0x4963, [0xab, 0xa4, 0xb, 0x35, 0x57, 0x52, 0xa9, 0x1b]);
 interface IPropertyKeyStore : IUnknown
 {
-    HRESULT GetKeyCount(int*);
-    HRESULT GetKeyAt(int, PROPERTYKEY*);
-    HRESULT AppendKey(const(PROPERTYKEY)*);
-    HRESULT DeleteKey(int);
-    HRESULT IsKeyInStore(const(PROPERTYKEY)*);
-    HRESULT RemoveKey(const(PROPERTYKEY)*);
+    HRESULT GetKeyCount(int* keyCount);
+    HRESULT GetKeyAt(int index, PROPERTYKEY* pkey);
+    HRESULT AppendKey(const(PROPERTYKEY)* key);
+    HRESULT DeleteKey(int index);
+    HRESULT IsKeyInStore(const(PROPERTYKEY)* key);
+    HRESULT RemoveKey(const(PROPERTYKEY)* key);
 }
 enum IID_IQueryCodePage = GUID(0xc7b236ce, 0xee80, 0x11d0, [0x98, 0x5f, 0x0, 0x60, 0x8, 0x5, 0x93, 0x82]);
 interface IQueryCodePage : IUnknown
 {
-    HRESULT GetCodePage(uint*);
-    HRESULT SetCodePage(uint);
+    HRESULT GetCodePage(uint* puiCodePage);
+    HRESULT SetCodePage(uint uiCodePage);
 }
 alias FOLDERVIEWOPTIONS = int;
 enum : int
@@ -6380,8 +6380,8 @@ enum : int
 enum IID_IFolderViewOptions = GUID(0x3cc974d2, 0xb302, 0x4d36, [0xad, 0x3e, 0x6, 0xd9, 0x3f, 0x69, 0x5d, 0x3f]);
 interface IFolderViewOptions : IUnknown
 {
-    HRESULT SetFolderViewOptions(FOLDERVIEWOPTIONS, FOLDERVIEWOPTIONS);
-    HRESULT GetFolderViewOptions(FOLDERVIEWOPTIONS*);
+    HRESULT SetFolderViewOptions(FOLDERVIEWOPTIONS fvoMask, FOLDERVIEWOPTIONS fvoFlags);
+    HRESULT GetFolderViewOptions(FOLDERVIEWOPTIONS* pfvoFlags);
 }
 alias _SV3CVW3_FLAGS = int;
 enum : int
@@ -6395,13 +6395,13 @@ enum : int
 enum IID_IShellView3 = GUID(0xec39fa88, 0xf8af, 0x41c5, [0x84, 0x21, 0x38, 0xbe, 0xd2, 0x8f, 0x46, 0x73]);
 interface IShellView3 : IShellView2
 {
-    HRESULT CreateViewWindow3(IShellBrowser, IShellView, uint, FOLDERFLAGS, FOLDERFLAGS, FOLDERVIEWMODE, const(GUID)*, const(RECT)*, HWND*);
+    HRESULT CreateViewWindow3(IShellBrowser psbOwner, IShellView psvPrev, uint dwViewFlags, FOLDERFLAGS dwMask, FOLDERFLAGS dwFlags, FOLDERVIEWMODE fvMode, const(GUID)* pvid, const(RECT)* prcView, HWND* phwndView);
 }
 enum IID_ISearchBoxInfo = GUID(0x6af6e03f, 0xd664, 0x4ef4, [0x96, 0x26, 0xf7, 0xe0, 0xed, 0x36, 0x75, 0x5e]);
 interface ISearchBoxInfo : IUnknown
 {
-    HRESULT GetCondition(const(GUID)*, void**);
-    HRESULT GetText(PWSTR*);
+    HRESULT GetCondition(const(GUID)* riid, void** ppv);
+    HRESULT GetText(PWSTR* ppsz);
 }
 alias VPWATERMARKFLAGS = int;
 enum : int
@@ -6423,39 +6423,39 @@ enum : int
 enum IID_IVisualProperties = GUID(0xe693cf68, 0xd967, 0x4112, [0x87, 0x63, 0x99, 0x17, 0x2a, 0xee, 0x5e, 0x5a]);
 interface IVisualProperties : IUnknown
 {
-    HRESULT SetWatermark(HBITMAP, VPWATERMARKFLAGS);
-    HRESULT SetColor(VPCOLORFLAGS, COLORREF);
-    HRESULT GetColor(VPCOLORFLAGS, COLORREF*);
-    HRESULT SetItemHeight(int);
-    HRESULT GetItemHeight(int*);
-    HRESULT SetFont(const(LOGFONTW)*, BOOL);
-    HRESULT GetFont(LOGFONTW*);
-    HRESULT SetTheme(const(wchar)*, const(wchar)*);
+    HRESULT SetWatermark(HBITMAP hbmp, VPWATERMARKFLAGS vpwf);
+    HRESULT SetColor(VPCOLORFLAGS vpcf, COLORREF cr);
+    HRESULT GetColor(VPCOLORFLAGS vpcf, COLORREF* pcr);
+    HRESULT SetItemHeight(int cyItemInPixels);
+    HRESULT GetItemHeight(int* cyItemInPixels);
+    HRESULT SetFont(const(LOGFONTW)* plf, BOOL bRedraw);
+    HRESULT GetFont(LOGFONTW* plf);
+    HRESULT SetTheme(const(wchar)* pszSubAppName, const(wchar)* pszSubIdList);
 }
 enum IID_ICommDlgBrowser3 = GUID(0xc8ad25a1, 0x3294, 0x41ee, [0x81, 0x65, 0x71, 0x17, 0x4b, 0xd0, 0x1c, 0x57]);
 interface ICommDlgBrowser3 : ICommDlgBrowser2
 {
-    HRESULT OnColumnClicked(IShellView, int);
-    HRESULT GetCurrentFilter(PWSTR, int);
-    HRESULT OnPreViewCreated(IShellView);
+    HRESULT OnColumnClicked(IShellView ppshv, int iColumn);
+    HRESULT GetCurrentFilter(PWSTR pszFileSpec, int cchFileSpec);
+    HRESULT OnPreViewCreated(IShellView ppshv);
 }
 enum IID_IUserAccountChangeCallback = GUID(0xa561e69a, 0xb4b8, 0x4113, [0x91, 0xa5, 0x64, 0xc6, 0xbc, 0xca, 0x34, 0x30]);
 interface IUserAccountChangeCallback : IUnknown
 {
-    HRESULT OnPictureChange(const(wchar)*);
+    HRESULT OnPictureChange(const(wchar)* pszUserName);
 }
 enum IID_IStreamAsync = GUID(0xfe0b6665, 0xe0ca, 0x49b9, [0xa1, 0x78, 0x2b, 0x5c, 0xb4, 0x8d, 0x92, 0xa5]);
 interface IStreamAsync : IStream
 {
-    HRESULT ReadAsync(void*, uint, uint*, OVERLAPPED*);
-    HRESULT WriteAsync(const(void)*, uint, uint*, OVERLAPPED*);
-    HRESULT OverlappedResult(OVERLAPPED*, uint*, BOOL);
+    HRESULT ReadAsync(void* pv, uint cb, uint* pcbRead, OVERLAPPED* lpOverlapped);
+    HRESULT WriteAsync(const(void)* lpBuffer, uint cb, uint* pcbWritten, OVERLAPPED* lpOverlapped);
+    HRESULT OverlappedResult(OVERLAPPED* lpOverlapped, uint* lpNumberOfBytesTransferred, BOOL bWait);
     HRESULT CancelIo();
 }
 enum IID_IStreamUnbufferedInfo = GUID(0x8a68fdda, 0x1fdc, 0x4c20, [0x8c, 0xeb, 0x41, 0x66, 0x43, 0xb5, 0xa6, 0x25]);
 interface IStreamUnbufferedInfo : IUnknown
 {
-    HRESULT GetSectorSize(uint*);
+    HRESULT GetSectorSize(uint* pcbSectorSize);
 }
 alias DSH_FLAGS = int;
 enum : int
@@ -6466,114 +6466,114 @@ enum : int
 enum IID_IDragSourceHelper2 = GUID(0x83e07d0d, 0xc5f, 0x4163, [0xbf, 0x1a, 0x60, 0xb2, 0x74, 0x5, 0x1e, 0x40]);
 interface IDragSourceHelper2 : IDragSourceHelper
 {
-    HRESULT SetFlags(uint);
+    HRESULT SetFlags(uint dwFlags);
 }
 enum IID_IHWEventHandler = GUID(0xc1fb73d0, 0xec3a, 0x4ba2, [0xb5, 0x12, 0x8c, 0xdb, 0x91, 0x87, 0xb6, 0xd1]);
 interface IHWEventHandler : IUnknown
 {
-    HRESULT Initialize(const(wchar)*);
-    HRESULT HandleEvent(const(wchar)*, const(wchar)*, const(wchar)*);
-    HRESULT HandleEventWithContent(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, IDataObject);
+    HRESULT Initialize(const(wchar)* pszParams);
+    HRESULT HandleEvent(const(wchar)* pszDeviceID, const(wchar)* pszAltDeviceID, const(wchar)* pszEventType);
+    HRESULT HandleEventWithContent(const(wchar)* pszDeviceID, const(wchar)* pszAltDeviceID, const(wchar)* pszEventType, const(wchar)* pszContentTypeHandler, IDataObject pdataobject);
 }
 enum IID_IHWEventHandler2 = GUID(0xcfcc809f, 0x295d, 0x42e8, [0x9f, 0xfc, 0x42, 0x4b, 0x33, 0xc4, 0x87, 0xe6]);
 interface IHWEventHandler2 : IHWEventHandler
 {
-    HRESULT HandleEventWithHWND(const(wchar)*, const(wchar)*, const(wchar)*, HWND);
+    HRESULT HandleEventWithHWND(const(wchar)* pszDeviceID, const(wchar)* pszAltDeviceID, const(wchar)* pszEventType, HWND hwndOwner);
 }
 enum IID_IQueryCancelAutoPlay = GUID(0xddefe873, 0x6997, 0x4e68, [0xbe, 0x26, 0x39, 0xb6, 0x33, 0xad, 0xbe, 0x12]);
 interface IQueryCancelAutoPlay : IUnknown
 {
-    HRESULT AllowAutoPlay(const(wchar)*, uint, const(wchar)*, uint);
+    HRESULT AllowAutoPlay(const(wchar)* pszPath, uint dwContentType, const(wchar)* pszLabel, uint dwSerialNumber);
 }
 enum IID_IDynamicHWHandler = GUID(0xdc2601d7, 0x59e, 0x42fc, [0xa0, 0x9d, 0x2a, 0xfd, 0x21, 0xb6, 0xd5, 0xf7]);
 interface IDynamicHWHandler : IUnknown
 {
-    HRESULT GetDynamicInfo(const(wchar)*, uint, PWSTR*);
+    HRESULT GetDynamicInfo(const(wchar)* pszDeviceID, uint dwContentType, PWSTR* ppszAction);
 }
 enum IID_IUserNotificationCallback = GUID(0x19108294, 0x441, 0x4aff, [0x80, 0x13, 0xfa, 0xa, 0x73, 0xb, 0xb, 0xea]);
 interface IUserNotificationCallback : IUnknown
 {
-    HRESULT OnBalloonUserClick(POINT*);
-    HRESULT OnLeftClick(POINT*);
-    HRESULT OnContextMenu(POINT*);
+    HRESULT OnBalloonUserClick(POINT* pt);
+    HRESULT OnLeftClick(POINT* pt);
+    HRESULT OnContextMenu(POINT* pt);
 }
 enum IID_IUserNotification2 = GUID(0x215913cc, 0x57eb, 0x4fab, [0xab, 0x5a, 0xe5, 0xfa, 0x7b, 0xea, 0x2a, 0x6c]);
 interface IUserNotification2 : IUnknown
 {
-    HRESULT SetBalloonInfo(const(wchar)*, const(wchar)*, uint);
-    HRESULT SetBalloonRetry(uint, uint, uint);
-    HRESULT SetIconInfo(HICON, const(wchar)*);
-    HRESULT Show(IQueryContinue, uint, IUserNotificationCallback);
-    HRESULT PlaySound(const(wchar)*);
+    HRESULT SetBalloonInfo(const(wchar)* pszTitle, const(wchar)* pszText, uint dwInfoFlags);
+    HRESULT SetBalloonRetry(uint dwShowTime, uint dwInterval, uint cRetryCount);
+    HRESULT SetIconInfo(HICON hIcon, const(wchar)* pszToolTip);
+    HRESULT Show(IQueryContinue pqc, uint dwContinuePollInterval, IUserNotificationCallback pSink);
+    HRESULT PlaySound(const(wchar)* pszSoundName);
 }
 enum IID_IDeskBand2 = GUID(0x79d16de4, 0xabee, 0x4021, [0x8d, 0x9d, 0x91, 0x69, 0xb2, 0x61, 0xd6, 0x57]);
 interface IDeskBand2 : IDeskBand
 {
-    HRESULT CanRenderComposited(BOOL*);
-    HRESULT SetCompositionState(BOOL);
-    HRESULT GetCompositionState(BOOL*);
+    HRESULT CanRenderComposited(BOOL* pfCanRenderComposited);
+    HRESULT SetCompositionState(BOOL fCompositionEnabled);
+    HRESULT GetCompositionState(BOOL* pfCompositionEnabled);
 }
 enum IID_IStartMenuPinnedList = GUID(0x4cd19ada, 0x25a5, 0x4a32, [0xb3, 0xb7, 0x34, 0x7b, 0xee, 0x5b, 0xe3, 0x6b]);
 interface IStartMenuPinnedList : IUnknown
 {
-    HRESULT RemoveFromList(IShellItem);
+    HRESULT RemoveFromList(IShellItem pitem);
 }
 enum IID_ICDBurn = GUID(0x3d73a659, 0xe5d0, 0x4d42, [0xaf, 0xc0, 0x51, 0x21, 0xba, 0x42, 0x5c, 0x8d]);
 interface ICDBurn : IUnknown
 {
-    HRESULT GetRecorderDriveLetter(PWSTR, uint);
-    HRESULT Burn(HWND);
-    HRESULT HasRecordableDrive(BOOL*);
+    HRESULT GetRecorderDriveLetter(PWSTR pszDrive, uint cch);
+    HRESULT Burn(HWND hwnd);
+    HRESULT HasRecordableDrive(BOOL* pfHasRecorder);
 }
 enum IID_IWizardSite = GUID(0x88960f5b, 0x422f, 0x4e7b, [0x80, 0x13, 0x73, 0x41, 0x53, 0x81, 0xc3, 0xc3]);
 interface IWizardSite : IUnknown
 {
-    HRESULT GetPreviousPage(HPROPSHEETPAGE*);
-    HRESULT GetNextPage(HPROPSHEETPAGE*);
-    HRESULT GetCancelledPage(HPROPSHEETPAGE*);
+    HRESULT GetPreviousPage(HPROPSHEETPAGE* phpage);
+    HRESULT GetNextPage(HPROPSHEETPAGE* phpage);
+    HRESULT GetCancelledPage(HPROPSHEETPAGE* phpage);
 }
 enum IID_IWizardExtension = GUID(0xc02ea696, 0x86cc, 0x491e, [0x9b, 0x23, 0x74, 0x39, 0x4a, 0x4, 0x44, 0xa8]);
 interface IWizardExtension : IUnknown
 {
-    HRESULT AddPages(HPROPSHEETPAGE*, uint, uint*);
-    HRESULT GetFirstPage(HPROPSHEETPAGE*);
-    HRESULT GetLastPage(HPROPSHEETPAGE*);
+    HRESULT AddPages(HPROPSHEETPAGE* aPages, uint cPages, uint* pnPagesAdded);
+    HRESULT GetFirstPage(HPROPSHEETPAGE* phpage);
+    HRESULT GetLastPage(HPROPSHEETPAGE* phpage);
 }
 enum IID_IWebWizardExtension = GUID(0xe6b3f66, 0x98d1, 0x48c0, [0xa2, 0x22, 0xfb, 0xde, 0x74, 0xe2, 0xfb, 0xc5]);
 interface IWebWizardExtension : IWizardExtension
 {
-    HRESULT SetInitialURL(const(wchar)*);
-    HRESULT SetErrorURL(const(wchar)*);
+    HRESULT SetInitialURL(const(wchar)* pszURL);
+    HRESULT SetErrorURL(const(wchar)* pszErrorURL);
 }
 enum IID_IPublishingWizard = GUID(0xaa9198bb, 0xccec, 0x472d, [0xbe, 0xed, 0x19, 0xa4, 0xf6, 0x73, 0x3f, 0x7a]);
 interface IPublishingWizard : IWizardExtension
 {
-    HRESULT Initialize(IDataObject, uint, const(wchar)*);
-    HRESULT GetTransferManifest(HRESULT*, IXMLDOMDocument*);
+    HRESULT Initialize(IDataObject pdo, uint dwOptions, const(wchar)* pszServiceScope);
+    HRESULT GetTransferManifest(HRESULT* phrFromTransfer, IXMLDOMDocument* pdocManifest);
 }
 enum IID_IFolderViewHost = GUID(0x1ea58f02, 0xd55a, 0x411d, [0xb0, 0x9e, 0x9e, 0x65, 0xac, 0x21, 0x60, 0x5b]);
 interface IFolderViewHost : IUnknown
 {
-    HRESULT Initialize(HWND, IDataObject, RECT*);
+    HRESULT Initialize(HWND hwndParent, IDataObject pdo, RECT* prc);
 }
 enum IID_IAccessibleObject = GUID(0x95a391c5, 0x9ed4, 0x4c28, [0x84, 0x1, 0xab, 0x9e, 0x6, 0x71, 0x9e, 0x11]);
 interface IAccessibleObject : IUnknown
 {
-    HRESULT SetAccessibleName(const(wchar)*);
+    HRESULT SetAccessibleName(const(wchar)* pszName);
 }
 enum IID_IResultsFolder = GUID(0x96e5ae6d, 0x6ae1, 0x4b1c, [0x90, 0xc, 0xc6, 0x48, 0xe, 0xaa, 0x88, 0x28]);
 interface IResultsFolder : IUnknown
 {
-    HRESULT AddItem(IShellItem);
-    HRESULT AddIDList(ITEMIDLIST*, ITEMIDLIST**);
-    HRESULT RemoveItem(IShellItem);
-    HRESULT RemoveIDList(ITEMIDLIST*);
+    HRESULT AddItem(IShellItem psi);
+    HRESULT AddIDList(ITEMIDLIST* pidl, ITEMIDLIST** ppidlAdded);
+    HRESULT RemoveItem(IShellItem psi);
+    HRESULT RemoveIDList(ITEMIDLIST* pidl);
     HRESULT RemoveAll();
 }
 enum IID_IAutoCompleteDropDown = GUID(0x3cd141f4, 0x3c6a, 0x11d2, [0xbc, 0xaa, 0x0, 0xc0, 0x4f, 0xd9, 0x29, 0xdb]);
 interface IAutoCompleteDropDown : IUnknown
 {
-    HRESULT GetDropDownStatus(uint*, PWSTR*);
+    HRESULT GetDropDownStatus(uint* pdwFlags, PWSTR* ppwszString);
     HRESULT ResetEnumerator();
 }
 alias CDBURNINGEXTENSIONRET = int;
@@ -6595,7 +6595,7 @@ enum : int
 enum IID_ICDBurnExt = GUID(0x2271dcca, 0x74fc, 0x4414, [0x8f, 0xb7, 0xc5, 0x6b, 0x5, 0xac, 0xe2, 0xd7]);
 interface ICDBurnExt : IUnknown
 {
-    HRESULT GetSupportedActionTypes(uint*);
+    HRESULT GetSupportedActionTypes(uint* pdwActions);
 }
 enum IID_IEnumReadyCallback = GUID(0x61e00d45, 0x8fff, 0x4e60, [0x92, 0x4e, 0x65, 0x37, 0xb6, 0x16, 0x12, 0xdd]);
 interface IEnumReadyCallback : IUnknown
@@ -6605,55 +6605,55 @@ interface IEnumReadyCallback : IUnknown
 enum IID_IEnumerableView = GUID(0x8c8bf236, 0x1aec, 0x495f, [0x98, 0x94, 0x91, 0xd5, 0x7c, 0x3c, 0x68, 0x6f]);
 interface IEnumerableView : IUnknown
 {
-    HRESULT SetEnumReadyCallback(IEnumReadyCallback);
-    HRESULT CreateEnumIDListFromContents(ITEMIDLIST*, uint, IEnumIDList*);
+    HRESULT SetEnumReadyCallback(IEnumReadyCallback percb);
+    HRESULT CreateEnumIDListFromContents(ITEMIDLIST* pidlFolder, uint dwEnumFlags, IEnumIDList* ppEnumIDList);
 }
 enum IID_IInsertItem = GUID(0xd2b57227, 0x3d23, 0x4b95, [0x93, 0xc0, 0x49, 0x2b, 0xd4, 0x54, 0xc3, 0x56]);
 interface IInsertItem : IUnknown
 {
-    HRESULT InsertItem(ITEMIDLIST*);
+    HRESULT InsertItem(ITEMIDLIST* pidl);
 }
 enum IID_IFolderBandPriv = GUID(0x47c01f95, 0xe185, 0x412c, [0xb5, 0xc5, 0x4f, 0x27, 0xdf, 0x96, 0x5a, 0xea]);
 interface IFolderBandPriv : IUnknown
 {
-    HRESULT SetCascade(BOOL);
-    HRESULT SetAccelerators(BOOL);
-    HRESULT SetNoIcons(BOOL);
-    HRESULT SetNoText(BOOL);
+    HRESULT SetCascade(BOOL fCascade);
+    HRESULT SetAccelerators(BOOL fAccelerators);
+    HRESULT SetNoIcons(BOOL fNoIcons);
+    HRESULT SetNoText(BOOL fNoText);
 }
 enum IID_IImageRecompress = GUID(0x505f1513, 0x6b3e, 0x4892, [0xa2, 0x72, 0x59, 0xf8, 0x88, 0x9a, 0x4d, 0x3e]);
 interface IImageRecompress : IUnknown
 {
-    HRESULT RecompressImage(IShellItem, int, int, int, IStorage, IStream*);
+    HRESULT RecompressImage(IShellItem psi, int cx, int cy, int iQuality, IStorage pstg, IStream* ppstrmOut);
 }
 enum IID_IFileDialogControlEvents = GUID(0x36116642, 0xd713, 0x4b97, [0x9b, 0x83, 0x74, 0x84, 0xa9, 0xd0, 0x4, 0x33]);
 interface IFileDialogControlEvents : IUnknown
 {
-    HRESULT OnItemSelected(IFileDialogCustomize, uint, uint);
-    HRESULT OnButtonClicked(IFileDialogCustomize, uint);
-    HRESULT OnCheckButtonToggled(IFileDialogCustomize, uint, BOOL);
-    HRESULT OnControlActivating(IFileDialogCustomize, uint);
+    HRESULT OnItemSelected(IFileDialogCustomize pfdc, uint dwIDCtl, uint dwIDItem);
+    HRESULT OnButtonClicked(IFileDialogCustomize pfdc, uint dwIDCtl);
+    HRESULT OnCheckButtonToggled(IFileDialogCustomize pfdc, uint dwIDCtl, BOOL bChecked);
+    HRESULT OnControlActivating(IFileDialogCustomize pfdc, uint dwIDCtl);
 }
 enum IID_IFileDialog2 = GUID(0x61744fc7, 0x85b5, 0x4791, [0xa9, 0xb0, 0x27, 0x22, 0x76, 0x30, 0x9b, 0x13]);
 interface IFileDialog2 : IFileDialog
 {
-    HRESULT SetCancelButtonLabel(const(wchar)*);
-    HRESULT SetNavigationRoot(IShellItem);
+    HRESULT SetCancelButtonLabel(const(wchar)* pszLabel);
+    HRESULT SetNavigationRoot(IShellItem psi);
 }
 enum IID_IApplicationAssociationRegistrationUI = GUID(0x1f76a169, 0xf994, 0x40ac, [0x8f, 0xc8, 0x9, 0x59, 0xe8, 0x87, 0x47, 0x10]);
 interface IApplicationAssociationRegistrationUI : IUnknown
 {
-    HRESULT LaunchAdvancedAssociationUI(const(wchar)*);
+    HRESULT LaunchAdvancedAssociationUI(const(wchar)* pszAppRegistryName);
 }
 enum IID_IShellRunDll = GUID(0xfce4bde0, 0x4b68, 0x4b80, [0x8e, 0x9c, 0x74, 0x26, 0x31, 0x5a, 0x73, 0x88]);
 interface IShellRunDll : IUnknown
 {
-    HRESULT Run(const(wchar)*);
+    HRESULT Run(const(wchar)* pszArgs);
 }
 enum IID_IPreviousVersionsInfo = GUID(0x76e54780, 0xad74, 0x48e3, [0xa6, 0x95, 0x3b, 0xa9, 0xa0, 0xaf, 0xf1, 0xd]);
 interface IPreviousVersionsInfo : IUnknown
 {
-    HRESULT AreSnapshotsAvailable(const(wchar)*, BOOL, BOOL*);
+    HRESULT AreSnapshotsAvailable(const(wchar)* pszPath, BOOL fOkToBeSlow, BOOL* pfAvailable);
 }
 enum IID_IUseToBrowseItem = GUID(0x5edda5c, 0x98a3, 0x4717, [0x8a, 0xdb, 0xc5, 0xe7, 0xda, 0x99, 0x1e, 0xb1]);
 interface IUseToBrowseItem : IRelatedItem
@@ -6674,10 +6674,10 @@ enum : int
 enum IID_INameSpaceTreeControl2 = GUID(0x7cc7aed8, 0x290e, 0x49bc, [0x89, 0x45, 0xc1, 0x40, 0x1c, 0xc9, 0x30, 0x6c]);
 interface INameSpaceTreeControl2 : INameSpaceTreeControl
 {
-    HRESULT SetControlStyle(uint, uint);
-    HRESULT GetControlStyle(uint, uint*);
-    HRESULT SetControlStyle2(NSTCSTYLE2, NSTCSTYLE2);
-    HRESULT GetControlStyle2(NSTCSTYLE2, NSTCSTYLE2*);
+    HRESULT SetControlStyle(uint nstcsMask, uint nstcsStyle);
+    HRESULT GetControlStyle(uint nstcsMask, uint* pnstcsStyle);
+    HRESULT SetControlStyle2(NSTCSTYLE2 nstcsMask, NSTCSTYLE2 nstcsStyle);
+    HRESULT GetControlStyle2(NSTCSTYLE2 nstcsMask, NSTCSTYLE2* pnstcsStyle);
 }
 alias _NSTCEHITTEST = int;
 enum : int
@@ -6706,41 +6706,41 @@ enum : int
 enum IID_INameSpaceTreeControlEvents = GUID(0x93d77985, 0xb3d8, 0x4484, [0x83, 0x18, 0x67, 0x2c, 0xdd, 0xa0, 0x2, 0xce]);
 interface INameSpaceTreeControlEvents : IUnknown
 {
-    HRESULT OnItemClick(IShellItem, uint, uint);
-    HRESULT OnPropertyItemCommit(IShellItem);
-    HRESULT OnItemStateChanging(IShellItem, uint, uint);
-    HRESULT OnItemStateChanged(IShellItem, uint, uint);
-    HRESULT OnSelectionChanged(IShellItemArray);
-    HRESULT OnKeyboardInput(uint, WPARAM, LPARAM);
-    HRESULT OnBeforeExpand(IShellItem);
-    HRESULT OnAfterExpand(IShellItem);
-    HRESULT OnBeginLabelEdit(IShellItem);
-    HRESULT OnEndLabelEdit(IShellItem);
-    HRESULT OnGetToolTip(IShellItem, PWSTR, int);
-    HRESULT OnBeforeItemDelete(IShellItem);
-    HRESULT OnItemAdded(IShellItem, BOOL);
-    HRESULT OnItemDeleted(IShellItem, BOOL);
-    HRESULT OnBeforeContextMenu(IShellItem, const(GUID)*, void**);
-    HRESULT OnAfterContextMenu(IShellItem, IContextMenu, const(GUID)*, void**);
-    HRESULT OnBeforeStateImageChange(IShellItem);
-    HRESULT OnGetDefaultIconIndex(IShellItem, int*, int*);
+    HRESULT OnItemClick(IShellItem psi, uint nstceHitTest, uint nstceClickType);
+    HRESULT OnPropertyItemCommit(IShellItem psi);
+    HRESULT OnItemStateChanging(IShellItem psi, uint nstcisMask, uint nstcisState);
+    HRESULT OnItemStateChanged(IShellItem psi, uint nstcisMask, uint nstcisState);
+    HRESULT OnSelectionChanged(IShellItemArray psiaSelection);
+    HRESULT OnKeyboardInput(uint uMsg, WPARAM wParam, LPARAM lParam);
+    HRESULT OnBeforeExpand(IShellItem psi);
+    HRESULT OnAfterExpand(IShellItem psi);
+    HRESULT OnBeginLabelEdit(IShellItem psi);
+    HRESULT OnEndLabelEdit(IShellItem psi);
+    HRESULT OnGetToolTip(IShellItem psi, PWSTR pszTip, int cchTip);
+    HRESULT OnBeforeItemDelete(IShellItem psi);
+    HRESULT OnItemAdded(IShellItem psi, BOOL fIsRoot);
+    HRESULT OnItemDeleted(IShellItem psi, BOOL fIsRoot);
+    HRESULT OnBeforeContextMenu(IShellItem psi, const(GUID)* riid, void** ppv);
+    HRESULT OnAfterContextMenu(IShellItem psi, IContextMenu pcmIn, const(GUID)* riid, void** ppv);
+    HRESULT OnBeforeStateImageChange(IShellItem psi);
+    HRESULT OnGetDefaultIconIndex(IShellItem psi, int* piDefaultIcon, int* piOpenIcon);
 }
 enum IID_INameSpaceTreeControlDropHandler = GUID(0xf9c665d6, 0xc2f2, 0x4c19, [0xbf, 0x33, 0x83, 0x22, 0xd7, 0x35, 0x2f, 0x51]);
 interface INameSpaceTreeControlDropHandler : IUnknown
 {
-    HRESULT OnDragEnter(IShellItem, IShellItemArray, BOOL, uint, uint*);
-    HRESULT OnDragOver(IShellItem, IShellItemArray, uint, uint*);
-    HRESULT OnDragPosition(IShellItem, IShellItemArray, int, int);
-    HRESULT OnDrop(IShellItem, IShellItemArray, int, uint, uint*);
-    HRESULT OnDropPosition(IShellItem, IShellItemArray, int, int);
-    HRESULT OnDragLeave(IShellItem);
+    HRESULT OnDragEnter(IShellItem psiOver, IShellItemArray psiaData, BOOL fOutsideSource, uint grfKeyState, uint* pdwEffect);
+    HRESULT OnDragOver(IShellItem psiOver, IShellItemArray psiaData, uint grfKeyState, uint* pdwEffect);
+    HRESULT OnDragPosition(IShellItem psiOver, IShellItemArray psiaData, int iNewPosition, int iOldPosition);
+    HRESULT OnDrop(IShellItem psiOver, IShellItemArray psiaData, int iPosition, uint grfKeyState, uint* pdwEffect);
+    HRESULT OnDropPosition(IShellItem psiOver, IShellItemArray psiaData, int iNewPosition, int iOldPosition);
+    HRESULT OnDragLeave(IShellItem psiOver);
 }
 enum IID_INameSpaceTreeAccessible = GUID(0x71f312de, 0x43ed, 0x4190, [0x84, 0x77, 0xe9, 0x53, 0x6b, 0x82, 0x35, 0xb]);
 interface INameSpaceTreeAccessible : IUnknown
 {
-    HRESULT OnGetDefaultAccessibilityAction(IShellItem, BSTR*);
-    HRESULT OnDoDefaultAccessibilityAction(IShellItem);
-    HRESULT OnGetAccessibilityRole(IShellItem, VARIANT*);
+    HRESULT OnGetDefaultAccessibilityAction(IShellItem psi, BSTR* pbstrDefaultAction);
+    HRESULT OnDoDefaultAccessibilityAction(IShellItem psi);
+    HRESULT OnGetAccessibilityRole(IShellItem psi, VARIANT* pvarRole);
 }
 struct NSTCCUSTOMDRAW
 {
@@ -6756,25 +6756,25 @@ struct NSTCCUSTOMDRAW
 enum IID_INameSpaceTreeControlCustomDraw = GUID(0x2d3ba758, 0x33ee, 0x42d5, [0xbb, 0x7b, 0x5f, 0x34, 0x31, 0xd8, 0x6c, 0x78]);
 interface INameSpaceTreeControlCustomDraw : IUnknown
 {
-    HRESULT PrePaint(HDC, RECT*, LRESULT*);
-    HRESULT PostPaint(HDC, RECT*);
-    HRESULT ItemPrePaint(HDC, RECT*, NSTCCUSTOMDRAW*, COLORREF*, COLORREF*, LRESULT*);
-    HRESULT ItemPostPaint(HDC, RECT*, NSTCCUSTOMDRAW*);
+    HRESULT PrePaint(HDC hdc, RECT* prc, LRESULT* plres);
+    HRESULT PostPaint(HDC hdc, RECT* prc);
+    HRESULT ItemPrePaint(HDC hdc, RECT* prc, NSTCCUSTOMDRAW* pnstccdItem, COLORREF* pclrText, COLORREF* pclrTextBk, LRESULT* plres);
+    HRESULT ItemPostPaint(HDC hdc, RECT* prc, NSTCCUSTOMDRAW* pnstccdItem);
 }
 enum IID_ITrayDeskBand = GUID(0x6d67e846, 0x5b9c, 0x4db8, [0x9c, 0xbc, 0xdd, 0xe1, 0x2f, 0x42, 0x54, 0xf1]);
 interface ITrayDeskBand : IUnknown
 {
-    HRESULT ShowDeskBand(const(GUID)*);
-    HRESULT HideDeskBand(const(GUID)*);
-    HRESULT IsDeskBandShown(const(GUID)*);
+    HRESULT ShowDeskBand(const(GUID)* clsid);
+    HRESULT HideDeskBand(const(GUID)* clsid);
+    HRESULT IsDeskBandShown(const(GUID)* clsid);
     HRESULT DeskBandRegistrationChanged();
 }
 enum IID_IBandHost = GUID(0xb9075c7c, 0xd48e, 0x403f, [0xab, 0x99, 0xd6, 0xc7, 0x7a, 0x10, 0x84, 0xac]);
 interface IBandHost : IUnknown
 {
-    HRESULT CreateBand(const(GUID)*, BOOL, BOOL, const(GUID)*, void**);
-    HRESULT SetBandAvailability(const(GUID)*, BOOL);
-    HRESULT DestroyBand(const(GUID)*);
+    HRESULT CreateBand(const(GUID)* rclsidBand, BOOL fAvailable, BOOL fVisible, const(GUID)* riid, void** ppv);
+    HRESULT SetBandAvailability(const(GUID)* rclsidBand, BOOL fAvailable);
+    HRESULT DestroyBand(const(GUID)* rclsidBand);
 }
 enum IID_IComputerInfoChangeNotify = GUID(0xdf60d92, 0x6818, 0x46d6, [0xb3, 0x58, 0xd6, 0x61, 0x70, 0xdd, 0xe4, 0x66]);
 interface IComputerInfoChangeNotify : IUnknown
@@ -6784,7 +6784,7 @@ interface IComputerInfoChangeNotify : IUnknown
 enum IID_IDesktopGadget = GUID(0xc1646bc4, 0xf298, 0x4f91, [0xa2, 0x4, 0xeb, 0x2d, 0xd1, 0x70, 0x9d, 0x1a]);
 interface IDesktopGadget : IUnknown
 {
-    HRESULT RunGadget(const(wchar)*);
+    HRESULT RunGadget(const(wchar)* gadgetPath);
 }
 enum CLSID_QueryCancelAutoPlay = GUID(0x331f1768, 0x5a9, 0x4ddd, [0xb8, 0x6e, 0xda, 0xe3, 0x4d, 0xdc, 0x99, 0x8a]);
 struct QueryCancelAutoPlay
@@ -6908,27 +6908,27 @@ enum : int
 enum IID_IAccessibilityDockingServiceCallback = GUID(0x157733fd, 0xa592, 0x42e5, [0xb5, 0x94, 0x24, 0x84, 0x68, 0xc5, 0xa8, 0x1b]);
 interface IAccessibilityDockingServiceCallback : IUnknown
 {
-    HRESULT Undocked(UNDOCK_REASON);
+    HRESULT Undocked(UNDOCK_REASON undockReason);
 }
 enum IID_IAccessibilityDockingService = GUID(0x8849dc22, 0xcedf, 0x4c95, [0x99, 0x8d, 0x5, 0x14, 0x19, 0xdd, 0x3f, 0x76]);
 interface IAccessibilityDockingService : IUnknown
 {
-    HRESULT GetAvailableSize(HMONITOR, uint*, uint*);
-    HRESULT DockWindow(HWND, HMONITOR, uint, IAccessibilityDockingServiceCallback);
-    HRESULT UndockWindow(HWND);
+    HRESULT GetAvailableSize(HMONITOR hMonitor, uint* pcxFixed, uint* pcyMax);
+    HRESULT DockWindow(HWND hwnd, HMONITOR hMonitor, uint cyRequested, IAccessibilityDockingServiceCallback pCallback);
+    HRESULT UndockWindow(HWND hwnd);
 }
 enum IID_IStorageProviderBanners = GUID(0x5efb46d7, 0x47c0, 0x4b68, [0xac, 0xda, 0xde, 0xd4, 0x7c, 0x90, 0xec, 0x91]);
 interface IStorageProviderBanners : IUnknown
 {
-    HRESULT SetBanner(const(wchar)*, const(wchar)*, const(wchar)*);
-    HRESULT ClearBanner(const(wchar)*, const(wchar)*);
-    HRESULT ClearAllBanners(const(wchar)*);
-    HRESULT GetBanner(const(wchar)*, const(wchar)*, PWSTR*);
+    HRESULT SetBanner(const(wchar)* providerIdentity, const(wchar)* subscriptionId, const(wchar)* contentId);
+    HRESULT ClearBanner(const(wchar)* providerIdentity, const(wchar)* subscriptionId);
+    HRESULT ClearAllBanners(const(wchar)* providerIdentity);
+    HRESULT GetBanner(const(wchar)* providerIdentity, const(wchar)* subscriptionId, PWSTR* contentId);
 }
 enum IID_IStorageProviderCopyHook = GUID(0x7bf992a9, 0xaf7a, 0x4dba, [0xb2, 0xe5, 0x4d, 0x8, 0xb, 0x1e, 0xcb, 0xc6]);
 interface IStorageProviderCopyHook : IUnknown
 {
-    HRESULT CopyCallback(HWND, uint, uint, const(wchar)*, uint, const(wchar)*, uint, uint*);
+    HRESULT CopyCallback(HWND hwnd, uint operation, uint flags, const(wchar)* srcFile, uint srcAttribs, const(wchar)* destFile, uint destAttribs, uint* result);
 }
 alias CommandStateChangeConstants = int;
 enum : int
@@ -7026,27 +7026,27 @@ interface IWebBrowser : IDispatch
     HRESULT GoForward();
     HRESULT GoHome();
     HRESULT GoSearch();
-    HRESULT Navigate(BSTR, VARIANT*, VARIANT*, VARIANT*, VARIANT*);
+    HRESULT Navigate(BSTR URL, VARIANT* Flags, VARIANT* TargetFrameName, VARIANT* PostData, VARIANT* Headers);
     HRESULT Refresh();
-    HRESULT Refresh2(VARIANT*);
+    HRESULT Refresh2(VARIANT* Level);
     HRESULT Stop();
-    HRESULT get_Application(IDispatch*);
-    HRESULT get_Parent(IDispatch*);
-    HRESULT get_Container(IDispatch*);
-    HRESULT get_Document(IDispatch*);
-    HRESULT get_TopLevelContainer(VARIANT_BOOL*);
-    HRESULT get_Type(BSTR*);
-    HRESULT get_Left(int*);
-    HRESULT put_Left(int);
-    HRESULT get_Top(int*);
-    HRESULT put_Top(int);
-    HRESULT get_Width(int*);
-    HRESULT put_Width(int);
-    HRESULT get_Height(int*);
-    HRESULT put_Height(int);
-    HRESULT get_LocationName(BSTR*);
-    HRESULT get_LocationURL(BSTR*);
-    HRESULT get_Busy(VARIANT_BOOL*);
+    HRESULT get_Application(IDispatch* ppDisp);
+    HRESULT get_Parent(IDispatch* ppDisp);
+    HRESULT get_Container(IDispatch* ppDisp);
+    HRESULT get_Document(IDispatch* ppDisp);
+    HRESULT get_TopLevelContainer(VARIANT_BOOL* pBool);
+    HRESULT get_Type(BSTR* Type);
+    HRESULT get_Left(int* pl);
+    HRESULT put_Left(int Left);
+    HRESULT get_Top(int* pl);
+    HRESULT put_Top(int Top);
+    HRESULT get_Width(int* pl);
+    HRESULT put_Width(int Width);
+    HRESULT get_Height(int* pl);
+    HRESULT put_Height(int Height);
+    HRESULT get_LocationName(BSTR* LocationName);
+    HRESULT get_LocationURL(BSTR* LocationURL);
+    HRESULT get_Busy(VARIANT_BOOL* pBool);
 }
 enum IID_DWebBrowserEvents = GUID(0xeab22ac2, 0x30c1, 0x11cf, [0xa7, 0xeb, 0x0, 0x0, 0xc0, 0x5b, 0xae, 0xb]);
 interface DWebBrowserEvents : IDispatch
@@ -7056,48 +7056,48 @@ enum IID_IWebBrowserApp = GUID(0x2df05, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0
 interface IWebBrowserApp : IWebBrowser
 {
     HRESULT Quit();
-    HRESULT ClientToWindow(int*, int*);
-    HRESULT PutProperty(BSTR, VARIANT);
-    HRESULT GetProperty(BSTR, VARIANT*);
-    HRESULT get_Name(BSTR*);
-    HRESULT get_HWND(SHANDLE_PTR*);
-    HRESULT get_FullName(BSTR*);
-    HRESULT get_Path(BSTR*);
-    HRESULT get_Visible(VARIANT_BOOL*);
-    HRESULT put_Visible(VARIANT_BOOL);
-    HRESULT get_StatusBar(VARIANT_BOOL*);
-    HRESULT put_StatusBar(VARIANT_BOOL);
-    HRESULT get_StatusText(BSTR*);
-    HRESULT put_StatusText(BSTR);
-    HRESULT get_ToolBar(int*);
-    HRESULT put_ToolBar(int);
-    HRESULT get_MenuBar(VARIANT_BOOL*);
-    HRESULT put_MenuBar(VARIANT_BOOL);
-    HRESULT get_FullScreen(VARIANT_BOOL*);
-    HRESULT put_FullScreen(VARIANT_BOOL);
+    HRESULT ClientToWindow(int* pcx, int* pcy);
+    HRESULT PutProperty(BSTR Property, VARIANT vtValue);
+    HRESULT GetProperty(BSTR Property, VARIANT* pvtValue);
+    HRESULT get_Name(BSTR* Name);
+    HRESULT get_HWND(SHANDLE_PTR* pHWND);
+    HRESULT get_FullName(BSTR* FullName);
+    HRESULT get_Path(BSTR* Path);
+    HRESULT get_Visible(VARIANT_BOOL* pBool);
+    HRESULT put_Visible(VARIANT_BOOL Value);
+    HRESULT get_StatusBar(VARIANT_BOOL* pBool);
+    HRESULT put_StatusBar(VARIANT_BOOL Value);
+    HRESULT get_StatusText(BSTR* StatusText);
+    HRESULT put_StatusText(BSTR StatusText);
+    HRESULT get_ToolBar(int* Value);
+    HRESULT put_ToolBar(int Value);
+    HRESULT get_MenuBar(VARIANT_BOOL* Value);
+    HRESULT put_MenuBar(VARIANT_BOOL Value);
+    HRESULT get_FullScreen(VARIANT_BOOL* pbFullScreen);
+    HRESULT put_FullScreen(VARIANT_BOOL bFullScreen);
 }
 enum IID_IWebBrowser2 = GUID(0xd30c1661, 0xcdaf, 0x11d0, [0x8a, 0x3e, 0x0, 0xc0, 0x4f, 0xc9, 0xe2, 0x6e]);
 interface IWebBrowser2 : IWebBrowserApp
 {
-    HRESULT Navigate2(VARIANT*, VARIANT*, VARIANT*, VARIANT*, VARIANT*);
-    HRESULT QueryStatusWB(OLECMDID, OLECMDF*);
-    HRESULT ExecWB(OLECMDID, OLECMDEXECOPT, VARIANT*, VARIANT*);
-    HRESULT ShowBrowserBar(VARIANT*, VARIANT*, VARIANT*);
-    HRESULT get_ReadyState(READYSTATE*);
-    HRESULT get_Offline(VARIANT_BOOL*);
-    HRESULT put_Offline(VARIANT_BOOL);
-    HRESULT get_Silent(VARIANT_BOOL*);
-    HRESULT put_Silent(VARIANT_BOOL);
-    HRESULT get_RegisterAsBrowser(VARIANT_BOOL*);
-    HRESULT put_RegisterAsBrowser(VARIANT_BOOL);
-    HRESULT get_RegisterAsDropTarget(VARIANT_BOOL*);
-    HRESULT put_RegisterAsDropTarget(VARIANT_BOOL);
-    HRESULT get_TheaterMode(VARIANT_BOOL*);
-    HRESULT put_TheaterMode(VARIANT_BOOL);
-    HRESULT get_AddressBar(VARIANT_BOOL*);
-    HRESULT put_AddressBar(VARIANT_BOOL);
-    HRESULT get_Resizable(VARIANT_BOOL*);
-    HRESULT put_Resizable(VARIANT_BOOL);
+    HRESULT Navigate2(VARIANT* URL, VARIANT* Flags, VARIANT* TargetFrameName, VARIANT* PostData, VARIANT* Headers);
+    HRESULT QueryStatusWB(OLECMDID cmdID, OLECMDF* pcmdf);
+    HRESULT ExecWB(OLECMDID cmdID, OLECMDEXECOPT cmdexecopt, VARIANT* pvaIn, VARIANT* pvaOut);
+    HRESULT ShowBrowserBar(VARIANT* pvaClsid, VARIANT* pvarShow, VARIANT* pvarSize);
+    HRESULT get_ReadyState(READYSTATE* plReadyState);
+    HRESULT get_Offline(VARIANT_BOOL* pbOffline);
+    HRESULT put_Offline(VARIANT_BOOL bOffline);
+    HRESULT get_Silent(VARIANT_BOOL* pbSilent);
+    HRESULT put_Silent(VARIANT_BOOL bSilent);
+    HRESULT get_RegisterAsBrowser(VARIANT_BOOL* pbRegister);
+    HRESULT put_RegisterAsBrowser(VARIANT_BOOL bRegister);
+    HRESULT get_RegisterAsDropTarget(VARIANT_BOOL* pbRegister);
+    HRESULT put_RegisterAsDropTarget(VARIANT_BOOL bRegister);
+    HRESULT get_TheaterMode(VARIANT_BOOL* pbRegister);
+    HRESULT put_TheaterMode(VARIANT_BOOL bRegister);
+    HRESULT get_AddressBar(VARIANT_BOOL* Value);
+    HRESULT put_AddressBar(VARIANT_BOOL Value);
+    HRESULT get_Resizable(VARIANT_BOOL* Value);
+    HRESULT put_Resizable(VARIANT_BOOL Value);
 }
 enum IID_DWebBrowserEvents2 = GUID(0x34a715a0, 0x6587, 0x11d0, [0x92, 0x4a, 0x0, 0x20, 0xaf, 0xc7, 0xac, 0x4d]);
 interface DWebBrowserEvents2 : IDispatch
@@ -7130,17 +7130,17 @@ interface DShellWindowsEvents : IDispatch
 enum IID_IShellWindows = GUID(0x85cb6900, 0x4d95, 0x11cf, [0x96, 0xc, 0x0, 0x80, 0xc7, 0xf4, 0xee, 0x85]);
 interface IShellWindows : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT Item(VARIANT, IDispatch*);
-    HRESULT _NewEnum(IUnknown*);
-    HRESULT Register(IDispatch, int, ShellWindowTypeConstants, int*);
-    HRESULT RegisterPending(int, VARIANT*, VARIANT*, ShellWindowTypeConstants, int*);
-    HRESULT Revoke(int);
-    HRESULT OnNavigate(int, VARIANT*);
-    HRESULT OnActivated(int, VARIANT_BOOL);
-    HRESULT FindWindowSW(VARIANT*, VARIANT*, ShellWindowTypeConstants, int*, ShellWindowFindWindowOptions, IDispatch*);
-    HRESULT OnCreated(int, IUnknown);
-    HRESULT ProcessAttachDetach(VARIANT_BOOL);
+    HRESULT get_Count(int* Count);
+    HRESULT Item(VARIANT index, IDispatch* Folder);
+    HRESULT _NewEnum(IUnknown* ppunk);
+    HRESULT Register(IDispatch pid, int hwnd, ShellWindowTypeConstants swClass, int* plCookie);
+    HRESULT RegisterPending(int lThreadId, VARIANT* pvarloc, VARIANT* pvarlocRoot, ShellWindowTypeConstants swClass, int* plCookie);
+    HRESULT Revoke(int lCookie);
+    HRESULT OnNavigate(int lCookie, VARIANT* pvarLoc);
+    HRESULT OnActivated(int lCookie, VARIANT_BOOL fActive);
+    HRESULT FindWindowSW(VARIANT* pvarLoc, VARIANT* pvarLocRoot, ShellWindowTypeConstants swClass, int* phwnd, ShellWindowFindWindowOptions swfwOptions, IDispatch* ppdispOut);
+    HRESULT OnCreated(int lCookie, IUnknown punk);
+    HRESULT ProcessAttachDetach(VARIANT_BOOL fAttach);
 }
 enum CLSID_ShellWindows = GUID(0x9ba05972, 0xf6a8, 0x11cf, [0xa4, 0x42, 0x0, 0xa0, 0xc9, 0xa, 0x8f, 0x39]);
 struct ShellWindows
@@ -7152,133 +7152,133 @@ interface IShellUIHelper : IDispatch
     HRESULT ResetFirstBootMode();
     HRESULT ResetSafeMode();
     HRESULT RefreshOfflineDesktop();
-    HRESULT AddFavorite(BSTR, VARIANT*);
-    HRESULT AddChannel(BSTR);
-    HRESULT AddDesktopComponent(BSTR, BSTR, VARIANT*, VARIANT*, VARIANT*, VARIANT*);
-    HRESULT IsSubscribed(BSTR, VARIANT_BOOL*);
-    HRESULT NavigateAndFind(BSTR, BSTR, VARIANT*);
-    HRESULT ImportExportFavorites(VARIANT_BOOL, BSTR);
-    HRESULT AutoCompleteSaveForm(VARIANT*);
-    HRESULT AutoScan(BSTR, BSTR, VARIANT*);
-    HRESULT AutoCompleteAttach(VARIANT*);
-    HRESULT ShowBrowserUI(BSTR, VARIANT*, VARIANT*);
+    HRESULT AddFavorite(BSTR URL, VARIANT* Title);
+    HRESULT AddChannel(BSTR URL);
+    HRESULT AddDesktopComponent(BSTR URL, BSTR Type, VARIANT* Left, VARIANT* Top, VARIANT* Width, VARIANT* Height);
+    HRESULT IsSubscribed(BSTR URL, VARIANT_BOOL* pBool);
+    HRESULT NavigateAndFind(BSTR URL, BSTR strQuery, VARIANT* varTargetFrame);
+    HRESULT ImportExportFavorites(VARIANT_BOOL fImport, BSTR strImpExpPath);
+    HRESULT AutoCompleteSaveForm(VARIANT* Form);
+    HRESULT AutoScan(BSTR strSearch, BSTR strFailureUrl, VARIANT* pvarTargetFrame);
+    HRESULT AutoCompleteAttach(VARIANT* Reserved);
+    HRESULT ShowBrowserUI(BSTR bstrName, VARIANT* pvarIn, VARIANT* pvarOut);
 }
 enum IID_IShellUIHelper2 = GUID(0xa7fe6eda, 0x1932, 0x4281, [0xb8, 0x81, 0x87, 0xb3, 0x1b, 0x8b, 0xc5, 0x2c]);
 interface IShellUIHelper2 : IShellUIHelper
 {
-    HRESULT AddSearchProvider(BSTR);
+    HRESULT AddSearchProvider(BSTR URL);
     HRESULT RunOnceShown();
     HRESULT SkipRunOnce();
-    HRESULT CustomizeSettings(VARIANT_BOOL, VARIANT_BOOL, BSTR);
-    HRESULT SqmEnabled(VARIANT_BOOL*);
-    HRESULT PhishingEnabled(VARIANT_BOOL*);
-    HRESULT BrandImageUri(BSTR*);
+    HRESULT CustomizeSettings(VARIANT_BOOL fSQM, VARIANT_BOOL fPhishing, BSTR bstrLocale);
+    HRESULT SqmEnabled(VARIANT_BOOL* pfEnabled);
+    HRESULT PhishingEnabled(VARIANT_BOOL* pfEnabled);
+    HRESULT BrandImageUri(BSTR* pbstrUri);
     HRESULT SkipTabsWelcome();
     HRESULT DiagnoseConnection();
-    HRESULT CustomizeClearType(VARIANT_BOOL);
-    HRESULT IsSearchProviderInstalled(BSTR, uint*);
-    HRESULT IsSearchMigrated(VARIANT_BOOL*);
-    HRESULT DefaultSearchProvider(BSTR*);
-    HRESULT RunOnceRequiredSettingsComplete(VARIANT_BOOL);
-    HRESULT RunOnceHasShown(VARIANT_BOOL*);
-    HRESULT SearchGuideUrl(BSTR*);
+    HRESULT CustomizeClearType(VARIANT_BOOL fSet);
+    HRESULT IsSearchProviderInstalled(BSTR URL, uint* pdwResult);
+    HRESULT IsSearchMigrated(VARIANT_BOOL* pfMigrated);
+    HRESULT DefaultSearchProvider(BSTR* pbstrName);
+    HRESULT RunOnceRequiredSettingsComplete(VARIANT_BOOL fComplete);
+    HRESULT RunOnceHasShown(VARIANT_BOOL* pfShown);
+    HRESULT SearchGuideUrl(BSTR* pbstrUrl);
 }
 enum IID_IShellUIHelper3 = GUID(0x528df2ec, 0xd419, 0x40bc, [0x9b, 0x6d, 0xdc, 0xdb, 0xf9, 0xc1, 0xb2, 0x5d]);
 interface IShellUIHelper3 : IShellUIHelper2
 {
-    HRESULT AddService(BSTR);
-    HRESULT IsServiceInstalled(BSTR, BSTR, uint*);
-    HRESULT InPrivateFilteringEnabled(VARIANT_BOOL*);
-    HRESULT AddToFavoritesBar(BSTR, BSTR, VARIANT*);
+    HRESULT AddService(BSTR URL);
+    HRESULT IsServiceInstalled(BSTR URL, BSTR Verb, uint* pdwResult);
+    HRESULT InPrivateFilteringEnabled(VARIANT_BOOL* pfEnabled);
+    HRESULT AddToFavoritesBar(BSTR URL, BSTR Title, VARIANT* Type);
     HRESULT BuildNewTabPage();
-    HRESULT SetRecentlyClosedVisible(VARIANT_BOOL);
-    HRESULT SetActivitiesVisible(VARIANT_BOOL);
+    HRESULT SetRecentlyClosedVisible(VARIANT_BOOL fVisible);
+    HRESULT SetActivitiesVisible(VARIANT_BOOL fVisible);
     HRESULT ContentDiscoveryReset();
-    HRESULT IsSuggestedSitesEnabled(VARIANT_BOOL*);
-    HRESULT EnableSuggestedSites(VARIANT_BOOL);
-    HRESULT NavigateToSuggestedSites(BSTR);
+    HRESULT IsSuggestedSitesEnabled(VARIANT_BOOL* pfEnabled);
+    HRESULT EnableSuggestedSites(VARIANT_BOOL fEnable);
+    HRESULT NavigateToSuggestedSites(BSTR bstrRelativeUrl);
     HRESULT ShowTabsHelp();
     HRESULT ShowInPrivateHelp();
 }
 enum IID_IShellUIHelper4 = GUID(0xb36e6a53, 0x8073, 0x499e, [0x82, 0x4c, 0xd7, 0x76, 0x33, 0xa, 0x33, 0x3e]);
 interface IShellUIHelper4 : IShellUIHelper3
 {
-    HRESULT msIsSiteMode(VARIANT_BOOL*);
+    HRESULT msIsSiteMode(VARIANT_BOOL* pfSiteMode);
     HRESULT msSiteModeShowThumbBar();
-    HRESULT msSiteModeAddThumbBarButton(BSTR, BSTR, VARIANT*);
-    HRESULT msSiteModeUpdateThumbBarButton(VARIANT, VARIANT_BOOL, VARIANT_BOOL);
-    HRESULT msSiteModeSetIconOverlay(BSTR, VARIANT*);
+    HRESULT msSiteModeAddThumbBarButton(BSTR bstrIconURL, BSTR bstrTooltip, VARIANT* pvarButtonID);
+    HRESULT msSiteModeUpdateThumbBarButton(VARIANT ButtonID, VARIANT_BOOL fEnabled, VARIANT_BOOL fVisible);
+    HRESULT msSiteModeSetIconOverlay(BSTR IconUrl, VARIANT* pvarDescription);
     HRESULT msSiteModeClearIconOverlay();
     HRESULT msAddSiteMode();
-    HRESULT msSiteModeCreateJumpList(BSTR);
-    HRESULT msSiteModeAddJumpListItem(BSTR, BSTR, BSTR, VARIANT*);
+    HRESULT msSiteModeCreateJumpList(BSTR bstrHeader);
+    HRESULT msSiteModeAddJumpListItem(BSTR bstrName, BSTR bstrActionUri, BSTR bstrIconUri, VARIANT* pvarWindowType);
     HRESULT msSiteModeClearJumpList();
     HRESULT msSiteModeShowJumpList();
-    HRESULT msSiteModeAddButtonStyle(VARIANT, BSTR, BSTR, VARIANT*);
-    HRESULT msSiteModeShowButtonStyle(VARIANT, VARIANT);
+    HRESULT msSiteModeAddButtonStyle(VARIANT uiButtonID, BSTR bstrIconUrl, BSTR bstrTooltip, VARIANT* pvarStyleID);
+    HRESULT msSiteModeShowButtonStyle(VARIANT uiButtonID, VARIANT uiStyleID);
     HRESULT msSiteModeActivate();
-    HRESULT msIsSiteModeFirstRun(VARIANT_BOOL, VARIANT*);
-    HRESULT msAddTrackingProtectionList(BSTR, BSTR);
-    HRESULT msTrackingProtectionEnabled(VARIANT_BOOL*);
-    HRESULT msActiveXFilteringEnabled(VARIANT_BOOL*);
+    HRESULT msIsSiteModeFirstRun(VARIANT_BOOL fPreserveState, VARIANT* puiFirstRun);
+    HRESULT msAddTrackingProtectionList(BSTR URL, BSTR bstrFilterName);
+    HRESULT msTrackingProtectionEnabled(VARIANT_BOOL* pfEnabled);
+    HRESULT msActiveXFilteringEnabled(VARIANT_BOOL* pfEnabled);
 }
 enum IID_IShellUIHelper5 = GUID(0xa2a08b09, 0x103d, 0x4d3f, [0xb9, 0x1c, 0xea, 0x45, 0x5c, 0xa8, 0x2e, 0xfa]);
 interface IShellUIHelper5 : IShellUIHelper4
 {
-    HRESULT msProvisionNetworks(BSTR, VARIANT*);
+    HRESULT msProvisionNetworks(BSTR bstrProvisioningXml, VARIANT* puiResult);
     HRESULT msReportSafeUrl();
     HRESULT msSiteModeRefreshBadge();
     HRESULT msSiteModeClearBadge();
     HRESULT msDiagnoseConnectionUILess();
     HRESULT msLaunchNetworkClientHelp();
-    HRESULT msChangeDefaultBrowser(VARIANT_BOOL);
+    HRESULT msChangeDefaultBrowser(VARIANT_BOOL fChange);
 }
 enum IID_IShellUIHelper6 = GUID(0x987a573e, 0x46ee, 0x4e89, [0x96, 0xab, 0xdd, 0xf7, 0xf8, 0xfd, 0xc9, 0x8c]);
 interface IShellUIHelper6 : IShellUIHelper5
 {
     HRESULT msStopPeriodicTileUpdate();
-    HRESULT msStartPeriodicTileUpdate(VARIANT, VARIANT, VARIANT);
-    HRESULT msStartPeriodicTileUpdateBatch(VARIANT, VARIANT, VARIANT);
+    HRESULT msStartPeriodicTileUpdate(VARIANT pollingUris, VARIANT startTime, VARIANT uiUpdateRecurrence);
+    HRESULT msStartPeriodicTileUpdateBatch(VARIANT pollingUris, VARIANT startTime, VARIANT uiUpdateRecurrence);
     HRESULT msClearTile();
-    HRESULT msEnableTileNotificationQueue(VARIANT_BOOL);
-    HRESULT msPinnedSiteState(VARIANT*);
-    HRESULT msEnableTileNotificationQueueForSquare150x150(VARIANT_BOOL);
-    HRESULT msEnableTileNotificationQueueForWide310x150(VARIANT_BOOL);
-    HRESULT msEnableTileNotificationQueueForSquare310x310(VARIANT_BOOL);
-    HRESULT msScheduledTileNotification(BSTR, BSTR, BSTR, VARIANT, VARIANT);
-    HRESULT msRemoveScheduledTileNotification(BSTR);
-    HRESULT msStartPeriodicBadgeUpdate(BSTR, VARIANT, VARIANT);
+    HRESULT msEnableTileNotificationQueue(VARIANT_BOOL fChange);
+    HRESULT msPinnedSiteState(VARIANT* pvarSiteState);
+    HRESULT msEnableTileNotificationQueueForSquare150x150(VARIANT_BOOL fChange);
+    HRESULT msEnableTileNotificationQueueForWide310x150(VARIANT_BOOL fChange);
+    HRESULT msEnableTileNotificationQueueForSquare310x310(VARIANT_BOOL fChange);
+    HRESULT msScheduledTileNotification(BSTR bstrNotificationXml, BSTR bstrNotificationId, BSTR bstrNotificationTag, VARIANT startTime, VARIANT expirationTime);
+    HRESULT msRemoveScheduledTileNotification(BSTR bstrNotificationId);
+    HRESULT msStartPeriodicBadgeUpdate(BSTR pollingUri, VARIANT startTime, VARIANT uiUpdateRecurrence);
     HRESULT msStopPeriodicBadgeUpdate();
     HRESULT msLaunchInternetOptions();
 }
 enum IID_IShellUIHelper7 = GUID(0x60e567c8, 0x9573, 0x4ab2, [0xa2, 0x64, 0x63, 0x7c, 0x6c, 0x16, 0x1c, 0xb1]);
 interface IShellUIHelper7 : IShellUIHelper6
 {
-    HRESULT SetExperimentalFlag(BSTR, VARIANT_BOOL);
-    HRESULT GetExperimentalFlag(BSTR, VARIANT_BOOL*);
-    HRESULT SetExperimentalValue(BSTR, uint);
-    HRESULT GetExperimentalValue(BSTR, uint*);
+    HRESULT SetExperimentalFlag(BSTR bstrFlagString, VARIANT_BOOL vfFlag);
+    HRESULT GetExperimentalFlag(BSTR bstrFlagString, VARIANT_BOOL* vfFlag);
+    HRESULT SetExperimentalValue(BSTR bstrValueString, uint dwValue);
+    HRESULT GetExperimentalValue(BSTR bstrValueString, uint* pdwValue);
     HRESULT ResetAllExperimentalFlagsAndValues();
-    HRESULT GetNeedIEAutoLaunchFlag(BSTR, VARIANT_BOOL*);
-    HRESULT SetNeedIEAutoLaunchFlag(BSTR, VARIANT_BOOL);
-    HRESULT HasNeedIEAutoLaunchFlag(BSTR, VARIANT_BOOL*);
-    HRESULT LaunchIE(BSTR, VARIANT_BOOL);
+    HRESULT GetNeedIEAutoLaunchFlag(BSTR bstrUrl, VARIANT_BOOL* flag);
+    HRESULT SetNeedIEAutoLaunchFlag(BSTR bstrUrl, VARIANT_BOOL flag);
+    HRESULT HasNeedIEAutoLaunchFlag(BSTR bstrUrl, VARIANT_BOOL* exists);
+    HRESULT LaunchIE(BSTR bstrUrl, VARIANT_BOOL automated);
 }
 enum IID_IShellUIHelper8 = GUID(0x66debcf2, 0x5b0, 0x4f07, [0xb4, 0x9b, 0xb9, 0x62, 0x41, 0xa6, 0x5d, 0xb2]);
 interface IShellUIHelper8 : IShellUIHelper7
 {
-    HRESULT GetCVListData(BSTR*);
-    HRESULT GetCVListLocalData(BSTR*);
-    HRESULT GetEMIEListData(BSTR*);
-    HRESULT GetEMIEListLocalData(BSTR*);
+    HRESULT GetCVListData(BSTR* pbstrResult);
+    HRESULT GetCVListLocalData(BSTR* pbstrResult);
+    HRESULT GetEMIEListData(BSTR* pbstrResult);
+    HRESULT GetEMIEListLocalData(BSTR* pbstrResult);
     HRESULT OpenFavoritesPane();
     HRESULT OpenFavoritesSettings();
-    HRESULT LaunchInHVSI(BSTR);
+    HRESULT LaunchInHVSI(BSTR bstrUrl);
 }
 enum IID_IShellUIHelper9 = GUID(0x6cdf73b0, 0x7f2f, 0x451f, [0xbc, 0xf, 0x63, 0xe0, 0xf3, 0x28, 0x4e, 0x54]);
 interface IShellUIHelper9 : IShellUIHelper8
 {
-    HRESULT GetOSSku(uint*);
+    HRESULT GetOSSku(uint* pdwResult);
 }
 enum CLSID_ShellUIHelper = GUID(0x64ab4bb7, 0x111e, 0x11d1, [0x8f, 0x79, 0x0, 0xc0, 0x4f, 0xc2, 0xfb, 0xe1]);
 struct ShellUIHelper
@@ -7298,36 +7298,36 @@ interface IShellFavoritesNameSpace : IDispatch
     HRESULT Synchronize();
     HRESULT Import();
     HRESULT Export();
-    HRESULT InvokeContextMenuCommand(BSTR);
+    HRESULT InvokeContextMenuCommand(BSTR strCommand);
     HRESULT MoveSelectionTo();
-    HRESULT get_SubscriptionsEnabled(VARIANT_BOOL*);
-    HRESULT CreateSubscriptionForSelection(VARIANT_BOOL*);
-    HRESULT DeleteSubscriptionForSelection(VARIANT_BOOL*);
-    HRESULT SetRoot(BSTR);
+    HRESULT get_SubscriptionsEnabled(VARIANT_BOOL* pBool);
+    HRESULT CreateSubscriptionForSelection(VARIANT_BOOL* pBool);
+    HRESULT DeleteSubscriptionForSelection(VARIANT_BOOL* pBool);
+    HRESULT SetRoot(BSTR bstrFullPath);
 }
 enum IID_IShellNameSpace = GUID(0xe572d3c9, 0x37be, 0x4ae2, [0x82, 0x5d, 0xd5, 0x21, 0x76, 0x3e, 0x31, 0x8]);
 interface IShellNameSpace : IShellFavoritesNameSpace
 {
-    HRESULT get_EnumOptions(int*);
-    HRESULT put_EnumOptions(int);
-    HRESULT get_SelectedItem(IDispatch*);
-    HRESULT put_SelectedItem(IDispatch);
-    HRESULT get_Root(VARIANT*);
-    HRESULT put_Root(VARIANT);
-    HRESULT get_Depth(int*);
-    HRESULT put_Depth(int);
-    HRESULT get_Mode(uint*);
-    HRESULT put_Mode(uint);
-    HRESULT get_Flags(uint*);
-    HRESULT put_Flags(uint);
-    HRESULT put_TVFlags(uint);
-    HRESULT get_TVFlags(uint*);
-    HRESULT get_Columns(BSTR*);
-    HRESULT put_Columns(BSTR);
-    HRESULT get_CountViewTypes(int*);
-    HRESULT SetViewType(int);
-    HRESULT SelectedItems(IDispatch*);
-    HRESULT Expand(VARIANT, int);
+    HRESULT get_EnumOptions(int* pgrfEnumFlags);
+    HRESULT put_EnumOptions(int lVal);
+    HRESULT get_SelectedItem(IDispatch* pItem);
+    HRESULT put_SelectedItem(IDispatch pItem);
+    HRESULT get_Root(VARIANT* pvar);
+    HRESULT put_Root(VARIANT var);
+    HRESULT get_Depth(int* piDepth);
+    HRESULT put_Depth(int iDepth);
+    HRESULT get_Mode(uint* puMode);
+    HRESULT put_Mode(uint uMode);
+    HRESULT get_Flags(uint* pdwFlags);
+    HRESULT put_Flags(uint dwFlags);
+    HRESULT put_TVFlags(uint dwFlags);
+    HRESULT get_TVFlags(uint* dwFlags);
+    HRESULT get_Columns(BSTR* bstrColumns);
+    HRESULT put_Columns(BSTR bstrColumns);
+    HRESULT get_CountViewTypes(int* piTypes);
+    HRESULT SetViewType(int iType);
+    HRESULT SelectedItems(IDispatch* ppid);
+    HRESULT Expand(VARIANT var, int iDepth);
     HRESULT UnselectAll();
 }
 enum CLSID_ShellNameSpace = GUID(0x55136805, 0xb2de, 0x11d1, [0xb9, 0xf2, 0x0, 0xa0, 0xc9, 0x8b, 0xc5, 0x47]);
@@ -7339,18 +7339,18 @@ interface IScriptErrorList : IDispatch
 {
     HRESULT advanceError();
     HRESULT retreatError();
-    HRESULT canAdvanceError(BOOL*);
-    HRESULT canRetreatError(BOOL*);
-    HRESULT getErrorLine(int*);
-    HRESULT getErrorChar(int*);
-    HRESULT getErrorCode(int*);
-    HRESULT getErrorMsg(BSTR*);
-    HRESULT getErrorUrl(BSTR*);
-    HRESULT getAlwaysShowLockState(BOOL*);
-    HRESULT getDetailsPaneOpen(BOOL*);
-    HRESULT setDetailsPaneOpen(BOOL);
-    HRESULT getPerErrorDisplay(BOOL*);
-    HRESULT setPerErrorDisplay(BOOL);
+    HRESULT canAdvanceError(BOOL* pfCanAdvance);
+    HRESULT canRetreatError(BOOL* pfCanRetreat);
+    HRESULT getErrorLine(int* plLine);
+    HRESULT getErrorChar(int* plChar);
+    HRESULT getErrorCode(int* plCode);
+    HRESULT getErrorMsg(BSTR* pstr);
+    HRESULT getErrorUrl(BSTR* pstr);
+    HRESULT getAlwaysShowLockState(BOOL* pfAlwaysShowLocked);
+    HRESULT getDetailsPaneOpen(BOOL* pfDetailsPaneOpen);
+    HRESULT setDetailsPaneOpen(BOOL fDetailsPaneOpen);
+    HRESULT getPerErrorDisplay(BOOL* pfPerErrorDisplay);
+    HRESULT setPerErrorDisplay(BOOL fPerErrorDisplay);
 }
 enum CLSID_CScriptErrorList = GUID(0xefd01300, 0x160f, 0x11d2, [0xbb, 0x2e, 0x0, 0x80, 0x5f, 0xf7, 0xef, 0xca]);
 struct CScriptErrorList
@@ -7424,7 +7424,7 @@ enum : int
 enum IID_IFolderViewOC = GUID(0x9ba05970, 0xf6a8, 0x11cf, [0xa4, 0x42, 0x0, 0xa0, 0xc9, 0xa, 0x8f, 0x39]);
 interface IFolderViewOC : IDispatch
 {
-    HRESULT SetFolderView(IDispatch);
+    HRESULT SetFolderView(IDispatch pdisp);
 }
 enum IID_DShellFolderViewEvents = GUID(0x62112aa2, 0xebe4, 0x11cf, [0xa5, 0xfb, 0x0, 0x20, 0xaf, 0xe7, 0x29, 0x2d]);
 interface DShellFolderViewEvents : IDispatch
@@ -7437,90 +7437,90 @@ struct ShellFolderViewOC
 enum IID_DFConstraint = GUID(0x4a3df050, 0x23bd, 0x11d2, [0x93, 0x9f, 0x0, 0xa0, 0xc9, 0x1e, 0xed, 0xba]);
 interface DFConstraint : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Value(VARIANT*);
+    HRESULT get_Name(BSTR* pbs);
+    HRESULT get_Value(VARIANT* pv);
 }
 enum IID_FolderItem = GUID(0xfac32c80, 0xcbe4, 0x11ce, [0x83, 0x50, 0x44, 0x45, 0x53, 0x54, 0x0, 0x0]);
 interface FolderItem : IDispatch
 {
-    HRESULT get_Application(IDispatch*);
-    HRESULT get_Parent(IDispatch*);
-    HRESULT get_Name(BSTR*);
-    HRESULT put_Name(BSTR);
-    HRESULT get_Path(BSTR*);
-    HRESULT get_GetLink(IDispatch*);
-    HRESULT get_GetFolder(IDispatch*);
-    HRESULT get_IsLink(VARIANT_BOOL*);
-    HRESULT get_IsFolder(VARIANT_BOOL*);
-    HRESULT get_IsFileSystem(VARIANT_BOOL*);
-    HRESULT get_IsBrowsable(VARIANT_BOOL*);
-    HRESULT get_ModifyDate(double*);
-    HRESULT put_ModifyDate(double);
-    HRESULT get_Size(int*);
-    HRESULT get_Type(BSTR*);
-    HRESULT Verbs(FolderItemVerbs*);
-    HRESULT InvokeVerb(VARIANT);
+    HRESULT get_Application(IDispatch* ppid);
+    HRESULT get_Parent(IDispatch* ppid);
+    HRESULT get_Name(BSTR* pbs);
+    HRESULT put_Name(BSTR bs);
+    HRESULT get_Path(BSTR* pbs);
+    HRESULT get_GetLink(IDispatch* ppid);
+    HRESULT get_GetFolder(IDispatch* ppid);
+    HRESULT get_IsLink(VARIANT_BOOL* pb);
+    HRESULT get_IsFolder(VARIANT_BOOL* pb);
+    HRESULT get_IsFileSystem(VARIANT_BOOL* pb);
+    HRESULT get_IsBrowsable(VARIANT_BOOL* pb);
+    HRESULT get_ModifyDate(double* pdt);
+    HRESULT put_ModifyDate(double dt);
+    HRESULT get_Size(int* pul);
+    HRESULT get_Type(BSTR* pbs);
+    HRESULT Verbs(FolderItemVerbs* ppfic);
+    HRESULT InvokeVerb(VARIANT vVerb);
 }
 enum IID_FolderItems = GUID(0x744129e0, 0xcbe5, 0x11ce, [0x83, 0x50, 0x44, 0x45, 0x53, 0x54, 0x0, 0x0]);
 interface FolderItems : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get_Application(IDispatch*);
-    HRESULT get_Parent(IDispatch*);
-    HRESULT Item(VARIANT, FolderItem*);
-    HRESULT _NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get_Application(IDispatch* ppid);
+    HRESULT get_Parent(IDispatch* ppid);
+    HRESULT Item(VARIANT index, FolderItem* ppid);
+    HRESULT _NewEnum(IUnknown* ppunk);
 }
 enum IID_FolderItemVerb = GUID(0x8ec3e00, 0x50b0, 0x11cf, [0x96, 0xc, 0x0, 0x80, 0xc7, 0xf4, 0xee, 0x85]);
 interface FolderItemVerb : IDispatch
 {
-    HRESULT get_Application(IDispatch*);
-    HRESULT get_Parent(IDispatch*);
-    HRESULT get_Name(BSTR*);
+    HRESULT get_Application(IDispatch* ppid);
+    HRESULT get_Parent(IDispatch* ppid);
+    HRESULT get_Name(BSTR* pbs);
     HRESULT DoIt();
 }
 enum IID_FolderItemVerbs = GUID(0x1f8352c0, 0x50b0, 0x11cf, [0x96, 0xc, 0x0, 0x80, 0xc7, 0xf4, 0xee, 0x85]);
 interface FolderItemVerbs : IDispatch
 {
-    HRESULT get_Count(int*);
-    HRESULT get_Application(IDispatch*);
-    HRESULT get_Parent(IDispatch*);
-    HRESULT Item(VARIANT, FolderItemVerb*);
-    HRESULT _NewEnum(IUnknown*);
+    HRESULT get_Count(int* plCount);
+    HRESULT get_Application(IDispatch* ppid);
+    HRESULT get_Parent(IDispatch* ppid);
+    HRESULT Item(VARIANT index, FolderItemVerb* ppid);
+    HRESULT _NewEnum(IUnknown* ppunk);
 }
 enum IID_Folder = GUID(0xbbcbde60, 0xc3ff, 0x11ce, [0x83, 0x50, 0x44, 0x45, 0x53, 0x54, 0x0, 0x0]);
 interface Folder : IDispatch
 {
-    HRESULT get_Title(BSTR*);
-    HRESULT get_Application(IDispatch*);
-    HRESULT get_Parent(IDispatch*);
-    HRESULT get_ParentFolder(Folder*);
-    HRESULT Items(FolderItems*);
-    HRESULT ParseName(BSTR, FolderItem*);
-    HRESULT NewFolder(BSTR, VARIANT);
-    HRESULT MoveHere(VARIANT, VARIANT);
-    HRESULT CopyHere(VARIANT, VARIANT);
-    HRESULT GetDetailsOf(VARIANT, int, BSTR*);
+    HRESULT get_Title(BSTR* pbs);
+    HRESULT get_Application(IDispatch* ppid);
+    HRESULT get_Parent(IDispatch* ppid);
+    HRESULT get_ParentFolder(Folder* ppsf);
+    HRESULT Items(FolderItems* ppid);
+    HRESULT ParseName(BSTR bName, FolderItem* ppid);
+    HRESULT NewFolder(BSTR bName, VARIANT vOptions);
+    HRESULT MoveHere(VARIANT vItem, VARIANT vOptions);
+    HRESULT CopyHere(VARIANT vItem, VARIANT vOptions);
+    HRESULT GetDetailsOf(VARIANT vItem, int iColumn, BSTR* pbs);
 }
 enum IID_Folder2 = GUID(0xf0d2d8ef, 0x3890, 0x11d2, [0xbf, 0x8b, 0x0, 0xc0, 0x4f, 0xb9, 0x36, 0x61]);
 interface Folder2 : Folder
 {
-    HRESULT get_Self(FolderItem*);
-    HRESULT get_OfflineStatus(int*);
+    HRESULT get_Self(FolderItem* ppfi);
+    HRESULT get_OfflineStatus(int* pul);
     HRESULT Synchronize();
-    HRESULT get_HaveToShowWebViewBarricade(VARIANT_BOOL*);
+    HRESULT get_HaveToShowWebViewBarricade(VARIANT_BOOL* pbHaveToShowWebViewBarricade);
     HRESULT DismissedWebViewBarricade();
 }
 enum IID_Folder3 = GUID(0xa7ae5f64, 0xc4d7, 0x4d7f, [0x93, 0x7, 0x4d, 0x24, 0xee, 0x54, 0xb8, 0x41]);
 interface Folder3 : Folder2
 {
-    HRESULT get_ShowWebViewBarricade(VARIANT_BOOL*);
-    HRESULT put_ShowWebViewBarricade(VARIANT_BOOL);
+    HRESULT get_ShowWebViewBarricade(VARIANT_BOOL* pbShowWebViewBarricade);
+    HRESULT put_ShowWebViewBarricade(VARIANT_BOOL bShowWebViewBarricade);
 }
 enum IID_FolderItem2 = GUID(0xedc817aa, 0x92b8, 0x11d1, [0xb0, 0x75, 0x0, 0xc0, 0x4f, 0xc3, 0x3a, 0xa5]);
 interface FolderItem2 : FolderItem
 {
-    HRESULT InvokeVerbEx(VARIANT, VARIANT);
-    HRESULT ExtendedProperty(BSTR, VARIANT*);
+    HRESULT InvokeVerbEx(VARIANT vVerb, VARIANT vArgs);
+    HRESULT ExtendedProperty(BSTR bstrPropName, VARIANT* pvRet);
 }
 enum CLSID_ShellFolderItem = GUID(0x2fe352ea, 0xfd1f, 0x11d2, [0xb1, 0xf4, 0x0, 0xc0, 0x4f, 0x8e, 0xeb, 0x3e]);
 struct ShellFolderItem
@@ -7529,38 +7529,38 @@ struct ShellFolderItem
 enum IID_FolderItems2 = GUID(0xc94f0ad0, 0xf363, 0x11d2, [0xa3, 0x27, 0x0, 0xc0, 0x4f, 0x8e, 0xec, 0x7f]);
 interface FolderItems2 : FolderItems
 {
-    HRESULT InvokeVerbEx(VARIANT, VARIANT);
+    HRESULT InvokeVerbEx(VARIANT vVerb, VARIANT vArgs);
 }
 enum IID_FolderItems3 = GUID(0xeaa7c309, 0xbbec, 0x49d5, [0x82, 0x1d, 0x64, 0xd9, 0x66, 0xcb, 0x66, 0x7f]);
 interface FolderItems3 : FolderItems2
 {
-    HRESULT Filter(int, BSTR);
-    HRESULT get_Verbs(FolderItemVerbs*);
+    HRESULT Filter(int grfFlags, BSTR bstrFileSpec);
+    HRESULT get_Verbs(FolderItemVerbs* ppfic);
 }
 enum IID_IShellLinkDual = GUID(0x88a05c00, 0xf000, 0x11ce, [0x83, 0x50, 0x44, 0x45, 0x53, 0x54, 0x0, 0x0]);
 interface IShellLinkDual : IDispatch
 {
-    HRESULT get_Path(BSTR*);
-    HRESULT put_Path(BSTR);
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
-    HRESULT get_WorkingDirectory(BSTR*);
-    HRESULT put_WorkingDirectory(BSTR);
-    HRESULT get_Arguments(BSTR*);
-    HRESULT put_Arguments(BSTR);
-    HRESULT get_Hotkey(int*);
-    HRESULT put_Hotkey(int);
-    HRESULT get_ShowCommand(int*);
-    HRESULT put_ShowCommand(int);
-    HRESULT Resolve(int);
-    HRESULT GetIconLocation(BSTR*, int*);
-    HRESULT SetIconLocation(BSTR, int);
-    HRESULT Save(VARIANT);
+    HRESULT get_Path(BSTR* pbs);
+    HRESULT put_Path(BSTR bs);
+    HRESULT get_Description(BSTR* pbs);
+    HRESULT put_Description(BSTR bs);
+    HRESULT get_WorkingDirectory(BSTR* pbs);
+    HRESULT put_WorkingDirectory(BSTR bs);
+    HRESULT get_Arguments(BSTR* pbs);
+    HRESULT put_Arguments(BSTR bs);
+    HRESULT get_Hotkey(int* piHK);
+    HRESULT put_Hotkey(int iHK);
+    HRESULT get_ShowCommand(int* piShowCommand);
+    HRESULT put_ShowCommand(int iShowCommand);
+    HRESULT Resolve(int fFlags);
+    HRESULT GetIconLocation(BSTR* pbs, int* piIcon);
+    HRESULT SetIconLocation(BSTR bs, int iIcon);
+    HRESULT Save(VARIANT vWhere);
 }
 enum IID_IShellLinkDual2 = GUID(0x317ee249, 0xf12e, 0x11d2, [0xb1, 0xe4, 0x0, 0xc0, 0x4f, 0x8e, 0xeb, 0x3e]);
 interface IShellLinkDual2 : IShellLinkDual
 {
-    HRESULT get_Target(FolderItem*);
+    HRESULT get_Target(FolderItem* ppfi);
 }
 enum CLSID_ShellLinkObject = GUID(0x11219420, 0x1768, 0x11d1, [0x95, 0xbe, 0x0, 0x60, 0x97, 0x97, 0xea, 0x4f]);
 struct ShellLinkObject
@@ -7569,35 +7569,35 @@ struct ShellLinkObject
 enum IID_IShellFolderViewDual = GUID(0xe7a1af80, 0x4d96, 0x11cf, [0x96, 0xc, 0x0, 0x80, 0xc7, 0xf4, 0xee, 0x85]);
 interface IShellFolderViewDual : IDispatch
 {
-    HRESULT get_Application(IDispatch*);
-    HRESULT get_Parent(IDispatch*);
-    HRESULT get_Folder(Folder*);
-    HRESULT SelectedItems(FolderItems*);
-    HRESULT get_FocusedItem(FolderItem*);
-    HRESULT SelectItem(VARIANT*, int);
-    HRESULT PopupItemMenu(FolderItem, VARIANT, VARIANT, BSTR*);
-    HRESULT get_Script(IDispatch*);
-    HRESULT get_ViewOptions(int*);
+    HRESULT get_Application(IDispatch* ppid);
+    HRESULT get_Parent(IDispatch* ppid);
+    HRESULT get_Folder(Folder* ppid);
+    HRESULT SelectedItems(FolderItems* ppid);
+    HRESULT get_FocusedItem(FolderItem* ppid);
+    HRESULT SelectItem(VARIANT* pvfi, int dwFlags);
+    HRESULT PopupItemMenu(FolderItem pfi, VARIANT vx, VARIANT vy, BSTR* pbs);
+    HRESULT get_Script(IDispatch* ppDisp);
+    HRESULT get_ViewOptions(int* plViewOptions);
 }
 enum IID_IShellFolderViewDual2 = GUID(0x31c147b6, 0xade, 0x4a3c, [0xb5, 0x14, 0xdd, 0xf9, 0x32, 0xef, 0x6d, 0x17]);
 interface IShellFolderViewDual2 : IShellFolderViewDual
 {
-    HRESULT get_CurrentViewMode(uint*);
-    HRESULT put_CurrentViewMode(uint);
-    HRESULT SelectItemRelative(int);
+    HRESULT get_CurrentViewMode(uint* pViewMode);
+    HRESULT put_CurrentViewMode(uint ViewMode);
+    HRESULT SelectItemRelative(int iRelative);
 }
 enum IID_IShellFolderViewDual3 = GUID(0x29ec8e6c, 0x46d3, 0x411f, [0xba, 0xaa, 0x61, 0x1a, 0x6c, 0x9c, 0xac, 0x66]);
 interface IShellFolderViewDual3 : IShellFolderViewDual2
 {
-    HRESULT get_GroupBy(BSTR*);
-    HRESULT put_GroupBy(BSTR);
-    HRESULT get_FolderFlags(uint*);
-    HRESULT put_FolderFlags(uint);
-    HRESULT get_SortColumns(BSTR*);
-    HRESULT put_SortColumns(BSTR);
-    HRESULT put_IconSize(int);
-    HRESULT get_IconSize(int*);
-    HRESULT FilterView(BSTR);
+    HRESULT get_GroupBy(BSTR* pbstrGroupBy);
+    HRESULT put_GroupBy(BSTR bstrGroupBy);
+    HRESULT get_FolderFlags(uint* pdwFlags);
+    HRESULT put_FolderFlags(uint dwFlags);
+    HRESULT get_SortColumns(BSTR* pbstrSortColumns);
+    HRESULT put_SortColumns(BSTR bstrSortColumns);
+    HRESULT put_IconSize(int iIconSize);
+    HRESULT get_IconSize(int* piIconSize);
+    HRESULT FilterView(BSTR bstrFilterText);
 }
 enum CLSID_ShellFolderView = GUID(0x62112aa1, 0xebe4, 0x11cf, [0xa5, 0xfb, 0x0, 0x20, 0xaf, 0xe7, 0x29, 0x2d]);
 struct ShellFolderView
@@ -7606,13 +7606,13 @@ struct ShellFolderView
 enum IID_IShellDispatch = GUID(0xd8f015c0, 0xc278, 0x11ce, [0xa4, 0x9e, 0x44, 0x45, 0x53, 0x54, 0x0, 0x0]);
 interface IShellDispatch : IDispatch
 {
-    HRESULT get_Application(IDispatch*);
-    HRESULT get_Parent(IDispatch*);
-    HRESULT NameSpace(VARIANT, Folder*);
-    HRESULT BrowseForFolder(int, BSTR, int, VARIANT, Folder*);
-    HRESULT Windows(IDispatch*);
-    HRESULT Open(VARIANT);
-    HRESULT Explore(VARIANT);
+    HRESULT get_Application(IDispatch* ppid);
+    HRESULT get_Parent(IDispatch* ppid);
+    HRESULT NameSpace(VARIANT vDir, Folder* ppsdf);
+    HRESULT BrowseForFolder(int Hwnd, BSTR Title, int Options, VARIANT RootFolder, Folder* ppsdf);
+    HRESULT Windows(IDispatch* ppid);
+    HRESULT Open(VARIANT vDir);
+    HRESULT Explore(VARIANT vDir);
     HRESULT MinimizeAll();
     HRESULT UndoMinimizeALL();
     HRESULT FileRun();
@@ -7628,33 +7628,33 @@ interface IShellDispatch : IDispatch
     HRESULT FindFiles();
     HRESULT FindComputer();
     HRESULT RefreshMenu();
-    HRESULT ControlPanelItem(BSTR);
+    HRESULT ControlPanelItem(BSTR bstrDir);
 }
 enum IID_IShellDispatch2 = GUID(0xa4c6892c, 0x3ba9, 0x11d2, [0x9d, 0xea, 0x0, 0xc0, 0x4f, 0xb1, 0x61, 0x62]);
 interface IShellDispatch2 : IShellDispatch
 {
-    HRESULT IsRestricted(BSTR, BSTR, int*);
-    HRESULT ShellExecute(BSTR, VARIANT, VARIANT, VARIANT, VARIANT);
-    HRESULT FindPrinter(BSTR, BSTR, BSTR);
-    HRESULT GetSystemInformation(BSTR, VARIANT*);
-    HRESULT ServiceStart(BSTR, VARIANT, VARIANT*);
-    HRESULT ServiceStop(BSTR, VARIANT, VARIANT*);
-    HRESULT IsServiceRunning(BSTR, VARIANT*);
-    HRESULT CanStartStopService(BSTR, VARIANT*);
-    HRESULT ShowBrowserBar(BSTR, VARIANT, VARIANT*);
+    HRESULT IsRestricted(BSTR Group, BSTR Restriction, int* plRestrictValue);
+    HRESULT ShellExecute(BSTR File, VARIANT vArgs, VARIANT vDir, VARIANT vOperation, VARIANT vShow);
+    HRESULT FindPrinter(BSTR name, BSTR location, BSTR model);
+    HRESULT GetSystemInformation(BSTR name, VARIANT* pv);
+    HRESULT ServiceStart(BSTR ServiceName, VARIANT Persistent, VARIANT* pSuccess);
+    HRESULT ServiceStop(BSTR ServiceName, VARIANT Persistent, VARIANT* pSuccess);
+    HRESULT IsServiceRunning(BSTR ServiceName, VARIANT* pRunning);
+    HRESULT CanStartStopService(BSTR ServiceName, VARIANT* pCanStartStop);
+    HRESULT ShowBrowserBar(BSTR bstrClsid, VARIANT bShow, VARIANT* pSuccess);
 }
 enum IID_IShellDispatch3 = GUID(0x177160ca, 0xbb5a, 0x411c, [0x84, 0x1d, 0xbd, 0x38, 0xfa, 0xcd, 0xea, 0xa0]);
 interface IShellDispatch3 : IShellDispatch2
 {
-    HRESULT AddToRecent(VARIANT, BSTR);
+    HRESULT AddToRecent(VARIANT varFile, BSTR bstrCategory);
 }
 enum IID_IShellDispatch4 = GUID(0xefd84b2d, 0x4bcf, 0x4298, [0xbe, 0x25, 0xeb, 0x54, 0x2a, 0x59, 0xfb, 0xda]);
 interface IShellDispatch4 : IShellDispatch3
 {
     HRESULT WindowsSecurity();
     HRESULT ToggleDesktop();
-    HRESULT ExplorerPolicy(BSTR, VARIANT*);
-    HRESULT GetSetting(int, VARIANT_BOOL*);
+    HRESULT ExplorerPolicy(BSTR bstrPolicyName, VARIANT* pValue);
+    HRESULT GetSetting(int lSetting, VARIANT_BOOL* pResult);
 }
 enum IID_IShellDispatch5 = GUID(0x866738b9, 0x6cf2, 0x4de8, [0x87, 0x67, 0xf7, 0x94, 0xeb, 0xe7, 0x4f, 0x4e]);
 interface IShellDispatch5 : IShellDispatch4
@@ -7678,10 +7678,10 @@ enum IID_IFileSearchBand = GUID(0x2d91eea1, 0x9932, 0x11d2, [0xbe, 0x86, 0x0, 0x
 interface IFileSearchBand : IDispatch
 {
     HRESULT SetFocus();
-    HRESULT SetSearchParameters(BSTR*, VARIANT_BOOL, VARIANT*, VARIANT*);
-    HRESULT get_SearchID(BSTR*);
-    HRESULT get_Scope(VARIANT*);
-    HRESULT get_QueryFile(VARIANT*);
+    HRESULT SetSearchParameters(BSTR* pbstrSearchID, VARIANT_BOOL bNavToResults, VARIANT* pvarScope, VARIANT* pvarQueryFile);
+    HRESULT get_SearchID(BSTR* pbstrSearchID);
+    HRESULT get_Scope(VARIANT* pvarScope);
+    HRESULT get_QueryFile(VARIANT* pvarFile);
 }
 enum CLSID_FileSearchBand = GUID(0xc4ee31f3, 0x4768, 0x11d2, [0xbe, 0x5c, 0x0, 0xa0, 0xc9, 0xa8, 0x3d, 0xa1]);
 struct FileSearchBand
@@ -7693,28 +7693,28 @@ interface IWebWizardHost : IDispatch
     HRESULT FinalBack();
     HRESULT FinalNext();
     HRESULT Cancel();
-    HRESULT put_Caption(BSTR);
-    HRESULT get_Caption(BSTR*);
-    HRESULT put_Property(BSTR, VARIANT*);
-    HRESULT get_Property(BSTR, VARIANT*);
-    HRESULT SetWizardButtons(VARIANT_BOOL, VARIANT_BOOL, VARIANT_BOOL);
-    HRESULT SetHeaderText(BSTR, BSTR);
+    HRESULT put_Caption(BSTR bstrCaption);
+    HRESULT get_Caption(BSTR* pbstrCaption);
+    HRESULT put_Property(BSTR bstrPropertyName, VARIANT* pvProperty);
+    HRESULT get_Property(BSTR bstrPropertyName, VARIANT* pvProperty);
+    HRESULT SetWizardButtons(VARIANT_BOOL vfEnableBack, VARIANT_BOOL vfEnableNext, VARIANT_BOOL vfLastPage);
+    HRESULT SetHeaderText(BSTR bstrHeaderTitle, BSTR bstrHeaderSubtitle);
 }
 enum IID_IWebWizardHost2 = GUID(0xf9c013dc, 0x3c23, 0x4041, [0x8e, 0x39, 0xcf, 0xb4, 0x2, 0xf7, 0xea, 0x59]);
 interface IWebWizardHost2 : IWebWizardHost
 {
-    HRESULT SignString(BSTR, BSTR*);
+    HRESULT SignString(BSTR value, BSTR* signedValue);
 }
 enum IID_INewWDEvents = GUID(0x751c551, 0x7568, 0x41c9, [0x8e, 0x5b, 0xe2, 0x2e, 0x38, 0x91, 0x92, 0x36]);
 interface INewWDEvents : IWebWizardHost
 {
-    HRESULT PassportAuthenticate(BSTR, VARIANT_BOOL*);
+    HRESULT PassportAuthenticate(BSTR bstrSignInUrl, VARIANT_BOOL* pvfAuthenitcated);
 }
 enum IID_IAutoComplete = GUID(0xbb2762, 0x6a77, 0x11d0, [0xa5, 0x35, 0x0, 0xc0, 0x4f, 0xd7, 0xd0, 0x62]);
 interface IAutoComplete : IUnknown
 {
-    HRESULT Init(HWND, IUnknown, const(wchar)*, const(wchar)*);
-    HRESULT Enable(BOOL);
+    HRESULT Init(HWND hwndEdit, IUnknown punkACL, const(wchar)* pwszRegKeyPath, const(wchar)* pwszQuickComplete);
+    HRESULT Enable(BOOL fEnable);
 }
 alias AUTOCOMPLETEOPTIONS = int;
 enum : int
@@ -7734,8 +7734,8 @@ enum : int
 enum IID_IAutoComplete2 = GUID(0xeac04bc0, 0x3791, 0x11d2, [0xbb, 0x95, 0x0, 0x60, 0x97, 0x7b, 0x46, 0x4c]);
 interface IAutoComplete2 : IAutoComplete
 {
-    HRESULT SetOptions(uint);
-    HRESULT GetOptions(uint*);
+    HRESULT SetOptions(uint dwFlag);
+    HRESULT GetOptions(uint* pdwFlag);
 }
 alias ACENUMOPTION = int;
 enum : int
@@ -7748,45 +7748,45 @@ enum : int
 enum IID_IEnumACString = GUID(0x8e74c210, 0xcf9d, 0x4eaf, [0xa4, 0x3, 0x73, 0x56, 0x42, 0x8f, 0xa, 0x5a]);
 interface IEnumACString : IEnumString
 {
-    HRESULT NextItem(PWSTR, uint, uint*);
-    HRESULT SetEnumOptions(uint);
-    HRESULT GetEnumOptions(uint*);
+    HRESULT NextItem(PWSTR pszUrl, uint cchMax, uint* pulSortIndex);
+    HRESULT SetEnumOptions(uint dwOptions);
+    HRESULT GetEnumOptions(uint* pdwOptions);
 }
 enum IID_IDataObjectAsyncCapability = GUID(0x3d8b0590, 0xf691, 0x11d2, [0x8e, 0xa9, 0x0, 0x60, 0x97, 0xdf, 0x5b, 0xd4]);
 interface IDataObjectAsyncCapability : IUnknown
 {
-    HRESULT SetAsyncMode(BOOL);
-    HRESULT GetAsyncMode(BOOL*);
-    HRESULT StartOperation(IBindCtx);
-    HRESULT InOperation(BOOL*);
-    HRESULT EndOperation(HRESULT, IBindCtx, uint);
+    HRESULT SetAsyncMode(BOOL fDoOpAsync);
+    HRESULT GetAsyncMode(BOOL* pfIsOpAsync);
+    HRESULT StartOperation(IBindCtx pbcReserved);
+    HRESULT InOperation(BOOL* pfInAsyncOp);
+    HRESULT EndOperation(HRESULT hResult, IBindCtx pbcReserved, uint dwEffects);
 }
 enum IID_IExtractIconA = GUID(0x214eb, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IExtractIconA : IUnknown
 {
-    HRESULT GetIconLocation(uint, PSTR, uint, int*, uint*);
-    HRESULT Extract(const(char)*, uint, HICON*, HICON*, uint);
+    HRESULT GetIconLocation(uint uFlags, PSTR pszIconFile, uint cchMax, int* piIndex, uint* pwFlags);
+    HRESULT Extract(const(char)* pszFile, uint nIconIndex, HICON* phiconLarge, HICON* phiconSmall, uint nIconSize);
 }
 enum IID_IExtractIconW = GUID(0x214fa, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IExtractIconW : IUnknown
 {
-    HRESULT GetIconLocation(uint, PWSTR, uint, int*, uint*);
-    HRESULT Extract(const(wchar)*, uint, HICON*, HICON*, uint);
+    HRESULT GetIconLocation(uint uFlags, PWSTR pszIconFile, uint cchMax, int* piIndex, uint* pwFlags);
+    HRESULT Extract(const(wchar)* pszFile, uint nIconIndex, HICON* phiconLarge, HICON* phiconSmall, uint nIconSize);
 }
 enum IID_IShellIconOverlayManager = GUID(0xf10b5e34, 0xdd3b, 0x42a7, [0xaa, 0x7d, 0x2f, 0x4e, 0xc5, 0x4b, 0xb0, 0x9b]);
 interface IShellIconOverlayManager : IUnknown
 {
-    HRESULT GetFileOverlayInfo(const(wchar)*, uint, int*, uint);
-    HRESULT GetReservedOverlayInfo(const(wchar)*, uint, int*, uint, int);
-    HRESULT RefreshOverlayImages(uint);
+    HRESULT GetFileOverlayInfo(const(wchar)* pwszPath, uint dwAttrib, int* pIndex, uint dwflags);
+    HRESULT GetReservedOverlayInfo(const(wchar)* pwszPath, uint dwAttrib, int* pIndex, uint dwflags, int iReservedID);
+    HRESULT RefreshOverlayImages(uint dwFlags);
     HRESULT LoadNonloadedOverlayIdentifiers();
-    HRESULT OverlayIndexFromImageIndex(int, int*, BOOL);
+    HRESULT OverlayIndexFromImageIndex(int iImage, int* piIndex, BOOL fAdd);
 }
 enum IID_IShellIconOverlay = GUID(0x7d688a70, 0xc613, 0x11d0, [0x99, 0x9b, 0x0, 0xc0, 0x4f, 0xd6, 0x55, 0xe1]);
 interface IShellIconOverlay : IUnknown
 {
-    HRESULT GetOverlayIndex(ITEMIDLIST*, int*);
-    HRESULT GetOverlayIconIndex(ITEMIDLIST*, int*);
+    HRESULT GetOverlayIndex(ITEMIDLIST* pidl, int* pIndex);
+    HRESULT GetOverlayIconIndex(ITEMIDLIST* pidl, int* pIconIndex);
 }
 alias SHELL_LINK_DATA_FLAGS = int;
 enum : int
@@ -7893,19 +7893,19 @@ struct EXP_PROPERTYSTORAGE
 enum IID_IURLSearchHook = GUID(0xac60f6a0, 0xfd9, 0x11d0, [0x99, 0xcb, 0x0, 0xc0, 0x4f, 0xd6, 0x44, 0x97]);
 interface IURLSearchHook : IUnknown
 {
-    HRESULT Translate(PWSTR, uint);
+    HRESULT Translate(PWSTR pwszSearchURL, uint cchBufferSize);
 }
 enum IID_ISearchContext = GUID(0x9f656a2, 0x41af, 0x480c, [0x88, 0xf7, 0x16, 0xcc, 0xd, 0x16, 0x46, 0x15]);
 interface ISearchContext : IUnknown
 {
-    HRESULT GetSearchUrl(BSTR*);
-    HRESULT GetSearchText(BSTR*);
-    HRESULT GetSearchStyle(uint*);
+    HRESULT GetSearchUrl(BSTR* pbstrSearchUrl);
+    HRESULT GetSearchText(BSTR* pbstrSearchText);
+    HRESULT GetSearchStyle(uint* pdwSearchStyle);
 }
 enum IID_IURLSearchHook2 = GUID(0x5ee44da4, 0x6d32, 0x46e3, [0x86, 0xbc, 0x7, 0x54, 0xd, 0xed, 0xd0, 0xe0]);
 interface IURLSearchHook2 : IURLSearchHook
 {
-    HRESULT TranslateWithSearchContext(PWSTR, uint, ISearchContext);
+    HRESULT TranslateWithSearchContext(PWSTR pwszSearchURL, uint cchBufferSize, ISearchContext pSearchContext);
 }
 alias SHGFP_TYPE = int;
 enum : int
@@ -7953,7 +7953,7 @@ struct SHFOLDERCUSTOMSETTINGS
     PWSTR pszLogo;
     uint cchLogo;
 }
-alias BFFCALLBACK = int function(HWND, uint, LPARAM, LPARAM);
+alias BFFCALLBACK = int function(HWND hwnd, uint uMsg, LPARAM lParam, LPARAM lpData);
 struct BROWSEINFOA
 {
     HWND hwndOwner;
@@ -7979,19 +7979,19 @@ struct BROWSEINFOW
 enum IID_IShellDetails = GUID(0x214ec, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IShellDetails : IUnknown
 {
-    HRESULT GetDetailsOf(ITEMIDLIST*, uint, SHELLDETAILS*);
-    HRESULT ColumnClick(uint);
+    HRESULT GetDetailsOf(ITEMIDLIST* pidl, uint iColumn, SHELLDETAILS* pDetails);
+    HRESULT ColumnClick(uint iColumn);
 }
 enum IID_IObjMgr = GUID(0xbb2761, 0x6a77, 0x11d0, [0xa5, 0x35, 0x0, 0xc0, 0x4f, 0xd7, 0xd0, 0x62]);
 interface IObjMgr : IUnknown
 {
-    HRESULT Append(IUnknown);
-    HRESULT Remove(IUnknown);
+    HRESULT Append(IUnknown punk);
+    HRESULT Remove(IUnknown punk);
 }
 enum IID_IACList = GUID(0x77a130b0, 0x94fd, 0x11d0, [0xa5, 0x44, 0x0, 0xc0, 0x4f, 0xd7, 0xd0, 0x62]);
 interface IACList : IUnknown
 {
-    HRESULT Expand(const(wchar)*);
+    HRESULT Expand(const(wchar)* pszExpand);
 }
 alias AUTOCOMPLETELISTOPTIONS = int;
 enum : int
@@ -8009,29 +8009,29 @@ enum : int
 enum IID_IACList2 = GUID(0x470141a0, 0x5186, 0x11d2, [0xbb, 0xb6, 0x0, 0x60, 0x97, 0x7b, 0x46, 0x4c]);
 interface IACList2 : IACList
 {
-    HRESULT SetOptions(uint);
-    HRESULT GetOptions(uint*);
+    HRESULT SetOptions(uint dwFlag);
+    HRESULT GetOptions(uint* pdwFlag);
 }
 enum IID_IProgressDialog = GUID(0xebbc7c04, 0x315e, 0x11d2, [0xb6, 0x2f, 0x0, 0x60, 0x97, 0xdf, 0x5b, 0xd4]);
 interface IProgressDialog : IUnknown
 {
-    HRESULT StartProgressDialog(HWND, IUnknown, uint, const(void)*);
+    HRESULT StartProgressDialog(HWND hwndParent, IUnknown punkEnableModless, uint dwFlags, const(void)* pvResevered);
     HRESULT StopProgressDialog();
-    HRESULT SetTitle(const(wchar)*);
-    HRESULT SetAnimation(HINSTANCE, uint);
+    HRESULT SetTitle(const(wchar)* pwzTitle);
+    HRESULT SetAnimation(HINSTANCE hInstAnimation, uint idAnimation);
     BOOL HasUserCancelled();
-    HRESULT SetProgress(uint, uint);
-    HRESULT SetProgress64(ulong, ulong);
-    HRESULT SetLine(uint, const(wchar)*, BOOL, const(void)*);
-    HRESULT SetCancelMsg(const(wchar)*, const(void)*);
-    HRESULT Timer(uint, const(void)*);
+    HRESULT SetProgress(uint dwCompleted, uint dwTotal);
+    HRESULT SetProgress64(ulong ullCompleted, ulong ullTotal);
+    HRESULT SetLine(uint dwLineNum, const(wchar)* pwzString, BOOL fCompactPath, const(void)* pvResevered);
+    HRESULT SetCancelMsg(const(wchar)* pwzCancelMsg, const(void)* pvResevered);
+    HRESULT Timer(uint dwTimerAction, const(void)* pvResevered);
 }
 enum IID_IDockingWindowSite = GUID(0x2a342fc2, 0x7b26, 0x11d0, [0x8c, 0xa9, 0x0, 0xa0, 0xc9, 0x2d, 0xbf, 0xe8]);
 interface IDockingWindowSite : IOleWindow
 {
-    HRESULT GetBorderDW(IUnknown, RECT*);
-    HRESULT RequestBorderSpaceDW(IUnknown, RECT*);
-    HRESULT SetBorderSpaceDW(IUnknown, RECT*);
+    HRESULT GetBorderDW(IUnknown punkObj, RECT* prcBorder);
+    HRESULT RequestBorderSpaceDW(IUnknown punkObj, RECT* pbw);
+    HRESULT SetBorderSpaceDW(IUnknown punkObj, RECT* pbw);
 }
 struct NRESARRAY
 {
@@ -8146,13 +8146,13 @@ struct SHChangeNotifyEntry
 enum IID_IShellChangeNotify = GUID(0xd82be2b1, 0x5764, 0x11d0, [0xa9, 0x6e, 0x0, 0xc0, 0x4f, 0xd7, 0x5, 0xa2]);
 interface IShellChangeNotify : IUnknown
 {
-    HRESULT OnChange(int, ITEMIDLIST*, ITEMIDLIST*);
+    HRESULT OnChange(int lEvent, ITEMIDLIST* pidl1, ITEMIDLIST* pidl2);
 }
 enum IID_IQueryInfo = GUID(0x21500, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface IQueryInfo : IUnknown
 {
-    HRESULT GetInfoTip(uint, PWSTR*);
-    HRESULT GetInfoFlags(uint*);
+    HRESULT GetInfoTip(uint dwFlags, PWSTR* ppwszTip);
+    HRESULT GetInfoFlags(uint* pdwFlags);
 }
 alias SHARD = int;
 enum : int
@@ -8423,7 +8423,7 @@ struct OPENASINFO
 enum IID_IShellFolderViewCB = GUID(0x2047e320, 0xf2a9, 0x11ce, [0xae, 0x65, 0x8, 0x0, 0x2b, 0x2e, 0x12, 0x62]);
 interface IShellFolderViewCB : IUnknown
 {
-    HRESULT MessageSFVCB(uint, WPARAM, LPARAM);
+    HRESULT MessageSFVCB(uint uMsg, WPARAM wParam, LPARAM lParam);
 }
 struct QCMINFO_IDMAP_PLACEMENT
 {
@@ -8472,34 +8472,34 @@ struct ITEMSPACING
 enum IID_IShellFolderView = GUID(0x37a378c0, 0xf82d, 0x11ce, [0xae, 0x65, 0x8, 0x0, 0x2b, 0x2e, 0x12, 0x62]);
 interface IShellFolderView : IUnknown
 {
-    HRESULT Rearrange(LPARAM);
-    HRESULT GetArrangeParam(LPARAM*);
+    HRESULT Rearrange(LPARAM lParamSort);
+    HRESULT GetArrangeParam(LPARAM* plParamSort);
     HRESULT ArrangeGrid();
     HRESULT AutoArrange();
     HRESULT GetAutoArrange();
-    HRESULT AddObject(ITEMIDLIST*, uint*);
-    HRESULT GetObject(ITEMIDLIST**, uint);
-    HRESULT RemoveObject(ITEMIDLIST*, uint*);
-    HRESULT GetObjectCount(uint*);
-    HRESULT SetObjectCount(uint, uint);
-    HRESULT UpdateObject(ITEMIDLIST*, ITEMIDLIST*, uint*);
-    HRESULT RefreshObject(ITEMIDLIST*, uint*);
-    HRESULT SetRedraw(BOOL);
-    HRESULT GetSelectedCount(uint*);
-    HRESULT GetSelectedObjects(ITEMIDLIST***, uint*);
-    HRESULT IsDropOnSource(IDropTarget);
-    HRESULT GetDragPoint(POINT*);
-    HRESULT GetDropPoint(POINT*);
-    HRESULT MoveIcons(IDataObject);
-    HRESULT SetItemPos(ITEMIDLIST*, POINT*);
-    HRESULT IsBkDropTarget(IDropTarget);
-    HRESULT SetClipboard(BOOL);
-    HRESULT SetPoints(IDataObject);
-    HRESULT GetItemSpacing(ITEMSPACING*);
-    HRESULT SetCallback(IShellFolderViewCB, IShellFolderViewCB*);
-    HRESULT Select(uint);
-    HRESULT QuerySupport(uint*);
-    HRESULT SetAutomationObject(IDispatch);
+    HRESULT AddObject(ITEMIDLIST* pidl, uint* puItem);
+    HRESULT GetObject(ITEMIDLIST** ppidl, uint uItem);
+    HRESULT RemoveObject(ITEMIDLIST* pidl, uint* puItem);
+    HRESULT GetObjectCount(uint* puCount);
+    HRESULT SetObjectCount(uint uCount, uint dwFlags);
+    HRESULT UpdateObject(ITEMIDLIST* pidlOld, ITEMIDLIST* pidlNew, uint* puItem);
+    HRESULT RefreshObject(ITEMIDLIST* pidl, uint* puItem);
+    HRESULT SetRedraw(BOOL bRedraw);
+    HRESULT GetSelectedCount(uint* puSelected);
+    HRESULT GetSelectedObjects(ITEMIDLIST*** pppidl, uint* puItems);
+    HRESULT IsDropOnSource(IDropTarget pDropTarget);
+    HRESULT GetDragPoint(POINT* ppt);
+    HRESULT GetDropPoint(POINT* ppt);
+    HRESULT MoveIcons(IDataObject pDataObject);
+    HRESULT SetItemPos(ITEMIDLIST* pidl, POINT* ppt);
+    HRESULT IsBkDropTarget(IDropTarget pDropTarget);
+    HRESULT SetClipboard(BOOL bMove);
+    HRESULT SetPoints(IDataObject pDataObject);
+    HRESULT GetItemSpacing(ITEMSPACING* pSpacing);
+    HRESULT SetCallback(IShellFolderViewCB pNewCB, IShellFolderViewCB* ppOldCB);
+    HRESULT Select(uint dwFlags);
+    HRESULT QuerySupport(uint* pdwSupport);
+    HRESULT SetAutomationObject(IDispatch pdisp);
 }
 struct SFV_CREATE
 {
@@ -8508,7 +8508,7 @@ struct SFV_CREATE
     IShellView psvOuter;
     IShellFolderViewCB psfvcb;
 }
-alias LPFNDFMCALLBACK = HRESULT function(IShellFolder, HWND, IDataObject, uint, WPARAM, LPARAM);
+alias LPFNDFMCALLBACK = HRESULT function(IShellFolder psf, HWND hwnd, IDataObject pdtobj, uint uMsg, WPARAM wParam, LPARAM lParam);
 struct DEFCONTEXTMENU
 {
     HWND hwnd;
@@ -8531,7 +8531,7 @@ struct DFMICS
     CMINVOKECOMMANDINFO* pici;
     IUnknown punkSite;
 }
-alias LPFNVIEWCALLBACK = HRESULT function(IShellView, IShellFolder, HWND, uint, WPARAM, LPARAM);
+alias LPFNVIEWCALLBACK = HRESULT function(IShellView psvOuter, IShellFolder psf, HWND hwndMain, uint uMsg, WPARAM wParam, LPARAM lParam);
 struct CSFV
 {
     uint cbSize;
@@ -8574,9 +8574,9 @@ struct SHELLFLAGSTATE
 enum IID_INamedPropertyBag = GUID(0xfb700430, 0x952c, 0x11d1, [0x94, 0x6f, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0]);
 interface INamedPropertyBag : IUnknown
 {
-    HRESULT ReadPropertyNPB(const(wchar)*, const(wchar)*, PROPVARIANT*);
-    HRESULT WritePropertyNPB(const(wchar)*, const(wchar)*, PROPVARIANT*);
-    HRESULT RemovePropertyNPB(const(wchar)*, const(wchar)*);
+    HRESULT ReadPropertyNPB(const(wchar)* pszBagname, const(wchar)* pszPropName, PROPVARIANT* pVar);
+    HRESULT WritePropertyNPB(const(wchar)* pszBagname, const(wchar)* pszPropName, PROPVARIANT* pVar);
+    HRESULT RemovePropertyNPB(const(wchar)* pszBagname, const(wchar)* pszPropName);
 }
 alias IESHORTCUTFLAGS = int;
 enum : int
@@ -8590,50 +8590,50 @@ enum : int
 enum IID_INewShortcutHookA = GUID(0x214e1, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface INewShortcutHookA : IUnknown
 {
-    HRESULT SetReferent(const(char)*, HWND);
-    HRESULT GetReferent(PSTR, int);
-    HRESULT SetFolder(const(char)*);
-    HRESULT GetFolder(PSTR, int);
-    HRESULT GetName(PSTR, int);
-    HRESULT GetExtension(PSTR, int);
+    HRESULT SetReferent(const(char)* pcszReferent, HWND hwnd);
+    HRESULT GetReferent(PSTR pszReferent, int cchReferent);
+    HRESULT SetFolder(const(char)* pcszFolder);
+    HRESULT GetFolder(PSTR pszFolder, int cchFolder);
+    HRESULT GetName(PSTR pszName, int cchName);
+    HRESULT GetExtension(PSTR pszExtension, int cchExtension);
 }
 enum IID_INewShortcutHookW = GUID(0x214f7, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface INewShortcutHookW : IUnknown
 {
-    HRESULT SetReferent(const(wchar)*, HWND);
-    HRESULT GetReferent(PWSTR, int);
-    HRESULT SetFolder(const(wchar)*);
-    HRESULT GetFolder(PWSTR, int);
-    HRESULT GetName(PWSTR, int);
-    HRESULT GetExtension(PWSTR, int);
+    HRESULT SetReferent(const(wchar)* pcszReferent, HWND hwnd);
+    HRESULT GetReferent(PWSTR pszReferent, int cchReferent);
+    HRESULT SetFolder(const(wchar)* pcszFolder);
+    HRESULT GetFolder(PWSTR pszFolder, int cchFolder);
+    HRESULT GetName(PWSTR pszName, int cchName);
+    HRESULT GetExtension(PWSTR pszExtension, int cchExtension);
 }
 enum IID_ICopyHookA = GUID(0x214ef, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ICopyHookA : IUnknown
 {
-    uint CopyCallback(HWND, uint, uint, const(char)*, uint, const(char)*, uint);
+    uint CopyCallback(HWND hwnd, uint wFunc, uint wFlags, const(char)* pszSrcFile, uint dwSrcAttribs, const(char)* pszDestFile, uint dwDestAttribs);
 }
 enum IID_ICopyHookW = GUID(0x214fc, 0x0, 0x0, [0xc0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x46]);
 interface ICopyHookW : IUnknown
 {
-    uint CopyCallback(HWND, uint, uint, const(wchar)*, uint, const(wchar)*, uint);
+    uint CopyCallback(HWND hwnd, uint wFunc, uint wFlags, const(wchar)* pszSrcFile, uint dwSrcAttribs, const(wchar)* pszDestFile, uint dwDestAttribs);
 }
 enum IID_ICurrentWorkingDirectory = GUID(0x91956d21, 0x9276, 0x11d1, [0x92, 0x1a, 0x0, 0x60, 0x97, 0xdf, 0x5b, 0xd4]);
 interface ICurrentWorkingDirectory : IUnknown
 {
-    HRESULT GetDirectory(PWSTR, uint);
-    HRESULT SetDirectory(const(wchar)*);
+    HRESULT GetDirectory(PWSTR pwzPath, uint cchSize);
+    HRESULT SetDirectory(const(wchar)* pwzPath);
 }
 enum IID_IDockingWindowFrame = GUID(0x47d2657a, 0x7b27, 0x11d0, [0x8c, 0xa9, 0x0, 0xa0, 0xc9, 0x2d, 0xbf, 0xe8]);
 interface IDockingWindowFrame : IOleWindow
 {
-    HRESULT AddToolbar(IUnknown, const(wchar)*, uint);
-    HRESULT RemoveToolbar(IUnknown, uint);
-    HRESULT FindToolbar(const(wchar)*, const(GUID)*, void**);
+    HRESULT AddToolbar(IUnknown punkSrc, const(wchar)* pwszItem, uint dwAddFlags);
+    HRESULT RemoveToolbar(IUnknown punkSrc, uint dwRemoveFlags);
+    HRESULT FindToolbar(const(wchar)* pwszItem, const(GUID)* riid, void** ppv);
 }
 enum IID_IThumbnailCapture = GUID(0x4ea39266, 0x7211, 0x409f, [0xb6, 0x22, 0xf6, 0x3d, 0xbd, 0x16, 0xc5, 0x33]);
 interface IThumbnailCapture : IUnknown
 {
-    HRESULT CaptureThumbnail(const(SIZE)*, IUnknown, HBITMAP*);
+    HRESULT CaptureThumbnail(const(SIZE)* pMaxSize, IUnknown pHTMLDoc2, HBITMAP* phbmThumbnail);
 }
 struct BANDINFOSFB
 {
@@ -8651,17 +8651,17 @@ struct BANDINFOSFB
 enum IID_IShellFolderBand = GUID(0x7fe80cc8, 0xc247, 0x11d0, [0xb9, 0x3a, 0x0, 0xa0, 0xc9, 0x3, 0x12, 0xe1]);
 interface IShellFolderBand : IUnknown
 {
-    HRESULT InitializeSFB(IShellFolder, ITEMIDLIST*);
-    HRESULT SetBandInfoSFB(BANDINFOSFB*);
-    HRESULT GetBandInfoSFB(BANDINFOSFB*);
+    HRESULT InitializeSFB(IShellFolder psf, ITEMIDLIST* pidl);
+    HRESULT SetBandInfoSFB(BANDINFOSFB* pbi);
+    HRESULT GetBandInfoSFB(BANDINFOSFB* pbi);
 }
 enum IID_IDeskBarClient = GUID(0xeb0fe175, 0x1a3a, 0x11d0, [0x89, 0xb3, 0x0, 0xa0, 0xc9, 0xa, 0x90, 0xac]);
 interface IDeskBarClient : IOleWindow
 {
-    HRESULT SetDeskBarSite(IUnknown);
-    HRESULT SetModeDBC(uint);
-    HRESULT UIActivateDBC(uint);
-    HRESULT GetSize(uint, RECT*);
+    HRESULT SetDeskBarSite(IUnknown punkSite);
+    HRESULT SetModeDBC(uint dwMode);
+    HRESULT UIActivateDBC(uint dwState);
+    HRESULT GetSize(uint dwWhich, RECT* prc);
 }
 struct SHCOLUMNINFO
 {
@@ -8691,9 +8691,9 @@ struct SHCOLUMNDATA
 enum IID_IColumnProvider = GUID(0xe8025004, 0x1c42, 0x11d2, [0xbe, 0x2c, 0x0, 0xa0, 0xc9, 0xa8, 0x3d, 0xa1]);
 interface IColumnProvider : IUnknown
 {
-    HRESULT Initialize(SHCOLUMNINIT*);
-    HRESULT GetColumnInfo(uint, SHCOLUMNINFO*);
-    HRESULT GetItemData(PROPERTYKEY*, SHCOLUMNDATA*, VARIANT*);
+    HRESULT Initialize(SHCOLUMNINIT* psci);
+    HRESULT GetColumnInfo(uint dwIndex, SHCOLUMNINFO* psci);
+    HRESULT GetItemData(PROPERTYKEY* pscid, SHCOLUMNDATA* pscd, VARIANT* pvarData);
 }
 struct SHChangeProductKeyAsIDList
 {
@@ -8705,7 +8705,7 @@ struct SHChangeProductKeyAsIDList
 enum IID_IDocViewSite = GUID(0x87d605e0, 0xc511, 0x11cf, [0x89, 0xa9, 0x0, 0xa0, 0xc9, 0x5, 0x41, 0x29]);
 interface IDocViewSite : IUnknown
 {
-    HRESULT OnSetTitle(VARIANT*);
+    HRESULT OnSetTitle(VARIANT* pvTitle);
 }
 enum IID_IInitializeObject = GUID(0x4622ad16, 0xff23, 0x11d0, [0x8d, 0x34, 0x0, 0xa0, 0xc9, 0xf, 0x27, 0x19]);
 interface IInitializeObject : IUnknown
@@ -8715,10 +8715,10 @@ interface IInitializeObject : IUnknown
 enum IID_IBanneredBar = GUID(0x596a9a94, 0x13e, 0x11d1, [0x8d, 0x34, 0x0, 0xa0, 0xc9, 0xf, 0x27, 0x19]);
 interface IBanneredBar : IUnknown
 {
-    HRESULT SetIconSize(uint);
-    HRESULT GetIconSize(uint*);
-    HRESULT SetBitmap(HBITMAP);
-    HRESULT GetBitmap(HBITMAP*);
+    HRESULT SetIconSize(uint iIcon);
+    HRESULT GetIconSize(uint* piIcon);
+    HRESULT SetBitmap(HBITMAP hBitmap);
+    HRESULT GetBitmap(HBITMAP* phBitmap);
 }
 struct TBINFO
 {
@@ -9163,8 +9163,8 @@ enum : int
     BOOL bModal;
 }
 +/
-alias PFNCANSHAREFOLDERW = HRESULT function(const(wchar)*);
-alias PFNSHOWSHAREFOLDERUIW = HRESULT function(HWND, const(wchar)*);
+alias PFNCANSHAREFOLDERW = HRESULT function(const(wchar)* pszPath);
+alias PFNSHOWSHAREFOLDERUIW = HRESULT function(HWND hwndParent, const(wchar)* pszPath);
 struct NC_ADDRESS
 {
     NET_ADDRESS_INFO* pAddrInfo;
@@ -9358,11 +9358,11 @@ enum : int
 enum IID_IQueryAssociations = GUID(0xc46ca590, 0x3c3f, 0x11d2, [0xbe, 0xe6, 0x0, 0x0, 0xf8, 0x5, 0xca, 0x57]);
 interface IQueryAssociations : IUnknown
 {
-    HRESULT Init(ASSOCF, const(wchar)*, HKEY, HWND);
-    HRESULT GetString(ASSOCF, ASSOCSTR, const(wchar)*, PWSTR, uint*);
-    HRESULT GetKey(ASSOCF, ASSOCKEY, const(wchar)*, HKEY*);
-    HRESULT GetData(ASSOCF, ASSOCDATA, const(wchar)*, void*, uint*);
-    HRESULT GetEnum(ASSOCF, ASSOCENUM, const(wchar)*, const(GUID)*, void**);
+    HRESULT Init(ASSOCF flags, const(wchar)* pszAssoc, HKEY hkProgid, HWND hwnd);
+    HRESULT GetString(ASSOCF flags, ASSOCSTR str, const(wchar)* pszExtra, PWSTR pszOut, uint* pcchOut);
+    HRESULT GetKey(ASSOCF flags, ASSOCKEY key, const(wchar)* pszExtra, HKEY* phkeyOut);
+    HRESULT GetData(ASSOCF flags, ASSOCDATA data, const(wchar)* pszExtra, void* pvOut, uint* pcbOut);
+    HRESULT GetEnum(ASSOCF flags, ASSOCENUM assocenum, const(wchar)* pszExtra, const(GUID)* riid, void** ppvOut);
 }
 alias SHGLOBALCOUNTER = int;
 enum : int
@@ -9448,7 +9448,7 @@ struct DLLVERSIONINFO2
     uint dwFlags;
     ulong ullVersion;
 }
-alias DLLGETVERSIONPROC = HRESULT function(DLLVERSIONINFO*);
+alias DLLGETVERSIONPROC = HRESULT function(DLLVERSIONINFO* param0);
 alias APPINFODATAFLAGS = int;
 enum : int
 {
@@ -9519,10 +9519,10 @@ struct SLOWAPPINFO
 enum IID_IShellApp = GUID(0xa3e14960, 0x935f, 0x11d1, [0xb8, 0xb8, 0x0, 0x60, 0x8, 0x5, 0x93, 0x82]);
 interface IShellApp : IUnknown
 {
-    HRESULT GetAppInfo(APPINFODATA*);
-    HRESULT GetPossibleActions(uint*);
-    HRESULT GetSlowAppInfo(SLOWAPPINFO*);
-    HRESULT GetCachedSlowAppInfo(SLOWAPPINFO*);
+    HRESULT GetAppInfo(APPINFODATA* pai);
+    HRESULT GetPossibleActions(uint* pdwActions);
+    HRESULT GetSlowAppInfo(SLOWAPPINFO* psaid);
+    HRESULT GetCachedSlowAppInfo(SLOWAPPINFO* psaid);
     HRESULT IsInstalled();
 }
 alias PUBAPPINFOFLAGS = int;
@@ -9548,28 +9548,28 @@ struct PUBAPPINFO
 enum IID_IPublishedApp = GUID(0x1bc752e0, 0x9046, 0x11d1, [0xb8, 0xb3, 0x0, 0x60, 0x8, 0x5, 0x93, 0x82]);
 interface IPublishedApp : IShellApp
 {
-    HRESULT Install(SYSTEMTIME*);
-    HRESULT GetPublishedAppInfo(PUBAPPINFO*);
+    HRESULT Install(SYSTEMTIME* pstInstall);
+    HRESULT GetPublishedAppInfo(PUBAPPINFO* ppai);
     HRESULT Unschedule();
 }
 enum IID_IPublishedApp2 = GUID(0x12b81347, 0x1b3a, 0x4a04, [0xaa, 0x61, 0x3f, 0x76, 0x8b, 0x67, 0xfd, 0x7e]);
 interface IPublishedApp2 : IPublishedApp
 {
-    HRESULT Install2(SYSTEMTIME*, HWND);
+    HRESULT Install2(SYSTEMTIME* pstInstall, HWND hwndParent);
 }
 enum IID_IEnumPublishedApps = GUID(0xb124f8c, 0x91f0, 0x11d1, [0xb8, 0xb5, 0x0, 0x60, 0x8, 0x5, 0x93, 0x82]);
 interface IEnumPublishedApps : IUnknown
 {
-    HRESULT Next(IPublishedApp*);
+    HRESULT Next(IPublishedApp* pia);
     HRESULT Reset();
 }
 enum IID_IAppPublisher = GUID(0x7250a10, 0x9cf9, 0x11d1, [0x90, 0x76, 0x0, 0x60, 0x8, 0x5, 0x93, 0x82]);
 interface IAppPublisher : IUnknown
 {
-    HRESULT GetNumberOfCategories(uint*);
-    HRESULT GetCategories(APPCATEGORYINFOLIST*);
-    HRESULT GetNumberOfApps(uint*);
-    HRESULT EnumApps(GUID*, IEnumPublishedApps*);
+    HRESULT GetNumberOfCategories(uint* pdwCat);
+    HRESULT GetCategories(APPCATEGORYINFOLIST* pAppCategoryList);
+    HRESULT GetNumberOfApps(uint* pdwApps);
+    HRESULT EnumApps(GUID* pAppCategoryId, IEnumPublishedApps* ppepa);
 }
 alias CREDENTIAL_PROVIDER_USAGE_SCENARIO = int;
 enum : int
@@ -9669,109 +9669,109 @@ enum : int
 enum IID_ICredentialProviderCredential = GUID(0x63913a93, 0x40c1, 0x481a, [0x81, 0x8d, 0x40, 0x72, 0xff, 0x8c, 0x70, 0xcc]);
 interface ICredentialProviderCredential : IUnknown
 {
-    HRESULT Advise(ICredentialProviderCredentialEvents);
+    HRESULT Advise(ICredentialProviderCredentialEvents pcpce);
     HRESULT UnAdvise();
-    HRESULT SetSelected(BOOL*);
+    HRESULT SetSelected(BOOL* pbAutoLogon);
     HRESULT SetDeselected();
-    HRESULT GetFieldState(uint, CREDENTIAL_PROVIDER_FIELD_STATE*, CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE*);
-    HRESULT GetStringValue(uint, PWSTR*);
-    HRESULT GetBitmapValue(uint, HBITMAP*);
-    HRESULT GetCheckboxValue(uint, BOOL*, PWSTR*);
-    HRESULT GetSubmitButtonValue(uint, uint*);
-    HRESULT GetComboBoxValueCount(uint, uint*, uint*);
-    HRESULT GetComboBoxValueAt(uint, uint, PWSTR*);
-    HRESULT SetStringValue(uint, const(wchar)*);
-    HRESULT SetCheckboxValue(uint, BOOL);
-    HRESULT SetComboBoxSelectedValue(uint, uint);
-    HRESULT CommandLinkClicked(uint);
-    HRESULT GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE*, CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION*, PWSTR*, CREDENTIAL_PROVIDER_STATUS_ICON*);
-    HRESULT ReportResult(NTSTATUS, NTSTATUS, PWSTR*, CREDENTIAL_PROVIDER_STATUS_ICON*);
+    HRESULT GetFieldState(uint dwFieldID, CREDENTIAL_PROVIDER_FIELD_STATE* pcpfs, CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE* pcpfis);
+    HRESULT GetStringValue(uint dwFieldID, PWSTR* ppsz);
+    HRESULT GetBitmapValue(uint dwFieldID, HBITMAP* phbmp);
+    HRESULT GetCheckboxValue(uint dwFieldID, BOOL* pbChecked, PWSTR* ppszLabel);
+    HRESULT GetSubmitButtonValue(uint dwFieldID, uint* pdwAdjacentTo);
+    HRESULT GetComboBoxValueCount(uint dwFieldID, uint* pcItems, uint* pdwSelectedItem);
+    HRESULT GetComboBoxValueAt(uint dwFieldID, uint dwItem, PWSTR* ppszItem);
+    HRESULT SetStringValue(uint dwFieldID, const(wchar)* psz);
+    HRESULT SetCheckboxValue(uint dwFieldID, BOOL bChecked);
+    HRESULT SetComboBoxSelectedValue(uint dwFieldID, uint dwSelectedItem);
+    HRESULT CommandLinkClicked(uint dwFieldID);
+    HRESULT GetSerialization(CREDENTIAL_PROVIDER_GET_SERIALIZATION_RESPONSE* pcpgsr, CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* pcpcs, PWSTR* ppszOptionalStatusText, CREDENTIAL_PROVIDER_STATUS_ICON* pcpsiOptionalStatusIcon);
+    HRESULT ReportResult(NTSTATUS ntsStatus, NTSTATUS ntsSubstatus, PWSTR* ppszOptionalStatusText, CREDENTIAL_PROVIDER_STATUS_ICON* pcpsiOptionalStatusIcon);
 }
 enum IID_IQueryContinueWithStatus = GUID(0x9090be5b, 0x502b, 0x41fb, [0xbc, 0xcc, 0x0, 0x49, 0xa6, 0xc7, 0x25, 0x4b]);
 interface IQueryContinueWithStatus : IQueryContinue
 {
-    HRESULT SetStatusMessage(const(wchar)*);
+    HRESULT SetStatusMessage(const(wchar)* psz);
 }
 enum IID_IConnectableCredentialProviderCredential = GUID(0x9387928b, 0xac75, 0x4bf9, [0x8a, 0xb2, 0x2b, 0x93, 0xc4, 0xa5, 0x52, 0x90]);
 interface IConnectableCredentialProviderCredential : ICredentialProviderCredential
 {
-    HRESULT Connect(IQueryContinueWithStatus);
+    HRESULT Connect(IQueryContinueWithStatus pqcws);
     HRESULT Disconnect();
 }
 enum IID_ICredentialProviderCredentialEvents = GUID(0xfa6fa76b, 0x66b7, 0x4b11, [0x95, 0xf1, 0x86, 0x17, 0x11, 0x18, 0xe8, 0x16]);
 interface ICredentialProviderCredentialEvents : IUnknown
 {
-    HRESULT SetFieldState(ICredentialProviderCredential, uint, CREDENTIAL_PROVIDER_FIELD_STATE);
-    HRESULT SetFieldInteractiveState(ICredentialProviderCredential, uint, CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE);
-    HRESULT SetFieldString(ICredentialProviderCredential, uint, const(wchar)*);
-    HRESULT SetFieldCheckbox(ICredentialProviderCredential, uint, BOOL, const(wchar)*);
-    HRESULT SetFieldBitmap(ICredentialProviderCredential, uint, HBITMAP);
-    HRESULT SetFieldComboBoxSelectedItem(ICredentialProviderCredential, uint, uint);
-    HRESULT DeleteFieldComboBoxItem(ICredentialProviderCredential, uint, uint);
-    HRESULT AppendFieldComboBoxItem(ICredentialProviderCredential, uint, const(wchar)*);
-    HRESULT SetFieldSubmitButton(ICredentialProviderCredential, uint, uint);
-    HRESULT OnCreatingWindow(HWND*);
+    HRESULT SetFieldState(ICredentialProviderCredential pcpc, uint dwFieldID, CREDENTIAL_PROVIDER_FIELD_STATE cpfs);
+    HRESULT SetFieldInteractiveState(ICredentialProviderCredential pcpc, uint dwFieldID, CREDENTIAL_PROVIDER_FIELD_INTERACTIVE_STATE cpfis);
+    HRESULT SetFieldString(ICredentialProviderCredential pcpc, uint dwFieldID, const(wchar)* psz);
+    HRESULT SetFieldCheckbox(ICredentialProviderCredential pcpc, uint dwFieldID, BOOL bChecked, const(wchar)* pszLabel);
+    HRESULT SetFieldBitmap(ICredentialProviderCredential pcpc, uint dwFieldID, HBITMAP hbmp);
+    HRESULT SetFieldComboBoxSelectedItem(ICredentialProviderCredential pcpc, uint dwFieldID, uint dwSelectedItem);
+    HRESULT DeleteFieldComboBoxItem(ICredentialProviderCredential pcpc, uint dwFieldID, uint dwItem);
+    HRESULT AppendFieldComboBoxItem(ICredentialProviderCredential pcpc, uint dwFieldID, const(wchar)* pszItem);
+    HRESULT SetFieldSubmitButton(ICredentialProviderCredential pcpc, uint dwFieldID, uint dwAdjacentTo);
+    HRESULT OnCreatingWindow(HWND* phwndOwner);
 }
 enum IID_ICredentialProvider = GUID(0xd27c3481, 0x5a1c, 0x45b2, [0x8a, 0xaa, 0xc2, 0xe, 0xbb, 0xe8, 0x22, 0x9e]);
 interface ICredentialProvider : IUnknown
 {
-    HRESULT SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO, uint);
-    HRESULT SetSerialization(const(CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION)*);
-    HRESULT Advise(ICredentialProviderEvents, ulong);
+    HRESULT SetUsageScenario(CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, uint dwFlags);
+    HRESULT SetSerialization(const(CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION)* pcpcs);
+    HRESULT Advise(ICredentialProviderEvents pcpe, ulong upAdviseContext);
     HRESULT UnAdvise();
-    HRESULT GetFieldDescriptorCount(uint*);
-    HRESULT GetFieldDescriptorAt(uint, CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR**);
-    HRESULT GetCredentialCount(uint*, uint*, BOOL*);
-    HRESULT GetCredentialAt(uint, ICredentialProviderCredential*);
+    HRESULT GetFieldDescriptorCount(uint* pdwCount);
+    HRESULT GetFieldDescriptorAt(uint dwIndex, CREDENTIAL_PROVIDER_FIELD_DESCRIPTOR** ppcpfd);
+    HRESULT GetCredentialCount(uint* pdwCount, uint* pdwDefault, BOOL* pbAutoLogonWithDefault);
+    HRESULT GetCredentialAt(uint dwIndex, ICredentialProviderCredential* ppcpc);
 }
 enum IID_ICredentialProviderEvents = GUID(0x34201e5a, 0xa787, 0x41a3, [0xa5, 0xa4, 0xbd, 0x6d, 0xcf, 0x2a, 0x85, 0x4e]);
 interface ICredentialProviderEvents : IUnknown
 {
-    HRESULT CredentialsChanged(ulong);
+    HRESULT CredentialsChanged(ulong upAdviseContext);
 }
 enum IID_ICredentialProviderFilter = GUID(0xa5da53f9, 0xd475, 0x4080, [0xa1, 0x20, 0x91, 0xc, 0x4a, 0x73, 0x98, 0x80]);
 interface ICredentialProviderFilter : IUnknown
 {
-    HRESULT Filter(CREDENTIAL_PROVIDER_USAGE_SCENARIO, uint, GUID*, BOOL*, uint);
-    HRESULT UpdateRemoteCredential(const(CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION)*, CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION*);
+    HRESULT Filter(CREDENTIAL_PROVIDER_USAGE_SCENARIO cpus, uint dwFlags, GUID* rgclsidProviders, BOOL* rgbAllow, uint cProviders);
+    HRESULT UpdateRemoteCredential(const(CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION)* pcpcsIn, CREDENTIAL_PROVIDER_CREDENTIAL_SERIALIZATION* pcpcsOut);
 }
 enum IID_ICredentialProviderCredential2 = GUID(0xfd672c54, 0x40ea, 0x4d6e, [0x9b, 0x49, 0xcf, 0xb1, 0xa7, 0x50, 0x7b, 0xd7]);
 interface ICredentialProviderCredential2 : ICredentialProviderCredential
 {
-    HRESULT GetUserSid(PWSTR*);
+    HRESULT GetUserSid(PWSTR* sid);
 }
 enum IID_ICredentialProviderCredentialWithFieldOptions = GUID(0xdbc6fb30, 0xc843, 0x49e3, [0xa6, 0x45, 0x57, 0x3e, 0x6f, 0x39, 0x44, 0x6a]);
 interface ICredentialProviderCredentialWithFieldOptions : IUnknown
 {
-    HRESULT GetFieldOptions(uint, CREDENTIAL_PROVIDER_CREDENTIAL_FIELD_OPTIONS*);
+    HRESULT GetFieldOptions(uint fieldID, CREDENTIAL_PROVIDER_CREDENTIAL_FIELD_OPTIONS* options);
 }
 enum IID_ICredentialProviderCredentialEvents2 = GUID(0xb53c00b6, 0x9922, 0x4b78, [0xb1, 0xf4, 0xdd, 0xfe, 0x77, 0x4d, 0xc3, 0x9b]);
 interface ICredentialProviderCredentialEvents2 : ICredentialProviderCredentialEvents
 {
     HRESULT BeginFieldUpdates();
     HRESULT EndFieldUpdates();
-    HRESULT SetFieldOptions(ICredentialProviderCredential, uint, CREDENTIAL_PROVIDER_CREDENTIAL_FIELD_OPTIONS);
+    HRESULT SetFieldOptions(ICredentialProviderCredential credential, uint fieldID, CREDENTIAL_PROVIDER_CREDENTIAL_FIELD_OPTIONS options);
 }
 enum IID_ICredentialProviderUser = GUID(0x13793285, 0x3ea6, 0x40fd, [0xb4, 0x20, 0x15, 0xf4, 0x7d, 0xa4, 0x1f, 0xbb]);
 interface ICredentialProviderUser : IUnknown
 {
-    HRESULT GetSid(PWSTR*);
-    HRESULT GetProviderID(GUID*);
-    HRESULT GetStringValue(const(PROPERTYKEY)*, PWSTR*);
-    HRESULT GetValue(const(PROPERTYKEY)*, PROPVARIANT*);
+    HRESULT GetSid(PWSTR* sid);
+    HRESULT GetProviderID(GUID* providerID);
+    HRESULT GetStringValue(const(PROPERTYKEY)* key, PWSTR* stringValue);
+    HRESULT GetValue(const(PROPERTYKEY)* key, PROPVARIANT* value);
 }
 enum IID_ICredentialProviderUserArray = GUID(0x90c119ae, 0xf18, 0x4520, [0xa1, 0xf1, 0x11, 0x43, 0x66, 0xa4, 0xf, 0xe8]);
 interface ICredentialProviderUserArray : IUnknown
 {
-    HRESULT SetProviderFilter(const(GUID)*);
-    HRESULT GetAccountOptions(CREDENTIAL_PROVIDER_ACCOUNT_OPTIONS*);
-    HRESULT GetCount(uint*);
-    HRESULT GetAt(uint, ICredentialProviderUser*);
+    HRESULT SetProviderFilter(const(GUID)* guidProviderToFilterTo);
+    HRESULT GetAccountOptions(CREDENTIAL_PROVIDER_ACCOUNT_OPTIONS* credentialProviderAccountOptions);
+    HRESULT GetCount(uint* userCount);
+    HRESULT GetAt(uint userIndex, ICredentialProviderUser* user);
 }
 enum IID_ICredentialProviderSetUserArray = GUID(0x95c1484, 0x1c0c, 0x4388, [0x9c, 0x6d, 0x50, 0xe, 0x61, 0xbf, 0x84, 0xbd]);
 interface ICredentialProviderSetUserArray : IUnknown
 {
-    HRESULT SetUserArray(ICredentialProviderUserArray);
+    HRESULT SetUserArray(ICredentialProviderUserArray users);
 }
 enum CLSID_PasswordCredentialProvider = GUID(0x60b78e88, 0xead8, 0x445c, [0x9c, 0xfd, 0xb, 0x87, 0xf7, 0x4e, 0xa6, 0xcd]);
 struct PasswordCredentialProvider
@@ -9840,8 +9840,8 @@ struct V1WinBioCredentialProvider
 enum IID_ISyncMgrHandlerCollection = GUID(0xa7f337a3, 0xd20b, 0x45cb, [0x9e, 0xd7, 0x87, 0xd0, 0x94, 0xca, 0x50, 0x45]);
 interface ISyncMgrHandlerCollection : IUnknown
 {
-    HRESULT GetHandlerEnumerator(IEnumString*);
-    HRESULT BindToHandler(const(wchar)*, const(GUID)*, void**);
+    HRESULT GetHandlerEnumerator(IEnumString* ppenum);
+    HRESULT BindToHandler(const(wchar)* pszHandlerID, const(GUID)* riid, void** ppv);
 }
 alias SYNCMGR_HANDLER_CAPABILITIES = int;
 enum : int
@@ -9884,14 +9884,14 @@ enum : int
 enum IID_ISyncMgrHandler = GUID(0x4ec2e43, 0xac77, 0x49f9, [0x9b, 0x98, 0x3, 0x7, 0xef, 0x7a, 0x72, 0xa2]);
 interface ISyncMgrHandler : IUnknown
 {
-    HRESULT GetName(PWSTR*);
-    HRESULT GetHandlerInfo(ISyncMgrHandlerInfo*);
-    HRESULT GetObject(const(GUID)*, const(GUID)*, void**);
-    HRESULT GetCapabilities(SYNCMGR_HANDLER_CAPABILITIES*);
-    HRESULT GetPolicies(SYNCMGR_HANDLER_POLICIES*);
-    HRESULT Activate(BOOL);
-    HRESULT Enable(BOOL);
-    HRESULT Synchronize(const(wchar)**, uint, HWND, ISyncMgrSessionCreator, IUnknown);
+    HRESULT GetName(PWSTR* ppszName);
+    HRESULT GetHandlerInfo(ISyncMgrHandlerInfo* ppHandlerInfo);
+    HRESULT GetObject(const(GUID)* rguidObjectID, const(GUID)* riid, void** ppv);
+    HRESULT GetCapabilities(SYNCMGR_HANDLER_CAPABILITIES* pmCapabilities);
+    HRESULT GetPolicies(SYNCMGR_HANDLER_POLICIES* pmPolicies);
+    HRESULT Activate(BOOL fActivate);
+    HRESULT Enable(BOOL fEnable);
+    HRESULT Synchronize(const(wchar)** ppszItemIDs, uint cItems, HWND hwndOwner, ISyncMgrSessionCreator pSessionCreator, IUnknown punk);
 }
 alias SYNCMGR_HANDLER_TYPE = int;
 enum : int
@@ -9909,10 +9909,10 @@ enum : int
 enum IID_ISyncMgrHandlerInfo = GUID(0x4ff1d798, 0xecf7, 0x4524, [0xaa, 0x81, 0x1e, 0x36, 0x2a, 0xa, 0xef, 0x3a]);
 interface ISyncMgrHandlerInfo : IUnknown
 {
-    HRESULT GetType(SYNCMGR_HANDLER_TYPE*);
-    HRESULT GetTypeLabel(PWSTR*);
-    HRESULT GetComment(PWSTR*);
-    HRESULT GetLastSyncTime(FILETIME*);
+    HRESULT GetType(SYNCMGR_HANDLER_TYPE* pnType);
+    HRESULT GetTypeLabel(PWSTR* ppszTypeLabel);
+    HRESULT GetComment(PWSTR* ppszComment);
+    HRESULT GetLastSyncTime(FILETIME* pftLastSync);
     HRESULT IsActive();
     HRESULT IsEnabled();
     HRESULT IsConnected();
@@ -9920,9 +9920,9 @@ interface ISyncMgrHandlerInfo : IUnknown
 enum IID_ISyncMgrSyncItemContainer = GUID(0x90701133, 0xbe32, 0x4129, [0xa6, 0x5c, 0x99, 0xe6, 0x16, 0xca, 0xff, 0xf4]);
 interface ISyncMgrSyncItemContainer : IUnknown
 {
-    HRESULT GetSyncItem(const(wchar)*, ISyncMgrSyncItem*);
-    HRESULT GetSyncItemEnumerator(IEnumSyncMgrSyncItems*);
-    HRESULT GetSyncItemCount(uint*);
+    HRESULT GetSyncItem(const(wchar)* pszItemID, ISyncMgrSyncItem* ppItem);
+    HRESULT GetSyncItemEnumerator(IEnumSyncMgrSyncItems* ppenum);
+    HRESULT GetSyncItemCount(uint* pcItems);
 }
 alias SYNCMGR_ITEM_CAPABILITIES = int;
 enum : int
@@ -9960,31 +9960,31 @@ enum : int
 enum IID_ISyncMgrSyncItem = GUID(0xb20b24ce, 0x2593, 0x4f04, [0xbd, 0x8b, 0x7a, 0xd6, 0xc4, 0x50, 0x51, 0xcd]);
 interface ISyncMgrSyncItem : IUnknown
 {
-    HRESULT GetItemID(PWSTR*);
-    HRESULT GetName(PWSTR*);
-    HRESULT GetItemInfo(ISyncMgrSyncItemInfo*);
-    HRESULT GetObject(const(GUID)*, const(GUID)*, void**);
-    HRESULT GetCapabilities(SYNCMGR_ITEM_CAPABILITIES*);
-    HRESULT GetPolicies(SYNCMGR_ITEM_POLICIES*);
-    HRESULT Enable(BOOL);
+    HRESULT GetItemID(PWSTR* ppszItemID);
+    HRESULT GetName(PWSTR* ppszName);
+    HRESULT GetItemInfo(ISyncMgrSyncItemInfo* ppItemInfo);
+    HRESULT GetObject(const(GUID)* rguidObjectID, const(GUID)* riid, void** ppv);
+    HRESULT GetCapabilities(SYNCMGR_ITEM_CAPABILITIES* pmCapabilities);
+    HRESULT GetPolicies(SYNCMGR_ITEM_POLICIES* pmPolicies);
+    HRESULT Enable(BOOL fEnable);
     HRESULT Delete();
 }
 enum IID_ISyncMgrSyncItemInfo = GUID(0xe7fd9502, 0xbe0c, 0x4464, [0x90, 0xa1, 0x2b, 0x52, 0x77, 0x3, 0x12, 0x32]);
 interface ISyncMgrSyncItemInfo : IUnknown
 {
-    HRESULT GetTypeLabel(PWSTR*);
-    HRESULT GetComment(PWSTR*);
-    HRESULT GetLastSyncTime(FILETIME*);
+    HRESULT GetTypeLabel(PWSTR* ppszTypeLabel);
+    HRESULT GetComment(PWSTR* ppszComment);
+    HRESULT GetLastSyncTime(FILETIME* pftLastSync);
     HRESULT IsEnabled();
     HRESULT IsConnected();
 }
 enum IID_IEnumSyncMgrSyncItems = GUID(0x54b3abf3, 0xf085, 0x4181, [0xb5, 0x46, 0xe2, 0x9c, 0x40, 0x3c, 0x72, 0x6b]);
 interface IEnumSyncMgrSyncItems : IUnknown
 {
-    HRESULT Next(uint, ISyncMgrSyncItem*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, ISyncMgrSyncItem* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumSyncMgrSyncItems*);
+    HRESULT Clone(IEnumSyncMgrSyncItems* ppenum);
 }
 alias SYNCMGR_PROGRESS_STATUS = int;
 enum : int
@@ -10026,41 +10026,41 @@ enum : int
 enum IID_ISyncMgrSessionCreator = GUID(0x17f48517, 0xf305, 0x4321, [0xa0, 0x8d, 0xb2, 0x5a, 0x83, 0x49, 0x18, 0xfd]);
 interface ISyncMgrSessionCreator : IUnknown
 {
-    HRESULT CreateSession(const(wchar)*, const(wchar)**, uint, ISyncMgrSyncCallback*);
+    HRESULT CreateSession(const(wchar)* pszHandlerID, const(wchar)** ppszItemIDs, uint cItems, ISyncMgrSyncCallback* ppCallback);
 }
 enum IID_ISyncMgrSyncCallback = GUID(0x884ccd87, 0xb139, 0x4937, [0xa4, 0xba, 0x4f, 0x8e, 0x19, 0x51, 0x3f, 0xbe]);
 interface ISyncMgrSyncCallback : IUnknown
 {
-    HRESULT ReportProgress(const(wchar)*, const(wchar)*, SYNCMGR_PROGRESS_STATUS, uint, uint, SYNCMGR_CANCEL_REQUEST*);
-    HRESULT SetHandlerProgressText(const(wchar)*, SYNCMGR_CANCEL_REQUEST*);
-    HRESULT ReportEvent(const(wchar)*, SYNCMGR_EVENT_LEVEL, SYNCMGR_EVENT_FLAGS, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, GUID*);
-    HRESULT CanContinue(const(wchar)*);
-    HRESULT QueryForAdditionalItems(IEnumString*, IEnumUnknown*);
-    HRESULT AddItemToSession(const(wchar)*);
-    HRESULT AddIUnknownToSession(IUnknown);
-    HRESULT ProposeItem(ISyncMgrSyncItem);
-    HRESULT CommitItem(const(wchar)*);
+    HRESULT ReportProgress(const(wchar)* pszItemID, const(wchar)* pszProgressText, SYNCMGR_PROGRESS_STATUS nStatus, uint uCurrentStep, uint uMaxStep, SYNCMGR_CANCEL_REQUEST* pnCancelRequest);
+    HRESULT SetHandlerProgressText(const(wchar)* pszProgressText, SYNCMGR_CANCEL_REQUEST* pnCancelRequest);
+    HRESULT ReportEvent(const(wchar)* pszItemID, SYNCMGR_EVENT_LEVEL nLevel, SYNCMGR_EVENT_FLAGS nFlags, const(wchar)* pszName, const(wchar)* pszDescription, const(wchar)* pszLinkText, const(wchar)* pszLinkReference, const(wchar)* pszContext, GUID* pguidEventID);
+    HRESULT CanContinue(const(wchar)* pszItemID);
+    HRESULT QueryForAdditionalItems(IEnumString* ppenumItemIDs, IEnumUnknown* ppenumPunks);
+    HRESULT AddItemToSession(const(wchar)* pszItemID);
+    HRESULT AddIUnknownToSession(IUnknown punk);
+    HRESULT ProposeItem(ISyncMgrSyncItem pNewItem);
+    HRESULT CommitItem(const(wchar)* pszItemID);
     HRESULT ReportManualSync();
 }
 enum IID_ISyncMgrUIOperation = GUID(0xfc7cfa47, 0xdfe1, 0x45b5, [0xa0, 0x49, 0x8c, 0xfd, 0x82, 0xbe, 0xc2, 0x71]);
 interface ISyncMgrUIOperation : IUnknown
 {
-    HRESULT Run(HWND);
+    HRESULT Run(HWND hwndOwner);
 }
 enum IID_ISyncMgrEventLinkUIOperation = GUID(0x64522e52, 0x848b, 0x4015, [0x89, 0xce, 0x5a, 0x36, 0xf0, 0xb, 0x94, 0xff]);
 interface ISyncMgrEventLinkUIOperation : ISyncMgrUIOperation
 {
-    HRESULT Init(const(GUID)*, ISyncMgrEvent);
+    HRESULT Init(const(GUID)* rguidEventID, ISyncMgrEvent pEvent);
 }
 enum IID_ISyncMgrScheduleWizardUIOperation = GUID(0x459a6c84, 0x21d2, 0x4ddc, [0x8a, 0x53, 0xf0, 0x23, 0xa4, 0x60, 0x66, 0xf2]);
 interface ISyncMgrScheduleWizardUIOperation : ISyncMgrUIOperation
 {
-    HRESULT InitWizard(const(wchar)*);
+    HRESULT InitWizard(const(wchar)* pszHandlerID);
 }
 enum IID_ISyncMgrSyncResult = GUID(0x2b90f17e, 0x5a3e, 0x4b33, [0xbb, 0x7f, 0x1b, 0xc4, 0x80, 0x56, 0xb9, 0x4d]);
 interface ISyncMgrSyncResult : IUnknown
 {
-    HRESULT Result(SYNCMGR_PROGRESS_STATUS, uint, uint);
+    HRESULT Result(SYNCMGR_PROGRESS_STATUS nStatus, uint cError, uint cConflicts);
 }
 alias SYNCMGR_CONTROL_FLAGS = int;
 enum : int
@@ -10092,52 +10092,52 @@ enum : int
 enum IID_ISyncMgrControl = GUID(0x9b63616c, 0x36b2, 0x46bc, [0x95, 0x9f, 0xc1, 0x59, 0x39, 0x52, 0xd1, 0x9b]);
 interface ISyncMgrControl : IUnknown
 {
-    HRESULT StartHandlerSync(const(wchar)*, HWND, IUnknown, SYNCMGR_SYNC_CONTROL_FLAGS, ISyncMgrSyncResult);
-    HRESULT StartItemSync(const(wchar)*, const(wchar)**, uint, HWND, IUnknown, SYNCMGR_SYNC_CONTROL_FLAGS, ISyncMgrSyncResult);
-    HRESULT StartSyncAll(HWND);
-    HRESULT StopHandlerSync(const(wchar)*);
-    HRESULT StopItemSync(const(wchar)*, const(wchar)**, uint);
+    HRESULT StartHandlerSync(const(wchar)* pszHandlerID, HWND hwndOwner, IUnknown punk, SYNCMGR_SYNC_CONTROL_FLAGS nSyncControlFlags, ISyncMgrSyncResult pResult);
+    HRESULT StartItemSync(const(wchar)* pszHandlerID, const(wchar)** ppszItemIDs, uint cItems, HWND hwndOwner, IUnknown punk, SYNCMGR_SYNC_CONTROL_FLAGS nSyncControlFlags, ISyncMgrSyncResult pResult);
+    HRESULT StartSyncAll(HWND hwndOwner);
+    HRESULT StopHandlerSync(const(wchar)* pszHandlerID);
+    HRESULT StopItemSync(const(wchar)* pszHandlerID, const(wchar)** ppszItemIDs, uint cItems);
     HRESULT StopSyncAll();
-    HRESULT UpdateHandlerCollection(const(GUID)*, SYNCMGR_CONTROL_FLAGS);
-    HRESULT UpdateHandler(const(wchar)*, SYNCMGR_CONTROL_FLAGS);
-    HRESULT UpdateItem(const(wchar)*, const(wchar)*, SYNCMGR_CONTROL_FLAGS);
-    HRESULT UpdateEvents(const(wchar)*, const(wchar)*, SYNCMGR_CONTROL_FLAGS);
-    HRESULT UpdateConflict(const(wchar)*, const(wchar)*, ISyncMgrConflict, SYNCMGR_UPDATE_REASON);
-    HRESULT UpdateConflicts(const(wchar)*, const(wchar)*, SYNCMGR_CONTROL_FLAGS);
-    HRESULT ActivateHandler(BOOL, const(wchar)*, HWND, SYNCMGR_CONTROL_FLAGS);
-    HRESULT EnableHandler(BOOL, const(wchar)*, HWND, SYNCMGR_CONTROL_FLAGS);
-    HRESULT EnableItem(BOOL, const(wchar)*, const(wchar)*, HWND, SYNCMGR_CONTROL_FLAGS);
+    HRESULT UpdateHandlerCollection(const(GUID)* rclsidCollectionID, SYNCMGR_CONTROL_FLAGS nControlFlags);
+    HRESULT UpdateHandler(const(wchar)* pszHandlerID, SYNCMGR_CONTROL_FLAGS nControlFlags);
+    HRESULT UpdateItem(const(wchar)* pszHandlerID, const(wchar)* pszItemID, SYNCMGR_CONTROL_FLAGS nControlFlags);
+    HRESULT UpdateEvents(const(wchar)* pszHandlerID, const(wchar)* pszItemID, SYNCMGR_CONTROL_FLAGS nControlFlags);
+    HRESULT UpdateConflict(const(wchar)* pszHandlerID, const(wchar)* pszItemID, ISyncMgrConflict pConflict, SYNCMGR_UPDATE_REASON nReason);
+    HRESULT UpdateConflicts(const(wchar)* pszHandlerID, const(wchar)* pszItemID, SYNCMGR_CONTROL_FLAGS nControlFlags);
+    HRESULT ActivateHandler(BOOL fActivate, const(wchar)* pszHandlerID, HWND hwndOwner, SYNCMGR_CONTROL_FLAGS nControlFlags);
+    HRESULT EnableHandler(BOOL fEnable, const(wchar)* pszHandlerID, HWND hwndOwner, SYNCMGR_CONTROL_FLAGS nControlFlags);
+    HRESULT EnableItem(BOOL fEnable, const(wchar)* pszHandlerID, const(wchar)* pszItemID, HWND hwndOwner, SYNCMGR_CONTROL_FLAGS nControlFlags);
 }
 enum IID_ISyncMgrEventStore = GUID(0x37e412f9, 0x16e, 0x44c2, [0x81, 0xff, 0xdb, 0x3a, 0xdd, 0x77, 0x42, 0x66]);
 interface ISyncMgrEventStore : IUnknown
 {
-    HRESULT GetEventEnumerator(IEnumSyncMgrEvents*);
-    HRESULT GetEventCount(uint*);
-    HRESULT GetEvent(const(GUID)*, ISyncMgrEvent*);
-    HRESULT RemoveEvent(GUID*, uint);
+    HRESULT GetEventEnumerator(IEnumSyncMgrEvents* ppenum);
+    HRESULT GetEventCount(uint* pcEvents);
+    HRESULT GetEvent(const(GUID)* rguidEventID, ISyncMgrEvent* ppEvent);
+    HRESULT RemoveEvent(GUID* pguidEventIDs, uint cEvents);
 }
 enum IID_ISyncMgrEvent = GUID(0xfee0ef8b, 0x46bd, 0x4db4, [0xb7, 0xe6, 0xff, 0x2c, 0x68, 0x73, 0x13, 0xbc]);
 interface ISyncMgrEvent : IUnknown
 {
-    HRESULT GetEventID(GUID*);
-    HRESULT GetHandlerID(PWSTR*);
-    HRESULT GetItemID(PWSTR*);
-    HRESULT GetLevel(SYNCMGR_EVENT_LEVEL*);
-    HRESULT GetFlags(SYNCMGR_EVENT_FLAGS*);
-    HRESULT GetTime(FILETIME*);
-    HRESULT GetName(PWSTR*);
-    HRESULT GetDescription(PWSTR*);
-    HRESULT GetLinkText(PWSTR*);
-    HRESULT GetLinkReference(PWSTR*);
-    HRESULT GetContext(PWSTR*);
+    HRESULT GetEventID(GUID* pguidEventID);
+    HRESULT GetHandlerID(PWSTR* ppszHandlerID);
+    HRESULT GetItemID(PWSTR* ppszItemID);
+    HRESULT GetLevel(SYNCMGR_EVENT_LEVEL* pnLevel);
+    HRESULT GetFlags(SYNCMGR_EVENT_FLAGS* pnFlags);
+    HRESULT GetTime(FILETIME* pfCreationTime);
+    HRESULT GetName(PWSTR* ppszName);
+    HRESULT GetDescription(PWSTR* ppszDescription);
+    HRESULT GetLinkText(PWSTR* ppszLinkText);
+    HRESULT GetLinkReference(PWSTR* ppszLinkReference);
+    HRESULT GetContext(PWSTR* ppszContext);
 }
 enum IID_IEnumSyncMgrEvents = GUID(0xc81a1d4e, 0x8cf7, 0x4683, [0x80, 0xe0, 0xbc, 0xae, 0x88, 0xd6, 0x77, 0xb6]);
 interface IEnumSyncMgrEvents : IUnknown
 {
-    HRESULT Next(uint, ISyncMgrEvent*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, ISyncMgrEvent* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumSyncMgrEvents*);
+    HRESULT Clone(IEnumSyncMgrEvents* ppenum);
 }
 struct SYNCMGR_CONFLICT_ID_INFO
 {
@@ -10147,18 +10147,18 @@ struct SYNCMGR_CONFLICT_ID_INFO
 enum IID_ISyncMgrConflictStore = GUID(0xcf8fc579, 0xc396, 0x4774, [0x85, 0xf1, 0xd9, 0x8, 0xa8, 0x31, 0x15, 0x6e]);
 interface ISyncMgrConflictStore : IUnknown
 {
-    HRESULT EnumConflicts(const(wchar)*, const(wchar)*, IEnumSyncMgrConflict*);
-    HRESULT BindToConflict(const(SYNCMGR_CONFLICT_ID_INFO)*, const(GUID)*, void**);
-    HRESULT RemoveConflicts(const(SYNCMGR_CONFLICT_ID_INFO)*, uint);
-    HRESULT GetCount(const(wchar)*, const(wchar)*, uint*);
+    HRESULT EnumConflicts(const(wchar)* pszHandlerID, const(wchar)* pszItemID, IEnumSyncMgrConflict* ppEnum);
+    HRESULT BindToConflict(const(SYNCMGR_CONFLICT_ID_INFO)* pConflictIdInfo, const(GUID)* riid, void** ppv);
+    HRESULT RemoveConflicts(const(SYNCMGR_CONFLICT_ID_INFO)* rgConflictIdInfo, uint cConflicts);
+    HRESULT GetCount(const(wchar)* pszHandlerID, const(wchar)* pszItemID, uint* pnConflicts);
 }
 enum IID_IEnumSyncMgrConflict = GUID(0x82705914, 0xdda3, 0x4893, [0xba, 0x99, 0x49, 0xde, 0x6c, 0x8c, 0x80, 0x36]);
 interface IEnumSyncMgrConflict : IUnknown
 {
-    HRESULT Next(uint, ISyncMgrConflict*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, ISyncMgrConflict* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumSyncMgrConflict*);
+    HRESULT Clone(IEnumSyncMgrConflict* ppenum);
 }
 alias SYNCMGR_CONFLICT_ITEM_TYPE = int;
 enum : int
@@ -10170,11 +10170,11 @@ enum : int
 enum IID_ISyncMgrConflict = GUID(0x9c204249, 0xc443, 0x4ba4, [0x85, 0xed, 0xc9, 0x72, 0x68, 0x1d, 0xb1, 0x37]);
 interface ISyncMgrConflict : IUnknown
 {
-    HRESULT GetProperty(const(PROPERTYKEY)*, PROPVARIANT*);
-    HRESULT GetConflictIdInfo(SYNCMGR_CONFLICT_ID_INFO*);
-    HRESULT GetItemsArray(ISyncMgrConflictItems*);
-    HRESULT Resolve(ISyncMgrConflictResolveInfo);
-    HRESULT GetResolutionHandler(const(GUID)*, void**);
+    HRESULT GetProperty(const(PROPERTYKEY)* propkey, PROPVARIANT* ppropvar);
+    HRESULT GetConflictIdInfo(SYNCMGR_CONFLICT_ID_INFO* pConflictIdInfo);
+    HRESULT GetItemsArray(ISyncMgrConflictItems* ppArray);
+    HRESULT Resolve(ISyncMgrConflictResolveInfo pResolveInfo);
+    HRESULT GetResolutionHandler(const(GUID)* riid, void** ppvResolutionHandler);
 }
 alias SYNCMGR_RESOLUTION_ABILITIES = int;
 enum : int
@@ -10198,16 +10198,16 @@ enum : int
 enum IID_ISyncMgrResolutionHandler = GUID(0x40a3d052, 0x8bff, 0x4c4b, [0xa3, 0x38, 0xd4, 0xa3, 0x95, 0x70, 0xd, 0xe9]);
 interface ISyncMgrResolutionHandler : IUnknown
 {
-    HRESULT QueryAbilities(uint*);
-    HRESULT KeepOther(IShellItem, SYNCMGR_RESOLUTION_FEEDBACK*);
-    HRESULT KeepRecent(SYNCMGR_RESOLUTION_FEEDBACK*);
-    HRESULT RemoveFromSyncSet(SYNCMGR_RESOLUTION_FEEDBACK*);
-    HRESULT KeepItems(ISyncMgrConflictResolutionItems, SYNCMGR_RESOLUTION_FEEDBACK*);
+    HRESULT QueryAbilities(uint* pdwAbilities);
+    HRESULT KeepOther(IShellItem psiOther, SYNCMGR_RESOLUTION_FEEDBACK* pFeedback);
+    HRESULT KeepRecent(SYNCMGR_RESOLUTION_FEEDBACK* pFeedback);
+    HRESULT RemoveFromSyncSet(SYNCMGR_RESOLUTION_FEEDBACK* pFeedback);
+    HRESULT KeepItems(ISyncMgrConflictResolutionItems pArray, SYNCMGR_RESOLUTION_FEEDBACK* pFeedback);
 }
 enum IID_ISyncMgrConflictPresenter = GUID(0xb4f5353, 0xfd2b, 0x42cd, [0x87, 0x63, 0x47, 0x79, 0xf2, 0xd5, 0x8, 0xa3]);
 interface ISyncMgrConflictPresenter : IUnknown
 {
-    HRESULT PresentConflict(ISyncMgrConflict, ISyncMgrConflictResolveInfo);
+    HRESULT PresentConflict(ISyncMgrConflict pConflict, ISyncMgrConflictResolveInfo pResolveInfo);
 }
 alias SYNCMGR_PRESENTER_NEXT_STEP = int;
 enum : int
@@ -10231,19 +10231,19 @@ enum : int
 enum IID_ISyncMgrConflictResolveInfo = GUID(0xc405a219, 0x25a2, 0x442e, [0x87, 0x43, 0xb8, 0x45, 0xa2, 0xce, 0xe9, 0x3f]);
 interface ISyncMgrConflictResolveInfo : IUnknown
 {
-    HRESULT GetIterationInfo(uint*, uint*, uint*);
-    HRESULT GetPresenterNextStep(SYNCMGR_PRESENTER_NEXT_STEP*);
-    HRESULT GetPresenterChoice(SYNCMGR_PRESENTER_CHOICE*, BOOL*);
-    HRESULT GetItemChoiceCount(uint*);
-    HRESULT GetItemChoice(uint, uint*);
-    HRESULT SetPresenterNextStep(SYNCMGR_PRESENTER_NEXT_STEP);
-    HRESULT SetPresenterChoice(SYNCMGR_PRESENTER_CHOICE, BOOL);
-    HRESULT SetItemChoices(uint*, uint);
+    HRESULT GetIterationInfo(uint* pnCurrentConflict, uint* pcConflicts, uint* pcRemainingForApplyToAll);
+    HRESULT GetPresenterNextStep(SYNCMGR_PRESENTER_NEXT_STEP* pnPresenterNextStep);
+    HRESULT GetPresenterChoice(SYNCMGR_PRESENTER_CHOICE* pnPresenterChoice, BOOL* pfApplyToAll);
+    HRESULT GetItemChoiceCount(uint* pcChoices);
+    HRESULT GetItemChoice(uint iChoice, uint* piChoiceIndex);
+    HRESULT SetPresenterNextStep(SYNCMGR_PRESENTER_NEXT_STEP nPresenterNextStep);
+    HRESULT SetPresenterChoice(SYNCMGR_PRESENTER_CHOICE nPresenterChoice, BOOL fApplyToAll);
+    HRESULT SetItemChoices(uint* prgiConflictItemIndexes, uint cChoices);
 }
 enum IID_ISyncMgrConflictFolder = GUID(0x59287f5e, 0xbc81, 0x4fca, [0xa7, 0xf1, 0xe5, 0xa8, 0xec, 0xdb, 0x1d, 0x69]);
 interface ISyncMgrConflictFolder : IUnknown
 {
-    HRESULT GetConflictIDList(ISyncMgrConflict, ITEMIDLIST**);
+    HRESULT GetConflictIDList(ISyncMgrConflict pConflict, ITEMIDLIST** ppidlConflict);
 }
 struct CONFIRM_CONFLICT_ITEM
 {
@@ -10262,14 +10262,14 @@ struct CONFIRM_CONFLICT_RESULT_INFO
 enum IID_ISyncMgrConflictItems = GUID(0x9c7ead52, 0x8023, 0x4936, [0xa4, 0xdb, 0xd2, 0xa9, 0xa9, 0x9e, 0x43, 0x6a]);
 interface ISyncMgrConflictItems : IUnknown
 {
-    HRESULT GetCount(uint*);
-    HRESULT GetItem(uint, CONFIRM_CONFLICT_ITEM*);
+    HRESULT GetCount(uint* pCount);
+    HRESULT GetItem(uint iIndex, CONFIRM_CONFLICT_ITEM* pItemInfo);
 }
 enum IID_ISyncMgrConflictResolutionItems = GUID(0x458725b9, 0x129d, 0x4135, [0xa9, 0x98, 0x9c, 0xea, 0xfe, 0xc2, 0x70, 0x7]);
 interface ISyncMgrConflictResolutionItems : IUnknown
 {
-    HRESULT GetCount(uint*);
-    HRESULT GetItem(uint, CONFIRM_CONFLICT_RESULT_INFO*);
+    HRESULT GetCount(uint* pCount);
+    HRESULT GetItem(uint iIndex, CONFIRM_CONFLICT_RESULT_INFO* pItemInfo);
 }
 enum CLSID_SyncMgrClient = GUID(0x1202db60, 0x1dac, 0x42c5, [0xae, 0xd5, 0x1a, 0xbd, 0xd4, 0x32, 0x24, 0x8e]);
 struct SyncMgrClient
@@ -10372,32 +10372,32 @@ struct WTS_THUMBNAILID
 enum IID_ISharedBitmap = GUID(0x91162a4, 0xbc96, 0x411f, [0xaa, 0xe8, 0xc5, 0x12, 0x2c, 0xd0, 0x33, 0x63]);
 interface ISharedBitmap : IUnknown
 {
-    HRESULT GetSharedBitmap(HBITMAP*);
-    HRESULT GetSize(SIZE*);
-    HRESULT GetFormat(WTS_ALPHATYPE*);
-    HRESULT InitializeBitmap(HBITMAP, WTS_ALPHATYPE);
-    HRESULT Detach(HBITMAP*);
+    HRESULT GetSharedBitmap(HBITMAP* phbm);
+    HRESULT GetSize(SIZE* pSize);
+    HRESULT GetFormat(WTS_ALPHATYPE* pat);
+    HRESULT InitializeBitmap(HBITMAP hbm, WTS_ALPHATYPE wtsAT);
+    HRESULT Detach(HBITMAP* phbm);
 }
 enum IID_IThumbnailCache = GUID(0xf676c15d, 0x596a, 0x4ce2, [0x82, 0x34, 0x33, 0x99, 0x6f, 0x44, 0x5d, 0xb1]);
 interface IThumbnailCache : IUnknown
 {
-    HRESULT GetThumbnail(IShellItem, uint, WTS_FLAGS, ISharedBitmap*, WTS_CACHEFLAGS*, WTS_THUMBNAILID*);
-    HRESULT GetThumbnailByID(WTS_THUMBNAILID, uint, ISharedBitmap*, WTS_CACHEFLAGS*);
+    HRESULT GetThumbnail(IShellItem pShellItem, uint cxyRequestedThumbSize, WTS_FLAGS flags, ISharedBitmap* ppvThumb, WTS_CACHEFLAGS* pOutFlags, WTS_THUMBNAILID* pThumbnailID);
+    HRESULT GetThumbnailByID(WTS_THUMBNAILID thumbnailID, uint cxyRequestedThumbSize, ISharedBitmap* ppvThumb, WTS_CACHEFLAGS* pOutFlags);
 }
 enum IID_IThumbnailProvider = GUID(0xe357fccd, 0xa995, 0x4576, [0xb0, 0x1f, 0x23, 0x46, 0x30, 0x15, 0x4e, 0x96]);
 interface IThumbnailProvider : IUnknown
 {
-    HRESULT GetThumbnail(uint, HBITMAP*, WTS_ALPHATYPE*);
+    HRESULT GetThumbnail(uint cx, HBITMAP* phbmp, WTS_ALPHATYPE* pdwAlpha);
 }
 enum IID_IThumbnailSettings = GUID(0xf4376f00, 0xbef5, 0x4d45, [0x80, 0xf3, 0x1e, 0x2, 0x3b, 0xbf, 0x12, 0x9]);
 interface IThumbnailSettings : IUnknown
 {
-    HRESULT SetContext(WTS_CONTEXTFLAGS);
+    HRESULT SetContext(WTS_CONTEXTFLAGS dwContext);
 }
 enum IID_IThumbnailCachePrimer = GUID(0xf03f8fe, 0x2b26, 0x46f0, [0x96, 0x5a, 0x21, 0x2a, 0xa8, 0xd6, 0x6b, 0x76]);
 interface IThumbnailCachePrimer : IUnknown
 {
-    HRESULT PageInThumbnail(IShellItem, WTS_FLAGS, uint);
+    HRESULT PageInThumbnail(IShellItem psi, WTS_FLAGS wtsFlags, uint cxyRequestedThumbSize);
 }
 enum CLSID_LocalThumbnailCache = GUID(0x50ef4544, 0xac9f, 0x4a8e, [0xb2, 0x1b, 0x8a, 0x26, 0x18, 0xd, 0xb1, 0x3f]);
 struct LocalThumbnailCache
@@ -10410,16 +10410,16 @@ struct SharedBitmap
 enum IID_IShellImageDataFactory = GUID(0x9be8ed5c, 0xedab, 0x4d75, [0x90, 0xf3, 0xbd, 0x5b, 0xdb, 0xb2, 0x1c, 0x82]);
 interface IShellImageDataFactory : IUnknown
 {
-    HRESULT CreateIShellImageData(IShellImageData*);
-    HRESULT CreateImageFromFile(const(wchar)*, IShellImageData*);
-    HRESULT CreateImageFromStream(IStream, IShellImageData*);
-    HRESULT GetDataFormatFromPath(const(wchar)*, GUID*);
+    HRESULT CreateIShellImageData(IShellImageData* ppshimg);
+    HRESULT CreateImageFromFile(const(wchar)* pszPath, IShellImageData* ppshimg);
+    HRESULT CreateImageFromStream(IStream pStream, IShellImageData* ppshimg);
+    HRESULT GetDataFormatFromPath(const(wchar)* pszPath, GUID* pDataFormat);
 }
 enum IID_IShellImageData = GUID(0xbfdeec12, 0x8040, 0x4403, [0xa5, 0xea, 0x9e, 0x7, 0xda, 0xfc, 0xf5, 0x30]);
 interface IShellImageData : IUnknown
 {
-    HRESULT Decode(uint, uint, uint);
-    HRESULT Draw(HDC, RECT*, RECT*);
+    HRESULT Decode(uint dwFlags, uint cxDesired, uint cyDesired);
+    HRESULT Draw(HDC hdc, RECT* prcDest, RECT* prcSrc);
     HRESULT NextFrame();
     HRESULT NextPage();
     HRESULT PrevPage();
@@ -10430,24 +10430,24 @@ interface IShellImageData : IUnknown
     HRESULT IsEditable();
     HRESULT IsPrintable();
     HRESULT IsDecoded();
-    HRESULT GetCurrentPage(uint*);
-    HRESULT GetPageCount(uint*);
-    HRESULT SelectPage(uint);
-    HRESULT GetSize(SIZE*);
-    HRESULT GetRawDataFormat(GUID*);
-    HRESULT GetPixelFormat(uint*);
-    HRESULT GetDelay(uint*);
-    HRESULT GetProperties(uint, IPropertySetStorage*);
-    HRESULT Rotate(uint);
-    HRESULT Scale(uint, uint, InterpolationMode);
+    HRESULT GetCurrentPage(uint* pnPage);
+    HRESULT GetPageCount(uint* pcPages);
+    HRESULT SelectPage(uint iPage);
+    HRESULT GetSize(SIZE* pSize);
+    HRESULT GetRawDataFormat(GUID* pDataFormat);
+    HRESULT GetPixelFormat(uint* pFormat);
+    HRESULT GetDelay(uint* pdwDelay);
+    HRESULT GetProperties(uint dwMode, IPropertySetStorage* ppPropSet);
+    HRESULT Rotate(uint dwAngle);
+    HRESULT Scale(uint cx, uint cy, InterpolationMode hints);
     HRESULT DiscardEdit();
-    HRESULT SetEncoderParams(IPropertyBag);
-    HRESULT DisplayName(PWSTR, uint);
-    HRESULT GetResolution(uint*, uint*);
-    HRESULT GetEncoderParams(GUID*, ubyte**);
-    HRESULT RegisterAbort(IShellImageDataAbort, IShellImageDataAbort*);
-    HRESULT CloneFrame(ubyte**);
-    HRESULT ReplaceFrame(ubyte*);
+    HRESULT SetEncoderParams(IPropertyBag pbagEnc);
+    HRESULT DisplayName(PWSTR wszName, uint cch);
+    HRESULT GetResolution(uint* puResolutionX, uint* puResolutionY);
+    HRESULT GetEncoderParams(GUID* pguidFmt, ubyte** ppEncParams);
+    HRESULT RegisterAbort(IShellImageDataAbort pAbort, IShellImageDataAbort* ppAbortPrev);
+    HRESULT CloneFrame(ubyte** ppImg);
+    HRESULT ReplaceFrame(ubyte* pImg);
 }
 enum IID_IShellImageDataAbort = GUID(0x53fb8e58, 0x50c0, 0x4003, [0xb4, 0xaa, 0xc, 0x8d, 0xf2, 0x8e, 0x7f, 0x3a]);
 interface IShellImageDataAbort : IUnknown
@@ -10461,15 +10461,15 @@ struct ShellImageDataFactory
 enum IID_IStorageProviderPropertyHandler = GUID(0x301dfbe5, 0x524c, 0x4b0f, [0x8b, 0x2d, 0x21, 0xc4, 0xb, 0x3a, 0x29, 0x88]);
 interface IStorageProviderPropertyHandler : IUnknown
 {
-    HRESULT RetrieveProperties(const(PROPERTYKEY)*, uint, IPropertyStore*);
-    HRESULT SaveProperties(IPropertyStore);
+    HRESULT RetrieveProperties(const(PROPERTYKEY)* propertiesToRetrieve, uint propertiesToRetrieveCount, IPropertyStore* retrievedProperties);
+    HRESULT SaveProperties(IPropertyStore propertiesToSave);
 }
 enum IID_IStorageProviderHandler = GUID(0x162c6fb5, 0x44d3, 0x435b, [0x90, 0x3d, 0xe6, 0x13, 0xfa, 0x9, 0x3f, 0xb5]);
 interface IStorageProviderHandler : IUnknown
 {
-    HRESULT GetPropertyHandlerFromPath(const(wchar)*, IStorageProviderPropertyHandler*);
-    HRESULT GetPropertyHandlerFromUri(const(wchar)*, IStorageProviderPropertyHandler*);
-    HRESULT GetPropertyHandlerFromFileId(const(wchar)*, IStorageProviderPropertyHandler*);
+    HRESULT GetPropertyHandlerFromPath(const(wchar)* path, IStorageProviderPropertyHandler* propertyHandler);
+    HRESULT GetPropertyHandlerFromUri(const(wchar)* uri, IStorageProviderPropertyHandler* propertyHandler);
+    HRESULT GetPropertyHandlerFromFileId(const(wchar)* fileId, IStorageProviderPropertyHandler* propertyHandler);
 }
 alias SYNCMGRSTATUS = int;
 enum : int
@@ -10521,15 +10521,15 @@ struct SYNCMGRLOGERRORINFO
 enum IID_ISyncMgrSynchronizeCallback = GUID(0x6295df41, 0x35ee, 0x11d1, [0x87, 0x7, 0x0, 0xc0, 0x4f, 0xd9, 0x33, 0x27]);
 interface ISyncMgrSynchronizeCallback : IUnknown
 {
-    HRESULT ShowPropertiesCompleted(HRESULT);
-    HRESULT PrepareForSyncCompleted(HRESULT);
-    HRESULT SynchronizeCompleted(HRESULT);
-    HRESULT ShowErrorCompleted(HRESULT, uint, const(GUID)*);
-    HRESULT EnableModeless(BOOL);
-    HRESULT Progress(const(GUID)*, const(SYNCMGRPROGRESSITEM)*);
-    HRESULT LogError(uint, const(wchar)*, const(SYNCMGRLOGERRORINFO)*);
-    HRESULT DeleteLogError(const(GUID)*, uint);
-    HRESULT EstablishConnection(const(wchar)*, uint);
+    HRESULT ShowPropertiesCompleted(HRESULT hr);
+    HRESULT PrepareForSyncCompleted(HRESULT hr);
+    HRESULT SynchronizeCompleted(HRESULT hr);
+    HRESULT ShowErrorCompleted(HRESULT hr, uint cItems, const(GUID)* pItemIDs);
+    HRESULT EnableModeless(BOOL fEnable);
+    HRESULT Progress(const(GUID)* ItemID, const(SYNCMGRPROGRESSITEM)* pSyncProgressItem);
+    HRESULT LogError(uint dwErrorLevel, const(wchar)* pszErrorText, const(SYNCMGRLOGERRORINFO)* pSyncLogError);
+    HRESULT DeleteLogError(const(GUID)* ErrorID, uint dwReserved);
+    HRESULT EstablishConnection(const(wchar)* pwszConnection, uint dwReserved);
 }
 alias SYNCMGRITEMFLAGS = int;
 enum : int
@@ -10555,10 +10555,10 @@ struct SYNCMGRITEM
 enum IID_ISyncMgrEnumItems = GUID(0x6295df2a, 0x35ee, 0x11d1, [0x87, 0x7, 0x0, 0xc0, 0x4f, 0xd9, 0x33, 0x27]);
 interface ISyncMgrEnumItems : IUnknown
 {
-    HRESULT Next(uint, SYNCMGRITEM*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, SYNCMGRITEM* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(ISyncMgrEnumItems*);
+    HRESULT Clone(ISyncMgrEnumItems* ppenum);
 }
 alias SYNCMGRFLAG = int;
 enum : int
@@ -10600,16 +10600,16 @@ enum : int
 enum IID_ISyncMgrSynchronize = GUID(0x6295df40, 0x35ee, 0x11d1, [0x87, 0x7, 0x0, 0xc0, 0x4f, 0xd9, 0x33, 0x27]);
 interface ISyncMgrSynchronize : IUnknown
 {
-    HRESULT Initialize(uint, uint, uint, const(ubyte)*);
-    HRESULT GetHandlerInfo(SYNCMGRHANDLERINFO**);
-    HRESULT EnumSyncMgrItems(ISyncMgrEnumItems*);
-    HRESULT GetItemObject(const(GUID)*, const(GUID)*, void**);
-    HRESULT ShowProperties(HWND, const(GUID)*);
-    HRESULT SetProgressCallback(ISyncMgrSynchronizeCallback);
-    HRESULT PrepareForSync(uint, GUID*, HWND, uint);
-    HRESULT Synchronize(HWND);
-    HRESULT SetItemStatus(const(GUID)*, uint);
-    HRESULT ShowError(HWND, const(GUID)*);
+    HRESULT Initialize(uint dwReserved, uint dwSyncMgrFlags, uint cbCookie, const(ubyte)* lpCookie);
+    HRESULT GetHandlerInfo(SYNCMGRHANDLERINFO** ppSyncMgrHandlerInfo);
+    HRESULT EnumSyncMgrItems(ISyncMgrEnumItems* ppSyncMgrEnumItems);
+    HRESULT GetItemObject(const(GUID)* ItemID, const(GUID)* riid, void** ppv);
+    HRESULT ShowProperties(HWND hWndParent, const(GUID)* ItemID);
+    HRESULT SetProgressCallback(ISyncMgrSynchronizeCallback lpCallBack);
+    HRESULT PrepareForSync(uint cbNumItems, GUID* pItemIDs, HWND hWndParent, uint dwReserved);
+    HRESULT Synchronize(HWND hWndParent);
+    HRESULT SetItemStatus(const(GUID)* pItemID, uint dwSyncMgrStatus);
+    HRESULT ShowError(HWND hWndParent, const(GUID)* ErrorID);
 }
 alias SYNCMGRINVOKEFLAGS = int;
 enum : int
@@ -10621,7 +10621,7 @@ enum : int
 enum IID_ISyncMgrSynchronizeInvoke = GUID(0x6295df2c, 0x35ee, 0x11d1, [0x87, 0x7, 0x0, 0xc0, 0x4f, 0xd9, 0x33, 0x27]);
 interface ISyncMgrSynchronizeInvoke : IUnknown
 {
-    HRESULT UpdateItems(uint, const(GUID)*, uint, const(ubyte)*);
+    HRESULT UpdateItems(uint dwInvokeFlags, const(GUID)* clsid, uint cbCookie, const(ubyte)* pCookie);
     HRESULT UpdateAll();
 }
 alias SYNCMGRREGISTERFLAGS = int;
@@ -10635,9 +10635,9 @@ enum : int
 enum IID_ISyncMgrRegister = GUID(0x6295df42, 0x35ee, 0x11d1, [0x87, 0x7, 0x0, 0xc0, 0x4f, 0xd9, 0x33, 0x27]);
 interface ISyncMgrRegister : IUnknown
 {
-    HRESULT RegisterSyncMgrHandler(const(GUID)*, const(wchar)*, uint);
-    HRESULT UnregisterSyncMgrHandler(const(GUID)*, uint);
-    HRESULT GetHandlerRegistrationInfo(const(GUID)*, uint*);
+    HRESULT RegisterSyncMgrHandler(const(GUID)* clsidHandler, const(wchar)* pwszDescription, uint dwSyncMgrRegisterFlags);
+    HRESULT UnregisterSyncMgrHandler(const(GUID)* clsidHandler, uint dwReserved);
+    HRESULT GetHandlerRegistrationInfo(const(GUID)* clsidHandler, uint* pdwSyncMgrRegisterFlags);
 }
 enum CLSID_SyncMgr = GUID(0x6295df27, 0x35ee, 0x11d1, [0x87, 0x7, 0x0, 0xc0, 0x4f, 0xd9, 0x33, 0x27]);
 struct SyncMgr
@@ -10655,8 +10655,8 @@ enum : int
 enum IID_IThumbnailStreamCache = GUID(0x90e11430, 0x9569, 0x41d8, [0xae, 0x75, 0x6d, 0x4d, 0x2a, 0xe7, 0xcc, 0xa0]);
 interface IThumbnailStreamCache : IUnknown
 {
-    HRESULT GetThumbnailStream(const(wchar)*, ulong, ThumbnailStreamCacheOptions, uint, SIZE*, IStream*);
-    HRESULT SetThumbnailStream(const(wchar)*, ulong, SIZE, IStream);
+    HRESULT GetThumbnailStream(const(wchar)* path, ulong cacheId, ThumbnailStreamCacheOptions options, uint requestedThumbnailSize, SIZE* thumbnailSize, IStream* thumbnailStream);
+    HRESULT SetThumbnailStream(const(wchar)* path, ulong cacheId, SIZE thumbnailSize, IStream thumbnailStream);
 }
 enum CLSID_ThumbnailStreamCache = GUID(0xcbe0fed3, 0x4b91, 0x4e90, [0x83, 0x54, 0x8a, 0x8c, 0x84, 0xec, 0x68, 0x72]);
 struct ThumbnailStreamCache
@@ -10674,23 +10674,23 @@ struct WINDOWDATA
 enum IID_ITravelLogEntry = GUID(0x7ebfdd87, 0xad18, 0x11d3, [0xa4, 0xc5, 0x0, 0xc0, 0x4f, 0x72, 0xd6, 0xb8]);
 interface ITravelLogEntry : IUnknown
 {
-    HRESULT GetTitle(PWSTR*);
-    HRESULT GetURL(PWSTR*);
+    HRESULT GetTitle(PWSTR* ppszTitle);
+    HRESULT GetURL(PWSTR* ppszURL);
 }
 enum IID_ITravelLogClient = GUID(0x241c033e, 0xe659, 0x43da, [0xaa, 0x4d, 0x40, 0x86, 0xdb, 0xc4, 0x75, 0x8d]);
 interface ITravelLogClient : IUnknown
 {
-    HRESULT FindWindowByIndex(uint, IUnknown*);
-    HRESULT GetWindowData(IStream, WINDOWDATA*);
-    HRESULT LoadHistoryPosition(PWSTR, uint);
+    HRESULT FindWindowByIndex(uint dwID, IUnknown* ppunk);
+    HRESULT GetWindowData(IStream pStream, WINDOWDATA* pWinData);
+    HRESULT LoadHistoryPosition(PWSTR pszUrlLocation, uint dwPosition);
 }
 enum IID_IEnumTravelLogEntry = GUID(0x7ebfdd85, 0xad18, 0x11d3, [0xa4, 0xc5, 0x0, 0xc0, 0x4f, 0x72, 0xd6, 0xb8]);
 interface IEnumTravelLogEntry : IUnknown
 {
-    HRESULT Next(uint, ITravelLogEntry*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint cElt, ITravelLogEntry* rgElt, uint* pcEltFetched);
+    HRESULT Skip(uint cElt);
     HRESULT Reset();
-    HRESULT Clone(IEnumTravelLogEntry*);
+    HRESULT Clone(IEnumTravelLogEntry* ppEnum);
 }
 alias TLENUMF = int;
 enum : int
@@ -10707,13 +10707,13 @@ enum : int
 enum IID_ITravelLogStg = GUID(0x7ebfdd80, 0xad18, 0x11d3, [0xa4, 0xc5, 0x0, 0xc0, 0x4f, 0x72, 0xd6, 0xb8]);
 interface ITravelLogStg : IUnknown
 {
-    HRESULT CreateEntry(const(wchar)*, const(wchar)*, ITravelLogEntry, BOOL, ITravelLogEntry*);
-    HRESULT TravelTo(ITravelLogEntry);
-    HRESULT EnumEntries(TLENUMF, IEnumTravelLogEntry*);
-    HRESULT FindEntries(TLENUMF, const(wchar)*, IEnumTravelLogEntry*);
-    HRESULT GetCount(TLENUMF, uint*);
-    HRESULT RemoveEntry(ITravelLogEntry);
-    HRESULT GetRelativeEntry(int, ITravelLogEntry*);
+    HRESULT CreateEntry(const(wchar)* pszUrl, const(wchar)* pszTitle, ITravelLogEntry ptleRelativeTo, BOOL fPrepend, ITravelLogEntry* pptle);
+    HRESULT TravelTo(ITravelLogEntry ptle);
+    HRESULT EnumEntries(TLENUMF flags, IEnumTravelLogEntry* ppenum);
+    HRESULT FindEntries(TLENUMF flags, const(wchar)* pszUrl, IEnumTravelLogEntry* ppenum);
+    HRESULT GetCount(TLENUMF flags, uint* pcEntries);
+    HRESULT RemoveEntry(ITravelLogEntry ptle);
+    HRESULT GetRelativeEntry(int iOffset, ITravelLogEntry* ptle);
 }
 alias HLSR = int;
 enum : int
@@ -10785,20 +10785,20 @@ enum : int
 enum IID_IHlink = GUID(0x79eac9c3, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IHlink : IUnknown
 {
-    HRESULT SetHlinkSite(IHlinkSite, uint);
-    HRESULT GetHlinkSite(IHlinkSite*, uint*);
-    HRESULT SetMonikerReference(uint, IMoniker, const(wchar)*);
-    HRESULT GetMonikerReference(uint, IMoniker*, PWSTR*);
-    HRESULT SetStringReference(uint, const(wchar)*, const(wchar)*);
-    HRESULT GetStringReference(uint, PWSTR*, PWSTR*);
-    HRESULT SetFriendlyName(const(wchar)*);
-    HRESULT GetFriendlyName(uint, PWSTR*);
-    HRESULT SetTargetFrameName(const(wchar)*);
-    HRESULT GetTargetFrameName(PWSTR*);
-    HRESULT GetMiscStatus(uint*);
-    HRESULT Navigate(uint, IBindCtx, IBindStatusCallback, IHlinkBrowseContext);
-    HRESULT SetAdditionalParams(const(wchar)*);
-    HRESULT GetAdditionalParams(PWSTR*);
+    HRESULT SetHlinkSite(IHlinkSite pihlSite, uint dwSiteData);
+    HRESULT GetHlinkSite(IHlinkSite* ppihlSite, uint* pdwSiteData);
+    HRESULT SetMonikerReference(uint grfHLSETF, IMoniker pimkTarget, const(wchar)* pwzLocation);
+    HRESULT GetMonikerReference(uint dwWhichRef, IMoniker* ppimkTarget, PWSTR* ppwzLocation);
+    HRESULT SetStringReference(uint grfHLSETF, const(wchar)* pwzTarget, const(wchar)* pwzLocation);
+    HRESULT GetStringReference(uint dwWhichRef, PWSTR* ppwzTarget, PWSTR* ppwzLocation);
+    HRESULT SetFriendlyName(const(wchar)* pwzFriendlyName);
+    HRESULT GetFriendlyName(uint grfHLFNAMEF, PWSTR* ppwzFriendlyName);
+    HRESULT SetTargetFrameName(const(wchar)* pwzTargetFrameName);
+    HRESULT GetTargetFrameName(PWSTR* ppwzTargetFrameName);
+    HRESULT GetMiscStatus(uint* pdwStatus);
+    HRESULT Navigate(uint grfHLNF, IBindCtx pibc, IBindStatusCallback pibsc, IHlinkBrowseContext pihlbc);
+    HRESULT SetAdditionalParams(const(wchar)* pwzAdditionalParams);
+    HRESULT GetAdditionalParams(PWSTR* ppwzAdditionalParams);
 }
 alias HLINKWHICHMK = int;
 enum : int
@@ -10810,28 +10810,28 @@ enum : int
 enum IID_IHlinkSite = GUID(0x79eac9c2, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IHlinkSite : IUnknown
 {
-    HRESULT QueryService(uint, const(GUID)*, const(GUID)*, IUnknown*);
-    HRESULT GetMoniker(uint, uint, uint, IMoniker*);
-    HRESULT ReadyToNavigate(uint, uint);
-    HRESULT OnNavigationComplete(uint, uint, HRESULT, const(wchar)*);
+    HRESULT QueryService(uint dwSiteData, const(GUID)* guidService, const(GUID)* riid, IUnknown* ppiunk);
+    HRESULT GetMoniker(uint dwSiteData, uint dwAssign, uint dwWhich, IMoniker* ppimk);
+    HRESULT ReadyToNavigate(uint dwSiteData, uint dwReserved);
+    HRESULT OnNavigationComplete(uint dwSiteData, uint dwreserved, HRESULT hrError, const(wchar)* pwzError);
 }
 enum IID_IHlinkTarget = GUID(0x79eac9c4, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IHlinkTarget : IUnknown
 {
-    HRESULT SetBrowseContext(IHlinkBrowseContext);
-    HRESULT GetBrowseContext(IHlinkBrowseContext*);
-    HRESULT Navigate(uint, const(wchar)*);
-    HRESULT GetMoniker(const(wchar)*, uint, IMoniker*);
-    HRESULT GetFriendlyName(const(wchar)*, PWSTR*);
+    HRESULT SetBrowseContext(IHlinkBrowseContext pihlbc);
+    HRESULT GetBrowseContext(IHlinkBrowseContext* ppihlbc);
+    HRESULT Navigate(uint grfHLNF, const(wchar)* pwzJumpLocation);
+    HRESULT GetMoniker(const(wchar)* pwzLocation, uint dwAssign, IMoniker* ppimkLocation);
+    HRESULT GetFriendlyName(const(wchar)* pwzLocation, PWSTR* ppwzFriendlyName);
 }
 enum IID_IHlinkFrame = GUID(0x79eac9c5, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IHlinkFrame : IUnknown
 {
-    HRESULT SetBrowseContext(IHlinkBrowseContext);
-    HRESULT GetBrowseContext(IHlinkBrowseContext*);
-    HRESULT Navigate(uint, IBindCtx, IBindStatusCallback, IHlink);
-    HRESULT OnNavigate(uint, IMoniker, const(wchar)*, const(wchar)*, uint);
-    HRESULT UpdateHlink(uint, IMoniker, const(wchar)*, const(wchar)*);
+    HRESULT SetBrowseContext(IHlinkBrowseContext pihlbc);
+    HRESULT GetBrowseContext(IHlinkBrowseContext* ppihlbc);
+    HRESULT Navigate(uint grfHLNF, IBindCtx pbc, IBindStatusCallback pibsc, IHlink pihlNavigate);
+    HRESULT OnNavigate(uint grfHLNF, IMoniker pimkTarget, const(wchar)* pwzLocation, const(wchar)* pwzFriendlyName, uint dwreserved);
+    HRESULT UpdateHlink(uint uHLID, IMoniker pimkTarget, const(wchar)* pwzLocation, const(wchar)* pwzFriendlyName);
 }
 struct HLITEM
 {
@@ -10841,10 +10841,10 @@ struct HLITEM
 enum IID_IEnumHLITEM = GUID(0x79eac9c6, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IEnumHLITEM : IUnknown
 {
-    HRESULT Next(uint, HLITEM*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, HLITEM* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IEnumHLITEM*);
+    HRESULT Clone(IEnumHLITEM* ppienumhlitem);
 }
 alias HLTB_INFO = int;
 enum : int
@@ -10901,68 +10901,68 @@ enum : int
 enum IID_IHlinkBrowseContext = GUID(0x79eac9c7, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IHlinkBrowseContext : IUnknown
 {
-    HRESULT Register(uint, IUnknown, IMoniker, uint*);
-    HRESULT GetObject(IMoniker, BOOL, IUnknown*);
-    HRESULT Revoke(uint);
-    HRESULT SetBrowseWindowInfo(HLBWINFO*);
-    HRESULT GetBrowseWindowInfo(HLBWINFO*);
-    HRESULT SetInitialHlink(IMoniker, const(wchar)*, const(wchar)*);
-    HRESULT OnNavigateHlink(uint, IMoniker, const(wchar)*, const(wchar)*, uint*);
-    HRESULT UpdateHlink(uint, IMoniker, const(wchar)*, const(wchar)*);
-    HRESULT EnumNavigationStack(uint, uint, IEnumHLITEM*);
-    HRESULT QueryHlink(uint, uint);
-    HRESULT GetHlink(uint, IHlink*);
-    HRESULT SetCurrentHlink(uint);
-    HRESULT Clone(IUnknown, const(GUID)*, IUnknown*);
-    HRESULT Close(uint);
+    HRESULT Register(uint reserved, IUnknown piunk, IMoniker pimk, uint* pdwRegister);
+    HRESULT GetObject(IMoniker pimk, BOOL fBindIfRootRegistered, IUnknown* ppiunk);
+    HRESULT Revoke(uint dwRegister);
+    HRESULT SetBrowseWindowInfo(HLBWINFO* phlbwi);
+    HRESULT GetBrowseWindowInfo(HLBWINFO* phlbwi);
+    HRESULT SetInitialHlink(IMoniker pimkTarget, const(wchar)* pwzLocation, const(wchar)* pwzFriendlyName);
+    HRESULT OnNavigateHlink(uint grfHLNF, IMoniker pimkTarget, const(wchar)* pwzLocation, const(wchar)* pwzFriendlyName, uint* puHLID);
+    HRESULT UpdateHlink(uint uHLID, IMoniker pimkTarget, const(wchar)* pwzLocation, const(wchar)* pwzFriendlyName);
+    HRESULT EnumNavigationStack(uint dwReserved, uint grfHLFNAMEF, IEnumHLITEM* ppienumhlitem);
+    HRESULT QueryHlink(uint grfHLQF, uint uHLID);
+    HRESULT GetHlink(uint uHLID, IHlink* ppihl);
+    HRESULT SetCurrentHlink(uint uHLID);
+    HRESULT Clone(IUnknown piunkOuter, const(GUID)* riid, IUnknown* ppiunkObj);
+    HRESULT Close(uint reserved);
 }
 enum IID_IExtensionServices = GUID(0x79eac9cb, 0xbaf9, 0x11ce, [0x8c, 0x82, 0x0, 0xaa, 0x0, 0x4b, 0xa9, 0xb]);
 interface IExtensionServices : IUnknown
 {
-    HRESULT SetAdditionalHeaders(const(wchar)*);
-    HRESULT SetAuthenticateData(HWND, const(wchar)*, const(wchar)*);
+    HRESULT SetAdditionalHeaders(const(wchar)* pwzAdditionalHeaders);
+    HRESULT SetAuthenticateData(HWND phwnd, const(wchar)* pwzUsername, const(wchar)* pwzPassword);
 }
 enum IID_ITravelEntry = GUID(0xf46edb3b, 0xbc2f, 0x11d0, [0x94, 0x12, 0x0, 0xaa, 0x0, 0xa3, 0xeb, 0xd3]);
 interface ITravelEntry : IUnknown
 {
-    HRESULT Invoke(IUnknown);
-    HRESULT Update(IUnknown, BOOL);
-    HRESULT GetPidl(ITEMIDLIST**);
+    HRESULT Invoke(IUnknown punk);
+    HRESULT Update(IUnknown punk, BOOL fIsLocalAnchor);
+    HRESULT GetPidl(ITEMIDLIST** ppidl);
 }
 enum IID_ITravelLog = GUID(0x66a9cb08, 0x4802, 0x11d2, [0xa5, 0x61, 0x0, 0xa0, 0xc9, 0x2d, 0xbf, 0xe8]);
 interface ITravelLog : IUnknown
 {
-    HRESULT AddEntry(IUnknown, BOOL);
-    HRESULT UpdateEntry(IUnknown, BOOL);
-    HRESULT UpdateExternal(IUnknown, IUnknown);
-    HRESULT Travel(IUnknown, int);
-    HRESULT GetTravelEntry(IUnknown, int, ITravelEntry*);
-    HRESULT FindTravelEntry(IUnknown, ITEMIDLIST*, ITravelEntry*);
-    HRESULT GetToolTipText(IUnknown, int, int, PWSTR, uint);
-    HRESULT InsertMenuEntries(IUnknown, HMENU, int, int, int, uint);
-    HRESULT Clone(ITravelLog*);
-    uint CountEntries(IUnknown);
+    HRESULT AddEntry(IUnknown punk, BOOL fIsLocalAnchor);
+    HRESULT UpdateEntry(IUnknown punk, BOOL fIsLocalAnchor);
+    HRESULT UpdateExternal(IUnknown punk, IUnknown punkHLBrowseContext);
+    HRESULT Travel(IUnknown punk, int iOffset);
+    HRESULT GetTravelEntry(IUnknown punk, int iOffset, ITravelEntry* ppte);
+    HRESULT FindTravelEntry(IUnknown punk, ITEMIDLIST* pidl, ITravelEntry* ppte);
+    HRESULT GetToolTipText(IUnknown punk, int iOffset, int idsTemplate, PWSTR pwzText, uint cchText);
+    HRESULT InsertMenuEntries(IUnknown punk, HMENU hmenu, int nPos, int idFirst, int idLast, uint dwFlags);
+    HRESULT Clone(ITravelLog* pptl);
+    uint CountEntries(IUnknown punk);
     HRESULT Revert();
 }
 // [Not Found] IID_CIE4ConnectionPoint
 interface CIE4ConnectionPoint : IConnectionPoint
 {
-    HRESULT DoInvokeIE4(BOOL*, void**, int, DISPPARAMS*);
-    HRESULT DoInvokePIDLIE4(int, ITEMIDLIST*, BOOL);
+    HRESULT DoInvokeIE4(BOOL* pf, void** ppv, int dispid, DISPPARAMS* pdispparams);
+    HRESULT DoInvokePIDLIE4(int dispid, ITEMIDLIST* pidl, BOOL fCanCancel);
 }
 enum IID_IExpDispSupportXP = GUID(0x2f0dd58c, 0xf789, 0x4f14, [0x99, 0xfb, 0x92, 0x93, 0xb3, 0xc9, 0xc2, 0x12]);
 interface IExpDispSupportXP : IUnknown
 {
-    HRESULT FindCIE4ConnectionPoint(const(GUID)*, CIE4ConnectionPoint*);
-    HRESULT OnTranslateAccelerator(MSG*, uint);
-    HRESULT OnInvoke(int, const(GUID)*, uint, ushort, DISPPARAMS*, VARIANT*, EXCEPINFO*, uint*);
+    HRESULT FindCIE4ConnectionPoint(const(GUID)* riid, CIE4ConnectionPoint* ppccp);
+    HRESULT OnTranslateAccelerator(MSG* pMsg, uint grfModifiers);
+    HRESULT OnInvoke(int dispidMember, const(GUID)* iid, uint lcid, ushort wFlags, DISPPARAMS* pdispparams, VARIANT* pVarResult, EXCEPINFO* pexcepinfo, uint* puArgErr);
 }
 enum IID_IExpDispSupport = GUID(0xd7d1d00, 0x6fc0, 0x11d0, [0xa9, 0x74, 0x0, 0xc0, 0x4f, 0xd7, 0x5, 0xa2]);
 interface IExpDispSupport : IUnknown
 {
-    HRESULT FindConnectionPoint(const(GUID)*, IConnectionPoint*);
-    HRESULT OnTranslateAccelerator(MSG*, uint);
-    HRESULT OnInvoke(int, const(GUID)*, uint, ushort, DISPPARAMS*, VARIANT*, EXCEPINFO*, uint*);
+    HRESULT FindConnectionPoint(const(GUID)* riid, IConnectionPoint* ppccp);
+    HRESULT OnTranslateAccelerator(MSG* pMsg, uint grfModifiers);
+    HRESULT OnInvoke(int dispidMember, const(GUID)* iid, uint lcid, ushort wFlags, DISPPARAMS* pdispparams, VARIANT* pVarResult, EXCEPINFO* pexcepinfo, uint* puArgErr);
 }
 alias BNSTATE = int;
 enum : int
@@ -10984,41 +10984,41 @@ enum : int
 enum IID_IBrowserService = GUID(0x2ba3b52, 0x547, 0x11d1, [0xb8, 0x33, 0x0, 0xc0, 0x4f, 0xc9, 0xb3, 0x1f]);
 interface IBrowserService : IUnknown
 {
-    HRESULT GetParentSite(IOleInPlaceSite*);
-    HRESULT SetTitle(IShellView, const(wchar)*);
-    HRESULT GetTitle(IShellView, PWSTR, uint);
-    HRESULT GetOleObject(IOleObject*);
-    HRESULT GetTravelLog(ITravelLog*);
-    HRESULT ShowControlWindow(uint, BOOL);
-    HRESULT IsControlWindowShown(uint, BOOL*);
-    HRESULT IEGetDisplayName(ITEMIDLIST*, PWSTR, uint);
-    HRESULT IEParseDisplayName(uint, const(wchar)*, ITEMIDLIST**);
-    HRESULT DisplayParseError(HRESULT, const(wchar)*);
-    HRESULT NavigateToPidl(ITEMIDLIST*, uint);
-    HRESULT SetNavigateState(BNSTATE);
-    HRESULT GetNavigateState(BNSTATE*);
-    HRESULT NotifyRedirect(IShellView, ITEMIDLIST*, BOOL*);
+    HRESULT GetParentSite(IOleInPlaceSite* ppipsite);
+    HRESULT SetTitle(IShellView psv, const(wchar)* pszName);
+    HRESULT GetTitle(IShellView psv, PWSTR pszName, uint cchName);
+    HRESULT GetOleObject(IOleObject* ppobjv);
+    HRESULT GetTravelLog(ITravelLog* pptl);
+    HRESULT ShowControlWindow(uint id, BOOL fShow);
+    HRESULT IsControlWindowShown(uint id, BOOL* pfShown);
+    HRESULT IEGetDisplayName(ITEMIDLIST* pidl, PWSTR pwszName, uint uFlags);
+    HRESULT IEParseDisplayName(uint uiCP, const(wchar)* pwszPath, ITEMIDLIST** ppidlOut);
+    HRESULT DisplayParseError(HRESULT hres, const(wchar)* pwszPath);
+    HRESULT NavigateToPidl(ITEMIDLIST* pidl, uint grfHLNF);
+    HRESULT SetNavigateState(BNSTATE bnstate);
+    HRESULT GetNavigateState(BNSTATE* pbnstate);
+    HRESULT NotifyRedirect(IShellView psv, ITEMIDLIST* pidl, BOOL* pfDidBrowse);
     HRESULT UpdateWindowList();
     HRESULT UpdateBackForwardState();
-    HRESULT SetFlags(uint, uint);
-    HRESULT GetFlags(uint*);
+    HRESULT SetFlags(uint dwFlags, uint dwFlagMask);
+    HRESULT GetFlags(uint* pdwFlags);
     HRESULT CanNavigateNow();
-    HRESULT GetPidl(ITEMIDLIST**);
-    HRESULT SetReferrer(ITEMIDLIST*);
+    HRESULT GetPidl(ITEMIDLIST** ppidl);
+    HRESULT SetReferrer(ITEMIDLIST* pidl);
     uint GetBrowserIndex();
-    HRESULT GetBrowserByIndex(uint, IUnknown*);
-    HRESULT GetHistoryObject(IOleObject*, IStream*, IBindCtx*);
-    HRESULT SetHistoryObject(IOleObject, BOOL);
-    HRESULT CacheOLEServer(IOleObject);
-    HRESULT GetSetCodePage(VARIANT*, VARIANT*);
-    HRESULT OnHttpEquiv(IShellView, BOOL, VARIANT*, VARIANT*);
-    HRESULT GetPalette(HPALETTE*);
-    HRESULT RegisterWindow(BOOL, ShellWindowTypeConstants);
+    HRESULT GetBrowserByIndex(uint dwID, IUnknown* ppunk);
+    HRESULT GetHistoryObject(IOleObject* ppole, IStream* pstm, IBindCtx* ppbc);
+    HRESULT SetHistoryObject(IOleObject pole, BOOL fIsLocalAnchor);
+    HRESULT CacheOLEServer(IOleObject pole);
+    HRESULT GetSetCodePage(VARIANT* pvarIn, VARIANT* pvarOut);
+    HRESULT OnHttpEquiv(IShellView psv, BOOL fDone, VARIANT* pvarargIn, VARIANT* pvarargOut);
+    HRESULT GetPalette(HPALETTE* hpal);
+    HRESULT RegisterWindow(BOOL fForceRegister, ShellWindowTypeConstants swc);
 }
 enum IID_IShellService = GUID(0x5836fb00, 0x8187, 0x11cf, [0xa1, 0x2b, 0x0, 0xaa, 0x0, 0x4a, 0xe8, 0x37]);
 interface IShellService : IUnknown
 {
-    HRESULT SetOwner(IUnknown);
+    HRESULT SetOwner(IUnknown punkOwner);
 }
 alias SECURELOCKCODE = int;
 enum : int
@@ -11117,68 +11117,68 @@ struct TOOLBARITEM
 enum IID_IBrowserService2 = GUID(0x68bd21cc, 0x438b, 0x11d2, [0xa5, 0x60, 0x0, 0xa0, 0xc9, 0x2d, 0xbf, 0xe8]);
 interface IBrowserService2 : IBrowserService
 {
-    LRESULT WndProcBS(HWND, uint, WPARAM, LPARAM);
+    LRESULT WndProcBS(HWND hwnd, uint uMsg, WPARAM wParam, LPARAM lParam);
     HRESULT SetAsDefFolderSettings();
-    HRESULT GetViewRect(RECT*);
-    HRESULT OnSize(WPARAM);
-    HRESULT OnCreate(CREATESTRUCTW*);
-    LRESULT OnCommand(WPARAM, LPARAM);
+    HRESULT GetViewRect(RECT* prc);
+    HRESULT OnSize(WPARAM wParam);
+    HRESULT OnCreate(CREATESTRUCTW* pcs);
+    LRESULT OnCommand(WPARAM wParam, LPARAM lParam);
     HRESULT OnDestroy();
-    LRESULT OnNotify(NMHDR*);
+    LRESULT OnNotify(NMHDR* pnm);
     HRESULT OnSetFocus();
-    HRESULT OnFrameWindowActivateBS(BOOL);
+    HRESULT OnFrameWindowActivateBS(BOOL fActive);
     HRESULT ReleaseShellView();
     HRESULT ActivatePendingView();
-    HRESULT CreateViewWindow(IShellView, IShellView, RECT*, HWND*);
-    HRESULT CreateBrowserPropSheetExt(const(GUID)*, void**);
-    HRESULT GetViewWindow(HWND*);
-    HRESULT GetBaseBrowserData(BASEBROWSERDATALH**);
+    HRESULT CreateViewWindow(IShellView psvNew, IShellView psvOld, RECT* prcView, HWND* phwnd);
+    HRESULT CreateBrowserPropSheetExt(const(GUID)* riid, void** ppv);
+    HRESULT GetViewWindow(HWND* phwndView);
+    HRESULT GetBaseBrowserData(BASEBROWSERDATALH** pbbd);
     BASEBROWSERDATALH* PutBaseBrowserData();
-    HRESULT InitializeTravelLog(ITravelLog, uint);
+    HRESULT InitializeTravelLog(ITravelLog ptl, uint dw);
     HRESULT SetTopBrowser();
-    HRESULT Offline(int);
-    HRESULT AllowViewResize(BOOL);
-    HRESULT SetActivateState(uint);
-    HRESULT UpdateSecureLockIcon(int);
+    HRESULT Offline(int iCmd);
+    HRESULT AllowViewResize(BOOL f);
+    HRESULT SetActivateState(uint u);
+    HRESULT UpdateSecureLockIcon(int eSecureLock);
     HRESULT InitializeDownloadManager();
     HRESULT InitializeTransitionSite();
-    HRESULT _Initialize(HWND, IUnknown);
+    HRESULT _Initialize(HWND hwnd, IUnknown pauto);
     HRESULT _CancelPendingNavigationAsync();
     HRESULT _CancelPendingView();
     HRESULT _MaySaveChanges();
-    HRESULT _PauseOrResumeView(BOOL);
+    HRESULT _PauseOrResumeView(BOOL fPaused);
     HRESULT _DisableModeless();
-    HRESULT _NavigateToPidl2(ITEMIDLIST*, uint, uint);
-    HRESULT _TryShell2Rename(IShellView, ITEMIDLIST*);
+    HRESULT _NavigateToPidl2(ITEMIDLIST* pidl, uint grfHLNF, uint dwFlags);
+    HRESULT _TryShell2Rename(IShellView psv, ITEMIDLIST* pidlNew);
     HRESULT _SwitchActivationNow();
-    HRESULT _ExecChildren(IUnknown, BOOL, const(GUID)*, uint, uint, VARIANT*, VARIANT*);
-    HRESULT _SendChildren(HWND, BOOL, uint, WPARAM, LPARAM);
-    HRESULT GetFolderSetData(FOLDERSETDATA*);
-    HRESULT _OnFocusChange(uint);
-    HRESULT v_ShowHideChildWindows(BOOL);
+    HRESULT _ExecChildren(IUnknown punkBar, BOOL fBroadcast, const(GUID)* pguidCmdGroup, uint nCmdID, uint nCmdexecopt, VARIANT* pvarargIn, VARIANT* pvarargOut);
+    HRESULT _SendChildren(HWND hwndBar, BOOL fBroadcast, uint uMsg, WPARAM wParam, LPARAM lParam);
+    HRESULT GetFolderSetData(FOLDERSETDATA* pfsd);
+    HRESULT _OnFocusChange(uint itb);
+    HRESULT v_ShowHideChildWindows(BOOL fChildOnly);
     uint _get_itbLastFocus();
-    HRESULT _put_itbLastFocus(uint);
-    HRESULT _UIActivateView(uint);
-    HRESULT _GetViewBorderRect(RECT*);
+    HRESULT _put_itbLastFocus(uint itbLastFocus);
+    HRESULT _UIActivateView(uint uState);
+    HRESULT _GetViewBorderRect(RECT* prc);
     HRESULT _UpdateViewRectSize();
-    HRESULT _ResizeNextBorder(uint);
+    HRESULT _ResizeNextBorder(uint itb);
     HRESULT _ResizeView();
-    HRESULT _GetEffectiveClientArea(RECT*, HMONITOR);
-    IStream v_GetViewStream(ITEMIDLIST*, uint, const(wchar)*);
-    LRESULT ForwardViewMsg(uint, WPARAM, LPARAM);
-    HRESULT SetAcceleratorMenu(HACCEL);
+    HRESULT _GetEffectiveClientArea(RECT* lprectBorder, HMONITOR hmon);
+    IStream v_GetViewStream(ITEMIDLIST* pidl, uint grfMode, const(wchar)* pwszName);
+    LRESULT ForwardViewMsg(uint uMsg, WPARAM wParam, LPARAM lParam);
+    HRESULT SetAcceleratorMenu(HACCEL hacc);
     int _GetToolbarCount();
-    TOOLBARITEM* _GetToolbarItem(int);
-    HRESULT _SaveToolbars(IStream);
-    HRESULT _LoadToolbars(IStream);
-    HRESULT _CloseAndReleaseToolbars(BOOL);
-    HRESULT v_MayGetNextToolbarFocus(MSG*, uint, int, TOOLBARITEM**, HWND*);
-    HRESULT _ResizeNextBorderHelper(uint, BOOL);
-    uint _FindTBar(IUnknown);
-    HRESULT _SetFocus(TOOLBARITEM*, HWND, MSG*);
-    HRESULT v_MayTranslateAccelerator(MSG*);
-    HRESULT _GetBorderDWHelper(IUnknown, RECT*, BOOL);
-    HRESULT v_CheckZoneCrossing(ITEMIDLIST*);
+    TOOLBARITEM* _GetToolbarItem(int itb);
+    HRESULT _SaveToolbars(IStream pstm);
+    HRESULT _LoadToolbars(IStream pstm);
+    HRESULT _CloseAndReleaseToolbars(BOOL fClose);
+    HRESULT v_MayGetNextToolbarFocus(MSG* lpMsg, uint itbNext, int citb, TOOLBARITEM** pptbi, HWND* phwnd);
+    HRESULT _ResizeNextBorderHelper(uint itb, BOOL bUseHmonitor);
+    uint _FindTBar(IUnknown punkSrc);
+    HRESULT _SetFocus(TOOLBARITEM* ptbi, HWND hwnd, MSG* lpMsg);
+    HRESULT v_MayTranslateAccelerator(MSG* pmsg);
+    HRESULT _GetBorderDWHelper(IUnknown punkSrc, RECT* lprectBorder, BOOL bUseHmonitor);
+    HRESULT v_CheckZoneCrossing(ITEMIDLIST* pidl);
 }
 alias IEPDNFLAGS = int;
 enum : int
@@ -11189,21 +11189,21 @@ enum : int
 enum IID_IBrowserService3 = GUID(0x27d7ce21, 0x762d, 0x48f3, [0x86, 0xf3, 0x40, 0xe2, 0xfd, 0x37, 0x49, 0xc4]);
 interface IBrowserService3 : IBrowserService2
 {
-    HRESULT _PositionViewWindow(HWND, RECT*);
-    HRESULT IEParseDisplayNameEx(uint, const(wchar)*, uint, ITEMIDLIST**);
+    HRESULT _PositionViewWindow(HWND hwnd, RECT* prc);
+    HRESULT IEParseDisplayNameEx(uint uiCP, const(wchar)* pwszPath, uint dwFlags, ITEMIDLIST** ppidlOut);
 }
 enum IID_IBrowserService4 = GUID(0x639f1bff, 0xe135, 0x4096, [0xab, 0xd8, 0xe0, 0xf5, 0x4, 0xd6, 0x49, 0xa4]);
 interface IBrowserService4 : IBrowserService3
 {
-    HRESULT ActivateView(BOOL);
+    HRESULT ActivateView(BOOL fPendingView);
     HRESULT SaveViewState();
     HRESULT _ResizeAllBorders();
 }
 enum IID_ITrackShellMenu = GUID(0x8278f932, 0x2a3e, 0x11d2, [0x83, 0x8f, 0x0, 0xc0, 0x4f, 0xd9, 0x18, 0xd0]);
 interface ITrackShellMenu : IShellMenu
 {
-    HRESULT SetObscured(HWND, IUnknown, uint);
-    HRESULT Popup(HWND, POINTL*, RECTL*, int);
+    HRESULT SetObscured(HWND hwndTB, IUnknown punkBand, uint dwSMSetFlags);
+    HRESULT Popup(HWND hwnd, POINTL* ppt, RECTL* prcExclude, int dwFlags);
 }
 enum CLSID_TrackShellMenu = GUID(0x8278f931, 0x2a3e, 0x11d2, [0x83, 0x8f, 0x0, 0xc0, 0x4f, 0xd9, 0x18, 0xd0]);
 struct TrackShellMenu
@@ -11219,7 +11219,7 @@ enum : int
 enum IID_ITranscodeImage = GUID(0xbae86ddd, 0xdc11, 0x421c, [0xb7, 0xab, 0xcc, 0x55, 0xd1, 0xd6, 0x5c, 0x44]);
 interface ITranscodeImage : IUnknown
 {
-    HRESULT TranscodeImage(IShellItem, uint, uint, uint, IStream, uint*, uint*);
+    HRESULT TranscodeImage(IShellItem pShellItem, uint uiMaxWidth, uint uiMaxHeight, uint flags, IStream pvImage, uint* puiWidth, uint* puiHeight);
 }
 enum CLSID_ImageTranscode = GUID(0x17b75166, 0x928f, 0x417d, [0x96, 0x85, 0x64, 0xaa, 0x13, 0x55, 0x65, 0xc1]);
 struct ImageTranscode
@@ -11238,7 +11238,7 @@ enum : uint
     PATHCCH_CANONICALIZE_SLASHES            = 0x00000040,
 }
 
-alias APPLET_PROC = int function(HWND, uint, LPARAM, LPARAM);
+alias APPLET_PROC = int function(HWND hwndCpl, uint msg, LPARAM lParam1, LPARAM lParam2);
 struct CPLINFO
 {
     align (1):
@@ -11327,16 +11327,16 @@ struct URLINVOKECOMMANDINFOW
 enum IID_IUniformResourceLocatorA = GUID(0xfbf23b80, 0xe3f0, 0x101b, [0x84, 0x88, 0x0, 0xaa, 0x0, 0x3e, 0x56, 0xf8]);
 interface IUniformResourceLocatorA : IUnknown
 {
-    HRESULT SetURL(const(char)*, uint);
-    HRESULT GetURL(PSTR*);
-    HRESULT InvokeCommand(URLINVOKECOMMANDINFOA*);
+    HRESULT SetURL(const(char)* pcszURL, uint dwInFlags);
+    HRESULT GetURL(PSTR* ppszURL);
+    HRESULT InvokeCommand(URLINVOKECOMMANDINFOA* purlici);
 }
 enum IID_IUniformResourceLocatorW = GUID(0xcabb0da0, 0xda57, 0x11cf, [0x99, 0x74, 0x0, 0x20, 0xaf, 0xd7, 0x97, 0x62]);
 interface IUniformResourceLocatorW : IUnknown
 {
-    HRESULT SetURL(const(wchar)*, uint);
-    HRESULT GetURL(PWSTR*);
-    HRESULT InvokeCommand(URLINVOKECOMMANDINFOW*);
+    HRESULT SetURL(const(wchar)* pcszURL, uint dwInFlags);
+    HRESULT GetURL(PWSTR* ppszURL);
+    HRESULT InvokeCommand(URLINVOKECOMMANDINFOW* purlici);
 }
 alias TRANSLATEURL_IN_FLAGS = int;
 enum : int
@@ -11358,12 +11358,12 @@ enum : int
     MIMEASSOCDLG_FL_REGISTER_ASSOC = 0x00000001,
 }
 
-alias PAPPSTATE_CHANGE_ROUTINE = void function(BOOLEAN, void*);
-alias PAPPCONSTRAIN_CHANGE_ROUTINE = void function(BOOLEAN, void*);
+alias PAPPSTATE_CHANGE_ROUTINE = void function(BOOLEAN Quiesced, void* Context);
+alias PAPPCONSTRAIN_CHANGE_ROUTINE = void function(BOOLEAN Constrained, void* Context);
 enum IID_IInputPaneAnimationCoordinator = GUID(0x2af16ba9, 0x2de5, 0x4b75, [0x82, 0xd9, 0x1, 0x37, 0x2a, 0xfb, 0xff, 0xb4]);
 interface IInputPaneAnimationCoordinator : IUnknown
 {
-    HRESULT AddAnimation(IUnknown, IDCompositionAnimation);
+    HRESULT AddAnimation(IUnknown device, IDCompositionAnimation animation);
 }
 enum CLSID_ShowInputPaneAnimationCoordinator = GUID(0x1f046abf, 0x3202, 0x4dc1, [0x8c, 0xb5, 0x3c, 0x67, 0x61, 0x7c, 0xe1, 0xfa]);
 struct ShowInputPaneAnimationCoordinator

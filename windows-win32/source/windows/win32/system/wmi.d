@@ -8,7 +8,7 @@ import windows.win32.system.variant : VARIANT;
 version (Windows):
 extern (Windows):
 
-MI_Result MI_Application_InitializeV1(uint, const(ushort)*, MI_Instance**, MI_Application*);
+MI_Result MI_Application_InitializeV1(uint flags, const(ushort)* applicationID, MI_Instance** extendedError, MI_Application* application);
 enum MI_FLAG_ANY = 0x0000007f;
 enum MI_FLAG_VERSION = 0x1c000000;
 enum MI_FLAG_ADOPT = 0x80000000;
@@ -930,7 +930,7 @@ struct MI_PropertyDecl
     const(ushort)* propagator;
     const(void)* value;
 }
-alias MI_MethodDecl_Invoke = void function(void*, MI_Context*, const(ushort)*, const(ushort)*, const(ushort)*, const(MI_Instance)*, const(MI_Instance)*);
+alias MI_MethodDecl_Invoke = void function(void* self, MI_Context* context, const(ushort)* nameSpace, const(ushort)* className, const(ushort)* methodName, const(MI_Instance)* instanceName, const(MI_Instance)* parameters);
 struct MI_MethodDecl
 {
     uint flags;
@@ -970,20 +970,20 @@ struct MI_SchemaDecl
     const(MI_ClassDecl)** classDecls;
     uint numClassDecls;
 }
-alias MI_ProviderFT_Load = void function(void**, MI_Module_Self*, MI_Context*);
-alias MI_ProviderFT_Unload = void function(void*, MI_Context*);
-alias MI_ProviderFT_GetInstance = void function(void*, MI_Context*, const(ushort)*, const(ushort)*, const(MI_Instance)*, const(MI_PropertySet)*);
-alias MI_ProviderFT_EnumerateInstances = void function(void*, MI_Context*, const(ushort)*, const(ushort)*, const(MI_PropertySet)*, ubyte, const(MI_Filter)*);
-alias MI_ProviderFT_CreateInstance = void function(void*, MI_Context*, const(ushort)*, const(ushort)*, const(MI_Instance)*);
-alias MI_ProviderFT_ModifyInstance = void function(void*, MI_Context*, const(ushort)*, const(ushort)*, const(MI_Instance)*, const(MI_PropertySet)*);
-alias MI_ProviderFT_DeleteInstance = void function(void*, MI_Context*, const(ushort)*, const(ushort)*, const(MI_Instance)*);
-alias MI_ProviderFT_AssociatorInstances = void function(void*, MI_Context*, const(ushort)*, const(ushort)*, const(MI_Instance)*, const(ushort)*, const(ushort)*, const(ushort)*, const(MI_PropertySet)*, ubyte, const(MI_Filter)*);
-alias MI_ProviderFT_ReferenceInstances = void function(void*, MI_Context*, const(ushort)*, const(ushort)*, const(MI_Instance)*, const(ushort)*, const(MI_PropertySet)*, ubyte, const(MI_Filter)*);
-alias MI_ProviderFT_EnableIndications = void function(void*, MI_Context*, const(ushort)*, const(ushort)*);
-alias MI_ProviderFT_DisableIndications = void function(void*, MI_Context*, const(ushort)*, const(ushort)*);
-alias MI_ProviderFT_Subscribe = void function(void*, MI_Context*, const(ushort)*, const(ushort)*, const(MI_Filter)*, const(ushort)*, ulong, void**);
-alias MI_ProviderFT_Unsubscribe = void function(void*, MI_Context*, const(ushort)*, const(ushort)*, ulong, void*);
-alias MI_ProviderFT_Invoke = void function(void*, MI_Context*, const(ushort)*, const(ushort)*, const(ushort)*, const(MI_Instance)*, const(MI_Instance)*);
+alias MI_ProviderFT_Load = void function(void** self, MI_Module_Self* selfModule, MI_Context* context);
+alias MI_ProviderFT_Unload = void function(void* self, MI_Context* context);
+alias MI_ProviderFT_GetInstance = void function(void* self, MI_Context* context, const(ushort)* nameSpace, const(ushort)* className, const(MI_Instance)* instanceName, const(MI_PropertySet)* propertySet);
+alias MI_ProviderFT_EnumerateInstances = void function(void* self, MI_Context* context, const(ushort)* nameSpace, const(ushort)* className, const(MI_PropertySet)* propertySet, ubyte keysOnly, const(MI_Filter)* filter);
+alias MI_ProviderFT_CreateInstance = void function(void* self, MI_Context* context, const(ushort)* nameSpace, const(ushort)* className, const(MI_Instance)* newInstance);
+alias MI_ProviderFT_ModifyInstance = void function(void* self, MI_Context* context, const(ushort)* nameSpace, const(ushort)* className, const(MI_Instance)* modifiedInstance, const(MI_PropertySet)* propertySet);
+alias MI_ProviderFT_DeleteInstance = void function(void* self, MI_Context* context, const(ushort)* nameSpace, const(ushort)* className, const(MI_Instance)* instanceName);
+alias MI_ProviderFT_AssociatorInstances = void function(void* self, MI_Context* context, const(ushort)* nameSpace, const(ushort)* className, const(MI_Instance)* instanceName, const(ushort)* resultClass, const(ushort)* role, const(ushort)* resultRole, const(MI_PropertySet)* propertySet, ubyte keysOnly, const(MI_Filter)* filter);
+alias MI_ProviderFT_ReferenceInstances = void function(void* self, MI_Context* context, const(ushort)* nameSpace, const(ushort)* className, const(MI_Instance)* instanceName, const(ushort)* role, const(MI_PropertySet)* propertySet, ubyte keysOnly, const(MI_Filter)* filter);
+alias MI_ProviderFT_EnableIndications = void function(void* self, MI_Context* indicationsContext, const(ushort)* nameSpace, const(ushort)* className);
+alias MI_ProviderFT_DisableIndications = void function(void* self, MI_Context* indicationsContext, const(ushort)* nameSpace, const(ushort)* className);
+alias MI_ProviderFT_Subscribe = void function(void* self, MI_Context* context, const(ushort)* nameSpace, const(ushort)* className, const(MI_Filter)* filter, const(ushort)* bookmark, ulong subscriptionID, void** subscriptionSelf);
+alias MI_ProviderFT_Unsubscribe = void function(void* self, MI_Context* context, const(ushort)* nameSpace, const(ushort)* className, ulong subscriptionID, void* subscriptionSelf);
+alias MI_ProviderFT_Invoke = void function(void* self, MI_Context* context, const(ushort)* nameSpace, const(ushort)* className, const(ushort)* methodName, const(MI_Instance)* instanceName, const(MI_Instance)* inputParameters);
 struct MI_ProviderFT
 {
     MI_ProviderFT_Load Load;
@@ -1001,8 +1001,8 @@ struct MI_ProviderFT
     MI_ProviderFT_Unsubscribe Unsubscribe;
     MI_ProviderFT_Invoke Invoke;
 }
-alias MI_Module_Load = void function(MI_Module_Self**, MI_Context*);
-alias MI_Module_Unload = void function(MI_Module_Self*, MI_Context*);
+alias MI_Module_Load = void function(MI_Module_Self** self, MI_Context* context);
+alias MI_Module_Unload = void function(MI_Module_Self* self, MI_Context* context);
 struct MI_Module
 {
     uint version_;
@@ -1066,7 +1066,7 @@ enum : int
     MI_REASON_SERVICESTOP = 0x00000003,
 }
 
-alias MI_CancelCallback = void function(MI_CancellationReason, void*);
+alias MI_CancelCallback = void function(MI_CancellationReason reason, void* callbackData);
 struct MI_ContextFT
 {
     long PostResult;
@@ -1105,7 +1105,7 @@ struct MI_Context
     const(MI_ContextFT)* ft;
     long[3] reserved;
 }
-alias MI_MainFunction = MI_Module* function(MI_Server*);
+alias MI_MainFunction = MI_Module* function(MI_Server* server);
 struct MI_QualifierSetFT
 {
     long GetQualifierCount;
@@ -1165,14 +1165,14 @@ enum : int
     MI_OperationCallback_ResponseType_YesToAll = 0x00000003,
 }
 
-alias MI_OperationCallback_PromptUser = void function(MI_Operation*, void*, const(ushort)*, MI_PromptType, long);
-alias MI_OperationCallback_WriteError = void function(MI_Operation*, void*, MI_Instance*, long);
-alias MI_OperationCallback_WriteMessage = void function(MI_Operation*, void*, uint, const(ushort)*);
-alias MI_OperationCallback_WriteProgress = void function(MI_Operation*, void*, const(ushort)*, const(ushort)*, const(ushort)*, uint, uint);
-alias MI_OperationCallback_Instance = void function(MI_Operation*, void*, const(MI_Instance)*, ubyte, MI_Result, const(ushort)*, const(MI_Instance)*, long);
-alias MI_OperationCallback_StreamedParameter = void function(MI_Operation*, void*, const(ushort)*, MI_Type, const(MI_Value)*, long);
-alias MI_OperationCallback_Indication = void function(MI_Operation*, void*, const(MI_Instance)*, const(ushort)*, const(ushort)*, ubyte, MI_Result, const(ushort)*, const(MI_Instance)*, long);
-alias MI_OperationCallback_Class = void function(MI_Operation*, void*, const(MI_Class)*, ubyte, MI_Result, const(ushort)*, const(MI_Instance)*, long);
+alias MI_OperationCallback_PromptUser = void function(MI_Operation* operation, void* callbackContext, const(ushort)* message, MI_PromptType promptType, long promptUserResult);
+alias MI_OperationCallback_WriteError = void function(MI_Operation* operation, void* callbackContext, MI_Instance* instance, long writeErrorResult);
+alias MI_OperationCallback_WriteMessage = void function(MI_Operation* operation, void* callbackContext, uint channel, const(ushort)* message);
+alias MI_OperationCallback_WriteProgress = void function(MI_Operation* operation, void* callbackContext, const(ushort)* activity, const(ushort)* currentOperation, const(ushort)* statusDescription, uint percentageComplete, uint secondsRemaining);
+alias MI_OperationCallback_Instance = void function(MI_Operation* operation, void* callbackContext, const(MI_Instance)* instance, ubyte moreResults, MI_Result resultCode, const(ushort)* errorString, const(MI_Instance)* errorDetails, long resultAcknowledgement);
+alias MI_OperationCallback_StreamedParameter = void function(MI_Operation* operation, void* callbackContext, const(ushort)* parameterName, MI_Type resultType, const(MI_Value)* result, long resultAcknowledgement);
+alias MI_OperationCallback_Indication = void function(MI_Operation* operation, void* callbackContext, const(MI_Instance)* instance, const(ushort)* bookmark, const(ushort)* machineID, ubyte moreResults, MI_Result resultCode, const(ushort)* errorString, const(MI_Instance)* errorDetails, long resultAcknowledgement);
+alias MI_OperationCallback_Class = void function(MI_Operation* operation, void* callbackContext, const(MI_Class)* classResult, ubyte moreResults, MI_Result resultCode, const(ushort)* errorString, const(MI_Instance)* errorDetails, long resultAcknowledgement);
 struct MI_OperationCallbacks
 {
     void* callbackContext;
@@ -1255,7 +1255,7 @@ struct MI_SerializerFT
     long SerializeClass;
     long SerializeInstance;
 }
-alias MI_Deserializer_ClassObjectNeeded = MI_Result function(void*, const(ushort)*, const(ushort)*, const(ushort)*, MI_Class**);
+alias MI_Deserializer_ClassObjectNeeded = MI_Result function(void* context, const(ushort)* serverName, const(ushort)* namespaceName, const(ushort)* className, MI_Class** requestedClassObject);
 struct MI_DeserializerFT
 {
     long Close;
@@ -1462,46 +1462,46 @@ enum : int
 enum IID_IWbemPathKeyList = GUID(0x9ae62877, 0x7544, 0x4bb0, [0xaa, 0x26, 0xa1, 0x38, 0x24, 0x65, 0x9e, 0xd6]);
 interface IWbemPathKeyList : IUnknown
 {
-    HRESULT GetCount(uint*);
-    HRESULT SetKey(const(wchar)*, uint, uint, void*);
-    HRESULT SetKey2(const(wchar)*, uint, uint, VARIANT*);
-    HRESULT GetKey(uint, uint, uint*, PWSTR, uint*, void*, uint*);
-    HRESULT GetKey2(uint, uint, uint*, PWSTR, VARIANT*, uint*);
-    HRESULT RemoveKey(const(wchar)*, uint);
-    HRESULT RemoveAllKeys(uint);
-    HRESULT MakeSingleton(ubyte);
-    HRESULT GetInfo(uint, ulong*);
-    HRESULT GetText(int, uint*, PWSTR);
+    HRESULT GetCount(uint* puKeyCount);
+    HRESULT SetKey(const(wchar)* wszName, uint uFlags, uint uCimType, void* pKeyVal);
+    HRESULT SetKey2(const(wchar)* wszName, uint uFlags, uint uCimType, VARIANT* pKeyVal);
+    HRESULT GetKey(uint uKeyIx, uint uFlags, uint* puNameBufSize, PWSTR pszKeyName, uint* puKeyValBufSize, void* pKeyVal, uint* puApparentCimType);
+    HRESULT GetKey2(uint uKeyIx, uint uFlags, uint* puNameBufSize, PWSTR pszKeyName, VARIANT* pKeyValue, uint* puApparentCimType);
+    HRESULT RemoveKey(const(wchar)* wszName, uint uFlags);
+    HRESULT RemoveAllKeys(uint uFlags);
+    HRESULT MakeSingleton(ubyte bSet);
+    HRESULT GetInfo(uint uRequestedInfo, ulong* puResponse);
+    HRESULT GetText(int lFlags, uint* puBuffLength, PWSTR pszText);
 }
 enum IID_IWbemPath = GUID(0x3bc15af2, 0x736c, 0x477e, [0x9e, 0x51, 0x23, 0x8a, 0xf8, 0x66, 0x7d, 0xcc]);
 interface IWbemPath : IUnknown
 {
-    HRESULT SetText(uint, const(wchar)*);
-    HRESULT GetText(int, uint*, PWSTR);
-    HRESULT GetInfo(uint, ulong*);
-    HRESULT SetServer(const(wchar)*);
-    HRESULT GetServer(uint*, PWSTR);
-    HRESULT GetNamespaceCount(uint*);
-    HRESULT SetNamespaceAt(uint, const(wchar)*);
-    HRESULT GetNamespaceAt(uint, uint*, PWSTR);
-    HRESULT RemoveNamespaceAt(uint);
+    HRESULT SetText(uint uMode, const(wchar)* pszPath);
+    HRESULT GetText(int lFlags, uint* puBuffLength, PWSTR pszText);
+    HRESULT GetInfo(uint uRequestedInfo, ulong* puResponse);
+    HRESULT SetServer(const(wchar)* Name);
+    HRESULT GetServer(uint* puNameBufLength, PWSTR pName);
+    HRESULT GetNamespaceCount(uint* puCount);
+    HRESULT SetNamespaceAt(uint uIndex, const(wchar)* pszName);
+    HRESULT GetNamespaceAt(uint uIndex, uint* puNameBufLength, PWSTR pName);
+    HRESULT RemoveNamespaceAt(uint uIndex);
     HRESULT RemoveAllNamespaces();
-    HRESULT GetScopeCount(uint*);
-    HRESULT SetScope(uint, PWSTR);
-    HRESULT SetScopeFromText(uint, PWSTR);
-    HRESULT GetScope(uint, uint*, PWSTR, IWbemPathKeyList*);
-    HRESULT GetScopeAsText(uint, uint*, PWSTR);
-    HRESULT RemoveScope(uint);
+    HRESULT GetScopeCount(uint* puCount);
+    HRESULT SetScope(uint uIndex, PWSTR pszClass);
+    HRESULT SetScopeFromText(uint uIndex, PWSTR pszText);
+    HRESULT GetScope(uint uIndex, uint* puClassNameBufSize, PWSTR pszClass, IWbemPathKeyList* pKeyList);
+    HRESULT GetScopeAsText(uint uIndex, uint* puTextBufSize, PWSTR pszText);
+    HRESULT RemoveScope(uint uIndex);
     HRESULT RemoveAllScopes();
-    HRESULT SetClassName(const(wchar)*);
-    HRESULT GetClassName(uint*, PWSTR);
-    HRESULT GetKeyList(IWbemPathKeyList*);
-    HRESULT CreateClassPart(int, const(wchar)*);
-    HRESULT DeleteClassPart(int);
-    BOOL IsRelative(PWSTR, PWSTR);
-    BOOL IsRelativeOrChild(PWSTR, PWSTR, int);
-    BOOL IsLocal(const(wchar)*);
-    BOOL IsSameClassName(const(wchar)*);
+    HRESULT SetClassName(const(wchar)* Name);
+    HRESULT GetClassName(uint* puBuffLength, PWSTR pszName);
+    HRESULT GetKeyList(IWbemPathKeyList* pOut);
+    HRESULT CreateClassPart(int lFlags, const(wchar)* Name);
+    HRESULT DeleteClassPart(int lFlags);
+    BOOL IsRelative(PWSTR wszMachine, PWSTR wszNamespace);
+    BOOL IsRelativeOrChild(PWSTR wszMachine, PWSTR wszNamespace, int lFlags);
+    BOOL IsLocal(const(wchar)* wszMachine);
+    BOOL IsSameClassName(const(wchar)* wszClass);
 }
 enum CLSID_WbemDefPath = GUID(0xcf4cc405, 0xe2c5, 0x4ddd, [0xb3, 0xce, 0x5e, 0x75, 0x82, 0xd8, 0xc9, 0xfa]);
 struct WbemDefPath
@@ -1511,12 +1511,12 @@ enum IID_IWbemQuery = GUID(0x81166f58, 0xdd98, 0x11d3, [0xa1, 0x20, 0x0, 0x10, 0
 interface IWbemQuery : IUnknown
 {
     HRESULT Empty();
-    HRESULT SetLanguageFeatures(uint, uint, uint*);
-    HRESULT TestLanguageFeatures(uint, uint*, uint*);
-    HRESULT Parse(const(wchar)*, const(wchar)*, uint);
-    HRESULT GetAnalysis(uint, uint, void**);
-    HRESULT FreeMemory(void*);
-    HRESULT GetQueryInfo(uint, uint, uint, void*);
+    HRESULT SetLanguageFeatures(uint uFlags, uint uArraySize, uint* puFeatures);
+    HRESULT TestLanguageFeatures(uint uFlags, uint* uArraySize, uint* puFeatures);
+    HRESULT Parse(const(wchar)* pszLang, const(wchar)* pszQuery, uint uFlags);
+    HRESULT GetAnalysis(uint uAnalysisType, uint uFlags, void** pAnalysis);
+    HRESULT FreeMemory(void* pMem);
+    HRESULT GetQueryInfo(uint uAnalysisType, uint uInfoId, uint uBufSize, void* pDestBuf);
 }
 enum CLSID_WbemQuery = GUID(0xeac8a024, 0x21e2, 0x4523, [0xad, 0x73, 0xa7, 0x1a, 0xa, 0xa2, 0xf5, 0x6a]);
 struct WbemQuery
@@ -2155,145 +2155,145 @@ enum : int
 enum IID_IWbemClassObject = GUID(0xdc12a681, 0x737f, 0x11cf, [0x88, 0x4d, 0x0, 0xaa, 0x0, 0x4b, 0x2e, 0x24]);
 interface IWbemClassObject : IUnknown
 {
-    HRESULT GetQualifierSet(IWbemQualifierSet*);
-    HRESULT Get(const(wchar)*, int, VARIANT*, int*, int*);
-    HRESULT Put(const(wchar)*, int, VARIANT*, int);
-    HRESULT Delete(const(wchar)*);
-    HRESULT GetNames(const(wchar)*, WBEM_CONDITION_FLAG_TYPE, VARIANT*, SAFEARRAY**);
-    HRESULT BeginEnumeration(int);
-    HRESULT Next(int, BSTR*, VARIANT*, int*, int*);
+    HRESULT GetQualifierSet(IWbemQualifierSet* ppQualSet);
+    HRESULT Get(const(wchar)* wszName, int lFlags, VARIANT* pVal, int* pType, int* plFlavor);
+    HRESULT Put(const(wchar)* wszName, int lFlags, VARIANT* pVal, int Type);
+    HRESULT Delete(const(wchar)* wszName);
+    HRESULT GetNames(const(wchar)* wszQualifierName, WBEM_CONDITION_FLAG_TYPE lFlags, VARIANT* pQualifierVal, SAFEARRAY** pNames);
+    HRESULT BeginEnumeration(int lEnumFlags);
+    HRESULT Next(int lFlags, BSTR* strName, VARIANT* pVal, int* pType, int* plFlavor);
     HRESULT EndEnumeration();
-    HRESULT GetPropertyQualifierSet(const(wchar)*, IWbemQualifierSet*);
-    HRESULT Clone(IWbemClassObject*);
-    HRESULT GetObjectText(int, BSTR*);
-    HRESULT SpawnDerivedClass(int, IWbemClassObject*);
-    HRESULT SpawnInstance(int, IWbemClassObject*);
-    HRESULT CompareTo(WBEM_COMPARISON_FLAG, IWbemClassObject);
-    HRESULT GetPropertyOrigin(const(wchar)*, BSTR*);
-    HRESULT InheritsFrom(const(wchar)*);
-    HRESULT GetMethod(const(wchar)*, int, IWbemClassObject*, IWbemClassObject*);
-    HRESULT PutMethod(const(wchar)*, int, IWbemClassObject, IWbemClassObject);
-    HRESULT DeleteMethod(const(wchar)*);
-    HRESULT BeginMethodEnumeration(int);
-    HRESULT NextMethod(int, BSTR*, IWbemClassObject*, IWbemClassObject*);
+    HRESULT GetPropertyQualifierSet(const(wchar)* wszProperty, IWbemQualifierSet* ppQualSet);
+    HRESULT Clone(IWbemClassObject* ppCopy);
+    HRESULT GetObjectText(int lFlags, BSTR* pstrObjectText);
+    HRESULT SpawnDerivedClass(int lFlags, IWbemClassObject* ppNewClass);
+    HRESULT SpawnInstance(int lFlags, IWbemClassObject* ppNewInstance);
+    HRESULT CompareTo(WBEM_COMPARISON_FLAG lFlags, IWbemClassObject pCompareTo);
+    HRESULT GetPropertyOrigin(const(wchar)* wszName, BSTR* pstrClassName);
+    HRESULT InheritsFrom(const(wchar)* strAncestor);
+    HRESULT GetMethod(const(wchar)* wszName, int lFlags, IWbemClassObject* ppInSignature, IWbemClassObject* ppOutSignature);
+    HRESULT PutMethod(const(wchar)* wszName, int lFlags, IWbemClassObject pInSignature, IWbemClassObject pOutSignature);
+    HRESULT DeleteMethod(const(wchar)* wszName);
+    HRESULT BeginMethodEnumeration(int lEnumFlags);
+    HRESULT NextMethod(int lFlags, BSTR* pstrName, IWbemClassObject* ppInSignature, IWbemClassObject* ppOutSignature);
     HRESULT EndMethodEnumeration();
-    HRESULT GetMethodQualifierSet(const(wchar)*, IWbemQualifierSet*);
-    HRESULT GetMethodOrigin(const(wchar)*, BSTR*);
+    HRESULT GetMethodQualifierSet(const(wchar)* wszMethod, IWbemQualifierSet* ppQualSet);
+    HRESULT GetMethodOrigin(const(wchar)* wszMethodName, BSTR* pstrClassName);
 }
 enum IID_IWbemObjectAccess = GUID(0x49353c9a, 0x516b, 0x11d1, [0xae, 0xa6, 0x0, 0xc0, 0x4f, 0xb6, 0x88, 0x20]);
 interface IWbemObjectAccess : IWbemClassObject
 {
-    HRESULT GetPropertyHandle(const(wchar)*, int*, int*);
-    HRESULT WritePropertyValue(int, int, const(ubyte)*);
-    HRESULT ReadPropertyValue(int, int, int*, ubyte*);
-    HRESULT ReadDWORD(int, uint*);
-    HRESULT WriteDWORD(int, uint);
-    HRESULT ReadQWORD(int, ulong*);
-    HRESULT WriteQWORD(int, ulong);
-    HRESULT GetPropertyInfoByHandle(int, BSTR*, int*);
-    HRESULT Lock(int);
-    HRESULT Unlock(int);
+    HRESULT GetPropertyHandle(const(wchar)* wszPropertyName, int* pType, int* plHandle);
+    HRESULT WritePropertyValue(int lHandle, int lNumBytes, const(ubyte)* aData);
+    HRESULT ReadPropertyValue(int lHandle, int lBufferSize, int* plNumBytes, ubyte* aData);
+    HRESULT ReadDWORD(int lHandle, uint* pdw);
+    HRESULT WriteDWORD(int lHandle, uint dw);
+    HRESULT ReadQWORD(int lHandle, ulong* pqw);
+    HRESULT WriteQWORD(int lHandle, ulong pw);
+    HRESULT GetPropertyInfoByHandle(int lHandle, BSTR* pstrName, int* pType);
+    HRESULT Lock(int lFlags);
+    HRESULT Unlock(int lFlags);
 }
 enum IID_IWbemQualifierSet = GUID(0xdc12a680, 0x737f, 0x11cf, [0x88, 0x4d, 0x0, 0xaa, 0x0, 0x4b, 0x2e, 0x24]);
 interface IWbemQualifierSet : IUnknown
 {
-    HRESULT Get(const(wchar)*, int, VARIANT*, int*);
-    HRESULT Put(const(wchar)*, VARIANT*, int);
-    HRESULT Delete(const(wchar)*);
-    HRESULT GetNames(int, SAFEARRAY**);
-    HRESULT BeginEnumeration(int);
-    HRESULT Next(int, BSTR*, VARIANT*, int*);
+    HRESULT Get(const(wchar)* wszName, int lFlags, VARIANT* pVal, int* plFlavor);
+    HRESULT Put(const(wchar)* wszName, VARIANT* pVal, int lFlavor);
+    HRESULT Delete(const(wchar)* wszName);
+    HRESULT GetNames(int lFlags, SAFEARRAY** pNames);
+    HRESULT BeginEnumeration(int lFlags);
+    HRESULT Next(int lFlags, BSTR* pstrName, VARIANT* pVal, int* plFlavor);
     HRESULT EndEnumeration();
 }
 enum IID_IWbemServices = GUID(0x9556dc99, 0x828c, 0x11cf, [0xa3, 0x7e, 0x0, 0xaa, 0x0, 0x32, 0x40, 0xc7]);
 interface IWbemServices : IUnknown
 {
-    HRESULT OpenNamespace(const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemServices*, IWbemCallResult*);
-    HRESULT CancelAsyncCall(IWbemObjectSink);
-    HRESULT QueryObjectSink(WBEM_GENERIC_FLAG_TYPE, IWbemObjectSink*);
-    HRESULT GetObject(const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemClassObject*, IWbemCallResult*);
-    HRESULT GetObjectAsync(const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemObjectSink);
-    HRESULT PutClass(IWbemClassObject, WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemCallResult*);
-    HRESULT PutClassAsync(IWbemClassObject, WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemObjectSink);
-    HRESULT DeleteClass(const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemCallResult*);
-    HRESULT DeleteClassAsync(const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemObjectSink);
-    HRESULT CreateClassEnum(const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IEnumWbemClassObject*);
-    HRESULT CreateClassEnumAsync(const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemObjectSink);
-    HRESULT PutInstance(IWbemClassObject, WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemCallResult*);
-    HRESULT PutInstanceAsync(IWbemClassObject, WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemObjectSink);
-    HRESULT DeleteInstance(const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemCallResult*);
-    HRESULT DeleteInstanceAsync(const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemObjectSink);
-    HRESULT CreateInstanceEnum(const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IEnumWbemClassObject*);
-    HRESULT CreateInstanceEnumAsync(const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemObjectSink);
-    HRESULT ExecQuery(const(BSTR), const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IEnumWbemClassObject*);
-    HRESULT ExecQueryAsync(const(BSTR), const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemObjectSink);
-    HRESULT ExecNotificationQuery(const(BSTR), const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IEnumWbemClassObject*);
-    HRESULT ExecNotificationQueryAsync(const(BSTR), const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemObjectSink);
-    HRESULT ExecMethod(const(BSTR), const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemClassObject, IWbemClassObject*, IWbemCallResult*);
-    HRESULT ExecMethodAsync(const(BSTR), const(BSTR), WBEM_GENERIC_FLAG_TYPE, IWbemContext, IWbemClassObject, IWbemObjectSink);
+    HRESULT OpenNamespace(const(BSTR) strNamespace, WBEM_GENERIC_FLAG_TYPE lFlags, IWbemContext pCtx, IWbemServices* ppWorkingNamespace, IWbemCallResult* ppResult);
+    HRESULT CancelAsyncCall(IWbemObjectSink pSink);
+    HRESULT QueryObjectSink(WBEM_GENERIC_FLAG_TYPE lFlags, IWbemObjectSink* ppResponseHandler);
+    HRESULT GetObject(const(BSTR) strObjectPath, WBEM_GENERIC_FLAG_TYPE lFlags, IWbemContext pCtx, IWbemClassObject* ppObject, IWbemCallResult* ppCallResult);
+    HRESULT GetObjectAsync(const(BSTR) strObjectPath, WBEM_GENERIC_FLAG_TYPE lFlags, IWbemContext pCtx, IWbemObjectSink pResponseHandler);
+    HRESULT PutClass(IWbemClassObject pObject, WBEM_GENERIC_FLAG_TYPE lFlags, IWbemContext pCtx, IWbemCallResult* ppCallResult);
+    HRESULT PutClassAsync(IWbemClassObject pObject, WBEM_GENERIC_FLAG_TYPE lFlags, IWbemContext pCtx, IWbemObjectSink pResponseHandler);
+    HRESULT DeleteClass(const(BSTR) strClass, WBEM_GENERIC_FLAG_TYPE lFlags, IWbemContext pCtx, IWbemCallResult* ppCallResult);
+    HRESULT DeleteClassAsync(const(BSTR) strClass, WBEM_GENERIC_FLAG_TYPE lFlags, IWbemContext pCtx, IWbemObjectSink pResponseHandler);
+    HRESULT CreateClassEnum(const(BSTR) strSuperclass, WBEM_GENERIC_FLAG_TYPE lFlags, IWbemContext pCtx, IEnumWbemClassObject* ppEnum);
+    HRESULT CreateClassEnumAsync(const(BSTR) strSuperclass, WBEM_GENERIC_FLAG_TYPE lFlags, IWbemContext pCtx, IWbemObjectSink pResponseHandler);
+    HRESULT PutInstance(IWbemClassObject pInst, WBEM_GENERIC_FLAG_TYPE lFlags, IWbemContext pCtx, IWbemCallResult* ppCallResult);
+    HRESULT PutInstanceAsync(IWbemClassObject pInst, WBEM_GENERIC_FLAG_TYPE lFlags, IWbemContext pCtx, IWbemObjectSink pResponseHandler);
+    HRESULT DeleteInstance(const(BSTR) strObjectPath, WBEM_GENERIC_FLAG_TYPE lFlags, IWbemContext pCtx, IWbemCallResult* ppCallResult);
+    HRESULT DeleteInstanceAsync(const(BSTR) strObjectPath, WBEM_GENERIC_FLAG_TYPE lFlags, IWbemContext pCtx, IWbemObjectSink pResponseHandler);
+    HRESULT CreateInstanceEnum(const(BSTR) strFilter, WBEM_GENERIC_FLAG_TYPE lFlags, IWbemContext pCtx, IEnumWbemClassObject* ppEnum);
+    HRESULT CreateInstanceEnumAsync(const(BSTR) strFilter, WBEM_GENERIC_FLAG_TYPE lFlags, IWbemContext pCtx, IWbemObjectSink pResponseHandler);
+    HRESULT ExecQuery(const(BSTR) strQueryLanguage, const(BSTR) strQuery, WBEM_GENERIC_FLAG_TYPE lFlags, IWbemContext pCtx, IEnumWbemClassObject* ppEnum);
+    HRESULT ExecQueryAsync(const(BSTR) strQueryLanguage, const(BSTR) strQuery, WBEM_GENERIC_FLAG_TYPE lFlags, IWbemContext pCtx, IWbemObjectSink pResponseHandler);
+    HRESULT ExecNotificationQuery(const(BSTR) strQueryLanguage, const(BSTR) strQuery, WBEM_GENERIC_FLAG_TYPE lFlags, IWbemContext pCtx, IEnumWbemClassObject* ppEnum);
+    HRESULT ExecNotificationQueryAsync(const(BSTR) strQueryLanguage, const(BSTR) strQuery, WBEM_GENERIC_FLAG_TYPE lFlags, IWbemContext pCtx, IWbemObjectSink pResponseHandler);
+    HRESULT ExecMethod(const(BSTR) strObjectPath, const(BSTR) strMethodName, WBEM_GENERIC_FLAG_TYPE lFlags, IWbemContext pCtx, IWbemClassObject pInParams, IWbemClassObject* ppOutParams, IWbemCallResult* ppCallResult);
+    HRESULT ExecMethodAsync(const(BSTR) strObjectPath, const(BSTR) strMethodName, WBEM_GENERIC_FLAG_TYPE lFlags, IWbemContext pCtx, IWbemClassObject pInParams, IWbemObjectSink pResponseHandler);
 }
 enum IID_IWbemLocator = GUID(0xdc12a687, 0x737f, 0x11cf, [0x88, 0x4d, 0x0, 0xaa, 0x0, 0x4b, 0x2e, 0x24]);
 interface IWbemLocator : IUnknown
 {
-    HRESULT ConnectServer(const(BSTR), const(BSTR), const(BSTR), const(BSTR), int, const(BSTR), IWbemContext, IWbemServices*);
+    HRESULT ConnectServer(const(BSTR) strNetworkResource, const(BSTR) strUser, const(BSTR) strPassword, const(BSTR) strLocale, int lSecurityFlags, const(BSTR) strAuthority, IWbemContext pCtx, IWbemServices* ppNamespace);
 }
 enum IID_IWbemObjectSink = GUID(0x7c857801, 0x7381, 0x11cf, [0x88, 0x4d, 0x0, 0xaa, 0x0, 0x4b, 0x2e, 0x24]);
 interface IWbemObjectSink : IUnknown
 {
-    HRESULT Indicate(int, IWbemClassObject*);
-    HRESULT SetStatus(int, HRESULT, BSTR, IWbemClassObject);
+    HRESULT Indicate(int lObjectCount, IWbemClassObject* apObjArray);
+    HRESULT SetStatus(int lFlags, HRESULT hResult, BSTR strParam, IWbemClassObject pObjParam);
 }
 enum IID_IEnumWbemClassObject = GUID(0x27947e1, 0xd731, 0x11ce, [0xa3, 0x57, 0x0, 0x0, 0x0, 0x0, 0x0, 0x1]);
 interface IEnumWbemClassObject : IUnknown
 {
     HRESULT Reset();
-    HRESULT Next(int, uint, IWbemClassObject*, uint*);
-    HRESULT NextAsync(uint, IWbemObjectSink);
-    HRESULT Clone(IEnumWbemClassObject*);
-    HRESULT Skip(int, uint);
+    HRESULT Next(int lTimeout, uint uCount, IWbemClassObject* apObjects, uint* puReturned);
+    HRESULT NextAsync(uint uCount, IWbemObjectSink pSink);
+    HRESULT Clone(IEnumWbemClassObject* ppEnum);
+    HRESULT Skip(int lTimeout, uint nCount);
 }
 enum IID_IWbemCallResult = GUID(0x44aca675, 0xe8fc, 0x11d0, [0xa0, 0x7c, 0x0, 0xc0, 0x4f, 0xb6, 0x88, 0x20]);
 interface IWbemCallResult : IUnknown
 {
-    HRESULT GetResultObject(int, IWbemClassObject*);
-    HRESULT GetResultString(int, BSTR*);
-    HRESULT GetResultServices(int, IWbemServices*);
-    HRESULT GetCallStatus(int, int*);
+    HRESULT GetResultObject(int lTimeout, IWbemClassObject* ppResultObject);
+    HRESULT GetResultString(int lTimeout, BSTR* pstrResultString);
+    HRESULT GetResultServices(int lTimeout, IWbemServices* ppServices);
+    HRESULT GetCallStatus(int lTimeout, int* plStatus);
 }
 enum IID_IWbemContext = GUID(0x44aca674, 0xe8fc, 0x11d0, [0xa0, 0x7c, 0x0, 0xc0, 0x4f, 0xb6, 0x88, 0x20]);
 interface IWbemContext : IUnknown
 {
-    HRESULT Clone(IWbemContext*);
-    HRESULT GetNames(int, SAFEARRAY**);
-    HRESULT BeginEnumeration(int);
-    HRESULT Next(int, BSTR*, VARIANT*);
+    HRESULT Clone(IWbemContext* ppNewCopy);
+    HRESULT GetNames(int lFlags, SAFEARRAY** pNames);
+    HRESULT BeginEnumeration(int lFlags);
+    HRESULT Next(int lFlags, BSTR* pstrName, VARIANT* pValue);
     HRESULT EndEnumeration();
-    HRESULT SetValue(const(wchar)*, int, VARIANT*);
-    HRESULT GetValue(const(wchar)*, int, VARIANT*);
-    HRESULT DeleteValue(const(wchar)*, int);
+    HRESULT SetValue(const(wchar)* wszName, int lFlags, VARIANT* pValue);
+    HRESULT GetValue(const(wchar)* wszName, int lFlags, VARIANT* pValue);
+    HRESULT DeleteValue(const(wchar)* wszName, int lFlags);
     HRESULT DeleteAll();
 }
 enum IID_IUnsecuredApartment = GUID(0x1cfaba8c, 0x1523, 0x11d1, [0xad, 0x79, 0x0, 0xc0, 0x4f, 0xd8, 0xfd, 0xff]);
 interface IUnsecuredApartment : IUnknown
 {
-    HRESULT CreateObjectStub(IUnknown, IUnknown*);
+    HRESULT CreateObjectStub(IUnknown pObject, IUnknown* ppStub);
 }
 enum IID_IWbemUnsecuredApartment = GUID(0x31739d04, 0x3471, 0x4cf4, [0x9a, 0x7c, 0x57, 0xa4, 0x4a, 0xe7, 0x19, 0x56]);
 interface IWbemUnsecuredApartment : IUnsecuredApartment
 {
-    HRESULT CreateSinkStub(IWbemObjectSink, uint, const(wchar)*, IWbemObjectSink*);
+    HRESULT CreateSinkStub(IWbemObjectSink pSink, uint dwFlags, const(wchar)* wszReserved, IWbemObjectSink* ppStub);
 }
 enum IID_IWbemStatusCodeText = GUID(0xeb87e1bc, 0x3233, 0x11d2, [0xae, 0xc9, 0x0, 0xc0, 0x4f, 0xb6, 0x88, 0x20]);
 interface IWbemStatusCodeText : IUnknown
 {
-    HRESULT GetErrorCodeText(HRESULT, uint, int, BSTR*);
-    HRESULT GetFacilityCodeText(HRESULT, uint, int, BSTR*);
+    HRESULT GetErrorCodeText(HRESULT hRes, uint LocaleId, int lFlags, BSTR* MessageText);
+    HRESULT GetFacilityCodeText(HRESULT hRes, uint LocaleId, int lFlags, BSTR* MessageText);
 }
 enum IID_IWbemBackupRestore = GUID(0xc49e32c7, 0xbc8b, 0x11d2, [0x85, 0xd4, 0x0, 0x10, 0x5a, 0x1f, 0x83, 0x4]);
 interface IWbemBackupRestore : IUnknown
 {
-    HRESULT Backup(const(wchar)*, int);
-    HRESULT Restore(const(wchar)*, int);
+    HRESULT Backup(const(wchar)* strBackupToFile, int lFlags);
+    HRESULT Restore(const(wchar)* strRestoreFromFile, int lFlags);
 }
 enum IID_IWbemBackupRestoreEx = GUID(0xa359dec5, 0xe813, 0x4834, [0x8a, 0x2a, 0xba, 0x7f, 0x1d, 0x77, 0x7d, 0x76]);
 interface IWbemBackupRestoreEx : IWbemBackupRestore
@@ -2304,24 +2304,24 @@ interface IWbemBackupRestoreEx : IWbemBackupRestore
 enum IID_IWbemRefresher = GUID(0x49353c99, 0x516b, 0x11d1, [0xae, 0xa6, 0x0, 0xc0, 0x4f, 0xb6, 0x88, 0x20]);
 interface IWbemRefresher : IUnknown
 {
-    HRESULT Refresh(int);
+    HRESULT Refresh(int lFlags);
 }
 enum IID_IWbemHiPerfEnum = GUID(0x2705c288, 0x79ae, 0x11d2, [0xb3, 0x48, 0x0, 0x10, 0x5a, 0x1f, 0x81, 0x77]);
 interface IWbemHiPerfEnum : IUnknown
 {
-    HRESULT AddObjects(int, uint, int*, IWbemObjectAccess*);
-    HRESULT RemoveObjects(int, uint, int*);
-    HRESULT GetObjects(int, uint, IWbemObjectAccess*, uint*);
-    HRESULT RemoveAll(int);
+    HRESULT AddObjects(int lFlags, uint uNumObjects, int* apIds, IWbemObjectAccess* apObj);
+    HRESULT RemoveObjects(int lFlags, uint uNumObjects, int* apIds);
+    HRESULT GetObjects(int lFlags, uint uNumObjects, IWbemObjectAccess* apObj, uint* puReturned);
+    HRESULT RemoveAll(int lFlags);
 }
 enum IID_IWbemConfigureRefresher = GUID(0x49353c92, 0x516b, 0x11d1, [0xae, 0xa6, 0x0, 0xc0, 0x4f, 0xb6, 0x88, 0x20]);
 interface IWbemConfigureRefresher : IUnknown
 {
-    HRESULT AddObjectByPath(IWbemServices, const(wchar)*, int, IWbemContext, IWbemClassObject*, int*);
-    HRESULT AddObjectByTemplate(IWbemServices, IWbemClassObject, int, IWbemContext, IWbemClassObject*, int*);
-    HRESULT AddRefresher(IWbemRefresher, int, int*);
-    HRESULT Remove(int, int);
-    HRESULT AddEnum(IWbemServices, const(wchar)*, int, IWbemContext, IWbemHiPerfEnum*, int*);
+    HRESULT AddObjectByPath(IWbemServices pNamespace, const(wchar)* wszPath, int lFlags, IWbemContext pContext, IWbemClassObject* ppRefreshable, int* plId);
+    HRESULT AddObjectByTemplate(IWbemServices pNamespace, IWbemClassObject pTemplate, int lFlags, IWbemContext pContext, IWbemClassObject* ppRefreshable, int* plId);
+    HRESULT AddRefresher(IWbemRefresher pRefresher, int lFlags, int* plId);
+    HRESULT Remove(int lId, int lFlags);
+    HRESULT AddEnum(IWbemServices pNamespace, const(wchar)* wszClassName, int lFlags, IWbemContext pContext, IWbemHiPerfEnum* ppEnum, int* plId);
 }
 enum CLSID_WbemLocator = GUID(0x4590f811, 0x1d3a, 0x11d0, [0x89, 0x1f, 0x0, 0xaa, 0x0, 0x4b, 0x2e, 0x24]);
 struct WbemLocator
@@ -2362,16 +2362,16 @@ struct WbemObjectTextSrc
 enum IID_IWbemObjectSinkEx = GUID(0xe7d35cfa, 0x348b, 0x485e, [0xb5, 0x24, 0x25, 0x27, 0x25, 0xd6, 0x97, 0xca]);
 interface IWbemObjectSinkEx : IWbemObjectSink
 {
-    HRESULT WriteMessage(uint, const(BSTR));
-    HRESULT WriteError(IWbemClassObject, ubyte*);
-    HRESULT PromptUser(const(BSTR), ubyte, ubyte*);
-    HRESULT WriteProgress(const(BSTR), const(BSTR), const(BSTR), uint, uint);
-    HRESULT WriteStreamParameter(const(BSTR), VARIANT*, uint, uint);
+    HRESULT WriteMessage(uint uChannel, const(BSTR) strMessage);
+    HRESULT WriteError(IWbemClassObject pObjError, ubyte* puReturned);
+    HRESULT PromptUser(const(BSTR) strMessage, ubyte uPromptType, ubyte* puReturned);
+    HRESULT WriteProgress(const(BSTR) strActivity, const(BSTR) strCurrentOperation, const(BSTR) strStatusDescription, uint uPercentComplete, uint uSecondsRemaining);
+    HRESULT WriteStreamParameter(const(BSTR) strName, VARIANT* vtValue, uint ulType, uint ulFlags);
 }
 enum IID_IWbemShutdown = GUID(0xb7b31df9, 0xd515, 0x11d3, [0xa1, 0x1c, 0x0, 0x10, 0x5a, 0x1f, 0x51, 0x5a]);
 interface IWbemShutdown : IUnknown
 {
-    HRESULT Shutdown(int, uint, IWbemContext);
+    HRESULT Shutdown(int uReason, uint uMaxMilliseconds, IWbemContext pCtx);
 }
 alias WMI_OBJ_TEXT = int;
 enum : int
@@ -2394,8 +2394,8 @@ enum : int
 enum IID_IWbemObjectTextSrc = GUID(0xbfbf883a, 0xcad7, 0x11d3, [0xa1, 0x1b, 0x0, 0x10, 0x5a, 0x1f, 0x51, 0x5a]);
 interface IWbemObjectTextSrc : IUnknown
 {
-    HRESULT GetText(int, IWbemClassObject, uint, IWbemContext, BSTR*);
-    HRESULT CreateFromText(int, BSTR, uint, IWbemContext, IWbemClassObject*);
+    HRESULT GetText(int lFlags, IWbemClassObject pObj, uint uObjTextFormat, IWbemContext pCtx, BSTR* strText);
+    HRESULT CreateFromText(int lFlags, BSTR strText, uint uObjTextFormat, IWbemContext pCtx, IWbemClassObject* pNewObj);
 }
 struct WBEM_COMPILE_STATUS_INFO
 {
@@ -2429,9 +2429,9 @@ enum : int
 enum IID_IMofCompiler = GUID(0x6daf974e, 0x2e37, 0x11d2, [0xae, 0xc9, 0x0, 0xc0, 0x4f, 0xb6, 0x88, 0x20]);
 interface IMofCompiler : IUnknown
 {
-    HRESULT CompileFile(PWSTR, PWSTR, PWSTR, PWSTR, PWSTR, int, int, int, WBEM_COMPILE_STATUS_INFO*);
-    HRESULT CompileBuffer(int, ubyte*, PWSTR, PWSTR, PWSTR, PWSTR, int, int, int, WBEM_COMPILE_STATUS_INFO*);
-    HRESULT CreateBMOF(PWSTR, PWSTR, PWSTR, int, int, int, WBEM_COMPILE_STATUS_INFO*);
+    HRESULT CompileFile(PWSTR FileName, PWSTR ServerAndNamespace, PWSTR User, PWSTR Authority, PWSTR Password, int lOptionFlags, int lClassFlags, int lInstanceFlags, WBEM_COMPILE_STATUS_INFO* pInfo);
+    HRESULT CompileBuffer(int BuffSize, ubyte* pBuffer, PWSTR ServerAndNamespace, PWSTR User, PWSTR Authority, PWSTR Password, int lOptionFlags, int lClassFlags, int lInstanceFlags, WBEM_COMPILE_STATUS_INFO* pInfo);
+    HRESULT CreateBMOF(PWSTR TextFileName, PWSTR BMOFFileName, PWSTR ServerAndNamespace, int lOptionFlags, int lClassFlags, int lInstanceFlags, WBEM_COMPILE_STATUS_INFO* pInfo);
 }
 alias WBEM_UNSECAPP_FLAG_TYPE = int;
 enum : int
@@ -2459,59 +2459,59 @@ enum : int
 enum IID_IWbemPropertyProvider = GUID(0xce61e841, 0x65bc, 0x11d0, [0xb6, 0xbd, 0x0, 0xaa, 0x0, 0x32, 0x40, 0xc7]);
 interface IWbemPropertyProvider : IUnknown
 {
-    HRESULT GetProperty(int, const(BSTR), const(BSTR), const(BSTR), const(BSTR), VARIANT*);
-    HRESULT PutProperty(int, const(BSTR), const(BSTR), const(BSTR), const(BSTR), const(VARIANT)*);
+    HRESULT GetProperty(int lFlags, const(BSTR) strLocale, const(BSTR) strClassMapping, const(BSTR) strInstMapping, const(BSTR) strPropMapping, VARIANT* pvValue);
+    HRESULT PutProperty(int lFlags, const(BSTR) strLocale, const(BSTR) strClassMapping, const(BSTR) strInstMapping, const(BSTR) strPropMapping, const(VARIANT)* pvValue);
 }
 enum IID_IWbemUnboundObjectSink = GUID(0xe246107b, 0xb06e, 0x11d0, [0xad, 0x61, 0x0, 0xc0, 0x4f, 0xd8, 0xfd, 0xff]);
 interface IWbemUnboundObjectSink : IUnknown
 {
-    HRESULT IndicateToConsumer(IWbemClassObject, int, IWbemClassObject*);
+    HRESULT IndicateToConsumer(IWbemClassObject pLogicalConsumer, int lNumObjects, IWbemClassObject* apObjects);
 }
 enum IID_IWbemEventProvider = GUID(0xe245105b, 0xb06e, 0x11d0, [0xad, 0x61, 0x0, 0xc0, 0x4f, 0xd8, 0xfd, 0xff]);
 interface IWbemEventProvider : IUnknown
 {
-    HRESULT ProvideEvents(IWbemObjectSink, int);
+    HRESULT ProvideEvents(IWbemObjectSink pSink, int lFlags);
 }
 enum IID_IWbemEventProviderQuerySink = GUID(0x580acaf8, 0xfa1c, 0x11d0, [0xad, 0x72, 0x0, 0xc0, 0x4f, 0xd8, 0xfd, 0xff]);
 interface IWbemEventProviderQuerySink : IUnknown
 {
-    HRESULT NewQuery(uint, ushort*, ushort*);
-    HRESULT CancelQuery(uint);
+    HRESULT NewQuery(uint dwId, ushort* wszQueryLanguage, ushort* wszQuery);
+    HRESULT CancelQuery(uint dwId);
 }
 enum IID_IWbemEventProviderSecurity = GUID(0x631f7d96, 0xd993, 0x11d2, [0xb3, 0x39, 0x0, 0x10, 0x5a, 0x1f, 0x4a, 0xaf]);
 interface IWbemEventProviderSecurity : IUnknown
 {
-    HRESULT AccessCheck(ushort*, ushort*, int, const(ubyte)*);
+    HRESULT AccessCheck(ushort* wszQueryLanguage, ushort* wszQuery, int lSidLength, const(ubyte)* pSid);
 }
 enum IID_IWbemEventConsumerProvider = GUID(0xe246107a, 0xb06e, 0x11d0, [0xad, 0x61, 0x0, 0xc0, 0x4f, 0xd8, 0xfd, 0xff]);
 interface IWbemEventConsumerProvider : IUnknown
 {
-    HRESULT FindConsumer(IWbemClassObject, IWbemUnboundObjectSink*);
+    HRESULT FindConsumer(IWbemClassObject pLogicalConsumer, IWbemUnboundObjectSink* ppConsumer);
 }
 enum IID_IWbemProviderInitSink = GUID(0x1be41571, 0x91dd, 0x11d1, [0xae, 0xb2, 0x0, 0xc0, 0x4f, 0xb6, 0x88, 0x20]);
 interface IWbemProviderInitSink : IUnknown
 {
-    HRESULT SetStatus(int, int);
+    HRESULT SetStatus(int lStatus, int lFlags);
 }
 enum IID_IWbemProviderInit = GUID(0x1be41572, 0x91dd, 0x11d1, [0xae, 0xb2, 0x0, 0xc0, 0x4f, 0xb6, 0x88, 0x20]);
 interface IWbemProviderInit : IUnknown
 {
-    HRESULT Initialize(PWSTR, int, PWSTR, PWSTR, IWbemServices, IWbemContext, IWbemProviderInitSink);
+    HRESULT Initialize(PWSTR wszUser, int lFlags, PWSTR wszNamespace, PWSTR wszLocale, IWbemServices pNamespace, IWbemContext pCtx, IWbemProviderInitSink pInitSink);
 }
 enum IID_IWbemHiPerfProvider = GUID(0x49353c93, 0x516b, 0x11d1, [0xae, 0xa6, 0x0, 0xc0, 0x4f, 0xb6, 0x88, 0x20]);
 interface IWbemHiPerfProvider : IUnknown
 {
-    HRESULT QueryInstances(IWbemServices, PWSTR, int, IWbemContext, IWbemObjectSink);
-    HRESULT CreateRefresher(IWbemServices, int, IWbemRefresher*);
-    HRESULT CreateRefreshableObject(IWbemServices, IWbemObjectAccess, IWbemRefresher, int, IWbemContext, IWbemObjectAccess*, int*);
-    HRESULT StopRefreshing(IWbemRefresher, int, int);
-    HRESULT CreateRefreshableEnum(IWbemServices, const(wchar)*, IWbemRefresher, int, IWbemContext, IWbemHiPerfEnum, int*);
-    HRESULT GetObjects(IWbemServices, int, IWbemObjectAccess*, int, IWbemContext);
+    HRESULT QueryInstances(IWbemServices pNamespace, PWSTR wszClass, int lFlags, IWbemContext pCtx, IWbemObjectSink pSink);
+    HRESULT CreateRefresher(IWbemServices pNamespace, int lFlags, IWbemRefresher* ppRefresher);
+    HRESULT CreateRefreshableObject(IWbemServices pNamespace, IWbemObjectAccess pTemplate, IWbemRefresher pRefresher, int lFlags, IWbemContext pContext, IWbemObjectAccess* ppRefreshable, int* plId);
+    HRESULT StopRefreshing(IWbemRefresher pRefresher, int lId, int lFlags);
+    HRESULT CreateRefreshableEnum(IWbemServices pNamespace, const(wchar)* wszClass, IWbemRefresher pRefresher, int lFlags, IWbemContext pContext, IWbemHiPerfEnum pHiPerfEnum, int* plId);
+    HRESULT GetObjects(IWbemServices pNamespace, int lNumObjects, IWbemObjectAccess* apObj, int lFlags, IWbemContext pContext);
 }
 enum IID_IWbemDecoupledRegistrar = GUID(0x1005cbcf, 0xe64f, 0x4646, [0xbc, 0xd3, 0x3a, 0x8, 0x9d, 0x8a, 0x84, 0xb4]);
 interface IWbemDecoupledRegistrar : IUnknown
 {
-    HRESULT Register(int, IWbemContext, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, IUnknown);
+    HRESULT Register(int a_Flags, IWbemContext a_Context, const(wchar)* a_User, const(wchar)* a_Locale, const(wchar)* a_Scope, const(wchar)* a_Registration, IUnknown pIUnknown);
     HRESULT UnRegister();
 }
 enum CLSID_WbemAdministrativeLocator = GUID(0xcb8555cc, 0x9128, 0x11d1, [0xad, 0x9b, 0x0, 0xc0, 0x4f, 0xd8, 0xfd, 0xff]);
@@ -2537,7 +2537,7 @@ struct WbemDecoupledBasicEventProvider
 enum IID_IWbemProviderIdentity = GUID(0x631f7d97, 0xd993, 0x11d2, [0xb3, 0x39, 0x0, 0x10, 0x5a, 0x1f, 0x4a, 0xaf]);
 interface IWbemProviderIdentity : IUnknown
 {
-    HRESULT SetRegistrationObject(int, IWbemClassObject);
+    HRESULT SetRegistrationObject(int lFlags, IWbemClassObject pProvReg);
 }
 alias WBEM_EXTRA_RETURN_CODES = int;
 enum : int
@@ -2559,8 +2559,8 @@ enum : int
 enum IID_IWbemDecoupledBasicEventProvider = GUID(0x86336d20, 0xca11, 0x4786, [0x9e, 0xf1, 0xbc, 0x8a, 0x94, 0x6b, 0x42, 0xfc]);
 interface IWbemDecoupledBasicEventProvider : IWbemDecoupledRegistrar
 {
-    HRESULT GetSink(int, IWbemContext, IWbemObjectSink*);
-    HRESULT GetService(int, IWbemContext, IWbemServices*);
+    HRESULT GetSink(int a_Flags, IWbemContext a_Context, IWbemObjectSink* a_Sink);
+    HRESULT GetService(int a_Flags, IWbemContext a_Context, IWbemServices* a_Service);
 }
 alias WBEM_BATCH_TYPE = int;
 enum : int
@@ -2573,10 +2573,10 @@ enum : int
 enum IID_IWbemEventSink = GUID(0x3ae0080a, 0x7e3a, 0x4366, [0xbf, 0x89, 0xf, 0xee, 0xdc, 0x93, 0x16, 0x59]);
 interface IWbemEventSink : IWbemObjectSink
 {
-    HRESULT SetSinkSecurity(int, ubyte*);
+    HRESULT SetSinkSecurity(int lSDLength, ubyte* pSD);
     HRESULT IsActive();
-    HRESULT GetRestrictedSink(int, const(wchar)**, IUnknown, IWbemEventSink*);
-    HRESULT SetBatchingParameters(int, uint, uint);
+    HRESULT GetRestrictedSink(int lNumQueries, const(wchar)** awszQueries, IUnknown pCallback, IWbemEventSink* ppSink);
+    HRESULT SetBatchingParameters(int lFlags, uint dwMaxBufferSize, uint dwMaxSendLatency);
 }
 alias WbemChangeFlagEnum = int;
 enum : int
@@ -2866,181 +2866,181 @@ enum : int
 enum IID_ISWbemServices = GUID(0x76a6415c, 0xcb41, 0x11d1, [0x8b, 0x2, 0x0, 0x60, 0x8, 0x6, 0xd9, 0xb6]);
 interface ISWbemServices : IDispatch
 {
-    HRESULT Get(BSTR, int, IDispatch, ISWbemObject*);
-    HRESULT GetAsync(IDispatch, BSTR, int, IDispatch, IDispatch);
-    HRESULT Delete(BSTR, int, IDispatch);
-    HRESULT DeleteAsync(IDispatch, BSTR, int, IDispatch, IDispatch);
-    HRESULT InstancesOf(BSTR, int, IDispatch, ISWbemObjectSet*);
-    HRESULT InstancesOfAsync(IDispatch, BSTR, int, IDispatch, IDispatch);
-    HRESULT SubclassesOf(BSTR, int, IDispatch, ISWbemObjectSet*);
-    HRESULT SubclassesOfAsync(IDispatch, BSTR, int, IDispatch, IDispatch);
-    HRESULT ExecQuery(BSTR, BSTR, int, IDispatch, ISWbemObjectSet*);
-    HRESULT ExecQueryAsync(IDispatch, BSTR, BSTR, int, IDispatch, IDispatch);
-    HRESULT AssociatorsOf(BSTR, BSTR, BSTR, BSTR, BSTR, VARIANT_BOOL, VARIANT_BOOL, BSTR, BSTR, int, IDispatch, ISWbemObjectSet*);
-    HRESULT AssociatorsOfAsync(IDispatch, BSTR, BSTR, BSTR, BSTR, BSTR, VARIANT_BOOL, VARIANT_BOOL, BSTR, BSTR, int, IDispatch, IDispatch);
-    HRESULT ReferencesTo(BSTR, BSTR, BSTR, VARIANT_BOOL, VARIANT_BOOL, BSTR, int, IDispatch, ISWbemObjectSet*);
-    HRESULT ReferencesToAsync(IDispatch, BSTR, BSTR, BSTR, VARIANT_BOOL, VARIANT_BOOL, BSTR, int, IDispatch, IDispatch);
-    HRESULT ExecNotificationQuery(BSTR, BSTR, int, IDispatch, ISWbemEventSource*);
-    HRESULT ExecNotificationQueryAsync(IDispatch, BSTR, BSTR, int, IDispatch, IDispatch);
-    HRESULT ExecMethod(BSTR, BSTR, IDispatch, int, IDispatch, ISWbemObject*);
-    HRESULT ExecMethodAsync(IDispatch, BSTR, BSTR, IDispatch, int, IDispatch, IDispatch);
-    HRESULT get_Security_(ISWbemSecurity*);
+    HRESULT Get(BSTR strObjectPath, int iFlags, IDispatch objWbemNamedValueSet, ISWbemObject* objWbemObject);
+    HRESULT GetAsync(IDispatch objWbemSink, BSTR strObjectPath, int iFlags, IDispatch objWbemNamedValueSet, IDispatch objWbemAsyncContext);
+    HRESULT Delete(BSTR strObjectPath, int iFlags, IDispatch objWbemNamedValueSet);
+    HRESULT DeleteAsync(IDispatch objWbemSink, BSTR strObjectPath, int iFlags, IDispatch objWbemNamedValueSet, IDispatch objWbemAsyncContext);
+    HRESULT InstancesOf(BSTR strClass, int iFlags, IDispatch objWbemNamedValueSet, ISWbemObjectSet* objWbemObjectSet);
+    HRESULT InstancesOfAsync(IDispatch objWbemSink, BSTR strClass, int iFlags, IDispatch objWbemNamedValueSet, IDispatch objWbemAsyncContext);
+    HRESULT SubclassesOf(BSTR strSuperclass, int iFlags, IDispatch objWbemNamedValueSet, ISWbemObjectSet* objWbemObjectSet);
+    HRESULT SubclassesOfAsync(IDispatch objWbemSink, BSTR strSuperclass, int iFlags, IDispatch objWbemNamedValueSet, IDispatch objWbemAsyncContext);
+    HRESULT ExecQuery(BSTR strQuery, BSTR strQueryLanguage, int iFlags, IDispatch objWbemNamedValueSet, ISWbemObjectSet* objWbemObjectSet);
+    HRESULT ExecQueryAsync(IDispatch objWbemSink, BSTR strQuery, BSTR strQueryLanguage, int lFlags, IDispatch objWbemNamedValueSet, IDispatch objWbemAsyncContext);
+    HRESULT AssociatorsOf(BSTR strObjectPath, BSTR strAssocClass, BSTR strResultClass, BSTR strResultRole, BSTR strRole, VARIANT_BOOL bClassesOnly, VARIANT_BOOL bSchemaOnly, BSTR strRequiredAssocQualifier, BSTR strRequiredQualifier, int iFlags, IDispatch objWbemNamedValueSet, ISWbemObjectSet* objWbemObjectSet);
+    HRESULT AssociatorsOfAsync(IDispatch objWbemSink, BSTR strObjectPath, BSTR strAssocClass, BSTR strResultClass, BSTR strResultRole, BSTR strRole, VARIANT_BOOL bClassesOnly, VARIANT_BOOL bSchemaOnly, BSTR strRequiredAssocQualifier, BSTR strRequiredQualifier, int iFlags, IDispatch objWbemNamedValueSet, IDispatch objWbemAsyncContext);
+    HRESULT ReferencesTo(BSTR strObjectPath, BSTR strResultClass, BSTR strRole, VARIANT_BOOL bClassesOnly, VARIANT_BOOL bSchemaOnly, BSTR strRequiredQualifier, int iFlags, IDispatch objWbemNamedValueSet, ISWbemObjectSet* objWbemObjectSet);
+    HRESULT ReferencesToAsync(IDispatch objWbemSink, BSTR strObjectPath, BSTR strResultClass, BSTR strRole, VARIANT_BOOL bClassesOnly, VARIANT_BOOL bSchemaOnly, BSTR strRequiredQualifier, int iFlags, IDispatch objWbemNamedValueSet, IDispatch objWbemAsyncContext);
+    HRESULT ExecNotificationQuery(BSTR strQuery, BSTR strQueryLanguage, int iFlags, IDispatch objWbemNamedValueSet, ISWbemEventSource* objWbemEventSource);
+    HRESULT ExecNotificationQueryAsync(IDispatch objWbemSink, BSTR strQuery, BSTR strQueryLanguage, int iFlags, IDispatch objWbemNamedValueSet, IDispatch objWbemAsyncContext);
+    HRESULT ExecMethod(BSTR strObjectPath, BSTR strMethodName, IDispatch objWbemInParameters, int iFlags, IDispatch objWbemNamedValueSet, ISWbemObject* objWbemOutParameters);
+    HRESULT ExecMethodAsync(IDispatch objWbemSink, BSTR strObjectPath, BSTR strMethodName, IDispatch objWbemInParameters, int iFlags, IDispatch objWbemNamedValueSet, IDispatch objWbemAsyncContext);
+    HRESULT get_Security_(ISWbemSecurity* objWbemSecurity);
 }
 enum IID_ISWbemLocator = GUID(0x76a6415b, 0xcb41, 0x11d1, [0x8b, 0x2, 0x0, 0x60, 0x8, 0x6, 0xd9, 0xb6]);
 interface ISWbemLocator : IDispatch
 {
-    HRESULT ConnectServer(BSTR, BSTR, BSTR, BSTR, BSTR, BSTR, int, IDispatch, ISWbemServices*);
-    HRESULT get_Security_(ISWbemSecurity*);
+    HRESULT ConnectServer(BSTR strServer, BSTR strNamespace, BSTR strUser, BSTR strPassword, BSTR strLocale, BSTR strAuthority, int iSecurityFlags, IDispatch objWbemNamedValueSet, ISWbemServices* objWbemServices);
+    HRESULT get_Security_(ISWbemSecurity* objWbemSecurity);
 }
 enum IID_ISWbemObject = GUID(0x76a6415a, 0xcb41, 0x11d1, [0x8b, 0x2, 0x0, 0x60, 0x8, 0x6, 0xd9, 0xb6]);
 interface ISWbemObject : IDispatch
 {
-    HRESULT Put_(int, IDispatch, ISWbemObjectPath*);
-    HRESULT PutAsync_(IDispatch, int, IDispatch, IDispatch);
-    HRESULT Delete_(int, IDispatch);
-    HRESULT DeleteAsync_(IDispatch, int, IDispatch, IDispatch);
-    HRESULT Instances_(int, IDispatch, ISWbemObjectSet*);
-    HRESULT InstancesAsync_(IDispatch, int, IDispatch, IDispatch);
-    HRESULT Subclasses_(int, IDispatch, ISWbemObjectSet*);
-    HRESULT SubclassesAsync_(IDispatch, int, IDispatch, IDispatch);
-    HRESULT Associators_(BSTR, BSTR, BSTR, BSTR, VARIANT_BOOL, VARIANT_BOOL, BSTR, BSTR, int, IDispatch, ISWbemObjectSet*);
-    HRESULT AssociatorsAsync_(IDispatch, BSTR, BSTR, BSTR, BSTR, VARIANT_BOOL, VARIANT_BOOL, BSTR, BSTR, int, IDispatch, IDispatch);
-    HRESULT References_(BSTR, BSTR, VARIANT_BOOL, VARIANT_BOOL, BSTR, int, IDispatch, ISWbemObjectSet*);
-    HRESULT ReferencesAsync_(IDispatch, BSTR, BSTR, VARIANT_BOOL, VARIANT_BOOL, BSTR, int, IDispatch, IDispatch);
-    HRESULT ExecMethod_(BSTR, IDispatch, int, IDispatch, ISWbemObject*);
-    HRESULT ExecMethodAsync_(IDispatch, BSTR, IDispatch, int, IDispatch, IDispatch);
-    HRESULT Clone_(ISWbemObject*);
-    HRESULT GetObjectText_(int, BSTR*);
-    HRESULT SpawnDerivedClass_(int, ISWbemObject*);
-    HRESULT SpawnInstance_(int, ISWbemObject*);
-    HRESULT CompareTo_(IDispatch, int, VARIANT_BOOL*);
-    HRESULT get_Qualifiers_(ISWbemQualifierSet*);
-    HRESULT get_Properties_(ISWbemPropertySet*);
-    HRESULT get_Methods_(ISWbemMethodSet*);
-    HRESULT get_Derivation_(VARIANT*);
-    HRESULT get_Path_(ISWbemObjectPath*);
-    HRESULT get_Security_(ISWbemSecurity*);
+    HRESULT Put_(int iFlags, IDispatch objWbemNamedValueSet, ISWbemObjectPath* objWbemObjectPath);
+    HRESULT PutAsync_(IDispatch objWbemSink, int iFlags, IDispatch objWbemNamedValueSet, IDispatch objWbemAsyncContext);
+    HRESULT Delete_(int iFlags, IDispatch objWbemNamedValueSet);
+    HRESULT DeleteAsync_(IDispatch objWbemSink, int iFlags, IDispatch objWbemNamedValueSet, IDispatch objWbemAsyncContext);
+    HRESULT Instances_(int iFlags, IDispatch objWbemNamedValueSet, ISWbemObjectSet* objWbemObjectSet);
+    HRESULT InstancesAsync_(IDispatch objWbemSink, int iFlags, IDispatch objWbemNamedValueSet, IDispatch objWbemAsyncContext);
+    HRESULT Subclasses_(int iFlags, IDispatch objWbemNamedValueSet, ISWbemObjectSet* objWbemObjectSet);
+    HRESULT SubclassesAsync_(IDispatch objWbemSink, int iFlags, IDispatch objWbemNamedValueSet, IDispatch objWbemAsyncContext);
+    HRESULT Associators_(BSTR strAssocClass, BSTR strResultClass, BSTR strResultRole, BSTR strRole, VARIANT_BOOL bClassesOnly, VARIANT_BOOL bSchemaOnly, BSTR strRequiredAssocQualifier, BSTR strRequiredQualifier, int iFlags, IDispatch objWbemNamedValueSet, ISWbemObjectSet* objWbemObjectSet);
+    HRESULT AssociatorsAsync_(IDispatch objWbemSink, BSTR strAssocClass, BSTR strResultClass, BSTR strResultRole, BSTR strRole, VARIANT_BOOL bClassesOnly, VARIANT_BOOL bSchemaOnly, BSTR strRequiredAssocQualifier, BSTR strRequiredQualifier, int iFlags, IDispatch objWbemNamedValueSet, IDispatch objWbemAsyncContext);
+    HRESULT References_(BSTR strResultClass, BSTR strRole, VARIANT_BOOL bClassesOnly, VARIANT_BOOL bSchemaOnly, BSTR strRequiredQualifier, int iFlags, IDispatch objWbemNamedValueSet, ISWbemObjectSet* objWbemObjectSet);
+    HRESULT ReferencesAsync_(IDispatch objWbemSink, BSTR strResultClass, BSTR strRole, VARIANT_BOOL bClassesOnly, VARIANT_BOOL bSchemaOnly, BSTR strRequiredQualifier, int iFlags, IDispatch objWbemNamedValueSet, IDispatch objWbemAsyncContext);
+    HRESULT ExecMethod_(BSTR strMethodName, IDispatch objWbemInParameters, int iFlags, IDispatch objWbemNamedValueSet, ISWbemObject* objWbemOutParameters);
+    HRESULT ExecMethodAsync_(IDispatch objWbemSink, BSTR strMethodName, IDispatch objWbemInParameters, int iFlags, IDispatch objWbemNamedValueSet, IDispatch objWbemAsyncContext);
+    HRESULT Clone_(ISWbemObject* objWbemObject);
+    HRESULT GetObjectText_(int iFlags, BSTR* strObjectText);
+    HRESULT SpawnDerivedClass_(int iFlags, ISWbemObject* objWbemObject);
+    HRESULT SpawnInstance_(int iFlags, ISWbemObject* objWbemObject);
+    HRESULT CompareTo_(IDispatch objWbemObject, int iFlags, VARIANT_BOOL* bResult);
+    HRESULT get_Qualifiers_(ISWbemQualifierSet* objWbemQualifierSet);
+    HRESULT get_Properties_(ISWbemPropertySet* objWbemPropertySet);
+    HRESULT get_Methods_(ISWbemMethodSet* objWbemMethodSet);
+    HRESULT get_Derivation_(VARIANT* strClassNameArray);
+    HRESULT get_Path_(ISWbemObjectPath* objWbemObjectPath);
+    HRESULT get_Security_(ISWbemSecurity* objWbemSecurity);
 }
 enum IID_ISWbemObjectSet = GUID(0x76a6415f, 0xcb41, 0x11d1, [0x8b, 0x2, 0x0, 0x60, 0x8, 0x6, 0xd9, 0xb6]);
 interface ISWbemObjectSet : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Item(BSTR, int, ISWbemObject*);
-    HRESULT get_Count(int*);
-    HRESULT get_Security_(ISWbemSecurity*);
-    HRESULT ItemIndex(int, ISWbemObject*);
+    HRESULT get__NewEnum(IUnknown* pUnk);
+    HRESULT Item(BSTR strObjectPath, int iFlags, ISWbemObject* objWbemObject);
+    HRESULT get_Count(int* iCount);
+    HRESULT get_Security_(ISWbemSecurity* objWbemSecurity);
+    HRESULT ItemIndex(int lIndex, ISWbemObject* objWbemObject);
 }
 enum IID_ISWbemNamedValue = GUID(0x76a64164, 0xcb41, 0x11d1, [0x8b, 0x2, 0x0, 0x60, 0x8, 0x6, 0xd9, 0xb6]);
 interface ISWbemNamedValue : IDispatch
 {
-    HRESULT get_Value(VARIANT*);
-    HRESULT put_Value(VARIANT*);
-    HRESULT get_Name(BSTR*);
+    HRESULT get_Value(VARIANT* varValue);
+    HRESULT put_Value(VARIANT* varValue);
+    HRESULT get_Name(BSTR* strName);
 }
 enum IID_ISWbemNamedValueSet = GUID(0xcf2376ea, 0xce8c, 0x11d1, [0x8b, 0x5, 0x0, 0x60, 0x8, 0x6, 0xd9, 0xb6]);
 interface ISWbemNamedValueSet : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Item(BSTR, int, ISWbemNamedValue*);
-    HRESULT get_Count(int*);
-    HRESULT Add(BSTR, VARIANT*, int, ISWbemNamedValue*);
-    HRESULT Remove(BSTR, int);
-    HRESULT Clone(ISWbemNamedValueSet*);
+    HRESULT get__NewEnum(IUnknown* pUnk);
+    HRESULT Item(BSTR strName, int iFlags, ISWbemNamedValue* objWbemNamedValue);
+    HRESULT get_Count(int* iCount);
+    HRESULT Add(BSTR strName, VARIANT* varValue, int iFlags, ISWbemNamedValue* objWbemNamedValue);
+    HRESULT Remove(BSTR strName, int iFlags);
+    HRESULT Clone(ISWbemNamedValueSet* objWbemNamedValueSet);
     HRESULT DeleteAll();
 }
 enum IID_ISWbemQualifier = GUID(0x79b05932, 0xd3b7, 0x11d1, [0x8b, 0x6, 0x0, 0x60, 0x8, 0x6, 0xd9, 0xb6]);
 interface ISWbemQualifier : IDispatch
 {
-    HRESULT get_Value(VARIANT*);
-    HRESULT put_Value(VARIANT*);
-    HRESULT get_Name(BSTR*);
-    HRESULT get_IsLocal(VARIANT_BOOL*);
-    HRESULT get_PropagatesToSubclass(VARIANT_BOOL*);
-    HRESULT put_PropagatesToSubclass(VARIANT_BOOL);
-    HRESULT get_PropagatesToInstance(VARIANT_BOOL*);
-    HRESULT put_PropagatesToInstance(VARIANT_BOOL);
-    HRESULT get_IsOverridable(VARIANT_BOOL*);
-    HRESULT put_IsOverridable(VARIANT_BOOL);
-    HRESULT get_IsAmended(VARIANT_BOOL*);
+    HRESULT get_Value(VARIANT* varValue);
+    HRESULT put_Value(VARIANT* varValue);
+    HRESULT get_Name(BSTR* strName);
+    HRESULT get_IsLocal(VARIANT_BOOL* bIsLocal);
+    HRESULT get_PropagatesToSubclass(VARIANT_BOOL* bPropagatesToSubclass);
+    HRESULT put_PropagatesToSubclass(VARIANT_BOOL bPropagatesToSubclass);
+    HRESULT get_PropagatesToInstance(VARIANT_BOOL* bPropagatesToInstance);
+    HRESULT put_PropagatesToInstance(VARIANT_BOOL bPropagatesToInstance);
+    HRESULT get_IsOverridable(VARIANT_BOOL* bIsOverridable);
+    HRESULT put_IsOverridable(VARIANT_BOOL bIsOverridable);
+    HRESULT get_IsAmended(VARIANT_BOOL* bIsAmended);
 }
 enum IID_ISWbemQualifierSet = GUID(0x9b16ed16, 0xd3df, 0x11d1, [0x8b, 0x8, 0x0, 0x60, 0x8, 0x6, 0xd9, 0xb6]);
 interface ISWbemQualifierSet : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Item(BSTR, int, ISWbemQualifier*);
-    HRESULT get_Count(int*);
-    HRESULT Add(BSTR, VARIANT*, VARIANT_BOOL, VARIANT_BOOL, VARIANT_BOOL, int, ISWbemQualifier*);
-    HRESULT Remove(BSTR, int);
+    HRESULT get__NewEnum(IUnknown* pUnk);
+    HRESULT Item(BSTR name, int iFlags, ISWbemQualifier* objWbemQualifier);
+    HRESULT get_Count(int* iCount);
+    HRESULT Add(BSTR strName, VARIANT* varVal, VARIANT_BOOL bPropagatesToSubclass, VARIANT_BOOL bPropagatesToInstance, VARIANT_BOOL bIsOverridable, int iFlags, ISWbemQualifier* objWbemQualifier);
+    HRESULT Remove(BSTR strName, int iFlags);
 }
 enum IID_ISWbemProperty = GUID(0x1a388f98, 0xd4ba, 0x11d1, [0x8b, 0x9, 0x0, 0x60, 0x8, 0x6, 0xd9, 0xb6]);
 interface ISWbemProperty : IDispatch
 {
-    HRESULT get_Value(VARIANT*);
-    HRESULT put_Value(VARIANT*);
-    HRESULT get_Name(BSTR*);
-    HRESULT get_IsLocal(VARIANT_BOOL*);
-    HRESULT get_Origin(BSTR*);
-    HRESULT get_CIMType(WbemCimtypeEnum*);
-    HRESULT get_Qualifiers_(ISWbemQualifierSet*);
-    HRESULT get_IsArray(VARIANT_BOOL*);
+    HRESULT get_Value(VARIANT* varValue);
+    HRESULT put_Value(VARIANT* varValue);
+    HRESULT get_Name(BSTR* strName);
+    HRESULT get_IsLocal(VARIANT_BOOL* bIsLocal);
+    HRESULT get_Origin(BSTR* strOrigin);
+    HRESULT get_CIMType(WbemCimtypeEnum* iCimType);
+    HRESULT get_Qualifiers_(ISWbemQualifierSet* objWbemQualifierSet);
+    HRESULT get_IsArray(VARIANT_BOOL* bIsArray);
 }
 enum IID_ISWbemPropertySet = GUID(0xdea0a7b2, 0xd4ba, 0x11d1, [0x8b, 0x9, 0x0, 0x60, 0x8, 0x6, 0xd9, 0xb6]);
 interface ISWbemPropertySet : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Item(BSTR, int, ISWbemProperty*);
-    HRESULT get_Count(int*);
-    HRESULT Add(BSTR, WbemCimtypeEnum, VARIANT_BOOL, int, ISWbemProperty*);
-    HRESULT Remove(BSTR, int);
+    HRESULT get__NewEnum(IUnknown* pUnk);
+    HRESULT Item(BSTR strName, int iFlags, ISWbemProperty* objWbemProperty);
+    HRESULT get_Count(int* iCount);
+    HRESULT Add(BSTR strName, WbemCimtypeEnum iCIMType, VARIANT_BOOL bIsArray, int iFlags, ISWbemProperty* objWbemProperty);
+    HRESULT Remove(BSTR strName, int iFlags);
 }
 enum IID_ISWbemMethod = GUID(0x422e8e90, 0xd955, 0x11d1, [0x8b, 0x9, 0x0, 0x60, 0x8, 0x6, 0xd9, 0xb6]);
 interface ISWbemMethod : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Origin(BSTR*);
-    HRESULT get_InParameters(ISWbemObject*);
-    HRESULT get_OutParameters(ISWbemObject*);
-    HRESULT get_Qualifiers_(ISWbemQualifierSet*);
+    HRESULT get_Name(BSTR* strName);
+    HRESULT get_Origin(BSTR* strOrigin);
+    HRESULT get_InParameters(ISWbemObject* objWbemInParameters);
+    HRESULT get_OutParameters(ISWbemObject* objWbemOutParameters);
+    HRESULT get_Qualifiers_(ISWbemQualifierSet* objWbemQualifierSet);
 }
 enum IID_ISWbemMethodSet = GUID(0xc93ba292, 0xd955, 0x11d1, [0x8b, 0x9, 0x0, 0x60, 0x8, 0x6, 0xd9, 0xb6]);
 interface ISWbemMethodSet : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Item(BSTR, int, ISWbemMethod*);
-    HRESULT get_Count(int*);
+    HRESULT get__NewEnum(IUnknown* pUnk);
+    HRESULT Item(BSTR strName, int iFlags, ISWbemMethod* objWbemMethod);
+    HRESULT get_Count(int* iCount);
 }
 enum IID_ISWbemEventSource = GUID(0x27d54d92, 0xebe, 0x11d2, [0x8b, 0x22, 0x0, 0x60, 0x8, 0x6, 0xd9, 0xb6]);
 interface ISWbemEventSource : IDispatch
 {
-    HRESULT NextEvent(int, ISWbemObject*);
-    HRESULT get_Security_(ISWbemSecurity*);
+    HRESULT NextEvent(int iTimeoutMs, ISWbemObject* objWbemObject);
+    HRESULT get_Security_(ISWbemSecurity* objWbemSecurity);
 }
 enum IID_ISWbemObjectPath = GUID(0x5791bc27, 0xce9c, 0x11d1, [0x97, 0xbf, 0x0, 0x0, 0xf8, 0x1e, 0x84, 0x9c]);
 interface ISWbemObjectPath : IDispatch
 {
-    HRESULT get_Path(BSTR*);
-    HRESULT put_Path(BSTR);
-    HRESULT get_RelPath(BSTR*);
-    HRESULT put_RelPath(BSTR);
-    HRESULT get_Server(BSTR*);
-    HRESULT put_Server(BSTR);
-    HRESULT get_Namespace(BSTR*);
-    HRESULT put_Namespace(BSTR);
-    HRESULT get_ParentNamespace(BSTR*);
-    HRESULT get_DisplayName(BSTR*);
-    HRESULT put_DisplayName(BSTR);
-    HRESULT get_Class(BSTR*);
-    HRESULT put_Class(BSTR);
-    HRESULT get_IsClass(VARIANT_BOOL*);
+    HRESULT get_Path(BSTR* strPath);
+    HRESULT put_Path(BSTR strPath);
+    HRESULT get_RelPath(BSTR* strRelPath);
+    HRESULT put_RelPath(BSTR strRelPath);
+    HRESULT get_Server(BSTR* strServer);
+    HRESULT put_Server(BSTR strServer);
+    HRESULT get_Namespace(BSTR* strNamespace);
+    HRESULT put_Namespace(BSTR strNamespace);
+    HRESULT get_ParentNamespace(BSTR* strParentNamespace);
+    HRESULT get_DisplayName(BSTR* strDisplayName);
+    HRESULT put_DisplayName(BSTR strDisplayName);
+    HRESULT get_Class(BSTR* strClass);
+    HRESULT put_Class(BSTR strClass);
+    HRESULT get_IsClass(VARIANT_BOOL* bIsClass);
     HRESULT SetAsClass();
-    HRESULT get_IsSingleton(VARIANT_BOOL*);
+    HRESULT get_IsSingleton(VARIANT_BOOL* bIsSingleton);
     HRESULT SetAsSingleton();
-    HRESULT get_Keys(ISWbemNamedValueSet*);
-    HRESULT get_Security_(ISWbemSecurity*);
-    HRESULT get_Locale(BSTR*);
-    HRESULT put_Locale(BSTR);
-    HRESULT get_Authority(BSTR*);
-    HRESULT put_Authority(BSTR);
+    HRESULT get_Keys(ISWbemNamedValueSet* objWbemNamedValueSet);
+    HRESULT get_Security_(ISWbemSecurity* objWbemSecurity);
+    HRESULT get_Locale(BSTR* strLocale);
+    HRESULT put_Locale(BSTR strLocale);
+    HRESULT get_Authority(BSTR* strAuthority);
+    HRESULT put_Authority(BSTR strAuthority);
 }
 enum IID_ISWbemLastError = GUID(0xd962db84, 0xd4bb, 0x11d1, [0x8b, 0x9, 0x0, 0x60, 0x8, 0x6, 0xd9, 0xb6]);
 interface ISWbemLastError : ISWbemObject
@@ -3058,113 +3058,113 @@ interface ISWbemSink : IDispatch
 enum IID_ISWbemSecurity = GUID(0xb54d66e6, 0x2287, 0x11d2, [0x8b, 0x33, 0x0, 0x60, 0x8, 0x6, 0xd9, 0xb6]);
 interface ISWbemSecurity : IDispatch
 {
-    HRESULT get_ImpersonationLevel(WbemImpersonationLevelEnum*);
-    HRESULT put_ImpersonationLevel(WbemImpersonationLevelEnum);
-    HRESULT get_AuthenticationLevel(WbemAuthenticationLevelEnum*);
-    HRESULT put_AuthenticationLevel(WbemAuthenticationLevelEnum);
-    HRESULT get_Privileges(ISWbemPrivilegeSet*);
+    HRESULT get_ImpersonationLevel(WbemImpersonationLevelEnum* iImpersonationLevel);
+    HRESULT put_ImpersonationLevel(WbemImpersonationLevelEnum iImpersonationLevel);
+    HRESULT get_AuthenticationLevel(WbemAuthenticationLevelEnum* iAuthenticationLevel);
+    HRESULT put_AuthenticationLevel(WbemAuthenticationLevelEnum iAuthenticationLevel);
+    HRESULT get_Privileges(ISWbemPrivilegeSet* objWbemPrivilegeSet);
 }
 enum IID_ISWbemPrivilege = GUID(0x26ee67bd, 0x5804, 0x11d2, [0x8b, 0x4a, 0x0, 0x60, 0x8, 0x6, 0xd9, 0xb6]);
 interface ISWbemPrivilege : IDispatch
 {
-    HRESULT get_IsEnabled(VARIANT_BOOL*);
-    HRESULT put_IsEnabled(VARIANT_BOOL);
-    HRESULT get_Name(BSTR*);
-    HRESULT get_DisplayName(BSTR*);
-    HRESULT get_Identifier(WbemPrivilegeEnum*);
+    HRESULT get_IsEnabled(VARIANT_BOOL* bIsEnabled);
+    HRESULT put_IsEnabled(VARIANT_BOOL bIsEnabled);
+    HRESULT get_Name(BSTR* strDisplayName);
+    HRESULT get_DisplayName(BSTR* strDisplayName);
+    HRESULT get_Identifier(WbemPrivilegeEnum* iPrivilege);
 }
 enum IID_ISWbemPrivilegeSet = GUID(0x26ee67bf, 0x5804, 0x11d2, [0x8b, 0x4a, 0x0, 0x60, 0x8, 0x6, 0xd9, 0xb6]);
 interface ISWbemPrivilegeSet : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Item(WbemPrivilegeEnum, ISWbemPrivilege*);
-    HRESULT get_Count(int*);
-    HRESULT Add(WbemPrivilegeEnum, VARIANT_BOOL, ISWbemPrivilege*);
-    HRESULT Remove(WbemPrivilegeEnum);
+    HRESULT get__NewEnum(IUnknown* pUnk);
+    HRESULT Item(WbemPrivilegeEnum iPrivilege, ISWbemPrivilege* objWbemPrivilege);
+    HRESULT get_Count(int* iCount);
+    HRESULT Add(WbemPrivilegeEnum iPrivilege, VARIANT_BOOL bIsEnabled, ISWbemPrivilege* objWbemPrivilege);
+    HRESULT Remove(WbemPrivilegeEnum iPrivilege);
     HRESULT DeleteAll();
-    HRESULT AddAsString(BSTR, VARIANT_BOOL, ISWbemPrivilege*);
+    HRESULT AddAsString(BSTR strPrivilege, VARIANT_BOOL bIsEnabled, ISWbemPrivilege* objWbemPrivilege);
 }
 enum IID_ISWbemServicesEx = GUID(0xd2f68443, 0x85dc, 0x427e, [0x91, 0xd8, 0x36, 0x65, 0x54, 0xcc, 0x75, 0x4c]);
 interface ISWbemServicesEx : ISWbemServices
 {
-    HRESULT Put(ISWbemObjectEx, int, IDispatch, ISWbemObjectPath*);
-    HRESULT PutAsync(ISWbemSink, ISWbemObjectEx, int, IDispatch, IDispatch);
+    HRESULT Put(ISWbemObjectEx objWbemObject, int iFlags, IDispatch objWbemNamedValueSet, ISWbemObjectPath* objWbemObjectPath);
+    HRESULT PutAsync(ISWbemSink objWbemSink, ISWbemObjectEx objWbemObject, int iFlags, IDispatch objWbemNamedValueSet, IDispatch objWbemAsyncContext);
 }
 enum IID_ISWbemObjectEx = GUID(0x269ad56a, 0x8a67, 0x4129, [0xbc, 0x8c, 0x5, 0x6, 0xdc, 0xfe, 0x98, 0x80]);
 interface ISWbemObjectEx : ISWbemObject
 {
-    HRESULT Refresh_(int, IDispatch);
-    HRESULT get_SystemProperties_(ISWbemPropertySet*);
-    HRESULT GetText_(WbemObjectTextFormatEnum, int, IDispatch, BSTR*);
-    HRESULT SetFromText_(BSTR, WbemObjectTextFormatEnum, int, IDispatch);
+    HRESULT Refresh_(int iFlags, IDispatch objWbemNamedValueSet);
+    HRESULT get_SystemProperties_(ISWbemPropertySet* objWbemPropertySet);
+    HRESULT GetText_(WbemObjectTextFormatEnum iObjectTextFormat, int iFlags, IDispatch objWbemNamedValueSet, BSTR* bsText);
+    HRESULT SetFromText_(BSTR bsText, WbemObjectTextFormatEnum iObjectTextFormat, int iFlags, IDispatch objWbemNamedValueSet);
 }
 enum IID_ISWbemDateTime = GUID(0x5e97458a, 0xcf77, 0x11d3, [0xb3, 0x8f, 0x0, 0x10, 0x5a, 0x1f, 0x47, 0x3a]);
 interface ISWbemDateTime : IDispatch
 {
-    HRESULT get_Value(BSTR*);
-    HRESULT put_Value(BSTR);
-    HRESULT get_Year(int*);
-    HRESULT put_Year(int);
-    HRESULT get_YearSpecified(VARIANT_BOOL*);
-    HRESULT put_YearSpecified(VARIANT_BOOL);
-    HRESULT get_Month(int*);
-    HRESULT put_Month(int);
-    HRESULT get_MonthSpecified(VARIANT_BOOL*);
-    HRESULT put_MonthSpecified(VARIANT_BOOL);
-    HRESULT get_Day(int*);
-    HRESULT put_Day(int);
-    HRESULT get_DaySpecified(VARIANT_BOOL*);
-    HRESULT put_DaySpecified(VARIANT_BOOL);
-    HRESULT get_Hours(int*);
-    HRESULT put_Hours(int);
-    HRESULT get_HoursSpecified(VARIANT_BOOL*);
-    HRESULT put_HoursSpecified(VARIANT_BOOL);
-    HRESULT get_Minutes(int*);
-    HRESULT put_Minutes(int);
-    HRESULT get_MinutesSpecified(VARIANT_BOOL*);
-    HRESULT put_MinutesSpecified(VARIANT_BOOL);
-    HRESULT get_Seconds(int*);
-    HRESULT put_Seconds(int);
-    HRESULT get_SecondsSpecified(VARIANT_BOOL*);
-    HRESULT put_SecondsSpecified(VARIANT_BOOL);
-    HRESULT get_Microseconds(int*);
-    HRESULT put_Microseconds(int);
-    HRESULT get_MicrosecondsSpecified(VARIANT_BOOL*);
-    HRESULT put_MicrosecondsSpecified(VARIANT_BOOL);
-    HRESULT get_UTC(int*);
-    HRESULT put_UTC(int);
-    HRESULT get_UTCSpecified(VARIANT_BOOL*);
-    HRESULT put_UTCSpecified(VARIANT_BOOL);
-    HRESULT get_IsInterval(VARIANT_BOOL*);
-    HRESULT put_IsInterval(VARIANT_BOOL);
-    HRESULT GetVarDate(VARIANT_BOOL, double*);
-    HRESULT SetVarDate(double, VARIANT_BOOL);
-    HRESULT GetFileTime(VARIANT_BOOL, BSTR*);
-    HRESULT SetFileTime(BSTR, VARIANT_BOOL);
+    HRESULT get_Value(BSTR* strValue);
+    HRESULT put_Value(BSTR strValue);
+    HRESULT get_Year(int* iYear);
+    HRESULT put_Year(int iYear);
+    HRESULT get_YearSpecified(VARIANT_BOOL* bYearSpecified);
+    HRESULT put_YearSpecified(VARIANT_BOOL bYearSpecified);
+    HRESULT get_Month(int* iMonth);
+    HRESULT put_Month(int iMonth);
+    HRESULT get_MonthSpecified(VARIANT_BOOL* bMonthSpecified);
+    HRESULT put_MonthSpecified(VARIANT_BOOL bMonthSpecified);
+    HRESULT get_Day(int* iDay);
+    HRESULT put_Day(int iDay);
+    HRESULT get_DaySpecified(VARIANT_BOOL* bDaySpecified);
+    HRESULT put_DaySpecified(VARIANT_BOOL bDaySpecified);
+    HRESULT get_Hours(int* iHours);
+    HRESULT put_Hours(int iHours);
+    HRESULT get_HoursSpecified(VARIANT_BOOL* bHoursSpecified);
+    HRESULT put_HoursSpecified(VARIANT_BOOL bHoursSpecified);
+    HRESULT get_Minutes(int* iMinutes);
+    HRESULT put_Minutes(int iMinutes);
+    HRESULT get_MinutesSpecified(VARIANT_BOOL* bMinutesSpecified);
+    HRESULT put_MinutesSpecified(VARIANT_BOOL bMinutesSpecified);
+    HRESULT get_Seconds(int* iSeconds);
+    HRESULT put_Seconds(int iSeconds);
+    HRESULT get_SecondsSpecified(VARIANT_BOOL* bSecondsSpecified);
+    HRESULT put_SecondsSpecified(VARIANT_BOOL bSecondsSpecified);
+    HRESULT get_Microseconds(int* iMicroseconds);
+    HRESULT put_Microseconds(int iMicroseconds);
+    HRESULT get_MicrosecondsSpecified(VARIANT_BOOL* bMicrosecondsSpecified);
+    HRESULT put_MicrosecondsSpecified(VARIANT_BOOL bMicrosecondsSpecified);
+    HRESULT get_UTC(int* iUTC);
+    HRESULT put_UTC(int iUTC);
+    HRESULT get_UTCSpecified(VARIANT_BOOL* bUTCSpecified);
+    HRESULT put_UTCSpecified(VARIANT_BOOL bUTCSpecified);
+    HRESULT get_IsInterval(VARIANT_BOOL* bIsInterval);
+    HRESULT put_IsInterval(VARIANT_BOOL bIsInterval);
+    HRESULT GetVarDate(VARIANT_BOOL bIsLocal, double* dVarDate);
+    HRESULT SetVarDate(double dVarDate, VARIANT_BOOL bIsLocal);
+    HRESULT GetFileTime(VARIANT_BOOL bIsLocal, BSTR* strFileTime);
+    HRESULT SetFileTime(BSTR strFileTime, VARIANT_BOOL bIsLocal);
 }
 enum IID_ISWbemRefresher = GUID(0x14d8250e, 0xd9c2, 0x11d3, [0xb3, 0x8f, 0x0, 0x10, 0x5a, 0x1f, 0x47, 0x3a]);
 interface ISWbemRefresher : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT Item(int, ISWbemRefreshableItem*);
-    HRESULT get_Count(int*);
-    HRESULT Add(ISWbemServicesEx, BSTR, int, IDispatch, ISWbemRefreshableItem*);
-    HRESULT AddEnum(ISWbemServicesEx, BSTR, int, IDispatch, ISWbemRefreshableItem*);
-    HRESULT Remove(int, int);
-    HRESULT Refresh(int);
-    HRESULT get_AutoReconnect(VARIANT_BOOL*);
-    HRESULT put_AutoReconnect(VARIANT_BOOL);
+    HRESULT get__NewEnum(IUnknown* pUnk);
+    HRESULT Item(int iIndex, ISWbemRefreshableItem* objWbemRefreshableItem);
+    HRESULT get_Count(int* iCount);
+    HRESULT Add(ISWbemServicesEx objWbemServices, BSTR bsInstancePath, int iFlags, IDispatch objWbemNamedValueSet, ISWbemRefreshableItem* objWbemRefreshableItem);
+    HRESULT AddEnum(ISWbemServicesEx objWbemServices, BSTR bsClassName, int iFlags, IDispatch objWbemNamedValueSet, ISWbemRefreshableItem* objWbemRefreshableItem);
+    HRESULT Remove(int iIndex, int iFlags);
+    HRESULT Refresh(int iFlags);
+    HRESULT get_AutoReconnect(VARIANT_BOOL* bCount);
+    HRESULT put_AutoReconnect(VARIANT_BOOL bCount);
     HRESULT DeleteAll();
 }
 enum IID_ISWbemRefreshableItem = GUID(0x5ad4bf92, 0xdaab, 0x11d3, [0xb3, 0x8f, 0x0, 0x10, 0x5a, 0x1f, 0x47, 0x3a]);
 interface ISWbemRefreshableItem : IDispatch
 {
-    HRESULT get_Index(int*);
-    HRESULT get_Refresher(ISWbemRefresher*);
-    HRESULT get_IsSet(VARIANT_BOOL*);
-    HRESULT get_Object(ISWbemObjectEx*);
-    HRESULT get_ObjectSet(ISWbemObjectSet*);
-    HRESULT Remove(int);
+    HRESULT get_Index(int* iIndex);
+    HRESULT get_Refresher(ISWbemRefresher* objWbemRefresher);
+    HRESULT get_IsSet(VARIANT_BOOL* bIsSet);
+    HRESULT get_Object(ISWbemObjectEx* objWbemObject);
+    HRESULT get_ObjectSet(ISWbemObjectSet* objWbemObjectSet);
+    HRESULT Remove(int iFlags);
 }
 enum CLSID_SWbemLocator = GUID(0x76a64158, 0xcb41, 0x11d1, [0x8b, 0x2, 0x0, 0x60, 0x8, 0x6, 0xd9, 0xb6]);
 struct SWbemLocator
@@ -3265,9 +3265,9 @@ struct SWbemRefreshableItem
 enum IID_IWMIExtension = GUID(0xadc1f06e, 0x5c7e, 0x11d2, [0x8b, 0x74, 0x0, 0x10, 0x4b, 0x2a, 0xfb, 0x41]);
 interface IWMIExtension : IDispatch
 {
-    HRESULT get_WMIObjectPath(BSTR*);
-    HRESULT GetWMIObject(ISWbemObject*);
-    HRESULT GetWMIServices(ISWbemServices*);
+    HRESULT get_WMIObjectPath(BSTR* strWMIObjectPath);
+    HRESULT GetWMIObject(ISWbemObject* objWMIObject);
+    HRESULT GetWMIServices(ISWbemServices* objWMIServices);
 }
 enum CLSID_WMIExtension = GUID(0xf0975afe, 0x5c7f, 0x11d2, [0x8b, 0x74, 0x0, 0x10, 0x4b, 0x2a, 0xfb, 0x41]);
 struct WMIExtension
@@ -3291,20 +3291,20 @@ interface IWbemTransport : IUnknown
 enum IID_IWbemLevel1Login = GUID(0xf309ad18, 0xd86a, 0x11d0, [0xa0, 0x75, 0x0, 0xc0, 0x4f, 0xb6, 0x88, 0x20]);
 interface IWbemLevel1Login : IUnknown
 {
-    HRESULT EstablishPosition(PWSTR, uint, uint*);
-    HRESULT RequestChallenge(PWSTR, PWSTR, ubyte*);
-    HRESULT WBEMLogin(PWSTR, ubyte*, int, IWbemContext, IWbemServices*);
-    HRESULT NTLMLogin(PWSTR, PWSTR, int, IWbemContext, IWbemServices*);
+    HRESULT EstablishPosition(PWSTR wszLocaleList, uint dwNumLocales, uint* reserved);
+    HRESULT RequestChallenge(PWSTR wszNetworkResource, PWSTR wszUser, ubyte* Nonce);
+    HRESULT WBEMLogin(PWSTR wszPreferredLocale, ubyte* AccessToken, int lFlags, IWbemContext pCtx, IWbemServices* ppNamespace);
+    HRESULT NTLMLogin(PWSTR wszNetworkResource, PWSTR wszPreferredLocale, int lFlags, IWbemContext pCtx, IWbemServices* ppNamespace);
 }
 enum IID_IWbemConnectorLogin = GUID(0xd8ec9cb1, 0xb135, 0x4f10, [0x8b, 0x1b, 0xc7, 0x18, 0x8b, 0xb0, 0xd1, 0x86]);
 interface IWbemConnectorLogin : IUnknown
 {
-    HRESULT ConnectorLogin(PWSTR, PWSTR, int, IWbemContext, const(GUID)*, void**);
+    HRESULT ConnectorLogin(PWSTR wszNetworkResource, PWSTR wszPreferredLocale, int lFlags, IWbemContext pCtx, const(GUID)* riid, void** pInterface);
 }
 enum IID_IWbemAddressResolution = GUID(0xf7ce2e12, 0x8c90, 0x11d1, [0x9e, 0x7b, 0x0, 0xc0, 0x4f, 0xc3, 0x24, 0xa8]);
 interface IWbemAddressResolution : IUnknown
 {
-    HRESULT Resolve(PWSTR, PWSTR, uint*, ubyte**);
+    HRESULT Resolve(PWSTR wszNamespacePath, PWSTR wszAddressType, uint* pdwAddressLength, ubyte** pabBinaryAddress);
 }
 enum CLSID_WbemLevel1Login = GUID(0x8bc3f05e, 0xd86b, 0x11d0, [0xa0, 0x75, 0x0, 0xc0, 0x4f, 0xb6, 0x88, 0x20]);
 struct WbemLevel1Login
@@ -3321,14 +3321,14 @@ struct WbemUninitializedClassObject
 enum IID_IWbemClientTransport = GUID(0xf7ce2e11, 0x8c90, 0x11d1, [0x9e, 0x7b, 0x0, 0xc0, 0x4f, 0xc3, 0x24, 0xa8]);
 interface IWbemClientTransport : IUnknown
 {
-    HRESULT ConnectServer(BSTR, uint, ubyte*, BSTR, BSTR, BSTR, BSTR, int, BSTR, IWbemContext, IWbemServices*);
+    HRESULT ConnectServer(BSTR strAddressType, uint dwBinaryAddressLength, ubyte* abBinaryAddress, BSTR strNetworkResource, BSTR strUser, BSTR strPassword, BSTR strLocale, int lSecurityFlags, BSTR strAuthority, IWbemContext pCtx, IWbemServices* ppNamespace);
 }
 enum IID_IWbemClientConnectionTransport = GUID(0xa889c72a, 0xfcc1, 0x4a9e, [0xaf, 0x61, 0xed, 0x7, 0x13, 0x33, 0xfb, 0x5b]);
 interface IWbemClientConnectionTransport : IUnknown
 {
-    HRESULT Open(BSTR, uint, ubyte*, const(BSTR), const(BSTR), const(BSTR), const(BSTR), int, IWbemContext, const(GUID)*, void**, IWbemCallResult*);
-    HRESULT OpenAsync(BSTR, uint, ubyte*, const(BSTR), const(BSTR), const(BSTR), const(BSTR), int, IWbemContext, const(GUID)*, IWbemObjectSink);
-    HRESULT Cancel(int, IWbemObjectSink);
+    HRESULT Open(BSTR strAddressType, uint dwBinaryAddressLength, ubyte* abBinaryAddress, const(BSTR) strObject, const(BSTR) strUser, const(BSTR) strPassword, const(BSTR) strLocale, int lFlags, IWbemContext pCtx, const(GUID)* riid, void** pInterface, IWbemCallResult* pCallRes);
+    HRESULT OpenAsync(BSTR strAddressType, uint dwBinaryAddressLength, ubyte* abBinaryAddress, const(BSTR) strObject, const(BSTR) strUser, const(BSTR) strPassword, const(BSTR) strLocale, int lFlags, IWbemContext pCtx, const(GUID)* riid, IWbemObjectSink pResponseHandler);
+    HRESULT Cancel(int lFlags, IWbemObjectSink pHandler);
 }
 enum CLSID_WbemDCOMTransport = GUID(0xf7ce2e13, 0x8c90, 0x11d1, [0x9e, 0x7b, 0x0, 0xc0, 0x4f, 0xc3, 0x24, 0xa8]);
 struct WbemDCOMTransport
@@ -3337,8 +3337,8 @@ struct WbemDCOMTransport
 enum IID_IWbemConstructClassObject = GUID(0x9ef76194, 0x70d5, 0x11d1, [0xad, 0x90, 0x0, 0xc0, 0x4f, 0xd8, 0xfd, 0xff]);
 interface IWbemConstructClassObject : IUnknown
 {
-    HRESULT SetInheritanceChain(int, PWSTR*);
-    HRESULT SetPropertyOrigin(const(wchar)*, int);
-    HRESULT SetMethodOrigin(const(wchar)*, int);
-    HRESULT SetServerNamespace(const(wchar)*, const(wchar)*);
+    HRESULT SetInheritanceChain(int lNumAntecedents, PWSTR* awszAntecedents);
+    HRESULT SetPropertyOrigin(const(wchar)* wszPropertyName, int lOriginIndex);
+    HRESULT SetMethodOrigin(const(wchar)* wszMethodName, int lOriginIndex);
+    HRESULT SetServerNamespace(const(wchar)* wszServer, const(wchar)* wszNamespace);
 }

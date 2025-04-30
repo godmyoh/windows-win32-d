@@ -9,17 +9,17 @@ import windows.win32.system.variant : VARIANT;
 version (Windows):
 extern (Windows):
 
-HRESULT WMIsContentProtected(const(wchar)*, BOOL*);
-HRESULT WMCreateWriter(IUnknown, IWMWriter*);
-HRESULT WMCreateReader(IUnknown, uint, IWMReader*);
-HRESULT WMCreateSyncReader(IUnknown, uint, IWMSyncReader*);
-HRESULT WMCreateEditor(IWMMetadataEditor*);
-HRESULT WMCreateIndexer(IWMIndexer*);
-HRESULT WMCreateBackupRestorer(IUnknown, IWMLicenseBackup*);
-HRESULT WMCreateProfileManager(IWMProfileManager*);
-HRESULT WMCreateWriterFileSink(IWMWriterFileSink*);
-HRESULT WMCreateWriterNetworkSink(IWMWriterNetworkSink*);
-HRESULT WMCreateWriterPushSink(IWMWriterPushSink*);
+HRESULT WMIsContentProtected(const(wchar)* pwszFileName, BOOL* pfIsProtected);
+HRESULT WMCreateWriter(IUnknown pUnkCert, IWMWriter* ppWriter);
+HRESULT WMCreateReader(IUnknown pUnkCert, uint dwRights, IWMReader* ppReader);
+HRESULT WMCreateSyncReader(IUnknown pUnkCert, uint dwRights, IWMSyncReader* ppSyncReader);
+HRESULT WMCreateEditor(IWMMetadataEditor* ppEditor);
+HRESULT WMCreateIndexer(IWMIndexer* ppIndexer);
+HRESULT WMCreateBackupRestorer(IUnknown pCallback, IWMLicenseBackup* ppBackup);
+HRESULT WMCreateProfileManager(IWMProfileManager* ppProfileManager);
+HRESULT WMCreateWriterFileSink(IWMWriterFileSink* ppSink);
+HRESULT WMCreateWriterNetworkSink(IWMWriterNetworkSink* ppSink);
+HRESULT WMCreateWriterPushSink(IWMWriterPushSink* ppSink);
 enum WMT_VIDEOIMAGE_SAMPLE_INPUT_FRAME = 0x00000001;
 enum WMT_VIDEOIMAGE_SAMPLE_OUTPUT_FRAME = 0x00000002;
 enum WMT_VIDEOIMAGE_SAMPLE_USES_CURRENT_INPUT_FRAME = 0x00000004;
@@ -378,35 +378,35 @@ struct AM_WMT_EVENT_DATA
 enum IID_INSSBuffer = GUID(0xe1cd3524, 0x3d7, 0x11d2, [0x9e, 0xed, 0x0, 0x60, 0x97, 0xd2, 0xd7, 0xcf]);
 interface INSSBuffer : IUnknown
 {
-    HRESULT GetLength(uint*);
-    HRESULT SetLength(uint);
-    HRESULT GetMaxLength(uint*);
-    HRESULT GetBuffer(ubyte**);
-    HRESULT GetBufferAndLength(ubyte**, uint*);
+    HRESULT GetLength(uint* pdwLength);
+    HRESULT SetLength(uint dwLength);
+    HRESULT GetMaxLength(uint* pdwLength);
+    HRESULT GetBuffer(ubyte** ppdwBuffer);
+    HRESULT GetBufferAndLength(ubyte** ppdwBuffer, uint* pdwLength);
 }
 enum IID_INSSBuffer2 = GUID(0x4f528693, 0x1035, 0x43fe, [0xb4, 0x28, 0x75, 0x75, 0x61, 0xad, 0x3a, 0x68]);
 interface INSSBuffer2 : INSSBuffer
 {
-    HRESULT GetSampleProperties(uint, ubyte*);
-    HRESULT SetSampleProperties(uint, ubyte*);
+    HRESULT GetSampleProperties(uint cbProperties, ubyte* pbProperties);
+    HRESULT SetSampleProperties(uint cbProperties, ubyte* pbProperties);
 }
 enum IID_INSSBuffer3 = GUID(0xc87ceaaf, 0x75be, 0x4bc4, [0x84, 0xeb, 0xac, 0x27, 0x98, 0x50, 0x76, 0x72]);
 interface INSSBuffer3 : INSSBuffer2
 {
-    HRESULT SetProperty(GUID, void*, uint);
-    HRESULT GetProperty(GUID, void*, uint*);
+    HRESULT SetProperty(GUID guidBufferProperty, void* pvBufferProperty, uint dwBufferPropertySize);
+    HRESULT GetProperty(GUID guidBufferProperty, void* pvBufferProperty, uint* pdwBufferPropertySize);
 }
 enum IID_INSSBuffer4 = GUID(0xb6b8fd5a, 0x32e2, 0x49d4, [0xa9, 0x10, 0xc2, 0x6c, 0xc8, 0x54, 0x65, 0xed]);
 interface INSSBuffer4 : INSSBuffer3
 {
-    HRESULT GetPropertyCount(uint*);
-    HRESULT GetPropertyByIndex(uint, GUID*, void*, uint*);
+    HRESULT GetPropertyCount(uint* pcBufferProperties);
+    HRESULT GetPropertyByIndex(uint dwBufferPropertyIndex, GUID* pguidBufferProperty, void* pvBufferProperty, uint* pdwBufferPropertySize);
 }
 enum IID_IWMSBufferAllocator = GUID(0x61103ca4, 0x2033, 0x11d2, [0x9e, 0xf1, 0x0, 0x60, 0x97, 0xd2, 0xd7, 0xcf]);
 interface IWMSBufferAllocator : IUnknown
 {
-    HRESULT AllocateBuffer(uint, INSSBuffer*);
-    HRESULT AllocatePageSizeBuffer(uint, INSSBuffer*);
+    HRESULT AllocateBuffer(uint dwMaxBufferSize, INSSBuffer* ppBuffer);
+    HRESULT AllocatePageSizeBuffer(uint dwMaxBufferSize, INSSBuffer* ppBuffer);
 }
 alias WEBSTREAM_SAMPLE_TYPE = int;
 enum : int
@@ -994,42 +994,42 @@ struct DRM_VAL16
 enum IID_IWMMediaProps = GUID(0x96406bce, 0x2b2b, 0x11d3, [0xb3, 0x6b, 0x0, 0xc0, 0x4f, 0x61, 0x8, 0xff]);
 interface IWMMediaProps : IUnknown
 {
-    HRESULT GetType(GUID*);
-    HRESULT GetMediaType(WM_MEDIA_TYPE*, uint*);
-    HRESULT SetMediaType(WM_MEDIA_TYPE*);
+    HRESULT GetType(GUID* pguidType);
+    HRESULT GetMediaType(WM_MEDIA_TYPE* pType, uint* pcbType);
+    HRESULT SetMediaType(WM_MEDIA_TYPE* pType);
 }
 enum IID_IWMVideoMediaProps = GUID(0x96406bcf, 0x2b2b, 0x11d3, [0xb3, 0x6b, 0x0, 0xc0, 0x4f, 0x61, 0x8, 0xff]);
 interface IWMVideoMediaProps : IWMMediaProps
 {
-    HRESULT GetMaxKeyFrameSpacing(long*);
-    HRESULT SetMaxKeyFrameSpacing(long);
-    HRESULT GetQuality(uint*);
-    HRESULT SetQuality(uint);
+    HRESULT GetMaxKeyFrameSpacing(long* pllTime);
+    HRESULT SetMaxKeyFrameSpacing(long llTime);
+    HRESULT GetQuality(uint* pdwQuality);
+    HRESULT SetQuality(uint dwQuality);
 }
 enum IID_IWMWriter = GUID(0x96406bd4, 0x2b2b, 0x11d3, [0xb3, 0x6b, 0x0, 0xc0, 0x4f, 0x61, 0x8, 0xff]);
 interface IWMWriter : IUnknown
 {
-    HRESULT SetProfileByID(const(GUID)*);
-    HRESULT SetProfile(IWMProfile);
-    HRESULT SetOutputFilename(const(wchar)*);
-    HRESULT GetInputCount(uint*);
-    HRESULT GetInputProps(uint, IWMInputMediaProps*);
-    HRESULT SetInputProps(uint, IWMInputMediaProps);
-    HRESULT GetInputFormatCount(uint, uint*);
-    HRESULT GetInputFormat(uint, uint, IWMInputMediaProps*);
+    HRESULT SetProfileByID(const(GUID)* guidProfile);
+    HRESULT SetProfile(IWMProfile pProfile);
+    HRESULT SetOutputFilename(const(wchar)* pwszFilename);
+    HRESULT GetInputCount(uint* pcInputs);
+    HRESULT GetInputProps(uint dwInputNum, IWMInputMediaProps* ppInput);
+    HRESULT SetInputProps(uint dwInputNum, IWMInputMediaProps pInput);
+    HRESULT GetInputFormatCount(uint dwInputNumber, uint* pcFormats);
+    HRESULT GetInputFormat(uint dwInputNumber, uint dwFormatNumber, IWMInputMediaProps* pProps);
     HRESULT BeginWriting();
     HRESULT EndWriting();
-    HRESULT AllocateSample(uint, INSSBuffer*);
-    HRESULT WriteSample(uint, ulong, uint, INSSBuffer);
+    HRESULT AllocateSample(uint dwSampleSize, INSSBuffer* ppSample);
+    HRESULT WriteSample(uint dwInputNum, ulong cnsSampleTime, uint dwFlags, INSSBuffer pSample);
     HRESULT Flush();
 }
 enum IID_IWMDRMWriter = GUID(0xd6ea5dd0, 0x12a0, 0x43f4, [0x90, 0xab, 0xa3, 0xfd, 0x45, 0x1e, 0x6a, 0x7]);
 interface IWMDRMWriter : IUnknown
 {
-    HRESULT GenerateKeySeed(PWSTR, uint*);
-    HRESULT GenerateKeyID(PWSTR, uint*);
-    HRESULT GenerateSigningKeyPair(PWSTR, uint*, PWSTR, uint*);
-    HRESULT SetDRMAttribute(ushort, const(wchar)*, WMT_ATTR_DATATYPE, const(ubyte)*, ushort);
+    HRESULT GenerateKeySeed(PWSTR pwszKeySeed, uint* pcwchLength);
+    HRESULT GenerateKeyID(PWSTR pwszKeyID, uint* pcwchLength);
+    HRESULT GenerateSigningKeyPair(PWSTR pwszPrivKey, uint* pcwchPrivKeyLength, PWSTR pwszPubKey, uint* pcwchPubKeyLength);
+    HRESULT SetDRMAttribute(ushort wStreamNum, const(wchar)* pszName, WMT_ATTR_DATATYPE Type, const(ubyte)* pValue, ushort cbLength);
 }
 struct WMDRM_IMPORT_INIT_STRUCT
 {
@@ -1042,45 +1042,45 @@ struct WMDRM_IMPORT_INIT_STRUCT
 enum IID_IWMDRMWriter2 = GUID(0x38ee7a94, 0x40e2, 0x4e10, [0xaa, 0x3f, 0x33, 0xfd, 0x32, 0x10, 0xed, 0x5b]);
 interface IWMDRMWriter2 : IWMDRMWriter
 {
-    HRESULT SetWMDRMNetEncryption(BOOL, ubyte*, uint);
+    HRESULT SetWMDRMNetEncryption(BOOL fSamplesEncrypted, ubyte* pbKeyID, uint cbKeyID);
 }
 enum IID_IWMDRMWriter3 = GUID(0xa7184082, 0xa4aa, 0x4dde, [0xac, 0x9c, 0xe7, 0x5d, 0xbd, 0x11, 0x17, 0xce]);
 interface IWMDRMWriter3 : IWMDRMWriter2
 {
-    HRESULT SetProtectStreamSamples(WMDRM_IMPORT_INIT_STRUCT*);
+    HRESULT SetProtectStreamSamples(WMDRM_IMPORT_INIT_STRUCT* pImportInitStruct);
 }
 enum IID_IWMInputMediaProps = GUID(0x96406bd5, 0x2b2b, 0x11d3, [0xb3, 0x6b, 0x0, 0xc0, 0x4f, 0x61, 0x8, 0xff]);
 interface IWMInputMediaProps : IWMMediaProps
 {
-    HRESULT GetConnectionName(PWSTR, ushort*);
-    HRESULT GetGroupName(PWSTR, ushort*);
+    HRESULT GetConnectionName(PWSTR pwszName, ushort* pcchName);
+    HRESULT GetGroupName(PWSTR pwszName, ushort* pcchName);
 }
 enum IID_IWMPropertyVault = GUID(0x72995a79, 0x5090, 0x42a4, [0x9c, 0x8c, 0xd9, 0xd0, 0xb6, 0xd3, 0x4b, 0xe5]);
 interface IWMPropertyVault : IUnknown
 {
-    HRESULT GetPropertyCount(uint*);
-    HRESULT GetPropertyByName(const(wchar)*, WMT_ATTR_DATATYPE*, ubyte*, uint*);
-    HRESULT SetProperty(const(wchar)*, WMT_ATTR_DATATYPE, ubyte*, uint);
-    HRESULT GetPropertyByIndex(uint, PWSTR, uint*, WMT_ATTR_DATATYPE*, ubyte*, uint*);
-    HRESULT CopyPropertiesFrom(IWMPropertyVault);
+    HRESULT GetPropertyCount(uint* pdwCount);
+    HRESULT GetPropertyByName(const(wchar)* pszName, WMT_ATTR_DATATYPE* pType, ubyte* pValue, uint* pdwSize);
+    HRESULT SetProperty(const(wchar)* pszName, WMT_ATTR_DATATYPE pType, ubyte* pValue, uint dwSize);
+    HRESULT GetPropertyByIndex(uint dwIndex, PWSTR pszName, uint* pdwNameLen, WMT_ATTR_DATATYPE* pType, ubyte* pValue, uint* pdwSize);
+    HRESULT CopyPropertiesFrom(IWMPropertyVault pIWMPropertyVault);
     HRESULT Clear();
 }
 enum IID_IWMIStreamProps = GUID(0x6816dad3, 0x2b4b, 0x4c8e, [0x81, 0x49, 0x87, 0x4c, 0x34, 0x83, 0xa7, 0x53]);
 interface IWMIStreamProps : IUnknown
 {
-    HRESULT GetProperty(const(wchar)*, WMT_ATTR_DATATYPE*, ubyte*, uint*);
+    HRESULT GetProperty(const(wchar)* pszName, WMT_ATTR_DATATYPE* pType, ubyte* pValue, uint* pdwSize);
 }
 enum IID_IWMReader = GUID(0x96406bd6, 0x2b2b, 0x11d3, [0xb3, 0x6b, 0x0, 0xc0, 0x4f, 0x61, 0x8, 0xff]);
 interface IWMReader : IUnknown
 {
-    HRESULT Open(const(wchar)*, IWMReaderCallback, void*);
+    HRESULT Open(const(wchar)* pwszURL, IWMReaderCallback pCallback, void* pvContext);
     HRESULT Close();
-    HRESULT GetOutputCount(uint*);
-    HRESULT GetOutputProps(uint, IWMOutputMediaProps*);
-    HRESULT SetOutputProps(uint, IWMOutputMediaProps);
-    HRESULT GetOutputFormatCount(uint, uint*);
-    HRESULT GetOutputFormat(uint, uint, IWMOutputMediaProps*);
-    HRESULT Start(ulong, ulong, float, void*);
+    HRESULT GetOutputCount(uint* pcOutputs);
+    HRESULT GetOutputProps(uint dwOutputNum, IWMOutputMediaProps* ppOutput);
+    HRESULT SetOutputProps(uint dwOutputNum, IWMOutputMediaProps pOutput);
+    HRESULT GetOutputFormatCount(uint dwOutputNumber, uint* pcFormats);
+    HRESULT GetOutputFormat(uint dwOutputNumber, uint dwFormatNumber, IWMOutputMediaProps* ppProps);
+    HRESULT Start(ulong cnsStart, ulong cnsDuration, float fRate, void* pvContext);
     HRESULT Stop();
     HRESULT Pause();
     HRESULT Resume();
@@ -1088,450 +1088,450 @@ interface IWMReader : IUnknown
 enum IID_IWMSyncReader = GUID(0x9397f121, 0x7705, 0x4dc9, [0xb0, 0x49, 0x98, 0xb6, 0x98, 0x18, 0x84, 0x14]);
 interface IWMSyncReader : IUnknown
 {
-    HRESULT Open(const(wchar)*);
+    HRESULT Open(const(wchar)* pwszFilename);
     HRESULT Close();
-    HRESULT SetRange(ulong, long);
-    HRESULT SetRangeByFrame(ushort, ulong, long);
-    HRESULT GetNextSample(ushort, INSSBuffer*, ulong*, ulong*, uint*, uint*, ushort*);
-    HRESULT SetStreamsSelected(ushort, ushort*, WMT_STREAM_SELECTION*);
-    HRESULT GetStreamSelected(ushort, WMT_STREAM_SELECTION*);
-    HRESULT SetReadStreamSamples(ushort, BOOL);
-    HRESULT GetReadStreamSamples(ushort, BOOL*);
-    HRESULT GetOutputSetting(uint, const(wchar)*, WMT_ATTR_DATATYPE*, ubyte*, ushort*);
-    HRESULT SetOutputSetting(uint, const(wchar)*, WMT_ATTR_DATATYPE, const(ubyte)*, ushort);
-    HRESULT GetOutputCount(uint*);
-    HRESULT GetOutputProps(uint, IWMOutputMediaProps*);
-    HRESULT SetOutputProps(uint, IWMOutputMediaProps);
-    HRESULT GetOutputFormatCount(uint, uint*);
-    HRESULT GetOutputFormat(uint, uint, IWMOutputMediaProps*);
-    HRESULT GetOutputNumberForStream(ushort, uint*);
-    HRESULT GetStreamNumberForOutput(uint, ushort*);
-    HRESULT GetMaxOutputSampleSize(uint, uint*);
-    HRESULT GetMaxStreamSampleSize(ushort, uint*);
-    HRESULT OpenStream(IStream);
+    HRESULT SetRange(ulong cnsStartTime, long cnsDuration);
+    HRESULT SetRangeByFrame(ushort wStreamNum, ulong qwFrameNumber, long cFramesToRead);
+    HRESULT GetNextSample(ushort wStreamNum, INSSBuffer* ppSample, ulong* pcnsSampleTime, ulong* pcnsDuration, uint* pdwFlags, uint* pdwOutputNum, ushort* pwStreamNum);
+    HRESULT SetStreamsSelected(ushort cStreamCount, ushort* pwStreamNumbers, WMT_STREAM_SELECTION* pSelections);
+    HRESULT GetStreamSelected(ushort wStreamNum, WMT_STREAM_SELECTION* pSelection);
+    HRESULT SetReadStreamSamples(ushort wStreamNum, BOOL fCompressed);
+    HRESULT GetReadStreamSamples(ushort wStreamNum, BOOL* pfCompressed);
+    HRESULT GetOutputSetting(uint dwOutputNum, const(wchar)* pszName, WMT_ATTR_DATATYPE* pType, ubyte* pValue, ushort* pcbLength);
+    HRESULT SetOutputSetting(uint dwOutputNum, const(wchar)* pszName, WMT_ATTR_DATATYPE Type, const(ubyte)* pValue, ushort cbLength);
+    HRESULT GetOutputCount(uint* pcOutputs);
+    HRESULT GetOutputProps(uint dwOutputNum, IWMOutputMediaProps* ppOutput);
+    HRESULT SetOutputProps(uint dwOutputNum, IWMOutputMediaProps pOutput);
+    HRESULT GetOutputFormatCount(uint dwOutputNum, uint* pcFormats);
+    HRESULT GetOutputFormat(uint dwOutputNum, uint dwFormatNum, IWMOutputMediaProps* ppProps);
+    HRESULT GetOutputNumberForStream(ushort wStreamNum, uint* pdwOutputNum);
+    HRESULT GetStreamNumberForOutput(uint dwOutputNum, ushort* pwStreamNum);
+    HRESULT GetMaxOutputSampleSize(uint dwOutput, uint* pcbMax);
+    HRESULT GetMaxStreamSampleSize(ushort wStream, uint* pcbMax);
+    HRESULT OpenStream(IStream pStream);
 }
 enum IID_IWMSyncReader2 = GUID(0xfaed3d21, 0x1b6b, 0x4af7, [0x8c, 0xb6, 0x3e, 0x18, 0x9b, 0xbc, 0x18, 0x7b]);
 interface IWMSyncReader2 : IWMSyncReader
 {
-    HRESULT SetRangeByTimecode(ushort, WMT_TIMECODE_EXTENSION_DATA*, WMT_TIMECODE_EXTENSION_DATA*);
-    HRESULT SetRangeByFrameEx(ushort, ulong, long, ulong*);
-    HRESULT SetAllocateForOutput(uint, IWMReaderAllocatorEx);
-    HRESULT GetAllocateForOutput(uint, IWMReaderAllocatorEx*);
-    HRESULT SetAllocateForStream(ushort, IWMReaderAllocatorEx);
-    HRESULT GetAllocateForStream(ushort, IWMReaderAllocatorEx*);
+    HRESULT SetRangeByTimecode(ushort wStreamNum, WMT_TIMECODE_EXTENSION_DATA* pStart, WMT_TIMECODE_EXTENSION_DATA* pEnd);
+    HRESULT SetRangeByFrameEx(ushort wStreamNum, ulong qwFrameNumber, long cFramesToRead, ulong* pcnsStartTime);
+    HRESULT SetAllocateForOutput(uint dwOutputNum, IWMReaderAllocatorEx pAllocator);
+    HRESULT GetAllocateForOutput(uint dwOutputNum, IWMReaderAllocatorEx* ppAllocator);
+    HRESULT SetAllocateForStream(ushort wStreamNum, IWMReaderAllocatorEx pAllocator);
+    HRESULT GetAllocateForStream(ushort dwSreamNum, IWMReaderAllocatorEx* ppAllocator);
 }
 enum IID_IWMOutputMediaProps = GUID(0x96406bd7, 0x2b2b, 0x11d3, [0xb3, 0x6b, 0x0, 0xc0, 0x4f, 0x61, 0x8, 0xff]);
 interface IWMOutputMediaProps : IWMMediaProps
 {
-    HRESULT GetStreamGroupName(PWSTR, ushort*);
-    HRESULT GetConnectionName(PWSTR, ushort*);
+    HRESULT GetStreamGroupName(PWSTR pwszName, ushort* pcchName);
+    HRESULT GetConnectionName(PWSTR pwszName, ushort* pcchName);
 }
 enum IID_IWMStatusCallback = GUID(0x6d7cdc70, 0x9888, 0x11d3, [0x8e, 0xdc, 0x0, 0xc0, 0x4f, 0x61, 0x9, 0xcf]);
 interface IWMStatusCallback : IUnknown
 {
-    HRESULT OnStatus(WMT_STATUS, HRESULT, WMT_ATTR_DATATYPE, ubyte*, void*);
+    HRESULT OnStatus(WMT_STATUS Status, HRESULT hr, WMT_ATTR_DATATYPE dwType, ubyte* pValue, void* pvContext);
 }
 enum IID_IWMReaderCallback = GUID(0x96406bd8, 0x2b2b, 0x11d3, [0xb3, 0x6b, 0x0, 0xc0, 0x4f, 0x61, 0x8, 0xff]);
 interface IWMReaderCallback : IWMStatusCallback
 {
-    HRESULT OnSample(uint, ulong, ulong, uint, INSSBuffer, void*);
+    HRESULT OnSample(uint dwOutputNum, ulong cnsSampleTime, ulong cnsSampleDuration, uint dwFlags, INSSBuffer pSample, void* pvContext);
 }
 enum IID_IWMCredentialCallback = GUID(0x342e0eb7, 0xe651, 0x450c, [0x97, 0x5b, 0x2a, 0xce, 0x2c, 0x90, 0xc4, 0x8e]);
 interface IWMCredentialCallback : IUnknown
 {
-    HRESULT AcquireCredentials(PWSTR, PWSTR, PWSTR, uint, PWSTR, uint, HRESULT, uint*);
+    HRESULT AcquireCredentials(PWSTR pwszRealm, PWSTR pwszSite, PWSTR pwszUser, uint cchUser, PWSTR pwszPassword, uint cchPassword, HRESULT hrStatus, uint* pdwFlags);
 }
 enum IID_IWMMetadataEditor = GUID(0x96406bd9, 0x2b2b, 0x11d3, [0xb3, 0x6b, 0x0, 0xc0, 0x4f, 0x61, 0x8, 0xff]);
 interface IWMMetadataEditor : IUnknown
 {
-    HRESULT Open(const(wchar)*);
+    HRESULT Open(const(wchar)* pwszFilename);
     HRESULT Close();
     HRESULT Flush();
 }
 enum IID_IWMMetadataEditor2 = GUID(0x203cffe3, 0x2e18, 0x4fdf, [0xb5, 0x9d, 0x6e, 0x71, 0x53, 0x5, 0x34, 0xcf]);
 interface IWMMetadataEditor2 : IWMMetadataEditor
 {
-    HRESULT OpenEx(const(wchar)*, uint, uint);
+    HRESULT OpenEx(const(wchar)* pwszFilename, uint dwDesiredAccess, uint dwShareMode);
 }
 enum IID_IWMDRMEditor = GUID(0xff130ebc, 0xa6c3, 0x42a6, [0xb4, 0x1, 0xc3, 0x38, 0x2c, 0x3e, 0x8, 0xb3]);
 interface IWMDRMEditor : IUnknown
 {
-    HRESULT GetDRMProperty(const(wchar)*, WMT_ATTR_DATATYPE*, ubyte*, ushort*);
+    HRESULT GetDRMProperty(const(wchar)* pwstrName, WMT_ATTR_DATATYPE* pdwType, ubyte* pValue, ushort* pcbLength);
 }
 enum IID_IWMHeaderInfo = GUID(0x96406bda, 0x2b2b, 0x11d3, [0xb3, 0x6b, 0x0, 0xc0, 0x4f, 0x61, 0x8, 0xff]);
 interface IWMHeaderInfo : IUnknown
 {
-    HRESULT GetAttributeCount(ushort, ushort*);
-    HRESULT GetAttributeByIndex(ushort, ushort*, PWSTR, ushort*, WMT_ATTR_DATATYPE*, ubyte*, ushort*);
-    HRESULT GetAttributeByName(ushort*, const(wchar)*, WMT_ATTR_DATATYPE*, ubyte*, ushort*);
-    HRESULT SetAttribute(ushort, const(wchar)*, WMT_ATTR_DATATYPE, const(ubyte)*, ushort);
-    HRESULT GetMarkerCount(ushort*);
-    HRESULT GetMarker(ushort, PWSTR, ushort*, ulong*);
-    HRESULT AddMarker(PWSTR, ulong);
-    HRESULT RemoveMarker(ushort);
-    HRESULT GetScriptCount(ushort*);
-    HRESULT GetScript(ushort, PWSTR, ushort*, PWSTR, ushort*, ulong*);
-    HRESULT AddScript(PWSTR, PWSTR, ulong);
-    HRESULT RemoveScript(ushort);
+    HRESULT GetAttributeCount(ushort wStreamNum, ushort* pcAttributes);
+    HRESULT GetAttributeByIndex(ushort wIndex, ushort* pwStreamNum, PWSTR pwszName, ushort* pcchNameLen, WMT_ATTR_DATATYPE* pType, ubyte* pValue, ushort* pcbLength);
+    HRESULT GetAttributeByName(ushort* pwStreamNum, const(wchar)* pszName, WMT_ATTR_DATATYPE* pType, ubyte* pValue, ushort* pcbLength);
+    HRESULT SetAttribute(ushort wStreamNum, const(wchar)* pszName, WMT_ATTR_DATATYPE Type, const(ubyte)* pValue, ushort cbLength);
+    HRESULT GetMarkerCount(ushort* pcMarkers);
+    HRESULT GetMarker(ushort wIndex, PWSTR pwszMarkerName, ushort* pcchMarkerNameLen, ulong* pcnsMarkerTime);
+    HRESULT AddMarker(PWSTR pwszMarkerName, ulong cnsMarkerTime);
+    HRESULT RemoveMarker(ushort wIndex);
+    HRESULT GetScriptCount(ushort* pcScripts);
+    HRESULT GetScript(ushort wIndex, PWSTR pwszType, ushort* pcchTypeLen, PWSTR pwszCommand, ushort* pcchCommandLen, ulong* pcnsScriptTime);
+    HRESULT AddScript(PWSTR pwszType, PWSTR pwszCommand, ulong cnsScriptTime);
+    HRESULT RemoveScript(ushort wIndex);
 }
 enum IID_IWMHeaderInfo2 = GUID(0x15cf9781, 0x454e, 0x482e, [0xb3, 0x93, 0x85, 0xfa, 0xe4, 0x87, 0xa8, 0x10]);
 interface IWMHeaderInfo2 : IWMHeaderInfo
 {
-    HRESULT GetCodecInfoCount(uint*);
-    HRESULT GetCodecInfo(uint, ushort*, PWSTR, ushort*, PWSTR, WMT_CODEC_INFO_TYPE*, ushort*, ubyte*);
+    HRESULT GetCodecInfoCount(uint* pcCodecInfos);
+    HRESULT GetCodecInfo(uint wIndex, ushort* pcchName, PWSTR pwszName, ushort* pcchDescription, PWSTR pwszDescription, WMT_CODEC_INFO_TYPE* pCodecType, ushort* pcbCodecInfo, ubyte* pbCodecInfo);
 }
 enum IID_IWMHeaderInfo3 = GUID(0x15cc68e3, 0x27cc, 0x4ecd, [0xb2, 0x22, 0x3f, 0x5d, 0x2, 0xd8, 0xb, 0xd5]);
 interface IWMHeaderInfo3 : IWMHeaderInfo2
 {
-    HRESULT GetAttributeCountEx(ushort, ushort*);
-    HRESULT GetAttributeIndices(ushort, const(wchar)*, ushort*, ushort*, ushort*);
-    HRESULT GetAttributeByIndexEx(ushort, ushort, PWSTR, ushort*, WMT_ATTR_DATATYPE*, ushort*, ubyte*, uint*);
-    HRESULT ModifyAttribute(ushort, ushort, WMT_ATTR_DATATYPE, ushort, const(ubyte)*, uint);
-    HRESULT AddAttribute(ushort, const(wchar)*, ushort*, WMT_ATTR_DATATYPE, ushort, const(ubyte)*, uint);
-    HRESULT DeleteAttribute(ushort, ushort);
-    HRESULT AddCodecInfo(PWSTR, PWSTR, WMT_CODEC_INFO_TYPE, ushort, ubyte*);
+    HRESULT GetAttributeCountEx(ushort wStreamNum, ushort* pcAttributes);
+    HRESULT GetAttributeIndices(ushort wStreamNum, const(wchar)* pwszName, ushort* pwLangIndex, ushort* pwIndices, ushort* pwCount);
+    HRESULT GetAttributeByIndexEx(ushort wStreamNum, ushort wIndex, PWSTR pwszName, ushort* pwNameLen, WMT_ATTR_DATATYPE* pType, ushort* pwLangIndex, ubyte* pValue, uint* pdwDataLength);
+    HRESULT ModifyAttribute(ushort wStreamNum, ushort wIndex, WMT_ATTR_DATATYPE Type, ushort wLangIndex, const(ubyte)* pValue, uint dwLength);
+    HRESULT AddAttribute(ushort wStreamNum, const(wchar)* pszName, ushort* pwIndex, WMT_ATTR_DATATYPE Type, ushort wLangIndex, const(ubyte)* pValue, uint dwLength);
+    HRESULT DeleteAttribute(ushort wStreamNum, ushort wIndex);
+    HRESULT AddCodecInfo(PWSTR pwszName, PWSTR pwszDescription, WMT_CODEC_INFO_TYPE codecType, ushort cbCodecInfo, ubyte* pbCodecInfo);
 }
 enum IID_IWMProfileManager = GUID(0xd16679f2, 0x6ca0, 0x472d, [0x8d, 0x31, 0x2f, 0x5d, 0x55, 0xae, 0xe1, 0x55]);
 interface IWMProfileManager : IUnknown
 {
-    HRESULT CreateEmptyProfile(WMT_VERSION, IWMProfile*);
-    HRESULT LoadProfileByID(const(GUID)*, IWMProfile*);
-    HRESULT LoadProfileByData(const(wchar)*, IWMProfile*);
-    HRESULT SaveProfile(IWMProfile, PWSTR, uint*);
-    HRESULT GetSystemProfileCount(uint*);
-    HRESULT LoadSystemProfile(uint, IWMProfile*);
+    HRESULT CreateEmptyProfile(WMT_VERSION dwVersion, IWMProfile* ppProfile);
+    HRESULT LoadProfileByID(const(GUID)* guidProfile, IWMProfile* ppProfile);
+    HRESULT LoadProfileByData(const(wchar)* pwszProfile, IWMProfile* ppProfile);
+    HRESULT SaveProfile(IWMProfile pIWMProfile, PWSTR pwszProfile, uint* pdwLength);
+    HRESULT GetSystemProfileCount(uint* pcProfiles);
+    HRESULT LoadSystemProfile(uint dwProfileIndex, IWMProfile* ppProfile);
 }
 enum IID_IWMProfileManager2 = GUID(0x7a924e51, 0x73c1, 0x494d, [0x80, 0x19, 0x23, 0xd3, 0x7e, 0xd9, 0xb8, 0x9a]);
 interface IWMProfileManager2 : IWMProfileManager
 {
-    HRESULT GetSystemProfileVersion(WMT_VERSION*);
-    HRESULT SetSystemProfileVersion(WMT_VERSION);
+    HRESULT GetSystemProfileVersion(WMT_VERSION* pdwVersion);
+    HRESULT SetSystemProfileVersion(WMT_VERSION dwVersion);
 }
 enum IID_IWMProfileManagerLanguage = GUID(0xba4dcc78, 0x7ee0, 0x4ab8, [0xb2, 0x7a, 0xdb, 0xce, 0x8b, 0xc5, 0x14, 0x54]);
 interface IWMProfileManagerLanguage : IUnknown
 {
-    HRESULT GetUserLanguageID(ushort*);
-    HRESULT SetUserLanguageID(ushort);
+    HRESULT GetUserLanguageID(ushort* wLangID);
+    HRESULT SetUserLanguageID(ushort wLangID);
 }
 enum IID_IWMProfile = GUID(0x96406bdb, 0x2b2b, 0x11d3, [0xb3, 0x6b, 0x0, 0xc0, 0x4f, 0x61, 0x8, 0xff]);
 interface IWMProfile : IUnknown
 {
-    HRESULT GetVersion(WMT_VERSION*);
-    HRESULT GetName(PWSTR, uint*);
-    HRESULT SetName(const(wchar)*);
-    HRESULT GetDescription(PWSTR, uint*);
-    HRESULT SetDescription(const(wchar)*);
-    HRESULT GetStreamCount(uint*);
-    HRESULT GetStream(uint, IWMStreamConfig*);
-    HRESULT GetStreamByNumber(ushort, IWMStreamConfig*);
-    HRESULT RemoveStream(IWMStreamConfig);
-    HRESULT RemoveStreamByNumber(ushort);
-    HRESULT AddStream(IWMStreamConfig);
-    HRESULT ReconfigStream(IWMStreamConfig);
-    HRESULT CreateNewStream(const(GUID)*, IWMStreamConfig*);
-    HRESULT GetMutualExclusionCount(uint*);
-    HRESULT GetMutualExclusion(uint, IWMMutualExclusion*);
-    HRESULT RemoveMutualExclusion(IWMMutualExclusion);
-    HRESULT AddMutualExclusion(IWMMutualExclusion);
-    HRESULT CreateNewMutualExclusion(IWMMutualExclusion*);
+    HRESULT GetVersion(WMT_VERSION* pdwVersion);
+    HRESULT GetName(PWSTR pwszName, uint* pcchName);
+    HRESULT SetName(const(wchar)* pwszName);
+    HRESULT GetDescription(PWSTR pwszDescription, uint* pcchDescription);
+    HRESULT SetDescription(const(wchar)* pwszDescription);
+    HRESULT GetStreamCount(uint* pcStreams);
+    HRESULT GetStream(uint dwStreamIndex, IWMStreamConfig* ppConfig);
+    HRESULT GetStreamByNumber(ushort wStreamNum, IWMStreamConfig* ppConfig);
+    HRESULT RemoveStream(IWMStreamConfig pConfig);
+    HRESULT RemoveStreamByNumber(ushort wStreamNum);
+    HRESULT AddStream(IWMStreamConfig pConfig);
+    HRESULT ReconfigStream(IWMStreamConfig pConfig);
+    HRESULT CreateNewStream(const(GUID)* guidStreamType, IWMStreamConfig* ppConfig);
+    HRESULT GetMutualExclusionCount(uint* pcME);
+    HRESULT GetMutualExclusion(uint dwMEIndex, IWMMutualExclusion* ppME);
+    HRESULT RemoveMutualExclusion(IWMMutualExclusion pME);
+    HRESULT AddMutualExclusion(IWMMutualExclusion pME);
+    HRESULT CreateNewMutualExclusion(IWMMutualExclusion* ppME);
 }
 enum IID_IWMProfile2 = GUID(0x7e72d33, 0xd94e, 0x4be7, [0x88, 0x43, 0x60, 0xae, 0x5f, 0xf7, 0xe5, 0xf5]);
 interface IWMProfile2 : IWMProfile
 {
-    HRESULT GetProfileID(GUID*);
+    HRESULT GetProfileID(GUID* pguidID);
 }
 enum IID_IWMProfile3 = GUID(0xef96cc, 0xa461, 0x4546, [0x8b, 0xcd, 0xc9, 0xa2, 0x8f, 0xe, 0x6, 0xf5]);
 interface IWMProfile3 : IWMProfile2
 {
-    HRESULT GetStorageFormat(WMT_STORAGE_FORMAT*);
-    HRESULT SetStorageFormat(WMT_STORAGE_FORMAT);
-    HRESULT GetBandwidthSharingCount(uint*);
-    HRESULT GetBandwidthSharing(uint, IWMBandwidthSharing*);
-    HRESULT RemoveBandwidthSharing(IWMBandwidthSharing);
-    HRESULT AddBandwidthSharing(IWMBandwidthSharing);
-    HRESULT CreateNewBandwidthSharing(IWMBandwidthSharing*);
-    HRESULT GetStreamPrioritization(IWMStreamPrioritization*);
-    HRESULT SetStreamPrioritization(IWMStreamPrioritization);
+    HRESULT GetStorageFormat(WMT_STORAGE_FORMAT* pnStorageFormat);
+    HRESULT SetStorageFormat(WMT_STORAGE_FORMAT nStorageFormat);
+    HRESULT GetBandwidthSharingCount(uint* pcBS);
+    HRESULT GetBandwidthSharing(uint dwBSIndex, IWMBandwidthSharing* ppBS);
+    HRESULT RemoveBandwidthSharing(IWMBandwidthSharing pBS);
+    HRESULT AddBandwidthSharing(IWMBandwidthSharing pBS);
+    HRESULT CreateNewBandwidthSharing(IWMBandwidthSharing* ppBS);
+    HRESULT GetStreamPrioritization(IWMStreamPrioritization* ppSP);
+    HRESULT SetStreamPrioritization(IWMStreamPrioritization pSP);
     HRESULT RemoveStreamPrioritization();
-    HRESULT CreateNewStreamPrioritization(IWMStreamPrioritization*);
-    HRESULT GetExpectedPacketCount(ulong, ulong*);
+    HRESULT CreateNewStreamPrioritization(IWMStreamPrioritization* ppSP);
+    HRESULT GetExpectedPacketCount(ulong msDuration, ulong* pcPackets);
 }
 enum IID_IWMStreamConfig = GUID(0x96406bdc, 0x2b2b, 0x11d3, [0xb3, 0x6b, 0x0, 0xc0, 0x4f, 0x61, 0x8, 0xff]);
 interface IWMStreamConfig : IUnknown
 {
-    HRESULT GetStreamType(GUID*);
-    HRESULT GetStreamNumber(ushort*);
-    HRESULT SetStreamNumber(ushort);
-    HRESULT GetStreamName(PWSTR, ushort*);
-    HRESULT SetStreamName(PWSTR);
-    HRESULT GetConnectionName(PWSTR, ushort*);
-    HRESULT SetConnectionName(PWSTR);
-    HRESULT GetBitrate(uint*);
-    HRESULT SetBitrate(uint);
-    HRESULT GetBufferWindow(uint*);
-    HRESULT SetBufferWindow(uint);
+    HRESULT GetStreamType(GUID* pguidStreamType);
+    HRESULT GetStreamNumber(ushort* pwStreamNum);
+    HRESULT SetStreamNumber(ushort wStreamNum);
+    HRESULT GetStreamName(PWSTR pwszStreamName, ushort* pcchStreamName);
+    HRESULT SetStreamName(PWSTR pwszStreamName);
+    HRESULT GetConnectionName(PWSTR pwszInputName, ushort* pcchInputName);
+    HRESULT SetConnectionName(PWSTR pwszInputName);
+    HRESULT GetBitrate(uint* pdwBitrate);
+    HRESULT SetBitrate(uint pdwBitrate);
+    HRESULT GetBufferWindow(uint* pmsBufferWindow);
+    HRESULT SetBufferWindow(uint msBufferWindow);
 }
 enum IID_IWMStreamConfig2 = GUID(0x7688d8cb, 0xfc0d, 0x43bd, [0x94, 0x59, 0x5a, 0x8d, 0xec, 0x20, 0xc, 0xfa]);
 interface IWMStreamConfig2 : IWMStreamConfig
 {
-    HRESULT GetTransportType(WMT_TRANSPORT_TYPE*);
-    HRESULT SetTransportType(WMT_TRANSPORT_TYPE);
-    HRESULT AddDataUnitExtension(GUID, ushort, ubyte*, uint);
-    HRESULT GetDataUnitExtensionCount(ushort*);
-    HRESULT GetDataUnitExtension(ushort, GUID*, ushort*, ubyte*, uint*);
+    HRESULT GetTransportType(WMT_TRANSPORT_TYPE* pnTransportType);
+    HRESULT SetTransportType(WMT_TRANSPORT_TYPE nTransportType);
+    HRESULT AddDataUnitExtension(GUID guidExtensionSystemID, ushort cbExtensionDataSize, ubyte* pbExtensionSystemInfo, uint cbExtensionSystemInfo);
+    HRESULT GetDataUnitExtensionCount(ushort* pcDataUnitExtensions);
+    HRESULT GetDataUnitExtension(ushort wDataUnitExtensionNumber, GUID* pguidExtensionSystemID, ushort* pcbExtensionDataSize, ubyte* pbExtensionSystemInfo, uint* pcbExtensionSystemInfo);
     HRESULT RemoveAllDataUnitExtensions();
 }
 enum IID_IWMStreamConfig3 = GUID(0xcb164104, 0x3aa9, 0x45a7, [0x9a, 0xc9, 0x4d, 0xae, 0xe1, 0x31, 0xd6, 0xe1]);
 interface IWMStreamConfig3 : IWMStreamConfig2
 {
-    HRESULT GetLanguage(PWSTR, ushort*);
-    HRESULT SetLanguage(PWSTR);
+    HRESULT GetLanguage(PWSTR pwszLanguageString, ushort* pcchLanguageStringLength);
+    HRESULT SetLanguage(PWSTR pwszLanguageString);
 }
 enum IID_IWMPacketSize = GUID(0xcdfb97ab, 0x188f, 0x40b3, [0xb6, 0x43, 0x5b, 0x79, 0x3, 0x97, 0x5c, 0x59]);
 interface IWMPacketSize : IUnknown
 {
-    HRESULT GetMaxPacketSize(uint*);
-    HRESULT SetMaxPacketSize(uint);
+    HRESULT GetMaxPacketSize(uint* pdwMaxPacketSize);
+    HRESULT SetMaxPacketSize(uint dwMaxPacketSize);
 }
 enum IID_IWMPacketSize2 = GUID(0x8bfc2b9e, 0xb646, 0x4233, [0xa8, 0x77, 0x1c, 0x6a, 0x7, 0x96, 0x69, 0xdc]);
 interface IWMPacketSize2 : IWMPacketSize
 {
-    HRESULT GetMinPacketSize(uint*);
-    HRESULT SetMinPacketSize(uint);
+    HRESULT GetMinPacketSize(uint* pdwMinPacketSize);
+    HRESULT SetMinPacketSize(uint dwMinPacketSize);
 }
 enum IID_IWMStreamList = GUID(0x96406bdd, 0x2b2b, 0x11d3, [0xb3, 0x6b, 0x0, 0xc0, 0x4f, 0x61, 0x8, 0xff]);
 interface IWMStreamList : IUnknown
 {
-    HRESULT GetStreams(ushort*, ushort*);
-    HRESULT AddStream(ushort);
-    HRESULT RemoveStream(ushort);
+    HRESULT GetStreams(ushort* pwStreamNumArray, ushort* pcStreams);
+    HRESULT AddStream(ushort wStreamNum);
+    HRESULT RemoveStream(ushort wStreamNum);
 }
 enum IID_IWMMutualExclusion = GUID(0x96406bde, 0x2b2b, 0x11d3, [0xb3, 0x6b, 0x0, 0xc0, 0x4f, 0x61, 0x8, 0xff]);
 interface IWMMutualExclusion : IWMStreamList
 {
-    HRESULT GetType(GUID*);
-    HRESULT SetType(const(GUID)*);
+    HRESULT GetType(GUID* pguidType);
+    HRESULT SetType(const(GUID)* guidType);
 }
 enum IID_IWMMutualExclusion2 = GUID(0x302b57d, 0x89d1, 0x4ba2, [0x85, 0xc9, 0x16, 0x6f, 0x2c, 0x53, 0xeb, 0x91]);
 interface IWMMutualExclusion2 : IWMMutualExclusion
 {
-    HRESULT GetName(PWSTR, ushort*);
-    HRESULT SetName(PWSTR);
-    HRESULT GetRecordCount(ushort*);
+    HRESULT GetName(PWSTR pwszName, ushort* pcchName);
+    HRESULT SetName(PWSTR pwszName);
+    HRESULT GetRecordCount(ushort* pwRecordCount);
     HRESULT AddRecord();
-    HRESULT RemoveRecord(ushort);
-    HRESULT GetRecordName(ushort, PWSTR, ushort*);
-    HRESULT SetRecordName(ushort, PWSTR);
-    HRESULT GetStreamsForRecord(ushort, ushort*, ushort*);
-    HRESULT AddStreamForRecord(ushort, ushort);
-    HRESULT RemoveStreamForRecord(ushort, ushort);
+    HRESULT RemoveRecord(ushort wRecordNumber);
+    HRESULT GetRecordName(ushort wRecordNumber, PWSTR pwszRecordName, ushort* pcchRecordName);
+    HRESULT SetRecordName(ushort wRecordNumber, PWSTR pwszRecordName);
+    HRESULT GetStreamsForRecord(ushort wRecordNumber, ushort* pwStreamNumArray, ushort* pcStreams);
+    HRESULT AddStreamForRecord(ushort wRecordNumber, ushort wStreamNumber);
+    HRESULT RemoveStreamForRecord(ushort wRecordNumber, ushort wStreamNumber);
 }
 enum IID_IWMBandwidthSharing = GUID(0xad694af1, 0xf8d9, 0x42f8, [0xbc, 0x47, 0x70, 0x31, 0x1b, 0xc, 0x4f, 0x9e]);
 interface IWMBandwidthSharing : IWMStreamList
 {
-    HRESULT GetType(GUID*);
-    HRESULT SetType(const(GUID)*);
-    HRESULT GetBandwidth(uint*, uint*);
-    HRESULT SetBandwidth(uint, uint);
+    HRESULT GetType(GUID* pguidType);
+    HRESULT SetType(const(GUID)* guidType);
+    HRESULT GetBandwidth(uint* pdwBitrate, uint* pmsBufferWindow);
+    HRESULT SetBandwidth(uint dwBitrate, uint msBufferWindow);
 }
 enum IID_IWMStreamPrioritization = GUID(0x8c1c6090, 0xf9a8, 0x4748, [0x8e, 0xc3, 0xdd, 0x11, 0x8, 0xba, 0x1e, 0x77]);
 interface IWMStreamPrioritization : IUnknown
 {
-    HRESULT GetPriorityRecords(WM_STREAM_PRIORITY_RECORD*, ushort*);
-    HRESULT SetPriorityRecords(WM_STREAM_PRIORITY_RECORD*, ushort);
+    HRESULT GetPriorityRecords(WM_STREAM_PRIORITY_RECORD* pRecordArray, ushort* pcRecords);
+    HRESULT SetPriorityRecords(WM_STREAM_PRIORITY_RECORD* pRecordArray, ushort cRecords);
 }
 enum IID_IWMWriterAdvanced = GUID(0x96406be3, 0x2b2b, 0x11d3, [0xb3, 0x6b, 0x0, 0xc0, 0x4f, 0x61, 0x8, 0xff]);
 interface IWMWriterAdvanced : IUnknown
 {
-    HRESULT GetSinkCount(uint*);
-    HRESULT GetSink(uint, IWMWriterSink*);
-    HRESULT AddSink(IWMWriterSink);
-    HRESULT RemoveSink(IWMWriterSink);
-    HRESULT WriteStreamSample(ushort, ulong, uint, ulong, uint, INSSBuffer);
-    HRESULT SetLiveSource(BOOL);
-    HRESULT IsRealTime(BOOL*);
-    HRESULT GetWriterTime(ulong*);
-    HRESULT GetStatistics(ushort, WM_WRITER_STATISTICS*);
-    HRESULT SetSyncTolerance(uint);
-    HRESULT GetSyncTolerance(uint*);
+    HRESULT GetSinkCount(uint* pcSinks);
+    HRESULT GetSink(uint dwSinkNum, IWMWriterSink* ppSink);
+    HRESULT AddSink(IWMWriterSink pSink);
+    HRESULT RemoveSink(IWMWriterSink pSink);
+    HRESULT WriteStreamSample(ushort wStreamNum, ulong cnsSampleTime, uint msSampleSendTime, ulong cnsSampleDuration, uint dwFlags, INSSBuffer pSample);
+    HRESULT SetLiveSource(BOOL fIsLiveSource);
+    HRESULT IsRealTime(BOOL* pfRealTime);
+    HRESULT GetWriterTime(ulong* pcnsCurrentTime);
+    HRESULT GetStatistics(ushort wStreamNum, WM_WRITER_STATISTICS* pStats);
+    HRESULT SetSyncTolerance(uint msWindow);
+    HRESULT GetSyncTolerance(uint* pmsWindow);
 }
 enum IID_IWMWriterAdvanced2 = GUID(0x962dc1ec, 0xc046, 0x4db8, [0x9c, 0xc7, 0x26, 0xce, 0xae, 0x50, 0x8, 0x17]);
 interface IWMWriterAdvanced2 : IWMWriterAdvanced
 {
-    HRESULT GetInputSetting(uint, const(wchar)*, WMT_ATTR_DATATYPE*, ubyte*, ushort*);
-    HRESULT SetInputSetting(uint, const(wchar)*, WMT_ATTR_DATATYPE, const(ubyte)*, ushort);
+    HRESULT GetInputSetting(uint dwInputNum, const(wchar)* pszName, WMT_ATTR_DATATYPE* pType, ubyte* pValue, ushort* pcbLength);
+    HRESULT SetInputSetting(uint dwInputNum, const(wchar)* pszName, WMT_ATTR_DATATYPE Type, const(ubyte)* pValue, ushort cbLength);
 }
 enum IID_IWMWriterAdvanced3 = GUID(0x2cd6492d, 0x7c37, 0x4e76, [0x9d, 0x3b, 0x59, 0x26, 0x11, 0x83, 0xa2, 0x2e]);
 interface IWMWriterAdvanced3 : IWMWriterAdvanced2
 {
-    HRESULT GetStatisticsEx(ushort, WM_WRITER_STATISTICS_EX*);
+    HRESULT GetStatisticsEx(ushort wStreamNum, WM_WRITER_STATISTICS_EX* pStats);
     HRESULT SetNonBlocking();
 }
 enum IID_IWMWriterPreprocess = GUID(0xfc54a285, 0x38c4, 0x45b5, [0xaa, 0x23, 0x85, 0xb9, 0xf7, 0xcb, 0x42, 0x4b]);
 interface IWMWriterPreprocess : IUnknown
 {
-    HRESULT GetMaxPreprocessingPasses(uint, uint, uint*);
-    HRESULT SetNumPreprocessingPasses(uint, uint, uint);
-    HRESULT BeginPreprocessingPass(uint, uint);
-    HRESULT PreprocessSample(uint, ulong, uint, INSSBuffer);
-    HRESULT EndPreprocessingPass(uint, uint);
+    HRESULT GetMaxPreprocessingPasses(uint dwInputNum, uint dwFlags, uint* pdwMaxNumPasses);
+    HRESULT SetNumPreprocessingPasses(uint dwInputNum, uint dwFlags, uint dwNumPasses);
+    HRESULT BeginPreprocessingPass(uint dwInputNum, uint dwFlags);
+    HRESULT PreprocessSample(uint dwInputNum, ulong cnsSampleTime, uint dwFlags, INSSBuffer pSample);
+    HRESULT EndPreprocessingPass(uint dwInputNum, uint dwFlags);
 }
 enum IID_IWMWriterPostViewCallback = GUID(0xd9d6549d, 0xa193, 0x4f24, [0xb3, 0x8, 0x3, 0x12, 0x3d, 0x9b, 0x7f, 0x8d]);
 interface IWMWriterPostViewCallback : IWMStatusCallback
 {
-    HRESULT OnPostViewSample(ushort, ulong, ulong, uint, INSSBuffer, void*);
-    HRESULT AllocateForPostView(ushort, uint, INSSBuffer*, void*);
+    HRESULT OnPostViewSample(ushort wStreamNumber, ulong cnsSampleTime, ulong cnsSampleDuration, uint dwFlags, INSSBuffer pSample, void* pvContext);
+    HRESULT AllocateForPostView(ushort wStreamNum, uint cbBuffer, INSSBuffer* ppBuffer, void* pvContext);
 }
 enum IID_IWMWriterPostView = GUID(0x81e20ce4, 0x75ef, 0x491a, [0x80, 0x4, 0xfc, 0x53, 0xc4, 0x5b, 0xdc, 0x3e]);
 interface IWMWriterPostView : IUnknown
 {
-    HRESULT SetPostViewCallback(IWMWriterPostViewCallback, void*);
-    HRESULT SetReceivePostViewSamples(ushort, BOOL);
-    HRESULT GetReceivePostViewSamples(ushort, BOOL*);
-    HRESULT GetPostViewProps(ushort, IWMMediaProps*);
-    HRESULT SetPostViewProps(ushort, IWMMediaProps);
-    HRESULT GetPostViewFormatCount(ushort, uint*);
-    HRESULT GetPostViewFormat(ushort, uint, IWMMediaProps*);
-    HRESULT SetAllocateForPostView(ushort, BOOL);
-    HRESULT GetAllocateForPostView(ushort, BOOL*);
+    HRESULT SetPostViewCallback(IWMWriterPostViewCallback pCallback, void* pvContext);
+    HRESULT SetReceivePostViewSamples(ushort wStreamNum, BOOL fReceivePostViewSamples);
+    HRESULT GetReceivePostViewSamples(ushort wStreamNum, BOOL* pfReceivePostViewSamples);
+    HRESULT GetPostViewProps(ushort wStreamNumber, IWMMediaProps* ppOutput);
+    HRESULT SetPostViewProps(ushort wStreamNumber, IWMMediaProps pOutput);
+    HRESULT GetPostViewFormatCount(ushort wStreamNumber, uint* pcFormats);
+    HRESULT GetPostViewFormat(ushort wStreamNumber, uint dwFormatNumber, IWMMediaProps* ppProps);
+    HRESULT SetAllocateForPostView(ushort wStreamNumber, BOOL fAllocate);
+    HRESULT GetAllocateForPostView(ushort wStreamNumber, BOOL* pfAllocate);
 }
 enum IID_IWMWriterSink = GUID(0x96406be4, 0x2b2b, 0x11d3, [0xb3, 0x6b, 0x0, 0xc0, 0x4f, 0x61, 0x8, 0xff]);
 interface IWMWriterSink : IUnknown
 {
-    HRESULT OnHeader(INSSBuffer);
-    HRESULT IsRealTime(BOOL*);
-    HRESULT AllocateDataUnit(uint, INSSBuffer*);
-    HRESULT OnDataUnit(INSSBuffer);
+    HRESULT OnHeader(INSSBuffer pHeader);
+    HRESULT IsRealTime(BOOL* pfRealTime);
+    HRESULT AllocateDataUnit(uint cbDataUnit, INSSBuffer* ppDataUnit);
+    HRESULT OnDataUnit(INSSBuffer pDataUnit);
     HRESULT OnEndWriting();
 }
 enum IID_IWMRegisterCallback = GUID(0xcf4b1f99, 0x4de2, 0x4e49, [0xa3, 0x63, 0x25, 0x27, 0x40, 0xd9, 0x9b, 0xc1]);
 interface IWMRegisterCallback : IUnknown
 {
-    HRESULT Advise(IWMStatusCallback, void*);
-    HRESULT Unadvise(IWMStatusCallback, void*);
+    HRESULT Advise(IWMStatusCallback pCallback, void* pvContext);
+    HRESULT Unadvise(IWMStatusCallback pCallback, void* pvContext);
 }
 enum IID_IWMWriterFileSink = GUID(0x96406be5, 0x2b2b, 0x11d3, [0xb3, 0x6b, 0x0, 0xc0, 0x4f, 0x61, 0x8, 0xff]);
 interface IWMWriterFileSink : IWMWriterSink
 {
-    HRESULT Open(const(wchar)*);
+    HRESULT Open(const(wchar)* pwszFilename);
 }
 enum IID_IWMWriterFileSink2 = GUID(0x14282ba7, 0x4aef, 0x4205, [0x8c, 0xe5, 0xc2, 0x29, 0x3, 0x5a, 0x5, 0xbc]);
 interface IWMWriterFileSink2 : IWMWriterFileSink
 {
-    HRESULT Start(ulong);
-    HRESULT Stop(ulong);
-    HRESULT IsStopped(BOOL*);
-    HRESULT GetFileDuration(ulong*);
-    HRESULT GetFileSize(ulong*);
+    HRESULT Start(ulong cnsStartTime);
+    HRESULT Stop(ulong cnsStopTime);
+    HRESULT IsStopped(BOOL* pfStopped);
+    HRESULT GetFileDuration(ulong* pcnsDuration);
+    HRESULT GetFileSize(ulong* pcbFile);
     HRESULT Close();
-    HRESULT IsClosed(BOOL*);
+    HRESULT IsClosed(BOOL* pfClosed);
 }
 enum IID_IWMWriterFileSink3 = GUID(0x3fea4feb, 0x2945, 0x47a7, [0xa1, 0xdd, 0xc5, 0x3a, 0x8f, 0xc4, 0xc4, 0x5c]);
 interface IWMWriterFileSink3 : IWMWriterFileSink2
 {
-    HRESULT SetAutoIndexing(BOOL);
-    HRESULT GetAutoIndexing(BOOL*);
-    HRESULT SetControlStream(ushort, BOOL);
-    HRESULT GetMode(uint*);
-    HRESULT OnDataUnitEx(WMT_FILESINK_DATA_UNIT*);
-    HRESULT SetUnbufferedIO(BOOL, BOOL);
-    HRESULT GetUnbufferedIO(BOOL*);
+    HRESULT SetAutoIndexing(BOOL fDoAutoIndexing);
+    HRESULT GetAutoIndexing(BOOL* pfAutoIndexing);
+    HRESULT SetControlStream(ushort wStreamNumber, BOOL fShouldControlStartAndStop);
+    HRESULT GetMode(uint* pdwFileSinkMode);
+    HRESULT OnDataUnitEx(WMT_FILESINK_DATA_UNIT* pFileSinkDataUnit);
+    HRESULT SetUnbufferedIO(BOOL fUnbufferedIO, BOOL fRestrictMemUsage);
+    HRESULT GetUnbufferedIO(BOOL* pfUnbufferedIO);
     HRESULT CompleteOperations();
 }
 enum IID_IWMWriterNetworkSink = GUID(0x96406be7, 0x2b2b, 0x11d3, [0xb3, 0x6b, 0x0, 0xc0, 0x4f, 0x61, 0x8, 0xff]);
 interface IWMWriterNetworkSink : IWMWriterSink
 {
-    HRESULT SetMaximumClients(uint);
-    HRESULT GetMaximumClients(uint*);
-    HRESULT SetNetworkProtocol(WMT_NET_PROTOCOL);
-    HRESULT GetNetworkProtocol(WMT_NET_PROTOCOL*);
-    HRESULT GetHostURL(PWSTR, uint*);
-    HRESULT Open(uint*);
+    HRESULT SetMaximumClients(uint dwMaxClients);
+    HRESULT GetMaximumClients(uint* pdwMaxClients);
+    HRESULT SetNetworkProtocol(WMT_NET_PROTOCOL protocol);
+    HRESULT GetNetworkProtocol(WMT_NET_PROTOCOL* pProtocol);
+    HRESULT GetHostURL(PWSTR pwszURL, uint* pcchURL);
+    HRESULT Open(uint* pdwPortNum);
     HRESULT Disconnect();
     HRESULT Close();
 }
 enum IID_IWMClientConnections = GUID(0x73c66010, 0xa299, 0x41df, [0xb1, 0xf0, 0xcc, 0xf0, 0x3b, 0x9, 0xc1, 0xc6]);
 interface IWMClientConnections : IUnknown
 {
-    HRESULT GetClientCount(uint*);
-    HRESULT GetClientProperties(uint, WM_CLIENT_PROPERTIES*);
+    HRESULT GetClientCount(uint* pcClients);
+    HRESULT GetClientProperties(uint dwClientNum, WM_CLIENT_PROPERTIES* pClientProperties);
 }
 enum IID_IWMClientConnections2 = GUID(0x4091571e, 0x4701, 0x4593, [0xbb, 0x3d, 0xd5, 0xf5, 0xf0, 0xc7, 0x42, 0x46]);
 interface IWMClientConnections2 : IWMClientConnections
 {
-    HRESULT GetClientInfo(uint, PWSTR, uint*, PWSTR, uint*, PWSTR, uint*);
+    HRESULT GetClientInfo(uint dwClientNum, PWSTR pwszNetworkAddress, uint* pcchNetworkAddress, PWSTR pwszPort, uint* pcchPort, PWSTR pwszDNSName, uint* pcchDNSName);
 }
 enum IID_IWMReaderAdvanced = GUID(0x96406bea, 0x2b2b, 0x11d3, [0xb3, 0x6b, 0x0, 0xc0, 0x4f, 0x61, 0x8, 0xff]);
 interface IWMReaderAdvanced : IUnknown
 {
-    HRESULT SetUserProvidedClock(BOOL);
-    HRESULT GetUserProvidedClock(BOOL*);
-    HRESULT DeliverTime(ulong);
-    HRESULT SetManualStreamSelection(BOOL);
-    HRESULT GetManualStreamSelection(BOOL*);
-    HRESULT SetStreamsSelected(ushort, ushort*, WMT_STREAM_SELECTION*);
-    HRESULT GetStreamSelected(ushort, WMT_STREAM_SELECTION*);
-    HRESULT SetReceiveSelectionCallbacks(BOOL);
-    HRESULT GetReceiveSelectionCallbacks(BOOL*);
-    HRESULT SetReceiveStreamSamples(ushort, BOOL);
-    HRESULT GetReceiveStreamSamples(ushort, BOOL*);
-    HRESULT SetAllocateForOutput(uint, BOOL);
-    HRESULT GetAllocateForOutput(uint, BOOL*);
-    HRESULT SetAllocateForStream(ushort, BOOL);
-    HRESULT GetAllocateForStream(ushort, BOOL*);
-    HRESULT GetStatistics(WM_READER_STATISTICS*);
-    HRESULT SetClientInfo(WM_READER_CLIENTINFO*);
-    HRESULT GetMaxOutputSampleSize(uint, uint*);
-    HRESULT GetMaxStreamSampleSize(ushort, uint*);
-    HRESULT NotifyLateDelivery(ulong);
+    HRESULT SetUserProvidedClock(BOOL fUserClock);
+    HRESULT GetUserProvidedClock(BOOL* pfUserClock);
+    HRESULT DeliverTime(ulong cnsTime);
+    HRESULT SetManualStreamSelection(BOOL fSelection);
+    HRESULT GetManualStreamSelection(BOOL* pfSelection);
+    HRESULT SetStreamsSelected(ushort cStreamCount, ushort* pwStreamNumbers, WMT_STREAM_SELECTION* pSelections);
+    HRESULT GetStreamSelected(ushort wStreamNum, WMT_STREAM_SELECTION* pSelection);
+    HRESULT SetReceiveSelectionCallbacks(BOOL fGetCallbacks);
+    HRESULT GetReceiveSelectionCallbacks(BOOL* pfGetCallbacks);
+    HRESULT SetReceiveStreamSamples(ushort wStreamNum, BOOL fReceiveStreamSamples);
+    HRESULT GetReceiveStreamSamples(ushort wStreamNum, BOOL* pfReceiveStreamSamples);
+    HRESULT SetAllocateForOutput(uint dwOutputNum, BOOL fAllocate);
+    HRESULT GetAllocateForOutput(uint dwOutputNum, BOOL* pfAllocate);
+    HRESULT SetAllocateForStream(ushort wStreamNum, BOOL fAllocate);
+    HRESULT GetAllocateForStream(ushort dwSreamNum, BOOL* pfAllocate);
+    HRESULT GetStatistics(WM_READER_STATISTICS* pStatistics);
+    HRESULT SetClientInfo(WM_READER_CLIENTINFO* pClientInfo);
+    HRESULT GetMaxOutputSampleSize(uint dwOutput, uint* pcbMax);
+    HRESULT GetMaxStreamSampleSize(ushort wStream, uint* pcbMax);
+    HRESULT NotifyLateDelivery(ulong cnsLateness);
 }
 enum IID_IWMReaderAdvanced2 = GUID(0xae14a945, 0xb90c, 0x4d0d, [0x91, 0x27, 0x80, 0xd6, 0x65, 0xf7, 0xd7, 0x3e]);
 interface IWMReaderAdvanced2 : IWMReaderAdvanced
 {
-    HRESULT SetPlayMode(WMT_PLAY_MODE);
-    HRESULT GetPlayMode(WMT_PLAY_MODE*);
-    HRESULT GetBufferProgress(uint*, ulong*);
-    HRESULT GetDownloadProgress(uint*, ulong*, ulong*);
-    HRESULT GetSaveAsProgress(uint*);
-    HRESULT SaveFileAs(const(wchar)*);
-    HRESULT GetProtocolName(PWSTR, uint*);
-    HRESULT StartAtMarker(ushort, ulong, float, void*);
-    HRESULT GetOutputSetting(uint, const(wchar)*, WMT_ATTR_DATATYPE*, ubyte*, ushort*);
-    HRESULT SetOutputSetting(uint, const(wchar)*, WMT_ATTR_DATATYPE, const(ubyte)*, ushort);
-    HRESULT Preroll(ulong, ulong, float);
-    HRESULT SetLogClientID(BOOL);
-    HRESULT GetLogClientID(BOOL*);
+    HRESULT SetPlayMode(WMT_PLAY_MODE Mode);
+    HRESULT GetPlayMode(WMT_PLAY_MODE* pMode);
+    HRESULT GetBufferProgress(uint* pdwPercent, ulong* pcnsBuffering);
+    HRESULT GetDownloadProgress(uint* pdwPercent, ulong* pqwBytesDownloaded, ulong* pcnsDownload);
+    HRESULT GetSaveAsProgress(uint* pdwPercent);
+    HRESULT SaveFileAs(const(wchar)* pwszFilename);
+    HRESULT GetProtocolName(PWSTR pwszProtocol, uint* pcchProtocol);
+    HRESULT StartAtMarker(ushort wMarkerIndex, ulong cnsDuration, float fRate, void* pvContext);
+    HRESULT GetOutputSetting(uint dwOutputNum, const(wchar)* pszName, WMT_ATTR_DATATYPE* pType, ubyte* pValue, ushort* pcbLength);
+    HRESULT SetOutputSetting(uint dwOutputNum, const(wchar)* pszName, WMT_ATTR_DATATYPE Type, const(ubyte)* pValue, ushort cbLength);
+    HRESULT Preroll(ulong cnsStart, ulong cnsDuration, float fRate);
+    HRESULT SetLogClientID(BOOL fLogClientID);
+    HRESULT GetLogClientID(BOOL* pfLogClientID);
     HRESULT StopBuffering();
-    HRESULT OpenStream(IStream, IWMReaderCallback, void*);
+    HRESULT OpenStream(IStream pStream, IWMReaderCallback pCallback, void* pvContext);
 }
 enum IID_IWMReaderAdvanced3 = GUID(0x5dc0674b, 0xf04b, 0x4a4e, [0x9f, 0x2a, 0xb1, 0xaf, 0xde, 0x2c, 0x81, 0x0]);
 interface IWMReaderAdvanced3 : IWMReaderAdvanced2
 {
     HRESULT StopNetStreaming();
-    HRESULT StartAtPosition(ushort, void*, void*, WMT_OFFSET_FORMAT, float, void*);
+    HRESULT StartAtPosition(ushort wStreamNum, void* pvOffsetStart, void* pvDuration, WMT_OFFSET_FORMAT dwOffsetFormat, float fRate, void* pvContext);
 }
 enum IID_IWMReaderAdvanced4 = GUID(0x945a76a2, 0x12ae, 0x4d48, [0xbd, 0x3c, 0xcd, 0x1d, 0x90, 0x39, 0x9b, 0x85]);
 interface IWMReaderAdvanced4 : IWMReaderAdvanced3
 {
-    HRESULT GetLanguageCount(uint, ushort*);
-    HRESULT GetLanguage(uint, ushort, PWSTR, ushort*);
-    HRESULT GetMaxSpeedFactor(double*);
-    HRESULT IsUsingFastCache(BOOL*);
-    HRESULT AddLogParam(const(wchar)*, const(wchar)*, const(wchar)*);
+    HRESULT GetLanguageCount(uint dwOutputNum, ushort* pwLanguageCount);
+    HRESULT GetLanguage(uint dwOutputNum, ushort wLanguage, PWSTR pwszLanguageString, ushort* pcchLanguageStringLength);
+    HRESULT GetMaxSpeedFactor(double* pdblFactor);
+    HRESULT IsUsingFastCache(BOOL* pfUsingFastCache);
+    HRESULT AddLogParam(const(wchar)* wszNameSpace, const(wchar)* wszName, const(wchar)* wszValue);
     HRESULT SendLogParams();
-    HRESULT CanSaveFileAs(BOOL*);
+    HRESULT CanSaveFileAs(BOOL* pfCanSave);
     HRESULT CancelSaveFileAs();
-    HRESULT GetURL(PWSTR, uint*);
+    HRESULT GetURL(PWSTR pwszURL, uint* pcchURL);
 }
 enum IID_IWMReaderAdvanced5 = GUID(0x24c44db0, 0x55d1, 0x49ae, [0xa5, 0xcc, 0xf1, 0x38, 0x15, 0xe3, 0x63, 0x63]);
 interface IWMReaderAdvanced5 : IWMReaderAdvanced4
 {
-    HRESULT SetPlayerHook(uint, IWMPlayerHook);
+    HRESULT SetPlayerHook(uint dwOutputNum, IWMPlayerHook pHook);
 }
 enum IID_IWMReaderAdvanced6 = GUID(0x18a2e7f8, 0x428f, 0x4acd, [0x8a, 0x0, 0xe6, 0x46, 0x39, 0xbc, 0x93, 0xde]);
 interface IWMReaderAdvanced6 : IWMReaderAdvanced5
 {
-    HRESULT SetProtectStreamSamples(ubyte*, uint, uint, uint, ubyte*, uint*);
+    HRESULT SetProtectStreamSamples(ubyte* pbCertificate, uint cbCertificate, uint dwCertificateType, uint dwFlags, ubyte* pbInitializationVector, uint* pcbInitializationVector);
 }
 enum IID_IWMPlayerHook = GUID(0xe5b7ca9a, 0xf1c, 0x4f66, [0x90, 0x2, 0x74, 0xec, 0x50, 0xd8, 0xb3, 0x4]);
 interface IWMPlayerHook : IUnknown
@@ -1541,35 +1541,35 @@ interface IWMPlayerHook : IUnknown
 enum IID_IWMReaderAllocatorEx = GUID(0x9f762fa7, 0xa22e, 0x428d, [0x93, 0xc9, 0xac, 0x82, 0xf3, 0xaa, 0xfe, 0x5a]);
 interface IWMReaderAllocatorEx : IUnknown
 {
-    HRESULT AllocateForStreamEx(ushort, uint, INSSBuffer*, uint, ulong, ulong, void*);
-    HRESULT AllocateForOutputEx(uint, uint, INSSBuffer*, uint, ulong, ulong, void*);
+    HRESULT AllocateForStreamEx(ushort wStreamNum, uint cbBuffer, INSSBuffer* ppBuffer, uint dwFlags, ulong cnsSampleTime, ulong cnsSampleDuration, void* pvContext);
+    HRESULT AllocateForOutputEx(uint dwOutputNum, uint cbBuffer, INSSBuffer* ppBuffer, uint dwFlags, ulong cnsSampleTime, ulong cnsSampleDuration, void* pvContext);
 }
 enum IID_IWMReaderTypeNegotiation = GUID(0xfdbe5592, 0x81a1, 0x41ea, [0x93, 0xbd, 0x73, 0x5c, 0xad, 0x1a, 0xdc, 0x5]);
 interface IWMReaderTypeNegotiation : IUnknown
 {
-    HRESULT TryOutputProps(uint, IWMOutputMediaProps);
+    HRESULT TryOutputProps(uint dwOutputNum, IWMOutputMediaProps pOutput);
 }
 enum IID_IWMReaderCallbackAdvanced = GUID(0x96406beb, 0x2b2b, 0x11d3, [0xb3, 0x6b, 0x0, 0xc0, 0x4f, 0x61, 0x8, 0xff]);
 interface IWMReaderCallbackAdvanced : IUnknown
 {
-    HRESULT OnStreamSample(ushort, ulong, ulong, uint, INSSBuffer, void*);
-    HRESULT OnTime(ulong, void*);
-    HRESULT OnStreamSelection(ushort, ushort*, WMT_STREAM_SELECTION*, void*);
-    HRESULT OnOutputPropsChanged(uint, WM_MEDIA_TYPE*, void*);
-    HRESULT AllocateForStream(ushort, uint, INSSBuffer*, void*);
-    HRESULT AllocateForOutput(uint, uint, INSSBuffer*, void*);
+    HRESULT OnStreamSample(ushort wStreamNum, ulong cnsSampleTime, ulong cnsSampleDuration, uint dwFlags, INSSBuffer pSample, void* pvContext);
+    HRESULT OnTime(ulong cnsCurrentTime, void* pvContext);
+    HRESULT OnStreamSelection(ushort wStreamCount, ushort* pStreamNumbers, WMT_STREAM_SELECTION* pSelections, void* pvContext);
+    HRESULT OnOutputPropsChanged(uint dwOutputNum, WM_MEDIA_TYPE* pMediaType, void* pvContext);
+    HRESULT AllocateForStream(ushort wStreamNum, uint cbBuffer, INSSBuffer* ppBuffer, void* pvContext);
+    HRESULT AllocateForOutput(uint dwOutputNum, uint cbBuffer, INSSBuffer* ppBuffer, void* pvContext);
 }
 enum IID_IWMDRMReader = GUID(0xd2827540, 0x3ee7, 0x432c, [0xb1, 0x4c, 0xdc, 0x17, 0xf0, 0x85, 0xd3, 0xb3]);
 interface IWMDRMReader : IUnknown
 {
-    HRESULT AcquireLicense(uint);
+    HRESULT AcquireLicense(uint dwFlags);
     HRESULT CancelLicenseAcquisition();
-    HRESULT Individualize(uint);
+    HRESULT Individualize(uint dwFlags);
     HRESULT CancelIndividualization();
     HRESULT MonitorLicenseAcquisition();
     HRESULT CancelMonitorLicenseAcquisition();
-    HRESULT SetDRMProperty(const(wchar)*, WMT_ATTR_DATATYPE, const(ubyte)*, ushort);
-    HRESULT GetDRMProperty(const(wchar)*, WMT_ATTR_DATATYPE*, ubyte*, ushort*);
+    HRESULT SetDRMProperty(const(wchar)* pwstrName, WMT_ATTR_DATATYPE dwType, const(ubyte)* pValue, ushort cbLength);
+    HRESULT GetDRMProperty(const(wchar)* pwstrName, WMT_ATTR_DATATYPE* pdwType, ubyte* pValue, ushort* pcbLength);
 }
 struct DRM_MINIMUM_OUTPUT_PROTECTION_LEVELS
 {
@@ -1609,300 +1609,300 @@ struct DRM_COPY_OPL
 enum IID_IWMDRMReader2 = GUID(0xbefe7a75, 0x9f1d, 0x4075, [0xb9, 0xd9, 0xa3, 0xc3, 0x7b, 0xda, 0x49, 0xa0]);
 interface IWMDRMReader2 : IWMDRMReader
 {
-    HRESULT SetEvaluateOutputLevelLicenses(BOOL);
-    HRESULT GetPlayOutputLevels(DRM_PLAY_OPL*, uint*, uint*);
-    HRESULT GetCopyOutputLevels(DRM_COPY_OPL*, uint*, uint*);
+    HRESULT SetEvaluateOutputLevelLicenses(BOOL fEvaluate);
+    HRESULT GetPlayOutputLevels(DRM_PLAY_OPL* pPlayOPL, uint* pcbLength, uint* pdwMinAppComplianceLevel);
+    HRESULT GetCopyOutputLevels(DRM_COPY_OPL* pCopyOPL, uint* pcbLength, uint* pdwMinAppComplianceLevel);
     HRESULT TryNextLicense();
 }
 enum IID_IWMDRMReader3 = GUID(0xe08672de, 0xf1e7, 0x4ff4, [0xa0, 0xa3, 0xfc, 0x4b, 0x8, 0xe4, 0xca, 0xf8]);
 interface IWMDRMReader3 : IWMDRMReader2
 {
-    HRESULT GetInclusionList(GUID**, uint*);
+    HRESULT GetInclusionList(GUID** ppGuids, uint* pcGuids);
 }
 enum IID_IWMReaderPlaylistBurn = GUID(0xf28c0300, 0x9baa, 0x4477, [0xa8, 0x46, 0x17, 0x44, 0xd9, 0xcb, 0xf5, 0x33]);
 interface IWMReaderPlaylistBurn : IUnknown
 {
-    HRESULT InitPlaylistBurn(uint, PWSTR*, IWMStatusCallback, void*);
-    HRESULT GetInitResults(uint, HRESULT*);
+    HRESULT InitPlaylistBurn(uint cFiles, PWSTR* ppwszFilenames, IWMStatusCallback pCallback, void* pvContext);
+    HRESULT GetInitResults(uint cFiles, HRESULT* phrStati);
     HRESULT Cancel();
-    HRESULT EndPlaylistBurn(HRESULT);
+    HRESULT EndPlaylistBurn(HRESULT hrBurnResult);
 }
 enum IID_IWMReaderNetworkConfig = GUID(0x96406bec, 0x2b2b, 0x11d3, [0xb3, 0x6b, 0x0, 0xc0, 0x4f, 0x61, 0x8, 0xff]);
 interface IWMReaderNetworkConfig : IUnknown
 {
-    HRESULT GetBufferingTime(ulong*);
-    HRESULT SetBufferingTime(ulong);
-    HRESULT GetUDPPortRanges(WM_PORT_NUMBER_RANGE*, uint*);
-    HRESULT SetUDPPortRanges(WM_PORT_NUMBER_RANGE*, uint);
-    HRESULT GetProxySettings(const(wchar)*, WMT_PROXY_SETTINGS*);
-    HRESULT SetProxySettings(const(wchar)*, WMT_PROXY_SETTINGS);
-    HRESULT GetProxyHostName(const(wchar)*, PWSTR, uint*);
-    HRESULT SetProxyHostName(const(wchar)*, const(wchar)*);
-    HRESULT GetProxyPort(const(wchar)*, uint*);
-    HRESULT SetProxyPort(const(wchar)*, uint);
-    HRESULT GetProxyExceptionList(const(wchar)*, PWSTR, uint*);
-    HRESULT SetProxyExceptionList(const(wchar)*, const(wchar)*);
-    HRESULT GetProxyBypassForLocal(const(wchar)*, BOOL*);
-    HRESULT SetProxyBypassForLocal(const(wchar)*, BOOL);
-    HRESULT GetForceRerunAutoProxyDetection(BOOL*);
-    HRESULT SetForceRerunAutoProxyDetection(BOOL);
-    HRESULT GetEnableMulticast(BOOL*);
-    HRESULT SetEnableMulticast(BOOL);
-    HRESULT GetEnableHTTP(BOOL*);
-    HRESULT SetEnableHTTP(BOOL);
-    HRESULT GetEnableUDP(BOOL*);
-    HRESULT SetEnableUDP(BOOL);
-    HRESULT GetEnableTCP(BOOL*);
-    HRESULT SetEnableTCP(BOOL);
+    HRESULT GetBufferingTime(ulong* pcnsBufferingTime);
+    HRESULT SetBufferingTime(ulong cnsBufferingTime);
+    HRESULT GetUDPPortRanges(WM_PORT_NUMBER_RANGE* pRangeArray, uint* pcRanges);
+    HRESULT SetUDPPortRanges(WM_PORT_NUMBER_RANGE* pRangeArray, uint cRanges);
+    HRESULT GetProxySettings(const(wchar)* pwszProtocol, WMT_PROXY_SETTINGS* pProxySetting);
+    HRESULT SetProxySettings(const(wchar)* pwszProtocol, WMT_PROXY_SETTINGS ProxySetting);
+    HRESULT GetProxyHostName(const(wchar)* pwszProtocol, PWSTR pwszHostName, uint* pcchHostName);
+    HRESULT SetProxyHostName(const(wchar)* pwszProtocol, const(wchar)* pwszHostName);
+    HRESULT GetProxyPort(const(wchar)* pwszProtocol, uint* pdwPort);
+    HRESULT SetProxyPort(const(wchar)* pwszProtocol, uint dwPort);
+    HRESULT GetProxyExceptionList(const(wchar)* pwszProtocol, PWSTR pwszExceptionList, uint* pcchExceptionList);
+    HRESULT SetProxyExceptionList(const(wchar)* pwszProtocol, const(wchar)* pwszExceptionList);
+    HRESULT GetProxyBypassForLocal(const(wchar)* pwszProtocol, BOOL* pfBypassForLocal);
+    HRESULT SetProxyBypassForLocal(const(wchar)* pwszProtocol, BOOL fBypassForLocal);
+    HRESULT GetForceRerunAutoProxyDetection(BOOL* pfForceRerunDetection);
+    HRESULT SetForceRerunAutoProxyDetection(BOOL fForceRerunDetection);
+    HRESULT GetEnableMulticast(BOOL* pfEnableMulticast);
+    HRESULT SetEnableMulticast(BOOL fEnableMulticast);
+    HRESULT GetEnableHTTP(BOOL* pfEnableHTTP);
+    HRESULT SetEnableHTTP(BOOL fEnableHTTP);
+    HRESULT GetEnableUDP(BOOL* pfEnableUDP);
+    HRESULT SetEnableUDP(BOOL fEnableUDP);
+    HRESULT GetEnableTCP(BOOL* pfEnableTCP);
+    HRESULT SetEnableTCP(BOOL fEnableTCP);
     HRESULT ResetProtocolRollover();
-    HRESULT GetConnectionBandwidth(uint*);
-    HRESULT SetConnectionBandwidth(uint);
-    HRESULT GetNumProtocolsSupported(uint*);
-    HRESULT GetSupportedProtocolName(uint, PWSTR, uint*);
-    HRESULT AddLoggingUrl(const(wchar)*);
-    HRESULT GetLoggingUrl(uint, PWSTR, uint*);
-    HRESULT GetLoggingUrlCount(uint*);
+    HRESULT GetConnectionBandwidth(uint* pdwConnectionBandwidth);
+    HRESULT SetConnectionBandwidth(uint dwConnectionBandwidth);
+    HRESULT GetNumProtocolsSupported(uint* pcProtocols);
+    HRESULT GetSupportedProtocolName(uint dwProtocolNum, PWSTR pwszProtocolName, uint* pcchProtocolName);
+    HRESULT AddLoggingUrl(const(wchar)* pwszUrl);
+    HRESULT GetLoggingUrl(uint dwIndex, PWSTR pwszUrl, uint* pcchUrl);
+    HRESULT GetLoggingUrlCount(uint* pdwUrlCount);
     HRESULT ResetLoggingUrlList();
 }
 enum IID_IWMReaderNetworkConfig2 = GUID(0xd979a853, 0x42b, 0x4050, [0x83, 0x87, 0xc9, 0x39, 0xdb, 0x22, 0x1, 0x3f]);
 interface IWMReaderNetworkConfig2 : IWMReaderNetworkConfig
 {
-    HRESULT GetEnableContentCaching(BOOL*);
-    HRESULT SetEnableContentCaching(BOOL);
-    HRESULT GetEnableFastCache(BOOL*);
-    HRESULT SetEnableFastCache(BOOL);
-    HRESULT GetAcceleratedStreamingDuration(ulong*);
-    HRESULT SetAcceleratedStreamingDuration(ulong);
-    HRESULT GetAutoReconnectLimit(uint*);
-    HRESULT SetAutoReconnectLimit(uint);
-    HRESULT GetEnableResends(BOOL*);
-    HRESULT SetEnableResends(BOOL);
-    HRESULT GetEnableThinning(BOOL*);
-    HRESULT SetEnableThinning(BOOL);
-    HRESULT GetMaxNetPacketSize(uint*);
+    HRESULT GetEnableContentCaching(BOOL* pfEnableContentCaching);
+    HRESULT SetEnableContentCaching(BOOL fEnableContentCaching);
+    HRESULT GetEnableFastCache(BOOL* pfEnableFastCache);
+    HRESULT SetEnableFastCache(BOOL fEnableFastCache);
+    HRESULT GetAcceleratedStreamingDuration(ulong* pcnsAccelDuration);
+    HRESULT SetAcceleratedStreamingDuration(ulong cnsAccelDuration);
+    HRESULT GetAutoReconnectLimit(uint* pdwAutoReconnectLimit);
+    HRESULT SetAutoReconnectLimit(uint dwAutoReconnectLimit);
+    HRESULT GetEnableResends(BOOL* pfEnableResends);
+    HRESULT SetEnableResends(BOOL fEnableResends);
+    HRESULT GetEnableThinning(BOOL* pfEnableThinning);
+    HRESULT SetEnableThinning(BOOL fEnableThinning);
+    HRESULT GetMaxNetPacketSize(uint* pdwMaxNetPacketSize);
 }
 enum IID_IWMReaderStreamClock = GUID(0x96406bed, 0x2b2b, 0x11d3, [0xb3, 0x6b, 0x0, 0xc0, 0x4f, 0x61, 0x8, 0xff]);
 interface IWMReaderStreamClock : IUnknown
 {
-    HRESULT GetTime(ulong*);
-    HRESULT SetTimer(ulong, void*, uint*);
-    HRESULT KillTimer(uint);
+    HRESULT GetTime(ulong* pcnsNow);
+    HRESULT SetTimer(ulong cnsWhen, void* pvParam, uint* pdwTimerId);
+    HRESULT KillTimer(uint dwTimerId);
 }
 enum IID_IWMIndexer = GUID(0x6d7cdc71, 0x9888, 0x11d3, [0x8e, 0xdc, 0x0, 0xc0, 0x4f, 0x61, 0x9, 0xcf]);
 interface IWMIndexer : IUnknown
 {
-    HRESULT StartIndexing(const(wchar)*, IWMStatusCallback, void*);
+    HRESULT StartIndexing(const(wchar)* pwszURL, IWMStatusCallback pCallback, void* pvContext);
     HRESULT Cancel();
 }
 enum IID_IWMIndexer2 = GUID(0xb70f1e42, 0x6255, 0x4df0, [0xa6, 0xb9, 0x2, 0xb2, 0x12, 0xd9, 0xe2, 0xbb]);
 interface IWMIndexer2 : IWMIndexer
 {
-    HRESULT Configure(ushort, WMT_INDEXER_TYPE, void*, void*);
+    HRESULT Configure(ushort wStreamNum, WMT_INDEXER_TYPE nIndexerType, void* pvInterval, void* pvIndexType);
 }
 enum IID_IWMLicenseBackup = GUID(0x5e5ac9f, 0x3fb6, 0x4508, [0xbb, 0x43, 0xa4, 0x6, 0x7b, 0xa1, 0xeb, 0xe8]);
 interface IWMLicenseBackup : IUnknown
 {
-    HRESULT BackupLicenses(uint, IWMStatusCallback);
+    HRESULT BackupLicenses(uint dwFlags, IWMStatusCallback pCallback);
     HRESULT CancelLicenseBackup();
 }
 enum IID_IWMLicenseRestore = GUID(0xc70b6334, 0xa22e, 0x4efb, [0xa2, 0x45, 0x15, 0xe6, 0x5a, 0x0, 0x4a, 0x13]);
 interface IWMLicenseRestore : IUnknown
 {
-    HRESULT RestoreLicenses(uint, IWMStatusCallback);
+    HRESULT RestoreLicenses(uint dwFlags, IWMStatusCallback pCallback);
     HRESULT CancelLicenseRestore();
 }
 enum IID_IWMBackupRestoreProps = GUID(0x3c8e0da6, 0x996f, 0x4ff3, [0xa1, 0xaf, 0x48, 0x38, 0xf9, 0x37, 0x7e, 0x2e]);
 interface IWMBackupRestoreProps : IUnknown
 {
-    HRESULT GetPropCount(ushort*);
-    HRESULT GetPropByIndex(ushort, PWSTR, ushort*, WMT_ATTR_DATATYPE*, ubyte*, ushort*);
-    HRESULT GetPropByName(const(wchar)*, WMT_ATTR_DATATYPE*, ubyte*, ushort*);
-    HRESULT SetProp(const(wchar)*, WMT_ATTR_DATATYPE, const(ubyte)*, ushort);
-    HRESULT RemoveProp(const(wchar)*);
+    HRESULT GetPropCount(ushort* pcProps);
+    HRESULT GetPropByIndex(ushort wIndex, PWSTR pwszName, ushort* pcchNameLen, WMT_ATTR_DATATYPE* pType, ubyte* pValue, ushort* pcbLength);
+    HRESULT GetPropByName(const(wchar)* pszName, WMT_ATTR_DATATYPE* pType, ubyte* pValue, ushort* pcbLength);
+    HRESULT SetProp(const(wchar)* pszName, WMT_ATTR_DATATYPE Type, const(ubyte)* pValue, ushort cbLength);
+    HRESULT RemoveProp(const(wchar)* pcwszName);
     HRESULT RemoveAllProps();
 }
 enum IID_IWMCodecInfo = GUID(0xa970f41e, 0x34de, 0x4a98, [0xb3, 0xba, 0xe4, 0xb3, 0xca, 0x75, 0x28, 0xf0]);
 interface IWMCodecInfo : IUnknown
 {
-    HRESULT GetCodecInfoCount(const(GUID)*, uint*);
-    HRESULT GetCodecFormatCount(const(GUID)*, uint, uint*);
-    HRESULT GetCodecFormat(const(GUID)*, uint, uint, IWMStreamConfig*);
+    HRESULT GetCodecInfoCount(const(GUID)* guidType, uint* pcCodecs);
+    HRESULT GetCodecFormatCount(const(GUID)* guidType, uint dwCodecIndex, uint* pcFormat);
+    HRESULT GetCodecFormat(const(GUID)* guidType, uint dwCodecIndex, uint dwFormatIndex, IWMStreamConfig* ppIStreamConfig);
 }
 enum IID_IWMCodecInfo2 = GUID(0xaa65e273, 0xb686, 0x4056, [0x91, 0xec, 0xdd, 0x76, 0x8d, 0x4d, 0xf7, 0x10]);
 interface IWMCodecInfo2 : IWMCodecInfo
 {
-    HRESULT GetCodecName(const(GUID)*, uint, PWSTR, uint*);
-    HRESULT GetCodecFormatDesc(const(GUID)*, uint, uint, IWMStreamConfig*, PWSTR, uint*);
+    HRESULT GetCodecName(const(GUID)* guidType, uint dwCodecIndex, PWSTR wszName, uint* pcchName);
+    HRESULT GetCodecFormatDesc(const(GUID)* guidType, uint dwCodecIndex, uint dwFormatIndex, IWMStreamConfig* ppIStreamConfig, PWSTR wszDesc, uint* pcchDesc);
 }
 enum IID_IWMCodecInfo3 = GUID(0x7e51f487, 0x4d93, 0x4f98, [0x8a, 0xb4, 0x27, 0xd0, 0x56, 0x5a, 0xdc, 0x51]);
 interface IWMCodecInfo3 : IWMCodecInfo2
 {
-    HRESULT GetCodecFormatProp(const(GUID)*, uint, uint, const(wchar)*, WMT_ATTR_DATATYPE*, ubyte*, uint*);
-    HRESULT GetCodecProp(const(GUID)*, uint, const(wchar)*, WMT_ATTR_DATATYPE*, ubyte*, uint*);
-    HRESULT SetCodecEnumerationSetting(const(GUID)*, uint, const(wchar)*, WMT_ATTR_DATATYPE, const(ubyte)*, uint);
-    HRESULT GetCodecEnumerationSetting(const(GUID)*, uint, const(wchar)*, WMT_ATTR_DATATYPE*, ubyte*, uint*);
+    HRESULT GetCodecFormatProp(const(GUID)* guidType, uint dwCodecIndex, uint dwFormatIndex, const(wchar)* pszName, WMT_ATTR_DATATYPE* pType, ubyte* pValue, uint* pdwSize);
+    HRESULT GetCodecProp(const(GUID)* guidType, uint dwCodecIndex, const(wchar)* pszName, WMT_ATTR_DATATYPE* pType, ubyte* pValue, uint* pdwSize);
+    HRESULT SetCodecEnumerationSetting(const(GUID)* guidType, uint dwCodecIndex, const(wchar)* pszName, WMT_ATTR_DATATYPE Type, const(ubyte)* pValue, uint dwSize);
+    HRESULT GetCodecEnumerationSetting(const(GUID)* guidType, uint dwCodecIndex, const(wchar)* pszName, WMT_ATTR_DATATYPE* pType, ubyte* pValue, uint* pdwSize);
 }
 enum IID_IWMLanguageList = GUID(0xdf683f00, 0x2d49, 0x4d8e, [0x92, 0xb7, 0xfb, 0x19, 0xf6, 0xa0, 0xdc, 0x57]);
 interface IWMLanguageList : IUnknown
 {
-    HRESULT GetLanguageCount(ushort*);
-    HRESULT GetLanguageDetails(ushort, PWSTR, ushort*);
-    HRESULT AddLanguageByRFC1766String(PWSTR, ushort*);
+    HRESULT GetLanguageCount(ushort* pwCount);
+    HRESULT GetLanguageDetails(ushort wIndex, PWSTR pwszLanguageString, ushort* pcchLanguageStringLength);
+    HRESULT AddLanguageByRFC1766String(PWSTR pwszLanguageString, ushort* pwIndex);
 }
 enum IID_IWMWriterPushSink = GUID(0xdc10e6a5, 0x72c, 0x467d, [0xbf, 0x57, 0x63, 0x30, 0xa9, 0xdd, 0xe1, 0x2a]);
 interface IWMWriterPushSink : IWMWriterSink
 {
-    HRESULT Connect(const(wchar)*, const(wchar)*, BOOL);
+    HRESULT Connect(const(wchar)* pwszURL, const(wchar)* pwszTemplateURL, BOOL fAutoDestroy);
     HRESULT Disconnect();
     HRESULT EndSession();
 }
 enum IID_IWMDeviceRegistration = GUID(0xf6211f03, 0x8d21, 0x4e94, [0x93, 0xe6, 0x85, 0x10, 0x80, 0x5f, 0x2d, 0x99]);
 interface IWMDeviceRegistration : IUnknown
 {
-    HRESULT RegisterDevice(uint, ubyte*, uint, DRM_VAL16, IWMRegisteredDevice*);
-    HRESULT UnregisterDevice(uint, ubyte*, uint, DRM_VAL16);
-    HRESULT GetRegistrationStats(uint, uint*);
-    HRESULT GetFirstRegisteredDevice(uint, IWMRegisteredDevice*);
-    HRESULT GetNextRegisteredDevice(IWMRegisteredDevice*);
-    HRESULT GetRegisteredDeviceByID(uint, ubyte*, uint, DRM_VAL16, IWMRegisteredDevice*);
+    HRESULT RegisterDevice(uint dwRegisterType, ubyte* pbCertificate, uint cbCertificate, DRM_VAL16 SerialNumber, IWMRegisteredDevice* ppDevice);
+    HRESULT UnregisterDevice(uint dwRegisterType, ubyte* pbCertificate, uint cbCertificate, DRM_VAL16 SerialNumber);
+    HRESULT GetRegistrationStats(uint dwRegisterType, uint* pcRegisteredDevices);
+    HRESULT GetFirstRegisteredDevice(uint dwRegisterType, IWMRegisteredDevice* ppDevice);
+    HRESULT GetNextRegisteredDevice(IWMRegisteredDevice* ppDevice);
+    HRESULT GetRegisteredDeviceByID(uint dwRegisterType, ubyte* pbCertificate, uint cbCertificate, DRM_VAL16 SerialNumber, IWMRegisteredDevice* ppDevice);
 }
 enum IID_IWMRegisteredDevice = GUID(0xa4503bec, 0x5508, 0x4148, [0x97, 0xac, 0xbf, 0xa7, 0x57, 0x60, 0xa7, 0xd]);
 interface IWMRegisteredDevice : IUnknown
 {
-    HRESULT GetDeviceSerialNumber(DRM_VAL16*);
-    HRESULT GetDeviceCertificate(INSSBuffer*);
-    HRESULT GetDeviceType(uint*);
-    HRESULT GetAttributeCount(uint*);
-    HRESULT GetAttributeByIndex(uint, BSTR*, BSTR*);
-    HRESULT GetAttributeByName(BSTR, BSTR*);
-    HRESULT SetAttributeByName(BSTR, BSTR);
-    HRESULT Approve(BOOL);
-    HRESULT IsValid(BOOL*);
-    HRESULT IsApproved(BOOL*);
-    HRESULT IsWmdrmCompliant(BOOL*);
-    HRESULT IsOpened(BOOL*);
+    HRESULT GetDeviceSerialNumber(DRM_VAL16* pSerialNumber);
+    HRESULT GetDeviceCertificate(INSSBuffer* ppCertificate);
+    HRESULT GetDeviceType(uint* pdwType);
+    HRESULT GetAttributeCount(uint* pcAttributes);
+    HRESULT GetAttributeByIndex(uint dwIndex, BSTR* pbstrName, BSTR* pbstrValue);
+    HRESULT GetAttributeByName(BSTR bstrName, BSTR* pbstrValue);
+    HRESULT SetAttributeByName(BSTR bstrName, BSTR bstrValue);
+    HRESULT Approve(BOOL fApprove);
+    HRESULT IsValid(BOOL* pfValid);
+    HRESULT IsApproved(BOOL* pfApproved);
+    HRESULT IsWmdrmCompliant(BOOL* pfCompliant);
+    HRESULT IsOpened(BOOL* pfOpened);
     HRESULT Open();
     HRESULT Close();
 }
 enum IID_IWMProximityDetection = GUID(0x6a9fd8ee, 0xb651, 0x4bf0, [0xb8, 0x49, 0x7d, 0x4e, 0xce, 0x79, 0xa2, 0xb1]);
 interface IWMProximityDetection : IUnknown
 {
-    HRESULT StartDetection(ubyte*, uint, ubyte*, uint, uint, INSSBuffer*, IWMStatusCallback, void*);
+    HRESULT StartDetection(ubyte* pbRegistrationMsg, uint cbRegistrationMsg, ubyte* pbLocalAddress, uint cbLocalAddress, uint dwExtraPortsAllowed, INSSBuffer* ppRegistrationResponseMsg, IWMStatusCallback pCallback, void* pvContext);
 }
 enum IID_IWMDRMMessageParser = GUID(0xa73a0072, 0x25a0, 0x4c99, [0xb4, 0xa5, 0xed, 0xe8, 0x10, 0x1a, 0x6c, 0x39]);
 interface IWMDRMMessageParser : IUnknown
 {
-    HRESULT ParseRegistrationReqMsg(ubyte*, uint, INSSBuffer*, DRM_VAL16*);
-    HRESULT ParseLicenseRequestMsg(ubyte*, uint, INSSBuffer*, DRM_VAL16*, BSTR*);
+    HRESULT ParseRegistrationReqMsg(ubyte* pbRegistrationReqMsg, uint cbRegistrationReqMsg, INSSBuffer* ppDeviceCert, DRM_VAL16* pDeviceSerialNumber);
+    HRESULT ParseLicenseRequestMsg(ubyte* pbLicenseRequestMsg, uint cbLicenseRequestMsg, INSSBuffer* ppDeviceCert, DRM_VAL16* pDeviceSerialNumber, BSTR* pbstrAction);
 }
 enum IID_IWMDRMTranscryptor = GUID(0x69059850, 0x6e6f, 0x4bb2, [0x80, 0x6f, 0x71, 0x86, 0x3d, 0xdf, 0xc4, 0x71]);
 interface IWMDRMTranscryptor : IUnknown
 {
-    HRESULT Initialize(BSTR, ubyte*, uint, INSSBuffer*, IWMStatusCallback, void*);
-    HRESULT Seek(ulong);
-    HRESULT Read(ubyte*, uint*);
+    HRESULT Initialize(BSTR bstrFileName, ubyte* pbLicenseRequestMsg, uint cbLicenseRequestMsg, INSSBuffer* ppLicenseResponseMsg, IWMStatusCallback pCallback, void* pvContext);
+    HRESULT Seek(ulong hnsTime);
+    HRESULT Read(ubyte* pbData, uint* pcbData);
     HRESULT Close();
 }
 enum IID_IWMDRMTranscryptor2 = GUID(0xe0da439f, 0xd331, 0x496a, [0xbe, 0xce, 0x18, 0xe5, 0xba, 0xc5, 0xdd, 0x23]);
 interface IWMDRMTranscryptor2 : IWMDRMTranscryptor
 {
-    HRESULT SeekEx(ulong, ulong, float, BOOL);
-    HRESULT ZeroAdjustTimestamps(BOOL);
-    HRESULT GetSeekStartTime(ulong*);
-    HRESULT GetDuration(ulong*);
+    HRESULT SeekEx(ulong cnsStartTime, ulong cnsDuration, float flRate, BOOL fIncludeFileHeader);
+    HRESULT ZeroAdjustTimestamps(BOOL fEnable);
+    HRESULT GetSeekStartTime(ulong* pcnsTime);
+    HRESULT GetDuration(ulong* pcnsDuration);
 }
 enum IID_IWMDRMTranscryptionManager = GUID(0xb1a887b2, 0xa4f0, 0x407a, [0xb0, 0x2e, 0xef, 0xbd, 0x23, 0xbb, 0xec, 0xdf]);
 interface IWMDRMTranscryptionManager : IUnknown
 {
-    HRESULT CreateTranscryptor(IWMDRMTranscryptor*);
+    HRESULT CreateTranscryptor(IWMDRMTranscryptor* ppTranscryptor);
 }
 enum IID_IWMWatermarkInfo = GUID(0x6f497062, 0xf2e2, 0x4624, [0x8e, 0xa7, 0x9d, 0xd4, 0xd, 0x81, 0xfc, 0x8d]);
 interface IWMWatermarkInfo : IUnknown
 {
-    HRESULT GetWatermarkEntryCount(WMT_WATERMARK_ENTRY_TYPE, uint*);
-    HRESULT GetWatermarkEntry(WMT_WATERMARK_ENTRY_TYPE, uint, WMT_WATERMARK_ENTRY*);
+    HRESULT GetWatermarkEntryCount(WMT_WATERMARK_ENTRY_TYPE wmetType, uint* pdwCount);
+    HRESULT GetWatermarkEntry(WMT_WATERMARK_ENTRY_TYPE wmetType, uint dwEntryNum, WMT_WATERMARK_ENTRY* pEntry);
 }
 enum IID_IWMReaderAccelerator = GUID(0xbddc4d08, 0x944d, 0x4d52, [0xa6, 0x12, 0x46, 0xc3, 0xfd, 0xa0, 0x7d, 0xd4]);
 interface IWMReaderAccelerator : IUnknown
 {
-    HRESULT GetCodecInterface(uint, const(GUID)*, void**);
-    HRESULT Notify(uint, WM_MEDIA_TYPE*);
+    HRESULT GetCodecInterface(uint dwOutputNum, const(GUID)* riid, void** ppvCodecInterface);
+    HRESULT Notify(uint dwOutputNum, WM_MEDIA_TYPE* pSubtype);
 }
 enum IID_IWMReaderTimecode = GUID(0xf369e2f0, 0xe081, 0x4fe6, [0x84, 0x50, 0xb8, 0x10, 0xb2, 0xf4, 0x10, 0xd1]);
 interface IWMReaderTimecode : IUnknown
 {
-    HRESULT GetTimecodeRangeCount(ushort, ushort*);
-    HRESULT GetTimecodeRangeBounds(ushort, ushort, uint*, uint*);
+    HRESULT GetTimecodeRangeCount(ushort wStreamNum, ushort* pwRangeCount);
+    HRESULT GetTimecodeRangeBounds(ushort wStreamNum, ushort wRangeNum, uint* pStartTimecode, uint* pEndTimecode);
 }
 enum IID_IWMAddressAccess = GUID(0xbb3c6389, 0x1633, 0x4e92, [0xaf, 0x14, 0x9f, 0x31, 0x73, 0xba, 0x39, 0xd0]);
 interface IWMAddressAccess : IUnknown
 {
-    HRESULT GetAccessEntryCount(WM_AETYPE, uint*);
-    HRESULT GetAccessEntry(WM_AETYPE, uint, WM_ADDRESS_ACCESSENTRY*);
-    HRESULT AddAccessEntry(WM_AETYPE, WM_ADDRESS_ACCESSENTRY*);
-    HRESULT RemoveAccessEntry(WM_AETYPE, uint);
+    HRESULT GetAccessEntryCount(WM_AETYPE aeType, uint* pcEntries);
+    HRESULT GetAccessEntry(WM_AETYPE aeType, uint dwEntryNum, WM_ADDRESS_ACCESSENTRY* pAddrAccessEntry);
+    HRESULT AddAccessEntry(WM_AETYPE aeType, WM_ADDRESS_ACCESSENTRY* pAddrAccessEntry);
+    HRESULT RemoveAccessEntry(WM_AETYPE aeType, uint dwEntryNum);
 }
 enum IID_IWMAddressAccess2 = GUID(0x65a83fc2, 0x3e98, 0x4d4d, [0x81, 0xb5, 0x2a, 0x74, 0x28, 0x86, 0xb3, 0x3d]);
 interface IWMAddressAccess2 : IWMAddressAccess
 {
-    HRESULT GetAccessEntryEx(WM_AETYPE, uint, BSTR*, BSTR*);
-    HRESULT AddAccessEntryEx(WM_AETYPE, BSTR, BSTR);
+    HRESULT GetAccessEntryEx(WM_AETYPE aeType, uint dwEntryNum, BSTR* pbstrAddress, BSTR* pbstrMask);
+    HRESULT AddAccessEntryEx(WM_AETYPE aeType, BSTR bstrAddress, BSTR bstrMask);
 }
 enum IID_IWMImageInfo = GUID(0x9f0aa3b6, 0x7267, 0x4d89, [0x88, 0xf2, 0xba, 0x91, 0x5a, 0xa5, 0xc4, 0xc6]);
 interface IWMImageInfo : IUnknown
 {
-    HRESULT GetImageCount(uint*);
-    HRESULT GetImage(uint, ushort*, PWSTR, ushort*, PWSTR, ushort*, uint*, ubyte*);
+    HRESULT GetImageCount(uint* pcImages);
+    HRESULT GetImage(uint wIndex, ushort* pcchMIMEType, PWSTR pwszMIMEType, ushort* pcchDescription, PWSTR pwszDescription, ushort* pImageType, uint* pcbImageData, ubyte* pbImageData);
 }
 enum IID_IWMLicenseRevocationAgent = GUID(0x6967f2c9, 0x4e26, 0x4b57, [0x88, 0x94, 0x79, 0x98, 0x80, 0xf7, 0xac, 0x7b]);
 interface IWMLicenseRevocationAgent : IUnknown
 {
-    HRESULT GetLRBChallenge(ubyte*, uint, ubyte*, uint, ubyte*, uint*);
-    HRESULT ProcessLRB(ubyte*, uint, ubyte*, uint*);
+    HRESULT GetLRBChallenge(ubyte* pMachineID, uint dwMachineIDLength, ubyte* pChallenge, uint dwChallengeLength, ubyte* pChallengeOutput, uint* pdwChallengeOutputLength);
+    HRESULT ProcessLRB(ubyte* pSignedLRB, uint dwSignedLRBLength, ubyte* pSignedACK, uint* pdwSignedACKLength);
 }
 enum IID_IWMAuthorizer = GUID(0xd9b67d36, 0xa9ad, 0x4eb4, [0xba, 0xef, 0xdb, 0x28, 0x4e, 0xf5, 0x50, 0x4c]);
 interface IWMAuthorizer : IUnknown
 {
-    HRESULT GetCertCount(uint*);
-    HRESULT GetCert(uint, ubyte**);
-    HRESULT GetSharedData(uint, const(ubyte)*, ubyte*, ubyte**);
+    HRESULT GetCertCount(uint* pcCerts);
+    HRESULT GetCert(uint dwIndex, ubyte** ppbCertData);
+    HRESULT GetSharedData(uint dwCertIndex, const(ubyte)* pbSharedData, ubyte* pbCert, ubyte** ppbSharedData);
 }
 enum IID_IWMSecureChannel = GUID(0x2720598a, 0xd0f2, 0x4189, [0xbd, 0x10, 0x91, 0xc4, 0x6e, 0xf0, 0x93, 0x6f]);
 interface IWMSecureChannel : IWMAuthorizer
 {
-    HRESULT WMSC_AddCertificate(IWMAuthorizer);
-    HRESULT WMSC_AddSignature(ubyte*, uint);
-    HRESULT WMSC_Connect(IWMSecureChannel);
-    HRESULT WMSC_IsConnected(BOOL*);
+    HRESULT WMSC_AddCertificate(IWMAuthorizer pCert);
+    HRESULT WMSC_AddSignature(ubyte* pbCertSig, uint cbCertSig);
+    HRESULT WMSC_Connect(IWMSecureChannel pOtherSide);
+    HRESULT WMSC_IsConnected(BOOL* pfIsConnected);
     HRESULT WMSC_Disconnect();
-    HRESULT WMSC_GetValidCertificate(ubyte**, uint*);
-    HRESULT WMSC_Encrypt(ubyte*, uint);
-    HRESULT WMSC_Decrypt(ubyte*, uint);
+    HRESULT WMSC_GetValidCertificate(ubyte** ppbCertificate, uint* pdwSignature);
+    HRESULT WMSC_Encrypt(ubyte* pbData, uint cbData);
+    HRESULT WMSC_Decrypt(ubyte* pbData, uint cbData);
     HRESULT WMSC_Lock();
     HRESULT WMSC_Unlock();
-    HRESULT WMSC_SetSharedData(uint, const(ubyte)*);
+    HRESULT WMSC_SetSharedData(uint dwCertIndex, const(ubyte)* pbSharedData);
 }
 enum IID_IWMGetSecureChannel = GUID(0x94bc0598, 0xc3d2, 0x11d3, [0xbe, 0xdf, 0x0, 0xc0, 0x4f, 0x61, 0x29, 0x86]);
 interface IWMGetSecureChannel : IUnknown
 {
-    HRESULT GetPeerSecureChannelInterface(IWMSecureChannel*);
+    HRESULT GetPeerSecureChannelInterface(IWMSecureChannel* ppPeer);
 }
 enum IID_INSNetSourceCreator = GUID(0xc0e4080, 0x9081, 0x11d2, [0xbe, 0xec, 0x0, 0x60, 0x8, 0x2f, 0x20, 0x54]);
 interface INSNetSourceCreator : IUnknown
 {
     HRESULT Initialize();
-    HRESULT CreateNetSource(const(wchar)*, IUnknown, ubyte*, IUnknown, IUnknown, ulong);
-    HRESULT GetNetSourceProperties(const(wchar)*, IUnknown*);
-    HRESULT GetNetSourceSharedNamespace(IUnknown*);
-    HRESULT GetNetSourceAdminInterface(const(wchar)*, VARIANT*);
-    HRESULT GetNumProtocolsSupported(uint*);
-    HRESULT GetProtocolName(uint, PWSTR, ushort*);
+    HRESULT CreateNetSource(const(wchar)* pszStreamName, IUnknown pMonitor, ubyte* pData, IUnknown pUserContext, IUnknown pCallback, ulong qwContext);
+    HRESULT GetNetSourceProperties(const(wchar)* pszStreamName, IUnknown* ppPropertiesNode);
+    HRESULT GetNetSourceSharedNamespace(IUnknown* ppSharedNamespace);
+    HRESULT GetNetSourceAdminInterface(const(wchar)* pszStreamName, VARIANT* pVal);
+    HRESULT GetNumProtocolsSupported(uint* pcProtocols);
+    HRESULT GetProtocolName(uint dwProtocolNum, PWSTR pwszProtocolName, ushort* pcchProtocolName);
     HRESULT Shutdown();
 }
 enum IID_IWMPlayerTimestampHook = GUID(0x28580dda, 0xd98e, 0x48d0, [0xb7, 0xae, 0x69, 0xe4, 0x73, 0xa0, 0x28, 0x25]);
 interface IWMPlayerTimestampHook : IUnknown
 {
-    HRESULT MapTimestamp(long, long*);
+    HRESULT MapTimestamp(long rtIn, long* prtOut);
 }
 alias NETSOURCE_URLCREDPOLICY_SETTINGS = int;
 enum : int
@@ -1915,34 +1915,34 @@ enum : int
 enum IID_IWMSInternalAdminNetSource = GUID(0x8bb23e5f, 0xd127, 0x4afb, [0x8d, 0x2, 0xae, 0x5b, 0x66, 0xd5, 0x4c, 0x78]);
 interface IWMSInternalAdminNetSource : IUnknown
 {
-    HRESULT Initialize(IUnknown, IUnknown, INSNetSourceCreator, BOOL);
-    HRESULT GetNetSourceCreator(INSNetSourceCreator*);
-    HRESULT SetCredentials(BSTR, BSTR, BSTR, BOOL, BOOL);
-    HRESULT GetCredentials(BSTR, BSTR*, BSTR*, BOOL*);
-    HRESULT DeleteCredentials(BSTR);
-    HRESULT GetCredentialFlags(uint*);
-    HRESULT SetCredentialFlags(uint);
-    HRESULT FindProxyForURL(BSTR, BSTR, BOOL*, BSTR*, uint*, uint*);
-    HRESULT RegisterProxyFailure(HRESULT, uint);
-    HRESULT ShutdownProxyContext(uint);
-    HRESULT IsUsingIE(uint, BOOL*);
+    HRESULT Initialize(IUnknown pSharedNamespace, IUnknown pNamespaceNode, INSNetSourceCreator pNetSourceCreator, BOOL fEmbeddedInServer);
+    HRESULT GetNetSourceCreator(INSNetSourceCreator* ppNetSourceCreator);
+    HRESULT SetCredentials(BSTR bstrRealm, BSTR bstrName, BSTR bstrPassword, BOOL fPersist, BOOL fConfirmedGood);
+    HRESULT GetCredentials(BSTR bstrRealm, BSTR* pbstrName, BSTR* pbstrPassword, BOOL* pfConfirmedGood);
+    HRESULT DeleteCredentials(BSTR bstrRealm);
+    HRESULT GetCredentialFlags(uint* lpdwFlags);
+    HRESULT SetCredentialFlags(uint dwFlags);
+    HRESULT FindProxyForURL(BSTR bstrProtocol, BSTR bstrHost, BOOL* pfProxyEnabled, BSTR* pbstrProxyServer, uint* pdwProxyPort, uint* pdwProxyContext);
+    HRESULT RegisterProxyFailure(HRESULT hrParam, uint dwProxyContext);
+    HRESULT ShutdownProxyContext(uint dwProxyContext);
+    HRESULT IsUsingIE(uint dwProxyContext, BOOL* pfIsUsingIE);
 }
 enum IID_IWMSInternalAdminNetSource2 = GUID(0xe74d58c3, 0xcf77, 0x4b51, [0xaf, 0x17, 0x74, 0x46, 0x87, 0xc4, 0x3e, 0xae]);
 interface IWMSInternalAdminNetSource2 : IUnknown
 {
-    HRESULT SetCredentialsEx(BSTR, BSTR, BOOL, BSTR, BSTR, BOOL, BOOL);
-    HRESULT GetCredentialsEx(BSTR, BSTR, BOOL, NETSOURCE_URLCREDPOLICY_SETTINGS*, BSTR*, BSTR*, BOOL*);
-    HRESULT DeleteCredentialsEx(BSTR, BSTR, BOOL);
-    HRESULT FindProxyForURLEx(BSTR, BSTR, BSTR, BOOL*, BSTR*, uint*, uint*);
+    HRESULT SetCredentialsEx(BSTR bstrRealm, BSTR bstrUrl, BOOL fProxy, BSTR bstrName, BSTR bstrPassword, BOOL fPersist, BOOL fConfirmedGood);
+    HRESULT GetCredentialsEx(BSTR bstrRealm, BSTR bstrUrl, BOOL fProxy, NETSOURCE_URLCREDPOLICY_SETTINGS* pdwUrlPolicy, BSTR* pbstrName, BSTR* pbstrPassword, BOOL* pfConfirmedGood);
+    HRESULT DeleteCredentialsEx(BSTR bstrRealm, BSTR bstrUrl, BOOL fProxy);
+    HRESULT FindProxyForURLEx(BSTR bstrProtocol, BSTR bstrHost, BSTR bstrUrl, BOOL* pfProxyEnabled, BSTR* pbstrProxyServer, uint* pdwProxyPort, uint* pdwProxyContext);
 }
 enum IID_IWMSInternalAdminNetSource3 = GUID(0x6b63d08e, 0x4590, 0x44af, [0x9e, 0xb3, 0x57, 0xff, 0x1e, 0x73, 0xbf, 0x80]);
 interface IWMSInternalAdminNetSource3 : IWMSInternalAdminNetSource2
 {
-    HRESULT GetNetSourceCreator2(IUnknown*);
-    HRESULT FindProxyForURLEx2(BSTR, BSTR, BSTR, BOOL*, BSTR*, uint*, ulong*);
-    HRESULT RegisterProxyFailure2(HRESULT, ulong);
-    HRESULT ShutdownProxyContext2(ulong);
-    HRESULT IsUsingIE2(ulong, BOOL*);
-    HRESULT SetCredentialsEx2(BSTR, BSTR, BOOL, BSTR, BSTR, BOOL, BOOL, BOOL);
-    HRESULT GetCredentialsEx2(BSTR, BSTR, BOOL, BOOL, NETSOURCE_URLCREDPOLICY_SETTINGS*, BSTR*, BSTR*, BOOL*);
+    HRESULT GetNetSourceCreator2(IUnknown* ppNetSourceCreator);
+    HRESULT FindProxyForURLEx2(BSTR bstrProtocol, BSTR bstrHost, BSTR bstrUrl, BOOL* pfProxyEnabled, BSTR* pbstrProxyServer, uint* pdwProxyPort, ulong* pqwProxyContext);
+    HRESULT RegisterProxyFailure2(HRESULT hrParam, ulong qwProxyContext);
+    HRESULT ShutdownProxyContext2(ulong qwProxyContext);
+    HRESULT IsUsingIE2(ulong qwProxyContext, BOOL* pfIsUsingIE);
+    HRESULT SetCredentialsEx2(BSTR bstrRealm, BSTR bstrUrl, BOOL fProxy, BSTR bstrName, BSTR bstrPassword, BOOL fPersist, BOOL fConfirmedGood, BOOL fClearTextAuthentication);
+    HRESULT GetCredentialsEx2(BSTR bstrRealm, BSTR bstrUrl, BOOL fProxy, BOOL fClearTextAuthentication, NETSOURCE_URLCREDPOLICY_SETTINGS* pdwUrlPolicy, BSTR* pbstrName, BSTR* pbstrPassword, BOOL* pfConfirmedGood);
 }

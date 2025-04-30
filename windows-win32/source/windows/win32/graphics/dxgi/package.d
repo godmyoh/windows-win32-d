@@ -29,40 +29,76 @@ enum : uint
     DXGI_USAGE_UNORDERED_ACCESS     = 0x00000400,
 }
 
-HRESULT CreateDXGIFactory(const(GUID)*, void**);
-HRESULT CreateDXGIFactory1(const(GUID)*, void**);
-HRESULT CreateDXGIFactory2(uint, const(GUID)*, void**);
-HRESULT DXGIGetDebugInterface1(uint, const(GUID)*, void**);
+alias DXGI_PRESENT = uint;
+enum : uint
+{
+    DXGI_PRESENT_TEST                  = 0x00000001,
+    DXGI_PRESENT_DO_NOT_SEQUENCE       = 0x00000002,
+    DXGI_PRESENT_RESTART               = 0x00000004,
+    DXGI_PRESENT_DO_NOT_WAIT           = 0x00000008,
+    DXGI_PRESENT_STEREO_PREFER_RIGHT   = 0x00000010,
+    DXGI_PRESENT_STEREO_TEMPORARY_MONO = 0x00000020,
+    DXGI_PRESENT_RESTRICT_TO_OUTPUT    = 0x00000040,
+    DXGI_PRESENT_USE_DURATION          = 0x00000100,
+    DXGI_PRESENT_ALLOW_TEARING         = 0x00000200,
+}
+
+alias DXGI_ENUM_MODES = uint;
+enum : uint
+{
+    DXGI_ENUM_MODES_INTERLACED      = 0x00000001,
+    DXGI_ENUM_MODES_SCALING         = 0x00000002,
+    DXGI_ENUM_MODES_STEREO          = 0x00000004,
+    DXGI_ENUM_MODES_DISABLED_STEREO = 0x00000008,
+}
+
+alias DXGI_MWA_FLAGS = uint;
+enum : uint
+{
+    DXGI_MWA_NO_WINDOW_CHANGES = 0x00000001,
+    DXGI_MWA_NO_ALT_ENTER      = 0x00000002,
+    DXGI_MWA_NO_PRINT_SCREEN   = 0x00000004,
+    DXGI_MWA_VALID             = 0x00000007,
+}
+
+alias DXGI_MAP_FLAGS = uint;
+enum : uint
+{
+    DXGI_MAP_READ    = 0x00000001,
+    DXGI_MAP_WRITE   = 0x00000002,
+    DXGI_MAP_DISCARD = 0x00000004,
+}
+
+alias DXGI_RESOURCE_PRIORITY = uint;
+enum : uint
+{
+    DXGI_RESOURCE_PRIORITY_MINIMUM = 0x28000000,
+    DXGI_RESOURCE_PRIORITY_LOW     = 0x50000000,
+    DXGI_RESOURCE_PRIORITY_NORMAL  = 0x78000000,
+    DXGI_RESOURCE_PRIORITY_HIGH    = 0xa0000000,
+    DXGI_RESOURCE_PRIORITY_MAXIMUM = 0xc8000000,
+}
+
+alias DXGI_SHARED_RESOURCE_RW = uint;
+enum : uint
+{
+    DXGI_SHARED_RESOURCE_READ  = 0x80000000,
+    DXGI_SHARED_RESOURCE_WRITE = 0x00000001,
+}
+
+alias DXGI_CREATE_FACTORY_FLAGS = uint;
+enum : uint
+{
+    DXGI_CREATE_FACTORY_DEBUG = 0x00000001,
+}
+
+HRESULT CreateDXGIFactory(const(GUID)* riid, void** ppFactory);
+HRESULT CreateDXGIFactory1(const(GUID)* riid, void** ppFactory);
+HRESULT CreateDXGIFactory2(DXGI_CREATE_FACTORY_FLAGS Flags, const(GUID)* riid, void** ppFactory);
+HRESULT DXGIGetDebugInterface1(uint Flags, const(GUID)* riid, void** pDebug);
 HRESULT DXGIDeclareAdapterRemovalSupport();
 HRESULT DXGIDisableVBlankVirtualization();
-enum DXGI_RESOURCE_PRIORITY_MINIMUM = 0x28000000;
-enum DXGI_RESOURCE_PRIORITY_LOW = 0x50000000;
-enum DXGI_RESOURCE_PRIORITY_NORMAL = 0x78000000;
-enum DXGI_RESOURCE_PRIORITY_HIGH = 0xa0000000;
-enum DXGI_RESOURCE_PRIORITY_MAXIMUM = 0xc8000000;
-enum DXGI_MAP_READ = 0x00000001;
-enum DXGI_MAP_WRITE = 0x00000002;
-enum DXGI_MAP_DISCARD = 0x00000004;
-enum DXGI_ENUM_MODES_INTERLACED = 0x00000001;
-enum DXGI_ENUM_MODES_SCALING = 0x00000002;
 enum DXGI_MAX_SWAP_CHAIN_BUFFERS = 0x00000010;
-enum DXGI_PRESENT_TEST = 0x00000001;
-enum DXGI_PRESENT_DO_NOT_SEQUENCE = 0x00000002;
-enum DXGI_PRESENT_RESTART = 0x00000004;
-enum DXGI_PRESENT_DO_NOT_WAIT = 0x00000008;
-enum DXGI_PRESENT_STEREO_PREFER_RIGHT = 0x00000010;
-enum DXGI_PRESENT_STEREO_TEMPORARY_MONO = 0x00000020;
-enum DXGI_PRESENT_RESTRICT_TO_OUTPUT = 0x00000040;
-enum DXGI_PRESENT_USE_DURATION = 0x00000100;
-enum DXGI_PRESENT_ALLOW_TEARING = 0x00000200;
-enum DXGI_MWA_NO_WINDOW_CHANGES = 0x00000001;
-enum DXGI_MWA_NO_ALT_ENTER = 0x00000002;
-enum DXGI_MWA_NO_PRINT_SCREEN = 0x00000004;
-enum DXGI_MWA_VALID = 0x00000007;
-enum DXGI_ENUM_MODES_STEREO = 0x00000004;
-enum DXGI_ENUM_MODES_DISABLED_STEREO = 0x00000008;
-enum DXGI_SHARED_RESOURCE_READ = 0x80000000;
-enum DXGI_SHARED_RESOURCE_WRITE = 0x00000001;
 enum DXGI_DEBUG_BINARY_VERSION = 0x00000001;
 enum DXGI_DEBUG_ALL = GUID(0xe48ae283, 0xda80, 0x490b, [0x87, 0xe6, 0x43, 0xe9, 0xa9, 0xcf, 0xda, 0x8]);
 enum DXGI_DEBUG_DX = GUID(0x35cdd7fc, 0x13b2, 0x421d, [0xa5, 0xd7, 0x7e, 0x44, 0x51, 0x28, 0x7d, 0x64]);
@@ -70,7 +106,6 @@ enum DXGI_DEBUG_DXGI = GUID(0x25cddaa4, 0xb1c6, 0x47e1, [0xac, 0x3e, 0x98, 0x87,
 enum DXGI_DEBUG_APP = GUID(0x6cd6e01, 0x4219, 0x4ebd, [0x87, 0x9, 0x27, 0xed, 0x23, 0x36, 0xc, 0x62]);
 enum DXGI_INFO_QUEUE_MESSAGE_ID_STRING_FROM_APPLICATION = 0x00000000;
 enum DXGI_INFO_QUEUE_DEFAULT_MESSAGE_COUNT_LIMIT = 0x00000400;
-enum DXGI_CREATE_FACTORY_DEBUG = 0x00000001;
 enum DXGI_ERROR_INVALID_CALL = 0xffffffff887a0001;
 enum DXGI_ERROR_NOT_FOUND = 0xffffffff887a0002;
 enum DXGI_ERROR_MORE_DATA = 0xffffffff887a0003;
@@ -197,97 +232,97 @@ struct DXGI_SWAP_CHAIN_DESC
 enum IID_IDXGIObject = GUID(0xaec22fb8, 0x76f3, 0x4639, [0x9b, 0xe0, 0x28, 0xeb, 0x43, 0xa6, 0x7a, 0x2e]);
 interface IDXGIObject : IUnknown
 {
-    HRESULT SetPrivateData(const(GUID)*, uint, const(void)*);
-    HRESULT SetPrivateDataInterface(const(GUID)*, const(IUnknown));
-    HRESULT GetPrivateData(const(GUID)*, uint*, void*);
-    HRESULT GetParent(const(GUID)*, void**);
+    HRESULT SetPrivateData(const(GUID)* Name, uint DataSize, const(void)* pData);
+    HRESULT SetPrivateDataInterface(const(GUID)* Name, const(IUnknown) pUnknown);
+    HRESULT GetPrivateData(const(GUID)* Name, uint* pDataSize, void* pData);
+    HRESULT GetParent(const(GUID)* riid, void** ppParent);
 }
 enum IID_IDXGIDeviceSubObject = GUID(0x3d3e0379, 0xf9de, 0x4d58, [0xbb, 0x6c, 0x18, 0xd6, 0x29, 0x92, 0xf1, 0xa6]);
 interface IDXGIDeviceSubObject : IDXGIObject
 {
-    HRESULT GetDevice(const(GUID)*, void**);
+    HRESULT GetDevice(const(GUID)* riid, void** ppDevice);
 }
 enum IID_IDXGIResource = GUID(0x35f3ab4, 0x482e, 0x4e50, [0xb4, 0x1f, 0x8a, 0x7f, 0x8b, 0xd8, 0x96, 0xb]);
 interface IDXGIResource : IDXGIDeviceSubObject
 {
-    HRESULT GetSharedHandle(HANDLE*);
-    HRESULT GetUsage(DXGI_USAGE*);
-    HRESULT SetEvictionPriority(uint);
-    HRESULT GetEvictionPriority(uint*);
+    HRESULT GetSharedHandle(HANDLE* pSharedHandle);
+    HRESULT GetUsage(DXGI_USAGE* pUsage);
+    HRESULT SetEvictionPriority(DXGI_RESOURCE_PRIORITY EvictionPriority);
+    HRESULT GetEvictionPriority(DXGI_RESOURCE_PRIORITY* pEvictionPriority);
 }
 enum IID_IDXGIKeyedMutex = GUID(0x9d8e1289, 0xd7b3, 0x465f, [0x81, 0x26, 0x25, 0xe, 0x34, 0x9a, 0xf8, 0x5d]);
 interface IDXGIKeyedMutex : IDXGIDeviceSubObject
 {
-    HRESULT AcquireSync(ulong, uint);
-    HRESULT ReleaseSync(ulong);
+    HRESULT AcquireSync(ulong Key, uint dwMilliseconds);
+    HRESULT ReleaseSync(ulong Key);
 }
 enum IID_IDXGISurface = GUID(0xcafcb56c, 0x6ac3, 0x4889, [0xbf, 0x47, 0x9e, 0x23, 0xbb, 0xd2, 0x60, 0xec]);
 interface IDXGISurface : IDXGIDeviceSubObject
 {
-    HRESULT GetDesc(DXGI_SURFACE_DESC*);
-    HRESULT Map(DXGI_MAPPED_RECT*, uint);
+    HRESULT GetDesc(DXGI_SURFACE_DESC* pDesc);
+    HRESULT Map(DXGI_MAPPED_RECT* pLockedRect, DXGI_MAP_FLAGS MapFlags);
     HRESULT Unmap();
 }
 enum IID_IDXGISurface1 = GUID(0x4ae63092, 0x6327, 0x4c1b, [0x80, 0xae, 0xbf, 0xe1, 0x2e, 0xa3, 0x2b, 0x86]);
 interface IDXGISurface1 : IDXGISurface
 {
-    HRESULT GetDC(BOOL, HDC*);
-    HRESULT ReleaseDC(RECT*);
+    HRESULT GetDC(BOOL Discard, HDC* phdc);
+    HRESULT ReleaseDC(RECT* pDirtyRect);
 }
 enum IID_IDXGIAdapter = GUID(0x2411e7e1, 0x12ac, 0x4ccf, [0xbd, 0x14, 0x97, 0x98, 0xe8, 0x53, 0x4d, 0xc0]);
 interface IDXGIAdapter : IDXGIObject
 {
-    HRESULT EnumOutputs(uint, IDXGIOutput*);
-    HRESULT GetDesc(DXGI_ADAPTER_DESC*);
-    HRESULT CheckInterfaceSupport(const(GUID)*, long*);
+    HRESULT EnumOutputs(uint Output, IDXGIOutput* ppOutput);
+    HRESULT GetDesc(DXGI_ADAPTER_DESC* pDesc);
+    HRESULT CheckInterfaceSupport(const(GUID)* InterfaceName, long* pUMDVersion);
 }
 enum IID_IDXGIOutput = GUID(0xae02eedb, 0xc735, 0x4690, [0x8d, 0x52, 0x5a, 0x8d, 0xc2, 0x2, 0x13, 0xaa]);
 interface IDXGIOutput : IDXGIObject
 {
-    HRESULT GetDesc(DXGI_OUTPUT_DESC*);
-    HRESULT GetDisplayModeList(DXGI_FORMAT, uint, uint*, DXGI_MODE_DESC*);
-    HRESULT FindClosestMatchingMode(const(DXGI_MODE_DESC)*, DXGI_MODE_DESC*, IUnknown);
+    HRESULT GetDesc(DXGI_OUTPUT_DESC* pDesc);
+    HRESULT GetDisplayModeList(DXGI_FORMAT EnumFormat, DXGI_ENUM_MODES Flags, uint* pNumModes, DXGI_MODE_DESC* pDesc);
+    HRESULT FindClosestMatchingMode(const(DXGI_MODE_DESC)* pModeToMatch, DXGI_MODE_DESC* pClosestMatch, IUnknown pConcernedDevice);
     HRESULT WaitForVBlank();
-    HRESULT TakeOwnership(IUnknown, BOOL);
+    HRESULT TakeOwnership(IUnknown pDevice, BOOL Exclusive);
     void ReleaseOwnership();
-    HRESULT GetGammaControlCapabilities(DXGI_GAMMA_CONTROL_CAPABILITIES*);
-    HRESULT SetGammaControl(const(DXGI_GAMMA_CONTROL)*);
-    HRESULT GetGammaControl(DXGI_GAMMA_CONTROL*);
-    HRESULT SetDisplaySurface(IDXGISurface);
-    HRESULT GetDisplaySurfaceData(IDXGISurface);
-    HRESULT GetFrameStatistics(DXGI_FRAME_STATISTICS*);
+    HRESULT GetGammaControlCapabilities(DXGI_GAMMA_CONTROL_CAPABILITIES* pGammaCaps);
+    HRESULT SetGammaControl(const(DXGI_GAMMA_CONTROL)* pArray);
+    HRESULT GetGammaControl(DXGI_GAMMA_CONTROL* pArray);
+    HRESULT SetDisplaySurface(IDXGISurface pScanoutSurface);
+    HRESULT GetDisplaySurfaceData(IDXGISurface pDestination);
+    HRESULT GetFrameStatistics(DXGI_FRAME_STATISTICS* pStats);
 }
 enum IID_IDXGISwapChain = GUID(0x310d36a0, 0xd2e7, 0x4c0a, [0xaa, 0x4, 0x6a, 0x9d, 0x23, 0xb8, 0x88, 0x6a]);
 interface IDXGISwapChain : IDXGIDeviceSubObject
 {
-    HRESULT Present(uint, uint);
-    HRESULT GetBuffer(uint, const(GUID)*, void**);
-    HRESULT SetFullscreenState(BOOL, IDXGIOutput);
-    HRESULT GetFullscreenState(BOOL*, IDXGIOutput*);
-    HRESULT GetDesc(DXGI_SWAP_CHAIN_DESC*);
-    HRESULT ResizeBuffers(uint, uint, uint, DXGI_FORMAT, uint);
-    HRESULT ResizeTarget(const(DXGI_MODE_DESC)*);
-    HRESULT GetContainingOutput(IDXGIOutput*);
-    HRESULT GetFrameStatistics(DXGI_FRAME_STATISTICS*);
-    HRESULT GetLastPresentCount(uint*);
+    HRESULT Present(uint SyncInterval, DXGI_PRESENT Flags);
+    HRESULT GetBuffer(uint Buffer, const(GUID)* riid, void** ppSurface);
+    HRESULT SetFullscreenState(BOOL Fullscreen, IDXGIOutput pTarget);
+    HRESULT GetFullscreenState(BOOL* pFullscreen, IDXGIOutput* ppTarget);
+    HRESULT GetDesc(DXGI_SWAP_CHAIN_DESC* pDesc);
+    HRESULT ResizeBuffers(uint BufferCount, uint Width, uint Height, DXGI_FORMAT NewFormat, uint SwapChainFlags);
+    HRESULT ResizeTarget(const(DXGI_MODE_DESC)* pNewTargetParameters);
+    HRESULT GetContainingOutput(IDXGIOutput* ppOutput);
+    HRESULT GetFrameStatistics(DXGI_FRAME_STATISTICS* pStats);
+    HRESULT GetLastPresentCount(uint* pLastPresentCount);
 }
 enum IID_IDXGIFactory = GUID(0x7b7166ec, 0x21c7, 0x44ae, [0xb2, 0x1a, 0xc9, 0xae, 0x32, 0x1a, 0xe3, 0x69]);
 interface IDXGIFactory : IDXGIObject
 {
-    HRESULT EnumAdapters(uint, IDXGIAdapter*);
-    HRESULT MakeWindowAssociation(HWND, uint);
-    HRESULT GetWindowAssociation(HWND*);
-    HRESULT CreateSwapChain(IUnknown, DXGI_SWAP_CHAIN_DESC*, IDXGISwapChain*);
-    HRESULT CreateSoftwareAdapter(HMODULE, IDXGIAdapter*);
+    HRESULT EnumAdapters(uint Adapter, IDXGIAdapter* ppAdapter);
+    HRESULT MakeWindowAssociation(HWND WindowHandle, DXGI_MWA_FLAGS Flags);
+    HRESULT GetWindowAssociation(HWND* pWindowHandle);
+    HRESULT CreateSwapChain(IUnknown pDevice, DXGI_SWAP_CHAIN_DESC* pDesc, IDXGISwapChain* ppSwapChain);
+    HRESULT CreateSoftwareAdapter(HMODULE Module, IDXGIAdapter* ppAdapter);
 }
 enum IID_IDXGIDevice = GUID(0x54ec77fa, 0x1377, 0x44e6, [0x8c, 0x32, 0x88, 0xfd, 0x5f, 0x44, 0xc8, 0x4c]);
 interface IDXGIDevice : IDXGIObject
 {
-    HRESULT GetAdapter(IDXGIAdapter*);
-    HRESULT CreateSurface(const(DXGI_SURFACE_DESC)*, uint, DXGI_USAGE, const(DXGI_SHARED_RESOURCE)*, IDXGISurface*);
-    HRESULT QueryResourceResidency(IUnknown*, DXGI_RESIDENCY*, uint);
-    HRESULT SetGPUThreadPriority(int);
-    HRESULT GetGPUThreadPriority(int*);
+    HRESULT GetAdapter(IDXGIAdapter* pAdapter);
+    HRESULT CreateSurface(const(DXGI_SURFACE_DESC)* pDesc, uint NumSurfaces, DXGI_USAGE Usage, const(DXGI_SHARED_RESOURCE)* pSharedResource, IDXGISurface* ppSurface);
+    HRESULT QueryResourceResidency(IUnknown* ppResources, DXGI_RESIDENCY* pResidencyStatus, uint NumResources);
+    HRESULT SetGPUThreadPriority(int Priority);
+    HRESULT GetGPUThreadPriority(int* pPriority);
 }
 alias DXGI_ADAPTER_FLAG = int;
 enum : int
@@ -318,25 +353,25 @@ struct DXGI_DISPLAY_COLOR_SPACE
 enum IID_IDXGIFactory1 = GUID(0x770aae78, 0xf26f, 0x4dba, [0xa8, 0x29, 0x25, 0x3c, 0x83, 0xd1, 0xb3, 0x87]);
 interface IDXGIFactory1 : IDXGIFactory
 {
-    HRESULT EnumAdapters1(uint, IDXGIAdapter1*);
+    HRESULT EnumAdapters1(uint Adapter, IDXGIAdapter1* ppAdapter);
     BOOL IsCurrent();
 }
 enum IID_IDXGIAdapter1 = GUID(0x29038f61, 0x3839, 0x4626, [0x91, 0xfd, 0x8, 0x68, 0x79, 0x1, 0x1a, 0x5]);
 interface IDXGIAdapter1 : IDXGIAdapter
 {
-    HRESULT GetDesc1(DXGI_ADAPTER_DESC1*);
+    HRESULT GetDesc1(DXGI_ADAPTER_DESC1* pDesc);
 }
 enum IID_IDXGIDevice1 = GUID(0x77db970f, 0x6276, 0x48ba, [0xba, 0x28, 0x7, 0x1, 0x43, 0xb4, 0x39, 0x2c]);
 interface IDXGIDevice1 : IDXGIDevice
 {
-    HRESULT SetMaximumFrameLatency(uint);
-    HRESULT GetMaximumFrameLatency(uint*);
+    HRESULT SetMaximumFrameLatency(uint MaxLatency);
+    HRESULT GetMaximumFrameLatency(uint* pMaxLatency);
 }
 enum IID_IDXGIDisplayControl = GUID(0xea9dbf1a, 0xc88e, 0x4486, [0x85, 0x4a, 0x98, 0xaa, 0x1, 0x38, 0xf3, 0xc]);
 interface IDXGIDisplayControl : IUnknown
 {
     BOOL IsStereoEnabled();
-    void SetStereoEnabled(BOOL);
+    void SetStereoEnabled(BOOL enabled);
 }
 struct DXGI_OUTDUPL_MOVE_RECT
 {
@@ -384,25 +419,25 @@ struct DXGI_OUTDUPL_FRAME_INFO
 enum IID_IDXGIOutputDuplication = GUID(0x191cfac3, 0xa341, 0x470d, [0xb2, 0x6e, 0xa8, 0x64, 0xf4, 0x28, 0x31, 0x9c]);
 interface IDXGIOutputDuplication : IDXGIObject
 {
-    void GetDesc(DXGI_OUTDUPL_DESC*);
-    HRESULT AcquireNextFrame(uint, DXGI_OUTDUPL_FRAME_INFO*, IDXGIResource*);
-    HRESULT GetFrameDirtyRects(uint, RECT*, uint*);
-    HRESULT GetFrameMoveRects(uint, DXGI_OUTDUPL_MOVE_RECT*, uint*);
-    HRESULT GetFramePointerShape(uint, void*, uint*, DXGI_OUTDUPL_POINTER_SHAPE_INFO*);
-    HRESULT MapDesktopSurface(DXGI_MAPPED_RECT*);
+    void GetDesc(DXGI_OUTDUPL_DESC* pDesc);
+    HRESULT AcquireNextFrame(uint TimeoutInMilliseconds, DXGI_OUTDUPL_FRAME_INFO* pFrameInfo, IDXGIResource* ppDesktopResource);
+    HRESULT GetFrameDirtyRects(uint DirtyRectsBufferSize, RECT* pDirtyRectsBuffer, uint* pDirtyRectsBufferSizeRequired);
+    HRESULT GetFrameMoveRects(uint MoveRectsBufferSize, DXGI_OUTDUPL_MOVE_RECT* pMoveRectBuffer, uint* pMoveRectsBufferSizeRequired);
+    HRESULT GetFramePointerShape(uint PointerShapeBufferSize, void* pPointerShapeBuffer, uint* pPointerShapeBufferSizeRequired, DXGI_OUTDUPL_POINTER_SHAPE_INFO* pPointerShapeInfo);
+    HRESULT MapDesktopSurface(DXGI_MAPPED_RECT* pLockedRect);
     HRESULT UnMapDesktopSurface();
     HRESULT ReleaseFrame();
 }
 enum IID_IDXGISurface2 = GUID(0xaba496dd, 0xb617, 0x4cb8, [0xa8, 0x66, 0xbc, 0x44, 0xd7, 0xeb, 0x1f, 0xa2]);
 interface IDXGISurface2 : IDXGISurface1
 {
-    HRESULT GetResource(const(GUID)*, void**, uint*);
+    HRESULT GetResource(const(GUID)* riid, void** ppParentResource, uint* pSubresourceIndex);
 }
 enum IID_IDXGIResource1 = GUID(0x30961379, 0x4609, 0x4a41, [0x99, 0x8e, 0x54, 0xfe, 0x56, 0x7e, 0xe0, 0xc1]);
 interface IDXGIResource1 : IDXGIResource
 {
-    HRESULT CreateSubresourceSurface(uint, IDXGISurface2*);
-    HRESULT CreateSharedHandle(const(SECURITY_ATTRIBUTES)*, uint, const(wchar)*, HANDLE*);
+    HRESULT CreateSubresourceSurface(uint index, IDXGISurface2* ppSurface);
+    HRESULT CreateSharedHandle(const(SECURITY_ATTRIBUTES)* pAttributes, uint dwAccess, const(wchar)* lpName, HANDLE* pHandle);
 }
 alias DXGI_OFFER_RESOURCE_PRIORITY = int;
 enum : int
@@ -415,9 +450,9 @@ enum : int
 enum IID_IDXGIDevice2 = GUID(0x5008617, 0xfbfd, 0x4051, [0xa7, 0x90, 0x14, 0x48, 0x84, 0xb4, 0xf6, 0xa9]);
 interface IDXGIDevice2 : IDXGIDevice1
 {
-    HRESULT OfferResources(uint, IDXGIResource*, DXGI_OFFER_RESOURCE_PRIORITY);
-    HRESULT ReclaimResources(uint, IDXGIResource*, BOOL*);
-    HRESULT EnqueueSetEvent(HANDLE);
+    HRESULT OfferResources(uint NumResources, IDXGIResource* ppResources, DXGI_OFFER_RESOURCE_PRIORITY Priority);
+    HRESULT ReclaimResources(uint NumResources, IDXGIResource* ppResources, BOOL* pDiscarded);
+    HRESULT EnqueueSetEvent(HANDLE hEvent);
 }
 struct DXGI_MODE_DESC1
 {
@@ -468,32 +503,32 @@ struct DXGI_PRESENT_PARAMETERS
 enum IID_IDXGISwapChain1 = GUID(0x790a45f7, 0xd42, 0x4876, [0x98, 0x3a, 0xa, 0x55, 0xcf, 0xe6, 0xf4, 0xaa]);
 interface IDXGISwapChain1 : IDXGISwapChain
 {
-    HRESULT GetDesc1(DXGI_SWAP_CHAIN_DESC1*);
-    HRESULT GetFullscreenDesc(DXGI_SWAP_CHAIN_FULLSCREEN_DESC*);
-    HRESULT GetHwnd(HWND*);
-    HRESULT GetCoreWindow(const(GUID)*, void**);
-    HRESULT Present1(uint, uint, const(DXGI_PRESENT_PARAMETERS)*);
+    HRESULT GetDesc1(DXGI_SWAP_CHAIN_DESC1* pDesc);
+    HRESULT GetFullscreenDesc(DXGI_SWAP_CHAIN_FULLSCREEN_DESC* pDesc);
+    HRESULT GetHwnd(HWND* pHwnd);
+    HRESULT GetCoreWindow(const(GUID)* refiid, void** ppUnk);
+    HRESULT Present1(uint SyncInterval, DXGI_PRESENT PresentFlags, const(DXGI_PRESENT_PARAMETERS)* pPresentParameters);
     BOOL IsTemporaryMonoSupported();
-    HRESULT GetRestrictToOutput(IDXGIOutput*);
-    HRESULT SetBackgroundColor(const(DXGI_RGBA)*);
-    HRESULT GetBackgroundColor(DXGI_RGBA*);
-    HRESULT SetRotation(DXGI_MODE_ROTATION);
-    HRESULT GetRotation(DXGI_MODE_ROTATION*);
+    HRESULT GetRestrictToOutput(IDXGIOutput* ppRestrictToOutput);
+    HRESULT SetBackgroundColor(const(DXGI_RGBA)* pColor);
+    HRESULT GetBackgroundColor(DXGI_RGBA* pColor);
+    HRESULT SetRotation(DXGI_MODE_ROTATION Rotation);
+    HRESULT GetRotation(DXGI_MODE_ROTATION* pRotation);
 }
 enum IID_IDXGIFactory2 = GUID(0x50c83a1c, 0xe072, 0x4c48, [0x87, 0xb0, 0x36, 0x30, 0xfa, 0x36, 0xa6, 0xd0]);
 interface IDXGIFactory2 : IDXGIFactory1
 {
     BOOL IsWindowedStereoEnabled();
-    HRESULT CreateSwapChainForHwnd(IUnknown, HWND, const(DXGI_SWAP_CHAIN_DESC1)*, const(DXGI_SWAP_CHAIN_FULLSCREEN_DESC)*, IDXGIOutput, IDXGISwapChain1*);
-    HRESULT CreateSwapChainForCoreWindow(IUnknown, IUnknown, const(DXGI_SWAP_CHAIN_DESC1)*, IDXGIOutput, IDXGISwapChain1*);
-    HRESULT GetSharedResourceAdapterLuid(HANDLE, LUID*);
-    HRESULT RegisterStereoStatusWindow(HWND, uint, uint*);
-    HRESULT RegisterStereoStatusEvent(HANDLE, uint*);
-    void UnregisterStereoStatus(uint);
-    HRESULT RegisterOcclusionStatusWindow(HWND, uint, uint*);
-    HRESULT RegisterOcclusionStatusEvent(HANDLE, uint*);
-    void UnregisterOcclusionStatus(uint);
-    HRESULT CreateSwapChainForComposition(IUnknown, const(DXGI_SWAP_CHAIN_DESC1)*, IDXGIOutput, IDXGISwapChain1*);
+    HRESULT CreateSwapChainForHwnd(IUnknown pDevice, HWND hWnd, const(DXGI_SWAP_CHAIN_DESC1)* pDesc, const(DXGI_SWAP_CHAIN_FULLSCREEN_DESC)* pFullscreenDesc, IDXGIOutput pRestrictToOutput, IDXGISwapChain1* ppSwapChain);
+    HRESULT CreateSwapChainForCoreWindow(IUnknown pDevice, IUnknown pWindow, const(DXGI_SWAP_CHAIN_DESC1)* pDesc, IDXGIOutput pRestrictToOutput, IDXGISwapChain1* ppSwapChain);
+    HRESULT GetSharedResourceAdapterLuid(HANDLE hResource, LUID* pLuid);
+    HRESULT RegisterStereoStatusWindow(HWND WindowHandle, uint wMsg, uint* pdwCookie);
+    HRESULT RegisterStereoStatusEvent(HANDLE hEvent, uint* pdwCookie);
+    void UnregisterStereoStatus(uint dwCookie);
+    HRESULT RegisterOcclusionStatusWindow(HWND WindowHandle, uint wMsg, uint* pdwCookie);
+    HRESULT RegisterOcclusionStatusEvent(HANDLE hEvent, uint* pdwCookie);
+    void UnregisterOcclusionStatus(uint dwCookie);
+    HRESULT CreateSwapChainForComposition(IUnknown pDevice, const(DXGI_SWAP_CHAIN_DESC1)* pDesc, IDXGIOutput pRestrictToOutput, IDXGISwapChain1* ppSwapChain);
 }
 alias DXGI_GRAPHICS_PREEMPTION_GRANULARITY = int;
 enum : int
@@ -533,15 +568,15 @@ struct DXGI_ADAPTER_DESC2
 enum IID_IDXGIAdapter2 = GUID(0xaa1ae0a, 0xfa0e, 0x4b84, [0x86, 0x44, 0xe0, 0x5f, 0xf8, 0xe5, 0xac, 0xb5]);
 interface IDXGIAdapter2 : IDXGIAdapter1
 {
-    HRESULT GetDesc2(DXGI_ADAPTER_DESC2*);
+    HRESULT GetDesc2(DXGI_ADAPTER_DESC2* pDesc);
 }
 enum IID_IDXGIOutput1 = GUID(0xcddea8, 0x939b, 0x4b83, [0xa3, 0x40, 0xa6, 0x85, 0x22, 0x66, 0x66, 0xcc]);
 interface IDXGIOutput1 : IDXGIOutput
 {
-    HRESULT GetDisplayModeList1(DXGI_FORMAT, uint, uint*, DXGI_MODE_DESC1*);
-    HRESULT FindClosestMatchingMode1(const(DXGI_MODE_DESC1)*, DXGI_MODE_DESC1*, IUnknown);
-    HRESULT GetDisplaySurfaceData1(IDXGIResource);
-    HRESULT DuplicateOutput(IUnknown, IDXGIOutputDuplication*);
+    HRESULT GetDisplayModeList1(DXGI_FORMAT EnumFormat, DXGI_ENUM_MODES Flags, uint* pNumModes, DXGI_MODE_DESC1* pDesc);
+    HRESULT FindClosestMatchingMode1(const(DXGI_MODE_DESC1)* pModeToMatch, DXGI_MODE_DESC1* pClosestMatch, IUnknown pConcernedDevice);
+    HRESULT GetDisplaySurfaceData1(IDXGIResource pDestination);
+    HRESULT DuplicateOutput(IUnknown pDevice, IDXGIOutputDuplication* ppOutputDuplication);
 }
 enum IID_IDXGIDevice3 = GUID(0x6007896c, 0x3244, 0x4afd, [0xbf, 0x18, 0xa6, 0xd3, 0xbe, 0xda, 0x50, 0x23]);
 interface IDXGIDevice3 : IDXGIDevice2
@@ -560,13 +595,13 @@ struct DXGI_MATRIX_3X2_F
 enum IID_IDXGISwapChain2 = GUID(0xa8be2ac4, 0x199f, 0x4946, [0xb3, 0x31, 0x79, 0x59, 0x9f, 0xb9, 0x8d, 0xe7]);
 interface IDXGISwapChain2 : IDXGISwapChain1
 {
-    HRESULT SetSourceSize(uint, uint);
-    HRESULT GetSourceSize(uint*, uint*);
-    HRESULT SetMaximumFrameLatency(uint);
-    HRESULT GetMaximumFrameLatency(uint*);
+    HRESULT SetSourceSize(uint Width, uint Height);
+    HRESULT GetSourceSize(uint* pWidth, uint* pHeight);
+    HRESULT SetMaximumFrameLatency(uint MaxLatency);
+    HRESULT GetMaximumFrameLatency(uint* pMaxLatency);
     HANDLE GetFrameLatencyWaitableObject();
-    HRESULT SetMatrixTransform(const(DXGI_MATRIX_3X2_F)*);
-    HRESULT GetMatrixTransform(DXGI_MATRIX_3X2_F*);
+    HRESULT SetMatrixTransform(const(DXGI_MATRIX_3X2_F)* pMatrix);
+    HRESULT GetMatrixTransform(DXGI_MATRIX_3X2_F* pMatrix);
 }
 enum IID_IDXGIOutput2 = GUID(0x595e39d1, 0x2724, 0x4663, [0x99, 0xb1, 0xda, 0x96, 0x9d, 0xe2, 0x83, 0x64]);
 interface IDXGIOutput2 : IDXGIOutput1
@@ -576,7 +611,7 @@ interface IDXGIOutput2 : IDXGIOutput1
 enum IID_IDXGIFactory3 = GUID(0x25483823, 0xcd46, 0x4c7d, [0x86, 0xca, 0x47, 0xaa, 0x95, 0xb8, 0x37, 0xbd]);
 interface IDXGIFactory3 : IDXGIFactory2
 {
-    uint GetCreationFlags();
+    DXGI_CREATE_FACTORY_FLAGS GetCreationFlags();
 }
 struct DXGI_DECODE_SWAP_CHAIN_DESC
 {
@@ -593,21 +628,21 @@ enum : int
 enum IID_IDXGIDecodeSwapChain = GUID(0x2633066b, 0x4514, 0x4c7a, [0x8f, 0xd8, 0x12, 0xea, 0x98, 0x5, 0x9d, 0x18]);
 interface IDXGIDecodeSwapChain : IUnknown
 {
-    HRESULT PresentBuffer(uint, uint, uint);
-    HRESULT SetSourceRect(const(RECT)*);
-    HRESULT SetTargetRect(const(RECT)*);
-    HRESULT SetDestSize(uint, uint);
-    HRESULT GetSourceRect(RECT*);
-    HRESULT GetTargetRect(RECT*);
-    HRESULT GetDestSize(uint*, uint*);
-    HRESULT SetColorSpace(DXGI_MULTIPLANE_OVERLAY_YCbCr_FLAGS);
+    HRESULT PresentBuffer(uint BufferToPresent, uint SyncInterval, DXGI_PRESENT Flags);
+    HRESULT SetSourceRect(const(RECT)* pRect);
+    HRESULT SetTargetRect(const(RECT)* pRect);
+    HRESULT SetDestSize(uint Width, uint Height);
+    HRESULT GetSourceRect(RECT* pRect);
+    HRESULT GetTargetRect(RECT* pRect);
+    HRESULT GetDestSize(uint* pWidth, uint* pHeight);
+    HRESULT SetColorSpace(DXGI_MULTIPLANE_OVERLAY_YCbCr_FLAGS ColorSpace);
     DXGI_MULTIPLANE_OVERLAY_YCbCr_FLAGS GetColorSpace();
 }
 enum IID_IDXGIFactoryMedia = GUID(0x41e7d1f2, 0xa591, 0x4f7b, [0xa2, 0xe5, 0xfa, 0x9c, 0x84, 0x3e, 0x1c, 0x12]);
 interface IDXGIFactoryMedia : IUnknown
 {
-    HRESULT CreateSwapChainForCompositionSurfaceHandle(IUnknown, HANDLE, const(DXGI_SWAP_CHAIN_DESC1)*, IDXGIOutput, IDXGISwapChain1*);
-    HRESULT CreateDecodeSwapChainForCompositionSurfaceHandle(IUnknown, HANDLE, DXGI_DECODE_SWAP_CHAIN_DESC*, IDXGIResource, IDXGIOutput, IDXGIDecodeSwapChain*);
+    HRESULT CreateSwapChainForCompositionSurfaceHandle(IUnknown pDevice, HANDLE hSurface, const(DXGI_SWAP_CHAIN_DESC1)* pDesc, IDXGIOutput pRestrictToOutput, IDXGISwapChain1* ppSwapChain);
+    HRESULT CreateDecodeSwapChainForCompositionSurfaceHandle(IUnknown pDevice, HANDLE hSurface, DXGI_DECODE_SWAP_CHAIN_DESC* pDesc, IDXGIResource pYuvDecodeBuffers, IDXGIOutput pRestrictToOutput, IDXGIDecodeSwapChain* ppSwapChain);
 }
 alias DXGI_FRAME_PRESENTATION_MODE = int;
 enum : int
@@ -631,9 +666,9 @@ struct DXGI_FRAME_STATISTICS_MEDIA
 enum IID_IDXGISwapChainMedia = GUID(0xdd95b90b, 0xf05f, 0x4f6a, [0xbd, 0x65, 0x25, 0xbf, 0xb2, 0x64, 0xbd, 0x84]);
 interface IDXGISwapChainMedia : IUnknown
 {
-    HRESULT GetFrameStatisticsMedia(DXGI_FRAME_STATISTICS_MEDIA*);
-    HRESULT SetPresentDuration(uint);
-    HRESULT CheckPresentDurationSupport(uint, uint*, uint*);
+    HRESULT GetFrameStatisticsMedia(DXGI_FRAME_STATISTICS_MEDIA* pStats);
+    HRESULT SetPresentDuration(uint Duration);
+    HRESULT CheckPresentDurationSupport(uint DesiredPresentDuration, uint* pClosestSmallerPresentDuration, uint* pClosestLargerPresentDuration);
 }
 alias DXGI_OVERLAY_SUPPORT_FLAG = int;
 enum : int
@@ -645,7 +680,7 @@ enum : int
 enum IID_IDXGIOutput3 = GUID(0x8a6bb301, 0x7e7e, 0x41f4, [0xa8, 0xe0, 0x5b, 0x32, 0xf7, 0xf9, 0x9b, 0x18]);
 interface IDXGIOutput3 : IDXGIOutput2
 {
-    HRESULT CheckOverlaySupport(DXGI_FORMAT, IUnknown, uint*);
+    HRESULT CheckOverlaySupport(DXGI_FORMAT EnumFormat, IUnknown pConcernedDevice, uint* pFlags);
 }
 alias DXGI_SWAP_CHAIN_COLOR_SPACE_SUPPORT_FLAG = int;
 enum : int
@@ -658,9 +693,9 @@ enum IID_IDXGISwapChain3 = GUID(0x94d99bdb, 0xf1f8, 0x4ab0, [0xb2, 0x36, 0x7d, 0
 interface IDXGISwapChain3 : IDXGISwapChain2
 {
     uint GetCurrentBackBufferIndex();
-    HRESULT CheckColorSpaceSupport(DXGI_COLOR_SPACE_TYPE, uint*);
-    HRESULT SetColorSpace1(DXGI_COLOR_SPACE_TYPE);
-    HRESULT ResizeBuffers1(uint, uint, uint, DXGI_FORMAT, uint, const(uint)*, IUnknown*);
+    HRESULT CheckColorSpaceSupport(DXGI_COLOR_SPACE_TYPE ColorSpace, uint* pColorSpaceSupport);
+    HRESULT SetColorSpace1(DXGI_COLOR_SPACE_TYPE ColorSpace);
+    HRESULT ResizeBuffers1(uint BufferCount, uint Width, uint Height, DXGI_FORMAT Format, uint SwapChainFlags, const(uint)* pCreationNodeMask, IUnknown* ppPresentQueue);
 }
 alias DXGI_OVERLAY_COLOR_SPACE_SUPPORT_FLAG = int;
 enum : int
@@ -671,13 +706,13 @@ enum : int
 enum IID_IDXGIOutput4 = GUID(0xdc7dca35, 0x2196, 0x414d, [0x9f, 0x53, 0x61, 0x78, 0x84, 0x3, 0x2a, 0x60]);
 interface IDXGIOutput4 : IDXGIOutput3
 {
-    HRESULT CheckOverlayColorSpaceSupport(DXGI_FORMAT, DXGI_COLOR_SPACE_TYPE, IUnknown, uint*);
+    HRESULT CheckOverlayColorSpaceSupport(DXGI_FORMAT Format, DXGI_COLOR_SPACE_TYPE ColorSpace, IUnknown pConcernedDevice, uint* pFlags);
 }
 enum IID_IDXGIFactory4 = GUID(0x1bc6ea02, 0xef36, 0x464f, [0xbf, 0xc, 0x21, 0xca, 0x39, 0xe5, 0x16, 0x8a]);
 interface IDXGIFactory4 : IDXGIFactory3
 {
-    HRESULT EnumAdapterByLuid(LUID, const(GUID)*, void**);
-    HRESULT EnumWarpAdapter(const(GUID)*, void**);
+    HRESULT EnumAdapterByLuid(LUID AdapterLuid, const(GUID)* riid, void** ppvAdapter);
+    HRESULT EnumWarpAdapter(const(GUID)* riid, void** ppvAdapter);
 }
 alias DXGI_MEMORY_SEGMENT_GROUP = int;
 enum : int
@@ -696,12 +731,12 @@ struct DXGI_QUERY_VIDEO_MEMORY_INFO
 enum IID_IDXGIAdapter3 = GUID(0x645967a4, 0x1392, 0x4310, [0xa7, 0x98, 0x80, 0x53, 0xce, 0x3e, 0x93, 0xfd]);
 interface IDXGIAdapter3 : IDXGIAdapter2
 {
-    HRESULT RegisterHardwareContentProtectionTeardownStatusEvent(HANDLE, uint*);
-    void UnregisterHardwareContentProtectionTeardownStatus(uint);
-    HRESULT QueryVideoMemoryInfo(uint, DXGI_MEMORY_SEGMENT_GROUP, DXGI_QUERY_VIDEO_MEMORY_INFO*);
-    HRESULT SetVideoMemoryReservation(uint, DXGI_MEMORY_SEGMENT_GROUP, ulong);
-    HRESULT RegisterVideoMemoryBudgetChangeNotificationEvent(HANDLE, uint*);
-    void UnregisterVideoMemoryBudgetChangeNotification(uint);
+    HRESULT RegisterHardwareContentProtectionTeardownStatusEvent(HANDLE hEvent, uint* pdwCookie);
+    void UnregisterHardwareContentProtectionTeardownStatus(uint dwCookie);
+    HRESULT QueryVideoMemoryInfo(uint NodeIndex, DXGI_MEMORY_SEGMENT_GROUP MemorySegmentGroup, DXGI_QUERY_VIDEO_MEMORY_INFO* pVideoMemoryInfo);
+    HRESULT SetVideoMemoryReservation(uint NodeIndex, DXGI_MEMORY_SEGMENT_GROUP MemorySegmentGroup, ulong Reservation);
+    HRESULT RegisterVideoMemoryBudgetChangeNotificationEvent(HANDLE hEvent, uint* pdwCookie);
+    void UnregisterVideoMemoryBudgetChangeNotification(uint dwCookie);
 }
 alias DXGI_OUTDUPL_FLAG = int;
 enum : int
@@ -712,7 +747,7 @@ enum : int
 enum IID_IDXGIOutput5 = GUID(0x80a07424, 0xab52, 0x42eb, [0x83, 0x3c, 0xc, 0x42, 0xfd, 0x28, 0x2d, 0x98]);
 interface IDXGIOutput5 : IDXGIOutput4
 {
-    HRESULT DuplicateOutput1(IUnknown, uint, uint, const(DXGI_FORMAT)*, IDXGIOutputDuplication*);
+    HRESULT DuplicateOutput1(IUnknown pDevice, uint Flags, uint SupportedFormatsCount, const(DXGI_FORMAT)* pSupportedFormats, IDXGIOutputDuplication* ppOutputDuplication);
 }
 alias DXGI_HDR_METADATA_TYPE = int;
 enum : int
@@ -740,7 +775,7 @@ struct DXGI_HDR_METADATA_HDR10PLUS
 enum IID_IDXGISwapChain4 = GUID(0x3d585d5a, 0xbd4a, 0x489e, [0xb1, 0xf4, 0x3d, 0xbc, 0xb6, 0x45, 0x2f, 0xfb]);
 interface IDXGISwapChain4 : IDXGISwapChain3
 {
-    HRESULT SetHDRMetaData(DXGI_HDR_METADATA_TYPE, uint, void*);
+    HRESULT SetHDRMetaData(DXGI_HDR_METADATA_TYPE Type, uint Size, void* pMetaData);
 }
 alias DXGI_OFFER_RESOURCE_FLAGS = int;
 enum : int
@@ -759,8 +794,8 @@ enum : int
 enum IID_IDXGIDevice4 = GUID(0x95b4f95f, 0xd8da, 0x4ca4, [0x9e, 0xe6, 0x3b, 0x76, 0xd5, 0x96, 0x8a, 0x10]);
 interface IDXGIDevice4 : IDXGIDevice3
 {
-    HRESULT OfferResources1(uint, IDXGIResource*, DXGI_OFFER_RESOURCE_PRIORITY, uint);
-    HRESULT ReclaimResources1(uint, IDXGIResource*, DXGI_RECLAIM_RESOURCE_RESULTS*);
+    HRESULT OfferResources1(uint NumResources, IDXGIResource* ppResources, DXGI_OFFER_RESOURCE_PRIORITY Priority, uint Flags);
+    HRESULT ReclaimResources1(uint NumResources, IDXGIResource* ppResources, DXGI_RECLAIM_RESOURCE_RESULTS* pResults);
 }
 alias DXGI_FEATURE = int;
 enum : int
@@ -771,7 +806,7 @@ enum : int
 enum IID_IDXGIFactory5 = GUID(0x7632e1f5, 0xee65, 0x4dca, [0x87, 0xfd, 0x84, 0xcd, 0x75, 0xf8, 0x83, 0x8d]);
 interface IDXGIFactory5 : IDXGIFactory4
 {
-    HRESULT CheckFeatureSupport(DXGI_FEATURE, void*, uint);
+    HRESULT CheckFeatureSupport(DXGI_FEATURE Feature, void* pFeatureSupportData, uint FeatureSupportDataSize);
 }
 alias DXGI_ADAPTER_FLAG3 = int;
 enum : int
@@ -803,7 +838,7 @@ struct DXGI_ADAPTER_DESC3
 enum IID_IDXGIAdapter4 = GUID(0x3c8d99d1, 0x4fbf, 0x4181, [0xa8, 0x2c, 0xaf, 0x66, 0xbf, 0x7b, 0xd2, 0x4e]);
 interface IDXGIAdapter4 : IDXGIAdapter3
 {
-    HRESULT GetDesc3(DXGI_ADAPTER_DESC3*);
+    HRESULT GetDesc3(DXGI_ADAPTER_DESC3* pDesc);
 }
 struct DXGI_OUTPUT_DESC1
 {
@@ -833,8 +868,8 @@ enum : int
 enum IID_IDXGIOutput6 = GUID(0x68346e8, 0xaaec, 0x4b84, [0xad, 0xd7, 0x13, 0x7f, 0x51, 0x3f, 0x77, 0xa1]);
 interface IDXGIOutput6 : IDXGIOutput5
 {
-    HRESULT GetDesc1(DXGI_OUTPUT_DESC1*);
-    HRESULT CheckHardwareCompositionSupport(uint*);
+    HRESULT GetDesc1(DXGI_OUTPUT_DESC1* pDesc);
+    HRESULT CheckHardwareCompositionSupport(uint* pFlags);
 }
 alias DXGI_GPU_PREFERENCE = int;
 enum : int
@@ -847,13 +882,13 @@ enum : int
 enum IID_IDXGIFactory6 = GUID(0xc1b6694f, 0xff09, 0x44a9, [0xb0, 0x3c, 0x77, 0x90, 0xa, 0xa, 0x1d, 0x17]);
 interface IDXGIFactory6 : IDXGIFactory5
 {
-    HRESULT EnumAdapterByGpuPreference(uint, DXGI_GPU_PREFERENCE, const(GUID)*, void**);
+    HRESULT EnumAdapterByGpuPreference(uint Adapter, DXGI_GPU_PREFERENCE GpuPreference, const(GUID)* riid, void** ppvAdapter);
 }
 enum IID_IDXGIFactory7 = GUID(0xa4966eed, 0x76db, 0x44da, [0x84, 0xc1, 0xee, 0x9a, 0x7a, 0xfb, 0x20, 0xa8]);
 interface IDXGIFactory7 : IDXGIFactory6
 {
-    HRESULT RegisterAdaptersChangedEvent(HANDLE, uint*);
-    HRESULT UnregisterAdaptersChangedEvent(uint);
+    HRESULT RegisterAdaptersChangedEvent(HANDLE hEvent, uint* pdwCookie);
+    HRESULT UnregisterAdaptersChangedEvent(uint dwCookie);
 }
 alias DXGI_DEBUG_RLO_FLAGS = int;
 enum : int
@@ -916,48 +951,48 @@ struct DXGI_INFO_QUEUE_FILTER
 enum IID_IDXGIInfoQueue = GUID(0xd67441c7, 0x672a, 0x476f, [0x9e, 0x82, 0xcd, 0x55, 0xb4, 0x49, 0x49, 0xce]);
 interface IDXGIInfoQueue : IUnknown
 {
-    HRESULT SetMessageCountLimit(GUID, ulong);
-    void ClearStoredMessages(GUID);
-    HRESULT GetMessage(GUID, ulong, DXGI_INFO_QUEUE_MESSAGE*, ulong*);
-    ulong GetNumStoredMessagesAllowedByRetrievalFilters(GUID);
-    ulong GetNumStoredMessages(GUID);
-    ulong GetNumMessagesDiscardedByMessageCountLimit(GUID);
-    ulong GetMessageCountLimit(GUID);
-    ulong GetNumMessagesAllowedByStorageFilter(GUID);
-    ulong GetNumMessagesDeniedByStorageFilter(GUID);
-    HRESULT AddStorageFilterEntries(GUID, DXGI_INFO_QUEUE_FILTER*);
-    HRESULT GetStorageFilter(GUID, DXGI_INFO_QUEUE_FILTER*, ulong*);
-    void ClearStorageFilter(GUID);
-    HRESULT PushEmptyStorageFilter(GUID);
-    HRESULT PushDenyAllStorageFilter(GUID);
-    HRESULT PushCopyOfStorageFilter(GUID);
-    HRESULT PushStorageFilter(GUID, DXGI_INFO_QUEUE_FILTER*);
-    void PopStorageFilter(GUID);
-    uint GetStorageFilterStackSize(GUID);
-    HRESULT AddRetrievalFilterEntries(GUID, DXGI_INFO_QUEUE_FILTER*);
-    HRESULT GetRetrievalFilter(GUID, DXGI_INFO_QUEUE_FILTER*, ulong*);
-    void ClearRetrievalFilter(GUID);
-    HRESULT PushEmptyRetrievalFilter(GUID);
-    HRESULT PushDenyAllRetrievalFilter(GUID);
-    HRESULT PushCopyOfRetrievalFilter(GUID);
-    HRESULT PushRetrievalFilter(GUID, DXGI_INFO_QUEUE_FILTER*);
-    void PopRetrievalFilter(GUID);
-    uint GetRetrievalFilterStackSize(GUID);
-    HRESULT AddMessage(GUID, DXGI_INFO_QUEUE_MESSAGE_CATEGORY, DXGI_INFO_QUEUE_MESSAGE_SEVERITY, int, const(char)*);
-    HRESULT AddApplicationMessage(DXGI_INFO_QUEUE_MESSAGE_SEVERITY, const(char)*);
-    HRESULT SetBreakOnCategory(GUID, DXGI_INFO_QUEUE_MESSAGE_CATEGORY, BOOL);
-    HRESULT SetBreakOnSeverity(GUID, DXGI_INFO_QUEUE_MESSAGE_SEVERITY, BOOL);
-    HRESULT SetBreakOnID(GUID, int, BOOL);
-    BOOL GetBreakOnCategory(GUID, DXGI_INFO_QUEUE_MESSAGE_CATEGORY);
-    BOOL GetBreakOnSeverity(GUID, DXGI_INFO_QUEUE_MESSAGE_SEVERITY);
-    BOOL GetBreakOnID(GUID, int);
-    void SetMuteDebugOutput(GUID, BOOL);
-    BOOL GetMuteDebugOutput(GUID);
+    HRESULT SetMessageCountLimit(GUID Producer, ulong MessageCountLimit);
+    void ClearStoredMessages(GUID Producer);
+    HRESULT GetMessage(GUID Producer, ulong MessageIndex, DXGI_INFO_QUEUE_MESSAGE* pMessage, ulong* pMessageByteLength);
+    ulong GetNumStoredMessagesAllowedByRetrievalFilters(GUID Producer);
+    ulong GetNumStoredMessages(GUID Producer);
+    ulong GetNumMessagesDiscardedByMessageCountLimit(GUID Producer);
+    ulong GetMessageCountLimit(GUID Producer);
+    ulong GetNumMessagesAllowedByStorageFilter(GUID Producer);
+    ulong GetNumMessagesDeniedByStorageFilter(GUID Producer);
+    HRESULT AddStorageFilterEntries(GUID Producer, DXGI_INFO_QUEUE_FILTER* pFilter);
+    HRESULT GetStorageFilter(GUID Producer, DXGI_INFO_QUEUE_FILTER* pFilter, ulong* pFilterByteLength);
+    void ClearStorageFilter(GUID Producer);
+    HRESULT PushEmptyStorageFilter(GUID Producer);
+    HRESULT PushDenyAllStorageFilter(GUID Producer);
+    HRESULT PushCopyOfStorageFilter(GUID Producer);
+    HRESULT PushStorageFilter(GUID Producer, DXGI_INFO_QUEUE_FILTER* pFilter);
+    void PopStorageFilter(GUID Producer);
+    uint GetStorageFilterStackSize(GUID Producer);
+    HRESULT AddRetrievalFilterEntries(GUID Producer, DXGI_INFO_QUEUE_FILTER* pFilter);
+    HRESULT GetRetrievalFilter(GUID Producer, DXGI_INFO_QUEUE_FILTER* pFilter, ulong* pFilterByteLength);
+    void ClearRetrievalFilter(GUID Producer);
+    HRESULT PushEmptyRetrievalFilter(GUID Producer);
+    HRESULT PushDenyAllRetrievalFilter(GUID Producer);
+    HRESULT PushCopyOfRetrievalFilter(GUID Producer);
+    HRESULT PushRetrievalFilter(GUID Producer, DXGI_INFO_QUEUE_FILTER* pFilter);
+    void PopRetrievalFilter(GUID Producer);
+    uint GetRetrievalFilterStackSize(GUID Producer);
+    HRESULT AddMessage(GUID Producer, DXGI_INFO_QUEUE_MESSAGE_CATEGORY Category, DXGI_INFO_QUEUE_MESSAGE_SEVERITY Severity, int ID, const(char)* pDescription);
+    HRESULT AddApplicationMessage(DXGI_INFO_QUEUE_MESSAGE_SEVERITY Severity, const(char)* pDescription);
+    HRESULT SetBreakOnCategory(GUID Producer, DXGI_INFO_QUEUE_MESSAGE_CATEGORY Category, BOOL bEnable);
+    HRESULT SetBreakOnSeverity(GUID Producer, DXGI_INFO_QUEUE_MESSAGE_SEVERITY Severity, BOOL bEnable);
+    HRESULT SetBreakOnID(GUID Producer, int ID, BOOL bEnable);
+    BOOL GetBreakOnCategory(GUID Producer, DXGI_INFO_QUEUE_MESSAGE_CATEGORY Category);
+    BOOL GetBreakOnSeverity(GUID Producer, DXGI_INFO_QUEUE_MESSAGE_SEVERITY Severity);
+    BOOL GetBreakOnID(GUID Producer, int ID);
+    void SetMuteDebugOutput(GUID Producer, BOOL bMute);
+    BOOL GetMuteDebugOutput(GUID Producer);
 }
 enum IID_IDXGIDebug = GUID(0x119e7452, 0xde9e, 0x40fe, [0x88, 0x6, 0x88, 0xf9, 0xc, 0x12, 0xb4, 0x41]);
 interface IDXGIDebug : IUnknown
 {
-    HRESULT ReportLiveObjects(GUID, DXGI_DEBUG_RLO_FLAGS);
+    HRESULT ReportLiveObjects(GUID apiid, DXGI_DEBUG_RLO_FLAGS flags);
 }
 enum IID_IDXGIDebug1 = GUID(0xc5a05f0c, 0x16f2, 0x4adf, [0x9f, 0x4d, 0xa8, 0xc4, 0xd5, 0x8a, 0xc5, 0x50]);
 interface IDXGIDebug1 : IDXGIDebug

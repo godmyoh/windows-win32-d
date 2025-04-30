@@ -8,7 +8,7 @@ version (Windows):
 extern (Windows):
 
 HANDLE WnvOpen();
-uint WnvRequestNotification(HANDLE, WNV_NOTIFICATION_PARAM*, OVERLAPPED*, uint*);
+uint WnvRequestNotification(HANDLE WnvHandle, WNV_NOTIFICATION_PARAM* NotificationParam, OVERLAPPED* Overlapped, uint* BytesTransferred);
 enum WNV_API_MAJOR_VERSION_1 = 0x00000001;
 enum WNV_API_MINOR_VERSION_0 = 0x00000000;
 alias WNV_NOTIFICATION_TYPE = int;

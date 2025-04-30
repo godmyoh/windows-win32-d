@@ -130,94 +130,94 @@ enum : int
 enum IID_IDirectManipulationManager = GUID(0xfbf5d3b4, 0x70c7, 0x4163, [0x93, 0x22, 0x5a, 0x6f, 0x66, 0xd, 0x6f, 0xbc]);
 interface IDirectManipulationManager : IUnknown
 {
-    HRESULT Activate(HWND);
-    HRESULT Deactivate(HWND);
-    HRESULT RegisterHitTestTarget(HWND, HWND, DIRECTMANIPULATION_HITTEST_TYPE);
-    HRESULT ProcessInput(const(MSG)*, BOOL*);
-    HRESULT GetUpdateManager(const(GUID)*, void**);
-    HRESULT CreateViewport(IDirectManipulationFrameInfoProvider, HWND, const(GUID)*, void**);
-    HRESULT CreateContent(IDirectManipulationFrameInfoProvider, const(GUID)*, const(GUID)*, void**);
+    HRESULT Activate(HWND window);
+    HRESULT Deactivate(HWND window);
+    HRESULT RegisterHitTestTarget(HWND window, HWND hitTestWindow, DIRECTMANIPULATION_HITTEST_TYPE type);
+    HRESULT ProcessInput(const(MSG)* message, BOOL* handled);
+    HRESULT GetUpdateManager(const(GUID)* riid, void** object);
+    HRESULT CreateViewport(IDirectManipulationFrameInfoProvider frameInfo, HWND window, const(GUID)* riid, void** object);
+    HRESULT CreateContent(IDirectManipulationFrameInfoProvider frameInfo, const(GUID)* clsid, const(GUID)* riid, void** object);
 }
 enum IID_IDirectManipulationManager2 = GUID(0xfa1005e9, 0x3d16, 0x484c, [0xbf, 0xc9, 0x62, 0xb6, 0x1e, 0x56, 0xec, 0x4e]);
 interface IDirectManipulationManager2 : IDirectManipulationManager
 {
-    HRESULT CreateBehavior(const(GUID)*, const(GUID)*, void**);
+    HRESULT CreateBehavior(const(GUID)* clsid, const(GUID)* riid, void** object);
 }
 enum IID_IDirectManipulationManager3 = GUID(0x2cb6b33d, 0xffe8, 0x488c, [0xb7, 0x50, 0xfb, 0xdf, 0xe8, 0x8d, 0xca, 0x8c]);
 interface IDirectManipulationManager3 : IDirectManipulationManager2
 {
-    HRESULT GetService(const(GUID)*, const(GUID)*, void**);
+    HRESULT GetService(const(GUID)* clsid, const(GUID)* riid, void** object);
 }
 enum IID_IDirectManipulationViewport = GUID(0x28b85a3d, 0x60a0, 0x48bd, [0x9b, 0xa1, 0x5c, 0xe8, 0xd9, 0xea, 0x3a, 0x6d]);
 interface IDirectManipulationViewport : IUnknown
 {
     HRESULT Enable();
     HRESULT Disable();
-    HRESULT SetContact(uint);
-    HRESULT ReleaseContact(uint);
+    HRESULT SetContact(uint pointerId);
+    HRESULT ReleaseContact(uint pointerId);
     HRESULT ReleaseAllContacts();
-    HRESULT GetStatus(DIRECTMANIPULATION_STATUS*);
-    HRESULT GetTag(const(GUID)*, void**, uint*);
-    HRESULT SetTag(IUnknown, uint);
-    HRESULT GetViewportRect(RECT*);
-    HRESULT SetViewportRect(const(RECT)*);
-    HRESULT ZoomToRect(const(float), const(float), const(float), const(float), BOOL);
-    HRESULT SetViewportTransform(const(float)*, uint);
-    HRESULT SyncDisplayTransform(const(float)*, uint);
-    HRESULT GetPrimaryContent(const(GUID)*, void**);
-    HRESULT AddContent(IDirectManipulationContent);
-    HRESULT RemoveContent(IDirectManipulationContent);
-    HRESULT SetViewportOptions(DIRECTMANIPULATION_VIEWPORT_OPTIONS);
-    HRESULT AddConfiguration(DIRECTMANIPULATION_CONFIGURATION);
-    HRESULT RemoveConfiguration(DIRECTMANIPULATION_CONFIGURATION);
-    HRESULT ActivateConfiguration(DIRECTMANIPULATION_CONFIGURATION);
-    HRESULT SetManualGesture(DIRECTMANIPULATION_GESTURE_CONFIGURATION);
-    HRESULT SetChaining(DIRECTMANIPULATION_MOTION_TYPES);
-    HRESULT AddEventHandler(HWND, IDirectManipulationViewportEventHandler, uint*);
-    HRESULT RemoveEventHandler(uint);
-    HRESULT SetInputMode(DIRECTMANIPULATION_INPUT_MODE);
-    HRESULT SetUpdateMode(DIRECTMANIPULATION_INPUT_MODE);
+    HRESULT GetStatus(DIRECTMANIPULATION_STATUS* status);
+    HRESULT GetTag(const(GUID)* riid, void** object, uint* id);
+    HRESULT SetTag(IUnknown object, uint id);
+    HRESULT GetViewportRect(RECT* viewport);
+    HRESULT SetViewportRect(const(RECT)* viewport);
+    HRESULT ZoomToRect(const(float) left, const(float) top, const(float) right, const(float) bottom, BOOL animate);
+    HRESULT SetViewportTransform(const(float)* matrix, uint pointCount);
+    HRESULT SyncDisplayTransform(const(float)* matrix, uint pointCount);
+    HRESULT GetPrimaryContent(const(GUID)* riid, void** object);
+    HRESULT AddContent(IDirectManipulationContent content);
+    HRESULT RemoveContent(IDirectManipulationContent content);
+    HRESULT SetViewportOptions(DIRECTMANIPULATION_VIEWPORT_OPTIONS options);
+    HRESULT AddConfiguration(DIRECTMANIPULATION_CONFIGURATION configuration);
+    HRESULT RemoveConfiguration(DIRECTMANIPULATION_CONFIGURATION configuration);
+    HRESULT ActivateConfiguration(DIRECTMANIPULATION_CONFIGURATION configuration);
+    HRESULT SetManualGesture(DIRECTMANIPULATION_GESTURE_CONFIGURATION configuration);
+    HRESULT SetChaining(DIRECTMANIPULATION_MOTION_TYPES enabledTypes);
+    HRESULT AddEventHandler(HWND window, IDirectManipulationViewportEventHandler eventHandler, uint* cookie);
+    HRESULT RemoveEventHandler(uint cookie);
+    HRESULT SetInputMode(DIRECTMANIPULATION_INPUT_MODE mode);
+    HRESULT SetUpdateMode(DIRECTMANIPULATION_INPUT_MODE mode);
     HRESULT Stop();
     HRESULT Abandon();
 }
 enum IID_IDirectManipulationViewport2 = GUID(0x923ccaac, 0x61e1, 0x4385, [0xb7, 0x26, 0x1, 0x7a, 0xf1, 0x89, 0x88, 0x2a]);
 interface IDirectManipulationViewport2 : IDirectManipulationViewport
 {
-    HRESULT AddBehavior(IUnknown, uint*);
-    HRESULT RemoveBehavior(uint);
+    HRESULT AddBehavior(IUnknown behavior, uint* cookie);
+    HRESULT RemoveBehavior(uint cookie);
     HRESULT RemoveAllBehaviors();
 }
 enum IID_IDirectManipulationViewportEventHandler = GUID(0x952121da, 0xd69f, 0x45f9, [0xb0, 0xf9, 0xf2, 0x39, 0x44, 0x32, 0x1a, 0x6d]);
 interface IDirectManipulationViewportEventHandler : IUnknown
 {
-    HRESULT OnViewportStatusChanged(IDirectManipulationViewport, DIRECTMANIPULATION_STATUS, DIRECTMANIPULATION_STATUS);
-    HRESULT OnViewportUpdated(IDirectManipulationViewport);
-    HRESULT OnContentUpdated(IDirectManipulationViewport, IDirectManipulationContent);
+    HRESULT OnViewportStatusChanged(IDirectManipulationViewport viewport, DIRECTMANIPULATION_STATUS current, DIRECTMANIPULATION_STATUS previous);
+    HRESULT OnViewportUpdated(IDirectManipulationViewport viewport);
+    HRESULT OnContentUpdated(IDirectManipulationViewport viewport, IDirectManipulationContent content);
 }
 enum IID_IDirectManipulationContent = GUID(0xb89962cb, 0x3d89, 0x442b, [0xbb, 0x58, 0x50, 0x98, 0xfa, 0xf, 0x9f, 0x16]);
 interface IDirectManipulationContent : IUnknown
 {
-    HRESULT GetContentRect(RECT*);
-    HRESULT SetContentRect(const(RECT)*);
-    HRESULT GetViewport(const(GUID)*, void**);
-    HRESULT GetTag(const(GUID)*, void**, uint*);
-    HRESULT SetTag(IUnknown, uint);
-    HRESULT GetOutputTransform(float*, uint);
-    HRESULT GetContentTransform(float*, uint);
-    HRESULT SyncContentTransform(const(float)*, uint);
+    HRESULT GetContentRect(RECT* contentSize);
+    HRESULT SetContentRect(const(RECT)* contentSize);
+    HRESULT GetViewport(const(GUID)* riid, void** object);
+    HRESULT GetTag(const(GUID)* riid, void** object, uint* id);
+    HRESULT SetTag(IUnknown object, uint id);
+    HRESULT GetOutputTransform(float* matrix, uint pointCount);
+    HRESULT GetContentTransform(float* matrix, uint pointCount);
+    HRESULT SyncContentTransform(const(float)* matrix, uint pointCount);
 }
 enum IID_IDirectManipulationPrimaryContent = GUID(0xc12851e4, 0x1698, 0x4625, [0xb9, 0xb1, 0x7c, 0xa3, 0xec, 0x18, 0x63, 0xb]);
 interface IDirectManipulationPrimaryContent : IUnknown
 {
-    HRESULT SetSnapInterval(DIRECTMANIPULATION_MOTION_TYPES, float, float);
-    HRESULT SetSnapPoints(DIRECTMANIPULATION_MOTION_TYPES, const(float)*, uint);
-    HRESULT SetSnapType(DIRECTMANIPULATION_MOTION_TYPES, DIRECTMANIPULATION_SNAPPOINT_TYPE);
-    HRESULT SetSnapCoordinate(DIRECTMANIPULATION_MOTION_TYPES, DIRECTMANIPULATION_SNAPPOINT_COORDINATE, float);
-    HRESULT SetZoomBoundaries(float, float);
-    HRESULT SetHorizontalAlignment(DIRECTMANIPULATION_HORIZONTALALIGNMENT);
-    HRESULT SetVerticalAlignment(DIRECTMANIPULATION_VERTICALALIGNMENT);
-    HRESULT GetInertiaEndTransform(float*, uint);
-    HRESULT GetCenterPoint(float*, float*);
+    HRESULT SetSnapInterval(DIRECTMANIPULATION_MOTION_TYPES motion, float interval, float offset);
+    HRESULT SetSnapPoints(DIRECTMANIPULATION_MOTION_TYPES motion, const(float)* points, uint pointCount);
+    HRESULT SetSnapType(DIRECTMANIPULATION_MOTION_TYPES motion, DIRECTMANIPULATION_SNAPPOINT_TYPE type);
+    HRESULT SetSnapCoordinate(DIRECTMANIPULATION_MOTION_TYPES motion, DIRECTMANIPULATION_SNAPPOINT_COORDINATE coordinate, float origin);
+    HRESULT SetZoomBoundaries(float zoomMinimum, float zoomMaximum);
+    HRESULT SetHorizontalAlignment(DIRECTMANIPULATION_HORIZONTALALIGNMENT alignment);
+    HRESULT SetVerticalAlignment(DIRECTMANIPULATION_VERTICALALIGNMENT alignment);
+    HRESULT GetInertiaEndTransform(float* matrix, uint pointCount);
+    HRESULT GetCenterPoint(float* centerX, float* centerY);
 }
 alias DIRECTMANIPULATION_DRAG_DROP_STATUS = int;
 enum : int
@@ -233,7 +233,7 @@ enum : int
 enum IID_IDirectManipulationDragDropEventHandler = GUID(0x1fa11b10, 0x701b, 0x41ae, [0xb5, 0xf2, 0x49, 0xe3, 0x6b, 0xd5, 0x95, 0xaa]);
 interface IDirectManipulationDragDropEventHandler : IUnknown
 {
-    HRESULT OnDragDropStatusChange(IDirectManipulationViewport2, DIRECTMANIPULATION_DRAG_DROP_STATUS, DIRECTMANIPULATION_DRAG_DROP_STATUS);
+    HRESULT OnDragDropStatusChange(IDirectManipulationViewport2 viewport, DIRECTMANIPULATION_DRAG_DROP_STATUS current, DIRECTMANIPULATION_DRAG_DROP_STATUS previous);
 }
 alias DIRECTMANIPULATION_DRAG_DROP_CONFIGURATION = int;
 enum : int
@@ -248,8 +248,8 @@ enum : int
 enum IID_IDirectManipulationDragDropBehavior = GUID(0x814b5af5, 0xc2c8, 0x4270, [0xa9, 0xb7, 0xa1, 0x98, 0xce, 0x8d, 0x2, 0xfa]);
 interface IDirectManipulationDragDropBehavior : IUnknown
 {
-    HRESULT SetConfiguration(DIRECTMANIPULATION_DRAG_DROP_CONFIGURATION);
-    HRESULT GetStatus(DIRECTMANIPULATION_DRAG_DROP_STATUS*);
+    HRESULT SetConfiguration(DIRECTMANIPULATION_DRAG_DROP_CONFIGURATION configuration);
+    HRESULT GetStatus(DIRECTMANIPULATION_DRAG_DROP_STATUS* status);
 }
 alias DIRECTMANIPULATION_INTERACTION_TYPE = int;
 enum : int
@@ -266,25 +266,25 @@ enum : int
 enum IID_IDirectManipulationInteractionEventHandler = GUID(0xe43f45b8, 0x42b4, 0x403e, [0xb1, 0xf2, 0x27, 0x3b, 0x8f, 0x51, 0x8, 0x30]);
 interface IDirectManipulationInteractionEventHandler : IUnknown
 {
-    HRESULT OnInteraction(IDirectManipulationViewport2, DIRECTMANIPULATION_INTERACTION_TYPE);
+    HRESULT OnInteraction(IDirectManipulationViewport2 viewport, DIRECTMANIPULATION_INTERACTION_TYPE interaction);
 }
 enum IID_IDirectManipulationFrameInfoProvider = GUID(0xfb759dba, 0x6f4c, 0x4c01, [0x87, 0x4e, 0x19, 0xc8, 0xa0, 0x59, 0x7, 0xf9]);
 interface IDirectManipulationFrameInfoProvider : IUnknown
 {
-    HRESULT GetNextFrameInfo(ulong*, ulong*, ulong*);
+    HRESULT GetNextFrameInfo(ulong* time, ulong* processTime, ulong* compositionTime);
 }
 enum IID_IDirectManipulationCompositor = GUID(0x537a0825, 0x387, 0x4efa, [0xb6, 0x2f, 0x71, 0xeb, 0x1f, 0x8, 0x5a, 0x7e]);
 interface IDirectManipulationCompositor : IUnknown
 {
-    HRESULT AddContent(IDirectManipulationContent, IUnknown, IUnknown, IUnknown);
-    HRESULT RemoveContent(IDirectManipulationContent);
-    HRESULT SetUpdateManager(IDirectManipulationUpdateManager);
+    HRESULT AddContent(IDirectManipulationContent content, IUnknown device, IUnknown parentVisual, IUnknown childVisual);
+    HRESULT RemoveContent(IDirectManipulationContent content);
+    HRESULT SetUpdateManager(IDirectManipulationUpdateManager updateManager);
     HRESULT Flush();
 }
 enum IID_IDirectManipulationCompositor2 = GUID(0xd38c7822, 0xf1cb, 0x43cb, [0xb4, 0xb9, 0xac, 0xc, 0x76, 0x7a, 0x41, 0x2e]);
 interface IDirectManipulationCompositor2 : IDirectManipulationCompositor
 {
-    HRESULT AddContentWithCrossProcessChaining(IDirectManipulationPrimaryContent, IUnknown, IUnknown, IUnknown);
+    HRESULT AddContentWithCrossProcessChaining(IDirectManipulationPrimaryContent content, IUnknown device, IUnknown parentVisual, IUnknown childVisual);
 }
 enum IID_IDirectManipulationUpdateHandler = GUID(0x790b6337, 0x64f8, 0x4ff5, [0xa2, 0x69, 0xb3, 0x2b, 0xc2, 0xaf, 0x27, 0xa7]);
 interface IDirectManipulationUpdateHandler : IUnknown
@@ -294,9 +294,9 @@ interface IDirectManipulationUpdateHandler : IUnknown
 enum IID_IDirectManipulationUpdateManager = GUID(0xb0ae62fd, 0xbe34, 0x46e7, [0x9c, 0xaa, 0xd3, 0x61, 0xfa, 0xcb, 0xb9, 0xcc]);
 interface IDirectManipulationUpdateManager : IUnknown
 {
-    HRESULT RegisterWaitHandleCallback(HANDLE, IDirectManipulationUpdateHandler, uint*);
-    HRESULT UnregisterWaitHandleCallback(uint);
-    HRESULT Update(IDirectManipulationFrameInfoProvider);
+    HRESULT RegisterWaitHandleCallback(HANDLE handle, IDirectManipulationUpdateHandler eventHandler, uint* cookie);
+    HRESULT UnregisterWaitHandleCallback(uint cookie);
+    HRESULT Update(IDirectManipulationFrameInfoProvider frameInfo);
 }
 alias DIRECTMANIPULATION_AUTOSCROLL_CONFIGURATION = int;
 enum : int
@@ -309,14 +309,14 @@ enum : int
 enum IID_IDirectManipulationAutoScrollBehavior = GUID(0x6d5954d4, 0x2003, 0x4356, [0x9b, 0x31, 0xd0, 0x51, 0xc9, 0xff, 0xa, 0xf7]);
 interface IDirectManipulationAutoScrollBehavior : IUnknown
 {
-    HRESULT SetConfiguration(DIRECTMANIPULATION_MOTION_TYPES, DIRECTMANIPULATION_AUTOSCROLL_CONFIGURATION);
+    HRESULT SetConfiguration(DIRECTMANIPULATION_MOTION_TYPES motionTypes, DIRECTMANIPULATION_AUTOSCROLL_CONFIGURATION scrollMotion);
 }
 enum IID_IDirectManipulationDeferContactService = GUID(0x652d5c71, 0xfe60, 0x4a98, [0xbe, 0x70, 0xe5, 0xf2, 0x12, 0x91, 0xe7, 0xf1]);
 interface IDirectManipulationDeferContactService : IUnknown
 {
-    HRESULT DeferContact(uint, uint);
-    HRESULT CancelContact(uint);
-    HRESULT CancelDeferral(uint);
+    HRESULT DeferContact(uint pointerId, uint timeout);
+    HRESULT CancelContact(uint pointerId);
+    HRESULT CancelDeferral(uint pointerId);
 }
 enum CLSID_DirectManipulationViewport = GUID(0x34e211b6, 0x3650, 0x4f75, [0x83, 0x34, 0xfa, 0x35, 0x95, 0x98, 0xe1, 0xc5]);
 struct DirectManipulationViewport

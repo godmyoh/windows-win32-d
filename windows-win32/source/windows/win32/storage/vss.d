@@ -10,7 +10,7 @@ import windows.win32.system.variant : VARIANT;
 version (Windows):
 extern (Windows):
 
-HRESULT CreateVssExpressWriterInternal(IVssExpressWriter*);
+HRESULT CreateVssExpressWriterInternal(IVssExpressWriter* ppWriter);
 enum VSS_ASSOC_NO_MAX_SPACE = 0xffffffffffffffff;
 enum VSS_ASSOC_REMOVE = 0x00000000;
 enum VSS_E_BAD_STATE = 0xffffffff80042301;
@@ -372,17 +372,17 @@ struct VSS_OBJECT_PROP
 enum IID_IVssEnumObject = GUID(0xae1c7110, 0x2f60, 0x11d3, [0x8a, 0x39, 0x0, 0xc0, 0x4f, 0x72, 0xd8, 0xe3]);
 interface IVssEnumObject : IUnknown
 {
-    HRESULT Next(uint, VSS_OBJECT_PROP*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, VSS_OBJECT_PROP* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IVssEnumObject*);
+    HRESULT Clone(IVssEnumObject* ppenum);
 }
 enum IID_IVssAsync = GUID(0x507c37b4, 0xcf5b, 0x4e95, [0xb0, 0xaf, 0x14, 0xeb, 0x97, 0x67, 0x46, 0x7e]);
 interface IVssAsync : IUnknown
 {
     HRESULT Cancel();
-    HRESULT Wait(uint);
-    HRESULT QueryStatus(HRESULT*, int*);
+    HRESULT Wait(uint dwMilliseconds);
+    HRESULT QueryStatus(HRESULT* pHrResult, int* pReserved);
 }
 alias VSS_USAGE_TYPE = int;
 enum : int
@@ -483,119 +483,119 @@ enum : int
 // [Not Found] IID_IVssWMFiledesc
 interface IVssWMFiledesc : IUnknown
 {
-    HRESULT GetPath(BSTR*);
-    HRESULT GetFilespec(BSTR*);
-    HRESULT GetRecursive(bool*);
-    HRESULT GetAlternateLocation(BSTR*);
-    HRESULT GetBackupTypeMask(uint*);
+    HRESULT GetPath(BSTR* pbstrPath);
+    HRESULT GetFilespec(BSTR* pbstrFilespec);
+    HRESULT GetRecursive(bool* pbRecursive);
+    HRESULT GetAlternateLocation(BSTR* pbstrAlternateLocation);
+    HRESULT GetBackupTypeMask(uint* pdwTypeMask);
 }
 // [Not Found] IID_IVssWMDependency
 interface IVssWMDependency : IUnknown
 {
-    HRESULT GetWriterId(GUID*);
-    HRESULT GetLogicalPath(BSTR*);
-    HRESULT GetComponentName(BSTR*);
+    HRESULT GetWriterId(GUID* pWriterId);
+    HRESULT GetLogicalPath(BSTR* pbstrLogicalPath);
+    HRESULT GetComponentName(BSTR* pbstrComponentName);
 }
 enum IID_IVssComponent = GUID(0xd2c72c96, 0xc121, 0x4518, [0xb6, 0x27, 0xe5, 0xa9, 0x3d, 0x1, 0xe, 0xad]);
 interface IVssComponent : IUnknown
 {
-    HRESULT GetLogicalPath(BSTR*);
-    HRESULT GetComponentType(VSS_COMPONENT_TYPE*);
-    HRESULT GetComponentName(BSTR*);
-    HRESULT GetBackupSucceeded(bool*);
-    HRESULT GetAlternateLocationMappingCount(uint*);
-    HRESULT GetAlternateLocationMapping(uint, IVssWMFiledesc*);
-    HRESULT SetBackupMetadata(const(wchar)*);
-    HRESULT GetBackupMetadata(BSTR*);
-    HRESULT AddPartialFile(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*);
-    HRESULT GetPartialFileCount(uint*);
-    HRESULT GetPartialFile(uint, BSTR*, BSTR*, BSTR*, BSTR*);
-    HRESULT IsSelectedForRestore(bool*);
-    HRESULT GetAdditionalRestores(bool*);
-    HRESULT GetNewTargetCount(uint*);
-    HRESULT GetNewTarget(uint, IVssWMFiledesc*);
-    HRESULT AddDirectedTarget(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*);
-    HRESULT GetDirectedTargetCount(uint*);
-    HRESULT GetDirectedTarget(uint, BSTR*, BSTR*, BSTR*, BSTR*, BSTR*, BSTR*);
-    HRESULT SetRestoreMetadata(const(wchar)*);
-    HRESULT GetRestoreMetadata(BSTR*);
-    HRESULT SetRestoreTarget(VSS_RESTORE_TARGET);
-    HRESULT GetRestoreTarget(VSS_RESTORE_TARGET*);
-    HRESULT SetPreRestoreFailureMsg(const(wchar)*);
-    HRESULT GetPreRestoreFailureMsg(BSTR*);
-    HRESULT SetPostRestoreFailureMsg(const(wchar)*);
-    HRESULT GetPostRestoreFailureMsg(BSTR*);
-    HRESULT SetBackupStamp(const(wchar)*);
-    HRESULT GetBackupStamp(BSTR*);
-    HRESULT GetPreviousBackupStamp(BSTR*);
-    HRESULT GetBackupOptions(BSTR*);
-    HRESULT GetRestoreOptions(BSTR*);
-    HRESULT GetRestoreSubcomponentCount(uint*);
-    HRESULT GetRestoreSubcomponent(uint, BSTR*, BSTR*, bool*);
-    HRESULT GetFileRestoreStatus(VSS_FILE_RESTORE_STATUS*);
-    HRESULT AddDifferencedFilesByLastModifyTime(const(wchar)*, const(wchar)*, BOOL, FILETIME);
-    HRESULT AddDifferencedFilesByLastModifyLSN(const(wchar)*, const(wchar)*, BOOL, BSTR);
-    HRESULT GetDifferencedFilesCount(uint*);
-    HRESULT GetDifferencedFile(uint, BSTR*, BSTR*, BOOL*, BSTR*, FILETIME*);
+    HRESULT GetLogicalPath(BSTR* pbstrPath);
+    HRESULT GetComponentType(VSS_COMPONENT_TYPE* pct);
+    HRESULT GetComponentName(BSTR* pbstrName);
+    HRESULT GetBackupSucceeded(bool* pbSucceeded);
+    HRESULT GetAlternateLocationMappingCount(uint* pcMappings);
+    HRESULT GetAlternateLocationMapping(uint iMapping, IVssWMFiledesc* ppFiledesc);
+    HRESULT SetBackupMetadata(const(wchar)* wszData);
+    HRESULT GetBackupMetadata(BSTR* pbstrData);
+    HRESULT AddPartialFile(const(wchar)* wszPath, const(wchar)* wszFilename, const(wchar)* wszRanges, const(wchar)* wszMetadata);
+    HRESULT GetPartialFileCount(uint* pcPartialFiles);
+    HRESULT GetPartialFile(uint iPartialFile, BSTR* pbstrPath, BSTR* pbstrFilename, BSTR* pbstrRange, BSTR* pbstrMetadata);
+    HRESULT IsSelectedForRestore(bool* pbSelectedForRestore);
+    HRESULT GetAdditionalRestores(bool* pbAdditionalRestores);
+    HRESULT GetNewTargetCount(uint* pcNewTarget);
+    HRESULT GetNewTarget(uint iNewTarget, IVssWMFiledesc* ppFiledesc);
+    HRESULT AddDirectedTarget(const(wchar)* wszSourcePath, const(wchar)* wszSourceFilename, const(wchar)* wszSourceRangeList, const(wchar)* wszDestinationPath, const(wchar)* wszDestinationFilename, const(wchar)* wszDestinationRangeList);
+    HRESULT GetDirectedTargetCount(uint* pcDirectedTarget);
+    HRESULT GetDirectedTarget(uint iDirectedTarget, BSTR* pbstrSourcePath, BSTR* pbstrSourceFileName, BSTR* pbstrSourceRangeList, BSTR* pbstrDestinationPath, BSTR* pbstrDestinationFilename, BSTR* pbstrDestinationRangeList);
+    HRESULT SetRestoreMetadata(const(wchar)* wszRestoreMetadata);
+    HRESULT GetRestoreMetadata(BSTR* pbstrRestoreMetadata);
+    HRESULT SetRestoreTarget(VSS_RESTORE_TARGET target);
+    HRESULT GetRestoreTarget(VSS_RESTORE_TARGET* pTarget);
+    HRESULT SetPreRestoreFailureMsg(const(wchar)* wszPreRestoreFailureMsg);
+    HRESULT GetPreRestoreFailureMsg(BSTR* pbstrPreRestoreFailureMsg);
+    HRESULT SetPostRestoreFailureMsg(const(wchar)* wszPostRestoreFailureMsg);
+    HRESULT GetPostRestoreFailureMsg(BSTR* pbstrPostRestoreFailureMsg);
+    HRESULT SetBackupStamp(const(wchar)* wszBackupStamp);
+    HRESULT GetBackupStamp(BSTR* pbstrBackupStamp);
+    HRESULT GetPreviousBackupStamp(BSTR* pbstrBackupStamp);
+    HRESULT GetBackupOptions(BSTR* pbstrBackupOptions);
+    HRESULT GetRestoreOptions(BSTR* pbstrRestoreOptions);
+    HRESULT GetRestoreSubcomponentCount(uint* pcRestoreSubcomponent);
+    HRESULT GetRestoreSubcomponent(uint iComponent, BSTR* pbstrLogicalPath, BSTR* pbstrComponentName, bool* pbRepair);
+    HRESULT GetFileRestoreStatus(VSS_FILE_RESTORE_STATUS* pStatus);
+    HRESULT AddDifferencedFilesByLastModifyTime(const(wchar)* wszPath, const(wchar)* wszFilespec, BOOL bRecursive, FILETIME ftLastModifyTime);
+    HRESULT AddDifferencedFilesByLastModifyLSN(const(wchar)* wszPath, const(wchar)* wszFilespec, BOOL bRecursive, BSTR bstrLsnString);
+    HRESULT GetDifferencedFilesCount(uint* pcDifferencedFiles);
+    HRESULT GetDifferencedFile(uint iDifferencedFile, BSTR* pbstrPath, BSTR* pbstrFilespec, BOOL* pbRecursive, BSTR* pbstrLsnString, FILETIME* pftLastModifyTime);
 }
 // [Not Found] IID_IVssWriterComponents
 interface IVssWriterComponents
 {
-    HRESULT GetComponentCount(uint*);
-    HRESULT GetWriterInfo(GUID*, GUID*);
-    HRESULT GetComponent(uint, IVssComponent*);
+    HRESULT GetComponentCount(uint* pcComponents);
+    HRESULT GetWriterInfo(GUID* pidInstance, GUID* pidWriter);
+    HRESULT GetComponent(uint iComponent, IVssComponent* ppComponent);
 }
 enum IID_IVssComponentEx = GUID(0x156c8b5e, 0xf131, 0x4bd7, [0x9c, 0x97, 0xd1, 0x92, 0x3b, 0xe7, 0xe1, 0xfa]);
 interface IVssComponentEx : IVssComponent
 {
-    HRESULT SetPrepareForBackupFailureMsg(const(wchar)*);
-    HRESULT SetPostSnapshotFailureMsg(const(wchar)*);
-    HRESULT GetPrepareForBackupFailureMsg(BSTR*);
-    HRESULT GetPostSnapshotFailureMsg(BSTR*);
-    HRESULT GetAuthoritativeRestore(bool*);
-    HRESULT GetRollForward(VSS_ROLLFORWARD_TYPE*, BSTR*);
-    HRESULT GetRestoreName(BSTR*);
+    HRESULT SetPrepareForBackupFailureMsg(const(wchar)* wszFailureMsg);
+    HRESULT SetPostSnapshotFailureMsg(const(wchar)* wszFailureMsg);
+    HRESULT GetPrepareForBackupFailureMsg(BSTR* pbstrFailureMsg);
+    HRESULT GetPostSnapshotFailureMsg(BSTR* pbstrFailureMsg);
+    HRESULT GetAuthoritativeRestore(bool* pbAuth);
+    HRESULT GetRollForward(VSS_ROLLFORWARD_TYPE* pRollType, BSTR* pbstrPoint);
+    HRESULT GetRestoreName(BSTR* pbstrName);
 }
 enum IID_IVssComponentEx2 = GUID(0x3b5be0f2, 0x7a9, 0x4e4b, [0xbd, 0xd3, 0xcf, 0xdc, 0x8e, 0x2c, 0xd, 0x2d]);
 interface IVssComponentEx2 : IVssComponentEx
 {
-    HRESULT SetFailure(HRESULT, HRESULT, const(wchar)*, uint);
-    HRESULT GetFailure(HRESULT*, HRESULT*, BSTR*, uint*);
+    HRESULT SetFailure(HRESULT hr, HRESULT hrApplication, const(wchar)* wszApplicationMessage, uint dwReserved);
+    HRESULT GetFailure(HRESULT* phr, HRESULT* phrApplication, BSTR* pbstrApplicationMessage, uint* pdwReserved);
 }
 // [Not Found] IID_IVssCreateWriterMetadata
 interface IVssCreateWriterMetadata
 {
-    HRESULT AddIncludeFiles(const(wchar)*, const(wchar)*, ubyte, const(wchar)*);
-    HRESULT AddExcludeFiles(const(wchar)*, const(wchar)*, ubyte);
-    HRESULT AddComponent(VSS_COMPONENT_TYPE, const(wchar)*, const(wchar)*, const(wchar)*, const(ubyte)*, uint, ubyte, ubyte, ubyte, ubyte, uint);
-    HRESULT AddDatabaseFiles(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, uint);
-    HRESULT AddDatabaseLogFiles(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, uint);
-    HRESULT AddFilesToFileGroup(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, ubyte, const(wchar)*, uint);
-    HRESULT SetRestoreMethod(VSS_RESTOREMETHOD_ENUM, const(wchar)*, const(wchar)*, VSS_WRITERRESTORE_ENUM, ubyte);
-    HRESULT AddAlternateLocationMapping(const(wchar)*, const(wchar)*, ubyte, const(wchar)*);
-    HRESULT AddComponentDependency(const(wchar)*, const(wchar)*, GUID, const(wchar)*, const(wchar)*);
-    HRESULT SetBackupSchema(uint);
-    HRESULT GetDocument(IXMLDOMDocument*);
-    HRESULT SaveAsXML(BSTR*);
+    HRESULT AddIncludeFiles(const(wchar)* wszPath, const(wchar)* wszFilespec, ubyte bRecursive, const(wchar)* wszAlternateLocation);
+    HRESULT AddExcludeFiles(const(wchar)* wszPath, const(wchar)* wszFilespec, ubyte bRecursive);
+    HRESULT AddComponent(VSS_COMPONENT_TYPE ct, const(wchar)* wszLogicalPath, const(wchar)* wszComponentName, const(wchar)* wszCaption, const(ubyte)* pbIcon, uint cbIcon, ubyte bRestoreMetadata, ubyte bNotifyOnBackupComplete, ubyte bSelectable, ubyte bSelectableForRestore, uint dwComponentFlags);
+    HRESULT AddDatabaseFiles(const(wchar)* wszLogicalPath, const(wchar)* wszDatabaseName, const(wchar)* wszPath, const(wchar)* wszFilespec, uint dwBackupTypeMask);
+    HRESULT AddDatabaseLogFiles(const(wchar)* wszLogicalPath, const(wchar)* wszDatabaseName, const(wchar)* wszPath, const(wchar)* wszFilespec, uint dwBackupTypeMask);
+    HRESULT AddFilesToFileGroup(const(wchar)* wszLogicalPath, const(wchar)* wszGroupName, const(wchar)* wszPath, const(wchar)* wszFilespec, ubyte bRecursive, const(wchar)* wszAlternateLocation, uint dwBackupTypeMask);
+    HRESULT SetRestoreMethod(VSS_RESTOREMETHOD_ENUM method, const(wchar)* wszService, const(wchar)* wszUserProcedure, VSS_WRITERRESTORE_ENUM writerRestore, ubyte bRebootRequired);
+    HRESULT AddAlternateLocationMapping(const(wchar)* wszSourcePath, const(wchar)* wszSourceFilespec, ubyte bRecursive, const(wchar)* wszDestination);
+    HRESULT AddComponentDependency(const(wchar)* wszForLogicalPath, const(wchar)* wszForComponentName, GUID onWriterId, const(wchar)* wszOnLogicalPath, const(wchar)* wszOnComponentName);
+    HRESULT SetBackupSchema(uint dwSchemaMask);
+    HRESULT GetDocument(IXMLDOMDocument* pDoc);
+    HRESULT SaveAsXML(BSTR* pbstrXML);
 }
 enum IID_IVssCreateExpressWriterMetadata = GUID(0x9c772e77, 0xb26e, 0x427f, [0x92, 0xdd, 0xc9, 0x96, 0xf4, 0x1e, 0xa5, 0xe3]);
 interface IVssCreateExpressWriterMetadata : IUnknown
 {
-    HRESULT AddExcludeFiles(const(wchar)*, const(wchar)*, ubyte);
-    HRESULT AddComponent(VSS_COMPONENT_TYPE, const(wchar)*, const(wchar)*, const(wchar)*, const(ubyte)*, uint, ubyte, ubyte, ubyte, ubyte, uint);
-    HRESULT AddFilesToFileGroup(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*, ubyte, const(wchar)*, uint);
-    HRESULT SetRestoreMethod(VSS_RESTOREMETHOD_ENUM, const(wchar)*, const(wchar)*, VSS_WRITERRESTORE_ENUM, ubyte);
-    HRESULT AddComponentDependency(const(wchar)*, const(wchar)*, GUID, const(wchar)*, const(wchar)*);
-    HRESULT SetBackupSchema(uint);
-    HRESULT SaveAsXML(BSTR*);
+    HRESULT AddExcludeFiles(const(wchar)* wszPath, const(wchar)* wszFilespec, ubyte bRecursive);
+    HRESULT AddComponent(VSS_COMPONENT_TYPE ct, const(wchar)* wszLogicalPath, const(wchar)* wszComponentName, const(wchar)* wszCaption, const(ubyte)* pbIcon, uint cbIcon, ubyte bRestoreMetadata, ubyte bNotifyOnBackupComplete, ubyte bSelectable, ubyte bSelectableForRestore, uint dwComponentFlags);
+    HRESULT AddFilesToFileGroup(const(wchar)* wszLogicalPath, const(wchar)* wszGroupName, const(wchar)* wszPath, const(wchar)* wszFilespec, ubyte bRecursive, const(wchar)* wszAlternateLocation, uint dwBackupTypeMask);
+    HRESULT SetRestoreMethod(VSS_RESTOREMETHOD_ENUM method, const(wchar)* wszService, const(wchar)* wszUserProcedure, VSS_WRITERRESTORE_ENUM writerRestore, ubyte bRebootRequired);
+    HRESULT AddComponentDependency(const(wchar)* wszForLogicalPath, const(wchar)* wszForComponentName, GUID onWriterId, const(wchar)* wszOnLogicalPath, const(wchar)* wszOnComponentName);
+    HRESULT SetBackupSchema(uint dwSchemaMask);
+    HRESULT SaveAsXML(BSTR* pbstrXML);
 }
 enum IID_IVssExpressWriter = GUID(0xe33affdc, 0x59c7, 0x47b1, [0x97, 0xd5, 0x42, 0x66, 0x59, 0x8f, 0x62, 0x35]);
 interface IVssExpressWriter : IUnknown
 {
-    HRESULT CreateMetadata(GUID, const(wchar)*, VSS_USAGE_TYPE, uint, uint, uint, IVssCreateExpressWriterMetadata*);
-    HRESULT LoadMetadata(const(wchar)*, uint);
+    HRESULT CreateMetadata(GUID writerId, const(wchar)* writerName, VSS_USAGE_TYPE usageType, uint versionMajor, uint versionMinor, uint reserved, IVssCreateExpressWriterMetadata* ppMetadata);
+    HRESULT LoadMetadata(const(wchar)* metadata, uint reserved);
     HRESULT Register();
-    HRESULT Unregister(GUID);
+    HRESULT Unregister(GUID writerId);
 }
 alias VSS_MGMT_OBJECT_TYPE = int;
 enum : int
@@ -678,49 +678,49 @@ struct VSS_VOLUME_PROTECTION_INFO
 enum IID_IVssSnapshotMgmt = GUID(0xfa7df749, 0x66e7, 0x4986, [0xa2, 0x7f, 0xe2, 0xf0, 0x4a, 0xe5, 0x37, 0x72]);
 interface IVssSnapshotMgmt : IUnknown
 {
-    HRESULT GetProviderMgmtInterface(GUID, const(GUID)*, IUnknown*);
-    HRESULT QueryVolumesSupportedForSnapshots(GUID, int, IVssEnumMgmtObject*);
-    HRESULT QuerySnapshotsByVolume(ushort*, GUID, IVssEnumObject*);
+    HRESULT GetProviderMgmtInterface(GUID ProviderId, const(GUID)* InterfaceId, IUnknown* ppItf);
+    HRESULT QueryVolumesSupportedForSnapshots(GUID ProviderId, int lContext, IVssEnumMgmtObject* ppEnum);
+    HRESULT QuerySnapshotsByVolume(ushort* pwszVolumeName, GUID ProviderId, IVssEnumObject* ppEnum);
 }
 enum IID_IVssSnapshotMgmt2 = GUID(0xf61ec39, 0xfe82, 0x45f2, [0xa3, 0xf0, 0x76, 0x8b, 0x5d, 0x42, 0x71, 0x2]);
 interface IVssSnapshotMgmt2 : IUnknown
 {
-    HRESULT GetMinDiffAreaSize(long*);
+    HRESULT GetMinDiffAreaSize(long* pllMinDiffAreaSize);
 }
 enum IID_IVssDifferentialSoftwareSnapshotMgmt = GUID(0x214a0f28, 0xb737, 0x4026, [0xb8, 0x47, 0x4f, 0x9e, 0x37, 0xd7, 0x95, 0x29]);
 interface IVssDifferentialSoftwareSnapshotMgmt : IUnknown
 {
-    HRESULT AddDiffArea(ushort*, ushort*, long);
-    HRESULT ChangeDiffAreaMaximumSize(ushort*, ushort*, long);
-    HRESULT QueryVolumesSupportedForDiffAreas(ushort*, IVssEnumMgmtObject*);
-    HRESULT QueryDiffAreasForVolume(ushort*, IVssEnumMgmtObject*);
-    HRESULT QueryDiffAreasOnVolume(ushort*, IVssEnumMgmtObject*);
-    HRESULT QueryDiffAreasForSnapshot(GUID, IVssEnumMgmtObject*);
+    HRESULT AddDiffArea(ushort* pwszVolumeName, ushort* pwszDiffAreaVolumeName, long llMaximumDiffSpace);
+    HRESULT ChangeDiffAreaMaximumSize(ushort* pwszVolumeName, ushort* pwszDiffAreaVolumeName, long llMaximumDiffSpace);
+    HRESULT QueryVolumesSupportedForDiffAreas(ushort* pwszOriginalVolumeName, IVssEnumMgmtObject* ppEnum);
+    HRESULT QueryDiffAreasForVolume(ushort* pwszVolumeName, IVssEnumMgmtObject* ppEnum);
+    HRESULT QueryDiffAreasOnVolume(ushort* pwszVolumeName, IVssEnumMgmtObject* ppEnum);
+    HRESULT QueryDiffAreasForSnapshot(GUID SnapshotId, IVssEnumMgmtObject* ppEnum);
 }
 enum IID_IVssDifferentialSoftwareSnapshotMgmt2 = GUID(0x949d7353, 0x675f, 0x4275, [0x89, 0x69, 0xf0, 0x44, 0xc6, 0x27, 0x78, 0x15]);
 interface IVssDifferentialSoftwareSnapshotMgmt2 : IVssDifferentialSoftwareSnapshotMgmt
 {
-    HRESULT ChangeDiffAreaMaximumSizeEx(ushort*, ushort*, long, BOOL);
-    HRESULT MigrateDiffAreas(ushort*, ushort*, ushort*);
-    HRESULT QueryMigrationStatus(ushort*, ushort*, IVssAsync*);
-    HRESULT SetSnapshotPriority(GUID, ubyte);
+    HRESULT ChangeDiffAreaMaximumSizeEx(ushort* pwszVolumeName, ushort* pwszDiffAreaVolumeName, long llMaximumDiffSpace, BOOL bVolatile);
+    HRESULT MigrateDiffAreas(ushort* pwszVolumeName, ushort* pwszDiffAreaVolumeName, ushort* pwszNewDiffAreaVolumeName);
+    HRESULT QueryMigrationStatus(ushort* pwszVolumeName, ushort* pwszDiffAreaVolumeName, IVssAsync* ppAsync);
+    HRESULT SetSnapshotPriority(GUID idSnapshot, ubyte priority);
 }
 enum IID_IVssDifferentialSoftwareSnapshotMgmt3 = GUID(0x383f7e71, 0xa4c5, 0x401f, [0xb2, 0x7f, 0xf8, 0x26, 0x28, 0x9f, 0x84, 0x58]);
 interface IVssDifferentialSoftwareSnapshotMgmt3 : IVssDifferentialSoftwareSnapshotMgmt2
 {
-    HRESULT SetVolumeProtectLevel(ushort*, VSS_PROTECTION_LEVEL);
-    HRESULT GetVolumeProtectLevel(ushort*, VSS_VOLUME_PROTECTION_INFO*);
-    HRESULT ClearVolumeProtectFault(ushort*);
-    HRESULT DeleteUnusedDiffAreas(ushort*);
-    HRESULT QuerySnapshotDeltaBitmap(GUID, GUID, uint*, uint*, ubyte**);
+    HRESULT SetVolumeProtectLevel(ushort* pwszVolumeName, VSS_PROTECTION_LEVEL protectionLevel);
+    HRESULT GetVolumeProtectLevel(ushort* pwszVolumeName, VSS_VOLUME_PROTECTION_INFO* protectionLevel);
+    HRESULT ClearVolumeProtectFault(ushort* pwszVolumeName);
+    HRESULT DeleteUnusedDiffAreas(ushort* pwszDiffAreaVolumeName);
+    HRESULT QuerySnapshotDeltaBitmap(GUID idSnapshotOlder, GUID idSnapshotYounger, uint* pcBlockSizePerBit, uint* pcBitmapLength, ubyte** ppbBitmap);
 }
 enum IID_IVssEnumMgmtObject = GUID(0x1954e6b, 0x9254, 0x4e6e, [0x80, 0x8c, 0xc9, 0xe0, 0x5d, 0x0, 0x76, 0x96]);
 interface IVssEnumMgmtObject : IUnknown
 {
-    HRESULT Next(uint, VSS_MGMT_OBJECT_PROP*, uint*);
-    HRESULT Skip(uint);
+    HRESULT Next(uint celt, VSS_MGMT_OBJECT_PROP* rgelt, uint* pceltFetched);
+    HRESULT Skip(uint celt);
     HRESULT Reset();
-    HRESULT Clone(IVssEnumMgmtObject*);
+    HRESULT Clone(IVssEnumMgmtObject* ppenum);
 }
 enum CLSID_VssSnapshotMgmt = GUID(0xb5a2c52, 0x3eb9, 0x470a, [0x96, 0xe2, 0x6c, 0x6d, 0x45, 0x70, 0xe4, 0xf]);
 struct VssSnapshotMgmt
@@ -729,17 +729,17 @@ struct VssSnapshotMgmt
 enum IID_IVssAdmin = GUID(0x77ed5996, 0x2f63, 0x11d3, [0x8a, 0x39, 0x0, 0xc0, 0x4f, 0x72, 0xd8, 0xe3]);
 interface IVssAdmin : IUnknown
 {
-    HRESULT RegisterProvider(GUID, GUID, ushort*, VSS_PROVIDER_TYPE, ushort*, GUID);
-    HRESULT UnregisterProvider(GUID);
-    HRESULT QueryProviders(IVssEnumObject*);
+    HRESULT RegisterProvider(GUID pProviderId, GUID ClassId, ushort* pwszProviderName, VSS_PROVIDER_TYPE eProviderType, ushort* pwszProviderVersion, GUID ProviderVersionId);
+    HRESULT UnregisterProvider(GUID ProviderId);
+    HRESULT QueryProviders(IVssEnumObject* ppEnum);
     HRESULT AbortAllSnapshotsInProgress();
 }
 enum IID_IVssAdminEx = GUID(0x7858a9f8, 0xb1fa, 0x41a6, [0x96, 0x4f, 0xb9, 0xb3, 0x6b, 0x8c, 0xd8, 0xd8]);
 interface IVssAdminEx : IVssAdmin
 {
-    HRESULT GetProviderCapability(GUID, ulong*);
-    HRESULT GetProviderContext(GUID, int*);
-    HRESULT SetProviderContext(GUID, int);
+    HRESULT GetProviderCapability(GUID pProviderId, ulong* pllOriginalCapabilityMask);
+    HRESULT GetProviderContext(GUID ProviderId, int* plContext);
+    HRESULT SetProviderContext(GUID ProviderId, int lContext);
 }
 enum CLSID_VSSCoordinator = GUID(0xe579ab5f, 0x1cc4, 0x44b4, [0xbe, 0xd9, 0xde, 0x9, 0x91, 0xff, 0x6, 0x23]);
 struct VSSCoordinator
@@ -748,61 +748,61 @@ struct VSSCoordinator
 enum IID_IVssSoftwareSnapshotProvider = GUID(0x609e123e, 0x2c5a, 0x44d3, [0x8f, 0x1, 0xb, 0x1d, 0x9a, 0x47, 0xd1, 0xff]);
 interface IVssSoftwareSnapshotProvider : IUnknown
 {
-    HRESULT SetContext(int);
-    HRESULT GetSnapshotProperties(GUID, VSS_SNAPSHOT_PROP*);
-    HRESULT Query(GUID, VSS_OBJECT_TYPE, VSS_OBJECT_TYPE, IVssEnumObject*);
-    HRESULT DeleteSnapshots(GUID, VSS_OBJECT_TYPE, BOOL, int*, GUID*);
-    HRESULT BeginPrepareSnapshot(GUID, GUID, ushort*, int);
-    HRESULT IsVolumeSupported(ushort*, BOOL*);
-    HRESULT IsVolumeSnapshotted(ushort*, BOOL*, int*);
-    HRESULT SetSnapshotProperty(GUID, VSS_SNAPSHOT_PROPERTY_ID, VARIANT);
-    HRESULT RevertToSnapshot(GUID);
-    HRESULT QueryRevertStatus(ushort*, IVssAsync*);
+    HRESULT SetContext(int lContext);
+    HRESULT GetSnapshotProperties(GUID SnapshotId, VSS_SNAPSHOT_PROP* pProp);
+    HRESULT Query(GUID QueriedObjectId, VSS_OBJECT_TYPE eQueriedObjectType, VSS_OBJECT_TYPE eReturnedObjectsType, IVssEnumObject* ppEnum);
+    HRESULT DeleteSnapshots(GUID SourceObjectId, VSS_OBJECT_TYPE eSourceObjectType, BOOL bForceDelete, int* plDeletedSnapshots, GUID* pNondeletedSnapshotID);
+    HRESULT BeginPrepareSnapshot(GUID SnapshotSetId, GUID SnapshotId, ushort* pwszVolumeName, int lNewContext);
+    HRESULT IsVolumeSupported(ushort* pwszVolumeName, BOOL* pbSupportedByThisProvider);
+    HRESULT IsVolumeSnapshotted(ushort* pwszVolumeName, BOOL* pbSnapshotsPresent, int* plSnapshotCompatibility);
+    HRESULT SetSnapshotProperty(GUID SnapshotId, VSS_SNAPSHOT_PROPERTY_ID eSnapshotPropertyId, VARIANT vProperty);
+    HRESULT RevertToSnapshot(GUID SnapshotId);
+    HRESULT QueryRevertStatus(ushort* pwszVolume, IVssAsync* ppAsync);
 }
 enum IID_IVssProviderCreateSnapshotSet = GUID(0x5f894e5b, 0x1e39, 0x4778, [0x8e, 0x23, 0x9a, 0xba, 0xd9, 0xf0, 0xe0, 0x8c]);
 interface IVssProviderCreateSnapshotSet : IUnknown
 {
-    HRESULT EndPrepareSnapshots(GUID);
-    HRESULT PreCommitSnapshots(GUID);
-    HRESULT CommitSnapshots(GUID);
-    HRESULT PostCommitSnapshots(GUID, int);
-    HRESULT PreFinalCommitSnapshots(GUID);
-    HRESULT PostFinalCommitSnapshots(GUID);
-    HRESULT AbortSnapshots(GUID);
+    HRESULT EndPrepareSnapshots(GUID SnapshotSetId);
+    HRESULT PreCommitSnapshots(GUID SnapshotSetId);
+    HRESULT CommitSnapshots(GUID SnapshotSetId);
+    HRESULT PostCommitSnapshots(GUID SnapshotSetId, int lSnapshotsCount);
+    HRESULT PreFinalCommitSnapshots(GUID SnapshotSetId);
+    HRESULT PostFinalCommitSnapshots(GUID SnapshotSetId);
+    HRESULT AbortSnapshots(GUID SnapshotSetId);
 }
 enum IID_IVssProviderNotifications = GUID(0xe561901f, 0x3a5, 0x4afe, [0x86, 0xd0, 0x72, 0xba, 0xee, 0xce, 0x70, 0x4]);
 interface IVssProviderNotifications : IUnknown
 {
-    HRESULT OnLoad(IUnknown);
-    HRESULT OnUnload(BOOL);
+    HRESULT OnLoad(IUnknown pCallback);
+    HRESULT OnUnload(BOOL bForceUnload);
 }
 enum IID_IVssHardwareSnapshotProvider = GUID(0x9593a157, 0x44e9, 0x4344, [0xbb, 0xeb, 0x44, 0xfb, 0xf9, 0xb0, 0x6b, 0x10]);
 interface IVssHardwareSnapshotProvider : IUnknown
 {
-    HRESULT AreLunsSupported(int, int, ushort**, VDS_LUN_INFORMATION*, BOOL*);
-    HRESULT FillInLunInfo(ushort*, VDS_LUN_INFORMATION*, BOOL*);
-    HRESULT BeginPrepareSnapshot(GUID, GUID, int, int, ushort**, VDS_LUN_INFORMATION*);
-    HRESULT GetTargetLuns(int, ushort**, VDS_LUN_INFORMATION*, VDS_LUN_INFORMATION*);
-    HRESULT LocateLuns(int, VDS_LUN_INFORMATION*);
-    HRESULT OnLunEmpty(ushort*, VDS_LUN_INFORMATION*);
+    HRESULT AreLunsSupported(int lLunCount, int lContext, ushort** rgwszDevices, VDS_LUN_INFORMATION* pLunInformation, BOOL* pbIsSupported);
+    HRESULT FillInLunInfo(ushort* wszDeviceName, VDS_LUN_INFORMATION* pLunInfo, BOOL* pbIsSupported);
+    HRESULT BeginPrepareSnapshot(GUID SnapshotSetId, GUID SnapshotId, int lContext, int lLunCount, ushort** rgDeviceNames, VDS_LUN_INFORMATION* rgLunInformation);
+    HRESULT GetTargetLuns(int lLunCount, ushort** rgDeviceNames, VDS_LUN_INFORMATION* rgSourceLuns, VDS_LUN_INFORMATION* rgDestinationLuns);
+    HRESULT LocateLuns(int lLunCount, VDS_LUN_INFORMATION* rgSourceLuns);
+    HRESULT OnLunEmpty(ushort* wszDeviceName, VDS_LUN_INFORMATION* pInformation);
 }
 enum IID_IVssHardwareSnapshotProviderEx = GUID(0x7f5ba925, 0xcdb1, 0x4d11, [0xa7, 0x1f, 0x33, 0x9e, 0xb7, 0xe7, 0x9, 0xfd]);
 interface IVssHardwareSnapshotProviderEx : IVssHardwareSnapshotProvider
 {
-    HRESULT GetProviderCapabilities(ulong*);
-    HRESULT OnLunStateChange(VDS_LUN_INFORMATION*, VDS_LUN_INFORMATION*, uint, uint);
-    HRESULT ResyncLuns(VDS_LUN_INFORMATION*, VDS_LUN_INFORMATION*, uint, IVssAsync*);
-    HRESULT OnReuseLuns(VDS_LUN_INFORMATION*, VDS_LUN_INFORMATION*, uint);
+    HRESULT GetProviderCapabilities(ulong* pllOriginalCapabilityMask);
+    HRESULT OnLunStateChange(VDS_LUN_INFORMATION* pSnapshotLuns, VDS_LUN_INFORMATION* pOriginalLuns, uint dwCount, uint dwFlags);
+    HRESULT ResyncLuns(VDS_LUN_INFORMATION* pSourceLuns, VDS_LUN_INFORMATION* pTargetLuns, uint dwCount, IVssAsync* ppAsync);
+    HRESULT OnReuseLuns(VDS_LUN_INFORMATION* pSnapshotLuns, VDS_LUN_INFORMATION* pOriginalLuns, uint dwCount);
 }
 enum IID_IVssFileShareSnapshotProvider = GUID(0xc8636060, 0x7c2e, 0x11df, [0x8c, 0x4a, 0x8, 0x0, 0x20, 0xc, 0x9a, 0x66]);
 interface IVssFileShareSnapshotProvider : IUnknown
 {
-    HRESULT SetContext(int);
-    HRESULT GetSnapshotProperties(GUID, VSS_SNAPSHOT_PROP*);
-    HRESULT Query(GUID, VSS_OBJECT_TYPE, VSS_OBJECT_TYPE, IVssEnumObject*);
-    HRESULT DeleteSnapshots(GUID, VSS_OBJECT_TYPE, BOOL, int*, GUID*);
-    HRESULT BeginPrepareSnapshot(GUID, GUID, ushort*, int, GUID);
-    HRESULT IsPathSupported(ushort*, BOOL*);
-    HRESULT IsPathSnapshotted(ushort*, BOOL*, int*);
-    HRESULT SetSnapshotProperty(GUID, VSS_SNAPSHOT_PROPERTY_ID, VARIANT);
+    HRESULT SetContext(int lContext);
+    HRESULT GetSnapshotProperties(GUID SnapshotId, VSS_SNAPSHOT_PROP* pProp);
+    HRESULT Query(GUID QueriedObjectId, VSS_OBJECT_TYPE eQueriedObjectType, VSS_OBJECT_TYPE eReturnedObjectsType, IVssEnumObject* ppEnum);
+    HRESULT DeleteSnapshots(GUID SourceObjectId, VSS_OBJECT_TYPE eSourceObjectType, BOOL bForceDelete, int* plDeletedSnapshots, GUID* pNondeletedSnapshotID);
+    HRESULT BeginPrepareSnapshot(GUID SnapshotSetId, GUID SnapshotId, ushort* pwszSharePath, int lNewContext, GUID ProviderId);
+    HRESULT IsPathSupported(ushort* pwszSharePath, BOOL* pbSupportedByThisProvider);
+    HRESULT IsPathSnapshotted(ushort* pwszSharePath, BOOL* pbSnapshotsPresent, int* plSnapshotCompatibility);
+    HRESULT SetSnapshotProperty(GUID SnapshotId, VSS_SNAPSHOT_PROPERTY_ID eSnapshotPropertyId, VARIANT vProperty);
 }

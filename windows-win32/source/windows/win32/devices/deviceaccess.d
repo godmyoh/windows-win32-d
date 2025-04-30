@@ -7,7 +7,7 @@ import windows.win32.system.com : IUnknown;
 version (Windows):
 extern (Windows):
 
-HRESULT CreateDeviceAccessInstance(const(wchar)*, uint, ICreateDeviceAccessAsync*);
+HRESULT CreateDeviceAccessInstance(const(wchar)* deviceInterfacePath, uint desiredAccess, ICreateDeviceAccessAsync* createAsync);
 enum ED_BASE = 0x00001000;
 enum DEV_PORT_SIM = 0x00000001;
 enum DEV_PORT_COM1 = 0x00000002;
@@ -56,20 +56,20 @@ enum CLSID_DeviceIoControl = GUID(0x12d3e372, 0x874b, 0x457d, [0x9f, 0xdf, 0x73,
 enum IID_IDeviceRequestCompletionCallback = GUID(0x999bad24, 0x9acd, 0x45bb, [0x86, 0x69, 0x2a, 0x2f, 0xc0, 0x28, 0x8b, 0x4]);
 interface IDeviceRequestCompletionCallback : IUnknown
 {
-    HRESULT Invoke(HRESULT, uint);
+    HRESULT Invoke(HRESULT requestResult, uint bytesReturned);
 }
 enum IID_IDeviceIoControl = GUID(0x9eefe161, 0x23ab, 0x4f18, [0x9b, 0x49, 0x99, 0x1b, 0x58, 0x6a, 0xe9, 0x70]);
 interface IDeviceIoControl : IUnknown
 {
-    HRESULT DeviceIoControlSync(uint, ubyte*, uint, ubyte*, uint, uint*);
-    HRESULT DeviceIoControlAsync(uint, ubyte*, uint, ubyte*, uint, IDeviceRequestCompletionCallback, ulong*);
-    HRESULT CancelOperation(ulong);
+    HRESULT DeviceIoControlSync(uint ioControlCode, ubyte* inputBuffer, uint inputBufferSize, ubyte* outputBuffer, uint outputBufferSize, uint* bytesReturned);
+    HRESULT DeviceIoControlAsync(uint ioControlCode, ubyte* inputBuffer, uint inputBufferSize, ubyte* outputBuffer, uint outputBufferSize, IDeviceRequestCompletionCallback requestCompletionCallback, ulong* cancelContext);
+    HRESULT CancelOperation(ulong cancelContext);
 }
 enum IID_ICreateDeviceAccessAsync = GUID(0x3474628f, 0x683d, 0x42d2, [0xab, 0xcb, 0xdb, 0x1, 0x8c, 0x65, 0x3, 0xbc]);
 interface ICreateDeviceAccessAsync : IUnknown
 {
     HRESULT Cancel();
-    HRESULT Wait(uint);
+    HRESULT Wait(uint timeout);
     HRESULT Close();
-    HRESULT GetResult(const(GUID)*, void**);
+    HRESULT GetResult(const(GUID)* riid, void** deviceAccess);
 }

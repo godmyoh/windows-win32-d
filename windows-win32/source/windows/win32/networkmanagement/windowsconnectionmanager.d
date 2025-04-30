@@ -6,16 +6,16 @@ import windows.win32.foundation : BOOL, FILETIME, HANDLE, HRESULT, PWSTR;
 version (Windows):
 extern (Windows):
 
-uint WcmQueryProperty(const(GUID)*, const(wchar)*, WCM_PROPERTY, void*, uint*, ubyte**);
-uint WcmSetProperty(const(GUID)*, const(wchar)*, WCM_PROPERTY, void*, uint, const(ubyte)*);
-uint WcmGetProfileList(void*, WCM_PROFILE_INFO_LIST**);
-uint WcmSetProfileList(WCM_PROFILE_INFO_LIST*, uint, BOOL, void*);
-void WcmFreeMemory(void*);
-HRESULT OnDemandGetRoutingHint(const(wchar)*, uint*);
-HRESULT OnDemandRegisterNotification(ONDEMAND_NOTIFICATION_CALLBACK, void*, HANDLE*);
-HRESULT OnDemandUnRegisterNotification(HANDLE);
-HRESULT GetInterfaceContextTableForHostName(const(wchar)*, const(wchar)*, uint, ubyte*, uint, NET_INTERFACE_CONTEXT_TABLE**);
-void FreeInterfaceContextTable(NET_INTERFACE_CONTEXT_TABLE*);
+uint WcmQueryProperty(const(GUID)* pInterface, const(wchar)* strProfileName, WCM_PROPERTY Property, void* pReserved, uint* pdwDataSize, ubyte** ppData);
+uint WcmSetProperty(const(GUID)* pInterface, const(wchar)* strProfileName, WCM_PROPERTY Property, void* pReserved, uint dwDataSize, const(ubyte)* pbData);
+uint WcmGetProfileList(void* pReserved, WCM_PROFILE_INFO_LIST** ppProfileList);
+uint WcmSetProfileList(WCM_PROFILE_INFO_LIST* pProfileList, uint dwPosition, BOOL fIgnoreUnknownProfiles, void* pReserved);
+void WcmFreeMemory(void* pMemory);
+HRESULT OnDemandGetRoutingHint(const(wchar)* destinationHostName, uint* interfaceIndex);
+HRESULT OnDemandRegisterNotification(ONDEMAND_NOTIFICATION_CALLBACK callback, void* callbackContext, HANDLE* registrationHandle);
+HRESULT OnDemandUnRegisterNotification(HANDLE registrationHandle);
+HRESULT GetInterfaceContextTableForHostName(const(wchar)* HostName, const(wchar)* ProxyName, uint Flags, ubyte* ConnectionProfileFilterRawData, uint ConnectionProfileFilterRawDataSize, NET_INTERFACE_CONTEXT_TABLE** InterfaceContextTable);
+void FreeInterfaceContextTable(NET_INTERFACE_CONTEXT_TABLE* InterfaceContextTable);
 enum WCM_API_VERSION_1_0 = 0x00000001;
 enum WCM_API_VERSION = 0x00000001;
 enum WCM_UNKNOWN_DATAPLAN_STATUS = 0xffffffff;
@@ -119,7 +119,7 @@ struct WCM_DATAPLAN_STATUS
     uint MaxTransferSizeInMegabytes;
     uint Reserved;
 }
-alias ONDEMAND_NOTIFICATION_CALLBACK = void function(void*);
+alias ONDEMAND_NOTIFICATION_CALLBACK = void function(void* param0);
 struct NET_INTERFACE_CONTEXT
 {
     uint InterfaceIndex;

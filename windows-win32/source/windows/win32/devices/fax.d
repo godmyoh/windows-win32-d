@@ -1,8 +1,7 @@
 module windows.win32.devices.fax;
 
 import windows.win32.guid : GUID;
-import windows.win32.devices.properties : DEVPROPKEY;
-import windows.win32.foundation : BOOL, BSTR, CHAR, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL;
+import windows.win32.foundation : BOOL, BSTR, CHAR, DEVPROPKEY, FILETIME, HANDLE, HINSTANCE, HRESULT, HWND, PSTR, PWSTR, SYSTEMTIME, VARIANT_BOOL;
 import windows.win32.graphics.gdi : HDC;
 import windows.win32.system.com : IDispatch, IUnknown;
 import windows.win32.system.io : OVERLAPPED;
@@ -13,65 +12,65 @@ import windows.win32.ui.controls : HPROPSHEETPAGE;
 version (Windows):
 extern (Windows):
 
-BOOL FaxConnectFaxServerA(const(char)*, HANDLE*);
-BOOL FaxConnectFaxServerW(const(wchar)*, HANDLE*);
-BOOL FaxClose(HANDLE);
-BOOL FaxOpenPort(HANDLE, uint, uint, HANDLE*);
-BOOL FaxCompleteJobParamsA(FAX_JOB_PARAMA**, FAX_COVERPAGE_INFOA**);
-BOOL FaxCompleteJobParamsW(FAX_JOB_PARAMW**, FAX_COVERPAGE_INFOW**);
-BOOL FaxSendDocumentA(HANDLE, const(char)*, FAX_JOB_PARAMA*, const(FAX_COVERPAGE_INFOA)*, uint*);
-BOOL FaxSendDocumentW(HANDLE, const(wchar)*, FAX_JOB_PARAMW*, const(FAX_COVERPAGE_INFOW)*, uint*);
-BOOL FaxSendDocumentForBroadcastA(HANDLE, const(char)*, uint*, PFAX_RECIPIENT_CALLBACKA, void*);
-BOOL FaxSendDocumentForBroadcastW(HANDLE, const(wchar)*, uint*, PFAX_RECIPIENT_CALLBACKW, void*);
-BOOL FaxEnumJobsA(HANDLE, FAX_JOB_ENTRYA**, uint*);
-BOOL FaxEnumJobsW(HANDLE, FAX_JOB_ENTRYW**, uint*);
-BOOL FaxGetJobA(HANDLE, uint, FAX_JOB_ENTRYA**);
-BOOL FaxGetJobW(HANDLE, uint, FAX_JOB_ENTRYW**);
-BOOL FaxSetJobA(HANDLE, uint, uint, const(FAX_JOB_ENTRYA)*);
-BOOL FaxSetJobW(HANDLE, uint, uint, const(FAX_JOB_ENTRYW)*);
-BOOL FaxGetPageData(HANDLE, uint, ubyte**, uint*, uint*, uint*);
-BOOL FaxGetDeviceStatusA(HANDLE, FAX_DEVICE_STATUSA**);
-BOOL FaxGetDeviceStatusW(HANDLE, FAX_DEVICE_STATUSW**);
-BOOL FaxAbort(HANDLE, uint);
-BOOL FaxGetConfigurationA(HANDLE, FAX_CONFIGURATIONA**);
-BOOL FaxGetConfigurationW(HANDLE, FAX_CONFIGURATIONW**);
-BOOL FaxSetConfigurationA(HANDLE, const(FAX_CONFIGURATIONA)*);
-BOOL FaxSetConfigurationW(HANDLE, const(FAX_CONFIGURATIONW)*);
-BOOL FaxGetLoggingCategoriesA(HANDLE, FAX_LOG_CATEGORYA**, uint*);
-BOOL FaxGetLoggingCategoriesW(HANDLE, FAX_LOG_CATEGORYW**, uint*);
-BOOL FaxSetLoggingCategoriesA(HANDLE, const(FAX_LOG_CATEGORYA)*, uint);
-BOOL FaxSetLoggingCategoriesW(HANDLE, const(FAX_LOG_CATEGORYW)*, uint);
-BOOL FaxEnumPortsA(HANDLE, FAX_PORT_INFOA**, uint*);
-BOOL FaxEnumPortsW(HANDLE, FAX_PORT_INFOW**, uint*);
-BOOL FaxGetPortA(HANDLE, FAX_PORT_INFOA**);
-BOOL FaxGetPortW(HANDLE, FAX_PORT_INFOW**);
-BOOL FaxSetPortA(HANDLE, const(FAX_PORT_INFOA)*);
-BOOL FaxSetPortW(HANDLE, const(FAX_PORT_INFOW)*);
-BOOL FaxEnumRoutingMethodsA(HANDLE, FAX_ROUTING_METHODA**, uint*);
-BOOL FaxEnumRoutingMethodsW(HANDLE, FAX_ROUTING_METHODW**, uint*);
-BOOL FaxEnableRoutingMethodA(HANDLE, const(char)*, BOOL);
-BOOL FaxEnableRoutingMethodW(HANDLE, const(wchar)*, BOOL);
-BOOL FaxEnumGlobalRoutingInfoA(HANDLE, FAX_GLOBAL_ROUTING_INFOA**, uint*);
-BOOL FaxEnumGlobalRoutingInfoW(HANDLE, FAX_GLOBAL_ROUTING_INFOW**, uint*);
-BOOL FaxSetGlobalRoutingInfoA(HANDLE, const(FAX_GLOBAL_ROUTING_INFOA)*);
-BOOL FaxSetGlobalRoutingInfoW(HANDLE, const(FAX_GLOBAL_ROUTING_INFOW)*);
-BOOL FaxGetRoutingInfoA(HANDLE, const(char)*, ubyte**, uint*);
-BOOL FaxGetRoutingInfoW(HANDLE, const(wchar)*, ubyte**, uint*);
-BOOL FaxSetRoutingInfoA(HANDLE, const(char)*, const(ubyte)*, uint);
-BOOL FaxSetRoutingInfoW(HANDLE, const(wchar)*, const(ubyte)*, uint);
-BOOL FaxInitializeEventQueue(HANDLE, HANDLE, ulong, HWND, uint);
-void FaxFreeBuffer(void*);
-BOOL FaxStartPrintJobA(const(char)*, const(FAX_PRINT_INFOA)*, uint*, FAX_CONTEXT_INFOA*);
-BOOL FaxStartPrintJobW(const(wchar)*, const(FAX_PRINT_INFOW)*, uint*, FAX_CONTEXT_INFOW*);
-BOOL FaxPrintCoverPageA(const(FAX_CONTEXT_INFOA)*, const(FAX_COVERPAGE_INFOA)*);
-BOOL FaxPrintCoverPageW(const(FAX_CONTEXT_INFOW)*, const(FAX_COVERPAGE_INFOW)*);
-BOOL FaxRegisterServiceProviderW(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*);
-BOOL FaxUnregisterServiceProviderW(const(wchar)*);
-BOOL FaxRegisterRoutingExtensionW(HANDLE, const(wchar)*, const(wchar)*, const(wchar)*, PFAX_ROUTING_INSTALLATION_CALLBACKW, void*);
-BOOL FaxAccessCheck(HANDLE, uint);
+BOOL FaxConnectFaxServerA(const(char)* MachineName, HANDLE* FaxHandle);
+BOOL FaxConnectFaxServerW(const(wchar)* MachineName, HANDLE* FaxHandle);
+BOOL FaxClose(HANDLE FaxHandle);
+BOOL FaxOpenPort(HANDLE FaxHandle, uint DeviceId, uint Flags, HANDLE* FaxPortHandle);
+BOOL FaxCompleteJobParamsA(FAX_JOB_PARAMA** JobParams, FAX_COVERPAGE_INFOA** CoverpageInfo);
+BOOL FaxCompleteJobParamsW(FAX_JOB_PARAMW** JobParams, FAX_COVERPAGE_INFOW** CoverpageInfo);
+BOOL FaxSendDocumentA(HANDLE FaxHandle, const(char)* FileName, FAX_JOB_PARAMA* JobParams, const(FAX_COVERPAGE_INFOA)* CoverpageInfo, uint* FaxJobId);
+BOOL FaxSendDocumentW(HANDLE FaxHandle, const(wchar)* FileName, FAX_JOB_PARAMW* JobParams, const(FAX_COVERPAGE_INFOW)* CoverpageInfo, uint* FaxJobId);
+BOOL FaxSendDocumentForBroadcastA(HANDLE FaxHandle, const(char)* FileName, uint* FaxJobId, PFAX_RECIPIENT_CALLBACKA FaxRecipientCallback, void* Context);
+BOOL FaxSendDocumentForBroadcastW(HANDLE FaxHandle, const(wchar)* FileName, uint* FaxJobId, PFAX_RECIPIENT_CALLBACKW FaxRecipientCallback, void* Context);
+BOOL FaxEnumJobsA(HANDLE FaxHandle, FAX_JOB_ENTRYA** JobEntry, uint* JobsReturned);
+BOOL FaxEnumJobsW(HANDLE FaxHandle, FAX_JOB_ENTRYW** JobEntry, uint* JobsReturned);
+BOOL FaxGetJobA(HANDLE FaxHandle, uint JobId, FAX_JOB_ENTRYA** JobEntry);
+BOOL FaxGetJobW(HANDLE FaxHandle, uint JobId, FAX_JOB_ENTRYW** JobEntry);
+BOOL FaxSetJobA(HANDLE FaxHandle, uint JobId, uint Command, const(FAX_JOB_ENTRYA)* JobEntry);
+BOOL FaxSetJobW(HANDLE FaxHandle, uint JobId, uint Command, const(FAX_JOB_ENTRYW)* JobEntry);
+BOOL FaxGetPageData(HANDLE FaxHandle, uint JobId, ubyte** Buffer, uint* BufferSize, uint* ImageWidth, uint* ImageHeight);
+BOOL FaxGetDeviceStatusA(HANDLE FaxPortHandle, FAX_DEVICE_STATUSA** DeviceStatus);
+BOOL FaxGetDeviceStatusW(HANDLE FaxPortHandle, FAX_DEVICE_STATUSW** DeviceStatus);
+BOOL FaxAbort(HANDLE FaxHandle, uint JobId);
+BOOL FaxGetConfigurationA(HANDLE FaxHandle, FAX_CONFIGURATIONA** FaxConfig);
+BOOL FaxGetConfigurationW(HANDLE FaxHandle, FAX_CONFIGURATIONW** FaxConfig);
+BOOL FaxSetConfigurationA(HANDLE FaxHandle, const(FAX_CONFIGURATIONA)* FaxConfig);
+BOOL FaxSetConfigurationW(HANDLE FaxHandle, const(FAX_CONFIGURATIONW)* FaxConfig);
+BOOL FaxGetLoggingCategoriesA(HANDLE FaxHandle, FAX_LOG_CATEGORYA** Categories, uint* NumberCategories);
+BOOL FaxGetLoggingCategoriesW(HANDLE FaxHandle, FAX_LOG_CATEGORYW** Categories, uint* NumberCategories);
+BOOL FaxSetLoggingCategoriesA(HANDLE FaxHandle, const(FAX_LOG_CATEGORYA)* Categories, uint NumberCategories);
+BOOL FaxSetLoggingCategoriesW(HANDLE FaxHandle, const(FAX_LOG_CATEGORYW)* Categories, uint NumberCategories);
+BOOL FaxEnumPortsA(HANDLE FaxHandle, FAX_PORT_INFOA** PortInfo, uint* PortsReturned);
+BOOL FaxEnumPortsW(HANDLE FaxHandle, FAX_PORT_INFOW** PortInfo, uint* PortsReturned);
+BOOL FaxGetPortA(HANDLE FaxPortHandle, FAX_PORT_INFOA** PortInfo);
+BOOL FaxGetPortW(HANDLE FaxPortHandle, FAX_PORT_INFOW** PortInfo);
+BOOL FaxSetPortA(HANDLE FaxPortHandle, const(FAX_PORT_INFOA)* PortInfo);
+BOOL FaxSetPortW(HANDLE FaxPortHandle, const(FAX_PORT_INFOW)* PortInfo);
+BOOL FaxEnumRoutingMethodsA(HANDLE FaxPortHandle, FAX_ROUTING_METHODA** RoutingMethod, uint* MethodsReturned);
+BOOL FaxEnumRoutingMethodsW(HANDLE FaxPortHandle, FAX_ROUTING_METHODW** RoutingMethod, uint* MethodsReturned);
+BOOL FaxEnableRoutingMethodA(HANDLE FaxPortHandle, const(char)* RoutingGuid, BOOL Enabled);
+BOOL FaxEnableRoutingMethodW(HANDLE FaxPortHandle, const(wchar)* RoutingGuid, BOOL Enabled);
+BOOL FaxEnumGlobalRoutingInfoA(HANDLE FaxHandle, FAX_GLOBAL_ROUTING_INFOA** RoutingInfo, uint* MethodsReturned);
+BOOL FaxEnumGlobalRoutingInfoW(HANDLE FaxHandle, FAX_GLOBAL_ROUTING_INFOW** RoutingInfo, uint* MethodsReturned);
+BOOL FaxSetGlobalRoutingInfoA(HANDLE FaxHandle, const(FAX_GLOBAL_ROUTING_INFOA)* RoutingInfo);
+BOOL FaxSetGlobalRoutingInfoW(HANDLE FaxHandle, const(FAX_GLOBAL_ROUTING_INFOW)* RoutingInfo);
+BOOL FaxGetRoutingInfoA(HANDLE FaxPortHandle, const(char)* RoutingGuid, ubyte** RoutingInfoBuffer, uint* RoutingInfoBufferSize);
+BOOL FaxGetRoutingInfoW(HANDLE FaxPortHandle, const(wchar)* RoutingGuid, ubyte** RoutingInfoBuffer, uint* RoutingInfoBufferSize);
+BOOL FaxSetRoutingInfoA(HANDLE FaxPortHandle, const(char)* RoutingGuid, const(ubyte)* RoutingInfoBuffer, uint RoutingInfoBufferSize);
+BOOL FaxSetRoutingInfoW(HANDLE FaxPortHandle, const(wchar)* RoutingGuid, const(ubyte)* RoutingInfoBuffer, uint RoutingInfoBufferSize);
+BOOL FaxInitializeEventQueue(HANDLE FaxHandle, HANDLE CompletionPort, ulong CompletionKey, HWND hWnd, uint MessageStart);
+void FaxFreeBuffer(void* Buffer);
+BOOL FaxStartPrintJobA(const(char)* PrinterName, const(FAX_PRINT_INFOA)* PrintInfo, uint* FaxJobId, FAX_CONTEXT_INFOA* FaxContextInfo);
+BOOL FaxStartPrintJobW(const(wchar)* PrinterName, const(FAX_PRINT_INFOW)* PrintInfo, uint* FaxJobId, FAX_CONTEXT_INFOW* FaxContextInfo);
+BOOL FaxPrintCoverPageA(const(FAX_CONTEXT_INFOA)* FaxContextInfo, const(FAX_COVERPAGE_INFOA)* CoverPageInfo);
+BOOL FaxPrintCoverPageW(const(FAX_CONTEXT_INFOW)* FaxContextInfo, const(FAX_COVERPAGE_INFOW)* CoverPageInfo);
+BOOL FaxRegisterServiceProviderW(const(wchar)* DeviceProvider, const(wchar)* FriendlyName, const(wchar)* ImageName, const(wchar)* TspName);
+BOOL FaxUnregisterServiceProviderW(const(wchar)* DeviceProvider);
+BOOL FaxRegisterRoutingExtensionW(HANDLE FaxHandle, const(wchar)* ExtensionName, const(wchar)* FriendlyName, const(wchar)* ImageName, PFAX_ROUTING_INSTALLATION_CALLBACKW CallBack, void* Context);
+BOOL FaxAccessCheck(HANDLE FaxHandle, uint AccessMask);
 BOOL CanSendToFaxRecipient();
-uint SendToFaxRecipient(SendToMode, const(wchar)*);
-HRESULT StiCreateInstanceW(HINSTANCE, uint, IStillImageW*, IUnknown);
+uint SendToFaxRecipient(SendToMode sndMode, const(wchar)* lpFileName);
+HRESULT StiCreateInstanceW(HINSTANCE hinst, uint dwVer, IStillImageW* ppSti, IUnknown punkOuter);
 enum prv_DEFAULT_PREFETCH_SIZE = 0x00000064;
 enum FS_INITIALIZING = 0x20000000;
 enum FS_DIALING = 0x20000001;
@@ -748,9 +747,9 @@ struct FAX_CONTEXT_INFOW
     HDC hDC;
     wchar[16] ServerName;
 }
-alias PFAXCONNECTFAXSERVERA = BOOL function(const(char)*, HANDLE*);
-alias PFAXCONNECTFAXSERVERW = BOOL function(const(wchar)*, HANDLE*);
-alias PFAXCLOSE = BOOL function(HANDLE);
+alias PFAXCONNECTFAXSERVERA = BOOL function(const(char)* MachineName, HANDLE* FaxHandle);
+alias PFAXCONNECTFAXSERVERW = BOOL function(const(wchar)* MachineName, HANDLE* FaxHandle);
+alias PFAXCLOSE = BOOL function(HANDLE FaxHandle);
 alias FAX_ENUM_PORT_OPEN_TYPE = int;
 enum : int
 {
@@ -758,62 +757,62 @@ enum : int
     PORT_OPEN_MODIFY = 0x00000002,
 }
 
-alias PFAXOPENPORT = BOOL function(HANDLE, uint, uint, HANDLE*);
-alias PFAXCOMPLETEJOBPARAMSA = BOOL function(FAX_JOB_PARAMA**, FAX_COVERPAGE_INFOA**);
-alias PFAXCOMPLETEJOBPARAMSW = BOOL function(FAX_JOB_PARAMW**, FAX_COVERPAGE_INFOW**);
-alias PFAXSENDDOCUMENTA = BOOL function(HANDLE, const(char)*, FAX_JOB_PARAMA*, const(FAX_COVERPAGE_INFOA)*, uint*);
-alias PFAXSENDDOCUMENTW = BOOL function(HANDLE, const(wchar)*, FAX_JOB_PARAMW*, const(FAX_COVERPAGE_INFOW)*, uint*);
-alias PFAX_RECIPIENT_CALLBACKA = BOOL function(HANDLE, uint, void*, FAX_JOB_PARAMA*, FAX_COVERPAGE_INFOA*);
-alias PFAX_RECIPIENT_CALLBACKW = BOOL function(HANDLE, uint, void*, FAX_JOB_PARAMW*, FAX_COVERPAGE_INFOW*);
-alias PFAXSENDDOCUMENTFORBROADCASTA = BOOL function(HANDLE, const(char)*, uint*, PFAX_RECIPIENT_CALLBACKA, void*);
-alias PFAXSENDDOCUMENTFORBROADCASTW = BOOL function(HANDLE, const(wchar)*, uint*, PFAX_RECIPIENT_CALLBACKW, void*);
-alias PFAXENUMJOBSA = BOOL function(HANDLE, FAX_JOB_ENTRYA**, uint*);
-alias PFAXENUMJOBSW = BOOL function(HANDLE, FAX_JOB_ENTRYW**, uint*);
-alias PFAXGETJOBA = BOOL function(HANDLE, uint, FAX_JOB_ENTRYA**);
-alias PFAXGETJOBW = BOOL function(HANDLE, uint, FAX_JOB_ENTRYW**);
-alias PFAXSETJOBA = BOOL function(HANDLE, uint, uint, const(FAX_JOB_ENTRYA)*);
-alias PFAXSETJOBW = BOOL function(HANDLE, uint, uint, const(FAX_JOB_ENTRYW)*);
-alias PFAXGETPAGEDATA = BOOL function(HANDLE, uint, ubyte**, uint*, uint*, uint*);
-alias PFAXGETDEVICESTATUSA = BOOL function(HANDLE, FAX_DEVICE_STATUSA**);
-alias PFAXGETDEVICESTATUSW = BOOL function(HANDLE, FAX_DEVICE_STATUSW**);
-alias PFAXABORT = BOOL function(HANDLE, uint);
-alias PFAXGETCONFIGURATIONA = BOOL function(HANDLE, FAX_CONFIGURATIONA**);
-alias PFAXGETCONFIGURATIONW = BOOL function(HANDLE, FAX_CONFIGURATIONW**);
-alias PFAXSETCONFIGURATIONA = BOOL function(HANDLE, const(FAX_CONFIGURATIONA)*);
-alias PFAXSETCONFIGURATIONW = BOOL function(HANDLE, const(FAX_CONFIGURATIONW)*);
-alias PFAXGETLOGGINGCATEGORIESA = BOOL function(HANDLE, FAX_LOG_CATEGORYA**, uint*);
-alias PFAXGETLOGGINGCATEGORIESW = BOOL function(HANDLE, FAX_LOG_CATEGORYW**, uint*);
-alias PFAXSETLOGGINGCATEGORIESA = BOOL function(HANDLE, const(FAX_LOG_CATEGORYA)*, uint);
-alias PFAXSETLOGGINGCATEGORIESW = BOOL function(HANDLE, const(FAX_LOG_CATEGORYW)*, uint);
-alias PFAXENUMPORTSA = BOOL function(HANDLE, FAX_PORT_INFOA**, uint*);
-alias PFAXENUMPORTSW = BOOL function(HANDLE, FAX_PORT_INFOW**, uint*);
-alias PFAXGETPORTA = BOOL function(HANDLE, FAX_PORT_INFOA**);
-alias PFAXGETPORTW = BOOL function(HANDLE, FAX_PORT_INFOW**);
-alias PFAXSETPORTA = BOOL function(HANDLE, const(FAX_PORT_INFOA)*);
-alias PFAXSETPORTW = BOOL function(HANDLE, const(FAX_PORT_INFOW)*);
-alias PFAXENUMROUTINGMETHODSA = BOOL function(HANDLE, FAX_ROUTING_METHODA**, uint*);
-alias PFAXENUMROUTINGMETHODSW = BOOL function(HANDLE, FAX_ROUTING_METHODW**, uint*);
-alias PFAXENABLEROUTINGMETHODA = BOOL function(HANDLE, const(char)*, BOOL);
-alias PFAXENABLEROUTINGMETHODW = BOOL function(HANDLE, const(wchar)*, BOOL);
-alias PFAXENUMGLOBALROUTINGINFOA = BOOL function(HANDLE, FAX_GLOBAL_ROUTING_INFOA**, uint*);
-alias PFAXENUMGLOBALROUTINGINFOW = BOOL function(HANDLE, FAX_GLOBAL_ROUTING_INFOW**, uint*);
-alias PFAXSETGLOBALROUTINGINFOA = BOOL function(HANDLE, const(FAX_GLOBAL_ROUTING_INFOA)*);
-alias PFAXSETGLOBALROUTINGINFOW = BOOL function(HANDLE, const(FAX_GLOBAL_ROUTING_INFOW)*);
-alias PFAXGETROUTINGINFOA = BOOL function(HANDLE, const(char)*, ubyte**, uint*);
-alias PFAXGETROUTINGINFOW = BOOL function(HANDLE, const(wchar)*, ubyte**, uint*);
-alias PFAXSETROUTINGINFOA = BOOL function(HANDLE, const(char)*, const(ubyte)*, uint);
-alias PFAXSETROUTINGINFOW = BOOL function(HANDLE, const(wchar)*, const(ubyte)*, uint);
-alias PFAXINITIALIZEEVENTQUEUE = BOOL function(HANDLE, HANDLE, ulong, HWND, uint);
-alias PFAXFREEBUFFER = void function(void*);
-alias PFAXSTARTPRINTJOBA = BOOL function(const(char)*, const(FAX_PRINT_INFOA)*, uint*, FAX_CONTEXT_INFOA*);
-alias PFAXSTARTPRINTJOBW = BOOL function(const(wchar)*, const(FAX_PRINT_INFOW)*, uint*, FAX_CONTEXT_INFOW*);
-alias PFAXPRINTCOVERPAGEA = BOOL function(const(FAX_CONTEXT_INFOA)*, const(FAX_COVERPAGE_INFOA)*);
-alias PFAXPRINTCOVERPAGEW = BOOL function(const(FAX_CONTEXT_INFOW)*, const(FAX_COVERPAGE_INFOW)*);
-alias PFAXREGISTERSERVICEPROVIDERW = BOOL function(const(wchar)*, const(wchar)*, const(wchar)*, const(wchar)*);
-alias PFAXUNREGISTERSERVICEPROVIDERW = BOOL function(const(wchar)*);
-alias PFAX_ROUTING_INSTALLATION_CALLBACKW = BOOL function(HANDLE, void*, PWSTR, PWSTR, PWSTR, PWSTR);
-alias PFAXREGISTERROUTINGEXTENSIONW = BOOL function(HANDLE, const(wchar)*, const(wchar)*, const(wchar)*, PFAX_ROUTING_INSTALLATION_CALLBACKW, void*);
-alias PFAXACCESSCHECK = BOOL function(HANDLE, uint);
+alias PFAXOPENPORT = BOOL function(HANDLE FaxHandle, uint DeviceId, uint Flags, HANDLE* FaxPortHandle);
+alias PFAXCOMPLETEJOBPARAMSA = BOOL function(FAX_JOB_PARAMA** JobParams, FAX_COVERPAGE_INFOA** CoverpageInfo);
+alias PFAXCOMPLETEJOBPARAMSW = BOOL function(FAX_JOB_PARAMW** JobParams, FAX_COVERPAGE_INFOW** CoverpageInfo);
+alias PFAXSENDDOCUMENTA = BOOL function(HANDLE FaxHandle, const(char)* FileName, FAX_JOB_PARAMA* JobParams, const(FAX_COVERPAGE_INFOA)* CoverpageInfo, uint* FaxJobId);
+alias PFAXSENDDOCUMENTW = BOOL function(HANDLE FaxHandle, const(wchar)* FileName, FAX_JOB_PARAMW* JobParams, const(FAX_COVERPAGE_INFOW)* CoverpageInfo, uint* FaxJobId);
+alias PFAX_RECIPIENT_CALLBACKA = BOOL function(HANDLE FaxHandle, uint RecipientNumber, void* Context, FAX_JOB_PARAMA* JobParams, FAX_COVERPAGE_INFOA* CoverpageInfo);
+alias PFAX_RECIPIENT_CALLBACKW = BOOL function(HANDLE FaxHandle, uint RecipientNumber, void* Context, FAX_JOB_PARAMW* JobParams, FAX_COVERPAGE_INFOW* CoverpageInfo);
+alias PFAXSENDDOCUMENTFORBROADCASTA = BOOL function(HANDLE FaxHandle, const(char)* FileName, uint* FaxJobId, PFAX_RECIPIENT_CALLBACKA FaxRecipientCallback, void* Context);
+alias PFAXSENDDOCUMENTFORBROADCASTW = BOOL function(HANDLE FaxHandle, const(wchar)* FileName, uint* FaxJobId, PFAX_RECIPIENT_CALLBACKW FaxRecipientCallback, void* Context);
+alias PFAXENUMJOBSA = BOOL function(HANDLE FaxHandle, FAX_JOB_ENTRYA** JobEntry, uint* JobsReturned);
+alias PFAXENUMJOBSW = BOOL function(HANDLE FaxHandle, FAX_JOB_ENTRYW** JobEntry, uint* JobsReturned);
+alias PFAXGETJOBA = BOOL function(HANDLE FaxHandle, uint JobId, FAX_JOB_ENTRYA** JobEntry);
+alias PFAXGETJOBW = BOOL function(HANDLE FaxHandle, uint JobId, FAX_JOB_ENTRYW** JobEntry);
+alias PFAXSETJOBA = BOOL function(HANDLE FaxHandle, uint JobId, uint Command, const(FAX_JOB_ENTRYA)* JobEntry);
+alias PFAXSETJOBW = BOOL function(HANDLE FaxHandle, uint JobId, uint Command, const(FAX_JOB_ENTRYW)* JobEntry);
+alias PFAXGETPAGEDATA = BOOL function(HANDLE FaxHandle, uint JobId, ubyte** Buffer, uint* BufferSize, uint* ImageWidth, uint* ImageHeight);
+alias PFAXGETDEVICESTATUSA = BOOL function(HANDLE FaxPortHandle, FAX_DEVICE_STATUSA** DeviceStatus);
+alias PFAXGETDEVICESTATUSW = BOOL function(HANDLE FaxPortHandle, FAX_DEVICE_STATUSW** DeviceStatus);
+alias PFAXABORT = BOOL function(HANDLE FaxHandle, uint JobId);
+alias PFAXGETCONFIGURATIONA = BOOL function(HANDLE FaxHandle, FAX_CONFIGURATIONA** FaxConfig);
+alias PFAXGETCONFIGURATIONW = BOOL function(HANDLE FaxHandle, FAX_CONFIGURATIONW** FaxConfig);
+alias PFAXSETCONFIGURATIONA = BOOL function(HANDLE FaxHandle, const(FAX_CONFIGURATIONA)* FaxConfig);
+alias PFAXSETCONFIGURATIONW = BOOL function(HANDLE FaxHandle, const(FAX_CONFIGURATIONW)* FaxConfig);
+alias PFAXGETLOGGINGCATEGORIESA = BOOL function(HANDLE FaxHandle, FAX_LOG_CATEGORYA** Categories, uint* NumberCategories);
+alias PFAXGETLOGGINGCATEGORIESW = BOOL function(HANDLE FaxHandle, FAX_LOG_CATEGORYW** Categories, uint* NumberCategories);
+alias PFAXSETLOGGINGCATEGORIESA = BOOL function(HANDLE FaxHandle, const(FAX_LOG_CATEGORYA)* Categories, uint NumberCategories);
+alias PFAXSETLOGGINGCATEGORIESW = BOOL function(HANDLE FaxHandle, const(FAX_LOG_CATEGORYW)* Categories, uint NumberCategories);
+alias PFAXENUMPORTSA = BOOL function(HANDLE FaxHandle, FAX_PORT_INFOA** PortInfo, uint* PortsReturned);
+alias PFAXENUMPORTSW = BOOL function(HANDLE FaxHandle, FAX_PORT_INFOW** PortInfo, uint* PortsReturned);
+alias PFAXGETPORTA = BOOL function(HANDLE FaxPortHandle, FAX_PORT_INFOA** PortInfo);
+alias PFAXGETPORTW = BOOL function(HANDLE FaxPortHandle, FAX_PORT_INFOW** PortInfo);
+alias PFAXSETPORTA = BOOL function(HANDLE FaxPortHandle, const(FAX_PORT_INFOA)* PortInfo);
+alias PFAXSETPORTW = BOOL function(HANDLE FaxPortHandle, const(FAX_PORT_INFOW)* PortInfo);
+alias PFAXENUMROUTINGMETHODSA = BOOL function(HANDLE FaxPortHandle, FAX_ROUTING_METHODA** RoutingMethod, uint* MethodsReturned);
+alias PFAXENUMROUTINGMETHODSW = BOOL function(HANDLE FaxPortHandle, FAX_ROUTING_METHODW** RoutingMethod, uint* MethodsReturned);
+alias PFAXENABLEROUTINGMETHODA = BOOL function(HANDLE FaxPortHandle, const(char)* RoutingGuid, BOOL Enabled);
+alias PFAXENABLEROUTINGMETHODW = BOOL function(HANDLE FaxPortHandle, const(wchar)* RoutingGuid, BOOL Enabled);
+alias PFAXENUMGLOBALROUTINGINFOA = BOOL function(HANDLE FaxHandle, FAX_GLOBAL_ROUTING_INFOA** RoutingInfo, uint* MethodsReturned);
+alias PFAXENUMGLOBALROUTINGINFOW = BOOL function(HANDLE FaxHandle, FAX_GLOBAL_ROUTING_INFOW** RoutingInfo, uint* MethodsReturned);
+alias PFAXSETGLOBALROUTINGINFOA = BOOL function(HANDLE FaxPortHandle, const(FAX_GLOBAL_ROUTING_INFOA)* RoutingInfo);
+alias PFAXSETGLOBALROUTINGINFOW = BOOL function(HANDLE FaxPortHandle, const(FAX_GLOBAL_ROUTING_INFOW)* RoutingInfo);
+alias PFAXGETROUTINGINFOA = BOOL function(HANDLE FaxPortHandle, const(char)* RoutingGuid, ubyte** RoutingInfoBuffer, uint* RoutingInfoBufferSize);
+alias PFAXGETROUTINGINFOW = BOOL function(HANDLE FaxPortHandle, const(wchar)* RoutingGuid, ubyte** RoutingInfoBuffer, uint* RoutingInfoBufferSize);
+alias PFAXSETROUTINGINFOA = BOOL function(HANDLE FaxPortHandle, const(char)* RoutingGuid, const(ubyte)* RoutingInfoBuffer, uint RoutingInfoBufferSize);
+alias PFAXSETROUTINGINFOW = BOOL function(HANDLE FaxPortHandle, const(wchar)* RoutingGuid, const(ubyte)* RoutingInfoBuffer, uint RoutingInfoBufferSize);
+alias PFAXINITIALIZEEVENTQUEUE = BOOL function(HANDLE FaxHandle, HANDLE CompletionPort, ulong CompletionKey, HWND hWnd, uint MessageStart);
+alias PFAXFREEBUFFER = void function(void* Buffer);
+alias PFAXSTARTPRINTJOBA = BOOL function(const(char)* PrinterName, const(FAX_PRINT_INFOA)* PrintInfo, uint* FaxJobId, FAX_CONTEXT_INFOA* FaxContextInfo);
+alias PFAXSTARTPRINTJOBW = BOOL function(const(wchar)* PrinterName, const(FAX_PRINT_INFOW)* PrintInfo, uint* FaxJobId, FAX_CONTEXT_INFOW* FaxContextInfo);
+alias PFAXPRINTCOVERPAGEA = BOOL function(const(FAX_CONTEXT_INFOA)* FaxContextInfo, const(FAX_COVERPAGE_INFOA)* CoverPageInfo);
+alias PFAXPRINTCOVERPAGEW = BOOL function(const(FAX_CONTEXT_INFOW)* FaxContextInfo, const(FAX_COVERPAGE_INFOW)* CoverPageInfo);
+alias PFAXREGISTERSERVICEPROVIDERW = BOOL function(const(wchar)* DeviceProvider, const(wchar)* FriendlyName, const(wchar)* ImageName, const(wchar)* TspName);
+alias PFAXUNREGISTERSERVICEPROVIDERW = BOOL function(const(wchar)* DeviceProvider);
+alias PFAX_ROUTING_INSTALLATION_CALLBACKW = BOOL function(HANDLE FaxHandle, void* Context, PWSTR MethodName, PWSTR FriendlyName, PWSTR FunctionName, PWSTR Guid);
+alias PFAXREGISTERROUTINGEXTENSIONW = BOOL function(HANDLE FaxHandle, const(wchar)* ExtensionName, const(wchar)* FriendlyName, const(wchar)* ImageName, PFAX_ROUTING_INSTALLATION_CALLBACKW CallBack, void* Context);
+alias PFAXACCESSCHECK = BOOL function(HANDLE FaxHandle, uint AccessMask);
 struct FAX_SEND
 {
     uint SizeOfStruct;
@@ -846,18 +845,18 @@ struct FAX_DEV_STATUS
     uint ErrorCode;
     uint[3] Reserved;
 }
-alias PFAX_SERVICE_CALLBACK = BOOL function(HANDLE, uint, ulong, ulong, ulong);
-alias PFAX_LINECALLBACK = void function(HANDLE, uint, uint, ulong, ulong, ulong, ulong);
-alias PFAX_SEND_CALLBACK = BOOL function(HANDLE, uint, uint, uint);
-alias PFAXDEVINITIALIZE = BOOL function(uint, HANDLE, PFAX_LINECALLBACK*, PFAX_SERVICE_CALLBACK);
-alias PFAXDEVVIRTUALDEVICECREATION = BOOL function(uint*, PWSTR, uint*, HANDLE, ulong);
-alias PFAXDEVSTARTJOB = BOOL function(uint, uint, HANDLE*, HANDLE, ulong);
-alias PFAXDEVENDJOB = BOOL function(HANDLE);
-alias PFAXDEVSEND = BOOL function(HANDLE, FAX_SEND*, PFAX_SEND_CALLBACK);
-alias PFAXDEVRECEIVE = BOOL function(HANDLE, uint, FAX_RECEIVE*);
-alias PFAXDEVREPORTSTATUS = BOOL function(HANDLE, FAX_DEV_STATUS*, uint, uint*);
-alias PFAXDEVABORTOPERATION = BOOL function(HANDLE);
-alias PFAXDEVCONFIGURE = BOOL function(HPROPSHEETPAGE*);
+alias PFAX_SERVICE_CALLBACK = BOOL function(HANDLE FaxHandle, uint DeviceId, ulong Param1, ulong Param2, ulong Param3);
+alias PFAX_LINECALLBACK = void function(HANDLE FaxHandle, uint hDevice, uint dwMessage, ulong dwInstance, ulong dwParam1, ulong dwParam2, ulong dwParam3);
+alias PFAX_SEND_CALLBACK = BOOL function(HANDLE FaxHandle, uint CallHandle, uint Reserved1, uint Reserved2);
+alias PFAXDEVINITIALIZE = BOOL function(uint param0, HANDLE param1, PFAX_LINECALLBACK* param2, PFAX_SERVICE_CALLBACK param3);
+alias PFAXDEVVIRTUALDEVICECREATION = BOOL function(uint* DeviceCount, PWSTR DeviceNamePrefix, uint* DeviceIdPrefix, HANDLE CompletionPort, ulong CompletionKey);
+alias PFAXDEVSTARTJOB = BOOL function(uint param0, uint param1, HANDLE* param2, HANDLE param3, ulong param4);
+alias PFAXDEVENDJOB = BOOL function(HANDLE param0);
+alias PFAXDEVSEND = BOOL function(HANDLE param0, FAX_SEND* param1, PFAX_SEND_CALLBACK param2);
+alias PFAXDEVRECEIVE = BOOL function(HANDLE param0, uint param1, FAX_RECEIVE* param2);
+alias PFAXDEVREPORTSTATUS = BOOL function(HANDLE param0, FAX_DEV_STATUS* param1, uint param2, uint* param3);
+alias PFAXDEVABORTOPERATION = BOOL function(HANDLE param0);
+alias PFAXDEVCONFIGURE = BOOL function(HPROPSHEETPAGE* param0);
 alias PFAXDEVSHUTDOWN = HRESULT function();
 alias FAX_JOB_STATUS_ENUM = int;
 enum : int
@@ -924,23 +923,23 @@ enum : int
 enum IID_IFaxJobStatus = GUID(0x8b86f485, 0xfd7f, 0x4824, [0x88, 0x6b, 0x40, 0xc5, 0xca, 0xa6, 0x17, 0xcc]);
 interface IFaxJobStatus : IDispatch
 {
-    HRESULT get_Status(FAX_JOB_STATUS_ENUM*);
-    HRESULT get_Pages(int*);
-    HRESULT get_Size(int*);
-    HRESULT get_CurrentPage(int*);
-    HRESULT get_DeviceId(int*);
-    HRESULT get_CSID(BSTR*);
-    HRESULT get_TSID(BSTR*);
-    HRESULT get_ExtendedStatusCode(FAX_JOB_EXTENDED_STATUS_ENUM*);
-    HRESULT get_ExtendedStatus(BSTR*);
-    HRESULT get_AvailableOperations(FAX_JOB_OPERATIONS_ENUM*);
-    HRESULT get_Retries(int*);
-    HRESULT get_JobType(FAX_JOB_TYPE_ENUM*);
-    HRESULT get_ScheduledTime(double*);
-    HRESULT get_TransmissionStart(double*);
-    HRESULT get_TransmissionEnd(double*);
-    HRESULT get_CallerId(BSTR*);
-    HRESULT get_RoutingInformation(BSTR*);
+    HRESULT get_Status(FAX_JOB_STATUS_ENUM* pStatus);
+    HRESULT get_Pages(int* plPages);
+    HRESULT get_Size(int* plSize);
+    HRESULT get_CurrentPage(int* plCurrentPage);
+    HRESULT get_DeviceId(int* plDeviceId);
+    HRESULT get_CSID(BSTR* pbstrCSID);
+    HRESULT get_TSID(BSTR* pbstrTSID);
+    HRESULT get_ExtendedStatusCode(FAX_JOB_EXTENDED_STATUS_ENUM* pExtendedStatusCode);
+    HRESULT get_ExtendedStatus(BSTR* pbstrExtendedStatus);
+    HRESULT get_AvailableOperations(FAX_JOB_OPERATIONS_ENUM* pAvailableOperations);
+    HRESULT get_Retries(int* plRetries);
+    HRESULT get_JobType(FAX_JOB_TYPE_ENUM* pJobType);
+    HRESULT get_ScheduledTime(double* pdateScheduledTime);
+    HRESULT get_TransmissionStart(double* pdateTransmissionStart);
+    HRESULT get_TransmissionEnd(double* pdateTransmissionEnd);
+    HRESULT get_CallerId(BSTR* pbstrCallerId);
+    HRESULT get_RoutingInformation(BSTR* pbstrRoutingInformation);
 }
 alias FAX_SERVER_EVENTS_TYPE_ENUM = int;
 enum : int
@@ -970,82 +969,82 @@ enum : int
 enum IID_IFaxServer = GUID(0x475b6469, 0x90a5, 0x4878, [0xa5, 0x77, 0x17, 0xa8, 0x6e, 0x8e, 0x34, 0x62]);
 interface IFaxServer : IDispatch
 {
-    HRESULT Connect(BSTR);
-    HRESULT get_ServerName(BSTR*);
-    HRESULT GetDeviceProviders(IFaxDeviceProviders*);
-    HRESULT GetDevices(IFaxDevices*);
-    HRESULT get_InboundRouting(IFaxInboundRouting*);
-    HRESULT get_Folders(IFaxFolders*);
-    HRESULT get_LoggingOptions(IFaxLoggingOptions*);
-    HRESULT get_MajorVersion(int*);
-    HRESULT get_MinorVersion(int*);
-    HRESULT get_MajorBuild(int*);
-    HRESULT get_MinorBuild(int*);
-    HRESULT get_Debug(VARIANT_BOOL*);
-    HRESULT get_Activity(IFaxActivity*);
-    HRESULT get_OutboundRouting(IFaxOutboundRouting*);
-    HRESULT get_ReceiptOptions(IFaxReceiptOptions*);
-    HRESULT get_Security(IFaxSecurity*);
+    HRESULT Connect(BSTR bstrServerName);
+    HRESULT get_ServerName(BSTR* pbstrServerName);
+    HRESULT GetDeviceProviders(IFaxDeviceProviders* ppFaxDeviceProviders);
+    HRESULT GetDevices(IFaxDevices* ppFaxDevices);
+    HRESULT get_InboundRouting(IFaxInboundRouting* ppFaxInboundRouting);
+    HRESULT get_Folders(IFaxFolders* pFaxFolders);
+    HRESULT get_LoggingOptions(IFaxLoggingOptions* ppFaxLoggingOptions);
+    HRESULT get_MajorVersion(int* plMajorVersion);
+    HRESULT get_MinorVersion(int* plMinorVersion);
+    HRESULT get_MajorBuild(int* plMajorBuild);
+    HRESULT get_MinorBuild(int* plMinorBuild);
+    HRESULT get_Debug(VARIANT_BOOL* pbDebug);
+    HRESULT get_Activity(IFaxActivity* ppFaxActivity);
+    HRESULT get_OutboundRouting(IFaxOutboundRouting* ppFaxOutboundRouting);
+    HRESULT get_ReceiptOptions(IFaxReceiptOptions* ppFaxReceiptOptions);
+    HRESULT get_Security(IFaxSecurity* ppFaxSecurity);
     HRESULT Disconnect();
-    HRESULT GetExtensionProperty(BSTR, VARIANT*);
-    HRESULT SetExtensionProperty(BSTR, VARIANT);
-    HRESULT ListenToServerEvents(FAX_SERVER_EVENTS_TYPE_ENUM);
-    HRESULT RegisterDeviceProvider(BSTR, BSTR, BSTR, BSTR, int);
-    HRESULT UnregisterDeviceProvider(BSTR);
-    HRESULT RegisterInboundRoutingExtension(BSTR, BSTR, BSTR, VARIANT);
-    HRESULT UnregisterInboundRoutingExtension(BSTR);
-    HRESULT get_RegisteredEvents(FAX_SERVER_EVENTS_TYPE_ENUM*);
-    HRESULT get_APIVersion(FAX_SERVER_APIVERSION_ENUM*);
+    HRESULT GetExtensionProperty(BSTR bstrGUID, VARIANT* pvProperty);
+    HRESULT SetExtensionProperty(BSTR bstrGUID, VARIANT vProperty);
+    HRESULT ListenToServerEvents(FAX_SERVER_EVENTS_TYPE_ENUM EventTypes);
+    HRESULT RegisterDeviceProvider(BSTR bstrGUID, BSTR bstrFriendlyName, BSTR bstrImageName, BSTR TspName, int lFSPIVersion);
+    HRESULT UnregisterDeviceProvider(BSTR bstrUniqueName);
+    HRESULT RegisterInboundRoutingExtension(BSTR bstrExtensionName, BSTR bstrFriendlyName, BSTR bstrImageName, VARIANT vMethods);
+    HRESULT UnregisterInboundRoutingExtension(BSTR bstrExtensionUniqueName);
+    HRESULT get_RegisteredEvents(FAX_SERVER_EVENTS_TYPE_ENUM* pEventTypes);
+    HRESULT get_APIVersion(FAX_SERVER_APIVERSION_ENUM* pAPIVersion);
 }
 enum IID_IFaxDeviceProviders = GUID(0x9fb76f62, 0x4c7e, 0x43a5, [0xb6, 0xfd, 0x50, 0x28, 0x93, 0xf7, 0xe1, 0x3e]);
 interface IFaxDeviceProviders : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(VARIANT, IFaxDeviceProvider*);
-    HRESULT get_Count(int*);
+    HRESULT get__NewEnum(IUnknown* ppUnk);
+    HRESULT get_Item(VARIANT vIndex, IFaxDeviceProvider* pFaxDeviceProvider);
+    HRESULT get_Count(int* plCount);
 }
 enum IID_IFaxDevices = GUID(0x9e46783e, 0xf34f, 0x482e, [0xa3, 0x60, 0x4, 0x16, 0xbe, 0xcb, 0xbd, 0x96]);
 interface IFaxDevices : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(VARIANT, IFaxDevice*);
-    HRESULT get_Count(int*);
-    HRESULT get_ItemById(int, IFaxDevice*);
+    HRESULT get__NewEnum(IUnknown* ppUnk);
+    HRESULT get_Item(VARIANT vIndex, IFaxDevice* pFaxDevice);
+    HRESULT get_Count(int* plCount);
+    HRESULT get_ItemById(int lId, IFaxDevice* ppFaxDevice);
 }
 enum IID_IFaxInboundRouting = GUID(0x8148c20f, 0x9d52, 0x45b1, [0xbf, 0x96, 0x38, 0xfc, 0x12, 0x71, 0x35, 0x27]);
 interface IFaxInboundRouting : IDispatch
 {
-    HRESULT GetExtensions(IFaxInboundRoutingExtensions*);
-    HRESULT GetMethods(IFaxInboundRoutingMethods*);
+    HRESULT GetExtensions(IFaxInboundRoutingExtensions* pFaxInboundRoutingExtensions);
+    HRESULT GetMethods(IFaxInboundRoutingMethods* pFaxInboundRoutingMethods);
 }
 enum IID_IFaxFolders = GUID(0xdce3b2a8, 0xa7ab, 0x42bc, [0x9d, 0xa, 0x31, 0x49, 0x45, 0x72, 0x61, 0xa0]);
 interface IFaxFolders : IDispatch
 {
-    HRESULT get_OutgoingQueue(IFaxOutgoingQueue*);
-    HRESULT get_IncomingQueue(IFaxIncomingQueue*);
-    HRESULT get_IncomingArchive(IFaxIncomingArchive*);
-    HRESULT get_OutgoingArchive(IFaxOutgoingArchive*);
+    HRESULT get_OutgoingQueue(IFaxOutgoingQueue* pFaxOutgoingQueue);
+    HRESULT get_IncomingQueue(IFaxIncomingQueue* pFaxIncomingQueue);
+    HRESULT get_IncomingArchive(IFaxIncomingArchive* pFaxIncomingArchive);
+    HRESULT get_OutgoingArchive(IFaxOutgoingArchive* pFaxOutgoingArchive);
 }
 enum IID_IFaxLoggingOptions = GUID(0x34e64fb9, 0x6b31, 0x4d32, [0x8b, 0x27, 0xd2, 0x86, 0xc0, 0xc3, 0x36, 0x6]);
 interface IFaxLoggingOptions : IDispatch
 {
-    HRESULT get_EventLogging(IFaxEventLogging*);
-    HRESULT get_ActivityLogging(IFaxActivityLogging*);
+    HRESULT get_EventLogging(IFaxEventLogging* pFaxEventLogging);
+    HRESULT get_ActivityLogging(IFaxActivityLogging* pFaxActivityLogging);
 }
 enum IID_IFaxActivity = GUID(0x4b106f97, 0x3df5, 0x40f2, [0xbc, 0x3c, 0x44, 0xcb, 0x81, 0x15, 0xeb, 0xdf]);
 interface IFaxActivity : IDispatch
 {
-    HRESULT get_IncomingMessages(int*);
-    HRESULT get_RoutingMessages(int*);
-    HRESULT get_OutgoingMessages(int*);
-    HRESULT get_QueuedMessages(int*);
+    HRESULT get_IncomingMessages(int* plIncomingMessages);
+    HRESULT get_RoutingMessages(int* plRoutingMessages);
+    HRESULT get_OutgoingMessages(int* plOutgoingMessages);
+    HRESULT get_QueuedMessages(int* plQueuedMessages);
     HRESULT Refresh();
 }
 enum IID_IFaxOutboundRouting = GUID(0x25dc05a4, 0x9909, 0x41bd, [0xa9, 0x5b, 0x7e, 0x5d, 0x1d, 0xec, 0x1d, 0x43]);
 interface IFaxOutboundRouting : IDispatch
 {
-    HRESULT GetGroups(IFaxOutboundRoutingGroups*);
-    HRESULT GetRules(IFaxOutboundRoutingRules*);
+    HRESULT GetGroups(IFaxOutboundRoutingGroups* pFaxOutboundRoutingGroups);
+    HRESULT GetRules(IFaxOutboundRoutingRules* pFaxOutboundRoutingRules);
 }
 alias FAX_SMTP_AUTHENTICATION_TYPE_ENUM = int;
 enum : int
@@ -1066,24 +1065,24 @@ enum : int
 enum IID_IFaxReceiptOptions = GUID(0x378efaeb, 0x5fcb, 0x4afb, [0xb2, 0xee, 0xe1, 0x6e, 0x80, 0x61, 0x44, 0x87]);
 interface IFaxReceiptOptions : IDispatch
 {
-    HRESULT get_AuthenticationType(FAX_SMTP_AUTHENTICATION_TYPE_ENUM*);
-    HRESULT put_AuthenticationType(FAX_SMTP_AUTHENTICATION_TYPE_ENUM);
-    HRESULT get_SMTPServer(BSTR*);
-    HRESULT put_SMTPServer(BSTR);
-    HRESULT get_SMTPPort(int*);
-    HRESULT put_SMTPPort(int);
-    HRESULT get_SMTPSender(BSTR*);
-    HRESULT put_SMTPSender(BSTR);
-    HRESULT get_SMTPUser(BSTR*);
-    HRESULT put_SMTPUser(BSTR);
-    HRESULT get_AllowedReceipts(FAX_RECEIPT_TYPE_ENUM*);
-    HRESULT put_AllowedReceipts(FAX_RECEIPT_TYPE_ENUM);
-    HRESULT get_SMTPPassword(BSTR*);
-    HRESULT put_SMTPPassword(BSTR);
+    HRESULT get_AuthenticationType(FAX_SMTP_AUTHENTICATION_TYPE_ENUM* pType);
+    HRESULT put_AuthenticationType(FAX_SMTP_AUTHENTICATION_TYPE_ENUM Type);
+    HRESULT get_SMTPServer(BSTR* pbstrSMTPServer);
+    HRESULT put_SMTPServer(BSTR bstrSMTPServer);
+    HRESULT get_SMTPPort(int* plSMTPPort);
+    HRESULT put_SMTPPort(int lSMTPPort);
+    HRESULT get_SMTPSender(BSTR* pbstrSMTPSender);
+    HRESULT put_SMTPSender(BSTR bstrSMTPSender);
+    HRESULT get_SMTPUser(BSTR* pbstrSMTPUser);
+    HRESULT put_SMTPUser(BSTR bstrSMTPUser);
+    HRESULT get_AllowedReceipts(FAX_RECEIPT_TYPE_ENUM* pAllowedReceipts);
+    HRESULT put_AllowedReceipts(FAX_RECEIPT_TYPE_ENUM AllowedReceipts);
+    HRESULT get_SMTPPassword(BSTR* pbstrSMTPPassword);
+    HRESULT put_SMTPPassword(BSTR bstrSMTPPassword);
     HRESULT Refresh();
     HRESULT Save();
-    HRESULT get_UseForInboundRouting(VARIANT_BOOL*);
-    HRESULT put_UseForInboundRouting(VARIANT_BOOL);
+    HRESULT get_UseForInboundRouting(VARIANT_BOOL* pbUseForInboundRouting);
+    HRESULT put_UseForInboundRouting(VARIANT_BOOL bUseForInboundRouting);
 }
 alias FAX_ACCESS_RIGHTS_ENUM = int;
 enum : int
@@ -1104,13 +1103,13 @@ enum : int
 enum IID_IFaxSecurity = GUID(0x77b508c1, 0x9c0, 0x47a2, [0x91, 0xeb, 0xfc, 0xe7, 0xfd, 0xf2, 0x69, 0xe]);
 interface IFaxSecurity : IDispatch
 {
-    HRESULT get_Descriptor(VARIANT*);
-    HRESULT put_Descriptor(VARIANT);
-    HRESULT get_GrantedRights(FAX_ACCESS_RIGHTS_ENUM*);
+    HRESULT get_Descriptor(VARIANT* pvDescriptor);
+    HRESULT put_Descriptor(VARIANT vDescriptor);
+    HRESULT get_GrantedRights(FAX_ACCESS_RIGHTS_ENUM* pGrantedRights);
     HRESULT Refresh();
     HRESULT Save();
-    HRESULT get_InformationType(int*);
-    HRESULT put_InformationType(int);
+    HRESULT get_InformationType(int* plInformationType);
+    HRESULT put_InformationType(int lInformationType);
 }
 alias FAX_PRIORITY_TYPE_ENUM = int;
 enum : int
@@ -1139,309 +1138,309 @@ enum : int
 enum IID_IFaxDocument = GUID(0xb207a246, 0x9e3, 0x4a4e, [0xa7, 0xdc, 0xfe, 0xa3, 0x1d, 0x29, 0x45, 0x8f]);
 interface IFaxDocument : IDispatch
 {
-    HRESULT get_Body(BSTR*);
-    HRESULT put_Body(BSTR);
-    HRESULT get_Sender(IFaxSender*);
-    HRESULT get_Recipients(IFaxRecipients*);
-    HRESULT get_CoverPage(BSTR*);
-    HRESULT put_CoverPage(BSTR);
-    HRESULT get_Subject(BSTR*);
-    HRESULT put_Subject(BSTR);
-    HRESULT get_Note(BSTR*);
-    HRESULT put_Note(BSTR);
-    HRESULT get_ScheduleTime(double*);
-    HRESULT put_ScheduleTime(double);
-    HRESULT get_ReceiptAddress(BSTR*);
-    HRESULT put_ReceiptAddress(BSTR);
-    HRESULT get_DocumentName(BSTR*);
-    HRESULT put_DocumentName(BSTR);
-    HRESULT get_CallHandle(int*);
-    HRESULT put_CallHandle(int);
-    HRESULT get_CoverPageType(FAX_COVERPAGE_TYPE_ENUM*);
-    HRESULT put_CoverPageType(FAX_COVERPAGE_TYPE_ENUM);
-    HRESULT get_ScheduleType(FAX_SCHEDULE_TYPE_ENUM*);
-    HRESULT put_ScheduleType(FAX_SCHEDULE_TYPE_ENUM);
-    HRESULT get_ReceiptType(FAX_RECEIPT_TYPE_ENUM*);
-    HRESULT put_ReceiptType(FAX_RECEIPT_TYPE_ENUM);
-    HRESULT get_GroupBroadcastReceipts(VARIANT_BOOL*);
-    HRESULT put_GroupBroadcastReceipts(VARIANT_BOOL);
-    HRESULT get_Priority(FAX_PRIORITY_TYPE_ENUM*);
-    HRESULT put_Priority(FAX_PRIORITY_TYPE_ENUM);
-    HRESULT get_TapiConnection(IDispatch*);
-    HRESULT putref_TapiConnection(IDispatch);
-    HRESULT Submit(BSTR, VARIANT*);
-    HRESULT ConnectedSubmit(IFaxServer, VARIANT*);
-    HRESULT get_AttachFaxToReceipt(VARIANT_BOOL*);
-    HRESULT put_AttachFaxToReceipt(VARIANT_BOOL);
+    HRESULT get_Body(BSTR* pbstrBody);
+    HRESULT put_Body(BSTR bstrBody);
+    HRESULT get_Sender(IFaxSender* ppFaxSender);
+    HRESULT get_Recipients(IFaxRecipients* ppFaxRecipients);
+    HRESULT get_CoverPage(BSTR* pbstrCoverPage);
+    HRESULT put_CoverPage(BSTR bstrCoverPage);
+    HRESULT get_Subject(BSTR* pbstrSubject);
+    HRESULT put_Subject(BSTR bstrSubject);
+    HRESULT get_Note(BSTR* pbstrNote);
+    HRESULT put_Note(BSTR bstrNote);
+    HRESULT get_ScheduleTime(double* pdateScheduleTime);
+    HRESULT put_ScheduleTime(double dateScheduleTime);
+    HRESULT get_ReceiptAddress(BSTR* pbstrReceiptAddress);
+    HRESULT put_ReceiptAddress(BSTR bstrReceiptAddress);
+    HRESULT get_DocumentName(BSTR* pbstrDocumentName);
+    HRESULT put_DocumentName(BSTR bstrDocumentName);
+    HRESULT get_CallHandle(int* plCallHandle);
+    HRESULT put_CallHandle(int lCallHandle);
+    HRESULT get_CoverPageType(FAX_COVERPAGE_TYPE_ENUM* pCoverPageType);
+    HRESULT put_CoverPageType(FAX_COVERPAGE_TYPE_ENUM CoverPageType);
+    HRESULT get_ScheduleType(FAX_SCHEDULE_TYPE_ENUM* pScheduleType);
+    HRESULT put_ScheduleType(FAX_SCHEDULE_TYPE_ENUM ScheduleType);
+    HRESULT get_ReceiptType(FAX_RECEIPT_TYPE_ENUM* pReceiptType);
+    HRESULT put_ReceiptType(FAX_RECEIPT_TYPE_ENUM ReceiptType);
+    HRESULT get_GroupBroadcastReceipts(VARIANT_BOOL* pbUseGrouping);
+    HRESULT put_GroupBroadcastReceipts(VARIANT_BOOL bUseGrouping);
+    HRESULT get_Priority(FAX_PRIORITY_TYPE_ENUM* pPriority);
+    HRESULT put_Priority(FAX_PRIORITY_TYPE_ENUM Priority);
+    HRESULT get_TapiConnection(IDispatch* ppTapiConnection);
+    HRESULT putref_TapiConnection(IDispatch pTapiConnection);
+    HRESULT Submit(BSTR bstrFaxServerName, VARIANT* pvFaxOutgoingJobIDs);
+    HRESULT ConnectedSubmit(IFaxServer pFaxServer, VARIANT* pvFaxOutgoingJobIDs);
+    HRESULT get_AttachFaxToReceipt(VARIANT_BOOL* pbAttachFax);
+    HRESULT put_AttachFaxToReceipt(VARIANT_BOOL bAttachFax);
 }
 enum IID_IFaxSender = GUID(0xd879d7d, 0xf57a, 0x4cc6, [0xa6, 0xf9, 0x3e, 0xe5, 0xd5, 0x27, 0xb4, 0x6a]);
 interface IFaxSender : IDispatch
 {
-    HRESULT get_BillingCode(BSTR*);
-    HRESULT put_BillingCode(BSTR);
-    HRESULT get_City(BSTR*);
-    HRESULT put_City(BSTR);
-    HRESULT get_Company(BSTR*);
-    HRESULT put_Company(BSTR);
-    HRESULT get_Country(BSTR*);
-    HRESULT put_Country(BSTR);
-    HRESULT get_Department(BSTR*);
-    HRESULT put_Department(BSTR);
-    HRESULT get_Email(BSTR*);
-    HRESULT put_Email(BSTR);
-    HRESULT get_FaxNumber(BSTR*);
-    HRESULT put_FaxNumber(BSTR);
-    HRESULT get_HomePhone(BSTR*);
-    HRESULT put_HomePhone(BSTR);
-    HRESULT get_Name(BSTR*);
-    HRESULT put_Name(BSTR);
-    HRESULT get_TSID(BSTR*);
-    HRESULT put_TSID(BSTR);
-    HRESULT get_OfficePhone(BSTR*);
-    HRESULT put_OfficePhone(BSTR);
-    HRESULT get_OfficeLocation(BSTR*);
-    HRESULT put_OfficeLocation(BSTR);
-    HRESULT get_State(BSTR*);
-    HRESULT put_State(BSTR);
-    HRESULT get_StreetAddress(BSTR*);
-    HRESULT put_StreetAddress(BSTR);
-    HRESULT get_Title(BSTR*);
-    HRESULT put_Title(BSTR);
-    HRESULT get_ZipCode(BSTR*);
-    HRESULT put_ZipCode(BSTR);
+    HRESULT get_BillingCode(BSTR* pbstrBillingCode);
+    HRESULT put_BillingCode(BSTR bstrBillingCode);
+    HRESULT get_City(BSTR* pbstrCity);
+    HRESULT put_City(BSTR bstrCity);
+    HRESULT get_Company(BSTR* pbstrCompany);
+    HRESULT put_Company(BSTR bstrCompany);
+    HRESULT get_Country(BSTR* pbstrCountry);
+    HRESULT put_Country(BSTR bstrCountry);
+    HRESULT get_Department(BSTR* pbstrDepartment);
+    HRESULT put_Department(BSTR bstrDepartment);
+    HRESULT get_Email(BSTR* pbstrEmail);
+    HRESULT put_Email(BSTR bstrEmail);
+    HRESULT get_FaxNumber(BSTR* pbstrFaxNumber);
+    HRESULT put_FaxNumber(BSTR bstrFaxNumber);
+    HRESULT get_HomePhone(BSTR* pbstrHomePhone);
+    HRESULT put_HomePhone(BSTR bstrHomePhone);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT put_Name(BSTR bstrName);
+    HRESULT get_TSID(BSTR* pbstrTSID);
+    HRESULT put_TSID(BSTR bstrTSID);
+    HRESULT get_OfficePhone(BSTR* pbstrOfficePhone);
+    HRESULT put_OfficePhone(BSTR bstrOfficePhone);
+    HRESULT get_OfficeLocation(BSTR* pbstrOfficeLocation);
+    HRESULT put_OfficeLocation(BSTR bstrOfficeLocation);
+    HRESULT get_State(BSTR* pbstrState);
+    HRESULT put_State(BSTR bstrState);
+    HRESULT get_StreetAddress(BSTR* pbstrStreetAddress);
+    HRESULT put_StreetAddress(BSTR bstrStreetAddress);
+    HRESULT get_Title(BSTR* pbstrTitle);
+    HRESULT put_Title(BSTR bstrTitle);
+    HRESULT get_ZipCode(BSTR* pbstrZipCode);
+    HRESULT put_ZipCode(BSTR bstrZipCode);
     HRESULT LoadDefaultSender();
     HRESULT SaveDefaultSender();
 }
 enum IID_IFaxRecipient = GUID(0x9a3da3a0, 0x538d, 0x42b6, [0x94, 0x44, 0xaa, 0xa5, 0x7d, 0xc, 0xe2, 0xbc]);
 interface IFaxRecipient : IDispatch
 {
-    HRESULT get_FaxNumber(BSTR*);
-    HRESULT put_FaxNumber(BSTR);
-    HRESULT get_Name(BSTR*);
-    HRESULT put_Name(BSTR);
+    HRESULT get_FaxNumber(BSTR* pbstrFaxNumber);
+    HRESULT put_FaxNumber(BSTR bstrFaxNumber);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT put_Name(BSTR bstrName);
 }
 enum IID_IFaxRecipients = GUID(0xb9c9de5a, 0x894e, 0x4492, [0x9f, 0xa3, 0x8, 0xc6, 0x27, 0xc1, 0x1d, 0x5d]);
 interface IFaxRecipients : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(int, IFaxRecipient*);
-    HRESULT get_Count(int*);
-    HRESULT Add(BSTR, BSTR, IFaxRecipient*);
-    HRESULT Remove(int);
+    HRESULT get__NewEnum(IUnknown* ppUnk);
+    HRESULT get_Item(int lIndex, IFaxRecipient* ppFaxRecipient);
+    HRESULT get_Count(int* plCount);
+    HRESULT Add(BSTR bstrFaxNumber, BSTR bstrRecipientName, IFaxRecipient* ppFaxRecipient);
+    HRESULT Remove(int lIndex);
 }
 enum IID_IFaxIncomingArchive = GUID(0x76062cc7, 0xf714, 0x4fbd, [0xaa, 0x6, 0xed, 0x6e, 0x4a, 0x4b, 0x70, 0xf3]);
 interface IFaxIncomingArchive : IDispatch
 {
-    HRESULT get_UseArchive(VARIANT_BOOL*);
-    HRESULT put_UseArchive(VARIANT_BOOL);
-    HRESULT get_ArchiveFolder(BSTR*);
-    HRESULT put_ArchiveFolder(BSTR);
-    HRESULT get_SizeQuotaWarning(VARIANT_BOOL*);
-    HRESULT put_SizeQuotaWarning(VARIANT_BOOL);
-    HRESULT get_HighQuotaWaterMark(int*);
-    HRESULT put_HighQuotaWaterMark(int);
-    HRESULT get_LowQuotaWaterMark(int*);
-    HRESULT put_LowQuotaWaterMark(int);
-    HRESULT get_AgeLimit(int*);
-    HRESULT put_AgeLimit(int);
-    HRESULT get_SizeLow(int*);
-    HRESULT get_SizeHigh(int*);
+    HRESULT get_UseArchive(VARIANT_BOOL* pbUseArchive);
+    HRESULT put_UseArchive(VARIANT_BOOL bUseArchive);
+    HRESULT get_ArchiveFolder(BSTR* pbstrArchiveFolder);
+    HRESULT put_ArchiveFolder(BSTR bstrArchiveFolder);
+    HRESULT get_SizeQuotaWarning(VARIANT_BOOL* pbSizeQuotaWarning);
+    HRESULT put_SizeQuotaWarning(VARIANT_BOOL bSizeQuotaWarning);
+    HRESULT get_HighQuotaWaterMark(int* plHighQuotaWaterMark);
+    HRESULT put_HighQuotaWaterMark(int lHighQuotaWaterMark);
+    HRESULT get_LowQuotaWaterMark(int* plLowQuotaWaterMark);
+    HRESULT put_LowQuotaWaterMark(int lLowQuotaWaterMark);
+    HRESULT get_AgeLimit(int* plAgeLimit);
+    HRESULT put_AgeLimit(int lAgeLimit);
+    HRESULT get_SizeLow(int* plSizeLow);
+    HRESULT get_SizeHigh(int* plSizeHigh);
     HRESULT Refresh();
     HRESULT Save();
-    HRESULT GetMessages(int, IFaxIncomingMessageIterator*);
-    HRESULT GetMessage(BSTR, IFaxIncomingMessage*);
+    HRESULT GetMessages(int lPrefetchSize, IFaxIncomingMessageIterator* pFaxIncomingMessageIterator);
+    HRESULT GetMessage(BSTR bstrMessageId, IFaxIncomingMessage* pFaxIncomingMessage);
 }
 enum IID_IFaxIncomingQueue = GUID(0x902e64ef, 0x8fd8, 0x4b75, [0x97, 0x25, 0x60, 0x14, 0xdf, 0x16, 0x15, 0x45]);
 interface IFaxIncomingQueue : IDispatch
 {
-    HRESULT get_Blocked(VARIANT_BOOL*);
-    HRESULT put_Blocked(VARIANT_BOOL);
+    HRESULT get_Blocked(VARIANT_BOOL* pbBlocked);
+    HRESULT put_Blocked(VARIANT_BOOL bBlocked);
     HRESULT Refresh();
     HRESULT Save();
-    HRESULT GetJobs(IFaxIncomingJobs*);
-    HRESULT GetJob(BSTR, IFaxIncomingJob*);
+    HRESULT GetJobs(IFaxIncomingJobs* pFaxIncomingJobs);
+    HRESULT GetJob(BSTR bstrJobId, IFaxIncomingJob* pFaxIncomingJob);
 }
 enum IID_IFaxOutgoingArchive = GUID(0xc9c28f40, 0x8d80, 0x4e53, [0x81, 0xf, 0x9a, 0x79, 0x91, 0x9b, 0x49, 0xfd]);
 interface IFaxOutgoingArchive : IDispatch
 {
-    HRESULT get_UseArchive(VARIANT_BOOL*);
-    HRESULT put_UseArchive(VARIANT_BOOL);
-    HRESULT get_ArchiveFolder(BSTR*);
-    HRESULT put_ArchiveFolder(BSTR);
-    HRESULT get_SizeQuotaWarning(VARIANT_BOOL*);
-    HRESULT put_SizeQuotaWarning(VARIANT_BOOL);
-    HRESULT get_HighQuotaWaterMark(int*);
-    HRESULT put_HighQuotaWaterMark(int);
-    HRESULT get_LowQuotaWaterMark(int*);
-    HRESULT put_LowQuotaWaterMark(int);
-    HRESULT get_AgeLimit(int*);
-    HRESULT put_AgeLimit(int);
-    HRESULT get_SizeLow(int*);
-    HRESULT get_SizeHigh(int*);
+    HRESULT get_UseArchive(VARIANT_BOOL* pbUseArchive);
+    HRESULT put_UseArchive(VARIANT_BOOL bUseArchive);
+    HRESULT get_ArchiveFolder(BSTR* pbstrArchiveFolder);
+    HRESULT put_ArchiveFolder(BSTR bstrArchiveFolder);
+    HRESULT get_SizeQuotaWarning(VARIANT_BOOL* pbSizeQuotaWarning);
+    HRESULT put_SizeQuotaWarning(VARIANT_BOOL bSizeQuotaWarning);
+    HRESULT get_HighQuotaWaterMark(int* plHighQuotaWaterMark);
+    HRESULT put_HighQuotaWaterMark(int lHighQuotaWaterMark);
+    HRESULT get_LowQuotaWaterMark(int* plLowQuotaWaterMark);
+    HRESULT put_LowQuotaWaterMark(int lLowQuotaWaterMark);
+    HRESULT get_AgeLimit(int* plAgeLimit);
+    HRESULT put_AgeLimit(int lAgeLimit);
+    HRESULT get_SizeLow(int* plSizeLow);
+    HRESULT get_SizeHigh(int* plSizeHigh);
     HRESULT Refresh();
     HRESULT Save();
-    HRESULT GetMessages(int, IFaxOutgoingMessageIterator*);
-    HRESULT GetMessage(BSTR, IFaxOutgoingMessage*);
+    HRESULT GetMessages(int lPrefetchSize, IFaxOutgoingMessageIterator* pFaxOutgoingMessageIterator);
+    HRESULT GetMessage(BSTR bstrMessageId, IFaxOutgoingMessage* pFaxOutgoingMessage);
 }
 enum IID_IFaxOutgoingQueue = GUID(0x80b1df24, 0xd9ac, 0x4333, [0xb3, 0x73, 0x48, 0x7c, 0xed, 0xc8, 0xc, 0xe5]);
 interface IFaxOutgoingQueue : IDispatch
 {
-    HRESULT get_Blocked(VARIANT_BOOL*);
-    HRESULT put_Blocked(VARIANT_BOOL);
-    HRESULT get_Paused(VARIANT_BOOL*);
-    HRESULT put_Paused(VARIANT_BOOL);
-    HRESULT get_AllowPersonalCoverPages(VARIANT_BOOL*);
-    HRESULT put_AllowPersonalCoverPages(VARIANT_BOOL);
-    HRESULT get_UseDeviceTSID(VARIANT_BOOL*);
-    HRESULT put_UseDeviceTSID(VARIANT_BOOL);
-    HRESULT get_Retries(int*);
-    HRESULT put_Retries(int);
-    HRESULT get_RetryDelay(int*);
-    HRESULT put_RetryDelay(int);
-    HRESULT get_DiscountRateStart(double*);
-    HRESULT put_DiscountRateStart(double);
-    HRESULT get_DiscountRateEnd(double*);
-    HRESULT put_DiscountRateEnd(double);
-    HRESULT get_AgeLimit(int*);
-    HRESULT put_AgeLimit(int);
-    HRESULT get_Branding(VARIANT_BOOL*);
-    HRESULT put_Branding(VARIANT_BOOL);
+    HRESULT get_Blocked(VARIANT_BOOL* pbBlocked);
+    HRESULT put_Blocked(VARIANT_BOOL bBlocked);
+    HRESULT get_Paused(VARIANT_BOOL* pbPaused);
+    HRESULT put_Paused(VARIANT_BOOL bPaused);
+    HRESULT get_AllowPersonalCoverPages(VARIANT_BOOL* pbAllowPersonalCoverPages);
+    HRESULT put_AllowPersonalCoverPages(VARIANT_BOOL bAllowPersonalCoverPages);
+    HRESULT get_UseDeviceTSID(VARIANT_BOOL* pbUseDeviceTSID);
+    HRESULT put_UseDeviceTSID(VARIANT_BOOL bUseDeviceTSID);
+    HRESULT get_Retries(int* plRetries);
+    HRESULT put_Retries(int lRetries);
+    HRESULT get_RetryDelay(int* plRetryDelay);
+    HRESULT put_RetryDelay(int lRetryDelay);
+    HRESULT get_DiscountRateStart(double* pdateDiscountRateStart);
+    HRESULT put_DiscountRateStart(double dateDiscountRateStart);
+    HRESULT get_DiscountRateEnd(double* pdateDiscountRateEnd);
+    HRESULT put_DiscountRateEnd(double dateDiscountRateEnd);
+    HRESULT get_AgeLimit(int* plAgeLimit);
+    HRESULT put_AgeLimit(int lAgeLimit);
+    HRESULT get_Branding(VARIANT_BOOL* pbBranding);
+    HRESULT put_Branding(VARIANT_BOOL bBranding);
     HRESULT Refresh();
     HRESULT Save();
-    HRESULT GetJobs(IFaxOutgoingJobs*);
-    HRESULT GetJob(BSTR, IFaxOutgoingJob*);
+    HRESULT GetJobs(IFaxOutgoingJobs* pFaxOutgoingJobs);
+    HRESULT GetJob(BSTR bstrJobId, IFaxOutgoingJob* pFaxOutgoingJob);
 }
 enum IID_IFaxIncomingMessageIterator = GUID(0xfd73ecc4, 0x6f06, 0x4f52, [0x82, 0xa8, 0xf7, 0xba, 0x6, 0xae, 0x31, 0x8]);
 interface IFaxIncomingMessageIterator : IDispatch
 {
-    HRESULT get_Message(IFaxIncomingMessage*);
-    HRESULT get_PrefetchSize(int*);
-    HRESULT put_PrefetchSize(int);
-    HRESULT get_AtEOF(VARIANT_BOOL*);
+    HRESULT get_Message(IFaxIncomingMessage* pFaxIncomingMessage);
+    HRESULT get_PrefetchSize(int* plPrefetchSize);
+    HRESULT put_PrefetchSize(int lPrefetchSize);
+    HRESULT get_AtEOF(VARIANT_BOOL* pbEOF);
     HRESULT MoveFirst();
     HRESULT MoveNext();
 }
 enum IID_IFaxIncomingMessage = GUID(0x7cab88fa, 0x2ef9, 0x4851, [0xb2, 0xf3, 0x1d, 0x14, 0x8f, 0xed, 0x84, 0x47]);
 interface IFaxIncomingMessage : IDispatch
 {
-    HRESULT get_Id(BSTR*);
-    HRESULT get_Pages(int*);
-    HRESULT get_Size(int*);
-    HRESULT get_DeviceName(BSTR*);
-    HRESULT get_Retries(int*);
-    HRESULT get_TransmissionStart(double*);
-    HRESULT get_TransmissionEnd(double*);
-    HRESULT get_CSID(BSTR*);
-    HRESULT get_TSID(BSTR*);
-    HRESULT get_CallerId(BSTR*);
-    HRESULT get_RoutingInformation(BSTR*);
-    HRESULT CopyTiff(BSTR);
+    HRESULT get_Id(BSTR* pbstrId);
+    HRESULT get_Pages(int* plPages);
+    HRESULT get_Size(int* plSize);
+    HRESULT get_DeviceName(BSTR* pbstrDeviceName);
+    HRESULT get_Retries(int* plRetries);
+    HRESULT get_TransmissionStart(double* pdateTransmissionStart);
+    HRESULT get_TransmissionEnd(double* pdateTransmissionEnd);
+    HRESULT get_CSID(BSTR* pbstrCSID);
+    HRESULT get_TSID(BSTR* pbstrTSID);
+    HRESULT get_CallerId(BSTR* pbstrCallerId);
+    HRESULT get_RoutingInformation(BSTR* pbstrRoutingInformation);
+    HRESULT CopyTiff(BSTR bstrTiffPath);
     HRESULT Delete();
 }
 enum IID_IFaxOutgoingJobs = GUID(0x2c56d8e6, 0x8c2f, 0x4573, [0x94, 0x4c, 0xe5, 0x5, 0xf8, 0xf5, 0xae, 0xed]);
 interface IFaxOutgoingJobs : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(VARIANT, IFaxOutgoingJob*);
-    HRESULT get_Count(int*);
+    HRESULT get__NewEnum(IUnknown* ppUnk);
+    HRESULT get_Item(VARIANT vIndex, IFaxOutgoingJob* pFaxOutgoingJob);
+    HRESULT get_Count(int* plCount);
 }
 enum IID_IFaxOutgoingJob = GUID(0x6356daad, 0x6614, 0x4583, [0xbf, 0x7a, 0x3a, 0xd6, 0x7b, 0xbf, 0xc7, 0x1c]);
 interface IFaxOutgoingJob : IDispatch
 {
-    HRESULT get_Subject(BSTR*);
-    HRESULT get_DocumentName(BSTR*);
-    HRESULT get_Pages(int*);
-    HRESULT get_Size(int*);
-    HRESULT get_SubmissionId(BSTR*);
-    HRESULT get_Id(BSTR*);
-    HRESULT get_OriginalScheduledTime(double*);
-    HRESULT get_SubmissionTime(double*);
-    HRESULT get_ReceiptType(FAX_RECEIPT_TYPE_ENUM*);
-    HRESULT get_Priority(FAX_PRIORITY_TYPE_ENUM*);
-    HRESULT get_Sender(IFaxSender*);
-    HRESULT get_Recipient(IFaxRecipient*);
-    HRESULT get_CurrentPage(int*);
-    HRESULT get_DeviceId(int*);
-    HRESULT get_Status(FAX_JOB_STATUS_ENUM*);
-    HRESULT get_ExtendedStatusCode(FAX_JOB_EXTENDED_STATUS_ENUM*);
-    HRESULT get_ExtendedStatus(BSTR*);
-    HRESULT get_AvailableOperations(FAX_JOB_OPERATIONS_ENUM*);
-    HRESULT get_Retries(int*);
-    HRESULT get_ScheduledTime(double*);
-    HRESULT get_TransmissionStart(double*);
-    HRESULT get_TransmissionEnd(double*);
-    HRESULT get_CSID(BSTR*);
-    HRESULT get_TSID(BSTR*);
-    HRESULT get_GroupBroadcastReceipts(VARIANT_BOOL*);
+    HRESULT get_Subject(BSTR* pbstrSubject);
+    HRESULT get_DocumentName(BSTR* pbstrDocumentName);
+    HRESULT get_Pages(int* plPages);
+    HRESULT get_Size(int* plSize);
+    HRESULT get_SubmissionId(BSTR* pbstrSubmissionId);
+    HRESULT get_Id(BSTR* pbstrId);
+    HRESULT get_OriginalScheduledTime(double* pdateOriginalScheduledTime);
+    HRESULT get_SubmissionTime(double* pdateSubmissionTime);
+    HRESULT get_ReceiptType(FAX_RECEIPT_TYPE_ENUM* pReceiptType);
+    HRESULT get_Priority(FAX_PRIORITY_TYPE_ENUM* pPriority);
+    HRESULT get_Sender(IFaxSender* ppFaxSender);
+    HRESULT get_Recipient(IFaxRecipient* ppFaxRecipient);
+    HRESULT get_CurrentPage(int* plCurrentPage);
+    HRESULT get_DeviceId(int* plDeviceId);
+    HRESULT get_Status(FAX_JOB_STATUS_ENUM* pStatus);
+    HRESULT get_ExtendedStatusCode(FAX_JOB_EXTENDED_STATUS_ENUM* pExtendedStatusCode);
+    HRESULT get_ExtendedStatus(BSTR* pbstrExtendedStatus);
+    HRESULT get_AvailableOperations(FAX_JOB_OPERATIONS_ENUM* pAvailableOperations);
+    HRESULT get_Retries(int* plRetries);
+    HRESULT get_ScheduledTime(double* pdateScheduledTime);
+    HRESULT get_TransmissionStart(double* pdateTransmissionStart);
+    HRESULT get_TransmissionEnd(double* pdateTransmissionEnd);
+    HRESULT get_CSID(BSTR* pbstrCSID);
+    HRESULT get_TSID(BSTR* pbstrTSID);
+    HRESULT get_GroupBroadcastReceipts(VARIANT_BOOL* pbGroupBroadcastReceipts);
     HRESULT Pause();
     HRESULT Resume();
     HRESULT Restart();
-    HRESULT CopyTiff(BSTR);
+    HRESULT CopyTiff(BSTR bstrTiffPath);
     HRESULT Refresh();
     HRESULT Cancel();
 }
 enum IID_IFaxOutgoingMessageIterator = GUID(0xf5ec5d4f, 0xb840, 0x432f, [0x99, 0x80, 0x11, 0x2f, 0xe4, 0x2a, 0x9b, 0x7a]);
 interface IFaxOutgoingMessageIterator : IDispatch
 {
-    HRESULT get_Message(IFaxOutgoingMessage*);
-    HRESULT get_AtEOF(VARIANT_BOOL*);
-    HRESULT get_PrefetchSize(int*);
-    HRESULT put_PrefetchSize(int);
+    HRESULT get_Message(IFaxOutgoingMessage* pFaxOutgoingMessage);
+    HRESULT get_AtEOF(VARIANT_BOOL* pbEOF);
+    HRESULT get_PrefetchSize(int* plPrefetchSize);
+    HRESULT put_PrefetchSize(int lPrefetchSize);
     HRESULT MoveFirst();
     HRESULT MoveNext();
 }
 enum IID_IFaxOutgoingMessage = GUID(0xf0ea35de, 0xcaa5, 0x4a7c, [0x82, 0xc7, 0x2b, 0x60, 0xba, 0x5f, 0x2b, 0xe2]);
 interface IFaxOutgoingMessage : IDispatch
 {
-    HRESULT get_SubmissionId(BSTR*);
-    HRESULT get_Id(BSTR*);
-    HRESULT get_Subject(BSTR*);
-    HRESULT get_DocumentName(BSTR*);
-    HRESULT get_Retries(int*);
-    HRESULT get_Pages(int*);
-    HRESULT get_Size(int*);
-    HRESULT get_OriginalScheduledTime(double*);
-    HRESULT get_SubmissionTime(double*);
-    HRESULT get_Priority(FAX_PRIORITY_TYPE_ENUM*);
-    HRESULT get_Sender(IFaxSender*);
-    HRESULT get_Recipient(IFaxRecipient*);
-    HRESULT get_DeviceName(BSTR*);
-    HRESULT get_TransmissionStart(double*);
-    HRESULT get_TransmissionEnd(double*);
-    HRESULT get_CSID(BSTR*);
-    HRESULT get_TSID(BSTR*);
-    HRESULT CopyTiff(BSTR);
+    HRESULT get_SubmissionId(BSTR* pbstrSubmissionId);
+    HRESULT get_Id(BSTR* pbstrId);
+    HRESULT get_Subject(BSTR* pbstrSubject);
+    HRESULT get_DocumentName(BSTR* pbstrDocumentName);
+    HRESULT get_Retries(int* plRetries);
+    HRESULT get_Pages(int* plPages);
+    HRESULT get_Size(int* plSize);
+    HRESULT get_OriginalScheduledTime(double* pdateOriginalScheduledTime);
+    HRESULT get_SubmissionTime(double* pdateSubmissionTime);
+    HRESULT get_Priority(FAX_PRIORITY_TYPE_ENUM* pPriority);
+    HRESULT get_Sender(IFaxSender* ppFaxSender);
+    HRESULT get_Recipient(IFaxRecipient* ppFaxRecipient);
+    HRESULT get_DeviceName(BSTR* pbstrDeviceName);
+    HRESULT get_TransmissionStart(double* pdateTransmissionStart);
+    HRESULT get_TransmissionEnd(double* pdateTransmissionEnd);
+    HRESULT get_CSID(BSTR* pbstrCSID);
+    HRESULT get_TSID(BSTR* pbstrTSID);
+    HRESULT CopyTiff(BSTR bstrTiffPath);
     HRESULT Delete();
 }
 enum IID_IFaxIncomingJobs = GUID(0x11f04e9, 0x4fd6, 0x4c23, [0x95, 0x13, 0xb6, 0xb6, 0x6b, 0xb2, 0x6b, 0xe9]);
 interface IFaxIncomingJobs : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(VARIANT, IFaxIncomingJob*);
-    HRESULT get_Count(int*);
+    HRESULT get__NewEnum(IUnknown* ppUnk);
+    HRESULT get_Item(VARIANT vIndex, IFaxIncomingJob* pFaxIncomingJob);
+    HRESULT get_Count(int* plCount);
 }
 enum IID_IFaxIncomingJob = GUID(0x207529e6, 0x654a, 0x4916, [0x9f, 0x88, 0x4d, 0x23, 0x2e, 0xe8, 0xa1, 0x7]);
 interface IFaxIncomingJob : IDispatch
 {
-    HRESULT get_Size(int*);
-    HRESULT get_Id(BSTR*);
-    HRESULT get_CurrentPage(int*);
-    HRESULT get_DeviceId(int*);
-    HRESULT get_Status(FAX_JOB_STATUS_ENUM*);
-    HRESULT get_ExtendedStatusCode(FAX_JOB_EXTENDED_STATUS_ENUM*);
-    HRESULT get_ExtendedStatus(BSTR*);
-    HRESULT get_AvailableOperations(FAX_JOB_OPERATIONS_ENUM*);
-    HRESULT get_Retries(int*);
-    HRESULT get_TransmissionStart(double*);
-    HRESULT get_TransmissionEnd(double*);
-    HRESULT get_CSID(BSTR*);
-    HRESULT get_TSID(BSTR*);
-    HRESULT get_CallerId(BSTR*);
-    HRESULT get_RoutingInformation(BSTR*);
-    HRESULT get_JobType(FAX_JOB_TYPE_ENUM*);
+    HRESULT get_Size(int* plSize);
+    HRESULT get_Id(BSTR* pbstrId);
+    HRESULT get_CurrentPage(int* plCurrentPage);
+    HRESULT get_DeviceId(int* plDeviceId);
+    HRESULT get_Status(FAX_JOB_STATUS_ENUM* pStatus);
+    HRESULT get_ExtendedStatusCode(FAX_JOB_EXTENDED_STATUS_ENUM* pExtendedStatusCode);
+    HRESULT get_ExtendedStatus(BSTR* pbstrExtendedStatus);
+    HRESULT get_AvailableOperations(FAX_JOB_OPERATIONS_ENUM* pAvailableOperations);
+    HRESULT get_Retries(int* plRetries);
+    HRESULT get_TransmissionStart(double* pdateTransmissionStart);
+    HRESULT get_TransmissionEnd(double* pdateTransmissionEnd);
+    HRESULT get_CSID(BSTR* pbstrCSID);
+    HRESULT get_TSID(BSTR* pbstrTSID);
+    HRESULT get_CallerId(BSTR* pbstrCallerId);
+    HRESULT get_RoutingInformation(BSTR* pbstrRoutingInformation);
+    HRESULT get_JobType(FAX_JOB_TYPE_ENUM* pJobType);
     HRESULT Cancel();
     HRESULT Refresh();
-    HRESULT CopyTiff(BSTR);
+    HRESULT CopyTiff(BSTR bstrTiffPath);
 }
 alias FAX_PROVIDER_STATUS_ENUM = int;
 enum : int
@@ -1458,18 +1457,18 @@ enum : int
 enum IID_IFaxDeviceProvider = GUID(0x290eac63, 0x83ec, 0x449c, [0x84, 0x17, 0xf1, 0x48, 0xdf, 0x8c, 0x68, 0x2a]);
 interface IFaxDeviceProvider : IDispatch
 {
-    HRESULT get_FriendlyName(BSTR*);
-    HRESULT get_ImageName(BSTR*);
-    HRESULT get_UniqueName(BSTR*);
-    HRESULT get_TapiProviderName(BSTR*);
-    HRESULT get_MajorVersion(int*);
-    HRESULT get_MinorVersion(int*);
-    HRESULT get_MajorBuild(int*);
-    HRESULT get_MinorBuild(int*);
-    HRESULT get_Debug(VARIANT_BOOL*);
-    HRESULT get_Status(FAX_PROVIDER_STATUS_ENUM*);
-    HRESULT get_InitErrorCode(int*);
-    HRESULT get_DeviceIds(VARIANT*);
+    HRESULT get_FriendlyName(BSTR* pbstrFriendlyName);
+    HRESULT get_ImageName(BSTR* pbstrImageName);
+    HRESULT get_UniqueName(BSTR* pbstrUniqueName);
+    HRESULT get_TapiProviderName(BSTR* pbstrTapiProviderName);
+    HRESULT get_MajorVersion(int* plMajorVersion);
+    HRESULT get_MinorVersion(int* plMinorVersion);
+    HRESULT get_MajorBuild(int* plMajorBuild);
+    HRESULT get_MinorBuild(int* plMinorBuild);
+    HRESULT get_Debug(VARIANT_BOOL* pbDebug);
+    HRESULT get_Status(FAX_PROVIDER_STATUS_ENUM* pStatus);
+    HRESULT get_InitErrorCode(int* plInitErrorCode);
+    HRESULT get_DeviceIds(VARIANT* pvDeviceIds);
 }
 alias FAX_DEVICE_RECEIVE_MODE_ENUM = int;
 enum : int
@@ -1482,42 +1481,42 @@ enum : int
 enum IID_IFaxDevice = GUID(0x49306c59, 0xb52e, 0x4867, [0x9d, 0xf4, 0xca, 0x58, 0x41, 0xc9, 0x56, 0xd0]);
 interface IFaxDevice : IDispatch
 {
-    HRESULT get_Id(int*);
-    HRESULT get_DeviceName(BSTR*);
-    HRESULT get_ProviderUniqueName(BSTR*);
-    HRESULT get_PoweredOff(VARIANT_BOOL*);
-    HRESULT get_ReceivingNow(VARIANT_BOOL*);
-    HRESULT get_SendingNow(VARIANT_BOOL*);
-    HRESULT get_UsedRoutingMethods(VARIANT*);
-    HRESULT get_Description(BSTR*);
-    HRESULT put_Description(BSTR);
-    HRESULT get_SendEnabled(VARIANT_BOOL*);
-    HRESULT put_SendEnabled(VARIANT_BOOL);
-    HRESULT get_ReceiveMode(FAX_DEVICE_RECEIVE_MODE_ENUM*);
-    HRESULT put_ReceiveMode(FAX_DEVICE_RECEIVE_MODE_ENUM);
-    HRESULT get_RingsBeforeAnswer(int*);
-    HRESULT put_RingsBeforeAnswer(int);
-    HRESULT get_CSID(BSTR*);
-    HRESULT put_CSID(BSTR);
-    HRESULT get_TSID(BSTR*);
-    HRESULT put_TSID(BSTR);
+    HRESULT get_Id(int* plId);
+    HRESULT get_DeviceName(BSTR* pbstrDeviceName);
+    HRESULT get_ProviderUniqueName(BSTR* pbstrProviderUniqueName);
+    HRESULT get_PoweredOff(VARIANT_BOOL* pbPoweredOff);
+    HRESULT get_ReceivingNow(VARIANT_BOOL* pbReceivingNow);
+    HRESULT get_SendingNow(VARIANT_BOOL* pbSendingNow);
+    HRESULT get_UsedRoutingMethods(VARIANT* pvUsedRoutingMethods);
+    HRESULT get_Description(BSTR* pbstrDescription);
+    HRESULT put_Description(BSTR bstrDescription);
+    HRESULT get_SendEnabled(VARIANT_BOOL* pbSendEnabled);
+    HRESULT put_SendEnabled(VARIANT_BOOL bSendEnabled);
+    HRESULT get_ReceiveMode(FAX_DEVICE_RECEIVE_MODE_ENUM* pReceiveMode);
+    HRESULT put_ReceiveMode(FAX_DEVICE_RECEIVE_MODE_ENUM ReceiveMode);
+    HRESULT get_RingsBeforeAnswer(int* plRingsBeforeAnswer);
+    HRESULT put_RingsBeforeAnswer(int lRingsBeforeAnswer);
+    HRESULT get_CSID(BSTR* pbstrCSID);
+    HRESULT put_CSID(BSTR bstrCSID);
+    HRESULT get_TSID(BSTR* pbstrTSID);
+    HRESULT put_TSID(BSTR bstrTSID);
     HRESULT Refresh();
     HRESULT Save();
-    HRESULT GetExtensionProperty(BSTR, VARIANT*);
-    HRESULT SetExtensionProperty(BSTR, VARIANT);
-    HRESULT UseRoutingMethod(BSTR, VARIANT_BOOL);
-    HRESULT get_RingingNow(VARIANT_BOOL*);
+    HRESULT GetExtensionProperty(BSTR bstrGUID, VARIANT* pvProperty);
+    HRESULT SetExtensionProperty(BSTR bstrGUID, VARIANT vProperty);
+    HRESULT UseRoutingMethod(BSTR bstrMethodGUID, VARIANT_BOOL bUse);
+    HRESULT get_RingingNow(VARIANT_BOOL* pbRingingNow);
     HRESULT AnswerCall();
 }
 enum IID_IFaxActivityLogging = GUID(0x1e29078b, 0x5a69, 0x497b, [0x95, 0x92, 0x49, 0xb7, 0xe7, 0xfa, 0xdd, 0xb5]);
 interface IFaxActivityLogging : IDispatch
 {
-    HRESULT get_LogIncoming(VARIANT_BOOL*);
-    HRESULT put_LogIncoming(VARIANT_BOOL);
-    HRESULT get_LogOutgoing(VARIANT_BOOL*);
-    HRESULT put_LogOutgoing(VARIANT_BOOL);
-    HRESULT get_DatabasePath(BSTR*);
-    HRESULT put_DatabasePath(BSTR);
+    HRESULT get_LogIncoming(VARIANT_BOOL* pbLogIncoming);
+    HRESULT put_LogIncoming(VARIANT_BOOL bLogIncoming);
+    HRESULT get_LogOutgoing(VARIANT_BOOL* pbLogOutgoing);
+    HRESULT put_LogOutgoing(VARIANT_BOOL bLogOutgoing);
+    HRESULT get_DatabasePath(BSTR* pbstrDatabasePath);
+    HRESULT put_DatabasePath(BSTR bstrDatabasePath);
     HRESULT Refresh();
     HRESULT Save();
 }
@@ -1533,25 +1532,25 @@ enum : int
 enum IID_IFaxEventLogging = GUID(0x880d965, 0x20e8, 0x42e4, [0x8e, 0x17, 0x94, 0x4f, 0x19, 0x2c, 0xaa, 0xd4]);
 interface IFaxEventLogging : IDispatch
 {
-    HRESULT get_InitEventsLevel(FAX_LOG_LEVEL_ENUM*);
-    HRESULT put_InitEventsLevel(FAX_LOG_LEVEL_ENUM);
-    HRESULT get_InboundEventsLevel(FAX_LOG_LEVEL_ENUM*);
-    HRESULT put_InboundEventsLevel(FAX_LOG_LEVEL_ENUM);
-    HRESULT get_OutboundEventsLevel(FAX_LOG_LEVEL_ENUM*);
-    HRESULT put_OutboundEventsLevel(FAX_LOG_LEVEL_ENUM);
-    HRESULT get_GeneralEventsLevel(FAX_LOG_LEVEL_ENUM*);
-    HRESULT put_GeneralEventsLevel(FAX_LOG_LEVEL_ENUM);
+    HRESULT get_InitEventsLevel(FAX_LOG_LEVEL_ENUM* pInitEventLevel);
+    HRESULT put_InitEventsLevel(FAX_LOG_LEVEL_ENUM InitEventLevel);
+    HRESULT get_InboundEventsLevel(FAX_LOG_LEVEL_ENUM* pInboundEventLevel);
+    HRESULT put_InboundEventsLevel(FAX_LOG_LEVEL_ENUM InboundEventLevel);
+    HRESULT get_OutboundEventsLevel(FAX_LOG_LEVEL_ENUM* pOutboundEventLevel);
+    HRESULT put_OutboundEventsLevel(FAX_LOG_LEVEL_ENUM OutboundEventLevel);
+    HRESULT get_GeneralEventsLevel(FAX_LOG_LEVEL_ENUM* pGeneralEventLevel);
+    HRESULT put_GeneralEventsLevel(FAX_LOG_LEVEL_ENUM GeneralEventLevel);
     HRESULT Refresh();
     HRESULT Save();
 }
 enum IID_IFaxOutboundRoutingGroups = GUID(0x235cbef7, 0xc2de, 0x4bfd, [0xb8, 0xda, 0x75, 0x9, 0x7c, 0x82, 0xc8, 0x7f]);
 interface IFaxOutboundRoutingGroups : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(VARIANT, IFaxOutboundRoutingGroup*);
-    HRESULT get_Count(int*);
-    HRESULT Add(BSTR, IFaxOutboundRoutingGroup*);
-    HRESULT Remove(VARIANT);
+    HRESULT get__NewEnum(IUnknown* ppUnk);
+    HRESULT get_Item(VARIANT vIndex, IFaxOutboundRoutingGroup* pFaxOutboundRoutingGroup);
+    HRESULT get_Count(int* plCount);
+    HRESULT Add(BSTR bstrName, IFaxOutboundRoutingGroup* pFaxOutboundRoutingGroup);
+    HRESULT Remove(VARIANT vIndex);
 }
 alias FAX_GROUP_STATUS_ENUM = int;
 enum : int
@@ -1565,30 +1564,30 @@ enum : int
 enum IID_IFaxOutboundRoutingGroup = GUID(0xca6289a1, 0x7e25, 0x4f87, [0x9a, 0xb, 0x93, 0x36, 0x57, 0x34, 0x96, 0x2c]);
 interface IFaxOutboundRoutingGroup : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_Status(FAX_GROUP_STATUS_ENUM*);
-    HRESULT get_DeviceIds(IFaxDeviceIds*);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT get_Status(FAX_GROUP_STATUS_ENUM* pStatus);
+    HRESULT get_DeviceIds(IFaxDeviceIds* pFaxDeviceIds);
 }
 enum IID_IFaxDeviceIds = GUID(0x2f0f813f, 0x4ce9, 0x443e, [0x8c, 0xa1, 0x73, 0x8c, 0xfa, 0xee, 0xe1, 0x49]);
 interface IFaxDeviceIds : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(int, int*);
-    HRESULT get_Count(int*);
-    HRESULT Add(int);
-    HRESULT Remove(int);
-    HRESULT SetOrder(int, int);
+    HRESULT get__NewEnum(IUnknown* ppUnk);
+    HRESULT get_Item(int lIndex, int* plDeviceId);
+    HRESULT get_Count(int* plCount);
+    HRESULT Add(int lDeviceId);
+    HRESULT Remove(int lIndex);
+    HRESULT SetOrder(int lDeviceId, int lNewOrder);
 }
 enum IID_IFaxOutboundRoutingRules = GUID(0xdcefa1e7, 0xae7d, 0x4ed6, [0x85, 0x21, 0x36, 0x9e, 0xdc, 0xca, 0x51, 0x20]);
 interface IFaxOutboundRoutingRules : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(int, IFaxOutboundRoutingRule*);
-    HRESULT get_Count(int*);
-    HRESULT ItemByCountryAndArea(int, int, IFaxOutboundRoutingRule*);
-    HRESULT RemoveByCountryAndArea(int, int);
-    HRESULT Remove(int);
-    HRESULT Add(int, int, VARIANT_BOOL, BSTR, int, IFaxOutboundRoutingRule*);
+    HRESULT get__NewEnum(IUnknown* ppUnk);
+    HRESULT get_Item(int lIndex, IFaxOutboundRoutingRule* pFaxOutboundRoutingRule);
+    HRESULT get_Count(int* plCount);
+    HRESULT ItemByCountryAndArea(int lCountryCode, int lAreaCode, IFaxOutboundRoutingRule* pFaxOutboundRoutingRule);
+    HRESULT RemoveByCountryAndArea(int lCountryCode, int lAreaCode);
+    HRESULT Remove(int lIndex);
+    HRESULT Add(int lCountryCode, int lAreaCode, VARIANT_BOOL bUseDevice, BSTR bstrGroupName, int lDeviceId, IFaxOutboundRoutingRule* pFaxOutboundRoutingRule);
 }
 alias FAX_RULE_STATUS_ENUM = int;
 enum : int
@@ -1603,137 +1602,137 @@ enum : int
 enum IID_IFaxOutboundRoutingRule = GUID(0xe1f795d5, 0x7c2, 0x469f, [0xb0, 0x27, 0xac, 0xac, 0xc2, 0x32, 0x19, 0xda]);
 interface IFaxOutboundRoutingRule : IDispatch
 {
-    HRESULT get_CountryCode(int*);
-    HRESULT get_AreaCode(int*);
-    HRESULT get_Status(FAX_RULE_STATUS_ENUM*);
-    HRESULT get_UseDevice(VARIANT_BOOL*);
-    HRESULT put_UseDevice(VARIANT_BOOL);
-    HRESULT get_DeviceId(int*);
-    HRESULT put_DeviceId(int);
-    HRESULT get_GroupName(BSTR*);
-    HRESULT put_GroupName(BSTR);
+    HRESULT get_CountryCode(int* plCountryCode);
+    HRESULT get_AreaCode(int* plAreaCode);
+    HRESULT get_Status(FAX_RULE_STATUS_ENUM* pStatus);
+    HRESULT get_UseDevice(VARIANT_BOOL* pbUseDevice);
+    HRESULT put_UseDevice(VARIANT_BOOL bUseDevice);
+    HRESULT get_DeviceId(int* plDeviceId);
+    HRESULT put_DeviceId(int DeviceId);
+    HRESULT get_GroupName(BSTR* pbstrGroupName);
+    HRESULT put_GroupName(BSTR bstrGroupName);
     HRESULT Refresh();
     HRESULT Save();
 }
 enum IID_IFaxInboundRoutingExtensions = GUID(0x2f6c9673, 0x7b26, 0x42de, [0x8e, 0xb0, 0x91, 0x5d, 0xcd, 0x2a, 0x4f, 0x4c]);
 interface IFaxInboundRoutingExtensions : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(VARIANT, IFaxInboundRoutingExtension*);
-    HRESULT get_Count(int*);
+    HRESULT get__NewEnum(IUnknown* ppUnk);
+    HRESULT get_Item(VARIANT vIndex, IFaxInboundRoutingExtension* pFaxInboundRoutingExtension);
+    HRESULT get_Count(int* plCount);
 }
 enum IID_IFaxInboundRoutingExtension = GUID(0x885b5e08, 0xc26c, 0x4ef9, [0xaf, 0x83, 0x51, 0x58, 0xa, 0x75, 0xb, 0xe1]);
 interface IFaxInboundRoutingExtension : IDispatch
 {
-    HRESULT get_FriendlyName(BSTR*);
-    HRESULT get_ImageName(BSTR*);
-    HRESULT get_UniqueName(BSTR*);
-    HRESULT get_MajorVersion(int*);
-    HRESULT get_MinorVersion(int*);
-    HRESULT get_MajorBuild(int*);
-    HRESULT get_MinorBuild(int*);
-    HRESULT get_Debug(VARIANT_BOOL*);
-    HRESULT get_Status(FAX_PROVIDER_STATUS_ENUM*);
-    HRESULT get_InitErrorCode(int*);
-    HRESULT get_Methods(VARIANT*);
+    HRESULT get_FriendlyName(BSTR* pbstrFriendlyName);
+    HRESULT get_ImageName(BSTR* pbstrImageName);
+    HRESULT get_UniqueName(BSTR* pbstrUniqueName);
+    HRESULT get_MajorVersion(int* plMajorVersion);
+    HRESULT get_MinorVersion(int* plMinorVersion);
+    HRESULT get_MajorBuild(int* plMajorBuild);
+    HRESULT get_MinorBuild(int* plMinorBuild);
+    HRESULT get_Debug(VARIANT_BOOL* pbDebug);
+    HRESULT get_Status(FAX_PROVIDER_STATUS_ENUM* pStatus);
+    HRESULT get_InitErrorCode(int* plInitErrorCode);
+    HRESULT get_Methods(VARIANT* pvMethods);
 }
 enum IID_IFaxInboundRoutingMethods = GUID(0x783fca10, 0x8908, 0x4473, [0x9d, 0x69, 0xf6, 0x7f, 0xbe, 0xa0, 0xc6, 0xb9]);
 interface IFaxInboundRoutingMethods : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(VARIANT, IFaxInboundRoutingMethod*);
-    HRESULT get_Count(int*);
+    HRESULT get__NewEnum(IUnknown* ppUnk);
+    HRESULT get_Item(VARIANT vIndex, IFaxInboundRoutingMethod* pFaxInboundRoutingMethod);
+    HRESULT get_Count(int* plCount);
 }
 enum IID_IFaxInboundRoutingMethod = GUID(0x45700061, 0xad9d, 0x4776, [0xa8, 0xc4, 0x64, 0x6, 0x54, 0x92, 0xcf, 0x4b]);
 interface IFaxInboundRoutingMethod : IDispatch
 {
-    HRESULT get_Name(BSTR*);
-    HRESULT get_GUID(BSTR*);
-    HRESULT get_FunctionName(BSTR*);
-    HRESULT get_ExtensionFriendlyName(BSTR*);
-    HRESULT get_ExtensionImageName(BSTR*);
-    HRESULT get_Priority(int*);
-    HRESULT put_Priority(int);
+    HRESULT get_Name(BSTR* pbstrName);
+    HRESULT get_GUID(BSTR* pbstrGUID);
+    HRESULT get_FunctionName(BSTR* pbstrFunctionName);
+    HRESULT get_ExtensionFriendlyName(BSTR* pbstrExtensionFriendlyName);
+    HRESULT get_ExtensionImageName(BSTR* pbstrExtensionImageName);
+    HRESULT get_Priority(int* plPriority);
+    HRESULT put_Priority(int lPriority);
     HRESULT Refresh();
     HRESULT Save();
 }
 enum IID_IFaxDocument2 = GUID(0xe1347661, 0xf9ef, 0x4d6d, [0xb4, 0xa5, 0xc0, 0xa0, 0x68, 0xb6, 0x5c, 0xff]);
 interface IFaxDocument2 : IFaxDocument
 {
-    HRESULT get_SubmissionId(BSTR*);
-    HRESULT get_Bodies(VARIANT*);
-    HRESULT put_Bodies(VARIANT);
-    HRESULT Submit2(BSTR, VARIANT*, int*);
-    HRESULT ConnectedSubmit2(IFaxServer, VARIANT*, int*);
+    HRESULT get_SubmissionId(BSTR* pbstrSubmissionId);
+    HRESULT get_Bodies(VARIANT* pvBodies);
+    HRESULT put_Bodies(VARIANT vBodies);
+    HRESULT Submit2(BSTR bstrFaxServerName, VARIANT* pvFaxOutgoingJobIDs, int* plErrorBodyFile);
+    HRESULT ConnectedSubmit2(IFaxServer pFaxServer, VARIANT* pvFaxOutgoingJobIDs, int* plErrorBodyFile);
 }
 enum IID_IFaxConfiguration = GUID(0x10f4d0f7, 0x994, 0x4543, [0xab, 0x6e, 0x50, 0x69, 0x49, 0x12, 0x8c, 0x40]);
 interface IFaxConfiguration : IDispatch
 {
-    HRESULT get_UseArchive(VARIANT_BOOL*);
-    HRESULT put_UseArchive(VARIANT_BOOL);
-    HRESULT get_ArchiveLocation(BSTR*);
-    HRESULT put_ArchiveLocation(BSTR);
-    HRESULT get_SizeQuotaWarning(VARIANT_BOOL*);
-    HRESULT put_SizeQuotaWarning(VARIANT_BOOL);
-    HRESULT get_HighQuotaWaterMark(int*);
-    HRESULT put_HighQuotaWaterMark(int);
-    HRESULT get_LowQuotaWaterMark(int*);
-    HRESULT put_LowQuotaWaterMark(int);
-    HRESULT get_ArchiveAgeLimit(int*);
-    HRESULT put_ArchiveAgeLimit(int);
-    HRESULT get_ArchiveSizeLow(int*);
-    HRESULT get_ArchiveSizeHigh(int*);
-    HRESULT get_OutgoingQueueBlocked(VARIANT_BOOL*);
-    HRESULT put_OutgoingQueueBlocked(VARIANT_BOOL);
-    HRESULT get_OutgoingQueuePaused(VARIANT_BOOL*);
-    HRESULT put_OutgoingQueuePaused(VARIANT_BOOL);
-    HRESULT get_AllowPersonalCoverPages(VARIANT_BOOL*);
-    HRESULT put_AllowPersonalCoverPages(VARIANT_BOOL);
-    HRESULT get_UseDeviceTSID(VARIANT_BOOL*);
-    HRESULT put_UseDeviceTSID(VARIANT_BOOL);
-    HRESULT get_Retries(int*);
-    HRESULT put_Retries(int);
-    HRESULT get_RetryDelay(int*);
-    HRESULT put_RetryDelay(int);
-    HRESULT get_DiscountRateStart(double*);
-    HRESULT put_DiscountRateStart(double);
-    HRESULT get_DiscountRateEnd(double*);
-    HRESULT put_DiscountRateEnd(double);
-    HRESULT get_OutgoingQueueAgeLimit(int*);
-    HRESULT put_OutgoingQueueAgeLimit(int);
-    HRESULT get_Branding(VARIANT_BOOL*);
-    HRESULT put_Branding(VARIANT_BOOL);
-    HRESULT get_IncomingQueueBlocked(VARIANT_BOOL*);
-    HRESULT put_IncomingQueueBlocked(VARIANT_BOOL);
-    HRESULT get_AutoCreateAccountOnConnect(VARIANT_BOOL*);
-    HRESULT put_AutoCreateAccountOnConnect(VARIANT_BOOL);
-    HRESULT get_IncomingFaxesArePublic(VARIANT_BOOL*);
-    HRESULT put_IncomingFaxesArePublic(VARIANT_BOOL);
+    HRESULT get_UseArchive(VARIANT_BOOL* pbUseArchive);
+    HRESULT put_UseArchive(VARIANT_BOOL bUseArchive);
+    HRESULT get_ArchiveLocation(BSTR* pbstrArchiveLocation);
+    HRESULT put_ArchiveLocation(BSTR bstrArchiveLocation);
+    HRESULT get_SizeQuotaWarning(VARIANT_BOOL* pbSizeQuotaWarning);
+    HRESULT put_SizeQuotaWarning(VARIANT_BOOL bSizeQuotaWarning);
+    HRESULT get_HighQuotaWaterMark(int* plHighQuotaWaterMark);
+    HRESULT put_HighQuotaWaterMark(int lHighQuotaWaterMark);
+    HRESULT get_LowQuotaWaterMark(int* plLowQuotaWaterMark);
+    HRESULT put_LowQuotaWaterMark(int lLowQuotaWaterMark);
+    HRESULT get_ArchiveAgeLimit(int* plArchiveAgeLimit);
+    HRESULT put_ArchiveAgeLimit(int lArchiveAgeLimit);
+    HRESULT get_ArchiveSizeLow(int* plSizeLow);
+    HRESULT get_ArchiveSizeHigh(int* plSizeHigh);
+    HRESULT get_OutgoingQueueBlocked(VARIANT_BOOL* pbOutgoingBlocked);
+    HRESULT put_OutgoingQueueBlocked(VARIANT_BOOL bOutgoingBlocked);
+    HRESULT get_OutgoingQueuePaused(VARIANT_BOOL* pbOutgoingPaused);
+    HRESULT put_OutgoingQueuePaused(VARIANT_BOOL bOutgoingPaused);
+    HRESULT get_AllowPersonalCoverPages(VARIANT_BOOL* pbAllowPersonalCoverPages);
+    HRESULT put_AllowPersonalCoverPages(VARIANT_BOOL bAllowPersonalCoverPages);
+    HRESULT get_UseDeviceTSID(VARIANT_BOOL* pbUseDeviceTSID);
+    HRESULT put_UseDeviceTSID(VARIANT_BOOL bUseDeviceTSID);
+    HRESULT get_Retries(int* plRetries);
+    HRESULT put_Retries(int lRetries);
+    HRESULT get_RetryDelay(int* plRetryDelay);
+    HRESULT put_RetryDelay(int lRetryDelay);
+    HRESULT get_DiscountRateStart(double* pdateDiscountRateStart);
+    HRESULT put_DiscountRateStart(double dateDiscountRateStart);
+    HRESULT get_DiscountRateEnd(double* pdateDiscountRateEnd);
+    HRESULT put_DiscountRateEnd(double dateDiscountRateEnd);
+    HRESULT get_OutgoingQueueAgeLimit(int* plOutgoingQueueAgeLimit);
+    HRESULT put_OutgoingQueueAgeLimit(int lOutgoingQueueAgeLimit);
+    HRESULT get_Branding(VARIANT_BOOL* pbBranding);
+    HRESULT put_Branding(VARIANT_BOOL bBranding);
+    HRESULT get_IncomingQueueBlocked(VARIANT_BOOL* pbIncomingBlocked);
+    HRESULT put_IncomingQueueBlocked(VARIANT_BOOL bIncomingBlocked);
+    HRESULT get_AutoCreateAccountOnConnect(VARIANT_BOOL* pbAutoCreateAccountOnConnect);
+    HRESULT put_AutoCreateAccountOnConnect(VARIANT_BOOL bAutoCreateAccountOnConnect);
+    HRESULT get_IncomingFaxesArePublic(VARIANT_BOOL* pbIncomingFaxesArePublic);
+    HRESULT put_IncomingFaxesArePublic(VARIANT_BOOL bIncomingFaxesArePublic);
     HRESULT Refresh();
     HRESULT Save();
 }
 enum IID_IFaxServer2 = GUID(0x571ced0f, 0x5609, 0x4f40, [0x91, 0x76, 0x54, 0x7e, 0x3a, 0x72, 0xca, 0x7c]);
 interface IFaxServer2 : IFaxServer
 {
-    HRESULT get_Configuration(IFaxConfiguration*);
-    HRESULT get_CurrentAccount(IFaxAccount*);
-    HRESULT get_FaxAccountSet(IFaxAccountSet*);
-    HRESULT get_Security2(IFaxSecurity2*);
+    HRESULT get_Configuration(IFaxConfiguration* ppFaxConfiguration);
+    HRESULT get_CurrentAccount(IFaxAccount* ppCurrentAccount);
+    HRESULT get_FaxAccountSet(IFaxAccountSet* ppFaxAccountSet);
+    HRESULT get_Security2(IFaxSecurity2* ppFaxSecurity2);
 }
 enum IID_IFaxAccountSet = GUID(0x7428fbae, 0x841e, 0x47b8, [0x86, 0xf4, 0x22, 0x88, 0x94, 0x6d, 0xca, 0x1b]);
 interface IFaxAccountSet : IDispatch
 {
-    HRESULT GetAccounts(IFaxAccounts*);
-    HRESULT GetAccount(BSTR, IFaxAccount*);
-    HRESULT AddAccount(BSTR, IFaxAccount*);
-    HRESULT RemoveAccount(BSTR);
+    HRESULT GetAccounts(IFaxAccounts* ppFaxAccounts);
+    HRESULT GetAccount(BSTR bstrAccountName, IFaxAccount* pFaxAccount);
+    HRESULT AddAccount(BSTR bstrAccountName, IFaxAccount* pFaxAccount);
+    HRESULT RemoveAccount(BSTR bstrAccountName);
 }
 enum IID_IFaxAccounts = GUID(0x93ea8162, 0x8be7, 0x42d1, [0xae, 0x7b, 0xec, 0x74, 0xe2, 0xd9, 0x89, 0xda]);
 interface IFaxAccounts : IDispatch
 {
-    HRESULT get__NewEnum(IUnknown*);
-    HRESULT get_Item(VARIANT, IFaxAccount*);
-    HRESULT get_Count(int*);
+    HRESULT get__NewEnum(IUnknown* ppUnk);
+    HRESULT get_Item(VARIANT vIndex, IFaxAccount* pFaxAccount);
+    HRESULT get_Count(int* plCount);
 }
 alias FAX_ACCOUNT_EVENTS_TYPE_ENUM = int;
 enum : int
@@ -1749,66 +1748,66 @@ enum : int
 enum IID_IFaxAccount = GUID(0x68535b33, 0x5dc4, 0x4086, [0xbe, 0x26, 0xb7, 0x6f, 0x9b, 0x71, 0x10, 0x6]);
 interface IFaxAccount : IDispatch
 {
-    HRESULT get_AccountName(BSTR*);
-    HRESULT get_Folders(IFaxAccountFolders*);
-    HRESULT ListenToAccountEvents(FAX_ACCOUNT_EVENTS_TYPE_ENUM);
-    HRESULT get_RegisteredEvents(FAX_ACCOUNT_EVENTS_TYPE_ENUM*);
+    HRESULT get_AccountName(BSTR* pbstrAccountName);
+    HRESULT get_Folders(IFaxAccountFolders* ppFolders);
+    HRESULT ListenToAccountEvents(FAX_ACCOUNT_EVENTS_TYPE_ENUM EventTypes);
+    HRESULT get_RegisteredEvents(FAX_ACCOUNT_EVENTS_TYPE_ENUM* pRegisteredEvents);
 }
 enum IID_IFaxOutgoingJob2 = GUID(0x418a8d96, 0x59a0, 0x4789, [0xb1, 0x76, 0xed, 0xf3, 0xdc, 0x8f, 0xa8, 0xf7]);
 interface IFaxOutgoingJob2 : IFaxOutgoingJob
 {
-    HRESULT get_HasCoverPage(VARIANT_BOOL*);
-    HRESULT get_ReceiptAddress(BSTR*);
-    HRESULT get_ScheduleType(FAX_SCHEDULE_TYPE_ENUM*);
+    HRESULT get_HasCoverPage(VARIANT_BOOL* pbHasCoverPage);
+    HRESULT get_ReceiptAddress(BSTR* pbstrReceiptAddress);
+    HRESULT get_ScheduleType(FAX_SCHEDULE_TYPE_ENUM* pScheduleType);
 }
 enum IID_IFaxAccountFolders = GUID(0x6463f89d, 0x23d8, 0x46a9, [0x8f, 0x86, 0xc4, 0x7b, 0x77, 0xca, 0x79, 0x26]);
 interface IFaxAccountFolders : IDispatch
 {
-    HRESULT get_OutgoingQueue(IFaxAccountOutgoingQueue*);
-    HRESULT get_IncomingQueue(IFaxAccountIncomingQueue*);
-    HRESULT get_IncomingArchive(IFaxAccountIncomingArchive*);
-    HRESULT get_OutgoingArchive(IFaxAccountOutgoingArchive*);
+    HRESULT get_OutgoingQueue(IFaxAccountOutgoingQueue* pFaxOutgoingQueue);
+    HRESULT get_IncomingQueue(IFaxAccountIncomingQueue* pFaxIncomingQueue);
+    HRESULT get_IncomingArchive(IFaxAccountIncomingArchive* pFaxIncomingArchive);
+    HRESULT get_OutgoingArchive(IFaxAccountOutgoingArchive* pFaxOutgoingArchive);
 }
 enum IID_IFaxAccountIncomingQueue = GUID(0xdd142d92, 0x186, 0x4a95, [0xa0, 0x90, 0xcb, 0xc3, 0xea, 0xdb, 0xa6, 0xb4]);
 interface IFaxAccountIncomingQueue : IDispatch
 {
-    HRESULT GetJobs(IFaxIncomingJobs*);
-    HRESULT GetJob(BSTR, IFaxIncomingJob*);
+    HRESULT GetJobs(IFaxIncomingJobs* pFaxIncomingJobs);
+    HRESULT GetJob(BSTR bstrJobId, IFaxIncomingJob* pFaxIncomingJob);
 }
 enum IID_IFaxAccountOutgoingQueue = GUID(0xf1424e9, 0xf22d, 0x4553, [0xb7, 0xa5, 0xd, 0x24, 0xbd, 0xd, 0x7e, 0x46]);
 interface IFaxAccountOutgoingQueue : IDispatch
 {
-    HRESULT GetJobs(IFaxOutgoingJobs*);
-    HRESULT GetJob(BSTR, IFaxOutgoingJob*);
+    HRESULT GetJobs(IFaxOutgoingJobs* pFaxOutgoingJobs);
+    HRESULT GetJob(BSTR bstrJobId, IFaxOutgoingJob* pFaxOutgoingJob);
 }
 enum IID_IFaxOutgoingMessage2 = GUID(0xb37df687, 0xbc88, 0x4b46, [0xb3, 0xbe, 0xb4, 0x58, 0xb3, 0xea, 0x9e, 0x7f]);
 interface IFaxOutgoingMessage2 : IFaxOutgoingMessage
 {
-    HRESULT get_HasCoverPage(VARIANT_BOOL*);
-    HRESULT get_ReceiptType(FAX_RECEIPT_TYPE_ENUM*);
-    HRESULT get_ReceiptAddress(BSTR*);
-    HRESULT get_Read(VARIANT_BOOL*);
-    HRESULT put_Read(VARIANT_BOOL);
+    HRESULT get_HasCoverPage(VARIANT_BOOL* pbHasCoverPage);
+    HRESULT get_ReceiptType(FAX_RECEIPT_TYPE_ENUM* pReceiptType);
+    HRESULT get_ReceiptAddress(BSTR* pbstrReceiptAddress);
+    HRESULT get_Read(VARIANT_BOOL* pbRead);
+    HRESULT put_Read(VARIANT_BOOL bRead);
     HRESULT Save();
     HRESULT Refresh();
 }
 enum IID_IFaxAccountIncomingArchive = GUID(0xa8a5b6ef, 0xe0d6, 0x4aee, [0x95, 0x5c, 0x91, 0x62, 0x5b, 0xec, 0x9d, 0xb4]);
 interface IFaxAccountIncomingArchive : IDispatch
 {
-    HRESULT get_SizeLow(int*);
-    HRESULT get_SizeHigh(int*);
+    HRESULT get_SizeLow(int* plSizeLow);
+    HRESULT get_SizeHigh(int* plSizeHigh);
     HRESULT Refresh();
-    HRESULT GetMessages(int, IFaxIncomingMessageIterator*);
-    HRESULT GetMessage(BSTR, IFaxIncomingMessage*);
+    HRESULT GetMessages(int lPrefetchSize, IFaxIncomingMessageIterator* pFaxIncomingMessageIterator);
+    HRESULT GetMessage(BSTR bstrMessageId, IFaxIncomingMessage* pFaxIncomingMessage);
 }
 enum IID_IFaxAccountOutgoingArchive = GUID(0x5463076d, 0xec14, 0x491f, [0x92, 0x6e, 0xb3, 0xce, 0xda, 0x5e, 0x56, 0x62]);
 interface IFaxAccountOutgoingArchive : IDispatch
 {
-    HRESULT get_SizeLow(int*);
-    HRESULT get_SizeHigh(int*);
+    HRESULT get_SizeLow(int* plSizeLow);
+    HRESULT get_SizeHigh(int* plSizeHigh);
     HRESULT Refresh();
-    HRESULT GetMessages(int, IFaxOutgoingMessageIterator*);
-    HRESULT GetMessage(BSTR, IFaxOutgoingMessage*);
+    HRESULT GetMessages(int lPrefetchSize, IFaxOutgoingMessageIterator* pFaxOutgoingMessageIterator);
+    HRESULT GetMessage(BSTR bstrMessageId, IFaxOutgoingMessage* pFaxOutgoingMessage);
 }
 alias FAX_ACCESS_RIGHTS_ENUM_2 = int;
 enum : int
@@ -1828,30 +1827,30 @@ enum : int
 enum IID_IFaxSecurity2 = GUID(0x17d851f4, 0xd09b, 0x48fc, [0x99, 0xc9, 0x8f, 0x24, 0xc4, 0xdb, 0x9a, 0xb1]);
 interface IFaxSecurity2 : IDispatch
 {
-    HRESULT get_Descriptor(VARIANT*);
-    HRESULT put_Descriptor(VARIANT);
-    HRESULT get_GrantedRights(FAX_ACCESS_RIGHTS_ENUM_2*);
+    HRESULT get_Descriptor(VARIANT* pvDescriptor);
+    HRESULT put_Descriptor(VARIANT vDescriptor);
+    HRESULT get_GrantedRights(FAX_ACCESS_RIGHTS_ENUM_2* pGrantedRights);
     HRESULT Refresh();
     HRESULT Save();
-    HRESULT get_InformationType(int*);
-    HRESULT put_InformationType(int);
+    HRESULT get_InformationType(int* plInformationType);
+    HRESULT put_InformationType(int lInformationType);
 }
 enum IID_IFaxIncomingMessage2 = GUID(0xf9208503, 0xe2bc, 0x48f3, [0x9e, 0xc0, 0xe6, 0x23, 0x6f, 0x9b, 0x50, 0x9a]);
 interface IFaxIncomingMessage2 : IFaxIncomingMessage
 {
-    HRESULT get_Subject(BSTR*);
-    HRESULT put_Subject(BSTR);
-    HRESULT get_SenderName(BSTR*);
-    HRESULT put_SenderName(BSTR);
-    HRESULT get_SenderFaxNumber(BSTR*);
-    HRESULT put_SenderFaxNumber(BSTR);
-    HRESULT get_HasCoverPage(VARIANT_BOOL*);
-    HRESULT put_HasCoverPage(VARIANT_BOOL);
-    HRESULT get_Recipients(BSTR*);
-    HRESULT put_Recipients(BSTR);
-    HRESULT get_WasReAssigned(VARIANT_BOOL*);
-    HRESULT get_Read(VARIANT_BOOL*);
-    HRESULT put_Read(VARIANT_BOOL);
+    HRESULT get_Subject(BSTR* pbstrSubject);
+    HRESULT put_Subject(BSTR bstrSubject);
+    HRESULT get_SenderName(BSTR* pbstrSenderName);
+    HRESULT put_SenderName(BSTR bstrSenderName);
+    HRESULT get_SenderFaxNumber(BSTR* pbstrSenderFaxNumber);
+    HRESULT put_SenderFaxNumber(BSTR bstrSenderFaxNumber);
+    HRESULT get_HasCoverPage(VARIANT_BOOL* pbHasCoverPage);
+    HRESULT put_HasCoverPage(VARIANT_BOOL bHasCoverPage);
+    HRESULT get_Recipients(BSTR* pbstrRecipients);
+    HRESULT put_Recipients(BSTR bstrRecipients);
+    HRESULT get_WasReAssigned(VARIANT_BOOL* pbWasReAssigned);
+    HRESULT get_Read(VARIANT_BOOL* pbRead);
+    HRESULT put_Read(VARIANT_BOOL bRead);
     HRESULT ReAssign();
     HRESULT Save();
     HRESULT Refresh();
@@ -1869,47 +1868,47 @@ interface IFaxServerNotify : IDispatch
 enum IID_IFaxServerNotify2 = GUID(0xec9c69b9, 0x5fe7, 0x4805, [0x94, 0x67, 0x82, 0xfc, 0xd9, 0x6a, 0xf9, 0x3]);
 interface IFaxServerNotify2 : IDispatch
 {
-    HRESULT OnIncomingJobAdded(IFaxServer2, BSTR);
-    HRESULT OnIncomingJobRemoved(IFaxServer2, BSTR);
-    HRESULT OnIncomingJobChanged(IFaxServer2, BSTR, IFaxJobStatus);
-    HRESULT OnOutgoingJobAdded(IFaxServer2, BSTR);
-    HRESULT OnOutgoingJobRemoved(IFaxServer2, BSTR);
-    HRESULT OnOutgoingJobChanged(IFaxServer2, BSTR, IFaxJobStatus);
-    HRESULT OnIncomingMessageAdded(IFaxServer2, BSTR);
-    HRESULT OnIncomingMessageRemoved(IFaxServer2, BSTR);
-    HRESULT OnOutgoingMessageAdded(IFaxServer2, BSTR);
-    HRESULT OnOutgoingMessageRemoved(IFaxServer2, BSTR);
-    HRESULT OnReceiptOptionsChange(IFaxServer2);
-    HRESULT OnActivityLoggingConfigChange(IFaxServer2);
-    HRESULT OnSecurityConfigChange(IFaxServer2);
-    HRESULT OnEventLoggingConfigChange(IFaxServer2);
-    HRESULT OnOutgoingQueueConfigChange(IFaxServer2);
-    HRESULT OnOutgoingArchiveConfigChange(IFaxServer2);
-    HRESULT OnIncomingArchiveConfigChange(IFaxServer2);
-    HRESULT OnDevicesConfigChange(IFaxServer2);
-    HRESULT OnOutboundRoutingGroupsConfigChange(IFaxServer2);
-    HRESULT OnOutboundRoutingRulesConfigChange(IFaxServer2);
-    HRESULT OnServerActivityChange(IFaxServer2, int, int, int, int);
-    HRESULT OnQueuesStatusChange(IFaxServer2, VARIANT_BOOL, VARIANT_BOOL, VARIANT_BOOL);
-    HRESULT OnNewCall(IFaxServer2, int, int, BSTR);
-    HRESULT OnServerShutDown(IFaxServer2);
-    HRESULT OnDeviceStatusChange(IFaxServer2, int, VARIANT_BOOL, VARIANT_BOOL, VARIANT_BOOL, VARIANT_BOOL);
-    HRESULT OnGeneralServerConfigChanged(IFaxServer2);
+    HRESULT OnIncomingJobAdded(IFaxServer2 pFaxServer, BSTR bstrJobId);
+    HRESULT OnIncomingJobRemoved(IFaxServer2 pFaxServer, BSTR bstrJobId);
+    HRESULT OnIncomingJobChanged(IFaxServer2 pFaxServer, BSTR bstrJobId, IFaxJobStatus pJobStatus);
+    HRESULT OnOutgoingJobAdded(IFaxServer2 pFaxServer, BSTR bstrJobId);
+    HRESULT OnOutgoingJobRemoved(IFaxServer2 pFaxServer, BSTR bstrJobId);
+    HRESULT OnOutgoingJobChanged(IFaxServer2 pFaxServer, BSTR bstrJobId, IFaxJobStatus pJobStatus);
+    HRESULT OnIncomingMessageAdded(IFaxServer2 pFaxServer, BSTR bstrMessageId);
+    HRESULT OnIncomingMessageRemoved(IFaxServer2 pFaxServer, BSTR bstrMessageId);
+    HRESULT OnOutgoingMessageAdded(IFaxServer2 pFaxServer, BSTR bstrMessageId);
+    HRESULT OnOutgoingMessageRemoved(IFaxServer2 pFaxServer, BSTR bstrMessageId);
+    HRESULT OnReceiptOptionsChange(IFaxServer2 pFaxServer);
+    HRESULT OnActivityLoggingConfigChange(IFaxServer2 pFaxServer);
+    HRESULT OnSecurityConfigChange(IFaxServer2 pFaxServer);
+    HRESULT OnEventLoggingConfigChange(IFaxServer2 pFaxServer);
+    HRESULT OnOutgoingQueueConfigChange(IFaxServer2 pFaxServer);
+    HRESULT OnOutgoingArchiveConfigChange(IFaxServer2 pFaxServer);
+    HRESULT OnIncomingArchiveConfigChange(IFaxServer2 pFaxServer);
+    HRESULT OnDevicesConfigChange(IFaxServer2 pFaxServer);
+    HRESULT OnOutboundRoutingGroupsConfigChange(IFaxServer2 pFaxServer);
+    HRESULT OnOutboundRoutingRulesConfigChange(IFaxServer2 pFaxServer);
+    HRESULT OnServerActivityChange(IFaxServer2 pFaxServer, int lIncomingMessages, int lRoutingMessages, int lOutgoingMessages, int lQueuedMessages);
+    HRESULT OnQueuesStatusChange(IFaxServer2 pFaxServer, VARIANT_BOOL bOutgoingQueueBlocked, VARIANT_BOOL bOutgoingQueuePaused, VARIANT_BOOL bIncomingQueueBlocked);
+    HRESULT OnNewCall(IFaxServer2 pFaxServer, int lCallId, int lDeviceId, BSTR bstrCallerId);
+    HRESULT OnServerShutDown(IFaxServer2 pFaxServer);
+    HRESULT OnDeviceStatusChange(IFaxServer2 pFaxServer, int lDeviceId, VARIANT_BOOL bPoweredOff, VARIANT_BOOL bSending, VARIANT_BOOL bReceiving, VARIANT_BOOL bRinging);
+    HRESULT OnGeneralServerConfigChanged(IFaxServer2 pFaxServer);
 }
 enum IID_IFaxAccountNotify = GUID(0xb9b3bc81, 0xac1b, 0x46f3, [0xb3, 0x9d, 0xa, 0xdc, 0x30, 0xe1, 0xb7, 0x88]);
 interface IFaxAccountNotify : IDispatch
 {
-    HRESULT OnIncomingJobAdded(IFaxAccount, BSTR);
-    HRESULT OnIncomingJobRemoved(IFaxAccount, BSTR);
-    HRESULT OnIncomingJobChanged(IFaxAccount, BSTR, IFaxJobStatus);
-    HRESULT OnOutgoingJobAdded(IFaxAccount, BSTR);
-    HRESULT OnOutgoingJobRemoved(IFaxAccount, BSTR);
-    HRESULT OnOutgoingJobChanged(IFaxAccount, BSTR, IFaxJobStatus);
-    HRESULT OnIncomingMessageAdded(IFaxAccount, BSTR, VARIANT_BOOL);
-    HRESULT OnIncomingMessageRemoved(IFaxAccount, BSTR, VARIANT_BOOL);
-    HRESULT OnOutgoingMessageAdded(IFaxAccount, BSTR);
-    HRESULT OnOutgoingMessageRemoved(IFaxAccount, BSTR);
-    HRESULT OnServerShutDown(IFaxServer2);
+    HRESULT OnIncomingJobAdded(IFaxAccount pFaxAccount, BSTR bstrJobId);
+    HRESULT OnIncomingJobRemoved(IFaxAccount pFaxAccount, BSTR bstrJobId);
+    HRESULT OnIncomingJobChanged(IFaxAccount pFaxAccount, BSTR bstrJobId, IFaxJobStatus pJobStatus);
+    HRESULT OnOutgoingJobAdded(IFaxAccount pFaxAccount, BSTR bstrJobId);
+    HRESULT OnOutgoingJobRemoved(IFaxAccount pFaxAccount, BSTR bstrJobId);
+    HRESULT OnOutgoingJobChanged(IFaxAccount pFaxAccount, BSTR bstrJobId, IFaxJobStatus pJobStatus);
+    HRESULT OnIncomingMessageAdded(IFaxAccount pFaxAccount, BSTR bstrMessageId, VARIANT_BOOL fAddedToReceiveFolder);
+    HRESULT OnIncomingMessageRemoved(IFaxAccount pFaxAccount, BSTR bstrMessageId, VARIANT_BOOL fRemovedFromReceiveFolder);
+    HRESULT OnOutgoingMessageAdded(IFaxAccount pFaxAccount, BSTR bstrMessageId);
+    HRESULT OnOutgoingMessageRemoved(IFaxAccount pFaxAccount, BSTR bstrMessageId);
+    HRESULT OnServerShutDown(IFaxServer2 pFaxServer);
 }
 enum CLSID_FaxServer = GUID(0xcda8acb0, 0x8cf5, 0x4f6c, [0x9b, 0xa2, 0x59, 0x31, 0xd4, 0xc, 0x8c, 0xae]);
 struct FaxServer
@@ -2111,12 +2110,12 @@ enum CLSID_FaxSecurity2 = GUID(0x735c1248, 0xec89, 0x4c30, [0xa1, 0x27, 0x65, 0x
 struct FaxSecurity2
 {
 }
-alias PFAXROUTEADDFILE = int function(uint, const(wchar)*, GUID*);
-alias PFAXROUTEDELETEFILE = int function(uint, const(wchar)*);
-alias PFAXROUTEGETFILE = BOOL function(uint, uint, PWSTR, uint*);
-alias PFAXROUTEENUMFILE = BOOL function(uint, GUID*, GUID*, const(wchar)*, void*);
-alias PFAXROUTEENUMFILES = BOOL function(uint, GUID*, PFAXROUTEENUMFILE, void*);
-alias PFAXROUTEMODIFYROUTINGDATA = BOOL function(uint, const(wchar)*, ubyte*, uint);
+alias PFAXROUTEADDFILE = int function(uint JobId, const(wchar)* FileName, GUID* Guid);
+alias PFAXROUTEDELETEFILE = int function(uint JobId, const(wchar)* FileName);
+alias PFAXROUTEGETFILE = BOOL function(uint JobId, uint Index, PWSTR FileNameBuffer, uint* RequiredSize);
+alias PFAXROUTEENUMFILE = BOOL function(uint JobId, GUID* GuidOwner, GUID* GuidCaller, const(wchar)* FileName, void* Context);
+alias PFAXROUTEENUMFILES = BOOL function(uint JobId, GUID* Guid, PFAXROUTEENUMFILE FileEnumerator, void* Context);
+alias PFAXROUTEMODIFYROUTINGDATA = BOOL function(uint JobId, const(wchar)* RoutingGuid, ubyte* RoutingData, uint RoutingDataSize);
 struct FAX_ROUTE_CALLBACKROUTINES
 {
     uint SizeOfStruct;
@@ -2152,12 +2151,12 @@ enum : int
     STATUS_ENABLE  = 0x00000001,
 }
 
-alias PFAXROUTEINITIALIZE = BOOL function(HANDLE, FAX_ROUTE_CALLBACKROUTINES*);
-alias PFAXROUTEMETHOD = BOOL function(const(FAX_ROUTE)*, void**, uint*);
-alias PFAXROUTEDEVICEENABLE = BOOL function(const(wchar)*, uint, int);
-alias PFAXROUTEDEVICECHANGENOTIFICATION = BOOL function(uint, BOOL);
-alias PFAXROUTEGETROUTINGINFO = BOOL function(const(wchar)*, uint, ubyte*, uint*);
-alias PFAXROUTESETROUTINGINFO = BOOL function(const(wchar)*, uint, const(ubyte)*, uint);
+alias PFAXROUTEINITIALIZE = BOOL function(HANDLE param0, FAX_ROUTE_CALLBACKROUTINES* param1);
+alias PFAXROUTEMETHOD = BOOL function(const(FAX_ROUTE)* param0, void** param1, uint* param2);
+alias PFAXROUTEDEVICEENABLE = BOOL function(const(wchar)* param0, uint param1, int param2);
+alias PFAXROUTEDEVICECHANGENOTIFICATION = BOOL function(uint param0, BOOL param1);
+alias PFAXROUTEGETROUTINGINFO = BOOL function(const(wchar)* param0, uint param1, ubyte* param2, uint* param3);
+alias PFAXROUTESETROUTINGINFO = BOOL function(const(wchar)* param0, uint param1, const(ubyte)* param2, uint param3);
 alias FAX_ENUM_DEVICE_ID_SOURCE = int;
 enum : int
 {
@@ -2165,13 +2164,13 @@ enum : int
     DEV_ID_SRC_TAPI = 0x00000001,
 }
 
-alias PFAX_EXT_GET_DATA = uint function(uint, FAX_ENUM_DEVICE_ID_SOURCE, const(wchar)*, ubyte**, uint*);
-alias PFAX_EXT_SET_DATA = uint function(HINSTANCE, uint, FAX_ENUM_DEVICE_ID_SOURCE, const(wchar)*, ubyte*, uint);
-alias PFAX_EXT_CONFIG_CHANGE = HRESULT function(uint, const(wchar)*, ubyte*, uint);
-alias PFAX_EXT_REGISTER_FOR_EVENTS = HANDLE function(HINSTANCE, uint, FAX_ENUM_DEVICE_ID_SOURCE, const(wchar)*, PFAX_EXT_CONFIG_CHANGE);
-alias PFAX_EXT_UNREGISTER_FOR_EVENTS = uint function(HANDLE);
-alias PFAX_EXT_FREE_BUFFER = void function(void*);
-alias PFAX_EXT_INITIALIZE_CONFIG = HRESULT function(PFAX_EXT_GET_DATA, PFAX_EXT_SET_DATA, PFAX_EXT_REGISTER_FOR_EVENTS, PFAX_EXT_UNREGISTER_FOR_EVENTS, PFAX_EXT_FREE_BUFFER);
+alias PFAX_EXT_GET_DATA = uint function(uint param0, FAX_ENUM_DEVICE_ID_SOURCE param1, const(wchar)* param2, ubyte** param3, uint* param4);
+alias PFAX_EXT_SET_DATA = uint function(HINSTANCE param0, uint param1, FAX_ENUM_DEVICE_ID_SOURCE param2, const(wchar)* param3, ubyte* param4, uint param5);
+alias PFAX_EXT_CONFIG_CHANGE = HRESULT function(uint param0, const(wchar)* param1, ubyte* param2, uint param3);
+alias PFAX_EXT_REGISTER_FOR_EVENTS = HANDLE function(HINSTANCE param0, uint param1, FAX_ENUM_DEVICE_ID_SOURCE param2, const(wchar)* param3, PFAX_EXT_CONFIG_CHANGE param4);
+alias PFAX_EXT_UNREGISTER_FOR_EVENTS = uint function(HANDLE param0);
+alias PFAX_EXT_FREE_BUFFER = void function(void* param0);
+alias PFAX_EXT_INITIALIZE_CONFIG = HRESULT function(PFAX_EXT_GET_DATA param0, PFAX_EXT_SET_DATA param1, PFAX_EXT_REGISTER_FOR_EVENTS param2, PFAX_EXT_UNREGISTER_FOR_EVENTS param3, PFAX_EXT_FREE_BUFFER param4);
 alias SendToMode = int;
 enum : int
 {
@@ -2261,42 +2260,42 @@ struct STINOTIFY
 enum IID_IStillImageW = GUID(0x641bd880, 0x2dc8, 0x11d0, [0x90, 0xea, 0x0, 0xaa, 0x0, 0x60, 0xf8, 0x6c]);
 interface IStillImageW : IUnknown
 {
-    HRESULT Initialize(HINSTANCE, uint);
-    HRESULT GetDeviceList(uint, uint, uint*, void**);
-    HRESULT GetDeviceInfo(PWSTR, void**);
-    HRESULT CreateDevice(PWSTR, uint, IStiDevice*, IUnknown);
-    HRESULT GetDeviceValue(PWSTR, PWSTR, uint*, ubyte*, uint*);
-    HRESULT SetDeviceValue(PWSTR, PWSTR, uint, ubyte*, uint);
-    HRESULT GetSTILaunchInformation(PWSTR, uint*, PWSTR);
-    HRESULT RegisterLaunchApplication(PWSTR, PWSTR);
-    HRESULT UnregisterLaunchApplication(PWSTR);
-    HRESULT EnableHwNotifications(const(wchar)*, BOOL);
-    HRESULT GetHwNotificationState(const(wchar)*, BOOL*);
-    HRESULT RefreshDeviceBus(const(wchar)*);
-    HRESULT LaunchApplicationForDevice(PWSTR, PWSTR, STINOTIFY*);
-    HRESULT SetupDeviceParameters(STI_DEVICE_INFORMATIONW*);
-    HRESULT WriteToErrorLog(uint, const(wchar)*);
+    HRESULT Initialize(HINSTANCE hinst, uint dwVersion);
+    HRESULT GetDeviceList(uint dwType, uint dwFlags, uint* pdwItemsReturned, void** ppBuffer);
+    HRESULT GetDeviceInfo(PWSTR pwszDeviceName, void** ppBuffer);
+    HRESULT CreateDevice(PWSTR pwszDeviceName, uint dwMode, IStiDevice* pDevice, IUnknown punkOuter);
+    HRESULT GetDeviceValue(PWSTR pwszDeviceName, PWSTR pValueName, uint* pType, ubyte* pData, uint* cbData);
+    HRESULT SetDeviceValue(PWSTR pwszDeviceName, PWSTR pValueName, uint Type, ubyte* pData, uint cbData);
+    HRESULT GetSTILaunchInformation(PWSTR pwszDeviceName, uint* pdwEventCode, PWSTR pwszEventName);
+    HRESULT RegisterLaunchApplication(PWSTR pwszAppName, PWSTR pwszCommandLine);
+    HRESULT UnregisterLaunchApplication(PWSTR pwszAppName);
+    HRESULT EnableHwNotifications(const(wchar)* pwszDeviceName, BOOL bNewState);
+    HRESULT GetHwNotificationState(const(wchar)* pwszDeviceName, BOOL* pbCurrentState);
+    HRESULT RefreshDeviceBus(const(wchar)* pwszDeviceName);
+    HRESULT LaunchApplicationForDevice(PWSTR pwszDeviceName, PWSTR pwszAppName, STINOTIFY* pStiNotify);
+    HRESULT SetupDeviceParameters(STI_DEVICE_INFORMATIONW* param0);
+    HRESULT WriteToErrorLog(uint dwMessageType, const(wchar)* pszMessage);
 }
 enum IID_IStiDevice = GUID(0x6cfa5a80, 0x2dc8, 0x11d0, [0x90, 0xea, 0x0, 0xaa, 0x0, 0x60, 0xf8, 0x6c]);
 interface IStiDevice : IUnknown
 {
-    HRESULT Initialize(HINSTANCE, const(wchar)*, uint, uint);
-    HRESULT GetCapabilities(STI_DEV_CAPS*);
-    HRESULT GetStatus(STI_DEVICE_STATUS*);
+    HRESULT Initialize(HINSTANCE hinst, const(wchar)* pwszDeviceName, uint dwVersion, uint dwMode);
+    HRESULT GetCapabilities(STI_DEV_CAPS* pDevCaps);
+    HRESULT GetStatus(STI_DEVICE_STATUS* pDevStatus);
     HRESULT DeviceReset();
-    HRESULT Diagnostic(STI_DIAG*);
-    HRESULT Escape(uint, void*, uint, void*, uint, uint*);
-    HRESULT GetLastError(uint*);
-    HRESULT LockDevice(uint);
+    HRESULT Diagnostic(STI_DIAG* pBuffer);
+    HRESULT Escape(uint EscapeFunction, void* lpInData, uint cbInDataSize, void* pOutData, uint dwOutDataSize, uint* pdwActualData);
+    HRESULT GetLastError(uint* pdwLastDeviceError);
+    HRESULT LockDevice(uint dwTimeOut);
     HRESULT UnLockDevice();
-    HRESULT RawReadData(void*, uint*, OVERLAPPED*);
-    HRESULT RawWriteData(void*, uint, OVERLAPPED*);
-    HRESULT RawReadCommand(void*, uint*, OVERLAPPED*);
-    HRESULT RawWriteCommand(void*, uint, OVERLAPPED*);
-    HRESULT Subscribe(STISUBSCRIBE*);
-    HRESULT GetLastNotificationData(STINOTIFY*);
+    HRESULT RawReadData(void* lpBuffer, uint* lpdwNumberOfBytes, OVERLAPPED* lpOverlapped);
+    HRESULT RawWriteData(void* lpBuffer, uint nNumberOfBytes, OVERLAPPED* lpOverlapped);
+    HRESULT RawReadCommand(void* lpBuffer, uint* lpdwNumberOfBytes, OVERLAPPED* lpOverlapped);
+    HRESULT RawWriteCommand(void* lpBuffer, uint nNumberOfBytes, OVERLAPPED* lpOverlapped);
+    HRESULT Subscribe(STISUBSCRIBE* lpSubsribe);
+    HRESULT GetLastNotificationData(STINOTIFY* lpNotify);
     HRESULT UnSubscribe();
-    HRESULT GetLastErrorInfo(_ERROR_INFOW*);
+    HRESULT GetLastErrorInfo(_ERROR_INFOW* pLastErrorInfo);
 }
 struct STI_USD_CAPS
 {
@@ -2306,35 +2305,35 @@ struct STI_USD_CAPS
 enum IID_IStiDeviceControl = GUID(0x128a9860, 0x52dc, 0x11d0, [0x9e, 0xdf, 0x44, 0x45, 0x53, 0x54, 0x0, 0x0]);
 interface IStiDeviceControl : IUnknown
 {
-    HRESULT Initialize(uint, uint, const(wchar)*, uint);
-    HRESULT RawReadData(void*, uint*, OVERLAPPED*);
-    HRESULT RawWriteData(void*, uint, OVERLAPPED*);
-    HRESULT RawReadCommand(void*, uint*, OVERLAPPED*);
-    HRESULT RawWriteCommand(void*, uint, OVERLAPPED*);
-    HRESULT RawDeviceControl(uint, void*, uint, void*, uint, uint*);
-    HRESULT GetLastError(uint*);
-    HRESULT GetMyDevicePortName(PWSTR, uint);
-    HRESULT GetMyDeviceHandle(HANDLE*);
-    HRESULT GetMyDeviceOpenMode(uint*);
-    HRESULT WriteToErrorLog(uint, const(wchar)*, uint);
+    HRESULT Initialize(uint dwDeviceType, uint dwMode, const(wchar)* pwszPortName, uint dwFlags);
+    HRESULT RawReadData(void* lpBuffer, uint* lpdwNumberOfBytes, OVERLAPPED* lpOverlapped);
+    HRESULT RawWriteData(void* lpBuffer, uint nNumberOfBytes, OVERLAPPED* lpOverlapped);
+    HRESULT RawReadCommand(void* lpBuffer, uint* lpdwNumberOfBytes, OVERLAPPED* lpOverlapped);
+    HRESULT RawWriteCommand(void* lpBuffer, uint nNumberOfBytes, OVERLAPPED* lpOverlapped);
+    HRESULT RawDeviceControl(uint EscapeFunction, void* lpInData, uint cbInDataSize, void* pOutData, uint dwOutDataSize, uint* pdwActualData);
+    HRESULT GetLastError(uint* lpdwLastError);
+    HRESULT GetMyDevicePortName(PWSTR lpszDevicePath, uint cwDevicePathSize);
+    HRESULT GetMyDeviceHandle(HANDLE* lph);
+    HRESULT GetMyDeviceOpenMode(uint* pdwOpenMode);
+    HRESULT WriteToErrorLog(uint dwMessageType, const(wchar)* pszMessage, uint dwErrorCode);
 }
 enum IID_IStiUSD = GUID(0xc9bb460, 0x51ac, 0x11d0, [0x90, 0xea, 0x0, 0xaa, 0x0, 0x60, 0xf8, 0x6c]);
 interface IStiUSD : IUnknown
 {
-    HRESULT Initialize(IStiDeviceControl, uint, HKEY);
-    HRESULT GetCapabilities(STI_USD_CAPS*);
-    HRESULT GetStatus(STI_DEVICE_STATUS*);
+    HRESULT Initialize(IStiDeviceControl pHelDcb, uint dwStiVersion, HKEY hParametersKey);
+    HRESULT GetCapabilities(STI_USD_CAPS* pDevCaps);
+    HRESULT GetStatus(STI_DEVICE_STATUS* pDevStatus);
     HRESULT DeviceReset();
-    HRESULT Diagnostic(STI_DIAG*);
-    HRESULT Escape(uint, void*, uint, void*, uint, uint*);
-    HRESULT GetLastError(uint*);
+    HRESULT Diagnostic(STI_DIAG* pBuffer);
+    HRESULT Escape(uint EscapeFunction, void* lpInData, uint cbInDataSize, void* pOutData, uint cbOutDataSize, uint* pdwActualData);
+    HRESULT GetLastError(uint* pdwLastDeviceError);
     HRESULT LockDevice();
     HRESULT UnLockDevice();
-    HRESULT RawReadData(void*, uint*, OVERLAPPED*);
-    HRESULT RawWriteData(void*, uint, OVERLAPPED*);
-    HRESULT RawReadCommand(void*, uint*, OVERLAPPED*);
-    HRESULT RawWriteCommand(void*, uint, OVERLAPPED*);
-    HRESULT SetNotificationHandle(HANDLE);
-    HRESULT GetNotificationData(STINOTIFY*);
-    HRESULT GetLastErrorInfo(_ERROR_INFOW*);
+    HRESULT RawReadData(void* lpBuffer, uint* lpdwNumberOfBytes, OVERLAPPED* lpOverlapped);
+    HRESULT RawWriteData(void* lpBuffer, uint nNumberOfBytes, OVERLAPPED* lpOverlapped);
+    HRESULT RawReadCommand(void* lpBuffer, uint* lpdwNumberOfBytes, OVERLAPPED* lpOverlapped);
+    HRESULT RawWriteCommand(void* lpBuffer, uint nNumberOfBytes, OVERLAPPED* lpOverlapped);
+    HRESULT SetNotificationHandle(HANDLE hEvent);
+    HRESULT GetNotificationData(STINOTIFY* lpNotify);
+    HRESULT GetLastErrorInfo(_ERROR_INFOW* pLastErrorInfo);
 }

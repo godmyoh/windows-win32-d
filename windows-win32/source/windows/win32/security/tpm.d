@@ -62,24 +62,24 @@ enum : int
 enum IID_ITpmVirtualSmartCardManagerStatusCallback = GUID(0x1a1bb35f, 0xabb8, 0x451c, [0xa1, 0xae, 0x33, 0xd9, 0x8f, 0x1b, 0xef, 0x4a]);
 interface ITpmVirtualSmartCardManagerStatusCallback : IUnknown
 {
-    HRESULT ReportProgress(TPMVSCMGR_STATUS);
-    HRESULT ReportError(TPMVSCMGR_ERROR);
+    HRESULT ReportProgress(TPMVSCMGR_STATUS Status);
+    HRESULT ReportError(TPMVSCMGR_ERROR Error);
 }
 enum IID_ITpmVirtualSmartCardManager = GUID(0x112b1dff, 0xd9dc, 0x41f7, [0x86, 0x9f, 0xd6, 0x7f, 0xee, 0x7c, 0xb5, 0x91]);
 interface ITpmVirtualSmartCardManager : IUnknown
 {
-    HRESULT CreateVirtualSmartCard(const(wchar)*, ubyte, const(ubyte)*, uint, const(ubyte)*, uint, const(ubyte)*, uint, const(ubyte)*, uint, BOOL, ITpmVirtualSmartCardManagerStatusCallback, PWSTR*, BOOL*);
-    HRESULT DestroyVirtualSmartCard(const(wchar)*, ITpmVirtualSmartCardManagerStatusCallback, BOOL*);
+    HRESULT CreateVirtualSmartCard(const(wchar)* pszFriendlyName, ubyte bAdminAlgId, const(ubyte)* pbAdminKey, uint cbAdminKey, const(ubyte)* pbAdminKcv, uint cbAdminKcv, const(ubyte)* pbPuk, uint cbPuk, const(ubyte)* pbPin, uint cbPin, BOOL fGenerate, ITpmVirtualSmartCardManagerStatusCallback pStatusCallback, PWSTR* ppszInstanceId, BOOL* pfNeedReboot);
+    HRESULT DestroyVirtualSmartCard(const(wchar)* pszInstanceId, ITpmVirtualSmartCardManagerStatusCallback pStatusCallback, BOOL* pfNeedReboot);
 }
 enum IID_ITpmVirtualSmartCardManager2 = GUID(0xfdf8a2b9, 0x2de, 0x47f4, [0xbc, 0x26, 0xaa, 0x85, 0xab, 0x5e, 0x52, 0x67]);
 interface ITpmVirtualSmartCardManager2 : ITpmVirtualSmartCardManager
 {
-    HRESULT CreateVirtualSmartCardWithPinPolicy(const(wchar)*, ubyte, const(ubyte)*, uint, const(ubyte)*, uint, const(ubyte)*, uint, const(ubyte)*, uint, const(ubyte)*, uint, BOOL, ITpmVirtualSmartCardManagerStatusCallback, PWSTR*, BOOL*);
+    HRESULT CreateVirtualSmartCardWithPinPolicy(const(wchar)* pszFriendlyName, ubyte bAdminAlgId, const(ubyte)* pbAdminKey, uint cbAdminKey, const(ubyte)* pbAdminKcv, uint cbAdminKcv, const(ubyte)* pbPuk, uint cbPuk, const(ubyte)* pbPin, uint cbPin, const(ubyte)* pbPinPolicy, uint cbPinPolicy, BOOL fGenerate, ITpmVirtualSmartCardManagerStatusCallback pStatusCallback, PWSTR* ppszInstanceId, BOOL* pfNeedReboot);
 }
 enum IID_ITpmVirtualSmartCardManager3 = GUID(0x3c745a97, 0xf375, 0x4150, [0xbe, 0x17, 0x59, 0x50, 0xf6, 0x94, 0xc6, 0x99]);
 interface ITpmVirtualSmartCardManager3 : ITpmVirtualSmartCardManager2
 {
-    HRESULT CreateVirtualSmartCardWithAttestation(const(wchar)*, ubyte, const(ubyte)*, uint, const(ubyte)*, uint, const(ubyte)*, uint, const(ubyte)*, uint, const(ubyte)*, uint, TPMVSC_ATTESTATION_TYPE, BOOL, ITpmVirtualSmartCardManagerStatusCallback, PWSTR*);
+    HRESULT CreateVirtualSmartCardWithAttestation(const(wchar)* pszFriendlyName, ubyte bAdminAlgId, const(ubyte)* pbAdminKey, uint cbAdminKey, const(ubyte)* pbAdminKcv, uint cbAdminKcv, const(ubyte)* pbPuk, uint cbPuk, const(ubyte)* pbPin, uint cbPin, const(ubyte)* pbPinPolicy, uint cbPinPolicy, TPMVSC_ATTESTATION_TYPE attestationType, BOOL fGenerate, ITpmVirtualSmartCardManagerStatusCallback pStatusCallback, PWSTR* ppszInstanceId);
 }
 enum CLSID_TpmVirtualSmartCardManager = GUID(0x16a18e86, 0x7f6e, 0x4c20, [0xad, 0x89, 0x4f, 0xfc, 0xd, 0xb7, 0xa9, 0x6a]);
 struct TpmVirtualSmartCardManager

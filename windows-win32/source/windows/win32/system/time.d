@@ -5,21 +5,21 @@ import windows.win32.foundation : BOOL, BOOLEAN, FILETIME, SYSTEMTIME;
 version (Windows):
 extern (Windows):
 
-BOOL SystemTimeToTzSpecificLocalTime(const(TIME_ZONE_INFORMATION)*, const(SYSTEMTIME)*, SYSTEMTIME*);
-BOOL TzSpecificLocalTimeToSystemTime(const(TIME_ZONE_INFORMATION)*, const(SYSTEMTIME)*, SYSTEMTIME*);
-BOOL FileTimeToSystemTime(const(FILETIME)*, SYSTEMTIME*);
-BOOL SystemTimeToFileTime(const(SYSTEMTIME)*, FILETIME*);
-uint GetTimeZoneInformation(TIME_ZONE_INFORMATION*);
-BOOL SetTimeZoneInformation(const(TIME_ZONE_INFORMATION)*);
-BOOL SetDynamicTimeZoneInformation(const(DYNAMIC_TIME_ZONE_INFORMATION)*);
-uint GetDynamicTimeZoneInformation(DYNAMIC_TIME_ZONE_INFORMATION*);
-BOOL GetTimeZoneInformationForYear(ushort, DYNAMIC_TIME_ZONE_INFORMATION*, TIME_ZONE_INFORMATION*);
-uint EnumDynamicTimeZoneInformation(const(uint), DYNAMIC_TIME_ZONE_INFORMATION*);
-uint GetDynamicTimeZoneInformationEffectiveYears(const(DYNAMIC_TIME_ZONE_INFORMATION)*, uint*, uint*);
-BOOL SystemTimeToTzSpecificLocalTimeEx(const(DYNAMIC_TIME_ZONE_INFORMATION)*, const(SYSTEMTIME)*, SYSTEMTIME*);
-BOOL TzSpecificLocalTimeToSystemTimeEx(const(DYNAMIC_TIME_ZONE_INFORMATION)*, const(SYSTEMTIME)*, SYSTEMTIME*);
-BOOL LocalFileTimeToLocalSystemTime(const(TIME_ZONE_INFORMATION)*, const(FILETIME)*, SYSTEMTIME*);
-BOOL LocalSystemTimeToLocalFileTime(const(TIME_ZONE_INFORMATION)*, const(SYSTEMTIME)*, FILETIME*);
+BOOL SystemTimeToTzSpecificLocalTime(const(TIME_ZONE_INFORMATION)* lpTimeZoneInformation, const(SYSTEMTIME)* lpUniversalTime, SYSTEMTIME* lpLocalTime);
+BOOL TzSpecificLocalTimeToSystemTime(const(TIME_ZONE_INFORMATION)* lpTimeZoneInformation, const(SYSTEMTIME)* lpLocalTime, SYSTEMTIME* lpUniversalTime);
+BOOL FileTimeToSystemTime(const(FILETIME)* lpFileTime, SYSTEMTIME* lpSystemTime);
+BOOL SystemTimeToFileTime(const(SYSTEMTIME)* lpSystemTime, FILETIME* lpFileTime);
+uint GetTimeZoneInformation(TIME_ZONE_INFORMATION* lpTimeZoneInformation);
+BOOL SetTimeZoneInformation(const(TIME_ZONE_INFORMATION)* lpTimeZoneInformation);
+BOOL SetDynamicTimeZoneInformation(const(DYNAMIC_TIME_ZONE_INFORMATION)* lpTimeZoneInformation);
+uint GetDynamicTimeZoneInformation(DYNAMIC_TIME_ZONE_INFORMATION* pTimeZoneInformation);
+BOOL GetTimeZoneInformationForYear(ushort wYear, DYNAMIC_TIME_ZONE_INFORMATION* pdtzi, TIME_ZONE_INFORMATION* ptzi);
+uint EnumDynamicTimeZoneInformation(const(uint) dwIndex, DYNAMIC_TIME_ZONE_INFORMATION* lpTimeZoneInformation);
+uint GetDynamicTimeZoneInformationEffectiveYears(const(DYNAMIC_TIME_ZONE_INFORMATION)* lpTimeZoneInformation, uint* FirstYear, uint* LastYear);
+BOOL SystemTimeToTzSpecificLocalTimeEx(const(DYNAMIC_TIME_ZONE_INFORMATION)* lpTimeZoneInformation, const(SYSTEMTIME)* lpUniversalTime, SYSTEMTIME* lpLocalTime);
+BOOL TzSpecificLocalTimeToSystemTimeEx(const(DYNAMIC_TIME_ZONE_INFORMATION)* lpTimeZoneInformation, const(SYSTEMTIME)* lpLocalTime, SYSTEMTIME* lpUniversalTime);
+BOOL LocalFileTimeToLocalSystemTime(const(TIME_ZONE_INFORMATION)* timeZoneInformation, const(FILETIME)* localFileTime, SYSTEMTIME* localSystemTime);
+BOOL LocalSystemTimeToLocalFileTime(const(TIME_ZONE_INFORMATION)* timeZoneInformation, const(SYSTEMTIME)* localSystemTime, FILETIME* localFileTime);
 enum wszW32TimeRegKeyTimeProviders = "System\\CurrentControlSet\\Services\\W32Time\\TimeProviders";
 enum wszW32TimeRegKeyPolicyTimeProviders = "Software\\Policies\\Microsoft\\W32Time\\TimeProviders";
 enum wszW32TimeRegValueEnabled = "Enabled";

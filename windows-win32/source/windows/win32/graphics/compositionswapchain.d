@@ -32,25 +32,25 @@ enum : int
 enum IID_IPresentationBuffer = GUID(0x2e217d3a, 0x5abb, 0x4138, [0x9a, 0x13, 0xa7, 0x75, 0x59, 0x3c, 0x89, 0xca]);
 interface IPresentationBuffer : IUnknown
 {
-    HRESULT GetAvailableEvent(HANDLE*);
-    HRESULT IsAvailable(ubyte*);
+    HRESULT GetAvailableEvent(HANDLE* availableEventHandle);
+    HRESULT IsAvailable(ubyte* isAvailable);
 }
 enum IID_IPresentationContent = GUID(0x5668bb79, 0x3d8e, 0x415c, [0xb2, 0x15, 0xf3, 0x80, 0x20, 0xf2, 0xd2, 0x52]);
 interface IPresentationContent : IUnknown
 {
-    void SetTag(ulong);
+    void SetTag(ulong tag);
 }
 enum IID_IPresentationSurface = GUID(0x956710fb, 0xea40, 0x4eba, [0xa3, 0xeb, 0x43, 0x75, 0xa0, 0xeb, 0x4e, 0xdc]);
 interface IPresentationSurface : IPresentationContent
 {
-    HRESULT SetBuffer(IPresentationBuffer);
-    HRESULT SetColorSpace(DXGI_COLOR_SPACE_TYPE);
-    HRESULT SetAlphaMode(DXGI_ALPHA_MODE);
-    HRESULT SetSourceRect(const(RECT)*);
-    HRESULT SetTransform(PresentationTransform*);
-    HRESULT RestrictToOutput(IUnknown);
-    HRESULT SetDisableReadback(ubyte);
-    HRESULT SetLetterboxingMargins(float, float, float, float);
+    HRESULT SetBuffer(IPresentationBuffer presentationBuffer);
+    HRESULT SetColorSpace(DXGI_COLOR_SPACE_TYPE colorSpace);
+    HRESULT SetAlphaMode(DXGI_ALPHA_MODE alphaMode);
+    HRESULT SetSourceRect(const(RECT)* sourceRect);
+    HRESULT SetTransform(PresentationTransform* transform);
+    HRESULT RestrictToOutput(IUnknown output);
+    HRESULT SetDisableReadback(ubyte value);
+    HRESULT SetLetterboxingMargins(float leftLetterboxSize, float topLetterboxSize, float rightLetterboxSize, float bottomLetterboxSize);
 }
 enum IID_IPresentStatistics = GUID(0xb44b8bda, 0x7282, 0x495d, [0x9d, 0xd7, 0xce, 0xad, 0xd8, 0xb4, 0xbb, 0x86]);
 interface IPresentStatistics : IUnknown
@@ -61,26 +61,26 @@ interface IPresentStatistics : IUnknown
 enum IID_IPresentationManager = GUID(0xfb562f82, 0x6292, 0x470a, [0x88, 0xb1, 0x84, 0x36, 0x61, 0xe7, 0xf2, 0xc]);
 interface IPresentationManager : IUnknown
 {
-    HRESULT AddBufferFromResource(IUnknown, IPresentationBuffer*);
-    HRESULT CreatePresentationSurface(HANDLE, IPresentationSurface*);
+    HRESULT AddBufferFromResource(IUnknown resource, IPresentationBuffer* presentationBuffer);
+    HRESULT CreatePresentationSurface(HANDLE compositionSurfaceHandle, IPresentationSurface* presentationSurface);
     ulong GetNextPresentId();
-    HRESULT SetTargetTime(SystemInterruptTime);
-    HRESULT SetPreferredPresentDuration(SystemInterruptTime, SystemInterruptTime);
-    HRESULT ForceVSyncInterrupt(ubyte);
+    HRESULT SetTargetTime(SystemInterruptTime targetTime);
+    HRESULT SetPreferredPresentDuration(SystemInterruptTime preferredDuration, SystemInterruptTime deviationTolerance);
+    HRESULT ForceVSyncInterrupt(ubyte forceVsyncInterrupt);
     HRESULT Present();
-    HRESULT GetPresentRetiringFence(const(GUID)*, void**);
-    HRESULT CancelPresentsFrom(ulong);
-    HRESULT GetLostEvent(HANDLE*);
-    HRESULT GetPresentStatisticsAvailableEvent(HANDLE*);
-    HRESULT EnablePresentStatisticsKind(PresentStatisticsKind, ubyte);
-    HRESULT GetNextPresentStatistics(IPresentStatistics*);
+    HRESULT GetPresentRetiringFence(const(GUID)* riid, void** fence);
+    HRESULT CancelPresentsFrom(ulong presentIdToCancelFrom);
+    HRESULT GetLostEvent(HANDLE* lostEventHandle);
+    HRESULT GetPresentStatisticsAvailableEvent(HANDLE* presentStatisticsAvailableEventHandle);
+    HRESULT EnablePresentStatisticsKind(PresentStatisticsKind presentStatisticsKind, ubyte enabled);
+    HRESULT GetNextPresentStatistics(IPresentStatistics* nextPresentStatistics);
 }
 enum IID_IPresentationFactory = GUID(0x8fb37b58, 0x1d74, 0x4f64, [0xa4, 0x9c, 0x1f, 0x97, 0xa8, 0xa, 0x2e, 0xc0]);
 interface IPresentationFactory : IUnknown
 {
     ubyte IsPresentationSupported();
     ubyte IsPresentationSupportedWithIndependentFlip();
-    HRESULT CreatePresentationManager(IPresentationManager*);
+    HRESULT CreatePresentationManager(IPresentationManager* ppPresentationManager);
 }
 alias PresentStatus = int;
 enum : int
@@ -120,7 +120,7 @@ interface ICompositionFramePresentStatistics : IPresentStatistics
 {
     ulong GetContentTag();
     ulong GetCompositionFrameId();
-    void GetDisplayInstanceArray(uint*, const(CompositionFrameDisplayInstance)**);
+    void GetDisplayInstanceArray(uint* displayInstanceArrayCount, const(CompositionFrameDisplayInstance)** displayInstanceArray);
 }
 enum IID_IIndependentFlipFramePresentStatistics = GUID(0x8c93be27, 0xad94, 0x4da0, [0x8f, 0xd4, 0x24, 0x13, 0x13, 0x2d, 0x12, 0x4e]);
 interface IIndependentFlipFramePresentStatistics : IPresentStatistics
@@ -131,4 +131,4 @@ interface IIndependentFlipFramePresentStatistics : IPresentStatistics
     SystemInterruptTime GetDisplayedTime();
     SystemInterruptTime GetPresentDuration();
 }
-HRESULT CreatePresentationFactory(IUnknown, const(GUID)*, void**);
+HRESULT CreatePresentationFactory(IUnknown d3dDevice, const(GUID)* riid, void** presentationFactory);

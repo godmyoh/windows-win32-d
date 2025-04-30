@@ -13,20 +13,20 @@ enum WSBAPP_ASYNC_IN_PROGRESS = 0x007a0004;
 enum IID_IWsbApplicationBackupSupport = GUID(0x1eff3510, 0x4a27, 0x46ad, [0xb9, 0xe0, 0x8, 0x33, 0x2f, 0xf, 0x4f, 0x6d]);
 interface IWsbApplicationBackupSupport : IUnknown
 {
-    HRESULT CheckConsistency(PWSTR, PWSTR, PWSTR, uint, PWSTR*, PWSTR*, IWsbApplicationAsync*);
+    HRESULT CheckConsistency(PWSTR wszWriterMetadata, PWSTR wszComponentName, PWSTR wszComponentLogicalPath, uint cVolumes, PWSTR* rgwszSourceVolumePath, PWSTR* rgwszSnapshotVolumePath, IWsbApplicationAsync* ppAsync);
 }
 enum IID_IWsbApplicationRestoreSupport = GUID(0x8d3bdb38, 0x4ee8, 0x4718, [0x85, 0xf9, 0xc7, 0xdb, 0xc4, 0xab, 0x77, 0xaa]);
 interface IWsbApplicationRestoreSupport : IUnknown
 {
-    HRESULT PreRestore(PWSTR, PWSTR, PWSTR, BOOLEAN);
-    HRESULT PostRestore(PWSTR, PWSTR, PWSTR, BOOLEAN);
-    HRESULT OrderComponents(uint, PWSTR*, PWSTR*, PWSTR**, PWSTR**);
-    HRESULT IsRollForwardSupported(ubyte*);
+    HRESULT PreRestore(PWSTR wszWriterMetadata, PWSTR wszComponentName, PWSTR wszComponentLogicalPath, BOOLEAN bNoRollForward);
+    HRESULT PostRestore(PWSTR wszWriterMetadata, PWSTR wszComponentName, PWSTR wszComponentLogicalPath, BOOLEAN bNoRollForward);
+    HRESULT OrderComponents(uint cComponents, PWSTR* rgComponentName, PWSTR* rgComponentLogicalPaths, PWSTR** prgComponentName, PWSTR** prgComponentLogicalPath);
+    HRESULT IsRollForwardSupported(ubyte* pbRollForwardSupported);
 }
 enum IID_IWsbApplicationAsync = GUID(0x843f6f7, 0x895c, 0x44a6, [0xb0, 0xc2, 0x5, 0xa5, 0x2, 0x2a, 0xa3, 0xa1]);
 interface IWsbApplicationAsync : IUnknown
 {
-    HRESULT QueryStatus(HRESULT*);
+    HRESULT QueryStatus(HRESULT* phrResult);
     HRESULT Abort();
 }
 alias WSB_OB_STATUS_ENTRY_PAIR_TYPE = int;
