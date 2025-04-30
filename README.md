@@ -6,7 +6,7 @@ This project aims to replace `core.sys.windows`.
 
 ## Usage
 
-Clone this repository and build `windows-win32.lib` (or `windows-win32-debug.lib`) from `windows-win32-d\windows-win32\source`.
+Clone this repository and build `windows-win32-release.lib` (or `windows-win32-debug.lib`) from `windows-win32-d\windows-win32\source`.
 
 ```
 git clone https://github.com/godmyoh/windows-win32-d.git
@@ -17,7 +17,7 @@ dub build --build=debug --config=debug --force
 
 Instead of `dub build`, `dub-build.bat` in `windows-win32-d` folder can be used.
 
-You can import `windows-win32-d\windows-win32\source` and link `windows-win32-d\windows-win32\windows-win32.lib` instead of using `core.sys.windows`.
+You can import `windows-win32-d\windows-win32\source` and link `windows-win32-d\windows-win32\windows-win32-release.lib` instead of using `core.sys.windows`.
 Try following command to run an example program. (See `dub.sdl` in `windows-win32-d\example`)
 
 ```
